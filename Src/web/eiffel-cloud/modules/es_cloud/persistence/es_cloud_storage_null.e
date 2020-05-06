@@ -49,7 +49,7 @@ feature -- Licenses
 		do
 		end
 
-	user_id_with_license (a_license: ES_CLOUD_LICENSE): INTEGER_64
+	user_id_for_license (a_license: ES_CLOUD_LICENSE): INTEGER_64
 		do
 		end
 
@@ -144,7 +144,7 @@ feature -- Access: installations
 
 feature -- Access: sessions		
 
-	last_user_session (a_user: ES_CLOUD_USER): detachable ES_CLOUD_SESSION
+	last_user_session (a_user: ES_CLOUD_USER; a_installation: detachable ES_CLOUD_INSTALLATION): detachable ES_CLOUD_SESSION
 		do
 		end
 

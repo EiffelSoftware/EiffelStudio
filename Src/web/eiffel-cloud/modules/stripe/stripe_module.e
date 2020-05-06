@@ -127,7 +127,7 @@ feature -- Access: router
 		do
 			if attached stripe_api as l_mod_api then
 				a_router.handle (l_mod_api.config.base_path + "/not_available", create {WSF_URI_AGENT_HANDLER}.make (agent handle_not_available (?,?, a_api)), a_router.methods_get)
-				a_router.handle (l_mod_api.config.base_path + "/subscribe/{category}/{checkout}", create {STRIPE_SUBSCRIPTION_HANDLER}.make (Current, l_mod_api, l_mod_api.config.base_path), a_router.methods_get)
+				a_router.handle (l_mod_api.config.base_path + "/subscribe/{category}/{checkout}", create {STRIPE_SUBSCRIPTION_HANDLER}.make (Current, l_mod_api, l_mod_api.config.base_path), a_router.methods_post)
 
 				a_router.handle (l_mod_api.config.base_path + "/pay/{category}/{checkout}", create {STRIPE_PAYMENT_HANDLER}.make (Current, l_mod_api, l_mod_api.config.base_path), a_router.methods_get)
 				a_router.handle (l_mod_api.config.base_path + "/pay/{category}/{checkout}/terms", create {STRIPE_PAYMENT_HANDLER}.make (Current, l_mod_api, l_mod_api.config.base_path), a_router.methods_get)
@@ -137,24 +137,191 @@ feature -- Access: router
 
 feature -- Helper
 
-	payment_link (a_category: READABLE_STRING_GENERAL; a_checkout: READABLE_STRING_GENERAL): READABLE_STRING_8
+	payment_link (a_category: READABLE_STRING_GENERAL; a_checkout: READABLE_STRING_GENERAL; a_email: READABLE_STRING_GENERAL): READABLE_STRING_8
 			-- Payment url for category `a_category` and checkout `a_checkout`.
 		do
 			if attached stripe_api as l_stripe_api and then l_stripe_api.config.is_valid then
-				Result := l_stripe_api.config.base_path + "/pay/" + html_encoded (a_category) + "/" + html_encoded (a_checkout)
+				Result := l_stripe_api.config.base_path + "/pay/" + html_encoded (a_category) + "/" + html_encoded (a_checkout) + "?contact_email=" + url_encoded (a_email)
 			else
 				Result := {STRIPE_CONFIG}.default_base_path + "/not_available"
 			end
 		end
 
-	subscription_checkout_link (a_category: READABLE_STRING_GENERAL; a_checkout: READABLE_STRING_GENERAL): READABLE_STRING_8
+	subscription_checkout_link (a_category: READABLE_STRING_GENERAL; a_checkout: READABLE_STRING_GENERAL; a_email: READABLE_STRING_GENERAL): READABLE_STRING_8
 			-- Checkout url for checkout from category `a_category` and checkout `a_checkout`.
 		do
 			if attached stripe_api as l_stripe_api and then l_stripe_api.config.is_valid then
-				Result := l_stripe_api.config.base_path + "/subscribe/" + html_encoded (a_category) + "/" + html_encoded (a_checkout)
+				Result := l_stripe_api.config.base_path + "/subscribe/" + html_encoded (a_category) + "/" + html_encoded (a_checkout) + "?contact_email=" + url_encoded (a_email)
 			else
 				Result := {STRIPE_CONFIG}.default_base_path + "/not_available"
 			end
+		end
+
+	fill_payment_form (a_user: detachable CMS_USER; a_email: READABLE_STRING_GENERAL; a_form: CMS_FORM)
+		local
+			f_email: WSF_FORM_EMAIL_INPUT
+			f_phone: WSF_FORM_TEL_INPUT
+			f_name: WSF_FORM_TEXT_INPUT
+			l_customer: STRIPE_CUSTOMER
+			l_address: STRIPE_ADDRESS
+			f_txt: WSF_FORM_TEXT_INPUT
+			f_set: WSF_FORM_FIELD_SET
+			f_countries: WSF_FORM_SELECT
+			l_country: READABLE_STRING_GENERAL
+			l_submit: WSF_WIDGET
+		do
+			if attached stripe_api as l_stripe_api then
+				l_customer := l_stripe_api.customer_by_email (a_email)
+				if l_customer /= Void then
+					l_address := l_customer.address
+					if l_address /= Void then
+						l_country := l_address.country
+					end
+				end
+			end
+			if attached a_form.fields_by_name ("stripe-op") as lst and then not lst.is_empty then
+				l_submit := lst.first
+			end
+
+			create f_set.make
+			f_set.set_legend ("User Contact")
+			if l_submit /= Void then
+				a_form.insert_before (f_set, l_submit)
+			else
+				a_form.extend (f_set)
+			end
+			if
+				attached a_form.fields_by_name ("contact_email") as lst and then lst.count = 1 and then
+				attached {WSF_FORM_EMAIL_INPUT} lst.first as e
+			then
+				f_email := e
+			else
+				create f_email.make ("contact_email")
+				f_set.extend (f_email)
+			end
+			f_email.set_text_value (a_email)
+			f_email.set_label ("Email address")
+			f_email.enable_required
+
+			create f_name.make ("contact_name")
+			f_name.set_label ("Name (first, last)")
+			f_set.extend (f_name)
+			if l_customer /= Void and then attached l_customer.name as l_name then
+				f_name.set_text_value (l_name)
+			elseif a_user /= Void then
+				f_name.set_text_value (a_user.name)
+			end
+
+			create f_phone.make ("contact_phone")
+			f_phone.set_label ("Phone (optional)")
+			f_set.extend (f_phone)
+			if l_customer /= Void and then attached l_customer.phone as l_phone then
+				f_phone.set_text_value (l_phone)
+			end
+
+			create f_set.make
+			f_set.set_legend ("User Information")
+			if l_submit /= Void then
+				a_form.insert_before (f_set, l_submit)
+			else
+				a_form.extend (f_set)
+			end
+
+			create f_txt.make ("contact_address_street1")
+			f_txt.set_label ("Street address")
+			f_txt.set_placeholder ("Street #1")
+			f_set.extend (f_txt)
+			if l_address /= Void then
+				f_txt.set_text_value (l_address.line1)
+			end
+
+			create f_txt.make ("contact_address_street2")
+			f_txt.set_placeholder ("Street #2")
+			f_set.extend (f_txt)
+			if l_address /= Void then
+				f_txt.set_text_value (l_address.line2)
+			end
+
+
+			create f_txt.make ("contact_address_city")
+			f_txt.set_label ("City")
+			f_txt.set_placeholder ("City")
+			f_set.extend (f_txt)
+			if l_address /= Void then
+				f_txt.set_text_value (l_address.city)
+			end
+
+			create f_txt.make ("contact_address_zip")
+			f_txt.set_label ("Postal code/ZIP")
+			f_txt.set_placeholder ("Postal code")
+			f_set.extend (f_txt)
+			if l_address /= Void then
+				f_txt.set_text_value (l_address.postal_code)
+			end
+
+			create f_txt.make ("contact_address_state")
+			f_txt.set_label ("State/Region")
+			f_txt.set_placeholder ("State")
+			f_set.extend (f_txt)
+			if l_address /= Void then
+				f_txt.set_text_value (l_address.state)
+			end
+
+			create f_countries.make ("contact_address_country")
+			if l_country = Void then
+				l_country := "US"
+			end
+			f_countries := new_country_field ("contact_address_country", l_country)
+			f_countries.set_label ("Country")
+			f_set.extend (f_countries)
+		end
+
+	new_country_field (a_field_name: READABLE_STRING_8; a_dft_country: detachable READABLE_STRING_GENERAL): WSF_FORM_SELECT
+		local
+			f_opt: WSF_FORM_SELECT_OPTION
+		do
+			create Result.make (a_field_name)
+			across
+				iso_countries as ic
+			loop
+				create f_opt.make (ic.key, ic.item)
+				if a_dft_country /= Void and then a_dft_country.is_case_insensitive_equal (ic.key) then
+					f_opt.set_is_selected (True)
+				end
+				Result.add_option (f_opt)
+			end
+		end
+
+	iso_countries: STRING_TABLE [READABLE_STRING_32]
+		once
+			create Result.make (27)
+			Result ["AU"] := "Australia"
+            Result ["AT"] := "Austria"
+            Result ["BE"] := "Belgium"
+            Result ["BR"] := "Brazil"
+            Result ["CA"] := "Canada"
+            Result ["CN"] := "China"
+            Result ["DK"] := "Denmark"
+            Result ["FI"] := "Finland"
+            Result ["FR"] := "France"
+            Result ["DE"] := "Germany"
+            Result ["HK"] := "Hong Kong"
+            Result ["IE"] := "Ireland"
+            Result ["IT"] := "Italy"
+            Result ["JP"] := "Japan"
+            Result ["LU"] := "Luxembourg"
+            Result ["MY"] := "Malaysia"
+            Result ["MX"] := "Mexico"
+            Result ["NL"] := "Netherlands"
+            Result ["NZ"] := "New Zealand"
+            Result ["NO"] := "Norway"
+            Result ["PT"] := "Portugal"
+            Result ["SG"] := "Singapore"
+            Result ["ES"] := "Spain"
+            Result ["SE"] := "Sweden"
+            Result ["CH"] := "Switzerland"
+            Result ["GB"] := "United Kingdom"
+            Result ["US"] := "United States"
 		end
 
 feature -- Routes

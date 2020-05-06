@@ -23,9 +23,9 @@ feature -- Execution
 			lic: detachable ES_CLOUD_LICENSE
 			s: STRING
 			l_user: ES_CLOUD_USER
-			l_org: ES_CLOUD_ORGANIZATION
 			l_plan_filter: detachable READABLE_STRING_GENERAL
-			orgs: detachable LIST [ES_CLOUD_ORGANIZATION]
+--			l_org: ES_CLOUD_ORGANIZATION
+--			orgs: detachable LIST [ES_CLOUD_ORGANIZATION]
 			lst: LIST [TUPLE [license: ES_CLOUD_LICENSE; user: detachable ES_CLOUD_USER]]
 		do
 			if api.has_permission ("manage es accounts") then

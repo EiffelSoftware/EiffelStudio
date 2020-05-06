@@ -52,7 +52,7 @@ feature -- Access: License
 		deferred
 		end
 
-	user_id_with_license (a_license: ES_CLOUD_LICENSE): INTEGER_64
+	user_id_for_license (a_license: ES_CLOUD_LICENSE): INTEGER_64
 		deferred
 		end
 
@@ -72,7 +72,7 @@ feature -- Element change: license
 
 	assign_license_to_user (a_license: ES_CLOUD_LICENSE; a_user: ES_CLOUD_USER)
 		require
-			user_id_with_license (a_license) = 0
+			user_id_for_license (a_license) = 0
 		deferred
 		end
 

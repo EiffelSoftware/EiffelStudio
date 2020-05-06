@@ -36,6 +36,8 @@ feature {NONE} -- Router/administration
 				a_router.handle (l_base_path + "/carts/{cid}/{provider}/{code}", create {WSF_URI_TEMPLATE_AGENT_HANDLER}.make (agent handle_get_cart_item (?,?,l_mod_api)), a_router.methods_get)
 				a_router.handle (l_base_path + "/carts/{cid}/{provider}/{code}", create {WSF_URI_TEMPLATE_AGENT_HANDLER}.make (agent handle_update_cart_item (?,?,l_mod_api)), a_router.methods_put_post)
 				a_router.handle (l_base_path + "/carts/{cid}/{provider}/{code}", create {WSF_URI_TEMPLATE_AGENT_HANDLER}.make (agent handle_delete_cart_item (?,?,l_mod_api)), a_router.methods_delete)
+
+				a_router.handle (l_base_path + "/carts/{cid}/{provider}/{code}/{field}/{value}", create {WSF_URI_TEMPLATE_AGENT_HANDLER}.make (agent handle_modify_cart_item (?,?,l_mod_api)), a_router.methods_put)
 			end
 		end
 
@@ -174,6 +176,43 @@ feature -- Routes
 					api.save_guest_shopping_cart (l_shop_cart)
 				else
 					api.save_user_shopping_cart (l_shop_cart)
+				end
+				r.add_boolean_field ("Succeed", not api.has_error)
+			else
+				r.add_boolean_field ("Succeed", False)
+			end
+			r.execute
+		end
+
+	handle_modify_cart_item (req: WSF_REQUEST; res: WSF_RESPONSE; api: SHOP_API)
+		local
+			r: like new_response
+			nb: NATURAL_32
+		do
+			r := new_response (req, res, api)
+			if
+				attached shop_cart_and_item (req, api) as l_shop_cart_and_item and then
+				attached l_shop_cart_and_item.cart as l_shop_cart and then
+				attached l_shop_cart_and_item.cart_item as l_shop_item and then
+				attached {WSF_STRING} req.path_parameter ("field") as p_fieldname and then
+				attached {WSF_STRING} req.path_parameter ("value") as p_fieldvalue
+			then
+				if
+					p_fieldname.is_case_insensitive_equal ("quantity") and then
+					p_fieldvalue.is_integer
+				then
+					nb := p_fieldvalue.integer_value.max (0).to_natural_8
+					if nb /= l_shop_item.quantity then
+						l_shop_item.set_quantity (nb)
+						if l_shop_cart.is_guest then
+							api.save_guest_shopping_cart (l_shop_cart)
+						else
+							api.save_user_shopping_cart (l_shop_cart)
+						end
+						r.add_boolean_field ("Succeed", not api.has_error)
+					else
+						r.add_boolean_field ("Succeed", False)
+					end
 				end
 				r.add_boolean_field ("Succeed", not api.has_error)
 			else

@@ -23,6 +23,10 @@ feature -- Store
 		do
 		end
 
+	shopping_cart_by_email (a_email: READABLE_STRING_GENERAL): detachable SHOPPING_CART
+		do
+		end
+
 	shopping_cart_by_id (a_cart_id: like {SHOPPING_CART}.id): detachable SHOPPING_CART
 		do
 		end

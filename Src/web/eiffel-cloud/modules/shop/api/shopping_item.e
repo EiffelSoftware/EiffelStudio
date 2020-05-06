@@ -32,13 +32,53 @@ feature -- Access
 
 feature -- Resolved data
 
+	title: detachable READABLE_STRING_32
+		do
+			if attached details as d then
+				Result := d.title
+			end
+		end
+
 	details: detachable SHOPPING_ITEM_DETAILS assign set_details
+
+	has_details: BOOLEAN
+		do
+			Result := details /= Void
+		end
 
 	is_onetime: BOOLEAN
 		require
 			details /= Void
 		do
 			Result := attached details as d and then d.is_onetime
+		end
+
+	is_yearly: BOOLEAN
+		require
+			details /= Void
+		do
+			Result := attached details as d and then d.is_yearly
+		end
+
+	is_monthly: BOOLEAN
+		require
+			details /= Void
+		do
+			Result := attached details as d and then d.is_monthly
+		end
+
+	is_weekly: BOOLEAN
+		require
+			details /= Void
+		do
+			Result := attached details as d and then d.is_weekly
+		end
+
+	is_daily: BOOLEAN
+		require
+			details /= Void
+		do
+			Result := attached details as d and then d.is_daily
 		end
 
 feature -- Status report

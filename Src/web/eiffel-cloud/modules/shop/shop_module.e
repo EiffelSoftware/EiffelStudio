@@ -74,13 +74,13 @@ feature {CMS_API} -- Module Initialization
 						cfg.set_shop_name (s)
 					end
 					if attached l_cfg.resolved_text_item ("shop.id") as s then
-						cfg.set_shop_id (s)
+						cfg.set_shop_id (s.to_string_8)
 					end
 					if attached l_cfg.resolved_text_item ("shop.cookie_name") as s then
-						cfg.set_cookie_name (s)
+						cfg.set_cookie_name (s.to_string_8)
 					end
 					if attached l_cfg.resolved_text_item ("shop.currency") as s then
-						cfg.set_default_currency (s)
+						cfg.set_default_currency (s.to_string_8)
 					end
 					if attached l_cfg.utf_8_text_item ("shop.base_path") as l_base_path then
 						if l_base_path.starts_with_general ("/") then
@@ -148,7 +148,7 @@ feature -- Access: router
 
 feature -- Helper
 
---	checkout_link (a_category: READABLE_STRING_GENERAL; a_product: READABLE_STRING_GENERAL): STRING
+--	checkout_link (a_category: READABLE_STRING_GENERAL; a_product: READABLE_STRING_GENERAL): READABLE_STRING_8
 --			-- Payment url for category `a_category` and product `a_product`.
 --		do
 --			if attached shop_api as l_shop_api and then l_shop_api.config.is_valid then
@@ -157,19 +157,20 @@ feature -- Helper
 --				Result := {SHOP_CONFIG}.default_base_path + "/not_available"
 --			end
 --		end
-	wipe_out_cart_link (a_cart: SHOPPING_CART): STRING_8
+
+	wipe_out_cart_link (a_cart: SHOPPING_CART): READABLE_STRING_8
 		do
 			if attached shop_api as l_shop_api and then l_shop_api.config.is_valid then
 				Result := l_shop_api.config.base_path + "/" + cart_sub_location + "?remove=all"
 				if attached a_cart.security as l_sec then
-					Result.append ("&security=" + url_encoded (l_sec))
+					Result := Result + "&security=" + url_encoded (l_sec)
 				end
 			else
 				Result := {SHOP_CONFIG}.default_base_path + "/not_available"
 			end
 		end
 
-	submit_single_item_link (a_provider: READABLE_STRING_GENERAL; a_item_code: READABLE_STRING_GENERAL): STRING_8
+	submit_single_item_link (a_provider: READABLE_STRING_GENERAL; a_item_code: READABLE_STRING_GENERAL): READABLE_STRING_8
 		do
 			if attached shop_api as l_shop_api and then l_shop_api.config.is_valid then
 				Result := l_shop_api.config.base_path + "/" + cart_sub_location + "?itemProvider=" + url_encoded (a_provider) + "&itemCode=" + url_encoded (a_item_code)
@@ -229,6 +230,7 @@ feature -- Hook
 			l_sub_item: STRIPE_PAYMENT_SUBSCRIPTION_ITEM
 			l_plan: STRIPE_PLAN
 			l_product_id: READABLE_STRING_GENERAL
+			l_price_in_cents: NATURAL_32
 		do
 			if
 				attached shop_api as l_shop_api and then
@@ -266,16 +268,17 @@ feature -- Hook
 									if not l_details.is_onetime then
 										l_product_id := l_shop_item.provider + "." + l_shop_item.code
 											-- yearly, monthly, ...
+										l_price_in_cents := l_details.price_in_cents * l_shop_item.quantity
 										if l_details.is_yearly then
-											create l_plan.make_yearly (l_details.price_in_cents, l_details.currency, l_details.interval_count, l_product_id)
+											create l_plan.make_yearly (l_price_in_cents, l_details.currency, l_details.interval_count, l_product_id)
 										elseif l_details.is_monthly then
-											create l_plan.make_monthly (l_details.price_in_cents, l_details.currency, l_details.interval_count, l_product_id)
+											create l_plan.make_monthly (l_price_in_cents, l_details.currency, l_details.interval_count, l_product_id)
 										elseif l_details.is_weekly then
-											create l_plan.make_weekly (l_details.price_in_cents, l_details.currency, l_details.interval_count, l_product_id)
+											create l_plan.make_weekly (l_price_in_cents, l_details.currency, l_details.interval_count, l_product_id)
 										elseif l_details.is_daily then
-											create l_plan.make_daily (l_details.price_in_cents, l_details.currency, l_details.interval_count, l_product_id)
+											create l_plan.make_daily (l_price_in_cents, l_details.currency, l_details.interval_count, l_product_id)
 										else
-											create l_plan.make_yearly (l_details.price_in_cents, l_details.currency, l_details.interval_count, l_product_id)
+											create l_plan.make_yearly (l_price_in_cents, l_details.currency, l_details.interval_count, l_product_id)
 										end
 										create l_sub_item.make (if attached l_plan.identifier as l_id then l_id else l_product_id end, l_plan, l_shop_item.quantity)
 										pay.add_item (l_sub_item)
@@ -299,11 +302,10 @@ feature -- Hook
 			l_order: READABLE_STRING_GENERAL
 			l_invoice: STRIPE_INVOICE
 			l_email_addr: READABLE_STRING_8
-			msg: STRING
+			vars: STRING_TABLE [READABLE_STRING_8]
 		do
 			if attached shop_api as l_shop_api then
 				l_invoice := a_validation.subscription.latest_invoice
-
 				if
 					attached l_shop_api.cms_api.user as u and then
 					attached l_shop_api.user_shopping_cart (u) as l_active_cart and then
@@ -347,16 +349,41 @@ feature -- Hook
 					l_email_addr := u.email
 				end
 				if l_email_addr /= Void then
-					create msg.make_empty
-					msg.append ("Thank you for your order at " + l_shop_api.cms_api.site_url + " .%N")
+					create vars.make_caseless (2)
 					if l_invoice /= Void and then attached l_invoice.hosted_invoice_url as l_invoice_url then
-						msg.append ("See your invoice at " + l_invoice_url + " .")
+						vars ["invoice_url"] := l_invoice_url
 					end
-					if attached l_shop_api.cms_api.new_email (l_email_addr, "Thanks for your order", msg) as e then
+					if attached order_confirmation_email (l_email_addr, vars, l_shop_api) as e then
 						l_shop_api.cms_api.process_email (e)
 					end
 				end
 			end
+		end
+
+	order_confirmation_email (a_email_addr: READABLE_STRING_8; vars: STRING_TABLE [READABLE_STRING_8]; a_shop_api: SHOP_API): CMS_EMAIL
+		local
+			res: PATH
+			msg: STRING_8
+		do
+			create res.make_from_string ("templates")
+			if
+				attached a_shop_api.cms_api.module_theme_resource_location (Current, res.extended ("email_order_confirmation.tpl")) as loc and then
+				attached a_shop_api.cms_api.resolved_smarty_template (loc) as tpl
+			then
+				across
+					vars as ic
+				loop
+					tpl.set_value (ic.item, ic.key)
+				end
+				msg := tpl.string
+			else
+				create msg.make_empty
+				msg.append ("Thank you for your order at " + a_shop_api.cms_api.site_url + " .%N")
+				if attached vars["invoice_url"] as l_invoice_url then
+					msg.append ("See your invoice at " + l_invoice_url + " .")
+				end
+			end
+			Result := a_shop_api.cms_api.new_email (a_email_addr, "Thank you for your order", msg)
 		end
 
 end

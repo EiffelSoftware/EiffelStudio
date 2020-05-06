@@ -50,7 +50,7 @@ feature -- Execution
 		local
 			r: like new_generic_response
 			s: STRING_8
-			l_plan: ES_CLOUD_PLAN
+--			l_plan: ES_CLOUD_PLAN
 		do
 			r := new_generic_response (req, res)
 			r.add_style (r.module_name_resource_url ({ES_CLOUD_MODULE}.name, "/files/css/es_cloud.css", Void), Void)
@@ -129,7 +129,10 @@ feature -- Execution
 				s.append ("</div>")
 
 					-- Buy new license button
-				s.append ("<div><div class=%"es-new-license%"><form action=%""+ r.location_url ({ES_CLOUD_MODULE}.licenses_location, Void) +"%" method=%"post%"><input type=%"submit%" class=%"button%" title=%"Buy a new license%" name=%"op%" value=%"Buy new license%"></input></form></div></div>")
+					-- FIXME: remove when licensing is live !
+				if attached u.email as l_email and then l_email.ends_with_general ("@eiffel.com") then
+					s.append ("<div><div class=%"es-new-license%"><form action=%""+ r.location_url ({ES_CLOUD_MODULE}.licenses_location, Void) +"%" method=%"post%"><input type=%"submit%" class=%"button%" title=%"Buy a new license%" name=%"op%" value=%"Buy new license%"></input></form></div></div>")
+				end
 
 					-- List of licenses
 				s.append ("<div class=%"es-licenses%">")

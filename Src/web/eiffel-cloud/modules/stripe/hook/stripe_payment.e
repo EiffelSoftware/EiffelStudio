@@ -27,6 +27,24 @@ feature -- Status
 			is_prepared := True
 		end
 
+	is_empty: BOOLEAN
+		local
+			q: NATURAL_32
+		do
+			Result := True
+			if attached items as lst then
+				if not lst.is_empty then
+					q := 0
+					across
+						lst as ic
+					loop
+						q := q + ic.item.quantity
+					end
+					Result := q = 0
+				end
+			end
+		end
+
 feature -- Access
 
 	category: IMMUTABLE_STRING_32

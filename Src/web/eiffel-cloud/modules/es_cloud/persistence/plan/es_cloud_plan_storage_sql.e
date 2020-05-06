@@ -72,7 +72,7 @@ feature -- Access: License
 					sql_after or has_error
 				loop
 					if attached fetch_license (Void) as lic then
-						uid := sql_read_integer_64 (11)
+						uid := sql_read_integer_64 (12)
 						if uid /= 0 then
 							u := create {CMS_PARTIAL_USER}.make_with_id (uid)
 						else
@@ -104,7 +104,7 @@ feature -- Access: License
 					sql_after or has_error
 				loop
 					if attached fetch_license (a_plan) as lic then
-						uid := sql_read_integer_64 (11)
+						uid := sql_read_integer_64 (12)
 						if uid /= 0 then
 							u := create {CMS_PARTIAL_USER}.make_with_id (uid)
 						else
@@ -152,7 +152,7 @@ feature -- Access: License
 			sql_finalize_query (sql_select_license_by_key)
 		end
 
-	user_id_with_license (a_license: ES_CLOUD_LICENSE): INTEGER_64
+	user_id_for_license (a_license: ES_CLOUD_LICENSE): INTEGER_64
 		local
 			l_params: STRING_TABLE [detachable ANY]
 		do
@@ -238,15 +238,16 @@ feature -- Element change: license
 			l_is_new := not a_license.has_id
 			reset_error
 			if l_is_new then
-				create l_params.make (7)
-			else
 				create l_params.make (8)
+			else
+				create l_params.make (9)
 				l_params.force (a_license.id, "lid")
 			end
 			l_params.force (a_license.plan.id, "pid")
 			l_params.force (a_license.key, "key")
 			l_params.force (a_license.platform, "platform")
 			l_params.force (a_license.version, "version")
+			l_params.force (a_license.status, "status")
 			l_params.force (a_license.creation_date, "creation")
 			l_params.force (a_license.expiration_date, "expiration")
 			l_params.force (a_license.fallback_date, "fallback")
@@ -406,13 +407,17 @@ feature {NONE} -- Fetcher
 			if attached sql_read_string_32 (i + 2) as s then
 				Result.set_version (s)
 			end
-			if attached sql_read_date_time (i + 3) as dt then
+			if attached sql_read_integer_32 (i + 3) as st then
+				Result.set_status (st)
+			end
+
+			if attached sql_read_date_time (i + 4) as dt then
 				Result.set_creation_date (dt)
 			end
-			if attached sql_read_date_time (i + 4) as dt then
+			if attached sql_read_date_time (i + 5) as dt then
 				Result.set_expiration_date (dt)
 			end
-			if attached sql_read_date_time (i + 5) as dt then
+			if attached sql_read_date_time (i + 6) as dt then
 				Result.set_fallback_date (dt)
 			end
 		end
@@ -435,16 +440,16 @@ feature {NONE} -- Queries: licenses
 
 	sql_last_inserted_license_id: STRING = "SELECT MAX(lid) FROM es_licenses;"
 
-	sql_insert_license: STRING = "INSERT INTO es_licenses (pid, key, platform, version, creation, expiration, fallback) VALUES (:pid, :key, :platform, :version, :creation, :expiration, :fallback);"
+	sql_insert_license: STRING = "INSERT INTO es_licenses (pid, key, platform, version, status, creation, expiration, fallback) VALUES (:pid, :key, :platform, :version, :status, :creation, :expiration, :fallback);"
 
-	sql_update_license: STRING = "UPDATE es_licenses SET pid=:pid, key=:key, platform=:platform, version=:version, creation=:creation, expiration=:expiration, fallback=:fallback WHERE lid=:lid;"
+	sql_update_license: STRING = "UPDATE es_licenses SET pid=:pid, key=:key, platform=:platform, version=:version, status=:status, creation=:creation, expiration=:expiration, fallback=:fallback WHERE lid=:lid;"
 
 	sql_delete_license: STRING = "DELETE FROM es_licenses WHERE lid=:lid;"
 
 	sql_select_licenses: STRING = "[
 			SELECT 
 				lic.lid, lic.key, lic.pid, es_plans.name, es_plans.data,
-				lic.platform, lic.version, lic.creation, lic.expiration, lic.fallback,
+				lic.platform, lic.version, lic.status, lic.creation, lic.expiration, lic.fallback,
 				es_licenses_users.uid
 			FROM es_licenses AS lic 
 			INNER JOIN es_plans ON lic.pid = es_plans.pid 
@@ -455,7 +460,7 @@ feature {NONE} -- Queries: licenses
 	sql_select_licenses_by_plan: STRING = "[
 			SELECT
 				lic.lid, lic.key, lic.pid,
-				lic.platform, lic.version, lic.creation, lic.expiration, lic.fallback,
+				lic.platform, lic.version, lic.status, lic.creation, lic.expiration, lic.fallback,
 				es_licenses_users.uid
 			FROM es_licenses AS lic
 			INNER JOIN es_licenses_users ON lic.lid = es_licenses_users.lid
@@ -466,7 +471,7 @@ feature {NONE} -- Queries: licenses
 	sql_select_license_by_id: STRING = "[
 			SELECT
 				lic.lid, lic.key, lic.pid, es_plans.name, es_plans.data,
-				lic.platform, lic.version, lic.creation, lic.expiration, lic.fallback
+				lic.platform, lic.version, lic.status, lic.creation, lic.expiration, lic.fallback
 			FROM es_licenses AS lic INNER JOIN es_plans ON lic.pid = es_plans.pid
 			WHERE lic.lid=:lid
 			;
@@ -475,7 +480,7 @@ feature {NONE} -- Queries: licenses
 	sql_select_license_by_key: STRING = "[
 			SELECT
 				lic.lid, lic.key, lic.pid, es_plans.name, es_plans.data,
-				lic.platform, lic.version, lic.creation, lic.expiration, lic.fallback
+				lic.platform, lic.version, lic.status, lic.creation, lic.expiration, lic.fallback
 			FROM es_licenses AS lic INNER JOIN es_plans ON lic.pid = es_plans.pid
 			WHERE lower(lic.key)=:lowerkey
 			;

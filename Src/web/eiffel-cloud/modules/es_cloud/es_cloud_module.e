@@ -66,12 +66,16 @@ feature {CMS_MODULE} -- Access control
 			Result.force (perm_manage_es_accounts)
 			Result.force (perm_view_es_accounts)
 			Result.force (perm_discard_own_installations)
+			Result.force (perm_view_any_es_activities)
+			Result.force (perm_view_es_sessions)
 		end
 
 feature -- Access control
 
 	perm_manage_es_accounts: STRING = "manager es accounts"
 	perm_view_es_accounts: STRING = "view es accounts"
+	perm_view_any_es_activities: STRING = "view any es activities"
+	perm_view_es_sessions: STRING = "view es sessions"
 	perm_discard_own_installations: STRING = "discard own installations"
 	perm_manage_es_licenses: STRING = "manager es licenses"
 
@@ -208,12 +212,16 @@ feature -- Hook
 						a_cart.is_currency_accepted (l_store_item.currency)
 					then
 						l_quantity := a_cart_item.quantity
-						l_price := l_store_item.price * l_quantity
-						l_cents_price := l_store_item.cents_price * l_quantity
-						if l_cents_price > 99 then
-							l_price := l_price + l_cents_price // 100
-							l_cents_price := l_cents_price \\ 100
-						end
+--						l_price := l_store_item.price * l_quantity
+--						l_cents_price := l_store_item.cents_price * l_quantity
+--						if l_cents_price > 99 then
+--							l_price := l_price + l_cents_price // 100
+--							l_cents_price := l_cents_price \\ 100
+--						end
+
+						l_price := l_store_item.price
+						l_cents_price := l_store_item.cents_price
+
 
 						create d
 						d.set_price (l_price, l_cents_price, l_store_item.currency)
@@ -226,6 +234,7 @@ feature -- Hook
 						elseif l_store_item.is_daily then
 							d.set_daily (1)
 						end
+						d.set_title (l_store_item.title)
 						a_cart_item.set_details (d)
 					end
 				end
@@ -240,12 +249,14 @@ feature -- Hook
 		do
 			if
 				attached es_cloud_api as api and then
-				attached api.active_user as l_user and then
 				attached api.store (a_cart.currency) as l_store
 			then
 				l_prov_name := api.config.shop_provider_name
 				if a_cart_item.provider.is_case_insensitive_equal_general (l_prov_name) then
+					--TODO: check invoice email instead!!!
+
 					if
+						attached api.active_user as l_user and then
 						attached l_store.item (a_cart_item.code) as l_store_item and then
 						a_cart.is_currency_accepted (l_store_item.currency)
 					then

@@ -1,6 +1,6 @@
 /* ALTER */
-ALTER TABLE es_test RENAME TO es_test_tmp;
-CREATE TABLE es_test (
+ALTER TABLE es_installations RENAME TO es_installations_old;
+CREATE TABLE es_installations (
   `iid` VARCHAR(255) PRIMARY KEY NOT NULL ,
   `lid`	INTEGER NOT NULL,
   `name` TEXT,
@@ -8,7 +8,7 @@ CREATE TABLE es_test (
   `status` INTEGER NOT NULL,
   `creation` DATETIME NOT NULL
 );
-DROP TABLE es_test_tmp;
+/* DROP TABLE es_installations_old; */
 
 /* Addition */
 
@@ -18,6 +18,7 @@ CREATE TABLE es_licenses(
   `key` TEXT NOT NULL,
   `platform` TEXT,
   `version` TEXT,
+  `status` INTEGER,
   `creation` DATETIME NOT NULL,
   `expiration` DATETIME,
   `fallback` DATETIME
@@ -27,5 +28,11 @@ CREATE TABLE es_licenses_users(
   `lid` INTEGER NOT NULL,
   `uid`	INTEGER NOT NULL,
   CONSTRAINT PK_lid_uid_key PRIMARY KEY (lid,uid)
+);
+
+CREATE TABLE es_licenses_orgs(
+  `lid` INTEGER NOT NULL,
+  `oid`	INTEGER NOT NULL,
+  CONSTRAINT PK_lid_oid_key PRIMARY KEY (lid,oid)
 );
 

@@ -29,7 +29,8 @@ feature -- Access: installations
 
 feature -- Access: sessions
 
-	last_user_session (a_user: ES_CLOUD_USER): detachable ES_CLOUD_SESSION
+	last_user_session (a_user: ES_CLOUD_USER; a_installation: detachable ES_CLOUD_INSTALLATION): detachable ES_CLOUD_SESSION
+			-- Last user session, and only for installation `a_installation` is provided.
 		deferred
 		end
 

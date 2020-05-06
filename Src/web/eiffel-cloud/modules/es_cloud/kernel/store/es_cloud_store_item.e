@@ -24,6 +24,8 @@ feature -- Access
 
 	name: detachable IMMUTABLE_STRING_32
 
+	title: detachable IMMUTABLE_STRING_32
+
 	price: NATURAL_32
 
 	cents_price: NATURAL_32
@@ -91,6 +93,15 @@ feature -- Status report
 		end
 
 feature -- Element change
+
+	set_title (a_title: detachable READABLE_STRING_GENERAL)
+		do
+			if a_title = Void then
+				title := Void
+			else
+				create title.make_from_string_general (a_title)
+			end
+		end
 
 	set_name (a_name: READABLE_STRING_GENERAL)
 		do

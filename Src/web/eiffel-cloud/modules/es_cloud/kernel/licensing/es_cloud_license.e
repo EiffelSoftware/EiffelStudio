@@ -36,6 +36,9 @@ feature -- Access
 	version: detachable IMMUTABLE_STRING_32
 			-- Limited to version
 
+	status: INTEGER
+			-- Status value.
+
 	creation_date: DATE_TIME
 
 	expiration_date: detachable DATE_TIME
@@ -58,11 +61,21 @@ feature -- Status report
 
 	is_active: BOOLEAN
 		do
-			if attached expiration_date as l_exp_date then
+			if is_suspended then
+					-- False
+			elseif attached expiration_date as l_exp_date then
 				Result := l_exp_date >= (create {DATE_TIME}.make_now_utc)
 			else
 				Result := True
 			end
+		end
+
+	is_suspended: BOOLEAN
+			-- License suspended
+			--| note: could be due to failing payment
+			--|		  or manual decision
+		do
+			Result := status = status_suspended
 		end
 
 	is_expired: BOOLEAN
@@ -115,12 +128,7 @@ feature -- License validity
 		do
 			Result := True
 			if is_active then
-				if
-					attached platform as l_platform and then
-					(pf = Void or else not pf.is_case_insensitive_equal (l_platform))
-				then
-					Result := False
-				end
+				Result := Result and then is_accepted_platform (pf)
 				if
 					attached version as l_version and then
 					(a_prod_version = Void or else not a_prod_version.is_case_insensitive_equal (l_version))
@@ -134,17 +142,45 @@ feature -- License validity
 					then
 						Result := False
 					end
-					if
-						attached platform as l_platform and then
-						(pf = Void or else not pf.is_case_insensitive_equal (l_platform))
-					then
-						Result := False
-					end
+					Result := Result and then is_accepted_platform (pf)
 				else
 					Result := False
 				end
 			else
 				Result := False
+			end
+		end
+
+	is_accepted_platform (pf: detachable READABLE_STRING_GENERAL): BOOLEAN
+		do
+			if attached platform as l_platform then
+				if pf = Void then
+					Result := False
+				elseif pf.is_case_insensitive_equal (l_platform) then
+					Result := True
+				elseif generic_platform_name (pf).is_case_insensitive_equal (l_platform) then
+					Result := True
+				else
+					Result := False
+				end
+			else
+				Result := True
+			end
+		end
+
+	generic_platform_name (v: READABLE_STRING_GENERAL): READABLE_STRING_GENERAL
+		do
+			if
+				v.is_case_insensitive_equal ("windows")
+				or v.is_case_insensitive_equal ("win64")
+			then
+				Result := platform_windows
+			elseif v.as_lower.starts_with ("linux") then
+				Result := platform_linux
+			elseif v.as_lower.starts_with ("macos") then
+				Result := platform_macos
+			else
+				Result := v
 			end
 		end
 
@@ -160,18 +196,19 @@ feature -- Element change
 			if v = Void then
 				platform := Void
 			else
-				if
-					v.is_case_insensitive_equal ("windows")
-					or 	v.is_case_insensitive_equal ("win64")
-				then
-					platform := platform_windows
-				elseif v.as_lower.starts_with ("linux") then
-					platform := platform_linux
-				elseif v.as_lower.starts_with ("macos") then
-					platform := platform_macos
-				else
+				-- Do not use general platform, but specific!
+--				if
+--					v.is_case_insensitive_equal ("windows")
+--					or 	v.is_case_insensitive_equal ("win64")
+--				then
+--					platform := platform_windows
+--				elseif v.as_lower.starts_with ("linux") then
+--					platform := platform_linux
+--				elseif v.as_lower.starts_with ("macos") then
+--					platform := platform_macos
+--				else
 					create platform.make_from_string_general (v)
-				end
+--				end
 			end
 		end
 
@@ -194,6 +231,23 @@ feature -- Element change
 			expiration_date := dt
 		end
 
+	set_status (st: like status)
+		do
+			status := st
+		end
+
+	suspend
+		do
+			status := status_suspended
+		end
+
+	resume
+		require
+			is_suspended
+		do
+			status := 0
+		end
+
 	set_remaining_days (nb_days: NATURAL_32)
 		local
 			dt: DATE_TIME
@@ -209,6 +263,8 @@ feature -- Element change
 		end
 
 feature -- Constants
+
+	status_suspended: INTEGER = 8
 
 	platform_windows: IMMUTABLE_STRING_32
 		once

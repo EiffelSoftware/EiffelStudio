@@ -99,19 +99,30 @@ feature -- Access: installations
 
 feature -- Access: sessions		
 
-	last_user_session (a_user: ES_CLOUD_USER): detachable ES_CLOUD_SESSION
+	last_user_session (a_user: ES_CLOUD_USER; a_installation: detachable ES_CLOUD_INSTALLATION): detachable ES_CLOUD_SESSION
 		local
 			l_params: STRING_TABLE [detachable ANY]
 		do
 			reset_error
-			create l_params.make (1)
+			create l_params.make (2)
 			l_params.force (a_user.id, "uid")
-			sql_query (sql_select_last_user_session, l_params)
-			sql_start
-			if not has_error and not sql_after then
-				Result := fetch_user_session (a_user)
+			if a_installation = Void then
+				sql_query (sql_select_last_user_session, l_params)
+				sql_start
+				if not has_error and not sql_after then
+					Result := fetch_user_session (a_user)
+				end
+				sql_finalize_query (sql_select_last_user_session)
+			else
+				l_params.force (a_installation.id, "iid")
+				sql_query (sql_select_last_user_session_for_installation, l_params)
+				sql_start
+				if not has_error and not sql_after then
+					Result := fetch_user_session (a_user)
+				end
+				sql_finalize_query (sql_select_last_user_session_for_installation)
+
 			end
-			sql_finalize_query (sql_select_last_user_session)
 		end
 
 	last_license_session (a_license: ES_CLOUD_LICENSE): detachable ES_CLOUD_SESSION
@@ -334,6 +345,8 @@ feature {NONE} -- Sessions
 	sql_delete_installation_sessions: STRING = "DELETE FROM es_sessions WHERE iid=:iid AND uid=:uid;"
 
 	sql_select_last_user_session: STRING = "SELECT sid, iid, uid, state, first, last, title FROM es_sessions WHERE uid=:uid ORDER BY last DESC LIMIT 1;"
+
+	sql_select_last_user_session_for_installation: STRING = "SELECT sid, iid, uid, state, first, last, title FROM es_sessions WHERE iid=:iid AND uid=:uid ORDER BY last DESC LIMIT 1;"
 
 	sql_select_last_user_session_by_license: STRING = "[
 	

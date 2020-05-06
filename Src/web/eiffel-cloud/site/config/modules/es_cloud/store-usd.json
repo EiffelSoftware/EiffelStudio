@@ -1,11 +1,10 @@
 {
-	"perso-dly": {
+	"perso-yly": {
 		"plan": "perso",
-		"title": "Personal (daily)",
-		"price": 1,
-		"price.cents": 0,
+		"title": "Personal (yearly)",
+		"price": 145,
 		"currency": "usd",
-		"interval": "day"
+		"interval": "year"
 	},
 	"perso-mly": {
 		"plan": "perso",
@@ -15,10 +14,18 @@
 		"currency": "usd",
 		"interval": "month"
 	},
-	"perso-yly": {
+	"perso-dly": {
 		"plan": "perso",
-		"title": "Personal (yearly)",
-		"price": 145,
+		"title": "Personal (daily)",
+		"price": 1,
+		"price.cents": 0,
+		"currency": "usd",
+		"interval": "day"
+	},
+	"pro-yly": {
+		"plan": "pro",
+		"title": "Professional (yearly)",
+		"price": 495,
 		"currency": "usd",
 		"interval": "year"
 	},
@@ -29,13 +36,6 @@
 		"price.cents": 50,
 		"currency": "usd",
 		"interval": "month"
-	},
-	"pro-yly": {
-		"plan": "pro",
-		"title": "Professional (yearly)",
-		"price": 495,
-		"currency": "usd",
-		"interval": "year"
 	},
 	"pro-test": {
 		"plan": "pro",

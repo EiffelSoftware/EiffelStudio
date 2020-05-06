@@ -142,6 +142,16 @@ feature -- Access: licenses
 			Result := es_cloud_storage.license_by_key (a_license_key)
 		end
 
+	user_for_license (a_license: ES_CLOUD_LICENSE): detachable ES_CLOUD_USER
+		local
+			uid: INTEGER_64
+		do
+			uid := es_cloud_storage.user_id_for_license (a_license)
+			if uid /= 0 and then attached cms_api.user_api.user_by_id (uid) as u then
+				create Result.make (u)
+			end
+		end
+
 	user_has_license (a_user: ES_CLOUD_USER; a_license_id: INTEGER_64): BOOLEAN
 		do
 			Result := es_cloud_storage.user_has_license (a_user, a_license_id)
@@ -250,6 +260,7 @@ feature -- Access: store
 								end
 								create l_item.make (ic.item)
 								l_item.set_price (l_price.to_natural_32, l_cents, l_currency.to_string_8, tb.item ("interval"))
+								l_item.set_title (tb.item ("title"))
 								l_item.set_name (l_plan)
 								Result.extend (l_item)
 							end
@@ -345,9 +356,10 @@ feature -- Access: subscriptions
 			create {QUICK_SORTER [ES_CLOUD_INSTALLATION]} Result.make (comp)
 		end
 
-	last_user_session (a_user: ES_CLOUD_USER): detachable ES_CLOUD_SESSION
+	last_user_session (a_user: ES_CLOUD_USER; a_installation: detachable ES_CLOUD_INSTALLATION): detachable ES_CLOUD_SESSION
+			-- Last user session, and only for installation `a_installation` is provided.
 		do
-			Result := es_cloud_storage.last_user_session (a_user)
+			Result := es_cloud_storage.last_user_session (a_user, a_installation)
 		end
 
 	last_license_session (a_license: ES_CLOUD_LICENSE): detachable ES_CLOUD_SESSION

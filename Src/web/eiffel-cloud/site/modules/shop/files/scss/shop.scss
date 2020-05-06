@@ -1,5 +1,79 @@
+div.shop-cart-page {
+	margin: 0;
+	padding: 0;
+	
+	div.identification {
+		border-bottom: solid 1px #ccc;
+		margin: 2rem 0 0 0;
+
+		label {
+			font-style: italic;
+		}
+	}
+	div.legals {
+		border-bottom: solid 1px #ccc;
+		margin: .5rem 0 1rem 0;
+		>div {
+			padding: 1rem;
+			input[type=checkbox] {
+				margin-right: .5rem;
+			}
+		}
+	}
+	select, input[type=email] {
+		padding: 1rem;
+		margin: 1rem;
+	}
+
+	input[type=email] {
+		width: 20rem;
+	}
+	div.error {
+		line-height: 1.5rem;
+		background-color: #ffcccccc;
+		color: #900;
+		border: solid 2px red;
+		padding: 1rem;
+		margin-bottom: 1rem;
+	}
+
+	div.description {
+		font-style: italic;
+		padding-left: 2rem;
+		color: #333;
+	}
+
+	a.button, input[type=submit] {
+	  margin: 1rem;
+	  padding: .5rem;
+	  color: #fff;
+	  background-color: #00a6fd;
+	  border-radius: 20px;
+	  border: solid .3rem #00a6fd;
+	  font-size: 110%;
+	  font-weight: bold;
+	}
+	a.button:hover, input[type=submit]:hover {
+	  color: #00a6fd;
+	  border: solid .3rem #00a6fd;
+	  background-color: #00a6fd20;
+	}
+}
 div.shop-cart {
 	position: relative;
+
+	div.quantity-modifier {
+		padding-left: 1rem;
+		display: inline-block;
+		color: #00f;
+		cursor: default;
+		span.more {
+			cursor: zoom-in;
+		}
+		span.less {
+			cursor: zoom-out;
+		}
+	}
 
 	button.remover {
 	}
@@ -34,6 +108,23 @@ div.shop-cart {
 			td.cart-item-count {
 				width: 15%;
 				color: green;
+			}
+		}
+		tr.total {
+			td {
+				padding: 1rem .2rem 1rem .2rem;
+			}
+			td.title {
+				background-color: #fffbd7cc;
+				border: solid 1px #999;
+				border-right: none;
+				text-align: right;
+			}
+			td.total {
+				background-color: #fffbd7cc;
+				font-weight: bold;
+				border: solid 1px #999;
+				border-left: none;
 			}
 		}
 	}

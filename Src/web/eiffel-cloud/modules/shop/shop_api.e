@@ -55,11 +55,16 @@ feature -- Access
 		local
 			s: STRING_32
 			i: INTEGER
-
+			u: CMS_USER
 		do
-			if attached cms_api.user as u then
+			u := cms_api.user
+			if u /= Void then
 				Result := user_shopping_cart (u)
-			elseif attached {WSF_STRING} req.cookie (config.cookie_name) as p_cookie then
+			end
+			if
+				(Result = Void or else Result.is_empty) and then
+				attached {WSF_STRING} req.cookie (config.cookie_name) as p_cookie
+			then
 				s := p_cookie.value
 				i := s.substring_index ("guest_shop_cid=", 1)
 				if i = 1 then
@@ -77,6 +82,10 @@ feature -- Access
 				end
 --				create Result.make_guest
 --				Result.set_items_from_json_string (utf_8_encoded (p_cookie.value))
+				if u /= Void and then Result /= Void and then Result.is_guest then
+					Result.set_owner (u)
+					save_user_shopping_cart (Result)
+				end
 			end
 			if Result /= Void then
 				Result.set_currency (config.default_currency)
@@ -149,6 +158,19 @@ feature -- Hook invokation
 				loop
 					if attached {SHOP_HOOK} ic.item as h then
 						h.fill_cart (a_cart)
+					end
+				end
+			end
+		end
+
+	invoke_shop_fill_cart_item (a_cart: SHOPPING_CART; a_cart_item: SHOPPING_ITEM)
+		do
+			if attached cms_api.hooks.subscribers ({SHOP_HOOK}) as lst then
+				across
+					lst as ic
+				loop
+					if attached {SHOP_HOOK} ic.item as h then
+						h.fill_cart_item (a_cart, a_cart_item)
 					end
 				end
 			end

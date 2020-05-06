@@ -73,20 +73,29 @@ function showCardError(error) {
   }, 8000);
 }
 
+function customer_form_value(fn, box) {
+  w = box.querySelector('#' + fn);
+  if (w == null) {
+	return null;
+  } else {
+	return w.value;
+  }
+}
+
 var createPaymentMethodAndCustomer = function(stripe, card) {
   var customer = {address: {}};
 
 	// Get data from html form
-  customer['email'] = eStripeMod.main_box.querySelector('#customer-email').value;
-  customer['name'] = eStripeMod.main_box.querySelector('#customer-name').value;
-  customer['phone'] = eStripeMod.main_box.querySelector('#customer-phone').value;
-  customer['address']['line1'] = eStripeMod.main_box.querySelector('#customer-address-line1').value;
-  customer['address']['line2'] = eStripeMod.main_box.querySelector('#customer-address-line2').value;
-  customer['address']['city'] = eStripeMod.main_box.querySelector('#customer-address-city').value;
-  customer['address']['postal_code'] = eStripeMod.main_box.querySelector('#customer-address-postal-code').value;
-  customer['address']['state'] = eStripeMod.main_box.querySelector('#customer-address-state').value;
-  //customer['address']['country'] = eStripeMod.main_box.querySelector('#customer-address-country').value;
-  var cardItems = eStripeMod.main_box.querySelector('#items').value;
+  customer['email'] = customer_form_value('customer-email', eStripeMod.main_box);
+  customer['name'] = customer_form_value ('customer-name', eStripeMod.main_box);
+  customer['phone'] = customer_form_value ('customer-phone', eStripeMod.main_box);
+  customer['address']['line1'] = customer_form_value ('customer-address-line1', eStripeMod.main_box);
+  customer['address']['line2'] = customer_form_value ('customer-address-line2', eStripeMod.main_box);
+  customer['address']['city'] = customer_form_value ('customer-address-city', eStripeMod.main_box);
+  customer['address']['postal_code'] = customer_form_value ('customer-address-postal-code', eStripeMod.main_box);
+  customer['address']['state'] = customer_form_value ('customer-address-state', eStripeMod.main_box);
+  customer['address']['country'] = customer_form_value ('customer-address-country', eStripeMod.main_box);
+  var cardItems = customer_form_value ('items', eStripeMod.main_box);
 
   stripe
     .createPaymentMethod('card', card, {

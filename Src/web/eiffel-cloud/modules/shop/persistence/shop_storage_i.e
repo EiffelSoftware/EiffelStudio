@@ -21,6 +21,10 @@ feature -- Store
 		deferred
 		end
 
+	shopping_cart_by_email (a_email: READABLE_STRING_GENERAL): detachable SHOPPING_CART
+		deferred
+		end
+
 	shopping_cart_by_id (a_cart_id: like {SHOPPING_CART}.id): detachable SHOPPING_CART
 		require
 			a_cart_id > 0

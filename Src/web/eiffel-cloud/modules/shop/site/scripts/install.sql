@@ -1,6 +1,7 @@
 CREATE TABLE shop_carts(
   `cid` INTEGER PRIMARY KEY AUTO_INCREMENT NOT NULL,
-  `uid` INTEGER NOT NULL,
+  `uid` INTEGER,
+  `email` TEXT,
   `security` TEXT,
   `changed` DATETIME,
   `items`	TEXT NOT NULL,

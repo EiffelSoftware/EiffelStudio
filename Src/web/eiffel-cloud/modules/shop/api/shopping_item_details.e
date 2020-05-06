@@ -44,6 +44,8 @@ feature -- Access
 			Result.append_string (currency)
 		end
 
+	title: detachable READABLE_STRING_32
+
 feature -- Interval types
 
 	interval_type: NATURAL_8
@@ -160,6 +162,15 @@ feature -- Element change
 			interval_count := a_count
 		ensure
 			is_yearly
+		end
+
+	set_title (s: detachable READABLE_STRING_GENERAL)
+		do
+			if s = Void then
+				title := Void
+			else
+				title := s.to_string_32
+			end
 		end
 
 end

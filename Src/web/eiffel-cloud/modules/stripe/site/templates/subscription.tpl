@@ -38,7 +38,7 @@
                     id="customer-phone"
                     placeholder="Phone"
                     class="sr-input"
-                    value=""
+                    value="{htmlentities}{$customer_phone/}{/htmlentities}"
                   />
 				  </div>
 				</div>
@@ -51,14 +51,14 @@
                     id="customer-address-line1"
                     placeholder="Street #1"
                     class="sr-input"
-                    value=""
+                    value="{htmlentities}{$customer_address_street1/}{/htmlentities}"
                   />
                   <input
                     type="text"
                     id="customer-address-line2"
                     placeholder="Street #2"
                     class="sr-input"
-                    value=""
+                    value="{htmlentities}{$customer_address_street2/}{/htmlentities}"
                   />
 				  <label for="customer-address-city">City:</label>
                   <input
@@ -66,7 +66,7 @@
                     id="customer-address-city"
                     placeholder="City"
                     class="sr-input"
-                    value=""
+                    value="{htmlentities}{$customer_address_city/}{/htmlentities}"
                   />
 				  <label for="customer-address-postal-code">Postal code/ZIP:</label>
                   <input
@@ -82,18 +82,43 @@
                     id="customer-address-state"
                     placeholder="State"
                     class="sr-input"
-                    value=""
+                    value="{htmlentities}{$customer_address_state/}{/htmlentities}"
                   />
-				  <!--
 				  <label for="customer-address-country">Country:</label>
-                  <input
-                    type="text"
-                    id="customer-address-country"
-                    placeholder="Country"
-                    class="sr-input"
-                    value=""
-                  />
-				  -->
+					<select name="customer-address-country" 
+					  id="customer-address-country"
+                      class="sr-input"
+					>
+					  <option value="">...</option>
+					  <option value="AU" {if condition="$customer_address_country ~ 'AU'"}selected="selected"{/if}>Australia</option>
+					  <option value="AT" {if condition="$customer_address_country ~ 'AT'"}selected="selected"{/if}>Austria</option>
+					  <option value="BE" {if condition="$customer_address_country ~ 'BE'"}selected="selected"{/if}>Belgium</option>
+					  <option value="BR" {if condition="$customer_address_country ~ 'BR'"}selected="selected"{/if}>Brazil</option>
+					  <option value="CA" {if condition="$customer_address_country ~ 'CA'"}selected="selected"{/if}>Canada</option>
+					  <option value="CN" {if condition="$customer_address_country ~ 'CN'"}selected="selected"{/if}>China</option>
+					  <option value="DK" {if condition="$customer_address_country ~ 'DK'"}selected="selected"{/if}>Denmark</option>
+					  <option value="FI" {if condition="$customer_address_country ~ 'FI'"}selected="selected"{/if}>Finland</option>
+					  <option value="FR" {if condition="$customer_address_country ~ 'FR'"}selected="selected"{/if}>France</option>
+					  <option value="DE" {if condition="$customer_address_country ~ 'DE'"}selected="selected"{/if}>Germany</option>
+					  <option value="HK" {if condition="$customer_address_country ~ 'HK'"}selected="selected"{/if}>Hong Kong</option>
+					  <option value="IE" {if condition="$customer_address_country ~ 'IE'"}selected="selected"{/if}>Ireland</option>
+					  <option value="IT" {if condition="$customer_address_country ~ 'IT'"}selected="selected"{/if}>Italy</option>
+					  <option value="JP" {if condition="$customer_address_country ~ 'JP'"}selected="selected"{/if}>Japan</option>
+					  <option value="LU" {if condition="$customer_address_country ~ 'LU'"}selected="selected"{/if}>Luxembourg</option>
+					  <option value="MY" {if condition="$customer_address_country ~ 'MY'"}selected="selected"{/if}>Malaysia</option>
+					  <option value="MX" {if condition="$customer_address_country ~ 'MX'"}selected="selected"{/if}>Mexico</option>
+					  <option value="NL" {if condition="$customer_address_country ~ 'NL'"}selected="selected"{/if}>Netherlands</option>
+					  <option value="NZ" {if condition="$customer_address_country ~ 'NZ'"}selected="selected"{/if}>New Zealand</option>
+					  <option value="NO" {if condition="$customer_address_country ~ 'NO'"}selected="selected"{/if}>Norway</option>
+					  <option value="PT" {if condition="$customer_address_country ~ 'PT'"}selected="selected"{/if}>Portugal</option>
+					  <option value="SG" {if condition="$customer_address_country ~ 'SG'"}selected="selected"{/if}>Singapore</option>
+					  <option value="ES" {if condition="$customer_address_country ~ 'ES'"}selected="selected"{/if}>Spain</option>
+					  <option value="SE" {if condition="$customer_address_country ~ 'SE'"}selected="selected"{/if}>Sweden</option>
+					  <option value="CH" {if condition="$customer_address_country ~ 'CH'"}selected="selected"{/if}>Switzerland</option>
+					  <option value="GB" {if condition="$customer_address_country ~ 'GB'"}selected="selected"{/if}>United Kingdom</option>
+					  <option value="US" {if condition="$customer_address_country ~ 'US'"}selected="selected"{/if}>United States</option>
+					</select>
+				  </label>
 				  </div> <!-- info -->
                   <input
                     type="hidden"

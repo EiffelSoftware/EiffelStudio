@@ -15,7 +15,7 @@ feature {NONE} -- Initialization
 	make
 		do
 			session_expiration_delay := 60 -- minutes
-			shop_provider_name := "EiffelStudio"
+			shop_provider_name := "Eiffel Software"
 		end
 
 feature -- Access

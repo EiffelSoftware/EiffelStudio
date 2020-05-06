@@ -57,14 +57,30 @@ feature -- Execution
 	handle_get_cart (req: WSF_REQUEST; res: WSF_RESPONSE)
 		local
 			r: like new_generic_response
+		do
+			r := cart_get_response (req, res, Void)
+			r.execute
+		end
+
+	cart_get_response (req: WSF_REQUEST; res: WSF_RESPONSE; a_error_html_message: detachable READABLE_STRING_8): like new_generic_response
+		local
 			l_html: STRING_8
 			l_cart: SHOPPING_CART
 			l_cart_count: NATURAL_32
+			l_email,
+			l_button_title: READABLE_STRING_GENERAL
+			l_user: CMS_USER
+			l_is_new_customer: BOOLEAN
+			l_form: CMS_FORM
+			f_email: WSF_FORM_EMAIL_INPUT
+			f: WSF_FORM_FIELD
+			f_submit: WSF_FORM_SUBMIT_INPUT
+			l_agreement_cb, l_consent_cb: WSF_FORM_CHECKBOX_INPUT
 		do
-			r := new_generic_response (req, res)
-			r.add_style (r.module_resource_url (module, "/files/css/shop.css", Void), Void)
-			r.add_javascript_url (r.module_resource_url (module, "/files/js/shop.js", Void))
-			r.set_title ("Your shopping cart")
+			Result := new_generic_response (req, res)
+			Result.add_style (Result.module_resource_url (module, "/files/css/shop.css", Void), Void)
+			Result.add_javascript_url (Result.module_resource_url (module, "/files/js/shop.js", Void))
+			Result.set_title ("Your shopping cart")
 			create l_html.make (1024)
 			l_cart := shop_api.active_shopping_cart (req)
 			if
@@ -74,33 +90,148 @@ feature -- Execution
 			then
 				shop_api.clear_shopping_cart (l_cart)
 			end
-			append_cart_to_html (l_cart, l_html)
+			l_html.append ("<div class=%"shop-cart-page%">")
+			if a_error_html_message /= Void then
+				l_html.append ("<div class=%"error%">")
+				l_html.append (a_error_html_message)
+				l_html.append ("</div>%N")
+				append_cart_to_html (l_cart, l_html)
+			else
+				append_cart_to_html (l_cart, l_html)
+				if
+					attached shop_api.config.shop_id as l_shop_id and then
+					attached {STRIPE_MODULE} api.module ({STRIPE_MODULE}) as l_stripe_module
+				then
+					if l_cart /= Void then
+						l_cart_count := l_cart.count
+						if l_cart_count > 0 then
+							l_user := api.user
+							if l_user /= Void then
+								l_email := l_user.email
+							end
+							if l_email = Void then
+								l_email := req.string_item ("shopping_email")
+							end
+							if l_email = Void then
+								l_html.append ("%N<div class=%"identification%"><h3>Identification</h3>")
+								l_html.append ("<p>Please provide an email address where we should send your order information.</p>")
+								l_html.append ("[
+									<form action="" method="GET"><label for="shopping_email">Email address
+										<input type="email" name="shopping_email" id="shopping_email" placeholder="Valid email address"></input>
+										<input type="submit" value="Continue"></input>
+										</label></form>
+									]")
+								l_html.append ("</div>")
+							else
+								if l_cart.is_onetime then
+									create l_form.make (api.location_url (l_stripe_module.payment_link (l_shop_id, l_cart.id.out, l_email), Void), "stripe-payment")
+								else
+									create l_form.make (api.location_url (l_stripe_module.subscription_checkout_link (l_shop_id, l_cart.id.out, l_email), Void), "stripe-payment")
+								end
+								l_form.set_method_post
+								l_form.extend_html_text ("%N<div class=%"identification%"><h3>Identification</h3>")
+								create f_email.make_with_text ("contact_email", l_email)
+								f_email.set_label ("Email address")
+								f_email.set_description ("You will get information about your order on that email address.")
+								f_email.enable_required
+								f_email.set_disabled (True)
+								l_form.extend (f_email)
+
+	--							l_html.append ("<label for=%"contact_email%">Contact email<input type=%"email%" name=%"contact_email%" id=%"contact_email%" value=%"" + html_encoded (l_email) + "%"></input></label>")
+								if l_user = Void and attached api.user_api.user_by_email (l_email) as l_shopping_user then
+									l_form.extend_html_text ("<p>We found an account for this email %""+ html_encoded (l_email) +"%", <br/>")
+									if attached {CMS_AUTHENTICATION_MODULE} api.module ({CMS_AUTHENTICATION_MODULE}) as l_auth_module then
+										l_form.extend_html_text ("You can <a href=%"" + api.location_absolute_url (l_auth_module.roc_login_location, Void) + "?destination="+ url_encoded (Result.location) +"%">sign in</a> to continue ...")
+									end
+									l_form.extend_html_text ("</p>")
+								elseif l_user /= Void then
+									l_form.extend_html_text ("<br/>%N")
+								else
+									l_is_new_customer := True
+									l_form.extend_html_text ("<p>We cannot find an account for this email %""+ html_encoded (l_email) +"%", <br/>")
+									if attached {CMS_AUTHENTICATION_MODULE} api.module ({CMS_AUTHENTICATION_MODULE}) as l_auth_module then
+										l_form.extend_html_text ("You can <a href=%"" + api.location_absolute_url (l_auth_module.roc_register_location, Void) + "?destination="+ url_encoded (Result.location) +"%">register a new account</a> to continue ...")
+									end
+									l_form.extend_html_text ("</p>")
+								end
+								f := l_stripe_module.new_country_field ("contact_country", "US")
+								f.set_label ("Please confirm your country/region")
+								l_form.extend (f)
+
+								l_form.extend_html_text ("</div>%N")
+
+								l_form.extend_html_text ("<div class=%"legals%">%N")
+								if attached customer_agreement_html as s then
+									create l_agreement_cb.make ("customer_agreement")
+									l_agreement_cb.set_text_value ("yes")
+									l_agreement_cb.set_raw_title (s)
+									l_agreement_cb.enable_required
+									l_form.extend (l_agreement_cb)
+								end
+
+								if attached customer_consent_html as s then
+									create l_consent_cb.make ("customer_consent")
+									l_consent_cb.set_text_value ("yes")
+									l_consent_cb.set_raw_title (s)
+									l_consent_cb.enable_required
+									l_form.extend (l_consent_cb)
+								end
+								l_form.extend_html_text ("</div>%N")
+								if l_is_new_customer then
+									l_button_title := "Proceed as new customer"
+								else
+									l_button_title := "Proceed"
+								end
+								create f_submit.make_with_text ("stripe-op", l_button_title)
+								f_submit.add_css_class ("button")
+								l_form.extend (f_submit)
+
+	--							l_stripe_module.fill_payment_form (l_user, l_email, l_form)
+								l_form.append_to_html (Result.wsf_theme, l_html)
+							end
+						end
+					end
+				else
+					l_html.append ("<div class=%"warning%">Online payment is currently disabled!</div>")
+				end
+			end
+			l_html.append ("</div>")
+
+			Result.set_main_content (l_html)
+		end
+
+	customer_agreement_html: detachable STRING
+		local
+			tpl_p: PATH
+		do
+			create tpl_p.make_from_string ("templates")
 
 			if
-				attached shop_api.config.shop_id as l_shop_id and then
-				attached {STRIPE_MODULE} api.module ({STRIPE_MODULE}) as l_stripe_module
+				attached api.module_theme_resource_location (module, tpl_p.extended ("shop_agreement.tpl")) as loc and then
+				attached api.resolved_smarty_template (loc) as tpl
 			then
-				if l_cart /= Void then
-					l_cart_count := l_cart.count
-					if l_cart_count > 0 then
-						l_html.append ("<div class=%"actions%">")
-
-						if l_cart.is_onetime then
-							l_html.append ("<a href=%""+ api.location_url (l_stripe_module.payment_link (l_shop_id, l_cart.id.out), Void)
-									 + "%">Buy now</a>")
-						else
-							l_html.append ("<a href=%""+ api.location_url (l_stripe_module.subscription_checkout_link (l_shop_id, l_cart.id.out), Void)
-									 + "%">Subscribe now</a>")
-						end
-						l_html.append ("</div>")
-					end
-				end
+				tpl.set_value (shop_api.config.shop_name, "shop_name")
+				Result := tpl.string
 			else
-				l_html.append ("<div class=%"warning%">Online payment is currently disabled!</div>")
+				api.log_error ("shop", "Missing shop_agreement.tpl", Void)
 			end
+		end
 
-			r.set_main_content (l_html)
-			r.execute
+	customer_consent_html: detachable STRING
+		local
+			tpl_p: PATH
+		do
+			create tpl_p.make_from_string ("templates")
+
+			if
+				attached api.module_theme_resource_location (module, tpl_p.extended ("shop_consent.tpl")) as loc and then
+				attached api.resolved_smarty_template (loc) as tpl
+			then
+				tpl.set_value (shop_api.config.shop_name, "shop_name")
+				Result := tpl.string
+			else
+				api.log_error ("shop", "Missing shop_consent.tpl", Void)
+			end
 		end
 
 	append_cart_to_html (a_cart: detachable SHOPPING_CART; a_html: STRING_8)
@@ -110,6 +241,7 @@ feature -- Execution
 			a_html.append ("<div class=%"shop-cart%"")
 			if a_cart /= Void then
 				a_html.append (" data-cid=%"" + a_cart.id.out + "%"")
+				a_html.append (" data-currency=%"" + a_cart.currency + "%"")
 				if attached a_cart.security as l_security then
 					a_html.append (" data-sec=%"" + url_encoded (l_security) + "%"")
 				end
@@ -120,7 +252,7 @@ feature -- Execution
 				a_html.append ("<div class=%"warning%">No item</div>")
 			else
 				a_html.append ("<table class=%"shop-cart%">")
-				a_html.append ("<thead><tr><th>Product</th><th>Provider</th><th>Quantity</th><th>...</th></tr></thead>")
+				a_html.append ("<thead><tr><th>Product</th><th>Provider</th><th>Item Price</th><th>Quantity</th></tr></thead>")
 				a_html.append ("<tbody>")
 				across
 					a_cart.items as ic
@@ -136,11 +268,8 @@ feature -- Execution
 					a_html.append ("<td class=%"cart-item-provider%">")
 					a_html.append (html_encoded (l_item.provider))
 					a_html.append ("</td>")
-					a_html.append ("<td class=%"cart-item-count%">")
-					a_html.append (l_item.quantity.out)
-					a_html.append ("</td>")
 					if attached l_item.details as l_item_details then
-						a_html.append ("<td class=%"cart-item-data%">")
+						a_html.append ("<td class=%"cart-item-data%" data-price=%""+ l_item_details.price_in_cents.out +"%">")
 						a_html.append (l_item_details.price_as_string)
 						if l_item_details.is_monthly then
 							a_html.append (" /month")
@@ -158,8 +287,15 @@ feature -- Execution
 					else
 						a_html.append ("<td class=%"cart-item-data%">N/A</td>")
 					end
+					a_html.append ("<td class=%"cart-item-count%" data-quantity=%""+ l_item.quantity.out +"%">")
+					a_html.append (l_item.quantity.out)
+					a_html.append ("</td>")
 					a_html.append ("</tr>")
 				end
+				a_html.append ("<tr class=%"total%"><td/><td/>")
+				a_html.append ("<td class=%"title%">Total:</td><td class=%"total%">")
+				a_html.append (a_cart.price_as_string + "</td>")
+				a_html.append ("</tr>")
 				a_html.append ("</tbody>")
 				a_html.append ("</table>")
 
@@ -174,6 +310,10 @@ feature -- Execution
 			l_cart: SHOPPING_CART
 			l_item: SHOPPING_ITEM
 			l_code, l_provider: READABLE_STRING_GENERAL
+			r: like cart_get_response
+			l_err_html: STRING_8
+			l_item_interval: STRING
+			l_item_interval_count: NATURAL_8
 		do
 			if attached {WSF_STRING} req.query_parameter ("itemProvider") as p_provider then
 				l_provider := p_provider.value
@@ -187,16 +327,85 @@ feature -- Execution
 			end
 
 			create l_html.make_empty
-
 			l_cart := shop_api.active_shopping_cart (req)
 			if l_cart = Void then
 				create l_cart.make_guest
+			else
+				shop_api.invoke_shop_fill_cart (l_cart)
 			end
 			if l_item /= Void then
-				l_cart.add_item (l_item)
+				shop_api.invoke_shop_fill_cart_item (l_cart, l_item)
+				if l_cart.is_item_compatible (l_item) then
+					l_cart.add_item (l_item)
+				else
+					create l_err_html.make_empty
+					l_err_html.append ("Impossible to add item <strong>")
+					l_err_html.append (html_encoded (l_item.code))
+					if attached l_item.title as l_item_title then
+						l_err_html.append (" &quot;")
+						l_err_html.append (html_encoded (l_item_title))
+						l_err_html.append ("&quot;")
+					end
+					l_err_html.append ("</strong> from <strong>" + html_encoded (l_item.provider) + "</strong>.")
+					if attached l_item.details as l_details then
+						l_item_interval_count := l_details.interval_count
+						inspect
+							l_details.interval_type
+						when {SHOPPING_ITEM_DETAILS}.interval_type_onetime then
+							l_item_interval := "onetime"
+						when {SHOPPING_ITEM_DETAILS}.interval_type_daily then
+							if l_item_interval_count > 1 then
+								l_item_interval := "every " + l_item_interval_count.out + " days"
+							else
+								l_item_interval := "per day"
+							end
+						when {SHOPPING_ITEM_DETAILS}.interval_type_weekly then
+							if l_item_interval_count > 1 then
+								l_item_interval := "every " + l_item_interval_count.out + " weeks"
+							else
+								l_item_interval := "per week"
+							end
+						when {SHOPPING_ITEM_DETAILS}.interval_type_monthly then
+							if l_item_interval_count > 1 then
+								l_item_interval := "every " + l_item_interval_count.out + " months"
+							else
+								l_item_interval := "per month"
+							end
+						when {SHOPPING_ITEM_DETAILS}.interval_type_yearly then
+							if l_item_interval_count > 1 then
+								l_item_interval := "every " + l_item_interval_count.out + " years"
+							else
+								l_item_interval := "per year"
+							end
+						else
+							l_item_interval := Void
+						end
+						if l_item_interval /= Void then
+							l_err_html.append ("<br/>The payment (<strong>" + l_item_interval + "</strong>) is conflicting with the other item")
+						else
+							l_err_html.append ("<br/>The payment is conflicting with the other item.")
+						end
+						if l_cart.count > 1 then
+							l_err_html.append ("s.")
+						else
+							l_err_html.append (".")
+						end
+						l_err_html.append ("<br/><br/>Either remove the conflicting item(s), or choose another item ... ")
+						if attached req.http_referer as l_referer then
+							l_err_html.append (" <a href=%"" + l_referer + "%">Go Back</a>")
+						end
+					end
+				end
 			end
-			save_cart (l_cart, res)
-			res.redirect_now (req.percent_encoded_path_info)
+			if l_err_html /= Void then
+				r := cart_get_response (req, res, l_err_html)
+				r.execute
+			else
+				if not l_cart.is_empty then
+					save_cart (l_cart, res)
+				end
+				res.redirect_now (req.percent_encoded_path_info)
+			end
 		end
 
 	save_cart (a_cart: SHOPPING_CART; res: WSF_RESPONSE)

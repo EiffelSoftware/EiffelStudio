@@ -47,6 +47,8 @@ feature -- Access
 
 	owner: CMS_USER assign set_owner
 
+	email: detachable READABLE_STRING_8
+
 	security: detachable IMMUTABLE_STRING_32
 
 	items: ARRAYED_LIST [SHOPPING_ITEM]
@@ -58,7 +60,6 @@ feature -- Access
 	currency: IMMUTABLE_STRING_8
 
 	default_currency: STRING_8 = "usd"
-
 
 feature -- Query
 
@@ -77,6 +78,42 @@ feature -- Query
 				items as ic
 			loop
 				Result := Result and ic.item.is_onetime
+			end
+		end
+
+	is_yearly: BOOLEAN
+		do
+			across
+				items as ic
+			loop
+				Result := Result and ic.item.is_yearly
+			end
+		end
+
+	is_monthly: BOOLEAN
+		do
+			across
+				items as ic
+			loop
+				Result := Result and ic.item.is_monthly
+			end
+		end
+
+	is_weekly: BOOLEAN
+		do
+			across
+				items as ic
+			loop
+				Result := Result and ic.item.is_weekly
+			end
+		end
+
+	is_daily: BOOLEAN
+		do
+			across
+				items as ic
+			loop
+				Result := Result and ic.item.is_daily
 			end
 		end
 
@@ -138,7 +175,7 @@ feature -- Query
 				l_item := ic.item
 				if attached l_item.details as l_details then
 					if l_details.currency.is_case_insensitive_equal_general (l_cart_currency) then
-						Result := Result + l_details.price_in_cents
+						Result := Result + l_item.quantity * l_details.price_in_cents
 					else
 						check same_currency: False end
 					end
@@ -146,6 +183,27 @@ feature -- Query
 					check has_details: False end
 				end
 			end
+		end
+
+	price_as_string: STRING
+		local
+			l_total: NATURAL_32
+			p,c: NATURAL_32
+		do
+			l_total := price_in_cents
+			p := l_total // 100
+			c := l_total \\ 100
+			create Result.make (10)
+			Result.append_natural_32 (p)
+			if c > 0 then
+				Result.append_character ('.')
+				if c <= 9 then
+					Result.append_integer (0)
+				end
+				Result.append_natural_32 (c)
+			end
+			Result.append_character (' ')
+			Result.append_string (currency)
 		end
 
 	item (a_code, a_provider: READABLE_STRING_GENERAL): detachable SHOPPING_ITEM
@@ -184,6 +242,33 @@ feature -- Validation
 				Result := a_currency.is_case_insensitive_equal (l_cart_currency)
 			else
 				Result := True
+			end
+		end
+
+	is_item_compatible (a_item: SHOPPING_ITEM): BOOLEAN
+		require
+			has_details: a_item.has_details
+		local
+			l_interval_type: NATURAL_8
+			nb: NATURAL_8
+		do
+			if count = 0 then
+				Result := True
+			elseif attached a_item.details as l_details then
+				l_interval_type := l_details.interval_type
+				nb := l_details.interval_count
+				Result := True
+				across
+					items as ic
+				until
+					not Result
+				loop
+					if attached ic.item.details as d then
+						Result := d.interval_type = l_interval_type and then d.interval_count = nb
+					else
+						Result := False
+					end
+				end
 			end
 		end
 
@@ -233,6 +318,9 @@ feature -- Conversion
 				if attached jo.number_item ("uid") as j_uid then
 					create {CMS_PARTIAL_USER} owner.make_with_id (j_uid.integer_64_item)
 				end
+				if attached jo.string_item ("email") as j_email then
+					set_email (j_email.unescaped_string_8)
+				end
 				if attached jo.boolean_item ("is_guest") as j_guest then
 					is_guest := j_guest.item
 				end
@@ -266,6 +354,9 @@ feature -- Conversion
 			create jo.make_with_capacity (10)
 			jo.put_integer (id, "id")
 			jo.put_integer (owner.id, "uid")
+			if attached email as e then
+				jo.put_string (e, "email")
+			end
 			if is_guest then
 				jo.put_boolean (True, "is_guest")
 			end
@@ -453,7 +544,15 @@ feature -- Element change
 	set_owner (u: like owner)
 		do
 			owner := u
+			if u.has_email then
+				set_email (u.email)
+			end
 			is_guest := not u.has_id
+		end
+
+	set_email (e: detachable READABLE_STRING_8)
+		do
+			email := e
 		end
 
 	set_security (v: detachable READABLE_STRING_GENERAL)

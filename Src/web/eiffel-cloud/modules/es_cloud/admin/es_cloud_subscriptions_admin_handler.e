@@ -107,7 +107,7 @@ feature -- Execution
 							s.append ("<td>")
 							if l_user /= Void then
 								if
-									attached {ES_CLOUD_SESSION} es_cloud_api.last_user_session (l_user) as l_last and then
+									attached {ES_CLOUD_SESSION} es_cloud_api.last_user_session (l_user, Void) as l_last and then
 									attached l_last.last_date as dt
 								then
 									s.append ("<time class=%"timeago%" datetime=%"" + date_time_to_timestamp_string (dt) + "%">")

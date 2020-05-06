@@ -109,6 +109,7 @@ feature -- Conversion
 		local
 			l_is_already_selected: BOOLEAN
 			h: detachable STRING_8
+			l_item_html_text: STRING_8
 		do
 			a_html.append ("<select name=%""+ name +"%" ")
 			if css_id = Void then
@@ -137,12 +138,13 @@ feature -- Conversion
 						a_html.append (" selected=%"selected%"")
 					end
 --				end
-				a_html.append (">" + o.item.text + "</option>%N")
+				l_item_html_text := html_encoded_string (o.item.text)
+				a_html.append (">" + l_item_html_text + "</option>%N")
 				if attached o.item.description as d then
 					if h = Void then
 						create h.make_empty
 					end
-					h.append ("<div id=%"" + name + "-" + o.item.value + "%" class=%"option%"><strong>"+ o.item.text +"</strong>:"+ d + "</div>")
+					h.append ("<div id=%"" + name + "-" + o.item.value + "%" class=%"option%"><strong>"+ l_item_html_text +"</strong>:"+ d + "</div>")
 				end
 			end
 			a_html.append ("</select>%N")

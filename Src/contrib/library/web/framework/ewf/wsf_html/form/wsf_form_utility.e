@@ -9,7 +9,7 @@ class
 
 feature -- Converter
 
-	html_encoded_string (s: READABLE_STRING_GENERAL): READABLE_STRING_8
+	html_encoded_string (s: READABLE_STRING_GENERAL): STRING_8
 		do
 			Result := html_encoder.general_encoded_string (s)
 		end

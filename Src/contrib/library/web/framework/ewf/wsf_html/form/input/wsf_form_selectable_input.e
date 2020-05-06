@@ -15,7 +15,7 @@ inherit
 		redefine
 			set_value,
 			specific_input_attributes_string,
-			append_child_to_html
+			append_item_to_html
 		end
 
 	WSF_FORM_SELECTABLE_ITEM
@@ -97,14 +97,30 @@ feature -- Change
 
 feature {NONE} -- Implementation
 
-	append_child_to_html (a_theme: WSF_THEME; a_html: STRING_8)
-			-- Specific child element if any.	
-			--| To redefine if needed
+	append_item_to_html (a_theme: WSF_THEME; a_html: STRING_8)
+		do
+			Precursor (a_theme, a_html)
+			append_label_to_html (a_theme, a_html)
+		end
+
+	append_label_to_html (a_theme: WSF_THEME; a_html: STRING_8)
+			-- Specific label element if any.	
+		local
+			s: STRING_8
 		do
 			if attached raw_title as t then
-				a_html.append (t)
+				s := t
 			elseif attached title as t then
-				a_html.append (a_theme.html_encoded (t))
+				s := a_theme.html_encoded (t)
+			end
+			if s /= Void then
+				if attached css_id as l_id then
+					a_html.append ("<label for=%""+ l_id +"%">")
+				else
+					a_html.append ("<label>")
+				end
+				a_html.append (s)
+				a_html.append ("</label>")
 			end
 		end
 

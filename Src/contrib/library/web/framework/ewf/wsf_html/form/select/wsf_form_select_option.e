@@ -17,14 +17,14 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_value: READABLE_STRING_GENERAL; a_text: detachable like text)
+	make (a_value: READABLE_STRING_GENERAL; a_text: detachable READABLE_STRING_GENERAL)
 			-- Initialize `Current'.
 		do
 			value := a_value.as_string_32
 			if a_text = Void then
 				text := html_encoder.general_encoded_string (a_value)
 			else
-				text := a_text
+				text := a_text.to_string_32
 			end
 		end
 
@@ -37,16 +37,16 @@ feature -- Status
 			Result := value.same_string_general (v)
 		end
 
-	is_same_text (v: like text): BOOLEAN
+	is_same_text (v: READABLE_STRING_GENERAL): BOOLEAN
 		do
-			Result := text.same_string (v)
+			Result := v.same_string (text)
 		end
 
 feature -- Access
 
 	value: READABLE_STRING_32
 
-	text: READABLE_STRING_8
+	text: READABLE_STRING_32
 
 	description: detachable READABLE_STRING_8
 

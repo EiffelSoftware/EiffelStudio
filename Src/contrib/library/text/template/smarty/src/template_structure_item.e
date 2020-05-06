@@ -92,30 +92,33 @@ feature -- Expression
 			l_exp := e.twin
 			l_exp.left_adjust
 			l_exp.right_adjust
-
-			if l_exp.has ('.') then
-				from
-					l_sp_exp := l_exp.split ('.')
-					l_sp_exp.start
-					tmp := resolved_variable (l_sp_exp.item)
-					l_sp_exp.forth
-				until
-					l_sp_exp.after or tmp = Void
-				loop
-					if 	l_sp_exp.item.starts_with ("$") and then
-						attached {READABLE_STRING_GENERAL} resolved_variable (l_sp_exp.item) as vn  and then
-						vn.is_valid_as_string_8
-					then
-						tmp := resolved_nested_message (tmp, vn.to_string_8)
-					else
-						tmp := resolved_nested_message (tmp, l_sp_exp.item)
+			if not l_exp.is_empty then
+				if l_exp.has ('.') then
+					from
+						l_sp_exp := l_exp.split ('.')
+						l_sp_exp.start
+						tmp := resolved_variable (l_sp_exp.item)
+						l_sp_exp.forth
+					until
+						l_sp_exp.after or tmp = Void
+					loop
+						if 	l_sp_exp.item.starts_with ("$") and then
+							attached {READABLE_STRING_GENERAL} resolved_variable (l_sp_exp.item) as vn  and then
+							vn.is_valid_as_string_8
+						then
+							tmp := resolved_nested_message (tmp, vn.to_string_8)
+						else
+							tmp := resolved_nested_message (tmp, l_sp_exp.item)
+						end
+						l_sp_exp.forth
 					end
-					l_sp_exp.forth
+					Result := tmp
+				elseif l_exp[1] = '%'' and then l_exp[l_exp.count] = '%'' then
+					Result := l_exp.substring (2, l_exp.count - 1)
+				else
+					Result := resolved_variable (l_exp)
 				end
-			else
-				tmp := resolved_variable (l_exp)
 			end
-			Result := tmp
 		end
 
 	resolved_composed_expression (e: STRING): detachable ANY

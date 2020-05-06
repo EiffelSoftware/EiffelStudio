@@ -363,7 +363,6 @@ feature {NONE} -- Implementation
 
 	make_definition (a_val: STRING; a_count: INTEGER): STRING
 		local
-			i: INTEGER
 			l_routine: STRING
 		do
 			l_routine := "routine_"

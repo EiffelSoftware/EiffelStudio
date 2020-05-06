@@ -140,8 +140,6 @@ feature -- Access
 	is_unicode_char_pointer_type: BOOLEAN
 			-- Is the current type a pointer to unicode char ?
 			-- (Note consts are ignored)
-		local
-			primitive_type: EWG_C_AST_ALIAS_TYPE
 		do
 			if
 				base.skip_consts.is_based_type

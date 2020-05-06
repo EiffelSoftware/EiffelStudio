@@ -152,7 +152,6 @@ feature {NONE}
 	rename_function_parameter_duplicate (members: DS_ARRAYED_LIST [EWG_C_AST_DECLARATION])
 		local
 			cs_out: DS_BILINEAR_CURSOR [EWG_C_AST_DECLARATION]
-			cs_in: DS_BILINEAR_CURSOR [EWG_C_AST_DECLARATION]
 			j, i, k: INTEGER
 			out_item: EWG_C_AST_DECLARATION
 			in_item: EWG_C_AST_DECLARATION

@@ -44,16 +44,30 @@ feature -- Generation
 				create l_content.make_from_string (makefile_windows)
 
 					-- $EIF_LIBARY_NAME, $OBJECT_LIST, $OUTPUT_DIRECTORY
+					-- $INCLUDE_PATH
 				l_content.replace_substring_all ("$EIF_LIBARY_NAME", "eif_" + directory_structure.config_system.name)
 				l_content.replace_substring_all ("$OBJECT_LIST", object_name + ".$obj")
 				l_content.replace_substring_all ("$OUTPUT_DIRECTORY", directory_name)
+				if directory_structure.config_system.include_path.is_empty then
+					l_content.replace_substring_all ("$INCLUDE_PATH", "")
+				else
+					if
+						attached directory_structure.config_system.include_path.entry as l_entry
+					then
+						l_content.replace_substring_all ("$INCLUDE_PATH", "$(DIR)"+l_entry.out)
+					else
+							-- Should not happen.
+							-- Replace by empty.
+						l_content.replace_substring_all ("$INCLUDE_PATH", "")
+					end
+				end
 				create_make_file (makefilename_win, l_content)
 			end
 		end
 
 
 
-feature
+feature -- Makefile build
 
 	create_make_file (a_makefile_name: STRING; a_content: STRING)
 		local
@@ -82,7 +96,7 @@ OUTDIR= .
 INDIR= .
 CC = $cc
 OUTPUT_CMD = $output_cmd
-CFLAGS = -I"$rt_include" -I $(TOP)$(DIR)include -I $(TOP)$(DIR)$(TOP)$(DIR)$(TOP)$(DIR)$OUTPUT_DIRECTORY$(DIR)c$(DIR)include -I $(TOP)$(DIR)$(TOP)$(DIR)$(TOP)$(DIR)C$(DIR)include  
+CFLAGS = -I"$rt_include" -I $(TOP)$(DIR)include -I $(TOP)$(DIR)$(TOP)$(DIR)$(TOP)$(DIR)$OUTPUT_DIRECTORY$(DIR)c$(DIR)include -I $(TOP)$(DIR)$(TOP)$(DIR)$(TOP)$(DIR)C$(DIR)include$INCLUDE_PATH  
 JCFLAGS = $(CFLAGS) $optimize $ccflags
 JMTCFLAGS = $(CFLAGS) $optimize $mtccflags
 JILCFLAGS = $(CFLAGS) $optimize $mtccflags  -DEIF_IL_DLL

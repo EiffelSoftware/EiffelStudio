@@ -471,7 +471,7 @@ feature {ANY} -- Add/Remove types
 							check
 								pointers_are_anonymous: False
 							end
-				elseif attached {EWG_C_AST_FUNCTION_TYPE} a_type as function /= Void then
+				elseif attached {EWG_C_AST_FUNCTION_TYPE} a_type as function  then
 					named_function_table.remove (l_name)
 				elseif attached {EWG_C_AST_EIFFEL_OBJECT_TYPE} a_type as eiffel then
 						check

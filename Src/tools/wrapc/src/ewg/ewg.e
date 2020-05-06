@@ -171,7 +171,7 @@ feature -- Basic Operations
 				end
 			end
 			create config_system.make (header_file_name)
-
+			config_system.set_include_path (l_path.parent)
 		end
 
 	exceptions_die

@@ -85,11 +85,11 @@ feature -- Basic Ops: Primary
 				create rule.make (matching_clause, create {EWG_CONFIG_DEFAULT_WRAPPER_CLAUSE}.make)
 				config_system.append_rule (rule)
 			end
-			if error_handler.has_error then
-				if attached config_file_name as l_config_file_name then
-					report_quitting_because_of_config_file_errors_error (l_config_file_name)
-					exceptions_die
-				end
+			if error_handler.has_error and then
+				attached config_file_name as l_config_file_name
+			then
+				report_quitting_because_of_config_file_errors_error (l_config_file_name)
+				exceptions_die
 			end
 		ensure
 			has_directory_structure: attached config_system.directory_structure as al_dir_structure

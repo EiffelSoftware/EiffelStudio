@@ -32,6 +32,7 @@ feature {NONE} -- Initialization
 
 			create eiffel_wrapper_set.make
 			output_directory_name := ""
+			create include_path.make_empty
 			name := "unknown"
 			create {EWG_CONFIG_DEFAULT_WRAPPER_CLAUSE} default_wrapper_clause.make
 			create rule_list.make_default
@@ -43,6 +44,7 @@ feature {NONE} -- Initialization
 			create function_excludes.make (10)
 			function_excludes.compare_objects
 			create directory_structure.make (Current)
+
 		end
 
 feature {ANY} -- Access
@@ -67,6 +69,9 @@ feature {ANY} -- Access
 	function_excludes: ARRAYED_LIST [STRING]
 			-- List of functions which we want
 			-- to eclude for the high level api.
+
+	include_path: PATH
+			-- Directory path to the header.
 
 feature {ANY}
 
@@ -448,6 +453,14 @@ feature {ANY} -- Operations
 			rule_macro_list.force_last (a_rule)
 		ensure
 			has_rule: has_macro_rule (a_rule)
+		end
+
+	set_include_path (a_path: PATH)
+			-- Set `include_path` with `a_path`.
+		do
+			include_path := a_path
+		ensure
+			include_path_set: include_path = a_path
 		end
 
 feature {NONE} -- Implementation

@@ -350,7 +350,7 @@ feature -- Access
 		deferred
 		end
 
-	sql_read_string (a_index: INTEGER): detachable READABLE_STRING_8
+	sql_read_string_8, sql_read_string (a_index: INTEGER): detachable READABLE_STRING_8
 			-- Retrieved value at `a_index' position in `item'.
 		local
 			l_item: like sql_item

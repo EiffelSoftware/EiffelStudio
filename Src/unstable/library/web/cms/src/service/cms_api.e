@@ -1151,11 +1151,13 @@ feature -- Query: module
 			--| usage: if attached module ({FOO_MODULE}) as mod then ...
 		do
 			Result := installed_module (a_type)
-			if Result /= Void and then not Result.is_enabled then
-				Result := Void
+			if Result /= Void then
+				if not Result.is_enabled or else not Result.is_initialized then
+					Result := Void
+				end
 			end
 		ensure
-			Result /= Void implies (Result.is_enabled) -- and a_type.is_conforming_to (Result.generating_type))
+			Result /= Void implies (Result.is_enabled and Result.is_initialized) -- and a_type.is_conforming_to (Result.generating_type))
 		end
 
 	installed_module (a_type: TYPE [CMS_MODULE]): detachable CMS_MODULE

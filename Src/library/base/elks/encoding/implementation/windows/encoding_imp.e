@@ -172,7 +172,7 @@ feature -- Status report
 			end
 		end
 
-	is_code_page_convertible (a_from_code_page, a_to_code_page: STRING): BOOLEAN
+	is_code_page_convertible (a_from_code_page, a_to_code_page: READABLE_STRING_8): BOOLEAN
 			-- Is `a_from_code_page` convertible to `a_to_code_page`.
 		do
 				-- Always true. It is not really interesting here on windows without converting strings.

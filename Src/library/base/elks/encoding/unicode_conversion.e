@@ -26,7 +26,7 @@ feature -- Query
 			end
 		end
 
-	is_code_page_convertible (a_from_code_page, a_to_code_page: STRING): BOOLEAN
+	is_code_page_convertible (a_from_code_page, a_to_code_page: READABLE_STRING_8): BOOLEAN
 			-- Is `a_from_code_page` convertible to `a_to_code_page`.
 		do
 				-- We accept conversion between the same encodings to optimize.

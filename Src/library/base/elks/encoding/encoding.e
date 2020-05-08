@@ -29,7 +29,7 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	code_page: STRING
+	code_page: READABLE_STRING_8
 			-- Code page/Character set name.
 			-- Immutable name.	
 

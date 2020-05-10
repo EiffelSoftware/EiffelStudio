@@ -4428,10 +4428,10 @@ rt_private void diadic_op(int code)
 		uint32 sk_type = f->type & SK_HEAD;
 			/* Special case for `-' from CHARACTER_8 and CHARACTER_32 class. */
 		if (sk_type == SK_CHAR8) {
-			CHECK ("right operand is INTEGER_32", s->type & SK_HEAD == SK_INT32);
+			CHECK ("right operand is INTEGER_32", (s->type & SK_HEAD) == SK_INT32);
 			f->it_char = f->it_char - (EIF_CHARACTER_8) s->it_int32;
 		} else if (sk_type == SK_CHAR32) {
-			CHECK ("right operand is NATURAL_32", s->type & SK_HEAD == SK_UINT32);
+			CHECK ("right operand is NATURAL_32", (s->type & SK_HEAD) == SK_UINT32);
 			f->it_wchar = f->it_wchar - s->it_uint32;
 		} else {
 				/* Normal case of substraction between numeric types. */
@@ -4458,10 +4458,10 @@ rt_private void diadic_op(int code)
 		uint32 sk_type = f->type & SK_HEAD;
 			/* Special case for `+' from CHARACTER_8 and CHARACTER_32 class. */
 		if (sk_type == SK_CHAR8) {
-			CHECK ("right operand is INTEGER_32", s->type & SK_HEAD == SK_INT32);
+			CHECK ("right operand is INTEGER_32", (s->type & SK_HEAD) == SK_INT32);
 			f->it_char = f->it_char + (EIF_CHARACTER_8) s->it_int32;
 		} else if (sk_type == SK_CHAR32) {
-			CHECK ("right operand is NATURAL_32", s->type & SK_HEAD == SK_UINT32);
+			CHECK ("right operand is NATURAL_32", (s->type & SK_HEAD) == SK_UINT32);
 			f->it_wchar = f->it_wchar + s->it_uint32;
 		} else {
 				/* Normal case of addition between numeric types. */

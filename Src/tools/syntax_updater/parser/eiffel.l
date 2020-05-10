@@ -351,6 +351,77 @@ BREAK	{HORIZONAL_BREAK}|\n
 					last_token := TE_BLOCK_CLOSE
 				end
 			}
+\xC2\xAC {
+				update_character_locations
+				process_id_as
+				last_token :=
+					if syntax_version = obsolete_syntax then
+						TE_FREE
+					else
+						TE_FREE_NOT
+					end
+			}
+\xE2\x88\xA7 {
+				update_character_locations
+				process_id_as
+				last_token :=
+					if syntax_version = obsolete_syntax then
+						TE_FREE
+					else
+						TE_FREE_AND
+					end
+			}
+\xE2\x88\xA7\xE2\x80\xA6 {
+				update_character_locations
+				process_id_as
+				last_token :=
+					if syntax_version = obsolete_syntax then
+						TE_FREE
+					else
+						TE_FREE_AND_THEN
+					end
+			}
+\xE2\x88\xA8 {
+				update_character_locations
+				process_id_as
+				last_token :=
+					if syntax_version = obsolete_syntax then
+						TE_FREE
+					else
+						TE_FREE_OR
+					end
+			}
+\xE2\x88\xA8\xE2\x80\xA6 {
+				update_character_locations
+				process_id_as
+				last_token :=
+					if syntax_version = obsolete_syntax then
+						TE_FREE
+					else
+						TE_FREE_OR_ELSE
+					end
+			}
+\xE2\x87\x92 {
+				update_character_locations
+				process_id_as
+				last_token :=
+					if syntax_version = obsolete_syntax then
+						TE_FREE
+					else
+						TE_FREE_IMPLIES
+					end
+			}
+\xE2\x8A\xBB {
+				update_character_locations
+				process_id_as
+				last_token :=
+					if syntax_version = obsolete_syntax then
+						TE_FREE
+					else
+						TE_FREE_XOR
+					end
+			}
+
 
 (@|#|\||&)[@#0-9a-zA-Z_!\$&\'\(\)\*\+\,\-\./:;<>=\?\[\\\]\^\`\{\}\|\~]*		|
 {NON_ASCII_NB}+ {

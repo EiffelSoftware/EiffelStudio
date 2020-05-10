@@ -23,22 +23,22 @@ create
 %nonassoc	TE_ASSIGNMENT TE_REPEAT_OPEN TE_REPEAT_CLOSE
 %left		TE_FORALL TE_EXISTS
 %nonassoc	TE_DOTDOT
-%left		TE_IMPLIES
-%left		TE_OR
-%left		TE_XOR
-%left		TE_AND
+%left		TE_IMPLIES TE_FREE_IMPLIES
+%left		TE_OR TE_FREE_OR TE_FREE_OR_ELSE
+%left		TE_XOR TE_FREE_XOR
+%left		TE_AND TE_FREE_AND TE_FREE_AND_THEN
 %left 		TE_TILDE TE_NOT_TILDE TE_NE TE_EQ TE_LT TE_GT TE_LE TE_GE
 %left		TE_PLUS TE_MINUS
 %left		TE_STAR TE_SLASH TE_MOD TE_DIV
 %right		TE_POWER
 %left		TE_FREE
-%right		TE_NOT
+%right		TE_NOT TE_FREE_NOT
 %nonassoc	TE_STRIP
 %left		TE_OLD
 %left		TE_DOT
 %right		TE_LPARAN TE_BLOCK_OPEN
 
-%token <detachable ID_AS> TE_FREE TE_ID TE_TUPLE
+%token <detachable ID_AS> TE_FREE TE_FREE_AND TE_FREE_AND_THEN TE_FREE_IMPLIES TE_FREE_NOT TE_FREE_OR TE_FREE_OR_ELSE TE_FREE_XOR TE_ID TE_TUPLE
 %token TE_INTEGER
 %token TE_REAL
 %token <detachable CHAR_AS>		TE_CHAR
@@ -225,7 +225,7 @@ create
 %type <detachable CONSTRAINT_LIST_AS> Multiple_constraint_list
 %type <detachable CONSTRAINING_TYPE_AS> Single_constraint
 
-%expect 553
+%expect 429
 
 %%
 
@@ -3351,16 +3351,28 @@ Qualified_binary_expression:
 			{ $$ := ast_factory.new_bin_power_as ($1, $3, $2) }
 	|	Expression TE_AND Expression
 			{ $$ := ast_factory.new_bin_and_as ($1, $3, $2) }
+	|	Expression TE_FREE_AND Expression
+			{ $$ := ast_factory.new_bin_free_as ($1, $2, $3) }
 	|	Expression TE_AND TE_THEN Expression %prec TE_AND
 			{ $$ := ast_factory.new_bin_and_then_as ($1, $4, $2, $3) }
+	|	Expression TE_FREE_AND_THEN Expression
+			{ $$ := ast_factory.new_bin_free_as ($1, $2, $3) }
 	|	Expression TE_OR Expression
 			{ $$ := ast_factory.new_bin_or_as ($1, $3, $2) }
+	|	Expression TE_FREE_OR Expression
+			{ $$ := ast_factory.new_bin_free_as ($1, $2, $3) }
 	|	Expression TE_OR TE_ELSE Expression %prec TE_OR
 			{ $$ := ast_factory.new_bin_or_else_as ($1, $4,$2, $3) }
+	|	Expression TE_FREE_OR_ELSE Expression
+			{ $$ := ast_factory.new_bin_free_as ($1, $2, $3) }
 	|	Expression TE_IMPLIES Expression
 			{ $$ := ast_factory.new_bin_implies_as ($1, $3, $2) }
+	|	Expression TE_FREE_IMPLIES Expression
+			{ $$ := ast_factory.new_bin_free_as ($1, $2, $3) }
 	|	Expression TE_XOR Expression
 			{ $$ := ast_factory.new_bin_xor_as ($1, $3, $2) }
+	|	Expression TE_FREE_XOR Expression
+			{ $$ := ast_factory.new_bin_free_as ($1, $2, $3) }
 	|	Expression TE_GE Expression
 			{ $$ := ast_factory.new_bin_ge_as ($1, $3, $2) }
 	|	Expression TE_GT Expression
@@ -3371,18 +3383,6 @@ Qualified_binary_expression:
 			{ $$ := ast_factory.new_bin_lt_as ($1, $3, $2) }
 	|	Expression Free_operator Expression %prec TE_FREE
 			{ $$ := ast_factory.new_bin_free_as ($1, $2, $3) }
-	|	Expression TE_EXISTS Expression -- %prec TE_FREE
-			{ $$ := ast_factory.new_bin_free_as ($1, extract_id_from_symbol ($2), $3) }
-	|	Expression TE_FORALL Expression -- %prec TE_FREE
-			{ $$ := ast_factory.new_bin_free_as ($1, extract_id_from_symbol ($2), $3) }
-	|	Expression TE_REPEAT_OPEN Expression -- %prec TE_FREE
-			{ $$ := ast_factory.new_bin_free_as ($1, extract_id_from_symbol ($2), $3) }
-	|	Expression TE_REPEAT_CLOSE Expression -- %prec TE_FREE
-			{ $$ := ast_factory.new_bin_free_as ($1, extract_id_from_symbol ($2), $3) }
-	|	Expression TE_BLOCK_OPEN Expression -- %prec TE_FREE
-			{ $$ := ast_factory.new_bin_free_as ($1, extract_id_from_symbol ($2), $3) }
-	|	Expression TE_BLOCK_CLOSE Expression -- %prec TE_FREE
-			{ $$ := ast_factory.new_bin_free_as ($1, extract_id_from_symbol ($2), $3) }
 	;
 
 Factor: TE_VOID
@@ -3438,20 +3438,10 @@ Qualified_factor:
 			{ $$ := ast_factory.new_un_plus_as ($2, $1) }
 	|	TE_NOT Expression
 			{ $$ := ast_factory.new_un_not_as ($2, $1) }
+	|	TE_FREE_NOT Expression
+			{ $$ := ast_factory.new_un_free_as ($1, $2) }
 	|	Free_operator Expression %prec TE_NOT
 			{ $$ := ast_factory.new_un_free_as ($1, $2) }
-	|	TE_EXISTS Expression -- %prec TE_NOT
-			{ $$ := ast_factory.new_un_free_as (extract_id_from_symbol ($1), $2) }
-	|	TE_FORALL Expression -- %prec TE_NOT
-			{ $$ := ast_factory.new_un_free_as (extract_id_from_symbol ($1), $2) }
-	|	TE_REPEAT_OPEN Expression -- %prec TE_NOT
-			{ $$ := ast_factory.new_un_free_as (extract_id_from_symbol ($1), $2) }
-	|	TE_REPEAT_CLOSE Expression -- %prec TE_NOT
-			{ $$ := ast_factory.new_un_free_as (extract_id_from_symbol ($1), $2) }
-	|	TE_BLOCK_OPEN Expression -- %prec TE_NOT
-			{ $$ := ast_factory.new_un_free_as (extract_id_from_symbol ($1), $2) }
-	|	TE_BLOCK_CLOSE Expression -- %prec TE_NOT
-			{ $$ := ast_factory.new_un_free_as (extract_id_from_symbol ($1), $2) }
 	;
 
 Typed_expression:	Typed			

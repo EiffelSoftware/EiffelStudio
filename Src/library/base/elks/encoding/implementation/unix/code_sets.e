@@ -256,6 +256,7 @@ feature -- Access
 		end
 
 note
+	ca_ignore: "CA032", "CA032: too long routine"
 	library:   "Encoding: Library of reusable components for Eiffel."
 	copyright: "Copyright (c) 1984-2020, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"

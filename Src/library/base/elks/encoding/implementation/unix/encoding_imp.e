@@ -46,25 +46,27 @@ feature -- String encoding convertion
 				if is_four_byte_code_page (a_from_code_page) then
 					l_string_32 := a_from_string.as_string_32.twin
 					if not descriptor_cache.converted (a_from_code_page, a_to_code_page) then
-						if (l_big_endian xor is_little_endian) then
-							l_string_32.precede (byte_order_mark)
-						else
-							l_string_32.precede (byte_order_mark_32_reverse)
-						end
+						l_string_32.precede
+							(if l_big_endian xor is_little_endian then
+								byte_order_mark
+							else
+								byte_order_mark_32_reverse
+							end)
 					end
 					l_managed_pointer := string_32_to_pointer (l_string_32)
-					l_count := (l_string_32.count) * 4
+					l_count := l_string_32.count * 4
 				elseif is_two_byte_code_page (a_from_code_page) then
 					l_string_32 := a_from_string.as_string_32.twin
 					if not descriptor_cache.converted (a_from_code_page, a_to_code_page) then
-						if (l_big_endian xor is_little_endian) then
-							l_string_32.precede (byte_order_mark)
-						else
-							l_string_32.precede (byte_order_mark_16_reverse)
-						end
+						l_string_32.precede
+							(if l_big_endian xor is_little_endian then
+								byte_order_mark
+							else
+								byte_order_mark_16_reverse
+							end)
 					end
 					l_managed_pointer := wide_string_to_pointer (l_string_32)
-					l_count := (l_string_32.count) * 2
+					l_count := l_string_32.count * 2
 				else
 					if a_from_string.is_valid_as_string_8 then
 						l_string_8 := a_from_string.to_string_8
@@ -277,15 +279,10 @@ feature {NONE} -- Implementation
 			a_from_code_page_valid: is_code_page_valid (a_from_code_page)
 			a_to_code_page_valid: is_code_page_valid (a_to_code_page)
 			code_page_convertible: is_code_page_convertible (a_from_code_page, a_to_code_page)
-		local
-			l_key: READABLE_STRING_8
-			l_cd: POINTER
 		do
-			l_key := a_from_code_page + a_to_code_page
-			descriptor_cache.search (l_key)
+			descriptor_cache.search (a_from_code_page + a_to_code_page)
 			check found: descriptor_cache.found end
-			l_cd := descriptor_cache.found_item
-			Result := c_iconv (l_cd, a_str, a_size, a_out_count, a_error_code)
+			Result := c_iconv (descriptor_cache.found_item, a_str, a_size, a_out_count, a_error_code)
 			descriptor_cache.record_converted_pair (a_from_code_page, a_to_code_page)
 		end
 
@@ -339,17 +336,16 @@ feature {NONE} -- Implementation
 			i, nb: INTEGER
 			new_size: INTEGER
 			l_end_pos, l_start_pos: INTEGER
-			l_managed_data: MANAGED_POINTER
 		do
 			l_start_pos := 1
 			l_end_pos := a_string.count
-			create l_managed_data.make ((l_end_pos + 1) * 4)
+			create Result.make ((l_end_pos + 1) * 4)
 			nb := l_end_pos - l_start_pos + 1
 
 			new_size := (nb + 1) * 4
 
-			if l_managed_data.count < new_size  then
-				l_managed_data.resize (new_size)
+			if Result.count < new_size  then
+				Result.resize (new_size)
 			end
 
 			from
@@ -357,11 +353,10 @@ feature {NONE} -- Implementation
 			until
 				i = nb
 			loop
-				l_managed_data.put_natural_32 (a_string.code (i + l_start_pos), i * 4)
+				Result.put_natural_32 (a_string.code (i + l_start_pos), i * 4)
 				i := i +  1
 			end
-			l_managed_data.put_natural_32 (0, i * 4)
-			Result := l_managed_data
+			Result.put_natural_32 (0, i * 4)
 		end
 
 	byte_order_mark: CHARACTER_32
@@ -495,6 +490,7 @@ feature {NONE} -- Implementation
 		end
 
 note
+	ca_ignore: "CA011", "CA011: too many arguments"
 	library:   "Encoding: Library of reusable components for Eiffel."
 	copyright: "Copyright (c) 1984-2020, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"

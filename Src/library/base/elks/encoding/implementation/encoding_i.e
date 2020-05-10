@@ -41,7 +41,7 @@ feature {ENCODING} -- Reset
 			last_was_wide_string := False
 		ensure
 			last_converted_string_reset: last_converted_string = Void
-			last_conversion_successful_reset: last_conversion_successful = False
+			last_conversion_successful_reset: not last_conversion_successful
 		end
 
 feature {ENCODING} -- Access

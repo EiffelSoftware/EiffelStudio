@@ -14,11 +14,8 @@ feature -- Conversion
 			-- Managed pointer of `a_string`.
 		require
 			a_string_not_void: a_string /= Void
-		local
-			l_cstr: C_STRING
 		do
-			create l_cstr.make (a_string)
-			Result := l_cstr.managed_data
+			Result := (create {C_STRING}.make (a_string)).managed_data
 		ensure
 			instance_free: class
 			result_not_void: Result /= Void

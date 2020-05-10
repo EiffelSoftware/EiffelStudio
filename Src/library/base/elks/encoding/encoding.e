@@ -33,8 +33,6 @@ feature -- Access
 			-- Code page/Character set name.
 			-- Immutable name.	
 
-feature -- Access
-
 	last_converted_stream: STRING_8
 			-- Stream representation of last converted string.
 			-- Note: Original string object could be returned directly.

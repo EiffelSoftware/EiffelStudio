@@ -14,6 +14,7 @@ inherit
 			process_bin_and_as,
 			process_bin_and_then_as,
 			process_bin_eq_as,
+			process_bin_free_as,
 			process_bin_implies_as,
 			process_bin_ne_as,
 			process_bin_or_as,
@@ -50,59 +51,70 @@ feature {NONE} -- Initialization
 
 feature {AST_EIFFEL} -- Visitor pattern: boolean logic
 
-	process_bin_and_as (l_as: BIN_AND_AS)
+	process_bin_and_as (a: BIN_AND_AS)
+			-- <Precursor>
 		do
 				-- Apply the CAP only if `l_as' corresponds to the corresponding boolean operator.
-			if l_as.class_id = boolean_type.class_id and then is_negated = is_negation_expected then
-				if is_nested then
-					l_as.left.process (Current)
+			if a.class_id = boolean_type.class_id then
+				process_conjunction (a.left, a.right)
+			end
+		end
+
+	process_bin_and_then_as (a: BIN_AND_THEN_AS)
+			-- <Precursor>
+		do
+				-- Apply the CAP only if `l_as' corresponds to the corresponding boolean operator.
+			if a.class_id = boolean_type.class_id then
+				process_semistrict_conjunction (a.left, a.right)
+			end
+		end
+
+	process_bin_free_as (a: BIN_FREE_AS)
+			-- <Precursor>
+		do
+				-- Apply the CAP only if `a` corresponds to a built-in boolean operator.
+			if a.class_id = boolean_type.class_id then
+				inspect boolean_type.base_class.feature_of_rout_id (a.first).feature_name_id
+				when {PREDEFINED_NAMES}.conjuncted_name_id then
+					process_conjunction (a.left, a.right)
+				when {PREDEFINED_NAMES}.conjuncted_semistrict_name_id then
+					process_semistrict_conjunction (a.left, a.right)
+				when {PREDEFINED_NAMES}.disjuncted_name_id then
+					process_disjunction (a.left, a.right)
+				when {PREDEFINED_NAMES}.disjuncted_semistrict_name_id then
+					process_semistrict_disjunction (a.left, a.right)
+				when {PREDEFINED_NAMES}.implication_name_id then
+					process_implication (a.left, a.right)
+				else
+						-- Non-built-in operator, nothing to do.
 				end
-				l_as.right.process (Current)
 			end
 		end
 
-	process_bin_and_then_as (l_as: BIN_AND_THEN_AS)
+	process_bin_implies_as (a: BIN_IMPLIES_AS)
+			-- <Precursor>
 		do
 				-- Apply the CAP only if `l_as' corresponds to the corresponding boolean operator.
-			if l_as.class_id = boolean_type.class_id and then is_negated = is_negation_expected then
-				l_as.left.process (Current)
-				l_as.right.process (Current)
+			if a.class_id = boolean_type.class_id then
+				process_implication (a.left, a.right)
 			end
 		end
 
-	process_bin_implies_as (l_as: BIN_IMPLIES_AS)
-		local
-			old_is_nested: BOOLEAN
+	process_bin_or_as (a: BIN_OR_AS)
+			-- <Precursor>
 		do
-				-- Apply the CAP only if `l_as' corresponds to the corresponding boolean operator.
-			if l_as.class_id = boolean_type.class_id and then is_negated /= is_negation_expected then
-				old_is_nested := is_nested
-				is_nested := True
-				is_negated := not is_negated
-				l_as.left.process (Current)
-				is_negated := not is_negated
-				l_as.right.process (Current)
-				is_nested := old_is_nested
+				-- Apply the CAP only if `a` corresponds to the boolean operator.
+			if a.class_id = boolean_type.class_id then
+				process_disjunction (a.left, a.right)
 			end
 		end
 
-	process_bin_or_as (l_as: BIN_OR_AS)
+	process_bin_or_else_as (a: BIN_OR_ELSE_AS)
+			-- <Precursor>
 		do
-				-- Apply the CAP only if `l_as' corresponds to the corresponding boolean operator.
-			if l_as.class_id = boolean_type.class_id and then is_negated /= is_negation_expected then
-				if is_nested then
-					l_as.left.process (Current)
-				end
-				l_as.right.process (Current)
-			end
-		end
-
-	process_bin_or_else_as (l_as: BIN_OR_ELSE_AS)
-		do
-				-- Apply the CAP only if `l_as' corresponds to the corresponding boolean operator.
-			if l_as.class_id = boolean_type.class_id and then is_negated /= is_negation_expected then
-				l_as.left.process (Current)
-				l_as.right.process (Current)
+				-- Apply the CAP only if `a` corresponds to the boolean operator.
+			if a.class_id = boolean_type.class_id then
+				process_semistrict_disjunction (a.left, a.right)
 			end
 		end
 
@@ -119,6 +131,41 @@ feature {AST_EIFFEL} -- Visitor pattern: boolean logic
 		do
 			if a.message.class_id = boolean_type.class_id then
 				inspect a.message.feature_name.name_id
+				when {PREDEFINED_NAMES}.conjuncted_name_id then
+					if
+						a.message.parameter_count = 1 and then
+						attached a.message.parameters [1] as p
+					then
+						process_conjunction (a.target, p)
+					end
+				when {PREDEFINED_NAMES}.conjuncted_semistrict_name_id then
+					if
+						a.message.parameter_count = 1 and then
+						attached a.message.parameters [1] as p
+					then
+						process_semistrict_conjunction (a.target, p)
+					end
+				when {PREDEFINED_NAMES}.disjuncted_name_id then
+					if
+						a.message.parameter_count = 1 and then
+						attached a.message.parameters [1] as p
+					then
+						process_disjunction (a.target, p)
+					end
+				when {PREDEFINED_NAMES}.disjuncted_semistrict_name_id then
+					if
+						a.message.parameter_count = 1 and then
+						attached a.message.parameters [1] as p
+					then
+						process_semistrict_disjunction (a.target, p)
+					end
+				when {PREDEFINED_NAMES}.implication_name_id then
+					if
+						a.message.parameter_count = 1 and then
+						attached a.message.parameters [1] as p
+					then
+						process_implication (a.target, p)
+					end
 				when {PREDEFINED_NAMES}.negated_name_id then
 					process_negation (a.target)
 				else
@@ -149,6 +196,63 @@ feature {AST_EIFFEL} -- Visitor pattern: boolean logic
 		end
 
 feature {NONE} -- Boolean connectives
+
+	process_conjunction (l, r: EXPR_AS)
+			-- Process conjunction with left-hand side `l` and right-hand side `r`.
+		do
+			if is_negated = is_negation_expected then
+				if is_nested then
+					l.process (Current)
+				end
+				r.process (Current)
+			end
+		end
+
+	process_semistrict_conjunction (l, r: EXPR_AS)
+			-- Process semistrict conjunction with left-hand side `l` and right-hand side `r`.
+		do
+			if is_negated = is_negation_expected then
+				l.process (Current)
+				r.process (Current)
+			end
+		end
+
+	process_disjunction (l, r: EXPR_AS)
+			-- Process disjunction with left-hand side `l` and right-hand side `r`.
+		do
+			if is_negated /= is_negation_expected then
+				if is_nested then
+					l.process (Current)
+				end
+				r.process (Current)
+			end
+		end
+
+	process_semistrict_disjunction (l, r: EXPR_AS)
+			-- Process semistrict disjunction with left-hand side `l` and right-hand side `r`.
+		do
+			if is_negated /= is_negation_expected then
+				l.process (Current)
+				r.process (Current)
+			end
+		end
+
+	process_implication (l, r: EXPR_AS)
+			-- Process implication with left-hand side `l` and right-hand side `r`.
+		local
+			old_is_nested: BOOLEAN
+		do
+				-- Apply the CAP only if `l_as' corresponds to the corresponding boolean operator.
+			if is_negated /= is_negation_expected then
+				old_is_nested := is_nested
+				is_nested := True
+				is_negated := not is_negated
+				l.process (Current)
+				is_negated := not is_negated
+				r.process (Current)
+				is_nested := old_is_nested
+			end
+		end
 
 	process_negation (e: EXPR_AS)
 			-- Process negation of expression `e`.

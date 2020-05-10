@@ -3472,11 +3472,14 @@ feature {NONE} -- Visitor
 			l_target_type: TYPE_A
 			l_target_expr: EXPR_B
 			l_access_expr: ACCESS_EXPR_B
-			l_call: CALL_B
 			l_nested: NESTED_B
 			l_is_qualified_call: BOOLEAN
 			l_error_level: NATURAL_32
 			old_assigner_source: like assigner_source
+			s: like context.scope
+			connective_id: like {NAMES_HEAP}.id_of
+			is_connective: BOOLEAN
+			binary_b: BINARY_B
 		do
 				-- Type check the target, but we reset the
 				-- assigner flag syntax, because it is only pertinent
@@ -3504,22 +3507,88 @@ feature {NONE} -- Visitor
 				l_is_qualified_call := is_qualified_call
 				is_qualified_call := True
 				l_error_level := error_level
+				if l_target_type.is_boolean then
+					connective_id := l_as.message.feature_name.name_id
+					inspect connective_id
+					when
+						{PREDEFINED_NAMES}.conjuncted_name_id,
+						{PREDEFINED_NAMES}.disjuncted_exclusive_name_id,
+						{PREDEFINED_NAMES}.disjuncted_name_id
+					then
+						is_connective := True
+					when {PREDEFINED_NAMES}.conjuncted_semistrict_name_id then
+						is_connective := True
+						s := context.scope
+						;(create {AST_SCOPE_CONJUNCTIVE_EXPRESSION}.make (context)).add_scopes (l_as.target)
+					when {PREDEFINED_NAMES}.disjuncted_semistrict_name_id then
+						is_connective := True
+						s := context.scope
+						;(create {AST_SCOPE_DISJUNCTIVE_EXPRESSION}.make (context)).add_scopes (l_as.target)
+					when {PREDEFINED_NAMES}.implication_name_id then
+						is_connective := True
+						s := context.scope
+						;(create {AST_SCOPE_IMPLICATIVE_EXPRESSION}.make (context)).add_scopes (l_as.target)
+					else
+							-- Some other call on BOOLEAN.
+					end
+				end
 				l_as.message.process (Current)
+				if s > 0 then
+					context.set_scope (s)
+				end
 				is_qualified_call := l_is_qualified_call
 				if
 					error_level = l_error_level and then
 					is_byte_node_enabled
 				then
-					l_call ?= last_byte_node
-					check
-						l_call_not_void: l_call /= Void
+					if attached {CALL_B} last_byte_node as c then
+						if
+							is_connective and then
+							attached {CALL_ACCESS_B} c as a and then
+							attached a.parameters as ps and then
+							ps.count = 1 and then
+							attached ps [1] as p
+						then
+							inspect connective_id
+							when {PREDEFINED_NAMES}.conjuncted_name_id then
+								create {BIN_AND_B} binary_b.make (l_access_expr, p.expression)
+							when {PREDEFINED_NAMES}.conjuncted_semistrict_name_id then
+									-- TODO: replace specialized code with conditional expression after specializing code generation
+									-- to produce the code comparable by efficiency with the binary equivalent.
+									-- a ∧ b ≜ if a then b else False end
+									-- create {IF_EXPRESSION_B} last_byte_node.make (l_access_expr, p.expression, Void, create {BOOL_CONST_B}.make (False), l_target_type, Void)
+								create {B_AND_THEN_B} binary_b.make (l_access_expr, p.expression)
+							when {PREDEFINED_NAMES}.disjuncted_exclusive_name_id then
+								create {BIN_XOR_B} binary_b.make (l_access_expr, p.expression)
+							when {PREDEFINED_NAMES}.disjuncted_name_id then
+								create {BIN_OR_B} binary_b.make (l_access_expr, p.expression)
+							when {PREDEFINED_NAMES}.disjuncted_semistrict_name_id then
+									-- TODO: replace specialized code with conditional expression after specializing code generation
+									-- to produce the code comparable by efficiency with the binary equivalent.
+									-- a ∨ b ≜ if a then True else b end
+									-- create {IF_EXPRESSION_B} last_byte_node.make (l_access_expr, create {BOOL_CONST_B}.make (True), Void, p.expression, l_target_type, Void)
+								create {B_OR_ELSE_B} binary_b.make (l_access_expr, p.expression)
+							when {PREDEFINED_NAMES}.implication_name_id then
+									-- TODO: replace specialized code with conditional expression after specializing code generation
+									-- to produce the code comparable by efficiency with the binary equivalent.
+									-- a ⇒ b ≜ if a then b else True end
+									-- create {IF_EXPRESSION_B} last_byte_node.make (l_access_expr, p.expression, Void, create {BOOL_CONST_B}.make (True), l_target_type, Void)
+								create {B_IMPLIES_B} binary_b.make (l_access_expr, p.expression)
+							end
+							binary_b.init (a)
+							last_byte_node := binary_b
+						else
+							create l_nested
+							l_nested.set_target (l_access_expr)
+							l_nested.set_message (c)
+							c.set_parent (l_nested)
+							last_byte_node := l_nested
+						end
+					else
+						check
+							expected_byte_node: False
+						end
 					end
-					create l_nested
-					l_nested.set_target (l_access_expr)
-					fixme ("Should we set `parent' on `l_access_expr' as we do for a NESTED_AS")
-					l_nested.set_message (l_call)
-					l_call.set_parent (l_nested)
-					last_byte_node := l_nested
 				end
 			end
 		end
@@ -4920,7 +4989,7 @@ feature {NONE} -- Visitor
 			process_unary_as (l_as)
 		end
 
-	process_binary_as (l_as: BINARY_AS; scope_matcher: AST_SCOPE_MATCHER)
+	process_binary_as (l_as: BINARY_AS)
 		require
 			l_as_not_void: l_as /= Void
 		local
@@ -4951,6 +5020,8 @@ feature {NONE} -- Visitor
 			l_type_set: TYPE_SET_A
 			l_vtmc4: VTMC4
 			l_is_controlled: BOOLEAN
+			scope_matcher: AST_SCOPE_MATCHER
+			old_is_byte_node_enabled: BOOLEAN
 		do
 			l_needs_byte_node := is_byte_node_enabled
 			l_context_current_class := context.current_class
@@ -4996,7 +5067,32 @@ feature {NONE} -- Visitor
 				end
 
 				if error_level = l_error_level then
-						-- Then type check the right operand
+						-- Then type check the right operand.
+						-- Apply CAPs for semi-strict operators if applicable.
+					if
+						l_target_type.is_boolean and then
+						attached
+							if is_inherited then
+									-- Use recorded information.
+								l_target_type.base_class.feature_of_rout_id (l_as.routine_ids.first)
+							else
+									-- Lookup for an associated feature.
+								l_target_type.base_class.feature_of_alias_id (names_heap.id_of (l_as.infix_function_name))
+							end
+						as f
+					then
+							-- Rely on predefined feature name.
+						inspect f.feature_name_id
+						when {PREDEFINED_NAMES}.conjuncted_semistrict_name_id then
+							create {AST_SCOPE_CONJUNCTIVE_EXPRESSION} scope_matcher.make (context)
+						when {PREDEFINED_NAMES}.disjuncted_semistrict_name_id then
+							create {AST_SCOPE_DISJUNCTIVE_EXPRESSION} scope_matcher.make (context)
+						when {PREDEFINED_NAMES}.implication_name_id then
+							create {AST_SCOPE_IMPLICATIVE_EXPRESSION} scope_matcher.make (context)
+						else
+								-- Some other operator.
+						end
+					end
 					if scope_matcher /= Void then
 						s := context.scope
 						scope_matcher.add_scopes (l_as.left)
@@ -5105,6 +5201,15 @@ feature {NONE} -- Visitor
 											l_right_constrained := last_calls_target_type
 											l_left_constrained := l_right_constrained
 											l_error := Void
+											if attached scope_matcher then
+													-- The target boolean type of a semi-strict operator is replaced with something else.
+													-- Re-check the right-hand side for regular operator instead.
+												context.set_scope (s)
+												old_is_byte_node_enabled := is_byte_node_enabled
+												is_byte_node_enabled := False
+												l_as.right.process (Current)
+												is_byte_node_enabled := old_is_byte_node_enabled
+											end
 										else
 											l_target_conv_info := Void
 										end
@@ -5115,8 +5220,10 @@ feature {NONE} -- Visitor
 
 						check no_error_implies_feature: (l_error = Void and l_target_type.is_known) implies last_alias_feature /= Void end
 
-						if l_error /= Void then
-								-- Raise error here
+						if error_level /= l_error_level then
+								-- There was an error, ingnore further processing.
+						elseif attached l_error then
+								-- Raise error here.
 							if attached {VWOE1} l_error then
 								l_error.set_location (l_as.right.start_location)
 							else
@@ -5235,12 +5342,12 @@ feature {NONE} -- Visitor
 
 	process_bin_and_then_as (l_as: BIN_AND_THEN_AS)
 		do
-			process_binary_as (l_as, create {AST_SCOPE_CONJUNCTIVE_EXPRESSION}.make (context))
+			process_binary_as (l_as)
 		end
 
 	process_bin_free_as (l_as: BIN_FREE_AS)
 		do
-			process_binary_as (l_as, Void)
+			process_binary_as (l_as)
 		end
 
 	process_bin_implies_as (l_as: BIN_IMPLIES_AS)
@@ -5251,7 +5358,7 @@ feature {NONE} -- Visitor
 		do
 			l_old_expr := old_expressions
 			old_expressions := Void
-			process_binary_as (l_as, create {AST_SCOPE_IMPLICATIVE_EXPRESSION}.make (context))
+			process_binary_as (l_as)
 			if
 				last_type /= Void and then
 				is_byte_node_enabled
@@ -5281,77 +5388,77 @@ feature {NONE} -- Visitor
 
 	process_bin_or_as (l_as: BIN_OR_AS)
 		do
-			process_binary_as (l_as, Void)
+			process_binary_as (l_as)
 		end
 
 	process_bin_or_else_as (l_as: BIN_OR_ELSE_AS)
 		do
-			process_binary_as (l_as, create {AST_SCOPE_DISJUNCTIVE_EXPRESSION}.make (context))
+			process_binary_as (l_as)
 		end
 
 	process_bin_xor_as (l_as: BIN_XOR_AS)
 		do
-			process_binary_as (l_as, Void)
+			process_binary_as (l_as)
 		end
 
 	process_bin_ge_as (l_as: BIN_GE_AS)
 		do
-			process_binary_as (l_as, Void)
+			process_binary_as (l_as)
 		end
 
 	process_bin_gt_as (l_as: BIN_GT_AS)
 		do
-			process_binary_as (l_as, Void)
+			process_binary_as (l_as)
 		end
 
 	process_bin_le_as (l_as: BIN_LE_AS)
 		do
-			process_binary_as (l_as, Void)
+			process_binary_as (l_as)
 		end
 
 	process_bin_lt_as (l_as: BIN_LT_AS)
 		do
-			process_binary_as (l_as, Void)
+			process_binary_as (l_as)
 		end
 
 	process_bin_div_as (l_as: BIN_DIV_AS)
 		do
-			process_binary_as (l_as, Void)
+			process_binary_as (l_as)
 		end
 
 	process_bin_minus_as (l_as: BIN_MINUS_AS)
 		do
-			process_binary_as (l_as, Void)
+			process_binary_as (l_as)
 		end
 
 	process_bin_mod_as (l_as: BIN_MOD_AS)
 		do
-			process_binary_as (l_as, Void)
+			process_binary_as (l_as)
 		end
 
 	process_bin_plus_as (l_as: BIN_PLUS_AS)
 		do
-			process_binary_as (l_as, Void)
+			process_binary_as (l_as)
 		end
 
 	process_bin_power_as (l_as: BIN_POWER_AS)
 		do
-			process_binary_as (l_as, Void)
+			process_binary_as (l_as)
 		end
 
 	process_bin_slash_as (l_as: BIN_SLASH_AS)
 		do
-			process_binary_as (l_as, Void)
+			process_binary_as (l_as)
 		end
 
 	process_bin_star_as (l_as: BIN_STAR_AS)
 		do
-			process_binary_as (l_as, Void)
+			process_binary_as (l_as)
 		end
 
 	process_bin_and_as (l_as: BIN_AND_AS)
 		do
-			process_binary_as (l_as, Void)
+			process_binary_as (l_as)
 		end
 
 	process_bin_eq_as (l_as: BIN_EQ_AS)

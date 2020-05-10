@@ -21,6 +21,8 @@ inherit
 			process_bin_eq_as, process_bin_ne_as, process_bin_tilde_as, process_bin_not_tilde_as
 		end
 
+	SHARED_WORKBENCH
+
 feature -- Byte node
 
 	binary_node (a_node: BINARY_AS): BINARY_B
@@ -82,9 +84,33 @@ feature {NONE} -- Implementation
 			create {B_AND_THEN_B} last_binary_node
 		end
 
-	process_bin_free_as (l_as: BIN_FREE_AS)
+	process_bin_free_as (a: BIN_FREE_AS)
+			-- <Precursor>
 		do
-			create {BIN_FREE_B} last_binary_node
+			if
+				a.class_id = system.boolean_class.compiled_class.class_id and then
+				attached system.boolean_class.compiled_class.feature_of_rout_id (a.routine_ids.first) as f
+			then
+					-- Pick predefined byte node if available.
+				inspect f.feature_name_id
+				when {PREDEFINED_NAMES}.conjuncted_name_id then
+					create {BIN_AND_B} last_binary_node
+				when {PREDEFINED_NAMES}.conjuncted_semistrict_name_id then
+					create {B_AND_THEN_B} last_binary_node
+				when {PREDEFINED_NAMES}.disjuncted_exclusive_name_id then
+					create {BIN_XOR_B} last_binary_node
+				when {PREDEFINED_NAMES}.disjuncted_name_id then
+					create {BIN_OR_B} last_binary_node
+				when {PREDEFINED_NAMES}.disjuncted_semistrict_name_id then
+					create {B_OR_ELSE_B} last_binary_node
+				when {PREDEFINED_NAMES}.implication_name_id then
+					create {B_IMPLIES_B} last_binary_node
+				else
+					create {BIN_FREE_B} last_binary_node
+				end
+			else
+				create {BIN_FREE_B} last_binary_node
+			end
 		end
 
 	process_bin_implies_as (l_as: BIN_IMPLIES_AS)
@@ -188,7 +214,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2020, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
@@ -201,22 +227,22 @@ note
 			(available at the URL listed under "license" above).
 			
 			Eiffel Software's Eiffel Development Environment is
-			distributed in the hope that it will be useful,	but
+			distributed in the hope that it will be useful, but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
-			See the	GNU General Public License for more details.
+			See the GNU General Public License for more details.
 			
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,
-			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
+			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 		]"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 end

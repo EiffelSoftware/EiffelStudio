@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "[
 		Objects that redirect file output into a buffer. If the output exceeds the size of the buffer,
 		only the first and the last part of the output are kept in the buffer.
@@ -34,11 +34,10 @@ feature {NONE} -- Initialization
 		require
 			a_size_greater_one: a_size > 3
 		do
+			make_with_name ("test_output_buffer")
 			buffer_size := a_size
 			create buffer.make (buffer_size)
 			mode := write_file
-			set_name ("test_output_buffer")
-			create last_string.make_empty
 		end
 
 feature -- Access
@@ -282,7 +281,7 @@ invariant
 	truncated_implies_buffer_full: is_truncated implies (buffer.count = buffer_size)
 
 note
-	copyright: "Copyright (c) 1984-2012, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2020, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

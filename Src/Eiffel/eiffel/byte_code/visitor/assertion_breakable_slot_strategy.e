@@ -189,8 +189,10 @@ feature -- Node processing
 		do
 			a_node.condition.process (Current)
 
-				-- Generate hook for Then_part.
-			increment_counter (a_node)
+			if a_node.has_breakpoints then
+					-- Generate hook for Then_part.
+				increment_counter (a_node)
+			end
 
 				-- Generate expression for Then_part.
 			a_node.then_expression.process (Current)
@@ -204,8 +206,10 @@ feature -- Node processing
 				end
 			end
 
-				-- Generate hook for Else_part.
-			increment_counter (a_node)
+			if a_node.has_breakpoints then
+					-- Generate hook for Else_part.
+				increment_counter (a_node)
+			end
 
 				-- Generate expression for Else_part.
 			a_node.else_expression.process (Current)
@@ -395,7 +399,7 @@ feature -- Node processing
 note
 	date: "$Date$"
 	revision: "$Revision$"
-	copyright:	"Copyright (c) 1984-2018, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2020, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

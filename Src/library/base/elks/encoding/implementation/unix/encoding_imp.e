@@ -26,7 +26,7 @@ inherit
 
 feature -- String encoding convertion
 
-	convert_to (a_from_code_page: STRING; a_from_string: READABLE_STRING_GENERAL; a_to_code_page: STRING)
+	convert_to (a_from_code_page: READABLE_STRING_8; a_from_string: READABLE_STRING_GENERAL; a_to_code_page: READABLE_STRING_8)
 			-- Convert `a_from_string' of `a_from_code_page' to a string of `a_to_code_page'.
 		local
 			l_managed_pointer: MANAGED_POINTER
@@ -148,7 +148,7 @@ feature -- String encoding convertion
 
 feature -- Status report
 
-	is_code_page_valid (a_code_page: STRING): BOOLEAN
+	is_code_page_valid (a_code_page: READABLE_STRING_8): BOOLEAN
 			-- Is `a_code_page' valid?
 			-- We don't care this on Unix. What we are really interested is `is_code_page_convertible'.
 		do
@@ -157,7 +157,7 @@ feature -- Status report
 			end
 		end
 
-	is_code_page_convertible (a_from_code_page, a_to_code_page: STRING_8): BOOLEAN
+	is_code_page_convertible (a_from_code_page, a_to_code_page: READABLE_STRING_8): BOOLEAN
 			-- Is `a_from_code_page' convertible to `a_to_code_page'.
 		local
 			l_error: INTEGER
@@ -188,7 +188,7 @@ feature -- Status report
 
 feature {NONE} -- Status report
 
-	is_known_code_page (a_code_page: STRING): BOOLEAN
+	is_known_code_page (a_code_page: READABLE_STRING_8): BOOLEAN
 			-- Is `a_code_page' a known code page?
 		require
 			a_code_page_not_void: a_code_page /= Void
@@ -216,7 +216,7 @@ feature {NONE} -- Status report
 			retry
 		end
 
-	is_two_byte_code_page (a_code_page: STRING): BOOLEAN
+	is_two_byte_code_page (a_code_page: READABLE_STRING_8): BOOLEAN
 			-- Is `a_code_page' a known code page?
 		require
 			a_code_page_not_void: a_code_page /= Void
@@ -225,7 +225,7 @@ feature {NONE} -- Status report
 			Result := two_byte_code_pages.has (a_code_page.as_lower)
 		end
 
-	is_four_byte_code_page (a_code_page: STRING): BOOLEAN
+	is_four_byte_code_page (a_code_page: READABLE_STRING_8): BOOLEAN
 			-- Is `a_code_page' a known code page?
 		require
 			a_code_page_not_void: a_code_page /= Void
@@ -234,7 +234,7 @@ feature {NONE} -- Status report
 			Result := four_byte_code_pages.has (a_code_page.as_lower)
 		end
 
-	is_big_endian_code_page (a_code_page: STRING): BOOLEAN
+	is_big_endian_code_page (a_code_page: READABLE_STRING_8): BOOLEAN
 			-- Is `a_code_page' a known code page?
 		require
 			a_code_page_not_void: a_code_page /= Void
@@ -243,7 +243,7 @@ feature {NONE} -- Status report
 			Result := big_endian_code_pages.has (a_code_page.as_lower)
 		end
 
-	is_little_endian_code_page (a_code_page: STRING): BOOLEAN
+	is_little_endian_code_page (a_code_page: READABLE_STRING_8): BOOLEAN
 			-- Is `a_code_page' a known code page?
 		require
 			a_code_page_not_void: a_code_page /= Void
@@ -252,7 +252,7 @@ feature {NONE} -- Status report
 			Result := little_endian_code_pages.has (a_code_page.as_lower)
 		end
 
-	is_endianness_specified (a_code_page: STRING): BOOLEAN
+	is_endianness_specified (a_code_page: READABLE_STRING_8): BOOLEAN
 			-- Is `a_code_page' endianness specified?
 		require
 			a_code_page_not_void: a_code_page /= Void
@@ -271,14 +271,14 @@ feature {NONE} -- Cache
 
 feature {NONE} -- Implementation
 
-	iconv_imp (a_from_code_page, a_to_code_page: STRING; a_str: POINTER; a_size: INTEGER; a_out_count, a_error_code: TYPED_POINTER [INTEGER]): POINTER
+	iconv_imp (a_from_code_page, a_to_code_page: READABLE_STRING_8; a_str: POINTER; a_size: INTEGER; a_out_count, a_error_code: TYPED_POINTER [INTEGER]): POINTER
 			-- `iconv' plus setup and caching.
 		require
 			a_from_code_page_valid: is_code_page_valid (a_from_code_page)
 			a_to_code_page_valid: is_code_page_valid (a_to_code_page)
 			code_page_convertible: is_code_page_convertible (a_from_code_page, a_to_code_page)
 		local
-			l_key: STRING
+			l_key: READABLE_STRING_8
 			l_cd: POINTER
 		do
 			l_key := a_from_code_page + a_to_code_page
@@ -289,11 +289,11 @@ feature {NONE} -- Implementation
 			descriptor_cache.record_converted_pair (a_from_code_page, a_to_code_page)
 		end
 
-	is_codeset_convertible (a_from_code_page, a_to_code_page: STRING; a_error: TYPED_POINTER [INTEGER]): BOOLEAN
+	is_codeset_convertible (a_from_code_page, a_to_code_page: READABLE_STRING_8; a_error: TYPED_POINTER [INTEGER]): BOOLEAN
 			-- Is `a_from_codeset' and `a_to_codeset' convertible?
 		local
 			l_fp, l_tp: MANAGED_POINTER
-			l_key: STRING
+			l_key: READABLE_STRING_8
 			l_cd: POINTER
 			l_succ: BOOLEAN
 		do
@@ -312,7 +312,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	c_codeset_valid (a_code_set: STRING; a_error: TYPED_POINTER [INTEGER]): BOOLEAN
+	c_codeset_valid (a_code_set: READABLE_STRING_8; a_error: TYPED_POINTER [INTEGER]): BOOLEAN
 			-- Check if `a_code_set' is convertible to utf-8 to see if it is valid.
 			-- Some systems do not support utf-8 to utf-8 conversion, so checking utf-8
 			-- should be avoided.
@@ -332,7 +332,7 @@ feature {NONE} -- Implementation
 			Result := code = 0xFFFE or code = 0xFFFE0000
 		end
 
-	string_32_to_pointer (a_string: STRING_32): MANAGED_POINTER
+	string_32_to_pointer (a_string: READABLE_STRING_32): MANAGED_POINTER
 		require
 			a_string_not_void: a_string /= Void
 		local
@@ -496,7 +496,7 @@ feature {NONE} -- Implementation
 
 note
 	library:   "Encoding: Library of reusable components for Eiffel."
-	copyright: "Copyright (c) 1984-2019, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2020, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

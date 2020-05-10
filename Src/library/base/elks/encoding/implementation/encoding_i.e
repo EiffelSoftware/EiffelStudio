@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "Interfaces of encoding conversion."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -216,7 +216,5 @@ note
 			Website http://www.eiffel.com
 			Customer support http://support.eiffel.com
 		]"
-
-
 
 end

@@ -1,7 +1,9 @@
 note
+	description: "[
+			Byte code for "or else".
+		]"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
--- Byte code for "or else"
 
 class B_OR_ELSE_B
 
@@ -11,7 +13,11 @@ inherit
 		redefine
 			built_in_enlarged, generate_operator,
 			is_commutative
-		end;
+		end
+
+create
+	default_create,
+	make
 
 feature -- Visitor
 
@@ -34,7 +40,6 @@ feature -- Enlarging
 			-- Enlarge node. Try to get rid of useless code if possible.
 		local
 			l_b_or_else_bl: B_OR_ELSE_BL
-			l_attr: ATTRIBUTE_B
 			l_bool_val: VALUE_I
 			l_is_normal: BOOLEAN
 		do
@@ -56,8 +61,7 @@ feature -- Enlarging
 					if l_bool_val.boolean_value then
 							-- case of: XXX or True
 							--       or XXX or else True
-						l_attr ?= left
-						if is_or or left.is_predefined or (l_attr /= Void) then
+						if is_or or left.is_predefined or left.is_attribute then
 								-- No harm by not evaluating XXX if either condition is met:
 								-- 1 - we have a `is_or', therefore compiler is authorized to
 								--     change the evaluation order
@@ -105,7 +109,7 @@ feature -- Enlarging
 		end;
 
 note
-	copyright:	"Copyright (c) 1984-2012, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2020, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

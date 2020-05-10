@@ -70,7 +70,7 @@ feature -- Access
 	else_expression: EXPR_B
 			-- Byte node for Else_part.
 
-	end_location: LOCATION_AS
+	end_location: detachable LOCATION_AS
 			-- Line number where `end' keyword is located
 
 	type: TYPE_A
@@ -106,6 +106,14 @@ feature -- Status report
 				then_expression.allocates_memory or else
 				else_expression.allocates_memory or else
 				attached elsif_list as l and then across l as c some c.item.allocates_memory end
+		end
+
+	has_breakpoints: BOOLEAN
+			-- Can breakpoints be put inside the expression?
+		do
+				-- Breakpoints should not be generated if the conditional expression
+				-- replaces some boolean connective.
+			Result := attached end_location
 		end
 
 feature -- Code generation: C
@@ -381,8 +389,10 @@ feature {NONE} -- Code generation: C
 				-- There is a leading test, so put a space before opening a brace.
 			buf.put_two_character (' ', '{')
 			buf.indent
-				-- Generate the hook for the branch.
-			generate_frozen_debugger_hook
+			if has_breakpoints then
+					-- Generate the hook for the branch.
+				generate_frozen_debugger_hook
+			end
 				-- Assign result of a expression `e` to `register` of type `t`.
 			e.generate_for_attachment (register, t)
 			buf.generate_block_close
@@ -462,7 +472,7 @@ feature -- Inlining
 note
 	date: "$Date$"
 	revision: "$Revision$"
-	copyright:	"Copyright (c) 1984-2018, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2020, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

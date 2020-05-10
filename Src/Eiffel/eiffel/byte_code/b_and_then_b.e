@@ -1,7 +1,9 @@
 note
+	description: "[
+			Byte code for "and then".
+		]"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
--- Byte code for "and then"
 
 class B_AND_THEN_B
 
@@ -12,6 +14,10 @@ inherit
 			built_in_enlarged, generate_operator,
 			is_commutative
 		end
+
+create
+	default_create,
+	make
 
 feature -- Visitor
 
@@ -103,7 +109,7 @@ feature -- Enlarging
 		end;
 
 note
-	copyright:	"Copyright (c) 1984-2015, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2020, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

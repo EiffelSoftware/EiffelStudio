@@ -12,6 +12,10 @@ inherit
 			built_in_enlarged, print_register
 		end
 
+create
+	default_create,
+	make
+
 feature -- Visitor
 
 	process (v: BYTE_NODE_VISITOR)
@@ -68,7 +72,7 @@ feature
 		end;
 
 note
-	copyright:	"Copyright (c) 1984-2012, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2020, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

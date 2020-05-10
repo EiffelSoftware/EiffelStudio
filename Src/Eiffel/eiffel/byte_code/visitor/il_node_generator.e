@@ -2181,11 +2181,9 @@ feature {NONE} -- Visitors
 				-- End of `if' statement.
 			il_generator.mark_label (l_end_label)
 
-			check
-				end_location_not_void: a_node.end_location /= Void
+			if attached a_node.end_location as l then
+				il_generator.put_silent_debug_info (l)
 			end
-
-			il_generator.put_silent_debug_info (a_node.end_location)
 		end
 
 	process_inspect_b (a_node: INSPECT_B)

@@ -1224,8 +1224,10 @@ feature {NONE} -- Visitors
 				-- Deferred writing of the jump value.
 			ba.mark_forward
 
-				-- Generate hook for Then_part.
-			generate_melted_debugger_hook (ba)
+			if a_node.has_breakpoints then
+					-- Generate hook for Then_part.
+				generate_melted_debugger_hook (ba)
+			end
 				-- Generate expression for Then_part.
 			make_expression_byte_code_for_type (a_node.then_expression, t)
 
@@ -1246,8 +1248,10 @@ feature {NONE} -- Visitors
 				nb_jumps := nb_jumps + l.count
 			end
 
-				-- Generate hook for Else_part.
-			generate_melted_debugger_hook (ba)
+			if a_node.has_breakpoints then
+					-- Generate hook for Else_part.
+				generate_melted_debugger_hook (ba)
+			end
 				-- Generate expression for Else_part.
 			make_expression_byte_code_for_type (a_node.else_expression, t)
 

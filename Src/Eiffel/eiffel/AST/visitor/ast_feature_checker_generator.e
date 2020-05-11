@@ -2586,11 +2586,12 @@ feature {NONE} -- Visitor
 
 	adapted_manifest_string_class_c (a_class_id: INTEGER; a_class_i: detachable CLASS_I): detachable CLASS_C
 		do
-			if a_class_i /= Void then
-				Result := a_class_i.compiled_class
-				if Result /= Void and then Result.class_id /= a_class_id then
-					Result := Void
-				end
+			if
+				attached a_class_i and then
+				attached a_class_i.compiled_class as c and then
+				c.class_id = a_class_id
+			then
+				Result := c
 			end
 		ensure
 			Result /= Void implies Result.class_id = a_class_id and Result.original_class = a_class_i
@@ -2603,21 +2604,26 @@ feature {NONE} -- Visitor
 			l_value: detachable STRING
 			class_id: INTEGER
 			s8, s32: detachable CLASS_C
-			t8, t32: detachable TYPE_A
 			l_is_immutable: BOOLEAN
 		do
-			if l_as.type = Void then
-					-- Default to STRING_8, if not specified in the code.
-				l_simplified_string_type := manifest_string_type
-			else
-				check_type (l_as.type)
+			if attached l_as.type as t then
+					-- Check explicit manifest string type.
+				check_type (t)
 				if attached last_type as l_last_type then
 					l_simplified_string_type := l_last_type.duplicate
 						-- Manifest strings are always frozen.
 					l_simplified_string_type.set_frozen_mark
 				end
+			else
+					-- Default to STRING_8, if possible, and to STRING_32 otherwise.
+				l_simplified_string_type :=
+					if l_as.is_code_point_valid_string_8 then
+						manifest_string_8_type
+					else
+						manifest_string_32_type
+					end
 			end
-			if l_simplified_string_type /= Void then
+			if attached l_simplified_string_type then
 					-- Constants are always of an attached type.
 				l_simplified_string_type := l_simplified_string_type.as_normally_attached (context.current_class)
 				set_type (l_simplified_string_type, l_as)
@@ -2648,11 +2654,19 @@ feature {NONE} -- Visitor
 							l_value := l_as.value
 						end
 					else
-							-- Invalid Unicode code point for STRING_8
-						if attached s32 then
-							t32 := s32.actual_type
-						end
-						error_handler.insert_error (create {VWMQ}.make (l_simplified_string_type, <<t32>>, context, l_as))
+							-- Invalid Unicode code point for STRING_8.
+						error_handler.insert_error (create {VWMQ}.make (l_simplified_string_type, <<
+							if attached system.string_32_class as i and then attached i.compiled_class as c then
+								c.actual_type
+							else
+								Void
+							end,
+							if attached system.immutable_string_32_class as i and then attached i.compiled_class as c then
+								c.actual_type
+							else
+								Void
+							end
+						>>, context, l_as))
 						reset_types
 					end
 				elseif attached s32 then
@@ -2665,13 +2679,28 @@ feature {NONE} -- Visitor
 					end
 				else
 						-- The type is unexpected.
-					if attached s8 then
-						t8 := s8.actual_type
-					end
-					if attached s32 then
-						t32 := s32.actual_type
-					end
-					error_handler.insert_error (create {VWMQ}.make (l_simplified_string_type, <<t8, t32>>, context, l_as))
+					error_handler.insert_error (create {VWMQ}.make (l_simplified_string_type, <<
+							if l_as.is_code_point_valid_string_8 and then attached system.string_8_class as i and then attached i.compiled_class as c then
+								c.actual_type
+							else
+								Void
+							end,
+							if l_as.is_code_point_valid_string_8 and then attached system.immutable_string_8_class as i and then attached i.compiled_class as c then
+								c.actual_type
+							else
+								Void
+							end,
+							if attached system.string_32_class as i and then attached i.compiled_class as c then
+								c.actual_type
+							else
+								Void
+							end,
+							if attached system.immutable_string_32_class as i and then attached i.compiled_class as c then
+								c.actual_type
+							else
+								Void
+							end
+						>>, context, l_as))
 					reset_types
 				end
 				if attached l_value then
@@ -8986,10 +9015,18 @@ feature {NONE} -- Feature lookup
 
 feature {NONE} -- Predefined types
 
-	manifest_string_type: CL_TYPE_A
-			-- Actual string type
+	manifest_string_8_type: CL_TYPE_A
+			-- String type for 8-bit manifest strings.
 		once
 			Result := system.string_8_class.compiled_class.actual_type.duplicate
+				-- Manifest string have a frozen type.
+			Result.set_frozen_mark
+		end
+
+	manifest_string_32_type: CL_TYPE_A
+			-- String type for 32-bit manifest strings.
+		once
+			Result := system.string_32_class.compiled_class.actual_type.duplicate
 				-- Manifest string have a frozen type.
 			Result.set_frozen_mark
 		end

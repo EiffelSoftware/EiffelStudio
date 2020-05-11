@@ -92,11 +92,7 @@ feature -- Access
 				invoke_shop_fill_cart (Result)
 				if Result.has_incomplete_item then
 					Result.remove_incomplete_items
-					if Result.is_guest then
-						save_guest_shopping_cart (Result)
-					else
-						save_user_shopping_cart (Result)
-					end
+					save_shopping_cart (Result)
 				end
 			end
 		end
@@ -114,6 +110,15 @@ feature -- Access
 	clear_shopping_cart (a_cart: SHOPPING_CART)
 		do
 			a_cart.items.wipe_out
+			if a_cart.is_guest then
+				save_guest_shopping_cart (a_cart)
+			else
+				save_user_shopping_cart (a_cart)
+			end
+		end
+
+	save_shopping_cart (a_cart: SHOPPING_CART)
+		do
 			if a_cart.is_guest then
 				save_guest_shopping_cart (a_cart)
 			else

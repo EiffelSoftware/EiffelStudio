@@ -172,11 +172,7 @@ feature -- Routes
 				attached l_shop_cart_and_item.cart_item as l_shop_item
 			then
 				l_shop_cart.remove_item (l_shop_item)
-				if l_shop_cart.is_guest then
-					api.save_guest_shopping_cart (l_shop_cart)
-				else
-					api.save_user_shopping_cart (l_shop_cart)
-				end
+				api.save_shopping_cart (l_shop_cart)
 				r.add_boolean_field ("Succeed", not api.has_error)
 			else
 				r.add_boolean_field ("Succeed", False)
@@ -204,11 +200,7 @@ feature -- Routes
 					nb := p_fieldvalue.integer_value.max (0).to_natural_8
 					if nb /= l_shop_item.quantity then
 						l_shop_item.set_quantity (nb)
-						if l_shop_cart.is_guest then
-							api.save_guest_shopping_cart (l_shop_cart)
-						else
-							api.save_user_shopping_cart (l_shop_cart)
-						end
+						api.save_shopping_cart (l_shop_cart)
 						r.add_boolean_field ("Succeed", not api.has_error)
 					else
 						r.add_boolean_field ("Succeed", False)

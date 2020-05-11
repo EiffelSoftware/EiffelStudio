@@ -67,7 +67,7 @@ feature -- Execution
 			l_html: STRING_8
 			l_cart: SHOPPING_CART
 			l_cart_count: NATURAL_32
-			l_email,
+			l_email: READABLE_STRING_8
 			l_button_title: READABLE_STRING_GENERAL
 			l_user: CMS_USER
 			l_is_new_customer: BOOLEAN
@@ -109,8 +109,12 @@ feature -- Execution
 							if l_user /= Void then
 								l_email := l_user.email
 							end
-							if l_email = Void then
-								l_email := req.string_item ("shopping_email")
+							if
+								l_email = Void and then
+								attached req.string_item ("shopping_email") as p_email and then
+								p_email.is_valid_as_string_8
+							then
+								l_email := p_email.to_string_8
 							end
 							if l_email = Void then
 								l_html.append ("%N<div class=%"identification%"><h3>Identification</h3>")
@@ -123,6 +127,10 @@ feature -- Execution
 									]")
 								l_html.append ("</div>")
 							else
+								if l_cart.email = Void then
+									l_cart.set_email (l_email)
+									shop_api.save_shopping_cart (l_cart)
+								end
 								if l_cart.is_onetime then
 									create l_form.make (api.location_url (l_stripe_module.payment_link (l_shop_id, l_cart.id.out, l_email), Void), "stripe-payment")
 								else

@@ -6,25 +6,23 @@ note
 class
 	ES_CLOUD_ORG_LICENSE
 
-inherit
-	ES_CLOUD_LICENSE
-		rename
-			entity_id as organization_id
-		end
-
 create
 	make
 
+convert
+	license: {ES_CLOUD_LICENSE}
+
 feature {NONE} -- Creation
 
-	make (org: ES_CLOUD_ORGANIZATION; a_plan: ES_CLOUD_PLAN)
+	make (org: ES_CLOUD_ORGANIZATION; a_license: ES_CLOUD_LICENSE)
 		do
 			organization := org
-			plan := a_plan
-			create creation_date.make_now_utc
+			license := a_license
 		end
 
 feature -- Access
+
+	license: ES_CLOUD_LICENSE
 
 	organization: ES_CLOUD_ORGANIZATION
 

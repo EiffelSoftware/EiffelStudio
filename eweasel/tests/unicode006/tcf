@@ -25,7 +25,7 @@ compile_result validity_error TEST VQMC VQMC VQMC VQMC VQMC
 
 copy_raw 	test_manifest_with_bom.e $CLUSTER test.e
 resume_compile
-compile_result validity_error TEST VWMQ VWMQ VWMQ VWMQ VWMQ VWMQ VWMQ VWMQ VJAR VJAR VJAR VJAR VJAR VJAR
+compile_result validity_error TEST "Obsolete Call:75" "Obsolete Call:76" "Obsolete Call:78" "Obsolete Call:82" VWMQ VWMQ VWMQ VWMQ VJAR VJAR VJAR VJAR VJAR VJAR
 
 copy_raw 	test_without_bom.e $CLUSTER test.e
 resume_compile

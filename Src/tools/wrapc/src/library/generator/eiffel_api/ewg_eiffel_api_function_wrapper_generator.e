@@ -233,6 +233,9 @@ feature {NONE} -- Generate Eiffel High Level Access
 					generate_routine_call (a_function_wrapper)
 				end
 				output_stream.put_new_line
+				output_stream.put_string ("%T%Tensure")
+				output_stream.put_new_line
+				output_stream.put_line ("%T%T%Tinstance_free: class")
 				output_stream.put_line ("%T%Tend")
 --			end
 			output_stream.put_new_line

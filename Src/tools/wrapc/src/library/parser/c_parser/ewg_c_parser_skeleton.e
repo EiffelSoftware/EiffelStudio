@@ -123,7 +123,6 @@ feature {NONE}
 		local
 			cs_ds: DS_LINKED_LIST_CURSOR [ANY]
 			cs_dc: DS_LINKED_LIST_CURSOR [EWG_C_PHASE_1_DECLARATOR]
-			storage_class_spec: EWG_C_PHASE_1_STORAGE_CLASS_SPECIFIERS
 			is_typedef: BOOLEAN
 		do
 			-- see if this is a typedef
@@ -133,9 +132,9 @@ feature {NONE}
 			until
 				cs_ds.off or is_typedef
 			loop
-				storage_class_spec ?= cs_ds.item
-				if storage_class_spec /= Void and then
-					storage_class_spec.is_typedef then
+				if attached {EWG_C_PHASE_1_STORAGE_CLASS_SPECIFIERS} cs_ds.item as storage_class_spec and then
+					storage_class_spec.is_typedef
+				then
 					is_typedef := True
 				end
 				cs_ds.forth

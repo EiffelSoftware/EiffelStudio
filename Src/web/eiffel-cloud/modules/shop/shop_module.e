@@ -315,34 +315,34 @@ feature -- Hook
 					l_order := l_shop_api.cart_to_order (l_active_cart)
 					l_shop_api.invoke_commit_cart (l_active_cart)
 				end
-				if l_invoice /= Void then
-					create l_shop_cart.make_guest
-					l_shop_cart.set_currency (l_invoice.currency)
-					if attached l_invoice.lines as l_lines then
-						across
-							l_lines as ic
-						loop
-							if
-								attached ic.item as l_invoice_line and then
-								l_invoice_line.is_subscription_type and then
-								attached l_invoice_line.plan as l_plan and then
-								attached l_plan.nickname as l_plan_nickname
-							then
-								i := l_plan_nickname.index_of ('.', 1)
-								if i > 0 then
-									l_provider := l_plan_nickname.head (i - 1)
-									l_code := l_plan_nickname.substring (i + 1, l_plan_nickname.count)
-									l_quantity := l_invoice_line.quantity
-									create l_shop_item.make (l_code, l_provider)
-									l_shop_item.set_quantity (l_quantity)
+--				if l_invoice /= Void then
+--					create l_shop_cart.make_guest
+--					l_shop_cart.set_currency (l_invoice.currency)
+--					if attached l_invoice.lines as l_lines then
+--						across
+--							l_lines as ic
+--						loop
+--							if
+--								attached ic.item as l_invoice_line and then
+--								l_invoice_line.is_subscription_type and then
+--								attached l_invoice_line.plan as l_plan and then
+--								attached l_plan.nickname as l_plan_nickname
+--							then
+--								i := l_plan_nickname.index_of ('.', 1)
+--								if i > 0 then
+--									l_provider := l_plan_nickname.head (i - 1)
+--									l_code := l_plan_nickname.substring (i + 1, l_plan_nickname.count)
+--									l_quantity := l_invoice_line.quantity
+--									create l_shop_item.make (l_code, l_provider)
+--									l_shop_item.set_quantity (l_quantity)
 
-									l_shop_cart.add_item (l_shop_item)
-								end
-							end
-						end
-					end
-					l_shop_api.invoke_commit_cart (l_shop_cart)
-				end
+--									l_shop_cart.add_item (l_shop_item)
+--								end
+--							end
+--						end
+--					end
+--					l_shop_api.invoke_commit_cart (l_shop_cart)
+--				end
 				if l_invoice /= Void then
 					l_email_addr := l_invoice.customer_email
 				elseif attached l_shop_api.cms_api.user as u then

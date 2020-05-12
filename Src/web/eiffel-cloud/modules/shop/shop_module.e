@@ -209,10 +209,6 @@ feature -- Hook
 			lnk: CMS_LOCAL_LINK
 		do
 			if attached shop_api as l_shop_api and then l_shop_api.config.is_testing then
-				create lnk.make (a_response.api.translation ("Pricing", Void), a_response.location_url ("test-pricing", Void))
-				lnk.set_weight (10)
-				a_menu_system.primary_menu.extend (lnk)
-
 				if attached l_shop_api.active_shopping_cart (a_response.request) as l_cart and then l_cart.count > 0 then
 					create lnk.make ({STRING_32} "%/128722/" + {STRING_32} "(" + l_cart.count.out + ")", a_response.location_url ("shop/cart/", Void))
 					lnk.set_weight (100)
@@ -294,11 +290,6 @@ feature -- Hook
 
 	validate_payment (a_validation: STRIPE_PAYMENT_VALIDATION)
 		local
-			l_provider, l_code: READABLE_STRING_32
-			l_quantity: NATURAL_32
-			i: INTEGER
-			l_shop_cart: SHOPPING_CART
-			l_shop_item: SHOPPING_ITEM
 			l_order: READABLE_STRING_GENERAL
 			l_invoice: STRIPE_INVOICE
 			l_email_addr: READABLE_STRING_8

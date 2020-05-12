@@ -244,7 +244,7 @@ feature -- Element change: license
 				l_params.force (a_license.id, "lid")
 			end
 			l_params.force (a_license.plan.id, "pid")
-			l_params.force (a_license.key, "key")
+			l_params.force (a_license.key, "license_key")
 			l_params.force (a_license.platform, "platform")
 			l_params.force (a_license.version, "version")
 			l_params.force (a_license.status, "status")
@@ -440,15 +440,15 @@ feature {NONE} -- Queries: licenses
 
 	sql_last_inserted_license_id: STRING = "SELECT MAX(lid) FROM es_licenses;"
 
-	sql_insert_license: STRING = "INSERT INTO es_licenses (pid, key, platform, version, status, creation, expiration, fallback) VALUES (:pid, :key, :platform, :version, :status, :creation, :expiration, :fallback);"
+	sql_insert_license: STRING = "INSERT INTO es_licenses (pid, license_key, platform, version, status, creation, expiration, fallback) VALUES (:pid, :license_key, :platform, :version, :status, :creation, :expiration, :fallback);"
 
-	sql_update_license: STRING = "UPDATE es_licenses SET pid=:pid, key=:key, platform=:platform, version=:version, status=:status, creation=:creation, expiration=:expiration, fallback=:fallback WHERE lid=:lid;"
+	sql_update_license: STRING = "UPDATE es_licenses SET pid=:pid, license_key=:license_key, platform=:platform, version=:version, status=:status, creation=:creation, expiration=:expiration, fallback=:fallback WHERE lid=:lid;"
 
 	sql_delete_license: STRING = "DELETE FROM es_licenses WHERE lid=:lid;"
 
 	sql_select_licenses: STRING = "[
 			SELECT 
-				lic.lid, lic.key, lic.pid, es_plans.name, es_plans.data,
+				lic.lid, lic.license_key, lic.pid, es_plans.name, es_plans.data,
 				lic.platform, lic.version, lic.status, lic.creation, lic.expiration, lic.fallback,
 				es_licenses_users.uid
 			FROM es_licenses AS lic 
@@ -459,7 +459,7 @@ feature {NONE} -- Queries: licenses
 
 	sql_select_licenses_by_plan: STRING = "[
 			SELECT
-				lic.lid, lic.key, lic.pid,
+				lic.lid, lic.license_key, lic.pid,
 				lic.platform, lic.version, lic.status, lic.creation, lic.expiration, lic.fallback,
 				es_licenses_users.uid
 			FROM es_licenses AS lic
@@ -470,7 +470,7 @@ feature {NONE} -- Queries: licenses
 
 	sql_select_license_by_id: STRING = "[
 			SELECT
-				lic.lid, lic.key, lic.pid, es_plans.name, es_plans.data,
+				lic.lid, lic.license_key, lic.pid, es_plans.name, es_plans.data,
 				lic.platform, lic.version, lic.status, lic.creation, lic.expiration, lic.fallback
 			FROM es_licenses AS lic INNER JOIN es_plans ON lic.pid = es_plans.pid
 			WHERE lic.lid=:lid
@@ -479,10 +479,10 @@ feature {NONE} -- Queries: licenses
 
 	sql_select_license_by_key: STRING = "[
 			SELECT
-				lic.lid, lic.key, lic.pid, es_plans.name, es_plans.data,
+				lic.lid, lic.license_key, lic.pid, es_plans.name, es_plans.data,
 				lic.platform, lic.version, lic.status, lic.creation, lic.expiration, lic.fallback
 			FROM es_licenses AS lic INNER JOIN es_plans ON lic.pid = es_plans.pid
-			WHERE lower(lic.key)=:lowerkey
+			WHERE lower(lic.license_key)=:lowerkey
 			;
 		]"
 

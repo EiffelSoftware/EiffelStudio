@@ -61,7 +61,7 @@ CREATE TABLE es_sessions(
 CREATE TABLE es_licenses(
   `lid` INTEGER PRIMARY KEY AUTO_INCREMENT NOT NULL,
   `pid`	INTEGER NOT NULL, /* es_plans.id */
-  `key` TEXT NOT NULL,
+  `license_key` TEXT NOT NULL,
   `platform` TEXT,
   `version` TEXT,
   `status` INTEGER,

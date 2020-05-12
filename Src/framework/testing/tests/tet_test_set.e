@@ -1,11 +1,10 @@
-note
+﻿note
 	description: "[
-		Common ancestor for testing framework tests.
-		
-		The provided functionality in the class is mostly to initialize a test suite with a number of
-		{TEST_I} instances.
-	]"
-	author: ""
+			Common ancestor for testing framework tests.
+			
+			The provided functionality in the class is mostly to initialize a test suite with a number of
+			{TEST_I} instances.
+		]"
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -72,8 +71,8 @@ feature {NONE} -- Initialization
 			l_service: SERVICE_CONSUMER [SERVICE_CONTAINER_S]
 		do
 			create l_service
-			if l_service.is_service_available then
-				l_service.service.register (a_type, a_service, True)
+			if attached l_service.service as s then
+				s.register (a_type, a_service, True)
 			end
 		end
 
@@ -124,9 +123,8 @@ feature {NONE} -- Access: test suite
 			l_service_consumer: SERVICE_CONSUMER [TEST_SUITE_S]
 		do
 			create l_service_consumer
-			if l_service_consumer.is_service_available then
-				Result := l_service_consumer.service
-			else
+			Result := l_service_consumer.service
+			if not attached Result then
 				create {TEST_SUITE} Result.make
 				Result.test_suite_connection.connect_events (Current)
 				register_service ({TEST_SUITE_S}, Result)
@@ -212,7 +210,7 @@ feature {NONE} -- Basic operations
 			i: NATURAL
 			l_test: TET_TEST_MOCK
 			l_groups: TAG_SEARCH_TABLE
-			l_tag: STRING
+			l_tag: READABLE_STRING_32
 		do
 			assert_test_suite
 
@@ -229,9 +227,9 @@ feature {NONE} -- Basic operations
 					l_groups.after
 				loop
 					if l_groups.item_for_iteration.is_empty then
-						l_tag := "execution/serial"
+						l_tag := {STRING_32} "execution/serial"
 					else
-						l_tag := "execution/serial/" + l_groups.item_for_iteration
+						l_tag := {STRING_32} "execution/serial/" + l_groups.item_for_iteration
 					end
 					test_suite.tag_tree.add_tag (l_test, l_tag)
 					l_groups.forth
@@ -320,7 +318,7 @@ feature {NONE} -- Clean up
 		end
 
 note
-	copyright: "Copyright (c) 1984-2011, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2020, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

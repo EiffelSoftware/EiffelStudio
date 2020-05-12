@@ -1341,7 +1341,7 @@ test	finalize-wrong-type			final084 tcf pass finalizing
 test	finalize-min-used-crash		final085 tcf pass finalizing
 test	finalize-object-test-side-effects	final086 tcf pass finalizing
 test	finalize-inline-merged-routine	final087 tcf pass finalizing inlining
-test	finalize-inline-check-void-target	final088 tcf fail used_to_pass finalizing inlining
+test	finalize-inline-check-void-target	final088 tcf pass finalizing inlining
 test	finalize-qat-object-test		final089 tcf pass finalizing anchored_type
 test	finalize-attached-dcr-missing	final090 tcf pass finalizing
 test	finalize-inline-same-generic-derivation-crash	final091 tcf pass finalizing inlining

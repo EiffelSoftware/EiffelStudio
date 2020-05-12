@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "Manifest type qualifier error."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -56,25 +56,29 @@ feature -- Output
 	build_explain (f: TEXT_FORMATTER)
 			-- <Precursor>
 		local
-			comma: STRING
+			is_next: BOOLEAN
 		do
 			Precursor (f)
 			f.add ("Type: ")
 			type.append_to (f)
 			f.add_new_line
-			f.add ("Expected types: ")
-				-- Comma before type name is not required for the first type.
-			comma := ""
-			across expected_types as c
+			if ∃ t: expected_types ¦ attached t then
+				f.add ("Expected types: ")
+				across
+					expected_types as c
 				loop
 					if attached c.item as t then
-						f.add (comma)
+							-- Comma before type name is not required for the first type.
+						if is_next then
+							f.add (once ", ")
+						end
 						t.append_to (f)
 							-- Subsequent type names should be delimited with comma.
-						comma := once ", "
+						is_next := True
 					end
 				end
-			f.add_new_line
+				f.add_new_line
+			end
 		end
 
 feature {NONE} -- Output
@@ -95,7 +99,7 @@ invariant
 		expected_types_attached: attached expected_types
 
 note
-	copyright:	"Copyright (c) 1984-2011, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2020, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

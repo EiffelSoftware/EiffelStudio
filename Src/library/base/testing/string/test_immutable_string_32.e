@@ -829,27 +829,27 @@ feature -- Test
 			s_32 := "12345"
 			is_8 := "67890"
 			s_8 := "67890"
-			check_string_equality ("plus", is_32.plus (is_32), "1234512345")
-			check_string_equality ("plus", is_32.plus (s_32), "1234512345")
-			check_string_equality ("plus", is_32.plus (is_8), "1234567890")
-			check_string_equality ("plus", is_32.plus (s_8), "1234567890")
-			check_string_equality ("plus", is_32.plus (""), "12345")
+			check_string_equality ("plus", is_32 + is_32, "1234512345")
+			check_string_equality ("plus", is_32 + s_32, "1234512345")
+			check_string_equality ("plus", is_32 + is_8.as_string_32, "1234567890")
+			check_string_equality ("plus", is_32 + s_8, "1234567890")
+			check_string_equality ("plus", is_32 + "", "12345")
 
 			is_32 := ""
-			check_string_equality ("plus", is_32.plus (is_32), "")
-			check_string_equality ("plus", is_32.plus (s_32), "12345")
-			check_string_equality ("plus", is_32.plus (is_8), "67890")
-			check_string_equality ("plus", is_32.plus (s_8), "67890")
-			check_string_equality ("plus", is_32.plus (""), "")
+			check_string_equality ("plus", is_32 + is_32, "")
+			check_string_equality ("plus", is_32 + s_32, "12345")
+			check_string_equality ("plus", is_32 + is_8.as_string_32, "67890")
+			check_string_equality ("plus", is_32 + s_8, "67890")
+			check_string_equality ("plus", is_32 + "", "")
 
 			s_32 := ""
 			is_8 := ""
 			s_8 := ""
-			check_string_equality ("plus", is_32.plus (is_32), "")
-			check_string_equality ("plus", is_32.plus (s_32), "")
-			check_string_equality ("plus", is_32.plus (is_8), "")
-			check_string_equality ("plus", is_32.plus (s_8), "")
-			check_string_equality ("plus", is_32.plus (""), "")
+			check_string_equality ("plus", is_32 + is_32, "")
+			check_string_equality ("plus", is_32 + s_32, "")
+			check_string_equality ("plus", is_32 + is_8.as_string_32, "")
+			check_string_equality ("plus", is_32 + s_8, "")
+			check_string_equality ("plus", is_32 + "", "")
 		end
 
 	test_prunable
@@ -1297,7 +1297,7 @@ feature -- Constants
 
 
 note
-	copyright: "Copyright (c) 1984-2019, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2020, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

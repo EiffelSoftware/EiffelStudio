@@ -830,7 +830,7 @@ feature -- Test
 			s := "12345"
 			check_string_equality ("+", s + s, "1234512345")
 			check_string_equality ("+", "" + "", "")
-			check_string_equality ("+", "" + s, "12345")
+			check_string_equality ("+", ("").as_string_32 + s, "12345")
 			check_string_equality ("+", s + "", "12345")
 		end
 
@@ -1365,27 +1365,27 @@ feature -- Test
 			s_32 := "12345"
 			is_8 := "67890"
 			s_8 := "67890"
-			check_string_equality ("plus", s_32.plus (is_32), "1234512345")
-			check_string_equality ("plus", s_32.plus (s_32), "1234512345")
-			check_string_equality ("plus", s_32.plus (is_8), "1234567890")
-			check_string_equality ("plus", s_32.plus (s_8), "1234567890")
-			check_string_equality ("plus", s_32.plus (""), "12345")
+			check_string_equality ("plus", s_32 + is_32, "1234512345")
+			check_string_equality ("plus", s_32 + s_32, "1234512345")
+			check_string_equality ("plus", s_32 + is_8.as_string_32, "1234567890")
+			check_string_equality ("plus", s_32 + s_8, "1234567890")
+			check_string_equality ("plus", s_32 + "", "12345")
 
 			s_32 := ""
-			check_string_equality ("plus", s_32.plus (is_32), "12345")
-			check_string_equality ("plus", s_32.plus (s_32), "")
-			check_string_equality ("plus", s_32.plus (is_8), "67890")
-			check_string_equality ("plus", s_32.plus (s_8), "67890")
-			check_string_equality ("plus", s_32.plus (""), "")
+			check_string_equality ("plus", s_32 + is_32, "12345")
+			check_string_equality ("plus", s_32 + s_32, "")
+			check_string_equality ("plus", s_32 + is_8.as_string_32, "67890")
+			check_string_equality ("plus", s_32 + s_8, "67890")
+			check_string_equality ("plus", s_32 + "", "")
 
 			is_32 := ""
 			is_8 := ""
 			s_8 := ""
-			check_string_equality ("plus", s_32.plus (is_32), "")
-			check_string_equality ("plus", s_32.plus (s_32), "")
-			check_string_equality ("plus", s_32.plus (is_8), "")
-			check_string_equality ("plus", s_32.plus (s_8), "")
-			check_string_equality ("plus", s_32.plus (""), "")
+			check_string_equality ("plus", s_32 + is_32, "")
+			check_string_equality ("plus", s_32 + s_32, "")
+			check_string_equality ("plus", s_32 + is_8.as_string_32, "")
+			check_string_equality ("plus", s_32 + s_8, "")
+			check_string_equality ("plus", s_32 + "", "")
 		end
 
 	test_precede
@@ -2387,4 +2387,14 @@ feature -- Test
 			check_string_equality ("wipe_out", s, "")
 		end
 
+;note
+	copyright: "Copyright (c) 1984-2020, Eiffel Software and others"
+	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
+	source: "[
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
+		]"
 end

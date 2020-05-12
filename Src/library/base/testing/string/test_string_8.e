@@ -1396,27 +1396,27 @@ feature -- Tests
 			s_32 := "12345"
 			is_8 := "67890"
 			s_8 := "67890"
-			check_equality ("plus", s_8.plus (is_32), "6789012345")
-			check_equality ("plus", s_8.plus (s_32), "6789012345")
-			check_equality ("plus", s_8.plus (is_8), "6789067890")
-			check_equality ("plus", s_8.plus (s_8), "6789067890")
-			check_equality ("plus", s_8.plus (""), "67890")
+			check_equality ("plus", s_8 + is_32, "6789012345")
+			check_equality ("plus", s_8.as_string_32 + s_32, "6789012345")
+			check_equality ("plus", s_8 + is_8, "6789067890")
+			check_equality ("plus", s_8 + s_8, "6789067890")
+			check_equality ("plus", s_8 + "", "67890")
 
 			s_8 := ""
-			check_equality ("plus", s_8.plus (is_32), "12345")
-			check_equality ("plus", s_8.plus (s_32), "12345")
-			check_equality ("plus", s_8.plus (is_8), "67890")
-			check_equality ("plus", s_8.plus (s_8), "")
-			check_equality ("plus", s_8.plus (""), "")
+			check_equality ("plus", s_8 + is_32, "12345")
+			check_equality ("plus", s_8.as_string_32 + s_32, "12345")
+			check_equality ("plus", s_8 + is_8, "67890")
+			check_equality ("plus", s_8 + s_8, "")
+			check_equality ("plus", s_8 + "", "")
 
 			is_32 := ""
 			s_32 := ""
 			is_8 := ""
-			check_equality ("plus", s_8.plus (is_32), "")
-			check_equality ("plus", s_8.plus (s_32), "")
-			check_equality ("plus", s_8.plus (is_8), "")
-			check_equality ("plus", s_8.plus (s_8), "")
-			check_equality ("plus", s_8.plus (""), "")
+			check_equality ("plus", s_8 + is_32, "")
+			check_equality ("plus", s_8.as_string_32 + s_32, "")
+			check_equality ("plus", s_8 + is_8, "")
+			check_equality ("plus", s_8 + s_8, "")
+			check_equality ("plus", s_8 + "", "")
 		end
 
 	test_precede
@@ -2526,7 +2526,7 @@ feature -- Tests
 		end
 
 note
-	copyright: "Copyright (c) 1984-2018, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2020, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

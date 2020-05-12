@@ -1,11 +1,11 @@
-note
+﻿note
 	description: "[
 		Provices access to the raw API facilities of a dynamic module loaded from a known location
 		on disk.
 	]"
 	legal: "See notice at end of class."
-	status: "See notice at end of class.";
-	date: "$Date$";
+	status: "See notice at end of class."
+	date: "$Date$"
 	revision: "$Revision$"
 
 class
@@ -22,7 +22,7 @@ create
 
 feature {NONE} -- Initialize
 
-	make (a_path: READABLE_STRING_8)
+	make (a_path: READABLE_STRING_32)
 			-- Initialize the dynamic module with a full path.
 			--
 			-- `a_path': The full path to the dynamic module.
@@ -50,7 +50,7 @@ feature {NONE} -- Clean up
 
 feature -- Access
 
-	path: IMMUTABLE_STRING_8
+	path: IMMUTABLE_STRING_32
 			-- <Precursor>
 
 feature -- Status report
@@ -66,8 +66,8 @@ invariant
 	not_path_is_empty: not path.is_empty
 
 ;note
-	copyright:	"Copyright (c) 1984-2009, Eiffel Software"
-	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
+	copyright:	"Copyright (c) 1984-2020, Eiffel Software and others"
+	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
 			This file is part of Eiffel Software's Eiffel Development Environment.

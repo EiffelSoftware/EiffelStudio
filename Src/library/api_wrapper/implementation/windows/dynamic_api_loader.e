@@ -31,13 +31,13 @@ feature -- Query
 
 feature -- Basic operations
 
-	load_library (a_name: READABLE_STRING_GENERAL; a_version: detachable READABLE_STRING_GENERAL): POINTER
+	load_library (a_name: READABLE_STRING_32; a_version: detachable READABLE_STRING_32): POINTER
 			-- <Precursor>
 		local
 			l_fn: PATH
 			l_dll_fn: PATH
 		do
-			create l_fn.make_from_string (if a_version = Void then a_name else a_name + a_version end)
+			create l_fn.make_from_string (if attached a_version then a_name + a_version else a_name end)
 			l_dll_fn := l_fn.twin
 			l_dll_fn := l_dll_fn.appended_with_extension (once "dll")
 			Result := load_library_from_path (l_dll_fn.utf_8_name)
@@ -53,7 +53,7 @@ feature -- Basic operations
 			end
 		end
 
-	load_library_from_path (a_path: READABLE_STRING_GENERAL): POINTER
+	load_library_from_path (a_path: READABLE_STRING_32): POINTER
 			-- <Precursor>
 		local
 			l_path: C_STRING
@@ -119,7 +119,7 @@ feature {NONE} -- Externals
 		end
 
 ;note
-	copyright:	"Copyright (c) 1984-2019, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2020, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

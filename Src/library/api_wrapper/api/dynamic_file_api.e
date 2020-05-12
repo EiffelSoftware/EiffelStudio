@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "[
 		Base class for wrapping a dynamic library APIs using a known path to the dynamic library.
 	]"
@@ -15,7 +15,7 @@ inherit
 
 feature -- Access
 
-	path: READABLE_STRING_8
+	path: READABLE_STRING_32
 			-- Full path use to load the dynamic library with.
 		deferred
 		ensure
@@ -32,8 +32,8 @@ feature {NONE} -- Basic operations
 		end
 
 ;note
-	copyright: "Copyright (c) 1984-2009, Eiffel Software"
-	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
+	copyright: "Copyright (c) 1984-2020, Eiffel Software and others"
+	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[
 			This file is part of Eiffel Software's Eiffel Development Environment.

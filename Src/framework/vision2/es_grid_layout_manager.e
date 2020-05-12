@@ -190,7 +190,7 @@ feature -- Access
 					current_processing_id := 0 --| Cancel current restoration if any
 					gid := global_identification
 					debug ("es_grid_layout")
-						print (":" + name + ": record : session [" + gid + "] %N")
+						print ({STRING_32} ":" + name + ": record : session [" + gid + "] %N")
 					end
 
 					from
@@ -237,13 +237,13 @@ feature -- Access
 
 					gid := global_identification
 					debug ("es_grid_layout")
-						print (":" + name + ": restore : session [" + gid + "] %N")
+						print ({STRING_32} ":" + name + ": restore : session [" + gid + "] %N")
 					end
 
 					s := l_layout.id
 					if not s.is_equal (gid) then
 						debug ("es_grid_layout")
-							print (":" + name + ": different session -> " + s + " /= " + gid + "%N")
+							print ({STRING_32} ":" + name + ": different session -> " + s + " /= " + gid + "%N")
 						end
 						wipe_out
 					else
@@ -376,7 +376,7 @@ feature {NONE} -- Implementation
 						l_val := l_value_agent.item ([a_row, True])
 					end
 					debug ("es_grid_layout")
-						print (":" + name + ": " + generator + ".recorded_row_layout : "  + a_row.index.out + " %"" + l_id + "%".%N")
+						print ({STRING_32} ":" + name + ": " + generator + ".recorded_row_layout : "  + a_row.index.out + " %"" + l_id + "%".%N")
 					end
 					if a_row.is_expanded then
 						debug ("es_grid_layout")
@@ -416,20 +416,20 @@ feature {NONE} -- Implementation
 	restore_row_layout_on_idle (a_row: EV_GRID_ROW; lay: attached like layout; l_curr_pid: INTEGER)
 		do
 			debug ("es_grid_layout")
-				print (":" + name + ": " + generator + ".restore_row_layout_on_idle : " + a_row.index.out + " -> " + string_id_for_lay (lay) + ": BEGIN %N")
+				print ({STRING_32} ":" + name + ": " + generator + ".restore_row_layout_on_idle : " + a_row.index.out + " -> " + string_id_for_lay (lay) + ": BEGIN %N")
 			end
 --			a_row.parent.refresh_now
 --			print ("Row after refresh_now => " + a_row.count.out + "%N")
 			Ev_application.do_once_on_idle (agent delayed_restore_row_layout (a_row, lay, l_curr_pid))
 			debug ("es_grid_layout")
-				print (":" + name + ": " + generator + ".restore_row_layout_on_idle : " + a_row.index.out + " -> " + string_id_for_lay (lay) + " : FINISHED %N")
+				print ({STRING_32} ":" + name + ": " + generator + ".restore_row_layout_on_idle : " + a_row.index.out + " -> " + string_id_for_lay (lay) + " : FINISHED %N")
 			end
 		end
 
 	delayed_restore_row_layout (a_row: EV_GRID_ROW; lay: attached like layout; l_curr_pid: INTEGER)
 		do
 			debug ("es_grid_layout")
-				print (":" + name + ": " + generator + ".delayed_restore_row_layout : " + a_row.index.out + " -> " + string_id_for_lay (lay) +"%N")
+				print ({STRING_32} ":" + name + ": " + generator + ".delayed_restore_row_layout : " + a_row.index.out + " -> " + string_id_for_lay (lay) +"%N")
 			end
 			if a_row.parent /= Void and lay /= Void and row_is_ready_for_identification (a_row) then
 					--| `lay' should not be Void, but issue bug#10172 still occurs
@@ -458,17 +458,17 @@ feature {NONE} -- Implementation
 			if on_idle and l_pid /= current_processing_id then
 					--| Cancel this restoration operation
 				debug ("es_grid_layout")
-					print (":" + name + ": restore_row_layout -> cancelled : " + a_row.index.out + "[" + string_id_for_lay (lay) + "] %N")
+					print ({STRING_32} ":" + name + ": restore_row_layout -> cancelled : " + a_row.index.out + "[" + string_id_for_lay (lay) + "] %N")
 				end
 			elseif a_row /= Void then
 				ts := lay.id
 				if ts /= Void then
 					debug ("es_grid_layout")
-						print (":" + name + ": restore_row_layout -> [" + ts + "] ")
+						print ({STRING_32}":" + name + ": restore_row_layout -> [" + ts + "] ")
 					end
 					if attached row_identification (a_row) as l_id then
 						debug ("es_grid_layout")
-							print (" ?id[%"" + l_id + "%"]")
+							print ({STRING_32} " ?id[%"" + l_id + "%"]")
 						end
 						if ts.is_equal (l_id) then
 								--| Same identification text .. so we suppose same row ...
@@ -597,7 +597,7 @@ feature {NONE} -- Implementation
 			if a_row /= Void then
 				if grid.is_content_partially_dynamic then
 					debug ("es_grid_layout")
-						print (":" + name + ": process_row_layout_restoring -> [" + string_id_for_lay (lay) + "] %N")
+						print ({STRING_32} ":" + name + ": process_row_layout_restoring -> [" + string_id_for_lay (lay) + "] %N")
 					end
 						--| In this case, we need to force a redraw to be sure the first cell of the row
 						--| get computed, then we'll be able to get the cell's text.
@@ -624,7 +624,7 @@ feature {NONE} -- Implementation
 					end
 				else
 					debug ("es_grid_layout")
-						print (":" + name + ": process_row_layout_restoring -> [" + string_id_for_lay (lay) + "] now%N")
+						print ({STRING_32} ":" + name + ": process_row_layout_restoring -> [" + string_id_for_lay (lay) + "] now%N")
 					end
 					restore_row_layout (a_row, lay, False, current_processing_id)
 				end
@@ -711,7 +711,7 @@ feature {NONE} -- Agent
 			-- row and old value
 
 note
-	copyright:	"Copyright (c) 1984-2019, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2020, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

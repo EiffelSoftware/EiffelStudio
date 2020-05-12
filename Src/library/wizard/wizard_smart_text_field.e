@@ -1,8 +1,9 @@
-note
+﻿note
 	description: "Text field which are used by the Wizard"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 	author: "Arnaud PICHERY [aranud@mail.dotcom.fr]"
+	revised_by: "Alexander Kogtenkov"
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -178,10 +179,10 @@ feature -- Settings
 			-- the label to `a_size'.
 		do
 			if generated then
-				label.set_text (a_string+":")
+				label.set_text (a_string.as_string_32 + ":")
 				label.set_minimum_width (a_size)
 			else
-				label_string := a_string+":"
+				label_string := a_string.as_string_32 + ":"
 				label_size := a_size
 			end
 		end
@@ -364,7 +365,7 @@ feature {NONE} -- Implementation
 			-- Action for the browse button.
 
 note
-	copyright:	"Copyright (c) 1984-2016, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2020, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

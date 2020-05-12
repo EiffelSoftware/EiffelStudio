@@ -239,18 +239,15 @@ feature -- Access: -interface
 	interface_output_action_template: detachable IMMUTABLE_STRING_32
 			-- Template for output action
 		once
-			if attached interface_item ("template") as s then
-				Result := s
-			end
+			Result := interface_item ("template")
 		end
 
-	interface_text (m: READABLE_STRING_GENERAL): IMMUTABLE_STRING_32
+	interface_text (m: READABLE_STRING_32): IMMUTABLE_STRING_32
 			-- Value for -options text.`m'=value
 		do
-			if attached interface_item ("text." + m) as s then
-				Result := s
-			else
-				create Result.make_from_string_general (m)
+			Result := interface_item ({STRING_32} "text." + m)
+			if not attached Result then
+				create Result.make_from_string (m)
 			end
 		end
 
@@ -265,14 +262,11 @@ feature -- Access: -options
 	platform_option: IMMUTABLE_STRING_32
 			-- `platform' compiler option for any action.
 		once
-			if attached options_item ("platform") as l_opt then
-				if not l_opt.is_empty and then l_opt.item (l_opt.count) = '!' then
-					Result := l_opt.head (l_opt.count - 1)
-				else
-					Result := l_opt
-				end
-			else
+			Result := options_item ("platform")
+			if not attached Result then
 				create Result.make_empty
+			elseif not Result.is_empty and then Result.item (Result.count) = '!' then
+				Result := Result.head (Result.count - 1)
 			end
 		end
 
@@ -287,9 +281,8 @@ feature -- Access: -options
 	ec_options: IMMUTABLE_STRING_32
 			-- 'ec' compiler option for any action
 		once
-			if attached options_item ("ec") as l_opt then
-				Result := l_opt
-			else
+			Result := options_item ("ec")
+			if not attached Result then
 				create Result.make_empty
 			end
 		end
@@ -297,9 +290,8 @@ feature -- Access: -options
 	melt_ec_options: IMMUTABLE_STRING_32
 			-- 'ec' compiler option when melting
 		once
-			if attached options_item ("ec.melt") as l_opt then
-				Result := l_opt
-			else
+			Result := options_item ("ec.melt")
+			if not attached Result then
 				create Result.make_empty
 			end
 		end
@@ -307,9 +299,8 @@ feature -- Access: -options
 	freeze_ec_options: IMMUTABLE_STRING_32
 			-- 'ec' compiler option when freezing
 		once
-			if attached options_item ("ec.freeze") as l_opt then
-				Result := l_opt
-			else
+			Result := options_item ("ec.freeze")
+			if not attached Result then
 				create Result.make_empty
 			end
 		end
@@ -317,9 +308,8 @@ feature -- Access: -options
 	finalize_ec_options: IMMUTABLE_STRING_32
 			-- 'ec' compiler option when finalizing
 		once
-			if attached options_item ("ec.finalize") as l_opt then
-				Result := l_opt
-			else
+			Result := options_item ("ec.finalize")
+			if not attached Result then
 				create Result.make_empty
 			end
 		end
@@ -373,7 +363,8 @@ feature {NONE} -- Concatenated value for multiple switch
 		do
 			if
 				has_option (a_switch) and then
-			 	attached options_of_name (a_switch) as lst and then not lst.is_empty
+			 	attached options_of_name (a_switch) as lst and then
+			 	not lst.is_empty
 			then
 				create Result.make_caseless (lst.count)
 				Result.compare_objects
@@ -443,7 +434,7 @@ feature {NONE} -- Switch names
 	;
 
 note
-	copyright:	"Copyright (c) 1984-2019, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2020, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

@@ -1,11 +1,10 @@
-note
+﻿note
 	description: "[
 		Objects that provide settings for executing an {EQA_TEST_SET}. A settings conists of an
 		key-value pair of type {STRING}.
 		The settings are once per thread, meaning that any {EQA_ENVIRONMENT} instances will have
 		the same state if they are accessed in the same thread.
 	]"
-	author: ""
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -41,7 +40,7 @@ feature -- Access
 			if attached item (a_key) as l_v then
 				Result := l_v
 			else
-				an_asserter.assert (a_key + " not defined", False)
+				an_asserter.assert (a_key.as_string_32 + {STRING_32} " not defined", False)
 				create Result.make_empty
 			end
 		ensure
@@ -60,7 +59,7 @@ feature -- Access
 			an_asserter_attached: an_asserter /= Void
 		do
 			Result := item_attached (a_key, an_asserter)
-			an_asserter.assert (a_key + " is empty", not Result.is_empty)
+			an_asserter.assert (a_key.as_string_32 + {STRING_32} " is empty", not Result.is_empty)
 		end
 
 feature -- Access: obsolete
@@ -265,7 +264,7 @@ feature {NONE} -- Constants
 			-- variable name off from surrounding text
 
 note
-	copyright: "Copyright (c) 1984-2017, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2020, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

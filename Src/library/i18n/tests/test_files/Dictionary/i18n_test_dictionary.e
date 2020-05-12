@@ -119,7 +119,7 @@ feature {NONE}	-- Data generation
 			random:RANDOM
 			i:INTEGER
 			singular:READABLE_STRING_GENERAL
-			translated_singular, original_plural: READABLE_STRING_GENERAL
+			translated_singular: READABLE_STRING_GENERAL
 			file: PLAIN_TEXT_FILE
 			l_name, l_generated_name: STRING_32
 			l_fn: STRING
@@ -140,8 +140,7 @@ feature {NONE}	-- Data generation
 					random.forth
 					translated_singular:=random.item.out
 					random.forth
-					original_plural:=random.item.out
-					create entry.make_with_plural (singular, translated_singular, original_plural)
+					create entry.make_with_plural (singular, translated_singular, random.item.out)
 
 					--fill a `entry' with plural translations
 					-- are added by hand!
@@ -163,14 +162,14 @@ feature {NONE}	-- Data generation
 
 					-- fill the `file' with the entry
 					if attached entry.original_plural as l_plu and then attached entry.plural_translations as l_trans then
-						file.put_string ("entry "+i.out+": %N%
-										 %original_singular: "+entry.original_singular.out+"%N%
-										 %original_plural: "+l_plu.out+"%N%
-										 %singular_translation: "+entry.singular_translation.out+"%N%
-										 %plural_translations: (0) "+l_trans.item (0)+
-										 " (1) "+l_trans.item (1)+
-										 " (2) "+l_trans.item (2)+
-										 " (3) "+l_trans.item (3)+"%N")
+						file.put_string_32 ({STRING_32} "entry " + i.out + ": %N%
+										 %original_singular: " + entry.original_singular.out + "%N%
+										 %original_plural: " + l_plu.out + "%N%
+										 %singular_translation: " + entry.singular_translation.out + "%N%
+										 %plural_translations: (0) " + l_trans.item (0) +
+										 " (1) " + l_trans.item (1) +
+										 " (2) " + l_trans.item (2) +
+										 " (3) " + l_trans.item (3) + "%N")
 					end
 
 					-- to continue the loop
@@ -197,10 +196,9 @@ data_query(t:I18N_DICTIONARY; datalength,seed:INTEGER)
 		local
 			i,j: INTEGER
 			singular: READABLE_STRING_GENERAL
-			translated_singular, original_plural: READABLE_STRING_GENERAL
+			original_plural: READABLE_STRING_GENERAL
 			random: RANDOM
 			output_file: PLAIN_TEXT_FILE
-
 			l_name, l_generated_name: STRING_32
 			l_fn: STRING
 		do
@@ -217,7 +215,6 @@ data_query(t:I18N_DICTIONARY; datalength,seed:INTEGER)
 				loop
 					singular:=random.item.out
 					random.forth
-					translated_singular:=random.item.out
 					random.forth
 					original_plural:=random.item.out
 					output_file.put_string ("query "+i.out+": %N")
@@ -270,7 +267,6 @@ data_query(t:I18N_DICTIONARY; datalength,seed:INTEGER)
 				loop
 					singular:=random.item.out
 					random.forth
-					translated_singular:=random.item.out
 					random.forth
 					original_plural:=random.item.out
 					output_file.put_string ("query "+i.out+": %N")
@@ -318,7 +314,7 @@ feature {NONE} -- Data access
 		local
 			i,j: INTEGER
 			singular: READABLE_STRING_GENERAL
-			translated_singular, original_plural: READABLE_STRING_GENERAL
+			original_plural: READABLE_STRING_GENERAL
 			random: RANDOM
 			output_file: PLAIN_TEXT_FILE
 
@@ -339,37 +335,33 @@ feature {NONE} -- Data access
 				loop
 					singular := random.item.out
 					random.forth
-					translated_singular := random.item.out
 					random.forth
 					original_plural := random.item.out
 					output_file.put_string ("get data iteration " + i.out + ": " + "%N")
 
-					if attached t.singular (singular) as l_singular then
-						output_file.put_string ("get_singular(" + {UTF_CONVERTER}.utf_32_string_to_utf_8_string_8 (singular) + "): "+ {UTF_CONVERTER}.utf_32_string_to_utf_8_string_8 (l_singular) +"%N")
-					else
-						output_file.put_string ("not has(" + {UTF_CONVERTER}.utf_32_string_to_utf_8_string_8 (singular) + "): "+ "%N")
-					end
+					output_file.put_string_32
+						(if attached t.singular (singular) as l_singular then
+							{STRING_32} "get_singular (" + singular + "): "+ l_singular +"%N"
+						else
+							{STRING_32} "not has (" + singular + ")%N"
+						end)
 
 
 					-- i think `plural_number' could be 0,1,2,3
 					-- or 1 2 3 4, i do not know, try them all
 					-- actually plural_number >=0
 					from
-						j:=0
+						j := 0
 					until
-						j>10
+						j > 10
 					loop
-						if attached t.plural (singular,original_plural, j) as l_plural then
-							output_file.put_string ("get_plural (" + {UTF_CONVERTER}.utf_32_string_to_utf_8_string_8 (singular) + ","
-													+ {UTF_CONVERTER}.utf_32_string_to_utf_8_string_8 (original_plural) + "," + j.out +"): "
-													+ {UTF_CONVERTER}.utf_32_string_to_utf_8_string_8 (l_plural) +"%N")
-
-						else
-
-							output_file.put_string (" not has_plural (" + {UTF_CONVERTER}.utf_32_string_to_utf_8_string_8 (singular) + ","
-													+ {UTF_CONVERTER}.utf_32_string_to_utf_8_string_8 (original_plural) + "," + j.out +") %N ")
-						end
-						j:=j+1
+						output_file.put_string_32
+							(if attached t.plural (singular,original_plural, j) as l_plural then
+								{STRING_32} "get_plural (" + singular + "," + original_plural + "," + j.out +"): " + l_plural +"%N"
+							else
+								{STRING_32} "not has_plural (" + singular + "," + original_plural + "," + j.out +")%N "
+							end)
+						j := j + 1
 					end
 
 					-- to skip the four elements in plural translations
@@ -402,36 +394,32 @@ feature {NONE} -- Data access
 				loop
 					singular:=random.item.out
 					random.forth
-					translated_singular:=random.item.out
 					random.forth
 					original_plural:=random.item.out
 					output_file.put_string ("get_data_iteration " + i.out + ": " + "%N")
 
-
-					if attached t.singular (singular) as l_singular then
-						output_file.put_string ("get_singular(" + {UTF_CONVERTER}.utf_32_string_to_utf_8_string_8 (singular) + "): "+ {UTF_CONVERTER}.utf_32_string_to_utf_8_string_8 (l_singular) +"%N")
-					else
-						output_file.put_string (" not has_singular(" + {UTF_CONVERTER}.utf_32_string_to_utf_8_string_8 (singular) + ") %N ")
-					end
+					output_file.put_string_32
+						(if attached t.singular (singular) as l_singular then
+							{STRING_32} "get_singular (" + singular + "): "+ l_singular +"%N"
+						else
+							{STRING_32} "not has_singular (" + singular + ")%N "
+						end)
 
 					-- i think `plural_number' could be 0,1,2,3
 					-- or 1 2 3 4, i do not know, try them all
 					-- actually plural_number >=0
 					from
-						j:=0
+						j := 0
 					until
-						j>10
+						j > 10
 					loop
-						if attached t.plural (singular,original_plural, j) as l_plural then
-							output_file.put_string ("get_plural (" + {UTF_CONVERTER}.utf_32_string_to_utf_8_string_8 (singular) + "," + {UTF_CONVERTER}.utf_32_string_to_utf_8_string_8 (original_plural) + "," + j.out +"): "
-							+ l_plural +"%N")
-
-						else
-
-							output_file.put_string (" not has_plural (" + {UTF_CONVERTER}.utf_32_string_to_utf_8_string_8 (singular) + "," + {UTF_CONVERTER}.utf_32_string_to_utf_8_string_8 (original_plural) + "," + j.out +")%N")
-
-						end
-						j:=j+1
+						output_file.put_string_32
+							(if attached t.plural (singular,original_plural, j) as l_plural then
+								{STRING_32} "get_plural (" + singular + "," + original_plural + "," + j.out +"): " + l_plural +"%N"
+							else
+								{STRING_32} "not has_plural (" + singular + "," + original_plural + "," + j.out +")%N"
+							end)
+						j := j + 1
 					end
 
 				-- to continue the loop
@@ -446,18 +434,22 @@ feature {NONE} -- Data access
 				io.put_string ("data_get is finished")
 			end
 		end
+
 feature {NONE} -- access
+
 	attr_plural_form: INTEGER
 	current_folder: detachable DIRECTORY note option: stable attribute end
-	current_folder_string: STRING_8
+
+	current_folder_string: STRING_32
 		do
-			result :=Operating_environment.Current_directory_name_representation+
-												Operating_environment.Directory_separator.out
+			Result := Operating_environment.Current_directory_name_representation.as_string_32.twin
+			Result.extend (Operating_environment.Directory_separator)
 		end
 
 note
+	ca_ignore: "CA011", "CA011: too many arguments"
 	library:   "Internationalization library"
-	copyright: "Copyright (c) 1984-2019, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2020, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

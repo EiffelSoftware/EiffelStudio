@@ -84,7 +84,7 @@ feature -- Command
 			end
 
 			l_value := test_set.environment.substitute (l_value)
-			create l_inst.make (test_set, a_name + " " + l_value)
+			create l_inst.make (test_set, a_name + " " + {UTF_CONVERTER}.string_32_to_utf_8_string_8 (l_value))
 			l_inst.execute (test_set)
 		end
 
@@ -114,7 +114,7 @@ feature -- Command
 				l_count := l_count + 1
 			end
 			l_path := test_set.environment.substitute (l_path)
-			create l_inst.make (test_set, a_name + " " + l_path)
+			create l_inst.make (test_set, a_name + " " + {UTF_CONVERTER}.string_32_to_utf_8_string_8 (l_path))
 			l_inst.execute (test_set)
 		end
 
@@ -146,7 +146,7 @@ feature -- Command
 			l_path := l_path + " " + a_file_name
 			l_path := test_set.environment.substitute (l_path)
 
-			create l_inst.make (test_set, a_name + " " + l_path)
+			create l_inst.make (test_set, a_name + " " + {UTF_CONVERTER}.string_32_to_utf_8_string_8 (l_path))
 			l_inst.execute (test_set)
 		end
 
@@ -556,7 +556,7 @@ feature {NONE} -- Implementation
 		end
 
 ;note
-	copyright: "Copyright (c) 1984-2019, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2020, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

@@ -1,5 +1,4 @@
-note
-	description: "Objects that ..."
+﻿note
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -54,14 +53,14 @@ feature -- Change
 			elseif s.is_empty then
 				operator_string := " "
 			else
-				operator_string := " " + s + " "
+				operator_string := {STRING_32} " " + s + " "
 			end
 		ensure
 			attached operator_string as l_op implies (l_op[1] = ' ' and l_op[l_op.count] = ' ')
 		end
 
 note
-	copyright: "Copyright (c) 1984-2016, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2020, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

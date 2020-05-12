@@ -417,7 +417,7 @@ feature -- Access
 			create Result.make (sh.count + 30)
 			Result.append ("Usage: %"criterion:value%"")
 			if attached default_builder_name as dft then
-				Result.append (" (note: %"value%" is aliased with  %"" + dft + ":value%")")
+				Result.append ({STRING_32} " (note: %"value%" is aliased with  %"" + dft + ":value%")")
 			end
 			Result.append_character ('%N')
 			Result.append_character ('%N')
@@ -478,7 +478,7 @@ invariant
 	builders /= Void
 
 note
-	copyright: "Copyright (c) 1984-2017, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2020, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

@@ -172,7 +172,7 @@ feature {NONE} -- Implementation
 				--save_cache_to_file (generated_result_file_name (l_locale.info.id.name))
 				if not l_locale.info.id.name.is_empty then
 					if attached cached_output as l_output then
-						assert ("Output did not match when testing locale '" + l_locale.info.id.name + "'",
+						assert ({STRING_32} "Output did not match when testing locale '" + l_locale.info.id.name + "'",
 							has_same_content_as_string (result_file_name (l_locale.info.id.name, {PLATFORM}.is_windows), utf32_to_utf8 (l_output)))
 					else
 						assert ("No output", False)
@@ -310,7 +310,7 @@ feature {NONE} -- Implementation
 
 note
 	library:   "Internationalization library"
-	copyright: "Copyright (c) 1984-2019, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2020, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

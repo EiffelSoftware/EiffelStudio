@@ -1,6 +1,6 @@
-note
+﻿note
 	description: "[
-		Objects that contain all structures required for buffering RTF for saving/loading/implementation.
+			Objects that contain all structures required for buffering RTF for saving/loading/implementation.
 		]"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -811,7 +811,7 @@ feature {NONE} -- Implementation
 			-- Process fonttable contained in `rtf_text', the contents of which
 			-- start at character index `main_iterator'.
 		require
-			pointing_to_fonttable: rtf_text.substring (main_iterator, main_iterator + rtf_fonttable.count).same_string_general (rtf_control_character.out + rtf_fonttable)
+			pointing_to_fonttable: rtf_text.substring (main_iterator, main_iterator + rtf_fonttable.count).same_string_general (create {STRING_32}.make_filled (rtf_control_character, 1) + rtf_fonttable)
 		local
 			depth: INTEGER
 			current_character: CHARACTER_32
@@ -879,7 +879,7 @@ feature {NONE} -- Implementation
 			-- Process colortable contained in `rtf_text', the contents of which
 			-- start at character index `main_iterator'.
 		require
-			pointing_to_colortable: rtf_text.substring (main_iterator, main_iterator + rtf_colortbl.count).same_string_general (rtf_control_character.out + rtf_colortbl)
+			pointing_to_colortable: rtf_text.substring (main_iterator, main_iterator + rtf_colortbl.count).same_string_general (create {STRING_32}.make_filled (rtf_control_character, 1) + rtf_colortbl)
 		local
 			depth: INTEGER
 			current_character: CHARACTER_32
@@ -1364,7 +1364,7 @@ invariant
 	rich_text_not_void: rich_text /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2013, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2020, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software
@@ -1374,18 +1374,4 @@ note
 			Customer support http://support.eiffel.com
 		]"
 
-
-
-
-end -- class EV_RICH_TEXT_BUFFERING_STRUCTURES_I
-
-
-
-
-
-
-
-
-
-
-
+end

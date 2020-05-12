@@ -444,7 +444,7 @@ feature -- Drawing operations
 			if font_style.is_empty then
 				font_style.append_string_general ("Roman")
 			end
-			add_ps ("/" + font_name + "-" + font_style + " findfont")
+			add_ps ({STRING_32} "/" + font_name + "-" + font_style + " findfont")
 			add_ps (font.height.out + " scalefont")
 			add_ps ("setfont")
 			from
@@ -813,7 +813,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2018, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2020, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

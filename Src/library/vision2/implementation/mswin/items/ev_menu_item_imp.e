@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "Eiffel Vision menu item. Mswindows implementation."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -503,7 +503,7 @@ feature {NONE} -- WEL Implementation
 			plain_text_width := menu_font.string_width (plain_text_without_ampersands)
 			accel_text := accelerator_text
 			if not accel_text.is_empty then
-				accel_text_width := menu_font.string_width (" "+accel_text)
+				accel_text_width := menu_font.string_width ({STRING_32} " "+accel_text)
 			end
 			if attached pixmap_imp as l_pixmap_imp then
 				pixmap_width := l_pixmap_imp.width + Menu_bar_item_pixmap_text_space
@@ -964,7 +964,7 @@ feature {NONE} -- Constants
 			-- Space between the text and the pixmap in a menu bar item
 
 note
-	copyright:	"Copyright (c) 1984-2018, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2020, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

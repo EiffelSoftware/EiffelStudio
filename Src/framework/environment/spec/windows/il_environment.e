@@ -248,18 +248,18 @@ feature -- Query
 		do
 			if use_mdbg (a_debug) then
 				Result := dotnet_framework_sdk_bin_path
-				if Result /= Void then
-					Result := Result.extended (a_debug + ".exe")
+				if attached Result then
+					Result := Result.extended (a_debug).appended_with_extension ("exe")
 				end
 			elseif use_cordbg (a_debug) then
 				Result:= dotnet_framework_sdk_bin_path
-				if Result /= Void then
-					Result := Result.extended (a_debug + ".exe")
+				if attached Result then
+					Result := Result.extended (a_debug).appended_with_extension ("exe")
 				end
 			elseif use_dbgclr (a_debug) then
 				Result := Dotnet_framework_sdk_path
-				if Result /= Void then
-					Result := Result.extended ("GuiDebug").extended (a_debug + ".exe")
+				if attached Result then
+					Result := Result.extended ("GuiDebug").extended (a_debug).appended_with_extension ("exe")
 				end
 			end
 		end
@@ -369,7 +369,7 @@ invariant
 		version.item (3) = '.' and version.item (4).is_digit)
 
 note
-	copyright: "Copyright (c) 1984-2018, Eiffel Software"
+	copyright: "Copyright (c) 1984-2020, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

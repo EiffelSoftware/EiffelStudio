@@ -935,7 +935,7 @@ feature {NONE} -- Implementation
 				when Name_sorting_mode then --| Pref name
 					l_pref_index := l_display_name
 				when Type_sorting_mode then --| type name
-					l_pref_index := l_pref.string_type + "@" + l_display_name
+					l_pref_index := l_pref.string_type.as_string_32 + "@" + l_display_name
 				when Status_sorting_mode then --| type name
 					create l_pref_index.make_empty
 					if l_pref.is_default_value then
@@ -946,7 +946,8 @@ feature {NONE} -- Implementation
 					if l_pref.is_auto then
 						l_pref_index.append (auto_value)
 					end
-					l_pref_index.append ("@" + l_display_name)
+					l_pref_index.append ({STRING_32} "@")
+					l_pref_index.append (l_display_name)
 				else
 					check False end
 					create l_pref_index.make_empty
@@ -1720,7 +1721,7 @@ note
 	ca_ignore:
 		"CA011", "CA011: too many arguments",
 		"CA033", "CA033: very large class"
-	copyright:	"Copyright (c) 1984-2019, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2020, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

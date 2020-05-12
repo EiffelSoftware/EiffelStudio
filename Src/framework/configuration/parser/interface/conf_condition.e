@@ -514,7 +514,8 @@ feature -- Output
 					Result.append (l_min.version)
 					Result.append_string_general (" <= ")
 				end
-				Result.append_string_general (version.key_for_iteration + " version")
+				Result.append_string_general (version.key_for_iteration)
+				Result.append_string_general (" version")
 				if attached version.item_for_iteration.max as l_max then
 					Result.append_string_general (" <= ")
 					Result.append (l_max.version)
@@ -630,7 +631,7 @@ invariant
 	custom_not_void: custom /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2018, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2020, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

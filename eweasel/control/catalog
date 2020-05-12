@@ -129,6 +129,7 @@ test	two-way-tree-operations	tree008 tcf fail tree
 test	string-regression		string001 tcf pass string unicode
 test	check-lower-upper-unicode	string002 tcf pass string unicode
 test	manifest-string32-constants	string003 tcf pass string
+test	string-concatenation-conversion	string004 tcf pass string unicode conversion
 
 test	insert-default-key		table001 tcf pass table
 test	replace_key_cycle		table002 tcf pass table

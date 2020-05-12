@@ -1,0 +1,37 @@
+test_name string-concatenation-conversion
+test_description Concatenation of strings of different types is almost possible.
+
+copy_sub Ace $TEST Ace
+
+define ERROR ""
+copy_sub test.e $CLUSTER test.e
+
+compile_melted
+compile_result	validity_error TEST VWOE:63 VWOE:69 VWOE:75 VWOE:85 VWOE:87 VWOE:97 VWOE:99 VWOE:109 VWOE:111 "Obsolete Call:35" "Obsolete Call:37" "Obsolete Call:38" "Obsolete Call:40" "Obsolete Call:47" "Obsolete Call:49" "Obsolete Call:50" "Obsolete Call:51" "Obsolete Call:54" "Obsolete Call:55" "Obsolete Call:56" "Obsolete Call:58"
+
+define ERROR "--"
+copy_sub test.e $CLUSTER test.e
+
+resume_compile
+compile_result	validity_warning TEST "Obsolete Call:35" "Obsolete Call:37" "Obsolete Call:38" "Obsolete Call:40" "Obsolete Call:47" "Obsolete Call:49" "Obsolete Call:50" "Obsolete Call:51" "Obsolete Call:54" "Obsolete Call:55" "Obsolete Call:56" "Obsolete Call:58"
+execute_work	NONE exec_output_m
+execute_result	ok
+compare		exec_output_m output
+
+compile_frozen
+compile_result	ok
+c_compile_work
+c_compile_result	ok
+execute_work	NONE exec_output_w
+execute_result	ok
+compare		exec_output_w output
+
+compile_final
+compile_result	ok
+c_compile_final
+c_compile_result	ok
+execute_final	NONE exec_output_f
+execute_result	ok
+compare		exec_output_f output
+
+test_end

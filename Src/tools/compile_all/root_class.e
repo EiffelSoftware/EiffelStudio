@@ -224,7 +224,7 @@ feature {NONE} -- Implementation
 			base_location_set: base_location = loc
 		end
 
-	load_ignores (a_file: READABLE_STRING_GENERAL)
+	load_ignores (a_file: READABLE_STRING_32)
 			-- Retrieve list of ignored files/targets from `a_file'.
 		require
 			a_file_ok: a_file /= Void
@@ -244,7 +244,7 @@ feature {NONE} -- Implementation
 		do
 			create l_file.make_with_name (a_file)
 			if not l_file.exists or else not l_file.is_readable then
-				display_error ("Could not open ignore file "+a_file)
+				display_error ({STRING_32} "Could not open ignore file "+a_file)
 			else
 				l_file.open_read
 				create l_ini_loader.make
@@ -736,7 +736,7 @@ feature {NONE} -- Implementation
 				end
 				l_file.put_string ("%N")
 				if attached ISE_EC_FLAGS_environment_variable_value as v then
-					l_file.put_string ("ISE_EC_FLAGS: "+ v + "%N")
+					l_file.put_string_32 ({STRING_32} "ISE_EC_FLAGS: "+ v + "%N")
 				end
 
 				l_file.close
@@ -926,7 +926,7 @@ feature {NONE} -- Directory manipulation
 					directories_created_by_application.force (d.path)
 				end
 			else
-				io.error.put_string ("ERROR: unable to create directory %"" + d.path.name + "%".%N")
+				localized_print_error ("ERROR: unable to create directory %"" + d.path.name + "%".%N")
 			end
 		rescue
 			rescued := True
@@ -950,7 +950,7 @@ feature {NONE} -- Directory manipulation
 					d.recursive_delete
 				end
 			else
-				io.error.put_string ("ERROR: unable to remove directory %"" + d.path.name + "%".%N")
+				localized_print_error ("ERROR: unable to remove directory %"" + d.path.name + "%".%N")
 			end
 		rescue
 			rescued := True

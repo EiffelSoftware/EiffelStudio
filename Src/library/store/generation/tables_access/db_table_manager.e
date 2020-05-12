@@ -145,7 +145,7 @@ feature -- Access
 			check attached select_table_descr as l_select_table_descr then
 				Result := {STRING_32} "select "
 				if attached select_columns as l_select_columns then
-					Result.append_string (l_select_columns)
+					Result.append (l_select_columns)
 				else
 					Result.append_character ('*')
 				end
@@ -155,7 +155,7 @@ feature -- Access
 					Result.append_string_general (" where ")
 					Result.append (l_select_qualifiers)
 				end
-				Result.append_string_general (order_by)
+				Result.append (order_by)
 			end
 		end
 
@@ -242,7 +242,8 @@ feature -- Basic operations
 				until
 					cols.after
 				loop
-					l_select_columns.append (Values_separator + l_select_table_descr.description_list.i_th (cols.item))
+					l_select_columns.append (Values_separator)
+					l_select_columns.append (l_select_table_descr.description_list.i_th (cols.item))
 					cols.forth
 				end
 			end
@@ -296,17 +297,17 @@ feature -- Basic operations
 						-- '_' -> '?'): a solution is to replace
 						-- these characters by any character, i.e. '_'.
 					val.replace_substring_all (any_wildcard, only_one_wildcard)
-					q.append_string_general (Space)
-					q.append_string_general (Like_predicate)
-					q.append_string_general (Space)
+					q.append (Space)
+					q.append (Like_predicate)
+					q.append (Space)
 					if type = Contains_type or else type = Suffix_type then
-						val.prepend_string_general (any_wildcard)
+						val.prepend (any_wildcard)
 					end
 					if type = Contains_type or else type = Prefix_type then
-						val.append_string_general (any_wildcard)
+						val.append (any_wildcard)
 					end
 				else
-					q.append_string_general (Space)
+					q.append (Space)
 					if type = Equals_type then
 						q.append_character ('=')
 					elseif type = Greater_type then
@@ -314,7 +315,7 @@ feature -- Basic operations
 					elseif type = Lower_type then
 						q.append_character ('<')
 					end
-					q.append_string_general (Space)
+					q.append (Space)
 				end
 						-- Gives a valid SQL string representation to `val'.
 				if
@@ -349,17 +350,14 @@ feature -- Basic operations
 		require
 			select_query_prepared: select_query_prepared
 			value_not_void: value /= Void
-		local
-			l_select_qualifiers: like select_qualifiers
 		do
-			l_select_qualifiers := select_qualifiers
-			if l_select_qualifiers = Void then
-				create select_qualifiers.make_from_string_general (value)
-			else
-				l_select_qualifiers.append_string_general (Space)
-				l_select_qualifiers.append_string_general (And_operator)
-				l_select_qualifiers.append_string_general (Space)
+			if attached select_qualifiers as l_select_qualifiers then
+				l_select_qualifiers.append (Space)
+				l_select_qualifiers.append (And_operator)
+				l_select_qualifiers.append (Space)
 				l_select_qualifiers.append_string_general (value)
+			else
+				create select_qualifiers.make_from_string_general (value)
 			end
 		end
 
@@ -404,7 +402,8 @@ feature -- Basic operations
 					until
 						column_list.after
 					loop
-						order_by.append (Values_separator + descr_list.i_th (column_list.item))
+						order_by.append (Values_separator)
+						order_by.append (descr_list.i_th (column_list.item))
 						column_list.forth
 					end
 				else
@@ -418,7 +417,7 @@ feature -- Basic operations
 		require
 			select_query_prepared: select_query_prepared
 		do
-			order_by := ""
+			order_by := {STRING_32} ""
 		end
 
 feature -- Queries
@@ -461,12 +460,12 @@ feature -- Queries
 
 feature -- General command
 
-	execute_query (query: STRING)
+	execute_query (query: READABLE_STRING_32)
 			-- Execute SQL `query' and commit changes.
 		require
 			not_void: query /= Void
 		local
-			l_error_message: detachable STRING_32
+			l_error_message: STRING_32
 		do
 			database_manager.execute_query (query)
 			if database_manager.has_error then
@@ -586,11 +585,8 @@ feature -- Deletion
 	delete_item (an_obj: DB_TABLE)
 			-- Delete `an_obj' in the database, i.e.
 			-- the table row of `an_obj' table with `an_obj' ID.
-		local
-			table_descr: DB_TABLE_DESCRIPTION
 		do
-			table_descr := an_obj.table_description
-			delete_item_with_description (table_descr)
+			delete_item_with_description (an_obj.table_description)
 		end
 
 	delete_tablerow (an_obj: DB_TABLE)
@@ -615,7 +611,7 @@ feature -- Deletion
 			loop
 				item := to_delete_tables.item (ind)
 				fkey := del_fkey_from_table.item (item)
-				load_and_delete_tablerows (to_delete_tables.item (ind), fkey, deletion_fkey_value)
+				load_and_delete_tablerows (item, fkey, deletion_fkey_value)
 				ind := ind + 1
 			end
 			delete_item_with_description (table_descr)
@@ -771,8 +767,6 @@ feature {NONE} -- Creation implementation
 			-- Note: loaded repository are cached in `repository_table'.
 		require
 			is_valid_code: is_valid_code (code)
-		local
-			s_tmp: STRING
 		do
 			check
 				valid_index: repository_table.valid_index (code)
@@ -781,8 +775,7 @@ feature {NONE} -- Creation implementation
 			if attached repository_table.item (code) as l_repository then
 				Result := l_repository
 			else
-				s_tmp := tables.name_list.i_th (code).as_upper
-				create Result.make (s_tmp)
+				create Result.make (tables.name_list.i_th (code).as_upper)
 				Result.load
 				if not database_manager.has_error then
 					repository_table.put (Result, code)
@@ -807,39 +800,35 @@ feature {NONE} -- Deletion implementation
 			database_manager.execute_query (q)
 			if database_manager.has_error then
 				has_error := True
-				if attached database_manager.error_message_32 as l_error_message then
-					error_message_32 := Deletion_failed + l_error_message
-				else
-					error_message_32 := Deletion_failed
-				end
+				error_message_32 :=
+					if attached database_manager.error_message_32 as l_error_message then
+						Deletion_failed + l_error_message
+					else
+						Deletion_failed
+					end
 			end
 		end
 
 	load_and_delete_tablerows (table_code, fkey_code: INTEGER; fkey_value: ANY)
 			-- Load and delete rows of table with `tablecode' where foreign key with `fkey_code'
 			-- equals `fkey_value'.
-		local
-			l_result_list: like result_list
 		do
 			prepare_select_with_table (table_code)
 			add_value_qualifier (fkey_code, fkey_value.out)
 			load_result
-			if not database_manager.has_error then
-				l_result_list := result_list
-				if l_result_list /= Void then
-					from
-						l_result_list.start
-					until
-						l_result_list.after
-					loop
-						delete_tablerow (l_result_list.item)
-						l_result_list.forth
-					end
+			if
+				not database_manager.has_error and then
+				attached result_list as l_result_list
+			then
+				across
+					l_result_list as r
+				loop
+					delete_tablerow (r.item)
 				end
 			end
 		end
 
-feature {NONE} -- Implementation
+feature {NONE} -- Connection
 
 	session_control: detachable DB_CONTROL
 			-- Session control.
@@ -889,12 +878,12 @@ feature {NONE} -- Implementation
 			-- Database manager: manage every interaction
 			-- with database.
 
-feature {NONE} -- Implementation
+feature {NONE} -- Query
 
 	select_columns: detachable STRING_32
 			-- Columns to select from a selection statement.
 
-	order_by: STRING
+	order_by: STRING_32
 			-- SQL 'order by' clause.
 
 	result_list: detachable ARRAYED_LIST [DB_TABLE]
@@ -911,48 +900,40 @@ feature {NONE} -- Implementation
 
 feature {NONE} -- SQL query construction
 
-	Only_one_wildcard: STRING = "_"
+	Only_one_wildcard: STRING_32 = "_"
 			-- SQL representation of a wild card matching any character.
 
-	Any_wildcard: STRING = "%%"
+	Any_wildcard: STRING_32 = "%%"
 			-- SQL representation of a wild card matching any number of characters,
 			-- including none.
 
-	Space: STRING = " "
+	Space: STRING_32 = " "
 			-- Space separator in SQL queries.
 
-	to_lower (a_attribute: STRING): STRING
-			-- Oracle SQL representation of the value in lower case for `a_attribute'.
-		require
-			a_attribute_not_void: a_attribute /= Void
-		do
-			Result := "lower (" + a_attribute + ")"
-		end
-
-	to_lower_32 (a_attribute: READABLE_STRING_GENERAL): STRING_32
+	to_lower_32 (a_attribute: READABLE_STRING_32): STRING_32
 			-- Oracle SQL representation of the value in lower case for `a_attribute'.
 		require
 			a_attribute_not_void: a_attribute /= Void
 		do
 			create Result.make (8 + a_attribute.count)
-			Result.append_string_general ("lower (")
-			Result.append_string_general (a_attribute)
-			Result.append_string_general (")")
+			Result.append ("lower (")
+			Result.append (a_attribute)
+			Result.append (")")
 		end
 
-	Like_predicate: STRING = "like"
+	Like_predicate: STRING_32 = "like"
 			-- SQL 'like' predicate (used to match expressions using wildcards).
 
-	Order_by_clause: STRING = "order by"
+	Order_by_clause: STRING_32 = "order by"
 			-- SQL 'order by' clause.
 
-	Values_separator: STRING = ", "
+	Values_separator: STRING_32 = ", "
 			-- SQL value separator: for 'order by' clauses and columns to select.
 
-	All_columns: STRING = "*"
+	All_columns: STRING_32 = "*"
 			-- SQL all columns sign.
 
-	And_operator: STRING = "and"
+	And_operator: STRING_32 = "and"
 			-- SQL 'and' operator.
 
 feature {NONE} -- Error messages
@@ -962,32 +943,32 @@ feature {NONE} -- Error messages
 		require
 			query_not_void: query /= Void
 		do
-			Result := {STRING_32}"Database selection failed:%NSQL query was: "
-					+ query.as_string_32 + {STRING_32}"%NDatabase message is: "
+			Result := {STRING_32} "Database selection failed:%NSQL query was: "
+					+ query.as_string_32 + {STRING_32} "%NDatabase message is: "
 		end
 
 	Command_failed: STRING_32
 			-- Database command failed.
 		do
-			Result := {STRING_32}"Database command failed:%N"
+			Result := {STRING_32} "Database command failed:%N"
 		end
 
 	Update_failed: STRING_32
 			-- Database update failed.
 		do
-			Result := {STRING_32}"Database update failed:%N"
+			Result := {STRING_32} "Database update failed:%N"
 		end
 
 	Creation_failed: STRING_32
 			-- Database creation failed.
 		do
-			Result := {STRING_32}"Table row creation failed:%N"
+			Result := {STRING_32} "Table row creation failed:%N"
 		end
 
 	Deletion_failed: STRING_32
 			-- Database deletion failed.
 		do
-			Result := {STRING_32}"Table row deletion failed:%N"
+			Result := {STRING_32} "Table row deletion failed:%N"
 		end
 
 	id_creation_failed (name: STRING_32): STRING_32
@@ -995,7 +976,7 @@ feature {NONE} -- Error messages
 		require
 			not_void: name /= Void
 		do
-			Result := {STRING_32}"Cannot find a valid ID for the table: "
+			Result := {STRING_32} "Cannot find a valid ID for the table: "
 				+ name + "%N"
 		end
 
@@ -1004,24 +985,24 @@ feature {NONE} -- Error messages
 		require
 			not_void: name /= Void
 		do
-			Result := {STRING_32}"Cannot retrieve description of table "
-				+ name + {STRING_32}" :%N"
+			Result := {STRING_32} "Cannot retrieve description of table "
+				+ name + {STRING_32} " :%N"
 		end
 
 	No_repository: STRING_32
 			-- Reposioty does not exist.
 		do
-			Result := {STRING_32}"Repository does not exist.%N"
+			Result := {STRING_32} "Repository does not exist.%N"
 		end
 
 	Unexpected_error: STRING_32
 			-- Unexpected error.
 		do
-			Result := {STRING_32}"Unexpected error."
+			Result := {STRING_32} "Unexpected error."
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2019, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2020, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

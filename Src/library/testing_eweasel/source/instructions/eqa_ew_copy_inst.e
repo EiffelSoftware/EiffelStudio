@@ -235,10 +235,10 @@ feature {NONE} -- Implementation
 	check_dates (a_test: EQA_EW_SYSTEM_TEST_SET; a_start_date, a_orig_date, a_final_date, a_before_date, a_after_date: INTEGER a_fname: READABLE_STRING_GENERAL)
 			-- Check if date correct
 		local
-			l_error: STRING
+			l_error: STRING_32
 		do
 			if a_final_date <= a_orig_date then
-				l_error := "ERROR: final date " + a_final_date.out + " not greater than original date " + a_orig_date.out + " for file " + a_fname
+				l_error := {STRING_32} "ERROR: final date " + a_final_date.out + " not greater than original date " + a_orig_date.out + " for file " + a_fname
 				l_error.append ("Compile start = " + a_start_date.out + " Before = " + a_before_date.out + " After = " + a_after_date.out)
 				print (l_error)
 				a_test.assert (exception_tag, False)
@@ -266,7 +266,7 @@ feature {NONE} -- Constants
 			-- Tag for an exception thrown in `Current'
 
 ;note
-	copyright: "Copyright (c) 1984-2019, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2020, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

@@ -82,7 +82,7 @@ feature -- Routes
 				across
 					l_cart.items as ic
 				loop
-					r.add_link ("item_" + ic.item.code, Void, req.percent_encoded_path_info + "/" + url_encoded (ic.item.provider) + "/" + url_encoded (ic.item.code))
+					r.add_link ({STRING_32} "item_" + ic.item.code, Void, req.percent_encoded_path_info + "/" + url_encoded (ic.item.provider) + "/" + url_encoded (ic.item.code))
 				end
 			else
 				r.add_boolean_field ("Succeed", False)

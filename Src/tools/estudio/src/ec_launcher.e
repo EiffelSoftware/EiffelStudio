@@ -474,8 +474,9 @@ feature -- Environment
 			l_single_arg: STRING_32
 		do
 				--| Compute command line, args, and working directory
-			create {ARRAYED_LIST [STRING_32]} ec_arguments.make (cmdline_arguments_count + 1)
+			create {ARRAYED_LIST [STRING_32]} ec_arguments.make (cmdline_arguments_count + 2)
 			ec_arguments.extend ({STRING_32} "-gui")
+			ec_arguments.extend ({STRING_32} "-use_settings")
 
 			if cmdline_arguments_count > 0 then
 					--| And now we get the parameters for EiffelStudio
@@ -559,7 +560,7 @@ feature {NONE} -- Implementations
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2018, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2020, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

@@ -114,7 +114,9 @@ feature -- Labels
 
 	explanation: STRING_32
 		do
-			create Result.make_from_string ("Locale name: "+locale.info.id.name+"%NInformations:%N")
+			create Result.make_from_string_general ("Locale name: ")
+			Result.append (locale.info.id.name)
+			Result.append_string_general ("%NInformations:%N")
 			Result := locale.translation ("This string is written in the application's sourcecode")
 		end
 
@@ -201,11 +203,11 @@ feature -- about dialog
 
 note
 	library:   "Internationalization library"
-	copyright: "Copyright (c) 1984-2006, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2020, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software
-			356 Storke Road, Goleta, CA 93117 USA
+			5949 Hollister Ave., Goleta, CA 93117 USA
 			Telephone 805-685-1006, Fax 805-685-6869
 			Website http://www.eiffel.com
 			Customer support http://support.eiffel.com

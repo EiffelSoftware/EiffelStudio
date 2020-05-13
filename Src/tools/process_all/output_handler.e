@@ -280,7 +280,9 @@ feature -- Output
 				l_file.put_string (create {STRING_8}.make_from_separate (ec_args))
 				l_file.put_string ("%N")
 				if attached ISE_EC_FLAGS_environment_variable_value as v then
-					l_file.put_string ("ISE_EC_FLAGS: "+ v + "%N")
+					l_file.put_string ("ISE_EC_FLAGS: ")
+					l_file.put_string_32 (v)
+					l_file.put_new_line
 				end
 
 				l_file.close
@@ -414,7 +416,7 @@ feature {NONE} -- Implementation
 	non_reported_workers: detachable ARRAYED_LIST [INTEGER];
 
 note
-	copyright: "Copyright (c) 1984-2013, Eiffel Software"
+	copyright: "Copyright (c) 1984-2020, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

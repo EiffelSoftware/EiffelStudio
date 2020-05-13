@@ -151,7 +151,7 @@ feature {NONE} -- Implementation
 		do
 			create l_file.make_with_name (a_file)
 			if not l_file.exists or else not l_file.is_readable then
-				display_error ("Could not open ignore file "+a_file)
+				display_error ({STRING_32} "Could not open ignore file " + a_file.to_string_32)
 			else
 				l_file.open_read
 				create l_ini_loader.make
@@ -432,7 +432,7 @@ feature {NONE} -- Directory manipulation
 		end
 
 note
-	copyright: "Copyright (c) 1984-2019, Eiffel Software"
+	copyright: "Copyright (c) 1984-2020, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

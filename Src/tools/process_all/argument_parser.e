@@ -273,7 +273,7 @@ feature -- Access: -interface
 	interface_text (m: READABLE_STRING_GENERAL): IMMUTABLE_STRING_32
 			-- Value for -options text.`m'=value
 		do
-			if attached interface_item ("text." + m) as s then
+			if attached interface_item ({STRING_32} "text." + m.to_string_32) as s then
 				Result := s
 			else
 				create Result.make_from_string_general (m)
@@ -448,7 +448,7 @@ feature {NONE} -- Switch names
 	;
 
 note
-	copyright:	"Copyright (c) 1984-2013, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2020, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

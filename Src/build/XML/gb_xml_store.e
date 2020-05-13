@@ -80,7 +80,7 @@ feature -- Basic operation
 			l_string := string_from_xm_document (document)
 			if not abort_saving then
 					-- Save nicely formatted XML ouput to disk in `filename'.
-				create output_file.make (system_interface_filename)
+				create output_file.make (system_interface_filename.utf_8_name)
 				output_file.open_write
 				if output_file.is_open_write then
 					output_file.put_string (xml_format)
@@ -88,18 +88,18 @@ feature -- Basic operation
 					output_file.close
 					components.status_bar.set_timed_status_text ("Saved.")
 				else
-					create warning_dialog.make_with_text (unable_to_save_part1 + system_interface_filename + unable_to_save_part2)
+					create warning_dialog.make_with_text (unable_to_save_part1 + system_interface_filename.name + unable_to_save_part2)
 					warning_dialog.show_modal_to_window (components.tools.main_window)
 					components.status_bar.clear_status_bar
 				end
 			end
 		end
 
-	system_interface_filename: FILE_NAME
+	system_interface_filename: PATH
 			-- File to be generated.
 		do
 			create Result.make_from_string (components.system_status.current_project_settings.project_location)
-			Result.extend ("system_interface.xml")
+			Result := Result.extended ("system_interface.xml")
 		end
 
 	register_object_written_agent (an_agent: PROCEDURE [INTEGER, INTEGER])

@@ -41,7 +41,7 @@ feature -- Validation
 				end
 				l_valid := validator.is_setting_known (l_name)
 				if not l_valid then
-					invalidate_option ("Setting '" + l_name + "' is not a reconized compiler configuration setting.")
+					invalidate_option ({STRING_32} "Setting '" + l_name.to_string_32 + "' is not a reconized compiler configuration setting.")
 				end
 			end
 			is_option_valid := l_valid
@@ -58,7 +58,7 @@ feature {NONE} -- Configuration validity
 		end
 
 ;note
-	copyright: "Copyright (c) 1984-2017, Eiffel Software"
+	copyright: "Copyright (c) 1984-2020, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

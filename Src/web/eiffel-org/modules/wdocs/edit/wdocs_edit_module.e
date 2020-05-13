@@ -19,6 +19,8 @@ inherit
 
 	CMS_HOOK_MENU_SYSTEM_ALTER
 
+	CMS_HOOK_BLOCK
+
 	WDOCS_MODULE_HELPER
 		undefine
 			percent_encoder
@@ -305,6 +307,50 @@ feature -- Hooks configuration
 			if attached {WDOCS_EDIT_FORM_RESPONSE} a_response then
 				if a_response.has_permission (perm_edit_wdocs_page) then
 					a_response.add_javascript_url (a_response.module_resource_url (Current, "/files/js/wdocs_edit.js", Void))
+				end
+			end
+		end
+
+	block_list: ITERABLE [like {CMS_BLOCK}.name]
+		do
+			Result := <<"?wdocs-howto-edit">>
+		end
+
+	get_block_view (a_block_id: READABLE_STRING_8; a_response: CMS_RESPONSE)
+		local
+			l_content: STRING
+			l_content_block: CMS_CONTENT_BLOCK
+			vid: STRING
+			l_map: STRING
+		do
+			if
+				attached {READABLE_STRING_GENERAL} a_response.optional_content_type as l_type and then
+				l_type.is_case_insensitive_equal ({WDOCS_MODULE}.documentation_content_type) and then
+				a_block_id.same_string_general ("wdocs-howto-edit")
+			then
+				if attached wdocs_api as l_wdocs_api then
+					create l_content.make_empty
+					if
+						attached l_wdocs_api.settings.interwiki_mapping as l_interwiki_mapping and then
+						not l_interwiki_mapping.is_empty
+					then
+						l_content.append ("<h3>Interwiki mapping</h3>")
+						l_content.append ("Use link with [key:value title]:<ul>")
+						vid := percent_encoder.percent_encoded_string (manager (Void).version_id)
+						across
+							l_interwiki_mapping as ic
+						loop
+							l_map := ic.item
+							l_map.replace_substring_all ("$version", vid)
+							l_content.append ("<li><strong>")
+							l_content.append (html_encoded (ic.key))
+							l_content.append ("</strong> -> ")
+							l_content.append (html_encoded (l_map))
+							l_content.append ("</li>")
+						end
+						l_content.append ("</ul>")
+					end
+					create l_content_block.make (a_block_id, Void, l_content, a_response.formats.filtered_html)
 				end
 			end
 		end

@@ -815,7 +815,7 @@ feature -- Hook
 						l_uuid := ic.item.entity
 						if attached l_wdocs_api.wiki_page_by_uuid (l_uuid, Void, Void) as pg then
 							create {CMS_WDOCS_CONTENT} c.make (pg, l_uuid)
-							create lnk.make (pg.title, "doc/uuid/" + l_uuid)
+							create lnk.make (pg.title, "doc/uuid/" + url_encoded (l_uuid))
 							c.set_link (lnk)
 							a_contents.force (create {CMS_TAXONOMY_ENTITY}.make (c, create {DATE_TIME}.make_now_utc))
 							l_info_to_remove.force (ic.item)

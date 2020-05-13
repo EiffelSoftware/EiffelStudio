@@ -142,13 +142,13 @@ feature -- Hooks
 						if ch.same_string ("stable") then
 							create lnk.make ("download", "download")
 						else
-							create lnk.make ("download", "download/channel/" + ch)
+							create lnk.make ("download", "download/channel/" + url_encoded (ch))
 						end
 						vals.force (a_response.absolute_url (lnk.location, Void), "download_link")
 						if ch.same_string ("stable") then
 							create lnk.make ("download others", "downloads/channel/stable")
 						else
-							create lnk.make ("download others", "downloads/channel/" + ch)
+							create lnk.make ("download others", "downloads/channel/" + url_encoded (ch))
 						end
 						vals.force (a_response.absolute_url (lnk.location, Void), "download_other_link")
 					end

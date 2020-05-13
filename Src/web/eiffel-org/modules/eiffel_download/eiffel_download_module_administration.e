@@ -502,7 +502,7 @@ feature {NONE} -- Implementation
 			retried: BOOLEAN
 		do
 			if retried then
-				write_error_log (generator + {STRING_32} "Can not delete file %"" + p.name + "%"")
+				write_error_log (generator.to_string_32 + {STRING_32} "Can not delete file %"" + p.name + "%"")
 			else
 				create f.make_with_path (p)
 				if f.exists then

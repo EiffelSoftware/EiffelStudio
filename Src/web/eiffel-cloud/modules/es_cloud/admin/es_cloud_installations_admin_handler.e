@@ -131,7 +131,7 @@ feature -- Execution
 							inst := ic.item
 							s.append ("<tr>")
 							s.append ("<td>" + api.user_html_administration_link (l_user) + "</td>")
-							s.append ("<td><a href=%""+ req.script_url (req.percent_encoded_path_info) + "?user=" + l_user.id.out + "&installation="+ url_encoded (inst.id) +"%">" + inst.id + "</a></td>")
+							s.append ("<td><a href=%""+ req.script_url (req.percent_encoded_path_info) + "?user=" + l_user.id.out + "&installation="+ url_encoded (inst.id) +"%">" + html_encoded (inst.id) + "</a></td>")
 							if
 								attached es_cloud_api.user_sessions (l_user, inst.id, True) as l_sessions and then
 								not l_sessions.is_empty and then

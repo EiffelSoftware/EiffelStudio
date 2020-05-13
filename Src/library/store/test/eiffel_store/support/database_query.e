@@ -39,7 +39,8 @@ feature -- Intialization
 				a_base_selection.load_result
 				Result := a_base_selection.container
 			else
-				io.put_string (generator + "." + a_base_selection.error_message_32)
+				io.put_string (generator + ".")
+				io.put_string_32 (a_base_selection.error_message_32)
 			end
 			unset_map_name (a_base_selection)
 			a_base_selection.terminate

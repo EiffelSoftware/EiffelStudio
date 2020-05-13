@@ -33,7 +33,8 @@ feature {NONE} -- Initialization
 				if not db_control.is_ok then
 					io.put_string (generator +".login_with_connection_string:"+ db_control.error_code.out )
 					io.put_new_line
-					io.put_string (generator +".login_with_connection_string:"+ db_control.error_message_32 )
+					io.put_string (generator +".login_with_connection_string:")
+					io.put_string_32 (db_control.error_message_32 )
 					io.put_new_line
 				end
 				io.put_string (generator +".login_with_connection_string, After connect, is_connected? "+ is_connected.out)

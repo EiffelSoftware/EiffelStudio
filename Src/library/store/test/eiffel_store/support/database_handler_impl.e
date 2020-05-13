@@ -114,7 +114,8 @@ feature -- SQL Queries
 			end
 		rescue
 			if attached query as l_query and then attached l_query.error_message as l_message then
-				io.put_string ("Error:" + l_message)
+				io.put_string ("Error:")
+				io.put_string_32 (l_message)
 			end
 			if is_connected then
 				disconnect
@@ -148,7 +149,8 @@ feature -- SQL Queries
 			end
 		rescue
 			if attached query as l_query and then attached l_query.error_message as l_error_message then
-				io.put_string ("Error:" + l_error_message)
+				io.put_string ("Error:")
+				io.put_string_32 (l_error_message)
 			end
 			if is_connected then
 				disconnect

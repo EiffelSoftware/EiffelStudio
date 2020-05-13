@@ -36,7 +36,7 @@ feature -- Basic Operations
 	show (a_help_context: WIZARD_HELP_CONTEXT)
 			-- Show help with context `a_help_context'.
 		do
-			(create {EXECUTION_ENVIRONMENT}).launch ("netscape " + a_help_context.url)
+			(create {EXECUTION_ENVIRONMENT}).launch ({STRING_32} "netscape " + a_help_context.url)
 		end
 
 note

@@ -52,12 +52,11 @@ feature -- Generation
 					l_content.replace_substring_all ("$INCLUDE_PATH", "")
 				else
 					if
-						attached directory_structure.config_system.include_path.entry as l_entry
+						attached directory_structure.config_system.include_path.entry as l_entry and then
+						not l_entry.out.is_case_insensitive_equal ("include")
 					then
-						l_content.replace_substring_all ("$INCLUDE_PATH", "$(DIR)"+l_entry.out)
+						l_content.replace_substring_all ("$INCLUDE_PATH", l_entry.out)
 					else
-							-- Should not happen.
-							-- Replace by empty.
 						l_content.replace_substring_all ("$INCLUDE_PATH", "")
 					end
 				end

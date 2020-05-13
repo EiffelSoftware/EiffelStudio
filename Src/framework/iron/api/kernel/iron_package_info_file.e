@@ -122,7 +122,8 @@ feature -- Conversion
 
 	to_package (a_repo: IRON_REPOSITORY): IRON_PACKAGE
 		local
-			s,l_loc: STRING_8
+			s: STRING_8
+			l_loc: READABLE_STRING_8
 			l_path_uri: PATH_URI
 			l_name: detachable READABLE_STRING_32
 			t: STRING_32
@@ -363,7 +364,7 @@ feature -- Storage
 		end
 
 note
-	copyright: "Copyright (c) 1984-2018, Eiffel Software"
+	copyright: "Copyright (c) 1984-2020, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

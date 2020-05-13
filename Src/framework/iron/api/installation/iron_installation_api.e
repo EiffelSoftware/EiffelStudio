@@ -213,7 +213,7 @@ feature -- Query
 			l_path: READABLE_STRING_8
 			l_package_name: READABLE_STRING_GENERAL
 			l_project_path: READABLE_STRING_8
-			l_package_full_path: STRING_8
+			l_package_full_path,
 			l_repo_uri_string: READABLE_STRING_8
 			l_package: IRON_PACKAGE
 		do
@@ -417,7 +417,7 @@ feature -- Installed package
 	package_associated_with_uri (a_uri: READABLE_STRING_GENERAL): detachable IRON_PACKAGE
 			-- Installed package associated with uri `a_uri'.
 		local
-			s: STRING
+			s: READABLE_STRING_8
 			l_loc: READABLE_STRING_8
 			iri: IRI
 			l_uri: detachable URI

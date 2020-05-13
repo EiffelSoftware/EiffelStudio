@@ -364,7 +364,7 @@ feature {NONE} -- Implementation
 				elseif v.is_integer then
 					Result := [Void, v.to_integer]
 				else
-					s := v.as_string_8
+					s := v.to_string_8
 					i := s.last_index_of (':', s.count)
 					if i > 0 then
 						h := s.substring (1, i - 1)
@@ -432,7 +432,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright: "Copyright (c) 1984-2015, Eiffel Software"
+	copyright: "Copyright (c) 1984-2019, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

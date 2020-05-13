@@ -405,7 +405,8 @@ feature {EV_RICH_TEXT_IMP} -- Implementation
 				a_blue := fcolor |>> 16
 				temp_string := (a_red + a_green + a_blue).to_hex_string
 				temp_string.keep_tail (6)
-				propvalue := once "#" +  temp_string
+				temp_string.prepend_character ('#')
+				propvalue := temp_string
 				{GTK2}.g_object_set_pointer (Result, {GTK_PROPERTIES}.foreground, propvalue.item)
 			end
 
@@ -415,7 +416,8 @@ feature {EV_RICH_TEXT_IMP} -- Implementation
 				a_blue := bcolor |>> 16
 				temp_string := (a_red + a_green + a_blue).to_hex_string
 				temp_string.keep_tail (6)
-				propvalue := once "#" +  temp_string
+				temp_string.prepend_character ('#')
+				propvalue := temp_string
 				{GTK2}.g_object_set_pointer (Result, {GTK_PROPERTIES}.background, propvalue.item)
 			end
 
@@ -503,7 +505,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2016, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2020, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

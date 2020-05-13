@@ -53,7 +53,11 @@ feature -- Helper
 					i := i + 1
 				end
 			end
-			res.put_header ({HTTP_STATUS_CODE}.unsupported_media_type, << ["Content-Type", "text/plain"], ["Accept", accept_s]>>)
+			res.put_header ({HTTP_STATUS_CODE}.unsupported_media_type, 
+					{ARRAY [TUPLE [READABLE_STRING_8, READABLE_STRING_8]]} << 
+						["Content-Type", "text/plain"], ["Accept", accept_s]
+					>>
+				)
 			if accept_s /= Void then
 				res.put_string ("Unsupported request content-type, Accept: " + accept_s + "%N")
 			end
@@ -76,7 +80,8 @@ feature -- Helper
 				end
 				s.append_string (c.item)
 			end
-			res.put_header ({HTTP_STATUS_CODE}.method_not_allowed, <<
+			res.put_header ({HTTP_STATUS_CODE}.method_not_allowed,
+					{ARRAY [TUPLE [READABLE_STRING_8, READABLE_STRING_8]]} <<
 						["Content-Type", {HTTP_MIME_TYPES}.text_plain],
 						["Allow", s]
 					>>)

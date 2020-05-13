@@ -72,7 +72,7 @@ feature -- Basic operations
 						s.append (c.item.generating_type.name)
 						s.append_character ('}')
 						s.append_character ('=')
-						s.append (c.item.debug_output.as_string_8)
+						s.append ({UTF_CONVERTER}.utf_32_string_to_utf_8_string_8 (c.item.debug_output))
 						s.append_character ('%N')
 					end
 				end

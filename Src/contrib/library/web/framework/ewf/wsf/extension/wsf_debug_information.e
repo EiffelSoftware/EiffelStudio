@@ -100,7 +100,7 @@ feature -- Execution
 		do
 			a_output.append ("CGI variables:")
 			a_output.append (eol)
-			a_output.append (req.cgi_variables.debug_output)
+			append_unicode (req.cgi_variables.debug_output, a_output)
 			a_output.append (eol)
 			a_output.append (eol)
 		end

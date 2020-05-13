@@ -99,7 +99,6 @@ feature -- Execution
 			fut: FILE_UTILITIES
 			proc: BASE_PROCESS
 			l_input_env: STRING_TABLE [READABLE_STRING_GENERAL]
-			l_input_header: detachable STRING
 			l_input_buf: STRING
 			l_output: STRING
 			l_output_header_sent: BOOLEAN
@@ -107,10 +106,6 @@ feature -- Execution
 			s: STRING
 			i, j, n: INTEGER
 		do
-				-- Header
-			if attached req.raw_header_data as l_header then
-				l_input_header := l_header
-			end
 				-- Input data
 			create l_input_buf.make (req.content_length_value.to_integer_32)
 			req.read_input_data_into (l_input_buf)
@@ -126,7 +121,7 @@ feature -- Execution
 					check supported: False end
 				end
 			end
-				-- No need to import `l_input_header` in environment
+				-- No need to import input_header in environment
 				-- As current connector already did the job.
 			if
 				attached cgi_request_data (req) as d and then
@@ -149,7 +144,7 @@ feature -- Execution
 				if proc.launched then
 						-- Do not send the header to CGI script
 						-- value are passed via environment variables
-						--				proc.put_string (l_input_header)
+						--				proc.put_string (input_header)
 						-- Send payload.
 					proc.put_string (l_input_buf)
 

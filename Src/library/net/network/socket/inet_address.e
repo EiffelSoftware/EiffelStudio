@@ -66,17 +66,12 @@ feature
 		deferred
 		end
 
-	host_name: STRING
-		local
-			l_name: detachable STRING
+	host_name: READABLE_STRING_8
 		do
-			l_name := internal_host_name
-			if l_name /= Void then
-				Result := l_name
-			else
+			Result := internal_host_name
+			if Result = Void then
 					-- TODO For now we provide just the textual representation of the IP address
-				l_name := host_address.twin
-				Result := l_name
+				Result := host_address.twin
 			end
 		end
 
@@ -96,7 +91,7 @@ feature {NETWORK_SOCKET_ADDRESS}
 
 feature {NONE} -- Implementation
 
-    internal_host_name: detachable STRING
+    internal_host_name: detachable READABLE_STRING_8
 
 feature {NONE} -- Externals
 

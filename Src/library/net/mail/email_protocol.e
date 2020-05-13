@@ -14,7 +14,7 @@ inherit
 
 feature -- Access
 
-	hostname: STRING
+	hostname: READABLE_STRING_8
 		-- hostname .. ex: smtp
 
 	code_number: INTEGER

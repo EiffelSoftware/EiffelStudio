@@ -34,21 +34,21 @@ feature -- Implementation (EMAIL_RESOURCE)
 
 feature -- Access
 
-	mail_message: STRING
+	mail_message: READABLE_STRING_8
 		-- Email message
 
-	mail_signature: STRING
+	mail_signature: READABLE_STRING_8
 		-- Email signature
 
 feature -- Settings
 
-	set_message (s: STRING)
+	set_message (s: READABLE_STRING_8)
 			-- Set mail_message to 's'.
 		do
 			mail_message:= s
 		end
 
-	set_signature (s: STRING)
+	set_signature (s: READABLE_STRING_8)
 			-- Set mail_signature to 's'.
 		do
 			mail_signature:= s

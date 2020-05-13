@@ -26,7 +26,7 @@ feature {NONE} -- Initialization
 			mail_signature := ""
 		end
 
-	make_with_entry (header_from, header_to: STRING)
+	make_with_entry (header_from, header_to: READABLE_STRING_8)
 			-- Create an email with the 'header_from' and the 'header_to'.
 		require
 			needed_info: header_from /= Void and then header_to /= Void

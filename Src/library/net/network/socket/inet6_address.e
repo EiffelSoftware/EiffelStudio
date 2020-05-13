@@ -24,7 +24,7 @@ feature -- Constants
 
 feature {INET_ADDRESS_FACTORY} -- Initialization
 
-	make_from_host_and_address (a_hostname: detachable STRING; an_address: ARRAY [NATURAL_8])
+	make_from_host_and_address (a_hostname: detachable READABLE_STRING_8; an_address: ARRAY [NATURAL_8])
 		require
 			an_address_count_valid: an_address.count = inaddrsz
 		do
@@ -33,7 +33,7 @@ feature {INET_ADDRESS_FACTORY} -- Initialization
 			the_address := an_address
 		end
 
-	make_from_host_and_address_and_interface_name (a_hostname: detachable STRING; an_address: ARRAY [NATURAL_8]; an_iface_name: STRING)
+	make_from_host_and_address_and_interface_name (a_hostname: detachable READABLE_STRING_8; an_address: ARRAY [NATURAL_8]; an_iface_name: READABLE_STRING_8)
 		require
 			an_address_count_valid: an_address.count = inaddrsz
 		do
@@ -42,7 +42,7 @@ feature {INET_ADDRESS_FACTORY} -- Initialization
 			make_from_host_and_address_and_scope(a_hostname, an_address, 0)
 		end
 
-	make_from_host_and_address_and_scope (a_hostname: detachable STRING; an_address: ARRAY [NATURAL_8]; a_scope_id: INTEGER)
+	make_from_host_and_address_and_scope (a_hostname: detachable READABLE_STRING_8; an_address: ARRAY [NATURAL_8]; a_scope_id: INTEGER)
 		require
 			an_address_count_valid: an_address.count = inaddrsz
 		do
@@ -53,7 +53,7 @@ feature {INET_ADDRESS_FACTORY} -- Initialization
 			end
 		end
 
-	make_from_host_and_pointer (a_hostname: detachable STRING; a_pointer: POINTER)
+	make_from_host_and_pointer (a_hostname: detachable READABLE_STRING_8; a_pointer: POINTER)
 		local
 			ptr: POINTER
 			addr: ARRAY [NATURAL_8]
@@ -189,7 +189,7 @@ feature {NONE} -- Implementation
 
 	the_scope_id: INTEGER
 
-	the_scope_ifname: detachable STRING
+	the_scope_ifname: detachable READABLE_STRING_8
 
 	is_scope_ifname_set: BOOLEAN
 			-- This will be set to true if the object is constructed with a scoped

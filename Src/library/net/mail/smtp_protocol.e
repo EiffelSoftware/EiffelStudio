@@ -19,7 +19,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (host: STRING; user: STRING)
+	make (host: READABLE_STRING_8; user: READABLE_STRING_8)
 			-- Create an smtp protocol with 'host, 'user' and default port.
 		require
 			host_not_void: host /= Void
@@ -27,9 +27,9 @@ feature {NONE} -- Initialization
 			user_not_void: user /= Void
 			user_not_empty: not user.is_empty
 		do
-			hostname:= host
-			username:= user
-			port:= default_port
+			hostname := host
+			username := user
+			port := default_port
 			create sub_header.make_empty
 			create headers.make (4)
 			create {EMAIL} memory_resource.make
@@ -126,7 +126,7 @@ feature -- Implementation (EMAIL_RESOURCE)
 
 feature {NONE} -- Connection
 
-	username: STRING
+	username: READABLE_STRING_8
 		-- Smtp user name (Needed to initiate the connection).
 
 feature {NONE} -- Basic operations
@@ -292,10 +292,10 @@ feature {NONE} -- Basic operations
 			a_header_from_not_empty: not a_header_from.is_empty
 			recipients_attached: recipients /= Void
 		local
-			l_mail_message: STRING
-			l_mail_signature: STRING
+			l_mail_message: STRING_8
+			l_mail_signature: READABLE_STRING_8
 		do
-			l_mail_message := memory_resource.mail_message.twin
+			create l_mail_message.make_from_string (memory_resource.mail_message)
 			l_mail_signature := memory_resource.mail_signature
 
 			send_command (Mail_from + "<" + a_header_from + ">", Ok)
@@ -316,7 +316,8 @@ feature {NONE} -- Basic operations
 					send_command (Data, Data_code)
 					l_mail_message.prepend (sub_header)
 					if l_mail_signature /= Void then
-						l_mail_message.append ("%R%N" + l_mail_signature)
+						l_mail_message.append ("%R%N")
+						l_mail_message.append (l_mail_signature)
 					end
 					l_mail_message.replace_substring_all ("%N.", "%N..")
 					l_mail_message.append ("%R%N.")

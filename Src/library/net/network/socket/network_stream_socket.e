@@ -69,7 +69,7 @@ feature -- Initialization
 			socket_created: is_created
 		end
 
-	make_client_by_port (a_peer_port: INTEGER; a_peer_host: STRING)
+	make_client_by_port (a_peer_port: INTEGER; a_peer_host: READABLE_STRING_8)
 				-- Create a client connection to `a_peer_host' on
 				-- `a_peer_port'.
 		require

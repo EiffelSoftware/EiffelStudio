@@ -93,9 +93,9 @@ feature {WSF_RESPONSE} -- Output
 
 	send_to (res: WSF_RESPONSE)
 		local
-			s, l_html_error_code_text: STRING
+			s: STRING
 			l_text: detachable READABLE_STRING_GENERAL
-			l_loc: detachable READABLE_STRING_8
+			l_html_error_code_text, l_loc: detachable READABLE_STRING_8
 			h: like header
 			l_messages: HTTP_STATUS_CODE_MESSAGES
 		do
@@ -219,7 +219,8 @@ feature {WSF_RESPONSE} -- Output
 
 				h.put_content_type_text_html
 			else
-				s := l_html_error_code_text + ": the request method "
+				create s.make_from_string (l_html_error_code_text)
+				s.append (": the request method ")
 				s.append (request.request_method)
 				s.append (" is inappropriate for the URL for '" + html_encoder.general_encoded_string (request.request_uri) + "'.%N")
 				if attached suggested_methods as lst and then not lst.is_empty then
@@ -327,7 +328,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright: "2011-2017, Jocelyn Fiat, Javier Velilla, Olivier Ligot, Colin Adams, Eiffel Software and others"
+	copyright: "2011-2020, Jocelyn Fiat, Javier Velilla, Olivier Ligot, Colin Adams, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

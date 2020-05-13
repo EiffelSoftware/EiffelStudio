@@ -113,7 +113,7 @@ feature -- Access
 					-- Get URL data
 				l_is_https := url.starts_with_general ("https://")
 				create l_uri.make_from_string (url)
-				check valid_url: l_uri.is_valid end				
+				check valid_url: l_uri.is_valid end
 				l_port := l_uri.port
 				if l_port = 0 then
 					if l_is_https then
@@ -125,7 +125,7 @@ feature -- Access
 				if attached l_uri.host as h then
 					l_host := h
 				else
-					create l_url.make (url)
+					create l_url.make (url.to_string_8)
 					l_host := l_url.host
 				end
 
@@ -887,7 +887,7 @@ feature {NONE} -- Helpers
 
 invariant
 note
-	copyright: "2011-2018, Jocelyn Fiat, Javier Velilla, Eiffel Software and others"
+	copyright: "2011-2020, Jocelyn Fiat, Javier Velilla, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

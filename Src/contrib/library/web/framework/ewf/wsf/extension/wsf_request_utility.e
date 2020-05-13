@@ -18,13 +18,13 @@ inherit
 
 feature -- Url Query
 
-	script_absolute_url (req: WSF_REQUEST; a_path: STRING): STRING
+	script_absolute_url (req: WSF_REQUEST; a_path: READABLE_STRING_8): READABLE_STRING_8
 			-- Absolute Url for the script if any, extended by `a_path'
 		do
 			Result := req.absolute_script_url (a_path)
 		end
 
-	script_url (req: WSF_REQUEST; a_path: STRING): STRING
+	script_url (req: WSF_REQUEST; a_path: READABLE_STRING_8): READABLE_STRING_8
 			-- Url relative to script name if any, extended by `a_path'
 		require
 			a_path_attached: a_path /= Void
@@ -32,11 +32,12 @@ feature -- Url Query
 			Result := req.script_url (a_path)
 		end
 
-	url (req: WSF_REQUEST; a_path: STRING; args: detachable STRING; abs: BOOLEAN): STRING
+	url (req: WSF_REQUEST; a_path: READABLE_STRING_8; args: detachable READABLE_STRING_8; abs: BOOLEAN): READABLE_STRING_8
 			-- Associated url based on `path' and `args'
 			-- if `abs' then return absolute url
 		local
-			s,t: detachable STRING
+			s: detachable READABLE_STRING_8
+			t: detachable STRING_8
 		do
 			s := args
 			if s /= Void and then s.count > 0 then

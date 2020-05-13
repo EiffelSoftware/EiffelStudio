@@ -36,7 +36,7 @@ feature -- Output
 		do
 			if a_str /= Void then
 				to_implement ("Convert into UTF-8 or console encoding before output")
-				file.put_string (a_str.as_string_8)
+				file.put_string ({UTF_CONVERTER}.utf_32_string_to_utf_8_string_8 (a_str))
 			end
 		end
 

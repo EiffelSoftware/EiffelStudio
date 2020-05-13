@@ -55,10 +55,11 @@ feature {NONE} -- Implementation: Form analyzer
 			vars_attached: vars /= Void
 		local
 			p,i,next_b: INTEGER
-			l_boundary_prefix: STRING
+			l_boundary_prefix: READABLE_STRING_8
 			l_boundary_len: INTEGER
 			l_boundary: detachable READABLE_STRING_8
-			m: STRING
+			m: READABLE_STRING_8
+			tmp: STRING_8
 			is_crlf: BOOLEAN
 		do
 			l_boundary := a_content_type.parameter ("boundary")
@@ -68,13 +69,13 @@ feature {NONE} -- Implementation: Form analyzer
 					l_boundary_prefix := s.substring (1, p - 1)
 					l_boundary := l_boundary_prefix + l_boundary
 				else
-					create l_boundary_prefix.make_empty
+					l_boundary_prefix := ""
 				end
 				l_boundary_len := l_boundary.count
-					--| Let's support either %R%N and %N ... 
+					--| Let's support either %R%N and %N ...
 					--| Since both cases might occurs (for instance, our implementation of CGI does not have %R%N)
 					--| then let's be as flexible as possible on this.
-				is_crlf := s[l_boundary_len + 1] = '%R'
+				is_crlf := s [l_boundary_len + 1] = '%R'
 				from
 					i := 1 + l_boundary_len + 1
 					if is_crlf then
@@ -120,9 +121,10 @@ feature {NONE} -- Implementation: Form analyzer
 						if is_crlf then
 							i := i + 1
 						end
-						m := s.substring (i - 1, s.count)
-						m.right_adjust
-						if i >= s.count and not l_boundary_prefix.same_string (m) then
+						tmp := s.substring (i - 1, s.count).to_string_8
+						tmp.right_adjust
+							-- TODO: check if next condition should not use tmp instead of s
+						if i >= s.count and not l_boundary_prefix.same_string (tmp) then
 							req.error_handler.add_custom_error (0, "Invalid form data", "Invalid ending for form data from input")
 						end
 						i := next_b
@@ -131,17 +133,17 @@ feature {NONE} -- Implementation: Form analyzer
 			end
 		end
 
-	analyze_multipart_form_input (req: WSF_REQUEST; s: STRING; vars: HASH_TABLE [WSF_VALUE, READABLE_STRING_GENERAL])
+	analyze_multipart_form_input (req: WSF_REQUEST; s: READABLE_STRING_8; vars: HASH_TABLE [WSF_VALUE, READABLE_STRING_GENERAL])
 			-- Analyze multipart entry
 		require
 			s_not_empty: s /= Void and then not s.is_empty
 		local
 			n, i,p, b,e: INTEGER
-			l_name, l_filename, l_content_type: detachable STRING_8
+			l_name, l_filename, l_content_type: detachable READABLE_STRING_8
 			l_unicode_name: READABLE_STRING_32
-			l_header: detachable STRING_8
-			l_content: detachable STRING_8
-			l_line: detachable STRING_8
+			l_header: detachable READABLE_STRING_8
+			l_content: detachable READABLE_STRING_8
+			l_line: detachable READABLE_STRING_8
 			l_up_file: WSF_UPLOADED_FILE
 			utf: UTF_CONVERTER
 		do
@@ -256,7 +258,7 @@ feature {NONE} -- Implementation: Form analyzer
 			-- Default content type		
 
 note
-	copyright: "2011-2015, Jocelyn Fiat, Javier Velilla, Olivier Ligot, Colin Adams, Eiffel Software and others"
+	copyright: "2011-2020, Jocelyn Fiat, Javier Velilla, Olivier Ligot, Colin Adams, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

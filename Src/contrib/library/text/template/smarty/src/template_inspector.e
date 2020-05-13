@@ -9,7 +9,7 @@ deferred class
 
 feature -- Change
 
-	register (a_inspector_name: STRING)
+	register (a_inspector_name: READABLE_STRING_8)
 		do
 			Template_routines.register_template_inspector (Current, a_inspector_name)
 		end

@@ -28,7 +28,7 @@ feature -- Execution
 	handle (a_content_type: HTTP_CONTENT_TYPE; req: WSF_REQUEST;
 			a_vars: HASH_TABLE [WSF_VALUE, READABLE_STRING_GENERAL]; a_raw_data: detachable CELL [detachable STRING_8])
 		local
-			l_content: READABLE_STRING_8
+			l_content: STRING_8
 			n, p, i, j: INTEGER
 			s: READABLE_STRING_8
 			l_name, l_value: READABLE_STRING_8
@@ -66,7 +66,7 @@ feature -- Execution
 		end
 
 note
-	copyright: "2011-2015, Jocelyn Fiat, Javier Velilla, Olivier Ligot, Colin Adams, Eiffel Software and others"
+	copyright: "2011-2020, Jocelyn Fiat, Javier Velilla, Olivier Ligot, Colin Adams, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

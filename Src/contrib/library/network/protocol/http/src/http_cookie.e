@@ -47,21 +47,21 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	name: STRING_8
+	name: READABLE_STRING_8
 			-- name of the cookie.
 
-	value: STRING_8
+	value: READABLE_STRING_8
 			-- value of the cookie.
 
-	expiration: detachable STRING_8
+	expiration: detachable READABLE_STRING_8
 			-- Value of the Expires attribute.
 
-	path: detachable STRING_8
+	path: detachable READABLE_STRING_8
 			-- Value of the Path attribute.
 			-- Path to which the cookie applies.
 			--| The path "/", specify a cookie that apply to all URLs in your site.
 
-	domain: detachable STRING_8
+	domain: detachable READABLE_STRING_8
 			-- Value of the Domain attribute.
 			-- Domain to which the cookies apply.
 

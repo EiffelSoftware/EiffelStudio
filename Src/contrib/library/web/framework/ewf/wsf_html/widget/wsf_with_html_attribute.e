@@ -30,7 +30,7 @@ feature -- Change
 				lst.compare_objects
 				html_attributes := lst
 			end
-			lst.force (a_value, a_name)
+			lst.force (a_value, a_name.to_string_8)
 		end
 
 	remove_html_attribute (a_name: READABLE_STRING_8)
@@ -41,7 +41,7 @@ feature -- Change
 		do
 			lst := html_attributes
 			if lst /= Void then
-				lst.remove (a_name)
+				lst.remove (a_name.to_string_8)
 			end
 		end
 

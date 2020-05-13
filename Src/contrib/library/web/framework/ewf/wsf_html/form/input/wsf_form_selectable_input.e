@@ -106,7 +106,7 @@ feature {NONE} -- Implementation
 	append_label_to_html (a_theme: WSF_THEME; a_html: STRING_8)
 			-- Specific label element if any.	
 		local
-			s: STRING_8
+			s: READABLE_STRING_8
 		do
 			if attached raw_title as t then
 				s := t

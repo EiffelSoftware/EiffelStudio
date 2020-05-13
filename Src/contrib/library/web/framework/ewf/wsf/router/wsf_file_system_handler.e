@@ -254,7 +254,7 @@ feature -- Execution
 			if attached directory_index_file (d) as f then
 				process_file (f, req, res)
 			else
-				uri := a_uri
+				uri := a_uri.to_string_8
 				if not uri.is_empty and then uri [uri.count] /= '/'  then
 					uri.append_character ('/')
 				end
@@ -654,7 +654,7 @@ feature {NONE} -- implementation: date time
 		end
 
 note
-	copyright: "2011-2019, Jocelyn Fiat, Javier Velilla, Olivier Ligot, Colin Adams, Eiffel Software and others"
+	copyright: "2011-2020, Jocelyn Fiat, Javier Velilla, Olivier Ligot, Colin Adams, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

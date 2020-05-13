@@ -106,7 +106,7 @@ feature -- Access
 			loop
 				l_line := ic.item
 				if has_same_header_name (l_line, a_header_name) then
-					res := l_line.substring (n + 2, l_line.count)
+					res := l_line.substring (n + 2, l_line.count).to_string_8
 					res.left_adjust
 					res.right_adjust
 					Result := res
@@ -271,25 +271,25 @@ feature -- Content related header
 	put_content_type_with_charset (a_content_type: READABLE_STRING_8; a_charset: READABLE_STRING_8)
 			-- Put content type `a_content_type' with `a_charset' as "charset" parameter.
 		do
-			put_content_type_with_parameters (a_content_type, <<["charset", a_charset]>>)
+			put_content_type_with_parameters (a_content_type, {ARRAY [TUPLE [READABLE_STRING_8, READABLE_STRING_8]]} <<["charset", a_charset]>>)
 		end
 
 	add_content_type_with_charset (a_content_type: READABLE_STRING_8; a_charset: READABLE_STRING_8)
 			-- Same as `put_content_type_with_charset', but allow multiple definition of "Content-Type".
 		do
-			add_content_type_with_parameters (a_content_type, <<["charset", a_charset]>>)
+			add_content_type_with_parameters (a_content_type, {ARRAY [TUPLE [READABLE_STRING_8, READABLE_STRING_8]]} <<["charset", a_charset]>>)
 		end
 
 	put_content_type_with_name (a_content_type: READABLE_STRING_8; a_name: READABLE_STRING_8)
 			-- Put content type `a_content_type' with `a_name' as "name" parameter.	
 		do
-			put_content_type_with_parameters (a_content_type, <<["name", a_name]>>)
+			put_content_type_with_parameters (a_content_type, {ARRAY [TUPLE [READABLE_STRING_8, READABLE_STRING_8]]} <<["name", a_name]>>)
 		end
 
 	add_content_type_with_name (a_content_type: READABLE_STRING_8; a_name: READABLE_STRING_8)
 			-- same as `put_content_type_with_name', but allow multiple definition of "Content-Type"	
 		do
-			add_content_type_with_parameters (a_content_type, <<["name", a_name]>>)
+			add_content_type_with_parameters (a_content_type, {ARRAY [TUPLE [READABLE_STRING_8, READABLE_STRING_8]]} <<["name", a_name]>>)
 		end
 
 	put_content_length (a_length: INTEGER)

@@ -9,32 +9,35 @@ class
 
 feature -- Access
 
-	accepted_content_types (req: WSF_REQUEST): detachable ARRAYED_LIST [READABLE_STRING_8]
+	accepted_content_types (req: WSF_REQUEST): detachable ARRAYED_LIST [STRING_8]
 		local
 			s: STRING_8
-			q: READABLE_STRING_8
+			q,rs: READABLE_STRING_8
 			p: INTEGER
 			lst: LIST [READABLE_STRING_8]
 			qs: QUICK_SORTER [READABLE_STRING_8]
 		do
 --TEST		if attached ("text/html,application/xhtml+xml;q=0.6,application/xml;q=0.2,text/plain;q=0.5,*/*;q=0.8") as l_accept then
 			if attached req.http_accept as l_accept then
-				lst := l_accept.as_string_8.split (',')
+				lst := l_accept.split (',')
 				create Result.make (lst.count)
 				from
 					lst.start
 				until
 					lst.after
 				loop
-					s := lst.item
-					p := s.substring_index (";q=", 1)
+					rs := lst.item
+					p := rs.substring_index (";q=", 1)
 					if p > 0 then
-						q := s.substring (p + 3, s.count)
-						s := s.substring (1, p - 1)
+						q := rs.substring (p + 3, rs.count)
+						rs := rs.substring (1, p - 1)
 					else
 						q := "1.0"
 					end
-					Result.force (q + ":" + s)
+					create s.make_from_string (q)
+					s.append_character (':')
+					s.append (rs)
+					Result.force (s)
 
 					lst.forth
 				end
@@ -77,7 +80,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright: "2011-2012, Jocelyn Fiat, Javier Velilla, Olivier Ligot, Eiffel Software and others"
+	copyright: "2011-2020, Jocelyn Fiat, Javier Velilla, Olivier Ligot, Colin Adams, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

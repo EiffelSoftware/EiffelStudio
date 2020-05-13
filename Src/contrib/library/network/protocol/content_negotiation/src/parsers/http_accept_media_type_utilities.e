@@ -190,7 +190,7 @@ feature {NONE} -- Implementation
 			target: HTTP_MEDIA_TYPE
 			range: HTTP_MEDIA_TYPE
 			param_matches: INTEGER
-			element: detachable READABLE_STRING_8
+			element: detachable READABLE_STRING_GENERAL
 			l_fitness: INTEGER
 		do
 			best_fitness := -1

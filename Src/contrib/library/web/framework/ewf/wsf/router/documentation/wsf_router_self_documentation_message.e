@@ -26,7 +26,7 @@ feature {NONE} -- Initialization
 			router := a_router
 		end
 
-	make_with_resource (req: WSF_REQUEST; a_router: WSF_ROUTER; a_resource: STRING)
+	make_with_resource (req: WSF_REQUEST; a_router: WSF_ROUTER; a_resource: READABLE_STRING_8)
 			-- Make Current for request `req' and router `a_router'
 			-- and use `a_resource' to also generate links to this documentation via `a_resource'
 			--| note: it could be "/doc" or "/api/doc" or ...
@@ -51,7 +51,7 @@ feature -- Access
 
 	router: WSF_ROUTER
 
-	resource: detachable STRING_8
+	resource: detachable READABLE_STRING_8
 
 feature -- Properties
 
@@ -310,13 +310,13 @@ feature {NONE} -- Implementation
 			Result := resource /= Void
 		end
 
-	doc_url (a_api: STRING_8): STRING_8
+	doc_url (a_api: READABLE_STRING_8): STRING_8
 			-- URL to show the documentation related to `a_api'.
 		require
 			doc_url_supported: doc_url_supported
 		do
 			if attached resource as s then
-				Result := request.script_url (s)  + "?api=" + url_encoder.encoded_string (a_api)
+				Result := request.script_url (s)  + "?api=" + url_encoder.general_encoded_string (a_api)
 			else
 				Result := request.script_url ("")
 			end
@@ -333,7 +333,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright: "2011-2017, Jocelyn Fiat, Javier Velilla, Olivier Ligot, Colin Adams, Eiffel Software and others"
+	copyright: "2011-2020, Jocelyn Fiat, Javier Velilla, Olivier Ligot, Colin Adams, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

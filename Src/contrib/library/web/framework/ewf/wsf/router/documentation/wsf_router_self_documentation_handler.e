@@ -51,7 +51,7 @@ feature {NONE} -- Initialization
 
 	router: WSF_ROUTER
 
-	resource: detachable STRING
+	resource: detachable READABLE_STRING_8
 
 	is_hidden: BOOLEAN
 			-- Current mapped handler should be hidden from self documentation

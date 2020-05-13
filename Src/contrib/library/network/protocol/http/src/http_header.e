@@ -175,7 +175,7 @@ feature -- Header: adding
             across
             	lines as c
             loop
-            	line := c.item
+            	line := c.item.to_string_8
             	if not line.is_empty then
             		if line [line.count] = '%R' then
 						line.remove_tail (1)
@@ -223,7 +223,7 @@ feature -- Header: merging
             across
             	lines as c
             loop
-            	line := c.item
+            	line := c.item.to_string_8
             	if not line.is_empty then
             		if line [line.count] = '%R' then
 						line.remove_tail (1)
@@ -416,7 +416,7 @@ feature {NONE} -- Implementation: Header queries
 		end
 
 note
-	copyright: "2011-2014, Jocelyn Fiat, Eiffel Software and others"
+	copyright: "2011-2020, Jocelyn Fiat, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

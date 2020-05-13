@@ -219,7 +219,7 @@ feature {NONE} -- Helpers: Object
 			end
 			if Result = Void then
 				if l_type_name /= Void then
-					ctx.on_value_skipped (a_json_object, a_type, "Unable to instantiate type %"" + l_type_name + "%".")
+					ctx.on_value_skipped (a_json_object, a_type, {STRING_32} "Unable to instantiate type %"" + l_type_name + "%".")
 				elseif a_type /= Void then
 					ctx.on_value_skipped (a_json_object, a_type, "Unable to instantiate type {" + a_type.name + "}")
 				else

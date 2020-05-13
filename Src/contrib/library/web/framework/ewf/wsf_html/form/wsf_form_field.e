@@ -35,7 +35,10 @@ feature -- Status report
 	debug_output: STRING
 			-- String that should be displayed in debugger to represent `Current'.
 		do
-			Result := name + " {" + generator + "}"
+			create Result.make_from_string (name)
+			Result.append (" {")
+			Result.append (generator)
+			Result.append_character ('}')
 		end
 
 feature -- Validation		

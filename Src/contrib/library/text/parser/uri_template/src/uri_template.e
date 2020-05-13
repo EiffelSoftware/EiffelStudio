@@ -178,7 +178,8 @@ feature -- Builder
 			-- Expanded template using variable from `a_ht'
 			-- with based url
 		do
-			Result := a_base_url + expanded_string (a_ht)
+			create Result.make_from_string (a_base_url)
+			Result.append (expanded_string (a_ht))
 		end
 
 feature -- Match
@@ -192,12 +193,12 @@ feature -- Match
 			l_offset: INTEGER
 			p,q,nb: INTEGER
 			exp: URI_TEMPLATE_EXPRESSION
-			vn, s,t: STRING
-			vv, path_vv: STRING
+			vv, vn, t, s: READABLE_STRING_8
+			path_vv: STRING
 			l_vars, l_path_vars, l_query_vars: HASH_TABLE [READABLE_STRING_8, READABLE_STRING_8]
 			l_uri_count: INTEGER
 			tpl_count: INTEGER
-			l_next_literal_separator: detachable STRING
+			l_next_literal_separator: detachable READABLE_STRING_8
 		do
 				--| Extract expansion parts  "\\{([^\\}]*)\\}"
 			analyze
@@ -419,7 +420,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	import_path_style_parameters_into (a_content: STRING; res: HASH_TABLE [READABLE_STRING_8, READABLE_STRING_8])
+	import_path_style_parameters_into (a_content: READABLE_STRING_8; res: HASH_TABLE [READABLE_STRING_8, READABLE_STRING_8])
 		require
 			a_content_attached: a_content /= Void
 			res_attached: res /= Void
@@ -427,7 +428,7 @@ feature {NONE} -- Implementation
 			import_custom_style_parameters_into (a_content, ';', res)
 		end
 
-	import_form_style_parameters_into (a_content: STRING; res: HASH_TABLE [READABLE_STRING_8, READABLE_STRING_8])
+	import_form_style_parameters_into (a_content: READABLE_STRING_8; res: HASH_TABLE [READABLE_STRING_8, READABLE_STRING_8])
 		require
 			a_content_attached: a_content /= Void
 			res_attached: res /= Void
@@ -435,7 +436,7 @@ feature {NONE} -- Implementation
 			import_custom_style_parameters_into (a_content, '&', res)
 		end
 
-	import_custom_style_parameters_into (a_content: STRING; a_separator: CHARACTER; res: HASH_TABLE [READABLE_STRING_8, READABLE_STRING_8])
+	import_custom_style_parameters_into (a_content: READABLE_STRING_8; a_separator: CHARACTER; res: HASH_TABLE [READABLE_STRING_8, READABLE_STRING_8])
 		require
 			a_content_attached: a_content /= Void
 			res_attached: res /= Void
@@ -475,7 +476,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	next_path_variable_value (a_uri: STRING; a_index: INTEGER; a_end_token: detachable STRING): STRING
+	next_path_variable_value (a_uri: READABLE_STRING_8; a_index: INTEGER; a_end_token: detachable READABLE_STRING_8): STRING
 		require
 			valid_index: a_index <= a_uri.count
 		local
@@ -511,7 +512,7 @@ feature {NONE} -- Implementation
 				end
 				i := i + 1
 			end
-			Result := a_uri.substring (a_index, p)
+			Result := a_uri.substring (a_index, p).to_string_8
 		end
 
 note

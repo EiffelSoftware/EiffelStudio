@@ -91,7 +91,7 @@ feature -- Decoder
 		local
 			i, n: INTEGER
 			c: CHARACTER
-			hex: STRING
+			hex: READABLE_STRING_8
 		do
 			has_error := False
 			n := v.count
@@ -183,7 +183,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright: "Copyright (c) 2011-2014, Eiffel Software and others"
+	copyright: "Copyright (c) 2011-2020, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

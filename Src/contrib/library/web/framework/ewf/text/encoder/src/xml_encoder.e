@@ -93,7 +93,7 @@ feature -- Decoder
 
 feature {NONE} -- Implementation: decoder
 
-	next_entity (v: STRING_8; cl_i: CELL [INTEGER]): STRING_32
+	next_entity (v: READABLE_STRING_8; cl_i: CELL [INTEGER]): STRING_32
 			-- Return next entity value
 			-- move index
 		local
@@ -259,7 +259,7 @@ feature {NONE} -- Implementation: decoder
 		end
 
 note
-	copyright: "2011-2012, Eiffel Software and others"
+	copyright: "Copyright (c) 2011-2020, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

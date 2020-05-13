@@ -172,7 +172,7 @@ feature -- Element change
 
 feature -- Parameters: Access
 
-	parameter (a_key: READABLE_STRING_8): detachable READABLE_STRING_8
+	parameter (a_key: READABLE_STRING_GENERAL): detachable READABLE_STRING_8
 			-- Parameter associated with `a_key', if present
 			-- otherwise default value of type `STRING'
 		do
@@ -186,7 +186,7 @@ feature -- Parameters: Access
 
 feature -- Parameters: Status report
 
-	has_parameter (a_key: READABLE_STRING_8): BOOLEAN
+	has_parameter (a_key: READABLE_STRING_GENERAL): BOOLEAN
 			-- Is there an parameter in the parameters table with key `a_key'?
 		do
 			if attached parameters as l_params then
@@ -196,7 +196,7 @@ feature -- Parameters: Status report
 
 feature -- Parameters: Change
 
-	put_parameter (a_value: READABLE_STRING_8; a_key: READABLE_STRING_8)
+	put_parameter (a_value: READABLE_STRING_8; a_key: READABLE_STRING_GENERAL)
 			-- Insert `a_value' with `a_key' if there is no other item
 			-- associated with the same key. If present, replace
 			-- the old value with `a_value'

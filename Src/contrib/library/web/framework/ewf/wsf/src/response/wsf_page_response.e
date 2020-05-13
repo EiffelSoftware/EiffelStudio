@@ -17,7 +17,7 @@ create
 	make_with_body
 
 convert
-	make_with_body ({READABLE_STRING_8, STRING_8, IMMUTABLE_STRING_8})
+	make_with_body ({STRING_8})
 
 feature {NONE} -- Initialization
 
@@ -27,7 +27,9 @@ feature {NONE} -- Initialization
 			create header.make
 		end
 
-	make_with_body (a_body: READABLE_STRING_8)
+	make_with_body (a_body: STRING_8)
+			-- Initialize `body` with `a_body`.
+			-- Note: it mays not be the same object.
 		do
 			make
 			body := a_body
@@ -105,7 +107,7 @@ feature {WSF_RESPONSE} -- Output
 		end
 
 note
-	copyright: "2011-2013, Jocelyn Fiat, Javier Velilla, Olivier Ligot, Eiffel Software and others"
+	copyright: "2011-2020, Jocelyn Fiat, Javier Velilla, Olivier Ligot, Colin Adams, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

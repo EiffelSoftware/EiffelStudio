@@ -18,7 +18,7 @@ feature {NONE} -- Initialization
 		do
 				--| Default values
 			status := 200
-			url := a_url
+			create url.make_from_string (a_url)
 			create {STRING_8} raw_header.make_empty
 		end
 
@@ -46,7 +46,7 @@ feature {HTTP_CLIENT_REQUEST} -- Status setting
 
 feature -- Access
 
-	url: STRING_8
+	url: IMMUTABLE_STRING_8
 			-- URL associated with Current response
 
 	status: INTEGER assign set_status
@@ -163,7 +163,7 @@ feature -- Access
 						end
 						c := h.index_of (':', l_start)
 						if c > 0 then
-							k := h.substring (l_start, c - 1)
+							k := h.substring (l_start, c - 1).to_string_8
 							k.right_adjust
 							c := c + 1
 							from until c <= n and not h[c].is_space loop
@@ -290,7 +290,7 @@ feature -- Change
 			l_has_location: BOOLEAN
 			l_content_length: INTEGER
 			s: READABLE_STRING_8
-			l_status_line,h: detachable STRING_8
+			l_status_line,h: detachable READABLE_STRING_8
 		do
 			from
 				i := 1
@@ -363,6 +363,7 @@ feature -- Change
 			-- Set http header `raw_header' to `h'
 		local
 			i: INTEGER
+			rs: READABLE_STRING_8
 			s: STRING_8
 		do
 			raw_header := h
@@ -372,8 +373,9 @@ feature -- Change
 				--| Set status line, right away.
 			i := h.index_of ('%N', 1)
 			if i > 0 then
-				s := h.substring (1, i - 1)
-				if s.starts_with ("HTTP/") then
+				rs := h.substring (1, i - 1)
+				if rs.starts_with ("HTTP/") then
+					s := rs.to_string_8
 					s.right_adjust
 					set_status_line (s)
 				end
@@ -405,7 +407,7 @@ feature {NONE} -- Implementation
 			-- Internal cached value for the headers			
 
 ;note
-	copyright: "2011-2015, Jocelyn Fiat, Javier Velilla, Eiffel Software and others"
+	copyright: "2011-2020, Jocelyn Fiat, Javier Velilla, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

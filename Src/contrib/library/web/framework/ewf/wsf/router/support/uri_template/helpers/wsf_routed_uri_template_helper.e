@@ -11,7 +11,7 @@ inherit
 
 feature -- Mapping helper: uri template
 
-	map_uri_template (a_tpl: STRING; h: WSF_URI_TEMPLATE_HANDLER; rqst_methods: detachable WSF_REQUEST_METHODS)
+	map_uri_template (a_tpl: READABLE_STRING_8; h: WSF_URI_TEMPLATE_HANDLER; rqst_methods: detachable WSF_REQUEST_METHODS)
 			-- Map `h' as handler for `a_tpl', according to `rqst_methods'.
 		require
 			a_tpl_attached: a_tpl /= Void

@@ -168,7 +168,7 @@ feature {NONE} -- Implementation
 			l_target_type: READABLE_STRING_8
 			l_range: HTTP_ACCEPT_LANGUAGE
 			l_param_matches: INTEGER
-			l_element: detachable READABLE_STRING_8
+			l_element: detachable READABLE_STRING_GENERAL
 			l_fitness: INTEGER
 		do
 			l_best_fitness := -1

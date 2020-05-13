@@ -63,9 +63,10 @@ feature -- Access
 		do
 			if is_absolute_url (a_path) then
 					-- Is Absolute url
-				Result := a_path
+				Result := a_path.to_string_8
 			else
-				Result := base_url + a_path
+				create Result.make_from_string (base_url)
+				Result.append (a_path)
 			end
 			if ctx /= Void then
 				ctx.append_query_parameters_to_url (Result)
@@ -287,7 +288,7 @@ feature -- Access
 
 feature -- Authentication
 
-	auth_type: STRING
+	auth_type: READABLE_STRING_8
     		-- Set the authentication type for the request.
 			-- Types: "basic", "digest", "any"
 

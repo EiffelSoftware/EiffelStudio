@@ -76,7 +76,7 @@ feature
 
 feature -- Inspectors
 
-	register_template_inspector (ti: TEMPLATE_INSPECTOR; ti_name: STRING)
+	register_template_inspector (ti: TEMPLATE_INSPECTOR; ti_name: READABLE_STRING_8)
 		require
 			ti_name /= Void
 		do

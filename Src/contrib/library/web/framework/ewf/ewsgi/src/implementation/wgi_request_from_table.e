@@ -425,7 +425,7 @@ feature {NONE} -- Element change: CGI meta parameter related to PATH_INFO
 	update_path_info
 			-- Fix and update PATH_INFO value if needed
 		local
-			l_path_info: STRING
+			l_path_info: READABLE_STRING_8
 		do
 			l_path_info := path_info
 
@@ -480,14 +480,14 @@ feature {NONE} -- Implementation: utilities
 					end
 					n := s.count
 					check i >= 2 and i <= n end
-					Result := s.substring (i - 1, s.count)
+					Result := s.substring (i - 1, s.count).to_string_8
 				else
 					--| starts with one '/' and only one		
-					Result := s
+					Result := s.to_string_8
 				end
 			elseif n = 1 then
 				if s[1] = '/' then
-					Result := s
+					Result := s.to_string_8
 				else
 					create Result.make (2)
 					Result.append_character ('/')

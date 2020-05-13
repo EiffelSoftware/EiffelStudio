@@ -106,9 +106,9 @@ feature {WSF_ROUTER} -- Mapping
 			debug ("router")
 				-- Display conflict in mapping
 				if has_item_associated_with_resource (l_mapping.associated_resource, a_item.request_methods) then
-					io.error.put_string ("Mapping: " + l_mapping.debug_output + ": conflict with existing mapping")
+					io.error.put_string_32 ({STRING_32} "Mapping: " + l_mapping.debug_output.to_string_32 + {STRING_32} ": conflict with existing mapping")
 					if attached item_associated_with_resource (l_mapping.associated_resource, a_item.request_methods) as l_conflicted then
-						io.error.put_string (": " + l_conflicted.debug_output)
+						io.error.put_string_32 ({STRING_32} ": " + l_conflicted.debug_output)
 					end
 					io.error.put_string ("%N")
 				end

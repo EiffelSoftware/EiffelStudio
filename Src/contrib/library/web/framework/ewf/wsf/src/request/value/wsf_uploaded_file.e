@@ -64,7 +64,7 @@ feature -- Status report
 			Result.append ("%"")
 
 			Result.append (" content-type=%"")
-			Result.append (content_type)
+			Result.append_string_general (content_type)
 			Result.append ("%"")
 
 			Result.append (" size=%"")
@@ -121,7 +121,7 @@ feature -- Access: Uploaded File
 			Result := ut.safe_filename (filename)
 		end
 
-	content_type: STRING
+	content_type: READABLE_STRING_8
 			-- Content type
 
 	size: INTEGER

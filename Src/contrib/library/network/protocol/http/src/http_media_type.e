@@ -77,10 +77,10 @@ feature {NONE} -- Initialization
 					-- Look for semi colon as parameter separation
 				p := s.index_of (';', i)
 				if p > 0 then
-					t := s.substring (i, p - 1)
+					t := s.substring (i, p - 1).to_string_8
 					create parameters.make_from_substring (s, p + 1, s.count)
 				else
-					t := s.substring (i, n)
+					t := s.substring (i, n).to_string_8
 				end
 					-- Remove eventual trailing space
 				t.right_adjust
@@ -124,7 +124,7 @@ feature -- Access
 	subtype: READABLE_STRING_8
 			-- Sub type
 
-	has_parameter (a_name: READABLE_STRING_8): BOOLEAN
+	has_parameter (a_name: READABLE_STRING_GENERAL): BOOLEAN
 			-- Has Current a parameter?
 		do
 			if attached parameters as plst then
@@ -132,7 +132,7 @@ feature -- Access
 			end
 		end
 
-	parameter (a_name: READABLE_STRING_8): detachable READABLE_STRING_8
+	parameter (a_name: READABLE_STRING_GENERAL): detachable READABLE_STRING_8
 			-- Value for eventual parameter named `a_name'.
 		do
 			if attached parameters as plst then
@@ -159,7 +159,7 @@ feature -- Conversion
 					loop
 						res.append_character (';')
 						res.append_character (' ')
-						res.append (p.key)
+						res.append ({UTF_CONVERTER}.utf_32_string_to_utf_8_string_8 (p.key))
 						res.append_character ('=')
 						res.append_character ('%"')
 						res.append (p.item)
@@ -272,13 +272,19 @@ feature -- Status report
 	debug_output: STRING
 			-- String that should be displayed in debugger to represent `Current'.
 		do
-			if type /= Void and subtype /= Void then
-				Result := type + "/" + subtype
+			if attached type as l_type and attached subtype as l_subtype then
+				create Result.make_from_string (l_type)
+				Result.append_character ('/')
+				Result.append (l_subtype)
 				if attached parameters as plst then
 					across
 						plst as p
 					loop
-						Result.append ("; " + p.key + "=" + "%"" + p.item + "%"")
+						Result.append ("; ")
+						Result.append ({UTF_CONVERTER}.utf_32_string_to_utf_8_string_8 (p.key))
+						Result.append ("=%"")
+						Result.append (p.item)
+						Result.append_character ('%"')
 					end
 				end
 			else
@@ -290,7 +296,7 @@ invariant
 	type_and_subtype_not_empty: not has_error implies not type.is_empty and not subtype.is_empty
 
 note
-	copyright: "2011-2013, Jocelyn Fiat, Eiffel Software and others"
+	copyright: "2011-2020, Jocelyn Fiat, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

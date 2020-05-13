@@ -50,7 +50,7 @@ feature {NONE} -- Initialization
 			loop
 				if ic.key.starts_with ("HTTP_") then
 					if ic.key.is_valid_as_string_8 then
-						http_meta_variables.force (ic.item, ic.key.as_string_8)
+						http_meta_variables.force (ic.item, ic.key.to_string_8)
 					else
 						http_meta_variables.force (ic.item, utf.escaped_utf_32_string_to_utf_8_string_8 (ic.key))
 					end

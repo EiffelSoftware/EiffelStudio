@@ -392,7 +392,7 @@ feature -- Helper
 			--| Based on header "Accept:" that can be for instance
 			--| 	text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8
 		do
-			if attached (create {SERVER_MEDIA_TYPE_NEGOTIATION}.make (a_content_type.as_string_8)).preference (<<a_content_type.as_string_8>>, http_accept) as l_variants then
+			if attached (create {SERVER_MEDIA_TYPE_NEGOTIATION}.make (a_content_type.to_string_8)).preference (<<a_content_type.to_string_8>>, http_accept) as l_variants then
 				Result := l_variants.is_acceptable
 			end
 		end
@@ -1804,14 +1804,14 @@ feature -- URL Utility
 			Result := s
 		end
 
-	absolute_script_url (a_path: STRING): STRING
+	absolute_script_url (a_path: READABLE_STRING_8): STRING
 			-- Absolute Url for the script if any, extended by `a_path'
 		do
 			Result := script_url (a_path)
 			Result.prepend (server_url)
 		end
 
-	script_url (a_path: STRING): STRING
+	script_url (a_path: READABLE_STRING_8): STRING
 			-- Url relative to script name if any, extended by `a_path'
 		local
 			l_base_url: like internal_url_base
@@ -1854,7 +1854,7 @@ feature -- URL Utility
 					end
 				end
 				if l_base_url = Void then
-					create l_base_url.make_empty
+					create {STRING_8} l_base_url.make_empty
 				end
 				internal_url_base := l_base_url
 			end
@@ -1867,7 +1867,7 @@ feature {NONE} -- Implementation: URL Utility
 	internal_server_url: detachable like server_url
 			-- Server url
 
-	internal_url_base: detachable STRING
+	internal_url_base: detachable READABLE_STRING_8
 			-- URL base of potential script
 
 	internal_percent_encoded_path_info: detachable like percent_encoded_path_info
@@ -1912,7 +1912,7 @@ feature {WSF_MIME_HANDLER} -- Temporary File handling
 			end
 		end
 
-	save_uploaded_file (a_up_file: WSF_UPLOADED_FILE; a_content: STRING)
+	save_uploaded_file (a_up_file: WSF_UPLOADED_FILE; a_content: READABLE_STRING_8)
 			-- Save uploaded file content `a_content' into `a_filename'.
 		local
 			dn: PATH

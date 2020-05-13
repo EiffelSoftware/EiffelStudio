@@ -31,7 +31,7 @@ feature -- Status report
 	is_available: BOOLEAN
 			-- Is interface usable?
 		do
-			Result := curl.is_dynamic_library_exists
+			Result := curl.is_api_available
 		end
 
 feature -- Custom

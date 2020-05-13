@@ -9,7 +9,7 @@ class
 	HTTP_PARAMETER_TABLE
 
 inherit
-	HASH_TABLE [READABLE_STRING_8, STRING_8]
+	STRING_TABLE [READABLE_STRING_8]
 		redefine
 			empty_duplicate
 		end
@@ -58,7 +58,8 @@ feature {NONE} -- Implementation
 			-- and put in `out_end_index' the index after found parameter.
 		local
 			n: INTEGER
-			pn,pv: STRING_8
+			pn: READABLE_STRING_8
+			pv: STRING_8
 			i: INTEGER
 			p, q: INTEGER
 			err: BOOLEAN
@@ -86,7 +87,7 @@ feature {NONE} -- Implementation
 						if s[p+1] = '%"' then
 							q := s.index_of ('%"', p + 2)
 							if q > 0 then
-								pv := s.substring (p + 2, q - 1)
+								pv := s.substring (p + 2, q - 1).to_string_8
 								from
 									i := q + 1
 								until
@@ -108,7 +109,7 @@ feature {NONE} -- Implementation
 							if q = 0 then
 								q := n + 1
 							end
-							pv := s.substring (p + 1, q - 1)
+							pv := s.substring (p + 1, q - 1).to_string_8
 							out_end_index.replace (q + 1)
 						end
 						pv.right_adjust
@@ -138,7 +139,7 @@ feature {NONE} -- Duplication
 		end
 
 note
-	copyright: "2011-2013, Jocelyn Fiat, Eiffel Software and others"
+	copyright: "2011-2020, Jocelyn Fiat, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

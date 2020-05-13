@@ -9,7 +9,7 @@ class
 	BASE64
 
 inherit
-	ENCODER [STRING_8, STRING_8]
+	ENCODER [READABLE_STRING_8, READABLE_STRING_8]
 		redefine
 			valid_encoded_string
 		end
@@ -25,7 +25,7 @@ feature -- Status report
 
 	has_error: BOOLEAN
 
-	valid_encoded_string (v: STRING): BOOLEAN
+	valid_encoded_string (v: READABLE_STRING_8): BOOLEAN
 		do
 			Result := Precursor (v) and then
 					(v.is_empty or v.count >= 4)
@@ -33,7 +33,7 @@ feature -- Status report
 
 feature -- base64 encoder
 
-	encoded_string (s: STRING): STRING_8
+	encoded_string (s: READABLE_STRING_8): STRING_8
 			-- base64 encoded value of `s'.
 		local
 			i,n: INTEGER
@@ -95,14 +95,14 @@ feature -- base64 encoder
 
 feature -- Decoder
 
-	decoded_string (v: STRING): STRING
+	decoded_string (v: READABLE_STRING_8): STRING
 			-- base64 decoded value of `s'.	
 		do
 			create Result.make (v.count)
 			decode_string_to_buffer (v, Result)
 		end
 
-	decode_string_to_buffer (v: STRING; a_buffer: STRING)
+	decode_string_to_buffer (v: READABLE_STRING_8; a_buffer: STRING)
 			-- Write base64 decoded value of `s' into `a_buffer'
 		local
 			byte_count: INTEGER
@@ -180,7 +180,7 @@ feature -- Decoder
 			end
 		end
 
-	decode_string_to_output_medium (v: STRING; a_output: IO_MEDIUM)
+	decode_string_to_output_medium (v: READABLE_STRING_8; a_output: IO_MEDIUM)
 			-- Write base64 decoded value of `s' into `a_output' medium
 		require
 			a_output_writable: a_output.is_open_write
@@ -259,7 +259,7 @@ feature -- Decoder
 			end
 		end
 
-	next_encoded_character_position (v: STRING; from_pos: INTEGER): INTEGER
+	next_encoded_character_position (v: READABLE_STRING_8; from_pos: INTEGER): INTEGER
 			-- Next encoded character position from `v' starting after `from_pos' index.
 			-- Result over `v.count' denodes no remaining decodable position
 			--| Mainly to handle base64 encoded text on multiple line

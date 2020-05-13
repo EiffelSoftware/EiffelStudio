@@ -24,19 +24,19 @@ feature -- Request
 
 feature -- Url Query
 
-	script_absolute_url (a_path: STRING): STRING
+	script_absolute_url (a_path: STRING): READABLE_STRING_8
 			-- Absolute Url for the script if any, extended by `a_path'
 		do
 			Result := utility.script_absolute_url (request, a_path)
 		end
 
-	script_url (a_path: STRING): STRING
+	script_url (a_path: STRING): READABLE_STRING_8
 			-- Url relative to script name if any, extended by `a_path'
 		do
 			Result := utility.script_url (request, a_path)
 		end
 
-	url (args: detachable STRING; abs: BOOLEAN): STRING
+	url (args: detachable STRING; abs: BOOLEAN): READABLE_STRING_8
 			-- Associated url based on `path' and `args'
 			-- if `abs' then return absolute url
 		do

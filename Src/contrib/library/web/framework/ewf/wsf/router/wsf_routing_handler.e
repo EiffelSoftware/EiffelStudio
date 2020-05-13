@@ -58,7 +58,10 @@ feature -- Execution
 			create sess
 			router.dispatch (req, res, sess)
 			if not sess.dispatched then
-				res.put_header ({HTTP_STATUS_CODE}.not_found, <<[{HTTP_HEADER_NAMES}.header_content_length, "0"]>>)
+				res.put_header ({HTTP_STATUS_CODE}.not_found, 
+						{ARRAY [TUPLE [READABLE_STRING_8, READABLE_STRING_8]]} <<
+							[{HTTP_HEADER_NAMES}.header_content_length, "0"]
+						>>)
 			end
 		end
 

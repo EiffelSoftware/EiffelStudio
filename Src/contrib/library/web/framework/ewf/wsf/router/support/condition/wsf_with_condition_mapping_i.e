@@ -28,8 +28,10 @@ feature -- Access
 		do
 			if attached condition_description as desc and then desc.is_valid_as_string_8 then
 				Result := desc.to_string_8
+			elseif description.is_valid_as_string_8 then
+				Result := description.to_string_8
 			else
-				Result := description
+				Result := {UTF_CONVERTER}.utf_32_string_to_utf_8_string_8 (description)
 			end
 		end
 

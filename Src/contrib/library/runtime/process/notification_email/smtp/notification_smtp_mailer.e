@@ -93,7 +93,7 @@ feature -- Basic operation
 			-- Process the sending of `a_email'
 		local
 			l_email: EMAIL
-			h: STRING
+			h: STRING_8
 			i: INTEGER
 			lst: LIST [READABLE_STRING_8]
 		do
@@ -143,7 +143,7 @@ feature -- Basic operation
 					across
 						l_lines as ic
 					loop
-						h := ic.item
+						h := ic.item.to_string_8
 						i := h.index_of (':', 1)
 						if i > 0 then
 							l_email.add_header_entry (h.head (i - 1), h.substring (i + 1, h.count))
@@ -199,7 +199,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright: "2011-2017, Jocelyn Fiat, Javier Velilla, Olivier Ligot, Eiffel Software and others"
+	copyright: "2011-2020, Jocelyn Fiat, Javier Velilla, Olivier Ligot, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

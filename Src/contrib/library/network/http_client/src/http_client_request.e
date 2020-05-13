@@ -108,7 +108,7 @@ feature {HTTP_CLIENT_SESSION} -- Execution
 
 feature -- Authentication
 
-	auth_type: STRING
+	auth_type: READABLE_STRING_8
     		-- Set the authentication type for the request.
 			-- Types: "basic", "digest", "any"
 		do

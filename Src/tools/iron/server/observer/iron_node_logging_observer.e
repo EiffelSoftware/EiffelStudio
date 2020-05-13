@@ -28,7 +28,7 @@ feature {NONE} -- Initialization
 
 feature -- Log
 
-	log_event (a_title, a_message: STRING; a_type: detachable READABLE_STRING_8)
+	log_event (a_title, a_message: READABLE_STRING_32; a_type: detachable READABLE_STRING_8)
 		local
 			l_log: IRON_NODE_LOG
 		do
@@ -53,7 +53,7 @@ feature -- Event
 
 	on_user_updated (a_user: IRON_NODE_USER; flag_is_new: BOOLEAN)
 		local
-			l_title, l_message: STRING
+			l_title, l_message: STRING_32
 		do
 			if flag_is_new then
 				l_title := {STRING_32} "New user [" + a_user.name + {STRING_32} "]"
@@ -91,12 +91,14 @@ feature -- Event
 		local
 			l_body: STRING_32
 			l_title: STRING_32
+			l_version_value: READABLE_STRING_32
 		do
+			l_version_value := p.version.value.to_string_32
 			if flag_is_new then
-				l_title := {STRING_32} "[Iron:"+ p.version.value + {STRING_32} "] New version package [" +  p.human_identifier + {STRING_32} "]"
+				l_title := {STRING_32} "[Iron:" + l_version_value + {STRING_32} "] New version package [" +  p.human_identifier + {STRING_32} "]"
 				l_body := l_title + {STRING_32} "%N"
 			else
-				l_title := {STRING_32} "[Iron:"+ p.version.value + {STRING_32} "] Updated version package [" + p.human_identifier + {STRING_32} "]"
+				l_title := {STRING_32} "[Iron:" + l_version_value + {STRING_32} "] Updated version package [" + p.human_identifier + {STRING_32} "]"
 				l_body := l_title + {STRING_32} "%N"
 			end
 			log_event (l_title, l_body, package_log_type)
@@ -108,13 +110,13 @@ feature -- Event
 			l_body: STRING_32
 			l_title: STRING_32
 		do
-			l_title := {STRING_32} "[Iron:"+ p.version.value + {STRING_32} "] package [" +  p.human_identifier + {STRING_32} "] downloaded"
+			l_title := {STRING_32} "[Iron:"+ p.version.value.to_string_32 + {STRING_32} "] package [" +  p.human_identifier + {STRING_32} "] downloaded"
 			l_body := l_title + {STRING_32} "%N"
 			log_event (l_title, l_body, download_log_type)
 		end
 
 note
-	copyright: "Copyright (c) 1984-2014, Eiffel Software"
+	copyright: "Copyright (c) 1984-2020, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

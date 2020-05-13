@@ -363,7 +363,7 @@ feature -- Package
 								end
 							end
 							if s.is_valid_as_string_8 then
-								Result.add_link (links_ic.key, create {IRON_NODE_LINK}.make (s.as_string_8, l_title))
+								Result.add_link (links_ic.key, create {IRON_NODE_LINK}.make (s.to_string_8, l_title))
 							end
 						end
 					end
@@ -580,7 +580,7 @@ feature -- Package: change
 						s.append_character (' ')
 					end
 					s.append_string_general (link_ic.item.url)
-					inf.put (s, "links["+ link_ic.key +"]")
+					inf.put (s, {STRING_32} "links["+ link_ic.key + {STRING_32} "]")
 				end
 			end
 
@@ -639,7 +639,7 @@ feature -- Version package
 					create arch.make (package_version_archive_path (Result, rev).absolute_path)
 					if arch.file_exists then
 						if attached inf.item ("archive_hash") as s_hash and then not s_hash.is_whitespace then
-							arch.set_hash (s_hash)
+							arch.set_hash (s_hash.to_string_8) -- By design it is valid string 8.
 						else
 							arch.reset_hash
 						end
@@ -1262,15 +1262,15 @@ feature {NONE} -- Implementation: maps
 		local
 			f: RAW_FILE
 			utf: UTF_CONVERTER
-			l_id: READABLE_STRING_8
+			l_id: READABLE_STRING_32
 		do
 			create f.make_with_path (packages_version_index_map_path (m.version))
 			f.create_read_write
 			across
 				m.maps as ic
 			loop
-				l_id := ic.key.as_string_8 -- By design, it is valid STRING_8
-				f.put_string (l_id)
+				l_id := ic.key -- By design, it is valid STRING_8
+				f.put_string (utf.utf_32_string_to_utf_8_string_8 (l_id))
 				f.put_new_line
 				across
 					ic.item as ic_path

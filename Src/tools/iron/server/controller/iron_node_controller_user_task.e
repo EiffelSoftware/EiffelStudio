@@ -46,7 +46,7 @@ feature -- Execution
 						update_user (iron, args[2], args.subarray (3, args.upper))
 					end
 				else
-					io.error.put_string ("Error: '" + args[1]  + "' is not supported%N")
+					io.error.put_string_32 ({STRING_32} "Error: '" + args[1]  + "' is not supported%N")
 					display_help (iron)
 				end
 			else
@@ -135,7 +135,7 @@ feature -- Execution
 
 
 note
-	copyright: "Copyright (c) 1984-2015, Eiffel Software"
+	copyright: "Copyright (c) 1984-2020, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

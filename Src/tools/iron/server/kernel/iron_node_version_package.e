@@ -84,10 +84,13 @@ feature -- Comparison
 
 feature -- Status report
 
-	debug_output: READABLE_STRING_GENERAL
+	debug_output: STRING_32
 			-- String that should be displayed in debugger to represent `Current'.
 		do
-			Result := package.human_identifier + " (version:" + version.value + ")"
+			create Result.make_from_string (package.human_identifier)
+			Result.append_string_general (" (version:")
+			Result.append_string_general (version.value)
+			Result.append_character (')')
 		end
 
 feature -- Access

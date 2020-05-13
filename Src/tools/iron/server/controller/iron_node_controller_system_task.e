@@ -53,7 +53,7 @@ feature -- Execution
 						io.error.put_string ("Error: 'load' is missing argument%N")
 					end
 				else
-					io.error.put_string ("Error: '" + args [1] + "' is not supported%N")
+					io.error.put_string_32 ({STRING_32} "Error: '" + args [1] + "' is not supported%N")
 					display_help (iron)
 				end
 			else
@@ -110,7 +110,7 @@ feature -- Execution
 					io.put_string (e.value)
 					if attached e.error as err then
 						io.put_string (" [error:")
-						io.put_string (err.as_string_8) -- FIXME: unicode output
+						io.put_string_32 (err)
 						io.put_string (" ]")
 					end
 					io.put_new_line
@@ -305,7 +305,7 @@ feature -- Execution
 		end
 
 note
-	copyright: "Copyright (c) 1984-2014, Eiffel Software"
+	copyright: "Copyright (c) 1984-2020, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

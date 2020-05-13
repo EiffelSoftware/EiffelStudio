@@ -32,13 +32,20 @@ feature -- Event
 		local
 			m: NOTIFICATION_EMAIL
 			utf: UTF_CONVERTER
+			l_title, l_message: READABLE_STRING_8
 		do
 			if mailer.is_available then
+				l_title := utf.utf_32_string_to_utf_8_string_8 (a_title)
+				l_message := utf.utf_32_string_to_utf_8_string_8 (a_message)
 				if attached a_user.email as l_email then
-					create m.make (admin_email, l_email, utf.utf_32_string_to_utf_8_string_8 (a_title), a_message)
+					create m.make (admin_email, 
+								utf.utf_32_string_to_utf_8_string_8 (l_email),
+								l_title, 
+								l_message
+							)
 					mailer.process_email (m)
 				end
-				create m.make (admin_email, admin_email, a_title, a_message)
+				create m.make (admin_email, admin_email, l_title, l_message)
 				mailer.process_email (m)
 			end
 		end
@@ -46,7 +53,7 @@ feature -- Event
 	on_user_updated (a_user: IRON_NODE_USER; flag_is_new: BOOLEAN)
 		local
 			utf: UTF_CONVERTER
-			l_body: STRING
+			l_body: STRING_32
 		do
 			if flag_is_new then
 				create l_body.make_empty
@@ -119,7 +126,7 @@ feature -- Event
 		end
 
 note
-	copyright: "Copyright (c) 1984-2018, Eiffel Software"
+	copyright: "Copyright (c) 1984-2020, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

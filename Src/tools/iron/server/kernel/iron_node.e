@@ -129,7 +129,7 @@ feature -- Access: cms url
 
 	cms_base_url: STRING = "/repository"
 
-	cms_page (p: READABLE_STRING_8): READABLE_STRING_8
+	cms_page (p: READABLE_STRING_8): STRING_8
 		local
 			s: STRING
 		do
@@ -281,7 +281,7 @@ feature -- Encoders
 
 
 note
-	copyright: "Copyright (c) 1984-2015, Eiffel Software"
+	copyright: "Copyright (c) 1984-2020, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

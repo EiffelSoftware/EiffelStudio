@@ -51,7 +51,7 @@ feature {NONE} -- Status report
 	number_of_cpu: INTEGER
 			-- Number of CPU available.
 
-	make_utility: STRING
+	make_utility: STRING_32
 			-- Name/path of `make' utility.
 
 	make_flags: LIST [READABLE_STRING_32]
@@ -108,7 +108,7 @@ feature {NONE} -- Implementation
 				if l_make.is_empty then
 					report_error ("Error: Missing make utility command.%N")
 				end
-				make_utility := "%"" + l_make + "%""
+				make_utility := {STRING_32} "%"" + l_make + {STRING_32} "%""
 			elseif (create {PLATFORM}).is_windows then
 				make_utility := "nmake.exe"
 				if not attached l_make_flags then
@@ -132,10 +132,10 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	report_error (message: STRING)
+	report_error (message: READABLE_STRING_GENERAL)
 			-- Report error `message` and exit.
 		do
-			io.error.put_string (message)
+			io.error.put_string_32 (message.to_string_32)
 			print_usage
 			die (1)
 		ensure
@@ -354,7 +354,7 @@ invariant
 	make_flags_not_void: make_flags /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2016, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2020, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

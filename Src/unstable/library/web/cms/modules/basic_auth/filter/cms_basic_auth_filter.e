@@ -46,7 +46,7 @@ feature -- Basic operations
 						set_current_user (l_user)
 					end
 				else
-					api.logger.put_error (generator + ".execute login_valid failed for: " + l_auth_login, Void)
+					api.logger.put_error (generator + ".execute login_valid failed for: " + {UTF_CONVERTER}.utf_32_string_to_utf_8_string_8 (l_auth_login), Void)
 				end
 			end
 			execute_next (req, res)

@@ -85,7 +85,7 @@ feature -- Region
 			else
 				Result := ""
 				debug
-					Result := "{{" + n + "}}"
+					Result := "{{" + {UTF_CONVERTER}.utf_32_string_to_utf_8_string_8 (n) + "}}"
 				end
 			end
 		end

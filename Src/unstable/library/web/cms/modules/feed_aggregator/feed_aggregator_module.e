@@ -136,7 +136,7 @@ feature -- Handle
 						end
 						if attached l_agg.description as l_desc and then l_desc.is_valid_as_string_8 then
 							s.append ("<div class=%"description%">")
-							s.append (l_desc.as_string_8)
+							s.append (l_desc.to_string_8)
 							s.append ("</div>")
 						end
 						s.append ("<ul>")
@@ -200,7 +200,7 @@ feature -- Handle
 						if attached ic.item.description as l_desc then
 							if l_desc.is_valid_as_string_8 then
 								s.append ("<div class=%"description%">")
-								s.append (l_desc.as_string_8)
+								s.append (l_desc.to_string_8)
 								s.append ("</div>")
 							end
 						end
@@ -361,7 +361,7 @@ feature -- Hook
 				attached feed_aggregator_api as l_feed_api and then
 				attached l_feed_api.aggregation (a_feed_id) as l_agg
 			then
-				create l_cache.make (l_feed_api.cms_api.cache_location.extended (name).extended ("feed__" + a_feed_id + "__" + a_count.out + "_" + with_feed_info.out))
+				create l_cache.make (l_feed_api.cms_api.cache_location.extended (name).extended ({STRING_32} "feed__" + a_feed_id.to_string_32 + "__" + a_count.out + "_" + with_feed_info.out))
 				Result := l_cache.item
 				if Result = Void or l_cache.expired (Void, l_agg.expiration) then
 					if attached to_adapted_feed (l_feed_api, l_agg, a_count) as l_feed then
@@ -415,7 +415,7 @@ feature -- Hook
 				attached feed_aggregator_api as l_feed_api and then
 				attached l_feed_api.aggregation (a_feed_id) as l_agg
 			then
-				create l_cache.make (l_feed_api.cms_api.cache_location.extended (name).extended ("feed__" + a_feed_id + "__" + a_count.out + ".atom"))
+				create l_cache.make (l_feed_api.cms_api.cache_location.extended (name).extended ({STRING_32} "feed__" + a_feed_id.to_string_32 + "__" + a_count.out + ".atom"))
 				Result := l_cache.item
 				if Result = Void or l_cache.expired (Void, l_agg.expiration) then
 					if attached to_adapted_feed (l_feed_api, l_agg, a_count) as l_feed then
@@ -440,7 +440,7 @@ feature -- Hook
 				attached feed_aggregator_api as l_feed_api and then
 				attached l_feed_api.aggregation (a_feed_id) as l_agg
 			then
-				create l_cache.make (l_feed_api.cms_api.cache_location.extended (name).extended ("feed__" + a_feed_id + "__" + a_count.out + ".rss"))
+				create l_cache.make (l_feed_api.cms_api.cache_location.extended (name).extended ({STRING_32} "feed__" + a_feed_id.to_string_32 + "__" + a_count.out + ".rss"))
 				Result := l_cache.item
 				if Result = Void or l_cache.expired (Void, l_agg.expiration) then
 					if attached to_adapted_feed (l_feed_api, l_agg, a_count) as l_feed then

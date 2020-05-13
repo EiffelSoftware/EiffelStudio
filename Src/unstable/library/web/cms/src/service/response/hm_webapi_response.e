@@ -35,17 +35,17 @@ feature -- Element change
 		deferred
 		end
 
-	add_link (rel: READABLE_STRING_8; a_attname: detachable READABLE_STRING_8; a_att_href: READABLE_STRING_8)
+	add_link (rel: READABLE_STRING_GENERAL; a_attname: detachable READABLE_STRING_8; a_att_href: READABLE_STRING_8)
 		deferred
 		end
 
-	add_templated_link (rel: READABLE_STRING_8; a_attname: detachable READABLE_STRING_8; a_att_href: READABLE_STRING_8)
+	add_templated_link (rel: READABLE_STRING_GENERAL; a_attname: detachable READABLE_STRING_8; a_att_href: READABLE_STRING_8)
 		deferred
 		end
 
 invariant
 
 note
-	copyright: "2011-2017, Jocelyn Fiat, Javier Velilla, Eiffel Software and others"
+	copyright: "2011-2020, Jocelyn Fiat, Javier Velilla, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 end

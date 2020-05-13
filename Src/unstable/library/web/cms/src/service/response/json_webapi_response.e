@@ -97,7 +97,7 @@ feature -- Fields
 
 feature -- Links				
 
-	add_link (rel: READABLE_STRING_8; a_attname: detachable READABLE_STRING_8 ; a_att_href: READABLE_STRING_8)
+	add_link (rel: READABLE_STRING_GENERAL; a_attname: detachable READABLE_STRING_8 ; a_att_href: READABLE_STRING_8)
 		local
 			lnks: JSON_OBJECT
 			lnk: JSON_OBJECT
@@ -117,7 +117,7 @@ feature -- Links
 			lnks.put (lnk, rel)
 		end
 
-	add_templated_link (rel: READABLE_STRING_8; a_attname: detachable READABLE_STRING_8; a_att_href: READABLE_STRING_8)
+	add_templated_link (rel: READABLE_STRING_GENERAL; a_attname: detachable READABLE_STRING_8; a_att_href: READABLE_STRING_8)
 		local
 			lnks: JSON_OBJECT
 			lnk: JSON_OBJECT
@@ -143,7 +143,7 @@ feature -- Execution
 	process
 		local
 			m: WSF_PAGE_RESPONSE
-			j: READABLE_STRING_8
+			j: STRING_8
 			utf: UTF_CONVERTER
 		do
 			j := resource.representation

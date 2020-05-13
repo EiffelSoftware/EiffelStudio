@@ -107,7 +107,7 @@ feature -- Operation
 					if l_sql_params.has (ic.key) then
 						l_sql_params.remove (ic.key)
 					else
-						error_handler.add_custom_error (-1, "useless value", "value for unexpected parameter [" + ic.key + "]")
+						error_handler.add_custom_error (-1, "useless value", {STRING_32} "value for unexpected parameter [" + ic.key.to_string_32 + "]")
 					end
 				end
 				across

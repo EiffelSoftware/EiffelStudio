@@ -138,12 +138,12 @@ feature -- Hash password
 			valid_salt_length: salt.count > 28
 			valid_salt_version: is_valid_salt_version (salt)
 		local
-			real_salt: STRING_8
+			real_salt: READABLE_STRING_8
 			l_password, l_salt, l_hashed: SPECIAL [NATURAL_8]
 			rounds, off: INTEGER
 			minor: CHARACTER_8
 			pwd: STRING_8
-			l_substring: STRING_8
+			l_substring: READABLE_STRING_8
 			i,n: INTEGER
 			l_bcrypt: BCRYPT
 		do
@@ -873,7 +873,7 @@ feature -- bcrypt modified version of base64 encoding
 			end
 		end
 
-	decoded_base64_array (str: STRING_8; maxolen: INTEGER): SPECIAL [NATURAL_8]
+	decoded_base64_array (str: READABLE_STRING_8; maxolen: INTEGER): SPECIAL [NATURAL_8]
 			-- Decode a string encoded using bcrypt's base64 scheme to a byte array.
 			-- Note that this is *not* compatible with standard MIME-base64 encoding.
 		require

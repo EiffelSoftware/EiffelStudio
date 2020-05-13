@@ -80,7 +80,7 @@ feature -- HTTP Methods
 		do
 			if api.has_permission ("admin formats") then
 				if attached {WSF_STRING} req.path_parameter ("format-id") as p_format_id then
-					do_post_format (p_format_id.value, req, res)
+					do_post_format (p_format_id.url_encoded_value, req, res)
 				else
 					do_post_format (Void, req, res) -- New format!
 				end
@@ -236,7 +236,7 @@ feature -- View/edit Format
 			l_response.execute
 		end
 
-	do_post_format (a_format_id: detachable READABLE_STRING_GENERAL; req: WSF_REQUEST; res: WSF_RESPONSE)
+	do_post_format (a_format_id: detachable READABLE_STRING_8; req: WSF_REQUEST; res: WSF_RESPONSE)
 		local
 			f: detachable CMS_FORMAT
 			l_response: CMS_RESPONSE

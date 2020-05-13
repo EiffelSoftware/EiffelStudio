@@ -82,7 +82,7 @@ feature -- Conversion
 			across
 				page.regions as ic
 			loop
-				page.register_variable (ic.item, "region_" + ic.key)
+				page.register_variable (ic.item, {STRING_32} "region_" + ic.key.to_string_32)
 			end
 		end
 
@@ -128,7 +128,7 @@ feature {NONE} -- Internal
 invariant
 	attached internal_page_template as inv_p implies inv_p.theme = Current
 note
-	copyright: "2011-2017, Jocelyn Fiat, Javier Velilla, Eiffel Software and others"
+	copyright: "2011-2020, Jocelyn Fiat, Javier Velilla, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

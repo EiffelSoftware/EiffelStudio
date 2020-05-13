@@ -353,7 +353,7 @@ feature -- Access: Site
 		local
 			s_max_age: READABLE_STRING_8
 		do
-			s_max_age := string_8_item ("auth." + a_auth + ".max_age")
+			s_max_age := string_8_item ({STRING_32} "auth." + a_auth + {STRING_32} ".max_age")
 			if s_max_age = Void then
 				s_max_age := string_8_item ("auth.max_age")
 			end
@@ -367,7 +367,7 @@ feature -- Access: Site
 	site_auth_token (a_auth: READABLE_STRING_GENERAL): detachable READABLE_STRING_8
 			-- token for cookie related to session based authentication.
 		do
-			Result := string_8_item ("auth." + a_auth + ".token")
+			Result := string_8_item ({STRING_32} "auth." + a_auth.to_string_32 + {STRING_32} ".token")
 			if Result = Void then
 				Result := string_8_item ("auth.token")
 			end

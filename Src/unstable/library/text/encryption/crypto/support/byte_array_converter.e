@@ -44,7 +44,7 @@ feature {NONE} -- Initialization
 	make_from_string (s: READABLE_STRING_8)
 			-- Create current byte array from string, i.e an array of character 8 values, i.e from 0 to 255.
 		do
-			string := s
+			string := s.to_string_8
 		end
 
 	make_from_hex_string (hex: READABLE_STRING_8)

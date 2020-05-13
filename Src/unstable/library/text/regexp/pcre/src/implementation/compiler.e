@@ -344,7 +344,7 @@ feature -- Compilation
 		local
 			an_option: INTEGER
 		do
-			pattern := a_pattern.twin
+			create pattern.make_from_string (a_pattern)
 			pattern.append_character ('%U')
 			pattern_count := a_pattern.count
 			pattern_position := 1

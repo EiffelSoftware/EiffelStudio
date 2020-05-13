@@ -1005,7 +1005,7 @@ feature -- Basic operation
 					if prop_data /= {GTK}.null_pointer then
 						create a_string.make_from_c ({GTK}.gdk_atom_name (a_target))
 						debug ("GDK_EVENT")
-							print ("%NTarget Type: " + a_string + " %N" )
+							print ("%NTarget Type: " + {UTF_CONVERTER}.utf_32_string_to_utf_8_string_8 (a_string) + " %N" )
 						end
 						if a_string.is_equal (l_string)  then
 							create a_string.make_from_c (prop_data)
@@ -1471,7 +1471,7 @@ feature {NONE} -- Externals
 		-- Pointer to the global static mutex
 
 note
-	copyright:	"Copyright (c) 1984-2019, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2020, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

@@ -25,11 +25,11 @@ feature -- Test routines
 			create l_button
 			l_button.set_text ("Button")
 
-			assert ("text_correct: '" + l_button.text + "' instead of " + "'Button'", l_button.text.is_equal ("Button"))
+			assert ({STRING_32} "text_correct: '" + l_button.text + {STRING_32} "' instead of 'Button'", l_button.text.same_string ("Button"))
 		end
 
 note
-	copyright: "Copyright (c) 1984-2014, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2020, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

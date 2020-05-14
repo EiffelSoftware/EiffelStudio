@@ -101,7 +101,7 @@ feature -- Query
 					create {SQLITE_STRING_ARG} Result.make (a_var, l_value)
 				elseif attached {READABLE_STRING_32} a_value as l_s32 then
 					if l_s32.is_valid_as_string_8 then
-						create {SQLITE_STRING_ARG} Result.make (a_var, l_s32.as_string_8)
+						create {SQLITE_STRING_ARG} Result.make (a_var, l_s32.to_string_8)
 					else
 							--| Should not occur due to precondition is_valid_argument
 						check unsupported_value_for_type_string_32: False end

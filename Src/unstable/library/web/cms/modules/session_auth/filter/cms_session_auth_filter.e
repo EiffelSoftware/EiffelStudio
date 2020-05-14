@@ -43,7 +43,7 @@ feature -- Basic operations
 				if attached session_api.user_by_session_token (l_roc_auth_session_token.value) as l_user then
 					set_current_user (l_user)
 				else
-					api.logger.put_error (generator + ".execute login_valid failed for: " + l_roc_auth_session_token.value , Void)
+					api.logger.put_error (generator + ".execute login_valid failed for: " + l_roc_auth_session_token.url_encoded_value , Void)
 				end
 			end
 			execute_next (req, res)

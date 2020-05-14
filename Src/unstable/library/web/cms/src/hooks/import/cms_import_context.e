@@ -38,7 +38,7 @@ feature -- Logs
 			-- Associated importation logs.
 
 	log (m: READABLE_STRING_8)
-			-- Add message `m' into `logs'.
+			-- Add html message `m' into `logs'.
 		do
 			logs.force (m)
 		end
@@ -46,6 +46,6 @@ feature -- Logs
 invariant
 
 note
-	copyright: "2011-2017, Jocelyn Fiat, Javier Velilla, Eiffel Software and others"
+	copyright: "2011-2020, Jocelyn Fiat, Javier Velilla, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 end

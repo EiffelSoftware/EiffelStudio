@@ -40,7 +40,7 @@ feature -- Token Generation
 			create es.make (create {CMS_AUTHENTICATION_EMAIL_SERVICE_PARAMETERS}.make (cms_api))
 			es.send_admin_account_evaluation (u, a_personal_information, l_url_activate, l_url_reject, cms_api.absolute_url ("", Void))
 
--- TODO: 2018-08-13 add email verification operation. 
+-- TODO: 2018-08-13 add email verification operation.
 --			if cms_api.user_has_permission (Void, "account auto activate") then
 --					-- Send Email comfirmation to user
 --				cms_api.log_debug ("registration", "send_email_confirmation", Void)
@@ -53,7 +53,7 @@ feature -- Token Generation
 			create es.make (create {CMS_AUTHENTICATION_EMAIL_SERVICE_PARAMETERS}.make (cms_api))
 			es.send_contact_email (a_email, u, cms_api.absolute_url ("", Void))
 
-			cms_api.log ("registration", {STRING_32} "new user %"" + u.name + "%" <" + a_email + ">", {CMS_LOG}.level_info, Void)
+			cms_api.log ("registration", "new user %"" + html_encoded (u.name) + "%" <" + html_encoded (a_email) + ">", {CMS_LOG}.level_info, Void)
 		end
 
 	activate_user (a_temp_user: CMS_TEMP_USER; a_token: READABLE_STRING_GENERAL)

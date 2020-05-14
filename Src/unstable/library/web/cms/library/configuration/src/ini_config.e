@@ -333,7 +333,7 @@ feature {NONE} -- Implementation
 	parse_content (a_content: STRING_8)
 		local
 			i,j,n: INTEGER
-			s: READABLE_STRING_8
+			s: STRING_8
 		do
 			last_section_name := Void
 			from

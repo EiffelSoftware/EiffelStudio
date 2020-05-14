@@ -67,12 +67,12 @@ feature {NONE} -- Implementation
 	impl_response_execute (a_response: CMS_RESPONSE; a_message: detachable READABLE_STRING_8)
 		do
 			if a_message /= Void then
-				a_response.set_main_content (a_message)
+				a_response.set_main_content (a_message.to_string_8)
 			end
 			a_response.execute
 		end
 
 note
-	copyright: "2011-2018, Jocelyn Fiat, Javier Velilla, Eiffel Software and others"
+	copyright: "2011-2020, Jocelyn Fiat, Javier Velilla, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 end

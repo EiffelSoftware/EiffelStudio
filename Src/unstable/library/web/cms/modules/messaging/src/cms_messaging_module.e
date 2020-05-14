@@ -317,7 +317,7 @@ $(document).ready(function() {
 
 feature {NONE} -- Contact Message
 
-	resolved_template_text (api: CMS_API; a_text: READABLE_STRING_GENERAL; a_target_user: detachable CMS_USER): STRING_8
+	resolved_template_text (api: CMS_API; a_text: READABLE_STRING_GENERAL; a_target_user: detachable CMS_USER): READABLE_STRING_8
 		local
 			smt: CMS_SMARTY_TEMPLATE_TEXT
 		do

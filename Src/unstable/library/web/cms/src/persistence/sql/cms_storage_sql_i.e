@@ -64,7 +64,7 @@ feature -- Operation
 		local
 			l_sql_params: STRING_TABLE [READABLE_STRING_8]
 			i,j,n: INTEGER
-			s: STRING
+			s: READABLE_STRING_8
 		do
 			create l_sql_params.make_caseless (0)
 			from
@@ -207,7 +207,7 @@ feature -- Helper
 			err: BOOLEAN
 			err_msg: STRING_32
 			cl: CELL [INTEGER]
-			l_sql: STRING
+			l_sql: READABLE_STRING_8
 		do
 			reset_error
 			sql_begin_transaction
@@ -256,7 +256,7 @@ feature -- Helper
 	sql_table_exists (a_table_name: READABLE_STRING_8): BOOLEAN
 			-- Does table `a_table_name' exists?
 		local
-			l_sql: STRING
+			l_sql: READABLE_STRING_8
 		do
 			reset_error
 			l_sql := "SELECT count(*) FROM " + a_table_name + " ;"
@@ -270,7 +270,7 @@ feature -- Helper
 	sql_table_items_count (a_table_name: READABLE_STRING_8): INTEGER_64
 			-- Number of items in table `a_table_name'?
 		local
-			l_sql: STRING
+			l_sql: READABLE_STRING_8
 		do
 			reset_error
 			l_sql := "SELECT count(*) FROM " + a_table_name + " ;"

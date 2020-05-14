@@ -66,8 +66,8 @@ feature -- HTTP Methods
 			l_count: INTEGER
 			user_api: CMS_USER_API
 			l_full: BOOLEAN
-			l_modname: STRING_8
-			l_mods: ARRAYED_LIST [STRING_8]
+			l_modname: READABLE_STRING_GENERAL
+			l_mods: ARRAYED_LIST [READABLE_STRING_GENERAL]
 			l_perms: LIST [READABLE_STRING_8]
 		do
 				-- At the moment the template are hardcoded, but we can

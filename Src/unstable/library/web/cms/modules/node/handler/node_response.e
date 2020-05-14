@@ -30,7 +30,7 @@ feature -- Helpers
 	node_id_path_parameter: INTEGER_64
 			-- Node id passed as path parameter for request `request'.
 		local
-			s: STRING
+			s: READABLE_STRING_GENERAL
 		do
 			if attached {WSF_STRING} request.path_parameter ("id") as p_nid then
 				s := p_nid.value

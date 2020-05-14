@@ -57,7 +57,7 @@ feature -- Element change
 
 feature -- Conversion
 
-	string: STRING_8
+	string: READABLE_STRING_8
 			-- <Precursor>
 		local
 			tpl: detachable TEMPLATE_TEXT
@@ -93,6 +93,6 @@ feature -- Conversion
 		end
 
 note
-	copyright: "2011-2017, Jocelyn Fiat, Javier Velilla, Eiffel Software and others"
+	copyright: "2011-2020, Jocelyn Fiat, Javier Velilla, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 end

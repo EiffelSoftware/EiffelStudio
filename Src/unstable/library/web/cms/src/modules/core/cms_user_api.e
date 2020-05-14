@@ -355,12 +355,12 @@ feature -- User roles.
 			Result := user_storage.user_role_by_name (a_name)
 		end
 
-	role_permissions: HASH_TABLE [LIST [READABLE_STRING_8], STRING_8]
+	role_permissions: STRING_TABLE [LIST [READABLE_STRING_8]]
 			-- Possible known permissions indexed by modules.
 		local
 			lst, l_full_lst, l_used_permissions: LIST [READABLE_STRING_8]
 		do
-			create Result.make (cms_api.enabled_modules.count + 1)
+			create Result.make_caseless (cms_api.enabled_modules.count + 1)
 
 			l_used_permissions := user_storage.role_permissions
 			across

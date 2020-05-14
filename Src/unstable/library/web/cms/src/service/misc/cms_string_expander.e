@@ -6,7 +6,7 @@ note
 	revision: "$Revision$"
 
 class
-	CMS_STRING_EXPANDER [G -> STRING_GENERAL]
+	CMS_STRING_EXPANDER [G -> READABLE_STRING_GENERAL]
 
 create
 	make
@@ -49,7 +49,7 @@ feature -- Conversion
 
 	expand_string_8 (a_text: STRING)
 		local
-			k, s: STRING_8
+			k, s: READABLE_STRING_8
 			utf: UTF_CONVERTER
 		do
 				--| FIXME: implement better string expander.
@@ -61,7 +61,7 @@ feature -- Conversion
 				elseif attached ic.item as v then
 					s := utf.utf_32_string_to_utf_8_string_8 (v)
 				else
-					create s.make_empty
+					s := ""
 				end
 				if attached {READABLE_STRING_8} ic.key as v then
 					k := v
@@ -74,7 +74,7 @@ feature -- Conversion
 
 	expand_string_32 (a_text: STRING_32)
 		local
-			k, s: STRING_32
+			k, s: READABLE_STRING_32
 		do
 				--| FIXME: implement better string expander.
 			across
@@ -83,7 +83,7 @@ feature -- Conversion
 				if attached ic.item as v then
 					s := v.to_string_32
 				else
-					create s.make_empty
+					s := {STRING_32} ""
 				end
 				k := ic.key.to_string_32
 				a_text.replace_substring_all ({STRING_32} "$" + k, s)
@@ -114,6 +114,6 @@ feature {NONE} -- Implementation
 		end
 
 ;note
-	copyright: "2011-2016, Jocelyn Fiat, Javier Velilla, Eiffel Software and others"
+	copyright: "2011-2020, Jocelyn Fiat, Javier Velilla, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 end

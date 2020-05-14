@@ -309,6 +309,13 @@ feature -- Hooks
 
 feature -- Internationalization (i18n)
 
+	html_translation (a_text: READABLE_STRING_GENERAL; opts: detachable CMS_API_OPTIONS): STRING_8
+			-- Translated HTML text `a_text' according to expected context (lang, ...)
+			-- and adapt according to options eventually set by `opts'.
+		do
+			Result := html_encoded (api.translation (a_text, opts))
+		end
+
 	translation (a_text: READABLE_STRING_GENERAL; opts: detachable CMS_API_OPTIONS): STRING_32
 			-- Translated text `a_text' according to expected context (lang, ...)
 			-- and adapt according to options eventually set by `opts'.

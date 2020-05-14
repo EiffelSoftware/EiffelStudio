@@ -36,7 +36,7 @@ feature -- Comments helpers
 						loop
 							l_comment := ic.item
 							l_comments_api.save_recursively_comment (l_comment)
-							l_log := "comment #" + l_comment.id.out + " (count="+ l_comment.count.out +") imported from %"" + fn.utf_8_name + "%""
+							l_log := "comment #" + l_comment.id.out + " (count="+ l_comment.count.out +") imported from %"" + api.html_encoded (fn.name) + "%""
 							l_log.append (" into " + a_entity.content_type)
 							if attached a_entity.identifier as l_id then
 								l_log.append (" #" + l_id.out)

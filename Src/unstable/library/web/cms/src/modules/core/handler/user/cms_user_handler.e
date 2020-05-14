@@ -60,7 +60,7 @@ feature -- Query
 	user_path_parameter (req: WSF_REQUEST): detachable CMS_USER
 			-- User id (uid or username) passed as path parameter for request `req'.
 		local
-			s: STRING
+			s: READABLE_STRING_GENERAL
 			l_uid: INTEGER_64
 		do
 			if attached {WSF_STRING} req.path_parameter ("uid") as p_nid then
@@ -99,6 +99,6 @@ feature -- HTTP Methods
 		end
 
 note
-	copyright: "2011-2017, Jocelyn Fiat, Javier Velilla, Eiffel Software and others"
+	copyright: "2011-2020, Jocelyn Fiat, Javier Velilla, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 end

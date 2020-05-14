@@ -132,7 +132,7 @@ feature -- Hook
 			create l_feed_name.make_from_string (a_response.api.setup.site_name)
 			l_feed_name.append_string ({STRING_32} " : recent changes")
 			create l_feed.make (l_feed_name)
-			l_feed.set_id (a_response.api.absolute_url (a_response.request.path_info, Void))
+			l_feed.set_id (a_response.api.absolute_url (a_response.request.percent_encoded_path_info, Void))
 			l_feed.set_date (create {DATE_TIME}.make_now_utc)
 			nb := a_size
 			across

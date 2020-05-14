@@ -185,7 +185,7 @@ feature -- Request handling
 							create {GENERIC_VIEW_CMS_RESPONSE} r.make (req, res, a_auth_api.cms_api)
 							create f.make (req.percent_encoded_path_info, "activate-temp-user")
 							f.set_method_post
-							f.extend_html_text ("Activation of user " + a_auth_api.cms_api.user_display_name (l_temp_user))
+							f.extend_html_text ("Activation of user " + html_encoded (a_auth_api.cms_api.user_display_name (l_temp_user)))
 							if attached l_temp_user.email as l_email then
 								f.extend_html_text (" (email: " + html_encoded (l_email) + ")")
 							end
@@ -201,7 +201,7 @@ feature -- Request handling
 						r.execute
 					else
 							-- the token does not exist, or it was already used.
-						a_auth_api.cms_api.response_api.send_bad_request ("<p>The activation token <i>" + l_token.value + "</i> is not valid " + a_auth_api.cms_api.link ("Reactivate Account", "account/reactivate", Void) + "</p>", req, res)
+						a_auth_api.cms_api.response_api.send_bad_request ("<p>The activation token <i>" + html_encoded (l_token.value) + "</i> is not valid " + a_auth_api.cms_api.link ("Reactivate Account", "account/reactivate", Void) + "</p>", req, res)
 					end
 				else
 					a_auth_api.cms_api.response_api.send_bad_request ("Missing required token value", req, res)
@@ -244,7 +244,7 @@ feature -- Request handling
 							r.set_title ("User rejection")
 							create f.make (req.percent_encoded_path_info, "reject-temp-user")
 							f.set_method_post
-							f.extend_html_text ("Rejection of user " + a_auth_api.cms_api.user_display_name (l_temp_user))
+							f.extend_html_text ("Rejection of user " + html_encoded (a_auth_api.cms_api.user_display_name (l_temp_user)))
 							if attached l_temp_user.email as l_email then
 								f.extend_html_text (" (email: " + html_encoded (l_email) + ")")
 							end
@@ -261,7 +261,7 @@ feature -- Request handling
 						r.execute
 					else
 							-- the token does not exist, or it was already used.
-						a_auth_api.cms_api.response_api.send_bad_request ("<p>The activation token <i>" + l_token.value + "</i> is not valid " + a_auth_api.cms_api.link ("Reactivate Account", "account/reactivate", Void) + "</p>", req, res)
+						a_auth_api.cms_api.response_api.send_bad_request ("<p>The activation token <i>" + html_encoded (l_token.value) + "</i> is not valid " + a_auth_api.cms_api.link ("Reactivate Account", "account/reactivate", Void) + "</p>", req, res)
 
 					end
 				else

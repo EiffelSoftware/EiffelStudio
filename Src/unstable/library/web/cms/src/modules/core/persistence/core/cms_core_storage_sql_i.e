@@ -290,7 +290,7 @@ feature -- Logs
 			create Result.make (l_cat, l_mesg, l_level, l_date)
 			Result.set_id (sql_read_integer_64 (1))
 			Result.set_info (sql_read_string (6))
-			if attached sql_read_string_32 (7) as l_link_text then
+			if attached sql_read_string_8 (7) as l_link_text then
 					-- Format:   "[title](location)"
 				i := l_link_text.index_of ('(', 1)
 				if i > 0 then
@@ -420,6 +420,6 @@ feature -- Misc
 
 
 note
-	copyright: "2011-2017, Jocelyn Fiat, Javier Velilla, Eiffel Software and others"
+	copyright: "2011-2020, Jocelyn Fiat, Javier Velilla, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 end

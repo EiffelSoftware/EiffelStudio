@@ -34,10 +34,10 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	name: STRING
+	name: READABLE_STRING_8
 			-- <Precursor>
 
-	title: STRING
+	title: READABLE_STRING_8
 			-- <Precursor>
 
 	filters: ARRAYED_LIST [CONTENT_FILTER]
@@ -96,7 +96,7 @@ feature -- Element change
 			-- Set `title' according to `a_title' or `name' if `a_title' is blank.
 		do
 			if a_title = Void or else a_title.is_whitespace then
-				create title.make_from_string (name)
+				create {STRING_8} title.make_from_string (name)
 			else
 				title := a_title
 			end
@@ -143,6 +143,6 @@ feature -- Element change
 
 
 note
-	copyright: "2011-2018, Jocelyn Fiat, Javier Velilla, Eiffel Software and others"
+	copyright: "2011-2020, Jocelyn Fiat, Javier Velilla, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 end

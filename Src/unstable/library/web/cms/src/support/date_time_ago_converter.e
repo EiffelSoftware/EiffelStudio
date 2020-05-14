@@ -90,12 +90,11 @@ feature -- Output
 	formatted_date_time (a_date_time: DATE_TIME; a_date_time_format: STRING): STRING_8
 		local
 			y,m,d,h,mn,sec: INTEGER
-			s32: STRING_32
 			s: STRING
-			c: CHARACTER_32
+			c: CHARACTER
 			i: INTEGER
 		do
-			create s32.make (a_date_time_format.count)
+			create Result.make (a_date_time_format.count)
 			from
 				i := 1
 				m := a_date_time.month
@@ -109,100 +108,99 @@ feature -- Output
 			loop
 				c := a_date_time_format[i]
 				inspect c
-				when 'Y' then s32.append_integer (y)
+				when 'Y' then Result.append_integer (y)
 				when 'y' then
 					s := y.out
 					s.keep_tail (2)
-					s32.append_string (s)
+					Result.append_string (s)
 				when 'm' then
 					if m < 10 then
-						s32.append_integer (0)
+						Result.append_integer (0)
 					end
-					s32.append_integer (m)
-				when 'n' then s32.append_integer (m)
+					Result.append_integer (m)
+				when 'n' then Result.append_integer (m)
 				when 'M' then
 					s := a_date_time.months_text [m].string
-					s.to_lower; s.put (s.item (1).as_upper, 1); s32.append_string (s)
+					s.to_lower; s.put (s.item (1).as_upper, 1); Result.append_string (s)
 				when 'F' then
 					s := a_date_time.long_months_text [m].string
-					s.to_lower; s.put (s.item (1).as_upper, 1); s32.append_string (s)
+					s.to_lower; s.put (s.item (1).as_upper, 1); Result.append_string (s)
 				when 'D' then
 					s := a_date_time.days_text [a_date_time.date.day_of_the_week].string
-					s.to_lower; s.put (s.item (1).as_upper, 1); s32.append_string (s)
+					s.to_lower; s.put (s.item (1).as_upper, 1); Result.append_string (s)
 				when 'l' then
 					s := a_date_time.long_days_text [a_date_time.date.day_of_the_week].string
-					s.to_lower; s.put (s.item (1).as_upper, 1); s32.append_string (s)
+					s.to_lower; s.put (s.item (1).as_upper, 1); Result.append_string (s)
 
 				when 'd' then
 					if d < 10 then
-						s32.append_integer (0)
+						Result.append_integer (0)
 					end
-					s32.append_integer (d)
+					Result.append_integer (d)
 				when 'j' then
-					s32.append_integer (d)
---							when 'z' then s32.append_integer (a_date_time.date.*year)
+					Result.append_integer (d)
+--							when 'z' then Result.append_integer (a_date_time.date.*year)
 				when 'a' then
 					if h >= 12 then
-						s32.append_character ('p'); s32.append_character ('m')
+						Result.append_character ('p'); Result.append_character ('m')
 					else
-						s32.append_character ('a'); s32.append_character ('m')
+						Result.append_character ('a'); Result.append_character ('m')
 					end
 				when 'A' then
 					if h >= 12 then
-						s32.append_character ('P'); s32.append_character ('M')
+						Result.append_character ('P'); Result.append_character ('M')
 					else
-						s32.append_character ('A'); s32.append_character ('M')
+						Result.append_character ('A'); Result.append_character ('M')
 					end
 				when 'g','h' then
 					if h >= 12 then
 						if c = 'h' and h - 12 < 10 then
-							s32.append_integer (0)
+							Result.append_integer (0)
 						end
-						s32.append_integer (h - 12)
+						Result.append_integer (h - 12)
 					else
 						if c = 'h' and h < 10 then
-							s32.append_integer (0)
+							Result.append_integer (0)
 						end
-						s32.append_integer (h)
+						Result.append_integer (h)
 					end
 				when 'G', 'H' then
 					if c = 'H' and h < 10 then
-						s32.append_integer (0)
+						Result.append_integer (0)
 					end
-					s32.append_integer (h)
+					Result.append_integer (h)
 				when 'i' then
 					if mn < 10 then
-						s32.append_integer (0)
+						Result.append_integer (0)
 					end
-					s32.append_integer (mn)
+					Result.append_integer (mn)
 				when 's' then
 					if sec < 10 then
-						s32.append_integer (0)
+						Result.append_integer (0)
 					end
-					s32.append_integer (sec)
+					Result.append_integer (sec)
 				when 'u' then
-					s32.append_double (a_date_time.fine_second) -- CHECK result ...
-				when 'w' then s32.append_integer (a_date_time.date.day_of_the_week - 1)
-				when 'W' then s32.append_integer (a_date_time.date.week_of_year)
+					Result.append_double (a_date_time.fine_second) -- CHECK result ...
+				when 'w' then Result.append_integer (a_date_time.date.day_of_the_week - 1)
+				when 'W' then Result.append_integer (a_date_time.date.week_of_year)
 				when 'L' then
 					if a_date_time.is_leap_year (y) then
-						s32.append_integer (1)
+						Result.append_integer (1)
 					else
-						s32.append_integer (0)
+						Result.append_integer (0)
 					end
 				when '\' then
 					if i < a_date_time_format.count then
 						i := i + 1
-						s32.append_character (a_date_time_format[i])
+						Result.append_character (a_date_time_format[i])
 					else
-						s32.append_character ('\')
+						Result.append_character ('\')
 					end
 				else
-					s32.append_character (c)
+					Result.append_character (c)
 				end
 				i := i + 1
 			end
-			Result := s32
 		end
 
 	timezoned_date_time (a_utc_date_time: DATE_TIME): DATE_TIME

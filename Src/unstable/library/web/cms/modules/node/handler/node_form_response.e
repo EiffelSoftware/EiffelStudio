@@ -51,7 +51,7 @@ feature -- Execution
 						trash_node (l_node, l_type, b)
 					else
 						b.append ("<h1>")
-						b.append (translation ("Access denied", Void))
+						b.append (html_translation ("Access denied", Void))
 						b.append ("</h1>")
 					end
 				else
@@ -66,7 +66,7 @@ feature -- Execution
 					create_new_node (l_type, b)
 				else
 					b.append ("<h1>")
-					b.append (translation ("Access denied", Void))
+					b.append (html_translation ("Access denied", Void))
 					b.append ("</h1>")
 				end
 			else
@@ -81,7 +81,7 @@ feature -- Execution
 					then
 						b.append ("<li>" + link (l_node_type.name, "node/add/" + l_node_type.name, Void))
 						if attached l_node_type.description as d then
-							b.append ("<div class=%"description%">" + d + "</div>")
+							b.append ("<div class=%"description%">" + html_encoded (d) + "</div>")
 						end
 						b.append ("</li>")
 					end
@@ -124,7 +124,7 @@ feature {NONE} -- Create a new node
 				f.append_to_html (wsf_theme, b)
 			else
 				b.append ("<h1>")
-				b.append (translation ("Server error", Void))
+				b.append (html_translation ("Server error", Void))
 				b.append ("</h1>")
 			end
 		end

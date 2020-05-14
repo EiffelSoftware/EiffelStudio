@@ -292,7 +292,7 @@ feature -- Hooks
 													else
 														l_entity.set_author (l_page_api.cms_api.user)
 													end
-													a_import_ctx.log (l_node_type.name + " %"" + fp.utf_8_name + "%" WARNING (Author is unknown!)")
+													a_import_ctx.log (l_node_type.name + " %"" + html_encoded (fp.name) + "%" WARNING (Author is unknown!)")
 												end
 												if attached l_entity.author as l_author then
 													if
@@ -302,7 +302,7 @@ feature -- Hooks
 															-- Page Already exists!
 															-- FIXME/TODO
 														l_entity := l_pages.first
-														a_import_ctx.log (l_node_type.name + " from %"" + fp.utf_8_name + "%" SKIPPED (already exists for user #" + l_author.id.out + ")!")
+														a_import_ctx.log (l_node_type.name + " from %"" + html_encoded (fp.name) + "%" SKIPPED (already exists for user #" + l_author.id.out + ")!")
 													else
 														if
 															attached l_entity.parent as l_parent and then
@@ -314,7 +314,7 @@ feature -- Hooks
 														l_page_api.import_page (l_entity)
 														apply_taxonomy_to_node (j, l_entity, l_page_api.cms_api)
 														l_new_pages.force (l_entity, l_node_api.node_path (l_entity))
-														a_import_ctx.log (l_node_type.name + " #" + l_entity.id.out + " imported from %"" + fp.utf_8_name + "%" for user #" + l_author.id.out + ".")
+														a_import_ctx.log (l_node_type.name + " #" + l_entity.id.out + " imported from %"" + html_encoded (fp.name) + "%" for user #" + l_author.id.out + ".")
 														if attached {CMS_LOCAL_LINK} l_entity.link as l_link then
 															loc := l_node_api.node_path (l_entity)
 															if not l_link.location.starts_with_general ("node/") then
@@ -328,10 +328,10 @@ feature -- Hooks
 														import_comments_file_for_entity (p.extended (l_id).extended ("comments.json"), l_entity, l_node_api.cms_api, a_import_ctx)
 													end
 												else
-													a_import_ctx.log (l_node_type.name + " %"" + fp.utf_8_name + "%" skipped (Author is unknown!)")
+													a_import_ctx.log (l_node_type.name + " %"" + html_encoded (fp.name) + "%" skipped (Author is unknown!)")
 												end
 											else
-												a_import_ctx.log (l_node_type.name + " %"" + fp.utf_8_name + "%" skipped (Status is Not Published!)")
+												a_import_ctx.log (l_node_type.name + " %"" + html_encoded (fp.name) + "%" skipped (Status is Not Published!)")
 											end
 										end
 									end

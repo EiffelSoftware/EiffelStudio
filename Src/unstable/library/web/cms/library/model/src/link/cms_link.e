@@ -37,24 +37,26 @@ feature -- Access
 	weight: INTEGER
 			-- Optional weight used for order.
 
-	query_string: detachable STRING
+	query_string: detachable READABLE_STRING_8
 			-- Query string from `location'.
 		local
 			i: INTEGER
 			loc: like location
+			s: STRING_8
 		do
 			loc := location
 			i := loc.index_of ('?', 1)
 			if i > 0 then
-				Result := loc.substring (i + 1, loc.count)
+				s := loc.substring (i + 1, loc.count).to_string_8
 				i := loc.last_index_of ('#', loc.count)
 				if i > 0 then
-					Result.keep_head (i - 1)
+					s.keep_head (i - 1)
 				end
+				Result := s
 			end
 		end
 
-	fragment_string: detachable STRING
+	fragment_string: detachable READABLE_STRING_8
 			-- Query string from `location'.
 		local
 			i: INTEGER

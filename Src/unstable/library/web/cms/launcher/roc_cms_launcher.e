@@ -62,7 +62,7 @@ feature {NONE} -- Launch operation
 	launch (opts: detachable WSF_SERVICE_LAUNCHER_OPTIONS)
 		local
 			l_retry: BOOLEAN
-			l_message: STRING
+			l_message: STRING_32
 		do
 			if not l_retry then
 				launcher.launch (opts)
@@ -85,6 +85,7 @@ feature {NONE} -- Launch operation
 					l_message.append ("%N%N")
 				end
 				-- send email shutdown
+				-- TODO: to implement!
 			end
 		rescue
 			l_retry :=  True

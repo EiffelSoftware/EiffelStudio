@@ -134,13 +134,13 @@ feature -- Import
 				dst := cms_api.files_location.extended_path (rel_path)
 				b := safe_copy_file (a_file_path, dst)
 				if b then
-					a_import_ctx.log ("Imported file %"" + a_file_path.utf_8_name + "%" to %"" + dst.utf_8_name + "%".")
+					a_import_ctx.log ("Imported file %"" + html_encoded (a_file_path.name) + "%" to %"" + html_encoded (dst.name) + "%".")
 				else
-					a_import_ctx.log ("ERROR: unable to import file %"" + a_file_path.utf_8_name + "%" !!!")
+					a_import_ctx.log ("ERROR: unable to import file %"" + html_encoded (a_file_path.name) + "%" !!!")
 				end
 			else
 				check a_file_path_in_root_directory: False end
-				a_import_ctx.log ("ERROR: unable to import file %"" + a_file_path.utf_8_name + "%" (not in root directory) !")
+				a_import_ctx.log ("ERROR: unable to import file %"" + html_encoded (a_file_path.name) + "%" (not in root directory) !")
 			end
 		end
 
@@ -149,10 +149,10 @@ feature -- Import
 		do
 			if attached json_to_user_role (j_user_role) as ur then
 				if user_api.user_role_by_name (ur.name) = Void then
-					a_import_ctx.log ("new user role %"" + ur.name + "%".")
+					a_import_ctx.log ("new user role %"" + html_encoded (ur.name) + "%".")
 					user_api.save_user_role (ur)
 				else
-					a_import_ctx.log ("Skip user role %"" + ur.name + "%" : already exists!")
+					a_import_ctx.log ("Skip user role %"" + html_encoded (ur.name) + "%" : already exists!")
 						-- Already exists!
 				end
 			end
@@ -168,7 +168,7 @@ feature -- Import
 					l_user_by_email := user_api.user_by_email (l_email)
 				end
 				if l_user_by_name /= Void or l_user_by_email /= Void then
-					a_import_ctx.log ("Skip user %"" + u.name + "%": already exists!")
+					a_import_ctx.log ("Skip user %"" + html_encoded (u.name) + "%": already exists!")
 						-- Already exists!
 					if l_user_by_email /= Void then
 						l_user := l_user_by_email
@@ -177,7 +177,7 @@ feature -- Import
 							l_user_by_name.same_as (l_user)
 						then
 								-- Two different accounts exists!
-							a_import_ctx.log ("Two different accounts already exists for username %"" + u.name + "%" !")
+							a_import_ctx.log ("Two different accounts already exists for username %"" + html_encoded (u.name) + "%" !")
 						end
 					else
 						l_user := l_user_by_name
@@ -195,7 +195,7 @@ feature -- Import
 				else
 					user_api.new_user (u)
 					-- FIXME: check what status to use...
-					a_import_ctx.log ("New user %"" + u.name + "%" -> " + u.id.out + " .")
+					a_import_ctx.log ("New user %"" + html_encoded (u.name) + "%" -> " + u.id.out + " .")
 				end
 			end
 		end
@@ -262,6 +262,6 @@ feature -- Import
 		end
 
 note
-	copyright: "2011-2017, Jocelyn Fiat, Javier Velilla, Eiffel Software and others"
+	copyright: "2011-2020, Jocelyn Fiat, Javier Velilla, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 end

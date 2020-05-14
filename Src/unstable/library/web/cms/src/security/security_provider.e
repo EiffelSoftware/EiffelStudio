@@ -34,7 +34,7 @@ feature -- Access
 			Result.keep_head (Result.count - 2)
 		end
 
-	password_hash (a_password: READABLE_STRING_GENERAL; a_salt: STRING): STRING
+	password_hash (a_password: READABLE_STRING_GENERAL; a_salt: READABLE_STRING_8): STRING
 			-- Password hash based on password `a_password' and salt value `a_salt'.
 		local
 			utf: UTF_CONVERTER
@@ -67,7 +67,7 @@ feature {NONE} -- Implementation
 			Result := encode_base_64 (l_array)
 		end
 
-	sha1_string (a_str: STRING): STRING
+	sha1_string (a_str: READABLE_STRING_8): STRING
 			-- SHA1 diggest of `a_str'.
 		do
 			sha1.update_from_string (a_str)
@@ -156,4 +156,7 @@ feature -- Encoding
 			Result := base64_map [i & 0x3F].code.as_integer_8
 		end
 
+note
+	copyright: "2011-2020, Jocelyn Fiat, Javier Velilla, Eiffel Software and others"
+	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 end

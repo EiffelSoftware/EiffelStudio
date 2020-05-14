@@ -21,7 +21,7 @@ feature -- Core
 		deferred
 		end
 
-	based_path (p: STRING): STRING
+	based_path (p: READABLE_STRING_8): STRING
 			-- Path `p' in the context of the `base_url'
 		do
 			if attached base_url as l_base_url then
@@ -35,7 +35,7 @@ feature -- Core
 					end
 				end
 			else
-				Result := p
+				Result := p.to_string_8
 			end
 		end
 
@@ -120,7 +120,8 @@ feature -- Url
 			--|  - query: string		=> append "?query"
 			--|  - fragment: string		=> append "#fragment"
 		local
-			q,f: detachable STRING_8
+			q: detachable STRING_8
+			f: detachable READABLE_STRING_8
 			l_abs: BOOLEAN
 		do
 			l_abs := False
@@ -129,7 +130,7 @@ feature -- Url
 				l_abs := opts.boolean_item ("absolute", l_abs)
 				if attached opts.item ("query") as l_query then
 					if attached {READABLE_STRING_8} l_query as s_value then
-						q := s_value
+						q := s_value.to_string_8
 					elseif attached {ITERABLE [TUPLE [key, value: READABLE_STRING_GENERAL]]} l_query as lst then
 						create q.make_empty
 						across
@@ -168,16 +169,18 @@ feature -- Url
 						end
 					end
 				else
-					Result := a_path
+					Result := a_path.to_string_8
 				end
 			else
 				Result := based_path (a_path)
 			end
 			if q /= Void then
-				Result.append ("?" + q)
+				Result.append_character ('?')
+				Result.append (q)
 			end
 			if f /= Void then
-				Result.append ("#" + f)
+				Result.append_character ('#')
+				Result.append (f)
 			end
 		end
 

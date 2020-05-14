@@ -333,7 +333,7 @@ feature -- Hooks
 					end
 
 					if api.has_error then
-						write_error_log (generator + ".handle_post_contact: error message:["+ api.string_representation_of_errors +"]")
+						write_error_log (generator + ".handle_post_contact: error message:["+ html_encoded (api.string_representation_of_errors) +"]")
 						r.set_status_code ({HTTP_CONSTANTS}.internal_server_error)
 						r.values.force (True, "has_error")
 						vars.put ("True", "has_error")
@@ -427,7 +427,7 @@ feature {NONE} -- Contact Message
 			res: PATH
 			p: detachable PATH
 			tpl: CMS_SMARTY_TEMPLATE_BLOCK
-			exp: CMS_STRING_EXPANDER [STRING_8]
+			exp: CMS_STRING_EXPANDER [READABLE_STRING_8]
 		do
 			write_debug_log (generator + ".email_html_message for [" + a_message_id + " ]")
 

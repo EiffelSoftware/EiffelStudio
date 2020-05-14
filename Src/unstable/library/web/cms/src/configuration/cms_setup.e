@@ -572,7 +572,7 @@ feature -- Access: storage
 			-- initialization.
 		local
 			retried: BOOLEAN
-			l_message: STRING
+			l_message: STRING_32
 		do
 			if not retried then
 				debug
@@ -597,19 +597,17 @@ feature -- Access: storage
 				create l_message.make (1024)
 				if attached (create {EXCEPTION_MANAGER}).last_exception as l_exception then
 					if attached l_exception.description as l_description then
-						l_message.append (l_description.as_string_32)
-						l_message.append ("%N%N")
+						l_message.append (l_description)
 					elseif attached l_exception.trace as l_trace then
 						l_message.append (l_trace)
-						l_message.append ("%N%N")
 					else
-						l_message.append (l_exception.out)
-						l_message.append ("%N%N")
+						l_message.append_string_general (l_exception.out)
 					end
 				else
-					l_message.append ("The application crash without available information")
-					l_message.append ("%N%N")
+					l_message.append_string_general ("The application crash without available information")
 				end
+				l_message.append_character ('%N')
+				l_message.append_character ('%N')
 				a_error_handler.add_custom_error (0, " Database Connection ", l_message)
 			end
 		rescue

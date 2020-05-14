@@ -88,7 +88,7 @@ feature -- Javascript
 
 feature -- Helper
 
-	field_id (a_select_field: WSF_FORM_SELECT): STRING
+	field_id (a_select_field: WSF_FORM_SELECT): READABLE_STRING_8
 			-- Id of the given field.
 		do
 			if attached a_select_field.css_id as a_id then
@@ -98,13 +98,13 @@ feature -- Helper
 			end
 		end
 
-	editor_variable (a_textarea: WSF_FORM_TEXTAREA): STRING
+	editor_variable (a_textarea: WSF_FORM_TEXTAREA): READABLE_STRING_8
 			-- Returns the variable name that stores the editor instance of the given textarea
 		do
 			Result := "cms_ckeditor_" + a_textarea.name
 		end
 
 note
-	copyright: "2011-2016, Jocelyn Fiat, Javier Velilla, Eiffel Software and others"
+	copyright: "2011-2020, Jocelyn Fiat, Javier Velilla, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 end

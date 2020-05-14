@@ -74,7 +74,7 @@ feature -- Conversion
 				l_wikitext := s8
 			elseif attached {STRING_32} a_text as s32 then
 				if s32.is_valid_as_string_8 then
-					l_wikitext := s32.as_string_8
+					l_wikitext := s32.to_string_8
 				else
 					l_wikitext := adapted_text (s32)
 				end

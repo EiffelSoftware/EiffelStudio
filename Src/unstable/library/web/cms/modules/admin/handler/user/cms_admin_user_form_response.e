@@ -17,7 +17,7 @@ feature -- Query
 	user_id_path_parameter (req: WSF_REQUEST): INTEGER_64
 			-- User id passed as path parameter for request `req'.
 		local
-			s: STRING
+			s: READABLE_STRING_GENERAL
 		do
 			if attached {WSF_STRING} req.path_parameter ("id") as p_nid then
 				s := p_nid.value
@@ -555,7 +555,7 @@ feature -- Form
 						l_email.is_valid_as_string_8
 					then
 						create u.make (l_username)
-						u.set_email (l_email.as_string_8)
+						u.set_email (l_email.to_string_8)
 						u.set_password (new_random_password (u))
 						u.mark_active
 						api.user_api.new_user (u)

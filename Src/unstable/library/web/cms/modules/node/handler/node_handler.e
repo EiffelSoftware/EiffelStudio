@@ -65,7 +65,7 @@ feature -- Query
 	node_id_path_parameter (req: WSF_REQUEST): INTEGER_64
 			-- Node id passed as path parameter for request `req'.
 		local
-			s: STRING
+			s: READABLE_STRING_GENERAL
 		do
 			if attached {WSF_STRING} req.path_parameter ("id") as p_nid then
 				s := p_nid.value

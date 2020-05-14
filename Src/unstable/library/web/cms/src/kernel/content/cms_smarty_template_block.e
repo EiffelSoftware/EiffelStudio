@@ -182,7 +182,7 @@ feature -- Debug
 				values.after
 			loop
 				Result.append ("%NKey:")
-				Result.append (values.key_for_iteration.as_string_8)
+				Result.append (utf.string_32_to_utf_8_string_8 (values.key_for_iteration))
 				Result.append (" - Value:")
 				if attached values.item_for_iteration as l_item then
 					Result.append (l_item.out)

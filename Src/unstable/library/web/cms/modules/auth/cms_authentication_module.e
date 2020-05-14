@@ -617,7 +617,7 @@ feature -- Handler
 			if attached {WSF_STRING} req.query_parameter ("token") as l_token then
 				r.set_value (l_token.value, "token")
 				if l_user_api.user_by_password_token (l_token.value) = Void then
-					r.set_value ("The token " + l_token.value + " is not valid, " + r.link ("click here", "account/new-password", Void) + " to generate a new token.", "error_token")
+					r.set_value ({STRING_32} "The token " + l_token.value + " is not valid, " + r.link ("click here", "account/new-password", Void) + " to generate a new token.", "error_token")
 					r.set_status_code ({HTTP_CONSTANTS}.bad_request)
 				end
 			end

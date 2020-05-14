@@ -33,7 +33,7 @@ feature -- Status report
 			v: STRING
 		do
 			if attached cms_api.setup.string_8_item_or_default ("dev.masquerade", "permission") as s then
-				v := s
+				v := s.to_string_8
 				v.left_adjust
 				v.right_adjust
 				if v.is_case_insensitive_equal_general ("none") then

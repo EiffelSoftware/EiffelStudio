@@ -29,7 +29,7 @@ feature -- Query
 	user_id_path_parameter (req: WSF_REQUEST): INTEGER_64
 			-- User id passed as path parameter for request `req'.
 		local
-			s: STRING
+			s: READABLE_STRING_GENERAL
 		do
 			if attached {WSF_STRING} req.path_parameter ("uid") as p_nid then
 				s := p_nid.value
@@ -101,7 +101,7 @@ feature -- Process Edit
 				create fs.make
 				fs.set_legend ("User Information")
 				if not a_user.same_as (api.user) and then api.has_permission ("admin users") then
-					fs.extend_html_text ("<p>Administration: <a href=%"" + api.administration_path ("user/" + a_user.id.out) + "%">manage user " + api.real_user_display_name (a_user) + "</a> ...</p>%N")
+					fs.extend_html_text ("<p>Administration: <a href=%"" + api.administration_path ("user/" + a_user.id.out) + "%">manage user " + html_encoded (api.real_user_display_name (a_user)) + "</a> ...</p>%N")
 				end
 				create ti.make_with_text ("profile_name", a_user.name)
 				if attached a_user.profile_name as l_profile_name then
@@ -139,6 +139,6 @@ feature -- Process Edit
 		end
 
 note
-	copyright: "2011-2019, Jocelyn Fiat, Javier Velilla, Eiffel Software and others"
+	copyright: "2011-2020, Jocelyn Fiat, Javier Velilla, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 end

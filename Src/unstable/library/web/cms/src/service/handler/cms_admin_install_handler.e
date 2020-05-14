@@ -108,7 +108,7 @@ feature -- HTTP Methods
 				end
 				api.install_all_modules
 				if api.has_error and then attached api.string_representation_of_errors as errs then
-					r.add_error_message (errs)
+					r.add_error_message (html_encoded (errs))
 				end
 
 				across
@@ -145,6 +145,6 @@ feature -- HTTP Methods
 		end
 
 note
-	copyright: "2011-2018, Jocelyn Fiat, Javier Velilla, Eiffel Software and others"
+	copyright: "2011-2020, Jocelyn Fiat, Javier Velilla, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 end

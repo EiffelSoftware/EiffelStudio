@@ -19,7 +19,7 @@ feature -- Query
 	role_id_path_parameter (req: WSF_REQUEST): INTEGER_64
 			-- Role id passed as path parameter for request `req'.
 		local
-			s: STRING
+			s: READABLE_STRING_GENERAL
 		do
 			if attached {WSF_STRING} req.path_parameter ("id") as p_nid then
 				s := p_nid.value
@@ -229,9 +229,9 @@ feature -- Form
 						loop
 							if attached {WSF_STRING} ic.item as p then
 								if not p.value.is_valid_as_string_8 then
-									fd.report_invalid_field ("new_cms_permissions[]", "Permission " + p.value + " should not have any unicode character!")
+									fd.report_invalid_field ("new_cms_permissions[]", "Permission " + html_encoded (p.value) + " should not have any unicode character!")
 								elseif across a_role.permissions as p_ic some p_ic.item.is_case_insensitive_equal_general (p.value) end then
-									fd.report_invalid_field ("new_cms_permissions[]", "Permission " + p.value + " already exists!")
+									fd.report_invalid_field ("new_cms_permissions[]", "Permission " + html_encoded (p.value) + " already exists!")
 								end
 							end
 						end
@@ -312,8 +312,8 @@ feature -- Form
 --			tb: WSF_FORM_BUTTON_INPUT
 			lab: WSF_WIDGET_TEXT
 			l_role_permissions: detachable LIST [READABLE_STRING_8]
-			l_module_names: ARRAYED_LIST [READABLE_STRING_8]
-			l_mod_name: READABLE_STRING_8
+			l_module_names: ARRAYED_LIST [READABLE_STRING_GENERAL]
+			l_mod_name: READABLE_STRING_GENERAL
 		do
 			if attached a_role as l_role then
 				create fs.make
@@ -354,7 +354,7 @@ feature -- Form
 								l_mod_name := "... "
 							end
 
-							create lab.make_with_text ("<strong>" + l_mod_name + " module</strong>")
+							create lab.make_with_text ("<strong>" + html_encoded (l_mod_name) + " module</strong>")
 
 							fs.extend (lab)
 							string_sorter.sort (l_permissions)

@@ -56,13 +56,13 @@ feature -- Conversion
 			origin.append_to_html (a_theme, a_output)
 		end
 
-	to_html (a_theme: CMS_THEME): STRING_8
+	to_html (a_theme: CMS_THEME): READABLE_STRING_8
 			-- HTML representation of Current block.
 		do
 			Result := origin.to_html (a_theme)
 		end
 
 ;note
-	copyright: "2011-2016, Jocelyn Fiat, Javier Velilla, Eiffel Software and others"
+	copyright: "2011-2020, Jocelyn Fiat, Javier Velilla, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 end

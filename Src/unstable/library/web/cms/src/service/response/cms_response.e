@@ -416,7 +416,7 @@ feature -- Blocks regions
 	blocks: STRING_TABLE [CMS_BLOCK]
 			-- Blocks indexed by their block id.
 
-	block_region_settings: STRING_TABLE [STRING]
+	block_region_settings: STRING_TABLE [READABLE_STRING_8]
 
 	block_region (b: CMS_BLOCK; a_default_region: detachable READABLE_STRING_8): CMS_BLOCK_REGION
 			-- Region associated with block `b', or else `a_default_region' if provided.

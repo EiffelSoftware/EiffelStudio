@@ -792,7 +792,7 @@ feature -- Filters and Formats
 
 feature -- Template
 
-	resolved_smarty_template_text (a_loc: PATH): detachable STRING_8
+	resolved_smarty_template_text (a_loc: PATH): detachable READABLE_STRING_8
 			-- Resolved smarty template located at `a_loc`.
 		local
 			smt: CMS_SMARTY_TEMPLATE_TEXT
@@ -922,7 +922,7 @@ feature -- Internationalization (i18n)
 
 feature -- Formating		
 
-	formatted_date_time_ago (dt: DATE_TIME): STRING_32
+	formatted_date_time_ago (dt: DATE_TIME): STRING_8
 			-- Output date `dt` using time ago duration.
 		local
 			ago: DATE_TIME_AGO_CONVERTER

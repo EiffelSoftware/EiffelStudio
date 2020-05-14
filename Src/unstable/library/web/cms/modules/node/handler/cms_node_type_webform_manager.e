@@ -46,8 +46,8 @@ feature -- Forms ...
 			if a_node /= Void then
 				ta.set_text_value (a_node.content)
 			end
-			ta.set_label (response.translation ("Content", Void))
-			ta.set_description (response.translation ("This is the main content", Void))
+			ta.set_label (response.html_translation ("Content", Void))
+			ta.set_description (response.html_translation ("This is the main content", Void))
 			ta.set_is_required (False)
 
 				-- Summary
@@ -59,8 +59,8 @@ feature -- Forms ...
 			if a_node /= Void then
 				sum.set_text_value (a_node.summary)
 			end
-			sum.set_label (response.translation ("Summary", Void))
-			sum.set_description (response.translation ("Text displayed in short view.", Void))
+			sum.set_label (response.html_translation ("Summary", Void))
+			sum.set_description (response.html_translation ("Text displayed in short view.", Void))
 			sum.set_is_required (False)
 
 			create fset.make

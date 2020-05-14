@@ -9,7 +9,7 @@ deferred class
 
 feature -- Access
 
-	name: STRING
+	name: READABLE_STRING_8
 		deferred
 		end
 

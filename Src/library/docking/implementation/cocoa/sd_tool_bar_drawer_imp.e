@@ -114,7 +114,7 @@ feature -- Redefine
 					l_tool_bar_imp.fill_rectangle (l_rect.x, l_rect.y, l_rect.width, l_rect.height)
 				else
 					io.put_string ("Drawing other item at (" + l_rect.x.out + ", " + l_rect.y.out + ") size (" + l_rect.width.out + "," + l_rect.height.out + ")%N")
-					io.put_string ("  name:" + l_item.name + "%N")
+					io.put_string_32 ({STRING_32} "  name:" + l_item.name + "%N")
 
 					l_tool_bar_imp.set_foreground_color (create {EV_COLOR}.make_with_rgb ({REAL_32}1.0, {REAL_32}1.0, {REAL_32}0.0))
 					l_tool_bar_imp.fill_rectangle (l_rect.x, l_rect.y, l_rect.width, l_rect.height)

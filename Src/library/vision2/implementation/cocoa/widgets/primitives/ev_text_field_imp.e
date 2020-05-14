@@ -85,14 +85,22 @@ feature -- Status setting
 
 	append_text (a_text: READABLE_STRING_GENERAL)
 			-- Append `a_text' to the end of the text.
+		local
+			s: STRING_32
 		do
-			text_field.set_string_value (text + a_text.as_string_32)
+			create s.make_from_string (text)
+			s.append_string_general (a_text)
+			text_field.set_string_value (s)
 		end
 
 	prepend_text (a_text: READABLE_STRING_GENERAL)
 			-- Prepend `a_text' to the end of the text.
+		local
+			s: STRING_32
 		do
-			text_field.set_string_value (a_text + text)
+			create s.make_from_string_general (a_text)
+			s.append (text)
+			text_field.set_string_value (s)
 		end
 
 	set_capacity (len: INTEGER)

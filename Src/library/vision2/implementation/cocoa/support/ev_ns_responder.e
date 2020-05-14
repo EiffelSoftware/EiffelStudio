@@ -21,7 +21,7 @@ feature -- Event handling
 		local
 			cocoa_code: NATURAL_16
 		do
-			io.put_string ("Key down: " + a_event.characters.as_string_32 + " (" + a_event.key_code.out + ")%N")
+			io.put_string_32 ({STRING_32} "Key down: " + a_event.characters.as_string_32 + " (" + a_event.key_code.out + ")%N")
 			if attached key_press_actions_internal as actions then
 				if a_event.characters_ignoring_modifiers.count = 1 then
 					cocoa_code := a_event.characters_ignoring_modifiers.character_at_index (0)
@@ -44,7 +44,7 @@ feature -- Event handling
 		local
 			cocoa_code: NATURAL_16
 		do
-			io.put_string ("Key up: " + a_event.characters.as_string_32 + " (" + a_event.key_code.out + ")%N")
+			io.put_string_32 ({STRING_32} "Key up: " + a_event.characters.as_string_32 + " (" + a_event.key_code.out + ")%N")
 			if attached key_release_actions_internal as actions then
 				if a_event.characters_ignoring_modifiers.count = 1 then
 					cocoa_code := a_event.characters_ignoring_modifiers.character_at_index (0)

@@ -53,7 +53,7 @@ feature -- Console View
 				p := $a_widget
 				create ident_str.make_filled (' ', ident*2)
 				str :=
-					"Type: " + w.generating_type.name_32 + "%N" + ident_str +
+					"Type: " + w.generating_type.name + "%N" + ident_str +
 					"Address: " + p.out + "%N" + ident_str +
 					"Relative Position: " + a_widget.x_position.out + "x" + a_widget.y_position.out + "%N" + ident_str +
 					"Screen Position: " + a_widget.screen_x.out + "x" + a_widget.screen_y.out + "%N" + ident_str +

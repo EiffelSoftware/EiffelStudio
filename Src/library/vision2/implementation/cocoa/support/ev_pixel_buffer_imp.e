@@ -102,7 +102,7 @@ feature -- Command
 			elseif l_extension.is_equal ("PNG") then
 				l_format := {NS_BITMAP_IMAGE_REP}.PNG_file_type
 			else
-				(create {EXCEPTIONS}).raise ("Could not save image file: Format " + l_extension + " unknown.")
+				(create {EXCEPTIONS}).raise ("Could not save image file: Format " + {UTF_CONVERTER}.utf_32_string_to_utf_8_string_8 (l_extension) + " unknown.")
 			end
 
 			create l_image_rep.make_with_data (image.tiff_representation)

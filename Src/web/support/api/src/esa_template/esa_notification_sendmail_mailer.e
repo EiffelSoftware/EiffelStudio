@@ -32,14 +32,14 @@ feature -- Command
 		require
 			cmd_attached: a_cmd /= Void
 		local
-			p: PROCESS
+			p: BASE_PROCESS
 			retried: BOOLEAN
 			err: BOOLEAN
 		do
 			if not retried then
 				err := False
 				create Result.make (10)
-				p := (create {PROCESS_FACTORY}).process_launcher_with_command_line (a_cmd, a_dir )
+				p := (create {BASE_PROCESS_FACTORY}).process_launcher_with_command_line (a_cmd, a_dir )
 				p.set_hidden (True)
 				p.set_separate_console (False)
 				p.redirect_input_to_stream

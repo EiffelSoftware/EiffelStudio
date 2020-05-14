@@ -29,11 +29,13 @@ create
 
 
 feature -- Launch
+
 	launch (opts: detachable WSF_SERVICE_LAUNCHER_OPTIONS)
 		local
-			app: NINO_SERVICE[ESA_SERVICE_EXECUTION]
-			wt: WORKER_THREAD
+			app: WSF_STANDALONE_SERVICE_LAUNCHER [ESA_SERVICE_EXECUTION]
+--			wt: WORKER_THREAD
 			e: EXECUTION_ENVIRONMENT
+			l_opts: WSF_STANDALONE_SERVICE_OPTIONS
 		do
 --			if not custom_port then
 --				if attached opts as l_opts and then attached {STRING} l_opts.option ("port") as l_port and then l_port.is_integer then
@@ -42,15 +44,24 @@ feature -- Launch
 --					port_number := 0
 --				end
 --			end
+			if opts /= Void then
+				create l_opts.make_from_iterable (opts)
+			else
+				create l_opts
+			end
+
+			l_opts.set_port (5050)
 			port_number := 5050
-			create app.make_custom ("")
+			create app.make (l_opts)
 			web_app := app
 
-			create wt.make (agent app.listen (port_number))
-			wt.launch
+			app.launch
+
+--			create wt.make (agent app.listen (port_number))
+--			wt.launch
 			create e
 			e.sleep (1_000_000_000 * 5)
-			port_number := app.port
+			port_number := app.connector.port
 		end
 
 feature -- Element Change
@@ -72,13 +83,16 @@ feature -- Shutdown
 	shutdown
 		do
 			if attached web_app as app then
-				app.shutdown
+				if attached app.connector as conn then
+					conn.shutdown_server
+				end
+--				app.shutdown
 			end
 		end
 
 feature -- Access
 
-	web_app: detachable NINO_SERVICE[ESA_SERVICE_EXECUTION]
+	web_app: detachable WSF_STANDALONE_SERVICE_LAUNCHER [ESA_SERVICE_EXECUTION]
 
 	server_name: STRING = ""
 

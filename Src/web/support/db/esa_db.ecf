@@ -7,7 +7,7 @@
 		</option>
 		<setting name="console_application" value="true"/>
 		<capability>
-			<concurrency support="thread"/>
+			<concurrency support="none"/>
 		</capability>
 		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf"/>
 		<library name="crypto" location="$ISE_LIBRARY\unstable\library\text\encryption\crypto\crypto.ecf"/>

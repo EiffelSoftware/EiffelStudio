@@ -81,7 +81,7 @@ feature -- Request Input Parameters
 			if not l_current_keys.is_empty then
 				across l_current_keys as l_keys loop
 					if not acceptable_query_parameters.has (l_keys.item.to_string_8) then
-						errors.force ("The parameter [" + l_keys.item + "] is not valid", l_keys.item)
+						errors.force ("The parameter [" + {UTF_CONVERTER}.utf_32_string_to_utf_8_string_8 (l_keys.item) + "] is not valid", l_keys.item)
 					end
 				end
 			end

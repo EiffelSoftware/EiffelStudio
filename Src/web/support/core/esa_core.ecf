@@ -7,7 +7,7 @@
 		</option>
 		<setting name="console_application" value="true"/>
 		<capability>
-			<concurrency support="thread"/>
+			<concurrency support="none" use="thread"/>
 		</capability>
 		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf"/>
 		<library name="json" location="$ISE_LIBRARY\contrib\library\text\parser\json\library\json.ecf" readonly="false"/>

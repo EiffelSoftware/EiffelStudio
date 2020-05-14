@@ -515,7 +515,7 @@ feature -- From EIFFEL_ENV
 				end
 
 				if l_value = Void or else l_value.is_empty then
-					log.eprint ("The registry key or environment variable " + l_variable.var + " has not been set!", generating_type)
+					log.eprint ("The registry key or environment variable " + {UTF_CONVERTER}.utf_32_string_to_utf_8_string_8 (l_variable.var) + " has not been set!", generating_type)
 					Result := False
 				else
 						-- Set the environment variable, as it may have come from the Windows registry.
@@ -528,7 +528,7 @@ feature -- From EIFFEL_ENV
 invariant
 		modules_attached: modules /= Void
 note
-	copyright: "Copyright (c) 1984-2015, Eiffel Software"
+	copyright: "Copyright (c) 1984-2020, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

@@ -11,6 +11,15 @@ class
 inherit
 	WSF_SERVICE_LAUNCHER_OPTIONS
 
+create
+	default_create,
+	make,
+	make_from_array,
+	make_from_iterable
+
+convert
+	make_from_array ({ARRAY [TUPLE [name: READABLE_STRING_GENERAL; value: detachable ANY]]})	
+
 feature -- Status report
 
 	is_secure_connection_supported: BOOLEAN

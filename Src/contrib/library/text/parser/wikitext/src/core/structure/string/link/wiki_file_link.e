@@ -24,14 +24,14 @@ create
 
 feature {NONE} -- Initialization
 
-	make_inlined (s: STRING)
+	make_inlined (s: READABLE_STRING_8)
 			-- [[File:title|string]]
 		do
 			make (s)
 			set_inlined (True)
 		end
 
-	make (s: STRING)
+	make (s: READABLE_STRING_8)
 			-- [[File:title|string]]
 		local
 			t: STRING

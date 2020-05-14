@@ -20,7 +20,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (s: STRING)
+	make (s: READABLE_STRING_8)
 		require
 			s_attached: s /= Void
 			s_starts_with_equal: s.count > 0 and then s.item (1) = '='
@@ -48,7 +48,7 @@ feature {NONE} -- Initialization
 			level := v - 1
 			if p > 0 and is_blank_string (s.substring (p + v, n)) then
 				is_valid := True
-				t := s.substring (v, p - 1)
+				t := s.substring (v, p - 1).to_string_8
 				t.left_adjust
 				t.right_adjust
 				text := t

@@ -82,7 +82,7 @@ feature -- Access
 	kind: CHARACTER
 			-- '*' or '#' or ';' or ':' or '%U' (for root list)
 
-	description: STRING
+	description: READABLE_STRING_8
 
 	expected_parent_description: like description
 		do

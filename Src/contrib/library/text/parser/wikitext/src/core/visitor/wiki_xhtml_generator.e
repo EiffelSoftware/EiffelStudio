@@ -114,7 +114,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	output (s: STRING)
+	output (s: READABLE_STRING_8)
 		local
 			buf: like buffer
 		do
@@ -141,7 +141,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	append_html_escaped_to (s: STRING; a_output: STRING)
+	append_html_escaped_to (s: READABLE_STRING_8; a_output: STRING_8)
 		local
 			i,n: INTEGER
 			c: CHARACTER
@@ -241,13 +241,13 @@ feature -- status: pre block
 
 feature -- Helper
 
-	page_title (a_page: WIKI_PAGE): STRING_8
+	page_title (a_page: WIKI_PAGE): READABLE_STRING_8
 			-- Title for page `a_page'.
 		do
 			Result := a_page.title
 		end
 
-	book_title (a_book: WIKI_BOOK): STRING_8
+	book_title (a_book: WIKI_BOOK): READABLE_STRING_8
 			-- Title for book `a_book'.
 		do
 			Result := a_book.name
@@ -361,7 +361,7 @@ feature -- Processing
 			end
 		end
 
-	output_section_node (a_node: WIKI_SECTION_NODE; a_list_tag: STRING)
+	output_section_node (a_node: WIKI_SECTION_NODE; a_list_tag: READABLE_STRING_8)
 		do
 			if
 				a_node.section = Void and then
@@ -638,7 +638,7 @@ feature -- Strings
 		local
 			s: STRING
 		do
-			s := a_raw_string.text.twin
+			create s.make_from_string (a_raw_string.text)
 			s.replace_substring_all ("&", "&amp;")
 			s.replace_substring_all ("<", "&lt;")
 			s.replace_substring_all (">", "&gt;")

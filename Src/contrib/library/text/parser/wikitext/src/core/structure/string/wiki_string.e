@@ -19,18 +19,18 @@ create
 	make
 
 convert
-	make ({STRING})
+	make ({STRING, READABLE_STRING_8})
 
 feature {NONE} -- Initialization
 
-	make (s: STRING)
+	make (s: READABLE_STRING_8)
 		do
 			text := s
 		end
 
 feature -- Access
 
-	text: STRING
+	text: READABLE_STRING_8
 
 	parts: detachable WIKI_STRING_LIST
 

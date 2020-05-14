@@ -39,7 +39,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (s: STRING)
+	make (s: READABLE_STRING_8)
 		require
 			starts_with_curly_bracket_and_pipe: s.starts_with ("{|")
 			ends_with_pipe_and_curly_bracket: s.ends_with ("|}")
@@ -71,7 +71,7 @@ feature -- Status report
 
 feature -- Change
 
-	set_text (t: STRING)
+	set_text (t: READABLE_STRING_8)
 		local
 			i,j,k,n,p,q: INTEGER
 			r: detachable WIKI_TABLE_ROW
@@ -199,7 +199,7 @@ feature -- Change
 					if p > 0 then
 						q := t.index_of ('|', i + 1)
 						if q > i + 1 and q < p  then
-							tmp := t.substring (i + 2, q - 1)
+							tmp := t.substring (i + 2, q - 1).to_string_8
 							tmp.left_adjust
 							tmp.right_adjust
 							caption_style := tmp
@@ -207,7 +207,7 @@ feature -- Change
 							q := i + 1
 						end
 						if l_caption = Void then
-							l_caption := t.substring (q + 1, p - 1)
+							l_caption := t.substring (q + 1, p - 1).to_string_8
 							l_caption.left_adjust
 						else
 							l_caption.append (t.substring (q + 1, p - 1))
@@ -250,7 +250,7 @@ feature -- Change
 						create r.make
 						p := t.index_of ('%N', i + 1)
 						if p > 0 then
-							tmp := t.substring (i + 2, p - 1)
+							tmp := t.substring (i + 2, p - 1).to_string_8
 							tmp.left_adjust
 							tmp.right_adjust
 							r.set_style (tmp)

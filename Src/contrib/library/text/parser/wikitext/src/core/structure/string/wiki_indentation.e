@@ -50,7 +50,7 @@ feature -- Element change
 			end
 		end
 
-	append_text (s: STRING)
+	append_text (s: READABLE_STRING_8)
 		do
 			structure := Void
 			text.append_string (s)

@@ -18,12 +18,12 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_tag: STRING; s: STRING)
+	make (a_tag: READABLE_STRING_8; s: READABLE_STRING_8)
 		local
 			i,j: INTEGER
 		do
 			original_text_has_new_line := s.has ('%N')
-			tag := a_tag
+			tag := a_tag.to_string_8
 			tag_name := tag_name_from (a_tag)
 
 			i := tag_name.index_of (' ', 1)
@@ -42,12 +42,12 @@ feature {NONE} -- Initialization
 			create text.make (s)
 		end
 
-	make_from_source (s: STRING)
+	make_from_source (s: READABLE_STRING_8)
 		require
 			valid_code_string: s.starts_with_general ("<") and s.ends_with_general (">")
 		local
 			i,j,k,e: INTEGER
-			l_end_tag, t,l_content: detachable STRING
+			l_end_tag, t, l_content: detachable STRING
 		do
 			original_text_has_new_line := s.has ('%N')
 			i := s.index_of ('<', 1)
@@ -58,7 +58,7 @@ feature {NONE} -- Initialization
 				tag := "<" + tag_name + ">"
 				create text.make (s)
 			else
-				tag := s.substring (i, e)
+				tag := s.substring (i, e).to_string_8
 
 				from
 					j := i + 1
@@ -67,7 +67,7 @@ feature {NONE} -- Initialization
 				loop
 					j := j + 1
 				end
-				t := s.substring (i + 1, j - 1)
+				t := s.substring (i + 1, j - 1).to_string_8
 				t.left_adjust
 				t.right_adjust
 				tag_name := t
@@ -89,9 +89,9 @@ feature {NONE} -- Initialization
 					j := k
 
 					if j > 0 then
-						l_content := s.substring (e + 1, j - 1)
+						l_content := s.substring (e + 1, j - 1).to_string_8
 					else
-						l_content := s.substring (e + 1, s.count)
+						l_content := s.substring (e + 1, s.count).to_string_8
 					end
 					if not l_content.is_empty then
 						if l_content[1] = '%N' then

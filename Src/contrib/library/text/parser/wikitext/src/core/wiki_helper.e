@@ -9,7 +9,7 @@ class
 
 feature -- Query
 
-	index_of_end_of_line (s: STRING; i: INTEGER): INTEGER
+	index_of_end_of_line (s: READABLE_STRING_8; i: INTEGER): INTEGER
 			-- Return the index of the end of line from `i'
 		require
 			s_attached: s /= Void
@@ -25,7 +25,7 @@ feature -- Query
 			end
 		end
 
-	index_of_char_before_end_of_line (s: STRING; a_char: CHARACTER; i: INTEGER): INTEGER
+	index_of_char_before_end_of_line (s: READABLE_STRING_8; a_char: CHARACTER; i: INTEGER): INTEGER
 			-- Index of `a_char` in `s` if occurs before the end of line from `i' .
 		require
 			s_attached: s /= Void
@@ -46,7 +46,7 @@ feature -- Query
 			end
 		end
 
-	current_line (s: STRING; i: INTEGER): STRING
+	current_line (s: READABLE_STRING_8; i: INTEGER): READABLE_STRING_8
 			-- Return the line from `i' to end of line
 		require
 			s_attached: s /= Void
@@ -54,7 +54,7 @@ feature -- Query
 			Result := s.substring (i, index_of_end_of_line (s, i))
 		end
 
-	is_blank_string (s: STRING_GENERAL): BOOLEAN
+	is_blank_string (s: READABLE_STRING_GENERAL): BOOLEAN
 			-- Is blank string?
 		require
 			s_attached: s /= Void
@@ -78,7 +78,7 @@ feature -- Query
 			end
 		end
 
-	is_valid_wiki_name (s: STRING): BOOLEAN
+	is_valid_wiki_name (s: READABLE_STRING_8): BOOLEAN
 		local
 			i,n: INTEGER
 		do
@@ -113,14 +113,14 @@ feature -- Query
 
 feature -- wiki string
 
-	wiki_string (s: STRING): WIKI_STRING
+	wiki_string (s: READABLE_STRING_8): WIKI_STRING
 		require
 			s_attached: s /= Void
 		do
 			create Result.make (s)
 		end
 
-	wiki_raw_string (s: STRING): WIKI_RAW_STRING
+	wiki_raw_string (s: READABLE_STRING_8): WIKI_RAW_STRING
 		require
 			s_attached: s /= Void
 		do
@@ -129,7 +129,7 @@ feature -- wiki string
 
 feature -- String manipulation
 
-	next_following_character_matched (s: STRING; p: INTEGER; a_string: STRING; a_case_sensitive: BOOLEAN): BOOLEAN
+	next_following_character_matched (s: READABLE_STRING_8; p: INTEGER; a_string: READABLE_STRING_8; a_case_sensitive: BOOLEAN): BOOLEAN
 		local
 			i,n: INTEGER
 		do
@@ -149,14 +149,14 @@ feature -- String manipulation
 			end
 		end
 
-	safe_character (s: STRING; p: INTEGER): CHARACTER
+	safe_character (s: READABLE_STRING_8; p: INTEGER): CHARACTER
 		do
 			if s.valid_index (p) then
 				Result := s.item (p)
 			end
 		end
 
-	safe_following_character_count (s: STRING; p: INTEGER; a_char_token: CHARACTER): INTEGER
+	safe_following_character_count (s: READABLE_STRING_8; p: INTEGER; a_char_token: CHARACTER): INTEGER
 		local
 			i, n: INTEGER
 			c: CHARACTER

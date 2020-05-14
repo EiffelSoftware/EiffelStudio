@@ -25,7 +25,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (s: STRING)
+	make (s: READABLE_STRING_8)
 			-- [schema:resource title]
 		require
 			starts_with_bracket: s.starts_with ("[")
@@ -74,7 +74,7 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	url: STRING
+	url: READABLE_STRING_8
 
 	text: WIKI_STRING_ITEM
 
@@ -104,7 +104,7 @@ feature -- Status report
 		local
 			l_url: like url
 			i: INTEGER
-			s: STRING
+			s: READABLE_STRING_8
 		do
 			l_url := url
 			if l_url.is_whitespace then

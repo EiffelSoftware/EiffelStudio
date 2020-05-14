@@ -26,14 +26,14 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_tag, s: STRING_8)
+	make (a_tag, s: READABLE_STRING_8)
 			-- <Precursor>
 		do
 			Precursor (a_tag, s)
 			set_is_inline (text.is_single_line and not original_text_has_new_line)
 		end
 
-	make_from_source (s: STRING)
+	make_from_source (s: READABLE_STRING_8)
 			-- <Precursor>
 		do
 			Precursor (s)
@@ -45,7 +45,7 @@ feature {NONE} -- Initialization
 			make (a_tag.tag, a_tag.text.text)
 		end
 
-	make_from_3backticks_source (s: STRING)
+	make_from_3backticks_source (s: READABLE_STRING_8)
 			-- Create wiki code from `s' using the 3backticks syntax.
 			-- ie: "```lang%N....%N```%N"
 		require
@@ -58,7 +58,7 @@ feature {NONE} -- Initialization
 			i := 1
 			j := s.index_of ('%N', i)
 			if j > i then
-				l_lang := s.substring (i + 3, j - 1)
+				l_lang := s.substring (i + 3, j - 1).to_string_8
 				l_lang.left_adjust
 				l_lang.right_adjust
 				create l_source.make (s.count + 15) -- = (14 - 3) + (7 - 3)
@@ -76,7 +76,7 @@ feature {NONE} -- Initialization
 			make_from_source (l_source)
 		end
 
-	make_from_single_backtick_source (s: STRING)
+	make_from_single_backtick_source (s: READABLE_STRING_8)
 			-- Create wiki code from `s' using the single backtick syntax.
 			-- ie: "`....`%N"
 		require
@@ -92,7 +92,7 @@ feature {NONE} -- Initialization
 			set_is_inline (True)
 		end
 
-	make_from_double_backtick_source (s: STRING)
+	make_from_double_backtick_source (s: READABLE_STRING_8)
 			-- Create wiki code from `s' using the single backtick syntax.
 			-- ie: "`` ....``%N", usually this is to escape single backtick.
 		require

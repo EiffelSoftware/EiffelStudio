@@ -20,14 +20,14 @@ create
 
 feature {NONE} -- Initialization
 
-	make (s: STRING)
+	make (s: READABLE_STRING_8)
 		do
 			text := s
 		end
 
 feature -- Access
 
-	text: STRING
+	text: READABLE_STRING_8
 
 feature -- Status report
 
@@ -52,7 +52,7 @@ feature -- Visitor
 
 feature -- Status report
 
-	debug_output: STRING
+	debug_output: READABLE_STRING_8
 			-- String that should be displayed in debugger to represent `Current'.
 		do
 			Result := text

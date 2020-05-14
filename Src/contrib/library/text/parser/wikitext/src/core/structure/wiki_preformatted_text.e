@@ -18,7 +18,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (s: STRING)
+	make (s: READABLE_STRING_8)
 		require
 			s_attached: s /= Void
 			s_starts_with_space: s.count > 0 and then s.item (1).is_space

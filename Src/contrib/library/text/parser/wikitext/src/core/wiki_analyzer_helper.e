@@ -12,7 +12,7 @@ inherit
 
 feature -- Helpers	
 
-	next_closing_link (s: STRING; a_start: INTEGER): INTEGER
+	next_closing_link (s: READABLE_STRING_8; a_start: INTEGER): INTEGER
 		local
 			i,n: INTEGER
 			v: INTEGER
@@ -42,7 +42,7 @@ feature -- Helpers
 			end
 		end
 
-	next_closing_template (s: STRING; a_start: INTEGER): INTEGER
+	next_closing_template (s: READABLE_STRING_8; a_start: INTEGER): INTEGER
 		local
 			i,n: INTEGER
 			v: INTEGER
@@ -72,7 +72,7 @@ feature -- Helpers
 			end
 		end
 
-	next_closing_table (s: STRING; a_start: INTEGER): INTEGER
+	next_closing_table (s: READABLE_STRING_8; a_start: INTEGER): INTEGER
 		local
 			i,j,k,n: INTEGER
 			v: INTEGER
@@ -127,7 +127,7 @@ feature -- Helpers
 			end
 		end
 
-	next_end_of_tag_character (s: STRING; a_start: INTEGER): INTEGER
+	next_end_of_tag_character (s: READABLE_STRING_8; a_start: INTEGER): INTEGER
 		local
 			i,n: INTEGER
 			v: INTEGER
@@ -153,12 +153,12 @@ feature -- Helpers
 			end
 		end
 
-	next_closing_tag (s: STRING; a_tag_name: READABLE_STRING_8; a_start: INTEGER): INTEGER
+	next_closing_tag (s: READABLE_STRING_8; a_tag_name: READABLE_STRING_8; a_start: INTEGER): INTEGER
 		do
 			Result := s.substring_index ("</" + a_tag_name + ">", a_start)
 		end
 
-	new_wiki_link (s: STRING; is_followed_by_new_line: BOOLEAN): WIKI_STRING_ITEM
+	new_wiki_link (s: READABLE_STRING_8; is_followed_by_new_line: BOOLEAN): WIKI_STRING_ITEM
 			-- [[name|title]]
 			-- [[Image:name|title]]
 			-- [[:image:name|title]]
@@ -171,7 +171,7 @@ feature -- Helpers
 			ends_with_double_bracket: s.ends_with ("]]")
 		local
 			n,b: INTEGER
-			t: detachable STRING
+			t: detachable READABLE_STRING_8
 			l_inlined: BOOLEAN
 			p,pp: INTEGER
 		do
@@ -254,7 +254,6 @@ feature {NONE} -- Implementation
 				Result := Void
 			end
 		end
-
 
 note
 	copyright: "2011-2019, Jocelyn Fiat and Eiffel Software"

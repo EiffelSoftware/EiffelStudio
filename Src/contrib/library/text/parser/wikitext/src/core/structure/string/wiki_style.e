@@ -15,7 +15,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_kind: INTEGER; s: STRING)
+	make (a_kind: INTEGER; s: READABLE_STRING_8)
 		require
 			valid_kind: valid_kind (a_kind)
 			s_attached: s /= Void

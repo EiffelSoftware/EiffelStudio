@@ -32,7 +32,7 @@ create
 
 feature {NONE} -- Make
 
-	make (a_title: STRING; a_unused_arg: STRING)
+	make (a_title: READABLE_STRING_8; a_unused_arg: READABLE_STRING_8)
 			-- Create wiki page with title `a_title'.
 		obsolete
 			"Use make_with_title (a_title) [2017-05-31]"
@@ -40,7 +40,7 @@ feature {NONE} -- Make
 			make_with_title (a_title)
 		end
 
-	make_with_title (a_title: STRING)
+	make_with_title (a_title: READABLE_STRING_8)
 			-- Create wiki page with title `a_title'.
 		do
 			set_title (a_title)
@@ -50,7 +50,7 @@ feature {NONE} -- Make
 
 feature -- Access
 
-	title: STRING
+	title: READABLE_STRING_8
 			-- Page's title.
 
 	weight: INTEGER
@@ -173,7 +173,7 @@ feature -- Element change
 	update_metadata
 			-- Update metadata values, from specific attributes of Current.
 		do
-			set_metadata (title, "title")
+			set_metadata (title.to_string_32, "title")
 			set_metadata (weight.out, "weight")
 		end
 

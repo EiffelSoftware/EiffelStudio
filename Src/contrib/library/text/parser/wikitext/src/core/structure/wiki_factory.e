@@ -12,7 +12,7 @@ inherit
 
 feature -- Factory
 
-	new_indentation (s: STRING_8): WIKI_INDENTATION
+	new_indentation (s: READABLE_STRING_8): WIKI_INDENTATION
 			-- wiki Indentation object creation from first chars.
 			-- It ignores the rest of the string.
 		require
@@ -34,7 +34,7 @@ feature -- Factory
 			create Result.make (lev)
 		end
 
-	new_indented_string (s: STRING_8): WIKI_INDENTATION
+	new_indented_string (s: READABLE_STRING_8): WIKI_INDENTATION
 			-- New indented string from `s'.
 			-- `s' is expected to start with sequence of colons such as "::text".
 		require
@@ -48,7 +48,7 @@ feature -- Factory
 --			Result.add_element (new_string_item (s.substring (lev.to_integer_32 + 1, s.count)))
 		end
 
-	new_string_item (s: STRING): WIKI_STRING
+	new_string_item (s: READABLE_STRING_8): WIKI_STRING
 		do
 			if s = Void then
 				create Result.make ("")

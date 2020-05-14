@@ -28,14 +28,14 @@ create
 
 feature {NONE} -- Initialization
 
-	make_inlined (s: STRING)
+	make_inlined (s: READABLE_STRING_8)
 			-- [[Image:title|string]]
 		do
 			set_inlined (True)
 			make (s)
 		end
 
-	make (s: STRING)
+	make (s: READABLE_STRING_8)
 			-- [[Image:title|string]]
 		local
 			t: STRING

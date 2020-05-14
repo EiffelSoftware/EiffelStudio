@@ -21,7 +21,7 @@ create
 
 feature {NONE} -- Make
 
-	make (a_text: STRING)
+	make (a_text: READABLE_STRING_8)
 		do
 			initialize
 			analyze (a_text)
@@ -67,7 +67,7 @@ feature -- Basic operation
 			end
 		end
 
-	analyze (a_text: STRING)
+	analyze (a_text: READABLE_STRING_8)
 			--| To support:
 			--| = Text =
 			--| == Text ==
@@ -121,7 +121,7 @@ feature -- Basic operation
 			multiline_level: INTEGER
 			in_tag: BOOLEAN
 			mt_ln: INTEGER
-			s: STRING
+			s: READABLE_STRING_8
 			l_items: ARRAYED_STACK [TUPLE [pos: INTEGER; kind: STRING]]
 			l_tag: detachable READABLE_STRING_8
 			l_line: detachable READABLE_STRING_8
@@ -511,7 +511,7 @@ feature -- Factory
 			create Result.make (a_item)
 		end
 
-	new_list_item (s: detachable STRING): WIKI_LIST
+	new_list_item (s: detachable READABLE_STRING_8): WIKI_LIST
 		local
 			f: WIKI_LIST_FACTORY
 		do
@@ -519,7 +519,7 @@ feature -- Factory
 			Result := f.new_list (s)
 		end
 
-	new_indented_string (s: STRING): WIKI_INDENTATION
+	new_indented_string (s: READABLE_STRING_8): WIKI_INDENTATION
 		local
 			f: WIKI_FACTORY
 		do
@@ -527,7 +527,7 @@ feature -- Factory
 			Result := f.new_indented_string (s)
 		end
 
-	new_indentation (s: STRING): WIKI_INDENTATION
+	new_indentation (s: READABLE_STRING_8): WIKI_INDENTATION
 		local
 			f: WIKI_FACTORY
 		do

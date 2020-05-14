@@ -17,14 +17,14 @@ create
 
 feature {NONE} -- Initialization
 
-	make (s: STRING)
+	make (s: READABLE_STRING_8)
 		do
 			value := s
 		end
 
 feature -- Access
 
-	value: STRING
+	value: READABLE_STRING_8
 
 feature -- Status report
 

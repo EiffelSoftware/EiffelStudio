@@ -123,7 +123,7 @@ feature -- Access
 
 	page_by_id (a_id: READABLE_STRING_GENERAL): detachable WIKI_BOOK_PAGE
 		local
-			l_src, s: STRING
+			l_src, s: READABLE_STRING_8
 			p,q: INTEGER
 		do
 			if attached book as bk then

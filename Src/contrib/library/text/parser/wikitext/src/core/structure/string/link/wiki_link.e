@@ -18,7 +18,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (s: STRING)
+	make (s: READABLE_STRING_8)
 			-- [[title|string]]
 			-- [[title|a|b|c|string]]
 			-- [[Image:title|string]]
@@ -41,7 +41,7 @@ feature {NONE} -- Initialization
 			loop
 				p := p + 1
 			end
-			name := s.substring (i, p - 1)
+			name := s.substring (i, p - 1).to_string_8
 			name.left_adjust
 			name.right_adjust
 			if p < n then

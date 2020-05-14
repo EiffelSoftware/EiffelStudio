@@ -52,7 +52,7 @@ feature -- Processing
 			end
 		end
 
-	analyze_string (a_text: STRING; a_parts: WIKI_STRING_LIST)
+	analyze_string (a_text: READABLE_STRING_8; a_parts: WIKI_STRING_LIST)
 		local
 			i,n, m: INTEGER
 			p,q,r: INTEGER

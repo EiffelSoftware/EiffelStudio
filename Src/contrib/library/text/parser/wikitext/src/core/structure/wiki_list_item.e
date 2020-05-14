@@ -19,7 +19,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make_item (a_description: STRING; s: STRING)
+	make_item (a_description: READABLE_STRING_8; s: READABLE_STRING_8)
 		do
 			make (a_description)
 			create text.make (s)

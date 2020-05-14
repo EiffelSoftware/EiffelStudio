@@ -16,11 +16,11 @@ create
 	make
 
 convert
-	make ({STRING})
+	make ({STRING, READABLE_STRING_8})
 
 feature {NONE} -- Initialization
 
-	make (s: STRING)
+	make (s: READABLE_STRING_8)
 		do
 			text := s
 		end

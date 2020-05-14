@@ -12,7 +12,7 @@ inherit
 
 feature -- Access
 
-	new_list (s: detachable STRING): WIKI_LIST
+	new_list (s: detachable READABLE_STRING_8): WIKI_LIST
 		local
 			t: STRING
 			c: CHARACTER

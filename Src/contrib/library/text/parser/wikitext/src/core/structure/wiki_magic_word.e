@@ -16,7 +16,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make_from_source (s: STRING)
+	make_from_source (s: READABLE_STRING_8)
 		require
 			s.starts_with ("__") and s.ends_with ("__")
 		do
@@ -25,7 +25,7 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	value: STRING
+	value: READABLE_STRING_8
 
 feature -- Status report
 

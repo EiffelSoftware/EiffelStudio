@@ -25,7 +25,7 @@ create
 
 feature {NONE} -- Make
 
-	make (a_page_id: STRING; a_parent_key: STRING)
+	make (a_page_id: READABLE_STRING_8; a_parent_key: READABLE_STRING_8)
 			-- Create wiki page with page id `a_page_id', and parent key `a_parent_key'.
 		do
 			page_id := a_page_id
@@ -37,7 +37,7 @@ feature {NONE} -- Make
 								or else a_page_id.is_case_insensitive_equal_general (parent_key) -- Same as parent page name.
 		end
 
-	make_from_page (a_page: WIKI_PAGE; a_parent_key: STRING)
+	make_from_page (a_page: WIKI_PAGE; a_parent_key: READABLE_STRING_8)
 			-- Create a book page from a page `a_page'.
 		do
 			if attached {WIKI_BOOK_PAGE} a_page as l_book_page then
@@ -77,7 +77,7 @@ feature {NONE} -- Make
 
 feature -- Access
 
-	src: STRING
+	src: READABLE_STRING_8
 			-- Relative URI from wiki book root directory.
 
 feature -- Access
@@ -119,12 +119,12 @@ feature {NONE} -- Implementation
 
 feature -- Access: book
 
-	page_id: STRING
+	page_id: READABLE_STRING_8
 			-- Id , related to `key' and `parent_key'
 			-- utf8 encoded.
 			-- note: this is related to book structure.
 
-	parent_key: STRING
+	parent_key: READABLE_STRING_8
 			-- Key identifying a parent page.
 			-- utf8 encoded.
 			-- note: this is related to book structure.

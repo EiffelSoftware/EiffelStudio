@@ -17,28 +17,30 @@ create
 
 feature {NONE} -- Initialization
 
-	make (s: STRING)
+	make (s: READABLE_STRING_8)
 		require
 			starts_with_double_curly_bracket: s.starts_with ("{{")
 			ends_with_double_curly_bracket: s.ends_with ("}}")
 		local
 			p: INTEGER
+			l_name: STRING_8
 		do
 			p := s.index_of ('|', 3)
 			if p > 0 then
-				name := s.substring (3, p - 1)
+				l_name := s.substring (3, p - 1).to_string_8
 				if p < s.count - 2 then
 					parameters_text := s.substring (p + 1, s.count - 2)
 				end
 			else
-				name := s.substring (3, s.count - 2) -- Remove "{{" and "}}"
+				l_name := s.substring (3, s.count - 2).to_string_8 -- Remove "{{" and "}}"
 			end
-			name.adjust
+			l_name.adjust
+			name := l_name
 		end
 
 feature -- Access
 
-	name: STRING
+	name: READABLE_STRING_8
 
 	parameters_text: detachable READABLE_STRING_8
 
@@ -163,7 +165,7 @@ feature -- Access
 							s.append ("{{{")
 							i := i + 3
 						else
-							l_id := tpl.substring (j + 3, k - 1)
+							l_id := tpl.substring (j + 3, k - 1).to_string_8
 							l_id.left_adjust
 							l_id.right_adjust
 							if attached l_parameters.item (l_id) as l_part then
@@ -213,17 +215,16 @@ feature {NONE} -- Implementation
 		do
 			pos := a_param_text.index_of ('=', 1)
 			if pos > 0 then
-				k := a_param_text.substring (1, pos - 1)
+				k := a_param_text.substring (1, pos - 1).to_string_8
 				k.left_adjust
 				k.right_adjust
-				v := a_param_text.substring (pos + 1, a_param_text.count)
+				v := a_param_text.substring (pos + 1, a_param_text.count).to_string_8
 				v.left_adjust
 				v.right_adjust
+				a_table.force (v, k)
 			else
-				k := (a_table.count + 1).out
-				v := a_param_text
+				a_table.force (a_param_text, (a_table.count + 1).out)
 			end
-			a_table.force (v, k)
 		end
 
 feature -- Visitor

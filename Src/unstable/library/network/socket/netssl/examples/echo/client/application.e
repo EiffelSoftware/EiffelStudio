@@ -21,7 +21,7 @@ feature {NONE} -- Initialization
 
 	make
 		local
-			host: IMMUTABLE_STRING_32
+			host: IMMUTABLE_STRING_8
 			port: INTEGER
 			prefer_ipv4_stack: BOOLEAN
 			address: detachable INET_ADDRESS
@@ -32,7 +32,11 @@ feature {NONE} -- Initialization
 			port := 12111
 
 			if argument_count > 0  then
-				host := argument (1)
+				if attached argument (1) as arg_host and then arg_host.is_valid_as_string_8 then
+					host := arg_host.to_string_8
+				else
+					io.error.put_string ("Error: the first argument is an unsupported host name (no Unicode in host name for now)!")
+				end
 				if argument_count > 1 then
 					port := argument (2).to_integer
 				end
@@ -53,13 +57,13 @@ feature {NONE} -- Initialization
 
 			io.put_string ("start echo_client")
 			io.put_string (" host = ")
-			io.put_string (host.as_string_8)
+			io.put_string (host)
 			io.put_string (", port = ")
 			io.put_integer (port)
 			io.put_new_line
 
 				-- Obtain the host address
-			address := create_from_name (host.as_string_8)
+			address := create_from_name (host)
 			if address = Void then
 				io.put_string ("Unknown host " + host)
 				io.put_new_line

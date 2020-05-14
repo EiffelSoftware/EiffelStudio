@@ -19,17 +19,23 @@ feature {NONE} -- Initialization
 
 	make
 		local
-			host: IMMUTABLE_STRING_32
+			host: IMMUTABLE_STRING_8
 			port: INTEGER
 			prefer_ipv4_stack: BOOLEAN
 			address: detachable INET_ADDRESS
 			timeout: INTEGER
 			l_socket: SSL_NETWORK_STREAM_SOCKET
+			client_get: STRING
 		do
 			host := "requestb.in"
+--			host := "www.openssl.org"
 			port := 443
 			if argument_count > 0 then
-				host := argument (1)
+				if attached argument (1) as arg_host and then arg_host.is_valid_as_string_8 then
+					host := arg_host.to_string_8
+				else
+					io.error.put_string ("Error: the first argument is an unsupported host name (no Unicode in host name for now)!")
+				end
 				if argument_count > 1 then
 					port := argument (2).to_integer
 				end
@@ -45,13 +51,13 @@ feature {NONE} -- Initialization
 			end
 			io.put_string ("start ssl_client")
 			io.put_string (" host = ")
-			io.put_string (host.as_string_8)
+			io.put_string (host)
 			io.put_string (", port = ")
 			io.put_integer (port)
 			io.put_new_line
 
 				-- Obtain the host address
-			address := create_from_name (host.as_string_8)
+			address := create_from_name (host)
 			if address = Void then
 				io.put_string ("Unknown host " + host)
 				io.put_new_line
@@ -72,8 +78,10 @@ feature {NONE} -- Initialization
 					io.put_new_line
 				else
 						-- Since this is the client, we will initiate the talking.
+					client_get := "POST /api/v1/bins HTTP/1.1"
+--					client_get := "GET / HTTP/1.1"
 					client_get.append ("%R%N")
-					client_get.append ("Host: requestb.in")
+					client_get.append ("Host: " + host)
 					client_get.append ("%R%N")
 					client_get.append ("Cache-Control:max-age=0")
 					client_get.append ("%R%N")
@@ -134,14 +142,12 @@ feature {NONE} --Implementation
 				end_of_stream
 			loop
 				Result.append (a_socket.last_string)
-				if a_socket.last_string /= void and not a_socket.last_string.is_empty and a_socket.socket_ok then
+				if a_socket.last_string /= Void and not a_socket.last_string.is_empty and a_socket.socket_ok then
 					a_socket.read_line
 				else
 					end_of_stream := True
 				end
 			end
 		end
-
-	client_get: STRING = "GET / HTTP/1.1"
 
 end

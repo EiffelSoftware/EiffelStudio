@@ -48,7 +48,7 @@ feature -- Output
 			if attached cms_api.setup as l_setup then
 				if attached l_setup.environment as l_env then
 					s.append ("Env.path: " + l_env.path.utf_8_name + "%N")
-					s.append ("Env.name: " + l_env.name + "%N")
+					s.append ("Env.name: " + utf.utf_32_string_to_utf_8_string_8 (l_env.name) + "%N")
 					s.append ("Env.application_config_path: " + l_env.application_config_path.utf_8_name + "%N")
 				end
 				s.append (l_setup.out)
@@ -57,6 +57,6 @@ feature -- Output
 
 
 note
-	copyright: "2011-2017, Jocelyn Fiat, Javier Velilla, Eiffel Software and others"
+	copyright: "2011-2020, Jocelyn Fiat, Javier Velilla, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 end

@@ -50,7 +50,7 @@ feature {NONE} -- Creation
 
 feature {NONE} -- Implementation
 
-	authorization_code (a_request_url: READABLE_STRING_GENERAL): STRING
+	authorization_code (a_request_url: READABLE_STRING_8): STRING
 			-- The authorization token as computed by calling `a_request_url'
 		local
 			socket: NETWORK_STREAM_SOCKET
@@ -95,7 +95,7 @@ feature {NONE} -- Configuration
 	protected_resource_url : STRING = "https://www.strava.com/api/v3/athlete"
 
 note
-	copyright: "2013-2019, Javier Velilla, Jocelyn Fiat, Eiffel Software and others"
+	copyright: "2013-2020, Javier Velilla, Jocelyn Fiat, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

@@ -47,6 +47,9 @@ feature -- Status
 			Result := (create {RAW_FILE}.make_with_path (executable_path)).exists
 		end
 
+	last_succeed: BOOLEAN
+			-- Last notification succeed?
+
 feature -- Change
 
 	set_parameters (cmd: READABLE_STRING_GENERAL; args: detachable ITERABLE [READABLE_STRING_GENERAL])
@@ -84,7 +87,9 @@ feature -- Basic operation
 			args: like arguments
 			p: detachable PROCESS
 			retried: INTEGER
+			err: BOOLEAN
 		do
+			last_succeed := False
 			if retried = 0 then
 				create l_factory
 				if stdin_mode_set then
@@ -111,15 +116,22 @@ feature -- Basic operation
 							f.close
 							create args.make (1)
 							args.force (f.path.name)
+						else
+							err := True
+							-- FAILURE !
+							check should_not_occur: False end
 						end
 					end
-					p := l_factory.process_launcher (executable_path.name, args, Void)
-					p.set_hidden (True)
-					p.set_separate_console (False)
+					if not err then
+						p := l_factory.process_launcher (executable_path.name, args, Void)
+						p.set_hidden (True)
+						p.set_separate_console (False)
 
-					p.launch
+						p.launch
+					end
 				end
-				if p.launched and not p.has_exited then
+				if p /= Void and then p.launched and then not p.has_exited then
+					last_succeed := True
 					execution_environment.sleep (1_000)
 					p.wait_for_exit
 					if not p.has_exited then
@@ -146,55 +158,29 @@ feature -- Basic operation
 
 feature {NONE} -- Implementation
 
-	new_temporary_file (a_extension: detachable READABLE_STRING_8): RAW_FILE
+	new_temporary_file (a_prefix: detachable READABLE_STRING_8): detachable RAW_FILE
 			-- Create file with temporary name.
-			-- With concurrent execution, noting ensures that {FILE_NAME}.make_temporary_name is unique
-			-- So using `a_extension' may help
 		local
-			bn: STRING_32
-			fn: PATH
-			s: STRING_32
-			f: detachable like new_temporary_file
-			i: INTEGER
+			retried: INTEGER
 		do
-				-- With concurrent execution, nothing ensures that {FILE_NAME}.make_temporary_name is unique
-				-- So let's try to find
-			from
-				create bn.make_from_string_general ((create {FILE_NAME}.make_temporary_name).string)
-				create s.make_empty
-			until
-				f /= Void or i > 1000
-			loop
-				create fn.make_from_string (bn)
-				s.make_empty
-				if i > 0 then
-					s.append_character ('-')
-					s.append_integer (i)
-					fn := fn.appended (s)
+			if retried <= 3 then
+					-- Try 3 times...
+				if a_prefix /= Void then
+					create Result.make_open_temporary_with_prefix (a_prefix)
+				else
+					create Result.make_open_temporary
 				end
-				if a_extension /= Void then
-					fn := fn.appended_with_extension (a_extension)
-				end
-				create f.make_with_path (fn)
-				if f.exists then
-					i := i + 1
-					f := Void
-				end
-			end
-			if f = Void then
-				Result := new_temporary_file (Void)
-			else
-				Result := f
-				check not_temporary_file_exists: not Result.exists end
-				check temporary_creatable: Result.is_creatable end
 			end
 		ensure
-			not_result_exists: not Result.exists
-			result_creatable: Result.is_creatable
+			new_temporary_file_exists: Result /= Void implies Result.exists
+			result_is_open_write: Result /= Void implies Result.is_open_write
+		rescue
+			retried := retried + 1
+			retry
 		end
 
 note
-	copyright: "2011-2017, Jocelyn Fiat, Javier Velilla, Olivier Ligot, Eiffel Software and others"
+	copyright: "2011-2020, Jocelyn Fiat, Javier Velilla, Olivier Ligot, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

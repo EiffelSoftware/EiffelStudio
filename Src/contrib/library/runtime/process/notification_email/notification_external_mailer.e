@@ -162,10 +162,18 @@ feature {NONE} -- Implementation
 			-- Create file with temporary name.
 		local
 			retried: INTEGER
+			l_prefix: READABLE_STRING_GENERAL
 		do
 			if retried <= 3 then
 					-- Try 3 times...
-				if a_prefix /= Void then
+				if attached {EXECUTION_ENVIRONMENT}.temporary_directory_path as tmp then
+					if a_prefix /= Void then
+						l_prefix := tmp.extended (a_prefix).name
+					else
+						l_prefix := tmp.extended ("tmp-").name
+					end
+					create Result.make_open_temporary_with_prefix (l_prefix)
+				elseif a_prefix /= Void then
 					create Result.make_open_temporary_with_prefix (a_prefix)
 				else
 					create Result.make_open_temporary

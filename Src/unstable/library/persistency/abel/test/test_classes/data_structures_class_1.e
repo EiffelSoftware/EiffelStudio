@@ -89,7 +89,7 @@ feature -- Status Report
 	out: STRING
 			-- Convenient STRING representation of Current.
 		do
-			Result := "Object of class " + Current.generating_type.name_32 + " string representation:%N"
+			Result := "Object of class " + Current.generating_type.name + " string representation:%N"
 			Result.append ("array_1:%N " + array_1.out)
 			Result.append ("array_2:%N " + array_2.out)
 			Result.append ("arrayed_list_1:%N " + arrayed_list_1.out)

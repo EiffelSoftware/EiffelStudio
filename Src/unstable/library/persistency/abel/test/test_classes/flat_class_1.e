@@ -119,7 +119,7 @@ feature -- Status Report
 	out: STRING
 			-- Convenient STRING representation of Current.
 		do
-			Result := "Object of class " + Current.generating_type.name_32 + " string representation:%N"
+			Result := "Object of class " + Current.generating_type.name + " string representation:%N"
 			Result.append ("int_8_max = " + nat_8_max.out + " int_8_min = " + int_8_min.out + "%N")
 			Result.append ("int_16_max = " + nat_16_max.out + " int_16_min = " + int_16_min.out + "%N")
 			Result.append ("int_32_max = " + nat_32_max.out + " int_32_min = " + int_32_min.out + "%N")

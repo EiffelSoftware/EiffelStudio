@@ -30,7 +30,7 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	name: detachable STRING
+	name: detachable READABLE_STRING_8
 
 	is_closed: BOOLEAN
 
@@ -66,9 +66,9 @@ feature -- Access
 
 	items: ARRAYED_LIST [TEMPLATE_STRUCTURE_ITEM]
 
-	forced_output: detachable STRING
+	forced_output: detachable READABLE_STRING_8
 
-	error_output: detachable STRING
+	error_output: detachable READABLE_STRING_8
 
 feature -- Runtime values
 
@@ -81,7 +81,7 @@ feature -- Runtime values
 
 feature -- Expression
 
-	resolved_expression (e: STRING): detachable ANY
+	resolved_expression (e: READABLE_STRING_8): detachable ANY
 			-- `e' should be "$var_name.x.y.z"
 			-- to improve .. later
 		local
@@ -89,7 +89,7 @@ feature -- Expression
 			l_sp_exp: LIST [STRING]
 			tmp: like resolved_variable
 		do
-			l_exp := e.twin
+			create l_exp.make_from_string (e)
 			l_exp.left_adjust
 			l_exp.right_adjust
 			if not l_exp.is_empty then
@@ -121,7 +121,7 @@ feature -- Expression
 			end
 		end
 
-	resolved_composed_expression (e: STRING): detachable ANY
+	resolved_composed_expression (e: READABLE_STRING_8): detachable ANY
 		do
 			if e.has (':') then
 				Result := resolved_concatenation_expression (e)
@@ -130,7 +130,7 @@ feature -- Expression
 			end
 		end
 
-	resolved_arguments (args: LIST [STRING]): LIST [ANY]
+	resolved_arguments (args: LIST [READABLE_STRING_8]): LIST [ANY]
 		local
 			tmp: like resolved_expression
 		do
@@ -150,19 +150,19 @@ feature -- Expression
 			end
 		end
 
-	resolved_concatenation_expression (e: STRING): detachable ANY
+	resolved_concatenation_expression (e: READABLE_STRING_8): detachable ANY
 		require
 			e_has_colon: e.has (':')
 		local
 			l_args: LIST [ANY]
 			tmp: like resolved_expression
-			str1, str2: detachable STRING
+			str1, str2: detachable READABLE_STRING_8
 		do
 			l_args := resolved_arguments (e.split (':'))
 			from
 				l_args.start
 				Result := l_args.first
-				if attached {STRING} Result as s1 then
+				if attached {READABLE_STRING_8} Result as s1 then
 					str1 := s1.string
 				elseif Result /= Void then
 					str1 := Result.out
@@ -172,7 +172,7 @@ feature -- Expression
 				l_args.after or (Result = Void)
 			loop
 				tmp := l_args.item
-				if attached {STRING} Result as s1 then
+				if attached {READABLE_STRING_8} Result as s1 then
 					str1 := s1.string
 				elseif Result /= Void then
 					str1 := Result.out
@@ -180,7 +180,7 @@ feature -- Expression
 					str1 := Void
 				end
 				if str1 /= Void then
-					if attached {STRING} tmp as s2 then
+					if attached {READABLE_STRING_8} tmp as s2 then
 						str2 := s2
 					else
 						if tmp /= Void then
@@ -188,8 +188,7 @@ feature -- Expression
 						end
 					end
 					if str2 /= Void then
-						str1.append_string (str2)
-						Result := str1
+						Result := str1 + str2
 					else
 						Result := Void
 					end
@@ -200,23 +199,23 @@ feature -- Expression
 			end
 		end
 
-	resolved_variable (e: STRING): detachable ANY
+	resolved_variable (e: READABLE_STRING_8): detachable ANY
 			-- `e' should be "$var_name"
 			-- to improve .. later
 		local
 			l_exp: STRING
 		do
-			l_exp := e.twin
+			create l_exp.make_from_string (e)
 			l_exp.left_adjust
 			l_exp.right_adjust
 			Result := resolved_formatted_variable (l_exp)
 		end
 
-	resolved_formatted_variable (exp: STRING): detachable ANY
+	resolved_formatted_variable (exp: READABLE_STRING_8): detachable ANY
 			-- `exp' should be "$var_name"
 			-- to improve .. later
 		local
-			l_var: STRING
+			l_var: READABLE_STRING_8
 		do
 			Result := Precursor (exp)
 			if Result = Void then
@@ -233,7 +232,7 @@ feature -- Output
 		do
 		end
 
-	output: detachable STRING
+	output: detachable READABLE_STRING_8
 
 	get_output
 		do

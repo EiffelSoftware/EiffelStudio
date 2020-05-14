@@ -71,7 +71,7 @@ feature {NONE} -- Implementation
 	inside_text: STRING
 		do
 			if attached template_context.current_template_string as cts then
-				Result := cts.substring (end_index + 1, closing_start_index - 1)
+				Result := cts.substring (end_index + 1, closing_start_index - 1).to_string_8
 			else
 				create Result.make_empty
 				check has_inside_text: False end
@@ -84,7 +84,7 @@ feature {NONE} -- Implementation
 		local
 			s1, s2: INTEGER
 			t: TEMPLATE_STRUCTURE_ITEM
-			val: detachable STRING
+			val: detachable READABLE_STRING_8
 			soffset: INTEGER
 			item_output: STRING
 		do

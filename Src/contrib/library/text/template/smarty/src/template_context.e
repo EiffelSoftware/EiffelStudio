@@ -34,7 +34,7 @@ feature
 
 	current_template_text: detachable TEMPLATE_TEXT
 
-	current_template_string: detachable STRING
+	current_template_string: detachable READABLE_STRING_8
 		do
 			if attached current_template_text as ct then
 				Result := ct.text
@@ -178,7 +178,7 @@ feature -- Option
 
 	verbose: BOOLEAN
 
-	expression_error_report_function: detachable FUNCTION [TUPLE [obj: detachable ANY; mesg: STRING], detachable ANY]
+	expression_error_report_function: detachable FUNCTION [TUPLE [obj: detachable ANY; mesg: STRING_8], detachable ANY]
 			-- Function handling expression `mesg` on object `obj`, when an error occurs,
 			-- by returning a specific value for the expected result.
 			-- useful to return either a blank string, or an error message 

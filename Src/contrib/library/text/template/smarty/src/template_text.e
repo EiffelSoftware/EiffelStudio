@@ -21,7 +21,7 @@ feature {NONE} -- Initialization
 			init_values
 		end
 
-	make_from_text (t: STRING)
+	make_from_text (t: READABLE_STRING_8)
 			-- Initialize `Current'.
 		require
 			t /= Void
@@ -75,9 +75,9 @@ feature -- Values
 
 feature -- Access
 
-	name: detachable STRING
+	name: detachable READABLE_STRING_8
 
-	text: detachable STRING
+	text: detachable READABLE_STRING_8
 
 feature -- Change
 
@@ -110,19 +110,19 @@ feature -- Get
 	get_structure
 		local
 			r, rsc, rsa, rse, rsv : REGULAR_EXPRESSION
-			str: STRING
-			tagname: detachable STRING
+			str: READABLE_STRING_8
+			tagname: detachable READABLE_STRING_8
 			s1, s2: INTEGER
 			current_item: TEMPLATE_STRUCTURE_ITEM
 			struct_item: detachable TEMPLATE_STRUCTURE_ITEM
 			act_item: detachable TEMPLATE_STRUCTURE_ACTION
 			var_item: detachable TEMPLATE_STRUCTURE_VARIABLE
 			error: BOOLEAN
-			error_message: detachable STRING
+			error_message: detachable READABLE_STRING_8
 			is_scanning: BOOLEAN
 			found_tag_closing_slash: BOOLEAN
 			found_tag_open_closed_slash: BOOLEAN
-			found_tag_inside_text: STRING
+			found_tag_inside_text: READABLE_STRING_8
 --			i: INTEGER
 		do
 			if attached text as l_text then
@@ -324,11 +324,11 @@ feature -- Get
 			create Result
 		end
 
-	action_item_from_string (s: STRING): detachable TEMPLATE_STRUCTURE_ACTION
+	action_item_from_string (s: READABLE_STRING_8): detachable TEMPLATE_STRUCTURE_ACTION
 		local
 			r: like Tag_regexp_sub_action_op_val
 			an: STRING
-			txt: STRING
+			txt: READABLE_STRING_8
 			sval: STRING
 			skey: STRING
 		do
@@ -354,7 +354,7 @@ feature -- Get
 
 	print_structure (s: TEMPLATE_STRUCTURE_ITEM; alevel: INTEGER)
 		local
-			vn: detachable STRING
+			vn: detachable READABLE_STRING_8
 			tab: STRING
 			i: INTEGER
 		do
@@ -403,13 +403,13 @@ feature {NONE} -- Impl
 	process_structure (struct: TEMPLATE_STRUCTURE_ITEM)
 		local
 			t: TEMPLATE_STRUCTURE_ITEM
-			val: detachable STRING
+			val: detachable READABLE_STRING_8
 			s1, s2: INTEGER
 			soffset: INTEGER
 			l_output: like output
 		do
 			if attached text as l_text then
-				l_output := l_text.twin
+				create l_output.make_from_string (l_text)
 				soffset := 0
 				output := l_output
 				across

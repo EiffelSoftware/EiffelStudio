@@ -50,11 +50,11 @@ feature -- Output
 
 feature -- Access
 
-	variable_name: detachable STRING
+	variable_name: detachable READABLE_STRING_8
 
-	variable_expression: detachable STRING
+	variable_expression: detachable READABLE_STRING_8
 
-	forced_value: detachable STRING
+	forced_value: detachable READABLE_STRING_8
 
 feature -- Change
 

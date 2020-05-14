@@ -41,7 +41,7 @@ feature -- Helper
 				across
 					l_params as ic
 				loop
-					Result.append ("'" + ic.key + "':'" + ic.item + "',");
+					Result.append ("'" + {UTF_CONVERTER}.utf_32_string_to_utf_8_string_8 (ic.key) + "':'" + ic.item + "',");
 				end
 			end
 			Result.append ("})")

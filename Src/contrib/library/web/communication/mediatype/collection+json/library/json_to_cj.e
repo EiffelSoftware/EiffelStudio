@@ -24,8 +24,8 @@ feature -- Access
 		local
 			j: detachable JSON_OBJECT
 			i: INTEGER
-			l_version: detachable STRING_32
-			l_href: detachable STRING_32
+			l_version: detachable STRING_8
+			l_href: detachable STRING_8
 		do
 			if attached {JSON_OBJECT} jv as l_obj then
 				if attached {JSON_OBJECT} l_obj.item (collection_key) as j_collection then
@@ -35,10 +35,10 @@ feature -- Access
 				end
 
 				if attached {JSON_STRING} j.item (version_key) as js then
-					l_version := js.unescaped_string_32
+					l_version := js.unescaped_string_8.to_string_8
 				end
 				if attached {JSON_STRING} j.item (href_key) as js then
-					l_href := js.unescaped_string_32
+					l_href := js.unescaped_string_8.to_string_8
 				end
 				if l_href /= Void then
 					if l_version /= Void then
@@ -104,7 +104,7 @@ feature -- Access
 			if attached {JSON_OBJECT} jv as j then
 				create Result.make_empty
 				if attached {JSON_STRING} j.item (href_key) as js then
-					Result.set_href (js.unescaped_string_32)
+					Result.set_href (js.unescaped_string_8)
 				end
 				if attached {JSON_STRING} j.item (rel_key) as js then
 					Result.set_rel (js.unescaped_string_32)
@@ -129,7 +129,7 @@ feature -- Access
 				attached {JSON_OBJECT} jv as j and then
 				attached {JSON_STRING} j.item (href_key) as js
 			then
-				create Result.make (js.unescaped_string_32)
+				create Result.make (js.unescaped_string_8)
 				if attached {JSON_ARRAY} j.item (data_key) as ja then
 					from
 						i := 1
@@ -179,18 +179,18 @@ feature -- Access
 	to_query (jv: detachable JSON_VALUE): detachable CJ_QUERY
 		local
 			i: INTEGER
-			l_href: detachable STRING
-			l_rel: detachable STRING_32
+			l_href: detachable READABLE_STRING_8
+			l_rel: detachable READABLE_STRING_32
 		do
 			if attached {JSON_OBJECT} jv as j then
 				if attached {JSON_STRING} j.item (href_key) as j_href then
-					l_href := j_href.unescaped_string_32
+					l_href := j_href.unescaped_string_8
 				end
 				if attached {JSON_STRING} j.item (rel_key) as j_rel then
 					l_rel := j_rel.unescaped_string_32
 				end
 				if l_href /= Void and l_rel /= Void then
-					create Result.make (l_href, l_rel)
+					create Result.make (l_href.to_string_8, l_rel)
 					if attached {JSON_STRING} j.item (name_key) as j_name then
 						Result.set_name (j_name.unescaped_string_32)
 					end

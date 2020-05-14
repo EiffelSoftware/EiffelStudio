@@ -139,12 +139,17 @@ feature {NONE} -- Implementation
 				l_data := ctx.upload_data
 				if l_data /= Void and a_method.is_case_insensitive_equal_general ("PUT") then
 					--| Quick and dirty hack using real file, for PUT uploaded data
-					--| FIXME [2012-05-23]: better use libcurl for that purpose
+					--| FIXME [2012-05-23]: find better solution with libcurl for that need
 
 					if ctx.has_upload_filename then
 						check put_conflict_file_and_data: False end
 					end
-					create f.make_open_write (create {FILE_NAME}.make_temporary_name)
+
+					if attached {EXECUTION_ENVIRONMENT}.temporary_directory_path as tmp then
+						create f.make_open_temporary_with_prefix (tmp.extended ("tmp-libcurl-").name)
+					else
+						create f.make_open_temporary_with_prefix ("tmp-libcurl-")
+					end
 					f.put_string (l_data)
 					f.close
 					check ctx /= Void then
@@ -176,7 +181,7 @@ feature {LIBCURL_HTTP_CLIENT_REQUEST} -- Curl implementation
 
 
 ;note
-	copyright: "2011-2017, Jocelyn Fiat, Javier Velilla, Eiffel Software and others"
+	copyright: "2011-2020, Jocelyn Fiat, Javier Velilla, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

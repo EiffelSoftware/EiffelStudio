@@ -112,7 +112,6 @@ feature -- Test routines
 			-- New test routine
 		local
 			sess: like new_session
-			h: STRING_8
 			config: HTTP_CLIENT_SECURE_CONFIG
 		do
 				--| Set secure configuration
@@ -160,7 +159,6 @@ feature -- Test routines
 	test_abs_url
 		local
 			sess: like new_session
-			h: STRING_8
 			l_url: STRING
 		do
 			sess := new_session ("https://www.eiffel.org")

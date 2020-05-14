@@ -61,7 +61,7 @@ feature -- Requestbin
 							j := l_content.index_of ('}', i + 1)
 						end
 						if j > 0 then
-							Result := l_content.substring (i + 7, j - 1)
+							Result := l_content.substring (i + 7, j - 1).to_string_8
 							Result.adjust
 							if Result.starts_with ("%"") then
 								Result.remove_head (1)

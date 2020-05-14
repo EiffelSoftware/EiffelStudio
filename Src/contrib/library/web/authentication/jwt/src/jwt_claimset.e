@@ -73,7 +73,7 @@ feature -- Access
 				elseif attached {JSON_BOOLEAN} jv as jb then
 					Result := jb.item.out
 				elseif attached {JSON_NUMBER} jv as jnum then
-					Result := jnum.item
+					Result := jnum.item.to_string_32
 				end
 			end
 		end

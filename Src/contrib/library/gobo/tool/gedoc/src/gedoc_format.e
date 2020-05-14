@@ -801,7 +801,7 @@ feature -- Error handling
 		local
 			l_error: UT_MESSAGE
 		do
-			create l_error.make ("No class matches wildcard '" + a_wildcard + "'.")
+			create l_error.make ("No class matches wildcard '" + {UTF_CONVERTER}.utf_32_string_to_utf_8_string_8 (a_wildcard) + "'.")
 			report_error (l_error)
 		ensure
 			has_error: has_error

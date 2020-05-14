@@ -45,19 +45,19 @@ feature {NONE} -- Implementation
 	print_error (a_error: ERROR)
 			-- Print error to stderr.
 		do
-			localized_print_error ("ERROR: " + a_error.string_representation)
+			localized_print_error ({STRING_32} "ERROR: " + a_error.string_representation)
 		end
 
 	print_warning (a_message: READABLE_STRING_GENERAL)
 			-- Print warning to stderr.
 		do
-			localized_print_error ("WARNING: " + a_message + "%N")
+			localized_print_error ({STRING_32} "WARNING: " + a_message.to_string_32 + "%N")
 		end
 
 	print_info (a_message: READABLE_STRING_GENERAL)
 			-- Print info to stderr.
 		do
-			localized_print_error ("INFO: " + a_message + "%N")
+			localized_print_error ({STRING_32} "INFO: " + a_message.to_string_32 + "%N")
 		end
 
 	options: OPTIONS
@@ -185,6 +185,6 @@ Options
 		end
 
 note
-	copyright: "2015-2016, Nicolas Truessel, Jocelyn Fiat, Eiffel Software and others"
+	copyright: "2015-2020, Nicolas Truessel, Jocelyn Fiat, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 end

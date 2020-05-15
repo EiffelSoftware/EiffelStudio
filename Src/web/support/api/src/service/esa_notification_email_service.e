@@ -17,32 +17,34 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_smtp_server: READABLE_STRING_32)
+	make (a_smtp_server: READABLE_STRING_32; a_admin, a_webmaster: READABLE_STRING_8)
 			-- Create an instance of {ESA_NOTIFICATION_EMAIL_SERVICE} with an smtp_server `a_smtp_server'.
-			-- Using "noreplies@eiffel.com" as admin email.
+			-- Using `a_admin` as admin email.
 		do
+			admin_email := a_admin
+			webmaster_email := a_webmaster
+
 					-- Get local host name needed in creation of SMTP_PROTOCOL.
 			create {NOTIFICATION_SMTP_MAILER} mailer.make (a_smtp_server.to_string_8)
 			set_successful
 		end
 
-	make_sendmail
+	make_sendmail (a_admin, a_webmaster: READABLE_STRING_8)
 		do
+			admin_email := a_admin
+			webmaster_email := a_webmaster
+
 			create {NOTIFICATION_SENDMAIL_MAILER} mailer
 			set_successful
 		end
 
+feature -- Access
+
 	admin_email: IMMUTABLE_STRING_8
 			-- Administrator email.
-		once
-			Result := "noreplies@eiffel.com"
-		end
 
 	webmaster_email: IMMUTABLE_STRING_8
 			-- Webmaster email.
-		once
-			Result := "webmaster@eiffel.com"
-		end
 
 	mailer: NOTIFICATION_MAILER
 			-- Mailer.

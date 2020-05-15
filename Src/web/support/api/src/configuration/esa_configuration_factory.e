@@ -12,6 +12,11 @@ inherit
 
 	SHARED_ERROR
 
+feature -- Defaults
+
+	default_admin_email: STRING = "noreplies@eiffel.com"
+	default_webmaster_email: STRING = "webmaster@eiffel.com"
+
 feature -- Factory
 
 	esa_config (a_dir: detachable STRING): ESA_CONFIG
@@ -23,24 +28,37 @@ feature -- Factory
 			l_database: DATABASE_CONNECTION
 			l_api_service: ESA_API_SERVICE
 			l_retried: BOOLEAN
+			l_admin_email, l_webmaster_email: READABLE_STRING_8
 		once ("THREAD")
+			if attached a_dir then
+				create l_layout.make_with_path (create {PATH}.make_from_string (a_dir))
+			else
+				create l_layout.make_default
+			end
+			log.write_information (generator + ".esa_config " + l_layout.path.name.out)
+
+			if
+				attached (create {JSON_CONFIGURATION}).new_emails_configuration (l_layout.application_config_path) as l_email_addresses
+			then
+				l_admin_email := l_email_addresses ["admin"]
+				l_webmaster_email := l_email_addresses ["webmaster"]
+			end
+			if l_admin_email = Void then
+				l_admin_email := default_admin_email
+			end
+			if l_webmaster_email = Void then
+				l_webmaster_email := default_webmaster_email
+			end
+			if
+				attached (create {JSON_CONFIGURATION}).new_smtp_configuration (l_layout.application_config_path) as l_smtp_server and then
+				not l_smtp_server.is_whitespace
+			then
+				create l_notification_service.make (l_smtp_server, l_admin_email, l_webmaster_email)
+			else
+				create l_notification_service.make_sendmail (l_admin_email, l_webmaster_email)
+			end
+
 			if not l_retried then
-				if attached a_dir then
-					create l_layout.make_with_path (create {PATH}.make_from_string (a_dir))
-				else
-					create l_layout.make_default
-				end
-				log.write_information (generator + ".esa_config " + l_layout.path.name.out)
-
-				if
-					attached (create {JSON_CONFIGURATION}).new_smtp_configuration (l_layout.application_config_path) as l_smtp_server and then
-					not l_smtp_server.is_whitespace
-				then
-					create l_notification_service.make (l_smtp_server)
-				else
-					create l_notification_service.make_sendmail
-				end
-
 				if attached (create {JSON_CONFIGURATION}).new_database_configuration (l_layout.application_config_path) as l_database_config then
 					create {DATABASE_CONNECTION_ODBC} l_database.login_with_connection_string (l_database_config.connection_string)
 					create l_api_service.make_with_database (l_database)
@@ -54,20 +72,6 @@ feature -- Factory
 					log.write_error (generator + ".esa_config Error database connection" )
 				end
 			else
-				if attached a_dir then
-					create l_layout.make_with_path (create {PATH}.make_from_string (a_dir))
-				else
-					create l_layout.make_default
-				end
-				if
-					attached (create {JSON_CONFIGURATION}).new_smtp_configuration (l_layout.application_config_path) as l_smtp_server and then
-					not l_smtp_server.is_whitespace
-				then
-					create l_notification_service.make (l_smtp_server)
-				else
-					create l_notification_service.make_sendmail
-				end
-
 				create {DATABASE_CONNECTION_NULL} l_database.make_common
 				create l_api_service.make_with_database (l_database)
 				create Result.make (l_database, l_api_service, l_notification_service, l_layout)
@@ -86,25 +90,25 @@ feature -- Factory
 			l_database: DATABASE_CONNECTION
 			l_api_service: ESA_API_SERVICE
 			l_retried: BOOLEAN
+			l_admin_email, l_webmaster_email: READABLE_STRING_8
 		do
+			l_admin_email := default_admin_email
+			l_webmaster_email := default_webmaster_email
+			if attached a_dir and then attached Execution_environment.item (a_dir) as s then
+				create l_layout.make_with_path (create {PATH}.make_from_string (s))
+			else
+				create l_layout.make_default
+			end
+			if
+				attached (create {JSON_CONFIGURATION}).new_smtp_configuration (l_layout.application_config_path) as l_smtp_server and then
+				not l_smtp_server.is_whitespace
+			then
+				create l_notification_service.make (l_smtp_server, l_admin_email, l_webmaster_email)
+			else
+				create l_notification_service.make_sendmail (l_admin_email, l_webmaster_email)
+			end
 
 			if not l_retried then
-				if attached a_dir and then attached Execution_environment.item (a_dir) as s then
-					create l_layout.make_with_path (create {PATH}.make_from_string (s))
-				else
-					create l_layout.make_default
-				end
-
-				if
-					attached (create {JSON_CONFIGURATION}).new_smtp_configuration (l_layout.application_config_path) as l_smtp_server and then
-					not l_smtp_server.is_whitespace
-				then
-					create l_notification_service.make (l_smtp_server)
-				else
-					create l_notification_service.make_sendmail
-				end
-
-
 				if attached (create {JSON_CONFIGURATION}).new_database_configuration_test (l_layout.application_config_path) as l_database_config then
 					create {DATABASE_CONNECTION_ODBC} l_database.login_with_connection_string (l_database_config.connection_string)
 					create l_api_service.make_with_database (l_database)
@@ -117,20 +121,6 @@ feature -- Factory
 					set_last_error ("Database Connections", generator+".esa_config")
 				end
 			else
-				if attached a_dir and then attached Execution_environment.item (a_dir) as s then
-					create l_layout.make_with_path (create {PATH}.make_from_string (s))
-				else
-					create l_layout.make_default
-				end
-				if
-					attached (create {JSON_CONFIGURATION}).new_smtp_configuration (l_layout.application_config_path) as l_smtp_server and then
-					not l_smtp_server.is_whitespace
-				then
-					create l_notification_service.make (l_smtp_server)
-				else
-					create l_notification_service.make_sendmail
-				end
-				
 				create {DATABASE_CONNECTION_NULL} l_database.make_common
 				create l_api_service.make_with_database (l_database)
 				create Result.make (l_database, l_api_service, l_notification_service, l_layout)
@@ -140,4 +130,6 @@ feature -- Factory
 			l_retried := True
 			retry
 		end
+
+
 end

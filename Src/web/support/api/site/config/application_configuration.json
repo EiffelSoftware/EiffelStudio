@@ -16,6 +16,10 @@
 			}
 		}
 	},
+	"emails": {
+		"admin", "noreplies@eiffel.com",
+		"webmaster", "webmaster@eiffel.com"
+	},
 	"logger": { 
 			"level":"debug",
 			"backup_count":"4",

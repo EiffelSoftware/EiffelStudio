@@ -83,6 +83,32 @@ feature -- Application Configuration
 			end
 		end
 
+	new_emails_configuration (a_path: PATH): detachable STRING_TABLE [READABLE_STRING_8]
+			-- emails configuration
+		local
+			l_parser: JSON_PARSER
+			l_result: STRING_32
+		do
+			create l_result.make_empty
+			if attached json_file_from (a_path) as json_file then
+				l_parser := new_json_parser (json_file)
+				if
+					attached {JSON_OBJECT} l_parser.next_parsed_json_value as jv and then l_parser.is_valid and then
+					attached {JSON_OBJECT} jv.item ("emails") as j_emails
+				then
+					create Result.make_caseless (j_emails.count)
+					across
+						j_emails as ic
+					loop
+						if attached {JSON_STRING} ic.item as js then
+							Result [ic.key.unescaped_string_32] := js.unescaped_string_8
+						end
+					end
+				end
+			end
+		end
+
+
 	new_smtp_configuration (a_path: PATH): READABLE_STRING_32
 			-- Build a new smtp server configuration.
 		local

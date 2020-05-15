@@ -15,6 +15,11 @@
 				<platform excluded_value="windows"/>
 			</condition>
 		</pre_compile_action>
+		<pre_compile_action working_directory="..\..\library" command="%ISE_EIFFEL%\tools\spec\%ISE_PLATFORM%\bin\espawn.exe &quot;%ISE_EIFFEL%\tools\spec\%ISE_PLATFORM%\bin\wrap_c.exe --verbose --script_pre_process=%cd%\pre_script.bat --script_post_process=%cd%\post_script.bat --output-dir=%cd%\generated_wrapper  --full-header=%cd%\manual_wrapper\c\include\callback.h  --config=config.xml&quot;" succeed="false">
+			<condition>
+				<platform value="windows"/>
+			</condition>
+		</pre_compile_action>
 		<variable name="GOBO_CC" value="msc"/>
 		<library name="base" location="${ISE_LIBRARY}\library\base\base.ecf" readonly="true"/>
 		<library name="time" location="${ISE_LIBRARY}\library\time\time.ecf" readonly="true"/>

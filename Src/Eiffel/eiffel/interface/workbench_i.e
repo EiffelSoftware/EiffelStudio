@@ -305,7 +305,11 @@ feature -- Commands
 					end
 					l_prc_launcher :=
 						if {PLATFORM}.is_windows then
-							l_prc_factory.process_launcher_with_command_line (l_action.command, l_wd)
+							if attached execution_environment.item ("COMSPEC") as l_comspec then
+								l_prc_factory.process_launcher_with_command_line (l_comspec + {STRING_32} " /C " + l_action.command, l_wd)
+							else
+								l_prc_factory.process_launcher_with_command_line (l_action.command, l_wd)
+							end
 						else
 							l_prc_factory.process_launcher
 								("/bin/sh",

@@ -25,7 +25,6 @@
 		</option>
 		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf" readonly="true"/>
 		<library name="base_extension" location="$ISE_LIBRARY\library\base_extension\base_extension.ecf"/>
-		<library name="encoding" location="$ISE_LIBRARY\library\encoding\encoding.ecf"/>
 		<cluster name="arg_parser" location=".\" recursive="true">
 			<option namespace="ArgumentParser">
 			</option>

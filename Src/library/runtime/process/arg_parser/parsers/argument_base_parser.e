@@ -8,9 +8,6 @@
 deferred class
 	ARGUMENT_BASE_PARSER
 
-inherit
-	LOCALIZED_PRINTER
-
 feature {NONE} -- Initialization
 
 	make (a_cs: like is_case_sensitive; a_allow_non_switched: like is_allowing_non_switched_arguments; a_non_switch_required: like is_non_switch_argument_required)
@@ -370,7 +367,7 @@ feature {NONE} -- Status report
 			l_cs: like is_case_sensitive
 		do
 			l_cs := is_case_sensitive
-			Result := 
+			Result :=
 				∃ s: available_switches ¦
 					if l_cs then
 						s.id.same_string_general (a_name)
@@ -1207,26 +1204,26 @@ feature {NONE} -- Output
 			else
 				l_name := system_name
 			end
-			localized_print ("USAGE: %N")
+			io.put_string_32 ("USAGE: %N")
 
 			l_cfgs := command_option_configurations
 			if not l_cfgs.is_empty then
 				across
 					l_cfgs as c
 				loop
-					localized_print (tab_string)
-					localized_print (l_name)
-					localized_print (" ")
+					io.put_string_32 (tab_string)
+					io.put_string_32 (l_name)
+					io.put_string_32 (" ")
 					create l_cfg.make_from_string (c.item)
 					l_cfg.replace_substring_all ({STRING_32} "%N", {STRING_32} "%N" + create {STRING_32}.make_filled (' ', l_name.count + 1))
-					localized_print (l_cfg)
+					io.put_string_32 (l_cfg)
 					if not c.is_last then
 						io.new_line
 					end
 				end
 			else
-				localized_print (tab_string)
-				localized_print (l_name)
+				io.put_string_32 (tab_string)
+				io.put_string_32 (l_name)
 			end
 
 			if has_visible_available_options then
@@ -1238,7 +1235,7 @@ feature {NONE} -- Output
 			l_ext := extended_usage
 			if not l_ext.is_empty then
 				io.new_line
-				localized_print (l_ext)
+				io.put_string_32 (l_ext)
 			end
 			io.new_line
 		end
@@ -1246,12 +1243,12 @@ feature {NONE} -- Output
 	display_logo
 			-- Displays copyright information.
 		do
-			localized_print (name)
-			localized_print (" - Version: ")
-			localized_print (version)
+			io.put_string_32 (name)
+			io.put_string_32 (" - Version: ")
+			io.put_string_32 (version)
 			if not copyright.is_empty then
 				io.new_line
-				localized_print (copyright)
+				io.put_string_32 (copyright)
 			end
 			io.new_line
 			io.new_line
@@ -1261,12 +1258,12 @@ feature {NONE} -- Output
 			-- Displays version information.
 		do
 				-- Only display the version information if it was not already displayed
-			localized_print (name)
-			localized_print (" version ")
-			localized_print (version)
+			io.put_string_32 (name)
+			io.put_string_32 (" version ")
+			io.put_string_32 (version)
 			if not copyright.is_empty then
 				io.new_line
-				localized_print (copyright)
+				io.put_string_32 (copyright)
 			end
 			io.new_line
 		end
@@ -1277,17 +1274,15 @@ feature {NONE} -- Output
 			not_is_successful: not is_successful
 		local
 			l_errors: like error_messages
-			l_error: STRING_32
 		do
 			l_errors := error_messages
-			localized_print_error (string_formatter.format_unicode ("{1} error(s) occurred.%N", [l_errors.count]))
+			io.error.put_string_32 (string_formatter.format_unicode ("{1} error(s) occurred.%N", [l_errors.count]))
 			across
 				l_errors as e
 			loop
-				localized_print_error (tab_string)
-				localized_print_error ("> ")
-				l_error := format_terminal_text (e.item, tab_string.count.as_natural_8 + 2)
-				localized_print_error (l_error)
+				io.error.put_string_32 (tab_string)
+				io.error.put_string_32 ("> ")
+				io.error.put_string_32 (format_terminal_text (e.item, tab_string.count.as_natural_8 + 2))
 				io.error.new_line
 			end
 			io.error.new_line
@@ -1319,7 +1314,7 @@ feature {NONE} -- Output
 			l_count: INTEGER
 			i: INTEGER
 		do
-			localized_print ("%NOPTIONS:%N")
+			io.put_string_32 ("%NOPTIONS:%N")
 
 			create l_value_switches.make (0)
 
@@ -1345,13 +1340,13 @@ feature {NONE} -- Output
 					l_prefix.append_character ('%'')
 					i := i + 1
 				end
-				localized_print (tab_string)
-				localized_print ("Options ")
+				io.put_string_32 (tab_string)
+				io.put_string_32 ("Options ")
 				if is_case_sensitive then
-					localized_print ("are case-sensitive and ")
+					io.put_string_32 ("are case-sensitive and ")
 				end
-				localized_print ("should be prefixed with: ")
-				localized_print (l_prefix)
+				io.put_string_32 ("should be prefixed with: ")
+				io.put_string_32 (l_prefix)
 				io.new_line
 				io.new_line
 			end
@@ -1428,15 +1423,15 @@ feature {NONE} -- Output
 					l_desc.append (l_arg_desc)
 				end
 
-				localized_print (tab_string)
-				localized_print (l_name)
-				localized_print (": ")
-				localized_print (l_desc)
+				io.put_string_32 (tab_string)
+				io.put_string_32 (l_name)
+				io.put_string_32 (": ")
+				io.put_string_32 (l_desc)
 				io.new_line
 			end
 
 			if not l_inline_args and then not l_value_switches.is_empty then
-				localized_print ("%NARGUMENTS:%N")
+				io.put_string_32 ("%NARGUMENTS:%N")
 
 				create l_added_args.make (l_value_switches.count)
 
@@ -1464,10 +1459,10 @@ feature {NONE} -- Output
 						l_name.insert_character ('>', l_immutable.count + 2)
 
 						l_desc := format_terminal_text (l_value_switch.arg_description, (l_immutable.count + tab_string.count + 4).as_natural_8)
-						localized_print (tab_string)
-						localized_print (l_name)
-						localized_print (": ")
-						localized_print (l_desc)
+						io.put_string_32 (tab_string)
+						io.put_string_32 (l_name)
+						io.put_string_32 (": ")
+						io.put_string_32 (l_desc)
 						io.new_line
 
 						l_added_args.put (True, l_immutable)

@@ -135,6 +135,7 @@ precompile: "driver.exe: driver.lnk driver.rc precomp.lib%N%
 %%Tlib -nologo -OUT:precomp.lib $(C_OBJECTS) $(EXTERNALS)%N%
 %%N%
 %driver.lnk: e1\emain.obj $(OBJECTS) driver.res %N%
+%%Tif exist $@ $(RM) $@%N%
 %$echo_link_bom%
 %%T@echo $(LDFLAGS) $(CCLDFLAGS) -OUT:driver.exe >> $@%N%
 %%T@echo e1\emain.obj >> $@%N%

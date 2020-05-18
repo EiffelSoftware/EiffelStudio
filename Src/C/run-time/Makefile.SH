@@ -112,7 +112,7 @@ MTNETWORK_OBJ = $(TOP)/ipc/app/MTnetwork.o
 LSRC = malloc.c garcol.c local.c stack.c store.c retrieve.c \
 	hash.c traverse.c hashin.c tools.c internal.c plug.c \
 	copy.c equal.c lmalloc.c out.c timer.c urgent.c sig.c \
-	hector.c cecil.c file.c dir.c misc.c \
+	hector.c cecil.c file.c dir.c misc.c string.c \
 	error.c umain.c memory.c memory_analyzer.c argv.c boolstr.c search.c \
 	run_idr.c path_name.c object_id.c eif_threads.c eif_project.c \
 	posix_threads.c gen_conf.c eif_type_id.c rout_obj.c \
@@ -164,6 +164,7 @@ WOBJ = \
 	wfile.o \
 	wdir.o \
 	wmisc.o \
+	wstring.o \
 	werror.o \
 	wumain.o \
 	wmemory.o \
@@ -213,6 +214,7 @@ LOBJ = \
 	file.o \
 	dir.o \
 	misc.o \
+	string.o \
 	error.o \
 	umain.o \
 	memory.o \
@@ -278,6 +280,7 @@ MT_WOBJ = \
 	MTwfile.o \
 	MTwdir.o \
 	MTwmisc.o \
+	MTwstring.o \
 	MTwerror.o \
 	MTwumain.o \
 	MTwmemory.o \
@@ -337,6 +340,7 @@ MT_LOBJ = \
 	MTfile.o \
 	MTdir.o \
 	MTmisc.o \
+	MTstring.o \
 	MTerror.o \
 	MTumain.o \
 	MTmemory.o \
@@ -430,6 +434,9 @@ wdir.o: dir.c
 	       $(CC) -c $(JCFLAGS) -DWORKBENCH $? -o $@
 
 wmisc.o: misc.c
+	       $(CC) -c $(JCFLAGS) -DWORKBENCH $? -o $@
+
+wstring.o: string.c
 	       $(CC) -c $(JCFLAGS) -DWORKBENCH $? -o $@
 
 werror.o: error.c
@@ -571,6 +578,9 @@ MTdir.o: dir.c
 MTmisc.o: misc.c
 	       $(CC) -c $(JMTCFLAGS) $? -o $@
 
+MTstring.o: string.c
+	       $(CC) -c $(JMTCFLAGS) $? -o $@
+
 MTerror.o: error.c
 	       $(CC) -c $(JMTCFLAGS) $? -o $@
 
@@ -708,6 +718,9 @@ MTwdir.o: dir.c
 	       $(CC) -c $(JMTCFLAGS) -DWORKBENCH $? -o $@
 
 MTwmisc.o: misc.c
+	       $(CC) -c $(JMTCFLAGS) -DWORKBENCH $? -o $@
+
+MTwstring.o: string.c
 	       $(CC) -c $(JMTCFLAGS) -DWORKBENCH $? -o $@
 
 MTwerror.o: error.c

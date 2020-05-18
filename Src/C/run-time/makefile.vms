@@ -83,7 +83,7 @@ LISTINGS = $(patsubst %.c,%.lis,$(SOURCES))
 LSRC = malloc.c garcol.c local.c except.c store.c retrieve.c \
 	hash.c traverse.c hashin.c tools.c internal.c plug.c \
 	copy.c equal.c lmalloc.c out.c timer.c urgent.c sig.c \
-	hector.c cecil.c file.c dir.c misc.c \
+	hector.c cecil.c file.c dir.c misc.c string.c \
 	error.c umain.c memory.c memory_analyzer.c argv.c boolstr.c search.c \
 	run_idr.c path_name.c object_id.c eif_threads.c eif_project.c\
 	posix_threads.c gen_conf.c eif_type_id.c rout_obj.c \
@@ -129,6 +129,7 @@ WOBJ =		    \
 	file.obj_wk \
 	dir.obj_wk \
 	misc.obj_wk \
+	string.obj_wk \
 	error.obj_wk \
 	umain.obj_wk \
 	memory.obj_wk \
@@ -178,6 +179,7 @@ LOBJ = \
 	file.obj \
 	dir.obj \
 	misc.obj \
+	string.obj \
 	error.obj \
 	umain.obj \
 	memory.obj \
@@ -235,6 +237,7 @@ EOBJ = \
 	wfile.obj \
 	wdir.obj \
 	wmisc.obj \
+	wstring.obj \
 	werror.obj \
 	wumain.obj \
 	wmemory.obj \
@@ -283,6 +286,7 @@ MT_LOBJ = \
 	MTfile.obj \
 	MTdir.obj \
 	MTmisc.obj \
+	MTstring.obj \
 	MTerror.obj \
 	MTumain.obj \
 	MTmemory.obj \

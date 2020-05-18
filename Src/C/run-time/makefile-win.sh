@@ -49,6 +49,7 @@ FINAL_OBJECTS = \
 	$(INDIR)file.$obj \
 	$(INDIR)dir.$obj \
 	$(INDIR)misc.$obj \
+	$(INDIR)string.$obj \
 	$(INDIR)error.$obj \
 	$(INDIR)umain.$obj \
 	$(INDIR)memory.$obj \
@@ -102,6 +103,7 @@ WORKBENCH_OBJECTS = \
 	$(INDIR)wfile.$obj \
 	$(INDIR)wdir.$obj \
 	$(INDIR)wmisc.$obj \
+	$(INDIR)wstring.$obj \
 	$(INDIR)werror.$obj \
 	$(INDIR)wumain.$obj \
 	$(INDIR)wmemory.$obj \
@@ -158,6 +160,7 @@ MT_OBJECTS = \
 	$(INDIR)MTfile.$obj \
 	$(INDIR)MTdir.$obj \
 	$(INDIR)MTmisc.$obj \
+	$(INDIR)MTstring.$obj \
 	$(INDIR)MTerror.$obj \
 	$(INDIR)MTumain.$obj \
 	$(INDIR)MTmemory.$obj \
@@ -219,6 +222,7 @@ MT_WOBJECTS = \
 	$(INDIR)MTwfile.$obj \
 	$(INDIR)MTwdir.$obj \
 	$(INDIR)MTwmisc.$obj \
+	$(INDIR)MTwstring.$obj \
 	$(INDIR)MTwerror.$obj \
 	$(INDIR)MTwumain.$obj \
 	$(INDIR)MTwmemory.$obj \
@@ -437,6 +441,9 @@ $(INDIR)memory_analyzer.$obj: $(RTSRC)memory_analyzer.c
 $(INDIR)misc.$obj: $(RTSRC)misc.c
 	$(CC) $(JCFLAGS) $(RTSRC)misc.c
 
+$(INDIR)string.$obj: $(RTSRC)string.c
+	$(CC) $(JCFLAGS) $(RTSRC)string.c
+
 $(INDIR)object_id.$obj: $(RTSRC)object_id.c
 	$(CC) $(JCFLAGS) $(RTSRC)object_id.c
 
@@ -580,6 +587,9 @@ $(INDIR)wmemory_analyzer.$obj: $(RTSRC)memory_analyzer.c
 
 $(INDIR)wmisc.$obj: $(RTSRC)misc.c
 	$(CC) $(JCFLAGS) -DWORKBENCH $(RTSRC)misc.c
+
+$(INDIR)wstring.$obj: $(RTSRC)string.c
+	$(CC) $(JCFLAGS) -DWORKBENCH $(RTSRC)string.c
 
 $(INDIR)wobject_id.$obj: $(RTSRC)object_id.c
 	$(CC) $(JCFLAGS) -DWORKBENCH $(RTSRC)object_id.c
@@ -753,6 +763,9 @@ $(INDIR)MTmemory_analyzer.$obj: $(RTSRC)memory_analyzer.c
 $(INDIR)MTmisc.$obj: $(RTSRC)misc.c
 	$(CC) $(JMTCFLAGS) $(RTSRC)misc.c
 
+$(INDIR)MTstring.$obj: $(RTSRC)string.c
+	$(CC) $(JMTCFLAGS) $(RTSRC)string.c
+
 $(INDIR)MTobject_id.$obj: $(RTSRC)object_id.c
 	$(CC) $(JMTCFLAGS) $(RTSRC)object_id.c
 
@@ -924,6 +937,9 @@ $(INDIR)MTwmemory_analyzer.$obj: $(RTSRC)memory_analyzer.c
 $(INDIR)MTwmisc.$obj: $(RTSRC)misc.c
 	$(CC) $(JMTCFLAGS) -DWORKBENCH $(RTSRC)misc.c
 
+$(INDIR)MTwstring.$obj: $(RTSRC)string.c
+	$(CC) $(JMTCFLAGS) -DWORKBENCH $(RTSRC)string.c
+
 $(INDIR)MTwobject_id.$obj: $(RTSRC)object_id.c
 	$(CC) $(JMTCFLAGS) -DWORKBENCH $(RTSRC)object_id.c
 
@@ -1069,6 +1085,9 @@ $(INDIR)dir.$obj : eif_cecil.h eif_copy.h eif_dir.h eif_except.h eif_garcol.h ei
 
 $(INDIR)misc.$obj : eif_cecil.h eif_copy.h eif_except.h eif_garcol.h eif_hector.h eif_local.h \
 			eif_malloc.h eif_misc.h eif_plug.h eif_size.h eif_struct.h
+
+$(INDIR)string.$obj : eif_cecil.h eif_copy.h eif_except.h eif_garcol.h eif_hector.h eif_local.h \
+			eif_malloc.h eif_plug.h eif_size.h eif_struct.h
 
 $(INDIR)error.$obj : eif_except.h eif_garcol.h eif_malloc.h eif_plug.h eif_struct.h
 

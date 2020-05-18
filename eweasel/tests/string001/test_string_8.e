@@ -139,7 +139,7 @@ feature {NONE} -- Implementation
 			check_equality ("adapt", s, t)
 			check_equality ("adapt", s.area, t.area)
 		end
-		
+
 	test_adapt_size is
 		local
 			s: STRING_8
@@ -149,7 +149,7 @@ feature {NONE} -- Implementation
 			s.adapt_size
 			check_equality ("adapt_size", s.count, 5)
 		end
-		
+
 	test_additional_space is
 		local
 			s: STRING_8
@@ -159,7 +159,7 @@ feature {NONE} -- Implementation
 			i := s.additional_space
 			check_boolean ("additional_space", i >= 1)
 		end
-		
+
 	test_append is
 		local
 			s: STRING_8
@@ -167,14 +167,14 @@ feature {NONE} -- Implementation
 			create s.make (10)
 			s.append ("12345")
 			check_equality ("append", s, "12345")
-			
+
 			s.append (s)
 			check_equality ("append", s, "1234512345")
-			
+
 			s.append ("")
 			check_equality ("append", s, "1234512345")
 		end
-		
+
 	test_append_boolean is
 		local
 			s: STRING_8
@@ -182,12 +182,12 @@ feature {NONE} -- Implementation
 			create s.make (10)
 			s.append_boolean (True)
 			check_equality ("append_boolean", s, "True")
-			
+
 			s.wipe_out
 			s.append_boolean (False)
 			check_equality ("append_boolean", s, "False")
 		end
-		
+
 	test_append_character, test_extend is
 		local
 			s: STRING_8
@@ -196,7 +196,7 @@ feature {NONE} -- Implementation
 			s.append_character ('c')
 			check_equality ("append_character", s, "c")
 		end
-		
+
 	test_append_double is
 		local
 			s: STRING_8
@@ -232,7 +232,7 @@ feature {NONE} -- Implementation
 			check_equality ("append_real", s, "5.6")
 			check_equality ("append_real", s.to_real, r)
 		end
-		
+
 	test_append_string is
 		local
 			s: STRING_8
@@ -240,17 +240,17 @@ feature {NONE} -- Implementation
 			create s.make (10)
 			s.append_string ("12345")
 			check_equality ("append_string", s, "12345")
-			
+
 			s.append_string (s)
 			check_equality ("append_string", s, "1234512345")
-			
+
 			s.append_string ("")
 			check_equality ("append_string", s, "1234512345")
-			
+
 			s.append_string (Void)
 			check_equality ("append_string", s, "1234512345")
 		end
-		
+
 	test_as_lower is
 		local
 			s, t: STRING_8
@@ -259,11 +259,11 @@ feature {NONE} -- Implementation
 			t := s.as_lower
 			check_equality ("as_lower", t, "abcd ef gh i 123 ;ü")
 			check_boolean ("as_lower", t /= s)
-			
+
 			s.to_lower
 			check_equality ("as_lower", t, s)
 		end
-		
+
 	test_as_upper is
 		local
 			s, t: STRING_8
@@ -272,7 +272,7 @@ feature {NONE} -- Implementation
 			t := s.as_upper
 			check_equality ("as_upper", t, "ABCD EF GH I 123 ;ü")
 			check_boolean ("as_upper", t /= s)
-			
+
 			s.to_upper
 			check_equality ("as_upper", t, s)
 		end
@@ -287,7 +287,7 @@ feature {NONE} -- Implementation
 			check_equality ("automatic_grow", s, "123")
 			check_boolean ("automatic_grow", s.capacity >= 10)
 		end
-		
+
 	test_center_justify is
 		local
 			s: STRING_8
@@ -301,19 +301,19 @@ feature {NONE} -- Implementation
 			s.append ("  1234567890     ")
 			s.center_justify
 			check_equality ("center_justify", s, "    1234567890   ")
-			
+
 			s.wipe_out
 			s.append ("     1234567890  ")
 			s.append ("  1234567890     ")
 			s.center_justify
 			check_equality ("center_justify", s, "     1234567890    1234567890     ")
-			
+
 			s.wipe_out
 			s.append ("123456")
 			s.center_justify
 			check_equality ("center_justify", s, "123456")
 		end
-		
+
 	test_character_justify is
 		local
 			s: STRING_8
@@ -327,12 +327,12 @@ feature {NONE} -- Implementation
 			s.append ("1234567890x1234567890")
 			s.character_justify ('x', 20)
 			check_equality ("character_justify", s, "         1234567890x1234567890")
-			
+
 			s := "1234567890x1234567890"
 			s.character_justify ('s', 1)
 			check_equality ("character_justify", s, "1234567890x1234567890")
 		end
-		
+
 	test_copy is
 		local
 			s, t: STRING_8
@@ -344,14 +344,14 @@ feature {NONE} -- Implementation
 
 			s.copy ("1234567890")
 			check_equality ("copy",	s, "1234567890")
-			
+
 			create s.make (0)
 			t := "12345"
 			s.copy (t)
 			check_equality ("copy", s, t)
 			check_boolean ("copy", not s.shared_with (t))
 		end
-		
+
 	test_ends_with is
 		local
 			s: STRING_8
@@ -374,7 +374,7 @@ feature {NONE} -- Implementation
 			create s.make (10)
 			s.fill_blank
 			check_equality ("fill_blank", s, "          ")
-			
+
 			s.wipe_out
 			s.append ("12345")
 			s.fill_blank
@@ -388,7 +388,7 @@ feature {NONE} -- Implementation
 			create s.make (10)
 			s.fill_character ('1')
 			check_equality ("fill_character", s, "1111111111")
-			
+
 			s.wipe_out
 			s.append ("12345")
 			s.fill_character ('1')
@@ -402,7 +402,7 @@ feature {NONE} -- Implementation
 			create s.make (10)
 			s.fill_with ('1')
 			check_equality ("fill_with", s, "")
-			
+
 			s.wipe_out
 			s.append ("12345")
 			s.fill_with ('1')
@@ -418,7 +418,7 @@ feature {NONE} -- Implementation
 			create l_ptr.make_from_array ({ARRAY [NATURAL_8]} << 48, 49, 50, 51, 52, 53, 54, 0 >>)
 			s.from_c (l_ptr.item)
 			check_boolean ("from_c", s.is_equal ("0123456"))
-			
+
 			s := "abcdef"
 			create l_ptr.make_from_array ({ARRAY [NATURAL_8]} << 0, 48, 49, 50, 51, 52, 53, 54, 0 >>)
 			s.from_c (l_ptr.item)
@@ -454,16 +454,16 @@ feature {NONE} -- Implementation
 			s := "Eiffel Software Enterprise Edition"
 			i := s.fuzzy_index ("Soltware", 1, 1)
 			check_equality ("fuzzy_index", i, 8)
-			
+
 			i := s.fuzzy_index ("Sotware", 1, 1)
 			check_equality ("fuzzy_index", i, 0)
-			
+
 			i := s.fuzzy_index ("Edataon", 10, 2)
 			check_equality ("fuzzy_index", i, 28)
 
 			i := s.fuzzy_index ("Edataon", 29, 2)
 			check_equality ("fuzzy_index", i, 0)
-			
+
 			i := s.fuzzy_index ("Enterprise", 1, 0)
 			check_equality ("fuzzy_index", i, 17)
 
@@ -499,16 +499,16 @@ feature {NONE} -- Implementation
 			create s.make (10)
 			check_boolean ("has", not s.has ('c'))
 			check_boolean ("has", not s.has ('%U'))
-			
+
 			s.append ("1234c1234")
 			check_boolean ("has", s.has ('c'))
 			check_boolean ("has", not s.has ('9'))
-			
+
 			s.wipe_out
 			check_boolean ("has", not s.has ('c'))
 			check_boolean ("has", not s.has ('9'))
 		end
-		
+
 	test_has_substring is
 		local
 			s: STRING_8
@@ -541,7 +541,7 @@ feature {NONE} -- Implementation
 			check_boolean ("hash_code", s.hash_code /= h1)
 			check_boolean ("case_insensitive_hash_code", s.case_insensitive_hash_code /= h2)
 		end
-		
+
 	test_index_of is
 		local
 			s: STRING_8
@@ -551,20 +551,20 @@ feature {NONE} -- Implementation
 			s.append ("1234567890")
 			i := s.index_of ('0', 1)
 			check_equality ("index_of", i, 10)
-			
+
 			i := s.index_of ('x', 1)
 			check_equality ("index_of", i , 0)
-			
+
 			i := s.index_of ('5', 4)
 			check_equality ("index_of", i , 5)
 
-			i := s.index_of ('5', 5)			
+			i := s.index_of ('5', 5)
 			check_equality ("index_of", i , 5)
 
-			i := s.index_of ('5', 6)			
+			i := s.index_of ('5', 6)
 			check_equality ("index_of", i , 0)
 		end
-		
+
 	test_insert_character is
 		local
 			s: STRING_8
@@ -599,7 +599,7 @@ feature {NONE} -- Implementation
 			s.insert_character ('c', 6)
 			check_equality ("insert_character", s, "12345c")
 		end
-	
+
 	test_insert_string is
 		local
 			s, t: STRING_8
@@ -677,7 +677,7 @@ feature {NONE} -- Implementation
 			s.insert_string ("bar", 2)
 			check_equality ("insert_string", s, "bbarar")
 		end
-	
+
 	test_is_boolean is
 		local
 			s: STRING_8
@@ -687,7 +687,7 @@ feature {NONE} -- Implementation
 
 			s := "    true   "
 			check_boolean ("is_boolean", not s.is_boolean)
-			
+
 			s := "True"
 			check_boolean ("is_boolean", s.is_boolean)
 
@@ -696,16 +696,16 @@ feature {NONE} -- Implementation
 
 			s := "    false   "
 			check_boolean ("is_boolean", not s.is_boolean)
-			
+
 			s := "false"
 			check_boolean ("is_boolean", s.is_boolean)
-			
+
 			s := "TRUE"
 			check_boolean ("is_boolean", s.is_boolean)
-			
+
 			s := "FALSE"
 			check_boolean ("is_boolean", s.is_boolean)
-			
+
 			s := "Tru"
 			check_boolean ("is_boolean", not s.is_boolean)
 
@@ -729,19 +729,19 @@ feature {NONE} -- Implementation
 			check_boolean ("is_case_insensitive_equal", s.is_case_insensitive_equal ("12345"))
 			check_boolean ("is_case_insensitive_equal", not s.is_case_insensitive_equal ("123456"))
 			check_boolean ("is_case_insensitive_equal", not s.is_case_insensitive_equal ("1234"))
-			
+
 			s := "abcdef"
 			check_boolean ("is_case_insensitive_equal", s.is_case_insensitive_equal ("ABCDEF"))
 
 			s := "ABCDEF"
 			check_boolean ("is_case_insensitive_equal", s.is_case_insensitive_equal ("abcdef"))
-			
+
 			s := "ABCdef"
 			check_boolean ("is_case_insensitive_equal", s.is_case_insensitive_equal ("abcDEF"))
-			
+
 			check_boolean ("is_case_insensitive_equal", not s.is_case_insensitive_equal (""))
 		end
-		
+
 	test_is_double is
 		do
 			check_boolean ("is_double", ("5").is_double)
@@ -766,12 +766,12 @@ feature {NONE} -- Implementation
 			check_boolean ("is_double", ("1e").is_double)
 			check_boolean ("is_double", ("1e1").is_double)
 			check_boolean ("is_double", ("  5").is_double)
-			check_boolean ("is_double", ("5  ").is_double)			
+			check_boolean ("is_double", ("5  ").is_double)
 			check_boolean ("is_double", not ("%U5").is_double)
 			check_boolean ("is_double", not ("5.6%U").is_double)
 			check_boolean ("is_double", ("1").is_double)
 		end
-		
+
 	test_is_empty is
 		local
 			s: STRING_8
@@ -785,7 +785,7 @@ feature {NONE} -- Implementation
 
 			check_boolean ("is_empty", ("").is_empty)
 		end
-	
+
 	test_is_equal is
 		local
 			s: STRING_8
@@ -796,7 +796,7 @@ feature {NONE} -- Implementation
 			check_boolean ("is_equal", s.is_equal ("12345"))
 			check_boolean ("is_equal", not s.is_equal ("123456"))
 			check_boolean ("is_equal", not s.is_equal ("1234"))
-			
+
 			s := "abcdef"
 			check_boolean ("is_equal", not s.is_equal ("ABCDEF"))
 
@@ -807,11 +807,11 @@ feature {NONE} -- Implementation
 		local
 			s: STRING_8
 		do
-			s := "1234"	
+			s := "1234"
 			s.extend ('c')
 			check_boolean ("is_inserted", s.is_inserted ('c'))
 		end
-	
+
 	test_is_integer is
 		do
 			check_boolean ("is_integer", not ("a").is_integer)
@@ -820,7 +820,7 @@ feature {NONE} -- Implementation
 			check_boolean ("is_integer", (" 1").is_integer)
 			check_boolean ("is_integer", ("1 ").is_integer)
 		end
-		
+
 	test_is_real is
 		do
 			check_boolean ("is_real", ("5").is_real)
@@ -849,7 +849,7 @@ feature {NONE} -- Implementation
 			check_boolean ("is_real", not ("%U5").is_real)
 			check_boolean ("is_real", not ("5.6%U").is_real)
 		end
-		
+
 	test_infix_greater is
 		local
 			s: STRING_8
@@ -1124,7 +1124,7 @@ feature {NONE} -- Implementation
 			s.left_justify
 			check_equality ("left_justify", s, "")
 		end
-		
+
 	test_linear_representation is
 		local
 			s: STRING_8
@@ -1146,7 +1146,7 @@ feature {NONE} -- Implementation
 			end
 			check_boolean ("linear_representation", i = 5)
 		end
-	
+
 	test_make is
 		local
 			s: STRING_8
@@ -1159,14 +1159,14 @@ feature {NONE} -- Implementation
 			check_boolean ("make", s.count = 0)
 			check_boolean ("make", s.capacity >= 2)
 			check_boolean ("make", s.area /= p)
-			
+
 			create s.make (2)
 			check_boolean ("make", s.is_empty)
 			check_boolean ("make", s.count = 0)
 			check_boolean ("make", s.capacity >= 2)
 				-- Extra check that there are no aliasing within a STRING_8 creation
 			check_boolean ("make", s.area /= p)
-		end	
+		end
 
 	test_make_empty is
 		local
@@ -1180,7 +1180,7 @@ feature {NONE} -- Implementation
 			check_boolean ("make_empty", s.count = 0)
 			check_boolean ("make_empty", s.capacity >= 0)
 			check_boolean ("make_empty", s.area /= p)
-			
+
 			create s.make_empty
 			check_boolean ("make_empty", s.is_empty)
 			check_boolean ("make_empty", s.count = 0)
@@ -1188,7 +1188,7 @@ feature {NONE} -- Implementation
 				-- Extra check that there are no aliasing within a STRING_8 creation
 			check_boolean ("make_empty", s.area /= p)
 		end
-	
+
 	test_make_filled is
 		local
 			s: STRING_8
@@ -1208,7 +1208,7 @@ feature {NONE} -- Implementation
 			check_boolean ("make_filled", s.occurrences ('a') = 10)
 			check_boolean ("make_filled", s.is_equal ("aaaaaaaaaa"))
 		end
-		
+
 	test_make_from_c is
 		local
 			l_ptr: MANAGED_POINTER
@@ -1221,18 +1221,18 @@ feature {NONE} -- Implementation
 			create l_ptr.make_from_array ({ARRAY [NATURAL_8]} << 0, 48, 49, 50, 51, 52, 53, 54, 0 >>)
 			create s.make_from_c (l_ptr.item)
 			check_boolean ("make_from_c", s.is_empty)
-			
+
 			s := "abcdef"
 			create l_ptr.make_from_array ({ARRAY [NATURAL_8]} << 48, 49, 50, 51, 52, 53, 54, 0 >>)
 			s.make_from_c (l_ptr.item)
 			check_boolean ("make_from_c", s.is_equal ("0123456"))
-			
+
 			s := "abcdef"
 			create l_ptr.make_from_array ({ARRAY [NATURAL_8]} << 0, 48, 49, 50, 51, 52, 53, 54, 0 >>)
 			s.make_from_c (l_ptr.item)
 			check_boolean ("make_from_c", s.is_empty)
 		end
-		
+
 	test_make_from_string is
 		local
 			s, p: STRING_8
@@ -1242,12 +1242,12 @@ feature {NONE} -- Implementation
 			s.make_from_string (p)
 			check_boolean ("make_from_string", s.area = p.area)
 			check_boolean ("make_from_string", s.count = p.count)
-			
+
 			create s.make_from_string (p)
 			check_boolean ("make_from_string", s.is_equal ("12345"))
 			check_boolean ("make_from_string", s.area /= p.area)
 		end
-		
+
 	test_max is
 		local
 			s: STRING_8
@@ -1378,7 +1378,7 @@ feature {NONE} -- Implementation
 			s := "a"
 			s.multiply (3)
 			check_equality ("multiply", s, "aaa")
-			
+
 			s := "ab"
 			s.multiply (1)
 			check_equality ("multiply", s, "ab")
@@ -1482,27 +1482,27 @@ feature {NONE} -- Implementation
 			s_32 := "12345"
 			is_8 := "67890"
 			s_8 := "67890"
-			check_equality ("plus", s_8.plus (is_32), "6789012345")
-			check_equality ("plus", s_8.plus (s_32), "6789012345")
-			check_equality ("plus", s_8.plus (is_8), "6789067890")
-			check_equality ("plus", s_8.plus (s_8), "6789067890")
-			check_equality ("plus", s_8.plus (""), "67890")
+			check_equality ("plus", s_8 + is_32, "6789012345")
+			check_equality ("plus", s_8 + s_32, "6789012345")
+			check_equality ("plus", s_8 + is_8, "6789067890")
+			check_equality ("plus", s_8 + s_8, "6789067890")
+			check_equality ("plus", s_8 + "", "67890")
 
 			s_8 := ""
-			check_equality ("plus", s_8.plus (is_32), "12345")
-			check_equality ("plus", s_8.plus (s_32), "12345")
-			check_equality ("plus", s_8.plus (is_8), "67890")
-			check_equality ("plus", s_8.plus (s_8), "")
-			check_equality ("plus", s_8.plus (""), "")
+			check_equality ("plus", s_8 + is_32, "12345")
+			check_equality ("plus", s_8 + s_32, "12345")
+			check_equality ("plus", s_8 + is_8, "67890")
+			check_equality ("plus", s_8 + s_8, "")
+			check_equality ("plus", s_8 + "", "")
 
 			is_32 := ""
 			s_32 := ""
 			is_8 := ""
-			check_equality ("plus", s_8.plus (is_32), "")
-			check_equality ("plus", s_8.plus (s_32), "")
-			check_equality ("plus", s_8.plus (is_8), "")
-			check_equality ("plus", s_8.plus (s_8), "")
-			check_equality ("plus", s_8.plus (""), "")
+			check_equality ("plus", s_8 + is_32, "")
+			check_equality ("plus", s_8 + s_32, "")
+			check_equality ("plus", s_8 + is_8, "")
+			check_equality ("plus", s_8 + s_8, "")
+			check_equality ("plus", s_8 + "", "")
 		end
 
 	test_precede is
@@ -2107,7 +2107,7 @@ feature {NONE} -- Implementation
 			check_boolean ("same_string", not s.same_string ("123456"))
 			check_boolean ("same_string", not s.same_string ("123"))
 			check_boolean ("same_string", not s.same_string (""))
-			
+
 			s := "abcdef"
 			check_boolean ("same_string", not s.same_string ("ABCDEF"))
 		end
@@ -2147,7 +2147,7 @@ feature {NONE} -- Implementation
 			o := "BCD"
 			check_boolean ("same_caseless_characters", s.same_caseless_characters (o, 1, 2, 2))
 			check_boolean ("same_caseless_characters", not s.same_caseless_characters (o, 1, 2, 3))
-		end		
+		end
 
 	test_same_type is
 		do
@@ -2666,7 +2666,12 @@ feature {NONE} -- Checking
 		require
 			a_name_not_void: a_name /= Void
 		do
-			if not equal (a, b) then
+			if
+				a /~ b and then
+				({s1: READABLE_STRING_GENERAL} a and
+					{s2: READABLE_STRING_GENERAL} b implies
+				not s1.same_string (s2))
+			then
 				io.put_string ("Not OK: " + a_name)
 				io.put_new_line
 			end

@@ -9,7 +9,7 @@ copy_raw 	test_string_32.e $CLUSTER test_string_32.e
 copy_raw 	test_immutable_string_8.e $CLUSTER test_immutable_string_8.e
 copy_raw 	test_immutable_string_32.e $CLUSTER test_immutable_string_32.e
 compile_melted
-compile_result	ok
+compile_result	validity_warning TEST_IMMUTABLE_STRING_32 "Obsolete Call:901" "Obsolete Call:908" "Obsolete Call:917"; TEST_IMMUTABLE_STRING_8 "Obsolete Call:893" "Obsolete Call:900" "Obsolete Call:909"; TEST_STRING_32 "Obsolete Call:971" "Obsolete Call:1508" "Obsolete Call:1515" "Obsolete Call:1524"; TEST_STRING_8 "Obsolete Call:1486" "Obsolete Call:1493" "Obsolete Call:1502"
 
 execute_work NONE exec_output1
 execute_result ok

@@ -2,7 +2,7 @@
 	description: "The byte code interpreter."
 	date:		"$Date$"
 	revision:	"$Revision$"
-	copyright:	"Copyright (c) 1985-2018, Eiffel Software."
+	copyright:	"Copyright (c) 1985-2020, Eiffel Software."
 	license:	"GPL version 2 see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"Commercial license is available at http://www.eiffel.com/licensing"
 	copying: "[
@@ -208,7 +208,8 @@ rt_private void eif_interp_eq (EIF_TYPED_VALUE *f, EIF_TYPED_VALUE *s);			/* == 
 rt_private void eif_three_way_comparison (void);	/* Execute `three_way_comparison'. */
 rt_private void eif_interp_min_max (int code);	/* Execute `min' or `max' depending
 														   on value of `type' */
-rt_private void eif_interp_generator (struct stopchunk *stack_cur, EIF_TYPED_VALUE *stack_top);	/* generate the name of the basic type */
+rt_private void eif_interp_generator__s1 (struct stopchunk *stack_cur, EIF_TYPED_VALUE *stack_top);	/* generate the 8-bit name of the basic type */
+rt_private void eif_interp_generator__s4 (struct stopchunk *stack_cur, EIF_TYPED_VALUE *stack_top);	/* generate the 32-bit name of the basic type */
 rt_private void eif_interp_offset (void);	/* execute `offset' on character and pointer type */
 rt_private void eif_interp_bit_operations (void);	/* execute bit operations on integers */
 rt_private void eif_interp_builtins (struct stopchunk *stack_cur, EIF_TYPED_VALUE *stack_top); /* execute basic operations on basic types */
@@ -4752,7 +4753,7 @@ rt_private void eif_interp_eq (EIF_TYPED_VALUE *f, EIF_TYPED_VALUE *s) {
 	f->type = SK_BOOL;		/* Result is a boolean */
 }
 
-rt_private void eif_interp_generator (struct stopchunk *stack_cur, EIF_TYPED_VALUE *stack_top)
+rt_private void eif_interp_generator__s1 (struct stopchunk *stack_cur, EIF_TYPED_VALUE *stack_top)
 {
 	/* Execute the `generator' or `generating_type' function call for basic types
 	 * in melted code
@@ -4782,6 +4783,47 @@ rt_private void eif_interp_generator (struct stopchunk *stack_cur, EIF_TYPED_VAL
 		case SK_REAL32: first->it_ref = RTMS_EX("REAL_32", 7); break;
 		case SK_REAL64: first->it_ref = RTMS_EX("REAL_64", 7); break;
 		case SK_POINTER: first->it_ref = RTMS_EX("POINTER", 7); break;
+		default: eif_panic(MTC RT_BOTCHED_MSG);
+	}
+	first->type = SK_REF;
+
+	IC = OLD_IC;
+	if (tagval != stagval) {		/* previous call can call malloc which may call the interpreter for
+								   creation routines. */
+		sync_registers(stack_cur, stack_top);
+	}
+}
+
+rt_private void eif_interp_generator__s4 (struct stopchunk *stack_cur, EIF_TYPED_VALUE *stack_top)
+{
+	/* Execute the `generator' or `generating_type' function call for basic types
+	 * in melted code
+	 */
+	EIF_GET_CONTEXT
+	RT_GET_CONTEXT
+	EIF_TYPED_VALUE *first;			/* First operand */
+	unsigned char *OLD_IC = IC;
+	unsigned long stagval = tagval;	/* Tag value backup */
+
+	OLD_IC = IC;
+
+	first = EIF_STACK_TOP_ADDRESS(op_stack);				/* First operand will be replace by result */
+	CHECK("first not null", first);
+	switch (first->type & SK_HEAD) {
+		case SK_BOOL:    first->it_ref = RTMS32_EX("B\0\0\0O\0\0\0O\0\0\0L\0\0\0E\0\0\0A\0\0\0N\0\0\0", 7); break;
+		case SK_CHAR8:   first->it_ref = RTMS32_EX("C\0\0\0H\0\0\0A\0\0\0R\0\0\0A\0\0\0C\0\0\0T\0\0\0E\0\0\0R\0\0\0_\0\0\0" "8\0\0\0", 11); break;
+		case SK_CHAR32:  first->it_ref = RTMS32_EX("C\0\0\0H\0\0\0A\0\0\0R\0\0\0A\0\0\0C\0\0\0T\0\0\0E\0\0\0R\0\0\0_\0\0\0" "3\0\0\0" "2\0\0\0", 12); break;
+		case SK_UINT8:   first->it_ref = RTMS32_EX("N\0\0\0A\0\0\0T\0\0\0U\0\0\0R\0\0\0A\0\0\0L\0\0\0_\0\0\0" "8\0\0\0", 9); break;
+		case SK_UINT16:  first->it_ref = RTMS32_EX("N\0\0\0A\0\0\0T\0\0\0U\0\0\0R\0\0\0A\0\0\0L\0\0\0_\0\0\0" "1\0\0\0" "6\0\0\0", 10); break;
+		case SK_UINT32:  first->it_ref = RTMS32_EX("N\0\0\0A\0\0\0T\0\0\0U\0\0\0R\0\0\0A\0\0\0L\0\0\0_\0\0\0" "3\0\0\0" "2\0\0\0", 10); break;
+		case SK_UINT64:  first->it_ref = RTMS32_EX("N\0\0\0A\0\0\0T\0\0\0U\0\0\0R\0\0\0A\0\0\0L\0\0\0_\0\0\0" "6\0\0\0" "4\0\0\0", 10); break;
+		case SK_INT8:    first->it_ref = RTMS32_EX("I\0\0\0N\0\0\0T\0\0\0E\0\0\0G\0\0\0E\0\0\0R\0\0\0_\0\0\0" "8\0\0\0", 9); break;
+		case SK_INT16:   first->it_ref = RTMS32_EX("I\0\0\0N\0\0\0T\0\0\0E\0\0\0G\0\0\0E\0\0\0R\0\0\0_\0\0\0" "1\0\0\0" "6\0\0\0", 10); break;
+		case SK_INT32:   first->it_ref = RTMS32_EX("I\0\0\0N\0\0\0T\0\0\0E\0\0\0G\0\0\0E\0\0\0R\0\0\0_\0\0\0" "3\0\0\0" "2\0\0\0", 10); break;
+		case SK_INT64:   first->it_ref = RTMS32_EX("I\0\0\0N\0\0\0T\0\0\0E\0\0\0G\0\0\0E\0\0\0R\0\0\0_\0\0\0" "6\0\0\0" "4\0\0\0", 10); break;
+		case SK_REAL32:  first->it_ref = RTMS32_EX("R\0\0\0E\0\0\0A\0\0\0L\0\0\0_\0\0\0" "3\0\0\0" "2\0\0\0", 7); break;
+		case SK_REAL64:  first->it_ref = RTMS32_EX("R\0\0\0E\0\0\0A\0\0\0L\0\0\0_\0\0\0" "6\0\0\0" "4\0\0\0", 7); break;
+		case SK_POINTER: first->it_ref = RTMS32_EX("P\0\0\0O\0\0\0I\0\0\0N\0\0\0T\0\0\0E\0\0\0R\0\0\0", 7); break;
 		default: eif_panic(MTC RT_BOTCHED_MSG);
 	}
 	first->type = SK_REF;
@@ -5002,9 +5044,14 @@ rt_private void eif_interp_builtins (struct stopchunk *stack_cur, EIF_TYPED_VALU
 			iresult->it_int32 = eif_builtin_TYPE_type_id(icurrent->it_ref);
 			break;
 
-		case BC_BUILTIN_TYPE__RUNTIME_NAME:
+		case BC_BUILTIN_TYPE__RUNTIME_NAME__S1:
 			iresult->type = SK_REF;
-			iresult->it_ref = eif_builtin_TYPE_runtime_name(icurrent->it_ref);
+			iresult->it_ref = eif_builtin_TYPE_runtime_name__s1(icurrent->it_ref);
+			break;
+
+		case BC_BUILTIN_TYPE__RUNTIME_NAME__S4:
+			iresult->type = SK_REF;
+			iresult->it_ref = eif_builtin_TYPE_runtime_name__s4(icurrent->it_ref);
 			break;
 
 		case BC_BUILTIN_TYPE__GENERIC_PARAMETER_TYPE:
@@ -5068,8 +5115,13 @@ rt_private void eif_interp_basic_operations (struct stopchunk *stack_cur, EIF_TY
 			break;
 
 			/* `generator' and `generating_type' function calls */
-		case BC_GENERATOR:
-			eif_interp_generator (stack_cur, stack_top);
+		case BC_GENERATOR__S1:
+			eif_interp_generator__s1 (stack_cur, stack_top);
+			break;
+
+			/* `generator' and `generating_type' function calls */
+		case BC_GENERATOR__S4:
+			eif_interp_generator__s4 (stack_cur, stack_top);
 			break;
 
 			/* Offset operation on CHARACTER_8 and POINTER */

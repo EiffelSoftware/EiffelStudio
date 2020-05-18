@@ -2,7 +2,7 @@
 	description: "Byte code reader."
 	date:		"$Date$"
 	revision:	"$Revision$"
-	copyright:	"Copyright (c) 1985-2013, Eiffel Software."
+	copyright:	"Copyright (c) 1985-2020, Eiffel Software."
 	license:	"GPL version 2 see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"Commercial license is available at http://www.eiffel.com/licensing"
 	copying: "[
@@ -255,9 +255,13 @@ static  char    *builtin_op_names [] = {
 "BC_BUILTIN_TYPE__HAS_DEFAULT" ,
 "BC_BUILTIN_TYPE__DEFAULT" ,
 "BC_BUILTIN_TYPE__TYPE_ID" ,
-"BC_BUILTIN_TYPE__RUNTIME_NAME" ,
+"BC_BUILTIN_TYPE__RUNTIME_NAME__S1" ,
 "BC_BUILTIN_TYPE__GENERIC_PARAMETER_TYPE" ,
 "BC_BUILTIN_TYPE__GENERIC_PARAMETER_COUNT",
+"BC_BUILTIN_TYPE__IS_ATTACHED",
+"BC_BUILTIN_TYPE__IS_DEFERRED",
+"BC_BUILTIN_TYPE__IS_EXPANDED",
+"BC_BUILTIN_TYPE__RUNTIME_NAME__S4" ,
 };
 
 
@@ -265,7 +269,7 @@ static  char    *basic_op_names [] = {
 "",
 "BC_MAX" ,
 "BC_MIN" ,
-"BC_GENERATOR" ,
+"BC_GENERATOR__S1" ,
 "BC_OFFSET" ,
 "BC_ZERO" ,
 "BC_ONE",
@@ -276,6 +280,7 @@ static  char    *basic_op_names [] = {
 "BC_NAN",
 "BC_NEGATIVE_INFINITY",
 "BC_POSITIVE_INFINITY",
+"BC_GENERATOR__S4" ,
 };
 
 static  char    *bit_op_names [] = {

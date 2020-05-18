@@ -67,8 +67,10 @@ RT_LNK EIF_TYPE eif_compound_id (EIF_TYPE_INDEX current_dftype, const EIF_TYPE_I
 RT_LNK uint32 eif_tuple_count (EIF_REFERENCE tuple);
 RT_LNK uint32 eif_gen_count_with_dftype (EIF_TYPE_INDEX ftype);
 
-/* Full type name of an object as STRING object */
+/* Full type name of an object as STRING_8 object */
 RT_LNK EIF_REFERENCE eif_typename_of_type (EIF_TYPE ftype);
+/* Full type name of an object as STRING_32 object */
+RT_LNK EIF_REFERENCE eif_typename_of_type_32 (EIF_TYPE ftype);
 RT_LNK char * eif_typename (EIF_TYPE ftype);
 #define eif_typename_id(dftype)	eif_typename(eif_new_type(dftype, 0))
 

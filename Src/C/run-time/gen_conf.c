@@ -56,6 +56,7 @@ doc:<file name="gen_conf.c" header="eif_gen_conf.h" version="$Id$" summary="Gene
 #include "rt_interp.h"
 #endif
 #include "rt_globals_access.h"
+#include "rt_string.h"
 
 /*------------------------------------------------------------------*/
 /* Debugging flag. If set, the names of the generated types will be */
@@ -2008,7 +2009,7 @@ rt_private char *rt_none_name_type = "NONE";
 
 /*
 doc:	<routine name="eif_typename_of_type" return_type="EIF_REFERENCE" export="public">
-doc:		<summary>Given a type ID with annotations, returns the Eiffel string representation of that type.</summary>
+doc:		<summary>Given a type ID with annotations, returns the Eiffel 8-bit string representation of that type.</summary>
 doc:		<param name="ftype" type="EIF_TYPE">Dynamic type.</param>
 doc:		<return>Returns type name of `dftype'.</return>
 doc:		<thread_safety>Not Safe</thread_safety>
@@ -2018,12 +2019,29 @@ doc:	</routine>
 rt_public EIF_REFERENCE eif_typename_of_type (EIF_TYPE ftype)
 {
 	char    *name;
-	EIF_REFERENCE ret;	/* Return value. */
 
 	name = eif_typename (ftype);
+	return makestr(name, strlen(name));
+}
 
-	ret = makestr(name, strlen(name));
-	return ret;
+/*
+doc:	<routine name="eif_typename_of_type" return_type="EIF_REFERENCE" export="public">
+doc:		<summary>Given a type ID with annotations, returns the Eiffel 32-bit string representation of that type.</summary>
+doc:		<param name="ftype" type="EIF_TYPE">Dynamic type.</param>
+doc:		<return>Returns type name of `dftype'.</return>
+doc:		<thread_safety>Not Safe</thread_safety>
+doc:		<synchronization>None</synchronization>
+doc:	</routine>
+*/
+rt_public EIF_REFERENCE eif_typename_of_type_32 (EIF_TYPE ftype)
+{
+	EIF_REFERENCE result;
+
+	result = string_32_from_char_8 (eif_typename (ftype));
+	if (result == (EIF_REFERENCE) 0) {
+		enomem(MTC_NOARG);
+	}
+	return result;
 }
 
 rt_public char *rt_typename_id (EIF_TYPE_INDEX dftype)

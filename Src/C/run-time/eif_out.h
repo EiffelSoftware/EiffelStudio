@@ -2,7 +2,7 @@
 	description: "Include file for printing an Eiffel object."
 	date:		"$Date$"
 	revision:	"$Revision$"
-	copyright:	"Copyright (c) 1985-2007, Eiffel Software."
+	copyright:	"Copyright (c) 1985-2020, Eiffel Software."
 	license:	"GPL version 2 see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"Commercial license is available at http://www.eiffel.com/licensing"
 	copying: "[
@@ -52,10 +52,13 @@ extern "C" {
  * Function declarations 
  */
 
-RT_LNK EIF_REFERENCE  c_generator_of_type(EIF_TYPE ftype); /* Called by `generator' from ANY */
+RT_LNK EIF_REFERENCE  c_generator_of_type(EIF_TYPE ftype); /* Called by `generator: STRING_8` from ANY */
+RT_LNK EIF_REFERENCE  c_generator_of_type_32(EIF_TYPE ftype); /* Called by `generator: STRING_32` from ANY */
 #define c_generator(obj)	c_generator_of_type (eif_object_type(obj))
+#define c_generator_32(obj)	c_generator_of_type_32 (eif_object_type(obj))
 
-RT_LNK EIF_REFERENCE c_tagged_out(EIF_REFERENCE object);			/* Called by `tagged_out' from ANY */
+RT_LNK EIF_REFERENCE c_tagged_out(EIF_REFERENCE object);			/* Called by `tagged_out: STRING_8` from ANY */
+RT_LNK EIF_REFERENCE c_tagged_out_32(EIF_REFERENCE object);			/* Called by `tagged_out: STRING_32` from ANY */
 RT_LNK char *eif_out(EIF_REFERENCE object);		/* Build the output of an EIF_REFERENCE */
 extern char *build_out(EIF_REFERENCE object);		/* Build tagged out in C buffer */
 
@@ -71,6 +74,34 @@ RT_LNK EIF_REFERENCE c_outr32(EIF_REAL_32 f);
 RT_LNK EIF_REFERENCE c_outr64(EIF_REAL_64 d);
 RT_LNK EIF_REFERENCE c_outc(EIF_CHARACTER_8 c);
 RT_LNK EIF_REFERENCE c_outp(EIF_POINTER p);
+
+#define              eif_out__u1_s1 c_outu
+#define              eif_out__u2_s1 c_outu
+#define              eif_out__u4_s1 c_outu
+#define              eif_out__u8_s1 c_outu64
+#define              eif_out__i1_s1 c_outi
+#define              eif_out__i2_s1 c_outi
+#define              eif_out__i4_s1 c_outi
+#define              eif_out__i8_s1 c_outi64
+#define              eif_out__r4_s1 c_outr32
+#define              eif_out__r8_s1 c_outr64
+#define              eif_out__c1_s1 c_outc
+RT_LNK EIF_REFERENCE eif_out__c4_s1 (EIF_CHARACTER_32 c);
+#define              eif_out__p_s1  c_outp
+
+#define              eif_out__u1_s4 eif_out__u4_s4
+#define              eif_out__u2_s4 eif_out__u4_s4
+RT_LNK EIF_REFERENCE eif_out__u4_s4 (EIF_NATURAL_32 i);
+RT_LNK EIF_REFERENCE eif_out__u8_s4 (EIF_NATURAL_64 i);
+#define              eif_out__i1_s4 eif_out__i4_s4
+#define              eif_out__i2_s4 eif_out__i4_s4
+RT_LNK EIF_REFERENCE eif_out__i4_s4 (EIF_INTEGER_32 i);
+RT_LNK EIF_REFERENCE eif_out__i8_s4 (EIF_INTEGER_64 i);
+RT_LNK EIF_REFERENCE eif_out__r4_s4 (EIF_REAL_32 f);
+RT_LNK EIF_REFERENCE eif_out__r8_s4 (EIF_REAL_64 d);
+RT_LNK EIF_REFERENCE eif_out__c1_s4 (EIF_CHARACTER_8 c);
+RT_LNK EIF_REFERENCE eif_out__c4_s4 (EIF_CHARACTER_32 c);
+RT_LNK EIF_REFERENCE eif_out__p_s4  (EIF_POINTER p);
 
 #ifdef __cplusplus
 }

@@ -2,7 +2,7 @@
 	description: "Routines for printing an Eiffel object."
 	date:		"$Date$"
 	revision:	"$Revision$"
-	copyright:	"Copyright (c) 1985-2013, Eiffel Software."
+	copyright:	"Copyright (c) 1985-2020, Eiffel Software."
 	license:	"GPL version 2 see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"Commercial license is available at http://www.eiffel.com/licensing"
 	copying: "[
@@ -59,6 +59,7 @@ doc:<file name="out.c" header="eif_out.h" version="$Id$" summary="Routines for p
 #include <string.h>
 #include <stdio.h>
 #include "rt_globals_access.h"
+#include "rt_string.h"
 
 /*
  * Private declarations
@@ -106,6 +107,35 @@ doc:	</attribute>
 rt_private size_t tagged_len = 0;
 #endif /* EIF_THREADS */
 
+/*
+doc:	<routine name="rt_copy_s1_to_s4" return_type="void" export="private">
+doc:		<summary>Expand 1-byte sequence of given length to 4-byte sequence.</summary>
+doc:		<param name="p1" type="char*">Source.</param>
+doc:		<param name="p4" type="char*">Destination.</param>
+doc:		<param name="n" type="char*">Length.</param>
+doc:		<synchronization>None.</synchronization>
+doc:		<thread_safety>Safe.</thread_safety>
+doc:	</routine>
+*/
+rt_private rt_inline void rt_copy_s1_to_s4 (const char * p1, EIF_CHARACTER_32 * p4, int n) {
+	char c;
+
+	for (; n > 0; n--)
+	{
+		c = * (p1 ++);
+		* (p4 ++) = (EIF_CHARACTER_32)
+#			if BYTEORDER == 0x1234
+				c
+#			else
+				((c >> 24) & 0xff) |
+				((c >> 08) & 0xff00) |
+				((c << 08) & 0xff0000) |
+				((c << 24) & 0xff000000)
+#			endif
+			;
+	}
+}
+
 rt_private void write_string(const char *str);	/* Write a string in `tagged_out' */
 rt_private void write_char(EIF_CHARACTER_8 c);		/* Write a character */
 rt_private void write_attribute_character(EIF_CHARACTER_8 c);		/* Write a character as an Eiffel attribute */
@@ -124,7 +154,7 @@ rt_shared char *build_out(EIF_REFERENCE object);		/* Build `tagged_out' string *
 
 rt_public EIF_REFERENCE c_generator_of_type (EIF_TYPE ftype)
 	/* Class name associated with dynamic type `dftype'.
-	 * Return a reference on an Eiffel instance of STRING.
+	 * Return a reference on an Eiffel instance of STRING_8.
 	 */
 {
 	const char *generator;
@@ -132,10 +162,24 @@ rt_public EIF_REFERENCE c_generator_of_type (EIF_TYPE ftype)
 	return makestr (generator, strlen (generator));
 }
 
+rt_public EIF_REFERENCE c_generator_of_type_32 (EIF_TYPE ftype)
+	/* Class name associated with dynamic type `dftype`.
+	 * Return a reference on an Eiffel instance of STRING_32.
+	 */
+{
+	EIF_REFERENCE result;
+
+	result = string_32_from_char_8 (System (To_dtype(ftype.id)).cn_generator);
+	if (result == (EIF_REFERENCE) 0) {
+		enomem(MTC_NOARG);
+	}
+	return result;
+}
+
 rt_public EIF_REFERENCE c_tagged_out(EIF_REFERENCE object)
 {
 	/* Write a tagged out printing in an string.
-	 * Return a pointer on an Eiffel string object.
+	 * Return a pointer on an Eiffel 8-bit string object.
 	 */
 	RT_GET_CONTEXT
 	EIF_REFERENCE result;		/* The Eiffel string returned */
@@ -145,6 +189,27 @@ rt_public EIF_REFERENCE c_tagged_out(EIF_REFERENCE object)
 	eif_rt_xfree(tagged_out);	/* Buffer not needed anymore */
 
 	return result;		/* An Eiffel string */
+}
+
+rt_public EIF_REFERENCE c_tagged_out_32 (EIF_REFERENCE object)
+{
+	/* Write a tagged out printing in an string.
+	 * Return a pointer on an Eiffel 32-bit string object.
+	 */
+	RT_GET_CONTEXT
+	EIF_REFERENCE result;
+
+		/* Build 8-bit tagged out string for object. */
+	tagged_out = build_out(object);
+		/* Create 32-bit string from it. */
+	result = string_32_from_char_8 (tagged_out);
+		/* Release the temporary buffer. */
+	eif_rt_xfree(tagged_out);
+		/* Raise an exception if string could not be created. */
+	if (result == (EIF_REFERENCE) 0) {
+		enomem(MTC_NOARG);
+	}
+	return result;
 }
 
 rt_public char *eif_out (EIF_REFERENCE object)
@@ -674,13 +739,14 @@ rt_private void write_string(const char *str)
  * Building `out' representation for various data types.
  */
 
-rt_public EIF_REFERENCE c_outu(EIF_NATURAL_32 i)
+ rt_public EIF_REFERENCE c_outu(EIF_NATURAL_32 i)
 {
 	RT_GET_CONTEXT
 	register int len;
 	len = sprintf(buffero, "%u", i);
 	return makestr(buffero, len);
 }
+
 
 rt_public EIF_REFERENCE c_outu64(EIF_NATURAL_64 i)
 {
@@ -706,12 +772,137 @@ rt_public EIF_REFERENCE c_outi64(EIF_INTEGER_64 i)
 	return makestr(buffero, len);
 }
 
+rt_public EIF_REFERENCE eif_out__u4_s4 (EIF_NATURAL_32 i)
+{
+		/* Longest NATURAL_32 value is 0xFFFFFFFF, or 4'294'967'295 decimal. */
+		/* It requires at most 10 characters. */
+	EIF_CHARACTER_32 buffer [10];
+	register EIF_CHARACTER_32 * p;
+	register EIF_NATURAL_32 prev;
+
+	p = & (buffer [sizeof (buffer) / sizeof (buffer [0])]);
+	do {
+		prev = i;
+		i /= 10;
+		* (--p) = (EIF_CHARACTER_32) (prev - i * 10 + '0')
+#			if BYTEORDER != 0x1234
+				<< 24
+#			endif
+			;
+	} while (i > 0);
+	return RTMS32_EX ((char *) p, & (buffer [sizeof (buffer) / sizeof (buffer [0])]) - p);
+}
+
+rt_public EIF_REFERENCE eif_out__u8_s4 (EIF_NATURAL_64 i)
+{
+		/* Longest NATURAL_64 value is 0xFFFFFFFF_FFFFFFFF, or 18'446'744'073'709'551'615 decimal. */
+		/* It requires at most 20 characters. */
+	EIF_CHARACTER_32 buffer [20];
+	register EIF_CHARACTER_32 * p;
+	register EIF_NATURAL_64 prev;
+
+	p = & (buffer [sizeof (buffer) / sizeof (buffer [0])]);
+	do {
+		prev = i;
+		i /= 10;
+		* (--p) = (EIF_CHARACTER_32) (prev - i * 10 + '0')
+#			if BYTEORDER != 0x1234
+				<< 24
+#			endif
+			;
+	} while (i > 0);
+	return RTMS32_EX ((char *) p, & (buffer [sizeof (buffer) / sizeof (buffer [0])]) - p);
+}
+
+rt_public EIF_REFERENCE eif_out__i4_s4 (EIF_INTEGER_32 i)
+{
+		/* Longest INTEGER_32 value is -0x80000000, or -2'147'483'648 decimal. */
+		/* It requires at most 11 characters. */
+	EIF_CHARACTER_32 buffer [11];
+	register EIF_CHARACTER_32 * p;
+	register EIF_INTEGER_32 prev;
+
+	p = & (buffer [sizeof (buffer) / sizeof (buffer [0])]);
+	do {
+		prev = i;
+		i /= 10;
+		* (--p) = (EIF_CHARACTER_32) "9876543210123456789" [prev - i * 10 + 9]
+#			if BYTEORDER != 0x1234
+				<< 24
+#			endif
+			;
+	} while (i > 0);
+	if (prev < 0) {
+		* (--p) = (EIF_CHARACTER_32) '-'
+#			if BYTEORDER != 0x1234
+				<< 24
+#			endif
+			;
+	}
+	return RTMS32_EX ((char *) p, & (buffer [sizeof (buffer) / sizeof (buffer [0])]) - p);
+}
+
+rt_public EIF_REFERENCE eif_out__i8_s4 (EIF_INTEGER_64 i)
+{
+		/* Longest EIF_INTEGER_64 value is -0x80000000_00000000, or -9'223'372'036'854'775'808 decimal. */
+		/* It requires at most 20 characters. */
+	EIF_CHARACTER_32 buffer [20];
+	register EIF_CHARACTER_32 * p;
+	register EIF_INTEGER_64 prev;
+
+	p = & (buffer [sizeof (buffer) / sizeof (buffer [0])]);
+	* p = (EIF_CHARACTER_32) 0;
+	do {
+		prev = i;
+		i /= 10;
+		* (--p) = (EIF_CHARACTER_32) "9876543210123456789" [prev - i * 10 + 9]
+#			if BYTEORDER != 0x1234
+				<< 24
+#			endif
+			;
+	} while (i > 0);
+	if (prev < 0) {
+		* (--p) = (EIF_CHARACTER_32) '-'
+#			if BYTEORDER != 0x1234
+				<< 24
+#			endif
+			;
+	}
+	return RTMS32_EX ((char *) p, & (buffer [sizeof (buffer) / sizeof (buffer [0])]) - p);
+}
+
 rt_public EIF_REFERENCE c_outr32(EIF_REAL_32 f)
 {
 	RT_GET_CONTEXT
 	int len;
 	len = c_buffero_outr32(f);
 	return makestr(buffero, len);
+}
+
+rt_private const char * eif_string_nan = "N\0\0\0a\0\0\0N\0\0\0";
+rt_private const char * eif_string_p_infinity = "I\0\0\0n\0\0\0f\0\0\0i\0\0\0n\0\0\0i\0\0\0t\0\0\0y\0\0\0";
+rt_private const char * eif_string_n_infinity = "-\0\0\0I\0\0\0n\0\0\0f\0\0\0i\0\0\0n\0\0\0i\0\0\0t\0\0\0y\0\0\0";
+
+rt_public EIF_REFERENCE eif_out__r4_s4 (EIF_REAL_32 r)
+{
+		/* Maximum number of decimal digits is 9. */
+		/* Plus sign, dot, exponent symbol, exponent sign, 2 exponent digits, terminating 0. */
+	char buffer_1 [9 + 1 + 1 + 1 + 1 + 2 + 1];
+		/* Terminating 0 is not needed. */
+	EIF_CHARACTER_32 buffer_4 [sizeof buffer_1 - 1];
+	int n;
+
+	if (r != r) {
+		return RTMS32_EX (eif_string_nan, 3);
+	} else if (r == eif_real_32_negative_infinity) {
+		return RTMS32_EX (eif_string_n_infinity, 9);
+	} else if (r == eif_real_32_positive_infinity) {
+		return RTMS32_EX (eif_string_p_infinity, 8);
+	} else {
+		n = sprintf(buffer_1, "%g", r);
+		rt_copy_s1_to_s4 (buffer_1, buffer_4, n);
+		return RTMS32_EX ((char *) & buffer_4, n);
+	}
 }
 
 rt_public EIF_REFERENCE c_outr64(EIF_REAL_64 d)
@@ -722,9 +913,85 @@ rt_public EIF_REFERENCE c_outr64(EIF_REAL_64 d)
 	return makestr(buffero, len);
 }
 
+rt_public EIF_REFERENCE eif_out__r8_s4 (EIF_REAL_64 r)
+{
+		/* Maximum number of decimal digits is 17. */
+		/* Plus sign, dot, exponent symbol, exponent sign, 3 exponent digits, terminating 0. */
+	char buffer_1 [17 + 1 + 1 + 1 + 1 + 3 + 1];
+		/* Terminating 0 is not needed. */
+	EIF_CHARACTER_32 buffer_4 [sizeof buffer_1 - 1];
+	int n;
+
+	if (r != r) {
+		return RTMS32_EX (eif_string_nan, 3);
+	} else if (r == eif_real_64_negative_infinity) {
+		return RTMS32_EX (eif_string_n_infinity, 9);
+	} else if (r == eif_real_64_positive_infinity) {
+		return RTMS32_EX (eif_string_p_infinity, 8);
+	} else {
+		n = sprintf(buffer_1, "%.17g", r);
+		rt_copy_s1_to_s4 (buffer_1, buffer_4, n);
+		return RTMS32_EX ((char *) & buffer_4, n);
+	}
+}
+
 rt_public EIF_REFERENCE c_outc(EIF_CHARACTER_8 c)
 {
 	return makestr((char *) &c, 1);
+}
+
+rt_public EIF_REFERENCE eif_out__c1_s4 (EIF_CHARACTER_8 c)
+{
+	EIF_CHARACTER_32 buffer = (EIF_CHARACTER_32) c
+#			if BYTEORDER != 0x1234
+				<< 24
+#			endif
+			;
+	return RTMS32_EX ((char *) & buffer, 1);
+}
+
+rt_private const char * rt_hexadecimal_digit = "0123456789ABCDEF";
+
+rt_public EIF_REFERENCE eif_out__c4_s1 (EIF_CHARACTER_32 c)
+{
+		/* One byte requires 2 hexadecimal digits, plus leading U+ and terminating 0. */
+	char buffer [sizeof (EIF_CHARACTER_32) * 2 + 3];
+	int n;
+
+	if (c < 0x80) {
+			/* Plain ASCII code. */
+		return eif_out__c1_s1 ((EIF_CHARACTER_8) c);
+	}
+	buffer [sizeof buffer - 1] = '\0';
+	buffer [sizeof buffer - 2] = rt_hexadecimal_digit [c         & 0xF];
+	buffer [sizeof buffer - 3] = rt_hexadecimal_digit [(c >>  4) & 0xF];
+	buffer [sizeof buffer - 4] = rt_hexadecimal_digit [(c >>  8) & 0xF];
+	buffer [sizeof buffer - 5] = rt_hexadecimal_digit [(c >> 12) & 0xF];
+	buffer [sizeof buffer - 6] = rt_hexadecimal_digit [(c >> 16) & 0xF]; /* Optional. */
+	buffer [sizeof buffer - 7] = rt_hexadecimal_digit [(c >> 20) & 0xF]; /* Optional. */
+	buffer [sizeof buffer - 8] = rt_hexadecimal_digit [(c >> 24) & 0xF]; /* Optional. */
+	buffer [sizeof buffer - 9] = rt_hexadecimal_digit [(c >> 28) & 0xF]; /* Optional. */
+		/* Minimum 4 hexadecimal digits are required. */
+		/* Compute the number of optinal digits. */
+	n = ((c >> 16) && 1) + ((c >> 20) && 1) + ((c >> 24) && 1) + ((c >> 28) && 1);
+	buffer [(sizeof buffer - 6) - n] = '+';
+	buffer [(sizeof buffer - 7) - n] = 'U';
+	return makestr (& (buffer [(sizeof buffer - 7) - n]), n + 6);
+}
+
+rt_public EIF_REFERENCE eif_out__c4_s4 (EIF_CHARACTER_32 c)
+{
+	EIF_CHARACTER_32 buffer =
+#			if BYTEORDER == 0x1234
+				c
+#			else
+				((c >> 24) & 0xff) |
+				((c >> 08) & 0xff00) |
+				((c << 08) & 0xff0000) |
+				((c << 24) & 0xff000000)
+#			endif
+			;
+	return RTMS32_EX ((char *) & buffer, 1);
 }
 
 rt_public EIF_REFERENCE c_outp(EIF_POINTER p)
@@ -733,6 +1000,19 @@ rt_public EIF_REFERENCE c_outp(EIF_POINTER p)
 	register int len;
 	len = sprintf(buffero, "0x%" EIF_POINTER_DISPLAY, (rt_uint_ptr) p);
 	return makestr(buffero, len);
+}
+
+rt_public EIF_REFERENCE eif_out__p_s4 (EIF_POINTER p)
+{
+		/* One byte requires 2 hexadecimal digits, plus leading 0x and terminating 0. */
+	char buffer_1 [sizeof (rt_uint_ptr) * 2 + 3];
+		/* Terminating 0 is not needed. */
+	EIF_CHARACTER_32 buffer_4 [sizeof buffer_1 - 1];
+	int n;
+
+	n = sprintf(buffer_1, "0x%" EIF_POINTER_DISPLAY, (rt_uint_ptr) p);
+	rt_copy_s1_to_s4 (buffer_1, buffer_4, n);
+	return RTMS32_EX ((char *) & buffer_4, n);
 }
 
 rt_shared int c_buffero_outr32 (EIF_REAL_32 f)

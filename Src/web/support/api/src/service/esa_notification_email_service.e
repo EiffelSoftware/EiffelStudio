@@ -161,6 +161,7 @@ feature -- Basic Operations
 						l_email.add_bcc_address (ic.item)
 					end
 				end
+				l_email.add_header_line ("X-ESA-report-id: " + a_report.id.out)
 				l_email.add_header_line ("MIME-Version: 1.0")
 				l_email.add_header_line ("Content-Type: text/plain; charset=UTF-8")
 				mailer.safe_process_email (l_email)
@@ -195,6 +196,7 @@ feature -- Basic Operations
 						create l_email.make (user_mail (a_user.displayed_name), ll_email, report_email_subject (a_report, l_interactions.count), l_message)
 
 					end
+					l_email.add_header_line ("X-ESA-report-id: " + a_report.id.out)
 					l_email.add_header_line ("MIME-Version: 1.0")
 					l_email.add_header_line ("Content-Type: text/plain; charset=UTF-8")
 

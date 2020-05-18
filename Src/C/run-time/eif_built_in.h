@@ -375,7 +375,7 @@ rt_private rt_inline EIF_BOOLEAN rt_is_special_copy_semantics_item (EIF_INTEGER_
 #define eif_builtin_ISE_RUNTIME_field_static_type_of_type(i,enc_ftype)	eif_encoded_type(ei_field_static_type_of_type(i - 1, enc_ftype))
 #define eif_builtin_ISE_RUNTIME_field_type_of_type(i,enc_ftype)		ei_field_type_of_type(i - 1, enc_ftype)
 #define eif_builtin_ISE_RUNTIME_generating_type_of_type(enc_ftype)	eif_typename_of_type(eif_decoded_type(enc_ftype))
-#define eif_builtin_ISE_RUNTIME_generating_type_of_type_8(enc_ftype)	eif_typename_of_type(eif_decoded_type(enc_ftype))
+#define eif_builtin_ISE_RUNTIME_generating_type_8_of_type(enc_ftype)	eif_typename_of_type(eif_decoded_type(enc_ftype))
 #define eif_builtin_ISE_RUNTIME_is_copy_semantics_field(i,obj,offs)	rt_is_copy_semantics_field(i,obj,offs)
 #define eif_builtin_ISE_RUNTIME_is_expanded(obj)					eif_is_expanded(HEADER(obj)->ov_flags)
 #define eif_builtin_ISE_RUNTIME_is_special(obj)						ei_special(obj)

@@ -11,7 +11,7 @@ feature -- Feature specific to ISE runtime.
 			"return c_generator_of_type(eif_decoded_type($a_type_id));"
 		end
 
-	generator_of_type_8 (a_type_id: INTEGER): STRING_8
+	generator_8_of_type (a_type_id: INTEGER): STRING_8
 			-- Name of the generating class of current object
 		external
 			"C inline use %"eif_out.h%""

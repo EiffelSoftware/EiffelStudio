@@ -23,7 +23,7 @@ feature -- Feature specific to ISE runtime.
 			instance_free: class
 		end
 
-	frozen generator_of_type_8 (a_type_id: INTEGER): STRING_8
+	frozen generator_8_of_type (a_type_id: INTEGER): STRING_8
 			-- Name of the generating class of current object.
 		external
 			"built_in static"
@@ -46,7 +46,7 @@ feature -- Feature specific to ISE runtime.
 			instance_free: class
 		end
 
-	frozen generating_type_of_type_8 (a_type_id: INTEGER): STRING_8
+	frozen generating_type_8_of_type (a_type_id: INTEGER): STRING_8
 		external
 			"built_in static"
 		alias "generating_type_of_type"

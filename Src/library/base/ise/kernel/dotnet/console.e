@@ -36,6 +36,7 @@ class CONSOLE inherit
 				put_natural_8, put_natural_16, put_natural, put_natural_32, put_natural_64,
 				dispose, before, readable, is_closed, extendible, is_open_write
 		redefine
+			initialize_encoding, detect_encoding,
 			back,
 			close,
 			count,
@@ -85,6 +86,21 @@ feature -- Initialization
 			make_with_name (fn)
 			internal_stream := {SYSTEM_CONSOLE}.open_standard_error
 			set_write_mode
+		end
+
+	initialize_encoding
+			-- <Precursor/>
+		do
+			Precursor
+			encoding := {SYSTEM_ENCODINGS}.console_encoding
+		end
+
+feature -- Encoding
+
+	detect_encoding
+			-- <Precursor/>
+		do
+			encoding := {SYSTEM_ENCODINGS}.console_encoding
 		end
 
 feature -- Cursor movement
@@ -271,7 +287,7 @@ feature {NONE} -- Inapplicable
 
 note
 	library:	"EiffelBase: Library of reusable components for Eiffel."
-	copyright:	"Copyright (c) 1984-2018, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2020, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

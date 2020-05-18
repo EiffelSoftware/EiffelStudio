@@ -11,6 +11,14 @@ feature -- Feature specific to ISE runtime.
 			"return c_generator_of_type(eif_decoded_type($a_type_id));"
 		end
 
+	generator_of_type_8 (a_type_id: INTEGER): STRING_8
+			-- Name of the generating class of current object
+		external
+			"C inline use %"eif_out.h%""
+		alias
+			"return c_generator_of_type(eif_decoded_type($a_type_id));"
+		end
+
 	check_assert (b: BOOLEAN): BOOLEAN
 		external
 			"C use %"eif_copy.h%""
@@ -64,7 +72,7 @@ feature -- Internal C routines
 			"eif_set_pre_ecma_mapping($v)"
 		end
 
-	storable_version_of_type (a_type_id: INTEGER): detachable STRING
+	storable_version_of_type (a_type_id: INTEGER): detachable STRING_8
 		external
 			"C inline use %"eif_eiffel.h%""
 		alias

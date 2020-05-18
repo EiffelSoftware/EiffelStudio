@@ -102,7 +102,7 @@ feature -- Comparison
 			Result := other.item = item
 		end
 
-	three_way_comparison (other: like Current): INTEGER
+	three_way_comparison alias "⋚" (other: like Current): INTEGER
 			-- If current object equal to `other', 0;
 			-- if smaller, -1; if greater, 1
 		do
@@ -285,21 +285,21 @@ feature -- Basic operations
 			Result.set_item (item + other.item)
 		end
 
-	minus alias "-" (other: like Current): like Current
+	minus alias "-" alias "−" (other: like Current): like Current
 			-- Result of subtracting `other'
 		do
 			create Result
 			Result.set_item (item - other.item)
 		end
 
-	product alias "*" (other: like Current): like Current
+	product alias "*" alias "×" (other: like Current): like Current
 			-- Product with `other'
 		do
 			create Result
 			Result.set_item (item * other.item)
 		end
 
-	quotient alias "/" (other: like Current): like Current
+	quotient alias "/" alias "÷" (other: like Current): like Current
 			-- Division by `other'
 		do
 			create Result
@@ -319,7 +319,7 @@ feature -- Basic operations
 			Result.set_item (+ item)
 		end
 
-	opposite alias "-": like Current
+	opposite alias "-" alias "−": like Current
 			-- Unary minus
 		do
 			create Result
@@ -354,7 +354,7 @@ invariant
 	sign_times_abs: not item.is_nan implies sign * abs = item
 
 note
-	copyright: "Copyright (c) 1984-2017, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2020, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

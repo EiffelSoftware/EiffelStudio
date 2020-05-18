@@ -257,11 +257,22 @@ feature {NONE} -- Implementation
 
 	user_mail (a_name: STRING): STRING
 			-- Construct the from email of a user `a_name' as "a_name <admin_mail>".
+		local
+			l_email: like admin_email
+			i,j: INTEGER
 		do
-			create Result.make (a_name.count + 3 + admin_email.count)
+			l_email := admin_email
+			j := l_email.last_index_of ('>', l_email.count)
+			if j > 0 and j = l_email.count then
+				i := l_email.last_index_of ('<', j - 1)
+				if i > 0 and j > i then
+					l_email := l_email.substring (i + 1, j - 1)
+				end
+			end
+			create Result.make (a_name.count + 3 + l_email.count)
 			Result.append (a_name)
 			Result.append_character ('<')
-			Result.append (admin_email)
+			Result.append (l_email)
 			Result.append_character ('>')
 		end
 

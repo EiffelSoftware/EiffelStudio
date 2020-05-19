@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "Description of a manifest string constant."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -83,7 +83,7 @@ feature {INTERNAL_COMPILER_STRING_EXPORTER, STRING_VALUE_I} -- Access
 		require
 			is_valid_as_string_8: not is_string_32 implies string_value_32.is_valid_as_string_8
 		do
-			Result := string_value_32.as_string_8
+			Result := string_value_32.to_string_8
 		ensure
 			Result_set: Result /= Void
 		end
@@ -144,30 +144,13 @@ feature -- Code generation
 		local
 			buf: GENERATION_BUFFER
 			l_value: STRING_8
-			l_value_32: like string_value_32
 		do
 				-- RTMS_EX is the macro used to create Eiffel strings from C ones
 				-- RTMS32_EX_H is the macro used to create STRING_32 from C ones
-			buf := buffer
 			if is_string_32 then
-				l_value_32 := string_value_32
-				l_value := encoding_converter.string_32_to_stream (l_value_32)
-				if is_immutable_string then
-					buf.put_string ({C_CONST}.rtmis32_ex_h)
-				else
-					buf.put_string ({C_CONST}.rtms32_ex_h)
-				end
-
-				buf.put_character ('(')
-				buf.put_string_literal (l_value)
-				buf.put_character(',')
-
-				buf.put_integer(l_value_32.count)
-				buf.put_character(',')
-
-				buf.put_integer (l_value_32.hash_code)
-				buf.put_character(')')
+				buffer.generate_manifest_string_32 (string_value_32, is_immutable_string)
 			else
+				buf := buffer
 				l_value := string_value_8
 				if is_immutable_string then
 					buf.put_string ({C_CONST}.rtmis8_ex_h)
@@ -296,7 +279,7 @@ invariant
 	string_value_set: string_value /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2019, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2020, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

@@ -11,6 +11,8 @@ class
 inherit
 	STRING_HANDLER
 
+	SHARED_ENCODING_CONVERTER
+
 create
 	make
 
@@ -606,6 +608,20 @@ feature -- Automatically indented output
 			escape_string (current_buffer, s)
 		end
 
+	generate_manifest_string_32 (value: STRING_32; is_immutable: BOOLEAN)
+			-- Generate code that creates a new string with the content specified by `value`.
+			-- The new string is of immutable variant if `is_immutable`.
+		do
+			put_string (if is_immutable then {C_CONST}.rtmis32_ex_h else {C_CONST}.rtms32_ex_h end)
+			put_character ('(')
+			put_string_literal (encoding_converter.string_32_to_stream (value))
+			put_character(',')
+			put_integer(value.count)
+			put_character(',')
+			put_integer (value.hash_code)
+			put_character(')')
+		end
+
 	put_gtcx
 			-- Add GTCX macro.
 		do
@@ -767,7 +783,7 @@ feature -- prototype code generation
 
 feature {GENERATION_BUFFER} -- prototype code generation
 
-	generate_function_declaration (type: STRING; f_name: STRING; extern: BOOLEAN; arg_types: ARRAY [STRING])
+	generate_function_declaration (type: STRING; f_name: READABLE_STRING_8; extern: BOOLEAN; arg_types: ARRAY [STRING])
 				-- Generate funtion declaration using macros
 		require
 			type_not_void: type /= Void
@@ -957,7 +973,7 @@ invariant
 	buffers_not_void: buffers /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2019, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2020, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

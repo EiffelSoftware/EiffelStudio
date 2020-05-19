@@ -1,11 +1,10 @@
 note
 
-	description:
-		"Terminal window that redirects output to a file."
+	description: "Terminal window that redirects output to a file."
 	legal: "See notice at end of class."
-	status: "See notice at end of class.";
-	date: "$Date$";
-	revision: "$Revision $"
+	status: "See notice at end of class."
+	date: "$Date$"
+	revision: "$Revision$"
 
 class FILE_WINDOW
 
@@ -32,7 +31,7 @@ feature -- Element change
 	put_string (s: READABLE_STRING_GENERAL)
 			--
 		do
-			file_put_string (s.as_string_8)
+			put_string_general (s)
 		end
 
 feature -- Output
@@ -57,7 +56,7 @@ feature -- Output
 		end;
 
 note
-	copyright:	"Copyright (c) 1984-2017, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2020, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
@@ -88,4 +87,4 @@ note
 			Customer support http://support.eiffel.com
 		]"
 
-end -- class FILE_WINDOW
+end

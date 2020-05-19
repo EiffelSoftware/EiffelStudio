@@ -88,7 +88,7 @@ feature -- Basic operations
 			end
 		end
 
-	remove_entry (entry: STRING)
+	remove_entry (entry: READABLE_STRING_8)
 			-- Remove 'entry'
 		require
 			has_entry: entries.has (entry)
@@ -106,7 +106,7 @@ feature -- Basic operations
 
 feature {NONE} -- Implementation
 
-	from_array_to_entries (src: ARRAY [STRING])
+	from_array_to_entries (src: ARRAY [READABLE_STRING_8])
 			-- Convert 'array' into entries.
 		require
 			entries_exists: entries /= Void
@@ -119,7 +119,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2019, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2020, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

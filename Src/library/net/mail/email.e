@@ -74,7 +74,7 @@ feature -- Recipient change
 
 feature -- Status report
 
-	has_header_entry (header_key: STRING): BOOLEAN
+	has_header_entry (header_key: STRING_8): BOOLEAN
 		do
 			Result:= headers.has (header_key)
 		end
@@ -94,7 +94,7 @@ feature -- Entries changes
 			end
 		end
 
-	add_header_entries (header_key: STRING; header_entries: ITERABLE [READABLE_STRING_8])
+	add_header_entries (header_key: STRING_8; header_entries: ITERABLE [READABLE_STRING_8])
 			-- Add multiple 'header_entries' at once  to 'header_key',
 			-- If not such header exists. create it.
 		do
@@ -105,7 +105,7 @@ feature -- Entries changes
 			end
 		end
 
-	remove_header_entry (header_key, header_entry: STRING)
+	remove_header_entry (header_key, header_entry: STRING_8)
 			-- Remove 'header_entry' from header 'header_key' if present.
 		do
 			if attached headers.item (header_key) as l_header then
@@ -116,7 +116,7 @@ feature -- Entries changes
 				attached headers.item (header_key) as l_header_after implies not l_header_after.entries.has (header_entry)
 		end
 
-	remove_header_entries (header_key: STRING)
+	remove_header_entries (header_key: STRING_8)
 			-- Remove all header entries from header 'header_key' if present.	
 		do
 			if attached headers.item (header_key) as l_header then
@@ -203,7 +203,7 @@ feature -- Implementation (EMAIL_RESOURCE)
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2019, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2020, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

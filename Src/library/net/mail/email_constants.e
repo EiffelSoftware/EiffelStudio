@@ -1,8 +1,6 @@
-note
-	description: "Objects that ..."
+﻿note
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
-	author: ""
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -11,23 +9,23 @@ class
 
 feature -- Constants for SMTP Protocol
 
-	Helo: STRING = "HELO "
+	Helo: STRING_8 = "HELO "
 
-	Ehlo: STRING = "EHLO "
+	Ehlo: STRING_8 = "EHLO "
 
-	Data: STRING = "DATA"
+	Data: STRING_8 = "DATA"
 
-	Mail_from: STRING = "MAIL FROM: "
+	Mail_from: STRING_8 = "MAIL FROM: "
 
-	Mail_to: STRING = "RCPT TO: "
+	Mail_to: STRING_8 = "RCPT TO: "
 
-	Mail_cc: STRING = "RCPT CC:"
+	Mail_cc: STRING_8 = "RCPT CC:"
 
-	Mail_bcc: STRING = "RCPT BCC:"
+	Mail_bcc: STRING_8 = "RCPT BCC:"
 
-	Mail_reply_to: STRING = "RCPT REPLY TO:"
+	Mail_reply_to: STRING_8 = "RCPT REPLY TO:"
 
-	Quit: STRING = "QUIT"
+	Quit: STRING_8 = "QUIT"
 
 	Ack_begin_connection: INTEGER = 220
 
@@ -47,21 +45,21 @@ feature -- Constants for SMTP Protocol
 
 feature -- Constants for email headers (Authorized keys for the Hashtables)
 
-	H_to: STRING = "To"
+	H_to: STRING_8 = "To"
 
-	H_from: STRING = "From"
+	H_from: STRING_8 = "From"
 
-	H_cc: STRING = "Cc"
+	H_cc: STRING_8 = "Cc"
 
-	H_bcc: STRING = "Bcc"
+	H_bcc: STRING_8 = "Bcc"
 
-	H_subject: STRING = "Subject"
+	H_subject: STRING_8 = "Subject"
 
-	H_reply_to: STRING = "Reply-to"
+	H_reply_to: STRING_8 = "Reply-to"
 
-	H_date: STRING = "Date"
+	H_date: STRING_8 = "Date"
 
-	Default_headers: ARRAY [STRING]
+	Default_headers: ARRAY [STRING_8]
 		obsolete
 			"Use one of the `H_xxx` constants instead [2017-05-31]."
 		once
@@ -69,7 +67,7 @@ feature -- Constants for email headers (Authorized keys for the Hashtables)
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2017, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2020, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

@@ -134,7 +134,7 @@ feature {NONE} -- Basic operations
 	decode (a_socket: attached like socket)
 			-- Retrieve response from server and set `smtp_code_number'.
 		local
-			response: STRING
+			response: STRING_8
 		do
 			from
 				a_socket.read_line
@@ -157,7 +157,7 @@ feature {NONE} -- Basic operations
 			smtp_reply_set: smtp_reply /= Void
 		end
 
-	send_command (s: STRING; expected_code: INTEGER)
+	send_command (s: STRING_8; expected_code: INTEGER)
 			-- Send a string 's' to the server and result the code response.
 		require
 			s_not_void: s /= Void
@@ -258,7 +258,7 @@ feature {NONE} -- Basic operations
 			key_exists: memory_resource.headers.has (sub_header_key)
 		local
 			l_entries: like {HEADER}.entries
-			l_entry: STRING
+			l_entry: STRING_8
 		do
 				-- BCC email addresses must be listed in the RCPT TO command list,
 				-- but the BCC header should not be printed under the DATA command.
@@ -334,7 +334,7 @@ feature {NONE} -- Access
 	recipients: detachable ARRAYED_LIST [READABLE_STRING_8]
 		-- Header to use with the command 'Mail_to', it contains the "TO", "CC" and "BCC" fields.
 
-	sub_header: STRING
+	sub_header: STRING_8
 		-- Sub_header: data before the message.
 
 feature {NONE} -- Implementation
@@ -358,7 +358,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2019, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2020, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

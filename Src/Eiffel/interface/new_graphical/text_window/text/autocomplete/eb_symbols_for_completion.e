@@ -51,7 +51,7 @@ create {NAME_FOR_COMPLETION}
 
 feature {NONE} -- Initialization
 
-	make (a_name: READABLE_STRING_GENERAL; a_symbol: CHARACTER_32)
+	make (a_name: READABLE_STRING_GENERAL; a_symbol: READABLE_STRING_32)
 			-- Create feature name with value `name'
 		local
 			n: STRING_32
@@ -65,12 +65,12 @@ feature {NONE} -- Initialization
 
 	make_parent (a_name: READABLE_STRING_GENERAL)
 		do
-			make (a_name, '%U')
+			make (a_name, {STRING_32} "%U")
 		end
 
 feature -- Access
 
-	symbol: CHARACTER_32
+	symbol: READABLE_STRING_32
 
 	title: IMMUTABLE_STRING_32
 
@@ -78,12 +78,14 @@ feature -- Access
 
 	insert_name: STRING_32
 			-- Name to insert in editor
+		local
+			l_symbol: like symbol
 		do
-			if symbol = '%U' then
+			l_symbol := symbol
+			if l_symbol.is_empty or else l_symbol [1] = '%U' then
 				create Result.make_empty
 			else
-				create Result.make (1)
-				Result.append_character (symbol)
+				create Result.make_from_string (l_symbol)
 			end
 		end
 
@@ -116,7 +118,7 @@ feature -- Query
 			if symbol /= '%U' then
 				s.append_character (':')
 				s.append_character (' ')
-				s.append_character (symbol)
+				s.append (symbol)
 			end
 
 			create Result.make_with_text (s)
@@ -125,10 +127,12 @@ feature -- Query
 
 	tooltip_text: STRING_32
 			-- <Precursor>
+		local
+			c: CHARACTER_32
 		do
 			create Result.make (title.count)
 			if symbol /= '%U' then
-				Result.append_character (symbol)
+				Result.append (symbol)
 				Result.append_character (' ')
 				Result.append_character (':')
 				Result.append_character (' ')
@@ -140,9 +144,23 @@ feature -- Query
 					Result.append_character (')')
 				end
 				Result.append_character ('%N')
-				Result.append ("Eiffel code: %'%%/")
-				Result.append (symbol.natural_32_code.out)
-				Result.append ("/%'%N")
+				if symbol.count = 1 then
+					Result.append ("Eiffel code: %'%%/")
+					c := symbol [1]
+					Result.append (c.natural_32_code.out)
+					Result.append ("/%'%N")
+				else
+					Result.append ("Eiffel code: %"")
+					across
+						symbol as ic
+					loop
+						c := ic.item
+						Result.append ("%%/")
+						Result.append (c.natural_32_code.out)
+						Result.append ("/")
+					end
+					Result.append ("%"%N")
+				end
 			else
 				Result.append ("%NList of unicode symbols...")
 			end
@@ -182,7 +200,7 @@ feature {NONE} -- Implementation
 invariant
 
 note
-	copyright:	"Copyright (c) 1984-2019, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2020, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

@@ -17,7 +17,7 @@ class
 inherit
 	EIFFEL_LAYOUT
 
-	TABLE_ITERABLE [CHARACTER_32, READABLE_STRING_GENERAL]
+	TABLE_ITERABLE [STRING_32, READABLE_STRING_GENERAL]
 
 create
 	make
@@ -33,11 +33,11 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	items: STRING_TABLE [CHARACTER_32]
+	items: STRING_TABLE [STRING_32]
 
-	sections: STRING_TABLE [LIST [TUPLE [symbol: CHARACTER_32; description: READABLE_STRING_GENERAL]]]
+	sections: STRING_TABLE [LIST [TUPLE [symbol: STRING_32; description: READABLE_STRING_GENERAL]]]
 
-	new_cursor: TABLE_ITERATION_CURSOR [CHARACTER_32, READABLE_STRING_GENERAL]
+	new_cursor: TABLE_ITERATION_CURSOR [STRING_32, READABLE_STRING_GENERAL]
 			-- Fresh cursor associated with current structure
 		do
 			Result := items.new_cursor
@@ -58,8 +58,8 @@ feature {NONE} -- Persistency
 			l_line: STRING
 			s32: STRING_32
 			l_section_name: STRING
-			l_section_list: detachable LIST [TUPLE [symbol: CHARACTER_32; description: READABLE_STRING_GENERAL]]
-			ch: CHARACTER_32
+			l_section_list: detachable LIST [TUPLE [symbol: STRING_32; description: READABLE_STRING_GENERAL]]
+			symb: STRING_32
 			i,j: INTEGER
 		do
 			p := eiffel_layout.eifinit_path.extended ("unicode_symbols.cfg")
@@ -71,7 +71,7 @@ feature {NONE} -- Persistency
 			l_section_name := "Default"
 			l_section_list := sections [l_section_name]
 			if l_section_list = Void then
-				create {ARRAYED_LIST [TUPLE [symbol: CHARACTER_32; desc: READABLE_STRING_GENERAL]]} l_section_list.make (10)
+				create {ARRAYED_LIST [TUPLE [symbol: STRING_32; desc: READABLE_STRING_GENERAL]]} l_section_list.make (10)
 				sections.put (l_section_list, l_section_name)
 			end
 
@@ -96,7 +96,7 @@ feature {NONE} -- Persistency
 								l_section_name.adjust
 								l_section_list := sections [l_section_name]
 								if l_section_list = Void then
-									create {ARRAYED_LIST [TUPLE [symbol: CHARACTER_32; desc: READABLE_STRING_GENERAL]]} l_section_list.make (10)
+									create {ARRAYED_LIST [TUPLE [symbol: STRING_32; desc: READABLE_STRING_GENERAL]]} l_section_list.make (10)
 									sections.put (l_section_list, l_section_name)
 								end
 
@@ -108,23 +108,22 @@ feature {NONE} -- Persistency
 						end
 					else
 							-- format: `character code`:`name`
-						ch := '%U'
+						symb := Void
 						s32 := Void
 						i := l_line.index_of (':', 1)
 						if i > 0 then
-							ch := character_from_string (l_line.head (i - 1))
+							symb := symbol_from_string (l_line.head (i - 1))
 							s32 := utf.utf_8_string_8_to_string_32 (l_line.substring (i + 1, l_line.count))
 							s32.left_adjust
 						else
-							ch := character_from_string (l_line)
+							symb := symbol_from_string (l_line)
 						end
-						if ch /= '%U' then
+						if symb /= Void and then not symb.is_empty and then symb [1] /= '%U' then
 							if s32 = Void then
-								create s32.make (1)
-								s32.extend (ch)
+								s32 := symb
 							end
-							items [s32] := ch
-							l_section_list.force ([ch, s32])
+							items [s32] := symb
+							l_section_list.force ([symb, s32])
 						end
 					end
 				end
@@ -132,50 +131,75 @@ feature {NONE} -- Persistency
 			else
 					-- Hardcoded
 					-- Miscellaneous mathematical symbols
-				items ["For all"] := {CHARACTER_32} '%/8704/'
-				items ["Complement"] := {CHARACTER_32} '%/8705/'
-				items ["Partial differential"] := {CHARACTER_32} '%/8706/'
-				items ["There exists"] := {CHARACTER_32} '%/8707/'
-				items ["There does not exists"] := {CHARACTER_32} '%/8708/'
-				items ["Empty set"] := {CHARACTER_32} '%/8709/'
-				items ["Increment"] := {CHARACTER_32} '%/8710/'
-				items ["Nabla"] := {CHARACTER_32} '%/8711/'
+				items ["For all"] := {STRING_32} "%/8704/"
+				items ["Complement"] := {STRING_32} "%/8705/"
+				items ["Partial differential"] := {STRING_32} "%/8706/"
+				items ["There exists"] := {STRING_32} "%/8707/"
+				items ["There does not exists"] := {STRING_32} "%/8708/"
+				items ["Empty set"] := {STRING_32} "%/8709/"
+				items ["Increment"] := {STRING_32} "%/8710/"
+				items ["Nabla"] := {STRING_32} "%/8711/"
 					-- Set membership
-				items ["Element_of"] := {CHARACTER_32} '%/8712/'
-				items ["Not an element of"] := {CHARACTER_32} '%/8713/'
-				items ["Small element of"] := {CHARACTER_32} '%/8714/'
-				items ["Contains as member"] := {CHARACTER_32} '%/8715/'
-				items ["Does not contain as member"] := {CHARACTER_32} '%/8716/'
+				items ["Element_of"] := {STRING_32} "%/8712/"
+				items ["Not an element of"] := {STRING_32} "%/8713/"
+				items ["Small element of"] := {STRING_32} "%/8714/"
+				items ["Contains as member"] := {STRING_32} "%/8715/"
+				items ["Does not contain as member"] := {STRING_32} "%/8716/"
 					-- Miscellaneous mathematical symbol
-				items ["End of proof"] := {CHARACTER_32} '%/8717/'
+				items ["End of proof"] := {STRING_32} "%/8717/"
 					-- N-ary operators
-				items ["N-ary product"] := {CHARACTER_32} '%/8718/'
-				items ["N-ary coproduct"] := {CHARACTER_32} '%/8719/'
-				items ["N-ary summation"] := {CHARACTER_32} '%/8720/'
+				items ["N-ary product"] := {STRING_32} "%/8718/"
+				items ["N-ary coproduct"] := {STRING_32} "%/8719/"
+				items ["N-ary summation"] := {STRING_32} "%/8720/"
 					-- ...
 					-- Operators
-				items ["Minus sign"] := {CHARACTER_32} '%/8721/'
-				items ["Minus-or-plus sign"] := {CHARACTER_32} '%/8722/'
-				items ["Dot plus"] := {CHARACTER_32} '%/8723/'
+				items ["Minus sign"] := {STRING_32} "%/8721/"
+				items ["Minus-or-plus sign"] := {STRING_32} "%/8722/"
+				items ["Dot plus"] := {STRING_32} "%/8723/"
 					-- ..
-				items ["Ring operator"] := {CHARACTER_32} '%/8728/'
-				items ["Bullet operator"] := {CHARACTER_32} '%/8729/'
-				items ["Square root"] := {CHARACTER_32} '%/8730/'
-				items ["Cube root"] := {CHARACTER_32} '%/8731/'
-				items ["Fourth root"] := {CHARACTER_32} '%/8732/'
-				items ["Proportional to"] := {CHARACTER_32} '%/8733/'
+				items ["Ring operator"] := {STRING_32} "%/8728/"
+				items ["Bullet operator"] := {STRING_32} "%/8729/"
+				items ["Square root"] := {STRING_32} "%/8730/"
+				items ["Cube root"] := {STRING_32} "%/8731/"
+				items ["Fourth root"] := {STRING_32} "%/8732/"
+				items ["Proportional to"] := {STRING_32} "%/8733/"
 					-- Miscellaneous mathematical symbol
-				items ["Infinity"] := {CHARACTER_32} '%/8734/'
+				items ["Infinity"] := {STRING_32} "%/8734/"
 					-- ..
 					-- Logical and set operators
-				items ["Logical AND"] := {CHARACTER_32} '%/8743/'
-				items ["Logical OR"] := {CHARACTER_32} '%/8744/'
-				items ["Intersection"] := {CHARACTER_32} '%/8745/'
-				items ["Union"] := {CHARACTER_32} '%/8746/'
+				items ["Logical AND"] := {STRING_32} "%/8743/"
+				items ["Logical OR"] := {STRING_32} "%/8744/"
+				items ["Intersection"] := {STRING_32} "%/8745/"
+				items ["Union"] := {STRING_32} "%/8746/"
 				across
 					items as ic
 				loop
 					l_section_list.extend ([ic.item, ic.key])
+				end
+			end
+		end
+
+	symbol_from_string (s: READABLE_STRING_8): STRING_32
+		local
+			i,j: INTEGER
+		do
+			j := s.index_of ('+', 1)
+			if j = 0 then
+				create Result.make (1)
+				Result.append_character (character_from_string (s))
+			else
+				create Result.make (s.occurrences ('+') + 1)
+				from
+					i := 1
+				until
+					j = 0
+				loop
+					Result.append_character (character_from_string (s.substring (i, j - 1)))
+					i := j + 1
+					j := s.index_of ('+', i)
+					if j = 0 and i < s.count then
+						j := s.count + 1
+					end
 				end
 			end
 		end
@@ -203,7 +227,7 @@ feature {NONE} -- Persistency
 		end
 
 note
-	copyright: "Copyright (c) 1984-2019, Eiffel Software"
+	copyright: "Copyright (c) 1984-2020, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

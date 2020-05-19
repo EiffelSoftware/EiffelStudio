@@ -1277,7 +1277,7 @@ feature {NONE} -- String matching
 			n: EB_SYMBOLS_FOR_COMPLETION
 		do
 			tb := unicode_symbols
-			create Result.make_filled (create {EB_SYMBOLS_FOR_COMPLETION}.make ("_", '_'), 1, tb.count)
+			create Result.make_filled (create {EB_SYMBOLS_FOR_COMPLETION}.make ("_", {STRING_32} "_"), 1, tb.count)
 			cnt := 0
 			across
 				tb as ic
@@ -1285,9 +1285,9 @@ feature {NONE} -- String matching
 				cnt := cnt + 1
 
 				if a_is_delayed then
-					create {EB_SYMBOLS_FOR_DELAYED_COMPLETION} n.make (ic.key, ic.item.to_character_32)
+					create {EB_SYMBOLS_FOR_DELAYED_COMPLETION} n.make (ic.key, ic.item)
 				else
-					create {EB_SYMBOLS_FOR_COMPLETION} n.make (ic.key, ic.item.to_character_32)
+					create {EB_SYMBOLS_FOR_COMPLETION} n.make (ic.key, ic.item)
 				end
 				Result.force (n, cnt)
 			end

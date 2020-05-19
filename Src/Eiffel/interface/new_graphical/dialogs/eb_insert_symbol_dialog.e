@@ -184,7 +184,7 @@ feature -- Events
 
 	on_search_updated (a_field: EV_TEXTABLE)
 		local
-			lst: ARRAYED_LIST [TUPLE [symbol: CHARACTER_32; description: READABLE_STRING_GENERAL]]
+			lst: ARRAYED_LIST [TUPLE [symbol: READABLE_STRING_32; description: READABLE_STRING_GENERAL]]
 			s: READABLE_STRING_GENERAL
 			m: WILD_COMPLETION_NAME_MATCHER
 			l_query: STRING_32
@@ -199,7 +199,9 @@ feature -- Events
 			loop
 				s := ic.key
 				if m.prefix_string (l_query, s.to_string_32) then
-					lst.extend ([ic.item, ic.key])
+					if ic.item.count = 1 then
+						lst.extend ([ic.item, ic.key])
+					end
 				end
 			end
 			fill_grid_with (lst)
@@ -227,12 +229,12 @@ feature -- Events
 --			symbols_grid.set_focus
 		end
 
-	fill_grid_with (lst: detachable LIST [TUPLE [symbol: CHARACTER_32; description: READABLE_STRING_GENERAL]])
+	fill_grid_with (lst: detachable LIST [TUPLE [symbol: READABLE_STRING_32; description: READABLE_STRING_GENERAL]])
 		local
 			i,j: INTEGER
 			colw,nb,n: INTEGER
 			gi: EV_GRID_LABEL_ITEM
-			s: STRING_32
+			sym, s: STRING_32
 			g: like symbols_grid
 		do
 			g := symbols_grid
@@ -254,24 +256,26 @@ feature -- Events
 				across
 					lst as ic
 				loop
-					create s.make (1)
-					s.extend (ic.item.symbol)
-					create gi.make_with_text (s)
-					gi.align_text_center
-					gi.align_text_vertically_center
-					gi.set_tooltip (ic.item.description)
-					gi.set_data (ic.item)
-					gi.select_actions.extend (agent (i_data: attached like current_symbol)
-						do
-							current_symbol := i_data
-						end(ic.item))
+					sym := ic.item.symbol
+					if sym.count = 1 then
+						create s.make_from_string (sym)
+						create gi.make_with_text (s)
+						gi.align_text_center
+						gi.align_text_vertically_center
+						gi.set_tooltip (ic.item.description)
+						gi.set_data ([sym [1], ic.item.description])
+						gi.select_actions.extend (agent (i_data: attached like current_symbol)
+							do
+								current_symbol := i_data
+							end([sym [1], ic.item.description]))
 
-					j := j + 1
-					if j > nb then
-						j := 1
-						i := i + 1
+						j := j + 1
+						if j > nb then
+							j := 1
+							i := i + 1
+						end
+						g.set_item (j, i, gi)
 					end
-					g.set_item (j, i, gi)
 				end
 				across
 					1 |..| g.column_count as ic
@@ -366,7 +370,7 @@ invariant
 note
 	date: "$Date$"
 	revision: "$Revision$"
-	copyright: "Copyright (c) 1984-2019, Eiffel Software"
+	copyright: "Copyright (c) 1984-2020, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

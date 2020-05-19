@@ -113,7 +113,7 @@ feature -- Status report
 	last_read_successful: BOOLEAN
 			-- Was last read operation successful?
 
-	last_string: detachable STRING
+	last_string: detachable STRING_8
 			-- Last read string
 
 	last_written_bytes: INTEGER
@@ -151,7 +151,7 @@ feature -- Input
 				check l_bytes > 0 end
 				last_read_successful := True
 				l_str.set_count (l_bytes)
-				last_string := l_str.substring (1, l_bytes)
+				last_string := l_str.substring_8 (1, l_bytes)
 			else
 				last_read_successful := False
 				last_string := Void
@@ -191,7 +191,7 @@ feature -- Input
 					check l_bytes > 0 end
 					last_read_successful := True
 					l_str.set_count (l_bytes)
-					l_last_string.append (l_str.substring (1, l_bytes))
+					l_last_string.append (l_str.substring_8 (1, l_bytes))
 					l_done := l_last_string.item (l_last_string.count) = '%N'
 				else
 					last_read_successful := False
@@ -290,7 +290,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright: "Copyright (c) 1984-2017, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2020, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

@@ -130,7 +130,7 @@ feature {PROCESS_TIMER} -- Process status checking
 
 feature{NONE} -- Interprocess IO
 
-	input_buffer: STRING
+	input_buffer: STRING_8
 			-- Buffer used to store input data of process
 			-- This buffer is used temporarily to store data that can not be
 			-- consumed by launched process.
@@ -155,7 +155,7 @@ feature {PROCESS_IO_LISTENER_THREAD} -- Interprocess data transimission
 		local
 			l_cnt: INTEGER
 			l_left: INTEGER
-			l_str: detachable STRING
+			l_str: detachable STRING_8
 		do
 			input_mutex.lock
 			l_cnt := input_buffer.count
@@ -214,7 +214,7 @@ feature {PROCESS_IO_LISTENER_THREAD} -- Interprocess data transimission
 					l_error_file_handle.read_stream (child_process.std_error, buffer_size.min (bytes_avail))
 					if attached l_error_file_handle.last_string as l_last_string then
 						last_error_bytes := l_error_file_handle.last_read_bytes
-						l_error_handler.call ([l_last_string])
+						l_error_handler (l_last_string)
 					end
 				end
 			end
@@ -289,7 +289,7 @@ feature {NONE} -- Standard input-output redirection
 			-- Handles used to read and write file.
 
 ;note
-	copyright: "Copyright (c) 1984-2017, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2020, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

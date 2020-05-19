@@ -39,7 +39,7 @@ feature -- IO redirection
 			output_handler_void: output_handler = Void
 		end
 
-	redirect_output_to_agent (a_output_handler: PROCEDURE [STRING])
+	redirect_output_to_agent (a_output_handler: attached like output_handler)
 			-- Redirect output stream of process to an agent
 			-- so whenever some output data comes out of process,
 			-- the agent will be called with it's parameter assigned to
@@ -76,7 +76,7 @@ feature -- IO redirection
 			error_handler_void: error_handler = Void
 		end
 
-	redirect_error_to_agent (a_error_handler: PROCEDURE [STRING])
+	redirect_error_to_agent (a_error_handler: attached like error_handler)
 			-- Redirect error stream of process to an agent
 			-- so whenever some error data comes out of process,
 			-- the agent will be called with it's parameter assigned to
@@ -150,7 +150,7 @@ feature -- Access
 
 feature -- Status report
 
-	are_agents_valid (handler: detachable PROCEDURE [STRING]; is_error: BOOLEAN): BOOLEAN
+	are_agents_valid (handler: detachable PROCEDURE [READABLE_STRING_8]; is_error: BOOLEAN): BOOLEAN
 			-- Are output redirection agent and error redirection agent valid?
 			-- If you redirect both output and error to one agent,
 			-- they are not valid. You must redirect output and error to
@@ -186,10 +186,10 @@ feature -- Validation checking
 
 feature {PROCESS_IO_LISTENER_THREAD} -- Output/error handlers
 
-	output_handler: detachable PROCEDURE [STRING]
+	output_handler: detachable PROCEDURE [READABLE_STRING_8]
 			-- Handler called when output from process arrives
 
-	error_handler: detachable PROCEDURE [STRING]
+	error_handler: detachable PROCEDURE [READABLE_STRING_8]
 			-- Handler called when error from process arrives
 
 feature {NONE} -- Implementation
@@ -229,7 +229,7 @@ feature {NONE} -- Initializartion
 		end
 
 note
-	copyright: "Copyright (c) 1984-2017, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2020, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

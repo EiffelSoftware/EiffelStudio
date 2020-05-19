@@ -97,7 +97,7 @@ feature {NONE} -- Implementation
 			a_file_is_open: a_file.is_open_read
 			a_file_valid_pos: a_file.last_character.is_equal ('#')
 		local
-			l_string, id: detachable STRING
+			l_string, id: STRING_8
 		do
 			a_file.read_word
 			l_string := a_file.last_string
@@ -168,7 +168,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	insert_id_in_file (id, value: STRING; a_file: PLAIN_TEXT_FILE)
+	insert_id_in_file (id, value: STRING_8; a_file: PLAIN_TEXT_FILE)
 			-- Add a `id' to the class file.
 		require
 			id_not_void: id /= Void
@@ -199,7 +199,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2019, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2020, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

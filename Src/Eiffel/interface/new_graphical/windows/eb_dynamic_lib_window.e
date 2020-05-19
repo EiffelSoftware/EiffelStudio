@@ -1407,11 +1407,11 @@ feature {NONE} -- Implementation: Properties dialog
 		do
 			cl := modified_exported_feature.compiled_class
 			f := modified_exported_feature.routine
-			cr := cl.feature_with_name (creation_combo.selected_item.text)
-			al := alias_field.text
+			cr := cl.feature_with_name ({UTF_CONVERTER}.utf_32_string_to_utf_8_string_8 (creation_combo.selected_item.text))
+			al := {UTF_CONVERTER}.utf_32_string_to_utf_8_string_8 (alias_field.text)
 			if is_windows then
 				ind := index_field.value
-				cc := call_combo.selected_item.text
+				cc := {UTF_CONVERTER}.utf_32_string_to_utf_8_string_8 (call_combo.selected_item.text)
 			end
 			if not valid_export_parameters (cl, cr, f, al, ind, cc) then
 				if cl = Void then
@@ -1490,7 +1490,7 @@ feature {NONE} -- Implementation: Properties dialog
 			exp: DYNAMIC_LIB_EXPORT_FEATURE
 			clist: LIST [CLASS_I]
 		do
-			tmp := class_field.text
+			tmp := {UTF_CONVERTER}.utf_32_string_to_utf_8_string_8 (class_field.text)
 			if tmp /= Void and then not tmp.is_empty then
 				tmp.to_upper
 				clist := Eiffel_universe.compiled_classes_with_name (tmp)
@@ -1498,20 +1498,20 @@ feature {NONE} -- Implementation: Properties dialog
 					cl := clist.first.compiled_class
 				end
 			end
-			tmp := feature_field.text
+			tmp := {UTF_CONVERTER}.utf_32_string_to_utf_8_string_8 (feature_field.text)
 			if cl /= Void and then cl.has_feature_table and then not tmp.is_empty then
 				tmp.to_lower
 				f := cl.feature_with_name (tmp)
-				tmp := creation_combo.selected_item.text
+				tmp := {UTF_CONVERTER}.utf_32_string_to_utf_8_string_8 (creation_combo.selected_item.text)
 				if not tmp.is_empty then
 					tmp.to_lower
 					cr := cl.feature_with_name (tmp)
 				end
 			end
-			al := alias_field.text
+			al := {UTF_CONVERTER}.utf_32_string_to_utf_8_string_8 (alias_field.text)
 			if is_windows then
 				ind := index_field.value
-				cc := call_combo.selected_item.text
+				cc := {UTF_CONVERTER}.utf_32_string_to_utf_8_string_8 (call_combo.selected_item.text)
 			end
 			if not valid_export_parameters (cl, cr, f, al, ind, cc) then
 				if cl = Void then
@@ -1567,7 +1567,7 @@ feature {NONE} -- Implementation: Properties dialog
 			clist: LIST [CLASS_I]
 		do
 			creation_combo.wipe_out
-			tmp := class_field.text
+			tmp := {UTF_CONVERTER}.utf_32_string_to_utf_8_string_8 (class_field.text)
 			if not tmp.is_empty then
 				tmp.to_upper
 				clist := Eiffel_universe.compiled_classes_with_name (tmp)

@@ -1,6 +1,4 @@
-note
-	description: "Objects that ..."
-	author: ""
+﻿note
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -75,7 +73,7 @@ feature
 			end
 		end
 
-	host_address: STRING
+	host_address: STRING_8
 		deferred
 		end
 
@@ -102,4 +100,14 @@ feature {NONE} -- Externals
 			"en_socket_address_len"
 		end
 
+note
+	copyright: "Copyright (c) 1984-2020, Eiffel Software and others"
+	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
+	source: "[
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
+		]"
 end

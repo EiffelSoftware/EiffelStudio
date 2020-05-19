@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "Factory of INET_ADDRESS"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -33,16 +33,11 @@ feature
 
 	create_localhost: INET_ADDRESS
 			--
-		local
-			localhostname: STRING
 		do
-			localhostname := impl.local_host_name
-			if attached create_from_name (localhostname) as l_result then
-				Result := l_result
-			else
-				check attached create_from_name ("localhost") as l_result then
-					Result := l_result
-				end
+			Result := create_from_name (impl.local_host_name)
+			if not attached Result then
+				Result := create_from_name ("localhost")
+				check attached Result then end
 			end
 		end
 
@@ -622,7 +617,7 @@ feature {NONE} -- Externals
 		end
 
 note
-	copyright: "Copyright (c) 1984-2018, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2020, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

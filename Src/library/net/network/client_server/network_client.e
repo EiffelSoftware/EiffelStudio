@@ -1,11 +1,10 @@
-note
+﻿note
 
 	description:
 		"A client for a network socket."
-	legal: "See notice at end of class.";
-
-	status: "See notice at end of class.";
-	date: "$Date$";
+	legal: "See notice at end of class."
+	status: "See notice at end of class."
+	date: "$Date$"
 	revision: "$Revision$"
 
 class NETWORK_CLIENT inherit
@@ -23,7 +22,7 @@ feature -- Access
 	in_out: NETWORK_STREAM_SOCKET;
 			-- Receive and send sockets.
 
-	make (a_peer_port: INTEGER; a_peer_name: STRING)
+	make (a_peer_port: INTEGER; a_peer_name: STRING_8)
 			-- Make client with port `a_peer_port' and host `a_peer_name'.
 		require
 			a_valid_port: a_peer_port > 0;
@@ -48,18 +47,14 @@ feature -- Access
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2020, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
-
-
-
-end -- class NETWORK_CLIENT
-
+end

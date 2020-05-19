@@ -1,5 +1,5 @@
-note
-	description: "Objects that represents an IP V4 address ..."
+﻿note
+	description: "Objects that represents an IP V4 address."
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -48,7 +48,7 @@ feature {INET_ADDRESS_FACTORY} -- Initialization
 
 feature -- Access
 
-	host_address: STRING
+	host_address: STRING_8
 		do
 			Result := numeric_to_text (raw_address)
 		end
@@ -139,7 +139,7 @@ feature {NONE} -- Implementation
 
 	the_address: INTEGER
 
-	numeric_to_text (addr: ARRAY [NATURAL_8]): STRING
+	numeric_to_text (addr: ARRAY [NATURAL_8]): STRING_8
 		require
 			addr /= Void and then addr.count = inaddrsz
 		do
@@ -169,4 +169,14 @@ feature {NONE} -- Externals
 			"en_sockaddr_get_ipv4_address"
 		end
 
+note
+	copyright: "Copyright (c) 1984-2020, Eiffel Software and others"
+	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
+	source: "[
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
+		]"
 end

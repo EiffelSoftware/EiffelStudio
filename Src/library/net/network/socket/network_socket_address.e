@@ -51,7 +51,7 @@ feature -- Initialization
 			socket_address /= Void
 		end
 
-	make_from_hostname_and_port (a_hostname: STRING;  a_port: INTEGER)
+	make_from_hostname_and_port (a_hostname: STRING_8;  a_port: INTEGER)
 		require
 			non_void_hostname: a_hostname /= Void
 			-- TODO look at this valid_host: is_valid_host (a_hostname)
@@ -120,7 +120,7 @@ feature -- Status report
 
 feature --
 
-	is_valid_host (hostname: STRING): BOOLEAN
+	is_valid_host (hostname: STRING_8): BOOLEAN
 			--
 		require
 			hostname_not_void: hostname /= Void
@@ -204,7 +204,7 @@ feature {NONE} -- External
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2018, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2020, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

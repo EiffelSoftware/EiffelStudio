@@ -86,7 +86,7 @@ feature -- Initialization
 			timeout_set_to_default: is_default_timeout
 		end
 
-	make_targeted (a_hostname: STRING; a_peer_port: INTEGER)
+	make_targeted (a_hostname: STRING_8; a_peer_port: INTEGER)
 			-- Make a network datagram socket connected to
 			-- hostname `a_hostname' and port `a_port'.
 		local
@@ -271,7 +271,7 @@ feature {NONE} -- Externals
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2017, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2020, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

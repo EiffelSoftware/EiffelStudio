@@ -150,7 +150,7 @@ feature -- Change
 			last_position.line := a_line
 			last_position.nested := a_nested
 			debug ("RT_DBG_RECORD")
-				dtrace_indent (depth); dtrace ("BP_INFO (" + a_line.out + ", " + a_nested.out + ")%N")
+				dtrace_indent (depth); dtrace ({STRING_32} "BP_INFO (" + a_line.out + ", " + a_nested.out + ")%N")
 			end
 		end
 
@@ -292,12 +292,12 @@ feature {RT_DBG_EXECUTION_RECORDER, RT_DBG_CALL_RECORD} -- Change
 
 			debug ("RT_DBG_RECORD")
 				if attached {like value_records} rs as ot_rs then
-					dtrace_indent (depth); dtrace ("record_fields -> " + ot_rs.count.out + " value(s).%N")
+					dtrace_indent (depth); dtrace ({STRING_32} "record_fields -> " + ot_rs.count.out + " value(s).%N")
 					ot_rs.do_all (agent  (r: RT_DBG_VALUE_RECORD)
 						require
 							r_attached: r /= Void
 						do
-							dtrace (" -> " + r.position.out + ") " + r.to_string + "%N")
+							dtrace ({STRING_32} " -> " + r.position.out + ") " + r.to_string + "%N")
 						end)
 				else
 					dtrace_indent (depth); dtrace ("record_fields -> None.%N")
@@ -382,7 +382,7 @@ feature {RT_DBG_EXECUTION_RECORDER, RT_DBG_CALL_RECORD} -- Change
 			not_flat: not is_flat
 		do
 			debug ("RT_DBG_OPTIMIZATION")
-				dtrace_indent (depth); dtrace ("flatten_value_records (depth=" + depth.out + ") -start-%N")
+				dtrace_indent (depth); dtrace ({STRING_32} "flatten_value_records (depth=" + depth.out + ") -start-%N")
 			end
 			if value_records = Void then
 				create value_records.make (0)
@@ -396,7 +396,7 @@ feature {RT_DBG_EXECUTION_RECORDER, RT_DBG_CALL_RECORD} -- Change
 
 			is_flat := True
 			debug ("RT_DBG_OPTIMIZATION")
-				dtrace_indent (depth); dtrace ("flatten_value_records (depth=" + depth.out + ") -end-%N")
+				dtrace_indent (depth); dtrace ({STRING_32} "flatten_value_records (depth=" + depth.out + ") -end-%N")
 			end
 		ensure
 			is_flat: is_flat
@@ -595,7 +595,7 @@ feature {RT_DBG_EXECUTION_RECORDER, RT_DBG_CALL_RECORD} -- Change
 					end
 				end
 				debug ("RT_DBG_OPTIMIZATION")
-					dtrace_indent (depth); dtrace ("optimize_flat_value_records (depth=" + depth.out + "): to " + vals.count.out + " (-" + n.out + ")%N")
+					dtrace_indent (depth); dtrace ({STRING_32} "optimize_flat_value_records (depth=" + depth.out + "): to " + vals.count.out + " (-" + n.out + ")%N")
 				end
 				recorder.increment_records_count (- n)
 			end
@@ -676,7 +676,7 @@ feature {RT_DBG_EXECUTION_RECORDER, RT_DBG_CALL_RECORD} -- Query
 			sub_id: detachable STRING
 		do
 			debug ("RT_DBG_REPLAY")
-				dtrace_indent (depth); dtrace ("call_by_id (" + a_id + ")%N")
+				dtrace_indent (depth); dtrace ({STRING_32} "call_by_id (" + a_id + ")%N")
 			end
 			p := a_id.index_of ('.', 1)
 			if p > 0 then
@@ -697,7 +697,7 @@ feature {RT_DBG_EXECUTION_RECORDER, RT_DBG_CALL_RECORD} -- Query
 				end
 			end
 			debug ("RT_DBG_REPLAY")
-				dtrace_indent (depth); dtrace ("call_by_id (" + a_id + ") -> Result=")
+				dtrace_indent (depth); dtrace ({STRING_32} "call_by_id (" + a_id + ") -> Result=")
 				if Result = Void then
 					dtrace ("Void")
 				else
@@ -917,7 +917,7 @@ feature {RT_DBG_EXECUTION_RECORDER} -- Steps
 
 			debug ("RT_DBG_REPLAY")
 				dtrace_indent (depth); dtrace ("left_step -> ")
-				dtrace ("[" + l_steps.index.out + "/" + l_steps.count.out + "]: ")
+				dtrace ({STRING_32} "[" + l_steps.index.out + "/" + l_steps.count.out + "]: ")
 			end
 			if not l_steps.before then
 				if l_steps.item then --| Value
@@ -949,7 +949,7 @@ feature {RT_DBG_EXECUTION_RECORDER} -- Steps
 				if Result = Void then
 					dtrace ("=> Void %N")
 				else
-					dtrace ("=> " + Result.count.out + " %N")
+					dtrace ({STRING_32} "=> " + Result.count.out + " %N")
 				end
 			end
 		ensure
@@ -1070,17 +1070,17 @@ feature -- debug
 					c := 0
 					l_steps.start
 
-					print ("steps: " + i.out + " out of " + l_steps.count.out + "%N")
+					print ({STRING} "steps: " + i.out + " out of " + l_steps.count.out + "%N")
 					if l_values /= Void then
 						val_cursor := l_values.cursor
-						print ("%Tvalues: " + l_values.index.out + " out of " + l_values.count.out + "%N")
+						print ({STRING} "%Tvalues: " + l_values.index.out + " out of " + l_values.count.out + "%N")
 						l_values.start
 					else
 						print ("%Tvalues: None %N")
 					end
 					if l_calls /= Void then
 						call_cursor := l_calls.cursor
-						print ("%Tcalls: " + l_calls.index.out + " out of " + l_calls.count.out + "%N")
+						print ({STRING} "%Tcalls: " + l_calls.index.out + " out of " + l_calls.count.out + "%N")
 						l_calls.start
 					else
 						print ("%Tcalls: None %N")
@@ -1088,10 +1088,10 @@ feature -- debug
 				until
 					l_steps.after
 				loop
-					print ("%T" + l_steps.index.out + "=")
+					print ({STRING} "%T" + l_steps.index.out + "=")
 					if l_steps.item then
 						v := v + 1
-						print ("VALUE#" + v.out + ": ")
+						print ({STRING} "VALUE#" + v.out + ": ")
 						if l_values = Void then
 							print ("None")
 						else
@@ -1100,7 +1100,7 @@ feature -- debug
 						end
 					else
 						c := c + 1
-						print ("CALL#" + c.out + ": ")
+						print ({STRING} "CALL#" + c.out + ": ")
 						if l_calls = Void then
 							print ("None")
 						else
@@ -1124,13 +1124,13 @@ feature -- debug
 			end
 		end
 
-	debug_output: STRING
+	debug_output: STRING_32
 			-- Debug output as string representation.
 		local
-			tn: STRING
+			tn: READABLE_STRING_32
 		do
 			tn := reflector.type_name_of_type (class_type_id)
-			if attached object as o and then attached {STRING} o.generating_type as otn then
+			if attached object as o and then attached o.generating_type.name_32 as otn then
 				if tn = Void then
 					tn := otn
 				elseif otn /~ tn then
@@ -1141,7 +1141,7 @@ feature -- debug
 				tn := "_"
 			end
 
-			Result := "{" + tn + "}."
+			Result := {STRING_32} "{" + tn + "}."
 			Result.append (feature_rout_id.out + " <" + depth.out + ">")
 			if attached breakable_info as bi then
 				Result.append_character (' ')
@@ -1157,7 +1157,7 @@ feature -- debug
 			end
 
 			if attached object as obj and then rt_dynamic_type (obj) /= class_type_id then
-				Result.append_string (" -> ERROR Dtype(obj):" + rt_dynamic_type (obj).out + " /= " + class_type_id.out)
+				Result.append_string ({STRING_32} " -> ERROR Dtype(obj):" + rt_dynamic_type (obj).out + " /= " + class_type_id.out)
 			end
 		end
 

@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "Field record"
 	status: "See notice at end of class."
 	legal: "See notice at end of class."
@@ -117,16 +117,16 @@ feature -- Runtime
 			debug ("RT_DBG_REPLAY")
 				reflected_object.set_object (object)
 				dtrace (generator + ".restore (" + object.generator + " #" + index.out + ")%N")
- 				dtrace (" -> " + reflected_object.field_name (index) + ": offset " + reflected_object.field_offset (index).out + "%N")
+ 				dtrace ({STRING_32} " -> " + reflected_object.field_name (index) + ": offset " + reflected_object.field_offset (index).out + "%N")
 			end
 			if is_same_as (val) then
 				debug ("RT_DBG_REPLAY")
-					dtrace (" -> unchanged because same value [" + to_string + "].%N")
+					dtrace ({STRING_32} " -> unchanged because same value [" + to_string + "].%N")
 				end
 			else
 				set_object_field (object, Current)
 				debug ("RT_DBG_REPLAY")
-					dtrace (" -> restored: from [" + val.to_string + "] to [" + to_string + "] %N")
+					dtrace ({STRING_32} " -> restored: from [" + val.to_string + "] to [" + to_string + "] %N")
 				end
 			end
 		end
@@ -139,7 +139,7 @@ feature -- Runtime
 			end
 			set_object_field (object, bak)
 			debug ("RT_DBG_REPLAY")
-				dtrace (" -> reverted: from [" + to_string + "] to [" + bak.to_string + "] %N")
+				dtrace ({STRING_32} " -> reverted: from [" + to_string + "] to [" + bak.to_string + "] %N")
 			end
 		end
 
@@ -252,7 +252,7 @@ invariant
 
 note
 	library:   "EiffelBase: Library of reusable components for Eiffel."
-	copyright: "Copyright (c) 1984-2013, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2020, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

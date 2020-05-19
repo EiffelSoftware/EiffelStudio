@@ -75,7 +75,7 @@ feature -- Access
 	new_format_mismatch (a_old_version, a_new_version: NATURAL_32): SED_ERROR
 			-- Return an error when the format is different from what we expected upon retrieval
 		do
-			create Result.make_with_string ("Storable format mismatch, got " + a_old_version.out + " but expected " + a_new_version.out + ".")
+			create Result.make_with_string ({STRING} "Storable format mismatch, got " + a_old_version.out + " but expected " + a_new_version.out + ".")
 		ensure
 			result_not_void: Result /= Void
 		end
@@ -88,7 +88,7 @@ feature -- Access
 			result_not_void: Result /= Void
 		end
 
-	new_missing_type_error (a_stored_type, a_adapted_type: STRING): SED_ERROR
+	new_missing_type_error (a_stored_type, a_adapted_type: READABLE_STRING_8): SED_ERROR
 			-- Return a error representing a missing type `a_stored_type' possibly adapted to `a_adapted_type'.
 		require
 			a_stored_type_not_void: a_stored_type /= Void
@@ -103,7 +103,7 @@ feature -- Access
 			result_not_void: Result /= Void
 		end
 
-	new_missing_attribute_error (a_type_id: INTEGER; a_attribute_name: STRING): SED_ERROR
+	new_missing_attribute_error (a_type_id: INTEGER; a_attribute_name: READABLE_STRING_8): SED_ERROR
 			-- Return a error representing a missing attribute named `a_attribute_name' in type `a_type'.
 		require
 			a_type_id_non_negative: a_type_id >= 0
@@ -112,12 +112,12 @@ feature -- Access
 			l_type: STRING
 		do
 			l_type := internal.class_name_of_type (a_type_id)
-			create Result.make_with_string ("No attribute named '" + a_attribute_name + "' in type " + l_type)
+			create Result.make_with_string ({STRING_32} "No attribute named '" + a_attribute_name.to_string_32 + "' in type " + l_type)
 		ensure
 			result_not_void: Result /= Void
 		end
 
-	new_unknown_attribute_type_error (a_type_id: INTEGER; a_attribute_name: STRING): SED_ERROR
+	new_unknown_attribute_type_error (a_type_id: INTEGER; a_attribute_name: READABLE_STRING_8): SED_ERROR
 			-- Return a error representing an attribute whose type is unknown.
 		require
 			a_type_id_non_negative: a_type_id >= 0
@@ -126,7 +126,7 @@ feature -- Access
 			l_type: STRING
 		do
 			l_type := internal.class_name_of_type (a_type_id)
-			create Result.make_with_string ("Attribute named '" + a_attribute_name + "' in type " + l_type + " has an unknown type")
+			create Result.make_with_string ({STRING_32} "Attribute named '" + a_attribute_name.to_string_32 + "' in type " + l_type + " has an unknown type")
 		ensure
 			result_not_void: Result /= Void
 		end
@@ -136,13 +136,14 @@ feature -- Access
 		require
 			a_type_id_non_negative: a_type_id >= 0
 		local
-			l_type, l_error_msg: STRING
+			l_type: STRING
+			l_error_msg: STRING_32
 			l_new_version: detachable IMMUTABLE_STRING_8
 		do
 			l_type := internal.class_name_of_type (a_type_id)
 			l_new_version := internal.storable_version_of_type (a_type_id)
 			create l_error_msg.make (256)
-			l_error_msg.append ("Different version in class " + l_type + ".%N")
+			l_error_msg.append ({STRING_32} "Different version in class " + l_type + ".%N")
 			l_error_msg.append ("Old version: ")
 			if a_old_version_str = Void then
 				l_error_msg.append ("None")
@@ -153,7 +154,7 @@ feature -- Access
 			if l_new_version = Void then
 				l_error_msg.append ("None")
 			else
-				l_error_msg.append (l_new_version)
+				l_error_msg.append_string_general (l_new_version)
 			end
 			create Result.make_with_string (l_error_msg)
 		ensure
@@ -169,7 +170,7 @@ feature -- Access
 			l_type: STRING
 		do
 			l_type := internal.class_name_of_type (a_type_id)
-			create Result.make_with_string ("Attribute count mismatch in class " + l_type +
+			create Result.make_with_string ({STRING_32} "Attribute count mismatch in class " + l_type +
 				" Expected " + internal.persistent_field_count_of_type (a_type_id).out + ", Received " + a_received_attribute_count.out)
 		ensure
 			result_not_void: Result /= Void
@@ -183,7 +184,7 @@ feature -- Access
 			a_attribute_type_id_non_negative: a_attribute_type_id >= 0
 			a_received_attribute_type_id_non_negative: a_received_attribute_type_id >= 0
 		do
-			create Result.make_with_string ("Attribute mismatch in class " +
+			create Result.make_with_string ({STRING_32} "Attribute mismatch in class " +
 				internal.class_name_of_type (a_type_id) + " for attribute '" + a_attribute_name +
 				"'. Expected " + internal.class_name_of_type (a_attribute_type_id) + ", Received " +
 				internal.class_name_of_type (a_received_attribute_type_id))
@@ -203,7 +204,7 @@ feature {NONE} -- Implementation
 
 note
 	library:	"EiffelBase: Library of reusable components for Eiffel."
-	copyright:	"Copyright (c) 1984-2017, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2020, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

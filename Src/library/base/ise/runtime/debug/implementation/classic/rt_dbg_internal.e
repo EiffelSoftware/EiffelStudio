@@ -145,13 +145,13 @@ feature -- Object access
 			index_large_enough: pos >= 1
 		do
 			debug ("RT_DBG_INTERNAL")
-				print ("%Nstack_value_at (" + dep.out + ", " + pos.out + ", 0x" + a_rt_type.to_hex_string + ")%N")
+				print ({STRING} "%Nstack_value_at (" + dep.out + ", " + pos.out + ", 0x" + a_rt_type.to_hex_string + ")%N")
 			end
 			Result := c_stack_value_at (dep, a_loc_type, pos, a_rt_type)
 			debug ("RT_DBG_INTERNAL")
 				print ("stack_value_at -> ")
 				if Result /= Void then
-					print (Result.generating_type.name + " = " + Result.out)
+					print (Result.generating_type.name_32 + " = " + Result.out)
 				else
 					print ("Void Result")
 				end
@@ -363,7 +363,7 @@ feature -- Change field
 			a_eif_type: INTEGER
 		do
 debug ("RT_DBG_INTERNAL")
-			print ("set_field_at (" + off.out + ", " + a_type.out + ", value, " + object.generator + ") %N")
+			print ({STRING_32} "set_field_at (" + off.out + ", " + a_type.out + ", value, " + object.generator + ") %N")
 end
 			a_eif_type := eif_type (a_type)
 			inspect a_eif_type
@@ -465,11 +465,11 @@ feature -- Change local
 			a_eif_type: INTEGER
 		do
 			debug ("RT_DBG_INTERNAL")
-				print ("set_stack_value_at (dep=" + dep.out + ", loc_type=" + a_loc_type.out + ", pos=" + pos.out + ", type=0x" + a_rt_type.to_hex_string + ", value=")
+				print ({STRING} "set_stack_value_at (dep=" + dep.out + ", loc_type=" + a_loc_type.out + ", pos=" + pos.out + ", type=0x" + a_rt_type.to_hex_string + ", value=")
 				if value = Void then
 					print ("Void) %N")
 				else
-					print (value.generating_type.name + ": " + value.out + ") %N")
+					print (value.generating_type.name_32 + ": " + value.out + ") %N")
 				end
 			end
 			a_eif_type := eif_type (a_rt_type)
@@ -540,10 +540,10 @@ feature -- Change local
 				Result := 2
 			end
 			debug ("RT_DBG_INTERNAL")
-				print ("set_stack_value_at (dep=" + dep.out + ", loc_type=" + a_loc_type.out + ", pos=" + pos.out  +", ...) -> " + Result.out + " %N")
+				print ({STRING} "set_stack_value_at (dep=" + dep.out + ", loc_type=" + a_loc_type.out + ", pos=" + pos.out  +", ...) -> " + Result.out + " %N")
 				print ("set_stack_value_at: check modification -> ")
 				if attached stack_value_at (dep, a_loc_type, pos, a_rt_type) as a then
-					print (a.generating_type.name + ": " + a.out + "%N")
+					print (a.generating_type.name_32 + ": " + a.out + "%N")
 				else
 					print (" Void %N" )
 				end
@@ -782,22 +782,22 @@ feature -- Testing
 
 	test_locals (dep: INTEGER; loc_pos: INTEGER; val: ANY; a_rt_type: NATURAL_32)
 		local
-			s: STRING
+			s: STRING_32
 			retried: BOOLEAN
 		do
 			if not retried then
 				c_rt_set_is_inside_rt_eiffel_code (1);
 				s := "----------------------------------%N"
-				s.append ("Loc #" + loc_pos.out + "(stack depth=" + dep.out + ")")
+				s.append ({STRING_32} "Loc #" + loc_pos.out + "(stack depth=" + dep.out + ")")
 				if val /= Void then
-					s.append (": should be " + val.generating_type.name)
+					s.append (": should be " + val.generating_type.name_32)
 				end
 				s.append ("%N")
 				print (s)
 --				s.wipe_out
 				s.append (" -> ")
 				if attached stack_value_at (dep, rt_DLT_LOCALVAR, loc_pos, a_rt_type) as a then
-					s.append (a.generating_type.name + "=" + a.out)
+					s.append (a.generating_type.name_32 + "=" + a.out)
 				else
 					s.append ("Void object")
 				end
@@ -815,16 +815,16 @@ feature -- Testing
 
 	test_set_local (dep: INTEGER; loc_pos: INTEGER; val: ANY; a_rt_type: NATURAL_32)
 		local
-			s: STRING
+			s: STRING_32
 			r: INTEGER
 			retried: BOOLEAN
 		do
 			if not retried then
 				c_rt_set_is_inside_rt_eiffel_code (1);
 				s := "----------------------------------%N"
-				s.append ("SetLoc #" + loc_pos.out + "(stack depth=" + dep.out + ")")
+				s.append ({STRING_32} "SetLoc #" + loc_pos.out + "(stack depth=" + dep.out + ")")
 				if val /= Void then
-					s.append (": value " + val.generating_type.name)
+					s.append (": value " + val.generating_type.name_32)
 				else
 					s.append (": value Void")
 				end
@@ -834,7 +834,7 @@ feature -- Testing
 				r := set_stack_value_at (dep, rt_DLT_LOCALVAR, loc_pos, a_rt_type, val)
 
 				s.append (" -> ")
-				s.append ("Result = " + r.out)
+				s.append ({STRING_32} "Result = " + r.out)
 				s.append ("%N")
 				print (s)
 				c_rt_set_is_inside_rt_eiffel_code (0);
@@ -863,7 +863,7 @@ feature {NONE} -- Implementation
 
 note
 	library:   "EiffelBase: Library of reusable components for Eiffel."
-	copyright: "Copyright (c) 1984-2017, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2020, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

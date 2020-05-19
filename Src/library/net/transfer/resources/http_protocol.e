@@ -34,7 +34,7 @@ feature {NONE} -- Constants
 
 feature -- Access
 
-	location: STRING
+	location: STRING_8
 			-- Resource location
 		do
 			Result := address.location
@@ -125,7 +125,7 @@ feature -- Status setting
 	initiate_transfer
 			-- Initiate transfer.
 		local
-			str: STRING
+			str: STRING_8
 		do
 			str := Http_get_command.twin
 			str.extend (' ')
@@ -141,7 +141,8 @@ feature -- Status setting
 
 			str.append (Http_host_header + ": " + address.host)
 			if address.port /= address.default_port then
-				str.append (":" + address.port.out)
+				str.append (":")
+				str.append_integer (address.port)
 			end
 			if not address.username.is_empty then
 				str.append (Http_end_of_header_line)
@@ -341,7 +342,7 @@ invariant
 				(is_packet_pending = (bytes_transferred < count))
 
 note
-	copyright:	"Copyright (c) 1984-2018, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2020, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

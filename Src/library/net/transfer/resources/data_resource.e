@@ -37,7 +37,7 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	last_packet: detachable STRING
+	last_packet: detachable STRING_8
 			-- Last packet read
 
 	address: URL
@@ -88,7 +88,7 @@ feature -- Access
 			Result := address.hash_code
 		end
 
-	location: STRING
+	location: STRING_8
 			-- Location of resource
 		require
 			address_exists: address /= Void
@@ -319,7 +319,7 @@ feature -- Status setting
 			port_set: port = port_no
 		end
 
-	set_proxy (host: STRING; port_no: INTEGER)
+	set_proxy (host: STRING_8; port_no: INTEGER)
 			-- Set proxy host to `host' and port to `port_no'.
 		require
 			proxy_supported: is_proxy_supported
@@ -343,7 +343,7 @@ feature -- Status setting
 			proxy_set: address.is_proxy_used
 		end
 
-	set_username (un: STRING)
+	set_username (un: STRING_8)
 			-- Set username to `un'.
 		require
 			username_accepted: address.has_username
@@ -352,7 +352,7 @@ feature -- Status setting
 			address.set_username (un)
 		end
 
-	set_password (pw: STRING)
+	set_password (pw: STRING_8)
 			-- Set password to `pw'.
 		require
 			password_accepted: address.is_password_accepted
@@ -475,7 +475,7 @@ invariant
 	mode_constraint: is_mode_set = read_mode xor write_mode
 
 note
-	copyright:	"Copyright (c) 1984-2018, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2020, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

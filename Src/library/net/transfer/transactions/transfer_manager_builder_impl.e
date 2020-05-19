@@ -1,8 +1,6 @@
-note
-	description:
-		"Implementation of transfer manager builder"
+﻿note
+	description: "Implementation of transfer manager builder"
 	legal: "See notice at end of class."
-
 	status: "See notice at end of class."
 	date: "$Date$"
 	revision: "$Revision$"
@@ -87,7 +85,7 @@ feature -- Status report
 			Result := (Readable <= mode and mode <= Writable)
 		end
 
-	is_address_correct (addr: STRING; mode: INTEGER): BOOLEAN
+	is_address_correct (addr: STRING_8; mode: INTEGER): BOOLEAN
 			-- Is address `addr' correct considering `mode'?
 			-- (`mode' is `Readable' or `Writable')
 		require
@@ -188,7 +186,7 @@ feature -- Status setting
 			timeout_set: attached timeout as l_timeout_var and then l_timeout_var.item = s
 		end
 
-	set_source_proxy (host: STRING; port: INTEGER)
+	set_source_proxy (host: STRING_8; port: INTEGER)
 			-- Set source proxy host to `host' and port to `port'.
 		require
 			host_not_empty: host /= Void and then not host.is_empty
@@ -200,7 +198,7 @@ feature -- Status setting
 			host_port_set: attached source_proxy as l_proxy and then (l_proxy.host = host and l_proxy.port = port)
 		end
 
-	set_target_proxy (host: STRING; port: INTEGER)
+	set_target_proxy (host: STRING_8; port: INTEGER)
 			-- Set target proxy host to `host' and port to `port'.
 		require
 			host_not_empty: host /= Void and then not host.is_empty
@@ -212,7 +210,7 @@ feature -- Status setting
 			host_port_set: attached {like source_proxy} target_proxy as l_proxy and then (l_proxy.host = host and l_proxy.port = port)
 		end
 
-	set_proxies (host: STRING; port: INTEGER)
+	set_proxies (host: STRING_8; port: INTEGER)
 			-- Set source and target proxy host to `host' and
 			-- port to `port'.
 		require
@@ -255,7 +253,7 @@ feature -- Status setting
 
 feature -- Element change
 
-	add_transaction (s, t: STRING)
+	add_transaction (s, t: STRING_8)
 			-- Add transaction from source `s' to target `t'.
 		require
 			source_exists: s /= Void
@@ -552,7 +550,7 @@ invariant
 	count_equality: (optimized_count > 0) implies (count = optimized_count)
 
 note
-	copyright:	"Copyright (c) 1984-2013, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2020, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software
@@ -562,8 +560,4 @@ note
 			Customer support http://support.eiffel.com
 		]"
 
-
-
-
-end -- class TRANSFER_MANAGER_BUILDER_IMPL
-
+end

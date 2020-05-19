@@ -27,7 +27,7 @@ feature -- Access
 	service: detachable STRING
 			-- Requested service
 
-	address: detachable STRING
+	address: detachable STRING_8
 			-- Address (without service part)
 
 	url: detachable URL
@@ -64,18 +64,18 @@ feature -- Status report
 			Result := is_service_supported and then l_url /= Void and then l_url.is_correct
 		end
 
-	default_service: STRING
+	default_service: STRING_8
 			-- Name of service assumed if no service is specified in address
 
 feature -- Status setting
 
-	set_address (addr: STRING)
+	set_address (addr: STRING_8)
 			-- Set address.
 		require
 			address_exists: addr /= Void
 			address_not_empty: not addr.is_empty
 		local
-			s: STRING
+			s: STRING_8
 			pos: INTEGER
 		do
 			s := addr.twin
@@ -106,7 +106,7 @@ feature -- Status setting
 					is_address_set
 		end
 
-	set_default_service (service_name: STRING)
+	set_default_service (service_name: STRING_8)
 			-- Set default service to `service_name'.
 		require
 			name_exists: service_name /= Void
@@ -258,7 +258,7 @@ invariant
 							not default_service.is_empty
 
 note
-	copyright:	"Copyright (c) 1984-2013, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2020, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

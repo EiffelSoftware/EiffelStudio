@@ -1,8 +1,6 @@
-note
-	description:
-		"FTP protocol"
+﻿note
+	description: "FTP protocol"
 	legal: "See notice at end of class."
-
 	status: "See notice at end of class."
 	date: "$Date$"
 	revision: "$Revision$"
@@ -360,17 +358,17 @@ feature {NONE} -- Implementation
 	resource_size: INTEGER
 			-- Cached size of transferred file
 
-	last_reply: STRING
+	last_reply: STRING_8
 			-- Last received server reply
 
-	send (s: NETWORK_SOCKET; str: STRING)
+	send (s: NETWORK_SOCKET; str: STRING_8)
 			-- Send string `str' to socket `s'.
 		require
 			socket_exists: s /= Void
 			socket_writable: s.is_open_write
 			non_empty_string: str /= Void and then not str.is_empty
 		local
-			packet: STRING
+			packet: STRING_8
 		do
 			packet := str.twin
 			packet.append ("%N")
@@ -385,7 +383,7 @@ feature {NONE} -- Implementation
 			socket_exists: s /= Void
 			socket_readable: s.is_open_read
 		local
-			l_reply: detachable STRING
+			l_reply: detachable STRING_8
 			go_on: BOOLEAN
 		do
 			from
@@ -417,13 +415,13 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	port_command (p: INTEGER): STRING
+	port_command (p: INTEGER): STRING_8
 			-- PORT command
 		require
 			port_positive: p > 0
 		local
 			af: INET_ADDRESS_FACTORY
-			str: STRING
+			str: STRING_8
 		do
 			create af
 			Result := Ftp_port_command.twin
@@ -434,7 +432,7 @@ feature {NONE} -- Implementation
 			Result.append (str)
 		end
 
-	byte_list (n, num: INTEGER; low_first: BOOLEAN): STRING
+	byte_list (n, num: INTEGER; low_first: BOOLEAN): STRING_8
 			-- A comma-separated representation of the `num' lowest bytes of
 			-- `n'
 		require
@@ -443,7 +441,6 @@ feature {NONE} -- Implementation
 			divisor: INTEGER
 			i: INTEGER
 			number: INTEGER
-			str: STRING
 		do
 			from
 				divisor := (256 ^ (num - 1)).rounded
@@ -454,11 +451,10 @@ feature {NONE} -- Implementation
 			loop
 				i := number // divisor
 				number := number - i * divisor
-				str := i.out
 				if low_first then
-					Result.prepend (str)
+					Result.prepend_integer (i)
 				else
-					Result.append (str)
+					Result.append_integer (i)
 				end
 				if divisor > 1 then
 					if low_first then
@@ -557,17 +553,17 @@ feature {NONE} -- Implementation
 			if resource_size > 0 then is_count_valid := True end
 		end
 
-	setup_passive_mode_socket (a_reply: STRING): NETWORK_STREAM_SOCKET
+	setup_passive_mode_socket (a_reply: STRING_8): NETWORK_STREAM_SOCKET
 			-- Create a data socket specified by `a_reply' for the use with
 			-- passive mode.
 		require
 			passive_mode: passive_mode
 			non_empty_data: a_reply /= Void and then not a_reply.is_empty
 		local
-			ip_address: STRING
+			ip_address: STRING_8
 			l_paren, r_paren: INTEGER
 			comma: INTEGER
-			port_str: STRING
+			port_str: STRING_8
 			port_number: INTEGER
 		do
 			l_paren := a_reply.index_of ('(', 1)
@@ -615,7 +611,7 @@ feature {NONE} -- Implementation
 	send_username: BOOLEAN
 			-- Send username. Did it work?
 		local
-			cmd: STRING
+			cmd: STRING_8
 		do
 			if attached main_socket as l_socket then
 				cmd := Ftp_user_command.twin
@@ -634,7 +630,7 @@ feature {NONE} -- Implementation
 	send_password: BOOLEAN
 			-- Send password. Did it work?
 		local
-			cmd: STRING
+			cmd: STRING_8
 		do
 			if attached main_socket as l_socket then
 				cmd := Ftp_password_command.twin
@@ -713,7 +709,7 @@ feature {NONE} -- Implementation
 		require
 			data_socket_exists: data_socket /= Void
 		local
-			port_str: STRING
+			port_str: STRING_8
 			l_data_socket: like data_socket
 		do
 			l_data_socket := data_socket
@@ -736,7 +732,7 @@ feature {NONE} -- Implementation
 	send_transfer_command: BOOLEAN
 			-- Send transfer command. Did it work?
 		local
-			cmd: STRING
+			cmd: STRING_8
 		do
 			if attached main_socket as l_socket then
 				if passive_mode then
@@ -768,7 +764,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2018, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2020, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

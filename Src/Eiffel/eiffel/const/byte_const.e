@@ -157,12 +157,13 @@ feature -- Access
 	bc_builtin_type__has_default: CHARACTER = '%/002/'
 	bc_builtin_type__default: CHARACTER = '%/003/'
 	bc_builtin_type__type_id: CHARACTER = '%/004/'
-	bc_builtin_type__runtime_name: CHARACTER = '%/005/'
+	bc_builtin_type__runtime_name__s1: CHARACTER = '%/005/'
 	bc_builtin_type__generic_parameter_type: CHARACTER = '%/006/'
 	bc_builtin_type__generic_parameter_count: CHARACTER = '%/007/'
 	bc_builtin_type__is_attached: CHARACTER = '%/008/'
 	bc_builtin_type__is_deferred: CHARACTER = '%/009/'
 	bc_builtin_type__is_expanded: CHARACTER = '%/010/'
+	bc_builtin_type__runtime_name__s4: CHARACTER = '%/011/'
 
 
 	Bc_cast_char32:		CHARACTER = '%/135/';
@@ -172,7 +173,7 @@ feature -- Access
 	Bc_basic_operations:	CHARACTER = '%/137/'
 	Bc_max:			CHARACTER = '%/001/'
 	Bc_min:			CHARACTER = '%/002/'
-	Bc_generator:		CHARACTER = '%/003/'
+	Bc_generator__s1:		CHARACTER = '%/003/'
 	Bc_offset:			CHARACTER = '%/004/'
 	Bc_zero:			CHARACTER = '%/005/'
 	Bc_one:			CHARACTER = '%/006/'
@@ -183,6 +184,7 @@ feature -- Access
 	bc_nan:			CHARACTER = '%/011/'
 	bc_negative_infinity:		CHARACTER = '%/012/'
 	bc_positive_infinity:		CHARACTER = '%/013/'
+	Bc_generator__s4:		CHARACTER = '%/014/'
 
 		-- Special instructions for Bit operations
 	Bc_int_bit_op:		CHARACTER = '%/138/'
@@ -275,7 +277,7 @@ feature -- Access
 
 
 note
-	copyright:	"Copyright (c) 1984-2019, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2020, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

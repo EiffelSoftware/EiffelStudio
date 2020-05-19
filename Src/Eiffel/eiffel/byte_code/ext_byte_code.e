@@ -131,7 +131,19 @@ feature -- Byte code generation
 					when {PREDEFINED_NAMES}.type_id_name_id then
 						ba.append (bc_builtin_type__type_id)
 					when {PREDEFINED_NAMES}.runtime_name_name_id then
-						ba.append (bc_builtin_type__runtime_name)
+						if
+							attached context.current_feature.type.actual_type as t and then
+							t.has_associated_class and then
+							attached system.string_32_class as s and then
+							s.is_compiled and then
+							t.base_class.class_id = s.compiled_class.class_id
+						then
+								-- Result is of type STRING_32.
+							ba.append (bc_builtin_type__runtime_name__s4)
+						else
+								-- Result is of type STRING_8.
+							ba.append (bc_builtin_type__runtime_name__s1)
+						end
 					when {PREDEFINED_NAMES}.generic_parameter_type_name_id then
 						ba.append (bc_builtin_type__generic_parameter_type)
 					when {PREDEFINED_NAMES}.generic_parameter_count_name_id then
@@ -408,7 +420,7 @@ invariant
 	external_name_id_positive: external_name_id > 0
 
 note
-	copyright:	"Copyright (c) 1984-2018, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2020, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

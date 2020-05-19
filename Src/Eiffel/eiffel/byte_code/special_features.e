@@ -29,10 +29,10 @@ feature -- Access
 				if c_type_table.found then
 					function_type := c_type_table.found_item
 					if target_type.is_character_32 then
-							-- Do not inline `out', `lower', `upper' on CHARACTER 32 because the code is only
+							-- Do not inline `lower', `upper' on CHARACTER 32 because the code is only
 							-- provided in the Eiffel code.
 						inspect function_type
-						when out_type, lower_type, upper_type then
+						when lower_type, upper_type then
 						else
 							Result := True
 						end
@@ -67,7 +67,7 @@ feature -- Status
 
 feature -- Byte code special generation
 
-	make_byte_code (ba: BYTE_ARRAY; basic_type: BASIC_A)
+	make_byte_code (ba: BYTE_ARRAY; basic_type: BASIC_A; result_type: TYPE_A)
 			-- Generate byte code sequence that will be used with basic types.
 		require
 			basic_type_not_void: basic_type /= Void
@@ -162,7 +162,19 @@ feature -- Byte code special generation
 				ba.append (Bc_min)
 			when generator_type then
 				ba.append (Bc_basic_operations)
-				ba.append (Bc_generator)
+				if
+					attached result_type.actual_type as t and then
+					t.has_associated_class and then
+					attached system.string_32_class as s and then
+					s.is_compiled and then
+					t.base_class.class_id = s.compiled_class.class_id
+				then
+						-- Result is of type STRING_32.
+					ba.append (bc_generator__s4)
+				else
+						-- Result is of type STRING_8.
+					ba.append (bc_generator__s1)
+				end
 			when plus_type then
 				if type_of (basic_type) = pointer_type_id then
 					ba.append (Bc_basic_operations)
@@ -390,7 +402,7 @@ feature -- C special code generation
 			when power_type then
 				generate_power (basic_type, target, parameter, result_type, buffer)
 			when out_type then
-				generate_out (buffer, type_of (basic_type), target)
+				generate_out (buffer, basic_type, target, result_type)
 			when hash_code_type then
 				generate_hashcode (buffer, type_of (basic_type), target)
 			when hash_code_64_type then
@@ -404,7 +416,17 @@ feature -- C special code generation
 			when abs_type then
 				generate_abs (buffer, type_of (basic_type), target)
 			when generator_type then
-				generate_generator (buffer, type_of (basic_type))
+				if
+					attached result_type.actual_type as t and then
+					t.has_associated_class and then
+					attached system.string_32_class as s and then
+					s.is_compiled and then
+					t.base_class.class_id = s.compiled_class.class_id
+				then
+					generate_generator__s4 (buffer, type_of (basic_type))
+				else
+					generate_generator__s1 (buffer, type_of (basic_type))
+				end
 			when default_type then
 				basic_type.c_type.generate_default_value (buffer)
 			when negated_type then
@@ -1019,49 +1041,44 @@ feature {NONE} -- C code generation
 			end
 		end
 
-	generate_out (buffer: GENERATION_BUFFER; type_of_basic: INTEGER; target: REGISTRABLE)
+	generate_out (buffer: GENERATION_BUFFER; basic_type: BASIC_A; target: REGISTRABLE; result_type: TYPE_A)
 			-- Generate fast wrapper for call on `out' where target
 			-- is a basic type.
 		require
 			buffer_not_void: buffer /= Void
 			target_not_void: target /= Void
+		local
+			is_string_32: BOOLEAN
 		do
-			if type_of_basic = boolean_type_id then
-				buffer.put_character ('(');
+			if
+				attached result_type.actual_type as t and then
+				t.has_associated_class and then
+				attached system.string_32_class as s and then
+				s.is_compiled and then
+				t.base_class.class_id = s.compiled_class.class_id
+			then
+				is_string_32 := True
+			end
+			if basic_type.is_boolean then
+				buffer.put_character ('(')
 				target.print_register
-				buffer.put_string (" ? makestr (%"True%", 4) : makestr (%"False%", 5))")
-
-					-- Add `eif_plug.h' for C compilation where `makestr' is -- declared
-				shared_include_queue_put ({PREDEFINED_NAMES}.eif_plug_header_name_id)
-			else
-				inspect
-					type_of_basic
-				when character_type_id then
-					check
-						not_is_wide: not is_wide
-					end
-					buffer.put_string ("c_outc(")
-				when integer_type_id then
-					if is_signed_integer then
-						inspect
-							integer_size
-						when 8, 16, 32 then buffer.put_string ("c_outi(")
-						when 64 then buffer.put_string ("c_outi64(")
-						end
-					else
-						inspect
-							integer_size
-						when 8, 16, 32 then buffer.put_string ("c_outu(")
-						when 64 then buffer.put_string ("c_outu64(")
-						end
-					end
-				when pointer_type_id then
-					buffer.put_string ("c_outp(")
-				when real_32_type_id then
-					buffer.put_string ("c_outr32(")
-				when real_64_type_id then
-					buffer.put_string ("c_outr64(")
+				if is_string_32 then
+					buffer.put_three_character (' ', '?', ' ')
+					buffer.generate_manifest_string_32 ("True", False)
+					buffer.put_three_character (' ', ':', ' ')
+					buffer.generate_manifest_string_32 ("False", False)
+					buffer.put_character (')')
+				else
+					buffer.put_string (" ? makestr (%"True%", 4) : makestr (%"False%", 5))")
+						-- Add `eif_plug.h' for C compilation where `makestr' is -- declared
+					shared_include_queue_put ({PREDEFINED_NAMES}.eif_plug_header_name_id)
 				end
+			else
+				buffer.put_string ("eif_out__")
+				{BUILT_IN_EXTENSION_I}.append_type_name (basic_type, system.byte_context.context_class_type, buffer)
+				buffer.put_character ('_')
+				{BUILT_IN_EXTENSION_I}.append_type_name (result_type, system.byte_context.context_class_type, buffer)
+				buffer.put_character ('(')
 				target.print_register
 				buffer.put_character (')')
 
@@ -1118,7 +1135,7 @@ feature {NONE} -- C code generation
 			end
 		end
 
-	generate_generator (buffer: GENERATION_BUFFER; type_of_basic: INTEGER)
+	generate_generator__s1 (buffer: GENERATION_BUFFER; type_of_basic: INTEGER)
 			-- Generate fast wrapper for call on `generator' where target
 			-- is a basic type.
 		require
@@ -1161,6 +1178,50 @@ feature {NONE} -- C code generation
 			when real_64_type_id then
 				buffer.put_string (" RTMS_EX(%"REAL_64%", 7)")
 			end
+		end
+
+	generate_generator__s4 (buffer: GENERATION_BUFFER; type_of_basic: INTEGER)
+			-- Generate fast wrapper for call on `generator' where target
+			-- is a basic type.
+		require
+			buffer_not_void: buffer /= Void
+		do
+			buffer.generate_manifest_string_32
+				(inspect type_of_basic
+				when boolean_type_id then
+					{STRING_32} "BOOLEAN"
+				when character_type_id then
+					if is_wide then
+						{STRING_32} "CHARACTER_32"
+					else
+						{STRING_32} "CHARACTER_8"
+					end
+				when integer_type_id then
+					if is_signed_integer then
+						inspect
+							integer_size
+						when 8 then {STRING_32} "INTEGER_8"
+						when 16 then {STRING_32} "INTEGER_16"
+						when 32 then {STRING_32} "INTEGER_32"
+						when 64 then {STRING_32} "INTEGER_64"
+						end
+					else
+						inspect
+							integer_size
+						when 8 then {STRING_32} "NATURAL_8"
+						when 16 then {STRING_32} "NATURAL_16"
+						when 32 then {STRING_32} "NATURAL_32"
+						when 64 then {STRING_32} "NATURAL_64"
+						end
+					end
+				when pointer_type_id then
+					{STRING_32} "POINTER"
+				when real_32_type_id then
+					{STRING_32} "REAL_32"
+				when real_64_type_id then
+					{STRING_32} "REAL_64"
+				end,
+				False)
 		end
 
 	generate_max (buffer: GENERATION_BUFFER; type_of_basic: INTEGER; target: REGISTRABLE; parameter: PARAMETER_BL)

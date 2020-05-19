@@ -118,10 +118,10 @@ feature -- Setting
 
 feature -- Byte code generation
 
-	make_special_byte_code (ba: BYTE_ARRAY; basic_type: BASIC_A)
+	make_special_byte_code (ba: BYTE_ARRAY; basic_type: BASIC_A; result_type: TYPE_A)
 			-- Make byte code for special calls.
 		do
-			special_routines.make_byte_code (ba, basic_type)
+			special_routines.make_byte_code (ba, basic_type, result_type)
 		end
 
 	basic_register: REGISTRABLE

@@ -146,7 +146,7 @@ feature
 			buf: GENERATION_BUFFER
 			result_type: TYPE_A
 			l_args: like argument_types
-			put_eif_test: BOOLEAN
+			has_eif_test: BOOLEAN
 			internal_name: STRING
 			type_c: TYPE_C
 			local_argument_types: like argument_types
@@ -155,8 +155,8 @@ feature
 			buf := buffer
 			result_type := real_type (type)
 			type_c := result_type.c_type
-			put_eif_test := extension.is_inline and result_type.is_boolean
-			if put_eif_test then
+			if extension.is_inline and result_type.is_boolean then
+				has_eif_test := True
 				buf.put_string ("EIF_TEST (")
 			end
 			if is_encapsulation_required or else extension.is_inline then
@@ -212,7 +212,9 @@ feature
 				elseif attached {CPP_EXTENSION_I} extension as cpp_ext then
 					cpp_ext.generate_access (external_name, parameters, result_type)
 				elseif attached {BUILT_IN_EXTENSION_I} extension as built_in_ext then
-					built_in_ext.generate_access (external_name, written_in, reg, parameters, result_type)
+						-- Pass original feature to generate signature if needed.
+					built_in_ext.generate_access (external_name, written_in, reg, parameters, result_type,
+						routine_entry.written_class.feature_of_body_index (routine_entry.body_index), routine_entry.access_class_type)
 				elseif attached {C_EXTENSION_I} extension as c_ext then
 						-- Remove `Current' from argument types.
 					l_args := argument_types
@@ -231,7 +233,7 @@ feature
 					-- Call is done like a normal Eiffel routine call.
 				generate_parameters_part (reg)
 			end
-			if put_eif_test then
+			if has_eif_test then
 				buf.put_character (')')
 			end
 			if is_right_parenthesis_needed.item then

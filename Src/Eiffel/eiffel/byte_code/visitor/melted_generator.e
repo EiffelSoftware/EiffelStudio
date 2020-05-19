@@ -2588,7 +2588,6 @@ feature {NONE} -- Implementation
 		require
 			a_node_not_void: a_node /= Void
 		local
-			l_basic_type: BASIC_A
 			l_inst_cont_type: TYPE_A
 			l_finish_byte_code: BOOLEAN
 			creation_expression: CREATION_EXPR_B
@@ -2610,10 +2609,9 @@ feature {NONE} -- Implementation
 				-- that we are currently performing a static access call on a feature
 				-- from a basic class. Assuming otherwise is not correct as you
 				-- cannot seriously inherit from a basic class.
-			if l_inst_cont_type.is_basic and a_node.precursor_type = Void then
-				l_basic_type ?= l_inst_cont_type
+			if l_inst_cont_type.is_basic and a_node.precursor_type = Void and then attached {BASIC_A} l_inst_cont_type as l_basic_type then
 				if a_node.is_feature_special (False, l_basic_type) then
-					a_node.make_special_byte_code (ba, l_basic_type)
+					a_node.make_special_byte_code (ba, l_basic_type, a_node.type)
 				else
 						-- Process the call via the `feature_name' in the
 						-- associated reference type

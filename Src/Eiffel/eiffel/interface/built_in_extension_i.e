@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "Representation of a built_in external."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -56,14 +56,16 @@ feature -- Code generation
 			end
 				-- Make sure that the class id passed in is where the built-in feature is written, not melted.
 				-- This makes sure the replicated built-in's get generated correctly.
-			internal_generate_access (inline_byte_code.feature_name, Context.current_feature.written_in,
-				Void, Void, inline_byte_code.argument_count, l_ret_type)
+			internal_generate_access (inline_byte_code.external_name, Context.current_feature.written_in,
+				Void, Void, inline_byte_code.argument_count, l_ret_type,
+				context.current_feature.written_class.feature_of_body_index (context.current_feature.body_index), context.class_type)
 
 			l_buffer.put_character (';')
 		end
 
-	generate_access (external_name: STRING; written_class_id: INTEGER; reg: REGISTRABLE; parameters: BYTE_LIST [EXPR_B]; a_ret_type: TYPE_A)
-			-- Generate inline call to C++ external.
+	generate_access (external_name: STRING; written_class_id: INTEGER; reg: REGISTRABLE; parameters: BYTE_LIST [EXPR_B]; a_ret_type: TYPE_A;
+		declared_feature: detachable FEATURE_I; target_type: CLASS_TYPE)
+			-- Generate inline call to a built-in feature declared as `declared_feature` and called on target type `target_type`.
 		require
 			external_name_not_void: external_name /= Void
 			a_ret_type_not_void: a_ret_type /= Void
@@ -71,18 +73,15 @@ feature -- Code generation
 			check
 				final_mode: Context.final_mode
 			end
-			if parameters /= Void then
-				internal_generate_access (external_name, written_class_id, reg, parameters, parameters.count, a_ret_type)
-			else
-				internal_generate_access (external_name, written_class_id, reg, Void, 0, a_ret_type)
-			end
+			internal_generate_access (external_name, written_class_id, reg, parameters,
+				if attached parameters then parameters.count else 0 end, a_ret_type, declared_feature, target_type)
 		end
 
 feature {NONE} -- Implementation
 
 	internal_generate_access (
 			external_name: STRING; written_class_id: INTEGER; reg: REGISTRABLE; parameters: BYTE_LIST [EXPR_B];
-			nb: INTEGER; a_ret_type: TYPE_A)
+			nb: INTEGER; a_ret_type: TYPE_A; declared_feature: detachable FEATURE_I; target_type: CLASS_TYPE)
 
 			-- Generate inline C external call.
 		require
@@ -92,7 +91,8 @@ feature {NONE} -- Implementation
 		local
 			l_buffer: GENERATION_BUFFER
 			l_class: CLASS_C
-			l_name: STRING
+			l_name: READABLE_STRING_8
+			mutable_name: STRING_8
 		do
 			l_buffer := context.buffer
 
@@ -101,21 +101,50 @@ feature {NONE} -- Implementation
 			check l_class_not_void: l_class /= Void end
 				-- Special processing of operators that have a name not suitable
 				-- for C code generation.
-			l_name := external_name.twin
+			l_name := external_name
 			if is_mangled_alias_name (l_name) then
 				l_name := extract_alias_name (l_name)
-				operator_table.search (l_name)
-				if operator_table.found then
-					l_name := operator_table.found_item.twin
+				if attached operator_table [l_name] as n then
+					l_name := n
 				else
-					l_name.replace_substring_all (" ", "_")
+					create mutable_name.make_from_string (l_name)
+					mutable_name.replace_substring_all (" ", "_")
+					l_name := mutable_name
 				end
 			end
-			l_name.prepend_character ('_')
-			l_name.prepend (l_class.name)
-			l_name.prepend ("eif_builtin_")
-
+			l_buffer.put_string ("eif_builtin_")
+				-- Append class name.
+			l_buffer.put_string (l_class.name)
+			l_buffer.put_character ('_')
 			l_buffer.put_string (l_name)
+
+				-- Append original signature.
+			if attached declared_feature then
+					-- The signature is delimited with 2 consequent underscores.
+					-- One is generated here and another one is added when generating target/arguments/result.
+				l_buffer.put_character ('_')
+				if not is_static and then target_type.is_expanded and then attached target_type.type.generics then
+						-- Append target type name.
+					l_buffer.put_character ('_')
+					append_type_name (target_type.type, target_type, l_buffer)
+				end
+					-- Append argument type names.
+				if attached declared_feature.arguments as ts then
+					across
+						ts as t
+					loop
+						l_buffer.put_character ('_')
+						append_type_name (t.item, target_type, l_buffer)
+					end
+				end
+					-- Append result type name.
+					-- If there is no result type, there is still a trailing underscore.
+				l_buffer.put_character ('_')
+				if attached declared_feature.type as t and then not t.is_void then
+					append_type_name (t, target_type, l_buffer)
+				end
+			end
+
 			if not is_static or else nb > 0 then
 				l_buffer.put_string (" (")
 			end
@@ -139,12 +168,43 @@ feature {NONE} -- Implementation
 			shared_include_queue_put ({PREDEFINED_NAMES}.eif_built_in_header_name_id)
 		end
 
-feature {NONE} -- Implementation
+feature {SPECIAL_FEATURES} -- Generation: signature
 
-	operator_table: HASH_TABLE [STRING, STRING]
+	append_type_name (t: TYPE_A; target_type: CLASS_TYPE; buffer: GENERATION_BUFFER)
+			-- Append type name of type `t` declared in class `c` to buffer `buffer`.
+			-- The appended name uses only valid identifier characters.
+		require
+			t.is_valid_context_type (target_type.type)
+		local
+			conformance_type: TYPE_A
+			class_type: CL_TYPE_A
+			name: READABLE_STRING_8
+		do
+			conformance_type := t.conformance_type
+				-- Ignore formal generic types.
+			if conformance_type.has_associated_class_type (target_type.type) then
+				class_type := conformance_type.associated_class_type (target_type.type).type
+				name := class_type.base_class.name
+				buffer.put_string (if attached class_name_abbreviation [name] as n then n else name end)
+				if class_type.is_basic and then attached class_type.generics as gs and then not gs.is_empty and then not class_type.is_tuple then
+					across
+						gs as g
+					loop
+						buffer.put_character ('_')
+						append_type_name (g.item, target_type, buffer)
+					end
+				end
+			end
+		ensure
+			class
+		end
+
+feature {NONE} -- Name translation
+
+	operator_table: HASH_TABLE [READABLE_STRING_8, READABLE_STRING_8]
 			-- Mapping between standard operator and their C generated names
 		once
-			create Result.make (20)
+			create Result.make_equal (20)
 			Result.put ("or_else", "or else")
 			Result.put ("and_then", "and then")
 			Result.put ("slash", "/")
@@ -162,8 +222,43 @@ feature {NONE} -- Implementation
 			operator_table_not_void: Result /= Void
 		end
 
+	class_name_abbreviation: STRING_TABLE [READABLE_STRING_8]
+			-- Abbreviations to be used for know class names.
+		once
+			create Result.make_equal (10)
+			Result.compare_objects
+			Result ["ANY"] := "o"
+			Result ["ARRAY"] := "a"
+			Result ["BOOLEAN"] := "b"
+			Result ["CHARACTER_8"] := "c1"
+			Result ["CHARACTER_32"] := "c4"
+			Result ["EXCEPTION"] := "e"
+			Result ["IMMUTABLE_STRING_8"] := "m1"
+			Result ["IMMUTABLE_STRING_32"] := "m4"
+			Result ["INTEGER_8"] := "i1"
+			Result ["INTEGER_16"] := "i2"
+			Result ["INTEGER_32"] := "i4"
+			Result ["INTEGER_64"] := "i8"
+			Result ["NATURAL_8"] := "u1"
+			Result ["NATURAL_16"] := "u2"
+			Result ["NATURAL_32"] := "u4"
+			Result ["NATURAL_64"] := "u8"
+			Result ["POINTER"] := "p"
+			Result ["REAL_32"] := "r4"
+			Result ["REAL_64"] := "r8"
+			Result ["SPECIAL"] := "s"
+			Result ["STRING_8"] := "s1"
+			Result ["STRING_32"] := "s4"
+			Result ["TUPLE"] := "u"
+			Result ["TYPE"] := "t"
+		ensure
+			class
+			unique_mapping: across Result as t1 all across Result as t2 all t1.item.same_string (t2.item) implies t1.key = t2.key end end
+		end
+
 note
-	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
+	ca_ignore: "CA011", "CA011: too many arguments"
+	copyright:	"Copyright (c) 1984-2020, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

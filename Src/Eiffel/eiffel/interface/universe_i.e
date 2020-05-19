@@ -420,7 +420,7 @@ feature -- Access
 			end
 		end
 
-	safe_class_named (a_class_name: STRING; a_group: CONF_GROUP): detachable CLASS_I
+	safe_class_named (a_class_name: READABLE_STRING_GENERAL; a_group: CONF_GROUP): detachable CLASS_I
 			-- Class named `a_class_name' in cluster `a_cluster' which doesn't generate {VSCN} errors.
 		require
 			good_argument: a_class_name /= Void
@@ -930,7 +930,7 @@ invariant
 	target_in_conf_system: (conf_system /= Void and new_target = Void) implies target.system = conf_system
 
 note
-	copyright:	"Copyright (c) 1984-2019, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2020, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

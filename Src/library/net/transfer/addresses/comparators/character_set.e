@@ -1,8 +1,6 @@
-note
-	description:
-		"Comparator for character sets"
+﻿note
+	description: "Comparator for character sets"
 	legal: "See notice at end of class."
-
 	status: "See notice at end of class."
 	date: "$Date$"
 	revision: "$Revision$"
@@ -24,19 +22,19 @@ feature {NONE} -- Initialization
 	default_create
 			-- Initialize `Current'.
 		do
-			make_filled_area (False, {CHARACTER}.Max_value + 1)
+			make_filled_area (False, {CHARACTER_8}.Max_value + 1)
 		end
 
 feature -- Access
 
-	contains_string (s: STRING): BOOLEAN
+	contains_string (s: STRING_8): BOOLEAN
 			-- Does character set contain string `s'?
 		require
 			not_empty: not is_empty
 			string_exists: s /= Void
 		local
 			i, cnt: INTEGER
-			str: SPECIAL [CHARACTER]
+			str: SPECIAL [CHARACTER_8]
 		do
 			from
 				str := s.area
@@ -50,7 +48,7 @@ feature -- Access
 			end
 		end
 
-	contains_character (c: CHARACTER): BOOLEAN
+	contains_character (c: CHARACTER_8): BOOLEAN
 			-- Does character set contain character `c'?
 		require
 			not_empty: not is_empty
@@ -78,7 +76,7 @@ feature -- Status report
 
 feature -- Status setting
 
-	define (s: STRING)
+	define (s: STRING_8)
 			-- Define character set.
 		require
 			string_exists: s /= Void
@@ -102,7 +100,7 @@ feature -- Status setting
 
 feature -- Element change
 
-	add (s: STRING)
+	add (s: STRING_8)
 			-- Add `s' to character set.
 		require
 			non_empty_string: s /= Void and then not s.is_empty
@@ -113,7 +111,7 @@ feature -- Element change
 
 feature -- Removal
 
-	remove (s: STRING)
+	remove (s: STRING_8)
 			-- Remove `s' from character set.
 		require
 			non_empty_string: s /= Void and then not s.is_empty
@@ -124,14 +122,14 @@ feature -- Removal
 
 feature {NONE} -- Implementation
 
-	process_string (s: STRING; for_addition: BOOLEAN)
+	process_string (s: STRING_8; for_addition: BOOLEAN)
 			-- Add or remove (depending on `for_addition') the characters that `s' defines to/from the set.
 		require
 			valid_string: s /= Void and not s.is_empty
 			not_open_set: (s.item (1) /= '-') and (s.item (s.count) /= '-')
 		local
 			escape: BOOLEAN
-			lastc, curc: CHARACTER
+			lastc, curc: CHARACTER_8
 			i, cnt: INTEGER
 		do
 			from
@@ -165,7 +163,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	set_characters (c1, c2: CHARACTER; for_addition: BOOLEAN)
+	set_characters (c1, c2: CHARACTER_8; for_addition: BOOLEAN)
 			-- Set or unset (depending on `for_addition') the characters
 			-- between `c1' and `c2' to the set (bounds included).
 			-- Do nothing if c2 is before c1.
@@ -187,14 +185,14 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2020, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 

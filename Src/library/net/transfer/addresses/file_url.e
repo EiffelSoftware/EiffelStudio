@@ -31,7 +31,7 @@ feature -- Access
 			create Result.make_from_string (path.utf_8_name)
 		end
 
-	Service: STRING = "file"
+	Service: STRING_8 = "file"
 			-- Name of the service.
 
 	hash_code: INTEGER = 0
@@ -39,7 +39,7 @@ feature -- Access
 			-- (Objects of the current type cannot be hashed, therefore the
 			-- hash function is a constant.)
 
-	location: STRING
+	location: STRING_8
 			-- Full URL of resource.
 		do
 			Result := service.twin
@@ -62,7 +62,7 @@ feature -- Status report
 	Is_proxy_supported: BOOLEAN = False
 			-- Are proxy connections supported? (Answer: no)
 
-	proxy_host_ok (host: STRING): BOOLEAN
+	proxy_host_ok (host: STRING_8): BOOLEAN
 	 		-- Is host name of proxy correct?
 		do
 			Result := False
@@ -79,12 +79,12 @@ feature -- Status report
 
 feature -- Status setting
 
-	set_username (un: STRING)
+	set_username (un: STRING_8)
 			-- Set username.
 		do
 		end
 
-	set_password (pw: STRING)
+	set_password (pw: STRING_8)
 			-- Set password.
 		do
 		end
@@ -101,7 +101,7 @@ feature {NONE} -- Basic operations
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2019, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2020, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

@@ -20,7 +20,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a: STRING)
+	make (a: STRING_8)
 	 		-- Create address.
 		do
 			Precursor (a)
@@ -32,7 +32,7 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	Service: STRING = "ftp"
+	Service: STRING_8 = "ftp"
 			-- Name of service (Answer: "ftp")
 
 feature -- Status report
@@ -46,21 +46,21 @@ feature -- Status report
 	Has_username: BOOLEAN = True
 			-- Can address contain a username? (Answer: yes)
 
-	is_path_correct (p: STRING): BOOLEAN
+	is_path_correct (p: STRING_8): BOOLEAN
 			-- Is path name correct?
 		do
 			Result := not p.is_empty and then path_charset.contains_string (p)
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2020, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 

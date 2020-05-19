@@ -1,8 +1,6 @@
-note
-	description:
-		"URLs for network resources"
+﻿note
+	description: "URLs for network resources"
 	legal: "See notice at end of class."
-
 	status: "See notice at end of class."
 	date: "$Date$"
 	revision: "$Revision$"
@@ -23,7 +21,7 @@ deferred class NETWORK_RESOURCE_URL inherit
 
 feature {NONE} -- Initialization
 
-	make (a: STRING)
+	make (a: STRING_8)
 			-- Create address.
 		do
 			create username.make (0)
@@ -36,19 +34,19 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	host: STRING
+	host: STRING_8
 			-- Name or IP address of host
 
-	path: STRING
+	path: STRING_8
 			-- Path of resource
 
-	username: STRING
+	username: STRING_8
 			-- Optional username
 
-	password: STRING
+	password: STRING_8
 			-- Optional password
 
-	location: STRING
+	location: STRING_8
 			-- Full URL of resource
 		do
 			Result := service.twin
@@ -92,13 +90,13 @@ feature -- Comparison
 
 feature -- Status report
 
-	is_host_correct (h: STRING): BOOLEAN
+	is_host_correct (h: STRING_8): BOOLEAN
 			-- Is host `h' name correct?
 		do
 			Result :=  h /= Void and then host_charset.contains_string (h)
 		end
 
-	is_path_correct (p: STRING): BOOLEAN
+	is_path_correct (p: STRING_8): BOOLEAN
 			-- Is path name correct?
 		do
 			Result := p /= Void and then path_charset.contains_string (p)
@@ -118,7 +116,7 @@ feature -- Status report
 
 feature -- Status setting
 
-	set_username (un: STRING)
+	set_username (un: STRING_8)
 			-- Set username.
 		do
 			username := un
@@ -126,7 +124,7 @@ feature -- Status setting
 			username_set: username = un
 		end
 
-	set_password (pw: STRING)
+	set_password (pw: STRING_8)
 			-- Set password.
 		do
 			password := pw
@@ -231,18 +229,14 @@ invariant
 	host_not_void: host /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2020, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
-
-
-
-end -- class NETWORK_RESOURCE_URL
-
+end

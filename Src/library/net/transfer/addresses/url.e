@@ -13,7 +13,7 @@ deferred class URL inherit
 
 feature {NONE} -- Initialization
 
-	make (a: STRING)
+	make (a: STRING_8)
 			-- Create URL with address `a'.
 		require
 			address_specified: a /= Void and then not a.is_empty
@@ -30,7 +30,7 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	service: STRING
+	service: STRING_8
 			-- Name of service
 		deferred
 		end
@@ -43,7 +43,7 @@ feature -- Access
 		deferred
 		end
 
-	proxy_host: STRING
+	proxy_host: STRING_8
 			-- Name or address of proxy host
 		require
 			proxy_supported: is_proxy_supported
@@ -69,7 +69,7 @@ feature -- Access
 			result_non_negative: Result >= 0
 		end
 
-	location: STRING
+	location: STRING_8
 			-- Full URL of resource
 		deferred
 		end
@@ -86,7 +86,7 @@ feature -- Status report
 		deferred
 		end
 
-	 proxy_host_ok (host: STRING): BOOLEAN
+	 proxy_host_ok (host: STRING_8): BOOLEAN
 	 		-- Is host name of proxy correct?
 		require
 			proxy_supported: is_proxy_supported
@@ -121,7 +121,7 @@ feature -- Status setting
 			port_set: port = port_no
 		end
 
-	set_proxy (host: STRING; port_no: INTEGER)
+	set_proxy (host: STRING_8; port_no: INTEGER)
 			-- Set proxy host to `host' and proxy port to `port_no'.
 		require
 			proxy_supported: is_proxy_supported
@@ -145,7 +145,7 @@ feature -- Status setting
 			proxy_information_set: proxy_information = pi
 		end
 
-	set_username (un: STRING)
+	set_username (un: STRING_8)
 			-- Set username.
 		require
 			username_ok: has_username
@@ -153,7 +153,7 @@ feature -- Status setting
 		deferred
 		end
 
-	set_password (pw: STRING)
+	set_password (pw: STRING_8)
 			-- Set password.
 		require
 			password_accepted: is_password_accepted
@@ -183,7 +183,7 @@ feature {NONE} -- Basic operations
 
 feature {NONE} -- Implementation
 
-	address: STRING
+	address: STRING_8
 			-- Address string
 
 	proxy_information: detachable PROXY_INFORMATION
@@ -195,7 +195,7 @@ invariant
 	proxy_usage_constraint: is_proxy_used implies is_proxy_supported
 
 note
-	copyright:	"Copyright (c) 1984-2013, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2020, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

@@ -1,10 +1,9 @@
-note
-	description:
-		"Information about proxies"
+﻿note
+	description: "Information about proxies"
 	legal: "See notice at end of class."
-
 	status: "See notice at end of class."
 	author: "Patrick Schoenbach"
+	revised_by: "Alexander Kogtenkov"
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -21,7 +20,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (h: STRING; p: INTEGER)
+	make (h: STRING_8; p: INTEGER)
 			-- Create proxy information for host `h' and port `p'.
 		require
 			host_not_empty: h /= Void and then not h.is_empty
@@ -37,7 +36,7 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	host: STRING
+	host: STRING_8
 			-- Name or address of proxy host
 
 	port: INTEGER
@@ -45,7 +44,7 @@ feature -- Access
 
 feature -- Status setting
 
-	set_host (h: STRING)
+	set_host (h: STRING_8)
 			-- Set host name to `h'.
 		require
 			host_not_empty: h /= Void and then not h.is_empty
@@ -73,18 +72,14 @@ invariant
 	port_non_negative: port >= 0
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2020, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
-
-
-
-end -- class PROXY_INFORMATION
-
+end

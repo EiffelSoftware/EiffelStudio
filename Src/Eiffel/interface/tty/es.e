@@ -540,7 +540,7 @@ feature {NONE} -- Output
 	print_version
 			-- Print Version Number
 		do
-			localized_print ("ISE " + Workbench_name + " version " + Version_number + "%N")
+			io.put_string_32 ({STRING_32} "ISE " + Workbench_name + " version " + Version_number + "%N")
 		end
 
 	print_help

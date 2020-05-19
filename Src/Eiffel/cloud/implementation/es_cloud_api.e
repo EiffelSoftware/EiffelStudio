@@ -276,7 +276,7 @@ feature -- Plan
 		local
 			ctx: HTTP_CLIENT_REQUEST_CONTEXT
 			resp: like response
-			l_installation_href, l_account_href: READABLE_STRING_8
+			l_installation_href: READABLE_STRING_8
 		do
 			reset_api_call
 			if

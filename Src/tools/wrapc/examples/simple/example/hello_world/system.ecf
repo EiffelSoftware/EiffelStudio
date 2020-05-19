@@ -12,12 +12,12 @@
 		</option>
 		<pre_compile_action working_directory="." command="/bin/sh ./pre_compile_action.sh" succeed="true">
 			<condition>
-				<platform excluded_value="windows"/>
+				<custom name="ISE_PLATFORM" excluded_value="win*" match="wildcard"/>
 			</condition>
 		</pre_compile_action>
 		<pre_compile_action working_directory="." command="pre_compile_action.bat" succeed="true">
 			<condition>
-				<platform value="windows"/>
+				<custom name="ISE_PLATFORM" value="win*" match="wildcard"/>
 			</condition>
 		</pre_compile_action>
 		<variable name="GOBO_CC" value="msc"/>

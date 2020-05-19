@@ -1,34 +1,29 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
-<system
-	xmlns="http://www.eiffel.com/developers/xml/configuration-1-21-0"
-	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-21-0 http://www.eiffel.com/developers/xml/configuration-1-21-0.xsd"
-	name="callback_hello_world"
->
+<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-21-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-21-0 http://www.eiffel.com/developers/xml/configuration-1-21-0.xsd" name="callback_hello_world" uuid="F507D6B5-606C-42DD-84D4-67C3A3157387">
 	<target name="callback_hello_world">
 		<root class="CALLBACK_HELLO_WORLD" feature="make"/>
-		<option warning="warning" full_class_checking="false" is_attached_by_default="True" manifest_array_type="mismatch_warning">
-			<assertions check="false" invariant="false" loop="false" postcondition="false" precondition="false" supplier_precondition="false"/>
+		<option warning="warning" full_class_checking="false" is_attached_by_default="true" manifest_array_type="mismatch_warning">
+			<assertions/>
 		</option>
-		<pre_compile_action working_directory="." command="/bin/sh ./pre_compile_action.sh" succeed="true">
+		<pre_compile_action working_directory=".\" command="/bin/sh ./pre_compile_action.sh" succeed="true">
 			<condition>
-				<platform excluded_value="windows"/>
+				<custom name="ISE_PLATFORM" excluded_value="win*" match="wildcard"/>
 			</condition>
 		</pre_compile_action>
-		<pre_compile_action working_directory="." command="pre_compile_action.bat" succeed="true">
+		<pre_compile_action working_directory=".\" command="pre_compile_action.bat" succeed="true">
 			<condition>
-				<platform value="windows"/>
+				<custom name="ISE_PLATFORM" value="win*" match="wildcard"/>
 			</condition>
 		</pre_compile_action>
 		<variable name="GOBO_CC" value="msc"/>
 		<library name="base" location="${ISE_LIBRARY}\library\base\base.ecf" readonly="true"/>
-		<library name="time" location="${ISE_LIBRARY}\library\time\time.ecf" readonly="true"/>
 		<library name="callback_library" location="..\..\library\library.ecf" readonly="true"/>
-		<cluster name="callback_hello_world" location="." recursive="true">
+		<library name="time" location="${ISE_LIBRARY}\library\time\time.ecf" readonly="true"/>
+		<cluster name="callback_hello_world" location=".\" recursive="true">
 			<file_rule>
+				<exclude>/EIFGENs$</exclude>
 				<exclude>/c$</exclude>
 				<exclude>/include$</exclude>
-				<exclude>/EIFGENs$</exclude>
 			</file_rule>
 		</cluster>
 	</target>

@@ -232,7 +232,7 @@ feature -- Output
 			last_read_successful := cwin_read_file (output_handle, l_str.item,
 				count, $l_read_bytes, default_pointer)
 			last_read_bytes := l_read_bytes
-			last_string := l_str.substring (1, l_read_bytes)
+			last_string := l_str.substring_8 (1, l_read_bytes)
 		end
 
 feature {NONE} -- Implementation
@@ -345,9 +345,8 @@ feature {NONE} -- Externals
 			"INVALID_HANDLE_VALUE"
 		end
 
-
 note
-	copyright:	"Copyright (c) 1984-2010, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2020, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

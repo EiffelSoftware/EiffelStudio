@@ -81,7 +81,7 @@ feature -- Basic Operations
 			spawn_with_flags (a_command_line, a_working_directory, create_new_console)
 		end
 
-	launch (a_command_line: READABLE_STRING_GENERAL; a_working_directory: detachable READABLE_STRING_GENERAL; a_output_handler: detachable ROUTINE [STRING])
+	launch (a_command_line: READABLE_STRING_GENERAL; a_working_directory: detachable READABLE_STRING_GENERAL; a_output_handler: detachable ROUTINE [STRING_8])
 			-- Launch process described in `a_command_line' from `a_working_directory'.
 			-- Wait for end of process and send output to `a_output_handler' if not void.
 		require
@@ -335,7 +335,7 @@ feature {NONE} -- Implementation
 			-- Output block size.
 
 ;note
-	copyright:	"Copyright (c) 1984-2017, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2020, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

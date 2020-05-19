@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "Diff class for texts."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -24,7 +24,7 @@ feature -- Access
 		local
 			ss, se, ds, de: INTEGER --start and end positions in source and destination of this block
 			block_line_diff, line_diff: INTEGER -- #lines in destination - #lines in source
-			block: STRING
+			block: STRING_8
 			l_hunk: LIST [DIFF_LINE]
 			l_line: DIFF_LINE
 		do
@@ -175,7 +175,7 @@ feature -- Element change
 			a_dst_file_not_empty: not a_dst_file.is_empty
 		local
 			file_src, file_dst: PLAIN_TEXT_FILE
-			line: detachable STRING
+			line: detachable STRING_8
 			i: INTEGER
 			l_header: like unified_header
 			l_src: like src
@@ -234,7 +234,7 @@ feature -- Element change
 
 feature -- Basic operations
 
-	patch (a_text: READABLE_STRING_8; a_patch: READABLE_STRING_8; reversed: BOOLEAN): STRING
+	patch (a_text: READABLE_STRING_8; a_patch: READABLE_STRING_8; reversed: BOOLEAN): STRING_8
 			-- Apply `a_patch' (in unified patch format) to `a_text'. If the patch was created from destination to source set `reversed'.
 		require
 			a_text_not_void: a_text /= void
@@ -243,7 +243,7 @@ feature -- Basic operations
 			commands: LIST [READABLE_STRING_8]
 			lines: LIST [READABLE_STRING_8]
 			tmp: READABLE_STRING_8
-			add_char, del_char, match_char: CHARACTER
+			add_char, del_char, match_char: CHARACTER_8
 		do
 			match_char := ' '
 			if reversed then
@@ -324,13 +324,13 @@ feature -- Basic operations
 
 feature {NONE} -- Implementation
 
-	line_delimiter: CHARACTER
+	line_delimiter: CHARACTER_8
 			-- The line delimiter to use
 		do
 			Result := '%N'
 		end
 
-	unified_header: detachable STRING
+	unified_header: detachable STRING_8
 			-- The header for the unified diff.
 
 ;note

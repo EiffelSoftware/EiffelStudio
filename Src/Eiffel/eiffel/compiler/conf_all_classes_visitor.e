@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "Get a list of all classes."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -89,7 +89,7 @@ feature {NONE} -- Implementation
 	targets_done: SEARCH_TABLE [UUID]
 			-- Lookup for libraries we already handled.
 
-	assemblies_done: SEARCH_TABLE [STRING]
+	assemblies_done: SEARCH_TABLE [like {CONF_PHYSICAL_ASSEMBLY}.guid]
 			-- Lookup for assemblies we already handled.
 
 	retrieve_recursively (a_target: CONF_TARGET)
@@ -122,7 +122,7 @@ invariant
 	assemblies_done_not_void: assemblies_done /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2009, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2020, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

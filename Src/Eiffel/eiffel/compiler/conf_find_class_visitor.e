@@ -106,7 +106,7 @@ feature {NONE} -- Implementation
 	targets_done: SEARCH_TABLE [UUID]
 			-- Lookup for libraries where we already searched.
 
-	assemblies_done: SEARCH_TABLE [STRING]
+	assemblies_done: SEARCH_TABLE [like {CONF_PHYSICAL_ASSEMBLY}.guid]
 			-- Lookup for assemblies where we already searched.
 
 	retrieve_from_group (a_group: CONF_GROUP)
@@ -142,7 +142,7 @@ invariant
 	targets_done_not_void: targets_done /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2016, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2020, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

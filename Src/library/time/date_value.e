@@ -128,7 +128,7 @@ feature {NONE} -- Implementation
 	day_shift: INTEGER = 0
 			-- Shift needed to extract/set `year', `month' and `day'.
 
-	compact_date_attribute_name: STRING = "compact_date"
+	compact_date_attribute_name: STRING_8 = "compact_date"
 			-- Name of `compacte_date' attribute in 5.3 and older version.
 
 	set_private_internal_compact_date (a_compact_date: INTEGER)
@@ -144,7 +144,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright: "Copyright (c) 1984-2019, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2020, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

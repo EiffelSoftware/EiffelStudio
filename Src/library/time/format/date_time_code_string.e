@@ -15,7 +15,7 @@ create
 
 feature -- Creation
 
-	make (s: READABLE_STRING_8)
+	make (s: READABLE_STRING)
 			-- Create code descriptors and hash-table from `s'.
 		require
 			s_exists: s /= Void
@@ -23,7 +23,7 @@ feature -- Creation
 			i, pos1, pos2: INTEGER
 			date_constants: DATE_CONSTANTS
 			l_substrgs: like extracted_substrings
-			l_substrg, l_substrg2: READABLE_STRING_8
+			l_substrg, l_substrg2: READABLE_STRING
 		do
 			create value.make (20)
 			pos1 := 1
@@ -90,7 +90,7 @@ feature -- Attributes
 
 feature -- Status report
 
-	is_date (s: READABLE_STRING_8): BOOLEAN
+	is_date (s: READABLE_STRING): BOOLEAN
 			-- Does `s' contain a DATE?
 		require
 			non_empty_string: s /= Void and then not s.is_empty
@@ -98,7 +98,7 @@ feature -- Status report
 			Result := parser (s).is_date
 		end
 
-	is_time (s: READABLE_STRING_8): BOOLEAN
+	is_time (s: READABLE_STRING): BOOLEAN
 			-- Does `s' contain a TIME?
 		require
 			non_empty_string: s /= Void and then not s.is_empty
@@ -106,7 +106,7 @@ feature -- Status report
 			Result := parser (s).is_time
 		end
 
-	is_date_time (s: READABLE_STRING_8): BOOLEAN
+	is_date_time (s: READABLE_STRING): BOOLEAN
 			-- Does `s' contain a DATE_TIME?
 		require
 			non_empty_string: s /= Void and then not s.is_empty
@@ -114,7 +114,7 @@ feature -- Status report
 			Result := parser (s).is_date_time
 		end
 
-	is_value_valid (s: READABLE_STRING_8): BOOLEAN
+	is_value_valid (s: READABLE_STRING): BOOLEAN
 			-- Does `s' contain a valid date or time as string representation?
 		require
 			non_empty_string: s /= Void and then not s.is_empty
@@ -142,7 +142,7 @@ feature -- Status setting
 
 feature -- Interface
 
-	correspond (s: READABLE_STRING_8): BOOLEAN
+	correspond (s: READABLE_STRING): BOOLEAN
 			-- Does the user string `s' correspond to the code string?
 		require
 			s_exists: s /= Void
@@ -151,7 +151,7 @@ feature -- Interface
 			code: detachable DATE_TIME_CODE
 			has_seps: BOOLEAN
 			l_substrgs: like extracted_substrings
-			l_substrg, l_substrg2: READABLE_STRING_8
+			l_substrg, l_substrg2: READABLE_STRING
 		do
 			pos1 := 1
 			if s.is_empty then
@@ -375,7 +375,7 @@ feature -- Interface
 			string_correspond: correspond (Result)
 		end
 
-	create_date_time (s: READABLE_STRING_8): DATE_TIME
+	create_date_time (s: READABLE_STRING): DATE_TIME
 			-- Create DATE_TIME according to `s'.
 		require
 			s_exist: s /= Void
@@ -384,7 +384,7 @@ feature -- Interface
 			valid: is_value_valid (s)
 		local
 			l_parser: like parser
-			l_day_text: detachable READABLE_STRING_8
+			l_day_text: detachable READABLE_STRING
 		do
 			right_day_text := True
 			l_parser := parser (s)
@@ -400,7 +400,7 @@ feature -- Interface
 			day_text_equal_day: right_day_text
 		end
 
-	create_date (s: READABLE_STRING_8): DATE
+	create_date (s: READABLE_STRING): DATE
 			-- Create a DATE according to the format in `s'.
 		require
 			s_exists: s /= Void
@@ -442,7 +442,7 @@ feature -- Interface
 			day_text_equal_day: right_day_text
 		end
 
-	create_time (s: READABLE_STRING_8): TIME
+	create_time (s: READABLE_STRING): TIME
 			-- Create a TIME according to the format in `s'.
 		require
 			s_exists: s /= Void
@@ -594,14 +594,14 @@ feature -- Interface
 
 feature {NONE} -- Implementation
 
-	days: ARRAY [READABLE_STRING_8]
+	days: ARRAY [READABLE_STRING]
 
-	months: ARRAY [READABLE_STRING_8]
+	months: ARRAY [READABLE_STRING]
 
 	right_day_text: BOOLEAN
 			-- Is the name of the day the right one?
 
-	parser (s: READABLE_STRING_8): DATE_TIME_PARSER
+	parser (s: READABLE_STRING): DATE_TIME_PARSER
 			-- Parser from `s'.
 			-- Build a new one if necessary.
 		require
@@ -625,7 +625,7 @@ feature {NONE} -- Implementation
 			-- Cached instance of date-time string parser
 
 note
-	copyright: "Copyright (c) 1984-2019, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2020, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

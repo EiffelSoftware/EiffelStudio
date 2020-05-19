@@ -17,7 +17,7 @@ create
 
 feature -- Creation
 
-	make (v: READABLE_STRING_8)
+	make (v: READABLE_STRING)
 			-- Create code.
 		require
 			v_exists: v /= Void
@@ -54,7 +54,7 @@ feature -- Status report
 
 feature -- Change
 
-	set_value (v: READABLE_STRING_8)
+	set_value (v: READABLE_STRING)
 			-- Set all the attributes such as
 			-- Value, count_max, etc.
 		require
@@ -275,7 +275,7 @@ feature -- Change
 
 feature -- Attributes
 
-	value: READABLE_STRING_8
+	value: READABLE_STRING
 			-- String code
 
 	count_max: INTEGER
@@ -336,7 +336,7 @@ feature {FIND_SEPARATOR_FACILITY} -- Implementation
 		-- Type code constants
 
 note
-	copyright: "Copyright (c) 1984-2019, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2020, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

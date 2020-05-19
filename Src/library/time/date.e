@@ -131,7 +131,7 @@ feature -- Initialization
 			days_set: days = n
 		end
 
-	make_from_string_default (s: READABLE_STRING_8)
+	make_from_string_default (s: READABLE_STRING)
 			-- Initialize from a "standard" string of form
 			-- `date_default_format_string'.
 			-- (For 2-digit year specifications, the current century is used as
@@ -143,7 +143,7 @@ feature -- Initialization
 			make_from_string (s, Date_default_format_string)
 		end
 
-	make_from_string_default_with_base (s: READABLE_STRING_8; base: INTEGER)
+	make_from_string_default_with_base (s: READABLE_STRING; base: INTEGER)
 			-- Initialize from a "standard" string of form
 			-- `date_default_format_string' with base century `base'.
 		require
@@ -155,7 +155,7 @@ feature -- Initialization
 			make_from_string_with_base (s, Date_default_format_string, base)
 		end
 
-	make_from_string (s: READABLE_STRING_8; code: READABLE_STRING_8)
+	make_from_string (s: READABLE_STRING; code: READABLE_STRING)
 			-- Initialize from a "standard" string of form
 			-- `code'.
 			-- (For 2-digit year specifications, the current century is used as
@@ -171,7 +171,7 @@ feature -- Initialization
 			make (date.year, date.month, date.day)
 		end
 
-	make_from_string_with_base (s: READABLE_STRING_8; code: READABLE_STRING_8; base: INTEGER)
+	make_from_string_with_base (s: READABLE_STRING; code: READABLE_STRING; base: INTEGER)
 			-- Initialize from a "standard" string of form
 			-- `code' with base century `base'.
 		require
@@ -541,7 +541,7 @@ feature -- Output
 			Result := formatted_out (date_default_format_string)
 		end
 
-	formatted_out (s: READABLE_STRING_8): STRING
+	formatted_out (s: READABLE_STRING): STRING
 			-- Printable representation of `Current' with "standard"
 			-- Form: `s'
 		require
@@ -573,7 +573,7 @@ invariant
 	year_non_negative: year >= 0
 
 note
-	copyright: "Copyright (c) 1984-2019, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2020, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

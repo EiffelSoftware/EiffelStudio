@@ -134,7 +134,7 @@ feature -- Initialization
 			fractional_second := sec - s
 		end
 
-	make_from_string_default (s: READABLE_STRING_8)
+	make_from_string_default (s: READABLE_STRING)
 			-- Initialize from a "standard" string of form
 			-- `default_format_string'.
 		require
@@ -144,7 +144,7 @@ feature -- Initialization
 			make_from_string (s, Default_format_string)
 		end
 
-	make_from_string (s: READABLE_STRING_8; code: READABLE_STRING_8)
+	make_from_string (s: READABLE_STRING; code: READABLE_STRING)
 			-- Initialize from a "standard" string of form
 			-- `code'.
 		require
@@ -364,7 +364,7 @@ feature -- Output
 			Result := formatted_out (time_default_format_string)
 		end
 
-	formatted_out (s: READABLE_STRING_8): STRING
+	formatted_out (s: READABLE_STRING): STRING
 			-- Printable representation of time with "standard"
 			-- Form: `s'
 		require
@@ -385,7 +385,7 @@ invariant
 	hour_small_enough: hour < hours_in_day
 
 note
-	copyright: "Copyright (c) 1984-2019, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2020, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

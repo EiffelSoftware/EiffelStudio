@@ -23,7 +23,7 @@ inherit
 
 feature -- Preconditions
 
-	date_valid (s: READABLE_STRING_8; code_string: READABLE_STRING_8): BOOLEAN
+	date_valid (s: READABLE_STRING; code_string: READABLE_STRING): BOOLEAN
 			-- Is the code_string enough precise
 			-- To create an instance of type DATE
 			-- And does the string `s' correspond to `code_string'?
@@ -40,7 +40,7 @@ feature -- Preconditions
 			class
 		end
 
-	date_valid_with_base (s: READABLE_STRING_8; code_string: READABLE_STRING_8;
+	date_valid_with_base (s: READABLE_STRING; code_string: READABLE_STRING;
 							base: INTEGER): BOOLEAN
 			-- Is the code_string enough precise
 			-- To create an instance of type DATE
@@ -59,7 +59,7 @@ feature -- Preconditions
 				code.is_date (s)
 		end
 
-	date_valid_default (s: READABLE_STRING_8): BOOLEAN
+	date_valid_default (s: READABLE_STRING): BOOLEAN
 			-- Is the code_string enough precise
 			-- To create an instance of type DATE
 			-- And does the string `s' correspond to
@@ -70,7 +70,7 @@ feature -- Preconditions
 			Result := date_valid (s, date_default_format_string)
 		end
 
-	date_valid_default_with_base (s: READABLE_STRING_8; base: INTEGER): BOOLEAN
+	date_valid_default_with_base (s: READABLE_STRING; base: INTEGER): BOOLEAN
 			-- Is the code_string enough precise
 			-- To create an instance of type DATE
 			-- And does the string `s' correspond to
@@ -122,7 +122,7 @@ feature -- Preconditions
 		end
 
 note
-	copyright: "Copyright (c) 1984-2019, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2020, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

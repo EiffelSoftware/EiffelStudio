@@ -18,11 +18,11 @@ inherit
 
 feature {NONE} -- Constants
 
-	Separator_characters: STRING = ":/-, ."
+	Separator_characters: STRING_8 = ":/-, ."
 
 feature {NONE} -- Implementation
 
-	find_separator (s: READABLE_STRING_8; i: INTEGER): INTEGER
+	find_separator (s: READABLE_STRING; i: INTEGER): INTEGER
 			-- Position of the next separator in `s' starting at
 			-- `i'-th character.
 			-- ":", "/", "-", ",", " ", "."
@@ -79,21 +79,21 @@ feature {NONE} -- Implementation
 			not_zero: Result /= 0
 		end
 
-	extracted_substrings (s: READABLE_STRING_8; pos1, pos2: INTEGER): TUPLE [substrg, substrg2: READABLE_STRING_8]
+	extracted_substrings (s: READABLE_STRING; pos1, pos2: INTEGER): TUPLE [substrg, substrg2: READABLE_STRING]
 			-- Extract `substrg' and `substrg2' from `s' and specified by the
 			-- range `pos1'..`pos2'.
 		require
 			string_exists: s /= Void
 			range_correct: pos1 <= pos2.abs
 		local
-			l_substrg, l_substrg2: READABLE_STRING_8
+			l_substrg, l_substrg2: READABLE_STRING
 		do
 			if pos2 > 0 then
 				l_substrg := s.substring (pos1, pos2 - 1)
 				l_substrg2 := s.substring (pos2, pos2)
 			else
 				l_substrg := s.substring (pos1, - pos2)
-				create {IMMUTABLE_STRING_8} l_substrg2.make (0)
+				create {IMMUTABLE_STRING} l_substrg2.make (0)
 			end
 			Result := [l_substrg, l_substrg2]
 		ensure
@@ -101,7 +101,7 @@ feature {NONE} -- Implementation
 			substrings_extracted: Result.substrg /= Void and Result.substrg2 /= Void
 		end
 
-	has_separators (s: READABLE_STRING_8): BOOLEAN
+	has_separators (s: READABLE_STRING): BOOLEAN
 			-- Does date string `s' contain any separators?
 		require
 			string_exists: s /= Void
@@ -119,7 +119,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright: "Copyright (c) 1984-2019, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2020, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

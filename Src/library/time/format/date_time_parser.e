@@ -37,7 +37,7 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	source_string: detachable READABLE_STRING_8
+	source_string: detachable READABLE_STRING
 			-- String to be parsed
 
 	year: INTEGER
@@ -88,7 +88,7 @@ feature -- Access
 			Result := fine_second_val
 		end
 
-	day_text: detachable READABLE_STRING_8
+	day_text: detachable READABLE_STRING
 			-- Text representation of `day'
 		require
 			value_parsed: parsed
@@ -141,7 +141,7 @@ feature -- Status report
 
 feature -- Status setting
 
-	set_source_string (s: READABLE_STRING_8)
+	set_source_string (s: READABLE_STRING)
 			-- Assign `s' to `source_string'.
 		require
 			non_empty_string: s /= Void and then not s.is_empty
@@ -153,7 +153,7 @@ feature -- Status setting
 			not_parsed: not parsed
 		end
 
-	set_day_array (d: ARRAY [READABLE_STRING_8])
+	set_day_array (d: ARRAY [READABLE_STRING])
 			-- Set day array to `d'.
 		require
 			not_void: d /= Void
@@ -163,7 +163,7 @@ feature -- Status setting
 			days_set: days = d
 		end
 
-	set_month_array (m: ARRAY [READABLE_STRING_8])
+	set_month_array (m: ARRAY [READABLE_STRING])
 			-- Set month array to `m'.
 		require
 			not_void: m /= Void
@@ -193,13 +193,13 @@ feature -- Basic operations
 			pos1, pos2, i, j: INTEGER
 			type: INTEGER
 			second_val: INTEGER
-			s: READABLE_STRING_8
+			s: READABLE_STRING
 			has_seps: BOOLEAN
 			l_year_now: INTEGER
 			l_is_pm, l_is_pm_computed: BOOLEAN
 			l_hour_val_need_computation: BOOLEAN
 			l_item: detachable DATE_TIME_CODE
-			l_substrg: READABLE_STRING_8
+			l_substrg: READABLE_STRING
 		do
 			check source_string_attached: attached source_string as ss then
 				s := ss.as_upper
@@ -348,15 +348,15 @@ feature {NONE} -- Implementation
 
 	fine_second_val: DOUBLE
 
-	day_text_val: detachable READABLE_STRING_8
+	day_text_val: detachable READABLE_STRING
 
 	code: HASH_TABLE [DATE_TIME_CODE, INTEGER]
 			-- Hash table containing the parsed date/time code
 
-	months: detachable ARRAY [READABLE_STRING_8]
+	months: detachable ARRAY [READABLE_STRING]
 			-- Names of months
 
-	days: detachable ARRAY [READABLE_STRING_8]
+	days: detachable ARRAY [READABLE_STRING]
 			-- Names of days	
 
 	base_century: INTEGER
@@ -370,7 +370,7 @@ invariant
 	valid_value_implies_parsing: is_value_valid implies parsed
 
 note
-	copyright: "Copyright (c) 1984-2019, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2020, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

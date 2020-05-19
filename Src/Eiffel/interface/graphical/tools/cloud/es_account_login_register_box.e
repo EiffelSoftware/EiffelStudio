@@ -310,7 +310,7 @@ feature {NONE} -- Initialization
 			Result.extend (lab)
 			Result.disable_item_expand (lab)
 
-			create cb.make_with_text ("Remember my credentials?")
+			create cb.make_with_text ("Remember my credentials")
 			cb.set_tooltip ("Do not use this option on public machine!")
 			layout_constants.set_default_width_for_button (cb)
 			create but.make_with_text_and_action (

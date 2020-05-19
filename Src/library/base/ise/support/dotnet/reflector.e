@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "[
 			Access to internal object properties.
 			This class may be used as ancestor by classes needing its facilities.
@@ -268,6 +268,15 @@ feature -- Access
 			Result := helper.type_name_of_type (type_id)
 		end
 
+	type_name_8_of_type (type_id: INTEGER): STRING_8
+			-- Name of `type_id''s generating type (type of which `type_id'
+			-- is a direct instance).
+		require
+			type_id_nonnegative: type_id >= 0
+		do
+			Result := helper.type_name_8_of_type (type_id)
+		end
+
 	attached_type (type_id: INTEGER): INTEGER
 			-- Attached version of `type_id'.
 		require
@@ -324,6 +333,18 @@ feature -- Access
 			index_small_enought: i <= field_count_of_type (type_id)
 		do
 			Result := helper.field_name_of_type (i, type_id)
+		ensure
+			instance_free: class
+		end
+
+	field_name_8_of_type (i: INTEGER; type_id: INTEGER): STRING_8
+			-- Name of `i'-th field of dynamic type `type_id'.
+		require
+			type_id_nonnegative: type_id >= 0
+			index_large_enough: i >= 1
+			index_small_enought: i <= field_count_of_type (type_id)
+		do
+			Result := helper.field_name_8_of_type (i, type_id)
 		ensure
 			instance_free: class
 		end
@@ -394,7 +415,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright: "Copyright (c) 1984-2018, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2020, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

@@ -397,6 +397,22 @@ feature -- Access
 			end
 		end
 
+	type_name_8_of_type (type_id: INTEGER): STRING_8
+			-- Name of `type_id''s generating type (type of which `type_id'
+			-- is a direct instance).
+		require
+			type_id_nonnegative: type_id >= 0
+		do
+			if
+				attached pure_implementation_type (type_id) as l_rt_class_type and then
+				attached l_rt_class_type.type_name as l_name
+			then
+				Result := l_name
+			else
+				Result := "Unknown Type"
+			end
+		end
+
 	type_name_32_of_type (type_id: INTEGER): STRING_32
 			-- Name of `type_id''s generating type (type of which `type_id'
 			-- is a direct instance).
@@ -611,6 +627,61 @@ feature -- Access
 			index_small_enought: i <= field_count_of_type (type_id)
 		local
 			l_names: ARRAYED_LIST [STRING]
+			l_members: like get_members
+			l_name: detachable SYSTEM_STRING
+			k, nb: INTEGER
+			l_attributes: detachable NATIVE_ARRAY [detachable SYSTEM_OBJECT]
+			l_field: FIELD_INFO
+			l_provider: ICUSTOM_ATTRIBUTE_PROVIDER
+		do
+			if attached id_to_fields_name.item (type_id) as l_result then
+				Result := l_result.i_th (i)
+			else
+				from
+					l_members := get_members (type_id)
+					k := 1
+					nb := l_members.count
+					create l_names.make (nb)
+				until
+					k > nb
+				loop
+					l_field := l_members.i_th (k)
+					l_provider := l_field
+					l_attributes := l_provider.get_custom_attributes_type ({EIFFEL_NAME_ATTRIBUTE}, False)
+					if l_attributes /= Void and then l_attributes.count > 0 then
+						check
+							valid_number_of_custom_attributes: l_attributes.count = 1
+						end
+						if attached {EIFFEL_NAME_ATTRIBUTE} l_attributes.item (0) as l_eiffel_name then
+							l_name := l_eiffel_name.name
+						else
+							l_name := l_field.name
+						end
+					else
+						l_name := l_field.name
+					end
+					if l_name /= Void then
+						l_names.extend (l_name)
+					else
+						l_names.extend ("Invalid field name")
+					end
+					k := k + 1
+				end
+				id_to_fields_name.put (l_names, type_id)
+				Result := l_names.i_th (i)
+			end
+		ensure
+			field_name_of_type_not_void: Result /= Void
+		end
+
+	field_name_8_of_type (i: INTEGER; type_id: INTEGER): STRING_8
+			-- Name of `i'-th field of dynamic type `type_id'.
+		require
+			type_id_nonnegative: type_id >= 0
+			index_large_enough: i >= 1
+			index_small_enought: i <= field_count_of_type (type_id)
+		local
+			l_names: ARRAYED_LIST [STRING_8]
 			l_members: like get_members
 			l_name: detachable SYSTEM_STRING
 			k, nb: INTEGER
@@ -1846,7 +1917,7 @@ feature {TYPE, REFLECTOR, REFLECTED_OBJECT} -- Implementation
 
 note
 	library:	"EiffelBase: Library of reusable components for Eiffel."
-	copyright:	"Copyright (c) 1984-2019, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2020, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

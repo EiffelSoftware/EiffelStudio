@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "[
 		Used for extracting comments from a routine and displaying inherited comments, when appropriate.
 		
@@ -10,8 +10,8 @@ note
 		classes.
 	]"
 	legal: "See notice at end of class."
-	status: "See notice at end of class.";
-	date: "$Date$";
+	status: "See notice at end of class."
+	date: "$Date$"
 	revision: "$Revision$"
 
 class
@@ -126,8 +126,7 @@ feature -- Query
 									l_comments_emitted := True
 
 										-- Determine if inherited comments should be used
-										-- |FIXME: Unicode Regexp support needed.
-									original_comment_reg_ex.match (l_string.as_string_8)
+									original_comment_reg_ex.match (l_string)
 									if original_comment_reg_ex.has_matched then
 											-- The comment is actually a inherited comment reference
 										if original_comment_reg_ex.match_count = 3 then
@@ -277,7 +276,7 @@ feature {NONE} -- Implementation: Query
 		end
 
 ;note
-	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2020, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

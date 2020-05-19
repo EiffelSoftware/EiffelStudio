@@ -70,7 +70,7 @@ feature {INTERNAL_COMPILER_STRING_EXPORTER} -- Access
 		require
 			is_string_8: not is_string_32
 		do
-			Result := value_32.as_string_8
+			Result := value_32.to_string_8
 		ensure
 			Result_set: Result /= Void
 		end
@@ -176,7 +176,7 @@ invariant
 	valid_string_8: not is_string_32 implies value_32.is_valid_as_string_8
 
 note
-	copyright:	"Copyright (c) 1984-2019, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2020, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

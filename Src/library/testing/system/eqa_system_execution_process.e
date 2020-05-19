@@ -207,7 +207,7 @@ feature {EQA_EXECUTION} -- Basic operations
 
 feature {NONE} -- Basic operations
 
-	append_output (a_output: STRING; a_is_error: BOOLEAN)
+	append_output (a_output: READABLE_STRING_8; a_is_error: BOOLEAN)
 			-- Set next output to be processed.
 			--
 			-- `a_output': Output retrieved from `process'.
@@ -302,7 +302,7 @@ feature {NONE} -- Basic operations
 		end
 
 note
-	copyright: "Copyright (c) 1984-2013, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2020, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

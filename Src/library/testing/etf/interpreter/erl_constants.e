@@ -1,6 +1,5 @@
-note
+﻿note
 	description: "Constants for interpreter"
-	author: ""
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -9,11 +8,11 @@ class
 
 feature -- Access
 
-	none_type_name: STRING = "NONE"
+	none_type_name: STRING_8 = "NONE"
 			-- Name for {NONE} type
 
 note
-	copyright: "Copyright (c) 1984-2009, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2020, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

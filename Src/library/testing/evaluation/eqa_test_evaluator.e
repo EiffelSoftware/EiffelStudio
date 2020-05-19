@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "[
 			Objects that are able to run tests in a protected environment and provide information whether
 			the test has failed or succeeded.
@@ -99,7 +99,6 @@ feature {NONE} -- Implementation
 		local
 			l_response: detachable like execute_test_stage
 			l_iexcept: EQA_TEST_INVOCATION_EXCEPTION
-			l_test_set_name: STRING
 		do
 			if l_response = Void then
 				a_procedure.call (Void)
@@ -108,15 +107,14 @@ feature {NONE} -- Implementation
 			Result := l_response
 		rescue
 			check attached exception_manager.last_exception as l_exception then
-				l_test_set_name := class_name_of_type(({G}).type_id)
-				create l_iexcept.make (l_exception, l_test_set_name, Void)
+				create l_iexcept.make (l_exception, class_name_8_of_type (({G}).type_id), Void)
 				create l_response.make_exceptional (l_iexcept)
 			end
 			retry
 		end
 
 note
-	copyright: "Copyright (c) 1984-2017, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2020, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

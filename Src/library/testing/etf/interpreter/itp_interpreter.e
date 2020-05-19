@@ -4,6 +4,7 @@ note
 		Depends on a generated Erl-G reflection library.
 		]"
 	author: "Andreas Leitner"
+	revised_by: "Alexander Kogtenkov"
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -117,7 +118,7 @@ feature {NONE} -- Initialization
 				log_internal_error (l_trace)
 			end
 			log_message ("</session>%N")
-			report_error ("internal. " + l_trace)
+			report_error ({STRING} "internal. " + l_trace)
 			die (1)
 		end
 
@@ -154,7 +155,7 @@ feature {NONE} -- Handlers
 			l_index: INTEGER
 			l_value: detachable ANY
 			l_object_store: like object_store
-			l_type: STRING
+			l_type: STRING_8
 		do
 			if attached {STRING} last_request as l_obj_index then
 				log_message ("report_type_request start%N")
@@ -180,7 +181,7 @@ feature {NONE} -- Handlers
 					end
 					print_line_and_flush (l_type)
 				else
-					report_error ("Variable `v_" + l_index.out + "' not defined.")
+					report_error ({STRING} "Variable `v_" + l_index.out + "' not defined.")
 				end
 				log_message ("report_type_request end%N")
 			else
@@ -255,12 +256,12 @@ feature {NONE} -- Handlers
 
 feature {NONE} -- Error Reporting
 
-	report_error (a_reason: STRING)
+	report_error (a_reason: READABLE_STRING)
 		require
 			a_reason_not_void: a_reason /= Void
 			a_reason_not_empty: not a_reason.is_empty
 		do
-			error_buffer.append ("error: " + a_reason + "%N")
+			error_buffer.append ({STRING} "error: " + a_reason + "%N")
 			has_error := True
 		ensure
 			has_error: has_error
@@ -274,7 +275,7 @@ feature {NONE} -- Error Reporting
 		do
 			log_file.put_string ("<error type='internal'>%N")
 			log_file.put_string ("%T<reason>%N<![CDATA[%N")
-			log_file.put_string (a_reason)
+			log_file.put_string_general (a_reason)
 			log_file.put_string ("]]>%N</reason>%N")
 			log_file.put_string ("</error>%N")
 		end
@@ -296,12 +297,12 @@ feature {NONE} -- Logging
 			log_message ("]]>%N</instance>%N")
 		end
 
-	log_message (a_message: STRING)
+	log_message (a_message: READABLE_STRING_GENERAL)
 			-- Log message `a_messgae' to `log_message'.
 		require
 			a_message_not_void: a_message /= Void
 		do
-			log_file.put_string (a_message)
+			log_file.put_string_general (a_message)
 		end
 
 	report_trace
@@ -360,11 +361,11 @@ feature {NONE} -- Logging
 
 				-- Store exception into log file.
 			log_message ("<call_result type='exception'>%N")
-			log_message ("%T<meaning value='" + l_meaning + "'/>%N")
-			log_message ("%T<tag value='" + l_tag + "'/>%N")
+			log_message ({STRING_32} "%T<meaning value='" + l_meaning + "'/>%N")
+			log_message ({STRING_32} "%T<tag value='" + l_tag + "'/>%N")
 			log_message ("%T<recipient value='" + l_recipient + "'/>%N")
 			log_message ("%T<class value='" + l_recipient_class_name + "'>%N")
-			log_message ("%T<invariant violation on entry='" + is_last_invariant_violated.out + "'>%N")
+			log_message ({STRING} "%T<invariant violation on entry='" + is_last_invariant_violated.out + "'>%N")
 			log_message ("%T<exception_trace>%N<![CDATA[%N")
 			log_message (l_trace)
 			log_message ("]]>%N</exception_trace>%N")
@@ -469,7 +470,7 @@ feature {NONE} -- Socket IPC
 			retry
 		end
 
-	print_line_and_flush (a_text: STRING)
+	print_line_and_flush (a_text: READABLE_STRING_8)
 			-- Print `a_text' followed by a newline and flush output stream.
 		require
 			a_text_not_void: a_text /= Void

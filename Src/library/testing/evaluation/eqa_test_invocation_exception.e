@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "[
 		Objects representing an exception raised while invoking a test class and/or feature.
 		
@@ -307,10 +307,10 @@ feature {NONE} -- Constants
 
 	dash_line: STRING_32 = "-------------------------------------------------------------------------------%N"
 
-	class_attribute_name: STRING = "class_name"
-	recipient_attribute_name: STRING = "internal_exception"
-	tag_attribute_name: STRING = "tag_name"
-	trace_attribute_name: STRING = "trace"
+	class_attribute_name: STRING_8 = "class_name"
+	recipient_attribute_name: STRING_8 = "internal_exception"
+	tag_attribute_name: STRING_8 = "tag_name"
+	trace_attribute_name: STRING_8 = "trace"
 			-- Name of attributes in `Current'
 
 feature -- Mismatch Correnction
@@ -342,7 +342,7 @@ invariant
 	exception_break_point_slot_positive: break_point_slot >= 0
 
 note
-	copyright: "Copyright (c) 1984-2017, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2020, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

@@ -1,8 +1,7 @@
-note
+﻿note
 	description: "[
 		Objects creating directories and files in a system test set environment.
 	]"
-	author: ""
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -42,7 +41,7 @@ feature -- Command
 			source_is_closed: a_src.is_closed
 			destination_is_closed: a_dest.is_closed
 		local
-			l_line: STRING
+			l_line: STRING_8
 			u: UTF_CONVERTER
 		do
 			from
@@ -313,7 +312,7 @@ feature -- Constants
 	target_directory_key: STRING_32 = "EQA_TARGET_DIRECTORY"
 
 note
-	copyright: "Copyright (c) 1984-2017, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2020, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

@@ -1,8 +1,7 @@
-note
+﻿note
 	description: "[
 		Sets of tests which make use of an extracted application state to reproduce a failure.
 	]"
-	author: ""
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -109,7 +108,7 @@ feature {NONE} -- Query
 		do
 			Result := a_id.substring (2, a_id.count).to_natural
 		ensure
-			result_valid: ("#" + Result.out).is_equal (a_id)
+			result_valid: ({STRING} "#" + Result.out).same_string_general (a_id)
 		end
 
 	object_for_id (a_id: STRING): detachable ANY
@@ -281,7 +280,7 @@ feature {NONE} -- Object initialization
 						if attached {ANY} new_instance_of (l_gtype) as l_any then
 							l_object := l_any
 						else
-							assert_32 ("objects of type " + type_name_of_type (l_gtype) + " are not supported", False)
+							assert_32 ({STRING_32} "objects of type " + type_name_of_type (l_gtype) + " are not supported", False)
 						end
 					end
 					check l_object /= Void end

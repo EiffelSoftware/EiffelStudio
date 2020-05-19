@@ -101,7 +101,7 @@ feature -- Access
 
 feature {NONE} -- Access
 
-	buffer: STRING
+	buffer: STRING_8
 			-- Buffer containing first part of output
 
 	split_position: INTEGER
@@ -141,7 +141,7 @@ feature -- Status setting
 
 feature -- Output
 
-	put_string, putstring (a_string: STRING)
+	put_string, putstring (a_string: READABLE_STRING_8)
 			-- Append string to `buffer'.
 			--
 			-- `a_string': String to be appended to `buffer'.
@@ -152,7 +152,7 @@ feature -- Output
 		local
 			l_split, l_capacity, l_count, l_start, l_new_tsp: INTEGER
 			l_ccount1: INTEGER
-			l_chunk1, l_chunk2: STRING
+			l_chunk1, l_chunk2: STRING_8
 		do
 			if buffer.count + a_string.count > buffer_size then
 				l_split := split_position
@@ -172,10 +172,10 @@ feature -- Output
 					l_ccount1 := buffer_size - truncated_start_position + 1
 					l_new_tsp := l_split + 1 + l_count - l_ccount1
 
-					l_chunk1 := a_string.substring (l_start, l_start + l_ccount1 - 1)
+					l_chunk1 := a_string.substring (l_start, l_start + l_ccount1 - 1).to_string_8
 					buffer.replace_substring (l_chunk1, truncated_start_position, buffer.count)
 
-					l_chunk2 := a_string.substring (l_start + l_ccount1, a_string.count)
+					l_chunk2 := a_string.substring (l_start + l_ccount1, a_string.count).to_string_8
 					buffer.replace_substring (l_chunk2, l_split + 1, l_new_tsp - 1)
 
 					truncated_start_position := l_new_tsp
@@ -192,7 +192,7 @@ feature -- Output
 			end
 		end
 
-	put_character, putchar (c: CHARACTER)
+	put_character, putchar (c: CHARACTER_8)
 			-- Append character to buffer.
 			--
 			-- `c': Character to be appended to `buffer'.
@@ -221,7 +221,7 @@ feature -- Output
 	put_boolean, putbool (b: BOOLEAN)
 			-- <Precursor>
 		do
-			put_string (b.out)
+			put_string (if b then once "True" else once "False" end)
 		end
 
 	put_new_line, new_line
@@ -232,14 +232,22 @@ feature -- Output
 
 	put_double, putdouble (d: REAL_64)
 			-- <Precursor>
+		local
+			s: STRING_8
 		do
-			put_string (d.out)
+			create s.make (10)
+			s.append_double (d)
+			put_string (s)
 		end
 
 	put_real, putreal (r: REAL_32)
 			-- <Precursor>
+		local
+			s: STRING_8
 		do
-			put_string (r.out)
+			create s.make (10)
+			s.append_real (r)
+			put_string (s)
 		end
 
 	flush
@@ -271,7 +279,7 @@ feature -- Basic functionality: file
 
 feature {NONE} -- Constants
 
-	m_truncated: STRING = "%N%N---------------------------%NTruncated section%N---------------------------%N%N"
+	m_truncated: STRING_8 = "%N%N---------------------------%NTruncated section%N---------------------------%N%N"
 
 invariant
 	buffer_capacity_at_least_buffer_size: buffer.capacity >= buffer_size

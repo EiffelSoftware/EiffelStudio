@@ -106,7 +106,7 @@ feature -- Mismatch correction
 			-- <Precursor>
 		do
 			if attached {like output} mismatch_information.item (output_name) as l_output then
-				output := create {STRING}.make_from_string (l_output)
+				create output.make_from_string (l_output)
 			else
 				Precursor
 			end
@@ -114,13 +114,13 @@ feature -- Mismatch correction
 
 feature {NONE} -- Constants
 
-	output_name: STRING = "output"
+	output_name: STRING_8 = "output"
 
 invariant
 	pass_or_fail_or_unresolved: is_pass or is_fail or is_unresolved
 
 note
-	copyright: "Copyright (c) 1984-2017, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2020, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

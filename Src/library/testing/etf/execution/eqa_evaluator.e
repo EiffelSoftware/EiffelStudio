@@ -133,12 +133,12 @@ feature {NONE} -- Access: Test execution
 
 feature {NONE} -- Execution
 
-	execute_test (a_name: STRING; a_rout_id: INTEGER): EQA_PARTIAL_RESULT
+	execute_test (a_name: READABLE_STRING_32; a_rout_id: INTEGER): EQA_PARTIAL_RESULT
 			-- Execute test routine in test class.
 		local
 			l_type: like dynamic_type_from_string
 		do
-			l_type := dynamic_type_from_string ("EQA_TEST_EVALUATOR [attached " + a_name.as_upper + "]")
+			l_type := dynamic_type_from_string ({STRING_32} "EQA_TEST_EVALUATOR [attached " + a_name.as_upper + "]")
 			check attached {EQA_TEST_EVALUATOR [EQA_TEST_SET]} new_instance_of (l_type) as l_eval then
 				Result := l_eval.execute (agent invoke_routine (?, a_rout_id))
 			end
@@ -147,7 +147,7 @@ feature {NONE} -- Execution
 		end
 
 note
-	copyright: "Copyright (c) 1984-2014, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2020, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

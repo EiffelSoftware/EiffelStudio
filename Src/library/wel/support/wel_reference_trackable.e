@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "Facility to track references of an object."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -59,7 +59,7 @@ feature -- Status Setting
 				-- Give a unique number to current object, to follow it.
 			internal_number_id := internal_number_id_cell.item
 			debug ("WEL_GDI_REFERENCES")
-				io.put_string ("references are enabled for object #" + internal_number_id.out + "%N")
+				io.put_string_32 ({STRING} "references are enabled for object #" + internal_number_id.out + "%N")
 				internal_id_list.extend (internal_number_id)
 			end
 			internal_number_id_cell.put (internal_number_id + 1)
@@ -79,14 +79,14 @@ feature -- Status Setting
 					destroy_item
 					debug ("WEL_GDI_REFERENCES")
 						internal_id_list.prune_all (internal_number_id)
-						io.put_string ("Object #" + internal_number_id.out + " destroyed%N")
-						io.put_string ("Objects currently tracked: ")
+						io.put_string_32 ({STRING} "Object #" + internal_number_id.out + " destroyed%N")
+						io.put_string_32 ({STRING} "Objects currently tracked: ")
 						from
 							internal_id_list.start
 						until
 							internal_id_list.after
 						loop
-							io.put_string (internal_id_list.item.out + " ")
+							io.put_string_32 (internal_id_list.item.out + " ")
 							internal_id_list.forth
 						end
 						io.put_string ("%N%N")
@@ -196,14 +196,14 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2020, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 

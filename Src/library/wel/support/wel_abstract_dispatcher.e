@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "Receives and dispatch the Windows messages to the Eiffel objects."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -138,7 +138,6 @@ feature {NONE} -- Implementation
 			-- Dialog box messages dispatcher routine
 		local
 			window: detachable WEL_WINDOW
-			last_result: POINTER
 			need_decrement: BOOLEAN
 			retried: BOOLEAN
 			l_callback: like exception_callback
@@ -146,7 +145,7 @@ feature {NONE} -- Implementation
 			if not retried then
 				debug ("dlg_dispatcher")
 					io.put_string ("in dlg_proc ")
-					io.put_string (hwnd.out)
+					io.put_string_32 (hwnd.out)
 					io.put_character (' ')
 					io.put_integer (msg)
 					io.put_character (' ')
@@ -181,7 +180,7 @@ feature {NONE} -- Implementation
 					if window /= Void and then window.exists then
 						window.increment_level
 						need_decrement := True
-						last_result := window.process_message (hwnd, msg, wparam, lparam)
+						window.process_message (hwnd, msg, wparam, lparam).do_nothing
 						if window.has_return_value then
 							Result := window.message_return_value
 						else
@@ -214,15 +213,12 @@ feature {NONE} -- Implementation
 		end
 
 	new_exception: EXCEPTION
-			-- New exception object representating the last exception caught in Current
+			-- New exception object representating the last exception caught in Current.
 		require
 			exception_manager.last_exception /= Void
-		local
-			l_exception: detachable EXCEPTION
 		do
-			l_exception := exception_manager.last_exception
-			check l_exception_attached: l_exception /= Void then end
-			Result := l_exception
+			Result := exception_manager.last_exception
+			check from_precondition : attached Result then end
 		end
 
 feature {NONE} -- Externals
@@ -236,7 +232,7 @@ feature {NONE} -- Externals
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2013, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2020, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

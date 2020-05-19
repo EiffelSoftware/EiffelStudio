@@ -137,7 +137,7 @@ feature -- Removal
 				if not delete_result then
 					debug ("WEL")
 						create l_wel_error
-						io.put_string ("Unable to Destroy Icon/Cursor, Error=" +
+						io.put_string_32 ({STRING} "Unable to Destroy Icon/Cursor, Error=" +
 							l_wel_error.last_error_code.out)
 						print (Current)
 					end
@@ -197,7 +197,7 @@ feature {NONE} -- Constants
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2017, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2020, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

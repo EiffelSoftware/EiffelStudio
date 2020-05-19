@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "Drawing object used to draw lines and borders."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -41,7 +41,7 @@ feature {NONE} -- Initialization
 			if item = a_default_pointer then
 				debug("WEL")
 					create l_wel_error
-					io.put_string ("Error while creating a pen in class WEL_PEN.error_code = " +
+					io.put_string_32 ({STRING} "Error while creating a pen in class WEL_PEN.error_code = " +
 						l_wel_error.last_error_code.out+"%N")
 				end
 			end
@@ -154,14 +154,14 @@ feature {NONE} -- Externals
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2020, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 

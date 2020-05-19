@@ -91,7 +91,7 @@ feature {NONE} -- Implementation
 		do
 			gdi_objects_count_cell.replace (gdi_objects_count_cell.item + 1)
 			debug ("WEL_GDI_COUNT")
-				io.put_string ("GDI Objects = "+gdi_objects_count.out+"%N")
+				io.put_string_32 ({STRING} "GDI Objects = "+gdi_objects_count.out+"%N")
 			end
 		end
 
@@ -100,7 +100,7 @@ feature {NONE} -- Implementation
 		do
 			gdi_objects_count_cell.replace (gdi_objects_count_cell.item - 1)
 			debug ("WEL_GDI_COUNT")
-				io.put_string ("GDI Objects = "+gdi_objects_count.out+"%N")
+				io.put_string_32 ({STRING} "GDI Objects = "+gdi_objects_count.out+"%N")
 			end
 		end
 
@@ -121,7 +121,7 @@ feature {NONE} -- Externals
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2016, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2020, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

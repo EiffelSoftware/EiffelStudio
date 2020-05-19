@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "Window used to receive NotifyIcon notification."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -27,7 +27,7 @@ feature {NONE} -- Initialize
 				-- Create message
 			notify_uid := notify_uid_counter.item + 1
 			notify_uid_counter.put (notify_uid)
-			create notify_message_name.make ("Notify_msg_" + notify_uid_counter.item.out)
+			create notify_message_name.make ({STRING} "Notify_msg_" + notify_uid_counter.item.out)
 
 				-- Create window
 			create notify_icon_data.make
@@ -151,10 +151,8 @@ feature {NONE} -- Messaging
 		require
 			a_notify_icon_data_not_void: a_notify_icon_data /= Void
 			a_notify_icon_data_exists: a_notify_icon_data.exists
-		local
-			l_bool: INTEGER
 		do
-			l_bool := {WEL_API}.shell_notify_icon (a_message, a_notify_icon_data.item)
+			{WEL_API}.shell_notify_icon (a_message, a_notify_icon_data.item).do_nothing
 		end
 
 invariant
@@ -162,7 +160,7 @@ invariant
 	notify_message_name_not_void: notify_message_name /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2010, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2020, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software
@@ -171,8 +169,5 @@ note
 			Website http://www.eiffel.com
 			Customer support http://support.eiffel.com
 		]"
-
-
-
 
 end

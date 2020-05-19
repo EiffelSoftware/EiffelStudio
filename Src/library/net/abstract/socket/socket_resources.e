@@ -60,7 +60,7 @@ feature -- Status report
 			elseif connect_in_progress then
 				Result := "Connection in progress"
 			else
-				Result := "Unknown error : " + c_errorno.out
+				Result := {STRING} "Unknown error : " + c_errorno.out
 			end
 		end;
 
@@ -638,14 +638,14 @@ feature {NONE} -- Externals: constants for fcnlt calls
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2020, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 end -- class SOCKET_RESOURCES

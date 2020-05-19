@@ -303,7 +303,7 @@ feature -- Output
 			put_pointer_content (a_pointer.item, start_pos, a_byte_count)
 		end
 
-	put_character, putchar (c: CHARACTER)
+	put_character, putchar (c: CHARACTER_8)
 			-- Write character `c' to socket.
 		do
 			put_socket_buffer.put_character (c, 0)
@@ -729,7 +729,7 @@ feature -- Input
 				i := i + 1
 			end
 			if not was_error and last_character /= '%N' then
-				socket_error := "End of line not reached after " + n.out + " read characters"
+				socket_error := {STRING} "End of line not reached after " + n.out + " read characters"
 			end
 			last_string := l_last_string
 		ensure
@@ -1224,7 +1224,7 @@ feature {NONE} -- Externals
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2019, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2020, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

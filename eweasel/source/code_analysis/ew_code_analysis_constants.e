@@ -1,5 +1,6 @@
 ﻿note
 	description: "String constants used for parsing the code analysis output."
+	revised_by: "Alexander Kogtenkov"
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -51,7 +52,7 @@ feature -- Violation types
 
 	Unknown_violation_type_short: STRING = "?"
 
-	is_valid_short_violation_type (a_type: STRING): BOOLEAN
+	is_valid_short_violation_type (a_type: detachable STRING): BOOLEAN
 		do
 			Result := a_type ~ Error_short or a_type ~ Warning_short or a_type ~ Suggestion_short or a_type ~ Hint_short
 		end
@@ -70,6 +71,8 @@ feature -- Violation types
 				Result := Suggestion
 			elseif a_type.same_string (Hint_short) then
 				Result := Hint
+			else
+				check from_precondition: False then end
 			end
 		ensure
 			valid: is_valid_violation_type (Result)
@@ -90,6 +93,8 @@ feature -- Violation types
 				Result := Suggestion_short
 			elseif a_type.same_string (Hint) then
 				Result := Hint_short
+			else
+				check from_precondition: False then end
 			end
 		ensure
 			valid_short: is_valid_short_violation_type (Result)

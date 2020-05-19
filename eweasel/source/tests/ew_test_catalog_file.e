@@ -37,16 +37,14 @@ feature {NONE} -- Creation
 
 feature -- Status
 
-	last_catalog: EW_EIFFEL_TEST_CATALOG
-			-- Catalog from last test catalog file
-			-- parsed successfully.
+	last_catalog: detachable EW_EIFFEL_TEST_CATALOG
+			-- Catalog from last test catalog file parsed successfully.
 
 	last_ok: BOOLEAN
 			-- Was file parsed without any errors?
 
-	errors: EW_ERROR_LIST
-			-- Errors encountered, in order (void if `last_ok'
-			-- is true)
+	errors: detachable EW_ERROR_LIST
+			-- Errors encountered, in order (void if `last_ok' is true).
 
 	environment: EW_TEST_ENVIRONMENT
 			-- Environment in which catalog file is parsed.
@@ -106,8 +104,8 @@ feature {NONE} -- Implementation
 					line_number := line_number + 1
 					line := from_utf_8 (tcf.last_string)
 					parse_line (line.as_string_32)
-					if not parse_error and last_test /= Void then
-						tests.extend (last_test)
+					if not parse_error and attached last_test as t then
+						tests.extend (t)
 					end
 				end
 			end
@@ -225,7 +223,7 @@ feature {NONE} -- State
 	parse_error: BOOLEAN
 			-- Was there a parse error on the last line parsed?
 
-	last_test: EW_NAMED_EIFFEL_TEST
+	last_test: detachable EW_NAMED_EIFFEL_TEST
 			-- Test parsed from last line parsed
 
 	last_failure_explanation: READABLE_STRING_32
@@ -238,6 +236,7 @@ feature {NONE} -- State
 			Copyright (c) 1984-2018, University of Southern California, Eiffel Software and contributors.
 			All rights reserved.
 		]"
+	revised_by: "Alexander Kogtenkov"
 	license:   "Your use of this work is governed under the terms of the GNU General Public License version 2"
 	copying: "[
 			This file is part of the EiffelWeasel Eiffel Regression Tester.

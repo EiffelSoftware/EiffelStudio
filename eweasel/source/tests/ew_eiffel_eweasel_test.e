@@ -53,6 +53,8 @@ feature
 			from
 				last_ok := True
 				instructions.start
+			invariant
+				last_ok or attached inst
 			until
 				instructions.after or not last_ok or terminated
 			loop
@@ -61,11 +63,14 @@ feature
 				last_ok := inst.execute_ok
 				terminated := inst.test_execution_terminated
 				instructions.forth
-			end;
+			end
 			if not last_ok then
 				if not terminated then
 					instructions.finish	-- Test_end instruction
 					instructions.item.execute (Current)
+				end
+				if not attached inst then
+					check from_loop_invariant: False then end
 				end
 				create orig_text.make_empty
 				orig_text.append (inst.command)
@@ -208,16 +213,16 @@ feature -- Test properties
 			-- Eiffel compilation, if any
 			-- (possibly suspended and awaiting resumption)
 
-	e_compilation_result: EW_EIFFEL_COMPILATION_RESULT
+	e_compilation_result: detachable EW_EIFFEL_COMPILATION_RESULT
 			-- Result of the last Eiffel compilation.
 
 	c_compilation: EW_C_COMPILATION
 			-- Last C compilation, if any
 
-	c_compilation_result: EW_C_COMPILATION_RESULT
+	c_compilation_result: detachable EW_C_COMPILATION_RESULT
 			-- Result of the last C compilation.
 
-	execution_result: EW_EXECUTION_RESULT
+	execution_result: detachable EW_EXECUTION_RESULT
 			-- Result of the last Eiffel system execution.
 
 feature {EW_TEST_INSTRUCTION} -- Set test properties
@@ -288,17 +293,17 @@ feature {EW_TEST_INSTRUCTION} -- Set test properties
 			c_compilation := c
 		end
 
-	set_e_compilation_result (e: EW_EIFFEL_COMPILATION_RESULT)
+	set_e_compilation_result (e: detachable EW_EIFFEL_COMPILATION_RESULT)
 		do
 			e_compilation_result := e
 		end
 
-	set_c_compilation_result (c: EW_C_COMPILATION_RESULT)
+	set_c_compilation_result (c: detachable EW_C_COMPILATION_RESULT)
 		do
 			c_compilation_result := c
 		end
 
-	set_execution_result (e: EW_EXECUTION_RESULT)
+	set_execution_result (e: detachable EW_EXECUTION_RESULT)
 		do
 			execution_result := e
 		end
@@ -355,9 +360,10 @@ feature {NONE}  -- Implementation
 	date: "$Date$"
 	revision: "$Revision$"
 	copyright: "[
-			Copyright (c) 1984-2018, University of Southern California, Eiffel Software and contributors.
+			Copyright (c) 1984-2020, University of Southern California, Eiffel Software and contributors.
 			All rights reserved.
 		]"
+	revised_by: "Alexander Kogtenkov"
 	license:   "Your use of this work is governed under the terms of the GNU General Public License version 2"
 	copying: "[
 			This file is part of the EiffelWeasel Eiffel Regression Tester.

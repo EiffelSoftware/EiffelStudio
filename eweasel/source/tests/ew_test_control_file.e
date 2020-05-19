@@ -22,7 +22,7 @@ create
 
 feature {NONE} -- Creation
 
-	make (fn: READABLE_STRING_32; parent: EW_TEST_CONTROL_FILE;
+	make (fn: READABLE_STRING_32; parent: detachable EW_TEST_CONTROL_FILE;
 	  table: STRING_TABLE [EW_TEST_INSTRUCTION]; needs_end: BOOLEAN)
 			-- Create `Current' from file named `fn'
 			-- included by `inc_parent' (Void if none) using
@@ -41,7 +41,7 @@ feature {NONE} -- Creation
 
 feature -- Status
 
-	last_test: EW_EIFFEL_EWEASEL_TEST
+	last_test: detachable EW_EIFFEL_EWEASEL_TEST
 			-- Last test parsed or executed
 
 	last_ok: BOOLEAN
@@ -200,11 +200,15 @@ feature {NONE} -- Implementation
 				end
 				check
 					known_command: command_table.has (cmd)
-				end;
+				end
 				if cmd.same_string_general (Test_end_keyword) then
 					has_test_end := True
 				end
-				inst := command_table.item (cmd).twin
+				if attached command_table.item (cmd) as c then
+					inst := c.twin
+				else
+					check from_assertion: False then end
+				end
 				arguments := rest
 				inst.initialize (Current)
 				parse_error := not inst.init_ok
@@ -272,16 +276,17 @@ feature {EW_TEST_INSTRUCTION} -- State
 	parse_error: BOOLEAN
 			-- Was there a parse error on the last line parsed?
 
-	last_instruction: EW_TEST_INSTRUCTION
+	last_instruction: detachable EW_TEST_INSTRUCTION
 			--
 
 ;note
 	date: "$Date$"
 	revision: "$Revision$"
 	copyright: "[
-			Copyright (c) 1984-2018, University of Southern California, Eiffel Software and contributors.
+			Copyright (c) 1984-2020, University of Southern California, Eiffel Software and contributors.
 			All rights reserved.
 		]"
+	revised_by: "Alexander Kogtenkov"
 	license:   "Your use of this work is governed under the terms of the GNU General Public License version 2"
 	copying: "[
 			This file is part of the EiffelWeasel Eiffel Regression Tester.

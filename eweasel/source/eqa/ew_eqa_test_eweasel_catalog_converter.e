@@ -20,7 +20,7 @@ feature -- Command
 			ready: is_ready
 		end
 
-	append_related_setup (a_folder_name: READABLE_STRING_32; a_content_to_append: STRING)
+	append_related_setup (a_folder_name: READABLE_STRING_32; a_content_to_append: STRING_32)
 			-- Append related setup line to `a_content_to_append'
 			-- Set `test_arguments' if possible
 		require
@@ -34,7 +34,7 @@ feature -- Command
 			l_item := catalog_file.all_test_instructions.item (a_folder_name)
 			if l_item /= Void then
 				a_content_to_append.append ("%N%T%T%Tinit (")
-				a_content_to_append.append ("%"" + a_folder_name + "%")")
+				a_content_to_append.append ({STRING_32} "%"" + a_folder_name + "%")")
 
 				test_arguments := {UTF_CONVERTER}.string_32_to_utf_8_string_8 (l_item.a_argument)
 			else

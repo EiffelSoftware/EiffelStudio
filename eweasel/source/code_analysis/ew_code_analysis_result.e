@@ -91,6 +91,8 @@ feature -- Properties
 				Result := {STRING_32} "One or more violations found"
 			elseif not_run then
 				Result := {STRING_32} "Analysis not run"
+			else
+				check is_status_known: False then end
 			end
 			if analysis_argument_warning then
 				Result.append ({STRING_32} "; unrecognized argument warning")
@@ -237,20 +239,20 @@ feature -- Comparison
 
 feature {NONE} -- Implementation
 
-	last_class_with_messages: STRING
+	last_class_with_messages: detachable STRING
 
 	parse_in_class_line (a_line: STRING)
 		require
 			is_prefix (in_class_prefix, a_line)
 		local
-			l_substring_info: TUPLE [char_1_index, char_2_index: INTEGER; substring: STRING]
+			l_substring_info: TUPLE [char_1_index, char_2_index: INTEGER; substring: detachable STRING]
 		do
 			l_substring_info := substring_between (a_line, '%'', '%'', in_class_prefix.count)
-			if l_substring_info.substring = Void or else l_substring_info.substring.is_empty then
+			if attached l_substring_info.substring as s implies s.is_empty then
 				last_class_with_messages := Void
 				eweasel_parse_error := True
 			else
-				last_class_with_messages := l_substring_info.substring
+				last_class_with_messages := s
 			end
 		end
 
@@ -260,15 +262,15 @@ feature {NONE} -- Implementation
 		local
 			l_line_number: INTEGER
 			l_short_type, l_rule_id, l_message: STRING
-			l_substring_info: TUPLE [char_1_index, char_2_index: INTEGER; substring: STRING]
+			l_substring_info: TUPLE [char_1_index, char_2_index: INTEGER; substring: detachable STRING]
 			l_violation: EW_CODE_ANALYSIS_VIOLATION
 		do
 			l_substring_info := substring_between (a_line, '[', ':', 1)
-			if l_substring_info.substring = Void or else l_substring_info.substring.is_empty then
+			if attached l_substring_info.substring as s implies s.is_empty then
 				eweasel_parse_error := True
 				l_line_number := 0
 			else
-				l_line_number := l_substring_info.substring.to_integer
+				l_line_number := s.to_integer
 			end
 			l_substring_info := substring_between (a_line, ']', ':', l_substring_info.char_2_index + 1)
 			l_short_type := l_substring_info.substring
@@ -293,7 +295,7 @@ feature {NONE} -- Implementation
 			add_violation (l_violation)
 		end
 
-	substring_between (a_line: STRING; a_char1, a_char2: CHARACTER; a_start_index: INTEGER): TUPLE [char_1_index, char_2_index: INTEGER; substring: STRING]
+	substring_between (a_line: STRING; a_char1, a_char2: CHARACTER; a_start_index: INTEGER): TUPLE [char_1_index, char_2_index: INTEGER; substring: detachable STRING]
 			-- Returns the substring between `a_char1' and `a_char2' in the given index, starting from `a_start_index'.
 			-- The returned tuple contains the indices of the two characters and the actual substring.
 			-- If the separators are not found, [0, 0, Void] is returned.
@@ -354,9 +356,10 @@ note
 	date: "$Date$"
 	revision: "$Revision$"
 	copyright: "[
-			Copyright (c) 1984-2018, University of Southern California, Eiffel Software and contributors.
+			Copyright (c) 1984-2020, University of Southern California, Eiffel Software and contributors.
 			All rights reserved.
 		]"
+	revised_by: "Alexander Kogtenkov"
 	license: "Your use of this work is governed under the terms of the GNU General Public License version 2"
 	copying: "[
 					This file is part of the EiffelWeasel Eiffel Regression Tester.

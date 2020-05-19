@@ -209,7 +209,7 @@ feature {NONE} -- Implementation
 				catalog_converter.append_related_setup (a_routine_name, Result)
 			loop
 				if attached convert_instruction_to_one_line (i.item) as l_temp_string and then not l_temp_string.is_empty then
-					Result.append ("%N%T%T%T" + l_temp_string)
+					Result.append ("%N%T%T%T" + {UTF_CONVERTER}.utf_32_string_to_utf_8_string_8 (l_temp_string))
 				end
 			end
 
@@ -315,7 +315,7 @@ feature {NONE} -- Implementation
 				("all_eweasel_test_case_template.e")
 		end
 
-	convert_instruction_to_one_line (a_instruction: EW_TEST_INSTRUCTION): detachable STRING
+	convert_instruction_to_one_line (a_instruction: EW_TEST_INSTRUCTION): detachable STRING_32
 			-- Convert one testing instruction
 		require
 			not_void: a_instruction /= Void
@@ -335,18 +335,18 @@ feature {NONE} -- Implementation
 			elseif l_keyword.same_string (c_compile_final_keyword) then
 				l_arg := a_instruction.orig_arguments -- or using orign)arguments?
 				if l_arg /= Void and then not l_arg.is_empty then
-					Result := "c_compile_final (%"" + l_arg + "%")"
+					Result := {STRING_32} "c_compile_final (%"" + l_arg + "%")"
 				else
 					Result := "c_compile_final (Void)"
 				end
 			elseif l_keyword.same_string (c_compile_result_keyword) then
 				l_arg := a_instruction.orig_arguments
 				check not_void: l_arg /= Void and then not l_arg.is_empty end
-				Result := "c_compile_result (%"" + l_arg + "%")"
+				Result := {STRING_32} "c_compile_result (%"" + l_arg + "%")"
 			elseif l_keyword.same_string (c_compile_work_keyword) then
 				l_arg := a_instruction.orig_arguments
 				if l_arg /= Void then
-					Result := "c_compile_work (%"" + l_arg + "%")"
+					Result := {STRING_32} "c_compile_work (%"" + l_arg + "%")"
 				else
 					Result := "c_compile_work (Void)"
 				end
@@ -356,34 +356,34 @@ feature {NONE} -- Implementation
 				l_arg := a_instruction.orig_arguments
 				l_list := broken_into_words (l_arg)
 				check count_right: l_list.count = 2 end
-				Result := "compare (%"" + l_list.i_th (1) + "%", %"" + l_list.i_th (2) +  "%")"
+				Result := {STRING_32} "compare (%"" + l_list.i_th (1) + "%", %"" + l_list.i_th (2) +  "%")"
 			elseif l_keyword.same_string (compile_final_keep_keyword) then
 				l_arg := a_instruction.orig_arguments
 				if l_arg = Void then
 					Result := "compile_final_keep (Void)"
 				else
-					Result := "compile_final_keep (%"" + l_arg + "%")"
+					Result := {STRING_32} "compile_final_keep (%"" + l_arg + "%")"
 				end
 			elseif l_keyword.same_string (compile_final_keyword) then
 				l_arg := a_instruction.orig_arguments
 				if l_arg = Void then
 					Result := "compile_final (Void)"
 				else
-					Result := "compile_final (%"" + l_arg + "%")"
+					Result := {STRING_32} "compile_final (%"" + l_arg + "%")"
 				end
 			elseif l_keyword.same_string (compile_frozen_keyword) then
 				l_arg := a_instruction.orig_arguments
 				if l_arg = Void then
 					Result := "compile_frozen (Void)"
 				else
-					Result := "compile_frozen (%"" + l_arg + "%")"
+					Result := {STRING_32} "compile_frozen (%"" + l_arg + "%")"
 				end
 			elseif l_keyword.same_string (compile_melted_keyword) then
 				l_arg := a_instruction.orig_arguments
 				if l_arg = Void or else l_arg.is_empty then
 					Result := "compile_melted (Void)"
 				else
-					Result := "compile_melted (%"" + l_arg + "%")"
+					Result := {STRING_32} "compile_melted (%"" + l_arg + "%")"
 				end
 			elseif l_keyword.same_string (compile_precompiled_keyword) then
 				Result := "compile_precompiled"
@@ -392,34 +392,34 @@ feature {NONE} -- Implementation
 			elseif l_keyword.same_string (compile_result_keyword) then
 				l_arg := a_instruction.orig_arguments
 				check not_void: l_arg /= Void and then not l_arg.is_empty end
-				Result := "compile_result (%"" + l_arg + "%")"
+				Result := {STRING_32} "compile_result (%"" + l_arg + "%")"
 			elseif l_keyword.same_string (copy_bin_keyword) then
 				l_arg := a_instruction.orig_arguments
 				check not_void: l_arg /= Void and then not l_arg.is_empty end
 				l_list := broken_into_words (l_arg)
 				check count_right: l_list.count = 3 end
-				Result := "copy_bin (%"" + l_list.i_th (1) + "%", %"" + l_list.i_th (2) + "%", %"" + l_list.i_th (3) + "%")"
+				Result := {STRING_32} "copy_bin (%"" + l_list.i_th (1) + "%", %"" + l_list.i_th (2) + "%", %"" + l_list.i_th (3) + "%")"
 			elseif l_keyword.same_string (copy_file_keyword) then
 				l_arg := a_instruction.orig_arguments
 				check not_void: l_arg /= Void and then not l_arg.is_empty end
 				l_list := broken_into_words (l_arg)
 				check count_right: l_list.count = 3 end
-				Result := "copy_file (%"" + l_list.i_th (1) + "%", %"" + l_list.i_th (2) + "%", %"" + l_list.i_th (3) + "%")"
+				Result := {STRING_32} "copy_file (%"" + l_list.i_th (1) + "%", %"" + l_list.i_th (2) + "%", %"" + l_list.i_th (3) + "%")"
 			elseif l_keyword.same_string (copy_raw_keyword) then
 				l_arg := a_instruction.orig_arguments
 				check not_void: l_arg /= Void and then not l_arg.is_empty end
 				l_list := broken_into_words (l_arg)
 				check count_right: l_list.count = 3 end
-				Result := "copy_raw (%"" + l_list.i_th (1) + "%", %"" + l_list.i_th (2) + "%", %"" + l_list.i_th (3) + "%")"
+				Result := {STRING_32} "copy_raw (%"" + l_list.i_th (1) + "%", %"" + l_list.i_th (2) + "%", %"" + l_list.i_th (3) + "%")"
 			elseif l_keyword.same_string (copy_sub_keyword) then
 				l_arg := a_instruction.orig_arguments
 				l_list := broken_into_words (l_arg)
 				check count_right: l_list.count = 3 end
-				Result := "copy_sub (%"" + l_list.i_th (1) + "%", %"" + l_list.i_th (2) + "%", %"" + l_list.i_th (3) + "%")"
+				Result := {STRING_32} "copy_sub (%"" + l_list.i_th (1) + "%", %"" + l_list.i_th (2) + "%", %"" + l_list.i_th (3) + "%")"
 			elseif l_keyword.same_string (cpu_limit_keyword) then
 				l_arg := a_instruction.orig_arguments
 				check not_void: l_arg /= Void end
-				Result := "cpu_limit (%"" + l_arg + "%")"
+				Result := {STRING_32} "cpu_limit (%"" + l_arg + "%")"
 			elseif l_keyword.same_string (define_directory_keyword) then
 				l_arg := a_instruction.orig_arguments
 				l_list := broken_into_words (l_arg)
@@ -438,7 +438,7 @@ feature {NONE} -- Implementation
 					l_list.forth
 				end
 				l_array.append ({STRING_32} ">>")
-				Result := "define_directory (%"" + l_list.i_th (1) + "%", " + to_utf_8 (l_array) + ")"
+				Result := {STRING_32} "define_directory (%"" + l_list.i_th (1) + "%", " + l_array + ")"
 			elseif l_keyword.same_string (define_file_keyword) then
 				l_arg := a_instruction.orig_arguments
 				l_list := broken_into_words (l_arg)
@@ -457,7 +457,7 @@ feature {NONE} -- Implementation
 					l_list.forth
 				end
 				l_array.append ({STRING_32} ">>")
-				Result := "define_file (%"" + l_list.i_th (1) + "%", " + to_utf_8 (l_array) + ", %"" + l_list.last + "%")"
+				Result := {STRING_32} "define_file (%"" + l_list.i_th (1) + "%", " + l_array + ", %"" + l_list.last + "%")"
 			elseif l_keyword.same_string (define_keyword) then
 				l_arg := a_instruction.orig_arguments.twin
 				l_list := broken_into_words (l_arg)
@@ -465,18 +465,18 @@ feature {NONE} -- Implementation
 				l_arg.remove_substring (1, l_list.i_th (1).count + 1)
 				l_arg.left_adjust
 				decorate_quote (l_arg, True)
-				Result := "define (%"" + l_list.i_th (1) + "%", %"" + l_arg + "%")"
+				Result := {STRING_32} "define (%"" + l_list.i_th (1) + "%", %"" + l_arg + "%")"
 			elseif l_keyword.same_string (delete_keyword) then
 				l_arg := a_instruction.orig_arguments
 				l_list := broken_into_words (l_arg)
 				check count_right: l_list.count = 2 end
-				Result := "delete (%"" + l_list.i_th (1) + "%", %"" + l_list.i_th (2) + "%")"
+				Result := {STRING_32} "delete (%"" + l_list.i_th (1) + "%", %"" + l_list.i_th (2) + "%")"
 			elseif l_keyword.same_string (execute_final_keyword) then
 				l_arg := a_instruction.orig_arguments
 				l_list := broken_into_words (l_arg)
 				check count_right: l_list.count >= 2 end
 				if l_list.count = 2 then
-					Result := "execute_final (%"" + l_list.i_th (1) + "%", %"" + l_list.i_th (2) + "%", " + "Void)"
+					Result := {STRING_32} "execute_final (%"" + l_list.i_th (1) + "%", %"" + l_list.i_th (2) + "%", " + "Void)"
 				else
 					from
 						l_array := {STRING_32} ""
@@ -488,18 +488,18 @@ feature {NONE} -- Implementation
 						l_list.forth
 					end
 					decorate_quote (l_array, False)
-					Result := "execute_final (%"" + l_list.i_th (1) + "%", %"" + l_list.i_th (2) + "%", %"" + to_utf_8 (l_array) + "%")"
+					Result := {STRING_32} "execute_final (%"" + l_list.i_th (1) + "%", %"" + l_list.i_th (2) + "%", %"" + l_array + "%")"
 				end
 			elseif l_keyword.same_string (execute_result_keyword) then
 				l_arg := a_instruction.orig_arguments
 				check not_void: l_arg /= Void end
-				Result := "execute_result (%"" + l_arg + "%")"
+				Result := {STRING_32} "execute_result (%"" + l_arg + "%")"
 			elseif l_keyword.same_string (execute_work_keyword) then
 				l_arg := a_instruction.orig_arguments
 				l_list := broken_into_words (l_arg)
 				check count_right: l_list.count >= 2 end
 				if l_list.count = 2 then
-					Result := "execute_work (%"" + l_list.i_th (1) + "%", %"" + l_list.i_th (2) + "%", " + "Void)"
+					Result := {STRING_32} "execute_work (%"" + l_list.i_th (1) + "%", %"" + l_list.i_th (2) + "%", " + "Void)"
 				else
 					from
 						l_array := {STRING_32} ""
@@ -511,7 +511,7 @@ feature {NONE} -- Implementation
 						l_list.forth
 					end
 					decorate_quote (l_array, False)
-					Result := "execute_work (%"" + l_list.i_th (1) + "%", %"" + l_list.i_th (2) + "%", %"" + to_utf_8 (l_array) + "%")"
+					Result := {STRING_32} "execute_work (%"" + l_list.i_th (1) + "%", %"" + l_list.i_th (2) + "%", %"" + l_array + "%")"
 				end
 			elseif l_keyword.same_string (exit_compile_keyword) then
 				Result := "exit_compile"
@@ -523,28 +523,28 @@ feature {NONE} -- Implementation
 					l_arg.remove_substring (1, l_list.i_th (1).count + l_list.i_th (2).count + 2)
 					l_arg.left_adjust
 					--decorate_quote (l_arg, True)
-					Result := "if not has_env (%"" + l_list.i_th (2) + "%") then"
+					Result := {STRING_32} "if not has_env (%"" + l_list.i_th (2) + "%") then"
 					-- Recursive convert
 					l_instruction := one_line_to_instruction (l_arg)
 					check not_void: attached l_instruction end
-					Result.append ("%N" + convert_instruction_to_one_line (l_instruction))
+					Result.append ({STRING_32} "%N" + convert_instruction_to_one_line (l_instruction))
 					Result.append ("%N%T%T%Tend")
 				else
 					l_arg.remove_substring (1, l_list.i_th (1).count + 1)
 					l_arg.left_adjust
 					--decorate_quote (l_arg, True)
-					Result := "if has_env (%"" + l_list.i_th (1) + "%") then"
+					Result := {STRING_32} "if has_env (%"" + l_list.i_th (1) + "%") then"
 					-- Recursive convert
 					l_instruction := one_line_to_instruction (l_arg)
 					check not_void: attached l_instruction end
-					Result.append ("%N" + convert_instruction_to_one_line (l_instruction))
+					Result.append ({STRING_32} "%N" + convert_instruction_to_one_line (l_instruction))
 					Result.append ("%N%T%T%Tend")
 				end
 			elseif l_keyword.same_string (include_keyword) then
 				l_arg := a_instruction.orig_arguments
 				l_list := broken_into_words (l_arg)
 				check count_right: l_list.count = 2 end
-				Result := "include (%"" + l_list.i_th (1) + "%", %"" + l_list.i_th (2) + "%")"
+				Result := {STRING_32} "include (%"" + l_list.i_th (1) + "%", %"" + l_list.i_th (2) + "%")"
 			elseif l_keyword.same_string (not_keyword) then
 				Result := "not"
 			elseif l_keyword.same_string (resume_compile_keyword) then
@@ -553,12 +553,12 @@ feature {NONE} -- Implementation
 				l_arg := a_instruction.orig_arguments
 				l_list := broken_into_words (l_arg)
 				check count_right: l_list.count = 2 end
-				Result := "setenv (%"" + l_list.i_th (1) + "%", %"" + l_list.i_th (2) + "%")"
+				Result := {STRING_32} "setenv (%"" + l_list.i_th (1) + "%", %"" + l_list.i_th (2) + "%")"
 			elseif l_keyword.same_string (system_keyword) then
 				l_arg := a_instruction.orig_arguments
 				decorate_quote (l_arg, True)
 				check not_void: l_arg /= Void end
-				Result := "system (%"" + l_arg + "%")"
+				Result := {STRING_32} "system (%"" + l_arg + "%")"
 			elseif l_keyword.same_string (test_description_keyword) then
 				l_arg := a_instruction.orig_arguments.twin
 				check not_void: l_arg /= Void and then not l_arg.is_empty end
@@ -575,7 +575,7 @@ feature {NONE} -- Implementation
 			elseif l_keyword.same_string (undefine_keyword) then
 				l_arg := a_instruction.orig_arguments
 				check not_void: l_arg /= Void and then not l_arg.is_empty end
-				Result := "undefine (%"" + l_arg + "%")"
+				Result := {STRING_32} "undefine (%"" + l_arg + "%")"
 			elseif l_keyword.same_string (unknown_keyword) then
 				Result := "unknown"
 			else
@@ -686,7 +686,7 @@ feature {NONE} -- Implementation
 	date: "$Date$"
 	revision: "$Revision$"
 	copyright: "[
-			Copyright (c) 1984-2019, University of Southern California, Eiffel Software and contributors.
+			Copyright (c) 1984-2020, University of Southern California, Eiffel Software and contributors.
 			All rights reserved.
 		]"
 	license:   "Your use of this work is governed under the terms of the GNU General Public License version 2"

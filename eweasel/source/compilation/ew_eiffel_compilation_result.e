@@ -390,7 +390,7 @@ feature {NONE} -- Implementation
 				create class_name.make_empty
 			end
 			create Result.make (from_utf_8 (class_name))
-			if line_no.is_integer then
+			if attached line_no and then line_no.is_integer then
 				Result.set_line_number (line_no.to_integer)
 			end
 		end
@@ -431,7 +431,7 @@ feature {NONE} -- Implementation
 				create class_name.make (0)
 			end
 			create Result.make (from_utf_8 (class_name))
-			if line_no.is_integer then
+			if attached line_no and then line_no.is_integer then
 				Result.set_line_number (line_no.to_integer)
 			end
 		end
@@ -537,9 +537,10 @@ note
 	date: "$Date$"
 	revision: "$Revision$"
 	copyright: "[
-			Copyright (c) 1984-2018, University of Southern California, Eiffel Software and contributors.
+			Copyright (c) 1984-2020, University of Southern California, Eiffel Software and contributors.
 			All rights reserved.
 		]"
+	revised_by: "Alexander Kogtenkov"
 	license:   "Your use of this work is governed under the terms of the GNU General Public License version 2"
 	copying: "[
 			This file is part of the EiffelWeasel Eiffel Regression Tester.

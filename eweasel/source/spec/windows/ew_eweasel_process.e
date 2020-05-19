@@ -31,7 +31,7 @@ inherit
 
 feature -- Creation
 
-	make (cmd: READABLE_STRING_32; args: LIST [READABLE_STRING_32]; a_env_vars: like {EW_TEST_ENVIRONMENT}.environment_variables; inf, outf, savef: READABLE_STRING_32)
+	make (cmd: READABLE_STRING_32; args: LIST [READABLE_STRING_32]; a_env_vars: like {EW_TEST_ENVIRONMENT}.environment_variables; inf, outf, savef: detachable READABLE_STRING_32)
 			-- Start a new process to run command `cmd'
 			-- with arguments `args'.  The new process
 			-- will gets its input from file `inf' and
@@ -117,16 +117,20 @@ feature -- Control
 		do
 			close
 				-- Process is most likely active, we just wait until it has actually finished.
-			from
-			until
-				not {WEL_API}.get_exit_code_process (process_handle.item, $last_process_result) or else
-				last_process_result /= {WEL_API}.still_active
-			loop
-					-- Check every second.
-				sleep (1_000_000)
+			if attached process_handle as p then
+				from
+				until
+					not {WEL_API}.get_exit_code_process (p.item, $last_process_result) or else
+					last_process_result /= {WEL_API}.still_active
+				loop
+						-- Check every second.
+					sleep (1_000_000)
+				end
+				if attached thread_handle as t then
+					t.close
+				end
+				p.close
 			end
-			thread_handle.close
-			process_handle.close
 			suspended := False
 		end
 
@@ -135,17 +139,17 @@ feature -- Control
 			-- it if it is still running
 		do
 			close
-			if process_handle.is_open then
+			if attached process_handle as p and then p.is_open then
 				if
-					{WEL_API}.get_exit_code_process (process_handle.item, $last_process_result) and then
+					{WEL_API}.get_exit_code_process (p.item, $last_process_result) and then
 					last_process_result = {WEL_API}.still_active
 				then
-					{WEL_API}.terminate_process (process_handle.item, 0).do_nothing
+					{WEL_API}.terminate_process (p.item, 0).do_nothing
 				end
-				if thread_handle.is_open then
-					thread_handle.close
+				if attached thread_handle as t and then t.is_open then
+					t.close
 				end
-				process_handle.close
+				p.close
 			end
 			suspended := False
 		end
@@ -190,35 +194,37 @@ feature {NONE} -- Implementation
 	output_pipe_needed: BOOLEAN
 			-- Is a pipe needed to read output from current process?
 
-	input_file_name: READABLE_STRING_32
+	input_file_name: detachable READABLE_STRING_32
 			-- Name if any of input file
 
-	output_file_name: READABLE_STRING_32
+	output_file_name: detachable READABLE_STRING_32
 			-- Name if any of output file
 
-	savefile: RAW_FILE
+	savefile: detachable RAW_FILE
 			-- File to which output read from process is written,
 			-- if not void
 
-	savefile_name: READABLE_STRING_32
+	savefile_name: detachable READABLE_STRING_32
 			-- Name of file to which output read from process
 			-- is written, if not Void
 
-	savefile_contents: STRING
+	savefile_contents: detachable STRING
 			-- Current contents of file named `savefile_name'
 		local
 			f: RAW_FILE
 		do
-			create f.make_open_read (savefile_name)
-			create Result.make (100)
-			from
-			until
-				f.end_of_file
-			loop
-				f.read_stream (4096)
-				Result.append (f.last_string)
+			if attached savefile_name as n then
+				create f.make_open_read (n)
+				create Result.make (100)
+				from
+				until
+					f.end_of_file
+				loop
+					f.read_stream (4096)
+					Result.append (f.last_string)
+				end
+				f.close
 			end
-			f.close
 		end
 
 	std_input, std_output: POINTER
@@ -309,19 +315,33 @@ feature {NONE} -- Implementation
 				-- Initialize input of child
 			if input_pipe_needed then
 				l_tuple := file_handle.create_pipe_read_inheritable
-				child_input := l_tuple.pointer_item (1)
-				std_input := l_tuple.pointer_item (2)
+				if attached l_tuple then
+					child_input := l_tuple.pointer_item (1)
+					std_input := l_tuple.pointer_item (2)
+				end
 			else
-				child_input := file_handle.open_file_inheritable (input_file_name)
+				child_input :=
+					if attached input_file_name as n then
+						file_handle.open_file_inheritable (n)
+					else
+						default_pointer
+					end
 				std_input := default_pointer
 			end
 				-- Initialize output of child
 			if output_pipe_needed then
 				l_tuple := file_handle.create_pipe_write_inheritable
-				std_output := l_tuple.pointer_item (1)
-				child_output := l_tuple.pointer_item (2)
+				if attached l_tuple then
+					std_output := l_tuple.pointer_item (1)
+					child_output := l_tuple.pointer_item (2)
+				end
 			else
-				child_output := file_handle.create_file_inheritable (output_file_name, False)
+				child_output :=
+					if attached output_file_name as n then
+						file_handle.create_file_inheritable (n, False)
+					else
+						default_pointer
+					end
 				std_output := default_pointer
 			end
 
@@ -422,9 +442,10 @@ feature {NONE} -- Command-line
 	date: "$Date$"
 	revision: "$Revision$"
 	copyright: "[
-			Copyright (c) 1984-2018, University of Southern California, Eiffel Software and contributors.
+			Copyright (c) 1984-2020, University of Southern California, Eiffel Software and contributors.
 			All rights reserved.
 		]"
+	revised_by: "Alexander Kogtenkov"
 	license:   "Your use of this work is governed under the terms of the GNU General Public License version 2"
 	copying: "[
 			This file is part of the EiffelWeasel Eiffel Regression Tester.

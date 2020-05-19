@@ -1,8 +1,7 @@
-note
+﻿note
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
-	keywords: "Eiffel test";
-	date: "93/08/30"
+	keywords: "Eiffel test"
 
 class EW_IF_INST
 
@@ -31,6 +30,7 @@ feature
 			count, pos: INTEGER
 			val: READABLE_STRING_32
 			controlled_inst, cmd, table_cmd, rest: STRING_32
+			i: like instruction
 		do
 			args := broken_into_words (line)
 			count := args.count
@@ -77,11 +77,16 @@ feature
 					check
 						known_command: command_table.has (table_cmd)
 					end
-					instruction := command_table.item (table_cmd).twin
-					instruction.initialize_for_conditional (test_control_file, cmd, rest)
-					init_ok := instruction.init_ok
-					-- FIXME: add text about "if"
-					failure_explanation := instruction.failure_explanation
+					if attached command_table.item (table_cmd) as c then
+						i := c.twin
+						i.initialize_for_conditional (test_control_file, cmd, rest)
+						init_ok := i.init_ok
+						-- FIXME: add text about "if"
+						failure_explanation := i.failure_explanation
+						instruction := i
+					else
+						check from_assertion: False then end
+					end
 				else
 					instruction := Void
 				end
@@ -92,19 +97,19 @@ feature
 			-- Execute `Current' as one of the
 			-- instructions of `test'
 		do
-			if instruction /= Void then
-				instruction.execute (test)
-				execute_ok := instruction.execute_ok
-				test_execution_terminated := instruction.test_execution_terminated
-				failure_explanation := instruction.failure_explanation
+			if attached instruction as i then
+				i.execute (test)
+				execute_ok := i.execute_ok
+				test_execution_terminated := i.test_execution_terminated
+				failure_explanation := i.failure_explanation
 			else
 				-- Condition false, so controlled instruction
 				-- is skipped
 				execute_ok := True
 			end
-		end;
+		end
 
-	init_ok: BOOLEAN;
+	init_ok: BOOLEAN
 			-- Was last call to `initialize' successful?
 
 	execute_ok: BOOLEAN
@@ -120,14 +125,17 @@ feature {NONE}
 			-- Is condition positive (e.g., "if DOTNET")
 			-- rather than negative (e.g., "if not DOTNET")?
 
-	instruction: EW_TEST_INSTRUCTION;
+	instruction: detachable EW_TEST_INSTRUCTION;
 			-- Test instruction to be conditionally executed
 
 note
+	date: "$Date$"
+	revision: "$Revision$"
 	copyright: "[
-			Copyright (c) 1984-2007, University of Southern California and contributors.
+			Copyright (c) 1984-2020, University of Southern California and contributors.
 			All rights reserved.
 			]"
+	revised_by: "Alexander Kogtenkov"
 	license:   "Your use of this work is governed under the terms of the GNU General Public License version 2"
 	copying: "[
 			This file is part of the EiffelWeasel Eiffel Regression Tester.
@@ -148,11 +156,5 @@ note
 			if not, write to the Free Software Foundation,
 			Inc., 51 Franklin St, Fifth Floor, Boston, MA
 		]"
-
-
-
-
-
-
 
 end

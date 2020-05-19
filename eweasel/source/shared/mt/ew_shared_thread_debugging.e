@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "Shared objects."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -26,7 +26,7 @@ feature -- Operations
 			debug_mutex.unlock
 		end
 
-	print_debug_main (s: STRING)
+	print_debug_main (s: READABLE_STRING_32)
 			-- Display `s' along with thread ID of
 			-- current thread, followed by new line.  Intended
 			-- to be called by "main" thread for debugging
@@ -35,7 +35,7 @@ feature -- Operations
 			print_debug (s, Main_type)
 		end
 
-	print_debug_worker (s: STRING)
+	print_debug_worker (s: READABLE_STRING_32)
 			-- Display `s' along with thread ID of
 			-- current thread, followed by new line.  Intended
 			-- to be called by "worker" thread for debugging
@@ -46,7 +46,7 @@ feature -- Operations
 
 feature {NONE} -- Implementation
 
-	print_debug (s, a_type: STRING)
+	print_debug (s, a_type: READABLE_STRING_32)
 			-- Display debugging output `s' from `a_type'
 			-- of thread, along with thread ID of current
 			-- thread, followed by new line.  Intended to
@@ -66,7 +66,7 @@ feature {NONE} -- Implementation
 					id.prepend_character (' ')
 				end
 			end
-			output.append (tid.out + "  " + a_type + " " + id + "  " + s, True)
+			output.append_32 (tid.out.as_string_32 + "  " + a_type + " " + id + "  " + s, True)
 			debug_mutex.unlock
 		end
 
@@ -89,16 +89,17 @@ feature {NONE} -- Implementation
 			create Result.put (0)
 		end
 
-	Main_type: STRING = "Main  ";
+	Main_type: STRING_32 = "Main  ";
 
-	Worker_type: STRING = "Worker";
+	Worker_type: STRING_32 = "Worker";
 
 
 note
 	copyright: "[
-			Copyright (c) 1984-2007, University of Southern California and contributors.
+			Copyright (c) 1984-2020, University of Southern California and contributors.
 			All rights reserved.
-			]"
+		]"
+	revised_by: "Alexander Kogtenkov"
 	license:   "Your use of this work is governed under the terms of the GNU General Public License version 2"
 	copying: "[
 			This file is part of the EiffelWeasel Eiffel Regression Tester.
@@ -120,5 +121,4 @@ note
 			Inc., 51 Franklin St, Fifth Floor, Boston, MA
 		]"
 
-
-end -- class SHARED_OBJECTS
+end

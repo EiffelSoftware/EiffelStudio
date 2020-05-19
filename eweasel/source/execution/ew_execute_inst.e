@@ -20,6 +20,7 @@ feature
 			-- initialization was successful.
 		local
 			args: LIST [READABLE_STRING_32]
+			n: READABLE_STRING_32
 		do
 			args := broken_into_words (line)
 			if args.count < 2 then
@@ -30,15 +31,11 @@ feature
 				across
 					args as a
 				from
-					input_file_name := a.item
-					if input_file_name.same_string (No_file_name) then
-						input_file_name := Void
-					end
+					n := a.item
+					input_file_name := if n.same_string (No_file_name) then Void else n end
 					a.forth
-					output_file_name := a.item
-					if output_file_name.same_string (No_file_name) then
-						output_file_name := Void
-					end
+					n := a.item
+					output_file_name := if n.same_string (No_file_name) then Void else n end
 					a.forth
 				loop
 					arguments.extend (a.item)
@@ -66,14 +63,14 @@ feature
 				test.increment_execution_count
 				exec_dir := test.environment.value (execution_dir_name)
 				prog := os.executable_full_file_name (exec_dir, test.system_name)
-				if input_file_name /= Void then
-					infile := os.full_file_name (test.environment.value (Source_dir_name), input_file_name)
+				if attached input_file_name as n then
+					infile := os.full_file_name (test.environment.value (Source_dir_name), n)
 				else
 					infile := os.null_file_name
 				end
 				outfile := Void	-- Pipe output back to parent
-				if output_file_name /= Void then
-					savefile := output_file_name
+				if attached output_file_name as n then
+					savefile := n
 				else
 					savefile := test.execution_output_name
 				end
@@ -120,10 +117,10 @@ feature {NONE} -- Constants
 
 feature {NONE} -- Implementation
 
-	input_file_name: READABLE_STRING_32
+	input_file_name: detachable READABLE_STRING_32
 			-- Name of input file
 
-	output_file_name: READABLE_STRING_32
+	output_file_name: detachable READABLE_STRING_32
 			-- Name of output file
 
 	arguments: LINKED_LIST [READABLE_STRING_32]
@@ -137,9 +134,10 @@ note
 	date: "$Date$"
 	revision: "$Revision$"
 	copyright: "[
-			Copyright (c) 1984-2018, University of Southern California, Eiffel Software and contributors.
+			Copyright (c) 1984-2020, University of Southern California, Eiffel Software and contributors.
 			All rights reserved.
 		]"
+	revised_by: "Alexander Kogtenkov"
 	license:   "Your use of this work is governed under the terms of the GNU General Public License version 2"
 	copying: "[
 			This file is part of the EiffelWeasel Eiffel Regression Tester.

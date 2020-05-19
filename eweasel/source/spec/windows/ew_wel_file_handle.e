@@ -61,7 +61,7 @@ feature -- Factory
 			end
 		end
 
-	create_pipe_write_inheritable: TUPLE [POINTER, POINTER]
+	create_pipe_write_inheritable: detachable TUPLE [POINTER, POINTER]
 			-- Create pipe where `write' part of pipe can be written to.
 			-- Actual type is TUPLE [read, write: INTEGER]
 		local
@@ -82,7 +82,7 @@ feature -- Factory
 			end
 		end
 
-	create_pipe_read_inheritable: TUPLE [POINTER, POINTER]
+	create_pipe_read_inheritable: detachable TUPLE [POINTER, POINTER]
 			-- Create pipe where `write' part of pipe can be written to.
 			-- Actual type is TUPLE [read, write: POINTER]
 		local
@@ -275,9 +275,10 @@ note
 	date: "$Date$"
 	revision: "$Revision$"
 	copyright: "[
-			Copyright (c) 1984-2018, University of Southern California, Eiffel Software and contributors.
+			Copyright (c) 1984-2020, University of Southern California, Eiffel Software and contributors.
 			All rights reserved.
 		]"
+	revised_by: "Alexander Kogtenkov"
 	license:   "Your use of this work is governed under the terms of the GNU General Public License version 2"
 	copying: "[
 			This file is part of the EiffelWeasel Eiffel Regression Tester.

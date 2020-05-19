@@ -190,11 +190,11 @@ feature  {NONE} -- Implementation
 									test_suite_options.set_max_threads (n)
 									k := k + 2
 								else
-									output.append_error ("Invalid maximum thread count " + n.out + " - must be >= -1", True)
+									output.append_error_32 ({STRING_32} "Invalid maximum thread count " + n.out + " - must be >= -1", True)
 									args_ok := False
 								end
 							else
-								output.append_error ("Invalid maximum thread count: " + l_max_threads, True)
+								output.append_error_32 ({STRING_32} "Invalid maximum thread count: " + l_max_threads, True)
 								args_ok := False
 							end
 						else
@@ -209,11 +209,11 @@ feature  {NONE} -- Implementation
 									test_suite_options.set_max_c_processes (n)
 									k := k + 2
 								else
-									output.append_error ("Invalid maximum C processes value " + n.out + " - must be >= -1", True)
+									output.append_error_32 ({STRING_32} "Invalid maximum C processes value " + n.out + " - must be >= -1", True)
 									args_ok := False
 								end
 							else
-								output.append_error ("Invalid maximum C processes value: " + l_max_c_processes, True)
+								output.append_error_32 ({STRING_32} "Invalid maximum C processes value: " + l_max_c_processes, True)
 								args_ok := False
 							end
 						else
@@ -461,9 +461,10 @@ feature  {NONE} -- Implementation
 	date: "$Date$"
 	revision: "$Revision$"
 	copyright: "[
-			Copyright (c) 1984-2019, University of Southern California, Eiffel Software and contributors.
+			Copyright (c) 1984-2020, University of Southern California, Eiffel Software and contributors.
 			All rights reserved.
 		]"
+	revised_by: "Alexander Kogtenkov"
 	license: "Your use of this work is governed under the terms of the GNU General Public License version 2"
 	copying: "[
 			This file is part of the EiffelWeasel Eiffel Regression Tester.

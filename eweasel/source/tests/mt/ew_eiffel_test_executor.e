@@ -50,7 +50,7 @@ feature -- Execution
 				else
 					if test.execution_allowed then
 						debug ("threaded_eweasel")
-							print_debug_worker ("Executing test " + test.last_source_directory_component)
+							print_debug_worker ({STRING_32} "Executing test " + test.last_source_directory_component)
 						end
 						test.execute (test_suite.initial_environment (test));
 						test_dir := os.full_directory_name (test_suite.test_suite_directory, test.last_source_directory_component);
@@ -62,7 +62,7 @@ feature -- Execution
 							os.delete_directory_tree (test_dir)
 						end
 						debug ("threaded_eweasel")
-							print_debug_worker ("Finished test " + test.last_source_directory_component)
+							print_debug_worker ({STRING_32} "Finished test " + test.last_source_directory_component)
 						end
 					end
 					queue.mark_test_completed (test)
@@ -109,9 +109,10 @@ note
 	date: "$Date$"
 	revision: "$Revision$"
 	copyright: "[
-			Copyright (c) 1984-2018, University of Southern California, Eiffel Software and contributors.
+			Copyright (c) 1984-2020, University of Southern California, Eiffel Software and contributors.
 			All rights reserved.
 		]"
+	revised_by: "Alexander Kogtenkov"
 	license:   "Your use of this work is governed under the terms of the GNU General Public License version 2"
 	copying: "[
 			This file is part of the EiffelWeasel Eiffel Regression Tester.

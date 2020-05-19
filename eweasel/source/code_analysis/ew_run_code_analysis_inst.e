@@ -115,10 +115,10 @@ feature {NONE} -- Implementation
 	load_defaults: BOOLEAN
 			-- Was the argument for loading default settings specified?
 
-	preference_file_path: READABLE_STRING_32
+	preference_file_path: detachable READABLE_STRING_32
 			-- The path to the preference file to be loaded. Void if preferences should not be loaded.
 
-	class_list: LIST [READABLE_STRING_32]
+	class_list: detachable LIST [READABLE_STRING_32]
 			-- The list of names of classes to be analyzed. Void if the whole system is to be analyzed.
 
 	forced_rules_argument: READABLE_STRING_32
@@ -153,9 +153,10 @@ note
 	date: "$Date$"
 	revision: "$Revision$"
 	copyright: "[
-			Copyright (c) 1984-2018, University of Southern California, Eiffel Software and contributors.
+			Copyright (c) 1984-2020, University of Southern California, Eiffel Software and contributors.
 			All rights reserved.
 		]"
+	revised_by: "Alexander Kogtenkov"
 	license: "Your use of this work is governed under the terms of the GNU General Public License version 2"
 	copying: "[
 		This file is part of the EiffelWeasel Eiffel Regression Tester.

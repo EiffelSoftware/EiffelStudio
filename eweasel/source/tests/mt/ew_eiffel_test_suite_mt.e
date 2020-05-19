@@ -47,11 +47,11 @@ feature -- Execution
 				test := t.item
 				if opts.filter.selects (test) then
 					debug ("threaded_eweasel")
-						print_debug_main ("Adding " + test.last_source_directory_component + " to test queue")
+						print_debug_main ({STRING_32} "Adding " + test.last_source_directory_component + " to test queue")
 					end
 					queue.extend (test)
 					debug ("threaded_eweasel")
-						print_debug_main ("Added " + test.last_source_directory_component + " to test queue")
+						print_debug_main ({STRING_32} "Added " + test.last_source_directory_component + " to test queue")
 					end
 					if num_threads < max_threads then
 						num_threads := num_threads + 1
@@ -90,7 +90,7 @@ feature -- Execution
 					done := True
 				else
 					debug ("threaded_eweasel")
-						print_debug_main ("Test " + test.last_source_directory_component + " completed")
+						print_debug_main ({STRING_32} "Test " + test.last_source_directory_component + " completed")
 					end
 					update_statistics (test);
 					announce_start (test);
@@ -117,9 +117,10 @@ note
 	date: "$Date$"
 	revision: "$Revision$"
 	copyright: "[
-			Copyright (c) 1984-2018, University of Southern California, Eiffel Software and contributors.
+			Copyright (c) 1984-2020, University of Southern California, Eiffel Software and contributors.
 			All rights reserved.
 		]"
+	revised_by: "Alexander Kogtenkov"
 	license:   "Your use of this work is governed under the terms of the GNU General Public License version 2"
 	copying: "[
 			This file is part of the EiffelWeasel Eiffel Regression Tester.

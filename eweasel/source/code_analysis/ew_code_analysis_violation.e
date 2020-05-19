@@ -35,7 +35,7 @@ feature {NONE} -- Initialization
 
 	make_with_everything (a_class_name: STRING; a_line_number: INTEGER; a_rule_id: READABLE_STRING_32; a_type: READABLE_STRING_32; a_message: READABLE_STRING_32)
 		require
-			valid_type: a_type = Void or is_valid_violation_type (a_type)
+			valid_type: a_type = Void or else is_valid_violation_type (a_type)
 		do
 			class_name := a_class_name
 			line_number := a_line_number
@@ -67,9 +67,9 @@ feature -- Properties
 		do
 			create Result.make_empty
 			Result.append_string (type)
-			if attached class_name and then not class_name.is_empty then
+			if attached class_name as c and then not c.is_empty then
 				Result.append ({STRING_32} " in class ")
-				Result.append_string (from_utf_8 (class_name))
+				Result.append_string (from_utf_8 (c))
 				if line_number /= 0 then
 					Result.append ({STRING_32} " at line ")
 					Result.append_integer (line_number)
@@ -102,7 +102,7 @@ feature -- Modification
 
 	set_type (a_type: like type)
 		require
-			valid_type: a_type = Void or is_valid_violation_type (a_type)
+			valid_type: a_type = Void or else is_valid_violation_type (a_type)
 		do
 			type := a_type
 		end
@@ -185,7 +185,7 @@ feature {NONE} -- Implementation
 		end
 
 invariant
-	valid_type: is_valid_violation_type (type)
+	valid_type: attached type as t implies is_valid_violation_type (t)
 
 note
 	ca_ignore: "CA011", "CA011: too many arguments"
@@ -193,7 +193,7 @@ note
 	revision: "$Revision$"
 	author: "Alexander Kogtenkov"
 	copyright: "[
-			Copyright (c) 1984-2018, University of Southern California, Eiffel Software and contributors.
+			Copyright (c) 1984-2020, University of Southern California, Eiffel Software and contributors.
 			All rights reserved.
 		]"
 	license: "Your use of this work is governed under the terms of the GNU General Public License version 2"

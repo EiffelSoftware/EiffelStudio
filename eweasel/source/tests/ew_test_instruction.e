@@ -48,7 +48,7 @@ feature
 			s.adjust
 			orig_arguments := s
 			set_arguments (a_tcf)
-			inst_initialize (orig_arguments)
+			inst_initialize (s)
 		end
 
 	inst_initialize (args: READABLE_STRING_32)
@@ -124,7 +124,7 @@ feature -- Properties
 	command: READABLE_STRING_32
 			-- Name of test instruction command
 
-	orig_arguments: READABLE_STRING_32
+	orig_arguments: detachable READABLE_STRING_32
 			-- Rest of test instruction line, as it originally
 			-- appeared
 
@@ -181,9 +181,10 @@ note
 	date: "$Date$"
 	revision: "$Revision$"
 	copyright: "[
-			Copyright (c) 1984-2018, University of Southern California, Eiffel Software and contributors.
+			Copyright (c) 1984-2020, University of Southern California, Eiffel Software and contributors.
 			All rights reserved.
 		]"
+	revised_by: "Alexander Kogtenkov"
 	license:   "Your use of this work is governed under the terms of the GNU General Public License version 2"
 	copying: "[
 			This file is part of the EiffelWeasel Eiffel Regression Tester.

@@ -185,7 +185,7 @@ feature  -- Properties
 			end
 		end
 
-	value (var: READABLE_STRING_32): READABLE_STRING_32
+	value (var: READABLE_STRING_32): detachable READABLE_STRING_32
 			-- Value associated with environment variable
 			-- `var' (Void if no associated value).
 		require

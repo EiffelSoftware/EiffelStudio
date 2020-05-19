@@ -10,7 +10,7 @@ inherit
 
 feature -- Filtering
 
-	string_to_filter (s: READABLE_STRING_32): EW_EIFFEL_TEST_FILTER
+	string_to_filter (s: READABLE_STRING_32): detachable EW_EIFFEL_TEST_FILTER
 			-- Filter `s' represents (Void if none - i.e. if
 			-- `s' is invalid).
 		local
@@ -60,9 +60,10 @@ feature -- Filtering
 	date: "$Date$"
 	revision: "$Revision$"
 	copyright: "[
-			Copyright (c) 1984-2018, University of Southern California, Eiffel Software and contributors.
+			Copyright (c) 1984-2020, University of Southern California, Eiffel Software and contributors.
 			All rights reserved.
 		]"
+	revised_by: "Alexander Kogtenkov"
 	license:   "Your use of this work is governed under the terms of the GNU General Public License version 2"
 	copying: "[
 			This file is part of the EiffelWeasel Eiffel Regression Tester.

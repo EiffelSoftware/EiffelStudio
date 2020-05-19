@@ -60,23 +60,23 @@ feature -- Modification
 		do
 			create entry.make (t)
 			debug ("threaded_eweasel")
-				print_debug_main ("Trying to lock mutex in extend" )
+				print_debug_main ("Trying to lock mutex in extend")
 			end
 			mutex.lock
 			debug ("threaded_eweasel")
-				print_debug_main ("Locked mutex in extend" )
+				print_debug_main ("Locked mutex in extend")
 			end
 			pending_queue.extend (entry)
 			debug ("threaded_eweasel")
-				print_debug_main ("Signalling more waiting tests in extend" )
+				print_debug_main ("Signalling more waiting tests in extend")
 			end
 			more_waiting_tests.signal
 			debug ("threaded_eweasel")
-				print_debug_main ("Signalled more waiting tests in extend" )
+				print_debug_main ("Signalled more waiting tests in extend")
 			end
 			mutex.unlock
 			debug ("threaded_eweasel")
-				print_debug_main ("Unlocked mutex in extend" )
+				print_debug_main ("Unlocked mutex in extend")
 			end
 		end
 
@@ -89,11 +89,11 @@ feature -- Modification
 			queue: like pending_queue
 		do
 			debug ("threaded_eweasel")
-				print_debug_worker ("Trying to lock mutex in mark_test_completed" )
+				print_debug_worker ("Trying to lock mutex in mark_test_completed")
 			end
 			mutex.lock
 			debug ("threaded_eweasel")
-				print_debug_worker ("Locked mutex in mark_test_completed" )
+				print_debug_worker ("Locked mutex in mark_test_completed")
 			end
 			if results_in_catalog_order then
 				queue := pending_queue
@@ -108,7 +108,7 @@ feature -- Modification
 				entry := queue.item
 				if entry.test = t then
 					debug ("threaded_eweasel")
-						print_debug_worker ("Marking test queue entry for " + entry.test.last_source_directory_component + " completed in mark_test_completed" )
+						print_debug_worker ({STRING_32} "Marking test queue entry for " + entry.test.last_source_directory_component + " completed in mark_test_completed")
 					end
 					entry.set_waiting (False)
 					entry.set_in_use (False)
@@ -125,25 +125,25 @@ feature -- Modification
 				end
 			end
 			debug ("threaded_eweasel")
-				print_debug_worker ("Signalling more completed tests in mark_test_completed" )
+				print_debug_worker ("Signalling more completed tests in mark_test_completed")
 			end
 			more_completed_tests.signal
 			debug ("threaded_eweasel")
-				print_debug_worker ("Signalling more waiting tests in mark_test_completed" )
+				print_debug_worker ("Signalling more waiting tests in mark_test_completed")
 			end
 			more_waiting_tests.signal
 				-- Wake up one blocked thread since
 				-- one test finished
 			debug ("threaded_eweasel")
-				print_debug_worker ("Unlocking mutex in mark_test_completed" )
+				print_debug_worker ("Unlocking mutex in mark_test_completed")
 			end
 			mutex.unlock
 			debug ("threaded_eweasel")
-				print_debug_worker ("Mutex unlocked in mark_test_completed" )
+				print_debug_worker ("Mutex unlocked in mark_test_completed")
 			end
 		end
 
-	next_waiting_test: EW_NAMED_EIFFEL_TEST
+	next_waiting_test: detachable EW_NAMED_EIFFEL_TEST
 			-- Next test awaiting execution or Void if
 			-- no more tests
 		local
@@ -156,11 +156,11 @@ feature -- Modification
 				Result /= Void or no_tests
 			loop
 				debug ("threaded_eweasel")
-					print_debug_worker ("Trying to lock mutex in next_waiting_test" )
+					print_debug_worker ("Trying to lock mutex in next_waiting_test")
 				end
 				mutex.lock
 				debug ("threaded_eweasel")
-					print_debug_worker ("Locked mutex in next_waiting_test" )
+					print_debug_worker ("Locked mutex in next_waiting_test")
 				end
 				from
 					pending_queue.start
@@ -176,7 +176,7 @@ feature -- Modification
 							executing_queue.extend (entry)
 						end
 						debug ("threaded_eweasel")
-							print_debug_worker ("Found waiting test " + Result.last_source_directory_component + " in next_waiting_test" )
+							print_debug_worker ({STRING_32} "Found waiting test " + Result.last_source_directory_component + " in next_waiting_test")
 						end
 					end
 					pending_queue.forth
@@ -185,29 +185,29 @@ feature -- Modification
 				debug ("threaded_eweasel")
 					if Result = Void then
 						if all_tests_added then
-							print_debug_worker ("There are no more waiting tests in next_waiting_test" )
+							print_debug_worker ("There are no more waiting tests in next_waiting_test")
 						else
-							print_debug_worker ("Not all tests have been added to queue in next_waiting_test" )
+							print_debug_worker ("Not all tests have been added to queue in next_waiting_test")
 						end
 					end
 				end
 				if Result = Void and not no_tests then
 					debug ("threaded_eweasel")
-						print_debug_worker ("Waiting for more tests to be added in next_waiting_test" )
+						print_debug_worker ("Waiting for more tests to be added in next_waiting_test")
 					end
 					more_waiting_tests.wait (mutex)
 					debug ("threaded_eweasel")
-						print_debug_worker ("Finished waiting for more tests to be added in next_waiting_test" )
+						print_debug_worker ("Finished waiting for more tests to be added in next_waiting_test")
 					end
 				end
 				mutex.unlock
 				debug ("threaded_eweasel")
-					print_debug_worker ("Unlocked mutex in next_waiting_test" )
+					print_debug_worker ("Unlocked mutex in next_waiting_test")
 				end
 			end
 		end
 
-	next_completed_test: EW_NAMED_EIFFEL_TEST
+	next_completed_test: detachable EW_NAMED_EIFFEL_TEST
 			-- Next test that has been completed and can
 			-- now be reported or Void if no more tests
 		local
@@ -220,18 +220,18 @@ feature -- Modification
 				Result /= Void or not more_tests
 			loop
 				debug ("threaded_eweasel")
-					print_debug_main ("Trying to lock mutex in next_completed_test" )
+					print_debug_main ("Trying to lock mutex in next_completed_test")
 				end
 				mutex.lock
 				debug ("threaded_eweasel")
-					print_debug_main ("Locked mutex in next_completed_test" )
+					print_debug_main ("Locked mutex in next_completed_test")
 				end
 				more_tests := has_more_tests
 				debug ("threaded_eweasel")
 					if more_tests then
-						print_debug_main ("Test queue is not empty in next_completed_test" )
+						print_debug_main ("Test queue is not empty in next_completed_test")
 					else
-						print_debug_main ("Test queue is empty in next_completed_test" )
+						print_debug_main ("Test queue is empty in next_completed_test")
 					end
 				end
 				if more_tests then
@@ -243,7 +243,7 @@ feature -- Modification
 							pending_queue.start
 							pending_queue.remove
 							debug ("threaded_eweasel")
-								print_debug_main ("Found completed test " + Result.last_source_directory_component + " in next_completed_test" )
+								print_debug_main ({STRING_32} "Found completed test " + Result.last_source_directory_component + " in next_completed_test")
 							end
 						end
 					elseif not completed_queue.is_empty then
@@ -251,22 +251,22 @@ feature -- Modification
 						completed_queue.start
 						completed_queue.remove
 						debug ("threaded_eweasel")
-							print_debug_main ("Found completed test " + Result.last_source_directory_component + " in next_completed_test" )
+							print_debug_main ({STRING_32} "Found completed test " + Result.last_source_directory_component + " in next_completed_test")
 						end
 					end
 				end
 				if Result = Void and more_tests then
 					debug ("threaded_eweasel")
-						print_debug_main ("Waiting for more completed tests in next_completed_test" )
+						print_debug_main ("Waiting for more completed tests in next_completed_test")
 					end
 					more_completed_tests.wait (mutex)
 					debug ("threaded_eweasel")
-						print_debug_main ("Finished waiting for more completed tests in next_completed_test" )
+						print_debug_main ("Finished waiting for more completed tests in next_completed_test")
 					end
 				end
 				mutex.unlock
 				debug ("threaded_eweasel")
-					print_debug_main ("Unlocked mutex in next_completed_test" )
+					print_debug_main ("Unlocked mutex in next_completed_test")
 				end
 			end
 		end
@@ -275,20 +275,20 @@ feature -- Modification
 			-- Set `all_tests_added' to true
 		do
 			debug ("threaded_eweasel")
-				print_debug_main ("Trying to lock mutex in set_all_tests_added" )
+				print_debug_main ("Trying to lock mutex in set_all_tests_added")
 			end
 			mutex.lock
 			debug ("threaded_eweasel")
-				print_debug_main ("Locked mutex in set_all_tests_added" )
+				print_debug_main ("Locked mutex in set_all_tests_added")
 			end
 			all_tests_added := True
 			debug ("threaded_eweasel")
-				print_debug_main ("Broadcasting more waiting tests in set_all_tests_added" )
+				print_debug_main ("Broadcasting more waiting tests in set_all_tests_added")
 			end
 			more_waiting_tests.broadcast
 			mutex.unlock
 			debug ("threaded_eweasel")
-				print_debug_main ("Unlocked mutex in set_all_tests_added" )
+				print_debug_main ("Unlocked mutex in set_all_tests_added")
 			end
 		end
 
@@ -298,20 +298,20 @@ feature -- Modification
 			-- included just in case
 		do
 			debug ("threaded_eweasel")
-				print_debug_main ("Trying to lock mutex in broadcast_all_tests_completed" )
+				print_debug_main ("Trying to lock mutex in broadcast_all_tests_completed")
 			end
 			mutex.lock
 			debug ("threaded_eweasel")
-				print_debug_main ("Locked mutex in broadcast_all_tests_completed" )
+				print_debug_main ("Locked mutex in broadcast_all_tests_completed")
 			end
 			-- Wake up any waiting threads
 			debug ("threaded_eweasel")
-				print_debug_main ("Broadcasting all tests completed in broadcast_all_tests_completed" )
+				print_debug_main ("Broadcasting all tests completed in broadcast_all_tests_completed")
 			end
 			more_waiting_tests.broadcast
 			mutex.unlock
 			debug ("threaded_eweasel")
-				print_debug_main ("Unlocked mutex in broadcast_all_tests_completed" )
+				print_debug_main ("Unlocked mutex in broadcast_all_tests_completed")
 			end
 		end
 
@@ -372,9 +372,10 @@ feature {NONE} -- Obsolete
 
 note
 	copyright: "[
-			Copyright (c) 1984-2018, University of Southern California, Eiffel Software and contributors.
+			Copyright (c) 1984-2020, University of Southern California, Eiffel Software and contributors.
 			All rights reserved.
 		]"
+	revised_by: "Alexander Kogtenkov"
 	license:   "Your use of this work is governed under the terms of the GNU General Public License version 2"
 	copying: "[
 			This file is part of the EiffelWeasel Eiffel Regression Tester.

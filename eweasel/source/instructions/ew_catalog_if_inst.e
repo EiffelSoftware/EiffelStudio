@@ -73,11 +73,15 @@ feature
 					table_cmd := cmd
 					if not tcf.test_catalog_command_table.has (cmd) then
 						table_cmd := Unknown_keyword
-					end;
+					end
 					check
 						known_command: tcf.test_catalog_command_table.has (table_cmd)
-					end;
-					inst := tcf.test_catalog_command_table.item (table_cmd).twin
+					end
+					if attached tcf.test_catalog_command_table.item (table_cmd) as c then
+						inst := c.twin
+					else
+						check from_assertion: False then end
+					end
 					inst.execute (tcf)
 					execute_ok := inst.execute_ok
 					-- FIXME: add text about "if"
@@ -103,9 +107,10 @@ feature {NONE}
 	date: "$Date$"
 	revision: "$Revision$"
 	copyright: "[
-			Copyright (c) 1984-2018, University of Southern California, Eiffel Software and contributors.
+			Copyright (c) 1984-2020, University of Southern California, Eiffel Software and contributors.
 			All rights reserved.
 		]"
+	revised_by: "Alexander Kogtenkov"
 	license:   "Your use of this work is governed under the terms of the GNU General Public License version 2"
 	copying: "[
 			This file is part of the EiffelWeasel Eiffel Regression Tester.

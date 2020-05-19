@@ -85,7 +85,7 @@ feature {NONE} -- Initialization
 			create version_min_msil_clr
 			create version_max_compiler
 			create version_min_compiler
-			
+
 			create dynamic_runtime
 			create dynamic_runtime_enabled
 
@@ -665,7 +665,34 @@ feature {NONE} -- Actions
 		do
 			data.remove_custom (a_key, a_value)
 			create d -- FIXME
-			d.inverted := a_invert_value.starts_with ("/=") or a_invert_value.ends_with ("-mismatch")
+			if a_invert_value.is_case_insensitive_equal (comp_equal) then
+				d.inverted := False
+				d.set_match ({CONF_CONDITION_CUSTOM_ATTRIBUTES}.case_sensitive_matching)
+			elseif a_invert_value.is_case_insensitive_equal (comp_equal_mismatch) then
+				d.inverted := True
+				d.set_match ({CONF_CONDITION_CUSTOM_ATTRIBUTES}.case_sensitive_matching)
+			elseif a_invert_value.is_case_insensitive_equal (comp_caseless_match) then
+				d.inverted := False
+				d.set_match ({CONF_CONDITION_CUSTOM_ATTRIBUTES}.case_insensitive_matching)
+			elseif a_invert_value.is_case_insensitive_equal (comp_caseless_mismatch) then
+				d.inverted := True
+				d.set_match ({CONF_CONDITION_CUSTOM_ATTRIBUTES}.case_insensitive_matching)
+			elseif a_invert_value.is_case_insensitive_equal (comp_regexp_match) then
+				d.inverted := False
+				d.set_match ({CONF_CONDITION_CUSTOM_ATTRIBUTES}.regexp_matching)
+			elseif a_invert_value.is_case_insensitive_equal (comp_regexp_mismatch) then
+				d.inverted := True
+				d.set_match ({CONF_CONDITION_CUSTOM_ATTRIBUTES}.regexp_matching)
+			elseif a_invert_value.is_case_insensitive_equal (comp_wildcard_match) then
+				d.inverted := False
+				d.set_match ({CONF_CONDITION_CUSTOM_ATTRIBUTES}.wildcard_matching)
+			elseif a_invert_value.is_case_insensitive_equal (comp_wildcard_mismatch) then
+				d.inverted := True
+				d.set_match ({CONF_CONDITION_CUSTOM_ATTRIBUTES}.wildcard_matching)
+			else
+				check unknown: False end
+			end
+			-- note: d.inverted := a_invert_value.starts_with ("/=") or a_invert_value.ends_with ("-mismatch")
 			data.add_custom (a_key, a_value, d)
 		end
 
@@ -813,27 +840,27 @@ feature {NONE} -- Implementation
 						l_text.set_value (l_key)
 						l_text.change_value_actions.extend (agent update_variable ({READABLE_STRING_32} ?, l_key, l_values.key_for_iteration))
 						custom.set_item (1, i, l_text)
-						create l_choice.make_with_choices ("", create {ARRAYED_LIST [READABLE_STRING_32]}.make_from_array ({ARRAY [READABLE_STRING_32]} <<"=", "/=", "caseless-match", "caseless-mismatch", "regexp-match", "regexp-mismatch", "wildcard-match", "wildcard-mismatch">>))
+						create l_choice.make_with_choices ("", create {ARRAYED_LIST [READABLE_STRING_32]}.make_from_array ({ARRAY [READABLE_STRING_32]} <<comp_equal, comp_equal_mismatch, comp_caseless_match, comp_caseless_mismatch, comp_regexp_match, comp_regexp_mismatch, comp_wildcard_match, comp_wildcard_mismatch>>))
 						l_custom_item := l_values.item_for_iteration
 						if l_custom_item.inverted then
 							if l_custom_item.is_regular_expression then
-								l_choice.set_value ("regexp-mismatch")
+								l_choice.set_value (comp_regexp_mismatch)
 							elseif l_custom_item.is_wildcard then
-								l_choice.set_value ("wildcard-mismatch")
+								l_choice.set_value (comp_wildcard_mismatch)
 							elseif l_custom_item.is_case_insensitive then
-								l_choice.set_value ("caseless-mismatch")
+								l_choice.set_value (comp_caseless_mismatch)
 							else
-								l_choice.set_value ("/=")
+								l_choice.set_value (comp_equal_mismatch)
 							end
 						else
 							if l_custom_item.is_regular_expression then
-								l_choice.set_value ("regexp-match")
+								l_choice.set_value (comp_regexp_match)
 							elseif l_custom_item.is_wildcard then
-								l_choice.set_value ("wildcard-match")
+								l_choice.set_value (comp_wildcard_match)
 							elseif l_custom_item.is_case_insensitive then
-								l_choice.set_value ("caseless-match")
+								l_choice.set_value (comp_caseless_match)
 							else
-								l_choice.set_value ("=")
+								l_choice.set_value (comp_equal)
 							end
 						end
 						l_choice.change_value_actions.extend (agent update_invert ({READABLE_STRING_32} ?, l_values.key_for_iteration, l_key))
@@ -869,6 +896,17 @@ feature {NONE} -- Implementation
 		do
 			Result := conf_interface_names.boolean_values.item (a_string)
 		end
+
+feature {NONE} -- Constants
+
+	comp_equal: STRING_8 = "="
+	comp_equal_mismatch: STRING_8 = "/="
+	comp_caseless_match: STRING_8 = "caseless-match"
+	comp_caseless_mismatch: STRING_8 = "caseless-mismatch"
+	comp_regexp_match: STRING_8 = "regexp-match"
+	comp_regexp_mismatch: STRING_8 = "regexp-mismatch"
+	comp_wildcard_match: STRING_8 = "wildcard-match"
+	comp_wildcard_mismatch: STRING_8 = "wildcard-mismatch"
 
 note
 	copyright:	"Copyright (c) 1984-2020, Eiffel Software"

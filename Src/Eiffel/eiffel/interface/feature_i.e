@@ -464,8 +464,8 @@ feature -- Access
 		ensure
 			Result_not_void: Result /= Void
 			Result_not_empty: not Result.is_empty
-			ascii_compatible: Result ~ encoding_converter.utf8_to_utf32 (Result).as_string_8
-		end;
+			ascii_compatible: ∀ c: Result ¦ c ≤ '%/0x7F/'
+		end
 
 	external_name_id: INTEGER
 			-- External name of feature if any generation.

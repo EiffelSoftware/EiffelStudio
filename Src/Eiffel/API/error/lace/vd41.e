@@ -1,6 +1,6 @@
-note
+﻿note
 
-	description: 
+	description:
 		"Error for precompiled systems that cannot be succesfully%
 		%retrieved."
 	legal: "See notice at end of class."
@@ -12,11 +12,11 @@ class VD41
 
 inherit
 
-	LACE_ERROR;
+	LACE_ERROR
 
 feature -- Property
 
-	path: STRING;
+	path: READABLE_STRING_32
 			-- Path of precompiled project
 
 feature -- Output
@@ -30,14 +30,14 @@ feature -- Output
 
 feature {PRECOMP_R} -- Setting
 
-	set_path (s: STRING)
+	set_path (s: READABLE_STRING_32)
 			-- Assign `s' to `path'.
 		do
-			path := s;
-		end;
+			path := s
+		end
 
 note
-	copyright:	"Copyright (c) 1984-2018, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2020, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

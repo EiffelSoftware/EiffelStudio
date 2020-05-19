@@ -57,7 +57,7 @@ feature -- Status report
 
 feature -- Status setting
 
-	raise (a_name: detachable STRING)
+	raise (a_name: detachable READABLE_STRING_GENERAL)
 			-- Raise a developer exception of name `a_name'.
 		deferred
 		ensure

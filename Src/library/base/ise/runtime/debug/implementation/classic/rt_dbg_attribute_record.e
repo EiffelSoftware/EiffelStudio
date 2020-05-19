@@ -68,9 +68,9 @@ feature -- Access
 					value = l_att.value
 		end
 
-	debug_output: STRING
+	debug_output: STRING_32
 		do
-			Result := Precursor + " (object=" + object.generating_type.name + ")"
+			Result := Precursor + " (object=" + object.generating_type.name_32 + ")"
 		end
 
 	to_string: STRING
@@ -123,19 +123,19 @@ feature -- Runtime
 			debug ("RT_DBG_REPLAY")
 				dtrace (generator + ".restore (" + object.generator + " #" + offset.out + ")%N")
 				if attached field_name_at (offset, object) as fn then
- 					dtrace (" -> " + fn  + "%N")
+ 					dtrace ({STRING_32} " -> " + fn  + "%N")
  				else
  					dtrace (" -> Unknown name%N")
 				end
 			end
 			if is_same_as (val) then
 				debug ("RT_DBG_REPLAY")
-					dtrace (" -> unchanged because same value [" + to_string + "].%N")
+					dtrace ({STRING_32} " -> unchanged because same value [" + to_string + "].%N")
 				end
 			else
 				set_attribute_from_record (object, Current)
 				debug ("RT_DBG_REPLAY")
-					dtrace (" -> restored: from [" + val.to_string + "] to [" + to_string + "] %N")
+					dtrace ({STRING_32} " -> restored: from [" + val.to_string + "] to [" + to_string + "] %N")
 				end
 			end
 		end
@@ -148,7 +148,7 @@ feature -- Runtime
 			end
 			set_attribute_from_record (object, bak)
 			debug ("RT_DBG_REPLAY")
-				dtrace (" -> reverted: from [" + to_string + "] to [" + bak.to_string + "] %N")
+				dtrace ({STRING_32} " -> reverted: from [" + to_string + "] to [" + bak.to_string + "] %N")
 			end
 		end
 
@@ -188,7 +188,7 @@ feature {NONE} -- Implementation
 
 note
 	library:   "EiffelBase: Library of reusable components for Eiffel."
-	copyright: "Copyright (c) 1984-2015, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2020, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

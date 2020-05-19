@@ -66,7 +66,7 @@ feature -- Settings
 
 feature -- Access
 
-	read_character_8: CHARACTER
+	read_character_8: CHARACTER_8
 			-- Read next 8-bits character
 		require
 			is_ready: is_ready_for_reading
@@ -82,7 +82,7 @@ feature -- Access
 			Result := read_natural_32.to_character_32
 		end
 
-	read_string_8: STRING
+	read_string_8: STRING_8
 			-- Read next 8-bits sequence of character
 		require
 			is_ready: is_ready_for_reading
@@ -484,7 +484,7 @@ feature -- Element change
 
 note
 	library:	"EiffelBase: Library of reusable components for Eiffel."
-	copyright:	"Copyright (c) 1984-2017, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2020, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software
@@ -493,10 +493,5 @@ note
 			Website http://www.eiffel.com
 			Customer support http://support.eiffel.com
 		]"
-
-
-
-
-
 
 end

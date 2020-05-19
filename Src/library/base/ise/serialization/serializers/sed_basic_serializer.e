@@ -43,7 +43,7 @@ feature {NONE} -- Implementation
 				l_dtype := a_type_table.item_for_iteration
 				l_ser.write_compressed_natural_32 (l_dtype.to_natural_32)
 					-- Write type name
-				l_ser.write_string_8 (l_reflector.type_name_of_type (l_dtype))
+				l_ser.write_string_8 (l_reflector.type_name_8_of_type (l_dtype))
 				a_type_table.forth
 			end
 
@@ -52,7 +52,7 @@ feature {NONE} -- Implementation
 
 note
 	library:	"EiffelBase: Library of reusable components for Eiffel."
-	copyright:	"Copyright (c) 1984-2015, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2020, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

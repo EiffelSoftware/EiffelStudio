@@ -66,12 +66,12 @@ feature -- Notification
 					reset_events_assign_argument (a_data)
 				else
 					debug ("RT_EXTENSION")
-						dtrace ("Error: " + out + " ->" + a_id.out + "%N")
+						dtrace ({STRING_32} "Error: " + out + " ->" + a_id.out + "%N")
 					end
 				end
 			end
 		rescue
-			dtrace ("Error: Rescue -> RT_EXTENSION.notify (" + a_id.out + ", a_data)%N")
+			dtrace ({STRING_32} "Error: Rescue -> RT_EXTENSION.notify (" + a_id.out + ", a_data)%N")
 			retried := True
 			retry
 		end
@@ -91,14 +91,14 @@ feature -- Notification
 						create {like events_assign_argument} Result
 					else
 						debug ("RT_EXTENSION")
-							dtrace ("Error: RT_EXTENSION.notify_argument (" + a_id.out + "): unmatched id !%N")
+							dtrace ({STRING_32} "Error: RT_EXTENSION.notify_argument (" + a_id.out + "): unmatched id !%N")
 						end
 					end
 					cached_arguments[a_id] := Result
 				end
 			end
 		rescue
-			dtrace ("Error: Rescue -> RT_EXTENSION.notify_argument (" + a_id.out + ")%N")
+			dtrace ({STRING_32} "Error: Rescue -> RT_EXTENSION.notify_argument (" + a_id.out + ")%N")
 			retried := True
 			retry
 		end
@@ -389,7 +389,7 @@ invariant
 
 note
 	library:   "EiffelBase: Library of reusable components for Eiffel."
-	copyright: "Copyright (c) 1984-2019, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2020, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

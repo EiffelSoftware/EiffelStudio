@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "Store all information about a mismatch in a type."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -68,7 +68,7 @@ feature -- Element change
 			version_mismatched: has_version_mismatch
 		end
 
-	add_attribute_mismatch (a_old_attr_type, a_new_attr_type: INTEGER; a_old_name, a_new_name: STRING; a_old_pos, a_new_pos: INTEGER)
+	add_attribute_mismatch (a_old_attr_type, a_new_attr_type: INTEGER; a_old_name, a_new_name: STRING_8; a_old_pos, a_new_pos: INTEGER)
 			-- Mismatch for `a_old_name' where the new name is `a_new_name', the new type
 			-- `a_new_attr_type' is different from `a_old_attr_type' stored at position
 			-- `a_old_pos' in the stored system for a `a_new_pos' in the retrieving system.
@@ -87,7 +87,7 @@ feature -- Element change
 			mismatches_by_stored_position.put (l_info, a_old_pos)
 		end
 
-	add_void_safe_mismatch (a_old_attr_type, a_new_attr_type: INTEGER; a_old_name, a_new_name: STRING; a_old_pos, a_new_pos: INTEGER)
+	add_void_safe_mismatch (a_old_attr_type, a_new_attr_type: INTEGER; a_old_name, a_new_name: STRING_8; a_old_pos, a_new_pos: INTEGER)
 			-- Mismatch for `a_old_name' where the new name is `a_new_name', the new type
 			-- `a_new_attr_type' is attached and `a_old_attr_type' is detachable stored at position
 			-- `a_old_pos' in the stored system for a `a_new_pos' in the retrieving system.
@@ -106,7 +106,7 @@ feature -- Element change
 			mismatches_by_stored_position.put (l_info, a_old_pos)
 		end
 
-	add_removed_attribute (a_old_attr_type: INTEGER; a_old_name, a_new_name: STRING; a_old_pos: INTEGER)
+	add_removed_attribute (a_old_attr_type: INTEGER; a_old_name, a_new_name: STRING_8; a_old_pos: INTEGER)
 			-- Attribute `a_name' of type `a_old_attr_type' at position `a_old_pos' in
 			-- the stored system is now missing from Current.
 		require
@@ -144,13 +144,13 @@ feature -- Access
 	old_version, new_version: detachable IMMUTABLE_STRING_8
 			-- Version in stored system and retrieving system.
 
-	mismatches_by_name: HASH_TABLE [like attribute_info, STRING]
+	mismatches_by_name: HASH_TABLE [like attribute_info, STRING_8]
 			-- Store information about mismatch based on the attribute name.
 
 	mismatches_by_stored_position: HASH_TABLE [like attribute_info, INTEGER]
 			-- Store information about mismatch based on the store position.
 
-	attribute_info: TUPLE [old_name, new_name: STRING; old_attribute_type, new_attribute_type, old_position, new_position: INTEGER; is_changed, is_removed, is_attachment_check_required: BOOLEAN]
+	attribute_info: TUPLE [old_name, new_name: STRING_8; old_attribute_type, new_attribute_type, old_position, new_position: INTEGER; is_changed, is_removed, is_attachment_check_required: BOOLEAN]
 			-- For typing purposes.
 		require
 			callable: False
@@ -173,7 +173,7 @@ invariant
 
 note
 	library:	"EiffelBase: Library of reusable components for Eiffel."
-	copyright:	"Copyright (c) 1984-2014, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2020, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

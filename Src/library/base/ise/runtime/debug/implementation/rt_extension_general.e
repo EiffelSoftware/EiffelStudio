@@ -109,7 +109,7 @@ feature -- Object storage Access
 			retry
 		end
 
-	object_runtime_info (r: detachable ANY): STRING
+	object_runtime_info (r: detachable ANY): STRING_32
 			-- Representation of the internal information for object `r'.
 			--| Semi-colon separated information
 			--| class_name=FOO; type_name=FOO; dynamic_type=123;
@@ -122,7 +122,7 @@ feature -- Object storage Access
 				Result.append (r.generator)
 				Result.append (";")
 				Result.append ("type_name=")
-				Result.append (r.generating_type.name)
+				Result.append (r.generating_type.name_32)
 				Result.append (";")
 
 				create int
@@ -148,7 +148,7 @@ feature -- Object storage Access
 
 note
 	library:   "EiffelBase: Library of reusable components for Eiffel."
-	copyright: "Copyright (c) 1984-2017, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2020, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

@@ -133,11 +133,11 @@ feature {NONE} -- Implementation: access
 			end
 		end
 
-	class_type_translator: detachable FUNCTION [STRING, STRING]
+	class_type_translator: detachable FUNCTION [STRING_8, STRING_8]
 			-- Provide a mapping between a class type from the storable to a class type
 			-- in the retrieving system.
 
-	attribute_name_translator: detachable FUNCTION [STRING, INTEGER, STRING]
+	attribute_name_translator: detachable FUNCTION [STRING_8, INTEGER, STRING_8]
 			-- Provide a mapping for an attribute name for a give type ID.
 
 	mismatches: HASH_TABLE [SED_TYPE_MISMATCH, INTEGER]
@@ -179,7 +179,7 @@ feature {NONE} -- Implementation
 			l_reflector: like reflector
 			l_table: like dynamic_type_table
 			l_old_dtype, l_new_dtype: INTEGER
-			l_old_type_str, l_new_type_str: STRING
+			l_old_type_str, l_new_type_str: STRING_8
 			l_old_version, l_new_version: detachable IMMUTABLE_STRING_8
 		do
 			l_reflector := reflector
@@ -212,11 +212,12 @@ feature {NONE} -- Implementation
 					-- Read type string associated to `l_old_dtype' and find dynamic type
 					-- in current system.
 				l_old_type_str := l_deser.read_string_8
-				if attached class_type_translator as l_translator then
-					l_new_type_str := l_translator.item ([l_old_type_str])
-				else
-					l_new_type_str := l_old_type_str
-				end
+				l_new_type_str :=
+					if attached class_type_translator as translation then
+						translation (l_old_type_str)
+					else
+						l_old_type_str
+					end
 				l_new_dtype := l_reflector.dynamic_type_from_string (l_new_type_str)
 				if l_new_dtype >= 0 then
 					if not l_table.valid_index (l_old_dtype) then
@@ -259,11 +260,12 @@ feature {NONE} -- Implementation
 					-- Read type string associated to `l_old_dtype' and find dynamic type
 					-- in current system.
 				l_old_type_str := l_deser.read_string_8
-				if attached class_type_translator as l_translator then
-					l_new_type_str := l_translator.item ([l_old_type_str])
-				else
-					l_new_type_str := l_old_type_str
-				end
+				l_new_type_str :=
+					if attached class_type_translator as translation then
+						translation (l_old_type_str)
+					else
+						l_old_type_str
+					end
 				l_new_dtype := l_reflector.dynamic_type_from_string (l_new_type_str)
 				if l_new_dtype >= 0 then
 					if not l_table.valid_index (l_old_dtype) then
@@ -331,7 +333,7 @@ feature {NONE} -- Implementation
 			l_reflector: like reflector
 			l_map: like attributes_map
 			l_mapping: SPECIAL [INTEGER]
-			l_old_name, l_new_name: STRING
+			l_old_name, l_new_name: STRING_8
 			l_old_dtype, l_dtype: INTEGER
 			i, nb, l_not_founds: INTEGER
 			l_old_count, l_new_count: INTEGER
@@ -364,11 +366,12 @@ feature {NONE} -- Implementation
 				l_dtype := new_dynamic_type_id (l_old_dtype)
 					-- Read attribute name
 				l_old_name := l_deser.read_string_8
-				if attached attribute_name_translator as l_translator then
-					l_new_name := l_translator.item ([l_old_name, a_dtype])
-				else
-					l_new_name := l_old_name
-				end
+				l_new_name :=
+					if attached attribute_name_translator as translation then
+						translation (l_old_name, a_dtype)
+					else
+						l_old_name
+					end
 
 					-- If `l_dtype' is negatif then somehow the data we read is corrupted, we
 					-- skip that attribute and record the mismatch and mark it as a fatal error.
@@ -612,7 +615,7 @@ feature {NONE} -- Implementation
 			l_info: detachable MISMATCH_INFORMATION
 			l_check_for_non_void: BOOLEAN
 			l_has_mismatch: BOOLEAN
-			l_field_info: detachable TUPLE [old_name, new_name: STRING; old_attribute_type, new_attribute_type, old_position, new_position: INTEGER; is_changed, is_removed, is_attachment_check_required: BOOLEAN]
+			l_field_info: detachable TUPLE [old_name, new_name: STRING_8; old_attribute_type, new_attribute_type, old_position, new_position: INTEGER; is_changed, is_removed, is_attachment_check_required: BOOLEAN]
 			l_exp: REFLECTED_REFERENCE_OBJECT
 		do
 			l_dtype := a_reflected_object.dynamic_type
@@ -818,7 +821,7 @@ feature {NONE} -- Cleaning
 
 note
 	library:	"EiffelBase: Library of reusable components for Eiffel."
-	copyright:	"Copyright (c) 1984-2017, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2020, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

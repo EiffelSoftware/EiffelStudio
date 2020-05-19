@@ -98,7 +98,7 @@ feature -- Access
 					value = l_loc.value
 		end
 
-	debug_output: STRING
+	debug_output: STRING_32
 		do
 			Result := Precursor + " (depth=" + callstack_depth.out + ")"
 		end
@@ -154,12 +154,12 @@ feature -- Runtime
 			end
 			if is_same_as (val) then
 				debug ("RT_DBG_REPLAY")
-					dtrace (" -> unchanged because same value [" + to_string + "].%N")
+					dtrace ({STRING_32} " -> unchanged because same value [" + to_string + "].%N")
 				end
 			else
 				set_local_from_record (Current)
 				debug ("RT_DBG_REPLAY")
-					dtrace (" -> restored: from [" + val.to_string + "] to [" + to_string + "] %N")
+					dtrace ({STRING_32} " -> restored: from [" + val.to_string + "] to [" + to_string + "] %N")
 				end
 			end
 		end
@@ -172,7 +172,7 @@ feature -- Runtime
 			end
 			set_local_from_record (bak)
 			debug ("RT_DBG_REPLAY")
-				dtrace (" -> reverted: from [" + to_string + "] to [" + bak.to_string + "] %N")
+				dtrace ({STRING_32} " -> reverted: from [" + to_string + "] to [" + bak.to_string + "] %N")
 			end
 		end
 
@@ -211,7 +211,7 @@ feature {NONE} -- Implementation
 
 note
 	library:   "EiffelBase: Library of reusable components for Eiffel."
-	copyright: "Copyright (c) 1984-2013, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2020, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

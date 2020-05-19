@@ -28,7 +28,7 @@ feature {NONE} -- Implementation
 			l_reflector: like reflector
 			l_table: like dynamic_type_table
 			l_old_dtype, l_new_dtype: INTEGER
-			l_type_str: STRING
+			l_type_str: STRING_8
 		do
 			l_reflector := reflector
 			l_deser := deserializer
@@ -69,7 +69,7 @@ feature {NONE} -- Implementation
 
 note
 	library:	"EiffelBase: Library of reusable components for Eiffel."
-	copyright:	"Copyright (c) 1984-2013, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2020, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

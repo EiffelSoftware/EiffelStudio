@@ -59,6 +59,9 @@ feature -- Access
 	has_permission_to_use_authentication (api: CMS_API): BOOLEAN
 		do
 			Result := api.has_permission (perm_use_session_auth)
+			if not Result then
+				Result := attached api.setup.text_item ("modules." + name + ".login") as s and then s.is_case_insensitive_equal ("on")
+			end
 		end
 
 feature {CMS_API} -- Module Initialization			

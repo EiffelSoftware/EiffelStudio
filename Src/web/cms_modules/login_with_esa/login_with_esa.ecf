@@ -9,6 +9,7 @@
 		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf"/>
 		<library name="cms" location="$ISE_LIBRARY\unstable\library\web\cms\cms.ecf" readonly="false"/>
 		<library name="cms_app_env" location="$ISE_LIBRARY\unstable\library\web\cms\library\app_env\app_env.ecf" readonly="false"/>
+		<library name="cms_auth_module" location="$ISE_LIBRARY\unstable\library\web\cms\modules\auth\auth.ecf" readonly="false"/>
 		<library name="cms_config" location="$ISE_LIBRARY\unstable\library\web\cms\library\configuration\config.ecf"/>
 		<library name="cms_model" location="$ISE_LIBRARY\unstable\library\web\cms\library\model\cms_model.ecf"/>
 		<library name="error" location="$ISE_LIBRARY\contrib\library\utility\general\error\error.ecf"/>

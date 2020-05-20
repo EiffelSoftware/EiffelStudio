@@ -64,6 +64,14 @@ feature -- Access: License
 		deferred
 		end
 
+	email_for_license (a_license: ES_CLOUD_LICENSE): detachable READABLE_STRING_8
+		deferred
+		end
+
+	email_licenses (a_email: READABLE_STRING_8): LIST [ES_CLOUD_EMAIL_LICENSE]
+		deferred
+		end
+
 feature -- Element change: license
 
 	save_license (a_license: ES_CLOUD_LICENSE)
@@ -72,8 +80,26 @@ feature -- Element change: license
 
 	assign_license_to_user (a_license: ES_CLOUD_LICENSE; a_user: ES_CLOUD_USER)
 		require
+			a_user.has_id
 			user_id_for_license (a_license) = 0
 		deferred
+		ensure
+			user_id_for_license (a_license) = a_user.id
+		end
+
+	assign_license_to_email (a_license: ES_CLOUD_LICENSE; a_email: READABLE_STRING_8)
+		require
+			user_id_for_license (a_license) = 0
+			not a_email.is_whitespace
+		deferred
+		end
+
+	move_email_license_to_user (a_email_license: ES_CLOUD_EMAIL_LICENSE; a_user: ES_CLOUD_USER)
+		require
+			a_user.has_id
+		deferred
+		ensure
+			user_id_for_license (a_email_license.license) = a_user.id
 		end
 
 note

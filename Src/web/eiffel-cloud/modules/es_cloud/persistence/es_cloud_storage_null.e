@@ -67,6 +67,15 @@ feature -- Licenses
 			check False then end
 		end
 
+	email_for_license (a_license: ES_CLOUD_LICENSE): detachable READABLE_STRING_8
+		do
+		end
+
+	email_licenses (a_email: READABLE_STRING_8): LIST [ES_CLOUD_EMAIL_LICENSE]
+		do
+			check False then end
+		end
+
 feature -- Element change: license
 
 	save_license (a_license: ES_CLOUD_LICENSE)
@@ -75,6 +84,15 @@ feature -- Element change: license
 
 	assign_license_to_user (a_license: ES_CLOUD_LICENSE; a_user: ES_CLOUD_USER)
 		do
+		end
+
+	assign_license_to_email (a_license: ES_CLOUD_LICENSE; a_email: READABLE_STRING_8)
+		do
+		end
+
+	move_email_license_to_user (a_email_license: ES_CLOUD_EMAIL_LICENSE; a_user: ES_CLOUD_USER)
+		do
+			assign_license_to_user (a_email_license.license, a_user)
 		end
 
 feature -- Subscriptions		

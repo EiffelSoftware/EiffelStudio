@@ -208,7 +208,7 @@ feature -- Execution
 			Result.set_main_content (l_html)
 		end
 
-	customer_agreement_html: detachable STRING
+	customer_agreement_html: detachable READABLE_STRING_8
 		local
 			tpl_p: PATH
 		do
@@ -221,11 +221,11 @@ feature -- Execution
 				tpl.set_value (shop_api.config.shop_name, "shop_name")
 				Result := tpl.string
 			else
-				api.log_error ("shop", "Missing shop_agreement.tpl", Void)
+				api.log_error (module.name, "Missing shop_agreement.tpl", Void)
 			end
 		end
 
-	customer_consent_html: detachable STRING
+	customer_consent_html: detachable READABLE_STRING_8
 		local
 			tpl_p: PATH
 		do
@@ -238,7 +238,7 @@ feature -- Execution
 				tpl.set_value (shop_api.config.shop_name, "shop_name")
 				Result := tpl.string
 			else
-				api.log_error ("shop", "Missing shop_consent.tpl", Void)
+				api.log_error (module.name, "Missing shop_consent.tpl", Void)
 			end
 		end
 
@@ -412,7 +412,10 @@ feature -- Execution
 				if not l_cart.is_empty then
 					save_cart (l_cart, res)
 				end
-				res.redirect_now (req.percent_encoded_path_info)
+				r := cart_get_response (req, res, Void)
+				r.set_redirection (r.location)
+				r.execute
+--				res.redirect_now (req.percent_encoded_path_info)
 			end
 		end
 

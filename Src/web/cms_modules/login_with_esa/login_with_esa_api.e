@@ -80,7 +80,7 @@ feature -- Access/ ESA
 			if not retried then
 				reset_error
 
-				create cfg.make ("https://support2.eiffel.com")
+				create cfg.make (server_url)
 				create acc.make (cfg)
 				acc.attempt_logon (a_username, a_password, False)
 				if acc.is_logged_in then
@@ -109,7 +109,7 @@ feature -- Access/ ESA
 					attached a_account.last_name as l_last_name and then
 					attached a_account.email as l_email
 				then
-					create cfg.make ("https://support2.eiffel.com")
+					create cfg.make (server_url)
 					create reg.make (cfg)
 					create acc.make
 					acc.set_user_name (l_user_name)
@@ -155,10 +155,7 @@ feature -- Relation with CMS
 					if Result = Void and a_flag_create_user then
 							-- No user with given username or email,
 							-- then register a new user...
-						create Result.make (l_esa_user_name)
-						Result.set_password (a_password.to_string_32)
-						Result.set_email (l_esa_user_email)
-						l_user_api.new_user (Result)
+						Result := l_user_api.new_active_user (l_esa_user_name, l_esa_user_email, a_password)
 							-- FIXME: ... store association with ESA in DB?
 					end
 				end

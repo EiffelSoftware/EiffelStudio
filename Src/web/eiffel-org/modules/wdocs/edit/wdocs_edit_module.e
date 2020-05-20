@@ -340,7 +340,7 @@ feature -- Hooks configuration
 						across
 							l_interwiki_mapping as ic
 						loop
-							l_map := ic.item
+							l_map := ic.item.to_string_8
 							l_map.replace_substring_all ("$version", vid)
 							l_content.append ("<li><strong>")
 							l_content.append (html_encoded (ic.key))

@@ -40,13 +40,27 @@ feature -- Execution
 		local
 			l_uid: READABLE_STRING_GENERAL
 		do
-			if req.is_get_request_method then
+			if attached api.user as u then
+				send_already_signed_in (u, req, res)
+			elseif req.is_get_request_method then
 				send_registration_form (req, res)
 			elseif req.is_post_request_method then
 				submit_registration_form (req, res)
 			else
 				send_bad_request (req, res)
 			end
+		end
+
+	send_already_signed_in (u: CMS_USER; req: WSF_REQUEST; res: WSF_RESPONSE)
+		local
+			r: like new_generic_response
+			l_html: STRING
+		do
+			r := new_generic_response (req, res)
+			r.add_notice_message ("You are already signed in as user %"" + html_encoded (api.user_display_name (u)) + "%".")
+			r.set_redirection (api.absolute_url ({CMS_AUTHENTICATION_MODULE}.roc_account_location, Void))
+			r.set_title ("Account registration")
+			r.execute
 		end
 
 	send_registration_form (req: WSF_REQUEST; res: WSF_RESPONSE)
@@ -99,15 +113,21 @@ feature -- Execution
 						attached l_user_api.user_by_name (l_username)
 						or else attached l_user_api.temp_user_by_name (l_username)
 					then
-						fd.report_invalid_field ("user_name", "User name already taken!")
-					elseif
+						err := True
+						fd.report_invalid_field ("user_name", "User name %"" + html_encoded (l_username) + "%" already taken!")
+					end
+					if
 						attached l_user_api.user_by_email (l_email)
 						or else attached l_user_api.temp_user_by_email (l_email)
 					then
-						fd.report_invalid_field ("email", "An account is already associated with that email address!")
-					elseif
-						l_password.same_string (l_password_bis)
-					then
+						err := True
+						fd.report_invalid_field ("email", "The email address %"" + html_encoded (l_email) + "%" is already associated with an existing account!")
+					end
+					if not l_password.same_string (l_password_bis) then
+						err := True
+						fd.report_invalid_field ("password-bis", "Password mismatched")
+					end
+					if not err then
 						create acc.make_with_username (l_username)
 						acc.set_email (l_email)
 						acc.set_first_name (l_first_name)
@@ -117,8 +137,6 @@ feature -- Execution
 							fd.report_error ("Registration failed ...!")
 							fd.report_error (html_encoded (login_with_esa_api.error_handler.as_string_representation))
 						end
-					else
-						fd.report_invalid_field ("password-bis", "Password mismatched")
 					end
 				else
 					fd.report_error ("Issue with your application, invalid or missing values!")

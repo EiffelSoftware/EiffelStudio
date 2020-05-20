@@ -217,6 +217,54 @@ feature -- Access: License
 			end
 		end
 
+	email_for_license (a_license: ES_CLOUD_LICENSE): detachable READABLE_STRING_8
+		local
+			l_params: STRING_TABLE [detachable ANY]
+		do
+			reset_error
+			create l_params.make (1)
+			l_params.force (a_license.id, "lid")
+			sql_query (sql_select_email_with_license_id, l_params)
+			sql_start
+			if not has_error and not sql_after then
+				Result := sql_read_string_8 (1)
+			end
+			sql_finalize_query (sql_select_email_with_license_id)
+		end
+
+	email_licenses (a_email: READABLE_STRING_8): LIST [ES_CLOUD_EMAIL_LICENSE]
+		local
+			l_params: STRING_TABLE [detachable ANY]
+			lst: ARRAYED_LIST [INTEGER_64]
+		do
+			reset_error
+			create {ARRAYED_LIST [ES_CLOUD_EMAIL_LICENSE]} Result.make (0)
+			create l_params.make (1)
+			l_params.force (a_email, "email")
+
+			create lst.make (3)
+			sql_query (sql_select_email_licenses, l_params)
+			sql_start
+			if not has_error then
+				from
+					sql_start
+				until
+					sql_after or has_error
+				loop
+					lst.force (sql_read_integer_64 (1))
+					sql_forth
+				end
+			end
+			sql_finalize_query (sql_select_email_licenses)
+			across
+				lst as ic
+			loop
+				if attached license (ic.item) as lic then
+					Result.force (create {ES_CLOUD_EMAIL_LICENSE}.make (a_email, lic))
+				end
+			end
+		end
+
 feature -- Element change: license
 
 	last_inserted_license_id: INTEGER_64
@@ -296,6 +344,46 @@ feature -- Element change: license
 			l_params.force (a_user.id, "uid")
 			sql_delete (sql_delete_user_license, l_params)
 			sql_finalize_delete (sql_delete_user_license)
+		end
+
+	assign_license_to_email (a_license: ES_CLOUD_LICENSE; a_email: READABLE_STRING_8)
+		local
+			l_params: STRING_TABLE [detachable ANY]
+		do
+			reset_error
+			create l_params.make (2)
+			l_params.force (a_license.id, "lid")
+			l_params.force (a_email, "email")
+			sql_insert (sql_insert_email_license, l_params)
+			sql_finalize_insert (sql_insert_email_license)
+		end
+
+	unassign_license_from_email (a_license: ES_CLOUD_LICENSE; a_email: READABLE_STRING_8)
+		require
+--			email_has_license
+		local
+			l_params: STRING_TABLE [detachable ANY]
+		do
+			reset_error
+			create l_params.make (2)
+			l_params.force (a_license.id, "lid")
+			l_params.force (a_email, "email")
+			sql_delete (sql_delete_email_license, l_params)
+			sql_finalize_delete (sql_delete_email_license)
+		end
+
+	move_email_license_to_user (a_email_license: ES_CLOUD_EMAIL_LICENSE; a_user: ES_CLOUD_USER)
+		do
+			sql_begin_transaction
+			assign_license_to_user (a_email_license.license, a_user)
+			if not has_error then
+				unassign_license_from_email (a_email_license.license, a_email_license.email)
+			end
+			if has_error then
+				sql_rollback_transaction
+			else
+				sql_commit_transaction
+			end
 		end
 
 feature -- Change
@@ -497,6 +585,17 @@ feature {NONE} -- Queries: licenses
 	sql_insert_user_license: STRING = "INSERT INTO es_licenses_users (lid, uid) VALUES (:lid, :uid);"
 
 	sql_delete_user_license: STRING = "DELETE FROM es_licenses_users WHERE lid=:lid AND uid=:uid;"
+
+
+	sql_select_emails_licenses: STRING = "SELECT lid, email FROM es_licenses_emails ;"
+
+	sql_select_email_with_license_id: STRING = "SELECT email FROM es_licenses_emails WHERE lid=:lid;"
+
+	sql_select_email_licenses: STRING = "SELECT lid, email FROM es_licenses_emails WHERE email=:email;"
+
+	sql_insert_email_license: STRING = "INSERT INTO es_licenses_emails (lid, email) VALUES (:lid, :email);"
+
+	sql_delete_email_license: STRING = "DELETE FROM es_licenses_emails WHERE lid=:lid AND email=:email;"
 
 note
 	copyright: "2011-2019, Jocelyn Fiat, Javier Velilla, Eiffel Software and others"

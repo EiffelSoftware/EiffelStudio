@@ -64,7 +64,7 @@ feature -- Access
 					l_interval.is_case_insensitive_equal_general ("day")
 		end
 
-	price_as_string: STRING
+	price_as_string: STRING_32
 		do
 			create Result.make (10)
 			Result.append_natural_32 (price)
@@ -77,11 +77,11 @@ feature -- Access
 			end
 			Result.append_character (' ')
 			if currency.is_case_insensitive_equal_general ("usd") then
-				Result.append_string ("$")
+				Result.append_character ('$')
 			elseif currency.is_case_insensitive_equal_general ("eur") then
-				Result.append_string ({STRING_32} "%/8364/")
+				Result.append_character ({CHARACTER_32} '%/8364/')
 			else
-				Result.append_string (currency.as_upper)
+				Result.append_string_general (currency.as_upper)
 			end
 		end
 

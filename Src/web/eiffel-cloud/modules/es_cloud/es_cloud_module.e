@@ -13,6 +13,7 @@ inherit
 		redefine
 			initialize,
 			install,
+			update,
 			setup_hooks,
 			es_cloud_api,
 			permissions
@@ -36,6 +37,8 @@ inherit
 
 	SHOP_HOOK
 
+	CMS_HOOK_USER_MANAGEMENT
+
 --	STRIPE_HOOK
 
 create
@@ -45,7 +48,7 @@ feature {NONE} -- Initialization
 
 	make
 		do
-			version := "1.0"
+			version := "1.1"
 			description := "ES Cloud"
 			package := "EiffelStudio"
 			add_optional_dependency ({SHOP_MODULE})
@@ -105,7 +108,7 @@ feature {CMS_API} -- Module management
 				l_sql_storage.sql_execute_file_script (api.module_resource_location (Current, (create {PATH}.make_from_string ("scripts")).extended ("install.sql")), Void)
 
 				if l_sql_storage.has_error then
-					api.logger.put_error ("Could not initialize database for module [" + name + "]", generating_type)
+					api.logger.put_error ("Could not initialize database for module [" + name + "]: " + utf_8_encoded (l_sql_storage.error_handler.as_string_representation), generating_type)
 				else
 					Precursor {CMS_MODULE} (api)
 				end
@@ -123,6 +126,41 @@ feature {CMS_API} -- Module management
 					l_anonymous_role.add_permission ("use jwt_auth")
 					api.user_api.save_user_role (l_anonymous_role)
 				end
+			end
+		end
+
+	update (a_installed_version: READABLE_STRING_GENERAL; api: CMS_API)
+			-- Update module from version `a_installed_version` to current `version`.
+		local
+			v_from, v_to: STRING_32
+			p: PATH
+		do
+				-- Schema
+			if attached api.storage.as_sql_storage as l_sql_storage then
+				v_from := a_installed_version
+				v_from.left_adjust
+				v_from.right_adjust
+				v_to := version
+				v_to.left_adjust
+				v_to.right_adjust
+				v_from.replace_substring_all (".", "_")
+				v_to.replace_substring_all (".", "_")
+				create p.make_from_string ("scripts")
+				p := p.extended ("update-")
+				p := p.appended (v_from)
+				p := p.appended ("-")
+				p := p.appended (v_to)
+				p := p.appended_with_extension ("sql")
+
+				l_sql_storage.sql_execute_file_script (api.module_resource_location (Current, p), Void)
+
+				if l_sql_storage.has_error then
+					api.log_error (name, "Could not update database for module [" + name + "]: " + utf_8_encoded (l_sql_storage.error_handler.as_string_representation), Void)
+				else
+					Precursor {CMS_MODULE} (a_installed_version, api)
+				end
+			else
+				Precursor (a_installed_version, api)
 			end
 		end
 
@@ -187,6 +225,7 @@ feature -- Hooks configuration
 			a_hooks.subscribe_to_menu_system_alter_hook (Current)
 			a_hooks.subscribe_to_response_alter_hook (Current)
 			a_hooks.subscribe_to_hook (Current, {SHOP_HOOK})
+			a_hooks.subscribe_to_hook (Current, {CMS_HOOK_USER_MANAGEMENT})
 --			a_hooks.subscribe_to_hook (Current, {STRIPE_HOOK})
 		end
 
@@ -246,6 +285,8 @@ feature -- Hook
 			l_prov_name: READABLE_STRING_GENERAL
 			l_quantity: NATURAL_32
 			lic: ES_CLOUD_LICENSE
+			l_email: detachable READABLE_STRING_8
+			l_user: detachable CMS_USER
 		do
 			if
 				attached es_cloud_api as api and then
@@ -253,10 +294,23 @@ feature -- Hook
 			then
 				l_prov_name := api.config.shop_provider_name
 				if a_cart_item.provider.is_case_insensitive_equal_general (l_prov_name) then
-					--TODO: check invoice email instead!!!
-
+						-- TODO: check invoice email instead!!!
+					l_email := a_cart.email
+					if attached api.active_user as l_cloud_user then
+						l_user := l_cloud_user
+					end
+					if l_user = Void then
+						if l_email /= Void then
+							l_user := api.cms_api.user_api.user_by_email (l_email)
+							if l_user = Void then
+								l_user := api.cms_api.user_api.temp_user_by_email (l_email)
+							end
+						end
+					elseif l_email = Void then
+						l_email := l_user.email
+					end
 					if
-						attached api.active_user as l_user and then
+						(l_user /= Void or l_email /= Void) and then
 						attached l_store.item (a_cart_item.code) as l_store_item and then
 						a_cart.is_currency_accepted (l_store_item.currency)
 					then
@@ -271,7 +325,14 @@ feature -- Hook
 							loop
 								lic := api.new_license_for_plan (l_plan)
 								if lic /= Void then
-									api.assign_license_to_user (lic, l_user)
+									if l_user /= Void then
+										api.assign_license_to_user (lic, l_user)
+									elseif l_email /= Void then
+										api.assign_license_to_email (lic, l_email)
+									end
+									if l_email /= Void then
+										send_new_license_mail (l_user, l_email, lic, api)
+									end
 								end
 								l_quantity := l_quantity - 1
 							end
@@ -279,6 +340,33 @@ feature -- Hook
 					end
 				end
 			end
+		end
+
+	send_new_license_mail (a_user: detachable CMS_USER; a_email_addr: READABLE_STRING_8; a_license: ES_CLOUD_LICENSE; api: ES_CLOUD_API)
+		local
+			e: CMS_EMAIL
+			res: PATH
+			s: STRING_8
+			msg: READABLE_STRING_8
+		do
+			create res.make_from_string ("templates")
+			if attached api.cms_api.module_theme_resource_location (Current, res.extended ("new_license_email.tpl")) as loc and then attached api.cms_api.resolved_smarty_template (loc) as tpl then
+				tpl.set_value (a_license, "license")
+				tpl.set_value (a_license.key, "license_key")
+				msg := tpl.string
+			else
+				create s.make_empty;
+				s.append ("New license " + utf_8_encoded (a_license.key) + ".%N")
+				if a_user = Void then
+					s.append ("The license is associated with email %"" + a_email_addr + "%", please register a new account with that email at " + api.cms_api.site_url + " .%N")
+				else
+					s.append ("The license is associated with your user account %"" + utf_8_encoded (api.cms_api.user_display_name (a_user)) + "%" (email %"" + a_email_addr + "%"), please visit" + api.cms_api.site_url + " .%N")
+				end
+				msg := s
+			end
+
+			e := api.cms_api.new_html_email (a_email_addr, "New license " + utf_8_encoded (a_license.key), msg)
+			api.cms_api.process_email (e)
 		end
 
 --	prepare_payment (p: STRIPE_PAYMENT)
@@ -319,6 +407,32 @@ feature -- Hook
 				create lnk.make (a_response.api.translation ("Licenses", Void), licenses_location)
 				lnk.set_weight (10)
 				a_menu_system.primary_menu.extend (lnk)
+			end
+		end
+
+feature -- Hooks: user management
+
+	new_user (a_user: CMS_USER)
+		local
+			lic: ES_CLOUD_EMAIL_LICENSE
+			u: ES_CLOUD_USER
+		do
+			if attached es_cloud_api as l_es_cloud_api then
+				if
+					attached a_user.email as l_email and then
+					attached l_es_cloud_api.email_licenses (l_email) as l_licenses
+				then
+					u := a_user
+					across
+						l_licenses as ic
+					loop
+						lic := ic.item
+						l_es_cloud_api.move_email_license_to_user (lic, u)
+						if not l_es_cloud_api.has_error then
+							send_new_license_mail (a_user, l_email, lic.license, l_es_cloud_api)
+						end
+					end
+				end
 			end
 		end
 
@@ -375,6 +489,9 @@ feature -- Hooks: block
 			tb: STRING_TABLE [ARRAYED_LIST [ES_CLOUD_STORE_ITEM]]
 			lst: ARRAYED_LIST [ES_CLOUD_STORE_ITEM]
 			l_plan_name: READABLE_STRING_GENERAL
+			l_interval_type: READABLE_STRING_8
+			l_is_first: BOOLEAN
+			l_intervals: STRING_TABLE [INTEGER]
 		do
 			create l_html.make (1024)
 			l_html.append ("<div class=%"pricing%"><form action=%"%">")
@@ -404,24 +521,55 @@ feature -- Hooks: block
 					if attached api.plan_by_name (l_plan_name) as pl then
 						l_html.append ("<div class=%"plan "+ html_encoded (pl.name) +"%">")
 						l_html.append ("<h2>"+ html_encoded (pl.title_or_name) + "</h2>")
+						if tb_ic.item.count > 1 then
+--							l_html.append ("<div class=%"switch%">")
+							create l_intervals.make_caseless (tb_ic.item.count)
+							l_is_first := True
+							across
+								tb_ic.item as ic
+							loop
+								l_item := ic.item
+								l_interval_type := store_item_interval_name (l_item)
+								if l_interval_type /= Void then
+									if not l_intervals.has (l_interval_type) then
+										l_intervals.force (1, l_interval_type)
+										l_html.append ("<input type=%"radio%" name=%"interval-"+ pl.id.out +"%" id=%"" + l_interval_type + pl.id.out + "%" class=%"" + l_interval_type + "%" value=%"" + l_interval_type + "%"")
+										if l_is_first then
+											l_html.append (" checked=%"checked%"")
+										end
+										l_html.append ("/>")
+										l_html.append ("<label for=%"" + l_interval_type + pl.id.out + "%">")
+										l_html.append ("per " + l_interval_type + "</label>%N")
+
+										l_is_first := False
+									else
+										l_intervals.force (l_intervals [l_interval_type] + 1, l_interval_type)
+									end
+								end
+							end
+--							l_html.append ("</div>")
+						end
 						across
 							tb_ic.item as ic
 						loop
 							l_item := ic.item
-							l_html.append ("<div class=%"option%">")
+							l_interval_type := store_item_interval_name (l_item)
+
+							l_html.append ("<div class=%"option ")
+							if l_interval_type /= Void then
+								l_html.append (l_interval_type)
+								l_html.append ("%"")
+								l_html.append ("data-interval=%"")
+								l_html.append (l_interval_type)
+							end
+							l_html.append ("%">")
 							l_html.append ("<div class=%"prices%">")
 							if l_item.is_free then
 								l_html.append ("Free")
 							else
-								l_html.append (l_item.price_as_string)
-								if l_item.is_monthly then
-									l_html.append (" /month")
-								elseif l_item.is_yearly then
-									l_html.append (" /year")
-								elseif l_item.is_weekly then
-									l_html.append (" /week")
-								elseif l_item.is_daily then
-									l_html.append (" /day")
+								l_html.append (html_encoded (l_item.price_as_string))
+								if l_interval_type /= Void then
+									l_html.append (" /" + l_interval_type)
 								end
 							end
 							l_html.append ("</div>")
@@ -432,7 +580,7 @@ feature -- Hooks: block
 											 + "%" type=%"submit%" class=%"buy%">Buy now</button>")
 								end
 							end
-							l_html.append ("</div>") -- actions							
+							l_html.append ("</div>") -- actions
 							l_html.append ("</div>") -- option
 						end
 						if attached pl.description as l_desc then
@@ -452,6 +600,21 @@ feature -- Hooks: block
 			end
 			l_html.append ("</form></div>") -- pricings
 			create Result.make_raw ("cloud_store", "EiffelStudio plans", l_html, a_response.api.formats.full_html)
+		end
+
+	store_item_interval_name (a_item: ES_CLOUD_STORE_ITEM): detachable STRING
+		do
+			if a_item.is_monthly then
+				Result := "month"
+			elseif a_item.is_yearly then
+				Result := "year"
+			elseif a_item.is_weekly then
+				Result := "week"
+			elseif a_item.is_daily then
+				Result := "day"
+			else
+--				Result := "onetime"
+			end
 		end
 
 end

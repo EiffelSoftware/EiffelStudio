@@ -189,7 +189,7 @@ feature -- Resources
 					end
 					tpl.set_value (v, ic.key)
 				end
-				Result := tpl.string
+				Result := tpl.string.to_string_8
 			else
 				Result := card_tpl.twin
 				across

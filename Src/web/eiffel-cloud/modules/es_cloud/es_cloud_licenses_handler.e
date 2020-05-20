@@ -134,6 +134,20 @@ feature -- Execution
 					s.append ("<div><div class=%"es-new-license%"><form action=%""+ r.location_url ({ES_CLOUD_MODULE}.licenses_location, Void) +"%" method=%"post%"><input type=%"submit%" class=%"button%" title=%"Buy a new license%" name=%"op%" value=%"Buy new license%"></input></form></div></div>")
 				end
 
+				if
+					attached l_user.cms_user.email as l_email and then
+					attached es_cloud_api.email_licenses (l_email) as lst and then
+					not lst.is_empty
+				then
+					across
+						lst as ic
+					loop
+						es_cloud_api.move_email_license_to_user (ic.item, l_user)
+						s.append ("<div>Retrieving license " + html_encoded (ic.item.license.key))
+						s.append (" ... </div>")
+					end
+				end
+
 					-- List of licenses
 				s.append ("<div class=%"es-licenses%">")
 				if attached es_cloud_api.user_licenses (l_user) as lics and then not lics.is_empty then
@@ -265,7 +279,7 @@ feature -- Execution
 
 				s.append ("</li>")
 			elseif l_plan.installations_limit > 0 then
-				s.append ("<li class=%"limit warning%">Can be installed on: " + l_plan.installations_limit.out + " devices</li>")
+				s.append ("<li class=%"limit warning%">Can be installed on: " + l_plan.installations_limit.out + " device(s)</li>")
 			end
 			s.append ("<li><a href=%"" + api.location_url (es_cloud_module.license_activities_location (lic), Void) + "%">Associated activities...</a> ")
 			s.append ("</li>")

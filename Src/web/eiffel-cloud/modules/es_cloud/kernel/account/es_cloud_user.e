@@ -36,4 +36,9 @@ feature -- Access
 			Result := cms_user.id
 		end
 
+	has_id: BOOLEAN
+		do
+			Result := cms_user.has_id
+		end
+
 end

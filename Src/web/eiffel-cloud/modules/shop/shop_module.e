@@ -294,51 +294,62 @@ feature -- Hook
 			l_invoice: STRIPE_INVOICE
 			l_email_addr: READABLE_STRING_8
 			vars: STRING_TABLE [READABLE_STRING_8]
+			l_shop_cart: SHOPPING_CART
+			l_order_id: READABLE_STRING_GENERAL
+			i: INTEGER
+			l_provider, l_code: READABLE_STRING_GENERAL
+			l_quantity: NATURAL_32
+			l_shop_item: SHOPPING_ITEM
 		do
 			if attached shop_api as l_shop_api then
+				l_order_id := a_validation.order_id
 				l_invoice := a_validation.subscription.latest_invoice
-				if
-					attached l_shop_api.cms_api.user as u and then
-					attached l_shop_api.user_shopping_cart (u) as l_active_cart and then
-					attached a_validation.order_id as l_order_id and then
-					l_order_id.is_case_insensitive_equal (l_active_cart.id.out)
-				then
-					l_order := l_shop_api.cart_to_order (l_active_cart)
-					l_shop_api.invoke_commit_cart (l_active_cart)
-				end
---				if l_invoice /= Void then
---					create l_shop_cart.make_guest
---					l_shop_cart.set_currency (l_invoice.currency)
---					if attached l_invoice.lines as l_lines then
---						across
---							l_lines as ic
---						loop
---							if
---								attached ic.item as l_invoice_line and then
---								l_invoice_line.is_subscription_type and then
---								attached l_invoice_line.plan as l_plan and then
---								attached l_plan.nickname as l_plan_nickname
---							then
---								i := l_plan_nickname.index_of ('.', 1)
---								if i > 0 then
---									l_provider := l_plan_nickname.head (i - 1)
---									l_code := l_plan_nickname.substring (i + 1, l_plan_nickname.count)
---									l_quantity := l_invoice_line.quantity
---									create l_shop_item.make (l_code, l_provider)
---									l_shop_item.set_quantity (l_quantity)
-
---									l_shop_cart.add_item (l_shop_item)
---								end
---							end
---						end
---					end
---					l_shop_api.invoke_commit_cart (l_shop_cart)
---				end
 				if l_invoice /= Void then
 					l_email_addr := l_invoice.customer_email
 				elseif attached l_shop_api.cms_api.user as u then
 					l_email_addr := u.email
 				end
+				if
+					attached l_shop_api.cms_api.user as u
+				then
+					l_shop_cart := l_shop_api.user_shopping_cart (u)
+				elseif l_email_addr /= Void then
+					l_shop_cart := l_shop_api.shopping_cart_by_email (l_email_addr)
+				else
+					check has_cart: False end
+				end
+				if l_shop_cart = Void then
+					if l_invoice /= Void then
+						create l_shop_cart.make_guest
+						l_shop_cart.set_currency (l_invoice.currency)
+						if attached l_invoice.lines as l_lines then
+							across
+								l_lines as ic
+							loop
+								if
+									attached ic.item as l_invoice_line and then
+									l_invoice_line.is_subscription_type and then
+									attached l_invoice_line.plan as l_plan and then
+									attached l_plan.nickname as l_plan_nickname
+								then
+									i := l_plan_nickname.index_of ('.', 1)
+									if i > 0 then
+										l_provider := l_plan_nickname.head (i - 1)
+										l_code := l_plan_nickname.substring (i + 1, l_plan_nickname.count)
+										l_quantity := l_invoice_line.quantity
+										create l_shop_item.make (l_code, l_provider)
+										l_shop_item.set_quantity (l_quantity)
+										l_shop_cart.add_item (l_shop_item)
+									end
+								end
+							end
+						end
+					end
+				end
+				if l_email_addr = Void and l_shop_cart /= Void then
+					l_email_addr := l_shop_cart.email
+				end
+
 				if l_email_addr /= Void then
 					create vars.make_caseless (2)
 					if l_invoice /= Void and then attached l_invoice.hosted_invoice_url as l_invoice_url then
@@ -348,13 +359,25 @@ feature -- Hook
 						l_shop_api.cms_api.process_email (e)
 					end
 				end
+
+				if
+					l_shop_cart /= Void and then
+					(l_order_id /= Void implies l_order_id.is_case_insensitive_equal (l_shop_cart.id.out))
+				then
+					if l_email_addr /= Void and l_shop_cart.email = Void then
+						l_shop_cart.set_email (l_email_addr)
+					end
+					l_order := l_shop_api.cart_to_order (l_shop_cart)
+					l_shop_api.invoke_commit_cart (l_shop_cart)
+				end
 			end
 		end
 
 	order_confirmation_email (a_email_addr: READABLE_STRING_8; vars: STRING_TABLE [READABLE_STRING_8]; a_shop_api: SHOP_API): CMS_EMAIL
 		local
 			res: PATH
-			msg: STRING_8
+			s: STRING_8
+			msg: READABLE_STRING_8
 		do
 			create res.make_from_string ("templates")
 			if
@@ -368,13 +391,14 @@ feature -- Hook
 				end
 				msg := tpl.string
 			else
-				create msg.make_empty
-				msg.append ("Thank you for your order at " + a_shop_api.cms_api.site_url + " .%N")
+				create s.make_empty
+				s.append ("Thank you for your order at " + a_shop_api.cms_api.site_url + " .%N")
 				if attached vars["invoice_url"] as l_invoice_url then
-					msg.append ("See your invoice at " + l_invoice_url + " .")
+					s.append ("See your invoice at " + l_invoice_url + " .")
 				end
+				msg := s
 			end
-			Result := a_shop_api.cms_api.new_email (a_email_addr, "Thank you for your order", msg)
+			Result := a_shop_api.cms_api.new_html_email (a_email_addr, "Thank you for your order", msg)
 		end
 
 end

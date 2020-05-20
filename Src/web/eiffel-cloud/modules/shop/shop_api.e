@@ -100,6 +100,14 @@ feature -- Access
 	user_shopping_cart (a_user: CMS_USER): detachable SHOPPING_CART
 		do
 			Result := shop_storage.user_shopping_cart (a_user)
+			if Result = Void and then attached a_user.email as l_email then
+				Result := shopping_cart_by_email (l_email)
+			end
+		end
+
+	shopping_cart_by_email (a_email: READABLE_STRING_8): detachable SHOPPING_CART
+		do
+			Result := shop_storage.shopping_cart_by_email (a_email)
 		end
 
 	guest_shopping_cart (a_cart_id: like {SHOPPING_CART}.id): detachable SHOPPING_CART

@@ -37,11 +37,37 @@ div.plan div.actions {
     background-color: #006f9f;
     padding: 5px 15px 5px 15px; }
 div.plan div.option {
+  padding-top: 10px;
+  margin-top: 1rem;
   border-bottom: solid 1px #ccc; }
   div.plan div.option div.prices {
     margin: 5px 0 5px 0; }
   div.plan div.option button {
     width: 90%; }
+  div.plan div.option.year, div.plan div.option.month, div.plan div.option.week, div.plan div.option.day {
+    display: none; }
+div.plan input[type="radio"] {
+  display: none; }
+div.plan input[type="radio"] + label {
+  margin-bottom: 1rem;
+  padding: .6rem;
+  color: #00000055;
+  font-weight: bold;
+  background-color: #cccccc66; }
+div.plan input[type="radio"]:checked + label {
+  border: solid 1px #000;
+  border-radius: 5px;
+  color: #000000;
+  background-color: #fff;
+  transition: all .3s ease-out; }
+div.plan input[type="radio"].year:checked ~ div[data-interval="year"] {
+  display: block; }
+div.plan input[type="radio"].month:checked ~ div[data-interval="month"] {
+  display: block; }
+div.plan input[type="radio"].week:checked ~ div[data-interval="week"] {
+  display: block; }
+div.plan input[type="radio"].day:checked ~ div[data-interval="day"] {
+  display: block; }
 
 div.pay {
   padding: 10px; }

@@ -15,6 +15,7 @@ inherit
 			initialize,
 			install,
 			filters,
+			setup_hooks,
 			login_with_esa_api
 		end
 
@@ -34,6 +35,7 @@ feature {NONE} -- Initialization
 			version := "1.0"
 			description := "Login with ESA account"
 			package := "auth"
+			add_dependency ({CMS_AUTHENTICATION_MODULE})
 		end
 
 feature -- Access
@@ -105,9 +107,11 @@ feature -- Access: router
 			-- <Precursor>
 		do
 			if attached login_with_esa_api as l_esa_api then
-				a_router.handle ("/esa/register", create {LOGIN_WITH_ESA_REGISTER_HANDLER}.make (Current, l_esa_api), a_router.methods_get_post)
+				a_router.handle ("/" + register_location, create {LOGIN_WITH_ESA_REGISTER_HANDLER}.make (Current, l_esa_api), a_router.methods_get_post)
 			end
 		end
+
+	register_location: STRING = "esa/register"
 
 feature -- Access: filter
 
@@ -120,7 +124,13 @@ feature -- Access: filter
 			end
 		end
 
-feature -- Hook
+	setup_hooks (a_hooks: CMS_HOOK_CORE_MANAGER)
+			-- Module hooks configuration.
+		do
+			Precursor (a_hooks)
+		end
+
+feature -- Hooks
 
 	menu_system_alter (a_menu_system: CMS_MENU_SYSTEM; a_response: CMS_RESPONSE)
 			-- Hook execution on collection of menu contained by `a_menu_system'
@@ -129,7 +139,7 @@ feature -- Hook
 			lnk: CMS_LOCAL_LINK
 		do
 			if not a_response.api.user_is_authenticated then
-				create lnk.make ("Register", "/esa/register")
+				create lnk.make ("Register", "/" + register_location)
 				lnk.set_weight (99)
 				a_menu_system.primary_menu.extend (lnk)
 			end

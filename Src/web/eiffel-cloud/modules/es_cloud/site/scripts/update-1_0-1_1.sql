@@ -24,6 +24,12 @@ CREATE TABLE es_licenses(
   `fallback` DATETIME
 );
 
+CREATE TABLE es_licenses_emails(
+  `lid` INTEGER NOT NULL,
+  `email`	TEXT NOT NULL,
+  CONSTRAINT PK_lid_email_key PRIMARY KEY (lid,email)
+);
+
 CREATE TABLE es_licenses_users(
   `lid` INTEGER NOT NULL,
   `uid`	INTEGER NOT NULL,

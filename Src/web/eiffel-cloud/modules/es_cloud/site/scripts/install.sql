@@ -72,8 +72,7 @@ CREATE TABLE es_licenses(
 
 CREATE TABLE es_licenses_emails(
   `lid` INTEGER NOT NULL,
-  `email`	TEXT NOT NULL,
-  CONSTRAINT PK_lid_email_key PRIMARY KEY (lid,email)
+  `email`	TEXT NOT NULL
 );
 
 CREATE TABLE es_licenses_users(

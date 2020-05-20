@@ -81,6 +81,12 @@ feature -- Access
 			end
 		end
 
+	categories: like options_values_of_name
+			-- Specified categories.
+		do
+			Result := options_values_of_name (category_switch)
+		end
+
 feature -- Status report
 
 	has_statistic: BOOLEAN
@@ -91,12 +97,20 @@ feature -- Status report
 			Result := has_option (stat_switch)
 		end
 
+	has_range: BOOLEAN
+			-- Is range output requested?
+		require
+			is_successful: is_successful
+		once
+			Result := has_option (range_switch)
+		end
+
 feature -- Usage
 
 	name: STRING = "Unicode Helper Generator"
 			-- <Precursor>
 
-	version: STRING = "1.3"
+	version: STRING = "1.4"
 			-- <Precursor>
 
 feature {NONE} -- Usage
@@ -107,11 +121,13 @@ feature {NONE} -- Usage
 	switches: ARRAYED_LIST [ARGUMENT_SWITCH]
 			-- <Precursor>
 		once
-			create Result.make (6)
-			Result.extend (create {ARGUMENT_VALUE_SWITCH}.make (input_file_switch, "UnicodeData.txt file", False, False, "file", "Name of UnicodeData.txt file", False))
+			create Result.make (8)
+			Result.extend (create {ARGUMENT_VALUE_SWITCH}.make (category_switch, "Categories to select", True, True, "category", "2-letter general category value", False))
 			Result.extend (create {ARGUMENT_VALUE_SWITCH}.make (density_switch, "Density for tables", True, False, "density", "Density of table as a ratio", False))
-			Result.extend (create {ARGUMENT_VALUE_SWITCH}.make (property_template_switch, "Template used for generation of character properties", True, False, "template", "Template file", False))
+			Result.extend (create {ARGUMENT_VALUE_SWITCH}.make (input_file_switch, "UnicodeData.txt file", False, False, "file", "Name of UnicodeData.txt file", False))
 			Result.extend (create {ARGUMENT_VALUE_SWITCH}.make (output_switch, "Directory where files will be generated", True, False, "dir", "Directory for outputs", False))
+			Result.extend (create {ARGUMENT_VALUE_SWITCH}.make (property_template_switch, "Template used for generation of character properties", True, False, "template", "Template file", False))
+			Result.extend (create {ARGUMENT_SWITCH}.make (range_switch, "Output ranges of specified categories instead of generating character properties", True, False))
 			Result.extend (create {ARGUMENT_SWITCH}.make (stat_switch, "Display statistics", True, False))
 			Result.extend (create {ARGUMENT_VALUE_SWITCH}.make (unicode_version_switch, "Version of Unicode data", False, False, "version", "Version string, e.g. %"6.2.0%"", False))
 		end
@@ -124,10 +140,12 @@ feature {NONE} -- Usage
 
 feature {NONE} -- Switches
 
+	category_switch: STRING_32 = "c|category"
 	density_switch: STRING_32 = "d|density"
 	input_file_switch: STRING_32 = "i|input"
 	output_switch: STRING_32 = "o|output_directory"
 	property_template_switch: STRING_32 = "p|property_template"
+	range_switch: STRING_32 = "r|range"
 	stat_switch: STRING_32 = "s|statistics"
 	unicode_version_switch: STRING_32 = "u|unicode_version"
 			-- Argument switches

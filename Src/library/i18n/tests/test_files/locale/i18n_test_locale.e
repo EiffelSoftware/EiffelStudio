@@ -173,7 +173,7 @@ feature {NONE} -- Implementation
 				if not l_locale.info.id.name.is_empty then
 					if attached cached_output as l_output then
 						assert ({STRING_32} "Output did not match when testing locale '" + l_locale.info.id.name + "'",
-							has_same_content_as_string (result_file_name (l_locale.info.id.name, {PLATFORM}.is_windows), utf32_to_utf8 (l_output)))
+							has_same_content_as_string (result_file_name (l_locale.info.id.name, {PLATFORM}.is_windows), {UTF_CONVERTER}.utf_32_string_to_utf_8_string_8 (l_output)))
 					else
 						assert ("No output", False)
 					end

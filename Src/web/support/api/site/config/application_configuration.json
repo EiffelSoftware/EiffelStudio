@@ -17,7 +17,8 @@
 		}
 	},
 	"emails": {
-		"admin", "noreplies@eiffel.com",
+		"admin", "support.bot@eiffel.com",
+		"reply-to", "support.bot+report${id}-${interaction}@eiffel.com",
 		"webmaster", "webmaster@eiffel.com"
 	},
 	"logger": { 

@@ -46,8 +46,21 @@ feature -- Access
 	webmaster_email: IMMUTABLE_STRING_8
 			-- Webmaster email.
 
+	reply_to_email_pattern: detachable IMMUTABLE_STRING_8
+
 	mailer: NOTIFICATION_MAILER
 			-- Mailer.
+
+feature -- Element change
+
+	set_reply_to_email_pattern (e: detachable READABLE_STRING_8)
+		do
+			if e = Void then
+				reply_to_email_pattern := Void
+			else
+				reply_to_email_pattern := e
+			end
+		end
 
 feature -- Basic Operations
 
@@ -146,6 +159,24 @@ feature -- Basic Operations
 			end
 		end
 
+	add_esa_report_id_header (a_report: REPORT; a_email: ESA_NOTIFICATION_EMAIL)
+		local
+			s: STRING
+			l_int_nb: INTEGER
+		do
+			create s.make (8)
+			s.append_integer (a_report.number)
+			if attached a_report.interactions as lst and then not lst.is_empty then
+				l_int_nb := lst.count
+				s.append_character ('-')
+				s.append_integer (l_int_nb)
+			end
+			a_email.add_header_line ("X-ESA-report-id: " + s)
+			if attached reply_to_mail (a_report.number.out, l_int_nb.out) as l_reply_to then
+				a_email.set_reply_to_address (l_reply_to)
+			end
+		end
+
 	send_new_report_email (a_name: STRING; a_report: REPORT; a_email: STRING; a_subscribers: LIST [STRING]; a_url: STRING)
 			-- Send report creation confirmation email to interested parties.
 		local
@@ -161,12 +192,12 @@ feature -- Basic Operations
 						l_email.add_bcc_address (ic.item)
 					end
 				end
-				l_email.add_header_line ("X-ESA-report-id: " + a_report.id.out)
+				add_esa_report_id_header (a_report, l_email)
 				l_email.add_header_line ("MIME-Version: 1.0")
 				l_email.add_header_line ("Content-Type: text/plain; charset=UTF-8")
 				mailer.safe_process_email (l_email)
 			else
-				log.write_error (generator + ".send_new_report_email " + a_report.number.out + " " + last_error_message)
+				log.write_error (generator + ".send_new_report_email " + a_report.number.out + " " + {UTF_CONVERTER}.utf_32_string_to_utf_8_string_8 (last_error_message))
 			end
 		end
 
@@ -196,7 +227,7 @@ feature -- Basic Operations
 						create l_email.make (user_mail (a_user.displayed_name), ll_email, report_email_subject (a_report, l_interactions.count), l_message)
 
 					end
-					l_email.add_header_line ("X-ESA-report-id: " + a_report.id.out)
+					add_esa_report_id_header (a_report, l_email)
 					l_email.add_header_line ("MIME-Version: 1.0")
 					l_email.add_header_line ("Content-Type: text/plain; charset=UTF-8")
 
@@ -212,10 +243,10 @@ feature -- Basic Operations
 					end
 					mailer.safe_process_email (l_email)
 				else
-					log.write_error (generator + ".send_new_interaction_email " + a_report.number.out + " " + last_error_message)
+					log.write_error (generator + ".send_new_interaction_email " + a_report.number.out + " " + {UTF_CONVERTER}.utf_32_string_to_utf_8_string_8 (last_error_message))
 				end
 			else
-				log.write_error (generator + ".send_new_interaction_email " + a_report.number.out + " " + last_error_message)
+				log.write_error (generator + ".send_new_interaction_email " + a_report.number.out + " " + {UTF_CONVERTER}.utf_32_string_to_utf_8_string_8 (last_error_message))
 			end
 		end
 
@@ -238,7 +269,7 @@ feature -- Basic Operations
 				create l_email.make (user_mail (a_user.displayed_name), ll_email, report_email_subject (a_report, 0), l_content)
 				mailer.safe_process_email (l_email)
 			else
-				log.write_error (generator + ".send_responsible_change_email " + a_report.number.out + " " + last_error_message)
+				log.write_error (generator + ".send_responsible_change_email " + a_report.number.out + " " + {UTF_CONVERTER}.utf_32_string_to_utf_8_string_8 (last_error_message))
 			end
 		end
 
@@ -249,7 +280,7 @@ feature -- Basic Operations
 			l_content: STRING
 		do
 			create l_content.make (2048)
-			l_content.append (a_message.as_string_32)
+			l_content.append ({UTF_CONVERTER}.utf_32_string_to_utf_8_string_8 (a_message))
 
 			create l_email.make (admin_email, webmaster_email, "ESA API exception", l_content)
 			mailer.safe_process_email (l_email)
@@ -276,6 +307,70 @@ feature {NONE} -- Implementation
 			Result.append_character ('<')
 			Result.append (l_email)
 			Result.append_character ('>')
+		end
+
+	reply_to_mail (a_report_id, a_interaction: detachable READABLE_STRING_8): detachable STRING_8
+		local
+			i,j,n: INTEGER
+			l_name: READABLE_STRING_8
+			err: BOOLEAN
+		do
+			if attached reply_to_email_pattern as pat then
+				i := pat.index_of ('$', 1)
+				if i > 0 then
+					create Result.make (pat.count)
+					from
+						n := pat.count
+						i := 1
+					until
+						i > n or err
+					loop
+						j := pat.index_of ('$', i)
+						if j > 0  and j < n then
+							Result.append (pat.substring (i, j - 1))
+							l_name := Void
+							i := j
+							if pat [i + 1] = '{' then
+								j := pat.index_of ('}', i + 2)
+								if j > i then
+									l_name := pat.substring (i + 2, j - 1)
+								else
+									err := True
+								end
+							else
+								from
+								until
+									j > n or not pat [j].is_alpha
+								loop
+									j := j + 1
+								end
+								if j > n then
+									l_name := pat.substring (i + 1, n)
+								end
+							end
+							if not err and l_name /= Void then
+								if
+									l_name.is_case_insensitive_equal ("id") and then
+									a_report_id /= Void
+								then
+									Result.append (a_report_id)
+								elseif
+									l_name.is_case_insensitive_equal ("interaction") and then
+									a_interaction /= Void
+								then
+									Result.append (a_interaction)
+								end
+							end
+							i := j + 1
+						else
+							i := n + 1
+							Result.append (pat.substring (i, n))
+						end
+					end
+				else
+					Result := pat.to_string_8
+				end
+			end
 		end
 
 	report_email_subject (a_report: REPORT; a_interactions_count: INTEGER): STRING
@@ -437,16 +532,16 @@ feature {NONE} -- Implementation
 			then
 				Result.append ("%N")
 				if not l_old_status.synopsis.is_case_insensitive_equal_general (l_status.synopsis) then
-					Result.append ("Status changed to '" + l_status.synopsis)
+					Result.append ("Status changed to '" + utf.utf_32_string_to_utf_8_string_8 (l_status.synopsis))
 
 					if not l_old_category.synopsis.is_case_insensitive_equal_general (l_category.synopsis) then
-						Result.append ("', category changed to '" + l_category.synopsis + "'")
+						Result.append ("', category changed to '" + utf.utf_32_string_to_utf_8_string_8 (l_category.synopsis) + "'")
 					else
 						Result.append ("'")
 					end
 				else
 					if not l_old_category.synopsis.is_case_insensitive_equal_general (l_category.synopsis) then
-						Result.append ("Category changed to '" + l_category.synopsis + "'")
+						Result.append ("Category changed to '" + utf.utf_32_string_to_utf_8_string_8 (l_category.synopsis) + "'")
 					end
 				end
 				Result.append ("%N%N")

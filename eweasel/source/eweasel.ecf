@@ -48,6 +48,9 @@
 		<library name="time" location="$ISE_LIBRARY\library\time\time.ecf"/>
 		<library name="wel" location="$ISE_LIBRARY\library\wel\wel.ecf"/>
 		<cluster name="eweasel" location=".\" recursive="true">
+			<class_option class="EW_EIFFEL_TEST_SUITE">
+				<warning name="export_class_missing" enabled="false"/>
+			</class_option>
 			<file_rule>
 				<include>/eqa$</include>
 				<condition>
@@ -59,12 +62,6 @@
 				<exclude>/tests/mt$</exclude>
 				<condition>
 					<concurrency value="none"/>
-				</condition>
-			</file_rule>
-			<file_rule>
-				<exclude>/tests/st$</exclude>
-				<condition>
-					<concurrency excluded_value="none"/>
 				</condition>
 			</file_rule>
 		</cluster>

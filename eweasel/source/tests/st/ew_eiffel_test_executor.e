@@ -1,3 +1,0 @@
-class EW_EIFFEL_TEST_EXECUTOR
-
-end

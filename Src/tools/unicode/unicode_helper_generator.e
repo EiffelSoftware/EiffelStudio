@@ -16,18 +16,36 @@ feature {NONE} -- Initialization
 
 	make
 			-- Run application.
+		local
+			categories: like {UNICODE_CHARACTER_DATA}.category
 		do
 			create argument_parser.make
 			argument_parser.execute (agent do_nothing)
 			if argument_parser.is_successful and then attached argument_parser.input_file as l_file then
 				density := argument_parser.density
 				read_unicode_data (l_file)
-				if attached unicode_data as l_unicode_data then
-					process_properties (argument_parser.property_template, l_unicode_data)
-				elseif has_error then
+				if has_error then
 					io.error.put_string_32 (l_file + ": error occured!%N")
-				else
+				elseif attached unicode_data as l_unicode_data implies l_unicode_data.is_empty then
 					io.error.put_string_32 (l_file + " has no unicode character data in it.%N")
+				elseif not argument_parser.has_range then
+					process_properties (argument_parser.property_template, l_unicode_data)
+				elseif argument_parser.categories.is_empty then
+					io.error.put_string_32 ("No categories have been specified.%N")
+				else
+					across
+						argument_parser.categories as c
+					loop
+						if
+							attached {UNICODE_CHARACTER_DATA}.category_mask [c.item] as category and then
+							category /= 0
+						then
+							categories := categories ⦶ category
+						else
+							io.error.put_string_32 ({STRING_32} "Unknown category: " + c.item + ". Ignoring it.")
+						end
+					end
+					report_ranges (l_unicode_data, categories)
 				end
 			end
 		end
@@ -729,6 +747,90 @@ feature {NONE} -- Helpers
 	unicode_version_marker: STRING = "$UNICODE_VERSION"
 	generator_marker: STRING = "$GENERATOR"
 			-- Various marker in the template file that will be replaced.
+
+feature {NONE} -- Ranges
+
+	report_ranges (data: attached like unicode_data; categories: like {UNICODE_CHARACTER_DATA}.category)
+			-- Collect and report ranges of code points that belong to categories.
+		require
+			not data.is_empty
+		local
+			last: like {UNICODE_CHARACTER_DATA}.code
+			is_in_interval: BOOLEAN
+			is_last_printed: BOOLEAN
+		do
+			;(create {BUBBLE_SORTER [UNICODE_CHARACTER_DATA]}.make
+				(create {PREDICATE_COMPARATOR [UNICODE_CHARACTER_DATA]}.make
+					(agent (u, v: UNICODE_CHARACTER_DATA): BOOLEAN
+						do
+							Result := u.code < v.code
+						end))).sort (data)
+			is_last_printed := True
+			across
+				data as p
+			loop
+				if p.item.category ⊗ categories = 0 then
+						-- The code point does not match the criteria.
+						-- Print last entry in the range if not done yet.
+					if is_in_interval then
+						if not is_last_printed then
+							io.put_character ('-')
+							put_code_point (last)
+							is_last_printed := True
+						end
+						io.put_new_line
+						is_in_interval := False
+					end
+				elseif not is_in_interval then
+						-- This is the first item in the interval.
+					last := p.item.code
+					put_code_point (last)
+					is_in_interval := True
+					is_last_printed := True
+				elseif last + 1 = p.item.code then
+						-- This is the next item in the interval, simply record it.
+					last := last + 1
+					is_last_printed := False
+				else
+						-- The interval is over, and the new one has to be started.
+					if not is_last_printed then
+						io.put_character ('-')
+						put_code_point (last)
+					end
+					io.put_new_line
+					last := p.item.code
+					put_code_point (last)
+					is_in_interval := True
+					is_last_printed := True
+				end
+			end
+			if is_in_interval then
+				if not is_last_printed then
+					io.put_character ('-')
+					put_code_point (last)
+				end
+				io.put_new_line
+			end
+		end
+
+	put_code_point (n: like {UNICODE_CHARACTER_DATA}.code)
+			-- Print code point `n` as 4 or more hexadecimal digits.
+		local
+			s: like {UNICODE_CHARACTER_DATA}.code.to_hex_string
+		do
+			s := n.to_hex_string
+			if n <= 0xFFFF then
+				s := s.tail (4)
+			else
+				from
+				until
+					s [1] /= '0'
+				loop
+					s.remove (1)
+				end
+			end
+			io.put_string_32 (s)
+		end
 
 feature {NONE} -- Command line processing
 

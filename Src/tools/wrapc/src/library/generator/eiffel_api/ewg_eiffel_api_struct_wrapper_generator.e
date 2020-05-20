@@ -762,7 +762,7 @@ feature -- Generate Eiffel API
 
 						-- Using C_STRING instead of STRING
 						-- and NATIVE_STRING instead of STRING_32
-					if a_c_declaration.type.corresponding_eiffel_type_api.same_string ("STRING") then
+					if a_c_declaration.type.corresponding_eiffel_type_api.same_string ("STRING_8") then
 						output_stream.put_string ("C_STRING" )
 					elseif a_c_declaration.type.corresponding_eiffel_type_api.same_string ("STRING_32")  then
 						output_stream.put_string ("NATIVE_STRING" )
@@ -832,7 +832,7 @@ feature -- Generate Eiffel API
 						output_stream.put_string ("%Tset_")
 						output_stream.put_string (a_mapped_eiffel_name)
 						output_stream.put_string (" (a_value: ")
-						if a_c_declaration.type.corresponding_eiffel_type_api.same_string ("STRING") then
+						if a_c_declaration.type.corresponding_eiffel_type_api.same_string ("STRING_8") then
 							output_stream.put_string ("C_STRING" )
 						elseif a_c_declaration.type.corresponding_eiffel_type_api.same_string ("STRING_32")  then
 							output_stream.put_string ("NATIVE_STRING" )
@@ -1024,7 +1024,7 @@ feature -- Generate Eiffel API
 					Result.append (l_name.as_upper)
 					Result.append ("_UNION_API")
 				elseif a_function_type.return_type.is_char_pointer_type then
-					Result.append ("STRING")
+					Result.append ("STRING_8")
 				elseif a_function_type.return_type.is_unicode_char_pointer_type then
 					Result.append ("STRING_32")
 				else
@@ -1063,7 +1063,7 @@ feature -- Generate Eiffel API
 				Result.append (l_name.as_upper)
 				Result.append ("_UNION_API")
 			elseif is_char_pointer_type (a_c_declaration) then
-				Result.append ("STRING")
+				Result.append ("STRING_8")
 			elseif is_unicode_char_pointer_type (a_c_declaration)	then
 				Result.append ("STRING_32")
 			else

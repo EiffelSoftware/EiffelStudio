@@ -96,7 +96,7 @@ feature -- Access
 	corresponding_eiffel_type_api: STRING
 		do
 			if is_char_pointer_type then
-				Result := "STRING"
+				Result := "STRING_8"
 			elseif is_unicode_char_pointer_type then
 				Result := "STRING_32"
 			else

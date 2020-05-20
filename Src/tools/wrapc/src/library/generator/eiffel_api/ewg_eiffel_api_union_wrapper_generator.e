@@ -746,7 +746,7 @@ feature -- Generate Eiffel API
 					output_stream.put_string (" detachable ")
 				end
 
-				if a_c_declaration.type.corresponding_eiffel_type_api.same_string ("STRING")  then
+				if a_c_declaration.type.corresponding_eiffel_type_api.same_string ("STRING_8")  then
 					output_stream.put_string ("C_STRING")
 				elseif a_c_declaration.type.corresponding_eiffel_type_api.same_string ("STRING_32") then
 					output_stream.put_string ("NATIVE_STRING")
@@ -816,7 +816,7 @@ feature -- Generate Eiffel API
 					output_stream.put_string ("%Tset_")
 					output_stream.put_string (a_mapped_eiffel_name)
 					output_stream.put_string (" (a_value: ")
-					if a_c_declaration.type.corresponding_eiffel_type_api.same_string ("STRING") then
+					if a_c_declaration.type.corresponding_eiffel_type_api.same_string ("STRING_8") then
 						output_stream.put_string ("C_STRING")
 					elseif a_c_declaration.type.corresponding_eiffel_type_api.same_string ("STRING_32") then
 						output_stream.put_string ("NATIVE_STRING")

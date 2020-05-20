@@ -50,7 +50,7 @@ feature -- Access
 
 	eiffel_type: STRING
 		do
-			Result := "STRING"
+			Result := "STRING_8"
 		ensure
 			result_not_void: Result /= Void
 		end

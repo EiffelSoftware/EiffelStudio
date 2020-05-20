@@ -432,7 +432,7 @@ feature -- Status Setting
 
 feature {NONE} -- Query
 
-	option_of_name (a_name: READABLE_STRING_8): detachable ARGUMENT_OPTION
+	option_of_name (a_name: READABLE_STRING_GENERAL): detachable ARGUMENT_OPTION
 			-- Retrieves the first switch-qualified option, passed by user, by switch name.
 			--
 			-- `a_name': The switch names to retrieve an options for.
@@ -508,7 +508,7 @@ feature {NONE} -- Query
 			result_contains_attached_valid_items: ∀ l_c: Result ¦ not l_c.is_empty
 		end
 
-	unique_options_values_of_name (a_name: READABLE_STRING_8; a_ignore_case: BOOLEAN): ARRAYED_LIST [IMMUTABLE_STRING_32]
+	unique_options_values_of_name (a_name: READABLE_STRING_GENERAL; a_ignore_case: BOOLEAN): ARRAYED_LIST [IMMUTABLE_STRING_32]
 			-- Retrieves a list of unique switch-qualified option values, passed by user, by switch name.
 			--
 			-- `a_name': The switch names to retrieve a list of options for.

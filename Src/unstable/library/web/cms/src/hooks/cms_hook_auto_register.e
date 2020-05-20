@@ -39,10 +39,12 @@ feature -- Hook
 			if attached {CMS_HOOK_WEBAPI_RESPONSE_ALTER} Current as h_resp then
 				a_hooks.subscribe_to_webapi_response_alter_hook (h_resp)
 			end
-
+			if attached {CMS_HOOK_USER_MANAGEMENT} Current as h_u then
+				a_hooks.subscribe_to_user_management_hook (h_u)
+			end
 		end
 
 note
-	copyright: "2011-2017, Jocelyn Fiat, Javier Velilla, Eiffel Software and others"
+	copyright: "2011-2020, Jocelyn Fiat, Javier Velilla, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 end

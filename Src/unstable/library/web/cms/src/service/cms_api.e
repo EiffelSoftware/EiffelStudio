@@ -378,6 +378,14 @@ feature {CMS_ACCESS} -- Module management
 			m.uninstall (Current)
 		end
 
+	update_module (m: CMS_MODULE; a_installed_version: READABLE_STRING_GENERAL)
+			-- Update module `m'.
+		require
+			module_installed: is_module_installed (m)
+		do
+			m.update (a_installed_version, Current)
+		end
+
 	enable_module (m: CMS_MODULE)
 			-- Enable module `m'.
 		do
@@ -1041,6 +1049,14 @@ feature -- Emails
 				end
 			end
 			create Result.make (setup.site_email, a_to_address, l_subject, a_content)
+		end
+
+	new_html_email (a_to_address: READABLE_STRING_8; a_subject: READABLE_STRING_8; a_content: READABLE_STRING_8): CMS_EMAIL
+			-- New HTML email object using MIME header.
+		do
+			Result := new_email (a_to_address, a_subject, a_content)
+			Result.add_header_line ("MIME-Version:1.0")
+			Result.add_header_line ("Content-Type: text/html; charset=utf-8")
 		end
 
 	process_email (e: CMS_EMAIL)

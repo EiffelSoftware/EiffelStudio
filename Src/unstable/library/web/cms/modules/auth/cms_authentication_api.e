@@ -119,4 +119,19 @@ feature -- Token Generation
 			Result := l_token
 		end
 
+feature -- Hooks
+
+	invoke_get_login_redirection (a_response: CMS_RESPONSE; a_destination_url: detachable READABLE_STRING_8)
+		do
+			if attached cms_api.hooks.subscribers ({CMS_HOOK_AUTHENTICATION}) as lst then
+				across
+					lst as ic
+				loop
+					if attached {CMS_HOOK_AUTHENTICATION} ic.item as h then
+						h.get_login_redirection (a_response, a_destination_url)
+					end
+				end
+			end
+		end
+
 end

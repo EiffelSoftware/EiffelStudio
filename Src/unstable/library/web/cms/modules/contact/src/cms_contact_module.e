@@ -315,19 +315,15 @@ feature -- Hooks
 
 					write_debug_log (generator + ".handle_post_contact: send notification email")
 
-					e := api.new_email (l_params.admin_email, "Contact message from " + html_encoded (l_name.value) + " (" + html_encoded (l_contact_email_address) + ")" , email_html_message ("notification", r, vars))
+					e := api.new_html_email (l_params.admin_email, "Contact message from " + html_encoded (l_name.value) + " (" + html_encoded (l_contact_email_address) + ")" , email_html_message ("notification", r, vars))
 					e.set_from_address (l_params.admin_email)
-					e.add_header_line ("MIME-Version:1.0")
-					e.add_header_line ("Content-Type: text/html; charset=utf-8")
 					api.process_email (e)
 
 					if not api.has_error then
 							-- Send Contact email to the user
 						write_information_log (generator + ".handle_post_contact: preparing the message.")
-						e := api.new_email (l_contact_email_address, l_params.contact_subject_text, email_html_message ("message", r, vars))
+						e := api.new_html_email (l_contact_email_address, l_params.contact_subject_text, email_html_message ("message", r, vars))
 						e.set_from_address (l_params.admin_email)
-						e.add_header_line ("MIME-Version:1.0")
-						e.add_header_line ("Content-Type: text/html; charset=utf-8")
 						write_debug_log (generator + ".handle_post_contact: send_contact_email")
 						api.process_email (e)
 					end

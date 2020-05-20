@@ -83,6 +83,48 @@ feature -- Execution
 					r.set_main_content (s)
 					r.execute
 				end
+			elseif
+				attached {WSF_STRING} req.query_parameter ("op") as l_op and then l_op.same_string ("update") and then
+				attached {WSF_TABLE} req.query_parameter ("module_update") as tb
+			then
+				create {GENERIC_VIEW_CMS_RESPONSE} r.make (req, res, api)
+				if attached api.setup.string_8_item ("administration.installation_access") as l_access then
+					if l_access.is_case_insensitive_equal ("none") then
+						l_denied := True
+					elseif l_access.is_case_insensitive_equal ("permission") then
+						l_denied := not r.has_permission ("install modules")
+					end
+				else
+					l_denied := True
+				end
+				if l_denied then
+					send_custom_access_denied ("You do not have permission to access CMS module update procedure!", Void, req, res)
+				else
+					create s.make_empty
+					across
+						tb as ic
+					loop
+						if attached api.setup.modules.item_by_name (ic.item.string_representation) as l_module then
+							if api.is_module_installed (l_module) then
+								if attached api.installed_module_version (l_module) as v and then not v.same_string (l_module.version) then
+									api.update_module (l_module, v)
+									if attached api.installed_module_version (l_module) as nv and then not nv.same_string (l_module.version) then
+										s.append ("<p>ERROR: Module " + l_module.name + " failed to be updated!</p>")
+									else
+										s.append ("<p>Module " + l_module.name + " was successfully updated.</p>")
+									end
+								else
+									s.append ("<p>Module " + l_module.name + " does not have any update available.</p>")
+								end
+							else
+								s.append ("<p>Module " + l_module.name + " is not installed.</p>")
+							end
+						end
+					end
+					s.append (r.link ("Back to modules management", r.location, Void))
+					r.set_main_content (s)
+					r.execute
+				end
 			else
 				create {GENERIC_VIEW_CMS_RESPONSE} r.make (req, res, api)
 				create s.make_empty

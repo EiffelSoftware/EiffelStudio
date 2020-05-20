@@ -284,8 +284,7 @@ $(document).ready(function() {
 									l_email_title := resolved_template_text (api, l_title, l_user)
 									l_email_messg := resolved_template_text (api, l_message, l_user)
 
-
-									e := api.new_email (l_user_email, l_email_title, l_email_messg)
+									e := api.new_html_email (l_user_email, l_email_title, l_email_messg)
 
 									s.append (" <pre>")
 									s.append (e.message)

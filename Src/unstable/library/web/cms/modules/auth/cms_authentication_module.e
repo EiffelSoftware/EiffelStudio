@@ -406,38 +406,44 @@ feature -- Handler
 				create {GENERIC_VIEW_CMS_RESPONSE} r.make (req, res, a_auth_api.cms_api)
 				r.set_redirection ("account")
 				r.execute
-			elseif attached a_auth_api.cms_api.module_by_name ("session_auth") then
-					-- FIXME: find better solution to support a default login system.
-				create {GENERIC_VIEW_CMS_RESPONSE} r.make (req, res, a_auth_api.cms_api)
-				if
-					attached {WSF_STRING} req.item ("destination") as l_destination and then
-					attached l_destination.value as v and then
-					v.is_valid_as_string_8
-				then
-					r.set_redirection ("account/auth/roc-session-login?destination=" + secured_url_content (v.to_string_8))
-				else
-					r.set_redirection ("account/auth/roc-session-login")
-				end
-
-				r.execute
-
-			elseif attached a_auth_api.cms_api.module_by_name ("basic_auth") then
-					-- FIXME: find better solution to support a default login system.
-				create {GENERIC_VIEW_CMS_RESPONSE} r.make (req, res, a_auth_api.cms_api)
-
-				if
-					attached {WSF_STRING} req.item ("destination") as l_destination and then
-					attached l_destination.value as v and then
-					v.is_valid_as_string_8
-				then
-					r.set_redirection ("account/auth/roc-basic-login?destination=" + secured_url_content (v.to_string_8))
-				else
-					r.set_redirection ("account/auth/roc-basic-login")
-				end
-
-				r.execute
 			else
 				create {GENERIC_VIEW_CMS_RESPONSE} r.make (req, res, a_auth_api.cms_api)
+				if
+					attached {WSF_STRING} req.item ("destination") as l_destination and then
+					attached l_destination.value as v and then
+					v.is_valid_as_string_8
+				then
+					a_auth_api.invoke_get_login_redirection (r, v.to_string_8)
+				else
+					a_auth_api.invoke_get_login_redirection (r, Void)
+				end
+--				if r.redirection = Void then
+--					if attached a_auth_api.cms_api.module_by_name ("session_auth") then
+--							-- FIXME: find better solution to support a default login system.
+--						if
+--							attached {WSF_STRING} req.item ("destination") as l_destination and then
+--							attached l_destination.value as v and then
+--							v.is_valid_as_string_8
+--						then
+--							r.set_redirection ("account/auth/roc-session-login?destination=" + secured_url_content (v.to_string_8))
+--						else
+--							r.set_redirection ("account/auth/roc-session-login")
+--						end
+--					elseif attached a_auth_api.cms_api.module_by_name ("basic_auth") then
+--							-- FIXME: find better solution to support a default login system.
+--						if
+--							attached {WSF_STRING} req.item ("destination") as l_destination and then
+--							attached l_destination.value as v and then
+--							v.is_valid_as_string_8
+--						then
+--							r.set_redirection ("account/auth/roc-basic-login?destination=" + secured_url_content (v.to_string_8))
+--						else
+--							r.set_redirection ("account/auth/roc-basic-login")
+--						end
+--					else
+--							-- No login ...
+--					end
+--				end
 				r.execute
 			end
 		end

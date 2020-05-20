@@ -200,6 +200,20 @@ feature -- Access: user
 
 feature -- Change User
 
+	new_active_user (a_username: READABLE_STRING_GENERAL; a_email: READABLE_STRING_8; a_password: detachable READABLE_STRING_GENERAL): CMS_USER
+		local
+		do
+			create Result.make (a_username)
+			Result.set_email (a_email)
+			if a_password = Void then
+				Result.set_password (new_random_user_password (Result))
+			else
+				Result.set_password (a_password)
+			end
+			Result.mark_active
+			new_user (Result)
+		end
+
 	new_user (a_user: CMS_USER)
 			-- Add a new user `a_user`.
 		require
@@ -213,6 +227,9 @@ feature -- Change User
 				error_handler.append (user_storage.error_handler)
 			else
 				error_handler.add_custom_error (0, "bad new user request", "Missing password to create new user!")
+			end
+			if not has_error then
+				cms_api.hooks.invoke_new_user (a_user)
 			end
 		end
 
@@ -246,6 +263,27 @@ feature -- Change User
 			reset_error
 			user_storage.delete_user (a_user)
 			error_handler.append (user_storage.error_handler)
+		end
+
+feature -- Password helper
+
+	new_random_user_password (a_user: CMS_USER): STRING
+			-- Generate a new token activation token
+		local
+			l_token: STRING
+			l_security: SECURITY_PROVIDER
+			l_encode: URL_ENCODER
+		do
+			create l_security
+			l_token := l_security.token
+			create l_encode
+			from until l_token.same_string (l_encode.encoded_string (l_token)) loop
+				-- Loop ensure that we have a security token that does not contain characters that need encoding.
+			    -- We cannot simply to an encode-decode because the email sent to the user will contain an encoded token
+				-- but the user will need to use an unencoded token if activation has to be done manually.
+				l_token := l_security.token
+			end
+			Result := l_token + url_encoded (a_user.name) + a_user.creation_date.out
 		end
 
 feature -- Credential validation

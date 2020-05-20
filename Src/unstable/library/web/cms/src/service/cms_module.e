@@ -160,6 +160,7 @@ feature {CMS_API} -- Module management
 		do
 			if a_is_enabled then
 				api.storage.set_custom_value ("is_enabled", version, "module-" + name)
+				api.storage.set_custom_value ("is_installed", version, "module-" + name)
 				enable
 			else
 				api.storage.unset_custom_value ("is_enabled", "module-" + name)
@@ -184,6 +185,14 @@ feature {CMS_API} -- Module management
 			is_installed: is_installed (api)
 		do
 			api.storage.set_custom_value ("is_installed", "no", "module-" + name)
+		end
+
+	update (a_installed_version: READABLE_STRING_GENERAL; api: CMS_API)
+			-- Update module from version `a_installed_version` to current `version`.
+		require
+			is_installed: is_installed (api)
+		do
+			update_status_in_storage (True, api)
 		end
 
 feature -- Settings
@@ -246,6 +255,6 @@ invariant
 	version_set: not version.is_whitespace
 
 note
-	copyright: "2011-2018, Jocelyn Fiat, Javier Velilla, Eiffel Software and others"
+	copyright: "2011-2020, Jocelyn Fiat, Javier Velilla, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 end

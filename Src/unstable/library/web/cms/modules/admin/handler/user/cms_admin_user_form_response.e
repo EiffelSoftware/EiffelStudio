@@ -554,11 +554,7 @@ feature -- Form
 						attached a_form_data.string_item ("email") as l_email and then
 						l_email.is_valid_as_string_8
 					then
-						create u.make (l_username)
-						u.set_email (l_email.to_string_8)
-						u.set_password (new_random_password (u))
-						u.mark_active
-						api.user_api.new_user (u)
+						u := api.user_api.new_active_user (l_username, l_email.to_string_8, Void)
 						if api.user_api.has_error then
 							-- handle error
 						else
@@ -570,28 +566,6 @@ feature -- Form
 					end
 				end
 			end
-		end
-
-
-feature -- Generation
-
-	new_random_password (u: CMS_USER): STRING
-			-- Generate a new token activation token
-		local
-			l_token: STRING
-			l_security: SECURITY_PROVIDER
-			l_encode: URL_ENCODER
-		do
-			create l_security
-			l_token := l_security.token
-			create l_encode
-			from until l_token.same_string (l_encode.encoded_string (l_token)) loop
-				-- Loop ensure that we have a security token that does not contain characters that need encoding.
-			    -- We cannot simply to an encode-decode because the email sent to the user will contain an encoded token
-				-- but the user will need to use an unencoded token if activation has to be done manually.
-				l_token := l_security.token
-			end
-			Result := l_token + url_encoded (u.name) + u.creation_date.out
 		end
 
 end

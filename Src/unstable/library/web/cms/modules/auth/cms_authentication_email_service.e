@@ -220,10 +220,8 @@ feature {NONE} -- Implementation
 			utf: UTF_CONVERTER
 		do
 			reset_error
-			l_email := cms_api.new_email (a_to_address, utf.escaped_utf_32_string_to_utf_8_string_8 (a_subjet), utf.escaped_utf_32_string_to_utf_8_string_8 (a_content))
+			l_email := cms_api.new_html_email (a_to_address, utf.escaped_utf_32_string_to_utf_8_string_8 (a_subjet), utf.escaped_utf_32_string_to_utf_8_string_8 (a_content))
 			l_email.set_from_address (a_from_address)
-			l_email.add_header_line ("MIME-Version:1.0")
-			l_email.add_header_line ("Content-Type: text/html; charset=utf-8")
 			cms_api.process_email (l_email)
 			if cms_api.has_error then
 				error_handler.add_custom_error (-1, generator + "send_message failed", cms_api.string_representation_of_errors)

@@ -61,6 +61,12 @@
 					<concurrency value="none"/>
 				</condition>
 			</file_rule>
+			<file_rule>
+				<exclude>/tests/st$</exclude>
+				<condition>
+					<concurrency excluded_value="none"/>
+				</condition>
+			</file_rule>
 		</cluster>
 	</target>
 	<target name="eweasel_st" extends="common">

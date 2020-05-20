@@ -8,14 +8,6 @@ note
 class
 	UTF8_READER_WRITER
 
-inherit
-	ANY
-
-	UNICODE_CONVERSION
-		export
-			{NONE} all
-		end
-
 feature -- Reading
 
 	file_read_string_32_with_length (a_file: FILE; n_bytes: INTEGER): STRING_32
@@ -33,7 +25,7 @@ feature -- Reading
 				a_file.read_stream (n_bytes)
 				l_read := a_file.last_string
 				if l_read /= Void then
-					Result := utf8_to_utf32 (l_read)
+					Result := {UTF_CONVERTER}.utf_8_string_8_to_string_32 (l_read)
 				else
 					create Result.make_empty
 				end
@@ -53,13 +45,13 @@ feature -- Writing
 		local
 			l_str_to_write: STRING
 		do
-			l_str_to_write := utf32_to_utf8 (a_string)
+			l_str_to_write := {UTF_CONVERTER}.utf_32_string_to_utf_8_string_8 (a_string)
 			a_file.put_string (l_str_to_write)
 		end
 
 note
 	library:   "Internationalization library"
-	copyright: "Copyright (c) 1984-2009, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2020, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

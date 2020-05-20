@@ -322,26 +322,11 @@ feature -- Conversion
 feature -- Validate
 
 	is_code_point_valid_string_8 (a_utf8_str: STRING_8): BOOLEAN
-			-- Is Unicode code point  of `a_utf_8_str' valid for STRING_8?
+			-- Is Unicode code point of `a_utf_8_str' valid for STRING_8?
 		require
 			a_string_not_void: a_utf8_str /= Void
-		local
-			i, nb: INTEGER
-			l_ref: INTEGER_32_REF
 		do
-			from
-				i := 1
-				nb := a_utf8_str.count
-				create l_ref
-				Result := True
-			until
-				i > nb or not Result
-			loop
-				if not read_character_from_utf8 (i, l_ref, a_utf8_str).is_character_8 then
-					Result := False
-				end
-				i := i + l_ref.item
-			end
+			Result := {UTF_CONVERTER}.is_valid_utf_8_string_8 (a_utf8_str)
 		end
 
 feature -- Detection

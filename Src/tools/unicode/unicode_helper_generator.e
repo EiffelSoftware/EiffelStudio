@@ -25,9 +25,9 @@ feature {NONE} -- Initialization
 				if attached unicode_data as l_unicode_data then
 					process_properties (argument_parser.property_template, l_unicode_data)
 				elseif has_error then
-					io.error.put_string (l_file + ": error occured!%N")
+					io.error.put_string_32 (l_file + ": error occured!%N")
 				else
-					io.error.put_string (l_file + " has no unicode character data in it.%N")
+					io.error.put_string_32 (l_file + " has no unicode character data in it.%N")
 				end
 			end
 		end

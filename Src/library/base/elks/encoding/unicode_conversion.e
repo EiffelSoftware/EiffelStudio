@@ -237,29 +237,7 @@ feature -- Explicit Conversion
 				-- According to ISO/IEC 10646, the maximum Unicode point is 10FFFF.
 			a_code_is_valid: a_code >= 0 and then a_code <= 0x10FFFF
 		do
-				if a_code <= 127 then
-						-- Of the form 0xxxxxxx.
-					a_string.append_code (a_code)
-				elseif a_code <= 0x7FF then
-						-- Insert 110xxxxx 10xxxxxx.
-					a_string.append_code (0xC0 | (a_code |>> 6))
-					a_string.append_code (0x80 | (a_code & 0x3F))
-				elseif a_code <= 0xFFFF then
-						-- Start with 1110xxxx
-					a_string.append_code (0xE0 | (a_code |>> 12))
-					a_string.append_code (0x80 | ((a_code |>> 6) & 0x3F))
-					a_string.append_code (0x80 | (a_code & 0x3F))
-				else -- a_code <= 0x10FFFF then
-						-- Start with 11110xxx
-					check
-						max_4_bytes: a_code <= 0x10FFFF
-						-- UTF-8 has been restricted to 4 bytes characters
-					end
-					a_string.append_code (0xF0 | (a_code |>> 18))
-					a_string.append_code (0x80 | ((a_code |>> 12) & 0x3F))
-					a_string.append_code (0x80 | ((a_code |>> 6) & 0x3F))
-					a_string.append_code (0x80 | (a_code & 0x3F))
-				end
+			{UTF_CONVERTER}.utf_32_code_into_utf_8_string_8 (a_code, a_string)
 		ensure
 			a_string_appended: (a_code <= 127 implies a_string.count = old a_string.count + 1) and
 								((a_code > 127 and a_code <= 0x7FF) implies a_string.count = old a_string.count + 2) and

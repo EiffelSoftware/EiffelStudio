@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "Unicode description of a character code."
 	date: "$Date$"
 	revision: "$Revision$"
@@ -95,6 +95,7 @@ feature {NONE} -- Initialization
 				is_space := (not general_category.is_empty and then general_category.item (1) = 'Z') or
 					bidirectional_category.same_string ("WS") or bidirectional_category.same_string ("B") or
 					bidirectional_category.same_string ("S")
+				category := category_mask [general_category]
 			else
 				code := 0
 				name := ""
@@ -340,5 +341,92 @@ feature {NONE} -- Implementation
 	is_hexa_digit_flag: NATURAL_8 = 0x40
 	is_space_flag: NATURAL_8 = 0x80
 			-- Various flags
+
+feature -- General category
+
+	category: NATURAL_32
+			-- A bit mask with the bit set for the specific category.
+
+	category_letter_uppercase: NATURAL_32 = 0x0000_0001
+	category_letter_lowercase: NATURAL_32 = 0x0000_0002
+	category_letter_titlecase: NATURAL_32 = 0x0000_0004
+	category_letter_modifier: NATURAL_32 = 0x0000_0008
+	category_letter_other: NATURAL_32 = 0x0000_0010
+
+	category_mark_nonspacing: NATURAL_32 = 0x0000_0020
+	category_mark_spacing_combining: NATURAL_32 = 0x0000_0040
+	category_mark_enclosing: NATURAL_32 = 0x0000_0080
+
+	category_number_decimal_digit: NATURAL_32 = 0x0000_0100
+	category_number_letter: NATURAL_32 = 0x0000_0200
+	category_number_other: NATURAL_32 = 0x0000_0400
+
+	category_punctuation_connector: NATURAL_32 = 0x0000_0800
+	category_punctuation_dash: NATURAL_32 = 0x0000_1000
+	category_punctuation_open: NATURAL_32 = 0x0000_2000
+	category_punctuation_close: NATURAL_32 = 0x0000_4000
+	category_punctuation_initial_quote: NATURAL_32 = 0x0000_8000
+	category_punctuation_final_quote: NATURAL_32 = 0x0001_0000
+	category_punctuation_other: NATURAL_32 = 0x0002_0000
+
+	category_symbol_math: NATURAL_32 = 0x0004_0000
+	category_symbol_currency: NATURAL_32 = 0x0008_0000
+	category_symbol_modifier: NATURAL_32 = 0x0010_0000
+	category_symbol_other: NATURAL_32 = 0x0020_0000
+
+	category_separator_space: NATURAL_32 = 0x0040_0000
+	category_separator_line: NATURAL_32 = 0x0080_0000
+	category_separator_paragraph: NATURAL_32 = 0x0100_0000
+
+	category_other_control: NATURAL_32 = 0x0200_0000
+	category_other_format: NATURAL_32 = 0x0400_0000
+	category_other_surrogate: NATURAL_32 = 0x0800_0000
+	category_other_private_use: NATURAL_32 = 0x1000_0000
+	category_other_not_assigned: NATURAL_32 = 0x0200_0000
+
+	category_mask: STRING_TABLE [NATURAL_32]
+			-- Category mask indexed by its code in the database.
+		once
+			create Result.make (32)
+
+			Result ["Lu"] := category_letter_uppercase
+			Result ["Ll"] := category_letter_lowercase
+			Result ["Lt"] := category_letter_titlecase
+			Result ["Lm"] := category_letter_modifier
+			Result ["Lo"] := category_letter_other
+
+			Result ["Mn"] := category_mark_nonspacing
+			Result ["Mc"] := category_mark_spacing_combining
+			Result ["Me"] := category_mark_enclosing
+
+			Result ["Nd"] := category_number_decimal_digit
+			Result ["Nl"] := category_number_letter
+			Result ["No"] := category_number_other
+
+			Result ["Pc"] := category_punctuation_connector
+			Result ["Pd"] := category_punctuation_dash
+			Result ["Ps"] := category_punctuation_open
+			Result ["Pe"] := category_punctuation_close
+			Result ["Pi"] := category_punctuation_initial_quote
+			Result ["Pf"] := category_punctuation_final_quote
+			Result ["Po"] := category_punctuation_other
+
+			Result ["Sm"] := category_symbol_math
+			Result ["Sc"] := category_symbol_currency
+			Result ["Sk"] := category_symbol_modifier
+			Result ["So"] := category_symbol_other
+
+			Result ["Zs"] := category_separator_space
+			Result ["Zl"] := category_separator_line
+			Result ["Zp"] := category_separator_paragraph
+
+			Result ["Cc"] := category_other_control
+			Result ["Cf"] := category_other_format
+			Result ["Cs"] := category_other_surrogate
+			Result ["Co"] := category_other_private_use
+			Result ["Cn"] := category_other_not_assigned
+		ensure
+			class
+		end
 
 end

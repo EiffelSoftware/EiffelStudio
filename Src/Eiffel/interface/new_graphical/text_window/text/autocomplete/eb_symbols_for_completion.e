@@ -115,7 +115,7 @@ feature -- Query
 			s: STRING_32
 		do
 			create s.make_from_string (title)
-			if symbol /= '%U' then
+			if not symbol.is_empty and then symbol [1] /= '%U' then
 				s.append_character (':')
 				s.append_character (' ')
 				s.append (symbol)
@@ -131,7 +131,7 @@ feature -- Query
 			c: CHARACTER_32
 		do
 			create Result.make (title.count)
-			if symbol /= '%U' then
+			if not symbol.is_empty and then symbol [1] /= '%U' then
 				Result.append (symbol)
 				Result.append_character (' ')
 				Result.append_character (':')
@@ -144,25 +144,50 @@ feature -- Query
 					Result.append_character (')')
 				end
 				Result.append_character ('%N')
+				Result.append ("Code points: ")
+				across
+					symbol as ic
+				loop
+					c := ic.item
+					Result.append ("U+")
+					Result.append (code_as_hexadecimal (c.natural_32_code, 4))
+				end
+				Result.append ("%N")
+
 				if symbol.count = 1 then
-					Result.append ("Eiffel code: %'%%/")
+					Result.append ("Eiffel syntax: %'%%/x")
 					c := symbol [1]
-					Result.append (c.natural_32_code.out)
+					Result.append (code_as_hexadecimal (c.natural_32_code, 4))
 					Result.append ("/%'%N")
 				else
-					Result.append ("Eiffel code: %"")
+					Result.append ("Eiffel syntax: %"")
 					across
 						symbol as ic
 					loop
 						c := ic.item
-						Result.append ("%%/")
-						Result.append (c.natural_32_code.out)
-						Result.append ("/")
+						if c.is_alpha_numeric then
+							Result.append_character (c)
+						else
+							Result.append ("%%/x")
+							Result.append (code_as_hexadecimal (c.natural_32_code, 4))
+							Result.append ("/")
+						end
 					end
 					Result.append ("%"%N")
 				end
 			else
 				Result.append ("%NList of unicode symbols...")
+			end
+		end
+
+	code_as_hexadecimal (a_code: NATURAL_32; a_min_count: INTEGER): STRING
+		do
+			Result := a_code.to_hex_string
+			from
+			until
+				Result [1] /= '0' or Result.count <= a_min_count
+			loop
+				Result.remove_head (1)
 			end
 		end
 

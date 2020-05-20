@@ -179,24 +179,26 @@ feature {NONE} -- Persistency
 			end
 		end
 
-	symbol_from_string (s: READABLE_STRING_8): STRING_32
+	symbol_from_string (a_string: READABLE_STRING_8): STRING_32
 		local
 			i,j: INTEGER
+			s: STRING_32
 		do
-			j := s.index_of ('+', 1)
+			s := {UTF_CONVERTER}.utf_8_string_8_to_string_32 (a_string)
+			j := s.index_of ('>', 1)
 			if j = 0 then
 				create Result.make (1)
-				Result.append_character (character_from_string (s))
+				append_unescape_string (s, Result)
 			else
-				create Result.make (s.occurrences ('+') + 1)
+				create Result.make (s.occurrences ('>') + 1)
 				from
 					i := 1
 				until
 					j = 0
 				loop
-					Result.append_character (character_from_string (s.substring (i, j - 1)))
+					append_unescape_string (s.substring (i, j - 1), Result)
 					i := j + 1
-					j := s.index_of ('+', i)
+					j := s.index_of ('>', i)
 					if j = 0 and i < s.count then
 						j := s.count + 1
 					end
@@ -204,25 +206,22 @@ feature {NONE} -- Persistency
 			end
 		end
 
-	character_from_string (s: READABLE_STRING_8): CHARACTER_32
+	append_unescape_string (s: READABLE_STRING_32; a_target: STRING_32)
 		local
 			i: INTEGER
 			s32: STRING_32
 			utf: UTF_CONVERTER
 		do
-			if s.starts_with_general ("0x") then
+			if s.starts_with_general ("0x") or s.starts_with_general ("U+") then
 				i := {HEXADECIMAL_STRING_CONVERTER}.hex_to_integer_32 (s.substring (3, s.count))
-				Result := i.to_character_32
+				a_target.append_character (i.to_character_32)
 			elseif s.count >= 3 and s.is_integer then
 				i := s.to_integer
 				if i >= 128 then
-					Result := i.to_character_32
+					a_target.append_character (i.to_character_32)
 				end
 			else
-				s32 := utf.utf_8_string_8_to_string_32 (s)
-				if s32.count = 1 then
-					Result := s32 [1]
-				end
+				a_target.append (s)
 			end
 		end
 

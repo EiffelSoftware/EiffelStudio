@@ -213,7 +213,6 @@ feature {NONE} -- Visitors
 			l_base_class: CLASS_C
 			l_special_info: CREATE_TYPE
 			l_special_type: TYPE_A
-			l_special_class_type: SPECIAL_CLASS_TYPE
 			i: INTEGER
 		do
 			l_real_ty ?= context.real_type (a_node.type)
@@ -242,35 +241,35 @@ feature {NONE} -- Visitors
 			check
 				is_special_type: l_special_type /= Void and then l_special_type.base_class.lace_class = System.special_class
 			end
-			l_special_class_type ?= l_special_type.associated_class_type (context.context_class_type.type)
-			check
-				l_class_type_not_void: l_special_class_type /= Void
-			end
-			l_special_class_type.make_creation_byte_code (ba)
+			if attached {SPECIAL_CLASS_TYPE} l_special_type.associated_class_type (context.context_class_type.type) as l_special_class_type then
+				l_special_class_type.make_creation_byte_code (ba)
 
-				-- We compute the expressions and store them into the special
-			from
-				a_node.expressions.start
-				i := 0
-			until
-				a_node.expressions.after
-			loop
-				l_expr ?= a_node.expressions.item
-				check
-					l_expr_not_void: l_expr /= Void
+					-- We compute the expressions and store them into the special
+				from
+					a_node.expressions.start
+					i := 0
+				until
+					a_node.expressions.after
+				loop
+					l_expr ?= a_node.expressions.item
+					check
+						l_expr_not_void: l_expr /= Void
+					end
+					make_expression_byte_code_for_type (l_expr, l_target_type)
+					ba.append (bc_special_extend)
+					ba.append_integer (i)
+					i := i + 1
+					a_node.expressions.forth
 				end
-				make_expression_byte_code_for_type (l_expr, l_target_type)
-				ba.append (bc_special_extend)
-				ba.append_integer (i)
-				i := i + 1
-				a_node.expressions.forth
-			end
 
-				-- Now we create the ARRAY instance vi the call to `to_array' from SPECIAL
-			l_base_class := l_special_class_type.associated_class
-			l_feat_i := l_base_class.feature_table.item_id ({PREDEFINED_NAMES}.to_array_name_id)
-			ba.append (Bc_array)
-			ba.append_integer (l_feat_i.rout_id_set.first)
+					-- Now we create the ARRAY instance vi the call to `to_array' from SPECIAL
+				l_base_class := l_special_class_type.associated_class
+				l_feat_i := l_base_class.feature_table.item_id ({PREDEFINED_NAMES}.to_array_name_id)
+				ba.append (Bc_array)
+				ba.append_integer (l_feat_i.rout_id_set.first)
+			else
+				check is_special_class_type: False then end
+			end
 		end
 
 	process_assert_b (a_node: ASSERT_B)
@@ -1617,8 +1616,9 @@ feature {NONE} -- Visitors
 			l_old_hidden_code_level := l_context.hidden_code_level
 			l_context.set_hidden_code_level (0)
 
-				-- Generate loop iteration part.
-			generate_melted_debugger_hook (ba)
+				-- Allow the debugger to stop after a nested call.
+			generate_melted_debugger_hook_nested
+				-- Initialize cursor without generating a debugger hook.
 			l_context.enter_hidden_code
 			a_node.iteration_code.process (Current)
 			l_context.exit_hidden_code
@@ -1702,8 +1702,12 @@ feature {NONE} -- Visitors
 			ba.append (bc_lassign)
 			ba.append_short_integer (result_local_number)
 
-				-- Advance the loop cursor.
+				-- Allow the debugger to stop after a nested call.
+			generate_melted_debugger_hook_nested
+				-- Advance cursor without generating a debugger hook.
+			l_context.enter_hidden_code
 			a_node.advance_code.process (Current)
+			l_context.exit_hidden_code
 
 				-- Save hook context & restore recorded context.
 			body_breakpoint_slot := l_context.get_breakpoint_slot

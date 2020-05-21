@@ -2931,6 +2931,7 @@ feature {NONE} -- Implementation
 			iteration: ITERATION_AS
 			indent: PROCEDURE
 			exdent: PROCEDURE
+			exdent_no_wrap: PROCEDURE
 		do
 			if not expr_type_visiting then
 				l_text_formatter_decorator := text_formatter_decorator
@@ -2953,9 +2954,11 @@ feature {NONE} -- Implementation
 							text_formatter_decorator.put_new_line
 							text_formatter_decorator.exdent
 						end
+					exdent_no_wrap := agent text_formatter_decorator.exdent
 				else
 					indent := agent text_formatter_decorator.put_space
 					exdent := indent
+					exdent_no_wrap := agent do_nothing
 				end
 				l_text_formatter_decorator.set_separator (Void)
 				l_text_formatter_decorator.set_new_line_between_tokens
@@ -2968,7 +2971,6 @@ feature {NONE} -- Implementation
 					l_text_formatter_decorator.process_symbol_text (ti_colon)
 					l_text_formatter_decorator.put_space
 					l_text_formatter_decorator.new_expression
-					put_breakable
 					iteration.expression.process (Current)
 					l_text_formatter_decorator.put_space
 					l_text_formatter_decorator.process_keyword_text (ti_broken_bar, Void)
@@ -2976,7 +2978,7 @@ feature {NONE} -- Implementation
 					l_text_formatter_decorator.new_expression
 					put_breakable
 					l_as.expression.process (Current)
-					exdent.call
+					exdent_no_wrap.call
 				else
 					append_iteration_as (iteration, indent, exdent)
 					if attached l_as.invariant_part as p then

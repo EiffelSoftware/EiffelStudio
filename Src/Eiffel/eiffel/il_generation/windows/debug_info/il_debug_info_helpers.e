@@ -1,10 +1,10 @@
-note
+﻿note
 	description : "Objects that help computing file name for IL debug info"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
-	author      : "$Author$"
-	date        : "$Date$"
-	revision    : "$Revision$"
+	author: "$Author$"
+	date: "$Date$"
+	revision: "$Revision$"
 
 class
 	IL_DEBUG_INFO_HELPERS
@@ -99,24 +99,24 @@ feature {NONE} -- File name data From compiler world
 			Result := project_location.final_assemblies_path
 		end
 
-	precompilation_module_name (a_system_name: STRING): STRING
+	precompilation_module_name (a_system_name: READABLE_STRING_32): READABLE_STRING_32
 		do
 			Result := a_system_name + ".dll"
 		end
 
-	workbench_precompilation_module_filename (a_system_name: STRING): PATH
+	workbench_precompilation_module_filename (a_system_name: READABLE_STRING_32): PATH
 		do
 			Result := workbench_assembly_directory_path_name.extended (precompilation_module_name (a_system_name))
 		end
 
-	finalized_precompilation_module_filename (a_system_name: STRING): PATH
+	finalized_precompilation_module_filename (a_system_name: READABLE_STRING_32): PATH
 			-- Finalized precompilation module file name for `a_system_name'.
 		do
 			Result := finalized_assembly_directory_path_name.extended (precompilation_module_name (a_system_name))
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2012, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2020, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
@@ -147,4 +147,4 @@ note
 			Customer support http://support.eiffel.com
 		]"
 
-end -- class IL_DEBUG_INFO_HELPERS
+end

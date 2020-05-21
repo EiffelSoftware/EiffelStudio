@@ -300,7 +300,7 @@ feature -- Access to module name computing
 			class_c_not_void: a_class_c /= Void
 			a_class_c_is_not_external: not a_class_c.is_external
 		local
-			l_assembly_name: STRING
+			l_assembly_name: like {ASSEMBLY_INFO}.assembly_name
 			l_type_id: INTEGER
 			l_is_single_module: BOOLEAN
 		do
@@ -352,7 +352,7 @@ feature -- Access to module name computing
 			class_type_not_void: a_class_type /= Void
 			a_class_type_is_not_external: not a_class_type.is_external
 		local
-			l_assembly_name: STRING
+			l_assembly_name: like {ASSEMBLY_INFO}.assembly_name
 			l_type_id: INTEGER
 			l_is_single_module: BOOLEAN
 		do
@@ -989,7 +989,7 @@ feature {CIL_CODE_GENERATOR} -- Cleaning
 			 then
 				last_module_info_cleaned := l_module_filename
 				debug ("debugger_il_info_trace")
-					print ("Cleaning : " + l_module_filename.name.as_string_8 + "%N")
+					io.put_string_32 ({STRING_32} "Cleaning : " + l_module_filename.name + "%N")
 				end
 
 				l_info_from_module := info_from_module_if_exists (l_module_filename.name)
@@ -1276,7 +1276,7 @@ feature {NONE}-- Implementation for save and load task
 		do
 			if not retried then
 				debug ("debugger_il_info_trace")
-					io.error.put_string ("Importing IL Info from [" + a_fn.name.as_string_8 + "] %N")
+					io.error.put_string_32 ({STRING_32}"Importing IL Info from [" + a_fn.name + "] %N")
 				end
 				Result := True
 
@@ -1320,10 +1320,10 @@ feature {NONE}-- Implementation for save and load task
 									io.error.put_string ("Your project's location changed !!!%N")
 									io.error.put_string (" [Previous] %N")
 									io.error.put_string ("  - System   = " + l_dbg_system_name + "%N")
-									io.error.put_string ("  - Location = " + l_dbg_info_project_path +"%N")
+									io.error.put_string_32 ({STRING_32} "  - Location = " + l_dbg_info_project_path +"%N")
 									io.error.put_string (" [Current ] %N")
 									io.error.put_string ("  - System   = " + system.name + "%N")
-									io.error.put_string ("  - Location = " + l_current_project_path.as_string_8 +"%N")
+									io.error.put_string_32 ({STRING_32} "  - Location = " + l_current_project_path +"%N")
 									io.error.put_string (" => Updating data ... ")
 								end
 								create l_patched_dbg_info_modules.make (l_dbg_info_modules.count)
@@ -1368,7 +1368,7 @@ feature {NONE}-- Implementation for save and load task
 								l_info_module := m.item
 								update_imported_precompilation_info_module (a_system_name, l_info_module)
 								debug ("debugger_il_info_trace")
-									io.error.put_string (" :: Importing Module from [" + l_info_module.module_filename + "] %N")
+									io.error.put_string_32 ({STRING_32} " :: Importing Module from [" + l_info_module.module_filename + "] %N")
 								end
 								if dbg_info_modules.has (l_info_module.module_filename) then
 									dbg_info_modules.item (l_info_module.module_filename).merge (l_info_module)
@@ -1509,7 +1509,7 @@ feature {NONE} -- Module indexer implementation
 			-- and internal key for module
 
 note
-	copyright:	"Copyright (c) 1984-2018, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2020, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

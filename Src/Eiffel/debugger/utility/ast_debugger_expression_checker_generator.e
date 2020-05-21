@@ -85,7 +85,7 @@ feature -- Access: byte node
 				error_handler.wipe_out
 
 				debug ("debugger_trace_eval_data")
-					print (generator + ".get_expression_byte_node from [" + a_expression.text + "]%N")
+					io.put_string_32 ({STRING_32} "" + generator + ".get_expression_byte_node from [" + a_expression.text + "]%N")
 					print (a_context.to_string)
 				end
 					--| If we want to recompute the `byte_node',
@@ -647,7 +647,7 @@ feature {INSPECT_CONTROL} -- AST modification
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2018, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2020, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

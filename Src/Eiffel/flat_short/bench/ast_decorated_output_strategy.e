@@ -2971,7 +2971,7 @@ feature {NONE} -- Implementation
 					l_text_formatter_decorator.process_symbol_text (ti_colon)
 					l_text_formatter_decorator.put_space
 					l_text_formatter_decorator.new_expression
-					iteration.expression.process (Current)
+					process_loop_iteration_expression (iteration)
 					l_text_formatter_decorator.put_space
 					l_text_formatter_decorator.process_keyword_text (ti_broken_bar, Void)
 					indent.call
@@ -5046,7 +5046,7 @@ feature {NONE} -- Implementation: helpers
 				l_text_formatter_decorator.new_expression
 				put_breakable
 			end
-			l_as.expression.process (Current)
+			process_loop_iteration_expression (l_as)
 			if not expr_type_visiting then
 				l_text_formatter_decorator.put_space
 				l_text_formatter_decorator.process_keyword_text
@@ -5055,6 +5055,14 @@ feature {NONE} -- Implementation: helpers
 				l_as.identifier.process (Current)
 				exdent.call (Void)
 			end
+		end
+
+	process_loop_iteration_expression (a: ITERATION_AS)
+			-- Process loop iteration expression of iteration part `a` and record type information about its cursor variable for future use.
+		local
+			old_expr_type_visiting: BOOLEAN
+		do
+			a.expression.process (Current)
 				-- Compute type of the cursor and associate cursor name with this type.
 			if attached last_type then
 				context.find_iteration_classes (source_class)
@@ -5065,7 +5073,19 @@ feature {NONE} -- Implementation: helpers
 					attached b.feature_of_rout_id (n.rout_id_set.first) as f and then
 					attached f.type.instantiation_in (last_type, last_type.base_class.class_id) as t
 				then
-					object_test_locals_for_current_feature.force (t.as_attached_in (current_class), l_as.identifier.name_32)
+					object_test_locals_for_current_feature.force (t.as_attached_in (current_class), a.identifier.name_32)
+						-- The cursor variable type depends on the loop kind. If it is restricted,
+						-- the cursor type shoud be replaced with the type of feature "item".
+					if a.is_restricted then
+						old_expr_type_visiting := expr_type_visiting
+						expr_type_visiting := True
+						a.item.process (Current)
+						expr_type_visiting := old_expr_type_visiting
+						if attached last_type as item_type then
+								-- Use the item type instead.
+							object_test_locals_for_current_feature.force (item_type, a.identifier.name_32)
+						end
+					end
 				end
 			end
 		end

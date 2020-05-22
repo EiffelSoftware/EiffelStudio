@@ -3210,11 +3210,18 @@ feature {NONE} -- Visitor
 				l_local_info.disable_is_cursor
 					-- Process associated expression instead of the variable using routine ID computed earlier to handle renaming properly.
 				old_is_inherited := is_inherited
-				is_inherited := old_is_inherited
+				is_inherited := False
 				l_local_info.expression.process (Current)
 				is_inherited := old_is_inherited
 					-- Restore status of the variable meaning.
 				l_local_info.enable_is_cursor
+				if not old_is_inherited then
+						-- Record type information for analysis tools.
+					l_as.enable_object_test_local
+					if attached last_type as t then
+						l_as.set_class_id (class_id_of (t))
+					end
+				end
 			else
 				l_local_info.enable_is_used
 				last_access_writable := False

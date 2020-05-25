@@ -135,6 +135,19 @@ feature {NONE} -- Response helper
 			end
 		end
 
+	license_to_plan_table (lic: ES_CLOUD_LICENSE): STRING_TABLE [detachable ANY]
+		do
+			create Result.make (8)
+			Result.force (lic.plan.name, "name")
+			Result.force (lic.plan.id, "plan_id")
+			Result.force (date_time_to_string (lic.creation_date), "creation")
+			Result.force (lic.is_active, "is_active")
+			if attached lic.expiration_date as exp then
+				Result.force (date_time_to_string (exp), "expiration")
+				Result.force (lic.days_remaining, "days_remaining")
+			end
+		end
+
 feature {NONE} -- Implementation
 
 	remove_last_segment (a_location: STRING_8; a_keep_ending_slash: BOOLEAN)

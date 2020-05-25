@@ -287,6 +287,8 @@ feature -- Hook
 			lic: ES_CLOUD_LICENSE
 			l_email: detachable READABLE_STRING_8
 			l_user: detachable CMS_USER
+			dt: DATE_TIME
+			y,mo,d: INTEGER
 		do
 			if
 				attached es_cloud_api as api and then
@@ -325,6 +327,16 @@ feature -- Hook
 							loop
 								lic := api.new_license_for_plan (l_plan)
 								if lic /= Void then
+									if l_store_item.is_yearly then
+										api.extend_license_with_duration (lic, 1, 0, 0)
+									elseif l_store_item.is_monthly then
+										api.extend_license_with_duration (lic, 0, 1, 0)
+									elseif l_store_item.is_weekly then
+										api.extend_license_with_duration (lic, 0, 0, 7)
+									elseif l_store_item.is_daily then
+										api.extend_license_with_duration (lic, 0, 0, 1)
+									end
+
 									if l_user /= Void then
 										api.assign_license_to_user (lic, l_user)
 									elseif l_email /= Void then

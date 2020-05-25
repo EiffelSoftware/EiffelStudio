@@ -174,8 +174,34 @@ feature -- Element change license
 			k: STRING_32
 		do
 			k := cms_api.new_random_identifier (16, once "ABCDEFGHJKMNPQRSTUVW23456789") -- Without I O L 0 1 , which are sometime hard to distinguish!
-			create Result.make (0, k, a_plan)
+			create Result.make (k, a_plan)
 			es_cloud_storage.save_license (Result)
+		end
+
+	extend_license_with_duration (lic: ES_CLOUD_LICENSE; nb_years, nb_months, nb_days: INTEGER)
+			-- Extend the license `lic` life duration by
+			--  `nb_years` year(s)
+			--  `nb_months` month(s)
+			--  `nb_days` day(s)
+		require
+			lic.has_id
+		local
+			dt: DATE_TIME
+			y,mo,d: INTEGER
+		do
+			dt := lic.expiration_date
+			if dt = Void then
+				create dt.make_now_utc
+			end
+			y := dt.year + nb_years
+			mo := dt.month + nb_months
+			d := dt.day + nb_days
+			if mo > 12 then
+				y := y + mo // 12
+				mo := mo \\ 12
+			end
+			lic.set_expiration_date (create {DATE_TIME}.make (y, mo, d, dt.hour, dt.minute, dt.second))
+			save_license (lic)
 		end
 
 	save_new_license (a_license: ES_CLOUD_LICENSE; a_user: detachable ES_CLOUD_USER)
@@ -184,6 +210,11 @@ feature -- Element change license
 			if a_user /= Void then
 				assign_license_to_user (a_license, a_user)
 			end
+		end
+
+	save_license (a_license: ES_CLOUD_LICENSE)
+		do
+			es_cloud_storage.save_license (a_license)
 		end
 
 	update_license (a_license: ES_CLOUD_LICENSE; a_user: detachable ES_CLOUD_USER)

@@ -116,6 +116,8 @@ feature -- Execution
 						if attached es_cloud_api.license (inst.license_id) as lic then
 							r.add_table_iterator_field ("es:license", license_to_table (lic))
 							r.add_link ("license", "license", cloud_user_license_link (a_version, a_user, lic.key))
+
+							r.add_table_iterator_field ("es:plan", license_to_plan_table (lic))
 						end
 						if l_include_sessions then
 							if attached es_cloud_api.user_sessions (a_user, inst.id, False) as l_sessions then
@@ -359,6 +361,10 @@ feature {NONE} -- User installation post handling
 						r.add_boolean_field ("es:license_expired", True)
 						r.add_boolean_field ("es:plan_expired", True) -- For backward compatibility
 					else
+						if l_license.is_waiting_for_platform_value then
+							l_license.set_platform_restriction (a_installation.platform)
+							es_cloud_api.save_license (l_license)
+						end
 						l_plan := l_license.plan
 							-- Valid license.
 						if l_session /= Void then
@@ -521,6 +527,10 @@ feature {NONE} -- User installation post handling
 								)
 							then
 									-- Found license
+								if lic.is_waiting_for_platform_value then
+										-- Assign platform.
+									lic.set_platform_restriction (pl)
+								end
 								es_cloud_api.register_installation (lic, a_install_id, a_info)
 								inst := es_cloud_api.installation (a_install_id)
 							else

@@ -8,13 +8,19 @@ class
 	ES_CLOUD_LICENSE
 
 create
+	make_with_id,
 	make
 
 feature {NONE} -- Initialization
 
-	make (a_id: INTEGER_64; k: READABLE_STRING_GENERAL;	pl: ES_CLOUD_PLAN)
+	make_with_id (a_id: INTEGER_64; k: READABLE_STRING_GENERAL;	pl: ES_CLOUD_PLAN)
 		do
 			id := a_id
+			make (k, pl)
+		end
+
+	make (k: READABLE_STRING_GENERAL; pl: ES_CLOUD_PLAN)
+		do
 			create key.make_from_string_general (k)
 			plan := pl
 			create creation_date.make_now_utc
@@ -122,6 +128,20 @@ feature -- Status report
 			Result := plan.heartbeat
 		end
 
+feature -- Platform restriction		
+
+	is_waiting_for_platform_value: BOOLEAN
+		do
+			Result := platform = Void
+		end
+
+	set_platform_restriction (pf: detachable READABLE_STRING_GENERAL)
+		require
+			is_waiting_for_platform_value
+		do
+			set_platform (pf)
+		end
+
 feature -- License validity
 
 	is_valid (pf, a_prod_version: detachable READABLE_STRING_GENERAL): BOOLEAN
@@ -154,12 +174,14 @@ feature -- License validity
 	is_accepted_platform (pf: detachable READABLE_STRING_GENERAL): BOOLEAN
 		do
 			if attached platform as l_platform then
-				if pf = Void then
+				if l_platform.same_string ("*") then
+					Result := True
+				elseif pf = Void then
 					Result := False
 				elseif pf.is_case_insensitive_equal (l_platform) then
 					Result := True
-				elseif generic_platform_name (pf).is_case_insensitive_equal (l_platform) then
-					Result := True
+--				elseif generic_platform_name (pf).is_case_insensitive_equal (l_platform) then
+--					Result := True
 				else
 					Result := False
 				end

@@ -13,15 +13,20 @@ inherit
 			initialize
 		end
 
+	SHARED_ES_CLOUD_NAMES
+		undefine
+			default_create, copy
+		end
+
 create
 	make
 
 feature {NONE} -- Initialization
 
-	make (a_service: ES_CLOUD_S; a_title: READABLE_STRING_GENERAL)
+	make (a_service: ES_CLOUD_S)
 		do
 			service := a_service
-			make_with_title (a_title)
+			make_with_title (cloud_names.title_session_paused)
 		end
 
 	initialize
@@ -40,13 +45,13 @@ feature {NONE} -- Initialization
 
 			set_size (l_scaler.scaled_size (350), l_scaler.scaled_size (150))
 			min_but_w := l_scaler.scaled_size (80)
-			create lab.make_with_text ("[
+			create lab.make_with_text (locale.translation_in_context ("[
 					Another EiffelStudio session is running...
 					
 					Choose [Continue] to use EiffelStudio from this device.
-				]")
-			create b_continue.make_with_text ("Continue")
-			create b_quit.make_with_text ("Quit")
+				]", "cloud.info"))
+			create b_continue.make_with_text (cloud_names.button_continue)
+			create b_quit.make_with_text (cloud_names.button_quit)
 			create vb
 			vb.set_padding_width (l_scaler.scaled_size (5))
 			vb.set_border_width (l_scaler.scaled_size (3))
@@ -98,7 +103,7 @@ feature -- Callbacks
 
 
 note
-	copyright: "Copyright (c) 1984-2019, Eiffel Software"
+	copyright: "Copyright (c) 1984-2020, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

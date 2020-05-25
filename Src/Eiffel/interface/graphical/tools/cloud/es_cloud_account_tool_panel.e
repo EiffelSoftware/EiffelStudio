@@ -26,6 +26,8 @@ inherit
 
 	SHARED_ES_CLOUD_SERVICE
 
+	SHARED_ES_CLOUD_NAMES
+
 	ES_HELP_CONTEXT
 		export
 			{NONE} all
@@ -157,26 +159,28 @@ feature {NONE} -- Action handlers
 					b.extend (txt)
 					append_text_to ("%N%N", txt)
 					if cld.is_enterprise_edition then
-						append_bold_text_to ("Edition: enterprise%N", txt)
+						append_bold_text_to (locale.translation_in_context ("Edition: enterprise", "cloud.info"), txt)
+						append_text_to ("%N", txt)
 					elseif attached cld.installation.associated_plan as l_plan then
-						append_bold_text_to ("License: ", txt)
+						append_bold_text_to (locale.translation_in_context ("License: ", "cloud.info"), txt)
 						append_text_to (l_plan.name, txt)
 						append_text_to ("%N", txt)
 						if attached l_plan.expiration_date as dt then
 							nb_days := l_plan.days_remaining
-							append_bold_text_to ("Expires: ", txt)
+							append_bold_text_to (locale.translation_in_context ("Expires: ", "cloud.info"), txt)
 							append_text_to (dt.out, txt)
 							append_text_to ("%N", txt)
 
 							if nb_days >= 0 then
-								append_bold_text_to ("Days remaining: ", txt)
+								append_bold_text_to (locale.translation_in_context ("Days remaining: ", "cloud.info"), txt)
 								append_text_to (nb_days.out, txt)
 								append_text_to ("%N", txt)
 							else
-								append_bold_text_to ("License: EXPIRED!%N", txt)
+								append_bold_text_to (locale.translation_in_context ("License: EXPIRED!", "cloud.info"), txt)
+								append_text_to ("%N", txt)
 							end
 						end
-						append_bold_text_to ("Installation id: ", txt)
+						append_bold_text_to (locale.translation_in_context ("Installation id: ", "cloud.info"), txt)
 						append_text_to (cld.installation.id, txt)
 						append_text_to ("%N", txt)
 					end
@@ -186,7 +190,8 @@ feature {NONE} -- Action handlers
 						append_text_to (sess.id.out, txt)
 						append_text_to ("%N", txt)
 						if attached {ES_ACCOUNT_ACCESS_TOKEN} acc.access_token as tok then
-							append_bold_text_to ("%NAuthentication token expiration: ", txt)
+							append_text_to ("%N", txt)
+							append_bold_text_to (locale.translation_in_context ("Authentication token expiration: ", "cloud.info"), txt)
 							append_text_to (tok.expiration_date.out, txt)
 							if attached tok.expiration_delay_in_seconds as nb and then nb >= 0 then
 								append_text_to (" ", txt)
@@ -220,6 +225,7 @@ feature {NONE} -- Action handlers
 						end
 					end
 					if l_dbg then
+							-- no translation for debug interface.
 						append_bold_text_to ("Cloud: ", txt)
 						append_text_to (cld.server_url, txt)
 						append_text_to ("%N", txt)
@@ -233,15 +239,16 @@ feature {NONE} -- Action handlers
 						end
 						if attached {ES_ACCOUNT_ACCESS_TOKEN} acc.access_token as tok then
 							append_bold_text_to ("Session (%N", txt)
-							append_text_to ("%Tid=", txt)
+							append_text_to ("%T", txt)
+							append_text_to ("id=", txt)
 							if attached cld.active_session as sess then
 								append_text_to (sess.id, txt)
 							end
-							append_text_to ("%N", txt)
-							append_text_to ("%Ttoken=", txt)
+							append_text_to ("%N%T", txt)
+							append_text_to ("token=", txt)
 							append_text_to (tok.token, txt)
-							append_text_to ("%N", txt)
-							append_text_to ("%Texpiration=", txt)
+							append_text_to ("%N%T", txt)
+							append_text_to ("expiration=", txt)
 							append_text_to (tok.expiration_date.out, txt)
 							if attached tok.expiration_delay_in_seconds as nb and then nb >= 0 then
 								append_text_to (" ", txt)
@@ -276,7 +283,8 @@ feature {NONE} -- Action handlers
 
 							end
 							if attached tok.refresh_key as k then
-								append_text_to ("%Trefresh_key=", txt)
+								append_text_to ("%T", txt)
+								append_text_to ("refresh_key=", txt)
 								append_text_to (k, txt)
 								append_text_to ("%N", txt)
 							end
@@ -292,17 +300,18 @@ feature {NONE} -- Action handlers
 
 					if is_cloud_available then
 	--					create hb
-						create but.make_with_text_and_action ("Reload", agent on_account_reload (cld, acc))
+						create but.make_with_text_and_action (locale.translation_in_context ("Reload", "cloud.info"), agent on_account_reload (cld, acc))
 						hb.extend (but)
 						layout_constants.set_default_size_for_button (but)
 						hb.disable_item_expand (but)
 
-						create but.make_with_text_and_action ("Sign out", agent on_sign_out (cld))
+						create but.make_with_text_and_action (locale.translation_in_context ("Sign out", "cloud.info"), agent on_sign_out (cld))
 						hb.extend (but)
 						layout_constants.set_default_size_for_button (but)
 						hb.disable_item_expand (but)
 
 						if l_dbg and then attached cld.active_session as sess then
+							-- no translation for debug interface.
 							create but.make_with_text_and_action ("Ping", agent on_account_ping (cld, acc, sess))
 							hb.extend (but)
 							layout_constants.set_default_size_for_button (but)
@@ -333,16 +342,16 @@ feature {NONE} -- Action handlers
 					end
 				else
 					if cld.is_guest then
-						create lab.make_with_text ("Welcome guess ...")
+						create lab.make_with_text (cloud_names.prompt_welcome_guest)
 					else
-						create lab.make_with_text ("You are not connected with an account ...")
+						create lab.make_with_text (cloud_names.prompt_not_connected_with_account)
 					end
 					lab.align_text_left
 
 					b.extend (lab)
 					b.disable_item_expand (lab)
 					if is_cloud_available then
-						create lnk.make_with_text ("Connect your account to use EiffelStudio.")
+						create lnk.make_with_text (cloud_names.prompt_connected_your_account)
 						lnk.align_text_left
 						lnk.align_text_top
 						lnk.select_actions.extend (agent (i_cld: ES_CLOUD_S)
@@ -364,22 +373,22 @@ feature {NONE} -- Action handlers
 					b.disable_item_expand (hb)
 					hb.extend (create {EV_CELL})
 
-					create lab.make_with_text ("Cloud service unavailable! ")
+					create lab.make_with_text (cloud_names.label_service_not_available + {STRING_32} " ") -- extra space for layout
 					hb.extend (lab)
 					hb.disable_item_expand (lab)
-					create but.make_with_text_and_action ("Try to reconnect", agent update)
+					create but.make_with_text_and_action (cloud_names.button_try_to_reconnect, agent update)
 					layout_constants.set_default_size_for_button (but)
 					hb.extend (but)
 					hb.disable_item_expand (but)
 					hb.extend (create {EV_CELL})
 				end
 				if l_dbg then
-					create lab.make_with_text ("Installation: " + cld.installation.id)
+					create lab.make_with_text (cloud_names.label_field_installation + cld.installation.id)
 					b.extend (lab)
 					b.disable_item_expand (lab)
 				end
 			else
-				create lab.make_with_text ("Service not activated!")
+				create lab.make_with_text (locale.translation_in_context ("Service not activated!", "cloud.error"))
 				b.extend (lab)
 			end
 			b.set_background_color (colors.stock_colors.default_background_color)
@@ -536,11 +545,8 @@ feature -- Rich text helper
 		end
 
 	text_format (a_name: READABLE_STRING_GENERAL): detachable EV_CHARACTER_FORMAT
-		local
-			tb: like text_formats
 		do
-			tb := text_formats
-			if tb /= Void then
+			if attached text_formats as tb then
 				Result := tb.item (a_name)
 			end
 		end

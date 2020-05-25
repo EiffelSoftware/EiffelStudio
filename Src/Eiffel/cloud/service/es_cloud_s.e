@@ -44,6 +44,12 @@ feature -- Access
 		deferred
 		end
 
+	view_account_website_url: READABLE_STRING_8
+		do
+				-- TODO: get a magic login link, if supported.
+			Result := associated_website_url
+		end
+
 	new_account_website_url: READABLE_STRING_8
 		do
 			Result := associated_website_url + "/new_account"
@@ -67,6 +73,20 @@ feature -- Access
 	active_account: detachable ES_ACCOUNT
 			-- Active account if signed in, otherwise Void.
 		deferred
+		end
+
+	active_license: detachable ES_ACCOUNT_LICENSE
+		do
+			if attached installation as inst and then attached inst.associated_license as l_license then
+				Result := l_license
+			end
+		end
+
+	active_license_name: detachable READABLE_STRING_8
+		do
+			if attached active_license as lic then
+				Result := lic.plan_name
+			end
 		end
 
 	active_session: detachable ES_ACCOUNT_SESSION

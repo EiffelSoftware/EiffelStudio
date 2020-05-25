@@ -14,6 +14,8 @@ inherit
 
 	SHARED_ES_CLOUD_SERVICE
 
+	SHARED_ES_CLOUD_NAMES
+
 create
 	make_cloud_required,
 	make
@@ -76,11 +78,12 @@ feature {NONE} -- Initialization
 
 			s :=
 				if is_cloud_required then
-					"Sign in to use EiffelStudio " + {ES_IDE_SETTINGS}.edition_title + "."
+					cloud_names.prompt_sign_to_edition_cloud_services ({ES_IDE_SETTINGS}.edition_title)
 				else
-					"Sign in to use EiffelStudio cloud services."
+					cloud_names.prompt_sign_to_cloud_services
 				end
-			s.append ("%NBy registering EiffelStudio you agree to the terms of use and the rules on user-provided information.")
+			s.append_character ('%N')
+			s.append (cloud_names.prompt_registering_and_agree_terms_of_use_and_rules)
 			create txt
 			txt.set_text (s)
 			txt.set_is_text_wrapped (True); txt.align_text_left; txt.align_text_top
@@ -92,11 +95,11 @@ feature {NONE} -- Initialization
 			vb_learn.set_padding_width (layout_constants.default_padding_size)
 			vb_learn.set_border_width (layout_constants.default_border_size)
 			create txt
-			txt.set_text ("User information provided during the registration process is used solely for the purpose of creating a user account at " + cloud_service.associated_website_url + " and enforcing the usage rules (number of concurrent sessions) according to the terms of the EiffelStudio license. Eiffel Software does not share such information with any third party.")
-			txt.set_tooltip ("Double click to collapse")
+			txt.set_text (cloud_names.prompt_learn_more_about_data_collection (cloud_service.associated_website_url))
+			txt.set_tooltip (cloud_names.label_double_click_to_collapse)
 			txt.set_is_text_wrapped (True); txt.align_text_left; txt.align_text_top
 			vb_learn.extend (txt)
-			create l_weblnk.make_with_text ("Terms of use")
+			create l_weblnk.make_with_text (cloud_names.label_terms_of_use)
 			l_weblnk.select_actions.extend (agent open_url (cloud_service.associated_website_url + "/site/terms", Void))
 			vb_learn.extend (l_weblnk)
 			vb_learn.disable_item_expand (l_weblnk)
@@ -141,14 +144,14 @@ feature {NONE} -- Initialization
 			if attached es_cloud_s.service as cld then
 				create lnk.make_with_text (interface_names.l_open_eiffelstudio_account_web_site)
 				lnk.align_text_left
-				lnk.select_actions.extend (agent open_url (cld.associated_website_url, Void))
+				lnk.select_actions.extend (agent open_url (cld.view_account_website_url, Void))
 				vb.extend (lnk)
 				vb.disable_item_expand (lnk)
 			end
 
 				-- Offline access token.
 			if is_offline_allowed then
-				create cbut.make_with_text ("Offline?")
+				create cbut.make_with_text (locale.translation_in_context ("Offline?", "cloud.auth"))
 				cbut.select_actions.extend (agent (i_cb: EV_CHECK_BUTTON; fr: EV_FRAME)
 						do
 							if i_cb.is_selected then
@@ -241,10 +244,10 @@ feature {NONE} -- Initialization
 
 			create {EV_TEXT_FIELD} w
 			w.set_minimum_width (l_field_width)
-			append_label_and_item_horizontally ("Offline token", w, vb_off)
-			vb_off.extend (create {EV_LABEL}.make_with_text ("You can get that token from the web site."))
+			append_label_and_item_horizontally (locale.translation_in_context ("Offline token", "cloud.auth"), w, vb_off)
+			vb_off.extend (create {EV_LABEL}.make_with_text (locale.translation_in_context ("You can get that token from the web site.", "cloud.auth")))
 
-			create but.make_with_text_and_action ("Submit", agent do end)
+			create but.make_with_text_and_action (cloud_names.button_submit, agent do end)
 			layout_constants.set_default_width_for_button (but)
 			append_label_and_item_horizontally ("", but, vb_off)
 
@@ -310,8 +313,8 @@ feature {NONE} -- Initialization
 			Result.extend (lab)
 			Result.disable_item_expand (lab)
 
-			create cb.make_with_text ("Remember my credentials")
-			cb.set_tooltip ("Do not use this option on public machine!")
+			create cb.make_with_text (cloud_names.button_remember_credentials)
+			cb.set_tooltip (cloud_names.tooltip_do_not_use_on_public_machine)
 			layout_constants.set_default_width_for_button (cb)
 			create but.make_with_text_and_action (
 					interface_names.b_sign_in,
@@ -324,7 +327,7 @@ feature {NONE} -- Initialization
 			append_label_and_item_horizontally ("", cb, Result)
 
 
-			create lab.make_with_text ("Note: the account is also used at https://support.eiffel.com/")
+			create lab.make_with_text (cloud_names.prompt_note_support_account_usage)
 			lab.set_foreground_color (colors.stock_colors.dark_grey)
 			lab.set_font (fonts.italic_label_font)
 			lab.align_text_left
@@ -411,7 +414,7 @@ feature {NONE} -- Initialization
 			create Result
 			Result.set_border_width (layout_constants.default_border_size)
 			Result.set_padding_width (layout_constants.default_padding_size)
-			create l_weblnk.make_with_text ("Create a new account")
+			create l_weblnk.make_with_text (cloud_names.link_create_new_account)
 			l_weblnk.set_minimum_width (l_field_width)
 			Result.extend (l_weblnk)
 			Result.disable_item_expand (l_weblnk)
@@ -560,7 +563,7 @@ feature -- UI callbacks
 					if cld.is_available	then
 						cld.sign_in_with_credential (u, p)
 						if cld.has_error then
-							create s32.make_from_string_general ("Service error (try again later)!")
+							create s32.make_from_string_general (locale.translation_in_context ("Service error (try again later)!", "cloud.error"))
 							if attached cld.last_error_message as err then
 								s32.append_character ('%N')
 								s32.append (err)
@@ -587,16 +590,11 @@ feature -- UI callbacks
 							on_user_sign_in_refused (a_form, a_report_label)
 						end
 					else
-						create s32.make_from_string_general ("Account service is not available for now (try again later)!")
-						if attached cld.last_error_message as err then
-							s32.append_character ('%N')
-							s32.append (err)
-						end
-						on_system_error (s32, a_report_label)
+						on_cloud_service_not_available (cld.last_error_message, a_report_label)
 						cld.check_cloud_availability
 					end
 				else
-					on_system_error ("Cloud service not activated!", a_report_label)
+					on_system_error (locale.translation_in_context ("Cloud service not activated!", "cloud.error"), a_report_label)
 				end
 				widget.set_pointer_style (l_style)
 			else
@@ -622,7 +620,6 @@ feature -- UI callbacks
 		local
 			l_style: detachable EV_POINTER_STYLE
 			tb: STRING_TABLE [READABLE_STRING_GENERAL]
-			s32: STRING_32
 		do
 			if
 				attached gui_form_string_item ("user_name", a_form) as u and then
@@ -651,14 +648,10 @@ feature -- UI callbacks
 							on_user_registration_error (a_form, Void)
 						end
 					else
-						create s32.make_from_string_general ("Account service is not available for now (try again later)!")
-						if attached cld.last_error_message as err then
-							s32.append (err)
-						end
-						on_system_error (s32, Void)
+						on_cloud_service_not_available (cld.last_error_message, Void)
 					end
 				else
-					on_system_error ("Cloud service not activated!", Void)
+					on_cloud_service_not_activated_error (Void)
 				end
 				widget.set_pointer_style (l_style)
 			else
@@ -668,22 +661,39 @@ feature -- UI callbacks
 
 	on_user_expired_plan_error (a_form: like new_gui_form; a_report_label: detachable EV_LABEL)
 		do
-			on_system_error ("Your plan is expired, please renew or purchase a new one.", a_report_label)
+			on_system_error (locale.translation_in_context ("Your plan is expired, please renew or purchase a new one.", "cloud.error"), a_report_label)
 		end
 
 	on_user_sign_in_refused (a_form: like new_gui_form; a_report_label: detachable EV_LABEL)
 		do
-			on_system_error ("Error: invalid username or password!", a_report_label)
+			on_system_error (locale.translation_in_context ("Error: invalid username or password!", "cloud.error"), a_report_label)
 		end
 
 	on_user_registered (acc: ES_ACCOUNT; a_report_label: detachable EV_LABEL)
 		do
-			on_system_error ("Thank you for the registration", a_report_label)
+			on_system_error (locale.translation_in_context ("Thank you for the registration", "cloud.message"), a_report_label)
 		end
 
 	on_user_registration_error (a_form: like new_gui_form; a_report_label: detachable EV_LABEL)
 		do
-			on_system_error ("Error while registering", a_report_label)
+			on_system_error (locale.translation_in_context ("Error while registering", "cloud.error"), a_report_label)
+		end
+
+	on_cloud_service_not_available (a_msg: detachable READABLE_STRING_GENERAL; a_report_label: detachable EV_LABEL)
+		local
+			s: STRING_32
+		do
+			create s.make_from_string (locale.translation_in_context ("Account service is not available for now (try again later)!", "cloud.error"))
+			if a_msg /= Void then
+				s.append_character ('%N')
+				s.append (a_msg)
+			end
+			on_system_error (s, a_report_label)
+		end
+
+	on_cloud_service_not_activated_error (a_report_label: detachable EV_LABEL)
+		do
+			on_system_error (locale.translation_in_context ("Cloud service not activated!", "cloud.error"), a_report_label)
 		end
 
 feature {NONE} -- Implementation

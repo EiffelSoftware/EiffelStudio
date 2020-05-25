@@ -12,15 +12,20 @@ inherit
 			initialize
 		end
 
+	SHARED_ES_CLOUD_NAMES
+		undefine
+			default_create, copy
+		end
+
 create
 	make
 
 feature {NONE} -- Initialization
 
-	make (a_service: ES_CLOUD_S; a_title: READABLE_STRING_GENERAL)
+	make (a_service: ES_CLOUD_S)
 		do
 			service := a_service
-			make_with_title (a_title)
+			make_with_title (cloud_names.title_license_expired)
 		end
 
 	initialize
@@ -41,17 +46,17 @@ feature {NONE} -- Initialization
 
 			set_size (l_scaler.scaled_size (350), l_scaler.scaled_size (150))
 			min_but_w := l_scaler.scaled_size (80)
-			create lab.make_with_text ("[
+			create lab.make_with_text (locale.translation_in_context ("[
 					Your EiffelStudio license expired!
-					
+
 					Choose [Guest] to use EiffelStudio as Guest account.
-				]")
+				]", "cloud.info"))
 
-			create l_weblnk.make_with_text ("Please visit your web account for options.")
+			create l_weblnk.make_with_text (locale.translation_in_context ("Please visit your web account for options.", "cloud.info"))
 
-			create b_online.make_with_text ("Visit Web Account")
-			create b_continue.make_with_text ("Guest")
-			create b_quit.make_with_text ("Quit")
+			create b_online.make_with_text (cloud_names.button_visit_web_account)
+			create b_continue.make_with_text (cloud_names.button_guest)
+			create b_quit.make_with_text (cloud_names.button_quit)
 			create vb
 			vb.set_padding_width (l_scaler.scaled_size (5))
 			vb.set_border_width (l_scaler.scaled_size (3))
@@ -93,8 +98,6 @@ feature {NONE} -- Initialization
 			b_online.select_actions.extend (agent on_web_account (l_report_label))
 			l_weblnk.select_actions.extend (agent on_web_account (l_report_label))
 
-
-
 			extend (vb)
 		end
 
@@ -118,7 +121,7 @@ feature -- Callbacks
 
 	on_web_account (a_report_label: EV_LABEL)
 		do
-			open_url (service.associated_website_url, a_report_label)
+			open_url (service.view_account_website_url, a_report_label)
 		end
 
 	close

@@ -15,6 +15,11 @@ inherit
 			is_equal, default_create, copy
 		end
 
+	SHARED_ES_CLOUD_NAMES
+		undefine
+			is_equal, default_create, copy
+		end
+
 create
 	make
 
@@ -56,7 +61,7 @@ feature -- Operation
 				acc := cld.active_account
 				if acc /= Void then
 						-- Show profile
-					l_acc_menu_item.set_text ({STRING_32} "My Account (" + acc.username + ")")
+					l_acc_menu_item.set_text (cloud_names.menu_my_account (acc.username))
 					l_acc_menu_item.enable_sensitive
 
 					create mi.default_create
@@ -66,11 +71,11 @@ feature -- Operation
 					mi.select_actions.extend (agent cld.sign_out)
 				elseif cld.is_guest then
 						-- Show profile
-					l_acc_menu_item.set_text ({STRING_32} "Guest Account")
+					l_acc_menu_item.set_text (cloud_names.menu_guest_account)
 					l_acc_menu_item.enable_sensitive
 				else
 						-- Show profile
-					l_acc_menu_item.set_text ({STRING_32} "Sign in")
+					l_acc_menu_item.set_text (cloud_names.menu_sign_in)
 					l_acc_menu_item.enable_sensitive
 				end
 			else
@@ -82,7 +87,7 @@ feature -- Operation
 				t.set_interval (60 * 1_000) -- 60 * 1000 ms
 
 					-- Check availability
-				create mi.make_with_text ("Check")
+				create mi.make_with_text (cloud_names.menu_check)
 				mi.select_actions.extend (agent t.destroy)
 				mi.select_actions.extend (agent cld.check_cloud_availability)
 				auto_recycle (mi)

@@ -141,7 +141,7 @@ feature -- Events
 			stop_background_pinging
 
 			if attached es_cloud_s.service as l_cloud_service then
-				create dlg.make (l_cloud_service, "Your license expired!")
+				create dlg.make (l_cloud_service)
 				w := window_manager.last_focused_development_window
 				if
 					w = Void and then
@@ -181,7 +181,7 @@ feature -- Events
 		do
 			if attached es_cloud_s.service as l_cloud_service then
 				if sess.is_paused then
-					create dlg.make (l_cloud_service, "Session PAUSED")
+					create dlg.make (l_cloud_service)
 					w := window_manager.last_focused_development_window
 					if
 						w = Void and then

@@ -1,0 +1,108 @@
+note
+	description: "Summary description for {ES_CLOUD_NAMES}."
+	author: ""
+	date: "$Date$"
+	revision: "$Revision$"
+
+class
+	ES_CLOUD_NAMES
+
+inherit
+	SHARED_LOCALE
+
+feature -- Authentication
+
+	prompt_sign_to_cloud_services: STRING_32 do Result := locale.translation_in_context ("Sign in to use EiffelStudio cloud services.", "cloud.auth") end
+
+	prompt_sign_to_edition_cloud_services (a_edition: READABLE_STRING_GENERAL): STRING_32 do Result := locale.formatted_string (locale.translation_in_context ("Sign in to use EiffelStudio $1 services.", "cloud.auth"), [a_edition]) end
+
+	prompt_registering_and_agree_terms_of_use_and_rules: STRING_32
+		do
+			Result := locale.translation ("By registering EiffelStudio you agree to the terms of use and the rules on user-provided information.")
+		end
+
+	prompt_learn_more_about_data_collection (a_url: READABLE_STRING_GENERAL): STRING_32
+		do
+			Result := locale.formatted_string (locale.translation_in_context ("User information provided during the registration process is used solely for the purpose of creating a user account at $1 and enforcing the usage rules (number of concurrent sessions) according to the terms of the EiffelStudio license. Eiffel Software does not share such information with any third party.", "cloud:auth"), [a_url])
+		end
+
+	prompt_note_support_account_usage: STRING_32 do Result := locale.translation_in_context ("Note: the account is also used at https://support.eiffel.com/", "cloud.auth") end
+
+	link_create_new_account: STRING_32 do Result := locale.translation_in_context ("Create a new account", "cloud.auth") end
+
+	button_remember_credentials: STRING_32 do Result := locale.translation_in_context ("Remember my credentials", "cloud.auth") end
+	tooltip_do_not_use_on_public_machine: STRING_32 do Result := locale.translation_in_context ("Do not use this option on public machine!", "cloud.auth") end
+
+feature -- Account tool	
+
+	prompt_welcome_guest: STRING_32 do Result := locale.translation_in_context ("Welcome guest ...", "cloud.info") end
+
+	prompt_not_connected_with_account: STRING_32 do Result := locale.translation_in_context ("You are not connected with an account ...", "cloud.info") end
+
+	prompt_connected_your_account: STRING_32 do Result := locale.translation_in_context ("Connect your account to use EiffelStudio.", "cloud.info") end
+
+	label_service_not_available: STRING_32 do Result := locale.translation_in_context ("Cloud service unavailable!", "cloud.error") end
+
+	button_try_to_reconnect: STRING_32 do Result := locale.translation_in_context ("Try to reconnect", "cloud.action") end
+
+	label_field_installation: STRING_32 do Result := locale.translation_in_context ("Installation: ", "cloud.info") end
+
+feature -- Dialog
+
+	button_visit_web_account: STRING_32 do Result := locale.translation_in_context ("Visit Web Account", "cloud.info") end
+
+	title_license_expired: STRING_32 do Result := locale.translation_in_context ("Your license is EXPIRED", "cloud.info") end
+
+	title_session_paused: STRING_32 do Result := locale.translation_in_context ("This session is PAUSED", "cloud.info") end
+
+feature -- Menu
+
+	menu_my_account (a_username: READABLE_STRING_GENERAL): STRING_32 do Result := locale.formatted_string (locale.translation_in_context ("My Account ($1)", "cloud.menu"), [a_username])	end
+
+	menu_guest_account: STRING_32 do Result := locale.translation_in_context ("Guest Account", "cloud.menu") end
+
+	menu_sign_in: STRING_32 do Result := locale.translation_in_context ("Sign In", "cloud.menu") end
+
+	menu_check: STRING_32 do Result := locale.translation_in_context ("check", "cloud.menu") end
+
+feature -- General
+
+	label_terms_of_use: STRING_32 do Result := locale.translation_in_context ("Terms of use", "cloud") end
+	label_double_click_to_collapse: STRING_32 do Result := locale.translation_in_context ("Double click to collapse", "cloud") end
+	button_guest: STRING_32 do Result := locale.translation_in_context ("Guest", "cloud") end
+	button_quit: STRING_32 do Result := locale.translation_in_context ("Quit", "cloud") end
+	button_continue: STRING_32 do Result := locale.translation_in_context ("Continue", "cloud") end
+	button_submit: STRING_32 do Result := locale.translation_in_context ("Submit", "cloud") end
+
+;note
+	copyright: "Copyright (c) 1984-2020, Eiffel Software"
+	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
+	licensing_options: "http://www.eiffel.com/licensing"
+	copying: "[
+			This file is part of Eiffel Software's Eiffel Development Environment.
+			
+			Eiffel Software's Eiffel Development Environment is free
+			software; you can redistribute it and/or modify it under
+			the terms of the GNU General Public License as published
+			by the Free Software Foundation, version 2 of the License
+			(available at the URL listed under "license" above).
+			
+			Eiffel Software's Eiffel Development Environment is
+			distributed in the hope that it will be useful, but
+			WITHOUT ANY WARRANTY; without even the implied warranty
+			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+			See the GNU General Public License for more details.
+			
+			You should have received a copy of the GNU General Public
+			License along with Eiffel Software's Eiffel Development
+			Environment; if not, write to the Free Software Foundation,
+			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
+		]"
+	source: "[
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
+		]"
+end

@@ -14,6 +14,8 @@ inherit
 
 	ES_SHARED_FONTS_AND_COLORS
 
+	SHARED_ES_CLOUD_NAMES
+
 create
 	make
 
@@ -73,7 +75,6 @@ feature -- Execution
 				if attached {EV_COLORIZABLE} l_status_label as l_col then
 					l_col.set_foreground_color (colors.stock_colors.gray)
 				end
-				l_status_label.set_text ("Launching link "+ location)
 				if
 					attached {EV_WIDGET} l_status_label as l_status_widget and then
 					not l_status_widget.is_displayed
@@ -81,9 +82,10 @@ feature -- Execution
 					l_was_hidden := True
 					l_status_widget.show
 				end
+				l_status_label.set_text (cloud_names.label_opening_url (location))
 			else
 				create popup.make_with_shadow
-				create lab.make_with_text ("Launching link " + location)
+				create lab.make_with_text (cloud_names.label_opening_url (location))
 				popup.extend (lab)
 				popup.set_size (200, 50)
 				lab.pointer_button_release_actions.extend (agent (i_popup: EV_POPUP_WINDOW; x, y, button: INTEGER; x_tilt, y_tilt, pressure: DOUBLE; screen_x, screen_y: INTEGER)
@@ -117,7 +119,7 @@ feature -- Execution
 					clear_label_after_delay (5_000, l_status_label, l_was_hidden) -- 5 seconds
 				end
 			else
-				create m.make_from_string_general ("Error: could not launch link " + location)
+				create m.make_from_string_general (cloud_names.label_error_opening_url (location))
 				if l_status_label /= Void then
 					if attached {EV_COLORIZABLE} l_status_label as l_col then
 						l_col.set_foreground_color (colors.stock_colors.red)

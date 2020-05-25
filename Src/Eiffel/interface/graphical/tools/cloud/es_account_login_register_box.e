@@ -144,7 +144,7 @@ feature {NONE} -- Initialization
 			if attached es_cloud_s.service as cld then
 				create lnk.make_with_text (cloud_names.label_open_eiffelstudio_account_web_site)
 				lnk.align_text_left
-				lnk.select_actions.extend (agent open_url (cld.view_account_website_url, Void))
+				lnk.select_actions.extend (agent open_account_url (cld, Void))
 				vb.extend (lnk)
 				vb.disable_item_expand (lnk)
 			end
@@ -778,6 +778,11 @@ feature {NONE} -- Implementation
 			else
 				popup.show
 			end
+		end
+
+	open_account_url (cld: ES_CLOUD_S; a_report_label: detachable EV_LABEL)
+		do
+			open_url (cld.view_account_website_url, a_report_label)
 		end
 
 	open_url (a_url: READABLE_STRING_8; a_report_label: detachable EV_LABEL)

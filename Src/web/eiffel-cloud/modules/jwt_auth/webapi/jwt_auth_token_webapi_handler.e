@@ -19,13 +19,16 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_jwt_auth_api: JWT_AUTH_API)
+	make (mod: JWT_AUTH_MODULE_WEBAPI; a_jwt_auth_api: JWT_AUTH_API)
 		do
+			module := mod
 			make_with_cms_api (a_jwt_auth_api.cms_api)
 			jwt_auth_api := a_jwt_auth_api
 		end
 
 feature -- API
+
+	module: JWT_AUTH_MODULE_WEBAPI
 
 	jwt_auth_api: JWT_AUTH_API
 
@@ -38,7 +41,9 @@ feature -- Execution
 		do
 			if attached {WSF_STRING} req.path_parameter ("uid") as p_uid then
 				l_uid := p_uid.value
-				if req.is_post_request_method then
+				if req.path_info.ends_with_general ("/new_jwt_magic_link") then
+					handle_new_jwt_magic_link (l_uid, req, res)
+				elseif req.is_post_request_method then
 					post_jwt_token (l_uid, req, res)
 				elseif req.is_get_request_method then
 					get_jwt_tokens (l_uid, req, res)
@@ -178,6 +183,39 @@ feature -- Request execution
 			end
 			rep.execute
 		end
+
+	handle_new_jwt_magic_link (a_uid: READABLE_STRING_GENERAL; req: WSF_REQUEST; res: WSF_RESPONSE)
+			-- Execute handler for `req' and respond in `res'.
+		local
+			tb: STRING_TABLE [detachable ANY]
+			rep: like new_response
+		do
+			if attached user_by_uid (a_uid) as l_user then
+				if attached api.user as u then
+					if
+						api.user_api.is_admin_user (u)
+					 	or api.has_permission ({JWT_AUTH_MODULE}.perm_use_magic_login) and then (u.same_as (l_user))
+					then
+						if attached module.module.new_magic_login_link (u) as lnk then
+							rep := new_response (req, res)
+							rep.add_link ("jwt:magic_login", Void, lnk)
+						else
+							rep := new_error_response ("Could not create new magic login link", req, res)
+						end
+						rep.add_self (req.percent_encoded_path_info)
+					else
+							-- Only admin, or current user can create the user access_token!
+						rep := new_access_denied_error_response (Void, req, res)
+					end
+				else
+					rep := new_access_denied_error_response (Void, req, res)
+				end
+			else
+				rep := new_not_found_error_response ("User not found", req, res)
+			end
+			rep.execute
+		end
+
 
 note
 	copyright: "2011-2017, Jocelyn Fiat, Javier Velilla, Eiffel Software and others"

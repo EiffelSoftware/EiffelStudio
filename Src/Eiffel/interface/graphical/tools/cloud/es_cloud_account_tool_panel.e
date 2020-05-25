@@ -300,12 +300,19 @@ feature {NONE} -- Action handlers
 
 					if is_cloud_available then
 	--					create hb
-						create but.make_with_text_and_action (locale.translation_in_context ("Reload", "cloud.info"), agent on_account_reload (cld, acc))
+
+
+						create but.make_with_text_and_action (cloud_names.button_visit_web_account, agent on_web_account (cld, acc))
 						hb.extend (but)
 						layout_constants.set_default_size_for_button (but)
 						hb.disable_item_expand (but)
 
-						create but.make_with_text_and_action (locale.translation_in_context ("Sign out", "cloud.info"), agent on_sign_out (cld))
+						create but.make_with_text_and_action (cloud_names.button_reload, agent on_account_reload (cld, acc))
+						hb.extend (but)
+						layout_constants.set_default_size_for_button (but)
+						hb.disable_item_expand (but)
+
+						create but.make_with_text_and_action (cloud_names.button_sign_out, agent on_sign_out (cld))
 						hb.extend (but)
 						layout_constants.set_default_size_for_button (but)
 						hb.disable_item_expand (but)
@@ -424,6 +431,25 @@ feature {NONE} -- Action handlers
 			if not is_cloud_available then
 				refresh
 			end
+		end
+
+	on_web_account (cld: ES_CLOUD_S; acc: ES_ACCOUNT)
+		local
+			l_style: EV_POINTER_STYLE
+		do
+			l_style := widget.pointer_style
+			widget.set_pointer_style (pixmaps.stock_pixmaps.busy_cursor)
+			open_url (cld.view_account_website_url)
+			widget.set_pointer_style (l_style)
+		end
+
+	open_url (a_url: READABLE_STRING_8)
+		local
+			l_launcher: ES_CLOUD_URL_LAUNCHER
+		do
+			create l_launcher.make (a_url)
+			l_launcher.set_associated_widget (widget)
+			l_launcher.execute
 		end
 
 	on_account_ping (cld: ES_CLOUD_S; acc: ES_ACCOUNT; sess: ES_ACCOUNT_SESSION)

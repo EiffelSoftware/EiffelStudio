@@ -94,6 +94,15 @@ feature -- Access
 		deferred
 		end
 
+	check_for_new_license
+		do
+			if
+				attached active_account as acc
+			then
+				update_account (acc)
+			end
+		end
+
 	installation: ES_ACCOUNT_INSTALLATION
 			-- Current installation.
 		deferred

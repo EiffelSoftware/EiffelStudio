@@ -12,9 +12,9 @@ inherit
 
 feature -- Authentication
 
-	prompt_sign_to_cloud_services: STRING_32 do Result := locale.translation_in_context ("Sign in to use EiffelStudio cloud services.", "cloud.auth") end
+	prompt_sign_to_cloud_services: STRING_32 do Result := locale.translation_in_context ("Sign in to use EiffelStudio cloud services.", "eiffel.account") end
 
-	prompt_sign_to_edition_cloud_services (a_edition: READABLE_STRING_GENERAL): STRING_32 do Result := locale.formatted_string (locale.translation_in_context ("Sign in to use EiffelStudio $1 services.", "cloud.auth"), [a_edition]) end
+	prompt_sign_to_edition_cloud_services (a_edition: READABLE_STRING_GENERAL): STRING_32 do Result := locale.formatted_string (locale.translation_in_context ("Sign in to use EiffelStudio $1 services.", "eiffel.account"), [a_edition]) end
 
 	prompt_registering_and_agree_terms_of_use_and_rules: STRING_32
 		do
@@ -23,17 +23,17 @@ feature -- Authentication
 
 	prompt_learn_more_about_data_collection (a_url: READABLE_STRING_GENERAL): STRING_32
 		do
-			Result := locale.formatted_string (locale.translation_in_context ("User information provided during the registration process is used solely for the purpose of creating a user account at $1 and enforcing the usage rules (number of concurrent sessions) according to the terms of the EiffelStudio license. Eiffel Software does not share such information with any third party.", "cloud:auth"), [a_url])
+			Result := locale.formatted_string (locale.translation_in_context ("User information provided during the registration process is used solely for the purpose of creating a user account at $1 and enforcing the usage rules (number of concurrent sessions) according to the terms of the EiffelStudio license. Eiffel Software does not share such information with any third party.", "eiffel.account"), [a_url])
 		end
 
-	prompt_note_support_account_usage: STRING_32 do Result := locale.translation_in_context ("Note: the account is also used at https://support.eiffel.com/", "cloud.auth") end
+	prompt_note_support_account_usage: STRING_32 do Result := locale.translation_in_context ("Note: the account is also used at https://support.eiffel.com/", "eiffel.account") end
 
-	link_create_new_account: STRING_32 do Result := locale.translation_in_context ("Create a new account", "cloud.auth") end
+	link_create_new_account: STRING_32 do Result := locale.translation_in_context ("Create a new account", "eiffel.account") end
 
-	button_remember_credentials: STRING_32 do Result := locale.translation_in_context ("Remember my credentials", "cloud.auth") end
-	tooltip_do_not_use_on_public_machine: STRING_32 do Result := locale.translation_in_context ("Do not use this option on public machine!", "cloud.auth") end
+	button_remember_credentials: STRING_32 do Result := locale.translation_in_context ("Remember my credentials", "eiffel.account") end
+	tooltip_do_not_use_on_public_machine: STRING_32 do Result := locale.translation_in_context ("Do not use this option on public machine!", "eiffel.account") end
 
-	label_open_eiffelstudio_account_web_site: STRING_32 do Result := locale.translation_in_context ("Open EiffelStudio account website in web browser.", "cloud.auth") end
+	label_open_eiffelstudio_account_web_site: STRING_32 do Result := locale.translation_in_context ("Open EiffelStudio account website in web browser.", "eiffel.account") end
 
 	label_can_continue_as_guest_for_n_days (nb_days: INTEGER): READABLE_STRING_32
 		do
@@ -74,6 +74,16 @@ feature -- Dialog
 
 	title_session_paused: STRING_32 do Result := locale.translation_in_context ("This session is PAUSED", "cloud.info") end
 
+	label_opening_url (a_url: READABLE_STRING_GENERAL): STRING_32
+		do
+			Result := locale.formatted_string (locale.translation_in_context ("Opening $1", "cloud.info"), [a_url])
+		end
+
+	label_error_opening_url (a_url: READABLE_STRING_GENERAL): STRING_32
+		do
+			Result := locale.formatted_string (locale.translation_in_context ("Error: could not open $1", "cloud.error"), [a_url])
+		end
+
 feature -- Menu
 
 	menu_my_account (a_username: READABLE_STRING_GENERAL): STRING_32 do Result := locale.formatted_string (locale.translation_in_context ("My Account ($1)", "cloud.menu"), [a_username])	end
@@ -90,12 +100,14 @@ feature -- General
 	label_terms_of_use: STRING_32 do Result := locale.translation_in_context ("Terms of use", "cloud") end
 	label_double_click_to_collapse: STRING_32 do Result := locale.translation_in_context ("Double click to collapse", "cloud") end
 	button_guest: STRING_32 do Result := locale.translation_in_context ("Guest", "cloud") end
+	button_retry: STRING_32 do Result := locale.translation_in_context ("Retry", "cloud") end
 	button_quit: STRING_32 do Result := locale.translation_in_context ("Quit", "cloud") end
 	button_continue: STRING_32 do Result := locale.translation_in_context ("Continue", "cloud") end
 	button_submit: STRING_32 do Result := locale.translation_in_context ("Submit", "cloud") end
 
 	button_sign_in: STRING_32 do Result := locale.translation ("Sign in") end
 	button_sign_out: STRING_32 do Result := locale.translation ("Sign out") end
+	button_reload: STRING_32 do Result := locale.translation ("Reload") end
 	button_register: STRING_32 do Result := locale.translation ("Register") end
 
 ;note

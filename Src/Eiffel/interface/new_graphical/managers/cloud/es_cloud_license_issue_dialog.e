@@ -31,13 +31,13 @@ feature {NONE} -- Initialization
 	initialize
 		local
 			lab: EV_LABEL
-			b_online, b_continue, b_quit: EV_BUTTON
+			b_online, b_continue, b_quit, b_retry: EV_BUTTON
 			hb: EV_HORIZONTAL_BOX
 			vb: EV_VERTICAL_BOX
 			sep: EV_HORIZONTAL_SEPARATOR
 			min_but_w: INTEGER
 			l_scaler: EVS_DPI_SCALER
-			l_report_label: EV_LABEL
+			l_report_label: EVS_ELLIPSIS_LABEL
 			l_weblnk: EVS_HIGHLIGHT_LINK_LABEL
 		do
 			Precursor
@@ -57,6 +57,7 @@ feature {NONE} -- Initialization
 			create b_online.make_with_text (cloud_names.button_visit_web_account)
 			create b_continue.make_with_text (cloud_names.button_guest)
 			create b_quit.make_with_text (cloud_names.button_quit)
+			create b_retry.make_with_text (cloud_names.button_retry)
 			create vb
 			vb.set_padding_width (l_scaler.scaled_size (5))
 			vb.set_border_width (l_scaler.scaled_size (3))
@@ -64,6 +65,7 @@ feature {NONE} -- Initialization
 			vb.extend (l_weblnk)
 			vb.disable_item_expand (l_weblnk)
 			create l_report_label
+			l_report_label.set_is_ellipsing_character (True)
 			l_report_label.hide
 			vb.extend (l_report_label)
 			vb.disable_item_expand (l_report_label)
@@ -79,21 +81,26 @@ feature {NONE} -- Initialization
 			vb.disable_item_expand (hb)
 			hb.extend (create {EV_CELL})
 
-			hb.extend (b_quit)
+			hb.extend (b_online)
+			b_continue.set_minimum_width (min_but_w)
+			hb.disable_item_expand (b_online)
+
+			hb.extend (b_retry)
 			b_quit.set_minimum_width (min_but_w)
-			hb.disable_item_expand (b_quit)
+			hb.disable_item_expand (b_retry)
 
 			hb.extend (b_continue)
 			b_continue.set_minimum_width (min_but_w)
 			hb.disable_item_expand (b_continue)
 
-			hb.extend (b_online)
-			b_continue.set_minimum_width (min_but_w)
-			hb.disable_item_expand (b_online)
+			hb.extend (b_quit)
+			b_quit.set_minimum_width (min_but_w)
+			hb.disable_item_expand (b_quit)
 
 			set_default_cancel_button (b_continue)
 
 			b_continue.select_actions.extend (agent on_guest)
+			b_retry.select_actions.extend (agent on_retry)
 			b_quit.select_actions.extend (agent on_quit)
 			b_online.select_actions.extend (agent on_web_account (l_report_label))
 			l_weblnk.select_actions.extend (agent on_web_account (l_report_label))
@@ -110,6 +117,12 @@ feature -- Callbacks
 	on_quit
 		do
 			service.quit
+			close
+		end
+
+	on_retry
+		do
+			service.check_for_new_license
 			close
 		end
 
@@ -137,10 +150,9 @@ feature {NONE} -- Implementatopm
 		do
 			create l_launcher.make (a_url)
 			l_launcher.set_status_label (a_report_label)
---			l_launcher.set_associated_widget (widget)
+			l_launcher.set_associated_widget (Current)
 			l_launcher.execute
 		end
-
 
 note
 	copyright: "Copyright (c) 1984-2020, Eiffel Software"

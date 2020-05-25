@@ -52,15 +52,15 @@ feature {NONE} -- Creation
 					j := s.index_of ('-', 1)
 					if j > 0 then
 						s := s.head (j - 1)
-						if s.starts_with ("win") then
-							platform := "windows"
-						elseif s.starts_with ("linux") then
-							platform := "linux"
-						elseif s.starts_with ("macos") then
-							platform := "macos"
-						else
+--						if s.starts_with ("win") then
+--							platform := "windows"
+--						elseif s.starts_with ("linux") then
+--							platform := "linux"
+--						elseif s.starts_with ("macos") then
+--							platform := "macos"
+--						else
 							create platform.make_from_string_general (s)
-						end
+--						end
 					end
 				end
 			else

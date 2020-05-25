@@ -136,7 +136,6 @@ feature -- Handle
 			l_subscription: STRIPE_SUBSCRIPTION
 			lst: ARRAYED_LIST [TUPLE [plan: STRIPE_PLAN; quantity: NATURAL_32]]
 			l_identifier: READABLE_STRING_32
-			l_validation: STRIPE_PAYMENT_VALIDATION
 			l_quantity: NATURAL_32
 			i: INTEGER
 			l_metadata: detachable STRING_TABLE [READABLE_STRING_GENERAL]

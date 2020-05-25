@@ -38,7 +38,18 @@ feature {CMS_MODULE} -- Access nodes storage.
 
 feature -- Factory
 
-	new_token (a_user: CMS_USER; apps: detachable LIST [READABLE_STRING_GENERAL]): detachable JWT_AUTH_TOKEN
+	new_token (a_user: CMS_USER; apps: detachable ITERABLE [READABLE_STRING_GENERAL]): detachable JWT_AUTH_TOKEN
+			-- New JWT token for user `a_user` and `apps` scopes.
+		do
+			Result := new_token_with_expiration (a_user, apps, 0)
+		end
+
+	new_token_with_expiration (a_user: CMS_USER; apps: detachable ITERABLE [READABLE_STRING_GENERAL]; a_expiration_in_seconds: NATURAL_32): detachable JWT_AUTH_TOKEN
+			-- New JWT token for user `a_user` and `apps` scopes.
+			-- If `a_expiration_in_seconds` is positive, use it as the token expiration value.
+			-- (Note: if it is over the expiration value from the configuration, use the one from the configuration).
+		require
+			a_expiration_in_seconds > 0
 		local
 			jws: JWS
 			sec: like new_secret_key
@@ -56,6 +67,11 @@ feature -- Factory
 				attached cms_api.module_configuration_by_name ({JWT_AUTH_MODULE}.name, "config") as cfg
 			then
 				nb := cfg.integer_item ("jwt.expiration") -- In Seconds
+			end
+			if a_expiration_in_seconds > 0 then
+				if nb <= 0 or else a_expiration_in_seconds.to_integer_32 <= nb then
+					nb := a_expiration_in_seconds.to_integer_32
+				end
 			end
 			if nb < 0 then
 					-- Never expires ...

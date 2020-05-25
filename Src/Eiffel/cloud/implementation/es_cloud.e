@@ -9,7 +9,8 @@ class
 inherit
 	ES_CLOUD_S
 		redefine
-			on_account_signed_in
+			on_account_signed_in,
+			view_account_website_url
 		end
 
 	DISPOSABLE_SAFE
@@ -326,6 +327,18 @@ feature -- Access
 				end
 			end
 			Result := uri.string
+		end
+
+	view_account_website_url: READABLE_STRING_8
+		do
+			if
+				attached active_account as acc and then
+				attached web_api.account_magic_login_link (acc.access_token.token) as lnk
+			then
+				Result := lnk
+			else
+				Result := Precursor
+			end
 		end
 
 	version: READABLE_STRING_8
@@ -719,13 +732,17 @@ feature -- Connection checking
 			b: BOOLEAN
 		do
 			l_was_available := is_available
-			if attached cell_is_available as cl then
-				cl.item.last_time := Void -- Force new check
-				cl.item.try_count := 0
-			end
-			b := is_available
-			if l_was_available /= b then
+			if l_was_available then
 				on_cloud_available (b)
+			else
+				if attached cell_is_available as cl then
+					cl.item.last_time := Void -- Force new check
+					cl.item.try_count := 0
+				end
+				b := is_available
+				if l_was_available /= b then
+					on_cloud_available (b)
+				end
 			end
 		end
 

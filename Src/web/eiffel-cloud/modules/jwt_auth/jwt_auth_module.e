@@ -11,6 +11,7 @@ inherit
 		rename
 			module_api as jwt_auth_api
 		redefine
+			permissions,
 			initialize,
 			install,
 			setup_hooks,
@@ -33,11 +34,21 @@ feature {NONE} -- Initialization
 			version := "1.0"
 			description := "JWT authentication"
 			package := "jwt_auth"
+			add_optional_dependency ({CMS_SESSION_AUTH_MODULE})
 		end
 
 feature -- Access
 
 	name: STRING = "jwt_auth"
+
+	permissions: LIST [READABLE_STRING_8]
+			-- List of permission ids, used by this module, and declared.
+		do
+			Result := Precursor
+			Result.force (perm_use_magic_login)
+		end
+
+	perm_use_magic_login: STRING = "use magic_login"
 
 feature {CMS_API} -- Module Initialization			
 
@@ -83,6 +94,19 @@ feature -- Access: router
 		do
 			if attached jwt_auth_api as l_jwt_auth_api then
 				a_router.handle ("/user/{uid}/jwt_access_token", create {JWT_AUTH_TOKEN_USER_HANDLER}.make (l_jwt_auth_api), a_router.methods_get_post)
+				a_router.handle ("/user/{uid}/magic-login/{token}", create {JWT_AUTH_MAGIC_LOGIN_HANDLER}.make (l_jwt_auth_api), a_router.methods_get)
+			end
+		end
+
+feature -- Link factory
+
+	new_magic_login_link (a_user: CMS_USER): detachable STRING
+		do
+			if
+				attached jwt_auth_api as l_jwt_api and then
+				attached {JWT_AUTH_TOKEN} l_jwt_api.new_token_with_expiration (a_user, <<"magic-login">>, {NATURAL_32} 5 * 60) as l_magic_token
+			then
+				Result := l_jwt_api.cms_api.absolute_url ("/user/" + a_user.id.out + "/magic-login/" + url_encoded (l_magic_token.token), Void)
 			end
 		end
 

@@ -92,33 +92,7 @@ feature -- Execution
 					end
 					if inst /= Void then
 						r := new_response (req, res)
-						create tb.make (2)
-						tb.force (inst.id, "id")
-						if attached inst.product_id as l_pid then
-							tb.force (l_pid, "product_id")
-						end
-						if attached inst.product_version as l_pv then
-							tb.force (l_pv, "product_version")
-						end
-						if attached inst.name as l_name then
-							tb.force (l_name, "name")
-						end
-						tb.force (inst.info, "info")
-						if attached inst.creation_date as dt then
-							tb.force (date_time_to_string (dt), "creation_date")
-						end
-						if inst.is_active then
-							tb.force ("yes", "is_active")
-						else
-							tb.force ("no", "is_active")
-						end
-						r.add_table_iterator_field ("es:installation", tb)
-						if attached es_cloud_api.license (inst.license_id) as lic then
-							r.add_table_iterator_field ("es:license", license_to_table (lic))
-							r.add_link ("license", "license", cloud_user_license_link (a_version, a_user, lic.key))
-
-							r.add_table_iterator_field ("es:plan", license_to_plan_table (lic))
-						end
+						add_installation_to (a_version, a_user, inst, r)
 						if l_include_sessions then
 							if attached es_cloud_api.user_sessions (a_user, inst.id, False) as l_sessions then
 								create tb_sessions.make (l_sessions.count)
@@ -147,7 +121,6 @@ feature -- Execution
 						else
 							r.add_link ("sessions", "sessions", r.api.absolute_url (r.location + "/session/", Void))
 						end
-						r.add_link ("installation", "installation", cloud_user_installation_link (a_version, a_user, iid))
 						r.add_self (r.location)
 					else
 						r := new_error_response ("Installation not found", req, res)
@@ -162,6 +135,42 @@ feature -- Execution
 				r := new_access_denied_error_response (Void, req, res)
 			end
 			r.execute
+		end
+
+	add_installation_to (a_version: READABLE_STRING_GENERAL; a_user: ES_CLOUD_USER; inst: ES_CLOUD_INSTALLATION; r: like new_response)
+		local
+			tb: STRING_TABLE [detachable ANY]
+		do
+			create tb.make (2)
+			tb.force (inst.id, "id")
+			if attached inst.product_id as l_pid then
+				tb.force (l_pid, "product_id")
+			end
+			if attached inst.product_version as l_pv then
+				tb.force (l_pv, "product_version")
+			end
+			if attached inst.name as l_name then
+				tb.force (l_name, "name")
+			end
+			tb.force (inst.info, "info")
+			if attached inst.creation_date as dt then
+				tb.force (date_time_to_string (dt), "creation_date")
+			end
+			if inst.is_active then
+				tb.force ("yes", "is_active")
+			else
+				tb.force ("no", "is_active")
+			end
+			r.add_table_iterator_field ("es:installation", tb)
+
+			if attached es_cloud_api.license (inst.license_id) as lic then
+				r.add_table_iterator_field ("es:license", license_to_table (lic))
+				r.add_link ("license", "license", cloud_user_license_link (a_version, a_user, lic.key))
+
+				r.add_table_iterator_field ("es:plan", license_to_plan_table (lic))
+			end
+
+			r.add_link ("installation", "installation", cloud_user_installation_link (a_version, a_user, inst.id))
 		end
 
 	list_installations (a_version: READABLE_STRING_GENERAL; a_user: ES_CLOUD_USER; req: WSF_REQUEST; res: WSF_RESPONSE)
@@ -548,6 +557,8 @@ feature {NONE} -- User installation post handling
 						-- TODO: report error!
 						r.add_boolean_field ("es:installation_limit_reached", True)
 					end
+				else
+					add_installation_to (a_version, a_user, inst, r)
 				end
 				add_cloud_user_links_to (a_version, a_user, r)
 				add_user_links_to (a_user, r)

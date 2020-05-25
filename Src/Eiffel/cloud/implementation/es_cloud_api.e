@@ -173,6 +173,31 @@ feature -- ROC Account
 			end
 		end
 
+	account_magic_login_link (a_token: READABLE_STRING_8): detachable READABLE_STRING_8
+		local
+			ctx: HTTP_CLIENT_REQUEST_CONTEXT
+			resp: like response
+			l_new_magic_login_href: detachable READABLE_STRING_8
+		do
+			reset_api_call
+			if attached new_http_client_session as sess then
+				ctx := new_jwt_auth_context (a_token)
+				l_new_magic_login_href := endpoint_for_token (a_token, "_links|jwt:new_magic_login|href")
+				if l_new_magic_login_href = Void then
+					l_new_magic_login_href := jwt_new_magic_login_endpoint (a_token, sess, ctx)
+				end
+				if l_new_magic_login_href /= Void then
+					resp := response (sess.get (l_new_magic_login_href, ctx))
+					if
+						not has_error and then
+						attached resp.string_8_item ("_links|jwt:magic_login|href") as lnk
+					then
+						Result := lnk
+					end
+				end
+			end
+		end
+
 	account (a_token: READABLE_STRING_8): detachable ES_ACCOUNT
 		local
 			ctx: HTTP_CLIENT_REQUEST_CONTEXT
@@ -687,6 +712,22 @@ feature {NONE} -- JWT endpoints
 			else
 				if attached resp.string_8_item ("_links|jwt:access_token|href") as v then
 					Result := v
+				end
+			end
+		end
+
+	jwt_new_magic_login_endpoint (a_token: READABLE_STRING_8; sess: HTTP_CLIENT_SESSION; ctx: HTTP_CLIENT_REQUEST_CONTEXT): detachable IMMUTABLE_STRING_8
+		local
+			resp: like response
+		do
+			reset_api_call
+			resp := response (sess.get (config.root_endpoint, ctx))
+			if has_error then
+				reset_api_call
+			else
+				if attached resp.string_8_item ("_links|jwt:new_magic_login|href") as v then
+					Result := v
+					record_endpoint_for_token (a_token, "_links|jwt:new_magic_login|href", v)
 				end
 			end
 		end

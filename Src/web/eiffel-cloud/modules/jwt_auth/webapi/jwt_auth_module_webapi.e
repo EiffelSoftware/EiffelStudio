@@ -25,9 +25,13 @@ feature {NONE} -- Router/administration
 
 	setup_webapi_router (a_router: WSF_ROUTER; a_api: CMS_API)
 			-- <Precursor>
+		local
+			h: JWT_AUTH_TOKEN_WEBAPI_HANDLER
 		do
 			if attached module.jwt_auth_api as l_jwt_auth_api then
-				a_router.handle ("/user/{uid}/jwt_access_token", create {JWT_AUTH_TOKEN_WEBAPI_HANDLER}.make (l_jwt_auth_api), a_router.methods_get_post)
+				create h.make (Current, l_jwt_auth_api)
+				a_router.handle ("/user/{uid}/jwt_access_token", h, a_router.methods_get_post)
+				a_router.handle ("/user/{uid}/new_jwt_magic_link", h, a_router.methods_get_post)
 			end
 		end
 
@@ -37,6 +41,7 @@ feature -- Permissions
 		do
 			Result := Precursor
 			Result.force (perm_use_jwt_auth)
+			Result.append (module.permissions)
 		end
 
 	perm_use_jwt_auth: STRING = "use jwt_auth"
@@ -70,6 +75,12 @@ feature -- Hook
 				rep.is_root
 			then
 				hm.add_link ("jwt:access_token", Void, rep.api.webapi_path ("user/" + u.id.out + "/jwt_access_token"))
+				if
+					not rep.api.user_is_administrator and then -- Forbid this magic link for administrator! (security)
+					rep.has_permission ({JWT_AUTH_MODULE}.perm_use_magic_login)
+				then
+					hm.add_link ("jwt:new_magic_login", Void, rep.api.webapi_path ("user/" + u.id.out + "/new_jwt_magic_link"))
+				end
 			end
 		end
 

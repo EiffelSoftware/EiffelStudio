@@ -1679,6 +1679,11 @@ feature -- Access: active user
 			Result implies user /= Void
 		end
 
+	user_is_administrator: BOOLEAN
+		do
+			Result := attached user as u and then user_api.is_admin_user (u)
+		end
+
 	user: detachable CMS_USER
 			-- Current user or Void in case of visitor.
 		note

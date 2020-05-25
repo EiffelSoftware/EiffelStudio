@@ -509,7 +509,7 @@ feature {NONE} -- Implementation
 			ace_file_name_not_void: ace_file_name /= Void
 		local
 			l_loader: EB_GRAPHICAL_PROJECT_LOADER
-			ebench_name: STRING
+			ebench_name: STRING_32
 			ace_name, dir_name: PATH
 		do
 			ace_name := ace_file_name
@@ -531,9 +531,9 @@ feature {NONE} -- Implementation
 				ebench_name := eiffel_layout.studio_command_line (ace_name, Void, dir_name, True, True)
 				if compile_project then
 					if freeze_project then
-						ebench_name.append (" -freeze")
+						ebench_name.append_string_general (" -freeze")
 					else
-						ebench_name.append (" -melt")
+						ebench_name.append_string_general (" -melt")
 					end
 					compile_project := False
 				end
@@ -646,7 +646,7 @@ feature {NONE} -- Private attributes
 			-- Widget for opening a project using a config file.
 
 note
-	copyright:	"Copyright (c) 1984-2018, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2020, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

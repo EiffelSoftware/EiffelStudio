@@ -225,7 +225,6 @@ feature -- Hook
 			cid: INTEGER_64
 			l_sub_item: STRIPE_PAYMENT_SUBSCRIPTION_ITEM
 			l_onetime_item: STRIPE_PAYMENT_ONETIME_ITEM
-			l_pay: STRIPE_PAYMENT
 			l_plan: STRIPE_PLAN
 			l_product_id: READABLE_STRING_GENERAL
 			l_price_in_cents: NATURAL_32

@@ -170,7 +170,7 @@ feature -- Execution
 				r.add_table_iterator_field ("es:plan", license_to_plan_table (lic))
 			end
 
-			r.add_link ("installation", "installation", cloud_user_installation_link (a_version, a_user, inst.id))
+			r.add_link ("es:installation", "installation", cloud_user_installation_link (a_version, a_user, inst.id))
 		end
 
 	list_installations (a_version: READABLE_STRING_GENERAL; a_user: ES_CLOUD_USER; req: WSF_REQUEST; res: WSF_RESPONSE)
@@ -241,11 +241,11 @@ feature -- Execution
 					create l_inst_location.make_from_string (r.location)
 					remove_last_segment (l_inst_location, False)
 					remove_last_segment (l_inst_location, False)
-					r.add_link ("es:installation", "installation", (api.absolute_url (l_inst_location, Void)))
+--					r.add_link ("es:installation", "installation", (api.absolute_url (l_inst_location, Void)))
 				else
 					r := new_error_response ("Session not found", req, res)
 				end
-				r.add_link ("installation", "installation", cloud_user_installation_link (a_version, a_user, iid))
+				r.add_link ("es:installation", "installation", cloud_user_installation_link (a_version, a_user, iid))
 				add_cloud_user_links_to (a_version, a_user, r)
 				add_user_links_to (a_user, r)
 			else
@@ -275,7 +275,7 @@ feature -- Execution
 						r.add_boolean_field ("success", True)
 						r.add_string_field ("message", "installation discarded")
 						r.add_string_field ("installation_id", iid)
-						r.add_link ("installation", "installation", cloud_user_installation_link (a_version, a_user, iid))
+						r.add_link ("es:installation", "installation", cloud_user_installation_link (a_version, a_user, iid))
 						add_cloud_user_links_to (a_version, a_user, r)
 						add_user_links_to (a_user, r)
 					end

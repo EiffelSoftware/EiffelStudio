@@ -488,7 +488,7 @@ feature {NONE} -- Fetcher
 			if l_key = Void then
 				l_key := l_plan.name.to_string_32 + "_LIC_" + lid.out
 			end
-			create Result.make (lid, l_key, l_plan)
+			create Result.make_with_id (lid, l_key, l_plan)
 			if attached sql_read_string_32 (i + 1) as s then
 				Result.set_platform (s)
 			end

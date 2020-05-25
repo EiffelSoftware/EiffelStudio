@@ -287,8 +287,6 @@ feature -- Hook
 			lic: ES_CLOUD_LICENSE
 			l_email: detachable READABLE_STRING_8
 			l_user: detachable CMS_USER
-			dt: DATE_TIME
-			y,mo,d: INTEGER
 		do
 			if
 				attached es_cloud_api as api and then

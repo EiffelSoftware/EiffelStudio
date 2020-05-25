@@ -420,9 +420,6 @@ feature -- Customers
 								save_customer_id_with_email (l_email, Result.id)
 							end
 						end
-						debug
-							print (Result)
-						end
 					end
 				end
 			end

@@ -171,10 +171,11 @@ feature -- Handle
 									l_customer.set_phone (j_phone.unescaped_string_8)
 								end
 							end
-							l_customer := api.new_customer (l_customer)
+							if attached api.new_customer (l_customer) as l_new_customer then
+								l_customer := l_new_customer
+							end
 						end
-						if l_customer /= Void then
-
+						if l_customer /= Void and then l_customer.has_id then
 							api.attach_payment_method_to_customer (l_payment_method_id, l_customer)
 
 							if attached jo.array_item ("items") as j_items and then not j_items.is_empty then
@@ -234,34 +235,43 @@ feature -- Handle
 			end
 			rep := new_response (req, res, api)
 			if l_subscription /= Void then
-				if attached {JSON_WEBAPI_RESPONSE} rep as jrep then
-					jrep.import_json_object (l_subscription.to_string)
-				else
-					rep.add_string_field ("subscription_id", l_subscription.id)
-				end
-				rep.execute
-				if l_subscription.is_active then
-					api.cms_api.log_debug ({STRIPE_MODULE}.name, "New stripe subscription #" + l_subscription.id, Void)
-					if l_customer = Void then
-						l_customer := api.subscription_customer (l_subscription)
-					end
-					if l_customer /= Void then
-						create l_validation.make_from_subscription (l_subscription, l_customer)
-						if l_metadata /= Void then
-							l_validation.import_metadata (l_metadata)
-						end
-						if l_order_id /= Void then
-							l_validation.set_order_id (l_order_id)
-						end
-						api.invoke_validate_payment (l_validation)
-					end
-				end
+				process_subscription (l_subscription, l_customer, l_order_id, l_metadata, rep, api)
 			else
 				rep.add_boolean_field ("error", True)
 				if not api.config.is_valid then
 					rep.add_string_field ("error_message", "stripe configuration is not valid!")
 				end
 				rep.execute
+			end
+		end
+
+	process_subscription (sub: STRIPE_SUBSCRIPTION; cust: detachable STRIPE_CUSTOMER; a_order_id: detachable READABLE_STRING_GENERAL; a_metadata: detachable STRING_TABLE [READABLE_STRING_GENERAL]; rep: like new_response; api: STRIPE_API)
+		local
+			l_customer: STRIPE_CUSTOMER
+			l_validation: STRIPE_PAYMENT_VALIDATION
+		do
+			l_customer := cust
+			if attached {JSON_WEBAPI_RESPONSE} rep as jrep then
+				jrep.import_json_object (sub.to_string)
+			else
+				rep.add_string_field ("subscription_id", sub.id)
+			end
+			rep.execute
+			if sub.is_active then
+				api.cms_api.log_debug ({STRIPE_MODULE}.name, "New stripe subscription #" + sub.id, Void)
+				if l_customer = Void then
+					l_customer := api.subscription_customer (sub)
+				end
+				if l_customer /= Void then
+					create l_validation.make_from_subscription (sub, l_customer)
+					if a_metadata /= Void then
+						l_validation.import_metadata (a_metadata)
+					end
+					if a_order_id /= Void then
+						l_validation.set_order_id (a_order_id)
+					end
+					api.invoke_validate_payment (l_validation)
+				end
 			end
 		end
 
@@ -279,7 +289,7 @@ feature -- Handle
 				jp.parse_content
 				if jp.is_parsed and then jp.is_valid and then attached jp.parsed_json_object as jo then
 					if
-						attached jo.string_item ("subscription_id") as j_subscription_id and
+						attached jo.string_item ("subscriptionId") as j_subscription_id and
 						api.config.is_valid
 					then
 						l_subscription := api.subscription (j_subscription_id.unescaped_string_32)
@@ -288,7 +298,7 @@ feature -- Handle
 			end
 			rep := new_response (req, res, api)
 			if l_subscription /= Void then
-				rep.add_string_field ("id", l_subscription.id)
+				process_subscription (l_subscription, Void, Void, Void, rep, api)
 			else
 				rep.add_boolean_field ("error", True)
 				if not api.config.is_valid then

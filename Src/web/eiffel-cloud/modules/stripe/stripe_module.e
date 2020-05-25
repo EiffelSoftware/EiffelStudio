@@ -129,7 +129,7 @@ feature -- Access: router
 				a_router.handle (l_mod_api.config.base_path + "/not_available", create {WSF_URI_AGENT_HANDLER}.make (agent handle_not_available (?,?, a_api)), a_router.methods_get)
 				a_router.handle (l_mod_api.config.base_path + "/subscribe/{category}/{checkout}", create {STRIPE_SUBSCRIPTION_HANDLER}.make (Current, l_mod_api, l_mod_api.config.base_path), a_router.methods_post)
 
-				a_router.handle (l_mod_api.config.base_path + "/pay/{category}/{checkout}", create {STRIPE_PAYMENT_HANDLER}.make (Current, l_mod_api, l_mod_api.config.base_path), a_router.methods_get)
+				a_router.handle (l_mod_api.config.base_path + "/pay/{category}/{checkout}", create {STRIPE_PAYMENT_HANDLER}.make (Current, l_mod_api, l_mod_api.config.base_path), a_router.methods_get_post)
 				a_router.handle (l_mod_api.config.base_path + "/pay/{category}/{checkout}/terms", create {STRIPE_PAYMENT_HANDLER}.make (Current, l_mod_api, l_mod_api.config.base_path), a_router.methods_get)
 				a_router.handle (l_mod_api.config.base_path + "/test", create {WSF_URI_AGENT_HANDLER}.make (agent handle_test (?,?, a_api)), a_router.methods_get_post)
 			end

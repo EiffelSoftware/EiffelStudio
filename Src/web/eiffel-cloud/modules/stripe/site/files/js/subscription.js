@@ -78,7 +78,12 @@ function customer_form_value(fn, box) {
   if (w == null) {
 	return null;
   } else {
-	return w.value;
+    var str = w.value;
+	if (str === null || str.length === 0 || !str.trim() ) {
+		return null;
+	} else {
+		return str;
+	}
   }
 }
 
@@ -96,26 +101,27 @@ var createPaymentMethodAndCustomer = function(stripe, card) {
   customer['address']['state'] = customer_form_value ('customer-address-state', eStripeMod.main_box);
   customer['address']['country'] = customer_form_value ('customer-address-country', eStripeMod.main_box);
   var cardItems = customer_form_value ('items', eStripeMod.main_box);
+  var j_details = {
+		  email: customer['email'],
+		};
+  if (customer['name'] !== null) { j_details['name'] = customer['name']; }
+  if (customer['phone'] !== null) { j_details['phone'] = customer['phone']; }
+  if (customer['address'] !== null) { j_details['address'] = customer['address']; }
 
   stripe
     .createPaymentMethod('card', card, {
-      billing_details: {
-		  email: customer['email'],
-		  name: customer['name'],
-		  phone: customer['phone'],
-		  address: customer['address']
-      }
+      billing_details: j_details
     })
     .then(function(result) {
       if (result.error) {
         showCardError(result.error);
       } else {
-        createCustomer(result.paymentMethod.id, customer, JSON.parse(cardItems));
+        createCustomer(stripe, result.paymentMethod.id, customer, JSON.parse(cardItems));
       }
     });
 };
 
-async function createCustomer(paymentMethod, customer, cardItems) {
+async function createCustomer(stripe, paymentMethod, customer, cardItems) {
   return fetch(eStripeMod.HOST_URL + '/customer_subscription', {
     method: 'post',
     headers: {
@@ -134,36 +140,40 @@ async function createCustomer(paymentMethod, customer, cardItems) {
       return response.json();
     })
     .then(subscription => {
-      handleSubscription(subscription);
+      handleSubscription(stripe, subscription);
     });
 }
 
-function handleSubscription(subscription) {
+function handleSubscription(stripe, subscription) {
   const { latest_invoice } = subscription;
-  const { payment_intent } = latest_invoice;
-
-  if (payment_intent) {
-    const { client_secret, status } = payment_intent;
-
-    if (status === 'requires_action') {
-      stripe.confirmCardPayment(client_secret).then(function(result) {
-        if (result.error) {
-          // Display error message in your UI.
-          // The card was declined (i.e. insufficient funds, card has expired, etc)
-          changeLoadingState(false);
-          showCardError(result.error);
-        } else {
-          // Show a success message to your customer
-          confirmSubscription(subscription.id);
-        }
-      });
-    } else {
-      // No additional information was needed
-      // Show a success message to your customer
-      orderComplete(subscription);
-    }
+  if (!latest_invoice || latest_invoice === null) {
+	  showCardError("Internal error, payment cancelled.");
+	  alert ("Internal error, payment cancelled");
   } else {
-    orderComplete(subscription);
+	  const { payment_intent } = latest_invoice;
+	  if (payment_intent) {
+		  const { client_secret, status } = payment_intent;
+
+		  if (status === 'requires_action') {
+			  stripe.confirmCardPayment(client_secret).then(function(result) {
+				  if (result.error) {
+					  // Display error message in your UI.
+					  // The card was declined (i.e. insufficient funds, card has expired, etc)
+					  changeLoadingState(false);
+					  showCardError(result.error);
+				  } else {
+					  // Show a success message to your customer
+					  confirmSubscription(subscription.id);
+				  }
+			  });
+		  } else {
+			  // No additional information was needed
+			  // Show a success message to your customer
+			  orderComplete(subscription);
+		  }
+	  } else {
+		  orderComplete(subscription);
+	  }
   }
 }
 
@@ -217,7 +227,7 @@ var orderComplete = function(subscription) {
   eStripeMod.main_box.querySelector('.order-status').textContent = subscription.status;
   l_summary = '<a href="' + subscription.latest_invoice.hosted_invoice_url + '">Check your Invoice</a> (<a href="' + subscription.latest_invoice.invoice_pdf + '">PDF</a>)';
   eStripeMod.main_box.querySelector('.order-summary').innerHTML = l_summary;
-  eStripeMod.main_box.querySelector('code').textContent = subscriptionJson;
+  //eStripeMod.main_box.querySelector('code').textContent = subscriptionJson;
 };
 
 // Show a spinner on subscription submission
@@ -233,7 +243,6 @@ var changeLoadingState = function(isLoading) {
     eStripeMod.main_box.querySelector('#button-text').classList.remove('hidden');
   }
 };
-
 
 function setup(a_host_url,a_stripe_box) {
 	eStripeMod.HOST_URL=a_host_url;

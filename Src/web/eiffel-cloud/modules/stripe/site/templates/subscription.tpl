@@ -18,6 +18,7 @@
 				  <label for="customer-email">Email address</label>
                   <input
                     type="text"
+					required="required"
                     id="customer-email"
                     placeholder="Email"
                     autocomplete="cardholder"
@@ -35,6 +36,7 @@
 				  <label for="customer-phone">Phone (optional)</label>
 				  <input
                     type="text"
+					required="required"
                     id="customer-phone"
                     placeholder="Phone"
                     class="sr-input"
@@ -48,6 +50,7 @@
 				  <label for="customer-address-line1">Street address:</label>
                   <input
                     type="text"
+					required="required"
                     id="customer-address-line1"
                     placeholder="Street #1"
                     class="sr-input"
@@ -63,6 +66,7 @@
 				  <label for="customer-address-city">City:</label>
                   <input
                     type="text"
+					required="required"
                     id="customer-address-city"
                     placeholder="City"
                     class="sr-input"
@@ -71,6 +75,7 @@
 				  <label for="customer-address-postal-code">Postal code/ZIP:</label>
                   <input
                     type="text"
+					required="required"
                     id="customer-address-postal-code"
                     placeholder="Postal code"
                     class="sr-input"
@@ -79,6 +84,7 @@
 				  <label for="customer-address-state">State/Region:</label>
                   <input
                     type="text"
+					required="required"
                     id="customer-address-state"
                     placeholder="State"
                     class="sr-input"
@@ -86,6 +92,7 @@
                   />
 				  <label for="customer-address-country">Country:</label>
 					<select name="customer-address-country" 
+					  required="required"
 					  id="customer-address-country"
                       class="sr-input"
 					>

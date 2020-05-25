@@ -74,6 +74,7 @@ feature -- Query
 
 	is_onetime: BOOLEAN
 		do
+			Result := not is_empty
 			across
 				items as ic
 			loop
@@ -83,6 +84,7 @@ feature -- Query
 
 	is_yearly: BOOLEAN
 		do
+			Result := not is_empty
 			across
 				items as ic
 			loop
@@ -92,6 +94,7 @@ feature -- Query
 
 	is_monthly: BOOLEAN
 		do
+			Result := not is_empty
 			across
 				items as ic
 			loop
@@ -101,6 +104,7 @@ feature -- Query
 
 	is_weekly: BOOLEAN
 		do
+			Result := not is_empty
 			across
 				items as ic
 			loop
@@ -110,6 +114,7 @@ feature -- Query
 
 	is_daily: BOOLEAN
 		do
+			Result := not is_empty
 			across
 				items as ic
 			loop

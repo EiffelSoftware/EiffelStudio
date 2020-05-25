@@ -224,6 +224,8 @@ feature -- Hook
 			l_cart: SHOPPING_CART
 			cid: INTEGER_64
 			l_sub_item: STRIPE_PAYMENT_SUBSCRIPTION_ITEM
+			l_onetime_item: STRIPE_PAYMENT_ONETIME_ITEM
+			l_pay: STRIPE_PAYMENT
 			l_plan: STRIPE_PLAN
 			l_product_id: READABLE_STRING_GENERAL
 			l_price_in_cents: NATURAL_32
@@ -261,7 +263,10 @@ feature -- Hook
 								if
 									attached {SHOPPING_ITEM} ic.item as l_shop_item and then
 									attached {SHOPPING_ITEM_DETAILS} l_shop_item.details as l_details then
-									if not l_details.is_onetime then
+									if l_details.is_onetime then
+										create l_onetime_item.make (l_shop_item.provider, l_details.price_in_cents, l_details.currency)
+										pay.add_item (l_onetime_item)
+									else
 										l_product_id := l_shop_item.provider + "." + l_shop_item.code
 											-- yearly, monthly, ...
 										l_price_in_cents := l_details.price_in_cents * l_shop_item.quantity

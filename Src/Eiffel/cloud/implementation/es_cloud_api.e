@@ -322,7 +322,7 @@ feature -- Installation
 					if not has_error then
 						if attached resp.string_8_item ("_links|es:installation|href") as v then
 							l_new_installation_href := v
-							record_endpoint_for_token (a_token, {STRING_32} "_links|es:installation|href;installation=" + a_installation.id, l_new_installation_href)
+							record_endpoint_for_token (a_token, "_links|es:installation|href;installation=" + a_installation.id, l_new_installation_href)
 						end
 					end
 					if l_new_installation_href /= Void then
@@ -504,13 +504,12 @@ feature -- Installation
 			resp: like response
 		do
 			reset_api_call
-			l_installation_href := endpoint_for_token (a_token, {STRING_32} "_links|es:installation|href;installation=" + a_installation_id.as_string_32)
+			l_installation_href := endpoint_for_token (a_token, {STRING_32} "_links|es:installation|href;installation=" + a_installation_id.to_string_32)
 			if l_installation_href /= Void then
 				if
 					attached new_http_client_session as sess
 				then
 					ctx := new_jwt_auth_context (a_token)
-
 					resp := response (sess.get (l_installation_href, ctx))
 					if not has_error then
 						Result := installation_from_response (resp)
@@ -526,6 +525,30 @@ feature -- Installation
 					if not a_installation_id.same_string (Result.id) then
 						Result := Void
 					end
+				end
+				if Result /= Void then
+					Result := updated_installation (a_token, Result)
+				end
+			end
+		end
+
+	updated_installation (a_token: READABLE_STRING_8; a_installation: ES_ACCOUNT_INSTALLATION): ES_ACCOUNT_INSTALLATION
+		local
+			l_installation_href: READABLE_STRING_8
+			ctx: HTTP_CLIENT_REQUEST_CONTEXT
+			resp: like response
+		do
+			reset_api_call
+			l_installation_href := endpoint_for_token (a_token, "_links|es:installation|href;installation=" + a_installation.id)
+			Result := a_installation
+			if
+				l_installation_href /= Void and then
+				attached new_http_client_session as sess
+			then
+				ctx := new_jwt_auth_context (a_token)
+				resp := response (sess.get (l_installation_href, ctx))
+				if not has_error then
+					Result := installation_from_response (resp)
 				end
 			end
 		end
@@ -590,7 +613,10 @@ feature -- Installation
 							across
 								l_installations as ic
 							loop
-								create inst.make_with_id (ic.key.as_string_8)
+								create inst.make_with_id (ic.key.to_string_8)
+								if attached resp.string_8_item ("_links|" + inst.id + "|href") as h then
+									record_endpoint_for_token (a_token, "_links|es:installation|href;installation=" + inst.id, h)
+								end
 								Result.force (inst)
 							end
 						end
@@ -828,13 +854,43 @@ feature {NONE} -- Json handling
 		do
 			if attached r.string_8_item ("name") as l_plan_name then
 				create Result.make (l_plan_name)
-				if attached r.integer_64_item ("id") as l_uid then
-					Result.set_plan_id (l_uid)
-				elseif attached r.string_32_item ("id") as s_uid then
-					Result.set_plan_id (s_uid.to_integer_64)
+				if attached r.integer_64_item ("id") as l_pid then
+					Result.set_plan_id (l_pid)
+				elseif attached r.string_32_item ("id") as s_pid then
+					Result.set_plan_id (s_pid.to_integer_64)
 				end
 --				if r.boolean_item_is_true ("is_active") then
 --				end
+				if attached r.integer_64_item ("days_remaining") as l_days_remaining then
+					Result.set_days_remaining (l_days_remaining.to_integer_32)
+				end
+				if attached r.date_time_item ("creation") as l_creation then
+					Result.set_creation_date (l_creation)
+				end
+				if attached r.date_time_item ("expiration") as l_expiration then
+					Result.set_expiration_date (l_expiration)
+				end
+			end
+		end
+
+	license_from_response (r: like response): detachable ES_ACCOUNT_LICENSE
+		do
+			if attached r.string_8_item ("key") as l_key then
+				create Result.make (l_key)
+
+				if attached r.string_8_item ("plan") as l_plan_name then
+					Result.set_plan_name (l_plan_name)
+				end
+				if attached r.integer_64_item ("plan_id") as l_pid then
+					Result.set_plan_id (l_pid)
+				elseif attached r.string_32_item ("plan_id") as s_pid then
+					Result.set_plan_id (s_pid.to_integer_64)
+				end
+--				if r.boolean_item_is_true ("is_active") then
+--				end				
+				if r.boolean_item_is_true ("is_fallback") then
+					Result.set_is_fallback (True)
+				end
 				if attached r.integer_64_item ("days_remaining") as l_days_remaining then
 					Result.set_days_remaining (l_days_remaining.to_integer_32)
 				end
@@ -874,6 +930,12 @@ feature {NONE} -- Json handling
 				if attached resp.date_time_item ("es:installation|creation_date") as v_creation then
 					Result.set_creation_date (v_creation)
 				end
+			end
+			if
+				attached resp.sub_item ("es:license") as r_lic and then
+				attached license_from_response (r_lic) as l_lic
+			then
+				Result.set_associated_license (l_lic)
 			end
 			if
 				attached resp.sub_item ("es:plan") as r_plan and then

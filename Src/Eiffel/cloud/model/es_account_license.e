@@ -1,81 +1,77 @@
 note
-	description: "Summary description for {ES_ACCOUNT_INSTALLATION}."
+	description: "Summary description for {ES_ACCOUNT_LICENSE}."
 	author: ""
 	date: "$Date$"
 	revision: "$Revision$"
 
 class
-	ES_ACCOUNT_INSTALLATION
+	ES_ACCOUNT_LICENSE
 
 create
-	make_with_id
+	make
 
 feature {NONE} -- Creation
 
-	make_with_id (a_id: READABLE_STRING_8)
+	make (a_key: READABLE_STRING_8)
 		do
-			create id.make_from_string (a_id)
-			is_active := True
+			create key.make_from_string (a_key)
 		end
 
 feature -- Access
 
-	id: IMMUTABLE_STRING_8
+	key: IMMUTABLE_STRING_8
+
+	plan_name: detachable IMMUTABLE_STRING_8
+
+	plan_id: INTEGER_64
 
 	creation_date: detachable DATE_TIME
 
-	info: detachable READABLE_STRING_8
+	expiration_date: detachable DATE_TIME
 
-	associated_license: detachable ES_ACCOUNT_LICENSE
+	days_remaining: INTEGER
 
-	associated_plan: detachable ES_ACCOUNT_PLAN
-
-
-feature -- Status report
+	is_fallback: BOOLEAN
 
 	is_active: BOOLEAN
+		do
+			if attached expiration_date as l_exp then
+				Result := l_exp >= create {DATE_TIME}.make_now_utc
+			elseif days_remaining < 0 then
+				Result := False
+			else
+				Result := True
+			end
+		end
 
-feature -- Optional properties
+feature -- Access
 
-	platform: detachable IMMUTABLE_STRING_8
+	associated_plan: detachable ES_ACCOUNT_PLAN
+		do
+			if attached plan_name as l_name then
+				create Result.make (l_name)
+				Result.set_plan_id (plan_id)
+				Result.set_creation_date (creation_date)
+				Result.set_expiration_date (expiration_date)
+				Result.set_days_remaining (days_remaining)
+			end
+		end
 
 feature -- Element change
 
-	set_associated_license (lic: like associated_license)
+	set_is_fallback (b: Like is_fallback)
 		do
-			associated_license := lic
-			if lic /= Void then
-				associated_plan := lic.associated_plan
-			end
+			is_fallback := b
 		end
 
-	set_associated_plan (a_plan: like associated_plan)
+	set_plan_name (a_plan_name: READABLE_STRING_8)
 		do
-			associated_plan := a_plan
+			plan_name := a_plan_name
 		end
 
-	set_platform (pf: detachable READABLE_STRING_8)
+	set_plan_id (a_plan_id: INTEGER_64)
 		do
-			if pf = Void then
-				platform := Void
-			else
-				create platform.make_from_string (pf)
-			end
-		end
-
-	set_info (inf: detachable READABLE_STRING_8)
-		do
-			info := inf
-		end
-
-	mark_active
-		do
-			is_active := True
-		end
-
-	mark_inactive
-		do
-			is_active := False
+			plan_id := a_plan_id
 		end
 
 	set_creation_date (dt: like creation_date)
@@ -83,6 +79,15 @@ feature -- Element change
 			creation_date := dt
 		end
 
+	set_expiration_date (dt: like expiration_date)
+		do
+			expiration_date := dt
+		end
+
+	set_days_remaining (nb: INTEGER)
+		do
+			days_remaining := nb
+		end
 
 ;note
 	copyright: "Copyright (c) 1984-2020, Eiffel Software"

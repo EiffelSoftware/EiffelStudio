@@ -140,10 +140,11 @@ feature {NONE} -- Action handlers
 			b.wipe_out
 			if attached es_cloud_s.service as cld then
 				if not is_cloud_available then
-					is_cloud_available := cld.is_available
-					if is_cloud_available then
-						cld.on_cloud_available (True)
-					end
+					cld.async_check_availability
+--					is_cloud_available := cld.is_available
+--					if is_cloud_available then
+--						cld.on_cloud_available (True)
+--					end
 				end
 				l_dbg := cld.is_debug_enabled
 				acc := cld.active_account

@@ -1,67 +1,50 @@
 note
-	description: "[
-			Asynchronous call to refresh_token.
-
-		]"
-	status: "Under development, currently not used!"
+	description: "Asynchronous check for service availability."
 	date: "$Date$"
 	revision: "$Revision$"
 
 class
-	ES_CLOUD_ASYNC_REFRESH
+	ES_CLOUD_ASYNC_STATUS
+
+inherit
+	ES_CLOUD_ASYNC_OPERATION
+
+	SHARED_LOGGER_SERVICE
 
 create
 	make
 
-feature {NONE} -- Initialization
+feature {NONE} -- Access: worker thread
 
-	make (a_access_token: ES_ACCOUNT_ACCESS_TOKEN; cfg: ES_CLOUD_CONFIG)
-		require
-			has_refresh_key: a_access_token.has_refresh_key
-		do
-			access_token := a_access_token
-			config := cfg
-		end
+	is_available: BOOLEAN
 
-	access_token: ES_ACCOUNT_ACCESS_TOKEN
+feature {NONE} -- Execution
 
-	server_url: IMMUTABLE_STRING_8
-		do
-			Result := config.server_url
-		end
-
-	config: ES_CLOUD_CONFIG
-
-feature -- Output
-
-	refreshed_token: detachable ES_ACCOUNT_ACCESS_TOKEN
-
-feature -- Access
-
-	execute
-		local
-			wt: WORKER_THREAD
-		do
-			if attached access_token.refresh_key as k then
-				create wt.make (agent refresh_token (create {IMMUTABLE_STRING_8}.make_from_string (access_token.token), create {IMMUTABLE_STRING_8}.make_from_string (k)))
-				wt.launch
-			end
-		end
-
-	refresh_token (a_token: READABLE_STRING_8; a_refresh_key: READABLE_STRING_8)
+	execute_operation
 		local
 			wapi: ES_CLOUD_API
 		do
-			print ("Going to ping%N")
-			(create {EXECUTION_ENVIRONMENT}).sleep (10_000_000_000)
 			create wapi.make (config)
-			print ("Pinging%N")
-			refreshed_token := wapi.refreshing_token (a_token, a_refresh_key)
-			print ("Ping done.%N")
+			wapi.get_is_available
+			is_available := wapi.is_available
+		end
+
+feature {NONE} -- Access
+
+	on_operation_completion
+		do
+			if is_available then
+				service.on_cloud_available (is_available)
+			end
+		end
+
+	reset_operation
+		do
+			is_available := False
 		end
 
 note
-	copyright: "Copyright (c) 1984-2019, Eiffel Software"
+	copyright: "Copyright (c) 1984-2020, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

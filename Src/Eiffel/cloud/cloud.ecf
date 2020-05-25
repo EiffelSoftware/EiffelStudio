@@ -52,6 +52,7 @@
 						<platform value="windows"/>
 					</condition>
 				</cluster>
+				<cluster name="concurrency_common" location="$|concurrency\common\"/>
 				<cluster name="concurrency_none" location="$|concurrency\none\">
 					<condition>
 						<concurrency excluded_value="thread"/>

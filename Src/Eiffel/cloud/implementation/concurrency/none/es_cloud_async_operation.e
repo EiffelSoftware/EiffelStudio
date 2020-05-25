@@ -1,58 +1,63 @@
 note
-	description: "Asynchronous call to refresh_token."
+	description: "Asynchronous cloud operation."
 	date: "$Date$"
 	revision: "$Revision$"
 
-class
-	ES_CLOUD_ASYNC_REFRESH
+deferred class
+	ES_CLOUD_ASYNC_OPERATION
 
-create
-	make
+inherit
+	EV_SHARED_APPLICATION
 
 feature {NONE} -- Initialization
 
-	make (a_access_token: ES_ACCOUNT_ACCESS_TOKEN; a_server_url: READABLE_STRING_8)
+	make (a_service: ES_CLOUD_S; cfg: ES_CLOUD_CONFIG)
 		require
-			has_refresh_key: a_access_token.has_refresh_key
+			a_service /= Void
 		do
-			access_token := a_access_token
-			create server_url.make_from_string (a_server_url)
+			service := a_service
+			config := cfg
 		end
 
-	access_token: ES_ACCOUNT_ACCESS_TOKEN
+feature -- Access: Current
 
-	server_url: IMMUTABLE_STRING_8
+	service: ES_CLOUD_S
 
-feature -- Output
+feature {NONE} -- Access: thread synchro
 
-	refreshed_token: detachable ES_ACCOUNT_ACCESS_TOKEN
+	completed: BOOLEAN
 
-feature -- Access
+feature {NONE} -- Access: worker thread
+
+	config: ES_CLOUD_CONFIG
+
+feature -- Execution
 
 	execute
-		local
-			wt: WORKER_THREAD
 		do
-			if attached access_token.refresh_key as k then
-				create wt.make (agent refresh_token (create {IMMUTABLE_STRING_8}.make_from_string (access_token.token), create {IMMUTABLE_STRING_8}.make_from_string (k)))
-				wt.launch
-			end
+			completed := False
+			reset_operation
+			execute_operation
+			completed := True
+			on_operation_completion
 		end
 
-	refresh_token (a_token: READABLE_STRING_8; a_refresh_key: READABLE_STRING_8)
-		local
-			wapi: ES_CLOUD_API
-		do
-			print ("Going to ping%N")
-			(create {EXECUTION_ENVIRONMENT}).sleep (10_000_000_000)
-			create wapi.make (server_url)
-			print ("Pinging%N")
-			refreshed_token := wapi.refreshing_token (a_token, a_refresh_key)
-			print ("Ping done.%N")
+feature {NONE} -- Execution
+
+	execute_operation
+		deferred
+		end
+
+	reset_operation
+		deferred
+		end
+
+	on_operation_completion
+		deferred
 		end
 
 note
-	copyright: "Copyright (c) 1984-2017, Eiffel Software"
+	copyright: "Copyright (c) 1984-2020, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

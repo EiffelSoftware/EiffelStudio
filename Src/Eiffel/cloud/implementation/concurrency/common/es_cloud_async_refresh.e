@@ -1,55 +1,72 @@
 note
-	description: "Asynchronous call to refresh_token."
+	description: "[
+			Asynchronous call to refresh_token.
+
+		]"
+	status: "Under development, currently not used!"
 	date: "$Date$"
 	revision: "$Revision$"
 
 class
 	ES_CLOUD_ASYNC_REFRESH
 
+inherit
+	ES_CLOUD_ASYNC_OPERATION
+		rename
+			make as old_make
+		end
+
 create
 	make
 
 feature {NONE} -- Initialization
 
-	make (a_access_token: ES_ACCOUNT_ACCESS_TOKEN; a_server_url: READABLE_STRING_8)
+	make (a_service: ES_CLOUD_S; a_access_token: ES_ACCOUNT_ACCESS_TOKEN; cfg: ES_CLOUD_CONFIG)
 		require
 			has_refresh_key: a_access_token.has_refresh_key
 		do
+			old_make (a_service, cfg)
 			access_token := a_access_token
-			create server_url.make_from_string (a_server_url)
 		end
+
+feature {NONE} -- Access
 
 	access_token: ES_ACCOUNT_ACCESS_TOKEN
 
 	server_url: IMMUTABLE_STRING_8
+		do
+			Result := config.server_url
+		end
 
-feature -- Output
+feature {NONE} -- Output
 
 	refreshed_token: detachable ES_ACCOUNT_ACCESS_TOKEN
 
 feature -- Access
 
-	execute
+	on_operation_completion
 		do
-			if attached access_token.refresh_key as k then
-				refresh_token (create {IMMUTABLE_STRING_8}.make_from_string (access_token.token), create {IMMUTABLE_STRING_8}.make_from_string (k))
+			if attached refreshed_token as tok then
 			end
 		end
 
-	refresh_token (a_token: READABLE_STRING_8; a_refresh_key: READABLE_STRING_8)
+	reset_operation
+		do
+			refreshed_token := Void
+		end
+
+	execute_operation
 		local
 			wapi: ES_CLOUD_API
 		do
-			print ("Going to ping%N")
-			(create {EXECUTION_ENVIRONMENT}).sleep (10_000_000_000)
-			create wapi.make (server_url)
-			print ("Pinging%N")
-			refreshed_token := wapi.refreshing_token (a_token, a_refresh_key)
-			print ("Ping done.%N")
+			if attached access_token.refresh_key as k then
+				create wapi.make (config)
+				refreshed_token := wapi.refreshing_token (access_token.token, k)
+			end
 		end
 
 note
-	copyright: "Copyright (c) 1984-2017, Eiffel Software"
+	copyright: "Copyright (c) 1984-2019, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

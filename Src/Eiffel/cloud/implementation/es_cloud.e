@@ -82,7 +82,7 @@ feature {NONE} -- Default
 
 	default_server_url: STRING
 		do
-			Result := "https://cloud.eiffel.com/api" -- Default
+			Result := "https://account.eiffel.com/api" -- Default
 			debug ("es_cloud")
 				-- On Windows: Computer\HKEY_CURRENT_USER\Software\ISE\Eiffel_19.09\installation\es_cloud\default_server_url
 				if
@@ -93,8 +93,6 @@ feature {NONE} -- Default
 						-- For now, it is possible to change the server url this way.
 					Result := v.to_string_8
 				end
-			end
-			debug ("es_cloud")
 				if attached eiffel_layout.get_environment_8 ("ES_CLOUD_SERVER_URL") as l_env_url then
 					Result := l_env_url
 				end
@@ -149,7 +147,7 @@ feature {NONE} -- Initialization
 				l_id.append_character ('-')
 				l_id.append_character ('-')
 				l_id.append ((create {UUID_GENERATOR}).generate_uuid.out)
-				create installation.make_with_id (l_id)
+				create installation.make_with_id (l_id.to_string_8) -- TODO: check if Unicode id could work
 				inst.set_application_item (l_var_name, l_app_name, env.version_name, installation.id)
 			end
 			installation.set_platform (env.eiffel_platform)
@@ -359,26 +357,28 @@ feature -- Status report
 			cl: like cell_is_available
 			b: BOOLEAN
 			dt: DATE_TIME
+			nb: NATURAL_8
 		do
 			create dt.make_now_utc
 			cl := cell_is_available
 			if cl = Void then
 				web_api.get_is_available
 				Result := web_api.is_available
-				create cl.put ([Result, dt])
+				create cl.put ([Result, dt, {NATURAL_8} 1])
 				cell_is_available := cl
 			else
 				Result := cl.item.available
+				nb := cl.item.try_count.max (1)
 				if
 					cl.item.last_time = Void
 					or else attached cl.item.last_time as l_last_time and then
-							l_last_time.relative_duration (dt).seconds_count > 60
+							l_last_time.relative_duration (dt).seconds_count > (nb * nb) * 60
 				then
 					web_api.get_is_available
 					b := web_api.is_available
 					if b /= Result then
 						Result := b
-						create cl.put ([Result, dt])
+						create cl.put ([Result, dt, nb + 1])
 						cell_is_available := cl
 					end
 				end
@@ -429,7 +429,7 @@ feature -- Debug purpose
 
 feature {NONE} -- Status report
 
-	cell_is_available: detachable CELL [TUPLE [available: BOOLEAN; last_time: detachable DATE_TIME]]
+	cell_is_available: detachable CELL [TUPLE [available: BOOLEAN; last_time: detachable DATE_TIME; try_count: NATURAL_8]]
 
 feature -- Get status
 
@@ -541,6 +541,14 @@ feature -- Updating
 		do
 			params["product"] := eiffel_layout.product_name
 			params["product_version"] := eiffel_layout.version_name
+		end
+
+	async_check_availability
+		local
+			p: ES_CLOUD_ASYNC_STATUS
+		do
+			create p.make (Current, web_api.config)
+			p.execute
 		end
 
 	async_ping_installation (a_account: ES_ACCOUNT; a_session: ES_ACCOUNT_SESSION)
@@ -713,11 +721,12 @@ feature -- Connection checking
 			l_was_available := is_available
 			if attached cell_is_available as cl then
 				cl.item.last_time := Void -- Force new check
+				cl.item.try_count := 0
 			end
 			b := is_available
---			if l_was_available /= b then
+			if l_was_available /= b then
 				on_cloud_available (b)
---			end
+			end
 		end
 
 feature -- Account Registration	

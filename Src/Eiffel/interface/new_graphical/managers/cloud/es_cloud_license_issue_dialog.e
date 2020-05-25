@@ -44,7 +44,7 @@ feature {NONE} -- Initialization
 			create lab.make_with_text ("[
 					Your EiffelStudio license expired!
 					
-					Choose [Guest] to use EiffelStudio using Guest account.
+					Choose [Guest] to use EiffelStudio as Guest account.
 				]")
 
 			create l_weblnk.make_with_text ("Please visit your web account for options.")

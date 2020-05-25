@@ -140,6 +140,10 @@ feature -- Update
 			end
 		end
 
+	async_check_availability
+		deferred
+		end
+
 	async_ping_installation (a_account: ES_ACCOUNT; a_session: ES_ACCOUNT_SESSION)
 		deferred
 		end

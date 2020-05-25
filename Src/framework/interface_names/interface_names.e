@@ -2745,32 +2745,6 @@ feature -- Startup pages
 	l_please_read_and_accept_terms: STRING_32 do Result := locale.translation ("Please read and accept these terms and conditions. Scroll down for full text:") end
 	l_agree_and_continue_with_terms: STRING_32 do Result := locale.translation ("I confirm that I have read and accept the terms") end
 	l_purchase_enterprise_edition: STRING_32 do Result := locale.translation ("Purchase Enterprise edition") end
-	l_sign_in_with_credentials: STRING_32 do Result := locale.translation ("Sign in with credentials") end
-	l_learn_more: STRING_32 do Result := locale.translation ("Learn more ...") end
-
-	l_user_name: STRING_32 do Result := locale.translation ("User Name") end
-	l_first_name: STRING_32 do Result := locale.translation ("First Name") end
-	l_last_name: STRING_32 do Result := locale.translation ("Last Name") end
-	l_password: STRING_32 do Result := locale.translation ("Password") end
-	l_email: STRING_32 do Result := locale.translation ("Email") end
-
-	b_sign_in: STRING_32 do Result := locale.translation ("Sign in") end
-	b_sign_out: STRING_32 do Result := locale.translation ("Sign out") end
-	b_register: STRING_32 do Result := locale.translation ("Register") end
-	b_skip: STRING_32 do Result := locale.translation ("Skip") end
-	b_guest: STRING_32 do Result := locale.translation ("Guest") end
-
-	l_open_eiffelstudio_account_web_site: STRING_32 do Result := locale.translation ("Open EiffelStudio account website in web browser.") end
-	l_register_new_account: STRING_32 do Result := locale.translation ("Register a new account.") end
-	l_no_account_text: STRING_32 do Result := locale.translation ("No account?") end
-	l_create_new_account: STRING_32 do Result := locale.translation ("Create one!") end
-	l_sign_in_with_existing_account: STRING_32 do Result := locale.translation ("You already have an account? Sign in >>") end
-
-	l_can_continue_as_guest_for_n_days (nb_days: INTEGER): READABLE_STRING_32
-		do
-			Result := locale.formatted_string (locale.plural_translation_in_context
-			(once "This is the last day you can still continue as guest", once "You can still continue as guest for $1 more days", once "eiffel.account", nb_days), nb_days)
-		end
 
 feature -- Account related
 

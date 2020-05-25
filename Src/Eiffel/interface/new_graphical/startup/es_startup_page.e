@@ -18,6 +18,8 @@ inherit
 
 	SHARED_ES_CLOUD_SERVICE
 
+	SHARED_LOCALE
+
 create
 	make
 
@@ -260,14 +262,14 @@ feature -- Text
 
 	terms_agreement_text: STRING
 		once
-			Result := "[
+			Result :=  locale.translation_in_context ("[
 About the EiffelStudio Community License
 
 The terms of the EiffelStudio Community License appear below; they are those of the Gnu Public License (GPL). The spirit of the EiffelStudio Community License is to encourage the production of free, reusable Eiffel software. Users relying on the Eiffel Community License are expected to make their own EiffelStudio-produced software available under GPL or another open-source software license.
 There are a variety of ways to distribute EiffelStudio-produced software, from Github to BitBucket, SourceForge and others, as well as Eiffel's own Iron repository. We request that you make the software known and available to other Eiffel users by providing a link to it. Simply log into your account at https://myprojects.eiffel.org and follow the instructions.
 If you prefer to develop proprietary software, or do not agree with the terms of the EiffelStudio Community License, use another of the available EiffelStudio licenses.
 We look forward to your contributions.
-]"
+]", "license")
 		end
 
 feature -- Access: widgets

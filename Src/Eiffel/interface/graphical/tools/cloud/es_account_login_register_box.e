@@ -106,7 +106,7 @@ feature {NONE} -- Initialization
 
 			l_learn_more_box.extend (vb_learn)
 			l_learn_more_box.hide
-			create lnk.make_with_text (interface_names.l_learn_more)
+			create lnk.make_with_text (cloud_names.label_learn_more)
 			lnk.align_text_left
 			lnk.select_actions.extend (agent (i_learn_more_box: EV_WIDGET; i_lnk: EV_WIDGET)
 				do
@@ -142,7 +142,7 @@ feature {NONE} -- Initialization
 			vb.disable_item_expand (hb)
 
 			if attached es_cloud_s.service as cld then
-				create lnk.make_with_text (interface_names.l_open_eiffelstudio_account_web_site)
+				create lnk.make_with_text (cloud_names.label_open_eiffelstudio_account_web_site)
 				lnk.align_text_left
 				lnk.select_actions.extend (agent open_url (cld.view_account_website_url, Void))
 				vb.extend (lnk)
@@ -167,9 +167,9 @@ feature {NONE} -- Initialization
 			end -- end of offline
 
 			if not is_guest_signed_in and then attached remaining_allowed_guest_days as l_days and then l_days > 0 then
-				create but.make_with_text_and_action (interface_names.b_guest, agent on_guest)
+				create but.make_with_text_and_action (cloud_names.button_guest, agent on_guest)
 				layout_constants.set_default_width_for_button (but)
-				append_label_and_item_horizontally (interface_names.l_can_continue_as_guest_for_n_days (l_days), but, vb)
+				append_label_and_item_horizontally (cloud_names.label_can_continue_as_guest_for_n_days (l_days), but, vb)
 				debug
 					if attached guest_mode_sign_in_count as nb and then nb > 0 then
 						append_label_and_item_horizontally ("(" + nb.out + ")", create {EV_CELL}, vb)
@@ -194,7 +194,7 @@ feature {NONE} -- Initialization
 			b := new_sign_box
 			create hb
 
-			create lab.make_with_text (interface_names.l_no_account_text)
+			create lab.make_with_text (cloud_names.label_no_account_text)
 			hb.extend (lab)
 			hb.disable_item_expand (lab)
 			create lab.make_with_text (" ")
@@ -209,7 +209,7 @@ feature {NONE} -- Initialization
 			b.extend (lab)
 			b.disable_item_expand (lab)
 
-			create lnk.make_with_text (interface_names.l_create_new_account)
+			create lnk.make_with_text (cloud_names.label_create_new_account)
 			lnk.align_text_left
 			lnk.select_actions.extend (agent open_url (cloud_service.new_account_website_url, lab))
 --			lnk.select_actions.extend (agent set_register_mode (fr))
@@ -262,7 +262,7 @@ feature {NONE} -- Initialization
 		do
 			fr.remove_text
 			b := new_register_link_box
-			create lnk.make_with_text (interface_names.l_sign_in_with_existing_account)
+			create lnk.make_with_text (cloud_names.label_sign_in_with_existing_account)
 			lnk.align_text_left
 			lnk.select_actions.extend (agent set_sign_in_mode (fr))
 			b.extend (lnk)
@@ -302,11 +302,11 @@ feature {NONE} -- Initialization
 			password_input := tf_password
 			w := tf_username
 			w.set_minimum_width (l_field_width)
-			append_label_and_item_horizontally (interface_names.l_user_name, w, Result)
+			append_label_and_item_horizontally (cloud_names.label_user_name, w, Result)
 			l_focus := w
 			w := tf_password
 			w.set_minimum_width (l_field_width)
-			append_label_and_item_horizontally (interface_names.l_password, w, Result)
+			append_label_and_item_horizontally (cloud_names.label_password, w, Result)
 
 			create lab
 			lab.hide
@@ -317,7 +317,7 @@ feature {NONE} -- Initialization
 			cb.set_tooltip (cloud_names.tooltip_do_not_use_on_public_machine)
 			layout_constants.set_default_width_for_button (cb)
 			create but.make_with_text_and_action (
-					interface_names.b_sign_in,
+					cloud_names.button_sign_in,
 					agent process_account_sign_in (new_gui_form ({ARRAY [TUPLE [name: READABLE_STRING_GENERAL; widget: EV_ANY]]} <<
 								["user_name", tf_username], ["password", tf_password], ["remember", cb]
 							>>), lab)
@@ -371,22 +371,22 @@ feature {NONE} -- Initialization
 			create tf_email
 			w := tf_username
 			w.set_minimum_width (l_field_width)
-			append_label_and_item_horizontally (interface_names.l_user_name, w, Result)
+			append_label_and_item_horizontally (cloud_names.label_user_name, w, Result)
 			w := tf_password
 			w.set_minimum_width (l_field_width)
-			append_label_and_item_horizontally (interface_names.l_password, w, Result)
+			append_label_and_item_horizontally (cloud_names.label_password, w, Result)
 
 			w := tf_firstname
 			w.set_minimum_width (l_field_width)
-			append_label_and_item_horizontally (interface_names.l_first_name, w, Result)
+			append_label_and_item_horizontally (cloud_names.label_first_name, w, Result)
 			w := tf_lastname
 			w.set_minimum_width (l_field_width)
-			append_label_and_item_horizontally (interface_names.l_last_name, w, Result)
+			append_label_and_item_horizontally (cloud_names.label_last_name, w, Result)
 
 			w := tf_email
 			w.set_minimum_width (l_field_width)
-			append_label_and_item_horizontally (interface_names.l_email, w, Result)
-			create but.make_with_text_and_action (interface_names.b_register, agent process_account_registration (new_gui_form (<<
+			append_label_and_item_horizontally (cloud_names.label_email, w, Result)
+			create but.make_with_text_and_action (cloud_names.button_register, agent process_account_registration (new_gui_form (<<
 						["user_name", tf_username],
 						["password", tf_password],
 						["first_name", tf_firstname],

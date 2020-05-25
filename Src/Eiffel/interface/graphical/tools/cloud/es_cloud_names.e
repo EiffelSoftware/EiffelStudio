@@ -33,6 +33,25 @@ feature -- Authentication
 	button_remember_credentials: STRING_32 do Result := locale.translation_in_context ("Remember my credentials", "cloud.auth") end
 	tooltip_do_not_use_on_public_machine: STRING_32 do Result := locale.translation_in_context ("Do not use this option on public machine!", "cloud.auth") end
 
+	label_open_eiffelstudio_account_web_site: STRING_32 do Result := locale.translation_in_context ("Open EiffelStudio account website in web browser.", "cloud.auth") end
+
+	label_can_continue_as_guest_for_n_days (nb_days: INTEGER): READABLE_STRING_32
+		do
+			Result := locale.formatted_string (locale.plural_translation_in_context
+			(once "This is the last day you can still continue as guest", once "You can still continue as guest for $1 more days", once "eiffel.account", nb_days), nb_days)
+		end
+
+	label_no_account_text: STRING_32 do Result := locale.translation ("No account?") end
+	label_create_new_account: STRING_32 do Result := locale.translation ("Create one!") end
+
+	label_sign_in_with_existing_account: STRING_32 do Result := locale.translation ("You already have an account? Sign in >>") end
+
+	label_user_name: STRING_32 do Result := locale.translation ("User Name") end
+	label_first_name: STRING_32 do Result := locale.translation ("First Name") end
+	label_last_name: STRING_32 do Result := locale.translation ("Last Name") end
+	label_password: STRING_32 do Result := locale.translation ("Password") end
+	label_email: STRING_32 do Result := locale.translation ("Email") end
+
 feature -- Account tool	
 
 	prompt_welcome_guest: STRING_32 do Result := locale.translation_in_context ("Welcome guest ...", "cloud.info") end
@@ -67,12 +86,17 @@ feature -- Menu
 
 feature -- General
 
+	label_learn_more: STRING_32 do Result := locale.translation_in_context ("Learn more ...", "cloud") end
 	label_terms_of_use: STRING_32 do Result := locale.translation_in_context ("Terms of use", "cloud") end
 	label_double_click_to_collapse: STRING_32 do Result := locale.translation_in_context ("Double click to collapse", "cloud") end
 	button_guest: STRING_32 do Result := locale.translation_in_context ("Guest", "cloud") end
 	button_quit: STRING_32 do Result := locale.translation_in_context ("Quit", "cloud") end
 	button_continue: STRING_32 do Result := locale.translation_in_context ("Continue", "cloud") end
 	button_submit: STRING_32 do Result := locale.translation_in_context ("Submit", "cloud") end
+
+	button_sign_in: STRING_32 do Result := locale.translation ("Sign in") end
+	button_sign_out: STRING_32 do Result := locale.translation ("Sign out") end
+	button_register: STRING_32 do Result := locale.translation ("Register") end
 
 ;note
 	copyright: "Copyright (c) 1984-2020, Eiffel Software"

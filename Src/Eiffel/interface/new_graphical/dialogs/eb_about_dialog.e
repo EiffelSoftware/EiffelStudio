@@ -231,9 +231,16 @@ feature {NONE} -- Implementation
 
 	registration_info: STRING_32
 			-- Clause in the about dialog concerning the license.
+		local
+			l_edition: READABLE_STRING_8
 		do
 			create Result.make (50)
-			Result.append ("Installation information (" + {ES_IDE_SETTINGS}.edition_title + "):%N")
+			Result.append ("Installation information")
+			l_edition := {ES_IDE_SETTINGS}.edition_title
+			if not l_edition.is_whitespace then
+				Result.append (" (" + l_edition + ")")
+			end
+			Result.append (":%N")
 			Result.append ("Version = " + t_version_info (True) + "%N")
 			Result.append ("Monitor DPI = " + {EV_MONITOR_DPI_DETECTOR_IMP}.dpi.out + "%N")
 			Result.append ("%N")

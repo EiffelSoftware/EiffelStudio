@@ -132,21 +132,23 @@ feature {NONE} -- Initialization
 				l_id.append_character ('-')
 				l_id.append_character ('-')
 				v := syscsts.version_type_name
-				from
-					i := 1
-					n := v.count
-				until
-					i > n
-				loop
-					if (v [i]).is_alpha_numeric then
-						l_id.append_character (v [i])
-					else
-						l_id.append_character ('_')
+				if not v.is_whitespace then
+					from
+						i := 1
+						n := v.count
+					until
+						i > n
+					loop
+						if (v [i]).is_alpha_numeric then
+							l_id.append_character (v [i])
+						else
+							l_id.append_character ('_')
+						end
+						i := i + 1
 					end
-					i := i + 1
+					l_id.append_character ('-')
+					l_id.append_character ('-')
 				end
-				l_id.append_character ('-')
-				l_id.append_character ('-')
 				l_id.append ((create {UUID_GENERATOR}).generate_uuid.out)
 				create installation.make_with_id (l_id.to_string_8) -- TODO: check if Unicode id could work
 				inst.set_application_item (l_var_name, l_app_name, env.version_name, installation.id)

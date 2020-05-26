@@ -180,12 +180,16 @@ feature-- Versioning
 			-- `Major' . `Minor' . `Release' . `Build'.
 		local
 			l_profile: SHARED_COMPILER_PROFILE
+			v: like version_type_name
 		once
 			create Result.make (30)
 			Result.append (compiler_version_number.version)
 			Result.append_character (' ')
-			Result.append_string_general (version_type_name)
-			Result.append_character (' ')
+			v := version_type_name
+			if not v.is_whitespace then
+				Result.append_string_general (version_type_name)
+				Result.append_character (' ')
+			end
 			Result.append_character ('-')
 			Result.append_character (' ')
 			Result.append_string_general (eiffel_layout.eiffel_platform)
@@ -198,9 +202,9 @@ feature-- Versioning
 			end
 		end
 
-	Version_type_name: STRING = "Community Edition";
-			-- Name of version, e.g. Community edition, Enterprise Edition,...
-			-- Default: "Community Edition"
+	Version_type_name: STRING = "";
+			-- Name of version, e.g. no name, Enterprise Edition,...
+			-- Default: empty name ""
 
 feature {AUXILIARY_FILES} -- Versioning
 

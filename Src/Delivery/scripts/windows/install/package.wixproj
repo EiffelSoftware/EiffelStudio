@@ -99,9 +99,9 @@
     <WixVariables>
     </WixVariables>
   </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)' == 'studio_gpl_x64' ">
-    <OutputPath>bin\studio_gpl_x64\</OutputPath>
-    <IntermediateOutputPath>bin\studio_gpl_x64\</IntermediateOutputPath>
+  <PropertyGroup Condition=" '$(Configuration)' == 'studio_std_x64' ">
+    <OutputPath>bin\studio_std_x64\</OutputPath>
+    <IntermediateOutputPath>bin\studio_std_x64\</IntermediateOutputPath>
     <DefineConstants>x64;EiffelStudio;IsePlatform=win64</DefineConstants>
     <IncludeSearchPaths>
     </IncludeSearchPaths>
@@ -112,11 +112,11 @@
     </SuppressSpecificWarnings>
     <TreatWarningsAsErrors>False</TreatWarningsAsErrors>
     <VerboseOutput>False</VerboseOutput>
-    <LinkerAdditionalOptions>-reusecab -cc bin\studio_gpl_x64\cabs</LinkerAdditionalOptions>
+    <LinkerAdditionalOptions>-reusecab -cc bin\studio_std_x64\cabs</LinkerAdditionalOptions>
   </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)' == 'studio_gpl_x86' ">
-    <OutputPath>bin\studio_gpl_x86\</OutputPath>
-    <IntermediateOutputPath>bin\studio_gpl_x86\</IntermediateOutputPath>
+  <PropertyGroup Condition=" '$(Configuration)' == 'studio_std_x86' ">
+    <OutputPath>bin\studio_std_x86\</OutputPath>
+    <IntermediateOutputPath>bin\studio_std_x86\</IntermediateOutputPath>
     <DefineConstants>x86;EiffelStudio;IsePlatform=windows</DefineConstants>
     <IncludeSearchPaths>
     </IncludeSearchPaths>
@@ -127,7 +127,7 @@
     </SuppressSpecificWarnings>
     <TreatWarningsAsErrors>False</TreatWarningsAsErrors>
     <VerboseOutput>False</VerboseOutput>
-    <LinkerAdditionalOptions>-reusecab -cc bin\studio_gpl_x86\cabs</LinkerAdditionalOptions>
+    <LinkerAdditionalOptions>-reusecab -cc bin\studio_std_x86\cabs</LinkerAdditionalOptions>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)' == 'studio_ent_x64' ">
     <OutputPath>bin\studio_ent_x64\</OutputPath>
@@ -201,7 +201,7 @@
     <Compile Include="content\eiffelstudio\studio_ent_ec.wxs" />
     <Compile Include="content\eiffelstudio\studio_examples.wxs" />
     <Compile Include="content\eiffelstudio\studio_gdiplus.wxs" />
-    <Compile Include="content\eiffelstudio\studio_gpl_ec.wxs" />
+    <Compile Include="content\eiffelstudio\studio_std_ec.wxs" />
 	<Compile Include="content\eiffelstudio\studio_libraries.wxs" />
     <Compile Include="content\eiffelstudio\studio_gobo.wxs" />
     <Compile Include="content\eiffelstudio\studio_experimental.wxs" />

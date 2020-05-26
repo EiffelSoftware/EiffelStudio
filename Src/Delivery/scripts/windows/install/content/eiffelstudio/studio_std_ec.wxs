@@ -1,5 +1,5 @@
 <Wix xmlns="http://schemas.microsoft.com/wix/2006/wi">
   <Fragment>
-  	<ComponentGroup Id="gpl_ec" />
+  	<ComponentGroup Id="standard_ec" />
   </Fragment>
 </Wix>

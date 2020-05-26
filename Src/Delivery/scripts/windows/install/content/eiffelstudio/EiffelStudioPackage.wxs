@@ -204,7 +204,7 @@
 				<?ifdef Enterprise ?>
 					<ComponentGroupRef Id="enterprise_ec"/>
 				<?else?>
-					<ComponentGroupRef Id="gpl_ec"/>
+					<ComponentGroupRef Id="standard_ec"/>
 				<?endif?>
 			</Feature>
 

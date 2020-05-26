@@ -234,23 +234,23 @@ safe_md $EXPORT_DIR/ecs
 
 remtrace Standard edition
 cd $EXPORT_DIR/bin
-cp ec_standard.tar.bz2 ec.tar.bz2
+cp ec_std.tar.bz2 ec.tar.bz2
 untgz_ccode ec $should_cancel
 if [ -f ec ]; then
 	bzip2 ec
-	move ec.bz2 $EXPORT_DIR/ecs/ec_standard.bz2
+	move ec.bz2 $EXPORT_DIR/ecs/ec_std.bz2
 fi
 
 remtrace Standard batch edition
-cp ecb_standard.tar.bz2 ecb.tar.bz2
+cp ecb_std.tar.bz2 ecb.tar.bz2
 untgz_ccode ecb
 bzip2 ecb
-move ecb.bz2 $EXPORT_DIR/ecs/ecb_standard.bz2
+move ecb.bz2 $EXPORT_DIR/ecs/ecb_std.bz2
 
 
 if [ -z "$MULTIPLE_EDITIONS" ]; then
-	bunzip2 -c $EXPORT_DIR/ecs/ec_standard.bz2 > $INSTALL_DIR/studio/spec/$ISE_PLATFORM/bin/ec
-	bunzip2 -c $EXPORT_DIR/ecs/ecb_standard.bz2 > $INSTALL_DIR/studio/spec/$ISE_PLATFORM/bin/ecb
+	bunzip2 -c $EXPORT_DIR/ecs/ec_std.bz2 > $INSTALL_DIR/studio/spec/$ISE_PLATFORM/bin/ec
+	bunzip2 -c $EXPORT_DIR/ecs/ecb_std.bz2 > $INSTALL_DIR/studio/spec/$ISE_PLATFORM/bin/ecb
 	chmod a+rx $INSTALL_DIR/studio/spec/$ISE_PLATFORM/bin/ec
 	chmod go-w $INSTALL_DIR/studio/spec/$ISE_PLATFORM/bin/ec 
 	chmod a+rx $INSTALL_DIR/studio/spec/$ISE_PLATFORM/bin/ecb

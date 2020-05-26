@@ -106,7 +106,7 @@ if [ ! "$NO_NEW_EC" ]; then
 		CANCEL
 	fi
 	clean_project
-	move ec.tar.bz2 $EXPORT_DIR/bin/ec_standard.tar.bz2
+	move ec.tar.bz2 $EXPORT_DIR/bin/ec_std.tar.bz2
 
 	remtrace Batch version
 	clean_project
@@ -117,7 +117,7 @@ if [ ! "$NO_NEW_EC" ]; then
 		CANCEL
 	fi
 	clean_project
-	move ecb.tar.bz2 $EXPORT_DIR/bin/ecb_standard.tar.bz2
+	move ecb.tar.bz2 $EXPORT_DIR/bin/ecb_std.tar.bz2
 
 	if [ "$MULTIPLE_EDITIONS" ]; then
 		remtrace Enterprise version edition

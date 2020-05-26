@@ -29,9 +29,9 @@ WXS = \
 	studio_gobo_experimental.wxs \
 	studio_gdiplus.wxs \
 	studio_ent_ec.wxs \
-	studio_gpl_ec.wxs
+	studio_std_ec.wxs
 
-WXS_GPL = \
+WXS_STD = \
 	studio_gcc.wxs \
 	studio_core.wxs \
 	studio_examples.wxs \
@@ -40,7 +40,7 @@ WXS_GPL = \
 	studio_experimental.wxs \
 	studio_gobo_experimental.wxs \
 	studio_gdiplus.wxs \
-	studio_gpl_ec.wxs
+	studio_std_ec.wxs
 
 WXS_ENT = \
 	studio_gcc.wxs \
@@ -105,9 +105,9 @@ studio_ent_ec.wxs:
 		-dr:"Dir.Core.studio.spec.$$(var.IsePlatform).bin" -g:"enterprise_ec" -n:"Core." > $@.tmp
 	move $@.tmp $@
 
-studio_gpl_ec.wxs:
-	$(HALLOW) $(HALLOW_FLAGS) "$(INSTALL_DIR)\releases\gpl_version" \
-		-dr:"Dir.Core.studio.spec.$$(var.IsePlatform).bin" -g:"gpl_ec" -n:"Core." > $@.tmp
+studio_std_ec.wxs:
+	$(HALLOW) $(HALLOW_FLAGS) "$(INSTALL_DIR)\releases\standard_version" \
+		-dr:"Dir.Core.studio.spec.$$(var.IsePlatform).bin" -g:"standard_ec" -n:"Core." > $@.tmp
 	move $@.tmp $@
 
 ###################################################################
@@ -119,14 +119,14 @@ studio_gpl_ec.wxs:
 enterprise_x86: $(WXS_ENT)
 	$(MSBUILD) $(MSBUILD_FLAGS) /p:Configuration=studio_ent_x86 /p:Platform=x86 ..\..\package.sln
 
-gpl_x86: $(WXS_GPL)
-	$(MSBUILD) $(MSBUILD_FLAGS) /p:Configuration=studio_gpl_x86 /p:Platform=x86 ..\..\package.sln
+standard_x86: $(WXS_STD)
+	$(MSBUILD) $(MSBUILD_FLAGS) /p:Configuration=studio_std_x86 /p:Platform=x86 ..\..\package.sln
 
 enterprise_x64: $(WXS_ENT)
 	$(MSBUILD) $(MSBUILD_FLAGS) /p:Configuration=studio_ent_x64 /p:Platform=x64 ..\..\package.sln
 
-gpl_x64: $(WXS_GPL)
-	$(MSBUILD) $(MSBUILD_FLAGS) /p:Configuration=studio_gpl_x64 /p:Platform=x64 ..\..\package.sln
+standard_x64: $(WXS_STD)
+	$(MSBUILD) $(MSBUILD_FLAGS) /p:Configuration=studio_std_x64 /p:Platform=x64 ..\..\package.sln
 
 
 ###################################################################
@@ -136,6 +136,6 @@ gpl_x64: $(WXS_GPL)
 ###################################################################
 
 clean:
-	for %i in ($(WXS_GPL)) do if exist %i del %i
+	for %i in ($(WXS_STD)) do if exist %i del %i
 	for %i in ($(WXS_ENT)) do if exist %i del %i
 	if exist *.msi del *.msi

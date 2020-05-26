@@ -26,8 +26,8 @@
         <?define Edition = "Enterprise"?>
         <?define LicenseFile = "enterprise.rtf"?>
       <?else?>
-        <?define Edition = "GPL"?>
-        <?define LicenseFile = "gpl.rtf"?>
+        <?define Edition = "Standard"?>
+        <?define LicenseFile = "license.rtf"?>
       <?endif?>
       <?ifdef x64?>
         <?define ProductGuid = "1A24AAE7-8AB4-45D1-A58A-B5DF5A59E574" ?>
@@ -64,7 +64,7 @@
         <?define ProductKey = "Eiffel_20.05" ?>
       <?else?>
         <?define Edition = "Test"?>
-        <?define LicenseFile = "gpl.rtf"?>
+        <?define LicenseFile = "license.rtf"?>
         <?define ProductGuid = "9FF8F00B-86B0-41AD-962C-00517951FB62" ?>
         <?define UpgradeGuid = "1263FA71-F9CA-4F2E-BFEC-988C77F7DF50" ?>
         <?define Product = "EiffelStudio" ?>

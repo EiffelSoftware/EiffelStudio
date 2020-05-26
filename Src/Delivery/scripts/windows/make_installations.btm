@@ -72,16 +72,16 @@ remtrace ----------------------------------------------
 
 cdd %INIT_DIR\install\content\eiffelstudio
 safe_md %INSTALL_DIR\setups
-safe_md %INSTALL_DIR\setups\gpl
+safe_md %INSTALL_DIR\setups\standard
 safe_md %INSTALL_DIR\setups\enterprise
 
 remtrace Creating WIX files
 nmake /nologo clean
 nmake /nologo
 
-remtrace Preparing GPL edition
-nmake /nologo gpl_%WINNAME
-copy %INIT_DIR\install\bin\studio_gpl_%WINNAME\package.msi %INSTALL_DIR\setups\gpl\%STUDIO_NAME%_gpl_%SVN_VERSION-%ISE_PLATFORM%.msi
+remtrace Preparing Standard edition
+nmake /nologo standard_%WINNAME
+copy %INIT_DIR\install\bin\studio_std_%WINNAME\package.msi %INSTALL_DIR\setups\standard\%STUDIO_NAME%_rev_%SVN_VERSION-%ISE_PLATFORM%.msi
 
 remtrace Preparing Commercial edition
 nmake /nologo enterprise_%WINNAME
@@ -93,14 +93,14 @@ remtrace ----------------------------------------------
 cdd %INSTALL_DIR
 ren EiffelStudio %STUDIO_NAME%
 
-copy %INSTALL_DIR\releases\gpl_version\ec.exe %INSTALL_DIR\%STUDIO_NAME%\studio\spec\%ISE_PLATFORM%\bin
-copy %INSTALL_DIR\releases\gpl_version\ecb.exe %INSTALL_DIR\%STUDIO_NAME%\studio\spec\%ISE_PLATFORM%\bin
-iff exist %INSTALL_DIR\releases\gpl_version\LICENSE then
-	copy %INSTALL_DIR\releases\gpl_version\LICENSE %INSTALL_DIR\%STUDIO_NAME%\LICENSE
+copy %INSTALL_DIR\releases\standard_version\ec.exe %INSTALL_DIR\%STUDIO_NAME%\studio\spec\%ISE_PLATFORM%\bin
+copy %INSTALL_DIR\releases\standard_version\ecb.exe %INSTALL_DIR\%STUDIO_NAME%\studio\spec\%ISE_PLATFORM%\bin
+iff exist %INSTALL_DIR\releases\standard_version\LICENSE then
+	copy %INSTALL_DIR\releases\standard_version\LICENSE %INSTALL_DIR\%STUDIO_NAME%\LICENSE
 else
-	remtrace Missing GPL license text
+	remtrace Missing Standard license text
 endiff
-7z a -t7z %INSTALL_DIR\setups\gpl\%STUDIO_NAME%_gpl_%SVN_VERSION-%ISE_PLATFORM%.7z %STUDIO_NAME% -mx9 >>& %INSTALL_LOG
+7z a -t7z %INSTALL_DIR\setups\standard\%STUDIO_NAME%_rev_%SVN_VERSION-%ISE_PLATFORM%.7z %STUDIO_NAME% -mx9 >>& %INSTALL_LOG
 
 copy %INSTALL_DIR\releases\enterprise_version\ec.exe %INSTALL_DIR\%STUDIO_NAME%\studio\spec\%ISE_PLATFORM%\bin
 copy %INSTALL_DIR\releases\enterprise_version\ecb.exe %INSTALL_DIR\%STUDIO_NAME%\studio\spec\%ISE_PLATFORM%\bin
@@ -116,11 +116,11 @@ cdd %INSTALL_DIR
 ren %STUDIO_NAME% EiffelStudio
 
 remtrace Uploading packages online
-cdd %INSTALL_DIR\setups\gpl
-scp %STUDIO_NAME%_gpl_%SVN_VERSION%-%ISE_PLATFORM%.msi manus@eiffel.com:builds/nightly/
-ssh manus@eiffel.com chmod 444 builds/nightly/%STUDIO_NAME%_gpl_%SVN_VERSION%-%ISE_PLATFORM%.msi
-scp %STUDIO_NAME%_gpl_%SVN_VERSION%-%ISE_PLATFORM%.7z manus@eiffel.com:builds/nightly/
-ssh manus@eiffel.com chmod 444 builds/nightly/%STUDIO_NAME%_gpl_%SVN_VERSION%-%ISE_PLATFORM%.7z
+cdd %INSTALL_DIR\setups\standard
+scp %STUDIO_NAME%_rev_%SVN_VERSION%-%ISE_PLATFORM%.msi manus@eiffel.com:builds/nightly/
+ssh manus@eiffel.com chmod 444 builds/nightly/%STUDIO_NAME%_rev_%SVN_VERSION%-%ISE_PLATFORM%.msi
+scp %STUDIO_NAME%_rev_%SVN_VERSION%-%ISE_PLATFORM%.7z manus@eiffel.com:builds/nightly/
+ssh manus@eiffel.com chmod 444 builds/nightly/%STUDIO_NAME%_rev_%SVN_VERSION%-%ISE_PLATFORM%.7z
 
 fullrf %INSTALL_DIR\EiffelStudio\studio\spec\%ISE_PLATFORM%\bin\ec.exe
 fullrf %INSTALL_DIR\EiffelStudio\studio\spec\%ISE_PLATFORM%\bin\ecb.exe

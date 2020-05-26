@@ -4,10 +4,10 @@ md unstable
 cd unstable
 
 remtrace README.txt
-exprt -r %ORIGO_SVN_REVISION %DEFAULT_ORIGO_SVN/Src/unstable/README.txt README.txt
+exprt -r %PUBLIC_SVN_REVISION %DEFAULT_PUBLIC_SVN/Src/unstable/README.txt README.txt
 
 remtrace library
-exprt -r %ORIGO_SVN_REVISION %DEFAULT_ORIGO_SVN/Src/unstable/library library
+exprt -r %PUBLIC_SVN_REVISION %DEFAULT_PUBLIC_SVN/Src/unstable/library library
 
 remtrace Retrieve contrib libraries and examples
 cdd %1
@@ -15,11 +15,11 @@ md contrib
 cd contrib
 
 remtrace README.txt
-exprt -r %ORIGO_SVN_REVISION %DEFAULT_ORIGO_SVN/Src/contrib/README.txt README.txt
+exprt -r %PUBLIC_SVN_REVISION %DEFAULT_PUBLIC_SVN/Src/contrib/README.txt README.txt
 
 remtrace library
-exprt -r %ORIGO_SVN_REVISION %DEFAULT_ORIGO_SVN/Src/contrib/library library
+exprt -r %PUBLIC_SVN_REVISION %DEFAULT_PUBLIC_SVN/Src/contrib/library library
 
 remtrace examples
-exprt -r %ORIGO_SVN_REVISION %DEFAULT_ORIGO_SVN/Src/contrib/examples examples
+exprt -r %PUBLIC_SVN_REVISION %DEFAULT_PUBLIC_SVN/Src/contrib/examples examples
 

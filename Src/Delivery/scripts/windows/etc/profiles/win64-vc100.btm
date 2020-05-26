@@ -1,0 +1,10 @@
+REM Check ISE_BUILD_NAME=win64-vc100
+echo Use build "win64-vc100"
+set ISE_PLATFORM=win64
+
+iff exist %~dp0..\machines\local.btm then
+	call %~dp0..\machines\local.btm
+endiff
+
+set ISE_C_COMPILER=msc
+set ISE_C_COMPILER_VER=VC100

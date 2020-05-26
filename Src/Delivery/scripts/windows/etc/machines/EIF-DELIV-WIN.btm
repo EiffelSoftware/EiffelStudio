@@ -1,0 +1,42 @@
+echo Load EIF-DELIV-WIN local settings
+
+iff not defined ISE_PLATFORM then
+	echo Define ISE_PLATFORM to win64
+	set ISE_PLATFORM=win64
+endiff
+iff not defined ISE_EIFFEL then
+	set ISE_EIFFEL=%INIT_DIR%\bin\eiffel_%ISE_PLATFORM%
+endiff
+
+iff not defined ISE_VC_MSC then
+	set ISE_VC_MSC=VC110
+endiff
+iff not defined ISE_VC_MSC_VC140 then
+	set ISE_VC_MSC_VC140=VC140
+endiff
+
+iff not defined MYSQL then
+	iff "%ISE_PLATFORM%" == "win64" then
+		set MYSQL=%INIT_DIR%\include\mysql-connector-c-6.1.11-winx64
+	else
+		set MYSQL=%INIT_DIR%\include\mysql-connector-c-6.1.11-win32
+	endiff
+endiff
+
+iff not defined WORK_DIR then
+	set WORK_DIR=\eiffel-deliv
+endiff
+
+iff not defined DEFAULT_PUBLIC_SVN then
+::	set DEFAULT_PUBLIC_SVN=file:///%LOCAL_REPO_ROOT%/svn/eiffelstudio/trunk
+rem 	set DEFAULT_PUBLIC_SVN=svn://192.168.1.11:3699/trunk
+	set DEFAULT_PUBLIC_SVN=svn://svn.ise/mirrors/eiffelstudio/trunk
+endiff
+iff not defined DEFAULT_ISE_SVN then
+	set DEFAULT_ISE_SVN=svn://svn.ise/ise_svn/trunk
+::	set DEFAULT_ISE_SVN=file:///%LOCAL_REPO_ROOT%/svn/ise/trunk
+rem	set DEFAULT_ISE_SVN=svn://192.168.1.11:3698/trunk
+endiff
+
+rem set PATH=%PATH%;C:\apps\bin
+

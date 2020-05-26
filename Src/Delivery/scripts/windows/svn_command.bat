@@ -6,7 +6,9 @@ set i=0
 :start
 if not "%i%"=="0" goto finish
 
-svn %*
+if not "%1" == "cat" echo svn ... %*
+svn --config-option config:miscellany:use-commit-times=yes %*
+
 if not errorlevel 1 set i=1
 goto start
 :finish

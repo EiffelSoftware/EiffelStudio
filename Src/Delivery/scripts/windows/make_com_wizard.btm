@@ -1,9 +1,9 @@
 mkdir %STUDIO_DIR\wizards\com\resources
-copy %EIFFEL_SRC\tools\com_wizard\root\resources\*.* %STUDIO_DIR\wizards\com\resources
+safe_copy %EIFFEL_SRC\tools\com_wizard\root\resources\*.* %STUDIO_DIR\wizards\com\resources
 
 remtrace Compile the COM wizard
 cdd %EIFFEL_SRC\tools\com_wizard\root
-bash -o igncr %INIT_DIR\set_version.sh %EIFFEL_SRC 0000 argument_parser.e
+set_version %EIFFEL_SRC 0000 argument_parser.e
 
 clean_project
 finalize com_wizard.ecf

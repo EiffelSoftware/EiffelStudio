@@ -13,7 +13,11 @@ iff not defined NO_COMPILE then
 	safe_md headers
 	REM "We keep a copy of vendors specific header files at EiffelSoftware as they cannot be"
 	REM "redistributed freely."
-	exprtfile %DEFAULT_ISE_SVN/Src/library/headers.tar.gz > headers\headers.tar.gz
+	if EXIST %INIT_DIR%\isesvn\library\headers.tar.gz (
+		copy %INIT_DIR%\isesvn\library\headers.tar.gz headers\headers.tar.gz
+	) else (
+		exprtfile %DEFAULT_ISE_SVN%/Src/library/headers.tar.gz > headers\headers.tar.gz
+	)
 	cd headers
 	tar xvfz headers.tar.gz
 	iff not isdir apps then

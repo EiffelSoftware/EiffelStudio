@@ -1,0 +1,60 @@
+echo Current configuration:
+echo ----------------------
+echo INIT_DIR=%INIT_DIR  (script root directory)
+echo ISE_EIFFEL=%ISE_EIFFEL
+echo ISE_PLATFORM=%ISE_PLATFORM
+echo DELIV_DIR=%DELIV_DIR
+echo INSTALL_DIR=%INSTALL_DIR
+echo STUDIO_DIR=%STUDIO_DIR
+iff defined NO_GPL_BUILD then
+	echo NO_GPL_BUILD=%NO_GPL_BUILD
+endiff
+iff defined NO_ENTERPRISE_BUILD then
+	echo NO_ENTERPRISE_BUILD=%NO_ENTERPRISE_BUILD
+endiff
+echo Log file location: %INSTALL_LOG
+echo The private ISE svn repository: %DEFAULT_ISE_SVN
+echo The public svn repository: %DEFAULT_PUBLIC_SVN
+echo The revision that will be generated: %PUBLIC_SVN_REVISION
+echo ecb version:
+ecb -version
+echo The C environment: ISE_C_COMPILER=%ISE_C_COMPILER% (ISE_C_COMPILER_VER=%ISE_C_COMPILER_VER%)
+iff defined HAS_C_COMP_VER then
+	echo - HAS_C_COMP_VER=%HAS_C_COMP_VER% ISE_C_COMPILER_VER=%ISE_C_COMPILER_VER% (ISE_C_COMPILER=%ISE_C_COMPILER%)
+endiff
+iff defined HAS_VC_MSC then
+	echo - HAS_VC_MSC=%HAS_VC_MSC%
+	echo - ISE_VC_MSC=%ISE_VC_MSC%
+endiff
+iff defined HAS_VC_MSC_VC140 then
+	echo - HAS_VC_MSC_VC140=%HAS_VC_MSC_VC140%
+	echo - ISE_VC_MSC_VC140=%ISE_VC_MSC_VC140%
+endiff
+
+echo MYSQL lib location: %MYSQL%
+echo -----------------------------
+iff exist %INSTALL_DIR .or. isdir %INSTALL_DIR then
+	echo Warning: %INSTALL_DIR will be replaced by the installation script, you will lose everything in it
+endiff
+
+iff defined NO_COMPILE then
+	echo No compilation will be performed (including EiffelStudio's compilation)
+endiff
+iff defined NO_NEW_EC then
+	echo No new version of EiffelStudio will be compiled
+endiff
+iff defined BUILD_ENTERPRISE_ONLY then
+	echo Only EiffelStudio Enterprise will be build
+endiff
+iff defined NO_WIZARDS then
+	echo No wizards will be compiled.
+endiff
+iff defined NO_INSTALL then
+	echo The delivery will be generated, but not the final installation executable
+endiff
+
+
+iff not defined NO_INSTALL .and. not defined NO_COMPILE then
+	echo All components will be recompiled
+endiff
+

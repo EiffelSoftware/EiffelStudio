@@ -1,0 +1,19 @@
+@echo off
+setlocal
+
+REM Save previous environment
+REM FIXME: is it still needed with use of setlocal?
+set OLD_PATH=%PATH
+set OLD_EIFFEL_SRC=%EIFFEL_SRC
+set OLD_ISE_LIBRARY=%ISE_LIBRARY
+set OLD_ISE_SRC=%ISE_SRC
+set TMP_ISE_EIFFEL=%ISE_EIFFEL
+
+call %~dp0init.btm
+call check_environment.btm
+call inc\display_environment.btm
+
+goto EOF
+
+:broken
+CANCEL

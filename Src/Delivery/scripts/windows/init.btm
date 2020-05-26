@@ -1,0 +1,58 @@
+iff not defined INIT_DIR then
+	set INIT_DIR=%@EXECSTR[cd]
+endiff
+:: Set aliases and also call etc\config.btm
+call %INIT_DIR\set_aliases.btm
+
+REM Adding Wix to the path.
+set PATH=%PATH;%@EXECSTR[cd]\wix
+
+set EIFFEL_SRC=%TMP_EIFFEL_SRC
+set ISE_LIBRARY=%TMP_EIFFEL_SRC
+set ISE_SRC=%TMP_EIFFEL_SRC
+
+:: Make sure required directories exist
+REM Create parent dir of %INSTALL_LOG if it does not exist.
+echo DELIV_DIR=[%DELIV_DIR%]
+echo INSTALL_LOG=[%INSTALL_LOG%]
+set_parent_dir_of PDIR %INSTALL_LOG%
+iff not isdir %PDIR then
+	md /S %PDIR
+	remtrace Create directory %PDIR
+endiff
+set_parent_dir_of PDIR %ERROR_LOG%
+iff not isdir %PDIR then
+	md /S %PDIR
+	remtrace Create directory %PDIR
+endiff
+iff not isdir %TMP_EIFFEL_SRC% then
+	md /S %TMP_EIFFEL_SRC%
+	remtrace Create directory %TMP_EIFFEL_SRC%
+endiff
+
+:: Get C compilation environment information
+::call %INIT_DIR\inc\set_has_c_compiler HAS_WSDK71 WSDK71
+::call %INIT_DIR\inc\set_has_c_compiler HAS_VC100 VC100 
+::call %INIT_DIR\inc\set_has_c_compiler HAS_VC140 VC140 
+::call %INIT_DIR\inc\set_has_c_compiler HAS_VC150 VC150 
+
+set "HAS_VC_MSC=False"
+if "%ISE_VC_MSC%" NEQ "" (
+	call %INIT_DIR\inc\set_has_c_compiler HAS_VC_MSC %ISE_VC_MSC%
+)
+echo HAS_VC_MSC=%HAS_VC_MSC%
+
+set "HAS_VC_MSC_VC140=False"
+if "%ISE_VC_MSC_VC140%" NEQ "" (
+	call %INIT_DIR\inc\set_has_c_compiler HAS_VC_MSC_VC140 %ISE_VC_MSC_VC140%
+)
+echo HAS_VC_MSC_VC140=%HAS_VC_MSC_VC140%
+
+:: if "%ISE_C_COMPILER_VER%" NEQ "" (
+:: 	IF /I "%ISE_C_COMPILER_VER%" NEQ "VC100" (
+:: 		IF /I "%ISE_C_COMPILER_VER%" NEQ "VC140" (
+:: 			call %INIT_DIR\inc\set_has_c_compiler HAS_C_COMP_VER %ISE_C_COMPILER_VER%
+:: 		)
+:: 	)
+:: )
+::echo HAS_C_COMP_VER=%HAS_C_COMP_VER%

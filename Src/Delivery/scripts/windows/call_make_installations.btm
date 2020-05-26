@@ -1,0 +1,18 @@
+call %~dp0init.btm
+
+cdd %INIT_DIR
+
+iff not defined NO_INSTALL then
+	iff defined ISE_C_COMPILER_VER then
+		call %INIT_DIR\inc\set_has_c_compiler HAS_C_COMP_VER %ISE_C_COMPILER_VER 
+	else
+		set "HAS_C_COMP_VER=False"
+	endiff
+	iff defined ISE_C_COMPILER_VER .and. %HAS_C_COMP_VER% == "True" then
+		espawn -u:%ISE_C_COMPILER_VER% "%COMSPEC% /c make_installations.btm"
+	else
+		espawn "%COMSPEC% /c make_installations.btm"
+	endiff
+	cdd %INIT_DIR
+endiff
+

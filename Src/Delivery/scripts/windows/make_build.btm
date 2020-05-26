@@ -2,7 +2,7 @@ remtrace Compiling EiffelBuild
 REM Should be called by `make_exes.btm'
 cdd %EIFFEL_SRC
 cdd %EIFFEL_SRC\build\Constants
-bash -o igncr %INIT_DIR\set_version.sh %EIFFEL_SRC 0000 gb_about_dialog_constants.e
+set_version %EIFFEL_SRC 0000 gb_about_dialog_constants.e
 
 cdd %EIFFEL_SRC/build
 clean_project

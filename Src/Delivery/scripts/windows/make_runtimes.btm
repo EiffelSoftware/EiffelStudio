@@ -4,6 +4,8 @@ call %INIT_DIR%\set_simple_aliases.btm
 
 remtrace Compile the runtime for C compiler %1
 
+remtrace - Configure a run-time for Microsoft %1
+
 cd %EIFFEL_SRC\C
 call configure clean >>& %INSTALL_LOG
 iff defined WIN64 then
@@ -17,10 +19,10 @@ else
 endiff
 cd %EIFFEL_SRC
 fullrf C\run-time\LIB\*.exp
-copy C\run-time\LIB\*dll* %STUDIO_DIR\studio\spec\%ISE_PLATFORM\lib\%1
+safe_copy C\run-time\LIB\*dll* %STUDIO_DIR\studio\spec\%ISE_PLATFORM\lib\%1
 cd %EIFFEL_SRC
 
-remtrace Compile a run-time for Microsoft
+remtrace - Compile a run-time for Microsoft %1
 cd %EIFFEL_SRC\C
 call configure clean >>& %INSTALL_LOG
 iff defined WIN64 then
@@ -34,15 +36,16 @@ else
 endiff
 cd %EIFFEL_SRC
 
-copy C\run-time\LIB\*.lib %STUDIO_DIR\studio\spec\%ISE_PLATFORM\lib\%1
+remtrace - Copy the generated files to %ISE_PLATFORM%\lib\%1
+safe_copy C\run-time\LIB\*.lib %STUDIO_DIR\studio\spec\%ISE_PLATFORM\lib\%1
 iff not defined WIN64 then
-	copy C\desc\ise_desc.dll %STUDIO_DIR\studio\spec\%ISE_PLATFORM\lib\%1
-	copy C\desc\ise_desc.lib %STUDIO_DIR\studio\spec\%ISE_PLATFORM\lib\%1
+	safe_copy C\desc\ise_desc.dll %STUDIO_DIR\studio\spec\%ISE_PLATFORM\lib\%1
+	safe_copy C\desc\ise_desc.lib %STUDIO_DIR\studio\spec\%ISE_PLATFORM\lib\%1
 endiff
 
-remtrace Copy the configuration file
+remtrace - Copy the configuration file (%1)
 iff not defined WIN64 then
-	copy %EIFFEL_SRC\C\CONFIGS\windows-x86-msc %STUDIO_DIR\studio\config\%ISE_PLATFORM\%1\config.sh
+	safe_copy %EIFFEL_SRC\C\CONFIGS\windows-x86-msc %STUDIO_DIR\studio\config\%ISE_PLATFORM\%1\config.sh
 else
-	copy %EIFFEL_SRC\C\CONFIGS\windows-x86-64-msc %STUDIO_DIR\studio\config\%ISE_PLATFORM\%1\config.sh
+	safe_copy %EIFFEL_SRC\C\CONFIGS\windows-x86-64-msc %STUDIO_DIR\studio\config\%ISE_PLATFORM\%1\config.sh
 endiff

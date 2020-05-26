@@ -1,0 +1,25 @@
+echo Load local settings
+
+iff exist %~dp0%COMPUTERNAME%.btm then
+	call %~dp0%COMPUTERNAME%.btm
+endiff
+
+:: Set default environment for any machine here.
+
+iff not defined WORK_DIR then
+	set WORK_DIR=%~dp0..\..\DELIV
+endiff
+
+iff not defined ISE_EIFFEL then
+	set ISE_EIFFEL=%INIT_DIR%\bin\eiffel_%ISE_PLATFORM%
+	echo Set ISE_EIFFEL to %ISE_EIFFEL%
+endiff
+
+rem set ISE_EC_FLAGS=-full
+
+set DELIV_SKIP_ERROR="True"
+rem set DELIV_SKIP_ERROR="False"
+
+set ISE_LITE_DELIV="False"
+
+

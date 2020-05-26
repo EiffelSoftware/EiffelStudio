@@ -1,0 +1,10 @@
+REM Check ISE_BUILD_NAME=win64-vc140
+echo Use build "win64-vc140"
+set ISE_PLATFORM=win64
+
+iff exist %~dp0..\machines\local.btm then
+	call %~dp0..\machines\local.btm
+endiff
+
+set ISE_C_COMPILER=msc_vc140
+set ISE_C_COMPILER_VER=VC140

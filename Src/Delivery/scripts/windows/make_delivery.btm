@@ -1,21 +1,30 @@
 @echo off
-REM Adding Wix to the path.
-set PATH=%PATH;%@EXECSTR[cd]\wix
+setlocal
+
+REM Save previous environment
+REM FIXME: is it still needed with use of setlocal?
 set OLD_PATH=%PATH
 set OLD_EIFFEL_SRC=%EIFFEL_SRC
 set OLD_ISE_LIBRARY=%ISE_LIBRARY
 set OLD_ISE_SRC=%ISE_SRC
-set INIT_DIR=%@EXECSTR[cd]
 set TMP_ISE_EIFFEL=%ISE_EIFFEL
 
-call set_aliases.btm
+call %~dp0init.btm
+
 remtrace Set up the environment
 on break goto broken
 TIMER ON /1 >> NUL
 TIMER ON /2 >> NUL
 iff %@INDEX[%@LOWER[%$],h] ge 0 then
-	echo Installation for ISE Eiffel 5 generation.
-	echo Parameters are no_compile, no_new_ec, enterprise no_wizards and no_install (or nothing to fully regenerate the installation).
+	echo Installation for ISE Eiffel .
+	echo Parameters are 
+	echo   - no_compile: to discard any compilation
+	echo   - no_new_ec: to avoid compiling a new version of EiffelStudio
+	echo   - enterprise: to build only the enterprise version of EiffelStudio
+	echo   - gpl: to build only the GPL version of EiffelStudio
+	echo   - no_wizards: to discard wizards building
+	echo   - no_install: to generare only the delivery (but not the installation executable) 
+	echo   (or nothing to fully regenerate the installation).
 	CANCEL
 endiff
 iff %@INDEX[%@LOWER[%$],no_compile] ge 0 then
@@ -34,9 +43,12 @@ else
 	unset /Q NO_NEW_EC
 endiff
 iff %@INDEX[%@LOWER[%$],enterprise] ge 0 then
-	set BUILD_ENTERPRISE_ONLY="True"
-else
-	unset /Q BUILD_ENTERPRISE_ONLY
+	set NO_GPL_BUILD="True"
+endiff
+iff %@INDEX[%@LOWER[%$],gpl] ge 0 then
+	set NO_ENTERPRISE_BUILD="True"
+	unset /Q BUILD_ENTERPRISE
+	set BUILD_GPL="True"
 endiff
 iff %@INDEX[%@LOWER[%$],no_wizard] ge 0 then
 	set NO_WIZARDS="True"
@@ -44,23 +56,38 @@ else
 	unset /Q NO_WIZARDS
 endiff
 
-set EIFFEL_SRC=%TMP_EIFFEL_SRC
-set ISE_LIBRARY=%TMP_EIFFEL_SRC
-set ISE_SRC=%TMP_EIFFEL_SRC
 cdd %INIT_DIR
+
+
+call check_environment.btm
+call inc\display_environment.btm
+call inc\get_environment_confirmation.btm
+if %ERRORLEVEL% == 0 CANCEL
+
+REM This is not a comment, it should create a 0-sized log file.
+REM > %INSTALL_LOG%
+REM > %ERROR_LOG%
+
 remtrace Approximative starting time:
 remtrace %_TIME
 
-REM This is not a comment, it should create a 0-sized log file.
-REM > %INSTALL_LOG
-call check_environment.btm
+remtrace --------------------------------
+remtrace Installation parameters are:
+remtrace  - ISE_EIFFEL=%ISE_EIFFEL%
+remtrace  - ISE_PLATFORM=%ISE_PLATFORM%
+remtrace  - ISE_C_COMPILER=%ISE_C_COMPILER%
+remtrace  - ISE_C_COMPILER_VER=%ISE_C_COMPILER_VER%
+remtrace  - INSTALL_DIR=%INSTALL_DIR%
+remtrace  - STUDIO_DIR=%STUDIO_DIR%
+remtrace --------------------------------
+
 cdd %INIT_DIR
 
 give_time_to warm up
 remtrace Retrieve and organize the delivery
 remtrace Remove %INSTALL_DIR
-if isdir %INSTALL_DIR fullrd %INSTALL_DIR >>& %INSTALL_LOG
-if exist %INSTALL_DIR fullrf %INSTALL_DIR >>& %INSTALL_LOG
+if isdir %INSTALL_DIR nolog_fullrd %INSTALL_DIR >>& %INSTALL_LOG
+if exist %INSTALL_DIR nolog_fullrf %INSTALL_DIR >>& %INSTALL_LOG
 iff exist %INSTALL_DIR then
 	echo Cannot delete %INSTALL_DIR!
 	CANCEL
@@ -69,8 +96,11 @@ md %INSTALL_DIR
 md %STUDIO_DIR
 cdd %STUDIO_DIR
 remtrace studio
-exprt -r %ORIGO_SVN_REVISION %DEFAULT_ORIGO_SVN/Src/Delivery/studio studio
+exprt -r %PUBLIC_SVN_REVISION %DEFAULT_PUBLIC_SVN/Src/Delivery/studio studio
 fullrd studio\bitmaps\src
+fullrf studio\bitmaps\png\icons_16x16.png
+fullrf studio\bitmaps\png\small_12x12.png
+fullrf studio\bitmaps\png\mini_10x10.png
 fullrd studio\help\defaults\unix
 fullrd studio\spec\unix
 cdd %STUDIO_DIR\studio\spec
@@ -88,7 +118,7 @@ xcopy msc msc_vc140 /E /I
 
 safe_md %STUDIO_DIR\tools
 cdd %STUDIO_DIR\tools
-exprt -r %ORIGO_SVN_REVISION %DEFAULT_ORIGO_SVN/Src/tools/iron/delivery/iron iron
+exprt -r %PUBLIC_SVN_REVISION %DEFAULT_PUBLIC_SVN/Src/tools/iron/delivery/iron iron
 cdd %STUDIO_DIR\tools\iron\spec
 if not "windows"=="%ISE_PLATFORM" ren windows %ISE_PLATFORM
 fullrd unix
@@ -97,12 +127,13 @@ cdd %STUDIO_DIR\studio\lang
 fullrd po_files
 fullrd script
 cdd %STUDIO_DIR
+
 remtrace esbuilder
-exprt -r %ORIGO_SVN_REVISION %DEFAULT_ORIGO_SVN/Src/Delivery/esbuilder esbuilder
+exprt -r %PUBLIC_SVN_REVISION %DEFAULT_PUBLIC_SVN/Src/Delivery/esbuilder esbuilder
 remtrace vision2 tour
-exprt -r %ORIGO_SVN_REVISION %DEFAULT_ORIGO_SVN/Src/Delivery/vision2_demo vision2_demo
+exprt -r %PUBLIC_SVN_REVISION %DEFAULT_PUBLIC_SVN/Src/Delivery/vision2_demo vision2_demo
 remtrace examples
-exprt -r %ORIGO_SVN_REVISION %DEFAULT_ORIGO_SVN/Src/examples examples
+exprt -r %PUBLIC_SVN_REVISION %DEFAULT_PUBLIC_SVN/Src/examples examples
 cd examples
 fullrd obsolete
 fullrd eiffeltest
@@ -142,8 +173,8 @@ safe_md %STUDIO_DIR\experimental
 safe_md %STUDIO_DIR\experimental\precomp
 safe_md %STUDIO_DIR\experimental\precomp\spec
 cd %STUDIO_DIR\experimental\precomp\spec
-exprt -r %ORIGO_SVN_REVISION %DEFAULT_ORIGO_SVN/Src/Delivery/precomp/spec/platform %ISE_PLATFORM
-exprt -r %ORIGO_SVN_REVISION %DEFAULT_ORIGO_SVN/Src/Delivery/precomp/spec/dotnet %ISE_PLATFORM-dotnet
+exprt -r %PUBLIC_SVN_REVISION %DEFAULT_PUBLIC_SVN/Src/Delivery/precomp/spec/platform %ISE_PLATFORM
+exprt -r %PUBLIC_SVN_REVISION %DEFAULT_PUBLIC_SVN/Src/Delivery/precomp/spec/dotnet %ISE_PLATFORM-dotnet
 cdd %ISE_PLATFORM
 fullrf *-safe.ecf
 cdd ..\%ISE_PLATFORM-dotnet
@@ -151,44 +182,45 @@ fullrf *-safe.ecf
 safe_md %STUDIO_DIR\precomp
 safe_md %STUDIO_DIR\precomp\spec
 cd %STUDIO_DIR\precomp\spec
-exprt -r %ORIGO_SVN_REVISION %DEFAULT_ORIGO_SVN/Src/Delivery/precomp/spec/platform %ISE_PLATFORM
-exprt -r %ORIGO_SVN_REVISION %DEFAULT_ORIGO_SVN/Src/Delivery/precomp/spec/dotnet %ISE_PLATFORM-dotnet
+exprt -r %PUBLIC_SVN_REVISION %DEFAULT_PUBLIC_SVN/Src/Delivery/precomp/spec/platform %ISE_PLATFORM
+exprt -r %PUBLIC_SVN_REVISION %DEFAULT_PUBLIC_SVN/Src/Delivery/precomp/spec/dotnet %ISE_PLATFORM-dotnet
 cdd %STUDIO_DIR
 remtrace wizards
-exprt -r %ORIGO_SVN_REVISION %DEFAULT_ORIGO_SVN/Src/Delivery/wizards wizards
+exprt -r %PUBLIC_SVN_REVISION %DEFAULT_PUBLIC_SVN/Src/Delivery/wizards wizards
 fullrf %STUDIO_DIR\studio\wizards\new_projects\wizard.dsc
 fullrd %STUDIO_DIR\studio\wizards\new_projects\wizard
-exprt -r %ORIGO_SVN_REVISION %DEFAULT_ORIGO_SVN/Src/help/wizards/ewf/rootdir %STUDIO_DIR\studio\wizards\new_projects\ewf
+exprt -r %PUBLIC_SVN_REVISION %DEFAULT_PUBLIC_SVN/Src/help/wizards/ewf/rootdir %STUDIO_DIR\studio\wizards\new_projects\ewf
 move %STUDIO_DIR\studio\wizards\new_projects\ewf\ewf.dsc %STUDIO_DIR\studio\wizards\new_projects\ewf.dsc
-exprt -r %ORIGO_SVN_REVISION %DEFAULT_ORIGO_SVN/Src/help/wizards/library/rootdir %STUDIO_DIR\studio\wizards\new_projects\library
+exprt -r %PUBLIC_SVN_REVISION %DEFAULT_PUBLIC_SVN/Src/help/wizards/library/rootdir %STUDIO_DIR\studio\wizards\new_projects\library
 move %STUDIO_DIR\studio\wizards\new_projects\library\library.dsc %STUDIO_DIR\studio\wizards\new_projects\library.dsc
 
 remtrace C_library
 safe_md %STUDIO_DIR\C_library
 cdd %STUDIO_DIR\C_library
-exprt -r %ORIGO_SVN_REVISION %DEFAULT_ORIGO_SVN/Src/C_library/libpng libpng
-exprt -r %ORIGO_SVN_REVISION %DEFAULT_ORIGO_SVN/Src/C_library/zlib zlib
-exprt -r %ORIGO_SVN_REVISION %DEFAULT_ORIGO_SVN/Src/C_library/curl curl
+exprt -r %PUBLIC_SVN_REVISION %DEFAULT_PUBLIC_SVN/Src/C_library/libpng libpng
+exprt -r %PUBLIC_SVN_REVISION %DEFAULT_PUBLIC_SVN/Src/C_library/zlib zlib
+exprt -r %PUBLIC_SVN_REVISION %DEFAULT_PUBLIC_SVN/Src/C_library/curl curl
 safe_md openssl
-exprt -r %ORIGO_SVN_REVISION %DEFAULT_ORIGO_SVN/Src/C_library/openssl/clibs_openssl.ecf openssl
-exprt -r %ORIGO_SVN_REVISION %DEFAULT_ORIGO_SVN/Src/C_library/openssl/include openssl/include
+exprt -r %PUBLIC_SVN_REVISION %DEFAULT_PUBLIC_SVN/Src/C_library/openssl/clibs_openssl.ecf openssl
+exprt -r %PUBLIC_SVN_REVISION %DEFAULT_PUBLIC_SVN/Src/C_library/openssl/include openssl/include
 cdd %STUDIO_DIR
 remtrace root
-exprt -N -r %ORIGO_SVN_REVISION %DEFAULT_ORIGO_SVN/Src/Delivery Delivery
+exprt -N -r %PUBLIC_SVN_REVISION %DEFAULT_PUBLIC_SVN/Src/Delivery Delivery
 move Delivery\*.* . >>& %INSTALL_LOG
+give_time_to move Delivery files.
 fullrd Delivery >>& %INSTALL_LOG
 fullrf INSTALL README make_install compile_libraries
 remtrace eweasel (just the necessary)
-exprt -N -r %ORIGO_SVN_REVISION %DEFAULT_ORIGO_SVN/eweasel eweasel
-exprt -r %ORIGO_SVN_REVISION %DEFAULT_ORIGO_SVN/eweasel/bin eweasel/bin
-exprt -r %ORIGO_SVN_REVISION %DEFAULT_ORIGO_SVN/eweasel/control eweasel/control
+exprt -N -r %PUBLIC_SVN_REVISION %DEFAULT_PUBLIC_SVN/eweasel eweasel
+exprt -r %PUBLIC_SVN_REVISION %DEFAULT_PUBLIC_SVN/eweasel/bin eweasel/bin
+exprt -r %PUBLIC_SVN_REVISION %DEFAULT_PUBLIC_SVN/eweasel/control eweasel/control
 fullrf %STUDIO_DIR\eweasel\INSTALL
 
 remtrace MinGW files
 cdd %STUDIO_DIR
 safe_md gcc
 cd gcc
-exprt -r %ORIGO_SVN_REVISION %DEFAULT_ORIGO_SVN/free_add_ons/gcc/%ISE_PLATFORM% %ISE_PLATFORM%
+exprt -r %PUBLIC_SVN_REVISION %DEFAULT_PUBLIC_SVN/free_add_ons/gcc/%ISE_PLATFORM% %ISE_PLATFORM%
 
 remtrace Create directories
 cdd %STUDIO_DIR
@@ -220,27 +252,61 @@ call make_libraries.btm %STUDIO_DIR\experimental experimental/library
 cdd %INIT_DIR
 call make_other_libraries.btm %STUDIO_DIR
 
+:clibs
 remtrace Compile C code of Eiffel Software C libraries
-cdd %INIT_DIR
-espawn -u:VC140 "%COMSPEC% /c compile_c_libraries.btm %STUDIO_DIR msc_vc140"
-cdd %INIT_DIR
-espawn -u:%ISE_C_COMPILER_VER% "%COMSPEC% /c compile_c_libraries.btm %STUDIO_DIR msc"
-cdd %INIT_DIR
-call compile_c_libraries.btm %STUDIO_DIR mingw
+remtrace HAS_VC_MSC=%HAS_VC_MSC%
+remtrace HAS_VC_MSC_VC140=%HAS_VC_MSC_VC140%
+remtrace HAS_C_COMP_VER=%HAS_C_COMP_VER% : ISE_C_COMPILER_VER=%ISE_C_COMPILER_VER% (ISE_C_COMPILER=%ISE_C_COMPILER%)
 
+IF "%HAS_VC_MSC%" == "True" (
+	cdd %INIT_DIR
+	remtrace Build the C libraries of non-Eiffel Software C libraries for msc (%ISE_VC_MSC%)
+	call espawn -u:%ISE_VC_MSC% "%COMSPEC% /c compile_c_libraries.btm %STUDIO_DIR% msc"
+)
+IF "%HAS_VC_MSC_VC140%" == "True" (
+	cdd %INIT_DIR
+	remtrace Build the C libraries of non-Eiffel Software C libraries for msc_vc140 (%ISE_VC_MSC_VC140%)
+	call espawn -u:%ISE_VC_MSC_VC140% "%COMSPEC% /c compile_c_libraries.btm %STUDIO_DIR% msc_vc140"
+)
 cdd %INIT_DIR
-espawn -u:VC140 "%COMSPEC% /c compile_c_libraries.btm %STUDIO_DIR\experimental msc_vc140"
+remtrace Build the C libraries of non-Eiffel Software C libraries for mingw
+call compile_c_libraries.btm %STUDIO_DIR% mingw
+
+remtrace Setup for experimental folder
+set PREV_ISE_LIBRARY=%ISE_LIBRARY%
+set ISE_LIBRARY=%STUDIO_DIR%\experimental
+
+IF "%HAS_VC_MSC%" == "True" (
+	cdd %INIT_DIR
+	remtrace Build the Experimental C libraries of non-Eiffel Software C libraries for msc (%ISE_VC_MSC%)
+	call espawn -u:%ISE_VC_MSC% "%COMSPEC% /c compile_c_libraries.btm %STUDIO_DIR\experimental msc"
+)
+IF "%HAS_VC_MSC_VC140%" == "True" (
+	cdd %INIT_DIR
+	remtrace Build the Experimental C libraries of non-Eiffel Software C libraries for msc_vc140 (%ISE_VC_MSC_VC140%)
+	call espawn -u:%ISE_VC_MSC_VC140% "%COMSPEC% /c compile_c_libraries.btm %STUDIO_DIR\experimental msc_vc140"
+)
 cdd %INIT_DIR
-espawn -u:%ISE_C_COMPILER_VER% "%COMSPEC% /c compile_c_libraries.btm %STUDIO_DIR\experimental msc"
-cdd %INIT_DIR
+remtrace Build the Experimental C libraries of non-Eiffel Software C libraries for mingw 
 call compile_c_libraries.btm %STUDIO_DIR\experimental mingw
 
+remtrace Un-setup experimental folder
+set ISE_LIBRARY=%PREV_ISE_LIBRARY%
+unset PREV_ISE_LIBRARY
 
-remtrace Build the C libraries of non-Eiffel Software C libraries
-cdd %INIT_DIR
-espawn -u:VC140 "%COMSPEC% /c compile_other_c_libraries.btm %STUDIO_DIR msc_vc140"
-cdd %INIT_DIR
-espawn -u:%ISE_C_COMPILER_VER% "%COMSPEC% /c compile_other_c_libraries.btm %STUDIO_DIR msc"
+remtrace Build other C libraries
+
+IF "%HAS_VC_MSC%" == "True" (
+	remtrace Build the other C libraries of non-Eiffel Software C libraries for msc (%ISE_VC_MSC%)
+	cdd %INIT_DIR
+	espawn -u:%ISE_VC_MSC% "%COMSPEC% /c compile_other_c_libraries.btm %STUDIO_DIR msc"
+)
+IF "%HAS_VC_MSC_VC140%" == "True" (
+	remtrace Build the other C libraries of non-Eiffel Software C libraries for msc_vc140 (%ISE_VC_MSC_VC140%)
+	cdd %INIT_DIR
+	espawn -u:%ISE_VC_MSC_VC140% "%COMSPEC% /c compile_other_c_libraries.btm %STUDIO_DIR msc_vc140"
+)
+remtrace Build the other C libraries of non-Eiffel Software C libraries for mingw
 cdd %INIT_DIR
 call compile_other_c_libraries.btm %STUDIO_DIR mingw
 
@@ -251,21 +317,38 @@ iff not defined NO_COMPILE then
 	remtrace Update all libraries
 	iff isdir %EIFFEL_SRC then
 		remtrace Delete %EIFFEL_SRC
-		fullrd %EIFFEL_SRC
+		rename %EIFFEL_SRC% %EIFFEL_SRC%-deleting
+		fullrd %EIFFEL_SRC%-deleting
+		give_time_to remove %EIFFEL_SRC%
 	endiff
+
 	safe_md %EIFFEL_SRC
 
 	REM Clean up the files
 	remtrace Update all source files.
 	cdd %EIFFEL_SRC\..
-	co -r %ORIGO_SVN_REVISION %DEFAULT_ORIGO_SVN/Src %EIFFEL_SRC
+	co -r %PUBLIC_SVN_REVISION %DEFAULT_PUBLIC_SVN/Src %EIFFEL_SRC
 
-	remtrace ISE specific files
-	cdd %EIFFEL_SRC
-	co %DEFAULT_ISE_SVN/Src/library/keygen library/keygen
-	cd tools
-	co %DEFAULT_ISE_SVN/Src/tools/activation activation
-	co %DEFAULT_ISE_SVN/Src/tools/estudio_enterprise estudio_enterprise
+	iff not defined NO_ENTERPRISE_BUILD then
+		remtrace ISE specific files
+		cdd %EIFFEL_SRC
+		if EXIST %INIT_DIR%\isesvn\library\keygen (
+			xcopy %INIT_DIR%\isesvn\library\keygen library\keygen /E /I /Y
+		) else (
+			co -r %ISE_SVN_REVISION% %DEFAULT_ISE_SVN%/Src/library/keygen library/keygen
+		)
+		cd tools
+		if EXIST %INIT_DIR%\isesvn\tools\activation (
+			xcopy %INIT_DIR%\isesvn\tools\activation activation /E /I /Y
+		) else (
+			co -r %ISE_SVN_REVISION% %DEFAULT_ISE_SVN%/Src/tools/activation activation
+		)
+		if EXIST %INIT_DIR%\isesvn\tools\estudio_enterprise (
+			xcopy %INIT_DIR%\isesvn\tools\estudio_enterprise estudio_enterprise /E /I /Y
+		) else (
+			co -r %ISE_SVN_REVISION% %DEFAULT_ISE_SVN%/Src/tools/estudio_enterprise estudio_enterprise
+		)
+	endiff
 
 	remtrace Build the normal libraries
 	cdd %INIT_DIR
@@ -313,12 +396,8 @@ else
 	give_time_to copy executables from the old delivery
 endiff
 
-cdd %INIT_DIR
-
-iff not defined NO_INSTALL then
-	espawn -u:%ISE_C_COMPILER_VER% "%COMSPEC% /c make_installations.btm"
-	cdd %INIT_DIR
-endiff
+call %INIT_DIR%\call_make_installations.btm
+cdd %INIT_DIR%
 
 REM Finish
 remtrace final time:

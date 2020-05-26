@@ -1,0 +1,5 @@
+call %~dp0init.btm
+
+cdd %INIT_DIR
+call make_dotnet.btm
+cdd %EIFFEL_SRC

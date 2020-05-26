@@ -1,0 +1,3 @@
+%ISE_EIFFEL%\tools\spec\%ISE_PLATFORM%\bin\espawn.exe --list > %INSTALL_LOG%.tmp.c_compiler
+for /f "usebackq delims=" %%a in (`findstr /n "\<%2\>" %INSTALL_LOG%.tmp.c_compiler`) do set "%1=True"
+fullrf %INSTALL_LOG%.tmp.c_compiler

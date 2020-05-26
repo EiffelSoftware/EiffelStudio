@@ -8,29 +8,43 @@ set _SET_SIMPLE_ALIAS_SET_=1
 
 REM File management
 REM Copy also hidden files, keep attributes, overwrite automatically
-alias copy *copy /hkz >>& %INSTALL_LOG
+alias safe_copy `*copy /hkz >>& %INSTALL_LOG%`
+alias dirtest `dir >>& %INSTALL_LOG%`
+
 REM Remove completely a directory
-alias fullrd del /syeqxz >>& %INSTALL_LOG
+alias nolog_fullrd del /syeqxz
+alias fullrd `del /syeqxz >>& %INSTALL_LOG`
+
 REM Remove a file
-alias fullrf del /yqze >>& %INSTALL_LOG
+alias nolog_fullrf del /yqze
+alias fullrf `del /yqze >>& %INSTALL_LOG`
+
 REM Retrieve a file from the old delivery and put it in the new one
 alias quick_move `iff "%2" == "" then & copy %ISE_EIFFEL\%1 %STUDIO_DIR\%1 >>& %INSTALL_LOG & else & copy %1 %ISE_EIFFEL\%2 %STUDIO_DIR\%2 >>& %INSTALL_LOG & endiff`
+
 REM Create a directory if it doesn't exist already
 alias safe_md `iff not isdir %1 then & iff exist %1 then & fullrf %1 & endiff & md %1 & endiff`
+
 REM Save current path into TMP_PATH
 alias save_path `set TMP_PATH=%@EXECSTR[cd]`
 
+REM Save parent dir of %2 into %1 variable.
+alias set_parent_dir_of `for %%a in ("%2") do set "%1=%%~dpa%%"`
+
+
 REM Helpers for the script
 REM Give some info on what's happening, both in the log and on the screen
-alias remtrace `echo %$ & echo -------------------------------- >>& %INSTALL_LOG & echo %$ >>& %INSTALL_LOG`
+alias remtrace `echo %$ & echo -------------------------------- & echo -------------------------------- >>& %INSTALL_LOG & echo %$ >>& %INSTALL_LOG`
+alias remerror `remtrace ERROR %$ & echo -------------------------------- >>& %ERROR_LOG% & echo %$ >>& %ERROR_LOG & echo ======================== >>& %ERROR_LOG `
 REM Give info concerning the elapsed time
 alias give_time_to `remtrace time used to %$: & remtrace %@TIMER[1] & TIMER ON /1 >> NUL`
 REM Clean exit
 alias cancel `echo Exiting... & echo Total time used: & echo %@TIMER[2] & set PATH=%OLD_PATH & cdd %INIT_DIR & set EIFFEL_SRC=%OLD_EIFFEL_SRC & set ISE_LIBRARY=%OLD_ISE_LIBRARY & set ISE_SRC=%OLD_ISE_SRC & iff defined TMP_ISE_EIFFEL then & set ISE_EIFFEL=%TMP_ISE_EIFFEL & set TMP_ISE_EIFFEL= & endiff & *cancel`
+alias CANCEL_ON_ERROR `iff not "%DELIV_SKIP_ERROR%" == "True" then & CANCEL & endiff`
 
 REM CVS Commands: checkout, export
-alias co `call  %INIT_DIR\svn_command.bat co %$ >>& %INSTALL_LOG`
-alias exprt `call %INIT_DIR\svn_command.bat --force export %$ >>& %INSTALL_LOG`
+alias co `call  %INIT_DIR\svn_command.bat co --quiet %$ >>& %INSTALL_LOG`
+alias exprt `call %INIT_DIR\svn_command.bat --force export --quiet %$ >>& %INSTALL_LOG`
 REM We cannot redirect the output here, since the output is redirected to a file
 alias exprtfile `call %INIT_DIR\svn_command.bat cat %$` 
 
@@ -39,15 +53,18 @@ REM `default_make` will compile just for the value of ISE_C_COMPILER (currently 
 REM C compiler.
 alias default_make `finish_freezing.exe -library`
 
-REM `sepcific_make` will compile using the given C compiler argument. Callers are responsible to set the
+REM `specific_make` will compile using the given C compiler argument. Callers are responsible to set the
 REM compiler path and environment variables properly (e.g. using espawn)
 alias specific_make `save_path & call compile_library.bat %1 >>& %INSTALL_LOG & cd %TMP_PATH`
+
+alias espawn `set OLD__SET_SIMPLE_ALIAS_SET_=%_SET_SIMPLE_ALIAS_SET_ & unset _SET_SIMPLE_ALIAS_SET_ & iff "%ISE_PLATFORM%" == "windows" then *espawn --x86 --nologo %$ & else *espawn --nologo %$ & endiff & set _SET_SIMPLE_ALIAS_SET_=%OLD__SET_SIMPLE_ALIAS_SET_ & unset OLD__SET_SIMPLE_ALIAS_SET_ `
+
 
 REM Eiffel Compilation
 REM Remove a project from the current directory, if any
 alias clean_project `iff exist EIFGENs .or. isdir EIFGENs then & fullrd EIFGENs & endiff`
 REM Finalize at the Eiffel level only
-alias finalize `iff "%2" == "" then & ecb -finalize -c_compile -config %$ >>& %INSTALL_LOG & else & ecb -finalize -c_compile -config %1 -target %2 >>& %INSTALL_LOG & endiff`
+alias finalize `echo ISE_C_COMPILER=%ISE_C_COMPILER% (ISE_C_COMPILER_VER=%ISE_C_COMPILER_VER%) & iff "%2" == "" then & ecb -batch -finalize -c_compile -config %$ >>& %INSTALL_LOG & else & ecb -batch -finalize -c_compile -config %1 -target %2 >>& %INSTALL_LOG & endiff`
 REM Melt at the Eiffel level only
 alias melt `ecb -config %$ >>& %INSTALL_LOG`
 alias freeze `ecb -freeze -c_compile -config %$ >>& %INSTALL_LOG`
@@ -58,4 +75,13 @@ alias cleanup_eiffel `if exist EIFGENs\%1\F_code\%2 move EIFGENs\%1\F_code\%2 . 
 REM Tests....
 alias testpar `if %@INDEX[%$,no_compile] ge 0 echo true`
 
+REM /bin/bash
+alias bash `*bash -o igncr %$`
+
+alias set_version `call %INIT_DIR%\set_version.bat %1 %2 %3`
+
+REM file sharing
+::alias share_delivery `scp %1 %ISE_NIGHTLY_SCP_LOCATION% & ssh %ISE_NIGHTLY_SCP_HOST% chmod 444 %ISE_NIGHTLY_SCP_PATH%/%1 `
+::alias share_delivery `cp %1 %INIT_DIR%\nightly`
+alias share_delivery `call  %INIT_DIR\share_delivery.bat %1 >>& %INSTALL_LOG`
 

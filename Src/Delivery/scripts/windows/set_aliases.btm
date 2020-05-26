@@ -7,31 +7,42 @@ endiff
 
 set _SET_ALIAS_SET_=1
 
-set STUDIO_VERSION_MAJOR_MINOR=20.05
+REM Setup environment
+REM =================
+
+iff exist %INIT_DIR\etc\config.btm then
+	call %INIT_DIR\etc\config.btm
+else
+	echo ERROR missing file %INIT_DIR\etc\config.btm
+	set _SET_ALIAS_SET_=0
+	CANCEL
+endiff
+
+echo ISE_C_COMPILER_VER=%ISE_C_COMPILER_VER%
+iff defined ISE_C_COMPILER_VER then
+	set WORK_DIR=%WORK_DIR%\%STUDIO_VERSION_MAJOR_MINOR%\%ISE_PLATFORM%.%ISE_VC_MSC%_%ISE_VC_MSC_VC140%
+::	set WORK_DIR=%WORK_DIR%\%STUDIO_VERSION_MAJOR_MINOR%\%ISE_PLATFORM%.%ISE_VC_MSC%_%ISE_VC_MSC_VC140%.%ISE_C_COMPILER_VER%
+else
+	set WORK_DIR=%WORK_DIR%\%STUDIO_VERSION_MAJOR_MINOR%\%ISE_PLATFORM%
+endiff
+echo WORK_DIR=%WORK_DIR%
+
+set DELIV_DIR=%WORK_DIR%\build
 
 REM The file where all output is stored
-set INSTALL_LOG=c:\work\%STUDIO_VERSION_MAJOR_MINOR%_deliv\install.log
+set INSTALL_LOG=%DELIV_DIR%\install.log
+set ERROR_LOG=%DELIV_DIR%\error.log
 REM NB: The following directory is where a new version of ec.exe will be finalized.
-set FINALIZATION_DIR=c:\work\%STUDIO_VERSION_MAJOR_MINOR%_deliv
-REM NB: The following directory must contain document.exe
-REM Tag to export files in SVN at ETHZ
-set DEFAULT_ORIGO_SVN=https://svn.eiffel.com/eiffelstudio/trunk
-REM Tag to export files in SVN at ISE
-set DEFAULT_ISE_SVN=svn://%USERNAME%@svn.ise/ise_svn/trunk
+set FINALIZATION_DIR=%DELIV_DIR
+
 REM NB: The following directory will be erased!
-set TMP_EIFFEL_SRC=c:\work\tmpdev
-iff not defined ORIGO_SVN_REVISION then
-	set ORIGO_SVN_REVISION=HEAD
-endiff
+set TMP_EIFFEL_SRC=%WORK_DIR%\tmpdev
+
 REM Where the new delivery is set up. Warning: if it exists, the directory will be erased!
-REM
-iff "%ISE_PLATFORM%" == "win64" then
-set INSTALL_DIR=c:\work\InstalledEiffel_%STUDIO_VERSION_MAJOR_MINOR%
-else
-set INSTALL_DIR=c:\work\InstalledEiffel_%STUDIO_VERSION_MAJOR_MINOR%_32
-endiff
+set STUDIO_NAME=Eiffel_%STUDIO_VERSION_MAJOR_MINOR
+
+set INSTALL_DIR=%WORK_DIR%\%STUDIO_NAME%
 set STUDIO_DIR=%INSTALL_DIR\EiffelStudio
-set STUDIO_NAME=Eiffel_%STUDIO_VERSION_MAJOR_MINOR%
 
 REM Check for Windows 64 bits.
 iff "%ISE_PLATFORM%" == "win64" then
@@ -40,3 +51,6 @@ endiff
 
 REM OK The rest is private, no need for you to see it :)
 call %INIT_DIR%\set_simple_aliases.btm
+iff exist %INIT_DIR\etc\set_local_aliases.btm then
+	call %INIT_DIR\etc\set_local_aliases.btm
+endiff

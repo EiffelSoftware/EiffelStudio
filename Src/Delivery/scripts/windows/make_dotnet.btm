@@ -1,35 +1,70 @@
 remtrace Compiling .NET components
+
 REM Should be called by `make_exes.btm'
 cdd %EIFFEL_SRC
 
 remtrace Compiling .NET runtime
-cd %EIFFEL_SRC\Eiffel\eiffel\com_il_generation\core\run-time
-espawn -u:%ISE_C_COMPILER_VER% "%COMSPEC% /c nmake msbuild_20"
-copy EiffelSoftware.Runtime.dll %STUDIO_DIR\studio\spec\%ISE_PLATFORM\lib
-copy EiffelSoftware.Runtime.dll %STUDIO_DIR\studio\spec\%ISE_PLATFORM\bin
-copy EiffelSoftware.Runtime.dll %STUDIO_DIR\tools\spec\%ISE_PLATFORM\bin
+cd %EIFFEL_SRC%\Eiffel\eiffel\com_il_generation\core\run-time
+sed -e "s/msbuild runtime.sln/msbuild runtime.sln \/p:Platform=\"Any CPU\" \/p:Configuration=Release /" Makefile > Makefile-release
 
-remtrace Compiling Eiffel Assembly Cache
-cdd %EIFFEL_SRC\dotnet\consumer
-finalize consumer.ecf consumer_20
-cleanup_dotnet_eiffel consumer_20 EiffelSoftware.MetadataConsumer.dll
-iff not exist libEiffelSoftware.MetadataConsumer.dll then
-	remtrace Could not compile EiffelSoftware.MetadataConsumer.dll
-	CANCEL
+set TMP_ISE_C_COMPILER_VER=%ISE_C_COMPILER_VER%
+IF "%ISE_C_COMPILER%" EQ "msc_vc140" (
+	IF "%HAS_VC_MSC_VC140%" == "True" (
+		set TMP_ISE_C_COMPILER_VER=vc140
+	)
+)
+espawn -u:%TMP_ISE_C_COMPILER_VER% "%COMSPEC% /c nmake -f Makefile-release msbuild_20"
+iff exist EiffelSoftware.Runtime.dll then
+	safe_copy EiffelSoftware.Runtime.dll %STUDIO_DIR\studio\spec\%ISE_PLATFORM\lib
+	safe_copy EiffelSoftware.Runtime.dll %STUDIO_DIR\studio\spec\%ISE_PLATFORM\bin
+	safe_copy EiffelSoftware.Runtime.dll %STUDIO_DIR\tools\spec\%ISE_PLATFORM\bin
+else
+	remerror Could not compile .NET runtime
+	CANCEL_ON_ERROR
 endiff
-copy EiffelSoftware.MetadataConsumer.dll %STUDIO_DIR\studio\spec\%ISE_PLATFORM\bin
-copy libEiffelSoftware.MetadataConsumer.dll %STUDIO_DIR\studio\spec\%ISE_PLATFORM\bin
 
-remtrace Compiling Eiffel Metadata Cosumer Executable
-cdd %EIFFEL_SRC\dotnet\consumer
-finalize consumer.ecf emdc
-cleanup_dotnet_eiffel emdc emdc.exe
-iff not exist libemdc.dll then
-	remtrace Could not compile emdc.exe
-	CANCEL
+remtrace Compiling Eiffel Assembly Cache EiffelSoftware.MetadataConsumer.dll
+iff exist %STUDIO_DIR\studio\spec\%ISE_PLATFORM\bin\EiffelSoftware.MetadataConsumer.dll then
+	remtrace EiffelSoftware.MetadataConsumer.dll is already built
+else
+	cdd %EIFFEL_SRC\dotnet\consumer
+	finalize consumer.ecf consumer_20
+	cleanup_dotnet_eiffel consumer_20 EiffelSoftware.MetadataConsumer.dll
+	iff exist libEiffelSoftware.MetadataConsumer.dll then
+		safe_copy EiffelSoftware.MetadataConsumer.dll %STUDIO_DIR\studio\spec\%ISE_PLATFORM\bin
+		safe_copy libEiffelSoftware.MetadataConsumer.dll %STUDIO_DIR\studio\spec\%ISE_PLATFORM\bin
+	else
+		remerror Could not compile EiffelSoftware.MetadataConsumer.dll (consumer_20)
+		iff defined REUSE_MDCONSUMER then
+			remtrace REUSE installation MetadataConsumer dlls...
+			safe_copy %ISE_EIFFEL%\studio\spec\%ISE_PLATFORM%\bin\EiffelSoftware.MetadataConsumer.dll %STUDIO_DIR\studio\spec\%ISE_PLATFORM\bin
+			safe_copy %ISE_EIFFEL%\studio\spec\%ISE_PLATFORM%\bin\libEiffelSoftware.MetadataConsumer.dll %STUDIO_DIR\studio\spec\%ISE_PLATFORM\bin
+		else
+			CANCEL_ON_ERROR
+		endiff
+	endiff
 endiff
-copy emdc.exe %STUDIO_DIR\tools\spec\%ISE_PLATFORM\bin
-copy libemdc.dll %STUDIO_DIR\tools\spec\%ISE_PLATFORM\bin
 
+remtrace Compiling Eiffel Metadata Consumer Executable emdc.exe
+iff exist %STUDIO_DIR\tools\spec\%ISE_PLATFORM\bin\emdc.exe then
+	remtrace emdc tool is already built
+else
+	cdd %EIFFEL_SRC\dotnet\consumer
+	finalize consumer.ecf emdc
+	cleanup_dotnet_eiffel emdc emdc.exe
+	iff exist libemdc.dll then
+		safe_copy emdc.exe %STUDIO_DIR\tools\spec\%ISE_PLATFORM\bin
+		safe_copy libemdc.dll %STUDIO_DIR\tools\spec\%ISE_PLATFORM\bin
+	else
+		remerror Could not compile emdc.exe
+		iff defined REUSE_MDCONSUMER then
+			remtrace REUSE installation MetadataConsumer 
+			safe_copy %ISE_EIFFEL%\tools\spec\%ISE_PLATFORM%\bin\emdc.exe %STUDIO_DIR\tools\spec\%ISE_PLATFORM\bin
+			safe_copy %ISE_EIFFEL%\tools\spec\%ISE_PLATFORM%\bin\libemdc.dll %STUDIO_DIR\tools\spec\%ISE_PLATFORM\bin
+		else
+			CANCEL_ON_ERROR
+		endiff
+	endiff
+endiff
 
 cdd %EIFFEL_SRC

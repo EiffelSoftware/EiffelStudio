@@ -37,36 +37,4 @@ iff not defined INSTALL_DIR then
 	echo Error: No path specified for the generated delivery
 	CANCEL
 endiff
-iff exist %INSTALL_DIR .or. isdir %INSTALL_DIR then
-	echo Warning: %INSTALL_DIR will be replaced by the installation script, you will lose everything in it
-endiff
-echo Current configuration:
-echo ISE_EIFFEL is %ISE_EIFFEL
-echo ISE_PLATFORM is %ISE_PLATFORM
-echo INSTALL_DIR is %INSTALL_DIR
-echo STUDIO_DIR is %STUDIO_DIR
-echo Log file is %INSTALL_LOG
-echo The revision that will be generated will be %ORIGO_SVN_REVISION
-echo ecb version is:
-ecb -version
-echo -----------------------------
-iff defined NO_COMPILE then
-	echo No compilation will be performed (including EiffelStudio's compilation)
-endiff
-iff defined NO_NEW_EC then
-	echo No new version of EiffelStudio will be compiled
-endiff
-iff defined BUILD_ENTERPRISE_ONLY then
-	echo Only EiffelStudio Enterprise will be build
-endiff
-iff defined NO_INSTALL then
-	echo The delivery will be generated, but not the final installation executable
-endiff
-iff not defined NO_INSTALL .and. not defined NO_COMPILE then
-	echo All components will be recompiled
-endiff
-echo You have 60s to cancel this build
-echo Press Ctrl-C or Esc to abort
-delay /b 60
-echo Installation parameters are %ISE_EIFFEL, %ISE_PLATFORM, %INSTALL_DIR and %STUDIO_DIR >> %INSTALL_LOG
-echo -------------------------------- >> %INSTALL_LOG
+

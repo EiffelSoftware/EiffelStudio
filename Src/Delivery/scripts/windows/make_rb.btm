@@ -1,6 +1,6 @@
 remtrace Update the source files
 REM cdd %EIFFEL_SRC
-REM co -r %ORIGO_SVN_REVISION %DEFAULT_ORIGO_SVN/Src/tools/resource_bench resource_bench
+REM co -r %PUBLIC_SVN_REVISION %DEFAULT_PUBLIC_SVN/Src/tools/resource_bench resource_bench
 
 remtrace Recompile Resource Bench
 REM cdd %EIFFEL_SRC\tools\resource_bench
@@ -10,9 +10,9 @@ REM cleanup_eiffel rb rb.exe
 REM if not exist rb.exe (remtrace Couldnt generate rb.exe & cancel)
 REM move rb.exe %STUDIO_DIR\rb\bin
 cdd %STUDIO_DIR\rb
-exprt -r %ORIGO_SVN_REVISION %DEFAULT_ORIGO_SVN/Src/tools/resource_bench/bin bin
+exprt -r %PUBLIC_SVN_REVISION %DEFAULT_PUBLIC_SVN/Src/tools/resource_bench/bin bin
 
 remtrace Retrieve the example
 cdd %STUDIO_DIR\rb
-exprt -r %ORIGO_SVN_REVISION %DEFAULT_ORIGO_SVN/Src/tools/resource_bench/RB_documentation/examples example
+exprt -r %PUBLIC_SVN_REVISION %DEFAULT_PUBLIC_SVN/Src/tools/resource_bench/RB_documentation/examples example
 

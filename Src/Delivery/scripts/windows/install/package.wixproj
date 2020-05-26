@@ -226,7 +226,7 @@
     <Folder Include="content" />
   </ItemGroup>
   <ItemGroup>
-    <WixExtension Include="C:\Program Files (x86)\Windows Installer XML v3\bin\WixUtilExtension.dll" />
+    <WixExtension Include="wix\v3.0\WixUtilExtension.dll" />
   </ItemGroup>
-  <Import Project="$(MSBuildExtensionsPath)\Microsoft\WiX\v3.0\Wix.targets" />
+  <Import Project="wix\v3.0\Wix.targets" />
 </Project>

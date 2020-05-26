@@ -1,0 +1,81 @@
+rem Should be called by make_exes.btm
+
+remtrace Compiling Gobo tools
+safe_md %STUDIO_DIR\library\gobo\spec
+safe_md %STUDIO_DIR\library\gobo\spec\%ISE_PLATFORM
+safe_md %STUDIO_DIR\library\gobo\spec\%ISE_PLATFORM\bin
+cdd %EIFFEL_SRC\library\gobo\src
+clean_project
+
+remtrace geant
+iff exist %STUDIO_DIR\library\gobo\spec\%ISE_PLATFORM\bin\geant.exe then
+	remtrace geant is already built
+else
+	finalize geant.ecf geant
+	cleanup_eiffel geant geant.exe
+	move geant.exe %STUDIO_DIR\library\gobo\spec\%ISE_PLATFORM\bin
+endiff
+
+remtrace gelex
+iff exist %STUDIO_DIR\library\gobo\spec\%ISE_PLATFORM\bin\gelex.exe then
+	remtrace gelex is already built
+else
+	finalize gelex.ecf gelex
+	cleanup_eiffel gelex gelex.exe
+	move gelex.exe %STUDIO_DIR\library\gobo\spec\%ISE_PLATFORM\bin
+endiff
+
+remtrace geyacc
+iff exist %STUDIO_DIR\library\gobo\spec\%ISE_PLATFORM\bin\geyacc.exe then
+	remtrace geyacc is already built
+else
+	finalize geyacc.ecf geyacc
+	cleanup_eiffel geyacc geyacc.exe
+	move geyacc.exe %STUDIO_DIR\library\gobo\spec\%ISE_PLATFORM\bin
+endiff
+
+remtrace gec
+iff exist %STUDIO_DIR\library\gobo\spec\%ISE_PLATFORM\bin\gec.exe then
+	remtrace gec is already built
+else
+	finalize gec.ecf gec
+	cleanup_eiffel gec gec.exe
+	move gec.exe %STUDIO_DIR\library\gobo\spec\%ISE_PLATFORM\bin
+endiff
+
+remtrace gelint
+iff exist %STUDIO_DIR\library\gobo\spec\%ISE_PLATFORM\bin\gelint.exe then
+	remtrace gelint is already built
+else
+	finalize gelint.ecf gelint
+	cleanup_eiffel gelint gelint.exe
+	move gelint.exe %STUDIO_DIR\library\gobo\spec\%ISE_PLATFORM\bin
+endiff
+
+remtrace gepp
+iff exist %STUDIO_DIR\library\gobo\spec\%ISE_PLATFORM\bin\gepp.exe then
+	remtrace gepp is already built
+else
+	finalize gepp.ecf gepp
+	cleanup_eiffel gepp gepp.exe
+	move gepp.exe %STUDIO_DIR\library\gobo\spec\%ISE_PLATFORM\bin
+endiff
+
+remtrace getest
+iff exist %STUDIO_DIR\library\gobo\spec\%ISE_PLATFORM\bin\getest.exe then
+	remtrace getest is already built
+else
+	finalize getest.ecf getest
+	cleanup_eiffel getest getest.exe
+	move getest.exe %STUDIO_DIR\library\gobo\spec\%ISE_PLATFORM\bin
+endiff
+
+remtrace gexslt
+iff exist %STUDIO_DIR\library\gobo\spec\%ISE_PLATFORM\bin\gexslt.exe then
+	remtrace gexslt is already built
+else
+	finalize gexslt.ecf gexslt
+	cleanup_eiffel gexslt gexslt.exe
+	move gexslt.exe %STUDIO_DIR\library\gobo\spec\%ISE_PLATFORM\bin
+endiff
+

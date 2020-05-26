@@ -1,0 +1,7 @@
+@echo off
+call %~dp0init.btm
+
+echo Latest revision for %DEFAULT_PUBLIC_SVN%
+svn info %DEFAULT_PUBLIC_SVN% | grep Revision
+echo Latest revision for %DEFAULT_ISE_SVN%
+svn info %DEFAULT_ISE_SVN% | grep Revision

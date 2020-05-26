@@ -1,0 +1,14 @@
+call %~dp0init.btm
+
+cdd %INIT_DIR
+remtrace Generate the precompilation and the "new project" wizards
+call make_wizards.btm
+cdd %INIT_DIR
+give_time_to compile basic wizards
+
+remtrace Generate the COM wizard
+call make_com_wizard.btm
+cdd %INIT_DIR
+give_time_to compile the COM wizard
+
+cdd %EIFFEL_SRC

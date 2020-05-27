@@ -9,7 +9,7 @@ var_dir=`pwd`/var
 if [ "$include_enterprise" = "true" ]; then
 	output_dir=$var_dir/ent
 else
-	output_dir=$var_dir/community
+	output_dir=$var_dir/standard
 fi
 docker_image_name=local/eiffel-deliv-porterpackage
 docker rmi ${docker_image_name}

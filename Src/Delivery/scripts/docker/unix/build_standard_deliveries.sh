@@ -9,12 +9,12 @@
 #export SVN_EIFFELSTUDIO_BRANCH=/branches/Eiffel_19.12
 
 
-include_enterprise=false
+export include_enterprise=false
 
-include_64bits="true"
-#include_64bits="false"
-include_32bits="true"
-#include_32bits="false"
+export include_64bits="true"
+#export include_64bits="false"
+export include_32bits="true"
+#export include_32bits="false"
 
 ./build_deliveries.sh
 

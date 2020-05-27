@@ -23,10 +23,10 @@ cd %~dp0..
 svn revert -R install
 echo - remove install\binaries
 if EXIST install\binaries rd /q/s install\binaries
-echo - remove install\bin\studio_gpl_x64 rd
-if EXIST install\bin\studio_gpl_x64 rd /q/s install\bin\studio_gpl_x64
-echo - remove install\bin\studio_gpl_x86 rd
-if EXIST install\bin\studio_gpl_x86 rd /q/s install\bin\studio_gpl_x86
+echo - remove install\bin\studio_std_x64 rd
+if EXIST install\bin\studio_std_x64 rd /q/s install\bin\studio_std_x64
+echo - remove install\bin\studio_std_x86 rd
+if EXIST install\bin\studio_std_x86 rd /q/s install\bin\studio_std_x86
 echo - remove install\bin\studio_ent_x64 rd
 if EXIST install\bin\studio_ent_x64 rd /q/s install\bin\studio_ent_x64
 echo - remove install\bin\studio_ent_x86 rd

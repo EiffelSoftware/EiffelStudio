@@ -96,7 +96,7 @@ remtrace ==============================================
 
 cdd %INIT_DIR\install\content\eiffelstudio
 safe_md %INSTALL_DIR\setups
-safe_md %INSTALL_DIR\setups\gpl
+safe_md %INSTALL_DIR\setups\standard
 safe_md %INSTALL_DIR\setups\enterprise
 safe_md %INSTALL_DIR\setups\enterprise-axar
 
@@ -121,35 +121,35 @@ if "%NO_ENTERPRISE_BUILD%" NEQ "True" (
 	safe_copy %INIT_DIR\install\bin\studio_ent_%WINNAME\package.msi %INSTALL_DIR\setups\enterprise\%STUDIO_NAME%_ent_%SVN_VERSION-%ISE_PLATFORM%.msi
 )
 
-if "%NO_GPL_BUILD%" NEQ "True" (
-	remtrace Preparing GPL edition
-	remtrace Clean previous GPL WIX files
-	rem fullrd %INIT_DIR%\install\bin\studio_gpl_%WINNAME%
-	espawn -u:%ISE_C_COMPILER_VER%  "nmake /nologo gpl_%WINNAME"
-	safe_copy %INIT_DIR\install\bin\studio_gpl_%WINNAME\package.msi %INSTALL_DIR\setups\gpl\%STUDIO_NAME%_rev_%SVN_VERSION-%ISE_PLATFORM%.msi
+if "%NO_STANDARD_BUILD%" NEQ "True" (
+	remtrace Preparing Standard edition
+	remtrace Clean previous Standard WIX files
+	rem fullrd %INIT_DIR%\install\bin\studio_std_%WINNAME%
+	espawn -u:%ISE_C_COMPILER_VER%  "nmake /nologo std_%WINNAME"
+	safe_copy %INIT_DIR\install\bin\studio_std_%WINNAME\package.msi %INSTALL_DIR\setups\standard\%STUDIO_NAME%_rev_%SVN_VERSION-%ISE_PLATFORM%.msi
 )
 
 remtrace ==============================================
 remtrace Building the Zips
 remtrace ==============================================
-if "%NO_GPL_BUILD%" NEQ "True" (
+if "%NO_STANDARD_BUILD%" NEQ "True" (
 	cdd %INSTALL_DIR
-	if exist %INSTALL_DIR\setups\gpl\%STUDIO_NAME%_rev_%SVN_VERSION-%ISE_PLATFORM%.7z (
-		remtrace GPL archive: reuse
+	if exist %INSTALL_DIR\setups\standard\%STUDIO_NAME%_rev_%SVN_VERSION-%ISE_PLATFORM%.7z (
+		remtrace Standard archive: reuse
 	) else (
 		ren EiffelStudio %STUDIO_NAME%
-		remtrace GPL archive
-		safe_copy %INSTALL_DIR\releases\gpl_version\ec.exe %INSTALL_DIR\%STUDIO_NAME%\studio\spec\%ISE_PLATFORM%\bin
-		safe_copy %INSTALL_DIR\releases\gpl_version\ecb.exe %INSTALL_DIR\%STUDIO_NAME%\studio\spec\%ISE_PLATFORM%\bin
-		iff exist %INSTALL_DIR\releases\gpl_version\LICENSE then
-			safe_copy %INSTALL_DIR\releases\gpl_version\LICENSE %INSTALL_DIR\%STUDIO_NAME%\LICENSE
+		remtrace Standard archive
+		safe_copy %INSTALL_DIR\releases\standard_version\ec.exe %INSTALL_DIR\%STUDIO_NAME%\studio\spec\%ISE_PLATFORM%\bin
+		safe_copy %INSTALL_DIR\releases\standard_version\ecb.exe %INSTALL_DIR\%STUDIO_NAME%\studio\spec\%ISE_PLATFORM%\bin
+		iff exist %INSTALL_DIR\releases\standard_version\LICENSE then
+			safe_copy %INSTALL_DIR\releases\standard_version\LICENSE %INSTALL_DIR\%STUDIO_NAME%\LICENSE
 		else
-			remtrace Missing GPL license text
+			remtrace Missing Standard license text
 		endiff
-		7z a -t7z %INSTALL_DIR\setups\gpl\%STUDIO_NAME%_rev_%SVN_VERSION-%ISE_PLATFORM%.7z %STUDIO_NAME% -mx9 >>& %INSTALL_LOG
+		7z a -t7z %INSTALL_DIR\setups\standard\%STUDIO_NAME%_rev_%SVN_VERSION-%ISE_PLATFORM%.7z %STUDIO_NAME% -mx9 >>& %INSTALL_LOG
 	)
-remtrace Uploading GPL packages online
-	cdd %INSTALL_DIR\setups\gpl
+remtrace Uploading Standard packages online
+	cdd %INSTALL_DIR\setups\standard
 	call share_delivery %STUDIO_NAME%_rev_%SVN_VERSION%-%ISE_PLATFORM%.7z standard
 	call share_delivery %STUDIO_NAME%_rev_%SVN_VERSION%-%ISE_PLATFORM%.msi standard
 	if not EXIST %STUDIO_NAME%_rev_%SVN_VERSION%-%ISE_PLATFORM%.7z (

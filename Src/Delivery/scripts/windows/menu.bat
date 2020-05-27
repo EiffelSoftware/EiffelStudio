@@ -23,7 +23,7 @@ echo EiffelStudio delivery:
 @echo 4: starting environment
 @echo 5: bootstrap environment
 @echo 6: display logs
-@echo 7: GPL only
+@echo 7: Standard only
 @echo -------------------
 @echo i: display info
 @echo x: extra menu
@@ -38,16 +38,16 @@ if .%ERRORLEVEL%. == .3. GOTO make_installations
 if .%ERRORLEVEL%. == .4. GOTO starting_env
 if .%ERRORLEVEL%. == .5. GOTO bootstrap_env
 if .%ERRORLEVEL%. == .6. GOTO display_logs
-if .%ERRORLEVEL%. == .7. GOTO menu_gpl
+if .%ERRORLEVEL%. == .7. GOTO menu_std
 if .%ERRORLEVEL%. == .8. GOTO display_info
 if .%ERRORLEVEL%. == .9. GOTO menu_extra
 if .%ERRORLEVEL%. == .10. GOTO clean_delivery
 if .%ERRORLEVEL%. == .11. goto end
 goto end
 
-:menu_gpl
+:menu_std
 set NO_ENTERPRISE_BUILD="True"
-echo EiffelStudio GPL delivery:
+echo EiffelStudio Standard delivery:
 @echo 1: make_delivery
 @echo 2: make_exes
 @echo 3: make_installation
@@ -86,14 +86,14 @@ goto end
 %TCCLECMD% /C check_svn_repositories.btm
 goto end
 
-:make_gpl_delivery
-echo Build only GPL delivery
+:make_std_delivery
+echo Build only Standard delivery
 set NO_ENTERPRISE_BUILD="True"
 %TCCLECMD% /C make_delivery.btm
 goto end
 
-:make_gpl_installation
-echo Build only GPL installation delivery
+:make_std_installation
+echo Build only Standard installation delivery
 set NO_ENTERPRISE_BUILD="True"
 %TCCLECMD% /C make_installations.btm
 goto end

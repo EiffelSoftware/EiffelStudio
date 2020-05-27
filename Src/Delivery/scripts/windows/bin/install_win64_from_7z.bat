@@ -1,6 +1,6 @@
 echo off
 setlocal
-REM Usage: install_from_7z.bat ..\nightly\Eiffel_19.04_gpl_103069-win64.7z
+REM Usage: install_from_7z.bat ..\nightly\Eiffel_19.04_rev_103069-win64.7z
 REM
 set E_ARCHIVE=%~dpnx1
 set CWD=%cd%

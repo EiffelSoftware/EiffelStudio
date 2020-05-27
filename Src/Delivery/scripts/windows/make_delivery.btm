@@ -21,7 +21,7 @@ iff %@INDEX[%@LOWER[%$],h] ge 0 then
 	echo   - no_compile: to discard any compilation
 	echo   - no_new_ec: to avoid compiling a new version of EiffelStudio
 	echo   - enterprise: to build only the enterprise version of EiffelStudio
-	echo   - gpl: to build only the GPL version of EiffelStudio
+	echo   - standard: to build only the Standard version of EiffelStudio
 	echo   - no_wizards: to discard wizards building
 	echo   - no_install: to generare only the delivery (but not the installation executable) 
 	echo   (or nothing to fully regenerate the installation).
@@ -43,12 +43,12 @@ else
 	unset /Q NO_NEW_EC
 endiff
 iff %@INDEX[%@LOWER[%$],enterprise] ge 0 then
-	set NO_GPL_BUILD="True"
+	set NO_STANDARD_BUILD="True"
 endiff
-iff %@INDEX[%@LOWER[%$],gpl] ge 0 then
+iff %@INDEX[%@LOWER[%$],standard] ge 0 then
 	set NO_ENTERPRISE_BUILD="True"
 	unset /Q BUILD_ENTERPRISE
-	set BUILD_GPL="True"
+	set BUILD_STANDARD="True"
 endiff
 iff %@INDEX[%@LOWER[%$],no_wizard] ge 0 then
 	set NO_WIZARDS="True"

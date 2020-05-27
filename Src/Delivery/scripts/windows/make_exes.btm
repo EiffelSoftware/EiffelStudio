@@ -11,8 +11,8 @@ endiff
 iff not exist %INSTALL_DIR\releases\enterprise_version-axar then
 	md %INSTALL_DIR\releases\enterprise_version-axar
 endiff
-iff not exist %INSTALL_DIR\releases\gpl_version then
-	md %INSTALL_DIR\releases\gpl_version
+iff not exist %INSTALL_DIR\releases\standard_version then
+	md %INSTALL_DIR\releases\standard_version
 endiff
 
 remtrace Compile the run-times
@@ -103,8 +103,8 @@ cd %EIFFEL_SRC\framework\cli_debugger\Clib
 default_make
 
 REM Compiling EiffelStudio stuff
-iff defined NO_GPL_BUILD then
-	remtrace NO_GPL_BUILD=BUILD_ENTERPRISE_ONLY
+iff defined NO_STANDARD_BUILD then
+	remtrace NO_STANDARD_BUILD=BUILD_ENTERPRISE_ONLY
 	remtrace Recompile EiffelStudio
 	cdd %FINALIZATION_DIR
 	safe_copy %EIFFEL_SRC\Eiffel\Ace\*.* .
@@ -144,8 +144,8 @@ iff defined NO_GPL_BUILD then
 
 else
 	iff not defined NO_NEW_EC then
-		iff not defined NO_GPL_BUILD then
-			remtrace GPL edition
+		iff not defined NO_STANDARD_BUILD then
+			remtrace Standard edition
 			cdd %EIFFEL_SRC\Eiffel\API\constants
 			remtrace update version for system_constants.e
 			set_version %EIFFEL_SRC 0000 system_constants.e
@@ -153,28 +153,28 @@ else
 			safe_copy %EIFFEL_SRC\Eiffel\Ace\*.* .
 
 			clean_project
-			remtrace finalize GPL edition "batch"
+			remtrace finalize Standard edition "batch"
 			finalize ec.ecf batch
 			cleanup_eiffel batch ecb.exe
 			iff exist ecb.exe then
-				move ecb.exe %INSTALL_DIR\releases\gpl_version
+				move ecb.exe %INSTALL_DIR\releases\standard_version
 			else
 				remerror Could not finalize a new batch version of the compiler
 				CANCEL_ON_ERROR
 			endiff
 
 			clean_project
-			remtrace finalize GPL edition "bench"
+			remtrace finalize Standard edition "bench"
 			finalize ec.ecf bench
 			cleanup_eiffel bench ec.exe
 			iff exist ec.exe then
-				move ec.exe %INSTALL_DIR\releases\gpl_version
+				move ec.exe %INSTALL_DIR\releases\standard_version
 			else
-				remerror Could not finalize a new "gpl_edition" EiffelStudio
+				remerror Could not finalize a new "standard_edition" EiffelStudio
 				CANCEL_ON_ERROR
 			endiff
 
-			exprtfile -r %PUBLIC_SVN_REVISION %DEFAULT_PUBLIC_SVN/Src/Delivery/scripts/licensing/eiffelstudio/gpl.txt > %INSTALL_DIR\releases\gpl_version\LICENSE
+			exprtfile -r %PUBLIC_SVN_REVISION %DEFAULT_PUBLIC_SVN/Src/Delivery/scripts/licensing/eiffelstudio/license.txt > %INSTALL_DIR\releases\standard_version\LICENSE
 		endiff
 		iff not defined NO_AXAR_ENTERPRISE_BUILD then
 			remtrace AXAR-Enterprise edition for EiffelStudio

@@ -125,7 +125,7 @@ if "%NO_STANDARD_BUILD%" NEQ "True" (
 	remtrace Preparing Standard edition
 	remtrace Clean previous Standard WIX files
 	rem fullrd %INIT_DIR%\install\bin\studio_std_%WINNAME%
-	espawn -u:%ISE_C_COMPILER_VER%  "nmake /nologo std_%WINNAME"
+	espawn -u:%ISE_C_COMPILER_VER%  "nmake /nologo standard_%WINNAME"
 	safe_copy %INIT_DIR\install\bin\studio_std_%WINNAME\package.msi %INSTALL_DIR\setups\standard\%STUDIO_NAME%_rev_%SVN_VERSION-%ISE_PLATFORM%.msi
 )
 

@@ -5,7 +5,6 @@
 					https://en.wikipedia.org/wiki/Mathematical_operators_and_symbols_in_Unicode
 					https://www.unicode.org/charts/PDF/U2200.pdf
 		]"
-
 	date: "$Date$"
 	revision: "$Revision$"
 	EIS: "name=Unicode symbols for math", "protocol=URI", "src=https://en.wikipedia.org/wiki/Mathematical_operators_and_symbols_in_Unicode", "tag=symbol"
@@ -209,8 +208,6 @@ feature {NONE} -- Persistency
 	append_unescape_string (s: READABLE_STRING_32; a_target: STRING_32)
 		local
 			i: INTEGER
-			s32: STRING_32
-			utf: UTF_CONVERTER
 		do
 			if s.starts_with_general ("0x") or s.starts_with_general ("U+") then
 				i := {HEXADECIMAL_STRING_CONVERTER}.hex_to_integer_32 (s.substring (3, s.count))

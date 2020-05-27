@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "Version number."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -99,13 +99,29 @@ feature -- Status
 	minimum_length_for_build: NATURAL_8
 			-- Minimum length of current `build` string representation.
 
+feature -- Output
+
+	append_major (s: STRING_32)
+			-- Append major version part to `s`.
+		do
+			append_natural_16_to (major, minimum_length_for_major, s)
+		end
+
+	append_minor (s: STRING_32)
+			-- Append minor version part to `s`.
+		do
+			append_natural_16_to (minor, minimum_length_for_minor, s)
+		end
+
 feature -- Access, stored in configuration file
 
 	major: NATURAL_16
 			-- The major version.
+			-- Use `append_major` for output.
 
 	minor: NATURAL_16
 			-- The minor version.
+			-- Use `append_minor` for output.
 
 	release: NATURAL_16
 			-- The release version.
@@ -117,9 +133,9 @@ feature -- Access, stored in configuration file
 			-- The complete version.
 		do
 			create Result.make_empty
-			append_natural_16_to (major, minimum_length_for_major, Result)
+			append_major (Result)
 			Result.append_character ('.')
-			append_natural_16_to (minor, minimum_length_for_minor, Result)
+			append_minor (Result)
 			Result.append_character ('.')
 			append_natural_16_to (release, minimum_length_for_release, Result)
 			Result.append_character ('.')
@@ -360,7 +376,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright: "Copyright (c) 1984-2017, Eiffel Software"
+	copyright: "Copyright (c) 1984-2020, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

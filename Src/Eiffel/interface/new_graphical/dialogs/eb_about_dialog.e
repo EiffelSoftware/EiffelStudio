@@ -1,9 +1,9 @@
 note
-	description	: "About Dialog, displaying general information about $EiffelGraphicalCompiler$"
+	description	: "About Dialog, displaying general information about EiffelStudio"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
-	date		: "$Date$"
-	revision	: "$Revision$"
+	date: "$Date$"
+	revision: "$Revision$"
 
 class
 	EB_ABOUT_DIALOG
@@ -254,9 +254,9 @@ feature {NONE} -- Constant strings
 			create Result.make (100)
 			Result.append (Interface_names.t_Project)
 			Result.append (" ")
-			Result.append_integer (compiler_version_number.major)
+			compiler_version_number.append_major (Result)
 			Result.append (".")
-			Result.append_integer (compiler_version_number.minor)
+			compiler_version_number.append_minor (Result)
 			Result.append (" (")
 			Result.append (Version_number)
 			Result.append (")")
@@ -328,4 +328,4 @@ note
 			Customer support http://support.eiffel.com
 		]"
 
-end -- class EB_ABOUT_DIALOG
+end

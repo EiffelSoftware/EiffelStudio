@@ -273,6 +273,7 @@ rt_private rt_inline EIF_BOOLEAN rt_is_special_copy_semantics_item (EIF_INTEGER_
 
 /* SPECIAL class */
 #define eif_builtin_SPECIAL_aliased_resized_area__i4_s(area, n)	arycpy (area, n, RT_SPECIAL_COUNT (area))
+#define eif_builtin_SPECIAL_base_address__p(area)				(EIF_POINTER) (area)
 #define eif_builtin_SPECIAL_capacity__i4(area)					RT_SPECIAL_CAPACITY(area)
 #define eif_builtin_SPECIAL_count__i4(area)						RT_SPECIAL_COUNT(area)
 #define eif_builtin_SPECIAL_element_size__i4(area)				RT_SPECIAL_ELEM_SIZE(area)

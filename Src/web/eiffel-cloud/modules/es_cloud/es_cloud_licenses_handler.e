@@ -198,6 +198,11 @@ feature -- Execution
 						end
 					else
 						s.append ("<li class=%"status warning%">EXPIRED</li>")
+						if attached sub.expiration_date as exp then
+							s.append ("<li class=%"expiration%">Expiration date ")
+							s.append (api.date_time_to_string (exp))
+							s.append ("</li>")
+						end
 					end
 					s.append ("</ul>")
 					s.append ("</div>")

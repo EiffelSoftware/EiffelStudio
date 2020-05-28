@@ -2278,7 +2278,7 @@ feature {NONE} -- Comments
 				end
 				if not inline_comment then
 						-- The comment starts on a new line.
-					line := "%T" + indent
+					line := {STRING_32} "%T" + indent
 				elseif not white_space_chars.has (last_printed) then
 						-- The inline comment should be separated
 						-- from the previous token by a white space.

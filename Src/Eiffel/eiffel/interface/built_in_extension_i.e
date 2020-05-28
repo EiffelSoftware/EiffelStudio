@@ -91,7 +91,7 @@ feature {NONE} -- Implementation
 		local
 			l_buffer: GENERATION_BUFFER
 			l_class: CLASS_C
-			l_name: READABLE_STRING_8
+			l_name: STRING_8
 			mutable_name: STRING_8
 		do
 			l_buffer := context.buffer

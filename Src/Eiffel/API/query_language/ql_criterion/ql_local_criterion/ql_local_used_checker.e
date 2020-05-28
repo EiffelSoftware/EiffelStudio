@@ -1,8 +1,7 @@
-note
+﻿note
 	description: "Visitor to check if a given local is not used"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
-	author: ""
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -20,9 +19,14 @@ inherit
 			process_address_as
 		end
 
+	SHARED_NAMES_HEAP
+		export
+			{NONE} all
+		end
+
 feature -- Status report
 
-	last_local_name: STRING
+	last_local_name_id: like {ID_AS}.name_id
 			-- name of last set local variable
 
 	last_is_used: BOOLEAN
@@ -30,13 +34,13 @@ feature -- Status report
 
 feature -- Process
 
-	process_ast (a_ast: AST_EIFFEL; a_local_name: STRING)
+	process_ast (a_ast: AST_EIFFEL; a_local_name: READABLE_STRING_32)
 			-- Process `a_ast'.			
 		require
 			a_ast_attached: a_ast /= Void
 			a_local_name_attached: a_local_name /= Void
 		do
-			last_local_name := a_local_name.out
+			last_local_name_id := names_heap.id_of_32 (a_local_name.as_lower)
 			last_is_used := False
 			a_ast.process (Current)
 		end
@@ -47,8 +51,8 @@ feature{NONE} -- Access
 			-- Process `l_as'.
 		do
 			if not last_is_used then
-				check last_local_name /= Void end
-				last_is_used := l_as.access_name_8.is_case_insensitive_equal (last_local_name)
+				check last_local_name_id /= 0 end
+				last_is_used := l_as.feature_name.name_id = last_local_name_id
 				if not last_is_used then
 					safe_process (l_as.internal_parameters)
 				end
@@ -59,8 +63,8 @@ feature{NONE} -- Access
 			-- Process `l_as'.
 		do
 			if not last_is_used then
-				check last_local_name /= Void end
-				last_is_used := last_local_name.is_case_insensitive_equal (l_as.feature_name.internal_name.name_8)
+				check last_local_name_id /= 0 end
+				last_is_used := l_as.feature_name.internal_name.name_id = last_local_name_id
 			end
 		end
 

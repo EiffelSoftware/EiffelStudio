@@ -157,7 +157,7 @@ feature -- Actions
 							end
 							set_base_cluster (l_group)
 							prepare_for_file (relative_path (l_group), "index")
-							set_document_title ("cluster " + l_group.name)
+							set_document_title ({STRING_32} "cluster " + l_group.name)
 							generate_cluster_index (l_group)
 							l_groups.forth
 						end

@@ -3,7 +3,7 @@
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 	date: "$Date$"
-	revision: "$Revision $"
+	revision: "$Revision$"
 
 class
 	TEXT_FILTER
@@ -75,7 +75,7 @@ feature {NONE} -- Initialization
 			init_file_suffix
 			prepend_to_file_suffix ("")
 			create keyword_table.make (4)
-			set_keyword ("generator", "ISE " + Workbench_name + " version " + Version_number)
+			set_keyword ("generator", {STRING_32} "ISE " + Workbench_name + " version " + Version_number)
 			set_base_path ("")
 				-- We make DOCUMENTATION_UNIVERSE include all by default.
 			create doc_universe.make

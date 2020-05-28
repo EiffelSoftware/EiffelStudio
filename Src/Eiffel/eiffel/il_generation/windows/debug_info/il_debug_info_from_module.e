@@ -235,7 +235,7 @@ feature -- Recording Operation
 				list_feature_info.put (l_entry , a_feature_token)
 			else
 				debug ("il_info_trace")
-					io.error.put_string (">> CONFLICT record_feature_i : "+a_class_type.associated_class.name_in_upper
+					io.error.put_string_32 ({STRING_32} ">> CONFLICT record_feature_i : "+a_class_type.associated_class.name_in_upper
 							+"."+a_feature_i.feature_name_32
 							+" <<%N")
 					io.error.put_string ("  - key : feature_token =" + a_feature_token.to_hex_string + "%N")
@@ -294,7 +294,7 @@ invariant
 	module_filename_not_void: module_filename /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2019, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2020, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

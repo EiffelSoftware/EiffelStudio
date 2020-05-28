@@ -100,7 +100,7 @@ feature -- Recording Operation feature_token
 			else
 				debug ("il_info_trace")
 					io.error.put_string (">> CONFLICT record_feature_token <<%N")
-					io.error.put_string ("  - feature_name          =" + a_feature_i.feature_name_32 + "%N")
+					io.error.put_string_32 ({STRING_32} "  - feature_name          =" + a_feature_i.feature_name_32 + "%N")
 					io.error.put_string ("  - key : feature_name_id =" + l_feature_name_id.out + "%N")
 					io.error.put_string ("  - already               = " + list_feature_token.item (l_feature_name_id).to_hex_string + "%N")
 					io.error.put_string ("  - replace             = " + a_feature_token.to_hex_string + "%N")
@@ -320,7 +320,7 @@ invariant
 	static_type_id_valid: static_type_id /= 0
 
 note
-	copyright:	"Copyright (c) 1984-2018, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2020, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "Representation of an Eiffel Project."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -746,7 +746,7 @@ feature -- Output
 
 			if l_epr_file.has_error then
 				debug
-					io.error.put_string ("Error while saving " + l_epr_file.name.name.as_string_8)
+					io.error.put_string_32 ({STRING_32} "Error while saving " + l_epr_file.name.name)
 					if attached l_epr_file.error_description  as d then
 						io.error.put_string (": ")
 						io.error.put_string (d)
@@ -1046,7 +1046,7 @@ invariant
 	degree_output_not_void: degree_output /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2019, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2020, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

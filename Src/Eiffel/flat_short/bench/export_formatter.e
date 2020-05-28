@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "[
 		Format an EXPORT_I object using a TEXT_FORMATTER_DECORATOR. We are not using the visitor pattern
 		but as soon as we need to process EXPORT_I objects in a similar fashion we should.
@@ -77,9 +77,8 @@ feature {NONE} -- Implementation
 			a_ctxt_not_void: a_ctxt /= Void
 			a_client_not_void: a_client /= Void
 		local
-			temp: STRING
+			class_name: like {NAMES_HEAP}.item_32
 			group: CONF_GROUP
-			client_classi: CLASS_I
 			l_names_heap: like names_heap
 			i, nb: INTEGER
 		do
@@ -93,12 +92,15 @@ feature {NONE} -- Implementation
 			loop
 					-- Class name does not contain non ASCII char.
 					-- Safe to use `as_string_8'
-				temp := l_names_heap.item_32 (a_client.clients.item (i)).as_string_8
-				client_classi := Universe.class_named (temp, group)
-				if client_classi /= Void then
+				class_name := l_names_heap.item_32 (a_client.clients.item (i))
+				if
+					attached group.class_by_name (class_name, True) as classes and then
+					classes.count = 1 and then
+					attached {CLASS_I} classes [1] as client_classi
+				then
 					a_ctxt.put_classi (client_classi)
 				else
-					a_ctxt.process_string_text (temp.as_upper, Void)
+					a_ctxt.process_string_text (class_name.as_upper, Void)
 				end
 				i := i + 1
 				if i <= nb then

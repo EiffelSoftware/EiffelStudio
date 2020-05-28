@@ -1,8 +1,7 @@
-note
+﻿note
 	description: "Error object used in Eiffel Query Language."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
-	author: ""
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -34,11 +33,11 @@ feature -- Access
 	out: STRING
 			-- Output
 		do
-			Result := text.as_string_8
+			Result := {UTF_CONVERTER}.string_32_to_utf_8_string_8 (text)
 		end
 
 note
-	copyright: "Copyright (c) 1984-2013, Eiffel Software"
+	copyright: "Copyright (c) 1984-2020, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[
@@ -68,7 +67,5 @@ note
 			Website http://www.eiffel.com
 			Customer support http://support.eiffel.com
 		]"
-
-
 
 end

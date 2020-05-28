@@ -40,6 +40,7 @@ inherit
 			process_bin_gt_as,
 			process_bin_le_as,
 			process_bin_lt_as,
+			process_nested_expr_as,
 			process_object_test_as,
 			process_paran_as,
 			process_un_free_as,
@@ -111,12 +112,15 @@ feature {NONE} -- Implementation
 
 	is_within_binary: BOOLEAN
 
-	is_not_nested (a_expr: attached EXPR_AS): BOOLEAN
-			-- Is `a_expr' not one of unary, binary, or object test expressions?
+	are_parentheses_needed (e: EXPR_AS): BOOLEAN
+			-- Are parentheses needed around expression `e`?
 		do
-			Result := (not attached {UNARY_AS} a_expr)
-				and (not attached {BINARY_AS} a_expr)
-				and (not attached {OBJECT_TEST_AS} a_expr)
+			Result :=
+				not attached {CALL_AS} e and then
+				not attached {BRACKET_AS} e and then
+				not attached {CURRENT_AS} e and then
+				not attached {RESULT_AS} e and then
+				not attached {PARAN_AS} e
 		end
 
 feature {NONE} -- AST Visitor
@@ -124,12 +128,17 @@ feature {NONE} -- AST Visitor
 	process_paran_as (a_paran: PARAN_AS)
 		local
 			l_violation: CA_RULE_VIOLATION
+			old_is_within_binary: BOOLEAN
 		do
-			if not is_within_binary or is_not_nested (a_paran.expr) then
+			if not is_within_binary or not are_parentheses_needed (a_paran.expr) then
 				create l_violation.make_with_rule (Current)
 				l_violation.set_location (a_paran.start_location)
 				violations.extend (l_violation)
 			end
+			old_is_within_binary := is_within_binary
+			is_within_binary := False
+			Precursor (a_paran)
+			is_within_binary := old_is_within_binary
 		end
 
 	process_bin_div_as (a_bin: BIN_DIV_AS)
@@ -350,6 +359,16 @@ feature {NONE} -- AST Visitor
 			is_within_binary := True
 			Precursor (a_bin)
 			is_within_binary := l_old
+		end
+
+	process_nested_expr_as (a: NESTED_EXPR_AS)
+		local
+			old_is_within_binary: BOOLEAN
+		do
+			old_is_within_binary := is_within_binary
+			is_within_binary := True
+			Precursor (a)
+			is_within_binary := old_is_within_binary
 		end
 
 	process_object_test_as (a_ot: OBJECT_TEST_AS)

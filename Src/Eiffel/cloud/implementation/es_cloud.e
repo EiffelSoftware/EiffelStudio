@@ -10,7 +10,8 @@ inherit
 	ES_CLOUD_S
 		redefine
 			on_account_signed_in,
-			view_account_website_url
+			view_account_website_url,
+			on_cloud_available
 		end
 
 	DISPOSABLE_SAFE
@@ -37,6 +38,7 @@ feature {NONE} -- Creation
 			i: INTEGER
 		do
 			create cfg.make (a_server_url)
+			config := cfg
 
 			if is_eiffel_layout_defined then
 					-- On Windows: Computer\HKEY_CURRENT_USER\Software\ISE\Eiffel_MM.mm\installation\es_cloud\$variable_name
@@ -61,8 +63,6 @@ feature {NONE} -- Creation
 				end
 			end
 
-			create web_api.make (cfg)
-
 			if is_eiffel_layout_defined then
 				version := eiffel_layout.version_name
 				get_local_installation (eiffel_layout)
@@ -75,7 +75,7 @@ feature {NONE} -- Creation
 				create installation.make_with_id ("")
 			end
 				-- Initialization
-			session_heartbeat := config.default_session_heartbeat -- in minutes
+			session_heartbeat := cfg.default_session_heartbeat -- in minutes
 			load
 		end
 
@@ -246,8 +246,6 @@ feature {NONE} -- Access
 	accounts_location: detachable PATH
 			-- Local storage for account related data.
 
-	web_api: ES_CLOUD_API
-
 feature -- Event
 
 	on_project_closed
@@ -291,15 +289,18 @@ feature -- Event
 			end
 		end
 
+	on_cloud_available (a_is_available: BOOLEAN)
+		do
+			set_is_available (a_is_available, Void)
+			Precursor (a_is_available)
+		end
+
 feature -- Access
 
 	is_enterprise_edition: BOOLEAN
 			-- <Precursor>
 
 	config: ES_CLOUD_CONFIG
-		do
-			Result := web_api.config
-		end
 
 	server_url: READABLE_STRING_8
 			-- Web service url.
@@ -362,43 +363,30 @@ feature -- Access
 			-- Remaining days for guest mode.
 
 	session_heartbeat: NATURAL
-			-- <Precursor>			
+			-- <Precursor>		
+
+feature {NONE} -- API
+
+	web_api: ES_CLOUD_API
+		do
+			Result := internal_web_api
+			if Result = Void then
+				create Result.make (config)
+				internal_web_api := Result
+			end
+		ensure
+			Result /= Void and then Result = internal_web_api
+		end
+
+	set_config (cfg: like config)
+		do
+			config := cfg
+			internal_web_api := Void
+		end
+
+	internal_web_api: detachable like web_api
 
 feature -- Status report
-
-	is_available: BOOLEAN
-			-- Is account service available?
-		local
-			cl: like cell_is_available
-			b: BOOLEAN
-			dt: DATE_TIME
-			nb: NATURAL_8
-		do
-			create dt.make_now_utc
-			cl := cell_is_available
-			if cl = Void then
-				web_api.get_is_available
-				Result := web_api.is_available
-				create cl.put ([Result, dt, {NATURAL_8} 1])
-				cell_is_available := cl
-			else
-				Result := cl.item.available
-				nb := cl.item.try_count.max (1)
-				if
-					cl.item.last_time = Void
-					or else attached cl.item.last_time as l_last_time and then
-							l_last_time.relative_duration (dt).seconds_count > (nb * nb) * 60
-				then
-					web_api.get_is_available
-					b := web_api.is_available
-					if b /= Result then
-						Result := b
-						create cl.put ([Result, dt, nb + 1])
-						cell_is_available := cl
-					end
-				end
-			end
-		end
 
 	is_guest: BOOLEAN
 			-- Is guest?
@@ -413,6 +401,84 @@ feature -- Status report
 			if attached web_api.last_error as err then
 				Result := err.message
 			end
+		end
+
+	is_available: BOOLEAN
+			-- Is account service available?
+		local
+			cl: like cell_is_available
+			b: BOOLEAN
+			dt: DATE_TIME
+		do
+			cl := cell_is_available
+			create dt.make_now_utc
+			if cl = Void then
+				Result := web_api.is_available
+				set_is_available (Result, dt)
+			else
+				Result := cl.item.available
+				if not Result and then can_check_is_available (dt) then
+					web_api.get_is_available
+					b := web_api.is_available
+					if Result then
+						set_is_available (Result, dt)
+					else
+						cl.item.available := Result
+						cl.item.last_time := dt
+						cl.item.try_count := cl.item.try_count + 1
+					end
+				else
+					b := web_api.is_available
+					if Result /= b then
+						Result := b
+						set_is_available (b, dt)
+					end
+				end
+			end
+		end
+
+feature {NONE} -- Status report implementation
+
+	can_check_is_available (dt: DATE_TIME): BOOLEAN
+		local
+			cl: like cell_is_available
+			ref: DATE_TIME
+			nb: INTEGER
+		do
+			cl := cell_is_available
+			if cl = Void then
+				Result := True
+			else
+				nb := cl.item.try_count.max (1)
+				ref := cl.item.last_time
+				Result := ref = Void
+					or else dt.relative_duration (ref).seconds_count > ((nb * nb) * 10).min (640) -- 10 seconds, then 20, 40, 80, 160, 320, 640 ... but max delay is 640sec (~10 minutes)
+			end
+		end
+
+	set_is_available (b: BOOLEAN; a_date: detachable DATE_TIME)
+		local
+			dt: DATE_TIME
+			cl: like cell_is_available
+		do
+			dt := a_date
+			if dt = Void then
+				create dt.make_now_utc
+			end
+			cl := cell_is_available
+			if cl = Void then
+				create cell_is_available.put ([b, dt, {NATURAL_8} 1])
+			else
+				if cl.item.available /= b then
+					cl.item.available := b
+					cl.item.try_count := {NATURAL_8} 1
+				else
+					cl.item.try_count := cl.item.try_count + 1
+				end
+				cl.item.last_time := dt
+			end
+		ensure
+			is_available: is_available
 		end
 
 feature -- Element change
@@ -430,7 +496,7 @@ feature -- Element change
 			if attached web_api as w then
 				cfg.import_settings (w.config)
 			end
-			create web_api.make (cfg)
+			set_config (cfg)
 		end
 
 feature -- Debug purpose
@@ -561,9 +627,20 @@ feature -- Updating
 	async_check_availability
 		local
 			p: ES_CLOUD_ASYNC_STATUS
+			dt: DATE_TIME
 		do
-			create p.make (Current, web_api.config)
-			p.execute
+			create dt.make_now_utc
+			if can_check_is_available (dt) then
+				debug ("es_cloud")
+					print (generator + ".ASYNC_check_availability%N")
+				end
+				create p.make (Current, config)
+				p.execute
+			else
+				debug ("es_cloud")
+					print (generator + ".ASYNC_check_availability NOT FOR NOW!%N")
+				end
+			end
 		end
 
 	async_ping_installation (a_account: ES_ACCOUNT; a_session: ES_ACCOUNT_SESSION)
@@ -574,9 +651,12 @@ feature -- Updating
 			if
 				attached a_account.access_token as tok
 			then
+				debug ("es_cloud")
+					print (generator + ".ASYNC_ping_installation%N")
+				end
 				create params.make (installation.id, a_session.id)
 				fill_product_information (params)
-				create p.make (Current, tok, a_session, params, web_api.config)
+				create p.make (Current, tok, a_session, params, config)
 				p.execute
 			end
 		end

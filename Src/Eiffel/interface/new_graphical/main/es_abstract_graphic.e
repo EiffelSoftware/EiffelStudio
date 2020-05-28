@@ -324,8 +324,8 @@ feature {NONE} -- Implementation: interface loading
 			across
 				window_manager.development_windows as ic
 			loop
-				if attached ic.item.menus.cloud_account_menu as cld_menu then
-					cld_menu.update
+				if attached ic.item.show_cloud_account_cmd as l_cmd then
+					l_cmd.refresh
 				end
 			end
 

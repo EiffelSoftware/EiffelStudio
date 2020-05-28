@@ -258,13 +258,16 @@ feature -- Events
 			end
 		end
 
-	on_cloud_available (a_is_connected: BOOLEAN)
+	on_cloud_available (a_is_available: BOOLEAN)
 		do
+			debug ("es_cloud")
+				print (generator + ".on_cloud_available (" + a_is_available.out + ")%N")
+			end
 			if attached observers as lst then
 				across
 					lst as ic
 				loop
-					ic.item.on_cloud_available (a_is_connected)
+					ic.item.on_cloud_available (a_is_available)
 				end
 			end
 		end

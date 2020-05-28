@@ -92,7 +92,7 @@ feature -- Access
 			wapi: ES_CLOUD_API
 			d: ES_CLOUD_PING_DATA
 		do
-			create wapi.make (config)
+			wapi := web_api
 			create d
 			wapi.ping_installation (token, parameters, d)
 			session_state_changed := d.session_state_changed

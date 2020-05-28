@@ -54,6 +54,8 @@ feature -- Authentication
 
 feature -- Account tool	
 
+	desc_cloud_account_tool: STRING_32 do Result := locale.translation ("Show Account Tool") end
+
 	prompt_welcome_guest: STRING_32 do Result := locale.translation_in_context ("Welcome guest ...", "cloud.info") end
 
 	prompt_not_connected_with_account: STRING_32 do Result := locale.translation_in_context ("You are not connected with an account ...", "cloud.info") end
@@ -85,6 +87,10 @@ feature -- Dialog
 		end
 
 feature -- Menu
+
+	menu_account: STRING_32 do Result := locale.translation_in_context ("Account...", "cloud.menu") end
+
+	button_account: STRING_32 do Result := locale.translation_in_context ("Account", "cloud.menu") end
 
 	menu_my_account (a_username: READABLE_STRING_GENERAL): STRING_32 do Result := locale.formatted_string (locale.translation_in_context ("My Account ($1)", "cloud.menu"), [a_username])	end
 

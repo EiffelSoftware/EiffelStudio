@@ -33,7 +33,7 @@ feature -- Command
 			build_refactoring_menu
 			build_window_menu
 			build_help_menu
-			build_cloud_account_menu
+
 				-- Build the menu bar.
 			build_menu_bar
 		end
@@ -137,9 +137,6 @@ feature -- Command
 			l_mb.extend (develop_window.menus.tools_menu)
 			l_mb.extend (develop_window.menus.window_menu)
 			l_mb.extend (develop_window.menus.help_menu)
-			if attached develop_window.menus.cloud_account_menu as l_cloud_menu then
-				l_mb.extend (l_cloud_menu)
-			end
 
 			develop_window.estudio_debug_cmd.attach_window (develop_window.window)
 		end
@@ -778,17 +775,6 @@ feature {EB_EXTERNAL_COMMANDS_EDITOR} -- Menu Building
 			auto_recycle (develop_window.menus.favorites_menu)
 		end
 
-	build_cloud_account_menu
-			-- Build the Cloud Account menu
-		local
-			l_menu: ES_CLOUD_ACCOUNT_MENU
-		do
-			if attached es_cloud_s.service  as l_cloud_service then
-				create l_menu.make (l_cloud_service, develop_window.Interface_names.m_account, develop_window)
-				develop_window.menus.set_account_menu (l_menu)
-			end
-		end
-
 	build_project_menu
 			-- Build the project menu.
 		local
@@ -1019,6 +1005,15 @@ feature {EB_EXTERNAL_COMMANDS_EDITOR} -- Menu Building
 			l_command_menu_item := develop_window.Show_settings_import_cmd.new_menu_item
 			auto_recycle (l_command_menu_item)
 			l_tools_menu.extend (l_command_menu_item)
+
+			if attached es_cloud_s.service as l_cloud_service then
+				l_command_menu_item := develop_window.show_cloud_account_cmd.new_menu_item
+				auto_recycle (l_command_menu_item)
+				l_tools_menu.extend (l_command_menu_item)
+			end
+
+				-- Separator -------------------------------------------------
+			l_tools_menu.extend (create {EV_MENU_SEPARATOR})
 
 					-- External commands editor
 			l_command_menu_item := develop_window.commands.Edit_external_commands_cmd.new_menu_item
@@ -1667,7 +1662,7 @@ feature -- Docking library menu items
 		end
 
 note
-	copyright: "Copyright (c) 1984-2019, Eiffel Software"
+	copyright: "Copyright (c) 1984-2020, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

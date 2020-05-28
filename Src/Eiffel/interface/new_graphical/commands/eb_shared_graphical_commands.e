@@ -170,10 +170,11 @@ feature -- Commands
 			Result.disable_sensitive
 		end
 
-	show_cloud_account_cmd: EB_SHOW_CLOUD_ACCOUNT_CMD
+	show_cloud_account_cmd: ES_CLOUD_ACCOUNT_CMD
 			-- Display Cloud Account tool.
 		once
 			create Result.make
+			Result.enable_sensitive
 		end
 
 	Show_preferences_cmd: EB_SHOW_PREFERENCES_COMMAND
@@ -203,7 +204,7 @@ feature -- Commands
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2018, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2020, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

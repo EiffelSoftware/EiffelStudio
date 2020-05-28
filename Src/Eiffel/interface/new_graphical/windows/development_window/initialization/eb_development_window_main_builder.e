@@ -143,6 +143,7 @@ feature -- Command
 			l_toggle_stone_cmd: EB_UNIFY_STONE_CMD
 			l_system_info_cmd: EB_SYSTEM_INFORMATION_CMD
 			l_send_stone_to_context_cmd: EB_STANDARD_CMD
+			l_show_cloud_account_cmd: ES_CLOUD_ACCOUNT_CMD
 
 			l_show_toolbar_commands: HASH_TABLE [EB_SHOW_TOOLBAR_COMMAND, SD_TOOL_BAR_CONTENT]
 			l_editor_commands: ARRAYED_LIST [EB_GRAPHICAL_COMMAND]
@@ -319,6 +320,10 @@ feature -- Command
 			auto_recycle (l_system_info_cmd)
 			l_dev_commands.set_system_info_cmd (l_system_info_cmd)
 			l_dev_commands.toolbarable_commands.extend (l_system_info_cmd)
+
+			l_show_cloud_account_cmd := develop_window.show_cloud_account_cmd
+			auto_recycle (l_show_cloud_account_cmd)
+			l_dev_commands.toolbarable_commands.extend (l_show_cloud_account_cmd)
 
 			create l_send_stone_to_context_cmd.make
 			auto_recycle (l_send_stone_to_context_cmd)
@@ -1124,7 +1129,7 @@ feature{NONE} -- Implementation
 		end
 
 note
-	copyright: "Copyright (c) 1984-2019, Eiffel Software"
+	copyright: "Copyright (c) 1984-2020, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

@@ -18,26 +18,10 @@ feature {NONE} -- Creation
 
 	initialize
 		do
-				-- Get `is_available` value.
-			is_available := False
-			if
-				attached new_http_client_session as sess and then
-				attached response (sess.get (config.root_endpoint, Void)) as resp
-			then
-				if not has_error then
-					is_available := True
-					if attached resp.string_8_item ("_links|register|href") as v then
-						record_endpoint ("roc:register", v)
-					end
-					if attached resp.string_8_item ("_links|es:cloud|href") as v then
-						record_endpoint ("es:cloud", v)
-					end
-					if attached resp.string_8_item ("_links|esa:register|href") as v then
-						record_endpoint ("esa:register", v)
-					end
-
-				end
+			debug ("es_cloud")
+				print (generator + ".initialize %N")
 			end
+			get_is_available
 		end
 
 feature -- Status report
@@ -48,8 +32,33 @@ feature -- Status report
 	get_is_available
 			-- Refresh `is_available`.
 		do
-			is_available := False
-			initialize
+			debug ("es_cloud")
+				print (generator + ".get_is_available %N")
+			end
+				-- Update `is_available` value.
+			is_available := True
+			if
+				attached new_http_client_session as sess and then
+				attached response_get (sess, config.root_endpoint, Void) as resp
+			then
+				if has_error then
+					is_available := False
+				else
+					is_available := True
+					if attached resp.string_8_item ("_links|register|href") as v then
+						record_endpoint ("roc:register", v)
+					end
+					if attached resp.string_8_item ("_links|es:cloud|href") as v then
+						record_endpoint ("es:cloud", v)
+					end
+					if attached resp.string_8_item ("_links|esa:register|href") as v then
+						record_endpoint ("esa:register", v)
+					end
+				end
+			end
+			debug ("es_cloud")
+				print (generator + ".get_is_available -> "+ is_available.out +"%N")
+			end
 		end
 
 feature -- Access
@@ -106,7 +115,7 @@ feature -- Account: register
 							end
 						end
 					end
-					resp := response (sess.post (l_url, ctx, Void))
+					resp := response_post (sess, l_url, ctx, Void)
 					if not has_error then
 						if
 							attached resp.string_32_item ("status") as l_status and then
@@ -130,7 +139,7 @@ feature -- Account: register
 					ctx.add_form_parameter ("password", a_password)
 					ctx.add_form_parameter ("email", a_email)
 					ctx.add_form_parameter ("personal_information", "Registration submitted via API.")
-					resp := response (sess.post (l_url, ctx, Void))
+					resp := response_post (sess, l_url, ctx, Void)
 					if not has_error then
 						if
 							attached resp.string_32_item ("status") as l_status and then
@@ -165,7 +174,7 @@ feature -- ROC Account
 						-- Get new JWT access token, using Basic authorization.
 					ctx.add_form_parameter ("token", a_token)
 					ctx.add_form_parameter ("refresh", a_refresh_key)
-					resp := response (sess.post (l_jwt_access_token_href, ctx, Void))
+					resp := response_post (sess, l_jwt_access_token_href, ctx, Void)
 					if not has_error then
 						Result := jwt_token_from_response (resp)
 					end
@@ -187,7 +196,7 @@ feature -- ROC Account
 					l_new_magic_login_href := jwt_new_magic_login_endpoint (a_token, sess, ctx)
 				end
 				if l_new_magic_login_href /= Void then
-					resp := response (sess.get (l_new_magic_login_href, ctx))
+					resp := response_get (sess, l_new_magic_login_href, ctx)
 					if
 						not has_error and then
 						attached resp.string_8_item ("_links|jwt:magic_login|href") as lnk
@@ -211,7 +220,7 @@ feature -- ROC Account
 					ctx := new_jwt_auth_context (a_token)
 
 						-- Get new JWT access token, using Basic authorization.
-					resp := response (sess.get (l_account_href, ctx))
+					resp := response_get (sess, l_account_href, ctx)
 					if
 						not has_error and then
 						attached account_from_response (resp) as acc
@@ -235,7 +244,7 @@ feature -- ROC Account
 			if sess /= Void then
 				ctx := new_basic_auth_context (a_username, a_password)
 
-				resp := response (sess.get (config.root_endpoint, ctx))
+				resp := response_get (sess, config.root_endpoint, ctx)
 				if not has_error then
 					if attached resp.string_8_item ("_links|jwt:access_token|href") as v then
 						l_jwt_access_token_href := v
@@ -248,7 +257,7 @@ feature -- ROC Account
 				if l_jwt_access_token_href /= Void then
 						-- Get new JWT access token, using Basic authorization.
 					ctx.add_form_parameter ("applications", "es_account_api")
-					resp := response (sess.post (l_jwt_access_token_href, ctx, Void))
+					resp := response_post (sess, l_jwt_access_token_href, ctx, Void)
 					if not has_error then
 						create Result.make (a_username)
 						if attached resp.integer_64_item ("user|uid") as l_uid then
@@ -279,7 +288,7 @@ feature -- ROC Account
 						-- Discard JWT access token
 					ctx.add_form_parameter ("token", a_token)
 					ctx.add_form_parameter ("op", "discard")
-					resp := response (sess.post (l_jwt_access_token_href, ctx, Void))
+					resp := response_post (sess, l_jwt_access_token_href, ctx, Void)
 					Result := not has_error
 				end
 			end
@@ -310,7 +319,7 @@ feature -- Plan
 				l_installation_href := es_account_installations_endpoint_for_token (a_token, sess)
 				ctx := new_jwt_auth_context (a_token)
 				if l_installation_href /= Void then
-					resp := response (sess.get (l_installation_href, ctx))
+					resp := response_get (sess, l_installation_href, ctx)
 					if not has_error then
 						if attached installation_from_response (resp) as inst then
 							Result := inst.associated_plan
@@ -343,7 +352,7 @@ feature -- Installation
 						j_info.put_string (pf, "platform")
 					end
 					ctx.add_form_parameter ("info", j_info.representation)
-					resp := response (sess.post (l_installations_href, ctx, Void))
+					resp := response_post (sess, l_installations_href, ctx, Void)
 					if not has_error then
 						if attached resp.string_8_item ("_links|es:installation|href") as v then
 							l_new_installation_href := v
@@ -353,7 +362,7 @@ feature -- Installation
 					if l_new_installation_href /= Void then
 						ctx := new_jwt_auth_context (a_token)
 
-						resp := response (sess.get (l_new_installation_href, ctx))
+						resp := response_get (sess, l_new_installation_href, ctx)
 						if not has_error then
 							Result := installation_from_response (resp)
 						end
@@ -387,7 +396,7 @@ feature -- Installation
 					ctx.add_form_parameter ("operation", "end_session")
 					ctx.add_form_parameter ("installation_id", params.installation_id)
 					ctx.add_form_parameter ("session_id", params.session_id)
-					resp := response (sess.post (l_installations_href, ctx, Void))
+					resp := response_post (sess, l_installations_href, ctx, Void)
 					if has_error then
 							-- Too bad, but not critical
 						reset_error
@@ -413,7 +422,7 @@ feature -- Installation
 					ctx.add_form_parameter ("operation", "pause_session")
 					ctx.add_form_parameter ("installation_id", params.installation_id)
 					ctx.add_form_parameter ("session_id", params.session_id)
-					resp := response (sess.post (l_installations_href, ctx, Void))
+					resp := response_post (sess, l_installations_href, ctx, Void)
 					if has_error then
 							-- Too bad, but not critical
 						reset_error
@@ -439,7 +448,7 @@ feature -- Installation
 					ctx.add_form_parameter ("operation", "resume_session")
 					ctx.add_form_parameter ("installation_id", params.installation_id)
 					ctx.add_form_parameter ("session_id", params.session_id)
-					resp := response (sess.post (l_installations_href, ctx, Void))
+					resp := response_post (sess, l_installations_href, ctx, Void)
 					if has_error then
 							-- Too bad, but not critical
 						reset_error
@@ -476,7 +485,7 @@ feature -- Installation
 					loop
 						ctx.add_form_parameter (ic.key, ic.item)
 					end
-					resp := response (sess.post (l_installations_href, ctx, Void))
+					resp := response_post (sess, l_installations_href, ctx, Void)
 					if resp.has_error and then resp.has_internal_error then
 						if a_output /= Void then
 							a_output.report_error (Void)
@@ -535,7 +544,7 @@ feature -- Installation
 					attached new_http_client_session as sess
 				then
 					ctx := new_jwt_auth_context (a_token)
-					resp := response (sess.get (l_installation_href, ctx))
+					resp := response_get (sess, l_installation_href, ctx)
 					if not has_error then
 						Result := installation_from_response (resp)
 					end
@@ -571,7 +580,7 @@ feature -- Installation
 				attached new_http_client_session as sess
 			then
 				ctx := new_jwt_auth_context (a_token)
-				resp := response (sess.get (l_installation_href, ctx))
+				resp := response_get (sess, l_installation_href, ctx)
 				if not has_error then
 					Result := installation_from_response (resp)
 				end
@@ -609,7 +618,7 @@ feature -- Installation
 				then
 					ctx := new_jwt_auth_context (acc.access_token.token)
 
-					resp := response (sess.get (l_session_href, ctx))
+					resp := response_get (sess, l_session_href, ctx)
 					if not has_error then
 						Result := session_from_response (acc, resp)
 					end
@@ -631,7 +640,7 @@ feature -- Installation
 				ctx := new_jwt_auth_context (a_token)
 				l_installations_href := es_account_installations_endpoint_for_token (a_token, sess)
 				if l_installations_href /= Void then
-					resp := response (sess.get (l_installations_href, ctx))
+					resp := response_get (sess, l_installations_href, ctx)
 					if not has_error then
 						if attached resp.table_item ("es:installations") as l_installations then
 							create {ARRAYED_LIST [ES_ACCOUNT_INSTALLATION]} Result.make (l_installations.count)
@@ -677,7 +686,7 @@ feature {NONE} -- Endpoints
 		do
 			-- Get `is_available` value.
 			if
-				attached response (sess.get (config.root_endpoint, Void)) as resp
+				attached response_get (sess, config.root_endpoint, Void) as resp
 			then
 				if has_error then
 					reset_error
@@ -706,7 +715,7 @@ feature {NONE} -- JWT endpoints
 			resp: like response
 		do
 			reset_api_call
-			resp := response (sess.get (config.root_endpoint, ctx))
+			resp := response_get (sess, config.root_endpoint, ctx)
 			if has_error then
 				reset_api_call
 			else
@@ -721,7 +730,7 @@ feature {NONE} -- JWT endpoints
 			resp: like response
 		do
 			reset_api_call
-			resp := response (sess.get (config.root_endpoint, ctx))
+			resp := response_get (sess, config.root_endpoint, ctx)
 			if has_error then
 				reset_api_call
 			else
@@ -794,7 +803,7 @@ feature {NONE} -- Endpoints for token
 			if l_es_cloud_href /= Void then
 				ctx := new_jwt_auth_context (a_token)
 
-				resp := response (sess.get (l_es_cloud_href, ctx))
+				resp := response_get (sess, l_es_cloud_href, ctx)
 				if has_error then
 					reset_error
 				else
@@ -832,8 +841,35 @@ feature {NONE} -- Implementation
 
 	response (a_resp: HTTP_CLIENT_RESPONSE): ES_CLOUD_API_RESPONSE
 		do
+			if a_resp = Void or else a_resp.error_occurred then
+				is_available := False
+			end
 			create Result.make (a_resp)
 			last_error := Result.error
+		end
+
+	response_get (sess: like new_http_client_session; a_path: READABLE_STRING_8; ctx: detachable HTTP_CLIENT_REQUEST_CONTEXT): ES_CLOUD_API_RESPONSE
+		do
+			debug ("es_cloud")
+				print (generator + " -> GET "+ sess.url (a_path, ctx) + "%N")
+			end
+			if is_available then
+				Result := response (sess.get (a_path, ctx))
+			else
+				Result := response (Void)
+			end
+		end
+
+	response_post (sess: like new_http_client_session; a_path: READABLE_STRING_8; ctx: detachable HTTP_CLIENT_REQUEST_CONTEXT; data: detachable READABLE_STRING_8): ES_CLOUD_API_RESPONSE
+		do
+			debug ("es_cloud")
+				print (generator + " -> POST "+ sess.url (a_path, ctx) + "%N")
+			end
+			if is_available then
+				Result := response (sess.post (a_path, ctx, data))
+			else
+				Result := response (Void)
+			end
 		end
 
 	new_http_client_session: detachable HTTP_CLIENT_SESSION

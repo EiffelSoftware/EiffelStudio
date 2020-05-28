@@ -47,10 +47,10 @@ feature {NONE} -- Initialization
 			-- `a_widget': A widget to build the tool interface using.
 		do
 			main_box := a_widget
-			update
 			if attached es_cloud_s.service as cld then
 				cld.register_observer (Current)
 			end
+			update
 		end
 
 feature -- Widgets
@@ -72,8 +72,10 @@ feature -- Events
 
 	on_cloud_available (a_is_available: BOOLEAN)
 		do
-			is_cloud_available := a_is_available
-			refresh
+			if is_cloud_available /= a_is_available  then
+				is_cloud_available := a_is_available
+				refresh
+			end
 		end
 
 	on_session_state_changed (sess: ES_ACCOUNT_SESSION)
@@ -94,6 +96,13 @@ feature -- Events
 	on_account_updated (acc: detachable ES_ACCOUNT)
 		do
 			refresh
+		end
+
+feature {NONE} -- Background helper
+
+	check_availability_in_background (cld: ES_CLOUD_S)
+		do
+			cld.async_check_availability
 		end
 
 feature {NONE} -- Factory		
@@ -138,26 +147,20 @@ feature {NONE} -- Action handlers
 			l_dbg: BOOLEAN
 			acc: detachable ES_ACCOUNT
 		do
+			debug ("es_cloud")
+				print (generator + ".refresh%N")
+			end
 			b := main_box
 			b.wipe_out
 			if attached es_cloud_s.service as cld then
-				if not is_cloud_available then
-					cld.async_check_availability
---					is_cloud_available := cld.is_available
---					if is_cloud_available then
---						cld.on_cloud_available (True)
---					end
-				end
 				l_dbg := cld.is_debug_enabled
 				acc := cld.active_account
 				if acc /= Void then
-					create lab.make_with_text (acc.username)
-					b.extend (lab)
-					b.disable_item_expand (lab)
-
 					create txt
 					b.extend (txt)
-					append_text_to ("%N%N", txt)
+					append_bold_text_to (locale.translation_in_context ("Username: ", "cloud.info"), txt)
+					append_text_to (acc.username, txt)
+					append_text_to ("%N", txt)
 					if cld.is_enterprise_edition then
 						append_bold_text_to (locale.translation_in_context ("Edition: enterprise", "cloud.info"), txt)
 						append_text_to ("%N", txt)
@@ -170,7 +173,6 @@ feature {NONE} -- Action handlers
 							append_bold_text_to (locale.translation_in_context ("Expires: ", "cloud.info"), txt)
 							append_text_to (dt.out, txt)
 							append_text_to ("%N", txt)
-
 							if nb_days >= 0 then
 								append_bold_text_to (locale.translation_in_context ("Days remaining: ", "cloud.info"), txt)
 								append_text_to (nb_days.out, txt)
@@ -293,14 +295,15 @@ feature {NONE} -- Action handlers
 
 						end
 					end
-					create hb
-					b.extend (hb)
-					b.disable_item_expand (hb)
-					hb.extend (create {EV_CELL})
+				end
+				if is_cloud_available then
+					if acc /= Void then
+						create hb
+						b.extend (hb)
+						b.disable_item_expand (hb)
+						hb.extend (create {EV_CELL})
 
-					if is_cloud_available then
 	--					create hb
-
 
 						create but.make_with_text_and_action (cloud_names.button_visit_web_account, agent on_web_account (cld, acc))
 						hb.extend (but)
@@ -346,18 +349,17 @@ feature {NONE} -- Action handlers
 								hb.disable_item_expand (but)
 							end
 						end
-					end
-				else
-					if cld.is_guest then
-						create lab.make_with_text (cloud_names.prompt_welcome_guest)
 					else
-						create lab.make_with_text (cloud_names.prompt_not_connected_with_account)
-					end
-					lab.align_text_left
+						if cld.is_guest then
+							create lab.make_with_text (cloud_names.prompt_welcome_guest)
+						else
+							create lab.make_with_text (cloud_names.prompt_not_connected_with_account)
+						end
+						lab.align_text_left
 
-					b.extend (lab)
-					b.disable_item_expand (lab)
-					if is_cloud_available then
+						b.extend (lab)
+						b.disable_item_expand (lab)
+
 						create lnk.make_with_text (cloud_names.prompt_connected_your_account)
 						lnk.align_text_left
 						lnk.align_text_top
@@ -372,9 +374,15 @@ feature {NONE} -- Action handlers
 						)
 						b.extend (lnk)
 					end
-				end
+				else
+						-- Cloud not available.
+					if cld.is_guest then
+						create lab.make_with_text (cloud_names.prompt_welcome_guest)
+						lab.align_text_left
+						b.extend (lab)
+						b.disable_item_expand (lab)
+					end
 
-				if not is_cloud_available then
 					create hb
 					b.extend (hb)
 					b.disable_item_expand (hb)
@@ -388,9 +396,11 @@ feature {NONE} -- Action handlers
 					hb.extend (but)
 					hb.disable_item_expand (but)
 					hb.extend (create {EV_CELL})
+
+					check_availability_in_background (cld)
 				end
 				if l_dbg then
-					create lab.make_with_text (cloud_names.label_field_installation + cld.installation.id)
+					create lab.make_with_text (cloud_names.label_field_installation + cld.installation.id.to_string_32)
 					b.extend (lab)
 					b.disable_item_expand (lab)
 				end
@@ -398,8 +408,13 @@ feature {NONE} -- Action handlers
 				create lab.make_with_text (locale.translation_in_context ("Service not activated!", "cloud.error"))
 				b.extend (lab)
 			end
+
 			b.set_background_color (colors.stock_colors.default_background_color)
 			b.propagate_background_color
+--			b.propagate_foreground_color
+
+			txt.set_background_color (preferences.editor_data.normal_background_color)
+			txt.set_foreground_color (preferences.editor_data.normal_text_color)
 		end
 
 	on_sign_out (cld: ES_CLOUD_S)

@@ -116,9 +116,14 @@ feature {NONE} -- Background ping
 
 feature -- Events
 
+	last_is_available: BOOLEAN
+
 	on_cloud_available (a_is_available: BOOLEAN)
 		do
-			update_account_menu
+			if last_is_available /= a_is_available then
+				last_is_available := a_is_available
+				update_account_menu
+			end
 		end
 
 	on_account_signed_in (acc: ES_ACCOUNT)
@@ -227,8 +232,10 @@ feature -- Operations
 					win_lst as ic
 				loop
 					w := ic.item
-					w.menus.cloud_account_menu.update
 					w.tools.cloud_account_tool.update
+					if attached w.show_cloud_account_cmd as cmd then
+						cmd.refresh
+					end
 				end
 			end
 		end

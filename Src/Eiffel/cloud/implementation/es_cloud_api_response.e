@@ -14,11 +14,14 @@ create {ES_CLOUD_API_RESPONSE}
 
 feature {NONE} -- Creation
 
-	make (a_resp: HTTP_CLIENT_RESPONSE)
+	make (a_resp: detachable HTTP_CLIENT_RESPONSE)
 		local
 			jp: JSON_PARSER
 		do
-			if a_resp.error_occurred then
+			if a_resp = Void then
+				create error.make ("Not available")
+				has_internal_error := True
+			elseif a_resp.error_occurred then
 				create error.make (a_resp.error_message)
 				has_internal_error := True
 			elseif attached a_resp.body as s then

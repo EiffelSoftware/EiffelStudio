@@ -34,6 +34,11 @@ feature {NONE} -- Access: worker thread
 
 	config: ES_CLOUD_CONFIG
 
+	web_api: ES_CLOUD_API
+		do
+			create Result.make (config)
+		end
+
 feature -- Execution
 
 	execute
@@ -41,7 +46,7 @@ feature -- Execution
 			wt: WORKER_THREAD
 		do
 			completed := False
-			create wt.make (agent 
+			create wt.make (agent
 				do
 					execute_operation
 					mutex.lock
@@ -49,8 +54,8 @@ feature -- Execution
 					mutex.unlock
 				end)
 			reset_operation
-			ev_application.add_idle_action_kamikaze (agent check_for_completion)
 			wt.launch
+			ev_application.add_idle_action_kamikaze (agent check_for_completion)
 		end
 
 feature {NONE} -- Execution
@@ -81,16 +86,17 @@ feature {NONE} -- Access
 			create t
 			check_for_completion_timeout := t
 			t.actions.extend (agent process_check_for_completion (t))
-			t.set_interval (500) -- interval in milliseconds
+			t.set_interval (100) -- interval in milliseconds, start with 100, then 200, up to max 1000
 			process_check_for_completion (t)
 		end
 
 	process_check_for_completion (t: EV_TIMEOUT)
 		local
 			b: BOOLEAN
+			n: INTEGER
 		do
 			debug ("es_cloud")
-				print (generator + " : Check for completion AGENT ..%N")
+				print ("  " + generator + " : Check for completion AGENT ("+ t.interval.out +" ms)..%N")
 			end
 			mutex.lock
 			b := completed
@@ -100,6 +106,10 @@ feature {NONE} -- Access
 				on_completion
 			else
 					-- continue timeout
+				n := t.interval
+				if n < 1000 then
+					t.set_interval (n + 100)
+				end
 			end
 		end
 

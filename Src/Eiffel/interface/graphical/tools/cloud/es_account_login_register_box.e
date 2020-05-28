@@ -166,7 +166,8 @@ feature {NONE} -- Initialization
 				vb.disable_item_expand (cbut)
 			end -- end of offline
 
-			if not is_guest_signed_in and then attached remaining_allowed_guest_days as l_days and then l_days > 0 then
+			-- Check if needed ... if not is_guest_signed_in and then
+			if attached remaining_allowed_guest_days as l_days and then l_days > 0 then
 				create but.make_with_text_and_action (cloud_names.button_guest, agent on_guest)
 				layout_constants.set_default_width_for_button (but)
 				append_label_and_item_horizontally (cloud_names.label_can_continue_as_guest_for_n_days (l_days), but, vb)

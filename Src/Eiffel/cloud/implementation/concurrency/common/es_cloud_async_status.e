@@ -24,7 +24,7 @@ feature {NONE} -- Execution
 		local
 			wapi: ES_CLOUD_API
 		do
-			create wapi.make (config)
+			wapi := web_api
 			wapi.get_is_available
 			is_available := wapi.is_available
 		end
@@ -33,9 +33,12 @@ feature {NONE} -- Access
 
 	on_operation_completion
 		do
-			if is_available then
-				service.on_cloud_available (is_available)
+			debug ("es_cloud")
+				print (generator + ": cloud is available = " + is_available.out + "%N")
 			end
+--			if is_available then
+				service.on_cloud_available (is_available)
+--			end
 		end
 
 	reset_operation

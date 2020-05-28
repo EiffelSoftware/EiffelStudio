@@ -53,7 +53,7 @@ feature {EB_SHARED_PREFERENCES, EB_DEVELOPMENT_WINDOW_SESSION_DATA,
 			Result := <<"New_tab__visible", "New_window__hidden", "New_editor__hidden", "New_context_window__hidden", "Open_file__hidden",
 				"New_class__hidden", "New_feature__hidden", "Open_shell__visible", "Save_file__visible", "Save_all_file__visible", "Separator",
 				"Undo__visible", "Redo__visible", "Separator", "Editor_cut__visible", "Editor_copy__visible", "Editor_paste__visible", "Separator",
-				"ES_GROUP_TOOL__hidden", "ES_FEATURES_TOOL__hidden", "ES_SEARCH_TOOL__visible", "Separator", "Send_to_context__visible",
+				"ES_GROUP_TOOL__hidden", "ES_FEATURES_TOOL__hidden", "ES_SEARCH_TOOL__visible", "Cloud_account__hidden", "Separator", "Send_to_context__visible",
 				"New_cluster__hidden", "Remove_class_cluster__hidden", "Toggle_stone__hidden", "Raise_all__hidden", "Minimize_all__hidden",
 				"Print__hidden", "ES_OUTPUTS_TOOL__hidden", "ES_DIAGRAM_TOOL__hidden", "ES_CLASS_TOOL__hidden", "ES_FEATURE_RELATION_TOOL__hidden",
 				"ES_DEPENDENCY_TOOL__hidden", "ES_METRICS_TOOL__hidden", "ES_CONSOLE_TOOL__hidden", "ES_ERROR_LIST_TOOL__hidden",
@@ -388,7 +388,7 @@ invariant
 	estudio_dbg_menu_enabled_preference_not_void: estudio_dbg_menu_enabled_preference /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2015, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2020, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

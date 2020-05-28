@@ -1,11 +1,9 @@
-note
-
-	description:
-		"Command to display hierarchical structure of the system."
+﻿note
+	description: "Command to display hierarchical structure of the system."
 	legal: "See notice at end of class."
-	status: "See notice at end of class.";
-	date: "$Date$";
-	revision: "$Revision $"
+	status: "See notice at end of class."
+	date: "$Date$"
+	revision: "$Revision$"
 
 class E_SHOW_CLUSTER_HIERARCHY
 
@@ -478,7 +476,7 @@ feature{NONE} -- Implementation
 	processed_libraries_internal: like processed_libraries
 			-- Implementation of `processed_libraries'
 
-	processed_assemblies: ARRAYED_LIST [STRING]
+	processed_assemblies: ARRAYED_LIST [READABLE_STRING_32]
 			-- List of processed assemblies
 		do
 			if processed_assemblies_internal = Void then
@@ -526,7 +524,7 @@ feature{NONE} -- Implementation
 		end
 
 note
-	copyright: "Copyright (c) 1984-2018, Eiffel Software"
+	copyright: "Copyright (c) 1984-2020, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[
@@ -557,4 +555,4 @@ note
 			Customer support http://support.eiffel.com
 		]"
 
-end -- class E_SHOW_CLUSTER_HIERARCHY
+end

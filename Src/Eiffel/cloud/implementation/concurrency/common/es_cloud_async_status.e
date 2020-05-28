@@ -7,9 +7,7 @@ class
 	ES_CLOUD_ASYNC_STATUS
 
 inherit
-	ES_CLOUD_ASYNC_OPERATION
-
-	SHARED_LOGGER_SERVICE
+	ES_CLOUD_ASYNC_JOB
 
 create
 	make
@@ -18,9 +16,9 @@ feature {NONE} -- Access: worker thread
 
 	is_available: BOOLEAN
 
-feature {NONE} -- Execution
+feature -- Execution in concurrent thread
 
-	execute_operation
+	execute
 		local
 			wapi: ES_CLOUD_API
 		do
@@ -29,9 +27,14 @@ feature {NONE} -- Execution
 			is_available := wapi.is_available
 		end
 
-feature {NONE} -- Access
+feature -- Execution in main thread		
 
-	on_operation_completion
+	pre_execute
+		do
+			is_available := False
+		end
+
+	post_execute
 		do
 			debug ("es_cloud")
 				print (generator + ": cloud is available = " + is_available.out + "%N")
@@ -39,11 +42,6 @@ feature {NONE} -- Access
 --			if is_available then
 				service.on_cloud_available (is_available)
 --			end
-		end
-
-	reset_operation
-		do
-			is_available := False
 		end
 
 note

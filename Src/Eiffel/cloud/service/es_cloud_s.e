@@ -169,7 +169,7 @@ feature -- Update
 			end
 		end
 
-	async_check_availability
+	async_check_availability (a_force_operation: BOOLEAN)
 		deferred
 		end
 

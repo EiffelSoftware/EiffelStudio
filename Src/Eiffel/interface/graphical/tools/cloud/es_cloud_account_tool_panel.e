@@ -63,6 +63,13 @@ feature -- Status
 
 feature -- Operations
 
+	try_to_reconnect
+		do
+			if attached es_cloud_s.service as cld then
+				cld.async_check_availability (True)
+			end
+		end
+
 	update
 		do
 			refresh
@@ -102,7 +109,7 @@ feature {NONE} -- Background helper
 
 	check_availability_in_background (cld: ES_CLOUD_S)
 		do
-			cld.async_check_availability
+			cld.async_check_availability (False)
 		end
 
 feature {NONE} -- Factory		
@@ -147,9 +154,6 @@ feature {NONE} -- Action handlers
 			l_dbg: BOOLEAN
 			acc: detachable ES_ACCOUNT
 		do
-			debug ("es_cloud")
-				print (generator + ".refresh%N")
-			end
 			b := main_box
 			b.wipe_out
 			if attached es_cloud_s.service as cld then
@@ -391,7 +395,7 @@ feature {NONE} -- Action handlers
 					create lab.make_with_text (cloud_names.label_service_not_available + {STRING_32} " ") -- extra space for layout
 					hb.extend (lab)
 					hb.disable_item_expand (lab)
-					create but.make_with_text_and_action (cloud_names.button_try_to_reconnect, agent update)
+					create but.make_with_text_and_action (cloud_names.button_try_to_reconnect, agent try_to_reconnect)
 					layout_constants.set_default_size_for_button (but)
 					hb.extend (but)
 					hb.disable_item_expand (but)
@@ -413,8 +417,10 @@ feature {NONE} -- Action handlers
 			b.propagate_background_color
 --			b.propagate_foreground_color
 
-			txt.set_background_color (preferences.editor_data.normal_background_color)
-			txt.set_foreground_color (preferences.editor_data.normal_text_color)
+			if txt /= Void then
+				txt.set_background_color (preferences.editor_data.normal_background_color)
+				txt.set_foreground_color (preferences.editor_data.normal_text_color)
+			end
 		end
 
 	on_sign_out (cld: ES_CLOUD_S)

@@ -624,28 +624,36 @@ feature -- Updating
 			params["product_version"] := eiffel_layout.version_name
 		end
 
-	async_check_availability
+	async_worker: ES_CLOUD_ASYNC_WORKER
+		do
+			Result := internal_async_worker
+			if Result = Void then
+				create Result.make
+				internal_async_worker := Result
+			end
+		end
+
+	internal_async_worker: detachable like async_worker
+
+	async_check_availability (a_force_operation: BOOLEAN)
 		local
-			p: ES_CLOUD_ASYNC_STATUS
 			dt: DATE_TIME
 		do
 			create dt.make_now_utc
-			if can_check_is_available (dt) then
+			if a_force_operation or else can_check_is_available (dt) then
 				debug ("es_cloud")
 					print (generator + ".ASYNC_check_availability%N")
 				end
-				create p.make (Current, config)
-				p.execute
+				async_worker.add_job (create {ES_CLOUD_ASYNC_STATUS}.make (Current, config))
 			else
 				debug ("es_cloud")
-					print (generator + ".ASYNC_check_availability NOT FOR NOW!%N")
+					print (generator + ".ASYNC_check_availability WAIT BEFORE TRYING AGAIN!%N")
 				end
 			end
 		end
 
 	async_ping_installation (a_account: ES_ACCOUNT; a_session: ES_ACCOUNT_SESSION)
 		local
-			p: ES_CLOUD_ASYNC_PING
 			params: ES_CLOUD_API_SESSION_PARAMETERS
 		do
 			if
@@ -656,8 +664,8 @@ feature -- Updating
 				end
 				create params.make (installation.id, a_session.id)
 				fill_product_information (params)
-				create p.make (Current, tok, a_session, params, config)
-				p.execute
+
+				async_worker.add_job (create {ES_CLOUD_ASYNC_PING}.make (Current, tok, a_session, params, config))
 			end
 		end
 

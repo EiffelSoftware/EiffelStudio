@@ -24,6 +24,17 @@ feature {NONE} -- Creation
 			get_is_available
 		end
 
+feature -- Config change
+
+	set_config (cfg: ES_CLOUD_CONFIG)
+		do
+			if not cfg.server_url.same_string (config.server_url) then
+				endpoints_table.wipe_out
+				endpoints_table_for_tokens.wipe_out
+				config := cfg
+			end
+		end
+
 feature -- Status report
 
 	is_available: BOOLEAN

@@ -7,7 +7,7 @@ class
 	ES_CLOUD_ASYNC_PING
 
 inherit
-	ES_CLOUD_ASYNC_OPERATION
+	ES_CLOUD_ASYNC_JOB
 		rename
 			make as old_make
 		end
@@ -17,7 +17,7 @@ inherit
 create
 	make
 
-feature {NONE} -- Initialization
+feature {NONE} -- Initialization	
 
 	make (a_service: ES_CLOUD_S; a_token: ES_ACCOUNT_ACCESS_TOKEN; a_session: ES_ACCOUNT_SESSION; params: ES_CLOUD_API_SESSION_PARAMETERS; cfg: ES_CLOUD_CONFIG)
 		require
@@ -31,10 +31,10 @@ feature {NONE} -- Initialization
 			across
 				params as ic
 			loop
-				parameters[ic.key.twin] := ic.item.twin
+				parameters [ic.key.twin] := ic.item.twin
 			end
 			if attached a_session.title as l_title then
-				parameters["session_title"] := create {IMMUTABLE_STRING_32}.make_from_string_general (l_title)
+				parameters ["session_title"] := create {IMMUTABLE_STRING_32}.make_from_string_general (l_title)
 			end
 		end
 
@@ -43,6 +43,10 @@ feature -- Access: Current
 	session: ES_ACCOUNT_SESSION
 
 feature {NONE} -- Access: after thread completed
+
+	is_cloud_available: BOOLEAN
+
+	is_cloud_available_updated: BOOLEAN
 
 	session_state_changed: BOOLEAN
 
@@ -56,9 +60,43 @@ feature {NONE} -- Access: worker thread
 
 	parameters: ES_CLOUD_API_SESSION_PARAMETERS
 
-feature -- Access
+feature -- Execution
 
-	on_operation_completion
+	execute
+		local
+			wapi: ES_CLOUD_API
+			d: ES_CLOUD_PING_DATA
+		do
+			wapi := web_api
+			is_cloud_available := wapi.is_available
+			if not is_cloud_available then
+				wapi.get_is_available
+				is_cloud_available := wapi.is_available
+				is_cloud_available_updated := is_cloud_available
+			end
+			if is_cloud_available then
+				create d
+				wapi.ping_installation (token, parameters, d)
+				is_cloud_available := wapi.is_available
+				is_cloud_available_updated := not is_cloud_available
+				session_state_changed := d.session_state_changed
+				if d.heartbeat > 0 then
+					session_heartbeat := d.heartbeat
+				end
+				if d.license_expired then
+					license_expired := d.license_expired
+				end
+			end
+		end
+
+	pre_execute
+		do
+			session_state_changed := False
+			license_expired := False
+			is_cloud_available_updated := False
+		end
+
+	post_execute
 		do
 			debug ("es_cloud")
 				if attached logger_s.service as logger_service then
@@ -79,28 +117,8 @@ feature -- Access
 			if license_expired then
 				service.on_account_license_expired (session.account)
 			end
-		end
-
-	reset_operation
-		do
-			session_state_changed := False
-			license_expired := False
-		end
-
-	execute_operation
-		local
-			wapi: ES_CLOUD_API
-			d: ES_CLOUD_PING_DATA
-		do
-			wapi := web_api
-			create d
-			wapi.ping_installation (token, parameters, d)
-			session_state_changed := d.session_state_changed
-			if d.heartbeat > 0 then
-				session_heartbeat := d.heartbeat
-			end
-			if d.license_expired then
-				license_expired := d.license_expired
+			if is_cloud_available_updated then
+				service.on_cloud_available (is_cloud_available)
 			end
 		end
 

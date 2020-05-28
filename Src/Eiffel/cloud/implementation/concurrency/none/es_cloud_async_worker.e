@@ -1,81 +1,47 @@
 note
-	description: "Configuration for the cloud api."
+	description: "Summary description for {ES_CLOUD_ASYNC_WORKER}."
 	date: "$Date$"
 	revision: "$Revision$"
 
 class
-	ES_CLOUD_CONFIG
+	ES_CLOUD_ASYNC_WORKER
 
 create
-	make,
-	make_from_separate
+	make
 
-feature {NONE} -- Initialization
+feature {NONE} -- Initialization	
 
-	make (a_webapi_url: READABLE_STRING_8)
-		local
-			uri: URI
+	make
 		do
-			create uri.make_from_string (a_webapi_url)
-			create root_endpoint.make_from_string (uri.path)
-			uri.set_path ("")
-			create server_url.make_from_string (uri.string)
-
-			connection_timeout := 3 -- seconds
-			timeout := 10 -- seconds
-		end
-
-	make_from_separate (cfg: separate ES_CLOUD_CONFIG)
-		do
-			create root_endpoint.make_from_string (cfg.root_endpoint)
-			create server_url.make_from_string (cfg.server_url)
-			connection_timeout := cfg.connection_timeout
-			timeout := cfg.timeout
+			create jobs.make (10)
 		end
 
 feature -- Access
 
-	root_endpoint: IMMUTABLE_STRING_8
+	pending_job_count: NATURAL_32
 
-	server_url: IMMUTABLE_STRING_8
+feature -- Protected Access
 
-feature -- Builtin settings	
-
-	guest_period_in_days: INTEGER = 15
-			-- Number of days as guest.
-
-	default_session_heartbeat: NATURAL = 900 -- 15 * 60 s = 15 minutes
-			-- Delay between two heartbeat to track session activity.
-
-feature -- Settings	
-
-	connection_timeout: INTEGER
-			-- Connection timeout in seconds.
-
-	timeout: INTEGER
-			-- Timeout in seconds.			
-
-feature -- Conversion
-
-	import_settings (cfg: like Current)
-		do
-			connection_timeout := cfg.connection_timeout
-			timeout := cfg.timeout
-		end
+	exit_requested: BOOLEAN
 
 feature -- Element change
 
-	set_connection_timeout (a_secs: like connection_timeout)
+	add_job (a_job: ES_CLOUD_ASYNC_JOB)
 		do
-			connection_timeout := a_secs
+			pending_job_count := pending_job_count + 1
+			a_job.pre_execute
+			a_job.execute
+			a_job.post_execute
+			pending_job_count := pending_job_count - 1
 		end
 
-	set_timeout (a_secs: like timeout)
+	request_exit
 		do
-			timeout := a_secs
+			exit_requested := True
 		end
 
-;note
+invariant
+note
 	copyright: "Copyright (c) 1984-2020, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"

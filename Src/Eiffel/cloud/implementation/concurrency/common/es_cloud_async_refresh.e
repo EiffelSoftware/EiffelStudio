@@ -1,7 +1,6 @@
 note
 	description: "[
 			Asynchronous call to refresh_token.
-
 		]"
 	status: "Under development, currently not used!"
 	date: "$Date$"
@@ -11,7 +10,7 @@ class
 	ES_CLOUD_ASYNC_REFRESH
 
 inherit
-	ES_CLOUD_ASYNC_OPERATION
+	ES_CLOUD_ASYNC_JOB
 		rename
 			make as old_make
 		end
@@ -44,29 +43,29 @@ feature {NONE} -- Output
 
 feature -- Access
 
-	on_operation_completion
+	post_execute
 		do
 			if attached refreshed_token as tok then
 			end
 		end
 
-	reset_operation
+	pre_execute
 		do
 			refreshed_token := Void
 		end
 
-	execute_operation
+	execute
 		local
 			wapi: ES_CLOUD_API
 		do
 			if attached access_token.refresh_key as k then
-				create wapi.make (config)
+				wapi := web_api
 				refreshed_token := wapi.refreshing_token (access_token.token, k)
 			end
 		end
 
 note
-	copyright: "Copyright (c) 1984-2019, Eiffel Software"
+	copyright: "Copyright (c) 1984-2020, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

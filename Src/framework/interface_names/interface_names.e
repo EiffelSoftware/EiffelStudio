@@ -2748,7 +2748,7 @@ feature -- Startup pages
 
 feature -- Account related
 
-	m_account: STRING_32				do Result := locale.translation ("Account") end
+	m_account: STRING_32				do Result := locale.translation ("Account...") end
 
 feature -- Titles translation needless (Title Original) for preference strings.
 

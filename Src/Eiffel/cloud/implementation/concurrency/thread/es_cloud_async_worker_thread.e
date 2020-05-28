@@ -1,62 +1,70 @@
 note
-	description: "Asynchronous cloud operation."
+	description: "Summary description for {ES_CLOUD_ASYNC_WORKER_THREAD}."
+	author: ""
 	date: "$Date$"
 	revision: "$Revision$"
 
-deferred class
-	ES_CLOUD_ASYNC_OPERATION
+class
+	ES_CLOUD_ASYNC_WORKER_THREAD
 
 inherit
-	EV_SHARED_APPLICATION
+	THREAD
+		rename
+			make as make_thread
+		end
+
+create
+	make
 
 feature {NONE} -- Initialization
 
-	make (a_service: ES_CLOUD_S; cfg: ES_CLOUD_CONFIG)
-		require
-			a_service /= Void
+	make (a_mutex: MUTEX; a_worker: ES_CLOUD_ASYNC_WORKER)
 		do
-			service := a_service
-			config := cfg
+			mutex := a_worker.mutex
+			semaphore := a_worker.semaphore
+			worker := a_worker
+			make_thread
 		end
 
-feature -- Access: Current
+feature -- Access
 
-	service: ES_CLOUD_S
+	mutex: MUTEX
 
-feature {NONE} -- Access: thread synchro
+	semaphore: SEMAPHORE
 
-	completed: BOOLEAN
-
-feature {NONE} -- Access: worker thread
-
-	config: ES_CLOUD_CONFIG
+	worker: ES_CLOUD_ASYNC_WORKER
 
 feature -- Execution
 
 	execute
+		local
+			l_exit_requested: BOOLEAN
+			l_job: detachable ES_CLOUD_ASYNC_JOB
 		do
-			completed := False
-			reset_operation
-			execute_operation
-			completed := True
-			on_operation_completion
+			debug ("es_cloud_async")
+				print (">> Cloud async worker: started.%N")
+			end
+			from until l_exit_requested loop
+				semaphore.wait
+				mutex.lock
+				l_exit_requested := worker.exit_requested
+				l_job := worker.next_job
+				mutex.unlock
+				if l_job /= Void then
+					l_job.execute
+					mutex.lock
+					worker.complete_job (l_job)
+					mutex.unlock
+				else
+--					sleep (10_000_000) -- 10 ms
+				end
+			end
+			debug ("es_cloud_async")
+				print (">> Cloud async worker: finished.%N")
+			end
 		end
 
-feature {NONE} -- Execution
-
-	execute_operation
-		deferred
-		end
-
-	reset_operation
-		deferred
-		end
-
-	on_operation_completion
-		deferred
-		end
-
-note
+;note
 	copyright: "Copyright (c) 1984-2020, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"

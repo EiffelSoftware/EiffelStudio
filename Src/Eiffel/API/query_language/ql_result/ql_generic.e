@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "Object that represents a class generic item in Eiffel query language"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -98,8 +98,8 @@ feature -- Access
 		local
 			l_list: EIFFEL_LIST [FORMAL_DEC_AS]
 			l_ast: like ast
-			l_item_name: STRING
-			l_name: STRING
+			l_item_name: like {ID_AS}.name_32
+			l_name: like name
 		do
 			if internal_ast = Void then
 				l_list := class_c.generics
@@ -249,7 +249,7 @@ invariant
 	parent_valid: parent.is_class and then parent.is_valid_domain_item and then parent.is_compiled
 
 note
-	copyright: "Copyright (c) 1984-2018, Eiffel Software"
+	copyright: "Copyright (c) 1984-2020, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

@@ -91,7 +91,7 @@ feature{NONE} -- Implementation
 		deferred
 		end
 
-	type_dec_ast_with_name (a_name: STRING; a_type_dec_list: EIFFEL_LIST [LIST_DEC_AS]): LIST_DEC_AS
+	type_dec_ast_with_name (a_name: READABLE_STRING_32; a_type_dec_list: EIFFEL_LIST [LIST_DEC_AS]): LIST_DEC_AS
 			-- TYPE_DEC_AS object which has identifier named `a_name' in `a_type_dec_list'.
 			-- Void if no item is named `a_name' in `a_type_dec_list'.
 		require
@@ -115,7 +115,7 @@ feature{NONE} -- Implementation
 					until
 						i > l_cnt or Result /= Void
 					loop
-						if l_type_dec.item_name (i).is_case_insensitive_equal_general (name) then
+						if l_type_dec.item_name_32 (i).is_case_insensitive_equal (name) then
 							Result := l_type_dec
 						end
 						i := i + 1
@@ -144,7 +144,7 @@ invariant
 note
 	date: "$Date$"
 	revision: "$Revision$"
-	copyright: "Copyright (c) 1984-2018, Eiffel Software"
+	copyright: "Copyright (c) 1984-2020, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

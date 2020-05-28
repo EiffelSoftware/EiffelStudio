@@ -36,9 +36,9 @@ feature -- Element Change
 		local
 			m: like msgctxt_lines
 		do
-			if attached a_msgctxt as l_msgc then
+			if attached a_msgctxt then
 				create m.make
-				m.append (break_line (l_msgc.as_string_32))
+				m.append (break_line (a_msgctxt.as_string_32))
 				msgctxt_lines := m
 			end
 		ensure
@@ -350,7 +350,7 @@ feature  {NONE} -- Implementation (datastructures)
 		end
 
 note
-	copyright: "Copyright (c) 1984-2016, Eiffel Software"
+	copyright: "Copyright (c) 1984-2020, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

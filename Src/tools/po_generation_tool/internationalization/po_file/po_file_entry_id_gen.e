@@ -13,8 +13,8 @@ feature -- Generation
 		require
 			a_msg_id_not_void: a_msgid  /= Void
 		do
-			if attached a_msgctxt as l_ctxt then
-				Result := a_msgid.as_string_32 + l_ctxt.as_string_32
+			if attached a_msgctxt then
+				Result := a_msgid.as_string_32 + a_msgctxt.as_string_32
 			else
 				Result := a_msgid.as_string_32
 			end
@@ -23,7 +23,7 @@ feature -- Generation
 		end
 
 note
-	copyright: "Copyright (c) 1984-2012, Eiffel Software"
+	copyright: "Copyright (c) 1984-2020, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

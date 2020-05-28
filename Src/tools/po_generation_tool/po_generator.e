@@ -11,7 +11,7 @@ class
 create
 	make
 
-feature -- Initialize
+feature {NONE} -- Creation
 
 	make (a_file: like file; a_text: like text; a_source_file_name: like source_file_name)
 			-- Initialize.
@@ -42,8 +42,8 @@ feature -- Access
 	file: PO_FILE
 			-- File where messages are added
 
-	text: STRING_GENERAL
-			-- Eiffel source text which is parsed for messages
+	text: STRING_8
+			-- Eiffel source text which is parsed for messages.
 
 	source_file_name: STRING_32
 			-- File name of Eiffel source file
@@ -57,10 +57,10 @@ feature -- Generation
 			source_file_name_set: source_file_name /= Void
 		local
 			l_iterator: I18N_AST_ITERATOR
-			l_string: STRING
-			l_string_low: STRING
+			l_string: STRING_8
+			l_string_low: STRING_8
 		do
-			l_string := text.as_string_8
+			l_string := text
 			l_string_low := l_string.as_lower
 			if l_string_low.has_substring (name_of_translation) or else l_string_low.has_substring (name_of_plural_translation) or else l_string_low.has_substring (name_of_feature_clause.as_lower) then
 				eiffel_parser.reset
@@ -141,7 +141,7 @@ invariant
 	file_not_void: file /= Void
 
 note
-	copyright: "Copyright (c) 1984-2016, Eiffel Software"
+	copyright: "Copyright (c) 1984-2020, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

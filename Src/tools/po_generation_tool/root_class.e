@@ -16,7 +16,7 @@ inherit
 create
 	make
 
-feature -- Initialization
+feature {NONE} -- Initialization
 
 	make
 			-- Creation procedure.
@@ -148,7 +148,7 @@ feature {NONE} -- Implementation
 					debug
 						 localized_print (l_dirs.item + "%N")
 					end
-					l_dir := (a_dir + operating_environment.directory_separator.out + l_dirs.item)
+					l_dir := a_dir + operating_environment.directory_separator.out + l_dirs.item
 					generate_directory (l_dir)
 					l_dirs.forth
 				end
@@ -210,8 +210,8 @@ feature {NONE} -- Implementation
 			end
 		rescue
 			l_retried := True
-			if attached l_file as l_f and then not l_f.is_closed then
-				l_f.close
+			if attached l_file and then not l_file.is_closed then
+				l_file.close
 			end
 			retry
 		end
@@ -466,7 +466,7 @@ feature {NONE} -- Output
 		end
 
 note
-	copyright: "Copyright (c) 1984-2016, Eiffel Software"
+	copyright: "Copyright (c) 1984-2020, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

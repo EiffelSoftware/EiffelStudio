@@ -395,7 +395,7 @@ feature -- Access
 			end
 		end
 
-	class_named (a_class_name: STRING; a_group: CONF_GROUP): detachable CLASS_I
+	class_named (a_class_name: READABLE_STRING_8; a_group: CONF_GROUP): detachable CLASS_I
 			-- Class named `a_class_name' in cluster `a_cluster'
 		require
 			good_argument: a_class_name /= Void

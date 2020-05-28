@@ -92,7 +92,7 @@ feature -- Access
 	source_file_name: STRING_32
 		-- Source file name.
 
-	source_text: STRING
+	source_text: READABLE_STRING_32
 		-- Source file text.
 
 feature {NONE} -- Status report
@@ -305,7 +305,7 @@ feature {NONE} -- Implementation
 
 feature {NONE} -- Implementation
 
-	current_line (a_pos: INTEGER; a_text: STRING): STRING
+	current_line (a_pos: INTEGER; a_text: READABLE_STRING_32): READABLE_STRING_32
 			-- Line text at `a_pos'
 		require
 			a_text_not_void: a_text /= Void
@@ -322,15 +322,6 @@ feature {NONE} -- Implementation
 			else
 				Result := a_text.substring (l_start + 1, l_end - 1)
 			end
-				-- If `Result' is not a valid UTF-8 sequence, then we simply convert Result
-				-- into a valid UTF-8 sequence assuming Result is UTF-32 compatible encoding.
-				-- This is bound to happen because there are no strict rules that guarantees
-				-- that a file is properly encoded into UTF-8.
-				-- In any case it does not matter for what we are doing because the source code
-				-- extracted will be part of comments as translator helper in the .pot file.
-			if not is_valid_utf8 (Result) then
-				Result := utf32_to_utf8 (Result.as_string_32)
-			end
 		ensure
 			Result_not_void: Result /= Void
 		end
@@ -341,14 +332,14 @@ feature {NONE} -- Implementation
 			a_as_not_void: a_as /= Void
 			a_node_not_void: a_node /= Void
 		local
-			l_line: STRING
+			l_line: STRING_32
 		do
 				-- Extract source code.
 			if a_as.position <= source_text.count then
 				l_line := current_line (a_as.position, source_text)
 				l_line.left_adjust
 				l_line.right_adjust
-				a_node.add_automatic_comment ("Source code: " + l_line)
+				a_node.add_automatic_comment ({STRING_32} "Source code: " + l_line)
 			end
 				-- Append location.
 			a_node.add_reference_comment (source_file_name + ":" + a_as.line.out)
@@ -364,8 +355,8 @@ feature {NONE} -- Implementation
 		do
 			l_msgid := l_as.value_32
 			handle_special_chars (l_msgid)
-			if attached a_context as l_ctxt and then not l_ctxt.value_32.is_empty then
-				l_msgctxt := l_ctxt.value_32
+			if attached a_context and then not a_context.value_32.is_empty then
+				l_msgctxt := a_context.value_32
 				handle_special_chars (l_msgctxt)
 			end
 			if not po_file.has_entry (l_msgid, l_msgctxt) then
@@ -374,15 +365,16 @@ feature {NONE} -- Implementation
 				append_comments (l_as, singular_entry)
 				po_file.add_entry (singular_entry)
 			else
-				if attached l_msgctxt as l_c then
-					localized_print ({STRING_32} "WARNING: Replicate found: %"" + l_msgid + "%" in context %"" + l_c + "%"%N")
+				if attached l_msgctxt then
+					localized_print ({STRING_32} "WARNING: Replicate found: %"" + l_msgid + "%" in context %"" + l_msgctxt + "%"%N")
 				else
 					localized_print ({STRING_32} "WARNING: Same message found: %"" + l_msgid + "%"%N")
 				end
-				if attached po_file.entry (l_msgid, l_msgctxt) as l_entry then
-					if attached l_entry.source_name as l_name then
-						localized_print ({STRING_32} "%TExising entry: " + l_name + "%N")
-					end
+				if
+					attached po_file.entry (l_msgid, l_msgctxt) as l_entry and then
+					attached l_entry.source_name as l_name
+				then
+					localized_print ({STRING_32} "%TExising entry: " + l_name + "%N")
 				end
 			end
 		end
@@ -397,8 +389,8 @@ feature {NONE} -- Implementation
 		do
 			l_msgid := l_as_1.value_32
 			handle_special_chars (l_msgid)
-			if attached a_context as l_ctxt and then not l_ctxt.value_32.is_empty then
-				l_msgctxt := l_ctxt.value_32
+			if attached a_context and then not a_context.value_32.is_empty then
+				l_msgctxt := a_context.value_32
 				handle_special_chars (l_msgctxt)
 			end
 			if not po_file.has_entry (l_msgid, l_msgctxt) then
@@ -410,15 +402,16 @@ feature {NONE} -- Implementation
 				append_comments (l_as_1, plural_entry)
 				po_file.add_entry (plural_entry)
 			else
-				if attached l_msgctxt as l_c then
-					localized_print ({STRING_32} "WARNING: Same message found: %"" + l_msgid + "%" in context %"" + l_c + "%"%N")
+				if attached l_msgctxt then
+					localized_print ({STRING_32} "WARNING: Same message found: %"" + l_msgid + "%" in context %"" + l_msgctxt + "%"%N")
 				else
 					localized_print ({STRING_32} "WARNING: Same message found: %"" + l_msgid + "%"%N")
 				end
-				if attached po_file.entry (l_msgid, l_msgctxt) as l_entry then
-					if attached l_entry.source_name as l_name then
-						localized_print ({STRING_32} "%TExising entry: " + l_name + "%N")
-					end
+				if
+					attached po_file.entry (l_msgid, l_msgctxt) as l_entry and then
+					attached l_entry.source_name as l_name
+				then
+					localized_print ({STRING_32} "%TExising entry: " + l_name + "%N")
 				end
 			end
 		end
@@ -440,7 +433,7 @@ feature {NONE} -- Implementation
 			-- Did last analysis find an entry?
 
 note
-	copyright: "Copyright (c) 1984-2016, Eiffel Software"
+	copyright: "Copyright (c) 1984-2020, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

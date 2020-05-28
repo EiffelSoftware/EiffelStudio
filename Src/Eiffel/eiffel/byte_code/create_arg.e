@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "Creation type like an argument."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -48,8 +48,16 @@ feature -- Update
 feature -- C code generation
 
 	analyze
+		local
+			argument_node: ARGUMENT_BL
 		do
 			associated_create_info.analyze
+				-- Make sure the argument is GC-protected.
+				-- Otherwise it can be collected or moved before type information is retrieved.
+				-- See eweasel test#exec347 ("TEST1.h").
+			create argument_node
+			argument_node.set_position (position)
+			argument_node.analyze
 		end
 
 	generate_type (buffer: GENERATION_BUFFER; final_mode: BOOLEAN; a_level: NATURAL)

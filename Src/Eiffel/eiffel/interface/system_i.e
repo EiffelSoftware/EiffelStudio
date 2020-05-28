@@ -1136,7 +1136,7 @@ end
 					end
 					l_class_i.compiled_class.recompile_syntactical_clients
 					if automatic_backup then
-						l_file.put_string ("REMOVED: " +
+						l_file.put_string_32 ({STRING_32} "REMOVED: " +
 							l_class_i.name + " " +
 							l_class_i.group.target.system.uuid.out + " " +
 							l_class_i.group.name + "%N")
@@ -1155,7 +1155,7 @@ end
 						l_classes.after
 					loop
 						l_class_i ?= l_classes.item_for_iteration
-						l_file.put_string ("OVERRIDE_REMOVED: " +
+						l_file.put_string_32 ({STRING_32} "OVERRIDE_REMOVED: " +
 							l_class_i.name + " " +
 							l_class_i.group.target.system.uuid.out + " " +
 							l_class_i.group.name + "%N")
@@ -6433,7 +6433,7 @@ invariant
 note
 	date: "$Date$"
 	revision: "$Revision$"
-	copyright:	"Copyright (c) 1984-2019, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2020, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

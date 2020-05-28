@@ -166,7 +166,7 @@ feature -- Value
 	update_channel: STRING
 			-- Update channel name.
 		do
-			Result := update_channel_preference.selected_value
+			Result := {UTF_CONVERTER}.string_32_to_utf_8_string_8 (update_channel_preference.selected_value)
 		end
 
 	eis_path: STRING_32

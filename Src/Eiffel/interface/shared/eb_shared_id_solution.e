@@ -295,7 +295,7 @@ feature  -- Element Change
 			is_for_url := a_b
 		ensure
 			is_for_url_set: is_for_url = a_b
-			name_sep_set: (a_b and (not old is_for_url)) implies (old name_sep) ~ decode (name_sep)
+			name_sep_set: (a_b and (not old is_for_url)) implies (old name_sep) ~ decode_string_8 (name_sep)
 			name_sep_set: ((not a_b) and old is_for_url) implies (old name_sep) ~ encode (name_sep)
 		end
 

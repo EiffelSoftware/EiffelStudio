@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="ISO-8859-1"?><system xmlns="http://www.eiffel.com/developers/xml/configuration-1-0-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-0-0 http://www.eiffel.com/developers/xml/configuration-1-0-0.xsd" name="test" uuid="a7b0f595-f8e9-47bd-9b01-5602ef63493a">
 	<target name="test">
-		<description>--| Copyright (c) 1993-2006 University of Southern California and contributors.
+		<description>--| Copyright (c) 1993-2020 University of Southern California and contributors.
 --| All rights reserved.
 --| Your use of this work is governed under the terms of the GNU General
 --| Public License version 2.
@@ -19,6 +19,8 @@
 		<setting name="console_application" value="true"/>
 		<setting name="total_order_on_reals" value="true"/>
 		$EWEASEL_DOTNET_SETTING
+		<mapping old_name="IMMUTABLE_STRING" new_name="IMMUTABLE_STRING_8"/>
+		<mapping old_name="READABLE_STRING" new_name="READABLE_STRING_8"/>
 		<mapping old_name="STRING" new_name="STRING_8"/>
 		<mapping old_name="INTEGER" new_name="INTEGER_32"/>
 		<mapping old_name="NATURAL" new_name="NATURAL_32" />

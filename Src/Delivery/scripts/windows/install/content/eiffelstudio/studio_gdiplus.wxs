@@ -1,21 +1,5 @@
 <Wix xmlns="http://schemas.microsoft.com/wix/2006/wi">
   <Fragment>
-    <?ifndef IsWin64?>
-    <?ifdef x64?>
-    <?define IsWin64 = "yes"?>
-    <?else ?>
-    <?define IsWin64 = "no"?>
-    <?endif ?>
-    <?endif ?>
-    <?ifdef EiffelStudio?>
-    <DirectoryRef Id="Dir.Core.studio.spec.$(var.IsePlatform).bin">
-      <Component Id="Comp.gdiplusreleases" Guid="5203CD41-4695-434C-83A8-48917D9B50F3" Win64="$(var.IsWin64)" KeyPath="yes">
-        <File Id="gdiplusgdiplus.dll" Name="gdiplus.dll" DiskId="1" Source="C:\es-deliv\20.05\win64.VC110_VC140\Eiffel_20.05\releases\gdiplus.dll" />
-      </Component>
-    </DirectoryRef>
-    <ComponentGroup Id="gdiplus">
-      <ComponentRef Id="Comp.gdiplusreleases" />
-    </ComponentGroup>
-    <?endif ?>
+  	<ComponentGroup Id="gdiplus" />
   </Fragment>
 </Wix>

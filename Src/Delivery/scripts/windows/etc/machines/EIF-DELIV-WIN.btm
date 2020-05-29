@@ -24,7 +24,7 @@ iff not defined MYSQL then
 endiff
 
 iff not defined WORK_DIR then
-	set WORK_DIR=\eiffel-deliv
+	set WORK_DIR=\es-deliv
 endiff
 
 iff not defined DEFAULT_PUBLIC_SVN then

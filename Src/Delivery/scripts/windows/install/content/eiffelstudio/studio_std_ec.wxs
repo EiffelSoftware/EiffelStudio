@@ -1,5 +1,23 @@
 <Wix xmlns="http://schemas.microsoft.com/wix/2006/wi">
   <Fragment>
-  	<ComponentGroup Id="standard_ec" />
+    <?ifndef IsWin64?>
+    <?ifdef x64?>
+    <?define IsWin64 = "yes"?>
+    <?else ?>
+    <?define IsWin64 = "no"?>
+    <?endif ?>
+    <?endif ?>
+    <?ifdef EiffelStudio?>
+    <DirectoryRef Id="Dir.Core.studio.spec.$(var.IsePlatform).bin">
+      <Component Id="Comp.Core.standard_version" Guid="70959B55-63C3-454A-B051-12E75A5279FA" Win64="$(var.IsWin64)" KeyPath="yes">
+        <File Id="Core.ec.exe" Name="ec.exe" DiskId="1" Source="C:\es-deliv\20.05\win64.VC110_VC140\Eiffel_20.05\releases\standard_version\ec.exe" />
+        <File Id="Core.ecb.exe" Name="ecb.exe" DiskId="1" Source="C:\es-deliv\20.05\win64.VC110_VC140\Eiffel_20.05\releases\standard_version\ecb.exe" />
+        <File Id="Core.LICENSE" Name="LICENSE" DiskId="1" Source="C:\es-deliv\20.05\win64.VC110_VC140\Eiffel_20.05\releases\standard_version\LICENSE" />
+      </Component>
+    </DirectoryRef>
+    <ComponentGroup Id="standard_ec">
+      <ComponentRef Id="Comp.Core.standard_version" />
+    </ComponentGroup>
+    <?endif ?>
   </Fragment>
 </Wix>

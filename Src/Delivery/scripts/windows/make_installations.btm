@@ -100,7 +100,10 @@ safe_md %INSTALL_DIR\setups\standard
 safe_md %INSTALL_DIR\setups\enterprise
 safe_md %INSTALL_DIR\setups\enterprise-axar
 
+fullrf %INSTALL_DIR%\releases\enterprise_version\LICENSE
 ren %INSTALL_DIR%\releases\enterprise_version\LICENSE %INSTALL_DIR%\releases\enterprise_version\LICENSE
+
+fullrf %INSTALL_DIR%\releases\enterprise_version-axar\LICENSE
 ren %INSTALL_DIR%\releases\enterprise_version\LICENSE %INSTALL_DIR%\releases\enterprise_version-axar\LICENSE
 
 if exist %INSTALL_DIR%\%STUDIO_NAME% (
@@ -108,7 +111,8 @@ if exist %INSTALL_DIR%\%STUDIO_NAME% (
     ren %INSTALL_DIR%\%STUDIO_NAME% %INSTALL_DIR%\EiffelStudio
 )
 
-if "%NO_INSTALL%" NEQ "True" (
+if "%NO_INSTALL%" NEQ "True" goto BUILD_ZIP
+
 remtrace ==============================================
 remtrace Building the MSIs
 remtrace ==============================================
@@ -133,12 +137,12 @@ if "%NO_STANDARD_BUILD%" NEQ "True" (
 	safe_copy %INIT_DIR\install\bin\studio_std_%WINNAME\package.msi %INSTALL_DIR\setups\standard\%STUDIO_NAME%_rev_%SVN_VERSION-%ISE_PLATFORM%.msi
 )
 
-)
-
+:BUILD_ZIP
 remtrace ==============================================
 remtrace Building the Zips
 remtrace ==============================================
 if "%NO_STANDARD_BUILD%" NEQ "True" (
+	remtrace Build Standard Zip
 	cdd %INSTALL_DIR
 	if exist %INSTALL_DIR\setups\standard\%STUDIO_NAME%_rev_%SVN_VERSION-%ISE_PLATFORM%.7z (
 		remtrace Standard archive: reuse
@@ -154,15 +158,15 @@ if "%NO_STANDARD_BUILD%" NEQ "True" (
 		endiff
 		7z a -t7z %INSTALL_DIR\setups\standard\%STUDIO_NAME%_rev_%SVN_VERSION-%ISE_PLATFORM%.7z %STUDIO_NAME% -mx9 >>& %INSTALL_LOG
 	)
-remtrace Uploading Standard packages online
+	remtrace Uploading Standard packages online
 	cdd %INSTALL_DIR\setups\standard
 	call share_delivery %STUDIO_NAME%_rev_%SVN_VERSION%-%ISE_PLATFORM%.7z standard
-	if "%NO_INSTALL%" NEQ "True" (
-		call share_delivery %STUDIO_NAME%_rev_%SVN_VERSION%-%ISE_PLATFORM%.msi standard
-	)
+	if "%NO_INSTALL%" NEQ "True" call share_delivery %STUDIO_NAME%_rev_%SVN_VERSION%-%ISE_PLATFORM%.msi standard
 	if not EXIST %STUDIO_NAME%_rev_%SVN_VERSION%-%ISE_PLATFORM%.7z (
 		if EXIST %~dp0notify.bat %~dp0notify.bat "Failure : no %STUDIO_NAME%_rev_%SVN_VERSION%-%ISE_PLATFORM%.7z release!"
 	)
+) else (
+	remtrace DO NOT Build Standard Zip
 )
 
 if "%NO_ENTERPRISE_BUILD%" NEQ "True" (
@@ -183,9 +187,7 @@ if "%NO_ENTERPRISE_BUILD%" NEQ "True" (
 remtrace Uploading ENT packages online
 	cdd %INSTALL_DIR\setups\enterprise
 	call share_delivery %STUDIO_NAME%_ent_%SVN_VERSION%-%ISE_PLATFORM%.7z enterprise
-	if "%NO_INSTALL%" NEQ "True" (
-		call share_delivery %STUDIO_NAME%_ent_%SVN_VERSION%-%ISE_PLATFORM%.msi enterprise
-	)
+	if "%NO_INSTALL%" NEQ "True" call share_delivery %STUDIO_NAME%_ent_%SVN_VERSION%-%ISE_PLATFORM%.msi enterprise
 )
 
 if "%NO_AXAR_ENTERPRISE_BUILD%" NEQ "True" (

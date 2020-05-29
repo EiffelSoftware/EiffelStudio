@@ -1,6 +1,99 @@
 <Wix xmlns="http://schemas.microsoft.com/wix/2006/wi">
   <Fragment>
-  	<ComponentGroup Id="Core.library.gobo" />
+    <?ifndef IsWin64?>
+    <?ifdef x64?>
+    <?define IsWin64 = "yes"?>
+    <?else ?>
+    <?define IsWin64 = "no"?>
+    <?endif ?>
+    <?endif ?>
+    <?ifdef EiffelStudio?>
+    <DirectoryRef Id="Dir.Core.library.gobo">
+      <Component Id="Comp.Core.library.gobo.gobo" Guid="FF5E1EE5-AB16-451D-832B-1E9DE5F5FF5D" Win64="$(var.IsWin64)" KeyPath="yes">
+        <File Id="Core.library.gobo.gobo_sample.ecf_sample" Name="gobo-sample.ecf-sample" DiskId="1" Source="C:\es-deliv\20.05\win64.VC110_VC140\Eiffel_20.05\EiffelStudio\library\gobo\gobo-sample.ecf-sample" />
+        <File Id="Core.library.gobo.gobo_all.ecf" Name="gobo_all.ecf" DiskId="1" Source="C:\es-deliv\20.05\win64.VC110_VC140\Eiffel_20.05\EiffelStudio\library\gobo\gobo_all.ecf" />
+        <File Id="Core.library.gobo.gobo_argument.ecf" Name="gobo_argument.ecf" DiskId="1" Source="C:\es-deliv\20.05\win64.VC110_VC140\Eiffel_20.05\EiffelStudio\library\gobo\gobo_argument.ecf" />
+        <File Id="Core.library.gobo.gobo_gelex_safe.ecf" Name="gobo_gelex-safe.ecf" DiskId="1" Source="C:\es-deliv\20.05\win64.VC110_VC140\Eiffel_20.05\EiffelStudio\library\gobo\gobo_gelex-safe.ecf" />
+        <File Id="Core.library.gobo.gobo_gelex.ecf" Name="gobo_gelex.ecf" DiskId="1" Source="C:\es-deliv\20.05\win64.VC110_VC140\Eiffel_20.05\EiffelStudio\library\gobo\gobo_gelex.ecf" />
+        <File Id="Core.library.gobo.gobo_geyacc_safe.ecf" Name="gobo_geyacc-safe.ecf" DiskId="1" Source="C:\es-deliv\20.05\win64.VC110_VC140\Eiffel_20.05\EiffelStudio\library\gobo\gobo_geyacc-safe.ecf" />
+        <File Id="Core.library.gobo.gobo_geyacc.ecf" Name="gobo_geyacc.ecf" DiskId="1" Source="C:\es-deliv\20.05\win64.VC110_VC140\Eiffel_20.05\EiffelStudio\library\gobo\gobo_geyacc.ecf" />
+        <File Id="Core.library.gobo.gobo_kernel_safe.ecf" Name="gobo_kernel-safe.ecf" DiskId="1" Source="C:\es-deliv\20.05\win64.VC110_VC140\Eiffel_20.05\EiffelStudio\library\gobo\gobo_kernel-safe.ecf" />
+        <File Id="Core.library.gobo.gobo_kernel.ecf" Name="gobo_kernel.ecf" DiskId="1" Source="C:\es-deliv\20.05\win64.VC110_VC140\Eiffel_20.05\EiffelStudio\library\gobo\gobo_kernel.ecf" />
+        <File Id="Core.library.gobo.gobo_lexical_safe.ecf" Name="gobo_lexical-safe.ecf" DiskId="1" Source="C:\es-deliv\20.05\win64.VC110_VC140\Eiffel_20.05\EiffelStudio\library\gobo\gobo_lexical-safe.ecf" />
+        <File Id="Core.library.gobo.gobo_lexical.ecf" Name="gobo_lexical.ecf" DiskId="1" Source="C:\es-deliv\20.05\win64.VC110_VC140\Eiffel_20.05\EiffelStudio\library\gobo\gobo_lexical.ecf" />
+        <File Id="Core.library.gobo.gobo_lexical_skl.ecf" Name="gobo_lexical_skl.ecf" DiskId="1" Source="C:\es-deliv\20.05\win64.VC110_VC140\Eiffel_20.05\EiffelStudio\library\gobo\gobo_lexical_skl.ecf" />
+        <File Id="Core.library.gobo.gobo_math_safe.ecf" Name="gobo_math-safe.ecf" DiskId="1" Source="C:\es-deliv\20.05\win64.VC110_VC140\Eiffel_20.05\EiffelStudio\library\gobo\gobo_math-safe.ecf" />
+        <File Id="Core.library.gobo.gobo_math.ecf" Name="gobo_math.ecf" DiskId="1" Source="C:\es-deliv\20.05\win64.VC110_VC140\Eiffel_20.05\EiffelStudio\library\gobo\gobo_math.ecf" />
+        <File Id="Core.library.gobo.gobo_parse_safe.ecf" Name="gobo_parse-safe.ecf" DiskId="1" Source="C:\es-deliv\20.05\win64.VC110_VC140\Eiffel_20.05\EiffelStudio\library\gobo\gobo_parse-safe.ecf" />
+        <File Id="Core.library.gobo.gobo_parse.ecf" Name="gobo_parse.ecf" DiskId="1" Source="C:\es-deliv\20.05\win64.VC110_VC140\Eiffel_20.05\EiffelStudio\library\gobo\gobo_parse.ecf" />
+        <File Id="Core.library.gobo.gobo_parse_skl.ecf" Name="gobo_parse_skl.ecf" DiskId="1" Source="C:\es-deliv\20.05\win64.VC110_VC140\Eiffel_20.05\EiffelStudio\library\gobo\gobo_parse_skl.ecf" />
+        <File Id="Core.library.gobo.gobo_pattern_safe.ecf" Name="gobo_pattern-safe.ecf" DiskId="1" Source="C:\es-deliv\20.05\win64.VC110_VC140\Eiffel_20.05\EiffelStudio\library\gobo\gobo_pattern-safe.ecf" />
+        <File Id="Core.library.gobo.gobo_pattern.ecf" Name="gobo_pattern.ecf" DiskId="1" Source="C:\es-deliv\20.05\win64.VC110_VC140\Eiffel_20.05\EiffelStudio\library\gobo\gobo_pattern.ecf" />
+        <File Id="Core.library.gobo.gobo_regexp_safe.ecf" Name="gobo_regexp-safe.ecf" DiskId="1" Source="C:\es-deliv\20.05\win64.VC110_VC140\Eiffel_20.05\EiffelStudio\library\gobo\gobo_regexp-safe.ecf" />
+        <File Id="Core.library.gobo.gobo_regexp.ecf" Name="gobo_regexp.ecf" DiskId="1" Source="C:\es-deliv\20.05\win64.VC110_VC140\Eiffel_20.05\EiffelStudio\library\gobo\gobo_regexp.ecf" />
+        <File Id="Core.library.gobo.gobo_string_safe.ecf" Name="gobo_string-safe.ecf" DiskId="1" Source="C:\es-deliv\20.05\win64.VC110_VC140\Eiffel_20.05\EiffelStudio\library\gobo\gobo_string-safe.ecf" />
+        <File Id="Core.library.gobo.gobo_string.ecf" Name="gobo_string.ecf" DiskId="1" Source="C:\es-deliv\20.05\win64.VC110_VC140\Eiffel_20.05\EiffelStudio\library\gobo\gobo_string.ecf" />
+        <File Id="Core.library.gobo.gobo_structure_safe.ecf" Name="gobo_structure-safe.ecf" DiskId="1" Source="C:\es-deliv\20.05\win64.VC110_VC140\Eiffel_20.05\EiffelStudio\library\gobo\gobo_structure-safe.ecf" />
+        <File Id="Core.library.gobo.gobo_structure.ecf" Name="gobo_structure.ecf" DiskId="1" Source="C:\es-deliv\20.05\win64.VC110_VC140\Eiffel_20.05\EiffelStudio\library\gobo\gobo_structure.ecf" />
+        <File Id="Core.library.gobo.gobo_test.ecf" Name="gobo_test.ecf" DiskId="1" Source="C:\es-deliv\20.05\win64.VC110_VC140\Eiffel_20.05\EiffelStudio\library\gobo\gobo_test.ecf" />
+        <File Id="Core.library.gobo.gobo_time_safe.ecf" Name="gobo_time-safe.ecf" DiskId="1" Source="C:\es-deliv\20.05\win64.VC110_VC140\Eiffel_20.05\EiffelStudio\library\gobo\gobo_time-safe.ecf" />
+        <File Id="Core.library.gobo.gobo_time.ecf" Name="gobo_time.ecf" DiskId="1" Source="C:\es-deliv\20.05\win64.VC110_VC140\Eiffel_20.05\EiffelStudio\library\gobo\gobo_time.ecf" />
+        <File Id="Core.library.gobo.gobo_tools.ecf" Name="gobo_tools.ecf" DiskId="1" Source="C:\es-deliv\20.05\win64.VC110_VC140\Eiffel_20.05\EiffelStudio\library\gobo\gobo_tools.ecf" />
+        <File Id="Core.library.gobo.gobo_utility_safe.ecf" Name="gobo_utility-safe.ecf" DiskId="1" Source="C:\es-deliv\20.05\win64.VC110_VC140\Eiffel_20.05\EiffelStudio\library\gobo\gobo_utility-safe.ecf" />
+        <File Id="Core.library.gobo.gobo_utility.ecf" Name="gobo_utility.ecf" DiskId="1" Source="C:\es-deliv\20.05\win64.VC110_VC140\Eiffel_20.05\EiffelStudio\library\gobo\gobo_utility.ecf" />
+        <File Id="Core.library.gobo.gobo_xml_safe.ecf" Name="gobo_xml-safe.ecf" DiskId="1" Source="C:\es-deliv\20.05\win64.VC110_VC140\Eiffel_20.05\EiffelStudio\library\gobo\gobo_xml-safe.ecf" />
+        <File Id="Core.library.gobo.gobo_xml.ecf" Name="gobo_xml.ecf" DiskId="1" Source="C:\es-deliv\20.05\win64.VC110_VC140\Eiffel_20.05\EiffelStudio\library\gobo\gobo_xml.ecf" />
+        <File Id="Core.library.gobo.gobo_xpath_safe.ecf" Name="gobo_xpath-safe.ecf" DiskId="1" Source="C:\es-deliv\20.05\win64.VC110_VC140\Eiffel_20.05\EiffelStudio\library\gobo\gobo_xpath-safe.ecf" />
+        <File Id="Core.library.gobo.gobo_xpath.ecf" Name="gobo_xpath.ecf" DiskId="1" Source="C:\es-deliv\20.05\win64.VC110_VC140\Eiffel_20.05\EiffelStudio\library\gobo\gobo_xpath.ecf" />
+        <File Id="Core.library.gobo.gobo_xslt_safe.ecf" Name="gobo_xslt-safe.ecf" DiskId="1" Source="C:\es-deliv\20.05\win64.VC110_VC140\Eiffel_20.05\EiffelStudio\library\gobo\gobo_xslt-safe.ecf" />
+        <File Id="Core.library.gobo.gobo_xslt.ecf" Name="gobo_xslt.ecf" DiskId="1" Source="C:\es-deliv\20.05\win64.VC110_VC140\Eiffel_20.05\EiffelStudio\library\gobo\gobo_xslt.ecf" />
+        <File Id="Core.library.gobo.package.iron" Name="package.iron" DiskId="1" Source="C:\es-deliv\20.05\win64.VC110_VC140\Eiffel_20.05\EiffelStudio\library\gobo\package.iron" />
+        <File Id="Core.library.gobo.README.txt" Name="README.txt" DiskId="1" Source="C:\es-deliv\20.05\win64.VC110_VC140\Eiffel_20.05\EiffelStudio\library\gobo\README.txt" />
+      </Component>
+      <Directory Id="Dir.Core.library.gobo.spec" Name="spec" FileSource="C:\es-deliv\20.05\win64.VC110_VC140\Eiffel_20.05\EiffelStudio\library\gobo\spec">
+        <Component Id="Comp.Core.library.gobo.spec" Guid="195F18B4-E0C9-440F-8CBD-F1840F8B5B54" Win64="$(var.IsWin64)" KeyPath="yes">
+          <CreateFolder />
+          <RemoveFolder Id="Dir.Core.library.gobo.spec" On="uninstall" />
+        </Component>
+        <Directory Id="Dir.Core.library.gobo.spec.win64" Name="win64" FileSource="C:\es-deliv\20.05\win64.VC110_VC140\Eiffel_20.05\EiffelStudio\library\gobo\spec\win64">
+          <Component Id="Comp.Core.library.gobo.spec.win64" Guid="2C25C2CD-CE7E-4625-A978-09FF79BBDB72" Win64="$(var.IsWin64)" KeyPath="yes">
+            <CreateFolder />
+            <RemoveFolder Id="Dir.Core.library.gobo.spec.win64" On="uninstall" />
+          </Component>
+          <Directory Id="Dir.Core.library.gobo.spec.win64.bin" Name="bin" FileSource="C:\es-deliv\20.05\win64.VC110_VC140\Eiffel_20.05\EiffelStudio\library\gobo\spec\win64\bin">
+            <Component Id="Comp.Core.library.gobo.spec.win64.bin" Guid="3FE1B09A-ED79-4E35-AD1D-A2105BA30A75" Win64="$(var.IsWin64)" KeyPath="yes">
+              <File Id="Core.library.gobo.spec.win64.bin.geant.exe" Name="geant.exe" DiskId="1" />
+              <File Id="Core.library.gobo.spec.win64.bin.gec.exe" Name="gec.exe" DiskId="1" />
+              <File Id="Core.library.gobo.spec.win64.bin.gelex.exe" Name="gelex.exe" DiskId="1" />
+              <File Id="Core.library.gobo.spec.win64.bin.gelint.exe" Name="gelint.exe" DiskId="1" />
+              <File Id="Core.library.gobo.spec.win64.bin.gepp.exe" Name="gepp.exe" DiskId="1" />
+              <File Id="Core.library.gobo.spec.win64.bin.getest.exe" Name="getest.exe" DiskId="1" />
+              <File Id="Core.library.gobo.spec.win64.bin.gexslt.exe" Name="gexslt.exe" DiskId="1" />
+              <File Id="Core.library.gobo.spec.win64.bin.geyacc.exe" Name="geyacc.exe" DiskId="1" />
+            </Component>
+          </Directory>
+        </Directory>
+      </Directory>
+      <Directory Id="Dir.Core.library.gobo.src" Name="src" FileSource="C:\es-deliv\20.05\win64.VC110_VC140\Eiffel_20.05\EiffelStudio\library\gobo\src">
+        <Component Id="Comp.Core.library.gobo.src" Guid="9C28FB78-7B93-42CA-A7E1-41B565E8AA2E" Win64="$(var.IsWin64)" KeyPath="yes">
+          <File Id="Core.library.gobo.src.geant.ecf" Name="geant.ecf" DiskId="1" />
+          <File Id="Core.library.gobo.src.gec.ecf" Name="gec.ecf" DiskId="1" />
+          <File Id="Core.library.gobo.src.gelex.ecf" Name="gelex.ecf" DiskId="1" />
+          <File Id="Core.library.gobo.src.gelint.ecf" Name="gelint.ecf" DiskId="1" />
+          <File Id="Core.library.gobo.src.gepp.ecf" Name="gepp.ecf" DiskId="1" />
+          <File Id="Core.library.gobo.src.getest.ecf" Name="getest.ecf" DiskId="1" />
+          <File Id="Core.library.gobo.src.gexslt.ecf" Name="gexslt.ecf" DiskId="1" />
+          <File Id="Core.library.gobo.src.geyacc.ecf" Name="geyacc.ecf" DiskId="1" />
+        </Component>
+      </Directory>
+    </DirectoryRef>
+    <ComponentGroup Id="Core.library.gobo">
+      <ComponentRef Id="Comp.Core.library.gobo.gobo" />
+      <ComponentRef Id="Comp.Core.library.gobo.spec" />
+      <ComponentRef Id="Comp.Core.library.gobo.spec.win64" />
+      <ComponentRef Id="Comp.Core.library.gobo.spec.win64.bin" />
+      <ComponentRef Id="Comp.Core.library.gobo.src" />
+    </ComponentGroup>
+    <?endif ?>
   </Fragment>
 </Wix>
-

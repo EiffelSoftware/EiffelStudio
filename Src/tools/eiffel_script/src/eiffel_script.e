@@ -432,6 +432,9 @@ feature -- Query
 				tgt := sys.application_target
 				if tgt = Void then
 					tgt := sys.library_target
+					if tgt /= Void and then not is_application_target (tgt) then
+						tgt := Void
+					end
 					if
 						tgt = Void and then
 						attached sys.compilable_targets as l_comp_targets
@@ -440,17 +443,29 @@ feature -- Query
 						across
 							l_comp_targets as ic
 						loop
-							Result.extend (ic.item)
+							if is_application_target (ic.item) then
+								Result.extend (ic.item)
+							end
 						end
 					end
 				end
 				if tgt /= Void then
+					if Result = Void then
+						create {ARRAYED_LIST [CONF_TARGET]} Result.make (1)
+					end
 					Result.extend (tgt)
 				end
 			end
 			if Result /= Void and then Result.is_empty then
 				Result := Void
 			end
+		end
+
+	is_application_target (tgt: CONF_TARGET): BOOLEAN
+		do
+			Result := not tgt.is_abstract and then
+						attached tgt.root as l_root and then
+						not l_root.is_all_root
 		end
 
 	ecf_target (sys: CONF_SYSTEM; a_target_name: detachable READABLE_STRING_GENERAL): detachable CONF_TARGET

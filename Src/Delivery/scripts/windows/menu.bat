@@ -18,12 +18,14 @@ goto end
 echo EiffelStudio delivery:
 
 @echo 1: make_delivery
-@echo 2: make_exes
-@echo 3: make_installations
-@echo 4: starting environment
-@echo 5: bootstrap environment
-@echo 6: display logs
-@echo 7: Standard only
+@echo 2: make_delivery_quick -no_install
+@echo 3: make_exes
+@echo 4: make_installations
+@echo 5: make_installations no_install
+@echo 6: starting environment
+@echo 7: bootstrap environment
+@echo 8: display logs
+@echo 9: Standard only
 @echo -------------------
 @echo i: display info
 @echo x: extra menu
@@ -31,18 +33,20 @@ echo EiffelStudio delivery:
 @echo -------------------
 @echo q: quit
 
-CHOICE /C 1234567ixwq /M " > selection:"
+CHOICE /C 123456789ixwq /M " > selection:"
 if .%ERRORLEVEL%. == .1. GOTO make_delivery
-if .%ERRORLEVEL%. == .2. GOTO make_exes
-if .%ERRORLEVEL%. == .3. GOTO make_installations
-if .%ERRORLEVEL%. == .4. GOTO starting_env
-if .%ERRORLEVEL%. == .5. GOTO bootstrap_env
-if .%ERRORLEVEL%. == .6. GOTO display_logs
-if .%ERRORLEVEL%. == .7. GOTO menu_std
-if .%ERRORLEVEL%. == .8. GOTO display_info
-if .%ERRORLEVEL%. == .9. GOTO menu_extra
-if .%ERRORLEVEL%. == .10. GOTO clean_delivery
-if .%ERRORLEVEL%. == .11. goto end
+if .%ERRORLEVEL%. == .2. GOTO make_delivery_quick
+if .%ERRORLEVEL%. == .3. GOTO make_exes
+if .%ERRORLEVEL%. == .4. GOTO make_installations
+if .%ERRORLEVEL%. == .5. GOTO make_installations_no_install
+if .%ERRORLEVEL%. == .6. GOTO starting_env
+if .%ERRORLEVEL%. == .7. GOTO bootstrap_env
+if .%ERRORLEVEL%. == .8. GOTO display_logs
+if .%ERRORLEVEL%. == .9. GOTO menu_std
+if .%ERRORLEVEL%. == .10. GOTO display_info
+if .%ERRORLEVEL%. == .11. GOTO menu_extra
+if .%ERRORLEVEL%. == .12. GOTO clean_delivery
+if .%ERRORLEVEL%. == .13. goto end
 goto end
 
 :menu_std
@@ -82,6 +86,10 @@ goto end
 %TCCLECMD% /C make_delivery.btm
 goto end
 
+:make_delivery_quick
+%TCCLECMD% /C make_delivery.btm no_install
+goto end
+
 :call_check_svn_repositories
 %TCCLECMD% /C check_svn_repositories.btm
 goto end
@@ -114,6 +122,11 @@ goto end
 :make_installations
 set NO_ENTERPRISE_BUILD=
 %TCCLECMD% /C make_installations.btm
+goto end
+
+:make_installations_no_install
+set NO_ENTERPRISE_BUILD=
+%TCCLECMD% /C make_installations.btm no_install
 goto end
 
 :starting_env

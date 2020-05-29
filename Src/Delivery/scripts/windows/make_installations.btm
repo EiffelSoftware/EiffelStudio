@@ -100,11 +100,6 @@ safe_md %INSTALL_DIR\setups\standard
 safe_md %INSTALL_DIR\setups\enterprise
 safe_md %INSTALL_DIR\setups\enterprise-axar
 
-fullrf %INSTALL_DIR%\releases\enterprise_version\LICENSE
-ren %INSTALL_DIR%\releases\enterprise_version\LICENSE %INSTALL_DIR%\releases\enterprise_version\LICENSE
-
-fullrf %INSTALL_DIR%\releases\enterprise_version-axar\LICENSE
-ren %INSTALL_DIR%\releases\enterprise_version\LICENSE %INSTALL_DIR%\releases\enterprise_version-axar\LICENSE
 
 if exist %INSTALL_DIR%\%STUDIO_NAME% (
     echo issue from previous building!

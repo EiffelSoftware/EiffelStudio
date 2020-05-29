@@ -40,14 +40,14 @@ echo INCLUDE_ENTERPRISE=$INCLUDE_ENTERPRISE
 
 # Initialization
 export PATH=$PATH:.
-if [ -n "$SVN_EIFFELSTUDIO_REPO" ]; then
+if [ ! -z "$SVN_EIFFELSTUDIO_REPO" ]; then
 	export DEFAULT_ORIGO_SVN_ROOT=$SVN_EIFFELSTUDIO_REPO
 fi
-if [ -n "$SVN_ISE_REPO" ]; then
-	if [ -n "$SVN_ISE_BRANCH" ]; then
-		export DEFAULT_ISE_SVN=$SVN_ISE_REPO$SVN_ISE_BRANCH
-	else
+if [ ! -r "$SVN_ISE_REPO" ]; then
+	if [ -z "$SVN_ISE_BRANCH" ]; then
 		export DEFAULT_ISE_SVN=$SVN_ISE_REPO/trunk
+	else
+		export DEFAULT_ISE_SVN=$SVN_ISE_REPO$SVN_ISE_BRANCH
 	fi
 	echo DEFAULT_ISE_SVN=$DEFAULT_ISE_SVN
 fi

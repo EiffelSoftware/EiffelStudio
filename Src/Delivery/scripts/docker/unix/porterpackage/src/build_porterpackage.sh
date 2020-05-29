@@ -1,5 +1,8 @@
 #!/bin/bash
 
+echo SVN_EIFFELSTUDIO_REPO=$SVN_EIFFELSTUDIO_REPO
+echo SVN_ISE_REPO=$SVN_ISE_REPO
+
 export DELIV_DIR=$1
 if [ ! -d "$DELIV_DIR" ]; then
 	echo Create $DELIV_DIR
@@ -47,21 +50,26 @@ echo INCLUDE_ENTERPRISE=$INCLUDE_ENTERPRISE
 
 # Initialization
 export PATH=$PATH:.
-if [ -n "$SVN_EIFFELSTUDIO_REPO" ]; then
-	export DEFAULT_ORIGO_SVN_ROOT=$SVN_EIFFELSTUDIO_REPO
+if [ -z "$SVN_EIFFELSTUDIO_REPO" ]; then
+	export SVN_EIFFELSTUDIO_REPO=https://svn.eiffel.com
 fi
-if [ -n "$SVN_ISE_REPO" ]; then
-	if [ -n "$SVN_ISE_BRANCH" ]; then
-		export DEFAULT_ISE_SVN=$SVN_ISE_REPO$SVN_ISE_BRANCH
-	else
-		export DEFAULT_ISE_SVN=$SVN_ISE_REPO/trunk
-	fi
-	echo DEFAULT_ISE_SVN=$DEFAULT_ISE_SVN
+export DEFAULT_ORIGO_SVN_ROOT=$SVN_EIFFELSTUDIO_REPO
+echo DEFAULT_ORIGO_SVN_ROOT=$DEFAULT_ORIGO_SVN_ROOT
+
+if [ -z "$SVN_ISE_REPO" ]; then
+	export SVN_ISE_REPO=svn://svn.ise/ise_svn
 fi
+if [ -z "$SVN_ISE_BRANCH" ]; then
+	export DEFAULT_ISE_SVN=$SVN_ISE_REPO/trunk
+else
+	export DEFAULT_ISE_SVN=$SVN_ISE_REPO$SVN_ISE_BRANCH
+fi
+echo DEFAULT_ISE_SVN=$DEFAULT_ISE_SVN
 
 
 echo Build PorterPackage in $DELIV_DIR
-echo Use EiffelStudio svn repository: $DEFAULT_ORIGO_SVN_ROOT$SVN_EIFFELSTUDIO_BRANCH
+echo Use EiffelStudio svn url: $DEFAULT_ORIGO_SVN_ROOT$SVN_EIFFELSTUDIO_BRANCH
+echo Use ISE svn url: $DEFAULT_ISE_SVN
 
 # Main
 

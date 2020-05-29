@@ -23,7 +23,7 @@ if test -z "$SVN_EIFFELSTUDIO_REPO_REVISION"
 then
 	if ! test -z "$1" 
 	then
-		set SVN_EIFFELSTUDIO_REPO_REVISION=$1
+		export SVN_EIFFELSTUDIO_REPO_REVISION=$1
 	fi
 fi
 
@@ -58,7 +58,7 @@ share_deliv_folder()
 
 
 if [ "$SVN_EIFFELSTUDIO_REPO_REVISION" = "" ]; then
-	set SVN_EIFFELSTUDIO_REPO_REVISION=HEAD
+	export SVN_EIFFELSTUDIO_REPO_REVISION=HEAD
 fi
 
 echo "===================================="

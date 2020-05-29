@@ -32,7 +32,9 @@
 #define EIF_C_DECIMAL_TYPE		12
 
 #ifndef my_bool
+#ifdef bool
 #define my_bool bool /* needed with MySQL 8, as it uses directly "bool" and not anymore "my_bool" */
+#endif
 #endif
 
 /* Public functions */

@@ -13,6 +13,7 @@ inherit
 			has_call,
 			is_feature_special,
 			is_instance_free,
+			is_single,
 			is_target_type_fixed,
 			optimized_byte_node,
 			parameters,
@@ -21,6 +22,15 @@ inherit
 		end
 
 feature -- Status report
+
+	is_single: BOOLEAN
+			-- <Precursor>
+		do
+				-- If a target class object is needed, no arguments are allowed.
+				-- Smarter optimization may check that passed arguments do not include any arguments of enclosing feature,
+				-- otherwise they can be moved or collected by GC.
+			Result := (is_class_target_needed ⇒ not attached parameters) ∧ Precursor
+		end
 
 	is_instance_free: BOOLEAN
 			-- <Precursor>
@@ -309,7 +319,7 @@ feature -- Inlining
 note
 	date: "$Date$"
 	revision: "$Revision$"
-	copyright:	"Copyright (c) 1984-2019, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2020, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

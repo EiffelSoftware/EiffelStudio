@@ -1387,6 +1387,7 @@ test	dead-code-removal-new_instance		final130 tcf pass finalizing code_removal
 test	dead-code-removal-sed_facilities	final131 tcf pass finalizing code_removal storable
 test	dead-code-removal-storable		final132 tcf pass finalizing code_removal storable
 test	finalized-agent-call			final133 tcf fail finalizing 
+test	finalize-single-non-object-call		final134 tcf fail finalizing instance_free call execution
 
 -- Runtime
 test	gc-tracking-001					runtime001	tcf pass runtime

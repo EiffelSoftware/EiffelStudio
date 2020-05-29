@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "Command to open cloud account tool panel."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -166,7 +166,6 @@ feature {NONE} -- Implementation
 			-- Drop down menu for `new_sd_toolbar_item'.
 		local
 			l_item: EV_MENU_ITEM
-			mi: EV_MENU_ITEM
 			acc: detachable ES_ACCOUNT
 			t: EV_TIMEOUT
 		do

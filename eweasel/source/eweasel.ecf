@@ -31,7 +31,7 @@
 		<pre_compile_action command="eweasel_pre.bat">
 			<description>Update revision number reported by the eweasel command.</description>
 			<condition>
-				<platform value="windows"/>
+				<custom name="ISE_PLATFORM" value="win*" match="wildcard"/>
 			</condition>
 		</pre_compile_action>
 		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf" readonly="false"/>

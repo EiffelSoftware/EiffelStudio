@@ -39,6 +39,12 @@ feature {NONE} -- Creation
 				collection_on
 				f (a)
 				f (t)
+				collection_off
+				create a.make_with (i.item + 3)
+				create t.make_with (i.item + 4)
+				collection_on
+				h (a).do_nothing
+				h (t).do_nothing
 			end
 		end
 
@@ -72,6 +78,18 @@ feature
 				test (a.i2, v * 2)
 			end
 			collection_on
+		ensure
+			class
+		end
+
+	h (a: A): INTEGER_32
+		do
+			Result := {TEST}.r (a)
+		end
+
+	r (a: A): INTEGER_32
+		do
+			g (a)
 		ensure
 			class
 		end

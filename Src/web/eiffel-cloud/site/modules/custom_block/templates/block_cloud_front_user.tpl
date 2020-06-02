@@ -1,3 +1,8 @@
 <h1>Welcome <em>{htmlentities}{$user.name/}{/htmlentities}</em></h1>
-<p><a href="{$escloud_licenses_url/}">Your licenses...</a></p>
-<p><a href="{$site_url/}account">Your account...</a></p>
+<div class="box">
+<a href="{$escloud_licenses_url/}">Your licenses...</a>
+</div>
+<br/>
+<div class="box">
+<a href="{$site_url/}account">Your account...</a>
+</div>

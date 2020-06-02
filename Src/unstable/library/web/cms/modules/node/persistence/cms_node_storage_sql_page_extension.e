@@ -48,8 +48,10 @@ feature -- Persistence
 			l_update: BOOLEAN
 			l_has_modif: BOOLEAN
 		do
-			if attached api as l_api then
-				l_api.logger.put_information (generator + ".store", Void)
+			debug ("cms")
+				if attached api as l_api then
+					l_api.logger.put_information (generator + ".store", Void)
+				end
 			end
 
 			error_handler.reset

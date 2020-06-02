@@ -49,6 +49,9 @@ feature -- Status report
 		deferred
 		end
 
+	is_reuseable: BOOLEAN assign set_is_reuseable
+			-- Is current storage marked as reusable?
+
 feature -- Basic operation
 
 	close
@@ -69,7 +72,12 @@ feature -- Element change
 			api := a_api
 		end
 
+	set_is_reuseable (b: BOOLEAN)
+		do
+			is_reuseable := b
+		end
+
 note
-	copyright: "2011-2015, Jocelyn Fiat, Javier Velilla, Eiffel Software and others"
+	copyright: "2011-2020, Jocelyn Fiat, Javier Velilla, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 end

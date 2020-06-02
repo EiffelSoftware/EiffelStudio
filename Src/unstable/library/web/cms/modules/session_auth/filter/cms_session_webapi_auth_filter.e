@@ -39,7 +39,9 @@ feature -- Basic operations
 						set_current_user (l_user)
 					end
 				else
-					api.logger.put_error (generator + ".execute login_valid failed for: " + l_roc_auth_session_token.url_encoded_value , Void)
+					debug ("cms")
+						api.logger.put_error (generator + ".execute login_valid failed for: " + l_roc_auth_session_token.url_encoded_value , Void)
+					end
 				end
 			end
 			execute_next (req, res)

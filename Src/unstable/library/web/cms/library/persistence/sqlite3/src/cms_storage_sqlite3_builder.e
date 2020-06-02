@@ -28,15 +28,15 @@ feature -- Factory
 		local
 			s: detachable READABLE_STRING_32
 			p: PATH
-			db: detachable SQLITE_DATABASE
+			conn: detachable SQLITE_DATABASE
 			l_source: SQLITE_FILE_SOURCE
 			i,j: INTEGER
 		do
 			if
-				attached (create {APPLICATION_JSON_CONFIGURATION_HELPER}).new_database_configuration (a_setup.environment.application_config_path) as l_database_config
+				attached (create {APPLICATION_JSON_CONFIGURATION_HELPER}).new_database_configuration (a_setup.environment.application_config_path) as cfg
 			then
-				if l_database_config.driver.is_case_insensitive_equal ("sqlite3") then
-					s := l_database_config.database_string
+				if cfg.driver.is_case_insensitive_equal ("sqlite3") then
+					s := cfg.database_string
 					i := s.substring_index ("Database=", 1)
 					if i > 0 then
 						i := s.index_of ('=', i) + 1
@@ -50,22 +50,36 @@ feature -- Factory
 					end
 
 					if attached reuseable_connection.item as d then
-						if p.same_as (d.path) then
-							db := d.database
-						end
-					end
-					if db = Void or else db.is_closed then
-						create l_source.make (p.name)
-						create db.make (l_source)
-						if l_source.exists then
-							db.open_read_write
+						conn := d.conn
+						if
+							cfg.is_connection_reusable and
+							p.same_as (d.path)
+						then
+								-- Keep `conn`
 						else
-							db.open_create_read_write
+							conn.close
+							conn := Void
+							reuseable_connection.replace (Void)
 						end
 					end
-					if not db.is_closed then
-						db.set_busy_timeout (1_000) -- FIXME
-						create Result.make (db)
+					if conn = Void or else conn.is_closed then
+						create l_source.make (p.name)
+						create conn.make (l_source)
+						if l_source.exists then
+							conn.open_read_write
+						else
+							conn.open_create_read_write
+						end
+					end
+					if not conn.is_closed then
+						conn.set_busy_timeout (1_000) -- FIXME
+
+						create Result.make (conn)
+						if cfg.is_connection_reusable then
+							Result.set_is_reuseable (True)
+							reuseable_connection.replace ([p, conn])
+						end
+
 --						set_map_zero_null_value (False)	--| This way we map 0 to 0, instead of Null as default.
 						if Result.is_available then
 							if not Result.is_initialized then
@@ -73,15 +87,16 @@ feature -- Factory
 							end
 						end
 					else
-						a_error_handler.add_custom_error (0, "Could not connect to the ODBC storage", Void)
+						a_error_handler.add_custom_error (0, "Could not connect to the SQLITE3 storage", Void)
 					end
 				else
 					-- Wrong mapping between storage name and storage builder!
+					a_error_handler.add_custom_error (0, "Wrong mapping between storage and builder!", Void)
 				end
 			end
 		end
 
-	reuseable_connection: CELL [detachable TUPLE [path: PATH; database: SQLITE_DATABASE]]
+	reuseable_connection: CELL [detachable TUPLE [path: PATH; conn: SQLITE_DATABASE]]
 		once
 			create Result.put (Void)
 		end

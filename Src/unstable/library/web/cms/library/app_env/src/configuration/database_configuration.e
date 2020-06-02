@@ -17,10 +17,17 @@ feature {NONE} -- Initialization
 		do
 			driver := a_driver
 			database_string := a_connection
+			is_connection_reusable := True
 		ensure
 			driver_set: driver = a_driver
 			server_set: database_string = a_connection
 		end
+
+feature -- Status report
+
+	is_connection_reusable: BOOLEAN
+			-- Is connection reusable ?
+			-- Default: True
 
 feature -- Access
 
@@ -90,8 +97,15 @@ feature -- Access
 			Result := item ("Pwd")
 		end
 
+feature -- Element change
+
+	set_is_connection_reusable (b: BOOLEAN)
+		do
+			is_connection_reusable := b
+		end
+
 
 note
-	copyright: "2011-2015, Javier Velilla, Jocelyn Fiat, Eiffel Software and others"
+	copyright: "2011-2020, Javier Velilla, Jocelyn Fiat, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 end

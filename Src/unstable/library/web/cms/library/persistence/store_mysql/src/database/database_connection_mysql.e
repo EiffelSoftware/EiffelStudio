@@ -107,7 +107,7 @@ feature -- Initialization
 			keep_connection := is_keep_connection
 		end
 
-feature -- Databse Connection
+feature -- Database Connection
 
 	db_application: DATABASE_APPL [MYSQL]
 			-- Database application.

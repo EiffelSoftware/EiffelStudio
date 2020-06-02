@@ -559,11 +559,9 @@ feature -- Access: storage
 		deferred
 		end
 
-	storage_configuration_driver: detachable READABLE_STRING_32
+	storage_configuration: detachable DATABASE_CONFIGURATION
 		do
-			if attached (create {APPLICATION_JSON_CONFIGURATION_HELPER}).new_database_configuration (environment.application_config_path) as l_database_config then
-				Result := l_database_config.driver
-			end
+			Result := (create {APPLICATION_JSON_CONFIGURATION_HELPER}).new_database_configuration (environment.application_config_path)
 		end
 
 	storage (a_error_handler: ERROR_HANDLER): detachable CMS_STORAGE
@@ -579,10 +577,10 @@ feature -- Access: storage
 					to_implement ("Refactor database setup")
 				end
 				if
-					attached storage_configuration_driver as l_db_driver and then
-					attached storage_drivers.item (l_db_driver) as l_builder
+					attached storage_configuration as l_db_cfg and then
+					attached storage_drivers.item (l_db_cfg.driver) as l_builder
 				then
-					Result := l_builder.storage (Current, a_error_handler)
+					Result := l_builder.storage (l_db_cfg, Current, a_error_handler)
 					if Result = Void and not a_error_handler.has_error then
 						a_error_handler.add_custom_error (0, "Database storage not found", l_message)
 					end

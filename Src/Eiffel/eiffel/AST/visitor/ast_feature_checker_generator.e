@@ -3761,10 +3761,10 @@ feature {NONE} -- Visitor
 					if l_feat_type.is_initialization_required then
 							-- Verify that result is properly set in internal routine if required.
 						if
-							not l_as.is_external and then
-							not l_as.is_attribute and then
 							not context.local_initialization.is_result_set and then
-							not f.is_deferred and then
+							not l_as.is_deferred and then
+							not l_as.is_external and then
+							not (l_as.is_attribute and then l_as.routine_body.is_empty) and then
 							is_void_safe_initialization
 						then
 								-- Result is not properly initialized.

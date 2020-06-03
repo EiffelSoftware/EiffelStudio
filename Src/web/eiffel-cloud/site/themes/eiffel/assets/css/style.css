@@ -1,0 +1,311 @@
+.box, #main .es-message, #main div.es-plans ul li.es-plan-box, div.login-box {
+  -webkit-border-radius: 5px;
+  -moz-border-radius: 5px;
+  -ms-border-radius: 5px;
+  border-radius: 5px;
+  padding: 20px;
+  border: solid 3px #ccc;
+  background-color: #eee; }
+
+.box, #main .es-message, #main div.es-plans ul li.es-plan-box, div.login-box {
+  -webkit-border-radius: 5px;
+  -moz-border-radius: 5px;
+  -ms-border-radius: 5px;
+  border-radius: 5px;
+  padding: 20px;
+  border: solid 3px #ccc;
+  background-color: #eee; }
+
+#main .es-message {
+  font-size: xx-large;
+  border: solid 1px #ccc;
+  background-color: #ddd;
+  width: 60%;
+  padding: 20px;
+  margin-left: auto;
+  margin-right: auto;
+  font-family: roboto; }
+#main div.es-plans ul {
+  display: inline-flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: stretch; }
+  #main div.es-plans ul li.es-plan-box {
+    flex-grow: 1;
+    flex-basis: 100px;
+    align-self: auto;
+    margin: 2px;
+    list-style: none; }
+    #main div.es-plans ul li.es-plan-box > div.title {
+      font-weight: bold; }
+    #main div.es-plans ul li.es-plan-box div.description {
+      margin: 5px;
+      font-style: italic;
+      display: block; }
+#main div.es-installations > p {
+  font-weight: bold; }
+#main div.es-installations > p > a.note {
+  float: right;
+  font-weight: normal;
+  font-style: italic; }
+  #main div.es-installations > p > a.note:before {
+    content: "("; }
+  #main div.es-installations > p > a.note:after {
+    content: ")"; }
+#main div.es-installations li {
+  list-style: none;
+  padding: 3px 5px 15px 5px;
+  margin-bottom: 5px; }
+  #main div.es-installations li span {
+    float: right;
+    border: dotted 1px #bbb;
+    padding: 0 5px 0 5px;
+    margin-left: 10px;
+    background-color: #fff;
+    clear: both; }
+  #main div.es-installations li span.creation {
+    font-size: smaller; }
+    #main div.es-installations li span.creation:before {
+      content: "Installed: "; }
+  #main div.es-installations li span.access {
+    font-size: smaller; }
+    #main div.es-installations li span.access:before {
+      content: "Last-seen: "; }
+  #main div.es-installations li.session {
+    margin-top: 5px; }
+    #main div.es-installations li.session span.creation:before {
+      content: "Started: "; }
+    #main div.es-installations li.session.active {
+      border-left: solid 5px orange;
+      border-top: dotted 1px orange; }
+      #main div.es-installations li.session.active span {
+        background-color: #cfc; }
+    #main div.es-installations li.session.paused {
+      border-left: solid 5px #009;
+      border-top: dotted 1px #009; }
+      #main div.es-installations li.session.paused span {
+        background-color: #ccf; }
+      #main div.es-installations li.session.paused span.access:before {
+        content: "Paused: "; }
+    #main div.es-installations li.session.closed {
+      border-left: solid 5px #999;
+      border-top: dotted 1px #999; }
+      #main div.es-installations li.session.closed span {
+        background-color: #bbb; }
+      #main div.es-installations li.session.closed span.access:before {
+        content: "Closed: "; }
+    #main div.es-installations li.session.expired {
+      border-left: solid 5px #999;
+      border-top: dotted 1px #999; }
+      #main div.es-installations li.session.expired span {
+        background-color: #ddd; }
+      #main div.es-installations li.session.expired span.access:before {
+        content: "Expired: "; }
+  #main div.es-installations li.never {
+    border-left: solid 5px #ccc;
+    border-top: dotted 1px #ccc; }
+#main div.es-subscription, #main div.es-licenses {
+  margin-bottom: 1rem; }
+  #main div.es-subscription > p, #main div.es-licenses > p {
+    font-weight: bold; }
+  #main div.es-subscription li, #main div.es-licenses li {
+    list-style: none; }
+  #main div.es-subscription li.status, #main div.es-licenses li.status {
+    padding-left: 5px; }
+    #main div.es-subscription li.status.success, #main div.es-licenses li.status.success {
+      color: #0a0;
+      border-left: solid 5px #090; }
+    #main div.es-subscription li.status.warning, #main div.es-licenses li.status.warning {
+      color: #990;
+      border-left: solid 5px #900; }
+
+div.es-new-license {
+  position: relative;
+  margin-top: 4rem; }
+  div.es-new-license form .button {
+    position: absolute;
+    top: -4rem;
+    right: 1rem;
+    margin: 1rem;
+    padding: .3rem;
+    color: #fff;
+    background-color: #00a6fd;
+    border-radius: 20px;
+    border: solid .3rem #00a6fd;
+    font-size: 110%;
+    font-weight: bold; }
+    div.es-new-license form .button:hover {
+      color: #00a6fd;
+      border: solid .3rem #00a6fd;
+      background-color: #00a6fd20; }
+
+div.es-license {
+  color: #5b5b5b;
+  padding: 1rem;
+  border: solid 1px #ccc;
+  background-color: #f5f5f5;
+  margin-bottom: 1rem; }
+  div.es-license div.header {
+    padding: 1rem;
+    background-color: #fff;
+    position: relative;
+    box-sizing: border-box; }
+    div.es-license div.header div.title {
+      font-weight: bold;
+      font-size: larger; }
+    div.es-license div.header div.license-id {
+      box-sizing: border-box;
+      position: absolute;
+      top: 0.5rem;
+      right: 0.5rem; }
+      div.es-license div.header div.license-id span.id {
+        display: block;
+        font-weight: bold; }
+  div.es-license div.details div.es-installations {
+    margin-top: 0.2rem; }
+  div.es-license div.details li {
+    margin-bottom: 0.2rem; }
+    div.es-license div.details li span.title {
+      font-weight: bold; }
+  div.es-license div.details li.status.warning {
+    color: red !important;
+    font-weight: bold; }
+  div.es-license div.details li.es-installation {
+    font-style: italic; }
+    div.es-license div.details li.es-installation button {
+      color: #c00;
+      padding: 2px 4px 2px 4px;
+      border-radius: 3px;
+      border: solid 1px #ccc;
+      font-size: larger;
+      font-weight: bold;
+      margin-left: .5rem;
+      margin-right: .5rem; }
+      div.es-license div.details li.es-installation button:hover {
+        color: white;
+        background-color: #f00; }
+
+div.cms-node div.info {
+  display: none; }
+
+html {
+  height: 100%; }
+
+body {
+  margin: 0;
+  padding: 0;
+  min-height: 100%;
+  position: relative;
+  background-color: #ececee;
+  font-family: 'Roboto', sans-serif;
+  font-family: Arial, Tahoma, sans-serif;
+  line-height: 1.6rem;
+  box-sizing: border-box; }
+
+a {
+  color: blue;
+  text-decoration: none; }
+
+div#message li.error,
+div.error {
+  color: red;
+  background-color: #fdd;
+  /* border: solid 1px #f00; */
+  padding: 10px; }
+
+div.login-box {
+  border: solid 3px #6a6;
+  background-color: #eee; }
+
+#header {
+  display: flex;
+  flex-direction: row wrap;
+  background-color: transparent;
+  background: url(../images/outer_header_bg.jpg) repeat-x 0 0;
+  color: black; }
+  #header #logo {
+    width: 169px;
+    height: auto;
+    padding: 10px 20px 0 20px; }
+  #header #menu-bar {
+    padding: 0;
+    margin: 0; }
+    #header #menu-bar #primary {
+      height: 100%; }
+    #header #menu-bar ul.horizontal {
+      display: flex;
+      flex-flow: row wrap;
+      align-items: center;
+      height: 100%;
+      padding: 0;
+      margin: 0;
+      line-height: 53px; }
+      #header #menu-bar ul.horizontal li {
+        height: 100%;
+        padding: 0 0.8rem;
+        display: inline-block;
+        border: none; }
+        #header #menu-bar ul.horizontal li a {
+          display: inline-flex;
+          color: black;
+          font-family: "Lato", sans-serif;
+          text-transform: uppercase;
+          font-weight: bold;
+          letter-spacing: .02em;
+          font-size: .9em; }
+        #header #menu-bar ul.horizontal li.active {
+          color: #fff;
+          background-color: #6c9edd; }
+        #header #menu-bar ul.horizontal li:hover {
+          height: 100%;
+          background-color: #446084; }
+          #header #menu-bar ul.horizontal li:hover a {
+            color: #fff; }
+
+div#content {
+  max-width: 800px;
+  padding: 10px 0 50px 0;
+  margin: 0 auto 0 auto; }
+
+div#footer, footer {
+  position: absolute;
+  bottom: 0;
+  width: 100%;
+  padding: 10px 0 10px 0;
+  margin-top: 10px;
+  color: #e1e1e1;
+  background-color: #777777; }
+  div#footer a, footer a {
+    color: #f1f1f1; }
+  div#footer div.footer_copyright, footer div.footer_copyright {
+    background-color: #5b5b5b;
+    text-align: center; }
+    div#footer div.footer_copyright a, footer div.footer_copyright a {
+      color: #c1c1c1; }
+    div#footer div.footer_copyright a:hover, footer div.footer_copyright a:hover {
+      color: #f1f1f1; }
+
+div.menu.tabs ul.horizontal {
+  list-style-type: none;
+  display: flex;
+  flex-flow: row wrap;
+  justify-content: flex-start; }
+  div.menu.tabs ul.horizontal li {
+    padding-left: 1em;
+    padding-right: 1em;
+    padding-top: 2px;
+    border-left: solid 1px #ccc;
+    border-top: solid 2px #eee;
+    border-bottom: solid 1px #ddd; }
+    div.menu.tabs ul.horizontal li:hover {
+      font-weight: bold; }
+    div.menu.tabs ul.horizontal li.active {
+      border-top: solid 2px #ccc;
+      border-bottom: solid 1px transparent; }
+  div.menu.tabs ul.horizontal li:last-child {
+    border-right: solid 1px #ccc; }
+
+h1, h2, h3 {
+  color: #1982D1; }
+
+/*# sourceMappingURL=style.css.map */

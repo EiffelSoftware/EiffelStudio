@@ -1,0 +1,15 @@
+name=eiffel
+engine=smarty
+author=jfiat
+version=0.1
+regions[page_top] = Top
+regions[header] = Header
+regions[search] = Search
+regions[content] = Content
+regions[highlighted] = Highlighted
+regions[help] = Help
+regions[footer] = Footer
+regions[sidebar_first] = first sidebar
+regions[sidebar_second] = second sidebar
+regions[page_bottom] = Bottom
+navigation=default_nav

@@ -1,0 +1,213 @@
+@import "common.scss";
+
+#main {
+	.es-message {
+		@extend .box;
+		font-size: xx-large;
+		border: solid 1px #ccc;
+		background-color: #ddd;
+		width: 60%;
+		padding: 20px;
+		margin-left: auto;
+		margin-right: auto;
+		font-family: roboto;
+	}
+	div.es-plans {
+		ul {
+			display: inline-flex;
+			flex-wrap: wrap;
+			justify-content: center;
+			align-items: stretch;
+			li.es-plan-box {
+				flex-grow: 1;
+				flex-basis: 100px;
+				align-self: auto;
+				margin: 2px;
+				@extend .box;
+				list-style: none;
+				&>div.title {
+					font-weight: bold;
+				}
+				div.description {
+					margin: 5px;
+					font-style: italic;
+					display: block;
+				}
+			}
+		}
+	}
+	div.es-installations {
+		&>p {
+			font-weight: bold;
+		}
+		&>p>a.note {
+			float: right;
+			font-weight: normal;
+			font-style: italic;
+			&:before { content: "("; }
+			&:after { content: ")"; }
+		}
+		li {
+			span {
+				float: right;
+				border: dotted 1px #bbb;
+				padding: 0 5px 0 5px;
+				margin-left: 10px;
+				background-color: #fff;
+				clear: both;
+			}
+			span.creation {
+				font-size: smaller;
+				&:before {
+					content: "Installed: ";
+				}
+			}
+			span.access {
+				font-size: smaller;
+				&:before {
+					content: "Last-seen: ";
+				}
+			}
+			&.session {
+				margin-top: 5px;
+				span.creation:before { content: "Started: "; }
+				&.active {
+					span { background-color: #cfc; }
+					border-left: solid 5px orange;
+					border-top: dotted 1px orange;
+				}
+				&.paused {
+					span { background-color: #ccf; }
+					border-left: solid 5px #009;
+					border-top: dotted 1px #009;
+					span.access:before { content: "Paused: "; }
+				}
+				&.closed {
+					span { background-color: #bbb; }
+					border-left: solid 5px #999;
+					border-top: dotted 1px #999;
+					span.access:before { content: "Closed: "; }
+				}
+				&.expired {
+					span { background-color: #ddd; }
+					border-left: solid 5px #999;
+					border-top: dotted 1px #999;
+					span.access:before { content: "Expired: "; }
+				}
+			}
+
+			list-style: none;
+			padding: 3px 5px 15px 5px;
+			margin-bottom: 5px;
+			&.never {
+				border-left: solid 5px #ccc;
+				border-top: dotted 1px #ccc;
+			}
+		}
+	}
+	div.es-subscription, div.es-licenses {
+		margin-bottom: 1rem;
+		&>p {
+			font-weight: bold;
+		}
+		li {
+			list-style: none;
+		}
+		li.status {
+			padding-left: 5px;
+			&.success {
+				color: #0a0;
+				border-left: solid 5px #090;
+			}
+			&.warning {
+				color: #990;
+				border-left: solid 5px #900;
+			}
+		}
+	}
+}
+
+div.es-new-license {
+	position: relative;
+	margin-top: 4rem;
+	form .button { 
+		position: absolute;
+		top: -4rem; right: 1rem;
+		margin: 1rem;
+		padding: .3rem;
+		color: #fff;
+		background-color: #00a6fd;
+		border-radius: 20px;
+		border: solid .3rem #00a6fd;
+		font-size: 110%;;
+		font-weight: bold;
+		&:hover {
+			color: #00a6fd;
+			border: solid .3rem #00a6fd;
+			background-color: #00a6fd20;
+		}
+	}
+}
+div.es-license {
+	color: #5b5b5b;
+	padding: 1rem;
+	border: solid 1px #ccc;
+	background-color: #f5f5f5;
+	margin-bottom: 1rem;
+	div.header {
+		padding: 1rem;
+		background-color: #fff;
+		position: relative;
+		box-sizing: border-box;
+		div.title {
+			font-weight: bold;
+			font-size: larger;
+		}
+		div.license-id {
+			box-sizing: border-box;
+			position: absolute;
+			top: 0.5rem;
+			right: 0.5rem;
+			span.id {
+				display: block;
+				font-weight: bold;
+			}
+		}
+	}
+	div.details {
+		div.es-installations {
+			margin-top: 0.2rem;
+		}
+		li {
+			margin-bottom: 0.2rem;
+			span.title {
+				font-weight: bold;
+			}
+		}
+		li.status.warning {
+			color: red !important;
+			font-weight: bold;
+		}
+		li.es-installation {
+			font-style: italic;
+			button { 
+				color: #c00;
+				padding: 2px 4px 2px 4px;
+				border-radius: 3px;
+				border: solid 1px #ccc;
+				&:hover {
+					color: white;
+					background-color: #f00;
+				}
+				font-size: larger;
+				font-weight: bold;
+				margin-left: .5rem; 
+				margin-right: .5rem; 
+			}
+		}
+	}
+}
+
+div.cms-node div.info {
+	display: none;
+}

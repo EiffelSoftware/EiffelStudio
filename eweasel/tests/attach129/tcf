@@ -1,0 +1,10 @@
+test_name 	 attribute-body-void-result
+test_description A self-initializing attribute with a non-empty body should set its result if its type is attached.
+
+copy_sub	Ace $TEST Ace
+copy_raw	test.e $CLUSTER test.e
+
+compile_melted
+compile_result	validity_error TEST VEVI:20
+
+test_end

@@ -611,14 +611,6 @@ feature {NONE} -- Implementation
 				if not arguments.ec_options.is_empty then
 					l_args.extend (arguments.ec_options)
 				end
-				debug
-					across
-						l_args as c
-					loop
-						print (c.item + " ")
-					end
-					print ("%N")
-				end
 
 				output_action (l_action, a_target)
 

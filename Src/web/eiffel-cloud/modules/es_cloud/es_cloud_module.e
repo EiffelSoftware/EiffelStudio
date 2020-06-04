@@ -506,20 +506,28 @@ feature -- Hooks: block
 	new_account_summary_block (a_user: CMS_USER; api: ES_CLOUD_API; a_response: CMS_RESPONSE): CMS_CONTENT_BLOCK
 		local
 			l_html: STRING
+			l_active_count: INTEGER
+			lic: ES_CLOUD_LICENSE
 		do
 			create l_html.make (1024)
-			l_html.append ("<div class=%"es_summary%">")
-			if
-				attached api.user_licenses (a_user) as lst and then
-				not lst.is_empty
-			then
-				across
-					lst as ic
-				loop
-					api.append_short_license_view_to_html (ic.item.license, a_user, Current, l_html)
-				end
-			else
-				l_html.append ("No license...")
+--			l_html.append ("<div class=%"es_summary%">")
+--			if
+--				attached api.user_licenses (a_user) as lst and then
+--				not lst.is_empty
+--			then
+--				across
+--					lst as ic
+--				loop
+--					lic := ic.item.license
+--					if not lic.is_expired then
+--						l_active_count := l_active_count + 1
+
+--					end
+--					api.append_short_license_view_to_html (lic, a_user, Current, l_html)
+--				end
+--			end
+			if l_active_count = 0 then
+				l_html.append ("<a href=%"" + a_response.location_url (licenses_location, Void) + "%">No active license...</a>")
 			end
 			l_html.append ("</div>")
 			create Result.make_raw ("cloud_account_summary", Void, l_html, a_response.api.formats.full_html)

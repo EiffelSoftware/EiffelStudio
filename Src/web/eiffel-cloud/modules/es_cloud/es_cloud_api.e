@@ -550,6 +550,129 @@ feature -- Change
 			es_cloud_storage.save_installation (ins)
 		end
 
+feature -- HTML factory
+
+	append_short_license_view_to_html (lic: ES_CLOUD_LICENSE; u: ES_CLOUD_USER; es_cloud_module: ES_CLOUD_MODULE; s: STRING_8)
+		local
+			l_plan: detachable ES_CLOUD_PLAN
+			api: CMS_API
+		do
+			api := cms_api
+			l_plan := lic.plan
+			s.append ("<div class=%"es-license%">")
+			s.append ("<div class=%"header%">")
+			s.append ("<div class=%"title%">")
+			s.append (html_encoded (l_plan.title_or_name))
+			s.append ("</div>")
+			s.append ("<div class=%"details%">")
+			if lic.is_active then
+				if attached lic.expiration_date as exp then
+					s.append (lic.days_remaining.out)
+					s.append (" days remaining")
+				else
+					s.append ("Active")
+				end
+			elseif lic.is_fallback then
+				s.append ("Fallback license")
+			else
+				s.append ("<span class=%"status warning%">Expired</span>")
+			end
+			s.append ("</div>")
+			s.append ("<div class=%"license-id%">License ID: <span class=%"id%">")
+			s.append ("<a href=%"" + api.location_url (es_cloud_module.license_location (lic), Void) + "%">")
+			s.append (html_encoded (lic.key))
+			s.append ("</a>")
+			s.append ("</span></div>")
+			s.append ("</div>") -- header
+			s.append ("<div class=%"details%"><ul>")
+
+			s.append ("</ul></div>")
+			s.append ("</div>")
+		end
+
+
+	append_license_to_html (lic: ES_CLOUD_LICENSE; a_user: detachable ES_CLOUD_USER; es_cloud_module: ES_CLOUD_MODULE; s: STRING_8)
+		local
+			l_plan: detachable ES_CLOUD_PLAN
+			inst: ES_CLOUD_INSTALLATION
+			api: CMS_API
+		do
+			api := cms_api
+			l_plan := lic.plan
+			s.append ("<div class=%"es-license%">")
+			s.append ("<div class=%"header%">")
+			s.append ("<div class=%"title%">")
+			s.append (html_encoded (l_plan.title_or_name))
+			s.append ("</div>")
+			s.append ("<div class=%"license-id%">License ID: <span class=%"id%">")
+			s.append ("<a href=%"" + api.location_url (es_cloud_module.license_location (lic), Void) + "%">")
+			s.append (html_encoded (lic.key))
+			s.append ("</a>")
+			s.append ("</span></div>")
+			s.append ("</div>") -- header
+			s.append ("<div class=%"details%"><ul>")
+			s.append ("<li class=%"creation%"><span class=%"title%">Started</span> ")
+			s.append (api.date_time_to_string (lic.creation_date))
+			s.append ("</li>")
+			if lic.is_active then
+				if attached lic.expiration_date as exp then
+					s.append ("<li class=%"expiration%"><span class=%"title%">Renewal date</span> ")
+					s.append (api.date_time_to_string (exp))
+					s.append (" (")
+					s.append (lic.days_remaining.out)
+					s.append (" days remaining)")
+					s.append ("</li>")
+				else
+					s.append ("<li class=%"status success%">ACTIVE</li>")
+				end
+			elseif lic.is_fallback then
+				s.append ("<li class=%"status notice%">Fallback license</li>")
+			else
+				s.append ("<li class=%"status warning%">EXPIRED</li>")
+			end
+			if attached lic.platform as l_platform then
+				s.append ("<li class=%"limit%"><span class=%"title%">Limited to platform:</span> " + html_encoded (l_platform) + "</li>")
+			end
+			if attached lic.version as l_product_version then
+				s.append ("<li class=%"limit%"><span class=%"title%">Limited to version:</span> " + html_encoded (l_product_version) + "</li>")
+			end
+			if attached license_installations (lic) as lst and then not lst.is_empty then
+				s.append ("<li class=%"limit%"><span class=%"title%">Installation(s):</span> " + lst.count.out)
+				if l_plan.installations_limit > 0 then
+					s.append (" / " + l_plan.installations_limit.out + " device(s)")
+					if l_plan.installations_limit.to_integer_32 <= lst.count then
+						s.append (" (<span class=%"warning%">No more installation available</span>)")
+						s.append ("<p>To install on another device, please revoke one the previous installation(s):</p>")
+					end
+				end
+				s.append ("<div class=%"es-installations%"><ul>")
+				across
+					lst as inst_ic
+				loop
+					inst := inst_ic.item
+					if a_user /= Void then
+						s.append ("<li class=%"es-installation discardable%" data-user-id=%"" + a_user.id.out + "%" data-installation-id=%"" + url_encoded (inst.id) + "%" >")
+					else
+						s.append ("<li class=%"es-installation discardable%">")
+					end
+					s.append (html_encoded (inst.id))
+					s.append ("</li>%N")
+				end
+				s.append ("</ul></div>")
+
+				s.append ("</li>")
+			elseif l_plan.installations_limit > 0 then
+				s.append ("<li class=%"limit warning%">Can be installed on: " + l_plan.installations_limit.out + " device(s)</li>")
+			end
+			if es_cloud_module /= Void then
+				s.append ("<li><a href=%"" + api.location_url (es_cloud_module.license_activities_location (lic), Void) + "%">Associated activities...</a> ")
+			end
+			s.append ("</li>")
+
+			s.append ("</ul></div>")
+			s.append ("</div>")
+		end
+
 note
 	copyright: "2011-2017, Jocelyn Fiat, Javier Velilla, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"

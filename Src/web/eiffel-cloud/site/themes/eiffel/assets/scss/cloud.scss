@@ -201,11 +201,31 @@ div.es-license {
 				}
 				font-size: larger;
 				font-weight: bold;
-				margin-left: .5rem; 
-				margin-right: .5rem; 
+				margin-left: .5rem;
+				margin-right: .5rem;
 			}
 		}
 	}
+}
+.es_summary {
+	div.es-license {
+		padding: 0;
+		border: none;
+		margin-bottom: .02rem;
+	}
+	div.header {
+		border: solid 1px #ccc;
+		div.details {
+			color: #333;
+			font-style: italic;
+			font-size: smaller;
+			.warning {
+				color: red;
+				font-weight: bold;
+			}
+		}
+	}
+
 }
 
 div.cms-node div.info {

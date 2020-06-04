@@ -185,6 +185,20 @@ div.es-license {
         color: white;
         background-color: #f00; }
 
+.es_summary div.es-license {
+  padding: 0;
+  border: none;
+  margin-bottom: .02rem; }
+.es_summary div.header {
+  border: solid 1px #ccc; }
+  .es_summary div.header div.details {
+    color: #333;
+    font-style: italic;
+    font-size: smaller; }
+    .es_summary div.header div.details .warning {
+      color: red;
+      font-weight: bold; }
+
 div.cms-node div.info {
   display: none; }
 
@@ -240,6 +254,8 @@ div.login-box {
       padding: 0;
       margin: 0;
       line-height: 53px; }
+      #header #menu-bar ul.horizontal li.icon {
+        display: none; }
       #header #menu-bar ul.horizontal li {
         height: 100%;
         padding: 0 0.8rem;
@@ -273,7 +289,7 @@ div.login-box {
     clear: both; }
 
   #menu-bar div.menu li.icon {
-    display: inline-block; }
+    display: inline-block !important; }
   #menu-bar div.menu li:not(.icon) {
     display: none !important; }
 

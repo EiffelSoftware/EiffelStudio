@@ -42,6 +42,7 @@ feature -- Execution
 			end
 		end
 
+
 	process_get (req: WSF_REQUEST; res: WSF_RESPONSE)
 		local
 			l_active_user, l_license_user, l_user: ES_CLOUD_USER
@@ -60,7 +61,7 @@ feature -- Execution
 			r := new_generic_response (req, res)
 			r.add_javascript_url (r.module_name_resource_url ({ES_CLOUD_MODULE}.name, "/files/js/es_cloud.js", Void))
 			r.add_style (r.module_name_resource_url ({ES_CLOUD_MODULE}.name, "/files/css/es_cloud.css", Void), Void)
-			r.set_title ("EiffelStudio activity")
+			r.set_title ("Activity")
 			s := ""
 
 			create ago.make
@@ -86,12 +87,12 @@ feature -- Execution
 				if l_license /= Void then
 					s.append ("<p class=%"es-message%">License "+ api.html_encoded (l_license.key))
 					if l_license_user /= Void then
-						s.append ("<br/>(user "+ api.html_encoded (api.real_user_display_name (l_license_user)) + ")")
+						s.append ("<br/>(account "+ api.html_encoded (api.real_user_display_name (l_license_user)) + ")")
 					end
 					s.append ("</p>")
 					l_installations := es_cloud_api.license_installations (l_license)
 				elseif l_active_user /= Void then
-					s.append ("<p class=%"es-message%">User "+ api.html_encoded (api.real_user_display_name (l_active_user)) +"</p>")
+					s.append ("<p class=%"es-message%">Account "+ api.html_encoded (api.real_user_display_name (l_active_user)) +"</p>")
 					l_installations := es_cloud_api.user_installations (l_active_user)
 				end
 					-- Plan
@@ -163,7 +164,7 @@ feature -- Execution
 								if l_display_all or not (l_session.is_ended or l_session.is_expired (es_cloud_api)) then
 									s.append ("<ul>")
 									append_session_to_html (Void, l_session, s, ago)
-									s.append ("<li class=%"description%">note: only the last session is shown ...</li>")
+									s.append ("<li class=%"description%">Note: Only the last session is shown.</li>")
 									s.append ("</ul>")
 								end
 							end

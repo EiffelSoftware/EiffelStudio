@@ -202,6 +202,7 @@ feature -- Access: router
 
 				create h_lic.make (Current, l_mod_api)
 				a_router.handle ("/" + licenses_location, h_lic, a_router.methods_get_post)
+				a_router.handle ("/" + licenses_location + "{license_key}", h_lic, a_router.methods_get)
 			end
 		end
 
@@ -214,6 +215,11 @@ feature -- Access: router
 	license_activities_location (lic: ES_CLOUD_LICENSE): STRING
 		do
 			Result := activities_location + url_encoded (lic.key)
+		end
+
+	license_location (lic: ES_CLOUD_LICENSE): STRING
+		do
+			Result := licenses_location + url_encoded (lic.key)
 		end
 
 feature -- Hooks configuration
@@ -370,7 +376,7 @@ feature -- Hook
 				if a_user = Void then
 					s.append ("The license is associated with email %"" + a_email_addr + "%", please register a new account with that email at " + api.cms_api.site_url + " .%N")
 				else
-					s.append ("The license is associated with your user account %"" + utf_8_encoded (api.cms_api.user_display_name (a_user)) + "%" (email %"" + a_email_addr + "%"), please visit" + api.cms_api.site_url + " .%N")
+					s.append ("The license is associated with your account %"" + utf_8_encoded (api.cms_api.user_display_name (a_user)) + "%" (email %"" + a_email_addr + "%"), please visit" + api.cms_api.site_url + " .%N")
 				end
 				msg := s
 			end
@@ -472,7 +478,7 @@ feature -- Hooks: block
 			-- If prefixed by "?", condition will be checked
 			-- to determine if it should be displayed (and computed) or not.
 		do
-			Result := <<"?cloud_store">>
+			Result := <<"?cloud_account_summary", "?cloud_store">>
 		end
 
 	get_block_view (a_block_id: READABLE_STRING_8; a_response: CMS_RESPONSE)
@@ -481,7 +487,12 @@ feature -- Hooks: block
 			--		as linking with css, js ... It should be done in `setup_block_view`.
 		do
 			if attached es_cloud_api as l_cloud_api then
-				if a_block_id.is_case_insensitive_equal_general ("cloud_store") then
+				if a_block_id.is_case_insensitive_equal_general ("cloud_account_summary") then
+					if attached l_cloud_api.cms_api.user as u then
+						a_response.add_block (new_account_summary_block (create {ES_CLOUD_USER}.make (u), l_cloud_api, a_response), "content")
+					end
+
+				elseif a_block_id.is_case_insensitive_equal_general ("cloud_store") then
 					if a_response.request.is_get_request_method then
 						a_response.add_block (new_store_block (l_cloud_api, a_response), "content")
 						a_response.add_style (a_response.module_resource_url (Current, "/files/css/pricing.css", Void), Void)
@@ -490,6 +501,28 @@ feature -- Hooks: block
 
 				end
 			end
+		end
+
+	new_account_summary_block (a_user: CMS_USER; api: ES_CLOUD_API; a_response: CMS_RESPONSE): CMS_CONTENT_BLOCK
+		local
+			l_html: STRING
+		do
+			create l_html.make (1024)
+			l_html.append ("<div class=%"es_summary%">")
+			if
+				attached api.user_licenses (a_user) as lst and then
+				not lst.is_empty
+			then
+				across
+					lst as ic
+				loop
+					api.append_short_license_view_to_html (ic.item.license, a_user, Current, l_html)
+				end
+			else
+				l_html.append ("No license...")
+			end
+			l_html.append ("</div>")
+			create Result.make_raw ("cloud_account_summary", Void, l_html, a_response.api.formats.full_html)
 		end
 
 	new_store_block (api: ES_CLOUD_API; a_response: CMS_RESPONSE): CMS_CONTENT_BLOCK

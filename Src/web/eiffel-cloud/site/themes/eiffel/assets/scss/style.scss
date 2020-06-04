@@ -72,7 +72,7 @@ div.login-box {
 			margin: 0;
 			line-height: 53px;
 			li.icon {
-				//display: none;
+				display: none;
 			}
 			li {
 				height: 100%;
@@ -116,7 +116,7 @@ div.login-box {
 	}
 	#menu-bar div.menu {
 		li.icon {
-			display: inline-block;
+			display: inline-block !important;
 		}
 		li:not(.icon) {
 			display: none !important;

@@ -69,6 +69,8 @@ feature -- Request execution
 			sub: WSF_FORM_SUBMIT_INPUT
 			l_form: CMS_FORM
 			s: STRING
+			l_now: DATE_TIME
+			lst: LIST [JWT_AUTH_TOKEN]
 		do
 			if attached user_by_uid (a_uid) as l_user then
 				if attached api.user as u then
@@ -77,13 +79,33 @@ feature -- Request execution
 						rep.set_title ("JWT tokens")
 						create s.make_empty
 
-						if attached jwt_auth_api.user_tokens (u, Void) as lst and then not lst.is_empty then
+						create l_now.make_now_utc
+
+						lst := jwt_auth_api.user_tokens (u, Void)
+						if lst /= Void and then not lst.is_empty then
+							from
+								lst.start
+							until
+								lst.off
+							loop
+								inf := lst.item
+								if inf.is_expired (l_now) then
+									jwt_auth_api.discard_user_token (u, lst.item.token)
+									lst.remove
+								else
+									lst.forth
+								end
+							end
+						end
+						if lst /= Void and then not lst.is_empty then
 							create l_form.make (req.percent_encoded_path_info, "user-jwt-tokens")
 							l_form.set_method_post
 							create fset.make
 							l_form.extend (fset)
 							create sub.make_with_text ("op", but_revoke_all_text)
 							fset.extend (sub)
+
+
 							fset.extend_html_text ("<p>Revoke all " + lst.count.out + " token(s) for user " +  html_encoded (api.user_display_name (u)) + " .</p>")
 							l_form.append_to_html (rep.wsf_theme, s)
 							l_form.append_html_attributes_to ("<br/>")
@@ -92,8 +114,8 @@ feature -- Request execution
 								lst as ic
 							loop
 								inf := ic.item
-								if inf.is_expired (create {DATE_TIME}.make_now_utc) then
-									s.append ("<div>Expired JWT TOKEN</div>%N")
+								if inf.is_expired (l_now) then
+									s.append ("<!-- <div>Expired JWT TOKEN</div> -->%N")
 								else
 									create l_form.make (req.percent_encoded_path_info, "user-jwt-tokens")
 									l_form.set_method_post
@@ -124,7 +146,7 @@ feature -- Request execution
 									tf.set_label ("Applications")
 	--								create sub.make_with_text ("op", "Refresh-token")
 	--								fset.extend (sub)
-									create sub.make_with_text ("op", but_delete_text)
+									create sub.make_with_text ("op", but_revoke_text)
 									fset.extend (sub)
 
 									l_form.append_to_html (rep.wsf_theme, s)
@@ -146,7 +168,7 @@ feature -- Request execution
 			end
 		end
 
-	but_delete_text: STRING = "Delete"
+	but_revoke_text: STRING = "Revoke"
 	but_revoke_all_text: STRING = "Revoke All"
 
 	post_jwt_token (a_uid: READABLE_STRING_GENERAL; req: WSF_REQUEST; res: WSF_RESPONSE)
@@ -165,7 +187,7 @@ feature -- Request execution
 					if u.same_as (l_user) or api.user_api.is_admin_user (u) then
 						if
 							attached {WSF_STRING} req.form_parameter ("token") as p_token and then
-							attached req.form_parameter ("op") as p_op and then p_op.same_string (but_delete_text)
+							attached req.form_parameter ("op") as p_op and then p_op.same_string (but_revoke_text)
 						then
 							rep := new_generic_response (req, res)
 

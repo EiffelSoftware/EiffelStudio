@@ -38,7 +38,11 @@ feature -- Execution
 			-- Execute handler for `req' and respond in `res'.
 		do
 			if req.is_get_request_method then
-				process_get (req, res)
+				if attached req.path_parameter ("license_key") as l_lic_key then
+					process_license_get (l_lic_key.string_representation, req, res)
+				else
+					process_get (req, res)
+				end
 			elseif req.is_post_request_method then
 				process_post (req, res)
 			else
@@ -59,24 +63,6 @@ feature -- Execution
 
 			s.append ("<h2>Buy a new license</h2>")
 
---			s.append ("<div class=%"es-plans%">")
---			s.append ("<strong>Plans</strong><ul>")
---			across
---				es_cloud_api.sorted_plans as ic
---			loop
---				l_plan := ic.item
---				if l_plan.is_public then
---					s.append ("<li class=%"es-plan-box%"><div class=%"title%">")
---					s.append (html_encoded (l_plan.title_or_name))
---					s.append ("</div>")
---					if attached l_plan.description as l_plan_description then
---						s.append ("<div class=%"description%">"+ html_encoded (l_plan_description) + "</div>")
---					end
---					s.append ("</li>")
---				end
---			end
---			s.append ("</ul>")
---			s.append ("</div>")
 			if attached es_cloud_module.new_store_block (es_cloud_api, r) as bl then
 				r.add_block (bl, "content")
 				r.add_style (r.module_resource_url (es_cloud_module, "/files/css/pricing.css", Void), Void)
@@ -84,6 +70,43 @@ feature -- Execution
 
 			r.set_main_content (s)
 			r.execute
+		end
+
+	process_license_get (a_lic_key: READABLE_STRING_GENERAL; req: WSF_REQUEST; res: WSF_RESPONSE)
+		local
+			l_lic_user, l_user: ES_CLOUD_USER
+			r: like new_generic_response
+			s: STRING
+		do
+			if attached api.user as u then
+				l_user := u
+			end
+			if
+				attached es_cloud_api.license_by_key (a_lic_key) as lic
+			then
+				l_lic_user := es_cloud_api.user_for_license (lic)
+				if
+					api.has_permission ({ES_CLOUD_MODULE}.perm_manage_es_licenses) or else
+					(l_lic_user /= Void and then l_user /= Void and then l_user.same_as (l_lic_user))
+				then
+					r := new_generic_response (req, res)
+					r.add_javascript_url (r.module_name_resource_url ({ES_CLOUD_MODULE}.name, "/files/js/es_cloud.js", Void))
+					r.add_style (r.module_name_resource_url ({ES_CLOUD_MODULE}.name, "/files/css/es_cloud.css", Void), Void)
+					r.set_title ("License " + html_encoded (a_lic_key))
+					s := ""
+
+					s.append ("<div class=%"es-licenses%">")
+					append_license_to_html (lic, l_lic_user, s)
+					s.append ("<div><a href=%"" + api.location_url (es_cloud_module.licenses_location, Void) + "%">All licenses...</a></div>")
+					r.set_main_content (s)
+					r.execute
+				else
+					send_access_denied_message (res)
+--					s.append ("<div class=%"warning%">This page is restricted to authorized person!</div>")
+				end
+			else
+				send_not_found (req, res)
+			end
 		end
 
 	process_get (req: WSF_REQUEST; res: WSF_RESPONSE)
@@ -99,14 +122,15 @@ feature -- Execution
 			r := new_generic_response (req, res)
 			r.add_javascript_url (r.module_name_resource_url ({ES_CLOUD_MODULE}.name, "/files/js/es_cloud.js", Void))
 			r.add_style (r.module_name_resource_url ({ES_CLOUD_MODULE}.name, "/files/css/es_cloud.css", Void), Void)
-			r.set_title ("EiffelStudio account")
+			r.set_title ("EiffelStudio Licenses")
 			s := ""
 
 			create ago.make
 
 			if attached api.user as u then
 				create l_user.make (u)
-				s.append ("<p class=%"es-message%">User "+ api.html_encoded (api.real_user_display_name (u)) +"</p>")
+				s.append ("<div class=%"es-user%"><strong>Account:</strong> "+ api.html_encoded (api.real_user_display_name (u)) +"</div>")
+				
 					-- Organisations
 				s.append ("<div class=%"es-organizations%">")
 				if attached es_cloud_api.user_organizations (l_user) as l_orgs then
@@ -221,76 +245,9 @@ feature -- Execution
 			r.execute
 		end
 
-	append_license_to_html (lic: ES_CLOUD_LICENSE; u: ES_CLOUD_USER; s: STRING_8)
-		local
-			l_plan: detachable ES_CLOUD_PLAN
-			inst: ES_CLOUD_INSTALLATION
+	append_license_to_html (lic: ES_CLOUD_LICENSE; u: detachable ES_CLOUD_USER; s: STRING_8)
 		do
-			l_plan := lic.plan
-			s.append ("<div class=%"es-license%">")
-			s.append ("<div class=%"header%">")
-			s.append ("<div class=%"title%">")
-			s.append (html_encoded (l_plan.title_or_name))
-			s.append ("</div>")
-			s.append ("<div class=%"license-id%">License ID: <span class=%"id%">")
-			s.append (html_encoded (lic.key))
-			s.append ("</span></div>")
-			s.append ("</div>") -- header
-			s.append ("<div class=%"details%"><ul>")
-			s.append ("<li class=%"creation%"><span class=%"title%">Started</span> ")
-			s.append (api.date_time_to_string (lic.creation_date))
-			s.append ("</li>")
-			if lic.is_active then
-				if attached lic.expiration_date as exp then
-					s.append ("<li class=%"expiration%"><span class=%"title%">Renewal date</span> ")
-					s.append (api.date_time_to_string (exp))
-					s.append (" (")
-					s.append (lic.days_remaining.out)
-					s.append (" days remaining)")
-					s.append ("</li>")
-				else
-					s.append ("<li class=%"status success%">ACTIVE</li>")
-				end
-			elseif lic.is_fallback then
-				s.append ("<li class=%"status notice%">Fallback license</li>")
-			else
-				s.append ("<li class=%"status warning%">EXPIRED</li>")
-			end
-			if attached lic.platform as l_platform then
-				s.append ("<li class=%"limit%"><span class=%"title%">Limited to platform:</span> " + html_encoded (l_platform) + "</li>")
-			end
-			if attached lic.version as l_product_version then
-				s.append ("<li class=%"limit%"><span class=%"title%">Limited to version:</span> " + html_encoded (l_product_version) + "</li>")
-			end
-			if attached es_cloud_api.license_installations (lic) as lst and then not lst.is_empty then
-				s.append ("<li class=%"limit%"><span class=%"title%">Installation(s):</span> " + lst.count.out)
-				if l_plan.installations_limit > 0 then
-					s.append (" / " + l_plan.installations_limit.out + " device(s)")
-					if l_plan.installations_limit.to_integer_32 <= lst.count then
-						s.append (" (<span class=%"warning%">No more installation available</span>)")
-						s.append ("<p>To install on another device, please revoke one the previous installation(s):</p>")
-					end
-				end
-				s.append ("<div class=%"es-installations%"><ul>")
-				across
-					lst as inst_ic
-				loop
-					inst := inst_ic.item
-					s.append ("<li class=%"es-installation discardable%" data-user-id=%"" + u.id.out + "%" data-installation-id=%"" + url_encoded (inst.id) + "%" >")
-					s.append (html_encoded (inst.id))
-					s.append ("</li>%N")
-				end
-				s.append ("</ul></div>")
-
-				s.append ("</li>")
-			elseif l_plan.installations_limit > 0 then
-				s.append ("<li class=%"limit warning%">Can be installed on: " + l_plan.installations_limit.out + " device(s)</li>")
-			end
-			s.append ("<li><a href=%"" + api.location_url (es_cloud_module.license_activities_location (lic), Void) + "%">Associated activities...</a> ")
-			s.append ("</li>")
-
-			s.append ("</ul></div>")
-			s.append ("</div>")
+			es_cloud_api.append_license_to_html (lic, u, es_cloud_module, s)
 		end
 
 note

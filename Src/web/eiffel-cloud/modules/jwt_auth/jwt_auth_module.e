@@ -46,9 +46,11 @@ feature -- Access
 		do
 			Result := Precursor
 			Result.force (perm_use_magic_login)
+			Result.force (perm_manage_own_tokens)
 		end
 
 	perm_use_magic_login: STRING = "use magic_login"
+	perm_manage_own_tokens: STRING = "manage own jwt tokens"
 
 feature {CMS_API} -- Module Initialization			
 
@@ -134,7 +136,8 @@ feature -- Hook
 			then
 				if
 					fid.same_string ({CMS_AUTHENTICATION_MODULE}.view_account_form_id) and then
-					attached a_response.user as u
+					attached a_response.user as u and then
+					a_response.has_permission (perm_manage_own_tokens)
 				then
 					a_form.extend_html_text ("<hr/><h4>Authentication with JWT token</h4><ul><li><a href=%"" + a_response.url ("/user/" + u.id.out + "/jwt_access_token", Void) + "%">manage your tokens.</a></li></ul>%N")
 				end

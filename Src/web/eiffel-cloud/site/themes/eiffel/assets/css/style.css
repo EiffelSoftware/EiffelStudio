@@ -1,26 +1,26 @@
 .box, #main .es-message, #main div.es-plans ul li.es-plan-box, div.login-box {
-  -webkit-border-radius: 5px;
-  -moz-border-radius: 5px;
-  -ms-border-radius: 5px;
-  border-radius: 5px;
+  -webkit-border-radius: 3px;
+  -moz-border-radius: 3px;
+  -ms-border-radius: 3px;
+  border-radius: 3px;
   padding: 20px;
-  border: solid 3px #ccc;
+  border: solid 1px #ccc;
   background-color: #eee; }
 
 .box, #main .es-message, #main div.es-plans ul li.es-plan-box, div.login-box {
-  -webkit-border-radius: 5px;
-  -moz-border-radius: 5px;
-  -ms-border-radius: 5px;
-  border-radius: 5px;
+  -webkit-border-radius: 3px;
+  -moz-border-radius: 3px;
+  -ms-border-radius: 3px;
+  border-radius: 3px;
   padding: 20px;
-  border: solid 3px #ccc;
+  border: solid 1px #ccc;
   background-color: #eee; }
 
 #main .es-message {
-  font-size: xx-large;
+  font-size: large;
   border: solid 1px #ccc;
   background-color: #ddd;
-  width: 60%;
+  width: 80%;
   padding: 20px;
   margin-left: auto;
   margin-right: auto;
@@ -223,7 +223,7 @@ div.login-box {
   background-color: transparent;
   background: url(../images/outer_header_bg.jpg) repeat-x 0 0;
   color: black; }
-  #header #logo {
+  #header #logo img {
     width: 169px;
     height: auto;
     padding: 10px 20px 0 20px; }
@@ -262,6 +262,30 @@ div.login-box {
           #header #menu-bar ul.horizontal li:hover a {
             color: #fff; }
 
+@media screen and (max-width: 600px) {
+  #header #logo {
+    padding-left: 2rem; }
+
+  #header #menu-bar {
+    position: absolute;
+    left: 0;
+    top: 0;
+    clear: both; }
+
+  #menu-bar div.menu li.icon {
+    display: inline-block; }
+  #menu-bar div.menu li:not(.icon) {
+    display: none !important; }
+
+  #menu-bar div.menu.responsive {
+    background-color: white !important; }
+    #menu-bar div.menu.responsive li:not(.icon) {
+      height: auto !important;
+      display: block !important;
+      text-align: left; }
+    #menu-bar div.menu.responsive li.icon {
+      height: auto !important;
+      display: block; } }
 div#content {
   max-width: 800px;
   padding: 10px 0 50px 0;

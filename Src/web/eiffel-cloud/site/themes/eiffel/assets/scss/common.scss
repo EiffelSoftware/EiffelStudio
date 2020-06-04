@@ -6,8 +6,8 @@
 }
 
 .box {
-	@include border-radius(5px);
+	@include border-radius(3px);
 	padding: 20px;
-	border: solid 3px #ccc;
+	border: solid 1px #ccc;
 	background-color: #eee;
 }

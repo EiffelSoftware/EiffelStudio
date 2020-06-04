@@ -1,18 +1,18 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
-        <meta name="viewport" content="width=device-width, initial-scale=1"/>
-        <link rel="stylesheet" href="{$theme_path/}css/style.css"/>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+	<meta name="viewport" content="width=device-width, initial-scale=1"/>
+	<link rel="stylesheet" href="{$theme_path/}css/style.css"/>
 	<link rel="stylesheet" href="://fonts.googleapis.com/css2?family=Roboto:wght@300&display=swap" type="text/css" media="all"> 
 {if isset="$head"}{$head/}{/if}
 {if isset="$styles"}{$styles/}{/if}
 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script> 
-
 	<script src="{$theme_path/}js/jquery.timeago.js"></script>
+	<script src="{$theme_path/}js/index.js"></script>
 {if isset="$scripts"}{$scripts/}{/if}
 {if isset="$head_lines"}{$head_lines/}{/if}
-        <title>{$head_title/}</title>
+	<title>{$head_title/}</title>
 </head>
 <body>
   <!-- Page Top -->
@@ -21,8 +21,8 @@
   {/if}
   <!-- Page Header -->
   <div id="header">
-    <a href="{$site_url/}" title="{$site_title/}">
-    <img src="{$theme_path/}images/logo.png" alt="{$site_name/}" id="logo"/>
+    <a id="logo" href="{$site_url/}" title="{$site_title/}">
+    <img src="{$theme_path/}images/logo.png" alt="{$site_name/}"/>
     </a>
     {if isset="$page.primary_nav"}
         {$page.primary_nav/}
@@ -66,7 +66,6 @@
   <!-- Page Bottom -->
   {$page.region_bottom/}
   </div>
-  <script src="{$theme_path/}js/index.js"/>
 
 </body>
 </html>

@@ -52,7 +52,7 @@ div.login-box {
 	background-color: $header-bgcolor;
 	background: url(../images/outer_header_bg.jpg) repeat-x 0 0;
 	color: $header-text-fgcolor;
-	#logo {
+	#logo img {
 		width: 169px;
 		height: auto;
 		padding: 10px 20px 0 20px;
@@ -70,7 +70,10 @@ div.login-box {
 			height: 100%;
 			padding: 0;
 			margin: 0;
-				line-height: 53px;
+			line-height: 53px;
+			li.icon {
+				//display: none;
+			}
 			li {
 				height: 100%;
 				padding: 0 .8rem ;
@@ -100,6 +103,39 @@ div.login-box {
 		}
 	}
 }
+
+@media screen and (max-width: 600px) {
+	#header #logo {
+		padding-left: 2rem;
+	}
+	#header #menu-bar {
+		position: absolute;
+		left: 0;
+		top: 0;
+		clear: both;
+	}
+	#menu-bar div.menu {
+		li.icon {
+			display: inline-block;
+		}
+		li:not(.icon) {
+			display: none !important;
+		}
+	}
+	#menu-bar div.menu.responsive {
+		background-color: white !important;
+		li:not(.icon) {
+			height: auto !important;
+			display: block !important;
+			text-align: left;
+		}
+		li.icon {
+			height: auto !important;
+			display:block;
+		}
+	}
+}
+
 div#content {
 	max-width: 800px;
 	padding: 10px 0 50px 0;

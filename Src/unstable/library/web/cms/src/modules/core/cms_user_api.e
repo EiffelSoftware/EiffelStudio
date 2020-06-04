@@ -372,7 +372,7 @@ feature -- User roles.
 			if attached user_role_by_id (2) as l_authenticated then
 				Result := l_authenticated
 			else
-				create Result.make ("authenticated")
+				create Result.make ({STRING_32} "authenticated")
 			end
 		end
 

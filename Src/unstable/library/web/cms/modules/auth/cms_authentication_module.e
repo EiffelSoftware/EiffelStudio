@@ -11,6 +11,7 @@ inherit
 		rename
 			module_api as auth_api
 		redefine
+			install,
 			initialize,
 			setup_hooks,
 			permissions,
@@ -67,6 +68,15 @@ feature {CMS_API} -- Initialization
 			Precursor (api)
 		end
 
+	install (api: CMS_API)
+		do
+			Precursor (api)
+			if attached api.user_api.authenticated_user_role as l_auth_role then
+				l_auth_role.add_permission (perm_view_own_account)
+				api.user_api.save_user_role (l_auth_role)
+			end
+		end
+
 feature -- Access
 
 	name: STRING = "auth"
@@ -77,13 +87,17 @@ feature -- Access
 			Result := Precursor
 			Result.force (perm_account_register)
 			Result.force ("account auto activate")
-			Result.force ("edit own account")
+			Result.force (perm_view_own_account)
+			Result.force (perm_edit_own_account)
 			Result.force ("change own username")
 			Result.force ("change own password")
 			Result.force ("view users")
 		end
 
 	auth_api: detachable CMS_AUTHENTICATION_API
+
+	perm_view_own_account: STRING = "view own account"
+	perm_edit_own_account: STRING = "edit own account"
 
 	perm_account_register: STRING = "account register"
 
@@ -205,13 +219,14 @@ feature -- Hooks configuration
 			lnk: CMS_LOCAL_LINK
 		do
 			if attached a_response.user as u then
-				create lnk.make (a_response.api.translation ("Your Account", Void), "account")
-					-- it could also use the display username
-				-- create lnk.make (u.name, "account")
+				if a_response.has_permission (perm_view_own_account) then
+					create lnk.make (a_response.api.translation ("Your Account", Void), "account")
+						-- it could also use the display username
+					-- create lnk.make (u.name, "account")
 
-				lnk.set_weight (97)
-				a_menu_system.primary_menu.extend (lnk)
-
+					lnk.set_weight (97)
+					a_menu_system.primary_menu.extend (lnk)
+				end
 				create lnk.make (a_response.api.translation ("Logout", Void), roc_logout_location)
 			else
 				create lnk.make (a_response.api.translation ("Login", Void), roc_login_location)
@@ -268,10 +283,22 @@ feature -- Handler
 		do
 			create {GENERIC_VIEW_CMS_RESPONSE} r.make (req, res, a_auth_api.cms_api)
 			create b.make_empty
+			if r.is_authenticated then
+				if r.has_permission (perm_edit_own_account) then
+					create lnk.make ("View", "account/")
+					lnk.set_weight (1)
+					r.add_to_primary_tabs (lnk)
+
+					create lnk.make ("Edit", "account/edit")
+					lnk.set_weight (2)
+					r.add_to_primary_tabs (lnk)
+				end
+			end
+
 			l_user := r.user
 			create f.make (r.location, view_account_form_id)
 			if attached smarty_template_block (Current, "account_info", a_auth_api.cms_api) as l_tpl_block then
-				l_tpl_block.set_weight (-10)
+				l_tpl_block.set_weight (-1)
 				r.add_block (l_tpl_block, "content")
 			else
 				debug ("cms")
@@ -303,18 +330,6 @@ feature -- Handler
 				end
 			end
 
-			if r.is_authenticated then
-				create lnk.make ("View", "account/")
-				lnk.set_weight (1)
-				r.add_to_primary_tabs (lnk)
-
-				if r.has_permission ("edit own account") then
-					create lnk.make ("Edit", "account/edit")
-					lnk.set_weight (2)
-					r.add_to_primary_tabs (lnk)
-				end
-			end
-
 			a_auth_api.cms_api.hooks.invoke_form_alter (f, Void, r)
 			f.append_to_html (r.wsf_theme, b)
 
@@ -343,13 +358,13 @@ feature -- Handler
 			lnk: CMS_LOCAL_LINK
 			l_form: CMS_FORM
 		do
-			if a_auth_api.cms_api.has_permission ("edit own account") then
+			if a_auth_api.cms_api.has_permission (perm_edit_own_account) then
 				create {GENERIC_VIEW_CMS_RESPONSE} r.make (req, res, a_auth_api.cms_api)
 				create b.make_empty
 				l_user := r.user
 				create l_form.make (r.location, edit_account_form_id)
 				if attached smarty_template_block (Current, "account_edit", a_auth_api.cms_api) as l_tpl_block then
-					l_tpl_block.set_weight (-10)
+					l_tpl_block.set_weight (-1)
 					r.add_block (l_tpl_block, "content")
 				else
 					debug ("cms")

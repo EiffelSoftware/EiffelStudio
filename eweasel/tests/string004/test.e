@@ -58,30 +58,30 @@ feature {NONE} -- Creation
 			localized_print (i32 + r8 + "%N") -- Call to obsolete feature `as_readable_string_32`.
 				-- s + sN
 				-- sN + s
-			localized_print (s + s8 + "%N")
-			localized_print (s + s32 + "%N")
+			localized_print (s + s8 + "%N") -- Call to obsolete feature `plus`. Call to obsolete feature `plus`.
+			localized_print (s + s32 + "%N") -- Call to obsolete feature `plus`. Call to obsolete feature `plus`.
 			$ERROR localized_print (s8 + s + "%N") -- VWOE
 			localized_print (s32 + s + "%N")
 				-- r + rN
 				-- rN + r
-			localized_print (r + r8 + "%N")
-			localized_print (r + r32 + "%N")
+			localized_print (r + r8 + "%N") -- Call to obsolete feature `plus`. Call to obsolete feature `plus`.
+			localized_print (r + r32 + "%N") -- Call to obsolete feature `plus`. Call to obsolete feature `plus`.
 			$ERROR localized_print (r8 + r + "%N") -- VWOE
 			localized_print (r32 + r + "%N")
 				-- i + iN
 				-- iN + i
-			localized_print (i + i8 + "%N")
-			localized_print (i + i32 + "%N")
+			localized_print (i + i8 + "%N") -- Call to obsolete feature `plus`. Call to obsolete feature `plus`.
+			localized_print (i + i32 + "%N") -- Call to obsolete feature `plus`. Call to obsolete feature `plus`.
 			$ERROR localized_print (i8 + i + "%N") -- VWOE
 			localized_print (i32 + i + "%N")
 				-- s + rN
 				-- s + iN
 				-- rN + s
 				-- iN + s
-			localized_print (s + r8 + "%N")
-			localized_print (s + r32 + "%N")
-			localized_print (s + i8 + "%N")
-			localized_print (s + i32 + "%N")
+			localized_print (s + r8 + "%N") -- Call to obsolete feature `plus`. Call to obsolete feature `plus`.
+			localized_print (s + r32 + "%N") -- Call to obsolete feature `plus`. Call to obsolete feature `plus`.
+			localized_print (s + i8 + "%N") -- Call to obsolete feature `plus`. Call to obsolete feature `plus`.
+			localized_print (s + i32 + "%N") -- Call to obsolete feature `plus`. Call to obsolete feature `plus`.
 			$ERROR localized_print (r8 + s + "%N") -- VWOE
 			localized_print (r32 + s + "%N")
 			$ERROR localized_print (i8 + s + "%N") -- VWOE
@@ -90,10 +90,10 @@ feature {NONE} -- Creation
 				-- r + iN
 				-- sN + r
 				-- iN + r
-			localized_print (r + s8 + "%N")
-			localized_print (r + s32 + "%N")
-			localized_print (r + i8 + "%N")
-			localized_print (r + i32 + "%N")
+			localized_print (r + s8 + "%N") -- Call to obsolete feature `plus`. Call to obsolete feature `plus`.
+			localized_print (r + s32 + "%N") -- Call to obsolete feature `plus`. Call to obsolete feature `plus`.
+			localized_print (r + i8 + "%N") -- Call to obsolete feature `plus`. Call to obsolete feature `plus`.
+			localized_print (r + i32 + "%N") -- Call to obsolete feature `plus`. Call to obsolete feature `plus`.
 			$ERROR localized_print (s8 + r + "%N") -- VWOE
 			localized_print (s32 + r + "%N")
 			$ERROR localized_print (i8 + r + "%N") -- VWOE
@@ -102,10 +102,10 @@ feature {NONE} -- Creation
 				-- i + rN
 				-- sN + i
 				-- rN + i
-			localized_print (i + s8 + "%N")
-			localized_print (i + s32 + "%N")
-			localized_print (i + i8 + "%N")
-			localized_print (i + i32 + "%N")
+			localized_print (i + s8 + "%N") -- Call to obsolete feature `plus`. Call to obsolete feature `plus`.
+			localized_print (i + s32 + "%N") -- Call to obsolete feature `plus`. Call to obsolete feature `plus`.
+			localized_print (i + i8 + "%N") -- Call to obsolete feature `plus`. Call to obsolete feature `plus`.
+			localized_print (i + i32 + "%N") -- Call to obsolete feature `plus`. Call to obsolete feature `plus`.
 			$ERROR localized_print (s8 + i + "%N") -- VWOE
 			localized_print (s32 + i + "%N")
 			$ERROR localized_print (r8 + i + "%N") -- VWOE

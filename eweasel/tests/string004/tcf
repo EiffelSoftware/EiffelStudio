@@ -7,13 +7,13 @@ define ERROR ""
 copy_sub test.e $CLUSTER test.e
 
 compile_melted
-compile_result	validity_error TEST VWOE:63 VWOE:69 VWOE:75 VWOE:85 VWOE:87 VWOE:97 VWOE:99 VWOE:109 VWOE:111 "Obsolete Call:35" "Obsolete Call:37" "Obsolete Call:38" "Obsolete Call:40" "Obsolete Call:47" "Obsolete Call:49" "Obsolete Call:50" "Obsolete Call:51" "Obsolete Call:54" "Obsolete Call:55" "Obsolete Call:56" "Obsolete Call:58"
+compile_result	validity_error TEST VWOE:63 VWOE:69 VWOE:75 VWOE:85 VWOE:87 VWOE:97 VWOE:99 VWOE:109 VWOE:111 "Obsolete Call:35" "Obsolete Call:37" "Obsolete Call:38" "Obsolete Call:40" "Obsolete Call:47" "Obsolete Call:49" "Obsolete Call:50" "Obsolete Call:51" "Obsolete Call:54" "Obsolete Call:55" "Obsolete Call:56" "Obsolete Call:58" "Obsolete Call:61" "Obsolete Call:61" "Obsolete Call:62" "Obsolete Call:62" "Obsolete Call:67" "Obsolete Call:67" "Obsolete Call:68" "Obsolete Call:68" "Obsolete Call:73" "Obsolete Call:73" "Obsolete Call:74" "Obsolete Call:74" "Obsolete Call:81" "Obsolete Call:81" "Obsolete Call:82" "Obsolete Call:82" "Obsolete Call:83" "Obsolete Call:83" "Obsolete Call:84" "Obsolete Call:84" "Obsolete Call:93" "Obsolete Call:93" "Obsolete Call:94" "Obsolete Call:94" "Obsolete Call:95" "Obsolete Call:95" "Obsolete Call:96" "Obsolete Call:96" "Obsolete Call:105" "Obsolete Call:105" "Obsolete Call:106" "Obsolete Call:106" "Obsolete Call:107" "Obsolete Call:107" "Obsolete Call:108" "Obsolete Call:108"
 
 define ERROR "--"
 copy_sub test.e $CLUSTER test.e
 
 resume_compile
-compile_result	validity_warning TEST "Obsolete Call:35" "Obsolete Call:37" "Obsolete Call:38" "Obsolete Call:40" "Obsolete Call:47" "Obsolete Call:49" "Obsolete Call:50" "Obsolete Call:51" "Obsolete Call:54" "Obsolete Call:55" "Obsolete Call:56" "Obsolete Call:58"
+compile_result	validity_warning TEST "Obsolete Call:35" "Obsolete Call:37" "Obsolete Call:38" "Obsolete Call:40" "Obsolete Call:47" "Obsolete Call:49" "Obsolete Call:50" "Obsolete Call:51" "Obsolete Call:54" "Obsolete Call:55" "Obsolete Call:56" "Obsolete Call:58" "Obsolete Call:61" "Obsolete Call:61" "Obsolete Call:62" "Obsolete Call:62" "Obsolete Call:67" "Obsolete Call:67" "Obsolete Call:68" "Obsolete Call:68" "Obsolete Call:73" "Obsolete Call:73" "Obsolete Call:74" "Obsolete Call:74" "Obsolete Call:81" "Obsolete Call:81" "Obsolete Call:82" "Obsolete Call:82" "Obsolete Call:83" "Obsolete Call:83" "Obsolete Call:84" "Obsolete Call:84" "Obsolete Call:93" "Obsolete Call:93" "Obsolete Call:94" "Obsolete Call:94" "Obsolete Call:95" "Obsolete Call:95" "Obsolete Call:96" "Obsolete Call:96" "Obsolete Call:105" "Obsolete Call:105" "Obsolete Call:106" "Obsolete Call:106" "Obsolete Call:107" "Obsolete Call:107" "Obsolete Call:108" "Obsolete Call:108"
 execute_work	NONE exec_output_m
 execute_result	ok
 compare		exec_output_m output

@@ -112,11 +112,11 @@ feature {NONE} -- Rule checking
 			end
 		end
 
-	stringify_clients (a_clients: CLIENT_AS): STRING_GENERAL
+	stringify_clients (a_clients: CLIENT_AS): STRING_32
 			-- Convert `a_clients' to a string representation.
 		local
 			l_inner_clients: CLASS_LIST_AS
-			l_client_list: ARRAYED_LIST [READABLE_STRING_GENERAL]
+			l_client_list: ARRAYED_LIST [READABLE_STRING_32]
 			l_string_sorter: QUICK_SORTER [READABLE_STRING_GENERAL]
 			l_current_client: READABLE_STRING_32
 			i: INTEGER
@@ -144,7 +144,7 @@ feature {NONE} -- Rule checking
 				across
 					l_client_list as ic
 				loop
-					Result.append (ic.item + " ")
+					Result.append (ic.item + {STRING_32} " ")
 				end
 			end
 		end

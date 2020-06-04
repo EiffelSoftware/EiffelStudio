@@ -503,6 +503,7 @@ feature -- Access: global variables
 		local
 			i: INTEGER
 			n: INTEGER
+			s: STRING_32
 		do
 			from
 				i := 1
@@ -511,7 +512,11 @@ feature -- Access: global variables
 			until
 				i = 0
 			loop
-				if attached {WSF_STRING} a_item_fct.item ([a_name + "[" + i.out + "]"]) as v then
+				create s.make_from_string_general (a_name)
+				s.append_character ('[')
+				s.append_integer (i)
+				s.append_character (']')
+				if attached {WSF_STRING} a_item_fct.item ([s]) as v then
 					Result.force (v.value, n)
 					n := n + 1
 					i := i + 1

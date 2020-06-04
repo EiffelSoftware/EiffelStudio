@@ -15,19 +15,18 @@ feature
 			obj_not_void: obj /= Void
 			field_name_not_void: fdn /= Void
 		local
-			otn: STRING
+			otn: READABLE_STRING_GENERAL
 			obj_fields: detachable STRING_TABLE [INTEGER]
 		do
-			otn := type_name (obj)
+			otn := type_name_32 (obj)
 			if
-				template_inspectors.has (otn) and then
 				attached Template_inspectors.item (otn) as tpl_inspector and then
 				attached tpl_inspector.internal_data (fdn, obj) as cl -- If Void, this is not handled by tpl_inspector
 			then
 				Result := cl
 			else
-				if internal_info.has (otn) then
-					obj_fields := internal_info.item (otn)
+				if attached internal_info.item (otn) as l_info then
+					obj_fields := l_info
 				else
 					obj_fields := internal_info_build (obj)
 				end
@@ -53,9 +52,7 @@ feature
 			obj /= Void
 		local
 			fi, fc: INTEGER
-			otn: STRING
 		do
-			otn := type_name (obj)
 			from
 				fi := 1
 				fc := field_count (obj)
@@ -66,7 +63,7 @@ feature
 				Result.force (fi, field_name (fi, obj))
 				fi := fi + 1
 			end
-			internal_info.force (Result, otn)
+			internal_info.force (Result, type_name_32 (obj))
 		end
 
 	internal_info: STRING_TABLE [STRING_TABLE [INTEGER]]

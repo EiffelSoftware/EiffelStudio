@@ -62,14 +62,16 @@ feature -- Access
 
 	table_item (a_name: READABLE_STRING_GENERAL): detachable WSF_TABLE
 		local
-			s,k: READABLE_STRING_GENERAL
+			s: STRING_32
+			k: READABLE_STRING_GENERAL
 			p,q: INTEGER
 		do
 			if attached {WSF_TABLE} item (a_name) as tb then
 				Result := tb
 			else
-				s := a_name + "["
-				create Result.make (a_name.to_string_8) -- FIXME
+				create s.make_from_string_general (a_name)
+				s.append_character ('[')
+				create Result.make (a_name)
 				across
 					items as c
 				loop

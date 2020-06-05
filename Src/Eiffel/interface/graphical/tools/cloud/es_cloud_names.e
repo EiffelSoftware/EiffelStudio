@@ -16,9 +16,9 @@ feature -- Authentication
 
 	prompt_sign_to_edition_cloud_services (a_edition: READABLE_STRING_GENERAL): STRING_32 do Result := locale.formatted_string (locale.translation_in_context ("Sign in to use EiffelStudio $1 services.", "eiffel.account"), [a_edition]) end
 
-	prompt_registering_and_agree_terms_of_use_and_rules: STRING_32
+	prompt_agree_terms_of_use_and_rules: STRING_32
 		do
-			Result := locale.translation ("By registering EiffelStudio you agree to the terms of use and the rules on user-provided information.")
+			Result := locale.translation ("By using EiffelStudio, you agree to the terms of use and the rules on user-provided information.")
 		end
 
 	prompt_learn_more_about_data_collection (a_url: READABLE_STRING_GENERAL): STRING_32
@@ -26,7 +26,7 @@ feature -- Authentication
 			Result := locale.formatted_string (locale.translation_in_context ("User information provided during the registration process is used solely for the purpose of creating a user account at $1 and enforcing the usage rules (number of concurrent sessions) according to the terms of the EiffelStudio license. Eiffel Software does not share such information with any third party.", "eiffel.account"), [a_url])
 		end
 
-	prompt_note_support_account_usage: STRING_32 do Result := locale.translation_in_context ("Note: the account is also used at https://support.eiffel.com/", "eiffel.account") end
+	prompt_note_support_account_usage: STRING_32 do Result := locale.translation_in_context ("Note: You can use //support.eiffel.com/ account", "eiffel.account") end
 
 	link_create_new_account: STRING_32 do Result := locale.translation_in_context ("Create a new account", "eiffel.account") end
 

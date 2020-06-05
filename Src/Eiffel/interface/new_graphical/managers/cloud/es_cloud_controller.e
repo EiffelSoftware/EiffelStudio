@@ -145,8 +145,17 @@ feature -- Events
 			end
 			stop_background_pinging
 
-			if attached es_cloud_s.service as l_cloud_service then
+			dlg := last_license_issue_dialog
+			if dlg /= Void and dlg.is_destroyed then
+				dlg := Void
+				last_license_issue_dialog := Void
+			end
+
+			if dlg = void and then attached es_cloud_s.service as l_cloud_service then
 				create dlg.make (l_cloud_service)
+				last_license_issue_dialog := dlg
+			end
+			if dlg /= Void then
 				w := window_manager.last_focused_development_window
 				if
 					w = Void and then
@@ -163,6 +172,8 @@ feature -- Events
 				end
 			end
 		end
+
+	last_license_issue_dialog: detachable ES_CLOUD_LICENSE_ISSUE_DIALOG
 
 	on_account_signed_out
 		do

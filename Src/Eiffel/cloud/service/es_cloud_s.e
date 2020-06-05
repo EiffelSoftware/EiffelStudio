@@ -32,6 +32,26 @@ feature -- Debug purpose
 		deferred
 		end
 
+feature -- Access: edition
+
+	is_standard_edition: BOOLEAN
+			-- Is associated with standard edition of EiffelStudio.
+		do
+			Result := not (is_enterprise_edition or is_branded_edition)
+		end
+
+	is_enterprise_edition: BOOLEAN
+		deferred
+		end
+
+	is_branded_edition: BOOLEAN
+		deferred
+		end
+
+	edition_brand_name: detachable IMMUTABLE_STRING_8
+		deferred
+		end
+
 feature -- Access
 
 	server_url: READABLE_STRING_8
@@ -60,15 +80,11 @@ feature -- Access
 		deferred
 		end
 
-	is_enterprise_edition: BOOLEAN
-			-- Is associated with Enterprise edition of EiffelStudio.
-		deferred
-		end
-
 	is_signed_in: BOOLEAN
 		do
 			Result := active_account /= Void or else is_guest
 		end
+
 
 	active_account: detachable ES_ACCOUNT
 			-- Active account if signed in, otherwise Void.
@@ -223,8 +239,22 @@ feature -- Registration
 		deferred
 		end
 
-	set_is_enterprise_edition (b: BOOLEAN)
+	set_is_standard_edition
 		deferred
+		ensure
+			is_standard_edition
+		end
+
+	set_is_enterprise_edition
+		deferred
+		ensure
+			is_enterprise_edition
+		end
+
+	set_is_branded_edition (a_brand_name: READABLE_STRING_8)
+		deferred
+		ensure
+			is_branded_edition
 		end
 
 feature -- Connection checking

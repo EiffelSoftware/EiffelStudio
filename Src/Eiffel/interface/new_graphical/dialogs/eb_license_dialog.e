@@ -124,7 +124,7 @@ feature -- Access
 	license_path: PATH
 			-- Path to license file.
 
-	license_info: STRING
+	license_info: STRING_32
 		local
 			f: PLAIN_TEXT_FILE
 		do
@@ -142,12 +142,15 @@ feature -- Access
 				end
 				f.close
 			else
-				create Result.make_from_string ("Missing LICENSE file!")
+				create Result.make_from_string ({STRING_32} "Missing LICENSE file!%N")
+				Result.append_string_general ("location: ")
+				Result.append (license_path.name)
+				Result.append_character ('%N')
 			end
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2018, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2020, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "Summary description for {ES_CLOUD_URL_LAUNCHER}."
 	author: ""
 	date: "$Date$"
@@ -69,6 +69,7 @@ feature -- Execution
 			l_was_hidden: BOOLEAN
 			m: STRING_32
 			l_status_label: like status_label
+			dpi_scaler: EVS_DPI_SCALER
 		do
 			l_status_label := status_label
 			if l_status_label /= Void then
@@ -82,12 +83,13 @@ feature -- Execution
 					l_was_hidden := True
 					l_status_widget.show
 				end
-				l_status_label.set_text (cloud_names.label_opening_url (location))
+				update_status_label (cloud_names.label_opening_url (location), l_status_label)
 			else
 				create popup.make_with_shadow
-				create lab.make_with_text (cloud_names.label_opening_url (location))
+				create lab
 				popup.extend (lab)
-				popup.set_size (200, 50)
+				create dpi_scaler.make
+				popup.set_size (dpi_scaler.scaled_size (200), dpi_scaler.scaled_size  (50))
 				lab.pointer_button_release_actions.extend (agent (i_popup: EV_POPUP_WINDOW; x, y, button: INTEGER; x_tilt, y_tilt, pressure: DOUBLE; screen_x, screen_y: INTEGER)
 					do
 						i_popup.destroy
@@ -99,6 +101,7 @@ feature -- Execution
 				else
 					popup.show
 				end
+				update_status_label (cloud_names.label_opening_url (location), lab)
 			end
 			if
 				attached {STRING_32_PREFERENCE} preferences.misc_data.internet_browser_preference as pref and then
@@ -124,11 +127,36 @@ feature -- Execution
 					if attached {EV_COLORIZABLE} l_status_label as l_col then
 						l_col.set_foreground_color (colors.stock_colors.red)
 					end
-					l_status_label.set_text (m)
+					update_status_label (m, l_status_label)
 				elseif popup /= Void and lab /= Void then
-					lab.set_text (m)
+					update_status_label (m, lab)
 				end
 			end
+		end
+
+	update_status_label (a_txt: READABLE_STRING_GENERAL; a_label: like status_label)
+		local
+			s: STRING_32
+			w,len, nb: INTEGER
+		do
+			if attached {EV_WIDGET} a_label as wid and then wid.is_show_requested then
+				w := wid.width
+				if w > 0 and then attached {EV_FONTABLE} a_label as w_ft and then attached w_ft.font as ft then
+					len := ft.string_width (a_txt)
+					if len > w then
+						nb := w // (ft.string_width ("_") + 1) -- Approx, if font is mono
+					end
+				end
+			end
+			if nb = 0 then
+				nb := 40 -- Default
+			end
+			create s.make_from_string_general (a_txt)
+			if s.count > nb then
+				s.keep_head (nb)
+				s.append_character ({CHARACTER_32} '…')
+			end
+			a_label.set_text (s)
 		end
 
 	clear_label_after_delay (a_timeout_delay: INTEGER; lab: EV_TEXTABLE; a_hide: BOOLEAN)

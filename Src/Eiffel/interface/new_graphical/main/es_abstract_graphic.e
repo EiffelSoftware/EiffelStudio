@@ -154,8 +154,14 @@ feature {NONE} -- Initialization
 			create ctlr.make
 			if attached ctlr.es_cloud_s.service as s then
 				s.register_observer (ctlr)
-				if not is_community_edition then
-					s.set_is_enterprise_edition (True)
+				if is_standard_edition then
+					s.set_is_standard_edition
+				elseif s.is_enterprise_edition then
+					s.set_is_enterprise_edition
+				elseif s.is_branded_edition then
+					s.set_is_branded_edition (edition_name)
+				else
+					s.set_is_standard_edition
 				end
 			end
 		end
@@ -176,9 +182,25 @@ feature {NONE} -- Initialization
 
 feature {NONE} -- Access
 
-	is_community_edition: BOOLEAN
-			-- Is Community edition?
+	edition_name: STRING
 		deferred
+		end
+
+	is_standard_edition: BOOLEAN
+			-- Is Standard edition?
+		do
+			Result := edition_name.is_whitespace
+		end
+
+	is_enterprise_edition: BOOLEAN
+			-- Is Enterprise edition?
+		do
+			Result := edition_name.is_case_insensitive_equal ("enterprise")
+		end
+
+	is_branded_edition: BOOLEAN
+		do
+			Result := not (is_standard_edition or is_enterprise_edition)
 		end
 
 	service_initializer: SERVICE_INITIALIZER
@@ -297,7 +319,7 @@ feature {NONE} -- Welcome dialog
 			end
 			win := first_window.window
 
-			create pg.make (is_community_edition)
+			create pg.make (is_branded_edition)
 			pg.set_quit_action (agent do (create {EXCEPTIONS}).die (0) end)
 			pg.set_next_action (agent load_interface)
 			pg.dialog.set_size (first_window.scaled_size (300), first_window.scaled_size (100))
@@ -567,6 +589,11 @@ feature {NONE} -- Factory
 		ensure
 			result_attached: Result /= Void
 		end
+
+invariant
+
+		unique_edition: is_standard_edition xor is_enterprise_edition xor is_branded_edition
+		valid_branded_edition: is_branded_edition implies not edition_name.is_whitespace
 
 note
 	copyright: "Copyright (c) 1984-2020, Eiffel Software"

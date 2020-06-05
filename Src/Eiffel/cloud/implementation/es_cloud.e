@@ -295,10 +295,18 @@ feature -- Event
 			Precursor (a_is_available)
 		end
 
-feature -- Access
+feature -- Access: edition
 
 	is_enterprise_edition: BOOLEAN
 			-- <Precursor>
+
+	is_branded_edition: BOOLEAN
+			-- <Precursor>
+
+	edition_brand_name: detachable IMMUTABLE_STRING_8
+			-- <Precursor>
+
+feature -- Access
 
 	config: ES_CLOUD_CONFIG
 
@@ -483,9 +491,25 @@ feature {NONE} -- Status report implementation
 
 feature -- Element change
 
-	set_is_enterprise_edition (b: BOOLEAN)
+	set_is_standard_edition
 		do
-			is_enterprise_edition := b
+			is_enterprise_edition := False
+			is_branded_edition := False
+			edition_brand_name := Void
+		end
+
+	set_is_enterprise_edition
+		do
+			is_enterprise_edition := True
+			is_branded_edition := False
+			edition_brand_name := Void
+		end
+
+	set_is_branded_edition (a_brand_name: READABLE_STRING_8)
+		do
+			is_branded_edition := True
+			is_enterprise_edition := False
+			edition_brand_name := a_brand_name
 		end
 
 	set_server_url (a_server_url: READABLE_STRING_8)
@@ -760,7 +784,11 @@ feature -- Updating
 				store
 				if a_account.is_expired then
 					on_account_signed_out
-				elseif attached installation as l_installation and then l_installation.is_active then
+				elseif
+					attached installation as l_installation and then
+					l_installation.is_active and then
+					l_installation.associated_license.is_active
+				then
 					on_account_updated (a_account)
 				else
 					on_account_license_expired (acc)

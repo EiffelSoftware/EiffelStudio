@@ -10,6 +10,11 @@ class
 
 inherit
 	ES_ABSTRACT_GRAPHIC
+		redefine
+			is_standard_edition,
+			is_enterprise_edition,
+			is_branded_edition
+		end
 
 create
 	make
@@ -32,11 +37,19 @@ feature {NONE} -- Initialization
 
 feature {NONE} -- Access
 
-	is_community_edition: BOOLEAN = True
-			-- Is Community edition?
+	edition_name: STRING = ""
+
+	is_standard_edition: BOOLEAN = True
+			-- Is standard edition?
+
+	is_enterprise_edition: BOOLEAN = False
+			-- Is enterprise edition?
+
+	is_branded_edition: BOOLEAN = False
+			-- Is branded edition?			
 
 note
-	copyright:	"Copyright (c) 1984-2019, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2020, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

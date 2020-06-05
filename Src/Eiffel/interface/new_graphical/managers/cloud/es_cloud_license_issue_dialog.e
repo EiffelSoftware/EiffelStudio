@@ -122,7 +122,7 @@ feature -- Callbacks
 
 	on_retry
 		do
-			service.check_for_new_license
+			ev_application.add_idle_action_kamikaze (agent service.check_for_new_license)
 			close
 		end
 

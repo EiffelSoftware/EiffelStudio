@@ -25,10 +25,10 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_is_community_edition: like is_community_edition)
+	make (a_terms_agreement_required: like terms_agreement_required)
 			-- Initialize `Current'.
 		do
-			is_community_edition := a_is_community_edition
+			terms_agreement_required := a_terms_agreement_required
 			build_interface
 		end
 
@@ -54,8 +54,8 @@ feature -- Execution
 		local
 			acc: ES_ACCOUNT
 		do
-			if is_community_edition then
-				if not license_accepted then
+			if terms_agreement_required or is_cloud_enabled then
+				if terms_agreement_required and not license_accepted then
 					switch_to_user_agreement_page
 					show_modal_to_window (win)
 				elseif is_cloud_enabled and then attached es_cloud_s.service as cld then
@@ -99,7 +99,7 @@ feature -- Execution
 			hb.set_padding_width (layout_constants.default_padding_size)
 
 			main_box.replace (hb)
-			if is_community_edition then
+			if terms_agreement_required then
 				create vb
 				eiffel_image :=	Pixmaps.bm_About.twin
 				eiffel_image.set_minimum_size (eiffel_image.width, eiffel_image.height)
@@ -154,7 +154,7 @@ feature -- Execution
 
 				create but.make_with_text_and_action (interface_names.b_purchase, agent on_purchase_selected)
 				layout_constants.set_default_size_for_button (but)
-				append_label_and_item_horizontally (interface_names.l_purchase_enterprise_edition, but, vb)
+				append_label_and_item_horizontally (interface_names.l_purchase_license, but, vb)
 
 				create but.make_with_text_and_action (interface_names.b_reject_and_quit, agent on_quit)
 				layout_constants.set_default_size_for_button (but)
@@ -235,8 +235,8 @@ feature -- Execution
 
 feature -- Status
 
-	is_community_edition: BOOLEAN
-			-- Is Current EiffelStudio the Community edition?
+	terms_agreement_required: BOOLEAN
+			-- Is Current EiffelStudio the Standard edition?
 
 	license_accepted: BOOLEAN
 		do
@@ -262,14 +262,7 @@ feature -- Text
 
 	terms_agreement_text: STRING
 		once
-			Result :=  locale.translation_in_context ("[
-About the EiffelStudio Community License
-
-The terms of the EiffelStudio Community License appear below; they are those of the Gnu Public License (GPL). The spirit of the EiffelStudio Community License is to encourage the production of free, reusable Eiffel software. Users relying on the Eiffel Community License are expected to make their own EiffelStudio-produced software available under GPL or another open-source software license.
-There are a variety of ways to distribute EiffelStudio-produced software, from Github to BitBucket, SourceForge and others, as well as Eiffel's own Iron repository. We request that you make the software known and available to other Eiffel users by providing a link to it. Simply log into your account at https://myprojects.eiffel.org and follow the instructions.
-If you prefer to develop proprietary software, or do not agree with the terms of the EiffelStudio Community License, use another of the available EiffelStudio licenses.
-We look forward to your contributions.
-]", "license")
+			Result :=  locale.translation_in_context ("To continue using this editon of EiffelStudio, you must first agree with the license. If you do not agree with the terms, use another EiffelStudio Edition.", "license")
 		end
 
 feature -- Access: widgets

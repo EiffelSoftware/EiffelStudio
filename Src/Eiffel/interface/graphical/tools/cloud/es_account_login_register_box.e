@@ -83,7 +83,7 @@ feature {NONE} -- Initialization
 					cloud_names.prompt_sign_to_cloud_services
 				end
 			s.append_character ('%N')
-			s.append (cloud_names.prompt_registering_and_agree_terms_of_use_and_rules)
+			s.append (cloud_names.prompt_agree_terms_of_use_and_rules)
 			create txt
 			txt.set_text (s)
 			txt.set_is_text_wrapped (True); txt.align_text_left; txt.align_text_top

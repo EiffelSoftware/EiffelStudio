@@ -2744,7 +2744,7 @@ feature -- Startup pages
 	l_read_license_text: STRING_32 do Result := locale.translation ("Read License Text") end
 	l_please_read_and_accept_terms: STRING_32 do Result := locale.translation ("Please read and accept these terms and conditions. Scroll down for full text:") end
 	l_agree_and_continue_with_terms: STRING_32 do Result := locale.translation ("I confirm that I have read and accept the terms") end
-	l_purchase_enterprise_edition: STRING_32 do Result := locale.translation ("Purchase Enterprise edition") end
+	l_purchase_license: STRING_32 do Result := locale.translation ("Purchase a license") end
 
 feature -- Account related
 

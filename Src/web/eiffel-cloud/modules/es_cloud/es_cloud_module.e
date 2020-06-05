@@ -510,22 +510,22 @@ feature -- Hooks: block
 			lic: ES_CLOUD_LICENSE
 		do
 			create l_html.make (1024)
---			l_html.append ("<div class=%"es_summary%">")
---			if
---				attached api.user_licenses (a_user) as lst and then
---				not lst.is_empty
---			then
---				across
---					lst as ic
---				loop
---					lic := ic.item.license
---					if not lic.is_expired then
---						l_active_count := l_active_count + 1
+			l_html.append ("<div class=%"es_summary%">")
+			if
+				attached api.user_licenses (a_user) as lst and then
+				not lst.is_empty
+			then
+				across
+					lst as ic
+				loop
+					lic := ic.item.license
+					if not lic.is_expired then
+						l_active_count := l_active_count + 1
 
---					end
---					api.append_short_license_view_to_html (lic, a_user, Current, l_html)
---				end
---			end
+					end
+					api.append_short_license_view_to_html (lic, a_user, Current, l_html)
+				end
+			end
 			if l_active_count = 0 then
 				l_html.append ("<a href=%"" + a_response.location_url (licenses_location, Void) + "%">No active license...</a>")
 			end

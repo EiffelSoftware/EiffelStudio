@@ -256,17 +256,21 @@ feature -- Change
 			end
 		end
 
-	discard_installation (inst: ES_CLOUD_INSTALLATION)
+	discard_installation (inst: ES_CLOUD_INSTALLATION; a_user: detachable ES_CLOUD_USER)
 		local
 			l_params: STRING_TABLE [detachable ANY]
 		do
 			reset_error
-
 			create l_params.make (2)
 			l_params.force (inst.id, "iid")
-			l_params.force (inst.license_id, "lid")
-			sql_delete (sql_delete_installation_sessions, l_params)
-			sql_finalize_delete (sql_delete_installation_sessions)
+			if a_user /= Void then
+				l_params.force (a_user.id, "uid")
+				sql_delete (sql_delete_installation_user_sessions, l_params)
+				sql_finalize_delete (sql_delete_installation_user_sessions)
+			else
+				sql_delete (sql_delete_installation_sessions, l_params)
+				sql_finalize_delete (sql_delete_installation_sessions)
+			end
 
 			if not has_error then
 				create l_params.make (1)
@@ -342,7 +346,9 @@ feature {NONE} -- Queries: installations
 
 feature {NONE} -- Sessions
 
-	sql_delete_installation_sessions: STRING = "DELETE FROM es_sessions WHERE iid=:iid AND uid=:uid;"
+	sql_delete_installation_user_sessions: STRING = "DELETE FROM es_sessions WHERE iid=:iid AND uid=:uid;"
+
+	sql_delete_installation_sessions: STRING = "DELETE FROM es_sessions WHERE iid=:iid;"
 
 	sql_select_last_user_session: STRING = "SELECT sid, iid, uid, state, first, last, title FROM es_sessions WHERE uid=:uid ORDER BY last DESC LIMIT 1;"
 

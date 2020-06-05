@@ -52,7 +52,7 @@ feature -- Change
 		deferred
 		end
 
-	discard_installation (inst: ES_CLOUD_INSTALLATION)
+	discard_installation (inst: ES_CLOUD_INSTALLATION; a_user: detachable ES_CLOUD_USER)
 		deferred
 		end
 

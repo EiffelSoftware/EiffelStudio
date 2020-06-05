@@ -267,7 +267,7 @@ feature -- Execution
 					iid := p_iid.value
 				end
 				if iid /= Void and then attached es_cloud_api.installation (iid) as l_installation then
-					es_cloud_api.discard_installation (l_installation)
+					es_cloud_api.discard_installation (l_installation, a_user)
 					if es_cloud_api.has_error or else es_cloud_api.installation (iid) /= Void then
 						r := new_error_response ("Can not discard installation", req, res)
 					else

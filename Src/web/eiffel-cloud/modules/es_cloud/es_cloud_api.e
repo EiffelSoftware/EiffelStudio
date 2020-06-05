@@ -358,9 +358,9 @@ feature -- Access: subscriptions
 			end
 		end
 
-	discard_installation (inst: ES_CLOUD_INSTALLATION)
+	discard_installation (inst: ES_CLOUD_INSTALLATION; a_user: detachable ES_CLOUD_USER)
 		do
-			es_cloud_storage.discard_installation (inst)
+			es_cloud_storage.discard_installation (inst, a_user)
 		end
 
 	user_installations (a_user: ES_CLOUD_USER): LIST [ES_CLOUD_INSTALLATION]

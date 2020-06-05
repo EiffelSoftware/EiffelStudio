@@ -208,7 +208,7 @@ feature -- Change
 		do
 		end
 
-	discard_installation (inst: ES_CLOUD_INSTALLATION)
+	discard_installation (inst: ES_CLOUD_INSTALLATION; a_user: detachable ES_CLOUD_USER)
 		do
 		end
 

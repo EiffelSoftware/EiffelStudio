@@ -22,14 +22,12 @@ feature -- Logger
             -- without reinitializing it.
 		local
 			l_log_writer: ESA_LOG_ROLLING_WRITER_FILE
-			l_environment: EXECUTION_ENVIRONMENT
 			l_path: PATH
 			l_logger_config: LOGGER_CONFIGURATION
 			dir: DIRECTORY
 		once ("PROCESS")
 					--| Initialize the logging facility
 			create Result.make
-			create l_environment
 
 			l_path := create {PATH}.make_current
 			if attached separate_character_option_value ('d') as l_dir then

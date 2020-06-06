@@ -33,7 +33,7 @@ feature -- Access
 	connection_string: READABLE_STRING_32
 			-- Connection string
 		do
-			Result := "Driver={"+driver+"};" + database_string;
+			Result := {STRING_32}"Driver={"+driver+"};" + database_string;
 		end
 
 end

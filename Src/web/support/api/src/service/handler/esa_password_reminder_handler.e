@@ -72,7 +72,7 @@ feature -- HTTP Methods
 			-- Send a new password.
 		local
 			l_rhf: ESA_REPRESENTATION_HANDLER_FACTORY
-			l_email: READABLE_STRING_32
+			l_user_info, l_email: READABLE_STRING_32
 			l_error: detachable STRING;
 			l_token: STRING
 		do
@@ -81,7 +81,10 @@ feature -- HTTP Methods
 				debug
 					log.write_information (generator + ".do_post Processing request using media type " + l_type )
 				end
-				l_email:= extract_data_from_request (req, l_type)
+				l_user_info:= extract_data_from_request (req, l_type)
+				l_email := email_from_user_info (l_user_info)
+
+
 				if attached api_service.token_from_email (l_email) then
 							-- Account not activated
 					l_error := "Account not activated"
@@ -105,13 +108,27 @@ feature -- HTTP Methods
 							l_rhf.new_representation_handler (esa_config, l_type, media_type_variants (req)).reminder_page (req, res, l_error)
 						end
 					else
-						l_error := "User does not exist for the given email"
+						l_error := "User does not exist for the given email/username"
 						l_rhf.new_representation_handler (esa_config, l_type, media_type_variants (req)).reminder_page (req, res, l_error)
 					end
 				end
 			else
 					-- Not acceptable
 				l_rhf.new_representation_handler (esa_config, Empty_string, media_type_variants (req)).bad_request_page (req,res)
+			end
+		end
+
+
+	email_from_user_info (a_data: READABLE_STRING_32): STRING_32
+			-- Retrieve user email from request data.
+		do
+				-- Check if the user data represents an email.
+			if attached api_service.user_from_email (a_data) then
+				Result := a_data
+			elseif attached {USER_INFORMATION} api_service.user_account_information (a_data) as l_user_info and then attached l_user_info.email as l_email then
+				Result := l_email
+			else
+				Result := a_data
 			end
 		end
 

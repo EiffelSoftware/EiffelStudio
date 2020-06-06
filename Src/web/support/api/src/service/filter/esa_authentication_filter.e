@@ -39,8 +39,8 @@ feature -- Basic operations
 					-- A valid user
 				if (attached l_auth.type as l_auth_type and then l_auth_type.is_case_insensitive_equal ("basic")) and then
 					attached l_auth.login as l_auth_login and then attached l_auth.password as l_auth_password then
-					if api_service.login_valid (l_auth_login, l_auth_password) then
-						req.set_execution_variable ("user", create {USER}.make (l_auth_login))
+					if attached {USER} api_service.user_login_valid (l_auth_login, l_auth_password) as l_user then
+						req.set_execution_variable ("user", l_user)
 						execute_next (req, res)
 					else
 						log.write_error (generator + ".execute login_valid failed for: " + {UTF_CONVERTER}.utf_32_string_to_utf_8_string_8 (l_auth_login))

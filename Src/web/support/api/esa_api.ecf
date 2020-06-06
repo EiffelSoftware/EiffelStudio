@@ -1,17 +1,19 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
-<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-18-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-18-0 http://www.eiffel.com/developers/xml/configuration-1-18-0.xsd" name="esa_api" uuid="8B2873E9-8E2A-4490-8B6C-1122B579FD1D" library_target="esa_api">
+<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-21-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-21-0 http://www.eiffel.com/developers/xml/configuration-1-21-0.xsd" name="esa_api" uuid="8B2873E9-8E2A-4490-8B6C-1122B579FD1D" library_target="esa_api">
 	<target name="common" abstract="true">
 		<file_rule>
 			<exclude>/.svn$</exclude>
 			<exclude>/CVS$</exclude>
 			<exclude>/EIFGENs$</exclude>
 		</file_rule>
-		<option warning="true">
+		<option warning="warning">
 			<debug name="esa" enabled="true"/>
 			<assertions precondition="true" postcondition="true" check="true" invariant="true" loop="true" supplier_precondition="true"/>
 		</option>
 		<setting name="console_application" value="true"/>
 		<setting name="exception_trace" value="true"/>
+		<setting name="total_order_on_reals" value="true"/>
+		<setting name="dead_code_removal" value="feature"/>
 		<capability>
 			<concurrency support="none" use="thread"/>
 		</capability>
@@ -58,8 +60,8 @@
 		<capability>
 			<concurrency support="thread" use="thread"/>
 		</capability>
-		<library name="standalone_launcher" location="$ISE_LIBRARY\unstable\library\web\cms\launcher\standalone.ecf" readonly="false"/>
 		<variable name="httpd_ssl_disabled" value="false"/>
+		<library name="standalone_launcher" location="$ISE_LIBRARY\unstable\library\web\cms\launcher\standalone.ecf" readonly="false"/>
 		<cluster name="src" location=".\src\" recursive="true"/>
 	</target>
 	<target name="esa_api_test" extends="common">
@@ -67,6 +69,7 @@
 		<capability>
 			<concurrency support="thread" use="thread"/>
 		</capability>
+		<library name="base_process" location="$ISE_LIBRARY\library\process\base\base_process.ecf"/>
 		<library name="default_standalone" location="$ISE_LIBRARY\contrib\library\web\framework\ewf\wsf\default\standalone.ecf"/>
 		<library name="ewsgi" location="$ISE_LIBRARY\contrib\library\web\framework\ewf\ewsgi\ewsgi.ecf" readonly="false">
 			<option>
@@ -74,13 +77,12 @@
 			</option>
 		</library>
 		<library name="http_client" location="$ISE_LIBRARY\contrib\library\network\http_client\http_client.ecf"/>
-		<library name="testing" location="$ISE_LIBRARY\library\testing\testing.ecf"/>
-		<library name="base_process" location="$ISE_LIBRARY\library\process\base\base_process.ecf"/>
 		<library name="process" location="$ISE_LIBRARY\library\process\process.ecf"/>
+		<library name="standalone_launcher" location="$ISE_LIBRARY\unstable\library\web\cms\launcher\standalone.ecf" readonly="false"/>
+		<library name="testing" location="$ISE_LIBRARY\library\testing\testing.ecf"/>
 		<library name="thread" location="$ISE_LIBRARY\library\thread\thread.ecf"/>
 		<library name="wgi_standalone" location="$ISE_LIBRARY\contrib\library\web\framework\ewf\ewsgi\connectors\standalone\standalone.ecf"/>
 		<library name="wsf_standalone" location="$ISE_LIBRARY\contrib\library\web\framework\ewf\wsf\connector\standalone.ecf"/>
-		<library name="standalone_launcher" location="$ISE_LIBRARY\unstable\library\web\cms\launcher\standalone.ecf" readonly="false"/>
 		<cluster name="src" location="src\" recursive="true"/>
 		<cluster name="test" location="test\" recursive="true"/>
 	</target>

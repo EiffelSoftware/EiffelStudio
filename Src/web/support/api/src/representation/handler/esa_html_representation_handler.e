@@ -659,15 +659,16 @@ feature -- Response
 			res.put_string (output)
 		end
 
-	compute_response_redirect (req: WSF_REQUEST; res: WSF_RESPONSE; a_location: READABLE_STRING_32)
+	compute_response_redirect (req: WSF_REQUEST; res: WSF_RESPONSE; a_location: READABLE_STRING_8)
 			-- Redirect to `a_location'
 		local
 			h: HTTP_HEADER
 		do
 			create h.make
+			h.put_content_length (0)
 			h.put_content_type_text_html
 			h.put_current_date
-			h.put_location (a_location.to_string_8)
+			h.put_location (a_location)
 			res.set_status_code ({HTTP_STATUS_CODE}.see_other)
 			res.put_header_text (h.string)
 		end

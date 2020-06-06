@@ -9,8 +9,8 @@
 			<div class="modal-body" id="myModalForm">
 				<a href="{$host/}/reminder" itemprop="reminder" rel="reminder">Forgot username or password?</a>
 				<form data-rel="login" itemprop="login">
-					<p itemprop="user_name"><input type="text" class="span3" name="username" id="username" placeholder="Enter Username" value="" required/></p>
-					<p itemprop="password"><input type="password" class="span3" id="password" name="password" placeholder="Enter Password" required/></p>
+					<p itemprop="user_name"><input type="text" class="form-control" name="username" id="username" placeholder="Enter Username or Email" value="" required/></p>
+					<p itemprop="password"><input type="password" class="form-control" id="password" name="password" placeholder="Enter Password" required/></p>
 					<p itemprop="remember_me"><input type="checkbox" name="remember_me" value="remember me" checked> Remember me<br>
 					<input type="hidden" name="host" value="{$host/}"/>
 					<div class="controls">

@@ -62,9 +62,10 @@ feature -- HTTP Methods
 				attached {WSF_STRING} req.form_parameter ("remember_me") as l_remember_me
 			then
 				if
-					api_service.login_valid (l_username.value, l_password.value) and then
-					api_service.is_active (l_username.value) and then
-					attached api_service.user_from_username (l_username.value) as l_user
+--					api_service.login_valid (l_username.value, l_password.value) and then
+--					api_service.is_active (l_username.value) and then
+--					attached api_service.user_from_username (l_username.value) as l_user
+					attached api_service.user_login_valid (l_username.value, l_password.value) as l_user 
 				then
 					l_token := generate_token
 					create l_cookie.make (esa_session_token, l_token)

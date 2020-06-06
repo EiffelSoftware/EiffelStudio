@@ -448,7 +448,7 @@ feature -- Access
 			post_data_provider_execution
 		end
 
-	interaction_content (a_id: INTEGER): STRING
+	interaction_content (a_id: INTEGER): STRING_32
 				-- 	Retrieve the content given the id of the interaction
 			do
 				create Result.make_empty
@@ -811,6 +811,23 @@ feature -- Status Report
 				Result := login_provider.validate_login (a_username, l_sha_password)
 			end
 			post_login_provider_execution
+		end
+
+	user_login_valid (a_username: READABLE_STRING_32; a_password: READABLE_STRING_32): detachable USER
+			-- Does account with username `a_username' and password `a_password' exist?
+			-- if true return a User in other case Void.
+		do
+				-- Login with email
+			if attached {TUPLE [first_name: STRING; last_name: STRING; user_name: STRING]} login_provider.user_from_email (a_username) as l_user_info then
+				if login_valid (l_user_info.user_name, a_password) and then is_active (l_user_info.user_name) then
+					Result := user_from_username (l_user_info.user_name)
+				end
+			else
+				-- Login with username
+				if login_valid (a_username, a_password) and then is_active (a_username) then
+					Result := user_from_username (a_username)
+				end
+			end
 		end
 
 	is_report_visible_guest (a_report: INTEGER): BOOLEAN

@@ -24,7 +24,7 @@ feature -- Status
 			template_context.set_template_folder (v)
 		end
 
-	set_template_file_name (v: STRING)
+	set_template_file_name (v: READABLE_STRING_GENERAL)
 			-- Set  `template' to `v'.
 		do
 			create template.make_from_file (v)

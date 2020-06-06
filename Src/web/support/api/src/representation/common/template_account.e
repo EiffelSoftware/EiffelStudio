@@ -15,7 +15,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_host: READABLE_STRING_GENERAL; a_account: ESA_ACCOUNT_VIEW; a_template: READABLE_STRING_32)
+	make (a_host: READABLE_STRING_GENERAL; a_account: ESA_ACCOUNT_VIEW; a_template: READABLE_STRING_GENERAL)
 			-- Initialize `Current'.
 		do
 			set_template_file_name (a_template)

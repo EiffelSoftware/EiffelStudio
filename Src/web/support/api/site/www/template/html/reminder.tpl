@@ -7,12 +7,12 @@
 			<div class="main">
 				<form class="form-horizontal well" id="reminder" method='POST' action='{$host/}/reminder' itemprop="create">
 					<fieldset>
-						<legend>Username/ Password Reminder</legend>
+						<legend>Reset your password</legend>
 						<p>If you've forgotten your Username or Password, simply fill in your e-mail address below, then answer your security question. We will assign you a new random password and remind you of your Username via email. Once you log back in you may choose your own password by editing your member profile. </p>
 						<div class="control-group">
 							<label class="control-label" itemprop="email">Email</label>
 							<div class="controls">
-								<input type="email" class="input-xlarge" id="email" name="email" rel="popover" data-content="Enter your email" data-original-title="Email" placeholder="email@example.com" value="{$form.email/}" required />
+								<input type="test" class="col-xs-4" id="email" name="email" rel="popover" data-content="Enter your email/Username" data-original-title="Email/Username" placeholder="email@example.com/Username" value="{$form.email/}" required /><br>
 							</div>
 						</div>
 						<div class="control-group">

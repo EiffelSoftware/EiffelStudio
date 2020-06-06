@@ -1,11 +1,13 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
-<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-18-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-18-0 http://www.eiffel.com/developers/xml/configuration-1-18-0.xsd" name="esa_db" uuid="6052764C-5998-4290-8578-18C2D7DA9D14" library_target="esa_db">
+<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-21-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-21-0 http://www.eiffel.com/developers/xml/configuration-1-21-0.xsd" name="esa_db" uuid="6052764C-5998-4290-8578-18C2D7DA9D14" library_target="esa_db">
 	<target name="esa_db">
 		<root all_classes="true"/>
-		<option warning="true">
+		<option warning="warning">
 			<assertions precondition="true" postcondition="true" check="true" invariant="true" loop="true" supplier_precondition="true"/>
 		</option>
 		<setting name="console_application" value="true"/>
+		<setting name="total_order_on_reals" value="true"/>
+		<setting name="dead_code_removal" value="feature"/>
 		<capability>
 			<concurrency support="none"/>
 		</capability>

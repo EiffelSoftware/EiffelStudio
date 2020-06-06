@@ -136,7 +136,9 @@ feature -- Access
 					if attached read_string (a_index) as s8 then
 						Result := s8.to_string_32 -- FIXME: any escape?
 					else
-						check is_string_nor_null: l_item = Void end
+						debug
+							check is_string_nor_null: l_item = Void end
+						end
 					end
 				end
 			end

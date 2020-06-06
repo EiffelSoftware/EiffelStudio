@@ -42,7 +42,7 @@ feature {NONE} -- Initialization
 		rescue
 			create db_control.make
 			set_last_error_from_exception ("Connection execution")
-			log.write_critical (generator + ".make_common:" + last_error_message)
+			log.write_critical (generator + {STRING_32}".make_common:" + last_error_message)
 			if is_connected then
 				disconnect
 			end

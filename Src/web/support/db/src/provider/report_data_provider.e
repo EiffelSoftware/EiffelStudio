@@ -877,8 +877,7 @@ feature -- Access
 			post_execution
 		end
 
-
-	interaction_content (a_id: INTEGER): detachable STRING
+	interaction_content (a_id: INTEGER): detachable STRING_32
 		local
 			l_parameters:STRING_TABLE [ANY]
 		do
@@ -891,10 +890,11 @@ feature -- Access
 			db_handler.execute_query
 			if not db_handler.after then
 				db_handler.start
-				Result := db_handler.read_string (1)
+				Result := db_handler.read_string_32 (1)
 			end
 			post_execution
 		end
+
 feature -- Basic Operations
 
 	new_problem_report_id (a_username: READABLE_STRING_32): INTEGER
@@ -2167,17 +2167,16 @@ feature {NONE} -- Implementation
 			end
 
 				--Content
-			if attached {STRING} a_tuple.item (2) as l_item_2 then
+			if attached db_handler.read_string_32 (2) as l_item_2 then
 				Result.set_content (l_item_2)
 			end
 
 				--Username
-			if attached {STRING} a_tuple.item (3) as l_item_3 then
+			if attached db_handler.read_string_32 (3) as l_item_3 then
 				Result.set_contact (create {USER}.make (l_item_3))
 			end
-
 				--Status
-			if attached {STRING} a_tuple.item (6) as l_item_6 then
+			if attached db_handler.read_string_32 (6) as l_item_6 then
 				Result.set_status (l_item_6)
 			end
 

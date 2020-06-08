@@ -140,7 +140,7 @@ iff defined NO_STANDARD_BUILD then
 	endiff
 	move ecb.exe %INSTALL_DIR\releases\enterprise_version
 
-	exprtfile -r %PUBLIC_SVN_REVISION %DEFAULT_PUBLIC_SVN/Src/Delivery/scripts/licensing/eiffelstudio/enterprise.txt > %INSTALL_DIR\releases\enterprise_version\LICENSE
+	exprtfile -r %PUBLIC_SVN_REVISION %DEFAULT_PUBLIC_SVN/Src/Delivery/scripts/licensing/eiffelstudio/license.txt > %INSTALL_DIR\releases\enterprise_version\LICENSE
 
 else
 	iff not defined NO_NEW_EC then
@@ -209,7 +209,7 @@ else
 				CANCEL_ON_ERROR
 			endiff
 
-			exprtfile -r %PUBLIC_SVN_REVISION %DEFAULT_PUBLIC_SVN/Src/Delivery/scripts/licensing/eiffelstudio/enterprise.txt > %INSTALL_DIR\releases\enterprise_version-axar\LICENSE
+			exprtfile -r %PUBLIC_SVN_REVISION %DEFAULT_PUBLIC_SVN/Src/Delivery/scripts/licensing/eiffelstudio/license.txt > %INSTALL_DIR\releases\enterprise_version-axar\LICENSE
 
 			remtrace Clean AXAR additional file.
 			fullrd %EIFFEL_SRC\Eiffel\interface\new_graphical\overrides\axar
@@ -246,7 +246,7 @@ else
 				CANCEL_ON_ERROR
 			endiff
 
-			exprtfile -r %PUBLIC_SVN_REVISION %DEFAULT_PUBLIC_SVN/Src/Delivery/scripts/licensing/eiffelstudio/enterprise.txt > %INSTALL_DIR\releases\enterprise_version\LICENSE
+			exprtfile -r %PUBLIC_SVN_REVISION %DEFAULT_PUBLIC_SVN/Src/Delivery/scripts/licensing/eiffelstudio/license.txt > %INSTALL_DIR\releases\enterprise_version\LICENSE
 
 			remtrace Restore non enterprise edition files
 			move ec.ecf-bak ec.ecf

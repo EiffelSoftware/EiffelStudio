@@ -62,8 +62,8 @@ if [ "$MULTIPLE_EDITIONS" ]; then
 	chmod go-w $INSTALL_DIR/studio/spec/$ISE_PLATFORM/bin/ec 
 	chmod a+rx $INSTALL_DIR/studio/spec/$ISE_PLATFORM/bin/ecb
 	chmod go-w $INSTALL_DIR/studio/spec/$ISE_PLATFORM/bin/ecb
-	if [ -f licensing/eiffelstudio/enterprise.txt ]; then
-		cp licensing/eiffelstudio/enterprise.txt $INSTALL_DIR/LICENSE
+	if [ -f licensing/eiffelstudio/license.txt ]; then
+		cp licensing/eiffelstudio/license.txt $INSTALL_DIR/LICENSE
 	fi
 
 	remtrace copying CD key validator

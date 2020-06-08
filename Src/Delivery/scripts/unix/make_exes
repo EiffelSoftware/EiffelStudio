@@ -124,7 +124,7 @@ if [ ! "$NO_NEW_EC" ]; then
 		cd $FINALIZATION_DIR
 		cd $EIFFEL_SRC/Eiffel/API/constants
 		# save original system_constants.e
-		move system_constants.e system_constants.e.bak
+		copy system_constants.e system_constants.e.bak
 		sed -e "s/[vV]ersion_type_name:[ ]*STRING\(_[0-9]+\)\{0,1\}[ ]*=[ ]*\"[^\"]*\"/Version_type_name:\ STRING\ =\ \"Enterprise\ Edition\"/g" system_constants.e >> new_system_constants.e
 		move new_system_constants.e system_constants.e
 		cd $FINALIZATION_DIR

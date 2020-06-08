@@ -6,7 +6,7 @@
   procedure. Opening or downloading the software package, or starting its 
   installation procedure, indicates your acceptance of these terms and conditions.
   This software agreement governs your use of EiffelStudio Integrated Developmen
-  t Environment, Enterprise Edition  (hereinafter referred to as EiffelStudio)
+  t Environment (hereinafter referred to as EiffelStudio)
   from Interactive Software Engineering, Inc., a  California Corporation with
   offices in Goleta, California 93117, doing business as Eiffel Software 
   (hereinafter Eiffel Software). By using the enclosed EiffelStudio software package,
@@ -46,9 +46,9 @@ your purchase order or invoice.
   3. PROPERTY RIGHTS 
 
     a) EiffelStudio is copyrighted by Eiffel Software and proprietary to
-	Eiffel Software, and Eiffel Software remains title and ownership of 
+	Eiffel Software, and Eiffel Software retains title and ownership of 
 	EiffelStudio, and all copies of EiffelStudio, including the copy of 
-	EiffelStudio recorded on delivery media. 
+	EiffelStudio recorded on delivery media if any. 
 
     b) This is not a sale of EiffelStudio or any copy. You agree to take
 	all reasonable steps to protect EiffelStudio against unauthorized use 

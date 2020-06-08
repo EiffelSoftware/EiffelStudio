@@ -106,7 +106,7 @@ if exist %INSTALL_DIR%\%STUDIO_NAME% (
     ren %INSTALL_DIR%\%STUDIO_NAME% %INSTALL_DIR%\EiffelStudio
 )
 
-if "%NO_INSTALL%" NEQ "True" goto BUILD_ZIP
+if "%NO_INSTALL%" EQU "True" goto BUILD_ZIP
 
 remtrace ==============================================
 remtrace Building the MSIs

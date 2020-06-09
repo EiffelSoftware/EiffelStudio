@@ -4105,7 +4105,7 @@ Infix_operator: TE_STR_LT
 			{
 					-- Alias names should always be taken in their lower case version
 				if attached $1 as l_str_and then
-					l_str_and.value.to_lower
+					l_str_and.value_to_lower
 					$$ := l_str_and
 				end
 			}
@@ -4113,7 +4113,7 @@ Infix_operator: TE_STR_LT
 			{
 					-- Alias names should always be taken in their lower case version
 				if attached $1 as l_str_and_then then
-					l_str_and_then.value.to_lower
+					l_str_and_then.value_to_lower
 					$$ := l_str_and_then
 				end
 			}
@@ -4121,7 +4121,7 @@ Infix_operator: TE_STR_LT
 			{
 					-- Alias names should always be taken in their lower case version
 				if attached $1 as l_str_implies then 
-					l_str_implies.value.to_lower
+					l_str_implies.value_to_lower
 					$$ := l_str_implies
 				end
 			}
@@ -4129,7 +4129,7 @@ Infix_operator: TE_STR_LT
 			{
 					-- Alias names should always be taken in their lower case version
 				if attached $1 as l_str_or then
-					l_str_or.value.to_lower
+					l_str_or.value_to_lower
 					$$ := l_str_or
 				end
 			}
@@ -4137,7 +4137,7 @@ Infix_operator: TE_STR_LT
 			{
 					-- Alias names should always be taken in their lower case version
 				if attached $1 as l_str_or_else then
-					l_str_or_else.value.to_lower
+					l_str_or_else.value_to_lower
 					$$ := l_str_or_else
 				end
 			}
@@ -4145,7 +4145,7 @@ Infix_operator: TE_STR_LT
 			{
 					-- Alias names should always be taken in their lower case version
 				if attached $1 as l_str_xor then
-					l_str_xor.value.to_lower
+					l_str_xor.value_to_lower
 					$$ := l_str_xor
 				end
 			}
@@ -4153,7 +4153,7 @@ Infix_operator: TE_STR_LT
 			{
 					-- Alias names should always be taken in their lower case version
 				if attached $1 as l_str_free then
-					l_str_free.value.to_lower
+					l_str_free.value_to_lower
 					$$ := l_str_free
 				end
 			}

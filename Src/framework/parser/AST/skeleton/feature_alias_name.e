@@ -27,8 +27,8 @@ feature {NONE} -- Initialize
 			valid_alias_name:
 				is_bracket_alias_name (a_alias_name.value) or else
 				is_parentheses_alias_name (a_alias_name.value) or else
-				is_valid_binary_operator (a_alias_name.value) or else
-				is_valid_unary_operator (a_alias_name.value)
+				is_valid_binary_operator (a_alias_name.value_32) or else
+				is_valid_unary_operator (a_alias_name.value_32)
 		do
 			alias_name := a_alias_name
 			if a_alias_keyword /= Void then
@@ -72,10 +72,11 @@ feature -- Access
 				create Result.initialize (alias_name.value)
 			else
 					-- For alias, always consider lowercase operator name!
+				check alias_name_is_lower: alias_name.value_is_lower end
 				if is_binary then
-					create Result.initialize (infix_feature_name_with_symbol (alias_name.value.as_lower))
+					create Result.initialize (infix_feature_name_with_symbol (alias_name.value))
 				else
-					create Result.initialize (prefix_feature_name_with_symbol (alias_name.value.as_lower))
+					create Result.initialize (prefix_feature_name_with_symbol (alias_name.value))
 				end
 			end
 		ensure
@@ -127,7 +128,7 @@ feature -- Element change
 invariant
 
 note
-	copyright: "Copyright (c) 1984-2019, Eiffel Software"
+	copyright: "Copyright (c) 1984-2020, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

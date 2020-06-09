@@ -197,7 +197,7 @@ feature {INTERNAL_COMPILER_STRING_EXPORTER} -- Access
 					if attached {STRING_AS} list.first as s then
 							-- Explicit property name
 						Result := s.value
-					elseif attached {ID_AS} list.first as id and then id.name.as_lower.is_equal ("auto") then
+					elseif attached {ID_AS} list.first as id and then id.name.is_case_insensitive_equal ("auto") then
 							-- Implicit property name
 						Result := ""
 					end
@@ -530,7 +530,7 @@ feature -- Roundtrip
 		end
 
 note
-	copyright: "Copyright (c) 1984-2018, Eiffel Software"
+	copyright: "Copyright (c) 1984-2020, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

@@ -96,8 +96,8 @@ feature -- Access
 					until
 						k.keys.after
 					loop
+						k.keys.item.value_to_lower
 						l_str := k.keys.item.value
-						l_str.to_lower
 						system.add_new_debug_clause (l_str)
 						k.keys.forth
 					end
@@ -419,7 +419,7 @@ note
 	ca_ignore:
 		"CA011", "CA011: too many arguments",
 		"CA033", "CA033: very long class"
-	copyright:	"Copyright (c) 1984-2019, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2020, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

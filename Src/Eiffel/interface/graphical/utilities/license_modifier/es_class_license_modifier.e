@@ -35,7 +35,7 @@ feature -- Access
 				if l_list /= Void and then not l_list.is_empty then
 						-- Take the first index value, ignore all others, in case of a typo on the user's part.
 					if attached {STRING_AS} l_list.first as l_string then
-						l_result := l_string.value.as_string_32
+						l_result := l_string.value_32
 						if not l_result.is_empty then
 							Result := l_result
 						end
@@ -378,7 +378,7 @@ feature {NONE} -- Implementation: Internal cache
 			-- Note: Do not use directly!
 
 ;note
-	copyright: "Copyright (c) 1984-2019, Eiffel Software"
+	copyright: "Copyright (c) 1984-2020, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

@@ -79,6 +79,25 @@ feature {INTERNAL_COMPILER_STRING_EXPORTER} -- Properties
 	value: STRING
 			-- Real string value in UTF-8.
 
+	value_is_lower: BOOLEAN
+			-- Is value with all characters in lower case?
+		local
+			s: READABLE_STRING_32
+		do
+			s := value_32
+			Result := s.is_case_insensitive_equal (s.as_lower)
+		end
+
+	value_to_lower
+			-- Convert `value` to the UTF-8 lower case version of `value_32`.
+		local
+			s: STRING_8
+		do
+			s := encoding_converter.utf32_to_utf8 (value_32.as_lower)
+			value.wipe_out
+			value.append (s)
+		end
+
 feature {INTERNAL_COMPILER_STRING_EXPORTER} -- Roundtrip/Text
 
 	string_text (a_match_list: LEAF_AS_LIST): STRING
@@ -198,7 +217,7 @@ invariant
 	value_not_void: value /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2018, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2020, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

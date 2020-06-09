@@ -236,7 +236,7 @@ feature -- Element Change
 				attached files as l_files and then
 				not l_files.is_empty
 			then
-				Result := number + " Community"
+				Result := number
 			else
 				Result := ""
 			end

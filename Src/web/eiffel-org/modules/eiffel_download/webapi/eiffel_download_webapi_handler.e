@@ -259,7 +259,7 @@ feature {NONE} -- Implementation
 					a_platform.is_case_insensitive_equal ("all") and then
 					attached l_download_api.download_channel_configuration (Void) as cfg and then
 					attached l_download_api.retrieve_products (cfg) as l_all_products and then
-					attached l_download_api.retrieve_mirror_community (cfg) as l_mirror
+					attached l_download_api.retrieve_mirror (cfg) as l_mirror
 				then
 						-- all releases and all platforms.
 					across
@@ -290,7 +290,7 @@ feature {NONE} -- Implementation
 					not a_platform.is_case_insensitive_equal ("all") and then
 					attached l_download_api.download_channel_configuration (Void) as cfg and then
 					attached l_download_api.retrieve_products (cfg) as l_all_products and then
-					attached l_download_api.retrieve_mirror_community (cfg) as l_mirror
+					attached l_download_api.retrieve_mirror (cfg) as l_mirror
 				then
 						-- all releases and specific platform.
 					across
@@ -322,8 +322,8 @@ feature {NONE} -- Implementation
 					not a_release.is_case_insensitive_equal ("all") and then
 					not a_platform.is_case_insensitive_equal ("all") and then
 					attached l_download_api.download_channel_configuration (Void) as cfg and then
-					attached l_download_api.retrieve_product_community_by_version (cfg, a_release) as prod and then
-					attached l_download_api.retrieve_mirror_community (cfg) as l_mirror and then
+					attached l_download_api.retrieve_product_by_version (cfg, a_release) as prod and then
+					attached l_download_api.retrieve_mirror (cfg) as l_mirror and then
 					attached prod.build as l_build and then
 					attached prod.name as l_name and then
 					attached prod.version as l_version and then
@@ -361,8 +361,8 @@ feature {NONE} -- Implementation
 					Result := retrieve_by_release_and_platform (req, res, "all", "all")
 				elseif
 					attached l_download_api.download_channel_configuration (Void) as cfg and then
-					attached l_download_api.retrieve_product_community_by_version (cfg, a_release) as l_product and then
-				  	attached l_download_api.retrieve_mirror_community (cfg) as l_mirror and then
+					attached l_download_api.retrieve_product_by_version (cfg, a_release) as l_product and then
+				  	attached l_download_api.retrieve_mirror (cfg) as l_mirror and then
 				   	attached l_product.build as l_build and then
 				  	attached l_product.name as l_name and then
 				  	attached l_product.version as l_version and then
@@ -409,8 +409,8 @@ feature {NONE} -- Implementation
 			if attached download_api as l_download_api then
 				if
 					attached l_download_api.download_channel_configuration (a_channel) as cfg and then
-					attached l_download_api.retrieve_product_community (cfg) as l_product and then
-					attached l_download_api.retrieve_mirror_community (cfg) as l_mirror and then
+					attached l_download_api.retrieve_product (cfg) as l_product and then
+					attached l_download_api.retrieve_mirror (cfg) as l_mirror and then
 					attached l_product.build as l_build and then
 					attached l_product.name as l_name and then
 					attached l_product.version as l_version and then

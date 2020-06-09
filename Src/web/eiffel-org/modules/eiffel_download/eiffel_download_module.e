@@ -51,7 +51,7 @@ feature {NONE} -- Initialization
 			-- Create current module
 		do
 			version := "1.0"
-			description := "Eiffel Community Download"
+			description := "Eiffel Download"
 			package := "eiffel"
 		end
 
@@ -127,11 +127,11 @@ feature -- Hooks
 				l_platform := get_platform (l_ua)
 				vals.force (l_platform, "platform")
 
-				if attached l_api.retrieve_product_community (cfg) as l_product then
+				if attached l_api.retrieve_product (cfg) as l_product then
 					if
 						attached l_product.name as l_name and then
 						attached l_product.version  as l_version and then
-						attached l_api.retrieve_mirror_community (cfg) as l_mirror
+						attached l_api.retrieve_mirror (cfg) as l_mirror
 					then
 						vals.force (l_name + " " + l_version, "last_release")
 						if attached l_product.default_mirror as dft_mirror then
@@ -281,7 +281,7 @@ feature -- Handler
 					if
 						attached l_api.download_channel_configuration (a_channel) as cfg
 					then
-						vals.force (l_api.retrieve_product_community (cfg), "product")
+						vals.force (l_api.retrieve_product (cfg), "product")
 						if attached l_api.retrieve_products (cfg) as l_products then
 								-- Compute download links if needed.
 							across
@@ -300,7 +300,7 @@ feature -- Handler
 						else
 							vals.force (Void, "products")
 						end
-						vals.force (l_api.retrieve_mirror_community (cfg), "mirror")
+						vals.force (l_api.retrieve_mirror (cfg), "mirror")
 						across
 							vals as ic
 						loop
@@ -334,7 +334,7 @@ feature -- Handler
 				create l_ua.make_from_string (req.http_user_agent)
 				write_debug_log (generator + ".handle_download [ User_agent: " + l_ua.user_agent  + " ]")
 
-				if attached l_api.retrieve_product_community (cfg) as l_product then
+				if attached l_api.retrieve_product (cfg) as l_product then
 					if
 						attached l_api.selected_platform (l_product.downloads, get_platform (l_ua)) as l_selected and then
 						attached l_selected.filename as l_filename
@@ -347,7 +347,7 @@ feature -- Handler
 							attached l_product.build as l_build and then
 							attached l_product.name as l_name and then
 							attached l_product.number as l_number and then
-							attached l_api.retrieve_mirror_community (cfg) as l_mirror
+							attached l_api.retrieve_mirror (cfg) as l_mirror
 						then
 						    create l_link.make_from_string (l_mirror)
 						    l_link.append (url_encoded (l_name))

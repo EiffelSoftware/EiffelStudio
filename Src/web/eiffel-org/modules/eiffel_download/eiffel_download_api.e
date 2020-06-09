@@ -145,13 +145,13 @@ feature -- Persistency
 
 feature -- Access
 
-	retrieve_mirror_community (cfg: DOWNLOAD_CONFIGURATION): detachable READABLE_STRING_8
+	retrieve_mirror (cfg: DOWNLOAD_CONFIGURATION): detachable READABLE_STRING_8
 			-- Get mirror.
 		do
 			Result := cfg.mirror
 		end
 
-	retrieve_product_community (cfg: DOWNLOAD_CONFIGURATION): detachable DOWNLOAD_PRODUCT
+	retrieve_product (cfg: DOWNLOAD_CONFIGURATION): detachable DOWNLOAD_PRODUCT
 			-- Get the latest release.
 		do
 			if attached retrieve_products (cfg)  as l_products then
@@ -159,7 +159,7 @@ feature -- Access
 			end
 		end
 
-	retrieve_product_community_by_version (cfg: DOWNLOAD_CONFIGURATION; a_version: READABLE_STRING_32): detachable DOWNLOAD_PRODUCT
+	retrieve_product_by_version (cfg: DOWNLOAD_CONFIGURATION; a_version: READABLE_STRING_32): detachable DOWNLOAD_PRODUCT
 			-- Retrieve product by version a 'a_version'.
 		local
 			l_found: BOOLEAN

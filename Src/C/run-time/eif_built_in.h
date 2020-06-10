@@ -78,6 +78,12 @@ extern "C" {
 #define eif_builtin_ARGUMENTS_32_i_th_argument_pointer__i4_p(i)	(eif_arg_item(i))
 #define eif_builtin_ARGUMENTS_32_argument_count__i4			(eif_arg_count() - 1)
 
+/* CHARACTER_8 class */
+RT_LNK EIF_CHARACTER_8 eif_CHARACTER_8_as_lower_table [];
+RT_LNK EIF_CHARACTER_8 eif_CHARACTER_8_as_upper_table [];
+#define eif_builtin_CHARACTER_8_as_lower__c1_c1(c) (eif_CHARACTER_8_as_lower_table [(c)])
+#define eif_builtin_CHARACTER_8_as_upper__c1_c1(c) (eif_CHARACTER_8_as_upper_table [(c)])
+
 /* EXCEPTION_MANAGER class */
 #define eif_builtin_ISE_EXCEPTION_MANAGER_developer_raise__i4_p_p_(code, meaning, message)			draise(code, meaning, message)
 

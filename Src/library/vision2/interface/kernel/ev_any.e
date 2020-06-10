@@ -187,7 +187,7 @@ feature -- Duplication
 			-- to `other', so as to yield equal objects.
 		do
 			check
-				cannot_copy_this_vision2_class: False
+				can_copy_this_vision2_class: False
 			end
 			-- Copy is not permitted for most Vision2 classes.
 			-- The following Vision2 classes may be copied :-
@@ -262,7 +262,7 @@ invariant
 
 
 note
-	copyright:	"Copyright (c) 1984-2014, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2020, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software
@@ -272,4 +272,4 @@ note
 			Customer support http://support.eiffel.com
 		]"
 
-end -- class EV_ANY
+end

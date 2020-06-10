@@ -85,7 +85,13 @@ feature {INTERNAL_COMPILER_STRING_EXPORTER} -- Properties
 			s: READABLE_STRING_32
 		do
 			s := value_32
-			Result := s.is_case_insensitive_equal (s.as_lower)
+			Result := s.same_string (s.as_lower)
+		end
+
+	value_as_lower: STRING
+			-- UTF-8 encoded value of lower case `value_32`.
+		do
+			Result := encoding_converter.utf32_to_utf8 (value_32.as_lower)
 		end
 
 	value_to_lower

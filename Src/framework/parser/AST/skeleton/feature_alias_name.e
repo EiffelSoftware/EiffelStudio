@@ -72,11 +72,10 @@ feature -- Access
 				create Result.initialize (alias_name.value)
 			else
 					-- For alias, always consider lowercase operator name!
-				check alias_name_is_lower: alias_name.value_is_lower end
 				if is_binary then
-					create Result.initialize (infix_feature_name_with_symbol (alias_name.value))
+					create Result.initialize (infix_feature_name_with_symbol (alias_name.value_as_lower))
 				else
-					create Result.initialize (prefix_feature_name_with_symbol (alias_name.value))
+					create Result.initialize (prefix_feature_name_with_symbol (alias_name.value_as_lower))
 				end
 			end
 		ensure

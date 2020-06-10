@@ -130,7 +130,7 @@ feature -- Execution
 			if attached api.user as u then
 				create l_user.make (u)
 				s.append ("<div class=%"es-user%"><strong>Account:</strong> "+ api.html_encoded (api.real_user_display_name (u)) +"</div>")
-				
+
 					-- Organisations
 				s.append ("<div class=%"es-organizations%">")
 				if attached es_cloud_api.user_organizations (l_user) as l_orgs then
@@ -154,7 +154,7 @@ feature -- Execution
 
 					-- Buy new license button
 					-- FIXME: remove when licensing is live !
-				if attached u.email as l_email and then l_email.ends_with_general ("@eiffel.com") then
+				if api.has_permission ({ES_CLOUD_MODULE}.perm_buy_es_license) then
 					s.append ("<div><div class=%"es-new-license%"><form action=%""+ r.location_url ({ES_CLOUD_MODULE}.licenses_location, Void) +"%" method=%"post%"><input type=%"submit%" class=%"button%" title=%"Buy a new license%" name=%"op%" value=%"Buy new license%"></input></form></div></div>")
 				end
 

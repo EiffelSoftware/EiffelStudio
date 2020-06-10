@@ -64,7 +64,7 @@ feature -- Output
 	string: READABLE_STRING_8
 			-- String representation.
 		do
-			Result := id.out + " | " + synopsis.string
+			Result := id.out + " | " + synopsis.string.to_string_8
 		end
 
 end

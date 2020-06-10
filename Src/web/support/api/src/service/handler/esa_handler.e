@@ -46,7 +46,7 @@ feature -- Media Type
 
 feature -- Absolute Host
 
-	absolute_host (req: WSF_REQUEST; a_path:STRING): STRING
+	absolute_host (req: WSF_REQUEST; a_path: READABLE_STRING_8): STRING_8
 		do
 			Result := req.absolute_script_url (a_path)
 			if Result.last_index_of ('/', Result.count) = Result.count then
@@ -91,7 +91,7 @@ feature {NONE} -- Implementations
 							s.append (c.item.generating_type.name_32.to_string_8)
 							s.append_character ('}')
 							s.append_character ('=')
-							s.append (c.item.debug_output.as_string_8)
+							s.append (c.item.debug_output.to_string_8)
 							s.append_character ('%N')
 						end
 					end

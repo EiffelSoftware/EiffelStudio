@@ -42,7 +42,7 @@ feature {NONE} -- Initialization
 		rescue
 			create db_control.make
 			set_last_error_from_exception ("Connection execution")
-			log.write_critical (generator + {STRING_32}".make_common:" + last_error_message)
+			log.write_critical (generator + ".make_common:" + last_error_message.to_string_8)
 			if is_connected then
 				disconnect
 			end
@@ -74,7 +74,7 @@ feature {NONE} -- Initialization
 		rescue
 			create db_control.make
 			set_last_error_from_exception ("Connection execution")
-			log.write_critical (generator + ".make_common:" + last_error_message)
+			log.write_critical (generator + ".make_common:" + last_error_message.to_string_8)
 			if is_connected then
 				disconnect
 			end
@@ -117,7 +117,7 @@ feature {NONE} -- Initialization
 				connect
 				if not db_control.is_ok then
 					log.write_critical (generator +".login_with_connection_string:"+ db_control.error_code.out )
-					log.write_critical (generator +".login_with_connection_string:"+ db_control.error_message_32 )
+					log.write_critical (generator +".login_with_connection_string:"+ db_control.error_message_32.to_string_8 )
 				end
 				log.write_debug (generator +".login_with_connection_string, After connect, is_connected? "+ is_connected.out)
 			end

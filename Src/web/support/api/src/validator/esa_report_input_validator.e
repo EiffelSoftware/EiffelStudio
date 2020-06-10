@@ -90,10 +90,10 @@ feature -- Access
 			Result.compare_objects
 		end
 
-	accetpable_order_by: ARRAY [STRING]
+	accetpable_order_by: ARRAY [STRING_32]
 			-- acceptable values to sort the reports.	
 		once
-			Result := <<"number", "statusID", "synopsis", "username", "submissionDate", "categorySynopsis", "release">>
+			Result :={ARRAY [STRING_32]} <<"number", "statusID", "synopsis", "username", "submissionDate", "categorySynopsis", "release">>
 			Result.compare_objects
 		end
 
@@ -145,7 +145,7 @@ feature {NONE} -- Validations
 					not l_page.is_integer or else
 					(l_page.is_integer and then l_page.integer_value <= 0)
 				then
-					errors.force ("The parameter value for page should be greater then 0, the value " + l_page.value + " is not valid", "page")
+					errors.force ({STRING_32}"The parameter value for page should be greater then 0, the value " + l_page.value + {STRING_32}" is not valid", "page")
 				else
 					set_page (l_page.integer_value)
 				end
@@ -165,7 +165,7 @@ feature {NONE} -- Validations
 					not l_size.is_integer or else
 					(l_size.is_integer and then l_size.integer_value <= 0)
 				then
-					errors.force ("The parameter value for size should be greater than 0, the value " + l_size.value + " is not valid", "size")
+					errors.force ({STRING_32}"The parameter value for size should be greater than 0, the value " + l_size.value + {STRING_32}" is not valid", "size")
 				else
 					set_size (l_size.integer_value)
 				end
@@ -184,7 +184,7 @@ feature {NONE} -- Validations
 					not l_category.is_integer or else
 					(l_category.is_integer and then l_category.integer_value < 0)
 				then
-					errors.force ("The parameter value for category should be greater than or equal 0, the value " + l_category.value + " is not valid", "category")
+					errors.force ({STRING_32}"The parameter value for category should be greater than or equal 0, the value " + l_category.value + {STRING_32}" is not valid", "category")
 				else
 					set_category (l_category.integer_value)
 				end
@@ -210,7 +210,7 @@ feature {NONE} -- Validations
 				   		then
 				   			status.force (c.item.integer_value)
 				   		else
-				   			errors.force ("The parameter value for status " + c.item.value + " is not valid", "status_" + c.item.value )
+				   			errors.force ({STRING_32}"The parameter value for status " + c.item.value + {STRING_32}" is not valid", {STRING_32}"status_" + c.item.value )
 				   		end
 				   end
 				elseif attached {WSF_STRING} a_table_request.at ("status") as l_status  then
@@ -225,7 +225,7 @@ feature {NONE} -- Validations
 						then
 							status.force (c.item.to_integer)
 						else
-							errors.force ("The parameter value for status " + c.item + " is not valid", "status_" + c.item )
+							errors.force ({STRING_32}"The parameter value for status " + c.item + {STRING_32}" is not valid", {STRING_32}"status_" + c.item )
 						end
 					end
 				end
@@ -245,9 +245,9 @@ feature {NONE} -- Validations
 				if
 					accetpable_order_by.has (l_orderBy.value)
 				then
-					set_orderby (l_orderBy.value)
+					set_orderby (l_orderBy.value.to_string_8)
 				else
-					errors.force ("The parameter value for orderBy " + l_orderBy.value + " is not valid", "orderBy")
+					errors.force ({STRING_32}"The parameter value for orderBy " + l_orderBy.value + {STRING_32}" is not valid", "orderBy")
 				end
 			end
 		end
@@ -273,11 +273,11 @@ feature {NONE} -- Validations
 				attached {WSF_STRING} a_table_request.at ("filter_content") as l_content
 			then
 				if not l_content.is_integer then
-					errors.force ("The parameter value for filter_content=[" + l_content.value + "] is not valid", "content")
+					errors.force ({STRING_32}"The parameter value for filter_content=[" + l_content.value + {STRING_32}"] is not valid", "content")
 				elseif l_content.is_integer and then
 					( l_content.integer_value > 1 or else l_content.integer_value < 0 )
 				then
-					errors.force ("The parameter value for filter_content should be between 0 and 1 the current value " + l_content.value + " is not valid", "content")
+					errors.force ({STRING_32}"The parameter value for filter_content should be between 0 and 1 the current value " + l_content.value + {STRING_32}" is not valid", {STRING_32}"content")
 				else
 					set_filter_content (l_content.integer_value)
 				end
@@ -297,9 +297,9 @@ feature {NONE} -- Validations
 				if
 					l_dir.value.same_string ("ASC") or	l_dir.value.same_string ("DESC")
 				then
-					set_direction (l_dir.value)
+					set_direction (l_dir.value.to_string_8)
 				else
-					errors.force ("The parameter value for dir " + l_dir.value + " is not valid", "dir")
+					errors.force ({STRING_32}"The parameter value for dir " + l_dir.value + {STRING_32}" is not valid", {STRING_32}"dir")
 				end
 			end
 		end

@@ -98,7 +98,7 @@ feature -- HTTP Methods
 						remove_user (l_register)
 						l_register.set_questions (api_service.security_questions)
 						if attached l_register.email as l_email then
-							l_register.add_error ("Email", "Unable to send email to " + l_email + ". Please check email address or contact administrator.")
+							l_register.add_error ("Email", "Unable to send email to " + l_email.to_string_8 + ". Please check email address or contact administrator.")
 						end
 						l_rhf.new_representation_handler (esa_config, l_type, media_type_variants (req)).register_page (req, res, l_register)
 					end
@@ -138,7 +138,7 @@ feature -- HTTP Methods
 			   attached a_register.last_name as l_last_name and then
 			   attached a_register.user_name as l_user_name and then
 			   attached a_register.question as l_question then
-			   Result := api_service.add_user (l_first_name, l_last_name, l_email, l_user_name, l_password, l_answer, l_token, l_question)
+			   Result := api_service.add_user (l_first_name, l_last_name, l_email.to_string_8, l_user_name, l_password, l_answer, l_token, l_question)
 			   if Result then
 					email_notification_service.send_post_registration_email (l_email, l_token, a_host)
 					Result := email_notification_service.successful

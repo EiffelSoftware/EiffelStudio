@@ -87,10 +87,8 @@ feature -- Change Element
 				errors := l_errors
 			else
 				create l_errors.make (0)
-				if attached l_errors  then
-					l_errors.force (a_description, a_key)
-					errors := l_errors
-				end
+				l_errors.force (a_description, a_key)
+				errors := l_errors
 			end
 		end
 

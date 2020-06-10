@@ -94,7 +94,7 @@ feature -- View
 		deferred
 		end
 
-	update_report_responsible (req: WSF_REQUEST; res: WSF_RESPONSE; a_redirect_uri: READABLE_STRING_32)
+	update_report_responsible (req: WSF_REQUEST; res: WSF_RESPONSE; a_redirect_uri: READABLE_STRING_8)
 			-- Update report responsible
 		deferred
 		end
@@ -201,12 +201,12 @@ feature -- View
 		end
 
 
-	reminder_page (req: WSF_REQUEST; res: WSF_RESPONSE; a_error: detachable STRING)
+	reminder_page (req: WSF_REQUEST; res: WSF_RESPONSE; a_error: detachable READABLE_STRING_GENERAL)
 			-- Reminder page.
 		deferred
 		end
 
-	post_reminder_page (req: WSF_REQUEST; res: WSF_RESPONSE; a_email: detachable STRING)
+	post_reminder_page (req: WSF_REQUEST; res: WSF_RESPONSE; a_email: detachable READABLE_STRING_8)
 			-- Post reminder page.
 		deferred
 		end

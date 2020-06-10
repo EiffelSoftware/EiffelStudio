@@ -31,12 +31,12 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	problem_reports (a_page_number: INTEGER; a_rows_per_page: INTEGER; a_username: STRING;  a_category: INTEGER; a_status, a_column: READABLE_STRING_32; a_order: INTEGER; a_filter: READABLE_STRING_32; a_content: INTEGER): DATABASE_ITERATION_CURSOR [REPORT]
+	problem_reports (a_page_number: INTEGER; a_rows_per_page: INTEGER; a_username: READABLE_STRING_GENERAL;  a_category: INTEGER; a_status, a_column: READABLE_STRING_32; a_order: INTEGER; a_filter: READABLE_STRING_32; a_content: INTEGER): DATABASE_ITERATION_CURSOR [REPORT]
 			-- Problem reports for user with username `a_username'
 			-- Open reports only if `a_open_only', all reports otherwise.
 		local
 			l_parameters: STRING_TABLE [ANY]
-			l_query: STRING
+			l_query: STRING_32
 			l_encoder: DATABASE_SQL_SERVER_ENCODER
 		do
 			debug
@@ -78,7 +78,7 @@ feature -- Access
 			end
 
 				--| Need to be updated to build the set based on user selection.
-			l_query.replace_substring_all ("$StatusSet", "(" + l_encoder.encode (a_status) + ")")
+			l_query.replace_substring_all ("$StatusSet", "(" + l_encoder.encode (a_status).to_string_8 + ")")
 
 			db_handler.set_query (create {DATABASE_QUERY}.data_reader (l_query, l_parameters))
 			db_handler.execute_query
@@ -94,7 +94,7 @@ feature -- Access
 			-- by the default the order by is done on Number.
 		local
 			l_parameters: STRING_TABLE [ANY]
-			l_query: STRING
+			l_query: STRING_32
 			l_encode: DATABASE_SQL_SERVER_ENCODER
 		do
 			debug
@@ -137,7 +137,7 @@ feature -- Access
 			end
 
 			--| Need to be updated to build the set based on user selection.
-			l_query.replace_substring_all ("$StatusSet", "(" + l_encode.encode (a_status.to_string_32) + ")")
+			l_query.replace_substring_all ("$StatusSet", "(" + l_encode.encode (a_status).to_string_8 + ")")
 			db_handler.set_query (create {DATABASE_QUERY}.data_reader (l_query, l_parameters))
 			db_handler.execute_query
 			create Result.make (db_handler, agent new_report)
@@ -153,7 +153,7 @@ feature -- Access
 			-- Reports are searched by Username or FirstName or LastName.
 		local
 			l_parameters: STRING_TABLE [ANY]
-			l_query: STRING
+			l_query: STRING_32
 			l_encode: DATABASE_SQL_SERVER_ENCODER
 			l_query_filter: STRING
 		do
@@ -223,7 +223,7 @@ feature -- Access
 				l_query.replace_substring_all ("$ORD2", "ASC")
 			end
 				--| Need to be updated to build the set based on user selection.
-			l_query.replace_substring_all ("$StatusSet", "(" + l_encode.encode (a_status) + ")")
+			l_query.replace_substring_all ("$StatusSet", "(" + l_encode.encode (a_status).to_string_8 + ")")
 			db_handler.set_query (create {DATABASE_QUERY}.data_reader (l_query, l_parameters))
 			db_handler.execute_query
 			create Result.make (db_handler, agent new_report_responsible)
@@ -255,7 +255,7 @@ feature -- Access
 		end
 
 
-	problem_report_category_subscribers (a_category: STRING): DATABASE_ITERATION_CURSOR [STRING]
+	problem_report_category_subscribers (a_category: READABLE_STRING_32): DATABASE_ITERATION_CURSOR [STRING]
 			-- Problem report subscribers emails for category `a_category'
 		local
 			l_parameters: HASH_TABLE [ANY, STRING_32]
@@ -271,7 +271,7 @@ feature -- Access
 			post_execution
 		end
 
-	interaction (a_username: STRING; a_interaction_id: INTEGER; a_report: REPORT): detachable REPORT_INTERACTION
+	interaction (a_username: READABLE_STRING_GENERAL; a_interaction_id: INTEGER; a_report: REPORT): detachable REPORT_INTERACTION
 			-- Problem report interaction given `a_username', `a_interaction_id' and report, if any.
 		local
 			l_parameters: HASH_TABLE [ANY, STRING_32]
@@ -495,7 +495,7 @@ feature -- Access
 			post_execution
 		end
 
-	add_user (a_first_name, a_last_name, a_email, a_username, a_password, a_answer, a_token: READABLE_STRING_32; a_question_id: INTEGER)
+	add_user (a_first_name, a_last_name: READABLE_STRING_32; a_email: READABLE_STRING_8; a_username, a_password, a_answer, a_token: READABLE_STRING_32; a_question_id: INTEGER)
 			-- Add user with username `a_username', first name `a_first_name' and last name `a_last_name'.
 		require
 			attached_username: a_username /= Void
@@ -511,9 +511,9 @@ feature -- Access
 			end
 			create l_security
 			l_answer_salt := l_security.salt
-			l_answer_hash := l_security.password_hash (a_answer, l_answer_salt)
+			l_answer_hash := l_security.password_hash (a_answer.to_string_8, l_answer_salt)
 			l_password_salt := l_security.salt
-			l_password_hash := l_security.password_hash (a_password, l_password_salt)
+			l_password_hash := l_security.password_hash (a_password.to_string_8, l_password_salt)
 
 			create l_parameters.make (10)
 			l_parameters.put (string_parameter (a_first_name, 50), {DATA_PARAMETERS_NAMES}.Firstname_param)
@@ -859,7 +859,7 @@ feature -- Access
 			post_execution
 		end
 
-	subscribed_categories (a_username: STRING): DATABASE_ITERATION_CURSOR [ TUPLE [categoryId:INTEGER; synopsis:STRING; subscribed:INTEGER] ]
+	subscribed_categories (a_username: READABLE_STRING_GENERAL): DATABASE_ITERATION_CURSOR [ TUPLE [categoryId:INTEGER; synopsis:STRING; subscribed:INTEGER] ]
 			-- Table associating each category with boolean value specifying whether responsible `a_username'
 			-- is subscribed for receiving email notifications when reports or interactions are created in
 			-- category
@@ -952,7 +952,7 @@ feature -- Basic Operations
 		local
 			l_parameters: STRING_TABLE [ANY]
 			l_encode: DATABASE_SQL_SERVER_ENCODER
-			l_query: STRING
+			l_query: STRING_32
 		do
 			debug
 				log.write_information (generator + ".row_count_problem_report_guest")
@@ -984,7 +984,7 @@ feature -- Basic Operations
 			end
 
 			--| Need to be updated to build the set based on user selection.
-			l_query.replace_substring_all ("$StatusSet", "(" + l_encode.encode (a_status) + ")")
+			l_query.replace_substring_all ("$StatusSet", "(" + l_encode.encode (a_status).to_string_8 + ")")
 			db_handler.set_query (create {DATABASE_QUERY}.data_reader (l_query, l_parameters))
 			db_handler.execute_query
 			if not db_handler.after then
@@ -1003,7 +1003,7 @@ feature -- Basic Operations
 			-- Updated to search for Username, LastName or FirstName.
 		local
 			l_parameters: STRING_TABLE [ANY]
-			l_query: STRING
+			l_query: STRING_32
 			l_encode: DATABASE_SQL_SERVER_ENCODER
 		do
 			debug
@@ -1042,7 +1042,7 @@ feature -- Basic Operations
 				l_query.replace_substring_all ("$SearchBySynopsisAndOrDescription", "")
 			end
 				--| Need to be updated to build the set based on user selection.
-			l_query.replace_substring_all ("$StatusSet", "(" + l_encode.encode (a_status) + ")")
+			l_query.replace_substring_all ("$StatusSet", "(" + l_encode.encode (a_status).to_string_8 + ")")
 			db_handler.set_query (create {DATABASE_QUERY}.data_reader (l_query, l_parameters))
 			db_handler.execute_query
 			if not db_handler.after then
@@ -1061,7 +1061,7 @@ feature -- Basic Operations
 		local
 			l_parameters: STRING_TABLE [ANY]
 			l_encode: DATABASE_SQL_SERVER_ENCODER
-			l_query: STRING
+			l_query: STRING_32
 		do
 			debug
 				log.write_information (generator + ".row_count_problem_report_user")
@@ -1093,7 +1093,7 @@ feature -- Basic Operations
 				l_query.replace_substring_all ("$SearchBySynopsisAndOrDescription", "")
 			end
 				--| Need to be updated to build the set based on user selection.
-			l_query.replace_substring_all ("$StatusSet", "(" + l_encode.encode (a_status.to_string_32) + ")")
+			l_query.replace_substring_all ("$StatusSet", "(" + l_encode.encode (a_status).to_string_8 + ")")
 			db_handler.set_query (create {DATABASE_QUERY}.data_reader (l_query, l_parameters))
 			db_handler.execute_query
 			if not db_handler.after then
@@ -1171,7 +1171,6 @@ feature -- Basic Operations
 			attached_to_reproduce: a_to_reproduce /= Void
 		local
 			l_parameters: HASH_TABLE [ANY, STRING_32]
-			utf: UTF_CONVERTER
 		do
 			debug
 				log.write_information (generator + ".initialize_problem_report")
@@ -1187,7 +1186,7 @@ feature -- Basic Operations
 			l_parameters.put (string_parameter (a_synopsis, 100), {DATA_PARAMETERS_NAMES}.Synopsis_param)
 			l_parameters.put (string_parameter (a_release, 50), {DATA_PARAMETERS_NAMES}.Release_param)
 			l_parameters.put (string_parameter (a_environment, 200), {DATA_PARAMETERS_NAMES}.Environment_param)
-			l_parameters.put (utf.escaped_utf_32_string_to_utf_8_string_8 (a_description) , {DATA_PARAMETERS_NAMES}.Description_param)
+			l_parameters.put (a_description , {DATA_PARAMETERS_NAMES}.Description_param)
 			l_parameters.put (a_to_reproduce, {DATA_PARAMETERS_NAMES}.Toreproduce_param)
 			db_handler.set_store (create {DATABASE_STORE_PROCEDURE}.data_reader ("InitializeProblemReport", l_parameters))
 			db_handler.execute_reader
@@ -1257,7 +1256,7 @@ feature -- Basic Operations
 			post_execution
 		end
 
-	new_interaction_id (a_username: STRING; a_pr_number: INTEGER): INTEGER
+	new_interaction_id (a_username: READABLE_STRING_GENERAL; a_pr_number: INTEGER): INTEGER
 			-- Id of added interaction by user `a_username' to interactions of pr with number `a_pr_number'.
 		require
 			attached_username: a_username /= Void
@@ -1378,7 +1377,7 @@ feature -- Basic Operations
 			post_execution
 		end
 
-	remove_temporary_report_attachment (a_report_id: INTEGER; a_filename: STRING)
+	remove_temporary_report_attachment (a_report_id: INTEGER; a_filename: READABLE_STRING_GENERAL)
 			-- Remove a temporary attachment `a_filename' for the report `a_report_id'.
 		require
 			attached_filename: a_filename /= Void
@@ -1398,7 +1397,7 @@ feature -- Basic Operations
 			post_execution
 		end
 
-	remove_temporary_interaction_attachment (a_interaction_id: INTEGER; a_filename: STRING)
+	remove_temporary_interaction_attachment (a_interaction_id: INTEGER; a_filename: READABLE_STRING_GENERAL)
 			-- Remove all temporary attachment with file name `a_file_name' uploaded by user with username `a_username'.
 		require
 			attached_filename: a_filename /= Void
@@ -1830,7 +1829,7 @@ feature -- Status Report
 			post_execution
 		end
 
-	attachment_visible (a_username: STRING; a_attachment_id: INTEGER): BOOLEAN
+	attachment_visible (a_username: READABLE_STRING_32; a_attachment_id: INTEGER): BOOLEAN
 			-- Can user with username `a_username' see attachment `a_attachment_id'?
 		require
 			attached_username: a_username /= Void
@@ -1883,7 +1882,7 @@ feature -- Status Report
 			post_execution
 		end
 
-	register_subscriber (a_username: STRING; a_catID: INTEGER; a_subscribe: BOOLEAN)
+	register_subscriber (a_username: READABLE_STRING_32; a_catID: INTEGER; a_subscribe: BOOLEAN)
 			-- Subscribe responsible `a_username' to category with category ID `a_catID' if `a_subscribe'
 			-- Unsubscribe otherwise.
 		local
@@ -2010,8 +2009,6 @@ feature {NONE} -- Implementation
 
 	new_report_detail (a_tuple: DB_TUPLE): REPORT
 			-- Create a new report detail from Database.
-		local
-			utf: UTF_CONVERTER
 		do
 			create Result.make (0, "Null", False)
 
@@ -2176,7 +2173,7 @@ feature {NONE} -- Implementation
 				Result.set_contact (create {USER}.make (l_item_3))
 			end
 				--Status
-			if attached db_handler.read_string_32 (6) as l_item_6 then
+			if attached db_handler.read_string (6) as l_item_6 then
 				Result.set_status (l_item_6)
 			end
 

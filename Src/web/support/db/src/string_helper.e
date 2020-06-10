@@ -38,7 +38,7 @@ feature -- Access
 		end
 
 
-	json_encode (a_string: STRING): STRING
+	json_encode (a_string: READABLE_STRING_GENERAL): STRING
 			-- json encode `a_string'.
 		local
 			encode: SHARED_JSON_ENCODER

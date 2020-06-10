@@ -84,7 +84,7 @@ feature {NONE} -- Validations
 					not l_page.is_integer or else
 					(l_page.is_integer and then l_page.integer_value <= 0)
 				then
-					errors.force ("The parameter value for search should be > 0, the value [" + l_page.value + "] is not valid", "page")
+					errors.force ({STRING_32}"The parameter value for search should be > 0, the value [" + l_page.value + {STRING_32}"] is not valid", "page")
 				else
 					set_search (l_page.integer_value)
 				end

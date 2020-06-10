@@ -63,7 +63,7 @@ feature -- Output
 	string: READABLE_STRING_8
 			-- String Representation.
 		do
-			Result := synopsis.string
+			Result := synopsis.string.to_string_8
 		end
 
 end

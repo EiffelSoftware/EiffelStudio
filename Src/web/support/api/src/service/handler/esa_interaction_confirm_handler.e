@@ -175,7 +175,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	send_new_interaction_email (a_user: STRING; a_report_id: INTEGER; a_old_report: detachable REPORT; a_url: STRING)
+	send_new_interaction_email (a_user: READABLE_STRING_GENERAL; a_report_id: INTEGER; a_old_report: detachable REPORT; a_url: STRING)
 			-- Send interaction creation confirmation email to interested parties.
 		local
 			l_subscribers: LIST [STRING]
@@ -193,7 +193,7 @@ feature {NONE} -- Implementation
 				email_notification_service.send_new_interaction_email (api_service.user_account_information (a_user), l_report, l_subscribers, a_old_report, a_url, api_service.role (a_user), l_submitter_email)
 			else
 					-- Not expected.
-				log.write_critical (generator + ".send_new_interaction_email Unexpected behavior user [" + a_user +"]" + "does not has email, or the report does not exist or does not has synopsis")
+				log.write_critical (generator + ".send_new_interaction_email Unexpected behavior user [" + a_user.to_string_8 +"]" + "does not has email, or the report does not exist or does not has synopsis")
 			end
 		end
 

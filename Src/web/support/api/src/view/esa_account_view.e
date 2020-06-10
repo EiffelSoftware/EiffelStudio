@@ -12,7 +12,7 @@ create
 
 feature {NONE}-- Initialization
 
-	make (a_username: STRING)
+	make (a_username: STRING_32)
 			-- Create a new instance set `user_name' to `a_username'.
 		do
 			username := a_username
@@ -63,51 +63,51 @@ feature {NONE}-- Initialization
 
 feature -- Access : Personal Information
 
-	username: STRING
+	username: STRING_32
 			-- Username.
 
-	first_name: detachable STRING
+	first_name: detachable STRING_32
 			-- First_name.
 
-	last_name: detachable STRING
+	last_name: detachable STRING_32
 			-- Last_name.	
 
-	email: detachable STRING
+	email: detachable STRING_32
 			-- Email.
 
-	address: detachable STRING
+	address: detachable STRING_32
 			-- Street address.
 
-	city: detachable STRING
+	city: detachable STRING_32
 			-- City.
 
-	country: detachable STRING
+	country: detachable STRING_32
 			-- Country.
 
-	region: detachable STRING
+	region: detachable STRING_32
 			-- Region.
 
-	postal_code: detachable STRING
+	postal_code: detachable STRING_32
 			-- Postal_code.
 
-	telephone: detachable STRING
+	telephone: detachable STRING_32
 			-- Telephone.
 
-	fax: detachable STRING
+	fax: detachable STRING_32
 			-- Fax.
 
-	position: detachable STRING
+	position: detachable STRING_32
 			-- Position.
 
 	countries: detachable LIST [COUNTRY]
 			-- Countries.
 
-	selected_country: detachable STRING
+	selected_country: detachable STRING_32
 			-- Selected country.
 
 feature -- Change Element
 
-	set_first_name (a_first_name: STRING)
+	set_first_name (a_first_name: READABLE_STRING_32)
 			-- Set `first_name' to `a_first_name'.
 		do
 			first_name := a_first_name
@@ -115,7 +115,7 @@ feature -- Change Element
 			first_name_set:  first_name = a_first_name
 		end
 
-	set_last_name (a_last_name: STRING)
+	set_last_name (a_last_name: READABLE_STRING_32)
 			-- Set `last_name' to `a_last_name'.
 		do
 			last_name := a_last_name
@@ -123,7 +123,7 @@ feature -- Change Element
 			last_name_set:
 		end
 
-	set_email (a_email: STRING)
+	set_email (a_email: READABLE_STRING_32)
 			-- Set `email' to `a_email'.
 		do
 			email := a_email
@@ -131,7 +131,7 @@ feature -- Change Element
 			email_set: email = a_email
 		end
 
-	set_address (a_address: STRING)
+	set_address (a_address: READABLE_STRING_32)
 			-- Set Street  `address' to `a_address'.
 		do
 			address := a_address
@@ -139,7 +139,7 @@ feature -- Change Element
 			address_set: address = a_address
 		end
 
-	set_city (a_city: STRING)
+	set_city (a_city: READABLE_STRING_32)
 			-- Set `city' to `a_city'.
 		do
 			city := a_city
@@ -147,7 +147,7 @@ feature -- Change Element
 			city_set: city = a_city
 		end
 
-	set_country (a_country: STRING)
+	set_country (a_country: READABLE_STRING_32)
 			-- Set `country' to `a_country'.
 		do
 			country := a_country
@@ -155,7 +155,7 @@ feature -- Change Element
 			country_set: country = a_country
 		end
 
-	set_region (a_region: STRING)
+	set_region (a_region: READABLE_STRING_32)
 			-- Set `region' to `a_region'.
 		do
 			region := a_region
@@ -163,7 +163,7 @@ feature -- Change Element
 			region_set: region = a_region
 		end
 
-	set_postal_code (a_postal_code: STRING)
+	set_postal_code (a_postal_code: READABLE_STRING_32)
 			-- Postal_code
 		do
 			postal_code := a_postal_code
@@ -171,7 +171,7 @@ feature -- Change Element
 			post_code_set: postal_code = a_postal_code
 		end
 
-	set_telephone (a_telephone: STRING)
+	set_telephone (a_telephone: READABLE_STRING_32)
 			-- Set `telephone' to `a_telephone'.
 		do
 			telephone := a_telephone
@@ -179,7 +179,7 @@ feature -- Change Element
 			telephone_set: telephone = a_telephone
 		end
 
-	set_fax ( a_fax : STRING)
+	set_fax ( a_fax : READABLE_STRING_32)
 			-- Set `fax' to `a_fax'.
 		do
 			fax := a_fax
@@ -187,7 +187,7 @@ feature -- Change Element
 			fax_set: fax = a_fax
 		end
 
-	set_position ( a_position : STRING)
+	set_position ( a_position : READABLE_STRING_32)
 			-- Set `position' to `a_position'.
 		do
 			position := a_position

@@ -86,7 +86,7 @@ feature -- HTTP Methods
 						l_email.is_valid_form and then
 					   	attached l_email.email as l_new_email and then
 					   	attached api_service.user_account_information (l_user).email as ll_email and then
-					  	api_service.user_from_email (l_new_email) = Void
+					  	api_service.user_from_email (l_new_email.to_string_8) = Void
 					 then
 					   	l_token := (create {SECURITY_PROVIDER}).token
 					   	api_service.change_user_email (l_user, l_new_email, l_token)
@@ -103,8 +103,8 @@ feature -- HTTP Methods
 							l_rhf.new_representation_handler (esa_config, l_type, media_type_variants (req)).change_email (req, res, l_email)
 						end
 					else
-						if attached l_email.email as ll_email and then attached api_service.user_from_email (ll_email) then
-							l_email.add_error ("Exists", "The email " + ll_email + " it's already used")
+						if attached l_email.email as ll_email and then attached api_service.user_from_email (ll_email.to_string_8) then
+							l_email.add_error ("Exists", "The email " + ll_email.to_string_8 + " it's already used")
 						end
 						l_rhf.new_representation_handler (esa_config, l_type, media_type_variants (req)).change_email (req, res, l_email)
 					end

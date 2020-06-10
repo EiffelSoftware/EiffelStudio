@@ -29,7 +29,7 @@ feature {NONE} -- Initialization
 	analyze
 			-- Analyze `user_agent'.
 		local
-			s: STRING
+			s: READABLE_STRING_8
 		do
 			s := user_agent.as_lower
 			get_address_register_size (s)

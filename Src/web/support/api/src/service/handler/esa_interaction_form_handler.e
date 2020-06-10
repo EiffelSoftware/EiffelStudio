@@ -351,7 +351,7 @@ feature -- Initialize Report Problem
 					else
 						-- Not accepted file too big.
 						to_implement("Add the name of the file as a list of rejected files.")
-						log.write_alert (generator + ".initialize_interaction_report_problem_internal File " + c.item.name + " rejected, too big." )
+						log.write_alert (generator + ".initialize_interaction_report_problem_internal File " + c.item.name.to_string_8 + " rejected, too big." )
 					end
 				end
 			end
@@ -559,7 +559,7 @@ feature {NONE} -- Implementation
 					else
 						-- Not accepted file too big.
 						to_implement("Add the name of the file as a list of rejected files.")
-						log.write_alert (generator + ".upload_temporary_files_html File " + c.item.name + " rejected, too big." )
+						log.write_alert (generator + ".upload_temporary_files_html File " + c.item.name.to_string_8 + " rejected, too big." )
 					end
 				end
 			end

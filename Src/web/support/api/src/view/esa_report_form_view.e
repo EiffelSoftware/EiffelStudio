@@ -99,7 +99,7 @@ feature -- Access
 	temporary_files: detachable LIST [ESA_FILE_VIEW]
 		-- Temporary files.
 
-	temporary_files_names: detachable LIST [STRING]
+	temporary_files_names: detachable LIST [STRING_32]
 		-- Temporary files names.		
 
 	eiffel_stable_versions: detachable LIST [STRING]
@@ -277,13 +277,13 @@ feature -- Element Change
 			temporary_files_set: temporary_files = a_files
 		end
 
-	add_temporary_file_name (a_name: STRING)
+	add_temporary_file_name (a_name: READABLE_STRING_GENERAL)
 		local
 			l_files: like temporary_files_names
 		do
 			l_files := temporary_files_names
 			if l_files = Void then
-				create {ARRAYED_LIST [STRING]}l_files.make (1)
+				create {ARRAYED_LIST [STRING_32]}l_files.make (1)
 				temporary_files_names := l_files
 			end
 			l_files.force (a_name)

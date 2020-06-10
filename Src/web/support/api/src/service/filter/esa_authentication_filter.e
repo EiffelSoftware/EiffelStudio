@@ -34,7 +34,7 @@ feature -- Basic operations
 				end
 				create l_auth.make (req.http_authorization)
 				if attached req.raw_header_data as l_raw_data then
-				   log.write_debug (generator + ".execute " + l_raw_data )
+				   log.write_debug (generator + ".execute " + l_raw_data.to_string_8 )
 				end
 					-- A valid user
 				if (attached l_auth.type as l_auth_type and then l_auth_type.is_case_insensitive_equal ("basic")) and then

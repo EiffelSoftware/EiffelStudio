@@ -63,7 +63,7 @@ feature -- Access: Auth Session
 		local
 			l_parameters: STRING_TABLE [ANY]
 		do
-			log.write_debug (generator + ".has_user_token for a_user:" + a_user.name )
+			log.write_debug (generator + ".has_user_token for a_user:" + a_user.name.to_string_8 )
 			create l_parameters.make (1)
 			l_parameters.put (a_user.id, "uid")
 			db_handler.set_query (create {DATABASE_QUERY}.data_reader (Select_has_user_token, l_parameters))
@@ -85,7 +85,7 @@ feature -- Change Auth Session
 		local
 			l_parameters: STRING_TABLE [ANY]
 		do
-			log.write_debug (generator + ".new_user_session_auth for a_user:" + a_user.name )
+			log.write_debug (generator + ".new_user_session_auth for a_user:" + a_user.name.to_string_8 )
 			create l_parameters.make (3)
 			l_parameters.put (a_user.id, "uid")
 			l_parameters.put (a_token, "token")
@@ -101,7 +101,7 @@ feature -- Change Auth Session
 		local
 			l_parameters: STRING_TABLE [ANY]
 		do
-			log.write_debug (generator + ".update_user_session_auth for a_user:" + a_user.name )
+			log.write_debug (generator + ".update_user_session_auth for a_user:" + a_user.name.to_string_8 )
 			create l_parameters.make (3)
 			l_parameters.put (a_user.id, "uid")
 			l_parameters.put (a_token, "token")
@@ -129,7 +129,7 @@ feature -- Access
 			post_execution
 		end
 
-	token_from_email (a_email: READABLE_STRING_32): detachable STRING
+	token_from_email (a_email: READABLE_STRING_8): detachable STRING
 			-- Activation token for user with email `a_email' if any.
 		require
 			attached_email: a_email /= Void
@@ -313,7 +313,7 @@ feature -- Access
 			post_execution
 		end
 
-	user_from_email (a_email: READABLE_STRING_32): detachable TUPLE [first_name: STRING; last_name: STRING; user_name: STRING]
+	user_from_email (a_email: READABLE_STRING_8): detachable TUPLE [first_name: STRING; last_name: STRING; user_name: STRING]
 			-- User with email `a_email' if any.
 		require
 			attached_email: a_email /= Void
@@ -417,7 +417,7 @@ feature -- Element Settings
 			post_execution
 		end
 
-	update_password (a_email: STRING; a_password: STRING)
+	update_password (a_email: READABLE_STRING_GENERAL; a_password: READABLE_STRING_GENERAL)
 			-- Update password of user with email `a_email'.
 		require
 			attached_email: a_email /= Void
@@ -432,7 +432,7 @@ feature -- Element Settings
 			end
 			create l_security
 			l_password_salt := l_security.salt
-			l_password_hash := l_security.password_hash (a_password, l_password_salt)
+			l_password_hash := l_security.password_hash (a_password.to_string_8, l_password_salt)
 
 			create l_parameters.make (3)
 			l_parameters.put (string_parameter (a_email, 100), {DATA_PARAMETERS_NAMES}.email_param)
@@ -460,7 +460,7 @@ feature -- Element Settings
 		end
 
 
-	update_personal_information (a_username: STRING; a_first_name, a_last_name, a_position, a_address, a_city, a_country, a_region, a_code, a_tel, a_fax: detachable STRING)
+	update_personal_information (a_username: READABLE_STRING_GENERAL; a_first_name, a_last_name, a_position, a_address, a_city, a_country, a_region, a_code, a_tel, a_fax: detachable READABLE_STRING_GENERAL)
 			-- Update personal information of user with username `a_username'.
 		local
 			l_parameters: HASH_TABLE [ANY, STRING_32]
@@ -611,7 +611,7 @@ feature -- Factories
 			end
 		end
 
-	new_user_account_information (a_user_name: STRING): USER_INFORMATION
+	new_user_account_information (a_user_name: READABLE_STRING_32): USER_INFORMATION
 			-- Build a new user account information from.
 		do
 			create Result.make (a_user_name)
@@ -728,9 +728,7 @@ feature -- Status Report
 			post_execution
 		end
 
-
-
-	activation_valid (a_email, a_token: READABLE_STRING_32): BOOLEAN
+	activation_valid (a_email: READABLE_STRING_8; a_token: READABLE_STRING_32): BOOLEAN
 			-- Is activation for user with email `a_email' using token `a_token' valid?
 		require
 			attached_email: a_email /= Void
@@ -792,7 +790,7 @@ feature -- Status Report
 		local
 			l_parameters: STRING_TABLE [ANY]
 		do
-			log.write_debug (generator + ".email_from_reset_password token:" + a_token )
+			log.write_debug (generator + ".email_from_reset_password token:" + a_token.to_string_8 )
 			create l_parameters.make (1)
 			l_parameters.put (a_token, "token")
 			db_handler.set_query (create {DATABASE_QUERY}.data_reader (Select_email_reset_password, l_parameters))

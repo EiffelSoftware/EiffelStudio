@@ -88,7 +88,7 @@ feature -- View
 			generic_response (req, res)
 		end
 
-	update_report_responsible (req: WSF_REQUEST; res: WSF_RESPONSE; a_redirect_uri: READABLE_STRING_32)
+	update_report_responsible (req: WSF_REQUEST; res: WSF_RESPONSE; a_redirect_uri: READABLE_STRING_8)
 			-- Update report responsible
 		do
 			generic_response (req, res)

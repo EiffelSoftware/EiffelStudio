@@ -8,7 +8,7 @@ deferred class
 
 feature -- String
 
-	string_parameter (a_value: READABLE_STRING_32; a_length: INTEGER): STRING_32
+	string_parameter (a_value: READABLE_STRING_GENERAL; a_length: INTEGER): STRING_32
 			-- Adjust a parameter `a_value' to the lenght `a_length'.
 		require
 			valid_length: a_length > 0

@@ -54,17 +54,13 @@ feature -- Access
 	problem_reports_guest (a_page_number: INTEGER; a_rows_per_page: INTEGER; a_category: INTEGER; a_status: READABLE_STRING_8; a_column: READABLE_STRING_8; a_order: INTEGER; a_username: READABLE_STRING_32; a_filter:READABLE_STRING_32; a_content:INTEGER): LIST[REPORT]
 			-- All Problem reports for guest users, filter by page `a_page_numer' and rows per page `a_row_per_page'
 			-- Only not confidential reports
-		local
-			l_list: LIST [REPORT]
 		do
 			log.write_information (generator + ".problem_reports_guest_2 All Problem reports for guest users, filter by: page" + a_page_number.out + " rows_per_page:" + a_rows_per_page.out + " category:" + a_category.out + " status:" + a_status.out +  " column:" + a_column + " order:" + a_order.out)
-			create {ARRAYED_LIST [REPORT]} l_list.make (0)
+			create {ARRAYED_LIST [REPORT]} Result.make (0)
 			-- data_provider.connect
 			across data_provider.problem_reports_guest (a_page_number, a_rows_per_page, a_category, a_status, a_column, a_order, a_username, a_filter, a_content) as c loop
-				l_list.force (c.item)
+				Result.force (c.item)
 			end
-			-- data_provider.disconnect
-			Result := l_list
 			post_data_provider_execution
 		end
 
@@ -72,34 +68,28 @@ feature -- Access
 	problem_reports_responsibles (a_page_number, a_rows_per_page, a_category, a_severity, a_priority, a_responsible: INTEGER_32; a_column: READABLE_STRING_32; a_order: INTEGER_32; a_status, a_username: READABLE_STRING_32; a_filter: detachable READABLE_STRING_32; a_content: INTEGER_32): LIST[REPORT]
 			-- All Problem reports for responsible users, filter by page `a_page_numer' and rows per page `a_row_per_page'
 			-- and category `a_category', severity `a_severity', priority, `a_priority', `a_responsible'
-		local
-			l_list: LIST [REPORT]
 		do
-			log.write_debug (generator + ".problem_reports_responsibles All Problem reports for responsibles users, filter by: page" + a_page_number.out + " rows_per_page:" + a_rows_per_page.out + " category:" + a_category.out + " priority:" + a_priority.out + " serverity:" + a_severity.out + " responsible:" + a_responsible.out +" status:" + a_status.out + " username:" + a_username)
+			log.write_debug (generator + ".problem_reports_responsibles All Problem reports for responsibles users, filter by: page" + a_page_number.out + " rows_per_page:" + a_rows_per_page.out + " category:" + a_category.out + " priority:" + a_priority.out + " serverity:" + a_severity.out + " responsible:" + a_responsible.out +" status:" + a_status.to_string_8 + " username:" + a_username.to_string_8)
 
-			create {ARRAYED_LIST [REPORT]} l_list.make (0)
+			create {ARRAYED_LIST [REPORT]} Result.make (0)
 			-- data_provider.connect
 			across data_provider.problem_reports_responsibles (a_page_number, a_rows_per_page, a_category, a_severity, a_priority, a_responsible, a_column, a_order, a_status, a_username, a_filter, a_content) as c loop
-				l_list.force (c.item)
+				Result.force (c.item)
 			end
 			-- data_provider.disconnect
-			Result := l_list
 			post_data_provider_execution
 		end
 
-	problem_reports (a_page_number, a_rows_per_page: INTEGER_32; a_username: STRING_8;  a_category: INTEGER; a_status, a_column: READABLE_STRING_32; a_order: INTEGER_32; a_filter: READABLE_STRING_32; a_content: INTEGER): LIST[REPORT]
+	problem_reports (a_page_number, a_rows_per_page: INTEGER_32; a_username: READABLE_STRING_GENERAL;  a_category: INTEGER; a_status, a_column: READABLE_STRING_32; a_order: INTEGER_32; a_filter: READABLE_STRING_32; a_content: INTEGER): LIST[REPORT]
 				-- Problem reports for user with username `a_username'
 				-- Open reports only if `a_open_only', all reports otherwise.
-		local
-			l_list: LIST [REPORT]
 		do
-			create {ARRAYED_LIST [REPORT]} l_list.make (0)
+			create {ARRAYED_LIST [REPORT]} Result.make (0)
 			-- data_provider.connect
 			across data_provider.problem_reports (a_page_number, a_rows_per_page, a_username, a_category, a_status, a_column, a_order, a_filter, a_content) as c loop
-				l_list.force (c.item)
+				Result.force (c.item)
 			end
 			-- data_provider.disconnect
-			Result := l_list
 			post_data_provider_execution
 		end
 
@@ -145,7 +135,7 @@ feature -- Access
 		local
 			l_interactions: LIST [REPORT_INTERACTION]
 		do
-			log.write_debug (generator+".problem_report_details for user:"+ a_username + " interaction and attachments:" + a_number.out )
+			log.write_debug (generator+".problem_report_details for user:"+ a_username.to_string_8 + " interaction and attachments:" + a_number.out )
 			if attached data_provider.problem_report (a_number) as l_report then
 				l_interactions := data_provider.interactions (a_username, a_number, l_report)
 				l_report.set_interactions (l_interactions)
@@ -182,10 +172,10 @@ feature -- Access
 			post_data_provider_execution
 		end
 
-	user_role (a_username: STRING): USER_ROLE
+	user_role (a_username: READABLE_STRING_GENERAL): USER_ROLE
 			-- Role associated with user with username `a_username'.
 		do
-			log.write_debug (generator + ".user_role:" + a_username)
+			log.write_debug (generator + ".user_role:" + a_username.to_string_8)
 			if attached login_provider.role (a_username) as l_role then
 			  	if attached login_provider.role_description (l_role) as l_description then
 			  		create Result.make (l_role, l_description)
@@ -272,7 +262,7 @@ feature -- Access
 	role (a_username: READABLE_STRING_32): USER_ROLE
 			-- Role associated with username `a_username'
 		do
-			log.write_debug (generator + ".role username:" + a_username)
+			log.write_debug (generator + ".role username:" + a_username.to_string_8)
 			if attached login_provider.role (a_username) as l_role and then
 			   attached login_provider.role_description (l_role) as l_description then
 				create Result.make (l_role, l_description)
@@ -375,18 +365,18 @@ feature -- Access
 			post_data_provider_execution
 		end
 
-	remove_temporary_report_attachment (a_report_id: INTEGER; a_filename: STRING)
+	remove_temporary_report_attachment (a_report_id: INTEGER; a_filename: READABLE_STRING_GENERAL)
 			-- Remove a temporary attachment `a_filename' for the report `a_report_id'
 		do
-			log.write_debug (generator+".remove_temporary_report_attachment report_id:" + a_report_id.out + " filename:" + a_filename)
+			log.write_debug (generator+".remove_temporary_report_attachment report_id:" + a_report_id.out + " filename:" + a_filename.to_string_8)
 			data_provider.remove_temporary_report_attachment (a_report_id, a_filename)
 			post_data_provider_execution
 		end
 
-	remove_temporary_interaction_attachment (a_interaction_id: INTEGER; a_filename: STRING)
+	remove_temporary_interaction_attachment (a_interaction_id: INTEGER; a_filename: READABLE_STRING_GENERAL)
 			-- Remove a temporary attachment `a_filename' for the interaction `a_interaction_id'
 		do
-			log.write_debug (generator+".remove_temporary_interaction_attachment interaction_id:" + a_interaction_id.out + " filename:" + a_filename)
+			log.write_debug (generator+".remove_temporary_interaction_attachment interaction_id:" + a_interaction_id.out + " filename:" + a_filename.to_string_8)
 			data_provider.remove_temporary_interaction_attachment (a_interaction_id, a_filename)
 			post_data_provider_execution
 		end
@@ -399,7 +389,7 @@ feature -- Access
 			post_data_provider_execution
 		end
 
-	token_from_email (a_email: READABLE_STRING_32): detachable STRING
+	token_from_email (a_email: READABLE_STRING_8): detachable STRING
 			-- Activation token for user with email `a_email' if any.
 		do
 			log.write_debug (generator+".token_from_email Activation token from user email:" + a_email)
@@ -415,7 +405,7 @@ feature -- Access
 			post_login_provider_execution
 		end
 
-	user_from_email (a_email: READABLE_STRING_32): detachable TUPLE [first_name: STRING; last_name: STRING; user_name: STRING]
+	user_from_email (a_email: READABLE_STRING_8): detachable TUPLE [first_name: STRING; last_name: STRING; user_name: STRING]
 			-- User with email `a_email' if any.
 		do
 			log.write_debug (generator+".user_from_email user email:" + a_email)
@@ -430,7 +420,7 @@ feature -- Access
 			post_login_provider_execution
 		end
 
-	subscribed_categories (a_username: STRING): LIST [ ESA_CATEGORY_SUBSCRIBER_VIEW ]
+	subscribed_categories (a_username: READABLE_STRING_32): LIST [ ESA_CATEGORY_SUBSCRIBER_VIEW ]
 			-- Table associating each category with boolean value specifying whether responsible `a_username'
 			-- is subscribed for receiving email notifications when reports or interactions are created in
 			-- category
@@ -462,7 +452,7 @@ feature -- Access
 			-- Retrieve user email using the generated token `a_token` from the
 			-- reset password action.
 		do
-			log.write_debug (generator+".email_from_reset_password token:" + a_token)
+			log.write_debug (generator+".email_from_reset_password token:" + a_token.to_string_8)
 			Result := login_provider.email_from_reset_password (a_token)
 			post_login_provider_execution
 		end
@@ -472,7 +462,7 @@ feature -- Basic Operations
 	row_count_problem_report_guest (a_category: INTEGER; a_status: INTEGER; a_username: READABLE_STRING_32): INTEGER
 			-- Row count table `PROBLEM_REPORT table' for guest users
 		do
-			log.write_debug (generator+".row_count_problem_report_guest filter by category:" + a_category.out + " status:" + a_status.out + " username:" + a_username)
+			log.write_debug (generator+".row_count_problem_report_guest filter by category:" + a_category.out + " status:" + a_status.out + " username:" + a_username.to_string_8)
 			Result := data_provider.row_count_problem_report_guest (a_category, a_status, a_username)
 			post_data_provider_execution
 		end
@@ -481,7 +471,7 @@ feature -- Basic Operations
 			-- Row count table `PROBLEM_REPORT table' for guest users
 		do
 
-			log.write_debug (generator+".row_count_problem_report_guest filter by category:" + a_category.out + " status:" + a_status.out + " username:" + a_username)
+			log.write_debug (generator+".row_count_problem_report_guest filter by category:" + a_category.out + " status:" + a_status.out + " username:" + a_username.to_string_8)
 			Result := data_provider.row_count_problem_reports (a_category, a_status, a_username, a_filter, a_content)
 			post_data_provider_execution
 		end
@@ -491,7 +481,7 @@ feature -- Basic Operations
 			-- With filters by category `a_category', severity 'a_severity', priority `a_priority', responsible `a_responsible',
 			-- status `a_status' and submitter `a_submitter'
 		do
-			log.write_debug (generator+".row_count_problem_report_responsible filter by category:" + a_category.out + " severity:" + a_severity.out + " priority:" + a_priority.out + " status:" + a_status.out + " username:" + a_username)
+			log.write_debug (generator+".row_count_problem_report_responsible filter by category:" + a_category.out + " severity:" + a_severity.out + " priority:" + a_priority.out + " status:" + a_status.out + " username:" + a_username.to_string_8)
 			Result := data_provider.row_count_problem_report_responsible (a_category, a_severity, a_priority, a_responsible, a_status, a_username, a_filter, a_content)
 			post_data_provider_execution
 		end
@@ -524,7 +514,7 @@ feature -- Basic Operations
 			attached_description: a_description /= Void
 			attached_to_reproduce: a_to_reproduce /= Void
 		do
-			log.write_debug (generator+".initialize_problem_report report_id" + a_report_id.out + " priority_id:" + a_priority_id + " category_id:" + a_category_id + " class_id:" + a_class_id + " confidential:" + a_confidential + " synopsis:" + a_synopsis.out + " release:" + a_release + " environment:" + a_environment.out + " description:" + a_description.out + " to_reprodude:" + a_to_reproduce.out)
+			log.write_debug (generator+".initialize_problem_report report_id" + a_report_id.out + " priority_id:" + a_priority_id + " category_id:" + a_category_id + " class_id:" + a_class_id + " confidential:" + a_confidential + " synopsis:" + a_synopsis.out + " release:" + a_release.to_string_8 + " environment:" + a_environment.out + " description:" + a_description.out + " to_reprodude:" + a_to_reproduce.out)
 			data_provider.initialize_problem_report (a_report_id, a_priority_id, a_severity_id, a_category_id, a_class_id, a_confidential.to_string_32, a_synopsis, a_release, a_environment, a_description, a_to_reproduce)
 			post_data_provider_execution
 		end
@@ -532,7 +522,7 @@ feature -- Basic Operations
 	new_problem_report_id (a_username: READABLE_STRING_32): INTEGER
 			-- Initialize new problem report row and returns ReportID.
 		do
-			log.write_debug (generator+".new_problem_report_id username" + a_username )
+			log.write_debug (generator+".new_problem_report_id username" + a_username.to_string_8 )
 			Result := data_provider.new_problem_report_id (a_username)
 			post_data_provider_execution
 		end
@@ -577,7 +567,7 @@ feature -- Basic Operations
 			attached_description: a_description /= Void
 			attached_to_reproduce: a_to_reproduce /= Void
 		do
-			log.write_debug (generator+".update_problem_report report_problem:" + a_pr.out + " priority_id:" + a_priority_id.out + " severity_id:" + a_severity_id + " category_id:" + a_category_id + " class_id:" + a_class_id + " confidential:" + a_confidential + " synopsis:" + a_synopsis + " release:" + a_release + " environment:" + a_environment + " description" + a_description + " to_reproduce:" + a_to_reproduce )
+			log.write_debug (generator+".update_problem_report report_problem:" + a_pr.out + " priority_id:" + a_priority_id.out + " severity_id:" + a_severity_id + " category_id:" + a_category_id + " class_id:" + a_class_id + " confidential:" + a_confidential + " synopsis:" + {UTF_CONVERTER}.utf_32_string_to_utf_8_string_8 (a_synopsis) + " release:" + a_release.to_string_8 + " environment:" + a_environment.to_string_8 + " description" + {UTF_CONVERTER}.utf_32_string_to_utf_8_string_8 (a_description) + " to_reproduce:" + {UTF_CONVERTER}.utf_32_string_to_utf_8_string_8 (a_to_reproduce) )
 			data_provider.update_problem_report (a_pr, a_priority_id, a_severity_id, a_category_id, a_class_id, a_confidential, a_synopsis, a_release, a_environment, a_description, a_to_reproduce)
 			post_data_provider_execution
 		end
@@ -590,10 +580,10 @@ feature -- Basic Operations
 			post_data_provider_execution
 		end
 
-	new_interaction_id (a_username: STRING; a_pr_number: INTEGER): INTEGER
+	new_interaction_id (a_username: READABLE_STRING_GENERAL; a_pr_number: INTEGER): INTEGER
 			-- Id of added interaction by user `a_username' to interactions of pr with number `a_pr_number'.
 		do
-			log.write_debug (generator + ".new_interaction_id report_number:" + a_pr_number.out + " username:" + a_username)
+			log.write_debug (generator + ".new_interaction_id report_number:" + a_pr_number.out + " username:" + a_username.to_string_8)
 			Result := data_provider.new_interaction_id (a_username, a_pr_number)
 			post_data_provider_execution
 		end
@@ -601,7 +591,7 @@ feature -- Basic Operations
 	initialize_interaction (a_interaction_id: INTEGER_32; a_category_id: INTEGER; a_content: STRING_32; a_new_status: INTEGER_32; a_private: BOOLEAN)
 			-- Initialize temporary interaction `a_interaction_id' with content `a_content'.
 		do
-			log.write_debug (generator + ".initialize_interaction [Interaction_Id:" + a_interaction_id.out + ", content: " + a_content + ", new_status: " + a_new_status.out + ", private: "+ a_private.out)
+			log.write_debug (generator + ".initialize_interaction [Interaction_Id:" + a_interaction_id.out + ", content: " + a_content.to_string_8 + ", new_status: " + a_new_status.out + ", private: "+ a_private.out)
 			data_provider.initialize_interaction (a_interaction_id, a_category_id, a_content, a_new_status, a_private)
 			post_data_provider_execution
 		end
@@ -618,7 +608,7 @@ feature -- Basic Operations
 	upload_temporary_report_attachment (a_report_id: INTEGER; a_file: ESA_FILE_VIEW)
 			-- Upload attachment in temporary table for temporary report `a_report_id'
 		do
-			log.write_debug (generator + ".upload_temporary_report_attachment Report_id:" + a_report_id.out + " filename:" + a_file.name)
+			log.write_debug (generator + ".upload_temporary_report_attachment Report_id:" + a_report_id.out + " filename:" + a_file.name.to_string_8)
 			data_provider.upload_temporary_report_attachment (a_report_id, a_file.size, a_file.name, a_file.content)
 			post_data_provider_execution
 		end
@@ -626,7 +616,7 @@ feature -- Basic Operations
 	upload_temporary_interaction_attachment	(a_interaction_id: INTEGER; a_file: ESA_FILE_VIEW)
 			-- Upload attachment in temporary table for temporary interaction `a_interaction_id'
 		do
-			log.write_debug (generator + ".upload_temporary_interaction_attachment InteractionId:" + a_interaction_id.out + " filename:" + a_file.name)
+			log.write_debug (generator + ".upload_temporary_interaction_attachment InteractionId:" + a_interaction_id.out + " filename:" + a_file.name.to_string_8)
 			data_provider.upload_temporary_interaction_attachment (a_interaction_id, a_file.size, a_file.name, a_file.content)
 			post_data_provider_execution
 		end
@@ -648,15 +638,15 @@ feature -- Basic Operations
 
 feature -- Element Settings
 
-	add_user (a_first_name, a_last_name, a_email, a_username, a_password, a_answer, a_token: READABLE_STRING_32; a_question_id: INTEGER): BOOLEAN
+	add_user (a_first_name, a_last_name: READABLE_STRING_32; a_email: READABLE_STRING_8; a_username, a_password, a_answer, a_token: READABLE_STRING_32; a_question_id: INTEGER): BOOLEAN
 			-- Add user with username `a_username', first name `a_first_name' and last name `a_last_name'.
 		require
 			attached_username: a_username /= Void
 			attached_first_name: a_first_name /= Void
 			attached_last_name: a_last_name /= Void
 		do
-			log.write_debug (generator + ".add_user First Name:" + a_first_name + " Last Name:" + a_last_name + " email:" + a_email +
-			" Username:" + a_username + " a_token:" + a_token + " question:" + a_question_id.out)
+			log.write_debug (generator + ".add_user First Name:" + a_first_name.to_string_8 + " Last Name:" + a_last_name.to_string_8 + " email:" + a_email +
+			" Username:" + a_username.to_string_8 + " a_token:" + a_token.to_string_8 + " question:" + a_question_id.out)
 			if login_provider.user_from_username (a_username) = Void and then
 				login_provider.user_from_email (a_email) = Void then
 				data_provider.add_user (a_first_name, a_last_name, a_email, a_username, a_password, a_answer, a_token, a_question_id)
@@ -677,7 +667,7 @@ feature -- Element Settings
 	user_from_username (a_username: READABLE_STRING_32): detachable USER
 			-- User from username `a_username', if any.
 		do
-			log.write_debug (generator + ".user_from_username:" + a_username)
+			log.write_debug (generator + ".user_from_username:" + a_username.to_string_8)
 			Result := login_provider.user_from_username (a_username)
 			post_login_provider_execution
 		end
@@ -685,20 +675,20 @@ feature -- Element Settings
 	remove_user (a_username: READABLE_STRING_32)
 			-- Remove username `a_username' from database
 		do
-			log.write_debug (generator + ".remove_user username:" + a_username)
+			log.write_debug (generator + ".remove_user username:" + a_username.to_string_8)
 			login_provider.remove_user (a_username)
 			post_login_provider_execution
 		end
 
-	update_password (a_email: STRING; a_password: STRING)
+	update_password (a_email: READABLE_STRING_GENERAL; a_password: READABLE_STRING_GENERAL)
 			-- Update password of user with email `a_email'.
 		do
-			log.write_debug (generator + ".update_password email:" + a_email)
+			log.write_debug (generator + ".update_password email:" + a_email.to_string_8)
 			login_provider.update_password (a_email, a_password)
 			post_login_provider_execution
 		end
 
-	update_personal_information (a_username: STRING; a_first_name, a_last_name, a_position, a_address, a_city, a_country, a_region, a_code, a_tel, a_fax: detachable STRING): BOOLEAN
+	update_personal_information (a_username: READABLE_STRING_GENERAL; a_first_name, a_last_name, a_position, a_address, a_city, a_country, a_region, a_code, a_tel, a_fax: detachable READABLE_STRING_GENERAL): BOOLEAN
 			-- Update personal information of user with username `a_username'.
 		do
 			if login_provider.user_from_username (a_username) /= Void then
@@ -764,7 +754,7 @@ feature -- Access: Auth Session
 	has_user_token (a_user: USER): BOOLEAN
 			-- Has the user `a_user' and associated session token?
 		do
-			log.write_debug (generator + ".has_user_token for user:" + a_user.name )
+			log.write_debug (generator + ".has_user_token for user:" + a_user.name.to_string_8 )
 			Result := login_provider.has_user_token (a_user)
 			post_login_provider_execution
 		end
@@ -774,7 +764,7 @@ feature -- Change: Auth Session
 	new_user_session_auth (a_token: READABLE_STRING_GENERAL; a_user: USER; a_maxage: INTEGER)
 			-- New user session for user `a_user' with token `a_token'.
 		do
-			log.write_debug (generator + ".new_user_session_auth for user:" + a_user.name )
+			log.write_debug (generator + ".new_user_session_auth for user:" + a_user.name.to_string_8 )
 			login_provider.new_user_session_auth (a_token, a_user, a_maxage)
 			post_login_provider_execution
 		end
@@ -783,7 +773,7 @@ feature -- Change: Auth Session
 	update_user_session_auth (a_token: READABLE_STRING_GENERAL; a_user: USER; a_maxage: INTEGER)
 			-- Update user session for user `a_user' with token `a_token'.
 		do
-			log.write_debug (generator + ".update_user_session_auth for user:" + a_user.name )
+			log.write_debug (generator + ".update_user_session_auth for user:" + a_user.name.to_string_8 )
 			login_provider.update_user_session_auth (a_token, a_user, a_maxage)
 			post_login_provider_execution
 		end
@@ -793,9 +783,9 @@ feature -- Status Report
 	is_active (a_username: READABLE_STRING_32): BOOLEAN
 			-- Is membership for user with username `a_username' active?
 		do
-			log.write_debug (generator + ".is_active Is Membership for username:" + a_username + " active?")
+			log.write_debug (generator + ".is_active Is Membership for username:" + a_username.to_string_8 + " active?")
 			Result := login_provider.is_active (a_username)
-			log.write_debug (generator + ".is_active Is Membership for username:" + a_username + " active?" + Result.out )
+			log.write_debug (generator + ".is_active Is Membership for username:" + a_username.to_string_8 + " active?" + Result.out )
 			post_login_provider_execution
 		end
 
@@ -804,10 +794,10 @@ feature -- Status Report
 		local
 			l_sha_password: STRING
 		do
-			log.write_debug (generator + ".login_valid for username:" + a_username )
+			log.write_debug (generator + ".login_valid for username:" + a_username.to_string_8 )
 			if attached data_provider.user_password_salt (a_username) as l_hash and then
 			   attached a_password then
-				l_sha_password := (create {SECURITY_PROVIDER}).password_hash (a_password, l_hash)
+				l_sha_password := (create {SECURITY_PROVIDER}).password_hash (a_password.to_string_8, l_hash)
 				Result := login_provider.validate_login (a_username, l_sha_password)
 			end
 			post_login_provider_execution
@@ -816,9 +806,10 @@ feature -- Status Report
 	user_login_valid (a_username: READABLE_STRING_32; a_password: READABLE_STRING_32): detachable USER
 			-- Does account with username `a_username' and password `a_password' exist?
 			-- if true return a User in other case Void.
+			-- a_username could be a username or email.
 		do
 				-- Login with email
-			if attached {TUPLE [first_name: STRING; last_name: STRING; user_name: STRING]} login_provider.user_from_email (a_username) as l_user_info then
+			if attached {TUPLE [first_name: STRING; last_name: STRING; user_name: STRING]} login_provider.user_from_email (a_username.to_string_8) as l_user_info then
 				if login_valid (l_user_info.user_name, a_password) and then is_active (l_user_info.user_name) then
 					Result := user_from_username (l_user_info.user_name)
 				end
@@ -841,7 +832,7 @@ feature -- Status Report
 	is_report_visible ( a_username: READABLE_STRING_32; a_number: INTEGER): BOOLEAN
 			-- Can user `a_username' see report number `a_number'?
 		do
-			log.write_debug (generator + ".is_report_visible for username:" + a_username + " report:" + a_number.out )
+			log.write_debug (generator + ".is_report_visible for username:" + a_username.to_string_8 + " report:" + a_number.out )
 			Result := data_provider.is_report_visible (a_username, a_number)
 			post_data_provider_execution
 		end
@@ -851,7 +842,7 @@ feature -- Status Report
 			-- if the username is void means `Guest user'.
 		do
 			if attached a_username then
-				log.write_debug (generator + ".is_interaction_visible for username:" + a_username + " interaction:" + a_interaction_id.out )
+				log.write_debug (generator + ".is_interaction_visible for username:" + a_username.to_string_8 + " interaction:" + a_interaction_id.out )
 				Result := data_provider.interaction_visible (a_username, a_interaction_id)
 				post_data_provider_execution
 			else
@@ -866,7 +857,7 @@ feature -- Status Report
 			-- if the username is void it means 'Guest users'.
 		do
 			if attached a_username then
-				log.write_debug (generator + ".is_attachment_visible for user:" + a_username + " attachment:" + a_attachment_id.out )
+				log.write_debug (generator + ".is_attachment_visible for user:" + a_username.to_string_8 + " attachment:" + a_attachment_id.out )
 				Result := data_provider.attachment_visible (a_username, a_attachment_id)
 				post_data_provider_execution
 			else
@@ -876,17 +867,17 @@ feature -- Status Report
 			end
 		end
 
-	activation_valid (a_email, a_token: READABLE_STRING_32): BOOLEAN
+	activation_valid (a_email: READABLE_STRING_GENERAL; a_token: READABLE_STRING_32): BOOLEAN
 			-- Is activation for user with email `a_email' using token `a_token' valid?
 		do
-			log.write_debug (generator + ".activation_valid Processing user activation with email:" + a_email + " token: " + a_token )
-			Result := login_provider.activation_valid (a_email, a_token)
+			log.write_debug (generator + ".activation_valid Processing user activation with email:" + a_email.to_string_8 + " token: " + a_token.to_string_8 )
+			Result := login_provider.activation_valid (a_email.to_string_8, a_token)
 			if login_provider.successful then
 				set_successful
-				log.write_debug (generator + ".activation_valid User activated with email:" + a_email )
+				log.write_debug (generator + ".activation_valid User activated with email:" + a_email.to_string_8 )
 			else
 				set_last_error_from_handler (login_provider.last_error)
-				log.write_error (generator + ".activation_valid " + last_error_message)
+				log.write_error (generator + ".activation_valid " + last_error_message.to_string_8)
 			end
 		end
 
@@ -903,9 +894,9 @@ feature -- Status Report
 			then
 				set_successful
 			elseif l_age = -1 then
-				set_last_error ("Token: " + a_token + " is invalid " , generator + ".is_token_email_valid")
+				set_last_error ({STRING_32}"Token: " + a_token + {STRING_32}" is invalid " , generator + ".is_token_email_valid")
 			else
-				set_last_error ("Token: " + a_token + " has expired " , generator + ".is_token_email_valid")
+				set_last_error ({STRING_32}"Token: " + a_token + {STRING_32}" has expired " , generator + ".is_token_email_valid")
 			end
 
 		end
@@ -917,7 +908,7 @@ feature -- Status Report
 			-- last_interaction_id created.		
 
 
-	register_subscriber (a_user: STRING; a_categories: LIST [INTEGER])
+	register_subscriber (a_user: READABLE_STRING_32; a_categories: LIST [INTEGER])
 			-- Subscribe responsible `a_user' to category with category ID in the list of categories'
 		local
 			l_categories: LIST [ESA_CATEGORY_SUBSCRIBER_VIEW]

@@ -80,7 +80,7 @@ feature -- Implementation
 			end
 		end
 
-	has_access (a_user:STRING; a_form: ESA_INTERACTION_FORM_VIEW): BOOLEAN
+	has_access (a_user: READABLE_STRING_32; a_form: ESA_INTERACTION_FORM_VIEW): BOOLEAN
 				-- Has the current user access to change category and status?
 			do
 				Result := a_form.is_responsible_or_admin
@@ -88,7 +88,7 @@ feature -- Implementation
 					attached a_form.report as l_report and then
 					attached l_report.contact as l_contact
 				then
-					Result := Result or else a_user.same_string (l_contact.name.to_string_8)
+					Result := Result or else a_user.same_string_general (l_contact.name)
 				end
 
 			end

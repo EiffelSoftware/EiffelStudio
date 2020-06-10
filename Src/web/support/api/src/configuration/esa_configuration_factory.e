@@ -64,7 +64,7 @@ feature -- Factory
 
 			if not l_retried then
 				if attached (create {JSON_CONFIGURATION}).new_database_configuration (l_layout.application_config_path) as l_database_config then
-					create {DATABASE_CONNECTION_ODBC} l_database.login_with_connection_string (l_database_config.connection_string)
+					create {DATABASE_CONNECTION_ODBC} l_database.login_with_connection_string (l_database_config.connection_string.to_string_8)
 					create l_api_service.make_with_database (l_database)
 					create Result.make (l_database, l_api_service, l_notification_service, l_layout)
 					set_successful
@@ -125,7 +125,7 @@ feature -- Factory
 
 			if not l_retried then
 				if attached (create {JSON_CONFIGURATION}).new_database_configuration_test (l_layout.application_config_path) as l_database_config then
-					create {DATABASE_CONNECTION_ODBC} l_database.login_with_connection_string (l_database_config.connection_string)
+					create {DATABASE_CONNECTION_ODBC} l_database.login_with_connection_string (l_database_config.connection_string.to_string_8)
 					create l_api_service.make_with_database (l_database)
 					create Result.make (l_database, l_api_service, l_notification_service, l_layout)
 					set_successful

@@ -73,7 +73,7 @@ feature -- HTTP Methods
 			   attached {WSF_STRING} req.path_parameter("id") as l_id and then l_id.is_integer then
 				if attached current_media_type (req) as l_type then
 					debug
-						log.write_information (generator + ".do_get Processing request: User:" + l_user + " Id:" + l_id.value)
+						log.write_information (generator + ".do_get Processing request: User:" + l_user.to_string_8 + " Id:" + l_id.value.to_string_8)
 					end
 					l_rhf.new_representation_handler (esa_config, l_type, media_type_variants (req)).report_form_confirm_page (req, res, l_id.integer_value)
 				else
@@ -147,7 +147,7 @@ feature -- Implementation
 			end
 		end
 
-	send_new_report_email (a_user: STRING; a_url: STRING)
+	send_new_report_email (a_user: READABLE_STRING_32; a_url: STRING)
 			-- Send report creation confirmation email to interested parties.	
 		local
 			l_subscribers: LIST [STRING]
@@ -163,7 +163,7 @@ feature -- Implementation
 				email_notification_service.send_new_report_email (api_service.user_account_information (a_user).displayed_name, l_report, l_email, l_subscribers, a_url)
 			else
 					-- Not expected.
-				log.write_critical (generator + ".send_new_report_email Unexpected behavior user [" + a_user +"]" + "does not has email, or the report does not exist or does not has synopsis")
+				log.write_critical (generator + ".send_new_report_email Unexpected behavior user [" + a_user.to_string_8 +"]" + "does not has email, or the report does not exist or does not has synopsis")
 			end
 		end
 end

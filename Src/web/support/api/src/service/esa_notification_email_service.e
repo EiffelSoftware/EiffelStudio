@@ -64,27 +64,25 @@ feature -- Element change
 
 feature -- Basic Operations
 
-	send_post_registration_email (a_to, a_token, a_host: STRING)
+	send_post_registration_email (a_to, a_token, a_host: READABLE_STRING_GENERAL)
 			-- Send successful registration message containing activation code `a_token' to `a_to'.
 		require
 			attached_to: a_to /= Void
 			attached_token: a_token /= Void
 			attached_host: a_host /= Void
 		local
-			l_content: STRING
+			l_content: STRING_8
 			l_url: URL_ENCODER
- 			l_path: PATH
-			l_html: HTML_ENCODER
+ 			l_html: HTML_ENCODER
 			l_email: ESA_NOTIFICATION_EMAIL
 		do
 			if successful then
-				log.write_information (generator + ".send_post_registration_email to [" + a_to + "]" )
-				create l_path.make_current
+				log.write_information (generator + ".send_post_registration_email to [" + a_to.to_string_8 + "]" )
 				create l_url
 				create l_html
 				create l_content.make (1024)
 				l_content.append ("Thank you for registering at eiffel.com.%N%NTo complete your registration, please click on this link to activate your account:%N%N")
-				l_content.append (a_host)
+				l_content.append (a_host.to_string_8)
 				l_content.append ("/activation?code=")
 				l_content.append (l_url.encoded_string (a_token))
 				l_content.append ("&email=")
@@ -97,7 +95,7 @@ feature -- Basic Operations
 				l_content.append ("%N%NThank you for joining us.%N%NEiffel Software.")
 				l_content.append (Disclaimer)
 					-- Create our message.
-				create l_email.make (admin_email, a_to, "Eiffel Support Site: Account Activation", l_content)
+				create l_email.make (admin_email, a_to.to_string_8, "Eiffel Support Site: Account Activation", l_content)
 				mailer.safe_process_email (l_email)
 			end
 		end
@@ -144,15 +142,17 @@ feature -- Basic Operations
 		end
 
 
-	send_password_reset (a_to, a_message : STRING)
+	send_password_reset (a_to: READABLE_STRING_8; a_message : READABLE_STRING_32)
 			-- Send password reset email `a_token' to `a_to'.
 		local
 			l_email: ESA_NOTIFICATION_EMAIL
+			l_message: STRING_32
 		do
 			if successful then
 				log.write_information (generator + ".send_password_reset to [" + a_to + "]" )
-				a_message.append (disclaimer)
-				create l_email.make (admin_email, a_to, "Eiffel Support Site: Password Reset" , a_message)
+				create l_message.make_from_string (a_message)
+				l_message.append (disclaimer)
+				create l_email.make (admin_email, a_to, "Eiffel Support Site: Password Reset" , {UTF_CONVERTER}.utf_32_string_to_utf_8_string_8 (l_message))
 				l_email.add_header_line ("MIME-Version: 1.0")
 				l_email.add_header_line ("Content-Type: text/plain; charset=UTF-8")
 				mailer.safe_process_email (l_email)
@@ -177,7 +177,7 @@ feature -- Basic Operations
 			end
 		end
 
-	send_new_report_email (a_name: STRING; a_report: REPORT; a_email: STRING; a_subscribers: LIST [STRING]; a_url: STRING)
+	send_new_report_email (a_name: READABLE_STRING_GENERAL; a_report: REPORT; a_email: STRING; a_subscribers: LIST [STRING]; a_url: STRING)
 			-- Send report creation confirmation email to interested parties.
 		local
 			l_email: ESA_NOTIFICATION_EMAIL
@@ -288,7 +288,7 @@ feature -- Basic Operations
 
 feature {NONE} -- Implementation
 
-	user_mail (a_name: STRING): STRING
+	user_mail (a_name: READABLE_STRING_GENERAL): STRING
 			-- Construct the from email of a user `a_name' as "a_name <admin_mail>".
 		local
 			l_email: like admin_email
@@ -303,7 +303,7 @@ feature {NONE} -- Implementation
 				end
 			end
 			create Result.make (a_name.count + 3 + l_email.count)
-			Result.append (a_name)
+			Result.append_string_general (a_name)
 			Result.append_character ('<')
 			Result.append (l_email)
 			Result.append_character ('>')
@@ -612,7 +612,7 @@ feature {NONE} -- Implementation
 			if a_user /= Void then
 				Result.append ("%N------------------------------------------------------------%N")
 				Result.append ("Message prepared by: ")
-				Result.append (a_user.displayed_name)
+				Result.append (a_user.displayed_name.to_string_8)
 				Result.append ("%N%N")
 				Result.append (Disclaimer)
 			end

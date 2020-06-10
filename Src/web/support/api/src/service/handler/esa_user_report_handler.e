@@ -78,7 +78,7 @@ feature -- HTTP Methods
 			if attached {READABLE_STRING_32} current_user_name (req) as l_user then
 					-- Logged in user
 				debug
-					log.write_information (generator+".do_get Processing request with user:" + l_user  )
+					log.write_information (generator+".do_get Processing request with user:" + l_user.to_string_8  )
 				end
 				if attached current_media_type (req) as l_type then
 					create l_input_validator

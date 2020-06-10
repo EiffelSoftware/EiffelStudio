@@ -61,10 +61,10 @@ feature -- Access
 			Result.compare_objects
 		end
 
-	accetpable_order_by: ARRAY [STRING]
+	accetpable_order_by: ARRAY [STRING_32]
 			-- acceptable values to sort the reports.	
 		once
-			Result := <<"number", "statusID", "priorityID", "severityID", "synopsis", "username", "submissionDate", "categorySynopsis", "release">>
+			Result := {ARRAY [STRING_32]} <<"number", "statusID", "priorityID", "severityID", "synopsis", "username", "submissionDate", "categorySynopsis", "release">>
 			Result.compare_objects
 		end
 
@@ -81,7 +81,7 @@ feature -- Request Input Parameters
 			if not l_current_keys.is_empty then
 				across l_current_keys as l_keys loop
 					if not acceptable_query_parameters.has (l_keys.item.to_string_8) then
-						errors.force ("The parameter [" + {UTF_CONVERTER}.utf_32_string_to_utf_8_string_8 (l_keys.item) + "] is not valid", l_keys.item)
+						errors.force ("The parameter [" + l_keys.item.to_string_8 + "] is not valid", l_keys.item)
 					end
 				end
 			end
@@ -119,7 +119,7 @@ feature {NONE} -- Validations
 			-- feature, if there is an error, add it to errors.
 		do
 			if
-				a_current_keys.has ({STRING_32} "responsible") and then
+				a_current_keys.has ("responsible") and then
 				attached {WSF_STRING} a_table_request.at ("responsible") as l_responsible
 			then
 				if
@@ -127,7 +127,7 @@ feature {NONE} -- Validations
 					(l_responsible.is_integer and then
 					 l_responsible.integer_value < 0 )
 				then
-					errors.force ("The parameter value for responsible should be greater than 0, the vale =[" + l_responsible.value + "] is not valid", "responsible")
+					errors.force ("The parameter value for responsible should be greater than 0, the vale =[" + l_responsible.value.to_string_8 + "] is not valid", "responsible")
 				else
 					set_responsible (l_responsible.integer_value)
 				end
@@ -140,15 +140,15 @@ feature {NONE} -- Validations
 		do
 				-- Validate priority, should be a number between 0 and 3
 			if
-				a_current_keys.has ({STRING_32} "priority") and then
+				a_current_keys.has ("priority") and then
 				attached {WSF_STRING} a_table_request.at ("priority") as l_priority
 			then
 				if not l_priority.is_integer then
-					errors.force ("The parameter value for priority=[" + l_priority.value + "] is not valid", "priority")
+					errors.force ("The parameter value for priority=[" + l_priority.value.to_string_8 + "] is not valid", "priority")
 				elseif l_priority.is_integer and then
 					( l_priority.integer_value > 3 or else l_priority.integer_value < 0 )
 				then
-					errors.force ("The parameter value for priority should be between 0 .. 3 the current value [" + l_priority.value + "] is not valid", "priority")
+					errors.force ("The parameter value for priority should be between 0 .. 3 the current value [" + l_priority.value.to_string_8 + "] is not valid", "priority")
 				else
 					set_priority (l_priority.integer_value)
 				end
@@ -160,7 +160,7 @@ feature {NONE} -- Validations
 			-- feature..
 		do
 			if
-				a_current_keys.has ({STRING_32} "submitter") and then
+				a_current_keys.has ("submitter") and then
 				attached {WSF_STRING} a_table_request.at ("submitter") as l_submitter
 			then
 				set_submitter (l_submitter.value)
@@ -172,15 +172,15 @@ feature {NONE} -- Validations
 			-- feature, if there is an error, add it to errors.
 		do
 			if
-				a_current_keys.has ({STRING_32} "severity") and then
+				a_current_keys.has ("severity") and then
 				attached {WSF_STRING} a_table_request.at ("severity") as l_severity
 			then
 				if not l_severity.is_integer then
-					errors.force ("The parameter value for severity=[" + l_severity.value + "] is not valid", "severity")
+					errors.force ("The parameter value for severity=[" + l_severity.value.to_string_8 + "] is not valid", "severity")
 				elseif l_severity.is_integer and then
 				   ( l_severity.integer_value > 3 or else l_severity.integer_value < 0 )
 				then
-				  	errors.force ("The parameter value for severity should be between 0 .. 3 the current value [" + l_severity.value + "] is not valid", "severity")
+				  	errors.force ("The parameter value for severity should be between 0 .. 3 the current value [" + l_severity.value.to_string_8 + "] is not valid", "severity")
 				else
 					set_severity (l_severity.integer_value)
 				end

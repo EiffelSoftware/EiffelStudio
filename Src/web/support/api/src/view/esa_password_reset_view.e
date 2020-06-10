@@ -13,7 +13,7 @@ inherit
 
 feature -- Access
 
-	token: detachable STRING
+	token: detachable STRING_32
 
 feature -- Change Element
 

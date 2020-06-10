@@ -56,7 +56,7 @@ feature -- Functionality
 			end
 		rescue
 			set_last_error_from_exception ("Store procedure execution")
-			log.write_critical (generator+ ".execute_reader " + last_error_message)
+			log.write_critical (generator+ ".execute_reader " + last_error_message.to_string_8)
 			if is_connected then
 				disconnect
 			end
@@ -93,7 +93,7 @@ feature -- Functionality
 			end
 		rescue
 			set_last_error_from_exception ("Store procedure execution")
-			log.write_critical (generator+ ".execute_writer " + last_error_message)
+			log.write_critical (generator+ ".execute_writer " + last_error_message.to_string_8)
 			if is_connected then
 				disconnect
 			end
@@ -126,7 +126,7 @@ feature -- SQL Queries
 			end
 		rescue
 			set_last_error_from_exception ("execute_query")
-			log.write_critical (generator+ ".execute_query " + last_error_message)
+			log.write_critical (generator+ ".execute_query " + last_error_message.to_string_8)
 			if is_connected then
 				disconnect
 			end
@@ -159,7 +159,7 @@ feature -- SQL Queries
 			end
 		rescue
 			set_last_error_from_exception ("Store procedure execution")
-			log.write_critical (generator+ ".execute_writer " + last_error_message)
+			log.write_critical (generator+ ".execute_writer " + last_error_message.to_string_8)
 			if is_connected then
 				disconnect
 			end

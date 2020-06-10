@@ -12,10 +12,10 @@ inherit
 
 feature -- Escape SQL input
 
-	encode (a_string:READABLE_STRING_32): READABLE_STRING_32
+	encode (a_string:READABLE_STRING_GENERAL): READABLE_STRING_32
 			-- Escape single quote (') and braces ([,]).
 		local
-			l_string: STRING
+			l_string: STRING_32
 		do
 			l_string := a_string.twin
 			if not l_string.is_empty then

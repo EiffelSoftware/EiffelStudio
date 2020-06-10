@@ -89,7 +89,7 @@ feature -- Report Interaction
 			then
 				if api_service.is_attachment_visible (a_user, l_id.as_string.integer_value) then
 					debug
-						log.write_information (generator+".do_get Processing request download file:" + l_name.as_string.value )
+						log.write_information (generator+".do_get Processing request download file:" + l_name.as_string.value.to_string_8 )
 					end
 					compute_response_get_txt (req, res, api_service.attachments_content (l_id.as_string.integer_value))
 				else
@@ -115,7 +115,7 @@ feature -- Report Interaction
 
 feature -- Response	
 
-	compute_response_get_txt (req: WSF_REQUEST; res: WSF_RESPONSE; output: STRING)
+	compute_response_get_txt (req: WSF_REQUEST; res: WSF_RESPONSE; output: STRING_32)
 			--Simple response to download content
 		local
 			h: HTTP_HEADER
@@ -123,7 +123,7 @@ feature -- Response
 		do
 			fixme ("Find a better way to handle this!!!")
 			create h.make
-			create l_msg.make_from_string (output)
+			create l_msg.make_from_string ({UTF_CONVERTER}.utf_32_string_to_utf_8_string_8 (output))
 			h.put_header_key_value ("Content-type", "application/octet-stream")
 			h.put_cache_control ("no-store, no-cache")
 			h.put_content_length (l_msg.count)

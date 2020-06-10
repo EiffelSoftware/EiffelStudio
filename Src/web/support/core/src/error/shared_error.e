@@ -21,7 +21,7 @@ feature -- Access
 			if attached last_error as ll_error then
 				Result := ll_error.error_message
 			else
-				Result := ""
+				Result := {STRING_32}""
 			end
 		end
 
@@ -33,7 +33,7 @@ feature -- Status Report
 
 feature -- Element Settings
 
-	set_last_error_from_exception (a_location: STRING)
+	set_last_error_from_exception (a_location: READABLE_STRING_GENERAL)
 			-- Initialize instance from last exception.
 			-- Don't show too much internal details (e.g. stack trace).
 			-- We really don't want this to fail since it is called from rescue clauses.
@@ -66,7 +66,7 @@ feature -- Element Settings
 			retry
 		end
 
-	set_last_error (a_message, a_location: STRING)
+	set_last_error (a_message, a_location: READABLE_STRING_GENERAL)
 			-- Set `last_error_message' with `a_message',
 			-- `last_error_location' with `a_location' and
 			-- `successful' to `False'.
@@ -75,7 +75,7 @@ feature -- Element Settings
 			attached_location: a_location /= Void
 		do
 			create last_error.make (a_message, a_location)
-			log.write_critical (generator + ".set_last_error " + a_message)
+			log.write_critical (generator + ".set_last_error " + a_message.to_string_8)
 			successful := False
 		ensure
 			last_error_set: attached last_error

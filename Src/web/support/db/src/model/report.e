@@ -252,7 +252,7 @@ feature -- Output
 		do
 			create Result.make_from_string ("%N(" + id.out + ")")
 			Result.append (" #" + number.out + ":")
-			Result.append (synopsis.as_string_8)
+			Result.append (synopsis.to_string_8)
 			Result.append_character ('%N')
 			if attached status as st then
 				Result.append ("  " + st.string)
@@ -272,13 +272,13 @@ feature -- Output
 				Result.append (" Public")
 			end
 			if attached contact as u then
-				Result.append ("%N  Reported by " + u.name)
+				Result.append ("%N  Reported by " + u.name.to_string_8)
 			end
 			if attached release as rel then
-				Result.append ("%N  Release: " + rel)
+				Result.append ("%N  Release: " + rel.to_string_8)
 			end
 			if attached environment as env then
-				Result.append ("%N  Environment: " + env)
+				Result.append ("%N  Environment: " + env.to_string_8)
 			end
 			if attached description as d then
 				Result.append ("%N  Description:%N" + indented_text ("%T", d.to_string_8) + "%N")

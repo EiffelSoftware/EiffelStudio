@@ -128,7 +128,7 @@ feature -- View
 			-- Report form confirm redirect
 		do
 			if attached current_user_name (req) as l_user then
-				compute_response_redirect (req, res,absolute_host(req,"/user_reports/"+l_user))
+				compute_response_redirect (req, res,absolute_host(req,"/user_reports/" + {UTF_CONVERTER}.utf_32_string_to_utf_8_string_8 (l_user)))
 			end
 		end
 
@@ -152,7 +152,7 @@ feature -- View
 			end
 		end
 
-	update_report_responsible (req: WSF_REQUEST; res: WSF_RESPONSE; a_redirect_uri: READABLE_STRING_32)
+	update_report_responsible (req: WSF_REQUEST; res: WSF_RESPONSE; a_redirect_uri: READABLE_STRING_8)
 			-- Update report responsible
 		do
 			compute_response_redirect (req, res, absolute_host (req, a_redirect_uri) )
@@ -387,7 +387,7 @@ feature -- View
 		end
 
 
-	reminder_page (req: WSF_REQUEST; res: WSF_RESPONSE; a_error: detachable STRING)
+	reminder_page (req: WSF_REQUEST; res: WSF_RESPONSE; a_error: detachable READABLE_STRING_GENERAL)
 			-- Reminder page
 		local
 			l_hp: HTML_REMINDER
@@ -430,7 +430,7 @@ feature -- View
 			-- <Precursor>
 		do
 			if attached current_user_name (req) as l_user then
-				compute_response_redirect (req, res,absolute_host (req, "/user_reports/"+l_user) )
+				compute_response_redirect (req, res,absolute_host (req, "/user_reports/" + {UTF_CONVERTER}.utf_32_string_to_utf_8_string_8 (l_user)) )
 			end
 		end
 
@@ -520,7 +520,7 @@ feature -- View
 			-- <Precursor>
 		do
 			if attached current_user_name (req) as l_user then
-				compute_response_redirect (req, res,absolute_host (req, "/user_reports/"+l_user) )
+				compute_response_redirect (req, res,absolute_host (req, "/user_reports/" + {UTF_CONVERTER}.utf_32_string_to_utf_8_string_8 (l_user)) )
 			end
 		end
 

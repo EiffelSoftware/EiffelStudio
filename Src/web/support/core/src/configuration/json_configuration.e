@@ -87,9 +87,7 @@ feature -- Application Configuration
 			-- emails configuration
 		local
 			l_parser: JSON_PARSER
-			l_result: STRING_32
 		do
-			create l_result.make_empty
 			if attached json_file_from (a_path) as json_file then
 				l_parser := new_json_parser (json_file)
 				if

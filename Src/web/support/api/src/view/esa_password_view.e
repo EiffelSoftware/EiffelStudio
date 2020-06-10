@@ -8,10 +8,10 @@ class
 
 feature -- Access
 
-	password: detachable STRING
+	password: detachable STRING_32
 			-- new password.
 
-	check_password: detachable STRING
+	check_password: detachable STRING_32
 			-- Check password.
 
 	is_valid_form: BOOLEAN
@@ -64,7 +64,7 @@ feature -- Errors
 
 feature -- Change Element
 
-	set_password (a_password: STRING)
+	set_password (a_password: READABLE_STRING_32)
 			-- Set `password' to `a_password'.
 		do
 			password := a_password
@@ -72,7 +72,7 @@ feature -- Change Element
 			password_set: password = a_password
 		end
 
-	set_check_password (a_check_password: STRING)
+	set_check_password (a_check_password: READABLE_STRING_32)
 			-- Set `password' to `a_check_password'.
 		do
 			check_password := a_check_password

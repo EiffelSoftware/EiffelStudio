@@ -73,7 +73,7 @@ feature -- Output
 	string: STRING_8
 			-- String representation.
 		do
-			Result := synopsis.string
+			Result := synopsis.string.to_string_8
 			if is_active then
 				Result.append (" [Active]")
 			else

@@ -14,7 +14,6 @@ feature -- Factory
 			if a_media_type.same_string({HTTP_MIME_TYPES}.text_html) then
 				create {ESA_HTML_REPRESENTATION_HANDLER} Result.make (a_esa_config,a_media_variants)
 			elseif a_media_type.same_string("application/vnd.collection+json") then
-
 				create {ESA_CJ_REPRESENTATION_HANDLER} Result.make (a_esa_config,a_media_variants)
 			else
 				create {ESA_NULL_REPRESENTATION_HANDLER} Result.make (a_esa_config,a_media_variants)

@@ -15,7 +15,7 @@ feature -- Access
 		deferred
 		end
 
-	debug_output: STRING
+	debug_output: READABLE_STRING_GENERAL
 		do
 			Result := string
 		end

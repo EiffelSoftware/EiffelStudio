@@ -88,10 +88,10 @@ feature -- Access
 	selected_severity: INTEGER
 		-- Severity selected.
 
-	order_by: detachable STRING_8
+	order_by: detachable READABLE_STRING_8
 		-- Field used to sort the reports.
 
-	direction: detachable STRING_8
+	direction: detachable READABLE_STRING_8
 		-- Direction ASC|DESC.
 
 	submitter: detachable STRING_32

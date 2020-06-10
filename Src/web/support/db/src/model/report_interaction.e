@@ -62,7 +62,7 @@ feature -- Access
 	date_output: detachable STRING
 			-- formatted date as dd mmm yyyy.		
 
-	status: detachable STRING
+	status: detachable STRING_8
 			-- assigned status.
 
 feature -- Element change
@@ -145,16 +145,16 @@ feature -- Output
 			create Result.make_from_string ("(" + id.out + ")")
 			Result.append (" #" + report.number.out)
 			if attached contact as u then
-				Result.append (" by " + u.name)
+				Result.append (" by " + {UTF_CONVERTER}.utf_32_string_to_utf_8_string_8 (u.name))
 			end
 			if private then
 				Result.append (" [Private]")
 			end
-			if attached content as t then
+			if attached content as l_content then
 				Result.append ("%N")
 				Result.append (create {STRING_8}.make_filled ('-', 78))
 				Result.append ("%N")
-				Result.append (indented_text ("%T", t.as_string_8))
+				Result.append (indented_text ("%T", {UTF_CONVERTER}.utf_32_string_to_utf_8_string_8 (l_content)))
 				Result.append ("%N")
 			end
 			if attached attachments as ats then
@@ -166,7 +166,7 @@ feature -- Output
 				across
 					ats as c
 				loop
-					Result.append ("%T- " + c.item.name + " (" + c.item.bytes_count.out + " bytes)%N")
+					Result.append ("%T- " + {UTF_CONVERTER}.utf_32_string_to_utf_8_string_8 (c.item.name) + " (" + c.item.bytes_count.out + " bytes)%N")
 				end
 			end
 		end

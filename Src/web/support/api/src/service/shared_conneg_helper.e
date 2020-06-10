@@ -15,7 +15,7 @@ feature -- Access
 			create Result.make ({HTTP_MIME_TYPES}.text_html, "en", "UTF-8", "identity")
 		end
 
-	mime_types_supported (req: WSF_REQUEST): LIST [STRING]
+	mime_types_supported (req: WSF_REQUEST): LIST [READABLE_STRING_8]
 			-- All values for Accept header that `Current' can serve.
 		do
 			create {ARRAYED_LIST [STRING]} Result.make_from_array (<<{HTTP_MIME_TYPES}.text_html, "application/vnd.collection+json">>)
@@ -30,7 +30,7 @@ feature -- Access
 			Result := conneg (req).media_type_preference (mime_types_supported (req), req.http_accept)
 		end
 
-	compression_supported (req: WSF_REQUEST): LIST [STRING]
+	compression_supported (req: WSF_REQUEST): LIST [READABLE_STRING_8]
 			-- All values for Accept-Encofing header that `Current' can serve.
 		do
 				create {ARRAYED_LIST [STRING]} Result.make_from_array (<<"identity","deflate">>)

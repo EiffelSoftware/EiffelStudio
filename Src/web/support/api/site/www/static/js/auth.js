@@ -53,7 +53,7 @@ var login = function() {
                            window.location=host.concat(path_name);
                 }
                 else{
-                  if (navigator.userAgent.toLowerCase().indexOf("firefox") != -1){                       
+                  if (navigator.userAgent.toLowerCase().indexOf("firefox") !==-1){                       
                      }
                    
 		  if (document.getElementById('myModalFormId') === null ) {		
@@ -71,7 +71,7 @@ var login = function() {
     }
  
     var userAgent = navigator.userAgent.toLowerCase();
-    if (userAgent.indexOf("firefox") != -1){ //TODO: check version number
+    if (userAgent.indexOf("firefox") !== -1){ //TODO: check version number
         if (firstLogIn) _login();
         else logoff(_login);
     }
@@ -139,7 +139,7 @@ var login_with_redirect = function() {
 
         }
                 else{
-                  if (navigator.userAgent.toLowerCase().indexOf("firefox") != -1){                       
+                  if (navigator.userAgent.toLowerCase().indexOf("firefox") !== -1){                       
                      }
                    
           if (document.getElementById('myModalFormId') === null ) {     
@@ -157,7 +157,7 @@ var login_with_redirect = function() {
     }
  
     var userAgent = navigator.userAgent.toLowerCase();
-    if (userAgent.indexOf("firefox") != -1){ //TODO: check version number
+    if (userAgent.indexOf("firefox") !== -1){ //TODO: check version number
         if (firstLogIn) _login();
         else logoff(_login);
     }
@@ -173,7 +173,7 @@ var logoff = function(callback){
 	   var form = document.forms[0];
      var host = form.host.value;
 	  
-    if (userAgent.indexOf("msie") != -1) {
+    if (userAgent.indexOf("msie") !== -1) {
         document.execCommand("ClearAuthenticationCache");
     }
     else if (userAgent.indexOf("firefox") != -1){ //TODO: check version number
@@ -185,7 +185,7 @@ var logoff = function(callback){
         request1.open("GET", host.concat(logoutURL) + "?prompt=false", true);
         request1.send("");
         request1.onreadystatechange = function(){
-            if (request1.readyState == 4) {
+            if (request1.readyState === 4) {
  
               //Sign in with dummy credentials to clear the auth cache
                 request2.open("GET", host.concat(logoutURL), true, "logout", "logout");

@@ -92,7 +92,7 @@ feature -- View
 			end
 		end
 
-	update_report_responsible (req: WSF_REQUEST; res: WSF_RESPONSE; a_redirect_uri: READABLE_STRING_32)
+	update_report_responsible (req: WSF_REQUEST; res: WSF_RESPONSE; a_redirect_uri: READABLE_STRING_8)
 			-- <Precursor>
 		do
 			compute_response_redirect (req, res, absolute_host (req, a_redirect_uri) )
@@ -132,7 +132,7 @@ feature -- View
 			-- Report form confirm redirect.
 		do
 			if attached current_user_name (req) as l_user then
-				compute_response_redirect (req, res, absolute_host(req,"/user_reports/" + l_user))
+				compute_response_redirect (req, res, absolute_host(req,"/user_reports/" + {UTF_CONVERTER}.utf_32_string_to_utf_8_string_8 (l_user)))
 			end
 		end
 
@@ -208,7 +208,7 @@ feature -- View
 			l_cj: CJ_ROOT
 		do
 			if attached req.http_host as l_host then
-				create l_cj.make_with_error (absolute_host(req,""), "Bad Request " + req.path_info.as_string_8, 400, current_user_name (req))
+				create l_cj.make_with_error (absolute_host(req,""), "Bad Request " + req.path_info.to_string_8, 400, current_user_name (req))
 				if attached l_cj.representation as l_representation then
 					new_response_400 (req, res, l_representation)
 				end
@@ -433,7 +433,7 @@ feature -- View
 			-- Interaction form redirect
 		do
 			if attached current_user_name (req) as l_user then
-				compute_response_redirect (req, res, absolute_host(req,"/user_reports/"+l_user))
+				compute_response_redirect (req, res, absolute_host(req,"/user_reports/" + {UTF_CONVERTER}.utf_32_string_to_utf_8_string_8 (l_user)))
 			end
 		end
 
@@ -497,7 +497,7 @@ feature -- View
 			-- <Precursor>
 		do
 			if attached current_user_name (req) as l_user then
-				compute_response_redirect (req, res,absolute_host (req, "/user_reports/"+l_user) )
+				compute_response_redirect (req, res,absolute_host (req, "/user_reports/" + {UTF_CONVERTER}.utf_32_string_to_utf_8_string_8 (l_user)) )
 			end
 		end
 
@@ -577,7 +577,7 @@ feature -- View
 			-- <Precursor>
 		do
 			if attached current_user_name (req) as l_user then
-				compute_response_redirect (req, res,absolute_host (req, "/user_reports/"+l_user) )
+				compute_response_redirect (req, res,absolute_host (req, "/user_reports/"+ {UTF_CONVERTER}.utf_32_string_to_utf_8_string_8(l_user)) )
 			end
 		end
 

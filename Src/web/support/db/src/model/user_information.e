@@ -11,7 +11,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_username: STRING)
+	make (a_username: STRING_32)
 			-- Initialize instance.
 		do
 			username := a_username
@@ -21,7 +21,7 @@ feature {NONE} -- Initialization
 
 feature -- Access : Personal Information
 
-	username: STRING
+	username: STRING_32
 			-- Username.
 
 	first_name: detachable STRING
@@ -271,7 +271,7 @@ feature -- Query
 				is_null_or_empty (email))
 		end
 
-	displayed_name: STRING
+	displayed_name: STRING_32
 			-- Display representation of the name for Current user.
 		do
 			if attached first_name as l_first and then not l_first.is_empty then
@@ -311,7 +311,7 @@ feature -- Query
 
 feature {NONE} -- Implementation
 
-	is_null_or_empty (a_argument: detachable STRING): BOOLEAN
+	is_null_or_empty (a_argument: detachable READABLE_STRING_GENERAL): BOOLEAN
 			-- Is `a_argument' null or empty?
 		do
 			Result := not  (attached a_argument as l_argument and then not l_argument.is_empty)

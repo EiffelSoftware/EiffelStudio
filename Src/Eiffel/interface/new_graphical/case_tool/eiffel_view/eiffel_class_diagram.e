@@ -1,8 +1,7 @@
-note
+﻿note
 	description: "BON view for a CLASS_GRAPH."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
-	author: ""
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -207,7 +206,7 @@ feature {NONE} -- Implementation
 						remove_links := cm.needed_links
 						update_cluster_legend
 						context_editor.history.register_named_undoable (
-							Interface_names.t_Diagram_include_class_cmd (cm.name),
+							Interface_names.t_Diagram_include_class_cmd (cm.name_32),
 							[<<agent reinclude_class (cf, remove_links, drop_x, drop_y), agent update_cluster_legend>>],
 							[<<agent remove_class_virtual (cf, remove_links), agent update_cluster_legend>>])
 					else
@@ -222,7 +221,7 @@ feature {NONE} -- Implementation
 						old_y := cf.port_y
 						cf.set_port_position (drop_x, drop_y)
 						context_editor.history.register_named_undoable (
-							interface_names.t_diagram_move_class_cmd (cm.name),
+							interface_names.t_diagram_move_class_cmd (cm.name_32),
 							agent cf.set_port_position (drop_x, drop_y),
 							agent cf.set_port_position (old_x, old_y))
 					end
@@ -285,7 +284,7 @@ feature {NONE} -- Implementation
 				remove_links := es_class.needed_links
 				update_cluster_legend
 				context_editor.history.register_named_undoable (
-					interface_names.t_diagram_include_class_cmd (es_class.name),
+					interface_names.t_diagram_include_class_cmd (es_class.name_32),
 					[<<agent reinclude_class (cf, remove_links, a_x, a_y), agent update_cluster_legend>>],
 					[<<agent remove_class_virtual (cf, remove_links), agent update_cluster_legend>>])
 			end
@@ -307,7 +306,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2020, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
@@ -338,4 +337,4 @@ note
 			Customer support http://support.eiffel.com
 		]"
 
-end -- class EIFFEL_CLASS_DIAGRAM
+end

@@ -1,8 +1,9 @@
-note
+﻿note
 	description: "Common functionality for all views for ES_CLASSes."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 	author: "Benno Baumgartner"
+	revised_by: "Alexander Kogtenkov"
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -269,7 +270,7 @@ feature {NONE} -- Implementation
 							world.context_editor.history.remove_last
 						end
 						world.context_editor.history.register_named_undoable (
-						interface_names.t_diagram_set_center_class (model.name),
+						interface_names.t_diagram_set_center_class (model.name_32),
 						[<<
 							agent old_center.set_is_fixed (False),
 							agent cg.set_new_center_class (model),
@@ -298,7 +299,7 @@ feature {NONE} -- Implementation
 							world.context_editor.history.remove_last
 						end
 						world.context_editor.history.register_named_undoable (
-						interface_names.t_diagram_set_center_class (model.name),
+						interface_names.t_diagram_set_center_class (model.name_32),
 						[<<
 							agent cg.set_new_center_class (model),
 							agent layout.layout,
@@ -413,7 +414,7 @@ feature {NONE} -- Implementation (adding relations)
 						es_link.enable_needed_on_diagram
 					end
 					world.context_editor.history.register_named_undoable (
-						interface_names.t_diagram_add_inh_link_cmd (es_link.ancestor.name, es_link.descendant.name, l_is_non_conforming),
+						interface_names.t_diagram_add_inh_link_cmd (es_link.ancestor.name_32, es_link.descendant.name_32, l_is_non_conforming),
 						agent add_ancestor (other_model, es_link, l_is_non_conforming),
 						agent remove_ancestor (other_model, es_link, l_is_non_conforming))
 				end
@@ -480,20 +481,20 @@ feature {NONE} -- Implementation (adding relations)
 							end
 
 							world.context_editor.history.register_named_undoable (
-								interface_names.t_diagram_add_cs_link_cmd (es_link.client.name, es_link.supplier.name),
+								interface_names.t_diagram_add_cs_link_cmd (es_link.client.name_32, es_link.supplier.name_32),
 								agent reinclude_removed_feature_and_link (client_model, added_code, last_query, es_link),
 								agent remove_added_feature_and_link (client_model, added_code, last_query, es_link))
 						else
 							es_link.synchronize
 							world.context_editor.history.register_named_undoable (
-								interface_names.t_diagram_add_cs_link_cmd (es_link.client.name, es_link.supplier.name),
+								interface_names.t_diagram_add_cs_link_cmd (es_link.client.name_32, es_link.supplier.name_32),
 								agent reinclude_removed_feature_and_link (client_model, added_code, last_query, es_link),
 								agent remove_added_feature (client_model, added_code, last_query, es_link))
 						end
 					else
 							-- We are adding a procedure via the diagram tool so no link is needed
 						world.context_editor.history.register_named_undoable (
-							interface_names.t_diagram_add_cs_link_cmd (client_model.name, model.name),
+							interface_names.t_diagram_add_cs_link_cmd (client_model.name_32, model.name_32),
 							agent reinclude_added_code (model, added_code),
 							agent remove_added_code (model, added_code))
 
@@ -606,7 +607,7 @@ feature {NONE} -- Implementation (move)
 			offset_x := port_x - saved_x
 			offset_y := port_y - saved_y
 			world.context_editor.history.register_named_undoable (
-				interface_names.t_diagram_move_class_cmd (model.name),
+				interface_names.t_diagram_move_class_cmd (model.name_32),
 				agent move_figures_for (l_selected_figures, offset_x, offset_y),
 				agent move_figures_for (l_selected_figures, -offset_x, -offset_y))
 			if world.context_editor.is_force_directed_used then
@@ -674,7 +675,7 @@ feature {NONE} -- Implementation (move)
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2015, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2020, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
@@ -705,4 +706,4 @@ note
 			Customer support http://support.eiffel.com
 		]"
 
-end -- class EIFFEL_CLASS_FIGURE
+end

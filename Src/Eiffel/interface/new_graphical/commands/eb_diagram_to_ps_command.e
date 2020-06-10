@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "Command to output diagram to a Postscript file"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -67,9 +67,9 @@ feature -- Basic operations
 					set_dialog_filters_and_add_all (dial, {ARRAY [STRING_32]} <<Png_files_filter>>)
 
 					if tool.class_graph /= Void then
-						create l_path.make_from_string (tool.class_graph.center_class.name + ".png")
+						create l_path.make_from_string (tool.class_graph.center_class.name_32 + ".png")
 					else
-						create l_path.make_from_string (tool.cluster_graph.center_cluster.name + ".png")
+						create l_path.make_from_string (tool.cluster_graph.center_cluster.name_32 + ".png")
 					end
 					dial.set_full_file_path (l_path)
 					dial.show_modal_to_window (tool.develop_window.window)
@@ -138,7 +138,7 @@ feature -- Basic operations
 			-- preferences.
 
 note
-	copyright:	"Copyright (c) 1984-2012, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2020, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
@@ -169,4 +169,4 @@ note
 			Customer support http://support.eiffel.com
 		]"
 
-end -- class EB_DIAGRAM_TO_PS_COMMAND
+end

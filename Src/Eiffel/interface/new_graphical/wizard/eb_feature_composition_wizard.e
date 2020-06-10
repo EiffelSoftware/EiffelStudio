@@ -1,4 +1,4 @@
-note
+﻿note
 	description:
 		"Wizard to create features and insert them in a specific%N%
 		%feature clause."
@@ -217,7 +217,7 @@ feature -- Status setting
 			-- (Could disable user selection...)
 		do
 			feature_editor.set_supplier_type (s)
-			feature_editor.set_type (s.name)
+			feature_editor.set_type (s.name_32)
 		end
 
 	set_name_number (a_number: INTEGER)
@@ -326,7 +326,7 @@ feature {NONE} -- Implementation
 			-- Container of `feature_editor'.
 
 note
-	copyright:	"Copyright (c) 1984-2013, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2020, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
@@ -357,4 +357,4 @@ note
 			Customer support http://support.eiffel.com
 		]"
 
-end -- class EB_FEATURE_COMPOSITION_WIZARD
+end

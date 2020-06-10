@@ -1,8 +1,7 @@
-note
+﻿note
 	description: "Command to delete diagram components and to remove corresponding code in system."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
-	author: ""
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -99,7 +98,7 @@ feature -- Access
 						if referenced_classes.is_empty then
 							Precursor {EB_DELETE_CLASS_CLUSTER_COMMAND} (st)
 						else
-							msg := warning_messages.w_still_referenced (es_class.name, referenced_classes)
+							msg := warning_messages.w_still_referenced (es_class.name_32, referenced_classes)
 							(create {ES_SHARED_PROMPT_PROVIDER}).prompts.show_warning_prompt (msg, window.window, Void)
 						end
 					else
@@ -138,9 +137,9 @@ feature -- Access
 				e_item.disable_needed_on_diagram
 
 				tool.history.do_named_undoable (
-					interface_names.t_diagram_delete_inheritance_link_cmd (ancestor.name, descendant.name, l_is_non_conforming),
-					agent remove_ancestor (ctm, ancestor.name, e_item, l_is_non_conforming),
-					agent add_ancestor (ctm, ancestor.name, e_item, l_is_non_conforming))
+					interface_names.t_diagram_delete_inheritance_link_cmd (ancestor.name_32, descendant.name_32, l_is_non_conforming),
+					agent remove_ancestor (ctm, ancestor.name_32, e_item, l_is_non_conforming),
+					agent add_ancestor (ctm, ancestor.name_32, e_item, l_is_non_conforming))
 			end
 		end
 
@@ -464,7 +463,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2013, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2020, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
@@ -495,4 +494,4 @@ note
 			Customer support http://support.eiffel.com
 		]"
 
-end -- class EB_DELETE_DIAGRAM_ITEM_COMMAND
+end

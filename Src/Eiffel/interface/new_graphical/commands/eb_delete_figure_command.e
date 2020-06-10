@@ -1,9 +1,9 @@
-note
-	description	: "Command to delete diagram components."
+﻿note
+	description: "Command to delete diagram components."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
-	date		: "$Date$"
-	revision	: "$Revision$"
+	date: "$Date$"
+	revision: "$Revision$"
 
 class
 	EB_DELETE_FIGURE_COMMAND
@@ -48,7 +48,7 @@ feature -- Basic operations
 				remove_links := es_class.needed_links
 				tool.restart_force_directed
 				history.do_named_undoable (
-					interface_names.t_diagram_erase_class_cmd (es_class.name),
+					interface_names.t_diagram_erase_class_cmd (es_class.name_32),
 					[<<agent l_world.remove_class_virtual (class_fig, remove_links), agent l_projector.full_project, agent tool.restart_force_directed, agent l_world.update_cluster_legend>>],
 					[<<agent l_world.reinclude_class (class_fig, remove_links, old_x, old_y), agent l_projector.full_project, agent tool.restart_force_directed, agent l_world.update_cluster_legend>>])
 			end
@@ -111,7 +111,7 @@ feature -- Basic operations
 				end
 
 				history.do_named_undoable (
-						interface_names.t_diagram_erase_cluster_cmd (es_cluster.name),
+						interface_names.t_diagram_erase_cluster_cmd (es_cluster.name_32),
 						[<<agent l_world.remove_cluster_virtual (cluster_fig, remove_links, remove_classes), agent tool.restart_force_directed, agent l_world.update_cluster_legend>>],
 						[<<agent l_world.reinclude_cluster (cluster_fig, remove_links, remove_classes), agent tool.restart_force_directed, agent l_world.update_cluster_legend>>])
 			end
@@ -154,7 +154,7 @@ feature -- Basic operations
 				l_projector := tool.projector
 				l_is_non_conforming := a_stone.source.model.is_non_conforming
 				history.do_named_undoable (
-					interface_names.t_diagram_delete_inheritance_link_cmd (fig.model.ancestor.name, fig.model.descendant.name, l_is_non_conforming),
+					interface_names.t_diagram_delete_inheritance_link_cmd (fig.model.ancestor.name_32, fig.model.descendant.name_32, l_is_non_conforming),
 					[<<agent l_item.disable_needed_on_diagram, agent l_projector.full_project>>],
 					[<<agent l_item.enable_needed_on_diagram, agent l_projector.full_project>>])
 			end
@@ -172,7 +172,7 @@ feature -- Basic operations
 			if l_item /= Void then
 				l_projector := tool.projector
 				history.do_named_undoable (
-					interface_names.t_diagram_delete_client_link_cmd (fig.model.name),
+					interface_names.t_diagram_delete_client_link_cmd (fig.model.name_32),
 					[<<agent l_item.disable_needed_on_diagram, agent l_projector.full_project>>],
 					[<<agent l_item.enable_needed_on_diagram, agent l_projector.full_project>>])
 			end
@@ -311,9 +311,8 @@ feature {NONE} -- Implementation
 			end
 		end
 
-
 note
-	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2020, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
@@ -344,5 +343,4 @@ note
 			Customer support http://support.eiffel.com
 		]"
 
-end -- class EB_DELETE_FIGURE_COMMAND
-
+end

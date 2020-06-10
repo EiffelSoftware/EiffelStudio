@@ -1,0 +1,21 @@
+test_name character_8-as_lower-as_upper
+test_description `as_lower` and `as_upper` should work the same for CHARACTER_8 and CHARACTER_32.
+
+copy_sub Ace $TEST Ace
+copy_raw test.e $CLUSTER test.e
+
+compile_melted
+compile_result	ok
+execute_work	NONE exec_output_m
+execute_result	ok
+compare		exec_output_m output
+
+compile_frozen
+compile_result	ok
+c_compile_work
+c_compile_result	ok
+execute_work	NONE exec_output_w
+execute_result	ok
+compare		exec_output_w output
+
+test_end

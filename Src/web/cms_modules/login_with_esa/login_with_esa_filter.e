@@ -47,6 +47,7 @@ feature -- Basic operations
 				l_user := l_login_w_esa_api.associated_cms_user (l_auth_login, l_auth_password, True)
 				if
 					l_user /= Void and then
+					l_user.is_active and then
 					api.user_has_permission (l_user, {LOGIN_WITH_ESA_MODULE}.perm_use_login_with_esa)
 				then
 					api.set_user (l_user)

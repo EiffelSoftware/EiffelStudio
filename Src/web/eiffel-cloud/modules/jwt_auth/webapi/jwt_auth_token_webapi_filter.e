@@ -40,7 +40,7 @@ feature -- Basic operations
 				l_auth.starts_with_general ("Bearer ")
 			then
 				tok := l_auth.substring (8, l_auth.count)
-				if attached jwt_auth_api.user_for_token (tok) as l_user then
+				if attached jwt_auth_api.user_for_token (tok) as l_user and then l_user.is_active then
 					if api.user_has_permission (l_user, {JWT_AUTH_MODULE_WEBAPI}.perm_use_jwt_auth) then
 						api.set_user (l_user)
 					end

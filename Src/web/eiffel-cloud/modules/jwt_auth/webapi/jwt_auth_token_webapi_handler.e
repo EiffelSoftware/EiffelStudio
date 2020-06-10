@@ -196,7 +196,7 @@ feature -- Request execution
 						api.user_api.is_admin_user (u)
 					 	or api.has_permission ({JWT_AUTH_MODULE}.perm_use_magic_login) and then (u.same_as (l_user))
 					then
-						if attached module.module.new_magic_login_link (u) as lnk then
+						if attached module.module.new_magic_login_link (u, {NATURAL_32} 5 * 60) as lnk then
 							rep := new_response (req, res)
 							rep.add_link ("jwt:magic_login", Void, lnk)
 						else

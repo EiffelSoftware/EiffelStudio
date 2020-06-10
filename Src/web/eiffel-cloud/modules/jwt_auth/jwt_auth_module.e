@@ -102,11 +102,11 @@ feature -- Access: router
 
 feature -- Link factory
 
-	new_magic_login_link (a_user: CMS_USER): detachable STRING
+	new_magic_login_link (a_user: CMS_USER; a_expiration_in_seconds: NATURAL_32): detachable STRING
 		do
 			if
 				attached jwt_auth_api as l_jwt_api and then
-				attached {JWT_AUTH_TOKEN} l_jwt_api.new_token_with_expiration (a_user, <<"magic-login">>, {NATURAL_32} 5 * 60) as l_magic_token
+				attached {JWT_AUTH_TOKEN} l_jwt_api.new_token_with_expiration (a_user, <<"magic-login">>, a_expiration_in_seconds) as l_magic_token
 			then
 				Result := l_jwt_api.cms_api.absolute_url ("/user/" + a_user.id.out + "/magic-login/" + url_encoded (l_magic_token.token), Void)
 			end

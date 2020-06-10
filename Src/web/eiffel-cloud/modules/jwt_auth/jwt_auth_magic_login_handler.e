@@ -71,6 +71,7 @@ feature -- Request execution
 		do
 			if attached user_by_uid (a_uid) as l_user then
 				if
+				 	l_user.is_active and then
 					not api.user_api.is_admin_user (l_user) and then -- Forbid this magic link for administrator! (security)
 					api.has_permission ({JWT_AUTH_MODULE}.perm_use_magic_login) and then
 					attached {WSF_STRING} req.path_parameter ("token") as p_token and then

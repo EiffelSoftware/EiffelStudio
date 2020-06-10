@@ -1,5 +1,5 @@
-note
-	description: "data for alias name in the multiple alias list : FEATURE_NAME_ALIAS_AS.aliases ."
+﻿note
+	description: "An alias name in the multiple alias list (see `{FEATURE_NAME_ALIAS_AS}.aliases`)."
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -7,12 +7,8 @@ class
 	FEATURE_ALIAS_NAME
 
 inherit
-	ANY
-
 	INTERNAL_COMPILER_STRING_EXPORTER
-
 	EIFFEL_SYNTAX_CHECKER
-
 	PREFIX_INFIX_NAMES
 
 create
@@ -27,24 +23,21 @@ feature {NONE} -- Initialize
 			valid_alias_name:
 				is_bracket_alias_name (a_alias_name.value) or else
 				is_parentheses_alias_name (a_alias_name.value) or else
-				is_valid_binary_operator (a_alias_name.value_32) or else
-				is_valid_unary_operator (a_alias_name.value_32)
+				is_valid_binary_operator (a_alias_name.value) or else
+				is_valid_unary_operator (a_alias_name.value)
 		do
 			alias_name := a_alias_name
 			if a_alias_keyword /= Void then
 				alias_keyword_index := a_alias_keyword.index
 			end
 
-			if
-				not is_bracket_alias and then
-				not is_parentheses_alias
-			then
-					-- Make sure we do not get "prefix %"or%"" or alike
-				if is_valid_unary_operator (a_alias_name.value_32) then
-					set_is_unary
-				elseif is_valid_binary_operator (a_alias_name.value_32) then
-					set_is_binary
-				end
+			if is_bracket_alias or else is_parentheses_alias then
+					-- No name mangling is performed.
+			elseif is_valid_unary_operator (a_alias_name.value) then
+					-- Make sure we do not get "prefix %"or%"" or alike.
+				set_is_unary
+			elseif is_valid_binary_operator (a_alias_name.value) then
+				set_is_binary
 			end
 		end
 
@@ -102,12 +95,12 @@ feature -- status
 
 	is_bracket_alias: BOOLEAN
 		do
-			Result := alias_name.value.item (1) = '['
+			Result := alias_name.value [1] = '['
 		end
 
 	is_parentheses_alias: BOOLEAN
 		do
-			Result := alias_name.value.item (1) = '('
+			Result := alias_name.value [1] = '('
 		end
 
 feature -- Element change
@@ -123,8 +116,6 @@ feature -- Element change
 			is_binary := True
 			is_unary := False
 		end
-
-invariant
 
 note
 	copyright: "Copyright (c) 1984-2020, Eiffel Software"

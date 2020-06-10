@@ -81,8 +81,8 @@ extern "C" {
 /* CHARACTER_8 class */
 RT_LNK EIF_CHARACTER_8 eif_CHARACTER_8_as_lower_table [];
 RT_LNK EIF_CHARACTER_8 eif_CHARACTER_8_as_upper_table [];
-#define eif_builtin_CHARACTER_8_as_lower__c1_c1(c) (eif_CHARACTER_8_as_lower_table [(c)])
-#define eif_builtin_CHARACTER_8_as_upper__c1_c1(c) (eif_CHARACTER_8_as_upper_table [(c)])
+#define eif_builtin_CHARACTER_8_as_lower__c1_c1(c)	(eif_CHARACTER_8_as_lower_table [(c)])
+#define eif_builtin_CHARACTER_8_as_upper__c1_c1(c)	(eif_CHARACTER_8_as_upper_table [(c)])
 
 /* EXCEPTION_MANAGER class */
 #define eif_builtin_ISE_EXCEPTION_MANAGER_developer_raise__i4_p_p_(code, meaning, message)			draise(code, meaning, message)

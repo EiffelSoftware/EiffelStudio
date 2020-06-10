@@ -8,6 +8,9 @@ class
 
 inherit
 	CMS_USER
+		redefine
+			is_active
+		end
 
 create
 	make,
@@ -20,6 +23,9 @@ feature -- Access
 
 	salt: detachable STRING_32
 			-- User's password salt.
+
+	is_active: BOOLEAN = False
+			-- <Precursor/>.
 
 feature -- Element change
 

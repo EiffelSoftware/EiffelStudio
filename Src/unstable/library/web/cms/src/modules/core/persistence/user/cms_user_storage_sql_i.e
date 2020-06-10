@@ -13,8 +13,6 @@ inherit
 
 	REFACTORING_HELPER
 
-	SHARED_LOGGER
-
 feature -- Access: user
 
 	has_user: BOOLEAN
@@ -27,7 +25,6 @@ feature -- Access: user
 			-- Number of items users.
 		do
 			error_handler.reset
-			write_information_log (generator + ".user_count")
 
 			sql_query (select_users_count, Void)
 			if not has_error and then not sql_after then
@@ -43,7 +40,6 @@ feature -- Access: user
 			create {ARRAYED_LIST [CMS_USER]} Result.make (0)
 
 			error_handler.reset
-			write_information_log (generator + ".all_users")
 
 			sql_query (select_users, Void)
 			from
@@ -65,7 +61,6 @@ feature -- Access: user
 			l_parameters: STRING_TABLE [detachable ANY]
 		do
 			error_handler.reset
-			write_information_log (generator + ".user_by_id")
 			create l_parameters.make (1)
 			l_parameters.put (a_id, "uid")
 			sql_query (select_user_by_id, l_parameters)
@@ -83,7 +78,6 @@ feature -- Access: user
 			l_parameters: STRING_TABLE [detachable ANY]
 		do
 			error_handler.reset
-			write_information_log (generator + ".user_by_name")
 			create l_parameters.make (1)
 			l_parameters.put (a_name, "name")
 			sql_query (select_user_by_name, l_parameters)
@@ -101,7 +95,6 @@ feature -- Access: user
 			l_parameters: STRING_TABLE [detachable ANY]
 		do
 			error_handler.reset
-			write_information_log (generator + ".user_by_email")
 			create l_parameters.make (1)
 			l_parameters.put (a_email, "email")
 			sql_query (select_user_by_email, l_parameters)
@@ -146,7 +139,6 @@ feature -- Access: user
 			l_parameters: STRING_TABLE [detachable ANY]
 		do
 			error_handler.reset
-			write_information_log (generator + ".user_by_activation_token")
 			create l_parameters.make (1)
 			l_parameters.put (a_token, "token")
 			sql_query (select_user_by_activation_token, l_parameters)
@@ -164,7 +156,6 @@ feature -- Access: user
 			l_parameters: STRING_TABLE [detachable ANY]
 		do
 			error_handler.reset
-			write_information_log (generator + ".user_by_password_token")
 			create l_parameters.make (1)
 			l_parameters.put (a_token, "token")
 			sql_query (select_user_by_password_token, l_parameters)
@@ -199,7 +190,6 @@ feature -- Access: user
 			create {ARRAYED_LIST [CMS_USER]} Result.make (0)
 
 			error_handler.reset
-			write_information_log (generator + ".recent_users")
 
 			create l_parameters.make (2)
 			l_parameters.put (a_count, "rows")
@@ -234,7 +224,6 @@ feature -- Change: user
 				l_password_salt := l_security.salt
 				l_password_hash := l_security.password_hash (l_password, l_password_salt)
 
-				write_information_log (generator + ".new_user")
 				create l_parameters.make (7)
 				l_parameters.put (a_user.name, "name")
 				l_parameters.put (l_password_hash, "password")
@@ -288,7 +277,6 @@ feature -- Change: user
 			then
 				sql_begin_transaction
 
-				write_information_log (generator + ".update_username")
 				create l_parameters.make (4)
 				l_parameters.put (a_user.id, "uid")
 				l_parameters.put (a_new_username, "name")
@@ -336,7 +324,6 @@ feature -- Change: user
 			then
 				sql_begin_transaction
 
-				write_information_log (generator + ".update_user")
 				create l_parameters.make (8)
 				l_parameters.put (a_user.id, "uid")
 				l_parameters.put (a_user.name, "name")
@@ -370,7 +357,6 @@ feature -- Change: user
 		do
 			error_handler.reset
 			sql_begin_transaction
-			write_information_log (generator + ".delete_user")
 			create l_parameters.make (1)
 			l_parameters.put (a_user.id, "uid")
 			sql_delete (sql_delete_user, l_parameters)
@@ -464,7 +450,6 @@ feature -- Access: roles and permissions
 			l_parameters: STRING_TABLE [ANY]
 		do
 			error_handler.reset
-			write_information_log (generator + ".user_role_by_id")
 			create l_parameters.make (1)
 			l_parameters.put (a_id, "rid")
 			sql_query (select_user_role_by_id, l_parameters)
@@ -485,7 +470,6 @@ feature -- Access: roles and permissions
 			l_parameters: STRING_TABLE [ANY]
 		do
 			error_handler.reset
-			write_information_log (generator + ".user_role_by_name")
 			create l_parameters.make (1)
 			l_parameters.put (a_name, "name")
 			sql_query (select_user_role_by_name, l_parameters)
@@ -505,7 +489,6 @@ feature -- Access: roles and permissions
 			l_parameters: STRING_TABLE [ANY]
 		do
 			error_handler.reset
-			write_information_log (generator + ".user_roles_for")
 
 			create {ARRAYED_LIST [CMS_USER_ROLE]} Result.make (0)
 			create l_parameters.make (1)
@@ -534,7 +517,6 @@ feature -- Access: roles and permissions
 			l_role: detachable CMS_USER_ROLE
 		do
 			error_handler.reset
-			write_information_log (generator + ".user_roles")
 
 			create {ARRAYED_LIST [CMS_USER_ROLE]} Result.make (0)
 			sql_query (select_user_roles, Void)
@@ -575,7 +557,6 @@ feature -- Access: roles and permissions
 			l_parameters: STRING_TABLE [ANY]
 		do
 			error_handler.reset
-			write_information_log (generator + ".role_permissions_by_id")
 
 			create {ARRAYED_LIST [READABLE_STRING_8]} Result.make (0)
 			create l_parameters.make (1)
@@ -600,7 +581,6 @@ feature -- Access: roles and permissions
 			-- Possible known permissions.
 		do
 			error_handler.reset
-			write_information_log (generator + ".role_permissions")
 
 			create {ARRAYED_LIST [READABLE_STRING_8]} Result.make (0)
 			Result.compare_objects
@@ -629,7 +609,6 @@ feature -- Change: roles and permissions
 			l_found: BOOLEAN
 		do
 			error_handler.reset
-			write_information_log (generator + ".save_user_role")
 
 
 			if a_user_role.has_id then
@@ -738,7 +717,6 @@ feature -- Change: roles and permissions
 			-- Last inserted user role id.
 		do
 			error_handler.reset
-			write_information_log (generator + ".last_inserted_user_role_id")
 			sql_query (sql_last_insert_user_role_id, Void)
 			if not sql_after then
 				Result := sql_read_integer_64 (1).to_integer_32
@@ -756,7 +734,6 @@ feature -- Change: roles and permissions
 		do
 			error_handler.reset
 			sql_begin_transaction
-			write_information_log (generator + ".delete_role")
 			create l_parameters.make (1)
 			l_parameters.put (a_role.id, "rid")
 			sql_delete (sql_delete_role_permissions_by_role_id, l_parameters)
@@ -775,7 +752,6 @@ feature -- Access: User activation
 			l_parameters: STRING_TABLE [detachable ANY]
 		do
 			error_handler.reset
-			write_information_log (generator + ".activation_elapsed_time")
 			create l_parameters.make (1)
 			l_parameters.put (a_token, "token")
 			sql_query (sql_select_activation_expiration, l_parameters)
@@ -793,7 +769,6 @@ feature -- Access: User activation
 			l_parameters: STRING_TABLE [detachable ANY]
 		do
 			error_handler.reset
-			write_information_log (generator + ".user_id_by_actication")
 			create l_parameters.make (1)
 			l_parameters.put (a_token, "token")
 			sql_query (sql_select_userid_activation, l_parameters)
@@ -815,7 +790,6 @@ feature -- Change: User activation
 		do
 			error_handler.reset
 			sql_begin_transaction
-			write_information_log (generator + ".save_activation")
 			create l_utc_date.make_now_utc
 			create l_parameters.make (3)
 			l_parameters.put (a_token, "token")
@@ -836,7 +810,6 @@ feature -- Change: User password recovery
 		do
 			error_handler.reset
 			sql_begin_transaction
-			write_information_log (generator + ".save_password")
 			create l_utc_date.make_now_utc
 			create l_parameters.make (2)
 			l_parameters.put (a_token, "token")
@@ -854,7 +827,6 @@ feature -- Change: User password recovery
 		do
 			error_handler.reset
 			sql_begin_transaction
-			write_information_log (generator + ".remove_password")
 			create l_parameters.make (1)
 			l_parameters.put (a_token, "token")
 			sql_modify (sql_remove_password, l_parameters)
@@ -870,7 +842,6 @@ feature {NONE} -- Implementation: User
 			l_parameters: STRING_TABLE [detachable ANY]
 		do
 			error_handler.reset
-			write_information_log (generator + ".user_salt")
 			create l_parameters.make (1)
 			l_parameters.put (a_username, "name")
 			sql_query (select_salt_by_username, l_parameters)
@@ -890,7 +861,6 @@ feature {NONE} -- Implementation: User
 			l_parameters: STRING_TABLE [detachable ANY]
 		do
 			error_handler.reset
-			write_information_log (generator + ".temp_user_salt")
 			create l_parameters.make (1)
 			l_parameters.put (a_username, "name")
 			sql_query (select_temp_user_salt_by_username, l_parameters)
@@ -1110,7 +1080,6 @@ feature -- Acess: Temp users
 			-- Number of items users.
 		do
 			error_handler.reset
-			write_information_log (generator + ".temp_users_count")
 
 			sql_query (select_temp_users_count, Void)
 			if not has_error and then not sql_after then
@@ -1128,7 +1097,6 @@ feature -- Acess: Temp users
 			l_string: STRING
 		do
 			error_handler.reset
-			write_information_log (generator + ".temp_user_by_id")
 			create l_parameters.make (1)
 			l_parameters.put (a_uid, "uid")
 			create l_string.make_from_string (select_user_auth_temp_by_id)
@@ -1150,7 +1118,6 @@ feature -- Acess: Temp users
 			l_parameters: STRING_TABLE [detachable ANY]
 		do
 			error_handler.reset
-			write_information_log (generator + ".temp_user_by_name")
 			create l_parameters.make (1)
 			l_parameters.put (a_name, "name")
 			sql_query (select_temp_user_by_name, l_parameters)
@@ -1168,7 +1135,6 @@ feature -- Acess: Temp users
 			l_parameters: STRING_TABLE [detachable ANY]
 		do
 			error_handler.reset
-			write_information_log (generator + ".temp_user_by_name")
 			create l_parameters.make (1)
 			l_parameters.put (a_email, "email")
 			sql_query (select_temp_user_by_email, l_parameters)
@@ -1186,7 +1152,6 @@ feature -- Acess: Temp users
 			l_parameters: STRING_TABLE [detachable ANY]
 		do
 			error_handler.reset
-			write_information_log (generator + ".temp_user_by_activation_token")
 			create l_parameters.make (1)
 			l_parameters.put (a_token, "token")
 			sql_query (select_temp_user_by_activation_token, l_parameters)
@@ -1206,7 +1171,6 @@ feature -- Acess: Temp users
 			create {ARRAYED_LIST [CMS_TEMP_USER]} Result.make (0)
 
 			error_handler.reset
-			write_information_log (generator + ".temp_recent_users")
 
 			create l_parameters.make (2)
 			l_parameters.put (a_count, "rows")
@@ -1231,7 +1195,6 @@ feature -- Acess: Temp users
 			l_parameters: STRING_TABLE [detachable ANY]
 		do
 			error_handler.reset
-			write_information_log (generator + ".token_by_temp_user_id")
 			create l_parameters.make (1)
 			l_parameters.put (a_id, "uid")
 
@@ -1303,7 +1266,6 @@ feature -- New Temp User
   					-- FIXME: store the personal_information in profile!
   				sql_begin_transaction
 
-  				write_information_log (generator  + ".new_user_from_temp_user")
   				create l_parameters.make (7)
   				l_parameters.put (a_temp_user.name, "name")
   				l_parameters.put (l_password_hash, "password")
@@ -1344,7 +1306,6 @@ feature -- New Temp User
 				l_password_salt := l_security.salt
 				l_password_hash := l_security.password_hash (l_password, l_password_salt)
 
-				write_information_log (generator + ".new_temp_user")
 				create l_parameters.make (4)
 				l_parameters.put (a_temp_user.name, "name")
 				l_parameters.put (l_password_hash, "password")
@@ -1376,7 +1337,6 @@ feature -- Remove Activation
 		do
 			error_handler.reset
 			sql_begin_transaction
-			write_information_log (generator + ".remove_activation")
 			create l_parameters.make (1)
 			l_parameters.put (a_token, "token")
 			sql_modify (sql_remove_activation, l_parameters)
@@ -1391,7 +1351,6 @@ feature -- Remove Activation
 		do
 			error_handler.reset
 			sql_begin_transaction
-			write_information_log (generator + ".delete_temp_user")
 			create l_parameters.make (1)
 			l_parameters.put (a_temp_user.id, "uid")
 			sql_delete (sql_delete_temp_user, l_parameters)
@@ -1405,7 +1364,6 @@ feature {NONE} -- Implementation
 			-- Last insert user id.
 		do
 			error_handler.reset
-			write_information_log (generator + ".last_inserted_temp_user_id")
 			sql_query (sql_last_insert_temp_user_id, Void)
 			if not sql_after then
 				Result := sql_read_integer_64 (1)
@@ -1419,7 +1377,6 @@ feature {NONE} -- Implementation
 			-- Last insert user id.
 		do
 			error_handler.reset
-			write_information_log (generator + ".last_inserted_user_id")
 			sql_query (sql_last_insert_user_id, Void)
 			if not sql_after then
 				Result := sql_read_integer_64 (1)

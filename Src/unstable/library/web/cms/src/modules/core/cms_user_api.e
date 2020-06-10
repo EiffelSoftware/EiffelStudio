@@ -298,6 +298,18 @@ feature -- Credential validation
 
 feature -- Status report
 
+	active_user_with_credential (a_user_identifier, a_password: READABLE_STRING_GENERAL): detachable CMS_USER
+			-- User validating the credential `a_user_identifier` and `a_password`, if any.
+			-- note: can be used to check if credentials are valid.
+		do
+			Result := user_with_credential (a_user_identifier, a_password)
+			if Result /= Void and then not Result.is_active then
+				Result := Void
+			end
+		ensure
+			Result /= Void implies Result.is_active
+		end
+
 	user_with_credential (a_user_identifier, a_password: READABLE_STRING_GENERAL): detachable CMS_USER
 			-- User validating the credential `a_user_identifier` and `a_password`, if any.
 			-- note: can be used to check if credentials are valid.
@@ -340,7 +352,7 @@ feature -- Status report
 
 	is_admin_user (u: CMS_USER): BOOLEAN
 		do
-			Result := u.id = 1
+			Result := u.is_active and then u.id = 1
 		end
 
 	user_roles (a_user: CMS_USER): LIST [CMS_USER_ROLE]
@@ -350,8 +362,11 @@ feature -- Status report
 			l_roles := a_user.roles
 			if l_roles = Void then
 					-- Fill user with its roles.
-				create {ARRAYED_LIST [CMS_USER_ROLE]} l_roles.make (0)
-				l_roles := user_storage.user_roles_for (a_user)
+				if a_user.is_active then
+					l_roles := user_storage.user_roles_for (a_user)
+				else
+					create {ARRAYED_LIST [CMS_USER_ROLE]} l_roles.make (0)
+				end
 			end
 			Result := l_roles
 		end

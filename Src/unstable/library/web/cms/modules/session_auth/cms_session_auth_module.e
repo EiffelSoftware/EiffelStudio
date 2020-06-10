@@ -232,7 +232,7 @@ feature {NONE} -- Implementation: routes
 				l_password := p_password.value
 				l_user := api.user_api.user_with_credential (l_username_or_email, l_password)
 				if l_user /= Void then
-					if attached {CMS_TEMP_USER} l_user as l_temp_user then
+					if not l_user.is_active or attached {CMS_TEMP_USER} l_user as l_temp_user then
 						create {GENERIC_VIEW_CMS_RESPONSE} r.make (req, res, api)
 						if attached smarty_template_login_block (req, Current, "login", api) as l_tpl_block then
 							l_tpl_block.set_value (l_username_or_email, "username")

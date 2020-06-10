@@ -26,7 +26,7 @@ feature -- Basic operations
 				attached l_auth.password as l_auth_password
 			then
 				if
-					attached api.user_api.user_with_credential (l_auth_login, l_auth_password) as l_user
+					attached api.user_api.active_user_with_credential (l_auth_login, l_auth_password) as l_user
 				then
 					if api.user_has_permission (l_user, {CMS_BASIC_AUTH_MODULE_WEBAPI}.perm_use_webapi_basic_auth) then
 						api.set_user (l_user)

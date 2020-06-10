@@ -1696,8 +1696,12 @@ feature -- Access: active user
 			-- Set `a_user' as current `user'.
 		require
 			a_user_attached: a_user /= Void
+			is_active_user: a_user.is_active -- TODO: check if we could allow temp user.
 		do
-			set_current_user (request, a_user)
+			if a_user.is_active then
+					-- in case existing code do not check for `is_active`.
+				set_current_user (request, a_user)
+			end
 		end
 
 	unset_user

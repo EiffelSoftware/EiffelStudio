@@ -94,10 +94,10 @@ feature -- Execution
 					r.add_style (r.module_name_resource_url ({ES_CLOUD_MODULE}.name, "/files/css/es_cloud.css", Void), Void)
 					r.set_title ("License " + html_encoded (a_lic_key))
 					s := ""
-
 					s.append ("<div class=%"es-licenses%">")
 					append_license_to_html (lic, l_lic_user, s)
 					s.append ("<div><a href=%"" + api.location_url (es_cloud_module.licenses_location, Void) + "%">All licenses...</a></div>")
+					s.append ("</div>")
 					r.set_main_content (s)
 					r.execute
 				else

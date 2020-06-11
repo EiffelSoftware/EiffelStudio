@@ -314,6 +314,8 @@ feature -- Access: feeds
 			l_exhausted: BOOLEAN
 			lnk: FEED_LINK
 			l_feed_name: STRING_32
+			l_dn: READABLE_STRING_32
+			l_display_names: HASH_TABLE [READABLE_STRING_32, like {CMS_USER}.id]
 		do
 			create l_feed_name.make_from_string (cms_api.setup.site_name)
 			l_feed_name.append_string ({STRING_32} " : ")
@@ -349,7 +351,15 @@ feature -- Access: feeds
 						if n.is_published then
 							create l_feed_item.make (n.title)
 							if attached n.author as u then
-								l_feed_item.set_author (create {FEED_AUTHOR}.make (cms_api.user_api.real_user_display_name (u)))
+								if l_display_names = Void then
+									create l_display_names.make (1)
+								end
+								l_dn := l_display_names.item (u.id)
+								if l_dn = Void then
+									l_dn := cms_api.user_api.real_user_display_name (u)
+									l_display_names [u.id] := l_dn
+								end
+								l_feed_item.set_author (create {FEED_AUTHOR}.make (l_dn))
 							end
 							l_feed_item.set_date (n.publication_date)
 							l_feed_item.set_id (n.content_type + ":id" + n.id.out + "-rev" + n.revision.out)

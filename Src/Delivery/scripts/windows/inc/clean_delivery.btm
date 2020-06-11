@@ -1,9 +1,12 @@
-call %~dp0init.btm
+call %~dp0..\init.btm
 
 echo reset environment
 if "%ISE_PLATFORM%" == "" set ISE_PLATFORM=win64
 if "%ISE_PLATFORM%" == "windows" Call %~dp0..\bin\reset_eiffel_env.bat windows
 if "%ISE_PLATFORM%" == "win64" Call %~dp0..\bin\reset_eiffel_env.bat win64
 
-echo Remove build folder
+echo Remove build folder %DELIV_DIR%
 if EXIST "%DELIV_DIR%" rd /q/s "%DELIV_DIR%"
+
+echo Remove work folder %WORK_DIR%
+if EXIST "%WORK_DIR%" rd /q/s "%WORK_DIR%"

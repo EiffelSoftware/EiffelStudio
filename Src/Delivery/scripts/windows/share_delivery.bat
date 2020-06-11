@@ -38,11 +38,11 @@ if "%T_SRC%" NEQ "%T_DST%" (
 set T_S3=s3://ise.deliv
 set T_S3_WWW=http://ise.deliv.s3-website-eu-west-1.amazonaws.com
 set T_S3_PATH=nightly
-if "%T_KIND%" NEQ "" (
-	set T_S3_PATH=%T_S3_PATH%/%T_KIND%
-)
 if "%TMP_REVISION%" NEQ "" (
 	set T_S3_PATH=%T_S3_PATH%/%TMP_REVISION%
+)
+if "%T_KIND%" NEQ "" (
+	set T_S3_PATH=%T_S3_PATH%/%T_KIND%
 )
 echo Upload %1 to %T_S3%/%T_S3_PATH%/
 aws s3 cp --acl public-read %T_DST% %T_S3%/%T_S3_PATH%/ > NUL

@@ -236,7 +236,7 @@ feature {NONE} -- Action handlers
 						if attached l_plan.expiration_date as dt then
 							nb_days := l_plan.days_remaining
 							append_bold_text_to (locale.translation_in_context ("Expires: ", "cloud.info"), txt)
-							append_text_to (dt.out, txt)
+							append_time_to (dt, txt)
 							append_text_to ("%N", txt)
 							if nb_days >= 0 then
 								append_bold_text_to (locale.translation_in_context ("Days remaining: ", "cloud.info"), txt)
@@ -261,7 +261,7 @@ feature {NONE} -- Action handlers
 						if attached {ES_ACCOUNT_ACCESS_TOKEN} acc.access_token as tok then
 							append_text_to ("%N", txt)
 							append_bold_text_to (locale.translation_in_context ("Authentication token expiration: ", "cloud.info"), txt)
-							append_text_to (tok.expiration_date.out, txt)
+							append_time_to (tok.expiration_date, txt)
 							if attached tok.expiration_delay_in_seconds as nb and then nb >= 0 then
 								append_text_to (" ", txt)
 								create s.make_empty
@@ -302,7 +302,7 @@ feature {NONE} -- Action handlers
 							append_bold_text_to ("Installation: ", txt)
 							append_text_to (l_installation.id, txt)
 							if attached l_installation.creation_date as dt then
-								append_italic_text_to (" (since " + dt.out + ")" , txt)
+								append_italic_text_to (" (since " + date_time_local_representation (dt) + ")" , txt)
 							end
 							append_text_to ("%N", txt)
 						end
@@ -318,7 +318,7 @@ feature {NONE} -- Action handlers
 							append_text_to (tok.token, txt)
 							append_text_to ("%N%T", txt)
 							append_text_to ("expiration=", txt)
-							append_text_to (tok.expiration_date.out, txt)
+							append_time_to (tok.expiration_date, txt)
 							if attached tok.expiration_delay_in_seconds as nb and then nb >= 0 then
 								append_text_to (" ", txt)
 								create s.make_empty
@@ -569,7 +569,26 @@ feature -- Access: Help
 			Result := {STRING_32} "TO-FILL"
 		end
 
+feature -- Time helpers
+
+	local_time (dt: DATE_TIME): DATE_TIME
+		do
+    		create Result.make_by_date_time (dt.date, dt.time)
+			Result.add ((create {DATE_TIME}.make_now).relative_duration (create {DATE_TIME}.make_now_utc))
+		end
+
+	date_time_local_representation (dt: DATE_TIME): STRING
+		do
+			Result := local_time (dt).formatted_out ("yyyy-[0]mm-[0]dd [0]hh:[0]mi:[0]ss")
+			Result.replace_substring_all (" ", "T")
+		end
+
 feature -- Rich text helper
+
+	append_time_to (dt: DATE_TIME; a_rich_text: EV_RICH_TEXT)
+		do
+			append_formatted_text_to (date_time_local_representation (dt), Void, a_rich_text)
+		end
 
 	append_text_to (a_txt: detachable READABLE_STRING_GENERAL; a_rich_text: EV_RICH_TEXT)
 		do

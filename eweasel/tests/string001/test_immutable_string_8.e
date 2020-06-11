@@ -77,7 +77,7 @@ feature {NONE} -- Implementation
 		local
 			s, t: IMMUTABLE_STRING_8
 		do
-			create s.make_from_string ("ABcd EF gh I 123 ;ü")
+			create s.make_from_string ("ABcd EF gh I 123 ;Ü")
 			t := s.as_lower
 			check_string_equality ("as_lower", t, "abcd ef gh i 123 ;ü")
 			check_boolean ("as_lower", t /= s)
@@ -89,7 +89,7 @@ feature {NONE} -- Implementation
 		do
 			create s.make_from_string ("ABcd EF gh I 123 ;ü")
 			t := s.as_upper
-			check_string_equality ("as_upper", t, "ABCD EF GH I 123 ;ü")
+			check_string_equality ("as_upper", t, "ABCD EF GH I 123 ;Ü")
 			check_boolean ("as_upper", t /= s)
 		end
 

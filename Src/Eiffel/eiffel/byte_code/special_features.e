@@ -830,7 +830,6 @@ feature {NONE} -- C code generation
 
 	generate_lower_upper (buffer: GENERATION_BUFFER;
 			basic_type: BASIC_A; f_type: INTEGER; target: REGISTRABLE)
-
 			-- Generate fast wrapper for call on `upper' and `lower' of CHARACTER.
 		require
 			buffer_not_void: buffer /= Void
@@ -838,16 +837,21 @@ feature {NONE} -- C code generation
 			character_type: type_of (basic_type) = character_type_id
 			valid_function_type: f_type = lower_type or f_type = upper_type
 		do
-			if function_type = lower_type then
-				buffer.put_string ("(EIF_CHARACTER_8) tolower(")
-			else
-				buffer.put_string ("(EIF_CHARACTER_8) toupper(")
-			end
+			buffer.put_string
+				(if function_type = lower_type then
+					"eif_builtin_CHARACTER_8_as_lower__"
+				else
+					"eif_builtin_CHARACTER_8_as_upper__"
+				end)
+			{BUILT_IN_EXTENSION_I}.append_type_name (basic_type, system.byte_context.context_class_type, buffer)
+			buffer.put_character ('_')
+			{BUILT_IN_EXTENSION_I}.append_type_name (basic_type, system.byte_context.context_class_type, buffer)
+			buffer.put_character ('(')
 			target.print_register
 			buffer.put_character (')')
 
-				-- Add `ctype.h' for C compilation where `tolower' and `toupper' are declared.
-			shared_include_queue_put ({PREDEFINED_NAMES}.ctype_header_name_id)
+				-- Add "eif_built_in.h" for C compilation where all output functions are declared.
+			shared_include_queue_put ({PREDEFINED_NAMES}.eif_built_in_header_name_id)
 		end
 
 	generate_is_digit (buffer: GENERATION_BUFFER;
@@ -1082,7 +1086,7 @@ feature {NONE} -- C code generation
 				target.print_register
 				buffer.put_character (')')
 
-					-- Add `eif_out.h' for C compilation where all output functions are declared.
+					-- Add "eif_out.h" for C compilation where all output functions are declared.
 				shared_include_queue_put ({PREDEFINED_NAMES}.eif_out_header_name_id)
 			end
 		end

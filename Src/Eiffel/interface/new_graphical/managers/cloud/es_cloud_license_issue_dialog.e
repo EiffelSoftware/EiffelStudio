@@ -31,7 +31,7 @@ feature {NONE} -- Initialization
 	initialize
 		local
 			lab: EV_LABEL
-			b_continue, b_quit, b_retry: EV_BUTTON
+			b_continue, b_quit, b_check_again: EV_BUTTON
 			hb: EV_HORIZONTAL_BOX
 			vb: EV_VERTICAL_BOX
 			sep: EV_HORIZONTAL_SEPARATOR
@@ -56,8 +56,11 @@ feature {NONE} -- Initialization
 			l_weblnk.set_tooltip (locale.translation_in_context ("Please visit your web account for more information and options.", "cloud.info"))
 
 			create b_continue.make_with_text (cloud_names.button_guest)
+			b_continue.set_tooltip (cloud_names.tooltip_button_guest)
 			create b_quit.make_with_text (cloud_names.button_quit)
-			create b_retry.make_with_text (cloud_names.button_retry)
+			b_quit.set_tooltip (cloud_names.tooltip_button_quit)
+			create b_check_again.make_with_text (cloud_names.button_check_again)
+			b_check_again.set_tooltip (cloud_names.tooltip_button_check_again)
 			create vb
 			vb.set_padding_width (l_scaler.scaled_size (5))
 			vb.set_border_width (l_scaler.scaled_size (3))
@@ -81,9 +84,9 @@ feature {NONE} -- Initialization
 			vb.disable_item_expand (hb)
 			hb.extend (create {EV_CELL})
 
-			hb.extend (b_retry)
+			hb.extend (b_check_again)
 			b_quit.set_minimum_width (min_but_w)
-			hb.disable_item_expand (b_retry)
+			hb.disable_item_expand (b_check_again)
 
 			hb.extend (b_continue)
 			b_continue.set_minimum_width (min_but_w)
@@ -96,7 +99,7 @@ feature {NONE} -- Initialization
 			set_default_cancel_button (b_continue)
 
 			b_continue.select_actions.extend (agent on_guest)
-			b_retry.select_actions.extend (agent on_retry)
+			b_check_again.select_actions.extend (agent on_retry)
 			b_quit.select_actions.extend (agent on_quit)
 			l_weblnk.select_actions.extend (agent on_web_account (l_report_label))
 

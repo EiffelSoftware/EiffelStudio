@@ -41,6 +41,8 @@ feature -- Authentication
 			(once "This is the last day you can still continue as guest", once "You can still continue as guest for $1 more days", once "eiffel.account", nb_days), nb_days)
 		end
 
+	label_cannot_continue_as_guest: STRING_32 do Result := locale.translation ("You can not continue as guest anymore!") end
+
 	label_no_account_text: STRING_32 do Result := locale.translation ("No account?") end
 	label_create_new_account: STRING_32 do Result := locale.translation ("Create one!") end
 
@@ -93,6 +95,9 @@ feature -- Dialog
 			Result := locale.formatted_string (locale.translation_in_context ("Error: could not open $1", "cloud.error"), [a_url])
 		end
 
+	button_check_again: STRING_32 do Result := locale.translation_in_context ("Check again", "cloud") end
+	tooltip_button_check_again: STRING_32 do Result := locale.translation_in_context ("Check again if no license is available for your environment.", "cloud") end
+
 feature -- Menu
 
 	menu_account: STRING_32 do Result := locale.translation_in_context ("Account...", "cloud.menu") end
@@ -113,8 +118,11 @@ feature -- General
 	label_terms_of_use: STRING_32 do Result := locale.translation_in_context ("Terms of use", "cloud") end
 	label_double_click_to_collapse: STRING_32 do Result := locale.translation_in_context ("Double click to collapse", "cloud") end
 	button_guest: STRING_32 do Result := locale.translation_in_context ("Guest", "cloud") end
+	tooltip_button_guest: STRING_32 do Result := locale.translation_in_context ("Continue using EiffelStudio as a guest", "cloud") end
 	button_retry: STRING_32 do Result := locale.translation_in_context ("Retry", "cloud") end
+
 	button_quit: STRING_32 do Result := locale.translation_in_context ("Quit", "cloud") end
+	tooltip_button_quit: STRING_32 do Result := locale.translation_in_context ("Quit EiffelStudio", "cloud") end
 	button_continue: STRING_32 do Result := locale.translation_in_context ("Continue", "cloud") end
 	button_submit: STRING_32 do Result := locale.translation_in_context ("Submit", "cloud") end
 

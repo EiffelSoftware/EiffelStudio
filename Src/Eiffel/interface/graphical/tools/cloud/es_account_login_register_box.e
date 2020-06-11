@@ -176,6 +176,10 @@ feature {NONE} -- Initialization
 						append_label_and_item_horizontally ("(" + nb.out + ")", create {EV_CELL}, vb)
 					end
 				end
+			else
+				create but.make_with_text_and_action (cloud_names.button_quit, agent on_guest)
+				layout_constants.set_default_width_for_button (but)
+				append_label_and_item_horizontally (cloud_names.label_cannot_continue_as_guest, but, vb)
 			end
 			a_box.set_background_color (colors.stock_colors.white)
 			a_box.propagate_background_color

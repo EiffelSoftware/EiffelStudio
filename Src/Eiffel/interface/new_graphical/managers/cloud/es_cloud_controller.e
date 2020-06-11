@@ -156,6 +156,11 @@ feature -- Events
 				last_license_issue_dialog := dlg
 			end
 			if dlg /= Void then
+				if lic /= Void then
+					dlg.set_license_expired
+				else
+					dlg.set_license_issue
+				end
 				w := window_manager.last_focused_development_window
 				if
 					w = Void and then

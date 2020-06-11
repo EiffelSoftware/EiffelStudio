@@ -115,7 +115,7 @@ feature -- Execution
 				service.on_session_state_changed (session)
 			end
 			if license_expired then
-				service.on_account_license_expired (session.account)
+				service.on_account_license_issue (Void, session.account)
 			end
 			if is_cloud_available_updated then
 				service.on_cloud_available (is_cloud_available)

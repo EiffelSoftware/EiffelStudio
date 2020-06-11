@@ -68,11 +68,18 @@ feature -- Account tool
 
 	label_field_installation: STRING_32 do Result := locale.translation_in_context ("Installation: ", "cloud.info") end
 
+	button_show_more: STRING_32 do Result := locale.translation_in_context ("Show more...", "cloud.info") end
+	button_show_less: STRING_32 do Result := locale.translation_in_context ("Show less...", "cloud.info") end
+
+	tooltip_button_show_more: STRING_32 do Result := locale.translation_in_context ("Toggle this button to show more|less information.", "cloud.info") end
+
 feature -- Dialog
 
-	button_visit_web_account: STRING_32 do Result := locale.translation_in_context ("Visit Web Account", "cloud.info") end
+	button_visit_web_account: STRING_32 do Result := locale.translation_in_context ("My Web Account...", "cloud.info") end
+	tooltip_button_visit_web_account: STRING_32 do Result := locale.translation_in_context ("Visit my online Account (in web browser)...", "cloud.info") end
 
 	title_license_expired: STRING_32 do Result := locale.translation_in_context ("Your license is EXPIRED", "cloud.info") end
+	title_license_issue: STRING_32 do Result := locale.translation_in_context ("Issue with your license", "cloud.info") end
 
 	title_session_paused: STRING_32 do Result := locale.translation_in_context ("This session is PAUSED", "cloud.info") end
 
@@ -115,6 +122,8 @@ feature -- General
 	button_sign_out: STRING_32 do Result := locale.translation ("Sign out") end
 	button_reload: STRING_32 do Result := locale.translation ("Reload") end
 	button_register: STRING_32 do Result := locale.translation ("Register") end
+	button_update: STRING_32 do Result := locale.translation_in_context ("Update", "cloud.info") end
+	tooltip_button_update: STRING_32 do Result := locale.translation_in_context ("Update account information (synchronize)", "cloud.info") end
 
 ;note
 	copyright: "Copyright (c) 1984-2020, Eiffel Software"

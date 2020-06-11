@@ -21,7 +21,7 @@ feature -- Event
 		do
 		end
 
-	on_account_license_expired (acc: ES_ACCOUNT)
+	on_account_license_issue (lic: detachable ES_ACCOUNT_LICENSE; acc: ES_ACCOUNT)
 		do
 		end
 

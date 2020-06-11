@@ -713,10 +713,7 @@ feature -- Updating
 					on_session_heartbeat_updated (d.heartbeat)
 				end
 				if d.license_expired then
-					on_account_license_expired (a_account)
-				end
-				if False then
-					on_account_license_expired (a_account)
+					on_account_license_issue (Void, a_account)
 				end
 			end
 		end
@@ -772,7 +769,6 @@ feature -- Updating
 				else
 					a_account.set_access_token (Void)
 				end
---				a_account.set_plan (acc.plan)
 				if attached web_api.installation (tok.token, installation.id) as inst then
 						-- Ok good.
 					installation := inst
@@ -786,12 +782,18 @@ feature -- Updating
 					on_account_signed_out
 				elseif
 					attached installation as l_installation and then
-					l_installation.is_active and then
-					l_installation.associated_license.is_active
+					attached l_installation.associated_license as lic
 				then
-					on_account_updated (a_account)
+					if
+						l_installation.is_active and then
+						lic.is_active
+					then
+						on_account_updated (a_account)
+					else
+						on_account_license_issue (lic, acc)
+					end
 				else
-					on_account_license_expired (acc)
+					on_account_license_issue (Void, acc)
 				end
 			elseif is_available then
 				sign_out

@@ -327,11 +327,16 @@ feature -- Events
 
 	on_account_license_expired (acc: ES_ACCOUNT)
 		do
+			on_account_license_issue (Void, acc)
+		end
+
+	on_account_license_issue (lic: detachable ES_ACCOUNT_LICENSE; acc: ES_ACCOUNT)
+		do
 			if attached observers as lst then
 				across
 					lst as ic
 				loop
-					ic.item.on_account_license_expired (acc)
+					ic.item.on_account_license_issue (lic, acc)
 				end
 			end
 		end

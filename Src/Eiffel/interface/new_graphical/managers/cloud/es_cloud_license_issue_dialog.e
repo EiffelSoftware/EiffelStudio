@@ -25,13 +25,13 @@ feature {NONE} -- Initialization
 	make (a_service: ES_CLOUD_S)
 		do
 			service := a_service
-			make_with_title (cloud_names.title_license_expired)
+			make_with_title (cloud_names.title_license_issue)
 		end
 
 	initialize
 		local
 			lab: EV_LABEL
-			b_online, b_continue, b_quit, b_retry: EV_BUTTON
+			b_continue, b_quit, b_retry: EV_BUTTON
 			hb: EV_HORIZONTAL_BOX
 			vb: EV_VERTICAL_BOX
 			sep: EV_HORIZONTAL_SEPARATOR
@@ -47,14 +47,14 @@ feature {NONE} -- Initialization
 			set_size (l_scaler.scaled_size (350), l_scaler.scaled_size (150))
 			min_but_w := l_scaler.scaled_size (80)
 			create lab.make_with_text (locale.translation_in_context ("[
-					Your EiffelStudio license expired!
+					Issue with your EiffelStudio license!
 
 					Choose [Guest] to use EiffelStudio as Guest account.
 				]", "cloud.info"))
 
-			create l_weblnk.make_with_text (locale.translation_in_context ("Please visit your web account for options.", "cloud.info"))
+			create l_weblnk.make_with_text (locale.translation_in_context ("Please visit your web account.", "cloud.info"))
+			l_weblnk.set_tooltip (locale.translation_in_context ("Please visit your web account for more information and options.", "cloud.info"))
 
-			create b_online.make_with_text (cloud_names.button_visit_web_account)
 			create b_continue.make_with_text (cloud_names.button_guest)
 			create b_quit.make_with_text (cloud_names.button_quit)
 			create b_retry.make_with_text (cloud_names.button_retry)
@@ -81,10 +81,6 @@ feature {NONE} -- Initialization
 			vb.disable_item_expand (hb)
 			hb.extend (create {EV_CELL})
 
-			hb.extend (b_online)
-			b_continue.set_minimum_width (min_but_w)
-			hb.disable_item_expand (b_online)
-
 			hb.extend (b_retry)
 			b_quit.set_minimum_width (min_but_w)
 			hb.disable_item_expand (b_retry)
@@ -102,7 +98,6 @@ feature {NONE} -- Initialization
 			b_continue.select_actions.extend (agent on_guest)
 			b_retry.select_actions.extend (agent on_retry)
 			b_quit.select_actions.extend (agent on_quit)
-			b_online.select_actions.extend (agent on_web_account (l_report_label))
 			l_weblnk.select_actions.extend (agent on_web_account (l_report_label))
 
 			extend (vb)
@@ -111,6 +106,16 @@ feature {NONE} -- Initialization
 feature -- Access
 
 	service: ES_CLOUD_S
+
+	set_license_expired
+		do
+			set_title (cloud_names.title_license_expired)
+		end
+
+	set_license_issue
+		do
+			set_title (cloud_names.title_license_issue)
+		end
 
 feature -- Callbacks
 

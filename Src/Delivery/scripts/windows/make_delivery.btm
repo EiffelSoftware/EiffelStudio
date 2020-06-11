@@ -24,6 +24,7 @@ iff %@INDEX[%@LOWER[%$],h] ge 0 then
 	echo   - standard: to build only the Standard version of EiffelStudio
 	echo   - no_wizards: to discard wizards building
 	echo   - no_install: to generare only the delivery (but not the installation executable) 
+	echo   - no_msi: exclude .msi building
 	echo   (or nothing to fully regenerate the installation).
 	CANCEL
 endiff
@@ -36,6 +37,11 @@ iff %@INDEX[%@LOWER[%$],no_install] ge 0 then
 	set NO_INSTALL="True"
 else
 	unset /Q NO_INSTALL
+endiff
+iff %@INDEX[%@LOWER[%$],no_msi] ge 0 then
+	set NO_MSI="True"
+::else
+::	unset /Q NO_MSI
 endiff
 iff %@INDEX[%@LOWER[%$],no_new_ec] ge 0 then
 	set NO_NEW_EC="True"

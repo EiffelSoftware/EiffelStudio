@@ -53,15 +53,19 @@ goto end
 set NO_ENTERPRISE_BUILD="True"
 echo EiffelStudio Standard delivery:
 @echo 1: make_delivery
-@echo 2: make_exes
-@echo 3: make_installation
+@echo 2: make_delivery -no_install
+@echo 3: make_delivery -no_msi
+@echo 4: make_exes
+@echo 5: make_installation
 @echo -------------------
 @echo q: quit
-CHOICE /C 123q /M " > selection:"
+CHOICE /C 12345q /M " > selection:"
 if .%ERRORLEVEL%. == .1. GOTO make_delivery
-if .%ERRORLEVEL%. == .2. GOTO make_exes
-if .%ERRORLEVEL%. == .3. GOTO make_installations
-if .%ERRORLEVEL%. == .4. goto end
+if .%ERRORLEVEL%. == .2. GOTO make_delivery_no_install
+if .%ERRORLEVEL%. == .3. GOTO make_delivery_no_msi
+if .%ERRORLEVEL%. == .4. GOTO make_exes
+if .%ERRORLEVEL%. == .5. GOTO make_installations
+if .%ERRORLEVEL%. == .6. goto end
 goto end
 
 :menu_extra
@@ -88,6 +92,14 @@ goto end
 
 :make_delivery_quick
 %TCCLECMD% /C make_delivery.btm no_install
+goto end
+
+:make_delivery_no_install
+%TCCLECMD% /C make_delivery.btm no_install
+goto end
+
+:make_delivery_no_msi
+%TCCLECMD% /C make_delivery.btm no_msi
 goto end
 
 :call_check_svn_repositories

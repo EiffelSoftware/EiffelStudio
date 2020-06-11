@@ -1,1 +1,1 @@
-set NO_INSTALL="True"
+set NO_MSI="True"

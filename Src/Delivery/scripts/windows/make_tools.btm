@@ -91,6 +91,22 @@ else
 	endiff
 endiff
 
+remtrace Recompile wrap_c tool
+iff exist %STUDIO_DIR\tools\spec\%ISE_PLATFORM\bin\wrap_c.exe then
+	remtrace wrap_c tool is already built
+else
+	cdd %EIFFEL_SRC\tools\wrapc\src\ewg
+	clean_project
+	finalize system.ecf
+	cleanup_eiffel wrap_c wrap_c.exe
+	iff exist wrap_c.exe then
+		move wrap_c.exe %STUDIO_DIR\tools\spec\%ISE_PLATFORM\bin
+	else
+		remerror Could not finalize a new wrap_c tool
+		CANCEL_ON_ERROR
+	endiff
+endiff
+
 remtrace Recompile eiffel_image_embedder
 iff exist %STUDIO_DIR\tools\spec\%ISE_PLATFORM\bin\eiffel_image_embedder.exe then
 	remtrace eiffel_image_embedder tool is already built

@@ -186,6 +186,8 @@ else
 
 			safe_md %EIFFEL_SRC\Eiffel\interface\new_graphical\overrides\axar
 			safe_copy %EIFFEL_SRC\tools\estudio_enterprise\axar\*.e %EIFFEL_SRC\Eiffel\interface\new_graphical\overrides\axar\.
+			remtrace Backup original es_ide_settings.e
+			move %EIFFEL_SRC\tools\estudio_enterprise\es_ide_settings.e %EIFFEL_SRC\tools\estudio_enterprise\es_ide_settings.e-BAK
 
 			clean_project
 			finalize ec.ecf batch
@@ -213,6 +215,8 @@ else
 
 			remtrace Clean AXAR additional file.
 			fullrd %EIFFEL_SRC\Eiffel\interface\new_graphical\overrides\axar
+			remtrace Restore original es_ide_settings.e
+			move %EIFFEL_SRC\tools\estudio_enterprise\es_ide_settings.e-BAK %EIFFEL_SRC\tools\estudio_enterprise\es_ide_settings.e
 			cdd %EIFFEL_SRC\Eiffel\API\constants
 			move system_constants.e-BAK system_constants.e
 		endiff

@@ -241,7 +241,9 @@ feature {NONE} -- Implementation
 				Result.append (" (" + l_edition + ")")
 			end
 			Result.append (":%N")
-			Result.append ("Version = " + t_version_info (True) + "%N")
+			Result.append ({STRING_32} "Version = ")
+			Result.append (t_version_info (True))
+			Result.append_character ('%N')
 			Result.append ("Monitor DPI = " + {EV_MONITOR_DPI_DETECTOR_IMP}.dpi.out + "%N")
 			Result.append ("%N")
 			Result.append (eiffel_layout.environment_info)

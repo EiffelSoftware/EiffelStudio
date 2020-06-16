@@ -320,7 +320,7 @@ feature {NONE} -- Welcome dialog
 			win := first_window.window
 
 			create pg.make (is_branded_edition)
-			pg.set_quit_action (agent do (create {EXCEPTIONS}).die (0) end)
+			pg.set_quit_action (agent do (create {EB_EXIT_APPLICATION_COMMAND}).execute_with_confirmation (False) end)
 			pg.set_next_action (agent load_interface)
 			pg.dialog.set_size (first_window.scaled_size (300), first_window.scaled_size (100))
 			pg.dialog.show_actions.extend_kamikaze (agent (i_dlg: EV_DIALOG; i_win: EV_WINDOW)

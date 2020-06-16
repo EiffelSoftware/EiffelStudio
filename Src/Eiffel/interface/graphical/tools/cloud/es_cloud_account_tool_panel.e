@@ -437,7 +437,8 @@ feature {NONE} -- Action handlers
 								l_startup_page: ES_STARTUP_PAGE
 							do
 								create l_startup_page.make (not i_cld.is_enterprise_edition)
-								l_startup_page.switch_to_account_page (i_cld, Void, False)
+								l_startup_page.switch_to_account_page (i_cld, Void, not {ES_IDE_SETTINGS}.cloud_required)
+								l_startup_page.set_quit_action (agent do (create {EB_EXIT_APPLICATION_COMMAND}).execute_with_confirmation (False) end)
 								l_startup_page.show_modal_to_window (develop_window.window)
 							end(cld)
 						)

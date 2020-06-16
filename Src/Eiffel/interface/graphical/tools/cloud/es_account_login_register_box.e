@@ -166,20 +166,22 @@ feature {NONE} -- Initialization
 				vb.disable_item_expand (cbut)
 			end -- end of offline
 
-			-- Check if needed ... if not is_guest_signed_in and then
-			if attached remaining_allowed_guest_days as l_days and then l_days > 0 then
-				create but.make_with_text_and_action (cloud_names.button_guest, agent on_guest)
-				layout_constants.set_default_width_for_button (but)
-				append_label_and_item_horizontally (cloud_names.label_can_continue_as_guest_for_n_days (l_days), but, vb)
-				debug
-					if attached guest_mode_sign_in_count as nb and then nb > 0 then
-						append_label_and_item_horizontally ("(" + nb.out + ")", create {EV_CELL}, vb)
+			if {ES_IDE_SETTINGS}.cloud_required then
+				-- Check if needed ... if not is_guest_signed_in and then
+				if attached remaining_allowed_guest_days as l_days and then l_days > 0 then
+					create but.make_with_text_and_action (cloud_names.button_guest, agent on_guest)
+					layout_constants.set_default_width_for_button (but)
+					append_label_and_item_horizontally (cloud_names.label_can_continue_as_guest_for_n_days (l_days), but, vb)
+					debug
+						if attached guest_mode_sign_in_count as nb and then nb > 0 then
+							append_label_and_item_horizontally ("(" + nb.out + ")", create {EV_CELL}, vb)
+						end
 					end
+				else
+					create but.make_with_text_and_action (cloud_names.button_quit, agent on_next)
+					layout_constants.set_default_width_for_button (but)
+					append_label_and_item_horizontally (cloud_names.label_cannot_continue_as_guest, but, vb)
 				end
-			else
-				create but.make_with_text_and_action (cloud_names.button_quit, agent on_guest)
-				layout_constants.set_default_width_for_button (but)
-				append_label_and_item_horizontally (cloud_names.label_cannot_continue_as_guest, but, vb)
 			end
 			a_box.set_background_color (colors.stock_colors.white)
 			a_box.propagate_background_color

@@ -169,7 +169,7 @@ feature -- Execution
 			main_box.propagate_background_color
 		end
 
-	switch_to_account_page (cld: ES_CLOUD_S; a_username: detachable READABLE_STRING_GENERAL; a_sign_in_dialog: BOOLEAN)
+	switch_to_account_page (cld: ES_CLOUD_S; a_username: detachable READABLE_STRING_GENERAL; a_account_optional: BOOLEAN)
 		require
 			is_cloud_enabled: is_cloud_enabled
 		local
@@ -217,7 +217,7 @@ feature -- Execution
 			vb.disable_item_expand (wid)
 			vb.extend (create {EV_CELL})
 
-			if a_sign_in_dialog then
+			if a_account_optional then
 				create but.make_with_text_and_action (interface_names.b_close, agent on_close)
 			else
 				create but.make_with_text_and_action (interface_names.b_quit, agent on_quit)
@@ -260,7 +260,7 @@ feature -- Status
 
 feature -- Text
 
-	terms_agreement_text: STRING
+	terms_agreement_text: STRING_32
 		once
 			Result :=  locale.translation_in_context ("To continue using this editon of EiffelStudio, you must first agree with the license. If you do not agree with the terms, use another EiffelStudio Edition.", "license")
 		end

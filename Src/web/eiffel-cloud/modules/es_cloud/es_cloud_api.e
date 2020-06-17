@@ -591,7 +591,7 @@ feature -- HTML factory
 		end
 
 
-	append_license_to_html (lic: ES_CLOUD_LICENSE; a_user: detachable ES_CLOUD_USER; es_cloud_module: ES_CLOUD_MODULE; s: STRING_8)
+	append_license_to_html (lic: ES_CLOUD_LICENSE; a_user: detachable ES_CLOUD_USER; es_cloud_module: detachable ES_CLOUD_MODULE; s: STRING_8)
 		local
 			l_plan: detachable ES_CLOUD_PLAN
 			inst: ES_CLOUD_INSTALLATION
@@ -605,12 +605,22 @@ feature -- HTML factory
 			s.append (html_encoded (l_plan.title_or_name))
 			s.append ("</div>")
 			s.append ("<div class=%"license-id%">License ID: <span class=%"id%">")
-			s.append ("<a href=%"" + api.location_url (es_cloud_module.license_location (lic), Void) + "%">")
-			s.append (html_encoded (lic.key))
-			s.append ("</a>")
+			if es_cloud_module /= Void then
+				s.append ("<a href=%"" + api.location_url (es_cloud_module.license_location (lic), Void) + "%">")
+				s.append (html_encoded (lic.key))
+				s.append ("</a>")
+			else
+				s.append (html_encoded (lic.key))
+			end
 			s.append ("</span></div>")
 			s.append ("</div>") -- header
 			s.append ("<div class=%"details%"><ul>")
+			if a_user /= Void then
+				s.append ("<li class=%"owner%"><span class=%"title%">Owner:</span> ")
+				s.append (api.user_html_link (a_user))
+				s.append ("</li>")
+
+			end
 			s.append ("<li class=%"creation%"><span class=%"title%">Started</span> ")
 			s.append (api.date_time_to_string (lic.creation_date))
 			s.append ("</li>")

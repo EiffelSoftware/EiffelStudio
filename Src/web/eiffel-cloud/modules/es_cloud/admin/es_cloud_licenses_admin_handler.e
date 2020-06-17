@@ -9,15 +9,94 @@ class
 
 inherit
 	ES_CLOUD_ADMIN_HANDLER
+		rename
+			make as make_admin_handler
+		end
 
-	WSF_URI_HANDLER
+	WSF_URI_TEMPLATE_HANDLER
 
 create
 	make
 
+feature {NONE} -- Creation
+
+	make (a_es_cloud_api: ES_CLOUD_API; a_admin_module: ES_CLOUD_MODULE_ADMINISTRATION)
+		do
+			admin_module := a_admin_module
+			make_admin_handler (a_es_cloud_api)
+		end
+
+feature -- Access
+
+	admin_module: ES_CLOUD_MODULE_ADMINISTRATION
+
 feature -- Execution
 
 	execute (req: WSF_REQUEST; res: WSF_RESPONSE)
+		local
+		do
+			if attached {WSF_STRING} req.path_parameter ("license") as p_license then
+				handle_license (p_license.value, req, res)
+			else
+				handle_licenses_list (req, res)
+			end
+		end
+
+	handle_license (a_lic_id: READABLE_STRING_GENERAL; req: WSF_REQUEST; res: WSF_RESPONSE)
+		local
+			lic: ES_CLOUD_LICENSE
+			s: STRING
+			r: like new_generic_response
+			f: CMS_FORM
+			fset: WSF_FORM_FIELD_SET
+			l_user: detachable ES_CLOUD_USER
+		do
+			if api.has_permission ("admin es licenses") then
+				lic := es_cloud_api.license_by_key (a_lic_id)
+				if lic = Void and a_lic_id.is_integer_64 then
+					lic := es_cloud_api.license (a_lic_id.to_integer_64)
+				end
+				if lic = Void then
+					send_not_found (req, res)
+				else
+					l_user := es_cloud_api.user_for_license (lic)
+
+					r := new_generic_response (req, res)
+					create s.make_empty
+
+						-- Edit form					
+					create f.make (r.absolute_url (req.percent_encoded_path_info, Void), "edit-license")
+					f.set_method_post
+					create fset.make
+					f.extend (fset)
+					admin_module.add_license_form_part_to (lic, fset, es_cloud_api)
+					if req.is_post_request_method then
+						f.validation_actions.extend (agent admin_module.license_form_validation_action (?, l_user, lic, es_cloud_api))
+						f.process (r)
+						if attached es_cloud_api.license_by_key (lic.key) as l_updated_lic then
+							lic := l_updated_lic
+						end
+						es_cloud_api.append_license_to_html (lic, l_user, Void, s)
+
+						create f.make (r.absolute_url (req.percent_encoded_path_info, Void), "edit-license")
+						f.set_method_post
+						create fset.make
+						f.extend (fset)
+						admin_module.add_license_form_part_to (lic, fset, es_cloud_api)
+
+						f.append_to_html (r.wsf_theme, s)
+					else
+						es_cloud_api.append_license_to_html (lic, l_user, Void, s)
+						f.append_to_html (r.wsf_theme, s)
+					end
+
+					r.set_main_content (s)
+					r.execute
+				end
+			end
+		end
+
+	handle_licenses_list (req: WSF_REQUEST; res: WSF_RESPONSE)
 		local
 			r: like new_generic_response
 			lic: detachable ES_CLOUD_LICENSE
@@ -28,7 +107,7 @@ feature -- Execution
 --			orgs: detachable LIST [ES_CLOUD_ORGANIZATION]
 			lst: LIST [TUPLE [license: ES_CLOUD_LICENSE; user: detachable ES_CLOUD_USER]]
 		do
-			if api.has_permission ("manage es accounts") then
+			if api.has_permission ("admin es licenses") then
 				if attached {WSF_STRING} req.query_parameter ("plan") as p_plan then
 					l_plan_filter := p_plan.value
 				end
@@ -57,7 +136,7 @@ feature -- Execution
 					if lic /= Void then
 						s.append ("<tr><td>")
 						s.append ("<a href=%"")
-						s.append (api.location_url ("activities/" + url_encoded (lic.key), Void))
+						s.append (api.location_url (r.location + url_encoded (lic.key), Void))
 						s.append ("%">")
 						s.append (html_encoded (lic.key))
 						s.append ("</a>")
@@ -111,6 +190,9 @@ feature -- Execution
 								s.append (html_encoded (date_time_to_string (dt)))
 								s.append ("</time>")
 							end
+							s.append ("<a href=%"")
+							s.append (api.location_url ("activities/" + url_encoded (lic.key), Void))
+							s.append ("%">...</a>")
 							s.append ("</td>")
 						else
 							s.append ("<td>")

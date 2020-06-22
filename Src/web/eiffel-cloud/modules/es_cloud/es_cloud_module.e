@@ -638,7 +638,7 @@ feature -- Hooks: block
 						end
 						if attached pl.description as l_desc then
 							l_html.append ("<div class=%"features%"><header>")
-							l_html.append (html_encoded (l_desc))
+							l_html.append (utf_8_encoded (l_desc))
 							l_html.append ("</header></div>")
 						end
 						l_html.append ("<div class=%"actions%">")

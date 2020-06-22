@@ -278,6 +278,7 @@ feature -- Access: store
 		local
 			l_item: ES_CLOUD_STORE_ITEM
 			l_cents: NATURAL_32
+			l_visible: BOOLEAN
 		do
 			Result := internal_store (a_currency)
 			if Result = Void then
@@ -298,16 +299,29 @@ feature -- Access: store
 								attached tb.item ("price") as l_price and then
 								attached tb.item ("currency") as l_currency
 							then
-								if attached tb.item ("price.cents") as l_cents_price then
-									l_cents := l_cents_price.to_natural_32
+								if attached tb.item ("status") as l_status then
+									if
+										l_status.is_case_insensitive_equal ("published")
+									then
+										l_visible := True
+									else
+										l_visible := False
+									end
 								else
-									l_cents := 0
+									l_visible := True
 								end
-								create l_item.make (ic.item)
-								l_item.set_price (l_price.to_natural_32, l_cents, l_currency.to_string_8, tb.item ("interval"))
-								l_item.set_title (tb.item ("title"))
-								l_item.set_name (l_plan)
-								Result.extend (l_item)
+								if l_visible then
+									if attached tb.item ("price.cents") as l_cents_price then
+										l_cents := l_cents_price.to_natural_32
+									else
+										l_cents := 0
+									end
+									create l_item.make (ic.item)
+									l_item.set_price (l_price.to_natural_32, l_cents, l_currency.to_string_8, tb.item ("interval"))
+									l_item.set_title (tb.item ("title"))
+									l_item.set_name (l_plan)
+									Result.extend (l_item)
+								end
 							end
 						end
 					end

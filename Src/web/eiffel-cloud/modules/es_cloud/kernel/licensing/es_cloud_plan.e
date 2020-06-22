@@ -38,6 +38,7 @@ feature -- Access
 	title: detachable IMMUTABLE_STRING_32
 
 	description: detachable IMMUTABLE_STRING_32
+			-- HTML description (could contain Unicode symbols)
 
 	is_public: BOOLEAN
 

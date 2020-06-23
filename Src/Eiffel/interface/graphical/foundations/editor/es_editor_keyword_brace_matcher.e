@@ -1,7 +1,5 @@
-note
-	description: "[
-			Supports block keyword match scanning functionality in the editor.
-		]"
+﻿note
+	description: "Detector of a block keyword match in the editor."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 	date: "$Date$"
@@ -102,40 +100,37 @@ feature {NONE} -- Status report
 		local
 			l_next: detachable like next_text_token
 			l_prev: detachable like previous_text_token
-			l_image: detachable STRING
+			l_image: like {EDITOR_TOKEN}.image
 		do
 			if attached {EDITOR_TOKEN_KEYWORD} a_token as l_keyword then
-				l_image := l_keyword.wide_image.as_string_8
-				if l_image /= Void then
-					l_image.to_lower
-					if l_image.is_equal ({EIFFEL_KEYWORD_CONSTANTS}.once_keyword) then
-						l_next := next_text_token (a_token, a_line, True, Void)
-							-- Check the token is not a once string.
-						Result := l_next /= Void and then attached {EDITOR_TOKEN_STRING} l_next.token
-					elseif
-						l_image.is_equal ({EIFFEL_KEYWORD_CONSTANTS}.rename_keyword) or else
-						l_image.is_equal ({EIFFEL_KEYWORD_CONSTANTS}.export_keyword) or else
-						l_image.is_equal ({EIFFEL_KEYWORD_CONSTANTS}.redefine_keyword) or else
-						l_image.is_equal ({EIFFEL_KEYWORD_CONSTANTS}.rename_keyword) or else
-						l_image.is_equal ({EIFFEL_KEYWORD_CONSTANTS}.select_keyword) or else
-						l_image.is_equal ({EIFFEL_KEYWORD_CONSTANTS}.undefine_keyword)
-					then
-							-- Parent clause is only a valid match if the previous token is a class name.
-						l_prev := previous_token (a_token, a_line, True, Void, agent (ia_token: EDITOR_TOKEN; ia_line: EDITOR_LINE): BOOLEAN
-								-- We are looking for the parent class declaration which could either be a class name or generic type, in which
-								-- case a closing ] might be found.
-							require
-								ia_token_attached: ia_token /= Void
-								ia_line_attached: ia_line /= Void
-							do
-								if attached {EDITOR_TOKEN_TEXT} ia_token as l_text then
-										-- Return matches for all tokens execpt closing square brackets, because we want to skip
-										-- over these to find the type. ] are the only acceptable characters before a class type name.
-									Result := not (l_text.wide_image.count = 1 and then l_text.wide_image.is_equal ("]"))
-								end
-							end)
-						Result := l_prev = Void or else not attached {EDITOR_TOKEN_CLASS} l_prev.token
-					end
+				l_image := l_keyword.wide_image
+				if l_image.is_case_insensitive_equal_general ({EIFFEL_KEYWORD_CONSTANTS}.once_keyword) then
+					l_next := next_text_token (a_token, a_line, True, Void)
+						-- Check the token is not a once string.
+					Result := l_next /= Void and then attached {EDITOR_TOKEN_STRING} l_next.token
+				elseif
+					l_image.is_case_insensitive_equal_general ({EIFFEL_KEYWORD_CONSTANTS}.rename_keyword) or else
+					l_image.is_case_insensitive_equal_general ({EIFFEL_KEYWORD_CONSTANTS}.export_keyword) or else
+					l_image.is_case_insensitive_equal_general ({EIFFEL_KEYWORD_CONSTANTS}.redefine_keyword) or else
+					l_image.is_case_insensitive_equal_general ({EIFFEL_KEYWORD_CONSTANTS}.rename_keyword) or else
+					l_image.is_case_insensitive_equal_general ({EIFFEL_KEYWORD_CONSTANTS}.select_keyword) or else
+					l_image.is_case_insensitive_equal_general ({EIFFEL_KEYWORD_CONSTANTS}.undefine_keyword)
+				then
+						-- Parent clause is only a valid match if the previous token is a class name.
+					l_prev := previous_token (a_token, a_line, True, Void, agent (ia_token: EDITOR_TOKEN; ia_line: EDITOR_LINE): BOOLEAN
+							-- We are looking for the parent class declaration which could either be a class name or generic type, in which
+							-- case a closing ] might be found.
+						require
+							ia_token_attached: ia_token /= Void
+							ia_line_attached: ia_line /= Void
+						do
+							if attached {EDITOR_TOKEN_TEXT} ia_token as l_text then
+									-- Return matches for all tokens execpt closing square brackets, because we want to skip
+									-- over these to find the type. ] are the only acceptable characters before a class type name.
+								Result := not (l_text.wide_image.count = 1 and then l_text.wide_image.is_equal ("]"))
+							end
+						end)
+					Result := l_prev = Void or else not attached {EDITOR_TOKEN_CLASS} l_prev.token
 				end
 			elseif attached {EDITOR_TOKEN_STRING} a_token then
 				Result := True
@@ -143,7 +138,7 @@ feature {NONE} -- Status report
 		end
 
 ;note
-	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2020, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

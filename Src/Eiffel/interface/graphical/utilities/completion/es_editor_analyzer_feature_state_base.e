@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "[
 			A base implementation for feature-based analyzer states ({ES_EDITOR_ANALYZER_STATE}).
 		]"
@@ -128,7 +128,7 @@ feature {NONE} -- Status report
 
 feature {NONE} -- Implementation
 
-	expression_type_name_from_string (a_info: ES_EDITOR_ANALYZER_FEATURE_STATE_INFO; a_expr: READABLE_STRING_8; a_default: STRING): STRING
+	expression_type_name_from_string (a_info: ES_EDITOR_ANALYZER_FEATURE_STATE_INFO; a_expr: READABLE_STRING_32; a_default: STRING): STRING_32
 			-- The expression `a_expr' is an attached factored expression, which requires an expression
 			-- evaluation. This does not work for agent expression yet.
 		do
@@ -364,7 +364,7 @@ feature {NONE} -- Helpers
 		end
 
 ;note
-	copyright:	"Copyright (c) 1984-2011, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2020, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

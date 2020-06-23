@@ -1,6 +1,7 @@
 ﻿note
 	description: "Command-line Eiffel Inspector (code analysis)"
 	author: "Stefan Zurfluh and others"
+	revised_by: "Alexander Kogtenkov"
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -329,7 +330,8 @@ feature -- Execution (declared in EWB_CMD)
 	print_line (a_string: READABLE_STRING_GENERAL)
 			-- Prints `a_string' and a new line to the output window.
 		do
-			output_window.add (a_string + "%N")
+			output_window.add (a_string)
+			output_window.add_new_line
 		end
 
 	try_add_class_with_name (a_analyzer: CA_CODE_ANALYZER; a_class_name: READABLE_STRING_GENERAL)
@@ -347,7 +349,7 @@ feature -- Execution (declared in EWB_CMD)
 
 feature -- Info (declared in EWB_CMD)
 
-	name: STRING = "Eiffel Inspector"
+	name: STRING = "Code analyzer"
 			-- Name of this command-line tool.
 
 	help_message: STRING_GENERAL
@@ -389,7 +391,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright: "Copyright (c) 1984-2015, Eiffel Software"
+	copyright: "Copyright (c) 1984-2020, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

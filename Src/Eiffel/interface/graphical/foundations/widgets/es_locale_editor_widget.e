@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "[
 		A specialized editor widget for supporting different locale in the editor output.
 	]"
@@ -136,8 +136,8 @@ feature {NONE} -- Action handlers
 			is_interface_usable: is_interface_usable
 			is_initialized: is_initialized
 		local
-			l_locale_id: STRING
-			l_text: detachable STRING_32
+			l_locale_id: STRING_32
+			l_text: STRING_32
 			l_table: like locale_table
 		do
 			l_locale_id := preferences.misc_data.locale_id
@@ -203,7 +203,7 @@ feature {NONE} -- Internationalization
 	lb_locale: STRING = "Locale"
 
 ;note
-	copyright:	"Copyright (c) 1984-2019, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2020, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

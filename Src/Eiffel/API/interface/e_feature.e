@@ -1026,13 +1026,14 @@ feature -- Output
 		require
 			valid_st: a_text_formatter /= Void
 		local
-			l_name: STRING
+			l_name: STRING_32
 		do
-			l_name := name.as_lower
+			l_name := name_32.as_lower
 			if is_once or else is_constant then
-				l_name.put ((l_name @ 1).upper, 1)
+					-- TODO: Use `{CHARACTER_32}.to_title` when it is available.
+				l_name [1] := l_name [1].as_upper
 			end
-			a_text_formatter.add_feature (Current, encoding_converter.utf8_to_utf32 (l_name))
+			a_text_formatter.add_feature (Current, l_name)
 		end
 
 	append_full_name (a_text_formatter: TEXT_FORMATTER)
@@ -1243,7 +1244,7 @@ note
 	ca_ignore: "CA033", "CA033: very large class"
 	date: "$Date$"
 	revision: "$Revision$"
-	copyright:	"Copyright (c) 1984-2019, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2020, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

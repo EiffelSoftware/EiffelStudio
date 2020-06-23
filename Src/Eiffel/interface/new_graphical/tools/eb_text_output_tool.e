@@ -1,8 +1,7 @@
-note
+﻿note
 	description: "Object that represents an output tool which contains a text field"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
-	author: ""
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -64,7 +63,7 @@ feature -- Access
 			if locale_combo_internal = Void then
 				create locale_combo_internal
 				locale_combo_internal.set_strings (locale_table.linear_representation)
-				locale_combo_internal.set_text (locale_table.item (preferences.misc_data.locale_id).as_string_32)
+				locale_combo_internal.set_text (locale_table.item (preferences.misc_data.locale_id))
 				locale_combo_internal.select_actions.extend (agent on_encoding_change)
 				locale_combo_internal.disable_edit
 				on_encoding_change
@@ -198,7 +197,7 @@ feature -- Process
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2013, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2020, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

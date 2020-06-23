@@ -40,7 +40,7 @@ feature -- Access
 
 feature -- Status change
 
-	set_locale_with_id (a_id: STRING)
+	set_locale_with_id (a_id: STRING_32)
 			-- Set `locale' with `a_id'.
 			-- `a_id' is a Locale Id.
 			-- If locale of `a_id' not found, an empty locale is set.
@@ -176,16 +176,19 @@ feature -- String
 			end
 		end
 
-	first_character_as_upper (a_s: READABLE_STRING_GENERAL): STRING_GENERAL
+	first_character_as_upper (a_s: READABLE_STRING_GENERAL): STRING_32
 			-- First character to upper case if possible.
 			-- Be careful to apply this to a translated word.
 			-- Since translation might result in more than one word from one in English.
 		require
 			a_s_not_void: a_s /= Void
 		do
-			Result := as_string_general_twin (a_s)
+			Result := a_s.as_string_32
+			if Result = a_s then
+				Result := Result.twin
+			end
 			if not Result.is_empty then
-				Result.put_code (a_s.item (1).as_upper.natural_32_code, 1)
+				Result [1] := Result [1].as_upper
 			end
 		ensure
 			Result_not_void: Result /= Void
@@ -325,7 +328,7 @@ feature -- String
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2019, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2020, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

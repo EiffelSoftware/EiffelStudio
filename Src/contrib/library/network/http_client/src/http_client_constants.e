@@ -1,6 +1,4 @@
-note
-	description: "Summary description for {HTTP_CLIENT_CONSTANTS}."
-	author: ""
+﻿note
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -10,20 +8,16 @@ class
 feature -- Auth type
 
 	auth_type_id (a_auth_type_string: READABLE_STRING_8): INTEGER
-		local
-			s: STRING_8
 		do
-			create s.make_from_string (a_auth_type_string)
-			s.to_lower
-			if s.same_string_general ("basic") then
+			if a_auth_type_string.is_case_insensitive_equal ("basic") then
 				Result := Auth_type_basic
-			elseif s.same_string_general ("digest") then
+			elseif a_auth_type_string.is_case_insensitive_equal ("digest") then
 				Result := Auth_type_digest
-			elseif s.same_string_general ("any") then
+			elseif a_auth_type_string.is_case_insensitive_equal ("any") then
 				Result := Auth_type_any
-			elseif s.same_string_general ("anysafe") then
+			elseif a_auth_type_string.is_case_insensitive_equal ("anysafe") then
 				Result := Auth_type_anysafe
-			elseif s.same_string_general ("none") then
+			elseif a_auth_type_string.is_case_insensitive_equal ("none") then
 				Result := Auth_type_none
 			end
 		end
@@ -35,7 +29,8 @@ feature -- Auth type
 	Auth_type_anysafe: INTEGER = 4
 
 note
-	copyright: "2011-2012, Jocelyn Fiat, Javier Velilla, Eiffel Software and others"
+	copyright: "2011-2020, Jocelyn Fiat, Javier Velilla, Eiffel Software and others"
+	revised_by: "Alexander Kogtenkov"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

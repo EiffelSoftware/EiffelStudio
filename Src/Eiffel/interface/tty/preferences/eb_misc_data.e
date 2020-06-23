@@ -96,33 +96,38 @@ feature -- Value
 		require
 			a_line_positive: a_line > 0
 		local
-			l_target: READABLE_STRING_GENERAL
+			s: STRING_32
 		do
 				-- Extract the command and adapt it if missing.
 			Result := external_editor_command
-			if Result.is_empty then
-					-- Ensure that we have a working command.
-				if {PLATFORM}.is_windows then
-					Result := "notepad $target"
+			Result :=
+				if Result.is_empty then
+						-- Ensure that we have a working command.
+					if {PLATFORM}.is_windows then
+						{STRING_32} "notepad $target"
+					else
+						{STRING_32} "vi +$line $target"
+					end
 				else
-					Result := "vi +$line $target"
+					Result.twin
 				end
-			else
-				Result := Result.twin
-			end
 				-- Replace $target and $line with the expected values
-			if a_target /= Void then
+			if attached a_target then
 				if a_target.count > 1 and a_target.code (1) /= ('"').code.as_natural_32 then
-					l_target := a_target.substring (1, 0) + "%"" + a_target + "%""
+					create s.make (a_target.count + 2)
+					s.append_character ('"')
+					s.append_string_general (a_target)
+					s.append_character ('"')
 				else
-					l_target := a_target
+					create s.make_from_string_general (a_target)
 				end
 			else
-				l_target := ""
+				create s.make_empty
 			end
-			check l_target_not_void: l_target /= Void end
-			Result.replace_substring_all ({STRING_32} "$target", l_target.as_string_32)
-			Result.replace_substring_all ({STRING_32} "$line", a_line.out.as_string_32)
+			Result.replace_substring_all ({STRING_32} "$target", s)
+			create s.make (3)
+			s.append_integer (a_line)
+			Result.replace_substring_all ({STRING_32} "$line", s)
 		ensure
 			external_editor_cli_not_void: Result /= Void
 			external_editor_cli_not_empty: not Result.is_empty
@@ -151,7 +156,7 @@ feature -- Value
 			Result := internet_browser_preference.value
 		end
 
-	locale_id: STRING
+	locale_id: STRING_32
 			-- Locale ID of current language
 		do
 			Result := locale_id_preference.selected_value
@@ -203,7 +208,7 @@ feature -- Preference
 	show_hidden_preferences_preference: BOOLEAN_PREFERENCE
 	console_shell_command_preference: STRING_PREFERENCE
 	file_browser_command_preference: STRING_32_PREFERENCE
-	locale_id_preference: ARRAY_PREFERENCE
+	locale_id_preference: ARRAY_32_PREFERENCE
 	pnd_preference: BOOLEAN_PREFERENCE
 	update_channel_preference: STRING_CHOICE_PREFERENCE
 	eis_path_preference: STRING_32_PREFERENCE
@@ -258,7 +263,7 @@ feature {NONE} -- Implementation
 				external_editor_command_preference := l_manager.new_string_preference_value (l_manager, external_editor_command_string, "xterm -geometry 80x40 -e vi +$line $target")
 			end
 
-			locale_id_preference := l_manager.new_array_preference_value (l_manager, locale_id_preference_string, <<"Unselected">>)
+			locale_id_preference := l_manager.new_array_32_preference_value (l_manager, locale_id_preference_string, <<"Unselected">>)
 			locale_id_preference.set_is_choice (True)
 			init_locale
 				-- Set the exact value, otherwise the preference detected default will be removed.
@@ -293,12 +298,12 @@ feature {NONE} -- Implementation
 		require
 			locale_id_preference_not_void: locale_id_preference /= Void
 		local
-			l_select_lang: detachable STRING_8
+			l_select_lang: STRING_32
 			l_id: I18N_LOCALE_ID
-			l_available_lang: STRING
+			l_available_lang: STRING_32
 			l_available_locales: LIST [I18N_LOCALE_ID]
-			l_str: STRING
-			l_added_pre: HASH_TABLE [STRING, STRING]
+			l_str: STRING_32
+			l_added_pre: HASH_TABLE [STRING_32, STRING_32]
 			l_found, l_is_unselected: BOOLEAN
 			l_set_default_locale: BOOLEAN
 		do
@@ -338,14 +343,14 @@ feature {NONE} -- Implementation
 						check
 							name_of_locale_id_is_string_8: l_available_locales.item.name.is_valid_as_string_8
 						end
-						l_str := l_available_locales.item.name.as_string_8
+						l_str := l_available_locales.item.name
 						if not l_added_pre.has (l_str) then
 							l_added_pre.force (l_str, l_str)
 							if l_available_locales.item.is_equal (l_id) and then not l_is_unselected then
 									-- Set this item selected.
 									-- And activate this locale.
 								set_locale_with_id (l_str)
-								l_str := "[" + l_str + "]"
+								l_str := {STRING_32} "[" + l_str + "]"
 								l_found := True
 							end
 							l_available_lang.append (l_str)
@@ -367,7 +372,7 @@ feature {NONE} -- Implementation
 			else
 				if is_eiffel_layout_defined then
 					if attached eiffel_layout.get_environment_32 ("ISE_LANG") as l_lang then
-						l_select_lang := l_lang.to_string_8
+						l_select_lang := l_lang
 					end
 					if l_select_lang /= Void and then not l_select_lang.is_empty then
 						create l_id.make_from_string (l_select_lang)
@@ -409,7 +414,7 @@ invariant
 	license_accepted_preference_not_void: license_accepted_preference /= Void
 
 note
-	copyright: "Copyright (c) 1984-2019, Eiffel Software"
+	copyright: "Copyright (c) 1984-2020, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

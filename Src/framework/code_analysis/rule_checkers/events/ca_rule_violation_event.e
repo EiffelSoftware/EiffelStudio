@@ -143,7 +143,7 @@ feature -- Status report
 				Result :=
 					data.rule.title.as_lower.has_substring (t) or else
 					rule_id.as_lower.has_substring (t) or else
-					affected_class.name.as_lower.has_substring (t) or else
+					{UTF_CONVERTER}.utf_8_string_8_to_string_32 (affected_class.name).as_lower.has_substring (t) or else
 					violation_description.as_lower.has_substring (t)
 			end
 		end

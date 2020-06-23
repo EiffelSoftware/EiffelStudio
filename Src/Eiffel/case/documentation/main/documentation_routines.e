@@ -263,7 +263,7 @@ feature -- Access
 			current_class := class_c
 			a_text_formatter.process_filter_item (f_class_declaration, True)
 			a_text_formatter.process_filter_item (f_menu_bar, True)
-			insert_class_menu_bar (a_text_formatter, class_c.name.as_lower)
+			insert_class_menu_bar (a_text_formatter, {UTF_CONVERTER}.utf_8_string_8_to_string_32 (class_c.name).as_lower)
 			a_text_formatter.process_filter_item (f_menu_bar, False)
 			class_c.append_header (a_text_formatter)
 			a_text_formatter.add_new_line
@@ -294,7 +294,7 @@ feature -- Access
 			append_feature_chart_item (a_text_formatter, commands, "Commands")
 			append_class_constraints (a_text_formatter, class_c)
 			a_text_formatter.process_filter_item (f_menu_bar, True)
-			insert_class_menu_bar (a_text_formatter, class_c.name.as_lower)
+			insert_class_menu_bar (a_text_formatter, {UTF_CONVERTER}.utf_8_string_8_to_string_32 (class_c.name).as_lower)
 			a_text_formatter.process_filter_item (f_menu_bar, False)
 			a_text_formatter.process_filter_item (f_class_declaration, False)
 			current_class := Void
@@ -308,7 +308,7 @@ feature -- Access
 		do
 			a_text_formatter.process_filter_item (f_class_declaration, True)
 			a_text_formatter.process_filter_item (f_menu_bar, True)
-			insert_class_menu_bar (a_text_formatter, class_c.name.as_lower)
+			insert_class_menu_bar (a_text_formatter, {UTF_CONVERTER}.utf_8_string_8_to_string_32 (class_c.name).as_lower)
 			a_text_formatter.process_filter_item (f_menu_bar, False)
 			class_c.append_header (a_text_formatter)
 			a_text_formatter.add_new_line
@@ -317,7 +317,7 @@ feature -- Access
 			append_class_clients (a_text_formatter, class_c)
 			append_class_suppliers (a_text_formatter, class_c)
 			a_text_formatter.process_filter_item (f_menu_bar, True)
-			insert_class_menu_bar (a_text_formatter, class_c.name.as_lower)
+			insert_class_menu_bar (a_text_formatter, {UTF_CONVERTER}.utf_8_string_8_to_string_32 (class_c.name).as_lower)
 			a_text_formatter.process_filter_item (f_menu_bar, False)
 			a_text_formatter.process_filter_item (f_class_declaration, False)
 		end
@@ -917,7 +917,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2018, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2020, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

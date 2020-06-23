@@ -1133,7 +1133,7 @@ feature -- Plug and Makefile file
 				if not compilation_modes.is_precompiling and not l_root.procedure_name.is_empty then
 					buffer.put_string (l_root_cl.name_in_upper)
 					buffer.put_character ('.')
-					buffer.put_string (l_root.procedure_name.as_lower)
+					buffer.put_string ({UTF_CONVERTER}.string_32_to_utf_8_string_8 ({UTF_CONVERTER}.utf_8_string_8_to_string_32 (l_root.procedure_name).as_lower))
 				else
 					buffer.put_string ("ANY")
 				end
@@ -1343,7 +1343,7 @@ feature -- Plug and Makefile file
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2019, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2020, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

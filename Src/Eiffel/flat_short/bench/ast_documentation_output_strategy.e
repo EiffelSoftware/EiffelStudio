@@ -1,8 +1,7 @@
-note
+﻿note
 	description: "Output strategy for documentation"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
-	author: ""
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -39,13 +38,13 @@ feature -- Process
 			text_formatter_decorator.process_filter_item (f_class_declaration, true)
 
 			text_formatter_decorator.process_filter_item (f_menu_bar, true)
-			documentation.insert_class_menu_bar (text_formatter_decorator, current_class.name.as_lower)
+			documentation.insert_class_menu_bar (text_formatter_decorator, {UTF_CONVERTER}.utf_8_string_8_to_string_32 (current_class.name).as_lower)
 			text_formatter_decorator.process_filter_item (f_menu_bar, false)
 
 			share_class_processing (l_as)
 
 			text_formatter_decorator.process_filter_item (f_menu_bar, true)
-			documentation.insert_class_menu_bar (text_formatter_decorator, current_class.name.as_lower)
+			documentation.insert_class_menu_bar (text_formatter_decorator, {UTF_CONVERTER}.utf_8_string_8_to_string_32 (current_class.name).as_lower)
 			text_formatter_decorator.process_filter_item (f_menu_bar, false)
 			text_formatter_decorator.process_filter_item (f_class_declaration, false)
 			text_formatter_decorator.put_new_line
@@ -57,7 +56,7 @@ feature {NONE} -- Implementation
 			-- For documentation
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2020, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
@@ -87,4 +86,5 @@ note
 			 Website http://www.eiffel.com
 			 Customer support http://support.eiffel.com
 		]"
-end -- class AST_DOCUMENTATION_OUTPUT_STRATEGY
+
+end

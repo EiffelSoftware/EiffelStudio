@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "Visitor that changes all occurrences of a feature name to a new name."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -57,7 +57,7 @@ feature {NONE} -- Initialization
 		do
 			feature_i := a_feature
 			rout_id_set := feature_i.rout_id_set
-			old_feature_name := a_feature.feature_name.as_lower
+			old_feature_name := {UTF_CONVERTER}.string_32_to_utf_8_string_8 ({UTF_CONVERTER}.utf_8_string_8_to_string_32 (a_feature.feature_name).as_lower)
 			new_feature_name := a_new_feature_name
 			change_comments := a_change_comments
 			change_strings := a_change_strings
@@ -434,13 +434,13 @@ invariant
 	feature_i_not_void: feature_i /= Void
 	rout_id_set_not_void: rout_id_set /= Void
 	old_feature_name_ok: old_feature_name /= Void and not old_feature_name.is_empty
-	old_feature_name_lower: old_feature_name.as_lower.is_equal (old_feature_name)
+	old_feature_name_lower: {UTF_CONVERTER}.utf_8_string_8_to_string_32 (old_feature_name).as_lower.is_equal ({UTF_CONVERTER}.utf_8_string_8_to_string_32 (old_feature_name))
 	new_feature_name_ok: new_feature_name /= Void and not new_feature_name.is_empty
 	recursive_descendants_not_void: recursive_descendants /= Void
 	type_a_generator_not_void: type_a_generator /= Void
 
 note
-	copyright: "Copyright (c) 1984-2019, Eiffel Software"
+	copyright: "Copyright (c) 1984-2020, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

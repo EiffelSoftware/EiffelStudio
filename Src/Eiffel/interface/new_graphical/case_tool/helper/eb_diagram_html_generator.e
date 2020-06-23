@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "Objects that generate an html file representing a diagram%N%
 			% , to be included in html documentation"
 	legal: "See notice at end of class."
@@ -341,7 +341,7 @@ feature {NONE} -- Implementation
 							item_file.append (path)
 							item_file.append_character ('/')
 						end
-						item_file.append (l_class_i.name.as_lower)
+						item_file.append ({UTF_CONVERTER}.utf_8_string_8_to_string_32 (l_class_i.name).as_lower)
 						item_file.append ("_chart.html")
 						bbox := cf.bounding_box
 						Result.append ("<area shape=rect coords=%"")
@@ -437,7 +437,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2012, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2020, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

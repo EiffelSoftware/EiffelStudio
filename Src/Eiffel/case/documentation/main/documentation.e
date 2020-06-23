@@ -846,7 +846,7 @@ feature -- Specific Generation
 						-- `ti_after_class_declaration' so that `insert_class_menu_bars'
 						-- works properly.
 					l_filter.process_filter_item (f_menu_bar, True)
-					insert_class_menu_bar (l_filter, l_class_i.name.as_lower)
+					insert_class_menu_bar (l_filter, {UTF_CONVERTER}.utf_8_string_8_to_string_32 (l_class_i.name).as_lower)
 					l_filter.process_filter_item (f_menu_bar, False
 					)
 					l_filter.process_filter_item (f_class_declaration, True)
@@ -856,7 +856,7 @@ feature -- Specific Generation
 					l_filter.add_new_line
 
 					l_filter.process_filter_item (f_menu_bar, True)
-					insert_class_menu_bar (l_filter, l_class_i.name.as_lower)
+					insert_class_menu_bar (l_filter, {UTF_CONVERTER}.utf_8_string_8_to_string_32 (l_class_i.name).as_lower)
 					l_filter.process_filter_item (f_menu_bar, False)
 
 					l_filter.process_filter_item (f_class_declaration, False)
@@ -940,7 +940,7 @@ feature {NONE} -- Menu bars
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2019, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2020, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

@@ -1,11 +1,9 @@
-note
-
-	description:
-		"Class to show the output of the profile query."
+﻿note
+	description: "Class to show the output of the profile query."
 	legal: "See notice at end of class."
-	status: "See notice at end of class.";
-	date: "$Date$";
-	revision: "Revision: $"
+	status: "See notice at end of class."
+	date: "$Date$"
+	revision: "$Revision$"
 
 class E_SHOW_PROFILE_QUERY
 
@@ -643,53 +641,51 @@ end;
 				end;
 				Result := real_ref
 			end
-		end;
+		end
 
 	extend_with_languages
 			-- Creates extra language filters
 		local
-			lang_filt: PROFILE_FILTER;
-			new_ff: PROFILE_FILTER;
+			lang_filt: PROFILE_FILTER
+			new_ff: PROFILE_FILTER
 			i: INTEGER
 		do
 			if prof_options.language_names.count > 1 then
 				from
-					create {OR_FILTER} lang_filt.make;
+					create {OR_FILTER} lang_filt.make
 					i := 1
 				until
 					i > prof_options.language_names.count
 				loop
-					lang_filt.extend (generate_language_filter (i));
+					lang_filt.extend (generate_language_filter (i))
 					i := i + 1
 				end
-				create {AND_FILTER} new_ff.make;
-				new_ff.extend (lang_filt);
-				new_ff.extend (first_filter);
+				create {AND_FILTER} new_ff.make
+				new_ff.extend (lang_filt)
+				new_ff.extend (first_filter)
 				first_filter := new_ff
 			elseif prof_options.language_names.count = 1 then
-				create {AND_FILTER} new_ff.make;
-				new_ff.extend (generate_language_filter (1));
-				new_ff.extend (first_filter);
+				create {AND_FILTER} new_ff.make
+				new_ff.extend (generate_language_filter (1))
+				new_ff.extend (first_filter)
 				first_filter := new_ff
 			end
-		end;
+		end
 
 	generate_language_filter (i: INTEGER): PROFILE_FILTER
-			-- Generates a filter for a specified
-			-- language
+			-- Generates a filter for a specified language.
 		local
 			lang_name: STRING
 		do
-			lang_name := prof_options.language_names.item (i);
-			lang_name.to_lower;
-			if lang_name.is_equal (profiler_eiffel) then
+			lang_name := prof_options.language_names [i]
+			if lang_name.is_case_insensitive_equal (profiler_eiffel) then
 				create {EIFFEL_FILTER} Result.make
-			elseif lang_name.is_equal (profiler_c) then
+			elseif lang_name.is_case_insensitive_equal (profiler_c) then
 				create {C_FILTER} Result.make
-			elseif lang_name.is_equal (profiler_cycle) then
+			elseif lang_name.is_case_insensitive_equal (profiler_cycle) then
 				create {CYCLE_FILTER} Result.make
 			end
-		end;
+		end
 
 	print_columns (item: PROFILE_DATA)
 			-- Prints the values from the columns the user wanted
@@ -759,7 +755,7 @@ feature {NONE} -- Attributes
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2018, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2020, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
@@ -790,4 +786,4 @@ note
 			Customer support http://support.eiffel.com
 		]"
 
-end -- class E_SHOW_PROFILE_QUERY
+end

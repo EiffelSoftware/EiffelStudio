@@ -1,11 +1,10 @@
-note
+﻿note
 
-	description:
-		"Retrieves the profiler configuration file."
+	description: "Loader of the profiler configuration file."
 	legal: "See notice at end of class."
-	status: "See notice at end of class.";
-	date: "Date: ";
-	revision: "Revision: "
+	status: "See notice at end of class."
+	date: "$Date$"
+	revision: "$Revision$"
 
 class CONFIGURATION_LOADER
 
@@ -168,19 +167,18 @@ feature {NONE} -- Implementation
 		local
 			s: STRING
 		do
-			s := get_string_value (GLU_string);
+			s := get_string_value (GLU_string)
 			if s = Void then
-				error_occurred := True;
+				error_occurred := True
 			else
-				s.to_lower;
-				if s.is_equal ("yes") then
-					shared_prof_config.set_leading_underscore (True);
-				elseif s.is_equal ("no") then
-					shared_prof_config.set_leading_underscore (False);
+				if s.is_case_insensitive_equal ("yes") then
+					shared_prof_config.set_leading_underscore (True)
+				elseif s.is_case_insensitive_equal ("no") then
+					shared_prof_config.set_leading_underscore (False)
 				else
-					error_occurred := True;
-				end;
-			end;
+					error_occurred := True
+				end
+			end
 		end
 
 	get_integer_value (s: STRING): INTEGER
@@ -300,7 +298,7 @@ feature {NONE} -- Implementation: Access
 		-- Eiffel installation directory under "bench/profiler".
 
 note
-	copyright:	"Copyright (c) 1984-2013, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2020, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
@@ -331,4 +329,4 @@ note
 			Customer support http://support.eiffel.com
 		]"
 
-end -- class CONFIGURATION_LOADER
+end

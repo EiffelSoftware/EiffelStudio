@@ -88,7 +88,7 @@ feature -- Compiler specific calls
 		do
 				-- Copy precompiled driver to the target directory.
 			if {PLATFORM}.is_windows then
-				u.copy_file_path (driver_name, c_code_dir.extended (system_name + ".exe"))
+				u.copy_file_path (driver_name, c_code_dir.extended (system_name).appended_with_extension ("exe"))
 			elseif {PLATFORM}.is_vms then
 				u.copy_file_path (driver_name, c_code_dir.extended (system_name))
 			else
@@ -124,7 +124,7 @@ feature -- Compiler specific calls
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2018, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2020, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
@@ -155,4 +155,4 @@ note
 			Customer support http://support.eiffel.com
 		]"
 
-end -- class COMMAND_EXECUTOR
+end

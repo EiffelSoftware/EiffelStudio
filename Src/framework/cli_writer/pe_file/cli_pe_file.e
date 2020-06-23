@@ -91,7 +91,7 @@ feature -- Status
 	is_32bits: BOOLEAN
 			-- Is current application a 32bit application?
 
-	file_name: READABLE_STRING_GENERAL
+	file_name: READABLE_STRING_32
 			-- Name of current PE file on disk.
 
 	has_strong_name: BOOLEAN

@@ -172,7 +172,7 @@ feature {NONE} -- Access
 	standard_twin_body_index: INTEGER
 			-- Body index of `standard_twin' from ANY
 
-	output_file_name: READABLE_STRING_GENERAL
+	output_file_name: READABLE_STRING_32
 			-- File where assembly is stored.
 
 	md_dispenser: MD_DISPENSER
@@ -8294,7 +8294,7 @@ note
 		"CA011", "CA011: too many arguments",
 		"CA033", "CA033: very long class",
 		"CA093", "CA093: manifest array type mismatch"
-	copyright:	"Copyright (c) 1984-2019, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2020, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

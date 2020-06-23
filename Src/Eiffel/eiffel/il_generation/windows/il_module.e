@@ -134,7 +134,7 @@ feature -- Access
 	module_name: STRING
 			-- Name of current module
 
-	module_file_name: READABLE_STRING_GENERAL
+	module_file_name: READABLE_STRING_32
 			-- Location where current will be generated.
 
 	module_id: INTEGER
@@ -3716,7 +3716,7 @@ invariant
 	dll_or_console_valid: not is_assembly_module implies (is_dll and is_console_application)
 
 note
-	copyright:	"Copyright (c) 1984-2019, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2020, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

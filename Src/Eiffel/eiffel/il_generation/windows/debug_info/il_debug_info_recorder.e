@@ -10,7 +10,6 @@
 	]"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
-	author: "$author$"
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -897,7 +896,7 @@ feature {NONE} -- Record processing
 							+ "%N")
 				end
 					--| Record `feature_i' indexed by `feature_token'
-				l_info_from_module := info_from_module_or_create (a_module.module_file_name.as_string_32, a_module.module_name)
+				l_info_from_module := info_from_module_or_create (a_module.module_file_name, a_module.module_name)
 				l_info_from_module.record_feature_i (a_class_type, a_feature, a_feature_token)
 
 					--| Record `feature_token' indexed by `feature_i'
@@ -915,7 +914,7 @@ feature {NONE} -- Class Specific info
 			class_type_not_void: a_class_type /= Void
 			class_token_positive: a_class_token > 0
 		do
-			internal_record_class_type (a_module.module_file_name.as_string_32, a_module.module_name, a_class_type, a_class_token)
+			internal_record_class_type (a_module.module_file_name, a_module.module_name, a_class_type, a_class_token)
 		end
 
 	internal_record_class_type (a_module_filename: STRING_32; a_module_name: STRING;

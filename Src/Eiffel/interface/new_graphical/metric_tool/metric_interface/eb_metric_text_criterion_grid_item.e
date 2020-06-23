@@ -1,6 +1,5 @@
-note
+﻿note
 	description: "Grid item for metric text criterion"
-	author: ""
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -72,7 +71,7 @@ feature -- Setting
 			l_value: like value
 		do
 			l_value := safe_value
-			a_criterion.set_text (l_value.a_text.as_string_8)
+			a_criterion.set_text (l_value.a_text)
 			a_criterion.set_matching_strategy (l_value.a_matcher)
 			if l_value.a_case_sensitive then
 				a_criterion.enable_case_sensitive

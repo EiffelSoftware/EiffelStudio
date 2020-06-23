@@ -774,6 +774,7 @@ feature {NONE} -- Implementation
 	cloned_lower_string (a_string: STRING): STRING
 			-- Clone of `a_string'; convert characters to lower case
 			-- (Reduce memory storage if possible.)
+		obsolete "Avoid using this feature because it is not Unicode-friendly."
 		require
 			a_string_not_void: a_string /= Void
 		do
@@ -919,7 +920,7 @@ invariant
 	filename_not_void: filename /= Void
 
 note
-	copyright: "Copyright (c) 1984-2019, Eiffel Software"
+	copyright: "Copyright (c) 1984-2020, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

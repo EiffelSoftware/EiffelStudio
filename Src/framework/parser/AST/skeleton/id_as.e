@@ -98,12 +98,13 @@ feature -- Update
 			l_code: CHARACTER_32
 			l_area: SPECIAL [CHARACTER_32]
 			l_index: INTEGER
+			n: STRING_32
 		do
 				-- We only want to duplicate string if necessary
+			n := name_32
 			from
-				l_area := name_32.area
-				l_index := l_area.count - 2
-					-- We have to take null character in to account
+				l_area := n.area
+				l_index := n.count - 1
 			until
 				l_index < 0
 			loop
@@ -111,7 +112,7 @@ feature -- Update
 				l_index := l_index - 1
 				if l_code /= l_code.as_upper then
 						-- The character is not in upper case. Make sure `Current' is correctly initialized.
-					initialize ({UTF_CONVERTER}.string_32_to_utf_8_string_8 (name.as_upper))
+					initialize ({UTF_CONVERTER}.string_32_to_utf_8_string_8 (n.as_upper))
 					l_index := -1
 				end
 			end
@@ -123,12 +124,13 @@ feature -- Update
 			l_code: CHARACTER_32
 			l_area: SPECIAL [CHARACTER_32]
 			l_index: INTEGER
+			n: STRING_32
 		do
 				-- We only want to duplicate string if necessary
+			n := name_32
 			from
-				l_area := name_32.area
-				l_index := l_area.count - 2
-					-- We have to take null character in to account
+				l_area := n.area
+				l_index := n.count - 1
 			until
 				l_index < 0
 			loop
@@ -136,7 +138,7 @@ feature -- Update
 				l_index := l_index - 1
 				if l_code /= l_code.as_lower then
 						-- The character is not in lower case. Make sure `Current' is correctly initialized.
-					initialize ({UTF_CONVERTER}.string_32_to_utf_8_string_8 (name.as_lower))
+					initialize ({UTF_CONVERTER}.string_32_to_utf_8_string_8 (n.as_lower))
 					l_index := -1
 				end
 			end

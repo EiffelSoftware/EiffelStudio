@@ -1,8 +1,7 @@
-note
+﻿note
 	description: "Scanner skeleton class for COMMENT_SCANNER, based on UTF-8"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
-	author: ""
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -138,23 +137,18 @@ feature {NONE} -- Implementation
 			-- A feature like {CLASS}.feature encountered.
 		local
 			l_text : STRING_32
-			l_feat_8: STRING_8
 			l_feat_name: STRING_32
-			l_feat: E_FEATURE
 		do
-			l_feat_8 := text.twin
-			l_text := encoding_converter.utf8_to_utf32 (l_feat_8)
-			l_feat_8.keep_tail (l_feat_8.count - 1)
-			l_feat_8.to_lower
-			l_feat := feature_by_name (l_feat_8)
-			l_feat_name := encoding_converter.utf8_to_utf32 (l_feat_8)
-			if l_feat /= Void then
+			l_text := {UTF_CONVERTER}.utf_8_string_8_to_string_32 (text)
+			l_feat_name := l_text.tail (l_text.count - 1)
+			l_feat_name.to_lower
+			if attached feature_by_name ({UTF_CONVERTER}.string_32_to_utf_8_string_8 (l_feat_name)) as l_feat then
 				text_formatter.process_symbol_text (ti_dot)
 				text_formatter.process_feature_text (l_feat_name, l_feat, false)
-				if not l_feat.is_procedure then
-					last_type := l_feat.type.actual_type
-				else
+				if l_feat.is_procedure then
 					reset_last_type
+				else
+					last_type := l_feat.type.actual_type
 				end
 			else
 				add_text (l_text, False)
@@ -166,28 +160,22 @@ feature {NONE} -- Implementation
 			-- A feature like `feature' encountered.
 		local
 			l_text : STRING_32
-			l_feat_8: STRING
-			l_feat: E_FEATURE
 		do
-			l_feat_8 := text
+			l_text := {UTF_CONVERTER}.utf_8_string_8_to_string_32 (text)
 			check
-				l_feat_8.count >= 2
+				l_text.count >= 2
 			end
-			l_text := encoding_converter.utf8_to_utf32 (l_feat_8)
-			l_feat_8 := l_feat_8.substring (2, l_feat_8.count - 1)
+			l_text := l_text.substring (2, l_text.count - 1)
 			if current_class /= Void then
 				last_type := current_class.actual_type
 			end
-			l_feat := feature_by_name (l_feat_8.as_lower)
 				-- We try infix and prefix
-			if l_feat = Void then
-				add_text (l_text.substring (2, l_text.count - 1), True)
+			if not attached feature_by_name ({UTF_CONVERTER}.string_32_to_utf_8_string_8 (l_text.as_lower)) as l_feat then
+				add_text (l_text, True)
+			elseif last_is_alias then
+				l_feat.append_full_name (text_formatter)
 			else
-				if last_is_alias then
-					l_feat.append_full_name (text_formatter)
-				else
-					l_feat.append_name (text_formatter)
-				end
+				l_feat.append_name (text_formatter)
 			end
 		end
 
@@ -394,7 +382,7 @@ invariant
 	invariant_clause: True -- Your invariant here
 
 note
-	copyright:	"Copyright (c) 1984-2016, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2020, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

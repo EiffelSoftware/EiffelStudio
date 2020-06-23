@@ -188,9 +188,8 @@ feature {NONE} -- Implementation
 					l_name := name_from_associated_file
 					if l_name /= Void then
 						set_name (l_name)
-
-							-- rename file to class name
-						file_name := name.as_lower.as_string_32 + {STRING_32} ".e"
+							-- Rename file to class name.
+						file_name := {UTF_CONVERTER}.utf_8_string_8_to_string_32 (name).as_lower + {STRING_32} ".e"
 						l_file.rename_path (full_file_name)
 					else
 						create {CONF_ERROR_PARTIAL} last_error.make ("Unable to find class name from associated file.")

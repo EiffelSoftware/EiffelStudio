@@ -1,8 +1,7 @@
-note
+﻿note
 	description: "Mapping between locale ids and names"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
-	author: ""
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -279,7 +278,7 @@ feature -- Access
 			Result.force (locale.translation ("Malay (Brunei Darussalam)"), "ms_bn")
 			Result.force (locale.translation ("Malay (Malaysia)"), "ms_my")
 			Result.force (locale.translation ("Maltese (Malta)"), "mt_mt")
-			Result.force (locale.translation ("Norwegian (Bokm�l, Norway)"), "nb_no")
+			Result.force (locale.translation ("Norwegian (Bokmål, Norway)"), "nb_no")
 			Result.force (locale.translation ("Nepali (India)"), "ne_in")
 			Result.force (locale.translation ("Nepali (Nepal)"), "ne_np")
 			Result.force (locale.translation ("Dutch (Belgium)"), "nl_be")
@@ -352,7 +351,7 @@ feature -- Access
 			Result.force (locale.translation ("Zulu/isiZulu (South Africa)"), "zu_za")
 		end
 
-	locales_from_array (a_array_of_id: ARRAY [STRING]): like locales
+	locales_from_array (a_array_of_id: ARRAY [STRING_32]): like locales
 			-- Locale pairs of names and locale ids.
 			-- Names have been translated according to current selected locale.
 		require
@@ -361,7 +360,7 @@ feature -- Access
 			i: INTEGER
 			l_displayed_name: STRING_32
 			l_langs, l_locales: STRING_TABLE [STRING_32]
-			l_original_value, l_value: STRING
+			l_original_value, l_value: STRING_32
 		do
 			create Result.make (a_array_of_id.count)
 			l_langs := languages
@@ -420,7 +419,7 @@ feature -- Access
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2013, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2020, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

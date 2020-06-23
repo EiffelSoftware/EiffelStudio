@@ -201,7 +201,7 @@ feature {SPECIAL_FEATURES} -- Generation: signature
 
 feature {NONE} -- Name translation
 
-	operator_table: HASH_TABLE [READABLE_STRING_8, READABLE_STRING_8]
+	operator_table: HASH_TABLE [STRING_8, READABLE_STRING_8]
 			-- Mapping between standard operator and their C generated names
 		once
 			create Result.make_equal (20)

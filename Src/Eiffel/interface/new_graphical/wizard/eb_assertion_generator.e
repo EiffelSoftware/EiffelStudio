@@ -60,58 +60,51 @@ feature {NONE} -- Implementation
 
 	is_integer (a_type: STRING): BOOLEAN
 			-- Is `a_type' an integer type?
-		local
-			l: STRING
 		do
-			l := a_type.as_lower
-			Result := l.is_equal ("integer_8") or l.is_equal ("integer_16") or l.is_equal ("integer_32") or l.is_equal ("integer_64")
-				or l.is_equal ("integer") -- legacy
+			Result :=
+				a_type.is_case_insensitive_equal ("integer_8") or
+				a_type.is_case_insensitive_equal ("integer_16") or
+				a_type.is_case_insensitive_equal_general ("integer_32") or
+				a_type.is_case_insensitive_equal ("integer_64")
+				or a_type.is_case_insensitive_equal ("integer") -- legacy
 		end
 
 	is_natural (a_type: STRING): BOOLEAN
 			-- Is `a_type' a natural type?
-		local
-			l: STRING
 		do
-			l := a_type.as_lower
-			Result := l.is_equal ("natural_8") or l.is_equal ("natural_16") or l.is_equal ("natural_32") or l.is_equal ("natural_64")
-				or l.is_equal ("natural") -- legacy
+			Result :=
+				a_type.is_case_insensitive_equal ("natural_8") or
+				a_type.is_case_insensitive_equal ("natural_16") or
+				a_type.is_case_insensitive_equal ("natural_32") or
+				a_type.is_case_insensitive_equal ("natural_64")
+				or a_type.is_case_insensitive_equal ("natural") -- legacy
 		end
 
 	is_pointer (a_type: STRING): BOOLEAN
 			-- Is `a_type' a pointer type?
 		do
-			Result := a_type.as_lower.is_equal ("pointer")
+			Result := a_type.is_case_insensitive_equal ("pointer")
 		end
 
 	is_character (a_type: STRING): BOOLEAN
 			-- Is `a_type' a character type?
-		local
-			l: STRING
 		do
-			l := a_type.as_lower
-			Result := l.is_equal ("character_8") or else l.is_equal ("character_32")
-			 or else l.is_equal ("character") or else l.is_equal ("wide_character") -- legacy
+			Result := a_type.is_case_insensitive_equal ("character_8") or else a_type.is_case_insensitive_equal ("character_32")
+			 or else a_type.is_case_insensitive_equal ("character") or else a_type.is_case_insensitive_equal ("wide_character") -- legacy
 		end
 
 	is_real (a_type: STRING): BOOLEAN
 			-- Is `a_type' a floating point type?
-		local
-			l: STRING
 		do
-			l := a_type.as_lower
-			Result := l.is_equal ("real_32") or l.is_equal ("real_64")
-				or else l.is_equal ("real") or else l.is_equal ("double") -- legacy
+			Result := a_type.is_case_insensitive_equal ("real_32") or a_type.is_case_insensitive_equal ("real_64")
+				or else a_type.is_case_insensitive_equal ("real") or else a_type.is_case_insensitive_equal ("double") -- legacy
 		end
 
 	is_string (a_type: STRING): BOOLEAN
 			-- Is `a_type' a string type?
-		local
-			l: STRING
 		do
-			l := a_type.as_lower
-			Result := l.is_equal ("string_8") or else l.is_equal ("string_32")
-				or else l.is_equal ("string") -- legacy
+			Result := a_type.is_case_insensitive_equal ("string_8") or else a_type.is_case_insensitive_equal ("string_32")
+				or else a_type.is_case_insensitive_equal ("string") -- legacy
 		end
 
 	reference_assertions (a_attribute: STRING): LINKED_LIST [STRING]

@@ -33,10 +33,10 @@ feature {NONE} -- Initialization
 	make
 			-- Creation
 		do
-			create order.make (1,0)
-			create precursor_count.make (1,0)
-			create successors.make (1,0)
-			create original.make (1,0)
+			create order.make_empty
+			create precursor_count.make_empty
+			create successors.make_empty
+			create original.make_empty
 			create outsides1.make (1)
 			create outsides2.make
 		end
@@ -44,12 +44,21 @@ feature {NONE} -- Initialization
 	init (n: INTEGER)
 			-- Initialization for `n' items to sort.
 		require
-			n_positive: n >= 0
+			n_positive: n > 0
+		local
+			c: CLASS_C
 		do
-			order.conservative_resize (1, n)
+			across
+				system.classes as ic
+			until
+				attached c
+			loop
+				c := ic.item
+			end
+			order.conservative_resize_with_default (c, 1, n)
 			precursor_count.conservative_resize_with_default (0, 1, n)
-			successors.conservative_resize (1, n)
-			original.conservative_resize (1, n)
+			successors.conservative_resize_with_default (create {like successors.item}.make (0), 1, n)
+			original.conservative_resize_with_default (c, 1, n)
 			outsides1.wipe_out
 			outsides2.wipe_out
 			count := n
@@ -68,19 +77,24 @@ feature -- Sort
 
 	sort
 			-- Topological sort of classes
+		local
+			n: like system.classes.count
 		do
 				-- Initialize data structures
-			init (System.classes.count)
+			n := system.classes.count
+			if n > 0 then
+				init (n)
 
-				-- Initialize arrays `successors' and `precursor_count'.
-			fill
+					-- Initialize arrays `successors' and `precursor_count'.
+				fill
 
-				-- Perform sort
-			perform_sort
+					-- Perform sort
+				perform_sort
 
-				-- Check validity: there must be no cycle in the
-				-- inheritance graph
-			check_validity
+					-- Check validity: there must be no cycle in the
+					-- inheritance graph
+				check_validity
+			end
 		end
 
 feature {NONE} -- Access
@@ -286,8 +300,8 @@ feature {NONE} -- Filling
 			nb_item := succ.count
 			if succ.count /= 0 then
 				from
-					create Result.make (1, nb_item)
-					create index.make (1, nb_item)
+					create Result.make_filled (succ [1], 1, nb_item)
+					create index.make_filled (0, 1, nb_item)
 					nb_item := 0
 					succ.start
 				until
@@ -553,7 +567,7 @@ invariant
 	outsides2_not_void: outsides2 /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2018, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2020, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

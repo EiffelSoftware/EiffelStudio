@@ -1,9 +1,9 @@
-note
+﻿note
 	description: "Input/output operation for batch command line processing."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 	date: "$Date$"
-	revision: "$Revision $"
+	revision: "$Revision$"
 
 class COMMAND_LINE_IO
 
@@ -32,13 +32,13 @@ feature -- Input/output
 		local
 			str: STRING
 		do
-			localized_print_error (("%N").as_string_32 + ewb_names.err_press_return_to_resume + ("%N").as_string_32)
+			localized_print_error ({STRING_32} "%N" + ewb_names.err_press_return_to_resume + ("%N").as_string_32)
 			wait_for_return
 			if has_failure then
 				Result := True
 			else
-				str := io.last_string.as_lower
-				Result := ((str.count >= 1) and then (str.item (1) = 'q'))
+				str := io.last_string
+				Result := not str.is_empty and then str [1].as_lower = 'q'
 			end
 		end
 
@@ -162,31 +162,18 @@ feature -- Input/output
 			-- Set `last_input' to "False" or "True"
 		require
 			valid_name: an_option /= Void
-		local
-			tmp: STRING
 		do
 			if not more_arguments then
 				io.put_string ("--> ")
 				localized_print (an_option)
-				io.put_string (" [")
-				if value then
-					io.put_string ("yes")
-				else
-					io.put_string ("no")
-				end
-				io.put_string ("]: ")
+				io.put_string (if value then " [yes]: " else " [no]: " end)
 				get_name
 			end
 			get_last_input
 			if last_input = Void or else last_input.is_empty then
 				last_input := value.out
 			else
-				tmp := last_input.as_lower
-				if tmp.is_equal ("yes") or else tmp.is_equal ("y") then
-					last_input := (True).out
-				else
-					last_input := (False).out
-				end
+				last_input := (last_input.is_case_insensitive_equal ("yes") or else last_input.is_case_insensitive_equal ("y")).out
 			end
 		ensure
 			last_input_is_boolean: last_input.is_boolean
@@ -273,7 +260,7 @@ feature {EWB_CMD} -- Implementation
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2018, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2020, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
@@ -304,4 +291,4 @@ note
 			Customer support http://support.eiffel.com
 		]"
 
-end -- class COMMAND_LINE_IO
+end

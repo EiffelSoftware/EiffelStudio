@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "[
 		Analyzes the C compilation output from GCC to produce results.
 	]"
@@ -81,9 +81,9 @@ feature {NONE} -- Basic operations
 									string_general_right_adjust (l_message_type)
 								end
 							end
-							if l_message_type.as_string_8.as_lower.substring_index (once "warning", 1) > 0 then
+							if l_message_type.as_lower.has_substring (once {STRING_32} "warning") then
 								is_error := False
-							elseif l_message_type.as_string_8.as_lower.substring_index (once "error", 1) > 0 then
+							elseif l_message_type.as_lower.has_substring (once {STRING_32} "error") then
 								is_error := True
 							else
 									-- It is neither a warning nor an error.
@@ -92,10 +92,9 @@ feature {NONE} -- Basic operations
 						end
 					else
 						line_number := 0
-							-- Before looking for "warning", converting to STRING_8 is fine.
-						if l_position.as_string_8.as_lower.substring_index (once "warning", 1) > 0 then
+						if l_position.as_lower.has_substring (once {STRING_32} "warning") then
 							is_error := False
-						elseif l_position.as_string_8.as_lower.substring_index (once "error", 1) > 0 then
+						elseif l_position.as_lower.has_substring (once {STRING_32} "error") then
 							is_error := True
 						else
 								-- It is neither a warning nor an error.
@@ -145,7 +144,7 @@ feature {NONE} -- Constants
 		end
 
 ;note
-	copyright: "Copyright (c) 1984-2011, Eiffel Software"
+	copyright: "Copyright (c) 1984-2020, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

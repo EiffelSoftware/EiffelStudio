@@ -22,14 +22,13 @@ feature {NONE} -- Initialize
 			create item.make_from_array (data)
 		end
 
-	make_from_string (data: STRING)
+	make_from_string (data: READABLE_STRING_32)
 			-- Initialize `item' with content of `data' expressed in hexadecimal.
 		require
 			data_not_void: data /= Void
 			valid_count: data.count \\ 2 = 0
 		local
 			l_data: ARRAY [NATURAL_8]
-			l_byte: STRING
 			i, nb: INTEGER
 		do
 			nb := data.count
@@ -39,53 +38,29 @@ feature {NONE} -- Initialize
 			until
 				i > nb
 			loop
-				l_byte := data.substring (i, i + 1)
-				l_data.put (read_hexa_value (l_byte).to_natural_8, i // 2 + 1)
+				l_data.put (nibble (data [i]) |<< 4 + nibble (data [i + 1]), i // 2 + 1)
 				i := i + 2
 			end
 			make_from_array (l_data)
 		end
 
-	read_hexa_value (s: STRING): INTEGER
-			-- Convert `s' hexadecimal value into an integer representation.
+	nibble (c: CHARACTER_32): NATURAL_8
+			-- Convert a hexadecimal unicode digit to the corresponding numeric value.
 		require
-			s_not_void: s /= Void
-			s_large_enough: s.count >= 1 and s.count <= 8
+			c.is_hexa_digit
 		local
-			i, j: INTEGER
-			last_integer: INTEGER
-			area: SPECIAL [CHARACTER]
-			val: CHARACTER
+			mask: NATURAL_8
 		do
-			area := s.area
-			j := s.count - 1
-
-			from
-			until
-				(j - i) < 0 or i = 8
-			loop
-				val := area.item (j - i).lower
-				inspect
-					val
-				when 'a' then
-					last_integer := last_integer | ((10).to_integer_32 |<< (i * 4))
-				when 'b' then
-					last_integer := last_integer | ((11).to_integer_32 |<< (i * 4))
-				when 'c' then
-					last_integer := last_integer | ((12).to_integer_32 |<< (i * 4))
-				when 'd' then
-					last_integer := last_integer | ((13).to_integer_32 |<< (i * 4))
-				when 'e' then
-					last_integer := last_integer | ((14).to_integer_32 |<< (i * 4))
-				when 'f' then
-					last_integer := last_integer | ((15).to_integer_32 |<< (i * 4))
-				else
-					last_integer := last_integer | ((val.code - 48) |<< (i * 4))
-				end
-				i := i + 1
-			end
-
-			Result := last_integer
+				-- Convert full-width digits to ASCII.
+			Result := ((c.natural_32_code & 0x7F) + ((c.natural_32_code & 0x100) |>> 3)).to_natural_8
+				-- Mask out numbers.
+			Result := Result & 0x4F
+				-- Convert hexadecimal digits.
+			mask := ((Result |<< 1).to_integer_8 |>> 7).to_natural_8
+			Result := (Result & mask.bit_not) | ((Result - 55) & mask)
+		ensure
+			range: 0 <= Result and Result < 16
+			value: ("0123456789ABCDEF") [Result + 1] = c.as_upper or ("０１２３４５６７８９ＡＢＣＤＥＦ") [Result + 1] = c.as_upper
 		end
 
 feature -- Access
@@ -97,7 +72,7 @@ invariant
 	item_not_void: item /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2018, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2020, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
@@ -128,4 +103,4 @@ note
 			Customer support http://support.eiffel.com
 		]"
 
-end -- class MD_PUBLIC_KEY_TOKEN
+end

@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "Abstract representation of addition of Eiffel routines in a dynamic library"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -528,14 +528,8 @@ feature {NONE} -- Implementation
 		require
 			valid_line: current_line /= Void and then current_line.count > 0
 			valid_position: pos > 0
-		local
-			temp: STRING
 		do
-			temp := current_line.substring (pos, pos + 4)
-			if temp.count = 5 then
-				temp.to_lower
-				Result := temp.is_equal ("alias")
-			end
+			Result := current_line.substring (pos, pos + 4).is_case_insensitive_equal ("alias")
 		end
 
 	has_call_type_keyword (current_line: STRING; pos: INTEGER): BOOLEAN
@@ -543,18 +537,12 @@ feature {NONE} -- Implementation
 		require
 			valid_line: current_line /= Void and then current_line.count > 0
 			valid_position: pos > 0
-		local
-			temp: STRING
 		do
-			temp := current_line.substring (pos, pos + 8)
-			if temp.count = 9 then
-				temp.to_lower
-				Result := temp.is_equal ("call_type")
-			end
+			Result := current_line.substring (pos, pos + 8).is_case_insensitive_equal ("call_type")
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2012, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2020, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
@@ -585,4 +573,4 @@ note
 			Customer support http://support.eiffel.com
 		]"
 
-end -- class E_DYNAMIC_LIB
+end

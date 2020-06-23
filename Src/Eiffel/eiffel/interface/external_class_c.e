@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "Representation of a non-Eiffel compiled class that is external to current system."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -1469,7 +1469,6 @@ feature {NONE} -- Implementation
 			l_val: like a_value
 			l_is_negative: BOOLEAN
 			l_value: VALUE_I
-			l_bool_value: BOOL_VALUE_I
 			l_char_value: CHAR_VALUE_I
 			l_string_value: STRING_VALUE_I
 			l_int32: INTEGER
@@ -1549,9 +1548,7 @@ feature {NONE} -- Implementation
 			elseif a_external_type.is_natural then
 				create {INTEGER_CONSTANT} l_value.make_from_type (a_external_type, False, a_value)
 			elseif a_external_type.is_boolean then
-				a_value.to_lower
-				create l_bool_value.make (a_value.is_equal (a_value.True_constant))
-				l_value := l_bool_value
+				create {BOOL_VALUE_I} l_value.make (a_value.is_case_insensitive_equal (a_value.true_constant))
 			elseif a_external_type.is_character then
 				check
 					valid_count: a_value.count = 1
@@ -1710,4 +1707,4 @@ note
 			Customer support http://support.eiffel.com
 		]"
 
-end -- class EXTERNAL_CLASS_C
+end

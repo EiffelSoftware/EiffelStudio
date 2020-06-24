@@ -19,7 +19,7 @@ feature {NONE} -- Initialization
 	make (a_text: READABLE_STRING_GENERAL)
 			-- Initialize current with `a_text'.
 		do
-			create text.make_from_string (a_text.to_string_32)
+			create text.make_from_string_general (a_text)
 		ensure
 			text_set: text.same_string_general (a_text)
 		end

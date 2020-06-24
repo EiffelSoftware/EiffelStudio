@@ -84,7 +84,7 @@ feature {NONE} -- Initialization
 				-- Each time the window holding the grid is resized, we want to make
 				-- sure that the width of the last column is as big as the window at the
 				-- minimum.
-			resize_actions.force_extend (agent resize_column_to_window_width)
+			resize_actions.extend (agent on_resize_event)
 		end
 
 feature -- Access
@@ -269,6 +269,7 @@ feature {EV_ABSTRACT_SUGGESTION_FIELD} -- Navigation
 				end
 				i := ix + l_offset
 				from
+					l_loop_end := l_grid.visible_row_count = 0
 				until
 					l_loop_end
 				loop
@@ -286,6 +287,10 @@ feature {EV_ABSTRACT_SUGGESTION_FIELD} -- Navigation
 					end
 					i := i + l_offset
 				end
+			elseif a_is_forward then
+				go_first
+			else
+				go_last
 			end
 		end
 
@@ -331,7 +336,7 @@ feature {EV_ABSTRACT_SUGGESTION_FIELD} -- Navigation
 
 feature {EV_ABSTRACT_SUGGESTION_FIELD} -- Completion
 
-	show_suggestion_list (a_name: READABLE_STRING_GENERAL; a_is_first: BOOLEAN)
+	show_suggestion_list (a_text: READABLE_STRING_GENERAL; a_is_first: BOOLEAN)
 			-- Build the list based on matches with `name' and show it on screen.
 			-- If `a_is_first' it is the first time that the list will be shown and
 			-- a new query to the- suggestion provider is issued.
@@ -365,7 +370,7 @@ feature {EV_ABSTRACT_SUGGESTION_FIELD} -- Completion
 				l_grid.wipe_out
 					-- Set the minimum number of column.
 				l_grid.set_column_count_to (1)
-				field.suggestion_provider.query_with_callback_and_cancellation (a_name, l_post_action,
+				field.suggestion_provider.query_with_callback_and_cancellation (a_text, l_post_action,
 					agent (a_item: SUGGESTION_ITEM)
 						local
 							l_row: EV_GRID_ROW
@@ -390,47 +395,74 @@ feature {EV_ABSTRACT_SUGGESTION_FIELD} -- Completion
 	select_closest_match
 			-- Find the closes match to text in `field' in the list we have.
 		local
+			g: like grid
 			l_reg: SUGGESTION_MATCHER
 			i, nb: INTEGER
 			l_row_selected: BOOLEAN
 			l_row: EV_GRID_ROW
+			t: READABLE_STRING_GENERAL
+			r: REAL
+			l_is_matching: BOOLEAN
+			l_best_score: REAL
 		do
-			l_reg := settings.matcher
-			l_reg.prepare (field.searched_text)
-				-- If regular expression can be computed
-				-- we go ahead otherwise we leave things unchanged.
-			if l_reg.is_ready then
-				from
-					i := 1
-					nb := grid.row_count
-					if nb > 0 and settings.is_list_filtered_when_typing then
-							-- It does not matter if the row is hidden or show, the
-							-- code below will ensure that the rows are properly shown/hidden
-							-- depending on the match.
-						grid.row (1).hide
-						grid.row (1).show
-					end
-				until
-					i > nb
-				loop
-					l_row := grid.row (i)
-					if attached {like row_data_type} l_row.data as l_data then
-							-- Because regular expression don't support Unicode,
-							-- we convert the input text
-						if l_reg.is_matching (l_data.text) then
+			t := field.searched_text
+			if not t.is_whitespace then
+				l_reg := settings.matcher
+				l_reg.prepare (t)
+					-- If regular expression can be computed
+					-- we go ahead otherwise we leave things unchanged.
+				g := grid
+				if l_reg.is_ready then
+					from
+						i := 1
+						nb := g.row_count
+						if nb > 0 and settings.is_list_filtered_when_typing then
+								-- It does not matter if the row is hidden or show, the
+								-- code below will ensure that the rows are properly shown/hidden
+								-- depending on the match.
+							l_row := g.row (1)
+							l_row.hide
 							l_row.show
-							if not l_row_selected then
-								l_row_selected := True
-								field.set_selected_suggestion (l_data)
-								grid.select_row (i)
+						end
+					until
+						i > nb
+					loop
+						l_row := g.row (i)
+						if attached {like row_data_type} l_row.data as l_data then
+							if
+								attached {SUGGESTION_SCORER} l_reg as l_scorer
+							then
+								r := l_scorer.score (l_data.text)
+								l_is_matching := not l_scorer.is_zero_score (r)
+							else
+								r := {REAL} 1.0
+								l_is_matching := l_reg.is_matching (l_data.text)
 							end
-						else
-							if settings.is_list_filtered_when_typing then
-								l_row.hide
+							if l_is_matching then
+								l_row.show
+								if r > l_best_score then
+									l_best_score := r
+									l_row_selected := True
+									field.set_selected_suggestion (l_data)
+									g.select_row (i)
+								end
+--								if not l_row_selected then
+--									l_row_selected := True
+--									field.set_selected_suggestion (l_data)
+--									g.select_row (i)
+--								end
+							else
+								if settings.is_list_filtered_when_typing then
+									l_row.disable_select
+									l_row.hide
+								end
 							end
 						end
+						i := i + 1
 					end
-					i := i + 1
+				end
+				if not field.is_suggestion_requested and g.visible_row_count = 0 then
+					cancel_and_close
 				end
 			end
 		end
@@ -439,11 +471,17 @@ feature {EV_ABSTRACT_SUGGESTION_FIELD} -- Completion
 			-- Perform suggestion with selected item and close window.
 		local
 			l_grid: like grid
+			l_selected_rows: LIST [EV_GRID_ROW]
 		do
 			l_grid := grid
-			if l_grid.has_selected_row and then attached {like row_data_type} l_grid.selected_rows.first.data as l_data then
-				field.insert_suggestion (l_data)
-				field.close_actions.call ([l_data])
+			if l_grid.has_selected_row then
+				l_selected_rows := l_grid.selected_rows
+				check only_one_selected_row: l_selected_rows.count = 1 end
+				check selection_not_hidden: l_selected_rows.first.is_displayed end
+				if attached {like row_data_type} l_selected_rows.first.data as l_data then
+					field.insert_suggestion (l_data)
+					field.close_actions.call ([l_data])
+				end
 			end
 			close
 		end
@@ -466,6 +504,11 @@ feature {EV_ABSTRACT_SUGGESTION_FIELD} -- Completion
 
 	is_closing: BOOLEAN
 			-- Is the window being closed?
+
+	on_resize_event (a_x, a_y: INTEGER; a_width, a_height: INTEGER)
+		do
+			resize_column_to_window_width
+		end
 
 	resize_column_to_window_width
 			-- Resize the column width to the width of the grid.
@@ -884,7 +927,7 @@ feature {NONE} -- Implementation
 invariant
 
 note
-	copyright: "Copyright (c) 1984-2013, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2019, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

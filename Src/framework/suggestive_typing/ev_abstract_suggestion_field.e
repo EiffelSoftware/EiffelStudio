@@ -50,12 +50,15 @@ feature {NONE} -- Initialization
 				-- to let users provide their own customization, so we define
 				-- variables holding the user provided customization and ours.
 			old_default_key_processing_handler := Void
-			new_default_key_processing_handler := agent is_default_key_processing_enabled
+			new_default_key_processing_handler := Void -- agent is_default_key_processing_enabled
 		end
 
 	initialize_suggestion_field
 			-- Initialization done after creating all attached attributes of Current.
 		do
+				-- Handlers
+			new_default_key_processing_handler := agent is_default_key_processing_enabled
+
 				-- Create the window used to show the list of choices.
 			create choices.make (Current)
 
@@ -90,7 +93,7 @@ feature -- Access
 			-- Currently selected suggestion if any.
 			-- If Void, no items were selected or selection was cancelled.
 
-feature {EV_SUGGESTION_WINDOW} -- Access: shared
+feature {EV_SUGGESTION_WINDOW, EV_SUGGESTION_ACCESS} -- Access: shared
 
 	settings: EV_SUGGESTION_SETTINGS
 			-- Settings used for controlling various aspects of the way
@@ -145,6 +148,13 @@ feature -- Status report
 
 	is_suggesting: BOOLEAN
 			-- Is suggestion currently being processed?
+
+	is_suggestion_requested: BOOLEAN
+			-- Is suggestion activated manually?
+			-- (as opposed to automatically)
+
+	last_suggestion_activator_character: CHARACTER_32
+			-- Last suggestion activator character used for current suggestion.
 
 	is_updating_text: BOOLEAN
 			-- If true, an entry was selected in the completion list and we are updating Current with the associated
@@ -221,6 +231,13 @@ feature -- Element change
 
 feature -- Text operation
 
+	select_all_text
+			-- Select all text.
+		require
+			not_destroyed: not is_destroyed
+		deferred
+		end
+
 	delete_word_before
 			-- Delete one word before the `caret_position'.
 		require
@@ -244,7 +261,7 @@ feature -- Text operation
 		end
 
 	move_caret_to_end
-			-- Move caret at the end.
+			-- Move caret at the end of displayed text.
 		require
 			not_destroyed: not is_destroyed
 		deferred
@@ -261,6 +278,22 @@ feature -- Text operation
 				Result := l_agent.item ([displayed_text])
 			else
 				Result := displayed_text
+			end
+			Result := text_without_activator (Result)
+		end
+
+	text_without_activator (s: STRING_32): STRING_32
+		local
+			ch: like last_suggestion_activator_character
+		do
+			Result := s
+			ch := last_suggestion_activator_character
+			if
+				ch /= '%U' and then
+				not Result.is_empty and then
+				Result [1] = ch
+			then
+				Result := Result.substring (2, Result.count)
 			end
 		end
 
@@ -280,8 +313,37 @@ feature -- Text operation
 
 feature -- Basic operation
 
+	provide_requested_suggestion
+		do
+			is_suggestion_requested := True
+			disable_suggestion_timeout
+			process_suggestion
+		ensure
+			is_suggesting_updated: old is_suggesting implies is_suggesting
+		end
+
 	provide_suggestion
 			-- Prepare suggestion list and show suggestion window directly.
+		do
+			is_suggestion_requested := False
+			process_suggestion
+		ensure
+			is_suggesting_updated: old is_suggesting implies is_suggesting
+		end
+
+	terminate_suggestion
+			-- Suggestion has either been accepted or cancelled.
+		do
+			is_suggesting := False
+				-- We are done with the suggestion, we can therefore stop the timer.
+			disable_suggestion_timeout
+		ensure
+			not_is_suggesting: not is_suggesting
+		end
+
+feature {NONE} -- Execution
+
+	process_suggestion
 		do
 			if
 				is_editable and then not is_suggesting and then
@@ -299,16 +361,6 @@ feature -- Basic operation
 			is_suggesting_updated: old is_suggesting implies is_suggesting
 		end
 
-	terminate_suggestion
-			-- Suggestion has either been accepted or cancelled.
-		do
-			is_suggesting := False
-				-- We are done with the suggestion, we can therefore stop the timer.
-			disable_suggestion_timeout
-		ensure
-			not_is_suggesting: not is_suggesting
-		end
-
 feature {EV_SUGGESTION_WINDOW} -- Interact with suggestion window.
 
 	insert_suggestion (a_selected_item: attached like last_suggestion)
@@ -320,7 +372,7 @@ feature {EV_SUGGESTION_WINDOW} -- Interact with suggestion window.
 			l_text: READABLE_STRING_GENERAL
 		do
 			set_selected_suggestion (a_selected_item)
-			l_text := a_selected_item.displayed_text
+			l_text := suggested_text (a_selected_item)
 			if not l_text.is_empty and not l_text.has_code (('%R').natural_32_code)then
 					-- Before updating the text of the underlying field, we flag our editing
 					-- so that clients can control some of the change_actions and do something
@@ -334,6 +386,25 @@ feature {EV_SUGGESTION_WINDOW} -- Interact with suggestion window.
 		ensure
 			is_suggesting_unchanged: is_suggesting = old is_suggesting
 			last_suggestion_set: selected_suggestion = a_selected_item
+		end
+
+	suggested_text (a_selected_item: SUGGESTION_ITEM): READABLE_STRING_GENERAL
+		local
+			s32: STRING_32
+		do
+			Result := a_selected_item.text
+			if not Result.is_empty then
+					-- Keep or not the suggestion activator character, if any ?
+				if
+					last_suggestion_activator_character /= '%U' and then
+					settings.is_suggestion_activator_character_included (last_suggestion_activator_character)
+				then
+					create s32.make (Result.count + 1)
+					s32.append_character (last_suggestion_activator_character)
+					s32.append_string_general (Result)
+					Result := s32
+				end
+			end
 		end
 
 	set_selected_suggestion (a_suggestion_item: like selected_suggestion)
@@ -411,25 +482,32 @@ feature {NONE} -- Key handling
 			-- Handle `a_key' and check against `settings.override_shortcut_trigger', if specified,
 			-- that `a_key' is a shortcut for triggering the suggestion. If not specified
 			-- we use `is_shortcut_for_suggestion' instead.
+		local
+			l_suggested: BOOLEAN
 		do
 			if is_editable then
 				if not is_suggesting then
 					if attached settings.override_shortcut_trigger as l_agent then
 						if l_agent.item ([a_key, is_ctrl_pressed, is_alt_pressed, is_shift_pressed]) then
-							provide_suggestion
+							provide_requested_suggestion
+							l_suggested := True
 						end
 					else
 						if is_shortcut_for_suggestion (a_key, is_ctrl_pressed, is_alt_pressed, is_shift_pressed) then
-							provide_suggestion
+							provide_requested_suggestion
+							l_suggested := True
 						end
 					end
-					if a_key.is_printable then
-						reset_suggestion_timeout
-					elseif is_ctrl_pressed then
+					if not l_suggested then
+						disable_suggestion_timeout
+					end
+					if is_ctrl_pressed then
 							-- If Backspace or Delete is pressed we perform
 							-- whatever the implementation decided. By default it is to
 							-- remove the word before or after `caret_position'.
-						handle_deletion_keys (a_key)
+						handle_keys (a_key)
+					elseif not l_suggested and then a_key.is_printable then
+						reset_suggestion_timeout
 					end
 				elseif choices /= Void and then not choices.is_destroyed and then choices.is_displayed then
 					inspect
@@ -495,30 +573,38 @@ feature {NONE} -- Key handling
 			end
 		end
 
-	on_key_string_pressed (character_string: STRING_32)
-			-- Process character `character_string', if it is part of
-			-- `settings.suggestion_activator_acharacts' suggestion list is shown.
+	on_key_string_pressed (s: STRING_32)
+			-- Process character `s', if it is part of
+			-- `settings.suggestion_activator_characters' suggestion list is shown.
 		local
 			c: CHARACTER_32
 		do
 			if is_editable then
-				if character_string.count = 1 then
+				if s.count = 1 then
 					if not is_suggesting then
-						if attached settings.suggestion_activator_characters as l_chars and then l_chars.has (character_string.item (1)) then
-							provide_suggestion
+						last_suggestion_activator_character := '%U'
+						if settings.is_suggesting_as_typing and not s.is_whitespace then
+--							provide_suggestion
+							ev_application.do_once_on_idle (agent process_suggestion)
+						elseif settings.is_suggestion_activator_character (s [1]) then
+							last_suggestion_activator_character := s [1]
+--							provide_suggestion
+							ev_application.do_once_on_idle (agent process_suggestion)
+						else
+							disable_suggestion_timeout
 						end
-					elseif choices /= Void and then not choices.is_destroyed and then choices.is_displayed then
-						c := character_string.item (1)
+					elseif attached choices as l_choices and then not l_choices.is_destroyed and then l_choices.is_displayed then
+						c := s.item (1)
 						if attached settings.character_translator as l_translator then
 							c := l_translator.item ([c])
 						end
 						if c /= '%U' then
-							if attached settings.suggestion_deactivator_characters as l_table and then l_table.has (c) then
+							if settings.is_suggestion_deactivator_character (c) then
 								choices.suggest_and_close
 							else
 								ev_application.do_once_on_idle (agent do
-									if choices /= Void and then not choices.is_destroyed and then choices.is_displayed then
-										choices.show_suggestion_list (searched_text, False)
+									if attached choices as i_choices and then not i_choices.is_destroyed and then i_choices.is_displayed then
+										i_choices.show_suggestion_list (searched_text, False)
 									end
 								end)
 							end
@@ -527,6 +613,20 @@ feature {NONE} -- Key handling
 				end
 			end
 		end
+
+	handle_keys (a_key: EV_KEY)
+  			-- Process the push on Ctrl + an extended key.
+  		require
+ 			not_destroyed: not is_destroyed
+ 		do
+  			inspect
+  				a_key.code
+			when {EV_KEY_CONSTANTS}.key_a then
+				select_all_text
+			else
+				handle_deletion_keys (a_key)
+			end
+ 		end
 
 	handle_deletion_keys (a_key: EV_KEY)
  			-- Process the push on Ctrl + an extended key.
@@ -612,6 +712,8 @@ feature {NONE} -- Implementation
 
 	enable_suggestion_timeout
 			-- Restart `suggestion_timeout'.
+		require
+			suggestion_timeout.interval = 0
 		do
 			suggestion_timeout.set_interval (settings.timeout)
 		end
@@ -635,7 +737,7 @@ feature {NONE} -- Implementation: Access
 			-- Timeout for showing suggestion list if not already shown, and if shown, timeout
 			-- to refresh the suggestion list with new input if any.
 
-	new_default_key_processing_handler: attached like default_key_processing_handler
+	new_default_key_processing_handler: like default_key_processing_handler
 			-- Handler used whenever Vision2 is using `default_key_processing_handler'.
 
 	old_default_key_processing_handler: like default_key_processing_handler
@@ -645,7 +747,7 @@ feature {NONE} -- Implementation: Access
 invariant
 
 note
-	copyright: "Copyright (c) 1984-2014, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2019, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

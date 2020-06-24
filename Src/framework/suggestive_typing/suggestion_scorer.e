@@ -1,32 +1,38 @@
 note
-	description: "Given a string, find if this is part of another string."
+	description: "Given a pattern, compute the match score."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 	date: "$Date$"
 	revision: "$Revision$"
 
-class
-	SUBSTRING_SUGGESTION_MATCHER
+deferred class
+	SUGGESTION_SCORER
 
 inherit
 	SUGGESTION_MATCHER
 
 feature -- Status report
 
-	is_ready: BOOLEAN = True
-			-- <Precursor>
-			-- We can always perform a match.
+	score (a_string: READABLE_STRING_GENERAL): REAL
+			-- Matching score for `a_string`.
+		require
+			is_ready: is_ready
+		deferred
+		end
+
+	is_zero_score (a_score: REAL): BOOLEAN
+		do
+			Result := a_score < {REAL}.machine_epsilon
+		end
 
 	is_matching (a_string: READABLE_STRING_GENERAL): BOOLEAN
-			-- <Precursor>
+			-- Is `a_string' a match for `pattern'?
 		do
-			if attached pattern as l_pattern then
-				Result := a_string.has_substring (l_pattern)
-			end
+			Result := not is_zero_score (score (a_string))
 		end
 
 note
-	copyright: "Copyright (c) 1984-2018, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2019, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

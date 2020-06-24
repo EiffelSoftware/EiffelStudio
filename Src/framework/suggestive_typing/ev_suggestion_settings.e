@@ -37,10 +37,10 @@ feature {NONE} -- Initialization
 			has_arrows_key_text_navigation := False
 
 				-- Setup characters that can be used to stop suggestion
-			create suggestion_deactivator_characters.make (1)
-			suggestion_deactivator_characters.put (escape_character, escape_character)
-			suggestion_deactivator_characters.put (carriage_return_character, carriage_return_character)
-			suggestion_deactivator_characters.put (newline_character, newline_character)
+			create suggestion_deactivator_characters.make (3)
+			register_suggestion_deactivator_character (escape_character)
+			register_suggestion_deactivator_character (carriage_return_character)
+			register_suggestion_deactivator_character (newline_character)
 
 				-- No characters are setup by default to trigger suggestion
 			suggestion_activator_characters := Void
@@ -176,7 +176,7 @@ feature -- Access
 
 feature -- Character handling
 
-	suggestion_activator_characters: detachable HASH_TABLE [CHARACTER_32, CHARACTER_32]
+	suggestion_activator_characters: detachable HASH_TABLE [BOOLEAN, CHARACTER_32]
 			-- List of characters that can be used to trigger suggestion.
 
 	suggestion_deactivator_characters: HASH_TABLE [CHARACTER_32, CHARACTER_32]
@@ -237,6 +237,34 @@ feature -- Status report
 	is_fit_list_window_to_content: BOOLEAN
 			-- Is the suggestion list resized automatically to fit the content, i.e. it will grow
 			-- or shrink depending on the items being displayed.
+
+	is_suggesting_as_typing: BOOLEAN
+			-- Any character is a suggestion activator character.
+			-- Default: False
+
+	is_suggestion_activator_character (ch: CHARACTER_32): BOOLEAN
+			-- Is `ch` a suggestion activator character?
+		do
+			if attached suggestion_activator_characters as tb then
+				Result := tb.has (ch)
+			end
+		end
+
+	is_suggestion_activator_character_included (ch: CHARACTER_32): BOOLEAN
+		require
+			is_suggestion_activator_character (ch)
+		do
+			if attached suggestion_activator_characters as tb then
+				Result := tb.item (ch)
+			end
+		end
+
+	is_suggestion_deactivator_character (ch: CHARACTER_32): BOOLEAN
+		do
+			if attached suggestion_deactivator_characters as tb then
+				Result := tb.has (ch)
+			end
+		end
 
 feature -- Conversion
 
@@ -441,6 +469,13 @@ feature -- Settings
 			is_fit_list_window_to_content_set: is_fit_list_window_to_content = v
 		end
 
+	set_is_suggesting_as_typing (v: like is_suggesting_as_typing)
+		do
+			is_suggesting_as_typing := v
+		ensure
+			is_suggesting_as_typing_set: is_suggesting_as_typing = v
+		end
+
 feature -- Settings: Character handling
 
 	set_suggestion_activator_characters (a_chars: like suggestion_activator_characters)
@@ -451,12 +486,50 @@ feature -- Settings: Character handling
 			suggestion_activator_characters_set: suggestion_activator_characters = a_chars
 		end
 
+	register_suggestion_activator_character (ch: CHARACTER_32; a_included: BOOLEAN)
+			-- Register `ch` as a character activating the suggestion.
+			-- If `a_included` is False, keep the character in the suggested text,
+			-- otherwise remove it.
+		local
+			tb: like suggestion_activator_characters
+		do
+			tb := suggestion_activator_characters
+			if tb = Void then
+				create tb.make (1)
+				suggestion_activator_characters := tb
+			end
+			tb.force (a_included, ch)
+		end
+
+	unregister_suggestion_activator_character (ch: CHARACTER_32)
+			-- Un-register `ch` as a character activating the suggestion.
+		local
+			tb: like suggestion_activator_characters
+		do
+			tb := suggestion_activator_characters
+			if tb /= Void then
+				tb.remove (ch)
+			end
+		end
+
 	set_suggestion_deactivator_characters (a_chars: like suggestion_deactivator_characters)
 			-- Set `suggestion_deactivator_characters' with `a_chars'.
 		do
 			suggestion_deactivator_characters := a_chars
 		ensure
 			suggestion_deactivator_characters_set: suggestion_deactivator_characters = a_chars
+		end
+
+	register_suggestion_deactivator_character (ch: CHARACTER_32)
+		local
+			tb: like suggestion_deactivator_characters
+		do
+			tb := suggestion_deactivator_characters
+			if tb = Void then
+				create tb.make (1)
+				suggestion_deactivator_characters := tb
+			end
+			tb.force (ch, ch)
 		end
 
 	set_override_shortcut_trigger (a_trigger: like override_shortcut_trigger)
@@ -483,7 +556,7 @@ feature {NONE} -- Implementation
 invariant
 
 note
-	copyright: "Copyright (c) 1984-2013, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2019, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

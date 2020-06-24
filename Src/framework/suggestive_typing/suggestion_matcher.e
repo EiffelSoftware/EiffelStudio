@@ -17,12 +17,10 @@ feature -- Preparation
 
 	prepare (a_pattern: READABLE_STRING_GENERAL)
 			-- Prepare a match for `a_pattern'.
-		require
-			a_pattern_is_string_8: a_pattern.is_valid_as_string_8
 		do
-			create pattern.make_from_string (a_pattern.as_string_32)
+			create pattern.make_from_string_general (a_pattern)
 		ensure
-			pattern_set: attached pattern as l_pattern and then l_pattern.same_string_general (a_pattern)
+			pattern_set: pattern /= Void
 		end
 
 feature -- Status report
@@ -40,7 +38,7 @@ feature -- Status report
 		end
 
 note
-	copyright: "Copyright (c) 1984-2012, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2019, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

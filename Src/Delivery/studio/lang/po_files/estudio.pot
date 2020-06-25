@@ -7,6 +7,15 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 "MIME-Version: 1.0\n"
 
+#. Source code: Issue with your EiffelStudio license!
+#: es_cloud_license_issue_dialog.e:49
+msgctxt "cloud.info"
+msgid ""
+"\t\t\t\t\tIssue with your EiffelStudio license!\n"
+"\n"
+"\t\t\t\t\tChoose [Guest] to use EiffelStudio as Guest account."
+msgstr ""
+
 #. Source code: default_quick_melt_the_system: STRING_32				do Result := locale.translation ("%Tdefault (no option): quick melt the system.%N%N") end
 #: ewb_names.e:45
 msgid ""
@@ -1138,7 +1147,7 @@ msgid "&Input domain"
 msgstr ""
 
 #. Source code: m_insert_symbol: STRING_32 	do Result := locale.translation("&Insert Symbol")	end
-#: interface_names.e:2983
+#: interface_names.e:2957
 msgid "&Insert Symbol"
 msgstr ""
 
@@ -2198,7 +2207,7 @@ msgid ""
 msgstr ""
 
 #. Source code: unknown_string: STRING_32 do Result := locale.translation ("???") end
-#: interface_names.e:2993
+#: interface_names.e:2967
 msgid "???"
 msgstr ""
 
@@ -2267,7 +2276,7 @@ msgid ""
 msgstr ""
 
 #. Source code: e_Diagram_add_class_figure_relations: STRING_32 do Result := locale.translation("A class figure(s) must either be selected%N%
-#: interface_names.e:2861
+#: interface_names.e:2835
 msgid ""
 "A class figure(s) must either be selected\n"
 "or dropped on this button via right clicking."
@@ -2578,9 +2587,32 @@ msgstr ""
 msgid "Account"
 msgstr ""
 
+#. Source code: button_account: STRING_32 do Result := locale.translation_in_context ("Account", "cloud.menu") end
+#: es_cloud_names.e:105
+msgctxt "cloud.menu"
+msgid "Account"
+msgstr ""
+
 #. Source code: t_account_access: STRING = "Account Access"
 #: es_exception_submit_dialog.e:1002
 msgid "Account Access"
+msgstr ""
+
+#. Source code: create s.make_from_string (locale.translation_in_context ("Account service is not available for now (try again later)!", "cloud.error"))
+#: es_account_login_register_box.e:693
+msgctxt "cloud.error"
+msgid "Account service is not available for now (try again later)!"
+msgstr ""
+
+#. Source code: m_account: STRING_32				do Result := locale.translation ("Account...") end
+#: interface_names.e:2751
+msgid "Account..."
+msgstr ""
+
+#. Source code: menu_account: STRING_32 do Result := locale.translation_in_context ("Account...", "cloud.menu") end
+#: es_cloud_names.e:103
+msgctxt "cloud.menu"
+msgid "Account..."
 msgstr ""
 
 #. Source code: Result := locale.formatted_string (locale.translation ("Ace file `$1' cannot be read%N"), [a_fn])
@@ -2664,12 +2696,12 @@ msgid "Activate Replay Mode"
 msgstr ""
 
 #. Source code: e_Activate_execution_recording: STRING_32	do Result := locale.translation("Activate execution recording")	end
-#: interface_names.e:2963
+#: interface_names.e:2937
 msgid "Activate execution recording"
 msgstr ""
 
 #. Source code: e_Activate_execution_replay_mode: STRING_32	do Result := locale.translation("Activate execution replay mode")	end
-#: interface_names.e:2966
+#: interface_names.e:2940
 msgid "Activate execution replay mode"
 msgstr ""
 
@@ -2899,7 +2931,7 @@ msgid "Add a new feature"
 msgstr ""
 
 #. Source code: e_Add_exported_feature: STRING_32	do Result := locale.translation("Add a new feature to this dynamic library definition")	end
-#: interface_names.e:2825
+#: interface_names.e:2799
 msgid "Add a new feature to this dynamic library definition"
 msgstr ""
 
@@ -3182,12 +3214,12 @@ msgid "Affected target"
 msgstr ""
 
 #. Source code: Result.force (locale.translation ("Afrikaans"), "af")
-#: locale_names.e:20
+#: locale_names.e:19
 msgid "Afrikaans"
 msgstr ""
 
 #. Source code: Result.force (locale.translation ("Afrikaans (South Africa)"), "af_za")
-#: locale_names.e:145
+#: locale_names.e:144
 msgid "Afrikaans (South Africa)"
 msgstr ""
 
@@ -3206,12 +3238,12 @@ msgid ""
 msgstr ""
 
 #. Source code: Result.force (locale.translation ("Albanian"), "sq")
-#: locale_names.e:114
+#: locale_names.e:113
 msgid "Albanian"
 msgstr ""
 
 #. Source code: Result.force (locale.translation ("Albanian (Albania)"), "sq_AL")
-#: locale_names.e:318
+#: locale_names.e:317
 msgid "Albanian (Albania)"
 msgstr ""
 
@@ -3252,6 +3284,12 @@ msgstr ""
 #. Source code: l_Alias_name: STRING_32				do Result := locale.translation("Alias:")	end
 #: interface_names.e:1185
 msgid "Alias:"
+msgstr ""
+
+#. Source code: locale.translation_in_context ("All", "configuration.option")>>),
+#: option_properties.e:517
+msgctxt "configuration.option"
+msgid "All"
 msgstr ""
 
 #. Source code: locale.translation_in_context ("All", "configuration.option.dead_code")
@@ -3404,12 +3442,12 @@ msgid "Already editing class"
 msgstr ""
 
 #. Source code: Result.force (locale.translation ("Alsatian"), "gsw")
-#: locale_names.e:55
+#: locale_names.e:54
 msgid "Alsatian"
 msgstr ""
 
 #. Source code: Result.force (locale.translation ("Alsatian (France)"), "gsw_fr")
-#: locale_names.e:242
+#: locale_names.e:241
 msgid "Alsatian (France)"
 msgstr ""
 
@@ -3548,12 +3586,12 @@ msgid "Always terminate running external command."
 msgstr ""
 
 #. Source code: Result.force (locale.translation ("Amharic"), "am")
-#: locale_names.e:21
+#: locale_names.e:20
 msgid "Amharic"
 msgstr ""
 
 #. Source code: Result.force (locale.translation ("Amharic (Ethiopia)"), "am_et")
-#: locale_names.e:146
+#: locale_names.e:145
 msgid "Amharic (Ethiopia)"
 msgstr ""
 
@@ -3724,7 +3762,7 @@ msgid ""
 msgstr ""
 
 #. Source code: e_external_command_is_running: STRING_32 do Result := locale.translation("An external command is running now. %NPlease wait until it exits.")	end
-#: interface_names.e:2951
+#: interface_names.e:2925
 msgid ""
 "An external command is running now. \n"
 "Please wait until it exits."
@@ -3982,6 +4020,15 @@ msgstr ""
 msgid "And-term 1"
 msgstr ""
 
+#. Source code: Another EiffelStudio session is running...
+#: es_cloud_pause_dialog.e:48
+msgctxt "cloud.info"
+msgid ""
+"Another EiffelStudio session is running...\n"
+"\n"
+"Choose [Continue] to use EiffelStudio from this device."
+msgstr ""
+
 #. Source code: b_append: STRING_32							do Result := locale.translation("Append") end
 #: interface_names.e:214
 msgid "Append"
@@ -3993,7 +4040,7 @@ msgid "Application exited"
 msgstr ""
 
 #. Source code: e_Not_running: STRING_32				do Result := locale.translation("Application is not running")	end
-#: interface_names.e:2893
+#: interface_names.e:2867
 msgid "Application is not running"
 msgstr ""
 
@@ -4084,87 +4131,87 @@ msgid ""
 msgstr ""
 
 #. Source code: Result.force (locale.translation ("Arabic"), "ar")
-#: locale_names.e:22
+#: locale_names.e:21
 msgid "Arabic"
 msgstr ""
 
 #. Source code: Result.force (locale.translation ("Arabic (Algeria)"), "ar_dz")
-#: locale_names.e:149
+#: locale_names.e:148
 msgid "Arabic (Algeria)"
 msgstr ""
 
 #. Source code: Result.force (locale.translation ("Arabic (Bahrain)"), "ar_bh")
-#: locale_names.e:148
+#: locale_names.e:147
 msgid "Arabic (Bahrain)"
 msgstr ""
 
 #. Source code: Result.force (locale.translation ("Arabic (Egypt)"), "ar_eg")
-#: locale_names.e:150
+#: locale_names.e:149
 msgid "Arabic (Egypt)"
 msgstr ""
 
 #. Source code: Result.force (locale.translation ("Arabic (Iraq)"), "ar_iq")
-#: locale_names.e:151
+#: locale_names.e:150
 msgid "Arabic (Iraq)"
 msgstr ""
 
 #. Source code: Result.force (locale.translation ("Arabic (Jordan)"), "ar_jo")
-#: locale_names.e:152
+#: locale_names.e:151
 msgid "Arabic (Jordan)"
 msgstr ""
 
 #. Source code: Result.force (locale.translation ("Arabic (Kuwait)"), "ar_kw")
-#: locale_names.e:153
+#: locale_names.e:152
 msgid "Arabic (Kuwait)"
 msgstr ""
 
 #. Source code: Result.force (locale.translation ("Arabic (Lebanon)"), "ar_lb")
-#: locale_names.e:154
+#: locale_names.e:153
 msgid "Arabic (Lebanon)"
 msgstr ""
 
 #. Source code: Result.force (locale.translation ("Arabic (Libya)"), "ar_ly")
-#: locale_names.e:155
+#: locale_names.e:154
 msgid "Arabic (Libya)"
 msgstr ""
 
 #. Source code: Result.force (locale.translation ("Arabic (Morocco)"), "ar_ma")
-#: locale_names.e:156
+#: locale_names.e:155
 msgid "Arabic (Morocco)"
 msgstr ""
 
 #. Source code: Result.force (locale.translation ("Arabic (Oman)"), "ar_om")
-#: locale_names.e:157
+#: locale_names.e:156
 msgid "Arabic (Oman)"
 msgstr ""
 
 #. Source code: Result.force (locale.translation ("Arabic (Qatar)"), "ar_qa")
-#: locale_names.e:158
+#: locale_names.e:157
 msgid "Arabic (Qatar)"
 msgstr ""
 
 #. Source code: Result.force (locale.translation ("Arabic (Saudi Arabia)"), "ar_sa")
-#: locale_names.e:159
+#: locale_names.e:158
 msgid "Arabic (Saudi Arabia)"
 msgstr ""
 
 #. Source code: Result.force (locale.translation ("Arabic (Syria)"), "ar_sy")
-#: locale_names.e:160
+#: locale_names.e:159
 msgid "Arabic (Syria)"
 msgstr ""
 
 #. Source code: Result.force (locale.translation ("Arabic (Tunisia)"), "ar_tn")
-#: locale_names.e:161
+#: locale_names.e:160
 msgid "Arabic (Tunisia)"
 msgstr ""
 
 #. Source code: Result.force (locale.translation ("Arabic (U.A.E.)"), "ar_ae")
-#: locale_names.e:147
+#: locale_names.e:146
 msgid "Arabic (U.A.E.)"
 msgstr ""
 
 #. Source code: Result.force (locale.translation ("Arabic (Yemen)"), "ar_ye")
-#: locale_names.e:162
+#: locale_names.e:161
 msgid "Arabic (Yemen)"
 msgstr ""
 
@@ -4259,7 +4306,7 @@ msgid "Are you sure you want to quit $1?"
 msgstr ""
 
 #. Source code: e_refactoring_redo_sure: STRING_32 do Result := locale.translation("Are you sure you want to redo the refactoring?%N If classes have been modified since the undo of the refactoring this can lead to corrupt classes and lost information!")	end
-#: interface_names.e:2959
+#: interface_names.e:2933
 msgid ""
 "Are you sure you want to redo the refactoring?\n"
 " If classes have been modified since the undo of the refactoring this can "
@@ -4297,7 +4344,7 @@ msgid "Are you sure you want to stop the execution?"
 msgstr ""
 
 #. Source code: e_refactoring_undo_sure: STRING_32 do Result := locale.translation("Are you sure you want to undo the refactoring?%N If classes have been modified since the refactoring this can lead to corrupt classes and lost information!")	end
-#: interface_names.e:2958
+#: interface_names.e:2932
 msgid ""
 "Are you sure you want to undo the refactoring?\n"
 " If classes have been modified since the refactoring this can lead to "
@@ -4378,12 +4425,12 @@ msgid "Arguments value(s) associated to selected call stack element"
 msgstr ""
 
 #. Source code: Result.force (locale.translation ("Armenian"), "hy")
-#: locale_names.e:62
+#: locale_names.e:61
 msgid "Armenian"
 msgstr ""
 
 #. Source code: Result.force (locale.translation ("Armenian (Armenia)"), "hy_am")
-#: locale_names.e:250
+#: locale_names.e:249
 msgid "Armenian (Armenia)"
 msgstr ""
 
@@ -4404,12 +4451,12 @@ msgid "As object"
 msgstr ""
 
 #. Source code: Result.force (locale.translation ("Assamese"), "as")
-#: locale_names.e:24
+#: locale_names.e:23
 msgid "Assamese"
 msgstr ""
 
 #. Source code: Result.force (locale.translation ("Assamese (India)"), "as_in")
-#: locale_names.e:164
+#: locale_names.e:163
 msgid "Assamese (India)"
 msgstr ""
 
@@ -4524,7 +4571,7 @@ msgid "Attach Debuggee"
 msgstr ""
 
 #. Source code: e_Exec_attach: STRING_32			do Result := locale.translation("Attach debuggee ...")	end
-#: interface_names.e:2875
+#: interface_names.e:2849
 msgid "Attach debuggee ..."
 msgstr ""
 
@@ -4534,7 +4581,7 @@ msgid "Attach debuggee execution"
 msgstr ""
 
 #. Source code: e_Exec_attach_on_port: STRING_32	do Result := locale.translation("Attach debuggee on port")	end
-#: interface_names.e:2876
+#: interface_names.e:2850
 msgid "Attach debuggee on port"
 msgstr ""
 
@@ -4653,6 +4700,12 @@ msgstr ""
 #. Source code: l_Attributes: STRING_32				do Result := locale.translation("Attributes")	end
 #: interface_names.e:1191
 msgid "Attributes"
+msgstr ""
+
+#. Source code: append_bold_text_to (locale.translation_in_context ("Authentication token expiration: ", "cloud.info"), txt)
+#: es_cloud_account_tool_panel.e:263
+msgctxt "cloud.info"
+msgid "Authentication token expiration: "
 msgstr ""
 
 #. Source code: Result := locale.translation ("Auto Hide")
@@ -6236,17 +6289,17 @@ msgid "Avoid 'not equal' in If-Else instructions"
 msgstr ""
 
 #. Source code: Result.force (locale.translation ("Azeri"), "az")
-#: locale_names.e:25
+#: locale_names.e:24
 msgid "Azeri"
 msgstr ""
 
 #. Source code: Result.force (locale.translation ("Azeri (Azerbaijan, Cyrillic)"), "az_cyrl_az")
-#: locale_names.e:165
+#: locale_names.e:164
 msgid "Azeri (Azerbaijan, Cyrillic)"
 msgstr ""
 
 #. Source code: Result.force (locale.translation ("Azeri (Azerbaijan, Latin)"), "az_latn_az")
-#: locale_names.e:166
+#: locale_names.e:165
 msgid "Azeri (Azerbaijan, Latin)"
 msgstr ""
 
@@ -6293,32 +6346,32 @@ msgid "Back to previous menu"
 msgstr ""
 
 #. Source code: e_C_compilation_failed: STRING_32 	do Result := locale.translation("Background C Compilation Failed")	end
-#: interface_names.e:2841
+#: interface_names.e:2815
 msgid "Background C Compilation Failed"
 msgstr ""
 
 #. Source code: e_C_compilation_launch_failed: STRING_32 do Result := locale.translation("Background C Compilation Launch Failed")	end
-#: interface_names.e:2842
+#: interface_names.e:2816
 msgid "Background C Compilation Launch Failed"
 msgstr ""
 
 #. Source code: e_C_compilication_launched: STRING_32 do Result := locale.translation("Background C Compilation Launched")	end
-#: interface_names.e:2844
+#: interface_names.e:2818
 msgid "Background C Compilation Launched"
 msgstr ""
 
 #. Source code: e_C_compilation_succeeded: STRING_32 do Result := locale.translation("Background C Compilation Succeeded")	end
-#: interface_names.e:2845
+#: interface_names.e:2819
 msgid "Background C Compilation Succeeded"
 msgstr ""
 
 #. Source code: e_C_compilation_terminated: STRING_32 do Result := locale.translation("Background C Compilation Terminated")	end
-#: interface_names.e:2843
+#: interface_names.e:2817
 msgid "Background C Compilation Terminated"
 msgstr ""
 
 #. Source code: e_C_compilation_running: STRING_32	do Result := locale.translation("Background C Compilation in Progress")	end
-#: interface_names.e:2846
+#: interface_names.e:2820
 msgid "Background C Compilation in Progress"
 msgstr ""
 
@@ -6329,52 +6382,52 @@ msgid "Background Color for Diagram Tool"
 msgstr ""
 
 #. Source code: e_finalizing_launch_failed: STRING_32	do Result := locale.translation("Background Finalized C Compilation Launch Failed")	end
-#: interface_names.e:2834
+#: interface_names.e:2808
 msgid "Background Finalized C Compilation Launch Failed"
 msgstr ""
 
 #. Source code: e_finalizing_launched: STRING_32 	do Result := locale.translation("Background Finalized C Compilation Launched")	end
-#: interface_names.e:2836
+#: interface_names.e:2810
 msgid "Background Finalized C Compilation Launched"
 msgstr ""
 
 #. Source code: e_finalizing_succeeded: STRING_32	do Result := locale.translation("Background Finalized C Compilation Succeeded")	end
-#: interface_names.e:2838
+#: interface_names.e:2812
 msgid "Background Finalized C Compilation Succeeded"
 msgstr ""
 
 #. Source code: e_finalizing_terminated: STRING_32 	do Result := locale.translation("Background Finalized C Compilation Terminated")	end
-#: interface_names.e:2840
+#: interface_names.e:2814
 msgid "Background Finalized C Compilation Terminated"
 msgstr ""
 
 #. Source code: e_finalizing_failed: STRING_32		do Result := locale.translation("Background Finalized C compilation Failed")	end
-#: interface_names.e:2831
+#: interface_names.e:2805
 msgid "Background Finalized C compilation Failed"
 msgstr ""
 
 #. Source code: e_freezing_failed: STRING_32 		do Result := locale.translation("Background Workbench C Compilation Failed")	end
-#: interface_names.e:2830
+#: interface_names.e:2804
 msgid "Background Workbench C Compilation Failed"
 msgstr ""
 
 #. Source code: e_freezing_launch_failed: STRING_32 	do Result := locale.translation("Background Workbench C Compilation Launch Failed")	end
-#: interface_names.e:2833
+#: interface_names.e:2807
 msgid "Background Workbench C Compilation Launch Failed"
 msgstr ""
 
 #. Source code: e_freezing_launched: STRING_32 		do Result := locale.translation("Background Workbench C Compilation Launched")	end
-#: interface_names.e:2835
+#: interface_names.e:2809
 msgid "Background Workbench C Compilation Launched"
 msgstr ""
 
 #. Source code: e_freezing_succeeded: STRING_32 		do Result := locale.translation("Background Workbench C Compilation Succeeded")	end
-#: interface_names.e:2837
+#: interface_names.e:2811
 msgid "Background Workbench C Compilation Succeeded"
 msgstr ""
 
 #. Source code: e_freezing_terminated: STRING_32 	do Result := locale.translation("Background Workbench C Compilation Terminated")	end
-#: interface_names.e:2839
+#: interface_names.e:2813
 msgid "Background Workbench C Compilation Terminated"
 msgstr ""
 
@@ -6694,12 +6747,12 @@ msgid "Base value of a value tester is missing."
 msgstr ""
 
 #. Source code: Result.force (locale.translation ("Bashkir"), "ba")
-#: locale_names.e:26
+#: locale_names.e:25
 msgid "Bashkir"
 msgstr ""
 
 #. Source code: Result.force (locale.translation ("Bashkir (Russia)"), "ba_ru")
-#: locale_names.e:167
+#: locale_names.e:166
 msgid "Bashkir (Russia)"
 msgstr ""
 
@@ -6720,12 +6773,12 @@ msgid "Basic text view"
 msgstr ""
 
 #. Source code: Result.force (locale.translation ("Basque"), "eu")
-#: locale_names.e:45
+#: locale_names.e:44
 msgid "Basque"
 msgstr ""
 
 #. Source code: Result.force (locale.translation ("Basque (Basque)"), "eu_es")
-#: locale_names.e:227
+#: locale_names.e:226
 msgid "Basque (Basque)"
 msgstr ""
 
@@ -6735,22 +6788,22 @@ msgid "Batch/Stop mode: saving new configuration format as '$1'."
 msgstr ""
 
 #. Source code: Result.force (locale.translation ("Belarusian"), "be")
-#: locale_names.e:27
+#: locale_names.e:26
 msgid "Belarusian"
 msgstr ""
 
 #. Source code: Result.force (locale.translation ("Belarusian (Belarus)"), "be_by")
-#: locale_names.e:168
+#: locale_names.e:167
 msgid "Belarusian (Belarus)"
 msgstr ""
 
 #. Source code: Result.force (locale.translation ("Bengali"), "bn")
-#: locale_names.e:29
+#: locale_names.e:28
 msgid "Bengali"
 msgstr ""
 
 #. Source code: Result.force (locale.translation ("Bengali (India)"), "bn_in")
-#: locale_names.e:170
+#: locale_names.e:169
 msgid "Bengali (India)"
 msgstr ""
 
@@ -6952,17 +7005,17 @@ msgid "Boolean result can be returned directly"
 msgstr ""
 
 #. Source code: Result.force (locale.translation ("Bosnian"), "bs")
-#: locale_names.e:32
+#: locale_names.e:31
 msgid "Bosnian"
 msgstr ""
 
 #. Source code: Result.force (locale.translation ("Bosnian (Bosnia and Herzegovina, Cyrillic)"), "bs_cyrl_ba")
-#: locale_names.e:174
+#: locale_names.e:173
 msgid "Bosnian (Bosnia and Herzegovina, Cyrillic)"
 msgstr ""
 
 #. Source code: Result.force (locale.translation ("Bosnian (Bosnia and Herzegovina, Latin)"), "bs_latn_ba")
-#: locale_names.e:175
+#: locale_names.e:174
 msgid "Bosnian (Bosnia and Herzegovina, Latin)"
 msgstr ""
 
@@ -7058,12 +7111,12 @@ msgid "Breakpoints control"
 msgstr ""
 
 #. Source code: Result.force (locale.translation ("Breton"), "br")
-#: locale_names.e:31
+#: locale_names.e:30
 msgid "Breton"
 msgstr ""
 
 #. Source code: Result.force (locale.translation ("Breton (France)"), "br_fr")
-#: locale_names.e:173
+#: locale_names.e:172
 msgid "Breton (France)"
 msgstr ""
 
@@ -7103,12 +7156,12 @@ msgid "Building tree view ..."
 msgstr ""
 
 #. Source code: Result.force (locale.translation ("Bulgarian"), "bg")
-#: locale_names.e:28
+#: locale_names.e:27
 msgid "Bulgarian"
 msgstr ""
 
 #. Source code: Result.force (locale.translation ("Bulgarian (Bulgaria)"), "bg_bg")
-#: locale_names.e:169
+#: locale_names.e:168
 msgid "Bulgarian (Bulgaria)"
 msgstr ""
 
@@ -7125,6 +7178,13 @@ msgid ""
 "\n"
 "Are you sure you want to keep the assertions in your\n"
 "finalized executable?"
+msgstr ""
+
+#. Source code: Result := locale.translation ("By using EiffelStudio, you agree to the terms of use and the rules on user-provided information.")
+#: es_cloud_names.e:21
+msgid ""
+"By using EiffelStudio, you agree to the terms of use and the rules on user-"
+"provided information."
 msgstr ""
 
 #. Source code: 
@@ -7365,7 +7425,7 @@ msgid "Cannot add target because there is already a target with the same name."
 msgstr ""
 
 #. Source code: Result := locale.formatted_string (locale.translation("Cannot change to directory %"$1%"."), [a_directory])
-#: interface_names.e:2955
+#: interface_names.e:2929
 msgid "Cannot change to directory \"$1\"."
 msgstr ""
 
@@ -7671,12 +7731,12 @@ msgid "CatCall detected"
 msgstr ""
 
 #. Source code: Result.force (locale.translation ("Catalan"), "ca")
-#: locale_names.e:33
+#: locale_names.e:32
 msgid "Catalan"
 msgstr ""
 
 #. Source code: Result.force (locale.translation ("Catalan (Catalan)"), "ca_es")
-#: locale_names.e:176
+#: locale_names.e:175
 msgid "Catalan (Catalan)"
 msgstr ""
 
@@ -7744,7 +7804,7 @@ msgid "Change feature export to {NONE}"
 msgstr ""
 
 #. Source code: e_Project_settings: STRING_32		do Result := locale.translation("Change project settings, right click to open external editor")	end
-#: interface_names.e:2902
+#: interface_names.e:2876
 msgid "Change project settings, right click to open external editor"
 msgstr ""
 
@@ -7818,6 +7878,18 @@ msgstr ""
 msgid "Check VAPE"
 msgstr ""
 
+#. Source code: button_check_again: STRING_32 do Result := locale.translation_in_context ("Check again", "cloud") end
+#: es_cloud_names.e:98
+msgctxt "cloud"
+msgid "Check again"
+msgstr ""
+
+#. Source code: tooltip_button_check_again: STRING_32 do Result := locale.translation_in_context ("Check again if no license is available for your environment.", "cloud") end
+#: es_cloud_names.e:99
+msgctxt "cloud"
+msgid "Check again if no license is available for your environment."
+msgstr ""
+
 #. 	<PREF NAME="tools.metric_tool.check_defined_warning" DESCRIPTION="Check defined value warning when metric archive is recalculated?"><BOOLEAN>False</BOOLEAN></PREF>	
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:128
 msgctxt "preference"
@@ -7858,7 +7930,7 @@ msgid "Check recursively"
 msgstr ""
 
 #. Source code: e_Check_exports: STRING_32			do Result := locale.translation("Check the validity of the library definition")	end
-#: interface_names.e:2827
+#: interface_names.e:2801
 msgid "Check the validity of the library definition"
 msgstr ""
 
@@ -7881,32 +7953,32 @@ msgid "Checking metric validity"
 msgstr ""
 
 #. Source code: Result.force (locale.translation ("Chinese"), "zh")
-#: locale_names.e:138
+#: locale_names.e:137
 msgid "Chinese"
 msgstr ""
 
 #. Source code: Result.force (locale.translation ("Chinese (Hong Kong SAR, PRC)"), "zh_hk")
-#: locale_names.e:348
+#: locale_names.e:347
 msgid "Chinese (Hong Kong SAR, PRC)"
 msgstr ""
 
 #. Source code: Result.force (locale.translation ("Chinese (Macao SAR)"), "zh_mo")
-#: locale_names.e:349
+#: locale_names.e:348
 msgid "Chinese (Macao SAR)"
 msgstr ""
 
 #. Source code: Result.force (locale.translation ("Chinese (PRC)"), "zh_cn")
-#: locale_names.e:347
+#: locale_names.e:346
 msgid "Chinese (PRC)"
 msgstr ""
 
 #. Source code: Result.force (locale.translation ("Chinese (Singapore)"), "zh_sg")
-#: locale_names.e:350
+#: locale_names.e:349
 msgid "Chinese (Singapore)"
 msgstr ""
 
 #. Source code: Result.force (locale.translation ("Chinese (Taiwan)"), "zh_tw")
-#: locale_names.e:351
+#: locale_names.e:350
 msgid "Chinese (Taiwan)"
 msgstr ""
 
@@ -8708,7 +8780,7 @@ msgid "Cli&ents"
 msgstr ""
 
 #. Source code: wb_Click_back_and_correct_error: STRING_32 do Result := locale.translation("Click Back if you can correct the problem or Click Abort.")	end
-#: interface_names.e:3040
+#: interface_names.e:3014
 msgid "Click Back if you can correct the problem or Click Abort."
 msgstr ""
 
@@ -8784,7 +8856,7 @@ msgid "Click to show the $1 tool help documentation."
 msgstr ""
 
 #. Source code: e_show_help: STRING_32 do Result := locale.translation("Click to show the help documentation.")	end
-#: interface_names.e:2960
+#: interface_names.e:2934
 msgid "Click to show the help documentation."
 msgstr ""
 
@@ -8922,6 +8994,18 @@ msgstr ""
 #. Source code: w_Closing_stops_debugger: STRING_32 do Result := locale.translation ("Closing the window will stop execution.") end
 #: warning_messages.e:1068
 msgid "Closing the window will stop execution."
+msgstr ""
+
+#. Source code: on_system_error (locale.translation_in_context ("Cloud service not activated!", "cloud.error"), a_report_label)
+#: es_account_login_register_box.e:604
+msgctxt "cloud.error"
+msgid "Cloud service not activated!"
+msgstr ""
+
+#. Source code: label_service_not_available: STRING_32 do Result := locale.translation_in_context ("Cloud service unavailable!", "cloud.error") end
+#: es_cloud_names.e:67
+msgctxt "cloud.error"
+msgid "Cloud service unavailable!"
 msgstr ""
 
 #. Source code: l_class: STRING = "Class"
@@ -9910,7 +9994,7 @@ msgid "Compilation failed"
 msgstr ""
 
 #. Source code: wt_Compilation_mode: STRING_32 do Result := locale.translation("Compilation mode")	end
-#: interface_names.e:3013
+#: interface_names.e:2987
 msgid "Compilation mode"
 msgstr ""
 
@@ -10447,6 +10531,12 @@ msgctxt "configuration.void_safety"
 msgid "Conformance"
 msgstr ""
 
+#. Source code: prompt_connected_your_account: STRING_32 do Result := locale.translation_in_context ("Connect your account to use EiffelStudio.", "cloud.info") end
+#: es_cloud_names.e:65
+msgctxt "cloud.info"
+msgid "Connect your account to use EiffelStudio."
+msgstr ""
+
 #. Source code: do Result := translation_in_context ("Consider replacing this comparison to zero by a call to '", once "code_analyzer.violation") end
 #: ca_messages.e:474
 msgctxt "code_analyzer.violation"
@@ -10545,6 +10635,12 @@ msgstr ""
 msgid "Continue"
 msgstr ""
 
+#. Source code: button_continue: STRING_32 do Result := locale.translation_in_context ("Continue", "cloud") end
+#: es_cloud_names.e:126
+msgctxt "cloud"
+msgid "Continue"
+msgstr ""
+
 #. Source code: b_Continue_anyway: STRING_32					do Result := locale.translation("Continue Anyway")	end
 #: interface_names.e:61
 msgid "Continue Anyway"
@@ -10556,7 +10652,7 @@ msgid "Continue execution"
 msgstr ""
 
 #. Source code: e_Exec_debug_continue: STRING_32	do Result := locale.translation("Continue execution and stop at breakpoints")	end
-#: interface_names.e:2873
+#: interface_names.e:2847
 msgid "Continue execution and stop at breakpoints"
 msgstr ""
 
@@ -10568,6 +10664,12 @@ msgstr ""
 #. Source code: do Result := locale.translation("Continue if evaluation fails ?")	end
 #: debugger_names.e:166
 msgid "Continue if evaluation fails ?"
+msgstr ""
+
+#. Source code: tooltip_button_guest: STRING_32 do Result := locale.translation_in_context ("Continue using EiffelStudio as a guest", "cloud") end
+#: es_cloud_names.e:121
+msgctxt "cloud"
+msgid "Continue using EiffelStudio as a guest"
 msgstr ""
 
 #. Source code: do Result := locale.translation("Continue when breakpoint hits ?") end
@@ -10597,7 +10699,7 @@ msgid "Contract view"
 msgstr ""
 
 #. Source code: e_Exec_ignore_contract_violation: STRING_32	do Result := locale.translation("Contract violation occurred. Do you want to%N - [break] into debugger,%N - or [continue] to let the application handle the violation,%N - or [ignore] the violation and continue as if it was not violated? %N%NNote: You can always ignore contract violation later using the drop down menu from %"Run%" button.")	end
-#: interface_names.e:2881
+#: interface_names.e:2855
 msgid ""
 "Contract violation occurred. Do you want to\n"
 " - [break] into debugger,\n"
@@ -10619,7 +10721,7 @@ msgid "Control Debuggee Object Storage"
 msgstr ""
 
 #. Source code: e_Control_debuggee_object_storage: STRING_32	do Result := locale.translation("Control debuggee object storage")	end
-#: interface_names.e:2975
+#: interface_names.e:2949
 msgid "Control debuggee object storage"
 msgstr ""
 
@@ -10961,7 +11063,7 @@ msgid "Copy breakpoint location to clipboard."
 msgstr ""
 
 #. Source code: e_Copy_call_stack_to_clipboard: STRING_32 do Result := locale.translation("Copy call stack to clipboard")	end
-#: interface_names.e:2848
+#: interface_names.e:2822
 msgid "Copy call stack to clipboard"
 msgstr ""
 
@@ -10976,12 +11078,12 @@ msgid "Copyright"
 msgstr ""
 
 #. Source code: Result.force (locale.translation ("Corsican"), "co")
-#: locale_names.e:34
+#: locale_names.e:33
 msgid "Corsican"
 msgstr ""
 
 #. Source code: Result.force (locale.translation ("Corsican (France)"), "co_fr")
-#: locale_names.e:177
+#: locale_names.e:176
 msgid "Corsican (France)"
 msgstr ""
 
@@ -11137,13 +11239,19 @@ msgstr ""
 msgid "Create New watch"
 msgstr ""
 
+#. Source code: link_create_new_account: STRING_32 do Result := locale.translation_in_context ("Create a new account", "eiffel.account") end
+#: es_cloud_names.e:31
+msgctxt "eiffel.account"
+msgid "Create a new account"
+msgstr ""
+
 #. Source code: e_New_dynamic_lib_definition: STRING_32	do Result := locale.translation("Create a new dynamic library definition")	end
-#: interface_names.e:2890
+#: interface_names.e:2864
 msgid "Create a new dynamic library definition"
 msgstr ""
 
 #. Source code: e_New_expression: STRING_32			do Result := locale.translation("Create a new expression")	end
-#: interface_names.e:2892
+#: interface_names.e:2866
 msgid "Create a new expression"
 msgstr ""
 
@@ -11177,8 +11285,8 @@ msgstr ""
 msgid "Create new test"
 msgstr ""
 
-#. Source code: l_create_new_account: STRING_32 do Result := locale.translation ("Create one!") end
-#: interface_names.e:2766
+#. Source code: label_create_new_account: STRING_32 do Result := locale.translation ("Create one!") end
+#: es_cloud_names.e:47
 msgid "Create one!"
 msgstr ""
 
@@ -11332,17 +11440,17 @@ msgid "Critical stack depth"
 msgstr ""
 
 #. Source code: Result.force (locale.translation ("Croatian"), "hr")
-#: locale_names.e:60
+#: locale_names.e:59
 msgid "Croatian"
 msgstr ""
 
 #. Source code: Result.force (locale.translation ("Croatian (Bosnia and Herzegovina, Latin)"), "hr_ba")
-#: locale_names.e:247
+#: locale_names.e:246
 msgid "Croatian (Bosnia and Herzegovina, Latin)"
 msgstr ""
 
 #. Source code: Result.force (locale.translation ("Croatian (Croatia)"), "hr_hr")
-#: locale_names.e:248
+#: locale_names.e:247
 msgid "Croatian (Croatia)"
 msgstr ""
 
@@ -11374,6 +11482,12 @@ msgstr ""
 
 #. Source code: 
 #: es_test_comparison_widget.e:800
+msgid "Current"
+msgstr ""
+
+#. Source code: locale.translation_in_context ("Current", "configuration.option"),
+#: option_properties.e:516
+msgctxt "configuration.option"
 msgid "Current"
 msgstr ""
 
@@ -11479,7 +11593,7 @@ msgid "Cursor line highlight color"
 msgstr ""
 
 #. Source code: e_Cursor_position: STRING_32			do Result := locale.translation("Cursor position (line:column)")	end
-#: interface_names.e:2849
+#: interface_names.e:2823
 msgid "Cursor position (line:column)"
 msgstr ""
 
@@ -13202,12 +13316,12 @@ msgid "Cutoff (minutes)"
 msgstr ""
 
 #. Source code: Result.force (locale.translation ("Czech"), "cs")
-#: locale_names.e:35
+#: locale_names.e:34
 msgid "Czech"
 msgstr ""
 
 #. Source code: Result.force (locale.translation ("Czech (Czech Republic)"), "cs_cz")
-#: locale_names.e:178
+#: locale_names.e:177
 msgid "Czech (Czech Republic)"
 msgstr ""
 
@@ -13217,22 +13331,22 @@ msgid "DDMin for minimization"
 msgstr ""
 
 #. Source code: Result.force (locale.translation ("Danish"), "da")
-#: locale_names.e:37
+#: locale_names.e:36
 msgid "Danish"
 msgstr ""
 
 #. Source code: Result.force (locale.translation ("Danish (Denmark)"), "da_dk")
-#: locale_names.e:180
+#: locale_names.e:179
 msgid "Danish (Denmark)"
 msgstr ""
 
 #. Source code: Result.force (locale.translation ("Dari"), "gbz")
-#: locale_names.e:53
+#: locale_names.e:52
 msgid "Dari"
 msgstr ""
 
 #. Source code: Result.force (locale.translation ("Dari (Afghanistan)"), "gbz_af")
-#: locale_names.e:240
+#: locale_names.e:239
 msgid "Dari (Afghanistan)"
 msgstr ""
 
@@ -13244,6 +13358,12 @@ msgstr ""
 #. Source code: t_Date: STRING_32							do Result := locale.translation ("Date") end
 #: interface_names.e:2702
 msgid "Date"
+msgstr ""
+
+#. Source code: append_bold_text_to (locale.translation_in_context ("Days remaining: ", "cloud.info"), txt)
+#: es_cloud_account_tool_panel.e:242
+msgctxt "cloud.info"
+msgid "Days remaining: "
 msgstr ""
 
 #. 	<PREF NAME="interface.dialogs.dbg_confirm_detach" DESCRIPTION="Display confirmation dialog before detaching debugger from a process."><BOOLEAN>True</BOOLEAN></PREF>
@@ -13268,12 +13388,12 @@ msgid "Deactivate Replay Mode"
 msgstr ""
 
 #. Source code: e_Deactivate_execution_recording: STRING_32	do Result := locale.translation("Deactivate execution recording")	end
-#: interface_names.e:2964
+#: interface_names.e:2938
 msgid "Deactivate execution recording"
 msgstr ""
 
 #. Source code: e_Deactivate_execution_replay_mode: STRING_32	do Result := locale.translation("Deactivate execution replay mode")	end
-#: interface_names.e:2967
+#: interface_names.e:2941
 msgid "Deactivate execution replay mode"
 msgstr ""
 
@@ -14075,7 +14195,7 @@ msgid "Detach Application"
 msgstr ""
 
 #. Source code: e_Exec_detach: STRING_32			do Result := locale.translation("Detach execution")	end
-#: interface_names.e:2878
+#: interface_names.e:2852
 msgid "Detach execution"
 msgstr ""
 
@@ -14813,12 +14933,12 @@ msgid "Disable graphical output."
 msgstr ""
 
 #. Source code: e_Dbg_assertion_checking: STRING_32	do Result := locale.translation("Disable or restore assertion checking handling during execution")	end
-#: interface_names.e:2935
+#: interface_names.e:2909
 msgid "Disable or restore assertion checking handling during execution"
 msgstr ""
 
 #. Source code: e_Dbg_Ignore_breakpoints: STRING_32 	do Result := locale.translation("Disable stop at breakpoint (Execution ignores breakpoints).")	end
-#: interface_names.e:2937
+#: interface_names.e:2911
 msgid "Disable stop at breakpoint (Execution ignores breakpoints)."
 msgstr ""
 
@@ -14850,7 +14970,7 @@ msgid "Discard target scope customized formatter"
 msgstr ""
 
 #. Source code: e_discover_melt: STRING_32			do Result := locale.translation("Discover unreferenced externally added classes and recompile.")	end
-#: interface_names.e:2904
+#: interface_names.e:2878
 msgid "Discover unreferenced externally added classes and recompile."
 msgstr ""
 
@@ -14918,7 +15038,7 @@ msgid "Display all breakpoints together"
 msgstr ""
 
 #. Source code: e_Pretty_print: STRING_32			do Result := locale.translation("Display an expanded view of objects")	end
-#: interface_names.e:2899
+#: interface_names.e:2873
 msgid "Display an expanded view of objects"
 msgstr ""
 
@@ -15181,7 +15301,7 @@ msgid "Display information"
 msgstr ""
 
 #. Source code: e_Display_system_info: STRING_32	do Result := locale.translation("Display information concerning current system")	end
-#: interface_names.e:2866
+#: interface_names.e:2840
 msgid "Display information concerning current system"
 msgstr ""
 
@@ -15280,12 +15400,12 @@ msgid "Displayed in"
 msgstr ""
 
 #. Source code: Result.force (locale.translation ("Divehi"), "dv")
-#: locale_names.e:40
+#: locale_names.e:39
 msgid "Divehi"
 msgstr ""
 
 #. Source code: Result.force (locale.translation ("Divehi (Maldives)"), "dv_mv")
-#: locale_names.e:187
+#: locale_names.e:186
 msgid "Divehi (Maldives)"
 msgstr ""
 
@@ -15343,6 +15463,12 @@ msgctxt "preference"
 msgid ""
 "Do not show the dialog that asks if a compilation should be started before "
 "running the debug if there where changes in classes."
+msgstr ""
+
+#. Source code: tooltip_do_not_use_on_public_machine: STRING_32 do Result := locale.translation_in_context ("Do not use this option on public machine!", "eiffel.account") end
+#: es_cloud_names.e:34
+msgctxt "eiffel.account"
+msgid "Do not use this option on public machine!"
 msgstr ""
 
 #. Source code: b_do_nothing: STRING_32 						do Result := locale.translation("Do nothing")	end
@@ -15522,6 +15648,12 @@ msgctxt "preference"
 msgid "Dotnet debugger"
 msgstr ""
 
+#. Source code: label_double_click_to_collapse: STRING_32 do Result := locale.translation_in_context ("Double click to collapse", "cloud") end
+#: es_cloud_names.e:119
+msgctxt "cloud"
+msgid "Double click to collapse"
+msgstr ""
+
 #. Source code: f_go_to_first_occurrence: STRING_32	do Result := locale.translation("Double click to go to first occurrence")	end
 #: interface_names.e:800
 msgid "Double click to go to first occurrence"
@@ -15568,7 +15700,7 @@ msgid "Down"
 msgstr ""
 
 #. Source code: e_open_c_file: STRING_32 do Result := locale.translation ("Drop a class/feature here to open its corresponding C file/function in external editor.") end
-#: interface_names.e:2943
+#: interface_names.e:2917
 msgid ""
 "Drop a class/feature here to open its corresponding C file/function in "
 "external editor."
@@ -15624,17 +15756,17 @@ msgid "Duration"
 msgstr ""
 
 #. Source code: Result.force (locale.translation ("Dutch"), "nl")
-#: locale_names.e:92
+#: locale_names.e:91
 msgid "Dutch"
 msgstr ""
 
 #. Source code: Result.force (locale.translation ("Dutch (Belgium)"), "nl_be")
-#: locale_names.e:285
+#: locale_names.e:284
 msgid "Dutch (Belgium)"
 msgstr ""
 
 #. Source code: Result.force (locale.translation ("Dutch (Netherlands)"), "nl_nl")
-#: locale_names.e:286
+#: locale_names.e:285
 msgid "Dutch (Netherlands)"
 msgstr ""
 
@@ -15833,18 +15965,24 @@ msgid "Edit the breakpoint located at the cursor."
 msgstr ""
 
 #. Source code: e_Edit_exported_feature: STRING_32	do Result := locale.translation("Edit the properties of the selected feature")	end
-#: interface_names.e:2869
+#: interface_names.e:2843
 msgid "Edit the properties of the selected feature"
 msgstr ""
 
 #. Source code: e_Edit_expression: STRING_32		do Result := locale.translation("Edit the selected expression")	end
-#: interface_names.e:2870
+#: interface_names.e:2844
 msgid "Edit the selected expression"
 msgstr ""
 
 #. Source code: b_Edit_command: STRING_32					do Result := locale.translation("Edit...")	end
 #: interface_names.e:75
 msgid "Edit..."
+msgstr ""
+
+#. Source code: append_bold_text_to (locale.translation_in_context ("Edition: enterprise", "cloud.info"), txt)
+#: es_cloud_account_tool_panel.e:230
+msgctxt "cloud.info"
+msgid "Edition: enterprise"
 msgstr ""
 
 #. Source code: t_Editor: STRING_32							do Result := locale.translation("Editor")	end
@@ -18096,7 +18234,7 @@ msgid "Eiffel Compilation"
 msgstr ""
 
 #. Source code: e_Compilation_failed: STRING_32		do Result := locale.translation("Eiffel Compilation Failed")	end
-#: interface_names.e:2828
+#: interface_names.e:2802
 msgid "Eiffel Compilation Failed"
 msgstr ""
 
@@ -18108,7 +18246,7 @@ msgid ""
 msgstr ""
 
 #. Source code: e_Compilation_succeeded: STRING_32	do Result := locale.translation("Eiffel Compilation Succeeded")	end
-#: interface_names.e:2829
+#: interface_names.e:2803
 msgid "Eiffel Compilation Succeeded"
 msgstr ""
 
@@ -18239,8 +18377,8 @@ msgctxt "preference"
 msgid "Elseif"
 msgstr ""
 
-#. Source code: l_email: STRING_32 do Result := locale.translation ("Email") end
-#: interface_names.e:2755
+#. Source code: label_email: STRING_32 do Result := locale.translation ("Email") end
+#: es_cloud_names.e:55
 msgid "Email"
 msgstr ""
 
@@ -18912,7 +19050,7 @@ msgid "Enable rule."
 msgstr ""
 
 #. Source code: e_Dbg_stop_at_breakpoints: STRING_32 do Result := locale.translation("Enable stop at breakpoint (Execution stops when a breakpoint is reached).")	end
-#: interface_names.e:2936
+#: interface_names.e:2910
 msgid ""
 "Enable stop at breakpoint (Execution stops when a breakpoint is reached)."
 msgstr ""
@@ -18934,7 +19072,7 @@ msgid "Enable/Disable Breakpoints"
 msgstr ""
 
 #. Source code: e_Toggle_state_of_expressions: STRING_32		do Result := locale.translation("Enable/Disable expressions")	end
-#: interface_names.e:2927
+#: interface_names.e:2901
 msgid "Enable/Disable expressions"
 msgstr ""
 
@@ -19053,87 +19191,87 @@ msgid "Enforce unique class names"
 msgstr ""
 
 #. Source code: Result.force (locale.translation ("English"), "en")
-#: locale_names.e:42
+#: locale_names.e:41
 msgid "English"
 msgstr ""
 
 #. Source code: Result.force (locale.translation ("English (Australia)"), "en_au")
-#: locale_names.e:190
+#: locale_names.e:189
 msgid "English (Australia)"
 msgstr ""
 
 #. Source code: Result.force (locale.translation ("English (Belize)"), "en_bz")
-#: locale_names.e:191
+#: locale_names.e:190
 msgid "English (Belize)"
 msgstr ""
 
 #. Source code: Result.force (locale.translation ("English (Canada)"), "en_ca")
-#: locale_names.e:192
+#: locale_names.e:191
 msgid "English (Canada)"
 msgstr ""
 
 #. Source code: Result.force (locale.translation ("English (Caribbean)"), "en_029")
-#: locale_names.e:189
+#: locale_names.e:188
 msgid "English (Caribbean)"
 msgstr ""
 
 #. Source code: Result.force (locale.translation ("English (India)"), "en_in")
-#: locale_names.e:196
+#: locale_names.e:195
 msgid "English (India)"
 msgstr ""
 
 #. Source code: Result.force (locale.translation ("English (Ireland)"), "en_ie")
-#: locale_names.e:195
+#: locale_names.e:194
 msgid "English (Ireland)"
 msgstr ""
 
 #. Source code: Result.force (locale.translation ("English (Jamaica)"), "en_jm")
-#: locale_names.e:197
+#: locale_names.e:196
 msgid "English (Jamaica)"
 msgstr ""
 
 #. Source code: Result.force (locale.translation ("English (Malaysia)"), "en_my")
-#: locale_names.e:198
+#: locale_names.e:197
 msgid "English (Malaysia)"
 msgstr ""
 
 #. Source code: Result.force (locale.translation ("English (New Zealand)"), "en_nz")
-#: locale_names.e:199
+#: locale_names.e:198
 msgid "English (New Zealand)"
 msgstr ""
 
 #. Source code: Result.force (locale.translation ("English (Philippines)"), "en_ph")
-#: locale_names.e:200
+#: locale_names.e:199
 msgid "English (Philippines)"
 msgstr ""
 
 #. Source code: Result.force (locale.translation ("English (Singapore)"), "en_sg")
-#: locale_names.e:201
+#: locale_names.e:200
 msgid "English (Singapore)"
 msgstr ""
 
 #. Source code: Result.force (locale.translation ("English (South Africa)"), "en_za")
-#: locale_names.e:204
+#: locale_names.e:203
 msgid "English (South Africa)"
 msgstr ""
 
 #. Source code: Result.force (locale.translation ("English (Trinidad and Tobago)"), "en_tt")
-#: locale_names.e:202
+#: locale_names.e:201
 msgid "English (Trinidad and Tobago)"
 msgstr ""
 
 #. Source code: Result.force (locale.translation ("English (United Kingdom)"), "en_gb")
-#: locale_names.e:194
+#: locale_names.e:193
 msgid "English (United Kingdom)"
 msgstr ""
 
 #. Source code: Result.force (locale.translation ("English (United States)"), "en_us")
-#: locale_names.e:203
+#: locale_names.e:202
 msgid "English (United States)"
 msgstr ""
 
 #. Source code: Result.force (locale.translation ("English (Zimbabwe)"), "en_zw")
-#: locale_names.e:205
+#: locale_names.e:204
 msgid "English (Zimbabwe)"
 msgstr ""
 
@@ -19307,7 +19445,7 @@ msgid "Error"
 msgstr ""
 
 #. Source code: err_error: STRING_32 do Result := locale.translation ("Error ") end
-#: interface_names.e:2989
+#: interface_names.e:2963
 msgid "Error "
 msgstr ""
 
@@ -19421,6 +19559,12 @@ msgctxt "preference"
 msgid "Error text color"
 msgstr ""
 
+#. Source code: on_system_error (locale.translation_in_context ("Error while registering", "cloud.error"), a_report_label)
+#: es_account_login_register_box.e:686
+msgctxt "cloud.error"
+msgid "Error while registering"
+msgstr ""
+
 #. Source code: Result := locale.formatted_string (locale.translation ("Error with `$1' line $2"), [a_name, a_line])
 #: interface_names.e:2095
 msgid "Error with `$1' line $2"
@@ -19515,11 +19659,23 @@ msgid ""
 "What to do: Remove the class postcondition."
 msgstr ""
 
+#. Source code: Result := locale.formatted_string (locale.translation_in_context ("Error: could not open $1", "cloud.error"), [a_url])
+#: es_cloud_names.e:95
+msgctxt "cloud.error"
+msgid "Error: could not open $1"
+msgstr ""
+
 #. Source code: Result := locale.formatted_string (locale.translation ("Error: could not write to $1%NPlease check permissions and disk space"), [a_file_name])
 #: ewb_names.e:242
 msgid ""
 "Error: could not write to $1\n"
 "Please check permissions and disk space"
+msgstr ""
+
+#. Source code: on_system_error (locale.translation_in_context ("Error: invalid username or password!", "cloud.error"), a_report_label)
+#: es_account_login_register_box.e:676
+msgctxt "cloud.error"
+msgid "Error: invalid username or password!"
 msgstr ""
 
 #. Source code: do Result := locale.formatted_string (locale.translation ("Error: issue with attribute `$1'."), [aname]) end
@@ -19558,12 +19714,12 @@ msgid "Errors and Warnings"
 msgstr ""
 
 #. Source code: Result.force (locale.translation ("Estonian"), "et")
-#: locale_names.e:44
+#: locale_names.e:43
 msgid "Estonian"
 msgstr ""
 
 #. Source code: Result.force (locale.translation ("Estonian (Estonia)"), "et_ee")
-#: locale_names.e:226
+#: locale_names.e:225
 msgid "Estonian (Estonia)"
 msgstr ""
 
@@ -19724,7 +19880,7 @@ msgid "Exception data"
 msgstr ""
 
 #. Source code: e_Dbg_exception_handler: STRING_32	do Result := locale.translation("Exception handling ...")	end
-#: interface_names.e:2934
+#: interface_names.e:2908
 msgid "Exception handling ..."
 msgstr ""
 
@@ -19818,7 +19974,7 @@ msgid "Executable"
 msgstr ""
 
 #. Source code: e_Up_to_date: STRING_32				do Result := locale.translation("Executable is up-to-date")	end
-#: interface_names.e:2930
+#: interface_names.e:2904
 msgid "Executable is up-to-date"
 msgstr ""
 
@@ -19828,7 +19984,7 @@ msgid "Execute $1 tests"
 msgstr ""
 
 #. Source code: e_Exec_step: STRING_32				do Result := locale.translation("Execute execution one step at a time")	end
-#: interface_names.e:2883
+#: interface_names.e:2857
 msgid "Execute execution one step at a time"
 msgstr ""
 
@@ -19860,17 +20016,17 @@ msgid "Execution Parameters ..."
 msgstr ""
 
 #. Source code: wt_Execution_Profile: STRING_32 do Result := locale.translation("Execution Profile")	end
-#: interface_names.e:3016
+#: interface_names.e:2990
 msgid "Execution Profile"
 msgstr ""
 
 #. Source code: wt_Execution_profile_error: STRING_32 do Result := locale.translation("Execution Profile Error")	end
-#: interface_names.e:3057
+#: interface_names.e:3031
 msgid "Execution Profile Error"
 msgstr ""
 
 #. Source code: wt_Execution_Profile_Generation: STRING_32 do Result := locale.translation("Execution Profile Generation")	end
-#: interface_names.e:3023
+#: interface_names.e:2997
 msgid "Execution Profile Generation"
 msgstr ""
 
@@ -20017,6 +20173,12 @@ msgstr ""
 #: $EIFFEL_SRC/Delivery/studio/eifinit/code_analysis.xml:95
 msgctxt "code_analysis.preference"
 msgid "Expiration"
+msgstr ""
+
+#. Source code: append_bold_text_to (locale.translation_in_context ("Expires: ", "cloud.info"), txt)
+#: es_cloud_account_tool_panel.e:238
+msgctxt "cloud.info"
+msgid "Expires: "
 msgstr ""
 
 #. Source code: format_elements (t, locale.translation_in_context ("Explicit array type {1} has to be specified.", "compiler.error"), <<agent target_array_type.append_to>>)
@@ -20269,7 +20431,7 @@ msgid "External command is not specified."
 msgstr ""
 
 #. Source code: e_external_command_not_launched: STRING_32 do Result := locale.translation("External command not launched.")	end
-#: interface_names.e:2957
+#: interface_names.e:2931
 msgid "External command not launched."
 msgstr ""
 
@@ -20329,7 +20491,7 @@ msgid "External editor command"
 msgstr ""
 
 #. Source code: e_external_editor_not_defined: STRING_32 do Result := locale.translation("External editor not defined")	end
-#: interface_names.e:2950
+#: interface_names.e:2924
 msgid "External editor not defined"
 msgstr ""
 
@@ -20396,7 +20558,7 @@ msgid "F&ormat"
 msgstr ""
 
 #. Source code: e_f_code: STRING_32 do Result := locale.translation("F_code")	end
-#: interface_names.e:2945
+#: interface_names.e:2919
 msgid "F_code"
 msgstr ""
 
@@ -20426,12 +20588,12 @@ msgid "False"
 msgstr ""
 
 #. Source code: Result.force (locale.translation ("Faroese"), "fo-FO")
-#: locale_names.e:49
+#: locale_names.e:48
 msgid "Faroese"
 msgstr ""
 
 #. Source code: Result.force (locale.translation ("Faroese (Faroe Islands)"), "fo_fo")
-#: locale_names.e:231
+#: locale_names.e:230
 msgid "Faroese (Faroe Islands)"
 msgstr ""
 
@@ -21196,12 +21358,12 @@ msgid "Files already exist"
 msgstr ""
 
 #. Source code: Result.force (locale.translation ("Filipino"), "fil")
-#: locale_names.e:48
+#: locale_names.e:47
 msgid "Filipino"
 msgstr ""
 
 #. Source code: Result.force (locale.translation ("Filipino (Philippines)"), "fil_ph")
-#: locale_names.e:230
+#: locale_names.e:229
 msgid "Filipino (Philippines)"
 msgstr ""
 
@@ -21389,17 +21551,17 @@ msgid "Finish Freezing Status"
 msgstr ""
 
 #. Source code: Result.force (locale.translation ("Finnish"), "fi")
-#: locale_names.e:47
+#: locale_names.e:46
 msgid "Finnish"
 msgstr ""
 
 #. Source code: Result.force (locale.translation ("Finnish (Finland)"), "fi_fi")
-#: locale_names.e:229
+#: locale_names.e:228
 msgid "Finnish (Finland)"
 msgstr ""
 
-#. Source code: l_first_name: STRING_32 do Result := locale.translation ("First Name") end
-#: interface_names.e:2752
+#. Source code: label_first_name: STRING_32 do Result := locale.translation ("First Name") end
+#: es_cloud_names.e:52
 msgid "First Name"
 msgstr ""
 
@@ -21736,7 +21898,7 @@ msgid "Force right angles"
 msgstr ""
 
 #. Source code: e_force_execution_mode: STRING_32		do Result := locale.translation("Force the environment to stay in execution mode")	end
-#: interface_names.e:2832
+#: interface_names.e:2806
 msgid "Force the environment to stay in execution mode"
 msgstr ""
 
@@ -21888,7 +22050,7 @@ msgid "Forth external command shortcut."
 msgstr ""
 
 #. Source code: e_History_forth: STRING_32			do Result := locale.translation("Forward")	end
-#: interface_names.e:2887
+#: interface_names.e:2861
 msgid "Forward"
 msgstr ""
 
@@ -21940,47 +22102,47 @@ msgid ""
 msgstr ""
 
 #. Source code: Result.force (locale.translation ("French"), "fr")
-#: locale_names.e:50
+#: locale_names.e:49
 msgid "French"
 msgstr ""
 
 #. Source code: Result.force (locale.translation ("French (Belgium)"), "fr_be")
-#: locale_names.e:232
+#: locale_names.e:231
 msgid "French (Belgium)"
 msgstr ""
 
 #. Source code: Result.force (locale.translation ("French (Canada)"), "fr_ca")
-#: locale_names.e:233
+#: locale_names.e:232
 msgid "French (Canada)"
 msgstr ""
 
 #. Source code: Result.force (locale.translation ("French (France)"), "fr_fr")
-#: locale_names.e:235
+#: locale_names.e:234
 msgid "French (France)"
 msgstr ""
 
 #. Source code: Result.force (locale.translation ("French (Luxembourg)"), "fr_lu")
-#: locale_names.e:236
+#: locale_names.e:235
 msgid "French (Luxembourg)"
 msgstr ""
 
 #. Source code: Result.force (locale.translation ("French (Monaco)"), "fr_mc")
-#: locale_names.e:237
+#: locale_names.e:236
 msgid "French (Monaco)"
 msgstr ""
 
 #. Source code: Result.force (locale.translation ("French (Switzerland)"), "fr_ch")
-#: locale_names.e:234
+#: locale_names.e:233
 msgid "French (Switzerland)"
 msgstr ""
 
 #. Source code: Result.force (locale.translation ("Frisian"), "fy")
-#: locale_names.e:51
+#: locale_names.e:50
 msgid "Frisian"
 msgstr ""
 
 #. Source code: Result.force (locale.translation ("Frisian (Netherlands)"), "fy_nl")
-#: locale_names.e:238
+#: locale_names.e:237
 msgid "Frisian (Netherlands)"
 msgstr ""
 
@@ -22095,12 +22257,12 @@ msgid "Functional feature has to be a pure function."
 msgstr ""
 
 #. Source code: Result.force (locale.translation ("Galician"), "gl")
-#: locale_names.e:54
+#: locale_names.e:53
 msgid "Galician"
 msgstr ""
 
 #. Source code: Result.force (locale.translation ("Galician (Spain)"), "gl_es")
-#: locale_names.e:241
+#: locale_names.e:240
 msgid "Galician (Spain)"
 msgstr ""
 
@@ -22496,7 +22658,7 @@ msgid "Generating: "
 msgstr ""
 
 #. Source code: wt_Generation_error: STRING_32 do Result := locale.translation("Generation Error")	end
-#: interface_names.e:3039
+#: interface_names.e:3013
 msgid "Generation Error"
 msgstr ""
 
@@ -22523,47 +22685,47 @@ msgid "Generic text color"
 msgstr ""
 
 #. Source code: Result.force (locale.translation ("Georgian"), "ka")
-#: locale_names.e:70
+#: locale_names.e:69
 msgid "Georgian"
 msgstr ""
 
 #. Source code: Result.force (locale.translation ("Georgian (Georgia)"), "ka_ge")
-#: locale_names.e:260
+#: locale_names.e:259
 msgid "Georgian (Georgia)"
 msgstr ""
 
 #. Source code: Result.force (locale.translation ("German"), "de")
-#: locale_names.e:38
+#: locale_names.e:37
 msgid "German"
 msgstr ""
 
 #. Source code: Result.force (locale.translation ("German (Austria)"), "de_at")
-#: locale_names.e:181
+#: locale_names.e:180
 msgid "German (Austria)"
 msgstr ""
 
 #. Source code: Result.force (locale.translation ("German (Germany)"), "de_de")
-#: locale_names.e:183
+#: locale_names.e:182
 msgid "German (Germany)"
 msgstr ""
 
 #. Source code: Result.force (locale.translation ("German (Liechtenstein)"), "de_li")
-#: locale_names.e:184
+#: locale_names.e:183
 msgid "German (Liechtenstein)"
 msgstr ""
 
 #. Source code: Result.force (locale.translation ("German (Luxembourg)"), "de_lu")
-#: locale_names.e:185
+#: locale_names.e:184
 msgid "German (Luxembourg)"
 msgstr ""
 
 #. Source code: Result.force (locale.translation ("German (Switzerland)"), "de_ch")
-#: locale_names.e:182
+#: locale_names.e:181
 msgid "German (Switzerland)"
 msgstr ""
 
 #. Source code: e_Display_error_help: STRING_32		do Result := locale.translation("Give help on compilation errors")	end
-#: interface_names.e:2865
+#: interface_names.e:2839
 msgid "Give help on compilation errors"
 msgstr ""
 
@@ -22600,7 +22762,7 @@ msgid "Go to"
 msgstr ""
 
 #. Source code: e_go_to_f_code_dir: STRING_32 do Result := locale.translation("Go to F_code directory of this system, or right click to open F_code in specified file browser")	end
-#: interface_names.e:2942
+#: interface_names.e:2916
 msgid ""
 "Go to F_code directory of this system, or right click to open F_code in "
 "specified file browser"
@@ -22627,7 +22789,7 @@ msgid "Go to Previous War&ning"
 msgstr ""
 
 #. Source code: e_go_to_w_code_dir: STRING_32 do Result := locale.translation("Go to W_code directory of this system, or right click to open W_code in specified file browser")	end
-#: interface_names.e:2941
+#: interface_names.e:2915
 msgid ""
 "Go to W_code directory of this system, or right click to open W_code in "
 "specified file browser"
@@ -22705,7 +22867,7 @@ msgid "Go to previous warning"
 msgstr ""
 
 #. Source code: e_go_to_project_dir: STRING_32 do Result := locale.translation ("Go to project directory of this system, or right click to open that directory in specified file browser") end
-#: interface_names.e:2944
+#: interface_names.e:2918
 msgid ""
 "Go to project directory of this system, or right click to open that "
 "directory in specified file browser"
@@ -22741,22 +22903,22 @@ msgid "Graphics application, multi-platform, with EiffelVision 2"
 msgstr ""
 
 #. Source code: Result.force (locale.translation ("Greek"), "el")
-#: locale_names.e:41
+#: locale_names.e:40
 msgid "Greek"
 msgstr ""
 
 #. Source code: Result.force (locale.translation ("Greek (Greece)"), "el_gr")
-#: locale_names.e:188
+#: locale_names.e:187
 msgid "Greek (Greece)"
 msgstr ""
 
 #. Source code: Result.force (locale.translation ("Greenlandic"), "kl")
-#: locale_names.e:73
+#: locale_names.e:72
 msgid "Greenlandic"
 msgstr ""
 
 #. Source code: Result.force (locale.translation ("Greenlandic (Greenland)"), "kl_gl")
-#: locale_names.e:263
+#: locale_names.e:262
 msgid "Greenlandic (Greenland)"
 msgstr ""
 
@@ -22867,18 +23029,25 @@ msgstr ""
 msgid "Groups this override is overriding."
 msgstr ""
 
-#. Source code: b_guest: STRING_32 do Result := locale.translation ("Guest") end
-#: interface_names.e:2761
+#. Source code: button_guest: STRING_32 do Result := locale.translation_in_context ("Guest", "cloud") end
+#: es_cloud_names.e:120
+msgctxt "cloud"
 msgid "Guest"
 msgstr ""
 
+#. Source code: menu_guest_account: STRING_32 do Result := locale.translation_in_context ("Guest Account", "cloud.menu") end
+#: es_cloud_names.e:109
+msgctxt "cloud.menu"
+msgid "Guest Account"
+msgstr ""
+
 #. Source code: Result.force (locale.translation ("Gujarati"), "gu")
-#: locale_names.e:56
+#: locale_names.e:55
 msgid "Gujarati"
 msgstr ""
 
 #. Source code: Result.force (locale.translation ("Gujarati (India)"), "gu_in")
-#: locale_names.e:243
+#: locale_names.e:242
 msgid "Gujarati (India)"
 msgstr ""
 
@@ -22893,12 +23062,12 @@ msgid "Has Changed"
 msgstr ""
 
 #. Source code: Result.force (locale.translation ("Hausa"), "ha")
-#: locale_names.e:57
+#: locale_names.e:56
 msgid "Hausa"
 msgstr ""
 
 #. Source code: Result.force (locale.translation ("Hausa (Nigeria, Latin)"), "ha_latn_ng")
-#: locale_names.e:244
+#: locale_names.e:243
 msgid "Hausa (Nigeria, Latin)"
 msgstr ""
 
@@ -22928,12 +23097,12 @@ msgid "Header font"
 msgstr ""
 
 #. Source code: Result.force (locale.translation ("Hebrew"), "he")
-#: locale_names.e:58
+#: locale_names.e:57
 msgid "Hebrew"
 msgstr ""
 
 #. Source code: Result.force (locale.translation ("Hebrew (Israel)"), "he_il")
-#: locale_names.e:245
+#: locale_names.e:244
 msgid "Hebrew (Israel)"
 msgstr ""
 
@@ -22997,7 +23166,7 @@ msgid "Help Topic could not be displayed, please check Eiffel Installation"
 msgstr ""
 
 #. Source code: e_Switch_num_formating: STRING_32		do Result := locale.translation ("Hexadecimal/Decimal formating") end
-#: interface_names.e:2926
+#: interface_names.e:2900
 msgid "Hexadecimal/Decimal formating"
 msgstr ""
 
@@ -23138,12 +23307,12 @@ msgid "Highlight matching braces"
 msgstr ""
 
 #. Source code: Result.force (locale.translation ("Hindi"), "hi")
-#: locale_names.e:59
+#: locale_names.e:58
 msgid "Hindi"
 msgstr ""
 
 #. Source code: Result.force (locale.translation ("Hindi (India)"), "hi_in")
-#: locale_names.e:246
+#: locale_names.e:245
 msgid "Hindi (India)"
 msgstr ""
 
@@ -23212,12 +23381,12 @@ msgid "Html statistics"
 msgstr ""
 
 #. Source code: Result.force (locale.translation ("Hungarian"), "hu")
-#: locale_names.e:61
+#: locale_names.e:60
 msgid "Hungarian"
 msgstr ""
 
 #. Source code: Result.force (locale.translation ("Hungarian (Hungary)"), "hu_hu")
-#: locale_names.e:249
+#: locale_names.e:248
 msgid "Hungarian (Hungary)"
 msgstr ""
 
@@ -23247,12 +23416,12 @@ msgid "ISE Eiffel: Session aborted\n"
 msgstr ""
 
 #. Source code: Result.force (locale.translation ("Icelandic"), "is")
-#: locale_names.e:66
+#: locale_names.e:65
 msgid "Icelandic"
 msgstr ""
 
 #. Source code: Result.force (locale.translation ("Icelandic (Iceland)"), "is_is")
-#: locale_names.e:254
+#: locale_names.e:253
 msgid "Icelandic (Iceland)"
 msgstr ""
 
@@ -23348,12 +23517,12 @@ msgid "If you do not already have an account, please register "
 msgstr ""
 
 #. Source code: Result.force (locale.translation ("Igbo"), "ig")
-#: locale_names.e:64
+#: locale_names.e:63
 msgid "Igbo"
 msgstr ""
 
 #. Source code: Result.force (locale.translation ("Igbo (Nigeria)"), "ig_ng")
-#: locale_names.e:252
+#: locale_names.e:251
 msgid "Igbo (Nigeria)"
 msgstr ""
 
@@ -23771,12 +23940,12 @@ msgid ""
 msgstr ""
 
 #. Source code: Result.force (locale.translation ("Indonesian"), "id")
-#: locale_names.e:63
+#: locale_names.e:62
 msgid "Indonesian"
 msgstr ""
 
 #. Source code: Result.force (locale.translation ("Indonesian (Indonesia)"), "id_id")
-#: locale_names.e:251
+#: locale_names.e:250
 msgid "Indonesian (Indonesia)"
 msgstr ""
 
@@ -24145,7 +24314,7 @@ msgid "Insert Midpoint"
 msgstr ""
 
 #. Source code: f_insert_symbol: STRING_32 	do Result := locale.translation("Insert Symbol")	end
-#: interface_names.e:2981
+#: interface_names.e:2955
 msgid "Insert Symbol"
 msgstr ""
 
@@ -24155,7 +24324,7 @@ msgid "Insert special keywords"
 msgstr ""
 
 #. Source code: e_Insert_symbol: STRING_32	do Result := locale.translation("Insert symbol") end
-#: interface_names.e:2979
+#: interface_names.e:2953
 msgid "Insert symbol"
 msgstr ""
 
@@ -24213,9 +24382,21 @@ msgstr ""
 msgid "Installation"
 msgstr ""
 
+#. Source code: append_bold_text_to (locale.translation_in_context ("Installation id: ", "cloud.info"), txt)
+#: es_cloud_account_tool_panel.e:251
+msgctxt "cloud.info"
+msgid "Installation id: "
+msgstr ""
+
 #. Source code: Result := locale.formatted_string (locale.translation ("Installation of package: $1"), [a_package_id])
 #: conf_interface_names.e:769
 msgid "Installation of package: $1"
+msgstr ""
+
+#. Source code: label_field_installation: STRING_32 do Result := locale.translation_in_context ("Installation: ", "cloud.info") end
+#: es_cloud_names.e:71
+msgctxt "cloud.info"
+msgid "Installation: "
 msgstr ""
 
 #. Source code: l_installed_versions: STRING_32 do Result := locale.translation ("Installed Versions") end
@@ -24621,17 +24802,17 @@ msgid "Interrupted by user"
 msgstr ""
 
 #. Source code: Result.force (locale.translation ("Inuktitut"), "iu")
-#: locale_names.e:68
+#: locale_names.e:67
 msgid "Inuktitut"
 msgstr ""
 
 #. Source code: Result.force (locale.translation ("Inuktitut (Canada, Latin)"), "iu_latn_ca")
-#: locale_names.e:258
+#: locale_names.e:257
 msgid "Inuktitut (Canada, Latin)"
 msgstr ""
 
 #. Source code: Result.force (locale.translation ("Inuktitut (Canada, Syllabics)"), "iu_cans_ca")
-#: locale_names.e:257
+#: locale_names.e:256
 msgid "Inuktitut (Canada, Syllabics)"
 msgstr ""
 
@@ -25110,12 +25291,12 @@ msgid "Invariants"
 msgstr ""
 
 #. Source code: Result.force (locale.translation ("Irish"), "ga")
-#: locale_names.e:52
+#: locale_names.e:51
 msgid "Irish"
 msgstr ""
 
 #. Source code: Result.force (locale.translation ("Irish (Ireland)"), "ga_ie")
-#: locale_names.e:239
+#: locale_names.e:238
 msgid "Irish (Ireland)"
 msgstr ""
 
@@ -25324,6 +25505,12 @@ msgctxt "preference"
 msgid "Is window maximized?"
 msgstr ""
 
+#. Source code: title_license_issue: STRING_32 do Result := locale.translation_in_context ("Issue with your license", "cloud.info") end
+#: es_cloud_names.e:84
+msgctxt "cloud.info"
+msgid "Issue with your license"
+msgstr ""
+
 #. Source code: Result := locale.translation ("It is not possible to create a normal cluster inside of a test cluster")
 #: warning_messages.e:599
 msgid "It is not possible to create a normal cluster inside of a test cluster"
@@ -25343,17 +25530,17 @@ msgid ""
 msgstr ""
 
 #. Source code: Result.force (locale.translation ("Italian"), "it")
-#: locale_names.e:67
+#: locale_names.e:66
 msgid "Italian"
 msgstr ""
 
 #. Source code: Result.force (locale.translation ("Italian (Italy)"), "it_it")
-#: locale_names.e:256
+#: locale_names.e:255
 msgid "Italian (Italy)"
 msgstr ""
 
 #. Source code: Result.force (locale.translation ("Italian (Switzerland)"), "it_ch")
-#: locale_names.e:255
+#: locale_names.e:254
 msgid "Italian (Switzerland)"
 msgstr ""
 
@@ -25416,42 +25603,42 @@ msgid "JSON display"
 msgstr ""
 
 #. Source code: Result.force (locale.translation ("Japanese"), "ja")
-#: locale_names.e:69
+#: locale_names.e:68
 msgid "Japanese"
 msgstr ""
 
 #. Source code: Result.force (locale.translation ("Japanese (Japan)"), "ja_jp")
-#: locale_names.e:259
+#: locale_names.e:258
 msgid "Japanese (Japan)"
 msgstr ""
 
 #. Source code: Result.force (locale.translation ("K'iche"), "qut")
-#: locale_names.e:101
+#: locale_names.e:100
 msgid "K'iche"
 msgstr ""
 
 #. Source code: Result.force (locale.translation ("K'iche (Guatemala)"), "qut_gt")
-#: locale_names.e:296
+#: locale_names.e:295
 msgid "K'iche (Guatemala)"
 msgstr ""
 
 #. Source code: Result.force (locale.translation ("Kannada"), "kn")
-#: locale_names.e:74
+#: locale_names.e:73
 msgid "Kannada"
 msgstr ""
 
 #. Source code: Result.force (locale.translation ("Kannada (India)"), "kn_in")
-#: locale_names.e:264
+#: locale_names.e:263
 msgid "Kannada (India)"
 msgstr ""
 
 #. Source code: Result.force (locale.translation ("Kazakh"), "kk")
-#: locale_names.e:72
+#: locale_names.e:71
 msgid "Kazakh"
 msgstr ""
 
 #. Source code: Result.force (locale.translation ("Kazakh (Kazakhstan)"), "kk_kz")
-#: locale_names.e:262
+#: locale_names.e:261
 msgid "Kazakh (Kazakhstan)"
 msgstr ""
 
@@ -25599,12 +25786,12 @@ msgid "Keyword text color"
 msgstr ""
 
 #. Source code: Result.force (locale.translation ("Khmer"), "kh")
-#: locale_names.e:71
+#: locale_names.e:70
 msgid "Khmer"
 msgstr ""
 
 #. Source code: Result.force (locale.translation ("Khmer (Cambodia)"), "kh_kh")
-#: locale_names.e:261
+#: locale_names.e:260
 msgid "Khmer (Cambodia)"
 msgstr ""
 
@@ -25614,42 +25801,42 @@ msgid "Kill application"
 msgstr ""
 
 #. Source code: Result.force (locale.translation ("Kinyarwanda"), "rw")
-#: locale_names.e:106
+#: locale_names.e:105
 msgid "Kinyarwanda"
 msgstr ""
 
 #. Source code: Result.force (locale.translation ("Kinyarwanda (Rwanda)"), "rw_rw")
-#: locale_names.e:303
+#: locale_names.e:302
 msgid "Kinyarwanda (Rwanda)"
 msgstr ""
 
 #. Source code: Result.force (locale.translation ("Konkani"), "kok")
-#: locale_names.e:76
+#: locale_names.e:75
 msgid "Konkani"
 msgstr ""
 
 #. Source code: Result.force (locale.translation ("Konkani (India)"), "kok_in")
-#: locale_names.e:266
+#: locale_names.e:265
 msgid "Konkani (India)"
 msgstr ""
 
 #. Source code: Result.force (locale.translation ("Korean"), "ko")
-#: locale_names.e:75
+#: locale_names.e:74
 msgid "Korean"
 msgstr ""
 
 #. Source code: Result.force (locale.translation ("Korean (Korea)"), "ko_kr")
-#: locale_names.e:265
+#: locale_names.e:264
 msgid "Korean (Korea)"
 msgstr ""
 
 #. Source code: Result.force (locale.translation ("Kyrgyz"), "ky")
-#: locale_names.e:77
+#: locale_names.e:76
 msgid "Kyrgyz"
 msgstr ""
 
 #. Source code: Result.force (locale.translation ("Kyrgyz (Kyrgyzstan)"), "ky_kg")
-#: locale_names.e:267
+#: locale_names.e:266
 msgid "Kyrgyz (Kyrgyzstan)"
 msgstr ""
 
@@ -25670,12 +25857,12 @@ msgid "Language type"
 msgstr ""
 
 #. Source code: Result.force (locale.translation ("Lao"), "lo")
-#: locale_names.e:79
+#: locale_names.e:78
 msgid "Lao"
 msgstr ""
 
 #. Source code: Result.force (locale.translation ("Lao (Lao PDR)"), "lo_la")
-#: locale_names.e:269
+#: locale_names.e:268
 msgid "Lao (Lao PDR)"
 msgstr ""
 
@@ -25685,8 +25872,8 @@ msgctxt "preference"
 msgid "Largest number of items displayed in list data."
 msgstr ""
 
-#. Source code: l_last_name: STRING_32 do Result := locale.translation ("Last Name") end
-#: interface_names.e:2753
+#. Source code: label_last_name: STRING_32 do Result := locale.translation ("Last Name") end
+#: es_cloud_names.e:53
 msgid "Last Name"
 msgstr ""
 
@@ -25819,12 +26006,12 @@ msgid "Last time when closing development window if it was forcing debug mode."
 msgstr ""
 
 #. Source code: Result.force (locale.translation ("Latvian"), "lv")
-#: locale_names.e:81
+#: locale_names.e:80
 msgid "Latvian"
 msgstr ""
 
 #. Source code: Result.force (locale.translation ("Latvian (Latvia)"), "lv_lv")
-#: locale_names.e:271
+#: locale_names.e:270
 msgid "Latvian (Latvia)"
 msgstr ""
 
@@ -25859,8 +26046,9 @@ msgctxt "preference"
 msgid "Layout of watch tools."
 msgstr ""
 
-#. Source code: l_learn_more: STRING_32 do Result := locale.translation ("Learn more ...") end
-#: interface_names.e:2749
+#. Source code: label_learn_more: STRING_32 do Result := locale.translation_in_context ("Learn more ...", "cloud") end
+#: es_cloud_names.e:117
+msgctxt "cloud"
 msgid "Learn more ..."
 msgstr ""
 
@@ -25941,6 +26129,12 @@ msgstr ""
 #. Source code: Result := locale.formatted_string (locale.translation ("License for $1"), [workbench_name])
 #: interface_names.e:2360
 msgid "License for $1"
+msgstr ""
+
+#. Source code: append_bold_text_to (locale.translation_in_context ("License plan: ", "cloud.info"), txt)
+#: es_cloud_account_tool_panel.e:233
+msgctxt "cloud.info"
+msgid "License plan: "
 msgstr ""
 
 #. Source code: m_Unify_stone: STRING_32				do Result := locale.translation("Lin&k Context Tool")	end
@@ -26039,12 +26233,12 @@ msgid "Link color"
 msgstr ""
 
 #. Source code: e_Toggle_stone_management: STRING_32 do Result := locale.translation("Link or not the context tool to other components")	end
-#: interface_names.e:2928
+#: interface_names.e:2902
 msgid "Link or not the context tool to other components"
 msgstr ""
 
 #. Source code: e_Unify_stone: STRING_32				do Result := locale.translation("Link the context tool to the other components")	end
-#: interface_names.e:2931
+#: interface_names.e:2905
 msgid "Link the context tool to the other components"
 msgstr ""
 
@@ -26133,12 +26327,12 @@ msgid "Literal Value"
 msgstr ""
 
 #. Source code: Result.force (locale.translation ("Lithuanian"), "lt")
-#: locale_names.e:80
+#: locale_names.e:79
 msgid "Lithuanian"
 msgstr ""
 
 #. Source code: Result.force (locale.translation ("Lithuanian (Lithuania)"), "lt_lt")
-#: locale_names.e:270
+#: locale_names.e:269
 msgid "Lithuanian (Lithuania)"
 msgstr ""
 
@@ -26266,7 +26460,7 @@ msgctxt "code_analyzer.violation"
 msgid "Local {1} is not read after initialization by creation instruction."
 msgstr ""
 
-#. Source code: ;note
+#. Source code: lb_locale: STRING = "Locale"
 #: es_locale_editor_widget.e:203
 msgid "Locale"
 msgstr ""
@@ -26304,7 +26498,7 @@ msgid "Locate"
 msgstr ""
 
 #. Source code: e_Show_class_cluster: STRING_32		do Result := locale.translation("Locate currently edited class or cluster")	end
-#: interface_names.e:2918
+#: interface_names.e:2892
 msgid "Locate currently edited class or cluster"
 msgstr ""
 
@@ -26536,22 +26730,22 @@ msgid "Loop invariant may not be maintained (untagged)."
 msgstr ""
 
 #. Source code: Result.force (locale.translation ("Lower Sorbian"), "dsb")
-#: locale_names.e:39
+#: locale_names.e:38
 msgid "Lower Sorbian"
 msgstr ""
 
 #. Source code: Result.force (locale.translation ("Lower Sorbian (Germany)"), "dsb_de")
-#: locale_names.e:186
+#: locale_names.e:185
 msgid "Lower Sorbian (Germany)"
 msgstr ""
 
 #. Source code: Result.force (locale.translation ("Luxembourgish"), "lb")
-#: locale_names.e:78
+#: locale_names.e:77
 msgid "Luxembourgish"
 msgstr ""
 
 #. Source code: Result.force (locale.translation ("Luxembourgish (Luxembourg)"), "lb_lu")
-#: locale_names.e:268
+#: locale_names.e:267
 msgid "Luxembourgish (Luxembourg)"
 msgstr ""
 
@@ -26566,12 +26760,12 @@ msgid "Ma&ximize Editor Area"
 msgstr ""
 
 #. Source code: Result.force (locale.translation ("Macedonian"), "mk")
-#: locale_names.e:83
+#: locale_names.e:82
 msgid "Macedonian"
 msgstr ""
 
 #. Source code: Result.force (locale.translation ("Macedonian (Macedonia, FYROM)"), "mk_mk")
-#: locale_names.e:273
+#: locale_names.e:272
 msgid "Macedonian (Macedonia, FYROM)"
 msgstr ""
 
@@ -26681,37 +26875,37 @@ msgid "Makefiles"
 msgstr ""
 
 #. Source code: Result.force (locale.translation ("Malay"), "ms")
-#: locale_names.e:88
+#: locale_names.e:87
 msgid "Malay"
 msgstr ""
 
 #. Source code: Result.force (locale.translation ("Malay (Brunei Darussalam)"), "ms_bn")
-#: locale_names.e:279
+#: locale_names.e:278
 msgid "Malay (Brunei Darussalam)"
 msgstr ""
 
 #. Source code: Result.force (locale.translation ("Malay (Malaysia)"), "ms_my")
-#: locale_names.e:280
+#: locale_names.e:279
 msgid "Malay (Malaysia)"
 msgstr ""
 
 #. Source code: Result.force (locale.translation ("Malayalam"), "ml")
-#: locale_names.e:84
+#: locale_names.e:83
 msgid "Malayalam"
 msgstr ""
 
 #. Source code: Result.force (locale.translation ("Malayalam (India)"), "ml_in")
-#: locale_names.e:274
+#: locale_names.e:273
 msgid "Malayalam (India)"
 msgstr ""
 
 #. Source code: Result.force (locale.translation ("Maltese"), "mt")
-#: locale_names.e:89
+#: locale_names.e:88
 msgid "Maltese"
 msgstr ""
 
 #. Source code: Result.force (locale.translation ("Maltese (Malta)"), "mt_mt")
-#: locale_names.e:281
+#: locale_names.e:280
 msgid "Maltese (Malta)"
 msgstr ""
 
@@ -26817,32 +27011,32 @@ msgid "Many instructions in an Inspect case"
 msgstr ""
 
 #. Source code: Result.force (locale.translation ("Maori"), "mi")
-#: locale_names.e:82
+#: locale_names.e:81
 msgid "Maori"
 msgstr ""
 
 #. Source code: Result.force (locale.translation ("Maori (New Zealand)"), "mi_nz")
-#: locale_names.e:272
+#: locale_names.e:271
 msgid "Maori (New Zealand)"
 msgstr ""
 
 #. Source code: Result.force (locale.translation ("Mapudungun"), "arn")
-#: locale_names.e:23
+#: locale_names.e:22
 msgid "Mapudungun"
 msgstr ""
 
 #. Source code: Result.force (locale.translation ("Mapudungun (Chile)"), "arn_cl")
-#: locale_names.e:163
+#: locale_names.e:162
 msgid "Mapudungun (Chile)"
 msgstr ""
 
 #. Source code: Result.force (locale.translation ("Marathi"), "mr")
-#: locale_names.e:87
+#: locale_names.e:86
 msgid "Marathi"
 msgstr ""
 
 #. Source code: Result.force (locale.translation ("Marathi (India)"), "mr_in")
-#: locale_names.e:278
+#: locale_names.e:277
 msgid "Marathi (India)"
 msgstr ""
 
@@ -27412,7 +27606,7 @@ msgid "Minimize All"
 msgstr ""
 
 #. Source code: e_Minimize_all: STRING_32			do Result := locale.translation("Minimize all windows")	end
-#: interface_names.e:2888
+#: interface_names.e:2862
 msgid "Minimize all windows"
 msgstr ""
 
@@ -27769,27 +27963,27 @@ msgid "Module"
 msgstr ""
 
 #. Source code: Result.force (locale.translation ("Mohawk"), "moh")
-#: locale_names.e:86
+#: locale_names.e:85
 msgid "Mohawk"
 msgstr ""
 
 #. Source code: Result.force (locale.translation ("Mohawk (Canada)"), "moh_ca")
-#: locale_names.e:277
+#: locale_names.e:276
 msgid "Mohawk (Canada)"
 msgstr ""
 
 #. Source code: Result.force (locale.translation ("Mongolian"), "mn")
-#: locale_names.e:85
+#: locale_names.e:84
 msgid "Mongolian"
 msgstr ""
 
 #. Source code: Result.force (locale.translation ("Mongolian (Mongolia)"), "mn_cyrl_mn")
-#: locale_names.e:275
+#: locale_names.e:274
 msgid "Mongolian (Mongolia)"
 msgstr ""
 
 #. Source code: Result.force (locale.translation ("Mongolian (PRC)"), "mn_mong_cn")
-#: locale_names.e:276
+#: locale_names.e:275
 msgid "Mongolian (PRC)"
 msgstr ""
 
@@ -27977,6 +28171,18 @@ msgstr ""
 msgid "Must succeed"
 msgstr ""
 
+#. Source code: menu_my_account (a_username: READABLE_STRING_GENERAL): STRING_32 do Result := locale.formatted_string (locale.translation_in_context ("My Account ($1)", "cloud.menu"), [a_username])	end
+#: es_cloud_names.e:107
+msgctxt "cloud.menu"
+msgid "My Account ($1)"
+msgstr ""
+
+#. Source code: button_visit_web_account: STRING_32 do Result := locale.translation_in_context ("My Web Account...", "cloud.info") end
+#: es_cloud_names.e:80
+msgctxt "cloud.info"
+msgid "My Web Account..."
+msgstr ""
+
 #. Source code: Result := locale.formatted_string (locale.translation ("NATIVE_ARRAY is not yet fully supported, unable to evaluate `$1'."), [fname])
 #: debugger_names.e:530
 msgid "NATIVE_ARRAY is not yet fully supported, unable to evaluate `$1'."
@@ -28007,7 +28213,7 @@ msgid "Name"
 msgstr ""
 
 #. Source code: e_Project_name: STRING_32			do Result := locale.translation("Name of the current project")	end
-#: interface_names.e:2901
+#: interface_names.e:2875
 msgid "Name of the current project"
 msgstr ""
 
@@ -28119,17 +28325,17 @@ msgid "Negated comparison"
 msgstr ""
 
 #. Source code: Result.force (locale.translation ("Nepali"), "ne")
-#: locale_names.e:91
+#: locale_names.e:90
 msgid "Nepali"
 msgstr ""
 
 #. Source code: Result.force (locale.translation ("Nepali (India)"), "ne_in")
-#: locale_names.e:283
+#: locale_names.e:282
 msgid "Nepali (India)"
 msgstr ""
 
 #. Source code: Result.force (locale.translation ("Nepali (Nepal)"), "ne_np")
-#: locale_names.e:284
+#: locale_names.e:283
 msgid "Nepali (Nepal)"
 msgstr ""
 
@@ -28413,8 +28619,8 @@ msgstr ""
 msgid "No Evaluator"
 msgstr ""
 
-#. Source code: l_no_account_text: STRING_32 do Result := locale.translation ("No account?") end
-#: interface_names.e:2765
+#. Source code: label_no_account_text: STRING_32 do Result := locale.translation ("No account?") end
+#: es_cloud_names.e:46
 msgid "No account?"
 msgstr ""
 
@@ -28553,7 +28759,7 @@ msgid "No features in this file"
 msgstr ""
 
 #. Source code: e_no_text_is_selected: STRING_32 do Result := locale.translation("No file name is selected.")	end
-#: interface_names.e:2948
+#: interface_names.e:2922
 msgid "No file name is selected."
 msgstr ""
 
@@ -28563,7 +28769,7 @@ msgid "No help available for this element"
 msgstr ""
 
 #. Source code: e_show_help_unavailable: STRING_32 do Result := locale.translation("No help provider is available to show help for this dialog!")	end
-#: interface_names.e:2961
+#: interface_names.e:2935
 msgid "No help provider is available to show help for this dialog!"
 msgstr ""
 
@@ -28871,17 +29077,17 @@ msgid "Normal text color"
 msgstr ""
 
 #. Source code: Result.force (locale.translation ("Norwegian"), "nb")
-#: locale_names.e:90
+#: locale_names.e:89
 msgid "Norwegian"
 msgstr ""
 
-#. Source code: Result.force (locale.translation ("Norwegian (Bokmål, Norway)"), "nb_no")
-#: locale_names.e:282
+#. Source code: Result.force (locale.translation ("Norwegian (BokmÃ¥l, Norway)"), "nb_no")
+#: locale_names.e:281
 msgid "Norwegian (Bokmål, Norway)"
 msgstr ""
 
 #. Source code: Result.force (locale.translation ("Norwegian (Nynorsk, Norway)"), "nn_no")
-#: locale_names.e:287
+#: locale_names.e:286
 msgid "Norwegian (Nynorsk, Norway)"
 msgstr ""
 
@@ -28962,6 +29168,12 @@ msgstr ""
 #. Source code: t_metric_not_saved: STRING_32 do Result := locale.translation ("Note: Metric is not saved.") end
 #: eb_metric_names.e:65
 msgid "Note: Metric is not saved."
+msgstr ""
+
+#. Source code: prompt_note_support_account_usage: STRING_32 do Result := locale.translation_in_context ("Note: You can use //support.eiffel.com/ account", "eiffel.account") end
+#: es_cloud_names.e:29
+msgctxt "eiffel.account"
+msgid "Note: You can use //support.eiffel.com/ account"
 msgstr ""
 
 #. 	<PREF NAME="interface.dialogs.notification_autoclose_delay_ms" DESCRIPTION="Delay in milliseconds before closing automatically the notification widget."><INTEGER>45000</INTEGER></PREF>
@@ -29402,12 +29614,12 @@ msgid "Obsolete syntax"
 msgstr ""
 
 #. Source code: Result.force (locale.translation ("Occitan"), "oc")
-#: locale_names.e:95
+#: locale_names.e:94
 msgid "Occitan"
 msgstr ""
 
 #. Source code: Result.force (locale.translation ("Occitan (France)"), "oc_fr")
-#: locale_names.e:289
+#: locale_names.e:288
 msgid "Occitan (France)"
 msgstr ""
 
@@ -29415,6 +29627,18 @@ msgstr ""
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:733
 msgctxt "preference"
 msgid "Odd row background color"
+msgstr ""
+
+#. Source code: append_label_and_item_horizontally (locale.translation_in_context ("Offline token", "cloud.auth"), w, vb_off)
+#: es_account_login_register_box.e:254
+msgctxt "cloud.auth"
+msgid "Offline token"
+msgstr ""
+
+#. Source code: create cbut.make_with_text (locale.translation_in_context ("Offline?", "cloud.auth"))
+#: es_account_login_register_box.e:154
+msgctxt "cloud.auth"
+msgid "Offline?"
 msgstr ""
 
 #. Source code: do Result := translation_in_context ("Often, from-until loops use an integer %
@@ -29493,7 +29717,7 @@ msgid "Once"
 msgstr ""
 
 #. Source code: do Result := locale.translation("Once an execution of an instrumented system has generated the proper file,%N%
-#: interface_names.e:3026
+#: interface_names.e:3000
 msgid ""
 "Once an execution of an instrumented system has generated the proper file,\n"
 "you must process it through a profile converter to produce the Execution\n"
@@ -29622,8 +29846,9 @@ msgstr ""
 msgid "Open Containing Folder"
 msgstr ""
 
-#. Source code: l_open_eiffelstudio_account_web_site: STRING_32 do Result := locale.translation ("Open EiffelStudio account website in web browser.") end
-#: interface_names.e:2763
+#. Source code: label_open_eiffelstudio_account_web_site: STRING_32 do Result := locale.translation_in_context ("Open EiffelStudio account website in web browser.", "eiffel.account") end
+#: es_cloud_names.e:36
+msgctxt "eiffel.account"
 msgid "Open EiffelStudio account website in web browser."
 msgstr ""
 
@@ -29648,22 +29873,22 @@ msgid "Open Watch tool menu"
 msgstr ""
 
 #. Source code: e_Open_dynamic_lib_definition: STRING_32 do Result := locale.translation("Open a dynamic library definition")	end
-#: interface_names.e:2894
+#: interface_names.e:2868
 msgid "Open a dynamic library definition"
 msgstr ""
 
 #. Source code: e_Open_file: STRING_32				do Result := locale.translation("Open a file")	end
-#: interface_names.e:2895
+#: interface_names.e:2869
 msgid "Open a file"
 msgstr ""
 
 #. Source code: e_New_context_tool: STRING_32		do Result := locale.translation("Open a new context window")	end
-#: interface_names.e:2889
+#: interface_names.e:2863
 msgid "Open a new context window"
 msgstr ""
 
 #. Source code: e_New_editor: STRING_32				do Result := locale.translation("Open a new editor window")	end
-#: interface_names.e:2891
+#: interface_names.e:2865
 msgid "Open a new editor window"
 msgstr ""
 
@@ -29716,12 +29941,12 @@ msgid "Open project dialog width"
 msgstr ""
 
 #. Source code: e_open_selection_in_editor: STRING_32 do Result := locale.translation("Open selected file name in specified external editor")	end
-#: interface_names.e:2939
+#: interface_names.e:2913
 msgid "Open selected file name in specified external editor"
 msgstr ""
 
 #. Source code: e_Open_eac_browser: STRING_32		do Result := locale.translation("Open the Eiffel Assembly Cache browser tool")	end
-#: interface_names.e:2896
+#: interface_names.e:2870
 msgid "Open the Eiffel Assembly Cache browser tool"
 msgstr ""
 
@@ -29750,13 +29975,19 @@ msgstr ""
 msgid "Open user defined metrics externally"
 msgstr ""
 
+#. Source code: Result := locale.formatted_string (locale.translation_in_context ("Opening $1", "cloud.info"), [a_url])
+#: es_cloud_names.e:90
+msgctxt "cloud.info"
+msgid "Opening $1"
+msgstr ""
+
 #. Source code: e_Operation_failed: STRING_32	do Result := locale.translation("Operation failed.") end
-#: interface_names.e:2977
+#: interface_names.e:2951
 msgid "Operation failed."
 msgstr ""
 
 #. Source code: e_Operation_succeeded: STRING_32	do Result := locale.translation("Operation succeeded.")	end
-#: interface_names.e:2976
+#: interface_names.e:2950
 msgid "Operation succeeded."
 msgstr ""
 
@@ -29848,12 +30079,12 @@ msgid "Original value is \"$1=$2\""
 msgstr ""
 
 #. Source code: Result.force (locale.translation ("Oriya"), "or")
-#: locale_names.e:96
+#: locale_names.e:95
 msgid "Oriya"
 msgstr ""
 
 #. Source code: Result.force (locale.translation ("Oriya (India)"), "or_in")
-#: locale_names.e:290
+#: locale_names.e:289
 msgid "Oriya (India)"
 msgstr ""
 
@@ -30119,12 +30350,12 @@ msgid "Parsing Classes"
 msgstr ""
 
 #. Source code: Result.force (locale.translation ("Pashto"), "ps")
-#: locale_names.e:99
+#: locale_names.e:98
 msgid "Pashto"
 msgstr ""
 
 #. Source code: Result.force (locale.translation ("Pashto (Afghanistan)"), "ps_af")
-#: locale_names.e:293
+#: locale_names.e:292
 msgid "Pashto (Afghanistan)"
 msgstr ""
 
@@ -30143,8 +30374,8 @@ msgstr ""
 msgid "Passes"
 msgstr ""
 
-#. Source code: l_password: STRING_32 do Result := locale.translation ("Password") end
-#: interface_names.e:2754
+#. Source code: label_password: STRING_32 do Result := locale.translation ("Password") end
+#: es_cloud_names.e:54
 msgid "Password"
 msgstr ""
 
@@ -30203,7 +30434,7 @@ msgid "Pause application"
 msgstr ""
 
 #. Source code: e_Exec_stop: STRING_32				do Result := locale.translation("Pause execution at current point")	end
-#: interface_names.e:2884
+#: interface_names.e:2858
 msgid "Pause execution at current point"
 msgstr ""
 
@@ -30261,12 +30492,12 @@ msgid ""
 msgstr ""
 
 #. Source code: Result.force (locale.translation ("Persian"), "fa")
-#: locale_names.e:46
+#: locale_names.e:45
 msgid "Persian"
 msgstr ""
 
 #. Source code: Result.force (locale.translation ("Persian (Iran)"), "fa_ir")
-#: locale_names.e:228
+#: locale_names.e:227
 msgid "Persian (Iran)"
 msgstr ""
 
@@ -30297,7 +30528,7 @@ msgid "Pick metrics or items like group/class/feature and drop here"
 msgstr ""
 
 #. Source code: e_Drop_an_error_stone: STRING_32	do Result := locale.translation("Pick the code of a compilation error (such as VEEN, VTCT,...)%N%
-#: interface_names.e:2867
+#: interface_names.e:2841
 msgid ""
 "Pick the code of a compilation error (such as VEEN, VTCT,...)\n"
 "and drop it here to have extended information about it."
@@ -30373,7 +30604,7 @@ msgid "Please compile the project first"
 msgstr ""
 
 #. Source code: e_Diagram_class_header: STRING_32 	do Result := locale.translation("Please drop a class on this button.%NUse right click for both%N%
-#: interface_names.e:2853
+#: interface_names.e:2827
 msgid ""
 "Please drop a class on this button.\n"
 "Use right click for both\n"
@@ -30381,7 +30612,7 @@ msgid ""
 msgstr ""
 
 #. Source code: e_Diagram_hole: STRING_32			do Result := locale.translation("Please drop a class or a cluster on this button %N%
-#: interface_names.e:2850
+#: interface_names.e:2824
 msgid ""
 "Please drop a class or a cluster on this button \n"
 "to view its diagram.\n"
@@ -30389,7 +30620,7 @@ msgid ""
 msgstr ""
 
 #. Source code: e_Diagram_remove_anchor: STRING_32	do Result := locale.translation("Please drop a class or a cluster with an%Nanchor on this button.%NUse right click for both%N%
-#: interface_names.e:2855
+#: interface_names.e:2829
 msgid ""
 "Please drop a class or a cluster with an\n"
 "anchor on this button.\n"
@@ -30398,7 +30629,7 @@ msgid ""
 msgstr ""
 
 #. Source code: e_Diagram_delete_item: STRING_32	do Result := locale.translation("Please drop a class, a cluster or a link%N%
-#: interface_names.e:2863
+#: interface_names.e:2837
 msgid ""
 "Please drop a class, a cluster or a link\n"
 "on this button. Use right click for both\n"
@@ -30406,7 +30637,7 @@ msgid ""
 msgstr ""
 
 #. Source code: e_Diagram_delete_figure: STRING_32	do Result := locale.translation("Please drop a class, a cluster or a midpoint%N%
-#: interface_names.e:2859
+#: interface_names.e:2833
 msgid ""
 "Please drop a class, a cluster or a midpoint\n"
 "on this button. Use right click for both\n"
@@ -30414,7 +30645,7 @@ msgid ""
 msgstr ""
 
 #. Source code: e_Diagram_create_class: STRING_32	do Result := locale.translation("Please drop this button on the diagram.%N%
-#: interface_names.e:2857
+#: interface_names.e:2831
 msgid ""
 "Please drop this button on the diagram.\n"
 "Use right click for both\n"
@@ -30553,18 +30784,30 @@ msgstr ""
 msgid "Please specify a compiled class (or * for all classes)."
 msgstr ""
 
+#. Source code: l_weblnk.set_tooltip (locale.translation_in_context ("Please visit your web account for more information and options.", "cloud.info"))
+#: es_cloud_license_issue_dialog.e:56
+msgctxt "cloud.info"
+msgid "Please visit your web account for more information and options."
+msgstr ""
+
+#. Source code: create l_weblnk.make_with_text (locale.translation_in_context ("Please visit your web account.", "cloud.info"))
+#: es_cloud_license_issue_dialog.e:55
+msgctxt "cloud.info"
+msgid "Please visit your web account."
+msgstr ""
+
 #. Source code: l_please_wait: STRING = "Please wait..."
 #: es_popup_transition_window.e:318
 msgid "Please wait..."
 msgstr ""
 
 #. Source code: Result.force (locale.translation ("Polish"), "pl")
-#: locale_names.e:98
+#: locale_names.e:97
 msgid "Polish"
 msgstr ""
 
 #. Source code: Result.force (locale.translation ("Polish (Poland)"), "pl_pl")
-#: locale_names.e:292
+#: locale_names.e:291
 msgid "Polish (Poland)"
 msgstr ""
 
@@ -30574,17 +30817,17 @@ msgid "Pop-up automatically"
 msgstr ""
 
 #. Source code: Result.force (locale.translation ("Portuguese"), "pt")
-#: locale_names.e:100
+#: locale_names.e:99
 msgid "Portuguese"
 msgstr ""
 
 #. Source code: Result.force (locale.translation ("Portuguese (Brazil)"), "pt_br")
-#: locale_names.e:294
+#: locale_names.e:293
 msgid "Portuguese (Brazil)"
 msgstr ""
 
 #. Source code: Result.force (locale.translation ("Portuguese (Portugal)"), "pt_pt")
-#: locale_names.e:295
+#: locale_names.e:294
 msgid "Portuguese (Portugal)"
 msgstr ""
 
@@ -30943,7 +31186,7 @@ msgid "Print a message:"
 msgstr ""
 
 #. Source code: e_Print: STRING_32					do Result := locale.translation("Print the currently edited text")	end
-#: interface_names.e:2900
+#: interface_names.e:2874
 msgid "Print the currently edited text"
 msgstr ""
 
@@ -31016,7 +31259,7 @@ msgid "Progress bar color"
 msgstr ""
 
 #. Source code: e_open_project: STRING_32 do Result := locale.translation ("Project") end
-#: interface_names.e:2947
+#: interface_names.e:2921
 msgid "Project"
 msgstr ""
 
@@ -31248,12 +31491,12 @@ msgid "Pull up Feature"
 msgstr ""
 
 #. Source code: Result.force (locale.translation ("Punjabi"), "pa")
-#: locale_names.e:97
+#: locale_names.e:96
 msgid "Punjabi"
 msgstr ""
 
 #. Source code: Result.force (locale.translation ("Punjabi (India)"), "pa_in")
-#: locale_names.e:291
+#: locale_names.e:290
 msgid "Punjabi (India)"
 msgstr ""
 
@@ -31262,9 +31505,9 @@ msgstr ""
 msgid "Purchase"
 msgstr ""
 
-#. Source code: l_purchase_enterprise_edition: STRING_32 do Result := locale.translation ("Purchase Enterprise edition") end
+#. Source code: l_purchase_license: STRING_32 do Result := locale.translation ("Purchase a license") end
 #: interface_names.e:2747
-msgid "Purchase Enterprise edition"
+msgid "Purchase a license"
 msgstr ""
 
 #. Source code: t_Diagram_put_one_handle_left_cmd: STRING_32	do Result := locale.translation("Put Handle Left")	end
@@ -31319,22 +31562,22 @@ msgid "Quadruple click enabled"
 msgstr ""
 
 #. Source code: Result.force (locale.translation ("Quechua"), "quz")
-#: locale_names.e:102
+#: locale_names.e:101
 msgid "Quechua"
 msgstr ""
 
 #. Source code: Result.force (locale.translation ("Quechua (Bolivia)"), "quz_bo")
-#: locale_names.e:297
+#: locale_names.e:296
 msgid "Quechua (Bolivia)"
 msgstr ""
 
 #. Source code: Result.force (locale.translation ("Quechua (Ecuador)"), "quz_ec")
-#: locale_names.e:298
+#: locale_names.e:297
 msgid "Quechua (Ecuador)"
 msgstr ""
 
 #. Source code: Result.force (locale.translation ("Quechua (Peru)"), "quz_pe")
-#: locale_names.e:299
+#: locale_names.e:298
 msgid "Quechua (Peru)"
 msgstr ""
 
@@ -31368,6 +31611,18 @@ msgstr ""
 msgid "Quit"
 msgstr ""
 
+#. Source code: button_quit: STRING_32 do Result := locale.translation_in_context ("Quit", "cloud") end
+#: es_cloud_names.e:124
+msgctxt "cloud"
+msgid "Quit"
+msgstr ""
+
+#. Source code: tooltip_button_quit: STRING_32 do Result := locale.translation_in_context ("Quit EiffelStudio", "cloud") end
+#: es_cloud_names.e:125
+msgctxt "cloud"
+msgid "Quit EiffelStudio"
+msgstr ""
+
 #. Source code: m_Raise_all_unsaved: STRING_32		do Result := locale.translation("Raise &Unsaved Windows")	end
 #: interface_names.e:1040
 msgid "Raise &Unsaved Windows"
@@ -31379,12 +31634,12 @@ msgid "Raise Windows"
 msgstr ""
 
 #. Source code: e_Raise_all_unsaved: STRING_32		do Result := locale.translation("Raise all unsaved windows")	end
-#: interface_names.e:2906
+#: interface_names.e:2880
 msgid "Raise all unsaved windows"
 msgstr ""
 
 #. Source code: e_Raise_all: STRING_32				do Result := locale.translation("Raise all windows")	end
-#: interface_names.e:2905
+#: interface_names.e:2879
 msgid "Raise all windows"
 msgstr ""
 
@@ -31498,7 +31753,7 @@ msgid "Recompile Overrides"
 msgstr ""
 
 #. Source code: e_override_scan: STRING_32			do Result := locale.translation("Recompile override clusters")	end
-#: interface_names.e:2903
+#: interface_names.e:2877
 msgid "Recompile override clusters"
 msgstr ""
 
@@ -31508,7 +31763,7 @@ msgid "Recompile project"
 msgstr ""
 
 #. Source code: e_Exec_recompile: STRING_32      	do Result := locale.translation("Recompiling project will end current execution.") end
-#: interface_names.e:2885
+#: interface_names.e:2859
 msgid "Recompiling project will end current execution."
 msgstr ""
 
@@ -31755,14 +32010,9 @@ msgstr ""
 msgid "Regexp"
 msgstr ""
 
-#. Source code: b_register: STRING_32 do Result := locale.translation ("Register") end
-#: interface_names.e:2759
+#. Source code: button_register: STRING_32 do Result := locale.translation ("Register") end
+#: es_cloud_names.e:132
 msgid "Register"
-msgstr ""
-
-#. Source code: l_register_new_account: STRING_32 do Result := locale.translation ("Register a new account.") end
-#: interface_names.e:2764
-msgid "Register a new account."
 msgstr ""
 
 #. Source code: t_regexp: STRING_32 do Result := locale.translation ("Regular expression") end
@@ -31790,8 +32040,8 @@ msgstr ""
 msgid "Relations"
 msgstr ""
 
-#. Source code: b_Reload: STRING_32							do Result := locale.translation("Reload")	end
-#: interface_names.e:112
+#. Source code: button_reload: STRING_32 do Result := locale.translation ("Reload") end
+#: es_cloud_names.e:131
 msgid "Reload"
 msgstr ""
 
@@ -31831,6 +32081,12 @@ msgstr ""
 #. Source code: lb_remember_me: STRING = "Remember me"
 #: es_exception_submit_dialog.e:1011
 msgid "Remember me"
+msgstr ""
+
+#. Source code: button_remember_credentials: STRING_32 do Result := locale.translation_in_context ("Remember my credentials", "eiffel.account") end
+#: es_cloud_names.e:33
+msgctxt "eiffel.account"
+msgid "Remember my credentials"
 msgstr ""
 
 #. 	<PREF NAME="shortcuts.code_completion.toggle_remember_size" DESCRIPTION="Remember/forget size in completion list."><SHORTCUT>F7</SHORTCUT></PREF>
@@ -31902,7 +32158,7 @@ msgid "Remove Right Angles"
 msgstr ""
 
 #. Source code: e_Remove_class_cluster: STRING_32	do Result := locale.translation("Remove a class or a cluster from the system")	end
-#: interface_names.e:2908
+#: interface_names.e:2882
 msgid "Remove a class or a cluster from the system"
 msgstr ""
 
@@ -31974,7 +32230,7 @@ msgid "Remove current selected metric"
 msgstr ""
 
 #. Source code: e_Remove_object: STRING_32			do Result := locale.translation("Remove currently selected object")	end
-#: interface_names.e:2911
+#: interface_names.e:2885
 msgid "Remove currently selected object"
 msgstr ""
 
@@ -32069,7 +32325,7 @@ msgid "Remove selected customized tool"
 msgstr ""
 
 #. Source code: e_Remove_expressions: STRING_32		do Result := locale.translation("Remove selected expressions")	end
-#: interface_names.e:2910
+#: interface_names.e:2884
 msgid "Remove selected expressions"
 msgstr ""
 
@@ -32115,7 +32371,7 @@ msgid "Remove the empty loop"
 msgstr ""
 
 #. Source code: e_Remove_exported_feature: STRING_32	do Result := locale.translation("Remove the selected feature from this dynamic library definition")	end
-#: interface_names.e:2909
+#: interface_names.e:2883
 msgid "Remove the selected feature from this dynamic library definition"
 msgstr ""
 
@@ -32367,27 +32623,27 @@ msgid "Replay mode"
 msgstr ""
 
 #. Source code: e_Exec_replay_forth: STRING_32	do Result := locale.translation("Replay next execution stack")	end
-#: interface_names.e:2971
+#: interface_names.e:2945
 msgid "Replay next execution stack"
 msgstr ""
 
 #. Source code: e_Exec_replay_right: STRING_32	do Result := locale.translation("Replay next execution step")	end
-#: interface_names.e:2973
+#: interface_names.e:2947
 msgid "Replay next execution step"
 msgstr ""
 
 #. Source code: e_Exec_replay_back: STRING_32	do Result := locale.translation("Replay previous execution stack")	end
-#: interface_names.e:2970
+#: interface_names.e:2944
 msgid "Replay previous execution stack"
 msgstr ""
 
 #. Source code: e_Exec_replay_left: STRING_32	do Result := locale.translation("Replay previous execution step")	end
-#: interface_names.e:2972
+#: interface_names.e:2946
 msgid "Replay previous execution step"
 msgstr ""
 
 #. Source code: e_Exec_replay: STRING_32	do Result := locale.translation("Replay the execution")	end
-#: interface_names.e:2969
+#: interface_names.e:2943
 msgid "Replay the execution"
 msgstr ""
 
@@ -32635,7 +32891,7 @@ msgid "Restore tab"
 msgstr ""
 
 #. Source code: e_Restore_normal_mode: STRING_32		do Result := locale.translation("Restore the environment to normal mode")	end
-#: interface_names.e:2912
+#: interface_names.e:2886
 msgid "Restore the environment to normal mode"
 msgstr ""
 
@@ -32741,13 +32997,19 @@ msgstr ""
 msgid "Retry"
 msgstr ""
 
+#. Source code: button_retry: STRING_32 do Result := locale.translation_in_context ("Retry", "cloud") end
+#: es_cloud_names.e:122
+msgctxt "cloud"
+msgid "Retry"
+msgstr ""
+
 #. Source code: l_allow_duplicate_name: STRING_32	do Result := locale.translation ("Reuse existing name") end
 #: interface_names.e:717
 msgid "Reuse existing name"
 msgstr ""
 
 #. Source code: ws_Execution_Profile: STRING_32 do Result := locale.translation("Reuse or Generate an Execution Profile.")	end
-#: interface_names.e:3017
+#: interface_names.e:2991
 msgid "Reuse or Generate an Execution Profile."
 msgstr ""
 
@@ -32768,22 +33030,22 @@ msgid "Rollback?"
 msgstr ""
 
 #. Source code: Result.force (locale.translation ("Romanian"), "ro")
-#: locale_names.e:104
+#: locale_names.e:103
 msgid "Romanian"
 msgstr ""
 
 #. Source code: Result.force (locale.translation ("Romanian (Romania)"), "ro_ro")
-#: locale_names.e:301
+#: locale_names.e:300
 msgid "Romanian (Romania)"
 msgstr ""
 
 #. Source code: Result.force (locale.translation ("Romansh"), "rm")
-#: locale_names.e:103
+#: locale_names.e:102
 msgid "Romansh"
 msgstr ""
 
 #. Source code: Result.force (locale.translation ("Romansh (Switzerland)"), "rm_ch")
-#: locale_names.e:300
+#: locale_names.e:299
 msgid "Romansh (Switzerland)"
 msgstr ""
 
@@ -33451,7 +33713,7 @@ msgid "Run without stop point"
 msgstr ""
 
 #. Source code: e_Exec_no_stop: STRING_32			do Result := locale.translation("Run without stopping at breakpoints")	end
-#: interface_names.e:2880
+#: interface_names.e:2854
 msgid "Run without stopping at breakpoints"
 msgstr ""
 
@@ -33482,17 +33744,17 @@ msgid "Runs"
 msgstr ""
 
 #. Source code: wt_Runtime_information_record_error: STRING_32 do Result := locale.translation("Runtime Information Record Error")	end
-#: interface_names.e:3042
+#: interface_names.e:3016
 msgid "Runtime Information Record Error"
 msgstr ""
 
 #. Source code: Result.force (locale.translation ("Russian"), "ru")
-#: locale_names.e:105
+#: locale_names.e:104
 msgid "Russian"
 msgstr ""
 
 #. Source code: Result.force (locale.translation ("Russian (Russia)"), "ru_ru")
-#: locale_names.e:302
+#: locale_names.e:301
 msgid "Russian (Russia)"
 msgstr ""
 
@@ -33533,62 +33795,62 @@ msgid "Same UUID"
 msgstr ""
 
 #. Source code: Result.force (locale.translation ("Sami"), "se")
-#: locale_names.e:109
+#: locale_names.e:108
 msgid "Sami"
 msgstr ""
 
 #. Source code: Result.force (locale.translation ("Sami (Inari, Finland)"), "smn_fi")
-#: locale_names.e:316
+#: locale_names.e:315
 msgid "Sami (Inari, Finland)"
 msgstr ""
 
 #. Source code: Result.force (locale.translation ("Sami (Lule, Norway)"), "smj_no")
-#: locale_names.e:314
+#: locale_names.e:313
 msgid "Sami (Lule, Norway)"
 msgstr ""
 
 #. Source code: Result.force (locale.translation ("Sami (Lule, Sweden)"), "smj_se")
-#: locale_names.e:315
+#: locale_names.e:314
 msgid "Sami (Lule, Sweden)"
 msgstr ""
 
 #. Source code: Result.force (locale.translation ("Sami (Northern, Finland)"), "se_fi")
-#: locale_names.e:306
+#: locale_names.e:305
 msgid "Sami (Northern, Finland)"
 msgstr ""
 
 #. Source code: Result.force (locale.translation ("Sami (Northern, Norway)"), "se_no")
-#: locale_names.e:307
+#: locale_names.e:306
 msgid "Sami (Northern, Norway)"
 msgstr ""
 
 #. Source code: Result.force (locale.translation ("Sami (Northern, Sweden)"), "se_se")
-#: locale_names.e:308
+#: locale_names.e:307
 msgid "Sami (Northern, Sweden)"
 msgstr ""
 
 #. Source code: Result.force (locale.translation ("Sami (Skolt, Finland)"), "sms_fi")
-#: locale_names.e:317
+#: locale_names.e:316
 msgid "Sami (Skolt, Finland)"
 msgstr ""
 
 #. Source code: Result.force (locale.translation ("Sami (Southern, Norway)"), "sma_no")
-#: locale_names.e:312
+#: locale_names.e:311
 msgid "Sami (Southern, Norway)"
 msgstr ""
 
 #. Source code: Result.force (locale.translation ("Sami (Southern, Sweden)"), "sma_se")
-#: locale_names.e:313
+#: locale_names.e:312
 msgid "Sami (Southern, Sweden)"
 msgstr ""
 
 #. Source code: Result.force (locale.translation ("Sanskrit"), "sa")
-#: locale_names.e:107
+#: locale_names.e:106
 msgid "Sanskrit"
 msgstr ""
 
 #. Source code: Result.force (locale.translation ("Sanskrit (India)"), "sa_in")
-#: locale_names.e:304
+#: locale_names.e:303
 msgid "Sanskrit (India)"
 msgstr ""
 
@@ -33629,7 +33891,7 @@ msgid "Save Backup"
 msgstr ""
 
 #. Source code: e_save_c_compilation_output: STRING_32 do Result := locale.translation("Save C Compilation output to file")	end
-#: interface_names.e:2940
+#: interface_names.e:2914
 msgid "Save C Compilation output to file"
 msgstr ""
 
@@ -33660,7 +33922,7 @@ msgid "Save all"
 msgstr ""
 
 #. Source code: e_Save_call_stack: STRING_32			do Result := locale.translation("Save call stack to a text file")	end
-#: interface_names.e:2915
+#: interface_names.e:2889
 msgid "Save call stack to a text file"
 msgstr ""
 
@@ -33670,7 +33932,7 @@ msgid "Save current output to disk"
 msgstr ""
 
 #. Source code: e_Save_exception_into: STRING_32		do Result := locale.translation("Save exception message to a text file")	end
-#: interface_names.e:2916
+#: interface_names.e:2890
 msgid "Save exception message to a text file"
 msgstr ""
 
@@ -33690,7 +33952,7 @@ msgid "Save output to file"
 msgstr ""
 
 #. Source code: e_Save_dynamic_lib_definition: STRING_32 do Result := locale.translation("Save this dynamic library definition")	end
-#: interface_names.e:2917
+#: interface_names.e:2891
 msgid "Save this dynamic library definition"
 msgstr ""
 
@@ -34007,7 +34269,7 @@ msgid "Select a File"
 msgstr ""
 
 #. Source code: ws_Execution_Profile_Generation: STRING_32 do Result := locale.translation("Select a Run-time information record to generate the Execution profile")	end
-#: interface_names.e:3024
+#: interface_names.e:2998
 msgid "Select a Run-time information record to generate the Execution profile"
 msgstr ""
 
@@ -34198,7 +34460,7 @@ msgid "Select target"
 msgstr ""
 
 #. Source code: ws_Compilation_mode: STRING_32 do Result := locale.translation("Select the Compilation mode.")	end
-#: interface_names.e:3014
+#: interface_names.e:2988
 msgid "Select the Compilation mode."
 msgstr ""
 
@@ -34218,7 +34480,7 @@ msgid "Select the formats to use"
 msgstr ""
 
 #. Source code: ws_Switches_and_query: STRING_32 do Result := locale.translation("Select the information you need and formulate your query.")	end
-#: interface_names.e:3037
+#: interface_names.e:3011
 msgid "Select the information you need and formulate your query."
 msgstr ""
 
@@ -34299,7 +34561,7 @@ msgid ""
 msgstr ""
 
 #. Source code: e_selected_text_is_not_file: STRING_32 do Result := locale.translation("Selected text is not a correct file name.")	end
-#: interface_names.e:2949
+#: interface_names.e:2923
 msgid "Selected text is not a correct file name."
 msgstr ""
 
@@ -34393,7 +34655,7 @@ msgid "Send to context"
 msgstr ""
 
 #. Source code: e_Shell: STRING_32					do Result := locale.translation("Send to external editor")	end
-#: interface_names.e:2923
+#: interface_names.e:2897
 msgid "Send to external editor"
 msgstr ""
 
@@ -34425,27 +34687,27 @@ msgid "Separator"
 msgstr ""
 
 #. Source code: Result.force (locale.translation ("Serbian"), "sr")
-#: locale_names.e:115
+#: locale_names.e:114
 msgid "Serbian"
 msgstr ""
 
 #. Source code: Result.force (locale.translation ("Serbian (Bosnia and Herzegovina, Cyrillic)"), "sr_cyrl_ba")
-#: locale_names.e:319
+#: locale_names.e:318
 msgid "Serbian (Bosnia and Herzegovina, Cyrillic)"
 msgstr ""
 
 #. Source code: Result.force (locale.translation ("Serbian (Bosnia and Herzegovina, Latin)"), "sr_latn_ba")
-#: locale_names.e:321
+#: locale_names.e:320
 msgid "Serbian (Bosnia and Herzegovina, Latin)"
 msgstr ""
 
 #. Source code: Result.force (locale.translation ("Serbian (Serbia and Montenegro, Cyrillic)"), "sr_cyrl_cs")
-#: locale_names.e:320
+#: locale_names.e:319
 msgid "Serbian (Serbia and Montenegro, Cyrillic)"
 msgstr ""
 
 #. Source code: Result.force (locale.translation ("Serbian (Serbia and Montenegro, Latin)"), "sr_latn_cs")
-#: locale_names.e:322
+#: locale_names.e:321
 msgid "Serbian (Serbia and Montenegro, Latin)"
 msgstr ""
 
@@ -34454,13 +34716,25 @@ msgstr ""
 msgid "Serious"
 msgstr ""
 
+#. Source code: create s32.make_from_string_general (locale.translation_in_context ("Service error (try again later)!", "cloud.error"))
+#: es_account_login_register_box.e:573
+msgctxt "cloud.error"
+msgid "Service error (try again later)!"
+msgstr ""
+
+#. Source code: create lab.make_with_text (locale.translation_in_context ("Service not activated!", "cloud.error"))
+#: es_cloud_account_tool_panel.e:478
+msgctxt "cloud.error"
+msgid "Service not activated!"
+msgstr ""
+
 #. Source code: Result.force (locale.translation ("Sesotho sa Leboa/Northern Sotho"), "ns")
-#: locale_names.e:94
+#: locale_names.e:93
 msgid "Sesotho sa Leboa/Northern Sotho"
 msgstr ""
 
 #. Source code: Result.force (locale.translation ("Sesotho sa Leboa/Northern Sotho (South Africa)"), "ns_za")
-#: locale_names.e:288
+#: locale_names.e:287
 msgid "Sesotho sa Leboa/Northern Sotho (South Africa)"
 msgstr ""
 
@@ -34522,7 +34796,7 @@ msgid "Set environment"
 msgstr ""
 
 #. Source code: e_Set_stack_depth: STRING_32			do Result := locale.translation("Set maximum call stack depth")	end
-#: interface_names.e:2922
+#: interface_names.e:2896
 msgid "Set maximum call stack depth"
 msgstr ""
 
@@ -34593,12 +34867,12 @@ msgid "Sets the case sensitivity of all the words in the word list."
 msgstr ""
 
 #. Source code: Result.force (locale.translation ("Setswana/Tswana"), "tn")
-#: locale_names.e:125
+#: locale_names.e:124
 msgid "Setswana/Tswana"
 msgstr ""
 
 #. Source code: Result.force (locale.translation ("Setswana/Tswana (South Africa)"), "tn_za")
-#: locale_names.e:333
+#: locale_names.e:332
 msgid "Setswana/Tswana (South Africa)"
 msgstr ""
 
@@ -36128,6 +36402,11 @@ msgctxt "preference"
 msgid "Show ANY features"
 msgstr ""
 
+#. Source code: desc_cloud_account_tool: STRING_32 do Result := locale.translation ("Show Account Tool") end
+#: es_cloud_names.e:59
+msgid "Show Account Tool"
+msgstr ""
+
 #. Source code: f_show_alias: STRING_32			do Result := locale.translation("Show Alias Name")	end
 #: interface_names.e:968
 msgid "Show Alias Name"
@@ -36461,7 +36740,7 @@ msgid "Show hidden preferences in preference window?"
 msgstr ""
 
 #. Source code: e_Bkpt_info: STRING_32				do Result := locale.translation("Show information about breakpoints")	end
-#: interface_names.e:2826
+#: interface_names.e:2800
 msgid "Show information about breakpoints"
 msgstr ""
 
@@ -36493,6 +36772,12 @@ msgstr ""
 msgid "Show labels"
 msgstr ""
 
+#. Source code: button_show_less: STRING_32 do Result := locale.translation_in_context ("Show less...", "cloud.info") end
+#: es_cloud_names.e:74
+msgctxt "cloud.info"
+msgid "Show less..."
+msgstr ""
+
 #. 	<PREF NAME="editor.general.show_line_numbers" DESCRIPTION="Indicates if editor displays the line numbers by default."><BOOLEAN>False</BOOLEAN></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:698
 msgctxt "preference"
@@ -36509,6 +36794,12 @@ msgstr ""
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:823
 msgctxt "preference"
 msgid "Show metric tool"
+msgstr ""
+
+#. Source code: button_show_more: STRING_32 do Result := locale.translation_in_context ("Show more...", "cloud.info") end
+#: es_cloud_names.e:73
+msgctxt "cloud.info"
+msgid "Show more..."
 msgstr ""
 
 #. 	<PREF NAME="shortcuts.code_completion.next_completion_panel" DESCRIPTION="Show next completion panel in completion list."><SHORTCUT Ctrl="True">Space</SHORTCUT></PREF>
@@ -36802,18 +37093,31 @@ msgctxt "preference"
 msgid "Shows contextual help documentation, if available."
 msgstr ""
 
-#. Source code: b_sign_in: STRING_32 do Result := locale.translation ("Sign in") end
-#: interface_names.e:2757
+#. Source code: menu_sign_in: STRING_32 do Result := locale.translation_in_context ("Sign In", "cloud.menu") end
+#: es_cloud_names.e:111
+msgctxt "cloud.menu"
+msgid "Sign In"
+msgstr ""
+
+#. Source code: button_sign_in: STRING_32 do Result := locale.translation ("Sign in") end
+#: es_cloud_names.e:129
 msgid "Sign in"
 msgstr ""
 
-#. Source code: l_sign_in_with_credentials: STRING_32 do Result := locale.translation ("Sign in with credentials") end
-#: interface_names.e:2748
-msgid "Sign in with credentials"
+#. Source code: prompt_sign_to_edition_cloud_services (a_edition: READABLE_STRING_GENERAL): STRING_32 do Result := locale.formatted_string (locale.translation_in_context ("Sign in to use EiffelStudio $1 services.", "eiffel.account"), [a_edition]) end
+#: es_cloud_names.e:17
+msgctxt "eiffel.account"
+msgid "Sign in to use EiffelStudio $1 services."
 msgstr ""
 
-#. Source code: b_sign_out: STRING_32 do Result := locale.translation ("Sign out") end
-#: interface_names.e:2758
+#. Source code: prompt_sign_to_cloud_services: STRING_32 do Result := locale.translation_in_context ("Sign in to use EiffelStudio cloud services.", "eiffel.account") end
+#: es_cloud_names.e:15
+msgctxt "eiffel.account"
+msgid "Sign in to use EiffelStudio cloud services."
+msgstr ""
+
+#. Source code: button_sign_out: STRING_32 do Result := locale.translation ("Sign out") end
+#: es_cloud_names.e:130
 msgid "Sign out"
 msgstr ""
 
@@ -36842,12 +37146,12 @@ msgid "Single use variable"
 msgstr ""
 
 #. Source code: Result.force (locale.translation ("Sinhala"), "si")
-#: locale_names.e:110
+#: locale_names.e:109
 msgid "Sinhala"
 msgstr ""
 
 #. Source code: Result.force (locale.translation ("Sinhala (Sri Lanka)"), "si_lk")
-#: locale_names.e:309
+#: locale_names.e:308
 msgid "Sinhala (Sri Lanka)"
 msgstr ""
 
@@ -36855,11 +37159,6 @@ msgstr ""
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:803
 msgctxt "preference"
 msgid "Sixth external command shortcut."
-msgstr ""
-
-#. Source code: b_skip: STRING_32 do Result := locale.translation ("Skip") end
-#: interface_names.e:2760
-msgid "Skip"
 msgstr ""
 
 #. Source code: l_Set_slice_limits: STRING_32		do Result := locale.translation ("Slice limits") end
@@ -36873,22 +37172,22 @@ msgid "Slice minimization"
 msgstr ""
 
 #. Source code: Result.force (locale.translation ("Slovak"), "sk")
-#: locale_names.e:111
+#: locale_names.e:110
 msgid "Slovak"
 msgstr ""
 
 #. Source code: Result.force (locale.translation ("Slovak (Slovakia)"), "sk_sk")
-#: locale_names.e:310
+#: locale_names.e:309
 msgid "Slovak (Slovakia)"
 msgstr ""
 
 #. Source code: Result.force (locale.translation ("Slovenian"), "sl")
-#: locale_names.e:112
+#: locale_names.e:111
 msgid "Slovenian"
 msgstr ""
 
 #. Source code: Result.force (locale.translation ("Slovenian (Slovenia)"), "sl_si")
-#: locale_names.e:311
+#: locale_names.e:310
 msgid "Slovenian (Slovenia)"
 msgstr ""
 
@@ -36947,7 +37246,7 @@ msgid "Some arguments of routine '"
 msgstr ""
 
 #. Source code: e_Edited: STRING_32					do Result := locale.translation("Some classes were edited since last compilation")	end
-#: interface_names.e:2871
+#: interface_names.e:2845
 msgid "Some classes were edited since last compilation"
 msgstr ""
 
@@ -37099,107 +37398,107 @@ msgid "Spaces text color"
 msgstr ""
 
 #. Source code: Result.force (locale.translation ("Spanish"), "es")
-#: locale_names.e:43
+#: locale_names.e:42
 msgid "Spanish"
 msgstr ""
 
 #. Source code: Result.force (locale.translation ("Spanish (Argentina)"), "es_ar")
-#: locale_names.e:206
+#: locale_names.e:205
 msgid "Spanish (Argentina)"
 msgstr ""
 
 #. Source code: Result.force (locale.translation ("Spanish (Bolivia)"), "es_bo")
-#: locale_names.e:207
+#: locale_names.e:206
 msgid "Spanish (Bolivia)"
 msgstr ""
 
 #. Source code: Result.force (locale.translation ("Spanish (Chile)"), "es_cl")
-#: locale_names.e:208
+#: locale_names.e:207
 msgid "Spanish (Chile)"
 msgstr ""
 
 #. Source code: Result.force (locale.translation ("Spanish (Colombia)"), "es_co")
-#: locale_names.e:209
+#: locale_names.e:208
 msgid "Spanish (Colombia)"
 msgstr ""
 
 #. Source code: Result.force (locale.translation ("Spanish (Costa Rica)"), "es_cr")
-#: locale_names.e:210
+#: locale_names.e:209
 msgid "Spanish (Costa Rica)"
 msgstr ""
 
 #. Source code: Result.force (locale.translation ("Spanish (Dominican Republic)"), "es_do")
-#: locale_names.e:211
+#: locale_names.e:210
 msgid "Spanish (Dominican Republic)"
 msgstr ""
 
 #. Source code: Result.force (locale.translation ("Spanish (Ecuador)"), "es_ec")
-#: locale_names.e:212
+#: locale_names.e:211
 msgid "Spanish (Ecuador)"
 msgstr ""
 
 #. Source code: Result.force (locale.translation ("Spanish (El Salvador)"), "es_sv")
-#: locale_names.e:222
+#: locale_names.e:221
 msgid "Spanish (El Salvador)"
 msgstr ""
 
 #. Source code: Result.force (locale.translation ("Spanish (Guatemala)"), "es_gt")
-#: locale_names.e:214
+#: locale_names.e:213
 msgid "Spanish (Guatemala)"
 msgstr ""
 
 #. Source code: Result.force (locale.translation ("Spanish (Honduras)"), "es_hn")
-#: locale_names.e:215
+#: locale_names.e:214
 msgid "Spanish (Honduras)"
 msgstr ""
 
 #. Source code: Result.force (locale.translation ("Spanish (Mexico)"), "es_mx")
-#: locale_names.e:216
+#: locale_names.e:215
 msgid "Spanish (Mexico)"
 msgstr ""
 
 #. Source code: Result.force (locale.translation ("Spanish (Nicaragua)"), "es_ni")
-#: locale_names.e:217
+#: locale_names.e:216
 msgid "Spanish (Nicaragua)"
 msgstr ""
 
 #. Source code: Result.force (locale.translation ("Spanish (Panama)"), "es_pa")
-#: locale_names.e:218
+#: locale_names.e:217
 msgid "Spanish (Panama)"
 msgstr ""
 
 #. Source code: Result.force (locale.translation ("Spanish (Paraguay)"), "es_py")
-#: locale_names.e:221
+#: locale_names.e:220
 msgid "Spanish (Paraguay)"
 msgstr ""
 
 #. Source code: Result.force (locale.translation ("Spanish (Peru)"), "es_pe")
-#: locale_names.e:219
+#: locale_names.e:218
 msgid "Spanish (Peru)"
 msgstr ""
 
 #. Source code: Result.force (locale.translation ("Spanish (Puerto Rico)"), "es_pr")
-#: locale_names.e:220
+#: locale_names.e:219
 msgid "Spanish (Puerto Rico)"
 msgstr ""
 
 #. Source code: Result.force (locale.translation ("Spanish (Spain)"), "es_es")
-#: locale_names.e:213
+#: locale_names.e:212
 msgid "Spanish (Spain)"
 msgstr ""
 
 #. Source code: Result.force (locale.translation ("Spanish (United States)"), "es_us")
-#: locale_names.e:223
+#: locale_names.e:222
 msgid "Spanish (United States)"
 msgstr ""
 
 #. Source code: Result.force (locale.translation ("Spanish (Uruguay)"), "es_uy")
-#: locale_names.e:224
+#: locale_names.e:223
 msgid "Spanish (Uruguay)"
 msgstr ""
 
 #. Source code: Result.force (locale.translation ("Spanish (Venezuela)"), "es_ve")
-#: locale_names.e:225
+#: locale_names.e:224
 msgid "Spanish (Venezuela)"
 msgstr ""
 
@@ -37380,7 +37679,7 @@ msgid "Start command"
 msgstr ""
 
 #. Source code: e_Exec_debug: STRING_32				do Result := locale.translation("Start execution and stop at breakpoints")	end
-#: interface_names.e:2872
+#: interface_names.e:2846
 msgid "Start execution and stop at breakpoints"
 msgstr ""
 
@@ -37431,6 +37730,12 @@ msgstr ""
 msgid "Status Bar"
 msgstr ""
 
+#. Source code: append_bold_text_to (locale.translation_in_context ("Status: EXPIRED!", "cloud.info"), txt)
+#: es_cloud_account_tool_panel.e:246
+msgctxt "cloud.info"
+msgid "Status: EXPIRED!"
+msgstr ""
+
 #. Source code: b_Exec_step: STRING_32						do Result := locale.translation("Step")	end
 #: interface_names.e:182
 msgid "Step"
@@ -37474,7 +37779,7 @@ msgid "Step into"
 msgstr ""
 
 #. Source code: e_Exec_into: STRING_32				do Result := locale.translation("Step into a routine")	end
-#: interface_names.e:2879
+#: interface_names.e:2853
 msgid "Step into a routine"
 msgstr ""
 
@@ -37489,7 +37794,7 @@ msgid "Step out"
 msgstr ""
 
 #. Source code: e_Exec_out: STRING_32				do Result := locale.translation("Step out of a routine")	end
-#: interface_names.e:2882
+#: interface_names.e:2856
 msgid "Step out of a routine"
 msgstr ""
 
@@ -37560,7 +37865,7 @@ msgid ""
 msgstr ""
 
 #. Source code: e_Exec_kill: STRING_32				do Result := locale.translation("Stop execution")	end
-#: interface_names.e:2874
+#: interface_names.e:2848
 msgid "Stop execution"
 msgstr ""
 
@@ -37638,6 +37943,12 @@ msgstr ""
 
 #. Source code: i_critical: STRING = "Critical"
 #: es_exception_submit_dialog.e:1026
+msgid "Submit"
+msgstr ""
+
+#. Source code: button_submit: STRING_32 do Result := locale.translation_in_context ("Submit", "cloud") end
+#: es_cloud_names.e:127
+msgctxt "cloud"
 msgid "Submit"
 msgstr ""
 
@@ -37725,27 +38036,27 @@ msgid "Suspicious interation scheme"
 msgstr ""
 
 #. Source code: Result.force (locale.translation ("Swahili"), "sw")
-#: locale_names.e:117
+#: locale_names.e:116
 msgid "Swahili"
 msgstr ""
 
 #. Source code: Result.force (locale.translation ("Swahili (Kenya)"), "sw_ke")
-#: locale_names.e:325
+#: locale_names.e:324
 msgid "Swahili (Kenya)"
 msgstr ""
 
 #. Source code: Result.force (locale.translation ("Swedish"), "sv")
-#: locale_names.e:116
+#: locale_names.e:115
 msgid "Swedish"
 msgstr ""
 
 #. Source code: Result.force (locale.translation ("Swedish (Finland)"), "sv_fi")
-#: locale_names.e:323
+#: locale_names.e:322
 msgid "Swedish (Finland)"
 msgstr ""
 
 #. Source code: Result.force (locale.translation ("Swedish (Sweden)"), "sv_se")
-#: locale_names.e:324
+#: locale_names.e:323
 msgid "Swedish (Sweden)"
 msgstr ""
 
@@ -37765,12 +38076,12 @@ msgid "Switch to Tree View"
 msgstr ""
 
 #. Source code: e_Switch_num_format_to_dec: STRING_32 do Result := locale.translation("Switch to decimal format")	end
-#: interface_names.e:2925
+#: interface_names.e:2899
 msgid "Switch to decimal format"
 msgstr ""
 
 #. Source code: e_Switch_num_format_to_hex: STRING_32 do Result := locale.translation("Switch to hexadecimal format")	end
-#: interface_names.e:2924
+#: interface_names.e:2898
 msgid "Switch to hexadecimal format"
 msgstr ""
 
@@ -37790,7 +38101,7 @@ msgid "Switch to search mode"
 msgstr ""
 
 #. Source code: wt_Switches_and_query: STRING_32 do Result := locale.translation("Switches and Query")	end
-#: interface_names.e:3036
+#: interface_names.e:3010
 msgid "Switches and Query"
 msgstr ""
 
@@ -37810,7 +38121,7 @@ msgid "Synchronize"
 msgstr ""
 
 #. Source code: e_Send_stone_to_context: STRING_32	do Result := locale.translation("Synchronize context")	end
-#: interface_names.e:2919
+#: interface_names.e:2893
 msgid "Synchronize context"
 msgstr ""
 
@@ -37877,12 +38188,12 @@ msgid "Syntax complete enabled"
 msgstr ""
 
 #. Source code: Result.force (locale.translation ("Syriac"), "syr")
-#: locale_names.e:118
+#: locale_names.e:117
 msgid "Syriac"
 msgstr ""
 
 #. Source code: Result.force (locale.translation ("Syriac (Syria)"), "syr_sy")
-#: locale_names.e:326
+#: locale_names.e:325
 msgid "Syriac (Syria)"
 msgstr ""
 
@@ -37913,7 +38224,7 @@ msgid "System doesn't exist."
 msgstr ""
 
 #. Source code: e_Compiling: STRING_32				do Result := locale.translation("System is being compiled")	end
-#: interface_names.e:2847
+#: interface_names.e:2821
 msgid "System is being compiled"
 msgstr ""
 
@@ -38003,32 +38314,32 @@ msgid "Tags:"
 msgstr ""
 
 #. Source code: Result.force (locale.translation ("Tajik"), "tg")
-#: locale_names.e:121
+#: locale_names.e:120
 msgid "Tajik"
 msgstr ""
 
 #. Source code: Result.force (locale.translation ("Tajik (Tajikistan)"), "tg_cyrl_tj")
-#: locale_names.e:329
+#: locale_names.e:328
 msgid "Tajik (Tajikistan)"
 msgstr ""
 
 #. Source code: Result.force (locale.translation ("Tamazight"), "tmz")
-#: locale_names.e:124
+#: locale_names.e:123
 msgid "Tamazight"
 msgstr ""
 
 #. Source code: Result.force (locale.translation ("Tamazight (Algeria, Latin)"), "tmz_latn_dz")
-#: locale_names.e:332
+#: locale_names.e:331
 msgid "Tamazight (Algeria, Latin)"
 msgstr ""
 
 #. Source code: Result.force (locale.translation ("Tamil"), "ta")
-#: locale_names.e:119
+#: locale_names.e:118
 msgid "Tamil"
 msgstr ""
 
 #. Source code: Result.force (locale.translation ("Tamil (India)"), "ta_in")
-#: locale_names.e:327
+#: locale_names.e:326
 msgid "Tamil (India)"
 msgstr ""
 
@@ -38170,12 +38481,12 @@ msgid "Tasks"
 msgstr ""
 
 #. Source code: Result.force (locale.translation ("Tatar"), "tt")
-#: locale_names.e:128
+#: locale_names.e:127
 msgid "Tatar"
 msgstr ""
 
 #. Source code: Result.force (locale.translation ("Tatar (Russia)"), "tt_ru")
-#: locale_names.e:336
+#: locale_names.e:335
 msgid "Tatar (Russia)"
 msgstr ""
 
@@ -38185,12 +38496,12 @@ msgid "Te&xt"
 msgstr ""
 
 #. Source code: Result.force (locale.translation ("Telugu"), "te")
-#: locale_names.e:120
+#: locale_names.e:119
 msgid "Telugu"
 msgstr ""
 
 #. Source code: Result.force (locale.translation ("Telugu (India)"), "te_in")
-#: locale_names.e:328
+#: locale_names.e:327
 msgid "Telugu (India)"
 msgstr ""
 
@@ -38211,13 +38522,19 @@ msgid "Terminate C Compilation"
 msgstr ""
 
 #. Source code: e_Terminate_c_compilation: STRING_32 do Result := locale.translation("Terminate current C compilation in progress")	end
-#: interface_names.e:2932
+#: interface_names.e:2906
 msgid "Terminate current C compilation in progress"
 msgstr ""
 
 #. Source code: f_Terminate_command_button: STRING_32 	 do Result := locale.translation ("Terminate running command") end
 #: eb_external_output_names.e:20
 msgid "Terminate running command"
+msgstr ""
+
+#. Source code: label_terms_of_use: STRING_32 do Result := locale.translation_in_context ("Terms of use", "cloud") end
+#: es_cloud_names.e:118
+msgctxt "cloud"
+msgid "Terms of use"
 msgstr ""
 
 #. Source code: h_old_result: STRING = "Previous Result"
@@ -38441,18 +38758,24 @@ msgid "Text was saved"
 msgstr ""
 
 #. Source code: Result.force (locale.translation ("Thai"), "th")
-#: locale_names.e:122
+#: locale_names.e:121
 msgid "Thai"
 msgstr ""
 
 #. Source code: Result.force (locale.translation ("Thai (Thailand)"), "th_th")
-#: locale_names.e:330
+#: locale_names.e:329
 msgid "Thai (Thailand)"
 msgstr ""
 
 #. Source code: tt_thank_you: STRING = "Thank you for the bug report"
 #: es_exception_submit_dialog.e:1005
 msgid "Thank you for the bug report"
+msgstr ""
+
+#. Source code: on_system_error (locale.translation_in_context ("Thank you for the registration", "cloud.message"), a_report_label)
+#: es_account_login_register_box.e:681
+msgctxt "cloud.message"
+msgid "Thank you for the registration"
 msgstr ""
 
 #. Source code: (locale.translation_in_context ("The $ operator is not supported on externals.", "compiler.error"),
@@ -38784,7 +39107,7 @@ msgid ""
 msgstr ""
 
 #. Source code: "The file you have supplied as Runtime Information Record%N%
-#: interface_names.e:3046
+#: interface_names.e:3020
 msgid ""
 "The file you have supplied as Runtime Information Record\n"
 "does not exist or is not valid.\n"
@@ -38799,7 +39122,7 @@ msgid ""
 msgstr ""
 
 #. Source code: do Result := locale.translation("The file you have supplied as existing Execution Profile does%N%
-#: interface_names.e:3059
+#: interface_names.e:3033
 msgid ""
 "The file you have supplied as existing Execution Profile does\n"
 "not exist. Please provide a valid file or generate\n"
@@ -38993,7 +39316,7 @@ msgid_plural "The obsolete feature call has to be removed in {1} days."
 msgstr[0] ""
 
 #. Source code: e_Exec_attach_on_port_description: STRING_32	do Result := locale.translation("The port number shoud be greater than 1023.%NIt is recommended to use the range 49152-65535.")	end
-#: interface_names.e:2877
+#: interface_names.e:2851
 msgid ""
 "The port number shoud be greater than 1023.\n"
 "It is recommended to use the range 49152-65535."
@@ -39539,7 +39862,7 @@ msgid ""
 msgstr ""
 
 #. Source code: (once "This is the last day you can still continue as guest", once "You can still continue as guest for $1 more days", once "eiffel.account", nb_days), nb_days)
-#: interface_names.e:2772
+#: es_cloud_names.e:41
 msgctxt "eiffel.account"
 msgid "This is the last day you can still continue as guest"
 msgid_plural "You can still continue as guest for $1 more days"
@@ -39591,6 +39914,12 @@ msgstr ""
 #. Source code: has_more_than_one_target: STRING_32 					do Result := locale.translation ("This project has more than one target: ") end
 #: ewb_names.e:35
 msgid "This project has more than one target: "
+msgstr ""
+
+#. Source code: title_session_paused: STRING_32 do Result := locale.translation_in_context ("This session is PAUSED", "cloud.info") end
+#: es_cloud_names.e:86
+msgctxt "cloud.info"
+msgid "This session is PAUSED"
 msgstr ""
 
 #. Source code: l_domain_displayer_help: STRING_32 do Result := locale.translation ("This view can be used to display result of all formatters%Nthus it is used as a default view for formatters") end
@@ -39677,17 +40006,17 @@ msgid "Throw a call on Void target exception?"
 msgstr ""
 
 #. Source code: Result.force (locale.translation ("Tibetan"), "bo")
-#: locale_names.e:30
+#: locale_names.e:29
 msgid "Tibetan"
 msgstr ""
 
 #. Source code: Result.force (locale.translation ("Tibetan (Bhutan)"), "bo_bt")
-#: locale_names.e:171
+#: locale_names.e:170
 msgid "Tibetan (Bhutan)"
 msgstr ""
 
 #. Source code: Result.force (locale.translation ("Tibetan (PRC)"), "bo_cn")
-#: locale_names.e:172
+#: locale_names.e:171
 msgid "Tibetan (PRC)"
 msgstr ""
 
@@ -39732,6 +40061,15 @@ msgid ""
 "To check whether a REAL object is \"NaN\" (not a number) a comparison using "
 "the '=' symbol does not yield the intended result. Instead one must use the "
 "query {REAL}.is_nan."
+msgstr ""
+
+#. Source code: Result :=  locale.translation_in_context ("To continue using this editon of EiffelStudio, you must first agree with the license. If you do not agree with the terms, use another EiffelStudio Edition.", "license")
+#: es_startup_page.e:265
+msgctxt "license"
+msgid ""
+"To continue using this editon of EiffelStudio, you must first agree with the "
+"license. If you do not agree with the terms, use another EiffelStudio "
+"Edition."
 msgstr ""
 
 #. Source code: l_to_do_dialog: STRING_32 do Result := locale.translation ("To do information") end
@@ -39861,6 +40199,12 @@ msgstr ""
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:761
 msgctxt "preference"
 msgid "Toggle show unicode symbols"
+msgstr ""
+
+#. Source code: tooltip_button_show_more: STRING_32 do Result := locale.translation_in_context ("Toggle this button to show more|less information.", "cloud.info") end
+#: es_cloud_names.e:76
+msgctxt "cloud.info"
+msgid "Toggle this button to show more|less information."
 msgstr ""
 
 #. Source code: Result := locale.translation_in_context (once "Toggle this button to show/hide errors.", once "tool.error")
@@ -40716,23 +41060,29 @@ msgstr ""
 msgid "Try it now!"
 msgstr ""
 
+#. Source code: button_try_to_reconnect: STRING_32 do Result := locale.translation_in_context ("Try to reconnect", "cloud.action") end
+#: es_cloud_names.e:69
+msgctxt "cloud.action"
+msgid "Try to reconnect"
+msgstr ""
+
 #. Source code: Result.force (locale.translation ("Turkish"), "tr")
-#: locale_names.e:127
+#: locale_names.e:126
 msgid "Turkish"
 msgstr ""
 
 #. Source code: Result.force (locale.translation ("Turkish (Turkey)"), "tr_tr")
-#: locale_names.e:335
+#: locale_names.e:334
 msgid "Turkish (Turkey)"
 msgstr ""
 
 #. Source code: Result.force (locale.translation ("Turkmen"), "tk")
-#: locale_names.e:123
+#: locale_names.e:122
 msgid "Turkmen"
 msgstr ""
 
 #. Source code: Result.force (locale.translation ("Turkmen (Turkmenistan)"), "tk_tm")
-#: locale_names.e:331
+#: locale_names.e:330
 msgid "Turkmen (Turkmenistan)"
 msgstr ""
 
@@ -40905,22 +41255,22 @@ msgid "UUID is missing."
 msgstr ""
 
 #. Source code: Result.force (locale.translation ("Uighur"), "ug")
-#: locale_names.e:129
+#: locale_names.e:128
 msgid "Uighur"
 msgstr ""
 
 #. Source code: Result.force (locale.translation ("Uighur (PRC)"), "ug_cn")
-#: locale_names.e:337
+#: locale_names.e:336
 msgid "Uighur (PRC)"
 msgstr ""
 
 #. Source code: Result.force (locale.translation ("Ukrainian"), "uk")
-#: locale_names.e:130
+#: locale_names.e:129
 msgid "Ukrainian"
 msgstr ""
 
 #. Source code: Result.force (locale.translation ("Ukrainian (Ukraine)"), "uk_ua")
-#: locale_names.e:338
+#: locale_names.e:337
 msgid "Ukrainian (Ukraine)"
 msgstr ""
 
@@ -41661,7 +42011,7 @@ msgid "Unlin&k Context Tool"
 msgstr ""
 
 #. Source code: e_Separate_stone: STRING_32			do Result := locale.translation("Unlink the context tool from the other components")	end
-#: interface_names.e:2921
+#: interface_names.e:2895
 msgid "Unlink the context tool from the other components"
 msgstr ""
 
@@ -41866,6 +42216,18 @@ msgstr ""
 msgid "Update"
 msgstr ""
 
+#. Source code: button_update: STRING_32 do Result := locale.translation_in_context ("Update", "cloud.info") end
+#: es_cloud_names.e:133
+msgctxt "cloud.info"
+msgid "Update"
+msgstr ""
+
+#. Source code: tooltip_button_update: STRING_32 do Result := locale.translation_in_context ("Update account information (synchronize)", "cloud.info") end
+#: es_cloud_names.e:134
+msgctxt "cloud.info"
+msgid "Update account information (synchronize)"
+msgstr ""
+
 #. Source code: l_Update_breakpoint: STRING_32		do Result := locale.translation("Update breakpoint(s) status")	end
 #: interface_names.e:1560
 msgid "Update breakpoint(s) status"
@@ -41946,27 +42308,27 @@ msgid "Updating the view ..."
 msgstr ""
 
 #. Source code: Result.force (locale.translation ("Upper Sorbian"), "wen")
-#: locale_names.e:134
+#: locale_names.e:133
 msgid "Upper Sorbian"
 msgstr ""
 
 #. Source code: Result.force (locale.translation ("Upper Sorbian (Germany)"), "wen_de")
-#: locale_names.e:343
+#: locale_names.e:342
 msgid "Upper Sorbian (Germany)"
 msgstr ""
 
 #. Source code: Result.force (locale.translation ("Urdu"), "tr")
-#: locale_names.e:126
+#: locale_names.e:125
 msgid "Urdu"
 msgstr ""
 
 #. Source code: Result.force (locale.translation ("Urdu (India)"), "tr_in")
-#: locale_names.e:334
+#: locale_names.e:333
 msgid "Urdu (India)"
 msgstr ""
 
 #. Source code: Result.force (locale.translation ("Urdu (Pakistan)"), "ur_pk")
-#: locale_names.e:339
+#: locale_names.e:338
 msgid "Urdu (Pakistan)"
 msgstr ""
 
@@ -42532,8 +42894,8 @@ msgctxt "code_analyzer"
 msgid "Useless contract with void safety"
 msgstr ""
 
-#. Source code: l_user_name: STRING_32 do Result := locale.translation ("User Name") end
-#: interface_names.e:2751
+#. Source code: label_user_name: STRING_32 do Result := locale.translation ("User Name") end
+#: es_cloud_names.e:51
 msgid "User Name"
 msgstr ""
 
@@ -42561,6 +42923,17 @@ msgid ""
 "defined in Editor->Eiffel->Keyboard Shortcuts->Customized insertion 3."
 msgstr ""
 
+#. Source code: Result := locale.formatted_string (locale.translation_in_context ("User information provided during the registration process is used solely for the purpose of creating a user account at $1 and enforcing the usage rules (number of concurrent sessions) according to the terms of the EiffelStudio license. Eiffel Software does not share such information with any third party.", "eiffel.account"), [a_url])
+#: es_cloud_names.e:26
+msgctxt "eiffel.account"
+msgid ""
+"User information provided during the registration process is used solely for "
+"the purpose of creating a user account at $1 and enforcing the usage rules "
+"(number of concurrent sessions) according to the terms of the EiffelStudio "
+"license. Eiffel Software does not share such information with any third "
+"party."
+msgstr ""
+
 #. Source code: c_user: STRING = "User-defined tags"
 #: es_test_tree.e:299
 msgid "User-defined tags"
@@ -42571,8 +42944,14 @@ msgstr ""
 msgid "Username:"
 msgstr ""
 
+#. Source code: append_bold_text_to (locale.translation_in_context ("Username: ", "cloud.info"), txt)
+#: es_cloud_account_tool_panel.e:226
+msgctxt "cloud.info"
+msgid "Username: "
+msgstr ""
+
 #. Source code: do Result := locale.translation("Using this wizard you can analyze the result of a profiling.%N%
-#: interface_names.e:2999
+#: interface_names.e:2973
 msgid ""
 "Using this wizard you can analyze the result of a profiling.\n"
 "\n"
@@ -42681,17 +43060,17 @@ msgid ""
 msgstr ""
 
 #. Source code: Result.force (locale.translation ("Uzbek"), "uz")
-#: locale_names.e:132
+#: locale_names.e:131
 msgid "Uzbek"
 msgstr ""
 
 #. Source code: Result.force (locale.translation ("Uzbek (Uzbekistan, Cyrillic)"), "uz_cyrl_uz")
-#: locale_names.e:340
+#: locale_names.e:339
 msgid "Uzbek (Uzbekistan, Cyrillic)"
 msgstr ""
 
 #. Source code: Result.force (locale.translation ("Uzbek (Uzbekistan, Latin)"), "uz_latn_uz")
-#: locale_names.e:341
+#: locale_names.e:340
 msgid "Uzbek (Uzbekistan, Latin)"
 msgstr ""
 
@@ -43001,12 +43380,12 @@ msgid "Very short identifier"
 msgstr ""
 
 #. Source code: Result.force (locale.translation ("Vietnamese"), "vi")
-#: locale_names.e:133
+#: locale_names.e:132
 msgid "Vietnamese"
 msgstr ""
 
 #. Source code: Result.force (locale.translation ("Vietnamese (Vietnam)"), "vi_vn")
-#: locale_names.e:342
+#: locale_names.e:341
 msgid "Vietnamese (Vietnam)"
 msgstr ""
 
@@ -43136,6 +43515,12 @@ msgstr ""
 msgid "Vision2 Application Appearance"
 msgstr ""
 
+#. Source code: tooltip_button_visit_web_account: STRING_32 do Result := locale.translation_in_context ("Visit my online Account (in web browser)...", "cloud.info") end
+#: es_cloud_names.e:81
+msgctxt "cloud.info"
+msgid "Visit my online Account (in web browser)..."
+msgstr ""
+
 #. Source code: do Result := translation_in_context ("Void check using 'is_equal'", once "code_analyzer") end
 #: ca_names.e:158
 msgctxt "code_analyzer"
@@ -43189,7 +43574,7 @@ msgid "WEL Application Type"
 msgstr ""
 
 #. Source code: e_w_code: STRING_32 do Result := locale.translation("W_code")	end
-#: interface_names.e:2946
+#: interface_names.e:2920
 msgid "W_code"
 msgstr ""
 
@@ -43368,6 +43753,12 @@ msgstr ""
 msgid "Welcome"
 msgstr ""
 
+#. Source code: prompt_welcome_guest: STRING_32 do Result := locale.translation_in_context ("Welcome guest ...", "cloud.info") end
+#: es_cloud_names.e:61
+msgctxt "cloud.info"
+msgid "Welcome guest ..."
+msgstr ""
+
 #. Source code: t_welcome_to_the_wizard: STRING_32	do Result := locale.translation ("Welcome to the%NPrecompilation Wizard") end
 #: interface_names.e:58
 msgid ""
@@ -43411,18 +43802,29 @@ msgid ""
 msgstr ""
 
 #. Source code: wt_Profiler_welcome: STRING_32 do Result := locale.translation("Welcome to the Profiler Wizard")	end
-#: interface_names.e:2997
+#: interface_names.e:2971
 msgid "Welcome to the Profiler Wizard"
 msgstr ""
 
 #. Source code: Result.force (locale.translation ("Welsh"), "cy")
-#: locale_names.e:36
+#: locale_names.e:35
 msgid "Welsh"
 msgstr ""
 
 #. Source code: Result.force (locale.translation ("Welsh (United Kingdom)"), "cy_gb")
-#: locale_names.e:179
+#: locale_names.e:178
 msgid "Welsh (United Kingdom)"
+msgstr ""
+
+#. Source code: locale.translation_in_context ({STRING_32} "[
+#: option_properties.e:508
+msgctxt "configuration.option"
+msgid ""
+"What warnings about obsolete feature calls should be reported?\n"
+" • None: None;\n"
+" • Current: Only warnings that are relevant now (with the date that passed "
+"already);\n"
+" • All: All warnings (regardless of the associated date)."
 msgstr ""
 
 #. #-#-#-#-#  estudio.pot  #-#-#-#-#
@@ -43626,12 +44028,12 @@ msgid "Wizard to precompile libraries"
 msgstr ""
 
 #. Source code: Result.force (locale.translation ("Wolof"), "wo")
-#: locale_names.e:135
+#: locale_names.e:134
 msgid "Wolof"
 msgstr ""
 
 #. Source code: Result.force (locale.translation ("Wolof (Senegal)"), "wo_sn")
-#: locale_names.e:344
+#: locale_names.e:343
 msgid "Wolof (Senegal)"
 msgstr ""
 
@@ -43689,22 +44091,22 @@ msgid "XML files"
 msgstr ""
 
 #. Source code: Result.force (locale.translation ("Xhosa/isiXhosa"), "xh")
-#: locale_names.e:136
+#: locale_names.e:135
 msgid "Xhosa/isiXhosa"
 msgstr ""
 
 #. Source code: Result.force (locale.translation ("Xhosa/isiXhosa (South Africa)"), "xh_za")
-#: locale_names.e:345
+#: locale_names.e:344
 msgid "Xhosa/isiXhosa (South Africa)"
 msgstr ""
 
 #. Source code: Result.force (locale.translation ("Yakut"), "sah")
-#: locale_names.e:108
+#: locale_names.e:107
 msgid "Yakut"
 msgstr ""
 
 #. Source code: Result.force (locale.translation ("Yakut (Russia)"), "sah_ru")
-#: locale_names.e:305
+#: locale_names.e:304
 msgid "Yakut (Russia)"
 msgstr ""
 
@@ -43714,27 +44116,27 @@ msgid "Yes"
 msgstr ""
 
 #. Source code: Result.force (locale.translation ("Yi"), "ii")
-#: locale_names.e:65
+#: locale_names.e:64
 msgid "Yi"
 msgstr ""
 
 #. Source code: Result.force (locale.translation ("Yi (PRC)"), "ii_cn")
-#: locale_names.e:253
+#: locale_names.e:252
 msgid "Yi (PRC)"
 msgstr ""
 
 #. Source code: Result.force (locale.translation ("Yoruba"), "yo")
-#: locale_names.e:137
+#: locale_names.e:136
 msgid "Yoruba"
 msgstr ""
 
 #. Source code: Result.force (locale.translation ("Yoruba (Nigeria)"), "yo_ng")
-#: locale_names.e:346
+#: locale_names.e:345
 msgid "Yoruba (Nigeria)"
 msgstr ""
 
-#. Source code: l_sign_in_with_existing_account: STRING_32 do Result := locale.translation ("You already have an account? Sign in >>") end
-#: interface_names.e:2767
+#. Source code: label_sign_in_with_existing_account: STRING_32 do Result := locale.translation ("You already have an account? Sign in >>") end
+#: es_cloud_names.e:49
 msgid "You already have an account? Sign in >>"
 msgstr ""
 
@@ -43744,6 +44146,12 @@ msgid ""
 "You are about to overwrite the original file with\n"
 "the backup file. Previous content will be lost\n"
 "and the backup file deleted."
+msgstr ""
+
+#. Source code: prompt_not_connected_with_account: STRING_32 do Result := locale.translation_in_context ("You are not connected with an account ...", "cloud.info") end
+#: es_cloud_names.e:63
+msgctxt "cloud.info"
+msgid "You are not connected with an account ..."
 msgstr ""
 
 #. Source code: do Result := translation_in_context ("You are using '=' to compare object references. This only%Nchecks whether they%
@@ -43804,12 +44212,18 @@ msgid ""
 msgstr ""
 
 #. Source code: do Result := locale.translation("You can generate the Execution Profile from a Run-time Information Record%N%
-#: interface_names.e:3019
+#: interface_names.e:2993
 msgid ""
 "You can generate the Execution Profile from a Run-time Information Record\n"
 "created by a profiler, or you can reuse an existing Execution Profile if "
 "you\n"
 "have already generated one for this system."
+msgstr ""
+
+#. Source code: vb_off.extend (create {EV_LABEL}.make_with_text (locale.translation_in_context ("You can get that token from the web site.", "cloud.auth")))
+#: es_account_login_register_box.e:255
+msgctxt "cloud.auth"
+msgid "You can get that token from the web site."
 msgstr ""
 
 #. Source code: Result := locale.translation ("[
@@ -43827,6 +44241,11 @@ msgid ""
 "\t$CLASS - current class name\n"
 "\t$FEATURE - current feature name\n"
 "\t$THREADID - current thread id"
+msgstr ""
+
+#. Source code: label_cannot_continue_as_guest: STRING_32 do Result := locale.translation ("You can not continue as guest anymore!") end
+#: es_cloud_names.e:44
+msgid "You can not continue as guest anymore!"
 msgstr ""
 
 #. Source code: f_get_negation: STRING_32 do Result := locale.translation ("You can put %"not%" before a criterion name to negate it") end
@@ -43943,10 +44362,16 @@ msgid "You should first manipulate the subqueries"
 msgstr ""
 
 #. Source code: e_external_command_list_full: STRING_32 do Result := locale.translation("Your external command list is full.%NUse Tools->External Command... to delete one.")	end
-#: interface_names.e:2952
+#: interface_names.e:2926
 msgid ""
 "Your external command list is full.\n"
 "Use Tools->External Command... to delete one."
+msgstr ""
+
+#. Source code: title_license_expired: STRING_32 do Result := locale.translation_in_context ("Your license is EXPIRED", "cloud.info") end
+#: es_cloud_names.e:83
+msgctxt "cloud.info"
+msgid "Your license is EXPIRED"
 msgstr ""
 
 #. Source code: Result := locale.formatted_string (locale.translation ("Your old configration file needs to be converted to the new format.%N%
@@ -43956,6 +44381,12 @@ msgid ""
 "The default name for the new configuration is '$1'.\n"
 "Select OK if you want to keep this name, or 'Save As...' to choose a "
 "different name."
+msgstr ""
+
+#. Source code: on_system_error (locale.translation_in_context ("Your plan is expired, please renew or purchase a new one.", "cloud.error"), a_report_label)
+#: es_account_login_register_box.e:671
+msgctxt "cloud.error"
+msgid "Your plan is expired, please renew or purchase a new one."
 msgstr ""
 
 #. #-#-#-#-#  estudio.pot  #-#-#-#-#
@@ -44041,12 +44472,12 @@ msgid "Zoom reset numpad"
 msgstr ""
 
 #. Source code: Result.force (locale.translation ("Zulu/isiZulu"), "zu")
-#: locale_names.e:139
+#: locale_names.e:138
 msgid "Zulu/isiZulu"
 msgstr ""
 
 #. Source code: Result.force (locale.translation ("Zulu/isiZulu (South Africa)"), "zu_za")
-#: locale_names.e:352
+#: locale_names.e:351
 msgid "Zulu/isiZulu (South Africa)"
 msgstr ""
 
@@ -44133,6 +44564,12 @@ msgstr ""
 #. Source code: change_operator_help: STRING_GENERAL do Result := locale.translation ("change the boolean operator") end
 #: shared_ewb_help.e:45
 msgid "change the boolean operator"
+msgstr ""
+
+#. Source code: menu_check: STRING_32 do Result := locale.translation_in_context ("check", "cloud.menu") end
+#: es_cloud_names.e:113
+msgctxt "cloud.menu"
+msgid "check"
 msgstr ""
 
 #. Source code: lb_degree: STRING = "Degree"

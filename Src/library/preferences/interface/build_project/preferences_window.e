@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "[
 			A EV_TITLED_WINDOW containing a tree view of application preferences.  Provides a
 			list to view preference information and ability to edit the preferences using popup floating widgets.  Also allows
@@ -190,17 +190,15 @@ feature {NONE} -- Events
 						-- Color drawable item
 					l_color_item.redraw
 				elseif attached {EV_GRID_LABEL_ITEM} a_item.row.item (1) as l_label_item then
-					if a_pref.generating_preference_type.is_equal ("FONT") then
+					if
+						a_pref.generating_preference_type.is_equal ("FONT") and then
+						attached {EV_GRID_LABEL_ITEM} l_item as l_font_item and
+						attached {FONT_PREFERENCE} a_pref as l_font
+					then
 							-- Font label item
-						if
-							attached {EV_GRID_LABEL_ITEM} l_item as l_font_item and
-							attached {FONT_PREFERENCE} a_pref as l_font
-						then
-							l_font_item.set_text (l_font.text_value)
-							l_font_item.set_font (l_font.value)
-						end
+						l_font_item.set_text (l_font.text_value)
+						l_font_item.set_font (l_font.value)
 					end
-				else
 				end
 			end
 		end
@@ -231,42 +229,45 @@ feature {NONE} -- Events
 			l_popup_menu: EV_MENU
 			l_menu_item: EV_MENU_ITEM
 		do
-			if not a_pref.is_default_value and then a_button = 3 then
+			if
+				not a_pref.is_default_value and then
+				a_button = 3 and then
 					-- Extract preference  from row data.
 					-- Show the menu only if necessary (that is to say, the preference value is different from the default one)
-				if
-					a_item.row.data = a_pref and then a_pref.has_default_value
-				then
-						-- Ensure that before showing the menu, the row gets selected.
-					grid.remove_selection
-					a_item.row.enable_select
+				a_item.row.data = a_pref and then
+				a_pref.has_default_value
+			then
+					-- Ensure that before showing the menu, the row gets selected.
+				grid.remove_selection
+				a_item.row.enable_select
 
-						-- The right clicked preference matches the selection in the grid
-					create l_popup_menu
-					create l_menu_item.make_with_text (l_restore_default)
-					l_menu_item.select_actions.extend (agent set_preference_to_default (a_item, a_pref))
-					l_popup_menu.extend (l_menu_item)
-					l_popup_menu.show
-				end
+					-- The right clicked preference matches the selection in the grid
+				create l_popup_menu
+				create l_menu_item.make_with_text (l_restore_default)
+				l_menu_item.select_actions.extend (agent set_preference_to_default (a_item, a_pref))
+				l_popup_menu.extend (l_menu_item)
+				l_popup_menu.show
 			end
 		end
 
-	on_grid_item_double_pressed (a_x, a_y, a_button: INTEGER; a_item: EV_GRID_ITEM)
+	on_grid_item_double_pressed (a_x, a_y, a_button: INTEGER; a_item: detachable EV_GRID_ITEM)
 			-- An item was double pressed
-		local
-			l_col_index: INTEGER
 		do
-			if a_item /= Void then
-				l_col_index := a_item.column.index
-				if l_col_index = 1 or l_col_index = 2 or l_col_index = 3 then
-					if attached {BOOLEAN_PREFERENCE} a_item.row.data as l_bool_preference then
-						if attached {EV_GRID_CHOICE_ITEM} a_item.row.item (4) as l_combo_widget then
-							l_combo_widget.set_text ((not l_bool_preference.value).out)
-							l_combo_widget.deactivate_actions.call ([])
-						else
-							check has_combo_widget: False end
-						end
+			if
+				attached a_item and then
+				a_item.column.index & 3 /= 0 and then
+				attached {BOOLEAN_PREFERENCE} a_item.row.data as l_bool_preference
+			then
+				if attached {EV_GRID_CHOICE_ITEM} a_item.row.item (4) as l_combo_widget then
+					check
+						a_item.column.index = 1 or
+						a_item.column.index = 2 or
+						a_item.column.index = 3
 					end
+					l_combo_widget.set_text ((not l_bool_preference.value).out)
+					l_combo_widget.deactivate_actions.call
+				else
+					check has_combo_widget: False end
 				end
 			end
 		end
@@ -276,16 +277,13 @@ feature {NONE} -- Events
 		require
 			k_attached: k /= Void
 		do
-			if k /= Void then
-				if k.code = {EV_KEY_CONSTANTS}.key_enter then
-					if grid.has_selected_row then
-						if attached grid.selected_rows.first.item (4) as l_item then
-							if attached {PREFERENCE_WIDGET} l_item.data as l_preference_widget then
-								l_preference_widget.show
-							end
-						end
-					end
-				end
+			if
+				k.code = {EV_KEY_CONSTANTS}.key_enter and then
+				grid.has_selected_row and then
+				attached grid.selected_rows.first.item (4) as l_item and then
+				attached {PREFERENCE_WIDGET} l_item.data as l_preference_widget
+			then
+				l_preference_widget.show
 			end
 		end
 
@@ -329,12 +327,10 @@ feature {NONE} -- Events
 			-- Header was double-clicked.
 		local
 			div_index: INTEGER
-			col: EV_GRID_COLUMN
 		do
 			div_index := grid.header.pointed_divider_index
 			if div_index > 0 then
-				col := grid.column (div_index)
-				resized_columns_list.put (True, col.index)
+				resized_columns_list.put (True, grid.column (div_index).index)
 			end
 		end
 
@@ -486,15 +482,14 @@ feature {NONE} -- Implementation
 
 			l_names.append (create {ARRAYED_LIST [READABLE_STRING_GENERAL]}.make_from_array (preferences.preferences.current_keys))
 			l_names.sort
+			across
+				l_names as name_cursor
 			from
-				l_names.start
 				grid_remove_and_clear_all_rows (grid)
 				description_text.set_text ("")
 				curr_row := 1
-			until
-				l_names.after
 			loop
-				l_pref_name := l_names.item
+				l_pref_name := name_cursor.item
 				if should_display_preference (l_pref_name, a_pref_name) and l_pref_name.count > a_pref_name.count then
 					l_preference := preferences.preferences.item (l_pref_name)
 
@@ -537,7 +532,6 @@ feature {NONE} -- Implementation
 						curr_row := curr_row + 1
 					end
 				end
-				l_names.forth
 			end
 			if grid.row_count > 0 then
 				grid.row (1).enable_select
@@ -571,13 +565,12 @@ feature {NONE} -- Implementation
 			curr_row: INTEGER
 			l_grid_item: detachable EV_GRID_ITEM
 		do
+			across
+				visible_preferences as p
 			from
-				visible_preferences.start
 				curr_row := 1
-			until
-				visible_preferences.after
 			loop
-				l_preference := visible_preferences.item
+				l_preference := p.item
 				if attached {EV_GRID_LABEL_ITEM} grid.row (curr_row).item (3) as l_grid_default_item then
 					if l_preference.is_default_value then
 						l_grid_default_item.set_text (p_default_value)
@@ -599,8 +592,6 @@ feature {NONE} -- Implementation
 					grid_value_drawable_item.redraw
 				end
 				curr_row := curr_row + 1
-
-				visible_preferences.forth
 			end
 		end
 
@@ -616,17 +607,8 @@ feature {NONE} -- Implementation
 	wipe_out_visible_preference_change_action
 			-- Wipe out the change action setup to notify Current about a change from outside
 		do
-			from
-				visible_preferences.start
-			until
-				visible_preferences.after
-			loop
-				visible_preferences.item.change_actions.prune_all (display_update_agent)
-				visible_preferences.forth
-			end
+			⟳ p: visible_preferences ¦ p.change_actions.prune_all (display_update_agent) ⟲
 		end
-
-feature {NONE} -- Implementation
 
 	destroy
 			-- Destroy.
@@ -782,7 +764,7 @@ feature {NONE} -- Implementation
 			g.clear
 		ensure
 			g.row_count = 0
-			g.selected_rows.count = 0
+			g.selected_rows.is_empty
 		end
 
 	visible_preferences: ARRAYED_LIST [PREFERENCE]
@@ -862,7 +844,8 @@ invariant
 	has_preferences: preferences /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2014, Eiffel Software and others"
+	ca_ignore: "CA011", "CA011: too many arguments"
+	copyright:	"Copyright (c) 1984-2020, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software
@@ -872,4 +855,4 @@ note
 			Customer support http://support.eiffel.com
 		]"
 
-end -- class PREFERENCES_GRID_WINDOW
+end

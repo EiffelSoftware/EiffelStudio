@@ -74,15 +74,15 @@ feature {NONE} -- Basic operations
 			--
 			-- `a_row': The row the user requested an action to be performed on.
 		local
-			l_item: EVENT_LIST_LOG_ITEM_I
 			l_prompt: ES_INFORMATION_PROMPT
 		do
-			l_item ?= a_row.data
-			check l_item_attached: l_item /= Void end
-
-			create l_prompt.make_standard (l_item.description)
-			l_prompt.set_sub_title ("Log Message")
-			l_prompt.show_on_active_window
+			if attached {EVENT_LIST_LOG_ITEM_I} a_row.data as l_item then
+				create l_prompt.make_standard (l_item.description)
+				l_prompt.set_sub_title ("Log Message")
+				l_prompt.show_on_active_window
+			else
+				check is_log_item: False end
+			end
 		end
 
 feature {NONE} -- User interface items
@@ -143,12 +143,10 @@ feature {NONE} -- Factory
 			-- `a_row': The row to create items on.
 		local
 			l_item: EV_GRID_LABEL_ITEM
-			l_log: EVENT_LIST_LOG_ITEM_I
 			l_pixmap: EV_PIXMAP
 			l_font: EV_FONT
 		do
-			l_log ?= a_event_item
-			check l_log_attached: l_log /= Void end
+			check is_log_attached: attached {EVENT_LIST_LOG_ITEM_I} a_event_item end
 
 				-- Category
 			create l_item

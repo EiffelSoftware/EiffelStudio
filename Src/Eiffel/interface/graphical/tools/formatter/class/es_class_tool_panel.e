@@ -198,30 +198,29 @@ feature {NONE} -- Implementation
 	drop_stone (st: like stone)
 			-- Set `st' in the stone manager and pop up the feature view if it is a feature stone.
 		local
-			fst: FEATURE_STONE
+			l_is_feature_stone: BOOLEAN
 			l_tool: EB_STONABLE_TOOL
+			dw: like develop_window
 		do
-			fst ?= st
+			l_is_feature_stone := attached {FEATURE_STONE} st
 			l_tool := decide_tool_to_display (st)
-			if develop_window.is_unified_stone then
-				develop_window.set_stone (st)
-			elseif develop_window.link_tools then
-				develop_window.tools.set_stone (st)
+			dw := develop_window
+			if dw.is_unified_stone then
+				dw.set_stone (st)
+			elseif dw.link_tools then
+				dw.tools.set_stone (st)
 			else
 				l_tool.set_stone (st)
 			end
-			if fst /= Void and then address_manager /= Void then
-				address_manager.hide_address_bar
+			if l_is_feature_stone and then attached address_manager as l_manager then
+				l_manager.hide_address_bar
 			end
 		end
 
 	decide_tool_to_display (a_st: STONE): EB_STONABLE_TOOL
 			-- Decide which tool to display.
-		local
-			fs: FEATURE_STONE
 		do
-			fs ?= a_st
-			if fs /= Void then
+			if attached {FEATURE_STONE} a_st then
 				develop_window.tools.show_default_tool_of_feature
 				Result := develop_window.tools.default_feature_tool
 			else
@@ -240,7 +239,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright: "Copyright (c) 1984-2015, Eiffel Software"
+	copyright: "Copyright (c) 1984-2020, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

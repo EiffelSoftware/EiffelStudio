@@ -165,7 +165,11 @@ feature -- Status setting
 
 				update_viewpoints (fst.e_class)
 				create l_feature_comparer
-				l_last_stone ?= stone
+				if attached {FEATURE_STONE} stone as l_feat_stone then
+					l_last_stone := l_feat_stone
+				else
+					l_last_stone := Void
+				end
 				if
 					l_last_stone = Void or else
 					(not l_feature_comparer.same_feature (l_last_stone.e_feature, fst.e_feature))
@@ -370,7 +374,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2017, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2020, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

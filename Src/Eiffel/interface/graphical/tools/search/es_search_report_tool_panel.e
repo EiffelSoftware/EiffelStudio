@@ -34,8 +34,8 @@ feature {NONE} -- Initialization
 		local
 			frm: EV_FRAME
 			report_toolbar: EV_TOOL_BAR
+			report: EV_FRAME
 			hbox: EV_HORIZONTAL_BOX
-			l_tool: ES_SEARCH_TOOL
 		do
 			create report_toolbar
 			report_toolbar.disable_vertical_button_style
@@ -71,17 +71,23 @@ feature {NONE} -- Initialization
 			shortcut_tool_bar.extend (create {EV_TOOL_BAR_SEPARATOR})
 			shortcut_tool_bar.extend (collapse_all_button)
 
-			l_tool ?= develop_window.shell_tools.tool ({ES_SEARCH_TOOL})
-			create search_report_grid.make (l_tool)
+			if attached {ES_SEARCH_TOOL} develop_window.shell_tools.tool ({ES_SEARCH_TOOL}) as l_tool then
+				create search_report_grid.make (l_tool)
+			else
+					-- TODO: check if it makes sense to have search report tool without a search tool ... [2020-06-29]
+				check has_search_tool: False end
+				search_report_grid := Void
+			end
 
 			create report_box
 			report_box.extend (frm)
 			report_box.disable_item_expand (frm)
 
-			create report
-
-			report.extend (search_report_grid)
-			report_box.extend (report)
+			if attached search_report_grid as g then
+				create report
+				report.extend (g)
+				report_box.extend (report)
+			end
 		end
 
 feature {EB_DEVELOPMENT_WINDOW_BUILDER, ES_TOOL} -- Initialize
@@ -106,14 +112,8 @@ feature {EB_DEVELOPMENT_WINDOW_BUILDER, ES_TOOL} -- Initialize
 
 feature -- Access
 
-	search_report_grid: EB_SEARCH_REPORT_GRID
+	search_report_grid: detachable EB_SEARCH_REPORT_GRID
 			-- Grid to contain search report
-
-	search_tool: ES_MULTI_SEARCH_TOOL_PANEL
-			-- Search tool
-		do
-			Result ?= develop_window.shell_tools.tool ({ES_SEARCH_TOOL}).panel
-		end
 
 	report_box: EV_VERTICAL_BOX
 			-- Widget
@@ -137,8 +137,8 @@ feature -- Command
 			Precursor {EB_TOOL}
 				-- We need to do this in shown_actions when it is available in docking library.
 				-- Or the widget in a tool will not get focus at auto-hide mode.
-			if search_report_grid /= Void then
-				set_focus_if_possible (search_report_grid)
+			if attached search_report_grid as g then
+				set_focus_if_possible (g)
 			end
 		end
 
@@ -182,15 +182,14 @@ feature {ES_MULTI_SEARCH_TOOL_PANEL, EB_SEARCH_REPORT_GRID} -- Widgets
 	collapse_all_button: EV_TOOL_BAR_BUTTON
 			-- Button to collapse all.
 
-	report : EV_FRAME
-			-- Report container
-
 feature {NONE} -- Recyclable
 
 	internal_recycle
 			-- Recyclable
 		do
-			search_report_grid.wipe_out
+			if attached search_report_grid as g then
+				g.wipe_out
+			end
 			Precursor {EB_TOOL}
 		end
 

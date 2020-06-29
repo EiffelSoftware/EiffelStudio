@@ -342,7 +342,6 @@ feature{NONE} -- Actions
 		local
 			l_selected_index: INTEGER
 			l_notebook: EV_NOTEBOOK
-			l_panel: EB_METRIC_PANEL
 			i: INTEGER
 			l_notebook_count: INTEGER
 		do
@@ -354,13 +353,15 @@ feature{NONE} -- Actions
 			until
 				i > l_notebook_count
 			loop
-				l_panel ?= l_notebook @ i
-				check l_panel /= Void end
-				if is_shown and then i = l_selected_index then
-					l_panel.set_is_selected (True)
-					l_panel.on_select
+				if attached {EB_METRIC_PANEL} (l_notebook @ i) as l_panel then
+					if is_shown and then i = l_selected_index then
+						l_panel.set_is_selected (True)
+						l_panel.on_select
+					else
+						l_panel.set_is_selected (False)
+					end
 				else
-					l_panel.set_is_selected (False)
+					check is_panel: False end
 				end
 				i := i + 1
 			end
@@ -430,11 +431,9 @@ feature{NONE} -- Actions
 	on_tab_droppable (a_pebble: ANY): BOOLEAN
 			-- Function to decide if `a_pebble' can be dropped on a `metric_notebook' tab
 		local
-			l_stone: STONE
 			l_tab_index: INTEGER
 		do
-			l_stone ?= a_pebble
-			if l_stone /= Void then
+			if attached {STONE} a_pebble then
 				l_tab_index := metric_notebook.pointed_tab_index
 				if l_tab_index > 0 then
 					if metric_notebook.i_th (l_tab_index) = metric_evaluation_panel then
@@ -450,17 +449,16 @@ feature{NONE} -- Actions
 			-- Action called when `a_pebble' is dropped on `metric_notebook'.
 			-- It will target current to `a_pebble'.
 		local
-			l_stone: STONE
 			l_tab_index: INTEGER
-			l_panel: EB_METRIC_PANEL
 		do
-			l_stone ?= a_pebble
-			if l_stone /= Void then
+			if attached {STONE} a_pebble as l_stone then
 				l_tab_index := metric_notebook.pointed_tab_index
 				if l_tab_index > 0 then
-					l_panel ?= metric_notebook.i_th (l_tab_index)
-					check l_panel /= Void end
-					l_panel.force_drop_stone (l_stone)
+					if attached {EB_METRIC_PANEL} metric_notebook.i_th (l_tab_index) as l_panel then
+						l_panel.force_drop_stone (l_stone)
+					else
+						check is_panel: False end
+					end
 				end
 			end
 		end
@@ -547,7 +545,7 @@ invariant
 	notify_project_unloaded_agent_attached: notify_project_unloaded_agent /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2009, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2020, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

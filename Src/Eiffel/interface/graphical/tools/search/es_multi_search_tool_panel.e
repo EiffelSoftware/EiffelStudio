@@ -377,7 +377,9 @@ feature -- Action
 							end
 							l_replaced := True
 							go_to_next_found
-							search_report_grid.redraw_grid
+							if attached search_report_grid as g then
+								g.redraw_grid
+							end
 							select_current_row
 							force_not_changed
 							put_replace_report (False)
@@ -612,16 +614,18 @@ feature {NONE} -- Shortcut button actions
 			i: INTEGER
 			l_row: EV_GRID_ROW
 		do
-			from
-				i := 1
-			until
-				i > search_report_grid.row_count
-			loop
-				l_row := search_report_grid.row (i)
-				if l_row.is_expandable then
-					l_row.expand
+			if attached search_report_grid as g then
+				from
+					i := 1
+				until
+					i > g.row_count
+				loop
+					l_row := g.row (i)
+					if l_row.is_expandable then
+						l_row.expand
+					end
+					i := i + 1
 				end
-				i := i + 1
 			end
 		end
 
@@ -631,14 +635,16 @@ feature {NONE} -- Shortcut button actions
 			i: INTEGER
 			l_row: EV_GRID_ROW
 		do
-			from
-				i := 1
-			until
-				i > search_report_grid.row_count
-			loop
-				l_row := search_report_grid.row (i)
-				l_row.collapse
-				i := i + 1
+			if attached search_report_grid as g then
+				from
+					i := 1
+				until
+					i > g.row_count
+				loop
+					l_row := g.row (i)
+					l_row.collapse
+					i := i + 1
+				end
 			end
 		end
 
@@ -1289,7 +1295,9 @@ feature {EB_CUSTOM_WIDGETTED_EDITOR} -- Search perform
 			if multi_search_performer.is_search_launched then
 				old_search_key_value := currently_searched
 				old_editor := editor
-				search_report_grid.redraw_grid
+				if attached search_report_grid as g then
+					g.redraw_grid
+				end
 				if
 					not is_current_editor_searched and then
 					not multi_search_performer.is_empty and then
@@ -1311,7 +1319,9 @@ feature {EB_CUSTOM_WIDGETTED_EDITOR} -- Search report
 	select_current_row
 			-- Select current row in the report.
 		do
-			search_report_grid.select_current_row
+			if attached search_report_grid as g then
+				g.select_current_row
+			end
 		end
 
 	has_result: BOOLEAN
@@ -1435,7 +1445,9 @@ feature {NONE} -- Replacement Implementation
 				multi_search_performer.set_replace_string (currently_replacing)
 				multi_search_performer.replace_all
 				update_combo_box_specific (replace_combo_box, currently_replacing)
-				search_report_grid.redraw_grid
+				if attached search_report_grid as g then
+					g.redraw_grid
+				end
 				put_replace_report (False)
 			else
 				put_replace_report (True)
@@ -1974,30 +1986,31 @@ feature {EB_SEARCH_REPORT_GRID, EB_CUSTOM_WIDGETTED_EDITOR} -- Implementation
 			box.change_actions.resume
 		end
 
-
 	display_stone_signature (textable: EV_TEXTABLE; a_stone: FILED_STONE)
 			-- Display signature name of `a_stone' in `textable'.
 		require
 			textable_not_void: textable /= Void
 			a_stone_not_void: a_stone /= Void
 		local
-			stone_signature: STRING
+			l_stone_signature: READABLE_STRING_GENERAL
+			i: INTEGER
 		do
-			if a_stone.stone_signature /= Void then
+			l_stone_signature := a_stone.stone_signature
+			if l_stone_signature /= Void then
 					-- FIXME Protected against Void, as there is no postcondition
 					-- on `stone_signature', although it appears it should never be Void,
 					-- it must be protected for now. Julian 07/22/03
 
-				stone_signature := a_stone.stone_signature
-				if stone_signature.has (' ') then
+				i := l_stone_signature.index_of (' ', 1)
+				if i > 0 then
 						-- Generic classes, and features with arguments have their arguments
 						-- included, so we strip everything except the name.
-					stone_signature := stone_signature.substring (1, stone_signature.index_of (' ', 1) - 1)
+					l_stone_signature := l_stone_signature.head (i - 1)
 				end
-				textable.set_text (stone_signature)
+				textable.set_text (l_stone_signature)
 			end
 		ensure
-			text_set: a_stone /= Void implies textable.text.is_equal (a_stone.stone_signature)
+			text_set: a_stone /= Void and then attached a_stone.stone_signature as el_signature implies textable.text.same_string (el_signature)
 		end
 
 	no_result_bgcolor: EV_COLOR

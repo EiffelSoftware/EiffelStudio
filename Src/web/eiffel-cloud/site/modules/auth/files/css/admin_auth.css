@@ -1,11 +1,10 @@
 table.cms-roles {
-  table-layout: auto;
-}
-table.cms-roles th.cms_role {
-  text-orientation: mixed;
-  writing-mode: vertical-lr;
-}
-table.cms-roles td.cms_role_permission {
-  white-space: nowrap;
-  font-style: italic;
-}
+  table-layout: auto; }
+  table.cms-roles th.cms_role {
+    text-orientation: mixed;
+    writing-mode: vertical-lr; }
+  table.cms-roles td.cms_role_permission {
+    white-space: nowrap;
+    font-style: italic; }
+
+/*# sourceMappingURL=admin_auth.css.map */

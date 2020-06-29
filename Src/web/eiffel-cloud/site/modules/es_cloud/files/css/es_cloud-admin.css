@@ -29,3 +29,6 @@ ul.es-sessions li {
     border: solid 1px #ccc; }
   ul.es-sessions li.expired {
     color: #333; }
+
+table td.warning {
+  background-color: #ffd8bc; }

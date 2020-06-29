@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: EiffelStudio $Revision$\n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2020-06-25 23:15+0300\n"
+"PO-Revision-Date: 2020-06-29 20:51+0300\n"
 "Last-Translator: Alexander Kogtenkov <kwaxer@mail.ru>\n"
 "Language-Team: Eiffel Software and others <support@eiffel.com>\n"
 "Language: ru\n"
@@ -17,19 +17,6 @@ msgstr ""
 "%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
 "X-Poedit-SourceCharset: UTF-8\n"
 "X-Generator: Poedit 2.2.4\n"
-
-#. Source code: Issue with your EiffelStudio license!
-#: es_cloud_license_issue_dialog.e:49
-msgctxt "cloud.info"
-msgid ""
-"\t\t\t\t\tIssue with your EiffelStudio license!\n"
-"\n"
-"\t\t\t\t\tChoose [Guest] to use EiffelStudio as Guest account."
-msgstr ""
-"\t\t\t\t\tПроблема с вашей лицензией EiffelStudio.\n"
-"\n"
-"\t\t\t\t\tВыберите [Гость], чтобы использовать EiffelStudio в качестве "
-"гостевой учётной записи."
 
 #. Source code: default_quick_melt_the_system: STRING_32				do Result := locale.translation ("%Tdefault (no option): quick melt the system.%N%N") end
 #: ewb_names.e:45
@@ -2910,11 +2897,11 @@ msgstr "Учётная запись"
 msgid "Account Access"
 msgstr "Доступ к учётной записи"
 
-#. Source code: create s.make_from_string (locale.translation_in_context ("Account service is not available for now (try again later)!", "cloud.error"))
+#. Source code: create s.make_from_string (locale.translation_in_context ("Account service is not available for now (try again later).", "cloud.error"))
 #: es_account_login_register_box.e:693
 msgctxt "cloud.error"
-msgid "Account service is not available for now (try again later)!"
-msgstr "Сервис аккаунта недоступен (попробуйте позже)"
+msgid "Account service is not available for now (try again later)."
+msgstr "Сервис аккаунта на данный момент недоступен (попробуйте позже)."
 
 #. Source code: m_account: STRING_32				do Result := locale.translation ("Account...") end
 #: interface_names.e:2751
@@ -8070,11 +8057,14 @@ msgctxt "cloud"
 msgid "Check again"
 msgstr "Проверить ещё раз"
 
-#. Source code: tooltip_button_check_again: STRING_32 do Result := locale.translation_in_context ("Check again if no license is available for your environment.", "cloud") end
+#. Source code: tooltip_button_check_again: STRING_32 do Result := locale.translation_in_context ("Check again if a license is available for your environment (platform, version).", "cloud") end
 #: es_cloud_names.e:99
 msgctxt "cloud"
-msgid "Check again if no license is available for your environment."
-msgstr "Проверить ещё раз, нет ли лицензии для вашей среды."
+msgid ""
+"Check again if a license is available for your environment (platform, "
+"version)."
+msgstr ""
+"Проверить ещё раз, нет ли лицензии для вашей установки (платформы и версии)."
 
 #. <PREF NAME="tools.metric_tool.check_defined_warning" DESCRIPTION="Check defined value warning when metric archive is recalculated?"><BOOLEAN>False</BOOLEAN></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:128
@@ -9176,11 +9166,11 @@ msgstr "Закрыть окно"
 msgid "Closing the window will stop execution."
 msgstr "Закрытие окна приведёт к остановке выполнения."
 
-#. Source code: on_system_error (locale.translation_in_context ("Cloud service not activated!", "cloud.error"), a_report_label)
+#. Source code: on_system_error (locale.translation_in_context ("Cloud service not activated.", "cloud.error"), a_report_label)
 #: es_account_login_register_box.e:604
 msgctxt "cloud.error"
-msgid "Cloud service not activated!"
-msgstr "Облачный сервис не активирован"
+msgid "Cloud service not activated."
+msgstr "Облачный сервис не активирован."
 
 #. Source code: label_service_not_available: STRING_32 do Result := locale.translation_in_context ("Cloud service unavailable!", "cloud.error") end
 #: es_cloud_names.e:67
@@ -13231,11 +13221,11 @@ msgstr "Сведения"
 msgid "Date"
 msgstr "Дата"
 
-#. Source code: append_bold_text_to (locale.translation_in_context ("Days remaining: ", "cloud.info"), txt)
+#. Source code: append_bold_text_to (locale.translation_in_context ("Days until expiration: ", "cloud.info"), txt)
 #: es_cloud_account_tool_panel.e:242
 msgctxt "cloud.info"
-msgid "Days remaining: "
-msgstr "Осталось дней: "
+msgid "Days until expiration: "
+msgstr "Дней до окончания: "
 
 #. <PREF NAME="interface.dialogs.dbg_confirm_detach" DESCRIPTION="Display confirmation dialog before detaching debugger from a process."><BOOLEAN>True</BOOLEAN></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:239
@@ -15160,10 +15150,10 @@ msgstr ""
 "Не показывать диалог, спрашивающий, надо ли запускать компиляцию перед "
 "отладкой, если были изменения в классах."
 
-#. Source code: tooltip_do_not_use_on_public_machine: STRING_32 do Result := locale.translation_in_context ("Do not use this option on public machine!", "eiffel.account") end
+#. Source code: tooltip_do_not_use_on_public_machine: STRING_32 do Result := locale.translation_in_context ("Do not use this option on a public machine!", "eiffel.account") end
 #: es_cloud_names.e:34
 msgctxt "eiffel.account"
-msgid "Do not use this option on public machine!"
+msgid "Do not use this option on a public machine!"
 msgstr "Не используйте эту опцию на общедоступной машине!"
 
 #. Source code: b_do_nothing: STRING_32 						do Result := locale.translation("Do nothing")	end
@@ -18380,11 +18370,11 @@ msgctxt "preference"
 msgid "Error text color"
 msgstr "Цвет текста ошибки"
 
-#. Source code: on_system_error (locale.translation_in_context ("Error while registering", "cloud.error"), a_report_label)
+#. Source code: on_system_error (locale.translation_in_context ("Error while registering.", "cloud.error"), a_report_label)
 #: es_account_login_register_box.e:686
 msgctxt "cloud.error"
-msgid "Error while registering"
-msgstr "Ошибка при регистрации"
+msgid "Error while registering."
+msgstr "Ошибка при регистрации."
 
 #. Source code: Result := locale.formatted_string (locale.translation ("Error with `$1' line $2"), [a_name, a_line])
 #: interface_names.e:2095
@@ -18527,11 +18517,11 @@ msgstr ""
 "Ошибка: не удалось записать в $1\n"
 "Пожалуйста, проверьте права доступа и свободное место на диске"
 
-#. Source code: on_system_error (locale.translation_in_context ("Error: invalid username or password!", "cloud.error"), a_report_label)
+#. Source code: on_system_error (locale.translation_in_context ("Error: invalid username or password.", "cloud.error"), a_report_label)
 #: es_account_login_register_box.e:676
 msgctxt "cloud.error"
-msgid "Error: invalid username or password!"
-msgstr "Ошибка: неверное имя пользователя или пароль"
+msgid "Error: invalid username or password."
+msgstr "Ошибка: неверное имя пользователя или пароль."
 
 #. Source code: do Result := locale.formatted_string (locale.translation ("Error: issue with attribute `$1'."), [aname]) end
 #: debugger_names.e:454
@@ -24144,11 +24134,23 @@ msgctxt "preference"
 msgid "Is window maximized?"
 msgstr "Окно максимизировано?"
 
-#. Source code: title_license_issue: STRING_32 do Result := locale.translation_in_context ("Issue with your license", "cloud.info") end
+#. Source code: Issue with your EiffelStudio license!
+#: es_cloud_license_issue_dialog.e:49
+msgctxt "cloud.info"
+msgid ""
+"Issue with your EiffelStudio license!\n"
+"\n"
+"Choose [Guest] to use EiffelStudio as Guest account."
+msgstr ""
+"Проблема с Вашей лицензией EiffelStudio.\n"
+"\n"
+"Выберите [Гость], чтобы использовать EiffelStudio с гостевой учётной записью."
+
+#. Source code: title_license_issue: STRING_32 do Result := locale.translation_in_context ("Issue with your license.", "cloud.info") end
 #: es_cloud_names.e:84
 msgctxt "cloud.info"
-msgid "Issue with your license"
-msgstr "Проблема с вашей лицензией"
+msgid "Issue with your license."
+msgstr "Проблема с вашей лицензией."
 
 #. Source code: Result := locale.translation ("It is not possible to create a normal cluster inside of a test cluster")
 #: warning_messages.e:599
@@ -24688,10 +24690,10 @@ msgctxt "preference"
 msgid "Layout of watch tools."
 msgstr "Компоновка инструментов наблюдения."
 
-#. Source code: label_learn_more: STRING_32 do Result := locale.translation_in_context ("Learn more ...", "cloud") end
+#. Source code: label_learn_more: STRING_32 do Result := locale.translation_in_context ("Learn more...", "cloud") end
 #: es_cloud_names.e:117
 msgctxt "cloud"
-msgid "Learn more ..."
+msgid "Learn more..."
 msgstr "Узнать больше..."
 
 #. <PREF NAME="debugger.left_debug_layout" HIDDEN="true" DESCRIPTION="Items/tools shown in navigation layout when in debug mode."><LIST>Features;closed;0;0;0;0;Clusters;closed;0;0;0;0;Properties;closed;0;0;0;0;Breakpoints;closed;0;0;0;0;Favorites;closed;0;0;0;0;Windows;closed;0;0;0;0;Threads;closed;0;0;0;38;Call Stack;visible;0;0;0;38</LIST></PREF>
@@ -24780,6 +24782,12 @@ msgstr "Лицензия для $1"
 msgctxt "cloud.info"
 msgid "License plan: "
 msgstr "Лицензионный план: "
+
+#. Source code: append_bold_text_to (locale.translation_in_context ("License status: EXPIRED!", "cloud.info"), txt)
+#: es_cloud_account_tool_panel.e:246
+msgctxt "cloud.info"
+msgid "License status: EXPIRED!"
+msgstr "Статус лицензии: истекла"
 
 #. Source code: m_Unify_stone: STRING_32				do Result := locale.translation("Lin&k Context Tool")	end
 #: interface_names.e:1055
@@ -26833,10 +26841,10 @@ msgctxt "cloud.menu"
 msgid "My Account ($1)"
 msgstr "Моя учётная запись ($1)"
 
-#. Source code: button_visit_web_account: STRING_32 do Result := locale.translation_in_context ("My Web Account...", "cloud.info") end
+#. Source code: button_visit_web_account: STRING_32 do Result := locale.translation_in_context ("My web account...", "cloud.info") end
 #: es_cloud_names.e:80
 msgctxt "cloud.info"
-msgid "My Web Account..."
+msgid "My web account..."
 msgstr "Моя учётная запись..."
 
 #. Source code: Result := locale.formatted_string (locale.translation ("NATIVE_ARRAY is not yet fully supported, unable to evaluate `$1'."), [fname])
@@ -33353,11 +33361,11 @@ msgstr "Сербский (Сербия и Черногория, латиница
 msgid "Serious"
 msgstr "Серьёзный"
 
-#. Source code: create s32.make_from_string_general (locale.translation_in_context ("Service error (try again later)!", "cloud.error"))
+#. Source code: create s32.make_from_string_general (locale.translation_in_context ("Service error (try again later).", "cloud.error"))
 #: es_account_login_register_box.e:573
 msgctxt "cloud.error"
-msgid "Service error (try again later)!"
-msgstr "Ошибка сервиса (повторите попытку позже)"
+msgid "Service error (try again later)."
+msgstr "Ошибка сервиса (повторите попытку позже)."
 
 #. Source code: create lab.make_with_text (locale.translation_in_context ("Service not activated!", "cloud.error"))
 #: es_cloud_account_tool_panel.e:478
@@ -35263,11 +35271,11 @@ msgstr "Показать путь элемента"
 msgid "Show labels"
 msgstr "Показывать ярлыки"
 
-#. Source code: button_show_less: STRING_32 do Result := locale.translation_in_context ("Show less...", "cloud.info") end
+#. Source code: button_show_less: STRING_32 do Result := locale.translation_in_context ("Show less", "cloud.info") end
 #: es_cloud_names.e:74
 msgctxt "cloud.info"
-msgid "Show less..."
-msgstr "Меньше..."
+msgid "Show less"
+msgstr "Меньше"
 
 #. <PREF NAME="editor.general.show_line_numbers" DESCRIPTION="Indicates if editor displays the line numbers by default."><BOOLEAN>False</BOOLEAN></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:698
@@ -35287,11 +35295,11 @@ msgctxt "preference"
 msgid "Show metric tool"
 msgstr "Показать панель метрик"
 
-#. Source code: button_show_more: STRING_32 do Result := locale.translation_in_context ("Show more...", "cloud.info") end
+#. Source code: button_show_more: STRING_32 do Result := locale.translation_in_context ("Show more", "cloud.info") end
 #: es_cloud_names.e:73
 msgctxt "cloud.info"
-msgid "Show more..."
-msgstr "Больше..."
+msgid "Show more"
+msgstr "Больше"
 
 #. <PREF NAME="shortcuts.code_completion.next_completion_panel" DESCRIPTION="Show next completion panel in completion list."><SHORTCUT Ctrl="True">Space</SHORTCUT></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:762
@@ -36260,12 +36268,6 @@ msgstr "Состояние"
 #: interface_names.e:17
 msgid "Status Bar"
 msgstr "Панель состояния"
-
-#. Source code: append_bold_text_to (locale.translation_in_context ("Status: EXPIRED!", "cloud.info"), txt)
-#: es_cloud_account_tool_panel.e:246
-msgctxt "cloud.info"
-msgid "Status: EXPIRED!"
-msgstr "Статус: истёк"
 
 #. Source code: b_Exec_step: STRING_32						do Result := locale.translation("Step")	end
 #: interface_names.e:182
@@ -37304,11 +37306,11 @@ msgstr "Тайский (Тайланд)"
 msgid "Thank you for the bug report"
 msgstr "Спасибо за сообщение об ошибке"
 
-#. Source code: on_system_error (locale.translation_in_context ("Thank you for the registration", "cloud.message"), a_report_label)
+#. Source code: on_system_error (locale.translation_in_context ("Thank you for the registration.", "cloud.message"), a_report_label)
 #: es_account_login_register_box.e:681
 msgctxt "cloud.message"
-msgid "Thank you for the registration"
-msgstr "Спасибо за регистрацию"
+msgid "Thank you for the registration."
+msgstr "Спасибо за регистрацию."
 
 #. Source code: (locale.translation_in_context ("The $ operator is not supported on externals.", "compiler.error"),
 #: ast_feature_checker_generator.e:4415
@@ -38714,11 +38716,11 @@ msgstr ""
 msgid "This project has more than one target: "
 msgstr "В этом проекте больше одного задания: "
 
-#. Source code: title_session_paused: STRING_32 do Result := locale.translation_in_context ("This session is PAUSED", "cloud.info") end
+#. Source code: title_session_paused: STRING_32 do Result := locale.translation_in_context ("This session is PAUSED.", "cloud.info") end
 #: es_cloud_names.e:86
 msgctxt "cloud.info"
-msgid "This session is PAUSED"
-msgstr "Эта сессия приостановлена"
+msgid "This session is PAUSED."
+msgstr "Эта сессия приостановлена."
 
 #. Source code: l_domain_displayer_help: STRING_32 do Result := locale.translation ("This view can be used to display result of all formatters%Nthus it is used as a default view for formatters") end
 #: interface_names.e:927
@@ -38879,16 +38881,16 @@ msgstr ""
 "помощью равенства '=' не даёт ожидаемого результата. Вместо этого необходимо "
 "использовать запрос {REAL}.is_nan."
 
-#. Source code: Result :=  locale.translation_in_context ("To continue using this editon of EiffelStudio, you must first agree with the license. If you do not agree with the terms, use another EiffelStudio Edition.", "license")
+#. Source code: Result :=  locale.translation_in_context ("To continue using this edition of EiffelStudio, you must first agree with the license terms. If you do not agree with the terms, use another EiffelStudio Edition.", "license")
 #: es_startup_page.e:265
 msgctxt "license"
 msgid ""
-"To continue using this editon of EiffelStudio, you must first agree with the "
-"license. If you do not agree with the terms, use another EiffelStudio "
-"Edition."
+"To continue using this edition of EiffelStudio, you must first agree with "
+"the license terms. If you do not agree with the terms, use another "
+"EiffelStudio Edition."
 msgstr ""
-"Чтобы продолжить использовать эту версию EiffelStudio, Вам необходимо "
-"согласиться с условиями лицензии. Если вы не согласны с ними, используйте "
+"Чтобы продолжить использовать эту версию EiffelStudio, необходимо "
+"согласиться с условиями лицензии. Если Вы не согласны с ними, используйте "
 "другую версию EiffelStudio."
 
 #. Source code: l_to_do_dialog: STRING_32 do Result := locale.translation ("To do information") end
@@ -42203,11 +42205,11 @@ msgstr "Видимые классы"
 msgid "Vision2 Application Appearance"
 msgstr "Внешний вид приложения Vision2"
 
-#. Source code: tooltip_button_visit_web_account: STRING_32 do Result := locale.translation_in_context ("Visit my online Account (in web browser)...", "cloud.info") end
+#. Source code: tooltip_button_visit_web_account: STRING_32 do Result := locale.translation_in_context ("Visit my online account (in web browser).", "cloud.info") end
 #: es_cloud_names.e:81
 msgctxt "cloud.info"
-msgid "Visit my online Account (in web browser)..."
-msgstr "Посетить свой онлайн-аккаунт (в веб-браузере)"
+msgid "Visit my online account (in web browser)."
+msgstr "Посетить свой онлайн-аккаунт (в веб-браузере)."
 
 #. Source code: do Result := translation_in_context ("Void check using 'is_equal'", once "code_analyzer") end
 #: ca_names.e:158
@@ -42455,11 +42457,11 @@ msgstr "Управление расположением сетки наблюд�
 msgid "Welcome"
 msgstr "Добро пожаловать"
 
-#. Source code: prompt_welcome_guest: STRING_32 do Result := locale.translation_in_context ("Welcome guest ...", "cloud.info") end
+#. Source code: prompt_welcome_guest: STRING_32 do Result := locale.translation_in_context ("Welcome guest.", "cloud.info") end
 #: es_cloud_names.e:61
 msgctxt "cloud.info"
-msgid "Welcome guest ..."
-msgstr "Добро пожаловать, Гость"
+msgid "Welcome guest."
+msgstr "Добро пожаловать, гость."
 
 #. Source code: t_welcome_to_the_wizard: STRING_32	do Result := locale.translation ("Welcome to the%NPrecompilation Wizard") end
 #: interface_names.e:58
@@ -42888,11 +42890,11 @@ msgstr ""
 "файлом резервной копии. Предыдущее содержимое\n"
 "будет утеряно, а файл резервной копии удалён."
 
-#. Source code: prompt_not_connected_with_account: STRING_32 do Result := locale.translation_in_context ("You are not connected with an account ...", "cloud.info") end
+#. Source code: prompt_not_connected_with_account: STRING_32 do Result := locale.translation_in_context ("You are not connected with an account.", "cloud.info") end
 #: es_cloud_names.e:63
 msgctxt "cloud.info"
-msgid "You are not connected with an account ..."
-msgstr "Учётная запись не указана"
+msgid "You are not connected with an account."
+msgstr "Не указана учётная запись."
 
 #. Source code: do Result := translation_in_context ("You are using '=' to compare object references. This only%Nchecks whether they%
 #: ca_messages.e:215
@@ -43171,11 +43173,17 @@ msgstr ""
 "Список внешних команд полон.\n"
 "Используйте \"Инструменты->Внешние команды...\" для их удаления."
 
-#. Source code: title_license_expired: STRING_32 do Result := locale.translation_in_context ("Your license is EXPIRED", "cloud.info") end
+#. Source code: title_license_expired: STRING_32 do Result := locale.translation_in_context ("Your license has EXPIRED.", "cloud.info") end
 #: es_cloud_names.e:83
 msgctxt "cloud.info"
-msgid "Your license is EXPIRED"
-msgstr "Лицензия истекла"
+msgid "Your license has EXPIRED."
+msgstr "Лицензия истекла."
+
+#. Source code: on_system_error (locale.translation_in_context ("Your license is expired, please renew or purchase a new one.", "cloud.error"), a_report_label)
+#: es_account_login_register_box.e:671
+msgctxt "cloud.error"
+msgid "Your license is expired, please renew or purchase a new one."
+msgstr "Срок действия вашей лицензии истёк, обновите или купите новую."
 
 #. Source code: Result := locale.formatted_string (locale.translation ("Your old configration file needs to be converted to the new format.%N%
 #: warning_messages.e:57
@@ -43189,12 +43197,6 @@ msgstr ""
 "Имя по умолчанию для новой конфигурации '$1'.\n"
 "Нажмите OK, если хотите использовать это имя, или 'Сохранить как...', чтобы "
 "выбрать другое."
-
-#. Source code: on_system_error (locale.translation_in_context ("Your plan is expired, please renew or purchase a new one.", "cloud.error"), a_report_label)
-#: es_account_login_register_box.e:671
-msgctxt "cloud.error"
-msgid "Your plan is expired, please renew or purchase a new one."
-msgstr "Срок действия вашего плана истёк, обновите или купите новый."
 
 #. <PREF NAME="rule.zero_count_test.enable" DESCRIPTION="Enable rule."><BOOLEAN>True</BOOLEAN></PREF>
 #. <PREF NAME="rule.zero_count_test.severity" DESCRIPTION="Severity score."><INTEGER>50</INTEGER></PREF>
@@ -44381,6 +44383,10 @@ msgstr "Сравнение с {REAL}.nan"
 #: debugger_names.e:501
 msgid "{SPECIAL} is not yet supported"
 msgstr "{SPECIAL} ещё не поддерживается"
+
+#~ msgctxt "cloud.info"
+#~ msgid "Days remaining: "
+#~ msgstr "Осталось дней: "
 
 #~ msgid "Purchase Enterprise edition"
 #~ msgstr "Купить Enterprise edition"

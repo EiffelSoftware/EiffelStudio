@@ -33,10 +33,10 @@ feature {NONE} -- Initialization
 					config.session_expiration_delay := s.to_integer
 				end
 				if
-					attached cfg.resolved_text_item ("auto_trial") as s and then
+					attached cfg.resolved_text_item ("license.auto_trial") as s and then
 					s.is_case_insensitive_equal_general ("yes")
 				then
-					config.enable_auto_trial
+					config.enable_auto_trial (cfg.resolved_text_item ("license.auto_trial_plan"))
 				end
 			end
 
@@ -181,7 +181,12 @@ feature -- Element change license
 			lic: ES_CLOUD_LICENSE
 		do
 			if config.auto_trial_enabled then
-				pl := default_plan
+				if attached config.auto_trial_plan_name as pl_name then
+					pl := plan_by_name (pl_name)
+				end
+				if pl = Void then
+					pl := default_plan
+				end
 				if pl /= Void then
 					lic := new_license_for_plan (pl)
 					lic.set_remaining_days (pl.trial_period_in_days)

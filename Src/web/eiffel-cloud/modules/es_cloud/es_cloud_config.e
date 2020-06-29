@@ -27,6 +27,8 @@ feature -- Access
 
 	auto_trial_enabled: BOOLEAN
 
+	auto_trial_plan_name: detachable IMMUTABLE_STRING_32
+
 feature -- Element change
 
 	set_session_expiration_delay (d: INTEGER)
@@ -39,9 +41,14 @@ feature -- Element change
 			create shop_provider_name.make_from_string_general (v)
 		end
 
-	enable_auto_trial
+	enable_auto_trial (a_pl_name: detachable READABLE_STRING_GENERAL)
 		do
 			auto_trial_enabled := True
+			if a_pl_name = Void then
+				auto_trial_plan_name := Void
+			else
+				create auto_trial_plan_name.make_from_string_general (a_pl_name)
+			end
 		end
 
 end

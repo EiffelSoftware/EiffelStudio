@@ -104,7 +104,7 @@ feature -- Status report
 					is_neg := True
 					secs := -secs
 				end
-				Result := (secs // (60 * 60 * 24)).to_integer_32
+				Result := ((secs + 60) // (60 * 60 * 24)).to_integer_32
 				if is_neg then
 					Result := - Result
 				end
@@ -277,6 +277,8 @@ feature -- Element change
 			create dt.make_now_utc
 			dt.day_add (nb_days.to_integer_32)
 			expiration_date := dt
+		ensure
+			days_remaining = nb_days.to_integer_32
 		end
 
 	set_fallback_date (dt: like fallback_date)

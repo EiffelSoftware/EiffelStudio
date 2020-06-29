@@ -57,15 +57,33 @@ feature -- Execution
 --			l_plan: ES_CLOUD_PLAN
 		do
 			r := new_generic_response (req, res)
-			r.add_style (r.module_name_resource_url ({ES_CLOUD_MODULE}.name, "/files/css/es_cloud.css", Void), Void)
 
 			create s.make_empty
 
-			s.append ("<h2>Buy a new license</h2>")
+			if
+				attached api.user as u and then
+				attached {WSF_STRING} req.query_parameter ("request") as s_request and then s_request.is_case_insensitive_equal ("trial")
+			then
+				if es_cloud_api.config.auto_trial_enabled then
+					if not attached es_cloud_api.user_licenses (u) as lics or else lics.is_empty then
+						s.append ("<h2>Trial period requested</h2>")
+						es_cloud_api.auto_assign_trial_to (u)
+						r.set_redirection (api.absolute_url (req.percent_encoded_path_info, Void))
+					else
+						s.append ("<h2>You can not request for a new trial.</h2>")
+					end
+				else
+					s.append ("<h2>No trial period available for now!</h2>")
+				end
+			else
+				r.add_style (r.module_name_resource_url ({ES_CLOUD_MODULE}.name, "/files/css/es_cloud.css", Void), Void)
 
-			if attached es_cloud_module.new_store_block (es_cloud_api, r) as bl then
-				r.add_block (bl, "content")
-				r.add_style (r.module_resource_url (es_cloud_module, "/files/css/pricing.css", Void), Void)
+				s.append ("<h2>Buy a new license</h2>")
+
+				if attached es_cloud_module.new_store_block (es_cloud_api, r) as bl then
+					r.add_block (bl, "content")
+					r.add_style (r.module_resource_url (es_cloud_module, "/files/css/pricing.css", Void), Void)
+				end
 			end
 
 			r.set_main_content (s)
@@ -188,6 +206,10 @@ feature -- Execution
 				else
 					s.append ("Please subscribe to a license ...")
 					l_user_has_no_license := True
+					if es_cloud_api.config.auto_trial_enabled then
+						s.append ("<br/>Or request a trial period ...")
+						s.append ("<div><div class=%"es-new-license%"><form action=%""+ r.location_url ({ES_CLOUD_MODULE}.licenses_location, Void) +"?request=trial%" method=%"post%"><input type=%"submit%" class=%"button%" title=%"Request a trial period%" name=%"op%" value=%"Request trial period%"></input></form></div></div>")
+					end
 				end
 				s.append ("</div>")
 

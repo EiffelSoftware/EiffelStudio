@@ -239,11 +239,11 @@ feature {NONE} -- Action handlers
 							append_time_to (dt, txt)
 							append_text_to ("%N", txt)
 							if nb_days >= 0 then
-								append_bold_text_to (locale.translation_in_context ("Days remaining: ", "cloud.info"), txt)
+								append_bold_text_to (locale.translation_in_context ("Days until expiration: ", "cloud.info"), txt)
 								append_text_to (nb_days.out, txt)
 								append_text_to ("%N", txt)
 							else
-								append_bold_text_to (locale.translation_in_context ("Status: EXPIRED!", "cloud.info"), txt)
+								append_bold_text_to (locale.translation_in_context ("License status: EXPIRED!", "cloud.info"), txt)
 								append_text_to ("%N", txt)
 							end
 						end

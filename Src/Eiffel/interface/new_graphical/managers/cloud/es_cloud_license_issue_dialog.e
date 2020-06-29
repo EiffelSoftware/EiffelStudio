@@ -47,10 +47,10 @@ feature {NONE} -- Initialization
 			set_size (l_scaler.scaled_size (350), l_scaler.scaled_size (150))
 			min_but_w := l_scaler.scaled_size (80)
 			create lab.make_with_text (locale.translation_in_context ("[
-					Issue with your EiffelStudio license!
+Issue with your EiffelStudio license!
 
-					Choose [Guest] to use EiffelStudio as Guest account.
-				]", "cloud.info"))
+Choose [Guest] to use EiffelStudio as Guest account.
+]", "cloud.info"))
 
 			create l_weblnk.make_with_text (locale.translation_in_context ("Please visit your web account.", "cloud.info"))
 			l_weblnk.set_tooltip (locale.translation_in_context ("Please visit your web account for more information and options.", "cloud.info"))

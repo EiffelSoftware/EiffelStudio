@@ -262,7 +262,7 @@ feature -- Text
 
 	terms_agreement_text: STRING_32
 		once
-			Result :=  locale.translation_in_context ("To continue using this editon of EiffelStudio, you must first agree with the license. If you do not agree with the terms, use another EiffelStudio Edition.", "license")
+			Result :=  locale.translation_in_context ("To continue using this edition of EiffelStudio, you must first agree with the license terms. If you do not agree with the terms, use another EiffelStudio Edition.", "license")
 		end
 
 feature -- Access: widgets

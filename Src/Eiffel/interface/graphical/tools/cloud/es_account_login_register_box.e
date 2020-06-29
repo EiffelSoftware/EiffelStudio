@@ -570,7 +570,7 @@ feature -- UI callbacks
 					if cld.is_available	then
 						cld.sign_in_with_credential (u, p)
 						if cld.has_error then
-							create s32.make_from_string_general (locale.translation_in_context ("Service error (try again later)!", "cloud.error"))
+							create s32.make_from_string_general (locale.translation_in_context ("Service error (try again later).", "cloud.error"))
 							if attached cld.last_error_message as err then
 								s32.append_character ('%N')
 								s32.append (err)
@@ -601,7 +601,7 @@ feature -- UI callbacks
 						cld.check_cloud_availability
 					end
 				else
-					on_system_error (locale.translation_in_context ("Cloud service not activated!", "cloud.error"), a_report_label)
+					on_system_error (locale.translation_in_context ("Cloud service not activated.", "cloud.error"), a_report_label)
 				end
 				widget.set_pointer_style (l_style)
 			else
@@ -668,29 +668,29 @@ feature -- UI callbacks
 
 	on_user_expired_plan_error (a_form: like new_gui_form; a_report_label: detachable EV_LABEL)
 		do
-			on_system_error (locale.translation_in_context ("Your plan is expired, please renew or purchase a new one.", "cloud.error"), a_report_label)
+			on_system_error (locale.translation_in_context ("Your license is expired, please renew or purchase a new one.", "cloud.error"), a_report_label)
 		end
 
 	on_user_sign_in_refused (a_form: like new_gui_form; a_report_label: detachable EV_LABEL)
 		do
-			on_system_error (locale.translation_in_context ("Error: invalid username or password!", "cloud.error"), a_report_label)
+			on_system_error (locale.translation_in_context ("Error: invalid username or password.", "cloud.error"), a_report_label)
 		end
 
 	on_user_registered (acc: ES_ACCOUNT; a_report_label: detachable EV_LABEL)
 		do
-			on_system_error (locale.translation_in_context ("Thank you for the registration", "cloud.message"), a_report_label)
+			on_system_error (locale.translation_in_context ("Thank you for the registration.", "cloud.message"), a_report_label)
 		end
 
 	on_user_registration_error (a_form: like new_gui_form; a_report_label: detachable EV_LABEL)
 		do
-			on_system_error (locale.translation_in_context ("Error while registering", "cloud.error"), a_report_label)
+			on_system_error (locale.translation_in_context ("Error while registering.", "cloud.error"), a_report_label)
 		end
 
 	on_cloud_service_not_available (a_msg: detachable READABLE_STRING_GENERAL; a_report_label: detachable EV_LABEL)
 		local
 			s: STRING_32
 		do
-			create s.make_from_string (locale.translation_in_context ("Account service is not available for now (try again later)!", "cloud.error"))
+			create s.make_from_string (locale.translation_in_context ("Account service is not available for now (try again later).", "cloud.error"))
 			if a_msg /= Void then
 				s.append_character ('%N')
 				s.append (a_msg)
@@ -700,7 +700,7 @@ feature -- UI callbacks
 
 	on_cloud_service_not_activated_error (a_report_label: detachable EV_LABEL)
 		do
-			on_system_error (locale.translation_in_context ("Cloud service not activated!", "cloud.error"), a_report_label)
+			on_system_error (locale.translation_in_context ("Cloud service not activated.", "cloud.error"), a_report_label)
 		end
 
 feature {NONE} -- Implementation

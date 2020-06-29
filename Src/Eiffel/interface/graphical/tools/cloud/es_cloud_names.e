@@ -31,7 +31,7 @@ feature -- Authentication
 	link_create_new_account: STRING_32 do Result := locale.translation_in_context ("Create a new account", "eiffel.account") end
 
 	button_remember_credentials: STRING_32 do Result := locale.translation_in_context ("Remember my credentials", "eiffel.account") end
-	tooltip_do_not_use_on_public_machine: STRING_32 do Result := locale.translation_in_context ("Do not use this option on public machine!", "eiffel.account") end
+	tooltip_do_not_use_on_public_machine: STRING_32 do Result := locale.translation_in_context ("Do not use this option on a public machine!", "eiffel.account") end
 
 	label_open_eiffelstudio_account_web_site: STRING_32 do Result := locale.translation_in_context ("Open EiffelStudio account website in web browser.", "eiffel.account") end
 
@@ -58,9 +58,9 @@ feature -- Account tool
 
 	desc_cloud_account_tool: STRING_32 do Result := locale.translation ("Show Account Tool") end
 
-	prompt_welcome_guest: STRING_32 do Result := locale.translation_in_context ("Welcome guest ...", "cloud.info") end
+	prompt_welcome_guest: STRING_32 do Result := locale.translation_in_context ("Welcome guest.", "cloud.info") end
 
-	prompt_not_connected_with_account: STRING_32 do Result := locale.translation_in_context ("You are not connected with an account ...", "cloud.info") end
+	prompt_not_connected_with_account: STRING_32 do Result := locale.translation_in_context ("You are not connected with an account.", "cloud.info") end
 
 	prompt_connected_your_account: STRING_32 do Result := locale.translation_in_context ("Connect your account to use EiffelStudio.", "cloud.info") end
 
@@ -70,20 +70,20 @@ feature -- Account tool
 
 	label_field_installation: STRING_32 do Result := locale.translation_in_context ("Installation: ", "cloud.info") end
 
-	button_show_more: STRING_32 do Result := locale.translation_in_context ("Show more...", "cloud.info") end
-	button_show_less: STRING_32 do Result := locale.translation_in_context ("Show less...", "cloud.info") end
+	button_show_more: STRING_32 do Result := locale.translation_in_context ("Show more", "cloud.info") end
+	button_show_less: STRING_32 do Result := locale.translation_in_context ("Show less", "cloud.info") end
 
 	tooltip_button_show_more: STRING_32 do Result := locale.translation_in_context ("Toggle this button to show more|less information.", "cloud.info") end
 
 feature -- Dialog
 
-	button_visit_web_account: STRING_32 do Result := locale.translation_in_context ("My Web Account...", "cloud.info") end
-	tooltip_button_visit_web_account: STRING_32 do Result := locale.translation_in_context ("Visit my online Account (in web browser)...", "cloud.info") end
+	button_visit_web_account: STRING_32 do Result := locale.translation_in_context ("My web account...", "cloud.info") end
+	tooltip_button_visit_web_account: STRING_32 do Result := locale.translation_in_context ("Visit my online account (in web browser).", "cloud.info") end
 
-	title_license_expired: STRING_32 do Result := locale.translation_in_context ("Your license is EXPIRED", "cloud.info") end
-	title_license_issue: STRING_32 do Result := locale.translation_in_context ("Issue with your license", "cloud.info") end
+	title_license_expired: STRING_32 do Result := locale.translation_in_context ("Your license is EXPIRED.", "cloud.info") end
+	title_license_issue: STRING_32 do Result := locale.translation_in_context ("Issue with your license.", "cloud.info") end
 
-	title_session_paused: STRING_32 do Result := locale.translation_in_context ("This session is PAUSED", "cloud.info") end
+	title_session_paused: STRING_32 do Result := locale.translation_in_context ("This session is PAUSED.", "cloud.info") end
 
 	label_opening_url (a_url: READABLE_STRING_GENERAL): STRING_32
 		do
@@ -96,7 +96,7 @@ feature -- Dialog
 		end
 
 	button_check_again: STRING_32 do Result := locale.translation_in_context ("Check again", "cloud") end
-	tooltip_button_check_again: STRING_32 do Result := locale.translation_in_context ("Check again if no license is available for your environment.", "cloud") end
+	tooltip_button_check_again: STRING_32 do Result := locale.translation_in_context ("Check again if a license is available for your environment (platform, version).", "cloud") end
 
 feature -- Menu
 
@@ -114,7 +114,7 @@ feature -- Menu
 
 feature -- General
 
-	label_learn_more: STRING_32 do Result := locale.translation_in_context ("Learn more ...", "cloud") end
+	label_learn_more: STRING_32 do Result := locale.translation_in_context ("Learn more...", "cloud") end
 	label_terms_of_use: STRING_32 do Result := locale.translation_in_context ("Terms of use", "cloud") end
 	label_double_click_to_collapse: STRING_32 do Result := locale.translation_in_context ("Double click to collapse", "cloud") end
 	button_guest: STRING_32 do Result := locale.translation_in_context ("Guest", "cloud") end

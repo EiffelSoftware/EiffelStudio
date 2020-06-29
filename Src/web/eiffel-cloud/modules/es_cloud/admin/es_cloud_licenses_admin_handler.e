@@ -121,7 +121,7 @@ feature -- Execution
 					create s.make_from_string ("<h1>Licenses</h1>")
 					s.append ("See <a href=%"" + api.administration_path ("/cloud/plans/") + " %">available plans</a>.")
 				end
-				s.append ("<table class=%"with_border%" style=%"border: solid 1px black%"><tr><th>Entity</th><th>Owner</th><th>Plan</th><th>Until</th><th>Last</th><th>organization(s)</th>")
+				s.append ("<table class=%"with_border%" style=%"border: solid 1px black%"><tr><th>Entity</th><th>Owner</th><th>Plan</th><th>Conditions</th><th>Until</th><th>Last</th><th>organization(s)</th>")
 				s.append ("</tr>")
 				if l_plan_filter /= Void and then attached es_cloud_api.plan_by_name (l_plan_filter) as pl then
 					lst := es_cloud_api.licenses_for_plan (pl)
@@ -158,21 +158,37 @@ feature -- Execution
 						s.append ("</td>")
 
 						if attached lic.plan as l_plan then
-							s.append ("<td>")
+							s.append ("<td>") -- Plan
 							s.append (html_encoded (l_plan.title_or_name))
 							s.append ("</td>")
-							s.append ("<td>")
+
+							s.append ("<td>") -- Conditions
+							if attached lic.platform as l_platforms then
+								s.append (" platform:" + html_encoded (l_platforms))
+							end
+							if attached lic.version as l_version then
+								s.append (" version:" + html_encoded (l_version))
+							end
+							s.append ("</td>")
 							if lic.is_active then
 								if attached lic.expiration_date as dt then
+									if lic.days_remaining < 10 then
+										s.append ("<td class=%"warning%">") -- Until
+									else
+										s.append ("<td>") -- Until
+									end
 									s.append (html_encoded (date_time_to_string (dt)))
 									s.append (" ( " + lic.days_remaining.out + " days remaining )")
 								else
+									s.append ("<td>") -- Until
 									s.append ("<strong>ACTIVE</strong>")
 									s.append (" (since ")
 									s.append (html_encoded (date_time_to_string (lic.creation_date)))
 									s.append (")")
 								end
 							else
+								s.append ("<td class=%"expired%">") -- Until
+
 								s.append ("<strong>EXPIRED</strong>")
 								if attached lic.expiration_date as dt then
 									s.append (" (since ")
@@ -181,7 +197,7 @@ feature -- Execution
 								end
 							end
 							s.append ("</td>")
-							s.append ("<td>")
+							s.append ("<td>") -- Last
 							if
 								attached {ES_CLOUD_SESSION} es_cloud_api.last_license_session (lic) as l_last and then
 								attached l_last.last_date as dt
@@ -195,14 +211,10 @@ feature -- Execution
 							s.append ("%">...</a>")
 							s.append ("</td>")
 						else
-							s.append ("<td>")
-							s.append ("</td>")
-							s.append ("<td>")
-							s.append ("</td>")
-							s.append ("<td>")
-							s.append ("</td>")
-							s.append ("<td>")
-							s.append ("</td>")
+							s.append ("<td></td>") -- Plan
+							s.append ("<td></td>") -- Conditions
+							s.append ("<td></td>") -- Until
+							s.append ("<td></td>") -- Last
 						end
 --						if l_user /= Void and orgs /= Void then
 --							s.append ("<td>")
@@ -217,8 +229,7 @@ feature -- Execution
 --							end
 --							s.append ("</td>")
 --						else
-							s.append ("<td>")
-							s.append ("</td>")
+							s.append ("<td></td>") -- Organisation
 --						end
 
 						s.append ("</tr>")

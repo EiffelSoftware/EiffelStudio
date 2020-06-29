@@ -25,7 +25,7 @@ feature {NONE} -- Creation
 			report (∀ x: list ¦ ∃ y: list ¦ y >= x)
 			report (∃ x: list ¦ ∀ y: list ¦ y >= x)
 			report (∀ x: list ¦ set ∋ x )
-			⟳ x: list ¦ ⟳ y: list ¦ if x < y then print (x.out + "<" + y.out + "%N") end ⟲⟲
+			⟳ x: list ¦ ⟳ y: list ¦ if x < y then print (x.out + "<" + y.out + "%N") end ⟲ ⟲
 		end
 
 feature {NONE} -- Output

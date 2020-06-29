@@ -32,6 +32,12 @@ feature {NONE} -- Initialization
 				if attached cfg.resolved_text_item ("session.expiration_delay") as s then
 					config.session_expiration_delay := s.to_integer
 				end
+				if
+					attached cfg.resolved_text_item ("auto_trial") as s and then
+					s.is_case_insensitive_equal_general ("yes")
+				then
+					config.enable_auto_trial
+				end
 			end
 
 				-- Storage initialization
@@ -168,6 +174,21 @@ feature -- Access: licenses
 		end
 
 feature -- Element change license
+
+	auto_assign_trial_to (a_user: ES_CLOUD_USER)
+		local
+			pl: ES_CLOUD_PLAN
+			lic: ES_CLOUD_LICENSE
+		do
+			if config.auto_trial_enabled then
+				pl := default_plan
+				if pl /= Void then
+					lic := new_license_for_plan (pl)
+					lic.set_remaining_days (pl.trial_period_in_days)
+					save_new_license (lic, a_user)
+				end
+			end
+		end
 
 	new_license_for_plan (a_plan: ES_CLOUD_PLAN): ES_CLOUD_LICENSE
 		local

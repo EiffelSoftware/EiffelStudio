@@ -23,6 +23,7 @@ feature -- Execution
 			r: like new_response
 			tb_plan, tb: STRING_TABLE [detachable ANY]
 			lic: ES_CLOUD_LICENSE
+			l_licenses: LIST [ES_CLOUD_USER_LICENSE]
 		do
 			if req.is_get_request_method then
 				if attached api.user as u then
@@ -42,7 +43,14 @@ feature -- Execution
 						r := new_response (req, res)
 						r.add_integer_64_field ("uid", l_user.id)
 						r.add_string_field ("name", api.real_user_display_name (l_user))
-						if attached es_cloud_api.user_licenses (l_user) as l_licenses and then not l_licenses.is_empty then
+						l_licenses := es_cloud_api.user_licenses (l_user)
+						if l_licenses = Void or else l_licenses.is_empty then
+								-- Auto trial ?
+							if l_user.same_as (u) and then es_cloud_api.config.auto_trial_enabled then
+								es_cloud_api.auto_assign_trial_to (u)
+							end
+						end
+						if l_licenses /= Void and then not l_licenses.is_empty then
 							create tb.make (l_licenses.count)
 							across
 								l_licenses as ic

@@ -25,6 +25,8 @@ feature -- Access
 
 	shop_provider_name: IMMUTABLE_STRING_32
 
+	auto_trial_enabled: BOOLEAN
+
 feature -- Element change
 
 	set_session_expiration_delay (d: INTEGER)
@@ -35,6 +37,11 @@ feature -- Element change
 	set_shop_provider_name (v: READABLE_STRING_GENERAL)
 		do
 			create shop_provider_name.make_from_string_general (v)
+		end
+
+	enable_auto_trial
+		do
+			auto_trial_enabled := True
 		end
 
 end

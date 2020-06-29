@@ -80,7 +80,7 @@ feature -- Dialog
 	button_visit_web_account: STRING_32 do Result := locale.translation_in_context ("My web account...", "cloud.info") end
 	tooltip_button_visit_web_account: STRING_32 do Result := locale.translation_in_context ("Visit my online account (in web browser).", "cloud.info") end
 
-	title_license_expired: STRING_32 do Result := locale.translation_in_context ("Your license is EXPIRED.", "cloud.info") end
+	title_license_expired: STRING_32 do Result := locale.translation_in_context ("Your license has EXPIRED.", "cloud.info") end
 	title_license_issue: STRING_32 do Result := locale.translation_in_context ("Issue with your license.", "cloud.info") end
 
 	title_session_paused: STRING_32 do Result := locale.translation_in_context ("This session is PAUSED.", "cloud.info") end

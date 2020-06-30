@@ -6,10 +6,10 @@ set ISE_MAJOR_MINOR_LATEST=19.05
 set ISE_BUILD_LATEST=103187
 
 set ISE_MAJOR_MINOR_NIGHTLY=20.05
-set ISE_BUILD_NIGHTLY=104470
+set ISE_BUILD_NIGHTLY=104521
 
-set ISE_MAJOR_MINOR_BETA=19.12
-set ISE_BUILD_BETA=103842
+set ISE_MAJOR_MINOR_BETA=20.05
+set ISE_BUILD_BETA=104521
 ::set ISE_BETA_DOWNLOAD_URL=http://downloads.sourceforge.net/eiffelstudio
 
 set ISE_SF_DOWNLOAD_URL=http://downloads.sourceforge.net/eiffelstudio
@@ -114,7 +114,7 @@ goto CHECK_LATEST
 			echo >&2 Version=%major%.%minor%.%build%
 			set ISE_MAJOR_MINOR=%major%.%minor%
 			set ISE_BUILD=%build%
-			set ISE_DOWNLOAD_FILE=Eiffel_%ISE_MAJOR_MINOR%_gpl_%ISE_BUILD%-%ISE_PLATFORM%.7z
+			set ISE_DOWNLOAD_FILE=Eiffel_%ISE_MAJOR_MINOR%_rev_%ISE_BUILD%-%ISE_PLATFORM%.7z
 			set ISE_DOWNLOAD_URL=https://ftp.eiffel.com/pub/download/%ISE_MAJOR_MINOR%/%ISE_DOWNLOAD_FILE%
 goto POST_CHANNEL
 
@@ -136,7 +136,7 @@ goto POST_CHANNEL
 			set ISE_MAJOR_MINOR=%ISE_MAJOR_MINOR_BETA%
 			set ISE_BUILD=%ISE_BUILD_BETA%
 
-			set ISE_DOWNLOAD_FILE=Eiffel_%ISE_MAJOR_MINOR%_gpl_%ISE_BUILD%-%ISE_PLATFORM%.7z
+			set ISE_DOWNLOAD_FILE=Eiffel_%ISE_MAJOR_MINOR%_rev_%ISE_BUILD%-%ISE_PLATFORM%.7z
 			if "%ISE_BETA_DOWNLOAD_URL%" NEQ "" (
 				set ISE_DOWNLOAD_URL=%ISE_BETA_DOWNLOAD_URL%/%ISE_DOWNLOAD_FILE%
 			) else (
@@ -152,7 +152,7 @@ goto POST_CHANNEL
 			set ISE_MAJOR_MINOR=%ISE_MAJOR_MINOR_NIGHTLY%
 			set ISE_BUILD=%ISE_BUILD_NIGHTLY%
 
-			set ISE_DOWNLOAD_FILE=Eiffel_%ISE_MAJOR_MINOR%_gpl_%ISE_BUILD%-%ISE_PLATFORM%.7z
+			set ISE_DOWNLOAD_FILE=Eiffel_%ISE_MAJOR_MINOR%_rev_%ISE_BUILD%-%ISE_PLATFORM%.7z
 			set ISE_DOWNLOAD_URL=https://ftp.eiffel.com/pub/beta/nightly/%ISE_DOWNLOAD_FILE%
 			call:iseverParse %ISE_MAJOR_MINOR%.%ISE_BUILD%
 			echo >&2 Version=%major%.%minor%.%build%

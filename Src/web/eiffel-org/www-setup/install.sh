@@ -25,17 +25,20 @@
 # Examples when script available via https://www.eiffel.org/setup/install.sh :
 #  $ curl -sSL https://www.eiffel.org/setup/install.sh | bash -s -- --channel nightly --dir /opt/eiffel
 #  $ curl -sSL https://www.eiffel.org/setup/install.sh | bash -s -- --channel nightly --install-dir /opt/eiffel/nightly --dir /opt/eiffel
-#  $ curl -sSL https://www.eiffel.org/setup/install.sh | bash -s -- --url https://ftp.eiffel.com/pub/beta/nightly/Eiffel_19.04_gpl_103127-linux-x86-64.tar.bz2 --install-dir /opt/eiffel/test --dir /opt/eiffel
+#  $ curl -sSL https://www.eiffel.org/setup/install.sh | bash -s -- --url https://ftp.eiffel.com/pub/beta/nightly/Eiffel_20.05_rev_104521-linux-x86-64.tar.bz2 --install-dir /opt/eiffel/test --dir /opt/eiffel
 
 # Default values
 ISE_MAJOR_MINOR_LATEST=19.05
 ISE_BUILD_LATEST=103187
+ISE_TYPE_LATEST=gpl
 
 ISE_MAJOR_MINOR_NIGHTLY=20.05
-ISE_BUILD_NIGHTLY=104470
+ISE_BUILD_NIGHTLY=104521
+ISE_TYPE_NIGHTLY=rev
 
-ISE_MAJOR_MINOR_BETA=19.12
-ISE_BUILD_BETA=103842
+ISE_MAJOR_MINOR_BETA=20.05
+ISE_BUILD_BETA=104521
+ISE_TYPE_BETA=rev
 #ISE_BETA_DOWNLOAD_URL=http://downloads.sourceforge.net/eiffelstudio
 
 # predefined
@@ -218,7 +221,7 @@ do_install() {
 			echo >&2 Use beta release.
 			ISE_MAJOR_MINOR=$ISE_MAJOR_MINOR_BETA
 			ISE_BUILD=$ISE_BUILD_BETA
-			ISE_DOWNLOAD_FILE=Eiffel_${ISE_MAJOR_MINOR}_gpl_${ISE_BUILD}-${ISE_PLATFORM}.tar.bz2
+			ISE_DOWNLOAD_FILE=Eiffel_${ISE_MAJOR_MINOR}_rev_${ISE_BUILD}-${ISE_PLATFORM}.tar.bz2
 			if [ -z "$ISE_BETA_DOWNLOAD_URL" ]; then
 				ISE_DOWNLOAD_URL=https://ftp.eiffel.com/pub/beta/$ISE_MAJOR_MINOR/$ISE_DOWNLOAD_FILE
 			else
@@ -232,7 +235,7 @@ do_install() {
 			echo >&2 Use nighlty release.
 			ISE_MAJOR_MINOR=$ISE_MAJOR_MINOR_NIGHTLY
 			ISE_BUILD=$ISE_BUILD_NIGHTLY
-			ISE_DOWNLOAD_FILE=Eiffel_${ISE_MAJOR_MINOR}_gpl_${ISE_BUILD}-${ISE_PLATFORM}.tar.bz2
+			ISE_DOWNLOAD_FILE=Eiffel_${ISE_MAJOR_MINOR}_rev_${ISE_BUILD}-${ISE_PLATFORM}.tar.bz2
 			ISE_DOWNLOAD_URL=https://ftp.eiffel.com/pub/beta/nightly/$ISE_DOWNLOAD_FILE
 			iseverParse $ISE_MAJOR_MINOR.$ISE_BUILD
 			echo >&2 Version=$major.$minor.$build
@@ -244,7 +247,7 @@ do_install() {
 				echo >&2 $major.$minor.$build
 				ISE_MAJOR_MINOR=$major.$minor
 				ISE_BUILD=$build
-				ISE_DOWNLOAD_FILE=Eiffel_${ISE_MAJOR_MINOR}_gpl_${ISE_BUILD}-${ISE_PLATFORM}.tar.bz2
+				ISE_DOWNLOAD_FILE=Eiffel_${ISE_MAJOR_MINOR}_rev_${ISE_BUILD}-${ISE_PLATFORM}.tar.bz2
 				ISE_DOWNLOAD_URL=https://ftp.eiffel.com/pub/download/$ISE_MAJOR_MINOR/$ISE_DOWNLOAD_FILE
 			else
 				echo >&2 Use custom url $ISE_CUSTOM_URL 

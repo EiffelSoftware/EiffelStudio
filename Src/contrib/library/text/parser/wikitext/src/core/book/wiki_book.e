@@ -203,7 +203,10 @@ feature -- Access
 
 	page_by_key (a_key: READABLE_STRING_GENERAL): detachable like page
 			-- Page identified with key `a_key'.
+		local
+			l_index_pages: ARRAYED_LIST [attached like page]
 		do
+			create l_index_pages.make (10)
 			across
 				pages as ic
 			until
@@ -211,15 +214,28 @@ feature -- Access
 			loop
 				Result := ic.item
 				if not Result.key.is_case_insensitive_equal_general (a_key) then
+					if Result.is_index_page then
+						l_index_pages.force (Result)
+					end
+					Result := Void
+				end
+			end
+			if Result = Void then
+				across
+					l_index_pages as ic
+				until
+					Result /= Void
+				loop
+					Result := ic.item
+					check Result.is_index_page end
 					if
-						Result.is_index_page and then
 						Result.parent_key.is_case_insensitive_equal_general (a_key)
 					then
 							-- Find it.
 					else
 						Result := Void
 					end
-				end
+				end			
 			end
 		end
 

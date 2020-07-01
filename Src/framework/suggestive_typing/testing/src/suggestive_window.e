@@ -36,6 +36,7 @@ feature {NONE} -- Initialization
 			lab: EV_LABEL
 			tf_folder, tf_fruit: EV_SUGGESTION_TEXT_FIELD
 			tf_fruits: EV_MULTIPLE_SUGGESTION_TEXT_FIELD
+			combo: EV_SUGGESTION_COMBO_BOX
 			cwd: READABLE_STRING_GENERAL
 			w: EV_WIDGET
 
@@ -62,7 +63,6 @@ feature {NONE} -- Initialization
 			vb.extend (w)
 			vb.disable_item_expand (w)
 
-
 			create tf.make_with_settings (create {ITERABLE_SUGGESTION_PROVIDER [READABLE_STRING_8]}.make (available_fruits), l_settings)
 			tf.set_tooltip ("Select a fruit, use Ctrl+Space to get suggestion...")
 			tf_fruit := tf
@@ -70,6 +70,28 @@ feature {NONE} -- Initialization
 
 			vb.extend (tf_fruit)
 			vb.disable_item_expand (tf_fruit)
+
+			-- Fruit with automatic suggestion and history
+			create l_settings.make
+			l_settings.set_matcher (create {CASE_INSENSITIVE_SUBSTRING_SUGGESTION_MATCHER})
+			l_settings.set_is_suggesting_as_typing (True)
+
+			w := new_title ("Select a fruit (auto suggestion + History)", l_settings)
+			vb.extend (w)
+			vb.disable_item_expand (w)
+
+			create combo.make_with_settings (create {ITERABLE_SUGGESTION_PROVIDER [READABLE_STRING_8]}.make (available_fruits), l_settings)
+			combo.set_tooltip ("Select a fruit, use Ctrl+Space to get suggestion...")
+			combo.close_actions.extend (agent (i: detachable SUGGESTION_ITEM; i_combo: EV_COMBO_BOX)
+					do
+						if i /= Void then
+							i_combo.put_front (create {EV_LIST_ITEM}.make_with_text (i.text))
+						end
+					end(?, combo)
+				)
+
+			vb.extend (combo)
+			vb.disable_item_expand (combo)
 
 			-- Fruit with activator # and @
 			create l_settings.make
@@ -85,7 +107,6 @@ feature {NONE} -- Initialization
 			create tf.make_with_settings (create {ITERABLE_SUGGESTION_PROVIDER [READABLE_STRING_8]}.make (available_fruits), l_settings)
 			tf.set_tooltip ("Select a fruit, use Ctrl+Space, or @ or #  to get suggestion...")
 			tf_fruit := tf
-
 
 			vb.extend (tf_fruit)
 			vb.disable_item_expand (tf_fruit)

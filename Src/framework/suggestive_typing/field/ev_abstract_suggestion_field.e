@@ -347,7 +347,8 @@ feature {NONE} -- Execution
 		do
 			if
 				is_editable and then not is_suggesting and then
-				suggestion_provider.is_available and then attached choices as l_choices
+				suggestion_provider.is_available and then
+				attached choices as l_choices
 			then
 					-- We are done processing the keys for the time being until
 					-- the `choices' are hidden and user starts typing again.
@@ -363,7 +364,7 @@ feature {NONE} -- Execution
 
 feature {EV_SUGGESTION_WINDOW} -- Interact with suggestion window.
 
-	insert_suggestion (a_selected_item: attached like last_suggestion)
+	insert_suggestion (a_selected_item: attached like selected_suggestion)
 			-- Insert associated text of `a_selected_item' in Current if valid,
 			-- move caret to the end and update `last_suggestion' with `a_selected_item'.
 		require
@@ -583,11 +584,11 @@ feature {NONE} -- Key handling
 				if s.count = 1 then
 					if not is_suggesting then
 						last_suggestion_activator_character := '%U'
-						if settings.is_suggesting_as_typing and not s.is_whitespace then
+						if settings.is_suggestion_activator_character (s [1]) then
+							last_suggestion_activator_character := s [1]
 --							provide_suggestion
 							ev_application.do_once_on_idle (agent process_suggestion)
-						elseif settings.is_suggestion_activator_character (s [1]) then
-							last_suggestion_activator_character := s [1]
+						elseif settings.is_suggesting_as_typing and not s.is_whitespace then
 --							provide_suggestion
 							ev_application.do_once_on_idle (agent process_suggestion)
 						else

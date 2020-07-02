@@ -202,8 +202,6 @@ feature
 			a_list_not_void: a_list /= Void
 		local
 			cs: DS_LINEAR_CURSOR[ANY]
-			specifier: EWG_C_PHASE_1_TYPE_SPECIFIER
-			qualifier: EWG_C_PHASE_1_TYPE_QUALIFIER
 		do
 			from
 				create Result.make (5)
@@ -212,11 +210,10 @@ feature
 			until
 				cs.off
 			loop
-				specifier ?= cs.item
-				qualifier ?= cs.item
-				if specifier /= Void then
+				if attached {EWG_C_PHASE_1_TYPE_SPECIFIER} cs.item as specifier then
 					Result.append_string (specifier.c_code)
-				elseif qualifier /= Void then
+				end
+				if attached {EWG_C_PHASE_1_TYPE_SPECIFIER} cs.item as qualifier  then
 					Result.append_string (qualifier.c_code)
 				end
 				cs.forth

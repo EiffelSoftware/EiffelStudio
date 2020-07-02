@@ -29,8 +29,6 @@ inherit
 			make_internal
 		end
 
-
-
 create
 
 	make
@@ -436,7 +434,7 @@ feature -- Generate Eiffel API
 						output_stream.put_string (eiffel_member_name)
 						output_stream.put_string ("_set: ")
 						output_stream.put_string (eiffel_member_name)
-						output_stream.put_string (" = a_value ")
+						output_stream.put_line (" = a_value ")
 						output_stream.put_line ("%T%Tend")
 						output_stream.put_new_line
 					end
@@ -579,7 +577,7 @@ feature -- Generate Eiffel API
 						output_stream.put_string (eiffel_member_name)
 						output_stream.put_string ("_set: ")
 						output_stream.put_string (eiffel_member_name)
-						output_stream.put_string (" = a_value ")
+						output_stream.put_line (" = a_value ")
 						output_stream.put_line ("%T%Tend")
 						output_stream.put_new_line
 					end
@@ -710,7 +708,7 @@ feature -- Generate Eiffel API
 						output_stream.put_string (eiffel_member_name)
 						output_stream.put_string ("_set: ")
 						output_stream.put_string (eiffel_member_name)
-						output_stream.put_string (" = a_value ")
+						output_stream.put_line (" = a_value ")
 						output_stream.put_line ("%T%Tend")
 						output_stream.put_new_line
 					end
@@ -805,7 +803,7 @@ feature -- Generate Eiffel API
 					output_stream.put_line ("%T%Tensure")
 					output_stream.put_string ("%T%T%Tresult_correct: Result = c_")
 					output_stream.put_string (eiffel_member_name)
-					output_stream.put_string (" (item)")
+					output_stream.put_line (" (item)")
 					output_stream.put_line ("%T%Tend")
 					output_stream.put_new_line
 				end

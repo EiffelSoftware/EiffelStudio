@@ -1,0 +1,29 @@
+test_name character-to_hexa_digit
+test_description A test for `CHARACTER_NN(_REF)`.to_hexa_digit.
+
+copy_sub Ace $TEST Ace
+copy_raw test.e $CLUSTER test.e
+
+compile_melted
+compile_result	ok
+execute_work	NONE exec_output_m
+execute_result	ok
+compare		exec_output_m output
+
+compile_frozen
+compile_result	ok
+c_compile_work
+c_compile_result	ok
+execute_work	NONE exec_output_w
+execute_result	ok
+compare		exec_output_w output
+
+compile_final
+compile_result	ok
+c_compile_final
+c_compile_result	ok
+execute_work	NONE exec_output_f
+execute_result	ok
+compare		exec_output_f output
+
+test_end

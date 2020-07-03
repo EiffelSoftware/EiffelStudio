@@ -19,7 +19,7 @@
 @import "site/removed";
 
 body, body.page {
-	background: #0AA694 url(../images/bg-head.jpg);
+	background: url(../images/bg-head.jpg);
 	font: 16px/24px "Open Sans", Arial, Helvetica, sans-serif; 
 }
 
@@ -50,7 +50,7 @@ body, body.page {
 	@extend .grid;
 	//@include grid(2);
 	//background-color: black;
-	background: url(../images/bg-header.jpg) no-repeat 100% 0;
+	background: #0AA694 url(../images/bg-header.jpg) no-repeat 100% 0;
 	border-bottom: solid 1px #000;
 	#nav {
 		//background-color: green;
@@ -64,7 +64,7 @@ body, body.page {
 
 .jumbotron {
 	@extend %clearfix;
-	background-color: none; //#0AA694;
+	//background-color: #0AA694;
 	padding: 20px;
 	margin-bottom: 10px;
 	margin-left: auto;

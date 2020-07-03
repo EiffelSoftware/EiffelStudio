@@ -188,6 +188,23 @@ feature -- Conversion
 			Result := lower_value [natural_32_code.as_integer_32]
 		end
 
+	to_hexa_digit: NATURAL_8
+			-- Convert a hexadecimal unicode digit character to the corresponding numeric value.
+		require
+			is_hexa_digit
+		local
+			mask: NATURAL_8
+		do
+				-- Mask out numbers.
+			Result := natural_32_code.to_natural_8 & 0x4F
+				-- Convert hexadecimal digits.
+			mask := ((Result |<< 1).to_integer_8 |>> 7).to_natural_8
+			Result := (Result & mask.bit_not) | ((Result - 55) & mask)
+		ensure
+			range: 0 <= Result and Result < 16
+			value: ("0123456789ABCDEF") [Result + 1] = as_upper
+		end
+
 feature -- Status report
 
 	is_alpha: BOOLEAN

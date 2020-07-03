@@ -195,6 +195,25 @@ feature -- Conversion
 			Result := properties.to_lower (item)
 		end
 
+	to_hexa_digit: NATURAL_8
+			-- Convert a hexadecimal unicode digit character to the corresponding numeric value.
+		require
+			is_hexa_digit
+		local
+			mask: NATURAL_8
+		do
+				-- Convert full-width digits to ASCII.
+			Result := ((natural_32_code & 0x7F) + ((natural_32_code & 0x100) |>> 3)).to_natural_8
+				-- Mask out numbers.
+			Result := Result & 0x4F
+				-- Convert hexadecimal digits.
+			mask := ((Result |<< 1).to_integer_8 |>> 7).to_natural_8
+			Result := (Result & mask.bit_not) | ((Result - 55) & mask)
+		ensure
+			range: 0 <= Result and Result < 16
+			value: ("0123456789ABCDEF") [Result + 1] = as_upper or ("０１２３４５６７８９ＡＢＣＤＥＦ") [Result + 1] = as_upper
+		end
+
 feature -- Status report
 
 	is_character_8: BOOLEAN

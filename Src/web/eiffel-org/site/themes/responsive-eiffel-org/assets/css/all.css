@@ -3339,9 +3339,11 @@ table.eiffel_org_nodes {
         .column .updates ul li a:hover {
           color: #c7ec7e; }
 
-body, body.page {
-  background: url(../images/bg-head.jpg);
+body {
   font: 16px/24px "Open Sans", Arial, Helvetica, sans-serif; }
+
+div#page {
+  background: #0AA694 url(../images/bg-head.jpg); }
 
 .rss-block, #content {
   width: 100%;
@@ -3373,7 +3375,7 @@ body, body.page {
 
 /* Header */
 #header {
-  background: #0AA694 url(../images/bg-header.jpg) no-repeat 100% 0;
+  background: url(../images/bg-header.jpg) no-repeat 100% 0;
   border-bottom: solid 1px #000; }
 
 /* Jumbotron */

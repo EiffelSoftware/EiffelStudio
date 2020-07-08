@@ -71,7 +71,31 @@ feature -- Test routines
 			s := "Thu, 31 Jan 2013 05:20:00 GMT-4:30" -- VET
 			create d.make_from_string (s)
 			assert ("RFC 1123", not d.has_error and then d.string.same_string ("Thu, 31 Jan 2013 09:50:00 GMT"))
+		end
 
+	test_http_date_rfc3339
+		local
+			s: STRING
+			d: HTTP_DATE
+			dt: DATE_TIME
+		do
+			create dt.make_now_utc
+			create dt.make (1985, 04, 12, 23, 20, 50)
+			dt.set_fractionals (52)
+			dt.time.set_fractionals (52)
+
+			create d.make_from_date_time (dt)
+			s := "1985-04-12T23:20:50.52Z"
+			assert ("RFC 3339 to string", d.rfc3339_string.same_string (s))
+
+			create d.make_from_rfc3339_string (s)
+			assert ("RFC 3339 from string", not d.has_error and then d.date_time.is_equal (dt))
+
+			create d.make_from_rfc3339_string ("1996-12-19T16:39:57-08:00")
+			assert ("-8hours", d.rfc3339_string.same_string ("1996-12-20T00:39:57Z"))
+
+			create d.make_from_rfc3339_string ("1937-01-01T12:00:27.87+00:20")
+			assert ("-8hours", d.rfc3339_string.same_string ("1937-01-01T11:40:27.87Z"))
 		end
 
 end

@@ -42,6 +42,7 @@ create
 	make_now_utc,
 	make_from_timestamp,
 	make_from_string,
+	make_from_rfc3339_string,
 	make_from_date_time
 
 feature {NONE} -- Initialization
@@ -64,6 +65,18 @@ feature {NONE} -- Initialization
 			if attached string_to_date_time (s) as dt then
 				date_time := dt
 			elseif attached ansi_c_string_to_date_time (s) as dt then
+				date_time := dt
+			elseif attached rfc3339_string_to_date_time (s) as dt then
+				date_time := dt
+			else
+				has_error := True
+				date_time := epoch
+			end
+		end
+
+	make_from_rfc3339_string (s: READABLE_STRING_GENERAL)
+		do
+			if attached rfc3339_string_to_date_time (s) as dt then
 				date_time := dt
 			else
 				has_error := True
@@ -153,10 +166,13 @@ feature -- Conversion to string
 			append_date_time_to_rfc850_string (date_time, Result)
 		end
 
+	iso8601_string,
 	rfc3339_string: STRING
 			-- String representation following RFC 3339.
 			-- format: [yyyy-mm-ddThh:mi:ssZ]
 			-- https://www.rfc-editor.org/rfc/rfc3339.txt
+			-- note: RFC 3339 is a profile of ISO 8601.
+			-- https://en.wikipedia.org/wiki/ISO_8601
 		do
 			create Result.make (25)
 			append_date_time_to_rfc3339_string (date_time, Result)
@@ -241,6 +257,7 @@ feature -- Conversion into string
 			s.append (" GMT")								-- SPace + GMT
 		end
 
+	append_date_time_to_iso8601_string,
 	append_date_time_to_rfc3339_string (dt: DATE_TIME; s: STRING_GENERAL)
 			-- Append `dt' as [yyyy-mm-ddThh:mi:ssZ] format to `s'.
 		do
@@ -316,7 +333,7 @@ feature -- Helper routines.
 			create fd.make (2, 2)
 			fd.show_trailing_zeros
 			fd.show_zero
-			r64 := t.fine_second
+			r64 := t.second + t.fractional_second * 0.01
 			f := fd.formatted (r64)
 			if f.ends_with_general (".00") then
 				append_2_digits_integer_to (t.second, s)	-- ss				
@@ -670,7 +687,7 @@ feature {NONE} -- Implementation
 		end
 
 	ansi_c_string_to_date_time (s: READABLE_STRING_GENERAL): detachable DATE_TIME
-			-- String representation of `dt' using the RFC 1123
+			-- ANSI C date from `s` string representation using the RFC 1123
 			--       asctime-date = wkday SP date3 SP time SP 4DIGIT
 			--       date3        = month SP ( 2DIGIT | ( SP 1DIGIT ))
 			--                      ; month day (e.g., Jun  2)
@@ -919,10 +936,114 @@ feature {NONE} -- Implementation
 			end
 		end
 
+	rfc3339_string_to_date_time (s: READABLE_STRING_GENERAL): detachable DATE_TIME
+			--| 1985-04-12T23:20:50.52Z
+			--| 1996-12-19T16:39:57-08:00  = 1996-12-20T00:39:57Z
+			--|
+		note
+			EIS: "name=RFC3339", "protocol=URI", "src=https://tools.ietf.org/html/rfc3339"
+		local
+			y,mo,d,h,mi,sec, frac_sec: INTEGER
+			l_off_h, l_off_mi: INTEGER
+			tmp: READABLE_STRING_GENERAL
+			i, j, k, pos: INTEGER
+			err: BOOLEAN
+		do
+			if s /= Void then
+				pos := s.index_of ('T', 1)
+				if pos > 0 then
+					i := 1
+					j := s.index_of ('-', i)
+					if j > i and j < pos then
+						y := s.substring (i, j - 1).to_integer
+						i := j + 1
+						j := s.index_of ('-', i)
+						if j > i and j < pos then
+							mo := s.substring (i, j - 1).to_integer
+							d := s.substring (j + 1, pos - 1).to_integer
+						else
+							err := True
+						end
+					else
+						err := True
+					end
+					i := pos + 1
+					j := s.index_of (':', i)
+					if j > i then
+						h := s.substring (i, j - 1).to_integer
+						i := j + 1
+						j := s.index_of (':', i)
+						if j > i then
+							mi := s.substring (i, j - 1).to_integer
+							from
+								k := j + 1
+							until
+								k > s.count
+								or s[k].is_alpha
+								or s[k] = '+'
+								or s[k] = '-'
+							loop
+								k := k + 1
+							end
+							tmp := s.substring (j + 1, k - 1)
+							j := tmp.index_of ('.', 1)
+							if j > 0 then
+								sec := tmp.head (j - 1).to_integer
+								frac_sec := tmp.substring (j + 1, tmp.count).to_integer
+							else
+								sec := tmp.to_integer
+							end
+							if k <= s.count then
+								if s[k] = '+' then
+									tmp := s.substring (k + 1, s.count)
+									j := tmp.index_of (':', 1)
+									if j > 0 then
+										l_off_h := - tmp.head (j - 1).to_integer
+										l_off_mi := - tmp.substring (j + 1, tmp.count).to_integer
+									else
+										l_off_h := - tmp.to_integer
+									end
+								elseif s[k] = '-' then
+									tmp := s.substring (k + 1, s.count)
+									j := tmp.index_of (':', 1)
+									if j > 0 then
+										l_off_h := + tmp.head (j - 1).to_integer
+										l_off_mi := + tmp.substring (j + 1, tmp.count).to_integer
+									else
+										l_off_h := + tmp.to_integer
+									end
+								elseif s[k] = 'Z' then
+									-- Done
+								else
+								end
+							end
+						else
+							err := True
+						end
+					else
+						err := True
+					end
+					if not err then
+						create Result.make (y, mo, d, h, mi, sec)
+						if frac_sec /= 0 then
+							Result.set_fractionals (frac_sec)
+							Result.time.set_fractionals (frac_sec)
+						end
+						if l_off_h /= 0 then
+							Result.hour_add (l_off_h)
+						end
+						if l_off_mi /= 0 then
+							Result.minute_add (l_off_mi)
+						end
+					end
+				end
+			end
+		end
+
 invariant
 
 note
-	copyright: "2011-2019, Jocelyn Fiat, Eiffel Software and others"
+	copyright: "2011-2020, Jocelyn Fiat, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

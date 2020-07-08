@@ -44,6 +44,7 @@
 		<library name="cms_wikitext_module" location="$ISE_LIBRARY\unstable\library\web\cms\modules\wikitext\wikitext.ecf" readonly="false" use_application_options="true"/>
 		<library name="http" location="$ISE_LIBRARY\contrib\library\network\protocol\http\http.ecf"/>
 		<library name="json" location="$ISE_LIBRARY\contrib\library\text\parser\json\library\json.ecf" readonly="false"/>
+		<library name="login_with_esa_module" location="..\cms_modules\login_with_esa\login_with_esa.ecf" readonly="false"/>
 		<library name="module_codeboard" location="modules\codeboard\codeboard.ecf" readonly="false" use_application_options="true"/>
 		<library name="module_eiffel_community" location="modules\eiffel_community\eiffel_community.ecf" readonly="false" use_application_options="true"/>
 		<library name="module_eiffel_download" location="modules\eiffel_download\eiffel_download.ecf" readonly="false" use_application_options="true"/>

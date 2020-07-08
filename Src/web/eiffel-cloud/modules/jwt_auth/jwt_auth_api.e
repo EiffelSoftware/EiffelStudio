@@ -199,8 +199,7 @@ feature {NONE} -- Implementation
 			n: INTEGER
 			v: NATURAL_32
 		do
-			create rand.set_seed ((100 * (create {DATE_TIME}.make_now_utc).fine_second).truncated_to_integer)
-			rand.start
+			rand := cms_api.random_generator
 			create Result.make (len)
 			from
 				n := off

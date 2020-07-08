@@ -140,6 +140,12 @@ feature -- Router
 
 	roc_account_location: STRING = "account"
 
+	roc_new_password_location: STRING = "account/new-password"
+
+	roc_reset_password_location: STRING = "account/reset-password"
+
+	roc_reactivate_location: STRING = "account/reactivate"
+
 	setup_router (a_router: WSF_ROUTER; a_api: CMS_API)
 			-- <Precursor>
 		do
@@ -163,8 +169,8 @@ feature -- Router
 			a_router.handle ("/" + roc_logout_location, create {WSF_URI_AGENT_HANDLER}.make (agent handle_logout(a_api, ?, ?)), a_router.methods_head_get)
 			a_router.handle ("/" + roc_register_location, create {WSF_URI_AGENT_HANDLER}.make (agent handle_register(a_api, ?, ?)), a_router.methods_get_post)
 
-			a_router.handle ("/" + roc_account_location + "/new-password", create {WSF_URI_AGENT_HANDLER}.make (agent handle_new_password(a_api, ?, ?)), a_router.methods_get_post)
-			a_router.handle ("/" + roc_account_location + "/reset-password", create {WSF_URI_AGENT_HANDLER}.make (agent handle_reset_password(a_api, ?, ?)), a_router.methods_get_post)
+			a_router.handle ("/" + roc_new_password_location, create {WSF_URI_AGENT_HANDLER}.make (agent handle_new_password(a_api, ?, ?)), a_router.methods_get_post)
+			a_router.handle ("/" + roc_reset_password_location, create {WSF_URI_AGENT_HANDLER}.make (agent handle_reset_password(a_api, ?, ?)), a_router.methods_get_post)
 			a_router.handle ("/" + roc_account_location + "/change/{field}", create {WSF_URI_TEMPLATE_AGENT_HANDLER}.make (agent handle_change_field (a_api, ?, ?)), a_router.methods_get_post)
 		end
 
@@ -432,33 +438,6 @@ feature -- Handler
 				else
 					a_auth_api.invoke_get_login_redirection (r, Void)
 				end
---				if r.redirection = Void then
---					if attached a_auth_api.cms_api.module_by_name ("session_auth") then
---							-- FIXME: find better solution to support a default login system.
---						if
---							attached {WSF_STRING} req.item ("destination") as l_destination and then
---							attached l_destination.value as v and then
---							v.is_valid_as_string_8
---						then
---							r.set_redirection ("account/auth/roc-session-login?destination=" + secured_url_content (v.to_string_8))
---						else
---							r.set_redirection ("account/auth/roc-session-login")
---						end
---					elseif attached a_auth_api.cms_api.module_by_name ("basic_auth") then
---							-- FIXME: find better solution to support a default login system.
---						if
---							attached {WSF_STRING} req.item ("destination") as l_destination and then
---							attached l_destination.value as v and then
---							v.is_valid_as_string_8
---						then
---							r.set_redirection ("account/auth/roc-basic-login?destination=" + secured_url_content (v.to_string_8))
---						else
---							r.set_redirection ("account/auth/roc-basic-login")
---						end
---					else
---							-- No login ...
---					end
---				end
 				r.execute
 			end
 		end
@@ -588,7 +567,7 @@ feature -- Handler
 								-- User exist create a new token and send a new email.
 							l_token := a_auth_api.new_token
 							l_user_api.new_password (l_token, l_user.id)
-							l_url := req.absolute_script_url ("/account/reset-password?token=" + l_token)
+							l_url := req.absolute_script_url ("/"+ roc_reset_password_location + "?token=" + l_token)
 
 								-- Send Email
 							create es.make (create {CMS_AUTHENTICATION_EMAIL_SERVICE_PARAMETERS}.make (a_auth_api.cms_api))
@@ -612,7 +591,7 @@ feature -- Handler
 							-- User exist create a new token and send a new email.
 						l_token := a_auth_api.new_token
 						l_user_api.new_password (l_token, l_user.id)
-						l_url := req.absolute_script_url ("/account/reset-password?token=" + l_token)
+						l_url := req.absolute_script_url ("/" + roc_reset_password_location + "?token=" + l_token)
 
 							-- Send Email
 						create es.make (create {CMS_AUTHENTICATION_EMAIL_SERVICE_PARAMETERS}.make (a_auth_api.cms_api))
@@ -803,13 +782,13 @@ feature -- Handler
 			loc: READABLE_STRING_8
 		do
 			loc := a_response.location
-			if a_block_id.is_case_insensitive_equal_general ("register") and then loc.starts_with ("account/roc-register") then
+			if a_block_id.is_case_insensitive_equal_general ("register") and then loc.starts_with (roc_register_location) then
 				get_block_view_register (a_block_id, a_response)
-			elseif a_block_id.is_case_insensitive_equal_general ("reactivate") and then loc.starts_with ("account/reactivate") then
+			elseif a_block_id.is_case_insensitive_equal_general ("reactivate") and then loc.starts_with (roc_reactivate_location) then
 				get_block_view_reactivate (a_block_id, a_response)
-			elseif a_block_id.is_case_insensitive_equal_general ("new_password") and then loc.starts_with ("account/new-password") then
+			elseif a_block_id.is_case_insensitive_equal_general ("new_password") and then loc.starts_with (roc_new_password_location) then
 				get_block_view_new_password (a_block_id, a_response)
-			elseif a_block_id.is_case_insensitive_equal_general ("reset_password") and then loc.starts_with ("account/reset-password") then
+			elseif a_block_id.is_case_insensitive_equal_general ("reset_password") and then loc.starts_with (roc_reset_password_location) then
 				get_block_view_reset_password (a_block_id, a_response)
 			end
 		end

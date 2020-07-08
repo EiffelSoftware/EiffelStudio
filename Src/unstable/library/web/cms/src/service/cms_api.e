@@ -990,6 +990,36 @@ feature -- Formating
 
 feature -- Factory
 
+	random_generator: RANDOM
+			-- New generator of random value.
+		once
+			create Result.make
+--			Result.set_seed ((100 * (create {DATE_TIME}.make_now_utc).fine_second).truncated_to_integer)
+			Result.set_seed (random_seed)
+			Result.start
+		end
+
+	random_seed: INTEGER
+			-- Seed of the random number generator.
+		local
+			l_seed: NATURAL_64
+			l_date: C_DATE
+		do
+			create l_date
+				-- Compute the seed as number of milliseconds since EPOC (January 1st 1970)
+			l_seed := (l_date.year_now - 1970).to_natural_64 * 12 * 30 * 24 * 60 * 60 * 1000
+			l_seed := l_seed + l_date.month_now.to_natural_64 * 30 * 24 * 60 * 60 * 1000
+			l_seed := l_seed + l_date.day_now.to_natural_64 * 24 * 60 * 60 * 1000
+			l_seed := l_seed + l_date.hour_now.to_natural_64 * 60 * 60 * 1000
+			l_seed := l_seed + l_date.minute_now.to_natural_64 * 60 * 1000
+			l_seed := l_seed + l_date.second_now.to_natural_64 * 1000
+			l_seed := l_seed + l_date.millisecond_now.to_natural_64
+				-- Use RFC 4122 trick to preserve as much meaning of `l_seed' onto an INTEGER_32.
+			Result := (l_seed |>> 32).bit_xor (l_seed).as_integer_32 & 0x7FFFFFFF
+		ensure
+			instance_free: class
+		end
+
 	new_uppercase_uuid: STRING
 		do
 			Result := {UUID_GENERATOR}.generate_uuid.out
@@ -1692,12 +1722,21 @@ feature -- Access: active user
 			Result := current_user (request)
 		end
 
+	set_inactive_user (a_user: CMS_USER)
+		require
+			a_user_attached: a_user /= Void
+			is_inactive_user: not a_user.is_active
+		do
+			current_inactive_user := a_user
+		end
+
 	set_user (a_user: CMS_USER)
 			-- Set `a_user' as current `user'.
 		require
 			a_user_attached: a_user /= Void
 			is_active_user: a_user.is_active -- TODO: check if we could allow temp user.
 		do
+			current_inactive_user := Void
 			if a_user.is_active then
 					-- in case existing code do not check for `is_active`.
 				set_current_user (request, a_user)
@@ -1763,6 +1802,8 @@ feature -- Request utilities
 
 
 feature {CMS_API_ACCESS, CMS_RESPONSE, CMS_MODULE} -- Request utilities
+
+	current_inactive_user: detachable CMS_USER
 
 	current_user (req: WSF_REQUEST): detachable CMS_USER
 			-- Current user or Void in case of Guest user.

@@ -151,8 +151,7 @@ feature {NONE} -- Implementation
 			n: INTEGER
 			v: NATURAL_32
 		do
-			create rand.set_seed ((create {DATE_TIME}.make_now_utc).seconds)
-			rand.start
+			rand := api.random_generator
 			create Result.make (len)
 			from
 				n := 1
@@ -170,8 +169,7 @@ feature {NONE} -- Implementation
 				n := n + 1
 			end
 		end
-
 note
-	copyright: "2011-2018, Jocelyn Fiat, Javier Velilla, Eiffel Software and others"
+	copyright: "2011-2020, Jocelyn Fiat, Javier Velilla, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 end

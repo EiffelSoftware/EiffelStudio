@@ -85,6 +85,15 @@ feature -- Helper conversions to and from string
 			Result := hd.rfc1123_string
 		end
 
+	date_time_to_iso8601_string (dt: DATE_TIME): STRING_8
+			-- Date time `dt` converted to standard output (using RFC3339 a profile of ISO8601)
+		local
+			hd: HTTP_DATE
+		do
+			create hd.make_from_date_time (dt)
+			Result := hd.iso8601_string
+		end
+
 	date_time_to_timestamp_string (dt: DATE_TIME): STRING_8
 			-- Date time `dt` converted to standard output (using RFC3339)
 		local
@@ -100,6 +109,18 @@ feature -- Helper conversions to and from string
 			hd: HTTP_DATE
 		do
 			create hd.make_from_string (s)
+			check not hd.has_error end
+			if not hd.has_error then
+				Result := hd.date_time
+			end
+		end
+
+	date_time_from_iso8601_string (s: READABLE_STRING_GENERAL): detachable DATE_TIME
+			-- Date time from RFC3339 (a profile of ISO 8601) string `s`, if valid.
+		local
+			hd: HTTP_DATE
+		do
+			create hd.make_from_rfc3339_string (s)
 			check not hd.has_error end
 			if not hd.has_error then
 				Result := hd.date_time
@@ -164,6 +185,6 @@ feature -- Helper conversions to and from string
 		end
 
 note
-	copyright: "2011-2019, Jocelyn Fiat, Javier Velilla, Eiffel Software and others"
+	copyright: "2011-2020, Jocelyn Fiat, Javier Velilla, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 end

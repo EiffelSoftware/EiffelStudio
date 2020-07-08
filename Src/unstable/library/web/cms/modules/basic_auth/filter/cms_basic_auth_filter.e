@@ -35,7 +35,7 @@ feature -- Basic operations
 				attached l_auth.password as l_auth_password
 			then
 				if
-					attached api.user_api.active_user_with_credential (l_auth_login, l_auth_password) as l_user
+					attached api.user_api.user_with_credential (l_auth_login, l_auth_password) as l_user
 				then
 					if api.user_has_permission (l_user, {CMS_BASIC_AUTH_MODULE}.perm_use_basic_auth) then
 						debug ("refactor_fixme")
@@ -43,7 +43,11 @@ feature -- Basic operations
 							-- req.set_execution_variable ("security_content", create SECURITY_CONTEXT.make (l_user))
 							-- other authentication filters (OpenID, etc) should implement the same approach.
 						end
-						set_current_user (l_user)
+						if l_user.is_active then
+							set_current_user (l_user)
+						else
+							set_current_inactive_user (l_user)
+						end
 					end
 				else
 					api.logger.put_error (generator + ".execute login_valid failed for: " + {UTF_CONVERTER}.utf_32_string_to_utf_8_string_8 (l_auth_login), Void)

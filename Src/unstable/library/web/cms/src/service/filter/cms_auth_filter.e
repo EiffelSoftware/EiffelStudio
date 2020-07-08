@@ -52,4 +52,12 @@ feature -- Basic operations
 			api.set_user (u)
 		end
 
+	set_current_inactive_user (u: CMS_USER)
+		do
+			api.set_inactive_user (u)
+		end
+
+note
+	copyright: "2011-2020, Jocelyn Fiat, Javier Velilla, Eiffel Software and others"
+	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 end

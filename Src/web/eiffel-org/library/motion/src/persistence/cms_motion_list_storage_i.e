@@ -85,7 +85,7 @@ feature -- Change: Motion
 		deferred
 		end
 
-	upload_motion_attachment  (a_id: INTEGER_64; a_interaction_id: INTEGER_64; a_size:INTEGER_64; a_content: READABLE_STRING_32; a_file_name: READABLE_STRING_32)
+	upload_motion_attachment  (a_id: INTEGER_64; a_interaction_id: INTEGER_64; a_size: INTEGER_64; a_content: READABLE_STRING_8; a_file_name: READABLE_STRING_GENERAL)
 			-- Upload a file for a motion list item `a_id' with file name `a_file_name', content `a_content' and length `a_size'.
 		deferred
 		end
@@ -95,7 +95,7 @@ feature -- Change: Motion
 		deferred
 		end
 
-	remove_motion_attachment_by_name (a_id: INTEGER_64; a_interaction_id: INTEGER_64; a_name: READABLE_STRING_32)
+	remove_motion_attachment_by_name (a_id: INTEGER_64; a_interaction_id: INTEGER_64; a_name: READABLE_STRING_GENERAL)
 			-- Remove attachment with name `a_name' associated motion wish `a_id'.
 		deferred
 		end

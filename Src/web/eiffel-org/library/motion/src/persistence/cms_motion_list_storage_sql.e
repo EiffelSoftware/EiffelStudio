@@ -336,7 +336,7 @@ feature -- Change: Motion
 			store_motion_interaction (a_wish)
 		end
 
-	upload_motion_attachment  (a_id: INTEGER_64; a_interaction_id: INTEGER_64; a_size:INTEGER_64; a_content: READABLE_STRING_32; a_file_name: READABLE_STRING_32)
+	upload_motion_attachment  (a_id: INTEGER_64; a_interaction_id: INTEGER_64; a_size: INTEGER_64; a_content: READABLE_STRING_8; a_file_name: READABLE_STRING_GENERAL)
 			-- <Precursor>
 		local
 			l_parameters: STRING_TABLE [ANY]
@@ -791,7 +791,7 @@ feature {NONE} -- Implemenation
 			if
 				attached sql_read_integer_64 (1) as l_id and then
 				attached sql_read_integer_64 (2) as l_length and then
-				attached sql_read_string_32 (3) as l_content and then
+				attached sql_read_string_8 (3) as l_content and then
 				attached sql_read_string_32 (4) as l_file_name
 			then
 				create Result.make (l_file_name, l_length, l_content)
@@ -810,7 +810,6 @@ feature {NONE} -- Implemenation
 			end
 			sql_finalize
 		end
-
 
 	last_inserted_motion_interaction_id: INTEGER_64
 			-- Last insert wish_interaction id.

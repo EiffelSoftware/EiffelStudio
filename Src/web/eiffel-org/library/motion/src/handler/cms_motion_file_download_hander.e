@@ -60,7 +60,7 @@ feature -- GET
 					loop
 						if c.item.name.is_case_insensitive_equal (l_name.value) then
 							l_found := True
-							compute_response_get_txt (req, res, c.item.content)
+							compute_response_get_download (req, res, c.item.name, c.item.content)
 						end
 					end
 				end
@@ -76,7 +76,7 @@ feature -- GET
 					loop
 						if c.item.name.is_case_insensitive_equal (l_name.value) then
 							l_found := True
-							compute_response_get_txt (req, res, c.item.content)
+							compute_response_get_download (req, res, c.item.name, c.item.content)
 						end
 					end
 				end
@@ -85,20 +85,34 @@ feature -- GET
 
 feature -- Response
 
-	compute_response_get_txt (req: WSF_REQUEST; res: WSF_RESPONSE; output: STRING)
+	compute_response_get_download (req: WSF_REQUEST; res: WSF_RESPONSE; a_file_name: READABLE_STRING_GENERAL; a_message: READABLE_STRING_8)
 			--Simple response to download content
 		local
 			h: HTTP_HEADER
-			l_msg: STRING
 		do
 			create h.make
-			create l_msg.make_from_string (output)
-			h.put_content_type_text_plain
-			h.put_content_length (l_msg.count)
+			h.put_content_type (content_type_from_name (a_file_name))
+			h.put_content_length (a_message.count)
 			h.put_current_date
 			res.set_status_code ({HTTP_STATUS_CODE}.ok)
 			res.put_header_text (h.string)
-			res.put_string (l_msg)
+			res.put_string (a_message)
+		end
+	
+
+	content_type_from_name (a_file_name: READABLE_STRING_GENERAL): READABLE_STRING_8
+		local
+			m_map: HTTP_FILE_EXTENSION_MIME_MAPPING
+			p: PATH
+		do
+			create m_map.make_default
+			create p.make_from_string (a_file_name)
+			if attached p.extension as ext then
+				Result := m_map.mime_type (ext.as_lower)
+			end
+			if Result = Void then
+				Result := {HTTP_MIME_TYPES}.application_force_download
+			end
 		end
 
 end

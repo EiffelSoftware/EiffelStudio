@@ -83,7 +83,7 @@ feature -- Change: WishList
 		do
 		end
 
-	upload_motion_attachment  (a_id: INTEGER_64; a_interaction_id: INTEGER_64; a_size:INTEGER_64; a_content: READABLE_STRING_32; a_file_name: READABLE_STRING_32)
+	upload_motion_attachment  (a_id: INTEGER_64; a_interaction_id: INTEGER_64; a_size: INTEGER_64; a_content: READABLE_STRING_8; a_file_name: READABLE_STRING_GENERAL)
 			-- <Precursor>
 		do
 		end
@@ -93,7 +93,7 @@ feature -- Change: WishList
 		do
 		end
 
-	remove_motion_attachment_by_name (a_id: INTEGER_64; a_interaction_id: INTEGER_64; a_name: READABLE_STRING_32)
+	remove_motion_attachment_by_name (a_id: INTEGER_64; a_interaction_id: INTEGER_64; a_name: READABLE_STRING_GENERAL)
 			-- <Precursor>
 		do
 		end

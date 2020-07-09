@@ -53,7 +53,7 @@ feature -- Access
 	temporary_files: detachable LIST [CMS_MOTION_FILE]
 		-- Temporary files.	
 
-	temporary_files_names: detachable LIST [STRING]
+	temporary_files_names: detachable LIST [READABLE_STRING_GENERAL]
 		-- Temporary files names.	
 
 feature -- Status Report
@@ -127,21 +127,21 @@ feature -- Element Change
 			id_set: id = a_id
 		end
 
-	set_status_by_synopsis (a_synopsis: READABLE_STRING_32)
+	set_status_by_synopsis (a_synopsis: READABLE_STRING_GENERAL)
 			-- Set `selected_status' id by synosis, if match.
 		do
 			across status as c loop
-				if c.item.synopsis.same_string (a_synopsis) then
+				if a_synopsis.same_string (c.item.synopsis) then
 					set_selected_status (c.item.id)
 				end
 			end
 		end
 
-	set_category_by_synopsis (a_synopsis: READABLE_STRING_32)
+	set_category_by_synopsis (a_synopsis: READABLE_STRING_GENERAL)
 			-- Set `category' id by synosis, if match.
 		do
 			across categories as c loop
-				if c.item.synopsis.same_string (a_synopsis) then
+				if a_synopsis.same_string (c.item.synopsis) then
 					set_category (c.item.id)
 				end
 			end
@@ -155,7 +155,7 @@ feature -- Element Change
 			uploaded_files_set: uploaded_files = a_files
 		end
 
-	set_temporary_files (a_files: like temporary_files )
+	set_temporary_files (a_files: like temporary_files)
 			-- Set `temporary_files' with `a_files'.
 		do
 			temporary_files := a_files
@@ -163,13 +163,13 @@ feature -- Element Change
 			temporary_files_set: temporary_files = a_files
 		end
 
-	add_temporary_file_name (a_name: STRING)
+	add_temporary_file_name (a_name: READABLE_STRING_GENERAL)
 		local
 			l_files: like temporary_files_names
 		do
 			l_files := temporary_files_names
 			if l_files = Void then
-				create {ARRAYED_LIST [STRING]}l_files.make (1)
+				create {ARRAYED_LIST [READABLE_STRING_GENERAL]} l_files.make (1)
 				temporary_files_names := l_files
 			end
 			l_files.force (a_name)

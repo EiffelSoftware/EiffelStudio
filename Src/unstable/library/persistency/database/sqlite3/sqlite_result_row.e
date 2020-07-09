@@ -269,7 +269,7 @@ feature -- Query: Value affinity
 				l_size := sqlite3_column_bytes (sqlite_api, statement.internal_stmt, (a_column - 1).as_integer_32)
 				if l_size >= 0 then
 					create l_string.make_by_pointer_and_count (p, l_size)
-					Result := l_string.string
+					Result := l_string.substring_8 (1, l_string.count)
 				else
 					create Result.make_empty
 				end

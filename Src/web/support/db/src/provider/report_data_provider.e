@@ -1337,7 +1337,7 @@ feature -- Basic Operations
 				--			delete_problem_report_temporary_interactions (a_interaction_id)
 		end
 
-	upload_temporary_report_attachment (a_report_id: INTEGER; a_length: INTEGER; a_name: READABLE_STRING_32; a_content: STRING)
+	upload_temporary_report_attachment (a_report_id: INTEGER; a_length: INTEGER; a_name: READABLE_STRING_32; a_content: READABLE_STRING_8)
 			-- Upload attachment in temporary table for temporary report `a_report_id'.
 		local
 			l_parameters: HASH_TABLE [ANY, STRING_32]

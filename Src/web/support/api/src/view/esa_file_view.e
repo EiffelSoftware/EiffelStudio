@@ -11,7 +11,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_name: READABLE_STRING_32; a_size: INTEGER; a_content: STRING)
+	make (a_name: READABLE_STRING_32; a_size: INTEGER; a_content: READABLE_STRING_8)
 			-- Create an object instance of ESA_FILE_VIEW
 			-- Set `name' to `a_name'
 			-- Set `size' to `a_size'
@@ -37,7 +37,7 @@ feature -- Access
 	size: INTEGER
 		-- Size of the current size.	
 
-	content: STRING
+	content: READABLE_STRING_8
 		-- String representation of the current file.
 
 feature -- Element Change

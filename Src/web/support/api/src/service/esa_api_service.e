@@ -164,7 +164,7 @@ feature -- Access
 			post_data_provider_execution
 		end
 
-	attachments_content (a_attachment_id: INTEGER): STRING
+	attachments_content (a_attachment_id: INTEGER): STRING_8
 			-- Attachment content of attachment with ID `a_attachment_id'
 		do
 			log.write_debug (generator + ".attachments_content Attachment content of attachment with ID:" + a_attachment_id.out)

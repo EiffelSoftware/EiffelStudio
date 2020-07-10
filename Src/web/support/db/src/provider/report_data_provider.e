@@ -426,7 +426,7 @@ feature -- Access
 			post_execution
 		end
 
-	attachments_content (a_attachment_id: INTEGER): STRING
+	attachments_content (a_attachment_id: INTEGER): STRING_8
 			-- Attachment content of attachment with ID `a_attachment_id'.
 		local
 			l_parameters: HASH_TABLE [ANY, STRING_32]
@@ -442,7 +442,7 @@ feature -- Access
 			db_handler.execute_reader
 			if not db_handler.after then
 				db_handler.start
-				if attached {DB_TUPLE} db_handler.item as l_item and then attached {STRING} l_item.item (1) as l_item_1 then
+				if attached {DB_TUPLE} db_handler.item as l_item and then attached {STRING_8} l_item.item (1) as l_item_1 then
 					Result := l_item_1
 				end
 			end
@@ -1357,7 +1357,7 @@ feature -- Basic Operations
 			post_execution
 		end
 
-	upload_temporary_interaction_attachment (a_interaction_id: INTEGER; a_length: INTEGER; a_name: READABLE_STRING_32; a_content: STRING)
+	upload_temporary_interaction_attachment (a_interaction_id: INTEGER; a_length: INTEGER; a_name: READABLE_STRING_32; a_content: READABLE_STRING_8)
 			-- Upload attachment in temporary table for temporary interaction `a_interaction_id'.
 		local
 			l_parameters: HASH_TABLE [ANY, STRING_32]

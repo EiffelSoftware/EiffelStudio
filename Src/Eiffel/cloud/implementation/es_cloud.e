@@ -297,14 +297,44 @@ feature -- Event
 
 feature -- Access: edition
 
+	eiffel_edition: detachable EIFFEL_EDITION
+			-- <precursor/>
+
+	is_standard_edition: BOOLEAN
+			-- Is associated with standard edition of EiffelStudio.
+		do
+			if attached eiffel_edition as ed then
+				Result := ed.is_standard_edition
+			else
+				Result := True
+			end
+			Result := not (is_enterprise_edition or is_branded_edition)
+		end
+
 	is_enterprise_edition: BOOLEAN
-			-- <Precursor>
+		do
+			if attached eiffel_edition as ed then
+				Result := ed.is_enterprise_edition
+			else
+				Result := False
+			end
+		end
 
 	is_branded_edition: BOOLEAN
-			-- <Precursor>
+		do
+			if attached eiffel_edition as ed then
+				Result := ed.is_branded_edition
+			else
+				Result := False
+			end
+		end
 
 	edition_brand_name: detachable IMMUTABLE_STRING_8
-			-- <Precursor>
+		do
+			if attached eiffel_edition as ed then
+				Result := ed.edition_name
+			end
+		end
 
 feature -- Access
 
@@ -491,25 +521,9 @@ feature {NONE} -- Status report implementation
 
 feature -- Element change
 
-	set_is_standard_edition
+	set_eiffel_edition (ed: EIFFEL_EDITION)
 		do
-			is_enterprise_edition := False
-			is_branded_edition := False
-			edition_brand_name := Void
-		end
-
-	set_is_enterprise_edition
-		do
-			is_enterprise_edition := True
-			is_branded_edition := False
-			edition_brand_name := Void
-		end
-
-	set_is_branded_edition (a_brand_name: READABLE_STRING_8)
-		do
-			is_branded_edition := True
-			is_enterprise_edition := False
-			edition_brand_name := a_brand_name
+			eiffel_edition := ed
 		end
 
 	set_server_url (a_server_url: READABLE_STRING_8)

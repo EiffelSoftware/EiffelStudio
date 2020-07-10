@@ -34,10 +34,13 @@ feature -- Debug purpose
 
 feature -- Access: edition
 
+	eiffel_edition: detachable EIFFEL_EDITION
+		deferred
+		end
+
 	is_standard_edition: BOOLEAN
 			-- Is associated with standard edition of EiffelStudio.
-		do
-			Result := not (is_enterprise_edition or is_branded_edition)
+		deferred
 		end
 
 	is_enterprise_edition: BOOLEAN
@@ -239,22 +242,9 @@ feature -- Registration
 		deferred
 		end
 
-	set_is_standard_edition
+	set_eiffel_edition (ed: EIFFEL_EDITION)
+			--Set the `eiffel_edition` to `ed`.
 		deferred
-		ensure
-			is_standard_edition
-		end
-
-	set_is_enterprise_edition
-		deferred
-		ensure
-			is_enterprise_edition
-		end
-
-	set_is_branded_edition (a_brand_name: READABLE_STRING_8)
-		deferred
-		ensure
-			is_branded_edition
 		end
 
 feature -- Connection checking

@@ -60,9 +60,18 @@ inherit
 			{NONE} all
 		end
 
+	SHARED_EIFFEL_EDITION
+
+	EIFFEL_EDITION
+
 	PREFERENCES_VERSIONS
 
 feature {NONE} -- Initialization
+
+	make
+		do
+			set_eiffel_edition (Current)
+		end
 
 	initialize_services
 			-- Initializes graphical services.
@@ -154,15 +163,7 @@ feature {NONE} -- Initialization
 			create ctlr.make
 			if attached ctlr.es_cloud_s.service as s then
 				s.register_observer (ctlr)
-				if is_standard_edition then
-					s.set_is_standard_edition
-				elseif s.is_enterprise_edition then
-					s.set_is_enterprise_edition
-				elseif s.is_branded_edition then
-					s.set_is_branded_edition (edition_name)
-				else
-					s.set_is_standard_edition
-				end
+				s.set_eiffel_edition (Current)
 			end
 		end
 
@@ -180,7 +181,7 @@ feature {NONE} -- Initialization
 --			end
 		end
 
-feature {NONE} -- Access
+feature -- Edition access
 
 	edition_name: STRING
 		deferred
@@ -202,6 +203,8 @@ feature {NONE} -- Access
 		do
 			Result := not (is_standard_edition or is_enterprise_edition)
 		end
+
+feature {NONE} -- Access
 
 	service_initializer: SERVICE_INITIALIZER
 			-- Initializer used to register all services.
@@ -319,7 +322,7 @@ feature {NONE} -- Welcome dialog
 			end
 			win := first_window.window
 
-			create pg.make (is_branded_edition)
+			create pg.make (Current)
 			pg.set_quit_action (agent do (create {EB_EXIT_APPLICATION_COMMAND}).execute_with_confirmation (False) end)
 			pg.set_next_action (agent load_interface)
 			pg.dialog.set_size (first_window.scaled_size (300), first_window.scaled_size (100))

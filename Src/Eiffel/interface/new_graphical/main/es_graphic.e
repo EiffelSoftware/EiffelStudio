@@ -13,7 +13,8 @@ inherit
 		redefine
 			is_standard_edition,
 			is_enterprise_edition,
-			is_branded_edition
+			is_branded_edition,
+			make
 		end
 
 create
@@ -26,6 +27,7 @@ feature {NONE} -- Initialization
 		local
 			l_app: EV_APPLICATION
 		do
+			Precursor
 			create l_app
 
 			l_app.post_launch_actions.extend (agent prepare (l_app))

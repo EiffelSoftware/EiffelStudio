@@ -53,6 +53,13 @@ inherit
 			default_create, copy
 		end
 
+	SHARED_EIFFEL_EDITION
+		export
+			{NONE} all
+		undefine
+			default_create, copy
+		end
+
 create
 	make
 
@@ -233,10 +240,16 @@ feature {NONE} -- Implementation
 			-- Clause in the about dialog concerning the license.
 		local
 			l_edition: READABLE_STRING_8
+			l_eiffel_edition: like eiffel_edition
 		do
 			create Result.make (50)
 			Result.append ("Installation information")
-			l_edition := {ES_IDE_SETTINGS}.edition_title
+			l_eiffel_edition := eiffel_edition
+			if l_eiffel_edition /= Void then
+				l_edition := l_eiffel_edition.edition_name
+			else
+				l_edition := {ES_IDE_SETTINGS}.edition_title
+			end
 			if not l_edition.is_whitespace then
 				Result.append (" (" + l_edition + ")")
 			end
@@ -244,6 +257,20 @@ feature {NONE} -- Implementation
 			Result.append ({STRING_32} "Version = ")
 			Result.append (t_version_info (True))
 			Result.append_character ('%N')
+			if l_eiffel_edition /= Void then
+				if l_eiffel_edition.is_branded_edition and attached l_eiffel_edition.branded_edition_title as l_title then
+					Result.append ({STRING_32} "Edition: " + l_title)
+					Result.append_character ('%N')
+				end
+				if attached l_eiffel_edition.edition_license_key as lic_key then
+					Result.append ({STRING_32} "License key: " + lic_key)
+					Result.append_character ('%N')
+				end
+				if l_eiffel_edition.edition_expiration /= Void then
+					Result.append ({STRING_32} "The license expires in " + l_eiffel_edition.number_of_remaining_days.out + " day(s).")
+					Result.append_character ('%N')
+				end
+			end
 			Result.append ("Monitor DPI = " + {EV_MONITOR_DPI_DETECTOR_IMP}.dpi.out + "%N")
 			Result.append ("%N")
 			Result.append (eiffel_layout.environment_info)

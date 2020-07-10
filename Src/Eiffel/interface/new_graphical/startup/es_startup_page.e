@@ -25,10 +25,11 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_terms_agreement_required: like terms_agreement_required)
+	make (a_edition: EIFFEL_EDITION)
 			-- Initialize `Current'.
 		do
-			terms_agreement_required := a_terms_agreement_required
+			eiffel_edition := a_edition
+			terms_agreement_required := a_edition.is_branded_edition
 			build_interface
 		end
 
@@ -55,7 +56,7 @@ feature -- Execution
 			acc: ES_ACCOUNT
 		do
 			if terms_agreement_required or is_cloud_enabled then
-				if terms_agreement_required and not license_accepted then
+				if terms_agreement_required and not terms_accepted then
 					switch_to_user_agreement_page
 					show_modal_to_window (win)
 				elseif is_cloud_enabled and then attached es_cloud_s.service as cld then
@@ -83,7 +84,7 @@ feature -- Execution
 		local
 			vb: EV_VERTICAL_BOX
 			hb: EV_HORIZONTAL_BOX
-			lab: EVS_LABEL
+			lab: EV_LABEL
 			txt: EV_TEXT
 			lnk: EVS_LINK_LABEL
 			eiffel_image: EV_PIXMAP
@@ -115,6 +116,12 @@ feature -- Execution
 				create vb
 				hb.extend (vb)
 				vb.set_padding_width (layout_constants.default_padding_size)
+
+--				if eiffel_edition.is_branded_edition then
+--					create lab.make_with_text (locale.translation_in_context ("To continue using this branded edition of EiffelStudio, you must first agree with the license terms. If you do not agree with the terms, use another EiffelStudio Edition.", "license"))
+--					vb.extend (lab)
+--					vb.disable_item_expand (lab)
+--				end
 
 				create lab.make_with_text (interface_names.l_please_read_and_accept_terms)
 				vb.extend (lab)
@@ -233,14 +240,18 @@ feature -- Execution
 			main_box.propagate_background_color
 		end
 
+feature -- Access: edition		
+
+	eiffel_edition: EIFFEL_EDITION
+
 feature -- Status
 
 	terms_agreement_required: BOOLEAN
 			-- Is Current EiffelStudio the Standard edition?
 
-	license_accepted: BOOLEAN
+	terms_accepted: BOOLEAN
 		do
-			Result := preferences.misc_data.license_accepted
+			Result := preferences.misc_data.terms_accepted
 		end
 
 	is_cloud_enabled: BOOLEAN
@@ -261,8 +272,17 @@ feature -- Status
 feature -- Text
 
 	terms_agreement_text: STRING_32
-		once
-			Result :=  locale.translation_in_context ("To continue using this edition of EiffelStudio, you must first agree with the license terms. If you do not agree with the terms, use another EiffelStudio Edition.", "license")
+		do
+			Result :=  locale.translation_in_context ("To continue using this edition of EiffelStudio, you must first agree with the license terms.If you do not agree with the terms, use another EiffelStudio Edition.", "license")
+
+			if eiffel_edition.is_branded_edition then
+				Result.prepend ({STRING_32} "EiffelStudio " + eiffel_edition.edition_name + " edition%N%N")
+
+				if attached eiffel_edition.branded_edition_title as l_title then
+					Result.prepend ("%N%N")
+					Result.prepend (l_title)
+				end
+			end
 		end
 
 feature -- Access: widgets
@@ -288,7 +308,7 @@ feature -- Event: license
 
 	on_usage_accepted
 		do
-			preferences.misc_data.set_license_accepted (True)
+			preferences.misc_data.set_terms_accepted (True)
 				-- Save preferences right away.
 			preferences.preferences.save_preferences
 			if is_cloud_enabled and then attached {ES_CLOUD_S} es_cloud_s.service as cld then

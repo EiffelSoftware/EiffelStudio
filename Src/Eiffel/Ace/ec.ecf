@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
-<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-20-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-20-0 http://www.eiffel.com/developers/xml/configuration-1-20-0.xsd" name="ec" uuid="D398E904-E3C8-4F8A-B9E7-6FE493CEA02F">
+<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-21-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-21-0 http://www.eiffel.com/developers/xml/configuration-1-21-0.xsd" name="ec" uuid="D398E904-E3C8-4F8A-B9E7-6FE493CEA02F">
 	<target name="common">
 		<file_rule>
 			<exclude>/EIFGENs$</exclude>
 			<exclude>/\.git$</exclude>
 			<exclude>/\.svn$</exclude>
 		</file_rule>
-		<option warning="true">
+		<option warning="warning">
 			<assertions precondition="true" postcondition="true" check="true" supplier_precondition="true"/>
 			<warning name="old_verbatim_strings" enabled="false"/>
 		</option>
@@ -72,8 +72,7 @@
 		<library name="dotnet_assembly_information" location="$EIFFEL_SRC\dotnet\assembly_info\dotnet_assembly_information.ecf" readonly="false"/>
 		<library name="gobo_kernel" location="$ISE_LIBRARY\library\gobo\gobo_kernel.ecf"/>
 		<library name="gobo_xml" location="$ISE_LIBRARY\library\gobo\gobo_xml.ecf"/>
-		<library name="preferences" location="$ISE_LIBRARY\library\preferences\preferences.ecf" readonly="false">
-		</library>
+		<library name="preferences" location="$ISE_LIBRARY\library\preferences\preferences.ecf" readonly="false"/>
 		<cluster name="compiler_api_profiler" location="$EIFFEL_SRC\Eiffel\API\profiler\" recursive="true"/>
 		<cluster name="compiler_api_ql" location="$EIFFEL_SRC\Eiffel\API\query_language\" recursive="true"/>
 		<cluster name="compiler_api_queries" location="$EIFFEL_SRC\Eiffel\API\queries\" recursive="true"/>
@@ -184,10 +183,11 @@
 		<library name="diff" location="$ISE_LIBRARY\library\diff\diff.ecf" readonly="false"/>
 		<library name="docking" location="$ISE_LIBRARY\library\docking\docking.ecf" readonly="false" use_application_options="true"/>
 		<library name="dotnet_assembly_information" location="$EIFFEL_SRC\dotnet\assembly_info\dotnet_assembly_information.ecf" readonly="false" use_application_options="true"/>
+		<library name="edition" location="$EIFFEL_SRC\Eiffel\edition\edition.ecf" readonly="false" use_application_options="true"/>
 		<library name="editor" location="$ISE_LIBRARY\library\editor\editor.ecf" readonly="false"/>
 		<library name="es_cloud" location="$EIFFEL_SRC\Eiffel\cloud\cloud.ecf" readonly="false" use_application_options="true"/>
-		<library name="esa_api_client" location="$EIFFEL_SRC\web\support\client\esa_client.ecf"/>
 		<library name="es_update_manager" location="$EIFFEL_SRC\framework\update_manager\update_manager.ecf" use_application_options="true"/>
+		<library name="esa_api_client" location="$EIFFEL_SRC\web\support\client\esa_client.ecf"/>
 		<library name="fast_ini" location="$EIFFEL_SRC\framework\file_formats\fast_ini\fast_ini.ecf" readonly="false" use_application_options="true"/>
 		<library name="framework_text" location="$EIFFEL_SRC\framework\base\text\text.ecf" readonly="false" use_application_options="true"/>
 		<library name="framework_vision2" location="$EIFFEL_SRC\framework\vision2\vision2.ecf" readonly="false">
@@ -210,8 +210,7 @@
 		<library name="memory_analyzer" location="$ISE_LIBRARY\library\memory_analyzer\memory_analyzer.ecf" readonly="false"/>
 		<library name="net" location="$ISE_LIBRARY\library\net\net.ecf" readonly="false"/>
 		<library name="patterns" location="$ISE_LIBRARY\library\patterns\patterns.ecf" readonly="false"/>
-		<library name="preferences" location="$ISE_LIBRARY\library\preferences\preferences.ecf" readonly="false">
-		</library>
+		<library name="preferences" location="$ISE_LIBRARY\library\preferences\preferences.ecf" readonly="false"/>
 		<library name="process" location="$ISE_LIBRARY\library\process\process.ecf"/>
 		<library name="tagging" location="$EIFFEL_SRC\framework\tagging\tagging.ecf" readonly="false" use_application_options="true"/>
 		<library name="tagging-ev" location="$EIFFEL_SRC\framework\tagging\ev\tagging-ev.ecf" readonly="false" use_application_options="true"/>

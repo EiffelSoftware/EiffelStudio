@@ -105,13 +105,13 @@ feature -- Response
 			m_map: HTTP_FILE_EXTENSION_MIME_MAPPING
 			p: PATH
 		do
-			create m_map.make_default
 			create p.make_from_string (a_file_name)
 			if attached p.extension as ext then
+				create m_map.make_default
 				Result := m_map.mime_type (ext.as_lower)
 			end
 			if Result = Void then
-				Result := {HTTP_MIME_TYPES}.application_force_download
+				Result := {HTTP_MIME_TYPES}.application_octet_stream
 			end
 		end
 

@@ -20,6 +20,8 @@ feature -- Content type	: application
 			-- atom application content-type header
 
 	application_force_download: STRING = "application/force-download"
+			-- Warning: this is not a standard MIME content type.
+			-- Prefer application_octet_stream as default.
 
 	application_javascript: STRING = "application/javascript"
 			-- JavaScript application content-type header

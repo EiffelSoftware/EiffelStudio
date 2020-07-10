@@ -307,7 +307,7 @@ feature -- Content-type related
 			create m_map.make_default
 			m := m_map.mime_type (file_extension (file_path).as_lower)
 			if m = Void then
-				m := {HTTP_MIME_TYPES}.application_force_download
+				m := {HTTP_MIME_TYPES}.application_octet_stream
 			end
 			content_type := m
 		end

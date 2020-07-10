@@ -376,7 +376,7 @@ feature -- Execution
 			ext := extension (f.path.name)
 			ct := extension_mime_mapping.mime_type (ext)
 			if ct = Void then
-				ct := {HTTP_MIME_TYPES}.application_force_download
+				ct := {HTTP_MIME_TYPES}.application_octet_stream
 			end
 			create fres.make_with_content_type_and_path (ct, f.path)
 			fres.set_status_code ({HTTP_STATUS_CODE}.ok)

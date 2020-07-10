@@ -113,23 +113,15 @@ feature -- Report Interaction
 			end
 		end
 
-
 feature -- Response	
 
 	compute_response_get_file_download (req: WSF_REQUEST; res: WSF_RESPONSE; a_message: READABLE_STRING_8; a_file_name: READABLE_STRING_GENERAL)
 			-- Simple response to download content
 		local
 			h: HTTP_HEADER
-			ct: READABLE_STRING_8
 		do
 			create h.make
-			ct := content_type_from_name (a_file_name)
-			if ct.is_case_insensitive_equal_general ({HTTP_MIME_TYPES}.text_plain) then
-				h.put_content_type_utf_8_text_plain
-			else
-				h.put_content_type (ct)
-			end
---			h.put_content_type ({HTTP_MIME_TYPES}.application_octet_stream)
+			h.put_content_type ({HTTP_MIME_TYPES}.application_octet_stream)
 			h.put_cache_control ("no-store, no-cache")
 			h.put_content_length (a_message.count)
 			h.put_current_date
@@ -138,32 +130,15 @@ feature -- Response
 			res.put_string (a_message)
 		end
 
-	content_type_from_name (a_file_name: detachable READABLE_STRING_GENERAL): READABLE_STRING_8
-		local
-			m_map: HTTP_FILE_EXTENSION_MIME_MAPPING
-			p: PATH
-		do
-			if a_file_name /= Void then
-				create p.make_from_string (a_file_name)
-				if attached p.extension as ext then
-					create m_map.make_default
-					m_map.map ({HTTP_MIME_TYPES}.text_plain, "e")
-					m_map.map ({HTTP_MIME_TYPES}.text_plain, "ecf")
-					Result := m_map.mime_type (ext.as_lower)
-				end
-			end
-			if Result = Void then
-				Result := {HTTP_MIME_TYPES}.application_octet_stream
-			end
-		end
-
 	compute_response_get_interaction_text (req: WSF_REQUEST; res: WSF_RESPONSE; a_interaction_text: READABLE_STRING_32)
 			--Simple response to download interaction text content
 		local
 			h: HTTP_HEADER
 			l_msg: STRING_8
 		do
-			fixme ("Find a better way to handle this!!!")
+			debug ("refactor_fixme")
+				fixme ("Find a better way to handle this!!!")
+			end
 			create h.make
 			create l_msg.make_from_string ({UTF_CONVERTER}.utf_32_string_to_utf_8_string_8 (a_interaction_text))
 			h.put_content_type_utf_8_text_plain

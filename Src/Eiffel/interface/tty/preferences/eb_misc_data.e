@@ -180,19 +180,19 @@ feature -- Value
 			Result := eis_path_preference.value
 		end
 
-	license_accepted: BOOLEAN
+	terms_accepted: BOOLEAN
 			-- License is accepted?
 		do
-			Result := license_accepted_preference.value
+			Result := terms_accepted_preference.value
 		end
 
 feature -- Element change
 
-	set_license_accepted (b: BOOLEAN)
+	set_terms_accepted (b: BOOLEAN)
 			-- Set License accepted to `b`.
 			-- Hidden.
 		do
-			license_accepted_preference.set_value (b)
+			terms_accepted_preference.set_value (b)
 		end
 
 feature -- Preference
@@ -213,7 +213,7 @@ feature -- Preference
 	update_channel_preference: STRING_CHOICE_PREFERENCE
 	eis_path_preference: STRING_32_PREFERENCE
 	use_postscript_preference: BOOLEAN_PREFERENCE
-	license_accepted_preference: BOOLEAN_PREFERENCE
+	terms_accepted_preference: BOOLEAN_PREFERENCE
 
 feature {NONE} -- Preference Strings
 
@@ -233,7 +233,7 @@ feature {NONE} -- Preference Strings
 	update_channel_string: STRING = "general.update_channel"
 	eis_path_preference_string: STRING = "general.eis_path"
 	use_postscript_preference_string: STRING = "general.use_postscript"
-	license_accepted_preference_string: STRING = "general.license_accepted"
+	terms_accepted_preference_string: STRING = "general.terms_accepted"
 
 feature {NONE} -- Implementation
 
@@ -284,8 +284,8 @@ feature {NONE} -- Implementation
 
 			use_postscript_preference := l_manager.new_boolean_preference_value (l_manager, use_postscript_preference_string, False)
 
-			license_accepted_preference := l_manager.new_boolean_preference_value (l_manager, license_accepted_preference_string, False)
-			license_accepted_preference.set_hidden (True)
+			terms_accepted_preference := l_manager.new_boolean_preference_value (l_manager, terms_accepted_preference_string, False)
+			terms_accepted_preference.set_hidden (True)
 		end
 
 	preferences: PREFERENCES
@@ -411,7 +411,7 @@ invariant
 	update_channel_preference_not_void: update_channel_preference /= Void
 	eis_preference_not_void: eis_path_preference /= Void
 	use_postscript_preference_not_void: use_postscript_preference /= Void
-	license_accepted_preference_not_void: license_accepted_preference /= Void
+	terms_accepted_preference_not_void: terms_accepted_preference /= Void
 
 note
 	copyright: "Copyright (c) 1984-2020, Eiffel Software"

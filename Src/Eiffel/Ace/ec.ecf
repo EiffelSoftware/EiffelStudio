@@ -183,7 +183,7 @@
 		<library name="diff" location="$ISE_LIBRARY\library\diff\diff.ecf" readonly="false"/>
 		<library name="docking" location="$ISE_LIBRARY\library\docking\docking.ecf" readonly="false" use_application_options="true"/>
 		<library name="dotnet_assembly_information" location="$EIFFEL_SRC\dotnet\assembly_info\dotnet_assembly_information.ecf" readonly="false" use_application_options="true"/>
-		<library name="edition" location="$EIFFEL_SRC\Eiffel\edition\edition.ecf" readonly="false" use_application_options="true"/>
+		<library name="eiffel_edition" location="$EIFFEL_SRC\Eiffel\edition\edition.ecf" readonly="false" use_application_options="true"/>
 		<library name="editor" location="$ISE_LIBRARY\library\editor\editor.ecf" readonly="false"/>
 		<library name="es_cloud" location="$EIFFEL_SRC\Eiffel\cloud\cloud.ecf" readonly="false" use_application_options="true"/>
 		<library name="es_update_manager" location="$EIFFEL_SRC\framework\update_manager\update_manager.ecf" use_application_options="true"/>

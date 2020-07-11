@@ -159,9 +159,11 @@ feature -- Execution
 				l_focus := but
 				append_label_and_item_horizontally (interface_names.l_agree_and_continue_with_terms, but, vb)
 
-				create but.make_with_text_and_action (interface_names.b_purchase, agent on_purchase_selected)
-				layout_constants.set_default_size_for_button (but)
-				append_label_and_item_horizontally (interface_names.l_purchase_license, but, vb)
+				if eiffel_edition.is_standard_edition then
+					create but.make_with_text_and_action (interface_names.b_purchase, agent on_purchase_selected)
+					layout_constants.set_default_size_for_button (but)
+					append_label_and_item_horizontally (interface_names.l_purchase_license, but, vb)
+				end
 
 				create but.make_with_text_and_action (interface_names.b_reject_and_quit, agent on_quit)
 				layout_constants.set_default_size_for_button (but)
@@ -273,14 +275,19 @@ feature -- Text
 
 	terms_agreement_text: STRING_32
 		do
-			Result :=  locale.translation_in_context ("To continue using this edition of EiffelStudio, you must first agree with the license terms.If you do not agree with the terms, use another EiffelStudio Edition.", "license")
-
+			Result := locale.translation_in_context ("To continue using this edition of EiffelStudio, you must first agree with the license terms. If you do not agree with the terms, use another EiffelStudio Edition.", "license")
 			if eiffel_edition.is_branded_edition then
-				Result.prepend ({STRING_32} "EiffelStudio " + eiffel_edition.edition_name + " edition%N%N")
-
-				if attached eiffel_edition.branded_edition_title as l_title then
-					Result.prepend ("%N%N")
+				if attached eiffel_edition.edition_terms as l_terms_of_use then
+					Result.prepend_character ('%N')
+					Result.prepend_character ('%N')
+					Result.prepend (l_terms_of_use)
+				end
+				Result.prepend_character ('%N')
+				Result.prepend_character ('%N')
+				if attached eiffel_edition.edition_title as l_title then
 					Result.prepend (l_title)
+				else
+					Result.prepend ({STRING_32}"EiffelStudio " + eiffel_edition.edition_name + " edition.")
 				end
 			end
 		end

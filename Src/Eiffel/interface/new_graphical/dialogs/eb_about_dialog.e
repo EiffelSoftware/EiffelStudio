@@ -258,7 +258,7 @@ feature {NONE} -- Implementation
 			Result.append (t_version_info (True))
 			Result.append_character ('%N')
 			if l_eiffel_edition /= Void then
-				if l_eiffel_edition.is_branded_edition and attached l_eiffel_edition.branded_edition_title as l_title then
+				if l_eiffel_edition.is_branded_edition and attached l_eiffel_edition.edition_title as l_title then
 					Result.append ({STRING_32} "Edition: " + l_title)
 					Result.append_character ('%N')
 				end

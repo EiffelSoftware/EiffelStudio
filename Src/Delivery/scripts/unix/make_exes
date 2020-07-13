@@ -133,18 +133,18 @@ if [ ! "$NO_NEW_EC" ]; then
 		finalize ec.ecf bench
 		tgz_ccode bench ec.tar.bz2
 		if [ ! -f ec.tar.bz2 ]; then
-			echo Could not finalize a new EiffelStudio
+			echo Could not finalize a new Enterprise EiffelStudio
 			CANCEL
 		fi
 		clean_project
 		move ec.tar.bz2 $EXPORT_DIR/bin/ec_ent.tar.bz2
 
-		remtrace Batch version
+		remtrace enterprise Batch version
 		clean_project
 		finalize ec.ecf batch
 		tgz_ccode batch ecb.tar.bz2
 		if [ ! -f ecb.tar.bz2 ]; then
-			echo Could not finalize a new batch version
+			echo Could not finalize a new Enterprise batch version
 			CANCEL
 		fi
 		# restore original system_constants.e
@@ -152,6 +152,39 @@ if [ ! "$NO_NEW_EC" ]; then
 		move $EIFFEL_SRC/Eiffel/API/constants/system_constants.e.bak $EIFFEL_SRC/Eiffel/API/constants/system_constants.e
 		clean_project
 		move ecb.tar.bz2 $EXPORT_DIR/bin/ecb_ent.tar.bz2
+
+		remtrace Branded edition
+		cd $FINALIZATION_DIR
+		cd $EIFFEL_SRC/Eiffel/API/constants
+		# save original system_constants.e
+		copy system_constants.e system_constants.e.bak
+		sed -e "s/[vV]ersion_type_name:[ ]*STRING\(_[0-9]+\)\{0,1\}[ ]*=[ ]*\"[^\"]*\"/Version_type_name:\ STRING\ =\ \"Branded\ Edition\"/g" system_constants.e >> new_system_constants.e
+		move new_system_constants.e system_constants.e
+		cd $FINALIZATION_DIR
+		copy $EIFFEL_SRC/tools/estudio_enterprise/branded/ec.ecf ec.ecf
+		clean_project
+		finalize ec.ecf bench
+		tgz_ccode bench ec.tar.bz2
+		if [ ! -f ec.tar.bz2 ]; then
+			echo Could not finalize a new Branded EiffelStudio
+			CANCEL
+		fi
+		clean_project
+		move ec.tar.bz2 $EXPORT_DIR/bin/ec_ent.tar.bz2
+
+		remtrace branded Batch version
+		clean_project
+		finalize ec.ecf batch
+		tgz_ccode batch ecb.tar.bz2
+		if [ ! -f ecb.tar.bz2 ]; then
+			echo Could not finalize a new Branded batch version
+			CANCEL
+		fi
+		# restore original system_constants.e
+		rm $EIFFEL_SRC/Eiffel/API/constants/system_constants.e
+		move $EIFFEL_SRC/Eiffel/API/constants/system_constants.e.bak $EIFFEL_SRC/Eiffel/API/constants/system_constants.e
+		clean_project
+		move ecb.tar.bz2 $EXPORT_DIR/bin/ecb_branded.tar.bz2
 	fi
 else
 	# FIXME doesn't work.

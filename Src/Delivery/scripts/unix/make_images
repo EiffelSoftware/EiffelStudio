@@ -77,5 +77,28 @@ if [ "$MULTIPLE_EDITIONS" ]; then
 	pax -w -f Eiffel_${STUDIO_VERSION_MAJOR_MINOR}_ent_$FILE_SVN_REVISION-$ISE_PLATFORM.tar Eiffel_${STUDIO_VERSION_MAJOR_MINOR} 
 
 	bzip2 Eiffel_${STUDIO_VERSION_MAJOR_MINOR}_ent_$FILE_SVN_REVISION-$ISE_PLATFORM.tar
+
+	remtrace clean previous Enterprise version
+	rm $INSTALL_DIR/register
+
+	remtrace Preparing Branded version
+	bunzip2 -c $EXPORT_DIR/ecs/ec_branded.bz2 > $INSTALL_DIR/studio/spec/$ISE_PLATFORM/bin/ec
+	bunzip2 -c $EXPORT_DIR/ecs/ecb_branded.bz2 > $INSTALL_DIR/studio/spec/$ISE_PLATFORM/bin/ecb
+	chmod a+rx $INSTALL_DIR/studio/spec/$ISE_PLATFORM/bin/ec
+	chmod go-w $INSTALL_DIR/studio/spec/$ISE_PLATFORM/bin/ec 
+	chmod a+rx $INSTALL_DIR/studio/spec/$ISE_PLATFORM/bin/ecb
+	chmod go-w $INSTALL_DIR/studio/spec/$ISE_PLATFORM/bin/ecb
+	if [ -f licensing/eiffelstudio/license.txt ]; then
+		cp licensing/eiffelstudio/license.txt $INSTALL_DIR/LICENSE
+	fi
+
+	mkdir $INSTALL_DIR/setup
+	cp $INSTALL_DIR/studio/bitmaps/png/logo.png $INSTALL_DIR/setup/install_logo.png
+	cp $INSTALL_DIR/studio/bitmaps/png/activation.png $INSTALL_DIR/setup/install_left.png
+
+	remtrace Building Enterprise CD image
+	pax -w -f Eiffel_${STUDIO_VERSION_MAJOR_MINOR}_branded_$FILE_SVN_REVISION-$ISE_PLATFORM.tar Eiffel_${STUDIO_VERSION_MAJOR_MINOR} 
+
+	bzip2 Eiffel_${STUDIO_VERSION_MAJOR_MINOR}_branded_$FILE_SVN_REVISION-$ISE_PLATFORM.tar
 fi
 

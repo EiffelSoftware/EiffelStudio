@@ -269,6 +269,20 @@ else
 	untgz_ccode ecb
 	bzip2 ecb
 	move ecb.bz2 $EXPORT_DIR/ecs/ecb_ent.bz2
+
+	remtrace Branded edition
+	cp ec_branded.tar.bz2 ec.tar.bz2
+	untgz_ccode ec $should_cancel
+	if [ -f ec ]; then
+		bzip2 ec
+		move ec.bz2 $EXPORT_DIR/ecs/ec_branded.bz2
+	fi
+
+	remtrace Branded batch edition
+	cp ecb_branded.tar.bz2 ecb.tar.bz2
+	untgz_ccode ecb
+	bzip2 ecb
+	move ecb.bz2 $EXPORT_DIR/ecs/ecb_branded.bz2
 fi
 
 remtrace Recompile estudio

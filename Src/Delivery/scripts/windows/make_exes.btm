@@ -11,6 +11,9 @@ endiff
 iff not exist %INSTALL_DIR\releases\enterprise_version-axar then
 	md %INSTALL_DIR\releases\enterprise_version-axar
 endiff
+iff not exist %INSTALL_DIR\releases\branded_version then
+	md %INSTALL_DIR\releases\branded_version
+endiff
 iff not exist %INSTALL_DIR\releases\standard_version then
 	md %INSTALL_DIR\releases\standard_version
 endiff
@@ -217,6 +220,43 @@ else
 			fullrd %EIFFEL_SRC\Eiffel\interface\new_graphical\overrides\axar
 			remtrace Restore original es_ide_settings.e
 			move %EIFFEL_SRC\tools\estudio_enterprise\es_ide_settings.e-BAK %EIFFEL_SRC\tools\estudio_enterprise\es_ide_settings.e
+			cdd %EIFFEL_SRC\Eiffel\API\constants
+			move system_constants.e-BAK system_constants.e
+		endiff
+		iff not defined NO_ENTERPRISE_BUILD then
+			remtrace Branded edition for EiffelStudio
+			cdd %EIFFEL_SRC\Eiffel\API\constants
+			safe_copy system_constants.e system_constants.e-BAK
+			sed -e "s/Version_type_name:\ STRING\ =\ \".*\"/Version_type_name:\ STRING\ =\ \"Custom\ Edition\"/g" system_constants.e >> new_system_constants.e
+			move new_system_constants.e system_constants.e
+			cdd %FINALIZATION_DIR
+
+			clean_project
+			finalize ec.ecf batch
+			cleanup_eiffel batch ecb.exe
+			iff exist ecb.exe then
+				move ecb.exe %INSTALL_DIR\releases\branded_version
+			else
+				remerror Could not finalize a new "branded_version" batch version of the compiler
+				CANCEL_ON_ERROR
+			endiff
+
+			clean_project
+			safe_copy ec.ecf ec.ecf-bak
+			safe_copy %EIFFEL_SRC\tools\estudio_enterprise\branded\ec.ecf ec.ecf
+			finalize ec.ecf bench
+			cleanup_eiffel bench ec.exe
+			iff exist ec.exe then
+				move ec.exe %INSTALL_DIR\releases\branded_version
+			else
+				remerror Could not finalize a new "branded_version" EiffelStudio
+				CANCEL_ON_ERROR
+			endiff
+
+			exprtfile -r %PUBLIC_SVN_REVISION %DEFAULT_PUBLIC_SVN/Src/Delivery/scripts/licensing/eiffelstudio/license.txt > %INSTALL_DIR\releases\branded_version\LICENSE
+
+			remtrace Restore non enterprise/branded edition files
+			move ec.ecf-bak ec.ecf
 			cdd %EIFFEL_SRC\Eiffel\API\constants
 			move system_constants.e-BAK system_constants.e
 		endiff

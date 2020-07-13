@@ -19,6 +19,7 @@ if "%T_KIND%" EQU "" (
 	set T_KIND=enterprise
 	ECHO.%T_FILENAME% | FIND /I "_gpl_">Nul && (set T_KIND=community)
 	ECHO.%T_FILENAME% | FIND /I "_rev_">Nul && (set T_KIND=standard)
+	ECHO.%T_FILENAME% | FIND /I "_branded_">Nul && (set T_KIND=branded)
 )
 if "%T_KIND%" NEQ "" (
 	set T_DST=%T_NIGHTLY%%T_KIND%\%T_FILENAME%

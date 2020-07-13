@@ -99,6 +99,7 @@ safe_md %INSTALL_DIR\setups
 safe_md %INSTALL_DIR\setups\standard
 safe_md %INSTALL_DIR\setups\enterprise
 safe_md %INSTALL_DIR\setups\enterprise-axar
+safe_md %INSTALL_DIR\setups\branded
 
 
 if exist %INSTALL_DIR%\%STUDIO_NAME% (
@@ -183,6 +184,26 @@ remtrace Uploading ENT packages online
 	cdd %INSTALL_DIR\setups\enterprise
 	call share_delivery %STUDIO_NAME%_ent_%SVN_VERSION%-%ISE_PLATFORM%.7z enterprise
 	if "%NO_MSI%" NEQ "True" call share_delivery %STUDIO_NAME%_ent_%SVN_VERSION%-%ISE_PLATFORM%.msi enterprise
+)
+if "%NO_ENTERPRISE_BUILD%" NEQ "True" (
+	cdd %INSTALL_DIR
+	if exist %INSTALL_DIR\setups\branded\%STUDIO_NAME%_branded_%SVN_VERSION-%ISE_PLATFORM%.7z (
+		remtrace Branded archive: reuse
+	) else (
+		remtrace Branded archive
+		safe_copy %INSTALL_DIR\releases\branded_version\ec.exe %INSTALL_DIR\%STUDIO_NAME%\studio\spec\%ISE_PLATFORM%\bin
+		safe_copy %INSTALL_DIR\releases\branded_version\ecb.exe %INSTALL_DIR\%STUDIO_NAME%\studio\spec\%ISE_PLATFORM%\bin
+		iff exist %INSTALL_DIR\releases\branded_version\LICENSE then
+			safe_copy %INSTALL_DIR\releases\branded_version\LICENSE %INSTALL_DIR\%STUDIO_NAME%\LICENSE
+		else
+			remtrace Missing Branded license text
+		endiff
+		7z a -t7z %INSTALL_DIR\setups\branded\%STUDIO_NAME%_branded_%SVN_VERSION-%ISE_PLATFORM%.7z %STUDIO_NAME% -mx9 >>& %INSTALL_LOG
+	)
+remtrace Uploading Branded packages online
+	cdd %INSTALL_DIR\setups\branded
+	call share_delivery %STUDIO_NAME%_branded_%SVN_VERSION%-%ISE_PLATFORM%.7z branded
+	if "%NO_MSI%" NEQ "True" call share_delivery %STUDIO_NAME%_branded_%SVN_VERSION%-%ISE_PLATFORM%.msi branded
 )
 
 if "%NO_AXAR_ENTERPRISE_BUILD%" NEQ "True" (

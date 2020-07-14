@@ -1,4 +1,10 @@
-<h1>Wishes </h1>
+<h1>EiffelStudio tomorrow: wish lists for new developments</h1>
+<div class="row">
+	<p>
+	Eiffel technology continues to develop in many directions. User input is essential. On this part of the eiffel.org site you will find wish lists for different areas of the technology: compiler, wrapping of existing libraries (typically in C), new Eiffel libraries and so on.
+	Your contributions are needed! Feel free to add your own dreams of where Eiffel technology should go
+	</p>
+</div>
 
 {include file="search_by_wish_id.tpl"/}
 
@@ -6,7 +12,7 @@
       <form action="{$site_url/}{$resource_path/}/{$module_name/}" id="search" method="GET" itemprop="search">
       		<input type="hidden" name="size" value="{$size/}"/>
               <label class="class-form-2 tooltip" itemprop="category" title="The name of the product, component or concept where the problem lies. In order to get the best possible support, please select the category carefully.">Category</label>
-	          <select class="class-form-4" data-style="btn-primary" name="category" form="search" itemprop="search">
+	          <select id="wish_category" class="class-form-4" data-style="btn-primary" name="category" form="search" itemprop="search">
 	             <option value="0">ALL</option>
 	                {foreach from="$categories" item="item"}
 	                  {if condition="$item.is_selected"} 
@@ -87,7 +93,7 @@
 <div class="row">
 	{include file="paging_wish_list.tpl"/}
 </div> 
-<div>
+<div class="row">
 	<table class="wish_nodes">
 		<thead>
 			<tr>

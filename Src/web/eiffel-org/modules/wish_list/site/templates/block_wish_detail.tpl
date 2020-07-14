@@ -4,6 +4,11 @@
 			<li class="active"><a href="{$site_url/}{$resource_path/}/{$module_item/}/{$wish.id/}/form">Edit</a></li></ul>
 		</div>	
 	{/if}
+	{if isset="$can_delete"}
+		<div id="primary-tabs" class="menu tabs"><ul class="horizontal">
+			<li class="active"><a href="{$site_url/}{$resource_path/}/{$module_item/}/{$wish.id/}/delete">Delete</a></li></ul>
+		</div>	
+	{/if}
 	<div class="row">
 			{if condition="$can_vote"}
 				<div class="vote-container">

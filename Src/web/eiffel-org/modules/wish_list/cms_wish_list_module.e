@@ -222,6 +222,7 @@ feature -- Hooks configuration
 			if a_response.location.starts_with_general ("resources/wish") then
 				a_response.add_style (a_response.module_resource_url (Current, "/files/css/wish_list.css", Void), Void)
 				a_response.add_javascript_url (a_response.module_resource_url (Current, "/files/js/jquery.tooltipster.min.js", Void))
+				a_response.add_javascript_url (a_response.module_resource_url (Current, "/files/js/wish_list.js", Void))
 			end
 		end
 

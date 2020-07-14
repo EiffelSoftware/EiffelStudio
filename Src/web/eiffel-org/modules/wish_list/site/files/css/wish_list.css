@@ -143,7 +143,8 @@ table {
 /* Content */
 #content div.row {
   overflow: hidden;
-  margin: 0; }
+  margin: 0;
+  box-sizing: content-box; }
   #content div.row form {
     display: inline;
     float: left;
@@ -188,6 +189,10 @@ table {
       width: 490px; }
     #content div.row form > input.class-form-6 {
       width: 490px; }
+    #content div.row form > label.class-header-form-2 {
+      width: 150px;
+      font-size: 200%;
+      font-weight: bold; }
     #content div.row form textarea.class-form-textarea {
       width: 95%;
       border: 3px solid #cccccc;
@@ -268,6 +273,9 @@ table {
       #content div.row ul.cms-links > li:hover {
         background: #e3e7e8; }
 
+table, .table {
+  border: none; }
+
 table.wish_nodes {
   width: 97%;
   margin-bottom: 20px;
@@ -282,17 +290,24 @@ table.wish_nodes {
   table.wish_nodes thead th {
     background-color: #0E9A8F;
     color: white;
-    border: 1px solid black;
+    border: none;
     text-align: left;
     padding-left: 4px; }
     table.wish_nodes thead th a {
       color: white; }
+    table.wish_nodes thead th tr {
+      border-radius: 10px 10px 0 0; }
+    table.wish_nodes thead th:first-child {
+      border-radius: 10px 0 0 0; }
+    table.wish_nodes thead th:last-child {
+      border-radius: 0 10px 0 0; }
   table.wish_nodes tbody td {
-    border: 1px solid black;
     font: 16px/24px "Open Sans", Arial, Helvetica, sans-serif;
     padding-left: 4px;
     display: table-cell;
     vertical-align: top; }
+  table.wish_nodes tbody:last-child {
+    border-radius: 10px; }
 
 div.btn-add-wish {
   background: #e9eced;
@@ -363,3 +378,8 @@ ul.cms-categories {
 
 .vote-clear {
   clear: both; }
+
+legend.wish_submission {
+  font-size: 20px; }
+
+/*# sourceMappingURL=wish_list.css.map */

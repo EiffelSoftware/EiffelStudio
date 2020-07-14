@@ -11,6 +11,7 @@
 		@extend %listreset;
 		overflow: hidden;
 		margin: 0;
+		box-sizing: content-box;
 
 		form {
 			@include grid(12);
@@ -159,6 +160,11 @@
 }
 
 
+table, .table {
+  border: none;
+}
+
+
 
 table.wish_nodes{ 
 	width:97%;
@@ -177,25 +183,37 @@ table.wish_nodes{
 		th {
 		    background-color: #0E9A8F;
 		    color: white;
-	    	border: 1px solid black;
+	    	border: none; //1px solid black;
 	    	text-align: left;
 	    	padding-left:4px;
 	    	a {
 	    		color: white;
 	    	}
-		}
+	    tr {
+    		border-radius: 10px 10px 0 0
+  		  } 
+  		 &:first-child {
+   			 border-radius: 10px 0 0 0;
+   		    } 
+   		 &:last-child {
+  			  border-radius: 0 10px 0 0;
+  			} 
+  		}	
 	}	
 
 	tbody{
 		 td {
-			 border: 1px solid black;
+			 //border: 1px solid black;
 			 font: 16px/24px "Open Sans", Arial, Helvetica, sans-serif;
 			 padding-left:4px;
 			 display: table-cell;
   			 vertical-align: top; 
     	}
+    	 &:last-child {
+  			  border-radius: 10px;
+  		} 
     }	
-}
+} 
 
 div.btn-add-wish {
 	 background: #e9eced;
@@ -288,4 +306,9 @@ ul.cms-categories {
 
 .vote-clear {
   clear: both;
+}
+
+
+legend.wish_submission {
+    font-size: 20px;
 }

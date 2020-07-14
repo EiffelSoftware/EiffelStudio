@@ -12,9 +12,9 @@
 							<input type="hidden" name="status" value="1">
 						{/unless}
 					<fieldset>
-						<legend>Wish Submission</legend>
+						<legend class="wish_submission">Wish Submission</legend>
 						<label class="class-form-2 tooltip" title="The name of the product, component or concept where the problem lies. In order to get the best possible support, please select the category carefully.">Category</label>
-						<select class="class-form-4" data-style="btn-primary" name="category" form="wish" required>
+						<select id="wish_category" class="class-form-4" data-style="btn-primary" name="category" form="wish" required onchange="onChangeCategory();">
 											<option value=""></option>
 											{foreach from="$categories" item="item"}
 												{if condition="$item.id = $category"}
@@ -42,10 +42,10 @@
 							<small><p>Note: Attachments files size cannot exceed 10240 kilobytes (10 MB).</p></small>
 
 							<label class="class-form-4 tooltip" has-success has-feedback itemprop="synopsis" title="<p>One-line summary of the problem. This information will be used as the subject of the problem and it should be short, but still descriptive enough to be different from other problem wish subjects.</p>">Synopsis</label>
-							<input type="text" id="synopsis" name="synopsis" class="class-form-6" value="{htmlentities}{$synopsis/}{/htmlentities}" required>
+							<input type="text" id="synopsis" name="synopsis" class="form-control" placeholder="synopsis" value="{htmlentities}{$synopsis/}{/htmlentities}" required>
 							<div>
 							<label class="class-form-12 tooltip" for="description" itemprop="description" title="<p>Precise description of the problem.</p>">Description</label>
-							<textarea  class="class-form-textarea" id="description" name="description" rows="17" placeholder="" maxlength="32768" required form="wish">{htmlentities}{$description/}{/htmlentities}</textarea>
+							<textarea  id="wish_textarea" class="class-form-textarea" id="description" name="description" rows="17" placeholder="" maxlength="32768" required form="wish">{htmlentities}{$description/}{/htmlentities}</textarea>
 							<small><p>Note: Description cannot exceed 32768 bytes (32 KB).</p></small>
 							</div>
 						<hr>
@@ -58,7 +58,7 @@
 						{unless isset="$id"}
 							<div class="form-actions">
 								<button type="submit" class="btn btn-primary">Save</button>
-								<input type="reset" class="btn btn-default" value="Reset"></p>
+								<input type="reset" class="btn btn-primary" value="Reset"></p>
 							</div>
 						{/unless}
 				</form>

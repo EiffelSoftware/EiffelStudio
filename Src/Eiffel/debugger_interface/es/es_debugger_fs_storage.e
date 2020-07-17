@@ -47,10 +47,7 @@ feature -- Access: profiles
 					create l_name.make_from_string_general (unique_identifier_for_conf_system (workbench.lace.conf_system))
 					l_name.append_character ('.')
 					l_name.append_string_general (tgt_name)
-					l_name.append_character ('.')
-					l_name.append ("dbg")
-					l_name.append_character ('.')
-					l_name.append ("profiles.xml")
+					l_name.append (".dbg.profiles.xml")
 					Result := dn.extended (l_name)
 				end
 			end
@@ -76,7 +73,6 @@ feature -- Access: profiles
 			l_uuid: UUID
 			l_root, e: XML_ELEMENT
 			att: detachable XML_ATTRIBUTE
-			k,v: detachable STRING_32
 		do
 				-- FIXME: check versioning information!
 			if
@@ -120,25 +116,22 @@ feature -- Access: profiles
 							across
 								l_variables as var_ic
 							loop
-								if attached {XML_ELEMENT} var_ic.item as e2 then
-									k := Void
-									v := Void
-									att := e2.attribute_by_name (xml_name_id)
-									if att /= Void then
-										k := att.value
-										att := e2.attribute_by_name (xml_value_id)
-										if att /= Void then
-											v := att.value
-										end
-									end
-									if k /= Void then
-										if e2.name.is_case_insensitive_equal_general (xml_unset_id) then
-											prof.unset_environment_variable (k)
-										elseif e2.name.is_case_insensitive_equal_general (xml_set_id) then
-											prof.set_environment_variable (v, k)
-										else
-											-- Ignore
-										end
+								if
+									attached {XML_ELEMENT} var_ic.item as e2 and then
+									attached e2.attribute_by_name (xml_name_id) as name_attribute and then
+									attached name_attribute.value as variable_name
+								then
+									if e2.name.is_case_insensitive_equal_general (xml_unset_id) then
+										prof.unset_environment_variable (variable_name)
+									elseif e2.name.is_case_insensitive_equal_general (xml_set_id) then
+										prof.set_environment_variable
+											(if attached e2.attribute_by_name (xml_value_id) as value_attribute then
+												value_attribute.value
+											else
+												Void
+											end, variable_name)
+									else
+										-- Ignore
 									end
 								end
 							end
@@ -171,10 +164,7 @@ feature -- Access: exception handler
 					create l_name.make_from_string_general (unique_identifier_for_conf_system (workbench.lace.conf_system))
 					l_name.append_character ('.')
 					l_name.append_string_general (tgt_name)
-					l_name.append_character ('.')
-					l_name.append ("dbg")
-					l_name.append_character ('.')
-					l_name.append ("exceptions_handler.xml")
+					l_name.append (".dbg.exceptions_handler.xml")
 					Result := dn.extended (l_name)
 				end
 			end
@@ -194,59 +184,44 @@ feature -- Access: exception handler
 
 	exceptions_handler_data_from_file (a_path: PATH): detachable DBG_EXCEPTION_HANDLER
 			-- <Precursor>
-		local
-			rt: XML_ELEMENT
-			att: detachable XML_ATTRIBUTE
-			s: detachable STRING_32
-			l_name: STRING
 		do
 				-- FIXME: check versioning information!
 			if
 				attached xml_document_from (a_path) as doc and then
-				doc.root_element.name.same_string_general (exceptions_handler_data_name)
+				attached doc.root_element as r and then
+				r.name.same_string_general (exceptions_handler_data_name)
 			then
 				create Result.make_handling_by_name
-				rt := doc.root_element
-				att := rt.attribute_by_name ("enabled")
-				if att /= Void and then att.value.is_case_insensitive_equal_general ("True") then
+				if attached r.attribute_by_name ("enabled") as a and then a.value.is_case_insensitive_equal_general ("True") then
 					Result.enable_exception_handling
 				else
 					Result.disable_exception_handling
 				end
-
-				if attached rt.element_by_name ("catcall_console_warning") as elt then
-					att := elt.attribute_by_name ("disabled")
-					if att /= Void then
-						Result.set_catcall_console_warning_disabled (att.value.is_case_insensitive_equal_general ("True"))
-					end
-				end
-				if attached rt.element_by_name ("catcall_debugger_warning") as elt then
-					att := elt.attribute_by_name ("disabled")
-					if att /= Void then
-						Result.set_catcall_debugger_warning_disabled (att.value.is_case_insensitive_equal_general ("True"))
-					end
-				end
-				if attached rt.elements_by_name ("exception") as l_exception_list then
+				Result.set_catcall_console_warning_disabled
+					(attached r.element_by_name ("catcall_console_warning") as e and then
+					attached e.attribute_by_name ("disabled") as a and then
+					a.value.is_case_insensitive_equal_general ("True"))
+				Result.set_catcall_debugger_warning_disabled
+					(attached r.element_by_name ("catcall_debugger_warning") as e and then
+					attached e.attribute_by_name ("disabled") as a and then
+					 a.value.is_case_insensitive_equal_general ("True"))
+				if attached r.elements_by_name ("exception") as l_exception_list then
 					across
 						l_exception_list as ic
 					loop
-						if attached ic.item.attribute_by_name ("name") as att_name then
-							s := att_name.value
-							if
-								s.is_valid_as_string_8 and then
-								attached ic.item.attribute_by_name ("role") as att_role
-							then
-								l_name := s.to_string_8
-								if att_role.value.is_case_insensitive_equal_general ("disabled") then
-									Result.disable_exception_by_name (l_name)
-								elseif att_role.value.is_case_insensitive_equal_general ("continue") then
-									Result.ignore_exception_by_name (l_name)
-								elseif att_role.value.is_case_insensitive_equal_general ("stop") then
-									Result.catch_exception_by_name (l_name)
-								else
-									check valid_role: False end
-										-- Ignore!
-								end
+						if
+							attached ic.item.attribute_by_name ("name") as name and then
+							attached ic.item.attribute_by_name ("role") as role
+						then
+							if role.value.is_case_insensitive_equal_general ("disabled") then
+								Result.disable_exception_by_name ({UTF_CONVERTER}.string_32_to_utf_8_string_8 (name.value))
+							elseif role.value.is_case_insensitive_equal_general ("continue") then
+								Result.ignore_exception_by_name ({UTF_CONVERTER}.string_32_to_utf_8_string_8 (name.value))
+							elseif role.value.is_case_insensitive_equal_general ("stop") then
+								Result.catch_exception_by_name ({UTF_CONVERTER}.string_32_to_utf_8_string_8 (name.value))
+							else
+								check valid_role: False end
+									-- Ignore!
 							end
 						end
 					end
@@ -317,19 +292,13 @@ feature {NONE} -- Persistence
 			-- Save profiles data `a_data' to `a_path'.
 		local
 			doc: XML_DOCUMENT
-			p: DEBUGGER_EXECUTION_PROFILE
 		do
 			doc := new_xml_document (profiles_data_name, "execution-parameters-1-0-0")
 			if attached doc.root_element as rt then
 				if attached a_data.last_profile as l_last_profile then
 					rt.add_unqualified_attribute (xml_last_profile_id, l_last_profile.uuid.out)
 				end
-				across
-					a_data as ic
-				loop
-					p := ic.item
-					append_profile_to_xml_element (p, rt)
-				end
+				⟳ d: a_data ¦ append_profile_to_xml_element (d, rt) ⟲
 			end
 			save_xml_document_to (doc, a_path)
 		end
@@ -392,14 +361,12 @@ feature {NONE} -- Persistence
 				if a_data.enabled then
 					rt.add_unqualified_attribute ("enabled", "True")
 				end
-				if a_data.catcall_console_warning_disabled then
-					create elt.make (rt, "catcall_console_warning", rt.namespace)
-					elt.add_unqualified_attribute ("disabled", "True")
-				end
-				if a_data.catcall_debugger_warning_disabled then
-					create elt.make (rt, "catcall_debugger_warning", rt.namespace)
-					elt.add_unqualified_attribute ("disabled", "True")
-				end
+				create elt.make (rt, "catcall_console_warning", rt.namespace)
+				elt.add_unqualified_attribute ("disabled", a_data.catcall_console_warning_disabled.out)
+				rt.force_last (elt)
+				create elt.make (rt, "catcall_debugger_warning", rt.namespace)
+				elt.add_unqualified_attribute ("disabled", a_data.catcall_debugger_warning_disabled.out)
+				rt.force_last (elt)
 				across
 					a_data.handled_exceptions_by_name as ic
 				loop
@@ -444,7 +411,7 @@ feature {NONE} -- Implementation: xml
 			create decl.make_in_document (Result, "1.0", "ISO-8859-1", False)
 			Result.set_xml_declaration (decl)
 			if a_xmlns_name_version /= Void then
-				Result.root_element.add_unqualified_attribute ("xmlns", "http://www.eiffel.com/developers/xml/" + a_xmlns_name_version)
+				Result.root_element.add_unqualified_attribute ("xmlns", {STRING_32} "http://www.eiffel.com/developers/xml/" + a_xmlns_name_version)
 					-- For now, let's use only xmlns for versioning.
 --				Result.root_element.add_unqualified_attribute ("xmlns:xsi", "http://www.w3.org/2001/XMLSchema-instance")
 --				Result.root_element.add_unqualified_attribute ("xsi:schemaLocation", "http://www.eiffel.com/developers/xml/" + a_xmlns_name_version + " " + a_xmlns_name_version + ".xsd")
@@ -471,14 +438,11 @@ feature {NONE} -- Implementation: xml
 	save_xml_document_to (doc: XML_DOCUMENT; a_path: PATH)
 			-- Save xml document `doc' into `a_path', if possible.
 		local
-			vis: XML_NODE_PRINTER
-			t2e: XML_TREE_TO_EVENTS
 			f: FILE
 			d: DIRECTORY
 			cb: XML_INDENT_PRETTY_PRINT_FILTER
 		do
 			create {PLAIN_TEXT_FILE} f.make_with_path (a_path)
-			create vis.make
 			if f.exists then
 				if f.is_access_writable then
 					f.open_write
@@ -495,8 +459,7 @@ feature {NONE} -- Implementation: xml
 			if f.is_open_write then
 				create cb.make_null
 				cb.set_output_file (f)
-				create t2e.make (cb)
-				t2e.process_document (doc)
+				(create {XML_TREE_TO_EVENTS}.make (cb)).process_document (doc)
 				f.close
 			end
 				-- FIXME: handle eventual error!

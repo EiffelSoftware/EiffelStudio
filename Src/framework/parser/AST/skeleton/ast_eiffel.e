@@ -336,9 +336,12 @@ feature -- Roundtrip/Text modification
 			-- Is text of current AST node available?
 		require
 			a_list_not_void: a_list /= Void
+		local
+			r: ERT_TOKEN_REGION
 		do
 			if first_token (a_list) /= Void and then last_token (a_list) /= Void then
-				Result := a_list.valid_text_region (token_region (a_list))
+				r := token_region (a_list)
+				Result := a_list.valid_region (r) and then a_list.valid_text_region (r)
 			end
 		end
 

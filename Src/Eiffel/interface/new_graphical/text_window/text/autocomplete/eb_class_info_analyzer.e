@@ -853,7 +853,7 @@ feature {NONE} -- Implementation (`type_from')
 					or l_named_tuple_type /= Void
 				then
 					if l_named_tuple_type /= Void then
-						l_pos := l_named_tuple_type.label_position (a_name)
+						l_pos := l_named_tuple_type.label_position_by_id (names_heap.id_of_32 (a_name))
 						if l_pos > 0 then
 							Result := l_named_tuple_type.generics.i_th (l_pos)
 						end
@@ -2436,7 +2436,7 @@ invariant
 	current_token_in_current_line: (current_line = Void and current_token = Void) or else (current_line /= Void and then current_line.has_token (current_token))
 
 note
-	copyright: "Copyright (c) 1984-2019, Eiffel Software"
+	copyright: "Copyright (c) 1984-2020, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

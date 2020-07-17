@@ -503,7 +503,7 @@ feature -- Breakpoints management
 				create evl.make (expr)
 				evl.evaluate
 				if evl.error_occurred then
-					debugger_message ("Conditional breakpoint failed to evaluate %"" + expr.text + "%".")
+					debugger_message ({STRING_32} "Conditional breakpoint failed to evaluate %"" + expr.text + "%".")
 				end
 				bp_reached := bp.condition_respected (evl) --| evaluator.final_result_is_true_boolean_value
 				evl.destroy
@@ -614,7 +614,7 @@ feature -- Breakpoints management
 								elseif v.is_case_insensitive_equal ("TIMESTAMP") then
 									s.append_string ((create {DATE_TIME}.make_now).out)
 								else
-									s.append ("$" + v.as_upper)
+									s.append ({STRING_32} "$" + v.as_upper)
 								end
 							end
 							if not in_keyword then
@@ -1118,27 +1118,17 @@ feature -- Access
 		end
 
 	sorted_comparable_string32_keys_from (env: like environment_variables_table): LIST [STRING_32]
-		local
-			k: STRING_32
-			l_comp: COMPARABLE_COMPARATOR [STRING_32]
-			l_sorter: SORTER [STRING_32]
 		do
 			if env /= Void and then not env.is_empty then
-				from
-					create {ARRAYED_LIST [STRING_32]} Result.make (env.count)
-					env.start
-				until
-					env.after
+				create {ARRAYED_LIST [STRING_32]} Result.make (env.count)
+				across
+					env as e
 				loop
-					k := env.key_for_iteration
-					if k /= Void and then not k.is_empty then
+					if attached e.key as k and then not k.is_empty then
 						Result.force (k)
 					end
-					env.forth
 				end
-				create l_comp
-				create {QUICK_SORTER [STRING_32]} l_sorter.make (l_comp)
-				l_sorter.sort (Result)
+				;(create {QUICK_SORTER [STRING_32]}.make (create {COMPARABLE_COMPARATOR [STRING_32]})).sort (Result)
 			end
 		ensure
 			(env /= Void and then not env.is_empty) implies Result /= Void

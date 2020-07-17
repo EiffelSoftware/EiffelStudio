@@ -334,7 +334,7 @@ feature {NONE} -- Basic operations: Modifications
 											l_atoms.complete_character_end_position (a_match_list),
 											l_index.index_list.text_32 (l_match_list))
 							else
-								insert_code (a_ast.complete_character_end_position (a_match_list) + 1, "%N%T" + l_index.text_32 (l_match_list))
+								insert_code (a_ast.complete_character_end_position (a_match_list) + 1, {STRING_32} "%N%T" + l_index.text_32 (l_match_list))
 							end
 							l_indexing.forth
 						end

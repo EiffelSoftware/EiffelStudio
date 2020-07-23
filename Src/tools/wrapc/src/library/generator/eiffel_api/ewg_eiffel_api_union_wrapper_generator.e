@@ -777,7 +777,7 @@ feature -- Generate Eiffel API
 					output_stream.put_string (eiffel_member_name)
 					output_stream.put_line (" (item) = default_pointer")
 					--output_stream.put_line ("%T%T%Tresult_not_void: attached Result as l_result implies l_result.same_string ((create {C_STRING}.make_by_pointer (item)).string)")
-					output_stream.put_line ("%T%T%Tresult_not_void: attached Result as l_result implies l_result.string..same_string ((create {C_STRING}.make_by_pointer (item)).string)")
+					output_stream.put_line ("%T%T%Tresult_not_void: attached Result as l_result implies l_result.string.same_string ((create {C_STRING}.make_by_pointer (item)).string)")
 					output_stream.put_line ("%T%Tend")
 					output_stream.put_new_line
 				elseif is_unicode_char_pointer_type (a_c_declaration) then

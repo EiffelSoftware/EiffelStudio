@@ -346,6 +346,13 @@ feature -- Access: store
 									l_item.set_price (l_price.to_natural_32, l_cents, l_currency.to_string_8, tb.item ("interval"))
 									l_item.set_title (tb.item ("title"))
 									l_item.set_name (l_plan)
+									if
+										l_item.is_onetime and then
+										attached tb.item ("duration") as l_duration and then
+										l_duration.is_natural_32
+									then
+										l_item.set_onetime_month_duration (l_duration.to_natural_32)
+									end
 									Result.extend (l_item)
 								end
 							end

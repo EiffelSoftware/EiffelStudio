@@ -39,6 +39,7 @@ feature -- Execution
 		local
 			rep: like new_generic_response
 			pay: STRIPE_PAYMENT
+			l_params: STRING_TABLE [detachable READABLE_STRING_GENERAL]
 		do
 			if stripe_api.config.is_valid then
 				if
@@ -56,24 +57,26 @@ feature -- Execution
 
 						if pay.is_prepared then
 							rep.add_javascript_url ("https://js.stripe.com/v3/")
-							rep.add_javascript_url (rep.module_resource_url (module, "/files/js/elementsModal.js", Void))
-							rep.add_style (rep.module_resource_url (module, "/files/css/elementsModal.css", Void), Void)
+							rep.add_javascript_url (rep.module_resource_url (module, "/files/js/onetime_payment.js", Void))
 							rep.add_style (rep.module_resource_url (module, "/files/css/stripe.css", Void), Void)
-							rep.set_main_content (card_html(
-								<<
-									["product.title", pay.title_or_checkout_id],
-									["product.price", pay.price_text],
-									["product.category", pay.category],
-									["product.name", pay.title_or_checkout_id],
-									["title", safe_string (pay.business_name)],
-									["business.name", safe_string (pay.business_name)],
-									["customer.name", safe_string (pay.customer_name)],
-									["customer.email", safe_string (pay.customer_email)],
-									["metadata", safe_string (pay.meta_data_as_json_string)],
-									["order.id", safe_string (pay.order_id)],
-									["stripe.host_url", stripe_api.cms_api.webapi_path (stripe_api.config.base_path)]
-								>>
-								))
+
+							create l_params.make_caseless (10)
+							l_params ["checkout_type"] := "onetime"
+							l_params ["checkout_price"] := pay.price_text
+							l_params ["checkout_title"] := pay.title_or_checkout_id
+							l_params ["checkout_items"] := safe_string (pay.items_as_json_string)
+							l_params ["checkout_category"] := pay.category
+							l_params ["checkout_name"] := pay.title_or_checkout_id
+							l_params ["title"] := safe_string (pay.business_name)
+							l_params ["business_name"] := safe_string (pay.business_name)
+							l_params ["customer_email"] := safe_string (pay.customer_email)
+							l_params ["customer_name"] := safe_string (pay.customer_name)
+
+							l_params ["order_id"] := safe_string (pay.order_id)
+							l_params ["metadata"] := safe_string (pay.meta_data_as_json_string)
+							l_params ["stripe_host_url"] := stripe_api.cms_api.webapi_path (stripe_api.config.base_path)
+
+							rep.set_main_content (card_html (l_params))
 						else
 							rep.set_main_content ("No payment information for <strong>" + html_encoded (pay.title_or_checkout_id)
 									+ "</strong> in category <strong>" + html_encoded (pay.category)
@@ -112,19 +115,46 @@ feature -- Handler
 
 feature -- Resources
 
-	card_html (vars: ITERABLE [TUPLE [name: READABLE_STRING_GENERAL; value: detachable READABLE_STRING_GENERAL]]): STRING_8
+	card_html (vars: STRING_TABLE [detachable READABLE_STRING_GENERAL]): STRING_8
 		local
 			v: detachable READABLE_STRING_GENERAL
+			tpl_p: PATH
 		do
-			Result := card_tpl.twin
-			across
-				vars as ic
-			loop
-				v := ic.item.value
-				if v = Void then
-					v := ""
+			create tpl_p.make_from_string ("templates")
+			if
+				attached api.module_theme_resource_location (module, tpl_p.extended ("checkout.tpl")) as loc and then
+				attached api.resolved_smarty_template (loc) as tpl
+			then
+				across
+					vars as ic
+				loop
+					v := ic.item
+					if v = Void then
+						v := ""
+					end
+					tpl.set_value (v, ic.key)
 				end
-				Result.replace_substring_all ("{{" + html_encoded (ic.item.name) + "}}", html_encoded (v))
+				Result := tpl.string.to_string_8
+			else
+				Result := card_tpl.twin
+				across
+					vars as ic
+				loop
+					v := ic.item
+					if v = Void then
+						v := ""
+					end
+					Result.replace_substring_all ("{{" + html_encoded (ic.key) + "}}", html_encoded (v))
+				end
+				across
+					vars as ic
+				loop
+					v := ic.item
+					if v = Void then
+						v := ""
+					end
+					Result.replace_substring_all ("{{raw-" + html_encoded (ic.key) + "}}", utf_8_encoded (v))
+				end
 			end
 		end
 
@@ -134,8 +164,8 @@ feature -- Resources
       <div class="container">
         <div class="price-and-button-container">
           <div>
-            <div class="product-name">{{product.title}}</div>
-            <div class="product-price">{{product.price}}</div>
+            <div class="product-name">{{checkout_title}}</div>
+            <div class="product-price">{{checkout_price}}</div>
           </div>
           <button
             type="button"
@@ -156,15 +186,15 @@ feature -- Resources
       </div>
     </div>
   <script defer>
-    window.eStripeEltsModal.setup("{{stripe.host_url}}");  
+    window.eStripeEltsModal.setup("{{stripe_host_url}}");  
     window.eStripeEltsModal.create({
       currency: "USD",
-      businessName: "{{business.name}}",
-      productName: "{{product.name}}",
-      productCategory: "{{product.category}}",
-      customerEmail: "{{customer.email}}",
-      customerName: "{{customer.name}}",
-      metadataOrderId: "{{order.id}}"
+      businessName: "{{business_name}}",
+      productName: "{{checkout_name}}",
+      productCategory: "{{checkout_category}}",
+      customerEmail: "{{customer_email}}",
+      customerName: "{{customer_name}}",
+      metadataOrderId: "{{order_id}}"
     });
     
     // Remove the comment for this to automatically open the modal demo

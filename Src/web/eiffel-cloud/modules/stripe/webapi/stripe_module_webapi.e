@@ -32,6 +32,7 @@ feature {NONE} -- Router/administration
 				l_base_path := cfg.base_path
 				a_router.handle (l_base_path + "/public-key", create {WSF_URI_AGENT_HANDLER}.make (agent get_public_key (?,?,l_mod_api)), a_router.methods_get)
 				a_router.handle (l_base_path + "/payment_intents", create {WSF_URI_AGENT_HANDLER}.make (agent post_payment_intents (?,?,l_mod_api)), a_router.methods_post)
+				a_router.handle (l_base_path + "/payment_confirmation", create {WSF_URI_AGENT_HANDLER}.make (agent post_payment_intents_confirmation (?,?,l_mod_api)), a_router.methods_post)
 				a_router.handle (l_base_path + "/customer_subscription", create {WSF_URI_AGENT_HANDLER}.make (agent post_customer_subscription (?,?,l_mod_api)), a_router.methods_post)
 				a_router.handle (l_base_path + "/subscription_confirmation", create {WSF_URI_AGENT_HANDLER}.make (agent post_subscription_confirmation (?,?,l_mod_api)), a_router.methods_post)
 				a_router.handle (l_base_path + "/callback", create {WSF_URI_AGENT_HANDLER}.make (agent post_webhook (?,?,l_mod_api)), a_router.methods_post)
@@ -82,7 +83,7 @@ feature -- Handle
 	post_payment_intents (req: WSF_REQUEST; res: WSF_RESPONSE; api: STRIPE_API)
 		local
 			l_amount: NATURAL_32
-			l_payment_intent: PAYMENT_INTENT
+			l_payment_intent: STRIPE_PAYMENT_INTENT
 			buf: STRING
 			jp: JSON_PARSER
 			rep: like new_response
@@ -95,11 +96,14 @@ feature -- Handle
 				jp.parse_content
 				if jp.is_parsed and then jp.is_valid and then attached jp.parsed_json_object as jo then
 					if
-						attached jo.string_item ("productName") as j_prod_name and
+						attached jo.string_item ("metadataOrderId") as j_order_id and
 						attached jo.string_item ("productCategory") as j_prod_cat and
 						attached jo.string_item ("currency") as j_currency
 					then
-						create pay.make (j_prod_cat.unescaped_string_32, j_prod_name.unescaped_string_32)
+						create pay.make (j_prod_cat.unescaped_string_32, j_order_id.unescaped_string_32)
+						if attached jo.string_item ("productName") as j_prod_name then
+							pay.set_title (j_prod_name.unescaped_string_32)
+						end
 						pay.set_price (0, j_currency.unescaped_string_8)
 						api.invoke_prepare_payment (pay)
 						l_amount := pay.price_in_cents
@@ -112,9 +116,13 @@ feature -- Handle
 
 			rep := new_response (req, res, api)
 			if l_payment_intent /= Void then
-				rep.add_string_field ("client_secret", l_payment_intent.client_secret)
-				rep.add_integer_64_field ("amount", l_payment_intent.amount)
-				rep.add_string_field ("currency", l_payment_intent.currency)
+				if attached {JSON_WEBAPI_RESPONSE} rep as jrep then
+					jrep.import_json_object (l_payment_intent.to_string)
+				else
+					rep.add_string_field ("client_secret", l_payment_intent.client_secret)
+					rep.add_integer_64_field ("amount", l_payment_intent.amount)
+					rep.add_string_field ("currency", l_payment_intent.currency)
+				end
 			else
 				rep.add_boolean_field ("error", True)
 				if not api.config.is_valid then
@@ -122,6 +130,75 @@ feature -- Handle
 				end
 			end
  			rep.execute
+		end
+
+	post_payment_intents_confirmation (req: WSF_REQUEST; res: WSF_RESPONSE; api: STRIPE_API)
+		local
+			buf: STRING
+			jp: JSON_PARSER
+			rep: like new_response
+			l_payment: STRIPE_PAYMENT_INTENT
+		do
+			if attached req.content_type as ct and then ct.same_string ({HTTP_CONSTANTS}.application_json) then
+				create buf.make (req.content_length_value.to_integer_32)
+				req.read_input_data_into (buf)
+				create jp.make_with_string (buf)
+				jp.parse_content
+				if jp.is_parsed and then jp.is_valid and then attached jp.parsed_json_object as jo then
+					if
+						attached jo.string_item ("paymentId") as j_payment_id and
+						api.config.is_valid
+					then
+						l_payment := api.payment_intent (j_payment_id.unescaped_string_32)
+					end
+				end
+			end
+			rep := new_response (req, res, api)
+			if l_payment /= Void then
+				process_payment_intent (l_payment, Void, Void, Void, rep, api)
+			else
+				rep.add_boolean_field ("error", True)
+				if not api.config.is_valid then
+					rep.add_string_field ("error_message", "stripe configuration is not valid!")
+				end
+			end
+			rep.execute
+		end
+
+	process_payment_intent (a_payment: STRIPE_PAYMENT_INTENT; cust: detachable STRIPE_CUSTOMER; a_order_id: detachable READABLE_STRING_GENERAL; a_metadata: detachable STRING_TABLE [READABLE_STRING_GENERAL]; rep: like new_response; api: STRIPE_API)
+		local
+			l_customer: STRIPE_CUSTOMER
+			l_validation: STRIPE_PAYMENT_VALIDATION
+		do
+			l_customer := cust
+			if attached {JSON_WEBAPI_RESPONSE} rep as jrep then
+				jrep.import_json_object (a_payment.to_string)
+			else
+				rep.add_string_field ("payment_id", a_payment.id)
+			end
+			rep.execute
+			if a_payment.succeeded then
+				api.cms_api.log_debug ({STRIPE_MODULE}.name, "New stripe payment #" + a_payment.id, Void)
+				if l_customer = Void then
+					if attached a_payment.customer_id as l_cust_id then
+						l_customer := api.customer (l_cust_id)
+					end
+					if l_customer = Void and attached a_payment.receipt_email as l_cust_email then
+						create l_customer.make_with_email (l_cust_email)
+					end
+				end
+				if l_customer /= Void then
+					--FIXME!!!!
+					create l_validation.make_from_payment_intent (a_payment, l_customer)
+					if a_metadata /= Void then
+						l_validation.import_metadata (a_metadata)
+					end
+					if a_order_id /= Void then
+						l_validation.set_order_id (a_order_id)
+					end
+					api.invoke_validate_payment (l_validation)
+				end
+			end
 		end
 
 	post_customer_subscription (req: WSF_REQUEST; res: WSF_RESPONSE; api: STRIPE_API)

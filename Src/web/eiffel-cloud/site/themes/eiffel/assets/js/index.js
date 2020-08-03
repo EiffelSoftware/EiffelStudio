@@ -4,7 +4,6 @@ class ROCCMS_RespMenu {
 		this.list = a_menu.find('ul').first();
 	}
 	apply() {
-		console.log("apply...");
 		var m = $("<li class=\"icon\" onclick=\"onRespMenu()\">&#x2630;</li>");
 		this.list.prepend (m);
 	}

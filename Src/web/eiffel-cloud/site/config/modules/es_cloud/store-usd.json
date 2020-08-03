@@ -54,13 +54,21 @@
 		"currency": "usd",
 		"interval": "month"
 	},
-	"pro-test": {
-		"plan": "pro",
-		"title": "Professional (test-yly)",
-		"price": 4,
-		"price.cents": 99,
+	"proplus-oneyear": {
+		"plan": "pro+",
+		"title": "Professional+ (one-year)",
+		"price": 799,
 		"currency": "usd",
 		"interval": "onetime",
-		"status": "test"
+		"status": "published"
+	},
+	"perso-oneyear": {
+		"plan": "perso",
+		"title": "Personal (one-year)",
+		"price": 145,
+		"currency": "usd",
+		"interval": "onetime",
+		"duration": "12",
+		"status": "published"
 	}
 }

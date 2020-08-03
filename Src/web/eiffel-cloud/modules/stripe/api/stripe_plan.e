@@ -181,10 +181,6 @@ feature -- Access
 	creation_timestamp: INTEGER
 			-- Time at which the object was created. Measured in seconds since the Unix epoch.
 
-	in_livemode: BOOLEAN
-			-- Has the value true if the object exists in live mode
-			-- or the value false if the object exists in test mode.	
-
 	usage_type: IMMUTABLE_STRING_8
 			-- Configures how the quantity per period should be determined.
 			-- Can be either metered or licensed.

@@ -110,10 +110,6 @@ feature -- Access
 	modification_timestamp: INTEGER
 			-- Time at which the object was last updated. Measured in seconds since the Unix epoch.
 
-	in_livemode: BOOLEAN
-			-- Has the value true if the object exists in live mode
-			-- or the value false if the object exists in test mode.	
-
 	type: IMMUTABLE_STRING_8
 			-- The type of the product.
 			-- The product is either of type good, which is eligible for use with Orders and SKUs,

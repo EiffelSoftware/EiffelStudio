@@ -21,7 +21,7 @@ feature {NONE} -- Initialization
 
 	make_with_json (j: like json)
 		local
-			l_charges: ARRAYED_LIST [PAYMENT_CHARGE]
+			l_charges: ARRAYED_LIST [STRIPE_PAYMENT_CHARGE]
 		do
 			Precursor (j)
 			create l_charges.make (1)
@@ -64,7 +64,7 @@ feature -- Access
 
 	status: NATURAL_8
 
-	charges: LIST [PAYMENT_CHARGE]
+	charges: LIST [STRIPE_PAYMENT_CHARGE]
 
 feature -- Constants
 
@@ -72,7 +72,7 @@ feature -- Constants
 
 feature -- Factory
 
-	stripe_charge (j: JSON_VALUE): detachable PAYMENT_CHARGE
+	stripe_charge (j: JSON_VALUE): detachable STRIPE_PAYMENT_CHARGE
 		do
 			if attached {JSON_OBJECT} j as j_charge then
 				create Result.make_with_json (j_charge)

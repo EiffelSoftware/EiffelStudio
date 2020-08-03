@@ -297,7 +297,7 @@ feature -- Hook
 			l_order: READABLE_STRING_GENERAL
 			l_invoice: STRIPE_INVOICE
 			l_email_addr: READABLE_STRING_8
-			vars: STRING_TABLE [READABLE_STRING_8]
+			vars: STRING_TABLE [ANY]
 			l_shop_cart: SHOPPING_CART
 			l_order_id: READABLE_STRING_GENERAL
 			i: INTEGER
@@ -307,11 +307,14 @@ feature -- Hook
 		do
 			if attached shop_api as l_shop_api then
 				l_order_id := a_validation.order_id
-				l_invoice := a_validation.subscription.latest_invoice
-				if l_invoice /= Void then
-					l_email_addr := l_invoice.customer_email
-				elseif attached l_shop_api.cms_api.user as u then
-					l_email_addr := u.email
+				l_invoice := a_validation.invoice
+				l_email_addr := a_validation.customer.email
+				if l_email_addr = Void then
+					if l_invoice /= Void then
+						l_email_addr := l_invoice.customer_email
+					elseif attached l_shop_api.cms_api.user as u then
+						l_email_addr := u.email
+					end
 				end
 				if
 					attached l_shop_api.cms_api.user as u
@@ -356,6 +359,8 @@ feature -- Hook
 
 				if l_email_addr /= Void then
 					create vars.make_caseless (2)
+					vars ["payment_validation"] := a_validation
+					vars ["receipt_or_invoice_urls"] := a_validation.receipt_or_invoice_urls
 					if l_invoice /= Void and then attached l_invoice.hosted_invoice_url as l_invoice_url then
 						vars ["invoice_url"] := l_invoice_url
 					end
@@ -377,7 +382,7 @@ feature -- Hook
 			end
 		end
 
-	order_confirmation_email (a_email_addr: READABLE_STRING_8; vars: STRING_TABLE [READABLE_STRING_8]; a_shop_api: SHOP_API): CMS_EMAIL
+	order_confirmation_email (a_email_addr: READABLE_STRING_8; vars: STRING_TABLE [ANY]; a_shop_api: SHOP_API): CMS_EMAIL
 		local
 			res: PATH
 			s: STRING_8
@@ -397,8 +402,15 @@ feature -- Hook
 			else
 				create s.make_empty
 				s.append ("Thank you for your order at " + a_shop_api.cms_api.site_url + " .%N")
-				if attached vars["invoice_url"] as l_invoice_url then
-					s.append ("See your invoice at " + l_invoice_url + " .")
+				if attached {READABLE_STRING_GENERAL} vars ["invoice_url"] as l_invoice_url then
+					s.append ("See your invoice at " + html_encoded (l_invoice_url) + " .")
+				elseif attached {STRING_TABLE [READABLE_STRING_GENERAL]} vars ["receipt_or_invoice_urls"] as l_urls then
+					s.append ("See documents:%N")
+					across
+						l_urls as ic
+					loop
+						s.append (html_encoded (ic.key) + " at "+ html_encoded (ic.item) +"%N")
+					end
 				end
 				msg := s
 			end

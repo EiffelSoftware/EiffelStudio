@@ -45,6 +45,7 @@
 				  </div>
 				</div>
                 <div class="sr-combo-inputs-row">
+{unless condition="$checkout_type ~ 'onetime'"}
 				  <div class="user-information">
 				  <h3>User information</h3>
 				  <label for="customer-address-line1">Street address:</label>
@@ -127,6 +128,7 @@
 					</select>
 				  </label>
 				  </div> <!-- info -->
+{/unless}
                   <input
                     type="hidden"
                     id="items"

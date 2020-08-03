@@ -4,7 +4,7 @@
 	<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
 	<meta name="viewport" content="width=device-width, initial-scale=1"/>
 	<link rel="stylesheet" href="{$theme_path/}css/style.css"/>
-	<link rel="stylesheet" href="://fonts.googleapis.com/css2?family=Roboto:wght@300&display=swap" type="text/css" media="all"> 
+	<link rel="stylesheet" href="//fonts.googleapis.com/css2?family=Roboto:wght@300&display=swap" type="text/css" media="all"> 
 {if isset="$head"}{$head/}{/if}
 {if isset="$styles"}{$styles/}{/if}
 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script> 

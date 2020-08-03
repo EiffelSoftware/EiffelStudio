@@ -84,9 +84,7 @@ feature -- Execution
 								rep.add_javascript_url ("https://js.stripe.com/v3/")
 								rep.add_javascript_url (rep.module_resource_url (module, "/files/js/subscription.js", Void))
 								rep.add_style (rep.module_resource_url (module, "/files/css/stripe.css", Void), Void)
-	--							rep.add_style (rep.module_resource_url (module, "/files/css/global.css", Void), Void)		
-	--							rep.add_style (rep.module_resource_url (module, "/files/css/normalize.css", Void), Void)
-
+	
 								create l_params.make_caseless (10)
 								l_params ["checkout_price"] := pay.price_text
 								l_params ["checkout_title"] := pay.title_or_checkout_id
@@ -125,7 +123,7 @@ feature -- Execution
 								l_params ["order_id"] := safe_string (pay.order_id)
 								l_params ["metadata"] := safe_string (pay.meta_data_as_json_string)
 								l_params ["stripe_host_url"] := stripe_api.cms_api.webapi_path (stripe_api.config.base_path)
-								rep.set_main_content (card_html(l_params))
+								rep.set_main_content (card_html (l_params))
 							else
 								rep.set_main_content ("Cart is empty")
 								rep.add_warning_message ("Shopping cart is empty")
@@ -346,7 +344,7 @@ feature -- Resources
       customerEmail: "{{customer_email}}",
       customerName: "{{customer_name}}",
       checkoutItems: "{{checkout_items}}",
-      metadata: {{raw_metadata}},
+      metadata: {{raw-metadata}},
       metadataOrderId: "{{order_id}}"
     });
   </script>

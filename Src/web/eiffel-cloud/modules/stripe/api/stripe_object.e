@@ -18,11 +18,19 @@ feature {NONE} -- Initialization
 		do
 			set_id ("")
 			json := j
+			if not j.is_empty then
+				id := safe_string_8_item (j, "id", id)
+				in_livemode := boolean_item (j, "livemode", False)
+			end
 		end
 
 feature -- Access
 
 	id: IMMUTABLE_STRING_8
+
+	in_livemode: BOOLEAN
+			-- Has the value true if the object exists in live mode
+			-- or the value false if the object exists in test mode.
 
 feature -- Status
 
@@ -58,6 +66,11 @@ feature {NONE} -- Implementation
 		do
 			if attached {JSON_NUMBER} (j @ k) as jnum then
 				Result := jnum.integer_64_item
+			elseif
+				attached {JSON_STRING} (j @ k) as js and then
+				js.item.is_integer_64
+			then
+				Result := js.item.to_integer_64
 			end
 		end
 
@@ -70,6 +83,11 @@ feature {NONE} -- Implementation
 		do
 			if attached {JSON_NUMBER} (j @ k) as jnum then
 				Result := jnum.natural_64_item
+			elseif
+				attached {JSON_STRING} (j @ k) as js and then
+				js.item.is_natural_64
+			then
+				Result := js.item.to_natural_64
 			end
 		end
 

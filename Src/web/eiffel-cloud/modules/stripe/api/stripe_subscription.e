@@ -221,10 +221,6 @@ feature -- Access
 			-- 		using the default source attached to the customer.
 			-- When sending an invoice, Stripe will email your customer an invoice with payment instructions.
 
-	in_livemode: BOOLEAN
-			-- Has the value true if the object exists in live mode
-			-- or the value false if the object exists in test mode.
-
 	plan: detachable STRIPE_PLAN
 			-- Associated plan the customer is subscribed to.
 			-- Only set if the subscription contains a single plan.	

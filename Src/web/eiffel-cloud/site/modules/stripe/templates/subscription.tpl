@@ -79,7 +79,7 @@
                     id="customer-address-postal-code"
                     placeholder="Postal code"
                     class="sr-input"
-                    value=""
+                    value="{htmlentities}{$customer_address_postal_code/}{/htmlentities}"
                   />
 				  <label for="customer-address-state">State/Region:</label>
                   <input
@@ -155,7 +155,7 @@
           </div>
         </form>
         <div class="sr-payment-summary hidden completed-view">
-          <h1>Your subscription is <span class="order-status"></span></h1>
+          <h1>Your order is <span class="order-status"></span></h1>
         </div>
         <div class="sr-section hidden completed-view">
           <div class="sr-callout">

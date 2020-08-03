@@ -5,7 +5,7 @@ note
 	revision: "$Revision$"
 
 class
-	PAYMENT_CHARGE
+	STRIPE_PAYMENT_CHARGE
 
 inherit
 	STRIPE_OBJECT
@@ -21,14 +21,16 @@ feature {NONE} -- Initialization
 
 	make_with_json (j: like json)
 		do
+			currency := "usd"
 			Precursor (j)
+
 			if attached {JSON_OBJECT} j.item ("billing_details") as jv then
 				create billing_details.make_with_json (jv)
 			end
 			if attached j.boolean_item ("paid") as b then
 				paid := b.item
 			end
-			currency := safe_string_8_item (j, "currency", "usd")
+			currency := safe_string_8_item (j, "currency", currency)
 			if attached {JSON_NUMBER} j.item ("amount") as num then
 				amount := num.integer_64_item.to_integer
 			elseif attached j.string_item ("amount") as s then

@@ -280,6 +280,9 @@ feature -- Hook
 							d.set_weekly (1)
 						elseif l_store_item.is_daily then
 							d.set_daily (1)
+						else
+								-- Default
+							d.set_onetime
 						end
 						d.set_title (l_store_item.title)
 						a_cart_item.set_details (d)
@@ -341,6 +344,9 @@ feature -- Hook
 										api.extend_license_with_duration (lic, 0, 0, 7)
 									elseif l_store_item.is_daily then
 										api.extend_license_with_duration (lic, 0, 0, 1)
+									elseif l_store_item.is_onetime then
+											-- By default, yearly
+										api.extend_license_with_duration (lic, 0, l_store_item.onetime_month_duration.to_integer_32, 0)
 									end
 
 									if l_user /= Void then

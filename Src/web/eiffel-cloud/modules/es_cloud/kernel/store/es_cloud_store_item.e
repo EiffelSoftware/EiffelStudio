@@ -16,6 +16,7 @@ feature {NONE} -- Initialization
 		do
 			create id.make_from_string_general (a_id)
 			currency := "usd"
+			onetime_month_duration := 12
 		end
 
 feature -- Access
@@ -33,6 +34,8 @@ feature -- Access
 	currency: IMMUTABLE_STRING_8
 
 	interval: detachable IMMUTABLE_STRING_8
+
+	onetime_month_duration: NATURAL
 
 	is_onetime: BOOLEAN
 		do
@@ -118,6 +121,13 @@ feature -- Element change
 			else
 				interval := Void -- onetime
 			end
+		end
+
+	set_onetime_month_duration (a_nb: NATURAL)
+		require
+			is_onetime
+		do
+			onetime_month_duration := a_nb
 		end
 
 end

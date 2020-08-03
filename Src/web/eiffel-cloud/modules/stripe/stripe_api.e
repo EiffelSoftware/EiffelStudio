@@ -80,7 +80,7 @@ feature -- API helpers
 
 feature -- Payment intents
 
-	new_card_payment_intent (a_amount: NATURAL_32; a_currency: READABLE_STRING_GENERAL): detachable PAYMENT_INTENT
+	new_card_payment_intent (a_amount: NATURAL_32; a_currency: READABLE_STRING_GENERAL): detachable STRIPE_PAYMENT_INTENT
 			-- `a_amount` in cents, a_currency is lowercase.
 		local
 			cl: DEFAULT_HTTP_CLIENT
@@ -94,6 +94,28 @@ feature -- Payment intents
 				ctx.add_form_parameter ("currency", a_currency)
 				ctx.add_form_parameter ("payment_method_types[]", "card")
 				if attached sess.post ("payment_intents", ctx, Void) as l_response then
+					if attached valid_api_json_object_response (l_response) as j then
+						create Result.make_with_json (j)
+						debug
+							print (Result)
+						end
+					end
+				end
+			end
+		end
+
+	payment_intent (a_payment_id: READABLE_STRING_GENERAL): detachable STRIPE_PAYMENT_INTENT
+		local
+			cl: DEFAULT_HTTP_CLIENT
+			ctx: HTTP_CLIENT_REQUEST_CONTEXT
+		do
+			create cl
+			if attached cl.new_session (stripe_api_url) as sess then
+				sess.set_credentials (config.secret_key, "")
+				create ctx.make_with_credentials_required
+				ctx.add_form_parameter ("expand[]", "invoice.payment_intent")
+				ctx.add_form_parameter ("expand[]", "charges.data")
+				if attached sess.get ("payment_intents/" + url_encoded (a_payment_id), ctx) as l_response then
 					if attached valid_api_json_object_response (l_response) as j then
 						create Result.make_with_json (j)
 						debug

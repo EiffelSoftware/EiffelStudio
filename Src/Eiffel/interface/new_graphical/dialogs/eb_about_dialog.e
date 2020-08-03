@@ -266,14 +266,28 @@ feature {NONE} -- Implementation
 					Result.append ({STRING_32} "License key: " + lic_key)
 					Result.append_character ('%N')
 				end
-				if l_eiffel_edition.edition_expiration /= Void then
-					Result.append ({STRING_32} "The license expires in " + l_eiffel_edition.number_of_remaining_days.out + " day(s).")
+				if attached l_eiffel_edition.edition_expiration as l_exp_date then
+					Result.append ({STRING_32} "The license expires in " + l_eiffel_edition.number_of_remaining_days.out + " day(s) (" + date_time_local_representation (l_exp_date) + ").")
 					Result.append_character ('%N')
 				end
 			end
 			Result.append ("Monitor DPI = " + {EV_MONITOR_DPI_DETECTOR_IMP}.dpi.out + "%N")
 			Result.append ("%N")
 			Result.append (eiffel_layout.environment_info)
+		end
+
+feature {NONE} -- Implementation
+
+	local_time (dt: DATE_TIME): DATE_TIME
+		do
+    		create Result.make_by_date_time (dt.date, dt.time)
+			Result.add ((create {DATE_TIME}.make_now).relative_duration (create {DATE_TIME}.make_now_utc))
+		end
+
+	date_time_local_representation (dt: DATE_TIME): STRING
+		do
+			Result := local_time (dt).formatted_out ("yyyy-[0]mm-[0]dd [0]hh:[0]mi:[0]ss")
+			Result.replace_substring_all (" ", "T")
 		end
 
 feature {NONE} -- Constant strings

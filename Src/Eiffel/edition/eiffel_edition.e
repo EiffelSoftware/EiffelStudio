@@ -59,7 +59,7 @@ feature -- Additional information
 			if attached edition_expiration as dt then
 				l_dur := dt.relative_duration (create {DATE_TIME}.make_now_utc)
 				l_dur.day_add (1)
-				Result := l_dur.day
+				Result := l_dur.seconds_count // 60 // 60 // 24 -- 60 seconds, 60 minutes, 24 hours.
 			end
 		end
 

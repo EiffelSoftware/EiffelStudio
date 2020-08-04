@@ -31,7 +31,7 @@ feature -- Access
 	access_token_endpoint: STRING_8
 			-- Url that receives the access token request
 		do
-			create {STRING_8} Result.make_from_string ("https://www.googleapis.com/oauth2/v4/token")
+			create {STRING_8} Result.make_from_string ("https://oauth2.googleapis.com/token")
 		end
 
 	authorization_url (config: OAUTH_CONFIG): detachable STRING_8
@@ -55,12 +55,12 @@ feature -- Access
 
 feature -- Implementation
 
-	Template_authorize_url: STRING = "https://accounts.google.com/o/oauth2/v2/auth?response_type=code&client_id=$CLIENT_ID&redirect_uri=$REDIRECT_URI";
+	Template_authorize_url: STRING_8 = "https://accounts.google.com/o/oauth2/auth?response_type=code&client_id=$CLIENT_ID&redirect_uri=$REDIRECT_URI"
 
-	Scoped_authorize_url: STRING = "&scope=$SCOPE";
+	Scoped_authorize_url: STRING = "&scope=$SCOPE"
 
 note
-	copyright: "2013-2015, Javier Velilla, Jocelyn Fiat, Eiffel Software and others"
+	copyright: "2013-2020, Javier Velilla, Jocelyn Fiat, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

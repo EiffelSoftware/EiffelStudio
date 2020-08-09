@@ -22,9 +22,6 @@ inherit
 
 	SHARED_BENCH_NAMES
 
---create
---	make
-
 feature {NONE} -- Initialization
 
 	make
@@ -296,14 +293,17 @@ feature -- Debugger data change
 		end
 
 	load_exceptions_handler_data
-			-- Load exceptions_handler data
+			-- Load exceptions_handler data.
 		local
 			loading_rescued: BOOLEAN
 		do
-			if not loading_rescued then
-				internal_exceptions_handler := dbg_storage.exceptions_handler_data_from_storage
-			else
-				-- Issue !
+				-- Avoid changing already computed exception handler if an old one does not exist or cannot be loaded.
+				-- Already computed exception handler is initialized using expected defaults.
+			if
+				not loading_rescued and then
+				attached dbg_storage.exceptions_handler_data_from_storage as h
+			then
+				internal_exceptions_handler := h
 			end
 		rescue
 			loading_rescued := True
@@ -879,14 +879,11 @@ feature -- Exception handling
 			-- Exception catched ?
 		require
 			application_is_executing and then application_status.exception_occurred
-		local
-			l_name: STRING
 		do
 			Result := True
 			if exceptions_handler.enabled then
 				application_status.update_on_pre_stopped_state
-				l_name := application_status.exception_type_name
-				if l_name /= Void then
+				if attached application_status.exception_type_name as l_name then
 					Result := exceptions_handler.exception_catched_by_name (l_name)
 					if not Result then
 						debugger_message ("Ignoring exception class name: " + l_name.out)
@@ -1412,16 +1409,12 @@ feature -- Application change
 		end
 
 	set_catcall_detection_mode (a_console, a_dbg: BOOLEAN)
+		local
+			h: like exceptions_handler
 		do
-			if attached exceptions_handler as exc_hld then
-				if exc_hld.catcall_console_warning_disabled /= not a_console then
-					exc_hld.set_catcall_console_warning_disabled (not a_console)
-				end
-				if exc_hld.catcall_debugger_warning_disabled /= not a_dbg then
-					exc_hld.set_catcall_debugger_warning_disabled (not a_dbg)
-				end
-			end
-
+			h := exceptions_handler
+			h.set_catcall_console_warning_disabled (not a_console)
+			h.set_catcall_debugger_warning_disabled (not a_dbg)
 			if application_initialized then
 				safe_update_catcall_detection_mode
 			end
@@ -1450,10 +1443,11 @@ feature -- Application change
 			-- pdate catcall detection mode
 		require
 			safe_application_is_stopped: safe_application_is_stopped
+		local
+			h: like exceptions_handler
 		do
-			if attached exceptions_handler as exc_hld then
-				application.set_catcall_detection_mode (not exc_hld.catcall_console_warning_disabled, not exc_hld.catcall_debugger_warning_disabled)
-			end
+			h := exceptions_handler
+			application.set_catcall_detection_mode (not h.catcall_console_warning_disabled, not h.catcall_debugger_warning_disabled)
 		end
 
 	disable_assertion_checking

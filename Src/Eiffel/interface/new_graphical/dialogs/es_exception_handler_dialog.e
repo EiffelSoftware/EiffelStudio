@@ -282,15 +282,14 @@ feature -- Change
 
 	set_role_on_row (r: INTEGER; a_row: EV_GRID_ROW)
 			-- Set role `r' on row `a_row'
-		local
-			lab: EV_GRID_LABEL_ITEM
 		do
-			if a_row /= Void and then a_row.parent /= Void then
-				lab ?= a_row.item (1)
-				if lab /= Void then
-					lab.set_text (Status_id[r])
-					refresh_row (a_row, Void)
-				end
+			if
+				attached a_row and then
+				attached a_row.parent and then
+				attached {EV_GRID_LABEL_ITEM} a_row.item (1) as lab
+			then
+				lab.set_text (Status_id[r])
+				refresh_row (a_row, Void)
 			end
 		end
 
@@ -298,21 +297,20 @@ feature -- Change
 			-- Refresh `a_row'
 		local
 			t: like role_pattern_from_row
-			item: EV_GRID_LABEL_ITEM
 		do
 			if a_row /= Void and then a_row.parent /= Void then
 				t := a_details
 				if t = Void then
 					t := role_pattern_from_row (a_row)
 				end
-				if t /= Void then
-					item ?= a_row.item (1)
-					if item /= Void then
-						if attached Status_pixmaps [t.role] as p then
-							item.set_pixmap (p)
-						else
-							item.remove_pixmap
-						end
+				if
+					attached t and then
+					attached {EV_GRID_LABEL_ITEM} a_row.item (1) as item
+				then
+					if attached Status_pixmaps [t.role] as p then
+						item.set_pixmap (p)
+					else
+						item.remove_pixmap
 					end
 				end
 			end
@@ -321,7 +319,7 @@ feature -- Change
 	activate_combo (ci: EV_GRID_COMBO_ITEM; a_dlg: EV_POPUP_WINDOW)
 			-- Activate combo grid item `ci'
 		local
-			t: STRING
+			t: like {EV_COMBO_BOX}.text
 			cbox: detachable EV_COMBO_BOX
 			found: BOOLEAN
 		do
@@ -334,7 +332,7 @@ feature -- Change
 				until
 					cbox.after or found
 				loop
-					if cbox.item.text.is_equal (t) then
+					if cbox.item.text.same_string (t) then
 						found := True
 						cbox.item.enable_select
 					end
@@ -366,7 +364,7 @@ feature {NONE} -- Implementation
 	row_selected (r: EV_GRID_ROW)
 		do
 			selected_row := r
-			selected_data ?= r.data
+			selected_data := if attached {like selected_data} r.data as s then s else Void end
 			tf_pattern.set_text (selected_data)
 		end
 
@@ -413,29 +411,32 @@ feature {NONE} -- Implementation
 			debugger_manager.set_catcall_detection_mode (not disable_catcall_console_warning_checkbox.is_selected, not disable_catcall_debugger_warning_checkbox.is_selected)
 		end
 
-	role_pattern_from_row (a_row: detachable EV_GRID_ROW): TUPLE [role: INTEGER; pattern: STRING]
+	role_pattern_from_row (a_row: EV_GRID_ROW): TUPLE [role: INTEGER; pattern: STRING]
 			-- Role,Pattern contained by `a_row' if any
 		require
 			a_row_not_void: a_row /= Void
 		local
-			l_st: STRING
+			l_st: like {EV_GRID_LABEL_ITEM}.text
 			l_pat: STRING
-			cell: detachable EV_GRID_LABEL_ITEM
 			r: INTEGER
 		do
-			cell ?= a_row.item (1)
-			l_st := cell.text
-			if l_st.is_equal (status_id[{DBG_EXCEPTION_HANDLER}.role_stop]) then
-				r := {DBG_EXCEPTION_HANDLER}.role_stop
-			elseif l_st.is_equal (status_id[{DBG_EXCEPTION_HANDLER}.role_continue]) then
-				r := {DBG_EXCEPTION_HANDLER}.role_continue
-			elseif l_st.is_equal (status_id[{DBG_EXCEPTION_HANDLER}.role_disabled]) then
-				r := {DBG_EXCEPTION_HANDLER}.role_disabled
+			if attached {EV_GRID_LABEL_ITEM} a_row.item (1) as cell then
+				l_st := cell.text
+				if l_st.same_string_general (status_id [{DBG_EXCEPTION_HANDLER}.role_stop]) then
+					r := {DBG_EXCEPTION_HANDLER}.role_stop
+				elseif l_st.same_string_general (status_id [{DBG_EXCEPTION_HANDLER}.role_continue]) then
+					r := {DBG_EXCEPTION_HANDLER}.role_continue
+				elseif l_st.same_string_general (status_id [{DBG_EXCEPTION_HANDLER}.role_disabled]) then
+					r := {DBG_EXCEPTION_HANDLER}.role_disabled
+				end
 			end
 
-			cell ?= a_row.item (2)
-			if cell /= Void then
-				l_pat := cell.text
+			if
+				attached {EV_GRID_LABEL_ITEM} a_row.item (2) as cell and then
+				attached cell.text as t and then
+				t.is_valid_as_string_8
+			then
+				l_pat := t.to_string_8
 			end
 
 			Result := [r, l_pat]
@@ -479,7 +480,7 @@ feature {NONE} -- events
 			if
 				selected_row /= Void and
 				selected_data /= Void and then
-				selected_data.is_equal (tf_pattern.text)
+				selected_data.same_string_general (tf_pattern.text)
 			then
 				r := selected_row.index
 				grid.remove_row (r)

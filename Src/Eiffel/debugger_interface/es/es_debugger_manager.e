@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "Shared object that manages all debugging actions."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -6,22 +6,23 @@ note
 	date: "$Date$"
 	revision: "$Revision$"
 
-class
+deferred class
 	ES_DEBUGGER_MANAGER
 
 inherit
 	DEBUGGER_MANAGER
 		redefine
-			make,
-			set_default_parameters,
-			classic_debugger_timeout,
+			classic_close_dbg_daemon_on_end_of_debugging,
 			classic_debugger_ending_timeout,
 			classic_debugger_location,
-			classic_close_dbg_daemon_on_end_of_debugging,
+			classic_debugger_timeout,
+			dotnet_debugger,
+			dotnet_debugger_entries,
 			dotnet_keep_stepping_info_non_eiffel_feature,
-			dotnet_debugger_entries, dotnet_debugger,
 			is_true_boolean_value,
-			log_message
+			log_message,
+			make,
+			set_default_parameters
 		end
 
 	SHARED_COMPILER_PREFERENCES
@@ -62,12 +63,9 @@ feature -- Settings
 
 	set_default_parameters
 			-- <Precursor>
-		local
-			prefs: EB_DEBUGGER_DATA
 		do
 			Precursor {DEBUGGER_MANAGER}
-			prefs := debugger_data
-			if prefs /= Void then
+			if attached debugger_data as prefs then
 				set_slices (prefs.min_slice, prefs.max_slice)
 				set_displayed_string_size (prefs.default_displayed_string_size)
 				set_maximum_stack_depth (prefs.default_maximum_stack_depth)
@@ -79,6 +77,7 @@ feature -- Settings
 					displayed_string_size: displayed_string_size = prefs.default_displayed_string_size
 					max_evaluation_duration_set: prefs /= Void implies max_evaluation_duration = prefs.max_evaluation_duration
 				end
+				set_catcall_detection_mode (prefs.default_catcall_console_warning, prefs.default_catcall_debugger_warning)
 			end
 		end
 

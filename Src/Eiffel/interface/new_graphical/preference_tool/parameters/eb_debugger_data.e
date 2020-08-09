@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "All shared preferences for the debugger."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -83,6 +83,18 @@ feature {SHARED_COMPILER_PREFERENCES} -- Value
 			Result := debugger_hidden_enabled_preference.value
 		end
 
+	default_catcall_console_warning: BOOLEAN
+			-- Are CAT-call console warnings enabled by default?
+		do
+			Result := default_catcall_console_warning_preference.value
+		end
+
+	default_catcall_debugger_warning: BOOLEAN
+			-- Are CAT-call debugger warnings enabled by default?
+		do
+			Result := default_catcall_debugger_warning_preference.value
+		end
+
 feature {SHARED_COMPILER_PREFERENCES} -- Classic specific
 
 	close_classic_dbg_daemon_on_end_of_debugging: BOOLEAN
@@ -132,6 +144,8 @@ feature {SHARED_COMPILER_PREFERENCES, EB_TOOL, ES_DIALOG} -- Preference
 	min_slice_preference: INTEGER_PREFERENCE
 	max_slice_preference: INTEGER_PREFERENCE
 	max_evaluation_duration_preference: INTEGER_PREFERENCE
+	default_catcall_console_warning_preference: BOOLEAN_PREFERENCE
+	default_catcall_debugger_warning_preference: BOOLEAN_PREFERENCE
 
 feature {NONE} -- Preference Strings
 
@@ -151,6 +165,8 @@ feature {NONE} -- Preference Strings
 	min_slice_string: STRING = "debugger.min_slice"
 	max_slice_string: STRING = "debugger.max_slice"
 	max_evaluation_duration_preference_string: STRING = "debugger.max_evaluation_duration"
+	default_catcall_console_warning_preference_string: STRING = "debugger.default_catcall_console_warning"
+	default_catcall_debugger_warning_preference_string: STRING = "debugger.default_catcall_debugger_warning"
 
 feature {NONE} -- Implementation
 
@@ -182,6 +198,8 @@ feature {NONE} -- Implementation
 			classic_debugger_timeout_preference := l_manager.new_integer_preference_value (l_manager, classic_debugger_timeout_string, 0)
 			classic_debugger_ending_timeout_preference := l_manager.new_integer_preference_value (l_manager, classic_debugger_ending_timeout_string, 0)
 			classic_debugger_location_preference := l_manager.new_path_preference_value (l_manager, classic_debugger_location_string, create {PATH}.make_empty)
+			default_catcall_console_warning_preference := l_manager.new_boolean_preference_value (l_manager, default_catcall_console_warning_preference_string, True)
+			default_catcall_debugger_warning_preference := l_manager.new_boolean_preference_value (l_manager, default_catcall_debugger_warning_preference_string, True)
 		end
 
 invariant
@@ -203,7 +221,7 @@ invariant
 --	_preference_not_void: _preference /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2013, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2020, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
@@ -234,4 +252,4 @@ note
 			Customer support http://support.eiffel.com
 		]"
 
-end -- class EB_DEBUGGER_DATA
+end

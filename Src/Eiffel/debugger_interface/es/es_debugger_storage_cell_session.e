@@ -32,11 +32,9 @@ feature -- Access
 	breakpoints_data_from_storage: detachable BREAK_LIST
 			-- Breakpoints data from storage
 		local
-			dbg_session: SESSION_I
 			l_value: detachable ANY
 		do
-			dbg_session := session_data
-			l_value := dbg_session.value (Breakpoints_session_data_id)
+			l_value := session_data.value (Breakpoints_session_data_id)
 			if attached {CELL_SESSION_DATA [like breakpoints_data_from_storage]} l_value as c then
 				data_cells.force (c, Breakpoints_session_data_id)
 				Result := c.item
@@ -48,11 +46,9 @@ feature -- Access
 	exceptions_handler_data_from_storage: detachable DBG_EXCEPTION_HANDLER
 			-- <Precursor>
 		local
-			dbg_session: SESSION_I
 			l_value: detachable ANY
 		do
-			dbg_session := session_data
-			l_value := dbg_session.value (Exception_handler_session_data_id)
+			l_value := session_data.value (Exception_handler_session_data_id)
 			if attached {CELL_SESSION_DATA [like exceptions_handler_data_from_storage]} l_value as c then
 				data_cells.force (c, Exception_handler_session_data_id)
 				Result := c.item
@@ -64,11 +60,9 @@ feature -- Access
 	profiles_data_from_storage: detachable DEBUGGER_PROFILE_MANAGER
 			-- <Precursor>
 		local
-			dbg_session: SESSION_I
 			l_value: detachable ANY
 		do
-			dbg_session := profiles_session_data
-			l_value := dbg_session.value (Profiles_session_data_id)
+			l_value := profiles_session_data.value (Profiles_session_data_id)
 			if attached {CELL_SESSION_DATA [like profiles_data_from_storage]} l_value as c then
 				data_cells.force (c, Profiles_session_data_id)
 				Result := c.item
@@ -175,14 +169,12 @@ feature {NONE} -- Access: session
 			-- Session data
 		do
 			Result := internal_session_data
-			if Result = Void then
-				if attached session_manager.service as s then
-					Result := s.retrieve_extended (True, once "dbg")
-					internal_session_data := Result
-
-						-- Load debugger data when first access the session
-					manager.load_all_debugger_data
-				end
+			if
+				Result = Void and then
+				attached session_manager.service as s
+			then
+				Result := s.retrieve_extended (True, once "dbg")
+				internal_session_data := Result
 			end
 		end
 
@@ -190,14 +182,12 @@ feature {NONE} -- Access: session
 			-- Session data
 		do
 			Result := internal_profiles_session_data
-			if Result = Void then
-				if attached session_manager.service as s then
-					Result := s.retrieve_extended (True, once "dbg-profiles")
-					internal_profiles_session_data := Result
-
-						-- Load debugger data when first access the session
-					manager.load_profiles_data
-				end
+			if
+				Result = Void and then
+				attached session_manager.service as s
+			then
+				Result := s.retrieve_extended (True, once "dbg-profiles")
+				internal_profiles_session_data := Result
 			end
 		end
 

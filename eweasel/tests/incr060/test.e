@@ -1,5 +1,5 @@
 
---| Copyright (c) 1993-2006 University of Southern California and contributors.
+--| Copyright (c) 1993-2020 University of Southern California, Eiffel Software and contributors.
 --| All rights reserved.
 --| Your use of this work is governed under the terms of the GNU General
 --| Public License version 2.
@@ -10,13 +10,13 @@
 	-- Recompile.  Compiler does not detect VGCC(3) error.
 
 class TEST
-creation
+create
 	make
 feature
 
-	make is
-		do
-			!TEST1!x;
+	make
+		do 
+			create {TEST1} x;
 		end;
 		
 	x: TEST1;

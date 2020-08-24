@@ -1,5 +1,5 @@
 
---| Copyright (c) 1993-2006 University of Southern California and contributors.
+--| Copyright (c) 1993-2020 University of Southern California, Eiffel Software and contributors.
 --| All rights reserved.
 --| Your use of this work is governed under the terms of the GNU General
 --| Public License version 2.
@@ -12,19 +12,19 @@ class
 	TEST
 inherit
 	DOUBLE_MATH
-creation	
+create	
 	make
 feature
 	
-	make is
+	make
 		local
 			k, count: INTEGER;
 			prime_list: LINKED_LIST [INTEGER];
 		do
 			from
 				count := 0;
-				k := 2;
-				!!prime_list.make;
+				k := 2 ;
+				create prime_list.make;
 			until
 				k > 10000
 			loop
@@ -39,7 +39,7 @@ feature
 		end;
 	
 
-	prime (n: INTEGER; known_primes: LINKED_LIST [INTEGER]): BOOLEAN is
+	prime (n: INTEGER; known_primes: LINKED_LIST [INTEGER]): BOOLEAN
 		local
 			k: INTEGER;
 			s: DOUBLE;

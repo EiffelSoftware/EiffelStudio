@@ -1,21 +1,21 @@
 
---| Copyright (c) 1993-2006 University of Southern California and contributors.
+--| Copyright (c) 1993-2020 University of Southern California, Eiffel Software and contributors.
 --| All rights reserved.
 --| Your use of this work is governed under the terms of the GNU General
 --| Public License version 2.
 
 class TEST
-creation
+create
 	make
 feature
-	make (args: ARRAY [STRING]) is
+	make (args: ARRAY [STRING])
 		local
 			child: CHILD;
 			k, count: INTEGER;
 		do
 			count := args.item (1).to_integer;
-			from
-				!!child.make;
+			from 
+				create child.make;
 				k := 1;
 			until
 				k > count

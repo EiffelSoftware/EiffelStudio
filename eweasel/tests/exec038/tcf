@@ -1,5 +1,5 @@
 
---| Copyright (c) 1993-2006 University of Southern California and contributors.
+--| Copyright (c) 1993-2020 University of Southern California, Eiffel Software and contributors.
 --| All rights reserved.
 --| Your use of this work is governed under the terms of the GNU General
 --| Public License version 2.
@@ -10,7 +10,7 @@ test_name 	 once-expanded-result
 test_description A system which calls a once function whose result type is an expanded type
 
 copy_sub 	 Ace $TEST Ace
-define		 CREATION "!!Result"
+define		 CREATION "create Result"
 copy_sub 	 test.e  $CLUSTER test.e
 copy_raw 	 test1.e  $CLUSTER test1.e
 compile_melted
@@ -35,7 +35,7 @@ copy_sub 	 test.e  $CLUSTER test.e
 compile_melted
 compile_result 	 ok
 
-define		 CREATION "!!Result"
+define		 CREATION "create Result"
 copy_sub 	 test.e  $CLUSTER test.e
 compile_melted
 compile_result 	 ok

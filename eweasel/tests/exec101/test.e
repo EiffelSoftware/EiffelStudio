@@ -1,21 +1,21 @@
 
---| Copyright (c) 1993-2006 University of Southern California and contributors.
+--| Copyright (c) 1993-2020 University of Southern California, Eiffel Software and contributors.
 --| All rights reserved.
 --| Your use of this work is governed under the terms of the GNU General
 --| Public License version 2.
 
 class TEST
-creation
+create
 	make
 feature
 
-	make (args: ARRAY [STRING]) is
+	make (args: ARRAY [STRING])
 		local
 			k, count: INTEGER;
 			str: STRING;
 		do
-			count := args.item (1).to_integer;
-			!!list.make;
+			count := args.item (1).to_integer ;
+			create list.make;
 			list.extend (Void);
 			from
 				k := 1;
@@ -36,7 +36,7 @@ feature
 	
 	list: LINKED_LIST [STRING];
 
-	strip_error (a: ARRAY [ANY]): STRING is
+	strip_error (a: ARRAY [ANY]): STRING
 		local
 			the_list: LINKED_LIST [STRING];
 		do

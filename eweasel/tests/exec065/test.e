@@ -1,16 +1,16 @@
 
---| Copyright (c) 1993-2006 University of Southern California and contributors.
+--| Copyright (c) 1993-2020 University of Southern California, Eiffel Software and contributors.
 --| All rights reserved.
 --| Your use of this work is governed under the terms of the GNU General
 --| Public License version 2.
 
 class TEST
-creation
+create
 	make
 
 feature
 
-	make (args: ARRAY [STRING]) is
+	make (args: ARRAY [STRING])
 		local
 			k, item_count, count, interval: INTEGER;
 			seed: INTEGER;
@@ -18,8 +18,8 @@ feature
 		do
 			seed :=  47;
 			item_count :=  args.item (1).to_integer;
-			interval :=  args.item (2).to_integer;
-			!!r.set_seed (seed);
+			interval :=  args.item (2).to_integer ;
+			create r.set_seed (seed);
 			from
 				k := 1;
 				r.start;

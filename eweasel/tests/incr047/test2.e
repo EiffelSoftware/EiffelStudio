@@ -1,5 +1,5 @@
 
---| Copyright (c) 1993-2006 University of Southern California and contributors.
+--| Copyright (c) 1993-2020 University of Southern California, Eiffel Software and contributors.
 --| All rights reserved.
 --| Your use of this work is governed under the terms of the GNU General
 --| Public License version 2.
@@ -10,22 +10,22 @@ inherit
 		redefine
 			default_create
 		end
-creation
+create
 	default_create
 feature
-	default_create is
+	default_create
 		do
 			m := {REAL_32} 3.14159;
 		end;
 
 	m: REAL;
 	
-	try is
+	try
 		do
 			io.putstring ("In try%N");
 		end;
 
-	to_expanded: TEST2 is
+	to_expanded: TEST2
 		do
 			create Result
 		end

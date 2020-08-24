@@ -1,5 +1,5 @@
 
---| Copyright (c) 1993-2006 University of Southern California and contributors.
+--| Copyright (c) 1993-2020 University of Southern California, Eiffel Software and contributors.
 --| All rights reserved.
 --| Your use of this work is governed under the terms of the GNU General
 --| Public License version 2.
@@ -8,12 +8,12 @@ class TEST
 inherit
 	EXCEPTIONS
 
-creation
+create
 
 	make
 feature
 
-	make is
+	make
 		local
 			tried: BOOLEAN;
 		do
@@ -26,13 +26,13 @@ feature
 			retry;
 		end;
 
-	compare (c1, c2: CHARACTER; flag: BOOLEAN): BOOLEAN is
+	compare (c1, c2: CHARACTER; flag: BOOLEAN): BOOLEAN
 		local
 			s: STRING;
 			tried: BOOLEAN;
 		do
-			if not tried then
-				!!s.make (0);
+			if not tried then 
+				create s.make (0);
 				s.append ("wimp");
 				if flag then
 					Result := c1 = c2;
@@ -47,7 +47,7 @@ feature
 			retry;
 		end;
     
-	caseless_char_eq (c1, c2:CHARACTER): BOOLEAN is
+	caseless_char_eq (c1, c2:CHARACTER): BOOLEAN
 		do
 			io.put_string ("Raising exception%N");
 			raise("weasels");

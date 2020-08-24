@@ -1,5 +1,5 @@
 
---| Copyright (c) 1993-2006 University of Southern California and contributors.
+--| Copyright (c) 1993-2020 University of Southern California, Eiffel Software and contributors.
 --| All rights reserved.
 --| Your use of this work is governed under the terms of the GNU General
 --| Public License version 2.
@@ -13,11 +13,11 @@
 
 class TEST
 
-creation
+create
 	make, make_obj
 feature
 
-	make is
+	make
 		local
 			last: TEST;
 			length: INTEGER;
@@ -37,11 +37,11 @@ feature
 			last := deep_twin
 		end;
 
-	make_obj is
+	make_obj
 		do
 		end;
 
-	deep (count: INTEGER; obj: TEST): TEST is
+	deep (count: INTEGER; obj: TEST): TEST
 		local
 			k: INTEGER;
 			curr_obj, next_obj: TEST;
@@ -51,8 +51,8 @@ feature
 				curr_obj := obj;
 			until
 				k > count
-			loop
-				!!next_obj.make_obj;
+			loop 
+				create next_obj.make_obj;
 				curr_obj.set_next (next_obj);
 				curr_obj := next_obj;
 				k := k + 1;
@@ -60,7 +60,7 @@ feature
 			Result := curr_obj;
 		end;
 
-	set_next (n: TEST) is
+	set_next (n: TEST)
 		do
 			next := n;
 		end;

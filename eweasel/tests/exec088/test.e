@@ -1,5 +1,5 @@
 
---| Copyright (c) 1993-2006 University of Southern California and contributors.
+--| Copyright (c) 1993-2020 University of Southern California, Eiffel Software and contributors.
 --| All rights reserved.
 --| Your use of this work is governed under the terms of the GNU General
 --| Public License version 2.
@@ -7,12 +7,12 @@
 class TEST
 inherit
 	SHARED
-creation
+create
 	make
 feature
-	make is
-		do
-			!!t.make;
+	make
+		do 
+			create t.make;
 			set_ok;
 			io.putstring ("In make%N");
 			try;
@@ -20,7 +20,7 @@ feature
 	
 	t: TEST2;
 
-	try is
+	try
 		local
 			x: expanded TEST1
 

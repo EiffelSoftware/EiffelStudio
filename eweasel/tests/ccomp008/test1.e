@@ -1,5 +1,5 @@
 
---| Copyright (c) 1993-2006 University of Southern California and contributors.
+--| Copyright (c) 1993-2020 University of Southern California, Eiffel Software and contributors.
 --| All rights reserved.
 --| Your use of this work is governed under the terms of the GNU General
 --| Public License version 2.
@@ -12,16 +12,16 @@ inherit
 			make as test2_make
 		end;
 	
-creation
+create
 	make
 
 feature
 
-	make (args: LINKED_LIST [STRING]) is
+	make (args: LINKED_LIST [STRING])
 		local
 			real_args: LINKED_LIST [STRING];
-		do
-			!!real_args.make;
+		do 
+			create real_args.make;
 			real_args.merge_right (args);
 		end;
 

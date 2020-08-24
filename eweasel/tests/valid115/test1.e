@@ -1,5 +1,5 @@
 
---| Copyright (c) 1993-2006 University of Southern California and contributors.
+--| Copyright (c) 1993-2020 University of Southern California, Eiffel Software and contributors.
 --| All rights reserved.
 --| Your use of this work is governed under the terms of the GNU General
 --| Public License version 2.
@@ -18,19 +18,19 @@ inherit
 		redefine
 			f
 		end
-creation
+create
 	make
 feature
-	make is
+	make
 		do
-			!!d1.make
-			!!d2.make
+			create d1.make
+			create d2.make
 			d2 := f
 			io.put_string (d2.generating_type.name_32.to_string_8) io.new_line
 			io.put_integer (d2.www); io.new_line
 		end
 
-	f: TEST4 is
+	f: TEST4
 		do
 			io.put_string ("In TEST1 f%N")
 			d1 := precursor

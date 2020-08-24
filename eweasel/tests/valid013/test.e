@@ -1,5 +1,5 @@
 
---| Copyright (c) 1993-2006 University of Southern California and contributors.
+--| Copyright (c) 1993-2020 University of Southern California, Eiffel Software and contributors.
 --| All rights reserved.
 --| Your use of this work is governed under the terms of the GNU General
 --| Public License version 2.
@@ -14,11 +14,11 @@ class
 	TEST
 inherit 
 	TEST1
-creation
+create
 	make
 feature
 	
-	make is
+	make
 		do
 			test_me;
 			io.putstring ("Getting ready to call turkey...%N");
@@ -26,13 +26,13 @@ feature
 			io.putstring ("Nope, did not die%N");
 		end;
 
-	weasel (s: STRING) is
+	weasel (s: STRING)
 		do
 			io.putstring ("In weasel%N");
 			io.putstring (s); io.new_line;
 		end;
 
-	turkey is
+	turkey
 		do
 			io.putstring ("In turkey%N");
 		end;

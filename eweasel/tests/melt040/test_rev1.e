@@ -1,5 +1,5 @@
 
---| Copyright (c) 1993-2006 University of Southern California and contributors.
+--| Copyright (c) 1993-2020 University of Southern California, Eiffel Software and contributors.
 --| All rights reserved.
 --| Your use of this work is governed under the terms of the GNU General
 --| Public License version 2.
@@ -20,27 +20,27 @@ feature
 			g: TEST1 [STRING];
 			p: POINTER;
 		do
-			!!a;
+			create a;
 			io.putdouble (a # 13.47); io.new_line;
 			io.putdouble (a # 13); io.new_line;
 			io.putdouble (a # Double_const); io.new_line;
 			io.putdouble (a # Real_const); io.new_line;
 			io.putdouble (a # Integer_const); io.new_line;
-			!!b;
+			create b;
 			io.putint (b # 13); io.new_line;
 			io.putint (b # Integer_const); io.new_line;
-			!!c;
+			create c;
 			io.putreal (c # {REAL_32} 13.47); io.new_line;
 			io.putreal (c # 13); io.new_line;
 			io.putreal (c # Real_const); io.new_line;
 			io.putreal (c # Integer_const); io.new_line;
-			!!d;
+			create d;
 			io.putbool (d # True); io.new_line;
-			!!e;
+			create e;
 			io.putchar (e # 'Z'); io.new_line;
-			!!f;
+			create f;
 			print (f # p); io.new_line;
-			!!g;
+			create g;
 			io.putstring (g # "weasel"); io.new_line;
 			$INSTRUCTION;
 		end

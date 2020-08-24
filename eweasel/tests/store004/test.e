@@ -1,5 +1,5 @@
 
---| Copyright (c) 1993-2006 University of Southern California and contributors.
+--| Copyright (c) 1993-2020 University of Southern California, Eiffel Software and contributors.
 --| All rights reserved.
 --| Your use of this work is governed under the terms of the GNU General
 --| Public License version 2.
@@ -8,7 +8,7 @@ class TEST
 inherit
 	SERIALIZATION_HELPER
 
-creation
+create
 	make
 feature
 	make
@@ -18,8 +18,8 @@ feature
 			x: TEST2
 			l_objects: like retrieved_objects
 		do
-			from
-				!!list.make;
+			from 
+				create list.make;
 				i := 1
 			until
 				i > 1000

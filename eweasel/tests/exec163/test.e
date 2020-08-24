@@ -1,5 +1,5 @@
 
---| Copyright (c) 1993-2006 University of Southern California and contributors.
+--| Copyright (c) 1993-2020 University of Southern California, Eiffel Software and contributors.
 --| All rights reserved.
 --| Your use of this work is governed under the terms of the GNU General
 --| Public License version 2.
@@ -7,14 +7,14 @@
 class TEST
 inherit
 	MEMORY
-creation
+create
 	make
 feature
 
 	--| NOTE: Must set environment variable EIF_MEMORY_CHUNK to 262143
 	--| before executing system
 
-	make (args: ARRAY [STRING]) is
+	make (args: ARRAY [STRING])
 		local
 			item_count1, item_count2: INTEGER;
 			seed1, seed2: INTEGER;
@@ -47,10 +47,10 @@ feature
 			when 3 then
 				allocate_tiny
 			end
-			print (chunk_size >= selected_chunk_size); io.new_line
-			!!r.set_seed (seed1);
-			!!s.set_seed (seed2);
-			!!list_of_lists.make_filled (item_count1);
+			print (chunk_size >= selected_chunk_size); io.new_line 
+			create r.set_seed (seed1) ;
+			create s.set_seed (seed2) ;
+			create list_of_lists.make_filled (item_count1);
 			from
 				k := 1;
 				r.start;
@@ -74,13 +74,13 @@ feature
 			end
 		end;
 
-	new_list (item_count: INTEGER): ARRAYED_LIST [TEST2] is
+	new_list (item_count: INTEGER): ARRAYED_LIST [TEST2]
 		local
 			k: INTEGER;
 		do
 			from
-				k := 1;
-				!!Result.make (item_count);
+				k := 1 ;
+				create Result.make (item_count);
 				Result.wipe_out;
 			until
 				k > item_count

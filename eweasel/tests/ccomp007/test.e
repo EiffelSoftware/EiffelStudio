@@ -1,5 +1,5 @@
 
---| Copyright (c) 1993-2006 University of Southern California and contributors.
+--| Copyright (c) 1993-2020 University of Southern California, Eiffel Software and contributors.
 --| All rights reserved.
 --| Your use of this work is governed under the terms of the GNU General
 --| Public License version 2.
@@ -9,19 +9,19 @@
 	--	`assertion (all)' in the Ace file.  
 	-- Finish_freezing.  Generated C code won't compile.
 
-indexing
+note
 	
 class TEST
 
 inherit
 	TEST1
-creation
+create
 	
 	make
 
 feature  -- Creation
 
-	make is
+	make
 		local
 			s: STRING;
 			b: BOOLEAN;

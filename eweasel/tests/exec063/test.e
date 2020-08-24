@@ -1,15 +1,15 @@
 
---| Copyright (c) 1993-2006 University of Southern California and contributors.
+--| Copyright (c) 1993-2020 University of Southern California, Eiffel Software and contributors.
 --| All rights reserved.
 --| Your use of this work is governed under the terms of the GNU General
 --| Public License version 2.
 
 class TEST
-creation
+create
 	make
 feature
 
-	make (args: ARRAY [STRING]) is
+	make (args: ARRAY [STRING])
 		local
 			r: RANDOM;
 			k, seed, item_count, string_len, n: INTEGER;
@@ -19,8 +19,8 @@ feature
 			seed := 47;
 			item_count := args.item (1).to_integer;
 			string_len := args.item (2).to_integer;
-			from
-				!!r.set_seed (seed);
+			from 
+				create r.set_seed (seed);
 				r.start;
 				k := 1;
 			until
@@ -46,18 +46,18 @@ feature
 	list2: LIST [STRING];
 	list3: LIST [STRING];
 
-	make_list (n, len: INTEGER): LINKED_LIST [STRING] is
+	make_list (n, len: INTEGER): LINKED_LIST [STRING]
 		local
 			k: INTEGER
 			str: STRING;
-		do
-			!!Result.make;
+		do 
+			create Result.make;
 			from
 				k := 1;
 			until
 				k > n
-			loop
-				!!str.make (len);
+			loop 
+				create str.make (len);
 				str.fill_blank;
 				Result.extend (str);
 				k := k + 1;

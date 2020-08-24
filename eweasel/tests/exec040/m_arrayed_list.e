@@ -1,5 +1,5 @@
 
---| Copyright (c) 1993-2006 University of Southern California and contributors.
+--| Copyright (c) 1993-2020 University of Southern California, Eiffel Software and contributors.
 --| All rights reserved.
 --| Your use of this work is governed under the terms of the GNU General
 --| Public License version 2.
@@ -7,19 +7,19 @@
 class M_ARRAYED_LIST [G]
 inherit
 	ARRAYED_LIST [G]
-creation
+create
 	make
 feature
 
-	process is
-		do
-			!!list.make (count);
+	process
+		do 
+			create list.make (count);
 			process_range (lower, upper);
 		end;
 
 	list: ARRAYED_LIST [G];
 	
-	process_range (low, high: INTEGER) is
+	process_range (low, high: INTEGER)
 		local
 			mid: INTEGER;
 		do
@@ -31,7 +31,7 @@ feature
 			end
 		end;
 
-	build_list (item_count: INTEGER) is
+	build_list (item_count: INTEGER)
 		local
 			k: INTEGER;
 			def: G;

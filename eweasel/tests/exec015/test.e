@@ -1,5 +1,5 @@
 
---| Copyright (c) 1993-2006 University of Southern California and contributors.
+--| Copyright (c) 1993-2020 University of Southern California, Eiffel Software and contributors.
 --| All rights reserved.
 --| Your use of this work is governed under the terms of the GNU General
 --| Public License version 2.
@@ -11,19 +11,19 @@
 class TEST
 inherit
 	ARGUMENTS
-creation
+create
 	make
 feature
 	
-	make is
+	make
 		local
 			fname: STRING;
 			f: PLAIN_TEXT_FILE;
 			k: INTEGER;
 		do
 			fname := argument (1);
-			from
-				!!f.make_open_read (fname);
+			from 
+				create f.make_open_read (fname);
 			until
 				f.end_of_file
 			loop

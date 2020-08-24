@@ -1,5 +1,5 @@
 
---| Copyright (c) 1993-2006 University of Southern California and contributors.
+--| Copyright (c) 1993-2020 University of Southern California, Eiffel Software and contributors.
 --| All rights reserved.
 --| Your use of this work is governed under the terms of the GNU General
 --| Public License version 2.
@@ -9,10 +9,10 @@
 	-- Finish_freezing.  Execute `test'.  Ends with illegal instruction.
 
 class TEST
-creation
+create
 	make
 feature
-	make is
+	make
 		local
 			k: INTEGER
 		do
@@ -29,14 +29,14 @@ feature
 			end
 		end;
 		
-	waste_memory is
+	waste_memory
 		local
 			list: LINKED_LIST [INTEGER];
 			k: INTEGER;
 		do
 			io.putstring ("Entering waste_memory%N");
-			from
-				!!list.make;
+			from 
+				create list.make;
 				k := 1
 			until
 				k > 1_000_000

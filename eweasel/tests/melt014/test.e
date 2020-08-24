@@ -1,5 +1,5 @@
 
---| Copyright (c) 1993-2006 University of Southern California and contributors.
+--| Copyright (c) 1993-2020 University of Southern California, Eiffel Software and contributors.
 --| All rights reserved.
 --| Your use of this work is governed under the terms of the GNU General
 --| Public License version 2.
@@ -7,15 +7,15 @@
 class TEST
 inherit
 	TEST1
-creation
+create
 	make
 feature
 
-	make is
+	make
 		do
 			io.putstring ("Entering TEST make%N");
-			name := "Weasel";
-			!!y.make_me (Current);
+			name := "Weasel" ;
+			create y.make_me (Current);
 			if y = Void then
 				io.putstring ("Y is Void%N");
 			else
@@ -27,7 +27,7 @@ feature
 
 	y: TEST1;
 	
-	set_y (val: TEST1) is
+	set_y (val: TEST1)
 		do
 			y := val;
 		end

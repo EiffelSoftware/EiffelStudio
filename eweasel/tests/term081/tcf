@@ -1,5 +1,5 @@
 
---| Copyright (c) 1993-2006 University of Southern California and contributors.
+--| Copyright (c) 1993-2020 University of Southern California, Eiffel Software and contributors.
 --| All rights reserved.
 --| Your use of this work is governed under the terms of the GNU General
 --| Public License version 2.
@@ -9,18 +9,18 @@
 test_name 	 invariant-creation-expr
 test_description A class with an explicit creation type in a creation expression that appears in the class invariant causes compiler to die.
 
-define INVARIANT "!STRING! s.make (0)"
+define INVARIANT "create {STRING} s.make (0)"
 copy_sub 	 Ace $TEST Ace
 copy_sub	 test.e $CLUSTER test.e
 compile_melted
 compile_result 	validity_error TEST VGCC(5) VKCN(3)
 	
-define INVARIANT "!STRING!.make (0)"
+define INVARIANT "create {STRING}.make (0)"
 copy_sub	 test.e $CLUSTER test.e
 resume_compile
 compile_result 	validity_error TEST VWBE
 	
-define INVARIANT "(!STRING!.make (47)).capacity = 47"
+define INVARIANT "(create {STRING}.make (47)).capacity = 47"
 copy_sub	 test.e $CLUSTER test.e
 resume_compile
 compile_result 	ok

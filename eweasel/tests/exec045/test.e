@@ -41,7 +41,7 @@ feature
 			until
 				k > limit
 			loop
-				!!s.make (100);
+				create s.make (100);
 				s.fill_blank;
 				k := k + 1;
 			end

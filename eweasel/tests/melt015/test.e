@@ -1,14 +1,14 @@
 
---| Copyright (c) 1993-2006 University of Southern California and contributors.
+--| Copyright (c) 1993-2020 University of Southern California, Eiffel Software and contributors.
 --| All rights reserved.
 --| Your use of this work is governed under the terms of the GNU General
 --| Public License version 2.
 
 class TEST
-creation
+create
 	make
 feature
-	make is
+	make
 		local
 			k: INTEGER;
 			t: TEST1
@@ -17,10 +17,10 @@ feature
 				k := 1;
 			until
 				k > 100000
-			loop
+			loop 
 				-- io.putstring ("Creating instance of TEST1: ");
 				-- io.putint (k); io.new_line;
-				!!t;
+				create t;
 				k := k + 1;
 			end
 		end

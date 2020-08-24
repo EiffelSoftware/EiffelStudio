@@ -1,15 +1,15 @@
 
---| Copyright (c) 1993-2006 University of Southern California and contributors.
+--| Copyright (c) 1993-2020 University of Southern California, Eiffel Software and contributors.
 --| All rights reserved.
 --| Your use of this work is governed under the terms of the GNU General
 --| Public License version 2.
 
 class TEST
-creation
+create
 	make
 feature
 
-	make (args: ARRAY [STRING]) is
+	make (args: ARRAY [STRING])
 		local
 			item_count, seed1, seed2, limit, size: INTEGER;
 			k, pos, count: INTEGER;
@@ -20,10 +20,10 @@ feature
 			item_count :=  args.item (1).to_integer;
 			seed1 :=  args.item (2).to_integer;
 			seed2 :=  args.item (3).to_integer;
-			limit :=  args.item (4).to_integer;
-			!!r.set_seed (seed1);
-			!!s.set_seed (seed2);
-			!!list_of_lists.make_filled (item_count);
+			limit :=  args.item (4).to_integer ;
+			create r.set_seed (seed1) ;
+			create s.set_seed (seed2) ;
+			create list_of_lists.make_filled (item_count);
 			from
 				k := 1;
 				r.start;
@@ -43,7 +43,7 @@ feature
 			end
 		end;
 
-	new_list: ARRAY [STRING] is
+	new_list: ARRAY [STRING]
 		local
 			k: INTEGER;
 		do

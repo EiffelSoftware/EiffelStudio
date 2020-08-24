@@ -1,5 +1,5 @@
 
---| Copyright (c) 1993-2006 University of Southern California and contributors.
+--| Copyright (c) 1993-2020 University of Southern California, Eiffel Software and contributors.
 --| All rights reserved.
 --| Your use of this work is governed under the terms of the GNU General
 --| Public License version 2.
@@ -10,12 +10,12 @@ feature
 
 	weasel: like wimp
 
-	set_weasel (val: G) is
+	set_weasel (val: G)
 		do
 			weasel := val;
 		end;
 	
-	do_weasel is
+	do_weasel
 		do
 			io.putstring ("Hey you weasel%N");
 		end

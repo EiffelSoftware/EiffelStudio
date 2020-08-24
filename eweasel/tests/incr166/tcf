@@ -1,5 +1,5 @@
 
---| Copyright (c) 1993-2006 University of Southern California and contributors.
+--| Copyright (c) 1993-2020 University of Southern California, Eiffel Software and contributors.
 --| All rights reserved.
 --| Your use of this work is governed under the terms of the GNU General
 --| Public License version 2.
@@ -10,7 +10,7 @@ test_name 	 change-external-melt
 test_description A sequence of changes where system is melted several times, with varying versions of an external routine, then made deferred which causes a VGCC(2) error, then made external again and then melted causes the compiler to die with a segmentation fault in `real_body_id'.
 
 define DEFERRED ""
-define CREATION "creation make"
+define CREATION "create make"
 define BODY "external "C""
 copy_sub 	Ace $TEST Ace
 copy_raw 	test.e $CLUSTER test.e
@@ -31,7 +31,7 @@ compile_melted
 compile_result 	validity_error TEST VGCC(2)
 
 define DEFERRED ""
-define CREATION "creation make"
+define CREATION "create make"
 define BODY "external "C" alias "gc_stop""
 copy_sub 	test1.e $CLUSTER test1.e
 resume_compile

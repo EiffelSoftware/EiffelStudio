@@ -1,16 +1,16 @@
 class
 	TEST
 
-creation
+create
 	make
 
 feature 
 
-	make is
+	make
 		local
 			a: A
-		do
-			!!a.make
+		do 
+			create a.make
 		end
 
 end

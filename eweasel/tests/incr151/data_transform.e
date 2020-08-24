@@ -1,5 +1,5 @@
 
---| Copyright (c) 1993-2006 University of Southern California and contributors.
+--| Copyright (c) 1993-2020 University of Southern California, Eiffel Software and contributors.
 --| All rights reserved.
 --| Your use of this work is governed under the terms of the GNU General
 --| Public License version 2.
@@ -28,14 +28,14 @@ feature
 
 	immediate_error_propagation: BOOLEAN
 
-	initialize is
+	initialize
 		do
-			precursor
-			!!output_buffer.make (output_capacity)
-			!!error_buffer.make (error_capacity)
+			precursor 
+			create output_buffer.make (output_capacity) 
+			create error_buffer.make (error_capacity)
 		end
 
-	reset is
+	reset
 		do
 			precursor;
 		end

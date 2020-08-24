@@ -1,14 +1,14 @@
 
---| Copyright (c) 1993-2006 University of Southern California and contributors.
+--| Copyright (c) 1993-2020 University of Southern California, Eiffel Software and contributors.
 --| All rights reserved.
 --| Your use of this work is governed under the terms of the GNU General
 --| Public License version 2.
 
 class TEST
-creation
+create
 	make
 feature
-	make is
+	make
 		local
 			a: INTEGER;
 			b: BOOLEAN;
@@ -16,18 +16,18 @@ feature
 			d: DOUBLE;
 			e: REAL;
 			f, g: POINTER;
-		do
-			!!a;
-			a := a + 1;
-			!!b;
-			b := b or True;
-			!!c;
-			c := 'A';
-			!!d;
-			d := d + 1.3;
-			!!e;
-			e := e + {REAL_32} 1.3;
-			!!f;
+		do 
+			create a;
+			a := a + 1 ;
+			create b;
+			b := b or True ;
+			create c;
+			c := 'A' ;
+			create d;
+			d := d + 1.3 ;
+			create e;
+			e := e + {REAL_32} 1.3 ;
+			create f;
 			f := g;
 		end
 

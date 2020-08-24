@@ -1,5 +1,5 @@
 
---| Copyright (c) 1993-2006 University of Southern California and contributors.
+--| Copyright (c) 1993-2020 University of Southern California, Eiffel Software and contributors.
 --| All rights reserved.
 --| Your use of this work is governed under the terms of the GNU General
 --| Public License version 2.
@@ -12,10 +12,10 @@
 	--	void the second time.
 
 class TEST 
-creation
+create
 	make
 feature
-	make is
+	make
 		do
 			if (control = Void) then
 				io.putstring("Test1: control is Void%N");
@@ -25,9 +25,9 @@ feature
 			end;
 		end;
 
-	control: STRING is
-		once
-			!!Result.make (10);
+	control: STRING
+		once 
+			create Result.make (10);
 			Result.append("weasel");
 		end
 end 

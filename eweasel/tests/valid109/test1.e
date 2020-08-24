@@ -1,24 +1,24 @@
 
---| Copyright (c) 1993-2006 University of Southern California and contributors.
+--| Copyright (c) 1993-2020 University of Southern California, Eiffel Software and contributors.
 --| All rights reserved.
 --| Your use of this work is governed under the terms of the GNU General
 --| Public License version 2.
 
 class TEST1
-creation
+create
 	make
 feature
-	make is
+	make
 		local
 			t: TEST4;
 			w: WEASEL;
 			list: LINKED_LIST [WEASEL];
-		do
-			!!t;
-			!!w;
-			!!list.make;
-			list.extend (w);
-			!!a.make;
+		do 
+			create t ;
+			create w ;
+			create list.make;
+			list.extend (w) ;
+			create a.make;
 			io.putstring ("Trying%N");
 			a.b.try (t, list);
 			io.putstring ("Done%N");

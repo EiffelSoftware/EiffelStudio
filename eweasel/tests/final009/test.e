@@ -1,14 +1,14 @@
 
---| Copyright (c) 1993-2006 University of Southern California and contributors.
+--| Copyright (c) 1993-2020 University of Southern California, Eiffel Software and contributors.
 --| All rights reserved.
 --| Your use of this work is governed under the terms of the GNU General
 --| Public License version 2.
      
 class TEST
-creation
+create
 	make
 feature
-	make (args: ARRAY [STRING]) is
+	make (args: ARRAY [STRING])
 		local
 			k, count, size, interval: INTEGER;
 			a: ARRAY [STRING];
@@ -43,9 +43,9 @@ feature
 			end
 		end
 
-	the_weasel: STRING is "weasel";
+	the_weasel: STRING = "weasel";
 
-	waste_memory (limit: INTEGER) is
+	waste_memory (limit: INTEGER)
 		local
 			k: INTEGER;
 			s: STRING;
@@ -54,8 +54,8 @@ feature
 				k := 1;
 			until
 				k > limit
-			loop
-				!!s.make (100);
+			loop 
+				create s.make (100);
 				s.fill_blank;
 				k := k + 1;
 			end

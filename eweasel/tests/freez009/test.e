@@ -1,15 +1,15 @@
 
---| Copyright (c) 1993-2006 University of Southern California and contributors.
+--| Copyright (c) 1993-2020 University of Southern California, Eiffel Software and contributors.
 --| All rights reserved.
 --| Your use of this work is governed under the terms of the GNU General
 --| Public License version 2.
 
 class TEST
-creation
+create
 	make
 feature
 
-	make (args: ARRAY [STRING]) is
+	make (args: ARRAY [STRING])
 		do
 			try (args.item (1).to_integer);
 			io.putstring (x.weasel); io.new_line;
@@ -17,11 +17,11 @@ feature
 			io.putstring (x.weasel); io.new_line;
 		end;
 
-	try (limit: INTEGER) is
+	try (limit: INTEGER)
 		local
 			source: TEST1;
-		do
-			!!source;
+		do 
+			create source;
 			source.sub_object.set_weasel ("weasel");
 			x ?= source.sub_object;
 			if x /= Void then
@@ -33,7 +33,7 @@ feature
 
 	x: TEST2;
 
-	waste_memory (limit: INTEGER) is
+	waste_memory (limit: INTEGER)
 		local
 			k: INTEGER;
 			s: STRING;
@@ -42,8 +42,8 @@ feature
 				k := 1;
 			until
 				k > limit
-			loop
-				!!s.make (100);
+			loop 
+				create s.make (100);
 				s.fill_blank;
 				k := k + 1;
 			end

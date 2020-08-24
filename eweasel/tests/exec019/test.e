@@ -1,5 +1,5 @@
 
---| Copyright (c) 1993-2006 University of Southern California and contributors.
+--| Copyright (c) 1993-2020 University of Southern California, Eiffel Software and contributors.
 --| All rights reserved.
 --| Your use of this work is governed under the terms of the GNU General
 --| Public License version 2.
@@ -12,17 +12,17 @@ class TEST
 
 inherit
 	ARGUMENTS
-creation
+create
 	make
 feature
 
-	make is
+	make
 		local
 			s: STRING;
 			k, count: INTEGER;
 		do
-			count := argument (1).to_integer;
-			!!s.make (20);
+			count := argument (1).to_integer ;
+			create s.make (20);
 			s.append ("turkey");
 			from
 				k := 1;
@@ -35,9 +35,9 @@ feature
 			end
 		end;
 
-	animal: STRING is "weasel";
+	animal: STRING = "weasel";
 
-	concat (list: ARRAY [STRING]): STRING is
+	concat (list: ARRAY [STRING]): STRING
 		local
 			k, total_len: INTEGER;
 		do
@@ -48,9 +48,9 @@ feature
 			loop
 				total_len := total_len + list.item (k).count;
 				k := k + 1;
-			end;
+			end ;
 			
-			!!Result.make (total_len);
+			create Result.make (total_len);
 			from
 				k := list.lower;
 			until
@@ -61,15 +61,15 @@ feature
 			end
 		end;
 
-	int_to_string (n: INTEGER): STRING is
-		do
-			!!Result.make (13);
+	int_to_string (n: INTEGER): STRING
+		do 
+			create Result.make (13);
 			Result.append_integer (n);
 		end;
 	
-	double_to_string (n: DOUBLE): STRING is
-		do
-			!!Result.make (13);
+	double_to_string (n: DOUBLE): STRING
+		do 
+			create Result.make (13);
 			Result.append_double (n);
 		end
 end

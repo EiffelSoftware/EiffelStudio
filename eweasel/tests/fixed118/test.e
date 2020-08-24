@@ -1,5 +1,5 @@
 
---| Copyright (c) 1993-2006 University of Southern California and contributors.
+--| Copyright (c) 1993-2020 University of Southern California, Eiffel Software and contributors.
 --| All rights reserved.
 --| Your use of this work is governed under the terms of the GNU General
 --| Public License version 2.
@@ -10,18 +10,18 @@
 	-- Run `test'.
 class 
 	TEST
-creation
+create
 	make
 feature
 	
-	make is
+	make
 		local
 			x: TEST1;
 			retrying: BOOLEAN;
 			next: INTEGER;
 		do
-			if not retrying then
-				!!x;
+			if not retrying then 
+				create x;
 				next := preconditions;
 			end;	
 			if next = preconditions then	
@@ -61,6 +61,6 @@ feature
 			retry;
 		end;
 
-	preconditions, postconditions, invariants, loops, checks: INTEGER is unique;
+	preconditions, postconditions, invariants, loops, checks: INTEGER = unique;
 
 end

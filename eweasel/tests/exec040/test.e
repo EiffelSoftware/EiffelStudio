@@ -1,15 +1,15 @@
 
---| Copyright (c) 1993-2006 University of Southern California and contributors.
+--| Copyright (c) 1993-2020 University of Southern California, Eiffel Software and contributors.
 --| All rights reserved.
 --| Your use of this work is governed under the terms of the GNU General
 --| Public License version 2.
 
 class TEST
-creation
+create
 	make
 feature
 
-	make (args: ARRAY [STRING]) is
+	make (args: ARRAY [STRING])
 		local
 			item_count: INTEGER;
 			seed: INTEGER;
@@ -22,15 +22,15 @@ feature
 			list.process;
 		end;
 
-	new_list (item_count, seed: INTEGER): M_ARRAYED_LIST [INTEGER] is
+	new_list (item_count, seed: INTEGER): M_ARRAYED_LIST [INTEGER]
 		local
 			r: RANDOM;
 			k: INTEGER;
-		do
-			!!r.set_seed (seed);
+		do 
+			create r.set_seed (seed);
 			from
-				k := 1;
-				!!Result.make (item_count);
+				k := 1 ;
+				create Result.make (item_count);
 				r.start;
 			until
 				k > item_count

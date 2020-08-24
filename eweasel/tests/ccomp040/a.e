@@ -2,11 +2,11 @@ deferred class A [G]
 
 feature
 
-	f (v: G; i: INTEGER): DOUBLE is
+	f (v: G; i: INTEGER): DOUBLE
 		deferred
 		end
 
-	g is
+	g
 		local
 			d: DOUBLE
 		do

@@ -1,5 +1,5 @@
 
---| Copyright (c) 1993-2006 University of Southern California and contributors.
+--| Copyright (c) 1993-2020 University of Southern California, Eiffel Software and contributors.
 --| All rights reserved.
 --| Your use of this work is governed under the terms of the GNU General
 --| Public License version 2.
@@ -8,16 +8,16 @@ class TEST
 inherit
 	EXCEPTIONS
 	MEM_CONST
-creation
+create
 	make
 feature
-	make (args: ARRAY [STRING]) is
+	make (args: ARRAY [STRING])
 		local
 			k, count: INTEGER;
 		do
 			no_message_on_failure
-			count := args.item (1).to_integer;
-			!!mem.make (Eiffel_memory);
+			count := args.item (1).to_integer ;
+			create mem.make (Eiffel_memory);
 			from 
 				k := 1; 
 			until 
@@ -28,7 +28,7 @@ feature
 			end
 		end
 	
-	try (max: INTEGER) is
+	try (max: INTEGER)
 		local
 			tried: BOOLEAN
 			count: INTEGER;
@@ -41,7 +41,7 @@ feature
 			retry;
 		end
 	
-	weasel is
+	weasel
 		local
 			x: TEST1;
 			y: INTEGER;
@@ -51,9 +51,9 @@ feature
 	
 	mem: MEM_INFO;
 
-	threshold: INTEGER is 4_000_000;
+	threshold: INTEGER = 4_000_000;
 
-	check_memory is
+	check_memory
 		do
 			mem.update (C_memory);
 			if mem.used > threshold then

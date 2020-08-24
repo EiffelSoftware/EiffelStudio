@@ -1,4 +1,4 @@
-indexing
+note
 	date: "$Date$";
 	revision: "$Revision$"
 
@@ -13,13 +13,13 @@ inherit
 			mirrored
 		end
 
-creation
+create
 	make, make_from_string, clone_from_string,
 	make_from_c
 
 feature -- Creation
 
-	clone_from_string (s: STRING) is
+	clone_from_string (s: STRING)
 			-- Initialize from the characters of `s'.
 		require
 			string_exists: s /= void
@@ -33,7 +33,7 @@ feature -- Creation
 
 feature -- Basic operations
 
-	appended (other: detachable ANY): ES_STRING is
+	appended (other: detachable ANY): ES_STRING
 		do
 			Result := twin
 			if other /= Void then
@@ -43,7 +43,7 @@ feature -- Basic operations
 			constant: equal (Current, old twin)
 		end
 
-	plus alias "+" (other: detachable ANY): ES_STRING is
+	plus alias "+" (other: detachable ANY): ES_STRING
 		do
 			Result := twin
 			if other /= Void then
@@ -56,21 +56,21 @@ feature -- Basic operations
 
 feature -- Status report
 
-	is_left_adjusted: BOOLEAN is
+	is_left_adjusted: BOOLEAN
 		do
 			Result := item (lower) /= ' '
 		ensure
 			no_initial_blank: item (1) /= ' '
 		end
 
-	is_right_adjusted: BOOLEAN is
+	is_right_adjusted: BOOLEAN
 		do
 			Result := item (upper) /= ' '
 		ensure
 			no_final_blank: item (count) /= ' '
 		end
 
-	upper: INTEGER is   
+	upper: INTEGER   
                           -- Synonym of count   
                   do   
                           Result := count   
@@ -78,7 +78,7 @@ feature -- Status report
    
 feature -- Element change
 
-	shorten_to (i: INTEGER) is
+	shorten_to (i: INTEGER)
 		require
 			great_enough: i >= 1
 			small_enough: i <= count
@@ -97,7 +97,7 @@ feature -- Element change
 
 feature -- Conversion
 
-	mirrored: like Current is
+	mirrored: like Current
 			-- Mirror image of string;
 			-- result for "Hello world" is "dlrow olleH".
 		do

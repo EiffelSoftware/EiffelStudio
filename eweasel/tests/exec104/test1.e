@@ -1,5 +1,5 @@
 
---| Copyright (c) 1993-2006 University of Southern California and contributors.
+--| Copyright (c) 1993-2020 University of Southern California, Eiffel Software and contributors.
 --| All rights reserved.
 --| Your use of this work is governed under the terms of the GNU General
 --| Public License version 2.
@@ -10,19 +10,19 @@ inherit
 		redefine
 			dispose
 		end
-creation
+create
 	make
 feature
 	
-	make is
-		do
-			!!s.make (10000);
+	make
+		do 
+			create s.make (10000);
 			s.fill_blank;
 		end
 	
 	s: STRING;
 	
-	dispose is
+	dispose
 		local
 			a, b: INTEGER;
 		do

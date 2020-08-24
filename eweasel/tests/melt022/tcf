@@ -1,5 +1,5 @@
 
---| Copyright (c) 1993-2006 University of Southern California and contributors.
+--| Copyright (c) 1993-2020 University of Southern California, Eiffel Software and contributors.
 --| All rights reserved.
 --| Your use of this work is governed under the terms of the GNU General
 --| Public License version 2.
@@ -17,7 +17,7 @@ compile_melted
 compile_result 	ok
 
 define		LOCALS "list: LINKED_LIST [STRING]"
-define		BODY "!!list.make; list.extend ("weasel"); io.putstring (list.i_th (1)); io.new_line;"
+define		BODY "create list.make; list.extend ("weasel"); io.putstring (list.i_th (1)); io.new_line;"
 copy_sub 	test.e $CLUSTER test.e
 compile_melted
 compile_result 	ok

@@ -1,5 +1,5 @@
 
---| Copyright (c) 1993-2006 University of Southern California and contributors.
+--| Copyright (c) 1993-2020 University of Southern California, Eiffel Software and contributors.
 --| All rights reserved.
 --| Your use of this work is governed under the terms of the GNU General
 --| Public License version 2.
@@ -10,11 +10,11 @@ inherit
 		redefine
 			weasel_amount
 		end
-creation
+create
 	make
 feature
 
-	weasel_amount: INTEGER is 
+	weasel_amount: INTEGER 
 		external
 			"C [macro %"$INCLUDE_FILE%"]"
 		alias

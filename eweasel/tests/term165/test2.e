@@ -1,5 +1,4 @@
-indexing
-	description: ""
+note
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -31,6 +30,6 @@ feature
 			create s.make_empty
 		end
 
-	s: !STRING
+	s: attached STRING
 
 end

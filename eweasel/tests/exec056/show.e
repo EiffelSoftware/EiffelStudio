@@ -1,12 +1,12 @@
 
---| Copyright (c) 1993-2006 University of Southern California and contributors.
+--| Copyright (c) 1993-2020 University of Southern California, Eiffel Software and contributors.
 --| All rights reserved.
 --| Your use of this work is governed under the terms of the GNU General
 --| Public License version 2.
 
 class SHOW
 feature
-	show (s: STRING; b: BOOLEAN): BOOLEAN is
+	show (s: STRING; b: BOOLEAN): BOOLEAN
 		do
 			io.putstring (s);
 			io.new_line;
@@ -20,8 +20,8 @@ feature
 
 feature {NONE}
 
-	count: INTEGER_REF is
-		once
-			!!Result;
+	count: INTEGER_REF
+		once 
+			create Result;
 		end
 end

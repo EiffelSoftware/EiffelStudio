@@ -1,5 +1,5 @@
 
---| Copyright (c) 1993-2006 University of Southern California and contributors.
+--| Copyright (c) 1993-2020 University of Southern California, Eiffel Software and contributors.
 --| All rights reserved.
 --| Your use of this work is governed under the terms of the GNU General
 --| Public License version 2.
@@ -7,11 +7,11 @@
 class TEST
 inherit
 	MEMORY
-creation
+create
 	make
 feature
 
-	make (args: ARRAY [STRING]) is
+	make (args: ARRAY [STRING])
 		local
 			item_count1, item_count2, item_count3: INTEGER;
 			seed1, seed2, seed3: INTEGER;
@@ -26,11 +26,11 @@ feature
 			item_count3 := args.item (3).to_integer;
 			seed1 := args.item (4).to_integer;
 			seed2 := args.item (5).to_integer;
-			seed3 := 44;
-			!!r.set_seed (seed1);
-			!!s.set_seed (seed2);
-			!!t.set_seed (seed3);
-			!!list_of_lists.make_filled (item_count1);
+			seed3 := 44 ;
+			create r.set_seed (seed1) ;
+			create s.set_seed (seed2) ;
+			create t.set_seed (seed3) ;
+			create list_of_lists.make_filled (item_count1);
 			from
 				k := 1;
 				r.start;
@@ -53,19 +53,19 @@ feature
 			end
 		end;
 
-	new_list (t: RANDOM; item_count, max_len: INTEGER): ARRAYED_LIST [STRING] is
+	new_list (t: RANDOM; item_count, max_len: INTEGER): ARRAYED_LIST [STRING]
 		local
 			k: INTEGER;
 			s: STRING;
 		do
 			from
-				k := 1;
-				!!Result.make (item_count);
+				k := 1 ;
+				create Result.make (item_count);
 				Result.wipe_out;
 			until
 				k > item_count
-			loop
-				!!s.make (t.item \\ max_len + 1);
+			loop 
+				create s.make (t.item \\ max_len + 1);
 				s.fill_blank;
 				Result.extend (s);
 				t.forth;

@@ -1,5 +1,5 @@
 
---| Copyright (c) 1993-2006 University of Southern California and contributors.
+--| Copyright (c) 1993-2020 University of Southern California, Eiffel Software and contributors.
 --| All rights reserved.
 --| Your use of this work is governed under the terms of the GNU General
 --| Public License version 2.
@@ -7,10 +7,10 @@
 class TEST
 inherit
 	MEMORY
-creation
+create
 	make
 feature
-	make is
+	make
 		local
 			list: ARRAYED_LIST [STRING];
 			k, max: INTEGER;
@@ -19,8 +19,8 @@ feature
 		do
 			s := "weasels and ermines and stoats"
 			max := 3
-			from
-				!!list.make_filled (max)
+			from 
+				create list.make_filled (max)
 				k := 1
 			until
 				k > max

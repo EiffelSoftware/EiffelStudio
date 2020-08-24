@@ -1,28 +1,28 @@
 
---| Copyright (c) 1993-2006 University of Southern California and contributors.
+--| Copyright (c) 1993-2020 University of Southern California, Eiffel Software and contributors.
 --| All rights reserved.
 --| Your use of this work is governed under the terms of the GNU General
 --| Public License version 2.
 
 class TEST
-creation
+create
 	make
 feature
 	
-	make is
+	make
 		do
 			io.putbool (k = m); io.new_line;
-			io.putbool (equal (k, m)); io.new_line;
-			!!x1.make;
-			!!x2.make;
-			!!x3.make;
-			!!x4.make;
-			!!x5.make;
-			!!x6.make;
-			!!x7.make;
-			!!x8.make;
-			!!x9.make;
-			!!x10.make;
+			io.putbool (equal (k, m)); io.new_line ;
+			create x1.make ;
+			create x2.make ;
+			create x3.make ;
+			create x4.make ;
+			create x5.make ;
+			create x6.make ;
+			create x7.make ;
+			create x8.make ;
+			create x9.make ;
+			create x10.make;
 		end
 	
 	k, m: INTEGER;

@@ -1,5 +1,5 @@
 
---| Copyright (c) 1993-2006 University of Southern California and contributors.
+--| Copyright (c) 1993-2020 University of Southern California, Eiffel Software and contributors.
 --| All rights reserved.
 --| Your use of this work is governed under the terms of the GNU General
 --| Public License version 2.
@@ -22,7 +22,7 @@ copy_sub 	 test.e  $CLUSTER test.e
 compile_melted
 compile_result 	 validity_error TEST VLEC
 
-define		 CREATION_INST "!!attribute_field.do_nothing"
+define		 CREATION_INST "create attribute_field.do_nothing"
 copy_sub 	 test1.e  $CLUSTER test1.e
 resume_compile
 compile_result 	 validity_error TEST VLEC
@@ -37,7 +37,7 @@ copy_sub 	 test.e  $CLUSTER test.e
 resume_compile
 compile_result 	 ok
 
-define		 CREATION_INST "!!attribute_field.do_nothing"
+define		 CREATION_INST "create attribute_field.do_nothing"
 copy_sub 	 test1.e  $CLUSTER test1.e
 compile_melted
 compile_result 	 validity_error TEST1 VGCC(6)

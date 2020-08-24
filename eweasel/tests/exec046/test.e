@@ -1,5 +1,5 @@
 
---| Copyright (c) 1993-2006 University of Southern California and contributors.
+--| Copyright (c) 1993-2020 University of Southern California, Eiffel Software and contributors.
 --| All rights reserved.
 --| Your use of this work is governed under the terms of the GNU General
 --| Public License version 2.
@@ -13,11 +13,11 @@ inherit
 
 	ANY
 
-creation
+create
 	make
 feature
 	
-	make (args: ARRAY [STRING]) is
+	make (args: ARRAY [STRING])
 		local
 			k: INTEGER
 		do
@@ -37,12 +37,12 @@ feature
 			end
 		end
 	
-	try (val: INTEGER) is
+	try (val: INTEGER)
 		local
 			tried: BOOLEAN;
 		do
-			if f = Void then
-				!!f.make (1);
+			if f = Void then 
+				create f.make (1);
 			end
 			if not tried then
 				f.set_value (val);

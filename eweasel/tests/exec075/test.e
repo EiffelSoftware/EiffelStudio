@@ -1,5 +1,5 @@
 
---| Copyright (c) 1993-2006 University of Southern California and contributors.
+--| Copyright (c) 1993-2020 University of Southern California, Eiffel Software and contributors.
 --| All rights reserved.
 --| Your use of this work is governed under the terms of the GNU General
 --| Public License version 2.
@@ -7,16 +7,16 @@
 class TEST
 inherit
 	MEM_CONST
-creation
+create
 	make
 
 feature
 
-	make (args: ARRAY [STRING]) is
+	make (args: ARRAY [STRING])
 		local
 			k, interval, max: INTEGER;
-		do
-			!!mem.make (Eiffel_memory);
+		do 
+			create mem.make (Eiffel_memory);
 			interval :=  args.item (1).to_integer;
 			max :=  args.item (2).to_integer;
 			from
@@ -26,15 +26,15 @@ feature
 			loop
 				if (k \\ interval) = 0 then
 					verify_memory_consistency;
-				end;
-				!!s.make (k);
+				end ;
+				create s.make (k);
 				k := k + 1;
 			end
 		end;
 
 	s: STRING;
 			
-	verify_memory_consistency is
+	verify_memory_consistency
 		do
 			mem.update (Eiffel_memory);
 			check_memory (mem);
@@ -46,7 +46,7 @@ feature
 	
 	mem: MEM_INFO;
 
-	check_memory (m: MEM_INFO) is
+	check_memory (m: MEM_INFO)
 		do
 			if m.used < 0 or m.free < 0 or m.overhead < 0 or
 			   m.total < 0 or (m.used + m.free + m.overhead /=
@@ -55,7 +55,7 @@ feature
 			end
 		end
 	
-	display_memory (m: MEM_INFO) is
+	display_memory (m: MEM_INFO)
 		do
 			io.putint (m.type);
 			io.putchar ('%T');

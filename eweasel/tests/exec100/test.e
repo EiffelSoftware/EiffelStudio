@@ -1,24 +1,24 @@
 
---| Copyright (c) 1993-2006 University of Southern California and contributors.
+--| Copyright (c) 1993-2020 University of Southern California, Eiffel Software and contributors.
 --| All rights reserved.
 --| Your use of this work is governed under the terms of the GNU General
 --| Public License version 2.
 
 class TEST
-creation
+create
 	make
 feature
 	
-	make is
+	make
 		local
 			a: TEST1 [DOUBLE];
 			b: TEST1 [expanded DOUBLE];
 			p: DOUBLE;
 			q: expanded DOUBLE;
-		do
-			!!a;
-			a.weasel (p);
-			!!b;
+		do 
+			create a;
+			a.weasel (p) ;
+			create b;
 			b.weasel (q);
 		end
 	

@@ -1,5 +1,5 @@
 
---| Copyright (c) 1993-2006 University of Southern California and contributors.
+--| Copyright (c) 1993-2020 University of Southern California, Eiffel Software and contributors.
 --| All rights reserved.
 --| Your use of this work is governed under the terms of the GNU General
 --| Public License version 2.
@@ -7,10 +7,10 @@
 class TEST
 inherit
 	MEMORY
-creation
+create
 	make
 feature
-	make (args: ARRAY [STRING]) is
+	make (args: ARRAY [STRING])
 		local
 			list: ARRAYED_LIST [STRING];
 			k, limit: INTEGER;
@@ -20,8 +20,8 @@ feature
 			enable_time_accounting
 			s := "weasels and ermines and stoats"
 			limit := args.item (1).to_integer
-			from
-				!!list.make_filled (limit)
+			from 
+				create list.make_filled (limit)
 				k := 1
 			until
 				k > limit

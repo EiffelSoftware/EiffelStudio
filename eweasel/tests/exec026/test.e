@@ -1,5 +1,5 @@
 
---| Copyright (c) 1993-2006 University of Southern California and contributors.
+--| Copyright (c) 1993-2020 University of Southern California, Eiffel Software and contributors.
 --| All rights reserved.
 --| Your use of this work is governed under the terms of the GNU General
 --| Public License version 2.
@@ -12,17 +12,17 @@
 class TEST
 inherit
 	EXCEPTIONS
-creation
+create
 	make
 feature
-	make is
+	make
 		local
 			p, null: POINTER;
 			k, len: INTEGER;
 			list: LINKED_LIST [POINTER];
 		do
-			from
-				!!list.make;
+			from 
+				create list.make;
 				k := 100_000
 			until
 				k > 150_000
@@ -51,26 +51,26 @@ feature
 			end
 		end;
 		
-	big_string (count: INTEGER) is
+	big_string (count: INTEGER)
 		local
 			s: STRING;
-		do
-			!!s.make (count);
+		do 
+			create s.make (count);
 			s.fill_blank;
 		end;
 
-	eiffel_gc is
+	eiffel_gc
 		local
 			m: MEMORY;
 		do
-			io.putstring ("Doing Eiffel GC%N");
-			!!m;
+			io.putstring ("Doing Eiffel GC%N") ;
+			create m;
 			m.allocate_tiny;
 			m.full_collect;
 			m.full_coalesce;
 		end;
 
-	free_dynamic_memory (list: LINKED_LIST [POINTER]) is
+	free_dynamic_memory (list: LINKED_LIST [POINTER])
 		local
 		do
 			from
@@ -85,12 +85,12 @@ feature
 
 feature {NONE}
 
-	malloc (count: INTEGER): POINTER is
+	malloc (count: INTEGER): POINTER
 		external
 			"C use <stdlib.h>"
 		end;
 
-	free (p: POINTER) is
+	free (p: POINTER)
 		external
 			"C use <stdlib.h>"
 		end;
@@ -101,7 +101,7 @@ feature {NONE}
 			-- "C"
 		-- end;
 
-	set_nongc_memory (dest: POINTER; c: CHARACTER size: INTEGER) is
+	set_nongc_memory (dest: POINTER; c: CHARACTER size: INTEGER)
 			-- Set `size' bytes of memory starting at
 			-- `dest' to `c'
 		require

@@ -4,7 +4,7 @@
   "translator": "$XEBRA_DEV\bin\xebra_translator.exe",
   "managed_webapps": "$XEBRA_DEV\www",
   "library": "$XEBRA_LIBRARY",
-  "compiler_flags": "-experiment",
+  "compiler_flags": "",
   "unmanaged_webapps":
   [		
   ]

@@ -363,7 +363,7 @@ start /max /wait http://localhost:55000/helloworld]]></Text>
 		<macro name='EC_FLAGS'>
 			<description><![CDATA[Can be used to pass additional arguments to ec
 ]]></description>
-			<value>-experiment</value>
+			<value></value>
 		</macro>
 		<macro name='EIFFEL_SRC'>
 			<description><![CDATA[Path to where eiffel_src will be checked out

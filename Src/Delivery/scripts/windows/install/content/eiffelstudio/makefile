@@ -25,8 +25,6 @@ WXS = \
 	studio_examples.wxs \
 	studio_libraries.wxs \
 	studio_gobo.wxs \
-	studio_experimental.wxs \
-	studio_gobo_experimental.wxs \
 	studio_gdiplus.wxs \
 	studio_ent_ec.wxs \
 	studio_std_ec.wxs
@@ -37,8 +35,6 @@ WXS_STD = \
 	studio_examples.wxs \
 	studio_libraries.wxs \
 	studio_gobo.wxs \
-	studio_experimental.wxs \
-	studio_gobo_experimental.wxs \
 	studio_gdiplus.wxs \
 	studio_std_ec.wxs
 
@@ -48,8 +44,6 @@ WXS_ENT = \
 	studio_examples.wxs \
 	studio_libraries.wxs \
 	studio_gobo.wxs \
-	studio_experimental.wxs \
-	studio_gobo_experimental.wxs \
 	studio_gdiplus.wxs \
 	studio_ent_ec.wxs
 
@@ -63,8 +57,7 @@ studio_gcc.wxs:
 studio_core.wxs:
 	$(HALLOW) $(HALLOW_FLAGS) "$(INSTALL_DIR)\EiffelStudio" -dr:"INSTALLDIR" \
 		-de:"\\EiffelStudio\\library$$" -de:"\\EiffelStudio\\examples$$" \
-		-de:"\\EiffelStudio\\compatible$$" -de:"\\EiffelStudio\\gcc$$" \
-		-de:"\\EiffelStudio\\experimental$$" \
+		-de:"\\EiffelStudio\\gcc$$" \
 		-fe:"\\EiffelStudio\\studio\\spec\\w.*\\estudio.exe$$" \
 		-fe:"\\EiffelStudio\\esbuilder\\spec\\w.*\\esbuilder.exe$$" \
 		-g:"Core" -r -n:"Core." > $@.tmp
@@ -84,14 +77,6 @@ studio_libraries.wxs:
 studio_gobo.wxs:
 	$(HALLOW) $(HALLOW_FLAGS) "$(INSTALL_DIR)\EiffelStudio\library\gobo" \
 		-dr:"Dir.Core.library.gobo" -g:"Core.library.gobo" -r -n:"Core.library.gobo." > $@.tmp
-	move $@.tmp $@
-
-studio_experimental.wxs:
-	$(HALLOW) $(HALLOW_FLAGS) "$(INSTALL_DIR)\EiffelStudio\experimental\library" -dr:"Dir.Core.experimental.library" -de:"\\EiffelStudio\\experimental\\library\\gobo$$" -g:"Core.experimental.library" -r -n:"Core.experimental." > $@.tmp
-	move $@.tmp $@
-
-studio_gobo_experimental.wxs:
-	$(HALLOW) $(HALLOW_FLAGS) "$(INSTALL_DIR)\EiffelStudio\experimental\library\gobo" -dr:"Dir.Core.experimental.library.gobo" -g:"Core.experimental.library.gobo" -r -n:"Core.experimental.library.gobo." > $@.tmp
 	move $@.tmp $@
 
 studio_gdiplus.wxs:

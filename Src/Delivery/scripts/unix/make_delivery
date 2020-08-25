@@ -145,13 +145,6 @@ fullrd vision2/tutorial
 fullrd vision2/widget_test
 
 remtrace precomp
-safe_md $INSTALL_DIR/experimental/precomp
-safe_md $INSTALL_DIR/experimental/precomp/spec
-cd $INSTALL_DIR/experimental/precomp/spec
-exprt -r $ORIGO_SVN_REVISION $DEFAULT_ORIGO_SVN/Src/Delivery/precomp/spec/platform platform 
-cd platform
-fullrf *-safe.ecf
-
 safe_md $INSTALL_DIR/precomp
 safe_md $INSTALL_DIR/precomp/spec
 cd $INSTALL_DIR/precomp/spec
@@ -283,10 +276,6 @@ fi
 remtrace "Putting the Eiffel libraries in the delivery"
 cd $INIT_DIR
 set -- $INSTALL_DIR library $GTK_DIR
-. ./make_libraries
-cd $INIT_DIR
-safe_md $INSTALL_DIR/experimental
-set -- $INSTALL_DIR/experimental experimental/library $GTK_DIR
 . ./make_libraries
 
 remtrace "Putting unsupported libraries in the delivery (ISE or others)"

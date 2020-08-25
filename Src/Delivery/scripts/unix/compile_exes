@@ -104,7 +104,6 @@ safe_md $INSTALL_DIR/studio/spec/$ISE_PLATFORM
 move $INSTALL_DIR/studio/config/unix/* $INSTALL_DIR/studio/config/$ISE_PLATFORM
 move $INSTALL_DIR/studio/spec/unix/* $INSTALL_DIR/studio/spec/$ISE_PLATFORM
 mv $INSTALL_DIR/precomp/spec/platform $INSTALL_DIR/precomp/spec/$ISE_PLATFORM
-mv $INSTALL_DIR/experimental/precomp/spec/platform $INSTALL_DIR/experimental/precomp/spec/$ISE_PLATFORM
 fullrd $INSTALL_DIR/studio/config/unix
 fullrd $INSTALL_DIR/studio/spec/unix
 
@@ -192,9 +191,6 @@ cd $EXPORT_DIR
 ./compile_libraries $ISE_PLATFORM $EXPORT_DIR $GTK_DIR
 cd $EXPORT_DIR
 ./compile_libraries $ISE_PLATFORM $INSTALL_DIR $GTK_DIR
-
-cd $EXPORT_DIR
-./compile_libraries $ISE_PLATFORM $INSTALL_DIR/experimental $GTK_DIR
 
 # Compile the other C libraries.
 cd $EXPORT_DIR

@@ -204,8 +204,6 @@
     <Compile Include="content\eiffelstudio\studio_std_ec.wxs" />
 	<Compile Include="content\eiffelstudio\studio_libraries.wxs" />
     <Compile Include="content\eiffelstudio\studio_gobo.wxs" />
-    <Compile Include="content\eiffelstudio\studio_experimental.wxs" />
-    <Compile Include="content\eiffelstudio\studio_gobo_experimental.wxs" />
     <Compile Include="content\eiffelenvision\Redist.wxs" />
     <Compile Include="interface\DialogMaintenanceWelcome.wxs" />
     <Compile Include="interface\DialogRegister.wxs" />

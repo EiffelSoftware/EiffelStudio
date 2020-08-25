@@ -175,16 +175,6 @@ fullrd widget_test
 cd ..
 cd ..
 remtrace precomp
-safe_md %STUDIO_DIR\experimental
-safe_md %STUDIO_DIR\experimental\precomp
-safe_md %STUDIO_DIR\experimental\precomp\spec
-cd %STUDIO_DIR\experimental\precomp\spec
-exprt -r %PUBLIC_SVN_REVISION %DEFAULT_PUBLIC_SVN/Src/Delivery/precomp/spec/platform %ISE_PLATFORM
-exprt -r %PUBLIC_SVN_REVISION %DEFAULT_PUBLIC_SVN/Src/Delivery/precomp/spec/dotnet %ISE_PLATFORM-dotnet
-cdd %ISE_PLATFORM
-fullrf *-safe.ecf
-cdd ..\%ISE_PLATFORM-dotnet
-fullrf *-safe.ecf
 safe_md %STUDIO_DIR\precomp
 safe_md %STUDIO_DIR\precomp\spec
 cd %STUDIO_DIR\precomp\spec
@@ -254,8 +244,6 @@ remtrace Checkout all the libraries
 cdd %INIT_DIR
 call make_libraries.btm %STUDIO_DIR library
 cdd %INIT_DIR
-call make_libraries.btm %STUDIO_DIR\experimental experimental/library
-cdd %INIT_DIR
 call make_other_libraries.btm %STUDIO_DIR
 
 :clibs
@@ -277,28 +265,6 @@ IF "%HAS_VC_MSC_VC140%" == "True" (
 cdd %INIT_DIR
 remtrace Build the C libraries of non-Eiffel Software C libraries for mingw
 call compile_c_libraries.btm %STUDIO_DIR% mingw
-
-remtrace Setup for experimental folder
-set PREV_ISE_LIBRARY=%ISE_LIBRARY%
-set ISE_LIBRARY=%STUDIO_DIR%\experimental
-
-IF "%HAS_VC_MSC%" == "True" (
-	cdd %INIT_DIR
-	remtrace Build the Experimental C libraries of non-Eiffel Software C libraries for msc (%ISE_VC_MSC%)
-	call espawn -u:%ISE_VC_MSC% "%COMSPEC% /c compile_c_libraries.btm %STUDIO_DIR\experimental msc"
-)
-IF "%HAS_VC_MSC_VC140%" == "True" (
-	cdd %INIT_DIR
-	remtrace Build the Experimental C libraries of non-Eiffel Software C libraries for msc_vc140 (%ISE_VC_MSC_VC140%)
-	call espawn -u:%ISE_VC_MSC_VC140% "%COMSPEC% /c compile_c_libraries.btm %STUDIO_DIR\experimental msc_vc140"
-)
-cdd %INIT_DIR
-remtrace Build the Experimental C libraries of non-Eiffel Software C libraries for mingw 
-call compile_c_libraries.btm %STUDIO_DIR\experimental mingw
-
-remtrace Un-setup experimental folder
-set ISE_LIBRARY=%PREV_ISE_LIBRARY%
-unset PREV_ISE_LIBRARY
 
 remtrace Build other C libraries
 
@@ -359,9 +325,6 @@ iff not defined NO_COMPILE then
 	remtrace Build the normal libraries
 	cdd %INIT_DIR
 	call update_libraries.btm %EIFFEL_SRC
-	remtrace Build the experimental libraries
-	cdd %INIT_DIR
-	call update_libraries.btm %EIFFEL_SRC\experimental
 
 	cdd %INIT_DIR
 	give_time_to update libraries

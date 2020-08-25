@@ -81,11 +81,6 @@
 			<Directory Id="Dir.Core.library" Name="library">
 				<Directory Id="Dir.Core.library.gobo" Name="gobo"/>
 			</Directory>
-			<Directory Id="Dir.Core.experimental" Name="experimental">
-				<Directory Id="Dir.Core.experimental.library" Name="library">
-					<Directory Id="Dir.Core.experimental.library.gobo" Name="gobo"/>
-				</Directory>
-			</Directory>
 			<!-- To comment when building complete delivery -->
 			<!--
 			<Directory Id="Dir.Core.esbuilder.spec.$(var.IsePlatform).bin" Name="testing1"/>
@@ -155,11 +150,6 @@
 					Description="EiffelStudio development environment" Show="normal" Directory="EiffelStudio"
 					Target="[INSTALLDIR]studio\spec\$(var.IsePlatform)\bin\estudio.exe"
 					/>
-				<Shortcut Id="estudio.exe1" Name="$(var.Product) $(var.ProductVersion) (Experimental mode)"
-					Description="EiffelStudio development environment using compatibility facilities of EiffelStudio" Show="normal"
-					Target="[INSTALLDIR]studio\spec\$(var.IsePlatform)\bin\estudio.exe" Directory="EiffelStudio"
-					Arguments="-experiment"
-					/>
 				<Shortcut Id="esvars.bat" Name="$(var.Product) $(var.ProductVersion) Command Prompt"
 					Description="EiffelStudio Command Prompt" Show="normal" Directory="EiffelStudio"
 					Target="[%ComSpec]"
@@ -218,14 +208,6 @@
 
 			<Feature Id="Gobo_feature" Title="Gobo" TypicalDefault="install" Level="1" Display="hidden">
 				<ComponentGroupRef Id="Core.library.gobo"/>
-			</Feature>
-
-			<Feature Id="Experimental_feature" Title="Experimental" TypicalDefault="install" Level="1" Display="hidden">
-				<ComponentGroupRef Id="Core.experimental.library"/>
-			</Feature>
-
-			<Feature Id="Gobo_experimental_feature" Title="Gobo Experimental" TypicalDefault="install" Level="1" Display="hidden">
-				<ComponentGroupRef Id="Core.experimental.library.gobo"/>
 			</Feature>
 
 			<Feature Id="gdiplus_feature" Title="GDI+" TypicalDefault="install" Level="1" Display="hidden">

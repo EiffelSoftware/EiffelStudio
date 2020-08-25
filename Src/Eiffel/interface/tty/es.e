@@ -400,13 +400,11 @@ feature -- Properties
 			Result [callers_cmd_name] := callers_help
 			Result [clean_cmd_name] := clean_help
 			Result [clients_cmd_name] := clients_help
-			Result [compat_cmd_name] := compat_help
 			Result [config_cmd_name] := config_help
 			Result [config_option_cmd_name] := config_option_help
 			Result [debug_cmd_name] := debug_help
 			Result [descendants_cmd_name] := descendants_help
 			Result [dversions_cmd_name] := dversions_help
-			Result [experiment_cmd_name] := experiment_help
 			Result [file_cmd_name] := file_help
 			Result [filter_cmd_name] := filter_help
 			Result [finalize_cmd_name] := finalize_help
@@ -437,6 +435,9 @@ feature -- Properties
 			Result [target_cmd_name] := target_help
 			Result [use_settings_cmd_name] := use_settings_help
 			Result [version_cmd_name] := version_help
+-- Hide -compat and -experiment flags.			
+--			Result [compat_cmd_name] := compat_help
+--			Result [experiment_cmd_name] := experiment_help
 		end
 
 	loop_cmd: EWB_LOOP
@@ -514,7 +515,7 @@ feature {NONE} -- Output
 			localized_print (argument (0))
 				-- The leading space on the first line is required to delimit options from the command name.
 			io.put_string ("[
-				 -help | [-compat | -experiment] | -version | -full |
+				 -help | -version | -full |
 				-batch | -clean | -verbose | -use_settings |
 				-freeze | -finalize [-keep] | -precompile [-finalize [-keep]] | -c_compile |
 				-loop | -debug | -quick_melt | -melt |
@@ -700,7 +701,7 @@ feature {NONE} -- Update
 			l_configuration_settings: like configuration_settings
 		do
 			filter_name := ""
-			option := argument (current_option);
+			option := argument (current_option)
 
 			if option.same_string_general ("-help") then
 				help_only := True
@@ -1322,6 +1323,7 @@ feature {NONE} -- Update
 					option_error_message := locale.translation ("Cannot mix -config or -target when compiling a system using an Eiffel class as argument")
 				end
 			elseif option.same_string_general ("-compat") then
+				check valid_option: compat_cmd_name.same_string ("compat") end
 					-- This option enables the default set of options of 6.3 and earlier if not specified
 					-- in the ECF file.
 				if is_experimental_flag_set then
@@ -1331,6 +1333,7 @@ feature {NONE} -- Update
 					is_compatible_flag_set := True
 				end
 			elseif option.same_string_general ("-experiment") then
+				check valid_option: experiment_cmd_name.same_string ("experiment") end
 					-- This option enables the new options of the compiler that are not mainstream.
 				if is_compatible_flag_set then
 					option_error_message := locale.translation ("Cannot override -compat with -experiment.")

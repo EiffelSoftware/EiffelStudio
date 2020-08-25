@@ -1,11 +1,11 @@
 class TEST
 
-creation 
+create 
 	make
 
 feature {NONE} -- Creation
 
-	make is
+	make
 			-- Run tests.
 		do
 			test (

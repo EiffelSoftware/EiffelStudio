@@ -3,16 +3,16 @@ deferred class
 
 feature -- Access
 
-	test_a: !STRING
+	test_a: attached STRING
 		deferred
 		end
 
-	test_b: !STRING
+	test_b: attached STRING
 		attribute
 			create Result.make_empty
 		end
 
-	test_c: !STRING
+	test_c: attached STRING
 
 feature -- Output
 

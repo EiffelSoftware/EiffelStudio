@@ -3,7 +3,7 @@ class
 
 feature -- Access
 
-	test_a: !G
+	test_a: attached G
 		attribute
 			create Result.make_from_string ("A")
 		end

@@ -3,7 +3,7 @@ deferred class
 
 feature
 
-	test: !G
+	test: attached G
 		do
 			Result := another_test
 		end

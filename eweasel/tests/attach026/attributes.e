@@ -19,22 +19,22 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	test_a: !STRING
+	test_a: attached STRING
 			-- Simple assignment
 		attribute
 			Result := "A"
 		end
 
-	test_b: !STRING
+	test_b: attached STRING
 			-- Simple creation
 		attribute
 			create Result.make_from_string ("B")
 		end
 
-	test_c: !STRING
+	test_c: attached STRING
 			-- Detached assignment
 		local
-			l_result: ?STRING
+			l_result: detachable STRING
 		attribute
 			if (1).min (0) = 0 then
 				l_result := "C"
@@ -43,29 +43,29 @@ feature -- Access
 			Result := l_result
 		end
 
-	test_d: !STRING
+	test_d: attached STRING
 			-- Qualified assignment
 		local
-			l_result: ?STRING
+			l_result: detachable STRING
 		attribute
 			l_result := "D"
 			Result := l_result
 		end
 
-	test_e: !STRING
+	test_e: attached STRING
 			-- Object test assignment
 		local
 			s: STRING
 		attribute
 			s := "E"
-			if {l_result: like test_e} s then
+			if attached {like test_e} s as l_result then
 				Result := l_result
 			else
 				create Result.make_empty
 			end
 		end
 
-	test_f: !STRING
+	test_f: attached STRING
 			-- Other attribute assignment
 		attribute
 			Result := f
@@ -73,7 +73,7 @@ feature -- Access
 
 feature {NONE} -- Access
 
-	f: !STRING
+	f: attached STRING
 		do
 			create Result.make_from_string ("F")
 		end

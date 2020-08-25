@@ -5,30 +5,30 @@ create
 
 feature {NONE} -- Creation
 
-	make is
+	make
 			-- Run test.
 		do
 			t := Current
-			if {a: like t} t then
+			if attached t as a then
 				f (a, "Test 1: OK")
 			end
-			if {b: ?like t} t then
+			if attached t as b then
 				f (b, "Test 2: OK")
 			end
-			if {c: !like t} t then
+			if attached t as c then
 				f (c, "Test 3: OK")
 			end
 		end
 
 feature {NONE} -- Access
 
-	t: ?TEST
+	t: detachable TEST
 
 feature {NONE} --  Output
 
-	f (x: !TEST; s: !STRING)
+	f (x: attached TEST; s: attached STRING)
 		do
-			if {o: like io} io then
+			if attached io as o then
 				o.put_string (s)
 				o.put_new_line
 			end

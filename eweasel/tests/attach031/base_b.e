@@ -3,7 +3,7 @@ deferred class
 
 feature -- Access
 
-	test_a: !STRING
+	test_a: attached STRING
 		deferred
 		end
 

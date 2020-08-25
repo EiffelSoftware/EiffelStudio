@@ -11,7 +11,7 @@ feature
 			test (Void)
 		end
 
-	test (a_test: ?GENERIC [ANY])
+	test (a_test: detachable GENERIC [ANY])
 		do
 			if a_test /= Void then
 				a_test.test.do_nothing

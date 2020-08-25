@@ -8,7 +8,7 @@ inherit
 
 feature
 
-	h (a: ?ANY): !TEST
+	h (a: detachable ANY): attached TEST
 		external "C inline"
 			alias "return eif_access($a);"
 		end

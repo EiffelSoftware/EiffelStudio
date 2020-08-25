@@ -8,7 +8,7 @@ feature {NONE} -- Initialization
 
 	make
 		local
-			l_test: !GENERIC [STRING]
+			l_test: attached GENERIC [STRING]
 		do
 			create l_test
 			l_test.display

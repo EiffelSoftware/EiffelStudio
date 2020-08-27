@@ -4,6 +4,7 @@
 		register their AST visitor agents here.
 	]"
 	author: "Stefan Zurfluh", "Eiffel Software"
+	revised_by: "Alexander Kogtenkov"
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -18,10 +19,6 @@ inherit
 			process_typed_char_as,
 			process_agent_routine_creation_as,
 			process_inline_agent_creation_as,
-			process_create_creation_as,
-			process_bang_creation_as,
-			process_create_creation_expr_as,
-			process_bang_creation_expr_as,
 			process_keyword_as,
 			process_symbol_as,
 			process_break_as,
@@ -36,7 +33,6 @@ inherit
 			process_array_as,
 			process_assign_as,
 			process_assigner_call_as,
-			process_bang_creation_as,
 			process_binary_as,
 			process_bin_eq_as,
 			process_bin_ge_as,
@@ -51,7 +47,6 @@ inherit
 			process_case_as,
 			process_converted_expr_as,
 			process_create_as,
-			process_create_creation_as,
 			process_creation_as,
 			process_do_as,
 			process_eiffel_list,
@@ -109,8 +104,6 @@ feature {NONE} -- Initialization
 			create assign_post_actions
 			create assigner_call_pre_actions
 			create assigner_call_post_actions
-			create bang_creation_pre_actions
-			create bang_creation_post_actions
 			create binary_pre_actions
 			create binary_post_actions
 			create bin_eq_pre_actions
@@ -141,8 +134,6 @@ feature {NONE} -- Initialization
 			create converted_expr_post_actions
 			create create_pre_actions
 			create create_post_actions
-			create create_creation_pre_actions
-			create create_creation_post_actions
 			create creation_pre_actions
 			create creation_post_actions
 			create do_pre_actions
@@ -279,16 +270,6 @@ feature {CA_STANDARD_RULE} -- Adding agents
 	add_assigner_call_post_action (a_action: attached PROCEDURE [ASSIGNER_CALL_AS])
 		do
 			assigner_call_post_actions.extend (a_action)
-		end
-
-	add_bang_creation_pre_action (a_action: attached PROCEDURE [BANG_CREATION_AS])
-		do
-			bang_creation_pre_actions.extend (a_action)
-		end
-
-	add_bang_creation_post_action (a_action: attached PROCEDURE [BANG_CREATION_AS])
-		do
-			bang_creation_post_actions.extend (a_action)
 		end
 
 	add_binary_pre_action (a_action: attached PROCEDURE [BINARY_AS])
@@ -439,16 +420,6 @@ feature {CA_STANDARD_RULE} -- Adding agents
 	add_create_post_action (a_action: attached PROCEDURE [CREATE_AS])
 		do
 			create_post_actions.extend (a_action)
-		end
-
-	add_create_creation_pre_action (a_action: attached PROCEDURE [CREATE_CREATION_AS])
-		do
-			create_creation_pre_actions.extend (a_action)
-		end
-
-	add_create_creation_post_action (a_action: attached PROCEDURE [CREATE_CREATION_AS])
-		do
-			create_creation_post_actions.extend (a_action)
 		end
 
 	add_creation_pre_action (a_action: attached PROCEDURE [CREATION_AS])
@@ -807,8 +778,6 @@ feature {NONE} -- Agent lists
 
 	assigner_call_pre_actions, assigner_call_post_actions: ACTION_SEQUENCE [TUPLE [ASSIGNER_CALL_AS]]
 
-	bang_creation_pre_actions, bang_creation_post_actions: ACTION_SEQUENCE [TUPLE [BANG_CREATION_AS]]
-
 	binary_pre_actions, binary_post_actions: ACTION_SEQUENCE [TUPLE [BINARY_AS]]
 
 	bin_eq_pre_actions, bin_eq_post_actions: ACTION_SEQUENCE [TUPLE [BIN_EQ_AS]]
@@ -838,8 +807,6 @@ feature {NONE} -- Agent lists
 	converted_expr_pre_actions, converted_expr_post_actions: ACTION_SEQUENCE [TUPLE [CONVERTED_EXPR_AS]]
 
 	create_pre_actions, create_post_actions: ACTION_SEQUENCE [TUPLE [CREATE_AS]]
-
-	create_creation_pre_actions, create_creation_post_actions: ACTION_SEQUENCE [TUPLE [CREATE_CREATION_AS]]
 
 	creation_pre_actions, creation_post_actions: ACTION_SEQUENCE [TUPLE [CREATION_AS]]
 
@@ -984,13 +951,6 @@ feature {NONE} -- Processing
 			assigner_call_post_actions.call (a)
 		end
 
-	process_bang_creation_as (a_bang_creation: BANG_CREATION_AS)
-		do
-			bang_creation_pre_actions.call ([a_bang_creation])
-			Precursor (a_bang_creation)
-			bang_creation_post_actions.call ([a_bang_creation])
-		end
-
 	process_binary_as (a: BINARY_AS)
 		local
 			old_is_assigner_call: BOOLEAN
@@ -1105,15 +1065,7 @@ feature {NONE} -- Processing
 			create_post_actions.call ([a_create])
 		end
 
-	process_create_creation_as (a_create_creation: CREATE_CREATION_AS)
-		do
-			create_creation_pre_actions.call ([a_create_creation])
-			Precursor (a_create_creation)
-			create_creation_post_actions.call ([a_create_creation])
-		end
-
 	process_creation_as (a: CREATION_AS)
-			-- <Precursor>
 		do
 			creation_pre_actions.call (a)
 			is_assign := True
@@ -1350,7 +1302,7 @@ feature {NONE} -- Processing
 
 note
 	ca_ignore: "CA033", "CA033: very long class"
-	copyright:	"Copyright (c) 2014-2018, Eiffel Software"
+	copyright:	"Copyright (c) 2014-2020, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

@@ -174,35 +174,19 @@ feature -- Access
 			end
 		end
 
-	new_create_creation_as (is_active: BOOLEAN; tp: detachable TYPE_AS; tg: detachable ACCESS_AS; c: detachable ACCESS_INV_AS; k_as: detachable KEYWORD_AS): detachable CREATE_CREATION_AS
-			-- New CREATE_CREATION AST node.
+	new_creation_as (is_active: BOOLEAN; tp: detachable TYPE_AS; tg: detachable ACCESS_AS; c: detachable ACCESS_INV_AS; k_as: detachable KEYWORD_AS): detachable CREATION_AS
+			-- New CREATION AST node.
 		do
 			if tg /= Void then
 				create Result.make (is_active, tp, tg, c, k_as)
 			end
 		end
 
-	new_bang_creation_as (tp: detachable TYPE_AS; tg: detachable ACCESS_AS; c: detachable ACCESS_INV_AS; l_as, r_as: detachable SYMBOL_AS): detachable BANG_CREATION_AS
-			-- New CREATE_CREATION AST node.
-		do
-			if tg /= Void then
-				create Result.make (tp, tg, c, l_as, r_as)
-			end
-		end
-
-	new_create_creation_expr_as (is_active: BOOLEAN; t: detachable TYPE_AS; c: detachable ACCESS_INV_AS; k_as: detachable KEYWORD_AS): detachable CREATE_CREATION_EXPR_AS
+	new_creation_expr_as (is_active: BOOLEAN; t: detachable TYPE_AS; c: detachable ACCESS_INV_AS; k_as: detachable KEYWORD_AS): detachable CREATION_EXPR_AS
 			-- New creation expression AST node
 		do
 			if t /= Void then
 				create Result.make (is_active, t, c, k_as)
-			end
-		end
-
-	new_bang_creation_expr_as (t: detachable TYPE_AS; c: detachable ACCESS_INV_AS; l_as, r_as: detachable SYMBOL_AS): detachable BANG_CREATION_EXPR_AS
-			-- New creation expression AST node
-		do
-			if t /= Void then
-				create Result.make (t, c, l_as, r_as)
 			end
 		end
 
@@ -265,6 +249,8 @@ feature -- Access
 
 	new_alias_name_info (k_as: detachable KEYWORD_AS; n_as: detachable STRING_AS): detachable ALIAS_NAME_INFO
 			-- New ALIAS_TRIPLE.
+		require
+			attached n_as implies not n_as.value_32.is_empty
 		do
 			if n_as /= Void then
 				create Result.make (k_as, n_as)
@@ -322,7 +308,7 @@ feature -- Access
 			-- New line pragma
 			--| Keep entire line, actual processing will be done later if we need it.
 		do
-			create Result.make (a_scn.text, a_scn.line, a_scn.column, a_scn.position, a_scn.text_count,
+			create Result.make (a_scn.utf8_text, a_scn.line, a_scn.column, a_scn.position, a_scn.text_count,
 				a_scn.character_column, a_scn.character_position, a_scn.unicode_text_count)
 		end
 
@@ -1480,6 +1466,16 @@ feature -- Access
 
 	new_feature_name_alias_as (feature_name: detachable ID_AS; a_alias_list: detachable LIST [ALIAS_NAME_INFO]; c_as: detachable KEYWORD_AS): detachable FEATURE_NAME_ALIAS_AS
 			-- New FEATURE_NAME_ALIAS AST node
+		require
+			alias_list_not_empty: attached a_alias_list implies not a_alias_list.is_empty
+			has_alias_name:
+				attached a_alias_list implies
+				across a_alias_list as a all not a.item.alias_name.value_32.is_empty end
+			no_alias_duplicates:
+				attached a_alias_list implies
+				across a_alias_list as x all across a_alias_list as y all
+					x.item.alias_name.value_32.same_string (y.item.alias_name.value_32) implies x.target_index = y.target_index
+				end end
 		do
 			if feature_name /= Void and then a_alias_list /= Void and then not a_alias_list.is_empty then
 				create Result.initialize_with_list (feature_name, a_alias_list, c_as)
@@ -1521,7 +1517,7 @@ feature -- Access
 			l_cnt := a_scn.text_count
 			l_str := reusable_string_buffer
 			l_str.wipe_out
-			a_scn.append_text_to_string (l_str)
+			a_scn.append_utf8_text_to_string (l_str)
 			create Result.initialize (l_str)
 			Result.set_position (a_scn.line, a_scn.column, a_scn.position, l_cnt,
 				a_scn.character_column, a_scn.character_position, a_scn.unicode_text_count)

@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "File buffer that scans characters and convert extended ASCII characters into UTF-8 byte sequence."
 	date: "$Date$"
 	revision: "$Revision$"
@@ -7,10 +7,8 @@ class
 	ASCII_UTF8_CONVERSION_FILE_BUFFER
 
 inherit
-	YY_FILE_BUFFER
+	YY_UNICODE_FILE_BUFFER
 		redefine
-			fill,
-			compact_left,
 			make_with_size
 		end
 
@@ -33,7 +31,7 @@ feature {NONE} -- Initialization
 
 feature -- Initialization
 
-	make_from_file_buffer (a_buffer: YY_FILE_BUFFER)
+	make_from_file_buffer (a_buffer: YY_UNICODE_FILE_BUFFER)
 			-- Create from other file buffer.
 		require
 			a_buffer_not_void: a_buffer /= Void
@@ -52,90 +50,6 @@ feature -- Initialization
 
 			create string_buffer.make (1)
 			string_buffer.append_character ('%U')
-		end
-
-feature -- Element Change
-
-	fill
-			-- Fill buffer with characters from `file'.
-			-- Do not lose unprocessed characters in buffer.
-			-- Resize buffer if necessary. Set `filled' to True
-			-- if characters have been added to buffer.
-		local
-			nb, nb2: INTEGER
-			buff: like content
-			is_exhausted: BOOLEAN
-		do
-				-- If the last call to `fill' failed to add
-				-- more characters, this means that the end of
-				-- file has already been reached. Do not attempt
-				-- to fill again the buffer in that case.
-			if filled and not end_of_file then
-					-- First move last characters to start of buffer
-					-- and eventually resize `content' if necessary.
-				compact_left
-				buff := content
-					-- Test if there is something to read.
-				if file.end_of_input then
-					filled := False
-					end_of_file := True
-				elseif interactive then
-						-- Read in one character if possible.
-					file.read_character
-					if file.end_of_input then
-						filled := False
-						end_of_file := True
-					else
-						put_character (file.last_character, buff)
-					end
-				else
-						-- Read in more data.
-					from
-						nb := capacity - count
-					until
-							-- We need to make sure that no less than `Max_bytes_of_iso_8859_1_to_utf8' space is left in the buffer.
-						nb2 >= nb or else is_exhausted or else nb - nb2 < Max_bytes_of_iso_8859_1_to_utf8
-					loop
-						file.read_character
-						if file.end_of_input then
-							is_exhausted := True
-							end_of_file := True
-						else
-							put_character (file.last_character, buff)
-							nb2 := nb2 + last_number_of_bytes_put
-						end
-					end
-					filled := nb2 > 0
-				end
-				buff.put (End_of_buffer_character, count + 1)
-				buff.put (End_of_buffer_character, count + 2)
-			else
-				filled := False
-			end
-		end
-
-	compact_left
-			-- <Precursor>
-			-- Resize even if there is still space as a result of filling one UTF-8 character.
-			-- i.e. Previously we left `Max_bytes_of_iso_8859_1_to_utf8' bytes space for one character,
-			-- however less than `Max_bytes_of_iso_8859_1_to_utf8' was actually put, thus there is still tiny space left
-			-- to prevent resizing in `precusor'.
-		local
-			nb: INTEGER
-		do
-			nb := count - index + 1
-			if nb + max_bytes_of_iso_8859_1_to_utf8 > capacity then
-					-- Buffer is full or not enough for a UTF-8 character. Resize it.
-				resize
-			end
-			if index /= 1 then
-					-- Move the 2 EOB characters as well.
-				content.move_left (index, 1, nb + 2)
-				index := 1
-				count := nb
-			end
-		ensure then
-			enough_space: capacity - count >= max_bytes_of_iso_8859_1_to_utf8
 		end
 
 feature {NONE} -- Implementation
@@ -189,7 +103,8 @@ invariant
 	string_buffer_not_void: string_buffer /= Void
 
 note
-	copyright: "Copyright (c) 1984-2013, Eiffel Software"
+	ca_ignore: "CA013", "CA013: creation procedure is generally available"
+	copyright: "Copyright (c) 1984-2020, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

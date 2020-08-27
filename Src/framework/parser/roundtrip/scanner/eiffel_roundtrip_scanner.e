@@ -1,8 +1,7 @@
-note
+﻿note
 	description: "Object that scans a input buffer and generate `match_list' for roundtrip"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
-	author: ""
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -46,7 +45,7 @@ feature -- Scann
 			-- Scan `input_buffer' until end of file is found
 			-- or an error occurs.
 		local
-			l_as: detachable AST_EIFFEL
+			l_as: AST_EIFFEL
 			l_error_level: NATURAL_32
 		do
 			l_error_level := error_handler.error_level
@@ -77,12 +76,12 @@ feature -- Scann
 				else
 				end
 			end
-			if l_error_level /= error_handler.error_level then
-				has_syntax_error := True
-				match_list := Void
-			else
+			if l_error_level = error_handler.error_level then
 				has_syntax_error := False
 				match_list := ast_factory.match_list
+			else
+				has_syntax_error := True
+				match_list := Void
 			end
 		end
 
@@ -111,7 +110,7 @@ feature -- Scann
 		require
 			a_string_not_void: a_string /= Void
 		do
-			create input_buffer.make (a_string)
+			create {YY_UNICODE_BUFFER} input_buffer.make_from_utf8_string (a_string)
 			detected_encoding := utf8
 			detected_bom := Void
 			yy_load_input_buffer
@@ -147,7 +146,7 @@ feature
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2019, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2020, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

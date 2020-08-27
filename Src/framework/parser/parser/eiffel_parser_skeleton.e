@@ -418,7 +418,7 @@ feature -- Parsing (Known encoding)
 			reset
 		end
 
-	parse_from_utf8_string (a_string: STRING; a_class: detachable ABSTRACT_CLASS_C)
+	parse_from_utf8_string (a_string: STRING_8; a_class: detachable ABSTRACT_CLASS_C)
 			-- Parse Eiffel class text in UTF-8 `a_string'.
 			-- Make result available in appropriate result node.
 			-- An exception is raised if a syntax error is found.
@@ -426,11 +426,11 @@ feature -- Parsing (Known encoding)
 			a_string_not_void: a_string /= Void
 		local
 			l_ast_factory: like ast_factory
-			l_input_buffer: YY_BUFFER
+			l_input_buffer: YY_UNICODE_BUFFER
 		do
 			reset_nodes
 
-			create l_input_buffer.make (a_string)
+			create l_input_buffer.make_from_utf8_string (a_string)
 			input_buffer := l_input_buffer
 
 			detected_encoding := utf8

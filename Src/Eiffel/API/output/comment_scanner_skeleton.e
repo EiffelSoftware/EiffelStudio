@@ -110,7 +110,7 @@ feature {NONE} -- Implementation
 			l_text : STRING_32
 			l_mailto: STRING_32
 		do
-			l_text := encoding_converter.utf8_to_utf32 (text)
+			l_text := unicode_text
 			l_mailto := "mailto:"
 			l_mailto.append (l_text)
 			if for_comment then
@@ -125,7 +125,7 @@ feature {NONE} -- Implementation
 		local
 			l_text : STRING_32
 		do
-			l_text := encoding_converter.utf8_to_utf32 (text)
+			l_text := unicode_text
 			if for_comment then
 				text_formatter.process_comment_text (l_text, l_text.twin)
 			else
@@ -139,7 +139,7 @@ feature {NONE} -- Implementation
 			l_text : STRING_32
 			l_feat_name: STRING_32
 		do
-			l_text := {UTF_CONVERTER}.utf_8_string_8_to_string_32 (text)
+			l_text := unicode_text
 			l_feat_name := l_text.tail (l_text.count - 1)
 			l_feat_name.to_lower
 			if attached feature_by_name ({UTF_CONVERTER}.string_32_to_utf_8_string_8 (l_feat_name)) as l_feat then
@@ -161,7 +161,7 @@ feature {NONE} -- Implementation
 		local
 			l_text : STRING_32
 		do
-			l_text := {UTF_CONVERTER}.utf_8_string_8_to_string_32 (text)
+			l_text := unicode_text
 			check
 				l_text.count >= 2
 			end
@@ -186,7 +186,7 @@ feature {NONE} -- Implementation
 			l_class_name: STRING_32
 			l_class: CLASS_I
 		do
-			l_text := encoding_converter.utf8_to_utf32 (text)
+			l_text := unicode_text
 			check
 				l_text.count >= 2
 			end
@@ -229,7 +229,7 @@ feature {NONE} -- Implementation
 			l_groups: ARRAYED_LIST [CONF_GROUP]
 			l_str: STRING_32
 		do
-			l_text := encoding_converter.utf8_to_utf32 (text)
+			l_text := unicode_text
 			check
 				l_text.count >= 2
 			end
@@ -274,7 +274,7 @@ feature {NONE} -- Implementation
 	add_normal_text
 			-- Add `text' to `text_formatter'.
 		do
-			add_text (encoding_converter.utf8_to_utf32 (text), False)
+			add_text (unicode_text, False)
 		end
 
 	add_text (a_text: STRING_GENERAL; a_basic_comment: BOOLEAN)
@@ -299,7 +299,7 @@ feature {NONE} -- Implementation
 			-- Append token to `text_formatter'
 		do
 			if not buffer_string.is_empty then
-				add_text (encoding_converter.utf8_to_utf32 (buffer_string.twin), False)
+				add_text (encoding_converter.utf8_to_utf32 (buffer_string), False)
 				buffer_string.wipe_out
 			end
 		end
@@ -307,7 +307,7 @@ feature {NONE} -- Implementation
 	buffer_token
 			-- Buffer token.
 		do
-			buffer_string.append (text)
+			buffer_string.append (utf8_text)
 		end
 
 	buffer_string : STRING

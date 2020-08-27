@@ -1041,28 +1041,219 @@ feature {NONE} -- Roundtrip
 			end
 		end
 
-	process_create_creation_as (l_as: CREATE_CREATION_AS)
+	process_creation_as (l_as: CREATION_AS)
 			-- Process `l_as'.
+		local
+			l_access: ACCESS_B
+			l_target_type, l_explicit_type, l_creation_type: TYPE_A
+			l_vgcc3: VGCC3
+			l_vgcc31: VGCC31
+			l_vgcc7: VGCC7
+			l_needs_byte_node: BOOLEAN
+			l_error_level: NATURAL_32
+			l_warning_level: like {ERROR_HANDLER}.warning_level
+			l_reinitialized_variable: like last_reinitialized_variable
 		do
-			process_creation_as (l_as)
+			l_error_level := error_level
+			break_point_slot_count := break_point_slot_count + 1
+
+			l_needs_byte_node := is_byte_node_enabled
+			reset_for_unqualified_call_checking
+
+				-- Set flag so that depend_unit knows it is used as a creation routine
+				-- not just a normal feature call. It is reset as soon as it is processed.
+			is_target_of_creation_instruction := True
+			last_access_writable := False
+			last_reinitialized_variable := 0
+			l_as.target.process (Current)
+			if l_needs_byte_node then
+				l_access ?= last_byte_node
+			end
+				-- Record initialized variable to commit it after the call is processed.
+			l_reinitialized_variable := last_reinitialized_variable
+				-- Although it might be already reset when `target' is indeed
+				-- a feature of the current class, it is not reset when it is a local,
+				-- that's why we reset it.
+			is_target_of_creation_instruction := False
+
+			l_target_type := last_type
+			if l_target_type /= Void then
+				if not last_access_writable then
+					create l_vgcc7
+					context.init_error (l_vgcc7)
+					l_vgcc7.set_target_name (l_as.target.access_name)
+					l_vgcc7.set_type (l_target_type)
+					l_vgcc7.set_location (l_as.target.start_location)
+					error_handler.insert_error (l_vgcc7)
+				else
+					if l_as.type /= Void then
+						l_as.type.process (Current)
+						l_explicit_type := last_type
+							-- If `l_explicit_type' is Void then we stop the process here.
+						if l_explicit_type /= Void then
+								-- Creation type is always attached
+							l_explicit_type := l_explicit_type.as_attached_in (context.current_class)
+							set_type (l_explicit_type, l_as)
+						end
+					end
+
+					if error_level = l_error_level then
+							-- Check validity of creation type.
+						if
+							l_target_type.is_none or else (l_explicit_type /= Void and then
+							(l_explicit_type.is_none or else
+								(l_target_type.is_expanded and then l_explicit_type.is_expanded and then
+								not l_explicit_type.same_as (l_target_type))))
+						then
+								-- Cannot create instance of NONE.
+								-- Cannot create an expanded type which is different from
+								-- the declared type of `l_as.target'.
+							create l_vgcc3
+							context.init_error (l_vgcc3)
+							l_vgcc3.set_type (l_explicit_type)
+							l_vgcc3.set_target_name (l_as.target.access_name)
+							l_vgcc3.set_location (l_as.target.start_location)
+							error_handler.insert_error (l_vgcc3)
+						else
+							l_warning_level := error_handler.warning_level
+							if
+								l_explicit_type /= Void and then
+								not l_target_type.backward_conform_to (context.current_class, l_explicit_type)
+							then
+									-- Specified creation type must conform to
+									-- the entity type
+								create l_vgcc31
+								context.init_error (l_vgcc31)
+								l_vgcc31.set_target_name (l_as.target.access_name)
+								l_vgcc31.set_type (l_explicit_type)
+								l_vgcc31.set_location (l_as.type.start_location)
+								error_handler.insert_error (l_vgcc31)
+							elseif l_warning_level /= error_handler.warning_level then
+								error_handler.warning_list.last.set_location (l_as.type.start_location)
+							end
+
+							if l_explicit_type /= Void then
+								instantiator.dispatch (l_explicit_type, context.current_class)
+								l_creation_type := l_explicit_type
+							else
+									-- Creation type is always attached.
+								l_creation_type := l_target_type.as_attached_in (context.current_class)
+								set_type (l_creation_type, l_as)
+							end
+
+								-- Check call validity for creation.
+							process_abstract_creation (l_creation_type, l_as.call, l_as.target.access_name, l_as.target.start_location)
+							if not is_inherited then
+								record_creation_dependence
+									(if
+										not attached l_explicit_type and then
+										attached {ACCESS_FEAT_AS} l_as.target as a and then
+										a.is_feature and then
+										attached context.current_class.feature_of_name_id (a.feature_name.name_id) as f and then
+										attached type_a_checker.check_and_solved (create {LIKE_FEATURE}.make (f, context.current_class.class_id), Void) as t
+									then
+											-- Use `attached like feature_name` type for creation on a feature without explicit type.
+										t.as_attached_in (context.current_class)
+									else
+											-- Use type of the target otherwise.
+										l_creation_type
+									end)
+							end
+
+							if l_needs_byte_node then
+								generate_creation (l_as.is_active, l_access, {ROUTINE_B} / last_byte_node, l_creation_type, l_explicit_type,
+									l_as.target.start_location)
+									-- Set line information for instruction.
+								if attached {ASSIGN_B} last_byte_node as l_assign then
+									l_assign.set_line_pragma (l_as.line_pragma)
+								end
+							end
+						end
+					end
+				end
+				if l_reinitialized_variable /= 0 then
+						-- Local variable is now attached.
+					if l_reinitialized_variable = result_name_id then
+						context.add_result_instruction_scope
+						context.set_result
+					elseif l_reinitialized_variable > 0 then
+						context.add_local_instruction_scope (l_reinitialized_variable)
+						context.set_local (l_reinitialized_variable)
+					else
+						context.add_attribute_instruction_scope (- l_reinitialized_variable)
+					end
+				end
+			end
+			reset_types
 		end
 
-	process_bang_creation_as (l_as: BANG_CREATION_AS)
+	process_creation_expr_as (l_as: CREATION_EXPR_AS)
 			-- Process `l_as'.
+		local
+			l_call_access: ROUTINE_B
+			l_creation_expr: CREATION_EXPR_B
+			l_creation_type: TYPE_A
+			l_create_info: CREATE_INFO
+			l_vgcc3: VGCC3
+			l_needs_byte_node: BOOLEAN
+			l_error_level: NATURAL_32
 		do
-			process_creation_as (l_as)
-		end
+			l_needs_byte_node := is_byte_node_enabled
+			reset_for_unqualified_call_checking
 
-	process_create_creation_expr_as (l_as: CREATE_CREATION_EXPR_AS)
-			-- Process `l_as'.
-		do
-			process_creation_expr_as (l_as)
-		end
+			l_error_level := error_level
+			l_as.type.process (Current)
+			l_creation_type := last_type
+			if l_creation_type /= Void then
+				if l_creation_type.is_none then
+						-- Cannot create instance of NONE.
+					create l_vgcc3
+					context.init_error (l_vgcc3)
+					l_vgcc3.set_type (l_creation_type)
+					l_vgcc3.set_location (l_as.type.start_location)
+					error_handler.insert_error (l_vgcc3)
+				else
+						-- Type of a creation expression is always attached.
+					l_creation_type := l_creation_type.as_attached_in (context.current_class)
+						-- Type of a creation expression is frozen if this is a class type.
+					if
+						attached {DEANCHORED_TYPE_A} l_creation_type as l_type and then
+						attached l_type.duplicate as l_duplicated_type
+					then
+						l_duplicated_type.set_frozen_mark
+						l_creation_type := l_duplicated_type
+					end
+					set_type (l_creation_type, l_as)
+					instantiator.dispatch (l_creation_type, context.current_class)
 
-	process_bang_creation_expr_as (l_as: BANG_CREATION_EXPR_AS)
-			-- Process `l_as'.
-		do
-			process_creation_expr_as (l_as)
+						-- Check call validity for creation.
+					is_in_creation_expression := True
+					process_abstract_creation (l_creation_type, l_as.call, Void, l_as.type.start_location)
+					if not is_inherited then
+						record_creation_dependence (l_creation_type)
+					end
+
+					if l_needs_byte_node then
+						l_call_access ?= last_byte_node
+
+							-- Compute creation information
+						l_create_info := l_creation_type.create_info
+
+						create l_creation_expr
+						l_creation_expr.set_is_active (l_as.is_active)
+						l_creation_expr.set_call (l_call_access)
+						l_creation_expr.set_info (l_create_info)
+						l_creation_expr.set_type (l_creation_type)
+						l_creation_expr.set_line_number (l_as.type.start_location.line)
+
+						last_byte_node := l_creation_expr
+					end
+					set_type (l_creation_type, l_as)
+				end
+			end
+			if error_level /= l_error_level then
+				reset_types
+			end
 		end
 
 feature {NONE} -- Implementation
@@ -6726,219 +6917,6 @@ feature {NONE} -- Visitor
 			end
 
 			last_byte_node := l_assign
-		end
-
-	process_creation_as (l_as: CREATION_AS)
-		local
-			l_access: ACCESS_B
-			l_target_type, l_explicit_type, l_creation_type: TYPE_A
-			l_vgcc3: VGCC3
-			l_vgcc31: VGCC31
-			l_vgcc7: VGCC7
-			l_needs_byte_node: BOOLEAN
-			l_error_level: NATURAL_32
-			l_warning_level: like {ERROR_HANDLER}.warning_level
-			l_reinitialized_variable: like last_reinitialized_variable
-		do
-			l_error_level := error_level
-			break_point_slot_count := break_point_slot_count + 1
-
-			l_needs_byte_node := is_byte_node_enabled
-			reset_for_unqualified_call_checking
-
-				-- Set flag so that depend_unit knows it is used as a creation routine
-				-- not just a normal feature call. It is reset as soon as it is processed.
-			is_target_of_creation_instruction := True
-			last_access_writable := False
-			last_reinitialized_variable := 0
-			l_as.target.process (Current)
-			if l_needs_byte_node then
-				l_access ?= last_byte_node
-			end
-				-- Record initialized variable to commit it after the call is processed.
-			l_reinitialized_variable := last_reinitialized_variable
-				-- Although it might be already reset when `target' is indeed
-				-- a feature of the current class, it is not reset when it is a local,
-				-- that's why we reset it.
-			is_target_of_creation_instruction := False
-
-			l_target_type := last_type
-			if l_target_type /= Void then
-				if not last_access_writable then
-					create l_vgcc7
-					context.init_error (l_vgcc7)
-					l_vgcc7.set_target_name (l_as.target.access_name)
-					l_vgcc7.set_type (l_target_type)
-					l_vgcc7.set_location (l_as.target.start_location)
-					error_handler.insert_error (l_vgcc7)
-				else
-					if l_as.type /= Void then
-						l_as.type.process (Current)
-						l_explicit_type := last_type
-							-- If `l_explicit_type' is Void then we stop the process here.
-						if l_explicit_type /= Void then
-								-- Creation type is always attached
-							l_explicit_type := l_explicit_type.as_attached_in (context.current_class)
-							set_type (l_explicit_type, l_as)
-						end
-					end
-
-					if error_level = l_error_level then
-							-- Check validity of creation type.
-						if
-							l_target_type.is_none or else (l_explicit_type /= Void and then
-							(l_explicit_type.is_none or else
-								(l_target_type.is_expanded and then l_explicit_type.is_expanded and then
-								not l_explicit_type.same_as (l_target_type))))
-						then
-								-- Cannot create instance of NONE.
-								-- Cannot create an expanded type which is different from
-								-- the declared type of `l_as.target'.
-							create l_vgcc3
-							context.init_error (l_vgcc3)
-							l_vgcc3.set_type (l_explicit_type)
-							l_vgcc3.set_target_name (l_as.target.access_name)
-							l_vgcc3.set_location (l_as.target.start_location)
-							error_handler.insert_error (l_vgcc3)
-						else
-							l_warning_level := error_handler.warning_level
-							if
-								l_explicit_type /= Void and then
-								not l_target_type.backward_conform_to (context.current_class, l_explicit_type)
-							then
-									-- Specified creation type must conform to
-									-- the entity type
-								create l_vgcc31
-								context.init_error (l_vgcc31)
-								l_vgcc31.set_target_name (l_as.target.access_name)
-								l_vgcc31.set_type (l_explicit_type)
-								l_vgcc31.set_location (l_as.type.start_location)
-								error_handler.insert_error (l_vgcc31)
-							elseif l_warning_level /= error_handler.warning_level then
-								error_handler.warning_list.last.set_location (l_as.type.start_location)
-							end
-
-							if l_explicit_type /= Void then
-								instantiator.dispatch (l_explicit_type, context.current_class)
-								l_creation_type := l_explicit_type
-							else
-									-- Creation type is always attached.
-								l_creation_type := l_target_type.as_attached_in (context.current_class)
-								set_type (l_creation_type, l_as)
-							end
-
-								-- Check call validity for creation.
-							process_abstract_creation (l_creation_type, l_as.call, l_as.target.access_name, l_as.target.start_location)
-							if not is_inherited then
-								record_creation_dependence
-									(if
-										not attached l_explicit_type and then
-										attached {ACCESS_FEAT_AS} l_as.target as a and then
-										a.is_feature and then
-										attached context.current_class.feature_of_name_id (a.feature_name.name_id) as f and then
-										attached type_a_checker.check_and_solved (create {LIKE_FEATURE}.make (f, context.current_class.class_id), Void) as t
-									then
-											-- Use `attached like feature_name` type for creation on a feature without explicit type.
-										t.as_attached_in (context.current_class)
-									else
-											-- Use type of the target otherwise.
-										l_creation_type
-									end)
-							end
-
-							if l_needs_byte_node then
-								generate_creation (l_as.is_active, l_access, {ROUTINE_B} / last_byte_node, l_creation_type, l_explicit_type,
-									l_as.target.start_location)
-									-- Set line information for instruction.
-								if attached {ASSIGN_B} last_byte_node as l_assign then
-									l_assign.set_line_pragma (l_as.line_pragma)
-								end
-							end
-						end
-					end
-				end
-				if l_reinitialized_variable /= 0 then
-						-- Local variable is now attached.
-					if l_reinitialized_variable = result_name_id then
-						context.add_result_instruction_scope
-						context.set_result
-					elseif l_reinitialized_variable > 0 then
-						context.add_local_instruction_scope (l_reinitialized_variable)
-						context.set_local (l_reinitialized_variable)
-					else
-						context.add_attribute_instruction_scope (- l_reinitialized_variable)
-					end
-				end
-			end
-			reset_types
-		end
-
-	process_creation_expr_as (l_as: CREATION_EXPR_AS)
-		local
-			l_call_access: ROUTINE_B
-			l_creation_expr: CREATION_EXPR_B
-			l_creation_type: TYPE_A
-			l_create_info: CREATE_INFO
-			l_vgcc3: VGCC3
-			l_needs_byte_node: BOOLEAN
-			l_error_level: NATURAL_32
-		do
-			l_needs_byte_node := is_byte_node_enabled
-			reset_for_unqualified_call_checking
-
-			l_error_level := error_level
-			l_as.type.process (Current)
-			l_creation_type := last_type
-			if l_creation_type /= Void then
-				if l_creation_type.is_none then
-						-- Cannot create instance of NONE.
-					create l_vgcc3
-					context.init_error (l_vgcc3)
-					l_vgcc3.set_type (l_creation_type)
-					l_vgcc3.set_location (l_as.type.start_location)
-					error_handler.insert_error (l_vgcc3)
-				else
-						-- Type of a creation expression is always attached.
-					l_creation_type := l_creation_type.as_attached_in (context.current_class)
-						-- Type of a creation expression is frozen if this is a class type.
-					if
-						attached {DEANCHORED_TYPE_A} l_creation_type as l_type and then
-						attached l_type.duplicate as l_duplicated_type
-					then
-						l_duplicated_type.set_frozen_mark
-						l_creation_type := l_duplicated_type
-					end
-					set_type (l_creation_type, l_as)
-					instantiator.dispatch (l_creation_type, context.current_class)
-
-						-- Check call validity for creation.
-					is_in_creation_expression := True
-					process_abstract_creation (l_creation_type, l_as.call, Void, l_as.type.start_location)
-					if not is_inherited then
-						record_creation_dependence (l_creation_type)
-					end
-
-					if l_needs_byte_node then
-						l_call_access ?= last_byte_node
-
-							-- Compute creation information
-						l_create_info := l_creation_type.create_info
-
-						create l_creation_expr
-						l_creation_expr.set_is_active (l_as.is_active)
-						l_creation_expr.set_call (l_call_access)
-						l_creation_expr.set_info (l_create_info)
-						l_creation_expr.set_type (l_creation_type)
-						l_creation_expr.set_line_number (l_as.type.start_location.line)
-
-						last_byte_node := l_creation_expr
-					end
-					set_type (l_creation_type, l_as)
-				end
-			end
-			if error_level /= l_error_level then
-				reset_types
-			end
 		end
 
 	process_debug_as (l_as: DEBUG_AS)

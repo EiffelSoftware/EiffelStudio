@@ -95,8 +95,7 @@ inherit
 			process_assign_as,
 			process_reverse_as,
 			process_check_as,
-			process_bang_creation_as,
-			process_create_creation_as,
+			process_creation_as,
 			process_debug_as,
 			process_guard_as,
 			process_if_as,
@@ -142,7 +141,7 @@ inherit
 			process_access_feat_as,
 			process_access_id_as,
 			process_access_inv_as,
-			process_create_creation_expr_as,
+			process_creation_expr_as,
 			process_nested_expr_as,
 			process_parameter_list_as,
 			process_precursor_as,
@@ -1352,17 +1351,7 @@ feature {CLASS_AS} -- Instructions
 			print_on_new_line (l_as.end_keyword)
 		end
 
-	process_bang_creation_as (l_as: BANG_CREATION_AS)
-			-- Process bang creation instruction `l_as'.
-		do
-			print_on_new_line (l_as.lbang_symbol)
-			safe_process (l_as.type)
-			safe_process (l_as.rbang_symbol)
-			safe_process (l_as.target)
-			safe_process (l_as.call)
-		end
-
-	process_create_creation_as (l_as: CREATE_CREATION_AS)
+	process_creation_as (l_as: CREATION_AS)
 			-- Process create creation instruction `l_as'.
 		do
 			print_on_new_line (l_as.create_keyword (match_list))
@@ -1982,7 +1971,7 @@ feature {CLASS_AS} -- Calls
 			safe_process_and_print (l_as.internal_parameters, " ", "")
 		end
 
-	process_create_creation_expr_as (l_as: CREATE_CREATION_EXPR_AS)
+	process_creation_expr_as (l_as: CREATION_EXPR_AS)
 			-- Process create creation expression `l_as'.
 		do
 			safe_process_and_print (l_as.create_keyword (match_list), "", " ")

@@ -1,19 +1,22 @@
-note
+﻿note
 	description: "Node for a creation instruction."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 	date: "$Date$"
 	revision: "$Revision$"
 
-deferred class CREATION_AS
+class CREATION_AS
 
 inherit
 	INSTRUCTION_AS
 
+create
+	make
+
 feature {NONE} -- Initialization
 
-	initialize (a: BOOLEAN; tp: like type; tg: like target; c: like call)
-			-- Create a new CREATION AST node.
+	make (a: BOOLEAN; tp: like type; tg: like target; c: like call; k_as: like create_keyword)
+			-- Create new CREATE_CREATION AST node.
 		require
 			tg_not_void: tg /= Void
 		do
@@ -21,11 +24,15 @@ feature {NONE} -- Initialization
 			type := tp
 			target := tg
 			call := c
+			if k_as /= Void then
+				create_keyword_index := k_as.index
+			end
 		ensure
 			is_active_set: is_active = a
 			type_set: type = tp
 			target_set: target = tg
 			call_set: call = c
+			create_keyword_set: k_as /= Void implies create_keyword_index = k_as.index
 		end
 
 feature -- Visitor
@@ -64,11 +71,53 @@ feature -- Comparison
 				equivalent (type, other.type)
 		end
 
+feature -- Roundtrip
+
+	create_keyword_index: INTEGER
+			-- Index of keyword "create" associated with this structure
+
+	create_keyword (a_list: LEAF_AS_LIST): detachable KEYWORD_AS
+			-- Keyword "create" associated with this structure
+		require
+			a_list_not_void: a_list /= Void
+		do
+			Result := keyword_from_index (a_list, create_keyword_index)
+		end
+
+	index: INTEGER
+			-- <Precursor>
+		do
+			Result := create_keyword_index
+		end
+
+feature -- Roundtrip/Token
+
+	first_token (a_list: detachable LEAF_AS_LIST): detachable LEAF_AS
+		do
+			if a_list /= Void and create_keyword_index /= 0 then
+				Result := create_keyword (a_list)
+			elseif attached type as l_type then
+				Result := l_type.first_token (a_list)
+			else
+				Result := target.first_token (a_list)
+			end
+		end
+
+	last_token (a_list: detachable LEAF_AS_LIST): detachable LEAF_AS
+		do
+			if attached call as l_call then
+				Result := l_call.last_token (a_list)
+			else
+				Result := target.last_token (a_list)
+			end
+		end
+
 invariant
 	target_not_void: target /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2015, Eiffel Software"
+	ca_ignore: "CA011", "CA011: too many arguments"
+	copyright:	"Copyright (c) 1984-2020, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
@@ -99,4 +148,4 @@ note
 			Customer support http://support.eiffel.com
 		]"
 
-end -- class CREATION_AS
+end

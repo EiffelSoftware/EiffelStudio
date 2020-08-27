@@ -229,54 +229,6 @@ feature -- Access: Encoding
 	detected_bom: detachable STRING
 			-- Bom of the encoding detected by last parsing
 
-feature -- Comparison
-
-	is_text_case_insensitve_equal_to (a_text: STRING_8): BOOLEAN
-			-- Is `text' the same as `a_text' in a case insensitive way?
-			--| We use `STRING_8' and not `READABLE_STRING_8' to have
-			--| an efficient comparison using the areas.
-		local
-			i, j, nb: INTEGER
-			l_other_area: SPECIAL [CHARACTER_8]
-		do
-			nb := text_count
-			if nb > 0 and a_text.count = nb then
-				if attached yy_content_area as l_area then
-					from
-						i := 0
-						j := yy_start
-						Result := True
-						l_other_area := a_text.area
-					until
-						i = nb
-					loop
-						if l_area.item (j).as_lower /= l_other_area.item (i).as_lower then
-							i := nb - 1
-							Result := False
-						end
-						i := i + 1
-						j := j + 1
-					end
-				else
-						-- Inefficient version.
-					from
-						i := 1
-						Result := True
-					until
-						i > nb
-					loop
-						if text_item (i).as_lower /= a_text.item (i).as_lower then
-							i := nb
-							Result := False
-						end
-						i := i + 1
-					end
-				end
-			end
-		ensure
-			definition: Result = text.same_string (a_text)
-		end
-
 feature {NONE} -- Status
 
 	syntax_version: NATURAL_8
@@ -550,7 +502,7 @@ feature {NONE} -- Implementation
 			l_count := text_count
 				-- Note: Identifiers are converted to lower-case.
 			if l_count > maximum_string_length then
-				report_too_long_string (text)
+				report_too_long_string (utf8_text)
 			else
 				last_detachable_id_as_value := ast_factory.new_filled_id_as (Current)
 			end
@@ -567,7 +519,7 @@ feature {NONE} -- Implementation
 			l_count := text_count
 				-- Note: Identifiers are converted to lower-case.
 			if l_count > maximum_string_length then
-				report_too_long_string (text)
+				report_too_long_string (utf8_text)
 			else
 				last_detachable_id_as_value := ast_factory.new_filled_id_as_with_existing_stub (Current, a_index)
 				if has_syntax_warning then
@@ -637,7 +589,7 @@ feature {NONE} -- Implementation
 				-- We remove the double quotes and initializes it with scanned input.
 			l_str := ast_factory.new_string (n - 2)
 			if l_str /= Void then
-				append_text_substring_to_string (2, n - 1, l_str)
+				append_utf8_text_substring_to_string (2, n - 1, l_str)
 			end
 
 				-- `roundtrip_token_buffer' is used for the getting the actual input
@@ -656,7 +608,7 @@ feature {NONE} -- Implementation
 					-- not needed by the factory.
 				if l_str = Void then
 					create l_str.make (n - 2)
-					append_text_substring_to_string (2, n - 1, l_str)
+					append_utf8_text_substring_to_string (2, n - 1, l_str)
 				end
 				report_too_long_string (l_str)
 			end
@@ -828,12 +780,12 @@ feature {NONE} -- Implementation
 	update_character_locations
 			-- Update character locations for later use.
 		do
-			if yyline_used and attached yy_content_area as l_content_area then
+			if yyline_used and attached yy_unicode_content_area as l_content_area then
 				update_character_position_from_buffer (l_content_area, yy_start, yy_end - 1)
 			end
 		end
 
-	update_character_position_from_buffer (s: SPECIAL [CHARACTER]; start_pos, end_pos: INTEGER)
+	update_character_position_from_buffer (s: SPECIAL [CHARACTER_32]; start_pos, end_pos: INTEGER)
 			-- Count of characters corresponding to UTF-8 sequence `s'.
 			-- Compute column number in character.
 		require
@@ -858,43 +810,14 @@ feature {NONE} -- Implementation
 				i > n
 			loop
 				c := s [i].code
-				if c <= 0x7F then
-						-- 0xxxxxxx
-					i := i + 1
-					cp := cp + 1
+				i := i + 1
+				cp := cp + 1
+				cc :=
 					if c = 0xA then -- New line
-						cc := 1
+						1
 					else
-						cc := cc + 1
+						cc + 1
 					end
-				elseif c <= 0xDF then
-						-- 110xxxxx 10xxxxxx
-					i := i + 2
-					if i - 1 <= n then
-						cp := cp + 1
-						cc := cc + 1
-					end
-				elseif c <= 0xEF then
-						-- 1110xxxx 10xxxxxx 10xxxxxx
-					i := i + 3
-					if i - 1 <= n then
-						cp := cp + 1
-						cc := cc + 1
-					end
-				elseif c <= 0xF7 then
-						-- 11110xxx 10xxxxxx 10xxxxxx 10xxxxxx
-					i := i + 4
-					if i - 1 <= n then
-						cp := cp + 1
-						cc := cc + 1
-					end
-				else
-					check should_not_occur: False end
-						-- unexpected case for valid UTF-8 encoded text.
-					i := i + 1
-					cp := cp + 1
-					cc := cc + 1
-				end
 			end
 			next_character_column := cc
 			next_character_position := cp

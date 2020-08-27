@@ -515,8 +515,6 @@ feature {NONE} -- Implementation
 
 	process_verbatim_string_as (l_as: VERBATIM_STRING_AS)
 		do
-			if not expr_type_visiting then
-			end
 			last_type := string_type
 		end
 
@@ -533,10 +531,8 @@ feature {NONE} -- Implementation
 			if l_as.type /= Void then
 				l_as.type.process (Current)
 			end
-			if l_as.assigner /= Void then
-				if not has_error_internal then
-					l_feat := current_assigner_feature
-				end
+			if attached l_as.assigner and then not has_error_internal then
+				l_feat := current_assigner_feature
 			end
 			safe_process (l_as.content)
 		end
@@ -671,10 +667,8 @@ feature {NONE} -- Implementation
 			if l_as.is_argument then
 				last_type := current_feature.arguments.i_th (l_as.argument_position)
 			elseif l_as.is_local then
-				if last_type = Void then
-					if locals_for_current_feature.has_key (l_as.access_name) then
-						last_type := locals_for_current_feature.found_item
-					end
+				if not attached last_type and then locals_for_current_feature.has_key (l_as.access_name) then
+					last_type := locals_for_current_feature.found_item
 				end
 			elseif l_as.is_tuple_access then
 				if not has_error_internal then
@@ -779,10 +773,8 @@ feature {NONE} -- Implementation
 					real_feature := l_current_feature.ancestor_version (l_parent_class)
 				end
 			end
-			if not expr_type_visiting then
-				if l_as.parameter_count > 0 then
-					l_as.parameters.process (Current)
-				end
+			if not expr_type_visiting and then l_as.parameter_count > 0 then
+				l_as.parameters.process (Current)
 			end
 			if real_feature /= Void then
 				l_type := real_feature.type
@@ -873,24 +865,17 @@ feature {NONE} -- Implementation
 					l_as.precondition.process (Current)
 				end
 			end
-				if l_as.locals /= Void then
-					if l_as.locals.count > 0 then
-						processing_locals := True
-						l_as.locals.process (Current)
-						processing_locals := False
-					end
+				if attached l_as.locals and then not l_as.locals.is_empty then
+					processing_locals := True
+					l_as.locals.process (Current)
+					processing_locals := False
 				end
 				safe_process (l_as.routine_body)
-			if is_inline_agent then
-			else
-				if l_as.postcondition /= Void then
-					l_as.postcondition.process (Current)
-				end
+			if not is_inline_agent and then attached l_as.postcondition as p then
+				p.process (Current)
 			end
-			if l_as.rescue_clause /= Void then
-				if not l_as.rescue_clause.is_empty then
-					format_compound (l_as.rescue_clause)
-				end
+			if attached l_as.rescue_clause as c and then not c.is_empty then
+				format_compound (c)
 			end
 			if not l_as.is_deferred and not l_as.is_external then
 				put_breakable (l_as)
@@ -952,7 +937,6 @@ feature {NONE} -- Implementation
 		local
 			first_printed: BOOLEAN
 			l_names_heap: like names_heap
-			l_id: INTEGER
 			l_feature: FEATURE_I
 			l_feat: E_FEATURE
 		do
@@ -963,8 +947,7 @@ feature {NONE} -- Implementation
 				until
 					l_as.id_list.after
 				loop
-					l_id := l_as.id_list.item
-					l_feature := feature_from_ancestors (source_class, l_id)
+					l_feature := feature_from_ancestors (source_class, l_as.id_list.item)
 						check
 							l_feature /= Void
 							l_feature.rout_id_set /= Void
@@ -1407,14 +1390,15 @@ feature {NONE} -- Implementation
 					l_feat := feature_in_class (last_class, l_as.routine_ids)
 				end
 			end
-			if not expr_type_visiting then
-				if l_as.operands /= Void then
-					l_last_type := last_type
-					l_last_class := last_class
-					l_as.operands.process (Current)
-					last_type := l_last_type
-					last_class := l_last_class
-				end
+			if
+				not expr_type_visiting and then
+				attached l_as.operands
+			then
+				l_last_type := last_type
+				l_last_class := last_class
+				l_as.operands.process (Current)
+				last_type := l_last_type
+				last_class := l_last_class
 			end
 			if not has_error_internal then
 				check
@@ -1576,10 +1560,8 @@ feature {NONE} -- Implementation
 			if l_as.case_list /= Void then
 				l_as.case_list.process (Current)
 			end
-			if l_as.else_part /= Void then
-				if not l_as.else_part.is_empty then
-					format_compound (l_as.else_part)
-				end
+			if attached l_as.else_part as e and then not e.is_empty then
+				format_compound (e)
 			end
 		end
 
@@ -1618,7 +1600,6 @@ feature {NONE} -- Implementation
 			end
 			if l_as.from_part /= Void then
 				format_compound (l_as.from_part)
-			else
 			end
 			if l_as.invariant_part /= Void then
 				l_as.invariant_part.process (Current)
@@ -1732,7 +1713,6 @@ feature {NONE} -- Implementation
 			-- Shared part of `'processing_class_as' for both normal flat views and doc.
 		local
 			l_creators: EIFFEL_LIST [CREATE_AS]
-			l_create: CREATE_AS
 			l_features: EIFFEL_LIST [FEATURE_NAME]
 			l_feat: FEATURE_I
 		do
@@ -1757,8 +1737,7 @@ feature {NONE} -- Implementation
 					create l_creators.make (1)
 					create l_features.make (1)
 					l_features.extend (create {FEAT_NAME_ID_AS}.initialize (create {ID_AS}.initialize_from_id (l_feat.feature_name_id)))
-					create l_create.initialize (Void, l_features, Void)
-					l_creators.extend (l_create)
+					l_creators.extend (create {CREATE_AS}.initialize (Void, l_features, Void))
 				end
 			end
 			if l_creators /= Void then
@@ -2469,11 +2448,8 @@ feature {NONE} -- Implementation: helpers
 
 	type_feature_i_from_ancestor (a_ancestor: CLASS_C; a_formal: FORMAL_A): TYPE_FEATURE_I
 			-- Formal constraint class from `a_ancestor'
-		local
-			l_type_feature_i: TYPE_FEATURE_I
 		do
-			l_type_feature_i := a_ancestor.formal_at_position (a_formal.position)
-			Result := l_type_feature_i
+			Result := a_ancestor.formal_at_position (a_formal.position)
 		end
 
 	type_from_ancestor (a_ancestor: CLASS_C; a_formal: FORMAL_A): TYPE_A
@@ -2547,14 +2523,9 @@ feature {NONE} -- Implementation: helpers
 		require
 			any_compiled: system.any_class.is_compiled
 			array_compiled: system.array_class.is_compiled
-		local
-			generics: ARRAYED_LIST [TYPE_A]
-			any_type: CL_TYPE_A
 		once
-			create generics.make (1)
-			create any_type.make (system.any_id)
-			generics.extend (any_type)
-			create Result.make (system.array_id, generics)
+			create Result.make (system.array_id,
+				create {ARRAYED_LIST [TYPE_A]}.make_from_array (<<create {CL_TYPE_A}.make (system.any_id)>>))
 				-- Type of a strip is a frozen array.
 			Result.set_frozen_mark
 		end
@@ -2697,11 +2668,9 @@ feature {NONE} -- Implementation: helpers
 					-- is used to create current ROUTINE type.
 				create l_oargtypes.make (l_count)
 
-				if l_count > 0 then
-					if l_oidx > 1 then
-							-- Target is open, so insert it.
-						l_oargtypes.extend (l_target_type)
-					end
+				if l_count > 0 and then l_oidx > 1 then
+						-- Target is open, so insert it.
+					l_oargtypes.extend (l_target_type)
 				end
 
 					-- Always insert target's type in `l_argtypes' as first argument.

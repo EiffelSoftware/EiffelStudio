@@ -237,7 +237,7 @@ feature -- Leaf nodes
 		do
 			l_cnt := a_scn.text_count
 			create l_str.make (l_cnt)
-			a_scn.append_text_to_string (l_str)
+			a_scn.append_utf8_text_to_string (l_str)
 			create Result.initialize (l_str)
 			Result.set_position (a_scn.line, a_scn.column, a_scn.position, l_cnt,
 				a_scn.character_column, a_scn.character_position, a_scn.unicode_text_count)
@@ -320,7 +320,7 @@ feature -- Leaf nodes
 			l_cnt := a_scn.text_count
 			l_str := reusable_string_buffer
 			l_str.wipe_out
-			a_scn.append_text_to_string (l_str)
+			a_scn.append_utf8_text_to_string (l_str)
 			create l_id_as.initialize (l_str)
 			l_id_as.set_position (a_scn.line, a_scn.column, a_scn.position, l_cnt,
 				a_scn.character_column, a_scn.character_position, a_scn.unicode_text_count)
@@ -364,7 +364,7 @@ feature -- Leaf nodes
 			l_cnt := s.text_count
 			l_str := reusable_string_buffer
 			l_str.wipe_out
-			s.append_text_to_string (l_str)
+			s.append_utf8_text_to_string (l_str)
 			create l_id_as.initialize (l_str)
 			l_id_as.set_position (s.line, s.column, s.position, l_cnt,
 				s.character_column, s.character_position, s.unicode_text_count)
@@ -386,7 +386,7 @@ feature -- Leaf nodes
 			increase_match_list_count
 		end
 
-	create_break_as_with_data (a_text: STRING; l, c, p, n, cc, cp, cs: INTEGER)
+	create_break_as_with_data (a_text: STRING; l, c, p, n, cc, cp, cn: INTEGER)
 			-- New COMMENT_AS node
 		do
 			increase_match_list_count
@@ -450,7 +450,7 @@ feature -- Access
 
 note
 	ca_ignore: "CA011", "CA011: too many arguments"
-	copyright:	"Copyright (c) 1984-2019, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2020, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

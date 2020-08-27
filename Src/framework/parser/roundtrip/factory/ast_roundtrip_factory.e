@@ -52,18 +52,18 @@ inherit
 
 feature -- Buffer operation
 
-	set_buffer (a_buf: STRING; a_scn: YY_SCANNER_SKELETON)
+	set_buffer (a_buf: STRING_8; a_scn: YY_SCANNER_SKELETON)
 		do
 			a_buf.wipe_out
-			a_buf.append (a_scn.text)
+			a_buf.append (a_scn.utf8_text)
 		ensure then
-			a_buf_set: a_buf.is_equal (a_scn.text)
+			a_buf_set: a_buf.same_string (a_scn.utf8_text)
 		end
 
 	append_text_to_buffer (a_buf: STRING; a_scn: YY_SCANNER_SKELETON)
 			-- Append `a_scn'.text to end of buffer `a_buf'.
 		do
-			a_scn.append_text_to_string (a_buf)
+			a_scn.append_utf8_text_to_string (a_buf)
 		end
 
 	append_character_to_buffer (a_buf: STRING; c: CHARACTER)
@@ -183,7 +183,7 @@ feature -- Leaf Nodes
 	new_filled_id_as (a_scn: EIFFEL_SCANNER_SKELETON): detachable ID_AS
 		do
 			Result := Precursor (a_scn)
-			extend_match_list_with_stub (create {LEAF_STUB_AS}.make (a_scn.text, a_scn.line, a_scn.column, a_scn.position, a_scn.text_count, a_scn.character_column, a_scn.character_position, a_scn.unicode_text_count))
+			extend_match_list_with_stub (create {LEAF_STUB_AS}.make (a_scn.utf8_text, a_scn.line, a_scn.column, a_scn.position, a_scn.text_count, a_scn.character_column, a_scn.character_position, a_scn.unicode_text_count))
 		end
 
 	new_void_as (a_scn: EIFFEL_SCANNER_SKELETON): detachable VOID_AS
@@ -213,13 +213,9 @@ feature -- Leaf Nodes
 	new_boolean_as (b: BOOLEAN; a_scn: EIFFEL_SCANNER_SKELETON): detachable BOOL_AS
 		do
 			Result := Precursor (b, a_scn)
-			if b then
-				extend_match_list_with_stub (create{KEYWORD_STUB_AS}.make (
-					{EIFFEL_TOKENS}.te_true, a_scn.text, a_scn.line, a_scn.column, a_scn.position, a_scn.text_count, a_scn.character_column, a_scn.character_position, a_scn.unicode_text_count))
-			else
-				extend_match_list_with_stub (create{KEYWORD_STUB_AS}.make (
-					{EIFFEL_TOKENS}.te_false, a_scn.text, a_scn.line, a_scn.column, a_scn.position, a_scn.text_count, a_scn.character_column, a_scn.character_position, a_scn.unicode_text_count))
-			end
+			extend_match_list_with_stub (create{KEYWORD_STUB_AS}.make
+				(if b then {EIFFEL_TOKENS}.te_true else {EIFFEL_TOKENS}.te_false end,
+				a_scn.text, a_scn.line, a_scn.column, a_scn.position, a_scn.text_count, a_scn.character_column, a_scn.character_position, a_scn.unicode_text_count))
 		end
 
 	new_current_as (a_scn: EIFFEL_SCANNER_SKELETON): detachable CURRENT_AS
@@ -277,7 +273,7 @@ feature -- Leaf Nodes
 			b_as: BREAK_AS
 		do
 			increase_match_list_count
-			create b_as.make (a_scn.text, a_scn.line, a_scn.column, a_scn.position, a_scn.text_count, a_scn.character_column, a_scn.character_position, a_scn.unicode_text_count)
+			create b_as.make (a_scn.utf8_text, a_scn.line, a_scn.column, a_scn.position, a_scn.text_count, a_scn.character_column, a_scn.character_position, a_scn.unicode_text_count)
 			b_as.set_index (match_list_count)
 			extend_match_list (b_as)
 		end
@@ -295,7 +291,7 @@ feature -- Leaf Nodes
 
 note
 	ca_ignore: "CA011", "CA011: too many arguments"
-	copyright:	"Copyright (c) 1984-2019, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2020, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

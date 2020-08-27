@@ -17,7 +17,7 @@ inherit
 	AST_ITERATOR
 		redefine
 			process_assign_as,
-			process_create_creation_as
+			process_creation_as
 		end
 
 create
@@ -111,7 +111,7 @@ feature {NONE} -- Implementation
 			Precursor (a_assign)
 		end
 
-	process_create_creation_as (a_create: attached CREATE_CREATION_AS)
+	process_creation_as (a_create: CREATION_AS)
 			-- <Precursor>
 		do
 			if

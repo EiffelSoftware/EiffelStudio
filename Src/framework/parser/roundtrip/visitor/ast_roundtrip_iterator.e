@@ -317,7 +317,7 @@ feature
 			safe_process (l_as.internal_operands)
 		end
 
-	process_create_creation_as (l_as: CREATE_CREATION_AS)
+	process_creation_as (l_as: CREATION_AS)
 			-- Process `l_as'.
 		do
 			safe_process (l_as.create_keyword (match_list))
@@ -326,30 +326,11 @@ feature
 			safe_process (l_as.call)
 		end
 
-	process_bang_creation_as (l_as: BANG_CREATION_AS)
-			-- Process `l_as'.
-		do
-			safe_process (l_as.lbang_symbol)
-			safe_process (l_as.type)
-			safe_process (l_as.rbang_symbol)
-			safe_process (l_as.target)
-			safe_process (l_as.call)
-		end
-
-	process_create_creation_expr_as (l_as: CREATE_CREATION_EXPR_AS)
+	process_creation_expr_as (l_as: CREATION_EXPR_AS)
 			-- Process `l_as'.
 		do
 			safe_process (l_as.create_keyword (match_list))
 			safe_process (l_as.type)
-			safe_process (l_as.call)
-		end
-
-	process_bang_creation_expr_as (l_as: BANG_CREATION_EXPR_AS)
-			-- Process `l_as'.
-		do
-			safe_process (l_as.lbang_symbol)
-			safe_process (l_as.type)
-			safe_process (l_as.rbang_symbol)
 			safe_process (l_as.call)
 		end
 
@@ -453,13 +434,6 @@ feature
 			safe_process (l_as.target)
 			safe_process (l_as.dot_symbol (match_list))
 			safe_process (l_as.message)
-		end
-
-	process_creation_expr_as (l_as: CREATION_EXPR_AS)
-		do
-			check
-				should_not_reach_here: False
-			end
 		end
 
 	process_type_expr_as (l_as: TYPE_EXPR_AS)
@@ -861,13 +835,6 @@ feature
 			safe_process (l_as.check_keyword (match_list))
 			safe_process (l_as.full_assertion_list)
 			safe_process (l_as.end_keyword)
-		end
-
-	process_creation_as (l_as: CREATION_AS)
-		do
-			check
-				Should_not_reach_here: False
-			end
 		end
 
 	process_debug_as (l_as: DEBUG_AS)

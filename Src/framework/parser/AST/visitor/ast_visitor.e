@@ -46,38 +46,6 @@ feature -- Roundtrip
 		deferred
 		end
 
-	process_create_creation_as (l_as: CREATE_CREATION_AS)
-			-- Process `l_as'.
-		require
-			is_valid_visitor: is_valid
-			l_as_not_void: l_as /= Void
-		deferred
-		end
-
-	process_bang_creation_as (l_as: BANG_CREATION_AS)
-			-- Process `l_as'.
-		require
-			is_valid_visitor: is_valid
-			l_as_not_void: l_as /= Void
-		deferred
-		end
-
-	process_create_creation_expr_as (l_as: CREATE_CREATION_EXPR_AS)
-			-- Process `l_as'.
-		require
-			is_valid_visitor: is_valid
-			non_void_as: l_as /= Void
-		deferred
-		end
-
-	process_bang_creation_expr_as (l_as: BANG_CREATION_EXPR_AS)
-			-- Process `l_as'.
-		require
-			is_valid_visitor: is_valid
-			non_void_as: l_as /= Void
-		deferred
-		end
-
 feature -- Roundtrip: leaves
 
 	process_keyword_as (l_as: KEYWORD_AS)

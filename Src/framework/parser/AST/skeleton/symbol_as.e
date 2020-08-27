@@ -1,8 +1,7 @@
-note
-	description: "Abstract description of an Eiffel symbol"
+﻿note
+	description: "Abstract description of an Eiffel symbol."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
-	author: ""
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -65,199 +64,193 @@ feature -- Status report
 	is_semicolon: BOOLEAN
 			-- Is current symbol ';'?
 		do
-			Result := (code = {EIFFEL_TOKENS}.te_semicolon)
+			Result := code = {EIFFEL_TOKENS}.te_semicolon
 		end
 
 	is_colon: BOOLEAN
 			-- Is current symbol ':'?
 		do
-			Result := (code = {EIFFEL_TOKENS}.te_colon)
+			Result := code = {EIFFEL_TOKENS}.te_colon
 		end
 
 	is_comma: BOOLEAN
 			-- Is current symbol ','?
 		do
-			Result := (code = {EIFFEL_TOKENS}.te_comma)
+			Result := code = {EIFFEL_TOKENS}.te_comma
 		end
 
 	is_dotdot: BOOLEAN
 			-- Is current symbol '..'?
 		do
-			Result := (code = {EIFFEL_TOKENS}.te_dotdot)
+			Result := code = {EIFFEL_TOKENS}.te_dotdot
 		end
 
 	is_question_mark: BOOLEAN
 			-- Is current symbol '?'?
 		do
-			Result := (code = {EIFFEL_TOKENS}.te_question)
+			Result := code = {EIFFEL_TOKENS}.te_question
 		end
 
 	is_tilde: BOOLEAN
 			-- Is current symbol '~'?
 		do
-			Result := (code = {EIFFEL_TOKENS}.te_tilde)
+			Result := code = {EIFFEL_TOKENS}.te_tilde
 		end
 
 	is_dot: BOOLEAN
 			-- Is current symbol '.'?
 		do
-			Result := (code = {EIFFEL_TOKENS}.te_dot)
+			Result := code = {EIFFEL_TOKENS}.te_dot
 		end
 
 	is_address: BOOLEAN
 			-- Is current symbol '$'?
 		do
-			Result := (code = {EIFFEL_TOKENS}.te_address)
+			Result := code = {EIFFEL_TOKENS}.te_address
 		end
 
 	is_assignment: BOOLEAN
 			-- Is current symbol ':='?
 		do
-			Result := (code = {EIFFEL_TOKENS}.te_assignment)
+			Result := code = {EIFFEL_TOKENS}.te_assignment
 		end
 
 	is_accept: BOOLEAN
 			-- Is current symbol '?='?
 		do
-			Result := (code = {EIFFEL_TOKENS}.te_accept)
+			Result := code = {EIFFEL_TOKENS}.te_accept
 		end
 
 	is_equal_symbol: BOOLEAN
 			-- Is current symbol '='?
 		do
-			Result := (code = {EIFFEL_TOKENS}.te_eq)
+			Result := code = {EIFFEL_TOKENS}.te_eq
 		end
 
 	is_lt: BOOLEAN
 			-- Is current symbol '<'?
 		do
-			Result := (code = {EIFFEL_TOKENS}.te_lt)
+			Result := code = {EIFFEL_TOKENS}.te_lt
 		end
 
 	is_gt: BOOLEAN
 			-- Is current symbol '>'?
 		do
-			Result := (code = {EIFFEL_TOKENS}.te_gt)
+			Result := code = {EIFFEL_TOKENS}.te_gt
 		end
 
 	is_le: BOOLEAN
 			-- Is current symbol '<='?
 		do
-			Result := (code = {EIFFEL_TOKENS}.te_le)
+			Result := code = {EIFFEL_TOKENS}.te_le
 		end
 
 	is_ge: BOOLEAN
 			-- Is current symbol '>='?
 		do
-			Result := (code = {EIFFEL_TOKENS}.te_ge)
+			Result := code = {EIFFEL_TOKENS}.te_ge
 		end
 
 	is_not_equal: BOOLEAN
 			-- Is current symbol '/='?
 		do
-			Result := (code = {EIFFEL_TOKENS}.te_ne)
+			Result := code = {EIFFEL_TOKENS}.te_ne
 		end
 
 	is_left_parenthesis: BOOLEAN
 			-- Is current symbol '('?
 		do
-			Result := (code = {EIFFEL_TOKENS}.te_lparan)
+			Result := code = {EIFFEL_TOKENS}.te_lparan
 		end
 
 	is_right_parenthesis: BOOLEAN
 			-- Is current symbol ')'?
 		do
-			Result := (code = {EIFFEL_TOKENS}.te_rparan)
+			Result := code = {EIFFEL_TOKENS}.te_rparan
 		end
 
 	is_left_curly: BOOLEAN
 			-- Is current symbol '{'?
 		do
-			Result := (code = {EIFFEL_TOKENS}.te_lcurly)
+			Result := code = {EIFFEL_TOKENS}.te_lcurly
 		end
 
 	is_right_curly: BOOLEAN
 			-- Is current symbol '}'?
 		do
-			Result := (code = {EIFFEL_TOKENS}.te_rcurly)
+			Result := code = {EIFFEL_TOKENS}.te_rcurly
 		end
 
 	is_left_square: BOOLEAN
 			-- Is current symbol '['?
 		do
-			Result := (code = {EIFFEL_TOKENS}.te_lsqure)
+			Result := code = {EIFFEL_TOKENS}.te_lsqure
 		end
 
 	is_right_square: BOOLEAN
 			-- Is current symbol ']'?
 		do
-			Result := (code = {EIFFEL_TOKENS}.te_rsqure)
+			Result := code = {EIFFEL_TOKENS}.te_rsqure
 		end
 
 	is_plus: BOOLEAN
 			-- Is current symbol '+'?
 		do
-			Result := (code = {EIFFEL_TOKENS}.te_plus)
+			Result := code = {EIFFEL_TOKENS}.te_plus
 		end
 
 	is_minus: BOOLEAN
 			-- Is current symbol '-'?
 		do
-			Result := (code = {EIFFEL_TOKENS}.te_minus)
+			Result := code = {EIFFEL_TOKENS}.te_minus
 		end
 
 	is_star: BOOLEAN
 			-- Is current symbol '*'?
 		do
-			Result := (code = {EIFFEL_TOKENS}.te_star)
+			Result := code = {EIFFEL_TOKENS}.te_star
 		end
 
 	is_slash: BOOLEAN
 			-- Is current symbol '/'?
 		do
-			Result := (code = {EIFFEL_TOKENS}.te_slash)
+			Result := code = {EIFFEL_TOKENS}.te_slash
 		end
 
 	is_power: BOOLEAN
 			-- Is current symbol '^'?
 		do
-			Result := (code = {EIFFEL_TOKENS}.te_power)
+			Result := code = {EIFFEL_TOKENS}.te_power
 		end
 
 	is_constrain: BOOLEAN
 			-- Is current symbol '->'?
 		do
-			Result := (code = {EIFFEL_TOKENS}.te_constrain)
-		end
-
-	is_bang: BOOLEAN
-			-- Is current symbol '!'?
-		do
-			Result := (code = {EIFFEL_TOKENS}.te_bang)
+			Result := code = {EIFFEL_TOKENS}.te_constrain
 		end
 
 	is_left_array: BOOLEAN
 			-- Is current symbol '<<'?
 		do
-			Result := (code = {EIFFEL_TOKENS}.te_larray)
+			Result := code = {EIFFEL_TOKENS}.te_larray
 		end
 
 	is_right_array: BOOLEAN
 			-- Is current symbol '>>'?
 		do
-			Result := (code = {EIFFEL_TOKENS}.te_rarray)
+			Result := code = {EIFFEL_TOKENS}.te_rarray
 		end
 
 	is_div: BOOLEAN
 			-- Is current symbol '//'?
 		do
-			Result := (code = {EIFFEL_TOKENS}.te_div)
+			Result := code = {EIFFEL_TOKENS}.te_div
 		end
 
 	is_mod: BOOLEAN
 			-- Is current symbol '\\'?
 		do
-			Result := (code = {EIFFEL_TOKENS}.te_mod)
+			Result := code = {EIFFEL_TOKENS}.te_mod
 		end
 
 feature -- Visitor
@@ -280,7 +273,8 @@ feature -- Symbol code
 		-- Symbol code		
 
 note
-	copyright:	"Copyright (c) 1984-2014, Eiffel Software"
+	ca_ignore: "CA011", "CA011: too many arguments"
+	copyright:	"Copyright (c) 1984-2020, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

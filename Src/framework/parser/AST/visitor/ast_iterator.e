@@ -34,30 +34,6 @@ feature -- Roundtrip
 			safe_process (l_as.operands)
 		end
 
-	process_create_creation_as (l_as: CREATE_CREATION_AS)
-			-- Process `l_as'.
-		do
-			process_creation_as (l_as)
-		end
-
-	process_bang_creation_as (l_as: BANG_CREATION_AS)
-			-- Process `l_as'.
-		do
-			process_creation_as (l_as)
-		end
-
-	process_create_creation_expr_as (l_as: CREATE_CREATION_EXPR_AS)
-			-- Process `l_as'.
-		do
-			process_creation_expr_as (l_as)
-		end
-
-	process_bang_creation_expr_as (l_as: BANG_CREATION_EXPR_AS)
-			-- Process `l_as'.
-		do
-			process_creation_expr_as (l_as)
-		end
-
 feature -- Roundtrip: leaves
 
 	process_keyword_as (l_as: KEYWORD_AS)
@@ -69,6 +45,7 @@ feature -- Roundtrip: leaves
 			-- Process `l_as'.
 		do
 		end
+
 	process_break_as (l_as: BREAK_AS)
 			-- Process `l_as'.
 		do

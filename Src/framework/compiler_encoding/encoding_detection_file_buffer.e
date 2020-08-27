@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "[
 					Buffer to detect file encoding according to leading characters. 
 					Characters read rather than BOM will be maitained and able be
@@ -11,7 +11,7 @@ class
 	ENCODING_DETECTION_FILE_BUFFER
 
 inherit
-	YY_FILE_BUFFER
+	YY_UNICODE_FILE_BUFFER
 
 	STRING_HANDLER
 
@@ -48,9 +48,13 @@ feature -- Detection
 					if last_detection_successful then
 						buff.fill_from_string (l_lead.substring (last_bom_count + 1, l_lead.count), 1)
 						count := count + l_lead.count - last_bom_count
+						set_default_encoding (utf8_encoding)
+						encoding := utf8_encoding
 					else
 						buff.fill_from_string (l_lead, 1)
 						count := count + l_lead.count
+						set_default_encoding (iso_8859_1_encoding)
+						encoding := iso_8859_1_encoding
 					end
 					buff.put (End_of_buffer_character, count + 1)
 					buff.put (End_of_buffer_character, count + 2)
@@ -61,7 +65,7 @@ feature -- Detection
 		end
 
 note
-	copyright: "Copyright (c) 1984-2010, Eiffel Software"
+	copyright: "Copyright (c) 1984-2020, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

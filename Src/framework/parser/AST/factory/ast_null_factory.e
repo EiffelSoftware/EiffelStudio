@@ -46,8 +46,8 @@ inherit
 			new_un_not_as, new_un_old_as, new_un_plus_as, new_un_strip_as, new_unique_as,
 			new_variant_as, new_verbatim_string_as, new_void_as, new_filled_none_id_as,
 			new_assigner_call_as,
-			new_create_creation_as, new_bang_creation_as,
-			new_create_creation_expr_as,new_bang_creation_expr_as,
+			new_creation_as,
+			new_creation_expr_as,
 			new_bracket_as,
 			new_assigner_mark_as, new_typed_char_as,
 			new_character_value_as, new_integer_value, new_real_value,
@@ -132,22 +132,12 @@ feature -- Roundtrip: New AST node
 		do
 		end
 
-	new_create_creation_as (is_active: BOOLEAN; tp: detachable TYPE_AS; tg: detachable ACCESS_AS; c: detachable ACCESS_INV_AS; k_as: detachable KEYWORD_AS): detachable CREATE_CREATION_AS
-			-- New CREATE_CREATION AST node.
+	new_creation_as (is_active: BOOLEAN; tp: detachable TYPE_AS; tg: detachable ACCESS_AS; c: detachable ACCESS_INV_AS; k_as: detachable KEYWORD_AS): detachable CREATION_AS
+			-- New CREATION AST node.
 		do
 		end
 
-	new_bang_creation_as (tp: detachable TYPE_AS; tg: detachable ACCESS_AS; c: detachable ACCESS_INV_AS; l_as, r_as: detachable SYMBOL_AS): detachable BANG_CREATION_AS
-			-- New CREATE_CREATION AST node.
-		do
-		end
-
-	new_create_creation_expr_as (is_active: BOOLEAN; t: detachable TYPE_AS; c: detachable ACCESS_INV_AS; k_as: detachable KEYWORD_AS): detachable CREATE_CREATION_EXPR_AS
-			-- New creation expression AST node
-		do
-		end
-
-	new_bang_creation_expr_as (t: detachable TYPE_AS; c: detachable ACCESS_INV_AS; l_as, r_as: detachable SYMBOL_AS): detachable BANG_CREATION_EXPR_AS
+	new_creation_expr_as (is_active: BOOLEAN; t: detachable TYPE_AS; c: detachable ACCESS_INV_AS; k_as: detachable KEYWORD_AS): detachable CREATION_EXPR_AS
 			-- New creation expression AST node
 		do
 		end

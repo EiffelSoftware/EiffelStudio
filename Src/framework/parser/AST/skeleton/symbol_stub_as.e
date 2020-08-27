@@ -75,7 +75,6 @@ feature -- Text
 			when {EIFFEL_TOKENS}.te_slash then Result := once "/"
 			when {EIFFEL_TOKENS}.te_power then Result := once "^"
 			when {EIFFEL_TOKENS}.te_constrain then Result := once "->"
-			when {EIFFEL_TOKENS}.te_bang then Result := once "!"
 			when {EIFFEL_TOKENS}.te_larray then Result := once "<<"
 			when {EIFFEL_TOKENS}.te_rarray then Result := once ">>"
 			when {EIFFEL_TOKENS}.te_div then Result := once "//"
@@ -133,7 +132,7 @@ feature {NONE} -- Unicode
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2019, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2020, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

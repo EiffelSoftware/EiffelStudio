@@ -16,9 +16,8 @@ inherit
 			process_array_as,
 			process_assign_as,
 			process_assigner_call_as,
-			process_bang_creation_as,
 			process_case_as,
-			process_create_creation_as,
+			process_creation_as,
 			process_creation_expr_as,
 			process_eiffel_list,
 			process_expr_call_as,
@@ -217,24 +216,6 @@ feature -- Processing
 			a_as.source.process (Current)
 		end
 
-	process_bang_creation_as (a_as: BANG_CREATION_AS)
-			-- Process old !! creation.
-			--
-			-- `a_as': Abstract syntax node to process.
-		local
-			l_call: ACCESS_INV_AS
-		do
-			reset_auto_spans
-			set_is_expression_instruction (True)
-			a_as.target.process (Current)
-
-			l_call := a_as.call
-			if l_call /= Void then
-				set_can_add_auto_span (False)
-				l_call.process (Current)
-			end
-		end
-
 	process_case_as (a_as: CASE_AS)
 			-- Process an inspect's when case.
 			--
@@ -249,7 +230,7 @@ feature -- Processing
 			a_as.compound.process (Current)
 		end
 
-	process_create_creation_as (a_as: CREATE_CREATION_AS)
+	process_creation_as (a_as: CREATION_AS)
 			-- Processes a creation expression
 			--
 			-- `a_as': Abstract syntax node to process.
@@ -698,8 +679,8 @@ feature -- {NONE} -- Autos Heap
 			l_list.extend (a_span)
 		ensure
 			autos_span_heap_has_a_line: autos_span_heap[a_line] /= Void
-			not_autos_span_heap_item_is_empty: not (autos_span_heap[a_line]).is_empty
-			autos_span_heap_has_a_span: (autos_span_heap[a_line]).last.is_equal (a_span)
+			not_autos_span_heap_item_is_empty: not autos_span_heap [a_line].is_empty
+			autos_span_heap_has_a_span: autos_span_heap [a_line].last.is_equal (a_span)
 		end
 
 feature {NONE} -- Internal Implementation Cache
@@ -749,7 +730,8 @@ feature {NONE} -- Implementation
 	leaf_as_list: LEAF_AS_LIST;
 
 note
-	copyright:	"Copyright (c) 1984-2015, Eiffel Software"
+	ca_ignore: "CA011", "CA011: too many arguments"
+	copyright:	"Copyright (c) 1984-2020, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

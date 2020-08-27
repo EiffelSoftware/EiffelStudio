@@ -8,7 +8,7 @@
 		<external_include location="/Users/matteo/Documents/Projects/Eiffel/wrapper_generator/objc_wrapper/Clib -ObjC"/>
 		<external_object location="/Users/matteo/Documents/Projects/Eiffel/wrapper_generator/objc_wrapper/spec/$(ISE_PLATFORM)/lib/objc.o"/>
 $FRAMEWORKS
-		<library name="base" location="$ISE_LIBRARY/library/base/base-safe.ecf"/>
+		<library name="base" location="$ISE_LIBRARY/library/base/base.ecf"/>
 		<cluster name="$WRAPPER_NAME" location=".\" recursive="true">
 			<file_rule>
 				<exclude>/EIFGENs$</exclude>

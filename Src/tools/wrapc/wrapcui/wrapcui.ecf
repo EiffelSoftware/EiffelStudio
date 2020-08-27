@@ -11,7 +11,7 @@
 			<concurrency support="none" use="thread"/>
 			<void_safety support="transitional" use="none"/>
 		</capability>
-		<library name="base" location="$ISE_LIBRARY\library\base\base-safe.ecf"/>
+		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf"/>
 		<library name="encoding" location="$ISE_LIBRARY\library\encoding\encoding.ecf"/>
 		<library name="ewg_library" location="..\src\library\library.ecf"/>
 		<library name="kernel" location="$ISE_LIBRARY\contrib\library\gobo\library\kernel\src\library.ecf"/>
@@ -49,7 +49,7 @@
 		</option>
 		<setting name="console_application" value="false"/>
 		<setting name="total_order_on_reals" value="false"/>
-		<library name="testing" location="$ISE_LIBRARY\library\testing\testing-safe.ecf"/>
+		<library name="testing" location="$ISE_LIBRARY\library\testing\testing.ecf"/>
 		<cluster name="tests" location=".\tests\" recursive="true"/>
 	</target>
 </system>

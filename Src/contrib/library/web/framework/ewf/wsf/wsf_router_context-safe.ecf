@@ -1,3 +1,0 @@
-<?xml version="1.0" encoding="ISO-8859-1"?>
-<redirection xmlns="http://www.eiffel.com/developers/xml/configuration-1-18-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-18-0 http://www.eiffel.com/developers/xml/configuration-1-18-0.xsd" uuid="1A0F9B0E-26CE-4DE0-BE47-C74D1AB2B389" message="Obsolete: use wsf_router_context.ecf !" location="wsf_router_context.ecf">
-</redirection>

@@ -1,6 +1,5 @@
-note
+﻿note
 	description: "Fast parser that only recognizes the old constructs"
-	author: ""
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -15,7 +14,6 @@ inherit
 			new_keyword_id_as,
 			new_old_syntax_object_test_as,
 			new_static_access_as,
-			new_symbol_as,
 			new_class_type_as,
 			new_filled_id_as
 		end
@@ -75,9 +73,7 @@ feature -- Processing
 			inspect a_code
 			when {EIFFEL_TOKENS}.te_is, {EIFFEL_TOKENS}.te_indexing then
 				has_obsolete_constructs := True
-
 			else
-
 			end
 		end
 
@@ -96,22 +92,6 @@ feature -- Processing
 			has_obsolete_constructs := has_obsolete_constructs or else f_as /= Void
 		end
 
-	new_symbol_as (a_code: INTEGER_32; a_scn: EIFFEL_SCANNER): SYMBOL_AS
-		do
-			inspect
-				a_code
-			when {EIFFEL_TOKENS}.te_bang then
-				has_obsolete_constructs := True
-
-			when {EIFFEL_TOKENS}.te_question  then
-					-- We might trigger some false alarm since ? is also used for open agent arguments, but it
-					-- is easier to do it that way than redefining all the factory routines that creates a TYPE_AS or descendants.
-				has_obsolete_constructs := True
-			else
-
-			end
-		end
-
 	new_filled_id_as (a_scn: EIFFEL_SCANNER_SKELETON): ID_AS
 		local
 			l_cnt: INTEGER_32
@@ -121,10 +101,10 @@ feature -- Processing
 				-- do we check that they are not just identifier, but class types.
 			if
 				not has_obsolete_constructs and then is_updating_agents and then
-				(a_scn.is_text_case_insensitve_equal_to (routine_class_name) or
-				a_scn.is_text_case_insensitve_equal_to (procedure_class_name) or
-				a_scn.is_text_case_insensitve_equal_to (function_class_name) or
-				a_scn.is_text_case_insensitve_equal_to (predicate_class_name))
+				(a_scn.utf8_text.is_case_insensitive_equal (routine_class_name) or
+				a_scn.utf8_text.is_case_insensitive_equal (procedure_class_name) or
+				a_scn.utf8_text.is_case_insensitive_equal (function_class_name) or
+				a_scn.utf8_text.is_case_insensitive_equal (predicate_class_name))
 			then
 				l_cnt := a_scn.text_count
 				l_str := Reusable_string_buffer
@@ -160,7 +140,8 @@ feature {NONE} -- Implementation
 			-- Name of agent types being in use.
 
 note
-	copyright: "Copyright (c) 1984-2015, Eiffel Software"
+	ca_ignore: "CA011", "CA011: too many arguments"
+	copyright: "Copyright (c) 1984-2020, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

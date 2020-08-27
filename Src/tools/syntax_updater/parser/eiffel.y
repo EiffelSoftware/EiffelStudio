@@ -47,7 +47,7 @@ create
 %token <detachable SYMBOL_AS>		TE_ACCEPT TE_ADDRESS TE_ASSIGNMENT
 %token <detachable SYMBOL_AS>		TE_LARRAY TE_RARRAY TE_RPARAN TE_LPARAN
 %token <detachable SYMBOL_AS>		TE_LCURLY TE_RCURLY
-%token <detachable SYMBOL_AS> 		TE_BANG TE_SEMICOLON
+%token <detachable SYMBOL_AS> 		TE_SEMICOLON
 %token <detachable SYMBOL_AS>		TE_COLON TE_COMMA TE_BAR
 %token <detachable SYMBOL_AS>		TE_CONSTRAIN TE_QUESTION
 %token <detachable SYMBOL_AS> 		TE_DOTDOT TE_DOT
@@ -173,7 +173,7 @@ create
 %type <detachable TAGGED_AS>			Assertion_clause
 %type <detachable TUPLE_AS>			Manifest_tuple
 %type <detachable TYPE_AS>				Type Anchored_type Typed Class_or_tuple_type Unmarked_class_type Unmarked_tuple_type Unmarked_anchored_type Unmarked_class_or_tuple_type Unmarked_unqualified_anchored_type Constraint_type
-%type <detachable TYPE_AS>				Obsolete_creation_type Obsolete_type Obsolete_class_or_tuple_type
+%type <detachable TYPE_AS>				Obsolete_type
 %type <detachable QUALIFIED_ANCHORED_TYPE_AS>	Unmarked_qualified_anchored_type
 %type <detachable CLASS_TYPE_AS>		Parent_class_type
 %type <detachable TYPE_DEC_AS>			Entity_declaration_group
@@ -225,7 +225,7 @@ create
 %type <detachable CONSTRAINT_LIST_AS> Multiple_constraint_list
 %type <detachable CONSTRAINING_TYPE_AS> Single_constraint
 
-%expect 429
+%expect 425
 
 %%
 
@@ -1705,8 +1705,6 @@ Type: Class_or_tuple_type
 			{ $$ := $1 }
 	|	Obsolete_type
 			{ $$ := $1 }
-	|	Obsolete_class_or_tuple_type
-			{ $$ := $1 }
 	;
 
 -- This is also used in 'Constraint_type' as constraint only support a subset of possible types.
@@ -2093,43 +2091,6 @@ Unmarked_qualified_anchored_type:
 			}
 	;
 
--- This is also used in the obsolete syntax for 'Creation' and 'Creation_expression'.
-Obsolete_creation_type: Unmarked_class_or_tuple_type
-			{ $$ := $1 }
-	|	Unmarked_anchored_type
-			{ $$ := $1 }
-	|	Obsolete_type
-			{ $$ := $1 }
-	;
-
--- This is also used in 'Constraint_type' as constraint should also support old syntax.
-Obsolete_class_or_tuple_type:
-	TE_BANG Unmarked_class_or_tuple_type
-			{
-				$$ := $2
-				if not is_ignoring_attachment_marks and then attached $$ as l_type then
-					l_type.set_attachment_mark ($1, True, False)
-				end
-				if has_syntax_warning then
-					report_one_warning (
-						create {SYNTAX_WARNING}.make (token_line ($1), token_column ($1), filename,
-						once "Use the `attached' keyword instead of !."))
-				end
-		}
-	| TE_QUESTION Unmarked_class_or_tuple_type
-			{
-				$$ := $2
-				if not is_ignoring_attachment_marks and then attached $$ as l_type then
-					l_type.set_attachment_mark ($1, False, True)
-				end
-				if has_syntax_warning then
-					report_one_warning (
-						create {SYNTAX_WARNING}.make (token_line ($1), token_column ($1), filename,
-						once "Use the `detachable' keyword instead of ?."))
-				end
-		}
-	;
-
 -- 'Obsolete_type' represent types that we used to accept but will disallow in the future.
 Obsolete_type: TE_EXPANDED Unmarked_class_type
 			{
@@ -2139,30 +2100,6 @@ Obsolete_type: TE_EXPANDED Unmarked_class_type
 					report_one_warning (
 						create {SYNTAX_WARNING}.make (token_line ($1), token_column ($1), filename,
 						once "Make an expanded version of the base class associated with this type."))
-				end
-			}
-	|	TE_BANG Unmarked_unqualified_anchored_type
-			{
-				$$ := $2
-				if not is_ignoring_attachment_marks and then attached $$ as l_type then
-					l_type.set_attachment_mark ($1, True, False)
-				end
-				if has_syntax_warning then
-					report_one_warning (
-						create {SYNTAX_WARNING}.make (token_line ($1), token_column ($1), filename,
-						once "Use the `attached' keyword instead of !."))
-				end
-			}
-	|	TE_QUESTION Unmarked_unqualified_anchored_type
-			{
-				$$ := $2
-				if not is_ignoring_attachment_marks and then attached $$ as l_type then
-					l_type.set_attachment_mark ($1, False, True)
-				end
-				if has_syntax_warning then
-					report_one_warning (
-						create {SYNTAX_WARNING}.make (token_line ($1), token_column ($1), filename,
-						once "Use the `detachable' keyword instead of ?."))
 				end
 			}
 	;
@@ -2506,13 +2443,6 @@ Single_constraint:
 
 Constraint_type:
 		Class_or_tuple_type
-			{
-				$$ := $1
-				if attached $1 as l_type and then l_type.has_anchor then
-					report_one_error (ast_factory.new_vtgc1_error (token_line (l_type), token_column (l_type), filename, l_type))
-				end
-			}
-	|	Obsolete_class_or_tuple_type
 			{
 				$$ := $1
 				if attached $1 as l_type and then l_type.has_anchor then
@@ -3139,41 +3069,14 @@ Delayed_actual: TE_QUESTION
 			{ $$ := ast_factory.new_operand_as (Void, $1) }
 	;
 
-Creation: TE_BANG TE_BANG Creation_target Creation_call
-			{
-				$$ := ast_factory.new_bang_creation_as (Void, $3, $4, $1, $2)
-				if has_syntax_warning then
-					report_one_warning (
-						create {SYNTAX_WARNING}.make (token_line ($1), token_column ($1),
-						filename, "Use keyword `create' instead."))
-				end
-			}
-	|	TE_BANG Obsolete_creation_type TE_BANG Creation_target Creation_call
-			{
-				$$ := ast_factory.new_bang_creation_as ($2, $4, $5, $1, $3)
-				if has_syntax_warning then
-					report_one_warning (
-						create {SYNTAX_WARNING}.make (token_line ($1), token_column ($1),
-						filename, "Use keyword `create' instead."))
-				end
-			}
-	|	TE_CREATE Creation_region Creation_target Creation_call
-			{ $$ := ast_factory.new_create_creation_as ($2, Void, $3, $4, $1) }
+Creation:	TE_CREATE Creation_region Creation_target Creation_call
+			{ $$ := ast_factory.new_creation_as ($2, Void, $3, $4, $1) }
 	|	TE_CREATE Creation_region Typed Creation_target Creation_call
-			{ $$ := ast_factory.new_create_creation_as ($2, $3, $4, $5, $1) }
+			{ $$ := ast_factory.new_creation_as ($2, $3, $4, $5, $1) }
 	;
 
 Creation_expression: TE_CREATE Creation_region Typed Creation_call
-			{ $$ := ast_factory.new_create_creation_expr_as ($2, $3, $4, $1) }
-	|	TE_BANG Obsolete_creation_type TE_BANG Creation_call
-			{
-				$$ := ast_factory.new_bang_creation_expr_as ($2, $4, $1, $3)
-				if has_syntax_warning then
-					report_one_warning (
-						create {SYNTAX_WARNING}.make (token_line ($1), token_column ($1),
-						filename, "Use keyword `create' instead."))
-				end
-			}
+			{ $$ := ast_factory.new_creation_expr_as ($2, $3, $4, $1) }
 	;
 
 Creation_region: -- Empty
@@ -4105,7 +4008,7 @@ Infix_operator: TE_STR_LT
 			{
 					-- Alias names should always be taken in their lower case version
 				if attached $1 as l_str_and then
-					l_str_and.value.to_lower
+					l_str_and.value_to_lower
 					$$ := l_str_and
 				end
 			}
@@ -4113,7 +4016,7 @@ Infix_operator: TE_STR_LT
 			{
 					-- Alias names should always be taken in their lower case version
 				if attached $1 as l_str_and_then then
-					l_str_and_then.value.to_lower
+					l_str_and_then.value_to_lower
 					$$ := l_str_and_then
 				end
 			}
@@ -4121,7 +4024,7 @@ Infix_operator: TE_STR_LT
 			{
 					-- Alias names should always be taken in their lower case version
 				if attached $1 as l_str_implies then 
-					l_str_implies.value.to_lower
+					l_str_implies.value_to_lower
 					$$ := l_str_implies
 				end
 			}
@@ -4129,7 +4032,7 @@ Infix_operator: TE_STR_LT
 			{
 					-- Alias names should always be taken in their lower case version
 				if attached $1 as l_str_or then
-					l_str_or.value.to_lower
+					l_str_or.value_to_lower
 					$$ := l_str_or
 				end
 			}
@@ -4137,7 +4040,7 @@ Infix_operator: TE_STR_LT
 			{
 					-- Alias names should always be taken in their lower case version
 				if attached $1 as l_str_or_else then
-					l_str_or_else.value.to_lower
+					l_str_or_else.value_to_lower
 					$$ := l_str_or_else
 				end
 			}
@@ -4145,7 +4048,7 @@ Infix_operator: TE_STR_LT
 			{
 					-- Alias names should always be taken in their lower case version
 				if attached $1 as l_str_xor then
-					l_str_xor.value.to_lower
+					l_str_xor.value_to_lower
 					$$ := l_str_xor
 				end
 			}
@@ -4153,7 +4056,7 @@ Infix_operator: TE_STR_LT
 			{
 					-- Alias names should always be taken in their lower case version
 				if attached $1 as l_str_free then
-					l_str_free.value.to_lower
+					l_str_free.value_to_lower
 					$$ := l_str_free
 				end
 			}

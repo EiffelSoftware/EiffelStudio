@@ -41,48 +41,14 @@ feature -- Roundtrip
 			Result := symbol_from_index (a_list, rcurly_symbol_index)
 		end
 
-	attachment_mark (a_list: LEAF_AS_LIST): detachable LEAF_AS
+	attachment_mark (a_list: LEAF_AS_LIST): detachable KEYWORD_AS
 			-- Attachment mark (if any).
-			-- Use `attachment_symbol' or `attachment_keyword' for specific representation.
-		require
-			a_list_not_void: a_list /= Void
 		local
 			i: INTEGER
 		do
 			i := attachment_mark_index
-			if a_list.valid_index (i) and then attached a_list [i] as m then
-				Result := m
-			end
-		ensure
-			result_attached: (attached Result) = (attached attachment_symbol (a_list) or attached attachment_keyword (a_list))
-			result_consistent: Result = attachment_symbol (a_list) or Result = attachment_keyword (a_list)
-		end
-
-	attachment_symbol (a_list: LEAF_AS_LIST): detachable SYMBOL_AS
-			-- Attachment symbol (if any).
-			-- Use `attachment_mark' if attachment status in a form of keyword is respected.
-		require
-			a_list_not_void: a_list /= Void
-		local
-			i: INTEGER
-		do
-			i := attachment_mark_index
-			if a_list.valid_index (i) and then attached {SYMBOL_AS} a_list.i_th (i) as s then
-				Result := s
-			end
-		end
-
-	attachment_keyword (a_list: LEAF_AS_LIST): detachable KEYWORD_AS
-			-- Attachment keyword (if any).
-			-- Use `attachment_mark' if attachment status in a form of symbol is respected.
-		require
-			a_list_not_void: a_list /= Void
-		local
-			i: INTEGER
-		do
-			i := attachment_mark_index
-			if a_list.valid_index (i) and then attached {KEYWORD_AS} a_list.i_th (i) as k then
-				Result := k
+			if a_list.valid_index (i) then
+				Result := {KEYWORD_AS} / a_list.i_th (i)
 			end
 		end
 
@@ -316,7 +282,7 @@ feature -- Output
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2017, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2020, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

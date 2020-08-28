@@ -9,6 +9,6 @@
 			<void_safety support="$LIBRARY_VOID_SAFETY"/>
 		</capability>
 		$EWEASEL_DOTNET_SETTING
-		<library name="base" location="$ISE_LIBRARY\library\base\base-safe.ecf"/>
+		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf"/>
 	</target>
 </system>

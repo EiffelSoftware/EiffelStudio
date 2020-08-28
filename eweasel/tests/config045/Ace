@@ -8,7 +8,7 @@
 			<concurrency support="scoop" use="$CONCURRENCY"/>
 		</capability>
 		$EWEASEL_DOTNET_SETTING
-		<library name="base" location="$ISE_LIBRARY\library\base\base-safe.ecf"/>
+		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf"/>
 		<library name="thread" location="thread.ecf">
 			<condition>
 				<concurrency value="$LIBRARY_CONCURRENCY"/>

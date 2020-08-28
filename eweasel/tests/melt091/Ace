@@ -9,7 +9,7 @@
 		<setting name="total_order_on_reals" value="true"/>
 		$EWEASEL_DOTNET_SETTING
 		<assembly name="mscorlib" location="$ISE_DOTNET_FRAMEWORK\mscorlib.dll"/>
-		<library name="base" location="$ISE_LIBRARY\library\base\base-safe.ecf" use_application_options="true"/>
+		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf" use_application_options="true"/>
 		<override name="root_cluster" location="$CLUSTER\"/>
 	</target>
 </system>

@@ -8,7 +8,7 @@
 		<setting name="console_application" value="true"/>
 		<setting name="total_order_on_reals" value="true"/>
 		$EWEASEL_DOTNET_SETTING
-		<library name="base" location="$ISE_LIBRARY\library\base\base-safe.ecf"/>
+		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf"/>
 		<cluster name="root_cluster" location="$CLUSTER\"/>
 	</target>
 </system>

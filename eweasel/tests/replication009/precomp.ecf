@@ -10,7 +10,7 @@
 		<setting name="total_order_on_reals" value="true"/>
 		<setting name="old_feature_replication" value="false"/>
 		$EWEASEL_DOTNET_SETTING
-		<library name="base" location="$ISE_LIBRARY/library/base/base-safe.ecf"/>
+		<library name="base" location="$ISE_LIBRARY/library/base/base.ecf"/>
 		<cluster name="precomp" location="$CLUSTER"/>
 	</target>
 </system>

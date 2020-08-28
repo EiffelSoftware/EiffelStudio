@@ -9,7 +9,7 @@
 			<void_safety support="all"/>
 		</capability>
 		$EWEASEL_DOTNET_SETTING
-		<library name="base" location="$ISE_LIBRARY\library\base\base-safe.ecf"/>
+		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf"/>
 		<cluster name="root_cluster" location="$CLUSTER\"/>
 	</target>
 	<target name="test" extends="parent">

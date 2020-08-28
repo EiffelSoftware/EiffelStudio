@@ -5,7 +5,7 @@
 		</option>
 		<setting name="console_application" value="true"/>
 		<setting name="total_order_on_reals" value="true"/>
-		<library name="base-safe" location="$ISE_LIBRARY\library\base\base-safe.ecf"/>
+		<library name="base-safe" location="$ISE_LIBRARY\library\base\base.ecf"/>
 		<cluster name="B" location="$LIB_B"/>
 	</target>
 </system>

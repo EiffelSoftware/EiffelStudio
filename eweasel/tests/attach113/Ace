@@ -10,7 +10,7 @@
 			<concurrency support="none"/>
 		</capability>
 		<precompile name="precompile" location="$PRECOMPILED_BASE_SAFE"/>
-		<library name="base" location="$ISE_LIBRARY\library\base\base-safe.ecf"/>
+		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf"/>
 		<cluster name="root_cluster" location="$CLUSTER\"/>
 	</target>
 </system>

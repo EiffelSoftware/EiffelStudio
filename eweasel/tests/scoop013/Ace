@@ -12,7 +12,7 @@
 			<void_safety support="transitional" use="transitional"/>
 		</capability>
 		<precompile name="precompile" location="$PRECOMPILED_BASE_SCOOP_SAFE"/>
-		<library name="base" location="$ISE_LIBRARY\library\base\base-safe.ecf"/>
+		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf"/>
 		<cluster name="root_cluster" location="$CLUSTER\"/>
 	</target>
 </system>

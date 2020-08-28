@@ -5,7 +5,7 @@
 		<setting name="console_application" value="true"/>
 		<setting name="total_order_on_reals" value="true"/>
 		<precompile name="precompile" location="$PRECOMPILED_BASE_SAFE"/>
-		<library name="base" location="$EIFFEL_SRC\library\base\base-safe.ecf"/>
+		<library name="base" location="$EIFFEL_SRC\library\base\base.ecf"/>
 		<override name="root_cluster" location="$CLUSTER\"/>
 	</target>
 </system>

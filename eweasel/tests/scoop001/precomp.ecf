@@ -10,7 +10,7 @@
 		<capability>
 			<void_safety support="transitional" use="transitional"/>
 		</capability>
-		<library name="base" location="$ISE_LIBRARY\library\base\base-safe.ecf"/>
+		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf"/>
 		<cluster name="precomp" location="$CLUSTER\precomp\"/>
 	</target>
 </system>

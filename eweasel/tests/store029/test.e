@@ -16,7 +16,7 @@ feature {NONE} -- Initialization
 			test (False)
 		end
 
-	test (a_store: BOOLEAN) is
+	test (a_store: BOOLEAN)
 		local
 			bb: BB
 			zz: ZZ [DOUBLE, INTEGER]

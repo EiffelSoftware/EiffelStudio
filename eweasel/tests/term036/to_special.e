@@ -1,4 +1,4 @@
-indexing
+note
 
 	description: "References to special objects, for direct access to arrays and strings"
 	status: "See notice at end of class"
@@ -17,7 +17,7 @@ feature -- Access
 
 feature {NONE} -- Initialization
 
-	make_area (n: INTEGER) is
+	make_area (n: INTEGER)
 			-- Creates a special object for `n' entries.
 		require
 			non_negative_argument: n >= 0
@@ -29,7 +29,7 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	item alias "@" (i: INTEGER): T is
+	item alias "@" (i: INTEGER): T
 			-- Entry at index `i', if in index interval
 		require
 			valid_index: valid_index (i)
@@ -39,7 +39,7 @@ feature -- Access
 
 feature -- Status report
 
-	valid_index (i: INTEGER): BOOLEAN is
+	valid_index (i: INTEGER): BOOLEAN
 			-- Is `i' within the bounds of Current?
 		do
 			Result := (0 <= i) and then (i < area.count)
@@ -47,7 +47,7 @@ feature -- Status report
 		
 feature -- Element change
 
-	put (v: T; i: INTEGER) is
+	put (v: T; i: INTEGER)
 			-- Replace `i'-th entry, if in index interval, by `v'.
 		require
 			valid_index: valid_index (i)
@@ -59,13 +59,13 @@ feature -- Element change
 
 feature {NONE} -- Element change
 
-	set_area (other: like area) is
+	set_area (other: like area)
 			-- Make `other' the new `area'
 		do
 			area := other
 		end
 
-indexing
+note
 
 	library: "[
 			EiffelBase: Library of reusable components for Eiffel.

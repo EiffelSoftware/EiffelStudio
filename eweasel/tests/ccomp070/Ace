@@ -1,10 +1,9 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
-<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-20-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-20-0 http://www.eiffel.com/developers/xml/configuration-1-20-0.xsd" name="test">
+<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-21-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-21-0 http://www.eiffel.com/developers/xml/configuration-1-21-0.xsd" name="test">
 	<target name="test">
 		<root cluster="root_cluster" class="TEST" feature="make"/>
-		<option profile="true" warning="true" full_class_checking="false" syntax="obsolete" manifest_array_type="mismatch_warning">
+		<option profile="true">
 			<assertions precondition="true"/>
-			<warning name="syntax" enabled="false"/>
 		</option>
 		<setting name="array_optimization" value="true"/>
 		<setting name="console_application" value="true"/>
@@ -12,11 +11,11 @@
 		<setting name="inlining" value="true"/>
 		<setting name="inlining_size" value="100"/>
 		<setting name="line_generation" value="true"/>
-		$EWEASEL_DOTNET_SETTING
 		<capability>
 			<concurrency support="none"/>
 			<void_safety support="none"/>
 		</capability>
+		$EWEASEL_DOTNET_SETTING
 		<precompile name="precompile" location="$PRECOMPILED_BASE"/>
 		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf" use_application_options="true"/>
 		<cluster name="root_cluster" location="$CLUSTER\"/>

@@ -1,4 +1,4 @@
-indexing
+note
 
 	description: "Original values of the attributes of a mismatched object."
 	instructions: "[
@@ -25,19 +25,19 @@ inherit
 			out
 		end
 
-creation
+create
 
 	default_create
 
 feature -- Initialization
 
-	default_create is
+	default_create
 			-- Make container with default size
 		do
 			make (5)
 		end
 
-	set_callback_pointers is
+	set_callback_pointers
 			-- Sets call-back pointers in the run-time
 		once
 			set_mismatch_information_access (Current, $clear_all, $internal_put)
@@ -45,7 +45,7 @@ feature -- Initialization
 
 feature -- Access
 
-	class_name: STRING is
+	class_name: STRING
 			-- Name of generating class which held attribute values
 		do
 			check has_class_entry: has (Class_key) end
@@ -56,7 +56,7 @@ feature -- Access
 
 feature -- Output
 
-	out: STRING is
+	out: STRING
 			-- Printable representation of attributes values
 		do
 			from
@@ -89,9 +89,9 @@ feature -- Output
 
 feature {NONE} -- Implementation
 
-	Class_key: STRING is "class"
+	Class_key: STRING = "class"
 
-	internal_put (value: ANY; ckey: POINTER) is
+	internal_put (value: ANY; ckey: POINTER)
 			-- Allows run-time to insert items into table
 		local
 			key: STRING
@@ -102,12 +102,12 @@ feature {NONE} -- Implementation
 
 feature {NONE} -- Externals
 
-	set_mismatch_information_access (obj: ANY; init, add: POINTER) is
+	set_mismatch_information_access (obj: ANY; init, add: POINTER)
 		external
 			"C"
 		end
 
-indexing
+note
 
 	library: "[
 			EiffelBase: Library of reusable components for Eiffel.

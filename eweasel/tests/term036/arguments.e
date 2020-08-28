@@ -1,4 +1,4 @@
-indexing
+note
 
 	description: "[
 		Access to command-line arguments. This class 
@@ -14,7 +14,7 @@ class
 
 feature -- Access
 
-	argument (i: INTEGER): STRING is
+	argument (i: INTEGER): STRING
 			-- `i'-th argument of command that started system execution
 			-- (the command name if `i' = 0)
 		require
@@ -24,7 +24,7 @@ feature -- Access
 			Result := arg_option (i)
 		end
 
-	argument_array: ARRAY [STRING] is
+	argument_array: ARRAY [STRING]
 			-- Array containing command name (position 0) and arguments
 		once
 			Result := internal_argument_array
@@ -32,7 +32,7 @@ feature -- Access
 			argument_array_not_void: Result /= Void
 		end
 
-	Command_line: STRING is
+	Command_line: STRING
 			-- Total command line
 		local
 			i: INTEGER
@@ -51,7 +51,7 @@ feature -- Access
 			Result.count >= command_name.count
 		end
 
-	Command_name: STRING is
+	Command_name: STRING
 			-- Name of command that started system execution
 		once
 			Result := arg_option (0)
@@ -61,13 +61,13 @@ feature -- Access
 
 feature -- Status report
 
-	has_word_option (opt: STRING): INTEGER is
+	has_word_option (opt: STRING): INTEGER
 		obsolete "Use index_of_word_option instead."
 		do
 			Result := index_of_word_option (opt)
 		end
 
-	index_of_word_option (opt: STRING): INTEGER is
+	index_of_word_option (opt: STRING): INTEGER
 			-- Does command line specify word option `opt' and, if so,
 			-- at what position?
 			-- If one of the arguments in list of space-separated arguments
@@ -93,7 +93,7 @@ feature -- Status report
 			end
 		end
 
-	index_of_beginning_with_word_option (opt: STRING): INTEGER is
+	index_of_beginning_with_word_option (opt: STRING): INTEGER
 			-- Does command line specify argument beginning with word 
 			-- option `opt' and, if so, at what position?
 			-- If one of the arguments in list of space-separated arguments
@@ -120,13 +120,13 @@ feature -- Status report
 			end
 		end
 
-	has_character_option (o: CHARACTER): INTEGER is
+	has_character_option (o: CHARACTER): INTEGER
 		obsolete "Use index_of_character_option instead."
 		do
 			Result := index_of_character_option (o)
 		end
 
-	index_of_character_option (o: CHARACTER): INTEGER is
+	index_of_character_option (o: CHARACTER): INTEGER
 			-- Does command line specify character option `o' and, if so,
 			-- at what position?
 			-- If one of the space-separated arguments is of the form `Xxxoyy',
@@ -150,7 +150,7 @@ feature -- Status report
 			if i <= argument_count then Result := i end
 		end
 
-	separate_character_option_value (o: CHARACTER): STRING is
+	separate_character_option_value (o: CHARACTER): STRING
 			-- The value, if any, specified after character option `o' on 
 			-- the command line.
 			-- This is one of the following (where `X' is the current 
@@ -178,7 +178,7 @@ feature -- Status report
 			end
 		end
 
-	separate_word_option_value (opt: STRING): STRING is
+	separate_word_option_value (opt: STRING): STRING
 			-- The value, if any, specified after word option `opt' on the 
 			-- command line.
 			-- This is one of the following (where `X' is the current `option_sign'):
@@ -205,13 +205,13 @@ feature -- Status report
 			end
 		end
 
-	coalesced_option_character_value (o: CHARACTER): STRING is
+	coalesced_option_character_value (o: CHARACTER): STRING
 		obsolete "Use coalesced_character_option_value instead."
 		do
 			Result := coalesced_character_option_value (o)
 		end
 
-	coalesced_character_option_value (o: CHARACTER): STRING is
+	coalesced_character_option_value (o: CHARACTER): STRING
 			-- The value, if any, specified for character option `o' on 
 			-- the command line.
 			-- Defined as follows (where 'X' is the current 'option_sign' and
@@ -235,13 +235,13 @@ feature -- Status report
 			end
 		end
 
-	coalesced_option_word_value (opt: STRING): STRING is
+	coalesced_option_word_value (opt: STRING): STRING
 		obsolete "Use coalesced_word_option_value instead."
 		do
 			Result := coalesced_word_option_value (opt)
 		end
 
-	coalesced_word_option_value (opt: STRING): STRING is
+	coalesced_word_option_value (opt: STRING): STRING
 			-- The value, if any, specified for word option `opt' on the 
 			-- command line.
 			-- Defined as follows (where X is the current `option_sign'):
@@ -265,7 +265,7 @@ feature -- Status report
 			end
 		end
 
-	option_sign: CHARACTER_REF is
+	option_sign: CHARACTER_REF
 			-- The character used to signal options on the command line.
 			-- This can be '%U' if no sign is necesary for the argument 
 			-- to be an option
@@ -277,7 +277,7 @@ feature -- Status report
 
 feature -- Status setting
 
-	set_option_sign (c: CHARACTER) is
+	set_option_sign (c: CHARACTER)
 			-- Make `c' the option sign.
 			-- Use'%U' if no sign is necesary for the argument to 
 			-- be an option
@@ -287,7 +287,7 @@ feature -- Status setting
 
 feature -- Measurement
 
-	argument_count: INTEGER is
+	argument_count: INTEGER
 			-- Number of arguments given to command that started
 			-- system execution (command name does not count)
 		once
@@ -298,17 +298,17 @@ feature -- Measurement
 
 feature {NONE} -- Implementation
 
-	arg_number: INTEGER is
+	arg_number: INTEGER
 		external
 			"C | %"eif_argv.h%""
 		end
 
-	arg_option (i: INTEGER): STRING is
+	arg_option (i: INTEGER): STRING
 		external
 			"C | %"eif_argv.h%""
 		end
 
-	option_word_equal (arg, w: STRING): BOOLEAN is
+	option_word_equal (arg, w: STRING): BOOLEAN
 			-- Is `arg' equal to the word option `w'?
 		do
 			if option_sign.item = '%U' then
@@ -318,7 +318,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	option_word_begins_with (arg, w: STRING): BOOLEAN is
+	option_word_begins_with (arg, w: STRING): BOOLEAN
 			-- Does `arg' begin with the word option `w'?
 		do
 			if option_sign.item = '%U' and then arg.count >= w.count then
@@ -328,7 +328,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	option_character_equal (arg: STRING; c: CHARACTER): BOOLEAN is
+	option_character_equal (arg: STRING; c: CHARACTER): BOOLEAN
 			-- Does `arg' contain the character option `c'?
 		do
 			if option_sign.item = '%U' then
@@ -338,7 +338,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	internal_argument_array: ARRAY [STRING] is
+	internal_argument_array: ARRAY [STRING]
 			-- Array containing command name (position 0) and arguments
 		local
 			i: INTEGER
@@ -355,7 +355,7 @@ feature {NONE} -- Implementation
 			internal_argument_array_not_void: Result /= Void
 		end
 
-indexing
+note
 
 	library: "[
 			EiffelBase: Library of reusable components for Eiffel.

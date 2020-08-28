@@ -6,8 +6,8 @@ feature
 
 	make
 		local
-			list: ARRAYED_LIST [?STRING]
-			a: ARRAY [?STRING]
+			list: ARRAYED_LIST [detachable STRING]
+			a: ARRAY [detachable STRING]
 		do
 			create list.make_from_array (<<"hello", "world", Void, Void>>)
 				-- Pruning Void elements is equivalent to reducing the count of the list by 2.

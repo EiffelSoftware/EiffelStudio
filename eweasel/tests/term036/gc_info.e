@@ -1,4 +1,4 @@
-indexing
+note
 
 	description: "[
 			Garbage collector statistics.
@@ -21,7 +21,7 @@ create
 
 feature -- Initialization
 
-	make, update (memory: INTEGER) is
+	make, update (memory: INTEGER)
 			-- Fill in statistics for `memory' type
 		do
 			gc_stat (memory)
@@ -124,26 +124,26 @@ feature -- Access
 
 feature {NONE} -- Implementation
 
-	gc_stat (mem: INTEGER) is
+	gc_stat (mem: INTEGER)
 			-- Initialize run-time buffer used by gc_info to retrieve the
 			-- statistics frozen at the time of this call.
 		external
 			"C | %"eif_memory.h%""
 		end
 
-	gc_info (field: INTEGER): INTEGER is
+	gc_info (field: INTEGER): INTEGER
 			-- Read GC accounting structure, field by field.
 		external
 			"C | %"eif_memory.h%""
 		end
 
-	gc_infod (field: INTEGER): DOUBLE is
+	gc_infod (field: INTEGER): DOUBLE
 			-- Read GC accounting structure, field by field.
 		external
 			"C | %"eif_memory.h%""
 		end
 
-indexing
+note
 
 	library: "[
 			EiffelBase: Library of reusable components for Eiffel.

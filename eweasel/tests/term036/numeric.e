@@ -1,4 +1,4 @@
-indexing
+note
 
 	description:
 		"Objects to which numerical operations are applicable"
@@ -18,14 +18,14 @@ inherit
 
 feature -- Access
 
-	one: like Current is
+	one: like Current
 			-- Neutral element for "*" and "/"
 		deferred
 		ensure
 			result_exists: Result /= Void
 		end
 
-	zero: like Current is
+	zero: like Current
 			-- Neutral element for "+" and "-"
 		deferred
 		ensure
@@ -34,14 +34,14 @@ feature -- Access
 
 feature -- Status report
 
-	divisible (other: like Current): BOOLEAN is
+	divisible (other: like Current): BOOLEAN
 			-- May current object be divided by `other'?
 		require
 			other_exists: other /= Void
 		deferred
 		end
 
-	exponentiable (other: NUMERIC): BOOLEAN is
+	exponentiable (other: NUMERIC): BOOLEAN
 			-- May current object be elevated to the power `other'?
 		require
 			other_exists: other /= Void
@@ -50,7 +50,7 @@ feature -- Status report
 
 feature -- Basic operations
 
-	plus alias "+" (other: like Current): like Current is
+	plus alias "+" (other: like Current): like Current
 			-- Sum with `other' (commutative).
 		require
 			other_exists: other /= Void
@@ -60,7 +60,7 @@ feature -- Basic operations
 			commutative: equal (Result, other + Current)
 		end
 
-	minus alias "-" (other: like Current): like Current is
+	minus alias "-" (other: like Current): like Current
 			-- Result of subtracting `other'
 		require
 			other_exists: other /= Void
@@ -69,7 +69,7 @@ feature -- Basic operations
 			result_exists: Result /= Void
 		end
 
-	product alias "*" (other: like Current): like Current is
+	product alias "*" (other: like Current): like Current
 			-- Product by `other'
 		require
 			other_exists: other /= Void
@@ -78,7 +78,7 @@ feature -- Basic operations
 			result_exists: Result /= Void
 		end
 
-	quotient alias "/" (other: like Current): like Current is
+	quotient alias "/" (other: like Current): like Current
 			-- Division by `other'
 		require
 			other_exists: other /= Void
@@ -88,14 +88,14 @@ feature -- Basic operations
 			result_exists: Result /= Void
 		end
 
-	identity alias "+": like Current is
+	identity alias "+": like Current
 			-- Unary plus
 		deferred
 		ensure
 			result_exists: Result /= Void
 		end
 
-	opposite alias "-": like Current is
+	opposite alias "-": like Current
 			-- Unary minus
 		deferred
 		ensure
@@ -109,7 +109,7 @@ invariant
 --	neutral_multiplication: equal (Current * one, Current);
 --	self_division: divisible (Current) implies equal (Current / Current, one)
 
-indexing
+note
 
 	library: "[
 			EiffelBase: Library of reusable components for Eiffel.

@@ -1,4 +1,4 @@
-indexing
+note
 
 	description: "[
 		Values that may be hashed into an integer index, 
@@ -14,7 +14,7 @@ deferred class
 
 feature -- Access
 
-	hash_code: INTEGER is
+	hash_code: INTEGER
 			-- Hash code value
 		deferred
 		ensure
@@ -23,7 +23,7 @@ feature -- Access
 
 feature -- Status report
 
-	is_hashable: BOOLEAN is
+	is_hashable: BOOLEAN
 			-- May current object be hashed?
 			-- (True if it is not its type's default.)
 		do
@@ -32,7 +32,7 @@ feature -- Status report
 			ok_if_not_default: Result implies (Current /= default)
 		end
 
-indexing
+note
 
 	library: "[
 			EiffelBase: Library of reusable components for Eiffel.

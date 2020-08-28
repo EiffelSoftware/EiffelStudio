@@ -9,7 +9,7 @@ create
 	default_create
 
 feature 
-	default_create is
+	default_create
 		do
 			b := "Totot"
 		end

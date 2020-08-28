@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Unsigned integer values coded on 64 bits"
 	status: "See notice at end of class"
 	date: "$Date$"
@@ -18,7 +18,7 @@ convert
 	to_real_32: {REAL},
 	to_real_64: {DOUBLE}
 
-indexing
+note
 
 	library: "[
 			EiffelBase: Library of reusable components for Eiffel.

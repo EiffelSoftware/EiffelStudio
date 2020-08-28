@@ -1,5 +1,5 @@
 
---| Copyright (c) 1993-2006 University of Southern California and contributors.
+--| Copyright (c) 1993-2020 University of Southern California, Eiffel Software and contributors.
 --| All rights reserved.
 --| Your use of this work is governed under the terms of the GNU General
 --| Public License version 2.
@@ -21,7 +21,7 @@ feature
 	t2: TEST2
 	t3: TEST3
 
-	make is
+	make
 		require
 			a: True
 		local
@@ -40,7 +40,7 @@ feature
 
 			s := once "%N%R%T%U"
 
-			if {ssdasda: !STRING} s then
+			if attached {attached STRING} s as ssdasda then
 				print ("Fdsfds")
 			end
 
@@ -110,7 +110,7 @@ feature
 			retry
 		end
 
-	test (a: INTEGER; b: STRING) is
+	test (a: INTEGER; b: STRING)
 		local
 			i: INTEGER
 			n: NATURAL_32
@@ -128,9 +128,9 @@ feature
 			b: io /= Void
 		end
 
-	hash_code: INTEGER is 1;
+	hash_code: INTEGER = 1;
 
-	f is
+	f
 		require else
 			a: io /= Void
 		do
@@ -139,43 +139,43 @@ feature
 			c: old io = io
 		end
 
-	once_procedure is
-		indexing
+	once_procedure
+		note
 			once_status: global
 		once
 			print ("Fdsfsd")
 		end
 
-	once_procedure_per_thread is
+	once_procedure_per_thread
 		once
 			print ("Fdsfsd")
 		end
 
-	once_integer: INTEGER is
-		indexing
+	once_integer: INTEGER
+		note
 			once_status: global
 		once
 			Result := 5
 		end
 
-	once_integer_per_thread: INTEGER is
+	once_integer_per_thread: INTEGER
 		once
 			Result := 10
 		end
 
-	once_string: STRING is
-		indexing
+	once_string: STRING
+		note
 			once_status: global
 		once
 			Result := "DFsdf"
 		end
 
-	once_string_per_thread: STRING is
+	once_string_per_thread: STRING
 		once
 			Result := "Fdsfdsf"
 		end
 
-	io_test: STD_FILES is
+	io_test: STD_FILES
 			-- Handle to standard file setup
 		once
 			create Result

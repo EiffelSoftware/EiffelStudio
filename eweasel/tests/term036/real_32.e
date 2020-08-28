@@ -1,4 +1,4 @@
-indexing
+note
 
 	description:
 		"Real values, single precision"
@@ -18,7 +18,7 @@ create
 convert
 	make_from_reference ({REAL_REF}),
 	to_double: {DOUBLE}
-indexing
+note
 
 	library: "[
 			EiffelBase: Library of reusable components for Eiffel.

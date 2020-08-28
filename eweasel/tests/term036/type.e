@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Representation of an Eiffel type."
 	date: "$Date$"
 	revision: "$Revision$"

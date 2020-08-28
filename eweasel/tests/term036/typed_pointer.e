@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 		References to objects containing reference to object
 		meant to be exchanged with non-Eiffel software.
@@ -19,7 +19,7 @@ inherit
 convert
 	to_pointer: {POINTER}
 
-indexing
+note
 
 	library: "[
 			EiffelBase: Library of reusable components for Eiffel.

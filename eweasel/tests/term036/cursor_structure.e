@@ -1,4 +1,4 @@
-indexing
+note
 
 	description: "[
 		Active structures, which always have a current position
@@ -18,28 +18,28 @@ deferred class CURSOR_STRUCTURE [G] inherit
 
 feature -- Access
 
-	cursor: CURSOR is
+	cursor: CURSOR
 			-- Current cursor position
 		deferred
 		end
 
 feature -- Status report
 
-	valid_cursor (p: CURSOR): BOOLEAN is
+	valid_cursor (p: CURSOR): BOOLEAN
 			-- Can the cursor be moved to position `p'?
 		deferred
 		end
 
 feature -- Cursor movement
 
-	go_to (p: CURSOR) is
+	go_to (p: CURSOR)
 			-- Move cursor to position `p'.
 		require
 			cursor_position_valid: valid_cursor (p)
 		deferred
 		end
 
-indexing
+note
 
 	library: "[
 			EiffelBase: Library of reusable components for Eiffel.

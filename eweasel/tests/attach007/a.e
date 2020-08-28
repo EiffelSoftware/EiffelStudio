@@ -5,7 +5,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a: !G)
+	make (a: attached G)
 		do
 			item := a
 		end

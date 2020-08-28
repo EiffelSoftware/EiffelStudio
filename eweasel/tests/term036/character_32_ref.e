@@ -1,4 +1,4 @@
-indexing
+note
 	description: "References to objects containing a unicode character value"
 	status: "See notice at end of class"
 	date: "$Date$"
@@ -23,7 +23,7 @@ feature -- Access
 	item: WIDE_CHARACTER
 			-- Unicde character value
 
-	hash_code, code: INTEGER is
+	hash_code, code: INTEGER
 			-- Associated integer value and hash code value
 		do
 			Result := chcode (item)
@@ -31,25 +31,25 @@ feature -- Access
 
 feature -- Status report
 
-	is_hashable: BOOLEAN is True
+	is_hashable: BOOLEAN = True
 			-- May current object be hashed?
 
 feature -- Comparison
 
-	is_less alias "<" (other: like Current): BOOLEAN is
+	is_less alias "<" (other: like Current): BOOLEAN
 			-- Is `other' greater than current character?
 		do
 			Result := item < other.item
 		end
 
-	is_equal (other: like Current): BOOLEAN is
+	is_equal (other: like Current): BOOLEAN
 			-- Is `other' attached to an object of the same type
 			-- as current object and identical to it?
 		do
 			Result := other.item = item
 		end
 
-	three_way_comparison (other: like Current): INTEGER is
+	three_way_comparison (other: like Current): INTEGER
 			-- If current object equal to `other', 0;
 			-- if smaller, -1; if greater, 1
 		do
@@ -62,7 +62,7 @@ feature -- Comparison
 
 feature -- Element change
 
-	set_item (c: WIDE_CHARACTER) is
+	set_item (c: WIDE_CHARACTER)
 			-- Make `c' the `item' value.
 		do
 			item := c
@@ -70,7 +70,7 @@ feature -- Element change
 
 feature -- Output
 
-	out: STRING is
+	out: STRING
 			-- Printable representation of wide character
 		do
 			create Result.make (6)
@@ -81,7 +81,7 @@ feature -- Output
 
 feature {NONE} -- Initialization
 
-	make_from_reference (v: WIDE_CHARACTER_REF) is
+	make_from_reference (v: WIDE_CHARACTER_REF)
 			-- Initialize `Current' with `v.item'.
 		require
 			v_not_void: V /= Void
@@ -93,7 +93,7 @@ feature {NONE} -- Initialization
 
 feature -- Conversion
 
-	to_reference: WIDE_CHARACTER_REF is
+	to_reference: WIDE_CHARACTER_REF
 			-- Associated reference of Current
 		do
 			create Result
@@ -104,13 +104,13 @@ feature -- Conversion
 
 feature {NONE} -- Implementation
 
-	chcode (c: like item): INTEGER is
+	chcode (c: like item): INTEGER
 			-- Associated integer value
 		external
 			"C [macro %"eif_misc.h%"]"
 		end
 
-indexing
+note
 
 	library: "[
 			EiffelBase: Library of reusable components for Eiffel.

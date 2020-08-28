@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Unsigned integer values coded on 16 bits"
 	status: "See notice at end of class"
 	date: "$Date$"
@@ -22,7 +22,7 @@ convert
 	to_natural_32: {NATURAL_32},
 	to_natural_64: {NATURAL_64}
 
-indexing
+note
 
 	library: "[
 			EiffelBase: Library of reusable components for Eiffel.

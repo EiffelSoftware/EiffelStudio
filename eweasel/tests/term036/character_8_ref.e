@@ -1,4 +1,4 @@
-indexing
+note
 
 	description:
 		"References to objects containing a character value"
@@ -24,25 +24,25 @@ feature -- Access
 	item: CHARACTER
 			-- Character value
 
-	code: INTEGER is
+	code: INTEGER
 			-- Associated integer value
 		do
 			Result := chcode (item)
 		end
 
-	hash_code: INTEGER is
+	hash_code: INTEGER
 			-- Hash code value
 		do
 			Result := code
 		end
 
-	Min_value: INTEGER is 0
-	Max_value: INTEGER is 255
+	Min_value: INTEGER = 0
+	Max_value: INTEGER = 255
 			-- Bounds for integer representation of characters (ASCII)
 
 feature -- Status report
 
-	is_hashable: BOOLEAN is
+	is_hashable: BOOLEAN
 			-- May current object be hashed?
 			-- (True if it is not its type's default.)
 		do
@@ -51,7 +51,7 @@ feature -- Status report
 
 feature -- Comparison
 
-	is_less alias "<" (other: like Current): BOOLEAN is
+	is_less alias "<" (other: like Current): BOOLEAN
 			-- Is `other' greater than current character?
 		do
 			Result := item < other.item
@@ -59,14 +59,14 @@ feature -- Comparison
 			definition: Result = (code < other.code)
 		end
 
-	is_equal (other: like Current): BOOLEAN is
+	is_equal (other: like Current): BOOLEAN
 			-- Is `other' attached to an object of the same type
 			-- as current object and identical to it?
 		do
 			Result := other.item = item
 		end
 
-	three_way_comparison (other: like Current): INTEGER is
+	three_way_comparison (other: like Current): INTEGER
 			-- If current object equal to `other', 0;
 			-- if smaller, -1; if greater, 1
 		do
@@ -79,7 +79,7 @@ feature -- Comparison
 
 feature -- Basic routines
 
-	plus alias "+" (incr: INTEGER): CHARACTER is
+	plus alias "+" (incr: INTEGER): CHARACTER
 			-- Add `incr' to the code of `item'
 		require
 			valid_increment: (item.code + incr).is_valid_character_code
@@ -89,7 +89,7 @@ feature -- Basic routines
 			valid_result: Result |-| item = incr
 		end
 
-	minus alias "-" (decr: INTEGER): CHARACTER is
+	minus alias "-" (decr: INTEGER): CHARACTER
 			-- Subtract `decr' to the code of `item'
 		require
 			valid_decrement: (item.code - decr).is_valid_character_code
@@ -99,7 +99,7 @@ feature -- Basic routines
 			valid_result: item |-| Result = decr
 		end
 
-	difference alias "|-|" (other: CHARACTER): INTEGER is
+	difference alias "|-|" (other: CHARACTER): INTEGER
 			-- Difference between the codes of `item' and `other'
 		do
 			Result := chcode (item) - chcode (other)
@@ -107,7 +107,7 @@ feature -- Basic routines
 			valid_result: other + Result = item
 		end
 
-	next: CHARACTER is
+	next: CHARACTER
 			-- Next character
 		require
 			valid_character: (item.code + 1).is_valid_character_code
@@ -117,7 +117,7 @@ feature -- Basic routines
 			valid_result: Result |-| item = 1
 		end
 
-	previous: CHARACTER is
+	previous: CHARACTER
 			-- Previous character
 		require
 			valid_character: (item.code - 1).is_valid_character_code
@@ -129,7 +129,7 @@ feature -- Basic routines
 
 feature -- Element change
 
-	set_item (c: CHARACTER) is
+	set_item (c: CHARACTER)
 			-- Make `c' the `item' value.
 		do
 			item := c
@@ -137,7 +137,7 @@ feature -- Element change
 
 feature -- Output
 
-	out: STRING is
+	out: STRING
 			-- Printable representation of character
 		do
 			Result := c_outc (item)
@@ -145,7 +145,7 @@ feature -- Output
 
 feature {NONE} -- Initialization
 
-	make_from_reference (v: CHARACTER_REF) is
+	make_from_reference (v: CHARACTER_REF)
 			-- Initialize `Current' with `v.item'.
 		require
 			v_not_void: V /= Void
@@ -157,7 +157,7 @@ feature {NONE} -- Initialization
 
 feature -- Conversion
 
-	to_reference: CHARACTER_REF is
+	to_reference: CHARACTER_REF
 			-- Associated reference of Current
 		do
 			create Result
@@ -166,14 +166,14 @@ feature -- Conversion
 			to_reference_not_void: Result /= Void
 		end
 
-	as_upper, upper: CHARACTER is
+	as_upper, upper: CHARACTER
 			-- Uppercase value of `item'
 			-- Returns `item' if not `is_lower'
 		do
 			Result := chupper (item)
 		end
 
-	as_lower, lower: CHARACTER is
+	as_lower, lower: CHARACTER
 			-- Lowercase value of `item'
 			-- Returns `item' if not `is_upper'
 		do
@@ -182,26 +182,26 @@ feature -- Conversion
 
 feature -- Status report
 
-	is_lower: BOOLEAN is
+	is_lower: BOOLEAN
 			-- Is `item' lowercase?
 		do
 			Result := chis_lower (item)
 		end
 
-	is_upper: BOOLEAN is
+	is_upper: BOOLEAN
 			-- Is `item' uppercase?
 		do
 			Result := chis_upper (item)
 		end
 
-	is_digit: BOOLEAN is
+	is_digit: BOOLEAN
 			-- Is `item' a digit?
 			-- A digit is one of 0123456789
 		do
 			Result := chis_digit (item)
 		end
 
-	is_alpha: BOOLEAN is
+	is_alpha: BOOLEAN
 			-- Is `item' alphabetic?
 			-- Alphabetic is `is_upper' or `is_lower'
 		do
@@ -210,55 +210,55 @@ feature -- Status report
 
 feature {NONE} -- Implementation
 
-	chcode (c: like item): INTEGER is
+	chcode (c: like item): INTEGER
 			-- Associated integer value
 		external
 			"C [macro %"eif_misc.h%"]"
 		end
 
-	chconv (i: INTEGER): CHARACTER is
+	chconv (i: INTEGER): CHARACTER
 			-- Character associated with integer value `i'
 		external
 			"C [macro %"eif_misc.h%"]"
 		end
 
-	c_outc (c: CHARACTER): STRING is
+	c_outc (c: CHARACTER): STRING
 			-- Printable representation of character
 		external
 			"C | %"eif_out.h%""
 		end
 
-	chupper (c: CHARACTER): CHARACTER is
+	chupper (c: CHARACTER): CHARACTER
 		external
 			"C [macro %"eif_misc.h%"]"
 		end
 
-	chlower (c: CHARACTER): CHARACTER is
+	chlower (c: CHARACTER): CHARACTER
 		external
 			"C [macro %"eif_misc.h%"]"
 		end
 
-	chis_lower (c: CHARACTER): BOOLEAN is
+	chis_lower (c: CHARACTER): BOOLEAN
 		external
 			"C [macro %"eif_misc.h%"]"
 		end
 
-	chis_upper (c: CHARACTER): BOOLEAN is
+	chis_upper (c: CHARACTER): BOOLEAN
 		external
 			"C [macro %"eif_misc.h%"]"
 		end
 
-	chis_digit (c: CHARACTER): BOOLEAN is
+	chis_digit (c: CHARACTER): BOOLEAN
 		external
 			"C [macro %"eif_misc.h%"]"
 		end
 
-	chis_alpha (c: CHARACTER): BOOLEAN is
+	chis_alpha (c: CHARACTER): BOOLEAN
 		external
 			"C [macro %"eif_misc.h%"]"
 		end
 
-indexing
+note
 
 	library: "[
 			EiffelBase: Library of reusable components for Eiffel.

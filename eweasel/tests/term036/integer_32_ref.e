@@ -1,4 +1,4 @@
-indexing
+note
 	description: "References to objects containing an integer value coded on 32 bits"
 	status: "See notice at end of class"
 	date: "$Date$"
@@ -30,14 +30,14 @@ feature -- Access
 	item: INTEGER
 			-- Integer value
 
-	hash_code: INTEGER is
+	hash_code: INTEGER
 			-- Hash code value
 		do
 				-- Clear sign bit.
 			Result := item & 0x7FFFFFFF
 		end
 
-	sign: INTEGER is
+	sign: INTEGER
 			-- Sign value (0, -1 or 1)
 		do
 			if item > 0 then
@@ -49,21 +49,21 @@ feature -- Access
 			three_way: Result = three_way_comparison (zero)
 		end
 
-	one: like Current is
+	one: like Current
 			-- Neutral element for "*" and "/"
 		do
 			create Result
 			Result.set_item (1)
 		end
 
-	zero: like Current is
+	zero: like Current
 			-- Neutral element for "+" and "-"
 		do
 			create Result
 			Result.set_item (0)
 		end
 
-	ascii_char: CHARACTER is
+	ascii_char: CHARACTER
 			-- Returns corresponding ASCII character to `item' value.
 		obsolete
 			"Use to_character instead"
@@ -73,19 +73,19 @@ feature -- Access
 			Result := item.to_character
 		end
 
-	Min_value: INTEGER is -2147483648
-	Max_value: INTEGER is 2147483647
+	Min_value: INTEGER = -2147483648
+	Max_value: INTEGER = 2147483647
 			-- Minimum and Maximum value hold in `item'.
 
 feature -- Comparison
 
-	is_less alias "<" (other: like Current): BOOLEAN is
+	is_less alias "<" (other: like Current): BOOLEAN
 			-- Is current integer less than `other'?
 		do
 			Result := item < other.item
 		end
 
-	is_equal (other: like Current): BOOLEAN is
+	is_equal (other: like Current): BOOLEAN
 			-- Is `other' attached to an object of the same type
 			-- as current object and identical to it?
 		do
@@ -94,7 +94,7 @@ feature -- Comparison
 
 feature -- Element change
 
-	set_item (i: INTEGER) is
+	set_item (i: INTEGER)
 			-- Make `i' the `item' value.
 		do
 			item := i
@@ -104,7 +104,7 @@ feature -- Element change
 
 feature -- Status report
 
-	divisible (other: INTEGER_REF): BOOLEAN is
+	divisible (other: INTEGER_REF): BOOLEAN
 			-- May current object be divided by `other'?
 		do
 			Result := other.item /= 0
@@ -112,7 +112,7 @@ feature -- Status report
 			value: Result = (other.item /= 0)
 		end
 
-	exponentiable (other: NUMERIC): BOOLEAN is
+	exponentiable (other: NUMERIC): BOOLEAN
 			-- May current object be elevated to the power `other'?
 		local
 			integer_value: INTEGER_REF
@@ -134,22 +134,22 @@ feature -- Status report
 				(other.conforms_to (0.0) and item > 0)) implies Result
 		end
 
-	is_hashable: BOOLEAN is
+	is_hashable: BOOLEAN
 			-- May current object be hashed?
 			-- (True if it is not its type's default.)
 		do
 			Result := item /= 0
 		end
 
-	is_valid_character_code: BOOLEAN is
+	is_valid_character_code: BOOLEAN
 			-- Does current object represent a character?
 		do
-			Result := item >= feature {CHARACTER}.Min_value and item <= feature {CHARACTER}.Max_value
+			Result := item >= {CHARACTER}.Min_value and item <= {CHARACTER}.Max_value
 		end
 
 feature -- Basic operations
 
-	abs: INTEGER is
+	abs: INTEGER
 			-- Absolute value
 		do
 			Result := abs_ref.item
@@ -158,28 +158,28 @@ feature -- Basic operations
 			same_absolute_value: (Result = item) or (Result = -item)
 		end
 
-	plus alias "+" (other: like Current): like Current is
+	plus alias "+" (other: like Current): like Current
 			-- Sum with `other'
 		do
 			create Result
 			Result.set_item (item + other.item)
 		end
 
-	minus alias "-" (other: like Current): like Current is
+	minus alias "-" (other: like Current): like Current
 			-- Result of subtracting `other'
 		do
 			create Result
 			Result.set_item (item - other.item)
 		end
 
-	product alias "*" (other: like Current): like Current is
+	product alias "*" (other: like Current): like Current
 			-- Product by `other'
 		do
 			create Result
 			Result.set_item (item * other.item)
 		end
 
-	quotient alias "/" (other: like Current): DOUBLE is
+	quotient alias "/" (other: like Current): DOUBLE
 			-- Division by `other'
 		require
 			other_exists: other /= Void
@@ -188,28 +188,28 @@ feature -- Basic operations
 			Result := item / other.item
 		end
 
-	identity alias "+": like Current is
+	identity alias "+": like Current
 			-- Unary plus
 		do
 			create Result
 			Result.set_item (+ item)
 		end
 
-	opposite alias "-": like Current is
+	opposite alias "-": like Current
 			-- Unary minus
 		do
 			create Result
 			Result.set_item (- item)
 		end
 
-	integer_quotient alias "//" (other: like Current): like Current is
+	integer_quotient alias "//" (other: like Current): like Current
 			-- Integer division of Current by `other'
 		do
 			create Result
 			Result.set_item (item // other.item)
 		end
 
-	integer_remainder alias "\\" (other: like Current): like Current is
+	integer_remainder alias "\\" (other: like Current): like Current
 			-- Remainder of the integer division of Current by `other'
 		require
 			other_exists: other /= Void
@@ -221,13 +221,13 @@ feature -- Basic operations
 			result_exists: Result /= Void
 		end
 
-	power alias "^" (other: DOUBLE): DOUBLE is
+	power alias "^" (other: DOUBLE): DOUBLE
 			-- Integer power of Current by `other'
 		do
 			Result := item ^ other
 		end
 
-	interval alias "|..|" (other: INTEGER): INTEGER_INTERVAL is
+	interval alias "|..|" (other: INTEGER): INTEGER_INTERVAL
 			-- Interval from current element to `other'
 			-- (empty if `other' less than current integer)
 		do
@@ -236,7 +236,7 @@ feature -- Basic operations
 
 feature {NONE} -- Initialization
 
-	make_from_reference (v: INTEGER_REF) is
+	make_from_reference (v: INTEGER_REF)
 			-- Initialize `Current' with `v.item'.
 		require
 			v_not_void: v /= Void
@@ -248,7 +248,7 @@ feature {NONE} -- Initialization
 
 feature -- Conversion
 
-	to_reference: INTEGER_REF is
+	to_reference: INTEGER_REF
 			-- Associated reference of Current
 		do
 			create Result
@@ -257,31 +257,31 @@ feature -- Conversion
 			to_reference_not_void: Result /= Void
 		end
 
-	frozen to_boolean: BOOLEAN is
+	frozen to_boolean: BOOLEAN
 			-- True if not `zero'.
 		do
 			Result := item /= 0
 		end
 
-	frozen to_natural_8: NATURAL_8 is
+	frozen to_natural_8: NATURAL_8
 			-- Convert `item' into an NATURAL_8 value.
 		require
 			item_non_negative: item >= 0
-			not_too_big: item <= feature {NATURAL_8}.Max_value
+			not_too_big: item <= {NATURAL_8}.Max_value
 		do
 			Result := item.to_natural_8
 		end
 
-	frozen to_natural_16: NATURAL_16 is
+	frozen to_natural_16: NATURAL_16
 			-- Convert `item' into an NATURAL_16 value.
 		require
 			item_non_negative: item >= 0
-			not_too_big: item <= feature {NATURAL_16}.Max_value
+			not_too_big: item <= {NATURAL_16}.Max_value
 		do
 			Result := item.to_natural_16
 		end
 
-	frozen to_natural_32: NATURAL_32 is
+	frozen to_natural_32: NATURAL_32
 			-- Convert `item' into an NATURAL_32 value.
 		require
 			item_non_negative: item >= 0
@@ -289,7 +289,7 @@ feature -- Conversion
 			Result := item.to_natural_32
 		end
 	
-	frozen to_natural_64: NATURAL_64 is
+	frozen to_natural_64: NATURAL_64
 			-- Convert `item' into an NATURAL_64 value.
 		require
 			item_non_negative: item >= 0
@@ -297,49 +297,49 @@ feature -- Conversion
 			Result := item.to_natural_64
 		end
 
-	frozen to_integer_8: INTEGER_8 is
+	frozen to_integer_8: INTEGER_8
 			-- Convert `item' into an INTEGER_8 value.
 		require
-			not_too_small: item >= feature {INTEGER_8}.Min_value
-			not_too_big: item <= feature {INTEGER_8}.Max_value
+			not_too_small: item >= {INTEGER_8}.Min_value
+			not_too_big: item <= {INTEGER_8}.Max_value
 		do
 			Result := item.to_integer_8
 		end
 		
-	frozen to_integer_16: INTEGER_16 is
+	frozen to_integer_16: INTEGER_16
 			-- Convert `item' into an INTEGER_16 value.
 		require
-			not_too_small: item >= feature {INTEGER_16}.Min_value
-			not_too_big: item <= feature {INTEGER_16}.Max_value
+			not_too_small: item >= {INTEGER_16}.Min_value
+			not_too_big: item <= {INTEGER_16}.Max_value
 		do
 			Result := item.to_integer_16
 		end
 
-	frozen to_integer, frozen to_integer_32: INTEGER is
+	frozen to_integer, frozen to_integer_32: INTEGER
 			-- Return `item'.
 		do
 			Result := item
 		end
 
-	frozen to_integer_64: INTEGER_64 is
+	frozen to_integer_64: INTEGER_64
 			-- Convert `item' into an INTEGER_64 value.
 		do
 			Result := item.to_integer_64
 		end
 
-	frozen to_real: REAL is
+	frozen to_real: REAL
 			-- Convert `item' into a REAL
 		do
 			Result := item.to_real
 		end
 
-	frozen to_double: DOUBLE is
+	frozen to_double: DOUBLE
 			-- Convert `item' into a DOUBLE
 		do
 			Result := item.to_double
 		end
 
-	to_hex_string: STRING is
+	to_hex_string: STRING
 			-- Convert `item' into an hexadecimal string.
 		local
 			i, val: INTEGER
@@ -363,7 +363,7 @@ feature -- Conversion
 			Result_valid_count: Result.count = (create {PLATFORM}).Integer_bits // 4
 		end
 
-	to_hex_character: CHARACTER is
+	to_hex_character: CHARACTER
 			-- Convert `item' into an hexadecimal character.
 		require
 			in_bounds: 0 <= item and item <= 15
@@ -380,7 +380,7 @@ feature -- Conversion
 			valid_character: ("0123456789ABCDEF").has (Result)
 		end
 
-	frozen to_character: CHARACTER is
+	frozen to_character: CHARACTER
 			-- Returns corresponding ASCII character to `item' value.
 		require
 			valid_character: is_valid_character_code
@@ -390,7 +390,7 @@ feature -- Conversion
 
 feature -- Bit operations
 
-	frozen bit_and alias "&" (i: like Current): like Current is
+	frozen bit_and alias "&" (i: like Current): like Current
 			-- Bitwise and between Current' and `i'.
 		require
 			i_not_void: i /= Void
@@ -401,7 +401,7 @@ feature -- Bit operations
 			bitwise_and_not_void: Result /= Void
 		end
 
-	frozen bit_or alias "|" (i: like Current): like Current is
+	frozen bit_or alias "|" (i: like Current): like Current
 			-- Bitwise or between Current' and `i'.
 		require
 			i_not_void: i /= Void
@@ -412,7 +412,7 @@ feature -- Bit operations
 			bitwise_or_not_void: Result /= Void
 		end
 
-	frozen bit_xor (i: like Current): like Current is
+	frozen bit_xor (i: like Current): like Current
 			-- Bitwise xor between Current' and `i'.
 		require
 			i_not_void: i /= Void
@@ -423,7 +423,7 @@ feature -- Bit operations
 			bitwise_xor_not_void: Result /= Void
 		end
 
-	frozen bit_not: like Current is
+	frozen bit_not: like Current
 			-- One's complement of Current.
 		do
 			create Result
@@ -432,7 +432,7 @@ feature -- Bit operations
 			bit_not_not_void: Result /= Void
 		end
 
-	frozen bit_shift (n: INTEGER): INTEGER is
+	frozen bit_shift (n: INTEGER): INTEGER
 			-- Shift Current from `n' position to right if `n' positive,
 			-- to left otherwise.
 		require
@@ -446,7 +446,7 @@ feature -- Bit operations
 			end	
 		end
 
-	frozen bit_shift_left alias "|<<" (n: INTEGER): like Current is
+	frozen bit_shift_left alias "|<<" (n: INTEGER): like Current
 			-- Shift Current from `n' position to left.
 		require
 			n_nonnegative: n >= 0
@@ -458,7 +458,7 @@ feature -- Bit operations
 			bit_shift_left_not_void: Result /= Void
 		end
 
-	frozen bit_shift_right alias "|>>" (n: INTEGER): like Current is
+	frozen bit_shift_right alias "|>>" (n: INTEGER): like Current
 			-- Shift Current from `n' position to right.
 		require
 			n_nonnegative: n >= 0
@@ -470,7 +470,7 @@ feature -- Bit operations
 			bit_shift_right_not_void: Result /= Void
 		end
 
-	frozen bit_test (n: INTEGER): BOOLEAN is
+	frozen bit_test (n: INTEGER): BOOLEAN
 			-- Test `n'-th position of Current.
 		require
 			n_nonnegative: n >= 0
@@ -479,7 +479,7 @@ feature -- Bit operations
 			Result := item & (1 |<< n) /= 0
 		end
 
-	frozen set_bit (b: BOOLEAN; n: INTEGER): INTEGER is
+	frozen set_bit (b: BOOLEAN; n: INTEGER): INTEGER
 			-- Copy of current with `n'-th position
 			-- set to 1 if `b', 0 otherwise.
 		require
@@ -493,7 +493,7 @@ feature -- Bit operations
 			end
 		end
 
-	frozen set_bit_with_mask (b: BOOLEAN; m: INTEGER): INTEGER is
+	frozen set_bit_with_mask (b: BOOLEAN; m: INTEGER): INTEGER
 			-- Copy of current with all 1 bits of m set to 1
 			-- if `b', 0 otherwise.
 		do
@@ -506,7 +506,7 @@ feature -- Bit operations
 
 feature -- Output
 
-	out: STRING is
+	out: STRING
 			-- Printable representation of integer value
 		do
 			Result := item.out
@@ -514,7 +514,7 @@ feature -- Output
 
 feature {NONE} -- Implementation
 
-	abs_ref: INTEGER_REF is
+	abs_ref: INTEGER_REF
 			-- Absolute value
 		do
 			if item >= 0 then
@@ -531,7 +531,7 @@ invariant
 
 	sign_times_abs: sign * abs = item
 
-indexing
+note
 
 	library: "[
 			EiffelBase: Library of reusable components for Eiffel.

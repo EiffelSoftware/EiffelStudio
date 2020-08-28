@@ -1,4 +1,4 @@
-indexing
+note
 
 	description:
 		"Tables whose keys are integers in a contiguous interval"
@@ -21,7 +21,7 @@ deferred class INDEXABLE [G, H -> INTEGER] inherit
 
 feature -- Measurement
 
-	index_set: INTEGER_INTERVAL is
+	index_set: INTEGER_INTERVAL
 			-- Range of acceptable indexes
 		deferred
 		ensure
@@ -30,7 +30,7 @@ feature -- Measurement
 
 feature -- Status report
 
-	valid_index (i: H): BOOLEAN is
+	valid_index (i: H): BOOLEAN
 			-- Is `i' a valid index?
 		deferred
 		ensure then
@@ -42,7 +42,7 @@ feature -- Status report
 
 feature -- Element change
 
-	put (v: G; k: H) is
+	put (v: G; k: H)
 			-- Associate value `v' with key `k'.
 		deferred
 		ensure then
@@ -53,7 +53,7 @@ invariant
 
 	index_set_not_void: index_set /= Void
 
-indexing
+note
 
 	library: "[
 			EiffelBase: Library of reusable components for Eiffel.

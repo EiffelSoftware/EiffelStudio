@@ -1,4 +1,4 @@
-indexing
+note
 
 	description: "Some useful facilities on objects of basic types"
 
@@ -11,7 +11,7 @@ class
 
 feature -- Conversion
 
-	charconv (i: INTEGER): CHARACTER is
+	charconv (i: INTEGER): CHARACTER
 			-- Character corresponding to ascii code `i'
 		external
 			"C [macro %"eif_misc.h%"]"
@@ -21,7 +21,7 @@ feature -- Conversion
 
 feature -- Basic operations
 
-	abs (n: INTEGER): INTEGER is
+	abs (n: INTEGER): INTEGER
 			-- Absolute value of `n'
 		do
 			if n < 0 then
@@ -33,7 +33,7 @@ feature -- Basic operations
 			non_negative_result: Result >= 0
 		end
 
-	sign (n: INTEGER): INTEGER is
+	sign (n: INTEGER): INTEGER
 			-- Sign of `n':
 			-- -1 if `n' < 0
 			--  0 if `n' = 0
@@ -50,7 +50,7 @@ feature -- Basic operations
 			correct_positive: (n > 0) = (Result = +1)
 		end
 
-	rsign (r: REAL): INTEGER is
+	rsign (r: REAL): INTEGER
 			-- Sign of `r':
 			-- -1 if `r' < 0
 			--  0 if `r' = 0
@@ -67,7 +67,7 @@ feature -- Basic operations
 			correct_positive: (r > 0) = (Result = +1)
 		end
 
-	bottom_int_div (n1, n2: INTEGER): INTEGER is
+	bottom_int_div (n1, n2: INTEGER): INTEGER
 			-- Greatest lower bound of the integer division of `n1' by `n2'
 		external
 			"C | %"eif_misc.h%""
@@ -75,7 +75,7 @@ feature -- Basic operations
 			"bointdiv"
 		end
 
-	up_int_div (n1, n2: INTEGER): INTEGER is
+	up_int_div (n1, n2: INTEGER): INTEGER
 			-- Least upper bound of the integer division
 			-- of `n1' by `n2'
 		external
@@ -84,7 +84,7 @@ feature -- Basic operations
 			"upintdiv"
 		end
 
-indexing
+note
 
 	library: "[
 			EiffelBase: Library of reusable components for Eiffel.

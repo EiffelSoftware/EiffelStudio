@@ -11,7 +11,7 @@ feature -- Initialization
 
 feature -- Access
 
-	test: BILINEAR [!STRING_8]
+	test: BILINEAR [attached STRING_8]
 
 feature -- Element change
 
@@ -23,7 +23,7 @@ feature {NONE} -- Basic operations
 
 	process_test
 		do
-			if {l_test: !like test} test then
+			if attached test as l_test then
 			end
 		end
 

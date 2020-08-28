@@ -1,4 +1,4 @@
-indexing
+note
 
 	description:
 		"Cursors for remembering positions in arbitrary data structures"
@@ -11,7 +11,7 @@ indexing
 class
 	CURSOR
 
-indexing
+note
 
 	library: "[
 			EiffelBase: Library of reusable components for Eiffel.

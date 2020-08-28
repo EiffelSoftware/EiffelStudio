@@ -1,4 +1,4 @@
-indexing
+note
 
 	description: "Objects that can access `set_count' from STRING"
 	date: "$Date$"
@@ -7,7 +7,7 @@ indexing
 class
 	STRING_HANDLER
 
-indexing
+note
 
 	library: "[
 			EiffelBase: Library of reusable components for Eiffel.

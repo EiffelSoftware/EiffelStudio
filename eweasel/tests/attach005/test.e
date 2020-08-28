@@ -5,10 +5,10 @@ create
 
 feature {NONE} -- Creation
 
-	make is
+	make
 			-- Run tests.
 		local
-			l_test: !TEST
+			l_test: attached TEST
 		do
 			l_test := Current
 		end

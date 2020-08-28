@@ -5,11 +5,11 @@ feature
 	f
 		local
 			g: G
-			ga: !G
-			gd: ?G
+			ga: attached G
+			gd: detachable G
 			t: TEST
-			ta: !TEST
-			td: ?TEST
+			ta: attached TEST
+			td: detachable TEST
 		do
 			t := gd
 			ta := ga

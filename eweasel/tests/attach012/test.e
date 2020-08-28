@@ -5,18 +5,18 @@ create
 
 feature {NONE} -- Creation
 
-	make is
+	make
 			-- Run tests.
 		do
 			io.put_string ("Test 1: ")
-			if {t: !TEST} Current and then {w: !TEST} t.identity.identity then
+			if attached {attached TEST} Current as t and then attached {attached TEST} t.identity.identity as w then
 				io.put_string ("OK")
 			else
 				io.put_string ("FAILED")
 			end
 			io.put_new_line
 			io.put_string ("Test 2: ")
-			if {s: !STRING} Current and then {p: !STRING} s.out.out then
+			if attached {attached STRING} Current as s and then attached {attached STRING} s.out.out as p then
 				io.put_string ("FAILED")
 			else
 				io.put_string ("OK")

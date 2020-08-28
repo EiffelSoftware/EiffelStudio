@@ -18,8 +18,8 @@ feature -- Status report
 			l_void: ANY
 		do
 			if
-				{l_s1: !STRING_8} l_void and then
-				{l_s2: !STRING_8} l_s1.out
+				attached {attached STRING_8} l_void as l_s1 and then
+				attached {attached STRING_8} l_s1.out as l_s2
 			then
 				Result := True
 			end

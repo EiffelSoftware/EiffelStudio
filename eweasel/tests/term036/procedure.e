@@ -1,4 +1,4 @@
-indexing
+note
 
 	description: "[
 		Objects representing delayed calls to a procedure.
@@ -17,7 +17,7 @@ inherit
 
 feature -- Calls
 
-	apply is
+	apply
 			-- Call procedure with `operands' as last set.
 		do
 			rout_set_cargs
@@ -26,13 +26,13 @@ feature -- Calls
 
 feature {NONE} -- Implementation
 
-	rout_obj_call_procedure (rout: POINTER; args: POINTER) is
+	rout_obj_call_procedure (rout: POINTER; args: POINTER)
 			-- Perform call to `rout' with `args'.
 		external
 			"C [macro %"eif_rout_obj.h%"]"
 		end
 
-indexing
+note
 
 	library: "[
 			EiffelBase: Library of reusable components for Eiffel.

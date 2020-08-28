@@ -48,7 +48,7 @@ compile_result 	ok
 
 copy_raw	 test_rev11.e $CLUSTER test.e
 compile_melted
-compile_result 	syntax_error TEST 18
+compile_result 	validity_error TEST VWOE:18
 
 copy_raw	 test_rev12.e $CLUSTER test.e
 resume_compile

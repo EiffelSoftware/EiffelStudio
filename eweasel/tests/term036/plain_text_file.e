@@ -1,4 +1,4 @@
-indexing
+note
 
 	description:
 		"Files viewed as persistent sequences of ASCII characters"
@@ -25,24 +25,24 @@ create
 
 feature -- Status report
 
-	is_plain_text: BOOLEAN is
+	is_plain_text: BOOLEAN
 			-- Is file reserved for text (character sequences)? (Yes)
 		do
 			Result := True
 		end
 
-	support_storable: BOOLEAN is False
+	support_storable: BOOLEAN = False
 			-- Can medium be used to store an Eiffel structure?
 
 feature -- Output
 
-	put_integer, putint (i: INTEGER) is
+	put_integer, putint (i: INTEGER)
 			-- Write ASCII value of `i' at current position.
 		do
 			file_pi (file_pointer, i)
 		end
 
-	put_boolean, putbool (b: BOOLEAN) is
+	put_boolean, putbool (b: BOOLEAN)
 			-- Write ASCII value of `b' at current position.
 		local
 			ext_bool_str: ANY
@@ -56,13 +56,13 @@ feature -- Output
 			end
 		end
 
-	put_real, putreal (r: REAL) is
+	put_real, putreal (r: REAL)
 			-- Write ASCII value of `r' at current position.
 		do
 			file_pr (file_pointer, r)
 		end
 
-	put_double, putdouble (d: DOUBLE) is
+	put_double, putdouble (d: DOUBLE)
 			-- Write ASCII value `d' at current position.
 		do
 			file_pd (file_pointer, d)
@@ -70,21 +70,21 @@ feature -- Output
 
 feature -- Input
 
-	read_integer, readint is
+	read_integer, readint
 			-- Read the ASCII representation of a new integer
 			-- from file. Make result available in `last_integer'.
 		do
 			last_integer := file_gi (file_pointer)
 		end
 
-	read_real, readreal is
+	read_real, readreal
 			-- Read the ASCII representation of a new real
 			-- from file. Make result available in `last_real'.
 		do
 			last_real := file_gr (file_pointer)
 		end
 
-	read_double, readdouble is
+	read_double, readdouble
 			-- Read the ASCII representation of a new double
 			-- from file. Make result available in `last_double'.
 		do
@@ -93,7 +93,7 @@ feature -- Input
 
 feature {NONE} -- Implementation
 
-	read_to_string (a_string: STRING; pos, nb: INTEGER): INTEGER is
+	read_to_string (a_string: STRING; pos, nb: INTEGER): INTEGER
 			-- Fill `a_string', starting at position `pos' with at
 			-- most `nb' characters read from current file.
 			-- Return the number of characters actually read.
@@ -104,37 +104,37 @@ feature {NONE} -- Implementation
 			Result := file_gss (file_pointer, $str_area + (pos - 1), nb)
 		end
 
-	file_gi (file: POINTER): INTEGER is
+	file_gi (file: POINTER): INTEGER
 			-- Get an integer from `file'
 		external
 			"C (FILE *): EIF_INTEGER | %"eif_file.h%""
 		end
 
-	file_gr (file: POINTER): REAL is
+	file_gr (file: POINTER): REAL
 			-- Read a real from `file'
 		external
 			"C (FILE *): EIF_REAL | %"eif_file.h%""
 		end
 
-	file_gd (file: POINTER): DOUBLE is
+	file_gd (file: POINTER): DOUBLE
 			-- Read a double from `file'
 		external
 			"C (FILE *): EIF_DOUBLE | %"eif_file.h%""
 		end
 
-	file_pi (file: POINTER; n: INTEGER) is
+	file_pi (file: POINTER; n: INTEGER)
 			-- Put `n' to end of `file'.
 		external
 			"C (FILE *, EIF_INTEGER) | %"eif_file.h%""
 		end
 
-	file_pr (file: POINTER; r: REAL) is
+	file_pr (file: POINTER; r: REAL)
 			-- Put `r' to end of `file'.
 		external
 			"C (FILE *, EIF_REAL) | %"eif_file.h%""
 		end
 
-	file_pd (file: POINTER; d: DOUBLE) is
+	file_pd (file: POINTER; d: DOUBLE)
 			-- Put `d' to end of `file'.
 		external
 			"C (FILE *, EIF_DOUBLE) | %"eif_file.h%""
@@ -144,7 +144,7 @@ invariant
 
 	plain_text: is_plain_text
 
-indexing
+note
 
 	library: "[
 			EiffelBase: Library of reusable components for Eiffel.

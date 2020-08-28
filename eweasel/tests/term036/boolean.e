@@ -1,4 +1,4 @@
-indexing
+note
 
 	description:
 		"Truth values, with the boolean operations"
@@ -19,7 +19,7 @@ create
 convert
 	make_from_reference ({BOOLEAN_REF})
 
-indexing
+note
 
 	library: "[
 			EiffelBase: Library of reusable components for Eiffel.

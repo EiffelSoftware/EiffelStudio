@@ -34,8 +34,8 @@ feature {NONE} -- Initialization
 
 feature {NONE} -- Implementation
 
-	attached_string: !STRING
-	detachable_string: ?STRING
+	attached_string: attached STRING
+	detachable_string: detachable STRING
 
 	precondition_violation (obj: ANY; pos: INTEGER): BOOLEAN
 		local

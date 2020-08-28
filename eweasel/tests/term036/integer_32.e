@@ -1,4 +1,4 @@
-indexing
+note
 
 	description:
 		"Integer values"
@@ -21,7 +21,7 @@ convert
 	to_double: {DOUBLE},
 	to_integer_64: {INTEGER_64}
 
-indexing
+note
 
 	library: "[
 			EiffelBase: Library of reusable components for Eiffel.

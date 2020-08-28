@@ -1,4 +1,4 @@
-indexing
+note
 
 	description: "[
 		Commonly used input and output mechanisms.
@@ -15,19 +15,19 @@ class
 
 feature -- Access
 
-	input: PLAIN_TEXT_FILE is
+	input: PLAIN_TEXT_FILE
 			-- Standard input file
 		once
 			create {CONSOLE} Result.make_open_stdin ("stdin")
 		end
 
-	output: PLAIN_TEXT_FILE is
+	output: PLAIN_TEXT_FILE
 			-- Standard output file
 		once
 			create {CONSOLE} Result.make_open_stdout ("stdout")
 		end
 
-	error: PLAIN_TEXT_FILE is
+	error: PLAIN_TEXT_FILE
 			-- Standard error file
 		once
 			create {CONSOLE} Result.make_open_stderr ("stderr")
@@ -36,7 +36,7 @@ feature -- Access
 	default_output: PLAIN_TEXT_FILE
 			-- Default output
 
-	standard_default: PLAIN_TEXT_FILE is
+	standard_default: PLAIN_TEXT_FILE
 			-- Return the `default_output' or `output'
 			-- if `default_output' is Void.
 			--| Useful if a class inherits from STD_FILES and
@@ -51,32 +51,32 @@ feature -- Access
 
 feature -- Status report
 
-	last_character, lastchar: CHARACTER is
+	last_character, lastchar: CHARACTER
 			-- Last character read by `read_character'
 		do
 			Result := input.last_character
 		end
 
-	last_integer, lastint: INTEGER is
+	last_integer, lastint: INTEGER
 			-- Last integer read by `read_integer'
 		do
 			Result := input.last_integer
 		end
 
-	last_real, lastreal: REAL is
+	last_real, lastreal: REAL
 			-- Last real read by `read_real'
 		do
 			Result := input.last_real
 		end
 
-	last_string, laststring: STRING is
+	last_string, laststring: STRING
 			-- Last string read by `read_line',
 			-- `read_stream', or `read_word'
 		do
 			Result := input.last_string
 		end
 
-	last_double, lastdouble: DOUBLE is
+	last_double, lastdouble: DOUBLE
 			-- Last double read by `read_double'
 		do
 			Result := input.last_double
@@ -84,13 +84,13 @@ feature -- Status report
 
 feature -- Element change
 
-	set_error_default is
+	set_error_default
 			-- Use standard error as default output.
 		do
 			default_output := error
 		end
 
-	set_file_default (f: PLAIN_TEXT_FILE) is
+	set_file_default (f: PLAIN_TEXT_FILE)
 			-- Use `f' as default output.
 		require
 			valid_argument: f /= Void
@@ -99,19 +99,19 @@ feature -- Element change
 			default_output := f
 		end
 
-	set_output_default is
+	set_output_default
 			-- Use standard output as default output.
 		do
 			default_output := output
 		end
 
-	put_character, putchar (c: CHARACTER) is
+	put_character, putchar (c: CHARACTER)
 			-- Write `c' at end of default output.
 		do
 			standard_default.put_character (c)
 		end
 
-	put_string, putstring (s: STRING) is
+	put_string, putstring (s: STRING)
 			-- Write `s' at end of default output.
 		require
 			string_not_void: s /= Void
@@ -119,25 +119,25 @@ feature -- Element change
 			standard_default.put_string (s)
 		end
 
-	put_real, putreal (r: REAL) is
+	put_real, putreal (r: REAL)
 			-- Write `r' at end of default output.
 		do
 			standard_default.put_real (r)
 		end
 
-	put_double, putdouble (d: DOUBLE) is
+	put_double, putdouble (d: DOUBLE)
 			-- Write `d' at end of default output.
 		do
 			standard_default.put_double (d)
 		end
 
-	put_integer, putint (i: INTEGER) is
+	put_integer, putint (i: INTEGER)
 			-- Write `i' at end of default output.
 		do
 			standard_default.put_integer (i)
 		end
 
-	put_boolean, putbool (b: BOOLEAN) is
+	put_boolean, putbool (b: BOOLEAN)
 			-- Write `b' at end of default output.
 		do
 			if b then
@@ -147,7 +147,7 @@ feature -- Element change
 			end
 		end
 
-	put_new_line, new_line is
+	put_new_line, new_line
 			-- Write line feed at end of default output.
 		do
 			standard_default.new_line
@@ -155,35 +155,35 @@ feature -- Element change
 
 feature -- Input
 
-	read_integer, readint is
+	read_integer, readint
 			-- Read a new integer from standard input.
 			-- Make result available in `last_integer'.
 		do
 			input.read_integer
 		end
 
-	read_real, readreal is
+	read_real, readreal
 			-- Read a new real from standard input.
 			-- Make result available in `last_real'.
 		do
 			input.read_real
 		end
 
-	read_double, readdouble is
+	read_double, readdouble
 			-- Read a new double from standard input.
 			-- Make result available in `last_double'.
 		do
 			input.read_double
 		end
 
-	read_line, readline is
+	read_line, readline
 			-- Read a line from standard input.
 			-- Make result available in `last_string'.
 		do
 			input.read_line
 		end
 
-	read_stream, readstream (nb_char: INTEGER) is
+	read_stream, readstream (nb_char: INTEGER)
  			-- Read a string of at most `nb_char' bound characters
 			-- from standard input.
 			-- Make result available in `last_string'.
@@ -191,14 +191,14 @@ feature -- Input
 			input.read_stream (nb_char)
 		end
 
-	read_word, readword is
+	read_word, readword
 			-- Read a new word from standard input.
 			-- Make result available in `last_string'.
 		do
 			input.read_word
 		end
 
-	read_character, readchar is
+	read_character, readchar
 			-- Read a new character from standard input.
 			-- It will not return until read operation is
 			-- terminated when enter key is pressed.
@@ -209,13 +209,13 @@ feature -- Input
 			input.read_character
 		end
 
-	to_next_line, next_line is
+	to_next_line, next_line
 			-- Move to next input line on standard input.
 		do
 			input.next_line
 		end
 
-indexing
+note
 
 	library: "[
 			EiffelBase: Library of reusable components for Eiffel.

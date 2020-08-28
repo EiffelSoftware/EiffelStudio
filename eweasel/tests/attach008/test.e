@@ -25,6 +25,6 @@ feature {TEST} -- Test
 		end
 
 invariant
-	is_string: {s: !STRING} a and then s.is_equal ("Test OK")
+	is_string: attached {attached STRING} a as s and then s.is_equal ("Test OK")
 
 end

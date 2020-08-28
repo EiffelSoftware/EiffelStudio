@@ -1,4 +1,4 @@
-indexing
+note
 
 	description: "Integer values coded on 8 bits"
 	status: "See notice at end of class"
@@ -21,7 +21,7 @@ convert
 	to_integer_32: {INTEGER},
 	to_integer_64: {INTEGER_64}
 
-indexing
+note
 
 	library: "[
 			EiffelBase: Library of reusable components for Eiffel.

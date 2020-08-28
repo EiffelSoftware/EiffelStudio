@@ -12,18 +12,18 @@ feature {NONE} -- Initialization
 		end
 
 
-	perform (a_string: ?STRING)
+	perform (a_string: detachable STRING)
 			-- This precondition should not compile
 		do
 		ensure
-			test: {el_string: STRING} a_string implies old test (el_string)
+			test: attached {STRING} a_string as el_string implies old test (el_string)
 		end
 
 
-	test (a_string: !STRING): BOOLEAN
+	test (a_string: attached STRING): BOOLEAN
 			-- Required to perform test
 		do
-			if {l_string: STRING} a_string then
+			if attached {STRING} a_string as l_string then
 				print (l_string)
 				Result := True
 			else

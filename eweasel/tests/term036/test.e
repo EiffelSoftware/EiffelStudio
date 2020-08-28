@@ -1,10 +1,10 @@
 
 class TEST
-creation
+create
 	make
 feature
 	
-	make is
+	make
 		local
 		do
 		end;

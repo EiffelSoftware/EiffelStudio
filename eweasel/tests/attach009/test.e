@@ -8,7 +8,7 @@ feature {NONE} -- Creation
 	make
 			-- Run test.
 		local
-			i: !INTEGER
+			i: attached INTEGER
 		do
 			io.put_integer (i)
 			io.put_new_line

@@ -1,4 +1,4 @@
-indexing
+note
 
 	description: "[
 		Structures for which there exists a traversal policy
@@ -21,7 +21,7 @@ inherit
 
 feature -- Access
 
-	item: G is
+	item: G
 			-- Item at current position
 		require
 			not_off: not off
@@ -30,14 +30,14 @@ feature -- Access
 
 feature -- Status report
 
-	off: BOOLEAN is
+	off: BOOLEAN
 			-- Is there no current item?
 		deferred
 		end
 
 feature -- Cursor movement
 
-	start is
+	start
 			-- Move to first position if any.
 		deferred
 		end
@@ -45,7 +45,7 @@ feature -- Cursor movement
 feature -- Iteration
 
 		
-	do_all (action: PROCEDURE [ANY, TUPLE [G]]) is
+	do_all (action: PROCEDURE [ANY, TUPLE [G]])
 			-- Apply `action' to every item.
 			-- Semantics not guaranteed if `action' changes the structure;
 			-- in such a case, apply iterator to clone of structure instead. 
@@ -56,7 +56,7 @@ feature -- Iteration
 		end
 
 	do_if (action: PROCEDURE [ANY, TUPLE [G]];
-	 test: FUNCTION [ANY, TUPLE [G], BOOLEAN]) is
+	 test: FUNCTION [ANY, TUPLE [G], BOOLEAN])
 			-- Apply `action' to every item that satisfies `test'.
 			-- Semantics not guaranteed if `action' or `test' changes the structure;
 			-- in such a case, apply iterator to clone of structure instead. 
@@ -68,7 +68,7 @@ feature -- Iteration
 			linear_representation.do_if (action, test)
 		end
 
-	there_exists (test: FUNCTION [ANY, TUPLE [G], BOOLEAN]): BOOLEAN is
+	there_exists (test: FUNCTION [ANY, TUPLE [G], BOOLEAN]): BOOLEAN
 			-- Is `test' true for at least one item?
 		require
 			test_exits: test /= Void
@@ -77,7 +77,7 @@ feature -- Iteration
 			Result := linear_representation.there_exists (test)
 		end
 
-	for_all (test: FUNCTION [ANY, TUPLE [G], BOOLEAN]): BOOLEAN is
+	for_all (test: FUNCTION [ANY, TUPLE [G], BOOLEAN]): BOOLEAN
 			-- Is `test' true for all items?
 		require
 			test_exits: test /= Void
@@ -90,7 +90,7 @@ invariant
 
 	empty_constraint: is_empty implies off
 
-indexing
+note
 
 	library: "[
 			EiffelBase: Library of reusable components for Eiffel.

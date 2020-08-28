@@ -9,7 +9,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make is
+	make
 		local
 			l_string_reference: like string_reference
 		do

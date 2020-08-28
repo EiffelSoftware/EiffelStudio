@@ -44,7 +44,7 @@ compile_result 	 syntax_error TEST 19
 define		 INSTRUCTION "print (5 \\\ 3);"
 copy_sub 	 test.e  $CLUSTER test.e
 resume_compile
-compile_result 	 syntax_error TEST 19
+compile_result 	 validity_error TEST VWOE:19
 
 define		 INSTRUCTION ";"
 copy_sub 	 test.e  $CLUSTER test.e

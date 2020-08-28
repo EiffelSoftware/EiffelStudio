@@ -5,7 +5,7 @@ create
 
 feature {NONE} -- Creation
 
-	make is
+	make
 			-- Run tests.
 		do
 			test (Current)
@@ -13,7 +13,7 @@ feature {NONE} -- Creation
 
 feature {NONE} -- Test
 
-	test (v: ?ANY)
+	test (v: detachable ANY)
 		require
 			v /= Void and then v.out /= Void
 		do

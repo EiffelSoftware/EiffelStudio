@@ -5,7 +5,7 @@ create
 
 feature {NONE} -- Creation
 
-	make is
+	make
 		do
 		end
 

@@ -1,4 +1,4 @@
-indexing
+note
 
 	description:
 		"References to objects containing a boolean value"
@@ -19,7 +19,7 @@ feature -- Access
 	item: BOOLEAN
 			-- Boolean value
 
-	hash_code: INTEGER is
+	hash_code: INTEGER
 			-- Hash code value
 		do
 			Result := 1
@@ -27,7 +27,7 @@ feature -- Access
 
 feature -- Status report
 
-	is_hashable: BOOLEAN is
+	is_hashable: BOOLEAN
 			-- May current object be hashed?
 			-- (True if it is not its type's default.)
 		do
@@ -36,7 +36,7 @@ feature -- Status report
 
 feature {NONE} -- Initialization
 
-	make_from_reference (v: BOOLEAN_REF) is
+	make_from_reference (v: BOOLEAN_REF)
 			-- Initialize `Current' with `v.item'.
 		require
 			v_not_void: v /= Void
@@ -48,7 +48,7 @@ feature {NONE} -- Initialization
 
 feature -- Conversion
 
-	to_reference: BOOLEAN_REF is
+	to_reference: BOOLEAN_REF
 			-- Associated reference of Current
 		do
 			create Result
@@ -57,7 +57,7 @@ feature -- Conversion
 			to_reference_not_void: Result /= Void
 		end
 
-	to_integer: INTEGER is
+	to_integer: INTEGER
 			-- 1 if `True'
 			-- 0 if `False'
 		do
@@ -71,7 +71,7 @@ feature -- Conversion
 
 feature -- Element change
 
-	set_item (b: BOOLEAN) is
+	set_item (b: BOOLEAN)
 			-- Make `b' the `item' value.
 		do
 			item := b
@@ -79,7 +79,7 @@ feature -- Element change
 
 feature -- Basic operations
 
-	conjuncted alias "and" (other: like Current): BOOLEAN is
+	conjuncted alias "and" (other: like Current): BOOLEAN
 			-- Boolean conjunction with `other'
 		require
 			other_exists: other /= Void
@@ -91,7 +91,7 @@ feature -- Basic operations
 			consistent_with_semi_strict: Result implies (Current and then other)
 		end
 
-	conjuncted_semistrict alias "and then" (other: like Current): BOOLEAN is
+	conjuncted_semistrict alias "and then" (other: like Current): BOOLEAN
 			-- Boolean semi-strict conjunction with `other'
 		require
 			other_exists: other /= Void
@@ -101,7 +101,7 @@ feature -- Basic operations
 			de_morgan: Result = not (not Current or else not other)
 		end
 
-	implication alias "implies" (other: like Current): BOOLEAN is
+	implication alias "implies" (other: like Current): BOOLEAN
 			-- Boolean implication of `other'
 			-- (semi-strict)
 		require
@@ -112,14 +112,14 @@ feature -- Basic operations
 			definition: Result = (not Current or else other)
 		end
 
-	negated alias "not": like Current is
+	negated alias "not": like Current
 			-- Negation
 		do
 			create Result
 			Result.set_item (not item)
 		end
 
-	disjuncted alias "or" (other: like Current): BOOLEAN is
+	disjuncted alias "or" (other: like Current): BOOLEAN
 			-- Boolean disjunction with `other'
 		require
 			other_exists: other /= Void
@@ -131,7 +131,7 @@ feature -- Basic operations
 			consistent_with_semi_strict: Result implies (Current or else other)
 		end
 
-	disjuncted_semistrict alias "or else" (other: like Current): BOOLEAN is
+	disjuncted_semistrict alias "or else" (other: like Current): BOOLEAN
 			-- Boolean semi-strict disjunction with `other'
 		require
 			other_exists: other /= Void
@@ -141,7 +141,7 @@ feature -- Basic operations
 			de_morgan: Result = not (not Current and then not other)
 		end
 
-	disjuncted_exclusive alias "xor" (other: like Current): BOOLEAN is
+	disjuncted_exclusive alias "xor" (other: like Current): BOOLEAN
 			-- Boolean exclusive or with `other'
 		require
 			other_exists: other /= Void
@@ -153,7 +153,7 @@ feature -- Basic operations
 
 feature -- Output
 
-	out: STRING is
+	out: STRING
 			-- Printable representation of boolean
 		do
 			if item then
@@ -169,7 +169,7 @@ invariant
 	non_contradiction: not (Current and (not Current))
 	completeness: Current or else (not Current)
 
-indexing
+note
 
 	library: "[
 			EiffelBase: Library of reusable components for Eiffel.

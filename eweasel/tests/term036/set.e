@@ -1,5 +1,5 @@
 
-indexing
+note
 
 	description:
 		"Collection, where each element must be unique."
@@ -20,14 +20,14 @@ deferred class SET [G] inherit
 
 feature -- Measurement
 
-	count: INTEGER is
+	count: INTEGER
 			-- Number of items
 		deferred
 		end
 
 feature -- Element change
 
-	extend, put (v: G) is
+	extend, put (v: G)
 			-- Ensure that set includes `v'.
 		deferred
 		ensure then
@@ -37,7 +37,7 @@ feature -- Element change
 
 feature -- Removal
 
-	prune (v: G) is
+	prune (v: G)
 			-- Remove `v' if present.
 		deferred
 		ensure then
@@ -46,7 +46,7 @@ feature -- Removal
 			item_deleted: not has (v)
 		end
 
-	changeable_comparison_criterion: BOOLEAN is
+	changeable_comparison_criterion: BOOLEAN
 			-- May `object_comparison' be changed?
 			-- (Answer: only if set empty; otherwise insertions might
 			-- introduce duplicates, destroying the set property.)
@@ -56,7 +56,7 @@ feature -- Removal
 			only_on_empty: Result = is_empty
 		end
 
-indexing
+note
 
 	library: "[
 			EiffelBase: Library of reusable components for Eiffel.

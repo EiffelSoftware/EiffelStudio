@@ -5,7 +5,7 @@ create
 
 feature {NONE} -- Creation
 
-	make is
+	make
 			-- Run tests.
 		local
 			a: ANY
@@ -22,7 +22,7 @@ feature {NONE} -- Creation
 				-- Successful object tests
 
 			io.put_string ("ot_b1: ")
-			if {ot_b1: BOOLEAN} b then
+			if attached {BOOLEAN} b as ot_b1 then
 				io.put_boolean (ot_b1)
 			else
 				io.put_string ("FAILED")
@@ -30,7 +30,7 @@ feature {NONE} -- Creation
 			io.put_new_line
 
 			io.put_string ("ot_e1: ")
-			if {ot_e1: E} e then
+			if attached {E} e as ot_e1 then
 				io.put_string (ot_e1.item)
 			else
 				io.put_string ("FAILED")
@@ -39,7 +39,7 @@ feature {NONE} -- Creation
 
 			a := c
 			io.put_string ("ot_c1: ")
-			if {ot_c1: CHARACTER} a then
+			if attached {CHARACTER} a as ot_c1 then
 				io.put_character (ot_c1)
 			else
 				io.put_string ("FAILED")
@@ -48,7 +48,7 @@ feature {NONE} -- Creation
 
 			a := e
 			io.put_string ("ot_e2: ")
-			if {ot_e2: E} a then
+			if attached {E} a as ot_e2 then
 				io.put_string (ot_e2.item)
 			else
 				io.put_string ("FAILED")
@@ -56,7 +56,7 @@ feature {NONE} -- Creation
 			io.put_new_line
 
 			io.put_string ("ot_r1: ")
-			if {ot_r1: !COMPARABLE} c then
+			if attached {attached COMPARABLE} c as ot_r1 then
 				io.put_string (ot_r1.out)
 			else
 				io.put_string ("FAILED")
@@ -64,7 +64,7 @@ feature {NONE} -- Creation
 			io.put_new_line
 
 			io.put_string ("ot_a1: ")
-			if {ot_a1: !ANY} e then
+			if attached {attached ANY} e as ot_a1 then
 				io.put_string (ot_a1.out)
 			else
 				io.put_string ("FAILED")
@@ -73,7 +73,7 @@ feature {NONE} -- Creation
 
 			io.put_string ("ot_r2: ")
 			s := "OK"
-			if {ot_r2: !COMPARABLE} s then
+			if attached {attached COMPARABLE} s as ot_r2 then
 				io.put_string (ot_r2.out)
 			else
 				io.put_string ("FAILED")
@@ -83,7 +83,7 @@ feature {NONE} -- Creation
 				-- Failing object tests
 
 			io.put_string ("ot_b2: ")
-			if {ot_b2: BOOLEAN} c then
+			if attached {BOOLEAN} c as ot_b2 then
 				io.put_boolean (ot_b2)
 			else
 				io.put_string ("OK")
@@ -91,7 +91,7 @@ feature {NONE} -- Creation
 			io.put_new_line
 
 			io.put_string ("ot_b3: ")
-			if {ot_b3: BOOLEAN} e then
+			if attached {BOOLEAN} e as ot_b3 then
 				io.put_boolean (ot_b3)
 			else
 				io.put_string ("OK")
@@ -100,7 +100,7 @@ feature {NONE} -- Creation
 
 			io.put_string ("ot_b4: ")
 			s := "FAILED"
-			if {ot_b4: BOOLEAN} s then
+			if attached {BOOLEAN} s as ot_b4 then
 				io.put_boolean (ot_b4)
 			else
 				io.put_string ("OK")
@@ -108,7 +108,7 @@ feature {NONE} -- Creation
 			io.put_new_line
 
 			io.put_string ("ot_e3: ")
-			if {ot_e3: E} c then
+			if attached {E} c as ot_e3 then
 				io.put_string (ot_e3.out)
 			else
 				io.put_string ("OK")
@@ -116,7 +116,7 @@ feature {NONE} -- Creation
 			io.put_new_line
 
 			io.put_string ("ot_e4: ")
-			if {ot_e4: E} x then
+			if attached {E} x as ot_e4 then
 				io.put_string (ot_e4.out)
 			else
 				io.put_string ("OK")
@@ -125,7 +125,7 @@ feature {NONE} -- Creation
 
 			io.put_string ("ot_e5: ")
 			s := "FAILED"
-			if {ot_e5: BOOLEAN} s then
+			if attached {BOOLEAN} s as ot_e5 then
 				io.put_string (ot_e5.out)
 			else
 				io.put_string ("OK")
@@ -133,7 +133,7 @@ feature {NONE} -- Creation
 			io.put_new_line
 
 			io.put_string ("ot_r3: ")
-			if {ot_r3: !COMPARABLE} b then
+			if attached {attached COMPARABLE} b as ot_r3 then
 				io.put_string (ot_r3.out)
 			else
 				io.put_string ("OK")
@@ -141,7 +141,7 @@ feature {NONE} -- Creation
 			io.put_new_line
 
 			io.put_string ("ot_r4: ")
-			if {ot_r4: !COMPARABLE} e then
+			if attached {attached COMPARABLE} e as ot_r4 then
 				io.put_string (ot_r4.out)
 			else
 				io.put_string ("OK")
@@ -150,7 +150,7 @@ feature {NONE} -- Creation
 
 			io.put_string ("ot_r5: ")
 			s := "FAILED"
-			if {ot_r5: !NUMERIC} s then
+			if attached {attached NUMERIC} s as ot_r5 then
 				io.put_string (ot_r5.out)
 			else
 				io.put_string ("OK")

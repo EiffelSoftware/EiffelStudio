@@ -19,6 +19,6 @@ feature {NONE} -- Initialization
 			create entries.make (5)
 		end
 
-	entries: !HASH_TABLE [ARRAYED_LIST [H], G]
+	entries: attached HASH_TABLE [ARRAYED_LIST [H], G]
 
 end

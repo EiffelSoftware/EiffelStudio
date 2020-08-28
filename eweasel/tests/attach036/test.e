@@ -6,10 +6,10 @@ create
  
 feature {NONE} -- Creation
  
-	make is
+	make
 			-- Run test.
 		local
-			s: SPECIAL [!ANY]
+			s: SPECIAL [attached ANY]
 		do
 			create s.make_empty (5)
 			test_item (s, 0)
@@ -27,7 +27,7 @@ feature {NONE} -- Creation
 
 feature {NONE} -- Tests
 
-	test_item (s: !SPECIAL [!ANY]; i: INTEGER)
+	test_item (s: attached SPECIAL [attached ANY]; i: INTEGER)
 			-- Check that `i'-th item of `s' is not Void.
 		require
 			valid_index: 0 <= i and i < s.count

@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Objects that provide an output in debugger"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -8,14 +8,14 @@ deferred class
 
 feature {NONE} -- Status report
 
-	debug_output: STRING is
+	debug_output: STRING
 			-- String that should be displayed in debugger to represent `Current'.
 		deferred
 		ensure
 			result_not_void: Result /= Void
 		end
 
-indexing
+note
 
 	library: "[
 			EiffelBase: Library of reusable components for Eiffel.

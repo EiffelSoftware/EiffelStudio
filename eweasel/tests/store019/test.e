@@ -21,7 +21,7 @@ feature {NONE} -- Implementation
 	retrieve_from_file
 			-- Retrieve storage from file	
 		local
-			l_file: ?RAW_FILE
+			l_file: detachable RAW_FILE
 			l_facility: SED_STORABLE_FACILITIES
 			l_reader: SED_MEDIUM_READER_WRITER
 			l_retried: BOOLEAN
@@ -33,7 +33,7 @@ feature {NONE} -- Implementation
 					create l_reader.make (l_file)
 					l_reader.set_for_reading
 					create l_facility
-					if not {l_tuple: TUPLE [tag_server: like tag_server]}l_facility.retrieved (l_reader, True) then
+					if not attached {TUPLE [tag_server: like tag_server]} l_facility.retrieved (l_reader, True) as l_tuple then
 						print ("Deserialization failed.%N")
 					end
 				end
@@ -52,7 +52,7 @@ feature {NONE} -- Implementation
 			-- Save storage to file when needed.
 		local
 			l_tuple: TUPLE [tag_server: like tag_server]
-			l_file: ?RAW_FILE
+			l_file: detachable RAW_FILE
 			l_facility: SED_STORABLE_FACILITIES
 			l_writer: SED_MEDIUM_READER_WRITER
 			l_retried: BOOLEAN
@@ -72,7 +72,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	tag_server: !SERVER [STRING_32, STRING_32]
+	tag_server: attached SERVER [STRING_32, STRING_32]
 			-- Tag server
 
 end

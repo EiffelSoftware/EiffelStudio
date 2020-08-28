@@ -3,14 +3,14 @@ class
 
 feature -- Access
 
-	f: !G
+	f: attached G
 		do
 			Result := new_f
 		end
 
 feature {NONE} -- Factory
 
-	new_f: !G
+	new_f: attached G
 		do
 			create Result
 		end

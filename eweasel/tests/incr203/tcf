@@ -1,5 +1,5 @@
 
---| Copyright (c) 1993-2006 University of Southern California and contributors.
+--| Copyright (c) 1993-2020 University of Southern California, Eiffel Software and contributors.
 --| All rights reserved.
 --| Your use of this work is governed under the terms of the GNU General
 --| Public License version 2.
@@ -11,7 +11,7 @@ test_description A system whose Ace specifies `syntax_warning (yes)' is compiled
 
 define		SYNTAX_WARNING "true"
 define		LOCALS "s: STRING"
-define		INSTRUCTIONS "!!s.make (0)"
+define		INSTRUCTIONS "s ?= Current"
 copy_sub 	Ace $TEST Ace
 copy_sub 	test.e $CLUSTER test.e
 compile_melted
@@ -19,7 +19,7 @@ compile_result 	syntax_warning TEST 17
 
 define		SYNTAX_WARNING "false"
 define		LOCALS "s, t: STRING"
-define		INSTRUCTIONS "!!s.make (0); !!t.make (0)"
+define		INSTRUCTIONS "s ?= t"
 copy_sub 	Ace $TEST Ace
 copy_sub 	test.e $CLUSTER test.e
 compile_melted

@@ -1,4 +1,4 @@
-indexing
+note
 
 	description: "[
 		Sequential, dynamically modifiable lists,
@@ -45,7 +45,7 @@ deferred class DYNAMIC_LIST [G] inherit
 
 feature -- Element change
 
-	put_left (v: like item) is
+	put_left (v: like item)
 			-- Add `v' to the left of cursor position.
 			-- Do not move cursor.
 		local
@@ -65,13 +65,13 @@ feature -- Element change
 			end
 		end
 
-	put_right (v: like item) is
+	put_right (v: like item)
 			-- Add `v' to the right of cursor position.
 			-- Do not move cursor.
 		deferred
 		end
 
-	merge_left (other: like Current) is
+	merge_left (other: like Current)
 			-- Merge `other' into current structure before cursor
 			-- position. Do not move cursor. Empty `other'.
 		do
@@ -85,7 +85,7 @@ feature -- Element change
 			end
 		end
 
-	merge_right (other: like Current) is
+	merge_right (other: like Current)
 			-- Merge `other' into current structure after cursor
 			-- position. Do not move cursor. Empty `other'.
 		do
@@ -102,7 +102,7 @@ feature -- Element change
 
 feature -- Removal
 
-	remove is
+	remove
 			-- Remove current item.
 			-- Move cursor to right neighbor
 			-- (or `after' if no right neighbor).
@@ -111,7 +111,7 @@ feature -- Removal
 			after_when_empty: is_empty implies after
 		end
 
-	remove_left is
+	remove_left
 			-- Remove item to the left of cursor position.
 			-- Do not move cursor.
 		require else
@@ -119,13 +119,13 @@ feature -- Removal
 		deferred
 		end
 
-	remove_right is
+	remove_right
 			-- Remove item to the right of cursor position.
 			-- Do not move cursor.
 		deferred
 		end
 
-	wipe_out is
+	wipe_out
 			-- Remove all items.
 		do
 			chain_wipe_out
@@ -134,7 +134,7 @@ feature -- Removal
 			is_before: before
 		end
 
-indexing
+note
 
 	library: "[
 			EiffelBase: Library of reusable components for Eiffel.

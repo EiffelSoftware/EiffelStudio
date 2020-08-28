@@ -6,7 +6,7 @@ create
 
 feature
 
-	make (v: G) is
+	make (v: G)
 		do
 			g := v
 			create l
@@ -16,6 +16,6 @@ feature
 
 	g: G
 
-	l: !B [G]
+	l: attached B [G]
 
 end

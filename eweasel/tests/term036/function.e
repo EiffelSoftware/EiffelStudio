@@ -1,4 +1,4 @@
-indexing
+note
 
 	description: "[
 		Objects representing delayed calls to a function,
@@ -22,7 +22,7 @@ inherit
 
 feature -- Access
 	
-	last_result: RESULT_TYPE is
+	last_result: RESULT_TYPE
 			-- Result of last call, if any.
 		do
 			if result_array /= Void then
@@ -30,7 +30,7 @@ feature -- Access
 			end
 		end
 
-	item (args: OPEN_ARGS): RESULT_TYPE is
+	item (args: OPEN_ARGS): RESULT_TYPE
 			-- Result of calling function with `args' as operands.
 		require
 			valid_operands: valid_operands (args)
@@ -43,7 +43,7 @@ feature -- Access
 
 feature -- Comparison
 
-	is_equal (other: like Current): BOOLEAN is
+	is_equal (other: like Current): BOOLEAN
 			-- Is associated function the same as the one
 			-- associated with `other'?
 		do
@@ -53,7 +53,7 @@ feature -- Comparison
 
 feature -- Duplication
 
-	copy (other: like Current) is
+	copy (other: like Current)
 			-- Use same function as `other'.
 		do
 			Precursor (other)
@@ -65,7 +65,7 @@ feature -- Duplication
 
 feature -- Basic operations
 
-	apply is
+	apply
 			-- Call function with `operands' as last set.
 		do
 			if result_array = Void then
@@ -78,7 +78,7 @@ feature -- Basic operations
 
 feature -- Obsolete
 
-	eval (args: OPEN_ARGS): RESULT_TYPE is
+	eval (args: OPEN_ARGS): RESULT_TYPE
 			-- Result of evaluating function for `args'.
 		obsolete
 			"Please use `item' instead"
@@ -95,14 +95,14 @@ feature {NONE} -- Implementation
 	result_array: ARRAY [RESULT_TYPE]
 			-- Array used to return result.
 
-	rout_obj_call_function (res, rout, args: POINTER) is
+	rout_obj_call_function (res, rout, args: POINTER)
 			-- Perform call to `rout' on `cur' object with `args'
 			-- as operands and return `res'.
 		external
 			"C | %"eif_rout_obj.h%""
 		end
 
-indexing
+note
 
 	library: "[
 			EiffelBase: Library of reusable components for Eiffel.

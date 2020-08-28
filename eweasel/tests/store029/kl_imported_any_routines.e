@@ -1,4 +1,4 @@
-indexing
+note
 
 	description:
 
@@ -14,7 +14,7 @@ class KL_IMPORTED_ANY_ROUTINES
 
 feature -- Access
 
-	ANY_: KL_ANY_ROUTINES is
+	ANY_: KL_ANY_ROUTINES
 			-- Routines that ought to be in class ANY
 		once
 			create Result

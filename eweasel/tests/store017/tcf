@@ -7,7 +7,7 @@ copy_raw	a.e $CLUSTER a.e
 copy_raw	b.e $CLUSTER b.e
 
 compile_melted
-compile_result ok
+compile_result syntax_warning TEST 38
 
 execute_work   NONE exec_output
 execute_result ok

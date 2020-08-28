@@ -8,7 +8,7 @@ copy_raw	 test2.e $CLUSTER test2.e
 copy_raw	 test3.e $CLUSTER test3.e
 
 compile_frozen
-compile_result 	ok
+compile_result 	syntax_warning TEST 32; TEST 85; TEST 144; TEST 156; TEST 168
 	
 c_compile_work
 c_compile_result ok

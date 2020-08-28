@@ -3,6 +3,6 @@ class
 
 feature
 
-	string_reference: ?STRING
+	string_reference: detachable STRING
 
 end

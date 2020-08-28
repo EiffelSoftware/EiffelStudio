@@ -5,7 +5,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make is
+	make
 		local
 			a: A [INTEGER]
 		do

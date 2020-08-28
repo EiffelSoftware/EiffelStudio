@@ -1,4 +1,4 @@
-indexing
+note
 
 	description:
 		"Hash tables, used to store items identified by hashable keys"
@@ -104,7 +104,7 @@ create
 
 feature -- Initialization
 
-	make (n: INTEGER) is
+	make (n: INTEGER)
 			-- Allocate hash table for at least `n' items.
 			-- The table will be resized automatically
 			-- if more than `n' items are inserted.
@@ -135,7 +135,7 @@ feature -- Initialization
 			no_status: not special_status
 		end
 
-	accommodate (n: INTEGER) is
+	accommodate (n: INTEGER)
 			-- Reallocate table with enough space for `n' items;
 			-- keep all current items.
 		require
@@ -188,7 +188,7 @@ feature -- Access
 	found_item: G
 			-- Item, if any, yielded by last search operation
 
-	item alias "@" (key: H): G is
+	item alias "@" (key: H): G
 			-- Item associated with `key', if present
 			-- otherwise default value of type `G'
 		local
@@ -205,7 +205,7 @@ feature -- Access
 				(not (has (key))) implies (Result = computed_default_value)
 		end
 
-	has (key: H): BOOLEAN is
+	has (key: H): BOOLEAN
 			-- Is there an item in the table with key `key'?
 		local
 			old_control, old_position: INTEGER
@@ -219,7 +219,7 @@ feature -- Access
 				(key = computed_default_key) implies (Result = has_default)
 		end
 
-	has_item (v: G): BOOLEAN is
+	has_item (v: G): BOOLEAN
 			-- Does structure include `v'?
 			-- (Reference or object equality,
 			-- based on `object_comparison'.)
@@ -252,7 +252,7 @@ feature -- Access
 			end
 		end
 
-	current_keys: ARRAY [H] is
+	current_keys: ARRAY [H]
 			-- New array containing actually used keys, from 1 to `count'
 		local
 			j: INTEGER
@@ -274,7 +274,7 @@ feature -- Access
 			good_count: Result.count = count
  		end
 
-	item_for_iteration: G is
+	item_for_iteration: G
 			-- Element at current iteration position
 		require
 			not_off: not off
@@ -282,7 +282,7 @@ feature -- Access
 			Result := content.item (iteration_position)
 		end
 
-	key_for_iteration: H is
+	key_for_iteration: H
 			-- Key at current iteration position
 		require
 			not_off: not off
@@ -292,7 +292,7 @@ feature -- Access
 			at_iteration_position: Result = key_at (iteration_position)
 		end
 
-	cursor: CURSOR is
+	cursor: CURSOR
 			-- Current cursor position
 		do
 			create {HASH_TABLE_CURSOR} Result.make (iteration_position)
@@ -308,7 +308,7 @@ feature -- Measurement
 	capacity: INTEGER
 			-- Number of items that may be stored.
 
-	occurrences (v: G): INTEGER is
+	occurrences (v: G): INTEGER
 			-- Number of table items equal to `v'.
 		local
 			old_iteration_position: INTEGER
@@ -342,7 +342,7 @@ feature -- Measurement
 
 feature -- Comparison
 
-	is_equal (other: like Current): BOOLEAN is
+	is_equal (other: like Current): BOOLEAN
 			-- Does table contain the same information as `other'?
 		do
 			Result :=
@@ -354,55 +354,55 @@ feature -- Comparison
 
 feature -- Status report
 
-	full: BOOLEAN is False
+	full: BOOLEAN = False
 			-- Is structure filled to capacity? (Answer: no.)
 
-	extendible: BOOLEAN is True
+	extendible: BOOLEAN = True
 			-- May new items be added? (Answer: yes.)
 
-	prunable: BOOLEAN is
+	prunable: BOOLEAN
 			-- May items be removed? (Answer: yes.)
 		do
 			Result := True
 		end
 
-	conflict: BOOLEAN is
+	conflict: BOOLEAN
 			-- Did last operation cause a conflict?
 		do
 			Result := (control = Conflict_constant)
 		end
 
-	inserted: BOOLEAN is
+	inserted: BOOLEAN
 			-- Did last operation insert an item?
 		do
 			Result := (control = Inserted_constant)
 		end
 
-	replaced: BOOLEAN is
+	replaced: BOOLEAN
 			-- Did last operation replace an item?
 		do
 			Result := (control = Replaced_constant)
 		end
 
-	removed: BOOLEAN is
+	removed: BOOLEAN
 			-- Did last operation remove an item?
 		do
 			Result := (control = Removed_constant)
 		end
 
-	found: BOOLEAN is
+	found: BOOLEAN
 			-- Did last operation find the item sought?
 		do
 			Result := (control = Found_constant)
 		end
 
-	not_found: BOOLEAN is
+	not_found: BOOLEAN
 			-- Did last operation fail to find the item sought?
 		do
 			Result := (control = Not_found_constant)
 		end
 
-	after, off: BOOLEAN is
+	after, off: BOOLEAN
 			-- Is cursor past last item?
 		do
 			Result := is_off_position (iteration_position)
@@ -412,7 +412,7 @@ feature -- Status report
 							(has_default and (iteration_position = (capacity + 1))))
 		end
 
-	valid_cursor (c: CURSOR): BOOLEAN is
+	valid_cursor (c: CURSOR): BOOLEAN
 			-- Can cursor be moved to position `c'?
 		require
 			c_not_void: c /= Void
@@ -431,7 +431,7 @@ feature -- Status report
 			end
 		end
 
-	valid_key (k: H): BOOLEAN is
+	valid_key (k: H): BOOLEAN
 			-- Is `k' a valid key?
 			-- (Answer: always yes for hash tables in this version)
 		do
@@ -442,14 +442,14 @@ feature -- Status report
 
 feature -- Cursor movement
 
-	start is
+	start
 			-- Bring cursor to first position.
 		do
 			iteration_position := -1
 			forth
 		end
 
-	forth is
+	forth
 			-- Advance cursor to next occupied position,
 			-- or `off' if no such position remains.
 		require
@@ -464,7 +464,7 @@ feature -- Cursor movement
 			end
 		end
 
-	go_to (c: CURSOR) is
+	go_to (c: CURSOR)
 			-- Move to position `c'.
 		require
 			c_not_void: c /= Void
@@ -478,7 +478,7 @@ feature -- Cursor movement
 			end
 		end
 
-	search (key: H) is
+	search (key: H)
 			-- Search for item of key `key'.
 			-- If found, set `found' to true, and set
 			-- `found_item' to item associated with `key'.
@@ -496,7 +496,7 @@ feature -- Cursor movement
 			item_if_found: found implies (found_item = content.item (position)) 
 		end
 
-	search_item: G is
+	search_item: G
 		obsolete
 			"Use found_item instead."
 		do
@@ -505,7 +505,7 @@ feature -- Cursor movement
 		
 feature -- Element change
 
-	put (new: G; key: H) is
+	put (new: G; key: H)
 			-- Insert `new' with `key' if there is no other item
 			-- associated with the same key.
 			-- Set `inserted' if and only if an insertion has
@@ -565,7 +565,7 @@ feature -- Element change
 							and (old has_default)))
 		end
 
-	force (new: G; key: H) is
+	force (new: G; key: H)
 			-- Update table so that `new' will be the item associated
 			-- with `key'.
 			-- If there was an item for that key, set `found'
@@ -620,7 +620,7 @@ feature -- Element change
 						((key /= computed_default_key) and (old has_default)))
 		end
 
-	extend (new: G; key: H) is
+	extend (new: G; key: H)
 			-- Assuming there is no item of key `key',
 			-- insert `new' with `key'.
 			-- Set `inserted'.
@@ -656,7 +656,7 @@ feature -- Element change
 					((key = computed_default_key) or (old has_default))
 		end
 
-	replace (new: G; key: H) is
+	replace (new: G; key: H)
 			-- Replace item at `key', if present,
 			-- with `new'; do not change associated key.
 			-- Set `replaced' if and only if a replacement has been made
@@ -680,7 +680,7 @@ feature -- Element change
 			found_item_is_old_item: found_item = old (item (key))
 		end
 
-	replace_key (new_key: H; old_key: H) is
+	replace_key (new_key: H; old_key: H)
 			-- If there is an item of key `old_key' and no item of key
 			-- `new_key', replace the former's key by `new_key',
 			-- set `replaced', and set `found_item' to the item
@@ -745,7 +745,7 @@ feature -- Element change
 
 feature -- Removal
 
-	remove (key: H) is
+	remove (key: H)
 			-- Remove item associated with `key', if present.
 			-- Set `removed' if and only if an item has been
 			-- removed (i.e. `key' was present);
@@ -776,7 +776,7 @@ feature -- Removal
 					(has_default = old has_default)
 		end
 
-	clear_all is
+	clear_all
 			-- Reset all items to default values; reset status.
 		local
 			default_value: G
@@ -801,7 +801,7 @@ feature -- Removal
 
 feature -- Conversion
 
-	linear_representation: ARRAYED_LIST [G] is
+	linear_representation: ARRAYED_LIST [G]
 			-- Representation as a linear structure
 		local
 			old_iteration_position: INTEGER
@@ -824,7 +824,7 @@ feature -- Conversion
 
 feature -- Duplication
 
-	copy (other: like Current) is
+	copy (other: like Current)
 			-- Re-initialize from `other'.
 		do
 			standard_copy (other)
@@ -847,13 +847,13 @@ feature {HASH_TABLE} -- Implementation: content attributes and preservation
 	has_default: BOOLEAN
 			-- Is the default key present?
 
-	set_default is
+	set_default
 			-- Record information that there is a value for default key.
 		do
 			has_default := True
 		end
 
-	set_no_default is
+	set_no_default
 			-- Record information that there is no value for default key.
 		local
 			default_value: G
@@ -871,7 +871,7 @@ feature {HASH_TABLE} -- Implementation: search attributes
 			-- Hash table cursor, updated after each operation:
 			-- put, remove, has, replace, force, change_key...
 
-	soon_full: BOOLEAN is
+	soon_full: BOOLEAN
 			-- Is table close to being filled to current capacity?
 			-- (If so, resizing is needed to avoid performance degradation.)
 		do
@@ -889,23 +889,23 @@ feature {HASH_TABLE} -- Implementation: search attributes
 
 feature {NONE} -- Implementation
 
-	Max_occupation: INTEGER is 80
+	Max_occupation: INTEGER = 80
 			-- Filling percentage over which table will be resized
 
-	Initial_occupation: INTEGER is 50
+	Initial_occupation: INTEGER = 50
 			-- Filling percentage for initial requested occupation
 
-	Extra_space: INTEGER is 50
+	Extra_space: INTEGER = 50
 			-- Percentage of extra positions when resizing
 
-	Impossible_position: INTEGER is - 1
+	Impossible_position: INTEGER = - 1
 			-- Position outside the array indices
 
 	used_slot_count: INTEGER
 			-- Number of slots occuped by an element either present
 			-- or marked as deleted
 
-	occupied (i: INTEGER): BOOLEAN is
+	occupied (i: INTEGER): BOOLEAN
 			-- Is position `i' occupied by a non-default key and a value?
 		require
 			in_bounds: i >= 0 and i < capacity
@@ -915,7 +915,7 @@ feature {NONE} -- Implementation
 			Result := (keys.item (i) /= default_key)
 		end	
 
-	truly_occupied (i: INTEGER): BOOLEAN is
+	truly_occupied (i: INTEGER): BOOLEAN
 			-- Is position `i' occupied by a key and a value?
 		require
 			in_bounds: i >= 0 and i <= capacity
@@ -926,7 +926,7 @@ feature {NONE} -- Implementation
 			default_key: (i = capacity) implies (Result = has_default)
 		end
 
-	is_off_position (pos: INTEGER): BOOLEAN is
+	is_off_position (pos: INTEGER): BOOLEAN
 			-- Is `pos' a cursor position past last item?
 		do
 			Result := (not has_default and (pos >= capacity)) or
@@ -937,13 +937,13 @@ feature {NONE} -- Implementation
 							(has_default and (pos = (capacity + 1))))
 		end
 
-	set_content (c: like content) is
+	set_content (c: like content)
 			-- Assign `c' to `content'.
 		do
 			content := c
 		end
 
-	deleted (i: INTEGER): BOOLEAN is
+	deleted (i: INTEGER): BOOLEAN
 			-- Is position `i' that of a deleted item?
 		require
 			in_bounds: i >= 0 and i < capacity
@@ -951,7 +951,7 @@ feature {NONE} -- Implementation
 			Result := deleted_marks.item (i)
 		end	
 
-	set_not_deleted (i: INTEGER) is
+	set_not_deleted (i: INTEGER)
 			-- Mark position `i' as not deleted.
 		require
 			in_bounds: i >= 0 and i < capacity
@@ -959,7 +959,7 @@ feature {NONE} -- Implementation
 			deleted_marks.put (False, i)
 		end	
 
-	set_deleted (i: INTEGER) is
+	set_deleted (i: INTEGER)
 			-- Mark position `i' as deleted.
 		require
 			in_bounds: i >= 0 and i < capacity
@@ -969,19 +969,19 @@ feature {NONE} -- Implementation
 			deleted: deleted (i)
 		end	
 
-	set_keys (c: like keys) is
+	set_keys (c: like keys)
 			-- Assign `c' to `keys'.
 		do
 			keys := c
 		end
 
-	set_deleted_marks (d: like deleted_marks) is
+	set_deleted_marks (d: like deleted_marks)
 			-- Assign `d' to `deleted_marks'.
 		do
 			deleted_marks := d
 		end
 
-	default_key_value: G is
+	default_key_value: G
 			-- Value associated with the default key, if any
 		require
 			has_default: has_default
@@ -989,7 +989,7 @@ feature {NONE} -- Implementation
 			Result := content.item (capacity)
 		end
 
-	computed_default_key: H is
+	computed_default_key: H
 			-- Default key
 			-- (For performance reasons, used only in assertions;
 			-- elsewhere, see use of local entity `default_key'.)
@@ -997,7 +997,7 @@ feature {NONE} -- Implementation
 			-- No instructions necessary (returns default value of type H)
 		end
 
-	computed_default_value: G is
+	computed_default_value: G
 			-- Default value of type G
 			-- (For performance reasons, used only in assertions;
 			-- elsewhere, see use of local entity `default_value'.)
@@ -1005,7 +1005,7 @@ feature {NONE} -- Implementation
 			-- No instructions necessary (returns default value of type G)
 		end
 
-	internal_search (key: H) is
+	internal_search (key: H)
 			-- Search for item of key `key'.
 			-- If successful, set `position' to index
 			-- of item with this key (the same index as the key's index).
@@ -1070,7 +1070,7 @@ feature {NONE} -- Implementation
 				(position = capacity) = (key = computed_default_key)
 		end
 
-	search_for_insertion (key: H) is
+	search_for_insertion (key: H)
 			-- Assuming there is no item of key `key', compute
 			-- `position' at which to insert such an item.
 		require
@@ -1109,7 +1109,7 @@ feature {NONE} -- Implementation
 				(position = capacity) = (key = computed_default_key)
 		end
 
-	put_at_position (new: G; key: H) is
+	put_at_position (new: G; key: H)
 			-- Put `new' with `key' at `position'.
 		require
 			in_bounds: position >= 0 and position <= capacity
@@ -1132,7 +1132,7 @@ feature {NONE} -- Implementation
 				(position = capacity) implies has_default
 		end
 
-	remove_at_position is
+	remove_at_position
 			-- Remove item at `position'
 		require
 			in_bounds: position >= 0 and position <= capacity
@@ -1156,7 +1156,7 @@ feature {NONE} -- Implementation
 			key_at (position) = computed_default_key
 		end
 
-	key_at (n: INTEGER): H is
+	key_at (n: INTEGER): H
 			-- Key at position `n'
 		require
 			in_bounds: n >= 0 and n < capacity
@@ -1164,29 +1164,29 @@ feature {NONE} -- Implementation
 			Result := keys.item (n)
 		end
 
-	initial_position (hash_value: INTEGER): INTEGER is
+	initial_position (hash_value: INTEGER): INTEGER
 			-- Initial position for an item of hash code `hash_value'
 		do
 			Result := (hash_value \\ capacity)
 		end
 
-	position_increment (hash_value: INTEGER): INTEGER is
+	position_increment (hash_value: INTEGER): INTEGER
 			-- Distance between successive positions for hash code
 			-- `hash_value' (computed for no cycle: `capacity' is prime)
 		do
 			Result := 1 + hash_value \\ (capacity - 1)
 		end
 
-	to_next_candidate (increment: INTEGER) is
+	to_next_candidate (increment: INTEGER)
 			-- Move from current `position' to next for same key
 		do
 			position := (position + increment) \\ capacity
 		end
 
-	Conflict_constant: INTEGER is unique
+	Conflict_constant: INTEGER = unique
 			-- Could not insert an already existing key
 
-	set_conflict is
+	set_conflict
 			-- Set status to conflict.
 		do
 			control := Conflict_constant
@@ -1194,10 +1194,10 @@ feature {NONE} -- Implementation
 			conflict: conflict
 		end
 
-	Found_constant: INTEGER is unique
+	Found_constant: INTEGER = unique
 			-- Key found
 
-	set_found is
+	set_found
 			-- Set status to found.
 		do
 			control := Found_constant
@@ -1205,10 +1205,10 @@ feature {NONE} -- Implementation
 			found: found
 		end
 
-	Inserted_constant: INTEGER is unique
+	Inserted_constant: INTEGER = unique
 			-- Insertion successful
 
-	set_inserted is
+	set_inserted
 			-- Set status to inserted.
 		do
 			control := Inserted_constant
@@ -1216,10 +1216,10 @@ feature {NONE} -- Implementation
 			inserted: inserted
 		end
 
-	Not_found_constant: INTEGER is unique
+	Not_found_constant: INTEGER = unique
 			-- Key not found
 
-	set_not_found is
+	set_not_found
 			-- Set status to not found.
 		do
 			control := Not_found_constant
@@ -1227,7 +1227,7 @@ feature {NONE} -- Implementation
 			not_found: not_found
 		end
 
-	set_no_status is
+	set_no_status
 			-- Set status to normal.
 		do
 			control := 0
@@ -1235,10 +1235,10 @@ feature {NONE} -- Implementation
 			default_status: not special_status
 		end
 
-	Removed_constant: INTEGER is unique
+	Removed_constant: INTEGER = unique
 			-- Remove successful
 
-	set_removed is
+	set_removed
 			-- Set status to removed.
 		do
 			control := Removed_constant
@@ -1246,10 +1246,10 @@ feature {NONE} -- Implementation
 			removed: removed
 		end
 
-	Replaced_constant: INTEGER is unique
+	Replaced_constant: INTEGER = unique
 			-- Replaced value
 
-	set_replaced is
+	set_replaced
 			-- Set status to replaced.
 		do
 			control := Replaced_constant
@@ -1257,7 +1257,7 @@ feature {NONE} -- Implementation
 			replaced: replaced
 		end
 
-	special_status: BOOLEAN is
+	special_status: BOOLEAN
 			-- Has status been set to some non-default value?
 		do
 			Result := (control > 0)
@@ -1265,7 +1265,7 @@ feature {NONE} -- Implementation
 			Result = (control > 0)
 		end
 
-	add_space is
+	add_space
 			-- Increase capacity.
 		do
 				-- Be pessimistic: plan for more growth by allocating
@@ -1277,16 +1277,16 @@ feature {NONE} -- Implementation
 			breathing_space: count * 100 < capacity * Initial_occupation
 		end
 
-	Minimum_capacity: INTEGER is 5
+	Minimum_capacity: INTEGER = 5
 
 feature {NONE} -- Inapplicable
 
-	prune (v: G) is
+	prune (v: G)
 			-- Remove one occurrence of `v' if any.
 		do
 		end
 
-	collection_extend (v: G) is
+	collection_extend (v: G)
 			-- Insert a new occurrence of `v'.
 		do
 		end
@@ -1315,7 +1315,7 @@ invariant
 	slot_count_small_enough: used_slot_count <= capacity
 	extra_space_non_negative: Extra_space >= 0
 							
-indexing
+note
 
 	library: "[
 			EiffelBase: Library of reusable components for Eiffel.

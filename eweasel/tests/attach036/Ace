@@ -2,8 +2,6 @@
 <system xmlns="http://www.eiffel.com/developers/xml/configuration-1-20-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-20-0 http://www.eiffel.com/developers/xml/configuration-1-20-0.xsd" name="test">
 	<target name="test">
 		<root class="TEST" feature="make"/>
-		<option full_class_checking="false" syntax="obsolete" manifest_array_type="mismatch_warning">
-		</option>
 		<setting name="console_application" value="true"/>
 		$EWEASEL_DOTNET_SETTING
 		<capability>

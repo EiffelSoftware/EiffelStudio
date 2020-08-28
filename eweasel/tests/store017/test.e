@@ -9,28 +9,28 @@ create
 
 feature -- Initialization
 
-	make is
+	make
 			-- Run application.
 		do
 			save
 			retrieve
 		end
 
-	save is
+	save
 		local
 			l_file: RAW_FILE
 		do
 			create l_file.make_open_write (file_name)
-			l_file.independent_store (create {A [!ANY]}.make (create {ANY}))
+			l_file.independent_store (create {A [attached ANY]}.make (create {ANY}))
 			l_file.close
 		end
 
-	retrieve is
+	retrieve
 		local
 			a: ANY
 			l_file: RAW_FILE
 			retried: BOOLEAN
-			l_spec: A [!ANY]
+			l_spec: A [attached ANY]
 		do
 			if not retried then
 				create l_file.make_open_read (file_name)
@@ -47,6 +47,6 @@ feature -- Initialization
 			retry
 		end
 
-	file_name: STRING is "data"
+	file_name: STRING = "data"
 
 end

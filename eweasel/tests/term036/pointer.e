@@ -1,4 +1,4 @@
-indexing
+note
 
 	description:
 		"References to objects meant to be exchanged with non-Eiffel software."
@@ -18,7 +18,7 @@ create
 convert
 	make_from_reference ({POINTER_REF})
 
-indexing
+note
 
 	library: "[
 			EiffelBase: Library of reusable components for Eiffel.

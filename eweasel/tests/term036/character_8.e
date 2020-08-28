@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Characters, with comparison operations and an ASCII code"
 	status: "See notice at end of class"
 	date: "$Date$"
@@ -26,7 +26,7 @@ feature -- Conversion
 			Result := item.to_character_32
 		end
 
-indexing
+note
 
 	library: "[
 			EiffelBase: Library of reusable components for Eiffel.

@@ -1,4 +1,4 @@
-indexing
+note
 
 	description: "Integer values coded on 8 bits"
 	status: "See notice at end of class"
@@ -24,7 +24,7 @@ convert
 	to_natural_32: {NATURAL_32},
 	to_natural_64: {NATURAL_64}
 
-indexing
+note
 
 	library: "[
 			EiffelBase: Library of reusable components for Eiffel.

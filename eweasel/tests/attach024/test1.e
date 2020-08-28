@@ -1,9 +1,9 @@
 class
-	TEST1 [G -> ?ANY]
+	TEST1 [G -> detachable ANY]
 
 feature
 
-	foundation_widget: !G
+	foundation_widget: attached G
 		do
 		ensure
 			result_attached: Result /= Void

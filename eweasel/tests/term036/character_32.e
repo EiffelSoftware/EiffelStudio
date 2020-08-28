@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Unicode characters, with comparison operations"
 	status: "See notice at end of class"
 	date: "$Date$"
@@ -39,7 +39,7 @@ feature -- Conversion
 			Result := to_character_8.lower
 		end
 
-indexing
+note
 
 	library: "[
 			EiffelBase: Library of reusable components for Eiffel.

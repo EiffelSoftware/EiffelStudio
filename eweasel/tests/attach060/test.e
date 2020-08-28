@@ -13,10 +13,10 @@ feature {NONE} -- Creation
 
 feature
 
-	test (a: !TEST; d: ?TEST)
+	test (a: attached TEST; d: detachable TEST)
 		local
-			l_a: !TEST
-			l_d: ?TEST
+			l_a: attached TEST
+			l_d: detachable TEST
 		do
 			l_a := a.f
 			l_d := a.f

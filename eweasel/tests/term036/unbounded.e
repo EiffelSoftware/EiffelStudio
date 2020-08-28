@@ -1,4 +1,4 @@
-indexing
+note
 
 	description:
 		"Finite structures whose item count is not bounded"
@@ -21,7 +21,7 @@ feature -- Status report
 
 	-- extendible: extendible
 
-indexing
+note
 
 	library: "[
 			EiffelBase: Library of reusable components for Eiffel.

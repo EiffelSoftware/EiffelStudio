@@ -1,4 +1,4 @@
-indexing
+note
 	description:
 		"Perform cleanup operations before current instance is reclaimed by garbage collection."
 	date: "$Date$"
@@ -9,7 +9,7 @@ deferred class
 
 feature -- Removal
 
-	dispose is
+	dispose
 			-- Action to be executed just before garbage collection
 			-- reclaims an object.
 			-- Effect it in descendants to perform specific dispose

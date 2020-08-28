@@ -1,4 +1,4 @@
-indexing
+note
 
 	description: "Integer values coded on 64 bits"
 	status: "See notice at end of class"
@@ -19,7 +19,7 @@ convert
 	to_real: {REAL},
 	to_double: {DOUBLE}
 
-indexing
+note
 
 	library: "[
 			EiffelBase: Library of reusable components for Eiffel.

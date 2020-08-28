@@ -1,4 +1,4 @@
-indexing
+note
 
 	description: "[
 		Objects representing delayed calls to a routine,
@@ -28,7 +28,7 @@ inherit
 
 feature -- Initialization
 
-	adapt (other: like Current) is
+	adapt (other: like Current)
 			-- Initialize from `other'.
 			-- Useful in descendants.
 		require
@@ -55,10 +55,10 @@ feature -- Initialization
 
 feature -- Access
 
-	operands: ?OPEN_ARGS
+	operands: detachable OPEN_ARGS
 			-- Open operands.
 
-	target: ANY is
+	target: ANY
 			-- Target of call.
 		do
 			if
@@ -73,7 +73,7 @@ feature -- Access
 			end
 		end
 
-	open_operand_type (i: INTEGER): INTEGER is
+	open_operand_type (i: INTEGER): INTEGER
 			-- Type of `i'th open operand.
 		require
 			positive: i >= 1
@@ -93,20 +93,20 @@ feature -- Access
 			end
 		end
 
-	hash_code: INTEGER is
+	hash_code: INTEGER
 			-- Hash code value.
 		do
 			Result := rout_disp.hash_code
 		end
 
-	precondition (args: like operands): BOOLEAN is
+	precondition (args: like operands): BOOLEAN
 			-- Do `args' satisfy routine's precondition
 			-- in current state?
 		do
 			Result := True
 		end
 
-	postcondition (args: like operands): BOOLEAN is
+	postcondition (args: like operands): BOOLEAN
 			-- Does current state satisfy routine's
 			-- postcondition for `args'?
 		do
@@ -115,7 +115,7 @@ feature -- Access
 
 feature -- Status report
 
-	callable: BOOLEAN is
+	callable: BOOLEAN
 			-- Can routine be called on current object?
 		local
 			null_ptr: POINTER
@@ -123,7 +123,7 @@ feature -- Status report
 			Result := (rout_disp /= null_ptr)
 		end
 
-	is_equal (other: like Current): BOOLEAN is
+	is_equal (other: like Current): BOOLEAN
 			-- Is associated routine the same as the one
 			-- associated with `other'.
 		do
@@ -139,7 +139,7 @@ feature -- Status report
 					 (rout_disp = other.rout_disp)
 		end
 
-	valid_operands (args: ?OPEN_ARGS): BOOLEAN is
+	valid_operands (args: detachable OPEN_ARGS): BOOLEAN
 			-- Are `args' valid operands for this routine?
 		local
 			i: INTEGER
@@ -248,7 +248,7 @@ feature -- Status report
 
 feature -- Measurement
 
-	open_count: INTEGER is
+	open_count: INTEGER
 			-- Number of open operands.
 		do
 			if open_map /= Void then
@@ -258,7 +258,7 @@ feature -- Measurement
 
 feature -- Element change
 
-	set_operands (args: OPEN_ARGS) is
+	set_operands (args: OPEN_ARGS)
 			-- Use `args' as operands for next call.
 		require
 			valid_operands: valid_operands (args)
@@ -269,7 +269,7 @@ feature -- Element change
 
 feature -- Duplication
 
-	copy (other: like Current) is
+	copy (other: like Current)
 			-- Use same routine as `other'.
 		local
 			null_ptr: POINTER
@@ -293,13 +293,13 @@ feature -- Duplication
 
 feature -- Basic operations
 
-	call (args: OPEN_ARGS) is
+	call (args: OPEN_ARGS)
 			-- Call routine with operands `args'.
 		require
 			valid_operands: valid_operands (args)
 			callable: callable
 		local
-			o: ?like operands
+			o: detachable like operands
 		do
 			operands := args
 			apply
@@ -308,7 +308,7 @@ feature -- Basic operations
 			end
 		end
 
-	apply is
+	apply
 			-- Call routine with `operands' as last set.
 		require
 			valid_operands: valid_operands (operands)
@@ -318,7 +318,7 @@ feature -- Basic operations
 
 feature -- Obsolete
 
-	adapt_from (other: like Current) is
+	adapt_from (other: like Current)
 			-- Adapt from `other'. Useful in descendants.
 		obsolete
 			"Please use `adapt' instead (it's also a creation procedure)"
@@ -348,7 +348,7 @@ feature {ROUTINE} -- Implementation
 	frozen closed_map: ARRAY [INTEGER]
 			-- Index map for closed arguments
 
-	open_type_codes: STRING is
+	open_type_codes: STRING
 			-- Type codes for open arguments
 		do
 			if internal_open_type_codes = Void then
@@ -360,7 +360,7 @@ feature {ROUTINE} -- Implementation
 	frozen open_types: ARRAY [INTEGER]
 			-- Types of open operands
 
-	closed_type_codes: STRING is
+	closed_type_codes: STRING
 			-- Type codes for closed arguments
 		do
 			if closed_operands /= Void and internal_closed_type_codes = Void then
@@ -391,7 +391,7 @@ feature {ROUTINE} -- Implementation
 
 	frozen set_lazy_rout_disp (a_class_id, a_feature_id: INTEGER
 							   a_is_precompiled, a_is_basic: BOOLEAN
-							   a_args: TUPLE; a_omap: ARRAY [INTEGER]) is
+							   a_args: TUPLE; a_omap: ARRAY [INTEGER])
 		require
 			a_class_id_valid: a_class_id > 0
 			a_feature_id_valid: a_feature_id > 0
@@ -400,7 +400,7 @@ feature {ROUTINE} -- Implementation
 		end
 
 	frozen set_rout_args (closed_args: TUPLE; 
-						 omap, cmap: ARRAY [INTEGER]) is
+						 omap, cmap: ARRAY [INTEGER])
 			-- Initialize object. 
 		require
 			consistent_args: (closed_args = Void and cmap = Void)
@@ -421,7 +421,7 @@ feature {NONE} -- Implementation
 
 	frozen internal_closed_type_codes: STRING
 
-	dispose is
+	dispose
 			-- Free routine argument union structure
 		local
 			null_ptr: POINTER
@@ -436,7 +436,7 @@ feature {NONE} -- Implementation
 	frozen rout_cargs: POINTER
 			-- Routine operands
 
-	frozen rout_set_cargs is
+	frozen rout_set_cargs
 			-- Allocate and fill argument structure
 		local
 			new_args: POINTER
@@ -589,120 +589,120 @@ feature {NONE} -- Implementation
 
 feature {NONE} -- Runtime constants
 
-	eif_boolean_code: CHARACTER is 'b'
-	eif_character_code: CHARACTER is 'c'
-	eif_double_code: CHARACTER is 'd'
-	eif_real_code: CHARACTER is 'f'
-	eif_integer_code: CHARACTER is 'i'
-	eif_pointer_code: CHARACTER is 'p'
-	eif_reference_code: CHARACTER is 'r'
-	eif_integer_8_code: CHARACTER is 'j'
-	eif_integer_16_code: CHARACTER is 'k'
-	eif_integer_64_code: CHARACTER is 'l'
-	eif_wide_char_code: CHARACTER is 'u'
+	eif_boolean_code: CHARACTER = 'b'
+	eif_character_code: CHARACTER = 'c'
+	eif_double_code: CHARACTER = 'd'
+	eif_real_code: CHARACTER = 'f'
+	eif_integer_code: CHARACTER = 'i'
+	eif_pointer_code: CHARACTER = 'p'
+	eif_reference_code: CHARACTER = 'r'
+	eif_integer_8_code: CHARACTER = 'j'
+	eif_integer_16_code: CHARACTER = 'k'
+	eif_integer_64_code: CHARACTER = 'l'
+	eif_wide_char_code: CHARACTER = 'u'
 			-- Type constants used by runtime to recognize types
 			-- needed to perform call
 
 feature {NONE} -- Externals
 
-	rout_obj_new_args (cnt: INTEGER): POINTER is
+	rout_obj_new_args (cnt: INTEGER): POINTER
 			-- Initialize for new operands.
 		external "C | %"eif_rout_obj.h%""
 		end
 
-	rout_obj_free_args (args: POINTER) is
+	rout_obj_free_args (args: POINTER)
 			-- Free `args'.
 		external "C | %"eif_rout_obj.h%""
 		end
 
-	rout_obj_putb (args: POINTER; idx: INTEGER; val: POINTER) is
+	rout_obj_putb (args: POINTER; idx: INTEGER; val: POINTER)
 			-- Adapt `args' for `idx' and `val'.
 		external "C[macro %"eif_rout_obj.h%"]"
 		end
 
-	rout_obj_putwc (args: POINTER; idx: INTEGER; val: POINTER) is
+	rout_obj_putwc (args: POINTER; idx: INTEGER; val: POINTER)
 			-- Adapt `args' for `idx' and `val'.
 		external "C[macro %"eif_rout_obj.h%"]"
 		end
 
-	rout_obj_putc (args: POINTER; idx: INTEGER; val: POINTER) is
+	rout_obj_putc (args: POINTER; idx: INTEGER; val: POINTER)
 			-- Adapt `args' for `idx' and `val'.
 		external "C[macro %"eif_rout_obj.h%"]"
 		end
 
-	rout_obj_putd (args: POINTER; idx: INTEGER; val: POINTER) is
+	rout_obj_putd (args: POINTER; idx: INTEGER; val: POINTER)
 			-- Adapt `args' for `idx' and `val'.
 		external "C[macro %"eif_rout_obj.h%"]"
 		end
 
-	rout_obj_puti8 (args: POINTER; idx: INTEGER; val: POINTER) is
+	rout_obj_puti8 (args: POINTER; idx: INTEGER; val: POINTER)
 			-- Adapt `args' for `idx' and `val'.
 		external "C[macro %"eif_rout_obj.h%"]"
 		end
 
-	rout_obj_puti16 (args: POINTER; idx: INTEGER; val: POINTER) is
+	rout_obj_puti16 (args: POINTER; idx: INTEGER; val: POINTER)
 			-- Adapt `args' for `idx' and `val'.
 		external "C[macro %"eif_rout_obj.h%"]"
 		end
 
-	rout_obj_puti32 (args: POINTER; idx: INTEGER; val: POINTER) is
+	rout_obj_puti32 (args: POINTER; idx: INTEGER; val: POINTER)
 			-- Adapt `args' for `idx' and `val'.
 		external "C[macro %"eif_rout_obj.h%"]"
 		end
 
-	rout_obj_puti64 (args: POINTER; idx: INTEGER; val: POINTER) is
+	rout_obj_puti64 (args: POINTER; idx: INTEGER; val: POINTER)
 			-- Adapt `args' for `idx' and `val'.
 		external "C[macro %"eif_rout_obj.h%"]"
 		end
 
-	rout_obj_putp (args: POINTER; idx: INTEGER; val: POINTER) is
+	rout_obj_putp (args: POINTER; idx: INTEGER; val: POINTER)
 			-- Adapt `args' for `idx' and `val'.
 		external "C[macro %"eif_rout_obj.h%"]"
 		end
 
-	rout_obj_putf (args: POINTER; idx: INTEGER; val: POINTER) is
+	rout_obj_putf (args: POINTER; idx: INTEGER; val: POINTER)
 			-- Adapt `args' for `idx' and `val'.
 		external "C[macro %"eif_rout_obj.h%"]"
 		end
 
-	rout_obj_putr (args: POINTER; idx: INTEGER; val: POINTER) is
+	rout_obj_putr (args: POINTER; idx: INTEGER; val: POINTER)
 			-- Adapt `args' for `idx' and `val'.
 		external "C[macro %"eif_rout_obj.h%"]"
 		end
 
-	eif_gen_conf (type1, type2: INTEGER): BOOLEAN is
+	eif_gen_conf (type1, type2: INTEGER): BOOLEAN
 			-- Does `type1' conform to `type2'?
 		external "C (int16, int16): EIF_BOOLEAN | %"eif_gen_conf.h%""
 		end
 
-	eif_gen_create (obj: POINTER; pos: INTEGER): POINTER is
+	eif_gen_create (obj: POINTER; pos: INTEGER): POINTER
 			-- Adapt `args' for `idx' and `val'.
 		external "C | %"eif_gen_conf.h%""
 		end
 
-	eif_gen_param_id (stype: INTEGER; obj: POINTER; pos: INTEGER): INTEGER is
+	eif_gen_param_id (stype: INTEGER; obj: POINTER; pos: INTEGER): INTEGER
 			-- Type of generic parameter in `obj' at position `pos'.
 		external
 			"C (int16, EIF_REFERENCE, int): EIF_INTEGER | %"eif_gen_conf.h%""
 		end
 
-	eif_gen_typecode (obj: POINTER; pos: INTEGER): CHARACTER is
+	eif_gen_typecode (obj: POINTER; pos: INTEGER): CHARACTER
 			-- Code for generic parameter `pos' in `obj'.
 		external
 			"C | %"eif_gen_conf.h%""
 		end
 
-	eif_gen_typecode_str (obj: POINTER): STRING is
+	eif_gen_typecode_str (obj: POINTER): STRING
 			-- Code name for generic parameter `pos' in `obj'.
 		external "C | %"eif_gen_conf.h%""
 		end
 
-	eif_gen_tuple_typecode_str (obj: POINTER): STRING is
+	eif_gen_tuple_typecode_str (obj: POINTER): STRING
 			-- Code name for generic parameter `pos' in `obj'.
 		external "C | %"eif_gen_conf.h%""
 		end
 
-	eif_gen_count (obj: POINTER): INTEGER is
+	eif_gen_count (obj: POINTER): INTEGER
 			-- Number of generic parameters of `obj'.
 		external
 			"C | %"eif_gen_conf.h%""
@@ -710,28 +710,28 @@ feature {NONE} -- Externals
 
 feature -- Obsolete
 
-	arguments: ?OPEN_ARGS is
+	arguments: detachable OPEN_ARGS
 		obsolete
 			"use operands"
 		do
 			Result := operands
 		end
 
-	set_arguments (args: OPEN_ARGS) is
+	set_arguments (args: OPEN_ARGS)
 		obsolete
 			"use set_operands"
 		do
 			set_operands (args)
 		end
 
-	valid_arguments (args: OPEN_ARGS): BOOLEAN is
+	valid_arguments (args: OPEN_ARGS): BOOLEAN
 		obsolete
 			"use valid_operands"
 		do
 			Result := valid_operands (args)
 		end
 
-indexing
+note
 
 	library: "[
 			EiffelBase: Library of reusable components for Eiffel.

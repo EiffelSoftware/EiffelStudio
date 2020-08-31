@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-21-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-21-0 http://www.eiffel.com/developers/xml/configuration-1-21-0.xsd" name="parent" uuid="3316C49C-FA1C-43BD-88B5-391A71BF4C86" library_target="parent">
+	<target name="parent">
+		<root all_classes="true"/>
+		<option>
+			<assertions precondition="true" postcondition="true" check="true" invariant="true" loop="true" supplier_precondition="true"/>
+		</option>
+		<setting name="console_application" value="true"/>
+		<capability>
+			<concurrency support="none"/>
+			<void_safety support="$VOID_SAFETY"/>
+		</capability>
+		$EWEASEL_DOTNET_SETTING
+		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf" use_application_options="true"/>
+		<cluster name="parent_cluster" location="$TEST/parent">
+			<class_option class="PARENT" full_class_checking="false" is_attached_by_default="false">
+			</class_option>
+		</cluster>
+	</target>
+</system>

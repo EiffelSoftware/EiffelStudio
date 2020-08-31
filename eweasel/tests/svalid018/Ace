@@ -1,18 +1,19 @@
-<?xml version="1.0" encoding="ISO-8859-1"?><system xmlns="http://www.eiffel.com/developers/xml/configuration-1-0-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-0-0 http://www.eiffel.com/developers/xml/configuration-1-0-0.xsd" name="test">
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-21-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-21-0 http://www.eiffel.com/developers/xml/configuration-1-21-0.xsd" name="test">
 	<target name="test">
-		<root cluster="root_cluster" class="test" feature="make"/>
-		<option warning="true" is_void_safe="false">
+		<root cluster="root_cluster" class="TEST" feature="make"/>
+		<option>
 			<assertions precondition="true" postcondition="true" check="true" invariant="true" loop="true" supplier_precondition="true"/>
-			<warning name="syntax" enabled="false"/>
 		</option>
 		<setting name="console_application" value="true"/>
-		<setting name="total_order_on_reals" value="true"/>
+		<capability>
+			<concurrency support="none"/>
+			<void_safety support="$VOID_SAFETY"/>
+		</capability>
+		$EWEASEL_DOTNET_SETTING
 		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf" use_application_options="true"/>
-		<cluster name="root_cluster" location=".\">
-			<class_option class="PARENT" full_class_checking="false" is_attached_by_default="false" is_void_safe="false">
-			</class_option>
-			<class_option class="CHILD" full_class_checking="true" is_attached_by_default="true" is_void_safe="true">
-			</class_option>
-		</cluster>
+		<library name="parent" location="$TEST/parent/parent.ecf" use_application_options="true"/>
+		<library name="child" location="$TEST/child/child.ecf" use_application_options="true"/>
+		<cluster name="root_cluster" location="$CLUSTER"/>
 	</target>
 </system>

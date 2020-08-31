@@ -28,9 +28,9 @@
 #  $ curl -sSL https://www.eiffel.org/setup/install.sh | bash -s -- --url https://ftp.eiffel.com/pub/beta/nightly/Eiffel_20.05_rev_104521-linux-x86-64.tar.bz2 --install-dir /opt/eiffel/test --dir /opt/eiffel
 
 # Default values
-ISE_MAJOR_MINOR_LATEST=19.05
-ISE_BUILD_LATEST=103187
-ISE_TYPE_LATEST=gpl
+ISE_MAJOR_MINOR_LATEST=20.05
+ISE_BUILD_LATEST=104521
+ISE_TYPE_LATEST=rev
 
 ISE_MAJOR_MINOR_NIGHTLY=20.05
 ISE_BUILD_NIGHTLY=104521
@@ -212,7 +212,7 @@ do_install() {
 			echo >&2 Use latest release.
 			ISE_MAJOR_MINOR=$ISE_MAJOR_MINOR_LATEST
 			ISE_BUILD=$ISE_BUILD_LATEST
-			ISE_DOWNLOAD_FILE=Eiffel_${ISE_MAJOR_MINOR}_gpl_${ISE_BUILD}-${ISE_PLATFORM}.tar.bz2
+			ISE_DOWNLOAD_FILE=Eiffel_${ISE_MAJOR_MINOR}_${ISE_TYPE_LATEST}_${ISE_BUILD}-${ISE_PLATFORM}.tar.bz2
 			ISE_DOWNLOAD_URL=${ISE_SF_DOWNLOAD_URL}/$ISE_DOWNLOAD_FILE
 			iseverParse $ISE_MAJOR_MINOR.$ISE_BUILD
 			echo >&2 Version=$major.$minor.$build
@@ -221,7 +221,7 @@ do_install() {
 			echo >&2 Use beta release.
 			ISE_MAJOR_MINOR=$ISE_MAJOR_MINOR_BETA
 			ISE_BUILD=$ISE_BUILD_BETA
-			ISE_DOWNLOAD_FILE=Eiffel_${ISE_MAJOR_MINOR}_rev_${ISE_BUILD}-${ISE_PLATFORM}.tar.bz2
+			ISE_DOWNLOAD_FILE=Eiffel_${ISE_MAJOR_MINOR}_${ISE_TYPE_BETA}_${ISE_BUILD}-${ISE_PLATFORM}.tar.bz2
 			if [ -z "$ISE_BETA_DOWNLOAD_URL" ]; then
 				ISE_DOWNLOAD_URL=https://ftp.eiffel.com/pub/beta/$ISE_MAJOR_MINOR/$ISE_DOWNLOAD_FILE
 			else
@@ -235,7 +235,7 @@ do_install() {
 			echo >&2 Use nighlty release.
 			ISE_MAJOR_MINOR=$ISE_MAJOR_MINOR_NIGHTLY
 			ISE_BUILD=$ISE_BUILD_NIGHTLY
-			ISE_DOWNLOAD_FILE=Eiffel_${ISE_MAJOR_MINOR}_rev_${ISE_BUILD}-${ISE_PLATFORM}.tar.bz2
+			ISE_DOWNLOAD_FILE=Eiffel_${ISE_MAJOR_MINOR}_${ISE_TYPE_NIGHTLY}_${ISE_BUILD}-${ISE_PLATFORM}.tar.bz2
 			ISE_DOWNLOAD_URL=https://ftp.eiffel.com/pub/beta/nightly/$ISE_DOWNLOAD_FILE
 			iseverParse $ISE_MAJOR_MINOR.$ISE_BUILD
 			echo >&2 Version=$major.$minor.$build

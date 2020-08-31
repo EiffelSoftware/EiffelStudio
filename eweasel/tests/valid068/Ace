@@ -7,6 +7,7 @@
 		</option>
 		<setting name="console_application" value="true"/>
 		<setting name="total_order_on_reals" value="true"/>
+		$EWEASEL_DOTNET_SETTING
 		<mapping old_name="STRING" new_name="STRING_8"/>
 		<mapping old_name="INTEGER" new_name="INTEGER_32"/>
 		<mapping old_name="NATURAL" new_name="NATURAL_32" />
@@ -20,6 +21,7 @@
 		<mapping old_name="REAL_REF" new_name="REAL_32_REF" />
 		<mapping old_name="DOUBLE_REF" new_name="REAL_64_REF" />
 
-		<cluster name="root_cluster" location=".\"/>
+		<cluster name="root_cluster" location="$CLUSTER\"/>
+		<assembly name="mscorlib" location="$ISE_DOTNET_FRAMEWORK\mscorlib.dll"/>
 	</target>
 </system>

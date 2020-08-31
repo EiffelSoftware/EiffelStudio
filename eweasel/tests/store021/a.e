@@ -6,7 +6,7 @@ create
 
 feature
 
-	make (v: attached G) is
+	make (v: attached G)
 		do
 			g := v
 			g_att := v

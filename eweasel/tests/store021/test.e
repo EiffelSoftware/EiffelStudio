@@ -1,32 +1,29 @@
 class
 	TEST
 
-inherit
-	ARGUMENTS
-
 create
 	make
 
 feature -- Initialization
 
-	make is
+	make
 			-- Run application.
 		do
 			$SAVE
 			retrieve
 		end
 
-	save (ignore_marks: BOOLEAN) is
+	save (ignore_marks: BOOLEAN)
 		local
 			l_file: RAW_FILE
 		do
 			set_ignore_marks (ignore_marks)
 			create l_file.make_open_write (file_name)
-			l_file.independent_store (create {A [!ANY, ?ANY]}.make (create {ANY}))
+			l_file.independent_store (create {A [attached ANY, detachable ANY]}.make (create {ANY}))
 			l_file.close
 		end
 
-	retrieve is
+	retrieve
 		local
 			a: detachable ANY
 			l_file: RAW_FILE
@@ -46,9 +43,9 @@ feature -- Initialization
 			retry
 		end
 
-	file_name: STRING is "data"
+	file_name: STRING = "data"
 
-	set_ignore_marks (a: BOOLEAN) is
+	set_ignore_marks (a: BOOLEAN)
 		external
 			"C inline use %"eif_store.h%""
 		alias

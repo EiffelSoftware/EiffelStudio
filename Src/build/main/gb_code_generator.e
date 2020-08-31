@@ -415,7 +415,6 @@ feature {NONE} -- Implementation
 			-- generate a debug and a release ace file.
 		do
 			generate_ace_file (ecf_file_name, ecf_name)
-			generate_ace_file (void_safe_ecf_file_name, void_safe_ecf_name)
 		end
 
 	generate_ace_file (template_file_name: PATH; file_name: STRING)

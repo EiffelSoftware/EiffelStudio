@@ -2,7 +2,7 @@ test_name 	 agent-attached-by-default
 test_description Agents are not attached by default in void-safe code
 
 copy_sub	Ace $TEST Ace
-define BAD_AGENT "l_agent := agent {?TEST}.bar"
+define BAD_AGENT "l_agent := agent {detachable TEST}.bar"
 copy_sub	test.e $CLUSTER test.e
 
 compile_melted

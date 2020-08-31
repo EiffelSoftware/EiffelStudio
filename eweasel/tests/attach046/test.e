@@ -56,6 +56,6 @@ feature {NONE} -- Creation
 
 feature {NONE} -- Access
 
-	a: !TEST
+	a: attached TEST
 
 end

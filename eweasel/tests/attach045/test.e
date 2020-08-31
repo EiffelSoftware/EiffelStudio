@@ -25,30 +25,30 @@ feature {NONE} -- Creation
 
 feature {NONE} -- Tests
 
-	f (a: !ANY)
+	f (a: attached ANY)
 		do
 		end
 
-	ff1 (a: ?ANY)
+	ff1 (a: detachable ANY)
 		require else
 			a /= Void
 		do
 			f (a)
 		end
 
-	ff2 (a: ?ANY)
+	ff2 (a: detachable ANY)
 		require else
 			a /= Void
 		do
 			f (a)
 		end
 
-	fp1 (a: ?ANY)
+	fp1 (a: detachable ANY)
 		do
 			f (a)
 		end
 
-	fp2 (a: ?ANY)
+	fp2 (a: detachable ANY)
 		do
 			f (a)
 		end

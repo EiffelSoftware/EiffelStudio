@@ -14,9 +14,9 @@ feature {NONE} -- Creation
 
 feature -- Output
 
-	x: !like io
+	x: attached like io
 
-	o: !like io
+	o: attached like io
 		local
 			r: like io
 		do

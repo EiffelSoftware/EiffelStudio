@@ -9,7 +9,7 @@ feature {NONE} -- Initialization
 	make
 		local
 			l_a: A
-			l_aa: !A
+			l_aa: attached A
 
 		do
 			create l_a

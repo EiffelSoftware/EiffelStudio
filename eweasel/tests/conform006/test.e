@@ -7,7 +7,7 @@ feature {NONE} -- Initialization
 
 	make
 		local
-			t: !TUPLE [a: !STRING; b: !PROCEDURE [!ANY, TUPLE]]
+			t: attached TUPLE [a: attached STRING; b: attached PROCEDURE]
 		do
 			t := ["TOTO", agent do_nothing]
 			print (t.generating_type)

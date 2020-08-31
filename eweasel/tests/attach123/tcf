@@ -35,7 +35,7 @@ execute_result ok
 compare exec_output_f output
 
 cleanup_compile
-define	BASE_ECF	base-safe.ecf
+define	BASE_ECF	base.ecf
 define	BASE_PRECOMPILE	$PRECOMPILED_BASE_SAFE
 define	LIBRARY_VOID_SAFETY all
 copy_sub	library.ecf $TEST library.ecf

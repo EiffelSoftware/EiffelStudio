@@ -8,7 +8,7 @@ copy_raw 	test.e $CLUSTER test.e
 compile_melted
 compile_result  ok
 
-define	 	LIB_NAME "base-safe"
+define	 	LIB_NAME "base"
 copy_sub 	Ace $TEST Ace
 
 compile_melted

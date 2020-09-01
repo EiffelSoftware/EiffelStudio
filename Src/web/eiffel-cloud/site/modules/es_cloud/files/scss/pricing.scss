@@ -56,7 +56,7 @@ div.plan {
 		button {
 			width: 90%;
 		}
-		&.year, &.month, &.week, &.day {
+		&.per-year, &.per-month, &.per-week, &.per-day, &.one-year {
 			display: none;
 		}
 	}
@@ -77,16 +77,19 @@ div.plan {
 		background-color: #fff;
 		transition: all .3s ease-out;
 	}
-	input[type="radio"].year:checked ~ div[data-interval="year"] {
+	input[type="radio"].per-year:checked ~ div[data-interval="per-year"] {
 		display: block;
 	}
-	input[type="radio"].month:checked ~ div[data-interval="month"] {
+	input[type="radio"].per-month:checked ~ div[data-interval="per-month"] {
 		display: block;
 	}
-	input[type="radio"].week:checked ~ div[data-interval="week"] {
+	input[type="radio"].per-week:checked ~ div[data-interval="per-week"] {
 		display: block;
 	}
-	input[type="radio"].day:checked ~ div[data-interval="day"] {
+	input[type="radio"].per-day:checked ~ div[data-interval="per-day"] {
+		display: block;
+	}
+	input[type="radio"].one-year:checked ~ div[data-interval="one-year"] {
 		display: block;
 	}
 }

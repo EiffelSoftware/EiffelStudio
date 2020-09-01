@@ -1,11 +1,12 @@
 {
-	"perso-dly": {
+	"perso-oneyear": {
 		"plan": "perso",
-		"title": "Personal (daily)",
-		"price": 1,
-		"price.cents": 0,
+		"title": "Personal (one-year)",
+		"price": 145,
 		"currency": "usd",
-		"interval": "day"
+		"interval": "onetime",
+		"duration": "12",
+		"status": "published"
 	},
 	"perso-mly": {
 		"plan": "perso",
@@ -13,14 +14,17 @@
 		"price": 14,
 		"price.cents": 50,
 		"currency": "usd",
-		"interval": "month"
+		"interval": "month",
+		"status": "published"
 	},
-	"perso-yly": {
-		"plan": "perso",
-		"title": "Personal (yearly)",
-		"price": 145,
+	"pro-oneyear": {
+		"plan": "pro",
+		"title": "Professional (one-year)",
+		"price": 495,
 		"currency": "usd",
-		"interval": "year"
+		"interval": "onetime",
+		"duration": "12",
+		"status": "published"
 	},
 	"pro-mly": {
 		"plan": "pro",
@@ -28,13 +32,25 @@
 		"price": 49,
 		"price.cents": 50,
 		"currency": "usd",
-		"interval": "month"
+		"interval": "month",
+		"status": "published"
 	},
-	"pro-yly": {
-		"plan": "pro",
-		"title": "Professional (yearly)",
-		"price": 495,
+	"proplus-oneyear": {
+		"plan": "pro+",
+		"title": "Professional+ (one-year)",
+		"price": 799,
 		"currency": "usd",
-		"interval": "year"
+		"interval": "onetime",
+		"duration": "12",
+		"status": "published"
+	},
+	"proplus-mly": {
+		"plan": "pro+",
+		"title": "Professional+ (monthly)",
+		"price": 79,
+		"price.cents": 50,
+		"currency": "usd",
+		"interval": "month",
+		"status": "published"
 	}
 }

@@ -44,7 +44,7 @@ div.plan div.option {
     margin: 5px 0 5px 0; }
   div.plan div.option button {
     width: 90%; }
-  div.plan div.option.year, div.plan div.option.month, div.plan div.option.week, div.plan div.option.day {
+  div.plan div.option.per-year, div.plan div.option.per-month, div.plan div.option.per-week, div.plan div.option.per-day, div.plan div.option.one-year {
     display: none; }
 div.plan input[type="radio"] {
   display: none; }
@@ -60,13 +60,15 @@ div.plan input[type="radio"]:checked + label {
   color: #000000;
   background-color: #fff;
   transition: all .3s ease-out; }
-div.plan input[type="radio"].year:checked ~ div[data-interval="year"] {
+div.plan input[type="radio"].per-year:checked ~ div[data-interval="per-year"] {
   display: block; }
-div.plan input[type="radio"].month:checked ~ div[data-interval="month"] {
+div.plan input[type="radio"].per-month:checked ~ div[data-interval="per-month"] {
   display: block; }
-div.plan input[type="radio"].week:checked ~ div[data-interval="week"] {
+div.plan input[type="radio"].per-week:checked ~ div[data-interval="per-week"] {
   display: block; }
-div.plan input[type="radio"].day:checked ~ div[data-interval="day"] {
+div.plan input[type="radio"].per-day:checked ~ div[data-interval="per-day"] {
+  display: block; }
+div.plan input[type="radio"].one-year:checked ~ div[data-interval="one-year"] {
   display: block; }
 
 div.pay {

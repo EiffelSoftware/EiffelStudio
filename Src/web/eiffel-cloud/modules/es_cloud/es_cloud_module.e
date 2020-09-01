@@ -549,6 +549,7 @@ feature -- Hooks: block
 			lst: ARRAYED_LIST [ES_CLOUD_STORE_ITEM]
 			l_plan_name: READABLE_STRING_GENERAL
 			l_interval_type: READABLE_STRING_8
+			l_int_id: STRING_8
 			l_is_first: BOOLEAN
 			l_intervals: STRING_TABLE [INTEGER]
 		do
@@ -578,7 +579,7 @@ feature -- Hooks: block
 				loop
 					l_plan_name := tb_ic.key
 					if attached api.plan_by_name (l_plan_name) as pl then
-						l_html.append ("<div class=%"plan "+ html_encoded (pl.name) +"%">")
+						l_html.append ("<div class=%"plan "+ html_encoded (pl.name) +"%">%N")
 						l_html.append ("<h2>"+ html_encoded (pl.title_or_name) + "</h2>")
 						if tb_ic.item.count > 1 then
 --							l_html.append ("<div class=%"switch%">")
@@ -588,21 +589,23 @@ feature -- Hooks: block
 								tb_ic.item as ic
 							loop
 								l_item := ic.item
-								l_interval_type := store_item_interval_name (l_item)
-								if l_interval_type /= Void then
-									if not l_intervals.has (l_interval_type) then
-										l_intervals.force (1, l_interval_type)
-										l_html.append ("<input type=%"radio%" name=%"interval-"+ pl.id.out +"%" id=%"" + l_interval_type + pl.id.out + "%" class=%"" + l_interval_type + "%" value=%"" + l_interval_type + "%"")
+--								l_interval_type := store_item_interval_name (l_item)
+								if attached store_item_interval_title (l_item) as l_interval_title then
+									create l_int_id.make_from_string (html_encoded (l_interval_title))
+									l_int_id.replace_substring_all (" ", "-")
+									if not l_intervals.has (l_int_id) then
+										l_intervals.force (1, l_int_id)
+										l_html.append ("<input type=%"radio%" name=%"interval-"+ pl.id.out +"%" id=%"" + l_int_id + pl.id.out + "%" class=%"" + l_int_id + "%" value=%"" + l_int_id + "%"")
 										if l_is_first then
 											l_html.append (" checked=%"checked%"")
 										end
 										l_html.append ("/>")
-										l_html.append ("<label for=%"" + l_interval_type + pl.id.out + "%">")
-										l_html.append ("per " + l_interval_type + "</label>%N")
+										l_html.append ("<label for=%"" + l_int_id + pl.id.out + "%">")
+										l_html.append (html_encoded (l_interval_title) + "</label>%N")
 
 										l_is_first := False
 									else
-										l_intervals.force (l_intervals [l_interval_type] + 1, l_interval_type)
+										l_intervals.force (l_intervals [l_int_id] + 1, l_int_id)
 									end
 								end
 							end
@@ -615,23 +618,33 @@ feature -- Hooks: block
 							l_interval_type := store_item_interval_name (l_item)
 
 							l_html.append ("<div class=%"option ")
-							if l_interval_type /= Void then
-								l_html.append (l_interval_type)
-								l_html.append ("%"")
+							if attached store_item_interval_title (l_item) as l_interval_title then
+								create l_int_id.make_from_string (html_encoded (l_interval_title))
+								l_int_id.replace_substring_all (" ", "-")
+								l_html.append (l_int_id)
+								l_html.append ("%" ")
 								l_html.append ("data-interval=%"")
-								l_html.append (l_interval_type)
+								l_html.append (l_int_id)
 							end
-							l_html.append ("%">")
+							l_html.append ("%">%N")
 							l_html.append ("<div class=%"prices%">")
 							if l_item.is_free then
 								l_html.append ("Free")
 							else
 								l_html.append (html_encoded (l_item.price_as_string))
-								if l_interval_type /= Void then
+								if l_item.is_onetime then
+									if l_item.onetime_month_duration = 12 then
+										l_html.append (" for one year")
+									elseif l_item.onetime_month_duration = 1 then
+										l_html.append (" for one month")
+									elseif l_item.onetime_month_duration > 1 then
+										l_html.append (" for "+ l_item.onetime_month_duration.out +" months")
+									end
+								elseif l_interval_type /= Void then
 									l_html.append (" /" + l_interval_type)
 								end
 							end
-							l_html.append ("</div>")
+							l_html.append ("</div>%N")
 							l_html.append ("<div class=%"actions%">")
 							if attached {SHOP_MODULE} api.cms_api.module ({SHOP_MODULE}) as l_shop_module then
 								if not l_item.is_free then
@@ -639,8 +652,8 @@ feature -- Hooks: block
 											 + "%" type=%"submit%" class=%"buy%">Buy now</button>")
 								end
 							end
-							l_html.append ("</div>") -- actions
-							l_html.append ("</div>") -- option
+							l_html.append ("</div>%N") -- actions
+							l_html.append ("</div>%N") -- option
 						end
 						if attached pl.description as l_desc then
 							l_html.append ("<div class=%"features%"><header>")
@@ -673,6 +686,17 @@ feature -- Hooks: block
 				Result := "day"
 			else
 --				Result := "onetime"
+			end
+		end
+
+	store_item_interval_title (a_item: ES_CLOUD_STORE_ITEM): detachable STRING
+		do
+			if attached store_item_interval_name (a_item) as l_sub_name then
+				Result := "per " + l_sub_name
+			elseif a_item.is_onetime then
+				if a_item.onetime_month_duration = 12 then
+					Result := "one year"
+				end
 			end
 		end
 

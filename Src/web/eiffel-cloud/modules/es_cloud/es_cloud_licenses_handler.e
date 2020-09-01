@@ -40,6 +40,8 @@ feature -- Execution
 			if req.is_get_request_method then
 				if attached req.path_parameter ("license_key") as l_lic_key then
 					process_license_get (l_lic_key.string_representation, req, res)
+				elseif attached {WSF_STRING} req.query_parameter ("op") as p_op and then p_op.is_case_insensitive_equal ("buy") then
+					process_post (req, res)
 				else
 					process_get (req, res)
 				end

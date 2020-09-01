@@ -282,6 +282,11 @@
 	<PREF NAME="interface.development_window.completion_list_height" DESCRIPTION="Height of completion list.  Used if 'remember_completion_list_size' is set to True." HIDDEN="true"><INTEGER>320</INTEGER></PREF>
 	<PREF NAME="interface.development_window.completion_list_width" DESCRIPTION="Width of completion list.  Used if 'remember_completion_list_size' is set to True." HIDDEN="true"><INTEGER>240</INTEGER></PREF>
 
+	<PREF NAME="interface.development_window.consecutive_successful_compilations_threshold" DESCRIPTION="Number of successful compilations in a row. Used with messindex to suggest to use Pretty print"><INTEGER>4</INTEGER></PREF>
+	<PREF NAME="interface.development_window.pretty_printer_messindex" DESCRIPTION="Used to compute the diff between the current code and the pretty printed code."><INTEGER>2</INTEGER></PREF>
+
+
+
 	<PREF NAME="recent_projects.last_opened_projects" DESCRIPTION="List of recently opened projects."><LIST></LIST></PREF>
 	<PREF NAME="recent_projects.keep_n_projects" DESCRIPTION="Number of recent projects to keep in the list."><INTEGER>10</INTEGER></PREF>
 	

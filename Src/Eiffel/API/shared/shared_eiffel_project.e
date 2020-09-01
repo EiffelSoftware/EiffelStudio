@@ -59,6 +59,12 @@ feature -- Access
 			result_is_not_void: Result /= Void
 		end;
 
+	eiffel_project_session_statistics: EB_PROJECT_SESSION_STATISTICS
+			-- Eiffel project session statistics.
+		once
+			create Result.make
+		end
+
 feature {NONE} -- Implementation
 
 	Degree_output: DEGREE_OUTPUT

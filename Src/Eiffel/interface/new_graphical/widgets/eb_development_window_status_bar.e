@@ -84,11 +84,13 @@ feature {NONE} -- Initialization
 			close_agent := agent on_project_closed (dbg)
 			compile_start_agent := agent on_project_compiles
 			compile_stop_agent := agent on_project_compiled
+			update_statistics_agent := agent on_project_update_statistics
 			mg.create_agents.extend (create_agent)
 			mg.close_agents.extend (close_agent)
 			mg.load_agents.extend (load_agent)
 			mg.compile_start_agents.extend (compile_start_agent)
 			mg.compile_stop_agents.extend (compile_stop_agent)
+			mg.compile_stop_agents.extend (update_statistics_agent)
 
 			compiling_icon_index := 1
 			running_icon_index := 1
@@ -533,6 +535,45 @@ feature {NONE} -- Implementation: event handling
 			compilation_icon.draw_pixmap (0, 0, p)
 		end
 
+	on_project_update_statistics (is_successful: BOOLEAN)
+			-- Increase `compilations' by one.
+			-- Increase `successful_compilations` by one iff is_successful.
+			-- Increase `consecutive_successful_compilations` by one iff is_successful.
+			-- Increase `failed_compilations` by one iff not is_successful.
+		local
+			l_notify: NOTIFICATION_MESSAGE_WITH_ACTIONS
+			l_shortcut: MANAGED_SHORTCUT
+			l_locale: SHARED_LOCALE
+		do
+			eiffel_project_session_statistics.increase_compilations
+			if is_successful then
+				eiffel_project_session_statistics.increase_successful_compilations
+				eiffel_project_session_statistics.increase_consecutive_successful_compilations
+			else
+				eiffel_project_session_statistics.increase_failed_compilations
+				eiffel_project_session_statistics.reset_consecutive_successful_compilations
+			end
+
+			if attached (create {SERVICE_CONSUMER [NOTIFICATION_S]}).service as l_notification_service then
+				debug ("PRETTY_PRINTER_NOTIFICATION")
+					l_notification_service.notify (create {NOTIFICATION_MESSAGE}.make ("Number of compilations: " + eiffel_project_session_statistics.compilations.out, ""))
+					l_notification_service.notify (create {NOTIFICATION_MESSAGE}.make ("Number of successful compilations: " + eiffel_project_session_statistics.successful_compilations.out, "" ))
+					l_notification_service.notify (create {NOTIFICATION_MESSAGE}.make ("Number of failed compilations: " + eiffel_project_session_statistics.failed_compilations.out, ""))
+					l_notification_service.notify (create {NOTIFICATION_MESSAGE}.make ("Number of successful compilations in a row: " + eiffel_project_session_statistics.consecutive_successful_compilations.out, ""))
+				end
+				if eiffel_project_session_statistics.consecutive_successful_compilations >= preferences.development_window_data.consecutive_successful_compilations_threshold then
+					if attached pretty_printer then
+						create l_locale
+						l_shortcut := preferences.editor_data.shortcuts.item ("prettify")
+						l_notification_service.notify (create {NOTIFICATION_MESSAGE}.make (l_locale.locale.translation ("The class ") + Window_manager.last_focused_development_window.class_name + l_locale.locale.translation (" can be prettified Use:") + l_locale.locale.translation (l_shortcut.display_string) , ""))
+						create l_notify.make ( interface_names.m_prettify + "?" + Window_manager.last_focused_development_window.class_name, "")
+						l_notify.register_action (agent editor_prettify, "Apply")
+						l_notification_service.notify (l_notify)
+					end
+				end
+			end
+		end
+
 	on_project_updated
 			-- The project has just been updated (the exe corresponds to the class texts).
 		local
@@ -559,6 +600,10 @@ feature {NONE} -- Implementation: event handling
 
 	compile_stop_agent: PROCEDURE [BOOLEAN]
 			-- Agent called when the project's compilation is over.
+
+	update_statistics_agent: PROCEDURE [BOOLEAN]
+			-- Agent called when the project's compilation is over.
+			-- to compute statistics
 
 feature {NONE} -- Implementation
 
@@ -648,12 +693,56 @@ feature {NONE} -- Implementation
 	compiling_timer: EV_TIMEOUT;
 			-- Timer that updates the "compiling" icon.
 
+
+feature -- Can pretty print?
+
+	pretty_printer: detachable STRING_32
+		local
+			l_show_pretty: E_SHOW_PRETTY
+			u,s: STRING_32
+			window: EB_DEVELOPMENT_WINDOW
+			l_diff: DIFF_TEXT
+		do
+			window := Window_manager.last_focused_development_window
+
+					-- Create a string to write prettified text.
+			create s.make_empty
+				-- Prettify code.
+			if attached window.file_name  as l_name then
+				create l_show_pretty.make_string (l_name.as_string_32, s)
+						-- Check if formatting is successful.
+				if not l_show_pretty.error then
+					create l_diff
+					s.replace_substring_all ("%N", "%R%N")
+					l_diff.set_text (window.text, s)
+					l_diff.compute_diff
+					u := l_diff.unified
+					if attached l_diff.hunks as l_hunks and then
+					   l_hunks.count >= preferences.development_window_data.pretty_printer_messindex.to_integer_32
+					then
+						Result := s
+					end
+				end
+			end
+		end
+
+
+	editor_prettify
+			-- Prettify class in current editor.
+		do
+			if attached Window_manager.last_focused_development_window.class_name and then attached Window_manager.last_focused_development_window.editors_manager.current_editor as l_editor then
+				l_editor.prettify
+			end
+		end
+
+
+
 invariant
 	compiling_icon_index_positive: compiling_icon_index > 0
 	running_icon_index_positive: running_icon_index > 0
 
 note
-	copyright:	"Copyright (c) 1984-2019, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2020, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

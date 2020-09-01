@@ -174,6 +174,18 @@ feature {EB_SHARED_PREFERENCES, EB_DEVELOPMENT_WINDOW_SESSION_DATA,
 			Result := outputs_tool_prompted_preference.value
 		end
 
+	consecutive_successful_compilations_threshold: NATURAL
+			-- Number of consecutive successfult compilations threshold, by default 4.
+		do
+			Result := consecutive_successful_compilations_threshold_preference.value.to_natural_32
+		end
+
+	pretty_printer_messindex: NATURAL
+			-- Threshold of estudio pretty printer messindex.
+		do
+			Result := pretty_printer_messindex_preference.value.to_natural_32
+		end
+
 feature {EB_SHARED_PREFERENCES} -- Preference
 
 	estudio_dbg_menu_allowed_preference: BOOLEAN_PREFERENCE
@@ -230,6 +242,14 @@ feature {EB_SHARED_PREFERENCES} -- Preference
 
 	outputs_tool_prompted_preference: BOOLEAN_PREFERENCE
 			-- If show up output tool if start compiling?
+
+	consecutive_successful_compilations_threshold_preference: INTEGER_PREFERENCE
+		-- Number of successful compilations in a row, to be used when a criteria is met, we suggest something to the user.
+		-- for example Pretty printer option.
+
+	pretty_printer_messindex_preference: INTEGER_PREFERENCE
+		-- Compute messindex as the diff between the current code and the pretty printed code.
+
 
 feature -- Element change
 
@@ -299,6 +319,13 @@ feature {NONE} -- Preference Strings
 	estudio_dbg_menu_accelerator_allowed_string: STRING = "interface.development_window.estudio_dbg_menu_accelerator_allowed"
 	estudio_dbg_menu_enabled_string: STRING = "interface.development_window.estudio_dbg_menu_enabled"
 
+	consecutive_successful_compilations_threshold_string: STRING = "interface.development_window.consecutive_successful_compilations_threshold"
+		-- Number of successful compilations in a row, to be used when a criteria is met, we suggest  something to the user.
+		-- for example Pretty printer option.
+
+	pretty_printer_messindex_string: STRING = "interface.development_window.pretty_printer_messindex"
+		-- Compute messindex as the diff between the current code and the pretty printed code.
+
 feature {NONE} -- Implementation
 
 	initialize_preferences
@@ -334,6 +361,12 @@ feature {NONE} -- Implementation
 			estudio_dbg_menu_enabled_preference := l_manager.new_boolean_preference_value (l_manager, estudio_dbg_menu_enabled_string, False)
 			estudio_dbg_menu_enabled_preference.set_hidden (not estudio_dbg_menu_allowed_preference.value)
 			estudio_dbg_menu_enabled_preference.change_actions.extend (agent update_estudio_dbg_menu)
+
+
+			consecutive_successful_compilations_threshold_preference := l_manager.new_integer_preference_value (l_manager, consecutive_successful_compilations_threshold_string, 4)
+			pretty_printer_messindex_preference := l_manager.new_integer_preference_value (l_manager, pretty_printer_messindex_string, 2)
+
+
 			auto_hide_animation_speed_preference.change_actions.extend (agent on_auto_hide_animation_speed_changed)
 			undocked_window_lower_than_main_window_preference.change_actions.extend (agent on_undocked_window_lower_than_main_window)
 			show_all_applicable_docking_indicators_preference.change_actions.extend (agent on_show_all_applicable_docking_indicators_changed)

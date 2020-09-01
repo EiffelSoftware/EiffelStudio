@@ -366,7 +366,7 @@ feature {NONE} -- Memory Management
 			Precursor
 		end
 
-feature {EB_COMMAND, EB_DEVELOPMENT_WINDOW, EB_DEVELOPMENT_WINDOW_MENU_BUILDER} -- Prettify text
+feature {EB_COMMAND, EB_DEVELOPMENT_WINDOW, EB_DEVELOPMENT_WINDOW_MENU_BUILDER, EB_DEVELOPMENT_WINDOW_STATUS_BAR} -- Prettify text
 
 	prettify
 			-- Prettify class text if possible.
@@ -410,6 +410,7 @@ feature {EB_COMMAND, EB_DEVELOPMENT_WINDOW, EB_DEVELOPMENT_WINDOW_MENU_BUILDER} 
 					if c > 0 then
 						text_displayed.cursor.set_x_in_characters (c)
 					end
+					(create {SHARED_EIFFEL_PROJECT}).eiffel_project_session_statistics.reset_consecutive_successful_compilations
 				end
 			end
 		end

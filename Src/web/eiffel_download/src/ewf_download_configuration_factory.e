@@ -18,7 +18,6 @@ feature -- Configuration
 			l_layout: APPLICATION_LAYOUT
 			email_service: EMAIL_SERVICE
 			database_service: detachable DATA_SERVICE
-			download_service: DOWNLOAD_SERVICE
 			j_cfg: APP_JSON_CONFIGURATION
 		once ("THREAD")
 			if attached separate_character_option_value ('d') as l_dir then

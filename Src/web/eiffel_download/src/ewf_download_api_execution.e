@@ -587,7 +587,7 @@ feature {NONE} -- Implementation
 		do
 			create Result
 			if attached {WSF_STRING} req.form_parameter ("product") as l_product then
-				Result.set_product (l_product.url_encoded_value)
+				Result.set_product ({UTF_CONVERTER}.utf_32_string_to_utf_8_string_8 (l_product.value))
 			end
 			if attached {WSF_STRING} req.form_parameter ("first_name") as l_first_name then
 				Result.set_first_name (l_first_name.value)
@@ -596,7 +596,7 @@ feature {NONE} -- Implementation
 				Result.set_last_name (l_last_name.value)
 			end
 			if attached {WSF_STRING} req.form_parameter ("email") as l_user_email then
-				Result.set_email (l_user_email.url_encoded_value)
+				Result.set_email ({UTF_CONVERTER}.utf_32_string_to_utf_8_string_8 (l_user_email.value))
 			end
 			if attached {WSF_STRING} req.form_parameter ("company") as l_user_company then
 				Result.set_company (l_user_company.value)
@@ -605,7 +605,7 @@ feature {NONE} -- Implementation
 				Result.set_title (l_user_title.value)
 			end
 			if attached {WSF_STRING} req.form_parameter ("platform") as l_platform then
-				Result.set_platform (l_platform.url_encoded_value)
+				Result.set_platform ({UTF_CONVERTER}.utf_32_string_to_utf_8_string_8 (l_platform.value))
 			end
 			if attached req.form_parameter ("newsletter") then
 				Result.set_newsletter (True)

@@ -63,6 +63,15 @@
 			</select></br>
 		</label>    
 
+		 <label>
+		    <span>Product :</span>
+			 <select name="product">
+			    <option value="eiffelstudio_standard">Standard</option>    
+			    <option value="eiffelstudio_enterprise">Enterprise</option>    
+			    <option value="eiffelstudio_branded">Branded</option>    
+			</select></br>
+		</label>    
+
 		<label class="checkbox"><input type="checkbox" name="newsletter" value="newsletter"><label>Newsletter</label> </label><br>
 		</fieldset>								
 		<fieldset>	

@@ -21,78 +21,78 @@ feature {NONE} -- Initialization
 
 feature -- Access : Personal Information
 
-	username: STRING_32
+	username: READABLE_STRING_32
 			-- Username.
 
-	first_name: detachable STRING
+	first_name: detachable READABLE_STRING_32
 			-- First_name.
 
-	last_name: detachable STRING
+	last_name: detachable READABLE_STRING_32
 			-- Last_name.	
 
-	email: detachable STRING
+	email: detachable READABLE_STRING_8
 			-- Email.
 
-	address: detachable STRING
+	address: detachable READABLE_STRING_32
 			-- Street address.
 
-	city: detachable STRING
+	city: detachable READABLE_STRING_32
 			-- City.
 
-	country: detachable STRING
+	country: detachable READABLE_STRING_32
 			-- Country.
 
-	region: detachable STRING
+	region: detachable READABLE_STRING_32
 			-- Region.
 
-	postal_code: detachable STRING
+	postal_code: detachable READABLE_STRING_8
 			-- Postal_code.
 
-	telephone: detachable STRING
+	telephone: detachable READABLE_STRING_8
 			-- Telephone.
 
-	fax: detachable STRING
+	fax: detachable READABLE_STRING_8
 			-- Fax.
 
-	position: detachable STRING
+	position: detachable READABLE_STRING_32
 			-- Position.
 
 feature -- Access : Organization Information
 
-	organization_name: detachable STRING
+	organization_name: detachable READABLE_STRING_32
 			-- Organization name.
 
-	organization_email: detachable STRING
+	organization_email: detachable READABLE_STRING_8
 			-- Organization email.
 
-	organization_url: detachable STRING
+	organization_url: detachable READABLE_STRING_8
 			-- Organization_url.
 
-	organization_address: detachable STRING
+	organization_address: detachable READABLE_STRING_32
 			-- Organization street address.
 
-	organization_city: detachable STRING
+	organization_city: detachable READABLE_STRING_32
 			-- Organization city.
 
-	organization_country: detachable STRING
+	organization_country: detachable READABLE_STRING_32
 			-- Organization country.
 
-	organization_region: detachable STRING
+	organization_region: detachable READABLE_STRING_32
 			-- Organization region.
 
-	organization_postal_code: detachable STRING
+	organization_postal_code: detachable READABLE_STRING_8
 			-- Organization postal code.
 
-	organization_telephone: detachable STRING
+	organization_telephone: detachable READABLE_STRING_8
 			-- Organization telephone.
 
-	organization_fax: detachable STRING
+	organization_fax: detachable READABLE_STRING_8
 			-- Organization fax.
 
 feature -- Change Element
 
 
-	set_first_name (a_first_name: STRING)
+	set_first_name (a_first_name: READABLE_STRING_32)
 			-- Set `first_name' to `a_first_name'.
 		do
 			first_name := a_first_name
@@ -100,7 +100,7 @@ feature -- Change Element
 			first_name_set:  first_name = a_first_name
 		end
 
-	set_last_name (a_last_name: STRING)
+	set_last_name (a_last_name: READABLE_STRING_32)
 			-- Set `last_name' to `a_last_name'.
 		do
 			last_name := a_last_name
@@ -108,7 +108,7 @@ feature -- Change Element
 			last_name_set:
 		end
 
-	set_email (a_email: STRING)
+	set_email (a_email: READABLE_STRING_8)
 			-- Set `email' to `a_email'.
 		do
 			email := a_email
@@ -116,7 +116,7 @@ feature -- Change Element
 			email_set: email = a_email
 		end
 
-	set_address (a_address: STRING)
+	set_address (a_address: READABLE_STRING_32)
 			-- Set Street  `address' to `a_address'.
 		do
 			address := a_address
@@ -124,7 +124,7 @@ feature -- Change Element
 			address_set: address = a_address
 		end
 
-	set_city (a_city: STRING)
+	set_city (a_city: READABLE_STRING_32)
 			-- Set `city' to `a_city'.
 		do
 			city := a_city
@@ -132,7 +132,7 @@ feature -- Change Element
 			city_set: city = a_city
 		end
 
-	set_country (a_country: STRING)
+	set_country (a_country: READABLE_STRING_32)
 			-- Set `country' to `a_country'.
 		do
 			country := a_country
@@ -140,7 +140,7 @@ feature -- Change Element
 			country_set: country = a_country
 		end
 
-	set_region (a_region: STRING)
+	set_region (a_region: READABLE_STRING_32)
 			-- Set `region' to `a_region'.
 		do
 			region := a_region
@@ -148,7 +148,7 @@ feature -- Change Element
 			region_set: region = a_region
 		end
 
-	set_postal_code (a_postal_code: STRING)
+	set_postal_code (a_postal_code: READABLE_STRING_8)
 			-- Postal_code
 		do
 			postal_code := a_postal_code
@@ -156,7 +156,7 @@ feature -- Change Element
 			post_code_set: postal_code = a_postal_code
 		end
 
-	set_telephone (a_telephone: STRING)
+	set_telephone (a_telephone: READABLE_STRING_8)
 			-- Set `telephone' to `a_telephone'.
 		do
 			telephone := a_telephone
@@ -164,7 +164,7 @@ feature -- Change Element
 			telephone_set: telephone = a_telephone
 		end
 
-	set_fax ( a_fax : STRING)
+	set_fax ( a_fax : READABLE_STRING_8)
 			-- Set `fax' to `a_fax'.
 		do
 			fax := a_fax
@@ -172,7 +172,7 @@ feature -- Change Element
 			fax_set: fax = a_fax
 		end
 
-	set_position ( a_position : STRING)
+	set_position ( a_position : READABLE_STRING_32)
 			-- Set `position' to `a_position'.
 		do
 			position := a_position
@@ -180,7 +180,7 @@ feature -- Change Element
 			position_set: position = a_position
 		end
 
-	set_organization_name ( a_organization_name : STRING)
+	set_organization_name ( a_organization_name : READABLE_STRING_32)
 			-- Set `organization_name' to `a_organization_name'.
 		do
 			organization_name := a_organization_name
@@ -188,7 +188,7 @@ feature -- Change Element
 			organization_name_set: organization_name = a_organization_name
 		end
 
-	set_organization_email ( a_organization_email : STRING)
+	set_organization_email ( a_organization_email : READABLE_STRING_8)
 			-- Set `organization_email' to `a_organization_email'
 		do
 			organization_email := a_organization_email
@@ -196,7 +196,7 @@ feature -- Change Element
 			organization_email_set: organization_email = a_organization_email
 		end
 
-	set_organization_url ( a_organization_url : STRING)
+	set_organization_url ( a_organization_url : READABLE_STRING_8)
 			-- Set `organization_url' to `a_organization_url'.
 		do
 			organization_url := a_organization_url
@@ -204,7 +204,7 @@ feature -- Change Element
 			organization_url_set: organization_url = a_organization_url
 		end
 
-	set_organization_address ( a_organization_address : STRING)
+	set_organization_address ( a_organization_address : READABLE_STRING_32)
 			-- Set `organization_address' to `a_organization_address'.
 		do
 			organization_address := a_organization_address
@@ -212,7 +212,7 @@ feature -- Change Element
 			organization_address_set: organization_address = a_organization_address
 		end
 
-	set_organization_city ( a_organization_city : STRING)
+	set_organization_city ( a_organization_city : READABLE_STRING_32)
 			-- Set `organization_city' to `a_organization_city'.
 		do
 			organization_city := a_organization_city
@@ -220,7 +220,7 @@ feature -- Change Element
 			organization_city_set: organization_city = a_organization_city
 		end
 
-	set_organization_country ( a_organization_country : STRING)
+	set_organization_country ( a_organization_country : READABLE_STRING_32)
 			-- Set `organization_country' to `a_organization_country'.
 		do
 			organization_country := a_organization_country
@@ -228,7 +228,7 @@ feature -- Change Element
 			organization_country_set: organization_country = a_organization_country
 		end
 
-	set_organization_region ( a_organization_region : STRING)
+	set_organization_region ( a_organization_region : READABLE_STRING_32)
 			-- Set `organization_region' to `a_organization_region'.
 		do
 			organization_region := a_organization_region
@@ -236,7 +236,7 @@ feature -- Change Element
 			organization_region_set: organization_region = a_organization_region
 		end
 
-	set_organization_postal_code( a_organization_postal_code : STRING)
+	set_organization_postal_code( a_organization_postal_code : READABLE_STRING_8)
 			-- Set `organization_postal_code' to `a_organization_postal_code'.
 		do
 			organization_postal_code := a_organization_postal_code
@@ -244,7 +244,7 @@ feature -- Change Element
 			organization_postal_code_set: organization_postal_code = a_organization_postal_code
 		end
 
-	set_organization_telephone ( a_organization_telephone : STRING)
+	set_organization_telephone ( a_organization_telephone : READABLE_STRING_8)
 			-- Set `organization_telephone' to `a_organization_telephone'.
 		do
 			organization_telephone := a_organization_telephone
@@ -252,7 +252,7 @@ feature -- Change Element
 			organization_telephone_set: organization_telephone = a_organization_telephone
 		end
 
-	set_organization_fax ( a_organization_fax: STRING)
+	set_organization_fax ( a_organization_fax: READABLE_STRING_8)
 			-- Set `organization_fax' to `a_organization_fax'.	
 		do
 			organization_fax := a_organization_fax

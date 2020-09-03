@@ -16,7 +16,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_smtp_server: READABLE_STRING_32)
+	make (a_smtp_server: READABLE_STRING_8)
 			-- Create an instance of {EMAIL_SERVICE} with an smtp_server `a_smtp_server'.
 			-- Using "noreplies@eiffel.com" as admin email.
 		do
@@ -53,7 +53,7 @@ feature {NONE} -- Initialization
 
 feature -- Basic Operations
 
-	send_download_email (a_to, a_content, a_host, a_release: STRING)
+	send_download_email (a_to: READABLE_STRING_8; a_content, a_host, a_release: READABLE_STRING_8)
 			-- Send successful download message containing token code (use to validate the download and give it an expiration of 30 days) `a_token' to `a_to'.
 		require
 			attached_to: a_to /= Void
@@ -67,7 +67,7 @@ feature -- Basic Operations
 			send_email (l_email)
 		end
 
-	send_email_resources (a_to, a_content: READABLE_STRING_8)
+	send_email_resources (a_to: READABLE_STRING_8; a_content: READABLE_STRING_8)
 			-- Send message containing video resources.
 		require
 			attached_to: a_to /= Void
@@ -80,8 +80,8 @@ feature -- Basic Operations
 			send_email (l_email)
 		end
 
-	send_email_download_notification (a_content: READABLE_STRING_32)
-				-- Send a notification email with content `a_content' with subject `a_subject'.
+	send_email_download_notification (a_content: READABLE_STRING_8)
+				-- Send a notification email with content `a_content'.
 		local
 			l_email: NOTIFICATION_EMAIL
 		do
@@ -92,7 +92,7 @@ feature -- Basic Operations
 			send_email (l_email)
 		end
 
-	send_email_internal_server_error (a_content: READABLE_STRING_32)
+	send_email_internal_server_error (a_content: READABLE_STRING_8)
 		local
 			l_email: NOTIFICATION_EMAIL
 		do
@@ -102,7 +102,7 @@ feature -- Basic Operations
 			send_email (l_email)
 		end
 
-	send_email_bad_request_error (a_content: READABLE_STRING_32)
+	send_email_bad_request_error (a_content: READABLE_STRING_8)
 		local
 			l_email: NOTIFICATION_EMAIL
 		do
@@ -116,6 +116,7 @@ feature -- Basic Operations
 			-- Send the email represented by `a_email'.
 		local
 			l_retried: BOOLEAN
+			utf: UTF_CONVERTER
 		do
 			if not l_retried then
 				log.write_information (generator + ".send_email Process send email.")
@@ -123,7 +124,7 @@ feature -- Basic Operations
 				log.write_information (generator + ".send_email Email sent.")
 				set_successful
 			else
-				log.write_error (generator + ".send_email Email not send: " + last_error_message )
+				log.write_error (generator + ".send_email Email not send: " + utf.utf_32_string_to_utf_8_string_8 (last_error_message))
 			end
 		rescue
 			set_last_error_from_exception (generator + ".send_email")

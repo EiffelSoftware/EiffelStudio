@@ -26,13 +26,13 @@ feature -- Access
 	email_date_output: detachable READABLE_STRING_32
 			-- Email date representation.		
 
-	organization_email: detachable READABLE_STRING_32
+	organization_email: detachable READABLE_STRING_8
 			-- User's `organization_email'.
 
-	email: detachable READABLE_STRING_32
+	email: detachable READABLE_STRING_8
 			-- User's `email'.
 
-	phone: detachable READABLE_STRING_32
+	phone: detachable READABLE_STRING_8
 			-- `phone'
 
 	organization: detachable READABLE_STRING_32
@@ -44,10 +44,10 @@ feature -- Access
 	filename: detachable READABLE_STRING_32
 			-- Downloaded `filename'
 
-	platform: detachable READABLE_STRING_32
+	platform: detachable READABLE_STRING_8
 			-- 	Downloaded `platform'.
 
-	product: detachable READABLE_STRING_32
+	product: detachable READABLE_STRING_8
 			-- Downloaded `product'.
 
 	company: detachable READABLE_STRING_32

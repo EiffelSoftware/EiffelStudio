@@ -4,10 +4,10 @@ note
 	revision: "$Revision$"
 
 class
-
 	DATABASE_SERVICE
 
 inherit
+	DATA_SERVICE
 
 	SHARED_LOGGER
 
@@ -29,34 +29,28 @@ feature {NONE} -- Initialize
 feature -- Access
 
 
-	is_membership (a_email: READABLE_STRING_32) : BOOLEAN
+	is_membership (a_email: READABLE_STRING_8) : BOOLEAN
 			-- Is email `a_email' already associated to a Membership user?
 		do
 			Result := attached login_provider.user_from_email (a_email)
 		end
 
-	is_contact (a_email: READABLE_STRING_32) : BOOLEAN
+	is_contact (a_email: READABLE_STRING_8) : BOOLEAN
 			-- Is email `a_email' already associated to a Contact user?
 		do
 			Result := attached login_provider.contact_from_email (a_email)
 		end
 
-	is_new_contact (a_email: READABLE_STRING_32) : BOOLEAN
-			-- Email `a_email' does not exist in the database.
-		do
-			Result := not ( is_membership(a_email) or is_contact(a_email) )
-		end
-
-	is_download_active ( a_token: READABLE_STRING_32): BOOLEAN
+	is_download_active (a_token: READABLE_STRING_GENERAL): BOOLEAN
 			-- Is download active for token `a_token'?
 		local
 			l_result: INTEGER
 		do
 			l_result := data_provider.download_expiration_token_age (a_token)
-			log.write_information (generator + ".is_download_active with token: " + a_token + " with result : " + l_result.out )
+			log.write_information (generator + ".is_download_active with token: " + {UTF_CONVERTER}.utf_32_string_to_utf_8_string_8 (a_token) + " with result : " + l_result.out )
 
 			if attached data_provider.last_error as l_error then
-				log.write_critical (generator + ".is_download_active: Error message" + l_error.error_message)
+				log.write_critical (generator + ".is_download_active: Error message" + {UTF_CONVERTER}.utf_32_string_to_utf_8_string_8 (l_error.error_message))
 			end
 
 			if
@@ -83,13 +77,14 @@ feature -- Status Report
 
 feature -- Basic Operations
 
-	retrieve_download_details (a_token: READABLE_STRING_32): detachable DOWNLOAD_INFORMATION
+	retrieve_download_details (a_token: READABLE_STRING_GENERAL): detachable DOWNLOAD_INFORMATION
 			-- Retrieve download details as tuple with email and platform for a given token `a_token', if any.
 		do
-			log.write_debug (generator + ".retrieve_download_details with token:" + a_token  )
-				-- TUPLE[email: READABLE_STRING_32; platform: READABLE_STRING_32; username: READABLE_STRING_32; org_name: READABLE_STRING_32; phone: READABLE_STRING_32; org_email: READABLE_STRING_32]
+			log.write_debug (generator + ".retrieve_download_details with token:" + {UTF_CONVERTER}.utf_32_string_to_utf_8_string_8 (a_token))
+				-- TUPLE [email: READABLE_STRING_8; platform: READABLE_STRING_8; username: READABLE_STRING_32; org_name: READABLE_STRING_32; phone: READABLE_STRING_8; org_email: READABLE_STRING_8]
 			if
-				attached {TUPLE[email: READABLE_STRING_32; platform: READABLE_STRING_32; username: READABLE_STRING_32; org_name: READABLE_STRING_32; phone: READABLE_STRING_32; org_email: READABLE_STRING_32; date: DATE_TIME; company: READABLE_STRING_32; first_name: READABLE_STRING_32; last_name: READABLE_STRING_32]} data_provider.retrieve_download_details (a_token) as l_tuple then
+				attached {TUPLE [email: READABLE_STRING_8; platform: READABLE_STRING_8; username: READABLE_STRING_32; org_name: READABLE_STRING_32; phone: READABLE_STRING_8; org_email: READABLE_STRING_8; date: DATE_TIME; company: READABLE_STRING_32; first_name: READABLE_STRING_32; last_name: READABLE_STRING_32]} data_provider.retrieve_download_details (a_token) as l_tuple
+			then
 				create Result
 				Result.set_email (l_tuple.email)
 				Result.set_platform (l_tuple.platform)
@@ -101,7 +96,9 @@ feature -- Basic Operations
 				Result.set_company (l_tuple.company)
 				Result.set_first_name (l_tuple.first_name)
 				Result.set_last_name (l_tuple.last_name)
-			elseif attached {TUPLE[email: READABLE_STRING_32; platform: READABLE_STRING_32; username: READABLE_STRING_32; date: DATE_TIME; company: READABLE_STRING_32; first_name: READABLE_STRING_32; last_name: READABLE_STRING_32]} data_provider.retrieve_temporary_download_details (a_token)  as l_tuple then
+			elseif
+				attached {TUPLE [email: READABLE_STRING_8; platform: READABLE_STRING_8; username: READABLE_STRING_32; date: DATE_TIME; company: READABLE_STRING_32; first_name: READABLE_STRING_32; last_name: READABLE_STRING_32]} data_provider.retrieve_temporary_download_details (a_token)  as l_tuple
+			then
 				create Result	-- Add download interaction to contact with email `a_email', product `a_product', platform `a_platform'
 				-- file `a_file_name', token `a_token'.
 
@@ -115,7 +112,7 @@ feature -- Basic Operations
 			end
 		end
 
-	add_download_interaction_membership (a_email, a_product, a_platform, a_file_name, a_token: READABLE_STRING_32)
+	add_download_interaction_membership (a_email, a_product, a_platform: READABLE_STRING_8; a_file_name, a_token: READABLE_STRING_32)
 				-- Add download interaction to membership with email `a_email', product `a_product', platform `a_platform'
 				-- file `a_file_name', token `a_token'.
 		do
@@ -124,7 +121,7 @@ feature -- Basic Operations
 			end
 		end
 
-	add_download_interaction_contact (a_email, a_product, a_platform, a_file_name, a_token: READABLE_STRING_32)
+	add_download_interaction_contact (a_email, a_product, a_platform: READABLE_STRING_8; a_file_name, a_token: READABLE_STRING_32)
 				-- Add download interaction to contact with email `a_email', product `a_product', platform `a_platform'
 				-- file `a_file_name', token `a_token'.
  		do
@@ -133,25 +130,25 @@ feature -- Basic Operations
 			end
 		end
 
-	initialize_download ( a_token: READABLE_STRING_32; a_form: DOWNLOAD_FORM)
+	initialize_download (a_token: READABLE_STRING_32; a_form: DOWNLOAD_FORM)
 			-- Initialize product download.
 		do
 			data_provider.initialize_download (a_form.email, a_token, a_form.platform, a_form.company, a_form.first_name, a_form.last_name)
 		end
 
-	add_temporary_contact (a_first_name, a_last_name, a_email: READABLE_STRING_32; a_newsletter: INTEGER)
+	add_temporary_contact (a_first_name, a_last_name: READABLE_STRING_32; a_email: READABLE_STRING_8; a_newsletter: INTEGER)
 			-- A a new contact temporary with first_name, last_name and email.
 		do
 			data_provider.add_contacts_temporary (a_first_name, a_last_name, a_email, a_newsletter)
 		end
 
-	validate_contact (a_email: READABLE_STRING_32)
+	validate_contact (a_email: READABLE_STRING_8)
 			-- A a new contact from a temporary contact
 		do
 			data_provider.add_temporary_contacts_to_contacts (a_email)
 		end
 
-	register_newsletter (a_email: READABLE_STRING_32)
+	register_newsletter (a_email: READABLE_STRING_8)
 			-- Register a contact with email `a_email' to the newsletter.
 		do
 			data_provider.register_newsletter (a_email)

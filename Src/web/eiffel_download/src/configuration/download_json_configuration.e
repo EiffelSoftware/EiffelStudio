@@ -8,7 +8,7 @@ class
 
 inherit
 
-	JSON_CONFIGURATION
+	APP_JSON_CONFIGURATION
 
 feature -- Access
 
@@ -26,7 +26,7 @@ feature -- Access
 					attached l_parser.parsed_json_object as jv
 				then
 					if attached jv.string_item ("mirror") as l_mirror then
-						Result.set_mirror (l_mirror.unescaped_string_32)
+						Result.set_mirror (l_mirror.unescaped_string_8)
 					end
 					if attached jv.array_item ("products") as l_products then
 						Result.set_products (new_products (l_products))

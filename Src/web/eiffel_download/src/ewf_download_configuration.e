@@ -27,11 +27,20 @@ feature --Access Services
 	email_service: detachable EMAIL_SERVICE
 			-- Email service.
 
-	database_service: detachable DATABASE_SERVICE
-			-- Database service.
+	data_service: detachable DATA_SERVICE
+			-- Data service.
 
-	download_service: detachable DOWNLOAD_SERVICE
+	enterprise_download_service: detachable DOWNLOAD_SERVICE
 			-- Download service.
+		do
+			create Result.make ((create {DOWNLOAD_JSON_CONFIGURATION}).new_download_configuration (layout.config_path.extended ("downloads_enterprise_configuration.json")))
+		end
+
+	standard_download_service: detachable DOWNLOAD_SERVICE
+			-- Download service.
+		do
+			create Result.make ((create {DOWNLOAD_JSON_CONFIGURATION}).new_download_configuration (layout.config_path.extended ("downloads_standard_configuration.json")))
+		end
 
 	is_using_safe_redirection: BOOLEAN assign set_is_using_safe_redirection
 			-- Use safe redirection when url contains embedded credential.
@@ -43,14 +52,9 @@ feature -- Change Element
 			email_service := a_email_service
 		end
 
-	set_database_service (a_database_service: like database_service)
+	set_data_service (a_data_service: like data_service)
 		do
-			database_service := a_database_service
-		end
-
-	set_download_service (a_download_service: like download_service)
-		do
-			download_service := a_download_service
+			data_service := a_data_service
 		end
 
 	set_is_using_safe_redirection (b: BOOLEAN)

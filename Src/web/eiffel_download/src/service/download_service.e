@@ -19,29 +19,29 @@ feature {NONE} -- Initialization
 			configuration_set: configuration = a_configuration
 		end
 
-feature -- Basic Operations
+feature -- Query
 
-	enterprise: detachable DOWNLOAD_OPTIONS
+	mirror: detachable READABLE_STRING_8
 		do
-			create Result
-			Result.set_product (retrieve_product_enterprise)
+			Result := configuration.mirror
 		end
 
-feature -- Implementation
-
-	retrieve_mirror_enterprise: detachable READABLE_STRING_32
+	products: detachable LIST [DOWNLOAD_PRODUCT]
+			-- Get products.
 		do
-			if attached configuration.mirror as l_mirror then
-				Result := l_mirror
+			Result := configuration.products
+		end
+
+	first_product: detachable DOWNLOAD_PRODUCT
+			-- First product among all `products`.
+			-- FIXME: it seems for now, we handle only first product, i.e a list of products with a unique element.
+		do
+			if attached products as l_products then
+				Result := l_products.first
 			end
 		end
 
-	retrieve_product_enterprise: detachable DOWNLOAD_PRODUCT
-		do
-			if attached configuration.products as l_products then
-				Result := l_products [1]
-			end
-		end
+feature {NONE} -- Configuration		
 
 	configuration : DOWNLOAD_CONFIGURATION
 		-- Download configuration object.		

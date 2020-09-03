@@ -34,22 +34,37 @@ feature -- Access
 	last_name: READABLE_STRING_32
 		-- User last name.
 
-	email: READABLE_STRING_32
+	email: IMMUTABLE_STRING_8
 		-- User email.
 
-	platform: READABLE_STRING_32
+	platform: IMMUTABLE_STRING_8
 		-- Selected Platform.
 
 	company: READABLE_STRING_32
 		-- User's organization.	
 
+	product: detachable IMMUTABLE_STRING_8
+		-- Given EiffelStudio product:
+		--  * eiffelstudio_standard (default)
+		--  * eiffelstudio_enterprise
+		--  * eiffelstudio_branded (not yet handled)
+
 	newsletter: BOOLEAN
 		-- Newsletter subscription ?
 
 	title: READABLE_STRING_32
-		-- User title :Developer, Project Manajer, CIO/CTO, Student, Professor, Other.	
+		-- User title :Developer, Project Manager, CIO/CTO, Student, Professor, Other.	
 
 feature -- Change elements
+
+	set_product (a_product: detachable READABLE_STRING_8)
+		do
+			if a_product = Void then
+				product := Void
+			else
+				create product.make_from_string (a_product)
+			end
+		end
 
 	set_first_name (a_first_name: READABLE_STRING_32)
 			-- Set `first_name' as `a_first_name'.
@@ -67,20 +82,20 @@ feature -- Change elements
 			last_name_set: last_name = a_last_name
 		end
 
-	set_email (a_email: READABLE_STRING_32)
+	set_email (a_email: READABLE_STRING_8)
 			-- Set `email' to `a_email'.
 		do
-			email := a_email
+			create email.make_from_string (a_email)
 		ensure
-			email_set: email = a_email
+			email_set: email.same_string (a_email)
 		end
 
-	set_platform (a_platform: READABLE_STRING_32)
+	set_platform (a_platform: READABLE_STRING_8)
 			-- Set `platform' to `a_platform'
 		do
-			platform := a_platform
+			create platform.make_from_string (a_platform)
 		ensure
-			platform_set: platform = a_platform
+			platform_set: platform.same_string (a_platform)
 		end
 
 	set_newsletter (a_newsletter: BOOLEAN)

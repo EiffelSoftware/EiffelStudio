@@ -28,14 +28,15 @@ feature {NONE} --Initialization
 			template.add_value (a_host, "host")
 			template.add_value (l_url.encoded_string (a_token), "token")
 			template.add_value (a_form.platform, "platform")
-			if attached a_download_service.configuration.products as l_products and then
-				attached l_products[1].number as l_number
+			if
+				attached a_download_service.first_product as l_product and then
+				attached l_product.number as l_number
 			then
 				template.add_value (l_number, "number")
 			end
 
 			if
-				attached a_download_service.retrieve_product_enterprise as l_product
+				attached a_download_service.first_product as l_product
 			then
 				template.add_value (l_product.sub_directory, "directory")
 				template.add_value (selected_platform (l_product.downloads, a_form.platform), "selected_platform")
@@ -53,7 +54,7 @@ feature {NONE} --Initialization
 		end
 
 
-	selected_platform (a_downloads: detachable LIST[DOWNLOAD_PRODUCT_OPTIONS]; a_platform: READABLE_STRING_32): detachable DOWNLOAD_PRODUCT_OPTIONS
+	selected_platform (a_downloads: detachable LIST [DOWNLOAD_PRODUCT_OPTIONS]; a_platform: READABLE_STRING_8): detachable DOWNLOAD_PRODUCT_OPTIONS
 		local
 			l_found: BOOLEAN
 		do
@@ -65,7 +66,10 @@ feature {NONE} --Initialization
 				until
 					a_downloads.after or l_found
 				loop
-					if a_downloads.item.platform ~ a_platform then
+					if
+						attached a_downloads.item.platform as p and then
+						a_platform.same_string (p)
+					then
 						Result := a_downloads.item
 					end
 					a_downloads.forth

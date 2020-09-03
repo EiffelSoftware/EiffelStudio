@@ -100,13 +100,13 @@ feature {NONE} -- Initialization
 			end
 		end
 
-	login_with_connection_string (a_string: STRING)
+	login_with_connection_string (a_string: READABLE_STRING_8)
 			-- Login with `a_connection_string'and immediately connect to database.
 		do
 			debug
 				log.write_debug (generator +".login_with_connection_string")
 			end
-			create db_application.login_with_connection_string (a_string)
+			create db_application.login_with_connection_string (a_string.to_string_8)
 			db_application.set_base
 			create db_control.make
 			debug

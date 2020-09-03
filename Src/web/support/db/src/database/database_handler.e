@@ -123,6 +123,18 @@ feature -- Access
 			end
 		end
 
+	read_string_8 (a_index: INTEGER): detachable STRING_8
+			-- Retrieved value at `a_index' position in `item'.
+		do
+			if attached {DB_TUPLE} item as l_item then
+				if attached {STRING_8} l_item.item (a_index) as ll_item then
+					Result := ll_item
+				elseif attached {BOOLEAN_REF} l_item.item (a_index) as ll_item then
+					Result := ll_item.item.out
+				end
+			end
+		end
+
 	read_string_32 (a_index: INTEGER): detachable STRING_32
 			-- Retrieved value at `a_index' position in `item'.
 		do

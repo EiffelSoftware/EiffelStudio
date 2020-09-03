@@ -17,14 +17,14 @@ create
 
 feature -- Intialization
 
-	data_reader (a_query: READABLE_STRING_GENERAL; a_parameters: STRING_TABLE [ANY])
+	data_reader (a_query: READABLE_STRING_GENERAL; a_parameters: HASH_TABLE [ANY, READABLE_STRING_GENERAL])
 			-- SQL data reader for the query `a_query' with arguments `a_parameters'
 		do
 			debug
-				log.write_information (generator + ".data_reader" + " execute query: " + a_query.to_string_8)
+				log.write_information (generator + ".data_reader" + " execute query: " + {UTF_CONVERTER}.utf_32_string_to_utf_8_string_8 (a_query))
 			end
-			log.write_debug (generator + ".data_reader execute query: " + a_query.to_string_8  + " arguments:" + log_parameters (a_parameters))
-			query := a_query.to_string_8
+			log.write_debug (generator + ".data_reader execute query: " + {UTF_CONVERTER}.utf_32_string_to_utf_8_string_8 (a_query)  + " arguments:" + log_parameters (a_parameters))
+			query := a_query
 			parameters := a_parameters
 		ensure
 			query_set: query.same_string_general (a_query)
@@ -62,10 +62,10 @@ feature -- Intialization
 
 feature --  Access
 
-	query: STRING_8
+	query: IMMUTABLE_STRING_32
 			-- SQL query to execute.
 
-	parameters: STRING_TABLE [ANY]
+	parameters: HASH_TABLE [ANY, READABLE_STRING_GENERAL]
 			-- query parameters.
 
 feature -- Status Report

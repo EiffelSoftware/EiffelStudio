@@ -20,7 +20,7 @@ feature -- Access
 	filename: detachable READABLE_STRING_32
 			-- Product filename.
 
-	platform: detachable READABLE_STRING_32
+	platform: detachable READABLE_STRING_8
 			-- Product platform.
 
 	os_family: detachable READABLE_STRING_32
@@ -60,29 +60,29 @@ feature -- Element change
 			filename_assigned: filename = a_filename
 		end
 
-	set_platform (a_platform: like platform)
+	set_platform (a_platform: detachable READABLE_STRING_8)
 			-- Assign `platform' with `a_platform'.
 		do
 			platform := a_platform
-			if attached platform as l_platform then
-				if l_platform.starts_with ("win") then
+			if a_platform /= Void then
+				if a_platform.starts_with ("win") then
 					os_family := "windows"
-				elseif l_platform.starts_with ("solaris") then
+				elseif a_platform.starts_with ("solaris") then
 					os_family := "solaris"
-				elseif l_platform.starts_with ("openbsd")	then
+				elseif a_platform.starts_with ("openbsd")	then
 					os_family := "openbsd"
-				elseif l_platform.starts_with ("macos")	then
+				elseif a_platform.starts_with ("macos")	then
 					os_family := "mac"
-				elseif l_platform.starts_with ("linux")	then
+				elseif a_platform.starts_with ("linux")	then
 					os_family := "linux"
-				elseif l_platform.starts_with ("freebsd")	then
+				elseif a_platform.starts_with ("freebsd")	then
 					os_family := "freebsd"
 				else
 					os_family := "unknow"
 				end
 			end
 		ensure
-			platform_assigned: platform = a_platform
+			platform_assigned: (a_platform = Void implies platform = Void) or (a_platform /= Void implies attached platform as p and then a_platform.same_string (p))
 		end
 
 end

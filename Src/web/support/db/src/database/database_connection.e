@@ -52,7 +52,7 @@ feature {NONE} -- Initialization
 			db_control_not_void: db_control /= Void
 		end
 
-	login_with_connection_string (a_connection_string: STRING)
+	login_with_connection_string (a_connection_string: READABLE_STRING_8)
 			-- Login with `a_connection_string'
 			-- and immediately connect to database.
 		deferred

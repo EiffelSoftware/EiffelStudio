@@ -1,0 +1,67 @@
+{
+"mirror": "http://sourceforge.net/projects/eiffelstudio/files/",
+"products": [
+{
+    "id": "eiffelstudio-rev", "name": "EiffelStudio",
+    "version": "20.05 REV",
+    "number": "20.05",
+    "build": "Build_104521",
+    "download": [
+      {
+        "filename": "Eiffel_20.05_rev_104521-win64.msi",
+        "platform": "win64",
+        "size": "162928151",
+        "hash": "fc45fdcb2949e8f1308cc2ac8b7abb210e1af2cf275b5e26a4ed4878ea4bbb32"
+      }
+      ,{
+        "filename": "Eiffel_20.05_rev_104521-win64.7z",
+        "platform": "win64",
+        "size": "98214522",
+        "hash": "bf1ba9f6abead8827051517029c5aedd0c64043032ee0065c8dfe0ebac2268fc"
+      }
+      ,{
+        "filename": "Eiffel_20.05_rev_104521-linux-x86.tar.bz2",
+        "platform": "linux-x86",
+        "size": "110426279",
+        "hash": "9c67e8b80953aa959030c256fdf60728a7cae45b6ee97d3c77c286d4e344960d"
+      }
+      ,{
+        "filename": "Eiffel_20.05_rev_104521-linux-x86-64.tar.bz2",
+        "platform": "linux-x86-64",
+        "size": "111369838",
+        "hash": "28845cf38422da2ed98b66f42267710cbf8be701775a64d023c6055374370d99"
+      }
+      ,{
+        "filename": "Eiffel_20.05_rev_104521-windows.7z",
+        "platform": "windows",
+        "size": "83108490",
+        "hash": "3b11fcf9ccf75865c961a3d9651db95bbec15aaf0382382ee0a544d8889e81ae"
+      }
+      ,{
+        "filename": "Eiffel_20.05_rev_104521-macosx-x86-64.tar.bz2",
+        "platform": "macosx-x86-64",
+        "size": "101437445",
+        "hash": "5108cda4c753c72cf34fe1156efa7c505fff6798e641fa64fd197482edae98b6"
+      }
+      ,{
+        "filename": "Eiffel_20.05_rev_104521-linux-armv7.tar.bz2",
+        "platform": "linux-armv7",
+        "size": "108949262",
+        "hash": "e1bd11efb2393642843c08a1fbd82e79728406c9d1ff0051ccd4362304b29838"
+      }
+      ,{
+        "filename": "Eiffel_20.05_rev_104521-freebsd-x86-64.tar.bz2",
+        "platform": "freebsd-x86-64",
+        "size": "108083598",
+        "hash": "ca80fc5992d67f0b9718ec4434e09cbf1e5edabae67c05a33a7bfc9447360c3f"
+      }
+      ,{
+        "filename": "Eiffel_20.05_rev_104521-windows.msi",
+        "platform": "windows",
+        "size": "137382000",
+        "hash": "bc6c1da6aa0e64b0162b1212c3f581eb6709b0019a3827f461c43e9438b73947"
+      }
+    ]
+}
+]
+}

@@ -45,20 +45,20 @@ feature -- Access
 			create l_parameters.make (6)
 			l_parameters.put (a_rows_per_page, "RowsPerPage")
 			l_parameters.put (a_rows_per_page * a_page_number, "Offset")
-			l_parameters.put (l_encoder.encode (string_parameter (a_username, 50)), {DATA_PARAMETERS_NAMES}.Username_param)
+			l_parameters.put (l_encoder.encoded_string (string_parameter (a_username, 50)), {DATA_PARAMETERS_NAMES}.Username_param)
 			l_parameters.put (a_category, {DATA_PARAMETERS_NAMES}.categoryid_param)
 			if not a_filter.is_empty then
-				l_parameters.put (l_encoder.encode (string_parameter (a_filter, 100)), {DATA_PARAMETERS_NAMES}.Filter_param)
+				l_parameters.put (l_encoder.encoded_string (string_parameter (a_filter, 100)), {DATA_PARAMETERS_NAMES}.Filter_param)
 			end
-			create l_query.make_from_string (Select_problem_reports_by_user_template)
+			create l_query.make_from_string_general (Select_problem_reports_by_user_template)
 			if a_order = 1 then
-				l_query.replace_substring_all ("$ORD1", "ASC")
-				l_query.replace_substring_all ("$ORD2", "DESC")
+				l_query.replace_substring_all ({STRING_32} "$ORD1", {STRING_32} "ASC")
+				l_query.replace_substring_all ({STRING_32} "$ORD2", {STRING_32} "DESC")
 			else
-				l_query.replace_substring_all ("$ORD1", "DESC")
-				l_query.replace_substring_all ("$ORD2", "ASC")
+				l_query.replace_substring_all ({STRING_32} "$ORD1", {STRING_32} "DESC")
+				l_query.replace_substring_all ({STRING_32} "$ORD2", {STRING_32} "ASC")
 			end
-			l_query.replace_substring_all ("$Column", l_encoder.encode (string_parameter (a_column, 30)).to_string_8)
+			l_query.replace_substring_all ({STRING_32} "$Column", l_encoder.encoded_string (string_parameter (a_column, 30)))
 
 			-- Filter search.
 			if
@@ -67,18 +67,18 @@ feature -- Access
 			then
 				if a_content = 1 then
 						-- Search by Synopsis, ToReproduce, Descriptions, Interactions.
-					l_query.replace_substring_all ("$SearchBySynopsisAndOrDescription", filter_by_content)
+					l_query.replace_substring_all ({STRING_32} "$SearchBySynopsisAndOrDescription", filter_by_content)
 				else
 						-- Search only by Synopsis
-					l_query.replace_substring_all ("$SearchBySynopsisAndOrDescription", " AND (( ProblemReports.Synopsis like '%%' + :Filter + '%%'))")
+					l_query.replace_substring_all ({STRING_32} "$SearchBySynopsisAndOrDescription", {STRING_32} " AND (( ProblemReports.Synopsis like '%%' + :Filter + '%%'))")
 				end
 			else
 					-- No filter
-				l_query.replace_substring_all ("$SearchBySynopsisAndOrDescription", "")
+				l_query.replace_substring_all ({STRING_32} "$SearchBySynopsisAndOrDescription", {STRING_32} "")
 			end
 
 				--| Need to be updated to build the set based on user selection.
-			l_query.replace_substring_all ("$StatusSet", "(" + l_encoder.encode (a_status).to_string_8 + ")")
+			l_query.replace_substring_all ({STRING_32} "$StatusSet", {STRING_32} "(" + l_encoder.encoded_string (a_status) + {STRING_32} ")")
 
 			db_handler.set_query (create {DATABASE_QUERY}.data_reader (l_query, l_parameters))
 			db_handler.execute_query
@@ -107,7 +107,7 @@ feature -- Access
 			l_parameters.put (string_parameter (a_username, 100),{DATA_PARAMETERS_NAMES}.Username_param)
 			l_parameters.put (a_category, {DATA_PARAMETERS_NAMES}.Categoryid_param)
 			if attached a_filter then
-				l_parameters.put (l_encode.encode (string_parameter (a_filter, 100)), {DATA_PARAMETERS_NAMES}.Filter_param)
+				l_parameters.put (l_encode.encoded_string (string_parameter (a_filter, 100)), {DATA_PARAMETERS_NAMES}.Filter_param)
 			end
 			create l_query.make_from_string (Select_problem_reports_template)
 			if a_order = 1 then
@@ -117,7 +117,7 @@ feature -- Access
 				l_query.replace_substring_all ("$ORD1", "DESC")
 				l_query.replace_substring_all ("$ORD2", "ASC")
 			end
-			l_query.replace_substring_all ("$Column", l_encode.encode (string_parameter (a_column.to_string_32, 30)).to_string_8)
+			l_query.replace_substring_all ("$Column", l_encode.encoded_string (string_parameter (a_column.to_string_32, 30)).to_string_8)
 
 				-- Filter search.
 			if
@@ -137,7 +137,7 @@ feature -- Access
 			end
 
 			--| Need to be updated to build the set based on user selection.
-			l_query.replace_substring_all ("$StatusSet", "(" + l_encode.encode (a_status).to_string_8 + ")")
+			l_query.replace_substring_all ("$StatusSet", "(" + l_encode.encoded_string (a_status).to_string_8 + ")")
 			db_handler.set_query (create {DATABASE_QUERY}.data_reader (l_query, l_parameters))
 			db_handler.execute_query
 			create Result.make (db_handler, agent new_report)
@@ -168,11 +168,11 @@ feature -- Access
 			l_parameters.put (a_priority, {DATA_PARAMETERS_NAMES}.Priorityid_param)
 			l_parameters.put (a_responsible, {DATA_PARAMETERS_NAMES}.Responsibleid_param)
 			if attached a_filter then
-				l_parameters.put (l_encode.encode (string_parameter (a_filter, 100)), {DATA_PARAMETERS_NAMES}.Filter_param)
+				l_parameters.put (l_encode.encoded_string (string_parameter (a_filter, 100)), {DATA_PARAMETERS_NAMES}.Filter_param)
 			end
 			create l_query.make_from_string (Select_problem_reports_responsibles_template)
 			if not a_username.is_empty then
-				l_parameters.put (l_encode.encode (string_parameter (a_username, 50)), {DATA_PARAMETERS_NAMES}.Username_param)
+				l_parameters.put (l_encode.encoded_string (string_parameter (a_username, 50)), {DATA_PARAMETERS_NAMES}.Username_param)
 				l_query.replace_substring_all ("$Submitter", "(Username = :Username or FirstName = :Username or LastName = :Username) AND")
 			else
 				l_query.replace_substring_all ("$Submitter", "")
@@ -214,7 +214,7 @@ feature -- Access
 				l_query.replace_substring_all ("$SearchBySynopsisAndOrDescription", "")
 			end
 
-			l_query.replace_substring_all ("$Column", l_encode.encode (string_parameter (a_column, 30)).to_string_8)
+			l_query.replace_substring_all ("$Column", l_encode.encoded_string (string_parameter (a_column, 30)).to_string_8)
 			if a_order = 1 then
 				l_query.replace_substring_all ("$ORD1", "ASC")
 				l_query.replace_substring_all ("$ORD2", "DESC")
@@ -223,7 +223,7 @@ feature -- Access
 				l_query.replace_substring_all ("$ORD2", "ASC")
 			end
 				--| Need to be updated to build the set based on user selection.
-			l_query.replace_substring_all ("$StatusSet", "(" + l_encode.encode (a_status).to_string_8 + ")")
+			l_query.replace_substring_all ("$StatusSet", "(" + l_encode.encoded_string (a_status).to_string_8 + ")")
 			db_handler.set_query (create {DATABASE_QUERY}.data_reader (l_query, l_parameters))
 			db_handler.execute_query
 			create Result.make (db_handler, agent new_report_responsible)
@@ -485,7 +485,7 @@ feature -- Access
 				log.write_information (generator + ".user_password_salt")
 			end
 			create l_parameters.make (1)
-			l_parameters.put (l_encoder.encode (string_parameter(a_username,50)), {DATA_PARAMETERS_NAMES}.username_param)
+			l_parameters.put (l_encoder.encoded_string (string_parameter (a_username, 50)), {DATA_PARAMETERS_NAMES}.username_param)
 			db_handler.set_query (create {DATABASE_QUERY}.data_reader (Select_user_password_salt, l_parameters))
 			db_handler.execute_query
 			if not db_handler.after then
@@ -962,7 +962,7 @@ feature -- Basic Operations
 			l_parameters.put (string_parameter (a_username, 50), {DATA_PARAMETERS_NAMES}.Username_param)
 			l_parameters.put (a_category, {DATA_PARAMETERS_NAMES}.Categoryid_param)
 			if attached a_filter then
-				l_parameters.put (l_encode.encode (string_parameter (a_filter, 100)), {DATA_PARAMETERS_NAMES}.Filter_param)
+				l_parameters.put (l_encode.encoded_string (string_parameter (a_filter, 100)), {DATA_PARAMETERS_NAMES}.Filter_param)
 			end
 			create l_query.make_from_string (Select_row_count_problem_reports)
 
@@ -973,18 +973,18 @@ feature -- Basic Operations
 			then
 				if a_content = 1 then
 						-- Search by Synopsis, ToReproduce, Descriptions, Interactions.
-					l_query.replace_substring_all ("$SearchBySynopsisAndOrDescription", filter_by_content)
+					l_query.replace_substring_all ({STRING_32} "$SearchBySynopsisAndOrDescription", filter_by_content)
 				else
 						-- Search only by Synopsis
-					l_query.replace_substring_all ("$SearchBySynopsisAndOrDescription", " AND (( ProblemReports.Synopsis like '%%' + :Filter + '%%'))")
+					l_query.replace_substring_all ({STRING_32} "$SearchBySynopsisAndOrDescription", {STRING_32} " AND (( ProblemReports.Synopsis like '%%' + :Filter + '%%'))")
 				end
 			else
 					-- No filter
-				l_query.replace_substring_all ("$SearchBySynopsisAndOrDescription", "")
+				l_query.replace_substring_all ({STRING_32} "$SearchBySynopsisAndOrDescription", {STRING_32} "")
 			end
 
 			--| Need to be updated to build the set based on user selection.
-			l_query.replace_substring_all ("$StatusSet", "(" + l_encode.encode (a_status).to_string_8 + ")")
+			l_query.replace_substring_all ({STRING_32} "$StatusSet", {STRING_32} "(" + l_encode.encoded_string (a_status) + {STRING_32} ")")
 			db_handler.set_query (create {DATABASE_QUERY}.data_reader (l_query, l_parameters))
 			db_handler.execute_query
 			if not db_handler.after then
@@ -1015,15 +1015,15 @@ feature -- Basic Operations
 			l_parameters.put (a_severity, {DATA_PARAMETERS_NAMES}.Severityid_param)
 			l_parameters.put (a_priority, {DATA_PARAMETERS_NAMES}.Priorityid_param)
 			l_parameters.put (a_responsible, {DATA_PARAMETERS_NAMES}.Responsibleid_param)
-			l_parameters.put (l_encode.encode (string_parameter (a_username, 50)), {DATA_PARAMETERS_NAMES}.Username_param)
+			l_parameters.put (l_encode.encoded_string (string_parameter (a_username, 50)), {DATA_PARAMETERS_NAMES}.Username_param)
 			if attached a_filter then
-				l_parameters.put (l_encode.encode (string_parameter (a_filter, 100)), {DATA_PARAMETERS_NAMES}.Filter_param)
+				l_parameters.put (l_encode.encoded_string (string_parameter (a_filter, 100)), {DATA_PARAMETERS_NAMES}.Filter_param)
 			end
 			create l_query.make_from_string (select_row_count_problem_reports_responsibles)
 			if not a_username.is_empty then
-				l_query.replace_substring_all ("$Submitter", "(Username = :Username or FirstName = :Username or LastName = :Username) AND")
+				l_query.replace_substring_all ({STRING_32} "$Submitter", {STRING_32} "(Username = :Username or FirstName = :Username or LastName = :Username) AND")
 			else
-				l_query.replace_substring_all ("$Submitter", "")
+				l_query.replace_substring_all ({STRING_32} "$Submitter", {STRING_32} "")
 			end
 				-- Filter search.
 			if
@@ -1032,17 +1032,17 @@ feature -- Basic Operations
 			then
 				if a_content = 1 then
 						-- Search by Synopsis, ToReproduce, Descriptions, Interactions.
-					l_query.replace_substring_all ("$SearchBySynopsisAndOrDescription", filter_by_content)
+					l_query.replace_substring_all ({STRING_32} "$SearchBySynopsisAndOrDescription", filter_by_content)
 				else
 						-- Search only by Synopsis
-					l_query.replace_substring_all ("$SearchBySynopsisAndOrDescription", " AND (( ProblemReports.Synopsis like '%%' + :Filter + '%%'))")
+					l_query.replace_substring_all ({STRING_32} "$SearchBySynopsisAndOrDescription", {STRING_32} " AND (( ProblemReports.Synopsis like '%%' + :Filter + '%%'))")
 				end
 			else
 					-- No filter
-				l_query.replace_substring_all ("$SearchBySynopsisAndOrDescription", "")
+				l_query.replace_substring_all ({STRING_32} "$SearchBySynopsisAndOrDescription", {STRING_32} "")
 			end
 				--| Need to be updated to build the set based on user selection.
-			l_query.replace_substring_all ("$StatusSet", "(" + l_encode.encode (a_status).to_string_8 + ")")
+			l_query.replace_substring_all ({STRING_32} "$StatusSet", {STRING_32} "(" + l_encode.encoded_string (a_status) + {STRING_32} ")")
 			db_handler.set_query (create {DATABASE_QUERY}.data_reader (l_query, l_parameters))
 			db_handler.execute_query
 			if not db_handler.after then
@@ -1055,7 +1055,7 @@ feature -- Basic Operations
 			post_execution
 		end
 
-	row_count_problem_report_user (a_username: READABLE_STRING_32; a_category:INTEGER; a_status:READABLE_STRING_8; a_filter: READABLE_STRING_32; a_content: INTEGER_32): INTEGER
+	row_count_problem_report_user (a_username: READABLE_STRING_32; a_category:INTEGER; a_status: READABLE_STRING_GENERAL; a_filter: READABLE_STRING_32; a_content: INTEGER_32): INTEGER
 			-- Number of problem reports for user with username `a_username'
 			-- Open reports only if `a_open_only', all reports otherwise, filetred by category and status.
 		local
@@ -1068,10 +1068,10 @@ feature -- Basic Operations
 			end
 
 			create l_parameters.make (4)
-			l_parameters.put (l_encode.encode (string_parameter (a_username, 50)), {DATA_PARAMETERS_NAMES}.Username_param)
+			l_parameters.put (l_encode.encoded_string (string_parameter (a_username, 50)), {DATA_PARAMETERS_NAMES}.Username_param)
 			l_parameters.put (a_category, {DATA_PARAMETERS_NAMES}.Categoryid_param)
 			if not a_filter.is_empty then
-				l_parameters.put (l_encode.encode (string_parameter (a_filter, 100)), {DATA_PARAMETERS_NAMES}.Filter_param)
+				l_parameters.put (l_encode.encoded_string (string_parameter (a_filter, 100)), {DATA_PARAMETERS_NAMES}.Filter_param)
 			end
 
 			create l_query.make_from_string (Select_row_count_problem_report_by_user)
@@ -1083,17 +1083,17 @@ feature -- Basic Operations
 			then
 				if a_content = 1 then
 						-- Search by Synopsis, ToReproduce, Descriptions, Interactions.
-					l_query.replace_substring_all ("$SearchBySynopsisAndOrDescription", filter_by_content)
+					l_query.replace_substring_all ({STRING_32} "$SearchBySynopsisAndOrDescription", filter_by_content)
 				else
 						-- Search only by Synopsis
-					l_query.replace_substring_all ("$SearchBySynopsisAndOrDescription", " AND (( ProblemReports.Synopsis like '%%' + :Filter + '%%'))")
+					l_query.replace_substring_all ({STRING_32} "$SearchBySynopsisAndOrDescription", {STRING_32} " AND (( ProblemReports.Synopsis like '%%' + :Filter + '%%'))")
 				end
 			else
 					-- No filter
-				l_query.replace_substring_all ("$SearchBySynopsisAndOrDescription", "")
+				l_query.replace_substring_all ({STRING_32} "$SearchBySynopsisAndOrDescription", {STRING_32} "")
 			end
 				--| Need to be updated to build the set based on user selection.
-			l_query.replace_substring_all ("$StatusSet", "(" + l_encode.encode (a_status).to_string_8 + ")")
+			l_query.replace_substring_all ({STRING_32} "$StatusSet", {STRING_32} "(" + l_encode.encoded_string (a_status) + {STRING_32} ")")
 			db_handler.set_query (create {DATABASE_QUERY}.data_reader (l_query, l_parameters))
 			db_handler.execute_query
 			if not db_handler.after then
@@ -1494,12 +1494,12 @@ feature -- Basic Operations
 		end
 
 
-	add_download_interaction (a_username, a_product, a_platform, a_file_name: STRING)
+	add_download_interaction (a_username: READABLE_STRING_32; a_product, a_platform: READABLE_STRING_8; a_file_name: READABLE_STRING_GENERAL)
 			-- Adds a download interaction to the database.
 		local
-				l_parameters: HASH_TABLE [ANY, STRING_32]
-				l_subject: STRING
-				l_notes: STRING
+			l_parameters: HASH_TABLE [ANY, STRING_32]
+			l_subject: STRING_8
+			l_notes: STRING_32
 		do
 			debug
 				log.write_information (generator + ".add_download_interaction")
@@ -1513,8 +1513,8 @@ feature -- Basic Operations
 			l_subject.append_character (')')
 
 			create l_notes.make (a_file_name.count + 40)
-			l_notes.append ("File downloaded: ")
-			l_notes.append (a_file_name)
+			l_notes.append_string_general ("File downloaded: ")
+			l_notes.append_string_general (a_file_name)
 
 			create l_parameters.make (3)
 			l_parameters.put (string_parameter (a_username, 50), {DATA_PARAMETERS_NAMES}.Username_param)
@@ -1526,12 +1526,12 @@ feature -- Basic Operations
 		end
 
 
-	add_download_interaction_contact (a_email, a_product, a_platform, a_file_name: STRING)
+	add_download_interaction_contact (a_email, a_product, a_platform: READABLE_STRING_8; a_file_name: READABLE_STRING_GENERAL)
 			-- Adds a download interaction to the database.
 		local
-				l_parameters: HASH_TABLE [ANY, STRING_32]
-				l_subject: STRING
-				l_notes: STRING
+			l_parameters: HASH_TABLE [ANY, STRING_32]
+			l_subject: STRING_8
+			l_notes: STRING_32
 		do
 			debug
 				log.write_information (generator + ".add_download_interaction_contact")
@@ -1545,8 +1545,8 @@ feature -- Basic Operations
 			l_subject.append_character (')')
 
 			create l_notes.make (a_file_name.count + 40)
-			l_notes.append ("File downloaded: ")
-			l_notes.append (a_file_name)
+			l_notes.append_string_general ("File downloaded: ")
+			l_notes.append_string_general (a_file_name)
 
 			create l_parameters.make (3)
 			l_parameters.put (string_parameter (a_email, 150), {DATA_PARAMETERS_NAMES}.Email_param)
@@ -1558,7 +1558,7 @@ feature -- Basic Operations
 		end
 
 
-	initialize_download (a_email: READABLE_STRING_32; a_token: READABLE_STRING_32; a_platform: READABLE_STRING_32; a_company: READABLE_STRING_32; a_first_name: READABLE_STRING_32; a_last_name: READABLE_STRING_32)
+	initialize_download (a_email: READABLE_STRING_8; a_token: READABLE_STRING_32; a_platform: READABLE_STRING_8; a_company: READABLE_STRING_32; a_first_name: READABLE_STRING_32; a_last_name: READABLE_STRING_32)
 			-- Initialize download for a given user with email `a_email' and token `a_token' and platform `a_platform'.
 		local
 			l_parameters: HASH_TABLE [ANY, STRING_32]
@@ -1578,7 +1578,7 @@ feature -- Basic Operations
 			post_execution
 		end
 
-	retrieve_download_details (a_token: READABLE_STRING_32): detachable TUPLE[email: READABLE_STRING_32; platform: READABLE_STRING_32; username: READABLE_STRING_32; org_name: READABLE_STRING_32; phone: READABLE_STRING_32; org_email: READABLE_STRING_32; date: DATE_TIME; company: READABLE_STRING_32;first_name: READABLE_STRING_32; last_name: READABLE_STRING_32]
+	retrieve_download_details (a_token: READABLE_STRING_32): detachable TUPLE [email: READABLE_STRING_8; platform: READABLE_STRING_8; username: READABLE_STRING_32; org_name: READABLE_STRING_32; phone: READABLE_STRING_8; org_email: READABLE_STRING_8; date: DATE_TIME; company: READABLE_STRING_32; first_name: READABLE_STRING_32; last_name: READABLE_STRING_32]
 			-- Retrieve download details as tuple with email and platform for a given token `a_token', if any.
 		local
 			l_parameters: STRING_TABLE [ANY]
@@ -1588,7 +1588,7 @@ feature -- Basic Operations
 				log.write_information (generator + ".retrieve_download_details")
 			end
 			create l_parameters.make (1)
-			l_parameters.put (l_encode.encode (string_parameter(a_token,50)), {DATA_PARAMETERS_NAMES}.Token_param)
+			l_parameters.put (l_encode.encoded_string (string_parameter(a_token,50)), {DATA_PARAMETERS_NAMES}.Token_param)
 			db_handler.set_query (create {DATABASE_QUERY}.data_reader (Select_download_details, l_parameters))
 			db_handler.execute_query
 			if not db_handler.after then
@@ -1600,10 +1600,10 @@ feature -- Basic Operations
 				if attached  db_handler.read_string (2) as l_platform then
 					Result.platform := l_platform
 				end
-				if attached  db_handler.read_string (3) as l_username then
+				if attached  db_handler.read_string_32 (3) as l_username then
 					Result.username := l_username
 				end
-				if attached  db_handler.read_string (4) as l_org_name then
+				if attached  db_handler.read_string_32 (4) as l_org_name then
 					Result.org_name := l_org_name
 				end
 				if attached  db_handler.read_string (5) as l_phone then
@@ -1615,23 +1615,23 @@ feature -- Basic Operations
 				if attached  db_handler.read_date_time (7) as l_date then
 					Result.date := l_date
 				end
-				if attached  db_handler.read_string (8) as l_username then
+				if attached  db_handler.read_string_32 (8) as l_username then
 					Result.username := l_username
 				end
-				if attached  db_handler.read_string (9) as l_company then
+				if attached  db_handler.read_string_32 (9) as l_company then
 					Result.company := l_company
 				end
-				if attached  db_handler.read_string (10) as l_first_name then
+				if attached  db_handler.read_string_32 (10) as l_first_name then
 					Result.first_name := l_first_name
 				end
-				if attached  db_handler.read_string (11) as l_last_name then
+				if attached  db_handler.read_string_32 (11) as l_last_name then
 					Result.last_name := l_last_name
 				end
 			end
 			post_execution
 		end
 
-	retrieve_temporary_download_details (a_token: READABLE_STRING_32): detachable TUPLE[email: READABLE_STRING_32; platform: READABLE_STRING_32; username: READABLE_STRING_32; date: DATE_TIME; company: READABLE_STRING_32; first_name: READABLE_STRING_32; last_name: READABLE_STRING_32]
+	retrieve_temporary_download_details (a_token: READABLE_STRING_32): detachable TUPLE [email: READABLE_STRING_8; platform: READABLE_STRING_8; username: READABLE_STRING_32; date: DATE_TIME; company: READABLE_STRING_32; first_name: READABLE_STRING_32; last_name: READABLE_STRING_32]
 			-- Retrieve download details as tuple with email and platform for a given token `a_token', if any.
 		local
 			l_parameters: STRING_TABLE [ANY]
@@ -1641,7 +1641,7 @@ feature -- Basic Operations
 				log.write_information (generator + ".retrieve_download_details")
 			end
 			create l_parameters.make (1)
-			l_parameters.put (l_encode.encode (string_parameter(a_token,50)), {DATA_PARAMETERS_NAMES}.Token_param)
+			l_parameters.put (l_encode.encoded_string (string_parameter(a_token,50)), {DATA_PARAMETERS_NAMES}.Token_param)
 			db_handler.set_query (create {DATABASE_QUERY}.data_reader (Select_temporary_download_details, l_parameters))
 			db_handler.execute_query
 			if not db_handler.after then
@@ -1653,19 +1653,19 @@ feature -- Basic Operations
 				if attached  db_handler.read_string (2) as l_platform then
 					Result.platform := l_platform
 				end
-				if attached  db_handler.read_string (3) as l_username then
+				if attached  db_handler.read_string_32 (3) as l_username then
 					Result.username := l_username
 				end
 				if attached  db_handler.read_date_time (4) as l_date then
 					Result.date := l_date
 				end
-				if attached  db_handler.read_string (5) as l_company then
+				if attached  db_handler.read_string_32 (5) as l_company then
 					Result.company := l_company
 				end
-				if attached  db_handler.read_string (6) as l_first_name then
+				if attached  db_handler.read_string_32 (6) as l_first_name then
 					Result.first_name := l_first_name
 				end
-				if attached  db_handler.read_string (7) as l_last_name then
+				if attached  db_handler.read_string_32 (7) as l_last_name then
 					Result.last_name := l_last_name
 				end
 			end
@@ -1673,7 +1673,7 @@ feature -- Basic Operations
 		end
 
 
-	add_contacts_temporary (a_first_name, a_last_name, a_email: READABLE_STRING_32; a_newsletter: INTEGER)
+	add_contacts_temporary (a_first_name, a_last_name: READABLE_STRING_32; a_email: READABLE_STRING_8; a_newsletter: INTEGER)
 			-- Add a contact temporary with first_name `a_first_name', last_name to `a_last_name' and email to `a_email'.
 		local
 			l_parameters: HASH_TABLE [ANY, STRING_32]
@@ -1692,7 +1692,7 @@ feature -- Basic Operations
 			post_execution
 		end
 
-	add_temporary_contacts_to_contacts ( a_email: READABLE_STRING_32)
+	add_temporary_contacts_to_contacts (a_email: READABLE_STRING_8)
 			-- Add a temporary contact with email  `a_email' to contacts.
 		local
 			l_parameters: HASH_TABLE [ANY, STRING_32]
@@ -1707,7 +1707,7 @@ feature -- Basic Operations
 			post_execution
 		end
 
-	register_newsletter ( a_email: READABLE_STRING_32)
+	register_newsletter (a_email: READABLE_STRING_8)
 			-- Register a contact with email `a_email' to the newsletter.
 		local
 			l_parameters: HASH_TABLE [ANY, STRING_32]
@@ -1912,9 +1912,9 @@ feature -- Status Report
 			end
 		end
 
-	download_expiration_token_age (a_token: STRING ): INTEGER
+	download_expiration_token_age (a_token: READABLE_STRING_GENERAL): INTEGER
 		local
-			l_parameters: HASH_TABLE[ANY,STRING_32]
+			l_parameters: HASH_TABLE [ANY, STRING_32]
 		do
 			debug
 				log.write_information (generator + ".download_expiration_token_age")
@@ -1933,7 +1933,7 @@ feature -- Status Report
 
 	download_expiration_token_age_2 (a_token: STRING ): INTEGER
 		local
-			l_parameters: STRING_TABLE[STRING_32]
+			l_parameters: STRING_TABLE [STRING_32]
 			l_encoder: DATABASE_SQL_SERVER_ENCODER
 		do
 			create l_encoder
@@ -1942,7 +1942,7 @@ feature -- Status Report
 				log.write_information (generator + ".download_expiration_token_age_2")
 			end
 			create l_parameters.make (1)
-			l_parameters.put (l_encoder.encode (string_parameter(a_token,50)), {DATA_PARAMETERS_NAMES}.Token_param)
+			l_parameters.put (l_encoder.encoded_string (string_parameter(a_token,50)), {DATA_PARAMETERS_NAMES}.Token_param)
 			db_handler.set_query (create {DATABASE_QUERY}.data_reader (select_download_expiration, l_parameters))
 			db_handler.execute_query
 			if not db_handler.after then

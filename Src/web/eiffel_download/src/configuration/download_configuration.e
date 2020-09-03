@@ -9,10 +9,10 @@ class
 
 feature -- Access
 
-	mirror: detachable READABLE_STRING_32
+	mirror: detachable READABLE_STRING_8
 		-- url mirror.
 
-	products: detachable LIST[DOWNLOAD_PRODUCT]
+	products: detachable LIST [DOWNLOAD_PRODUCT]
 		-- Possible list of product downloads.
 
 feature -- Element Change

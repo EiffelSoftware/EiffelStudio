@@ -14,7 +14,7 @@
 			<concurrency support="thread"/>
 		</capability>
 		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf"/>
-		<library name="core" location="..\support\core\esa_core.ecf"/>
+		<library name="core" location="..\support\core\esa_core.ecf" readonly="false"/>
 		<library name="db" location="..\support\db\esa_db.ecf" readonly="false"/>
 		<library name="encoder" location="$ISE_LIBRARY\contrib\library\web\framework\ewf\text\encoder\encoder.ecf"/>
 		<library name="http" location="$ISE_LIBRARY\contrib\library\network\protocol\http\http.ecf"/>
@@ -23,6 +23,7 @@
 		<library name="notification_email" location="$ISE_LIBRARY\contrib\library\runtime\process\notification_email\notification_email.ecf"/>
 		<library name="smarty" location="$ISE_LIBRARY\contrib\library\text\template\smarty\smarty.ecf"/>
 		<library name="time" location="$ISE_LIBRARY\library\time\time.ecf"/>
+		<library name="uri" location="$ISE_LIBRARY\library\text\uri\uri.ecf"/>
 		<library name="wsf" location="$ISE_LIBRARY\contrib\library\web\framework\ewf\wsf\wsf.ecf"/>
 		<library name="wsf_extension" location="$ISE_LIBRARY\contrib\library\web\framework\ewf\wsf\wsf_extension.ecf"/>
 	</target>

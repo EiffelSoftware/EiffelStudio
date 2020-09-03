@@ -4,10 +4,9 @@ note
 	revision: "$Revision$"
 
 class
-	JSON_CONFIGURATION
+	APP_JSON_CONFIGURATION
 
 inherit
-
 	JSON_PARSER_ACCESS
 
 feature -- Application Configuration
@@ -107,11 +106,12 @@ feature -- Application Configuration
 		end
 
 
-	new_smtp_configuration (a_path: PATH): READABLE_STRING_32
+	new_smtp_configuration (a_path: PATH): READABLE_STRING_8
 			-- Build a new smtp server configuration.
 		local
 			l_parser: JSON_PARSER
-			l_result: STRING_32
+			l_result: STRING_8
+			utf: UTF_CONVERTER
 		do
 			create l_result.make_empty
 			if attached json_file_from (a_path) as json_file then
@@ -121,7 +121,7 @@ feature -- Application Configuration
 					attached {JSON_OBJECT} jv.item ("smtp") as l_smtp and then
 					attached {JSON_STRING} l_smtp.item ("server") as l_server
 				then
-					l_result := l_server.item
+					l_result := l_server.unescaped_string_8
 					if
 						attached {JSON_STRING} l_smtp.item ("username") as l_username and then
 						attached {JSON_STRING} l_smtp.item ("password") as l_password and then
@@ -129,9 +129,9 @@ feature -- Application Configuration
 						not l_password.item.is_empty
 					then
 						l_result.prepend_character ('@')
-						l_result.prepend (l_password.item)
+						l_result.prepend (utf.utf_32_string_to_utf_8_string_8 (l_password.item))
 						l_result.prepend_character (':')
-						l_result.prepend (l_username.item)
+						l_result.prepend (utf.utf_32_string_to_utf_8_string_8 (l_username.item))
 					end
 				end
 			end
@@ -145,14 +145,16 @@ feature -- Application Configuration
 		do
 			if attached json_file_from (a_path) as json_file then
 				l_parser := new_json_parser (json_file)
-				if attached {JSON_OBJECT} l_parser.next_parsed_json_value as jv and then l_parser.is_valid and then
+				if
+					attached {JSON_OBJECT} l_parser.next_parsed_json_value as jv and then l_parser.is_valid and then
 					attached {JSON_OBJECT} jv.item ("database") as l_database and then
 					attached {JSON_OBJECT} l_database.item ("datasource") as l_datasource and then
 					attached {JSON_STRING} l_datasource.item ("driver") as l_driver and then
-					attached {JSON_STRING} l_datasource.item ("environment") as l_envrionment and then
+					attached {JSON_STRING} l_datasource.item ("environment") as l_env and then
 					attached {JSON_OBJECT} l_database.item ("environments") as l_environments and then
-					attached {JSON_OBJECT} l_environments.item (l_envrionment.item) as l_environment_selected and then
-					attached {JSON_STRING} l_environment_selected.item ("connection_string") as l_connection_string then
+					attached {JSON_OBJECT} l_environments.item (l_env.item) as l_environment_selected and then
+					attached {JSON_STRING} l_environment_selected.item ("connection_string") as l_connection_string
+				then
 					create Result.make (l_driver.item, l_connection_string.unescaped_string_8)
 				end
 			end

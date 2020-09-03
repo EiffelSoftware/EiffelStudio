@@ -26,7 +26,6 @@ feature {NONE} -- Initialization
 		require
 			a_pay.has_id
 		local
-			i: INTEGER
 			ch: STRIPE_PAYMENT_CHARGE
 		do
 			make (a_pay.invoice, a_customer)

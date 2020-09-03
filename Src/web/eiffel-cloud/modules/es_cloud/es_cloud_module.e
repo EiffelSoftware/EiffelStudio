@@ -660,11 +660,11 @@ feature -- Hooks: block
 							l_html.append (utf_8_encoded (l_desc))
 							l_html.append ("</header></div>")
 						end
-						l_html.append ("<div class=%"actions%">")
-						l_html.append ("<button formmethod=%"post%" formaction=%""+ api.cms_api.location_url ("/try_now", Void)
-							 + "%" type=%"submit%" class=%"try%">Try now</button>")
---						l_html.append ("<a href=%"" + api.cms_api.location_url ("/try_now", Void) + "%">Try now</a>")
-						l_html.append ("</div>") -- actions
+--						l_html.append ("<div class=%"actions%">")
+--						l_html.append ("<button formmethod=%"post%" formaction=%""+ api.cms_api.location_url ("/try_now", Void)
+--							 + "%" type=%"submit%" class=%"try%">Try now</button>")
+----						l_html.append ("<a href=%"" + api.cms_api.location_url ("/try_now", Void) + "%">Try now</a>")
+--						l_html.append ("</div>") -- actions
 						l_html.append ("</div>") -- plan
 					end
 				end

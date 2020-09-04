@@ -284,6 +284,11 @@ feature -- Element change: license
 			l_is_new: BOOLEAN
 		do
 			l_is_new := not a_license.has_id
+			if l_is_new and then attached license_by_key (a_license.key) as l_existing_license then
+					-- Prevent multiple license with same key !!!
+				l_is_new := False
+				a_license.update_id (l_existing_license.id)
+			end
 			reset_error
 			if l_is_new then
 				create l_params.make (8)

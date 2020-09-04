@@ -1,0 +1,12 @@
+test_name pretty-feature-call
+test_description Arguments of a feature call should be properly spaced.
+
+copy_raw test.e $CLUSTER test.e
+
+preference	pretty_printer.line_processing wrap
+preference	pretty_printer.loop_expression_style keep
+prettify	test.e prettify_output
+compile_result ok
+compare		prettify_output test.e
+
+test_end

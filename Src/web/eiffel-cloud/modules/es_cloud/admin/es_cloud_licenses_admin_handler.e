@@ -140,6 +140,7 @@ feature -- Execution
 						s.append ("%">")
 						s.append (html_encoded (lic.key))
 						s.append ("</a>")
+						s.append ("<!-- " + lic.id.out + " -->")
 						s.append ("</td>")
 						s.append ("<td>")
 --						if l_org /= Void then

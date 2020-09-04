@@ -1668,7 +1668,7 @@ feature {AST_VISITOR} -- Expressions
 				safe_process (l_as.dot_symbol (match_list))
 			end
 			safe_process (l_as.feature_name)
-			safe_process (l_as.internal_operands)
+			safe_process_and_print (l_as.internal_operands, " ", "")
 		end
 
 	process_inline_agent_creation_as (l_as: INLINE_AGENT_CREATION_AS)

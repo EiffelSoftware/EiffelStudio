@@ -216,11 +216,11 @@ feature {NONE} -- Initialization
 	test_user_from_email
 		local
 			l_db: LOGIN_DATA_PROVIDER
-			l_tuple: detachable TUPLE[STRING,STRING,STRING]
+			l_tuple: detachable TUPLE [first_name: READABLE_STRING_32; last_name: READABLE_STRING_32; user_name: READABLE_STRING_32]
 		do
 			create l_db.make (connection)
 			l_db.connect
-			l_tuple := l_db.user_from_email ("javier.hector@gmail.com")
+			l_tuple := l_db.user_from_email ("test@test.com")
 			print (l_tuple.at (1).out +"%N")
 			print (l_tuple.at (2).out +"%N")
 			print (l_tuple.at (3).out +"%N")

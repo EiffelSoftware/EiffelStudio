@@ -17,7 +17,7 @@ feature -- Test
 		local
 			l_enc: DATABASE_SQL_SERVER_ENCODER
 		do
-			assert ("Expected [data]", (l_enc.encode ("'data'")).same_string("[data]"))
+			assert ("Expected [data]", (l_enc.encoded_string ("'data'")).same_string("[data]"))
 		end
 
 	test_escape_quotes_and_braces
@@ -26,7 +26,7 @@ feature -- Test
 		local
 			l_enc: DATABASE_SQL_SERVER_ENCODER
 		do
-			assert ("Expected [data]", (l_enc.encode ("'this data needs to be escaped: ] '")).same_string("[this data needs to be escaped: ]] ]"))
+			assert ("Expected [data]", (l_enc.encoded_string ("'this data needs to be escaped: ] '")).same_string("[this data needs to be escaped: ]] ]"))
 		end
 
 
@@ -37,7 +37,7 @@ feature -- Test
 		local
 			l_enc: DATABASE_SQL_SERVER_ENCODER
 		do
-			assert ("Expected [data]", (l_enc.encode ("data")).same_string("[data]"))
+			assert ("Expected [data]", (l_enc.encoded_string ("data")).same_string("[data]"))
 		end
 
 

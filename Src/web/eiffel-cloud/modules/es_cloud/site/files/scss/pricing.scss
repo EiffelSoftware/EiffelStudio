@@ -7,9 +7,9 @@ div.plans {
 
 	&> div {
 		width: 25%;
-		margin: 20px;
+		margin: .5rem;
 		padding: 20px;
-		flex: 1;
+		flex-grow: 2;
 		border: solid 1px #999;
 		background-color: #fff;
 	}

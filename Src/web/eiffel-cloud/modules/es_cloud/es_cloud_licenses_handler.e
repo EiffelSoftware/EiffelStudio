@@ -80,7 +80,7 @@ feature -- Execution
 			else
 				r.add_style (r.module_name_resource_url ({ES_CLOUD_MODULE}.name, "/files/css/es_cloud.css", Void), Void)
 
-				s.append ("<h2>Buy a new license</h2>")
+				s.append ("<h2>Buy a license</h2>")
 
 				if attached es_cloud_module.new_store_block (es_cloud_api, r) as bl then
 					r.add_block (bl, "content")

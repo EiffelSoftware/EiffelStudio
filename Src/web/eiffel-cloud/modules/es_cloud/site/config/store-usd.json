@@ -1,56 +1,123 @@
 {
-	"perso-oneyear": {
-		"plan": "perso",
-		"title": "Personal (one-year)",
-		"price": 145,
-		"currency": "usd",
-		"interval": "onetime",
-		"duration": "12",
-		"status": "published"
-	},
-	"perso-mly": {
-		"plan": "perso",
-		"title": "Personal (monthly)",
-		"price": 14,
-		"price.cents": 50,
-		"currency": "usd",
-		"interval": "month",
-		"status": "published"
-	},
-	"pro-oneyear": {
-		"plan": "pro",
-		"title": "Professional (one-year)",
-		"price": 495,
-		"currency": "usd",
-		"interval": "onetime",
-		"duration": "12",
-		"status": "published"
-	},
-	"pro-mly": {
-		"plan": "pro",
-		"title": "Professional (monthly)",
-		"price": 49,
-		"price.cents": 50,
-		"currency": "usd",
-		"interval": "month",
-		"status": "published"
-	},
-	"proplus-oneyear": {
-		"plan": "pro+",
-		"title": "Professional+ (one-year)",
-		"price": 799,
-		"currency": "usd",
-		"interval": "onetime",
-		"duration": "12",
-		"status": "published"
-	},
-	"proplus-mly": {
-		"plan": "pro+",
-		"title": "Professional+ (monthly)",
-		"price": 79,
-		"price.cents": 50,
-		"currency": "usd",
-		"interval": "month",
-		"status": "published"
-	}
+        "perso-oneyear": {
+                "plan": "perso",
+                "title": "Personal (one-year)",
+                "price": 145,
+                "currency": "usd",
+                "interval": "onetime",
+                "duration": "12",
+                "status": "published"
+        },
+        "perso-mly": {
+                "plan": "perso",
+                "title": "Personal (monthly)",
+                "price": 14,
+                "price.cents": 50,
+                "currency": "usd",
+                "interval": "month",
+                "status": "published"
+        },
+        "pro-oneyear": {
+                "plan": "pro",
+                "title": "Professional (one-year)",
+                "price": 495,
+                "currency": "usd",
+                "interval": "onetime",
+                "duration": "12",
+                "status": "published"
+        },
+        "pro-mly": {
+                "plan": "pro",
+                "title": "Professional (monthly)",
+                "price": 49,
+                "price.cents": 50,
+                "currency": "usd",
+                "interval": "month",
+                "status": "published"
+        },
+        "proplus-oneyear": {
+                "plan": "pro+",
+                "title": "Professional+ (one-year)",
+                "price": 795,
+                "currency": "usd",
+                "interval": "onetime",
+                "duration": "12",
+                "status": "published"
+        },
+        "proplus-mly": {
+                "plan": "pro+",
+                "title": "Professional+ (monthly)",
+                "price": 79,
+                "price.cents": 50,
+                "currency": "usd",
+                "interval": "month",
+                "status": "published"
+        },
+
+
+        "perso-2pf-oneyear": {
+                "plan": "perso-2pf",
+                "title": "Personal 2 platforms (one-year)",
+                "price": 175,
+                "currency": "usd",
+                "interval": "onetime",
+                "duration": "12",
+                "status": "published"
+        },
+        "perso-2pf-mly": {
+                "plan": "perso-2pf",
+                "title": "Personal 2 platforms (monthly)",
+                "price": 17,
+                "price.cents": 50,
+                "currency": "usd",
+                "interval": "month",
+                "status": "published"
+        },
+        "pro-2pf-oneyear": {
+                "plan": "pro-2pf",
+                "title": "Professional (one-year)",
+                "price": 645,
+                "currency": "usd",
+                "interval": "onetime",
+                "duration": "12",
+                "status": "published"
+        },
+        "pro-2pf-mly": {
+                "plan": "pro-2pf",
+                "title": "Professional (monthly)",
+                "price": 64,
+                "price.cents": 50,
+                "currency": "usd",
+                "interval": "month",
+                "status": "published"
+        },
+        "proplus-2pf-oneyear": {
+                "plan": "pro+-2pf",
+                "title": "Professional+ (one-year)",
+                "price": 1195,
+                "currency": "usd",
+                "interval": "onetime",
+                "duration": "12",
+                "status": "published"
+        },
+        "proplus-2pf-mly": {
+                "plan": "pro+-2pf",
+                "title": "Professional+ (monthly)",
+                "price": 119,
+                "price.cents": 50,
+                "currency": "usd",
+                "interval": "month",
+                "status": "published"
+        },
+
+
+        "perso-dly": {
+                "plan": "perso",
+                "title": "Personal (daily)",
+                "price": 2,
+                "price.cents": 0,
+                "currency": "usd",
+                "interval": "day",
+                "status": "test"
+        }
 }

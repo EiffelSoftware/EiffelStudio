@@ -55,8 +55,8 @@
         },
 
 
-        "perso-2pf-oneyear": {
-                "plan": "perso-2pf",
+        "perso_2pf-oneyear": {
+                "plan": "perso_2pf",
                 "title": "Personal 2 platforms (one-year)",
                 "price": 175,
                 "currency": "usd",
@@ -64,8 +64,8 @@
                 "duration": "12",
                 "status": "published"
         },
-        "perso-2pf-mly": {
-                "plan": "perso-2pf",
+        "perso_2pf-mly": {
+                "plan": "perso_2pf",
                 "title": "Personal 2 platforms (monthly)",
                 "price": 17,
                 "price.cents": 50,
@@ -73,37 +73,93 @@
                 "interval": "month",
                 "status": "published"
         },
-        "pro-2pf-oneyear": {
-                "plan": "pro-2pf",
-                "title": "Professional (one-year)",
+        "pro_2pf-oneyear": {
+                "plan": "pro_2pf",
+                "title": "Professional 2 platforms (one-year)",
                 "price": 645,
                 "currency": "usd",
                 "interval": "onetime",
                 "duration": "12",
                 "status": "published"
         },
-        "pro-2pf-mly": {
-                "plan": "pro-2pf",
-                "title": "Professional (monthly)",
+        "pro_2pf-mly": {
+                "plan": "pro_2pf",
+                "title": "Professional 2 platforms (monthly)",
                 "price": 64,
                 "price.cents": 50,
                 "currency": "usd",
                 "interval": "month",
                 "status": "published"
         },
-        "proplus-2pf-oneyear": {
-                "plan": "pro+-2pf",
-                "title": "Professional+ (one-year)",
+        "proplus_2pf-oneyear": {
+                "plan": "pro+_2pf",
+                "title": "Professional+ 2 platforms (one-year)",
                 "price": 1195,
                 "currency": "usd",
                 "interval": "onetime",
                 "duration": "12",
                 "status": "published"
         },
-        "proplus-2pf-mly": {
-                "plan": "pro+-2pf",
-                "title": "Professional+ (monthly)",
+        "proplus_2pf-mly": {
+                "plan": "pro+_2pf",
+                "title": "Professional+ 2 platforms (monthly)",
                 "price": 119,
+                "price.cents": 50,
+                "currency": "usd",
+                "interval": "month",
+                "status": "published"
+        },
+
+
+        "perso_3pf-oneyear": {
+                "plan": "perso_3pf",
+                "title": "Personal 3 platforms (one-year)",
+                "price": 195,
+                "currency": "usd",
+                "interval": "onetime",
+                "duration": "12",
+                "status": "published"
+        },
+        "perso_3pf-mly": {
+                "plan": "perso_3pf",
+                "title": "Personal 3 platforms (monthly)",
+                "price": 19,
+                "price.cents": 50,
+                "currency": "usd",
+                "interval": "month",
+                "status": "published"
+        },
+        "pro_3pf-oneyear": {
+                "plan": "pro_3pf",
+                "title": "Professional 3 platforms (one-year)",
+                "price": 745,
+                "currency": "usd",
+                "interval": "onetime",
+                "duration": "12",
+                "status": "published"
+        },
+        "pro_3pf-mly": {
+                "plan": "pro_3pf",
+                "title": "Professional 3 platforms (monthly)",
+                "price": 74,
+                "price.cents": 50,
+                "currency": "usd",
+                "interval": "month",
+                "status": "published"
+        },
+        "proplus_3pf-oneyear": {
+                "plan": "pro+_3pf",
+                "title": "Professional+ 3 platforms (one-year)",
+                "price": 1495,
+                "currency": "usd",
+                "interval": "onetime",
+                "duration": "12",
+                "status": "published"
+        },
+        "proplus_3pf-mly": {
+                "plan": "pro+_3pf",
+                "title": "Professional+ 3 platforms (monthly)",
+                "price": 149,
                 "price.cents": 50,
                 "currency": "usd",
                 "interval": "month",

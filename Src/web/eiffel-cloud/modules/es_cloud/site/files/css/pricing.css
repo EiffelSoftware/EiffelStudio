@@ -12,6 +12,8 @@ div.plans {
     border: solid 1px #999;
     background-color: #fff; }
 
+div.plan h2 {
+  font-size: 140%; }
 div.plan div.actions {
   margin-top: 10px;
   padding: 10px;

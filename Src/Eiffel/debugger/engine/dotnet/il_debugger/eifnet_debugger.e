@@ -517,7 +517,7 @@ feature {EIFNET_DEBUGGER} -- Callback notification about synchro
 				set_last_process_by_pointer (p)
 				p := dbg_cb_info_pointer_item (2) -- p_app_domain
 				debug ("debugger_trace_callback_data")
-					io.error.put_string ((create {ICOR_DEBUG_APP_DOMAIN}.make_by_pointer (p)).get_name + "%N")
+					io.error.put_string ({UTF_CONVERTER}.utf_32_string_to_utf_8_string_8 ((create {ICOR_DEBUG_APP_DOMAIN}.make_by_pointer (p)).get_name) + "%N")
 				end
 				r := {ICOR_DEBUG_APP_DOMAIN}.cpp_is_attached (p, $i)
 				if not i.to_boolean then
@@ -1576,7 +1576,7 @@ feature -- Easy access
 		require
 			a_class_c_not_void: a_class_c /= Void
 		local
-			n: STRING
+			n: READABLE_STRING_GENERAL
 			m: ICOR_DEBUG_MODULE
 			mods: like {EIFNET_DEBUGGER_INFO}.loaded_modules
 		do
@@ -1955,7 +1955,7 @@ feature -- Specific function evaluation
 					if l_icdov /= Void then
 							--| the result should be a STRING instance
 						if attached string_value_from_string_class_value (debugger_manager.compiler_data.string_8_class_c, l_icd, l_icdov, 0, -1) as l_s32 then
-							Result := l_s32.as_string_8
+							Result := l_s32.to_string_8
 						end
 						l_icdov.clean_on_dispose
 					end
@@ -2510,7 +2510,7 @@ feature {NONE} -- External
 			-- Value for C externals to have an infinite wait
 
 note
-	copyright:	"Copyright (c) 1984-2019, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2020, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

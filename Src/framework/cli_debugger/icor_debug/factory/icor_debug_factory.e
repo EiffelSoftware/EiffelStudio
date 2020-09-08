@@ -13,7 +13,7 @@ inherit
 
 feature {ICOR_EXPORTER} -- Initialization
 		
-	new_cordebug_pointer_for (a_dbg_version: STRING): POINTER
+	new_cordebug_pointer_for (a_dbg_version: READABLE_STRING_GENERAL): POINTER
 			-- Create a new instance of ICorDebug for `a_dbg_version'.
 		local
 			l_hr: INTEGER

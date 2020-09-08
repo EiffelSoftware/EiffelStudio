@@ -109,7 +109,7 @@ feature {ICOR_EXPORTER} -- Meta Data queries
 
 feature {ICOR_EXPORTER} -- Access
 
-	name: STRING
+	name: STRING_32
 			-- Module's name
 		do
 			Result := private_name
@@ -118,7 +118,7 @@ feature {ICOR_EXPORTER} -- Access
 					Result := l_name
 				else
 					check module_has_name: False end
-					create Result.make_from_string ("Module-" + item.out + "-")
+					create Result.make_from_string_general ("Module-" + item.out + "-")
 				end
 				private_name := Result
 			else
@@ -126,7 +126,7 @@ feature {ICOR_EXPORTER} -- Access
 			end
 		end
 
-	module_name: STRING
+	module_name: STRING_32
 			-- Only the module name
 			-- remove the path
 		require
@@ -141,15 +141,15 @@ feature {ICOR_EXPORTER} -- Access
 			end
 		end
 
-	has_short_name (n: STRING): BOOLEAN
+	has_short_name (n: READABLE_STRING_GENERAL): BOOLEAN
 			-- Is Current's short name `n' ?
 			-- i.e: is `get_name' ends with `n.dll' or `n.exe' ?
 		local
-			en: STRING
-			mn: STRING
+			en: STRING_32
+			mn: STRING_32
 			i,j: INTEGER
 		do
-			create en.make_from_string (n)
+			create en.make_from_string_general (n)
 			en.append (".dll")
 
 			mn := name

@@ -460,9 +460,9 @@ feature -- Remote access to RT_
 				icdv := rto.icd_referenced_value
 				icdf := rto.icd_value_info.value_icd_function ("object_loaded_from")
 				if icdf /= Void then
-					if 
+					if
 						oa /= Void and then
-						attached {EIFNET_ABSTRACT_DEBUG_VALUE} kept_object_item (oa) as dv 
+						attached {EIFNET_ABSTRACT_DEBUG_VALUE} kept_object_item (oa) as dv
 					then
 						i_ref := dv.icd_referenced_value
 					end
@@ -839,7 +839,7 @@ feature -- Query
 	get_exception_value_details	(e: EXCEPTION_DEBUG_VALUE; a_details_level: INTEGER)
 			-- Get Exception details
 		local
-			tn: STRING
+			tn: STRING_32
 			s32: STRING_32
 			k: STRING
 			edv: DUMP_VALUE
@@ -862,7 +862,7 @@ feature -- Query
 					if e.exception_others /= Void and then e.exception_others.has (k) then
 						s32 := e.exception_others.item (k)
 						if s32 /= Void then
-							tn := s32.as_string_8
+							tn := s32
 						end
 					else
 						if e.has_value then
@@ -874,7 +874,7 @@ feature -- Query
 					if e.exception_type_name = Void then
 						e.set_exception_type_name (cl.name_in_upper)
 						if tn /= Void and e.exception_type_name = Void then
-							e.set_exception_type_name (tn)
+							e.set_exception_type_name ({UTF_CONVERTER}.utf_32_string_to_utf_8_string_8 (tn))
 						end
 					end
 
@@ -1288,7 +1288,7 @@ feature {NONE} -- Implementation
 				l_str.append_string ("]")
 				l_str.append_string ("%N")
 
-				l_str.append_string ("%T module_name="+Il_debug_info_recorder.module_file_name_for_class (l_class_c).name.as_string_8)
+				l_str.append_string ("%T module_name="+ {UTF_CONVERTER}.utf_32_string_to_utf_8_string_8 (Il_debug_info_recorder.module_file_name_for_class (l_class_c).name))
 			end
 
 			print (l_str)
@@ -1703,7 +1703,7 @@ feature {NONE} -- Constants for dotnet interactions
 			-- {EXCEPTION_MANAGER}.wrapped_exception feature name (for dotnet)
 
 ;note
-	copyright:	"Copyright (c) 1984-2013, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2020, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

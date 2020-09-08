@@ -33,7 +33,7 @@ feature {EIFNET_DEBUGGER_INFO_ACCESSOR} -- Access
 		do
 			debug ("debugger_trace_breakpoint")
 				io.error.put_string ("Request Add BP - line=" + a_line.to_hex_string+ "%N")
-				io.error.put_string ("%T Module = " + a_module_name.as_string_8 + " %N")
+				io.error.put_string ("%T Module = " + {UTF_CONVERTER}.utf_32_string_to_utf_8_string_8 (a_module_name) + " %N")
 				io.error.put_string ("%T ClassToken = "+ a_class_token.out + "~0x" + a_class_token.to_hex_string+" %N")
 				io.error.put_string ("%T FeatureTok = "+ a_feature_token.out + "~0x" + a_feature_token.to_hex_string+" %N")
 				io.error.put_string ("%N")
@@ -55,13 +55,13 @@ feature {EIFNET_DEBUGGER_INFO_ACCESSOR} -- Access
 			l_icd_bp: ICOR_DEBUG_BREAKPOINT
 		do
 			debug ("debugger_trace_breakpoint")
-				io.error.put_string ("Request Remove BP - line=" + a_line.to_hex_string+ "%N")
-				io.error.put_string ("%T Module = "+a_module_name.as_string_8+" %N")
-				io.error.put_string ("%T ClassToken = "+ a_class_token.out + "~0x" + a_class_token.to_hex_string+" %N")
-				io.error.put_string ("%T FeatureTok = "+ a_feature_token.out + "~0x" + a_feature_token.to_hex_string+" %N")
+				io.error.put_string ("Request Remove BP - line=" + a_line.to_hex_string + "%N")
+				io.error.put_string ("%T Module = "+ a_module_name.to_string_8 +" %N")
+				io.error.put_string ("%T ClassToken = "+ a_class_token.out + "~0x" + a_class_token.to_hex_string +" %N")
+				io.error.put_string ("%T FeatureTok = "+ a_feature_token.out + "~0x" + a_feature_token.to_hex_string +" %N")
 				io.error.put_string ("%N")
 			end
-			create l_bp.make (a_bp_loc, resolved_module_key (a_module_name.as_string_32), a_class_token, a_feature_token, a_line)
+			create l_bp.make (a_bp_loc, resolved_module_key (a_module_name.to_string_32), a_class_token, a_feature_token, a_line)
 
 			if is_bp_waiting_for_addition (l_bp) then
 				--| The breakpoint has not yet been enabled on the dotnet side
@@ -110,7 +110,7 @@ feature {NONE} -- Initialization
 
 feature {NONE} -- List operation
 
-	is_module_waiting_for_addition (a_module: STRING): BOOLEAN
+	is_module_waiting_for_addition (a_module: READABLE_STRING_GENERAL): BOOLEAN
 			-- Is `a_module' on the waiting queue for breakpoints addition ?
 		require
 			a_module /= Void and then not a_module.is_empty
@@ -124,7 +124,7 @@ feature {NONE} -- List operation
 			a_bp /= Void
 		local
 			l_bp_for_addition: ARRAYED_LIST [EIFNET_BREAKPOINT]
-			l_module_key: STRING
+			l_module_key: STRING_32
 		do
 			l_module_key := a_bp.module_key
 			if is_module_waiting_for_addition (l_module_key) then
@@ -141,7 +141,7 @@ feature {NONE} -- List operation
 			a_bp /= Void
 		local
 			l_bp_for_addition: ARRAYED_LIST [EIFNET_BREAKPOINT]
-			l_module_key: STRING
+			l_module_key: STRING_32
 		do
 			l_module_key := a_bp.module_key
 			if is_module_waiting_for_addition (l_module_key) then
@@ -161,7 +161,7 @@ feature {NONE} -- List operation
 			a_bp /= Void
 		local
 			l_bp_for_addition: ARRAYED_LIST [EIFNET_BREAKPOINT]
-			l_module_key: STRING
+			l_module_key: STRING_32
 		do
 			l_module_key := a_bp.module_key
 			if is_module_waiting_for_addition (l_module_key) then
@@ -271,7 +271,7 @@ feature {NONE} -- Implementation
 		local
 			l_icd_module: ICOR_DEBUG_MODULE
 			l_icd_class: ICOR_DEBUG_CLASS
-			l_module_key_name: STRING
+			l_module_key_name: READABLE_STRING_32
 		do
 			l_module_key_name := a_bp.module_key
 				--| Get CLASS or MODULE info to manage the BreakPoint
@@ -298,7 +298,7 @@ feature {NONE} -- Implementation
 							+ "."
 							+ a_bp.feature_token.out
 							+ " @ module "
-							+ l_module_key_name
+							+ {UTF_CONVERTER}.utf_32_string_to_utf_8_string_8 (l_module_key_name)
 							+ ")%N"
 						)
 				end
@@ -308,7 +308,7 @@ feature {NONE} -- Implementation
 	process_breakpoint_addition_on_module (a_bp: EIFNET_BREAKPOINT; a_icd_module: ICOR_DEBUG_MODULE): BOOLEAN
 		local
 			l_icd_func: ICOR_DEBUG_FUNCTION
-			l_icd_code: ICOR_DEBUG_CODE
+ 			l_icd_code: ICOR_DEBUG_CODE
 			l_icd_bp: ICOR_DEBUG_BREAKPOINT
 		do
 			l_icd_func := a_icd_module.get_function_from_token (a_bp.feature_token)
@@ -343,14 +343,14 @@ feature {NONE} -- Implementation
 
 feature {NONE} -- Classes informations
 
-	loaded_modules: HASH_TABLE [ICOR_DEBUG_MODULE, STRING_32]
+	loaded_modules: STRING_TABLE [ICOR_DEBUG_MODULE]
 			-- ICorDebugModule loaded so far.
 		deferred
 		end
 
 feature {NONE} -- Breakpoints informations
 
-	breakpoints_for_addition_by_module: HASH_TABLE [ARRAYED_LIST [EIFNET_BREAKPOINT], STRING]
+	breakpoints_for_addition_by_module: STRING_TABLE [ARRAYED_LIST [EIFNET_BREAKPOINT]]
 			-- Container for Breakpoint waiting to be added
 
 	breakpoints: HASH_TABLE [EIFNET_BREAKPOINT, EIFNET_BREAKPOINT]
@@ -368,20 +368,16 @@ feature -- debug purpose only
 			l_output := "%N  #===================================%N"
 
 			l_output.append_string ("  *** BP TO ADD *** %N")
-			from
-				breakpoints_for_addition_by_module.start
-			until
-				breakpoints_for_addition_by_module.after
+			across
+				breakpoints_for_addition_by_module as ic
 			loop
-				l_output.append_string ("  + " + breakpoints_for_addition_by_module.key_for_iteration + "%N")
-				l_bp_for_addition := breakpoints_for_addition_by_module.item_for_iteration
+				l_output.append_string ("  + " + {UTF_CONVERTER}.utf_32_string_to_utf_8_string_8 (ic.key) + "%N")
+				l_bp_for_addition := ic.item
 
-				from
-					l_bp_for_addition.start
-				until
-					l_bp_for_addition.after
+				across
+					l_bp_for_addition as bp_ic
 				loop
-					l_bp := l_bp_for_addition.item
+					l_bp := bp_ic.item
 					l_output.append_string ("    - "
 							+ l_bp.class_token.to_hex_string
 							+ "::"
@@ -393,11 +389,8 @@ feature -- debug purpose only
 					else
 						l_output.append_string (" NO DOTNET ")
 					end
-
 					l_output.append_string ("%N")
-					l_bp_for_addition.forth
 				end
-				breakpoints_for_addition_by_module.forth
 			end
 
 			l_output.append_string ("  *** BP -- OK  *** %N")
@@ -428,7 +421,7 @@ feature -- debug purpose only
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2012, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2020, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

@@ -939,12 +939,12 @@ feature -- JIT Module
 		require
 			a_module /= Void
 		local
-			l_module_key_name: STRING
-			l_module_key_name_tail: STRING
+			l_module_key_name: STRING_32
+			l_module_key_name_tail: STRING_32
 			l_module_stored: ICOR_DEBUG_MODULE
 		do
 			debug ("debugger_trace_callback_data")
-				io.error.put_string ("Registering new module : %N  [" + a_module.name + "]%N")
+				io.error.put_string ("Registering new module : %N  [" + {UTF_CONVERTER}.utf_32_string_to_utf_8_string_8 (a_module.name) + "]%N")
 			end
 
 			l_module_key_name := resolved_module_key (a_module.name)
@@ -957,13 +957,13 @@ feature -- JIT Module
 						debug ("debugger_trace_eifnet")
 							io.error.put_string ("WARNING: Reloading same ICorDebugModule %N")
 							io.error.put_string (" address -> " + a_module.item.out + "%N")
-							io.error.put_string ("    name -> " + l_module_key_name + "%N")
+							io.error.put_string ("    name -> " + {UTF_CONVERTER}.utf_32_string_to_utf_8_string_8 (l_module_key_name) + "%N")
 						end
 					else
 						debug ("debugger_trace_eifnet")
 							io.error.put_string ("WARNING: Overwriting same ICorDebugModule %N")
 							io.error.put_string (" address -> " + a_module.item.out + "%N")
-							io.error.put_string ("    name -> " + l_module_key_name + "%N")
+							io.error.put_string ("    name -> " + {UTF_CONVERTER}.utf_32_string_to_utf_8_string_8 (l_module_key_name) + "%N")
 						end
 
 -- FIXME jfiat [2004/07/20] : if a new module is registered, we should keep a list of all modules
@@ -1012,11 +1012,11 @@ feature {EIFNET_DEBUGGER_INFO_ACCESSOR} -- JIT info implementation
 --| and used only for Breakpoint in class contained inside the module from GAC
 			Result := il_debug_info_recorder.resolved_module_key (a_module_name)
 			debug ("debugger_trace_eifnet")
-				io.error.put_string ("Module name key (internal table building):%N (1) " + a_module_name + "%N (2) " + Result + "%N")
+				io.error.put_string ("Module name key (internal table building):%N (1) " + {UTF_CONVERTER}.utf_32_string_to_utf_8_string_8 (a_module_name) + "%N (2) " + Result + "%N")
 			end
 		end
 
-	loaded_modules: HASH_TABLE [ICOR_DEBUG_MODULE, STRING_32]
+	loaded_modules: STRING_TABLE [ICOR_DEBUG_MODULE]
 			-- Loaded modules by the execution
 
 	mscorlid_module: ICOR_DEBUG_MODULE
@@ -1138,7 +1138,7 @@ invariant
 	loaded_managed_threads_not_void: loaded_managed_threads /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2012, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2020, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

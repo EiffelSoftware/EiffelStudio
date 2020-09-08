@@ -28,8 +28,6 @@ feature {NONE} -- Implementation
 			r: EV_GRID_ROW
 			glab: EV_GRID_LABEL_ITEM
 			es_glab: EV_GRID_LABEL_ITEM
-			l_exception_class_detail: STRING
-			l_exception_module_detail: STRING_32
 			l_exception_meaning, l_exception_message: STRING_32
 			l_exception_code: INTEGER
 			appstat: APPLICATION_STATUS
@@ -44,8 +42,8 @@ feature {NONE} -- Implementation
 				row.set_item (1, glab)
 				create glab
 
-				dotnet_status ?= appstat
-				if dotnet_status /= Void then
+				if attached {APPLICATION_STATUS_DOTNET} appstat as l_dotnet_status then
+					dotnet_status := l_dotnet_status
 					if dotnet_status.exception_handled then
 						parent_grid.grid_cell_set_text (glab, Cst_exception_first_chance_text)
 					else
@@ -97,8 +95,7 @@ feature {NONE} -- Implementation
 					end
 
 						--| Type
-					l_exception_class_detail := exc_dv.type_name
-					if l_exception_class_detail /= Void then
+					if attached exc_dv.type_name as l_exception_class_detail then
 						r := parent_grid.extended_new_subrow (row)
 						glab := parent_grid.name_label_item ("Type")
 						parent_grid.grid_cell_set_pixmap (glab, pixmaps.icon_pixmaps.general_mini_error_icon)
@@ -111,8 +108,7 @@ feature {NONE} -- Implementation
 
 					if dotnet_status /= Void then
 							--| IL type name
-						l_exception_class_detail := dotnet_status.exception_il_type_name
-						if l_exception_class_detail /= Void then
+						if attached dotnet_status.exception_il_type_name as l_exception_class_detail then
 							r := parent_grid.extended_new_subrow (row)
 							glab := parent_grid.name_label_item ("IL Type")
 							parent_grid.grid_cell_set_pixmap (glab, pixmaps.icon_pixmaps.general_mini_error_icon)
@@ -123,8 +119,7 @@ feature {NONE} -- Implementation
 							r.set_item (2, es_glab)
 						end
 							--| Module
-						l_exception_module_detail := dotnet_status.exception_module_name
-						if l_exception_module_detail /= Void then
+						if attached dotnet_status.exception_module_name as l_exception_module_detail then
 							r := parent_grid.extended_new_subrow (row)
 							glab := parent_grid.name_label_item (interface_names.l_module)
 							parent_grid.grid_cell_set_pixmap (glab, pixmaps.icon_pixmaps.general_mini_error_icon)
@@ -154,7 +149,7 @@ feature -- Query
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2018, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2020, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

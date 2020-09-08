@@ -966,6 +966,8 @@ SVGadd $RES/instance-free.svg 24.svg
 SVGadd $OVERLAY/feature_se.svg 25.svg
 # verifier right
 SVGadd $OVERLAY/verify_se.svg 26.svg
+# once right
+SVGadd $OVERLAY/once_se.svg 27.svg
 # 
 ExitRow
 #----------------------------------------------------------------------------------

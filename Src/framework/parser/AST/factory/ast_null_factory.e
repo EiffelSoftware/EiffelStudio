@@ -511,7 +511,7 @@ feature -- Access
 		end
 
 	new_class_as (n: detachable ID_AS; ext_name: detachable STRING_AS;
-			is_d, is_e, is_fc, is_ex, is_par: BOOLEAN;
+			is_d, is_e, is_fc, is_ex, is_par, is_o: BOOLEAN;
 			top_ind, bottom_ind: detachable INDEXING_CLAUSE_AS;
 			g: detachable EIFFEL_LIST [FORMAL_DEC_AS];
 			cp: detachable PARENT_LIST_AS;

@@ -1,8 +1,7 @@
-note
+﻿note
 	description: "Factory to produce criteria with class scope"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
-	author: ""
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -36,6 +35,7 @@ feature{NONE} -- Initialization
 			agent_table.put (agent new_is_effective_criterion, c_is_effective)
 			agent_table.put (agent new_is_enum_criterion, c_is_enum)
 			agent_table.put (agent new_is_expanded_criterion, c_is_expanded)
+			agent_table.put (agent new_is_once_criterion, c_is_once)
 			agent_table.put (agent new_is_external_criterion, c_is_external)
 			agent_table.put (agent new_is_frozen_criterion, c_is_frozen)
 			agent_table.put (agent new_is_generic_criterion, c_is_generic)
@@ -86,6 +86,7 @@ feature{NONE} -- Initialization
 			name_table.put (c_is_effective, query_language_names.ql_cri_is_effective)
 			name_table.put (c_is_enum, query_language_names.ql_cri_is_enum)
 			name_table.put (c_is_expanded, query_language_names.ql_cri_is_expanded)
+			name_table.put (c_is_once, query_language_names.ql_cri_is_once)
 			name_table.put (c_is_external, query_language_names.ql_cri_is_external)
 			name_table.put (c_is_frozen, query_language_names.ql_cri_is_frozen)
 			name_table.put (c_is_generic, query_language_names.ql_cri_is_generic)
@@ -219,6 +220,14 @@ feature{NONE} -- New criterion
 			create Result.make (agent is_expanded_agent, True)
 		ensure
 			result_attached: Result /= Void
+		end
+
+	new_is_once_criterion: QL_SIMPLE_CLASS_CRITERION
+			-- New criterion to test if a class is once.
+		do
+			create Result.make (agent is_once_agent, True)
+		ensure
+			attached Result
 		end
 
 	new_is_external_criterion: QL_SIMPLE_CLASS_CRITERION
@@ -581,6 +590,7 @@ feature -- Criterion index
 	c_contain_ast: INTEGER = 44
 	c_value_of_metric_is: INTEGER = 45
 	c_is_satisfied_by: INTEGER = 46
+	c_is_once: INTEGER = 47
 
 feature{NONE} -- Implementation/Evaluate agent
 
@@ -691,6 +701,16 @@ feature{NONE} -- Implementation/Evaluate agent
 			a_item_valid: a_item.is_valid_domain_item
 		do
 			Result := a_item.is_compiled and then a_item.class_c.is_expanded
+		end
+
+	is_once_agent (a_item: QL_CLASS): BOOLEAN
+			-- Agent to test if a class is once
+			-- Require compiled: True
+		require
+			a_item_attached: a_item /= Void
+			a_item_valid: a_item.is_valid_domain_item
+		do
+			Result := a_item.is_compiled and then a_item.class_c.is_once
 		end
 
 	is_external_agent (a_item: QL_CLASS): BOOLEAN
@@ -813,7 +833,7 @@ feature{NONE} -- Implementation/Evaluate agent
 		end
 
 note
-	copyright: "Copyright (c) 1984-2013, Eiffel Software"
+	copyright: "Copyright (c) 1984-2020, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[
@@ -843,7 +863,5 @@ note
 			Website http://www.eiffel.com
 			Customer support http://support.eiffel.com
 		]"
-
-
 
 end

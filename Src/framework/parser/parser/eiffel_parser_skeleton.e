@@ -177,8 +177,10 @@ feature -- Initialization
 			is_partial_class := False
 			is_deferred := False
 			is_expanded := False
+			is_once := False
 			deferred_keyword := Void
 			expanded_keyword := Void
+			once_keyword := Void
 			external_keyword := Void
 			frozen_keyword := Void
 				-- Add a frame for a top-level feature.
@@ -946,6 +948,9 @@ feature {NONE} -- Implementation
 	is_expanded: BOOLEAN
 			-- Boolean mark for expanded class
 
+	is_once: BOOLEAN
+			-- Boolean mark for once class
+
 	is_frozen_class: BOOLEAN
 			-- Boolean mark for sealed/frozen class, ie not
 			-- inheritable by other classes.
@@ -978,6 +983,7 @@ feature {NONE} -- Implementation
 	frozen_keyword,
 	expanded_keyword,
 	deferred_keyword,
+	once_keyword,
 	external_keyword: detachable KEYWORD_AS
 			-- Keywords that may appear in header mark of a class
 
@@ -1136,7 +1142,7 @@ feature {NONE} -- Counters
 feature {NONE} -- Actions
 
 	new_class_description (n: detachable ID_AS; n2: detachable STRING_AS;
-		is_d, is_e, is_fc, is_ex, is_par: BOOLEAN;
+		is_d, is_e, is_fc, is_ex, is_par, is_o: BOOLEAN;
 		first_ind, last_ind: detachable INDEXING_CLAUSE_AS; g: detachable EIFFEL_LIST [FORMAL_DEC_AS];
 		a_parent_list_1: detachable PARENT_LIST_AS; a_parent_list_2: detachable PARENT_LIST_AS; c: detachable EIFFEL_LIST [CREATE_AS]; co: detachable CONVERT_FEAT_LIST_AS;
 		f: detachable EIFFEL_LIST [FEATURE_CLAUSE_AS]; inv: detachable INVARIANT_AS;
@@ -1165,7 +1171,7 @@ feature {NONE} -- Actions
 				l_non_conforming_parents := a_parent_list_2
 			end
 
-			Result := ast_factory.new_class_as (n, ext_name, is_d, is_e, is_fc, is_ex, is_par, first_ind,
+			Result := ast_factory.new_class_as (n, ext_name, is_d, is_e, is_fc, is_ex, is_par, is_o, first_ind,
 				last_ind, g, l_conforming_parents, l_non_conforming_parents, c, co, f, inv, s, o, ed)
 		end
 

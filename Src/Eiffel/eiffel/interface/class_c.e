@@ -3428,6 +3428,9 @@ feature -- Properties
 	is_expanded: BOOLEAN
 			-- Is class expanded?
 
+	is_once: BOOLEAN
+			-- Is class once?
+
 	is_enum: BOOLEAN
 			-- Is class an IL enum type?
 			-- Useful to perform call optimization on enum type in FEATURE_B.
@@ -4242,6 +4245,10 @@ feature -- Output
 				a_text_formatter.process_keyword_text (ti_Deferred_keyword, Void)
 				a_text_formatter.add_space
 			end
+			if is_once then
+				a_text_formatter.process_keyword_text (ti_once_keyword, Void)
+				a_text_formatter.add_space
+			end
 			a_text_formatter.process_keyword_text (ti_Class_keyword, Void)
 			a_text_formatter.add_new_line
 			a_text_formatter.add_indent
@@ -4321,6 +4328,14 @@ feature {COMPILER_EXPORTER} -- Setting
 			is_expanded := b
 		ensure
 			is_expanded_set: is_expanded = b
+		end
+
+	set_is_once (b: BOOLEAN)
+			-- Assign `b` to `is_once`.
+		do
+			is_once := b
+		ensure
+			is_once_set: is_once = b
 		end
 
 	set_is_enum (b: BOOLEAN)
@@ -4943,6 +4958,7 @@ feature {DEGREE_4, NAMED_TUPLE_TYPE_A, TYPE_A_CHECKER} -- Degree 4
 			degree_4_processed := False
 			expanded_modified := False
 			deferred_modified := False
+			once_modified := False
 			supplier_status_modified := False
 		ensure
 			removed: not degree_4_needed
@@ -4987,6 +5003,14 @@ feature {DEGREE_4, NAMED_TUPLE_TYPE_A, TYPE_A_CHECKER} -- Degree 4
 			deferred_modified_set: deferred_modified
 		end
 
+	set_once_modified
+			-- Set `once_modified` to `True`.
+		do
+			once_modified := True
+		ensure
+			once_modified
+		end
+
 	set_supplier_status_modified
 			-- Set `supplier_status_modified' to True.
 		do
@@ -5010,6 +5034,9 @@ feature {DEGREE_4, INHERIT_TABLE} -- Degree 4
 	deferred_modified: BOOLEAN
 			-- Has the deferred status of current
 			-- class been modified?
+
+	once_modified: BOOLEAN
+			-- Has once status of the class been modified?
 
 feature {DEGREE_4, DEGREE_3} -- Used by degree 4 and 3 to compute new assertions
 

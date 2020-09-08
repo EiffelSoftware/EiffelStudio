@@ -109,15 +109,13 @@ feature -- Status report
 			Result := criterion_table.has (a_scope) and then criterion_table.item (a_scope).has (a_name)
 		end
 
-feature{NONE} -- Implementation
+feature {NONE} -- Implementation
 
 	criterion_table: HASH_TABLE [HASH_TABLE [FUNCTION [EB_METRIC_CRITERION], STRING], QL_SCOPE]
 			-- Table of agents to create criteria
 			-- Key of outer hash table is criterion scope type
 			-- Key of inner hash table is criterion name,
 			-- Value of inner hash table is an agent to create a criterion with given name and scope.
-
-feature{NONE} -- Implementation
 
 	new_normal_criterion (a_scope: QL_SCOPE; a_name: STRING): EB_METRIC_CRITERION
 			-- New metric criterion whose `type' is `a_scope' and `name' is `a_name'
@@ -231,7 +229,7 @@ feature{NONE} -- Implementation
 			result_attached: Result /= Void
 		end
 
-feature{NONE} -- Initialization
+feature {NONE} -- Initialization
 
 	initialize_target_criteria
 			-- Initialize target criteria.
@@ -300,6 +298,7 @@ feature{NONE} -- Initialization
 			l_hash_table.put (agent new_normal_criterion (class_scope, query_language_names.ql_cri_is_effective), query_language_names.ql_cri_is_effective)
 			l_hash_table.put (agent new_normal_criterion (class_scope, query_language_names.ql_cri_is_enum), query_language_names.ql_cri_is_enum)
 			l_hash_table.put (agent new_normal_criterion (class_scope, query_language_names.ql_cri_is_expanded), query_language_names.ql_cri_is_expanded)
+			l_hash_table.put (agent new_normal_criterion (class_scope, query_language_names.ql_cri_is_once), query_language_names.ql_cri_is_once)
 			l_hash_table.put (agent new_normal_criterion (class_scope, query_language_names.ql_cri_is_external), query_language_names.ql_cri_is_external)
 			l_hash_table.put (agent new_normal_criterion (class_scope, query_language_names.ql_cri_is_frozen), query_language_names.ql_cri_is_frozen)
 			l_hash_table.put (agent new_normal_criterion (class_scope, query_language_names.ql_cri_is_generic), query_language_names.ql_cri_is_generic)
@@ -560,7 +559,7 @@ invariant
 	criterion_table_attached: criterion_table /= Void
 
 note
-        copyright:	"Copyright (c) 1984-2019, Eiffel Software"
+        copyright:	"Copyright (c) 1984-2020, Eiffel Software"
         license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
         licensing_options:	"http://www.eiffel.com/licensing"
         copying: "[

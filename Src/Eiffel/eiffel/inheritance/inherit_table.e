@@ -410,8 +410,9 @@ feature
 			new_creators := a_class.creators;
 			if old_creators = Void then
 				if
-					new_creators /= Void
-					or else (a_class.is_deferred and then pass_c.deferred_modified)
+					attached new_creators or else
+					(a_class.is_deferred and then pass_c.deferred_modified) or else
+					pass_c.once_modified
 				then
 						-- the clients using !! without a creation routine
 						-- must be recompiled
@@ -504,12 +505,9 @@ end;
 				-- Reset `assert_prop_list' for next iteration.
 			assert_prop_list := Void;
 
-			if l_is_il_generation then -- and then not a_class.is_external then
-				a_class.class_interface.process_features (resulting_table)
-			end
-
-				-- Find main_parent of current class.
 			if l_is_il_generation then
+				a_class.class_interface.process_features (resulting_table)
+					-- Find main_parent of current class.
 				compute_main_parent (resulting_table)
 			end
 

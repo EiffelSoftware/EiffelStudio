@@ -1333,6 +1333,7 @@ feature {NONE} -- Class initialization
 			old_generics: like generics
 			old_is_expanded: BOOLEAN
 			old_is_deferred: BOOLEAN
+			old_is_once: BOOLEAN
 			l_class: CLASS_C
 			is_first_compilation, changed_status: BOOLEAN
 			changed_generics, changed_expanded: BOOLEAN
@@ -1421,6 +1422,18 @@ feature {NONE} -- Class initialization
 			if not is_first_compilation and old_is_expanded /= is_expanded then
 					-- The expanded status has been modifed
 				Degree_4.set_expanded_modified (Current)
+				changed_status := True
+				changed_expanded := True
+				l_is_code_regeneration_needed := True
+			end
+
+				-- Once mark.
+			old_is_once := is_once
+			set_is_once (ast_b.is_once)
+
+			if not is_first_compilation and old_is_once /= is_once then
+					-- The once status has been changed.
+				Degree_4.set_once_modified (Current)
 				changed_status := True
 				changed_expanded := True
 				l_is_code_regeneration_needed := True
@@ -2177,7 +2190,7 @@ invariant
 
 note
 	ca_ignore: "CA033", "CA033: very long class"
-	copyright:	"Copyright (c) 1984-2019, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2020, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

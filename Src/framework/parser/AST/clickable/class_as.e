@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "Abstract description of an Eiffel class."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -29,7 +29,7 @@ feature {NONE} -- Initialization
 
 	initialize (n: like class_name;
 			ext_name: like external_class_name;
-			is_d, is_e, is_fc, is_ex, is_par: BOOLEAN;
+			is_d, is_e, is_fc, is_ex, is_par, is_o: BOOLEAN;
 			top_ind: like top_indexes;
 			bottom_ind: like bottom_indexes;
 			g: like generics;
@@ -56,6 +56,7 @@ feature {NONE} -- Initialization
 			is_frozen := is_fc
 			is_external := is_ex
 			is_partial := is_par
+			is_once := is_o
 			internal_top_indexes := top_ind
 			internal_bottom_indexes := bottom_ind
 			internal_generics := g
@@ -87,6 +88,7 @@ feature {NONE} -- Initialization
 			is_frozen_set: is_frozen = is_fc
 			is_external_set: is_external = is_ex
 			is_partial_set: is_partial = is_par
+			is_once_set: is_once = is_o
 			internal_top_indexes_set: internal_top_indexes = top_ind
 			internal_bottom_indexes_set: internal_bottom_indexes = bottom_ind
 			internal_generics_set: internal_generics = g
@@ -125,6 +127,7 @@ feature -- Roundtrip
 	frozen_keyword_index,
 	expanded_keyword_index,
 	deferred_keyword_index,
+	once_keyword_index,
 	external_keyword_index: INTEGER
 			-- Index of keywords that may appear in header mark
 
@@ -176,6 +179,14 @@ feature -- Roundtrip
 			Result := keyword_from_index (a_list, deferred_keyword_index)
 		end
 
+	once_keyword (a_list: LEAF_AS_LIST): detachable KEYWORD_AS
+			-- "once" keyword that may appear in header mark.
+		require
+			a_list_not_void: a_list /= Void
+		do
+			Result := keyword_from_index (a_list, once_keyword_index)
+		end
+
 	external_keyword (a_list: LEAF_AS_LIST): detachable KEYWORD_AS
 			-- Keywords that may appear in header mark
 		require
@@ -184,7 +195,7 @@ feature -- Roundtrip
 			Result := keyword_from_index (a_list, external_keyword_index)
 		end
 
-	set_header_mark (a_frozen_keyword, a_expanded_keyword, a_deferred_keyword, a_external_keyword: detachable KEYWORD_AS)
+	set_header_mark (a_frozen_keyword, a_expanded_keyword, a_deferred_keyword, a_once_keyword, a_external_keyword: detachable KEYWORD_AS)
 			-- Set header marks of a class.
 		do
 			if a_frozen_keyword /= Void then
@@ -196,6 +207,9 @@ feature -- Roundtrip
 			if a_deferred_keyword /= Void then
 				deferred_keyword_index := a_deferred_keyword.index
 			end
+			if attached a_once_keyword then
+				once_keyword_index := a_once_keyword.index
+			end
 			if a_external_keyword /= Void then
 				external_keyword_index := a_external_keyword.index
 			end
@@ -203,6 +217,7 @@ feature -- Roundtrip
 			frozen_keyword_set: a_frozen_keyword /= Void implies frozen_keyword_index = a_frozen_keyword.index
 			expanded_keyword_set: a_expanded_keyword /= Void implies expanded_keyword_index = a_expanded_keyword.index
 			deferred_keyword_set: a_deferred_keyword /= Void implies deferred_keyword_index = a_deferred_keyword.index
+			once_keyword_set: attached a_once_keyword implies once_keyword_index = a_once_keyword.index
 			external_keyword_set: a_external_keyword /= Void implies external_keyword_index = a_external_keyword.index
 		end
 
@@ -248,6 +263,8 @@ feature -- Roundtrip
 				Result := deferred_keyword (a_list)
 			elseif expanded_keyword_index /= 0 then
 				Result := expanded_keyword (a_list)
+			elseif once_keyword_index /= 0 then
+				Result := once_keyword (a_list)
 			elseif external_keyword_index /= 0 then
 				Result := external_keyword (a_list)
 			end
@@ -264,8 +281,6 @@ feature -- Roundtrip
 		do
 			Result := class_keyword_index
 		end
-
-feature -- Roundtrip
 
 	internal_bottom_indexes: detachable INDEXING_CLAUSE_AS
 			-- Internal indexing clause at bottom of class.
@@ -386,6 +401,9 @@ feature -- Attributes
 	is_expanded: BOOLEAN
 			-- Is the class expanded ?
 
+	is_once: BOOLEAN
+			-- Is the class once?
+
 	is_frozen: BOOLEAN
 			-- Is class frozen, ie we cannot inherit from it.
 
@@ -396,14 +414,11 @@ feature -- Attributes
 			-- Is class a partial? (that is the type definition is divided between multiple files)
 
 	click_list: CLICK_LIST
-		local
-			l_clicklist_visitor: AST_CLICKABLE_VISITOR
 		do
 			if attached internal_click_list as l_click_list then
 				Result := l_click_list
 			else
-				create l_clicklist_visitor
-				Result := l_clicklist_visitor.click_list (Current)
+				Result := (create {AST_CLICKABLE_VISITOR}).click_list (Current)
 				internal_click_list := Result
 			end
 		end
@@ -738,11 +753,11 @@ feature -- Query
 					-- Iterate the features clauses and feature all features
 				l_fccursor := l_fclauses.index
 				from l_fclauses.start until l_fclauses.after loop
-					if attached {FEATURE_CLAUSE_AS} l_fclauses.item as l_fclause and then attached {EIFFEL_LIST [FEATURE_AS]} l_fclause.features as l_features then
+					if attached l_fclauses.item as l_fclause and then attached l_fclause.features as l_features then
 							-- Iterate all features and extend the result list
 						l_fcursor := l_features.index
 						from l_features.start until l_features.after loop
-							if attached {FEATURE_AS} l_features.item as l_feature then
+							if attached l_features.item as l_feature then
 									-- Add feature
 								l_result.extend (l_feature)
 							end
@@ -787,33 +802,32 @@ feature -- Query
 				create l_helper
 				l_fccursor := l_fclauses.index
 				from l_fclauses.start until l_stop or else l_fclauses.after loop
-					if attached {FEATURE_CLAUSE_AS} l_fclauses.item as l_fclause then
-						if
-							l_helper.is_valid_positional_node (l_fclause) and then
-							l_helper.is_line_in (l_fclause, a_line)
-						then
-							if attached {EIFFEL_LIST [FEATURE_AS]} l_fclause.features as l_features then
-									-- Found a feature clauses
-									-- Iterate all features and extend the result list
-								l_fcursor := l_features.index
-								from l_features.start until l_stop or l_features.after loop
-									if
-										attached {FEATURE_AS} l_features.item as l_feature and then
-										l_helper.is_valid_positional_node (l_feature) and then
-										l_helper.is_line_in (l_feature, a_line)
-									then
-										Result := l_feature
-										l_stop := True
-									end
-									l_features.forth
+					if
+						attached l_fclauses.item as l_fclause and then
+						l_helper.is_valid_positional_node (l_fclause) and then
+						l_helper.is_line_in (l_fclause, a_line)
+					then
+						if attached l_fclause.features as l_features then
+								-- Found a feature clauses
+								-- Iterate all features and extend the result list
+							l_fcursor := l_features.index
+							from l_features.start until l_stop or l_features.after loop
+								if
+									attached l_features.item as l_feature and then
+									l_helper.is_valid_positional_node (l_feature) and then
+									l_helper.is_line_in (l_feature, a_line)
+								then
+									Result := l_feature
+									l_stop := True
 								end
-								l_features.go_i_th (l_fcursor)
+								l_features.forth
 							end
-
-								-- Ensure we go no further because if no feature is found then
-								-- we are not going to find it.
-							l_stop := True
+							l_features.go_i_th (l_fcursor)
 						end
+
+							-- Ensure we go no further because if no feature is found then
+							-- we are not going to find it.
+						l_stop := True
 					end
 
 					check
@@ -849,7 +863,7 @@ feature {INTERNAL_COMPILER_STRING_EXPORTER} -- Comparison
 
 					-- Iterate the features clauses and feature all features
 				from until l_fclauses.after or Result /= Void loop
-					if attached {FEATURE_CLAUSE_AS} l_fclauses.item as l_fclause and then attached {EIFFEL_LIST [FEATURE_AS]} l_fclause.features as l_features then
+					if attached l_fclauses.item as l_fclause and then attached l_fclause.features as l_features then
 						l_fcursor := l_features.index
 						if a_reverse_lookup then
 							l_features.finish
@@ -859,12 +873,12 @@ feature {INTERNAL_COMPILER_STRING_EXPORTER} -- Comparison
 
 							-- Iterate all features and extend the result list
 						from until l_features.after or Result /= Void loop
-							if attached {FEATURE_AS} l_features.item as l_feature2 then --and then l_feature2.is_named (a_name) then
-								if l_feature2.is_named (a_name) then
-										-- Feature located
-									Result := l_feature2
-								end
-
+							if
+								attached l_features.item as l_feature2 and then
+								l_feature2.is_named (a_name)
+							then
+									-- Feature located
+								Result := l_feature2
 							end
 							if a_reverse_lookup then
 								l_features.back
@@ -899,7 +913,8 @@ feature -- Comparison
 				equivalent (parents, other.parents) and then
 				equivalent (features, other.features) and then
 				is_deferred = other.is_deferred and then
-				is_expanded = other.is_expanded
+				is_expanded = other.is_expanded and then
+				is_once = other.is_once
 		end
 
 feature {COMPILER_EXPORTER} -- Setting
@@ -924,7 +939,8 @@ invariant
 	date_valid: date >= -1
 
 note
-	copyright:	"Copyright (c) 1984-2014, Eiffel Software"
+	ca_ignore: "CA011", "CA011: too many arguments"
+	copyright:	"Copyright (c) 1984-2020, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
@@ -955,4 +971,4 @@ note
 			Customer support http://support.eiffel.com
 		]"
 
-end -- class CLASS_AS
+end

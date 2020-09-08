@@ -581,11 +581,7 @@ feature {NONE} -- Implementation
 			elseif expr_type_visiting then
 				l_as.constant_type.process (Current)
 				if attached {REAL_A} last_type as l_real then
-					if l_real.size = 32 then
-						last_type := manifest_real_32_type
-					else
-						last_type := manifest_real_64_type
-					end
+					last_type :=  if l_real.size = 32 then manifest_real_32_type else manifest_real_64_type end
 				end
 			else
 				-- Nothing to be done, done above when process `l_as.constant_type'.
@@ -2430,23 +2426,23 @@ feature {NONE} -- Implementation
 				l_text_formatter_decorator.process_basic_text (l_as.visual_name_32)
 			end
 
-			if has_error_internal or else l_feat.has_alias_name then
-				if attached l_feat.aliases as l_aliases then
-					across
-						l_aliases as ic
-					loop
-						l_text_formatter_decorator.put_space
-						l_text_formatter_decorator.process_keyword_text (ti_alias_keyword, Void)
-						l_text_formatter_decorator.put_space
-						l_text_formatter_decorator.process_symbol_text (ti_double_quote)
-						if not has_error_internal then
-
-							l_text_formatter_decorator.process_operator_text (l_as.extract_alias_name_32 (ic.item.alias_name_32), l_feat)
-						else
-							l_text_formatter_decorator.process_basic_text (l_as.extract_alias_name_32 (ic.item.alias_name_32))
-						end
-						l_text_formatter_decorator.process_symbol_text (ti_double_quote)
+			if
+				(has_error_internal or else l_feat.has_alias_name) and then
+				attached l_feat.aliases as l_aliases
+			then
+				across
+					l_aliases as ic
+				loop
+					l_text_formatter_decorator.put_space
+					l_text_formatter_decorator.process_keyword_text (ti_alias_keyword, Void)
+					l_text_formatter_decorator.put_space
+					l_text_formatter_decorator.process_symbol_text (ti_double_quote)
+					if not has_error_internal then
+						l_text_formatter_decorator.process_operator_text (l_as.extract_alias_name_32 (ic.item.alias_name_32), l_feat)
+					else
+						l_text_formatter_decorator.process_basic_text (l_as.extract_alias_name_32 (ic.item.alias_name_32))
 					end
+					l_text_formatter_decorator.process_symbol_text (ti_double_quote)
 				end
 			end
 		end
@@ -4328,6 +4324,10 @@ feature {NONE} -- Implementation: helpers
 				l_text_formatter_decorator.process_keyword_text (ti_deferred_keyword, Void)
 				l_text_formatter_decorator.put_space
 			end
+			if l_as.is_once then
+				l_text_formatter_decorator.process_keyword_text (ti_once_keyword, Void)
+				l_text_formatter_decorator.put_space
+			end
 			l_text_formatter_decorator.process_keyword_text (ti_class_keyword, Void)
 			l_text_formatter_decorator.put_space
 			if l_text_formatter_decorator.is_short then
@@ -5104,7 +5104,7 @@ invariant
 	separate_argument_locals_for_current_scope_not_void: separate_argument_locals_for_current_scope /= Void
 
 note
-	ca_ignore: "CA033", "CA033 — very long class"
+	ca_ignore: "CA033", "CA033: very long class"
 	date: "$Date$"
 	revision: "$Revision$"
 	copyright: "Copyright (c) 1984-2020, Eiffel Software"

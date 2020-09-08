@@ -1031,6 +1031,7 @@ feature
 			safe_process (l_as.frozen_keyword (match_list))
 			safe_process (l_as.deferred_keyword (match_list))
 			safe_process (l_as.expanded_keyword (match_list))
+			safe_process (l_as.once_keyword (match_list))
 			safe_process (l_as.external_keyword (match_list))
 			safe_process (l_as.class_keyword (match_list))
 			safe_process (l_as.class_name)

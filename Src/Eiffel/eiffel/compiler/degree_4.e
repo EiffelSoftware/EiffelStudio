@@ -134,12 +134,14 @@ feature -- Processing
 				nb = count
 			loop
 				a_class := classes.item (i)
-				if a_class /= Void and then a_class.degree_4_needed then
-					if not a_class.degree_4_processed then
-						if a_class.changed and then a_class.generics /= Void then
-							l_system.set_current_class (a_class)
-							a_class.check_types_in_constraints
-						end
+				if attached a_class and then a_class.degree_4_needed then
+					if
+						not a_class.degree_4_processed and then
+						a_class.changed and then
+						attached a_class.generics
+					then
+						l_system.set_current_class (a_class)
+						a_class.check_types_in_constraints
 					end
 					nb := nb + 1
 				end
@@ -162,12 +164,14 @@ feature -- Processing
 				nb = count
 			loop
 				a_class := classes.item (i)
-				if a_class /= Void and then a_class.degree_4_needed then
-					if not a_class.degree_4_processed then
-						if a_class.changed and then a_class.generics /= Void then
-							l_system.set_current_class (a_class)
-							a_class.check_constraint_genericity
-						end
+				if attached a_class and then a_class.degree_4_needed then
+					if
+						not a_class.degree_4_processed and then
+						a_class.changed and then
+						attached a_class.generics
+					then
+						l_system.set_current_class (a_class)
+						a_class.check_constraint_genericity
 					end
 					nb := nb + 1
 				end
@@ -223,54 +227,57 @@ feature -- Processing
 					i > classes.upper
 				loop
 					a_class := classes.item (i)
-					if a_class /= Void and then a_class.degree_4_needed then
-						if not a_class.degree_4_processed and then (ignored_classes.count = 0 or else not ignored_classes.has (a_class)) then
-							l_degree_output.put_degree_4 (a_class, count - nb)
-								-- Set current class now.
-							l_system.set_current_class (a_class)
-							put_action_class
-								-- If class has creation constraints they are checked later
-								-- but before feature type checks since constraints can have
-								-- renamings that are taken into account when checking
-								-- qualified anchored types.
-							if
-								attached a_class.generics as g and then
-								g.there_exists (agent {FORMAL_DEC_AS}.has_constraint)
-							then
-									-- Add action to check constraints.
-								put_action (agent
-									local
-										e: like error_handler.error_level
-									do
-										check
-											current_class_set: attached system.current_class as c
-										then
-											e := error_handler.error_level
-											c.check_constraint_renaming
-												-- We only check the creation constraints if the renaming was valid.
-											if error_handler.error_level = e then
-												c.check_creation_constraint_genericity
-											end
+					if
+						attached a_class and then
+						a_class.degree_4_needed and then
+						not a_class.degree_4_processed and then
+						(ignored_classes.count = 0 or else not ignored_classes.has (a_class))
+					then
+						l_degree_output.put_degree_4 (a_class, count - nb)
+							-- Set current class now.
+						l_system.set_current_class (a_class)
+						put_action_class
+							-- If class has creation constraints they are checked later
+							-- but before feature type checks since constraints can have
+							-- renamings that are taken into account when checking
+							-- qualified anchored types.
+						if
+							attached a_class.generics as g and then
+							g.there_exists (agent {FORMAL_DEC_AS}.has_constraint)
+						then
+								-- Add action to check constraints.
+							put_action (agent
+								local
+									e: like error_handler.error_level
+								do
+									check
+										current_class_set: attached system.current_class as c
+									then
+										e := error_handler.error_level
+										c.check_constraint_renaming
+											-- We only check the creation constraints if the renaming was valid.
+										if error_handler.error_level = e then
+											c.check_creation_constraint_genericity
 										end
 									end
-								)
-							end
-								-- Adds future checks to the `remaining_validity_checking_list'
-							l_error_level := l_error_handler.error_level
-							process_class (a_class)
-							if l_error_handler.error_level = l_error_level then
-									-- We only merge the remaining checks if the class did not produce any other errors
-								merge_remaining_validity_checks_into_global_list
-							else
-									-- We cannot add the temporary added checks so we need to get rid of them
-									-- we will process them at the next compilation when user will have fix the
-									-- errors reported by the user.
-								empty_temp_remaining_validity_checking_list
-								ignored_classes.put (a_class)
-								remove_descendant_classes_from_processing (a_class)
-							end
-							nb := nb + 1
+								end
+							)
 						end
+							-- Adds future checks to the `remaining_validity_checking_list'
+						l_error_level := l_error_handler.error_level
+						process_class (a_class)
+						if l_error_handler.error_level = l_error_level then
+								-- We only merge the remaining checks if the class did not produce any other errors
+							merge_remaining_validity_checks_into_global_list
+						else
+								-- We cannot add the temporary added checks so we need to get rid of them
+								-- we will process them at the next compilation when user will have fix the
+								-- errors reported by the user.
+							empty_temp_remaining_validity_checking_list
+							ignored_classes.put (a_class)
+							remove_descendant_classes_from_processing (a_class)
+						end
+						nb := nb + 1
 					end
 					i := i + 1
 				end
@@ -460,6 +467,15 @@ feature -- Setting
 			a_class.set_deferred_modified
 		end
 
+	set_once_modified (a_class: CLASS_C)
+			-- The once status of `a_class` has been modified.
+		require
+			a_class_not_void: a_class /= Void
+		do
+			insert_class (a_class)
+			a_class.set_once_modified
+		end
+
 	set_supplier_status_modified (a_class: CLASS_C)
 			-- The status of a supplier has changed.
 		require
@@ -623,6 +639,8 @@ feature {INHERIT_TABLE} -- Propagation
 				io.error.put_boolean (a_class.expanded_modified)
 				io.error.put_string ("%Ndeferred_modified: ")
 				io.error.put_boolean (a_class.deferred_modified)
+				io.error.put_string ("%Nonce_modified: ")
+				io.error.put_boolean (a_class.once_modified)
 				if a_class.assert_prop_list /= Void then
 					if a_class.assert_prop_list.is_empty then
 						io.error.put_string ("%Nassert_prop_list: empty")
@@ -669,8 +687,10 @@ feature {INHERIT_TABLE} -- Propagation
 				-- Incremetality test: asked the compiler to apply at
 				-- least Degree 4 to the direct descendants of `a_class'.
 
-			real_pass2 := (not equivalent_table) or else a_class.expanded_modified
-					or else a_class.deferred_modified
+			real_pass2 := (not equivalent_table) or else
+					a_class.expanded_modified or else
+					a_class.deferred_modified or else
+					a_class.once_modified
 
 				-- If the set of ancestors has changed (changed3a)
 				-- we must propagate.
@@ -692,7 +712,10 @@ feature {INHERIT_TABLE} -- Propagation
 				if do_pass3 then
 						-- Propagation to Degree 3 in order to
 						-- type check clients of `a_class'.
-					propagate_pass3 (a_class, pass2_control, a_class.expanded_modified or a_class.deferred_modified)
+					propagate_pass3 (a_class, pass2_control,
+						a_class.expanded_modified or
+						a_class.deferred_modified or
+						a_class.once_modified)
 				end
 				if chg3a then
 						-- Propagation to Degree 3 in order to type check
@@ -774,6 +797,9 @@ feature {NONE} -- Propagation to Degree 4
 					end
 					if a_class.expanded_modified then
 						Degree_4.set_expanded_modified (descendant)
+					end
+					if a_class.once_modified then
+						degree_4.set_once_modified (descendant)
 					end
 					if attached a_class.assert_prop_list as assert_prop_list then
 						Degree_4.set_assertion_prop_list
@@ -1042,7 +1068,7 @@ invariant
 	delayed_classes_attached: attached delayed_classes
 
 note
-	copyright:	"Copyright (c) 1984-2018, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2020, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

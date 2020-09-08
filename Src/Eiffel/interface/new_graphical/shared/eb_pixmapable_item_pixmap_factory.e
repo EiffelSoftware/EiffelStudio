@@ -42,7 +42,7 @@ feature -- Query (Pixmap)
 			l_compiled_class: CLASS_C
 			l_conf_class: CONF_CLASS
 			l_comp: CLASS_C
-			l_pixcode: NATURAL_8
+			l_pixcode: like none_flag
 			l_overrides: ARRAYED_LIST [CONF_CLASS]
 			l_overrides_valid: BOOLEAN
 		do
@@ -60,6 +60,8 @@ feature -- Query (Pixmap)
 					l_pixcode := l_pixcode | frozen_flag
 				elseif l_compiled_class.is_deferred then
 					l_pixcode := l_pixcode | deferred_flag
+				elseif l_compiled_class.is_once then
+					l_pixcode := l_pixcode | once_flag
 				end
 			end
 			if l_conf_class.does_override then
@@ -382,24 +384,17 @@ feature -- Query (Pixmap)
 			-- Pixmap for `a_item'
 		require
 			a_item_attached: a_item /= Void
-		local
-			l_group: QL_GROUP
-			l_class: QL_CLASS
-			l_feature: QL_REAL_FEATURE
 		do
 			if a_item.is_target then
 				Result := pixmaps.icon_pixmaps.metric_unit_target_icon
-			elseif a_item.is_group then
-				l_group ?= a_item
-				Result := pixmap_from_group (l_group.group)
-			elseif a_item.is_class then
-				l_class ?= a_item
-				Result := pixmap_from_class_i (l_class.class_i)
+			elseif attached {QL_GROUP} a_item as g then
+				Result := pixmap_from_group (g.group)
+			elseif attached {QL_CLASS} a_item as c then
+				Result := pixmap_from_class_i (c.class_i)
 			elseif a_item.is_generic then
 				Result := pixmaps.icon_pixmaps.metric_unit_generic_icon
-			elseif a_item.is_real_feature then
-				l_feature ?= a_item
-				Result := pixmap_from_e_feature (l_feature.e_feature)
+			elseif attached {QL_REAL_FEATURE} a_item as f then
+				Result := pixmap_from_e_feature (f.e_feature)
 			elseif a_item.is_invariant_feature then
 				Result := pixmaps.icon_pixmaps.class_features_invariant_icon
 			elseif a_item.is_argument or a_item.is_local then
@@ -466,9 +461,8 @@ feature -- Query (Pixel buffer)
 		local
 			l_compiled_class: CLASS_C
 			l_conf_class: CONF_CLASS
-			l_classi: CLASS_I
 			l_comp: CLASS_C
-			l_pixcode: NATURAL_8
+			l_pixcode: like none_flag
 			l_overrides: ARRAYED_LIST [CONF_CLASS]
 			l_overrides_valid: BOOLEAN
 		do
@@ -486,6 +480,8 @@ feature -- Query (Pixel buffer)
 					l_pixcode := l_pixcode | frozen_flag
 				elseif l_compiled_class.is_deferred then
 					l_pixcode := l_pixcode | deferred_flag
+				elseif l_compiled_class.is_once then
+					l_pixcode := l_pixcode | once_flag
 				end
 			end
 			if l_conf_class.does_override then
@@ -500,11 +496,10 @@ feature -- Query (Pixel buffer)
 				loop
 					if l_overrides.item.is_valid then
 						l_overrides_valid := True
-						if l_overrides.item.is_compiled then
-							l_classi ?= l_overrides.item
-							check
-								classi: l_classi /= Void
-							end
+						if
+							l_overrides.item.is_compiled and then
+							attached {CLASS_I} l_overrides.item as l_classi
+						then
 							l_comp := l_classi.compiled_class
 						end
 					end
@@ -524,7 +519,6 @@ feature -- Query (Pixel buffer)
 			if l_pixcode = 0 then
 				l_pixcode := none_flag
 			end
-
 			check correct_pixcode: class_icon_map.has (l_pixcode) end
 			Result := class_icon_map_pixel_buffer.item (l_pixcode)
 		ensure
@@ -692,7 +686,7 @@ feature -- Query (Pixel buffer)
 				a_name := a_feature_as.feature_names.i_th (a_name_pos)
 				a_body := a_feature_as.body
 				l_assinger := a_body.assigner /= Void and then not a_body.assigner.name_8.is_empty
-				a_routine ?= a_body.content
+				a_routine := {ROUTINE_AS} / a_body.content
 				l_is_obsolete := a_routine /= Void and then a_routine.obsolete_message /= Void
 				l_is_frozen := a_name.is_frozen
 				l_is_instance_free := a_routine /= Void and then a_routine.has_class_postcondition
@@ -830,7 +824,7 @@ feature -- Query (Pixel buffer)
 
 feature {NONE} -- Access
 
-	class_icon_map: HASH_TABLE [EV_PIXMAP, NATURAL_8]
+	class_icon_map: HASH_TABLE [EV_PIXMAP, NATURAL_16]
 			-- Class icon map
 		once
 			create Result.make (37)
@@ -872,10 +866,10 @@ feature {NONE} -- Access
 			Result.force (pixmaps.icon_pixmaps.expanded_override_uncompiled_icon,			expanded_flag | overrides_flag)
 			Result.force (pixmaps.icon_pixmaps.expanded_override_uncompiled_readonly_icon,	expanded_flag | readonly_flag | overrides_flag)
 		ensure
-			result_attached: Result /= VOid
+			result_attached: attached Result
 		end
 
-	class_icon_map_pixel_buffer: HASH_TABLE [EV_PIXEL_BUFFER, NATURAL_8]
+	class_icon_map_pixel_buffer: HASH_TABLE [EV_PIXEL_BUFFER, NATURAL_16]
 			-- Class icon map
 		once
 			create Result.make (37)
@@ -917,19 +911,20 @@ feature {NONE} -- Access
 			Result.force (pixmaps.icon_pixmaps.expanded_override_uncompiled_icon_buffer,			expanded_flag | overrides_flag)
 			Result.force (pixmaps.icon_pixmaps.expanded_override_uncompiled_readonly_icon_buffer,	expanded_flag | readonly_flag | overrides_flag)
 		ensure
-			result_attached: Result /= VOid
+			result_attached: attached Result
 		end
 
 feature {NONE} -- Implementation
 
-	none_flag:  NATURAL_8 = 0x01
-	compiled_flag: NATURAL_8 = 0x02
-	deferred_flag: NATURAL_8 = 0x04
-	expanded_flag: NATURAL_8 = 0x08
-	frozen_flag: NATURAL_8 = 0x010
-	overrides_flag: NATURAL_8 = 0x20
-	overriden_flag: NATURAL_8 = 0x40
-	readonly_flag: NATURAL_8 = 0x80;
+	none_flag:  NATURAL_16 = 0x01
+	compiled_flag: NATURAL_16 = 0x02
+	deferred_flag: NATURAL_16 = 0x04
+	expanded_flag: NATURAL_16 = 0x08
+	once_flag: NATURAL_16 = 0x010
+	frozen_flag: NATURAL_16 = 0x020
+	overrides_flag: NATURAL_16 = 0x40
+	overriden_flag: NATURAL_16 = 0x80
+	readonly_flag: NATURAL_16 = 0x100
 		-- Class icon state flags		
 
 feature {NONE} -- Feature icons
@@ -1086,7 +1081,7 @@ invariant
 
 note
 	ca_ignore: "CA033", "CA033: very large class"
-	copyright:	"Copyright (c) 1984-2019, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2020, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

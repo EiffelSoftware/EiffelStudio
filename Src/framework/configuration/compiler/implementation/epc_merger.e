@@ -124,7 +124,7 @@ feature -- Status Report
 		local
 			l_ast, l_new_ast: detachable CLASS_AS
 			l_match_list, l_new_match_list: detachable LEAF_AS_LIST
-			l_is_deferred, l_is_expanded: BOOLEAN
+			l_is_deferred, l_is_expanded, l_is_once: BOOLEAN
 		do
 			successful := False
 			error_message := Void
@@ -142,6 +142,7 @@ feature -- Status Report
 				end
 				l_is_deferred := l_ast.is_deferred
 				l_is_expanded := l_ast.is_expanded
+				l_is_once := l_ast.is_once
 
 				from
 					a_file_names.forth
@@ -153,6 +154,7 @@ feature -- Status Report
 						l_new_match_list := roundtrip_eiffel_parser.match_list
 						l_is_deferred := l_is_deferred or l_new_ast.is_deferred
 						l_is_expanded := l_is_expanded or l_new_ast.is_expanded
+						l_is_once := l_is_once or l_new_ast.is_once
 						if l_match_list /= Void and l_new_match_list /= Void then
 							append_features (l_match_list, l_new_match_list, l_ast, l_new_ast)
 							append_invariants (l_match_list, l_new_match_list, l_ast, l_new_ast)
@@ -181,6 +183,13 @@ feature -- Status Report
 						attached l_ast.class_keyword (l_match_list) as class_keyword
 					then
 						class_keyword.prepend_text ("expanded ", l_match_list)
+					end
+					if
+						not l_ast.is_once and
+						l_is_once and then
+						attached l_ast.class_keyword (l_match_list) as class_keyword
+					then
+						class_keyword.prepend_text ("once ", l_match_list)
 					end
 					class_text := l_ast.text (l_match_list)
 				else
@@ -262,11 +271,8 @@ feature {NONE} -- Implementation
 			attached_new_match_list: a_new_match_list /= Void
 			attached_ast: a_ast /= Void
 			attached_new_ast: a_new_ast /= Void
-		local
-			l_mod: ERT_PARENT_LIST_MODIFIER
 		do
-			create l_mod.make (a_ast, a_match_list, a_new_ast, a_new_match_list)
-			l_mod.apply
+			(create {ERT_PARENT_LIST_MODIFIER}.make (a_ast, a_match_list, a_new_ast, a_new_match_list)).apply
 		end
 
 	append_indexing_clauses (a_match_list, a_new_match_list: LEAF_AS_LIST; a_ast, a_new_ast: CLASS_AS)
@@ -468,7 +474,7 @@ invariant
 	valid_first_line_pragma: attached first_line_pragma as p implies p.substring (1, 8).is_equal ("--#line ")
 
 note
-	copyright:	"Copyright (c) 1984-2018, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2020, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

@@ -73,6 +73,7 @@ feature -- Initialization
 					-- signature.
 				is_deferred := external_class.is_deferred
 				is_expanded := external_class.is_expanded
+				is_once := False
 				is_enum := external_class.is_enum
 				is_frozen := external_class.is_frozen
 
@@ -105,6 +106,7 @@ feature -- Initialization
 					is_frozen,
 					True,	-- is_external
 					False,  -- is_partial
+					is_once,
 					Void,	-- top_indexes
 					Void,	-- bottom_indexes
 					Void,	-- generics
@@ -408,7 +410,6 @@ feature -- Query
 		local
 			l_consumed_type: CONSUMED_TYPE
 			l_properties: ARRAYED_LIST [CONSUMED_PROPERTY]
-			l_prop: CONSUMED_PROPERTY
 			i, nb: INTEGER
 			done: BOOLEAN
 		do
@@ -425,12 +426,12 @@ feature -- Query
 				until
 					i > nb or done
 				loop
-					l_prop := l_properties.i_th (i)
-					if l_prop /= Void then
-						if l_prop.getter.eiffel_name.is_equal (a_feat.feature_name) then
-							done := True
-							Result := l_prop.setter /= Void
-						end
+					if
+						attached l_properties [i] as l_prop and then
+						l_prop.getter.eiffel_name.is_equal (a_feat.feature_name)
+					then
+						done := True
+						Result := l_prop.setter /= Void
 					end
 					i := i + 1
 				end
@@ -706,7 +707,6 @@ feature {NONE} -- Initialization
 			l_feat_arg: FEAT_ARG
 			l_names_heap: like Names_heap
 			l_list: ARRAYED_LIST [INTEGER]
-			l_name: STRING
 			l_name_id: INTEGER
 			l_underlying_enum_type: STRING
 			l_enum_member: CONSUMED_ENTITY
@@ -1031,8 +1031,7 @@ feature {NONE} -- Initialization
 					end
 				end
 
-				l_name := l_member.dotnet_eiffel_name
-				l_names_heap.put (l_name)
+				l_names_heap.put (l_member.dotnet_eiffel_name)
 				l_id := l_names_heap.found_item
 
 				if overloaded_names.has (l_id) then
@@ -1092,14 +1091,14 @@ feature {NONE} -- Initialization
 							check func_attached: l_extrn_func_i /= Void or l_def_func_i /= Void end
 
 							l_setter_name := l_setter.eiffel_name
-							if l_inherited /= Void and then l_inherited.has (l_property) then
+							if
+								attached l_inherited and then
+								l_inherited.has (l_property) and then
+								attached l_feat_i.written_class.feature_named (l_getter.eiffel_name) as l_feat and then
+								attached l_feat.assigner_name
+							then
 									-- property is inherited so use inherit setter name (fixes test#dotnet043)
-								if
-									attached {FEATURE_I} l_feat_i.written_class.feature_named (l_getter.eiffel_name) as l_feat and then
-									l_feat.assigner_name /= Void
-								then
-									l_setter_name := l_feat.assigner_name
-								end
+								l_setter_name := l_feat.assigner_name
 							end
 							check l_setter_name_attached: l_setter_name /= Void end
 							l_feat_i := a_feat_tbl.item (l_setter_name)
@@ -1131,7 +1130,7 @@ feature {NONE} -- Initialization
 						if l_setter /= Void then
 							if
 								attached {ATTRIBUTE_I} a_feat_tbl.item (l_getter.eiffel_name) as l_attr_i and
-								attached {FEATURE_I} a_feat_tbl.item (l_setter.eiffel_name) as l_feat
+								attached a_feat_tbl.item (l_setter.eiffel_name) as l_feat
 							then
 								l_attr_i.set_type (l_attr_i.type, l_feat.feature_name_id)
 							else
@@ -1339,45 +1338,42 @@ feature {NONE} -- Implementation
 						a_feat.written_class.simple_conform_to (l_feat.written_class) and then
 						attached {IL_EXTENSION_I} l_feat.extension as l_other_ext and then
 						l_other_ext.alias_name_id = l_feat_ext.alias_name_id and then
-						(a_feat.written_class = l_feat.written_class or else not l_feat.is_frozen)
-					then
+						(a_feat.written_class = l_feat.written_class or else not l_feat.is_frozen) and then
 							-- We found a routine, let's check that is the right one
 							-- by comparing their return type and their arguments type.
-						if
-							l_feat.type.same_as (a_feat.type) and then
-							l_feat.argument_count = a_feat.argument_count
-						then
-							if l_feat.argument_count = 0 then
+						l_feat.type.same_as (a_feat.type) and then
+						l_feat.argument_count = a_feat.argument_count
+					then
+						if l_feat.argument_count = 0 then
+							l_found := True
+						else
+							from
+								i := l_other_ext.argument_types.lower
+								nb := l_other_ext.argument_types.upper
 								l_found := True
-							else
-								from
-									i := l_other_ext.argument_types.lower
-									nb := l_other_ext.argument_types.upper
-									l_found := True
-								until
-									i > nb or not l_found
-								loop
-									l_found := l_other_ext.argument_types.item (i) =
-										l_feat_ext.argument_types.item (i)
+							until
+								i > nb or not l_found
+							loop
+								l_found := l_other_ext.argument_types.item (i) =
+									l_feat_ext.argument_types.item (i)
 
-									i := i + 1
-								end
+								i := i + 1
 							end
-							if l_found then
-									-- We found an inherited feature matching current.
-									-- If we are in an interface and that a parent interface
-									-- already define the same feature, then we have to create
-									-- a new routine ID.
-								if is_interface then
-									if
-										not a_feat.is_deferred or else
-										a_feat.written_class = l_feat.written_class
-									then
-										Result := l_feat
-									end
-								else
+						end
+						if l_found then
+								-- We found an inherited feature matching current.
+								-- If we are in an interface and that a parent interface
+								-- already define the same feature, then we have to create
+								-- a new routine ID.
+							if is_interface then
+								if
+									not a_feat.is_deferred or else
+									a_feat.written_class = l_feat.written_class
+								then
 									Result := l_feat
 								end
+							else
+								Result := l_feat
 							end
 						end
 					end
@@ -1465,12 +1461,9 @@ feature {NONE} -- Implementation
 			a_external_type_not_void: a_external_type /= Void
 			a_value_not_void: a_value /= Void and then not a_value.is_empty
 		local
-			l_int: INTEGER_CONSTANT
 			l_val: like a_value
 			l_is_negative: BOOLEAN
 			l_value: VALUE_I
-			l_char_value: CHAR_VALUE_I
-			l_string_value: STRING_VALUE_I
 			l_int32: INTEGER
 			l_int64: INTEGER_64
 			l_real64: DOUBLE
@@ -1543,8 +1536,7 @@ feature {NONE} -- Implementation
 				else
 					l_val := a_value
 				end
-				create l_int.make_from_string (Void, l_is_negative, l_val)
-				l_value := l_int
+				create {INTEGER_CONSTANT} l_value.make_from_string (Void, l_is_negative, l_val)
 			elseif a_external_type.is_natural then
 				create {INTEGER_CONSTANT} l_value.make_from_type (a_external_type, False, a_value)
 			elseif a_external_type.is_boolean then
@@ -1553,11 +1545,9 @@ feature {NONE} -- Implementation
 				check
 					valid_count: a_value.count = 1
 				end
-				create l_char_value.make_character_8 (a_value.item (1))
-				l_value := l_char_value
+				create {CHAR_VALUE_I} l_value.make_character_8 (a_value.item (1))
 			elseif a_external_type.base_class.original_class = System.system_string_class then
-				create l_string_value.make (a_value, True)
-				l_value := l_string_value
+				create {STRING_VALUE_I} l_value.make (a_value, True)
 			end
 			a_constant.set_value (l_value)
 		end
@@ -1595,13 +1585,11 @@ feature {NONE} -- Implementation
 			a_manager_attached: a_manager /= Void
 		local
 			retried: BOOLEAN
-			vd71: VD71
 		do
 			if not retried then
 				Result := a_manager.il_emitter
 			else
-				create vd71.make (a_manager.last_error)
-				error_handler.insert_error (vd71)
+				error_handler.insert_error (create {VD71}.make (a_manager.last_error))
 				error_handler.raise_error
 			end
 		rescue

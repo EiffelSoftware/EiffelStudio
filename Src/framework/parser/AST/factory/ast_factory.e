@@ -971,7 +971,7 @@ feature -- Access
 		end
 
 	new_class_as (n: detachable ID_AS; ext_name: detachable STRING_AS;
-			is_d, is_e, is_fc, is_ex, is_par: BOOLEAN;
+			is_d, is_e, is_fc, is_ex, is_par, is_o: BOOLEAN;
 			top_ind, bottom_ind: detachable INDEXING_CLAUSE_AS;
 			g: detachable EIFFEL_LIST [FORMAL_DEC_AS];
 			cp: detachable PARENT_LIST_AS;
@@ -986,7 +986,7 @@ feature -- Access
 			-- New CLASS AST node.
 		do
 			if n /= Void and s /= Void and (co = Void or else not co.is_empty) and ed /= Void then
-				create Result.initialize (n, ext_name, is_d, is_e, is_fc, is_ex, is_par, top_ind,
+				create Result.initialize (n, ext_name, is_d, is_e, is_fc, is_ex, is_par, is_o, top_ind,
 				bottom_ind, g, cp, ncp, c, co, f, inv, s, o, ed)
 			end
 		end

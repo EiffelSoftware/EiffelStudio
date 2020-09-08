@@ -54,6 +54,8 @@ feature {NONE} -- Access: after thread completed
 
 	license_expired: BOOLEAN
 
+	error_message: detachable READABLE_STRING_GENERAL
+
 feature {NONE} -- Access: worker thread
 
 	token: IMMUTABLE_STRING_8
@@ -80,6 +82,9 @@ feature -- Execution
 				is_cloud_available := wapi.is_available
 				is_cloud_available_updated := not is_cloud_available
 				session_state_changed := d.session_state_changed
+				if attached d.error_message as errmsg then
+					error_message := errmsg
+				end
 				if d.heartbeat > 0 then
 					session_heartbeat := d.heartbeat
 				end
@@ -92,11 +97,14 @@ feature -- Execution
 	pre_execute
 		do
 			session_state_changed := False
+			error_message := Void
 			license_expired := False
 			is_cloud_available_updated := False
 		end
 
 	post_execute
+		local
+			l_issue: ES_ACCOUNT_LICENSE_ISSUE
 		do
 			debug ("es_cloud")
 				if attached logger_s.service as logger_service then
@@ -115,7 +123,16 @@ feature -- Execution
 				service.on_session_state_changed (session)
 			end
 			if license_expired then
-				service.on_account_license_issue (Void, session.account)
+				create l_issue.make (session.account)
+				l_issue.set_license_expired
+				if attached error_message as errmsg then
+					l_issue.set_reason (errmsg)
+				end
+				service.on_account_license_issue (l_issue)
+			elseif attached error_message as errmsg then
+				create l_issue.make (session.account)
+				l_issue.set_reason (errmsg)
+				service.on_account_license_issue (l_issue)
 			end
 			if is_cloud_available_updated then
 				service.on_cloud_available (is_cloud_available)

@@ -1,77 +1,48 @@
 note
-	description: "Summary description for {ES_CLOUD_PING_RESPONSE}."
+	description: "Summary description for {ES_ACCOUNT_LICENSE_ISSUE}."
+	author: ""
 	date: "$Date$"
 	revision: "$Revision$"
 
 class
-	ES_CLOUD_PING_DATA
+	ES_ACCOUNT_LICENSE_ISSUE
+
+create
+	make
+
+feature {NONE} -- Initialization
+
+	make (a_acc: ES_ACCOUNT)
+		do
+			account := a_acc
+		end
 
 feature -- Access
 
-	has_error: BOOLEAN
+	license: detachable ES_ACCOUNT_LICENSE
 
-	error_message: detachable READABLE_STRING_GENERAL
+	account: ES_ACCOUNT
 
-	json: detachable STRING
+	reason: detachable IMMUTABLE_STRING_32
 
-feature -- Access: session
+feature -- Element
 
-	heartbeat: NATURAL_32 assign set_heartbeat
-
-	session_state: detachable READABLE_STRING_32 assign set_session_state
-
-	session_state_changed: BOOLEAN assign set_session_state_changed
-
-	license_missing: BOOLEAN assign set_license_missing
-
-	license_invalid: BOOLEAN assign set_license_invalid
-
-	license_expired: BOOLEAN assign set_license_expired
-
-feature -- Element change
-
-	report_error (msg: like error_message)
+	set_license (a_lic: like license)
 		do
-			error_message := msg.twin
-			has_error := True
+			license := a_lic
 		end
 
-	set_heartbeat (v: like heartbeat)
+	set_reason (s: READABLE_STRING_GENERAL)
 		do
-			heartbeat := v
+			create reason.make_from_string_general (s)
 		end
 
-	set_license_missing (b: BOOLEAN)
+	set_license_expired
 		do
-			license_missing := b
+			set_reason ("license expired")
 		end
 
-	set_license_invalid (b: BOOLEAN)
-		do
-			license_invalid := b
-		end
-
-	set_license_expired (b: BOOLEAN)
-		do
-			license_expired := b
-		end
-
-	set_session_state (v: like session_state)
-		do
-			if v = Void then
-				session_state := Void
-			else
-				create {IMMUTABLE_STRING_32} session_state.make_from_string (v)
-			end
-		end
-
-	set_session_state_changed (v: like session_state_changed)
-		do
-			session_state_changed := v
-		end
-
-
-;note
+note
 	copyright: "Copyright (c) 1984-2020, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"

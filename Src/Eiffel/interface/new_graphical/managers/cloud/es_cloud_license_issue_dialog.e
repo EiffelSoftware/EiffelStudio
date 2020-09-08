@@ -31,6 +31,7 @@ feature {NONE} -- Initialization
 	initialize
 		local
 			lab: EV_LABEL
+			errlab: like error_label
 			b_continue, b_quit, b_check_again: EV_BUTTON
 			hb: EV_HORIZONTAL_BOX
 			vb: EV_VERTICAL_BOX
@@ -39,10 +40,13 @@ feature {NONE} -- Initialization
 			l_scaler: EVS_DPI_SCALER
 			l_report_label: EVS_ELLIPSIS_LABEL
 			l_weblnk: EVS_HIGHLIGHT_LINK_LABEL
+			l_split: EV_VERTICAL_SPLIT_AREA
 		do
 			Precursor
 
 			create l_scaler.make
+			create errlab
+			error_label := errlab
 
 			set_size (l_scaler.scaled_size (350), l_scaler.scaled_size (150))
 			min_but_w := l_scaler.scaled_size (80)
@@ -64,7 +68,15 @@ Choose [Guest] to use EiffelStudio as Guest account.
 			create vb
 			vb.set_padding_width (l_scaler.scaled_size (5))
 			vb.set_border_width (l_scaler.scaled_size (3))
-			vb.extend (lab)
+
+			create l_split
+			vb.extend (l_split)
+			l_split.set_first (lab)
+			l_split.set_second (errlab)
+			errlab.set_minimum_height (2 * errlab.font.height)
+--			vb.disable_item_expand (errlab)
+			errlab.hide
+
 			vb.extend (l_weblnk)
 			vb.disable_item_expand (l_weblnk)
 			create l_report_label
@@ -106,9 +118,35 @@ Choose [Guest] to use EiffelStudio as Guest account.
 			extend (vb)
 		end
 
+feature -- Access: widgets
+
+	error_label: EV_TEXT
+
 feature -- Access
 
 	service: ES_CLOUD_S
+
+	issue: detachable ES_ACCOUNT_LICENSE_ISSUE
+
+	set_issue (a_issue: detachable ES_ACCOUNT_LICENSE_ISSUE)
+		do
+			error_label.remove_text
+			error_label.hide
+			issue := a_issue
+			if attached a_issue.reason as l_reason then
+				if l_reason.is_case_insensitive_equal_general ("license expired") then
+					set_license_expired
+				else
+					set_title (l_reason)
+				end
+				error_label.set_text (l_reason)
+				error_label.show
+			elseif attached a_issue.license as lic then
+				set_license_expired
+			else
+				set_license_issue
+			end
+		end
 
 	set_license_expired
 		do
@@ -147,6 +185,8 @@ feature -- Callbacks
 
 	close
 		do
+				-- Clean
+			issue := Void
 			destroy
 		end
 

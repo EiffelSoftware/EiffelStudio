@@ -85,7 +85,7 @@ feature {NONE} -- Default
 		do
 			Result := "https://account.eiffel.com/api" -- Default
 			debug ("es_cloud")
-				-- On Windows: Computer\HKEY_CURRENT_USER\Software\ISE\Eiffel_19.09\installation\es_cloud\default_server_url
+				-- On Windows: Computer\HKEY_CURRENT_USER\Software\ISE\Eiffel_MM.mm\installation\es_cloud\default_server_url
 				if
 					is_eiffel_layout_defined and then
 					attached (create {ES_INSTALLATION_ENVIRONMENT}.make (eiffel_layout)).application_item ("default_server_url", "es_cloud", eiffel_layout.version_name) as v
@@ -711,6 +711,7 @@ feature -- Updating
 		local
 			params: ES_CLOUD_API_SESSION_PARAMETERS
 			d: ES_CLOUD_PING_DATA
+			l_issue: ES_ACCOUNT_LICENSE_ISSUE
 		do
 			if attached a_account.access_token as tok then
 				create params.make (installation.id, a_session.id)
@@ -727,7 +728,16 @@ feature -- Updating
 					on_session_heartbeat_updated (d.heartbeat)
 				end
 				if d.license_expired then
-					on_account_license_issue (Void, a_account)
+					create l_issue.make (a_account)
+					l_issue.set_license_expired
+					if attached d.error_message as errmsg then
+						l_issue.set_reason (errmsg)
+					end
+					on_account_license_issue (l_issue)
+				elseif attached d.error_message as errmsg then
+					create l_issue.make (a_account)
+					l_issue.set_reason (errmsg)
+					on_account_license_issue (l_issue)
 				end
 			end
 		end
@@ -770,6 +780,8 @@ feature -- Updating
 		end
 
 	update_account (a_account: ES_ACCOUNT)
+		local
+			l_issue: ES_ACCOUNT_LICENSE_ISSUE
 		do
 			if
 				attached a_account.access_token as tok and then
@@ -804,10 +816,13 @@ feature -- Updating
 					then
 						on_account_updated (a_account)
 					else
-						on_account_license_issue (lic, acc)
+						create l_issue.make (acc)
+						l_issue.set_license (lic)
+						on_account_license_issue (l_issue)
 					end
 				else
-					on_account_license_issue (Void, acc)
+					create l_issue.make (acc)
+					on_account_license_issue (l_issue)
 				end
 			elseif is_available then
 				sign_out

@@ -517,6 +517,9 @@ feature -- Installation
 							if resp.boolean_item_is_true ("es:license_missing") then
 								a_output.license_missing := True
 							end
+							if resp.boolean_item_is_true ("es:license_invalid") then
+								a_output.license_invalid := True
+							end
 							if
 								resp.boolean_item_is_true ("es:license_expired")
 								or resp.boolean_item_is_true ("es:plan_expired")

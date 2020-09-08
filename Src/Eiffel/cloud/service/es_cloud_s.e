@@ -315,18 +315,13 @@ feature -- Events
 				-- FIXME: if gpl edition, quit EiffelStudio?
 		end
 
-	on_account_license_expired (acc: ES_ACCOUNT)
-		do
-			on_account_license_issue (Void, acc)
-		end
-
-	on_account_license_issue (lic: detachable ES_ACCOUNT_LICENSE; acc: ES_ACCOUNT)
+	on_account_license_issue (a_issue: ES_ACCOUNT_LICENSE_ISSUE)
 		do
 			if attached observers as lst then
 				across
 					lst as ic
 				loop
-					ic.item.on_account_license_issue (lic, acc)
+					ic.item.on_account_license_issue (a_issue)
 				end
 			end
 		end

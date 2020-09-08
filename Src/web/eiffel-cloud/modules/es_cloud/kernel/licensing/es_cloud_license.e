@@ -36,8 +36,23 @@ feature -- Access
 
 	plan: ES_CLOUD_PLAN
 
-	platform: detachable IMMUTABLE_STRING_32
-			-- Limited to platform
+	platforms: detachable LIST [IMMUTABLE_STRING_32]
+			-- Limited to list of platform.
+
+	platforms_as_csv_string: detachable STRING_32
+		do
+			if attached platforms as l_platforms then
+				create Result.make_empty
+				across
+					l_platforms as ic
+				loop
+					if not Result.is_empty then
+						Result.extend (',')
+					end
+					Result.append (ic.item)
+				end
+			end
+		end
 
 	version: detachable IMMUTABLE_STRING_32
 			-- Limited to version
@@ -123,6 +138,11 @@ feature -- Status report
 			Result := plan.installations_limit
 		end
 
+	platforms_limit: NATURAL
+		do
+			Result := plan.platforms_limit
+		end
+
 	heartbeat: NATURAL
 		do
 			Result := plan.heartbeat
@@ -130,16 +150,45 @@ feature -- Status report
 
 feature -- Platform restriction		
 
-	is_waiting_for_platform_value: BOOLEAN
+	is_waiting_for_platform_value (a_platform: detachable READABLE_STRING_GENERAL): BOOLEAN
 		do
-			Result := platform = Void
+			if attached platforms as pfs then
+				if
+					a_platform /= Void and then
+					across pfs as ic some ic.item.is_case_insensitive_equal_general (a_platform) end
+				then
+						-- Platform `a_platform` is already accepted.
+					Result := False
+				else
+					Result := pfs.count < platforms_limit.to_integer_32
+				end
+			else
+				Result := True
+			end
 		end
 
-	set_platform_restriction (pf: detachable READABLE_STRING_GENERAL)
-		require
-			is_waiting_for_platform_value
+	accept_platform (a_platform: READABLE_STRING_GENERAL)
+			-- Add `a_platform` as accepted platform
+		local
+			l_platforms: like platforms
 		do
-			set_platform (pf)
+			l_platforms := platforms
+			if l_platforms = Void then
+				create {ARRAYED_LIST [IMMUTABLE_STRING_32]} l_platforms.make (1)
+				platforms := l_platforms
+			end
+			l_platforms.force (create {IMMUTABLE_STRING_32}.make_from_string_general (a_platform))
+		end
+
+	set_platforms_restriction (a_platforms: detachable READABLE_STRING_GENERAL)
+		require
+			is_waiting_for_platform_value (Void)
+		do
+			if a_platforms = Void then
+				set_platforms (Void)
+			else
+				set_platforms (a_platforms.split (','))
+			end
 		end
 
 feature -- License validity
@@ -148,7 +197,7 @@ feature -- License validity
 		do
 			Result := True
 			if is_active then
-				Result := Result and then is_accepted_platform (pf)
+				Result := is_accepted_platform (pf)
 				if
 					attached version as l_version and then
 					(a_prod_version = Void or else not a_prod_version.is_case_insensitive_equal (l_version))
@@ -172,18 +221,31 @@ feature -- License validity
 		end
 
 	is_accepted_platform (pf: detachable READABLE_STRING_GENERAL): BOOLEAN
+		local
+			l_platform: READABLE_STRING_32
 		do
-			if attached platform as l_platform then
-				if l_platform.same_string ("*") then
+			if attached platforms as l_platforms then
+				if platforms_limit = 0 or else l_platforms.count.to_natural_32 < platforms_limit then
 					Result := True
-				elseif pf = Void then
-					Result := False
-				elseif pf.is_case_insensitive_equal (l_platform) then
-					Result := True
---				elseif generic_platform_name (pf).is_case_insensitive_equal (l_platform) then
---					Result := True
 				else
-					Result := False
+					across
+						l_platforms as ic
+					until
+						Result
+					loop
+						l_platform := ic.item
+						if l_platform.same_string ({STRING_32} "*") then
+							Result := True
+						elseif pf = Void then
+							Result := False
+						elseif pf.is_case_insensitive_equal (l_platform) then
+							Result := True
+		--				elseif generic_platform_name (pf).is_case_insensitive_equal (l_platform) then
+		--					Result := True
+						else
+							Result := False
+						end
+					end
 				end
 			else
 				Result := True
@@ -213,12 +275,23 @@ feature -- Element change
 			plan := p
 		end
 
-	set_platform (v: detachable READABLE_STRING_GENERAL)
+	set_platforms (v: detachable LIST [READABLE_STRING_GENERAL])
+		local
+			lst: ARRAYED_LIST [IMMUTABLE_STRING_32]
 		do
 			if v = Void then
-				platform := Void
+				platforms := Void
 			else
+				create lst.make (v.count)
+				across
+					v as ic
+				loop
+					lst.force (create {IMMUTABLE_STRING_32}.make_from_string_general (ic.item))
+				end
+				platforms := lst
+			end
 				-- Do not use general platform, but specific!
+-- TODO: to restore general platform cases, take the platforms `v` as comma separated values!				
 --				if
 --					v.is_case_insensitive_equal ("windows")
 --					or 	v.is_case_insensitive_equal ("win64")
@@ -229,9 +302,9 @@ feature -- Element change
 --				elseif v.as_lower.starts_with ("macos") then
 --					platform := platform_macos
 --				else
-					create platform.make_from_string_general (v)
+--					..
 --				end
-			end
+--			end
 		end
 
 	set_version (v: detachable READABLE_STRING_GENERAL)

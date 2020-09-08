@@ -227,8 +227,8 @@ feature -- Execution
 							else
 								s.append ("<li class=%"status warning%">EXPIRED</li>")
 							end
-							if attached lic.platform as l_platform then
-								s.append ("<li class=%"limit warning%">Limited to platform: " + html_encoded (l_platform) + "</li>")
+							if attached lic.platforms_as_csv_string as l_platforms then
+								s.append ("<li class=%"limit warning%">Limited to platform(s): " + html_encoded (l_platforms) + "</li>")
 							end
 							if attached lic.version as l_product_version then
 								s.append ("<li class=%"limit warning%">Limited to version: " + html_encoded (l_product_version) + "</li>")
@@ -256,6 +256,9 @@ feature -- Execution
 								s.append ("</li>")
 							elseif l_plan.installations_limit > 0 then
 								s.append ("<li class=%"limit warning%">Can be installed on: " + l_plan.installations_limit.out + " devices</li>")
+							end
+							if l_plan.platforms_limit > 0 then
+								s.append ("<li class=%"limit warning%">Can be installed on: " + l_plan.platforms_limit.out + " different platforms</li>")
 							end
 
 							s.append ("</ul>")

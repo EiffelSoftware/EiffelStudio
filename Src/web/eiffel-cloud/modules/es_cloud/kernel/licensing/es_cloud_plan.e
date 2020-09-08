@@ -46,6 +46,10 @@ feature -- Access
 			-- Maximum number of installation for the same plan.
 			-- `0` means no limit
 
+	platforms_limit: NATURAL
+			-- Maximum number of different platforms for the same plan.
+			-- `0` means no limit
+
 	concurrent_sessions_limit: NATURAL
 			-- Maximum number of concurrent sessions for the same plan.
 			-- `0` means no limit
@@ -69,6 +73,7 @@ feature -- Access: private
 		do
 			create s.make (50)
 			s.append ("install.limit="); s.append_natural_32 (installations_limit)
+			s.append (";platforms.limit="); s.append_natural_32 (platforms_limit)
 			s.append (";session.limit="); s.append_natural_32 (concurrent_sessions_limit)
 			s.append (";session.heartbeat="); s.append_natural_32 (heartbeat)
 			s.append (";order.weight="); s.append_integer (weight)
@@ -111,12 +116,13 @@ feature -- Element change
 
 	set_data (a_data: detachable READABLE_STRING_GENERAL)
 		local
-			sess,inst,l_heartbeat, l_trial_days: NATURAL
+			sess,inst,platfs,l_heartbeat, l_trial_days: NATURAL
 			l_weight: INTEGER
 			s: READABLE_STRING_GENERAL
 		do
 			sess := 0
 			inst := 0
+			platfs := 0
 			l_heartbeat := 0
 			l_weight := 0
 			l_trial_days := 0
@@ -127,6 +133,8 @@ feature -- Element change
 					s := ic.item
 					if s.starts_with ("install.limit=") then
 						inst := s.substring (s.index_of ('=', 1) + 1, s.count).to_natural
+					elseif s.starts_with ("platforms.limit=") then
+						platfs := s.substring (s.index_of ('=', 1) + 1, s.count).to_natural
 					elseif s.starts_with ("session.limit=") then
 						sess := s.substring (s.index_of ('=', 1) + 1, s.count).to_natural
 					elseif s.starts_with ("session.heartbeat=") then
@@ -142,6 +150,7 @@ feature -- Element change
 				end
 			end
 			installations_limit := inst
+			platforms_limit := platfs
 			concurrent_sessions_limit := sess
 			heartbeat := l_heartbeat
 			if l_trial_days = 0 then

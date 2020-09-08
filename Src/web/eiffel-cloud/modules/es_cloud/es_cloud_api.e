@@ -280,7 +280,7 @@ feature -- Element change license
 					Result.set_remaining_days (sub.plan.trial_period_in_days)
 				end
 				if a_installation /= Void then
-					Result.set_platform (a_installation.platform)
+					Result.set_platforms_restriction (a_installation.platform)
 					Result.set_version (a_installation.product_version)
 				end
 				save_new_license (Result, sub.user)
@@ -687,8 +687,8 @@ feature -- HTML factory
 			else
 				s.append ("<li class=%"status warning%">EXPIRED</li>")
 			end
-			if attached lic.platform as l_platform then
-				s.append ("<li class=%"limit%"><span class=%"title%">Limited to platform:</span> " + html_encoded (l_platform) + "</li>")
+			if attached lic.platforms_as_csv_string as l_platforms then
+				s.append ("<li class=%"limit%"><span class=%"title%">Limited to platform(s):</span> " + html_encoded (l_platforms) + "</li>")
 			end
 			if attached lic.version as l_product_version then
 				s.append ("<li class=%"limit%"><span class=%"title%">Limited to version:</span> " + html_encoded (l_product_version) + "</li>")
@@ -702,6 +702,7 @@ feature -- HTML factory
 						s.append ("<p>To install on another device, please revoke one the previous installation(s):</p>")
 					end
 				end
+
 				s.append ("<div class=%"es-installations%"><ul>")
 				across
 					lst as inst_ic
@@ -716,11 +717,14 @@ feature -- HTML factory
 					s.append ("</li>%N")
 				end
 				s.append ("</ul></div>")
-
 				s.append ("</li>")
 			elseif l_plan.installations_limit > 0 then
 				s.append ("<li class=%"limit warning%">Can be installed on: " + l_plan.installations_limit.out + " device(s)</li>")
 			end
+			if l_plan.platforms_limit > 0 then
+				s.append ("<li class=%"limit%">Can be installed on "+ l_plan.platforms_limit.out +" different platforms</li> ")
+			end
+
 			if es_cloud_module /= Void then
 				s.append ("<li><a href=%"" + api.location_url (es_cloud_module.license_activities_location (lic), Void) + "%">Associated activities...</a> ")
 			end

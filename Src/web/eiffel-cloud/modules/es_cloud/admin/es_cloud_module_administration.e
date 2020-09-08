@@ -150,8 +150,8 @@ feature -- Hooks configuration
 									s.append (" <span class=%"fallback%">(Fallback since " + date_time_to_string (l_fb) + ")</span>")
 								end
 
-								if attached l_license.platform as pf then
-									s.append (" <span class=%"platform%">[platform=" +  html_encoded (pf) + "]</span>")
+								if attached l_license.platforms_as_csv_string as pf then
+									s.append (" <span class=%"platform%">[platforms=" +  html_encoded (pf) + "]</span>")
 								end
 								if attached l_license.version as l_version then
 									s.append (" <span class=%"version%">[version=" +  html_encoded (l_version) + "]</span>")
@@ -237,11 +237,11 @@ feature -- Hooks configuration
 							if attached {WSF_STRING} l_lic_data.value ("key") as p_key then
 								check lic /= Void implies p_key.is_case_insensitive_equal (lic.key) end
 							end
-							if attached {WSF_STRING} l_lic_data.value ("platform") as p_platform then
-								if p_platform.is_empty then
-									lic.set_platform (Void)
+							if attached {WSF_STRING} l_lic_data.value ("platforms") as p_platforms then
+								if p_platforms.is_empty then
+									lic.set_platforms_restriction (Void)
 								else
-									lic.set_platform (p_platform.value)
+									lic.set_platforms_restriction (p_platforms.value)
 								end
 							end
 							if attached {WSF_STRING} l_lic_data.value ("version") as p_version then
@@ -348,10 +348,10 @@ feature -- Hooks configuration
 				lic_fset.extend (r)
 			end
 
-			create txt.make (l_var_prefix + "[platform]")
-			txt.set_label ("Platform")
-			txt.set_description ("License for specific platform")
-			if a_license /= Void and then attached a_license.platform as pf then
+			create txt.make (l_var_prefix + "[platforms]")
+			txt.set_label ("Platforms")
+			txt.set_description ("License for specific platforms (comma separated value)")
+			if a_license /= Void and then attached a_license.platforms_as_csv_string as pf then
 				txt.set_text_value (pf)
 			end
 			lic_fset.extend (txt)

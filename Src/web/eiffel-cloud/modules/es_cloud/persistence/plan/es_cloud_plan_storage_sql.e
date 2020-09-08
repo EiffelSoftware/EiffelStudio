@@ -298,7 +298,7 @@ feature -- Element change: license
 			end
 			l_params.force (a_license.plan.id, "pid")
 			l_params.force (a_license.key, "license_key")
-			l_params.force (a_license.platform, "platform")
+			l_params.force (a_license.platforms_as_csv_string, "platform")
 			l_params.force (a_license.version, "version")
 			l_params.force (a_license.status, "status")
 			l_params.force (a_license.creation_date, "creation")
@@ -495,7 +495,7 @@ feature {NONE} -- Fetcher
 			end
 			create Result.make_with_id (lid, l_key, l_plan)
 			if attached sql_read_string_32 (i + 1) as s then
-				Result.set_platform (s)
+				Result.set_platforms_restriction (s)
 			end
 			if attached sql_read_string_32 (i + 2) as s then
 				Result.set_version (s)

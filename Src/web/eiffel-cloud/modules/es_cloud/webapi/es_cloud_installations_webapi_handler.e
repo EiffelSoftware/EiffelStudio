@@ -350,6 +350,7 @@ feature {NONE} -- User installation post handling
 			l_plan: ES_CLOUD_PLAN
 			n, l_sess_limit, l_heartbeat: NATURAL
 			l_inst_location: STRING
+			err_msg, l_expecting: STRING_32
 		do
 			if a_user.same_as (api.user) then
 				a_installation.set_info (a_form_data.string_item ("info"))
@@ -366,12 +367,36 @@ feature {NONE} -- User installation post handling
 						r.add_boolean_field ("es:plan_expired", True) -- For backward compatibility
 					elseif not l_license.is_valid (a_installation.platform, a_installation.product_version) then
 						-- ERROR: invalid license!
-						r := new_error_response ("Error: invalid license!", req, res)
-						r.add_boolean_field ("es:license_expired", True)
+						create err_msg.make_from_string_general ("invalid license")
+						if attached l_license.version as l_version then
+							create l_expecting.make_from_string ({STRING_32} " version:" + l_version)
+						end
+						if attached l_license.platforms_as_csv_string as l_platforms then
+							if l_expecting = Void then
+								create l_expecting.make_empty
+							end
+							l_expecting.append ({STRING_32} " platforms:" + l_platforms)
+						end
+						if l_expecting /= Void then
+							err_msg.append ({STRING_32} " (expecting " + l_expecting + ")")
+						end
+
+						r := new_error_response (err_msg, req, res)
+						if attached l_license.version as l_version then
+							r.add_string_field ("es:version_limitation", l_version)
+						end
+						if attached l_license.platforms_as_csv_string as l_platforms then
+							r.add_string_field ("es:platforms_limitation", l_platforms)
+						end
+						r.add_boolean_field ("es:license_invalid", True)
+						r.add_boolean_field ("es:license_expired", True) -- For backward compatibility
 						r.add_boolean_field ("es:plan_expired", True) -- For backward compatibility
 					else
-						if l_license.is_waiting_for_platform_value then
-							l_license.set_platform_restriction (a_installation.platform)
+						if
+							attached a_installation.platform as pf and then
+							l_license.is_waiting_for_platform_value (pf)
+						then
+							l_license.accept_platform (pf)
 							es_cloud_api.save_license (l_license)
 						end
 						l_plan := l_license.plan
@@ -536,9 +561,9 @@ feature {NONE} -- User installation post handling
 								)
 							then
 									-- Found license
-								if lic.is_waiting_for_platform_value then
+								if pl /= Void and then lic.is_waiting_for_platform_value (pl) then
 										-- Assign platform.
-									lic.set_platform_restriction (pl)
+									lic.set_platforms_restriction (pl)
 								end
 								es_cloud_api.register_installation (lic, a_install_id, a_info)
 								inst := es_cloud_api.installation (a_install_id)

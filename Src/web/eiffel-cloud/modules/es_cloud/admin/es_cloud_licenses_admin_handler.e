@@ -164,8 +164,8 @@ feature -- Execution
 							s.append ("</td>")
 
 							s.append ("<td>") -- Conditions
-							if attached lic.platform as l_platforms then
-								s.append (" platform:" + html_encoded (l_platforms))
+							if attached lic.platforms_as_csv_string as l_platforms then
+								s.append (" platforms:" + html_encoded (l_platforms))
 							end
 							if attached lic.version as l_version then
 								s.append (" version:" + html_encoded (l_version))

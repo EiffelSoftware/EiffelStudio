@@ -72,6 +72,11 @@ feature -- Status report
 			Result := plan.installations_limit
 		end
 
+	platforms_limit: NATURAL
+		do
+			Result := plan.platforms_limit
+		end
+
 	heartbeat: NATURAL
 		do
 			Result := plan.heartbeat

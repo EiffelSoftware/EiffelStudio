@@ -1,1 +1,11 @@
-<svg height="100" viewBox="0 0 100 100" width="100" xmlns="http://www.w3.org/2000/svg"><g transform="matrix(1.0056257 0 0 .99251397 9.288561 -3.599683)"><path d="m23.812502 96.824998v-21.166667h-21.1666686v-21.166667h21.1666686v-21.166667h21.166666v21.166667h21.166668v21.166667h-21.166668v21.166667z" fill="#27c204" stroke="#005a1d" stroke-width="3.96875"/><g fill="none" stroke="#fff" stroke-linecap="round"><path d="m28.019449 75.658333v16.967731" opacity=".7" stroke-width="4.103144"/><path d="m6.8527784 58.48864v13.313167" opacity=".7" stroke-width="3.634507"/><path d="m28.019449 37.425931v16.967731" opacity=".7" stroke-width="4.103144"/></g></g><g transform="matrix(1.0056257 0 0 .99251397 9.288561 -3.599683)"><path d="m23.812502 96.824998v-21.166667h-21.1666686v-21.166667h21.1666686v-21.166667h21.166666v21.166667h21.166668v21.166667h-21.166668v21.166667z" fill="#27c204" stroke="#005a1d" stroke-width="3.96875"/><g fill="none" stroke="#fff" stroke-linecap="round"><path d="m28.019449 75.658333v16.967731" opacity=".7" stroke-width="4.103144"/><path d="m6.8527784 58.48864v13.313167" opacity=".7" stroke-width="3.634507"/><path d="m28.019449 37.425931v16.967731" opacity=".7" stroke-width="4.103144"/></g></g><path d="m82.517066 93.690073h14.433934-6.767044v-22.611233l-7.66689 2.76832 7.66689-2.76832v22.611233z" stroke="#0b0b0b" stroke-linecap="round" stroke-linejoin="round" stroke-width="3.87"/></svg>
+<svg height="100" viewBox="0 0 100 100" width="100" xmlns="http://www.w3.org/2000/svg">
+	<g transform="matrix(1.0056257 0 0 .99251397 9.288561 -3.599683)">
+		<path d="m23.812502 96.824998v-21.166667h-21.1666686v-21.166667h21.1666686v-21.166667h21.166666v21.166667h21.166668v21.166667h-21.166668v21.166667z" fill="#27c204" stroke="#005a1d" stroke-width="3.96875"/>
+		<g fill="none" stroke="#fff" stroke-linecap="round">
+			<path d="m28.019449 75.658333v16.967731" opacity=".7" stroke-width="4.103144"/>
+			<path d="m6.8527784 58.48864v13.313167" opacity=".7" stroke-width="3.634507"/>
+			<path d="m28.019449 37.425931v16.967731" opacity=".7" stroke-width="4.103144"/>
+		</g>
+	</g>
+	<path d="m82.517066 93.690073h14.433934-6.767044v-22.611233l-7.66689 2.76832 7.66689-2.76832v22.611233z" stroke="#0b0b0b" stroke-linecap="round" stroke-linejoin="round" stroke-width="3.87"/>
+</svg>

@@ -229,6 +229,33 @@ feature {NONE} -- Action handlers
 					if cld.is_enterprise_edition then
 						append_bold_text_to (locale.translation_in_context ("Edition: enterprise", "cloud.info"), txt)
 						append_text_to ("%N", txt)
+					elseif attached cld.installation.associated_license as l_lic then
+						append_bold_text_to (locale.translation_in_context ("License key: ", "cloud.info"), txt)
+						append_text_to (l_lic.key, txt)
+						append_text_to ("%N", txt)
+
+						append_bold_text_to (locale.translation_in_context ("License plan: ", "cloud.info"), txt)
+						append_text_to (l_lic.plan_name, txt)
+						append_text_to ("%N", txt)
+						if attached l_lic.expiration_date as dt then
+							nb_days := l_lic.days_remaining
+							append_bold_text_to (locale.translation_in_context ("Expires: ", "cloud.info"), txt)
+							append_time_to (dt, txt)
+							append_text_to ("%N", txt)
+							if nb_days >= 0 then
+								append_bold_text_to (locale.translation_in_context ("Days until expiration: ", "cloud.info"), txt)
+								append_text_to (nb_days.out, txt)
+								append_text_to ("%N", txt)
+							else
+								append_bold_text_to (locale.translation_in_context ("License status: EXPIRED!", "cloud.info"), txt)
+								append_text_to ("%N", txt)
+							end
+						end
+						if is_advanced_view then
+							append_bold_text_to (locale.translation_in_context ("Installation id: ", "cloud.info"), txt)
+							append_text_to (cld.installation.id, txt)
+							append_text_to ("%N", txt)
+						end
 					elseif attached cld.installation.associated_plan as l_plan then
 						append_bold_text_to (locale.translation_in_context ("License plan: ", "cloud.info"), txt)
 						append_text_to (l_plan.name, txt)

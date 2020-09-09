@@ -27,11 +27,11 @@ EnterRow 1
 # edited: 1.svg
 # readonly
 #SVGfrozen 1.svg 2.svg
-SVGadd 1.svg $RES/readonly.svg 2.svg
+SVGadd 1.svg $RES/readonly_ne.svg 2.svg
 # uncompiled
 SVGgrey 1.svg 3.svg
 # uncompiled readonly
-SVGadd 3.svg $RES/readonly.svg 4.svg
+SVGadd 3.svg $RES/readonly_ne.svg 4.svg
 # 
 # [@expanded override]
 # normal
@@ -47,63 +47,63 @@ SVGadd 4.svg $OVERLAY/override_se.svg 8.svg
 # normal
 SVGadd 1.svg $OVERLAY/overridden_sw.svg 9.svg
 # readonly
-SVGadd 9.svg $RES/readonly.svg 10.svg
+SVGadd 9.svg $RES/readonly_ne.svg 10.svg
 # uncompiled
 SVGadd 3.svg $OVERLAY/overridden_sw.svg 11.svg
 # uncompiled readonly
-SVGadd 11.svg $RES/readonly.svg 12.svg
+SVGadd 11.svg $RES/readonly_ne.svg 12.svg
 
 # [class]
 # @class
 # normal
 SVGadd $RES/class.svg 13.svg
 # readonly
-SVGadd 13.svg $RES/readonly.svg 14.svg
+SVGadd 13.svg $RES/readonly_ne.svg 14.svg
 # deferred
-SVGadd 13.svg $RES/deferred.svg 15.svg
+SVGadd 13.svg $RES/deferred_nw.svg 15.svg
 # deferred readonly
-SVGadd 13.svg $RES/deferred.svg $RES/readonly.svg 16.svg
+SVGadd 13.svg $RES/deferred_nw.svg $RES/readonly_ne.svg 16.svg
 # frozen
 SVGfrozen 13.svg 17.svg
 # frozen readonly
-SVGadd 17.svg $RES/readonly.svg 18.svg
+SVGadd 17.svg $RES/readonly_ne.svg 18.svg
 # uncompiled
 SVGgrey 13.svg 19.svg
 # uncompiled readonly
-SVGadd 19.svg $RES/readonly.svg 20.svg
+SVGadd 19.svg $RES/readonly_ne.svg 20.svg
 
 # @class override 
 # normal
 SVGadd 13.svg $OVERLAY/override_se.svg 21.svg
 # readonly
-SVGadd 21.svg $RES/readonly.svg 22.svg
+SVGadd 21.svg $RES/readonly_ne.svg 22.svg
 
 # deferred
-SVGadd 21.svg $RES/deferred.svg 23.svg
+SVGadd 21.svg $RES/deferred_nw.svg 23.svg
 # deferred readonly
-SVGadd 23.svg $RES/readonly.svg 24.svg
+SVGadd 23.svg $RES/readonly_ne.svg 24.svg
 # frozen
 SVGadd 17.svg $OVERLAY/override_se.svg 25.svg
 # frozen readonly
-SVGadd 25.svg $RES/readonly.svg 26.svg
+SVGadd 25.svg $RES/readonly_ne.svg 26.svg
 # uncompiled
 SVGadd 19.svg $OVERLAY/override_se.svg 27.svg
 # uncompiled readonly
-SVGadd 27.svg $RES/readonly.svg 28.svg
+SVGadd 27.svg $RES/readonly_ne.svg 28.svg
 
 # @class overridden
 # normal
 SVGadd 13.svg $OVERLAY/overridden_sw.svg 29.svg
 # readonly
-SVGadd 29.svg $RES/readonly.svg 30.svg
+SVGadd 29.svg $RES/readonly_ne.svg 30.svg
 # deferred
-SVGadd 29.svg $RES/deferred.svg 31.svg
+SVGadd 29.svg $RES/deferred_nw.svg 31.svg
 # deferred readonly
-SVGadd 31.svg $RES/readonly.svg 32.svg
+SVGadd 31.svg $RES/readonly_ne.svg 32.svg
 # frozen
 SVGadd 17.svg $OVERLAY/overridden_sw.svg 33.svg
 # frozen readonly
-SVGadd 33.svg $RES/readonly.svg 34.svg
+SVGadd 33.svg $RES/readonly_ne.svg 34.svg
 ExitRow
 
 #----------------------------------------------------------------------------------
@@ -111,7 +111,7 @@ EnterRow 2
 # uncompiled
 SVGadd ../1/19.svg $OVERLAY/overridden_sw.svg 1.svg
 # uncompiled readonly
-SVGadd 1.svg $RES/readonly.svg 2.svg
+SVGadd 1.svg $RES/readonly_ne.svg 2.svg
 ExitRow
 
 #----------------------------------------------------------------------------------
@@ -126,7 +126,7 @@ SVGadd $RES/feature.svg 1.svg
 # attribute
 SVGadd 1.svg $OVERLAY/attribute_e.svg 2.svg
 # once
-SVGadd 1.svg $RES/once.svg 3.svg
+SVGadd 1.svg $OVERLAY/once_se.svg 3.svg
 # deferred
 SVGlight 1.svg 4.svg
 # external
@@ -138,13 +138,13 @@ SVGlight 6.svg 7.svg
 
 # [@feature instance_free]
 # routine
-SVGadd 1.svg $RES/instance-free.svg 8.svg
+SVGadd 1.svg $RES/instance-free_ne.svg 8.svg
 # once
-SVGadd 8.svg $RES/once.svg 9.svg
+SVGadd 8.svg $OVERLAY/once_se.svg 9.svg
 # deferred 10
-SVGadd 4.svg $RES/instance-free.svg 10.svg
+SVGadd 4.svg $RES/instance-free_ne.svg 10.svg
 # external 11
-SVGadd 5.svg $RES/instance-free.svg 11.svg
+SVGadd 5.svg $RES/instance-free_ne.svg 11.svg
 # 
 # [@feature frozen]
 # routine
@@ -160,18 +160,18 @@ SVGfrozen 6.svg 16.svg
 # 
 # [@feature frozen instance_free]
 # routine
-SVGadd 12.svg $RES/instance-free.svg 17.svg
+SVGadd 12.svg $RES/instance-free_ne.svg 17.svg
 # once
-SVGadd 17.svg $RES/once.svg 18.svg
+SVGadd 17.svg $OVERLAY/once_se.svg 18.svg
 # external
-SVGadd 15.svg $RES/instance-free.svg 19.svg
+SVGadd 15.svg $RES/instance-free_ne.svg 19.svg
 # 
 # [@feature]
 # constant
 SVGadd 18.svg 20.svg
 # obsolete constant
 SVGgrey 3.svg 21.svg
-SVGadd 21.svg $RES/instance-free.svg 21.svg
+SVGadd 21.svg $RES/instance-free_ne.svg 21.svg
 # 
 # [@feature obsolete]
 # routine 22
@@ -711,12 +711,12 @@ SVGadd $RES/feature.svg 16.svg
 # creator
 # deferred
 # once
-SVGadd $RES/feature.svg $RES/once.svg  20.svg
+SVGadd $RES/feature.svg $OVERLAY/once_se.svg  20.svg
 # external
 SVGadd $RES/feature.svg $RES/curly_brackets.svg 21.svg
 # exported
 # instance_free routine
-SVGadd $RES/feature.svg $RES/instance-free.svg  23.svg
+SVGadd $RES/feature.svg $RES/instance-free_ne.svg  23.svg
 # 
 ExitRow
 #----------------------------------------------------------------------------------
@@ -961,7 +961,7 @@ SVGadd $OVERLAY/editor_sw.svg 22.svg
 # refresh left
 SVGadd $OVERLAY/refresh_sw.svg 23.svg
 # instance free
-SVGadd $RES/instance-free.svg 24.svg
+SVGadd $RES/instance-free_ne.svg 24.svg
 # feature left
 SVGadd $OVERLAY/feature_se.svg 25.svg
 # verifier right

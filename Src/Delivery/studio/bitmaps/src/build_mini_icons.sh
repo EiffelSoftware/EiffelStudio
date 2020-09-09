@@ -135,14 +135,14 @@ ExitRow
 EnterRow 5
 # [new]
 # feature
-SVGadd $RES/feature.svg $RES/new_nw.svg 1.svg
+SVGadd $RES/feature.svg $OVERLAY/new_nw.svg 1.svg
 # class
-SVGadd $RES/class.svg $RES/new_nw.svg 2.svg
+SVGadd $RES/class.svg $OVERLAY/new_nw.svg 2.svg
 # cluster
-SVGadd $RES/folder.svg $RES/new_nw.svg 3.svg
+SVGadd $RES/folder.svg $OVERLAY/new_nw.svg 3.svg
 # expression
 # library
-SVGadd $RES/library.svg $RES/new_nw.svg 5.svg
+SVGadd $RES/library.svg $OVERLAY/new_nw.svg 5.svg
 # assembly
 # watch tool
 # window

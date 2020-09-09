@@ -50,6 +50,7 @@ SVGoverlays water_drop
 SVGoverlays flash
 SVGoverlays eiffelstudio .7
 SVGoverlays feature
+SVGoverlays once
 
 SVGclean res/attribute.svg
 SVGoverlay e .45 res/attribute.svg res/overlay/attribute_e.svg

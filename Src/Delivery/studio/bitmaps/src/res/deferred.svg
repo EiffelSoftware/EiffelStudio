@@ -1,1 +1,132 @@
-<svg height="100" viewBox="0 0 100 100" width="100" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"><filter id="a" color-interpolation-filters="sRGB"><feGaussianBlur result="blur" stdDeviation="2 2"/></filter><radialGradient id="b" cx="178.04436" cy="134.44092" gradientTransform="matrix(.83333382 -.83333299 .83333282 .83333368 -82.360059 170.77703)" gradientUnits="userSpaceOnUse" r="13.515203"><stop offset="0" stop-color="#fff"/><stop offset=".60852629" stop-color="#f00"/><stop offset="1" stop-color="#210000"/></radialGradient><filter id="c" color-interpolation-filters="sRGB"><feFlood flood-opacity=".498039" result="flood"/><feComposite in="flood" in2="SourceGraphic" operator="in" result="composite1"/><feGaussianBlur in="composite1" result="blur" stdDeviation="3"/><feOffset dx="4" dy="4" result="offset"/><feComposite in="SourceGraphic" in2="offset" operator="over" result="composite2"/></filter><path d="m166.78169 123.17825h22.52534v22.52534h-22.52534z" fill="url(#b)" filter="url(#c)" stroke="#771b04" stroke-linejoin="round" stroke-width="3" transform="matrix(.69114344 .72271762 -.72271762 .69114344 -4.04614 -199.882481)"/><g fill="#fff" filter="url(#a)" transform="matrix(1.2121212 0 0 1.2121212 -9.366469 -246.77266)"><path d="m24.379465 215.26265h2.740327v12.47321h-2.740327z"/><path d="m220.12909-31.986237h2.74033v12.473214h-2.74033z" transform="rotate(90)"/></g></svg>
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg
+   xmlns:dc="http://purl.org/dc/elements/1.1/"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   inkscape:version="1.0 (4035a4fb49, 2020-05-01)"
+   sodipodi:docname="deferred.svg"
+   id="svg31"
+   version="1.1"
+   width="100"
+   viewBox="0 0 100 100"
+   height="100">
+  <metadata
+     id="metadata37">
+    <rdf:RDF>
+      <cc:Work
+         rdf:about="">
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type
+           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+        <dc:title></dc:title>
+      </cc:Work>
+    </rdf:RDF>
+  </metadata>
+  <defs
+     id="defs35" />
+  <sodipodi:namedview
+     inkscape:current-layer="svg31"
+     inkscape:window-maximized="1"
+     inkscape:window-y="-8"
+     inkscape:window-x="-8"
+     inkscape:cy="47.945553"
+     inkscape:cx="50"
+     inkscape:zoom="9.98"
+     showgrid="false"
+     id="namedview33"
+     inkscape:window-height="1147"
+     inkscape:window-width="1920"
+     inkscape:pageshadow="2"
+     inkscape:pageopacity="0"
+     guidetolerance="10"
+     gridtolerance="10"
+     objecttolerance="10"
+     borderopacity="1"
+     bordercolor="#666666"
+     pagecolor="#ffffff" />
+  <filter
+     color-interpolation-filters="sRGB"
+     id="a">
+    <feGaussianBlur
+       id="feGaussianBlur2"
+       stdDeviation="2 2"
+       result="blur" />
+  </filter>
+  <radialGradient
+     r="13.515203"
+     gradientUnits="userSpaceOnUse"
+     gradientTransform="matrix(0.83333382,-0.83333299,0.83333282,0.83333368,-82.360059,170.77703)"
+     cy="134.44092"
+     cx="178.04436"
+     id="b">
+    <stop
+       id="stop5"
+       stop-color="#fff"
+       offset="0" />
+    <stop
+       id="stop7"
+       stop-color="#f00"
+       offset=".60852629" />
+    <stop
+       id="stop9"
+       stop-color="#210000"
+       offset="1" />
+  </radialGradient>
+  <filter
+     color-interpolation-filters="sRGB"
+     id="c">
+    <feFlood
+       id="feFlood12"
+       result="flood"
+       flood-opacity=".498039" />
+    <feComposite
+       id="feComposite14"
+       result="composite1"
+       operator="in"
+       in2="SourceGraphic"
+       in="flood" />
+    <feGaussianBlur
+       id="feGaussianBlur16"
+       stdDeviation="3"
+       result="blur"
+       in="composite1" />
+    <feOffset
+       id="feOffset18"
+       result="offset"
+       dy="4"
+       dx="4" />
+    <feComposite
+       id="feComposite20"
+       result="composite2"
+       operator="over"
+       in2="offset"
+       in="SourceGraphic" />
+  </filter>
+  <path
+     style="fill:url(#b)"
+     id="path23"
+     transform="matrix(1.5371908,1.6074158,-1.6074158,1.5371908,-7.5856932,-442.85266)"
+     stroke-width="3"
+     stroke-linejoin="round"
+     stroke="#771b04"
+     filter="url(#c)"
+     fill="url(#b)"
+     d="m 166.78169,123.17825 h 22.52534 v 22.52534 h -22.52534 z" />
+  <g
+     id="g29"
+     transform="matrix(2.6959115,0,0,2.6959115,-19.418724,-547.14239)"
+     filter="url(#a)"
+     fill="#ffffff">
+    <path
+       id="path25"
+       d="m 24.379465,215.26265 h 2.740327 v 12.47321 h -2.740327 z" />
+    <path
+       id="path27"
+       transform="rotate(90)"
+       d="m 220.12909,-31.986237 h 2.74033 v 12.473214 h -2.74033 z" />
+  </g>
+</svg>

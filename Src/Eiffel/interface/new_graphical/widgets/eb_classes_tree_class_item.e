@@ -90,22 +90,38 @@ feature -- Status setting
 			-- (needs to be called after the class has been completely set up)
 		local
 			conf_class: CONF_CLASS
-			overs: ARRAYED_LIST [CONF_CLASS]
 			over_item: EB_CLASSES_TREE_CLASS_ITEM
-			class_i: CLASS_I
 		do
 			conf_class := data.config_class
 			if conf_class.does_override then
-				from
-					overs := conf_class.overrides
-					overs.start
-				until
-					overs.after
+				across
+					conf_class.overrides as ic
 				loop
-					class_i ?= overs.item
-					check
-						class_i: class_i /= Void
+					if attached {CLASS_I} ic.item as class_i then
+						if class_i.is_valid then
+							create over_item.make (class_i, class_i.name)
+							over_item.associate_with_window (associated_window)
+							if associated_textable /= Void then
+								over_item.set_associated_textable (associated_textable)
+							end
+
+							from
+								pointer_double_press_actions.start
+							until
+								pointer_double_press_actions.after
+							loop
+								over_item.add_double_click_action (pointer_double_press_actions.item)
+								pointer_double_press_actions.forth
+							end
+
+							extend (over_item)
+						end
+					else
+						check is_class_id: False end
 					end
+				end
+			elseif conf_class.is_overriden then
+				if attached {CLASS_I} conf_class.overriden_by as class_i then
 					if class_i.is_valid then
 						create over_item.make (class_i, class_i.name)
 						over_item.associate_with_window (associated_window)
@@ -121,32 +137,10 @@ feature -- Status setting
 							over_item.add_double_click_action (pointer_double_press_actions.item)
 							pointer_double_press_actions.forth
 						end
-
 						extend (over_item)
 					end
-					overs.forth
-				end
-			elseif conf_class.is_overriden then
-				class_i ?= conf_class.overriden_by
-				check
-					class_i: class_i /= Void
-				end
-				if class_i.is_valid then
-					create over_item.make (class_i, class_i.name)
-					over_item.associate_with_window (associated_window)
-					if associated_textable /= Void then
-						over_item.set_associated_textable (associated_textable)
-					end
-
-					from
-						pointer_double_press_actions.start
-					until
-						pointer_double_press_actions.after
-					loop
-						over_item.add_double_click_action (pointer_double_press_actions.item)
-						pointer_double_press_actions.forth
-					end
-					extend (over_item)
+				else
+					check is_class_id: False end
 				end
 			end
 		end
@@ -184,29 +178,22 @@ feature {NONE} -- Implementation
 
 	droppable (a_pebble: ANY): BOOLEAN
 			-- Can user drop `a_pebble' on `Current'?
-		local
-			conv_folder: CLUSTER_STONE
-			conv_st: CLASSI_STONE
-			fs: FEATURE_STONE
-			fparent: EB_CLASSES_TREE_FOLDER_ITEM
 		do
 				-- we can only drop things on clusters
-			fparent ?= parent
-			if fparent /= Void and then fparent.data.is_cluster then
-				conv_folder ?= a_pebble
-				if conv_folder /= Void then
+			if
+				attached {EB_CLASSES_TREE_FOLDER_ITEM} parent as fparent and then
+				fparent.data.is_cluster
+			then
+				if attached {CLUSTER_STONE} a_pebble as conv_folder then
 					Result := not cluster_contains_class (conv_folder.group)
 				else
-					conv_st ?= a_pebble
-					fs ?= a_pebble
-
 					Result :=
 							-- We have a class stone...
-						conv_st /= Void and then
+						attached {CLASSI_STONE} a_pebble as conv_st and then
 							-- ...from a different cluster...
 						conv_st.class_i.group /= data.group and then
 							-- ...and that is not a feature.
-						fs = Void
+						not attached {FEATURE_STONE} a_pebble
 				end
 			end
 		end
@@ -214,14 +201,14 @@ feature {NONE} -- Implementation
 	print_name
 			-- Print class name in textable, the associated text component.
 		do
-			if associated_textable /= Void then
-				associated_textable.set_data (data)
-				associated_textable.set_text (data.name)
+			if attached associated_textable as txt then
+				txt.set_data (data)
+				txt.set_text (data.name)
 			end
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2012, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2020, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

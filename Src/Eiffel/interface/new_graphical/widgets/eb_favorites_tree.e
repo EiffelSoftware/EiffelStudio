@@ -220,7 +220,7 @@ feature -- Observer pattern
 			-- is a folder situated in the root. If `a_item' is in the root, `a_path' can
 			-- be set to an empty list or `Void'.
 		local
-			item_name: STRING
+			item_name: READABLE_STRING_GENERAL
 		do
 				-- Remove the tree item that match `a_item' from the tree.
 			item_name := a_item.name
@@ -364,7 +364,7 @@ feature {NONE} -- Implementation
 		local
 			new_path: like a_path
 			curr_item: EB_FAVORITES_FOLDER
-			curr_folder_name: STRING
+			curr_folder_name: READABLE_STRING_GENERAL
 		do
 			if a_path = Void or else a_path.is_empty then
 				Result := item_list
@@ -403,7 +403,7 @@ feature {NONE} -- Implementation
 			-- Associated favorites manager
 
 note
-	copyright:	"Copyright (c) 1984-2018, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2020, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

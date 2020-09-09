@@ -335,7 +335,7 @@ Class_declaration:
 				end
 				
 				root_node := new_class_description ($4, temp_string_as1,
-					is_deferred, is_expanded, is_frozen_class, is_external_class, is_partial_class,
+					is_deferred, is_expanded, is_frozen_class, is_external_class, is_partial_class, is_once,
 					$1, $18, $5, $9, $11, $13, $14, $15, $17, suppliers, temp_string_as2, $19)
 				if attached root_node as l_root_node then
 					l_root_node.set_text_positions (
@@ -354,7 +354,7 @@ Class_declaration:
 					if attached $7 as l_obsolete then
 						l_root_node.set_obsolete_keyword (l_obsolete.first)
 					end
-					l_root_node.set_header_mark (frozen_keyword, expanded_keyword, deferred_keyword, external_keyword)
+					l_root_node.set_header_mark (frozen_keyword, expanded_keyword, deferred_keyword, once_keyword, external_keyword)
 					l_root_node.set_class_keyword ($3)
 				end
 			}
@@ -579,6 +579,11 @@ Header_mark: Frozen_mark External_mark
 			{
 				is_expanded := True
 				expanded_keyword := $2
+			}
+	|	Frozen_mark TE_ONCE External_mark
+			{
+				is_once := True
+				once_keyword := $2
 			}
 	;
 

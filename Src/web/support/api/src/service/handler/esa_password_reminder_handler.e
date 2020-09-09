@@ -72,9 +72,9 @@ feature -- HTTP Methods
 			-- Send a new password.
 		local
 			l_rhf: ESA_REPRESENTATION_HANDLER_FACTORY
-			l_email: READABLE_STRING_32
+			l_email: READABLE_STRING_8
 			l_error: detachable STRING_32
-			l_token: STRING_8
+			l_token: READABLE_STRING_8
 		do
 			create l_rhf
 			if attached current_media_type (req) as l_type then
@@ -84,14 +84,14 @@ feature -- HTTP Methods
 				l_email := email_from_user_info (extract_data_from_request (req, l_type))
 
 
-				if attached api_service.token_from_email (l_email.to_string_8) then
+				if attached api_service.token_from_email (l_email) then
 							-- Account not activated
 					l_error := "Account not activated"
 					l_rhf.new_representation_handler (esa_config, l_type, media_type_variants (req)).reminder_page (req, res, l_error)
 				else
 					if
-						attached api_service.question_from_email (l_email.to_string_8) and then
-						attached api_service.user_from_email (l_email.to_string_8) as l_user
+						attached api_service.question_from_email (l_email) and then
+						attached api_service.user_from_email (l_email) as l_user
 					then
 							-- Email address exist send email with a link
 							-- to reactivate his password.
@@ -99,9 +99,9 @@ feature -- HTTP Methods
 
 						api_service.change_password (l_user.user_name, l_email, l_token)
 								--  detachable TUPLE [first_name: STRING; last_name: STRING; user_name: STRING] then
-						email_notification_service.send_password_reset (l_email.to_string_8, message_change_password (l_token, l_user, req))
+						email_notification_service.send_password_reset (l_email, message_change_password (l_token, l_user, req))
 						if email_notification_service.successful then
-							l_rhf.new_representation_handler (esa_config, l_type, media_type_variants (req)).post_reminder_page (req, res, l_email.to_string_8)
+							l_rhf.new_representation_handler (esa_config, l_type, media_type_variants (req)).post_reminder_page (req, res, l_email)
 						else
 							l_error := email_notification_service.last_error_message
 							l_rhf.new_representation_handler (esa_config, l_type, media_type_variants (req)).reminder_page (req, res, l_error)
@@ -118,16 +118,19 @@ feature -- HTTP Methods
 		end
 
 
-	email_from_user_info (a_data: READABLE_STRING_32): STRING_32
+	email_from_user_info (a_data: READABLE_STRING_32): READABLE_STRING_8
 			-- Retrieve user email from request data.
 		do
 				-- Check if the user data represents an email.
-			if attached api_service.user_from_email (a_data.to_string_8) then
-				Result := a_data
-			elseif attached {USER_INFORMATION} api_service.user_account_information (a_data) as l_user_info and then attached l_user_info.email as l_email then
+			if
+				attached a_data.is_valid_as_string_8 and then
+				attached api_service.user_from_email (a_data.to_string_8)
+			then
+				Result := a_data.to_string_8
+			elseif attached api_service.user_account_information (a_data) as l_user_info and then attached l_user_info.email as l_email then
 				Result := l_email
 			else
-				Result := a_data
+				Result := {UTF_CONVERTER}.utf_32_string_to_utf_8_string_8 (a_data)
 			end
 		end
 
@@ -171,19 +174,22 @@ feature -- HTTP Methods
 			end
 		end
 
-	message_change_password (a_token: STRING; a_user: TUPLE [first_name: STRING; last_name: STRING; user_name: STRING]; req: WSF_REQUEST): STRING
-			-- Username and Password e-mail content.
+	message_change_password (a_token: READABLE_STRING_GENERAL; a_user: TUPLE [first_name: READABLE_STRING_32; last_name: READABLE_STRING_32; user_name: READABLE_STRING_32]; req: WSF_REQUEST): STRING
+			-- Username and Password e-mail UTF-8 content.
+		local
+			l_url_encoder: URL_ENCODER
 		do
 			create Result.make (1024)
 			Result.append ("Dear ")
-			Result.append (a_user.first_name)
+			Result.append ({UTF_CONVERTER}.utf_32_string_to_utf_8_string_8 (a_user.first_name))
 			Result.append (",%NYou have requested a new password at support.eiffel.com %N%N")
 			Result.append ("* Username: ")
-			Result.append (a_user.user_name)
+			Result.append ({UTF_CONVERTER}.utf_32_string_to_utf_8_string_8 (a_user.user_name))
 			Result.append ("%NTo complete your request, please click on the following link to generate a new password ")
 			Result.append (req.absolute_script_url (""))
 			Result.append ("/password-reset?token=")
-			Result.append (a_token)
+			create l_url_encoder
+			Result.append (l_url_encoder.general_encoded_string (a_token))
 			Result.append ("%N%NThank you,%N%N--%NThe eiffel.com Team%N%N------------------------------------------------------------%N")
 		end
 

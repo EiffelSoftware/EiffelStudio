@@ -17,7 +17,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_smtp_server: READABLE_STRING_32; a_admin, a_webmaster: READABLE_STRING_8)
+	make (a_smtp_server: READABLE_STRING_8; a_admin, a_webmaster: READABLE_STRING_8)
 			-- Create an instance of {ESA_NOTIFICATION_EMAIL_SERVICE} with an smtp_server `a_smtp_server'.
 			-- Using `a_admin` as admin email.
 		do
@@ -25,7 +25,7 @@ feature {NONE} -- Initialization
 			webmaster_email := a_webmaster
 
 					-- Get local host name needed in creation of SMTP_PROTOCOL.
-			create {NOTIFICATION_SMTP_MAILER} mailer.make (a_smtp_server.to_string_8)
+			create {NOTIFICATION_SMTP_MAILER} mailer.make (a_smtp_server)
 			set_successful
 		end
 
@@ -100,7 +100,7 @@ feature -- Basic Operations
 			end
 		end
 
-	send_email_change_email (a_new_email, a_token, a_host: STRING)
+	send_email_change_email (a_new_email, a_token, a_host: READABLE_STRING_8)
 			-- Send confirmation email for email address change.
 		require
 			attached_new_email: a_new_email /= Void
@@ -115,7 +115,7 @@ feature -- Basic Operations
 			l_message.append ("Please confirm your new email address by clicking on the link below:%N%N")
 			l_message.append (a_host)
 			l_message.append ("/confirm_email?token=")
-			l_message.append (l_url.encoded_string (a_token))
+			l_message.append (l_url.general_encoded_string (a_token))
 			l_message.append ("%N%NIf you are unable to click on the above link, please type the address into your Web browser:%N%N")
 			l_message.append ("Once there, please enter the following information and then click the %"Confirm Email%" button.%N%N")
 			l_message.append ("%NYour confirmation code: ")
@@ -128,7 +128,7 @@ feature -- Basic Operations
 			mailer.safe_process_email (l_email)
 		end
 
-	send_new_email_confirmed_email (a_old_email, a_new_email: STRING)
+	send_new_email_confirmed_email (a_old_email, a_new_email: READABLE_STRING_8)
 			-- Send email to old email address confirming address change.
 		local
 			l_message: STRING
@@ -177,7 +177,7 @@ feature -- Basic Operations
 			end
 		end
 
-	send_new_report_email (a_name: READABLE_STRING_GENERAL; a_report: REPORT; a_email: STRING; a_subscribers: LIST [STRING]; a_url: STRING)
+	send_new_report_email (a_name: READABLE_STRING_GENERAL; a_report: REPORT; a_email: READABLE_STRING_8; a_subscribers: LIST [STRING]; a_url: STRING)
 			-- Send report creation confirmation email to interested parties.
 		local
 			l_email: ESA_NOTIFICATION_EMAIL
@@ -201,13 +201,13 @@ feature -- Basic Operations
 			end
 		end
 
-	send_new_interaction_email (a_user: USER_INFORMATION; a_report: REPORT; a_subscribers: LIST [STRING]; a_old_report: REPORT; a_url: STRING; a_user_role: USER_ROLE; a_submitter_email: STRING)
+	send_new_interaction_email (a_user: USER_INFORMATION; a_report: REPORT; a_subscribers: LIST [STRING]; a_old_report: REPORT; a_url: STRING; a_user_role: USER_ROLE; a_submitter_email: READABLE_STRING_8)
 			-- Send report creation confirmation email to interested parties.
 		local
 			l_email: ESA_NOTIFICATION_EMAIL
 			l_message: STRING
 			l_etable: STRING_TABLE [STRING]
-			l_array: ARRAY [STRING]
+			l_array: ARRAY [READABLE_STRING_8]
 		do
 			if
 				attached a_report.interactions as l_interactions and then
@@ -402,7 +402,7 @@ feature {NONE} -- Implementation
 
 		end
 
-	recipients_to_array (a_recipients: LIST [STRING]; a_emails: STRING_TABLE[STRING]): ARRAY [STRING]
+	recipients_to_array (a_recipients: LIST [READABLE_STRING_8]; a_emails: STRING_TABLE [READABLE_STRING_8]): ARRAY [READABLE_STRING_8]
 			-- Convert list of recipients to 'To' array of strings.
 		require
 			valid_recipients: not a_recipients.is_empty
@@ -432,7 +432,7 @@ feature {NONE} -- Implementation
 			attached_string: Result /= Void
 		end
 
-	report_email_links (a_url:STRING; a_report_number: INTEGER): STRING
+	report_email_links (a_url: STRING; a_report_number: INTEGER): STRING
 			-- Links to report with number `a_report_number'
 		do
 			create Result.make (1024)
@@ -446,7 +446,6 @@ feature {NONE} -- Implementation
 			Result.append_integer (a_report_number)
 			Result.append ("/interaction_form")
 		end
-
 
 	new_report_email_message (a_report: REPORT; a_url: STRING): STRING
 			-- New report message

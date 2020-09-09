@@ -15,19 +15,19 @@ create
 
 feature {NONE} -- Intialization
 
-	data_reader (a_sp: READABLE_STRING_GENERAL; a_parameters: HASH_TABLE [ANY, STRING_32])
+	data_reader (a_sp: READABLE_STRING_8; a_parameters: HASH_TABLE [ANY, STRING_32])
 			-- SQL data reader for the stored procedure `a_sp' with arguments `a_parameters'.
 		local
 			l_retried: BOOLEAN
 		do
 			debug
-				log.write_information (generator.to_string_8 + {STRING_8}".data_reader" + {STRING_8}" execute store procedure: " + a_sp.to_string_8)
+				log.write_information (generator + ".data_reader" + " execute store procedure: " + a_sp)
 			end
-			log.write_debug (generator.to_string_8 + {STRING_8}".data_reader store procedure: " + a_sp.to_string_8  + {STRING_8}" arguments:" + {UTF_CONVERTER}.utf_32_string_to_utf_8_string_8 (log_parameters (a_parameters)))
+			log.write_debug (generator + ".data_reader store procedure: " + a_sp  + " arguments:" + {UTF_CONVERTER}.utf_32_string_to_utf_8_string_8 (log_parameters (a_parameters)))
 		    if not l_retried then
-				stored_procedure := a_sp.to_string_8
+				stored_procedure := a_sp
 				parameters := a_parameters
-				create proc.make (stored_procedure)
+				create proc.make (stored_procedure.to_string_8)
 				proc.load
 				if not a_parameters.is_empty then
 					proc.set_arguments_32 (a_parameters.current_keys, a_parameters.linear_representation.to_array)
@@ -35,40 +35,40 @@ feature {NONE} -- Intialization
 				if proc.exists then
 					if proc.text_32 /= Void then
 						debug
-							log.write_debug ( generator.to_string_8 + {STRING_8}".data_reader: " + {UTF_CONVERTER}.utf_32_string_to_utf_8_string_8 (proc.text_32))
+							log.write_debug ( generator + ".data_reader: " + {UTF_CONVERTER}.utf_32_string_to_utf_8_string_8 (proc.text_32))
 						end
 					end
 				else
 					has_error := True
 					error_message := proc.error_message_32
 					error_code := proc.error_code
-					log.write_error (generator.to_string_8+  {STRING_8}".data_reader message:" + {UTF_CONVERTER}.utf_32_string_to_utf_8_string_8 (proc.error_message_32) + {STRING_8}" code:" + proc.error_code.out)
+					log.write_error (generator + ".data_reader message:" + {UTF_CONVERTER}.utf_32_string_to_utf_8_string_8 (proc.error_message_32) + " code:" + proc.error_code.out)
 				end
 			else
-				stored_procedure := a_sp.to_string_8
+				stored_procedure := a_sp
 				parameters := a_parameters
-				create proc.make (stored_procedure)
+				create proc.make (stored_procedure.to_string_8)
 			end
 		rescue
 			set_last_error_from_exception ("SQL execution")
-			log.write_critical (generator.to_string_8 + {STRING_8}".data_reader " + {UTF_CONVERTER}.utf_32_string_to_utf_8_string_8 (last_error_message))
+			log.write_critical (generator + ".data_reader " + {UTF_CONVERTER}.utf_32_string_to_utf_8_string_8 (last_error_message))
 			l_retried := True
 			retry
 		end
 
-	data_writer (a_sp: READABLE_STRING_GENERAL; a_parameters: HASH_TABLE [ANY, STRING_32])
+	data_writer (a_sp: READABLE_STRING_8; a_parameters: HASH_TABLE [ANY, STRING_32])
 			-- SQL data reader for the stored procedure `a_sp' with arguments `a_parameters'
 		local
 			l_retried: BOOLEAN
 		do
 			debug
-				log.write_information (generator + ".data_writer" + " execute store procedure: " + a_sp.to_string_8)
+				log.write_information (generator + ".data_writer" + " execute store procedure: " + a_sp)
 			end
-			log.write_debug (generator.to_string_8 + {STRING_8}".data_writer  store procedure: " + a_sp.to_string_8 + " arguments:" + {UTF_CONVERTER}.utf_32_string_to_utf_8_string_8 (log_parameters (a_parameters)))
+			log.write_debug (generator.to_string_8 + ".data_writer  store procedure: " + a_sp + " arguments:" + {UTF_CONVERTER}.utf_32_string_to_utf_8_string_8 (log_parameters (a_parameters)))
 			if not l_retried then
-				stored_procedure := a_sp.to_string_8
+				stored_procedure := a_sp
 				parameters := a_parameters
-				create proc.make (stored_procedure)
+				create proc.make (stored_procedure.to_string_8)
 				proc.load
 				if not a_parameters.is_empty then
 					proc.set_arguments_32 (a_parameters.current_keys, a_parameters.linear_representation.to_array)
@@ -76,7 +76,7 @@ feature {NONE} -- Intialization
 				if proc.exists then
 					if proc.text_32 /= Void then
 						debug
-							log.write_debug ( generator.to_string_8 + {STRING_8}".data_writer: " + {UTF_CONVERTER}.utf_32_string_to_utf_8_string_8 (proc.text_32))
+							log.write_debug ( generator + ".data_writer: " + {UTF_CONVERTER}.utf_32_string_to_utf_8_string_8 (proc.text_32))
 						end
 					end
 				else
@@ -86,13 +86,13 @@ feature {NONE} -- Intialization
 					log.write_error (generator + ".data_witer message:" + {UTF_CONVERTER}.utf_32_string_to_utf_8_string_8 (proc.error_message_32) + " code:" + proc.error_code.out)
 				end
 			else
-				stored_procedure := a_sp.to_string_8
+				stored_procedure := a_sp
 				parameters := a_parameters
-				create proc.make (stored_procedure)
+				create proc.make (stored_procedure.to_string_8)
 			end
 		rescue
 			set_last_error_from_exception ("SQL execution")
-			log.write_critical (generator+ ".data_writer " + {UTF_CONVERTER}.utf_32_string_to_utf_8_string_8 (last_error_message))
+			log.write_critical (generator + ".data_writer " + {UTF_CONVERTER}.utf_32_string_to_utf_8_string_8 (last_error_message))
 			l_retried := True
 			retry
 		end
@@ -129,7 +129,7 @@ feature --  Access
 	parameters: HASH_TABLE [detachable ANY, STRING_32]
 			-- Parameters to be used by the stored procedure.
 
-	stored_procedure: STRING
+	stored_procedure: READABLE_STRING_8
 			-- Store procedure to execute
 
 feature -- Status Report

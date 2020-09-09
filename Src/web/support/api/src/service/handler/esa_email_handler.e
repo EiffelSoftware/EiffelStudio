@@ -85,26 +85,27 @@ feature -- HTTP Methods
 					if
 						l_email.is_valid_form and then
 					   	attached l_email.email as l_new_email and then
+					   	l_new_email.is_valid_as_string_8 and then
 					   	attached api_service.user_account_information (l_user).email as ll_email and then
-					  	api_service.user_from_email (l_new_email.to_string_8) = Void
+					  	api_service.user_from_email (l_new_email) = Void
 					 then
 					   	l_token := (create {SECURITY_PROVIDER}).token
-					   	api_service.change_user_email (l_user, l_new_email, l_token)
+					   	api_service.change_user_email (l_user, l_new_email.to_string_8, l_token)
 					   	if api_service.successful then
 							email_notification_service.send_email_change_email (ll_email, l_token, req.absolute_script_url (""))
 						  	if email_notification_service.successful then
 							  	l_rhf.new_representation_handler (esa_config, l_type, media_type_variants (req)).post_email_change_page (req, res)
 							else
-								l_email.add_error ("Send Email", email_notification_service.last_error_message)
+								l_email.add_error ({STRING_32} "Send Email", email_notification_service.last_error_message)
 								l_rhf.new_representation_handler (esa_config, l_type, media_type_variants (req)).change_email (req, res, l_email)
 							end
 						else
-                            l_email.add_error ("Email", "Could not send email")
+                            l_email.add_error ({STRING_32} "Email", "Could not send email")
 							l_rhf.new_representation_handler (esa_config, l_type, media_type_variants (req)).change_email (req, res, l_email)
 						end
 					else
-						if attached l_email.email as ll_email and then attached api_service.user_from_email (ll_email.to_string_8) then
-							l_email.add_error ("Exists", "The email " + ll_email.to_string_8 + " it's already used")
+						if attached l_email.email as l_email_email and then attached api_service.user_from_email (l_email_email) then
+							l_email.add_error ({STRING_32} "Exists", {STRING_32} "The email " + l_email_email + {STRING_32} " it's already used")
 						end
 						l_rhf.new_representation_handler (esa_config, l_type, media_type_variants (req)).change_email (req, res, l_email)
 					end

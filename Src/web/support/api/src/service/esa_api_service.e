@@ -389,38 +389,38 @@ feature -- Access
 			post_data_provider_execution
 		end
 
-	token_from_email (a_email: READABLE_STRING_8): detachable STRING
+	token_from_email (a_email: READABLE_STRING_GENERAL): detachable READABLE_STRING_32
 			-- Activation token for user with email `a_email' if any.
 		do
-			log.write_debug (generator+".token_from_email Activation token from user email:" + a_email)
+			log.write_debug (generator+".token_from_email Activation token from user email:" + {UTF_CONVERTER}.utf_32_string_to_utf_8_string_8 (a_email))
 			Result := login_provider.token_from_email (a_email)
 			post_login_provider_execution
 		end
 
-	question_from_email (a_email: READABLE_STRING_8): detachable STRING_8
+	question_from_email (a_email: READABLE_STRING_GENERAL): detachable READABLE_STRING_32
 			-- Security question associated with account with email `a_email' if any
 		do
-			log.write_debug (generator+".question_from_email user email:" + a_email)
+			log.write_debug (generator+".question_from_email user email:" + {UTF_CONVERTER}.utf_32_string_to_utf_8_string_8 (a_email))
 			Result := login_provider.question_from_email (a_email)
 			post_login_provider_execution
 		end
 
-	user_from_email (a_email: READABLE_STRING_8): detachable TUPLE [first_name: STRING; last_name: STRING; user_name: STRING]
+	user_from_email (a_email: READABLE_STRING_GENERAL): detachable TUPLE [first_name: READABLE_STRING_32; last_name: READABLE_STRING_32; user_name: READABLE_STRING_32]
 			-- User with email `a_email' if any.
 		do
-			log.write_debug (generator+".user_from_email user email:" + a_email)
+			log.write_debug (generator+".user_from_email user email:" + {UTF_CONVERTER}.utf_32_string_to_utf_8_string_8 (a_email))
 			Result := login_provider.user_from_email (a_email)
 			post_login_provider_execution
 		end
 
-	user_account_information (a_username: READABLE_STRING_32): USER_INFORMATION
+	user_account_information (a_username: READABLE_STRING_GENERAL): USER_INFORMATION
 			-- User information for `a_username' if any.
 		do
 			Result := login_provider.user_information (a_username)
 			post_login_provider_execution
 		end
 
-	subscribed_categories (a_username: READABLE_STRING_32): LIST [ ESA_CATEGORY_SUBSCRIBER_VIEW ]
+	subscribed_categories (a_username: READABLE_STRING_GENERAL): LIST [ ESA_CATEGORY_SUBSCRIBER_VIEW ]
 			-- Table associating each category with boolean value specifying whether responsible `a_username'
 			-- is subscribed for receiving email notifications when reports or interactions are created in
 			-- category
@@ -567,7 +567,12 @@ feature -- Basic Operations
 			attached_description: a_description /= Void
 			attached_to_reproduce: a_to_reproduce /= Void
 		do
-			log.write_debug (generator+".update_problem_report report_problem:" + a_pr.out + " priority_id:" + a_priority_id.out + " severity_id:" + a_severity_id + " category_id:" + a_category_id + " class_id:" + a_class_id + " confidential:" + a_confidential + " synopsis:" + {UTF_CONVERTER}.utf_32_string_to_utf_8_string_8 (a_synopsis) + " release:" + a_release.to_string_8 + " environment:" + a_environment.to_string_8 + " description" + {UTF_CONVERTER}.utf_32_string_to_utf_8_string_8 (a_description) + " to_reproduce:" + {UTF_CONVERTER}.utf_32_string_to_utf_8_string_8 (a_to_reproduce) )
+			log.write_debug (generator + ".update_problem_report report_problem:" + a_pr.out + " priority_id:" + a_priority_id.out + " severity_id:" + a_severity_id
+				+ " category_id:" + a_category_id + " class_id:" + a_class_id + " confidential:" + a_confidential
+				+ " synopsis:" + {UTF_CONVERTER}.utf_32_string_to_utf_8_string_8 (a_synopsis) + " release:" + a_release.to_string_8
+				+ " environment:" + a_environment.to_string_8 + " description" + {UTF_CONVERTER}.utf_32_string_to_utf_8_string_8 (a_description)
+				+ " to_reproduce:" + {UTF_CONVERTER}.utf_32_string_to_utf_8_string_8 (a_to_reproduce)
+				)
 			data_provider.update_problem_report (a_pr, a_priority_id, a_severity_id, a_category_id, a_class_id, a_confidential, a_synopsis, a_release, a_environment, a_description, a_to_reproduce)
 			post_data_provider_execution
 		end
@@ -706,7 +711,7 @@ feature -- Element Settings
 			end
 		end
 
-	change_user_email (a_user: READABLE_STRING_32; a_new_email: READABLE_STRING_32; a_token: READABLE_STRING_32)
+	change_user_email (a_user: READABLE_STRING_32; a_new_email: READABLE_STRING_8; a_token: READABLE_STRING_32)
 			-- Change user email.
 		do
 			if login_provider.user_from_username (a_user) /= Void then
@@ -726,7 +731,7 @@ feature -- Element Settings
 		end
 
 
-	change_password (a_user: READABLE_STRING_32; a_email: READABLE_STRING_32; a_token: READABLE_STRING_32)
+	change_password (a_user: READABLE_STRING_32; a_email: READABLE_STRING_8; a_token: READABLE_STRING_GENERAL)
 			-- Change user passord.
 		do
 			if login_provider.user_from_username (a_user) /= Void then

@@ -41,7 +41,7 @@ feature -- Access
 
 	cookie_service: ESA_COOKIE_SESSION_SERVICE
 		do
-			create Result.make ((create {JSON_CONFIGURATION}).cookie_session_remember_me(esa_config.layout.application_config_path))
+			create Result.make ((create {APP_JSON_CONFIGURATION}).cookie_session_remember_me(esa_config.layout.application_config_path))
 		end
 
 	Esa_session_token: STRING_8 = "_ESA_SESSION_TOKEN_"
@@ -50,7 +50,7 @@ feature -- Access
 	eiffel_versions: detachable LIST [STRING]
 			-- List of stable eiffel versions.
 		do
-			Result := (create {JSON_CONFIGURATION}).eiffel_stable_versions(esa_config.layout.application_config_path)
+			Result := (create {APP_JSON_CONFIGURATION}).eiffel_stable_versions(esa_config.layout.application_config_path)
 		end
 
 feature -- String Helper

@@ -38,7 +38,7 @@ feature -- Factory
 			log.write_information (generator + ".esa_config " + l_layout.path.name.out)
 
 			if
-				attached (create {JSON_CONFIGURATION}).new_emails_configuration (l_layout.application_config_path) as l_email_addresses
+				attached (create {APP_JSON_CONFIGURATION}).new_emails_configuration (l_layout.application_config_path) as l_email_addresses
 			then
 				l_admin_email := l_email_addresses ["admin"]
 				l_webmaster_email := l_email_addresses ["webmaster"]
@@ -51,7 +51,7 @@ feature -- Factory
 				l_webmaster_email := default_webmaster_email
 			end
 			if
-				attached (create {JSON_CONFIGURATION}).new_smtp_configuration (l_layout.application_config_path) as l_smtp_server and then
+				attached (create {APP_JSON_CONFIGURATION}).new_smtp_configuration (l_layout.application_config_path) as l_smtp_server and then
 				not l_smtp_server.is_whitespace
 			then
 				create l_notification_service.make (l_smtp_server, l_admin_email, l_webmaster_email)
@@ -63,7 +63,7 @@ feature -- Factory
 			end
 
 			if not l_retried then
-				if attached (create {JSON_CONFIGURATION}).new_database_configuration (l_layout.application_config_path) as l_database_config then
+				if attached (create {APP_JSON_CONFIGURATION}).new_database_configuration (l_layout.application_config_path) as l_database_config then
 					create {DATABASE_CONNECTION_ODBC} l_database.login_with_connection_string (l_database_config.connection_string.to_string_8)
 					create l_api_service.make_with_database (l_database)
 					create Result.make (l_database, l_api_service, l_notification_service, l_layout)
@@ -102,7 +102,7 @@ feature -- Factory
 				create l_layout.make_default
 			end
 			if
-				attached (create {JSON_CONFIGURATION}).new_emails_configuration (l_layout.application_config_path) as l_email_addresses
+				attached (create {APP_JSON_CONFIGURATION}).new_emails_configuration (l_layout.application_config_path) as l_email_addresses
 			then
 				l_admin_email := l_email_addresses ["admin"]
 				l_webmaster_email := l_email_addresses ["webmaster"]
@@ -115,7 +115,7 @@ feature -- Factory
 				l_webmaster_email := default_webmaster_email
 			end
 			if
-				attached (create {JSON_CONFIGURATION}).new_smtp_configuration (l_layout.application_config_path) as l_smtp_server and then
+				attached (create {APP_JSON_CONFIGURATION}).new_smtp_configuration (l_layout.application_config_path) as l_smtp_server and then
 				not l_smtp_server.is_whitespace
 			then
 				create l_notification_service.make (l_smtp_server, l_admin_email, l_webmaster_email)
@@ -124,7 +124,7 @@ feature -- Factory
 			end
 
 			if not l_retried then
-				if attached (create {JSON_CONFIGURATION}).new_database_configuration_test (l_layout.application_config_path) as l_database_config then
+				if attached (create {APP_JSON_CONFIGURATION}).new_database_configuration_test (l_layout.application_config_path) as l_database_config then
 					create {DATABASE_CONNECTION_ODBC} l_database.login_with_connection_string (l_database_config.connection_string.to_string_8)
 					create l_api_service.make_with_database (l_database)
 					create Result.make (l_database, l_api_service, l_notification_service, l_layout)

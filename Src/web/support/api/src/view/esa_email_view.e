@@ -24,19 +24,19 @@ feature -- Access
 		do
 			create l_errors.make (0)
 			if email = Void or else (attached email as l_email and then l_email.is_empty) then
-				l_errors.put ("email is required", "email")
+				l_errors.put ({STRING_32} "email is required", "email")
 			end
 			if check_email = Void or else (attached check_email as l_check_email and then l_check_email.is_empty) then
-				l_errors.put ("Check email is required", "check_email")
+				l_errors.put ({STRING_32} "Check email is required", "check_email")
 			end
 			if attached email as l_email and then attached check_email as l_check_email then
 				if l_email.is_empty or else l_check_email.is_empty then
-					l_errors.put ("email and Check email does not match", "check_email")
+					l_errors.put ({STRING_32} "email and Check email does not match", "check_email")
 				elseif not l_email.same_string (l_check_email) then
-					l_errors.put ("email and Check email does not match", "check_email")
+					l_errors.put ({STRING_32} "email and Check email does not match", "check_email")
 				end
 			else
-				l_errors.put ("email and Check email does not match", "Check_passowrd")
+				l_errors.put ({STRING_32} "email and Check email does not match", "check_password")
 			end
 			if l_errors.is_empty then
 				Result := True

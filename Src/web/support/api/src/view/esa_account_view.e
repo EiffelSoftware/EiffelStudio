@@ -123,12 +123,12 @@ feature -- Change Element
 			last_name_set:
 		end
 
-	set_email (a_email: READABLE_STRING_32)
+	set_email (a_email: READABLE_STRING_GENERAL)
 			-- Set `email' to `a_email'.
 		do
-			email := a_email
+			email := a_email.to_string_32
 		ensure
-			email_set: email = a_email
+			email_set: attached email as e_email and then e_email.same_string_general (a_email)
 		end
 
 	set_address (a_address: READABLE_STRING_32)
@@ -163,28 +163,28 @@ feature -- Change Element
 			region_set: region = a_region
 		end
 
-	set_postal_code (a_postal_code: READABLE_STRING_32)
+	set_postal_code (a_postal_code: READABLE_STRING_GENERAL)
 			-- Postal_code
 		do
-			postal_code := a_postal_code
+			postal_code := a_postal_code.to_string_32
 		ensure
-			post_code_set: postal_code = a_postal_code
+			post_code_set: attached postal_code as e_zip and then e_zip.same_string_general (a_postal_code)
 		end
 
-	set_telephone (a_telephone: READABLE_STRING_32)
+	set_telephone (a_telephone: READABLE_STRING_GENERAL)
 			-- Set `telephone' to `a_telephone'.
 		do
-			telephone := a_telephone
+			telephone := a_telephone.to_string_32
 		ensure
-			telephone_set: telephone = a_telephone
+			telephone_set: attached telephone as e_tel and then e_tel.same_string_general (a_telephone)
 		end
 
-	set_fax ( a_fax : READABLE_STRING_32)
+	set_fax ( a_fax : READABLE_STRING_GENERAL)
 			-- Set `fax' to `a_fax'.
 		do
-			fax := a_fax
+			fax := a_fax.to_string_32
 		ensure
-			fax_set: fax = a_fax
+			fax_set: attached fax as e_fax and then e_fax.same_string_general (a_fax)
 		end
 
 	set_position ( a_position : READABLE_STRING_32)

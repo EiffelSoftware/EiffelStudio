@@ -690,9 +690,7 @@ feature -- Send Email
 		local
 			l_hp: EMAIL_NOTIFICATION_DOWNLOAD
 		do
-			if
-				attached email_service as l_email_service
-			then
+			if attached email_service as l_email_service then
 				create l_hp.make (layout.html_template_path, a_download_information)
 				if attached l_hp.representation as l_html_download_info then
 					l_email_service.send_email_download_notification (l_html_download_info)

@@ -103,6 +103,10 @@ feature -- Query (Pixmap)
 
 			check correct_pixcode: class_icon_map.has (l_pixcode) end
 			Result := class_icon_map.item (l_pixcode)
+			if Result = Void then
+				check missing_class_pixmap_mapping: False end
+				Result := pixmaps.icon_pixmaps.general_blank_icon
+			end
 		ensure
 			result_not_void: Result /= Void
 		end
@@ -237,6 +241,10 @@ feature -- Query (Pixmap)
 				end
 					-- Store computed pixmap for next time.
 				w.put (Result)
+			end
+			if Result = Void then
+				check missing_feature_pixmap_mapping: False end
+				Result := pixmaps.icon_pixmaps.general_blank_icon
 			end
 		ensure
 			result_not_void: Result /= Void
@@ -832,6 +840,9 @@ feature {NONE} -- Access
 			Result.force (pixmaps.icon_pixmaps.class_readonly_icon,							compiled_flag | readonly_flag)
 			Result.force (pixmaps.icon_pixmaps.class_frozen_icon,							compiled_flag | frozen_flag)
 			Result.force (pixmaps.icon_pixmaps.class_frozen_readonly_icon,					compiled_flag | readonly_flag | frozen_flag)
+
+--			Result.force (pixmaps.icon_pixmaps.class_once_icon,										compiled_flag | once_flag)
+
 			Result.force (pixmaps.icon_pixmaps.class_uncompiled_icon,						none_flag)
 			Result.force (pixmaps.icon_pixmaps.class_uncompiled_readonly_icon,				readonly_flag)
 			Result.force (pixmaps.icon_pixmaps.class_deferred_icon,							compiled_flag | deferred_flag)

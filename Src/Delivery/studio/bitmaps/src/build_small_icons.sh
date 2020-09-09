@@ -4,6 +4,7 @@
 
 PIXDIR=small
 RES=../../res
+OVERLAY=$RES/overlay
 
 EnterRow() {
 	mkdir -p $PIXDIR/$1 > /dev/null

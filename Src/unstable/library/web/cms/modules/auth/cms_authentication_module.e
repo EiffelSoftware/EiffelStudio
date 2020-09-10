@@ -29,6 +29,9 @@ inherit
 	CMS_HOOK_VALUE_TABLE_ALTER
 
 	CMS_HOOK_BLOCK
+		redefine
+			setup_block
+		end
 
 	CMS_HOOK_BLOCK_HELPER
 
@@ -501,17 +504,7 @@ feature -- Handler
 								r.set_value ("An account is already associated with that email address!", "error_email")
 								l_exist := True
 							end
-							if attached recaptcha_secret_key (a_auth_api.cms_api) as l_recaptcha_key then
-								if attached {WSF_STRING} req.form_parameter ("g-recaptcha-response") as l_recaptcha_response and then is_captcha_verified (l_recaptcha_key, l_recaptcha_response.value) then
-									l_captcha_passed := True
-								else
-										--| Bad or missing captcha
-									l_captcha_passed := False
-								end
-							else
-									--| reCaptcha is not setup, so no verification
-								l_captcha_passed := True
-							end
+							l_captcha_passed := is_form_captcha_verified (req, a_auth_api.cms_api)
 							if l_captcha_passed and then not l_exist then
 									-- New temp user
 								create u.make (l_name)
@@ -793,6 +786,19 @@ feature -- Handler
 			end
 		end
 
+	setup_block (a_block: CMS_BLOCK; a_response: CMS_RESPONSE)
+			-- Setup block `a_block` and perform additional setup on `a_response` if needed
+			-- (such as linking with css, js, ...).
+			--| To be redefined if needed.
+		do
+--			if
+--				a_block.name.is_case_insensitive_equal_general ("register")
+--			then
+--				a_response.add_javascript_url ("https://www.google.com/recaptcha/api.js")
+--			end
+			a_response.add_javascript_url ("https://www.google.com/recaptcha/api.js")
+		end
+
 	new_change_username_form (a_response: CMS_RESPONSE): CMS_FORM
 		local
 			fs: WSF_FORM_FIELD_SET
@@ -918,7 +924,15 @@ feature {NONE} -- Block views
 --						l_tpl_block.set_value (a_response.values.item ("email"), "email")
 --						l_tpl_block.set_value (a_response.values.item ("name"), "name")
 						l_tpl_block.set_value (form_registration_application_description (a_response.api), "application_description")
-						if attached recaptcha_site_key (a_response.api) as l_recaptcha_site_key then
+						l_tpl_block.set_value ("roccms-user-register", "form_id")
+						if attached recaptcha_site_html ("roccms-user-register", a_response.api) as l_recaptcha_site_html then
+							l_tpl_block.set_value (l_recaptcha_site_html, "recaptcha_site_html")
+						end
+						if
+							attached recaptcha_config (a_response.api) as cfg and then
+							attached cfg.site_key as l_recaptcha_site_key
+						then
+								-- Backward compatiblity
 							l_tpl_block.set_value (l_recaptcha_site_key, "recaptcha_site_key")
 						end
 						a_response.add_block (l_tpl_block, "content")
@@ -1047,7 +1061,7 @@ feature {NONE} -- Block views
 feature -- Access: configuration
 
 	form_registration_application_description (api: CMS_API): detachable READABLE_STRING_8
-			-- Get recaptcha security key.
+			-- Application description value for the form.
 		do
 			if attached api.module_configuration (Current, Void) as cfg then
 				if attached cfg.text_item ("forms.registration.application_description") as l_desc and then not l_desc.is_whitespace then
@@ -1056,23 +1070,44 @@ feature -- Access: configuration
 			end
 		end
 
-	recaptcha_secret_key (api: CMS_API): detachable READABLE_STRING_8
-			-- Get recaptcha security key.
+	recaptcha_action: STRING = "register"
+
+	recaptcha_config (api: CMS_API): detachable RECAPTCHA_CONFIG
 		do
 			if attached api.module_configuration (Current, Void) as cfg then
-				if attached cfg.text_item ("recaptcha.secret_key") as l_recaptcha_key and then not l_recaptcha_key.is_empty then
-					Result := api.utf_8_encoded (l_recaptcha_key)
+				if
+					attached cfg.text_item ("recaptcha.version") as v and then
+					not v.is_empty
+				then
+					create Result.make_with_version (api.utf_8_encoded (v))
+				else
+					create Result.make
+				end
+				if
+					attached cfg.text_item ("recaptcha.secret_key") as k and then
+					not k.is_empty
+				then
+					Result.set_secret_key (api.utf_8_encoded (k))
+				end
+				if
+					attached cfg.text_item ("recaptcha.site_key") as k and then
+					not k.is_empty
+				then
+					Result.set_site_key (api.utf_8_encoded (k))
 				end
 			end
 		end
 
-	recaptcha_site_key (api: CMS_API): detachable READABLE_STRING_8
-			-- Get recaptcha security key.
+	recaptcha_site_html (a_form_id: READABLE_STRING_8; api: CMS_API): detachable READABLE_STRING_8
+		local
+			l_client: RECAPTCHA_CLIENT
 		do
-			if attached api.module_configuration (Current, Void) as cfg then
-				if attached cfg.text_item ("recaptcha.site_key") as l_recaptcha_key and then not l_recaptcha_key.is_empty then
-					Result := api.utf_8_encoded (l_recaptcha_key)
-				end
+			if
+				attached recaptcha_config (api) as cfg and then
+				attached cfg.site_key as l_recaptcha_site_key
+			then
+				create l_client.make (cfg, l_recaptcha_site_key)
+				Result := l_client.client_html (a_form_id, recaptcha_action)
 			end
 		end
 
@@ -1080,26 +1115,47 @@ feature -- Response Alter
 
 	response_alter (a_response: CMS_RESPONSE)
 		do
-			a_response.add_javascript_url ("https://www.google.com/recaptcha/api.js")
 			a_response.add_style (a_response.module_resource_url (Current, "/files/css/auth.css", Void), Void)
 		end
 
 feature {NONE} -- Implementation
 
-	is_captcha_verified (a_secret: READABLE_STRING_8; a_response: READABLE_STRING_GENERAL): BOOLEAN
+	is_form_captcha_verified (req: WSF_REQUEST; api: CMS_API): BOOLEAN
+		do
+			if
+				attached recaptcha_config (api) as cfg and then
+				attached cfg.secret_key as l_secret_key
+			then
+				if attached {WSF_STRING} req.form_parameter ("g-recaptcha-response") as l_recaptcha_response then
+					Result := is_captcha_verified (cfg, l_secret_key, l_recaptcha_response.value)
+				else
+						--| missing captcha
+				end
+			else
+					--| reCaptcha is not setup, so no verification
+				Result := True
+			end
+		end
+
+	is_captcha_verified (cfg: RECAPTCHA_CONFIG; a_secret: READABLE_STRING_8; a_response: READABLE_STRING_GENERAL): BOOLEAN
 		local
 			api: RECAPTCHA_API
 			l_errors: STRING
 		do
 			write_debug_log (generator + ".is_captcha_verified with response: [" + utf_8_encoded (a_response) + "]")
 			create api.make (a_secret, a_response)
-			Result := api.verify
-			if not Result and then attached api.errors as l_api_errors then
+			if cfg.is_version_3 then
+				Result := api.verify_score (0.5, recaptcha_action)
+			else
+				Result := api.verify
+			end
+			if
+				not Result and then
+				attached api.errors as l_api_errors
+			then
 				create l_errors.make_empty
 				l_errors.append_character ('%N')
-				across
-					l_api_errors as ic
-				loop
+				across l_api_errors as ic loop
 					l_errors.append (ic.item)
 					l_errors.append_character ('%N')
 				end

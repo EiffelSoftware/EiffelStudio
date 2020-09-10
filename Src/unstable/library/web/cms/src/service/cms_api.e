@@ -1035,12 +1035,9 @@ feature -- Factory
 			a_chars /= Void implies a_chars.count > 1
 		local
 			rnd: RANDOM
-			dt: DATE_TIME
 			n,i: INTEGER
 		do
-			create dt.make_now_utc
-			create rnd.set_seed (dt.seconds)
-			rnd.start
+			rnd := random_generator
 			create Result.make_filled ('_', a_length)
 			n := a_length
 			if a_chars /= Void then

@@ -29,9 +29,6 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	base_uri: STRING_8 = "https://www.google.com/recaptcha/api/siteverify"
-			-- Recaptcha base URI
-
 	secret: READABLE_STRING_8
 			-- Required. The shared key between your site and ReCAPTCHA.
 
@@ -66,13 +63,26 @@ feature -- API
 			-- Verify the user's response
 		local
 			l_parser: JSON_PARSER
+			sess: HTTP_CLIENT_SESSION
+			ctx: HTTP_CLIENT_REQUEST_CONTEXT
 		do
-			if attached get as l_response then
+				-- BaseUri?secret=secret_value&response=response_value[&remoteip=remoteip_value]
+			sess := (create {DEFAULT_HTTP_CLIENT}).new_session ({RECAPTCHA_CONFIG}.recaptcha_base_uri + "/api/siteverify")
+
+			create ctx.make
+			ctx.add_form_parameter ("secret", secret)
+			ctx.add_form_parameter ("response", response)
+			if attached remoteip as l_remoteip then
+				ctx.add_form_parameter ("remoteip", l_remoteip)
+			end
+			if attached sess.post ("", ctx, Void) as l_response then
 				if attached l_response.body as l_body then
 					create l_parser.make_with_string (l_body)
 					l_parser.parse_content
 					if
-						l_parser.is_parsed and then attached {JSON_OBJECT} l_parser.parsed_json_object as jv and then
+						l_parser.is_parsed and then
+						l_parser.is_valid and then
+						attached {JSON_OBJECT} l_parser.parsed_json_object as jv and then
 						attached {JSON_BOOLEAN} jv.item ("success") as l_success
 					then
 						Result := l_success.item
@@ -94,29 +104,62 @@ feature -- API
 			end
 		end
 
-feature {NONE} -- REST API
-
-	get: detachable RESPONSE
-			-- Reading Data
+	verify_score (a_score: REAL; a_action: detachable READABLE_STRING_GENERAL): BOOLEAN
+			-- Verify response from user (for recaptcha v3)
+		require
+			valid_score: a_score >= 0.0 and a_score <= 1.0
+		local
+			l_parser: JSON_PARSER
+			sess: HTTP_CLIENT_SESSION
+			ctx: HTTP_CLIENT_REQUEST_CONTEXT
 		do
-			Result := (create {REQUEST}.make ("GET", new_uri)).execute
+				-- BaseUri?secret=secret_value&response=response_value[&remoteip=remoteip_value]
+			sess := (create {DEFAULT_HTTP_CLIENT}).new_session ({RECAPTCHA_CONFIG}.recaptcha_base_uri + "/api/siteverify")
+
+			create ctx.make
+			ctx.add_form_parameter ("secret", secret)
+			ctx.add_form_parameter ("response", response)
+			if attached remoteip as l_remoteip then
+				ctx.add_form_parameter ("remoteip", l_remoteip)
+			end
+			if attached sess.post ("", ctx, Void) as l_response then
+				if attached l_response.body as l_body then
+					create l_parser.make_with_string (l_body)
+					l_parser.parse_content
+					if
+						l_parser.is_parsed and then
+						l_parser.is_valid and then
+						attached {JSON_OBJECT} l_parser.parsed_json_object as jv and then
+						attached {JSON_BOOLEAN} jv.item ("success") as l_success
+					then
+						Result := l_success.item
+						if Result then
+							if attached {JSON_NUMBER} jv.item ("score") as j_score then
+								if j_score.real_64_item.truncated_to_real < a_score then
+									Result := False
+								elseif a_action /= Void then
+									Result := attached {JSON_STRING} jv.item ("action") as j_action and then j_action.same_caseless_string (a_action)
+								end
+							end
+						elseif attached {JSON_ARRAY} jv.item ("error-codes") as l_error_codes then
+							across
+								l_error_codes as c
+							loop
+								if attached {JSON_STRING} c.item as ji then
+									put_error (ji.unescaped_string_32)
+								end
+							end
+						end
+					end
+				else
+					put_error (l_response.status.out)
+				end
+			else
+				put_error ("unknown")
+			end
 		end
 
 feature {NONE} -- Implementation
-
-	new_uri: STRING_8
-			-- new uri (BaseUri?secret=secret_value&response=response_value[&remoteip=remoteip_value]
-		local
-			l_uri: URI
-		do
-			create l_uri.make_from_string (base_uri)
-			l_uri.add_query_parameter ("secret", secret)
-			l_uri.add_query_parameter ("response", response)
-			if attached remoteip as l_remoteip then
-				l_uri.add_query_parameter ("remoteip", l_remoteip)
-			end
-			Result := l_uri.string
-		end
 
 	put_error (a_code: READABLE_STRING_GENERAL)
 		local
@@ -132,7 +175,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright: "2011-2018 Javier Velilla, Jocelyn Fiat, Eiffel Software and others"
+	copyright: "2011-2020 Javier Velilla, Jocelyn Fiat, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

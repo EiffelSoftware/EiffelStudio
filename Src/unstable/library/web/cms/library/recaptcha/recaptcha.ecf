@@ -11,7 +11,7 @@
 		<option warning="true">
 		</option>
 		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf"/>
-		<library name="http_client_extension" location="..\http_client_extension\http_client_extension.ecf"/>
+		<library name="http_client" location="$ISE_LIBRARY\contrib\library\network\http_client\http_client.ecf"/>
 		<library name="json" location="$ISE_LIBRARY\contrib\library\text\parser\json\library\json.ecf"/>
 		<library name="uri" location="$ISE_LIBRARY\library\text\uri\uri.ecf"/>
 		<cluster name="recaptcha" location=".\src\" recursive="true"/>

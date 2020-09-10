@@ -1,6 +1,6 @@
 <div class="contact-box clearfix">
     <h1>Contact us!</h1>
-    <form method="post" action="{$site_url/}contact" id="contact-form">
+    <form method="post" action="{$site_url/}contact" id="{$form_id/}">
         <label for="name">Name: <span class="required">*</span></label>
         <input type="text" id="name" name="name" value="{htmlentities}{$name/}{/htmlentities}" required="required" autofocus="autofocus" />
          

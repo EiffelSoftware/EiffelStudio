@@ -66,9 +66,6 @@ feature {CMS_API} -- Module Initialization
 			contact_storage: CONTACT_STORAGE_I
 		do
 			Precursor (api)
---			if attached api.storage.as_sql_storage as l_storage_sql then
---				create {CONTACT_STORAGE_SQL} contact_storage.make (l_storage_sql)
---			else
 			p := file_system_storage_path (api)
 			if ut.directory_path_exists (p) then
 				create {CONTACT_STORAGE_FS} contact_storage.make (p, api)
@@ -121,34 +118,6 @@ feature -- Router
 			a_router.handle ("/contact", create {WSF_URI_AGENT_HANDLER}.make (agent handle_post_contact (a_api, ?, ?)), a_router.methods_put_post)
 		end
 
-feature -- Recaptcha
-
-	recaptcha_secret_key (api: CMS_API): detachable READABLE_STRING_8
-			-- Get recaptcha security key.
-		do
-			if attached api.module_configuration (Current, Void) as cfg then
-				if
-					attached cfg.text_item ("recaptcha.secret_key") as l_recaptcha_key and then
-					not l_recaptcha_key.is_empty
-				then
-					Result := api.utf_8_encoded (l_recaptcha_key)
-				end
-			end
-		end
-
-	recaptcha_site_key (api: CMS_API): detachable READABLE_STRING_8
-			-- Get recaptcha security key.
-		do
-			if attached api.module_configuration (Current, Void) as cfg then
-				if
-					attached cfg.text_item ("recaptcha.site_key") as l_recaptcha_key and then
-					not l_recaptcha_key.is_empty
-				then
-					Result := api.utf_8_encoded (l_recaptcha_key)
-				end
-			end
-		end
-
 feature -- Hooks configuration
 
 	setup_hooks (a_hooks: CMS_HOOK_CORE_MANAGER)
@@ -180,7 +149,14 @@ feature -- Hooks
 					-- "contact", "post_contact"
 				if a_response.request.is_get_request_method then
 					if attached smarty_template_block (Current, a_block_id, a_response.api) as l_tpl_block then
-						if attached recaptcha_site_key (a_response.api) as l_recaptcha_site_key then
+						if attached recaptcha_site_html (a_response.api) as l_recaptcha_site_html then
+							l_tpl_block.set_value (l_recaptcha_site_html, "recaptcha_site_html")
+						end
+						if
+							attached recaptcha_config (a_response.api) as cfg and then
+							attached cfg.site_key as l_recaptcha_site_key
+						then
+								-- Backward compatiblity
 							l_tpl_block.set_value (l_recaptcha_site_key, "recaptcha_site_key")
 						end
 						a_response.add_block (l_tpl_block, "content")
@@ -201,7 +177,14 @@ feature -- Hooks
 		do
 			a_response.add_style (a_response.module_resource_url (Current, "/files/css/contact.css", Void), Void)
 			if attached smarty_template_block (Current, "contact", api) as l_tpl_block then
-				if attached recaptcha_site_key (api) as l_recaptcha_site_key then
+				if attached recaptcha_site_html (api) as l_recaptcha_site_html then
+					l_tpl_block.set_value (l_recaptcha_site_html, "recaptcha_site_html")
+				end
+				if
+					attached recaptcha_config (api) as cfg and then
+					attached cfg.site_key as l_recaptcha_site_key
+				then
+						-- Backward compatiblity
 					l_tpl_block.set_value (l_recaptcha_site_key, "recaptcha_site_key")
 				end
 				across
@@ -243,8 +226,9 @@ feature -- Hooks
 			f_msg.set_is_required (True)
 			f.extend (f_msg)
 
-			if attached recaptcha_site_key (api) as l_recaptcha_site_key then
-				f.extend_html_text ("<div class=%"g-recaptcha%" data-sitekey=%"" + l_recaptcha_site_key + "%"></div><br/>")
+			if attached recaptcha_site_html (api) as l_recaptcha_site_html then
+				f.extend_html_text (l_recaptcha_site_html)
+				f.extend_html_text ("<br/>")
 			end
 
 			create f_submit.make_with_text ("submit-op", "Send")
@@ -294,7 +278,7 @@ feature -- Hooks
 				attached {WSF_STRING} req.form_parameter ("message") as l_message
 			then
 				if
-					is_form_captcha_verified (req, "g-recaptcha-response", api) and then
+					is_form_captcha_verified (req, api) and then
 					l_email.value.is_valid_as_string_8
 				then
 					l_contact_email_address := l_email.value.to_string_8
@@ -355,8 +339,15 @@ feature -- Hooks
 						loop
 							l_tpl_block.set_value (tb.item, tb.key)
 						end
-						if attached recaptcha_site_key (api) as l_recaptcha_site_key then
+						if
+							attached recaptcha_config (api) as cfg and then
+							attached cfg.site_key as l_recaptcha_site_key
+						then
 							l_tpl_block.set_value (l_recaptcha_site_key, "recaptcha_site_key")
+							l_tpl_block.set_value (<<"Missing Captcha", "Internal Server Error">>, "error_response")
+						end
+						if attached recaptcha_site_html (api) as l_recaptcha_site_html then
+							l_tpl_block.set_value (l_recaptcha_site_html, "recaptcha_site_html")
 							l_tpl_block.set_value (<<"Missing Captcha", "Internal Server Error">>, "error_response")
 						end
 						r.set_main_content (l_tpl_block.to_html (r.theme))
@@ -381,24 +372,6 @@ feature -- Hooks
 					r.set_main_content (l_tpl_block.to_html (r.theme))
 				end
 				r.execute
-			end
-		end
-
-	is_form_captcha_verified (req: WSF_REQUEST; a_form_field_id: READABLE_STRING_GENERAL; api: CMS_API): BOOLEAN
-		do
-			if attached recaptcha_secret_key (api) as l_recaptcha_key then
-				if
-					attached {WSF_STRING} req.form_parameter (a_form_field_id) as l_recaptcha_response and then
-					is_captcha_verified (l_recaptcha_key, l_recaptcha_response.value)
-				then
-					Result := True
-				else
-						--| Bad or missing captcha
-					Result := False
-				end
-			else
-					--| reCaptcha is not setup, so no verification
-				Result := True
 			end
 		end
 
@@ -494,19 +467,84 @@ feature {NONE} -- Contact Message
 
 feature {NONE} -- Google recaptcha uri template
 
-	is_captcha_verified (a_secret: READABLE_STRING_8; a_response: READABLE_STRING_GENERAL): BOOLEAN
+	recaptcha_action: STRING = "post_message"
+
+	recaptcha_config (api: CMS_API): detachable RECAPTCHA_CONFIG
+		do
+			if attached api.module_configuration (Current, Void) as cfg then
+				if
+					attached cfg.text_item ("recaptcha.version") as v and then
+					not v.is_empty
+				then
+					create Result.make_with_version (api.utf_8_encoded (v))
+				else
+					create Result.make
+				end
+				if
+					attached cfg.text_item ("recaptcha.secret_key") as k and then
+					not k.is_empty
+				then
+					Result.set_secret_key (api.utf_8_encoded (k))
+				end
+				if
+					attached cfg.text_item ("recaptcha.site_key") as k and then
+					not k.is_empty
+				then
+					Result.set_site_key (api.utf_8_encoded (k))
+				end
+			end
+		end
+
+	recaptcha_site_html (api: CMS_API): detachable READABLE_STRING_8
+		local
+			l_client: RECAPTCHA_CLIENT
+		do
+			if
+				attached recaptcha_config (api) as cfg and then
+				attached cfg.site_key as l_recaptcha_site_key
+			then
+				create l_client.make (cfg, l_recaptcha_site_key)
+				Result := l_client.client_html (recaptcha_action)
+			end
+		end
+
+	is_form_captcha_verified (req: WSF_REQUEST; api: CMS_API): BOOLEAN
+		do
+			if
+				attached recaptcha_config (api) as cfg and then
+				attached cfg.secret_key as l_secret_key
+			then
+				if attached {WSF_STRING} req.form_parameter ("g-recaptcha-response") as l_recaptcha_response then
+					Result := is_captcha_verified (cfg, l_secret_key, l_recaptcha_response.value)
+				else
+						--| missing captcha
+				end
+			else
+					--| reCaptcha is not setup, so no verification
+				Result := True
+			end
+		end
+
+	is_captcha_verified (cfg: RECAPTCHA_CONFIG; a_secret: READABLE_STRING_8; a_response: READABLE_STRING_GENERAL): BOOLEAN
 		local
 			api: RECAPTCHA_API
 			l_errors: STRING
 		do
 			write_debug_log (generator + ".is_captcha_verified with response: [" + utf_8_encoded (a_response) + "]")
 			create api.make (a_secret, a_response)
-			Result := api.verify
-			if not Result and then attached api.errors as l_api_errors then
+			if cfg.is_version_3 then
+				Result := api.verify_score (0.5, recaptcha_action)
+			else
+				Result := api.verify
+			end
+			if
+				not Result and then
+				attached api.errors as l_api_errors
+			then
 				create l_errors.make_empty
 				l_errors.append_character ('%N')
 				across l_api_errors as ic loop
-					l_errors.append ( ic.item )
+					l_errors.append (ic.item)
 					l_errors.append_character ('%N')
 				end
 				write_error_log (generator + ".is_captcha_verified api_errors [" + l_errors + "]")

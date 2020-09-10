@@ -9,10 +9,7 @@
          
         <label for="message">Message: <span class="required">*</span></label>
         <textarea id="message" name="message" required="required" data-minlength="20" minlength="20" >{htmlentities}{$message/}{/htmlentities}</textarea>
-		{unless isempty="$recaptcha_site_key"}
-        <div class="g-recaptcha" data-sitekey="{$recaptcha_site_key/}"></div>
-        <br/>
-		{/unless}
+		{unless isempty="$recaptcha_site_html"}{$recaptcha_site_html/}<br/>{/unless}
         <input type="submit" value="Send" class="submit-button" />
         <p class="req-field-desc"><span class="required">*</span> indicates a required field</p>
     </form>

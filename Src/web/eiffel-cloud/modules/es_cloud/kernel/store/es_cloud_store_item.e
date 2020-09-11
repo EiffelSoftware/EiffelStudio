@@ -7,6 +7,9 @@ note
 class
 	ES_CLOUD_STORE_ITEM
 
+inherit
+	SHOPPING_CURRENCY_HELPER
+
 create
 	make
 
@@ -78,12 +81,11 @@ feature -- Access
 				end
 				Result.append_natural_32 (cents_price)
 			end
-			Result.append_character (' ')
-			if currency.is_case_insensitive_equal_general ("usd") then
-				Result.append_character ('$')
-			elseif currency.is_case_insensitive_equal_general ("eur") then
-				Result.append_character ({CHARACTER_32} '%/8364/')
+
+			if attached iso_currency_as_sign (currency) as ch then
+				Result.prepend_character (ch)
 			else
+				Result.append_character (' ')
 				Result.append_string_general (currency.as_upper)
 			end
 		end

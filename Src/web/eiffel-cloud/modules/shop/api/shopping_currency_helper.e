@@ -41,17 +41,4 @@ feature -- Conversion
 			instance_free: class
 		end
 
-	append_iso_currency_as_sign_to (a_iso_currency: READABLE_STRING_8; a_output: STRING_32)
-		require
-			is_valid_iso_currency (a_iso_currency)
-		do
-			if attached iso_currency_as_sign (a_iso_currency) as c then
-				a_output.append_character (c)
-			else
-				a_output.append_string_general (a_iso_currency)
-			end
-		ensure
-			instance_free: class
-		end
-
 end

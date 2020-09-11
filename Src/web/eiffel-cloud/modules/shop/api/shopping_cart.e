@@ -208,7 +208,6 @@ feature -- Query
 			p := l_total // 100
 			c := l_total \\ 100
 			create Result.make (10)
-			append_iso_currency_as_sign_to (currency, Result)
 			Result.append_natural_32 (p)
 			if c > 0 then
 				Result.append_character ('.')
@@ -216,6 +215,12 @@ feature -- Query
 					Result.append_integer (0)
 				end
 				Result.append_natural_32 (c)
+			end
+			if attached iso_currency_as_sign (currency) as ch then
+				Result.prepend_character (ch)
+			else
+				Result.append_character (' ')
+				Result.append_string_general (currency.as_upper)
 			end
 		end
 

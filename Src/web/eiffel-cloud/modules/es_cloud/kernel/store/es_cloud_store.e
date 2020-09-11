@@ -20,7 +20,7 @@ feature {NONE} -- Initialization
 
 	make_with_currency (a_curr: READABLE_STRING_8)
 		do
-			currency := a_curr
+			currency := a_curr.as_lower
 			create items.make_caseless (3)
 		end
 

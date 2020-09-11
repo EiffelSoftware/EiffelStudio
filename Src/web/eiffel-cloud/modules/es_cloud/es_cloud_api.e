@@ -382,8 +382,9 @@ feature -- Access: store
 			tb := internal_store_by_currency
 			if tb = Void then
 				create tb.make_caseless (1)
+				internal_store_by_currency := tb
 			end
-			tb[a_store.currency] := a_store
+			tb [a_store.currency] := a_store
 		end
 
 	internal_store_by_currency: detachable STRING_TABLE [ES_CLOUD_STORE]

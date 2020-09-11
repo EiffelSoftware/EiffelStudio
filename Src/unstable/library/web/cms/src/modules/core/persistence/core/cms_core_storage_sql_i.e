@@ -303,10 +303,10 @@ feature -- Logs
 	sql_insert_log: STRING = "INSERT INTO logs (category, level, uid, message, info, link, date) VALUES (:category, :level, :uid, :message, :info, :link, :date);"
 				-- SQL Insert to add a new node.
 
-	sql_select_logs: STRING = "SELECT id, category, level, uid, message, info, link, date FROM logs ORDER by date DESC;"
+	sql_select_logs: STRING = "SELECT id, category, level, uid, message, info, link, date FROM logs ORDER by date DESC, id DESC;"
 				-- SQL Insert to add a new node.
 
-	sql_select_categorized_logs: STRING = "SELECT id, category, level, uid, message, info, link, date FROM logs WHERE category=:category ORDER by date DESC;"
+	sql_select_categorized_logs: STRING = "SELECT id, category, level, uid, message, info, link, date FROM logs WHERE category=:category ORDER by date DESC, id DESC;"
 				-- SQL Insert to add a new node.
 
 feature -- Misc

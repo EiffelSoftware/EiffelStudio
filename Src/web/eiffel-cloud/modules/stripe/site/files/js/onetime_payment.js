@@ -59,7 +59,6 @@ eStripeMod.create = function (data) {
   Promise.all([eStripeMod.createPaymentIntent(data), eStripeMod.getPublicKey()])
   		.then(function(result) {
 		    var [paymentIntent, publicKey] = result;
-  			console.log (paymentIntent);
 		    eStripeMod.init(data, paymentIntent, publicKey);
 	  }
 	);
@@ -115,7 +114,6 @@ var processPaymentIntent = function(stripe, paymentIntent, card) {
 		if (result.error) {
 			showCardError(result.error);
 		} else {
-console.log (result);
 			//eStripeMod.stripePaymentHandler();
 			handlePayment(stripe, result, JSON.parse(cardItems));
 		}
@@ -123,8 +121,6 @@ console.log (result);
 };
 
 function handlePayment(stripe, payment, a_card_items) {
-	console.log (payment);
-	console.log (a_card_items);
 	confirmPayment (payment.paymentIntent);
 }
 
@@ -183,7 +179,6 @@ eStripeMod.getPublicKey = function () {
 
 /* Shows a success / error message when the payment is complete */
 var orderComplete = function(payment) {
-  console.log (payment);
   changeLoadingState(false);
   var paymentJson = JSON.stringify(payment, null, 2);
   eStripeMod.main_box.querySelectorAll('.payment-view').forEach(function(view) {

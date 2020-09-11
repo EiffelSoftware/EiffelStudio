@@ -107,7 +107,7 @@ feature -- Handle
 						pay.set_price (0, j_currency.unescaped_string_8)
 						api.invoke_prepare_payment (pay)
 						l_amount := pay.price_in_cents
-						if api.config.is_valid then
+						if api.config.is_valid and then l_amount /= 0 then
 							l_payment_intent := api.new_card_payment_intent (l_amount, pay.currency)
 						end
 					end

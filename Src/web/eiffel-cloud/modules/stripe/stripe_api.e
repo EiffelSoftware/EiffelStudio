@@ -82,6 +82,8 @@ feature -- Payment intents
 
 	new_card_payment_intent (a_amount: NATURAL_32; a_currency: READABLE_STRING_GENERAL): detachable STRIPE_PAYMENT_INTENT
 			-- `a_amount` in cents, a_currency is lowercase.
+		require
+			a_amount_not_zero: a_amount /= 0
 		local
 			cl: DEFAULT_HTTP_CLIENT
 			ctx: HTTP_CLIENT_REQUEST_CONTEXT

@@ -12,6 +12,9 @@ div.plans {
     border: solid 1px #999;
     background-color: #fff; }
 
+@media screen and (max-width: 600px) {
+  div.plans > div {
+    width: 100%; } }
 div.plan h2 {
   font-size: 140%; }
 div.plan div.actions {

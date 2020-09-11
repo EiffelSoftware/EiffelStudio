@@ -93,6 +93,10 @@ div.shop-cart {
       font-weight: bold;
       border: solid 1px #999;
       border-left: none; }
+    div.shop-cart table.shop-cart td.notes {
+      text-align: right;
+      font-style: italic;
+      color: #333; }
   div.shop-cart a.cart-reset {
     position: absolute;
     right: 5px; }

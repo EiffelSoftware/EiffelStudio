@@ -245,6 +245,7 @@ feature -- Execution
 	append_cart_to_html (a_cart: detachable SHOPPING_CART; a_html: STRING_8)
 		local
 			l_item: SHOPPING_ITEM
+			s32: STRING_32
 		do
 			a_html.append ("<div class=%"shop-cart%"")
 			if a_cart /= Void then
@@ -304,6 +305,18 @@ feature -- Execution
 				a_html.append ("<td class=%"title%">Total:</td><td class=%"total%">")
 				a_html.append (html_encoded (a_cart.price_as_string) + "</td>")
 				a_html.append ("</tr>")
+				if attached a_cart.currency_sign as l_sign then
+					a_html.append ("<tr>")
+					a_html.append ("<td/><td/><td/>")
+					a_html.append ("<td class=%"notes%">")
+					create s32.make (8)
+					s32.append_character (l_sign)
+					s32.append_string (" = ")
+					s32.append_string (a_cart.currency)
+					a_html.append (html_encoded (s32) + "</td>")
+					a_html.append ("</tr>")
+				end
+
 				a_html.append ("</tbody>")
 				a_html.append ("</table>")
 

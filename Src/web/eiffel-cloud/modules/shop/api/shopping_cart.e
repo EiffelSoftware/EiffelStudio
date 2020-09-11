@@ -193,6 +193,11 @@ feature -- Query
 			end
 		end
 
+	currency_sign: detachable CHARACTER_32
+		do
+			Result := iso_currency_as_sign (currency)
+		end
+
 	price_as_string: STRING_32
 			-- Price as string, using currency symbol when possible.
 		local

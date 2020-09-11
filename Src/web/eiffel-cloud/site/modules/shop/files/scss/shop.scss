@@ -127,6 +127,11 @@ div.shop-cart {
 				border-left: none;
 			}
 		}
+		td.notes {
+			text-align: right;
+			font-style: italic;
+			color: #333;
+		}
 	}
 	a.cart-reset {
 		position: absolute;

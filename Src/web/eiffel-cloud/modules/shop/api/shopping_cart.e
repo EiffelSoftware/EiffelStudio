@@ -6,6 +6,9 @@ note
 class
 	SHOPPING_CART
 
+inherit
+	SHOPPING_CURRENCY_HELPER
+
 create
 	make,
 	make_guest,
@@ -190,7 +193,29 @@ feature -- Query
 			end
 		end
 
-	price_as_string: STRING
+	price_as_string: STRING_32
+			-- Price as string, using currency symbol when possible.
+		local
+			l_total: NATURAL_32
+			p,c: NATURAL_32
+		do
+			l_total := price_in_cents
+			p := l_total // 100
+			c := l_total \\ 100
+			create Result.make (10)
+			append_iso_currency_as_sign_to (currency, Result)
+			Result.append_natural_32 (p)
+			if c > 0 then
+				Result.append_character ('.')
+				if c <= 9 then
+					Result.append_integer (0)
+				end
+				Result.append_natural_32 (c)
+			end
+		end
+
+	price_as_iso_string: STRING_8
+				-- Price as string, using ISO currency text.
 		local
 			l_total: NATURAL_32
 			p,c: NATURAL_32

@@ -7,7 +7,7 @@ class
 	SHOPPING_ITEM_DETAILS
 
 inherit
-	ANY
+	SHOPPING_CURRENCY_HELPER
 		redefine
 			default_create
 		end
@@ -29,7 +29,21 @@ feature -- Access
 
 	currency: IMMUTABLE_STRING_8
 
-	price_as_string: STRING
+	price_as_string: STRING_32
+		do
+			create Result.make (10)
+			append_iso_currency_as_sign_to (currency, Result)
+			Result.append_natural_32 (price)
+			if cents_price > 0 then
+				Result.append_character ('.')
+				if cents_price <= 9 then
+					Result.append_integer (0)
+				end
+				Result.append_natural_32 (cents_price)
+			end
+		end
+
+	price_as_iso_string: STRING_8
 		do
 			create Result.make (10)
 			Result.append_natural_32 (price)
@@ -41,7 +55,7 @@ feature -- Access
 				Result.append_natural_32 (cents_price)
 			end
 			Result.append_character (' ')
-			Result.append_string (currency)
+			Result.append_string_general (currency)
 		end
 
 	title: detachable READABLE_STRING_32

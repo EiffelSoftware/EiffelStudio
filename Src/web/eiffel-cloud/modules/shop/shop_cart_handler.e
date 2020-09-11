@@ -257,7 +257,7 @@ feature -- Execution
 			a_html.append_character ('>')
 
 			if a_cart = Void or else a_cart.is_empty then
-				a_html.append ("<div class=%"warning%">No item</div>")
+				a_html.append ("<div class=%"warning%">No items</div>")
 			else
 				a_html.append ("<table class=%"shop-cart%">")
 				a_html.append ("<thead><tr><th>Product</th><th>Provider</th><th>Item Price</th><th>Quantity</th></tr></thead>")
@@ -278,7 +278,7 @@ feature -- Execution
 					a_html.append ("</td>")
 					if attached l_item.details as l_item_details then
 						a_html.append ("<td class=%"cart-item-data%" data-price=%""+ l_item_details.price_in_cents.out +"%">")
-						a_html.append (l_item_details.price_as_string)
+						a_html.append (html_encoded (l_item_details.price_as_string))
 						if l_item_details.is_monthly then
 							a_html.append (" /month")
 						elseif l_item_details.is_yearly then
@@ -302,7 +302,7 @@ feature -- Execution
 				end
 				a_html.append ("<tr class=%"total%"><td/><td/>")
 				a_html.append ("<td class=%"title%">Total:</td><td class=%"total%">")
-				a_html.append (a_cart.price_as_string + "</td>")
+				a_html.append (html_encoded (a_cart.price_as_string) + "</td>")
 				a_html.append ("</tr>")
 				a_html.append ("</tbody>")
 				a_html.append ("</table>")

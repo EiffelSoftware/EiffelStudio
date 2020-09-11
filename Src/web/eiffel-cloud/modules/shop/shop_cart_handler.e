@@ -311,8 +311,8 @@ feature -- Execution
 					a_html.append ("<td class=%"notes%">")
 					create s32.make (8)
 					s32.append_character (l_sign)
-					s32.append_string (" = ")
-					s32.append_string (a_cart.currency)
+					s32.append_string ({STRING_32} " = ")
+					s32.append_string_general (a_cart.currency)
 					a_html.append (html_encoded (s32) + "</td>")
 					a_html.append ("</tr>")
 				end

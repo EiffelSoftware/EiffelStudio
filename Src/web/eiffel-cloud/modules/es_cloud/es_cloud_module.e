@@ -377,19 +377,27 @@ feature -- Hook
 			if attached api.cms_api.module_theme_resource_location (Current, res.extended ("new_license_email.tpl")) as loc and then attached api.cms_api.resolved_smarty_template (loc) as tpl then
 				tpl.set_value (a_license, "license")
 				tpl.set_value (a_license.key, "license_key")
+				if a_user /= Void then
+					tpl.set_value (a_user, "user")
+					tpl.set_value (a_user.email, "user_email")
+					tpl.set_value (a_user.name, "user_name")
+					tpl.set_value (api.cms_api.user_display_name (a_user), "profile_name")
+				else
+					tpl.set_value (a_email_addr, "user_email")
+				end
 				msg := tpl.string
 			else
 				create s.make_empty;
-				s.append ("New license " + utf_8_encoded (a_license.key) + ".%N")
+				s.append ("New EiffelStudio license " + utf_8_encoded (a_license.key) + ".%N")
 				if a_user = Void then
-					s.append ("The license is associated with email %"" + a_email_addr + "%", please register a new account with that email at " + api.cms_api.site_url + " .%N")
+					s.append ("The license is associated with email %"" + a_email_addr + "%".%NPlease register a new account with that email at " + api.cms_api.site_url + " .%N")
 				else
-					s.append ("The license is associated with your account %"" + utf_8_encoded (api.cms_api.user_display_name (a_user)) + "%" (email %"" + a_email_addr + "%"), please visit" + api.cms_api.site_url + " .%N")
+					s.append ("The license is associated with your account %"" + utf_8_encoded (api.cms_api.user_display_name (a_user)) + "%" (email %"" + a_email_addr + "%").%NPlease visit " + api.cms_api.site_url + " .%N")
 				end
 				msg := s
 			end
 
-			e := api.cms_api.new_html_email (a_email_addr, "New license " + utf_8_encoded (a_license.key), msg)
+			e := api.cms_api.new_html_email (a_email_addr, "New EiffelStudio license " + utf_8_encoded (a_license.key), msg)
 			api.cms_api.process_email (e)
 		end
 

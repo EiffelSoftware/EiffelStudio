@@ -1,5 +1,5 @@
 <div>
-	<form action="{$site_url/}account/roc-register" method="post">
+	<form action="{$site_url/}account/roc-register" method="post" id="{$form_id/}">
 		<fieldset>
 			<legend>Registration</legend>
 			<div>
@@ -31,7 +31,7 @@
 				<p class="description">{htmlentities}{$application_description/}{/htmlentities}</p>
 				{/if}
 			</div>
-			{unless isempty="$recaptcha_site_key"}<div class="g-recaptcha" data-sitekey="{$recaptcha_site_key/}"></div><br/>{/unless}
+			{unless isempty="$recaptcha_site_html"}{$recaptcha_site_html/}"<br/>{/unless}
 			<button type="submit">Register</button>
 		</fieldset>
 	</form>

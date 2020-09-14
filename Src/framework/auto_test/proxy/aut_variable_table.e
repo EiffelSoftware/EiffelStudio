@@ -163,9 +163,22 @@ feature -- Access
 			create {DS_ARRAYED_LIST [ITP_VARIABLE]} Result.make (variable_type_table.count)
 			across variable_type_table as cs loop
 				l_type := cs.item.actual_type
+
+					-- On non-Void-Safe
 					-- We only allow Void conforms to a non expanded type.
-				if l_type.is_conformant_to (a_context_class, a_type) and then not (a_type.is_expanded and then l_type.is_none) then
-					Result.force_last (cs.key)
+					--
+					-- On Void-Safe: Void is discarded
+					-- when the type `a_type` is directly attached.
+					--
+					-- To check if the current system is Void-Safe we just do the following comparison.
+					-- system.void_safety_index /= {CONF_TARGET_OPTION}.void_safety_index_none
+
+				if system.void_safety_index /= {CONF_TARGET_OPTION}.void_safety_index_none and then l_type.is_none and then a_type.is_directly_attached then
+					-- Avoid void.
+				else
+					if l_type.is_conformant_to (a_context_class, a_type) and then not (a_type.is_expanded and then l_type.is_none) then
+						Result.force_last (cs.key)
+					end
 				end
 			end
 		ensure
@@ -225,7 +238,7 @@ invariant
 	all_variables_have_type: not variable_type_table.has (Void)
 
 note
-	copyright: "Copyright (c) 1984-2013, Eiffel Software"
+	copyright: "Copyright (c) 1984-2020, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

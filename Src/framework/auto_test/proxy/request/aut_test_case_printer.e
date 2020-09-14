@@ -370,7 +370,7 @@ feature {AUT_REQUEST} -- Processing
 			if a_request.is_feature_query then
 				print_indentation
 				l_rec_type := variable_type (a_request.receiver)
-				l_use_ot := (l_rec_type /= Void and then l_rec_type.base_class.original_class /= system.any_class)
+				l_use_ot := (l_rec_type /= Void and then attached l_rec_type.base_class as l_base_clase and then l_base_clase.original_class /= system.any_class)
 				if l_use_ot then
 					output_stream.put_string ("check attached {")
 					output_stream.put_string (effective_type_name (l_rec_type))
@@ -614,7 +614,7 @@ invariant
 	valid_expression_printer_output_stream: expression_printer.output_stream = output_stream
 
 note
-	copyright: "Copyright (c) 1984-2013, Eiffel Software"
+	copyright: "Copyright (c) 1984-2020, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

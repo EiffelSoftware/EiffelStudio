@@ -17,6 +17,8 @@ div.plans {
     width: 100%; } }
 div.plan h2 {
   font-size: 140%; }
+div.plan hr {
+  color: #dedede3d; }
 div.plan div.actions {
   margin-top: 10px;
   padding: 10px;

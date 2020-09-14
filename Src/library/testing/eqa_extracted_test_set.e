@@ -500,29 +500,43 @@ feature {NONE} -- Object initialization
 			end
 		end
 
-	resolved_attributes (an_attributes: TUPLE): TUPLE
+	resolved_attributes (an_attributes: TUPLE): detachable TUPLE
 			-- New TUPLE object with object id string values from `an_attribute_list' replaced by the associated object.
 		require
 			an_attributes_attached: an_attributes /= Void
 		local
 			i: INTEGER
+			l_values: SPECIAL [detachable separate ANY]
+			l_reflector: REFLECTOR
+			l_type: STRING_8
+			--l_type_id: INTEGER
 		do
-			Result := an_attributes.twin
+			create l_reflector
+			l_type := "TUPLE ["
+			create l_values.make_filled (Void, an_attributes.count)
 			from
-				i := 1
+				i := 0
 			until
-				i > an_attributes.count
+				i = an_attributes.count
 			loop
-					-- Replace existing string id (ex: "#1", "#2", ...) by associated object for reference items.
-				if
-					an_attributes.is_reference_item (i) and then
-					attached {STRING} an_attributes.reference_item (i) as l_id and then
+		         if
+					an_attributes.is_reference_item (i + 1) and then
+					attached {STRING} an_attributes.reference_item (i + 1) as l_id and then
 					is_existing_id (l_id)
 				then
-					Result.put_reference (object_for_id (l_id), i)
+					l_values.put (object_for_id (l_id), i)
+				else
+					l_values.put (an_attributes.item (i + 1), i)
 				end
+				l_type.append ("separate ANY")
 				i := i + 1
+				if i < an_attributes.count then
+					l_type.append (", ")
+				else
+					l_type.append (" ]")
+				end
 			end
+			Result := l_reflector.new_tuple_from_special (l_reflector.dynamic_type_from_string (l_type), l_values)
 		end
 
 

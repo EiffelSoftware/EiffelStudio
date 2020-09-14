@@ -253,6 +253,30 @@ feature -- Element change license
 			es_cloud_storage.save_license (a_license)
 		end
 
+	discard_license (a_license: ES_CLOUD_LICENSE)
+		require
+			existing_license: license (a_license.id) /= Void
+		do
+			-- FIXME: to implement!
+		end
+
+	suspend_license (a_license: ES_CLOUD_LICENSE)
+		require
+			existing_license: license (a_license.id) /= Void
+		do
+			a_license.suspend
+			es_cloud_storage.save_license (a_license)
+		end
+
+	resume_license (a_license: ES_CLOUD_LICENSE)
+		require
+			existing_license: license (a_license.id) /= Void
+			is_suspended: a_license.is_suspended
+		do
+			a_license.resume
+			es_cloud_storage.save_license (a_license)
+		end
+
 	assign_license_to_user (a_license: ES_CLOUD_LICENSE; a_user: ES_CLOUD_USER)
 		do
 			es_cloud_storage.assign_license_to_user (a_license, a_user)
@@ -685,6 +709,8 @@ feature -- HTML factory
 				end
 			elseif lic.is_fallback then
 				s.append ("<li class=%"status notice%">Fallback license</li>")
+			elseif lic.is_suspended then
+				s.append ("<li class=%"status warning%">SUSPENDED</li>")
 			else
 				s.append ("<li class=%"status warning%">EXPIRED</li>")
 			end

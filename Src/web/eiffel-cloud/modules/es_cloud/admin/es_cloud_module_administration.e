@@ -299,13 +299,29 @@ feature -- Hooks configuration
 						end
 					end
 				end
+			else
+				if
+					a_cloud_api.cms_api.has_permission (module.perm_manage_es_licenses) and then
+					attached fd.integer_item ("es-lic-lid") as lid and then
+					attached a_cloud_api.license (lid) as l_lic
+				then
+					if attached fd.string_item ("es-lic-op-suspend") then
+						a_cloud_api.suspend_license (l_lic)
+					elseif attached fd.string_item ("es-lic-op-resume") then
+						a_cloud_api.resume_license (l_lic)
+					elseif attached fd.string_item ("es-lic-op-discard") then
+						a_cloud_api.discard_license (l_lic)
+					end
+				end
 			end
 		end
 
 	add_license_form_part_to (a_license: detachable ES_CLOUD_LICENSE; fset: WSF_FORM_FIELD_SET; a_cloud_api: ES_CLOUD_API)
 		local
 			lic_fset: WSF_FORM_FIELD_SET
-			r: WSF_FORM_RADIO_INPUT
+--			r: WSF_FORM_RADIO_INPUT
+			l_select: WSF_FORM_SELECT
+			l_select_opt: WSF_FORM_SELECT_OPTION
 			num: WSF_FORM_NUMBER_INPUT
 			exp: WSF_FORM_DATE_INPUT
 			txt: WSF_FORM_TEXT_INPUT
@@ -337,16 +353,28 @@ feature -- Hooks configuration
 				lic_fset.extend_html_text (s)
 			end
 
+			create l_select.make (l_var_prefix + "[plan]")
+			l_select.set_label ("Plan")
+			lic_fset.extend (l_select)
 			across
 				a_cloud_api.plans as pl_ic
 			loop
-				create r.make_with_value (l_var_prefix + "[plan]", pl_ic.item.name.as_string_32)
-				r.set_title (pl_ic.item.title_or_name)
+				create l_select_opt.make (pl_ic.item.name, pl_ic.item.title_or_name)
 				if l_plan /= Void and then pl_ic.item.same_plan (l_plan) then
-					r.set_checked (True)
+					l_select_opt.set_is_selected (True)
 				end
-				lic_fset.extend (r)
+				l_select.add_option (l_select_opt)
 			end
+--			across
+--				a_cloud_api.plans as pl_ic
+--			loop
+--				create r.make_with_value (l_var_prefix + "[plan]", pl_ic.item.name.as_string_32)
+--				r.set_title (pl_ic.item.title_or_name)
+--				if l_plan /= Void and then pl_ic.item.same_plan (l_plan) then
+--					r.set_checked (True)
+--				end
+--				lic_fset.extend (r)
+--			end
 
 			create txt.make (l_var_prefix + "[platforms]")
 			txt.set_label ("Platforms")
@@ -381,11 +409,21 @@ feature -- Hooks configuration
 			end
 			lic_fset.extend (exp)
 			if a_license /= Void then
-				create l_submit.make_with_text ("es-lic-op", "Save License #" + a_license.id.out)
+				lic_fset.extend (create {WSF_FORM_HIDDEN_INPUT}.make_with_text ("es-lic-lid", a_license.id.out))
+				if a_license.is_suspended then
+					create l_submit.make_with_text ("es-lic-op-resume", "Resume License")
+					lic_fset.extend (l_submit)
+				else
+					create l_submit.make_with_text ("es-lic-op", "Save License #" + a_license.id.out)
+					lic_fset.extend (l_submit)
+
+					create l_submit.make_with_text ("es-lic-op-suspend", "Suspend License")
+					lic_fset.extend (l_submit)
+				end
 			else
 				create l_submit.make_with_text ("es-lic-op", "Save License")
+				lic_fset.extend (l_submit)
 			end
-			lic_fset.extend (l_submit)
 		end
 
 	cloud_user_from_form (a_form: CMS_FORM; a_response: CMS_RESPONSE): detachable ES_CLOUD_USER

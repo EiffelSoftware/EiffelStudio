@@ -187,7 +187,11 @@ feature -- Execution
 									s.append (html_encoded (date_time_to_string (lic.creation_date)))
 									s.append (")")
 								end
+							elseif lic.is_suspended then
+								s.append ("<td class=%"suspended%">")
+								s.append ("<strong>SUSPENDED</strong>")
 							else
+
 								s.append ("<td class=%"expired%">") -- Until
 
 								s.append ("<strong>EXPIRED</strong>")

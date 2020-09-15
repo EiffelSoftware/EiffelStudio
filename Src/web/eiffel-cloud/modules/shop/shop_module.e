@@ -212,6 +212,7 @@ feature -- Hook
 				if attached l_shop_api.active_shopping_cart (a_response.request) as l_cart and then l_cart.count > 0 then
 					create lnk.make ({STRING_32} "%/128722/" + {STRING_32} "(" + l_cart.count.out + ")", a_response.location_url ("shop/cart/", Void))
 					lnk.set_weight (100)
+					lnk.add_css_class ("shopping-cart-live")
 					a_menu_system.primary_menu.extend (lnk)
 				end
 			end

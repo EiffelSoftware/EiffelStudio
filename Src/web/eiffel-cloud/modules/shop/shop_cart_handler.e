@@ -286,8 +286,6 @@ feature -- Execution
 							l_interval := Void
 						end
 						if l_interval /= Void then
-							a_html.append (" ")
-							a_html.append (l_interval)
 							if not l_intervals.has (l_interval) then
 								l_intervals.force (l_interval)
 							end
@@ -371,7 +369,11 @@ feature -- Execution
 				a_html.append ("</tr>")
 				if attached a_cart.currency_sign as l_sign then
 					a_html.append ("<tr>")
-					a_html.append ("<td/><td/><td/>")
+					if l_unique_provider = Void then
+						a_html.append ("<td/><td/><td/>")
+					else
+						a_html.append ("<td/><td/>")
+					end
 					a_html.append ("<td class=%"notes%">")
 					create s32.make (8)
 					s32.append_character (l_sign)
@@ -437,7 +439,7 @@ feature -- Execution
 						inspect
 							l_details.interval_type
 						when {SHOPPING_ITEM_DETAILS}.interval_type_onetime then
-							l_item_interval := "onetime"
+							l_item_interval := "one-time"
 						when {SHOPPING_ITEM_DETAILS}.interval_type_daily then
 							if l_item_interval_count > 1 then
 								l_item_interval := "every " + l_item_interval_count.out + " days"
@@ -466,15 +468,29 @@ feature -- Execution
 							l_item_interval := Void
 						end
 						if l_item_interval /= Void then
-							l_err_html.append ("<br/>The payment (<strong>" + l_item_interval + "</strong>) is conflicting with the other item")
+							l_err_html.append ("<br/>The payment (<strong>" + l_item_interval + "</strong>) is conflicting with the cart item")
 						else
-							l_err_html.append ("<br/>The payment is conflicting with the other item.")
+							l_err_html.append ("<br/>The one-time payment is conflicting with the cart item")
 						end
 						if l_cart.count > 1 then
 							l_err_html.append ("s.")
 						else
 							l_err_html.append (".")
 						end
+						l_err_html.append ("<br/>This cart contains only <strong>")
+						if l_cart.is_yearly then
+							l_err_html.append ("yearly")
+						elseif l_cart.is_monthly then
+							l_err_html.append ("monthly")
+						elseif l_cart.is_weekly then
+							l_err_html.append ("weekly")
+						elseif l_cart.is_daily then
+							l_err_html.append ("daily")
+						else
+							check l_cart.is_onetime end
+							l_err_html.append ("one-time")
+						end
+						l_err_html.append ("</strong> items.")
 						l_err_html.append ("<br/><br/>Either remove the conflicting item(s), or choose another item ... ")
 						if attached req.http_referer as l_referer then
 							l_err_html.append (" <a href=%"" + l_referer + "%">Go Back</a>")

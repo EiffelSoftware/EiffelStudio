@@ -8,7 +8,7 @@ class ROCSHOP_cart {
 		this.table = this.cart_div.find('table.shop-cart').first();
 		this.total = this.table.find("td.total").first();
 		this.total_cents=0;
-		console.log(this.payment);
+		//console.log(this.payment);
 
 		var l_url = $(location).attr('href');
 		var i = l_url.lastIndexOf('/');
@@ -47,18 +47,22 @@ class ROCSHOP_cart {
 					s = s + "." + td_total % 100;
 				}
 			}
-			cart.total.text(s + " " + cart.currency);
+			if (cart.currency == "usd") {
+				cart.total.text("$" + s);
+			} else {
+				cart.total.text(s + " " + cart.currency);
+			}
 		})).done (function() {
-			console.log("total updated to " + cart.total_cents);
+			//console.log("total updated to " + cart.total_cents);
 			if (cart.payment != null) {
-			console.log("update payment ...");
+			//console.log("update payment ...");
 				if (cart.total_cents == 0) {
 					cart.payment.fadeOut(1000);
 				} else {
 					cart.payment.fadeIn();
 				}
 			} else {
-			console.log(cart.payment);
+			//console.log(cart.payment);
 			}
 		});
 	};
@@ -122,7 +126,7 @@ class ROCSHOP_cart_item {
 				this.failures_count = 0;
 			} else {
 				this.line.append("<div>Error try again in 5 seconds (" + this.failures_count + ")</div>");
-				setTimeout(this.add_quantity(nb), 5000); /* 5 sec */
+				setTimeout(this.add_quantity(i), 5000); /* 5 sec */
 			}
 		});
 	};

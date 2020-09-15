@@ -124,10 +124,19 @@ feature -- Execution
 								l_params ["order_id"] := safe_string (pay.order_id)
 								l_params ["metadata"] := safe_string (pay.meta_data_as_json_string)
 								l_params ["stripe_host_url"] := stripe_api.cms_api.webapi_path (stripe_api.config.base_path)
+
 								rep.set_main_content (card_html (l_params))
 							else
-								rep.set_main_content ("Cart is empty")
-								rep.add_warning_message ("Shopping cart is empty")
+								if pay.is_empty then
+									rep.set_main_content ("Cart is empty")
+									rep.add_warning_message ("Shopping cart is empty")
+								else
+									rep.set_main_content ("No payment information for <strong>" + html_encoded (pay.title_or_code)
+											+ " (" + html_encoded (pay.code_or_checkout_id) + ")"
+											+ "</strong> in category <strong>" + html_encoded (pay.category)
+											+ "</strong> !"
+										)
+								end
 							end
 						else
 							rep := new_generic_response (req, res)

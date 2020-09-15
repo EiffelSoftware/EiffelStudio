@@ -39,6 +39,8 @@ feature -- Execution
 		local
 			rep: like new_generic_response
 			pay: STRIPE_PAYMENT
+			l_user: detachable CMS_USER
+			l_user_email: detachable READABLE_STRING_8
 			l_params: STRING_TABLE [detachable READABLE_STRING_GENERAL]
 		do
 			if stripe_api.config.is_valid then
@@ -50,48 +52,61 @@ feature -- Execution
 						rep := new_generic_response (req, res)
 						rep.set_redirection (rep.api.location_url ("/terms_of_use", Void)) -- Global site terms of use
 						rep.set_main_content ("Terms of use ....")
-					elseif attached stripe_api.cms_api.user as l_user then
-						create pay.make (p_cat.value, p_checkout.value)
-						stripe_api.invoke_prepare_payment (pay)
-						rep := new_generic_response (req, res)
-
-						if pay.is_prepared then
-							rep.add_javascript_url ("https://js.stripe.com/v3/")
-							rep.add_javascript_url (rep.module_resource_url (module, "/files/js/onetime_payment.js", Void))
-							rep.add_style (rep.module_resource_url (module, "/files/css/stripe.css", Void), Void)
-
-							create l_params.make_caseless (10)
-							l_params ["checkout_type"] := "onetime"
-							l_params ["checkout_price"] := pay.price_text
-							l_params ["checkout_title"] := pay.title_or_code
-							l_params ["checkout_code"] := pay.code_or_checkout_id
-							l_params ["checkout_items"] := safe_string (pay.items_as_json_string)
-							l_params ["checkout_category"] := pay.category
-							l_params ["checkout_name"] := pay.code_or_checkout_id
-							l_params ["title"] := safe_string (pay.business_name)
-							l_params ["business_name"] := safe_string (pay.business_name)
-							l_params ["customer_email"] := safe_string (pay.customer_email)
-							l_params ["customer_name"] := safe_string (pay.customer_name)
-
-							l_params ["order_id"] := safe_string (pay.order_id)
-							l_params ["metadata"] := safe_string (pay.meta_data_as_json_string)
-							l_params ["stripe_host_url"] := stripe_api.cms_api.webapi_path (stripe_api.config.base_path)
-
-							rep.set_main_content (card_html (l_params))
-						else
-							rep.set_main_content ("No payment information for <strong>" + html_encoded (pay.title_or_code)
-									+ " (" + html_encoded (pay.code_or_checkout_id) + ")"
-									+ "</strong> in category <strong>" + html_encoded (pay.category)
-									+ "</strong> !"
-								)
-						end
 					else
-						rep := new_generic_response (req, res)
-						if attached {CMS_AUTHENTICATION_MODULE} api.module ({CMS_AUTHENTICATION_MODULE}) as l_auth_module  then
-							rep.set_redirection (api.url (l_auth_module.roc_login_location, create {CMS_API_OPTIONS}.make_from_manifest (<<["query", "destination=" + secured_url_content (rep.location)]>>)))
+						l_user := stripe_api.cms_api.user
+						if attached req.string_item ("contact_email") as s then
+							l_user_email := s.to_string_8
+						elseif l_user /= Void then
+							l_user_email := l_user.email
 						end
-						rep.set_main_content ("Please login or register an account first.")
+						if l_user_email /= Void then
 
+							create pay.make (p_cat.value, p_checkout.value)
+							stripe_api.invoke_prepare_payment (pay)
+							rep := new_generic_response (req, res)
+
+							if pay.is_prepared and then not pay.is_empty then
+								rep.add_javascript_url ("https://js.stripe.com/v3/")
+								rep.add_javascript_url (rep.module_resource_url (module, "/files/js/onetime_payment.js", Void))
+								rep.add_style (rep.module_resource_url (module, "/files/css/stripe.css", Void), Void)
+
+								create l_params.make_caseless (10)
+								l_params ["checkout_type"] := "onetime"
+								l_params ["checkout_price"] := pay.price_text
+								l_params ["checkout_title"] := pay.title_or_code
+								l_params ["checkout_code"] := pay.code_or_checkout_id
+								l_params ["checkout_items"] := safe_string (pay.items_as_json_string)
+								l_params ["checkout_category"] := pay.category
+								l_params ["checkout_name"] := pay.code_or_checkout_id
+								l_params ["title"] := safe_string (pay.business_name)
+								l_params ["business_name"] := safe_string (pay.business_name)
+								l_params ["customer_email"] := safe_string (pay.customer_email)
+								l_params ["customer_name"] := safe_string (pay.customer_name)
+
+								l_params ["order_id"] := safe_string (pay.order_id)
+								l_params ["metadata"] := safe_string (pay.meta_data_as_json_string)
+								l_params ["stripe_host_url"] := stripe_api.cms_api.webapi_path (stripe_api.config.base_path)
+
+								rep.set_main_content (card_html (l_params))
+							else
+								if pay.is_empty then
+									rep.set_main_content ("Cart is empty")
+									rep.add_warning_message ("Shopping cart is empty")
+								else
+									rep.set_main_content ("No payment information for <strong>" + html_encoded (pay.title_or_code)
+											+ " (" + html_encoded (pay.code_or_checkout_id) + ")"
+											+ "</strong> in category <strong>" + html_encoded (pay.category)
+											+ "</strong> !"
+										)
+								end
+							end
+						else
+							rep := new_generic_response (req, res)
+							if attached {CMS_AUTHENTICATION_MODULE} api.module ({CMS_AUTHENTICATION_MODULE}) as l_auth_module  then
+								rep.set_redirection (api.url (l_auth_module.roc_login_location, create {CMS_API_OPTIONS}.make_from_manifest (<<["query", "destination=" + secured_url_content (rep.location)]>>)))
+							end
+							rep.set_main_content ("We are missing your contact email, please login or register an account first.")
+						end
 					end
 					rep.execute
 				else

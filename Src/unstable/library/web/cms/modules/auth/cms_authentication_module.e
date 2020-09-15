@@ -94,13 +94,15 @@ feature -- Access
 			Result.force (perm_edit_own_account)
 			Result.force ("change own username")
 			Result.force ("change own password")
-			Result.force ("view users")
+			Result.force (perm_view_users)
 		end
 
 	auth_api: detachable CMS_AUTHENTICATION_API
 
 	perm_view_own_account: STRING = "view own account"
 	perm_edit_own_account: STRING = "edit own account"
+
+	perm_view_users: STRING = "view users"
 
 	perm_account_register: STRING = "account register"
 

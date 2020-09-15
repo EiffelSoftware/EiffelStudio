@@ -139,7 +139,7 @@ feature -- Security
 			Result.force ("admin path_alias")
 			Result.force ("edit path_alias")
 			Result.force ("use access_token")
-			Result.force ("view users")
+			Result.force (perm_view_users)
 			if attached cms_api as l_cms_api then
 				across
 					l_cms_api.formats as ic
@@ -148,6 +148,8 @@ feature -- Security
 				end
 			end
 		end
+
+	perm_view_users: STRING = "view users"
 
 	use_format_permission_name (a_format: CONTENT_FORMAT): STRING
 		do

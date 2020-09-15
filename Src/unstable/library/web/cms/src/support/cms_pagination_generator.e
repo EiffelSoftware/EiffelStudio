@@ -276,7 +276,7 @@ feature -- Convertion
 					else
 						a_output.append ("<li>")
 					end
-					a_output.append (a_response.link (lnk.title, lnk.location, Void))
+					a_response.append_cms_link_to_html (lnk, Void, a_output)
 					a_output.append ("</li>")
 				end
 			end

@@ -178,7 +178,7 @@ feature -- HTTP Methods
 							s.append (" trashed")
 						end
 						s.append ("%">")
-						s.append (l_response.link (lnk.title, lnk.location, Void))
+						l_response.append_cms_link_to_html (lnk, Void, s)
 						if not n.is_published then
 							s.append (" <span class=%"info%">(not-published)</span>")
 						elseif n.is_trashed then

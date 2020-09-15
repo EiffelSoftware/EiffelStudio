@@ -159,6 +159,7 @@ feature {NONE} -- Implementation
 				if lnk.is_expanded then
 					cl.append ("expanded ")
 				end
+				cl := lnk.extended_css_class (cl).to_string_8
 				if cl.is_empty then
 					s.append ("<li>")
 				else

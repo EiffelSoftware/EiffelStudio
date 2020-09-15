@@ -76,7 +76,7 @@ feature -- HTTP Methods
 						n := ic.item
 						lnk := node_api.node_link (n)
 						s.append ("<li class=%"cms_type_"+ n.content_type +"%">")
-						s.append (l_page.link (lnk.title, lnk.location, Void))
+						l_page.append_cms_link_to_html (lnk, Void, s)
 						s.append ("</li>%N")
 					end
 					s.append ("</ul>%N")

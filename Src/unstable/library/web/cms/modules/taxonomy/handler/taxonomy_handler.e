@@ -107,7 +107,7 @@ feature -- HTTP Methods
 								ct := ic.item.content
 								s.append ("<li class=%""+ ct.content_type +"%">")
 								if attached ct.link as lnk then
-									l_page.append_link_to_html (lnk.title, lnk.location, Void, s)
+									l_page.append_cms_link_to_html (lnk, Void, s)
 								end
 								if attached api.content_type_webform_manager_by_name (ct.content_type) as l_wfm then
 									l_wfm.append_content_as_html_to (ct, True, s, l_page)

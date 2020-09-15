@@ -200,6 +200,42 @@ feature -- Query
 		deferred
 		end
 
+feature -- Option visual properties
+
+	extended_css_class (a_class: READABLE_STRING_8): READABLE_STRING_8
+			-- `a_class` extended with potential `css_class` value.
+		do
+			if attached css_class as cl and then not cl.is_whitespace then
+				if a_class.is_whitespace then
+					Result := cl
+				else
+					Result := a_class + " " + cl
+				end
+			else
+				Result := a_class
+			end
+		end
+
+	css_class: detachable READABLE_STRING_8
+			-- Optional css class value.
+
+	set_css_class (a_css_cl: detachable READABLE_STRING_8)
+		do
+			css_class := a_css_cl
+		end
+
+	add_css_class (a_css_cl: READABLE_STRING_8)
+		local
+			cl: detachable READABLE_STRING_8
+		do
+			cl := css_class
+			if cl = Void then
+				css_class := a_css_cl
+			else
+				css_class := cl + " " + a_css_cl
+			end
+		end
+
 feature -- Access
 
 	new_cursor: ITERATION_CURSOR [CMS_LINK]
@@ -226,6 +262,6 @@ feature -- Status report
 		end
 
 note
-	copyright: "2011-2016, Javier Velilla, Jocelyn Fiat, Eiffel Software and others"
+	copyright: "2011-2020, Javier Velilla, Jocelyn Fiat, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 end

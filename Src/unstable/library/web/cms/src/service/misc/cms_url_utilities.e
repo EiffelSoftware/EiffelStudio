@@ -57,6 +57,11 @@ feature -- Link
 			append_link_with_raw_text_to_html (a_raw_text, a_path, opts, Result)
 		end
 
+	append_cms_link_to_html (lnk: CMS_LINK; opts: detachable CMS_API_OPTIONS; a_html: STRING_8)
+		do
+			append_link_to_html (lnk.title, lnk.location, opts, a_html)
+		end
+
 	append_link_to_html (a_text: detachable READABLE_STRING_GENERAL; a_path: READABLE_STRING_8; opts: detachable CMS_API_OPTIONS; a_html: STRING_8)
 		local
 			l_html: BOOLEAN

@@ -3,10 +3,7 @@ class ESCL_inst_trash {
 		this.line = a_line;
 
 		var l_url = $(location).attr('href');
-		var i = l_url.lastIndexOf('/');
-		l_url = l_url.slice (0, i)
-		i = l_url.lastIndexOf('/');
-		this.host_url = l_url.slice (0, i)
+		this.host_url = this.url_origin($(location).attr('href'));
 
 		this.uid = this.line.attr('data-user-id');
 		this.iid = this.line.attr('data-installation-id');
@@ -14,6 +11,27 @@ class ESCL_inst_trash {
 		this.endpoint = this.host_url.concat("/api/cloud/v1/account/", this.uid, "/installations/", this.iid);
 		this.deleted = false;
 	}
+	url_origin(a_url){
+		var l_url = a_url;
+		if (typeof URL === "function") {
+			var u = new URL(l_url);
+			return u.origin;
+		} else {
+			var i = l_url.indexOf('//');
+			if (i > 0) {
+				var j = l_url.indexOf('/', i + 2);
+				l_url = l_url.slice (0, j);
+				return l_url;
+			} else {
+				var i = l_url.lastIndexOf('/');
+				if (l_url.length == i + 1) {
+					l_url = l_url.slice (0, i)
+				}
+				i = l_url.lastIndexOf('/');
+				return l_url.slice (0, i);
+			}
+		}
+	}	
 	insert_form() {
 		var but = $("<button title=\"Revoke installation\">&#x1F5D1;</button>");
 		this.line.append(but);

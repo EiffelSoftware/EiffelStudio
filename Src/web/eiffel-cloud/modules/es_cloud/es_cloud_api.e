@@ -689,9 +689,12 @@ feature -- HTML factory
 			s.append ("<div class=%"details%"><ul>")
 			if a_user /= Void then
 				s.append ("<li class=%"owner%"><span class=%"title%">Owner:</span> ")
-				s.append (api.user_html_link (a_user))
+				if api.has_permission ({CMS_CORE_MODULE}.perm_view_users) then
+					s.append (api.user_html_link (a_user))
+				else
+					s.append (html_encoded (api.real_user_display_name (a_user)))
+				end
 				s.append ("</li>")
-
 			end
 			s.append ("<li class=%"creation%"><span class=%"title%">Started</span> ")
 			s.append (api.date_time_to_string (lic.creation_date))

@@ -1,1 +1,1 @@
-I have read and I agree to the {$shop_name/} account agreement, purchase terms and subscription license agreement.
+I have read and agree with the terms of the {$shop_name/} account agreement, purchase conditions and subscription license agreement.

@@ -140,7 +140,7 @@ feature -- Execution
 								l_form.extend_html_text ("%N<div class=%"identification%"><h3>Identification</h3>")
 								create f_email.make_with_text ("contact_email", l_email)
 								f_email.set_label ("Email address")
-								f_email.set_description ("You will get information about your order on that email address.")
+								f_email.set_description ("You will receive confirmation of your order at the email address you indicated.")
 								f_email.enable_required
 								f_email.set_disabled (True)
 								l_form.extend (f_email)
@@ -246,6 +246,10 @@ feature -- Execution
 		local
 			l_item: SHOPPING_ITEM
 			s32: STRING_32
+			l_providers: ARRAYED_LIST [READABLE_STRING_32]
+			l_intervals: ARRAYED_LIST [READABLE_STRING_8]
+			l_interval: READABLE_STRING_8
+			l_unique_provider: detachable READABLE_STRING_32
 		do
 			a_html.append ("<div class=%"shop-cart%"")
 			if a_cart /= Void then
@@ -260,8 +264,45 @@ feature -- Execution
 			if a_cart = Void or else a_cart.is_empty then
 				a_html.append ("<div class=%"warning%">No items</div>")
 			else
+				create l_providers.make (1); l_providers.compare_objects
+				create l_intervals.make (1); l_intervals.compare_objects
+				across
+					a_cart.items as ic
+				loop
+					l_item := ic.item
+					if not l_providers.has (l_item.provider) then
+						l_providers.force (l_item.provider)
+					end
+					if attached l_item.details as l_item_details then
+						if l_item_details.is_monthly then
+							l_interval := "/month"
+						elseif l_item_details.is_yearly then
+							l_interval := "/year"
+						elseif l_item_details.is_weekly then
+							l_interval := "/week"
+						elseif l_item_details.is_daily then
+							l_interval := "/day"
+						else
+							l_interval := Void
+						end
+						if l_interval /= Void then
+							a_html.append (" ")
+							a_html.append (l_interval)
+							if not l_intervals.has (l_interval) then
+								l_intervals.force (l_interval)
+							end
+						end
+					end
+				end
+				if l_providers.count = 1 then
+					l_unique_provider := l_providers.first
+				end
 				a_html.append ("<table class=%"shop-cart%">")
-				a_html.append ("<thead><tr><th>Product</th><th>Provider</th><th>Item Price</th><th>Quantity</th></tr></thead>")
+				if l_unique_provider /= Void then
+					a_html.append ("<thead><tr><th>Product(s)</th><th>Item Price</th><th>Quantity</th></tr></thead>")
+				else
+					a_html.append ("<thead><tr><th>Product</th><th>Provider</th><th>Item Price</th><th>Quantity</th></tr></thead>")
+				end
 				a_html.append ("<tbody>")
 				across
 					a_cart.items as ic
@@ -272,22 +313,37 @@ feature -- Execution
 					a_html.append (" data-item-provider=%"" + url_encoded (l_item.provider) + "%"")
 					a_html.append_character ('>')
 					a_html.append ("<td class=%"cart-item-code%">")
-					a_html.append (html_encoded (l_item.code))
+					if attached l_item.details as l_details and then attached l_details.title as l_title then
+						a_html.append (html_encoded (l_title))
+					else
+						a_html.append (html_encoded (l_item.code))
+					end
 					a_html.append ("</td>")
-					a_html.append ("<td class=%"cart-item-provider%">")
-					a_html.append (html_encoded (l_item.provider))
-					a_html.append ("</td>")
+					if l_unique_provider = Void then
+						a_html.append ("<td class=%"cart-item-provider%">")
+						a_html.append (html_encoded (l_item.provider))
+						a_html.append ("</td>")
+					end
 					if attached l_item.details as l_item_details then
 						a_html.append ("<td class=%"cart-item-data%" data-price=%""+ l_item_details.price_in_cents.out +"%">")
 						a_html.append (html_encoded (l_item_details.price_as_string))
 						if l_item_details.is_monthly then
-							a_html.append (" /month")
+							l_interval := "/month"
 						elseif l_item_details.is_yearly then
-							a_html.append (" /year")
+							l_interval := "/year"
 						elseif l_item_details.is_weekly then
-							a_html.append (" /week")
+							l_interval := "/week"
 						elseif l_item_details.is_daily then
-							a_html.append (" /day")
+							l_interval := "/day"
+						else
+							l_interval := Void
+						end
+						if l_interval /= Void then
+							a_html.append (" ")
+							a_html.append (l_interval)
+							if not l_intervals.has (l_interval) then
+								l_intervals.force (l_interval)
+							end
 						end
 						if attached l_item.data as l_data then
 							a_html.append (l_data)
@@ -301,9 +357,17 @@ feature -- Execution
 					a_html.append ("</td>")
 					a_html.append ("</tr>")
 				end
-				a_html.append ("<tr class=%"total%"><td/><td/>")
+				a_html.append ("<tr class=%"total%"><td/>")
+				if l_unique_provider = Void then
+					a_html.append ("<td/>")
+				end
 				a_html.append ("<td class=%"title%">Total:</td><td class=%"total%">")
-				a_html.append (html_encoded (a_cart.price_as_string) + "</td>")
+				a_html.append (html_encoded (a_cart.price_as_string))
+				if l_intervals.count = 1 then
+					a_html.append (" ")
+					a_html.append (l_intervals.first)
+				end
+				a_html.append ("</td>")
 				a_html.append ("</tr>")
 				if attached a_cart.currency_sign as l_sign then
 					a_html.append ("<tr>")
@@ -312,7 +376,7 @@ feature -- Execution
 					create s32.make (8)
 					s32.append_character (l_sign)
 					s32.append_string ({STRING_32} " = ")
-					s32.append_string_general (a_cart.currency)
+					s32.append_string_general (a_cart.currency.as_upper)
 					a_html.append (html_encoded (s32) + "</td>")
 					a_html.append ("</tr>")
 				end
@@ -444,6 +508,7 @@ feature -- Execution
 				shop_api.save_guest_shopping_cart (a_cart)
 				s := "guest_shop_cid=" + a_cart.id.out
 				create l_cookie.make (shop_api.config.cookie_name, utf_8_encoded (s))
+				l_cookie.set_path ("/")
 				res.add_cookie (l_cookie)
 			end
 		end

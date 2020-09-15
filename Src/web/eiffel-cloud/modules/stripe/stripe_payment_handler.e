@@ -63,10 +63,11 @@ feature -- Execution
 							create l_params.make_caseless (10)
 							l_params ["checkout_type"] := "onetime"
 							l_params ["checkout_price"] := pay.price_text
-							l_params ["checkout_title"] := pay.title_or_checkout_id
+							l_params ["checkout_title"] := pay.title_or_code
+							l_params ["checkout_code"] := pay.code_or_checkout_id
 							l_params ["checkout_items"] := safe_string (pay.items_as_json_string)
 							l_params ["checkout_category"] := pay.category
-							l_params ["checkout_name"] := pay.title_or_checkout_id
+							l_params ["checkout_name"] := pay.code_or_checkout_id
 							l_params ["title"] := safe_string (pay.business_name)
 							l_params ["business_name"] := safe_string (pay.business_name)
 							l_params ["customer_email"] := safe_string (pay.customer_email)
@@ -78,7 +79,8 @@ feature -- Execution
 
 							rep.set_main_content (card_html (l_params))
 						else
-							rep.set_main_content ("No payment information for <strong>" + html_encoded (pay.title_or_checkout_id)
+							rep.set_main_content ("No payment information for <strong>" + html_encoded (pay.title_or_code)
+									+ " (" + html_encoded (pay.code_or_checkout_id) + ")"
 									+ "</strong> in category <strong>" + html_encoded (pay.category)
 									+ "</strong> !"
 								)
@@ -190,6 +192,7 @@ feature -- Resources
     window.eStripeEltsModal.create({
       currency: "USD",
       businessName: "{{business_name}}",
+      productTitle: "{{checkout_title}}",
       productName: "{{checkout_name}}",
       productCategory: "{{checkout_category}}",
       customerEmail: "{{customer_email}}",

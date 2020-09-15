@@ -84,10 +84,11 @@ feature -- Execution
 								rep.add_javascript_url ("https://js.stripe.com/v3/")
 								rep.add_javascript_url (rep.module_resource_url (module, "/files/js/subscription.js", Void))
 								rep.add_style (rep.module_resource_url (module, "/files/css/stripe.css", Void), Void)
-	
+
 								create l_params.make_caseless (10)
 								l_params ["checkout_price"] := pay.price_text
-								l_params ["checkout_title"] := pay.title_or_checkout_id
+								l_params ["checkout_title"] := pay.title_or_code
+								l_params ["checkout_name"] := pay.code_or_checkout_id
 								l_params ["checkout_items"] := safe_string (pay.items_as_json_string)
 								l_params ["checkout_category"] := pay.category
 								l_params ["title"] := safe_string (pay.business_name)
@@ -175,7 +176,7 @@ feature -- Resources
 			create tpl_p.make_from_string ("templates")
 
 			if
-				attached api.module_theme_resource_location (module, tpl_p.extended ("subscription.tpl")) as loc and then
+				attached api.module_theme_resource_location (module, tpl_p.extended ("checkout.tpl")) as loc and then
 				attached api.resolved_smarty_template (loc) as tpl
 			then
 				across
@@ -339,6 +340,7 @@ feature -- Resources
     window.eStripeEltsModal.create({
       currency: "USD",
       businessName: "{{business_name}}",
+      productTitle: "{{checkout_title}}",
       productName: "{{checkout_name}}",
       productCategory: "{{checkout_category}}",
       customerEmail: "{{customer_email}}",

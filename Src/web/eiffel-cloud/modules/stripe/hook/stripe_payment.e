@@ -132,6 +132,12 @@ feature -- Access: optional
 	business_name: detachable IMMUTABLE_STRING_32
 
 	title: detachable IMMUTABLE_STRING_32
+			-- Human title representing the content of the payment.
+			-- (product name, ...)
+
+	code: detachable IMMUTABLE_STRING_32
+			-- Code representing the content of the payment.
+			-- (product code, ...)	
 
 	customer_name: detachable IMMUTABLE_STRING_32
 
@@ -161,10 +167,19 @@ feature -- Access: optional
 
 feature -- Access: default
 
-	title_or_checkout_id: IMMUTABLE_STRING_32
+	title_or_code: IMMUTABLE_STRING_32
 		do
 			if attached title as t then
 				Result := t
+			else
+				Result := code_or_checkout_id
+			end
+		end
+
+	code_or_checkout_id: IMMUTABLE_STRING_32
+		do
+			if attached code as l_code then
+				Result := l_code
 			else
 				Result := checkout_id
 			end
@@ -220,6 +235,11 @@ feature -- Element change
 	set_title (a_title: READABLE_STRING_GENERAL)
 		do
 			create title.make_from_string_general (a_title)
+		end
+
+	set_code (a_code: READABLE_STRING_GENERAL)
+		do
+			create code.make_from_string_general (a_code)
 		end
 
 	set_business_name (a_name: READABLE_STRING_GENERAL)

@@ -131,7 +131,6 @@ feature -- Access: router
 
 				a_router.handle (l_mod_api.config.base_path + "/pay/{category}/{checkout}", create {STRIPE_PAYMENT_HANDLER}.make (Current, l_mod_api, l_mod_api.config.base_path), a_router.methods_get_post)
 				a_router.handle (l_mod_api.config.base_path + "/pay/{category}/{checkout}/terms", create {STRIPE_PAYMENT_HANDLER}.make (Current, l_mod_api, l_mod_api.config.base_path), a_router.methods_get)
-				a_router.handle (l_mod_api.config.base_path + "/test", create {WSF_URI_AGENT_HANDLER}.make (agent handle_test (?,?, a_api)), a_router.methods_get_post)
 			end
 		end
 
@@ -499,130 +498,6 @@ feature -- Routes
 		do
 			create r.make (req, res, api)
 			r.set_main_content ("<h2>Not available</h2>")
-			r.execute
-		end
-
-	handle_test (req: WSF_REQUEST; res: WSF_RESPONSE; api: CMS_API)
-			-- If stripe configuration is not valid, return not available response.
-		local
-			r: GENERIC_VIEW_CMS_RESPONSE
-			l_html: STRING_8
-			l_prod_name, l_plan_name: STRING_32
-			l_product: STRIPE_PRODUCT
-			l_plan: STRIPE_PLAN
-			l_customer: STRIPE_CUSTOMER
-			l_subscription: STRIPE_SUBSCRIPTION
-			l_validation: STRIPE_PAYMENT_VALIDATION
-		do
-			create r.make (req, res, api)
-			create l_html.make_empty
-			l_html.append ("<h2>Testing stripe API</h2>")
-			if attached stripe_api as l_stripe_api then
-				if attached req.string_item ("valid_subscription") as l_sub_id then
-					if
-						attached l_stripe_api.subscription (l_sub_id) as l_sub and then
-						attached l_stripe_api.subscription_customer (l_sub) as c
-					then
-						create l_validation.make_from_subscription (l_sub, c)
-						l_stripe_api.invoke_validate_payment (l_validation)
-					end
-				else
-					l_prod_name := "ES-perso"
-					if attached l_stripe_api.product_by_name (l_prod_name) as prod then
-						l_product := prod
-						l_html.append ("<h3>Found product " + html_encoded (l_prod_name) + "</h3><pre>")
-						l_html.append ("<pre>")
-						l_html.append (prod.to_string)
-						l_html.append ("</pre>")
-					elseif attached l_stripe_api.new_service_product (l_prod_name) as prod then
-						l_html.append ("<h3>New product "+ html_encoded (l_prod_name) +"</h3><pre>")
-						l_html.append (prod.to_string)
-						l_html.append ("</pre>")
-						l_product := l_stripe_api.product (prod.id)
-						if l_product /= Void then
-							l_html.append ("<pre>")
-							l_html.append (l_product.to_string)
-							l_html.append ("</pre>")
-						end
-					end
-
-					if l_product = Void then
-						create l_product.make_service_with_name (l_prod_name)
-					end
-					l_plan_name := l_prod_name + "-mly"
-					if attached l_stripe_api.plan_by_nickname (l_plan_name) as pl then
-						l_plan := pl
-						l_html.append ("<h3>Found plan " + html_encoded (l_plan_name) + "</h3><pre>")
-						l_html.append ("<pre>")
-						l_html.append (pl.to_string)
-						l_html.append ("</pre>")
-					elseif attached l_stripe_api.new_monthly_plan (99900, "usd", l_product, l_plan_name) as pl then
-						l_html.append ("<h3>New plan "+ html_encoded (l_plan_name) +"</h3><pre>")
-						l_html.append (pl.to_string)
-						l_html.append ("</pre>")
-						l_plan := l_stripe_api.plan (pl.id)
-						if l_plan /= Void then
-							l_html.append ("<pre>")
-							l_html.append (l_plan.to_string)
-							l_html.append ("</pre>")
-						end
-					end
-
-					l_customer := l_stripe_api.customer_by_email ("jfiat+shop@eiffel.com")
-					if l_customer = Void then
-						create l_customer.make_with_email ("jfiat+shop@eiffel.com")
-						l_customer.set_name ("Jocelyn Fiat-Testing")
-						l_customer.set_description ("Testing stripe api")
-						l_customer := l_stripe_api.new_customer (l_customer)
-					end
-
-					if l_customer /= Void and l_plan /= Void then
-						l_subscription := l_stripe_api.new_subscription (Void, l_customer, l_plan, Void)
-						if l_subscription /= Void then
-							l_html.append ("<h3>New subscription ...</h3><ul>")
-							l_html.append ("<li><pre>")
-							l_html.append (l_subscription.to_string)
-							l_html.append ("</pre></li>")
-						end
-					end
-
-					if attached l_stripe_api.customers (0) as lst then
-						l_html.append ("<h3>Customers ...</h3><ul>")
-						across
-							lst as ic
-						loop
-							l_html.append ("<li><pre>")
-							l_html.append (ic.item.to_string)
-							l_html.append ("</pre></li>")
-						end
-						l_html.append ("</ul>")
-					end
-
-					if attached l_stripe_api.products (0) as lst then
-						l_html.append ("<h3>Products ...</h3><ul>")
-						across
-							lst as ic
-						loop
-							l_html.append ("<li><pre>")
-							l_html.append (ic.item.to_string)
-							l_html.append ("</pre></li>")
-						end
-						l_html.append ("</ul>")
-					end
-					if attached l_stripe_api.plans (Void, 0) as lst then
-						l_html.append ("<h3>Plans ...</h3><ul>")
-						across
-							lst as ic
-						loop
-							l_html.append ("<li><pre>")
-							l_html.append (ic.item.to_string)
-							l_html.append ("</pre></li>")
-						end
-						l_html.append ("</ul>")
-					end
-				end
-			end
-			r.set_main_content (l_html)
 			r.execute
 		end
 

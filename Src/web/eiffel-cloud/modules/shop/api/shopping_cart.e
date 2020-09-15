@@ -125,10 +125,11 @@ feature -- Query
 			end
 		end
 
-	cart_name (a_dft: detachable READABLE_STRING_GENERAL): STRING_32
+	cart_title (a_dft: detachable READABLE_STRING_GENERAL): STRING_32
 		local
 			l_item: SHOPPING_ITEM
 			l_has_conflict: BOOLEAN
+			v: READABLE_STRING_32
 		do
 			create Result.make_empty
 			across
@@ -137,11 +138,40 @@ feature -- Query
 				l_has_conflict
 			loop
 				l_item := ic.item
-				if not Result.is_empty and then not l_item.code.is_case_insensitive_equal_general (Result) then
+				v := l_item.title
+				if v = Void then
+					v := l_item.code
+				end
+				if not Result.is_empty and then not v.is_case_insensitive_equal_general (Result) then
 					Result.append (", ")
 					l_has_conflict := True
 				end
-				Result.append (l_item.code)
+				Result.append (v)
+			end
+			if (Result.is_empty or l_has_conflict) and a_dft /= Void then
+				create Result.make_from_string_general (a_dft)
+			end
+		end
+
+	cart_name (a_dft: detachable READABLE_STRING_GENERAL): STRING_32
+		local
+			l_item: SHOPPING_ITEM
+			l_has_conflict: BOOLEAN
+			v: STRING_32
+		do
+			create Result.make_empty
+			across
+				items as ic
+			until
+				l_has_conflict
+			loop
+				l_item := ic.item
+				v := l_item.code
+				if not Result.is_empty and then not v.is_case_insensitive_equal_general (Result) then
+					Result.append (", ")
+					l_has_conflict := True
+				end
+				Result.append (v)
 			end
 			if (Result.is_empty or l_has_conflict) and a_dft /= Void then
 				create Result.make_from_string_general (a_dft)

@@ -253,7 +253,8 @@ feature -- Hook
 						if l_cart.has_incomplete_item then
 								-- Should not happen!!!
 						else
-							pay.set_title (l_cart.cart_name (Void))
+							pay.set_title (l_cart.cart_title (Void))
+							pay.set_code (l_cart.cart_name (Void))
 							pay.set_business_name (l_cart.provider_name (l_shop_api.config.shop_name))
 							pay.set_price (l_cart.price_in_cents, l_cart.currency)
 							pay.set_order_id (l_cart.id.out)

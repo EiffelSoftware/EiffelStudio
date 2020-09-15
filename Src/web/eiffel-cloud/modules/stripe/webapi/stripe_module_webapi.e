@@ -101,8 +101,11 @@ feature -- Handle
 						attached jo.string_item ("currency") as j_currency
 					then
 						create pay.make (j_prod_cat.unescaped_string_32, j_order_id.unescaped_string_32)
+						if attached jo.string_item ("productTitle") as j_prod_title then
+							pay.set_title (j_prod_title.unescaped_string_32)
+						end
 						if attached jo.string_item ("productName") as j_prod_name then
-							pay.set_title (j_prod_name.unescaped_string_32)
+							pay.set_code (j_prod_name.unescaped_string_32)
 						end
 						pay.set_price (0, j_currency.unescaped_string_8)
 						api.invoke_prepare_payment (pay)

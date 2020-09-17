@@ -398,7 +398,7 @@ feature -- Handle
 			jp: JSON_PARSER
 			l_sign: READABLE_STRING_32
 			l_type: READABLE_STRING_32
-			l_useful_id: detachable READABLE_STRING_32
+			l_useful_id: detachable STRING_32
 			s32: STRING_32
 			l_payment_intent_res: PAYMENT_INTENT_SUCCEEDED
 			l_invoice: STRIPE_INVOICE
@@ -436,12 +436,14 @@ feature -- Handle
 					l_useful_id := l_payment_intent_res.id
 				elseif l_type.is_case_insensitive_equal_general ("invoice.payment_succeeded") then
 					create l_invoice.make_with_json (jo)
-					l_useful_id := l_invoice.id
+					create l_useful_id.make_from_string_general (l_invoice.id)
 					if attached l_invoice.subscription_id as sub_id then
-						l_useful_id := l_useful_id + "." + sub_id
+						l_useful_id.append_character ('.')
+						l_useful_id.append_string_general (sub_id)
 					end
 					if attached l_invoice.payment_intent_id as p_id then
-						l_useful_id := l_useful_id + "." + p_id
+						l_useful_id.append_character ('.')
+						l_useful_id.append_string_general (p_id)
 					end
 				end
 			else

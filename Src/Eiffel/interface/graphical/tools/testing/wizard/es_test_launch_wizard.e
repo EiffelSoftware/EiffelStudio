@@ -266,14 +266,7 @@ feature {NONE} -- Implementation
 		do
 			l_target := a_project.universe.target
 			create l_factory
-			if
-				l_target.options.void_safety.index = {CONF_OPTION}.void_safety_index_transitional or else
-				l_target.options.void_safety.index = {CONF_OPTION}.void_safety_index_all
-			then
-				l_location := testing_library_path_safe
-			else
-				l_location := testing_library_path
-			end
+			l_location := testing_library_path
 			if a_project.universe.group_of_name (testing_library_name) /= Void then
 				l_name := testing_library_name + "_library"
 			else
@@ -344,7 +337,7 @@ feature {NONE} -- Internationalization
 	cancel_text: STRING = "Cancel"
 
 note
-	copyright: "Copyright (c) 1984-2015, Eiffel Software"
+	copyright: "Copyright (c) 1984-2020, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

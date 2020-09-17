@@ -455,7 +455,6 @@ feature {NONE} -- Constants
 
 	testing_library_uuid: STRING = "B77B3A44-A1A9-4050-8DF9-053598561C33"
 	testing_library_path: STRING = "$ISE_LIBRARY/library/testing/testing.ecf"
-	testing_library_path_safe: STRING = "$ISE_LIBRARY/library/testing/testing-safe.ecf"
 
 feature {NONE} -- Internationalization
 
@@ -481,7 +480,7 @@ feature {NONE} -- Internationalization
 	e_unkonwn_error: STRING = "Unable to launch processor"
 
 note
-	copyright: "Copyright (c) 1984-2018, Eiffel Software"
+	copyright: "Copyright (c) 1984-2020, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

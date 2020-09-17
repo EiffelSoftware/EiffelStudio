@@ -1334,6 +1334,7 @@ feature {NONE} -- Class initialization
 			old_is_expanded: BOOLEAN
 			old_is_deferred: BOOLEAN
 			old_is_once: BOOLEAN
+			new_is_frozen: BOOLEAN
 			l_class: CLASS_C
 			is_first_compilation, changed_status: BOOLEAN
 			changed_generics, changed_expanded: BOOLEAN
@@ -1440,16 +1441,12 @@ feature {NONE} -- Class initialization
 			end
 
 				-- Class status
-			if System.il_generation then
-				is_external := is_basic or ast_b.is_external
-			else
-				is_external := ast_b.is_external
-			end
+			is_external := (System.il_generation and is_basic) or ast_b.is_external
 
 				-- Process `frozen' mark.
-			changed_status := changed_status or else
-				(not is_first_compilation and is_frozen /= ast_b.is_frozen)
-			is_frozen := ast_b.is_frozen
+			new_is_frozen := ast_b.is_frozen or ast_b.is_once
+			changed_status := changed_status or (not is_first_compilation and new_is_frozen)
+			is_frozen := new_is_frozen
 
 			if changed_status then
 				Degree_4.add_changed_status (Current)

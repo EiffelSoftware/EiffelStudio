@@ -1,63 +1,27 @@
 ﻿note
-	description: "Generate a warning for an obsolete syntax."
+
+	description: "[
+		Feature redeclaration type should not be different from precursor's type
+		if any of the types is based on a once class.
+	]"
 	legal: "See notice at end of class."
-	status: "See notice at end of class."
-	date: "$Date$"
+	status: "See notice at end of class.";
+	date: "$Date$";
 	revision: "$Revision$"
 
-class
-	SYNTAX_WARNING
+class VDRD9_NEW
 
 inherit
-	WARNING
-		redefine
-			has_associated_file
-		end
+	VDRD_NEW
 
-create
+create {COMPILER_EXPORTER}
+
 	make
 
-feature {NONE} -- Initialization
+feature -- Access
 
-	make (l, c: INTEGER; f: like file_name; m: READABLE_STRING_32)
-			-- Create a new SYNTAX_WARNING instance.
-		require
-			f_not_void: f /= Void
-			m_not_void: m /= Void
-		do
-			set_position (l, c)
-			warning_message := m
-			file_name := f
-		ensure
-			line_set: line = l
-			column_set: column = c
-			warning_message_set: warning_message = m
-			file_name_set: file_name = f
-		end
-
-feature -- Properties
-
-	warning_message: READABLE_STRING_32
-			-- Warning description.
-
-	file_name: like {ERROR}.file_name
-			-- Path to file where syntax issue happened.
-
-	code: STRING = "Syntax Warning"
-			-- Error code.
-
-	has_associated_file: BOOLEAN = True
-			-- Current is associated to a file/class.
-
-feature -- Visitor
-
-	process (a_visitor: ERROR_VISITOR)
-		do
-			a_visitor.process_syntax_warning (Current)
-		end
-
-invariant
-	warning_message_not_void: warning_message /= Void
+	subcode: INTEGER = 9;
+			-- Error subcode
 
 note
 	copyright:	"Copyright (c) 1984-2020, Eiffel Software"

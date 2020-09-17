@@ -1842,14 +1842,18 @@ feature -- Access
 		end
 
 	expanded_deferred: BOOLEAN
-			-- Is the expanded type deferred ?
+			-- Is the expanded type deferred or once?
 		require
 			has_expanded
 		local
 			act_type: TYPE_A
+			b: like {TYPE_A}.base_class
 		do
 			act_type := actual_type
-			Result := act_type.is_expanded and then act_type.base_class.is_deferred
+			if act_type.is_expanded then
+				b := act_type.base_class
+				Result := b.is_deferred or b.is_once
+			end
 		end
 
 	valid_expanded_creation (c: CLASS_C): BOOLEAN
@@ -2130,7 +2134,7 @@ invariant
 	separate_mark_consistency: not is_expanded implies (has_separate_mark implies is_separate)
 
 note
-	copyright:	"Copyright (c) 1984-2019, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2020, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

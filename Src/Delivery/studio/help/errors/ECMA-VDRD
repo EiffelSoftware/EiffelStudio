@@ -36,3 +36,6 @@ VDRD, section 8.10.26
         8 If both features are queries with associated
           assigner commands fp and gp, then gp is the
           version of fp in C.
+
+        9 If either feature is of a type based on a once
+          class, types of f and g are the same.

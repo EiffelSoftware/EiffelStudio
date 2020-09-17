@@ -81,13 +81,16 @@ feature {CLASS_TYPE_AS} -- Actual class type
 			if is_expanded then
 				Result.set_expanded_class_mark
 			end
+			if is_once then
+				Result.set_once_class_mark
+			end
 		end
 
 invariant
 	types_has_only_one_element: types /= Void implies types.count <= 1
 
 note
-	copyright:	"Copyright (c) 1984-2015, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2020, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

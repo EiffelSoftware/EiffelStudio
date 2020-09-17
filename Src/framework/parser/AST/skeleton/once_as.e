@@ -139,15 +139,17 @@ feature -- Status report
 			end
 		end
 
-	has_key_conflict (a_feature_as: FEATURE_AS): BOOLEAN
+	has_key_conflict (a_feature_as: FEATURE_AS; is_once_class: BOOLEAN): BOOLEAN
 			-- Current once presents a conflict in keys and indexing?
 		local
 			is_p,is_t,is_o: BOOLEAN
 			l_keys: like keys
 		do
 			l_keys := keys
-			is_p := has_key_inside (once_key_process, l_keys)
-					or (attached a_feature_as.indexes as l_indexes and then l_indexes.has_global_once)
+			is_p :=
+				has_key_inside (once_key_process, l_keys) or
+				(attached a_feature_as.indexes as l_indexes and then l_indexes.has_global_once) or
+				is_once_class
 			is_t := has_key_inside (once_key_thread, l_keys)
 			is_o := has_key_inside (once_key_object, l_keys)
 
@@ -238,7 +240,7 @@ feature {NONE} -- Constants
 	once_key_object: STRING = "OBJECT"
 
 ;note
-	copyright:	"Copyright (c) 1984-2018, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2020, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

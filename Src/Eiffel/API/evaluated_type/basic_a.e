@@ -241,10 +241,10 @@ feature {COMPILER_EXPORTER} -- Instantiation of a type in the context of a desce
 invariant
 	is_basic: is_basic
 	is_expanded: is_expanded
-	is_base_class_expanded: class_declaration_mark = expanded_mark
+	is_base_class_expanded: class_declaration_mark ⊗ expanded_mark /= 0
 
 note
-	copyright:	"Copyright (c) 1984-2019, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2020, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

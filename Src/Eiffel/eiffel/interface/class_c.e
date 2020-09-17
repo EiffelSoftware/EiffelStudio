@@ -2343,6 +2343,9 @@ feature {TYPE_AS, AST_TYPE_A_GENERATOR, AST_FEATURE_CHECKER_GENERATOR} -- Actual
 			if is_expanded then
 				Result.set_expanded_class_mark
 			end
+			if is_once then
+				Result.set_once_class_mark
+			end
 		ensure
 			actual_type_not_void: Result /= Void
 		end

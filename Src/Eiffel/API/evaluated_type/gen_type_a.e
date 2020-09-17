@@ -675,8 +675,9 @@ feature {TYPE_A} -- Helpers
 			nb := l_generics.count
 			if
 				l_class /= Void and then l_class.is_valid and then
-				(l_class.is_expanded = (class_declaration_mark = expanded_mark)) and then
-				((l_class.generics /= Void and then l_class.generics.count = nb) or is_tuple)
+				l_class.is_expanded = (class_declaration_mark ⊗ expanded_mark /= 0) and then
+				l_class.is_once = (class_declaration_mark ⊗ once_mark /= 0) and then
+				((attached l_class.generics as g and then g.count = nb) or is_tuple)
 			then
 				from
 					Result := True
@@ -1846,7 +1847,14 @@ feature -- Primitives
 						-- specified or if there is no creation procedure in the class
 						-- corresponding to `to_check', this is not valid.
 					if
-						creators_table /= Void and then not creators_table.is_empty
+						attached class_c and then
+						class_c.is_once
+					then
+							-- An actual generic parameter cannot be based on a once class.
+						generate_constraint_error (Current, to_check.to_type_set, a_constraint_types, i, Void)
+					elseif
+						attached creators_table and then
+						not creators_table.is_empty
 					then
 						from
 							crc_list.start
@@ -2025,7 +2033,7 @@ invariant
 	generics_not_void: generics /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2018, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2020, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

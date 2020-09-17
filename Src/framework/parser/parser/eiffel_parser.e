@@ -5359,7 +5359,7 @@ end
 					attached (yyval54) as l_feature_as and then 
 					attached l_feature_as.once_as as l_once_as
 				then
-					if l_once_as.has_key_conflict (yyval54) then
+					if l_once_as.has_key_conflict (yyval54, is_once) then
 						report_one_error (ast_factory.new_vvok1_error (token_line (l_once_as), token_column (l_once_as), filename, yyval54))
 					elseif l_once_as.has_invalid_key (yyval54) then
 						if attached l_once_as.invalid_key (yyval54) as l_once_invalid_key then
@@ -11411,6 +11411,14 @@ end
 				if attached yyval115 as l_formals then
 					l_formals.set_squre_symbols (yyvs4.item (yyvsp4 - 1), yyvs4.item (yyvsp4))
 				end
+				if
+					is_once and then
+					attached (create {SYNTAX_ERROR}.make (token_line (yyvs4.item (yyvsp4 - 1)), token_column (yyvs4.item (yyvsp4 - 1)), filename,
+						locale.translation_in_context ("Once class cannot have formal generic parameters.", "compiler.parser"))) as e
+				then
+					e.set_associated_class (current_class)
+					error_handler.insert_error (e)
+				end
 			
 if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 2
@@ -11442,6 +11450,14 @@ end
 				if attached yyval115 as l_formals then
 					l_formals.transform_class_types_to_formals_and_record_suppliers (ast_factory, suppliers, formal_parameters)
 					l_formals.set_squre_symbols (yyvs4.item (yyvsp4 - 1), yyvs4.item (yyvsp4))
+				end
+				if
+					is_once and then
+					attached (create {SYNTAX_ERROR}.make (token_line (yyvs4.item (yyvsp4 - 1)), token_column (yyvs4.item (yyvsp4 - 1)), filename,
+						locale.translation_in_context ("Once class cannot have formal generic parameters.", "compiler.parser"))) as e
+				then
+					e.set_associated_class (current_class)
+					error_handler.insert_error (e)
 				end
 			
 if yy_parsing_status >= yyContinue then

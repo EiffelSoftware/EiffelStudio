@@ -196,7 +196,7 @@ feature -- Processing
 				end
 			elseif type = single_line then
 				a_value.initialize_output
-				if a_value.syntax_message /= Void and then not a_value.syntax_message.is_empty then
+				if attached a_value.syntax_message as m and then not m.is_empty then
 					text_formatter.add (a_value.syntax_message)
 				else
 					text_formatter.add ("Syntax error at line ")
@@ -222,7 +222,7 @@ feature -- Processing
 					text_formatter.add (" in class ")
 					text_formatter.add_class_syntax (a_value, l_class1, l_class1.class_signature)
 				end
-				l_w := a_value.warning_message_32
+				l_w := a_value.warning_message
 				if not l_w.is_empty then
 					text_formatter.add_new_line
 					text_formatter.add (l_w)
@@ -240,7 +240,7 @@ feature -- Processing
 			elseif type = single_line then
 				a_value.initialize_output
 				text_formatter.add ("Obsolete syntax: ")
-				text_formatter.add (a_value.warning_message_32)
+				text_formatter.add (a_value.warning_message)
 			elseif type = context then
 				if attached {CLASS_C} a_value.associated_class as l_class2 then
 					if attached {TEXT_FORMATTER} text_formatter as l_formatter then
@@ -651,7 +651,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2017, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2020, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

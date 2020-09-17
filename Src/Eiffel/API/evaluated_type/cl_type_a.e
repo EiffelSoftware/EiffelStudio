@@ -21,7 +21,8 @@ inherit
 			generic_derivation, associated_class_type, has_associated_class_type,
 			internal_same_generic_derivation_as, internal_generic_derivation,
 			has_associated_class, is_class_valid, instantiated_in, deep_actual_type,
-			is_processor_attachable_to, deanchored_form_marks_free, has_same_marks
+			is_processor_attachable_to, deanchored_form_marks_free, has_same_marks,
+			is_separate
 		end
 
 	SHARED_IL_CASING
@@ -44,8 +45,13 @@ feature {NONE} -- Initialization
 		do
 			class_id := a_class_id
 			l_class := system.class_of_id (a_class_id)
-			if l_class /= Void and then l_class.is_expanded then
-				set_expanded_class_mark
+			if attached l_class then
+				if l_class.is_expanded then
+					set_expanded_class_mark
+				end
+				if l_class.is_once then
+					set_once_class_mark
+				end
 			end
 		ensure
 			class_id_set: class_id = a_class_id
@@ -111,7 +117,7 @@ feature -- Properties
 			l_mark: like declaration_mark
 		do
 			l_mark := declaration_mark
-			Result := l_mark = expanded_mark or else (l_mark = no_mark and then class_declaration_mark = expanded_mark)
+			Result := l_mark = expanded_mark or else (l_mark = no_mark and then class_declaration_mark ⊗ expanded_mark /= 0)
 		end
 
 	is_reference: BOOLEAN
@@ -120,7 +126,7 @@ feature -- Properties
 			l_mark: like declaration_mark
 		do
 			l_mark := declaration_mark
-			Result := l_mark = reference_mark or else (l_mark = no_mark and then class_declaration_mark = no_mark)
+			Result := l_mark = reference_mark or else (l_mark = no_mark and then class_declaration_mark ⊗ expanded_mark = 0)
 		end
 
 	has_reference: BOOLEAN
@@ -163,6 +169,12 @@ feature -- Properties
 			Result := is_expanded and l_base_class.is_external and l_base_class.is_enum
 		end
 
+	is_separate: BOOLEAN
+			-- Is the current actual type a separate one ?
+		do
+			Result := (has_separate_mark or else (class_declaration_mark ⊗ once_mark /= 0)) and then not is_expanded
+		end
+
 	is_system_object_or_any: BOOLEAN
 			-- Does current type represent SYSTEM_OBJECT or ANY?
 		require
@@ -201,7 +213,9 @@ feature -- Comparison
 			-- <Precursor>
 		do
 			if attached {CL_TYPE_A} other as l_cl_type then
-				Result := Precursor (l_cl_type) and then declaration_mark = l_cl_type.declaration_mark and then
+				Result :=
+					Precursor (l_cl_type) and then
+					declaration_mark = l_cl_type.declaration_mark and then
 					class_declaration_mark = l_cl_type.class_declaration_mark
 			end
 		end
@@ -655,8 +669,12 @@ feature {TYPE_A} -- Helpers
 				--| Ideally we could also check that if Current base class is expanded
 				--| then it has the class_declaration_mark properly set, but it does not
 				--| currently work when processing TYPED_POINTER which is currently interpreted
-			Result := l_class /= Void and then l_class.is_valid and then l_class.generics = Void and then
-				(l_class.is_expanded = (class_declaration_mark = expanded_mark))
+			Result :=
+				attached l_class and then
+				l_class.is_valid and then
+				not attached l_class.generics and then
+				l_class.is_expanded = (class_declaration_mark ⊗ expanded_mark /= 0) and then
+				l_class.is_once = (class_declaration_mark ⊗ once_mark /= 0)
 		end
 
 	internal_generic_derivation (a_level: INTEGER): like Current
@@ -684,6 +702,14 @@ feature {COMPILER_EXPORTER} -- Settings
 			class_declaration_mark := expanded_mark
 		ensure
 			has_expanded_class_mark: class_declaration_mark = expanded_mark
+		end
+
+	set_once_class_mark
+			-- Mark class declaration as once.
+		do
+			class_declaration_mark := once_mark
+		ensure
+			has_once_class_mark: class_declaration_mark = once_mark
 		end
 
 	set_expanded_mark
@@ -1046,7 +1072,7 @@ feature {CL_TYPE_A, TUPLE_CLASS_B, CIL_CODE_GENERATOR} --Class type declaration 
 
 	class_declaration_mark: NATURAL_8
 			-- Declaration mark associated with class. Meaning that when this instance was
-			-- created the base class had the same mark (currently only works for expanded).
+			-- created the base class had the same mark (current marks include "expanded" and "once").
 			-- If Current has still the mark and not the base class, it simply means that
 			-- Current is not valid.
 
@@ -1066,10 +1092,13 @@ feature {CL_TYPE_A, TUPLE_CLASS_B, CIL_CODE_GENERATOR} --Class type declaration 
 			-- Empty declaration mark
 
 	expanded_mark: NATURAL_8 = 1
-			-- Expanded declaration mark
+			-- Expanded declaration mark.
 
 	reference_mark: NATURAL_8 = 2
-			-- Reference declaration mark
+			-- Reference declaration mark.
+
+	once_mark: NATURAL_8 = 4
+			-- Once declaration mark.
 
 invariant
 	class_id_positive: class_id > 0
@@ -1077,10 +1106,10 @@ invariant
 		declaration_mark = no_mark or declaration_mark = expanded_mark or
 		declaration_mark = reference_mark
 	valid_class_declaration_mark:
-		class_declaration_mark = no_mark or class_declaration_mark = expanded_mark
+		class_declaration_mark = no_mark or class_declaration_mark = expanded_mark or class_declaration_mark = once_mark
 
 note
-	copyright:	"Copyright (c) 1984-2019, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2020, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

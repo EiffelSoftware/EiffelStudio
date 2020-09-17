@@ -184,6 +184,9 @@ feature {CLASS_TYPE_AS} -- Actual class type
 			if is_expanded then
 				Result.set_expanded_class_mark
 			end
+			if is_once then
+				Result.set_once_class_mark
+			end
 		end
 
 feature -- Status report

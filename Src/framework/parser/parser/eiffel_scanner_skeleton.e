@@ -42,6 +42,8 @@ inherit
 
 	INTERNAL_COMPILER_STRING_EXPORTER
 
+	SHARED_LOCALE
+
 feature {NONE} -- Initialization
 
 	make
@@ -401,10 +403,18 @@ feature {NONE} -- Error handling
 			a_text_not_void: a_text /= Void
 			too_long_token: a_text.count > maximum_string_length
 		do
-			report_one_error (
-				create {SYNTAX_ERROR}.make (line, column, filename,
-					"Identifier, manifest string or free operator is " + a_text.count.out +
-					" characters long that exceeds limit of " + maximum_string_length.out + " characters."))
+			report_one_error
+				(create {SYNTAX_ERROR}.make (line, column, filename,
+					locale.plural_translation_in_context
+						("Identifier, manifest string or free operator is $1 character long.",
+						"Identifier, manifest string or free operator is $1 characters long.",
+						"compiler.parser",
+						 a_text.count) +
+					locale.plural_translation_in_context
+						(" It exceeds limit of $1 character.",
+						" It exceeds limit of $1 characters.",
+						"compiler.parser",
+						maximum_string_length)))
 		end
 
 	report_unknown_token_error (a_token: CHARACTER)
@@ -426,13 +436,16 @@ feature {AST_FACTORY} -- Error handling
 		require
 			a_type_not_void: a_type /= Void
 			a_real_not_void: a_real /= Void
-		local
-			an_error: SYNTAX_ERROR
 		do
-			create an_error.make (line, column, filename,
-				"Specified type %"" + a_type.dump +
-					"%" is not a valid type for real constant %"" + a_real + "%"")
-			report_one_error (an_error)
+			report_one_error
+				(create {SYNTAX_ERROR}.make (line, column, filename,
+					locale.formatted_string (locale.translation_in_context
+						("[
+							Specified type "$1" is not a valid type for real constant "$2".
+						]",
+						"compiler.parser"),
+					a_type.dump,
+					a_real)))
 		end
 
 	report_invalid_type_for_integer_error (a_type: TYPE_AS; an_int: READABLE_STRING_8)
@@ -440,13 +453,16 @@ feature {AST_FACTORY} -- Error handling
 		require
 			a_type_not_void: a_type /= Void
 			an_int_not_void: an_int /= Void
-		local
-			an_error: SYNTAX_ERROR
 		do
-			create an_error.make (line, column, filename,
-				"Specified type %"" + a_type.dump +
-					"%" is not a valid type for integer constant %"" + an_int + "%"")
-			report_one_error (an_error)
+			report_one_error
+				(create {SYNTAX_ERROR}.make (line, column, filename,
+					locale.formatted_string (locale.translation_in_context
+						("[
+							Specified type "$1" is not a valid type for integer constant "$2".
+						]",
+						"compiler.parser"),
+					a_type.dump,
+					an_int)))
 		end
 
 	report_integer_too_large_error (a_type: detachable TYPE_AS; an_int: READABLE_STRING_8)
@@ -454,16 +470,21 @@ feature {AST_FACTORY} -- Error handling
 			-- in an INTEGER (i.e. greater than maximum_integer_value).
 		require
 			an_int_not_void: an_int /= Void
-		local
-			l_message: STRING
 		do
 			fixme ("Change plain syntax error to Integer_too_large error when the corresponding validity rule is available.")
-			if a_type /= Void then
-				l_message := "Integer value " + an_int + " is too large for " + a_type.dump + "."
-			else
-				l_message := "Integer value " + an_int + " is too large for any integer type."
-			end
-			report_one_error (create {SYNTAX_ERROR}.make (line, column, filename, l_message))
+			report_one_error (create {SYNTAX_ERROR}.make (line, column, filename,
+				if attached a_type then
+					locale.formatted_string (locale.translation_in_context
+							("Integer value $1 is too large for $2.",
+							"compiler.parser"),
+						an_int,
+						a_type.dump)
+				else
+					locale.formatted_string (locale.translation_in_context
+							("Integer value $1 is too large for any integer type.",
+							"compiler.parser"),
+						an_int)
+				end))
 		end
 
 	report_integer_too_small_error (a_type: detachable TYPE_AS; an_int: READABLE_STRING_8)
@@ -471,16 +492,21 @@ feature {AST_FACTORY} -- Error handling
 			-- in an INTEGER (i.e. less than minimum_integer_value).
 		require
 			an_int_not_void: an_int /= Void
-		local
-			l_message: STRING
 		do
 			fixme ("Change plain syntax error to Integer_too_small error when the corresponding validity rule is available.")
-			if a_type /= Void then
-				l_message := "Integer value " + an_int + " is too small for " + a_type.dump + "."
-			else
-				l_message := "Integer value " + an_int + " is too small for any integer type."
-			end
-			report_one_error (create {SYNTAX_ERROR}.make (line, column, filename, l_message))
+			report_one_error (create {SYNTAX_ERROR}.make (line, column, filename,
+				if attached a_type then
+					locale.formatted_string (locale.translation_in_context
+							("Integer value $1 is too small for $2.",
+							"compiler.parser"),
+						an_int,
+						a_type.dump)
+				else
+					locale.formatted_string (locale.translation_in_context
+							("Integer value $1 is too small for any integer type.",
+							"compiler.parser"),
+						an_int)
+				end))
 		end
 
 	report_character_code_too_large_error (a_code: READABLE_STRING_8)
@@ -489,7 +515,10 @@ feature {AST_FACTORY} -- Error handling
 			a_code_not_void: a_code /= Void
 		do
 			report_one_error (create {BAD_CHARACTER}.make (line, column, filename,
-				"Character code " + a_code + " is too large for CHARACTER_32."))
+				locale.formatted_string (locale.translation_in_context
+						("Character code $1 is too large for CHARACTER_32.",
+						"compiler.parser"),
+					a_code)))
 		end
 
 feature {NONE} -- Implementation
@@ -514,7 +543,6 @@ feature {NONE} -- Implementation
 			-- Used for roundtrip.
 		local
 			l_count: INTEGER
-			message: STRING
 		do
 			l_count := text_count
 				-- Note: Identifiers are converted to lower-case.
@@ -523,15 +551,16 @@ feature {NONE} -- Implementation
 			else
 				last_detachable_id_as_value := ast_factory.new_filled_id_as_with_existing_stub (Current, a_index)
 				if has_syntax_warning then
-					if attached last_detachable_id_as_value as l_value and then attached l_value.name as l_name then
-						message := once "Keyword `" + l_name
-						message.append_string ("' is used as identifier.")
-					else
-						message := once "Keyword is used as identifier."
-					end
-					report_one_warning (
-						create {SYNTAX_WARNING}.make (token_line (keyword), token_column (keyword),
-							filename, message))
+					report_one_warning
+						(create {SYNTAX_WARNING}.make (token_line (keyword), token_column (keyword),
+							filename,
+							if attached last_detachable_id_as_value as l_value and then attached l_value.name as l_name then
+								locale.formatted_string (locale.translation_in_context
+									("Keyword `$1` is used as identifier.", "compiler.parser"), l_name)
+							else
+								locale.translation_in_context ("Keyword is used as identifier.", "compiler.parser")
+							end
+						))
 				end
 				if attached last_detachable_id_as_value as l_value then
 					if is_lower then

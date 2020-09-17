@@ -779,7 +779,7 @@ Feature_declaration: Add_counter New_feature_list Remove_counter {enter_scope} D
 					attached ($$) as l_feature_as and then 
 					attached l_feature_as.once_as as l_once_as
 				then
-					if l_once_as.has_key_conflict ($$) then
+					if l_once_as.has_key_conflict ($$, is_once) then
 						report_one_error (ast_factory.new_vvok1_error (token_line (l_once_as), token_column (l_once_as), filename, $$))
 					elseif l_once_as.has_invalid_key ($$) then
 						if attached l_once_as.invalid_key ($$) as l_once_invalid_key then
@@ -2300,6 +2300,14 @@ Formal_generics:
 				if attached $$ as l_formals then
 					l_formals.set_squre_symbols ($1, $2)
 				end
+				if
+					is_once and then
+					attached (create {SYNTAX_ERROR}.make (token_line ($1), token_column ($1), filename,
+						locale.translation_in_context ("Once class cannot have formal generic parameters.", "compiler.parser"))) as e
+				then
+					e.set_associated_class (current_class)
+					error_handler.insert_error (e)
+				end
 			}
 	|	TE_LSQURE Add_counter Disable_supplier_recording Formal_generic_list Enable_supplier_recording Remove_counter TE_RSQURE
 			{
@@ -2308,6 +2316,14 @@ Formal_generics:
 				if attached $$ as l_formals then
 					l_formals.transform_class_types_to_formals_and_record_suppliers (ast_factory, suppliers, formal_parameters)
 					l_formals.set_squre_symbols ($1, $7)
+				end
+				if
+					is_once and then
+					attached (create {SYNTAX_ERROR}.make (token_line ($1), token_column ($1), filename,
+						locale.translation_in_context ("Once class cannot have formal generic parameters.", "compiler.parser"))) as e
+				then
+					e.set_associated_class (current_class)
+					error_handler.insert_error (e)
 				end
 			}
 	;

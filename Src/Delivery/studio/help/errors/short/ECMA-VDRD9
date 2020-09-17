@@ -1,0 +1,5 @@
+Error: a redeclaration or precursor type is based on a once class,
+  but their types are not the same.
+What to do: do not use a type based on a once class in feature
+  declaration, or make sure both a redeclaration and a precursor
+  are of the same type.

@@ -19,7 +19,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (l, c: INTEGER; f: like file_name; m: STRING)
+	make (l, c: INTEGER; f: like file_name; m: READABLE_STRING_32)
 			-- Create a new SYNTAX_ERROR.
 		require
 			f_not_void: f /= Void
@@ -46,8 +46,8 @@ feature {NONE} -- Initialization
 
 feature -- Properties
 
-	error_message: STRING
-			-- Specify syntax issue message.
+	error_message: READABLE_STRING_32
+			-- Error description.
 
 	file_name: like {ERROR}.file_name
 			-- Path to file where syntax issue happened.
@@ -79,7 +79,7 @@ invariant
 	attached_error_message: error_message /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2018, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2020, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

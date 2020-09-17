@@ -2683,15 +2683,24 @@ end
 				vdrd52.init (old_feature, Current)
 				Error_handler.insert_error (vdrd52)
 			end
-				-- Check aliases
+				-- Check aliases.
 			if not is_same_alias (old_feature) then
-					-- Report that aliases are not the same
+					-- Report that aliases are not the same.
 				Error_handler.insert_error (create {VDRD7_NEW}.make (system.current_class, Current, old_feature))
 			end
-				-- Check assigner procedure
+				-- Check assigner procedure.
 			if not is_same_assigner (old_feature, tbl) then
-					-- Report that assigner commands are not the same
+					-- Report that assigner commands are not the same.
 				Error_handler.insert_error (create {VDRD8_NEW}.make (system.current_class, Current, old_feature))
+			end
+				-- Check type.
+			if
+				((attached old_type.conformance_type.base_class as b and then b.is_once) or else
+				(attached new_type.conformance_type.base_class as b and then b.is_once)) and then
+				not new_type.same_as (old_type)
+			then
+					-- Report that feature types are not the same.
+				Error_handler.insert_error (create {VDRD9_NEW}.make (system.current_class, Current, old_feature))
 			end
 		end
 

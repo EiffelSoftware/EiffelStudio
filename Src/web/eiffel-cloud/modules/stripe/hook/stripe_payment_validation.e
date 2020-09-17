@@ -20,6 +20,7 @@ feature {NONE} -- Initialization
 			a_sub.is_active
 		do
 			make (a_sub.latest_invoice, a_customer)
+			subscription_id := a_sub.id
 		end
 
 	make_from_payment_intent (a_pay: STRIPE_PAYMENT_INTENT; a_customer: STRIPE_CUSTOMER)
@@ -29,6 +30,7 @@ feature {NONE} -- Initialization
 			ch: STRIPE_PAYMENT_CHARGE
 		do
 			make (a_pay.invoice, a_customer)
+			payment_id := a_pay.id
 			if attached a_pay.charges as l_charges then
 				across
 					l_charges as ic
@@ -47,6 +49,9 @@ feature {NONE} -- Initialization
 			invoice := a_invoice
 			customer := a_customer
 			if a_invoice /= Void then
+				if attached a_invoice.subscription_id as sub_id then
+					subscription_id := a_invoice.subscription_id
+				end
 				receipt_or_invoice_urls ["invoice"] := a_invoice.hosted_invoice_url
 				receipt_or_invoice_urls ["invoice_pdf"] := a_invoice.invoice_pdf
 			end
@@ -63,6 +68,31 @@ feature -- Access
 	metadata: detachable STRING_TABLE [detachable ANY]
 
 	receipt_or_invoice_urls: STRING_TABLE [detachable READABLE_STRING_8]
+
+feature -- Access/id
+
+	reference_id: detachable READABLE_STRING_8
+		do
+			Result := subscription_id
+			if Result = Void then
+				Result := payment_id
+				if Result = Void then
+					if attached invoice as inv then
+						Result := "stripe.invoice=" + inv.id
+					elseif attached customer as cus then
+						Result := "stripe.customer=" + cus.id
+					end
+				else
+					Result := "stripe.payment=" + Result
+				end
+			else
+				Result := "stripe.subscription=" + Result
+			end
+		end
+
+	subscription_id: detachable READABLE_STRING_8
+
+	payment_id: detachable READABLE_STRING_8
 
 feature -- Element change
 

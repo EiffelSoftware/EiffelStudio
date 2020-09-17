@@ -25,11 +25,20 @@ feature -- Access
 
 	secret_key: IMMUTABLE_STRING_8
 
-	is_testing: BOOLEAN
-
 	base_path: IMMUTABLE_STRING_8
 
 	default_base_path: STRING = "/checkout"
+
+feature -- Status report
+
+	is_testing: BOOLEAN
+			-- Is in test mode? Default=True
+		do
+			Result := not is_live_mode
+		end
+
+	is_live_mode: BOOLEAN
+			-- Is in live mode? Default=False
 
 	is_valid: BOOLEAN
 		local
@@ -48,9 +57,23 @@ feature -- Element change
 			base_path := p
 		end
 
+	enable_live_mode
+		do
+			is_live_mode := True
+		end
+
+	disable_live_mode
+		do
+			is_live_mode := False
+		end
+
 	enable_testing
 		do
-			is_testing := True
+			disable_live_mode
 		end
+
+invariant
+
+	is_live_mode /= is_testing
 
 end

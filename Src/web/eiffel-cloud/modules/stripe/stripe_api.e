@@ -258,6 +258,30 @@ feature -- Subscriptions
 			end
 		end
 
+	process_new_subscription (sub: STRIPE_SUBSCRIPTION; cust: detachable STRIPE_CUSTOMER; a_order_id: detachable READABLE_STRING_GENERAL; a_metadata: detachable STRING_TABLE [READABLE_STRING_GENERAL])
+		local
+			l_customer: STRIPE_CUSTOMER
+			l_validation: STRIPE_PAYMENT_VALIDATION
+		do
+			l_customer := cust
+			if sub.is_active then
+				cms_api.log_debug ({STRIPE_MODULE}.name, "New stripe subscription #" + sub.id, Void)
+				if l_customer = Void then
+					l_customer := subscription_customer (sub)
+				end
+				if l_customer /= Void then
+					create l_validation.make_from_subscription (sub, l_customer)
+					if a_metadata /= Void then
+						l_validation.import_metadata (a_metadata)
+					end
+					if a_order_id /= Void then
+						l_validation.set_order_id (a_order_id)
+					end
+					invoke_validate_payment (l_validation)
+				end
+			end
+		end
+
 feature -- Payment method
 
 	attach_payment_method_to_customer (a_payment_method_id: READABLE_STRING_GENERAL; a_customer: STRIPE_CUSTOMER)

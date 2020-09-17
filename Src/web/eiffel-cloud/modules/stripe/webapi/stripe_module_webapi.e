@@ -315,43 +315,19 @@ feature -- Handle
 			end
 			rep := new_response (req, res, api)
 			if l_subscription /= Void then
-				process_subscription (l_subscription, l_customer, l_order_id, l_metadata, rep, api)
+				api.process_new_subscription (l_subscription, l_customer, l_order_id, l_metadata)
+				if attached {JSON_WEBAPI_RESPONSE} rep as jrep then
+					jrep.import_json_object (l_subscription.to_string)
+				else
+					rep.add_string_field ("subscription_id", l_subscription.id)
+				end
+				rep.execute
 			else
 				rep.add_boolean_field ("error", True)
 				if not api.config.is_valid then
 					rep.add_string_field ("error_message", "stripe configuration is not valid!")
 				end
 				rep.execute
-			end
-		end
-
-	process_subscription (sub: STRIPE_SUBSCRIPTION; cust: detachable STRIPE_CUSTOMER; a_order_id: detachable READABLE_STRING_GENERAL; a_metadata: detachable STRING_TABLE [READABLE_STRING_GENERAL]; rep: like new_response; api: STRIPE_API)
-		local
-			l_customer: STRIPE_CUSTOMER
-			l_validation: STRIPE_PAYMENT_VALIDATION
-		do
-			l_customer := cust
-			if attached {JSON_WEBAPI_RESPONSE} rep as jrep then
-				jrep.import_json_object (sub.to_string)
-			else
-				rep.add_string_field ("subscription_id", sub.id)
-			end
-			rep.execute
-			if sub.is_active then
-				api.cms_api.log_debug ({STRIPE_MODULE}.name, "New stripe subscription #" + sub.id, Void)
-				if l_customer = Void then
-					l_customer := api.subscription_customer (sub)
-				end
-				if l_customer /= Void then
-					create l_validation.make_from_subscription (sub, l_customer)
-					if a_metadata /= Void then
-						l_validation.import_metadata (a_metadata)
-					end
-					if a_order_id /= Void then
-						l_validation.set_order_id (a_order_id)
-					end
-					api.invoke_validate_payment (l_validation)
-				end
 			end
 		end
 
@@ -378,14 +354,20 @@ feature -- Handle
 			end
 			rep := new_response (req, res, api)
 			if l_subscription /= Void then
-				process_subscription (l_subscription, Void, Void, Void, rep, api)
+				api.process_new_subscription (l_subscription, Void, Void, Void)
+				if attached {JSON_WEBAPI_RESPONSE} rep as jrep then
+					jrep.import_json_object (l_subscription.to_string)
+				else
+					rep.add_string_field ("subscription_id", l_subscription.id)
+				end
+				rep.execute
 			else
 				rep.add_boolean_field ("error", True)
 				if not api.config.is_valid then
 					rep.add_string_field ("error_message", "stripe configuration is not valid!")
 				end
+				rep.execute
 			end
-			rep.execute
 		end
 
 	post_webhook (req: WSF_REQUEST; res: WSF_RESPONSE; api: STRIPE_API)
@@ -402,7 +384,7 @@ feature -- Handle
 			s32: STRING_32
 			l_payment_intent_res: PAYMENT_INTENT_SUCCEEDED
 			l_invoice: STRIPE_INVOICE
-			l_is_livemode: BOOLEAN
+			l_is_livemode: BOOLEAN			
 		do
 			create buf.make (req.content_length_value.to_integer_32)
 			req.read_input_data_into (buf)
@@ -416,37 +398,45 @@ feature -- Handle
 				attached jo.string_item ("type") as js
 			then
 				l_is_livemode := attached jo.boolean_item ("livemode") as j_livemode and then j_livemode.item
-
 				l_type := js.unescaped_string_32
-				if l_type.is_case_insensitive_equal_general ("payment_intent.succeeded") then
-					create l_payment_intent_res.make_with_json (jo)
-					across
-						l_payment_intent_res.charges as ic
-					loop
-						if
-							attached ic.item.billing_details as l_billing and then
-							attached l_billing.email as l_email
-						then
 
+				if
+					not l_is_livemode and
+					api.config.is_live_mode
+				then
+					-- Ignore testing callbacks!!!
+				else
+					if l_type.is_case_insensitive_equal_general ("payment_intent.succeeded") then
+						create l_payment_intent_res.make_with_json (jo)
+						across
+							l_payment_intent_res.charges as ic
+						loop
+							if
+								attached ic.item.billing_details as l_billing and then
+								attached l_billing.email as l_email
+							then
+
+							end
 						end
-					end
-					l_useful_id := l_payment_intent_res.id
-				elseif l_type.is_case_insensitive_equal_general ("payment_intent.created") then
-					create l_payment_intent_res.make_with_json (jo)
-					l_useful_id := l_payment_intent_res.id
-				elseif l_type.is_case_insensitive_equal_general ("invoice.payment_succeeded") then
-					create l_invoice.make_with_json (jo)
-					create l_useful_id.make_from_string_general (l_invoice.id)
-					if attached l_invoice.subscription_id as sub_id then
-						l_useful_id.append_character ('.')
-						l_useful_id.append_string_general (sub_id)
-					end
-					if attached l_invoice.payment_intent_id as p_id then
-						l_useful_id.append_character ('.')
-						l_useful_id.append_string_general (p_id)
+						l_useful_id := l_payment_intent_res.id
+					elseif l_type.is_case_insensitive_equal_general ("payment_intent.created") then
+						create l_payment_intent_res.make_with_json (jo)
+						l_useful_id := l_payment_intent_res.id
+					elseif l_type.is_case_insensitive_equal_general ("invoice.payment_succeeded") then
+						create l_invoice.make_with_json (jo)
+						create l_useful_id.make_from_string_general (l_invoice.id)
+						if attached l_invoice.subscription_id as sub_id then
+							l_useful_id.append_character ('.')
+							l_useful_id.append_string_general (sub_id)
+						end
+						if attached l_invoice.payment_intent_id as p_id then
+							l_useful_id.append_character ('.')
+							l_useful_id.append_string_general (p_id)
+						end
 					end
 				end
 			else
+				l_err := True
 				l_type := "webhook"
 			end
 
@@ -454,7 +444,9 @@ feature -- Handle
 			p := api.cms_api.site_location.extended ("stripe")
 			if fut.directory_path_exists (p) then
 				create s32.make (20)
-				if not l_is_livemode then
+				if l_err then
+					s32.append_string_general ("ERROR_")
+				elseif not l_is_livemode then
 					s32.append_string_general ("TEST_")
 				end
 				s32.append_string_general (req.request_time_stamp.out)

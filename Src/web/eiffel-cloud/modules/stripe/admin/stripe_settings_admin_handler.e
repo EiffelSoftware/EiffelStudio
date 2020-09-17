@@ -28,8 +28,10 @@ feature -- Execution
 				l_html.append ("<h2>Stripe settings</h2>")
 				l_html.append ("<li>public_key: " + html_encoded (stripe_api.config.public_key) + "</li>")
 				l_html.append ("<li>secret_key: " + html_encoded (stripe_api.config.secret_key) + "</li>")
-				if stripe_api.config.is_testing then
-					l_html.append ("<li class=%"warning%">In mode %"testing%".</li>")
+				if stripe_api.config.is_live_mode then
+					l_html.append ("<li class=%"warning%">In %"LIVE%" mode.</li>")
+				else
+					l_html.append ("<li class=%"warning%">In %"TEST%" mode.</li>")
 				end
 				r.set_main_content (l_html)
 				r.execute

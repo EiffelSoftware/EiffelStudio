@@ -89,8 +89,10 @@ feature {CMS_API} -- Module Initialization
 						l_sec /= Void
 					then
 						create cfg.make (l_pub, l_sec)
-						if not l_is_livemode then
-							cfg.enable_testing
+						if l_is_livemode then
+							cfg.enable_live_mode
+						else
+							cfg.disable_live_mode
 						end
 						if attached l_cfg.utf_8_text_item ("stripe.base_path") as l_base_path then
 							if l_base_path.starts_with_general ("/") then

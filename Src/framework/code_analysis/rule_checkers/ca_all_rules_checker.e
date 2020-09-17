@@ -54,6 +54,7 @@ inherit
 			process_expr_call_as,
 			process_feature_as,
 			process_feature_clause_as,
+			process_guard_as,
 			process_id_as,
 			process_if_as,
 			process_if_expression_as,
@@ -148,6 +149,8 @@ feature {NONE} -- Initialization
 			create feature_post_actions
 			create feature_clause_pre_actions
 			create feature_clause_post_actions
+			create guard_pre_actions
+			create guard_post_actions
 			create id_pre_actions
 			create id_post_actions
 			create if_pre_actions
@@ -492,6 +495,16 @@ feature {CA_STANDARD_RULE} -- Adding agents
 			feature_clause_post_actions.extend (a_action)
 		end
 
+	add_guard_pre_action (a: PROCEDURE [GUARD_AS])
+		do
+			guard_pre_actions.extend (a)
+		end
+
+	add_guard_post_action (a: PROCEDURE [GUARD_AS])
+		do
+			guard_post_actions.extend (a)
+		end
+
 	add_id_pre_action (a_action: attached PROCEDURE [ID_AS])
 		do
 			id_pre_actions.extend (a_action)
@@ -822,6 +835,8 @@ feature {NONE} -- Agent lists
 
 	feature_clause_pre_actions, feature_clause_post_actions: ACTION_SEQUENCE [TUPLE [FEATURE_CLAUSE_AS]]
 
+	guard_pre_actions, guard_post_actions: ACTION_SEQUENCE [TUPLE [GUARD_AS]]
+
 	id_pre_actions, id_post_actions: ACTION_SEQUENCE [TUPLE [ID_AS]]
 
 	if_pre_actions, if_post_actions: ACTION_SEQUENCE [TUPLE [IF_AS]]
@@ -1117,6 +1132,13 @@ feature {NONE} -- Processing
 			feature_clause_pre_actions.call ([a_clause])
 			Precursor (a_clause)
 			feature_clause_post_actions.call ([a_clause])
+		end
+
+	process_guard_as (a: GUARD_AS)
+		do
+			guard_pre_actions.call (a)
+			Precursor (a)
+			guard_post_actions.call (a)
 		end
 
 	process_id_as (a_id: ID_AS)

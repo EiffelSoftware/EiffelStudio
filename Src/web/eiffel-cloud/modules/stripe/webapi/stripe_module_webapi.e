@@ -31,10 +31,13 @@ feature {NONE} -- Router/administration
 				cfg := l_mod_api.config
 				l_base_path := cfg.base_path
 				a_router.handle (l_base_path + "/public-key", create {WSF_URI_AGENT_HANDLER}.make (agent get_public_key (?,?,l_mod_api)), a_router.methods_get)
+
 				a_router.handle (l_base_path + "/payment_intents", create {WSF_URI_AGENT_HANDLER}.make (agent post_payment_intents (?,?,l_mod_api)), a_router.methods_post)
 				a_router.handle (l_base_path + "/payment_confirmation", create {WSF_URI_AGENT_HANDLER}.make (agent post_payment_intents_confirmation (?,?,l_mod_api)), a_router.methods_post)
+
 				a_router.handle (l_base_path + "/customer_subscription", create {WSF_URI_AGENT_HANDLER}.make (agent post_customer_subscription (?,?,l_mod_api)), a_router.methods_post)
 				a_router.handle (l_base_path + "/subscription_confirmation", create {WSF_URI_AGENT_HANDLER}.make (agent post_subscription_confirmation (?,?,l_mod_api)), a_router.methods_post)
+
 				a_router.handle (l_base_path + "/callback", create {WSF_URI_AGENT_HANDLER}.make (agent post_webhook (?,?,l_mod_api)), a_router.methods_post)
 
 				a_router.handle (l_base_path + "/test", create {WSF_URI_AGENT_HANDLER}.make (agent handle_test (?,?, l_mod_api)), a_router.methods_get_post)
@@ -426,6 +429,8 @@ feature -- Handle
 					end
 				elseif l_type.is_case_insensitive_equal_general ("payment_intent.created") then
 
+				elseif l_type.is_case_insensitive_equal_general ("invoice.payment_succeeded") then
+					do_nothing
 				end
 			else
 				l_type := "webhook"

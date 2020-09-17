@@ -62,6 +62,10 @@ feature -- Execution
 						if l_user_email /= Void then
 
 							create pay.make (p_cat.value, p_checkout.value)
+							pay.set_customer_email (l_user_email)
+							if l_user /= Void then
+								pay.set_customer_name (l_user.name)
+							end
 							stripe_api.invoke_prepare_payment (pay)
 							rep := new_generic_response (req, res)
 

@@ -56,18 +56,40 @@ feature {CMS_API} -- Module Initialization
 			-- <Precursor>
 		local
 			cfg: STRIPE_CONFIG
+			l_is_livemode: BOOLEAN
+			l_pub,l_sec: detachable READABLE_STRING_8
 		do
 			Precursor (api)
 			if stripe_api = Void then
 				if
 					attached api.module_configuration_by_name ({STRIPE_MODULE}.name, "config") as l_cfg
 				then
+					if attached l_cfg.resolved_text_item ("stripe.livemode") as s then
+						l_is_livemode := s.is_case_insensitive_equal_general ("yes")
+					elseif attached l_cfg.resolved_text_item ("stripe.testing") as s then
+						l_is_livemode := not s.is_case_insensitive_equal_general ("no")
+					else
+						l_is_livemode := False -- by default, livemode is False
+					end
+
+					if l_is_livemode then
+						l_pub := l_cfg.utf_8_text_item ("stripe.live_public_key")
+						l_sec := l_cfg.utf_8_text_item ("stripe.live_secret_key")
+					else
+						l_pub := l_cfg.utf_8_text_item ("stripe.test_public_key")
+						l_sec := l_cfg.utf_8_text_item ("stripe.test_secret_key")
+					end
+					if l_pub = Void and l_sec = Void then
+							-- Backward compatible
+						l_pub := l_cfg.utf_8_text_item ("stripe.public_key")
+						l_sec := l_cfg.utf_8_text_item ("stripe.secret_key")
+					end
 					if
-						attached l_cfg.utf_8_text_item ("stripe.public_key") as l_pub and then
-						attached l_cfg.utf_8_text_item ("stripe.secret_key") as l_sec
+						l_pub /= Void and then
+						l_sec /= Void
 					then
 						create cfg.make (l_pub, l_sec)
-						if attached l_cfg.resolved_text_item ("stripe.testing") as s and then s.is_case_insensitive_equal_general ("yes") then
+						if not l_is_livemode then
 							cfg.enable_testing
 						end
 						if attached l_cfg.utf_8_text_item ("stripe.base_path") as l_base_path then
@@ -81,7 +103,6 @@ feature {CMS_API} -- Module Initialization
 						create stripe_api.make (api, cfg)
 					end
 				end
-
 			end
 		end
 

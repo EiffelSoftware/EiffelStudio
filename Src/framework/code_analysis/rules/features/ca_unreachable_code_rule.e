@@ -16,6 +16,15 @@ class
 inherit
 	CA_STANDARD_RULE
 
+	AST_ITERATOR
+		redefine
+			process_access_feat_as,
+			process_check_as,
+			process_guard_as,
+			process_inline_agent_creation_as,
+			process_precursor_as
+		end
+
 create
 	make
 
@@ -27,9 +36,10 @@ feature {NONE} -- Initialization
 			make_with_defaults
 		end
 
-	register_actions (a_checker: attached CA_ALL_RULES_CHECKER)
+	register_actions (a_checker: CA_ALL_RULES_CHECKER)
 		do
-			a_checker.add_feature_pre_action (agent check_feature)
+			a_checker.add_eiffel_list_pre_action (agent check_list)
+			a_checker.add_guard_pre_action (agent check_guard)
 			a_checker.add_if_pre_action (agent check_if)
 		end
 
@@ -58,52 +68,87 @@ feature -- Properties
 			a_formatter.add (ca_messages.unreachable_code_violation_2)
 		end
 
+feature {NONE} -- Status report
+
+	is_unreachable: BOOLEAN
+			-- Is current instruction unreachable?
+
 feature {NONE} -- Rule Checking
 
-	check_feature (a_feature: FEATURE_AS)
+	check_list (l: EIFFEL_LIST [AST_EIFFEL])
 		local
-			l_found_violation: BOOLEAN
-			l_index: INTEGER
+			done: BOOLEAN
 		do
-			if attached a_feature.body as l_body and then
-			   attached {ROUTINE_AS} l_body.content as l_routine and then
-			   attached {INTERNAL_AS} l_routine.routine_body as l_internal and then
-			   attached l_internal.compound as l_compound then
-				-- Getting the instruction list of the feature.
-				from
-					l_found_violation := False
-					l_index := 1
-					l_compound.start
+			if attached {EIFFEL_LIST [INSTRUCTION_AS]} l as instructions then
+					-- Assume that the block is reachable.
+				is_unreachable := False
+				across
+					instructions as i
 				until
-					l_compound.after or l_found_violation
+					done
 				loop
-					if attached {CHECK_AS} l_compound.item as l_check then
-						across l_check.check_list as l_tagged loop
-							if
-								not l_found_violation and then
-								is_expr_false (l_tagged.item.expr) and then
-									-- We found at least one assertion which is False.
-									-- There are still more instructions after the check fails.
-								not l_compound.islast
-							then
-								l_found_violation := True
-								create_violation (l_compound, l_index + 1)
-							end
-						end
-					elseif
-						attached {INSTR_CALL_AS} l_compound.item as l_call and then
-						attached {NESTED_EXPR_AS} l_call.call as l_nested and then
-						attached l_nested.message.feature_name.name_8.same_string ("raise") and then
-						not l_compound.islast
-					then
-							-- There are still more instructions after the exception is raised.
-						l_found_violation := True
-						create_violation (l_compound, l_index + 1)
+					if is_unreachable then
+						create_violation (instructions, i.target_index)
+						done := True
+					else
+						i.item.process (Current)
 					end
-					l_compound.forth
-					l_index := l_index + 1
 				end
+					-- Get ready for instructions in an outer or sibling block.
+				is_unreachable := False
 			end
+		end
+
+	process_access_feat_as (a: ACCESS_FEAT_AS)
+			-- <Precursor>
+		do
+			if a.is_feature then
+				process_feature_call (a.first, a.class_id)
+			end
+			Precursor (a)
+		end
+
+	process_precursor_as (a: PRECURSOR_AS)
+			-- <Precursor>
+		do
+			process_feature_call (a.first, a.class_id)
+			Precursor (a)
+		end
+
+	process_feature_call (routine_id: like {ID_SET_ACCESSOR}.routine_ids.first; class_id: like {CLASS_C}.class_id)
+			-- Process a call to a feature of routine ID `routine_id` in class of class ID `class_id`.
+		do
+			is_unreachable :=
+				class_id /= 0 and then
+				system.has_class_of_id (class_id) and then
+				attached system.class_of_id (class_id) as c and then
+				c.has_feature_table and then
+				routine_id > 0 and then
+				attached c.feature_of_rout_id (routine_id) as f and then
+				f.is_failing
+		end
+
+	process_inline_agent_creation_as (a: INLINE_AGENT_CREATION_AS)
+			-- <Precursor>
+		local
+			old_is_unreachable: BOOLEAN
+		do
+			old_is_unreachable := is_unreachable
+			Precursor (a)
+				-- Reset checks after agent creation.
+			is_unreachable := old_is_unreachable
+		end
+
+	process_check_as (a: CHECK_AS)
+			-- <Precursor>
+		do
+			is_unreachable := attached a.check_list as l and then ∃ t: l ¦ is_expr_false (t.expr)
+		end
+
+	process_guard_as (a: GUARD_AS)
+			-- <Precursor>
+		do
+			is_unreachable := attached a.check_list as l and then ∃ t: l ¦ is_expr_false (t.expr)
 		end
 
 	check_if (a_if: IF_AS)
@@ -113,6 +158,13 @@ feature {NONE} -- Rule Checking
 			end
 			if attached a_if.else_part and then is_expr_true (a_if.condition) then
 				create_violation (a_if.else_part, 1)
+			end
+		end
+
+	check_guard (a: GUARD_AS)
+		do
+			if attached a.compound as c and then attached a.check_list as l and then ∃ t: l ¦ is_expr_false (t.expr) then
+				create_violation (c, 1)
 			end
 		end
 

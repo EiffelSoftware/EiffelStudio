@@ -1108,7 +1108,7 @@ test 	inline-agent-removal-crash		incr424	tcf fail incrementality agent
 test 	inline-agent-removal-crash-2	incr425	tcf fail incrementality agent
 test 	finalization-with-error-crash	incr426	tcf fail incrementality agent finalizing
 test 	create-generic-remove-generic-inheritance incr427 tcf fail incrementality generic
-test	config-remove-library-indirectly	incr428 tcf fail incrementality config
+test	config-remove-library-indirectly	incr428 tcf pass incrementality config
 test	ececil-undefined-symbol-4	incr429	tcf fail incrementality
 test	qat-vwce-sneak			incr430	tcf pass incrementality anchored_type conditional expression
 test	unique-recompile-crash	incr431	tcf pass incrementality

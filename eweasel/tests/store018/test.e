@@ -9,28 +9,28 @@ create
 
 feature -- Initialization
 
-	make is
+	make
 			-- Run application.
 		do
 			create list.make (10)
 			list.extend (create {A [ANY]}.make (create {ANY}))
-			list.extend (create {A [!ANY]}.make (create {ANY}))
-			list.extend (create {A [?ANY]}.make (create {ANY}))
+			list.extend (create {A [attached ANY]}.make (create {ANY}))
+			list.extend (create {A [detachable ANY]}.make (create {ANY}))
 			list.extend (create {A [STRING]}.make ("TEST"))
-			list.extend (create {A [!STRING]}.make ("TEST1"))
-			list.extend (create {A [?STRING]}.make ("TEST2"))
+			list.extend (create {A [attached STRING]}.make ("TEST1"))
+			list.extend (create {A [detachable STRING]}.make ("TEST2"))
 			list.extend (create {A [LINKED_LIST [ANY]]}.make (create {LINKED_LIST [ANY]}.make))
-			list.extend (create {A [!LINKED_LIST [ANY]]}.make (create {LINKED_LIST [ANY]}.make))
-			list.extend (create {A [?LINKED_LIST [ANY]]}.make (create {LINKED_LIST [ANY]}.make))
-			list.extend (create {A [!LINKED_LIST [!ANY]]}.make (create {LINKED_LIST [!ANY]}.make))
-			list.extend (create {A [?LINKED_LIST [?ANY]]}.make (create {LINKED_LIST [?ANY]}.make))
+			list.extend (create {A [attached LINKED_LIST [ANY]]}.make (create {LINKED_LIST [ANY]}.make))
+			list.extend (create {A [detachable LINKED_LIST [ANY]]}.make (create {LINKED_LIST [ANY]}.make))
+			list.extend (create {A [attached LINKED_LIST [attached ANY]]}.make (create {LINKED_LIST [attached ANY]}.make))
+			list.extend (create {A [detachable LINKED_LIST [detachable ANY]]}.make (create {LINKED_LIST [detachable ANY]}.make))
 
 -- Commented out since it is only needed when created the test originally.
 --			save (list)
 			retrieve (list)
 		end
 
-	save (a_list: like list) is
+	save (a_list: like list)
 		local
 			l_file: RAW_FILE
 		do
@@ -39,12 +39,11 @@ feature -- Initialization
 			l_file.close
 		end
 
-	retrieve (orig: like list) is
+	retrieve (orig: like list)
 		local
 			a: ANY
 			l_file: RAW_FILE
 			retried: BOOLEAN
-			l_spec: A [!ANY]
 		do
 			if not retried then
 				create l_file.make_open_read (file_name)
@@ -60,7 +59,7 @@ feature -- Initialization
 			retry
 		end
 
-	file_name: STRING is "data"
+	file_name: STRING = "data"
 	list: ARRAYED_LIST [ANY]
 
 end

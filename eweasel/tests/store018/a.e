@@ -6,7 +6,7 @@ create
 
 feature
 
-	make (v: G) is
+	make (v: G)
 		do
 			g := v
 			if v /= Void then
@@ -27,17 +27,17 @@ feature
 feature
 
 	g: G
-	att_g: !G
-	det_g: ?G
+	att_g: attached G
+	det_g: detachable G
 
 	l1: B [G]
-	l2: B [?G]
-	l3: B [!G]
-	l4: ?B [G]
-	l5: ?B [?G]
-	l6: ?B [!G]
-	l7: !B [G]
-	l8: !B [?G]
-	l9: !B [!G]
+	l2: B [detachable G]
+	l3: B [attached G]
+	l4: detachable B [G]
+	l5: detachable B [detachable G]
+	l6: detachable B [attached G]
+	l7: attached B [G]
+	l8: attached B [detachable G]
+	l9: attached B [attached G]
 
 end

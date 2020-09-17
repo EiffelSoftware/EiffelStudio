@@ -39,8 +39,6 @@ feature {NONE} -- Router/administration
 				a_router.handle (l_base_path + "/subscription_confirmation", create {WSF_URI_AGENT_HANDLER}.make (agent post_subscription_confirmation (?,?,l_mod_api)), a_router.methods_post)
 
 				a_router.handle (l_base_path + "/callback", create {WSF_URI_AGENT_HANDLER}.make (agent post_webhook (?,?,l_mod_api)), a_router.methods_post)
-
-				a_router.handle (l_base_path + "/test", create {WSF_URI_AGENT_HANDLER}.make (agent handle_test (?,?, l_mod_api)), a_router.methods_get_post)
 			end
 		end
 
@@ -400,8 +398,11 @@ feature -- Handle
 			jp: JSON_PARSER
 			l_sign: READABLE_STRING_32
 			l_type: READABLE_STRING_32
+			l_useful_id: detachable READABLE_STRING_32
 			s32: STRING_32
 			l_payment_intent_res: PAYMENT_INTENT_SUCCEEDED
+			l_invoice: STRIPE_INVOICE
+			l_is_livemode: BOOLEAN
 		do
 			create buf.make (req.content_length_value.to_integer_32)
 			req.read_input_data_into (buf)
@@ -414,6 +415,8 @@ feature -- Handle
 				jp.is_parsed and then jp.is_valid and then attached jp.parsed_json_object as jo and then
 				attached jo.string_item ("type") as js
 			then
+				l_is_livemode := attached jo.boolean_item ("livemode") as j_livemode and then j_livemode.item
+
 				l_type := js.unescaped_string_32
 				if l_type.is_case_insensitive_equal_general ("payment_intent.succeeded") then
 					create l_payment_intent_res.make_with_json (jo)
@@ -427,10 +430,19 @@ feature -- Handle
 
 						end
 					end
+					l_useful_id := l_payment_intent_res.id
 				elseif l_type.is_case_insensitive_equal_general ("payment_intent.created") then
-
+					create l_payment_intent_res.make_with_json (jo)
+					l_useful_id := l_payment_intent_res.id
 				elseif l_type.is_case_insensitive_equal_general ("invoice.payment_succeeded") then
-					do_nothing
+					create l_invoice.make_with_json (jo)
+					l_useful_id := l_invoice.id
+					if attached l_invoice.subscription_id as sub_id then
+						l_useful_id := l_useful_id + "." + sub_id
+					end
+					if attached l_invoice.payment_intent_id as p_id then
+						l_useful_id := l_useful_id + "." + p_id
+					end
 				end
 			else
 				l_type := "webhook"
@@ -439,9 +451,17 @@ feature -- Handle
 			rep := new_response (req, res, api)
 			p := api.cms_api.site_location.extended ("stripe")
 			if fut.directory_path_exists (p) then
-				create s32.make_from_string_general (req.request_time_stamp.out)
+				create s32.make (20)
+				if not l_is_livemode then
+					s32.append_string_general ("TEST_")
+				end
+				s32.append_string_general (req.request_time_stamp.out)
 				s32.append_character ('.')
 				s32.append (l_type)
+				if l_useful_id /= Void then
+					s32.append_character ('.')
+					s32.append (l_useful_id)
+				end
 
 				create f.make_with_path (p.extended (s32))
 				f.create_read_write
@@ -463,27 +483,6 @@ feature -- Handle
 			end
 			rep.add_string_field ("status" , "ok")
 			rep.execute
-		end
-
-	handle_test (req: WSF_REQUEST; res: WSF_RESPONSE; api: STRIPE_API)
-			-- If stripe configuration is not valid, return not available response.
-		local
-			r: like new_response
-			l_validation: STRIPE_PAYMENT_VALIDATION
-		do
-			r := new_response (req, res, api)
-			if attached req.string_item ("valid_subscription") as l_sub_id then
-				if
-					attached api.subscription (l_sub_id) as l_sub and then
-					attached api.subscription_customer (l_sub) as c
-				then
-					create l_validation.make_from_subscription (l_sub, c)
-					api.invoke_validate_payment (l_validation)
-					r.add_boolean_field ("validation", True)
-				end
-			end
-			r.add_self (req.percent_encoded_path_info)
-			r.execute
 		end
 
 feature -- Hooks configuration

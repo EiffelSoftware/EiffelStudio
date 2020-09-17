@@ -39,6 +39,10 @@ feature {NONE} -- Initialization
 				amount_paid := natural_32_item (j, "amount_paid")
 				amount_remaining := natural_32_item (j, "amount_remaining")
 
+				billing_reason := string_8_item (j, "billing_reason")
+
+				charge_id := string_8_item (j, "charge")
+
 				currency := string_8_item (j, "currency")
 
 				creation_timestamp := integer_32_item (j, "created")
@@ -59,6 +63,12 @@ feature {NONE} -- Initialization
 					end
 				end
 
+				payment_intent_id := string_8_item (j, "payment_intent")
+
+				subscription_id := string_8_item (j, "subscription")
+
+				status := string_8_item (j, "status")
+
 				metadata := table_item (j, "metadata")
 			end
 		end
@@ -78,6 +88,15 @@ feature -- Access
 
 	hosted_invoice_url,
 	invoice_pdf: detachable READABLE_STRING_8
+
+
+	billing_reason: detachable READABLE_STRING_8
+
+	status: detachable READABLE_STRING_8
+
+	charge_id: detachable READABLE_STRING_8
+	payment_intent_id: detachable READABLE_STRING_8
+	subscription_id: detachable READABLE_STRING_8
 
 	lines: ARRAYED_LIST [STRIPE_INVOICE_LINE]
 

@@ -384,7 +384,8 @@ feature -- Handle
 			s32: STRING_32
 			l_payment_intent_res: PAYMENT_INTENT_SUCCEEDED
 			l_invoice: STRIPE_INVOICE
-			l_is_livemode: BOOLEAN			
+			l_is_livemode: BOOLEAN
+			l_err: BOOLEAN
 		do
 			create buf.make (req.content_length_value.to_integer_32)
 			req.read_input_data_into (buf)

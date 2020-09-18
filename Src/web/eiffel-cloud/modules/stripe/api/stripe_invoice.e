@@ -23,6 +23,8 @@ create
 feature {NONE} -- Initialization
 
 	make_with_json (j: like json)
+		local
+			pi: STRIPE_PAYMENT_INTENT
 		do
 			create id.make_empty
 			create lines.make (0)
@@ -63,7 +65,13 @@ feature {NONE} -- Initialization
 					end
 				end
 
-				payment_intent_id := string_8_item (j, "payment_intent")
+				if attached {JSON_OBJECT} j.item ("payment_intent") as j_pi then
+					create pi.make_with_json (j_pi)
+					payment_intent := pi
+					payment_intent_id := pi.id
+				else
+					payment_intent_id := string_8_item (j, "payment_intent")
+				end
 
 				subscription_id := string_8_item (j, "subscription")
 
@@ -96,6 +104,9 @@ feature -- Access
 
 	charge_id: detachable READABLE_STRING_8
 	payment_intent_id: detachable READABLE_STRING_8
+
+	payment_intent: detachable STRIPE_PAYMENT_INTENT
+
 	subscription_id: detachable READABLE_STRING_8
 
 	lines: ARRAYED_LIST [STRIPE_INVOICE_LINE]

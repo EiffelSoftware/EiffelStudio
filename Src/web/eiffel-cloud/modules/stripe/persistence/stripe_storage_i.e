@@ -37,6 +37,26 @@ feature -- Store
 		deferred
 		end
 
+feature -- Payment
+
+	record_invoice (a_invoice: STRIPE_INVOICE)
+		require
+			a_invoice.has_id
+		deferred
+		end
+
+	record_payment_intent (pi: STRIPE_PAYMENT_INTENT)
+		require
+			pi.has_id
+		deferred
+		end
+
+	is_payment_processed (a_payment_id: READABLE_STRING_GENERAL): BOOLEAN
+		require
+			not a_payment_id.is_whitespace
+		deferred
+		end
+
 
 note
 	copyright: "2011-2017, Jocelyn Fiat, Javier Velilla, Eiffel Software and others"

@@ -57,7 +57,7 @@ feature {CMS_API} -- Module Initialization
 		local
 			cfg: STRIPE_CONFIG
 			l_is_livemode: BOOLEAN
-			l_pub,l_sec: detachable READABLE_STRING_8
+			l_pub,l_sec, l_sign_sec: detachable READABLE_STRING_8
 		do
 			Precursor (api)
 			if stripe_api = Void then
@@ -75,14 +75,17 @@ feature {CMS_API} -- Module Initialization
 					if l_is_livemode then
 						l_pub := l_cfg.utf_8_text_item ("stripe.live_public_key")
 						l_sec := l_cfg.utf_8_text_item ("stripe.live_secret_key")
+						l_sign_sec := l_cfg.utf_8_text_item ("stripe.live_signing_secret")
 					else
 						l_pub := l_cfg.utf_8_text_item ("stripe.test_public_key")
 						l_sec := l_cfg.utf_8_text_item ("stripe.test_secret_key")
+						l_sign_sec := l_cfg.utf_8_text_item ("stripe.test_signing_secret")
 					end
 					if l_pub = Void and l_sec = Void then
 							-- Backward compatible
 						l_pub := l_cfg.utf_8_text_item ("stripe.public_key")
 						l_sec := l_cfg.utf_8_text_item ("stripe.secret_key")
+						l_sign_sec := l_cfg.utf_8_text_item ("stripe.signing_secret")
 					end
 					if
 						l_pub /= Void and then
@@ -101,11 +104,20 @@ feature {CMS_API} -- Module Initialization
 								cfg.set_base_path ("/" + l_base_path)
 							end
 						end
-
 						create stripe_api.make (api, cfg)
+						if l_sign_sec /= Void then
+							cfg.set_signing_secret (left_right_adjusted (l_sign_sec))
+						end
 					end
 				end
 			end
+		end
+
+	left_right_adjusted (s: READABLE_STRING_8): STRING_8
+		do
+			create Result.make_from_string (s)
+			Result.left_adjust
+			Result.right_adjust
 		end
 
 feature {CMS_API} -- Module management

@@ -128,6 +128,28 @@ feature -- Payment intents
 			end
 		end
 
+feature -- Event
+
+	event (a_event_id: READABLE_STRING_GENERAL): detachable STRIPE_EVENT
+		local
+			cl: DEFAULT_HTTP_CLIENT
+			ctx: HTTP_CLIENT_REQUEST_CONTEXT
+		do
+			create cl
+			if attached cl.new_session (stripe_api_url) as sess then
+				sess.set_credentials (config.secret_key, "")
+				create ctx.make_with_credentials_required
+				if attached sess.get ("events/" + url_encoded (a_event_id), ctx) as l_response then
+					if attached valid_api_json_object_response (l_response) as j then
+						create Result.make_with_json (j)
+						debug
+							print (Result)
+						end
+					end
+				end
+			end
+		end
+
 feature -- Subscriptions
 
 	new_subscription (a_default_payment_method_id: detachable READABLE_STRING_GENERAL; a_customer: STRIPE_CUSTOMER;
@@ -258,6 +280,37 @@ feature -- Subscriptions
 			end
 		end
 
+	process_payment_intent (a_payment: STRIPE_PAYMENT_INTENT; cust: detachable STRIPE_CUSTOMER; a_order_id: detachable READABLE_STRING_GENERAL; a_metadata: detachable STRING_TABLE [READABLE_STRING_GENERAL])
+		local
+			l_customer: STRIPE_CUSTOMER
+			l_validation: STRIPE_PAYMENT_VALIDATION
+		do
+			l_customer := cust
+			if a_payment.succeeded then
+				cms_api.log_debug ({STRIPE_MODULE}.name, "New stripe payment #" + a_payment.id, Void)
+				if l_customer = Void then
+					if attached a_payment.customer_id as l_cust_id then
+						l_customer := customer (l_cust_id)
+					end
+					if l_customer = Void and attached a_payment.receipt_email as l_cust_email then
+						create l_customer.make_with_email (l_cust_email)
+					end
+				end
+				if l_customer /= Void then
+					--FIXME!!!!
+					create l_validation.make_from_payment_intent (a_payment, l_customer)
+					if a_metadata /= Void then
+						l_validation.import_metadata (a_metadata)
+					end
+					if a_order_id /= Void then
+						l_validation.set_order_id (a_order_id)
+					end
+					record_payment_intent (a_payment)
+					invoke_validate_payment (l_validation)
+				end
+			end
+		end
+
 	process_new_subscription (sub: STRIPE_SUBSCRIPTION; cust: detachable STRIPE_CUSTOMER; a_order_id: detachable READABLE_STRING_GENERAL; a_metadata: detachable STRING_TABLE [READABLE_STRING_GENERAL])
 		local
 			l_customer: STRIPE_CUSTOMER
@@ -276,6 +329,9 @@ feature -- Subscriptions
 					end
 					if a_order_id /= Void then
 						l_validation.set_order_id (a_order_id)
+					end
+					if attached sub.latest_invoice as l_invoice then
+						record_invoice (l_invoice)
 					end
 					invoke_validate_payment (l_validation)
 				end
@@ -502,6 +558,23 @@ feature -- Customers
 	save_customer_id_with_email (a_email: READABLE_STRING_GENERAL; a_customer_id: READABLE_STRING_GENERAL)
 		do
 			stripe_storage.save_customer_id (a_customer_id, 0, a_email)
+		end
+
+feature -- Payment records
+
+	record_invoice (a_invoice: STRIPE_INVOICE)
+		do
+			stripe_storage.record_invoice (a_invoice)
+		end
+
+	record_payment_intent (pi: STRIPE_PAYMENT_INTENT)
+		do
+			stripe_storage.record_payment_intent (pi)
+		end
+
+	is_payment_processed (a_payment_id: READABLE_STRING_GENERAL): BOOLEAN
+		do
+			Result := stripe_storage.is_payment_processed (a_payment_id)
 		end
 
 feature -- Plans	

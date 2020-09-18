@@ -35,6 +35,20 @@ feature -- Store
 		do
 		end
 
+feature -- Payment
+
+	record_invoice (a_invoice: STRIPE_INVOICE)
+		do
+		end
+
+	record_payment_intent (pi: STRIPE_PAYMENT_INTENT)
+		do
+		end
+
+	is_payment_processed (a_payment_id: READABLE_STRING_GENERAL): BOOLEAN
+		do
+		end
+
 note
 	copyright: "2011-2017, Jocelyn Fiat, Javier Velilla, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"

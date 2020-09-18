@@ -127,6 +127,58 @@ feature -- Store
 			end
 		end
 
+feature -- Payment
+
+	record_invoice (a_invoice: STRIPE_INVOICE)
+		local
+			l_params: like sql_parameters
+		do
+			reset_error
+			l_params := sql_parameters (5,  {ARRAY [TUPLE [READABLE_STRING_GENERAL, detachable ANY]]}
+							 <<
+							 	["pi", a_invoice.payment_intent_id],
+							 	["sub", a_invoice.subscription_id],
+							 	["status", a_invoice.status],
+							 	["event_date", create {DATE_TIME}.make_now_utc],
+							 	["data", a_invoice.to_json_string]
+							 >>)
+			sql_insert (sql_insert_payment, l_params)
+			sql_finalize_insert (sql_insert_payment)
+		end
+
+	record_payment_intent (pi: STRIPE_PAYMENT_INTENT)
+		local
+			l_params: like sql_parameters
+		do
+			reset_error
+			l_params := sql_parameters (5,  {ARRAY [TUPLE [READABLE_STRING_GENERAL, detachable ANY]]}
+							 <<
+							 	["pi", pi.id],
+							 	["sub", Void],
+							 	["status", pi.status],
+							 	["event_date", create {DATE_TIME}.make_now_utc],
+							 	["data", pi.to_json_string]
+							 >>)
+			sql_insert (sql_insert_payment, l_params)
+			sql_finalize_insert (sql_insert_payment)
+		end
+
+	is_payment_processed (a_payment_id: READABLE_STRING_GENERAL): BOOLEAN
+		local
+			s: READABLE_STRING_8
+		do
+			reset_error
+			sql_query (sql_select_payment_by_id, sql_parameters (1, <<["pi", a_payment_id]>>))
+			if not has_error and not sql_after then
+				s := sql_read_string_8 (4)
+				if s /= Void then
+					Result := s.is_case_insensitive_equal_general ("paid")
+							or s.is_case_insensitive_equal_general ("succeeded")
+				end
+			end
+			sql_finalize_query (sql_select_payment_by_id)
+		end
+
 feature {NONE} -- Queries
 
 	sql_select_user_by_customer_id: STRING = "SELECT customer, uid, email FROM stripe_customers WHERE customer=:customer;"
@@ -138,6 +190,11 @@ feature {NONE} -- Queries
 	sql_insert_customer: STRING = "INSERT INTO stripe_customers (customer, uid, email) VALUES (:customer, :uid, :email);"
 
 	sql_update_customer: STRING = "UPDATE stripe_customers SET uid=:uid, email=:email WHERE customer=:customer;"
+
+
+	sql_insert_payment: STRING = "INSERT INTO stripe_payments (pi, sub, status, event_date, data) VALUES (:pi, :sub, :status, :event_date, :data);"
+
+	sql_select_payment_by_id: STRING = "SELECT id, pi, sub, status, event_date, data FROM stripe_payments WHERE pi=:pi ORDER BY event_date DESC, id DESC LIMIT 1;"
 
 feature {NONE} -- Implementation
 

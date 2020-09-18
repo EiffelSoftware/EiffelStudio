@@ -25,6 +25,8 @@ feature -- Access
 
 	secret_key: IMMUTABLE_STRING_8
 
+	signing_secret: detachable IMMUTABLE_STRING_8
+
 	base_path: IMMUTABLE_STRING_8
 
 	default_base_path: STRING = "/checkout"
@@ -55,6 +57,15 @@ feature -- Element change
 	set_base_path (p: READABLE_STRING_8)
 		do
 			base_path := p
+		end
+
+	set_signing_secret (v: detachable READABLE_STRING_8)
+		do
+			if v = Void then
+				signing_secret := Void
+			else
+				create signing_secret.make_from_string (v)
+			end
 		end
 
 	enable_live_mode

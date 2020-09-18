@@ -184,7 +184,7 @@ feature {NONE} -- Implementation
 
 feature -- Conversion
 
-	to_string: STRING
+	to_json_string: STRING
 		local
 			jp: JSON_PRETTY_STRING_VISITOR
 		do

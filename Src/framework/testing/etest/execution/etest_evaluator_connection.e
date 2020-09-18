@@ -142,9 +142,13 @@ feature -- Implementation
 			next_request := ({detachable G}).default
 			last_result := ({detachable H}).default
 			if not has_connection_died then
-				create l_socket.make_client_by_address_and_port ((create {INET_ADDRESS_FACTORY}).create_loopback, current_port)
-				l_socket.connect
-				l_socket.close
+				if current_port > 0 then
+					create l_socket.make_client_by_address_and_port ((create {INET_ADDRESS_FACTORY}).create_loopback, current_port)
+					l_socket.connect
+					l_socket.close
+				else
+						-- Invalid port!
+				end
 				has_connection_died := True
 				condition.broadcast
 			end
@@ -225,7 +229,7 @@ invariant
 	valid_port: not has_connection_died implies (min_port <= current_port and current_port <= max_port)
 
 note
-	copyright: "Copyright (c) 1984-2016, Eiffel Software"
+	copyright: "Copyright (c) 1984-2019, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

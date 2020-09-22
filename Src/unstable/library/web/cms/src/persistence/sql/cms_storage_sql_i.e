@@ -166,6 +166,12 @@ feature -- Operation
 	sql_finalize_statement (a_sql_statement: READABLE_STRING_8)
 		do
 			sql_finalize
+			if
+				has_error and then
+				attached api as l_cms_api
+			then
+				l_cms_api.log_error ("database", generator + "." + l_cms_api.html_encoded (error_handler.as_string_representation) + " SQL=%""+ a_sql_statement +"%"", Void)
+			end
 		end
 
 feature -- Helper

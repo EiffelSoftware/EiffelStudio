@@ -77,7 +77,7 @@ feature -- Operation
 				has_error and then
 				attached api as l_cms_api
 			then
-				l_cms_api.log_error ("database", generator + "." + l_cms_api.html_encoded (error_handler.as_string_representation), Void)
+				l_cms_api.log_error ("database", generator + "." + l_cms_api.html_encoded (error_handler.as_string_representation), l_cms_api.self_link)
 			end
 		end
 

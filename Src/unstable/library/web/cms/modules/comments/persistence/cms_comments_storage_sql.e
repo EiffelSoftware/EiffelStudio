@@ -30,7 +30,7 @@ feature -- Access
 			if not has_error and not sql_after then
 				Result := fetch_comment
 			end
-			sql_finalize
+			sql_finalize_query (sql_select_comment_by_id)
 		end
 
 	comments_for (a_content: CMS_CONTENT): detachable LIST [CMS_COMMENT]
@@ -54,7 +54,7 @@ feature -- Access
 				end
 				sql_forth
 			end
-			sql_finalize
+			sql_finalize_query (sql_select_comments_for_content)
 		end
 
 feature -- Change
@@ -104,10 +104,10 @@ feature -- Change
 			if a_comment.has_id then
 				l_parameters.put (a_comment.id, "cid")
 				sql_modify (sql_update_comment, l_parameters)
-				sql_finalize
+				sql_finalize_modify (sql_update_comment)
 			else
 				sql_insert (sql_insert_comment, l_parameters)
-				sql_finalize
+				sql_finalize_insert (sql_insert_comment)
 				if not has_error then
 					a_comment.set_id (last_inserted_comment_id)
 				end
@@ -173,7 +173,7 @@ feature {NONE} -- Implementation
 			if not has_error and not sql_after then
 				Result := sql_read_integer_64 (1)
 			end
-			sql_finalize
+			sql_finalize_query (Sql_last_inserted_comment_id)
 		end
 
 feature {NONE} -- Queries

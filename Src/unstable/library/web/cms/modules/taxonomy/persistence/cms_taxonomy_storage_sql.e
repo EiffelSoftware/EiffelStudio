@@ -26,7 +26,7 @@ feature -- Access
 			if not has_error and not sql_after then
 				Result := sql_read_integer_64 (1)
 			end
-			sql_finalize
+			sql_finalize_query (sql_select_vocabularies_count)
 		end
 
 	vocabularies (a_limit: NATURAL_32; a_offset: NATURAL_32): CMS_VOCABULARY_COLLECTION
@@ -50,7 +50,7 @@ feature -- Access
 				end
 				sql_forth
 			end
-			sql_finalize
+			sql_finalize_query (sql_select_terms)
 		end
 
 	vocabulary (a_tid: INTEGER_64): detachable CMS_VOCABULARY
@@ -73,7 +73,7 @@ feature -- Access
 			if not has_error and not sql_after then
 				Result := sql_read_integer_64 (1)
 			end
-			sql_finalize
+			sql_finalize_query (sql_select_vocabulary_terms_count)
 		end
 
 	terms (a_vocab: CMS_VOCABULARY; a_limit: NATURAL_32; a_offset: NATURAL_32): CMS_TERM_COLLECTION
@@ -100,7 +100,8 @@ feature -- Access
 				end
 				sql_forth
 			end
-			sql_finalize
+			sql_finalize_query (sql_select_terms)
+--			sql_finalize_query (sql_select_terms_with_range)
 		end
 
 	cloud_of_terms (a_vocab: CMS_VOCABULARY; a_limit: NATURAL_32; a_offset: NATURAL_32): ARRAYED_LIST [TUPLE [term: CMS_TERM; occurrences: NATURAL_64]]
@@ -133,7 +134,7 @@ feature -- Access
 				end
 				sql_forth
 			end
-			sql_finalize
+			sql_finalize_query (l_sql)
 		end
 
 	terms_count: INTEGER_64
@@ -144,7 +145,7 @@ feature -- Access
 			if not has_error and not sql_after then
 				Result := sql_read_integer_64 (1)
 			end
-			sql_finalize
+			sql_finalize_query (sql_select_terms_count)
 		end
 
 	term_by_id (a_tid: INTEGER_64): detachable CMS_TERM
@@ -160,7 +161,7 @@ feature -- Access
 			if not has_error and not sql_after then
 				Result := fetch_term
 			end
-			sql_finalize
+			sql_finalize_query (sql_select_term)
 		end
 
 	term_by_text (a_term_text: READABLE_STRING_GENERAL; a_vocabulary: detachable CMS_VOCABULARY): detachable CMS_TERM
@@ -181,7 +182,11 @@ feature -- Access
 			if not has_error and not sql_after then
 				Result := fetch_term
 			end
-			sql_finalize
+			if a_vocabulary /= Void then
+				sql_finalize_query (sql_select_vocabulary_term_by_text)
+			else
+				sql_finalize_query (sql_select_term_by_text)
+			end
 		end
 
 	terms_of_entity (a_type_name: READABLE_STRING_GENERAL; a_entity: READABLE_STRING_GENERAL; a_vocabulary: detachable CMS_VOCABULARY): detachable CMS_TERM_COLLECTION
@@ -215,7 +220,11 @@ feature -- Access
 				end
 				sql_forth
 			end
-			sql_finalize
+			if a_vocabulary /= Void then
+				sql_finalize_query (sql_select_vocabulary_terms_of_entity)
+			else
+				sql_finalize_query (sql_select_terms_of_entity)
+			end
 			if not l_tids.is_empty then
 				create Result.make (l_tids.count)
 				across
@@ -260,7 +269,7 @@ feature -- Access
 					sql_forth
 				end
 			end
-			sql_finalize
+			sql_finalize_query (sql_select_entity_and_type_by_term)
 		end
 
 feature -- Store
@@ -314,9 +323,11 @@ feature -- Store
 			if t.has_id then
 				l_parameters.put (t.id, "tid")
 				sql_modify (sql_update_term, l_parameters)
+				sql_finalize_modify (sql_update_term)
 			else
 				sql_insert (sql_insert_term, l_parameters)
 				t.set_id (last_inserted_term_id)
+				sql_finalize_insert (sql_insert_term)
 			end
 			if
 				not has_error and
@@ -331,13 +342,13 @@ feature -- Store
 					l_parameters.put (0, "parent_tid")
 				end
 				sql_insert (sql_insert_term_in_vocabulary, l_parameters)
+				sql_finalize_insert (sql_insert_term_in_vocabulary)
 			end
 			if has_error then
 				sql_rollback_transaction
 			else
 				sql_commit_transaction
 			end
-			sql_finalize
 		end
 
 	remove_term_from_vocabulary (t: CMS_TERM; voc: CMS_VOCABULARY)
@@ -350,7 +361,7 @@ feature -- Store
 			l_parameters.put (t.id, "tid")
 			l_parameters.put (voc.id, "parent_tid")
 			sql_modify (sql_remove_term_from_vocabulary, l_parameters)
-			sql_finalize
+			sql_finalize_modify (sql_remove_term_from_vocabulary)
 		end
 
 	associate_term_with_entity (a_term: CMS_TERM; a_type_name: READABLE_STRING_GENERAL; a_entity: READABLE_STRING_GENERAL)
@@ -366,7 +377,7 @@ feature -- Store
 			l_parameters.put (a_type_name, "type")
 
 			sql_insert (sql_insert_term_index, l_parameters)
-			sql_finalize
+			sql_finalize_insert (sql_insert_term_index)
 		end
 
 	unassociate_term_from_entity (a_term: CMS_TERM; a_type_name: READABLE_STRING_GENERAL; a_entity: READABLE_STRING_GENERAL)
@@ -382,7 +393,7 @@ feature -- Store
 			l_parameters.put (a_type_name, "type")
 
 			sql_modify (sql_delete_term_index, l_parameters)
-			sql_finalize
+			sql_finalize_modify (sql_delete_term_index)
 		end
 
 feature -- Vocabulary and types
@@ -429,7 +440,7 @@ feature -- Vocabulary and types
 				end
 				sql_forth
 			end
-			sql_finalize
+			sql_finalize_query (sql_select_vocabularies_for_type)
 			if not l_data.is_empty then
 				create Result.make (l_data.count)
 				across
@@ -467,7 +478,7 @@ feature -- Vocabulary and types
 			if not has_error or sql_after then
 				Result := sql_read_integer_64 (1) > 0
 			end
-			sql_finalize
+			sql_finalize_query (sql_select_term_in_vocabulary)
 		end
 
 	vocabularies_for_term (a_term: CMS_TERM): detachable CMS_VOCABULARY_COLLECTION
@@ -494,7 +505,7 @@ feature -- Vocabulary and types
 				l_ids.force (l_parent_id)
 				sql_forth
 			end
-			sql_finalize
+			sql_finalize_query (sql_select_vocabularies_for_term)
 
 			if l_ids.count > 0 then
 				create Result.make (1)
@@ -534,7 +545,7 @@ feature -- Vocabulary and types
 				end
 				sql_forth
 			end
-			sql_finalize
+			sql_finalize_query (sql_select_type_associated_with_vocabulary)
 		end
 
 	associate_vocabulary_with_type (a_voc: CMS_VOCABULARY; a_type_name: READABLE_STRING_GENERAL)
@@ -564,11 +575,11 @@ feature -- Vocabulary and types
 				across lst as ic some a_voc.id = ic.item.id  end
 			then
 				sql_modify (sql_update_term_index, l_parameters)
+				sql_finalize_modify (sql_update_term_index)
 			else
 				sql_insert (sql_insert_term_index, l_parameters)
+				sql_finalize_insert (sql_insert_term_index)
 			end
-
-			sql_finalize
 		end
 
 	unassociate_vocabulary_with_type (a_voc: CMS_VOCABULARY; a_type_name: READABLE_STRING_GENERAL)
@@ -582,8 +593,8 @@ feature -- Vocabulary and types
 			l_parameters.put (a_voc.id, "tid")
 			l_parameters.put (a_type_name, "type")
 
-			sql_insert (sql_delete_vocabulary_index, l_parameters)
-			sql_finalize
+			sql_modify (sql_delete_vocabulary_index, l_parameters)
+			sql_finalize_modify (sql_delete_vocabulary_index)
 		end
 
 feature {NONE} -- Queries
@@ -596,7 +607,7 @@ feature {NONE} -- Queries
 			if not has_error and not sql_after then
 				Result := sql_read_integer_64 (1)
 			end
-			sql_finalize
+			sql_finalize_query (Sql_last_inserted_term_id)
 		end
 
 	fetch_term: detachable CMS_TERM

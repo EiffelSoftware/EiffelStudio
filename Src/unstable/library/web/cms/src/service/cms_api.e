@@ -533,7 +533,7 @@ feature -- CMS links
 			Result := local_link (a_title, administration_path_location (a_relative_location))
 		end
 
-	local_link (a_title: READABLE_STRING_GENERAL; a_location: READABLE_STRING_8): CMS_LOCAL_LINK
+	local_link (a_title: detachable READABLE_STRING_GENERAL; a_location: READABLE_STRING_8): CMS_LOCAL_LINK
 		do
 			create Result.make (a_title, a_location)
 		end
@@ -668,6 +668,25 @@ feature {NONE} -- Access: request
 	response: WSF_RESPONSE
 			-- Associated http response.
 			--| note: here for the sole purpose of CMS_API, mainly to report error.
+
+feature -- Access: request
+
+	self_link: CMS_LOCAL_LINK
+		local
+			s: READABLE_STRING_8
+			loc: STRING_8
+		do
+			s := request.percent_encoded_path_info
+			if not s.is_empty and then s[1] = '/' then
+				loc := s.substring (2, s.count)
+			else
+				loc := s
+			end
+			if attached request.query_string as q and then not q.is_whitespace then
+				loc := loc + "?" + q
+			end
+			Result := local_link (Void, loc)
+		end
 
 feature -- Content
 

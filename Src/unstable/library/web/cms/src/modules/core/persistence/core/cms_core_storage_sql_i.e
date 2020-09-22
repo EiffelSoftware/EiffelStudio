@@ -294,7 +294,7 @@ feature -- Logs
 					-- Format:   "[title](location)"
 				i := l_link_text.index_of ('(', 1)
 				if i > 0 then
-					create lnk.make (l_link_text.substring (2, i - 2), l_link_text.substring (i + 1, l_link_text.count - 1))
+					create lnk.make (l_link_text.substring (i + 1, l_link_text.count - 1), l_link_text.substring (2, i - 2))
 					Result.set_link (lnk)
 				end
 			end

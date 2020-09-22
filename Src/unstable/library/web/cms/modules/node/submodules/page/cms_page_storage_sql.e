@@ -39,7 +39,7 @@ feature -- Access
 				end
 				sql_forth
 			end
-			sql_finalize
+			sql_finalize_query (sql_select_children_of_node)
 		end
 
 	available_parents_for_node (a_node: CMS_NODE): LIST [CMS_NODE]
@@ -65,7 +65,7 @@ feature -- Access
 				end
 				sql_forth
 			end
-			sql_finalize
+			sql_finalize_query (sql_select_available_parents_for_node)
 		end
 
 

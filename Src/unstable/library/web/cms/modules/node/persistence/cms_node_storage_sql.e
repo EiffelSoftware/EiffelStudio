@@ -36,7 +36,7 @@ feature -- Access
 			if not has_error and not sql_after then
 				Result := sql_read_natural_64 (1)
 			end
-			sql_finalize
+			sql_finalize_query (sql_select_nodes_count)
 		end
 
 	nodes_of_type_count (a_node_type: CMS_CONTENT_TYPE): NATURAL_64
@@ -52,7 +52,7 @@ feature -- Access
 			if not has_error and not sql_after then
 				Result := sql_read_natural_64 (1)
 			end
-			sql_finalize
+			sql_finalize_query (sql_select_nodes_of_type_count)
 		end
 
 	nodes: LIST [CMS_NODE]
@@ -74,7 +74,7 @@ feature -- Access
 				end
 				sql_forth
 			end
-			sql_finalize
+			sql_finalize_query (sql_select_nodes)
 		end
 
 	node_revisions (a_node: CMS_NODE): LIST [CMS_NODE]
@@ -102,7 +102,7 @@ feature -- Access
 				end
 				sql_forth
 			end
-			sql_finalize
+			sql_finalize_query (sql_select_node_revisions)
 		end
 
 	trashed_nodes (a_user: detachable CMS_USER): LIST [CMS_NODE]
@@ -132,7 +132,11 @@ feature -- Access
 				end
 				sql_forth
 			end
-			sql_finalize
+			if a_user /= Void and then a_user.has_id then
+				sql_finalize_query (sql_select_trash_nodes_by_author)
+			else
+				sql_finalize_query (sql_select_trash_nodes)
+			end
 		end
 
 	recent_nodes (a_lower: INTEGER; a_count: INTEGER): LIST [CMS_NODE]
@@ -159,7 +163,7 @@ feature -- Access
 				end
 				sql_forth
 			end
-			sql_finalize
+			sql_finalize_query (sql_select_recent_nodes)
 		end
 
 	recent_nodes_of_type (a_node_type: CMS_CONTENT_TYPE; a_lower: INTEGER; a_count: INTEGER): LIST [CMS_NODE]
@@ -184,7 +188,7 @@ feature -- Access
 				end
 				sql_forth
 			end
-			sql_finalize
+			sql_finalize_query (sql_select_recent_nodes_of_type)
 		end
 
 	recent_published_nodes_of_type (a_node_type: CMS_CONTENT_TYPE; a_lower: INTEGER; a_count: INTEGER): LIST [CMS_NODE]
@@ -210,7 +214,7 @@ feature -- Access
 				end
 				sql_forth
 			end
-			sql_finalize
+			sql_finalize_query (sql_select_recent_published_nodes_of_type)
 		end
 
 	recent_node_changes_before (a_lower: INTEGER; a_count: INTEGER; a_date: DATE_TIME): LIST [CMS_NODE]
@@ -240,7 +244,7 @@ feature -- Access
 				end
 				sql_forth
 			end
-			sql_finalize
+			sql_finalize_query (sql_select_recent_node_changes_before)
 		end
 
 	node_by_id (a_id: INTEGER_64): detachable CMS_NODE
@@ -256,7 +260,7 @@ feature -- Access
 			if not has_error and not sql_after then
 				Result := fetch_node
 			end
-			sql_finalize
+			sql_finalize_query (sql_select_node_by_id)
 		end
 
 	node_by_id_and_revision (a_node_id, a_revision: INTEGER_64): detachable CMS_NODE
@@ -273,7 +277,7 @@ feature -- Access
 			if not has_error and not sql_after then
 				Result := fetch_node
 			end
-			sql_finalize
+			sql_finalize_query (sql_select_node_by_id_and_revision)
 		end
 
 	last_inserted_node_id: INTEGER_64
@@ -285,7 +289,7 @@ feature -- Access
 			if not has_error and not sql_after then
 				Result := sql_read_integer_64 (1)
 			end
-			sql_finalize
+			sql_finalize_query (Sql_last_insert_node_id)
 		end
 
 	last_inserted_node_revision (a_node: detachable CMS_NODE): INTEGER_64
@@ -308,7 +312,7 @@ feature -- Access
 						check no_more_than_one: False end
 					end
 				end
-				sql_finalize
+				sql_finalize_query (Sql_last_insert_node_revision_for_nid)
 			end
 --			if Result = 0 and not has_error then --| include the case a_node = Void
 --				sql_query (Sql_last_insert_node_revision, Void)
@@ -344,7 +348,7 @@ feature -- Access
 				end
 				sql_forth
 			end
-			sql_finalize
+			sql_finalize_query (sql_select_nodes_of_type)
 		end
 
 	nodes_of_type_with_title (a_node_type: CMS_CONTENT_TYPE; a_title: READABLE_STRING_GENERAL): LIST [CMS_NODE]
@@ -372,7 +376,7 @@ feature -- Access
 				end
 				sql_forth
 			end
-			sql_finalize
+			sql_finalize_query (sql_select_nodes_of_type_with_title)
 		end
 
 feature -- Change: Node
@@ -402,7 +406,7 @@ feature -- Change: Node
 			l_parameters.put ({CMS_NODE_API}.trashed, "status")
 			l_parameters.put (a_id, "nid")
 			sql_modify (sql_trash_node, l_parameters)
-			sql_finalize
+			sql_finalize_modify (sql_trash_node)
 		end
 
 	 delete_node_base (a_node: CMS_NODE)
@@ -417,12 +421,12 @@ feature -- Change: Node
 			create l_parameters.make (1)
 			l_parameters.put (a_node.id, "nid")
 			sql_modify (sql_delete_node, l_parameters)
-			sql_finalize
+			sql_finalize_modify (sql_delete_node)
 
 				-- we remove node_revisions and potential extended nodes.
 				-- Check: maybe we need a transaction.
 			sql_modify (sql_delete_node_revisions, l_parameters)
-			sql_finalize
+			sql_finalize_modify (sql_delete_node_revisions)
 
 			if not error_handler.has_error then
 				extended_delete (a_node)
@@ -447,7 +451,7 @@ feature -- Change: Node
 			l_parameters.put ({CMS_NODE_API}.published, "status")
 			l_parameters.put (a_id, "nid")
 			sql_modify (sql_update_node_status, l_parameters)
-			sql_finalize
+			sql_finalize_modify (sql_update_node_status)
 		end
 
 
@@ -497,7 +501,7 @@ feature {NONE} -- Implementation
 				l_copy_parameters.force (a_node.id, "nid")
 --				l_copy_parameters.force (l_rev - 1, "revision")
 				sql_insert (sql_copy_node_to_revision, l_copy_parameters)
-				sql_finalize
+				sql_finalize_insert (sql_copy_node_to_revision)
 
 
 				if not has_error then
@@ -507,7 +511,7 @@ feature {NONE} -- Implementation
 					l_parameters.put (a_node.id, "nid")
 					l_parameters.put (a_node.revision, "revision")
 					sql_modify (sql_update_node, l_parameters)
-					sql_finalize
+					sql_finalize_modify (sql_update_node)
 				end
 			else
 					-- Store new node
@@ -515,7 +519,7 @@ feature {NONE} -- Implementation
 				l_parameters.put (l_rev, "revision")
 
 				sql_insert (sql_insert_node, l_parameters)
-				sql_finalize
+				sql_finalize_insert (sql_insert_node)
 
 				if not error_handler.has_error then
 					a_node.set_id (last_inserted_node_id)

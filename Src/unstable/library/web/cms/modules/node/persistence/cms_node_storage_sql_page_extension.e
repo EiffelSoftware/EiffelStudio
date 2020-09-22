@@ -76,17 +76,19 @@ feature -- Persistence
 				if l_update then
 					if l_has_modif then
 						sql_modify (sql_update_node_data, l_parameters)
+						sql_finalize_modify (sql_update_node_data)
 					end
 				else
 					if l_has_modif then
 						sql_insert (sql_insert_node_data, l_parameters)
+						sql_finalize_insert (sql_insert_node_data)
 					else
 						-- no page data, means everything is empty.
 						-- FOR NOW: always record row
 						sql_insert (sql_insert_node_data, l_parameters)
+						sql_finalize_insert (sql_insert_node_data)
 					end
 				end
-				sql_finalize
 			end
 		end
 
@@ -125,7 +127,7 @@ feature -- Persistence
 				create l_parameters.make (1)
 				l_parameters.put (a_node.id, "nid")
 				sql_modify (sql_delete_node_data, l_parameters)
-				sql_finalize
+				sql_finalize_modify (sql_delete_node_data)
 			end
 		end
 
@@ -155,7 +157,7 @@ feature {NONE} -- Implementation
 					check unique_data: n = 0 end
 				end
 			end
-			sql_finalize
+			sql_finalize_query (sql_select_node_data)
 		ensure
 			accepted_revision: Result /= Void implies Result.revision <= a_node.revision
 		end

@@ -12,11 +12,6 @@ class
 
 inherit
 
---	EWG_ABSTRACT_GENERATOR
---		redefine
---			make_internal
---		end
-
 	EWG_SHARED_TEMPLATE_EXPANDER
 		export {NONE} all end
 
@@ -30,7 +25,6 @@ inherit
 		redefine
 			make_internal
 		end
-
 
 create
 

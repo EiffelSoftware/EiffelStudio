@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-21-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-21-0 http://www.eiffel.com/developers/xml/configuration-1-21-0.xsd" name="wrapc_testing" uuid="EC99C77B-E53E-4677-9C75-09C5B3C187E4">
+	<target name="wrapc_testing">
+		<root class="APPLICATION" feature="make"/>
+		<file_rule>
+			<exclude>/C$</exclude>
+			<exclude>/CVS$</exclude>
+			<exclude>/EIFGENs$</exclude>
+			<exclude>/\.git$</exclude>
+			<exclude>/\.svn$</exclude>
+		</file_rule>
+		<option warning="warning" manifest_array_type="mismatch_warning">
+			<assertions precondition="true" postcondition="true" check="true" invariant="true" loop="true" supplier_precondition="true"/>
+		</option>
+		<pre_compile_action working_directory=".\" command="/bin/sh ./pre_compile_action.sh" succeed="true">
+			<condition>
+				<custom name="ISE_PLATFORM" excluded_value="win*" match="wildcard"/>
+			</condition>
+		</pre_compile_action> 
+		<pre_compile_action working_directory=".\" command="pre_compile_action.bat" succeed="true">
+			<condition>
+				<custom name="ISE_PLATFORM" value="win*" match="wildcard"/>
+			</condition>
+		</pre_compile_action>
+		<external_include location="$ECF_CONFIG_PATH\generated_wrapper\c\include">
+			<condition>
+				<platform value="windows"/>
+			</condition>
+		</external_include>
+		<external_include location="$ECF_CONFIG_PATH\manual_wrapper\c\include">
+			<condition>
+				<platform value="windows"/>
+			</condition>
+		</external_include>
+		<external_include location="$ECF_CONFIG_PATH/generated_wrapper/c/include">
+			<condition>
+				<platform excluded_value="windows"/>
+			</condition>
+		</external_include>
+		<external_include location="$ECF_CONFIG_PATH/manual_wrapper/c/include">
+			<condition>
+				<platform excluded_value="windows"/>
+			</condition>
+		</external_include>
+		
+		<external_object location="$ECF_CONFIG_PATH/C/spec/$ISE_C_COMPILER/$ISE_PLATFORM/lib/eif_wrapc_testing.lib">
+			<condition>
+				<platform value="windows"/>
+			</condition>
+		</external_object>
+		<external_object location="$ECF_CONFIG_PATH/C/spec/$(ISE_PLATFORM)/lib/eif_wrapc_testing.a">
+			<condition>
+				<platform excluded_value="windows"/>
+			</condition>
+		</external_object>
+		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf"/>
+		<library name="testing" location="$ISE_LIBRARY\library\testing\testing.ecf"/>
+		<cluster name="wrapc_testing" location=".\" recursive="true"/>
+	</target>
+</system>

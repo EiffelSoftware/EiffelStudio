@@ -343,7 +343,7 @@ feature {NONE} -- Implementation
 		end
 
 	escape_keywords (a_name: STRING): STRING
-			-- TODO: does not only escape keyowords
+			-- TODO: does not only escape keywords
 		require
 			a_name_not_void: a_name /= Void
 			a_name_not_empty: not (a_name.count = 0)
@@ -355,10 +355,7 @@ feature {NONE} -- Implementation
 			if eiffel_keywords.has (lower) then
 				create Result.make_from_string ("a_")
 				Result.append_string (a_name)
-			else
-				Result := a_name
-			end
-			if any_feature_names.has (lower) then
+			elseif any_feature_names.has (lower) then
 				create Result.make_from_string ("a_")
 				Result.append_string (a_name)
 			else
@@ -386,12 +383,10 @@ feature {NONE} -- Implementation
 			if eiffel_keywords.has (lower) then
 				Result := Result.twin
 				Result.append_string ("_")
-			end
-			if any_feature_names.has (lower) then
+			elseif any_feature_names.has (lower) then
 				Result := Result.twin
 				Result.append_string ("_")
-			end
-			if struct_feature_names.has (lower) then
+			elseif struct_feature_names.has (lower) then
 				Result := Result.twin
 				Result.append_string ("_")
 			end
@@ -416,20 +411,15 @@ feature {NONE} -- Implementation
 			Result.put ("assign")
 			Result.put ("attached")
 			Result.put ("attribute")
---			Result.put ("bit")
---			Result.put ("boolean")
---			Result.put ("character")
 			Result.put ("check")
 			Result.put ("class")
 			Result.put ("convert")
 			Result.put ("create")
---			Result.put ("creation")
 			Result.put ("current")
 			Result.put ("debug")
 			Result.put ("deferred")
 			Result.put ("detachable")
 			Result.put ("do")
---			Result.put ("double")
 			Result.put ("else")
 			Result.put ("elseif")
 			Result.put ("end")
@@ -443,17 +433,14 @@ feature {NONE} -- Implementation
 			Result.put ("frozen")
 			Result.put ("if")
 			Result.put ("implies")
---			Result.put ("indexing")
 			Result.put ("infix")
 			Result.put ("inherit")
 			Result.put ("inspect")
---			Result.put ("integer")
 			Result.put ("invariant")
 			Result.put ("is")
 			Result.put ("like")
 			Result.put ("local")
 			Result.put ("loop")
---			Result.put ("none")
 			Result.put ("not")
 			Result.put ("note")
 			Result.put ("obsolete")
@@ -462,9 +449,7 @@ feature {NONE} -- Implementation
 			Result.put ("only")
 			Result.put ("or")
 			Result.put ("precursor")
---			Result.put ("pointer")
 			Result.put ("prefix")
---			Result.put ("real")
 			Result.put ("redefine")
 			Result.put ("rename")
 			Result.put ("require")
@@ -473,8 +458,6 @@ feature {NONE} -- Implementation
 			Result.put ("retry")
 			Result.put ("select")
 			Result.put ("separate")
---			Result.put ("string")
---			Result.put ("strip")
 			Result.put ("then")
 			Result.put ("true")
 			Result.put ("tuple")
@@ -485,17 +468,7 @@ feature {NONE} -- Implementation
 			Result.put ("void")
 			Result.put ("when")
 			Result.put ("xor")
-
-			-- Additions
---			Result.put ("create")
---			Result.put ("agent")
---			Result.put ("Precursor")
---			Result.put ("integer_8")
---			Result.put ("integer_16")
---			Result.put ("integer_32")
---			Result.put ("integer_64")
 			Result.put ("reference")
---			Result.put ("note")
 
 		end
 

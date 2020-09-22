@@ -34,11 +34,12 @@ feature
 			-- TODO: Take care of how different platforms handle C types.
 			if attached name as l_name then
 				if l_name.has_substring ("int") or
-					l_name.has_substring ("long") or
-					l_name.has_substring ("signed") or -- includes 'unsigned'
+					--l_name.has_substring ("signed") or -- includes 'unsigned'
 					l_name.has_substring ("short") or
 					l_name.has_substring ("_Bool") then -- TODO: this should really be mapped to BOOLEAN. Needs changes all over the place probably.
 					Result := "INTEGER"
+				elseif l_name.has_substring ("long") then
+					Result := "INTEGER_64"
 				elseif l_name.has_substring ("char") then
 					Result := "CHARACTER"
 				elseif l_name.has_substring ("double") then
@@ -54,6 +55,14 @@ feature
 					Result := "UNKNOWN"
 					-- TODO: double check what to do with this
 					-- or just return detachable STRING
+				end
+				-- Check for unsigned
+				if l_name.has_substring ("unsigned") then
+					if Result.same_string ("INTEGER_64") then
+						Result := "NATURAL_64"
+					elseif Result.same_string ("INTEGER") then
+						Result := "NATURAL"
+					end
 				end
 			else
 				Result := "UNKNOWN"

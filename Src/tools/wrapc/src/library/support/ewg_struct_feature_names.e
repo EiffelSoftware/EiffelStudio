@@ -52,6 +52,7 @@ feature {NONE} -- Implementation
 			Result.put_new ("internal_item")
 			Result.put_new ("exists")
 			Result.put_new ("managed_pointer")
+			Result.put_new ("shared")
 		ensure
 			names_not_void: names /= Void
 		end

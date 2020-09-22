@@ -447,7 +447,7 @@ feature -- Element change: license
 			elseif a_sub.is_daily then
 				s.append ("daily")
 			end
-			l_params.force (s, "interval")
+			l_params.force (s, "interval_type")
 			l_params.force (a_sub.subscription_reference, "ref")
 			l_params.force (a_sub.cancellation_date, "cancel_date")
 			if l_is_new then
@@ -713,13 +713,13 @@ feature {NONE} -- Queries: licenses
 			;
 		]"
 
-	sql_select_subscribed_licenses: STRING = "SELECT license_key, interval, ref, cancel_date FROM es_license_subscriptions WHERE lower(ref)=:lower_ref ;"
+	sql_select_subscribed_licenses: STRING = "SELECT license_key, interval_type, ref, cancel_date FROM es_license_subscriptions WHERE lower(ref)=:lower_ref ;"
 
-	sql_select_license_subscription: STRING = "SELECT license_key, interval, ref, cancel_date FROM es_license_subscriptions WHERE lower(license_key)=:lowerkey ;"
+	sql_select_license_subscription: STRING = "SELECT license_key, interval_type, ref, cancel_date FROM es_license_subscriptions WHERE lower(license_key)=:lowerkey ;"
 
-	sql_insert_license_subscription: STRING = "INSERT INTO es_license_subscriptions (license_key, interval, ref, cancel_date) VALUES (:license_key, :interval, :ref, :cancel_date);"
+	sql_insert_license_subscription: STRING = "INSERT INTO es_license_subscriptions (license_key, interval_type, ref, cancel_date) VALUES (:license_key, :interval_type, :ref, :cancel_date);"
 
-	sql_update_license_subscription: STRING = "UPDATE es_license_subscriptions SET interval_type=:interval, ref=:ref, cancel_date=:cancel_date WHERE lower(license_key)=:lowerkey;"
+	sql_update_license_subscription: STRING = "UPDATE es_license_subscriptions SET interval_type=:interval_type, ref=:ref, cancel_date=:cancel_date WHERE lower(license_key)=:lowerkey;"
 
 
 	sql_select_user_license_by_id: STRING = "SELECT lid, uid FROM es_licenses_users WHERE uid=:uid AND lid=:lid;"

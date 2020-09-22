@@ -52,6 +52,10 @@ feature -- Access: License
 		deferred
 		end
 
+	license_subscription (a_license: ES_CLOUD_LICENSE): detachable ES_CLOUD_LICENSE_SUBSCRIPTION
+		deferred
+		end
+
 	user_id_for_license (a_license: ES_CLOUD_LICENSE): INTEGER_64
 		deferred
 		end
@@ -75,6 +79,14 @@ feature -- Access: License
 feature -- Element change: license
 
 	save_license (a_license: ES_CLOUD_LICENSE)
+		deferred
+		end
+
+	subscribed_licenses (a_order_ref: READABLE_STRING_GENERAL): detachable LIST [ES_CLOUD_LICENSE]
+		deferred
+		end
+
+	save_license_subscription (a_sub: ES_CLOUD_LICENSE_SUBSCRIPTION)
 		deferred
 		end
 

@@ -132,9 +132,9 @@ feature -- Execution
 									shop_api.save_shopping_cart (l_cart)
 								end
 								if l_cart.is_onetime then
-									create l_form.make (api.location_url (l_stripe_module.payment_link (l_shop_id, l_cart.id.out, l_email), Void), "stripe-payment")
+									create l_form.make (api.location_url (l_stripe_module.payment_link (l_shop_id, l_cart.identifier, l_email), Void), "stripe-payment")
 								else
-									create l_form.make (api.location_url (l_stripe_module.subscription_checkout_link (l_shop_id, l_cart.id.out, l_email), Void), "stripe-payment")
+									create l_form.make (api.location_url (l_stripe_module.subscription_checkout_link (l_shop_id, l_cart.identifier, l_email), Void), "stripe-payment")
 								end
 								l_form.set_method_post
 								l_form.extend_html_text ("%N<div class=%"identification%"><h3>Identification</h3>")
@@ -253,7 +253,7 @@ feature -- Execution
 		do
 			a_html.append ("<div class=%"shop-cart%"")
 			if a_cart /= Void then
-				a_html.append (" data-cid=%"" + a_cart.id.out + "%"")
+				a_html.append (" data-cid=%"" + a_cart.identifier + "%"")
 				a_html.append (" data-currency=%"" + a_cart.currency + "%"")
 				if attached a_cart.security as l_security then
 					a_html.append (" data-sec=%"" + url_encoded (l_security) + "%"")
@@ -416,7 +416,7 @@ feature -- Execution
 			create l_html.make_empty
 			l_cart := shop_api.active_shopping_cart (req)
 			if l_cart = Void then
-				create l_cart.make_guest
+				l_cart := shop_api.new_guest_cart
 			else
 				shop_api.invoke_shop_fill_cart (l_cart)
 			end
@@ -522,7 +522,7 @@ feature -- Execution
 				shop_api.save_user_shopping_cart (a_cart)
 			else
 				shop_api.save_guest_shopping_cart (a_cart)
-				s := "guest_shop_cid=" + a_cart.id.out
+				s := "guest_shop_cid=" + a_cart.identifier
 				create l_cookie.make (shop_api.config.cookie_name, utf_8_encoded (s))
 				l_cookie.set_path ("/")
 				res.add_cookie (l_cookie)

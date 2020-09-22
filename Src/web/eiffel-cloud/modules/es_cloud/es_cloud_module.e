@@ -36,6 +36,9 @@ inherit
 	CMS_HOOK_BLOCK_HELPER
 
 	SHOP_HOOK
+		redefine
+			commit_cart
+		end
 
 	CMS_HOOK_USER_MANAGEMENT
 
@@ -48,7 +51,7 @@ feature {NONE} -- Initialization
 
 	make
 		do
-			version := "1.1"
+			version := "1.2"
 			description := "ES Cloud"
 			package := "EiffelStudio"
 			add_optional_dependency ({SHOP_MODULE})
@@ -291,7 +294,77 @@ feature -- Hook
 			end
 		end
 
-	commit_cart_item (a_cart: SHOPPING_CART; a_cart_item: SHOPPING_ITEM)
+
+	commit_cart (a_cart: SHOPPING_CART; a_order: SHOPPING_ORDER)
+		local
+			lic: ES_CLOUD_LICENSE
+			l_email: READABLE_STRING_8
+			l_user: CMS_USER
+			l_is_cycle: BOOLEAN
+		do
+			if
+				attached es_cloud_api as api and then
+				attached a_order.reference_id as l_ref_id and then
+				attached api.subscribed_licenses (l_ref_id) as l_licenses
+			then
+				l_email := a_cart.email
+				if l_email = Void then
+					l_email := a_order.email
+				end
+				if l_email /= Void then
+					l_user := api.cms_api.user_api.user_by_email (l_email)
+					if l_user = Void then
+						l_user := api.cms_api.user_api.temp_user_by_email (l_email)
+					end
+				end
+
+				check same_count: l_licenses.count.to_natural_32 = a_cart.count end
+				across
+					l_licenses as ic
+				loop
+					l_is_cycle := True
+					lic := ic.item
+					if a_cart.has_details then
+						if a_cart.is_yearly then
+							api.extend_license_with_duration (lic, 1, 0, 0)
+						elseif a_cart.is_monthly then
+							api.extend_license_with_duration (lic, 0, 1, 0)
+						elseif a_cart.is_weekly then
+							api.extend_license_with_duration (lic, 0, 0, 7)
+						elseif a_cart.is_daily then
+							api.extend_license_with_duration (lic, 0, 0, 1)
+						else
+							check should_nor_occur: False end
+							l_is_cycle := False
+						end
+					else
+						if a_order.is_yearly (0) then
+							api.extend_license_with_duration (lic, a_order.interval_count, 0, 0)
+						elseif a_order.is_monthly (0) then
+							api.extend_license_with_duration (lic, 0, a_order.interval_count, 0)
+						elseif a_order.is_weekly (0) then
+							api.extend_license_with_duration (lic, 0, 0, 7 * a_order.interval_count)
+						elseif a_order.is_daily (0) then
+							api.extend_license_with_duration (lic, 0, 0, a_order.interval_count)
+						else
+							check should_nor_occur: False end
+							l_is_cycle := False
+						end
+					end
+					if l_is_cycle then
+						--FIXME: should we send notification to the user???
+--						if not l_email /= Void then
+--							send_extended_license_mail (l_user, l_email, lic, api)
+--						end
+						notify_extended_license (l_user, l_email, lic, api)
+					end
+				end
+			else
+				Precursor (a_cart, a_order)
+			end
+		end
+
+	commit_cart_item (a_cart: SHOPPING_CART; a_cart_item: SHOPPING_ITEM; a_order: SHOPPING_ORDER)
 		local
 			l_prov_name: READABLE_STRING_GENERAL
 			l_quantity: NATURAL_32
@@ -336,17 +409,23 @@ feature -- Hook
 							loop
 								lic := api.new_license_for_plan (l_plan)
 								if lic /= Void then
-									if l_store_item.is_yearly then
-										api.extend_license_with_duration (lic, 1, 0, 0)
-									elseif l_store_item.is_monthly then
-										api.extend_license_with_duration (lic, 0, 1, 0)
-									elseif l_store_item.is_weekly then
-										api.extend_license_with_duration (lic, 0, 0, 7)
-									elseif l_store_item.is_daily then
-										api.extend_license_with_duration (lic, 0, 0, 1)
-									elseif l_store_item.is_onetime then
+									if l_store_item.is_onetime then
 											-- By default, yearly
 										api.extend_license_with_duration (lic, 0, l_store_item.onetime_month_duration.to_integer_32, 0)
+									else
+										if l_store_item.is_yearly then
+											api.extend_license_with_duration (lic, 1, 0, 0)
+											api.record_yearly_license_subscription (lic, a_order.reference_id)
+										elseif l_store_item.is_monthly then
+											api.extend_license_with_duration (lic, 0, 1, 0)
+											api.record_monthly_license_subscription (lic, a_order.reference_id)
+										elseif l_store_item.is_weekly then
+											api.extend_license_with_duration (lic, 0, 0, 7)
+											api.record_weekly_license_subscription (lic, a_order.reference_id)
+										elseif l_store_item.is_daily then
+											api.extend_license_with_duration (lic, 0, 0, 1)
+											api.record_daily_license_subscription (lic, a_order.reference_id)
+										end
 									end
 
 									if l_user /= Void then
@@ -357,6 +436,7 @@ feature -- Hook
 									if l_email /= Void then
 										send_new_license_mail (l_user, l_email, lic, api)
 									end
+									notify_new_license (l_user, l_email, lic, api)
 								end
 								l_quantity := l_quantity - 1
 							end
@@ -398,6 +478,98 @@ feature -- Hook
 			end
 
 			e := api.cms_api.new_html_email (a_email_addr, "New EiffelStudio license " + utf_8_encoded (a_license.key), msg)
+			api.cms_api.process_email (e)
+		end
+
+	notify_new_license (a_user: detachable CMS_USER; a_email_addr: detachable READABLE_STRING_8; a_license: ES_CLOUD_LICENSE; api: ES_CLOUD_API)
+		local
+			e: CMS_EMAIL
+			res: PATH
+			s: STRING_8
+			msg: READABLE_STRING_8
+		do
+			create res.make_from_string ("templates")
+			if attached api.cms_api.module_theme_resource_location (Current, res.extended ("notify_new_license_email.tpl")) as loc and then attached api.cms_api.resolved_smarty_template (loc) as tpl then
+				tpl.set_value (a_license, "license")
+				tpl.set_value (a_license.key, "license_key")
+				if a_user /= Void then
+					tpl.set_value (a_user, "user")
+					tpl.set_value (a_user.email, "user_email")
+					tpl.set_value (a_user.name, "user_name")
+					tpl.set_value (api.cms_api.user_display_name (a_user), "profile_name")
+				else
+					tpl.set_value (a_email_addr, "user_email")
+				end
+				msg := tpl.string
+			else
+				create s.make_empty;
+				s.append ("New EiffelStudio license " + utf_8_encoded (a_license.key) + ".%N")
+				if a_user = Void then
+					if a_email_addr /= Void then
+						s.append ("The license is associated with email %"" + a_email_addr + "%".%N")
+					else
+						check should_not_occur: False end
+						s.append ("The license is associated with no email and no user!%N")
+					end
+				else
+					s.append ("The license is associated with account %"" + utf_8_encoded (api.cms_api.user_display_name (a_user)) + "%"")
+					if a_email_addr /= Void then
+						s.append ("(email %"" + a_email_addr + "%")")
+					end
+					s.append (".%N")
+				end
+				s.append ("Notification from site " + api.cms_api.site_url + " .%N")
+				msg := s
+			end
+			e := api.cms_api.new_html_email (api.cms_api.setup.site_notification_email, "[NOTIF] New EiffelStudio license " + utf_8_encoded (a_license.key), msg)
+			api.cms_api.process_email (e)
+		end
+
+	notify_extended_license (a_user: detachable CMS_USER; a_email_addr: detachable READABLE_STRING_8; a_license: ES_CLOUD_LICENSE; api: ES_CLOUD_API)
+		local
+			e: CMS_EMAIL
+			res: PATH
+			s: STRING_8
+			msg: READABLE_STRING_8
+		do
+			create res.make_from_string ("templates")
+			if attached api.cms_api.module_theme_resource_location (Current, res.extended ("notify_extended_license_email.tpl")) as loc and then attached api.cms_api.resolved_smarty_template (loc) as tpl then
+				tpl.set_value (a_license, "license")
+				tpl.set_value (a_license.expiration_date, "expiration_date")
+				tpl.set_value (a_license.key, "license_key")
+				if a_user /= Void then
+					tpl.set_value (a_user, "user")
+					tpl.set_value (a_user.email, "user_email")
+					tpl.set_value (a_user.name, "user_name")
+					tpl.set_value (api.cms_api.user_display_name (a_user), "profile_name")
+				else
+					tpl.set_value (a_email_addr, "user_email")
+				end
+				msg := tpl.string
+			else
+				create s.make_empty;
+				s.append ("EiffelStudio license " + utf_8_encoded (a_license.key) + ".%N")
+				if attached a_license.expiration_date as dt then
+					s.append ("Extended to date: " + date_time_to_iso8601_string (dt) + " .%N")
+				end
+				if a_user = Void then
+					if a_email_addr /= Void then
+						s.append ("The license is associated with email %"" + a_email_addr + "%" .%N")
+					else
+						check should_not_occur: False end
+						s.append ("The license is associated with no email and no user!%N")
+					end
+				else
+					s.append ("The license is associated with account %"" + utf_8_encoded (api.cms_api.user_display_name (a_user)) + " %"")
+					if a_email_addr /= Void then
+						s.append ("(email %"" + a_email_addr + "%")")
+					end
+					s.append (" .%N")
+				end
+				s.append ("Notification from site " + api.cms_api.site_url + " .%N")
+				msg := s
+			end
+			e := api.cms_api.new_html_email (api.cms_api.setup.site_notification_email, "[NOTIF] Extended EiffelStudio license " + utf_8_encoded (a_license.key), msg)
 			api.cms_api.process_email (e)
 		end
 

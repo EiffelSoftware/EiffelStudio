@@ -35,7 +35,7 @@ feature {NONE} -- Initialization
 
 	make
 		do
-			version := "1.0"
+			version := "1.1"
 			description := "Shopping system"
 			package := "shop"
 			add_dependency ({CMS_AUTHENTICATION_MODULE})
@@ -89,7 +89,7 @@ feature {CMS_API} -- Module Initialization
 							cfg.set_base_location (l_base_path)
 						end
 					end
-					create shop_api.make (api, cfg)
+					create shop_api.make (Current, api, cfg)
 				end
 			end
 		end
@@ -223,7 +223,7 @@ feature -- Hook
 	prepare_payment (pay: STRIPE_PAYMENT)
 		local
 			l_cart: SHOPPING_CART
-			cid: INTEGER_64
+			cname: READABLE_STRING_GENERAL
 			l_sub_item: STRIPE_PAYMENT_SUBSCRIPTION_ITEM
 			l_onetime_item: STRIPE_PAYMENT_ONETIME_ITEM
 			l_plan: STRIPE_PLAN
@@ -234,18 +234,21 @@ feature -- Hook
 				attached shop_api as l_shop_api and then
 				pay.category.is_case_insensitive_equal_general (l_shop_api.config.shop_id)
 			then
-				if attached pay.checkout_id as pn and then pn.is_integer_64 then
-					cid := pn.to_integer_64
+				if attached pay.checkout_id as pn then
+					cname := pn
+
 					if attached l_shop_api.cms_api.user as u then
 						pay.set_customer_name (l_shop_api.cms_api.user_display_name (u))
 						pay.set_customer_email (u.email)
 
 						l_cart := l_shop_api.user_shopping_cart (u)
-						if l_cart /= Void and then l_cart.id /= cid then
-							l_cart := Void
+						if l_cart /= Void then
+							if not l_cart.is_identified_by (cname) then
+								l_cart := Void
+							end
 						end
 					else
-						l_cart := l_shop_api.guest_shopping_cart (cid)
+						l_cart := l_shop_api.guest_shopping_cart (cname)
 					end
 					if l_cart /= Void then
 						l_cart.set_currency (pay.currency)
@@ -257,7 +260,7 @@ feature -- Hook
 							pay.set_code (l_cart.cart_name (Void))
 							pay.set_business_name (l_cart.provider_name (l_shop_api.config.shop_name))
 							pay.set_price (l_cart.price_in_cents, l_cart.currency)
-							pay.set_order_id (l_cart.id.out)
+							pay.set_order_id (l_cart.identifier)
 							across
 								l_cart.items as ic
 							loop
@@ -296,12 +299,12 @@ feature -- Hook
 
 	validate_payment (a_validation: STRIPE_PAYMENT_VALIDATION)
 		local
-			l_order: READABLE_STRING_GENERAL
 			l_invoice: STRIPE_INVOICE
 			l_email_addr: READABLE_STRING_8
+			l_order_id: detachable IMMUTABLE_STRING_32
 			vars: STRING_TABLE [ANY]
 			l_shop_cart: SHOPPING_CART
-			l_order_id: READABLE_STRING_GENERAL
+			l_order: SHOPPING_ORDER
 			i: INTEGER
 			l_provider, l_code: READABLE_STRING_GENERAL
 			l_quantity: NATURAL_32
@@ -318,18 +321,29 @@ feature -- Hook
 						l_email_addr := u.email
 					end
 				end
-				if
-					attached l_shop_api.cms_api.user as u
-				then
-					l_shop_cart := l_shop_api.user_shopping_cart (u)
-				elseif l_email_addr /= Void then
-					l_shop_cart := l_shop_api.shopping_cart_by_email (l_email_addr)
+
+				l_order := l_shop_api.order (l_order_id)
+				if l_order /= Void and a_validation.is_subscription_cycle then
+					if l_order.reference_id = Void and then attached a_validation.reference_id as ref then
+						l_order.set_reference_id (ref)
+					end
+					l_shop_cart := l_order.associated_cart
+					if l_email_addr = Void then
+						l_email_addr := l_order.email
+					end
 				else
-					check has_cart: False end
-				end
-				if l_shop_cart = Void then
-					if l_invoice /= Void then
-						create l_shop_cart.make_guest
+					if attached l_shop_api.cms_api.user as u then
+						l_shop_cart := l_shop_api.user_shopping_cart (u)
+					elseif l_email_addr /= Void then
+						l_shop_cart := l_shop_api.shopping_cart_by_email (l_email_addr)
+					else
+						check has_cart: False end
+					end
+					if
+						l_shop_cart = Void and then
+						l_invoice /= Void
+					then
+						l_shop_cart := l_shop_api.new_guest_cart
 						l_shop_cart.set_currency (l_invoice.currency)
 						if attached l_invoice.lines as l_lines then
 							across
@@ -358,65 +372,42 @@ feature -- Hook
 				if l_email_addr = Void and l_shop_cart /= Void then
 					l_email_addr := l_shop_cart.email
 				end
-
-				if l_email_addr /= Void then
+				if
+					l_email_addr /= Void  and then
+					(
+						l_order = Void or else
+						a_validation.is_subscription_creation
+					) -- No email, for monthly charge... TODO?
+				then
 					create vars.make_caseless (2)
 					vars ["payment_validation"] := a_validation
 					vars ["receipt_or_invoice_urls"] := a_validation.receipt_or_invoice_urls
 					if l_invoice /= Void and then attached l_invoice.hosted_invoice_url as l_invoice_url then
 						vars ["invoice_url"] := l_invoice_url
 					end
-					if attached order_confirmation_email (l_email_addr, vars, l_shop_api) as e then
-						l_shop_api.cms_api.process_email (e)
+					if a_validation.is_subscription_cycle then
+						if attached l_shop_api.subscription_cycle_confirmation_email (l_email_addr, vars) as e then
+							l_shop_api.cms_api.process_email (e)
+						end
+					else
+						if attached l_shop_api.order_confirmation_email (l_email_addr, vars) as e then
+							l_shop_api.cms_api.process_email (e)
+						end
 					end
 				end
-
-				if
-					l_shop_cart /= Void and then
-					(l_order_id /= Void implies l_order_id.is_case_insensitive_equal (l_shop_cart.id.out))
-				then
+				if l_shop_cart /= Void then
+					check l_order_id /= Void implies l_shop_cart.is_identified_by (l_order_id) end
 					if l_email_addr /= Void and l_shop_cart.email = Void then
 						l_shop_cart.set_email (l_email_addr)
 					end
-					l_order := l_shop_api.cart_to_order (l_shop_cart)
-					l_shop_api.invoke_commit_cart (l_shop_cart)
+					if l_order = Void then
+						l_order := l_shop_api.cart_to_order (l_shop_cart, a_validation.reference_id)
+					end
+					l_shop_api.invoke_commit_cart (l_shop_cart, l_order)
 				end
 			end
 		end
 
-	order_confirmation_email (a_email_addr: READABLE_STRING_8; vars: STRING_TABLE [ANY]; a_shop_api: SHOP_API): CMS_EMAIL
-		local
-			res: PATH
-			s: STRING_8
-			msg: READABLE_STRING_8
-		do
-			create res.make_from_string ("templates")
-			if
-				attached a_shop_api.cms_api.module_theme_resource_location (Current, res.extended ("email_order_confirmation.tpl")) as loc and then
-				attached a_shop_api.cms_api.resolved_smarty_template (loc) as tpl
-			then
-				across
-					vars as ic
-				loop
-					tpl.set_value (ic.item, ic.key)
-				end
-				msg := tpl.string
-			else
-				create s.make_empty
-				s.append ("Thank you for your order at " + a_shop_api.cms_api.site_url + " .%N")
-				if attached {READABLE_STRING_GENERAL} vars ["invoice_url"] as l_invoice_url then
-					s.append ("See your invoice at " + html_encoded (l_invoice_url) + " .")
-				elseif attached {STRING_TABLE [READABLE_STRING_GENERAL]} vars ["receipt_or_invoice_urls"] as l_urls then
-					s.append ("See documents:%N")
-					across
-						l_urls as ic
-					loop
-						s.append (html_encoded (ic.key) + " at "+ html_encoded (ic.item) +"%N")
-					end
-				end
-				msg := s
-			end
-			Result := a_shop_api.cms_api.new_html_email (a_email_addr, "Thank you for your order", msg)
-		end
+
 
 end

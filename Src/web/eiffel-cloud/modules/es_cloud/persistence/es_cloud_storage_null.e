@@ -49,6 +49,10 @@ feature -- Licenses
 		do
 		end
 
+	license_subscription (a_license: ES_CLOUD_LICENSE): detachable ES_CLOUD_LICENSE_SUBSCRIPTION
+		do
+		end
+
 	user_id_for_license (a_license: ES_CLOUD_LICENSE): INTEGER_64
 		do
 		end
@@ -79,6 +83,14 @@ feature -- Licenses
 feature -- Element change: license
 
 	save_license (a_license: ES_CLOUD_LICENSE)
+		do
+		end
+
+	subscribed_licenses (a_order_ref: READABLE_STRING_GENERAL): detachable LIST [ES_CLOUD_LICENSE]
+		do
+		end
+
+	save_license_subscription (a_sub: ES_CLOUD_LICENSE_SUBSCRIPTION)
 		do
 		end
 

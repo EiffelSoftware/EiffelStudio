@@ -14,7 +14,7 @@ inherit
 
 	CMS_HOOK_AUTO_REGISTER
 
-	WSF_REQUEST_EXPORTER
+--	WSF_REQUEST_EXPORTER
 
 --	STRIPE_HOOK
 
@@ -28,6 +28,7 @@ feature {NONE} -- Router/administration
 		local
 			cfg: STRIPE_CONFIG
 			l_base_path: READABLE_STRING_8
+			wh: STRIPE_WEBAPI_HOOK_HANDLER
 		do
 			if attached module.stripe_api as l_mod_api then
 				cfg := l_mod_api.config
@@ -40,7 +41,9 @@ feature {NONE} -- Router/administration
 				a_router.handle (l_base_path + "/customer_subscription", create {WSF_URI_AGENT_HANDLER}.make (agent post_customer_subscription (?,?,l_mod_api)), a_router.methods_post)
 				a_router.handle (l_base_path + "/subscription_confirmation", create {WSF_URI_AGENT_HANDLER}.make (agent post_subscription_confirmation (?,?,l_mod_api)), a_router.methods_post)
 
-				a_router.handle (l_base_path + "/callback", create {WSF_URI_AGENT_HANDLER}.make (agent post_webhook (?,?,l_mod_api)), a_router.methods_post)
+				create wh.make (l_mod_api)
+				a_router.handle (l_base_path + "/callback/{version}", wh, a_router.methods_post)
+				a_router.handle (l_base_path + "/callback", wh, a_router.methods_post)
 			end
 		end
 
@@ -273,7 +276,7 @@ feature -- Handle
 								if l_metadata = Void then
 									create l_metadata.make_caseless (1)
 								end
-								l_metadata.force (j_order_id.unescaped_string_32, "order_id")
+								l_metadata.force (j_order_id.unescaped_string_32, "order.id")
 								l_order_id := j_order_id.unescaped_string_32
 							end
 							if lst /= Void and then not lst.is_empty then
@@ -340,165 +343,6 @@ feature -- Handle
 				end
 				rep.execute
 			end
-		end
-
-	safe_webhook_event_data (req: WSF_REQUEST; api: STRIPE_API): TUPLE [buffer: STRING; event: detachable STRIPE_EVENT; signature_verified: BOOLEAN]
-			-- Safe event data, either by verifying the signature, or getting a fresh event data from stripe service.
-		local
-			buf: STRING
-			ev: STRIPE_EVENT
-			jp: JSON_PARSER
-			l_sign: STRIPE_SIGNATURE
-			l_sign_verified: BOOLEAN
-		do
-			create buf.make (req.content_length_value.to_integer_32)
-			req.read_input_data_into (buf)
-
-			create l_sign.make (req.meta_string_variable ("HTTP_STRIPE_SIGNATURE"))
-			l_sign_verified := l_sign.is_valid and then l_sign.is_content_verified (buf, api.config.signing_secret)
-
-			create jp.make_with_string (buf)
-			jp.parse_content
-			if
-				jp.is_parsed and then jp.is_valid and then attached jp.parsed_json_object as jo
-			then
-				create ev.make_with_json (jo)
-				if l_sign_verified then
-					Result := [buf, ev, True]
-				else
-					Result := [buf, api.event (ev.id), False]
-				end
-			else
-				Result := [buf, Void, l_sign_verified]
-			end
-		end
-
-	post_webhook (req: WSF_REQUEST; res: WSF_RESPONSE; api: STRIPE_API)
-		local
-			rep: like new_response
-			buf: STRING
-			p: PATH
-			f: RAW_FILE
-			fut: FILE_UTILITIES
-
-			l_useful_id: detachable STRING_32
-			l_type: READABLE_STRING_8
-			s32: STRING_32
-			l_payment_intent_res: PAYMENT_INTENT_SUCCEEDED
-			l_invoice: STRIPE_INVOICE
-			l_is_livemode: BOOLEAN
-			l_sign_verified: BOOLEAN
-			l_err: BOOLEAN
-			d: like safe_webhook_event_data
-		do
-			d := safe_webhook_event_data (req, api)
-			buf := d.buffer
-			l_sign_verified := d.signature_verified
-
-			if attached d.event as event then
-				l_type := event.type
-				l_is_livemode := event.in_livemode
-				if
-					not l_is_livemode and
-					api.config.is_live_mode
-				then
-					-- Ignore testing callbacks!!!
-				else
-					if
-						l_type.is_case_insensitive_equal_general ("payment_intent.succeeded") and then
-						attached {JSON_OBJECT} event.data as jo
-					then
-						create l_payment_intent_res.make_with_json (jo)
-						if api.is_payment_processed (l_payment_intent_res.id) then
-							api.cms_api.log_debug (module.name, "Stripe payment '" + l_payment_intent_res.id + "' is already processed!!!", Void)
-						end
-						l_useful_id := l_payment_intent_res.id
-					elseif
-						l_type.is_case_insensitive_equal_general ("payment_intent.failed") and then
-						attached {JSON_OBJECT} event.data as jo
-					then
-						create l_payment_intent_res.make_with_json (jo)
-						if api.is_payment_processed (l_payment_intent_res.id) then
-							api.cms_api.log_debug (module.name, "Stripe payment '" + l_payment_intent_res.id + "' is already processed!!!", Void)
-						end
-						l_useful_id := l_payment_intent_res.id
-					elseif
-						l_type.is_case_insensitive_equal_general ("invoice.payment_succeeded") and then
-						attached {JSON_OBJECT} event.data as jo
-					then
-						create l_invoice.make_with_json (jo)
-						if attached l_invoice.payment_intent_id as pi then
-							if api.is_payment_processed (pi) then
-								api.cms_api.log_error (module.name, "Stripe payment '" + pi + "' is already processed!", Void)
-							else
-								-- Process ...
-								api.record_invoice (l_invoice)
-							end
-						else
-							api.cms_api.log_error (module.name, "Stripe invoice without payment_intent_id!", Void)
-						end
-						create l_useful_id.make_from_string_general (l_invoice.id)
-						if attached l_invoice.subscription_id as sub_id then
-							l_useful_id.append_character ('.')
-							l_useful_id.append_string_general (sub_id)
-						end
-						if attached l_invoice.payment_intent_id as p_id then
-							l_useful_id.append_character ('.')
-							l_useful_id.append_string_general (p_id)
-						end
-					end
---					check l_sign_verified !!!
-				end
-			else
-				l_err := True
-				l_type := "webhook"
-			end
-
-			rep := new_response (req, res, api)
-			p := api.cms_api.site_location.extended ("stripe")
-			if fut.directory_path_exists (p) then
-				create s32.make (20)
-				if l_err then
-					s32.append_string_general ("ERROR_")
-				elseif not l_is_livemode then
-					s32.append_string_general ("TEST_")
-				end
-				s32.append_string_general (req.request_time_stamp.out)
-				s32.append_character ('.')
-				s32.append_string_general (l_type)
-				if l_useful_id /= Void then
-					s32.append_character ('.')
-					s32.append (l_useful_id)
-				end
-				create f.make_with_path (p.extended (s32))
-				f.create_read_write
-
-				if attached req.raw_header_data as h then
-					f.put_string (h.to_string_8)
-					f.put_new_line
-				elseif attached req.cgi_variables as l_cgi then
-					f.put_string (utf_8_encoded (l_cgi.debug_output))
-					f.put_new_line
-				end
-
-				if attached req.meta_string_variable ("HTTP_STRIPE_SIGNATURE") as s then
-					f.put_string ("HTTP_STRIPE_SIGNATURE=" + utf_8_encoded (s))
-					f.put_new_line
-					if l_sign_verified then
-						f.put_string ("Stripe-Signature VERIFIED")
-					else
-						f.put_string ("Stripe-Signature NOT-VERIFIED")
-					end
-					f.put_new_line
-				end
-
-				f.put_string (create {STRING}.make_filled ('=', 8))
-				f.put_new_line
-				f.put_string (buf)
-				f.close
-			end
-			rep.add_string_field ("status" , "ok")
-			rep.execute
 		end
 
 feature -- Hooks configuration

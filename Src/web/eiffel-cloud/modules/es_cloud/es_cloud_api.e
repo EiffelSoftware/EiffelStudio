@@ -322,6 +322,58 @@ feature -- Element change license
 			end
 		end
 
+feature -- License subscription
+
+	subscribed_licenses (a_order_ref: READABLE_STRING_GENERAL): detachable LIST [ES_CLOUD_LICENSE]
+		do
+			Result := es_cloud_storage.subscribed_licenses (a_order_ref)
+		end
+
+	record_yearly_license_subscription (a_license: ES_CLOUD_LICENSE; a_sub_ref: detachable READABLE_STRING_GENERAL)
+		local
+			sub: ES_CLOUD_LICENSE_SUBSCRIPTION
+		do
+			create sub.make_yearly (a_license)
+			if a_sub_ref /= Void then
+				sub.set_subscription_reference (a_sub_ref)
+			end
+			es_cloud_storage.save_license_subscription (sub)
+		end
+
+	record_monthly_license_subscription (a_license: ES_CLOUD_LICENSE; a_sub_ref: detachable READABLE_STRING_GENERAL)
+		local
+			sub: ES_CLOUD_LICENSE_SUBSCRIPTION
+		do
+			create sub.make_monthly (a_license)
+			if a_sub_ref /= Void then
+				sub.set_subscription_reference (a_sub_ref)
+			end
+			es_cloud_storage.save_license_subscription (sub)
+		end
+
+	record_weekly_license_subscription (a_license: ES_CLOUD_LICENSE; a_sub_ref: detachable READABLE_STRING_GENERAL)
+		local
+			sub: ES_CLOUD_LICENSE_SUBSCRIPTION
+		do
+			create sub.make_weekly (a_license)
+			if a_sub_ref /= Void then
+				sub.set_subscription_reference (a_sub_ref)
+			end
+			es_cloud_storage.save_license_subscription (sub)
+		end
+
+	record_daily_license_subscription (a_license: ES_CLOUD_LICENSE; a_sub_ref: detachable READABLE_STRING_GENERAL)
+		local
+			sub: ES_CLOUD_LICENSE_SUBSCRIPTION
+		do
+			create sub.make_daily (a_license)
+			if a_sub_ref /= Void then
+				sub.set_subscription_reference (a_sub_ref)
+			end
+			es_cloud_storage.save_license_subscription (sub)
+		end
+
+
 feature -- Access: store
 
 	store (a_currency: detachable READABLE_STRING_8): ES_CLOUD_STORE

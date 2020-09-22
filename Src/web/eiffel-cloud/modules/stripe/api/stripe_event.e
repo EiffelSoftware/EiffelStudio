@@ -49,4 +49,14 @@ feature -- Access
 	data: detachable JSON_VALUE
 			-- Data as JSON content
 
+	object_data: detachable JSON_OBJECT
+			-- JSON object inside `data`, if any
+		do
+			if attached {JSON_OBJECT} data as jo then
+				if attached {JSON_OBJECT} jo.item ("object") as res then
+					Result := res
+				end
+			end
+		end
+
 end

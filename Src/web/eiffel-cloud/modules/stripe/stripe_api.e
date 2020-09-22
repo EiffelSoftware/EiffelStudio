@@ -315,6 +315,7 @@ feature -- Subscriptions
 		local
 			l_customer: STRIPE_CUSTOMER
 			l_validation: STRIPE_PAYMENT_VALIDATION
+			l_invoice: STRIPE_INVOICE
 		do
 			l_customer := cust
 			if sub.is_active then
@@ -323,14 +324,49 @@ feature -- Subscriptions
 					l_customer := subscription_customer (sub)
 				end
 				if l_customer /= Void then
-					create l_validation.make_from_subscription (sub, l_customer)
+					l_invoice := sub.latest_invoice
+					create l_validation.make_from_subscription_creation (sub, l_invoice, l_customer)
 					if a_metadata /= Void then
 						l_validation.import_metadata (a_metadata)
 					end
 					if a_order_id /= Void then
 						l_validation.set_order_id (a_order_id)
 					end
-					if attached sub.latest_invoice as l_invoice then
+					if l_invoice /= Void then
+						record_invoice (l_invoice)
+					end
+					invoke_validate_payment (l_validation)
+				end
+			end
+		end
+
+	process_subscription_cycle (sub: STRIPE_SUBSCRIPTION; a_invoice: STRIPE_INVOICE)
+		local
+			l_customer: STRIPE_CUSTOMER
+			l_validation: STRIPE_PAYMENT_VALIDATION
+		do
+			if sub.is_active then
+				cms_api.log_debug ({STRIPE_MODULE}.name, "Subscription cycle #" + sub.id, Void)
+
+				if
+					a_invoice /= Void and then
+					attached a_invoice.customer_id as l_cust_id
+				then
+					l_customer := customer (l_cust_id)
+				end
+				if l_customer = Void then
+					l_customer := subscription_customer (sub)
+				end
+				if l_customer /= Void then
+					create l_validation.make_from_subscription_cycle (sub, a_invoice, l_customer)
+					if a_invoice /= Void then
+						if attached a_invoice.metadata as md then
+							l_validation.import_metadata (md)
+						end
+						if attached a_invoice.metadata_string_item ("order.id", True) as l_order_id then
+							l_validation.set_order_id (l_order_id)
+						end
+					elseif attached sub.latest_invoice as l_invoice then
 						record_invoice (l_invoice)
 					end
 					invoke_validate_payment (l_validation)

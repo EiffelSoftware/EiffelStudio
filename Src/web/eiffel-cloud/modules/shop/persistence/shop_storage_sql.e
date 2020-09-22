@@ -34,6 +34,18 @@ feature -- Store
 			end
 		end
 
+	shopping_cart_by_name (a_cart_name: READABLE_STRING_GENERAL): detachable SHOPPING_CART
+		do
+			reset_error
+			sql_query (sql_select_shopping_cart_by_name, sql_parameters (1, <<["name", a_cart_name]>>))
+			sql_start
+			if not has_error and not sql_after then
+				Result := fetch_shopping_cart
+				check valid_record: Result /= Void end
+			end
+			sql_finalize_query (sql_select_shopping_cart_by_name)
+		end
+
 	shopping_cart_by_id (a_cart_id: like {SHOPPING_CART}.id): detachable SHOPPING_CART
 		do
 			reset_error
@@ -85,8 +97,10 @@ feature -- Store
 				l_uid := a_cart.owner.id
 			end
 			a_cart.set_modification_date (create {DATE_TIME}.make_now_utc)
-			sql_append_parameters ({ARRAY [TUPLE [READABLE_STRING_GENERAL, detachable ANY]]} <<
+			sql_append_parameters ({ARRAY [TUPLE [READABLE_STRING_GENERAL, detachable ANY]]}
+							<<
 								["uid", l_uid],
+								["name", a_cart.identifier],
 								["email", a_cart.email],
 								["security", l_security],
 								["changed", a_cart.modification_date],
@@ -116,29 +130,35 @@ feature -- Store
 	fetch_shopping_cart: detachable SHOPPING_CART
 		local
 			cid, uid: INTEGER_64
-			l_email: READABLE_STRING_8
+			l_name: READABLE_STRING_8
 			u: CMS_PARTIAL_USER
 		do
 			cid := sql_read_integer_64 (1)
 			uid := sql_read_integer_64 (2)
-			l_email := sql_read_string (3)
+			l_name := sql_read_string (3)
+			if l_name = Void then
+				l_name := "undefined"
+			end
 			create u.make_with_id (uid)
 			if uid = 0 then
-				create Result.make_guest
+				create Result.make_guest (l_name)
 				Result.update_id (cid)
 			else
-				create Result.make_with_id (cid, u)
+				create Result.make_with_id (cid, u, l_name)
 			end
-			if attached sql_read_string_32 (4) as l_sec then
+			if attached sql_read_string (4) as l_email then
+				Result.set_email (l_email)
+			end
+			if attached sql_read_string_32 (5) as l_sec then
 				Result.set_security (l_sec)
 			end
-			if attached sql_read_date_time (5) as dt then
+			if attached sql_read_date_time (6) as dt then
 				Result.set_modification_date (dt)
 			end
-			if attached sql_read_string (6) as s and then not s.is_whitespace then
+			if attached sql_read_string (7) as s and then not s.is_whitespace then
 				Result.set_items_from_json_string (s)
 			end
-			Result.data := sql_read_string (7)
+			Result.data := sql_read_string (8)
 		end
 
 	last_inserted_shopping_cart_id: INTEGER_64
@@ -154,70 +174,128 @@ feature -- Store
 
 feature -- Order		
 
-	cart_to_order (a_cart: SHOPPING_CART; a_order_id: READABLE_STRING_GENERAL)
+	cart_to_order (a_cart: SHOPPING_CART; a_ref: detachable READABLE_STRING_GENERAL; a_order_name: READABLE_STRING_8): SHOPPING_ORDER
 		local
 			l_params: like sql_parameters
 			j: READABLE_STRING_8
 		do
 			j := a_cart.to_json_string
+
+			create Result.make_from_cart (a_order_name, a_cart)
+			if a_ref /= Void then
+				Result.set_reference_id (a_ref)
+			end
+
 			reset_error
 			l_params := sql_parameters (5, {ARRAY [TUPLE [name: READABLE_STRING_GENERAL; value: detachable ANY]]} <<
-					["name", a_order_id],
+					["name", Result.name],
 					["uid", a_cart.owner.id],
-					["email", a_cart.email],
-					["created", create {DATE_TIME}.make_now_utc],
-					["data", j]
+					["email", Result.email],
+					["created", Result.creation_date],
+					["data", j],
+					["reference", Result.reference_id],
+					["interval", Result.interval],
+					["interval_count", Result.interval_count]
 				>>)
 			sql_insert (sql_insert_order, l_params)
 			sql_finalize_insert (sql_insert_order)
+
 			if not has_error then
 				delete_shopping_cart (a_cart)
 			end
 		end
 
-	cart_from_order (a_order_name: READABLE_STRING_GENERAL): detachable SHOPPING_CART
+	order_by_name (a_order_name: READABLE_STRING_GENERAL): detachable SHOPPING_ORDER
 		local
-			uid: INTEGER_64
+			cid, uid: INTEGER_64
+			l_creation_date: DATE_TIME
+			l_name: READABLE_STRING_8
 			l_email: READABLE_STRING_8
 			j_data: READABLE_STRING_8
+			ref: READABLE_STRING_8
+			l_int: READABLE_STRING_8
+			l_int_nb: INTEGER_32
 		do
 			reset_error
 			sql_query (sql_select_order_by_name, sql_parameters (1, <<["name", a_order_name]>>))
 			sql_start
 			if not has_error and not sql_after then
+				cid := sql_read_integer_64 (1)
+				l_name := sql_read_string_8 (2)
 				uid := sql_read_integer_64 (3)
 				l_email := sql_read_string (4)
+				l_creation_date := sql_read_date_time (5)
 				j_data := sql_read_string (6)
-			end
-			sql_finalize_query (sql_select_order_by_name)
-			if j_data /= Void then
-				create Result.make_from_json (j_data)
-				if l_email /= Void then
-					Result.set_email (l_email)
+				ref := sql_read_string_8 (7)
+				l_int := sql_read_string_8 (8)
+				l_int_nb := sql_read_integer_32 (9)
+				if l_int_nb = 0 then
+					l_int_nb := 1
 				end
 			end
-			check Result /= Void and then Result.owner.id = uid end
+			sql_finalize_query (sql_select_order_by_name)
+			if
+				not has_error and then
+				l_name /= Void
+			then
+				if l_creation_date = Void then
+					check has_creation_date: False end
+					create l_creation_date.make_now_utc
+				end
+				if
+					uid > 0 and then
+				 	attached resolved_user (create {CMS_PARTIAL_USER}.make_with_id (uid)) as l_user
+				then
+					create Result.make_with_user (l_name, l_user, l_creation_date)
+				elseif l_email /= Void then
+					create Result.make_with_email (l_name, l_email, l_creation_date)
+				end
+				if Result /= Void then
+					if Result.email = Void and then l_email /= Void then
+						Result.set_email (l_email)
+					end
+					if j_data /= Void then
+						Result.set_associated_cart_with_json_data (j_data)
+					else
+						check has_data: False end
+					end
+					if ref /= Void then
+						Result.set_reference_id (ref)
+					end
+					Result.set_interval (l_int, l_int_nb)
+				end
+			end
+			check
+				Result /= Void implies
+			 	attached Result.associated_cart as l_cart and then
+			 	l_cart.owner.id = uid
+			 end
 		end
 
 feature {NONE} -- Queries
 
-	sql_select_user_shopping_cart: STRING = "SELECT cid, uid, email, security, changed, items, data FROM shop_carts WHERE uid=:uid ORDER by cid LIMIT 1;"
+	sql_select_user_shopping_cart: STRING = "SELECT cid, uid, name, email, security, changed, items, data FROM shop_carts WHERE uid=:uid ORDER by cid LIMIT 1;"
 
-	sql_select_shopping_cart_by_email: STRING = "SELECT cid, uid, email, security, changed, items, data FROM shop_carts WHERE email=:email ;"
+	sql_select_shopping_cart_by_email: STRING = "SELECT cid, uid, name, email, security, changed, items, data FROM shop_carts WHERE email=:email ;"
 
-	sql_select_shopping_cart_by_id: STRING = "SELECT cid, uid, email, security, changed, items, data FROM shop_carts WHERE cid=:cid ;"
+	sql_select_shopping_cart_by_id: STRING = "SELECT cid, uid, name, email, security, changed, items, data FROM shop_carts WHERE cid=:cid ;"
 
-	sql_insert_user_shopping_cart: STRING = "INSERT INTO shop_carts (uid, email, changed, security, items, data) VALUES (:uid, :email, :changed, :security, :items, :data);"
+	sql_select_shopping_cart_by_name: STRING = "SELECT cid, uid, name, email, security, changed, items, data FROM shop_carts WHERE name=:name ;"
+
+	sql_insert_user_shopping_cart: STRING = "INSERT INTO shop_carts (uid, name, email, changed, security, items, data) VALUES (:uid, :name, :email, :changed, :security, :items, :data);"
 
 	sql_last_inserted_shopping_cart_id: STRING = "SELECT MAX(cid) FROM shop_carts;"
 
-	sql_modify_user_shopping_cart: STRING = "UPDATE shop_carts SET uid=:uid, email=:email, security=:security, changed=:changed, items=:items, data=:data WHERE cid=:cid ;"
+	sql_modify_user_shopping_cart: STRING = "UPDATE shop_carts SET uid=:uid, name=:name, email=:email, security=:security, changed=:changed, items=:items, data=:data WHERE cid=:cid ;"
 
 	sql_delete_shopping_cart: STRING = "DELETE FROM shop_carts WHERE cid=:cid;"
 
-	sql_insert_order: STRING = "INSERT INTO shop_orders (name, uid, email, created, data) VALUES (:name, :uid, :email, :created, :data);"
+	sql_delete_shopping_cart_by_name: STRING = "DELETE FROM shop_carts WHERE name=:name;"
 
-	sql_select_order_by_name: STRING = "SELECT oid, name, uid, email, created, data FROM shop_orders WHERE name=:name ;"
+
+	sql_insert_order: STRING = "INSERT INTO shop_orders (name, uid, email, created, data, reference, interval, interval_count) VALUES (:name, :uid, :email, :created, :data, :reference, :interval, :interval_count);"
+
+	sql_select_order_by_name: STRING = "SELECT oid, name, uid, email, created, data, reference, interval, interval_count FROM shop_orders WHERE name=:name ;"
 
 feature {NONE} -- Implementation
 

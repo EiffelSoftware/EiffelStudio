@@ -17,34 +17,39 @@ create
 
 feature {NONE} -- Initialization
 
-	make_guest
+	make_guest (a_name: READABLE_STRING_8)
 		do
-			make (create {CMS_USER}.make ("Guest"))
+			make (create {CMS_USER}.make ("Guest"), a_name)
 			is_guest := True
 		end
 
-	make (a_user: like owner)
+	make (a_user: like owner; a_name: READABLE_STRING_8)
 		do
 			currency := "usd"
 			owner := a_user
+			email := a_user.email
 			create items.make (1)
+			identifier := a_name
 		end
 
-	make_with_id (a_id: like id; a_user: like owner)
+	make_with_id (a_id: like id; a_user: like owner; a_name: READABLE_STRING_8)
 		do
 			id := a_id
-			make (a_user)
+			make (a_user, a_name)
 		end
 
 	make_from_json (a_json: READABLE_STRING_8)
 		do
-			make (create {CMS_PARTIAL_USER}.make_with_id (0))
+			make (create {CMS_PARTIAL_USER}.make_with_id (0), "undefined")
 			import_json_string (a_json)
 		end
 
 feature -- Access
 
 	id: INTEGER_64
+
+	identifier: READABLE_STRING_8
+			-- Shopping cart identifier (key)
 
 	is_guest: BOOLEAN
 
@@ -64,7 +69,35 @@ feature -- Access
 
 	default_currency: STRING_8 = "usd"
 
+feature -- Status report
+
+	has_details: BOOLEAN
+		do
+			across
+				items as ic
+			until
+				Result
+			loop
+				if ic.item.has_details then
+					Result := True
+				end
+			end
+		end
+
 feature -- Query
+
+	is_identified_by (v: READABLE_STRING_GENERAL): BOOLEAN
+		do
+			if v.is_case_insensitive_equal (identifier) then
+					-- Same shopping cart name
+				Result := True
+			elseif v.is_integer_64 and then v.to_integer_64 = id then
+					-- Same shopping cart id
+				Result := True
+			else
+				Result := False
+			end
+		end
 
 	count: NATURAL_32
 		do
@@ -385,6 +418,9 @@ feature -- Conversion
 				if attached jo.number_item ("id") as j_id then
 					id := j_id.integer_64_item
 				end
+				if attached jo.string_item ("name") as j_name then
+					identifier := j_name.unescaped_string_8
+				end
 				if attached jo.number_item ("uid") as j_uid then
 					create {CMS_PARTIAL_USER} owner.make_with_id (j_uid.integer_64_item)
 				end
@@ -423,6 +459,9 @@ feature -- Conversion
 		do
 			create jo.make_with_capacity (10)
 			jo.put_integer (id, "id")
+			if attached identifier as n then
+				jo.put_string (n, "name")
+			end
 			jo.put_integer (owner.id, "uid")
 			if attached email as e then
 				jo.put_string (e, "email")
@@ -573,6 +612,11 @@ feature -- Conversion
 		end
 
 feature -- Element change
+
+	set_identifier (v: READABLE_STRING_8)
+		do
+			identifier := v
+		end
 
 	add_item (a_item: SHOPPING_ITEM)
 		local

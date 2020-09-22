@@ -52,7 +52,7 @@ feature -- Routes
 			if attached api.cms_api.user as u then
 				l_cart := api.user_shopping_cart (u)
 				if l_cart /= Void then
-					r.add_link ("cart", Void, req.percent_encoded_path_info + l_cart.id.out)
+					r.add_link ("cart", Void, req.percent_encoded_path_info + url_encoded (l_cart.identifier))
 				end
 			else
 				r.add_boolean_field ("Succeed", False)
@@ -68,15 +68,13 @@ feature -- Routes
 		do
 			r := new_response (req, res, api)
 			if attached {WSF_STRING} req.path_parameter ("cid") as p_cid then
-				if p_cid.is_integer then
-					l_cart := api.guest_shopping_cart (p_cid.integer_value)
-				end
+				l_cart := api.guest_shopping_cart (p_cid.value)
 			end
 			if l_cart /= Void then
 				create tb.make_caseless (3)
-				tb["items"] := l_cart.items_to_json_string
+				tb ["items"] := l_cart.items_to_json_string
 				if attached l_cart.modification_date as dt then
-					tb["modification_date"] := date_time_to_timestamp_string (dt)
+					tb ["modification_date"] := date_time_to_timestamp_string (dt)
 				end
 				r.add_table_iterator_field ("cart", tb)
 				across
@@ -129,10 +127,9 @@ feature -- Routes
 		do
 			r := new_response (req, res, api)
 			if
-				attached {WSF_STRING} req.path_parameter ("cid") as p_cid and then
-				p_cid.is_integer
+				attached {WSF_STRING} req.path_parameter ("cid") as p_cid
 			then
-				l_cart := api.guest_shopping_cart (p_cid.integer_value)
+				l_cart := api.guest_shopping_cart (p_cid.value)
 			end
 			if
 				l_cart /= Void and then
@@ -220,10 +217,9 @@ feature -- Helper
 			l_cart: SHOPPING_CART
 		do
 			if
-				attached {WSF_STRING} req.path_parameter ("cid") as p_cid and then
-				p_cid.is_integer
+				attached {WSF_STRING} req.path_parameter ("cid") as p_cid
 			then
-				l_cart := api.guest_shopping_cart (p_cid.integer_value)
+				l_cart := api.guest_shopping_cart (p_cid.value)
 			end
 			if
 				l_cart /= Void and then

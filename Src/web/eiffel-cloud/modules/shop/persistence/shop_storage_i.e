@@ -31,17 +31,23 @@ feature -- Store
 		deferred
 		end
 
+	shopping_cart_by_name (a_cart_name: READABLE_STRING_GENERAL): detachable SHOPPING_CART
+		require
+			not a_cart_name.is_whitespace
+		deferred
+		end
+
 	save_shopping_cart (a_cart: SHOPPING_CART)
 		deferred
 		end
 
-	cart_to_order (a_cart: SHOPPING_CART; a_order_id: READABLE_STRING_GENERAL)
+	cart_to_order (a_cart: SHOPPING_CART; a_ref: detachable READABLE_STRING_GENERAL; a_order_name: READABLE_STRING_GENERAL): SHOPPING_ORDER
 		require
 			not a_cart.is_guest
 		deferred
 		end
 
-	cart_from_order (a_order_id: READABLE_STRING_GENERAL): detachable SHOPPING_CART
+	order_by_name (a_order_name: READABLE_STRING_GENERAL): detachable SHOPPING_ORDER
 		deferred
 		end
 

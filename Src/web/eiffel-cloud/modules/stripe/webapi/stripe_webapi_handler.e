@@ -29,6 +29,10 @@ feature -- API
 
 	stripe_api: STRIPE_API
 
+	default_version: detachable STRING_8
+		deferred
+		end
+
 feature -- Execution
 
 	handler_execute (req: WSF_REQUEST; res: WSF_RESPONSE)
@@ -36,6 +40,8 @@ feature -- Execution
 		do
 			if attached {WSF_STRING} req.path_parameter ("version") as p_version then
 				execute (p_version.value, req, res)
+			elseif attached default_version as v then
+			execute (v, req, res)
 			else
 				report_version_missing_error (req, res)
 			end

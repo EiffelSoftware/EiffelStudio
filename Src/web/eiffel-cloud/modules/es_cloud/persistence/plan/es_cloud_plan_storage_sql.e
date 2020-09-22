@@ -325,6 +325,140 @@ feature -- Element change: license
 			sql_finalize_delete (sql_delete_license)
 		end
 
+	subscribed_licenses (a_order_ref: READABLE_STRING_GENERAL): detachable LIST [ES_CLOUD_LICENSE]
+		local
+			l_params: STRING_TABLE [detachable ANY]
+			lst: ARRAYED_LIST [READABLE_STRING_32]
+		do
+			reset_error
+			create l_params.make (1)
+			l_params.force (a_order_ref.as_lower, "lower_ref")
+
+			create lst.make (1)
+			sql_query (sql_select_subscribed_licenses, l_params)
+			sql_start
+			if not has_error then
+				from
+					sql_start
+				until
+					sql_after or has_error
+				loop
+					if attached sql_read_string_32 (1) as s then
+						lst.force (s)
+					end
+					sql_forth
+				end
+			end
+			sql_finalize_query (sql_select_subscribed_licenses)
+			if not lst.is_empty then
+				create {ARRAYED_LIST [ES_CLOUD_LICENSE]} Result.make (0)
+				across
+					lst as ic
+				loop
+					if attached license_by_key (ic.item) as lic then
+						Result.force (lic)
+					end
+				end
+				if Result.is_empty then
+					Result := Void
+				end
+			end
+		end
+
+	license_subscription (a_license: ES_CLOUD_LICENSE): detachable ES_CLOUD_LICENSE_SUBSCRIPTION
+		local
+			l_params: STRING_TABLE [detachable ANY]
+			t,c: NATURAL_8
+			l_interval: READABLE_STRING_8
+			i: INTEGER
+		do
+			reset_error
+			create l_params.make (1)
+			l_params.force (a_license.key.as_lower, "lowerkey")
+			sql_query (sql_select_license_subscription, l_params)
+			sql_start
+			if not has_error and not sql_after then
+				check same_license_key: attached sql_read_string_32 (1) as lic_key and then a_license.key.is_case_insensitive_equal_general (lic_key) end
+				l_interval := sql_read_string (2)
+				if l_interval /= Void and then not l_interval.is_whitespace then
+					i := l_interval.index_of ('x', 1)
+					if i > 0 then
+						c := l_interval.head (i - 1).to_natural_8
+						l_interval := l_interval.substring (i + 1, l_interval.count)
+					else
+						c := 1
+					end
+					if l_interval.is_case_insensitive_equal_general ("yearly") then
+						t := {ES_CLOUD_LICENSE_SUBSCRIPTION}.yearly
+					elseif l_interval.is_case_insensitive_equal_general ("monthly") then
+						t := {ES_CLOUD_LICENSE_SUBSCRIPTION}.monthly
+					elseif l_interval.is_case_insensitive_equal_general ("weekly") then
+						t := {ES_CLOUD_LICENSE_SUBSCRIPTION}.weekly
+					elseif l_interval.is_case_insensitive_equal_general ("daily") then
+						t := {ES_CLOUD_LICENSE_SUBSCRIPTION}.daily
+					else
+						check invalid_interval_type: False end
+						t := {ES_CLOUD_LICENSE_SUBSCRIPTION}.undefined_interval
+					end
+				end
+				create Result.make (a_license, t, c)
+
+				if attached sql_read_string_32 (3) as ref then
+					Result.set_subscription_reference (ref)
+				end
+				if attached sql_read_date_time (4) as dt then
+					Result.set_cancellation_date (dt)
+				end
+
+				check valid_record: Result /= Void end
+			end
+			sql_finalize_query (sql_select_license_subscription)
+		end
+
+	save_license_subscription (a_sub: ES_CLOUD_LICENSE_SUBSCRIPTION)
+		local
+			l_params: STRING_TABLE [detachable ANY]
+			l_is_new: BOOLEAN
+			s: STRING
+		do
+			if attached license_subscription (a_sub.license) as sub then
+					-- Updating ...
+			else
+				l_is_new := True
+			end
+			reset_error
+			if l_is_new then
+				create l_params.make (5)
+				l_params.force (a_sub.license.key, "license_key")
+			else
+				create l_params.make (4)
+			end
+			create s.make (6)
+			if a_sub.interval_count > 1 then
+				s.append (a_sub.interval_count.out)
+				s.append_character ('x')
+			end
+			if a_sub.is_yearly then
+				s.append ("yearly")
+			elseif a_sub.is_monthly then
+				s.append ("monthly")
+			elseif a_sub.is_weekly then
+				s.append ("weekly")
+			elseif a_sub.is_daily then
+				s.append ("daily")
+			end
+			l_params.force (s, "interval")
+			l_params.force (a_sub.subscription_reference, "ref")
+			l_params.force (a_sub.cancellation_date, "cancel_date")
+			if l_is_new then
+				sql_insert (sql_insert_license_subscription, l_params)
+				sql_finalize_insert (sql_insert_license_subscription)
+			else
+				sql_modify (sql_update_license_subscription, l_params)
+				sql_finalize_modify (sql_update_license_subscription)
+			end
+		end
+
 	assign_license_to_user (a_license: ES_CLOUD_LICENSE; a_user: ES_CLOUD_USER)
 		local
 			l_params: STRING_TABLE [detachable ANY]
@@ -578,6 +712,15 @@ feature {NONE} -- Queries: licenses
 			WHERE lower(lic.license_key)=:lowerkey
 			;
 		]"
+
+	sql_select_subscribed_licenses: STRING = "SELECT license_key, interval, ref, cancel_date FROM es_license_subscriptions WHERE lower(ref)=:lower_ref ;"
+
+	sql_select_license_subscription: STRING = "SELECT license_key, interval, ref, cancel_date FROM es_license_subscriptions WHERE lower(license_key)=:lowerkey ;"
+
+	sql_insert_license_subscription: STRING = "INSERT INTO es_license_subscriptions (license_key, interval, ref, cancel_date) VALUES (:license_key, :interval, :ref, :cancel_date);"
+
+	sql_update_license_subscription: STRING = "UPDATE es_license_subscriptions SET interval_type=:interval, ref=:ref, cancel_date=:cancel_date WHERE lower(license_key)=:lowerkey;"
+
 
 	sql_select_user_license_by_id: STRING = "SELECT lid, uid FROM es_licenses_users WHERE uid=:uid AND lid=:lid;"
 

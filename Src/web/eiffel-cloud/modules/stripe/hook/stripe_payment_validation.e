@@ -8,19 +8,31 @@ class
 	STRIPE_PAYMENT_VALIDATION
 
 create
-	make_from_subscription,
+	make_from_subscription_creation,
+	make_from_subscription_cycle,
 	make_from_payment_intent,
 	make
 
 feature {NONE} -- Initialization
 
-	make_from_subscription (a_sub: STRIPE_SUBSCRIPTION; a_customer: STRIPE_CUSTOMER)
+	make_from_subscription_creation (a_sub: STRIPE_SUBSCRIPTION; a_invoice: detachable STRIPE_INVOICE; a_customer: STRIPE_CUSTOMER)
+		require
+			a_sub.has_id
+ 			a_sub.is_active
+		do
+			make (a_invoice, a_customer)
+			subscription_id := a_sub.id
+			is_subscription_creation := True
+		end
+
+	make_from_subscription_cycle (a_sub: STRIPE_SUBSCRIPTION; a_invoice: detachable STRIPE_INVOICE; a_customer: STRIPE_CUSTOMER)
 		require
 			a_sub.has_id
 			a_sub.is_active
 		do
-			make (a_sub.latest_invoice, a_customer)
+			make (a_invoice, a_customer)
 			subscription_id := a_sub.id
+			is_subscription_cycle := True
 		end
 
 	make_from_payment_intent (a_pay: STRIPE_PAYMENT_INTENT; a_customer: STRIPE_CUSTOMER)
@@ -91,6 +103,10 @@ feature -- Access/id
 		end
 
 	subscription_id: detachable READABLE_STRING_8
+
+	is_subscription_creation: BOOLEAN
+
+	is_subscription_cycle: BOOLEAN
 
 	payment_id: detachable READABLE_STRING_8
 

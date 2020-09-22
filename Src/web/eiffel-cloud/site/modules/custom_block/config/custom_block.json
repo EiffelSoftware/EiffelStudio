@@ -16,8 +16,7 @@
 			"is_raw": "yes",
 			"region": "content",
 			"weight": 10,
-			"conditions": ["path:/licenses/_/buy/"]
+			"conditions": ["path:licenses/_/buy/"]
 		}
 	}
 }
-

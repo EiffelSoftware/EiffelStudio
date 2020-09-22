@@ -42,6 +42,8 @@ feature -- Execution
 					process_license_get (l_lic_key.string_representation, req, res)
 				elseif attached {WSF_STRING} req.query_parameter ("op") as p_op and then p_op.is_case_insensitive_equal ("buy") then
 					process_post (req, res)
+				elseif attached {WSF_STRING} req.path_parameter ("action") as p_action and then p_action.is_case_insensitive_equal ("buy") then
+					process_post (req, res)
 				else
 					process_get (req, res)
 				end
@@ -175,7 +177,7 @@ feature -- Execution
 					-- Buy new license button
 					-- FIXME: remove when licensing is live !
 				if api.has_permission ({ES_CLOUD_MODULE}.perm_buy_es_license) then
-					s.append ("<div><div class=%"es-new-license%"><form action=%""+ r.location_url ({ES_CLOUD_MODULE}.licenses_location, Void) +"%" method=%"post%"><input type=%"submit%" class=%"button%" title=%"Buy a new license%" name=%"op%" value=%"Buy new license%"></input></form></div></div>")
+					s.append ("<div><div class=%"es-new-license%"><form action=%""+ r.location_url ({ES_CLOUD_MODULE}.licenses_location + "_/buy/", Void) +"%" method=%"post%"><input type=%"submit%" class=%"button%" title=%"Buy a new license%" name=%"op%" value=%"Buy a license%"></input></form></div></div>")
 				end
 
 				if

@@ -208,6 +208,7 @@ feature -- Access: router
 				create h_lic.make (Current, l_mod_api)
 				a_router.handle ("/" + licenses_location, h_lic, a_router.methods_get_post)
 				a_router.handle ("/" + licenses_location + "{license_key}", h_lic, a_router.methods_get)
+				a_router.handle ("/" + licenses_location + "_/{action}/", h_lic, a_router.methods_get_post)
 			end
 		end
 

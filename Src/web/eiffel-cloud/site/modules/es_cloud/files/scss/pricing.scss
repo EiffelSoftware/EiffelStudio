@@ -1,6 +1,20 @@
 div.pricing {
 	background-color: #eaedf5;
 }
+div.pricing-notes {
+	font-size: smaller;
+	color: #777;
+	a { color: #777; font-weight: bold; }
+	a:hover {
+		text-decoration: underline;
+	}
+	background-color: #eaedf5;
+	border: solid 1px #ddd;
+	padding: 1rem;
+	dt {
+		font-weight: bold;
+	}
+}
 div.plans {
 	display: flex;
 	flex-wrap: wrap;

@@ -53,6 +53,9 @@ feature -- Evaluation
 				Result := False
 			elseif exp.starts_with ("path:") then
 				l_path := exp.substring (6, exp.count)
+				if l_path.count > 0 and then l_path[1] = '/' then
+					l_path := l_path.substring (2, l_path.count)
+				end
 				if l_path.has ('*') then
 					if l_path.index_of ('*', 1) = l_path.count then
 						Result := res.location.starts_with_general (l_path.substring (1, l_path.count - 1))
@@ -67,6 +70,6 @@ feature -- Evaluation
 		end
 
 note
-	copyright: "2011-2016, Jocelyn Fiat, Javier Velilla, Eiffel Software and others"
+	copyright: "2011-2020, Jocelyn Fiat, Javier Velilla, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 end

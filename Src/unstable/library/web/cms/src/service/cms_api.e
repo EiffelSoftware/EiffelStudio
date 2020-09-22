@@ -674,7 +674,7 @@ feature -- Access: request
 	self_link: CMS_LOCAL_LINK
 		local
 			s: READABLE_STRING_8
-			loc: STRING_8
+			loc: READABLE_STRING_8
 		do
 			s := request.percent_encoded_path_info
 			if not s.is_empty and then s[1] = '/' then

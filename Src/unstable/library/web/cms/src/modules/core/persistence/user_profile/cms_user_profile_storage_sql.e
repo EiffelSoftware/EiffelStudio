@@ -165,7 +165,7 @@ feature -- Change
 					l_is_new := True
 				elseif p.has_key (ic.key) then
 					l_is_new := False
-					l_has_diff := attached p.item (ic.key) as l_prev_item and then 
+					l_has_diff := attached p.item (ic.key) as l_prev_item and then
 									not l_prev_item.same_string (l_item)
 				else
 					l_is_new := True
@@ -189,27 +189,27 @@ feature -- Change
 
 feature {NONE} -- Queries
 
-	sql_select_user_profile_items: STRING = "SELECT key, value FROM user_profiles WHERE uid=:uid;"
+	sql_select_user_profile_items: STRING = "SELECT `key`, value FROM user_profiles WHERE uid=:uid;"
 			-- user profile items for :uid;
 
-	sql_select_user_profile_item: STRING = "SELECT key, value FROM user_profiles WHERE uid=:uid AND key=:key"
+	sql_select_user_profile_item: STRING = "SELECT `key`, value FROM user_profiles WHERE uid=:uid AND `key`=:key"
 			-- user profile items for :uid;
 
-	sql_select_users_with_profile_item: STRING = "SELECT uid FROM user_profiles WHERE key=:key and value=:value"
+	sql_select_users_with_profile_item: STRING = "SELECT uid FROM user_profiles WHERE `key`=:key and value=:value"
 			-- users with profile item named :key and value :value;
 
-	sql_select_users_with_profile_item_named: STRING = "SELECT uid FROM user_profiles WHERE key=:key"
+	sql_select_users_with_profile_item_named: STRING = "SELECT uid FROM user_profiles WHERE `key`=:key"
 			-- users with profile item named :key;
 
-	sql_insert_user_profile_item: STRING = "INSERT INTO user_profiles (uid, key, value) VALUES (:uid, :key, :value);"
+	sql_insert_user_profile_item: STRING = "INSERT INTO user_profiles (uid, `key`, value) VALUES (:uid, :key, :value);"
 			-- new user profile item for :uid;
 
-	sql_update_user_profile_item: STRING = "UPDATE user_profiles SET value = :value WHERE uid = :uid AND key = :key;"
+	sql_update_user_profile_item: STRING = "UPDATE user_profiles SET value = :value WHERE uid = :uid AND `key`=:key;"
 			-- user profile items for :uid;
 
 
 note
-	copyright: "2011-2017, Jocelyn Fiat, Javier Velilla, Eiffel Software and others"
+	copyright: "2011-2020, Jocelyn Fiat, Javier Velilla, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 end
 

@@ -17,7 +17,7 @@ CREATE TABLE shop_orders(
   `created` DATETIME NOT NULL,
   `data`	TEXT NOT NULL,
   `reference`	TEXT,
-  `interval`	TEXT,
+  `interval_type`	TEXT,
   `interval_count`	INTEGER
 );
 

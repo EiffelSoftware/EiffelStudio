@@ -194,7 +194,7 @@ feature -- Order
 					["created", Result.creation_date],
 					["data", j],
 					["reference", Result.reference_id],
-					["interval", Result.interval],
+					["interval_type", Result.interval],
 					["interval_count", Result.interval_count]
 				>>)
 			sql_insert (sql_insert_order, l_params)
@@ -293,9 +293,9 @@ feature {NONE} -- Queries
 	sql_delete_shopping_cart_by_name: STRING = "DELETE FROM shop_carts WHERE name=:name;"
 
 
-	sql_insert_order: STRING = "INSERT INTO shop_orders (name, uid, email, created, data, reference, interval, interval_count) VALUES (:name, :uid, :email, :created, :data, :reference, :interval, :interval_count);"
+	sql_insert_order: STRING = "INSERT INTO shop_orders (name, uid, email, created, data, reference, interval_type, interval_count) VALUES (:name, :uid, :email, :created, :data, :reference, :interval_type, :interval_count);"
 
-	sql_select_order_by_name: STRING = "SELECT oid, name, uid, email, created, data, reference, interval, interval_count FROM shop_orders WHERE name=:name ;"
+	sql_select_order_by_name: STRING = "SELECT oid, name, uid, email, created, data, reference, interval_type, interval_count FROM shop_orders WHERE name=:name ;"
 
 feature {NONE} -- Implementation
 

@@ -3,6 +3,7 @@ eStripeMod.HOST_URL = "";
 eStripeMod.ORDER_ID = "";
 eStripeMod.META_DATA = null;
 eStripeMod.main_box = null;
+eStripeMod.customer = null;
 
 eStripeMod.createElements = function (data, publicKey) {
   var stripe = Stripe(publicKey);
@@ -121,6 +122,7 @@ var createPaymentMethodAndCustomer = function(stripe, card) {
 };
 
 async function createCustomer(stripe, paymentMethod, customer, cardItems) {
+  eStripeMod.customer = customer;
   return fetch(eStripeMod.HOST_URL + '/customer_subscription', {
     method: 'post',
     headers: {
@@ -139,7 +141,7 @@ async function createCustomer(stripe, paymentMethod, customer, cardItems) {
       return response.json();
     })
     .then(subscription => {
-      handleSubscription(stripe, subscription, customer);
+      handleSubscription(stripe, subscription, eStripeMod.customer);
     });
 }
 
@@ -177,6 +179,7 @@ function handleSubscription(stripe, subscription, customer) {
 }
 
 function confirmSubscription(subscriptionId, customer) {
+  eStripeMod.customer = customer;
   return fetch(eStripeMod.HOST_URL + '/subscription_confirmation', {
     method: 'post',
     headers: {
@@ -191,7 +194,7 @@ function confirmSubscription(subscriptionId, customer) {
       return response.json();
     })
     .then(function(subscription) {
-      orderComplete(subscription, customer);
+      orderComplete(subscription, eStripeMod.customer);
     });
 }
 

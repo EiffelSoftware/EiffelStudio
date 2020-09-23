@@ -3,6 +3,7 @@ eStripeMod.HOST_URL = "";
 eStripeMod.ORDER_ID = "";
 eStripeMod.META_DATA = null;
 eStripeMod.main_box = null;
+eStripeMod.customer = null;
 
 eStripeMod.createElements = function (data, paymentIntent, publicKey) {
   var stripe = Stripe(publicKey);
@@ -100,6 +101,8 @@ var processPaymentIntent = function(stripe, paymentIntent, card) {
 		};
   if (customer['name'] !== null) { j_details['name'] = customer['name']; }
   if (customer['phone'] !== null) { j_details['phone'] = customer['phone']; }
+  	
+  eStripeMod.customer = customer;
 
   stripe.confirmCardPayment(paymentIntent.client_secret, {
 		receipt_email: customer['email'],
@@ -113,7 +116,7 @@ var processPaymentIntent = function(stripe, paymentIntent, card) {
 			showCardError(result.error);
 		} else {
 			//eStripeMod.stripePaymentHandler();
-			handlePayment(stripe, result, customer, JSON.parse(cardItems));
+			handlePayment(stripe, result, eStripeMod.customer, JSON.parse(cardItems));
 		}
 	});
 };
@@ -123,6 +126,7 @@ function handlePayment(stripe, payment, a_customer, a_card_items) {
 }
 
 function confirmPayment(payment, a_customer) {
+  eStripeMod.customer = a_customer;
   return fetch(eStripeMod.HOST_URL + '/payment_confirmation', {
     method: 'post',
     headers: {
@@ -139,7 +143,7 @@ function confirmPayment(payment, a_customer) {
       return response.json();
     })
     .then(function(pay) {
-      orderComplete(pay, a_customer);
+      orderComplete(pay, eStripeMod.customer);
     });
 }
 

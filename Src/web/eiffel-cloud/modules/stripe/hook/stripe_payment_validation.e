@@ -42,13 +42,17 @@ feature {NONE} -- Initialization
 			ch: STRIPE_PAYMENT_CHARGE
 		do
 			make (a_pay.invoice, a_customer)
+			if attached a_pay.currency as curr then
+				currency := curr.as_upper
+			end
 			payment_id := a_pay.id
+			amount_paid := a_pay.amount
 			if attached a_pay.charges as l_charges then
 				across
 					l_charges as ic
 				loop
 					ch := ic.item
-					receipt_or_invoice_urls ["receipt#" + ch.id] := ch.receipt_url
+					receipt_or_invoice_urls ["receipt #" + ch.id] := ch.receipt_url
 				end
 			end
 		end
@@ -56,11 +60,31 @@ feature {NONE} -- Initialization
 	make (a_invoice: detachable STRIPE_INVOICE; a_customer: STRIPE_CUSTOMER)
 		require
 			a_invoice /= Void implies a_invoice.has_id
+		local
+			l_line: STRIPE_INVOICE_LINE
+			l_products: ARRAYED_LIST [READABLE_STRING_32]
 		do
+			currency := "USD"
 			create receipt_or_invoice_urls.make (1)
 			invoice := a_invoice
 			customer := a_customer
 			if a_invoice /= Void then
+				if attached a_invoice.currency as curr then
+					currency := curr.as_upper
+				end
+				amount_paid := a_invoice.amount_paid
+				create l_products.make (a_invoice.lines.count)
+				across
+					a_invoice.lines as ic
+				loop
+					l_line := ic.item
+					if attached l_line.description as desc then
+						l_products.force (desc)
+					end
+				end
+				if not l_products.is_empty then
+					products := l_products
+				end
 				if attached a_invoice.subscription_id as sub_id then
 					subscription_id := a_invoice.subscription_id
 				end
@@ -80,6 +104,12 @@ feature -- Access
 	metadata: detachable STRING_TABLE [detachable ANY]
 
 	receipt_or_invoice_urls: STRING_TABLE [detachable READABLE_STRING_8]
+
+	products: detachable LIST [READABLE_STRING_32]
+
+	amount_paid: NATURAL_32
+
+	currency: READABLE_STRING_8
 
 feature -- Access/id
 

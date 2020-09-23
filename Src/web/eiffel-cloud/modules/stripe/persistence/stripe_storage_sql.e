@@ -132,18 +132,24 @@ feature -- Payment
 	record_invoice (a_invoice: STRIPE_INVOICE)
 		local
 			l_params: like sql_parameters
+			pi: READABLE_STRING_GENERAL
 		do
 			reset_error
-			l_params := sql_parameters (5,  {ARRAY [TUPLE [READABLE_STRING_GENERAL, detachable ANY]]}
-							 <<
-							 	["pi", a_invoice.payment_intent_id],
-							 	["sub", a_invoice.subscription_id],
-							 	["status", a_invoice.status],
-							 	["event_date", create {DATE_TIME}.make_now_utc],
-							 	["data", a_invoice.to_json_string]
-							 >>)
-			sql_insert (sql_insert_payment, l_params)
-			sql_finalize_insert (sql_insert_payment)
+			pi := a_invoice.payment_intent_id
+			if pi /= Void then
+				l_params := sql_parameters (5,  {ARRAY [TUPLE [READABLE_STRING_GENERAL, detachable ANY]]}
+								 <<
+								 	["pi", a_invoice.payment_intent_id],
+								 	["sub", a_invoice.subscription_id],
+								 	["status", a_invoice.status],
+								 	["event_date", create {DATE_TIME}.make_now_utc],
+								 	["data", a_invoice.to_json_string]
+								 >>)
+				sql_insert (sql_insert_payment, l_params)
+				sql_finalize_insert (sql_insert_payment)
+			else
+				check has_payment_intent_id: False end
+			end
 		end
 
 	record_payment_intent (pi: STRIPE_PAYMENT_INTENT)

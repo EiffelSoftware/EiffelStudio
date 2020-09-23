@@ -25,6 +25,9 @@ feature {NONE} -- Initialization
 	make_with_json (j: like json)
 		local
 			pi: STRIPE_PAYMENT_INTENT
+			cust: STRIPE_CUSTOMER
+			sub: STRIPE_SUBSCRIPTION
+			ch: STRIPE_PAYMENT_CHARGE
 		do
 			create id.make_empty
 			create lines.make (0)
@@ -34,8 +37,24 @@ feature {NONE} -- Initialization
 			if not j.is_empty then
 				id := safe_string_8_item (j, "id", id)
 
-				customer_id := string_8_item (j, "customer")
+				account_name := string_32_item (j, "account_name")
+
 				customer_email := string_8_item (j, "customer_email")
+				customer_name := string_32_item (j, "customer_name")
+
+				if attached {JSON_OBJECT} j.item ("customer") as j_customer then
+					create cust.make_with_json (j_customer)
+					customer := cust
+					customer_id := cust.id
+					if customer_email = Void then
+						customer_email := cust.email
+					end
+					if customer_name = Void then
+						customer_name := cust.name
+					end
+				else
+					customer_id := string_8_item (j, "customer")
+				end
 
 				amount_due := natural_32_item (j, "amount_due")
 				amount_paid := natural_32_item (j, "amount_paid")
@@ -43,7 +62,13 @@ feature {NONE} -- Initialization
 
 				billing_reason := string_8_item (j, "billing_reason")
 
-				charge_id := string_8_item (j, "charge")
+				if attached {JSON_OBJECT} j.item ("charge") as j_charge then
+					create ch.make_with_json (j_charge)
+					charge := ch
+					charge_id := ch.id
+				else
+					charge_id := string_8_item (j, "charge")
+				end
 
 				currency := string_8_item (j, "currency")
 
@@ -67,12 +92,19 @@ feature {NONE} -- Initialization
 
 				if attached {JSON_OBJECT} j.item ("payment_intent") as j_pi then
 					create pi.make_with_json (j_pi)
-					set_payment_intent (pi)
+					payment_intent := pi
+					payment_intent_id := pi.id
 				else
-					set_payment_intent_id (string_8_item (j, "payment_intent"))
+					payment_intent_id := string_8_item (j, "payment_intent")
 				end
 
-				subscription_id := string_8_item (j, "subscription")
+				if attached {JSON_OBJECT} j.item ("subscription") as j_sub then
+					create sub.make_with_json (j_sub)
+					subscription := sub
+					subscription_id := sub.id
+				else
+					subscription_id := string_8_item (j, "subscription")
+				end
 
 				status := string_8_item (j, "status")
 
@@ -82,8 +114,12 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
+	account_name: detachable READABLE_STRING_32
+
+	customer: detachable STRIPE_CUSTOMER
 	customer_id: detachable READABLE_STRING_8
 	customer_email: detachable READABLE_STRING_8
+	customer_name: detachable READABLE_STRING_32
 
 	amount_due,
 	amount_paid,
@@ -101,18 +137,13 @@ feature -- Access
 
 	status: detachable READABLE_STRING_8
 
+	charge: detachable STRIPE_PAYMENT_CHARGE
 	charge_id: detachable READABLE_STRING_8
+
 	payment_intent: detachable STRIPE_PAYMENT_INTENT
+	payment_intent_id: detachable READABLE_STRING_8
 
-	payment_intent_id: detachable READABLE_STRING_8 assign set_payment_intent_id
-		do
-			if attached payment_intent as p then
-				Result := p.id
-			else
-				Result := internal_payment_intent_id
-			end
-		end
-
+	subscription: detachable STRIPE_SUBSCRIPTION
 	subscription_id: detachable READABLE_STRING_8
 
 	lines: ARRAYED_LIST [STRIPE_INVOICE_LINE]
@@ -158,21 +189,5 @@ feature -- Access
 				end
 			end
 		end
-
-feature -- Internal
-
-	internal_payment_intent_id: detachable READABLE_STRING_8
-
-	set_payment_intent (a_pi: attached like payment_intent)
-		do
-			payment_intent := a_pi
-			set_payment_intent_id (a_pi.id)
-		end
-
-	set_payment_intent_id (a_pid: detachable READABLE_STRING_8)
-		do
-			internal_payment_intent_id := a_pid
-		end
-
 
 end

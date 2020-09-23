@@ -26,11 +26,12 @@ feature {NONE} -- Initialization
 	make_with_json (j: like json)
 		local
 			l_invoice: STRIPE_INVOICE
+			cust: STRIPE_CUSTOMER
 			l_charges: like charges
 		do
 			create id.make_empty
 			client_secret := ""
-			currency := "usd"
+			currency := "USD"
 
 				-- Default values
 
@@ -90,7 +91,13 @@ feature {NONE} -- Initialization
 			if not j.is_empty then
 				id := safe_string_8_item (j, "id", id)
 				client_secret := safe_string_8_item (j, "client_secret", client_secret)
-				customer_id := string_32_item (j, "customer")
+				if attached {JSON_OBJECT} j.item ("customer") as j_customer then
+					create cust.make_with_json (j_customer)
+					customer := cust
+					customer_id := cust.id
+				else
+					customer_id := string_32_item (j, "customer")
+				end
 
 				if attached {JSON_ARRAY} (j @ "charges" @ "data") as j_data_array then
 					create l_charges.make (1)
@@ -113,7 +120,7 @@ feature {NONE} -- Initialization
 				end
 
 				status := safe_string_8_item (j, "status", status)
-				amount := integer_32_item (j, "amount")
+				amount := natural_32_item (j, "amount")
 				currency := safe_string_8_item (j, "currency", currency)
 				receipt_email := string_8_item (j, "receipt_email")
 				metadata := table_item (j, "metadata")
@@ -123,7 +130,7 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	amount: INTEGER
+	amount: NATURAL_32
 			-- Amount intended to be collected by this PaymentIntent.
 			-- A positive integer representing how much to charge in the smallest currency unit
 			-- (e.g., 100 cents to charge $1.00 or 100 to charge ¥100, a zero-decimal currency).
@@ -143,6 +150,7 @@ feature -- Access
 	currency: READABLE_STRING_8
 			-- Three-letter ISO currency code, in lowercase. Must be a supported currency.
 
+	customer: detachable STRIPE_CUSTOMER
 	customer_id: detachable READABLE_STRING_32
 			-- ID of the customer who owns the payment.
 

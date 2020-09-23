@@ -41,7 +41,7 @@ feature -- Execution
 				if attached req.path_parameter ("license_key") as l_lic_key then
 					process_license_get (l_lic_key.string_representation, req, res)
 				elseif attached {WSF_STRING} req.query_parameter ("op") as p_op and then p_op.is_case_insensitive_equal ("buy") then
-					process_post (req, res)
+					res.redirect_now (api.absolute_url (req.percent_encoded_path_info + "_/buy/", Void))
 				elseif attached {WSF_STRING} req.path_parameter ("action") as p_action and then p_action.is_case_insensitive_equal ("buy") then
 					process_post (req, res)
 				else

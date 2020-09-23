@@ -60,19 +60,18 @@ feature {CMS_API} -- Module Initialization
 			-- <Precursor>
 		local
 			cfg: SHOP_CONFIG
+			l_shop_name: detachable READABLE_STRING_32
 		do
 			Precursor (api)
 			if shop_api = Void then
 				if
 					attached api.module_configuration_by_name ({SHOP_MODULE}.name, "config") as l_cfg
 				then
-					create cfg.make
-					if attached l_cfg.resolved_text_item ("shop.testing") as s and then s.is_case_insensitive_equal_general ("yes") then
-						cfg.enable_testing
+					l_shop_name := l_cfg.resolved_text_item ("shop.name")
+					if l_shop_name = Void then
+						l_shop_name := api.setup.site_name
 					end
-					if attached l_cfg.resolved_text_item ("shop.name") as s then
-						cfg.set_shop_name (s)
-					end
+					create cfg.make (l_shop_name)
 					if attached l_cfg.resolved_text_item ("shop.id") as s then
 						cfg.set_shop_id (s.to_string_8)
 					end
@@ -301,24 +300,38 @@ feature -- Hook
 		local
 			l_invoice: STRIPE_INVOICE
 			l_email_addr: READABLE_STRING_8
+			l_customer_name: READABLE_STRING_32
 			l_order_id: detachable IMMUTABLE_STRING_32
-			vars: STRING_TABLE [ANY]
+			vars: STRING_TABLE [detachable ANY]
 			l_shop_cart: SHOPPING_CART
 			l_order: SHOPPING_ORDER
 			i: INTEGER
 			l_provider, l_code: READABLE_STRING_GENERAL
 			l_quantity: NATURAL_32
 			l_shop_item: SHOPPING_ITEM
+			l_units,l_cents: STRING
+			s: STRING
 		do
 			if attached shop_api as l_shop_api then
 				l_order_id := a_validation.order_id
 				l_invoice := a_validation.invoice
 				l_email_addr := a_validation.customer.email
+				l_customer_name := a_validation.customer.name
 				if l_email_addr = Void then
 					if l_invoice /= Void then
 						l_email_addr := l_invoice.customer_email
 					elseif attached l_shop_api.cms_api.user as u then
 						l_email_addr := u.email
+					end
+				end
+				if l_customer_name = Void then
+					if l_invoice /= Void then
+						l_customer_name := l_invoice.customer_name
+					elseif attached l_shop_api.cms_api.user as u then
+						l_customer_name := u.profile_name
+						if l_customer_name = Void then
+							l_customer_name := u.name
+						end
 					end
 				end
 
@@ -332,17 +345,23 @@ feature -- Hook
 						l_email_addr := l_order.email
 					end
 				else
-					if attached l_shop_api.cms_api.user as u then
-						l_shop_cart := l_shop_api.user_shopping_cart (u)
-					elseif l_email_addr /= Void then
-						l_shop_cart := l_shop_api.shopping_cart_by_email (l_email_addr)
-					else
-						check has_cart: False end
+					if l_order_id /= Void then
+						l_shop_cart := l_shop_api.shopping_cart (l_order_id)
+					end
+					if l_shop_cart = Void then
+						if attached l_shop_api.cms_api.user as u then
+							l_shop_cart := l_shop_api.user_shopping_cart (u)
+						elseif l_email_addr /= Void then
+							l_shop_cart := l_shop_api.shopping_cart_by_email (l_email_addr)
+						else
+							check has_cart: False end
+						end
 					end
 					if
 						l_shop_cart = Void and then
 						l_invoice /= Void
 					then
+							-- Try to compute the cart from the invoice, if any.
 						l_shop_cart := l_shop_api.new_guest_cart
 						l_shop_cart.set_currency (l_invoice.currency)
 						if attached l_invoice.lines as l_lines then
@@ -373,17 +392,46 @@ feature -- Hook
 					l_email_addr := l_shop_cart.email
 				end
 				if
-					l_email_addr /= Void  and then
+					l_email_addr /= Void and then
 					(
 						l_order = Void or else
-						a_validation.is_subscription_creation
-					) -- No email, for monthly charge... TODO?
+						not a_validation.is_subscription_cycle -- No email, for monthly charge... TODO?
+					)
 				then
-					create vars.make_caseless (2)
+					create vars.make_caseless (3)
 					vars ["payment_validation"] := a_validation
 					vars ["receipt_or_invoice_urls"] := a_validation.receipt_or_invoice_urls
-					if l_invoice /= Void and then attached l_invoice.hosted_invoice_url as l_invoice_url then
-						vars ["invoice_url"] := l_invoice_url
+					vars ["products"] := a_validation.products
+					if a_validation.amount_paid > 0 then
+						s := a_validation.amount_paid.out
+						s.adjust
+						if s.count > 2 then
+							l_units := s.substring (1, s.count - 2)
+						else
+							l_units := "0"
+						end
+						l_cents := s.substring (s.count - 1, s.count)
+						if l_cents.is_case_insensitive_equal_general ("00") then
+							vars ["amount_paid"] := l_units
+						else
+							vars ["amount_paid"] := l_units + "." + l_cents
+						end
+						vars ["currency"] := a_validation.currency
+					end
+					vars ["customer_name"] := l_customer_name
+
+					if
+						l_shop_cart /= Void and then
+						attached l_shop_cart.provider_name (l_shop_api.config.shop_name) as l_prov_name
+					then
+						vars ["business_name"] := l_prov_name
+					else
+						vars ["business_name"] := l_shop_api.config.shop_name
+					end
+					if l_invoice /= Void then
+						vars ["invoice"] := l_invoice
+						vars ["invoice_url"] := l_invoice.hosted_invoice_url
+						vars ["invoice_pdf"] := l_invoice.invoice_pdf
 					end
 					if a_validation.is_subscription_cycle then
 						if attached l_shop_api.subscription_cycle_confirmation_email (l_email_addr, vars) as e then

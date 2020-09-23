@@ -222,6 +222,29 @@ feature -- Subscriptions
 			end
 		end
 
+	invoice (a_invoice_id: READABLE_STRING_GENERAL): detachable STRIPE_INVOICE
+		local
+			cl: DEFAULT_HTTP_CLIENT
+			ctx: HTTP_CLIENT_REQUEST_CONTEXT
+		do
+			create cl
+			if attached cl.new_session (stripe_api_url) as sess then
+				sess.set_credentials (config.secret_key, "")
+				create ctx.make_with_credentials_required
+				ctx.add_form_parameter ("expand[]", "customer")
+				ctx.add_form_parameter ("expand[]", "payment_intent")
+				ctx.add_form_parameter ("expand[]", "subscription")
+				if attached sess.get ("invoices/" + url_encoded (a_invoice_id), ctx) as l_response then
+					if attached valid_api_json_object_response (l_response) as j then
+						create Result.make_with_json (j)
+						debug
+							print (Result)
+						end
+					end
+				end
+			end
+		end
+
 	subscription (a_sub_id: READABLE_STRING_GENERAL): detachable STRIPE_SUBSCRIPTION
 		local
 			cl: DEFAULT_HTTP_CLIENT
@@ -333,7 +356,17 @@ feature -- Subscriptions
 						l_validation.set_order_id (a_order_id)
 					end
 					if l_invoice /= Void then
-						record_invoice (l_invoice)
+						if
+							l_invoice.payment_intent_id = Void and then
+							attached invoice (l_invoice.id) as inv
+						then
+							l_invoice := inv
+						end
+						if l_invoice.payment_intent_id /= Void then
+							record_invoice (l_invoice)
+						else
+							cms_api.log_error ({STRIPE_MODULE}.name, "Invoice "+ l_invoice.id +" without payment intent id!", Void)
+						end
 					end
 					invoke_validate_payment (l_validation)
 				end

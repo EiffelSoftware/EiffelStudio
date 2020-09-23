@@ -12,6 +12,8 @@ inherit
 	ES_CLOUD_SUBSCRIPTION_API_I
 
 	CMS_MODULE_API
+		rename
+			make as make_api
 		redefine
 			initialize
 		end
@@ -22,6 +24,13 @@ create
 	make
 
 feature {NONE} -- Initialization
+
+	make (a_module: ES_CLOUD_MODULE; a_api: CMS_API)
+		do
+			module := a_module
+			cms_api := a_api
+			initialize
+		end
 
 	initialize
 			-- <Precursor>
@@ -54,6 +63,8 @@ feature {CMS_MODULE} -- Access nodes storage.
 	es_cloud_storage: ES_CLOUD_STORAGE_I
 
 feature -- Settings
+
+	module: ES_CLOUD_MODULE
 
 	config: ES_CLOUD_CONFIG
 
@@ -814,6 +825,144 @@ feature -- HTML factory
 
 			s.append ("</ul></div>")
 			s.append ("</div>")
+		end
+
+feature -- Email processing
+
+	send_new_license_mail (a_user: detachable CMS_USER; a_customer_name: detachable READABLE_STRING_GENERAL; a_email_addr: READABLE_STRING_8; a_license: ES_CLOUD_LICENSE)
+		local
+			e: CMS_EMAIL
+			res: PATH
+			s: STRING_8
+			msg: READABLE_STRING_8
+		do
+			create res.make_from_string ("templates")
+			if attached cms_api.module_theme_resource_location (module, res.extended ("new_license_email.tpl")) as loc and then attached cms_api.resolved_smarty_template (loc) as tpl then
+				tpl.set_value (a_license, "license")
+				tpl.set_value (a_license.key, "license_key")
+				if a_user /= Void then
+					tpl.set_value (a_user, "user")
+					tpl.set_value (a_user.email, "user_email")
+					tpl.set_value (a_user.name, "user_name")
+					tpl.set_value (cms_api.user_display_name (a_user), "customer_name")
+				else
+					tpl.set_value (a_email_addr, "user_email")
+				end
+				if a_customer_name /= Void then
+					tpl.set_value (html_encoded (a_customer_name), "customer_name")
+				end
+
+				msg := tpl.string
+			else
+				create s.make_empty;
+				s.append ("New EiffelStudio license " + utf_8_encoded (a_license.key) + ".%N")
+				if a_user = Void then
+					s.append ("The license is associated with email %"" + a_email_addr + "%".%NPlease register a new account with that email at " + cms_api.site_url + " .%N")
+				else
+					s.append ("The license is associated with your account %"" + utf_8_encoded (cms_api.user_display_name (a_user)) + "%" (email %"" + a_email_addr + "%").%NPlease visit " + cms_api.site_url + " .%N")
+				end
+				msg := s
+			end
+
+			e := cms_api.new_html_email (a_email_addr, "New EiffelStudio license " + utf_8_encoded (a_license.key), msg)
+			cms_api.process_email (e)
+		end
+
+	notify_new_license (a_user: detachable CMS_USER; a_customer_name: detachable READABLE_STRING_GENERAL; a_email_addr: detachable READABLE_STRING_8; a_license: ES_CLOUD_LICENSE)
+		local
+			e: CMS_EMAIL
+			res: PATH
+			s: STRING_8
+			msg: READABLE_STRING_8
+		do
+			create res.make_from_string ("templates")
+			if attached cms_api.module_theme_resource_location (module, res.extended ("notify_new_license_email.tpl")) as loc and then attached cms_api.resolved_smarty_template (loc) as tpl then
+				tpl.set_value (a_license, "license")
+				tpl.set_value (a_license.key, "license_key")
+				if a_user /= Void then
+					tpl.set_value (a_user, "user")
+					tpl.set_value (a_user.email, "user_email")
+					tpl.set_value (a_user.name, "user_name")
+					tpl.set_value (cms_api.user_display_name (a_user), "customer_name")
+					tpl.set_value (cms_api.user_display_name (a_user), "profile_name")
+				else
+					tpl.set_value (a_email_addr, "user_email")
+				end
+				if a_customer_name /= Void then
+					tpl.set_value (html_encoded (a_customer_name), "customer_name")
+					tpl.set_value (html_encoded (a_customer_name), "profile_name")
+				end
+				msg := tpl.string
+			else
+				create s.make_empty;
+				s.append ("New EiffelStudio license " + utf_8_encoded (a_license.key) + ".%N")
+				if a_user = Void then
+					if a_email_addr /= Void then
+						s.append ("The license is associated with email %"" + a_email_addr + "%".%N")
+					else
+						check should_not_occur: False end
+						s.append ("The license is associated with no email and no user!%N")
+					end
+				else
+					s.append ("The license is associated with account %"" + utf_8_encoded (cms_api.user_display_name (a_user)) + "%"")
+					if a_email_addr /= Void then
+						s.append ("(email %"" + a_email_addr + "%")")
+					end
+					s.append (".%N")
+				end
+				s.append ("Notification from site " + cms_api.site_url + " .%N")
+				msg := s
+			end
+			e := cms_api.new_html_email (cms_api.setup.site_notification_email, "[NOTIF] New EiffelStudio license " + utf_8_encoded (a_license.key), msg)
+			cms_api.process_email (e)
+		end
+
+	notify_extended_license (a_user: detachable CMS_USER; a_email_addr: detachable READABLE_STRING_8; a_license: ES_CLOUD_LICENSE)
+		local
+			e: CMS_EMAIL
+			res: PATH
+			s: STRING_8
+			msg: READABLE_STRING_8
+		do
+			create res.make_from_string ("templates")
+			if attached cms_api.module_theme_resource_location (module, res.extended ("notify_extended_license_email.tpl")) as loc and then attached cms_api.resolved_smarty_template (loc) as tpl then
+				tpl.set_value (a_license, "license")
+				tpl.set_value (a_license.expiration_date, "expiration_date")
+				tpl.set_value (a_license.key, "license_key")
+				if a_user /= Void then
+					tpl.set_value (a_user, "user")
+					tpl.set_value (a_user.email, "user_email")
+					tpl.set_value (a_user.name, "user_name")
+					tpl.set_value (cms_api.user_display_name (a_user), "profile_name")
+				else
+					tpl.set_value (a_email_addr, "user_email")
+				end
+				msg := tpl.string
+			else
+				create s.make_empty;
+				s.append ("EiffelStudio license " + utf_8_encoded (a_license.key) + ".%N")
+				if attached a_license.expiration_date as dt then
+					s.append ("Extended to date: " + cms_api.date_time_to_iso8601_string (dt) + " .%N")
+				end
+				if a_user = Void then
+					if a_email_addr /= Void then
+						s.append ("The license is associated with email %"" + a_email_addr + "%" .%N")
+					else
+						check should_not_occur: False end
+						s.append ("The license is associated with no email and no user!%N")
+					end
+				else
+					s.append ("The license is associated with account %"" + utf_8_encoded (cms_api.user_display_name (a_user)) + " %"")
+					if a_email_addr /= Void then
+						s.append ("(email %"" + a_email_addr + "%")")
+					end
+					s.append (" .%N")
+				end
+				s.append ("Notification from site " + cms_api.site_url + " .%N")
+				msg := s
+			end
+			e := cms_api.new_html_email (cms_api.setup.site_notification_email, "[NOTIF] Extended EiffelStudio license " + utf_8_encoded (a_license.key), msg)
+			cms_api.process_email (e)
 		end
 
 note

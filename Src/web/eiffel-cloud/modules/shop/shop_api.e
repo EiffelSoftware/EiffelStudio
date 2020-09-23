@@ -116,6 +116,11 @@ feature -- Access
 			end
 		end
 
+	shopping_cart (a_cart_name: READABLE_STRING_GENERAL): detachable SHOPPING_CART
+		do
+			Result := shop_storage.shopping_cart_by_name (a_cart_name)
+		end
+
 	shopping_cart_by_email (a_email: READABLE_STRING_8): detachable SHOPPING_CART
 		do
 			Result := shop_storage.shopping_cart_by_email (a_email)
@@ -236,7 +241,7 @@ feature -- Hook invocation
 
 feature -- Email factory
 
-	order_confirmation_email (a_email_addr: READABLE_STRING_8; vars: STRING_TABLE [ANY]): CMS_EMAIL
+	order_confirmation_email (a_email_addr: READABLE_STRING_8; vars: STRING_TABLE [detachable ANY]): CMS_EMAIL
 		local
 			res: PATH
 			s: STRING_8
@@ -250,7 +255,9 @@ feature -- Email factory
 				across
 					vars as ic
 				loop
-					tpl.set_value (ic.item, ic.key)
+					if attached ic.item as v then
+						tpl.set_value (v, ic.key)
+					end
 				end
 				msg := tpl.string
 			else
@@ -263,15 +270,16 @@ feature -- Email factory
 					across
 						l_urls as ic
 					loop
-						s.append (html_encoded (ic.key) + " at "+ html_encoded (ic.item) +"%N")
+						s.append (html_encoded (ic.key) + " at " + html_encoded (ic.item) +"%N")
 					end
 				end
 				msg := s
 			end
-			Result := cms_api.new_html_email (a_email_addr, "Thank you for your order", msg)
+
+			Result := cms_api.new_html_email (a_email_addr, "Thank you for your order at " + utf_8_encoded (config.shop_name), msg)
 		end
 
-	subscription_cycle_confirmation_email (a_email_addr: READABLE_STRING_8; vars: STRING_TABLE [ANY]): CMS_EMAIL
+	subscription_cycle_confirmation_email (a_email_addr: READABLE_STRING_8; vars: STRING_TABLE [detachable ANY]): CMS_EMAIL
 		local
 			res: PATH
 			s: STRING_8
@@ -286,7 +294,9 @@ feature -- Email factory
 				across
 					vars as ic
 				loop
-					tpl.set_value (ic.item, ic.key)
+					if attached ic.item as v then
+						tpl.set_value (v, ic.key)
+					end
 				end
 				msg := tpl.string
 			else

@@ -12,18 +12,16 @@ create
 
 feature {NONE} -- Initialization
 
-	make
+	make (a_shop_name: READABLE_STRING_32)
 		do
+			shop_name := a_shop_name
 			set_base_location (default_base_location)
 			cookie_name := "roc-shop"
-			shop_name := "shop"
 			shop_id := "shop"
 			default_currency := "usd"
 		end
 
 feature -- Access
-
-	is_testing: BOOLEAN
 
 	base_path: IMMUTABLE_STRING_8
 
@@ -80,11 +78,6 @@ feature -- Element change
 	set_default_currency (v: READABLE_STRING_8)
 		do
 			default_currency := v
-		end
-
-	enable_testing
-		do
-			is_testing := True
 		end
 
 end

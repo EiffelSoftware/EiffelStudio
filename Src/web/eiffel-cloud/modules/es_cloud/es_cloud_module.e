@@ -435,7 +435,7 @@ feature -- Hook
 										api.assign_license_to_email (lic, l_email)
 									end
 									if l_email /= Void then
-										api.send_new_license_mail (l_user, Void, l_email, lic)
+										api.send_new_license_mail (l_user, Void, l_email, lic, Void)
 									end
 									api.notify_new_license (l_user, Void, l_email, lic)
 								end
@@ -507,7 +507,7 @@ feature -- Hooks: user management
 						lic := ic.item
 						l_es_cloud_api.move_email_license_to_user (lic, u)
 						if not l_es_cloud_api.has_error then
-							l_es_cloud_api.send_new_license_mail (a_user, Void, l_email, lic.license)
+							l_es_cloud_api.send_new_license_mail (a_user, Void, l_email, lic.license, Void)
 						end
 					end
 				end

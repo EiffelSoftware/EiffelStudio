@@ -1,11 +1,11 @@
 {unless isempty="$customer_name"}Dear {htmlentities}{$customer_name/}{/htmlentities},{/unless}
-<p>Thank you for your order at <a href="{$site_url/}">{unless isempty="$business_name"}{/unless}{if isempty="$business_name"}{$site_url/}{/if}</a>.</p>
+<p>This is a notice that an invoice has been generated from <a href="{$site_url/}">{unless isempty="$business_name"}{/unless}{if isempty="$business_name"}{$site_url/}{/if}</a>.</p>
 
-{unless isempty="$products"}<p>Item(s):
+{if isset="$products"}<p>Item(s):
 <ul>
 {foreach item="i" from="$products"}<li>{$i/}</li>{/foreach}
 </ul>
-{/unless}
+{/if}
 {if isset="$amount_paid"}<p>Amount paid: {$amount_paid/} {$currency/}{/if}
 
 {if isset="$invoice_url"}<p>See your invoice at {$invoice_url/}.</p> {/if}
@@ -15,9 +15,10 @@
 </ul>
 {/if}
 
-<p>We are honored to welcome you as customer and happy to be of service to you.</p>
+<p>We are honored to have you as customer and happy to be of service to you.</p>
 <p>Please feel free to contact us at <a href="{$site_url/}">{$site_url/}</a> for any questions you may have.</p>
 <br/>
+
 <p>Thank You</p>
 {unless isempty="$account_name"}<p>{htmlentities}{$account_name/}{/htmlentities}.</p>{/unless}
 <p>

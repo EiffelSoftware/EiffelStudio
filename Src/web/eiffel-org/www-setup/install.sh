@@ -171,6 +171,9 @@ do_install() {
 			armv6l|armv6)
 				ISE_PLATFORM=linux-armv6
 				;;
+			armv7l|armv7)
+				ISE_PLATFORM=linux-armv7
+				;;
 			# not supported armv7 ...
 			*)
 				echo >&2 Error: $architecture is not a recognized platform.
@@ -302,6 +305,9 @@ do_install() {
 	#mkdir -p eiffel; cd eiffel
 	if [ -n "$ISE_INSTALL_DIR" ]; then
 		ISE_EIFFEL=$ISE_INSTALL_DIR
+	elif [[ "$T_CURRENT_DIR" == *\/ ]]; then
+		#mostly for root case with "/" as current directory.
+		ISE_EIFFEL=${T_CURRENT_DIR}Eiffel_$ISE_MAJOR_MINOR
 	else
 		ISE_EIFFEL=$T_CURRENT_DIR/Eiffel_$ISE_MAJOR_MINOR
 	fi

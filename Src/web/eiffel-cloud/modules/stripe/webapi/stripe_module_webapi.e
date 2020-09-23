@@ -147,6 +147,11 @@ feature -- Handle
 			jp: JSON_PARSER
 			rep: like new_response
 			l_payment: STRIPE_PAYMENT_INTENT
+			l_customer_name: READABLE_STRING_32
+			l_customer_email: READABLE_STRING_8
+			l_metadata: detachable STRING_TABLE [READABLE_STRING_GENERAL]
+			l_order_id: detachable READABLE_STRING_GENERAL
+			cust: STRIPE_CUSTOMER
 		do
 			if attached req.content_type as ct and then ct.same_string ({HTTP_CONSTANTS}.application_json) then
 				create buf.make (req.content_length_value.to_integer_32)
@@ -154,11 +159,37 @@ feature -- Handle
 				create jp.make_with_string (buf)
 				jp.parse_content
 				if jp.is_parsed and then jp.is_valid and then attached jp.parsed_json_object as jo then
-					if
-						attached jo.string_item ("paymentId") as j_payment_id and
-						api.config.is_valid
-					then
-						l_payment := api.payment_intent (j_payment_id.unescaped_string_32)
+					if api.config.is_valid then
+						if attached jo.string_item ("paymentId") as j_payment_id then
+							l_payment := api.payment_intent (j_payment_id.unescaped_string_32)
+						end
+						if
+							attached {JSON_OBJECT} jo.item ("customer") as j_customer
+						then
+							if attached j_customer.string_item ("email") as j_email then
+								create cust.make_with_email (j_email.unescaped_string_8)
+								if attached j_customer.string_item ("name") as j_name then
+									cust.set_name (j_name.unescaped_string_32)
+								end
+							end
+						end
+						if attached jo.object_item ("metadata") as j_metadata then
+							create l_metadata.make_caseless (j_metadata.count)
+							across
+								j_metadata as ic
+							loop
+								if attached {JSON_STRING} ic.item as j_item then
+									l_metadata.force (j_item.unescaped_string_32, ic.key.unescaped_string_32)
+								end
+							end
+						end
+						if attached jo.string_item ("order_id") as j_order_id then
+							if l_metadata = Void then
+								create l_metadata.make_caseless (1)
+							end
+							l_metadata.force (j_order_id.unescaped_string_32, "order.id")
+							l_order_id := j_order_id.unescaped_string_32
+						end
 					end
 				end
 			end
@@ -170,7 +201,7 @@ feature -- Handle
 					rep.add_string_field ("payment_id", l_payment.id)
 				end
 				rep.execute
-				api.process_payment_intent (l_payment, Void, Void, Void)
+				api.process_payment_intent (l_payment, cust, l_order_id, l_metadata)
 			else
 				rep.add_boolean_field ("error", True)
 				if not api.config.is_valid then

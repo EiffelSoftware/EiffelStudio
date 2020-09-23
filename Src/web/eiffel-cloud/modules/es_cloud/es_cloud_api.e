@@ -829,7 +829,7 @@ feature -- HTML factory
 
 feature -- Email processing
 
-	send_new_license_mail (a_user: detachable CMS_USER; a_customer_name: detachable READABLE_STRING_GENERAL; a_email_addr: READABLE_STRING_8; a_license: ES_CLOUD_LICENSE)
+	send_new_license_mail (a_user: detachable CMS_USER; a_customer_name: detachable READABLE_STRING_GENERAL; a_email_addr: READABLE_STRING_8; a_license: ES_CLOUD_LICENSE; vars: detachable STRING_TABLE [detachable READABLE_STRING_GENERAL])
 		local
 			e: CMS_EMAIL
 			res: PATH
@@ -840,6 +840,15 @@ feature -- Email processing
 			if attached cms_api.module_theme_resource_location (module, res.extended ("new_license_email.tpl")) as loc and then attached cms_api.resolved_smarty_template (loc) as tpl then
 				tpl.set_value (a_license, "license")
 				tpl.set_value (a_license.key, "license_key")
+				if vars /= Void then
+					across
+						vars as ic
+					loop
+						if attached ic.item as v then
+							tpl.set_value (v, ic.key)
+						end
+					end
+				end
 				if a_user /= Void then
 					tpl.set_value (a_user, "user")
 					tpl.set_value (a_user.email, "user_email")

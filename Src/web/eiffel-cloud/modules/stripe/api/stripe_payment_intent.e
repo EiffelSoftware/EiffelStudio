@@ -96,7 +96,7 @@ feature {NONE} -- Initialization
 					customer := cust
 					customer_id := cust.id
 				else
-					customer_id := string_32_item (j, "customer")
+					customer_id := string_8_item (j, "customer")
 				end
 
 				if attached {JSON_ARRAY} (j @ "charges" @ "data") as j_data_array then
@@ -151,14 +151,15 @@ feature -- Access
 			-- Three-letter ISO currency code, in lowercase. Must be a supported currency.
 
 	customer: detachable STRIPE_CUSTOMER
-	customer_id: detachable READABLE_STRING_32
+	customer_id: detachable READABLE_STRING_8
 			-- ID of the customer who owns the payment.
+
+	invoice: detachable STRIPE_INVOICE
+			-- Invoice that created this PaymentIntent, if it exists.
 
 	invoice_id: detachable READABLE_STRING_8
 			-- ID of the invoice that created this PaymentIntent, if it exists.
 
-	invoice: detachable STRIPE_INVOICE
-			-- Invoice that created this PaymentIntent, if it exists.
 
 	metadata: detachable STRING_TABLE [detachable ANY]
 			-- Set of key-value pairs that you can attach to an object.

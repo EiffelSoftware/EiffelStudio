@@ -315,8 +315,12 @@ feature -- Subscriptions
 					if attached a_payment.customer_id as l_cust_id then
 						l_customer := customer (l_cust_id)
 					end
-					if l_customer = Void and attached a_payment.receipt_email as l_cust_email then
-						create l_customer.make_with_email (l_cust_email)
+					if attached a_payment.receipt_email as l_cust_email then
+						if l_customer = Void then
+							create l_customer.make_with_email (l_cust_email)
+						elseif attached l_customer.email as e and then not e.is_case_insensitive_equal_general (l_cust_email) then
+							l_customer.set_email (l_cust_email)
+						end
 					end
 				end
 				if l_customer /= Void then

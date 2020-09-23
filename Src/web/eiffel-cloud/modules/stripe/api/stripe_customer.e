@@ -133,6 +133,11 @@ feature -- Access
 
 feature -- Element change
 
+	set_email (v: READABLE_STRING_8)
+		do
+			email := v
+		end
+		
 	set_name (v: READABLE_STRING_GENERAL)
 		do
 			name := v.to_string_32

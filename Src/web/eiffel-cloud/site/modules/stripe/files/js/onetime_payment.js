@@ -1,4 +1,3 @@
-
 var eStripeMod = eStripeMod || { };
 eStripeMod.HOST_URL = "";
 eStripeMod.ORDER_ID = "";
@@ -102,8 +101,7 @@ var processPaymentIntent = function(stripe, paymentIntent, card) {
   if (customer['name'] !== null) { j_details['name'] = customer['name']; }
   if (customer['phone'] !== null) { j_details['phone'] = customer['phone']; }
 
-  stripe
-	.confirmCardPayment(paymentIntent.client_secret, {
+  stripe.confirmCardPayment(paymentIntent.client_secret, {
 		receipt_email: customer['email'],
 		payment_method: {
 			card: card,
@@ -115,30 +113,33 @@ var processPaymentIntent = function(stripe, paymentIntent, card) {
 			showCardError(result.error);
 		} else {
 			//eStripeMod.stripePaymentHandler();
-			handlePayment(stripe, result, JSON.parse(cardItems));
+			handlePayment(stripe, result, customer, JSON.parse(cardItems));
 		}
 	});
 };
 
-function handlePayment(stripe, payment, a_card_items) {
-	confirmPayment (payment.paymentIntent);
+function handlePayment(stripe, payment, a_customer, a_card_items) {
+	confirmPayment (payment.paymentIntent, a_customer);
 }
 
-function confirmPayment(payment) {
+function confirmPayment(payment, a_customer) {
   return fetch(eStripeMod.HOST_URL + '/payment_confirmation', {
     method: 'post',
     headers: {
       'Content-type': 'application/json'
     },
     body: JSON.stringify({
-      paymentId: payment.id
+      paymentId: payment.id,
+      customer: a_customer,
+	  order_id: eStripeMod.ORDER_ID,
+      metadata: eStripeMod.META_DATA
     })
   })
     .then(function(response) {
       return response.json();
     })
     .then(function(pay) {
-      orderComplete(pay);
+      orderComplete(pay, a_customer);
     });
 }
 
@@ -173,12 +174,10 @@ eStripeMod.getPublicKey = function () {
     });
 }
 
-//getPublicKey();
-
 /* ------- Post-payment helpers ------- */
 
 /* Shows a success / error message when the payment is complete */
-var orderComplete = function(payment) {
+var orderComplete = function(payment, a_customer) {
   changeLoadingState(false);
   var paymentJson = JSON.stringify(payment, null, 2);
   eStripeMod.main_box.querySelectorAll('.payment-view').forEach(function(view) {
@@ -188,7 +187,8 @@ var orderComplete = function(payment) {
     view.classList.remove('hidden');
   });
   eStripeMod.main_box.querySelector('.order-status').textContent = payment.status;
-  l_summary = 'Check your Invoice ...';
+  l_summary = "<p>You will receive email messages with the details of your order.</p>";
+  l_summary = l_summary + '<p>Check your Invoice ...';
 
 	l_charges = payment.charges.data;
 	l_charges_count = l_charges.length;
@@ -197,6 +197,7 @@ var orderComplete = function(payment) {
 	  l_receipt_url = l_charges[i].receipt_url;
   	  l_summary = l_summary + ' <a href="' + l_receipt_url + '">receipt # ' + i + '</a>';
   	}
+  	l_summary = l_summary + '</p>';
   eStripeMod.main_box.querySelector('.order-summary').innerHTML = l_summary;
   //eStripeMod.main_box.querySelector('code').textContent = paymentJson;
 };

@@ -1,5 +1,5 @@
 {unless isempty="$customer_name"}Dear {htmlentities}{$customer_name/}{/htmlentities},{/unless}
-<p>Thank you for your order at <a href="{$site_url/}">{unless isempty="$business_name"}{/unless}{if isempty="$business_name"}{$site_url/}{/if}</a>.</p>
+<p>Thank you for your order at <a href="{$site_url/}">{unless isempty="$business_name"}{$business_name/}{/unless}{if isempty="$business_name"}{$site_url/}{/if}</a>.</p>
 
 {unless isempty="$products"}<p>Item(s):
 <ul>
@@ -8,13 +8,12 @@
 {/unless}
 {if isset="$amount_paid"}<p>Amount paid: {$amount_paid/} {$currency/}{/if}
 
-{if isset="$invoice_url"}<p>See your invoice at {$invoice_url/}.</p> {/if}
+{if isset="$invoice_url"}<p>See your invoice at <a href="{$invoice_url/}">{$invoice_url/}</a>.</p> {/if}
 {if isset="$receipt_or_invoice_urls"}<p>Associated document(s):
 <ul>
-{foreach key="k" item="i" from="$receipt_or_invoice_urls"}<li><a href="{$i}">{$k/}</a></li>{/foreach}
+{foreach key="k" item="i" from="$receipt_or_invoice_urls"}<li><a href="{$i/}">{$k/}</a></li>{/foreach}
 </ul>
 {/if}
-
 <p>We are honored to welcome you as customer and happy to be of service to you.</p>
 <p>Please feel free to contact us at <a href="{$site_url/}">{$site_url/}</a> for any questions you may have.</p>
 <br/>

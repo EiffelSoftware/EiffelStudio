@@ -159,13 +159,40 @@ do_install() {
 		architecture=$(uname -m)
 	fi
 	if [ -z "$ISE_PLATFORM" ]; then
+		ostype=$(uname -s)
 		case $architecture in
 			# officially supported
 			amd64|x86_64)
-				ISE_PLATFORM=linux-x86-64
+				case $ostype in
+					Linux*)
+						ISE_PLATFORM=linux-x86-64
+					;;
+					Darwin*)
+						ISE_PLATFORM=macosx-x86-64
+					;;
+					FreeBSD)
+						ISE_PLATFORM=freebsd-x86-64
+					;;
+				*)
+					echo >&2 Error: $ostype is not a recognized OS.
+					exit 1
+				esac
 				;;
 			i386|i686)
-				ISE_PLATFORM=linux-x86
+				case $ostype in
+					Linux*)
+						ISE_PLATFORM=linux-x86
+					;;
+					Darwin*)
+						ISE_PLATFORM=macosx-x86
+					;;
+					FreeBSD)
+						ISE_PLATFORM=freebsd-x86
+					;;
+				*)
+					echo >&2 Error: $ostype is not a recognized OS.
+					exit 1
+				esac
 				;;
 			# unofficially supported with available repositories
 			armv6l|armv6)
@@ -174,7 +201,6 @@ do_install() {
 			armv7l|armv7)
 				ISE_PLATFORM=linux-armv7
 				;;
-			# not supported armv7 ...
 			*)
 				echo >&2 Error: $architecture is not a recognized platform.
 				exit 1

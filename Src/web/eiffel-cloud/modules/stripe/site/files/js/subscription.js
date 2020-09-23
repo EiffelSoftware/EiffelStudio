@@ -164,16 +164,16 @@ function handleSubscription(stripe, subscription, customer) {
 					  showCardError(result.error);
 				  } else {
 					  // Show a success message to your customer
-					  confirmSubscription(subscription.id, consumer);
+					  confirmSubscription(subscription.id, customer);
 				  }
 			  });
 		  } else {
 			  // No additional information was needed
 			  // Show a success message to your customer
-			  orderComplete(subscription, consumer);
+			  orderComplete(subscription, customer);
 		  }
 	  } else {
-		  orderComplete(subscription, consumer);
+		  orderComplete(subscription, customer);
 	  }
   }
 }

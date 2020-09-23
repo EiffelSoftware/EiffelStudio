@@ -150,9 +150,7 @@ command_exists() {
 	command -v "$@" > /dev/null 2>&1
 }
 
-do_install() {
-	echo >&2 "Executing eiffelstudio install script ... ($ISE_CHANNEL)"
-
+get_ise_platform() {
 	if [ -n "$HOSTTYPE" ]; then
 		architecture=$HOSTTYPE
 	else
@@ -206,6 +204,23 @@ do_install() {
 				exit 1
 				;;
 		esac
+		echo >&2 Using ISE_PLATFORM=$ISE_PLATFORM on architecture $architecture
+	else
+		echo >&2 Using existing ISE_PLATFORM=$ISE_PLATFORM on architecture $architecture
+	fi
+
+}
+
+do_install() {
+	echo >&2 "Executing eiffelstudio install script ... ($ISE_CHANNEL)"
+
+	if [ -n "$HOSTTYPE" ]; then
+		architecture=$HOSTTYPE
+	else
+		architecture=$(uname -m)
+	fi
+	if [ -z "$ISE_PLATFORM" ]; then
+		get_ise_platform
 		echo >&2 Using ISE_PLATFORM=$ISE_PLATFORM on architecture $architecture
 	else
 		echo >&2 Using existing ISE_PLATFORM=$ISE_PLATFORM on architecture $architecture
@@ -365,12 +380,12 @@ do_install() {
 	if [ -n "$ISE_INSTALL_DIR" ]; then
 		tdir=$(mktemp -d /tmp/eiffel.XXXXXXXXX)
 		cd ${tdir}
-		$curl $ISE_DOWNLOAD_URL | tar -x -p -s --bzip2
+		$curl $ISE_DOWNLOAD_URL | tar -x -p --bzip2
 		mv ${tdir}/Eiffel_$ISE_MAJOR_MINOR $ISE_INSTALL_DIR
 		\rm -rf ${tdir}
 	else
 		#Should be inside $ISE_EIFFEL=$T_CURRENT_DIR/Eiffel_$ISE_MAJOR_MINOR
-		$curl $ISE_DOWNLOAD_URL | tar -x -p -s --bzip2
+		$curl $ISE_DOWNLOAD_URL | tar -x -p --bzip2
 	fi
 
 	ISE_RC_FILE="$ISE_EIFFEL/setup.rc"

@@ -147,8 +147,6 @@ feature -- Handle
 			jp: JSON_PARSER
 			rep: like new_response
 			l_payment: STRIPE_PAYMENT_INTENT
-			l_customer_name: READABLE_STRING_32
-			l_customer_email: READABLE_STRING_8
 			l_metadata: detachable STRING_TABLE [READABLE_STRING_GENERAL]
 			l_order_id: detachable READABLE_STRING_GENERAL
 			cust: STRIPE_CUSTOMER

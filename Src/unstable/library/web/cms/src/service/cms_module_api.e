@@ -63,6 +63,12 @@ feature -- Bridge to CMS API
 			Result := cms_api.url_encoded (a_string)
 		end
 
+	utf_8_encoded (a_string: READABLE_STRING_GENERAL): STRING_8
+			-- `a_string` encoded using UTF-8.
+		do
+			Result := cms_api.utf_8_encoded (a_string)
+		end
+
 	percent_encoded (a_string: READABLE_STRING_GENERAL): STRING_8
 			-- `a_string' encoded with percent encoding, mainly used for url.
 		do
@@ -70,6 +76,6 @@ feature -- Bridge to CMS API
 		end
 
 note
-	copyright: "2011-2016, Jocelyn Fiat, Javier Velilla, Eiffel Software and others"
+	copyright: "2011-2020, Jocelyn Fiat, Javier Velilla, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 end

@@ -53,7 +53,7 @@ suffix='.a'
 shared_suffix='.sl'
 shared_rt_suffix='.sl'
 shared_prefix='lib'
-sharedlibversion='.20.07'
+sharedlibversion='.20.09'
 
 lngpad_2='LNGPAD(2)'
 

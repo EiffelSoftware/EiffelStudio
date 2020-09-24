@@ -22,6 +22,7 @@ function do_sed {
 	sed -i -e "$1" "$2" 
 	svn diff "$2"
 	echo $2 >> file_to_commit.log
+	echo $2 \\ >> commit_changes.sh
 	#read -p "Press ENTER key..."
 }
 
@@ -31,6 +32,7 @@ function doall_sed {
 		sed -i -e "$1" "$filename" 
 		svn diff "$filename"
 		echo $filename >> file_to_commit.log
+		echo $filename \\ >> commit_changes.sh
 	done
 }
 
@@ -40,6 +42,9 @@ echo Update source code from version $from_version to $to_version.
 echo Year=$curr_year
 echo EIFFEL_SRC=$EIFFEL_SRC
 echo  > file_to_commit.log
+echo  echo Update to version $to_version > commit_changes.sh
+echo  export EIFFEL_SRC=#EIFFEL_SRC >> commit_changes.sh
+echo  svn commit \\ >> commit_changes.sh
 
 # $EIFFEL_SRC/Delivery/VERSION
 do_sed "s/\<[0-9][0-9][0-9][0-9]\>/$curr_year/g" $EIFFEL_SRC/Delivery/VERSION 
@@ -102,6 +107,12 @@ do_sed "s/\(minor_version: .* = \)[0-9][0-9]/\1$to_version_minor/g" $EIFFEL_SRC/
 
 sort -u file_to_commit.log -o file_to_commit.log
 sed -i -e  "s~$EIFFEL_SRC~\$EIFFEL_SRC~g" file_to_commit.log
+
+echo  -m \"Updated to $to_version .\"  >> commit_changes.sh
+
+sed -i -e  "s~$EIFFEL_SRC~  \$EIFFEL_SRC~g" commit_changes.sh
+sed -i -e  "s~#EIFFEL_SRC~$EIFFEL_SRC~g" commit_changes.sh
+
 echo "Files to commit (in file_to_commit.log):"
 cat file_to_commit.log
 

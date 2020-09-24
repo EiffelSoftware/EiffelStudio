@@ -83,6 +83,12 @@ feature -- Response helpers
 			api.response_api.send_not_found (Void, req, res)
 		end
 
+	send_not_found_with_message (a_mesg: READABLE_STRING_8; req: WSF_REQUEST; res: WSF_RESPONSE)
+			-- Send via `res' a not found response.
+		do
+			api.response_api.send_not_found (a_mesg, req, res)
+		end
+
 	send_bad_request (req: WSF_REQUEST; res: WSF_RESPONSE)
 			-- Send via `res' a bad request response.
 		do
@@ -96,6 +102,6 @@ feature -- Response helpers
 		end
 
 note
-	copyright: "2011-2017, Jocelyn Fiat, Javier Velilla, Eiffel Software and others"
+	copyright: "2011-2020, Jocelyn Fiat, Javier Velilla, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 end

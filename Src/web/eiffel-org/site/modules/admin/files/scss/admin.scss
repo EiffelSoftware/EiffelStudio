@@ -85,4 +85,48 @@ form#modules_collection {
 	}
 }
 
-
+ul.logs {
+	li { 
+		border-bottom: dotted 1px #ccc;
+		div.log-header {
+			display: inline-block;
+		}
+		div.log-name {
+			display: inline-block;
+			font-weight: bold;
+			padding-right: 1rem;
+		}
+		div.log-category {
+			display: inline-block;
+			padding-right: 1rem;
+			font-weight: bold;
+		}
+		div.log-message {
+			display: inline;
+		}
+		div.log-date {
+			display: inline-block;
+			padding-right: 1rem;
+		}
+		div.log-link {
+			display: inline-block;
+			padding-right: 1rem;
+		}
+		&.log-error div.log-name {
+			color: red;
+		}
+		&:hover {
+			div.log-header {
+				display: block;
+			}
+			div.log-message {
+				display: block;
+				clear: both;
+				border: solid 1px #ccc;
+				padding: 1rem;
+				font-family: monospace;
+				white-space: pre;
+			}
+		}
+	}
+}

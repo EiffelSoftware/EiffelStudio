@@ -19,6 +19,33 @@ feature -- Access: organization
 		deferred
 		end
 
+	organization_by_id (oid: like {ES_CLOUD_ORGANIZATION}.id): detachable ES_CLOUD_ORGANIZATION
+		deferred
+		end
+
+	organization (a_id_or_name: READABLE_STRING_GENERAL): detachable ES_CLOUD_ORGANIZATION
+		local
+			l_id: INTEGER_64
+		do
+			if a_id_or_name.is_integer_64 then
+				l_id := a_id_or_name.to_integer_64
+			end
+			across
+				organizations as ic
+			until
+				Result /= Void
+			loop
+				Result := ic.item
+				if l_id /= 0 and then Result.id = l_id then
+						-- Found by id
+				elseif Result.name.is_case_insensitive_equal_general (a_id_or_name) then
+						-- Found by name
+				else
+					Result := Void
+				end
+			end
+		end
+
 	user_organizations (a_user: ES_CLOUD_USER): detachable LIST [ES_CLOUD_ORGANIZATION]
 		deferred
 		end

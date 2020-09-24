@@ -182,7 +182,7 @@ feature -- Execution
 						l_org := o_ic.item
 						if es_cloud_api.is_organization_manager (l_user, l_org) then
 							s.append ("<p>Manager of organization: <span class=%"es-org-title%">")
-							s.append ("<a href=%"" + api.administration_path ("cloud/organizations/?org=" + l_org.id.out) + "%">")
+							s.append ("<a href=%"" + api.administration_path ("cloud/organizations/" + l_org.id.out + "/") + "%">")
 							s.append (html_encoded (l_org.title_or_name))
 							s.append ("</a></span></p>")
 						else

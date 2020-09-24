@@ -183,6 +183,38 @@ feature -- Access: sessions
 			sql_finalize_query (l_query)
 		end
 
+	installation_sessions (a_install_id: READABLE_STRING_GENERAL; a_only_active: BOOLEAN): detachable LIST [ES_CLOUD_SESSION]
+		local
+			l_params: STRING_TABLE [detachable ANY]
+			l_query: READABLE_STRING_8
+		do
+			reset_error
+			create {ARRAYED_LIST [ES_CLOUD_SESSION]} Result.make (0)
+			create l_params.make (1)
+			l_params.force (a_install_id, "iid")
+			if a_only_active then
+				l_query := sql_select_active_installation_sessions
+			else
+				l_query := sql_select_installation_sessions
+			end
+			sql_query (l_query, l_params)
+			if not has_error then
+				from
+					sql_start
+				until
+					sql_after or has_error
+				loop
+					if attached fetch_user_session (Void) as sess then
+						Result.force (sess)
+					else
+						check valid_record: False end
+					end
+					sql_forth
+				end
+			end
+			sql_finalize_query (l_query)
+		end
+
 	user_session (a_user: ES_CLOUD_USER; a_installation_id, a_session_id: READABLE_STRING_GENERAL): detachable ES_CLOUD_SESSION
 		local
 			l_params: STRING_TABLE [detachable ANY]
@@ -379,6 +411,12 @@ feature {NONE} -- Sessions
 	sql_select_user_active_installation_sessions: STRING
 		once
 			Result := "SELECT sid, iid, uid, state, first, last, title FROM es_sessions WHERE iid=:iid AND uid=:uid AND state!=" + {ES_CLOUD_SESSION}.state_ended_id.out + ";"
+		end
+
+	sql_select_installation_sessions: STRING = "SELECT sid, iid, uid, state, first, last, title FROM es_sessions WHERE iid=:iid;"
+	sql_select_active_installation_sessions: STRING
+		once
+			Result := "SELECT sid, iid, uid, state, first, last, title FROM es_sessions WHERE iid=:iid AND state!=" + {ES_CLOUD_SESSION}.state_ended_id.out + ";"
 		end
 
 	sql_insert_session: STRING = "INSERT INTO es_sessions (sid, iid, uid, state, first, last, title) VALUES (:sid, :iid, :uid, :state, :first, :last, :title);"

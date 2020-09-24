@@ -138,7 +138,7 @@ feature -- Access
 
 feature -- Access: licenses
 
-	licenses: LIST [TUPLE [license: ES_CLOUD_LICENSE; user: detachable ES_CLOUD_USER]]
+	licenses: LIST [TUPLE [ES_CLOUD_LICENSE, detachable ES_CLOUD_USER, detachable READABLE_STRING_8, detachable ES_CLOUD_ORGANIZATION]]
 			-- Licenses
 		do
 			Result := es_cloud_storage.licenses
@@ -498,6 +498,12 @@ feature -- Access: subscriptions
 			es_cloud_storage.discard_installation (inst, a_user)
 		end
 
+	all_user_installations: LIST [ES_CLOUD_INSTALLATION]
+		do
+			Result := es_cloud_storage.all_user_installations
+			user_installations_sorter.reverse_sort (Result)
+		end
+
 	user_installations (a_user: ES_CLOUD_USER): LIST [ES_CLOUD_INSTALLATION]
 		do
 			Result := es_cloud_storage.user_installations (a_user)
@@ -555,6 +561,14 @@ feature -- Access: subscriptions
 	user_sessions (a_user: ES_CLOUD_USER; a_install_id: detachable READABLE_STRING_GENERAL; a_only_active: BOOLEAN): detachable LIST [ES_CLOUD_SESSION]
 		do
 			Result := es_cloud_storage.user_sessions (a_user, a_install_id, a_only_active)
+			if Result /= Void then
+				user_session_sorter.reverse_sort (Result)
+			end
+		end
+
+	installation_sessions (a_install_id: READABLE_STRING_GENERAL; a_only_active: BOOLEAN): detachable LIST [ES_CLOUD_SESSION]
+		do
+			Result := es_cloud_storage.installation_sessions (a_install_id, a_only_active)
 			if Result /= Void then
 				user_session_sorter.reverse_sort (Result)
 			end

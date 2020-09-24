@@ -13,6 +13,16 @@ feature -- Error Handling
 		deferred
 		end
 
+feature -- Deferred
+
+	organization (a_id_or_name: READABLE_STRING_GENERAL): detachable ES_CLOUD_ORGANIZATION
+		deferred
+		end
+
+	organization_by_id (oid: like {ES_CLOUD_ORGANIZATION}.id): detachable ES_CLOUD_ORGANIZATION
+		deferred
+		end
+
 feature -- Access: plan
 
 	plans: LIST [ES_CLOUD_PLAN]
@@ -35,7 +45,7 @@ feature -- Change
 
 feature -- Access: License
 
-	licenses: LIST [TUPLE [license: ES_CLOUD_LICENSE; user: detachable ES_CLOUD_USER]]
+	licenses: LIST [TUPLE [ES_CLOUD_LICENSE, detachable ES_CLOUD_USER, detachable READABLE_STRING_8, detachable ES_CLOUD_ORGANIZATION]]
 			-- Licenses
 		deferred
 		end

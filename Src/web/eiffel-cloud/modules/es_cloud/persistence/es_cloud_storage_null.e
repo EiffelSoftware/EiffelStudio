@@ -30,7 +30,7 @@ feature -- Access: plan
 
 feature -- Licenses
 
-	licenses: LIST [TUPLE [license: ES_CLOUD_LICENSE; user: detachable ES_CLOUD_USER]]
+	licenses: LIST [TUPLE [ES_CLOUD_LICENSE, detachable ES_CLOUD_USER, detachable READABLE_STRING_8, detachable ES_CLOUD_ORGANIZATION]]
 			-- Licenses
 		do
 			check False then end
@@ -121,6 +121,10 @@ feature -- Access: organization
 			create {ARRAYED_LIST [ES_CLOUD_ORGANIZATION]} Result.make (0)
 		end
 
+	organization_by_id (oid: like {ES_CLOUD_ORGANIZATION}.id): detachable ES_CLOUD_ORGANIZATION
+		do
+		end
+
 	user_organizations (a_user: ES_CLOUD_USER): detachable LIST [ES_CLOUD_ORGANIZATION]
 		do
 		end
@@ -160,7 +164,12 @@ feature -- Access: installations
 
 	user_installations (a_user: ES_CLOUD_USER): LIST [ES_CLOUD_INSTALLATION]
 		do
-			create {ARRAYED_LIST [ES_CLOUD_INSTALLATION]} Result.make (0)
+			check False then end
+		end
+
+	all_user_installations: LIST [ES_CLOUD_INSTALLATION]
+		do
+			check False then end
 		end
 
 	installation (a_install_id: READABLE_STRING_GENERAL): detachable ES_CLOUD_INSTALLATION
@@ -183,6 +192,10 @@ feature -- Access: sessions
 		end
 
 	user_sessions (a_user: ES_CLOUD_USER; a_install_id: detachable READABLE_STRING_GENERAL; a_only_active: BOOLEAN): detachable LIST [ES_CLOUD_SESSION]
+		do
+		end
+
+	installation_sessions (a_install_id: READABLE_STRING_GENERAL; a_only_active: BOOLEAN): detachable LIST [ES_CLOUD_SESSION]
 		do
 		end
 

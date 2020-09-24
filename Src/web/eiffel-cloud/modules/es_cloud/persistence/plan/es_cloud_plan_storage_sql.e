@@ -56,29 +56,30 @@ feature -- Access: plan
 
 feature -- Access: License
 
-	licenses: LIST [TUPLE [license: ES_CLOUD_LICENSE; user: detachable ES_CLOUD_USER]]
+	licenses: ARRAYED_LIST [TUPLE [license: ES_CLOUD_LICENSE; user: detachable ES_CLOUD_USER; email: detachable READABLE_STRING_8; org: detachable ES_CLOUD_ORGANIZATION]]
 		local
-			uid: INTEGER_64
+			uid, oid: INTEGER_64
 			u: ES_CLOUD_USER
+			e: READABLE_STRING_8
+			o: ES_CLOUD_ORGANIZATION
+			lst: ARRAYED_LIST [TUPLE [license: ES_CLOUD_LICENSE; uid: INTEGER_64; email: detachable READABLE_STRING_8; oid: INTEGER_64]]
 		do
 			reset_error
-			create {ARRAYED_LIST [TUPLE [license: ES_CLOUD_LICENSE; user: detachable ES_CLOUD_USER]]} Result.make (0)
 			sql_query (sql_select_licenses, Void)
 			sql_start
 			if not has_error then
+				create lst.make (30)
 				from
 					sql_start
 				until
 					sql_after or has_error
 				loop
 					if attached fetch_license (Void) as lic then
+						-- then 12:es_licenses_users.uid, 13:es_licenses_emails.email, 14:es_licenses_orgs.oid
 						uid := sql_read_integer_64 (12)
-						if uid /= 0 then
-							u := create {CMS_PARTIAL_USER}.make_with_id (uid)
-						else
-							u := Void
-						end
-						Result.force ([lic, u])
+						e := sql_read_string_8 (13)
+						oid := sql_read_integer_64 (14)
+						lst.force ([lic, uid, e, oid])
 					else
 						check valid_record: False end
 					end
@@ -86,31 +87,54 @@ feature -- Access: License
 				end
 			end
 			sql_finalize_query (sql_select_licenses)
+			if lst = Void then
+				create Result.make (0)
+			else
+				create Result.make (lst.count)
+				across
+					lst as ic
+				loop
+					uid := ic.item.uid
+					oid := ic.item.oid
+					if uid /= 0 then
+						u := create {CMS_PARTIAL_USER}.make_with_id (uid)
+					else
+						u := Void
+					end
+					if oid /= 0 then
+						o := organization_by_id (oid)
+					else
+						o := Void
+					end
+					Result.force ([ic.item.license, u, ic.item.email, o])
+				end
+			end
 		end
 
 	licenses_for_plan (a_plan: ES_CLOUD_PLAN): like licenses
 		local
-			uid: INTEGER_64
+			uid, oid: INTEGER_64
 			u: ES_CLOUD_USER
+			e: READABLE_STRING_8
+			o: ES_CLOUD_ORGANIZATION
+			lst: ARRAYED_LIST [TUPLE [license: ES_CLOUD_LICENSE; uid: INTEGER_64; email: detachable READABLE_STRING_8; oid: INTEGER_64]]
 		do
 			reset_error
-			create {ARRAYED_LIST [TUPLE [license: ES_CLOUD_LICENSE; user: detachable ES_CLOUD_USER]]} Result.make (0)
 			sql_query (sql_select_licenses_by_plan, sql_parameters (1, <<["pid", a_plan.id]>>))
 			sql_start
 			if not has_error then
+				create lst.make (30)
 				from
 					sql_start
 				until
 					sql_after or has_error
 				loop
 					if attached fetch_license (a_plan) as lic then
+						-- then 12:es_licenses_users.uid, 13:es_licenses_emails.email, 14:es_licenses_orgs.oid
 						uid := sql_read_integer_64 (12)
-						if uid /= 0 then
-							u := create {CMS_PARTIAL_USER}.make_with_id (uid)
-						else
-							u := Void
-						end
-						Result.force ([lic, u])
+						e := sql_read_string_8 (13)
+						oid := sql_read_integer_64 (14)
+						lst.force ([lic, uid, e, oid])
 					else
 						check valid_record: False end
 					end
@@ -118,6 +142,28 @@ feature -- Access: License
 				end
 			end
 			sql_finalize_query (sql_select_licenses)
+			if lst = Void then
+				create Result.make (0)
+			else
+				create Result.make (lst.count)
+				across
+					lst as ic
+				loop
+					uid := ic.item.uid
+					oid := ic.item.oid
+					if uid /= 0 then
+						u := create {CMS_PARTIAL_USER}.make_with_id (uid)
+					else
+						u := Void
+					end
+					if oid /= 0 then
+						create o.make_with_id (oid)
+					else
+						o := Void
+					end
+					Result.force ([ic.item.license, u, ic.item.email, o])
+				end
+			end
 		end
 
 	license (a_license_id: INTEGER_64): detachable ES_CLOUD_LICENSE
@@ -677,10 +723,12 @@ feature {NONE} -- Queries: licenses
 			SELECT 
 				lic.lid, lic.license_key, lic.pid, es_plans.name, es_plans.data,
 				lic.platform, lic.version, lic.status, lic.creation, lic.expiration, lic.fallback,
-				es_licenses_users.uid
+				es_licenses_users.uid, es_licenses_emails.email, es_licenses_orgs.oid
 			FROM es_licenses AS lic 
 			INNER JOIN es_plans ON lic.pid = es_plans.pid 
 			LEFT JOIN es_licenses_users ON lic.lid = es_licenses_users.lid
+			LEFT JOIN es_licenses_emails ON lic.lid = es_licenses_emails.lid
+			LEFT JOIN es_licenses_orgs ON lic.lid = es_licenses_orgs.lid
 			;
 		]"
 
@@ -688,9 +736,11 @@ feature {NONE} -- Queries: licenses
 			SELECT
 				lic.lid, lic.license_key, lic.pid,
 				lic.platform, lic.version, lic.status, lic.creation, lic.expiration, lic.fallback,
-				es_licenses_users.uid
+				es_licenses_users.uid, es_licenses_emails.email, es_licenses_orgs.oid
 			FROM es_licenses AS lic
-			INNER JOIN es_licenses_users ON lic.lid = es_licenses_users.lid
+			LEFT JOIN es_licenses_users ON lic.lid = es_licenses_users.lid
+			LEFT JOIN es_licenses_emails ON lic.lid = es_licenses_emails.lid
+			LEFT JOIN es_licenses_orgs ON lic.lid = es_licenses_orgs.lid
 			WHERE lic.pid=:pid
 			;
 		]"

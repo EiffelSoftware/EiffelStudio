@@ -19,11 +19,12 @@ feature -- Setup
 
 	setup_router (a_router: WSF_ROUTER; a_base_url: STRING)
 		do
-			a_router.handle (a_base_url, Current, a_router.methods_get_post)
 			a_router.handle (a_base_url + "{oid}/owners/", Current, a_router.methods_put_post + a_router.methods_delete)
 			a_router.handle (a_base_url + "{oid}/managers/", Current, a_router.methods_put_post + a_router.methods_delete)
 			a_router.handle (a_base_url + "{oid}/members/", Current, a_router.methods_put_post + a_router.methods_delete)
 			a_router.handle (a_base_url + "{oid}/plans/", Current, a_router.methods_post)
+			a_router.handle (a_base_url + "{org}/", Current, a_router.methods_get_post)
+			a_router.handle (a_base_url, Current, a_router.methods_get_post)
 		end
 
 feature -- Execution
@@ -64,10 +65,10 @@ feature -- Execution
 						send_access_denied (req, res)
 					end
 				else
-					send_not_found (req, res)
+					send_not_found_with_message ("Organization %""+ html_encoded (p_oid.value) +"%" not found", req, res)
 				end
 			elseif req.is_get_request_method then
-				if attached {WSF_STRING} req.query_parameter ("org") as p_org then
+				if attached {WSF_STRING} req.path_parameter ("org") as p_org then
 					l_organization := es_cloud_api.organization (p_org.value)
 					if l_organization = Void then
 						send_bad_request (req, res)
@@ -129,18 +130,22 @@ feature {NONE} -- Authorized request handling
 							es_cloud_api.discard_membership (org, l_user, role)
 							r.set_main_content ("Membership removed.")
 						end
-						r.set_redirection (api.administration_path ("/cloud/organizations/?org=" + url_encoded (org.name)))
+						r.set_redirection (api.administration_path ("/cloud/organizations/" + url_encoded (org.name) + "/"))
 						r.execute
 					elseif req.is_put_post_request_method then
 						es_cloud_api.update_membership (org, l_user, role)
 						r.set_main_content ("Membership updated.")
-						r.set_redirection (api.administration_path ("/cloud/organizations/?org=" + url_encoded (org.name)))
+						r.set_redirection (api.administration_path ("/cloud/organizations/" + url_encoded (org.name) + "/"))
 						r.execute
 					else
 						send_bad_request (req, res)
 					end
 				else
-					send_not_found (req, res)
+					if uid /= Void then
+						send_not_found_with_message ("User %""+ html_encoded (uid) +"%" not found", req, res)
+					else
+						send_bad_request (req, res)
+					end
 				end
 			else
 				send_bad_request (req, res)
@@ -163,7 +168,7 @@ feature {NONE} -- Authorized request handling
 				check oid = org.id end
 				if req.is_put_post_request_method then
 					r.set_main_content ("organization plan updated.")
-					r.set_redirection (api.administration_path ("/cloud/organizations/?org=" + url_encoded (org.name)))
+					r.set_redirection (api.administration_path ("/cloud/organizations/" + url_encoded (org.name) + "/"))
 					r.execute
 				else
 					send_bad_request (req, res)
@@ -289,7 +294,7 @@ feature {NONE} -- Authorized request handling
 					l_organization := ic.item
 					s.append ("<tr>")
 					s.append ("<td>")
-					s.append ("<a href=%""+ api.administration_path ("/cloud/organizations/?org=" + url_encoded (ic.item.name)) + "%">")
+					s.append ("<a href=%""+ api.administration_path ("/cloud/organizations/" + url_encoded (ic.item.name) + "/") + "%">")
 					s.append (html_encoded (ic.item.name))
 					s.append ("</a></td>")
 
@@ -400,11 +405,11 @@ feature {NONE} -- Web Forms
 			inspect
 				a_role
 			when {ES_CLOUD_ORGANIZATION}.role_owner_id then
-				create Result.make (req.percent_encoded_path_info + org.id.out + "/owners/", "es-cloud-edit-org-item")
+				create Result.make (req.percent_encoded_path_info + "owners/", "es-cloud-edit-org-item")
 			when {ES_CLOUD_ORGANIZATION}.role_manager_id then
-				create Result.make (req.percent_encoded_path_info + org.id.out + "/managers/", "es-cloud-edit-org-item")
+				create Result.make (req.percent_encoded_path_info + "managers/", "es-cloud-edit-org-item")
 			else
-				create Result.make (req.percent_encoded_path_info + org.id.out + "/members/", "es-cloud-edit-org-item")
+				create Result.make (req.percent_encoded_path_info + "members/", "es-cloud-edit-org-item")
 			end
 			Result.set_method_post
 

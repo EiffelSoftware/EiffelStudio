@@ -8,6 +8,9 @@ deferred class
 
 inherit
 	ES_CLOUD_ACCOUNT_STORAGE_I
+		redefine
+			organization
+		end
 
 	CMS_PROXY_STORAGE_SQL
 
@@ -38,7 +41,35 @@ feature -- Access: organization
 			sql_finalize_query (sql_select_organizations)
 		end
 
-	organization (oid: like {ES_CLOUD_ORGANIZATION}.id): detachable ES_CLOUD_ORGANIZATION
+	organization (a_id_or_name: READABLE_STRING_GENERAL): detachable ES_CLOUD_ORGANIZATION
+		local
+			l_oid: INTEGER_64
+		do
+			if a_id_or_name.is_integer_64 then
+				l_oid := a_id_or_name.to_integer_64
+				Result := organization_by_id (l_oid)
+			else
+				Result := organization_by_name (a_id_or_name)
+			end
+		end
+
+	organization_by_name (a_name: READABLE_STRING_GENERAL): detachable ES_CLOUD_ORGANIZATION
+		local
+			l_params: STRING_TABLE [detachable ANY]
+		do
+			reset_error
+			create l_params.make (1)
+			l_params.force (a_name.as_lower, "lower_name")
+
+			sql_query (sql_select_organization_by_name, l_params)
+			sql_start
+			if not has_error and not sql_after then
+				Result := fetch_organization
+			end
+			sql_finalize_query (sql_select_organization_by_name)
+		end
+
+	organization_by_id (oid: like {ES_CLOUD_ORGANIZATION}.id): detachable ES_CLOUD_ORGANIZATION
 		local
 			l_params: STRING_TABLE [detachable ANY]
 		do
@@ -82,7 +113,7 @@ feature -- Access: organization
 				across
 					lst as ic
 				loop
-					if attached organization (ic.item) as org then
+					if attached organization_by_id (ic.item) as org then
 						Result.force (org)
 					end
 				end
@@ -234,6 +265,8 @@ feature {NONE} -- organizations, users
 	sql_select_organizations: STRING = "SELECT oid, name, title, description, data FROM es_orgs ;"
 
 	sql_select_organization_by_id: STRING = "SELECT oid, name, title, description, data FROM es_orgs WHERE oid=:oid;"
+
+	sql_select_organization_by_name: STRING = "SELECT oid, name, title, description, data FROM es_orgs WHERE LOWER(name)=:lower_name;"
 
 	sql_insert_organization: STRING = "INSERT INTO es_orgs (name, title, description, data) VALUES (:name, :title, :description, :data);"
 

@@ -103,9 +103,10 @@ feature -- Execution
 			s: STRING
 			l_user: ES_CLOUD_USER
 			l_plan_filter: detachable READABLE_STRING_GENERAL
---			l_org: ES_CLOUD_ORGANIZATION
+			l_org: ES_CLOUD_ORGANIZATION
+			l_email: READABLE_STRING_8
 --			orgs: detachable LIST [ES_CLOUD_ORGANIZATION]
-			lst: LIST [TUPLE [license: ES_CLOUD_LICENSE; user: detachable ES_CLOUD_USER]]
+			lst: LIST [TUPLE [license: ES_CLOUD_LICENSE; user: detachable ES_CLOUD_USER; email: detachable READABLE_STRING_8; org: detachable ES_CLOUD_ORGANIZATION]]
 		do
 			if api.has_permission ("admin es licenses") then
 				if attached {WSF_STRING} req.query_parameter ("plan") as p_plan then
@@ -133,6 +134,8 @@ feature -- Execution
 				loop
 					lic := ic.item.license
 					l_user := ic.item.user
+					l_email := ic.item.email
+					l_org :=  ic.item.org
 					if lic /= Void then
 						s.append ("<tr><td>")
 						s.append ("<a href=%"")
@@ -142,20 +145,27 @@ feature -- Execution
 						s.append ("</a>")
 						s.append ("<!-- " + lic.id.out + " -->")
 						s.append ("</td>")
-						s.append ("<td>")
---						if l_org /= Void then
---							s.append ("[ORG] <a href=%"")
---							s.append (api.administration_path ("cloud/organizations/?org=" + sub.entity_id.out))
---							s.append ("%">")
---							s.append (html_encoded (l_org.name))
---						else
 						if l_user /= Void then
+							s.append ("<td class=%"user%">")
+
 							s.append ("<a href=%"")
 							s.append (api.administration_path ("cloud/installations/?user=" + l_user.id.out))
 							s.append ("%">")
 							s.append (html_encoded (api.real_user_display_name (l_user)))
+							s.append ("</a>")
+						elseif l_org /= Void then
+							s.append ("<td class=%"organization%">")
+							s.append ("[ORG] <a href=%"")
+							s.append (api.administration_path ("cloud/organizations/" + l_org.id.out + "/"))
+							s.append ("%">")
+							s.append (html_encoded (l_org.title_or_name))
+							s.append ("</a>")
+						elseif l_email /= Void then
+							s.append ("<td class=%"email%">")
+							s.append (l_email)
+						else
+							s.append ("<td>")
 						end
-						s.append ("</a>")
 						s.append ("</td>")
 
 						if attached lic.plan as l_plan then
@@ -227,15 +237,25 @@ feature -- Execution
 --								orgs as o_ic
 --							loop
 --								s.append ("<a href=%"")
---								s.append (api.administration_path ("cloud/organizations/?org=" + o_ic.item.id.out))
+--								s.append (api.administration_path ("cloud/organizations/" + o_ic.item.id.out + "/"))
 --								s.append ("%">")
 --								s.append (html_encoded (o_ic.item.name))
 --								s.append ("</a> ")
 --							end
 --							s.append ("</td>")
 --						else
-							s.append ("<td></td>") -- Organisation
---						end
+
+						if l_org /= Void then
+							s.append ("<td class=%"organization%">")
+							s.append ("<a href=%"")
+							s.append (api.administration_path ("cloud/organizations/" + l_org.id.out + "/"))
+							s.append ("%">")
+							s.append (html_encoded (l_org.title_or_name))
+							s.append ("</a>")
+							s.append ("</td>")
+						else
+							s.append ("<td></td>") -- Organization
+						end
 
 						s.append ("</tr>")
 					end
@@ -256,7 +276,7 @@ feature -- Execution
 --						or else (sub /= Void and then l_plan_filter.is_case_insensitive_equal (sub.plan.name))
 --					then
 --						s.append ("<tr><td><a href=%"")
---						s.append (api.administration_path ("cloud/organizations/?org=" + ic.item.id.out))
+--						s.append (api.administration_path ("cloud/organizations/" + ic.item.id.out + "/"))
 --						s.append ("%">")
 --						s.append (html_encoded (ic.item.name))
 --						s.append ("</a></td>")

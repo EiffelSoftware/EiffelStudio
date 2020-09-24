@@ -19,6 +19,10 @@ feature -- Access: installations
 		deferred
 		end
 
+	all_user_installations: LIST [ES_CLOUD_INSTALLATION]
+		deferred
+		end
+
 	installation (a_install_id: READABLE_STRING_GENERAL): detachable ES_CLOUD_INSTALLATION
 		deferred
 		end
@@ -43,6 +47,10 @@ feature -- Access: sessions
 		end
 
 	user_session (a_user: ES_CLOUD_USER; a_install_id, a_session_id: READABLE_STRING_GENERAL): detachable ES_CLOUD_SESSION
+		deferred
+		end
+
+	installation_sessions (a_install_id: READABLE_STRING_GENERAL; a_only_active: BOOLEAN): detachable LIST [ES_CLOUD_SESSION]
 		deferred
 		end
 

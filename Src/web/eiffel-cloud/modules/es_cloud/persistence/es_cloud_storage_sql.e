@@ -16,6 +16,9 @@ inherit
 	ES_CLOUD_SUBSCRIPTION_STORAGE_SQL
 
 	ES_CLOUD_STORAGE_I
+		undefine
+			organization
+		end
 
 	CMS_PROXY_STORAGE_SQL
 

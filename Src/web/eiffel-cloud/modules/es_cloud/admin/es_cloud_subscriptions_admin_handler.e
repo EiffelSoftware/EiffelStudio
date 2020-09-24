@@ -69,7 +69,7 @@ feature -- Execution
 						s.append ("<tr><td>")
 						if l_org /= Void then
 							s.append ("[ORG] <a href=%"")
-							s.append (api.administration_path ("cloud/organizations/?org=" + sub.entity_id.out))
+							s.append (api.administration_path ("cloud/organizations/" + sub.entity_id.out + "/"))
 							s.append ("%">")
 							s.append (html_encoded (l_org.name))
 						elseif l_user /= Void then
@@ -130,7 +130,7 @@ feature -- Execution
 								orgs as o_ic
 							loop
 								s.append ("<a href=%"")
-								s.append (api.administration_path ("cloud/organizations/?org=" + o_ic.item.id.out))
+								s.append (api.administration_path ("cloud/organizations/" + o_ic.item.id.out + "/"))
 								s.append ("%">")
 								s.append (html_encoded (o_ic.item.name))
 								s.append ("</a> ")
@@ -160,7 +160,7 @@ feature -- Execution
 						or else (sub /= Void and then l_plan_filter.is_case_insensitive_equal (sub.plan.name))
 					then
 						s.append ("<tr><td><a href=%"")
-						s.append (api.administration_path ("cloud/organizations/?org=" + ic.item.id.out))
+						s.append (api.administration_path ("cloud/organizations/" + ic.item.id.out + "/"))
 						s.append ("%">")
 						s.append (html_encoded (ic.item.name))
 						s.append ("</a></td>")

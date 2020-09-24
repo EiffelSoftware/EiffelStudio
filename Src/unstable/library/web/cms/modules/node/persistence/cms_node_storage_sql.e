@@ -139,8 +139,7 @@ feature -- Access
 			end
 		end
 
-	recent_nodes (a_lower: INTEGER; a_count: INTEGER): LIST [CMS_NODE]
-			-- List of recent `a_count' nodes with an offset of `lower'.
+	recent_nodes (a_offset: INTEGER; a_size: INTEGER): LIST [CMS_NODE]
 		local
 			l_parameters: STRING_TABLE [detachable ANY]
 		do
@@ -151,8 +150,8 @@ feature -- Access
 
 			from
 				create l_parameters.make (2)
-				l_parameters.put (a_count, "size")
-				l_parameters.put (a_lower, "offset")
+				l_parameters.put (a_size, "size")
+				l_parameters.put (a_offset, "offset")
 				sql_query (sql_select_recent_nodes, l_parameters)
 				sql_start
 			until
@@ -166,8 +165,8 @@ feature -- Access
 			sql_finalize_query (sql_select_recent_nodes)
 		end
 
-	recent_nodes_of_type (a_node_type: CMS_CONTENT_TYPE; a_lower: INTEGER; a_count: INTEGER): LIST [CMS_NODE]
-			-- Recent `a_count` nodes of type `a_node_type` with an offset of `lower`.
+	recent_nodes_of_type (a_node_type: CMS_CONTENT_TYPE; a_offset: INTEGER; a_count: INTEGER): LIST [CMS_NODE]
+			-- Recent `a_count` nodes of type `a_node_type` with an offset of `a_offset`.
 		local
 			l_parameters: STRING_TABLE [detachable ANY]
 		do
@@ -177,7 +176,7 @@ feature -- Access
 				create l_parameters.make (3)
 				l_parameters.put (a_node_type.name, "node_type")
 				l_parameters.put (a_count, "size")
-				l_parameters.put (a_lower, "offset")
+				l_parameters.put (a_offset, "offset")
 				sql_query (sql_select_recent_nodes_of_type, l_parameters)
 				sql_start
 			until
@@ -191,7 +190,7 @@ feature -- Access
 			sql_finalize_query (sql_select_recent_nodes_of_type)
 		end
 
-	recent_published_nodes_of_type (a_node_type: CMS_CONTENT_TYPE; a_lower: INTEGER; a_count: INTEGER): LIST [CMS_NODE]
+	recent_published_nodes_of_type (a_node_type: CMS_CONTENT_TYPE; a_offset: INTEGER; a_count: INTEGER): LIST [CMS_NODE]
 			-- <Precursor>
 		local
 			l_parameters: STRING_TABLE [detachable ANY]
@@ -202,7 +201,7 @@ feature -- Access
 				create l_parameters.make (4)
 				l_parameters.put (a_node_type.name, "node_type")
 				l_parameters.put (a_count, "size")
-				l_parameters.put (a_lower, "offset")
+				l_parameters.put (a_offset, "offset")
 				l_parameters.put ({CMS_NODE_API}.published, "status")
 				sql_query (sql_select_recent_published_nodes_of_type, l_parameters)
 				sql_start
@@ -217,7 +216,7 @@ feature -- Access
 			sql_finalize_query (sql_select_recent_published_nodes_of_type)
 		end
 
-	recent_node_changes_before (a_lower: INTEGER; a_count: INTEGER; a_date: DATE_TIME): LIST [CMS_NODE]
+	recent_node_changes_before (a_offset: INTEGER; a_count: INTEGER; a_date: DATE_TIME): LIST [CMS_NODE]
 			-- List of recent changes on published nodes, before `a_date', according to `params' settings.
 		local
 			l_parameters: STRING_TABLE [detachable ANY]
@@ -230,7 +229,7 @@ feature -- Access
 			from
 				create l_parameters.make (4)
 				l_parameters.put (a_count, "size")
-				l_parameters.put (a_lower, "offset")
+				l_parameters.put (a_offset, "offset")
 				l_parameters.put (a_date, "date")
 				l_parameters.put ({CMS_NODE_API}.published, "status")
 

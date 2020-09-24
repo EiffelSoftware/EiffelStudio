@@ -55,6 +55,10 @@ feature -- execute
 			execute (req, res)
 		end
 
+feature -- Settings
+
+	default_count: INTEGER = 50
+
 feature -- HTTP Methods
 
 	do_get (req: WSF_REQUEST; res: WSF_RESPONSE)
@@ -65,9 +69,10 @@ feature -- HTTP Methods
 			r: CMS_RESPONSE
 			l_cat: detachable READABLE_STRING_32
 			l_level: INTEGER
-			l_lower: INTEGER
+			l_offset: INTEGER
 			l_count: INTEGER
 			b: STRING
+			params: CMS_DATA_QUERY_PARAMETERS
 		do
 			if api.has_permission ("view logs") then
 				create {GENERIC_VIEW_CMS_RESPONSE} r.make (req, res, api)
@@ -81,17 +86,19 @@ feature -- HTTP Methods
 						l_level := {CMS_LOG}.level_from_string (p_level.value)
 					end
 				end
-				if attached {WSF_STRING} req.query_parameter ("lower") as p_lower and then p_lower.is_integer then
-					l_lower := p_lower.integer_value
+				if attached {WSF_STRING} req.query_parameter ("offset") as p_offset and then p_offset.is_integer then
+					l_offset := p_offset.integer_value
 				end
 				if attached {WSF_STRING} req.query_parameter ("count") as p_count and then p_count.is_integer then
 					l_count := p_count.integer_value
-					if l_count > 0 and l_lower = 0 then
-						l_lower := 1
-					end
+				else
+					l_count := default_count
 				end
 
-				l_logs := api.logs (l_cat, l_level, l_lower, l_count)
+				if l_count > 0 or l_offset > 0 then
+					create params.make (l_offset.to_natural_64, l_count.to_natural_32)
+				end
+				l_logs := api.logs (l_cat, l_level, params)
 				create b.make (100)
 				b.append ("<ul class=%"logs%">%N")
 				across
@@ -124,12 +131,12 @@ feature -- HTTP Methods
 				b.append ("</ul>%N")
 				if l_count > 0 then
 					b.append ("<p>")
-					if l_lower > 1 then
-						b.append (logs_link (" << ", l_cat, l_level.out, l_lower - l_count, l_count))
+					if l_offset > 0 then
+						b.append (logs_link (" << ", l_cat, l_level.out, l_offset - l_count, l_count))
 					end
-					b.append ("[" + l_lower.out + " -&gt; " + (l_lower + l_count - 1).out + "]")
+					b.append ("[" + (l_offset + 1).out + " -&gt; " + (l_offset + l_count - 1).out + "]")
 
-					b.append (logs_link (" >> ", l_cat, l_level.out, l_lower + l_count, l_count))
+					b.append (logs_link (" >> ", l_cat, l_level.out, l_offset + l_count, l_count))
 					b.append ("</p>")
 				end
 

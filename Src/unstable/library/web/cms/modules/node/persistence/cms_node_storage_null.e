@@ -53,25 +53,25 @@ feature -- Access: node
 			create {ARRAYED_LIST [CMS_NODE]} Result.make (0)
 		end
 
-	recent_nodes (a_lower: INTEGER; a_count: INTEGER): LIST [CMS_NODE]
-			-- List of the `a_count' most recent nodes, starting from `a_lower'.
+	recent_nodes (a_offset: INTEGER; a_count: INTEGER): LIST [CMS_NODE]
+			-- List of the `a_count' most recent nodes, starting from `a_offset'.
 		do
 			create {ARRAYED_LIST [CMS_NODE]} Result.make (0)
 		end
 
-	recent_nodes_of_type (a_node_type: CMS_CONTENT_TYPE; a_lower: INTEGER; a_count: INTEGER): LIST [CMS_NODE]
-			-- Recent `a_count` nodes of type `a_node_type` with an offset of `lower`.
+	recent_nodes_of_type (a_node_type: CMS_CONTENT_TYPE; a_offset: INTEGER; a_count: INTEGER): LIST [CMS_NODE]
+			-- Recent `a_count` nodes of type `a_node_type` with an offset of `a_offset`.
 		do
 			create {ARRAYED_LIST [CMS_NODE]} Result.make (0)
 		end
 
-	recent_published_nodes_of_type (a_node_type: CMS_CONTENT_TYPE; a_lower: INTEGER; a_count: INTEGER): LIST [CMS_NODE]
+	recent_published_nodes_of_type (a_node_type: CMS_CONTENT_TYPE; a_offset: INTEGER; a_count: INTEGER): LIST [CMS_NODE]
 			-- <Precursor>
 		do
 			create {ARRAYED_LIST [CMS_NODE]} Result.make (0)
 		end
 
-	recent_node_changes_before (a_lower: INTEGER; a_count: INTEGER; a_date: DATE_TIME): LIST [CMS_NODE]
+	recent_node_changes_before (a_offset: INTEGER; a_count: INTEGER; a_date: DATE_TIME): LIST [CMS_NODE]
 			-- List of recent changes, before `a_date', according to `params' settings.
 		do
 			create {ARRAYED_LIST [CMS_NODE]} Result.make (0)

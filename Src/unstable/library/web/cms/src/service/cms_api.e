@@ -865,13 +865,17 @@ feature -- Status Report
 
 feature -- Logging
 
-	logs (a_category: detachable READABLE_STRING_GENERAL; a_level: INTEGER; a_lower: INTEGER; a_count: INTEGER): LIST [CMS_LOG]
-			-- List of recent logs from `a_lower' to `a_lower+a_count'.
+	logs (a_category: detachable READABLE_STRING_GENERAL; a_level: INTEGER; params: detachable CMS_DATA_QUERY_PARAMETERS): LIST [CMS_LOG]
+			-- List of recent logs, and if `params` is set, from `params.offset' to `params.offset + params.a_count'.
 			-- If `a_category' is set, filter to return only associated logs.
 			-- If `a_level > 0' , filter to return only associated logs for that level.
-			-- If `a_count' <= 0 then, return all logs.
+			-- If `params.count' <= 0 then, return all logs.
 		do
-			Result := storage.logs (a_category, a_level, a_lower, a_count)
+			if params /= Void then
+				Result := storage.logs (a_category, a_level, params.offset.to_integer_32, params.size.to_integer_32)
+			else
+				Result := storage.logs (a_category, a_level, 0, 0)
+			end
 		end
 
 	log	(a_category: READABLE_STRING_8; a_message: READABLE_STRING_8; a_level: INTEGER; a_link: detachable CMS_LINK)

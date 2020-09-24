@@ -221,7 +221,7 @@ feature -- Logs
 			sql_finalize_insert (sql_insert_log)
 		end
 
-	logs (a_category: detachable READABLE_STRING_GENERAL; a_lower: INTEGER; a_count: INTEGER): ARRAYED_LIST [CMS_LOG]
+	logs (a_category: detachable READABLE_STRING_GENERAL; a_level: INTEGER; a_lower: INTEGER; a_count: INTEGER): ARRAYED_LIST [CMS_LOG]
 			-- <Precursor>.
 		local
 			l_parameters: detachable STRING_TABLE [detachable ANY]
@@ -231,16 +231,24 @@ feature -- Logs
 			create l_parameters.make (3)
 			if a_category /= Void then
 				l_parameters.put (a_category, "category")
-				l_sql := sql_select_categorized_logs
+				if a_level > 0 then
+					l_parameters.put (a_level, "level")
+					l_sql := sql_select_level_and_categorized_logs
+				else
+					l_sql := sql_select_categorized_logs
+				end
+			elseif a_level > 0 then
+				l_parameters.put (a_level, "level")
+				l_sql := sql_select_level_logs
 			else
 				l_sql := sql_select_logs
 			end
 			if a_count > 0 then
-				l_parameters.put (a_lower, "offset")
+				l_parameters.put (a_lower - 1, "offset")
 				l_parameters.put (a_count, "size")
 				check l_sql.ends_with_general (";") end
 				l_sql := l_sql.substring (1, l_sql.count - 1) -- Remove ';'
-							+ "LIMIT :size OFFSET :offset ;"
+							+ " LIMIT :size OFFSET :offset ;"
 			end
 
 			from
@@ -301,13 +309,15 @@ feature -- Logs
 		end
 
 	sql_insert_log: STRING = "INSERT INTO logs (category, level, uid, message, info, link, date) VALUES (:category, :level, :uid, :message, :info, :link, :date);"
-				-- SQL Insert to add a new node.
 
 	sql_select_logs: STRING = "SELECT id, category, level, uid, message, info, link, date FROM logs ORDER by date DESC, id DESC;"
-				-- SQL Insert to add a new node.
 
 	sql_select_categorized_logs: STRING = "SELECT id, category, level, uid, message, info, link, date FROM logs WHERE category=:category ORDER by date DESC, id DESC;"
-				-- SQL Insert to add a new node.
+
+	sql_select_level_and_categorized_logs: STRING = "SELECT id, category, level, uid, message, info, link, date FROM logs WHERE category=:category AND level=:level ORDER by date DESC, id DESC;"
+
+	sql_select_level_logs: STRING = "SELECT id, category, level, uid, message, info, link, date FROM logs WHERE level=:level ORDER by date DESC, id DESC;"
+
 
 feature -- Misc
 

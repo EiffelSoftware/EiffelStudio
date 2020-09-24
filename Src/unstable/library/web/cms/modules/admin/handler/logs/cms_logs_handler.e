@@ -64,6 +64,7 @@ feature -- HTTP Methods
 			l_log: CMS_LOG
 			r: CMS_RESPONSE
 			l_cat: detachable READABLE_STRING_32
+			l_level: INTEGER
 			l_lower: INTEGER
 			l_count: INTEGER
 			b: STRING
@@ -73,34 +74,65 @@ feature -- HTTP Methods
 				if attached {WSF_STRING} req.query_parameter ("category") as p_cat then
 					l_cat := p_cat.value
 				end
+				if attached {WSF_STRING} req.query_parameter ("level") as p_level then
+					if p_level.is_integer then
+						l_level := p_level.integer_value
+					else
+						l_level := {CMS_LOG}.level_from_string (p_level.value)
+					end
+				end
 				if attached {WSF_STRING} req.query_parameter ("lower") as p_lower and then p_lower.is_integer then
 					l_lower := p_lower.integer_value
 				end
 				if attached {WSF_STRING} req.query_parameter ("count") as p_count and then p_count.is_integer then
 					l_count := p_count.integer_value
+					if l_count > 0 and l_lower = 0 then
+						l_lower := 1
+					end
 				end
 
-				l_logs := api.logs (l_cat, l_lower, l_count)
+				l_logs := api.logs (l_cat, l_level, l_lower, l_count)
 				create b.make (100)
 				b.append ("<ul class=%"logs%">%N")
 				across
 					l_logs as ic
 				loop
 					l_log := ic.item
-					b.append ("<li class=%"log-level-"+ l_log.level.out +"%">")
-					b.append ("[" + l_log.category + "] ")
+					b.append ("<li class=%"log-level-"+ l_log.level.out +" log-" + l_log.level_name + "%">")
+					b.append ("<div class=%"log-header%">")
+					b.append ("<div class=%"log-name%">")
+					b.append (html_encoded (l_log.level_name))
+					b.append ("</div>")
+					b.append ("<div class=%"log-category%">")
+					b.append ("[" + html_encoded (l_log.category) + "]")
+					b.append ("</div>")
+					b.append ("</div>")
+					b.append ("<div class=%"log-message%">")
 					b.append (l_log.message)
-					b.append ("%N<p>(date: " + l_log.date.out + ")")
+					b.append ("</div>")
+					b.append ("<div class=%"log-date%">(date: " + l_log.date.out + ")</div>")
 					if attached l_log.link as lnk then
+						b.append ("<div class=%"log-link%">")
 						b.append (" <a href=%"" + req.script_url (lnk.location) + "%">" + html_encoded (lnk.title) + "</a>")
+						b.append ("</div>%N")
 					end
-					b.append ("</p>%N")
 					if attached l_log.info as l_info then
 						b.append ("<pre>" + l_info + "</pre>%N")
 					end
 					b.append ("</li>%N")
 				end
 				b.append ("</ul>%N")
+				if l_count > 0 then
+					b.append ("<p>")
+					if l_lower > 1 then
+						b.append (logs_link (" << ", l_cat, l_level.out, l_lower - l_count, l_count))
+					end
+					b.append ("[" + l_lower.out + " -&gt; " + (l_lower + l_count - 1).out + "]")
+
+					b.append (logs_link (" >> ", l_cat, l_level.out, l_lower + l_count, l_count))
+					b.append ("</p>")
+				end
+
 				r.set_main_content (b)
 				r.set_page_title ("Logs ...")
 				r.set_title ("Logs")
@@ -108,6 +140,24 @@ feature -- HTTP Methods
 			else
 				send_access_denied (req, res)
 			end
+		end
+
+	logs_link (a_title: READABLE_STRING_GENERAL; a_category, a_level: detachable READABLE_STRING_GENERAL; a_lower, a_count: INTEGER): STRING_8
+		local
+			lnk: CMS_LOCAL_LINK
+		do
+			lnk := api.administration_link (a_title, "logs")
+			if a_category /= Void then
+				lnk.add_query_parameter ("category", url_encoded (a_category))
+			end
+			if a_level /= Void then
+				lnk.add_query_parameter ("level", url_encoded (a_level))
+			end
+			if a_lower > 0 and a_count > 0 then
+				lnk.add_query_parameter ("lower", a_lower.out)
+				lnk.add_query_parameter ("count", a_count.out)
+			end
+			Result := api.link (lnk.title, lnk.location, Void)
 		end
 
 end

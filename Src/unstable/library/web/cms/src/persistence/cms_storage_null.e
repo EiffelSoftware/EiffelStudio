@@ -93,10 +93,7 @@ feature -- Logs
 		do
 		end
 
-	logs (a_category: detachable READABLE_STRING_GENERAL; a_lower: INTEGER; a_count: INTEGER): LIST [CMS_LOG]
-			-- List of recent logs from `a_lower' to `a_lower+a_count'.
-			-- If `a_category' is set, filter to return only associated logs.
-			-- If `a_count' <= 0 then, return all logs.
+	logs (a_category: detachable READABLE_STRING_GENERAL; a_level: INTEGER; a_lower: INTEGER; a_count: INTEGER): LIST [CMS_LOG]
 		do
 			create {ARRAYED_LIST [CMS_LOG]} Result.make (0)
 		end
@@ -136,6 +133,6 @@ feature -- Custom
 		end
 
 note
-	copyright: "2011-2018, Jocelyn Fiat, Javier Velilla, Eiffel Software and others"
+	copyright: "2011-2020, Jocelyn Fiat, Javier Velilla, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 end

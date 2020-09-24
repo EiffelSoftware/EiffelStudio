@@ -91,6 +91,31 @@ feature -- Change
 
 feature -- Constants
 
+	level_from_string (s: READABLE_STRING_GENERAL): INTEGER
+		do
+			if s.is_case_insensitive_equal ("emergency") then
+				Result := level_emergency
+			elseif s.is_case_insensitive_equal ("alert") then
+				Result := level_alert
+			elseif s.is_case_insensitive_equal ("critical") then
+				Result := level_critical
+			elseif s.is_case_insensitive_equal ("error") then
+				Result := level_error
+			elseif s.is_case_insensitive_equal ("warning") then
+				Result := level_warning
+			elseif s.is_case_insensitive_equal ("notice") then
+				Result := level_notice
+			elseif s.is_case_insensitive_equal ("info") then
+				Result := level_info
+			elseif s.is_case_insensitive_equal ("debug") then
+				Result := level_debug
+			else
+				Result := s.substring (6, s.count).to_integer
+			end
+		ensure
+			instance_free: class
+		end
+
 	level_to_string (a_level: INTEGER): STRING
 		do
 			inspect a_level
@@ -113,6 +138,8 @@ feature -- Constants
 			else
 				Result := "level-" + a_level.out
 			end
+		ensure
+			instance_free: class
 		end
 
 	level_emergency: INTEGER = 1
@@ -123,6 +150,7 @@ feature -- Constants
 	level_notice: INTEGER = 6
 	level_info: INTEGER = 7
 	level_debug: INTEGER = 8
+	
 
 note
 	copyright: "2011-2018, Javier Velilla, Jocelyn Fiat, Eiffel Software and others"

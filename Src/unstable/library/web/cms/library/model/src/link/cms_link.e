@@ -90,7 +90,7 @@ feature -- Element change
 			i := loc.index_of ('?', 1)
 			if i > 0 then
 				q := loc.substring (i + 1, loc.count)
-				loc.keep_head (i)
+				loc.keep_head (i - 1)
 			else
 				create q.make_empty
 			end

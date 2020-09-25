@@ -312,7 +312,7 @@ feature -- Execution
 			end
 			if l_plan = Void then
 				s.append ("<div class=%"es-plans%">")
-				s.append ("<strong>Plans</strong><ul>")
+				s.append ("<strong>EiffelStudio plans</strong><ul>")
 				across
 					es_cloud_api.sorted_plans as ic
 				loop
@@ -322,7 +322,7 @@ feature -- Execution
 						s.append (html_encoded (l_plan.title_or_name))
 						s.append ("</div>")
 						if attached l_plan.description as l_plan_description then
-							s.append ("<div class=%"description%">"+ html_encoded (l_plan_description) + "</div>")
+							s.append ("<div class=%"description%">"+ utf_8_encoded (l_plan_description) + "</div>")
 						end
 						s.append ("</li>")
 					end

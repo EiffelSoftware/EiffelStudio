@@ -93,9 +93,10 @@ feature -- Logs
 		do
 		end
 
-	logs (a_category: detachable READABLE_STRING_GENERAL; a_level: INTEGER; a_lower: INTEGER; a_count: INTEGER): LIST [CMS_LOG]
+	logs (a_category: detachable READABLE_STRING_GENERAL; a_level: INTEGER; a_offset: INTEGER; a_count: INTEGER): LIST [CMS_LOG]
 		do
-			create {ARRAYED_LIST [CMS_LOG]} Result.make (0)
+			check False then
+			end
 		end
 
 feature -- Custom		

@@ -59,8 +59,8 @@ feature -- Logs
 		deferred
 		end
 
-	logs (a_category: detachable READABLE_STRING_GENERAL; a_level: INTEGER; a_lower: INTEGER; a_count: INTEGER): LIST [CMS_LOG]
-			-- List of recent logs from `a_lower' to `a_lower+a_count'.
+	logs (a_category: detachable READABLE_STRING_GENERAL; a_level: INTEGER; a_offset: INTEGER; a_count: INTEGER): LIST [CMS_LOG]
+			-- List of recent logs from `1 + a_offset' to `a_offset + a_count'.
 			-- If `a_category' is set, filter to return only associated logs.
 			-- If `a_level > 0', filter to return only associated logs for that level.
 			-- If `a_count' <= 0 then, return all logs.

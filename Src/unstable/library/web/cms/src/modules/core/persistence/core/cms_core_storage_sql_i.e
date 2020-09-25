@@ -221,7 +221,7 @@ feature -- Logs
 			sql_finalize_insert (sql_insert_log)
 		end
 
-	logs (a_category: detachable READABLE_STRING_GENERAL; a_level: INTEGER; a_lower: INTEGER; a_count: INTEGER): ARRAYED_LIST [CMS_LOG]
+	logs (a_category: detachable READABLE_STRING_GENERAL; a_level: INTEGER; a_offset: INTEGER; a_count: INTEGER): ARRAYED_LIST [CMS_LOG]
 			-- <Precursor>.
 		local
 			l_parameters: detachable STRING_TABLE [detachable ANY]
@@ -244,11 +244,11 @@ feature -- Logs
 				l_sql := sql_select_logs
 			end
 			if a_count > 0 then
-				l_parameters.put (a_lower - 1, "offset")
-				l_parameters.put (a_count, "size")
 				check l_sql.ends_with_general (";") end
 				l_sql := l_sql.substring (1, l_sql.count - 1) -- Remove ';'
-							+ " LIMIT :size OFFSET :offset ;"
+				l_sql := l_sql + " LIMIT " + a_count.out
+				l_sql := l_sql + " OFFSET " + a_offset.out
+				l_sql := l_sql + " ;"
 			end
 
 			from

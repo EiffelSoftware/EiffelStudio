@@ -202,6 +202,15 @@ feature -- Element change license
 					lic := new_license_for_plan (pl)
 					lic.set_remaining_days (pl.trial_period_in_days)
 					save_new_license (lic, a_user)
+					if
+						attached a_user.cms_user as l_cms_user and then
+						attached l_cms_user.email as l_email
+					then
+						if l_email /= Void then
+							send_new_license_mail (l_cms_user, l_cms_user.profile_name, l_email, lic, Void)
+						end
+						notify_new_license (l_cms_user, l_cms_user.profile_name, l_email, lic)
+					end
 				end
 			end
 		end
@@ -329,6 +338,15 @@ feature -- Element change license
 						inst.update_license_id (Result.id)
 						es_cloud_storage.save_installation (inst)
 					end
+				end
+				if
+					attached sub.user.cms_user as l_cms_user and then
+					attached l_cms_user.email as l_email
+				then
+					if l_email /= Void then
+						send_new_license_mail (l_cms_user, l_cms_user.profile_name, l_email, Result, Void)
+					end
+					notify_new_license (l_cms_user, l_cms_user.profile_name, l_email, Result)
 				end
 			end
 		end

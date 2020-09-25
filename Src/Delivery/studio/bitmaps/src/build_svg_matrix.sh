@@ -17,6 +17,7 @@
 background="transparent"
 #background="rgb(0,255,0)"
 
+background_png="transparent"
 #comment following line, to have transparent background, instead of green background, for remaining PNG icons!
 #background_png="#0f0"
 
@@ -108,7 +109,9 @@ echo svg_page_size=$svg_page_width x $svg_page_height >> ${target}.txt
 
 function svg_to_png { # icons.svg icons.png width height
 	echo " - SVG to ${2}"
-	convert -resize ${3}x${4} +antialias -background $background $1 $2
+	#convert -resize ${3}x${4} +antialias -background $background $1 $2
+	echo "   > convert -resize ${3}x${4} -background $background $1 $2 "
+	convert -resize ${3}x${4} -background $background $1 $2
 	#Try with inkscape:
 	#inkscape --without-gui --export-background-opacity=0  --export-width=$3 --export-height=$4 $1 --export-png=$2
 }

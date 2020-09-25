@@ -28,6 +28,7 @@ h=$( basename -- $target | cut -d'_' -f 2 | cut -d'x' -f 2 | cut -d'.' -f1 )
 wsep=1
 hsep=1
 color="rgb(217,217,217)"
+color="transparent"
 
 tmpdir=/tmp/${w}x${h}
 if [ ! -e $tmpdir ]
@@ -98,9 +99,9 @@ function append_icons_row {
 
 }
 
-convert -size ${w}x${h} xc:transparent $tmpdir/empty.png
-convert -size ${wsep}x$(( $w + $wsep )) xc:$color $tmpdir/v.png
-convert -size $(( $cols * ($w + $hsep) + $hsep ))x${hsep} xc:$color $tmpdir/h_line.png
+convert -size ${w}x${h} xc:transparent -background transparent $tmpdir/empty.png
+convert -size ${wsep}x$(( $w + $wsep )) -background transparent xc:$color $tmpdir/v.png
+convert -size $(( $cols * ($w + $hsep) + $hsep ))x${hsep} -background transparent xc:$color $tmpdir/h_line.png
 cp $tmpdir/h_line.png ${target}
 
 r=1
@@ -144,7 +145,7 @@ do
 				if [ -e $d/$c.png ]
 				then
 					echo "($r,$c) resize to ${w}x${h}"
-					convert -resize ${w}x${h} $d/$c.png $icon
+					convert -resize ${w}x${h} -background transparent $d/$c.png $icon
 					#cp $d/$c.png $icon
 					#identify $icon
 				else

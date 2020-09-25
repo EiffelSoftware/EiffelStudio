@@ -561,6 +561,7 @@ EnterRow 12
 # system info
 SVGadd $RES/info.svg 6.svg
 # show features of any
+SVGadd ../1/13.svg $OVERLAY/feature_ne.svg $RES/any.svg 7.svg
 # go to definition
 # 
 # [@refactor]

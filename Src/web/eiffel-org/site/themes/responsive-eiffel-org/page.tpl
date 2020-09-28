@@ -47,6 +47,8 @@
 	<script src="https://cdn.jsdelivr.net/gh/google/code-prettify@master/loader/run_prettify.js"></script>
     <script src="{$theme_path/}js/google-code-prettify-eiffel/src/lang-eiffel.js"></script>
     <script src="https://www.google.com/recaptcha/api.js" async defer></script>
+
 </div>
 </body>
+
 </html>

@@ -144,9 +144,12 @@ feature {NONE} -- Parsing class types
 					-- Parse `a_name' into a type AST node.
 				type_parser.parse_from_string_32 ({STRING_32} "type " + a_name, Void)
 				l_type_as := type_parser.type_node
-
-					-- Generate TYPE_A object from type AST node.
-				Result := evaluated_base_type (l_type_as)
+				if l_type_as /= Void then
+						-- Generate TYPE_A object from type AST node.
+					Result := evaluated_base_type (l_type_as)
+				else
+					Result := none_type
+				end
 			end
 		end
 
@@ -214,7 +217,7 @@ feature{NONE} -- Implementation
 		end
 
 note
-	copyright: "Copyright (c) 1984-2017, Eiffel Software"
+	copyright: "Copyright (c) 1984-2020, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

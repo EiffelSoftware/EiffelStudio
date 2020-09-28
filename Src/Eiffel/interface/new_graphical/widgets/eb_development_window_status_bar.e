@@ -551,22 +551,25 @@ feature {NONE} -- Implementation: event handling
 				eiffel_project_session_statistics.reset_consecutive_successful_compilations
 			end
 
-			if attached (create {SERVICE_CONSUMER [NOTIFICATION_S]}).service as l_notification_service then
+			if
+				attached (create {SERVICE_CONSUMER [NOTIFICATION_S]}).service as l_notification_service and then
+				attached eiffel_project_session_statistics as l_stats
+			then
 				debug ("PRETTY_PRINTER_NOTIFICATION")
-					l_notification_service.notify (create {NOTIFICATION_MESSAGE}.make ("Number of compilations: " + eiffel_project_session_statistics.compilations.out, ""))
-					l_notification_service.notify (create {NOTIFICATION_MESSAGE}.make ("Number of successful compilations: " + eiffel_project_session_statistics.successful_compilations.out, "" ))
-					l_notification_service.notify (create {NOTIFICATION_MESSAGE}.make ("Number of failed compilations: " + eiffel_project_session_statistics.failed_compilations.out, ""))
-					l_notification_service.notify (create {NOTIFICATION_MESSAGE}.make ("Number of successful compilations in a row: " + eiffel_project_session_statistics.consecutive_successful_compilations.out, ""))
+					l_notification_service.notify (create {NOTIFICATION_MESSAGE}.make ("Number of compilations: " + l_stats.compilations.out, ""))
+					l_notification_service.notify (create {NOTIFICATION_MESSAGE}.make ("Number of successful compilations: " + l_stats.successful_compilations.out, "" ))
+					l_notification_service.notify (create {NOTIFICATION_MESSAGE}.make ("Number of failed compilations: " + l_stats.failed_compilations.out, ""))
+					l_notification_service.notify (create {NOTIFICATION_MESSAGE}.make ("Number of successful compilations in a row: " + l_stats.consecutive_successful_compilations.out, ""))
 				end
-				if eiffel_project_session_statistics.consecutive_successful_compilations >= preferences.development_window_data.consecutive_successful_compilations_threshold then
-					if attached pretty_printer as pp then
-						notify_about_pretty_printer (l_notification_service, pp)
+				if l_stats.consecutive_successful_compilations >= preferences.development_window_data.consecutive_successful_compilations_threshold then
+					if suggesting_pretty_printer then
+						notify_about_pretty_printer (l_notification_service)
 					end
 				end
 			end
 		end
 
-	notify_about_pretty_printer (a_notification_service: NOTIFICATION_S; a_pretty_printer: like pretty_printer)
+	notify_about_pretty_printer (a_notification_service: NOTIFICATION_S)
 		local
 			l_notify: NOTIFICATION_MESSAGE_WITH_ACTIONS
 			l_shortcut: MANAGED_SHORTCUT
@@ -578,7 +581,15 @@ feature {NONE} -- Implementation: event handling
 			l_msg := l_locale.locale.formatted_string (l_locale.locale.translation_in_context ("The class $1 can be prettified%NUse: $2", "prettify_notification") , [Window_manager.last_focused_development_window.class_name, l_shortcut.display_string])
 			create l_notify.make (l_msg, "prettify")
 			l_notify.set_title (l_locale.locale.translation_in_context ("Code prettify suggestion", "prettify_notification"))
-			l_notify.register_action (agent editor_prettify, "Apply")
+			l_notify.register_action (agent
+					do
+						if
+							attached Window_manager.last_focused_development_window as win and then
+							attached win.editors_manager.current_editor as l_editor
+						then
+							l_editor.prettify
+						end
+					end, "Apply")
 			a_notification_service.notify (l_notify)
 		end
 
@@ -704,46 +715,38 @@ feature {NONE} -- Implementation
 
 feature -- Can pretty print?
 
-	pretty_printer: detachable STRING_32
+	suggesting_pretty_printer: BOOLEAN
 		local
 			l_show_pretty: E_SHOW_PRETTY
-			u,s: STRING_32
+			src,s: STRING_32
 			window: EB_DEVELOPMENT_WINDOW
 			l_diff: DIFF_TEXT
 		do
-			window := Window_manager.last_focused_development_window
-
+			if
+				attached Window_manager.last_focused_development_window as windows and then
+				attached window.file_name as l_filename
+			then
 					-- Create a string to write prettified text.
-			create s.make_empty
-				-- Prettify code.
-			if attached window.file_name  as l_name then
-				create l_show_pretty.make_string (l_name.as_string_32, s)
+				create s.make_empty
+
+					-- Prettify code.
+				create l_show_pretty.make_string (l_filename.to_string_32, s)
 						-- Check if formatting is successful.
 				if not l_show_pretty.error then
 					create l_diff
-					s.replace_substring_all ("%N", "%R%N")
-					l_diff.set_text (window.text, s)
+					src := window.text
+					src.replace_substring_all ("%R%N", "%N")
+					l_diff.set_text (src, s)
 					l_diff.compute_diff
-					u := l_diff.unified
-					if attached l_diff.hunks as l_hunks and then
-					   l_hunks.count >= preferences.development_window_data.pretty_printer_messindex.to_integer_32
+					if
+						attached l_diff.hunks as l_hunks and then
+						l_hunks.count >= preferences.development_window_data.pretty_printer_messindex.to_integer_32
 					then
-						Result := s
+						Result := True
 					end
 				end
 			end
 		end
-
-
-	editor_prettify
-			-- Prettify class in current editor.
-		do
-			if attached Window_manager.last_focused_development_window.class_name and then attached Window_manager.last_focused_development_window.editors_manager.current_editor as l_editor then
-				l_editor.prettify
-			end
-		end
-
-
 
 invariant
 	compiling_icon_index_positive: compiling_icon_index > 0

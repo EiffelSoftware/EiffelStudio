@@ -871,6 +871,8 @@ feature -- Email processing
 			create res.make_from_string ("templates")
 			if attached cms_api.module_theme_resource_location (module, res.extended ("new_license_email.tpl")) as loc and then attached cms_api.resolved_smarty_template (loc) as tpl then
 				tpl.set_value (a_license, "license")
+				tpl.set_value (a_license.plan.name, "license_plan_name")
+				tpl.set_value (a_license.plan.title_or_name, "license_plan_title")
 				tpl.set_value (a_license.key, "license_key")
 				if vars /= Void then
 					across
@@ -896,7 +898,7 @@ feature -- Email processing
 				msg := tpl.string
 			else
 				create s.make_empty;
-				s.append ("New EiffelStudio license " + utf_8_encoded (a_license.key) + ".%N")
+				s.append ("New "+ html_encoded (a_license.plan.title_or_name) +" EiffelStudio license " + utf_8_encoded (a_license.key) + ".%N")
 				if a_user = Void then
 					s.append ("The license is associated with email %"" + a_email_addr + "%".%NPlease register a new account with that email at " + cms_api.site_url + " .%N")
 				else
@@ -905,7 +907,7 @@ feature -- Email processing
 				msg := s
 			end
 
-			e := cms_api.new_html_email (a_email_addr, "New EiffelStudio license " + utf_8_encoded (a_license.key), msg)
+			e := cms_api.new_html_email (a_email_addr, "New " + utf_8_encoded (a_license.plan.title_or_name) + " EiffelStudio license " + utf_8_encoded (a_license.key), msg)
 			cms_api.process_email (e)
 		end
 
@@ -919,6 +921,8 @@ feature -- Email processing
 			create res.make_from_string ("templates")
 			if attached cms_api.module_theme_resource_location (module, res.extended ("notify_new_license_email.tpl")) as loc and then attached cms_api.resolved_smarty_template (loc) as tpl then
 				tpl.set_value (a_license, "license")
+				tpl.set_value (a_license.plan.name, "license_plan_name")
+				tpl.set_value (a_license.plan.title_or_name, "license_plan_title")
 				tpl.set_value (a_license.key, "license_key")
 				if a_user /= Void then
 					tpl.set_value (a_user, "user")
@@ -936,7 +940,7 @@ feature -- Email processing
 				msg := tpl.string
 			else
 				create s.make_empty;
-				s.append ("New EiffelStudio license " + utf_8_encoded (a_license.key) + ".%N")
+				s.append ("New "+ html_encoded (a_license.plan.title_or_name) +" EiffelStudio license " + utf_8_encoded (a_license.key) + ".%N")
 				if a_user = Void then
 					if a_email_addr /= Void then
 						s.append ("The license is associated with email %"" + a_email_addr + "%".%N")
@@ -954,7 +958,7 @@ feature -- Email processing
 				s.append ("Notification from site " + cms_api.site_url + " .%N")
 				msg := s
 			end
-			e := cms_api.new_html_email (cms_api.setup.site_notification_email, "[NOTIF] New EiffelStudio license " + utf_8_encoded (a_license.key), msg)
+			e := cms_api.new_html_email (cms_api.setup.site_notification_email, "[NOTIF] New " + utf_8_encoded (a_license.plan.title_or_name) + " EiffelStudio license " + utf_8_encoded (a_license.key), msg)
 			cms_api.process_email (e)
 		end
 

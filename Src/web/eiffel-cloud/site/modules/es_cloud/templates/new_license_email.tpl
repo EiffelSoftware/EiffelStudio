@@ -1,5 +1,5 @@
 {unless isempty="$customer_name"}Dear {htmlentities}{$customer_name/}{/htmlentities},{/unless}
-<p>You have a new EiffelStudio license <strong>{$license_key/}</strong>.</p>
+<p>You have a new {unless isempty="$license_plan_title"}"{htmlentities}{$license_plan_title/}{/htmlentities}" {/unless} EiffelStudio license <strong>{$license_key/}</strong>.</p>
 
 {if isset="$user"}
 <p>The license is associated with your account "{htmlentities}{$user_name/}{/htmlentities}" {unless isempty="$user_email"}(email "{$user_email/}"){/unless}.</p>

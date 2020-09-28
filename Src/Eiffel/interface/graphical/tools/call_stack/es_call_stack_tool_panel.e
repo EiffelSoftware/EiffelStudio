@@ -1390,7 +1390,7 @@ feature {NONE} -- Export call stack
 			l_output: YANK_STRING_WINDOW
 			retried: BOOLEAN
 			cse: CALL_STACK_ELEMENT
-			s: STRING
+			s: STRING_32
 			levels: ARRAYED_LIST [INTEGER]
 			tf: DEBUGGER_TEXT_FORMATTER_VISITOR
 			l_sorter: QUICK_SORTER [INTEGER]

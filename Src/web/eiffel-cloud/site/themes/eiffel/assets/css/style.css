@@ -265,6 +265,16 @@ body {
           background-color: #446084; }
           #header #menu-bar ul.horizontal li:hover a {
             color: #fff; }
+  #header div#built-with-eiffel {
+    display: flex;
+    margin-left: auto;
+    padding: 10px 20px 0 20px;
+    background: white;
+    background: linear-gradient(90deg, rgba(255, 255, 255, 0) 40%, #75c1ff 100%); }
+    #header div#built-with-eiffel a {
+      color: #000; }
+    #header div#built-with-eiffel a:hover {
+      text-decoration: underline; }
 
 div#content {
   flex: 1;
@@ -308,6 +318,9 @@ div#footer, footer {
     left: 0;
     top: 0;
     clear: both; }
+
+  div#built-with-eiffel {
+    display: none; }
 
   #menu-bar div.menu li.icon {
     display: inline-block !important; }

@@ -28,11 +28,13 @@
     {if isset="$page.primary_nav"}
         {$page.primary_nav/}
     {/if}
+    <div id="built-with-eiffel">
+    <a href="{$site_url/}site/build_with_eiffel">Developed in Eiffel with EiffelStudio</a>
+    </div>
+    {if isset="$page.regions.search"}<!-- Page search -->
+    <div class="search">{$page.regions.search/}</div>
+    {/if}
   </div> 
-  {if isset="$page.regions.search"}
-  <!-- Page search -->
-  <div class="search">{$page.regions.search/}</div>
-  {/if}
   <!-- General Page Content -->
   <div id='content'>
   	<!-- Left Sidebar sidebar_first -->

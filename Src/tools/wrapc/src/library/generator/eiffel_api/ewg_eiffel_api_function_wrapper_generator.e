@@ -422,7 +422,7 @@ feature {NONE} -- Generate Eiffel High Level Access
 				output_stream.put_string (eiffel_parameter_name_from_c_parameter_name (a_native_member_wrapper.mapped_eiffel_name))
 				output_stream.put_string (": ")
 				if attached {EWG_C_AST_POINTER_TYPE} a_native_member_wrapper.c_declaration.type as l_type and then
-				   attached {EWG_C_AST_PRIMITIVE_TYPE} l_type.base as l_base then
+				   attached {EWG_C_AST_PRIMITIVE_TYPE} l_type.base as l_base and then not l_base.corresponding_eiffel_type.same_string ("WHAT_SHOULD_I_DO_WITH_VOID") then
 					output_stream.put_string ("TYPED_POINTER [")
 					output_stream.put_string (l_base.corresponding_eiffel_type)
 					output_stream.put_string ("]")
@@ -830,7 +830,7 @@ feature {NONE} -- Generate Eiffel to C inline code.
 					end
 					output_stream.put_string (": ")
 					if attached {EWG_C_AST_POINTER_TYPE} cs.item.type as l_type and then
-					   attached {EWG_C_AST_PRIMITIVE_TYPE} l_type.base as l_base
+					   attached {EWG_C_AST_PRIMITIVE_TYPE} l_type.base as l_base and then not l_base.corresponding_eiffel_type.same_string ("WHAT_SHOULD_I_DO_WITH_VOID")
 					then
 						output_stream.put_string ("TYPED_POINTER [")
 						output_stream.put_string (l_base.corresponding_eiffel_type)

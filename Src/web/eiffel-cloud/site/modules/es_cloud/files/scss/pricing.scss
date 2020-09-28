@@ -1,5 +1,11 @@
+@import "common.scss";
+
+div.title {
+}
+
 div.pricing {
 	background-color: #eaedf5;
+	padding: 0;
 }
 div.pricing-notes {
 	font-size: smaller;
@@ -8,8 +14,10 @@ div.pricing-notes {
 	a:hover {
 		text-decoration: underline;
 	}
-	background-color: #eaedf5;
-	border: solid 1px #ddd;
+	background-color: #fffcf0;
+	border: solid 2px #ddd;
+	@include border-radius(.7rem);
+	margin: .5rem;
 	padding: 1rem;
 	dt {
 		font-weight: bold;
@@ -18,14 +26,16 @@ div.pricing-notes {
 div.plans {
 	display: flex;
 	flex-wrap: wrap;
+	margin: 0;
 
 	&> div {
 		width: 25%;
 		margin: .5rem;
-		padding: 20px;
+		padding: 15px;
 		flex-grow: 2;
-		border: solid 1px #999;
+		border: solid 2px #ccc;
 		background-color: #fff;
+		@include border-radius(.7rem);
 	}
 
 }

@@ -1,8 +1,8 @@
 @import "common.scss";
 @import "cloud.scss";
 
-$header-text-fgcolor: black;
-$header-bgcolor: transparent;
+$header-text-fgcolor: #000;
+$header-bgcolor: #fff;
 $header-hover-bgcolor: #446084;
 $header-hover-fgcolor: #fff;
 $header-active-bgcolor: #6c9edd;
@@ -24,34 +24,18 @@ body {
     font-family: Arial, Tahoma, sans-serif;
 	line-height: 1.6rem;
 	box-sizing: border-box;
-}
 
-
-a {
-	color: blue;
-	text-decoration: none;
-}
-
-div#message li.error,
-div.error {
-	color: red;
-	background-color: #fdd;
-	/* border: solid 1px #f00; */
-	padding: 10px;
-}
-
-div.login-box {
-	@extend .box;
-	border: solid 3px #6a6;
-	background-color: #eee;
+	display: flex;
+	flex-direction: column;
+	min-height: 100vh;
 }
 
 #header {
 	display: flex;
 	flex-direction: row wrap;
 	background-color: $header-bgcolor;
-	background: url(../images/outer_header_bg.jpg) repeat-x 0 0;
 	color: $header-text-fgcolor;
+	border-bottom: solid 1px #999;
 	#logo img {
 		width: 169px;
 		height: auto;
@@ -104,6 +88,45 @@ div.login-box {
 	}
 }
 
+div#content {
+	flex: 1;
+	max-width: 1000px;
+	padding: 10px 0 5px 0;
+	margin: 0 auto 0 auto;
+}
+div#footer, footer {
+	margin-top: auto;
+	width: 100%;
+	padding: 10px 0 0 0;
+	margin-top: 10px;
+	color: $footer-fgcolor;
+	background-color: $footer-bgcolor;
+	a { color: $footer-hover-fgcolor; }
+	div.footer_legals {
+		padding: 1rem;
+		text-align: center;
+		a { 
+			color: #f1f1f1; 
+		}
+		a:hover { 
+			color: #fff; 
+			text-decoration: underline;
+		}
+	}
+	div.footer_copyright {
+		color: #c1c1c1; 
+		background-color: #5b5b5b;
+		padding: 10px 0 10px 0;
+		text-align: center;
+		a { 
+		}
+		a:hover { 
+			color: #fff; 
+			text-decoration: underline;
+		}
+	}
+}
+
 @media screen and (max-width: 600px) {
 	#header #logo {
 		padding-left: 2rem;
@@ -136,30 +159,23 @@ div.login-box {
 	}
 }
 
-div#content {
-	max-width: 1000px;
-	padding: 10px 0 50px 0;
-	margin: 0 auto 0 auto;
+a {
+	color: blue;
+	text-decoration: none;
 }
-div#footer, footer {
-	position: absolute;
-	bottom: 0;
-	width: 100%;
-	padding: 10px 0 10px 0;
-	margin-top: 10px;
-	color: $footer-fgcolor;
-	background-color: $footer-bgcolor;
-	a { color: $footer-hover-fgcolor; }
-	div.footer_copyright {
-		background-color: #5b5b5b;
-		text-align: center;
-		a { 
-			color: #c1c1c1; 
-		}
-		a:hover { 
-			color: #f1f1f1; 
-		}
-	}
+
+div#message li.error,
+div.error {
+	color: red;
+	background-color: #fdd;
+	/* border: solid 1px #f00; */
+	padding: 10px;
+}
+
+div.login-box {
+	@extend .box;
+	border: solid 3px #6a6;
+	background-color: #eee;
 }
 
 div.menu.tabs ul.horizontal {

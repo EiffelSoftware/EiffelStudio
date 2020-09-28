@@ -214,29 +214,17 @@ body {
   font-family: 'Roboto', sans-serif;
   font-family: Arial, Tahoma, sans-serif;
   line-height: 1.6rem;
-  box-sizing: border-box; }
-
-a {
-  color: blue;
-  text-decoration: none; }
-
-div#message li.error,
-div.error {
-  color: red;
-  background-color: #fdd;
-  /* border: solid 1px #f00; */
-  padding: 10px; }
-
-div.login-box {
-  border: solid 3px #6a6;
-  background-color: #eee; }
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh; }
 
 #header {
   display: flex;
   flex-direction: row wrap;
-  background-color: transparent;
-  background: url(../images/outer_header_bg.jpg) repeat-x 0 0;
-  color: black; }
+  background-color: #fff;
+  color: #000;
+  border-bottom: solid 1px #999; }
   #header #logo img {
     width: 169px;
     height: auto;
@@ -263,7 +251,7 @@ div.login-box {
         border: none; }
         #header #menu-bar ul.horizontal li a {
           display: inline-flex;
-          color: black;
+          color: #000;
           font-family: "Lato", sans-serif;
           text-transform: uppercase;
           font-weight: bold;
@@ -277,6 +265,38 @@ div.login-box {
           background-color: #446084; }
           #header #menu-bar ul.horizontal li:hover a {
             color: #fff; }
+
+div#content {
+  flex: 1;
+  max-width: 1000px;
+  padding: 10px 0 5px 0;
+  margin: 0 auto 0 auto; }
+
+div#footer, footer {
+  margin-top: auto;
+  width: 100%;
+  padding: 10px 0 0 0;
+  margin-top: 10px;
+  color: #e1e1e1;
+  background-color: #777777; }
+  div#footer a, footer a {
+    color: #f1f1f1; }
+  div#footer div.footer_legals, footer div.footer_legals {
+    padding: 1rem;
+    text-align: center; }
+    div#footer div.footer_legals a, footer div.footer_legals a {
+      color: #f1f1f1; }
+    div#footer div.footer_legals a:hover, footer div.footer_legals a:hover {
+      color: #fff;
+      text-decoration: underline; }
+  div#footer div.footer_copyright, footer div.footer_copyright {
+    color: #c1c1c1;
+    background-color: #5b5b5b;
+    padding: 10px 0 10px 0;
+    text-align: center; }
+    div#footer div.footer_copyright a:hover, footer div.footer_copyright a:hover {
+      color: #fff;
+      text-decoration: underline; }
 
 @media screen and (max-width: 600px) {
   #header #logo {
@@ -302,28 +322,20 @@ div.login-box {
     #menu-bar div.menu.responsive li.icon {
       height: auto !important;
       display: block; } }
-div#content {
-  max-width: 1000px;
-  padding: 10px 0 50px 0;
-  margin: 0 auto 0 auto; }
+a {
+  color: blue;
+  text-decoration: none; }
 
-div#footer, footer {
-  position: absolute;
-  bottom: 0;
-  width: 100%;
-  padding: 10px 0 10px 0;
-  margin-top: 10px;
-  color: #e1e1e1;
-  background-color: #777777; }
-  div#footer a, footer a {
-    color: #f1f1f1; }
-  div#footer div.footer_copyright, footer div.footer_copyright {
-    background-color: #5b5b5b;
-    text-align: center; }
-    div#footer div.footer_copyright a, footer div.footer_copyright a {
-      color: #c1c1c1; }
-    div#footer div.footer_copyright a:hover, footer div.footer_copyright a:hover {
-      color: #f1f1f1; }
+div#message li.error,
+div.error {
+  color: red;
+  background-color: #fdd;
+  /* border: solid 1px #f00; */
+  padding: 10px; }
+
+div.login-box {
+  border: solid 3px #6a6;
+  background-color: #eee; }
 
 div.menu.tabs ul.horizontal {
   list-style-type: none;
@@ -347,5 +359,3 @@ div.menu.tabs ul.horizontal {
 
 h1, h2, h3 {
   color: #1982D1; }
-
-/*# sourceMappingURL=style.css.map */

@@ -1,11 +1,17 @@
 div.pricing {
-  background-color: #eaedf5; }
+  background-color: #eaedf5;
+  padding: 0; }
 
 div.pricing-notes {
   font-size: smaller;
   color: #777;
-  background-color: #eaedf5;
-  border: solid 1px #ddd;
+  background-color: #fffcf0;
+  border: solid 2px #ddd;
+  -webkit-border-radius: 0.7rem;
+  -moz-border-radius: 0.7rem;
+  -ms-border-radius: 0.7rem;
+  border-radius: 0.7rem;
+  margin: .5rem;
   padding: 1rem; }
   div.pricing-notes a {
     color: #777;
@@ -17,14 +23,19 @@ div.pricing-notes {
 
 div.plans {
   display: flex;
-  flex-wrap: wrap; }
+  flex-wrap: wrap;
+  margin: 0; }
   div.plans > div {
     width: 25%;
     margin: .5rem;
-    padding: 20px;
+    padding: 15px;
     flex-grow: 2;
-    border: solid 1px #999;
-    background-color: #fff; }
+    border: solid 2px #ccc;
+    background-color: #fff;
+    -webkit-border-radius: 0.7rem;
+    -moz-border-radius: 0.7rem;
+    -ms-border-radius: 0.7rem;
+    border-radius: 0.7rem; }
 
 @media screen and (max-width: 600px) {
   div.plans > div {

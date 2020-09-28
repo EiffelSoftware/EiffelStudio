@@ -725,7 +725,7 @@ feature -- Hooks: block
 				l_html.append ("</div>") -- plans
 			end
 			l_html.append ("</form></div>") -- pricings
-			create Result.make_raw ("cloud_store", "EiffelStudio plans", l_html, a_response.api.formats.full_html)
+			create Result.make_raw ("cloud_store", Void, l_html, a_response.api.formats.full_html)
 		end
 
 	store_item_interval_name (a_item: ES_CLOUD_STORE_ITEM): detachable STRING

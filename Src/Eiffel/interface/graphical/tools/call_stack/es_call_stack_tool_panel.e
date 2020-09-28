@@ -1353,8 +1353,7 @@ feature {NONE} -- Export call stack
 			l_output: YANK_STRING_WINDOW
 			retried: BOOLEAN
 			e: like exception_value
-			s: STRING
-			t: STRING
+			s: STRING_32
 		do
 			if not retried then
 				if debugger_manager.safe_application_is_stopped then
@@ -1369,8 +1368,7 @@ feature {NONE} -- Export call stack
 					end
 					create l_output.make;
 					Eb_debugger_manager.text_formatter_visitor.append_stack (Debugger_manager.application_status.current_call_stack, l_output)
-					t := l_output.stored_output
-					if t /= Void and then not t.is_empty then
+					if attached l_output.stored_output as t and then not t.is_empty then
 						s.append_string (t)
 					end
 					ev_application.clipboard.set_text (s)
@@ -1393,7 +1391,6 @@ feature {NONE} -- Export call stack
 			retried: BOOLEAN
 			cse: CALL_STACK_ELEMENT
 			s: STRING
-			t: STRING
 			levels: ARRAYED_LIST [INTEGER]
 			tf: DEBUGGER_TEXT_FORMATTER_VISITOR
 			l_sorter: QUICK_SORTER [INTEGER]
@@ -1430,9 +1427,7 @@ feature {NONE} -- Export call stack
 								tf.append_arguments (cse, l_output)
 								tf.append_locals (cse, l_output)
 							end
-
-							t := l_output.stored_output
-							if t /= Void and then not t.is_empty then
+							if attached l_output.stored_output as t and then not t.is_empty then
 								t.replace_substring_all ("%N", "%N%T")
 								if not a_without_value then
 									s.append_string ("------")
@@ -1441,7 +1436,7 @@ feature {NONE} -- Export call stack
 								s.append_string (t)
 								s.append_character ('%N')
 							end
-							l_output.stored_output.wipe_out
+							l_output.reset_output
 
 							levels.forth
 						end

@@ -89,7 +89,11 @@ feature -- Element change
 
 			l_cross := close_icon
 
-			create l_label_title.make_with_text (title_from_category (message.category))
+			if attached message.title as l_title then
+				create l_label_title.make_with_text (l_title)
+			else
+				create l_label_title.make_with_text (title_from_category (message.category))
+			end
 			l_label_title.align_text_left
 			l_label_title.set_font (title_font)
 
@@ -250,7 +254,7 @@ feature -- Element change
 invariant
 
 note
-	copyright: "Copyright (c) 1984-2019, Eiffel Software"
+	copyright: "Copyright (c) 1984-2020, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

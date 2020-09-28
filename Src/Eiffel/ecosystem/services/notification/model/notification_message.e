@@ -36,6 +36,9 @@ feature -- Access
 	text: IMMUTABLE_STRING_32
 			-- Message text.
 
+	title: detachable IMMUTABLE_STRING_32
+			-- Optional title.
+
 	category: IMMUTABLE_STRING_32
 			-- Mandatory category to allow filtering.
 
@@ -50,6 +53,12 @@ feature -- Element change
 			-- Set message `text` to `txt`.
 		do
 			create text.make_from_string_general (txt)
+		end
+
+	set_title (a_title: READABLE_STRING_GENERAL)
+			-- Set message `title` to `a_title`.
+		do
+			create title.make_from_string_general (a_title)
 		end
 
 	set_category (a_category: READABLE_STRING_GENERAL)
@@ -70,13 +79,16 @@ feature -- Conversion
 			-- Copy of Current message for archiving.
 		do
 			create Result.make_with_date (text, category, date.twin)
+			if attached title as l_title then
+				Result.set_title (l_title)
+			end
 			if is_acknowledged then
 				Result.mark_acknowledged
 			end
 		end
 
 ;note
-	copyright: "Copyright (c) 1984-2019, Eiffel Software"
+	copyright: "Copyright (c) 1984-2020, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

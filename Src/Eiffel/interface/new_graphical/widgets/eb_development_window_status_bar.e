@@ -541,9 +541,6 @@ feature {NONE} -- Implementation: event handling
 			-- Increase `consecutive_successful_compilations` by one iff is_successful.
 			-- Increase `failed_compilations` by one iff not is_successful.
 		local
-			l_notify: NOTIFICATION_MESSAGE_WITH_ACTIONS
-			l_shortcut: MANAGED_SHORTCUT
-			l_locale: SHARED_LOCALE
 		do
 			eiffel_project_session_statistics.increase_compilations
 			if is_successful then
@@ -562,16 +559,27 @@ feature {NONE} -- Implementation: event handling
 					l_notification_service.notify (create {NOTIFICATION_MESSAGE}.make ("Number of successful compilations in a row: " + eiffel_project_session_statistics.consecutive_successful_compilations.out, ""))
 				end
 				if eiffel_project_session_statistics.consecutive_successful_compilations >= preferences.development_window_data.consecutive_successful_compilations_threshold then
-					if attached pretty_printer then
-						create l_locale
-						l_shortcut := preferences.editor_data.shortcuts.item ("prettify")
-						l_notification_service.notify (create {NOTIFICATION_MESSAGE}.make (l_locale.locale.translation ("The class ") + Window_manager.last_focused_development_window.class_name + l_locale.locale.translation (" can be prettified Use:") + l_locale.locale.translation (l_shortcut.display_string) , ""))
-						create l_notify.make ( interface_names.m_prettify + "?" + Window_manager.last_focused_development_window.class_name, "")
-						l_notify.register_action (agent editor_prettify, "Apply")
-						l_notification_service.notify (l_notify)
+					if attached pretty_printer as pp then
+						notify_about_pretty_printer (l_notification_service, pp)
 					end
 				end
 			end
+		end
+
+	notify_about_pretty_printer (a_notification_service: NOTIFICATION_S; a_pretty_printer: like pretty_printer)
+		local
+			l_notify: NOTIFICATION_MESSAGE_WITH_ACTIONS
+			l_shortcut: MANAGED_SHORTCUT
+			l_locale: SHARED_LOCALE
+			l_msg: STRING_32
+		do
+			create l_locale
+			l_shortcut := preferences.editor_data.shortcuts.item ("prettify")
+			l_msg := l_locale.locale.formatted_string (l_locale.locale.translation_in_context ("The class $1 can be prettified%NUse: $2", "prettify_notification") , [Window_manager.last_focused_development_window.class_name, l_shortcut.display_string])
+			create l_notify.make (l_msg, "prettify")
+			l_notify.set_title (l_locale.locale.translation_in_context ("Code prettify suggestion", "prettify_notification"))
+			l_notify.register_action (agent editor_prettify, "Apply")
+			a_notification_service.notify (l_notify)
 		end
 
 	on_project_updated

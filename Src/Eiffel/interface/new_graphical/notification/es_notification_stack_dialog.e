@@ -136,9 +136,14 @@ feature -- Action
 	fill_notification_row (a_row: EV_GRID_ROW; a_message: NOTIFICATION_MESSAGE)
 		local
 			glab: EV_GRID_LABEL_ITEM
+			m: IMMUTABLE_STRING_32
 		do
 			a_row.set_data (a_message)
-			create glab.make_with_text (a_message.text)
+			m := a_message.text
+			if attached a_message.title as l_title then
+				m := l_title + "%N" + m
+			end
+			create glab.make_with_text (m)
 			a_row.set_item (column_message, glab)
 			if not a_message.is_acknowledged then
 				glab.set_font (fonts.highlighted_label_font)
@@ -207,7 +212,7 @@ feature -- Action
 invariant
 
 note
-	copyright: "Copyright (c) 1984-2019, Eiffel Software"
+	copyright: "Copyright (c) 1984-2020, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

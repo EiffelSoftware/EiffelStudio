@@ -498,8 +498,9 @@ feature {NONE} -- Internationalization
 
 	e_evaluator_died_tag: STRING = "Evaluator Died"
 	e_evaluator_died_details: STRING = "[
-			The evaluator process which was executing test $1 terminated unexpectedly with exit code $2. Any output from the
-			evaluator is printed below.
+			The evaluator process which was executing test $1 terminated unexpectedly with exit code $2. 
+			What to do: Check your ecf, you can not execute tests with an ecf that uses "Root: All classes". 
+			Any output from the evaluator is printed below.
 		]"
 
 	e_test_not_compiled_tag: STRING = "Not Compiled"
@@ -516,7 +517,7 @@ invariant
 	empty_tasks_empty: empty_tasks.is_empty
 
 note
-	copyright: "Copyright (c) 1984-2016, Eiffel Software"
+	copyright: "Copyright (c) 1984-2020, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

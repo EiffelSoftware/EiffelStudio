@@ -28,12 +28,15 @@
     {if isset="$page.primary_nav"}
         {$page.primary_nav/}
     {/if}
-    <div id="built-with-eiffel">
-    <a href="{$site_url/}site/build_with_eiffel">Developed in Eiffel with EiffelStudio</a>
-    </div>
+    {if isset="$region_header"}{$region_header/}{/if}
     {if isset="$page.regions.search"}<!-- Page search -->
     <div class="search">{$page.regions.search/}</div>
     {/if}
+    <div id="built-with-eiffel">
+    <a href="{$site_url/}site/built_with_eiffel">Developed in Eiffel with EiffelStudio
+    <div class="tooltip down">Read the story of how we developed this site using Eiffel with EiffelStudio and the Eiffel Web Framework!</div>
+    </a>
+    </div>
   </div> 
   <!-- General Page Content -->
   <div id='content'>

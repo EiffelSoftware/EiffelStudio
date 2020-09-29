@@ -1,3 +1,8 @@
+@keyframes fadeIn {
+  from {
+    opacity: 0; }
+  to {
+    opacity: 1; } }
 .box, #main .es-message, #main div.es-plans ul li.es-plan-box, div.login-box {
   -webkit-border-radius: 3px;
   -moz-border-radius: 3px;
@@ -7,6 +12,11 @@
   border: solid 1px #ccc;
   background-color: #eee; }
 
+@keyframes fadeIn {
+  from {
+    opacity: 0; }
+  to {
+    opacity: 1; } }
 .box, #main .es-message, #main div.es-plans ul li.es-plan-box, div.login-box {
   -webkit-border-radius: 3px;
   -moz-border-radius: 3px;
@@ -275,6 +285,41 @@ body {
       color: #000; }
     #header div#built-with-eiffel a:hover {
       text-decoration: underline; }
+    #header div#built-with-eiffel div.tooltip {
+      visibility: hidden;
+      max-width: 200px;
+      background-color: #5171be;
+      color: #fff;
+      border: solid 1px #373c8d;
+      border-radius: 6px;
+      text-align: center;
+      padding: 1rem;
+      position: absolute;
+      top: 0;
+      right: 10px; }
+      #header div#built-with-eiffel div.tooltip::after {
+        content: " ";
+        position: absolute;
+        bottom: 100%;
+        /* At the bottom of the tooltip */
+        left: 50%;
+        margin-left: -8px;
+        border-width: 8px;
+        border-style: solid;
+        border-color: transparent transparent #373c8d transparent; }
+    #header div#built-with-eiffel:hover .tooltip.down {
+      visibility: visible;
+      animation: fadeIn ease 1s;
+      -webkit-animation: fadeIn ease 1s;
+      -moz-animation: fadeIn ease 1s;
+      -o-animation: fadeIn ease 1s;
+      -ms-animation: fadeIn ease 1s;
+      -webkit-transition: margin-top 0.2s ease-in-out;
+      -moz-transition: margin-top 0.2s ease-in-out;
+      -o-transition: margin-top 0.2s ease-in-out;
+      -ms-transition: margin-top 0.2s ease-in-out;
+      transition: margin-top 0.2s ease-in-out;
+      margin-top: 3.5rem; }
 
 div#content {
   flex: 1;

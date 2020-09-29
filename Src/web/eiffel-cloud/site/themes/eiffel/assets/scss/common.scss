@@ -5,6 +5,24 @@
           border-radius: $radius;
 }
 
+@mixin fade-in($delay) {
+	animation: fadeIn ease $delay;
+	-webkit-animation: fadeIn ease $delay;
+	-moz-animation: fadeIn ease $delay;
+	-o-animation: fadeIn ease $delay;
+	-ms-animation: fadeIn ease $delay;
+}
+@keyframes fadeIn {
+    from { opacity:0; } to { opacity:1; }
+}
+@mixin slide-down($delay) {
+  	-webkit-transition: margin-top $delay ease-in-out;
+	-moz-transition: margin-top $delay ease-in-out;
+  	-o-transition: margin-top $delay ease-in-out;
+  	-ms-transition: margin-top $delay ease-in-out;
+	transition: margin-top $delay ease-in-out;
+}
+
 .box {
 	@include border-radius(3px);
 	padding: 20px;

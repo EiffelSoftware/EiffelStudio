@@ -114,7 +114,8 @@ feature {NONE} -- Visitor
 		do
 			if can_be_symbolic and then not is_message then
 				if
-					attached {ACCESS_FEAT_AS} a.target as f and then
+					attached {EXPR_CALL_AS} a.target as c and then
+					attached {ACCESS_FEAT_AS} c.call as f and then
 					attached f.feature_name as n and then
 					n.name_id = name_id
 				then

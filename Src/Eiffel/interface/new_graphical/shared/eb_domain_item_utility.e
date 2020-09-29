@@ -181,7 +181,7 @@ feature -- Access
 					-- For invalid item, we display its name in error style.
 				l_writer := token_writer
 				l_writer.new_line
-				l_writer.add_error (create {SYNTAX_ERROR}.make (1, 1, "", ""), a_item.string_representation)
+				l_writer.add_error (create {SYNTAX_ERROR}.make (1, 1, "", {STRING_32} ""), a_item.string_representation)
 				Result := l_writer.last_line.content
 			end
 		ensure
@@ -189,7 +189,7 @@ feature -- Access
 		end
 
 note
-	copyright: "Copyright (c) 1984-2018, Eiffel Software"
+	copyright: "Copyright (c) 1984-2020, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

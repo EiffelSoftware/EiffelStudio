@@ -392,17 +392,17 @@ feature {NONE} -- Implementation: access
 			result_attached: Result /= Void
 		end
 
-	default_description: attached STRING
+	default_description: attached STRING_32
 			-- Default text for the bug report description
 		do
-			if last_description /= Void then
-				create Result.make_from_string (last_description)
+			if attached last_description as d then
+				create Result.make_from_string (d)
 			else
 				Result := locale_formatter.translation (lb_enter_bug_information)
 			end
 		end
 
-	last_description: STRING
+	last_description: READABLE_STRING_GENERAL
 			-- Last description
 
 feature {NONE} -- Status report
@@ -435,8 +435,8 @@ feature {NONE} -- Status report
 			is_initialized: is_initialized
 			not_is_recycled: not is_recycled
 		do
-			Result := description_text.text /= Void and then not description_text.text.is_empty and then
-				 not (description_text.text.is_equal (default_description) and last_description = Void)
+			Result := attached description_text.text as txt and then not txt.is_empty and then
+				 not (txt.is_equal (default_description) and last_description = Void)
 		end
 
 	can_submit: BOOLEAN
@@ -633,15 +633,15 @@ feature {NONE} -- Action handlers
 			l_text: STRING_GENERAL
 		do
 			l_text := a_text_widget.text
-			if l_text = Void or else l_text.as_string_8.is_equal (default_description) then
+			if l_text = Void or else l_text.is_case_insensitive_equal (default_description) then
 				a_text_widget.set_foreground_color (colors.grid_item_text_color)
 				if a_text_widget /= description_text or else last_description = Void then
-					a_text_widget.set_text ("")
+					a_text_widget.remove_text
 				end
 			end
 		end
 
-	on_text_component_focused_out (a_text_widget: EV_TEXT_COMPONENT; a_default_text: STRING_GENERAL)
+	on_text_component_focused_out (a_text_widget: EV_TEXT_COMPONENT; a_default_text: READABLE_STRING_GENERAL)
 			-- Called when a registered text widget loses focused
 			--
 			-- `a_text_widget': The unfocused text_widget.
@@ -1061,7 +1061,7 @@ invariant
 	shrink_interval_positive: shrink_interval > 0
 
 ;note
-	copyright: "Copyright (c) 1984-2019, Eiffel Software"
+	copyright: "Copyright (c) 1984-2020, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

@@ -2004,7 +2004,9 @@ feature {CLASS_AS} -- Calls
 					is_item: q.name_id = {PREDEFINED_NAMES}.item_name_id
 				end
 				process_leading_leaves (a.dot_symbol_index)
+				last_index := a.dot_symbol_index
 				process_leading_leaves_of_token (a.message.first_token (match_list))
+				last_index := a.message.index
 			else
 				safe_process (a.dot_symbol (match_list))
 				is_qualified := True

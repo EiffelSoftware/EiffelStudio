@@ -298,13 +298,8 @@ feature {TYPE_A} -- Visitors
 	process_none_a (a_type: NONE_A)
 			-- Process `a_type'.
 		do
-			if system.void_safety_index /= {CONF_TARGET_OPTION}.void_safety_index_none then
-				text_formatter.add (ti_detachable_keyword)
-				text_formatter.add (ti_space)
-				text_formatter.add (ti_none_class)
-			else
-				text_formatter.add (ti_none_class)
-			end
+			process_annotations (a_type)
+			text_formatter.add (ti_none_class)
 		end
 
 	process_pointer_a (a_type: POINTER_A)

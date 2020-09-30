@@ -322,11 +322,29 @@ body {
       margin-top: 3.5rem; }
 
 div#content {
+  display: flex;
+  flex-direction: row;
   flex: 1;
+  justify-content: space-between;
   width: 100%;
   max-width: 1000px;
   padding: 10px 0 5px 0;
   margin: 0 auto 0 auto; }
+
+div.sidebar {
+  flex: 1 0 auto;
+  background-color: white;
+  background: linear-gradient(90deg, rgba(255, 255, 255, 0) 0%, rgba(225, 225, 225, 0.5) 100%);
+  border: solid 1px rgba(210, 210, 210, 0.7);
+  border-left: none;
+  border-bottom: none;
+  max-width: 20rem;
+  padding: 1rem;
+  margin-right: 1rem; }
+
+div#main {
+  flex: 10 0 auto;
+  width: 100%; }
 
 div#footer, footer {
   margin-top: auto;
@@ -366,6 +384,9 @@ div#footer, footer {
 
   div#built-with-eiffel {
     display: none; }
+
+  div#content {
+    flex-direction: column; }
 
   #menu-bar div.menu li.icon {
     display: inline-block !important; }

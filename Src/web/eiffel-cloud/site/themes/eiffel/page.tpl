@@ -49,23 +49,22 @@
   	<div id="sidebar_second" class="sidebar">{$page.region_sidebar_second/}</div>
   	{/unless}
 
-      <!-- Highlighted, Help, Content -->      
-      <div id='main'>
-        <!-- Highlighted Section -->
-        {unless isempty="$page.region_highlighted"}
-  	  <div id="highlighted">{$page.region_highlighted/}</div>
-  	  {/unless}
-        <!-- Help Section -->
-        {unless isempty="$page.region_help"}
-  	  <div id="help">{$page.region_help/}</div>
-  	  {/unless}
+    <!-- Highlighted, Help, Content -->      
+    <div id='main'>
+      <!-- Highlighted Section -->
+      {unless isempty="$page.region_highlighted"}
+    <div id="highlighted">{$page.region_highlighted/}</div>
+    {/unless}
+      <!-- Help Section -->
+      {unless isempty="$page.region_help"}
+    <div id="help">{$page.region_help/}</div>
+    {/unless}
 
-        <!-- Main Content Section -->
-  	  {unless isempty="$page_title"}<h1 class="page-title">{$page_title/}</h1>{/unless}
-        {$page.region_content/}   
-      </div>
+      <!-- Main Content Section -->
+    {unless isempty="$page_title"}<h1 class="page-title">{$page_title/}</h1>{/unless}
+    {$page.region_content/}   
+    </div>
   </div>
-
   <div id="footer">
   <!--Page footer -->
   {$page.region_footer/}

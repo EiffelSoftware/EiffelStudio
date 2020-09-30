@@ -206,82 +206,28 @@ feature -- Order
 		end
 
 	order_by_name (a_order_name: READABLE_STRING_GENERAL): detachable SHOPPING_ORDER
-		local
-			cid, uid: INTEGER_64
-			l_creation_date: DATE_TIME
-			l_name: READABLE_STRING_8
-			l_email: READABLE_STRING_8
-			j_data: READABLE_STRING_8
-			ref: READABLE_STRING_8
-			l_int: READABLE_STRING_8
-			l_int_nb: INTEGER_32
 		do
 			reset_error
 			sql_query (sql_select_order_by_name, sql_parameters (1, <<["name", a_order_name]>>))
 			sql_start
 			if not has_error and not sql_after then
-				cid := sql_read_integer_64 (1)
-				l_name := sql_read_string_8 (2)
-				uid := sql_read_integer_64 (3)
-				l_email := sql_read_string (4)
-				l_creation_date := sql_read_date_time (5)
-				j_data := sql_read_string (6)
-				ref := sql_read_string_8 (7)
-				l_int := sql_read_string_8 (8)
-				l_int_nb := sql_read_integer_32 (9)
-				if l_int_nb = 0 then
-					l_int_nb := 1
-				end
+				Result := fetch_shopping_order
 			end
 			sql_finalize_query (sql_select_order_by_name)
 			if
 				not has_error and then
-				l_name /= Void
+				Result /= Void
 			then
-				if l_creation_date = Void then
-					check has_creation_date: False end
-					create l_creation_date.make_now_utc
-				end
 				if
-					uid > 0 and then
-				 	attached resolved_user (create {CMS_PARTIAL_USER}.make_with_id (uid)) as l_user
+					attached Result.user as l_partial_user and then
+					attached resolved_user (l_partial_user) as l_user
 				then
-					create Result.make_with_user (l_name, l_user, l_creation_date)
-				elseif l_email /= Void then
-					create Result.make_with_email (l_name, l_email, l_creation_date)
-				end
-				if Result /= Void then
-					if Result.email = Void and then l_email /= Void then
-						Result.set_email (l_email)
-					end
-					if j_data /= Void then
-						Result.set_associated_cart_with_json_data (j_data)
-					else
-						check has_data: False end
-					end
-					if ref /= Void then
-						Result.set_reference_id (ref)
-					end
-					Result.set_interval (l_int, l_int_nb)
+					Result.update_user (l_user)
 				end
 			end
-			check
-				Result /= Void implies
-			 	attached Result.associated_cart as l_cart and then
-			 	l_cart.owner.id = uid
-			 end
 		end
 
 	order_by_reference (a_reference: READABLE_STRING_GENERAL): detachable SHOPPING_ORDER
-		local
-			cid, uid: INTEGER_64
-			l_creation_date: DATE_TIME
-			l_name: READABLE_STRING_8
-			l_email: READABLE_STRING_8
-			j_data: READABLE_STRING_8
-			ref: READABLE_STRING_8
-			l_int: READABLE_STRING_8
-			l_int_nb: INTEGER_32
 		do
 			reset_error
 			sql_query (sql_select_order_by_reference, sql_parameters (1, <<["reference", a_reference]>>))

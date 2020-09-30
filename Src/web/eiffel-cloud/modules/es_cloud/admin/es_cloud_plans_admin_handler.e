@@ -47,12 +47,15 @@ feature -- Execution
 			l_plan_name: detachable READABLE_STRING_8
 			l_plan_title, l_plan_description, l_plan_data, l_op: detachable READABLE_STRING_32
 			l_plan_id: INTEGER
+			l_confirmation_field: WSF_FORM_SUBMIT_INPUT
 			s: STRING
+			f: CMS_FORM
 		do
 			r := new_generic_response (req, res)
 			add_primary_tabs (r)
 			create s.make_empty
-			if attached {CMS_FORM} new_edit_plan_form (req, Void) as f then
+			f := new_edit_plan_form (req, Void)
+			if f /= Void then
 				f.process (r)
 				if attached f.last_data as fd then
 					l_plan_id := fd.integer_item ("id")
@@ -77,17 +80,47 @@ feature -- Execution
 						if l_plan = Void then
 							l_plan := es_cloud_api.plan_by_name (l_plan_name)
 						end
-						if l_op /= Void and then l_op.same_string (delete_plan_text) then
-							if l_plan /= Void then
-								es_cloud_api.delete_plan (l_plan)
-								if es_cloud_api.has_error then
-									fd.report_error ("Issue while deleting plan!")
+						if
+							l_op /= Void and then (
+									l_op.same_string (delete_plan_text)
+									or l_op.same_string (confirm_delete_plan_text)
+								)
+						then
+							if attached fd.string_item (confirmation_field_name) as l_confirmation and then l_confirmation.same_string ("yes") then
+								if l_plan /= Void then
+									es_cloud_api.delete_plan (l_plan)
+									if es_cloud_api.has_error then
+										fd.report_error ("Issue while deleting plan!")
+									else
+										r.add_success_message ("Plan successfully deleted.")
+										r.set_redirection (api.administration_path ("/cloud/plans/"))
+									end
 								else
-									r.add_success_message ("Plan successfully deleted.")
-									r.set_redirection (api.administration_path ("/cloud/plans/"))
+									fd.report_error ("Could not find and delete plan %""+ l_plan_name +"%"!")
+									r.add_error_message ("Could not find and delete plan %""+ l_plan_name +"%"!")
 								end
 							else
-								fd.report_error ("Can not delete plan!")
+								f := new_edit_plan_form (req, l_plan)
+								r.add_notice_message ("Please confirm the plan deletion!")
+								fd.report_error ("Please confirm the plan deletion!")
+
+								create l_confirmation_field.make ("op")
+								l_confirmation_field.set_text_value (confirm_delete_plan_text)
+								f.extend (l_confirmation_field)
+								f.set_field_text_value (confirmation_field_name, "yes")
+								if attached f.fields_by_name ("op") as lst then
+									across
+										lst as ic
+									loop
+										if
+											attached {WSF_FORM_SUBMIT_INPUT} ic.item as l_op_submit and then
+											attached l_op_submit.default_value as dv and then dv.same_string_general (delete_plan_text)
+										then
+											f.remove (l_op_submit)
+										end
+									end
+								end
+
 							end
 						else
 							if l_plan /= Void then
@@ -214,6 +247,10 @@ feature -- Execution
 				hf.set_text_value (a_plan.id.out)
 			end
 			Result.extend (hf)
+
+			create hf.make (confirmation_field_name)
+			Result.extend (hf)
+
 			create tf.make ("name")
 			if a_plan /= Void then
 				tf.set_text_value (a_plan.name.as_string_32)
@@ -235,7 +272,7 @@ feature -- Execution
 			end
 			l_area.set_label ("Description")
 			l_area.set_cols (60)
-			l_area.set_rows (5)
+			l_area.set_rows (25)
 			Result.extend (l_area)
 
 			create tf.make ("data")
@@ -264,5 +301,9 @@ feature -- Execution
 	add_plan_text: STRING_32 = "Add Plan"
 	save_plan_text: STRING_32 = "Save Plan"
 	delete_plan_text: STRING_32 = "Delete Plan"
+
+	confirm_delete_plan_text: STRING_32 = "Confirm Plan Deletion"
+
+	confirmation_field_name: STRING = "confirmation"
 
 end

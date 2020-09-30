@@ -144,10 +144,15 @@ div.pay {
 }
 
 a.footnote {
-	&::before { content: '['; }
-	&::after { content: ']'; }
+    border: solid 1px blue;
+    color: #fff;
+    border-radius: 50%;
+	width: 14px;
+	height: 14px;
 	vertical-align: super;
-	font-size: 80%;
+	font: 12px Arial, sans-serif;
+	display: inline-block;
+    text-align: center;
 	margin-left: 2px;
 	color: blue;
 	cursor: pointer;

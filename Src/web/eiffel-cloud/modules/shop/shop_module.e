@@ -125,7 +125,7 @@ feature {NONE} -- Webapi
 			create Result.make (Current)
 		end
 
-feature {CMS_API, CMS_MODULE} -- Access: API
+feature {CMS_API, CMS_MODULE_API, CMS_MODULE} -- Access: API
 
 	shop_api: detachable SHOP_API
 			-- <Precursor>

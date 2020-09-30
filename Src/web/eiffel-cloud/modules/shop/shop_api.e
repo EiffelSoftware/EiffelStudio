@@ -198,6 +198,59 @@ feature -- Access
 			end
 		end
 
+feature -- Billings
+
+	billings (a_ref: READABLE_STRING_GENERAL): detachable SHOPPING_BILLS
+		local
+			l_stripe_ref: READABLE_STRING_GENERAL
+			i: INTEGER
+			l_records: LIST [STRIPE_PAYMENT_RECORD]
+			rec: STRIPE_PAYMENT_RECORD
+			l_bill: SHOPPING_BILL
+		do
+			if
+				a_ref.starts_with ("stripe.") and then
+				attached {STRIPE_API} cms_api.module_api ({STRIPE_MODULE}) as l_stripe_api
+			then
+				i := a_ref.index_of ('=', 1)
+				if i > 0 then
+					l_stripe_ref := a_ref.substring (i + 1, a_ref.count)
+					if not l_stripe_ref.is_whitespace then
+						if a_ref.starts_with ("stripe.payment") then
+							l_records := l_stripe_api.payment_records (l_stripe_ref)
+						else
+							l_records := l_stripe_api.subscription_payment_records (l_stripe_ref)
+						end
+						if l_records /= Void and then not l_records.is_empty then
+							create Result.make (l_records.count)
+							across
+								l_records as ic
+							loop
+								rec := ic.item
+								create l_bill.make (rec.date)
+								l_bill.external_invoice_url := rec.invoice_url
+								l_bill.external_receipt_url := rec.receipt_url
+								if attached rec.total as l_total_tuple then
+									l_bill.set_total_price_as_string ({SHOPPING_CURRENCY_HELPER}.price_in_cents_as_string (l_total_tuple.price_in_cents, l_total_tuple.currency))
+								end
+								Result.items.force (l_bill)
+							end
+						end
+					end
+				end
+			end
+			if
+				Result /= Void and then
+				attached shop_storage.order_by_reference (a_ref) as l_order
+			then
+				across
+					Result.items as ic
+				loop
+					ic.item.set_order (l_order)
+				end
+			end
+		end
+
 feature -- Hook invocation		
 
 	invoke_shop_fill_cart (a_cart: SHOPPING_CART)

@@ -49,6 +49,14 @@ feature -- Payment
 		do
 		end
 
+	payment_records (a_payment_id: READABLE_STRING_GENERAL): detachable LIST [STRIPE_PAYMENT_RECORD]
+		do
+		end
+
+	subscription_payment_records (a_subscription_id: READABLE_STRING_GENERAL): detachable LIST [STRIPE_PAYMENT_RECORD]
+		do
+		end
+
 note
 	copyright: "2011-2017, Jocelyn Fiat, Javier Velilla, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"

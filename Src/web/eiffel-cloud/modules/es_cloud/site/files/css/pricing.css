@@ -112,3 +112,14 @@ div.pay {
   div.pay button {
     margin: 10px;
     padding: 10px; }
+
+a.footnote {
+  vertical-align: super;
+  font-size: 80%;
+  margin-left: 2px;
+  color: blue;
+  cursor: pointer; }
+  a.footnote::before {
+    content: '['; }
+  a.footnote::after {
+    content: ']'; }

@@ -39,7 +39,11 @@ feature -- Execution
 		do
 			if req.is_get_request_method then
 				if attached req.path_parameter ("license_key") as l_lic_key then
-					process_license_get (l_lic_key.string_representation, req, res)
+					if req.path_info.ends_with_general ("/billing/") then
+						process_license_billing_get (l_lic_key.string_representation, req, res)
+					else
+						process_license_get (l_lic_key.string_representation, req, res)
+					end
 				elseif attached {WSF_STRING} req.query_parameter ("op") as p_op and then p_op.is_case_insensitive_equal ("buy") then
 					res.redirect_now (api.absolute_url (req.percent_encoded_path_info + "_/buy/", Void))
 				elseif attached {WSF_STRING} req.path_parameter ("action") as p_action and then p_action.is_case_insensitive_equal ("buy") then
@@ -118,7 +122,81 @@ feature -- Execution
 					s := ""
 					s.append ("<div class=%"es-licenses%">")
 					append_license_to_html (lic, l_lic_user, s)
+					s.append ("<div><a href=%"" + api.location_url (es_cloud_module.license_location (lic) + "/billing/", Void) + "%">Billing...</a></div>")
 					s.append ("<div><a href=%"" + api.location_url (es_cloud_module.licenses_location, Void) + "%">All licenses...</a></div>")
+					s.append ("</div>")
+					r.set_main_content (s)
+					r.execute
+				else
+					send_access_denied_message (res)
+--					s.append ("<div class=%"warning%">This page is restricted to authorized person!</div>")
+				end
+			else
+				send_not_found (req, res)
+			end
+		end
+
+	process_license_billing_get (a_lic_key: READABLE_STRING_GENERAL; req: WSF_REQUEST; res: WSF_RESPONSE)
+		local
+			l_lic_user, l_user: ES_CLOUD_USER
+			r: like new_generic_response
+			s: STRING
+		do
+			if attached api.user as u then
+				l_user := u
+			end
+			if
+				attached es_cloud_api.license_by_key (a_lic_key) as lic
+			then
+				l_lic_user := es_cloud_api.user_for_license (lic)
+				if
+					api.has_permission ({ES_CLOUD_MODULE}.perm_manage_es_licenses) or else
+					(l_lic_user /= Void and then l_user /= Void and then l_user.same_as (l_lic_user))
+				then
+					r := new_generic_response (req, res)
+					r.add_javascript_url (r.module_name_resource_url ({ES_CLOUD_MODULE}.name, "/files/js/es_cloud.js", Void))
+					r.add_style (r.module_name_resource_url ({ES_CLOUD_MODULE}.name, "/files/css/es_cloud.css", Void), Void)
+					r.set_title ("License " + html_encoded (a_lic_key))
+					s := ""
+					s.append ("<div class=%"es-licenses%">")
+					append_license_to_html (lic, l_lic_user, s)
+					if attached es_cloud_api.license_billings (lic) as l_billings then
+						s.append ("<div class=%"es-billing%">")
+						s.append ("<table style=%"border: solid 1px black;%"><tr><th>Date</th><th>Item</th><th>Order-id</th><th>Total</th><th>Invoice/Receipt</th></tr>%N")
+						across
+							l_billings as ic
+						loop
+							if attached ic.item as l_bill then
+								s.append ("<tr>")
+								s.append ("<td>"+ date_time_to_iso8601_string (l_bill.date) + "</td>")
+								s.append ("<td>")
+								if attached l_bill.title as l_title then
+									s.append (html_encoded (l_title))
+								end
+								s.append ("</td>")
+								s.append ("<td>")
+								if attached l_bill.order as l_order then
+									s.append (html_encoded (l_order.name))
+								end
+								s.append ("</td>")
+								s.append ("<td>")
+								if attached l_bill.total_price_as_string as l_total then
+									s.append (html_encoded (l_total))
+								end
+								s.append ("</td>")
+								s.append ("<td>")
+								if attached l_bill.external_invoice_url as l_url then
+									s.append ("<a href=%"" + l_url + "%" target=%"_blank%">invoice</a>")
+								elseif attached l_bill.external_receipt_url as l_url then
+									s.append ("<a href=%"" + l_url + "%" target=%"_blank%">receipt</a>")
+								end
+								s.append ("</td>")
+								s.append ("</tr>%N")
+							end
+						end
+						s.append ("</table>%N")
+						s.append ("</div>")
+					end
 					s.append ("</div>")
 					r.set_main_content (s)
 					r.execute

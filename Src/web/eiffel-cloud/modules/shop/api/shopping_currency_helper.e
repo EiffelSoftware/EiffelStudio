@@ -30,6 +30,39 @@ feature -- Status report
 
 feature -- Conversion
 
+	price_in_cents_as_string (a_price_in_cents: NATURAL_32; a_iso_currency: READABLE_STRING_8): STRING_32
+		local
+			u,c: NATURAL_32
+		do
+			u := a_price_in_cents // 100
+			c := a_price_in_cents \\ 100
+			Result := price_as_string (u, c, a_iso_currency)
+		ensure
+			instance_free: class
+		end
+
+	price_as_string (a_price, a_cents: NATURAL_32; a_iso_currency: READABLE_STRING_8): STRING_32
+		do
+			create Result.make (10)
+			Result.append_natural_32 (a_price)
+			if a_cents > 0 then
+				Result.append_character ('.')
+				if a_cents <= 9 then
+					Result.append_natural_32 (0)
+				end
+				Result.append_natural_32 (a_cents)
+			end
+
+			if attached iso_currency_as_sign (a_iso_currency) as ch then
+				Result.prepend_character (ch)
+			else
+				Result.append_character (' ')
+				Result.append_string_general (a_iso_currency.as_upper)
+			end
+		ensure
+			instance_free: class
+		end
+
 	iso_currency_as_sign (a_iso_currency: READABLE_STRING_8): detachable CHARACTER_32
 		do
 			if a_iso_currency.is_case_insensitive_equal_general ("usd") then

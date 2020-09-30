@@ -150,6 +150,13 @@ feature -- Interval
 
 feature -- Element change
 
+	update_user (a_user: CMS_USER)
+		require
+			same_user: attached user as u implies a_user.same_as (u)
+		do
+			user := a_user
+		end
+
 	set_reference_id (a_ref: READABLE_STRING_GENERAL)
 		do
 			create reference_id.make_from_string_general (a_ref)

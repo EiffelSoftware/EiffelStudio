@@ -84,7 +84,7 @@ feature {CMS_EXECUTION} -- Administration
 			create Result.make (Current)
 		end
 
-feature {CMS_API, JWT_AUTH_MODULE_WEBAPI} -- Access: API
+feature {CMS_API, CMS_MODULE_API, CMS_MODULE} -- Access: API
 
 	jwt_auth_api: detachable JWT_AUTH_API
 			-- <Precursor>

@@ -183,7 +183,7 @@ feature {NONE} -- Webapi
 			create Result.make (Current)
 		end
 
-feature {CMS_API, CMS_MODULE} -- Access: API
+feature {CMS_API, CMS_MODULE_API, CMS_MODULE} -- Access: API
 
 	es_cloud_api: detachable ES_CLOUD_API
 			-- <Precursor>
@@ -208,6 +208,7 @@ feature -- Access: router
 				create h_lic.make (Current, l_mod_api)
 				a_router.handle ("/" + licenses_location, h_lic, a_router.methods_get_post)
 				a_router.handle ("/" + licenses_location + "{license_key}", h_lic, a_router.methods_get)
+				a_router.handle ("/" + licenses_location + "{license_key}/billing/", h_lic, a_router.methods_get)
 				a_router.handle ("/" + licenses_location + "_/{action}/", h_lic, a_router.methods_get_post)
 			end
 		end
@@ -294,7 +295,6 @@ feature -- Hook
 				end
 			end
 		end
-
 
 	commit_cart (a_cart: SHOPPING_CART; a_order: SHOPPING_ORDER)
 		local
@@ -413,6 +413,7 @@ feature -- Hook
 									if l_store_item.is_onetime then
 											-- By default, yearly
 										api.extend_license_with_duration (lic, 0, l_store_item.onetime_month_duration.to_integer_32, 0)
+										api.record_onetime_license_payment (lic, l_store_item.onetime_month_duration, a_order.reference_id)
 									else
 										if l_store_item.is_yearly then
 											api.extend_license_with_duration (lic, 1, 0, 0)

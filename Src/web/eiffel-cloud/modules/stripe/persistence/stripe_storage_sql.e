@@ -174,7 +174,7 @@ feature -- Payment
 			s: READABLE_STRING_8
 		do
 			reset_error
-			sql_query (sql_select_payment_by_id, sql_parameters (1, <<["pi", a_payment_id]>>))
+			sql_query (sql_select_last_payment_by_id, sql_parameters (1, <<["pi", a_payment_id]>>))
 			if not has_error and not sql_after then
 				s := sql_read_string_8 (4)
 				if s /= Void then
@@ -182,7 +182,76 @@ feature -- Payment
 							or s.is_case_insensitive_equal_general ("succeeded")
 				end
 			end
-			sql_finalize_query (sql_select_payment_by_id)
+			sql_finalize_query (sql_select_last_payment_by_id)
+		end
+
+	payment_records (a_payment_id: READABLE_STRING_GENERAL): detachable ARRAYED_LIST [STRIPE_PAYMENT_RECORD]
+		local
+			rec: STRIPE_PAYMENT_RECORD
+		do
+			reset_error
+			sql_query (sql_select_payments_by_id, sql_parameters (1, <<["pi", a_payment_id]>>))
+			if not has_error then
+				create Result.make (5)
+				from
+					sql_start
+				until
+					sql_after or has_error
+				loop
+					rec := fetch_payment_record
+					if rec /= Void then
+						check rec.payment_id.is_case_insensitive_equal_general (a_payment_id) end
+						Result.extend (rec)
+					end
+					sql_forth
+				end
+			end
+			sql_finalize_query (sql_select_payments_by_id)
+		end
+
+	subscription_payment_records (a_subscription_id: READABLE_STRING_GENERAL): detachable ARRAYED_LIST [STRIPE_PAYMENT_RECORD]
+		local
+			rec: STRIPE_PAYMENT_RECORD
+		do
+			reset_error
+			sql_query (sql_select_payments_by_subscription_id, sql_parameters (1, <<["sub", a_subscription_id]>>))
+			if not has_error then
+				create Result.make (5)
+				from
+					sql_start
+				until
+					sql_after or has_error
+				loop
+					rec := fetch_payment_record
+					if rec /= Void then
+						check attached rec.subscription_payment_id as s and then s.is_case_insensitive_equal_general (a_subscription_id) end
+						Result.extend (rec)
+					end
+					sql_forth
+				end
+			end
+			sql_finalize_query (sql_select_payments_by_subscription_id)
+		end
+
+	fetch_payment_record: detachable STRIPE_PAYMENT_RECORD
+		local
+			s: READABLE_STRING_32
+			dt: DATE_TIME
+		do
+			s := sql_read_string_32 (2)
+			dt := sql_read_date_time (5)
+			if dt = Void then
+				create dt.make_now_utc
+			end
+			if s /= Void and then not s.is_whitespace then
+				create Result.make (s, dt)
+				s := sql_read_string_32 (3)
+				if s /= Void and then not s.is_whitespace then
+					Result.set_subscription_payment_id (s)
+				end
+				Result.set_status (sql_read_string_8 (4))
+				Result.set_data (sql_read_string_8 (6))
+			end
 		end
 
 feature {NONE} -- Queries
@@ -200,7 +269,11 @@ feature {NONE} -- Queries
 
 	sql_insert_payment: STRING = "INSERT INTO stripe_payments (pi, sub, status, event_date, data) VALUES (:pi, :sub, :status, :event_date, :data);"
 
-	sql_select_payment_by_id: STRING = "SELECT id, pi, sub, status, event_date, data FROM stripe_payments WHERE pi=:pi ORDER BY event_date DESC, id DESC LIMIT 1;"
+	sql_select_last_payment_by_id: STRING = "SELECT id, pi, sub, status, event_date, data FROM stripe_payments WHERE pi=:pi ORDER BY event_date DESC, id DESC LIMIT 1;"
+
+	sql_select_payments_by_id: STRING = "SELECT id, pi, sub, status, event_date, data FROM stripe_payments WHERE pi=:pi ORDER BY event_date DESC, id DESC;"
+
+	sql_select_payments_by_subscription_id: STRING = "SELECT id, pi, sub, status, event_date, data FROM stripe_payments WHERE sub=:sub ORDER BY event_date DESC, id DESC;"
 
 feature {NONE} -- Implementation
 

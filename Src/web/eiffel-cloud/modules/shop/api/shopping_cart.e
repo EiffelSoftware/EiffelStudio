@@ -6,9 +6,6 @@ note
 class
 	SHOPPING_CART
 
-inherit
-	SHOPPING_CURRENCY_HELPER
-
 create
 	make,
 	make_guest,
@@ -258,33 +255,13 @@ feature -- Query
 
 	currency_sign: detachable CHARACTER_32
 		do
-			Result := iso_currency_as_sign (currency)
+			Result := {SHOPPING_CURRENCY_HELPER}.iso_currency_as_sign (currency)
 		end
 
 	price_as_string: STRING_32
 			-- Price as string, using currency symbol when possible.
-		local
-			l_total: NATURAL_32
-			p,c: NATURAL_32
 		do
-			l_total := price_in_cents
-			p := l_total // 100
-			c := l_total \\ 100
-			create Result.make (10)
-			Result.append_natural_32 (p)
-			if c > 0 then
-				Result.append_character ('.')
-				if c <= 9 then
-					Result.append_integer (0)
-				end
-				Result.append_natural_32 (c)
-			end
-			if attached iso_currency_as_sign (currency) as ch then
-				Result.prepend_character (ch)
-			else
-				Result.append_character (' ')
-				Result.append_string_general (currency.as_upper)
-			end
+			Result := {SHOPPING_CURRENCY_HELPER}.price_in_cents_as_string (price_in_cents, currency)
 		end
 
 	price_as_iso_string: STRING_8

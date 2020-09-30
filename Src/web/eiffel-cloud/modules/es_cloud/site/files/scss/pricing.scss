@@ -142,3 +142,13 @@ div.pay {
 		padding: 10px;
 	}
 }
+
+a.footnote {
+	&::before { content: '['; }
+	&::after { content: ']'; }
+	vertical-align: super;
+	font-size: 80%;
+	margin-left: 2px;
+	color: blue;
+	cursor: pointer;
+}

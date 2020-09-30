@@ -150,7 +150,7 @@ feature {NONE} -- Webapi
 			create Result.make (Current)
 		end
 
-feature {CMS_API, CMS_MODULE} -- Access: API
+feature {CMS_API, CMS_MODULE_API, CMS_MODULE} -- Access: API
 
 	stripe_api: detachable STRIPE_API
 			-- <Precursor>

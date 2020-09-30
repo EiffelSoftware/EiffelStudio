@@ -7,6 +7,7 @@ note
 	author: ""
 	date: "$Date$"
 	revision: "$Revision$"
+	EIS: "name=invoices", "protocol=URI", "src=https://stripe.com/docs/api/invoices/object"
 
 class
 	STRIPE_INVOICE
@@ -186,6 +187,25 @@ feature -- Access
 				end
 				if has_conflict then
 					Result := Void
+				end
+			end
+		end
+
+feature -- Query
+
+	description: detachable STRING_32
+		do
+			if attached lines as l_lines then
+				across
+					l_lines as ic
+				loop
+					if attached ic.item.description as d then
+						if Result = Void then
+							Result := d
+						else
+							Result := Result + "%N" + d
+						end
+					end
 				end
 			end
 		end

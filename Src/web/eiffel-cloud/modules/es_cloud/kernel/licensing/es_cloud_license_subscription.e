@@ -12,16 +12,22 @@ create
 	make_monthly,
 	make_weekly,
 	make_daily,
+	make_onetime,
 	make
 
 feature {NONE} -- Initialization
 
-	make (a_license: like license; a_interval_type: NATURAL_8; a_interval_count: NATURAL_8)
+	make (a_license: like license; a_interval_type: NATURAL_8; a_interval_count: NATURAL_32)
 		require
 			a_license.has_id
 		do
 			license := a_license
 			set_interval (a_interval_type, a_interval_count)
+		end
+
+	make_onetime (a_license: like license; a_nb_months: NATURAL_32)
+		do
+			make (a_license, onetime, a_nb_months)
 		end
 
 	make_yearly (a_license: like license)
@@ -55,11 +61,16 @@ feature -- Access
 	interval_type: NATURAL_8
 			-- onetime, daily, ...,  monthly, yearly.
 
-	interval_count: NATURAL_8
+	interval_count: NATURAL_32
 			-- interval quantity.
 			-- note: 3 + monthly -> every 3 months.
 
 feature -- Query
+
+	is_onetime: BOOLEAN
+		do
+			Result := interval_type = onetime
+		end
 
 	is_yearly: BOOLEAN
 		do
@@ -85,17 +96,22 @@ feature -- Interval constants
 
 	undefined_interval: NATURAL_8 = 0
 
-	yearly: NATURAL_8 = 1
 
-	monthly: NATURAL_8 = 2
+	onetime: NATURAL_8 = 1
 
-	weekly: NATURAL_8 = 3
+	yearly: NATURAL_8 = 2
 
-	daily: NATURAL_8 = 4
+	monthly: NATURAL_8 = 4
+
+	weekly: NATURAL_8 = 16
+
+	daily: NATURAL_8 = 32
 
 	is_valid_interval (v: NATURAL_8): BOOLEAN
 		do
 			inspect v
+			when onetime then
+				Result := True
 			when yearly, monthly, weekly, daily then
 				Result := True
 			when undefined_interval then
@@ -118,7 +134,7 @@ feature -- Basic operations
 
 feature -- Element change
 
-	set_interval (a_type: NATURAL_8; a_count: NATURAL_8)
+	set_interval (a_type: NATURAL_8; a_count: NATURAL_32)
 		require
 			is_valid_interval (a_type)
 		do
@@ -131,6 +147,7 @@ feature -- Element change
 			cancellation_date := dt
 		end
 
+	set_payment_reference,
 	set_subscription_reference (ref: detachable READABLE_STRING_GENERAL)
 		do
 			if ref = Void then

@@ -6,3 +6,15 @@ div.user-view-cloud-box {
 		background-color: #eee;
 	}
 }
+
+.es-billing table {
+	background-color: #fefefe;
+	border: solid 1px #000;
+	th {
+		background-color: #fcfcfc;
+	}
+	td,th {
+		border-bottom: 1px solid #ddd;
+		padding: 0 1rem 0 1rem;
+	}
+}

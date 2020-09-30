@@ -402,6 +402,33 @@ feature -- License subscription
 			es_cloud_storage.save_license_subscription (sub)
 		end
 
+	record_onetime_license_payment (a_license: ES_CLOUD_LICENSE; a_nb_months: NATURAL_32; a_payment_ref: detachable READABLE_STRING_GENERAL)
+		local
+			sub: ES_CLOUD_LICENSE_SUBSCRIPTION
+		do
+			create sub.make (a_license, {ES_CLOUD_LICENSE_SUBSCRIPTION}.onetime, a_nb_months)
+			if a_payment_ref /= Void then
+				sub.set_payment_reference (a_payment_ref)
+			end
+			es_cloud_storage.save_license_subscription (sub)
+		end
+
+feature -- Billings
+
+	license_billings (a_license: ES_CLOUD_LICENSE): detachable SHOPPING_BILLS
+		do
+			if
+				attached es_cloud_storage.license_subscription (a_license) as l_sub and then
+				attached l_sub.subscription_reference as ref
+			then
+				if
+					attached {SHOP_MODULE} cms_api.module ({SHOP_MODULE}) as l_shop_module and then
+					attached l_shop_module.shop_api as l_shop_api
+				then
+					Result := l_shop_api.billings (ref)
+				end
+			end
+		end
 
 feature -- Access: store
 

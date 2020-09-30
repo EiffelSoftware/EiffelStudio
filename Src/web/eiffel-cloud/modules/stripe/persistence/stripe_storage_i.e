@@ -57,6 +57,17 @@ feature -- Payment
 		deferred
 		end
 
+	payment_records (a_payment_id: READABLE_STRING_GENERAL): detachable LIST [STRIPE_PAYMENT_RECORD]
+		require
+			not a_payment_id.is_whitespace
+		deferred
+		end
+
+	subscription_payment_records (a_subscription_id: READABLE_STRING_GENERAL): detachable LIST [STRIPE_PAYMENT_RECORD]
+		require
+			not a_subscription_id.is_whitespace
+		deferred
+		end
 
 note
 	copyright: "2011-2017, Jocelyn Fiat, Javier Velilla, Eiffel Software and others"

@@ -650,6 +650,16 @@ feature -- Payment records
 			Result := stripe_storage.is_payment_processed (a_payment_id)
 		end
 
+	payment_records (a_ref: READABLE_STRING_GENERAL): detachable LIST [STRIPE_PAYMENT_RECORD]
+		do
+			Result := stripe_storage.payment_records (a_ref)
+		end
+
+	subscription_payment_records (a_ref: READABLE_STRING_GENERAL): detachable LIST [STRIPE_PAYMENT_RECORD]
+		do
+			Result := stripe_storage.subscription_payment_records (a_ref)
+		end
+
 feature -- Plans	
 
 	ensure_plan_exists (a_plan: STRIPE_PLAN; a_default_id: READABLE_STRING_GENERAL)

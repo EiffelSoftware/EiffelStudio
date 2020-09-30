@@ -7,9 +7,6 @@ note
 class
 	ES_CLOUD_STORE_ITEM
 
-inherit
-	SHOPPING_CURRENCY_HELPER
-
 create
 	make
 
@@ -72,22 +69,7 @@ feature -- Access
 
 	price_as_string: STRING_32
 		do
-			create Result.make (10)
-			Result.append_natural_32 (price)
-			if cents_price > 0 then
-				Result.append_character ('.')
-				if cents_price <= 9 then
-					Result.append_natural_32 (0)
-				end
-				Result.append_natural_32 (cents_price)
-			end
-
-			if attached iso_currency_as_sign (currency) as ch then
-				Result.prepend_character (ch)
-			else
-				Result.append_character (' ')
-				Result.append_string_general (currency.as_upper)
-			end
+			Result := {SHOPPING_CURRENCY_HELPER}.price_as_string (price, cents_price, currency)
 		end
 
 feature -- Status report

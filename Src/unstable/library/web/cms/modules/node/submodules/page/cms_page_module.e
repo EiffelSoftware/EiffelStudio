@@ -124,7 +124,7 @@ feature {NONE} -- Administration
 			create Result.make (Current)
 		end
 
-feature {CMS_API} -- Access: API
+feature {CMS_API, CMS_MODULE_API, CMS_MODULE} -- Access: API
 
 	page_api: detachable CMS_PAGE_API
 			-- <Precursor>

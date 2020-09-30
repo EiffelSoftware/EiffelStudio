@@ -104,7 +104,7 @@ feature {CMS_API} -- Module management
 			Precursor (api)
 		end
 
-feature {CMS_API, CMS_MODULE_ADMINISTRATION} -- Access: API
+feature {CMS_API, CMS_MODULE_API, CMS_MODULE} -- Access: API
 
 	taxonomy_api: detachable CMS_TAXONOMY_API
 			-- <Precursor>

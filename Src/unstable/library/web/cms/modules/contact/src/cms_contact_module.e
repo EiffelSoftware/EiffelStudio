@@ -102,7 +102,7 @@ feature {CMS_API} -- Module management
 			Result := api.site_location.extended ("db").extended (name).extended ("messages")
 		end
 
-feature {CMS_API} -- Access: API
+feature {CMS_API, CMS_MODULE_API, CMS_MODULE} -- Access: API
 
 	contact_api: detachable CONTACT_API
 

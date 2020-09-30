@@ -59,6 +59,8 @@ feature {CMS_API} -- Module Initialization
 			Precursor (api)
 		end
 
+feature {CMS_API, CMS_MODULE_API, CMS_MODULE} -- Module api
+
 	custom_block_api: detachable CMS_MODULE_API
 			-- <Precursor>.
 

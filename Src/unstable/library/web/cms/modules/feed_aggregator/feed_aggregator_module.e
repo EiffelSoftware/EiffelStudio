@@ -57,7 +57,7 @@ feature {CMS_API} -- Module Initialization
 			create feed_aggregator_api.make (api)
 		end
 
-feature {CMS_API, CMS_MODULE} -- Access: API
+feature {CMS_API, CMS_MODULE_API, CMS_MODULE} -- Access: API
 
 	feed_aggregator_api: detachable FEED_AGGREGATOR_API
 			-- Eventual module api.

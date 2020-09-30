@@ -15,7 +15,7 @@ feature -- Creation
 			l_object_type: READABLE_STRING_8
 		do
 			create jp.make
-			jp.parse_string (a_json)
+			jp.parse_string (a_json.to_string_8)
 			if
 				jp.is_parsed and then
 				jp.is_valid and then

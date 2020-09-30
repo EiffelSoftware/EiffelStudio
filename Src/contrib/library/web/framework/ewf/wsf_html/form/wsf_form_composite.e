@@ -42,6 +42,20 @@ feature -- Change
 			Precursor (i)
 		end
 
+	set_field_text_value (a_name: READABLE_STRING_GENERAL; a_text_value: detachable READABLE_STRING_GENERAL)
+			-- Set recursively text value of input fields named `a_name` to value `a_text_value`.
+		do
+			across
+				items as ic
+			loop
+				if attached {WSF_FORM_INPUT} ic.item as l_input and then l_input.name.same_string_general (a_name) then
+					l_input.set_text_value (a_text_value)
+				elseif attached {WSF_FORM_COMPOSITE} ic.item as l_composite then
+					l_composite.set_field_text_value (a_name, a_text_value)
+				end
+			end
+		end
+
 feature {NONE} -- Implementation: Items			
 
 	container_has_field (a_container: ITERABLE [WSF_WIDGET]; a_name: READABLE_STRING_GENERAL): BOOLEAN

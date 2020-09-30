@@ -166,6 +166,19 @@ feature -- Change
 			end
 		end
 
+	remove (i: WSF_WIDGET)
+			-- Remove widget `i` from Current, recursively.
+		do
+			items.prune_all (i)
+			across
+				items as ic
+			loop
+				if attached {WSF_WIDGET_COMPOSITE} ic.item as l_comp then
+					l_comp.remove (i)
+				end
+			end
+		end
+
 	extend (i: WSF_WIDGET)
 		do
 			items.force (i)

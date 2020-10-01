@@ -128,7 +128,7 @@ feature -- Execution
 					r.set_main_content (s)
 					r.execute
 				else
-					send_access_denied_message (res)
+					send_access_denied (req, res)
 --					s.append ("<div class=%"warning%">This page is restricted to authorized person!</div>")
 				end
 			else
@@ -196,12 +196,14 @@ feature -- Execution
 						end
 						s.append ("</table>%N")
 						s.append ("</div>")
+					else
+						s.append ("<div>No billing information</div>")
 					end
 					s.append ("</div>")
 					r.set_main_content (s)
 					r.execute
 				else
-					send_access_denied_message (res)
+					send_access_denied (req, res)
 --					s.append ("<div class=%"warning%">This page is restricted to authorized person!</div>")
 				end
 			else

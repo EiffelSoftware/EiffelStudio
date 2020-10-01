@@ -82,6 +82,16 @@ feature -- Access: License
 		deferred
 		end
 
+	email_license (a_license: ES_CLOUD_LICENSE): detachable ES_CLOUD_EMAIL_LICENSE
+		local
+			l_email: READABLE_STRING_8
+		do
+			l_email := email_for_license (a_license)
+			if l_email /= Void then
+				create Result.make (l_email, a_license)
+			end
+		end
+
 	email_licenses (a_email: READABLE_STRING_8): LIST [ES_CLOUD_EMAIL_LICENSE]
 		deferred
 		end

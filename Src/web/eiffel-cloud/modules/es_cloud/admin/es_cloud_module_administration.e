@@ -107,9 +107,7 @@ feature -- Hooks configuration
 				attached module.es_cloud_api as l_cloud_api and then
 				attached a_form.id as l_form_id
 			then
-				if l_form_id.same_string ({CMS_AUTHENTICATION_MODULE}.view_account_form_id) then
-					a_form.extend_html_text ("<li>Cloud !!!</li>")
-				elseif l_form_id.same_string ("admin-view-user") then
+				if l_form_id.same_string ("admin-view-user") then
 					if
 						attached cloud_user_from_form (a_form, a_response) as l_user
 					then
@@ -132,7 +130,9 @@ feature -- Hooks configuration
 									s.append (" fallback")
 								end
 								s.append ("%"><strong>")
+								s.append ("<a href=%"" + l_cloud_api.cms_api.location_url (module.license_location (l_license), Void) + "%">")
 								s.append (html_encoded (l_license.key))
+								s.append ("</a>")
 								s.append ("</strong>: <span class=%"plan%">" + html_encoded (l_license.plan.title_or_name) + "</span>")
 								s.append ("<br/>")
 								s.append (" since  <span class=%"date%">")
@@ -162,31 +162,26 @@ feature -- Hooks configuration
 						end
 						a_form.extend (fset)
 					end
-				elseif l_form_id.same_string ("edit-user") then
-					if
-						a_response.has_permission ("admin es licenses")
-					then
-						if
-							attached cloud_user_from_form (a_form, a_response) as l_user and then
-							a_form_data = Void
-						then
-							create fset.make
-							fset.set_legend ("Current licenses")
-							a_form.extend (fset)
-							across
-								l_cloud_api.user_licenses (l_user) as ic
-							loop
-								l_license := ic.item.license
-								add_license_form_part_to (l_license, fset, l_cloud_api)
-							end
-							add_license_form_part_to (Void, fset, l_cloud_api)
-							a_form.validation_actions.extend (agent license_form_validation_action (?, l_user, l_license, l_cloud_api))
-						end
-					end
+--				elseif l_form_id.same_string ("edit-user") then
 --					if
---						a_response.has_permission ("admin es subscriptions")
+--						a_response.has_permission ("admin es licenses")
 --					then
---						form_alter_with_subscriptions (a_form, a_form_data, a_response)
+--						if
+--							attached cloud_user_from_form (a_form, a_response) as l_user and then
+--							a_form_data = Void
+--						then
+--							create fset.make
+--							fset.set_legend ("Current licenses")
+--							a_form.extend (fset)
+--							across
+--								l_cloud_api.user_licenses (l_user) as ic
+--							loop
+--								l_license := ic.item.license
+--								add_license_form_part_to (l_license, fset, l_cloud_api)
+--							end
+--							add_license_form_part_to (Void, fset, l_cloud_api)
+--							a_form.validation_actions.extend (agent license_form_validation_action (?, l_user, l_license, l_cloud_api))
+--						end
 --					end
 				end
 			end
@@ -320,6 +315,7 @@ feature -- Hooks configuration
 		local
 			lic_fset: WSF_FORM_FIELD_SET
 --			r: WSF_FORM_RADIO_INPUT
+			h: WSF_FORM_DIV
 			l_select: WSF_FORM_SELECT
 			l_select_opt: WSF_FORM_SELECT_OPTION
 			num: WSF_FORM_NUMBER_INPUT
@@ -331,7 +327,7 @@ feature -- Hooks configuration
 			l_var_prefix: STRING_8
 		do
 			create lic_fset.make
-			lic_fset.add_css_style ("padding: 5px; margin-bottom: 1em; border: solid 1px blue;")
+			lic_fset.add_css_style ("padding-left: 2rem; margin-bottom: 1em;")
 			fset.extend (lic_fset)
 
 			create s.make_empty
@@ -408,21 +404,24 @@ feature -- Hooks configuration
 				exp.set_description ("Current expiration date: " + l_exp_date.out + "%N")
 			end
 			lic_fset.extend (exp)
+			create h.make
+			h.add_css_class ("horizontal")
+			lic_fset.extend (h)
 			if a_license /= Void then
 				lic_fset.extend (create {WSF_FORM_HIDDEN_INPUT}.make_with_text ("es-lic-lid", a_license.id.out))
 				if a_license.is_suspended then
 					create l_submit.make_with_text ("es-lic-op-resume", "Resume License")
-					lic_fset.extend (l_submit)
+					h.extend (l_submit)
 				else
 					create l_submit.make_with_text ("es-lic-op", "Save License #" + a_license.id.out)
-					lic_fset.extend (l_submit)
+					h.extend (l_submit)
 
 					create l_submit.make_with_text ("es-lic-op-suspend", "Suspend License")
-					lic_fset.extend (l_submit)
+					h.extend (l_submit)
 				end
 			else
 				create l_submit.make_with_text ("es-lic-op", "Save License")
-				lic_fset.extend (l_submit)
+				h.extend (l_submit)
 			end
 		end
 
@@ -437,142 +436,6 @@ feature -- Hooks configuration
 				create Result.make (u)
 			end
 		end
-
---	form_alter_with_subscriptions (a_form: CMS_FORM; a_form_data: detachable WSF_FORM_DATA; a_response: CMS_RESPONSE)
---			-- Hook execution on form `a_form' and its associated data `a_form_data',
---			-- for related response `a_response'.
---		local
---			fset: WSF_FORM_FIELD_SET
---			r: WSF_FORM_RADIO_INPUT
---			num: WSF_FORM_NUMBER_INPUT
---			exp: WSF_FORM_DATE_INPUT
---			s: STRING
---			l_submit: WSF_FORM_SUBMIT_INPUT
---			l_user: detachable ES_CLOUD_USER
---			l_sub: detachable ES_CLOUD_PLAN_SUBSCRIPTION
---			l_plan: detachable ES_CLOUD_PLAN
---		do
---			if
---				attached module.es_cloud_api as l_cloud_api and then
---				attached a_form.id as l_form_id
---			then
---				if l_form_id.same_string ("edit-user") then
---					if
---						a_response.has_permission ("admin es subscriptions")
---					then
---						if
---							attached a_form.fields_by_name ("user-id") as lst and then
---							attached {WSF_FORM_HIDDEN_INPUT} lst.first as l_field and then
---							attached l_field.default_value as l_user_id and then
---							attached a_response.api.user_api.user_by_id_or_name (l_user_id) as u
---						then
---							create l_user.make (u)
---							if a_form_data = Void then
---								create fset.make
---								fset.set_legend ("License")
---								l_sub := l_cloud_api.user_direct_subscription (l_user)
---								if l_sub /= Void then
---									l_plan := l_sub.plan
---									create s.make_empty
---									s.append ("<p>Current plan: <strong>" + html_encoded (l_plan.title_or_name) + "</strong>")
---									if attached l_sub.expiration_date as dt then
---										s.append (" until ")
---										s.append (date_time_to_string (dt))
---									end
---									s.append ("</p>")
---									fset.extend_html_text (s)
---								end
---								across
---									l_cloud_api.plans as ic
---								loop
---									create r.make_with_value ("es-plan", ic.item.name.as_string_32)
---									r.set_title (ic.item.title_or_name)
---									if ic.item.same_plan (l_plan) then
---										r.set_checked (True)
---									end
---									fset.extend (r)
---								end
---								create num.make ("es-plan-duration-in-month")
---								num.set_min (0)
---								num.set_max (5*12)
---								num.set_step (0.5)
---								num.set_label ("Additional time")
---								num.set_size (3)
---								num.set_description ("number of additional months.")
---								fset.extend (num)
---
---
---								create exp.make ("es-plan-expiration")
---								exp.set_label ("Expiration date")
---								exp.set_description ("Expiration date")
---								if l_sub /= Void and then attached l_sub.expiration_date as l_exp_date then
---									exp.set_description ("Current expiration date: " + l_exp_date.out + "%N")
---								end
---								fset.extend (exp)
---
---								create l_submit.make_with_text ("op", "Save plan")
---								fset.extend (l_submit)
---								a_form.extend (fset)
---								a_form.validation_actions.extend (agent subscription_form_validation_action (?, a_user, l_sub, a_cloud_api))
---							end
---						end
---					end
---				end
---			end
---		end
-
---	subscription_form_validation_action (fd: WSF_FORM_DATA; a_user: ES_CLOUD_USER; a_sub: detachable ES_CLOUD_PLAN_SUBSCRIPTION; a_cloud_api: ES_CLOUD_API)
---		local
---			n: INTEGER
---			orig: DATE_TIME
---			dt: DATE_TIME
---			y,mo: INTEGER
---			nb_months: INTEGER
---			nb_days: INTEGER
---		do
---				-- Only update plan, if validated via the [Save plan] button!
---			if
---				attached fd.string_item ("op") as l_op and then
---				l_op.same_string ("Save plan") and then
---				attached fd.string_item ("es-plan") as l_plan_name and then
---				attached a_cloud_api.plan_by_name (l_plan_name) as l_new_plan
---			then
---				if attached fd.string_item ("es-plan-expiration") as s_exp and then attached yyyy_mm_dd_to_date (s_exp) as l_exp_date then
---					a_cloud_api.subscribe_user_to_plan_until_date (a_user, l_new_plan, l_exp_date)
---				else
---					if
---						attached fd.string_item ("es-plan-duration-in-month") as s_nb
---					then
---						if s_nb.is_integer then
---							nb_months := s_nb.to_integer --months
---						elseif s_nb.is_real then
---							nb_days := (31 * s_nb.to_real).truncated_to_integer --days
---						end
---					end
---					if a_sub /= Void and then a_sub.plan.same_plan (l_new_plan) then
---						orig := a_sub.creation_date
---						nb_days := nb_days + a_sub.days_remaining
---					else
---						create orig.make_now_utc
---					end
---					if nb_months > 0 then
---						n := nb_months
---						y := orig.year
---						mo := orig.month + n
---						if mo <= 12 then
---						else
---							y := y + mo // 12
---							mo := mo \\ 12
---						end
---						create dt.make_by_date_time (create {DATE}.make (y, mo, orig.day), orig.time)
---						n := (dt.relative_duration (orig).seconds_count // 3600 // 24).to_integer
---						nb_days := nb_days + n
---					end
---
---					a_cloud_api.subscribe_user_to_plan (a_user, l_new_plan, nb_days)
---				end
---			end
---		end
 
 	yyyy_mm_dd_to_date (s: READABLE_STRING_GENERAL): detachable DATE
 			-- YYYY-mm-dd to DATE object.

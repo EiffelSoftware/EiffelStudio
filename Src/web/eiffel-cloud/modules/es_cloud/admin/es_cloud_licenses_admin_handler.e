@@ -50,6 +50,9 @@ feature -- Execution
 			f: CMS_FORM
 			fset: WSF_FORM_FIELD_SET
 			l_user: detachable ES_CLOUD_USER
+			d: WSF_FORM_DIV
+			l_user_tf: WSF_FORM_TEXT_INPUT
+			l_submit: WSF_FORM_SUBMIT_INPUT
 		do
 			if api.has_permission ("admin es licenses") then
 				lic := es_cloud_api.license_by_key (a_lic_id)
@@ -64,10 +67,42 @@ feature -- Execution
 					r := new_generic_response (req, res)
 					create s.make_empty
 
-						-- Edit form					
+						-- Edit form
 					create f.make (r.absolute_url (req.percent_encoded_path_info, Void), "edit-license")
 					f.set_method_post
+					if
+						l_user = Void and then
+						attached es_cloud_api.email_license (lic) as l_email_lic
+					then
+						create fset.make
+						fset.set_legend ("Assign this license to a user")
+						fset.set_legend ("The license is currently associated to email "+ html_encoded (l_email_lic.email) + " .")
+						create d.make
+						d.add_css_class ("horizontal")
+						fset.extend (d)
+						create l_user_tf.make ("user-assignee")
+						d.extend (l_user_tf)
+						l_user_tf.set_label ("Username or uid")
+						create l_submit.make_with_text ("op", "Assign")
+						d.extend (l_submit)
+						l_submit.set_validation_action (agent (i_email_lic: ES_CLOUD_EMAIL_LICENSE; i_fd: WSF_FORM_DATA)
+								do
+									if
+										attached i_fd.string_item ("op") as l_op and then l_op.is_case_insensitive_equal_general ("Assign") and then
+										attached i_fd.string_item ("user-assignee") as l_uid
+									then
+										if attached api.user_api.user_by_id_or_name (l_uid) as l_assignee then
+											es_cloud_api.move_email_license_to_user (i_email_lic, l_assignee)
+										else
+											i_fd.report_invalid_field ("user-assignee", "User not found")
+										end
+									end
+								end(l_email_lic, ?)
+							)
+						f.extend (fset)
+					end
 					create fset.make
+					fset.set_legend ("Edit license " + html_encoded (lic.key))
 					f.extend (fset)
 					admin_module.add_license_form_part_to (lic, fset, es_cloud_api)
 					if req.is_post_request_method then
@@ -78,11 +113,11 @@ feature -- Execution
 						end
 						es_cloud_api.append_license_to_html (lic, l_user, Void, s)
 
-						create f.make (r.absolute_url (req.percent_encoded_path_info, Void), "edit-license")
-						f.set_method_post
-						create fset.make
-						f.extend (fset)
-						admin_module.add_license_form_part_to (lic, fset, es_cloud_api)
+--						create f.make (r.absolute_url (req.percent_encoded_path_info, Void), "edit-license")
+--						f.set_method_post
+--						create fset.make
+--						f.extend (fset)
+--						admin_module.add_license_form_part_to (lic, fset, es_cloud_api)
 
 						f.append_to_html (r.wsf_theme, s)
 					else

@@ -179,6 +179,16 @@ feature -- Access: licenses
 			Result := es_cloud_storage.user_licenses (a_user)
 		end
 
+	email_for_license (a_license: ES_CLOUD_LICENSE): detachable READABLE_STRING_8
+		do
+			Result := es_cloud_storage.email_for_license (a_license)
+		end
+
+	email_license (a_license: ES_CLOUD_LICENSE): detachable ES_CLOUD_EMAIL_LICENSE
+		do
+			Result := es_cloud_storage.email_license (a_license)
+		end
+
 	email_licenses (a_email: READABLE_STRING_8): LIST [ES_CLOUD_EMAIL_LICENSE]
 		do
 			Result := es_cloud_storage.email_licenses (a_email)
@@ -306,6 +316,7 @@ feature -- Element change license
 		do
 			es_cloud_storage.move_email_license_to_user (a_email_license, a_user)
 		end
+
 	assign_license_to_email (a_license: ES_CLOUD_LICENSE; a_email: READABLE_STRING_8)
 		do
 			es_cloud_storage.assign_license_to_email (a_license, a_email)

@@ -61,11 +61,26 @@ feature -- Helpers / security vulnerabilities
 			secure_text (Result)
 		end
 
-	secured_url_content (a_url_content: READABLE_STRING_8): STRING_8
+	secured_url_content (a_url_content: READABLE_STRING_8): READABLE_STRING_8
 			-- `a_url_content` cleaned from XSS vulnerabilities.
+		local
+			s: STRING_8
 		do
-			create Result.make_from_string (a_url_content)
-			secure_text (Result)
+			if a_url_content.is_empty then
+				Result := a_url_content
+			elseif
+				a_url_content.starts_with_general ("javascript") and then
+				a_url_content.count >= 14 and then (
+					a_url_content [11] = ':'
+				  	or (a_url_content [11] = '%%' and then a_url_content [12] = '3')
+				)
+			then
+				Result := ""
+			else
+				create s.make_from_string (a_url_content)
+				secure_text (s)
+				Result := s
+			end
 		end
 
 	secure_text (a_text: STRING_GENERAL)

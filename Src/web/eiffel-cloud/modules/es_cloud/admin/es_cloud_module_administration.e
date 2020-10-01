@@ -311,6 +311,42 @@ feature -- Hooks configuration
 			end
 		end
 
+	add_assign_email_license_form_part_to (a_license: ES_CLOUD_EMAIL_LICENSE; ftarget: WSF_FORM_COMPOSITE; a_cloud_api: ES_CLOUD_API)
+		local
+			d: WSF_FORM_DIV
+			l_user_tf: WSF_FORM_TEXT_INPUT
+			l_submit: WSF_FORM_SUBMIT_INPUT
+			fset: WSF_FORM_FIELD_SET
+		do
+			create fset.make
+			fset.set_legend ("Assign this license to a user")
+			fset.set_legend ("The license is currently associated to email "+ html_encoded (a_license.email) + " .")
+			ftarget.extend (fset)
+
+			create d.make
+			d.add_css_class ("horizontal")
+			fset.extend (d)
+			create l_user_tf.make ("user-assignee")
+			d.extend (l_user_tf)
+			l_user_tf.set_label ("Username or uid")
+			create l_submit.make_with_text ("op", "Assign")
+			d.extend (l_submit)
+			l_submit.set_validation_action (agent (i_email_lic: ES_CLOUD_EMAIL_LICENSE; i_fd: WSF_FORM_DATA; i_a_cloud_api: ES_CLOUD_API)
+					do
+						if
+							attached i_fd.string_item ("op") as l_op and then l_op.is_case_insensitive_equal_general ("Assign") and then
+							attached i_fd.string_item ("user-assignee") as l_uid
+						then
+							if attached i_a_cloud_api.cms_api.user_api.user_by_id_or_name (l_uid) as l_assignee then
+								i_a_cloud_api.move_email_license_to_user (i_email_lic, l_assignee)
+							else
+								i_fd.report_invalid_field ("user-assignee", "User not found")
+							end
+						end
+					end(a_license, ?, a_cloud_api)
+				)
+		end
+
 	add_license_form_part_to (a_license: detachable ES_CLOUD_LICENSE; fset: WSF_FORM_FIELD_SET; a_cloud_api: ES_CLOUD_API)
 		local
 			lic_fset: WSF_FORM_FIELD_SET

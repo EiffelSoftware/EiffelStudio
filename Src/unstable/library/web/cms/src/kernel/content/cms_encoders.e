@@ -76,6 +76,13 @@ feature -- Helpers / security vulnerabilities
 				)
 			then
 				Result := ""
+			elseif a_url_content.has_substring ("<!--") then
+				Result := ""
+			elseif
+				a_url_content.has_substring ("<Svg ")
+				or a_url_content.has_substring ("<svg ")
+			then
+				Result := ""
 			else
 				create s.make_from_string (a_url_content)
 				secure_text (s)

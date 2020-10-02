@@ -78,10 +78,16 @@ feature -- Helpers / security vulnerabilities
 				Result := ""
 			elseif
 				a_url_content.has ('%"')
-				or a_url_content.has ('<')
-				or a_url_content.has ('>')
+				or a_url_content.has ('<') or a_url_content.has ('>')
+				or a_url_content.has ('{') or a_url_content.has ('}')
+				or a_url_content.has ('|') or a_url_content.has ('\')
+				or a_url_content.has ('^') or a_url_content.has ('`')
 			then
-					-- Double quote, less than and greated than should be encoded!
+					-- Unsafe character should should be encoded in URL!
+					-- TODO: either consider that as unsecured, or maybe
+					--	     encode those unsafe character when found in url.
+					--		 but this could propagate the vulnerability to unsecure code.
+					--		 so for now, it is better to be strict.
 				Result := ""
 			else
 				create s.make_from_string (a_url_content)

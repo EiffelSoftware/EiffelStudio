@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
-<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-18-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-18-0 http://www.eiffel.com/developers/xml/configuration-1-18-0.xsd" name="test_simple_db" uuid="2A955961-2B7F-4075-BD05-F75225D8A711">
+<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-20-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-20-0 http://www.eiffel.com/developers/xml/configuration-1-20-0.xsd" name="test_simple_db" uuid="2A955961-2B7F-4075-BD05-F75225D8A711">
 	<target name="test_simple_db">
 		<root class="ANY" feature="default_create"/>
 		<file_rule>
@@ -7,8 +7,6 @@
 			<exclude>/\.git$</exclude>
 			<exclude>/\.svn$</exclude>
 		</file_rule>
-		<option warning="true">
-		</option>
 		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf"/>
 		<library name="json" location="$ISE_LIBRARY\contrib\library\text\parser\json\library\json.ecf"/>
 		<library name="simple_db" location="..\simple_db.ecf" readonly="false"/>

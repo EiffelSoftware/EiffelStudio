@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
-<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-18-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-18-0 http://www.eiffel.com/developers/xml/configuration-1-18-0.xsd" name="wsf" uuid="A37CE5AA-4D2A-4441-BC6A-0A1D7EC49647" library_target="wsf">
+<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-20-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-20-0 http://www.eiffel.com/developers/xml/configuration-1-20-0.xsd" name="wsf" uuid="A37CE5AA-4D2A-4441-BC6A-0A1D7EC49647" library_target="wsf">
 	<target name="wsf">
 		<root all_classes="true"/>
 		<file_rule>
@@ -7,8 +7,6 @@
 			<exclude>/\.git$</exclude>
 			<exclude>/\.svn$</exclude>
 		</file_rule>
-		<option warning="true">
-		</option>
 		<mapping old_name="WSF_URI_TEMPLATE_HELPER_FOR_ROUTED_EXECUTION" new_name="WSF_ROUTED_URI_TEMPLATE_HELPER"/>
 		<mapping old_name="WSF_URI_HELPER_FOR_ROUTED_EXECUTION" new_name="WSF_ROUTED_URI_HELPER"/>
 		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf"/>

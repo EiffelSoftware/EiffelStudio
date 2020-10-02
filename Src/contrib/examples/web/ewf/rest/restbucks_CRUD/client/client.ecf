@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
-<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-18-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-18-0 http://www.eiffel.com/developers/xml/configuration-1-18-0.xsd" name="client" uuid="D0059CEB-5F5C-4D21-8C71-842BD0F88468">
+<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-20-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-20-0 http://www.eiffel.com/developers/xml/configuration-1-20-0.xsd" name="client" uuid="D0059CEB-5F5C-4D21-8C71-842BD0F88468">
 	<target name="client">
 		<root class="RESTBUCK_CLIENT" feature="make"/>
 		<file_rule>
@@ -7,8 +7,6 @@
 			<exclude>/\.git$</exclude>
 			<exclude>/\.svn$</exclude>
 		</file_rule>
-		<option warning="true">
-		</option>
 		<setting name="console_application" value="true"/>
 		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf"/>
 		<library name="http_client" location="..\..\..\..\..\..\library\network\http_client\http_client.ecf"/>

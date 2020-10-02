@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
-<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-18-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-18-0 http://www.eiffel.com/developers/xml/configuration-1-18-0.xsd" name="openid" uuid="FCDB4F81-31EC-462B-9183-D506E6798C0B" library_target="openid">
+<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-20-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-20-0 http://www.eiffel.com/developers/xml/configuration-1-20-0.xsd" name="openid" uuid="FCDB4F81-31EC-462B-9183-D506E6798C0B" library_target="openid">
 	<target name="openid">
 		<root all_classes="true"/>
 		<file_rule>
@@ -7,8 +7,6 @@
 			<exclude>/\.git$</exclude>
 			<exclude>/\.svn$</exclude>
 		</file_rule>
-		<option warning="true">
-		</option>
 		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf"/>
 		<library name="curl" location="$ISE_LIBRARY\library\cURL\cURL.ecf" readonly="false"/>
 		<library name="http_client" location="..\..\..\..\network\http_client\http_client.ecf"/>

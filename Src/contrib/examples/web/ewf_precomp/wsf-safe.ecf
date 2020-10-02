@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
-<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-16-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-16-0 http://www.eiffel.com/developers/xml/configuration-1-16-0.xsd" name="precomp_wsf-safe" uuid="E541289C-4921-4BE3-98B2-4E466FC83AC7" library_target="wsf-safe">
+<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-20-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-20-0 http://www.eiffel.com/developers/xml/configuration-1-20-0.xsd" name="precomp_wsf-safe" uuid="E541289C-4921-4BE3-98B2-4E466FC83AC7" library_target="wsf-safe">
 	<target name="wsf-safe">
 		<root all_classes="true"/>
 		<capability>

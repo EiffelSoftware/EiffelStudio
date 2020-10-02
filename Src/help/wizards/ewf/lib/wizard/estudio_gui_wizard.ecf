@@ -1,11 +1,9 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
-<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-18-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-18-0 http://www.eiffel.com/developers/xml/configuration-1-18-0.xsd" name="estudio_gui_wizard" uuid="6E6AAD4F-8869-428A-B507-54EACE8613E9" library_target="estudio_gui_wizard">
+<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-20-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-20-0 http://www.eiffel.com/developers/xml/configuration-1-20-0.xsd" name="estudio_gui_wizard" uuid="6E6AAD4F-8869-428A-B507-54EACE8613E9" library_target="estudio_gui_wizard">
 	<target name="estudio_gui_wizard">
 		<root all_classes="true"/>
-		<option warning="true">
-		</option>
 		<capability>
-			<concurrency use="none"/>
+			<concurrency support="none"/>
 		</capability>
 		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf"/>
 		<library name="encoding" location="$ISE_LIBRARY\library\encoding\encoding.ecf"/>

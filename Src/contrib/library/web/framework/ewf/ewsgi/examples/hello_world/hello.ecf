@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
-<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-18-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-18-0 http://www.eiffel.com/developers/xml/configuration-1-18-0.xsd" name="hello_world" uuid="734385F1-0D17-4B5F-9138-24DC8D4F06C6">
+<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-20-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-20-0 http://www.eiffel.com/developers/xml/configuration-1-20-0.xsd" name="hello_world" uuid="734385F1-0D17-4B5F-9138-24DC8D4F06C6">
 	<target name="hello_world">
 		<root class="HELLO_WORLD" feature="make"/>
 		<file_rule>
@@ -7,8 +7,6 @@
 			<exclude>/\.git$</exclude>
 			<exclude>/\.svn$</exclude>
 		</file_rule>
-		<option warning="true">
-		</option>
 		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf"/>
 		<library name="connector_standalone" location="..\..\connectors\standalone\standalone.ecf" readonly="false"/>
 		<library name="ewsgi" location="..\..\ewsgi.ecf" readonly="false"/>

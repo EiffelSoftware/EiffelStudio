@@ -76,12 +76,12 @@ feature -- Helpers / security vulnerabilities
 				)
 			then
 				Result := ""
-			elseif a_url_content.has_substring ("<!--") then
-				Result := ""
 			elseif
-				a_url_content.has_substring ("<Svg ")
-				or a_url_content.has_substring ("<svg ")
+				a_url_content.has ('%"')
+				or a_url_content.has ('<')
+				or a_url_content.has ('>')
 			then
+					-- Double quote, less than and greated than should be encoded!
 				Result := ""
 			else
 				create s.make_from_string (a_url_content)

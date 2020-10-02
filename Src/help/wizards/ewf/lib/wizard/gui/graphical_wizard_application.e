@@ -1,4 +1,4 @@
-﻿note
+note
 	author: "$Author$"
 	date: "$Date$"
 	revision: "$Revision$"

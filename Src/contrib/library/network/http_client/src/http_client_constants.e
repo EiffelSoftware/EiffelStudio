@@ -1,4 +1,4 @@
-﻿note
+note
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -20,7 +20,7 @@ feature -- Auth type
 			elseif a_auth_type_string.is_case_insensitive_equal ("none") then
 				Result := Auth_type_none
 			end
-		end
+		end	
 
 	Auth_type_none: INTEGER = 0
 	Auth_type_basic: INTEGER = 1

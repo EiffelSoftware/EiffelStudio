@@ -1,4 +1,4 @@
-﻿note
+note
 	description: "[
 			Implementation of HTTPD_CONNECTION_HANDLER_I for concurrency mode: Thread
 		]"

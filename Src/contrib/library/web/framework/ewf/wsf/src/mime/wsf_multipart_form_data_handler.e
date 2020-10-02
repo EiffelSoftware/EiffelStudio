@@ -31,9 +31,9 @@ feature -- Status report
 feature -- Execution
 
 	handle (a_content_type: HTTP_CONTENT_TYPE; req: WSF_REQUEST;
-				a_vars: HASH_TABLE [WSF_VALUE, READABLE_STRING_GENERAL]; a_raw_data: detachable CELL [detachable STRING_8])
+				a_vars: HASH_TABLE [WSF_VALUE, READABLE_STRING_GENERAL]; a_raw_data: detachable CELL [detachable READABLE_STRING_8])
 		local
-			s: like full_input_data
+			s: READABLE_STRING_8
 		do
 			s := full_input_data (req)
 			if a_raw_data /= Void then

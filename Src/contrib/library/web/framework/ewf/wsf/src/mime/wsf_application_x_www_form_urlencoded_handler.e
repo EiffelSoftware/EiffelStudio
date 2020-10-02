@@ -26,9 +26,9 @@ feature -- Status report
 feature -- Execution
 
 	handle (a_content_type: HTTP_CONTENT_TYPE; req: WSF_REQUEST;
-			a_vars: HASH_TABLE [WSF_VALUE, READABLE_STRING_GENERAL]; a_raw_data: detachable CELL [detachable STRING_8])
+			a_vars: HASH_TABLE [WSF_VALUE, READABLE_STRING_GENERAL]; a_raw_data: detachable CELL [detachable READABLE_STRING_8])
 		local
-			l_content: STRING_8
+			l_content: READABLE_STRING_8
 			n, p, i, j: INTEGER
 			s: READABLE_STRING_8
 			l_name, l_value: READABLE_STRING_8

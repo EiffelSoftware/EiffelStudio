@@ -16,7 +16,7 @@ feature -- Status report
 feature -- Execution
 
 	handle (a_content_type: HTTP_CONTENT_TYPE; req: WSF_REQUEST;
-			a_vars: HASH_TABLE [WSF_VALUE, READABLE_STRING_GENERAL]; a_raw_data: detachable CELL [detachable STRING_8])
+			a_vars: HASH_TABLE [WSF_VALUE, READABLE_STRING_GENERAL]; a_raw_data: detachable CELL [detachable READABLE_STRING_8])
 			-- Handle MIME content from request `req', eventually fill the `a_vars' (not yet available from `req')
 			-- and if `a_raw_data' is attached, store any read data inside `a_raw_data'
 		require

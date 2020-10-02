@@ -58,10 +58,10 @@ feature -- Element Change
 			is_valid_number: a_val.is_integer
 		do
 			if a_val.is_string_32 then
-		 		min := html_encoder.encoded_string (a_val.to_string_32)
-		 	elseif a_val.is_string_8 then
-		 		min := a_val.to_string_8
-		 	end
+				min := html_encoder.encoded_string (a_val.to_string_32)
+			elseif a_val.is_string_8 then
+				min := a_val.to_string_8
+			end
 		ensure
 			min_set: attached min as l_min implies l_min.same_string_general (a_val)
 		end
@@ -72,10 +72,10 @@ feature -- Element Change
 			is_valid_number: a_val.is_integer
 		do
 			if a_val.is_string_32 then
-		 		max := html_encoder.encoded_string (a_val.to_string_32)
-		 	elseif a_val.is_string_8 then
-		 		max := a_val.to_string_8
-		 	end
+				max := html_encoder.encoded_string (a_val.to_string_32)
+			elseif a_val.is_string_8 then
+				max := a_val.to_string_8
+			end
 		ensure
 			max_set: attached max as l_max implies l_max.same_string_general (a_val)
 		end
@@ -84,12 +84,12 @@ feature -- Element Change
 			-- Set `step' with `a_val'.
 		require
 			is_valid_sequence: a_val.is_number_sequence or else a_val.is_real_sequence
- 		do
- 			if a_val.is_string_32 then
- 				step := html_encoder.encoded_string (a_val.to_string_32)
- 			elseif a_val.is_string_8 then
- 				step := a_val.to_string_8
- 			end
+		do
+			if a_val.is_string_32 then
+				step := html_encoder.encoded_string (a_val.to_string_32)
+			elseif a_val.is_string_8 then
+				step := a_val.to_string_8
+			end
 		ensure
 			step_set: attached step as l_step implies l_step.same_string_general (a_val)
 		end

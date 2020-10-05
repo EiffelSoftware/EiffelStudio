@@ -103,6 +103,7 @@ div.pricing {
 	div.plan div.option {
 		&.year, &.month, &.week, &.day, &.onetime {
 			display: none;
+			background-color: #999;
 		}
 	}
 
@@ -116,31 +117,43 @@ div.pricing {
 		color: #00000055;
 		font-weight: bold;
 		background-color: #cccccc66;
+		border: solid 2px #cccccc66;
 	}
 	input[type="radio"] ~  input[type="radio"] + label {
 		margin-left: .2rem;
 	}
 	input[type="radio"]:checked + label {
 		border: solid 2px #000;
-		border-radius: 1rem;
+		@include border-radius(1rem);
 		color: #000000;
 		background-color: #fff;
 		transition: all .3s ease-out;
+		@include transition-ease-out(all,1s);
 	}
 	input[type="radio"].year:checked ~ div.plans div.plan div[data-interval="year"] {
 		display: block;
+		background-color: transparent;
+		@include fade-in(1s);
 	}
 	input[type="radio"].month:checked ~ div.plans div.plan div[data-interval="month"] {
 		display: block;
+		background-color: transparent;
+		@include fade-in(1s);
 	}
 	input[type="radio"].week:checked ~ div.plans div.plan div[data-interval="week"] {
 		display: block;
+		background-color: transparent;
+		@include fade-in(1s);
 	}
 	input[type="radio"].day:checked ~ div.plans div.plan div[data-interval="day"] {
 		display: block;
+		background-color: transparent;
+		@include fade-in(1s);
 	}
 	input[type="radio"].onetime:checked ~ div.plans div.plan div[data-interval="onetime"] {
 		display: block;
+		background-color: transparent;
+		@include fade-in(1s);
 	}
 }
 

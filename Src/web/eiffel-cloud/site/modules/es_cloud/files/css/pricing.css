@@ -1,3 +1,8 @@
+@keyframes fadeIn {
+  from {
+    opacity: 0; }
+  to {
+    opacity: 1; } }
 div.pricing {
   background-color: #eaedf5;
   padding: 0; }
@@ -82,7 +87,8 @@ div.pricing .empty {
 div.pricing .plans {
   margin-top: 1.4rem; }
 div.pricing div.plan div.option.year, div.pricing div.plan div.option.month, div.pricing div.plan div.option.week, div.pricing div.plan div.option.day, div.pricing div.plan div.option.onetime {
-  display: none; }
+  display: none;
+  background-color: #999; }
 div.pricing input[type="radio"] {
   display: none; }
 div.pricing input[type="radio"] + label {
@@ -91,25 +97,64 @@ div.pricing input[type="radio"] + label {
   padding: 1rem;
   color: #00000055;
   font-weight: bold;
-  background-color: #cccccc66; }
+  background-color: #cccccc66;
+  border: solid 2px #cccccc66; }
 div.pricing input[type="radio"] ~ input[type="radio"] + label {
   margin-left: .2rem; }
 div.pricing input[type="radio"]:checked + label {
   border: solid 2px #000;
+  -webkit-border-radius: 1rem;
+  -moz-border-radius: 1rem;
+  -ms-border-radius: 1rem;
   border-radius: 1rem;
   color: #000000;
   background-color: #fff;
-  transition: all .3s ease-out; }
+  transition: all .3s ease-out;
+  transition: all ease-out 1s;
+  -webkit-transition: all ease-out 1s;
+  -moz-transition: all ease-out 1s;
+  -o-transition: all ease-out 1s;
+  -ms-transition: all ease-out 1s; }
 div.pricing input[type="radio"].year:checked ~ div.plans div.plan div[data-interval="year"] {
-  display: block; }
+  display: block;
+  background-color: transparent;
+  animation: fadeIn ease 1s;
+  -webkit-animation: fadeIn ease 1s;
+  -moz-animation: fadeIn ease 1s;
+  -o-animation: fadeIn ease 1s;
+  -ms-animation: fadeIn ease 1s; }
 div.pricing input[type="radio"].month:checked ~ div.plans div.plan div[data-interval="month"] {
-  display: block; }
+  display: block;
+  background-color: transparent;
+  animation: fadeIn ease 1s;
+  -webkit-animation: fadeIn ease 1s;
+  -moz-animation: fadeIn ease 1s;
+  -o-animation: fadeIn ease 1s;
+  -ms-animation: fadeIn ease 1s; }
 div.pricing input[type="radio"].week:checked ~ div.plans div.plan div[data-interval="week"] {
-  display: block; }
+  display: block;
+  background-color: transparent;
+  animation: fadeIn ease 1s;
+  -webkit-animation: fadeIn ease 1s;
+  -moz-animation: fadeIn ease 1s;
+  -o-animation: fadeIn ease 1s;
+  -ms-animation: fadeIn ease 1s; }
 div.pricing input[type="radio"].day:checked ~ div.plans div.plan div[data-interval="day"] {
-  display: block; }
+  display: block;
+  background-color: transparent;
+  animation: fadeIn ease 1s;
+  -webkit-animation: fadeIn ease 1s;
+  -moz-animation: fadeIn ease 1s;
+  -o-animation: fadeIn ease 1s;
+  -ms-animation: fadeIn ease 1s; }
 div.pricing input[type="radio"].onetime:checked ~ div.plans div.plan div[data-interval="onetime"] {
-  display: block; }
+  display: block;
+  background-color: transparent;
+  animation: fadeIn ease 1s;
+  -webkit-animation: fadeIn ease 1s;
+  -moz-animation: fadeIn ease 1s;
+  -o-animation: fadeIn ease 1s;
+  -ms-animation: fadeIn ease 1s; }
 
 div.pay {
   padding: 10px; }

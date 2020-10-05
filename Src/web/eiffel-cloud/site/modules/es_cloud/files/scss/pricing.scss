@@ -91,40 +91,55 @@ div.plan {
 		button {
 			width: 90%;
 		}
-		&.per-year, &.per-month, &.per-week, &.per-day, &.one-year {
+	}
+}
+div.pricing {
+	.empty {
+		height: 1rem;
+	}
+	.plans {
+		margin-top: 1.4rem;
+	}
+	div.plan div.option {
+		&.year, &.month, &.week, &.day, &.onetime {
 			display: none;
 		}
 	}
+
 	input[type="radio"] {
 		display: none;
 	}
 	input[type="radio"] + label {
-		margin-bottom: 1rem;
-		padding: .6rem;
+		margin-left: 1rem;
+		margin-bottom: 20px;
+		padding: 1rem;
 		color: #00000055;
 		font-weight: bold;
 		background-color: #cccccc66;
 	}
+	input[type="radio"] ~  input[type="radio"] + label {
+		margin-left: .2rem;
+	}
 	input[type="radio"]:checked + label {
-		border: solid 1px #000;
-		border-radius: 5px;
+		border: solid 2px #000;
+		border-radius: 1rem;
 		color: #000000;
 		background-color: #fff;
 		transition: all .3s ease-out;
 	}
-	input[type="radio"].per-year:checked ~ div[data-interval="per-year"] {
+	input[type="radio"].year:checked ~ div.plans div.plan div[data-interval="year"] {
 		display: block;
 	}
-	input[type="radio"].per-month:checked ~ div[data-interval="per-month"] {
+	input[type="radio"].month:checked ~ div.plans div.plan div[data-interval="month"] {
 		display: block;
 	}
-	input[type="radio"].per-week:checked ~ div[data-interval="per-week"] {
+	input[type="radio"].week:checked ~ div.plans div.plan div[data-interval="week"] {
 		display: block;
 	}
-	input[type="radio"].per-day:checked ~ div[data-interval="per-day"] {
+	input[type="radio"].day:checked ~ div.plans div.plan div[data-interval="day"] {
 		display: block;
 	}
-	input[type="radio"].one-year:checked ~ div[data-interval="one-year"] {
+	input[type="radio"].onetime:checked ~ div.plans div.plan div[data-interval="onetime"] {
 		display: block;
 	}
 }

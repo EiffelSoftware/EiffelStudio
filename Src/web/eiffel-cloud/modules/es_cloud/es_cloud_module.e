@@ -209,6 +209,7 @@ feature -- Access: router
 				a_router.handle ("/" + licenses_location, h_lic, a_router.methods_get_post)
 				a_router.handle ("/" + licenses_location + "{license_key}", h_lic, a_router.methods_get)
 				a_router.handle ("/" + licenses_location + "{license_key}/billing/", h_lic, a_router.methods_get)
+				a_router.handle ("/" + licenses_location + "_/{action}", h_lic, a_router.methods_get_post)
 				a_router.handle ("/" + licenses_location + "_/{action}/", h_lic, a_router.methods_get_post)
 			end
 		end
@@ -554,14 +555,11 @@ feature -- Hooks: block
 					if attached l_cloud_api.cms_api.user as u then
 						a_response.add_block (new_account_summary_block (create {ES_CLOUD_USER}.make (u), l_cloud_api, a_response), "content")
 					end
-
 				elseif a_block_id.is_case_insensitive_equal_general ("cloud_store") then
 					if a_response.request.is_get_request_method then
 						a_response.add_block (new_store_block (l_cloud_api, a_response), "content")
 						a_response.add_style (a_response.module_resource_url (Current, "/files/css/pricing.css", Void), Void)
 					end
-				else
-
 				end
 			end
 		end
@@ -613,7 +611,6 @@ feature -- Hooks: block
 			if
 				attached api.store (Void) as l_store
 			then
-				l_html.append ("<div class=%"plans%">")
 				create tb.make_caseless (3)
 				across
 					l_store.items as ic
@@ -629,6 +626,40 @@ feature -- Hooks: block
 					end
 				end
 
+				create l_intervals.make_caseless (2)
+				l_html.append ("<div class=%"empty%"></div>")
+
+				l_is_first := True
+				across
+					l_store.items as ic
+				loop
+					l_item := ic.item
+					if attached store_item_interval_name (l_item) as l_interval_name then
+						create l_int_id.make_from_string (html_encoded (l_interval_name))
+						l_int_id.replace_substring_all (" ", "-")
+						if not l_intervals.has (l_int_id) then
+							l_intervals.force (1, l_int_id)
+							l_html.append ("<input type=%"radio%" name=%"interval%" id=%"" + l_int_id + "%" class=%"" + l_int_id + "%" value=%"" + l_int_id + "%"")
+							if l_is_first then
+								l_html.append (" checked=%"checked%"")
+							end
+							l_html.append ("/>")
+							l_html.append ("<label for=%"" + l_int_id + "%">")
+							if attached store_item_interval_title (l_item) as l_interval_title then
+								l_html.append (html_encoded (l_interval_title))
+							else
+								l_html.append (html_encoded (l_interval_name))
+							end
+							l_html.append ("</label>%N")
+							l_is_first := False
+						else
+							l_intervals.force (l_intervals [l_int_id] + 1, l_int_id)
+						end
+
+					end
+				end
+
+				l_html.append ("<div class=%"plans%">")
 				across
 					tb as tb_ic
 				loop
@@ -636,36 +667,6 @@ feature -- Hooks: block
 					if attached api.plan_by_name (l_plan_name) as pl then
 						l_html.append ("<div class=%"plan "+ html_encoded (pl.name) +"%">%N")
 						l_html.append ("<h2>"+ html_encoded (pl.title_or_name) + "</h2>")
-						if tb_ic.item.count > 1 then
---							l_html.append ("<div class=%"switch%">")
-							create l_intervals.make_caseless (tb_ic.item.count)
-							l_is_first := True
-							across
-								tb_ic.item as ic
-							loop
-								l_item := ic.item
---								l_interval_type := store_item_interval_name (l_item)
-								if attached store_item_interval_title (l_item) as l_interval_title then
-									create l_int_id.make_from_string (html_encoded (l_interval_title))
-									l_int_id.replace_substring_all (" ", "-")
-									if not l_intervals.has (l_int_id) then
-										l_intervals.force (1, l_int_id)
-										l_html.append ("<input type=%"radio%" name=%"interval-"+ pl.id.out +"%" id=%"" + l_int_id + pl.id.out + "%" class=%"" + l_int_id + "%" value=%"" + l_int_id + "%"")
-										if l_is_first then
-											l_html.append (" checked=%"checked%"")
-										end
-										l_html.append ("/>")
-										l_html.append ("<label for=%"" + l_int_id + pl.id.out + "%">")
-										l_html.append (html_encoded (l_interval_title) + "</label>%N")
-
-										l_is_first := False
-									else
-										l_intervals.force (l_intervals [l_int_id] + 1, l_int_id)
-									end
-								end
-							end
---							l_html.append ("</div>")
-						end
 						across
 							tb_ic.item as ic
 						loop
@@ -673,8 +674,8 @@ feature -- Hooks: block
 							l_interval_type := store_item_interval_name (l_item)
 
 							l_html.append ("<div class=%"option ")
-							if attached store_item_interval_title (l_item) as l_interval_title then
-								create l_int_id.make_from_string (html_encoded (l_interval_title))
+							if attached store_item_interval_name (l_item) as l_interval_name then
+								create l_int_id.make_from_string (html_encoded (l_interval_name))
 								l_int_id.replace_substring_all (" ", "-")
 								l_html.append (l_int_id)
 								l_html.append ("%" ")
@@ -740,17 +741,25 @@ feature -- Hooks: block
 			elseif a_item.is_daily then
 				Result := "day"
 			else
---				Result := "onetime"
+				Result := "onetime"
 			end
 		end
 
 	store_item_interval_title (a_item: ES_CLOUD_STORE_ITEM): detachable STRING
 		do
-			if attached store_item_interval_name (a_item) as l_sub_name then
-				Result := "per " + l_sub_name
+--			if attached store_item_interval_name (a_item) as l_sub_name then
+--				Result := "per " + l_sub_name
+			if a_item.is_monthly then
+				Result := "Monthly payment"
+			elseif a_item.is_yearly then
+				Result := "Yearly payment"
+			elseif a_item.is_weekly then
+				Result := "Weekly payment"
+			elseif a_item.is_daily then
+				Result := "Daily payment"
 			elseif a_item.is_onetime then
 				if a_item.onetime_month_duration = 12 then
-					Result := "one year"
+					Result := "One-time payment"
 				end
 			end
 		end

@@ -142,15 +142,23 @@ feature -- Head customization
 
 feature -- Element change				
 
-	set_title (t: like title)
+	set_title (t: detachable READABLE_STRING_GENERAL)
 		do
-			title := t
+			if t = Void then
+				title := Void
+			else
+				title := t
+			end
 			set_page_title (t)
 		end
 
-	set_page_title (t: like page_title)
+	set_page_title (t: detachable READABLE_STRING_GENERAL)
 		do
-			page_title := t
+			if t = Void then
+				page_title := Void
+			else
+				page_title := t
+			end
 		end
 
 	set_description (d: like description)

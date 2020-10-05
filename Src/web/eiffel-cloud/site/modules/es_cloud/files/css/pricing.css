@@ -74,8 +74,6 @@ div.plan div.actions {
     background-color: #006f9f;
     padding: 5px 15px 5px 15px; }
 div.plan div.option {
-  padding-top: 10px;
-  margin-top: 1rem;
   border-bottom: solid 1px #ccc; }
   div.plan div.option div.prices {
     margin: 5px 0 5px 0; }

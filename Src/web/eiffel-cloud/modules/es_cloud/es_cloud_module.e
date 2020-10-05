@@ -689,12 +689,16 @@ feature -- Hooks: block
 							else
 								l_html.append (html_encoded (l_item.price_as_string))
 								if l_item.is_onetime then
-									if l_item.onetime_month_duration = 12 then
-										l_html.append (" for one year")
+									if attached l_item.price_title as l_price_title then
+										l_html.append (" <span class=%"price-title%">")
+										l_html.append (html_encoded (l_price_title))
+										l_html.append ("</span>")
+									elseif l_item.onetime_month_duration = 12 then
+--										l_html.append (" for one year")
 									elseif l_item.onetime_month_duration = 1 then
-										l_html.append (" for one month")
+--										l_html.append (" for one month")
 									elseif l_item.onetime_month_duration > 1 then
-										l_html.append (" for "+ l_item.onetime_month_duration.out +" months")
+										l_html.append (" for " + l_item.onetime_month_duration.out + " months")
 									end
 								elseif l_interval_type /= Void then
 									l_html.append (" /" + l_interval_type)

@@ -488,6 +488,7 @@ feature -- Access: store
 									create l_item.make (ic.item)
 									l_item.set_price (l_price.to_natural_32, l_cents, l_currency.to_string_8, tb.item ("interval"))
 									l_item.set_title (tb.item ("title"))
+									l_item.set_price_title (tb.item ("price.title"))
 									l_item.set_name (l_plan)
 									if
 										l_item.is_onetime and then

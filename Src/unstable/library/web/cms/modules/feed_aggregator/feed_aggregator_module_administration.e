@@ -95,7 +95,7 @@ feature -- Hook
 			if a_response.is_authenticated then
 				a_menu_system.navigation_menu.extend (create {CMS_LOCAL_LINK}.make ("Feeds", "feed_aggregation/"))
 				if a_response.has_permission (permission__manage_feed_aggregator) then
-					a_menu_system.management_menu.extend_into (a_response.api.administration_link ("Feeds (admin)", "feed_aggregator/"), "Admin", "admin")
+					a_menu_system.management_menu.extend_into (a_response.api.administration_link ("Feeds (admin)", "feed_aggregator/"), "Admin", a_response.api.administration_path_location (""))
 				end
 			end
 		end

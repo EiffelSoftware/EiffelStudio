@@ -128,7 +128,8 @@ feature
 			lnk: CMS_LOCAL_LINK
 		do
 			if a_response.has_permission ("admin custom blocks") then
-				lnk := a_response.api.administration_link ("custom-blocks", "custom-blocks/");
+				lnk := a_response.api.administration_link ("custom-blocks", "custom-blocks/")
+				lnk.set_permission_arguments (<<"admin custom blocks">>)
 				a_menu_system.management_menu.extend_into (lnk, "Admin", a_response.api.administration_path_location (""))
 			end
 		end

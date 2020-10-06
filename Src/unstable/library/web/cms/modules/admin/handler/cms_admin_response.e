@@ -17,20 +17,44 @@ feature -- Process
 	process
 		local
 			b: STRING
-			l_admin_links: ARRAYED_LIST [TUPLE [package: READABLE_STRING_8; permissions: ARRAY [READABLE_STRING_GENERAL]; link: CMS_LINK; help: READABLE_STRING_GENERAL]]
-			lst: detachable ARRAYED_LIST [TUPLE [permissions: ARRAY [READABLE_STRING_GENERAL]; link: CMS_LINK; help: READABLE_STRING_GENERAL]]
-			categories: STRING_TABLE [ARRAYED_LIST [TUPLE [permissions: ARRAY [READABLE_STRING_GENERAL]; link: CMS_LINK; help: READABLE_STRING_GENERAL]]]
-			l_package: READABLE_STRING_8
+			l_admin_links: ARRAYED_LIST [TUPLE [package: READABLE_STRING_GENERAL; permissions: detachable ITERABLE [READABLE_STRING_GENERAL]; link: CMS_LINK; help: detachable READABLE_STRING_GENERAL]]
+			lst: detachable ARRAYED_LIST [TUPLE [permissions: detachable ITERABLE [READABLE_STRING_GENERAL]; link: CMS_LINK; help: detachable READABLE_STRING_GENERAL]]
+			categories: STRING_TABLE [ARRAYED_LIST [TUPLE [permissions: detachable ITERABLE [READABLE_STRING_GENERAL]; link: CMS_LINK; help: detachable READABLE_STRING_GENERAL]]]
+			l_package: READABLE_STRING_GENERAL
+			lnk: CMS_LINK
 		do
 			create l_admin_links.make (5)
-			l_admin_links.force (["core", <<"admin users">>, administration_link ("Users", "users"), "View/Edit/Add Users"])
-			l_admin_links.force (["core", <<"admin roles">>, administration_link ("Roles", "roles"), "View/Edit/Add Roles"])
-			l_admin_links.force (["core", <<"admin modules">>, administration_link ("Modules", "modules"), "(un)Install modules"])
-			l_admin_links.force (["core", <<"view logs">>, administration_link ("Logs", "logs"), "View logs"])
-			l_admin_links.force (["core", <<"admin path_alias">>, administration_link ("Path Alias", "path_alias"), "Manage path aliases"])
-			l_admin_links.force (["support", <<"admin cache">>, administration_link ("Cache", "cache"), "Clear caches"])
-			l_admin_links.force (["support", <<"admin export">>, administration_link ("Export", "export"), "Export CMS contents, and modules contents."])
-			l_admin_links.force (["support", <<"admin import">>, administration_link ("Import", "import"), "Import CMS contents, and modules contents."])
+
+			if attached menu_system.management_menu.item_by_location (api.administration_path_location ("")) as l_admin_lnk then
+				if attached l_admin_lnk.children as l_children then
+					across
+						l_children as ic
+					loop
+						lnk := ic.item
+						if attached {CMS_LOCAL_LINK} lnk as loc_lnk then
+							l_admin_links.force (["core", loc_lnk.permission_arguments, lnk, lnk.help])
+							if
+								attached loc_lnk.children as l_sub_children and then
+								not l_sub_children.is_empty
+							then
+								across
+									l_sub_children as sub_ic
+								loop
+									lnk := sub_ic.item
+									if attached {CMS_LOCAL_LINK} lnk as loc_sub_lnk then
+										l_admin_links.force ([loc_lnk.title, loc_sub_lnk.permission_arguments, loc_sub_lnk, loc_sub_lnk.help])
+									else
+										l_admin_links.force ([loc_lnk.title, Void, lnk, lnk.help])
+									end
+								end
+							end
+						else
+							l_admin_links.force (["core", Void, lnk, lnk.help])
+						end
+					end
+				end
+			end
+
 			create categories.make_caseless (3)
 			across
 				l_admin_links as ic
@@ -52,20 +76,26 @@ feature -- Process
 			loop
 				lst := cats_ic.item
 				b.append ("<h3>")
+				b.append ("<a name=%""+ url_encoded (cats_ic.key) +"%"></a>")
 				b.append (html_encoded (cats_ic.key))
 				b.append ("</h3>")
 				b.append ("<ul>")
 				across
 					lst as ic
 				loop
-					if has_permissions (ic.item.permissions) then
+					if
+						not attached ic.item.permissions as l_permissions
+						or else has_permissions (l_permissions)
+					then
 						b.append ("<li>")
-						if attached ic.item.link as lnk then
-							b.append (link (lnk.title, lnk.location, Void))
+						if attached ic.item.link as i_lnk then
+							b.append (link (i_lnk.title, i_lnk.location, Void))
 						end
-						b.append ("<div class=%"description%">")
-						b.append (html_encoded (ic.item.help))
-						b.append ("</div>")
+						if attached ic.item.help as l_help then
+							b.append ("<div class=%"description%">")
+							b.append (html_encoded (l_help))
+							b.append ("</div>")
+						end
 						b.append ("</li>")
 					end
 				end

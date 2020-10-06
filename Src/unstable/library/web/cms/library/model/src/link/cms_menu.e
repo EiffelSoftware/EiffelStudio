@@ -15,6 +15,8 @@ inherit
 			is_empty
 		end
 
+	DEBUG_OUTPUT
+
 create
 	make,
 	make_with_title
@@ -70,6 +72,20 @@ feature -- Status report
 				Result
 			loop
 				Result := ic.item.location.same_string (lnk.location)
+			end
+		end
+
+	debug_output: STRING_32
+		do
+			create Result.make_from_string_general (name)
+			if attached title as t then
+				Result.append_character (' ')
+				Result.append_character ('%"')
+				Result.append (t)
+				Result.append_character ('%"')
+			end
+			if items.count > 0 then
+				Result.append ("%/8230/")
 			end
 		end
 

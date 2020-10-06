@@ -31,6 +31,9 @@ feature -- Access
 	title: READABLE_STRING_32
 			-- Associated title.
 
+	help: detachable READABLE_STRING_32
+			-- Associated help text.
+
 	location: READABLE_STRING_8
 			-- Associated url location.
 
@@ -169,9 +172,19 @@ feature -- Element change
 			-- Set `title' to `a_title' or `location'.
 		do
 			if a_title /= Void then
-				title := a_title.as_string_32
+				title := a_title.to_string_32
 			else
-				title := location.as_string_32
+				title := location.to_string_32
+			end
+		end
+
+	set_help (a_help: detachable READABLE_STRING_GENERAL)
+			-- Set `help' to `a_help'.
+		do
+			if a_help /= Void then
+				help := a_help.to_string_32
+			else
+				help := Void
 			end
 		end
 

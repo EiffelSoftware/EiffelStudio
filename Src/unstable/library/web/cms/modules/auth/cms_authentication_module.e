@@ -253,11 +253,13 @@ feature -- Hooks configuration
 			end
 			a_menu_system.primary_menu.extend (lnk)
 
-				 -- Add the link to the taxonomy to the main menu
+				 -- Add the link to the Administration page
 			if a_response.has_permission ("access admin") then
-				create lnk.make ("Administration", a_response.api.administration_path_location (Void))
-				lnk.set_weight (999)
-				a_menu_system.navigation_menu.extend (lnk)
+				if attached {CMS_LOCAL_LINK} a_menu_system.management_menu.new_composite_item ("Admin", a_response.api.administration_path_location ("")) as adm_lnk then
+					adm_lnk.set_weight (999)
+					adm_lnk.set_permission_arguments (<<"access admin">>)
+	--				a_menu_system.navigation_menu.extend (adm_lnk)
+				end
 			end
 		end
 

@@ -93,7 +93,7 @@ feature -- Hooks
 				 -- Add the link to the taxonomy to the main menu
 			if a_response.has_permission ("admin taxonomy") then
 				create lnk.make ("Taxonomy", a_response.api.administration_path_location ("taxonomy/"))
-				a_menu_system.management_menu.extend_into (lnk, "Admin", "admin")
+				a_menu_system.management_menu.extend_into (lnk, "Admin", a_response.api.administration_path_location (""))
 			end
 		end
 

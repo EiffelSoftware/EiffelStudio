@@ -869,12 +869,6 @@ feature -- Generation
 			l_empty_blocks: detachable ARRAYED_LIST [CMS_BLOCK]
 			l_block_html: STRING
 		do
-				-- Menu
-			create {CMS_LOCAL_LINK} lnk.make ("Home", "")
-			lnk.set_weight (-10)
-			add_to_primary_menu (lnk)
-			api.hooks.invoke_menu_system_alter (menu_system, Current)
-
 			if api.enabled_modules.count <= 1 then
 					-- It is the required CMS_CORE_MODULE!
 				if api.has_storage_error then
@@ -1151,7 +1145,15 @@ feature -- Execution
 feature {NONE} -- Execution		
 
 	begin
+		local
+			lnk: CMS_LINK
 		do
+				-- Menu
+			create {CMS_LOCAL_LINK} lnk.make ("Home", "")
+			lnk.set_weight (-10)
+			add_to_primary_menu (lnk)
+
+			api.hooks.invoke_menu_system_alter (menu_system, Current)
 		end
 
 	process

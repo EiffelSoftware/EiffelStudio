@@ -58,6 +58,7 @@ feature -- CMS modules
 			a_setup.register_module (create {JWT_AUTH_MODULE}.make)
 
 				-- EiffelStudio
+			a_setup.register_module (create {EIFFEL_DOWNLOAD_MODULE}.make)
 			a_setup.register_module (create {ES_CLOUD_MODULE}.make)
 			a_setup.register_module (create {SHOP_MODULE}.make)
 			a_setup.register_module (create {STRIPE_MODULE}.make)

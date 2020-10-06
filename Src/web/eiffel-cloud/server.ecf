@@ -23,8 +23,8 @@
 		<library name="cms_admin_module" location="$ISE_LIBRARY\unstable\library\web\cms\modules\admin\admin.ecf" readonly="false"/>
 		<library name="cms_auth_module" location="$ISE_LIBRARY\unstable\library\web\cms\modules\auth\auth.ecf" readonly="false"/>
 		<library name="cms_basic_auth_module" location="$ISE_LIBRARY\unstable\library\web\cms\modules\basic_auth\basic_auth.ecf" readonly="false"/>
-		<library name="cms_contact_module" location="$ISE_LIBRARY\unstable\library\web\cms\modules\contact\contact.ecf"/>
-		<library name="cms_custom_block_module" location="$ISE_LIBRARY\unstable\library\web\cms\modules\custom_block\custom_block.ecf"/>
+		<library name="cms_contact_module" location="$ISE_LIBRARY\unstable\library\web\cms\modules\contact\contact.ecf" readonly="false"/>
+		<library name="cms_custom_block_module" location="$ISE_LIBRARY\unstable\library\web\cms\modules\custom_block\custom_block.ecf" readonly="false"/>
 		<library name="cms_embedded_video_module" location="$ISE_LIBRARY\unstable\library\web\cms\modules\embedded_video\embedded_video.ecf"/>
 		<library name="cms_environment" location="$ISE_LIBRARY\unstable\library\web\cms\library\app_env\app_env.ecf" readonly="false"/>
 		<library name="cms_messaging_module" location="$ISE_LIBRARY\unstable\library\web\cms\modules\messaging\messaging.ecf" readonly="false"/>
@@ -40,7 +40,9 @@
 		<library name="json" location="$ISE_LIBRARY\contrib\library\text\parser\json\library\json.ecf" readonly="false"/>
 		<library name="jwt_auth_module" location="modules\jwt_auth\jwt_auth.ecf" readonly="false"/>
 		<library name="login_with_esa_module" location="..\cms_modules\login_with_esa\login_with_esa.ecf" readonly="false"/>
+		<library name="eiffel_download_module" location="..\eiffel-org\modules\eiffel_download\eiffel_download.ecf" readonly="false"/>
 		<library name="masquerade_auth_module" location="$ISE_LIBRARY\unstable\library\web\cms\dev_modules\masquerade_auth\masquerade_auth.ecf" readonly="false"/>
+		<library name="recaptcha" location="$ISE_LIBRARY\unstable\library\web\cms\library\recaptcha\recaptcha.ecf" readonly="false"/>
 		<library name="shop_module" location="modules\shop\shop.ecf" readonly="false"/>
 		<library name="stripe_module" location="modules\stripe\stripe.ecf" readonly="false"/>
 		<library name="time" location="$ISE_LIBRARY\library\time\time.ecf"/>

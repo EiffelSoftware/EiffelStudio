@@ -134,7 +134,7 @@ feature -- Persistency
 					prods.count = 1 and then
 					attached prods.first.number as l_number
 				then
-					p := l_dir.path.extended ("downloads_configuration_" + l_number + ".json")
+					p := l_dir.path.extended ({STRING_32} "downloads_configuration_" + l_number + {STRING_32} ".json")
 					create {PLAIN_TEXT_FILE} l_file.make_with_path (p)
 					l_file.open_write
 					l_file.put_string (cfg.to_json_representation)

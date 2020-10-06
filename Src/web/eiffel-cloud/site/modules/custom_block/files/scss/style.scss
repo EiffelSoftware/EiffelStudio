@@ -1,0 +1,26 @@
+.custom-blocks {
+	&>div {
+		padding: 1rem 0 1rem 0;
+		border-top: solid 1px #ccc;
+		margin-bottom: 1rem;
+		.id {
+			font-weight: bold;
+		}
+		.code {
+			&.readonly span::before {
+				content: "🔒";
+			}
+			&.editable span::before {
+				content: "✎";
+			}
+			textarea {
+				margin: 1rem;
+				padding: 1rem;
+				background-color: #333;
+				color: #fff;
+				clear: both;
+				display: block;
+			}
+		}
+	}
+}

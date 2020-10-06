@@ -77,20 +77,23 @@ feature -- Hooks configuration
 			-- for related response `a_response'.
 		local
 			lnk: CMS_LOCAL_LINK
+			l_parent: CMS_LINK_COMPOSITE
 		do
 				 -- Add the link to the taxonomy to the main menu
 			if a_response.has_permission ("admin subscriptions") then
-				lnk := a_response.api.administration_link ("ES Plans", "cloud/plans/")
-				a_menu_system.management_menu.extend_into (lnk, "Admin", a_response.api.administration_path_location (""))
+				l_parent := a_menu_system.management_menu.new_composite_item ("EiffelStudio", a_response.api.administration_path_location ("cloud/"))
 
-				lnk := a_response.api.administration_link ("ES Licenses", "cloud/licenses/")
-				a_menu_system.management_menu.extend_into (lnk, "Admin", a_response.api.administration_path_location (""))
+				lnk := a_response.api.administration_link ("Plans", "cloud/plans/")
+				l_parent.extend (lnk)
 
-				lnk := a_response.api.administration_link ("ES Subscriptions", "cloud/subscriptions/")
-				a_menu_system.management_menu.extend_into (lnk, "Admin", a_response.api.administration_path_location (""))
+				lnk := a_response.api.administration_link ("Licenses", "cloud/licenses/")
+				l_parent.extend (lnk)
 
-				lnk := a_response.api.administration_link ("ES organizations", "cloud/organizations/")
-				a_menu_system.management_menu.extend_into (lnk, "Admin", a_response.api.administration_path_location (""))
+				lnk := a_response.api.administration_link ("Subscriptions", "cloud/subscriptions/")
+				l_parent.extend (lnk)
+
+				lnk := a_response.api.administration_link ("Organizations", "cloud/organizations/")
+				l_parent.extend (lnk)
 
 			end
 		end

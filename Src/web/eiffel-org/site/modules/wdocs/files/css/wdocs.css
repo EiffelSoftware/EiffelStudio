@@ -1,5 +1,4 @@
 /* Wikidocs Table of contents */
-/* line 3, ../scss/wdocs.scss */
 .wiki-toc {
   -moz-box-shadow: -3px 5px 4px 0 #99c;
   -webkit-box-shadow: -3px 5px 4px 0 #99c;
@@ -9,168 +8,129 @@
   border: solid 1px #ccc;
   font-size: smaller;
   list-style-position: inside; }
-  /* line 13, ../scss/wdocs.scss */
   .wiki-toc > ul, .wiki-toc > ol {
     padding: 0; }
-  /* line 15, ../scss/wdocs.scss */
   .wiki-toc.wiki-toc-auto {
     float: right;
     clear: right; }
-  /* line 21, ../scss/wdocs.scss */
   .wiki-toc span.title {
     font-weight: bold;
     display: block;
     text-align: center;
     margin-bottom: 1ex; }
-  /* line 27, ../scss/wdocs.scss */
   .wiki-toc a {
     text-decoration: none; }
-  /* line 30, ../scss/wdocs.scss */
   .wiki-toc.horizontal {
     padding: 5px; }
-    /* line 32, ../scss/wdocs.scss */
     .wiki-toc.horizontal li {
       display: inline;
       padding: 0 5px 0 0; }
-      /* line 33, ../scss/wdocs.scss */
       .wiki-toc.horizontal li::before {
         content: "| "; }
 
 /* Override default margins of Table of contents */
-/* line 43, ../scss/wdocs.scss */
 div#content .wiki-toc {
   margin-top: 0px;
   margin-left: 2em; }
 
-/* line 50, ../scss/wdocs.scss */
 .wikipage p.tpl, .wikipage div.tpl {
   margin: 10px 50px 10px 10px;
   padding: 8px;
   border: solid 1px; }
-  /* line 54, ../scss/wdocs.scss */
   .wikipage p.tpl.header-message, .wikipage div.tpl.header-message {
     margin-left: auto;
     margin-right: auto;
     text-align: center;
     width: 350px; }
-/* line 61, ../scss/wdocs.scss */
 .wikipage span.tpl {
   padding: 1px 3px 1px 3px; }
-/* line 64, ../scss/wdocs.scss */
 .wikipage .tpl {
   color: black; }
-  /* line 66, ../scss/wdocs.scss */
   .wikipage .tpl.header-message {
     background-color: #FFEEBF;
     border-color: #FFB55F; }
-  /* line 70, ../scss/wdocs.scss */
   .wikipage .tpl.definition-message {
     background-color: #EFFFF0;
     border-color: #0A7D19; }
-  /* line 74, ../scss/wdocs.scss */
   .wikipage .tpl.note-message {
     color: #00529B;
     background-color: #eef7fb; }
-  /* line 78, ../scss/wdocs.scss */
   .wikipage .tpl.recommended-message {
     background-color: #EEEEFF; }
-  /* line 81, ../scss/wdocs.scss */
   .wikipage .tpl.rule-message {
     background-color: #f3eada; }
-  /* line 84, ../scss/wdocs.scss */
   .wikipage .tpl.sample-message {
     background-color: #eef7fb; }
-  /* line 87, ../scss/wdocs.scss */
   .wikipage .tpl.seealso-message {
     background-color: #eef7fb; }
-  /* line 90, ../scss/wdocs.scss */
   .wikipage .tpl.tip-message {
     background-color: #eef7fb; }
-  /* line 93, ../scss/wdocs.scss */
   .wikipage .tpl.key-message {
     color: black;
     background-color: #fafafa;
     border: solid 1px;
     white-space: nowrap; }
-  /* line 100, ../scss/wdocs.scss */
   .wikipage .tpl.info-message {
     color: #00529B;
     background-color: #BDE5F8; }
-  /* line 104, ../scss/wdocs.scss */
   .wikipage .tpl.success-message {
     color: #4F8A10;
     background-color: #DFF2BF; }
-  /* line 108, ../scss/wdocs.scss */
   .wikipage .tpl.warning-message {
     color: #9F6000;
     background-color: #FEEFB3; }
-  /* line 112, ../scss/wdocs.scss */
   .wikipage .tpl.error-message {
     color: #D8000C;
     background-color: #FFBABA; }
-/* line 118, ../scss/wdocs.scss */
 .wikipage div.tpl i {
   margin: 10px 22px;
   font-size: 2em;
   vertical-align: middle; }
-/* line 124, ../scss/wdocs.scss */
 .wikipage .tpl, .wikipage h1, .wikipage h2, .wikipage h3, .wikipage code {
   overflow: hidden; }
 
-/* line 130, ../scss/wdocs.scss */
 div#content.doc ul.message {
   list-style-type: none; }
-  /* line 132, ../scss/wdocs.scss */
   div#content.doc ul.message li.warning {
     padding: 5px;
     border-left: solid 4px #ffd200;
     background-color: #ffc; }
-    /* line 136, ../scss/wdocs.scss */
     div#content.doc ul.message li.warning a {
       border: solid 1px #ccc;
       padding: 2px;
       background-color: #eee;
       display: inline-block; }
 
-/* line 146, ../scss/wdocs.scss */
 div.wdocs-versions {
   float: right;
   display: inline-block;
   font-size: 80%;
   font-style: italic;
   margin: 0; }
-  /* line 152, ../scss/wdocs.scss */
   div.wdocs-versions > ul {
     padding-left: 2px;
     list-style-type: none;
     display: inline-block; }
-    /* line 156, ../scss/wdocs.scss */
     div.wdocs-versions > ul li.active {
       font-weight: bold; }
-    /* line 159, ../scss/wdocs.scss */
     div.wdocs-versions > ul > li:not(:last-child) {
       border-right: solid 1px #ccc; }
-    /* line 160, ../scss/wdocs.scss */
     div.wdocs-versions > ul > li {
       padding: 0 6px 0 2px;
       margin: 0 2px 0 2px;
       display: inline-block;
       border: none; }
-      /* line 161, ../scss/wdocs.scss */
       div.wdocs-versions > ul > li a:hover {
         text-decoration: underline; }
-    /* line 169, ../scss/wdocs.scss */
     div.wdocs-versions > ul > li > ul {
       padding: 10px;
       background-color: white;
       border: solid 1px #999;
       display: none;
       font-weight: normal; }
-    /* line 176, ../scss/wdocs.scss */
     div.wdocs-versions > ul > li:hover > ul {
       position: absolute;
       display: block;
       z-index: 99; }
-      /* line 180, ../scss/wdocs.scss */
       div.wdocs-versions > ul > li:hover > ul li {
         display: block; }

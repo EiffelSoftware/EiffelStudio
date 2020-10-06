@@ -96,7 +96,7 @@ feature {CMS_EXECUTION} -- Administration
 			create Result.make (Current)
 		end
 
-feature {CMS_API, LOGIN_WITH_ESA_MODULE_WEBAPI} -- Access: API
+feature {CMS_API, CMS_MODULE_API, CMS_MODULE} -- Access: API
 
 	login_with_esa_api: detachable LOGIN_WITH_ESA_API
 			-- <Precursor>

@@ -1,15 +1,11 @@
-/* line 1, ../scss/codeboard_static_demo.scss */
 .slider-wrapper {
   position: relative;
   height: 100%; }
-  /* line 5, ../scss/codeboard_static_demo.scss */
   .slider-wrapper .slider {
     position: relative;
     height: 100%; }
-    /* line 9, ../scss/codeboard_static_demo.scss */
     .slider-wrapper .slider .trigger {
       display: none; }
-    /* line 13, ../scss/codeboard_static_demo.scss */
     .slider-wrapper .slider .slide {
       width: 100%;
       overflow: hidden;
@@ -21,7 +17,6 @@
       opacity: 0;
       transition: opacity .5s ease-in-out;
       margin: 0; }
-      /* line 26, ../scss/codeboard_static_demo.scss */
       .slider-wrapper .slider .slide .slide-item {
         width: 100%;
         max-width: 100%;
@@ -33,7 +28,6 @@
         items-align: center;
         justify-content: center;
         border: solid 1px #ccc; }
-        /* line 39, ../scss/codeboard_static_demo.scss */
         .slider-wrapper .slider .slide .slide-item > pre {
           width: 100%;
           padding-left: 10px;
@@ -41,7 +35,6 @@
           border: none;
           font-size: 1.4rem;
           line-height: 2.1rem; }
-        /* line 47, ../scss/codeboard_static_demo.scss */
         .slider-wrapper .slider .slide .slide-item .slide-caption {
           font-size: 1.6rem;
           padding: 0 1rem 0 1rem;
@@ -51,17 +44,13 @@
           color: #666;
           background-color: rgba(230, 230, 230, 0.5);
           text-align: center; }
-          /* line 57, ../scss/codeboard_static_demo.scss */
           .slider-wrapper .slider .slide .slide-item .slide-caption a {
             color: blue; }
-          /* line 60, ../scss/codeboard_static_demo.scss */
           .slider-wrapper .slider .slide .slide-item .slide-caption a:hover {
             border-bottom: dotted 1px blue; }
-  /* line 67, ../scss/codeboard_static_demo.scss */
   .slider-wrapper .slider .trigger:checked + .slide {
     z-index: 6000;
     opacity: 1; }
-  /* line 72, ../scss/codeboard_static_demo.scss */
   .slider-wrapper .slider-nav {
     position: absolute;
     bottom: 0.5em;
@@ -70,10 +59,8 @@
     text-align: right;
     margin: 0;
     z-index: 6000; }
-    /* line 81, ../scss/codeboard_static_demo.scss */
     .slider-wrapper .slider-nav .slider-nav__item {
       display: inline-block; }
-    /* line 84, ../scss/codeboard_static_demo.scss */
     .slider-wrapper .slider-nav .slider-nav__label {
       font-size: 1.3rem;
       background-color: #333;
@@ -86,13 +73,11 @@
       color: white;
       cursor: pointer;
       transition: background-color .25s, color .25s ease-in-out; }
-    /* line 98, ../scss/codeboard_static_demo.scss */
     .slider-wrapper .slider-nav .slider-nav__label:hover,
     .slider-wrapper .slider-nav .slider-nav__label:active,
     .slider-wrapper .slider-nav .slider-nav__label:focus {
       background-color: gray;
       color: black; }
-    /* line 104, ../scss/codeboard_static_demo.scss */
     .slider-wrapper .slider-nav .slider-nav__label.slider-active {
       background-color: white;
       color: black;
@@ -100,23 +85,18 @@
 
 /* responsive layout */
 @media only screen and (min-width: 1024px) {
-  /* line 114, ../scss/codeboard_static_demo.scss */
   .slide-caption {
     font-size: 1.5rem; } }
 @media only screen and (max-width: 1023px) and (min-width: 768px) {
-  /* line 119, ../scss/codeboard_static_demo.scss */
   .slide-caption {
     font-size: 1.25rem; } }
 @media only screen and (max-width: 768px) {
-  /* line 124, ../scss/codeboard_static_demo.scss */
   .slide-item {
     width: 100%;
     height: auto; }
 
-  /* line 125, ../scss/codeboard_static_demo.scss */
   .slider-wrapper .slider-nav {
     position: relative;
     display: block; } }
-/* line 129, ../scss/codeboard_static_demo.scss */
 #content.codeboard_demo div.codeboard-player {
   height: 273px; }

@@ -1,8 +1,6 @@
-/* line 2, ../scss/download.scss */
 #block-download_channel div h3:first-letter {
   text-transform: uppercase; }
 
-/* line 6, ../scss/download.scss */
 .download-box {
   background-color: #F2F7F9;
   width: 465px;
@@ -19,39 +17,31 @@
   /* chrome, safari */
   /* mozilla */
   /* ie (faux placeholder) */ }
-  /* line 16, ../scss/download.scss */
   .download-box h1 {
     font-size: 42px; }
-  /* line 20, ../scss/download.scss */
   .download-box h2 {
     margin-bottom: 15px;
     font-style: italic;
     font-weight: normal; }
-  /* line 26, ../scss/download.scss */
   .download-box label {
     font-size: 15px;
     margin-bottom: 2px;
     display: block; }
-  /* line 32, ../scss/download.scss */
   .download-box input, .download-box select, .download-box textarea {
     width: 100%;
     font-size: 15px;
     border: 1px solid #CEE1E8;
     margin-bottom: 20px;
     padding: 4px; }
-    /* line 38, ../scss/download.scss */
     .download-box input:focus, .download-box select:focus, .download-box textarea:focus {
       border: 1px solid #AFCDD8;
       background-color: #EBF2F4; }
-  /* line 44, ../scss/download.scss */
   .download-box textarea {
     height: 150px;
     resize: none; }
-  /* line 49, ../scss/download.scss */
   .download-box span.required {
     font-weight: bold;
     color: #F00; }
-  /* line 54, ../scss/download.scss */
   .download-box input[type=submit] {
     width: 100px;
     background-color: #333;
@@ -63,14 +53,11 @@
     margin-right: 6px;
     background-color: #8FB5C1;
     -moz-border-radius: 8px; }
-    /* line 65, ../scss/download.scss */
     .download-box input[type=submit]:hover {
       background-color: #A6CFDD; }
-    /* line 68, ../scss/download.scss */
     .download-box input[type=submit]:active {
       position: relative;
       top: 1px; }
-  /* line 74, ../scss/download.scss */
   .download-box .message {
     width: 95%;
     margin: 25px 0px;
@@ -80,49 +67,37 @@
     border-radius: 8px;
     -webkit-border-radius: 8px;
     -moz-border-radius: 8px; }
-    /* line 84, ../scss/download.scss */
     .download-box .message.hidden {
       display: none; }
-    /* line 88, ../scss/download.scss */
     .download-box .message.error {
       border-color: #E58E8E;
       background-color: #FFE6E6; }
-      /* line 92, ../scss/download.scss */
       .download-box .message.error li {
         padding: 2px;
         list-style: none; }
-        /* line 95, ../scss/download.scss */
         .download-box .message.error li:before {
           content: ' - '; }
-      /* line 97, ../scss/download.scss */
       .download-box .message.error #info {
         font-weight: bold; }
-        /* line 99, ../scss/download.scss */
         .download-box .message.error #info:before {
           content: ''; }
-    /* line 103, ../scss/download.scss */
     .download-box .message.success {
       border-color: #83D186;
       padding-top: 25px;
       background-color: #D3EDD3; }
-  /* line 110, ../scss/download.scss */
   .download-box .req-field-desc {
     font-style: italic; }
-  /* line 117, ../scss/download.scss */
   .download-box input:required, .download-box textarea:required {
     -moz-box-shadow: none;
     -webkit-box-shadow: none;
     -o-box-shadow: none;
     box-shadow: none; }
-  /* line 127, ../scss/download.scss */
   .download-box ::-webkit-input-placeholder {
     color: #CCC;
     font-style: italic; }
-  /* line 133, ../scss/download.scss */
   .download-box input:-moz-placeholder, .download-box textarea:-moz-placeholder {
     color: #CCC;
     font-style: italic; }
-  /* line 139, ../scss/download.scss */
   .download-box input.placeholder-text, .download-box textarea.placeholder-text {
     color: #CCC;
     font-style: italic; }

@@ -82,20 +82,18 @@ form.search-form div {
 	.sidebar {
 		padding: 5px;
 		margin: 3px;
-		/* border: solid 1px #ccc; */
 		&#sidebar_first {
 			flex: 1 0 auto;
 			max-width: 200px;
 			width: 200px;
-			border-right: solid 1px #ddd;
+			border-right: solid 1px #ccc;
 		}
 		&#sidebar_second {
 			flex: 1 0 auto;
-			max-width: 250px;
-			width: 250px;
+			max-width: 240px;
+			width: 240px;
 			float: right;
 		}
-
 		&+#main {
 			margin-left: 1rem;
 		}
@@ -169,3 +167,4 @@ table.with_border {
 	position: relative;
   }
 }
+

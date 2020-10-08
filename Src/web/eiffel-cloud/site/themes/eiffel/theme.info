@@ -1,7 +1,7 @@
 name=eiffel
 engine=smarty
 author=jfiat
-version=0.1
+version=0.2
 regions[page_top] = Top
 regions[header] = Header
 regions[search] = Search

@@ -1,34 +1,44 @@
 div.es-organisations ul.owners {
-  border: dotted 1px red; }
+  border: dotted 1px red;
+}
 div.es-organisations ul form#es-cloud-del-org-item {
-  display: inline-block; }
-  div.es-organisations ul form#es-cloud-del-org-item > div, div.es-organisations ul form#es-cloud-del-org-item > input {
-    padding-left: 10px;
-    display: inline-block; }
+  display: inline-block;
+}
+div.es-organisations ul form#es-cloud-del-org-item > div, div.es-organisations ul form#es-cloud-del-org-item > input {
+  padding-left: 10px;
+  display: inline-block;
+}
 div.es-organisations ul form#es-cloud-edit-org-item {
   margin-top: 10px;
   background-color: #eeeeee;
   border: solid 1px #ccc;
   margin: 3px;
   padding: 10px;
-  display: inline-block; }
-  div.es-organisations ul form#es-cloud-edit-org-item > div, div.es-organisations ul form#es-cloud-edit-org-item > input {
-    display: inline-block; }
+  display: inline-block;
+}
+div.es-organisations ul form#es-cloud-edit-org-item > div, div.es-organisations ul form#es-cloud-edit-org-item > input {
+  display: inline-block;
+}
 
 ul.es-sessions li {
   margin-bottom: 1em;
-  border-top: dotted 1px #333; }
-  ul.es-sessions li span.duration {
-    font-weight: bold;
-    margin-left: 2em;
-    padding: 0 5px 0 5px;
-    border: solid 1px #ccc; }
-  ul.es-sessions li span.state {
-    margin-left: 1em;
-    padding: 0 5px 0 5px;
-    border: solid 1px #ccc; }
-  ul.es-sessions li.expired {
-    color: #333; }
+  border-top: dotted 1px #333;
+}
+ul.es-sessions li span.duration {
+  font-weight: bold;
+  margin-left: 2em;
+  padding: 0 5px 0 5px;
+  border: solid 1px #ccc;
+}
+ul.es-sessions li span.state {
+  margin-left: 1em;
+  padding: 0 5px 0 5px;
+  border: solid 1px #ccc;
+}
+ul.es-sessions li.expired {
+  color: #333;
+}
 
 table td.warning {
-  background-color: #ffd8bc; }
+  background-color: #ffd8bc;
+}

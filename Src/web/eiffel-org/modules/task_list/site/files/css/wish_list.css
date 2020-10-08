@@ -1,181 +1,442 @@
-/* line 1, base/base-reset.scss */
-body { margin: 0; color: #000000; background: #f0f3f5; font: 16px/24px "Open Sans", Arial, Helvetica, sans-serif; min-width: 1020px; overflow-y: scroll; -webkit-text-size-adjust: 100%; -ms-text-size-adjust: none; }
+body {
+  margin: 0;
+  color: #000000;
+  background: #f0f3f5;
+  font: 16px/24px "Open Sans", Arial, Helvetica, sans-serif;
+  min-width: 1020px;
+  overflow-y: scroll;
+  -webkit-text-size-adjust: 100%;
+  -ms-text-size-adjust: none;
+}
 
-/* line 11, base/base-reset.scss */
-* { max-height: 100000px; }
+* {
+  max-height: 100000px;
+}
 
-/* line 12, base/base-reset.scss */
-article, aside, details, figcaption, figure, footer, header, hgroup, main, nav, section, summary { display: block; }
+article,
+aside,
+details,
+figcaption,
+figure,
+footer,
+header,
+hgroup,
+main,
+nav,
+section,
+summary {
+  display: block;
+}
 
-/* line 27, base/base-reset.scss */
-img { border-style: none; }
+img {
+  border-style: none;
+}
 
-/* line 29, base/base-reset.scss */
-a { text-decoration: none; color: #5082D9; }
-/* line 32, base/base-reset.scss */
-a:hover { color: #5082D9; color: #3498db; }
+a {
+  text-decoration: none;
+  color: #5082D9;
+}
+a:hover {
+  color: #5082D9;
+  color: #3498db;
+}
 
-/* line 38, base/base-reset.scss */
-input, textarea, select { font: 100% Arial, Helvetica, sans-serif; color: black; vertical-align: middle; }
+input,
+textarea,
+select {
+  font: 100% Arial, Helvetica, sans-serif;
+  color: black;
+  vertical-align: middle;
+}
 
-/* line 46, base/base-reset.scss */
-form, fieldset { margin: 0; padding: 0; border-style: none; }
+form,
+fieldset {
+  margin: 0;
+  padding: 0;
+  border-style: none;
+}
 
-/* line 53, base/base-reset.scss */
-button::-moz-focus-inner, input::-moz-focus-inner { border: 0; padding: 0; }
+button::-moz-focus-inner,
+input::-moz-focus-inner {
+  border: 0;
+  padding: 0;
+}
 
-/* line 59, base/base-reset.scss */
-button, html input[type="button"], input[type="reset"], input[type="submit"] { -webkit-appearance: button; cursor: pointer; *overflow: visible; }
+button,
+html input[type="button"],
+input[type="reset"],
+input[type="submit"] {
+  -webkit-appearance: button;
+  cursor: pointer;
+  *overflow: visible;
+}
 
-/* line 68, base/base-reset.scss */
-input[type="submit"]:hover, button:hover { cursor: pointer; }
+input[type="submit"]:hover,
+button:hover {
+  cursor: pointer;
+}
 
-/* line 73, base/base-reset.scss */
-input[type="text"], input[type="tel"], input[type="email"], input[type="url"], input[type="password"], input[type="search"], textarea { margin: 0; padding: 4px 7px; border: 1px solid #999999; }
-/* line 83, base/base-reset.scss */
-input[type="text"]:focus, input[type="tel"]:focus, input[type="email"]:focus, input[type="url"]:focus, input[type="password"]:focus, input[type="search"]:focus, textarea:focus { border-color: #4d4d4d; }
+input[type="text"],
+input[type="tel"],
+input[type="email"],
+input[type="url"],
+input[type="password"],
+input[type="search"],
+textarea {
+  margin: 0;
+  padding: 4px 7px;
+  border: 1px solid #999999;
+}
+input[type="text"]:focus,
+input[type="tel"]:focus,
+input[type="email"]:focus,
+input[type="url"]:focus,
+input[type="password"]:focus,
+input[type="search"]:focus,
+textarea:focus {
+  border-color: #4d4d4d;
+}
 
-/* line 89, base/base-reset.scss */
-textarea { overflow: auto; resize: vertical; vertical-align: top; }
+textarea {
+  overflow: auto;
+  resize: vertical;
+  vertical-align: top;
+}
 
-/* line 95, base/base-reset.scss */
-input[type="checkbox"], input[type="radio"] { box-sizing: border-box; padding: 0; }
+input[type="checkbox"],
+input[type="radio"] {
+  box-sizing: border-box;
+  padding: 0;
+}
 
-/* line 101, base/base-reset.scss */
-input[type="search"] { -webkit-appearance: textfield; -moz-box-sizing: content-box; -webkit-box-sizing: content-box; box-sizing: content-box; }
+input[type="search"] {
+  -webkit-appearance: textfield;
+  -moz-box-sizing: content-box;
+  -webkit-box-sizing: content-box;
+  box-sizing: content-box;
+}
 
-/* line 108, base/base-reset.scss */
-input[type="search"]::-webkit-search-cancel-button, input[type="search"]::-webkit-search-decoration { -webkit-appearance: none; }
+input[type="search"]::-webkit-search-cancel-button,
+input[type="search"]::-webkit-search-decoration {
+  -webkit-appearance: none;
+}
 
-/* line 113, base/base-reset.scss */
-h1, h2, h3, h4, h5, h6 { font-family: "Open Sans", Arial, Helvetica, sans-serif; line-height: 1.2em; margin: 0 0 1.2em; }
+h1, h2, h3, h4, h5, h6 {
+  font-family: "Open Sans", Arial, Helvetica, sans-serif;
+  line-height: 1.2em;
+  margin: 0 0 1.2em;
+}
 
-/* line 119, base/base-reset.scss */
-p { margin: 0 0 1.2em; }
+p {
+  margin: 0 0 1.2em;
+}
 
-/* line 123, base/base-reset.scss */
-q { quotes: none; }
-/* line 125, base/base-reset.scss */
-q:before, q:after { content: ''; content: none; }
+q {
+  quotes: none;
+}
+q:before, q:after {
+  content: '';
+  content: none;
+}
 
-/* line 131, base/base-reset.scss */
-sub, sup { font-size: 75%; line-height: 0; position: relative; vertical-align: baseline; }
+sub,
+sup {
+  font-size: 75%;
+  line-height: 0;
+  position: relative;
+  vertical-align: baseline;
+}
 
-/* line 139, base/base-reset.scss */
-sup { top: -0.5em; }
+sup {
+  top: -0.5em;
+}
 
-/* line 143, base/base-reset.scss */
-sub { bottom: -0.25em; }
+sub {
+  bottom: -0.25em;
+}
 
-/* line 147, base/base-reset.scss */
-table { border-collapse: collapse; border-spacing: 0; }
+table {
+  border-collapse: collapse;
+  border-spacing: 0;
+}
 
-/* line 11, markup-mixins.scss */
-#content div.row { margin: 0; padding: 0; list-style: none; }
+#content div.row {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
 
 /* Content */
-/* line 10, wish_list.scss */
-#content div.row { overflow: hidden; margin: 0; }
-/* line 15, wish_list.scss */
-#content div.row form { display: inline; float: left; margin-left: 10px; margin-right: 10px; width: 1000px; background: #e9eced; height: 100%; width: 95%; float: left; margin: 0 20px 30px 20px; padding: 10px 10px 10px 10px; text-align: left; -webkit-border-radius: 10px; border-radius: 10px; display: block; }
-/* line 25, wish_list.scss */
-#content div.row form:hover { background: #e3e7e8; }
-/* line 29, wish_list.scss */
-#content div.row form > select.class-form-6 { width: 490px; margin-left: 5px; margin-bottom: 5px; }
-/* line 34, wish_list.scss */
-#content div.row form > select.class-form-4 { width: 320px; margin-left: 5px; margin-bottom: 5px; }
-/* line 39, wish_list.scss */
-#content div.row form > input.class-form-1 { width: 65px; }
-/* line 42, wish_list.scss */
-#content div.row form > input.class-form-2 { width: 150px; }
-/* line 45, wish_list.scss */
-#content div.row form > label.class-form-1 { width: 65px; }
-/* line 48, wish_list.scss */
-#content div.row form > label.class-form-2 { width: 150px; }
-/* line 51, wish_list.scss */
-#content div.row form > label.class-form-12 { width: 1000px; }
-/* line 54, wish_list.scss */
-#content div.row form > div.class-form-2 { width: 150px; }
-/* line 57, wish_list.scss */
-#content div.row form > div.class-form-4 { width: 320px; }
-/* line 60, wish_list.scss */
-#content div.row form > div.class-form-6 { width: 490px; }
-/* line 63, wish_list.scss */
-#content div.row form > input.class-form-6 { width: 490px; }
-/* line 66, wish_list.scss */
-#content div.row form > label.class-header-form-2 { width: 150px; font-size: 200%; font-weight: bold; }
-/* line 71, wish_list.scss */
-#content div.row form textarea.class-form-textarea { width: 95%; border: 3px solid #cccccc; padding: 5px; font-family: Tahoma, sans-serif; background-position: bottom right; background-repeat: no-repeat; }
-/* line 80, wish_list.scss */
-#content div.row section { display: inline; float: left; margin-left: 10px; margin-right: 10px; width: 1000px; background: #e9eced; height: 100%; width: 95%; float: left; margin: 0 20px 30px 20px; padding: 10px 10px 10px 10px; text-align: left; -webkit-border-radius: 10px; border-radius: 10px; display: block; }
-/* line 90, wish_list.scss */
-#content div.row section:hover { background: #e3e7e8; }
-/* line 93, wish_list.scss */
-#content div.row section div.row-interaction { background: white; height: 100%; width: 95%; float: left; margin: 0 20px 30px 15px; padding: 10px 0px 10px 10px; text-align: left; -webkit-border-radius: 10px; border-radius: 10px; }
-/* line 102, wish_list.scss */
-#content div.row section div.row-interaction:hover { background: white; }
-/* line 107, wish_list.scss */
-#content div.row section > span.class-form-1 { width: 65px; }
-/* line 110, wish_list.scss */
-#content div.row section > span.class-form-2 { width: 150px; }
-/* line 113, wish_list.scss */
-#content div.row section > span.class-form-12 { width: 1000px; }
-/* line 116, wish_list.scss */
-#content div.row section > span.class-form-2 { width: 150px; }
-/* line 119, wish_list.scss */
-#content div.row section > span.class-form-6 { width: 490px; }
-/* line 122, wish_list.scss */
-#content div.row section textarea.class-form-textarea { width: 98%; border: 3px solid #cccccc; padding: 5px; font-family: Tahoma, sans-serif; background-position: bottom right; background-repeat: no-repeat; }
-/* line 131, wish_list.scss */
-#content div.row ul.cms-links { display: inline; float: left; margin-left: 10px; margin-right: 10px; width: 1000px; background: #e9eced; height: 100%; width: 95%; float: left; margin: 0 20px 30px 20px; padding: 10px 10px 10px 10px; text-align: center; list-style-type: none; -webkit-border-radius: 10px; border-radius: 10px; display: block; }
-/* line 143, wish_list.scss */
-#content div.row ul.cms-links > li { width: 150px; -webkit-border-radius: 10px; border-radius: 10px; background-color: white; display: inline-block; }
-/* line 148, wish_list.scss */
-#content div.row ul.cms-links > li:hover { background: #e3e7e8; }
+#content div.row {
+  overflow: hidden;
+  margin: 0;
+}
+#content div.row form {
+  display: inline;
+  float: left;
+  margin-left: 10px;
+  margin-right: 10px;
+  width: 1000px;
+  background: #e9eced;
+  height: 100%;
+  width: 95%;
+  float: left;
+  margin: 0 20px 30px 20px;
+  padding: 10px 10px 10px 10px;
+  text-align: left;
+  -webkit-border-radius: 10px;
+  border-radius: 10px;
+  display: block;
+}
+#content div.row form:hover {
+  background: #e3e7e8;
+}
+#content div.row form > select.class-form-6 {
+  width: 490px;
+  margin-left: 5px;
+  margin-bottom: 5px;
+}
+#content div.row form > select.class-form-4 {
+  width: 320px;
+  margin-left: 5px;
+  margin-bottom: 5px;
+}
+#content div.row form > input.class-form-1 {
+  width: 65px;
+}
+#content div.row form > input.class-form-2 {
+  width: 150px;
+}
+#content div.row form > label.class-form-1 {
+  width: 65px;
+}
+#content div.row form > label.class-form-2 {
+  width: 150px;
+}
+#content div.row form > label.class-form-12 {
+  width: 1000px;
+}
+#content div.row form > div.class-form-2 {
+  width: 150px;
+}
+#content div.row form > div.class-form-4 {
+  width: 320px;
+}
+#content div.row form > div.class-form-6 {
+  width: 490px;
+}
+#content div.row form > input.class-form-6 {
+  width: 490px;
+}
+#content div.row form > label.class-header-form-2 {
+  width: 150px;
+  font-size: 200%;
+  font-weight: bold;
+}
+#content div.row form textarea.class-form-textarea {
+  width: 95%;
+  border: 3px solid #cccccc;
+  padding: 5px;
+  font-family: Tahoma, sans-serif;
+  background-position: bottom right;
+  background-repeat: no-repeat;
+}
+#content div.row section {
+  display: inline;
+  float: left;
+  margin-left: 10px;
+  margin-right: 10px;
+  width: 1000px;
+  background: #e9eced;
+  height: 100%;
+  width: 95%;
+  float: left;
+  margin: 0 20px 30px 20px;
+  padding: 10px 10px 10px 10px;
+  text-align: left;
+  -webkit-border-radius: 10px;
+  border-radius: 10px;
+  display: block;
+}
+#content div.row section:hover {
+  background: #e3e7e8;
+}
+#content div.row section div.row-interaction {
+  background: white;
+  height: 100%;
+  width: 95%;
+  float: left;
+  margin: 0 20px 30px 15px;
+  padding: 10px 0px 10px 10px;
+  text-align: left;
+  -webkit-border-radius: 10px;
+  border-radius: 10px;
+}
+#content div.row section div.row-interaction:hover {
+  background: white;
+}
+#content div.row section > span.class-form-1 {
+  width: 65px;
+}
+#content div.row section > span.class-form-2 {
+  width: 150px;
+}
+#content div.row section > span.class-form-12 {
+  width: 1000px;
+}
+#content div.row section > span.class-form-2 {
+  width: 150px;
+}
+#content div.row section > span.class-form-6 {
+  width: 490px;
+}
+#content div.row section textarea.class-form-textarea {
+  width: 98%;
+  border: 3px solid #cccccc;
+  padding: 5px;
+  font-family: Tahoma, sans-serif;
+  background-position: bottom right;
+  background-repeat: no-repeat;
+}
+#content div.row ul.cms-links {
+  display: inline;
+  float: left;
+  margin-left: 10px;
+  margin-right: 10px;
+  width: 1000px;
+  background: #e9eced;
+  height: 100%;
+  width: 95%;
+  float: left;
+  margin: 0 20px 30px 20px;
+  padding: 10px 10px 10px 10px;
+  text-align: center;
+  list-style-type: none;
+  -webkit-border-radius: 10px;
+  border-radius: 10px;
+  display: block;
+}
+#content div.row ul.cms-links > li {
+  width: 150px;
+  -webkit-border-radius: 10px;
+  border-radius: 10px;
+  background-color: white;
+  display: inline-block;
+}
+#content div.row ul.cms-links > li:hover {
+  background: #e3e7e8;
+}
 
-/* line 163, wish_list.scss */
-table.wish_nodes { width: 97%; margin-bottom: 20px; margin-left: 20px; }
-/* line 167, wish_list.scss */
-table.wish_nodes caption { font-size: 2rem; color: #444; margin: 1rem; background-size: contain; background-repeat: no-repeat; background-position: center left, center right; }
-/* line 177, wish_list.scss */
-table.wish_nodes thead th { background-color: #0E9A8F; color: white; border: 1px solid black; text-align: left; padding-left: 4px; }
-/* line 183, wish_list.scss */
-table.wish_nodes thead th a { color: white; }
-/* line 190, wish_list.scss */
-table.wish_nodes tbody td { border: 1px solid black; font: 16px/24px "Open Sans", Arial, Helvetica, sans-serif; padding-left: 4px; display: table-cell; vertical-align: top; }
+table.wish_nodes {
+  width: 97%;
+  margin-bottom: 20px;
+  margin-left: 20px;
+}
+table.wish_nodes caption {
+  font-size: 2rem;
+  color: #444;
+  margin: 1rem;
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center left, center right;
+}
+table.wish_nodes thead th {
+  background-color: #0E9A8F;
+  color: white;
+  border: 1px solid black;
+  text-align: left;
+  padding-left: 4px;
+}
+table.wish_nodes thead th a {
+  color: white;
+}
+table.wish_nodes tbody td {
+  border: 1px solid black;
+  font: 16px/24px "Open Sans", Arial, Helvetica, sans-serif;
+  padding-left: 4px;
+  display: table-cell;
+  vertical-align: top;
+}
 
-/* line 200, wish_list.scss */
-div.btn-add-wish { background: #e9eced; width: 150px; color: white; text-align: center; padding-left: 4px; margin-left: 20px; -webkit-border-radius: 10px; border-radius: 10px; display: block; }
-/* line 209, wish_list.scss */
-div.btn-add-wish:hover { background: #e3e7e8; }
-/* line 211, wish_list.scss */
-div.btn-add-wish:hover a { color: white; }
+div.btn-add-wish {
+  background: #e9eced;
+  width: 150px;
+  color: white;
+  text-align: center;
+  padding-left: 4px;
+  margin-left: 20px;
+  -webkit-border-radius: 10px;
+  border-radius: 10px;
+  display: block;
+}
+div.btn-add-wish:hover {
+  background: #e3e7e8;
+}
+div.btn-add-wish:hover a {
+  color: white;
+}
 
-/* line 220, wish_list.scss */
-ul.cms-categories { list-style-type: none; padding: 3px 3px 3px 3px; border: solid 1px #ccc; }
-/* line 226, wish_list.scss */
-ul.cms-categories li { border-top: dotted 1px #ccc; }
-/* line 228, wish_list.scss */
-ul.cms-categories li:first-child { border-top: none; }
-/* line 233, wish_list.scss */
-ul.cms-categories li.cms_category a::before { content: "[categories] "; }
+ul.cms-categories {
+  list-style-type: none;
+  padding: 3px 3px 3px 3px;
+  border: solid 1px #ccc;
+}
+ul.cms-categories li {
+  border-top: dotted 1px #ccc;
+}
+ul.cms-categories li:first-child {
+  border-top: none;
+}
+ul.cms-categories li.cms_category a::before {
+  content: "[categories] ";
+}
 
-/* line 239, wish_list.scss */
-.vote-button { border-style: solid; border-width: 0px 0px 3px; box-shadow: 0 -1px 0 rgba(255, 255, 255, 0.1) inset; color: #FFFFFF; border-radius: 6px; cursor: pointer; display: inline-block; font-style: normal; overflow: hidden; text-align: center; text-decoration: none; text-overflow: ellipsis; transition: all 200ms ease-in-out 0s; white-space: nowrap; font-family: "Gotham Rounded A","Gotham Rounded B",Helvetica,Arial,sans-serif; font-weight: 700; margin-left: 50px; font-size: 18px; }
+.vote-button {
+  border-style: solid;
+  border-width: 0px 0px 3px;
+  box-shadow: 0 -1px 0 rgba(255, 255, 255, 0.1) inset;
+  color: #FFFFFF;
+  border-radius: 6px;
+  cursor: pointer;
+  display: inline-block;
+  font-style: normal;
+  overflow: hidden;
+  text-align: center;
+  text-decoration: none;
+  text-overflow: ellipsis;
+  transition: all 200ms ease-in-out 0s;
+  white-space: nowrap;
+  font-family: "Gotham Rounded A","Gotham Rounded B",Helvetica,Arial,sans-serif;
+  font-weight: 700;
+  margin-left: 50px;
+  font-size: 18px;
+}
 
 /*Strong Blue 
 ==========================*/
-/* line 263, wish_list.scss */
-.vote-btn-blue { border-color: #193447; background-color: #5C6063; }
+.vote-btn-blue {
+  border-color: #193447;
+  background-color: #5C6063;
+}
 
-/* line 269, wish_list.scss */
-.vote-btn-blue:hover, .vote-btn-blue:focus, .vote-btn-blue:active { background-color: #193447; border-color: #193447; }
+.vote-btn-blue:hover, .vote-btn-blue:focus, .vote-btn-blue:active {
+  background-color: #193447;
+  border-color: #193447;
+}
 
-/* line 275, wish_list.scss */
-.vote-container { margin: 0 auto; display: inline; }
+.vote-container {
+  margin: 0 auto;
+  display: inline;
+}
 
-/* line 280, wish_list.scss */
-.vote-float { float: left; width: 22%; padding: 10px; padding-top: 50px; text-align: center; }
+.vote-float {
+  float: left;
+  width: 22%;
+  padding: 10px;
+  padding-top: 50px;
+  text-align: center;
+}
 
-/* line 289, wish_list.scss */
-.vote-clear { clear: both; }
+.vote-clear {
+  clear: both;
+}

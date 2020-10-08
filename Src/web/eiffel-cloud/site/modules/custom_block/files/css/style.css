@@ -2,17 +2,22 @@
 .custom-blocks > div {
   padding: 1rem 0 1rem 0;
   border-top: solid 1px #ccc;
-  margin-bottom: 1rem; }
-  .custom-blocks > div .id {
-    font-weight: bold; }
-  .custom-blocks > div .code.readonly span::before {
-    content: "🔒"; }
-  .custom-blocks > div .code.editable span::before {
-    content: "✎"; }
-  .custom-blocks > div .code textarea {
-    margin: 1rem;
-    padding: 1rem;
-    background-color: #333;
-    color: #fff;
-    clear: both;
-    display: block; }
+  margin-bottom: 1rem;
+}
+.custom-blocks > div .id {
+  font-weight: bold;
+}
+.custom-blocks > div .code.readonly span::before {
+  content: "🔒";
+}
+.custom-blocks > div .code.editable span::before {
+  content: "✎";
+}
+.custom-blocks > div .code textarea {
+  margin: 1rem;
+  padding: 1rem;
+  background-color: #333;
+  color: #fff;
+  clear: both;
+  display: block;
+}

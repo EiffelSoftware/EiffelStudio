@@ -1,15 +1,20 @@
 div.user-view-cloud-box {
   border: solid 1px #ccc;
-  padding: 1em; }
-  div.user-view-cloud-box:hover {
-    border: solid 1px #00f;
-    background-color: #eee; }
+  padding: 1em;
+}
+div.user-view-cloud-box:hover {
+  border: solid 1px #00f;
+  background-color: #eee;
+}
 
 .es-billing table {
   background-color: #fefefe;
-  border: solid 1px #000; }
-  .es-billing table th {
-    background-color: #fcfcfc; }
-  .es-billing table td, .es-billing table th {
-    border-bottom: 1px solid #ddd;
-    padding: 0 1rem 0 1rem; }
+  border: solid 1px #000;
+}
+.es-billing table th {
+  background-color: #fcfcfc;
+}
+.es-billing table td, .es-billing table th {
+  border-bottom: 1px solid #ddd;
+  padding: 0 1rem 0 1rem;
+}

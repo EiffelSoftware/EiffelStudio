@@ -41,21 +41,14 @@ feature -- Status report
 		require
 			a_stone_attached: a_stone /= Void
 			b_stone_attached: b_stone /= Void
-		local
-			l_a_cluster_stone: CLUSTER_STONE
-			l_b_cluster_stone: CLUSTER_STONE
-			l_a_path: STRING
-			l_b_path: STRING
 		do
 			Result := a_stone.same_as (b_stone)
-			if Result then
-				l_a_cluster_stone ?= a_stone
-				if l_a_cluster_stone /= Void then
-					l_b_cluster_stone ?= b_stone
-					l_a_path := l_a_cluster_stone.path
-					l_b_path := l_b_cluster_stone.path
-					Result := equal (l_a_path, l_b_path)
-				end
+			if
+				Result and then
+				attached {CLUSTER_STONE} a_stone as l_a_cluster_stone and then
+				attached {CLUSTER_STONE} b_stone as l_b_cluster_stone
+			then
+				Result := l_a_cluster_stone.path.same_string (l_b_cluster_stone.path)
 			end
 		end
 
@@ -114,11 +107,8 @@ feature {NONE} -- Implementation
 
 	decide_tool_to_display (a_st: STONE): EB_STONABLE_TOOL
 			-- Decide which tool to display.
-		local
-			fs: FEATURE_STONE
 		do
-			fs ?= a_st
-			if fs /= Void then
+			if attached {FEATURE_STONE} a_st then
 				develop_window.tools.show_default_tool_of_feature
 				Result := develop_window.tools.default_feature_tool
 			else
@@ -133,7 +123,6 @@ feature {NONE} -- Implementation
 	drop_stone (st: detachable STONE)
 			-- Set `st' in the stone manager and pop up the feature view if it is a feature stone.
 		local
-			fst: FEATURE_STONE
 			l_tool: EB_STONABLE_TOOL
 		do
 			l_tool := decide_tool_to_display (st)
@@ -144,14 +133,13 @@ feature {NONE} -- Implementation
 			else
 				l_tool.set_stone (st)
 			end
-			fst ?= st
-			if fst /= Void and then address_manager /= Void then
+			if attached {FEATURE_STONE} st and then address_manager /= Void then
 				address_manager.hide_address_bar
 			end
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2015, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2020, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

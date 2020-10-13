@@ -106,16 +106,16 @@ feature -- Status report
 
 	same_as (other: STONE): BOOLEAN
 			-- Do `Current' and `other' reference the same object?
-		local
-			o: like Current
 		do
-			o ?= other
-			if object_address /= Void and then o /= Void and then
-					o.object_address /= Void then
-				Result := object_address.is_equal (o.object_address)
-			else
-				Result := object_address = Void and
-					(o /= Void and then o.object_address = Void)
+			if attached {like Current} other as o then
+				if
+					attached object_address as l_current_object_address and then
+					attached o.object_address as l_other_object_address
+				then
+					Result := l_current_object_address.is_equal (l_other_object_address)
+				else
+					Result := object_address = Void and o.object_address = Void
+				end
 			end
 		end
 
@@ -142,7 +142,7 @@ invariant
 	dynamic_class_exists: dynamic_class /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2020, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

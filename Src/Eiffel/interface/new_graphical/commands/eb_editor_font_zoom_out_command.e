@@ -52,11 +52,24 @@ feature -- Command
 			-- <Precursor>
 		local
 			l_preference: EB_SHARED_PREFERENCES
-			l_old_value: INTEGER
+			l_value: INTEGER
 		do
 			create l_preference
-			l_old_value := l_preference.preferences.editor_data.font_zoom_factor_preference.value
-			l_preference.preferences.editor_data.font_zoom_factor_preference.set_value (l_old_value - 1)
+			l_value := l_preference.preferences.editor_data.font_zoom_factor_preference.value - 1
+			l_preference.preferences.editor_data.font_zoom_factor_preference.set_value (l_value)
+
+			if
+				attached develop_window as dw and then
+				attached dw.menus.zoom_font_menu as m
+			then
+				if l_value > 0 then
+					m.set_text (Interface_names.m_zoom + "%T(+" + l_value.out + ")")
+				elseif l_value < 0 then
+					m.set_text (Interface_names.m_zoom + "%T(" + l_value.out + ")")
+				else
+					m.set_text (Interface_names.m_zoom)
+				end
+			end
 		end
 
 feature -- Query
@@ -68,7 +81,7 @@ feature -- Query
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2020, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

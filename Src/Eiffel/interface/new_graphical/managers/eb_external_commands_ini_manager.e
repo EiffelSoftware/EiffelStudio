@@ -186,7 +186,7 @@ feature {INI_FAST_PARSER} -- Actions
 				create l_command.make_from_string (editor, l_string)
 				if l_command.is_valid then
 					l_command.setup_managed_shortcut (editor.accelerators)
-					commands.put (l_command, a_name.to_integer)
+					commands.force (l_command, a_name.to_integer)
 				end
 			else
 				check False end	 -- Implied by `generate_ini'
@@ -194,7 +194,7 @@ feature {INI_FAST_PARSER} -- Actions
 		end
 
 ;note
-	copyright: "Copyright (c) 1984-2013, Eiffel Software"
+	copyright: "Copyright (c) 1984-2020, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

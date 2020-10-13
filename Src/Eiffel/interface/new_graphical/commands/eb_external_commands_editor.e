@@ -221,7 +221,7 @@ feature -- Basic operations
 			ini_manager.update_from_ini_file
 		end
 
-feature{ES_CONSOLE_TOOL_PANEL, EB_DEVELOPMENT_WINDOW} -- Synchronizing features used by EB_EXTERNAL_OUTPUT_TOOL
+feature {ES_CONSOLE_TOOL_PANEL, EB_DEVELOPMENT_WINDOW, ES_SETTINGS_IMPORT_DIALOG} -- Synchronizing features used by EB_EXTERNAL_OUTPUT_TOOL
 
 	refresh_list_from_outside
 			-- Refresh command list from EB_EXTERNAL_OUTPUT_TOOL
@@ -230,6 +230,7 @@ feature{ES_CONSOLE_TOOL_PANEL, EB_DEVELOPMENT_WINDOW} -- Synchronizing features 
 				refresh_list
 			end
 		end
+
 	update_menus_from_outside
 			-- Update external menu items from EB_EXTERNAL_OUTPUT_TOOL
 		do
@@ -384,22 +385,24 @@ feature {NONE} -- Implementation
 			dialog_exists: list /= Void and dialog /= Void and not dialog.is_destroyed
 			has_selection: list.selected_item /= Void
 		local
-			comm: EB_EXTERNAL_COMMAND
 			l_old_index: INTEGER
 		do
-			comm ?= list.selected_item.data
-			l_old_index := comm.index
+			if attached {EB_EXTERNAL_COMMAND} list.selected_item.data as comm then
+				l_old_index := comm.index
 
-			comm.edit_properties (dialog)
+				comm.edit_properties (dialog)
 
-			commands.replace (void, l_old_index)
-			update_commands_and_ini (comm.index, commands, comm)
+				commands.replace (void, l_old_index)
+				update_commands_and_ini (comm.index, commands, comm)
 
-			comm.setup_managed_shortcut (accelerators)
-			shortcut_manager.update_external_commands
-			refresh_list
-			update_edit_buttons
-			dialog.set_focus
+				comm.setup_managed_shortcut (accelerators)
+				shortcut_manager.update_external_commands
+				refresh_list
+				update_edit_buttons
+				dialog.set_focus
+			else
+				check is_ext_command: False end
+			end
 		end
 
 	update_commands_and_ini (a_index: INTEGER; a_commands: like commands; a_new_command: detachable EB_EXTERNAL_COMMAND)
@@ -422,23 +425,24 @@ feature {NONE} -- Implementation
 		require
 			dialog_exists: list /= Void and dialog /= Void and not dialog.is_destroyed
 			has_selection: list.selected_item /= Void
-		local
-			comm: EB_EXTERNAL_COMMAND
 		do
-			comm ?= list.selected_item.data
-			update_commands_and_ini (comm.index, commands, Void)
-			refresh_list
-			update_edit_buttons
-			add_button.enable_sensitive
-			add_button.set_focus
-			external_output_manager.synchronize_command_list (Void)
+			if attached {EB_EXTERNAL_COMMAND} list.selected_item.data as comm then
+				update_commands_and_ini (comm.index, commands, Void)
+				refresh_list
+				update_edit_buttons
+				add_button.enable_sensitive
+				add_button.set_focus
+				external_output_manager.synchronize_command_list (Void)
+			else
+				check is_ext_command: False end
+			end
 		end
 
 	on_key (k: EV_KEY)
 			-- A key was pressed in the list. Process it.
 		do
 			if k.code = {EV_KEY_CONSTANTS}.Key_delete then
-				if list /= Void and list.selected_item /= Void then
+				if attached list as lst and then lst.selected_item /= Void then
 					delete_command
 				end
 			end
@@ -448,21 +452,14 @@ feature {NONE} -- Implementation
 			-- Refresh the 'tools' menus of all development windows.
 		local
 			l_builder: EB_DEVELOPMENT_WINDOW_MENU_BUILDER
-			l_managed_windows: ARRAYED_SET [EB_WINDOW]
-			l_develop_window: EB_DEVELOPMENT_WINDOW
 		do
-			from
-				l_managed_windows := window_manager.managed_windows
-				l_managed_windows.start
-			until
-				l_managed_windows.after
+			across
+				window_manager.managed_windows as ic
 			loop
-				l_develop_window ?= l_managed_windows.item
-				if l_develop_window /= Void then
+				if attached {EB_DEVELOPMENT_WINDOW} ic.item as l_develop_window then
 					create l_builder.make (l_develop_window)
 					l_builder.rebuild_tools_menu
 				end
-				l_managed_windows.forth
 			end
 		end
 
@@ -475,7 +472,7 @@ feature {NONE} -- Properties
 		end
 
 ;note
-	copyright:	"Copyright (c) 1984-2018, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2020, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

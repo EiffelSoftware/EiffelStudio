@@ -455,6 +455,14 @@ feature -- Event
 									create {RAW_FILE}.make_with_path (eiffel_layout.user_files_path.extended_path (ic.item)), text_widget)
 						end
 					end
+						-- Update external commands
+					if
+						attached dev_window as w and then
+						attached w.commands.edit_external_commands_cmd as c
+					then
+						c.update_commands_from_ini_file
+						c.update_menus_from_outside
+					end
 				end
 				progress_bar.set_value (100)
 				progress_bar.refresh_now;
@@ -493,7 +501,7 @@ feature -- Event
 
 			selected_version_name := Void
 			if is_eiffel_layout_defined then
-				l_curr_version := eiffel_layout.version_name
+				l_curr_version := current_version_name
 				versions_combo.enable_edit
 				versions_combo.wipe_out
 				across
@@ -514,6 +522,14 @@ feature -- Event
 					l_prev_version_list_item.enable_select
 				end
 				versions_combo.disable_edit
+			end
+		end
+
+	current_version_name: READABLE_STRING_GENERAL
+		do
+			Result := eiffel_layout.version_name
+			if eiffel_layout.is_workbench then
+				Result := Result + {STRING_32} "_" + eiffel_layout.wkbench_suffix
 			end
 		end
 
@@ -568,7 +584,7 @@ feature -- Event
 			update_choices_status
 
 				-- Button Import
-			if eiffel_layout.version_name.same_string_general (v) then
+			if current_version_name.same_string (v) then
 				import_button.disable_sensitive
 			else
 				import_button.enable_sensitive
@@ -782,7 +798,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2019, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2020, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

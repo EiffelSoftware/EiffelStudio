@@ -30,14 +30,15 @@ feature -- Access
 			l_dpi: NATURAL
 		do
 			l_dpi := {EV_MONITOR_DPI_DETECTOR_IMP}.dpi
-			if l_dpi > 108 and then l_dpi <= 120 then
-				Result := mini_pixmaps_12
-			elseif l_dpi > 132 and then l_dpi <= 144 then
-				Result := mini_pixmaps_15
-			elseif l_dpi > 144 then
-				create Result.make ("mini_20x20", 20, 20)
-			else
+			if l_dpi <= 108 then
 				create Result.make ("mini_10x10", 10, 10)
+			elseif l_dpi <= 120 then
+				Result := mini_pixmaps_12
+			elseif l_dpi <= 144 then
+				Result := mini_pixmaps_15
+			else
+				check l_dpi > 144 end
+				Result := mini_pixmaps_20
 			end
 			if Result = Void or else Result.has_error then
 				Result := mini_pixmaps_10
@@ -84,14 +85,15 @@ feature -- Access
 			l_dpi: NATURAL
 		do
 			l_dpi := {EV_MONITOR_DPI_DETECTOR_IMP}.dpi
-			if l_dpi > 108 and then l_dpi <= 120 then
-				Result := small_pixmaps_12
-			elseif l_dpi > 132 and then l_dpi <= 144 then
-				Result := small_pixmaps_18
-			elseif l_dpi > 144 then
-				Result := small_pixmaps_24
-			else
+			if l_dpi <= 108 then
 				create Result.make ("small_12x12", 12, 12)
+			elseif l_dpi <= 120 then
+				Result := small_pixmaps_12
+			elseif l_dpi <= 144 then
+				Result := small_pixmaps_18
+			else
+				check l_dpi > 144 end
+				Result := small_pixmaps_24
 			end
 			if Result = Void or else Result.has_error then
 				Result := small_pixmaps_12
@@ -138,11 +140,14 @@ feature -- Access
 			l_dpi: NATURAL
 		do
 			l_dpi := {EV_MONITOR_DPI_DETECTOR_IMP}.dpi
-			if l_dpi > 108 and then l_dpi <= 120 then
+			if l_dpi <= 108 then
+				create Result.make ("icons_16x16", 16, 16)
+			elseif l_dpi <= 120 then
 				Result := icon_pixmaps_20
-			elseif l_dpi > 132 and then l_dpi <= 144 then
+			elseif l_dpi <= 144 then
 				Result := icon_pixmaps_24
-			elseif l_dpi > 144 then
+			else
+				check l_dpi > 144 end
 				Result := icon_pixmaps_32
 			end
 			if Result = Void or else Result.has_error then
@@ -285,7 +290,7 @@ feature -- Pngs
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2019, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2020, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

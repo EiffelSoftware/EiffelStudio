@@ -1,91 +1,121 @@
 ul.cms-users {
   list-style-type: none;
   padding: 3px 3px 3px 3px;
-  border: solid 1px #ccc; }
-  ul.cms-users li {
-    border-top: dotted 1px #ccc;
-    display: flex;
-    flex-direction: row;
-    align-items: flex-start; }
-    ul.cms-users li:first-child {
-      border-top: none; }
-    ul.cms-users li span {
-      flex-grow: 1;
-      flex-basis: 20px;
-      padding-left: 2px;
-      text-align: left; }
-      ul.cms-users li span.identifier a::before {
-        content: "[user] "; }
-      ul.cms-users li span.roles {
-        color: #090;
-        font-weight: bold; }
+  border: solid 1px #ccc;
+}
+ul.cms-users li {
+  border-top: dotted 1px #ccc;
+  display: flex;
+  flex-direction: row;
+  align-items: flex-start;
+}
+ul.cms-users li:first-child {
+  border-top: none;
+}
+ul.cms-users li span {
+  flex-grow: 1;
+  flex-basis: 20px;
+  padding-left: 2px;
+  text-align: left;
+}
+ul.cms-users li span.identifier a::before {
+  content: "[user] ";
+}
+ul.cms-users li span.roles {
+  color: #090;
+  font-weight: bold;
+}
 
 ul.cms-roles {
   list-style-type: none;
   padding: 3px 3px 3px 3px;
-  border: solid 1px #ccc; }
-  ul.cms-roles li {
-    border-top: dotted 1px #ccc; }
-    ul.cms-roles li:first-child {
-      border-top: none; }
-  ul.cms-roles li.cms_role a::before {
-    content: "[role] "; }
+  border: solid 1px #ccc;
+}
+ul.cms-roles li {
+  border-top: dotted 1px #ccc;
+}
+ul.cms-roles li:first-child {
+  border-top: none;
+}
+ul.cms-roles li.cms_role a::before {
+  content: "[role] ";
+}
 
 table.cms-roles {
   border: solid 1px black;
-  border-collapse: collapse; }
-  table.cms-roles th, table.cms-roles td {
-    padding: 2px;
-    border: solid 1px black; }
-  table.cms-roles td.cms_role_permission {
-    font-style: italic; }
+  border-collapse: collapse;
+}
+table.cms-roles th, table.cms-roles td {
+  padding: 2px;
+  border: solid 1px black;
+}
+table.cms-roles td.cms_role_permission {
+  font-style: italic;
+}
 
 ul.cms-permissions {
   list-style-type: none;
   padding: 3px 3px 3px 3px;
-  border: solid 1px #ccc; }
-  ul.cms-permissions li {
-    border-top: dotted 1px #ccc; }
-    ul.cms-permissions li:first-child {
-      border-top: none; }
-  ul.cms-permissions li.cms_permission a::before {
-    content: "[permission] "; }
+  border: solid 1px #ccc;
+}
+ul.cms-permissions li {
+  border-top: dotted 1px #ccc;
+}
+ul.cms-permissions li:first-child {
+  border-top: none;
+}
+ul.cms-permissions li.cms_permission a::before {
+  content: "[permission] ";
+}
 
 form#modules_collection thead td {
-  font-weight: bold; }
+  font-weight: bold;
+}
 form#modules_collection tr {
-  border-bottom: dotted 1px #ccc; }
+  border-bottom: dotted 1px #ccc;
+}
 form#modules_collection td {
-  padding: 3px; }
+  padding: 3px;
+}
 
 ul.logs li {
-  border-bottom: dotted 1px #ccc; }
-  ul.logs li div.log-header {
-    display: inline-block; }
-  ul.logs li div.log-name {
-    display: inline-block;
-    font-weight: bold;
-    padding-right: 1rem; }
-  ul.logs li div.log-category {
-    display: inline-block;
-    padding-right: 1rem;
-    font-weight: bold; }
-  ul.logs li div.log-message {
-    display: inline; }
-  ul.logs li div.log-date {
-    display: inline-block;
-    padding-right: 1rem; }
-  ul.logs li div.log-link {
-    display: inline-block;
-    padding-right: 1rem; }
-  ul.logs li.log-error div.log-name {
-    color: red; }
-  ul.logs li:hover div.log-header {
-    display: block; }
-  ul.logs li:hover div.log-message {
-    display: block;
-    clear: both;
-    border: solid 1px #ccc;
-    padding: 1rem;
-    font-family: monospace;
-    white-space: pre; }
+  border-bottom: dotted 1px #ccc;
+}
+ul.logs li div.log-header {
+  display: inline-block;
+}
+ul.logs li div.log-name {
+  display: inline-block;
+  font-weight: bold;
+  padding-right: 1rem;
+}
+ul.logs li div.log-category {
+  display: inline-block;
+  padding-right: 1rem;
+  font-weight: bold;
+}
+ul.logs li div.log-message {
+  display: inline;
+}
+ul.logs li div.log-date {
+  display: inline-block;
+  padding-right: 1rem;
+}
+ul.logs li div.log-link {
+  display: inline-block;
+  padding-right: 1rem;
+}
+ul.logs li.log-error div.log-name {
+  color: red;
+}
+ul.logs li:hover div.log-header {
+  display: block;
+}
+ul.logs li:hover div.log-message {
+  display: block;
+  clear: both;
+  border: solid 1px #ccc;
+  padding: 1rem;
+  font-family: monospace;
+  white-space: pre;
+}

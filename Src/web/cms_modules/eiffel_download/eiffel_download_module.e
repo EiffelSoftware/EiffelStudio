@@ -20,6 +20,8 @@ inherit
 
 	CMS_HOOK_AUTO_REGISTER
 
+	CMS_HOOK_RESPONSE_ALTER
+
 	CMS_HOOK_BLOCK
 		redefine
 			setup_block
@@ -193,6 +195,15 @@ feature -- Hooks
 			-- <Precursor>
 		do
 			a_response.add_style (a_response.module_resource_url (Current, "/files/css/download.css", Void), Void)
+			a_response.add_defer_javascript_url (a_response.module_resource_url (Current, "/files/js/downloads.js", Void))
+		end
+
+	response_alter (a_response: CMS_RESPONSE)
+		do
+			if a_response.request.path_info.starts_with ("/downloads") then
+				a_response.add_style (a_response.module_resource_url (Current, "/files/css/download.css", Void), Void)
+				a_response.add_defer_javascript_url (a_response.module_resource_url (Current, "/files/js/downloads.js", Void))
+			end
 		end
 
 feature {NONE} -- Block view implementation
@@ -342,7 +353,7 @@ feature -- Handler
 						write_debug_log (generator + ".handle_download [ Filename: " + url_encoded (l_filename)  + " ]")
 						l_selected.get_link
 						if attached l_selected.link as lnk then
-							l_link := lnk
+							l_link := lnk.to_string_8
 						elseif
 							attached l_product.build as l_build and then
 							attached l_product.name as l_name and then
@@ -423,7 +434,7 @@ feature {NONE}  -- Helper
 			elseif a_user_agent.is_mac_os then
 				Result := "macosx-x86-64"
 			end
-			write_debug_log (generator + ".get_platform [ platform inferred "+  Result  + " ]")
+			write_debug_log (generator + ".get_platform [ platform inferred "+  utf_8_encoded (Result)  + " ]")
 		end
 
 end

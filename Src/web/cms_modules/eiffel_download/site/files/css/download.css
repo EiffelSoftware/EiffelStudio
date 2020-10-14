@@ -1,103 +1,115 @@
-#block-download_channel div h3:first-letter {
-  text-transform: uppercase; }
+@charset "UTF-8";
+div.download-channel > h3:first-letter {
+  text-transform: uppercase;
+}
 
-.download-box {
-  background-color: #F2F7F9;
-  width: 465px;
-  padding: 20px;
-  border: 6px solid #8FB5C1;
+.download-now-box {
+  position: relative;
+  float: right;
+  margin-right: 5%;
+  margin-bottom: 1rem;
+  display: inline-block;
+  padding: .5rem 1.4rem .5rem 1.4rem;
+  background-color: #d4ebb0;
+  border: solid 1px #99cc33;
   -moz-border-radius: 15px;
   -webkit-border-radius: 15px;
   border-radius: 15px;
+  width: auto;
+}
+.download-now-box div.row {
+  border-bottom: solid 1px #99cc33;
+  margin-bottom: .5rem;
+  text-align: center;
+}
+.download-now-box div.row > span {
+  width: 100%;
+}
+.download-now-box a.btn-download {
+  text-align: center;
   position: relative;
-  /* Remove box shadow firefox, chrome and opera put around required fields. 
-   * It looks rubbish. 
-   */
-  /* Normalize placeholder styles */
-  /* chrome, safari */
-  /* mozilla */
-  /* ie (faux placeholder) */ }
-  .download-box h1 {
-    font-size: 42px; }
-  .download-box h2 {
-    margin-bottom: 15px;
-    font-style: italic;
-    font-weight: normal; }
-  .download-box label {
-    font-size: 15px;
-    margin-bottom: 2px;
-    display: block; }
-  .download-box input, .download-box select, .download-box textarea {
-    width: 100%;
-    font-size: 15px;
-    border: 1px solid #CEE1E8;
-    margin-bottom: 20px;
-    padding: 4px; }
-    .download-box input:focus, .download-box select:focus, .download-box textarea:focus {
-      border: 1px solid #AFCDD8;
-      background-color: #EBF2F4; }
-  .download-box textarea {
-    height: 150px;
-    resize: none; }
-  .download-box span.required {
-    font-weight: bold;
-    color: #F00; }
-  .download-box input[type=submit] {
-    width: 100px;
-    background-color: #333;
-    color: #FFF;
-    border: none;
-    display: block;
-    float: right;
-    margin-bottom: 0px;
-    margin-right: 6px;
-    background-color: #8FB5C1;
-    -moz-border-radius: 8px; }
-    .download-box input[type=submit]:hover {
-      background-color: #A6CFDD; }
-    .download-box input[type=submit]:active {
-      position: relative;
-      top: 1px; }
-  .download-box .message {
-    width: 95%;
-    margin: 25px 0px;
-    padding: 10px;
-    display: block;
-    border: solid 1px #ccc;
-    border-radius: 8px;
-    -webkit-border-radius: 8px;
-    -moz-border-radius: 8px; }
-    .download-box .message.hidden {
-      display: none; }
-    .download-box .message.error {
-      border-color: #E58E8E;
-      background-color: #FFE6E6; }
-      .download-box .message.error li {
-        padding: 2px;
-        list-style: none; }
-        .download-box .message.error li:before {
-          content: ' - '; }
-      .download-box .message.error #info {
-        font-weight: bold; }
-        .download-box .message.error #info:before {
-          content: ''; }
-    .download-box .message.success {
-      border-color: #83D186;
-      padding-top: 25px;
-      background-color: #D3EDD3; }
-  .download-box .req-field-desc {
-    font-style: italic; }
-  .download-box input:required, .download-box textarea:required {
-    -moz-box-shadow: none;
-    -webkit-box-shadow: none;
-    -o-box-shadow: none;
-    box-shadow: none; }
-  .download-box ::-webkit-input-placeholder {
-    color: #CCC;
-    font-style: italic; }
-  .download-box input:-moz-placeholder, .download-box textarea:-moz-placeholder {
-    color: #CCC;
-    font-style: italic; }
-  .download-box input.placeholder-text, .download-box textarea.placeholder-text {
-    color: #CCC;
-    font-style: italic; }
+  display: inline-block;
+  height: 35px;
+  -moz-border-radius: 5px;
+  -webkit-border-radius: 5px;
+  background-color: #769830;
+  background-image: -moz-linear-gradient(top, #99cc33, #769830);
+  background-image: -webkit-linear-gradient(top, #99cc33, #769830);
+  letter-spacing: 1px;
+  position: relative;
+  padding: 15px 42px 0px 14px;
+  color: white;
+  font: 16px/16px "museo_sans500", Arial, Helvetica, sans-serif;
+}
+.download-now-box a.btn-download::after {
+  position: absolute;
+  right: 0px;
+  margin-left: 1rem;
+  margin-right: .2rem;
+  font-size: 150%;
+  content: '🡇';
+}
+
+div.download-channel > p.intro {
+  margin: 1rem auto 2rem 1rem;
+  width: 60%;
+  border: dotted 1px #ccc;
+  padding: 1rem;
+}
+
+div.download-channel div.product {
+  position: relative;
+}
+div.download-channel div.product h2.title {
+  cursor: pointer;
+  color: black;
+}
+div.download-channel div.product h2.title.shown::before {
+  color: #5cbb59;
+  font-size: 60%;
+  content: '▼ ';
+}
+div.download-channel div.product h2.title.hidden::before {
+  color: #5cbb59;
+  font-size: 60%;
+  content: '⯈ ';
+}
+div.download-channel div.product h3 {
+  margin-top: 1rem;
+}
+div.download-channel div.product h4 {
+  font-size: 95%;
+  position: absolute;
+  right: 1rem;
+  top: .2rem;
+}
+div.download-channel div.product table.download_decorator {
+  width: 100%;
+  margin-left: 1rem;
+  border: solid 1px #cccccc99;
+  font-size: 90%;
+}
+div.download-channel div.product table.download_decorator thead tr {
+  background-color: #cccccccc;
+}
+div.download-channel div.product tr:hover {
+  background-color: #ffffcccc;
+}
+div.download-channel div.product th, div.download-channel div.product td {
+  padding: .4rem;
+}
+div.download-channel div.product td.filename {
+  padding-left: 1rem;
+}
+div.download-channel div.product td.size::after {
+  content: ' octets';
+}
+div.download-channel div.product td.platform {
+  font-size: 90%;
+}
+div.download-channel div.product td.size {
+  font-size: 80%;
+}
+div.download-channel div.product td.hash {
+  font-size: 80%;
+}

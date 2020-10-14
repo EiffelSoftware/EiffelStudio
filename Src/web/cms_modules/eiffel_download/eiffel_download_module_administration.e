@@ -13,17 +13,11 @@ inherit
 			permissions
 		end
 
-	CMS_HOOK_BLOCK
-
-	CMS_HOOK_BLOCK_HELPER
-
 	CMS_HOOK_AUTO_REGISTER
 
 	CMS_HOOK_RESPONSE_ALTER
 
 	CMS_HOOK_MENU_SYSTEM_ALTER
-
-	CMS_HOOK_BLOCK_HELPER
 
 	SHARED_LOGGER
 
@@ -48,7 +42,6 @@ feature {NONE} -- Router/administration
 			a_router.handle ("/eiffel_download/channel/{channel}/{filename}", create {WSF_URI_TEMPLATE_AGENT_HANDLER}.make (agent handle_edit_admin (a_api, ?, ?)), a_router.methods_get_put_delete + a_router.methods_post)
 			a_router.handle ("/eiffel_download/update/channel/{channel}", create {WSF_URI_TEMPLATE_AGENT_HANDLER}.make (agent handle_update_download_admin (a_api, ?, ?)), a_router.methods_head_get_post)
 			a_router.handle ("/eiffel_download/create/channel/{channel}", create {WSF_URI_TEMPLATE_AGENT_HANDLER}.make (agent handle_update_download_admin (a_api, ?, ?)), a_router.methods_head_get_post)
---			a_router.handle ("/eiffel_download/process/channel/{channel}", create {WSF_URI_TEMPLATE_AGENT_HANDLER}.make (agent handle_process_update_admin (a_api, ?, ?)), a_router.methods_post)
 		end
 
 feature -- Handle
@@ -134,7 +127,7 @@ feature -- Handle
 									if attached fd.string_item ("content") as l_content then
 										create f.make_with_path (p)
 										f.open_write
-										f.put_string (l_content)
+										f.put_string (utf_8_encoded (l_content))
 										f.close
 										r.add_notice_message ("Data saved!")
 									end
@@ -237,10 +230,14 @@ feature -- Handle
 
 			write_debug_log (generator + ".handle_update_download_admin")
 			r := new_response (a_api, req, res)
-			create wf.make (req.percent_encoded_path_info, "download-form-update")
+			if req.percent_encoded_path_info.has_substring ("/update/") then
+				create wf.make (a_api.administration_path ("eiffel_download/update/channel/" + url_encoded (ch)), "download-form-update")
+			else
+				create wf.make (a_api.administration_path ("eiffel_download/create/channel/" + url_encoded (ch)), "download-form-create")
+			end
 			wf.set_method_post
 			create wdiv.make
---			wdiv.add_css_classes (<<"download-box", "clearfix">>)
+			wdiv.add_css_classes (<<"download-box">>)
 			wf.extend (wdiv)
 			wdiv.extend_html_text ("<h1>Update " + r.html_encoded (ch) + " channel</h1>")
 
@@ -341,14 +338,6 @@ feature -- Handle
 					r.add_error_message ("Invalid input!")
 					wf.append_to_html (r.wsf_theme, s)
 				end
-				if attached smarty_template_block_with_values (module, "post_update_download", a_api, vars) as l_tpl_block then
-					across
-						r.values as tb
-					loop
-						l_tpl_block.set_value (tb.item, tb.key)
-					end
-					s.append (l_tpl_block.to_html (r.theme))
-				end
 			else
 				wf.append_to_html (r.wsf_theme, s)
 			end
@@ -365,13 +354,12 @@ feature -- Hook
 			auto_subscribe_to_hooks (a_hooks)
 			a_hooks.subscribe_to_response_alter_hook (Current)
 			a_hooks.subscribe_to_menu_system_alter_hook (Current)
-			a_hooks.subscribe_to_block_hook (Current)
 		end
 
 	response_alter (a_response: CMS_RESPONSE)
 			-- <Precursor>
 		do
-			a_response.add_style (a_response.module_resource_url (module, "/files/css/download.css", Void), Void)
+			a_response.add_style (a_response.module_resource_url (module, "/files/css/download-admin.css", Void), Void)
 		end
 
 	menu_system_alter (a_menu_system: CMS_MENU_SYSTEM; a_response: CMS_RESPONSE)
@@ -387,12 +375,6 @@ feature -- Hook
 			end
 		end
 
-	block_list: ITERABLE [like {CMS_BLOCK}.name]
-				-- <Precursor>
-		do
-			Result := <<"?download_area_update">>
-		end
-
 	channel_from_url (a_url: READABLE_STRING_8): detachable READABLE_STRING_8
 		local
 			i,j: INTEGER
@@ -405,57 +387,6 @@ feature -- Hook
 					j := a_url.count + 1
 				end
 				Result := a_url.substring (i + 1, j - 1)
-			end
-		end
-
-	get_block_view (a_block_id: READABLE_STRING_8; a_response: CMS_RESPONSE)
-				-- <Precursor>
-		local
-			l_loc: READABLE_STRING_8
-		do
-			write_debug_log (generator + ".get_block_view with block_id:`" + a_block_id + "'")
-			if
-				a_block_id.is_case_insensitive_equal_general ("download_area_update")
-			then
-				l_loc := a_response.location
-				if
-					l_loc.starts_with_general ("admin/eiffel_download/update/channel/") and then
-					attached channel_from_url (l_loc) as ch
-				then
-					get_block_view_update_download (a_block_id, ch, a_response)
-				end
-			end
-		end
-
-	get_block_view_update_download (a_block_id: READABLE_STRING_8; a_channel: READABLE_STRING_GENERAL; a_response: CMS_RESPONSE)
-				--  Get block view update object identified by `a_block_id' and associate with `a_response'.
-		local
-			l_tpl_block: detachable CMS_SMARTY_TEMPLATE_BLOCK
-			res: PATH
-			p: detachable PATH
-		do
-			create res.make_from_string ("templates")
-				-- Note: template name harcoded.
-			res := res.extended ("block_update_download").appended_with_extension ("tpl")
-			p := a_response.api.module_theme_resource_location (module, res)
-
-			if p /= Void then
-				write_debug_log (generator + ".get_block_view with template_path:" + p.out)
-				if attached p.entry as e then
-					create l_tpl_block.make_raw (a_block_id, Void, p.parent, e)
-				else
-					create l_tpl_block.make_raw (a_block_id, Void, p.parent, p)
-				end
-				if l_tpl_block /= Void then
-					write_debug_log (generator + ".get_block_view with template_block:" + l_tpl_block.out)
-				else
-					write_debug_log (generator + ".get_block_view with template_block: Void")
-				end
-				l_tpl_block.set_value (a_channel, "download_channel")
-				a_response.add_block (l_tpl_block, "content")
-			else
-				a_response.add_warning_message ("Error with block [" + a_block_id + "]")
-				write_warning_log ("Error with block [" + a_block_id + "]")
 			end
 		end
 
@@ -502,7 +433,7 @@ feature {NONE} -- Implementation
 			retried: BOOLEAN
 		do
 			if retried then
-				write_error_log (generator.to_string_32 + {STRING_32} "Can not delete file %"" + p.name + "%"")
+				write_error_log (generator + "Can not delete file %"" + p.utf_8_name + "%"")
 			else
 				create f.make_with_path (p)
 				if f.exists then

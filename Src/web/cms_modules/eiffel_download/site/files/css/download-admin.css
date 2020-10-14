@@ -1,0 +1,123 @@
+form .download-box {
+  background-color: #F2F7F9;
+  padding: 20px;
+  border: 6px solid #8FB5C1;
+  -moz-border-radius: 15px;
+  -webkit-border-radius: 15px;
+  border-radius: 15px;
+  position: relative;
+  /* Remove box shadow firefox, chrome and opera put around required fields. 
+   * It looks rubbish. 
+   */
+  /* Normalize placeholder styles */
+  /* chrome, safari */
+  /* mozilla */
+  /* ie (faux placeholder) */
+}
+form .download-box h1 {
+  font-size: 42px;
+}
+form .download-box h2 {
+  margin-bottom: 15px;
+  font-style: italic;
+  font-weight: normal;
+}
+form .download-box label {
+  font-size: 15px;
+  margin-bottom: 2px;
+  display: block;
+}
+form .download-box input, form .download-box select, form .download-box textarea {
+  width: 100%;
+  font-size: 15px;
+  border: 1px solid #CEE1E8;
+  margin-bottom: 20px;
+  padding: 4px;
+}
+form .download-box input:focus, form .download-box select:focus, form .download-box textarea:focus {
+  border: 1px solid #AFCDD8;
+  background-color: #EBF2F4;
+}
+form .download-box textarea {
+  height: 150px;
+  resize: none;
+}
+form .download-box span.required {
+  font-weight: bold;
+  color: #F00;
+}
+form .download-box input[type=submit] {
+  width: 100px;
+  background-color: #333;
+  color: #FFF;
+  border: none;
+  display: block;
+  float: right;
+  margin-bottom: 0px;
+  margin-right: 6px;
+  background-color: #8FB5C1;
+  -moz-border-radius: 8px;
+}
+form .download-box input[type=submit]:hover {
+  background-color: #A6CFDD;
+}
+form .download-box input[type=submit]:active {
+  position: relative;
+  top: 1px;
+}
+form .download-box .message {
+  width: 95%;
+  margin: 25px 0px;
+  padding: 10px;
+  display: block;
+  border: solid 1px #ccc;
+  border-radius: 8px;
+  -webkit-border-radius: 8px;
+  -moz-border-radius: 8px;
+}
+form .download-box .message.hidden {
+  display: none;
+}
+form .download-box .message.error {
+  border-color: #E58E8E;
+  background-color: #FFE6E6;
+}
+form .download-box .message.error li {
+  padding: 2px;
+  list-style: none;
+}
+form .download-box .message.error li:before {
+  content: ' - ';
+}
+form .download-box .message.error #info {
+  font-weight: bold;
+}
+form .download-box .message.error #info:before {
+  content: '';
+}
+form .download-box .message.success {
+  border-color: #83D186;
+  padding-top: 25px;
+  background-color: #D3EDD3;
+}
+form .download-box .req-field-desc {
+  font-style: italic;
+}
+form .download-box input:required, form .download-box textarea:required {
+  -moz-box-shadow: none;
+  -webkit-box-shadow: none;
+  -o-box-shadow: none;
+  box-shadow: none;
+}
+form .download-box ::-webkit-input-placeholder {
+  color: #CCC;
+  font-style: italic;
+}
+form .download-box input:-moz-placeholder, form .download-box textarea:-moz-placeholder {
+  color: #CCC;
+  font-style: italic;
+}
+form .download-box input.placeholder-text, form .download-box textarea.placeholder-text {
+  color: #CCC;
+  font-style: italic;
+}

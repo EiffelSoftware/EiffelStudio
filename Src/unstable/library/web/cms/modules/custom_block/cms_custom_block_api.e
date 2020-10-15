@@ -69,12 +69,14 @@ feature -- Query
 					loop
 						l_name := ic.item
 						if l_name.is_valid_as_string_8 then
-							l_block_id := l_name.to_string_8
-							bk := block_from_cfg (l_block_id, cfg)
-							check
-									not Result.has (bk.id)
+							l_block_id := "blocks." + l_name.to_string_8
+							if cfg.has_item (l_block_id) then
+								bk := block_from_cfg (l_block_id, cfg)
+								check
+										not Result.has (bk.id)
+								end
+								Result [bk.id] := bk
 							end
-							Result [bk.id] := bk
 						end
 					end
 				end

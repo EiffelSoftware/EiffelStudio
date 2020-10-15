@@ -176,6 +176,7 @@ feature {NONE} -- Implementation factory
 			create ctx
 			ctx.set_default_serializer (l_serializer)
 			ctx.set_is_type_name_included (False)
+			ctx.register_serializer (create {JSON_VALUE_JSON_SERIALIZER}, {JSON_VALUE})
 			ctx.register_serializer (create {TABLE_ITERABLE_JSON_SERIALIZER [detachable ANY, READABLE_STRING_GENERAL]}, {TABLE_ITERABLE [detachable ANY, READABLE_STRING_GENERAL]})
 			ctx.register_serializer (create {ITERABLE_JSON_SERIALIZER [detachable ANY]}, {ITERABLE [detachable ANY]})
 			Result := l_serializer.to_json (a_value, ctx)

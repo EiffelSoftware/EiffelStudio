@@ -1,6 +1,8 @@
-note
-	description: "An array of BOOLEAN but in a packed forms, saving 7 bits for%
-				%every boolean contained by Current."
+﻿note
+	description: "[
+		An array of BOOLEAN but in a packed form,
+		saving 7 bits for every boolean contained by Current.
+	]"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 	date: "$Date$"
@@ -96,9 +98,9 @@ feature -- Element change
 		do
 			index := i // Integer_size
 			if v then
-				area.put (area.item (index) | ((1).to_integer_32 |<<  (i \\ Integer_size)), index)
+				area.put (area.item (index) | ({INTEGER_32} 1 |<<  (i \\ Integer_size)), index)
 			else
-				area.put (area.item (index) & ((1).to_integer_32 |<< (i \\ Integer_size)).bit_not, index)
+				area.put (area.item (index) & ({INTEGER_32} 1 |<< (i \\ Integer_size)).bit_not, index)
 			end
 		ensure
 			inserted: v = item (i)
@@ -195,7 +197,7 @@ invariant
 	area_not_empty: area.count > 0
 
 note
-	copyright:	"Copyright (c) 1984-2017, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2020, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

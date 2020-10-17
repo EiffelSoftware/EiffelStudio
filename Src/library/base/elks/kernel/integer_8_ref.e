@@ -504,8 +504,8 @@ feature -- Bit operations
 			-- Shift Current from `n' position to right if `n' positive,
 			-- to left otherwise.
 		require
-			n_less_or_equal_to_8: n <= 8
-			n_greater_or_equal_to_minus_8: n >= -8
+			n_less_than_8: n < 8
+			n_greater_than_minus_8: n > -8
 		do
 			if n > 0 then
 				Result := bit_shift_right (n).item
@@ -518,7 +518,7 @@ feature -- Bit operations
 			-- Shift Current from `n' position to left.
 		require
 			n_nonnegative: n >= 0
-			n_less_or_equal_to_8: n <= 8
+			n_less_than_8: n < 8
 		do
 			create Result
 			Result.set_item (item.bit_shift_left (n))
@@ -530,7 +530,7 @@ feature -- Bit operations
 			-- Shift Current from `n' position to right.
 		require
 			n_nonnegative: n >= 0
-			n_less_or_equal_to_8: n <= 8
+			n_less_than_8: n < 8
 		do
 			create Result
 			Result.set_item (item.bit_shift_right (n))
@@ -544,7 +544,7 @@ feature -- Bit operations
 			n_nonnegative: n >= 0
 			n_less_than_8: n < 8
 		do
-			Result := item & ((1).to_integer_8 |<< n) /= 0
+			Result := item & ({INTEGER_8} 1 |<< n) /= 0
 		end
 
 	frozen set_bit (b: BOOLEAN; n: INTEGER): INTEGER_8
@@ -555,9 +555,9 @@ feature -- Bit operations
 			n_less_than_8: n < 8
 		do
 			if b then
-				Result := item | ((1).to_integer_8 |<< n)
+				Result := item | ({INTEGER_8} 1 |<< n)
 			else
-				Result := item & ((1).to_integer_8 |<< n).bit_not
+				Result := item & ({INTEGER_8} 1 |<< n).bit_not
 			end
 		end
 

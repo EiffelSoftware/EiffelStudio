@@ -513,8 +513,8 @@ feature -- Bit operations
 			-- Shift Current from `n' position to right if `n' positive,
 			-- to left otherwise.
 		require
-			n_less_or_equal_to_32: n <= 32
-			n_greater_or_equal_to_minus_32: n >= -32
+			n_less_than_32: n < 32
+			n_greater_than_minus_32: n > -32
 		do
 			if n > 0 then
 				Result := bit_shift_right (n).item
@@ -527,7 +527,7 @@ feature -- Bit operations
 			-- Shift Current from `n' position to left.
 		require
 			n_nonnegative: n >= 0
-			n_less_or_equal_to_32: n <= 32
+			n_less_than_32: n < 32
 		do
 			create Result
 			Result.set_item (item.bit_shift_left (n))
@@ -539,7 +539,7 @@ feature -- Bit operations
 			-- Shift Current from `n' position to right.
 		require
 			n_nonnegative: n >= 0
-			n_less_or_equal_to_32: n <= 32
+			n_less_than_32: n < 32
 		do
 			create Result
 			Result.set_item (item.bit_shift_right (n))

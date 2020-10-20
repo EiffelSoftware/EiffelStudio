@@ -140,16 +140,13 @@
 				<a target="_blank" href="https://www.facebook.com/eiffelsoftware"><img alt="Facebook" src="https://www.eiffel.com/wp-content/uploads/images/logos/social/logo_facebook-50x50.png"/></a>
 			</td>
 			<td>
-				<a target="_blank" href="https://plus.google.com/117564431713099800122/posts"><img alt="Google+" src="https://www.eiffel.com/wp-content/uploads/images/logos/social/logo_google_plus-50x50.png"/></a>
-			</td>
-			<td>
 				<a target="_blank" href="http://www.linkedin.com/company/eiffel-software"><img alt="LinkedIn" src="https://www.eiffel.com/wp-content/uploads/images/logos/social/logo_linkedin-50x50.png"/></a>
 			</td>
 			<td>
 				<a target="_blank" href="https://twitter.com/eiffel_software"><img alt="Twitter" src="https://www.eiffel.com/wp-content/uploads/images/logos/social/logo_twitter-50x50.png"/></a>
 			</td>
 			<td>
-				<a target="_blank" href="http://groups.eiffel.com"><img alt="Yahoo!" src="https://www.eiffel.com/wp-content/uploads/images/logos/social/logo_yahoo-50x50.png"/></a>
+				<a target="_blank" href="https://groups.google.com/g/eiffel-users/"><img alt="Groups" src="https://www.eiffel.com/wp-content/uploads/images/logos/social/logo_googlegroups-50x50.png"/></a>
 			</td>
 			<td>
 				<a target="_blank" href="http://www.youtube.com/user/EiffelLanguage"><img alt="YouTube" src="https://www.eiffel.com/wp-content/uploads/images/logos/social/logo_youtube-50x50.png"/></a>
@@ -226,7 +223,7 @@
 <div class="copyright">
 	<div class="footer_copyright">
 					<div class="execphpwidget"><br/>
-<p style="text-align: center;line-height:50px;">Copyright © 2015 Eiffel Software - <a title="Privacy policy" href="https://www.eiffel.com/privacy-policy/">Privacy Policy</a></p>
+<p style="text-align: center;line-height:50px;">Copyright © 2020 Eiffel Software - <a title="Privacy policy" href="https://www.eiffel.com/privacy-policy/">Privacy Policy</a></p>
 </div>
 			</div>
 </div>

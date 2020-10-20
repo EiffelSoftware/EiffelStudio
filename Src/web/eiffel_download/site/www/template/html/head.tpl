@@ -30,7 +30,7 @@
 	<meta property="og:description" content="Eiffel Software is the leader in making software projects predictable and controllable. EiffelStudio enables software developers to quickly develop systems that work the first time around and that are easy to adapt when the world and the needs change." />
 	<meta property="og:url" content="https://www.eiffel.com/" />
 	<meta property="article:published_time" content="2012-05-25" />
-	<meta property="article:modified_time" content="2015-01-28" />
+	<meta property="article:modified_time" content="2020-10-20" />
 	<meta property="og:site_name" content="Eiffel Software - The Home of EiffelStudio" />
 	<meta name="twitter:card" content="summary" />
 <!-- /SEO Ultimate -->

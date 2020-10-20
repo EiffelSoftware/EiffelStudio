@@ -37,7 +37,7 @@
 		<library name="json" location="$ISE_LIBRARY\contrib\library\text\parser\json\library\json.ecf" readonly="false"/>
 		<library name="module_codeboard" location="modules\codeboard\codeboard.ecf" readonly="false" use_application_options="true"/>
 		<library name="module_eiffel_community" location="modules\eiffel_community\eiffel_community.ecf" readonly="false" use_application_options="true"/>
-		<library name="module_eiffel_download" location="modules\eiffel_download\eiffel_download.ecf" readonly="false" use_application_options="true"/>
+		<library name="module_eiffel_download" location="..\cms_modules\eiffel_download\eiffel_download.ecf" readonly="false" use_application_options="true"/>
 		<library name="module_wdocs" location="modules\wdocs\wdocs.ecf" readonly="false" use_application_options="true"/>
 		<library name="module_wish_list" location="modules\wish_list\cms_wish_list.ecf" readonly="false" use_application_options="true"/>
 		<library name="time" location="$ISE_LIBRARY\library\time\time.ecf"/>

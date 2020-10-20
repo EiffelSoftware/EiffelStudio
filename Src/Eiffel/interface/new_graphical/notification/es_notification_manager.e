@@ -252,7 +252,7 @@ feature {NOTIFICATION_S, ES_NOTIFICATION_WINDOW} -- Event handlers
 
 	activate_notification (a_window: ES_NOTIFICATION_WINDOW)
 		local
-			w: EV_WIDGET
+			w, l_prev_focused_widget: EV_WIDGET
 			y,ny: INTEGER
 		do
 			w := status_bar.widget
@@ -267,6 +267,7 @@ feature {NOTIFICATION_S, ES_NOTIFICATION_WINDOW} -- Event handlers
 			end
 			notification_windows.force (a_window)
 			a_window.set_auto_close_delay (autoclose_delay_ms)
+			l_prev_focused_widget := ev_application.focused_widget
 			if attached parent_window (w) as win then
 				a_window.show_relative_to_window (win)
 			else
@@ -274,6 +275,16 @@ feature {NOTIFICATION_S, ES_NOTIFICATION_WINDOW} -- Event handlers
 			end
 			a_window.set_position (w.screen_x + w.width - a_window.width - 1, y - a_window.height - 1)
 			ev_application.add_idle_action_kamikaze (agent update_notification_positions)
+			if l_prev_focused_widget /= Void then
+					-- Restore previous focus
+				ev_application.add_idle_action_kamikaze (agent (i_w: EV_WIDGET)
+						do
+							if not i_w.is_destroyed then
+								i_w.set_focus
+							end
+						end(l_prev_focused_widget)
+					)
+			end
 		end
 
 	update_notification_positions
@@ -385,7 +396,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright: "Copyright (c) 1984-2019, Eiffel Software"
+	copyright: "Copyright (c) 1984-2020, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

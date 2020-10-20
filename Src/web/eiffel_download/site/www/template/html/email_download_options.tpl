@@ -2,9 +2,9 @@
 <html lang="en-US">
 	<head>
 		<title>Eiffel Software - Downloading EiffelStudio</title>
-		<script src="https://github.com/johndyer/mediaelement/blob/master/build/jquery.js"></script>
-		<script src="https://github.com/johndyer/mediaelement/blob/master/build/mediaelement.min.js"></script>
-		<link rel="stylesheet" href="https://github.com/johndyer/mediaelement/blob/master/build/mediaelementplayer.css" />
+		<script src="https://github.com/mediaelement/mediaelement/blob/master/build/jquery.js"></script>
+		<script src="https://github.com/mediaelement/mediaelement/blob/master/build/mediaelement.min.js"></script>
+		<link rel="stylesheet" href="https://github.com/mediaelement/mediaelement/blob/master/build/mediaelementplayer.css" />
 		
 	</head>
 	<body style="background: #ececf0; font-family: Arial, Tahoma, sans-serif; font-size: 10pt; max-width:640px;">
@@ -16,15 +16,16 @@
 			<h2>Thank you for downloading EiffelStudio.</h2> <h4> Release {$number/} </h4>
  
 			<p>
-				This is an evaluation version. It will expire 30 days after your first use. It requires a CD Key which is provided below.
+				This is an evaluation version. It will expire 30 days after your first use.<br/>
+				It requires an evaluation CD Key which is provided below. <br/>
+				<em>Note:</em> the evaluation CD key can not be used to activate the product, the activation requires a valid customer CD key.
 			</p>
-
 			<p>
 				<a href="{$host/}/confirm_download?token={$token/}">Click here to download EiffelStudio.</a>
 			</p>
 			<p>	Details: </p>
 			<ul>	
-				<li><strong>CD key</strong>: {$selected_platform.key/}</li>
+				<li><strong>Evaluation CD key</strong>: {$selected_platform.key/}</li>
 				<li><strong>Platform</strong>: {$selected_platform.platform/}</li>
 				<li><strong>Size</strong>: {$selected_platform.size/}</li> 
 				<li><strong>SHA-256</strong>: {$selected_platform.hash/}</li>
@@ -56,10 +57,6 @@
 							<img alt="Facebook" src="https://www.eiffel.com/wp-content/uploads/images/logos/social/logo_facebook-50x50.png"/></a>
 					</td>
 					<td>
-						<a target="_blank" href="https://plus.google.com/117564431713099800122/posts">
-							<img alt="Google+" src="https://www.eiffel.com/wp-content/uploads/images/logos/social/logo_google_plus-50x50.png"/></a>
-					</td>
-					<td>
 						<a target="_blank" href="http://www.linkedin.com/company/eiffel-software">
 							<img alt="LinkedIn" src="https://www.eiffel.com/wp-content/uploads/images/logos/social/logo_linkedin-50x50.png"/></a>
 					</td>
@@ -68,8 +65,8 @@
 							<img alt="Twitter" src="https://www.eiffel.com/wp-content/uploads/images/logos/social/logo_twitter-50x50.png"/></a>
 					</td>
 					<td>
-						<a target="_blank" href="http://groups.eiffel.com">
-							<img alt="Yahoo!" src="https://www.eiffel.com/wp-content/uploads/images/logos/social/logo_yahoo-50x50.png"/></a>
+						<a target="_blank" href="https://groups.google.com/g/eiffel-users/">
+							<img alt="Groups" src="https://www.eiffel.com/wp-content/uploads/images/logos/social/logo_googlegroups-50x50.png"/></a>
 					</td>
 					<td>
 						<a target="_blank" href="http://www.youtube.com/user/EiffelLanguage">
@@ -80,7 +77,7 @@
 		</section>
 		<footer>
 			<br/>
-			<p style="text-align: center;margin-top:50px;">Copyright &copy; 2015 Eiffel Software - 
+			<p style="text-align: center;margin-top:50px;">Copyright &copy; 2020 Eiffel Software - 
 				<a title="Privacy policy" href="https://www.eiffel.com/privacy-policy/">Privacy Policy</a>
 			</p>
 			<p style="text-align: center; font-size: x-small">

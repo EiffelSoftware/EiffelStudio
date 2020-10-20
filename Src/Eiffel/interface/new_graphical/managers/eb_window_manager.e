@@ -95,6 +95,8 @@ feature {NONE} -- Initialization
 			Eiffel_project.manager.load_agents.extend (agent on_project_loaded)
 			Eiffel_project.manager.create_agents.extend (agent on_project_created)
 			Eiffel_project.manager.close_agents.extend (agent on_project_unloaded)
+
+			initialize_prettify_suggestion_detector
 		end
 
 feature -- Basic operations
@@ -922,6 +924,16 @@ feature {NONE} -- Exit implementation
 			end
 		end
 
+feature -- Prettify suggestion
+
+	initialize_prettify_suggestion_detector
+		do
+			create prettify_suggestion_detector
+			prettify_suggestion_detector.install
+		end
+
+	prettify_suggestion_detector: ES_PRETTIFY_SUGGESTION_DETECTOR
+
 feature -- Access: session data
 
 	load_favorites
@@ -1647,7 +1659,7 @@ feature{NONE} -- Implementation
 note
 	ca_ignore:
 		"CA033", "CA033: too long class"
-	copyright:	"Copyright (c) 1984-2018, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2020, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

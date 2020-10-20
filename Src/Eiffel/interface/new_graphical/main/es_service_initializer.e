@@ -50,6 +50,7 @@ feature -- Services
 			a_container.register_with_activator ({WIZARD_ENGINE_S}, agent new_wizard_service, False)
 			a_container.register_with_activator ({ES_CODE_TEMPLATE_CATALOG_S}, agent new_es_code_template_catalog_service, False)
 			a_container.register_with_activator ({CODE_ANALYZER_S [STONE, CA_RULE_VIOLATION]}, agent new_code_analyzer_service, False)
+			a_container.register_with_activator ({PROJECT_SESSION_STATISTICS_S}, agent new_statistics_service, False)
 			if {ES_IDE_SETTINGS}.cloud_enabled then
 				a_container.register_with_activator ({ES_CLOUD_S}, agent new_es_cloud_service, False)
 			end
@@ -142,6 +143,15 @@ feature {NONE} -- Factory
 			create {CODE_ANALYZER} Result.make
 		ensure
 			result_is_interface_usable: Result.is_interface_usable
+		end
+
+	new_statistics_service: detachable PROJECT_SESSION_STATISTICS_S
+		local
+			ps: PROJECT_SESSION_STATISTICS
+		do
+			create ps.make
+			ps.install
+			Result := ps
 		end
 
 	new_es_cloud_service: detachable ES_CLOUD_S

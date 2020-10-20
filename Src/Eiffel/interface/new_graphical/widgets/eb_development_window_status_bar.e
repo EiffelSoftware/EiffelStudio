@@ -84,13 +84,11 @@ feature {NONE} -- Initialization
 			close_agent := agent on_project_closed (dbg)
 			compile_start_agent := agent on_project_compiles
 			compile_stop_agent := agent on_project_compiled
-			update_statistics_agent := agent on_project_update_statistics
 			mg.create_agents.extend (create_agent)
 			mg.close_agents.extend (close_agent)
 			mg.load_agents.extend (load_agent)
 			mg.compile_start_agents.extend (compile_start_agent)
 			mg.compile_stop_agents.extend (compile_stop_agent)
-			mg.compile_stop_agents.extend (update_statistics_agent)
 
 			compiling_icon_index := 1
 			running_icon_index := 1
@@ -535,73 +533,6 @@ feature {NONE} -- Implementation: event handling
 			compilation_icon.draw_pixmap (0, 0, p)
 		end
 
-	on_project_update_statistics (is_successful: BOOLEAN)
-			-- Increase `compilations' by one.
-			-- Increase `successful_compilations` by one iff is_successful.
-			-- Increase `consecutive_successful_compilations` by one iff is_successful.
-			-- Increase `failed_compilations` by one iff not is_successful.
-		do
-			if attached eiffel_project_session_statistics as l_stats then
-				l_stats.increase_compilations
-				if is_successful then
-					l_stats.increase_successful_compilations
-					l_stats.increase_consecutive_successful_compilations
-				else
-					l_stats.increase_failed_compilations
-					l_stats.reset_consecutive_successful_compilations
-				end
-				debug ("PRETTY_PRINTER_NOTIFICATION")
-					if attached {LOGGER_S} (create {SERVICE_CONSUMER [LOGGER_S]}).service as l_logger_service then
-						l_logger_service.put_message_format (
-								"[
-									Number of compilations: {1}
-									Number of successful compilations: {2}
-									Number of failed compilations: {3}
-									Number of successful compilations in a row: {4}
-								]", [
-									l_stats.compilations,
-									l_stats.successful_compilations,
-									l_stats.failed_compilations,
-									l_stats.consecutive_successful_compilations
-								],
-								{ENVIRONMENT_CATEGORIES}.compilation
-							)
-					end
-				end
-
-				if attached (create {SERVICE_CONSUMER [NOTIFICATION_S]}).service as l_notification_service then
-					if l_stats.consecutive_successful_compilations >= preferences.development_window_data.consecutive_successful_compilations_threshold then
-						if
-							attached Window_manager.last_focused_development_window as win and then
-							attached win.editors_manager.current_editor as l_editor and then
-							suggesting_pretty_printer (l_editor)
-						then
-							notify_about_pretty_printer (l_editor, l_notification_service)
-						end
-					end
-				end
-			end
-		end
-
-	notify_about_pretty_printer (a_editor: EB_SMART_EDITOR; a_notification_service: NOTIFICATION_S)
-		local
-			l_notify: NOTIFICATION_MESSAGE_WITH_ACTIONS
-			l_shortcut: MANAGED_SHORTCUT
-			l_locale: SHARED_LOCALE
-			l_msg: STRING_32
-		do
-			create l_locale
-			l_shortcut := preferences.editor_data.shortcuts.item ("prettify")
-			l_msg := l_locale.locale.formatted_string (l_locale.locale.translation_in_context ("The class $1 can be prettified%NUse: $2", "prettify_notification") , [Window_manager.last_focused_development_window.class_name, l_shortcut.display_string])
-			create l_notify.make (l_msg, "prettify")
-			l_notify.set_title (l_locale.locale.translation_in_context ("Code prettify suggestion", "prettify_notification"))
-			l_notify.register_action (agent (i_editor: EB_SMART_EDITOR)
-				do
-					i_editor.prettify
-				end (a_editor), "Apply")
-			a_notification_service.notify (l_notify)
-		end
-
 	on_project_updated
 			-- The project has just been updated (the exe corresponds to the class texts).
 		local
@@ -628,10 +559,6 @@ feature {NONE} -- Implementation: event handling
 
 	compile_stop_agent: PROCEDURE [BOOLEAN]
 			-- Agent called when the project's compilation is over.
-
-	update_statistics_agent: PROCEDURE [BOOLEAN]
-			-- Agent called when the project's compilation is over.
-			-- to compute statistics
 
 feature {NONE} -- Implementation
 
@@ -720,37 +647,6 @@ feature {NONE} -- Implementation
 
 	compiling_timer: EV_TIMEOUT;
 			-- Timer that updates the "compiling" icon.
-
-
-feature -- Can pretty print?
-
-	suggesting_pretty_printer (a_editor: EB_SMART_EDITOR): BOOLEAN
-		local
-			l_show_pretty: E_SHOW_PRETTY
-			src,s: STRING_32
-			window: EB_DEVELOPMENT_WINDOW
-			l_diff: DIFF_TEXT
-		do
-				-- Create a string to write prettified text.
-			create s.make_empty
-
-				-- Prettify code.
-			create l_show_pretty.make_string (a_editor.file_path.name, s)
-					-- Check if formatting is successful.
-			if not l_show_pretty.error then
-				create l_diff
-				src := a_editor.text
-				src.replace_substring_all ("%R%N", "%N")
-				l_diff.set_text (src, s)
-				l_diff.compute_diff
-				if
-					attached l_diff.hunks as l_hunks and then
-					l_hunks.count >= preferences.development_window_data.pretty_printer_messindex.to_integer_32
-				then
-					Result := True
-				end
-			end
-		end
 
 invariant
 	compiling_icon_index_positive: compiling_icon_index > 0

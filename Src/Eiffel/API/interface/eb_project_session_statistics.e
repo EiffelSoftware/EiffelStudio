@@ -30,6 +30,24 @@ feature -- Statistic Report
 	consecutive_successful_compilations: NATURAL
 			-- Number of successful compilations in a row.		
 
+feature -- Compiler event
+
+	on_project_recompiled (a_is_successful: BOOLEAN)
+			-- Increase `compilations' by one.
+			-- Increase `successful_compilations` by one iff is_successful.
+			-- Increase `consecutive_successful_compilations` by one iff is_successful.
+			-- Increase `failed_compilations` by one iff not is_successful.	
+		do
+			increase_compilations
+			if a_is_successful then
+				increase_successful_compilations
+				increase_consecutive_successful_compilations
+			else
+				increase_failed_compilations
+				reset_consecutive_successful_compilations
+			end
+		end
+
 feature -- Change element
 
 	increase_compilations

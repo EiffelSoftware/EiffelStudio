@@ -366,7 +366,7 @@ feature {NONE} -- Memory Management
 			Precursor
 		end
 
-feature {EB_COMMAND, EB_DEVELOPMENT_WINDOW, EB_DEVELOPMENT_WINDOW_MENU_BUILDER, EB_DEVELOPMENT_WINDOW_STATUS_BAR} -- Prettify text
+feature {EB_COMMAND, EB_DEVELOPMENT_WINDOW, EB_DEVELOPMENT_WINDOW_MENU_BUILDER, ES_PRETTIFY_SUGGESTION_DETECTOR} -- Prettify text
 
 	prettify
 			-- Prettify class text if possible.
@@ -410,8 +410,8 @@ feature {EB_COMMAND, EB_DEVELOPMENT_WINDOW, EB_DEVELOPMENT_WINDOW_MENU_BUILDER, 
 					if c > 0 then
 						text_displayed.cursor.set_x_in_characters (c)
 					end
-					(create {SHARED_EIFFEL_PROJECT}).eiffel_project_session_statistics.reset_consecutive_successful_compilations
 				end
+				window_manager.prettify_suggestion_detector.reset
 			end
 		end
 
@@ -541,7 +541,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright: "Copyright (c) 1984-2016, Eiffel Software"
+	copyright: "Copyright (c) 1984-2020, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

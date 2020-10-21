@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-18-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-18-0 http://www.eiffel.com/developers/xml/configuration-1-18-0.xsd" name="uri_launcher" uuid="735261AB-A4E8-480D-913F-8F5FB9ABC099" library_target="uri_launcher">
+	<target name="uri_launcher">
+		<description>Performs operations to launch URIs using a default application independent of OS.</description>
+		<root all_classes="true"/>
+		<file_rule>
+			<exclude>/EIFGENs$</exclude>
+			<exclude>/\.svn$</exclude>
+			<exclude>/tests$</exclude>
+		</file_rule>
+		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf"/>
+		<library name="base_process" location="$ISE_LIBRARY\library\process\base\base_process.ecf"/>
+		<library name="patterns" location="$ISE_LIBRARY\library\patterns\patterns.ecf"/>
+		<library name="wel" location="$ISE_LIBRARY\library\wel\wel.ecf">
+			<condition>
+				<platform value="windows"/>
+			</condition>
+		</library>
+		<cluster name="uri_launcher" location=".\" recursive="true">
+			<file_rule>
+				<exclude>windows</exclude>
+				<condition>
+					<platform excluded_value="windows"/>
+				</condition>
+			</file_rule>
+			<file_rule>
+				<exclude>unix</exclude>
+				<condition>
+					<platform value="windows"/>
+				</condition>
+			</file_rule>
+		</cluster>
+	</target>
+</system>

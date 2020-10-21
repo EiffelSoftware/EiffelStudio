@@ -21,12 +21,6 @@ create
 convert
 	text: {STRING_32}
 
-feature {NONE} -- Initialization	
-
-	initialize
-		do
-		end
-
 feature -- Conversion
 
 	text: STRING_32

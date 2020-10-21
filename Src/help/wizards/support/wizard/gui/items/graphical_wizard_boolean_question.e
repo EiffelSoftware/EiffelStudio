@@ -11,6 +11,8 @@ inherit
 	WIZARD_BOOLEAN_QUESTION
 		undefine
 			make
+		redefine
+			initialize
 		end
 
 	GRAPHICAL_WIZARD_QUESTION
@@ -43,9 +45,12 @@ feature {NONE} -- Implementation
 				append_indented_widget (lab, b)
 			end
 
-
 			input_widget := l_field
 			widget := b
+
+			Precursor
+
+			l_field.select_actions.extend (agent on_value_changed)
 		end
 
 feature -- Access: UI

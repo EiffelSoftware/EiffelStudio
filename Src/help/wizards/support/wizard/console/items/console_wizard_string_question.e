@@ -11,8 +11,6 @@ inherit
 	WIZARD_STRING_QUESTION
 		undefine
 			make
-		redefine
-			initialize
 		end
 
 	CONSOLE_WIZARD_QUESTION
@@ -22,13 +20,6 @@ create
 
 convert
 	text: {STRING_32}
-
-feature {NONE} -- Initialization	
-
-	initialize
-		do
-			Precursor
-		end
 
 feature -- Conversion
 

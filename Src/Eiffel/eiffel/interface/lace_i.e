@@ -1597,7 +1597,6 @@ feature {NONE} -- Implementation
 			l_pre: CONF_PRECOMPILE
 			l_system: CONF_SYSTEM
 			l_load: CONF_LOAD
-			vd77: VD77
 			l_file_name: like {CONF_PRECOMPILE}.path
 			l_target: CONF_TARGET
 			l_old_target: CONF_TARGET
@@ -1614,9 +1613,7 @@ feature {NONE} -- Implementation
 			create l_load.make (l_factory)
 			l_load.retrieve_configuration (l_file_name)
 			if l_load.is_error then
-				create vd77
-				vd77.set_error (l_load.last_error)
-				Error_handler.insert_error (vd77)
+				Error_handler.insert_error (create {VD77}.make (l_pre.location.original_path, l_load.last_error))
 				Error_handler.raise_error
 			end
 
@@ -1700,7 +1697,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2019, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2020, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

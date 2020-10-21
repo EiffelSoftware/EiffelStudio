@@ -11,21 +11,45 @@ class VD77
 inherit
 
 	VD00
+		rename
+			make as make_error
 		redefine
 			build_explain
 		end
 
+create
+	make
+
+feature {NONE} -- Creation
+
+	make (l: STRING_32; e: CONF_ERROR)
+			-- Initialize an error described by `e` for a precompile with specified location `l`.
+		do
+			location := l
+			make_error (e)
+		ensure
+			location = l
+			error = e
+		end
+
+feature {NONE} -- Access
+
+	location: STRING_32
+			-- Uninterpreted location specified in the project file.
+
 feature -- Output
 
-	build_explain (st: TEXT_FORMATTER)
+	build_explain (f: TEXT_FORMATTER)
 		do
-			st.add_new_line
-			st.add (error.text)
-			st.add_new_line
+			f.add_new_line
+			f.add (error.text)
+			f.add_new_line
+			f.add (locale.formatted_string (locale.translation_in_context ("Specified location: $1", "compiler"), location))
+			f.add_new_line
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2012, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2020, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

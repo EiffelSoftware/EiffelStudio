@@ -16,6 +16,8 @@ feature -- Access
 
 	title: STRING_32 = "Eiffel Library Wizard"
 
+	default_library_name: STRING_32 = "new_library"
+
 feature -- Factory	
 
 	wizard_generator : LIBRARY_WIZARD_GENERATOR
@@ -33,6 +35,9 @@ feature -- Pages
 		end
 
 	library_page: WIZARD_PAGE
+		local
+			q_str: WIZARD_STRING_QUESTION
+			q_dir: WIZARD_DIRECTORY_QUESTION
 		once
 			Result := new_page ("library")
 			Result.set_title ("Library Name and Project Location")
@@ -42,11 +47,38 @@ Please fill in:
 	The name of the project (without space).
 	The directory where you want the eiffel classes to be generated.
 	]")
-			Result.extend (Result.new_string_question ("Library name:", "name", "ASCII name, without space"))
-			Result.add_directory_question ("Project location:", "location", "Valid directory path, it will be created if missing")
 
-			Result.data.force ("new_library", "name")
-			Result.data.force (application.available_directory_path ("new_library", application.layout.default_projects_location.extended ("eiffel_library")).name, "location")
+			q_str := Result.new_string_question ("Project name:", "name", "ASCII name, without space")
+			Result.extend (q_str)
+			q_dir := Result.new_directory_question ("Project location:", "location", "Valid directory path, it will be created if missing")
+			Result.extend (q_dir)
+			q_str.value_change_actions.extend (agent (i_str: WIZARD_STRING_QUESTION; i_dir: WIZARD_DIRECTORY_QUESTION)
+					local
+						s, v: READABLE_STRING_GENERAL
+						p: PATH
+					do
+						v := i_str.value
+						create p.make_from_string (i_dir.text)
+						if
+							i_dir.text.ends_with_general ("/")
+							or i_dir.text.ends_with_general ("\")
+						then
+								-- Keep current dir
+						else
+							p := p.parent
+						end
+
+						if v = Void then
+							s := application.available_directory_path (default_library_name, p).name
+							i_dir.set_text (s)
+						elseif not v.is_whitespace then
+							s := application.available_directory_path (v, p).name
+							i_dir.set_text (s)
+						end
+					end(?,q_dir)
+				)
+			Result.data.force (default_library_name, "name")
+			Result.data.force (application.available_directory_path (default_library_name, application.layout.default_projects_location.extended ("demo")).name, "location")
 
 			Result.set_validation (agent (a_page: WIZARD_PAGE)
 				do

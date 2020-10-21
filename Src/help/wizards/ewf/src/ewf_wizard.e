@@ -16,6 +16,8 @@ feature -- Access
 
 	title: STRING_32 = "Web Application Wizard"
 
+	default_project_name: STRING_32 = "new_app"
+
 feature -- Factory	
 
 	wizard_generator : EWF_WIZARD_GENERATOR
@@ -61,16 +63,24 @@ Please fill in:
 			Result.extend (q_str)
 			q_dir := Result.new_directory_question ("Project location:", "location", "Valid directory path, it will be created if missing")
 			Result.extend (q_dir)
-			q_str.value_change_actions.extend (agent (v: detachable READABLE_STRING_GENERAL; i_dir: WIZARD_DIRECTORY_QUESTION)
+			q_str.value_change_actions.extend (agent (i_str: WIZARD_STRING_QUESTION; i_dir: WIZARD_DIRECTORY_QUESTION)
 					local
-						s: READABLE_STRING_GENERAL
+						s, v: READABLE_STRING_GENERAL
 						p: PATH
 					do
+						v := i_str.value
 						create p.make_from_string (i_dir.text)
-						p := p.parent
+						if
+							i_dir.text.ends_with_general ("/")
+							or i_dir.text.ends_with_general ("\")
+						then
+								-- Keep current dir
+						else
+							p := p.parent
+						end
 
 						if v = Void then
-							s := application.available_directory_path ("new_app", p).name
+							s := application.available_directory_path (default_project_name, p).name
 							i_dir.set_text (s)
 						elseif not v.is_whitespace then
 							s := application.available_directory_path (v, p).name
@@ -78,9 +88,8 @@ Please fill in:
 						end
 					end(?,q_dir)
 				)
-
-			Result.data.force ("new_app", "name")
-			Result.data.force (application.available_directory_path ("new_app", application.layout.default_projects_location.extended ("eiffelweb")).name, "location")
+			Result.data.force (default_project_name, "name")
+			Result.data.force (application.available_directory_path (default_project_name, application.layout.default_projects_location.extended ("eiffelweb")).name, "location")
 
 			Result.set_validation (agent (a_page: WIZARD_PAGE)
 				do

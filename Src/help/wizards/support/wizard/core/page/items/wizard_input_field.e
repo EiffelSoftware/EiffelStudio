@@ -16,13 +16,24 @@ feature {NONE} -- Initialization
 			-- Create field identified by `a_id'.
 		do
 			id := a_id
+			initialize
 		end
 
+	initialize
+		deferred
+		ensure
+			is_initialized
+		end
+		
 feature -- Access
 
 	id: READABLE_STRING_8
 
 	validation: detachable PROCEDURE [WIZARD_PAGE]
+
+	is_initialized: BOOLEAN
+		deferred
+		end
 
 feature -- Validation
 

@@ -1,11 +1,9 @@
 note
-	description: "Summary description for {CONSOLE_WIZARD_QUESTION}."
-	author: ""
 	date: "$Date$"
 	revision: "$Revision$"
 
 deferred class
-	CONSOLE_WIZARD_QUESTION
+	GRAPHICAL_WIZARD_QUESTION
 
 inherit
 	WIZARD_QUESTION
@@ -13,7 +11,7 @@ inherit
 			make
 		end
 
-	CONSOLE_WIZARD_INPUT_FIELD
+	GRAPHICAL_WIZARD_INPUT_FIELD
 		rename
 			make as make_field
 		undefine
@@ -27,6 +25,22 @@ feature {NONE} -- Initialization
 			-- and optional description `a_optional_description'.
 		do
 			Precursor (a_id, a_title, a_optional_description)
+		end
+
+feature {NONE} -- Implementation
+
+	append_indented_widget (w: EV_WIDGET; a_container: EV_BOX)
+		local
+			hb: EV_HORIZONTAL_BOX
+		do
+			create hb
+			append_cell_to (20, hb)
+
+			hb.extend (w)
+			hb.disable_item_expand (w)
+
+			a_container.extend (hb)
+			a_container.disable_item_expand (hb)
 		end
 
 end

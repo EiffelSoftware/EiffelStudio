@@ -11,6 +11,8 @@ inherit
 	WIZARD_STRING_QUESTION
 		undefine
 			make
+		redefine
+			initialize
 		end
 
 	GRAPHICAL_WIZARD_QUESTION
@@ -51,6 +53,9 @@ feature {NONE} -- Initialization
 			end
 
 			widget := b
+			Precursor
+
+			l_field.change_actions.extend (agent on_value_changed)
 		end
 
 feature -- Access: UI

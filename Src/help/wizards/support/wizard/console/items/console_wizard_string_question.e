@@ -1,16 +1,18 @@
 note
-	description: "Summary description for {CONSOLE_WIZARD_DIRECTORY_QUESTION}."
+	description: "Summary description for {CONSOLE_WIZARD_STRING_QUESTION}."
 	author: ""
 	date: "$Date$"
 	revision: "$Revision$"
 
 class
-	CONSOLE_WIZARD_DIRECTORY_QUESTION
+	CONSOLE_WIZARD_STRING_QUESTION
 
 inherit
-	WIZARD_DIRECTORY_QUESTION
+	WIZARD_STRING_QUESTION
 		undefine
 			make
+		redefine
+			initialize
 		end
 
 	CONSOLE_WIZARD_QUESTION
@@ -21,18 +23,25 @@ create
 convert
 	text: {STRING_32}
 
+feature {NONE} -- Initialization	
+
+	initialize
+		do
+			Precursor
+		end
+
 feature -- Conversion
 
 	text: STRING_32
 		do
 			if attached value as v then
-				Result := v.name
+				Result := v
 			else
 				create Result.make_empty
 			end
 		end
 
-	value: detachable PATH
+	value: detachable STRING_32
 
 feature -- Element change
 
@@ -46,13 +55,17 @@ feature -- Element change
 			if t = Void then
 				set_value (Void)
 			else
-				set_value (create {PATH}.make_from_string (t))
+				set_value (create {STRING_32}.make_from_string_general (t))
 			end
 		end
 
-	set_value (v: detachable PATH)
+	set_value (v: detachable READABLE_STRING_GENERAL)
 		do
-			value := v
+			if v = Void then
+				value := Void
+			else
+				create value.make_from_string_general (v)
+			end
 		end
 
 

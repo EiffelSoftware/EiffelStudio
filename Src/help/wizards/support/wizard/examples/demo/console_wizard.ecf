@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
-<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-20-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-20-0 http://www.eiffel.com/developers/xml/configuration-1-20-0.xsd" name="wizard" uuid="835D7132-1767-4462-AAE0-A27ECBD4E5AB">
+<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-20-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-20-0 http://www.eiffel.com/developers/xml/configuration-1-20-0.xsd" name="wizard" uuid="34C75E02-00E4-43A8-AE16-5184C999E9DA">
 	<target name="wizard">
-		<root class="EWF_CONSOLE_WIZARD_APPLICATION" feature="make"/>
+		<root class="DEMO_CONSOLE_WIZARD_APPLICATION" feature="make"/>
 		<file_rule>
 			<exclude>/EIFGENs$</exclude>
 			<exclude>/\.git$</exclude>
@@ -15,7 +15,7 @@
 			<concurrency support="none" use="none"/>
 		</capability>
 		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf"/>
-		<library name="console_wizard" location="..\support\wizard\estudio_console_wizard.ecf" readonly="false"/>
+		<library name="console_wizard" location="..\..\estudio_console_wizard.ecf" readonly="false"/>
 		<library name="template_smarty" location="$ISE_LIBRARY\contrib\library\text\template\smarty\smarty.ecf"/>
 		<cluster name="src" location=".\src\" recursive="true">
 			<file_rule>

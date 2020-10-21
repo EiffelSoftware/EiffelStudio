@@ -1,9 +1,11 @@
 note
+	description: "Summary description for {CONSOLE_WIZARD_QUESTION}."
+	author: ""
 	date: "$Date$"
 	revision: "$Revision$"
 
 deferred class
-	GRAPHICAL_WIZARD_QUESTION
+	CONSOLE_WIZARD_QUESTION
 
 inherit
 	WIZARD_QUESTION
@@ -11,7 +13,7 @@ inherit
 			make
 		end
 
-	GRAPHICAL_WIZARD_INPUT_FIELD
+	CONSOLE_WIZARD_INPUT_FIELD
 		rename
 			make as make_field
 		undefine
@@ -25,30 +27,13 @@ feature {NONE} -- Initialization
 			-- and optional description `a_optional_description'.
 		do
 			Precursor (a_id, a_title, a_optional_description)
-
-			initialize
 		end
 
-	initialize
-		deferred
-		ensure
-			widget_created: widget /= Void
-		end
+feature -- Access
 
-feature {NONE} -- Implementation
-
-	append_indented_widget (w: EV_WIDGET; a_container: EV_BOX)
-		local
-			hb: EV_HORIZONTAL_BOX
+	is_initialized: BOOLEAN
 		do
-			create hb
-			append_cell_to (20, hb)
-
-			hb.extend (w)
-			hb.disable_item_expand (w)
-
-			a_container.extend (hb)
-			a_container.disable_item_expand (hb)
+			Result := True
 		end
 
 end

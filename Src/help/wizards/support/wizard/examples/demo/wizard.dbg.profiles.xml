@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<execution_parameters xmlns="http://www.eiffel.com/developers/xml/execution-parameters-1-0-0" last_profile="401F96A8-99E2-4773-8A2E-6057CBD3F14A">
+ <profile uuid="401F96A8-99E2-4773-8A2E-6057CBD3F14A" title="profile #1" arguments=". -callback cb" working_directory="">
+ </profile>
+</execution_parameters>

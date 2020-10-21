@@ -17,7 +17,7 @@
 		</capability>
 		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf"/>
 		<library name="environment" location="$EIFFEL_SRC\framework\environment\environment.ecf"/>
-		<library name="gui_wizard" location="..\ewf\lib\wizard\estudio_gui_wizard.ecf" readonly="false"/>
+		<library name="gui_wizard" location="..\support\wizard\estudio_gui_wizard.ecf" readonly="false"/>
 		<library name="template_smarty" location="$ISE_LIBRARY\contrib\library\text\template\smarty\smarty.ecf" readonly="false"/>
 		<library name="vision2" location="$ISE_LIBRARY\library\vision2\vision2.ecf"/>
 		<cluster name="graphical" location=".\src\gui\" recursive="true"/>

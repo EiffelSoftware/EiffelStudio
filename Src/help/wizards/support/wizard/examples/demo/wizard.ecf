@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
-<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-20-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-20-0 http://www.eiffel.com/developers/xml/configuration-1-20-0.xsd" name="eiffelweb_wizard" uuid="F881A707-745E-4C6D-90D1-F820EE3B1470">
+<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-20-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-20-0 http://www.eiffel.com/developers/xml/configuration-1-20-0.xsd" name="wizard" uuid="029F8085-A4E7-443A-86F2-47C3382BF7A2">
 	<target name="wizard">
-		<root class="EWF_GRAPHICAL_WIZARD" feature="make_and_launch"/>
+		<root class="DEMO_GRAPHICAL_WIZARD" feature="make_and_launch"/>
 		<file_rule>
 			<exclude>/EIFGENs$</exclude>
 			<exclude>/\.git$</exclude>
@@ -17,7 +17,7 @@
 		</capability>
 		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf"/>
 		<library name="environment" location="$EIFFEL_SRC\framework\environment\environment.ecf"/>
-		<library name="gui_wizard" location="..\support\wizard\estudio_gui_wizard.ecf" readonly="false"/>
+		<library name="gui_wizard" location="..\..\estudio_gui_wizard.ecf" readonly="false"/>
 		<library name="template_smarty" location="$ISE_LIBRARY\contrib\library\text\template\smarty\smarty.ecf" readonly="false"/>
 		<library name="vision2" location="$ISE_LIBRARY\library\vision2\vision2.ecf"/>
 		<cluster name="graphical" location=".\src\gui\" recursive="true"/>

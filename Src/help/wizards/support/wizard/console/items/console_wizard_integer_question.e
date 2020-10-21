@@ -1,14 +1,14 @@
 note
-	description: "Summary description for {CONSOLE_WIZARD_BOOLEAN_QUESTION}."
+	description: "Summary description for {CONSOLE_WIZARD_INTEGER_QUESTION}."
 	author: ""
 	date: "$Date$"
 	revision: "$Revision$"
 
 class
-	CONSOLE_WIZARD_BOOLEAN_QUESTION
+	CONSOLE_WIZARD_INTEGER_QUESTION
 
 inherit
-	WIZARD_BOOLEAN_QUESTION
+	WIZARD_INTEGER_QUESTION
 		undefine
 			make
 		end
@@ -21,18 +21,21 @@ create
 convert
 	text: {STRING_32}
 
+feature {NONE} -- Initialization	
+
+	initialize
+		do
+		end
+
 feature -- Conversion
 
 	text: STRING_32
 		do
-			if value then
-				Result := "yes"
-			else
-				Result := "no"
-			end
+			create Result.make_empty
+			Result.append_integer (value)
 		end
 
-	value: BOOLEAN
+	value: INTEGER
 
 feature -- Element change
 
@@ -44,13 +47,15 @@ feature -- Element change
 	set_text (t: detachable READABLE_STRING_GENERAL)
 		do
 			if t = Void then
-				set_value (False)
+				set_value (0)
+			elseif t.is_integer then
+				set_value (t.to_integer)
 			else
-				set_value (t.is_case_insensitive_equal ("yes"))
+				-- Ignore !
 			end
 		end
 
-	set_value (v: BOOLEAN)
+	set_value (v: INTEGER)
 		do
 			value := v
 		end

@@ -45,6 +45,9 @@ More information at:
 		end
 
 	project_page: WIZARD_PAGE
+		local
+			q_str: WIZARD_STRING_QUESTION
+			q_dir: WIZARD_DIRECTORY_QUESTION
 		once
 			Result := new_page ("project")
 			Result.set_title ("Project Name and Project Location")
@@ -54,8 +57,27 @@ Please fill in:
 	The name of the project (without space).
 	The directory where you want the eiffel classes to be generated.
 	]")
-			Result.extend (Result.new_string_question ("Project name:", "name", "ASCII name, without space"))
-			Result.add_directory_question ("Project location:", "location", "Valid directory path, it will be created if missing")
+			q_str := Result.new_string_question ("Project name:", "name", "ASCII name, without space")
+			Result.extend (q_str)
+			q_dir := Result.new_directory_question ("Project location:", "location", "Valid directory path, it will be created if missing")
+			Result.extend (q_dir)
+			q_str.value_change_actions.extend (agent (v: detachable READABLE_STRING_GENERAL; i_dir: WIZARD_DIRECTORY_QUESTION)
+					local
+						s: READABLE_STRING_GENERAL
+						p: PATH
+					do
+						create p.make_from_string (i_dir.text)
+						p := p.parent
+
+						if v = Void then
+							s := application.available_directory_path ("new_app", p).name
+							i_dir.set_text (s)
+						elseif not v.is_whitespace then
+							s := application.available_directory_path (v, p).name
+							i_dir.set_text (s)
+						end
+					end(?,q_dir)
+				)
 
 			Result.data.force ("new_app", "name")
 			Result.data.force (application.available_directory_path ("new_app", application.layout.default_projects_location.extended ("eiffelweb")).name, "location")
@@ -88,7 +110,7 @@ Select connectors you want to support:
 			Result.add_boolean_question ("Standalone", "use_standalone", "Using the standalone Eiffel Web server")
 			Result.add_boolean_question ("CGI", "use_cgi", "Require to setup associated httpd server")
 			Result.add_boolean_question ("libFCGI", "use_libfcgi", "Require to setup associated httpd server, and have libfcgi dynamic libraries in the path")
-			
+
 			Result.data.force ("yes", "use_standalone")
 			Result.data.force ("yes", "use_cgi")
 			Result.data.force ("yes", "use_libfcgi")

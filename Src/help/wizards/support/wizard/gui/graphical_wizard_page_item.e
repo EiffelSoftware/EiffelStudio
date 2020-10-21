@@ -16,4 +16,9 @@ feature -- Conversion
 		deferred
 		end
 
+	is_initialized: BOOLEAN
+		do
+			Result := widget /= Void
+		end
+
 end

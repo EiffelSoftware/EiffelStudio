@@ -136,6 +136,8 @@ feature {NONE} -- Initialization
 					create {EV_HORIZONTAL_RANGE},
 					create {EV_HORIZONTAL_SEPARATOR},
 					create {EV_LABEL},
+					create {EV_LINK_LABEL},
+					create {EV_HIGHLIGHT_LINK_LABEL},
 					create {EV_LIST},
 					create {EV_MULTI_COLUMN_LIST},
 					create {EV_PASSWORD_FIELD},

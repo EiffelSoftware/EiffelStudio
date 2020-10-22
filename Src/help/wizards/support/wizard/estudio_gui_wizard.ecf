@@ -9,6 +9,7 @@
 		<library name="encoding" location="$ISE_LIBRARY\library\encoding\encoding.ecf"/>
 		<library name="uuid" location="$ISE_LIBRARY\library\uuid\uuid.ecf"/>
 		<library name="vision2" location="$ISE_LIBRARY\library\vision2\vision2.ecf"/>
+		<library name="uri_launcher" location="$ISE_LIBRARY\library\runtime\process\uri_launcher\uri_launcher.ecf"/>
 		<cluster name="console" location=".\console\" recursive="true"/>
 		<cluster name="core" location=".\core\" recursive="true"/>
 		<cluster name="graphical" location=".\gui\" recursive="true"/>

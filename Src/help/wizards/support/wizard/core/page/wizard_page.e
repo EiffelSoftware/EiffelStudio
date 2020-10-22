@@ -177,6 +177,18 @@ feature -- Helpers
 			extend (new_integer_question (a_prompt, a_field_id, a_description))
 		end
 
+	frozen add_file_question (a_prompt: READABLE_STRING_GENERAL; a_field_id: READABLE_STRING_8; a_description: detachable READABLE_STRING_GENERAL)
+		do
+			extend (new_file_question (a_prompt, a_field_id, a_description))
+		end
+
+	frozen add_linked_text (a_text: READABLE_STRING_GENERAL; a_uri: READABLE_STRING_8)
+			-- TODO check if a_url is a valid url.
+		do
+			extend (new_link_text_item (a_text, a_uri))
+		end
+
+
 feature -- Helper Factory
 
 	new_section_item (a_text: READABLE_STRING_GENERAL): WIZARD_PAGE_SECTION_ITEM
@@ -209,6 +221,15 @@ feature -- Helper Factory
 
 	new_integer_question (a_prompt: READABLE_STRING_GENERAL; a_field_id: READABLE_STRING_8; a_description: detachable READABLE_STRING_GENERAL): WIZARD_INTEGER_QUESTION
 		deferred
+		end
+
+	new_file_question (a_prompt: READABLE_STRING_GENERAL; a_field_id: READABLE_STRING_8; a_description: detachable READABLE_STRING_GENERAL): WIZARD_DIRECTORY_QUESTION
+		deferred
+		end
+
+	new_link_text_item (a_text: READABLE_STRING_GENERAL; a_uri: READABLE_STRING_8 ): WIZARD_PAGE_LINK_TEXT_ITEM
+		do
+			create Result.make (a_text, a_uri)
 		end
 
 feature -- Basic operations

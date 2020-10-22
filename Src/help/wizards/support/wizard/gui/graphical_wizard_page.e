@@ -89,6 +89,11 @@ feature -- Helpers
 			create Result.make (a_field_id, a_prompt, a_description)
 		end
 
+	new_file_question (a_prompt: READABLE_STRING_GENERAL; a_field_id: READABLE_STRING_8; a_description: detachable READABLE_STRING_GENERAL): GRAPHICAL_WIZARD_FILE_QUESTION
+		do
+			create Result.make (a_field_id, a_prompt, a_description)
+		end
+
 feature {NONE} -- Implementation
 
 	unparent (i: WIZARD_PAGE_ITEM)

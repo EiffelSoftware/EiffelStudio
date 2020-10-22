@@ -21,6 +21,7 @@ feature {NONE} -- Initialization
 		do
 			page_id := a_page_id
 			create items.make_caseless (0)
+			create {ARRAYED_LIST [STRING]} elements.make (5)
 		end
 
 feature -- Access
@@ -43,6 +44,10 @@ feature -- Access
 		end
 
 	items: STRING_TABLE [READABLE_STRING_32]
+
+	elements: LIST [STRING]
+			-- Collection of elements.
+			--| Workaround to extend the key value design
 
 	count: INTEGER
 		do

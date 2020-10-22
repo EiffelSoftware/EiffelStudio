@@ -44,4 +44,9 @@ feature -- Helpers
 			create Result.make (a_field_id, a_prompt, a_description)
 		end
 
+	new_file_question (a_prompt: READABLE_STRING_GENERAL; a_field_id: READABLE_STRING_8; a_description: detachable READABLE_STRING_GENERAL): CONSOLE_WIZARD_DIRECTORY_QUESTION
+		do
+			create Result.make (a_field_id, a_prompt, a_description)
+		end
+
 end

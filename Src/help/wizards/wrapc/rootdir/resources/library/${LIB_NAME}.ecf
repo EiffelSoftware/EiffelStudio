@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-21-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-21-0 http://www.eiffel.com/developers/xml/configuration-1-21-0.xsd" name="{$WIZ.library.name/}" uuid="{$UUID/}" library_target="{$WIZ.library.name/}">
+	<target name="{$WIZ.library.name/}">
+		<root all_classes="true"/>
+		<option full_class_checking="false" is_attached_by_default="True" manifest_array_type="mismatch_warning">
+			<assertions precondition="true"/>
+		</option>
+		<setting name="console_application" value="true"/>
+		<setting name="inlining_size" value="0"/>
+		<setting name="msil_classes_per_module" value="5"/>
+		<setting name="dead_code_removal" value="feature"/>
+
+	    <!-- Include headers needed for C glue code to implement callbacks -->
+		<external_include location="$ECF_CONFIG_PATH\generated_wrapper\c\include">
+			<condition>
+				<platform value="windows"/>
+			</condition>
+		</external_include>
+		<external_include location="$ECF_CONFIG_PATH/generated_wrapper/c/include">
+			<condition>
+				<platform excluded_value="windows"/>
+			</condition>
+		</external_include>
+
+		<!-- Include headers for the C target library -->
+		<external_include location="$ECF_CONFIG_PATH\C\include">
+			<condition>
+				<platform value="windows"/>
+			</condition>		
+		</external_include>
+
+		{unless isset="$IS_WINDOWS"}	
+		<external_include location="{$WIZ.c_library.c_header_location/}">
+			<condition>
+				<platform excluded_value="windows"/>
+			</condition>
+		</external_include>
+		{/unless}
+	
+		
+		<!-- Manual Wrapper add this only if it's needed 
+		
+		<external_include location="$ECF_CONFIG_PATH\manual_wrapper\c\include">
+			<condition>
+				<platform value="windows"/>
+			</condition>		
+		</external_include>
+
+		<external_include location="$ECF_CONFIG_PATH/manual_wrapper/c/include">
+			<condition>
+				<platform excluded_value="windows"/>
+			</condition>		
+		</external_include>
+		-->
+
+		<!-- C glue code library to implement Callbacks -->
+		<external_object location="$ECF_CONFIG_PATH\C\spec\$ISE_C_COMPILER\$ISE_PLATFORM\lib\eif_{$WIZ.c_library.name/}.lib">
+			<condition>
+				<platform value="windows"/>
+			</condition>
+		</external_object>
+		<external_object location="$ECF_CONFIG_PATH/C/spec/$(ISE_PLATFORM)/lib/eif_{$WIZ.c_library.name/}.a">
+			<condition>
+				<platform excluded_value="windows"/>
+			</condition>
+		</external_object>
+
+
+		<!-- External C library -->
+		<external_object location="/usr/local/lib/{$WIZ.c_library.name/}.so">
+			<condition>
+				<platform excluded_value="windows"/>
+			</condition>
+		</external_object>
+		
+		<external_object location="$ECF_CONFIG_PATH\C\lib\{$WIZ.c_library.name/}.lib">
+			<condition>
+				<platform value="windows"/>
+			</condition>
+		</external_object>
+
+		<!-- Dependency libraries -->	
+		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf"/>
+		<cluster name="src" location="." recursive="true">
+			<file_rule>
+				<exclude>.git$</exclude>
+				<exclude>.svn$</exclude>
+				<exclude>/c$</exclude>
+				<exclude>/include$</exclude>
+				<exclude>/EIFGENs$</exclude>
+			</file_rule>
+		</cluster>
+	</target>
+	<target name="{$WIZ.library.name/}_tests" extends="{$WIZ.library.name/}">
+		<root class="ANY" feature="default_create"/>
+		<option warning="warning">
+			<assertions precondition="true" postcondition="true" check="true" invariant="true" loop="true" supplier_precondition="true"/>
+		</option>
+		<setting name="console_application" value="true"/>
+		<library name="testing" location="$ISE_LIBRARY\library\testing\testing.ecf"/>
+		<cluster name="test" location=".\testing\" recursive="true">
+			<file_rule>
+				<exclude>.git$</exclude>
+				<exclude>.svn$</exclude>
+				<exclude>/c$</exclude>
+				<exclude>/include$</exclude>
+				<exclude>/EIFGENs$</exclude>
+			</file_rule>
+		</cluster>	
+	</target>
+</system>
+

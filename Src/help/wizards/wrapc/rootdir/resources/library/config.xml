@@ -1,0 +1,50 @@
+<?xml version="1.0"?>
+<ewg_config name="{$WIZ.c_library.name/}">
+
+  <rule_list>
+  	  <!-- Ignore everything that starts with an underscore. -->
+    <rule>
+      <match>
+          <identifier name="_.*"/>  
+      </match>
+       <wrapper type="none">
+      </wrapper>
+    </rule>
+
+
+    	  <!-- Include functions, structs, unions, macros, etc-->
+    	  <!-- To learn more read: https://github.com/eiffel-wrap-c/WrapC/blob/master/doc/Readme.md#config_file-->
+
+    {if isset="$LIST_C_FUNCTIONS"} 
+      {foreach item="value" from="$LIST_C_FUNCTIONS"}
+      <rule>
+        <match>
+          <identifier name="{$value/}"/>
+        </match>
+        <wrapper type="default">
+        </wrapper>
+      </rule> 
+      {/foreach}
+    {/if}
+    {unless isset="$LIST_C_FUNCTIONS"}    
+    <!-- Add your mappings manually
+     <rule>
+      <match>
+      </match>
+      <wrapper type="default">
+      </wrapper>
+    </rule> 
+    -->
+    {/unless}
+      <!-- And the rest should be ignored -->
+    <rule>
+      <match>
+      </match>
+       <wrapper type="none">
+      </wrapper>
+    </rule>
+
+
+  </rule_list>
+
+</ewg_config>

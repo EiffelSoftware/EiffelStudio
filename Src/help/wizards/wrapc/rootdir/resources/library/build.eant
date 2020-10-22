@@ -1,0 +1,77 @@
+<?xml version="1.0"?>
+
+<project name="{$WIZ.library.name/}" default="help">
+
+  <description>
+    description: " {$WIZ.library.name/} library"
+    copyright: "Copyright (c) 2002, Andreas Leitner and others"
+    license: "Eiffel Forum License v2 (see forum.txt)"
+    date: "$Date$"
+    revision: "$Revision$"
+  </description>
+
+  <target name="help">
+    <echo message="usage:"/>
+    <echo message=" geant wrap_c"/>
+    <echo message=" geant wrap_c_no_scripts"/>
+    <echo message=" geant compile"/>
+    <echo message=" geant clean"/>
+    <echo message=" geant clobber"/>
+  </target>
+    <!-- Implementation -->
+
+  <target name="init_wrap_c">
+    <set name="system_dir" value="{$CWD/}"/>
+    <set name="wrap_c.library_name" value="{$WIZ.library.name/}"/>
+    <set name="wrap_c.full_header_name" value="$ECF_CONFIG_PATH{$PATH_SEPARATOR/}C{$PATH_SEPARATOR/}include" if="{$IS_WINDOWS/}"/>
+    <set name="wrap_c.full_header_name" value="{$WIZ.c_library.c_header_location/}{$PATH_SEPARATOR/}{$WIZ.c_library.c_header/}" unless="{$IS_WINDOWS/}"/>
+    
+    {if isset="$C_COMPILE_OPTIONS"}<set name="wrap_c.c_compile_options" value="--c_compile_options={$C_COMPILE_OPTIONS/}"/>{/if}
+    {unless isset="$C_COMPILE_OPTIONS"}<set name="wrap_c.c_compile_options" value=""/>{/unless}
+    <set name="wrap_c.use_config_file" value="True"/>
+    <set name="wrap_c.verbose" value="--verbose"/>
+    <set name="wrap_c.wrapper_dir" value="{$SYSTEM_DIR/}{$PATH_SEPARATOR/}generated_wrapper"/>
+  </target>
+
+  <target name="clean">
+    <echo message="- Clean [Eiffel {$WIZ.library.name/}]" />
+    <delete file="{$PREPROCESS_HEADER/}_cpp.h"/>
+    <delete directory="C{$PATH_SEPARATOR/}spec{$PATH_SEPARATOR/}{$ISE_PLATFORM/}" unless="{$IS_WINDOWS/}"/>
+    <delete directory="C{$PATH_SEPARATOR/}spec{$PATH_SEPARATOR/}{$ISE_C_COMPILER/}{$PATH_SEPARATOR/}{$ISE_PLATFORM/}" if="{$IS_WINDOWS/}" />
+    <delete directory="generated_wrapper"/>
+  </target>
+
+  <target name="wrap_c" depend="init_wrap_c">
+     <description>
+         Generate wrapper files, with script plugins pre and post postprocessing.
+     </description>
+     <set name="pre_script" value="pre_script.bat" if="${is_windows}" />
+     <set name="pre_script" value="pre_script.sh" unless="${is_windows}" />
+     <set name="script" value="post_script.bat" if="${is_windows}" />
+     <set name="script" value="post_script.sh" unless="${is_windows}" />
+     <set name="wrap_c.config_file_option" value="--config=config.xml" if="${wrap_c.use_config_file}=True"/> 
+     <exec executable="wrap_c ${wrap_c.verbose} ${wrap_c.c_compile_options} --script_pre_process=${cwd}${path_separator}${pre_script} --script_post_process=${cwd}${path_separator}${script} --output-dir=${wrap_c.wrapper_dir} --full-header=${wrap_c.full_header_name} ${wrap_c.config_file_option}"/>
+   </target>
+
+
+    <target name="wrap_c_no_scripts" depend="init_wrap_c">
+     <description>
+         Generate wrapper files, without script plugins pre and post postprocessing.
+     </description>
+     <set name="pre_script" value="pre_script.bat" if="${is_windows}" />
+     <set name="pre_script" value="pre_script.sh" unless="${is_windows}" />
+     <set name="script" value="post_script.bat" if="${is_windows}" />
+     <set name="script" value="post_script.sh" unless="${is_windows}" />
+     <set name="wrap_c.config_file_option" value="--config=config.xml" if="${wrap_c.use_config_file}=True"/> 
+     <exec executable="wrap_c ${wrap_c.verbose} ${wrap_c.c_compile_options} --output-dir=${wrap_c.wrapper_dir} --full-header=${wrap_c.full_header_name} ${wrap_c.config_file_option}"/>
+   </target>
+
+
+
+  <target name="compile" depend="init_wrap_c"> 
+    <geant file="${wrap_c.wrapper_dir}${path_separator}c${path_separator}src${path_separator}build.eant" target="compile" dir="${wrap_c.wrapper_dir}${path_separator}c${path_separator}src"/>
+  </target>
+
+  <target name="clobber" depend="clean" />
+</project>
+

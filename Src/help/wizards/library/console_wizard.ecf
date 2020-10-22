@@ -15,7 +15,7 @@
 			<concurrency support="none" use="none"/>
 		</capability>
 		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf"/>
-		<library name="console_wizard" location="..\ewf\lib\wizard\estudio_console_wizard.ecf" readonly="false"/>
+		<library name="console_wizard" location="..\support\wizard\estudio_console_wizard.ecf" readonly="false"/>
 		<library name="template_smarty" location="$ISE_LIBRARY\contrib\library\text\template\smarty\smarty.ecf"/>
 		<cluster name="src" location=".\src\" recursive="true">
 			<file_rule>

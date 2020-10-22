@@ -126,7 +126,7 @@ SVGadd $RES/feature.svg 1.svg
 # attribute
 SVGadd 1.svg $OVERLAY/attribute_e.svg 2.svg
 # once
-SVGadd 1.svg $OVERLAY/once_se.svg 3.svg
+SVGadd 1.svg $RES/once_se.svg 3.svg
 # deferred
 SVGlight 1.svg 4.svg
 # external
@@ -140,7 +140,7 @@ SVGlight 6.svg 7.svg
 # routine
 SVGadd 1.svg $RES/instance-free_ne.svg 8.svg
 # once
-SVGadd 8.svg $OVERLAY/once_se.svg 9.svg
+SVGadd 8.svg $RES/once_se.svg 9.svg
 # deferred 10
 SVGadd 4.svg $RES/instance-free_ne.svg 10.svg
 # external 11
@@ -162,7 +162,7 @@ SVGfrozen 6.svg 16.svg
 # routine
 SVGadd 12.svg $RES/instance-free_ne.svg 17.svg
 # once
-SVGadd 17.svg $OVERLAY/once_se.svg 18.svg
+SVGadd 17.svg $RES/once_se.svg 18.svg
 # external
 SVGadd 15.svg $RES/instance-free_ne.svg 19.svg
 # 
@@ -712,7 +712,7 @@ SVGadd $RES/feature.svg 16.svg
 # creator
 # deferred
 # once
-SVGadd $RES/feature.svg $OVERLAY/once_se.svg  20.svg
+SVGadd $RES/feature.svg $RES/once_se.svg  20.svg
 # external
 SVGadd $RES/feature.svg $RES/curly_brackets.svg 21.svg
 # exported
@@ -968,7 +968,7 @@ SVGadd $OVERLAY/feature_se.svg 25.svg
 # verifier right
 SVGadd $OVERLAY/verify_se.svg 26.svg
 # once right
-SVGadd $OVERLAY/once_se.svg 27.svg
+SVGadd $RES/once_se.svg 27.svg
 # 
 ExitRow
 #----------------------------------------------------------------------------------

@@ -228,8 +228,7 @@ feature -- Helper Factory
 		end
 
 	new_link_text_item (a_text: READABLE_STRING_GENERAL; a_uri: READABLE_STRING_8 ): WIZARD_PAGE_LINK_TEXT_ITEM
-		do
-			create Result.make (a_text, a_uri)
+		deferred
 		end
 
 feature -- Basic operations

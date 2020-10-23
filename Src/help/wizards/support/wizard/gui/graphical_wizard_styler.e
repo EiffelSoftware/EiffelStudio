@@ -54,6 +54,20 @@ feature -- Style
 			end
 		end
 
+	apply_link_style (w: EV_WIDGET)
+		do
+			apply_text_style (w)
+			w.set_foreground_color (colors.blue)
+		end
+
+	apply_fixed_size_link_style (w: EV_WIDGET)
+		do
+			apply_link_style (w)
+			if attached {EV_FONTABLE} w as l_fontable then
+				l_fontable.set_font (fixed_size_text_font)
+			end
+		end
+
 	apply_section_style (w: EV_WIDGET)
 		do
 			apply_text_style (w)

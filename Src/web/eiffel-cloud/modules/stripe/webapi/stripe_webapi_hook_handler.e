@@ -81,7 +81,7 @@ feature -- Execution
 
 			p := api.site_location.extended ("stripe")
 			if not l_is_livemode then
-				p := p.appended ("-test")
+				p := p.extended ("test")
 			end
 			if fut.directory_path_exists (p) then
 				create s32.make (20)

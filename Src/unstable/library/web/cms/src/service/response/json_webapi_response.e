@@ -144,8 +144,7 @@ feature -- Execution
 		local
 			m: WSF_PAGE_RESPONSE
 			j: STRING_8
-			utf: UTF_CONVERTER
-			vis: JSON_SERIALIZATION_VISITOR
+
 		do
 			j := resource.representation
 			create m.make_with_body (j)

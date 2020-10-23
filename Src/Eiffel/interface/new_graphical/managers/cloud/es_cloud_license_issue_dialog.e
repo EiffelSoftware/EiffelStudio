@@ -39,7 +39,7 @@ feature {NONE} -- Initialization
 			min_but_w: INTEGER
 			l_scaler: EVS_DPI_SCALER
 			l_report_label: EVS_ELLIPSIS_LABEL
-			l_weblnk: EVS_HIGHLIGHT_LINK_LABEL
+			l_weblnk: EV_HIGHLIGHT_LINK_LABEL
 			l_split: EV_VERTICAL_SPLIT_AREA
 		do
 			Precursor

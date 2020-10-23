@@ -78,7 +78,7 @@ feature -- Initialization
 			copyright_label: EV_LABEL
 			registration_label: EV_TEXT
 			info_label: EV_LABEL
-			l_update_check_link, l_license_link: EVS_HIGHLIGHT_LINK_LABEL
+			l_update_check_link, l_license_link: EV_HIGHLIGHT_LINK_LABEL
 			hsep: EV_HORIZONTAL_SEPARATOR
 			ok_button: EV_BUTTON
 			white_cell: EV_CELL
@@ -181,7 +181,7 @@ feature -- Initialization
 
 feature {NONE} -- Implementation
 
-	check_for_update (a_link: EVS_LINK_LABEL)
+	check_for_update (a_link: EV_LINK_LABEL)
 		local
 			ch: ES_RELEASE_UPDATE_CHECKER
 			l_pointer: like pointer_style
@@ -193,7 +193,7 @@ feature {NONE} -- Implementation
 			set_pointer_style (pixmaps.stock_pixmaps.busy_cursor)
 
 			create ch.make (preferences.misc_data.update_channel, eiffel_layout.eiffel_platform, eiffel_layout.version_name)
-			ch.check_for_update (agent (a_rel: detachable ES_UPDATE_RELEASE; i_lnk: EVS_LINK_LABEL)
+			ch.check_for_update (agent (a_rel: detachable ES_UPDATE_RELEASE; i_lnk: EV_LINK_LABEL)
 					local
 						m: NOTIFICATION_MESSAGE_WITH_ACTIONS
 					do

@@ -199,7 +199,7 @@ feature {NONE} -- Action handlers
 			lab: EV_LABEL
 			b: like main_box
 			but: EV_BUTTON
-			lnk: EVS_HIGHLIGHT_LINK_LABEL
+			lnk: EV_HIGHLIGHT_LINK_LABEL
 			hb: EV_HORIZONTAL_BOX
 			txt: EV_RICH_TEXT
 			q,r: INTEGER_64

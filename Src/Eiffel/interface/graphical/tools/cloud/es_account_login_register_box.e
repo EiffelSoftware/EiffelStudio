@@ -58,8 +58,8 @@ feature {NONE} -- Initialization
 			hb: EV_HORIZONTAL_BOX
 			l_learn_more_box: EV_FRAME
 			txt: EVS_LABEL
-			lnk: EVS_LINK_LABEL
-			l_weblnk: EVS_HIGHLIGHT_LINK_LABEL
+			lnk: EV_LINK_LABEL
+			l_weblnk: EV_HIGHLIGHT_LINK_LABEL
 			but: EV_BUTTON
 			cbut: EV_CHECK_BUTTON
 			s: STRING_32
@@ -192,7 +192,7 @@ feature {NONE} -- Initialization
 	set_sign_in_mode (fr: EV_FRAME)
 		local
 			b: like new_sign_box
-			lnk: EVS_HIGHLIGHT_LINK_LABEL
+			lnk: EV_HIGHLIGHT_LINK_LABEL
 			hb: EV_HORIZONTAL_BOX
 			lab: EV_LABEL
 		do
@@ -265,7 +265,7 @@ feature {NONE} -- Initialization
 	set_register_mode (fr: EV_FRAME)
 		local
 			b: like new_register_link_box
-			lnk: EVS_HIGHLIGHT_LINK_LABEL
+			lnk: EV_HIGHLIGHT_LINK_LABEL
 		do
 			fr.remove_text
 			b := new_register_link_box
@@ -412,7 +412,7 @@ feature {NONE} -- Initialization
 			l_field_width: INTEGER
 --			but: EV_BUTTON
 			l_scaler: EVS_DPI_SCALER
-			l_weblnk: EVS_HIGHLIGHT_LINK_LABEL
+			l_weblnk: EV_HIGHLIGHT_LINK_LABEL
 			lab: EV_LABEL
 		do
 			create l_scaler.make

@@ -12,14 +12,10 @@ class
 
 inherit
 	EV_LINK_LABEL
-		rename
-			set_font as set_internal_font
-		export
-			{NONE} set_internal_font
 		redefine
 			initialize,
 			set_text,
-			set_internal_font
+			set_font
 		end
 
 create
@@ -40,28 +36,32 @@ feature {NONE} -- Initialization
 			pointer_leave_actions.force (agent on_pointer_left)
 		end
 
+feature -- Access
+
+	is_highlighted: BOOLEAN
+
 feature {NONE} -- Access
 
-	default_font: EV_FONT
+	normal_font: EV_FONT
 			-- Font used to display labels.
 		do
-			if attached internal_font as ft then
-				Result := ft.twin
-			else
+			Result := internal_font
+			if Result = Void then
 				Result := font.twin
+				Result.set_weight ({EV_FONT_CONSTANTS}.weight_regular)
+				internal_font := Result
 			end
-			Result.set_weight ({EV_FONT_CONSTANTS}.weight_regular)
 		end
 
 	highlight_font: EV_FONT
 			-- Highlight font
 		do
-			if attached internal_font as ft then
-				Result := ft.twin
-			else
-				Result := default_font.twin
+			Result := internal_highlight_font
+			if Result = Void then
+				Result := normal_font.twin
+				Result.set_weight ({EV_FONT_CONSTANTS}.weight_bold)
+				internal_highlight_font := Result
 			end
-			Result.set_weight ({EV_FONT_CONSTANTS}.weight_bold)
 		end
 
 feature -- Element change
@@ -74,29 +74,33 @@ feature -- Element change
 		end
 
 	set_font (a_font: EV_FONT)
-			-- Assign `a_font' to font.
+			-- Assign `a_font' to normal_font.
+		do
+			if not is_internal_set_ev_font_operation then
+					-- i.e call from {EV_FONT}.set_font, outside of Current
+				internal_font := a_font
+				internal_highlight_font := Void
+				set_minimum_size (maximum_label_width (text), maximum_label_height (text))
+			end
+			if is_highlighted then
+				Precursor (highlight_font)
+			else
+				Precursor (normal_font)
+			end
+		end
+
+	set_highlight_font (a_font: EV_FONT)
+			-- Assign `a_font' to highlight_font.
+			-- note: always call after `set_font`
 		require
 			not_destroyed: not is_destroyed
 			a_font_not_void: a_font /= Void
-		local
-			ft: like internal_font
 		do
-			ft := internal_font
-			set_internal_font (a_font)
-			internal_font := ft
-		ensure
-			internal_font_unchanged: internal_font ~ old internal_font
-		end
-
-feature {NONE} -- Element change
-
-	set_internal_font (a_font: EV_FONT)
-			-- <Precursor>
-		do
-			internal_font := a_font
-			Precursor (a_font)
-		ensure then
-			internal_font_set: internal_font = a_font
+			internal_highlight_font := a_font
+			set_minimum_size (maximum_label_width (text), maximum_label_height (text))
+			if is_highlighted then
+				set_font (highlight_font)
+			end
 		end
 
 feature {NONE} -- Query
@@ -110,7 +114,7 @@ feature {NONE} -- Query
 			l_width: INTEGER
 			l_other: INTEGER
 		do
-			l_size := default_font.string_size (a_text)
+			l_size := normal_font.string_size (a_text)
 			l_width := l_size.width + l_size.left_offset + l_size.right_offset
 			l_size := highlight_font.string_size (a_text)
 			l_other := l_size.width + l_size.left_offset + l_size.right_offset + 2
@@ -126,7 +130,7 @@ feature {NONE} -- Query
 			l_height: INTEGER
 			l_other: INTEGER
 		do
-			l_size := default_font.string_size (a_text)
+			l_size := normal_font.string_size (a_text)
 			l_height := l_size.height
 			l_size := highlight_font.string_size (a_text)
 			l_other := l_size.height
@@ -139,12 +143,11 @@ feature {NONE} -- Action handlers
 			-- Called when the mouse cursor enters the label.
 		require
 			not_is_destroyed: not is_destroyed
-		local
-			ft: like internal_font
 		do
-			ft := internal_font
+			is_internal_set_ev_font_operation := True
+			is_highlighted := True
 			set_font (highlight_font)
-			internal_font := ft
+			is_internal_set_ev_font_operation := False
 		ensure
 			internal_font_unchanged: internal_font ~ old internal_font
 		end
@@ -153,20 +156,25 @@ feature {NONE} -- Action handlers
 			-- Called when the mouse cursor enters the label.
 		require
 			not_is_destroyed: not is_destroyed
-		local
-			ft: like internal_font
 		do
-			ft := internal_font
-			set_font (default_font)
-			internal_font := ft
+			is_internal_set_ev_font_operation := True
+			is_highlighted := False
+			set_font (normal_font)
+			is_internal_set_ev_font_operation := False
 		ensure
 			internal_font_unchanged: internal_font ~ old internal_font
 		end
 
 feature {NONE} -- Implementation: Internal cache
 
+	is_internal_set_ev_font_operation: BOOLEAN
+			-- False by default, True when called from on_pointer_entered or on_pointer_left
+
 	internal_font: detachable EV_FONT
-			-- Cached internal font
+			-- Cached internal normal_font
+
+	internal_highlight_font: detachable EV_FONT
+			-- Cached internal highlight_font
 
 ;
 

@@ -34,8 +34,12 @@ feature -- Factory
 
 	new_response (req: WSF_REQUEST; res: WSF_RESPONSE): HM_WEBAPI_RESPONSE
 		do
---			create {MD_WEBAPI_RESPONSE} Result.make (req, res, api)
 			create {JSON_WEBAPI_RESPONSE} Result.make (req, res, api)
+		end
+
+	new_signed_response (a_key: READABLE_STRING_8; req: WSF_REQUEST; res: WSF_RESPONSE): HM_WEBAPI_RESPONSE
+		do
+			create {SIGNED_JSON_WEBAPI_RESPONSE} Result.make (a_key, req, res, api)
 		end
 
 	new_error_response (msg: detachable READABLE_STRING_GENERAL; req: WSF_REQUEST; res: WSF_RESPONSE): like new_response
@@ -112,6 +116,6 @@ feature {NONE} -- Builder
 		end
 
 note
-	copyright: "2011-2017, Jocelyn Fiat, Javier Velilla, Eiffel Software and others"
+	copyright: "2011-2020, Jocelyn Fiat, Javier Velilla, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 end

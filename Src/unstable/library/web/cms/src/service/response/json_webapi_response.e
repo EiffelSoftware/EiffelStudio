@@ -145,14 +145,9 @@ feature -- Execution
 			m: WSF_PAGE_RESPONSE
 			j: STRING_8
 			utf: UTF_CONVERTER
+			vis: JSON_SERIALIZATION_VISITOR
 		do
 			j := resource.representation
-			if not utf.is_valid_utf_8_string_8 (j) then
-					-- FIXME: Remove this hack end of 2019! [2018-09-03]
-				check json_representation_invalid: False end
-				j := utf.utf_32_string_to_utf_8_string_8 (j)
-			end
-
 			create m.make_with_body (j)
 			m.set_status_code (status_code)
 			if attached redirection as loc then

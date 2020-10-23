@@ -168,6 +168,7 @@ feature -- Execution
 				r.add_link ("license", "license", cloud_user_license_link (a_version, a_user, lic.key))
 
 				r.add_table_iterator_field ("es:plan", license_to_plan_table (lic))
+--				r.add_table_iterator_field ("es:data", data_to_plan_table (lic))
 			end
 
 			r.add_link ("es:installation", "installation", cloud_user_installation_link (a_version, a_user, inst.id))
@@ -405,8 +406,8 @@ feature {NONE} -- User installation post handling
 							l_active_sessions := es_cloud_api.user_active_concurrent_sessions (a_user, a_installation.id, l_session)
 						end
 						if l_plan /= Void then
-							l_sess_limit := l_plan.concurrent_sessions_limit
-							l_heartbeat := l_plan.heartbeat
+							l_sess_limit := l_license.concurrent_sessions_limit
+							l_heartbeat := l_license.heartbeat
 						else
 							l_sess_limit := es_cloud_api.default_concurrent_sessions_limit
 							l_heartbeat :=  es_cloud_api.default_heartbeat

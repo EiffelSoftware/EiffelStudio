@@ -51,7 +51,7 @@ feature {NONE} -- Initialization
 
 	make
 		do
-			version := "1.2"
+			version := "1.3"
 			description := "ES Cloud"
 			package := "EiffelStudio"
 			add_optional_dependency ({SHOP_MODULE})
@@ -373,6 +373,8 @@ feature -- Hook
 			lic: ES_CLOUD_LICENSE
 			l_email: detachable READABLE_STRING_8
 			l_user: detachable CMS_USER
+			l_trial_licences: detachable LIST [ES_CLOUD_USER_LICENSE]
+			l_trial_lic: detachable ES_CLOUD_USER_LICENSE
 		do
 			if
 				attached es_cloud_api as api and then
@@ -404,12 +406,28 @@ feature -- Hook
 							attached l_store_item.name as l_item_name and then
 							attached api.plan_by_name (l_item_name) as l_plan
 						then
+							if l_user /= Void then
+								l_trial_licences := api.trial_user_licenses (l_user)
+							end
 							from
 								l_quantity := a_cart_item.quantity
 							until
 								l_quantity = 0
 							loop
-								lic := api.new_license_for_plan (l_plan)
+								if l_trial_licences /= Void and then not l_trial_licences.is_empty then
+									l_trial_lic := l_trial_licences.first
+									l_trial_licences.prune_all (l_trial_lic)
+								else
+									l_trial_lic := Void
+								end
+								if l_trial_lic /= Void then
+									lic := l_trial_lic.license
+									lic.set_plan (l_plan)
+									lic.reset_date
+									api.save_license (lic)
+								else
+									lic := api.new_license_for_plan (l_plan)
+								end
 								if lic /= Void then
 									if l_store_item.is_onetime then
 											-- By default, yearly
@@ -432,14 +450,16 @@ feature -- Hook
 									end
 
 									if l_user /= Void then
-										api.assign_license_to_user (lic, l_user)
+										if l_trial_lic = Void then
+											api.assign_license_to_user (lic, l_user)
+										end
 									elseif l_email /= Void then
 										api.assign_license_to_email (lic, l_email)
 									end
 									if l_email /= Void then
-										api.send_new_license_mail (l_user, Void, l_email, lic, Void)
+										api.send_new_license_mail (l_user, Void, l_email, lic, l_trial_lic, Void)
 									end
-									api.notify_new_license (l_user, Void, l_email, lic)
+									api.notify_new_license (l_user, Void, l_email, lic, l_trial_lic)
 								end
 								l_quantity := l_quantity - 1
 							end
@@ -509,7 +529,7 @@ feature -- Hooks: user management
 						lic := ic.item
 						l_es_cloud_api.move_email_license_to_user (lic, u)
 						if not l_es_cloud_api.has_error then
-							l_es_cloud_api.send_new_license_mail (a_user, Void, l_email, lic.license, Void)
+							l_es_cloud_api.send_new_license_mail (a_user, Void, l_email, lic.license, Void, Void)
 						end
 					end
 				end

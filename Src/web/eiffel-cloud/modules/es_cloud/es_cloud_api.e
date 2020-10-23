@@ -38,6 +38,10 @@ feature {NONE} -- Initialization
 			Precursor
 			create config.make
 			if attached cms_api.module_configuration_by_name ({ES_CLOUD_MODULE}.name, "config") as cfg then
+				if attached cfg.resolved_text_item ("api.secret") as s then
+					config.set_api_secret (s)
+				end
+
 				if attached cfg.resolved_text_item ("session.expiration_delay") as s then
 					config.session_expiration_delay := s.to_integer
 				end
@@ -194,6 +198,38 @@ feature -- Access: licenses
 			Result := es_cloud_storage.email_licenses (a_email)
 		end
 
+feature -- Access trial		
+
+	trial_user_licenses (a_user: ES_CLOUD_USER): detachable ARRAYED_LIST [ES_CLOUD_USER_LICENSE]
+			-- Existing trial license for user `a_user` or email `a_email` if any.
+		local
+			lic: ES_CLOUD_USER_LICENSE
+		do
+			if attached trial_plan as pl then
+				create Result.make (1)
+				across
+					user_licenses (a_user) as ic
+				loop
+					lic := ic.item
+					if pl.same_plan (lic.license.plan) then
+						Result.force (lic)
+					end
+				end
+			end
+		end
+
+	trial_plan: detachable ES_CLOUD_PLAN
+		do
+			if config.auto_trial_enabled then
+				if attached config.auto_trial_plan_name as pl_name then
+					Result := plan_by_name (pl_name)
+				end
+				if Result = Void then
+					Result := default_plan
+				end
+			end
+		end
+
 feature -- Element change license
 
 	auto_assign_trial_to (a_user: ES_CLOUD_USER)
@@ -217,9 +253,9 @@ feature -- Element change license
 						attached l_cms_user.email as l_email
 					then
 						if l_email /= Void then
-							send_new_license_mail (l_cms_user, l_cms_user.profile_name, l_email, lic, Void)
+							send_new_license_mail (l_cms_user, l_cms_user.profile_name, l_email, lic, Void, Void)
 						end
-						notify_new_license (l_cms_user, l_cms_user.profile_name, l_email, lic)
+						notify_new_license (l_cms_user, l_cms_user.profile_name, l_email, lic, Void)
 					end
 				end
 			end
@@ -355,9 +391,9 @@ feature -- Element change license
 					attached l_cms_user.email as l_email
 				then
 					if l_email /= Void then
-						send_new_license_mail (l_cms_user, l_cms_user.profile_name, l_email, Result, Void)
+						send_new_license_mail (l_cms_user, l_cms_user.profile_name, l_email, Result, Void, Void)
 					end
-					notify_new_license (l_cms_user, l_cms_user.profile_name, l_email, Result)
+					notify_new_license (l_cms_user, l_cms_user.profile_name, l_email, Result, Void)
 				end
 			end
 		end
@@ -900,7 +936,7 @@ feature -- HTML factory
 
 feature -- Email processing
 
-	send_new_license_mail (a_user: detachable CMS_USER; a_customer_name: detachable READABLE_STRING_GENERAL; a_email_addr: READABLE_STRING_8; a_license: ES_CLOUD_LICENSE; vars: detachable STRING_TABLE [detachable READABLE_STRING_GENERAL])
+	send_new_license_mail (a_user: detachable CMS_USER; a_customer_name: detachable READABLE_STRING_GENERAL; a_email_addr: READABLE_STRING_8; a_license: ES_CLOUD_LICENSE; a_previous_trial_license: detachable ES_CLOUD_USER_LICENSE ; vars: detachable STRING_TABLE [detachable READABLE_STRING_GENERAL])
 		local
 			e: CMS_EMAIL
 			res: PATH
@@ -950,7 +986,7 @@ feature -- Email processing
 			cms_api.process_email (e)
 		end
 
-	notify_new_license (a_user: detachable CMS_USER; a_customer_name: detachable READABLE_STRING_GENERAL; a_email_addr: detachable READABLE_STRING_8; a_license: ES_CLOUD_LICENSE)
+	notify_new_license (a_user: detachable CMS_USER; a_customer_name: detachable READABLE_STRING_GENERAL; a_email_addr: detachable READABLE_STRING_8; a_license: ES_CLOUD_LICENSE; a_previous_trial: detachable ES_CLOUD_USER_LICENSE)
 		local
 			e: CMS_EMAIL
 			res: PATH

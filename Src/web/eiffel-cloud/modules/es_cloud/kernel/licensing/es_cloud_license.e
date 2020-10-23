@@ -148,7 +148,7 @@ feature -- Status report
 			Result := plan.heartbeat
 		end
 
-feature -- Platform restriction		
+feature -- Platform restriction
 
 	is_waiting_for_platform_value (a_platform: detachable READABLE_STRING_GENERAL): BOOLEAN
 		do
@@ -269,6 +269,12 @@ feature -- License validity
 		end
 
 feature -- Element change
+
+	reset_date
+		do
+			create creation_date.make_now_utc
+			expiration_date := Void
+		end
 
 	set_plan (p: like plan)
 		do

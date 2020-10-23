@@ -10,6 +10,8 @@ inherit
 	CMS_WEBAPI_HANDLER
 		rename
 			make as make_with_cms_api
+		redefine
+			new_response
 		end
 
 	WSF_URI_TEMPLATE_HANDLER
@@ -28,6 +30,15 @@ feature {NONE} -- Initialization
 feature -- API
 
 	es_cloud_api: ES_CLOUD_API
+
+	new_response (req: WSF_REQUEST; res: WSF_RESPONSE): HM_WEBAPI_RESPONSE
+		do
+			if attached es_cloud_api.config.api_secret as sec then
+				Result := new_signed_response (sec, req, res)
+			else
+				Result := Precursor (req, res)
+			end
+		end
 
 feature -- Execution
 

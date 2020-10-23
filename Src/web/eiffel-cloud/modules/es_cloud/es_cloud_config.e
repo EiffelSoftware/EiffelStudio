@@ -20,6 +20,8 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
+	api_secret: detachable IMMUTABLE_STRING_8
+
 	session_expiration_delay: INTEGER assign set_session_expiration_delay
 			-- Delay in minutes before marking a session as expired.
 
@@ -30,6 +32,15 @@ feature -- Access
 	auto_trial_plan_name: detachable IMMUTABLE_STRING_32
 
 feature -- Element change
+
+	set_api_secret (s: detachable READABLE_STRING_GENERAL)
+		do
+			if s /= Void then
+				create api_secret.make_from_string ({UTF_CONVERTER}.utf_32_string_to_utf_8_string_8 (s))
+			else
+				api_secret := Void
+			end
+		end
 
 	set_session_expiration_delay (d: INTEGER)
 		do

@@ -31,7 +31,7 @@ feature -- Execution
 				rep.add_link ("es:installations", Void, cloud_user_installations_link (a_version, l_user))
 				add_user_links_to (u, rep)
 			else
-				rep.add_link ("es:account", Void, cloud_link (a_version) + "/account/")
+				rep.add_link ("es:account", Void, cloud_link (a_version) + "account/")
 			end
 			rep.add_link ("es:plans", Void, cloud_plans_link (a_version))
 			rep.add_self (req.request_uri)

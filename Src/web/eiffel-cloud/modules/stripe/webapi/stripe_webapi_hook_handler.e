@@ -80,6 +80,9 @@ feature -- Execution
 			end
 
 			p := api.site_location.extended ("stripe")
+			if not l_is_livemode then
+				p := p.appended ("-test")
+			end
 			if fut.directory_path_exists (p) then
 				create s32.make (20)
 				if l_err then
@@ -124,7 +127,37 @@ feature -- Execution
 			if not l_replied then
 				rep := new_response (req, res)
 				rep.add_string_field ("status" , "ok")
+			if l_err then
+					rep.add_string_field ("description" , "error occured")
+				else
+					rep.add_string_field ("description" , "ignored")
+				end
 				rep.execute
+			end
+			if f /= Void then
+				f.open_append
+				f.put_new_line
+				f.put_string (create {STRING}.make_filled ('=', 8))
+				f.put_new_line
+				f.put_string ("Status=" + res.status_code.out)
+				f.put_new_line
+				f.put_string ("transfered_content_length=" + res.transfered_content_length.out)
+				f.put_new_line
+				f.put_string (create {STRING}.make_filled ('=', 8))
+				f.put_new_line
+				if attached {HTTP_HEADER} res.header as h then
+					f.put_string (h.string)
+					f.put_new_line
+				elseif attached {WSF_RESPONSE_HEADER} res.header as wrh then
+					across
+						wrh as ic
+					loop
+						f.put_string (ic.item)
+						f.put_new_line
+					end
+				end
+				f.put_new_line
+				f.close
 			end
 		end
 
@@ -197,7 +230,7 @@ feature -- Execution
 			then
 				create ev.make_with_json (jo)
 				if l_sign_verified then
-					Result := [buf, ev, True]
+					Result := [buf, ev, l_sign_verified]
 				else
 					Result := [buf, stripe_api.event (ev.id), False]
 				end

@@ -158,20 +158,16 @@ feature -- Pages
 	select_c_functions_page: WIZARD_PAGE
 		local
 			wfg: WRAPC_WIZARD_FUNCTION_GENERATOR
-
 			l_header_path: STRING_32
-
 			list_options: GRAPHICAL_WRAPC_WIZARD_LIST_OPTIONS
-
 		do
 			Result := new_page ("c_functions")
 			Result.set_previous_page (library_page)
 			Result.set_title ("List of C functions")
 			Result.set_subtitle ("Select the C funtions that you want to wrap.")
 
-			l_header_path := ""
-			if attached c_library_page.data.item ("c_header_location") as l_loc
-			then
+			l_header_path := {STRING_32} ""
+			if attached c_library_page.data.item ("c_header_location") as l_loc then
 				l_header_path := l_loc
 				Result.data.force (l_header_path, "c_full_header_path")
 			end

@@ -15,7 +15,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_item_id: like item_id; a_list_of_functions: ARRAYED_LIST [STRING]; a_header_path: STRING)
+	make (a_item_id: like item_id; a_list_of_functions: ARRAYED_LIST [STRING]; a_header_path: READABLE_STRING_GENERAL)
 			-- Create field identified by `a_id', with title `a_title'
 			-- and optional description `a_optional_description'.
 		do
@@ -60,14 +60,14 @@ feature {NONE} -- Initialization
 					end
 				end (check_button, checkeable_list)
 			)
-			view_file_button.select_actions.extend (agent  (a_header_path: STRING)
+			view_file_button.select_actions.extend (agent (a_header_path: READABLE_STRING_GENERAL)
 				local
-					str: STRING
+					str: STRING_32
 				do
 					if {PLATFORM}.is_windows then
-						str := "notepad $target"
+						str := {STRING_32} "notepad $target"
 					else
-						str := "vi +$line $target"
+						str := {STRING_32} "vi +$line $target"
 					end
 					str.replace_substring_all ({STRING_32} "$target", a_header_path)
 					{EXECUTION_ENVIRONMENT}.launch (str)
@@ -108,7 +108,7 @@ feature -- Access
 
 	list_of_functions: ARRAYED_LIST [STRING]
 
-	header_path: STRING
+	header_path: READABLE_STRING_32
 
 feature -- Access Widgets
 

@@ -155,20 +155,16 @@ feature {NONE} -- Status report
 	is_initialization_required: BOOLEAN
 			-- Is it potentially required to evaluate an associated attribute body before the value can be read?
 		do
-			if context.workbench_mode and then context_type.is_separate then
-					-- Wrap a separate call in workbench mode.
-				Result := True
-			elseif not is_attachment and then not real_type (type).is_basic then
-					-- No need to wrap a target of an attachment as well as
-					-- access to an attribute of a basic type that is always initialized.
-				if context.workbench_mode then
-						-- Attribute may be redeclared to become of an attached type and to have a body.
-					Result := True
-				else
-						-- Check if attribute is of an attached type in some descendant
-						-- that declares an explicit body for it.
-					Result := Eiffel_table.poly_table (routine_id).is_initialization_required (context_type, context.context_class_type)
-				end
+			if not is_attachment then
+					-- No need to wrap a target of an attachment.
+				Result :=
+						-- Wrap a separate call in workbench mode.
+					context.workbench_mode and then context_type.is_separate or else
+						-- Do not wrap access to an attribute of a basic type that is always initialized.
+					not real_type (type).is_basic and then
+							-- Wrap an attribute that may be redeclared to become of an attached type and to have a body.
+						(context.workbench_mode or else
+						Eiffel_table.poly_table (routine_id).is_initialization_required (context_type, context.context_class_type))
 			end
 		end
 
@@ -219,7 +215,7 @@ feature -- Inlining
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2019, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2020, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

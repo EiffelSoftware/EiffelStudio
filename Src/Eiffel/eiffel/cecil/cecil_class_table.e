@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "Hash table of classes."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -71,42 +71,23 @@ feature {NONE} -- Convenience
 			same_capacity: a_keys.capacity = a_values.capacity
 		local
 			i, nb, nb_entries: INTEGER
-			l_class: CLASS_C
-			l_has_entry: BOOLEAN
-			l_types: TYPE_LIST
-			l_values: like values
-			l_keys: like keys
 			l_used_entries: ARRAY [BOOLEAN]
 		do
-			l_values := a_values
-			l_keys := a_keys
-			nb := l_keys.capacity - 1
+			nb := a_keys.capacity - 1
 
 				-- First compute number of entries for case `for_expanded'.
 			from
 				i := 0
-				create l_used_entries.make (0, nb)
+				create l_used_entries.make_filled (False, 0, nb)
 			until
 				i > nb
 			loop
-				l_class := l_values.item (i)
-				if l_class /= Void then
-					from
-						l_types := l_class.types
-						l_has_entry := False
-						l_types.start
-					until
-						l_types.after or l_has_entry
-					loop
-						l_has_entry :=
-							(for_expanded and l_types.item.is_expanded) or
-							(not for_expanded and not l_types.item.is_expanded)
-						l_types.forth
-					end
-					if l_has_entry then
-						l_used_entries.put (True, i)
-						nb_entries := nb_entries + 1
-					end
+				if
+					attached a_values [i] as l_class and then
+					∃ t: l_class.types ¦ t.type.is_expanded = for_expanded
+				then
+					l_used_entries.put (True, i)
+					nb_entries := nb_entries + 1
 				end
 				i := i + 1
 			end
@@ -119,7 +100,7 @@ feature {NONE} -- Convenience
 				i > nb
 			loop
 				if l_used_entries.item (i) then
-					put (l_values.item (i), l_keys.item (i))
+					put (a_values.item (i), a_keys.item (i))
 				end
 				i := i + 1
 			end
@@ -132,13 +113,9 @@ feature {NONE} -- C code generation
 		require
 			buffer_not_void: buffer /= Void
 		local
-			l_class: CLASS_C
 			i, nb: INTEGER
-			gen_type: GEN_TYPE_A
-			l_types: TYPE_LIST
 			l_values: like values
 			l_keys: like keys
-			l_is_generic: BOOLEAN
 			cl_name: STRING
 			t: CLASS_TYPE
 		do
@@ -175,65 +152,41 @@ feature {NONE} -- C code generation
 			until
 				i > nb
 			loop
-				l_class := l_values.item (i)
-				if l_class /= Void then
-					l_is_generic := l_class.is_generic
-					if l_is_generic then
-						if for_expanded then
-							buffer.put_string (once "static uint32 exp_patterns")
-						else
-							buffer.put_string (once "static uint32 patterns")
-						end
-						buffer.put_integer (l_class.class_id)
-						buffer.put_string (once " [] = {%N")
-						from
-							l_types := l_class.types
-							l_types.start
-						until
-							l_types.after
-						loop
-							if
-								(for_expanded and l_types.item.is_expanded) or
-								(not for_expanded and not l_types.item.is_expanded)
-							then
-								if l_is_generic then
-									gen_type ?= l_types.item.type
-									check
-										gen_type_not_void: gen_type /= Void
-						 			end
-									gen_type.generate_cecil_values (buffer, l_types.item.type)
-								else
-									l_types.item.type.generate_cecil_value (buffer, l_types.item.type)
-									buffer.put_string (once ",%N")
-								end
-							end
-							l_types.forth
-						end
-						buffer.put_string (once "SK_INVALID%N};%N%N")
-
-						if for_expanded then
-							buffer.put_string (once "static EIF_TYPE_INDEX exp_dyn_types")
-						else
-							buffer.put_string (once "static EIF_TYPE_INDEX dyn_types")
-						end
-						buffer.put_integer (l_class.class_id)
-						buffer.put_string (once " [] = {%N")
-						from
-							l_types.start
-						until
-							l_types.after
-						loop
-							if
-								(for_expanded and l_types.item.is_expanded) or
-								(not for_expanded and not l_types.item.is_expanded)
-							then
-								buffer.put_type_id (l_types.item.type_id)
-								buffer.put_string (once ",%N")
-							end
-							l_types.forth
-						end
-						buffer.put_string (once "};%N%N")
+				if attached l_values [i] as l_class and then l_class.is_generic then
+					if for_expanded then
+						buffer.put_string (once "static uint32 exp_patterns")
+					else
+						buffer.put_string (once "static uint32 patterns")
 					end
+					buffer.put_integer (l_class.class_id)
+					buffer.put_string (once " [] = {%N")
+					across
+						l_class.types as class_type
+					loop
+						if not attached {GEN_TYPE_A} class_type.item.type as g then
+							check is_class_generic: False end
+						elseif for_expanded = g.is_expanded then
+							g.generate_cecil_values (buffer, g)
+						end
+					end
+					buffer.put_string (once "SK_INVALID%N};%N%N")
+
+					if for_expanded then
+						buffer.put_string (once "static EIF_TYPE_INDEX exp_dyn_types")
+					else
+						buffer.put_string (once "static EIF_TYPE_INDEX dyn_types")
+					end
+					buffer.put_integer (l_class.class_id)
+					buffer.put_string (once " [] = {%N")
+					across
+						l_class.types as class_type
+					loop
+						if for_expanded = class_type.item.is_expanded then
+							buffer.put_type_id (class_type.item.type_id)
+							buffer.put_string (once ",%N")
+						end
+					end
+					buffer.put_string (once "};%N%N")
 				end
 				i := i + 1
 			end
@@ -249,8 +202,7 @@ feature {NONE} -- C code generation
 			until
 				i > nb
 			loop
-				l_class := l_values.item (i)
-				if l_class = Void then
+				if not attached l_values [i] as l_class then
 					buffer.put_string (once "{(int) 0, (EIF_TYPE_INDEX) 0, NULL, NULL}")
 				else
 					buffer.put_string (once "{(int) ")
@@ -272,20 +224,13 @@ feature {NONE} -- C code generation
 							-- Although it is a loop, only one iteration of it will produce
 							-- an ID because we are in a non generic class and it can only
 							-- have at most 2 types: a non-expanded one and an expanded one.
-						debug ("fixme")
-							fixme ("Process separate types.")
-						end
-						from
-							l_types := l_class.types
-							l_types.start
-						until
-							l_types.after
+						across
+							l_class.types as class_type
 						loop
-							t := l_types.item
-							if not t.is_separate and then for_expanded = t.is_expanded then
+							t := class_type.item
+							if t.type.is_expanded = for_expanded then
 								buffer.put_type_id (t.type_id)
 							end
-							l_types.forth
 						end
 						buffer.put_string (once ", NULL, NULL")
 					end
@@ -318,12 +263,8 @@ feature {NONE} -- Byte code generation
 		local
 			i, nb, nb_types: INTEGER
 			cl_name: STRING
-			l_class: CLASS_C
-			l_types: TYPE_LIST
-			gen_type: GEN_TYPE_A
 			l_keys: like keys
 			l_values: like values
-			l_is_generic: BOOLEAN
 			t: CLASS_TYPE
 		do
 			l_values := values
@@ -354,92 +295,62 @@ feature {NONE} -- Byte code generation
 			until
 				i > nb
 			loop
-				l_class := l_values.item (i)
-				if l_class = Void then
+				if not attached l_values.item (i) as l_class then
 						-- No generics
 					ba.append_short_integer (0)
 						-- No dynamic type
 					ba.append_short_integer (0)
+				elseif not l_class.is_generic then
+						-- No generics
+					ba.append_short_integer (0)
+						-- Although it is a loop, only one iteration of it will produce
+						-- an ID because we are in a non generic class and it can only
+						-- have at most 2 types: a non-expanded one and an expanded one.
+					across
+						l_class.types as class_type
+					loop
+						t := class_type.item
+						if t.type.is_expanded = for_expanded then
+							ba.append_short_integer (t.type_id - 1)
+						end
+					end
 				else
-					l_is_generic := l_class.is_generic
 						-- Number of generics
-					if not l_is_generic then
-							-- No generics
-						ba.append_short_integer (0)
-							-- Although it is a loop, only one iteration of it will produce
-							-- an ID because we are in a non generic class and it can only
-							-- have at most 2 types: a non-expanded one and an expanded one.
-						debug ("fixme")
-							fixme ("Process separate types.")
-						end
-						from
-							l_types := l_class.types
-							l_types.start
-						until
-							l_types.after
-						loop
-							t := l_types.item
-							if not t.is_separate and then t.is_expanded = for_expanded then
-								ba.append_short_integer (l_types.item.type_id - 1)
-							end
-							l_types.forth
-						end
-					else
-						ba.append_short_integer (l_class.generics.count)
-						ba.append_short_integer (0)
+					ba.append_short_integer (l_class.generics.count)
+					ba.append_short_integer (0)
 
-							-- Compute number of types that needs to be generated.
-						from
-							l_types := l_class.types
-							nb_types := 0
-							l_types.start
-						until
-							l_types.after
-						loop
-							if l_types.item.is_expanded = for_expanded then
-								nb_types := nb_types + 1
-							end
-							l_types.forth
+						-- Compute number of types that needs to be generated.
+					nb_types := 0
+					across
+						l_class.types as class_type
+					loop
+						if class_type.item.type.is_expanded = for_expanded then
+							nb_types := nb_types + 1
 						end
+					end
 
-						check
-							has_types: nb_types > 0
+					check
+						has_types: nb_types > 0
+					end
+					ba.append_short_integer (nb_types)
+
+						-- Meta type description array
+					across
+						l_class.types as class_type
+					loop
+						if not attached {GEN_TYPE_A} class_type.item.type as g then
+							check is_class_generic: False end
+						elseif g.is_expanded = for_expanded then
+							g.make_cecil_values (ba, g)
 						end
-						ba.append_short_integer (nb_types)
+					end
 
-							-- Meta type description array
-						from
-							l_types.start
-						until
-							l_types.after
-						loop
-							if l_types.item.is_expanded = for_expanded then
-								if l_is_generic then
-									gen_type ?= l_types.item.type
-									check
-										gen_type_not_void: gen_type /= Void
-									end
-									gen_type.make_cecil_values (ba, l_types.item.type)
-								else
-									ba.append_natural_32 (l_types.item.type.sk_value (l_types.item.type))
-								end
-							end
-							l_types.forth
-						end
-
-							-- Dynamic type array
-						from
-							l_types.start
-						until
-							l_types.after
-						loop
-							if
-								(for_expanded and l_types.item.is_expanded) or
-								(not for_expanded and not l_types.item.is_expanded)
-							then
-								ba.append_short_integer (l_types.item.type_id - 1)
-							end
-							l_types.forth
+						-- Dynamic type array
+					across
+						l_class.types as class_type
+					loop
+						if for_expanded = class_type.item.type.is_expanded then
+							ba.append_short_integer (class_type.item.type_id - 1)
 						end
 					end
 				end
@@ -448,7 +359,7 @@ feature {NONE} -- Byte code generation
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2020, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

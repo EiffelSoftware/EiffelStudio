@@ -376,7 +376,7 @@ RT_LNK void eif_exit_eiffel_code(void);
 		struct ex_vect * exvecto;                                    \
 		jmp_buf exenvo;                                              \
 			/* Save stack contexts. */                           \
-		RTXDR;                                                        \
+		RTXDR;                                                       \
 			/* Record execution vector to catch exception. */    \
 		exvecto = extre ();                                          \
 		if (!setjmp(exenvo)) {                                       \
@@ -436,7 +436,7 @@ RT_LNK void eif_exit_eiffel_code(void);
 
 #define RTOSHP(code_index)                                                   \
 	extern EIF_BOOLEAN RTOFN(code_index,_done);                          \
-	extern EIF_OBJECT RTOFN(code_index,_failed);                      \
+	extern EIF_OBJECT RTOFN(code_index,_failed);                         \
 	extern EIF_BOOLEAN RTOFN(code_index,_succeeded);
 
 #define RTOSHF(type, code_index)                                             \
@@ -468,29 +468,29 @@ RT_LNK void eif_exit_eiffel_code(void);
 				/* Try to exceute routine body. */           \
 			RTO_TRY
 
-#define RTOSE(code_index)                                                    \
-				/* Record successful execution result. */    \
-			RTOFN(code_index,_succeeded) = EIF_TRUE;             \
-				/* Catch exception. */                       \
-			RTO_EXCEPT                                           \
-				/* Handle exception.                */       \
-				/* Record exception for future use. */       \
+#define RTOSE(code_index)                                                               \
+				/* Record successful execution result. */               \
+			RTOFN(code_index,_succeeded) = EIF_TRUE;                        \
+				/* Catch exception. */                                  \
+			RTO_EXCEPT                                                      \
+				/* Handle exception.                */                  \
+				/* Record exception for future use. */                  \
 			RTOFN(code_index,_failed) = eif_protect(RTLA);                  \
-			RTO_END_EXCEPT                                       \
-				/* Propagate the exception if any. */				\
-			if (RTOFN(code_index,_failed)) {                             \
-				if (eif_access(RTOFN(code_index,_failed))) {							\
-					ereturn ();										\
-				}															\
-			}                                                            \
-		} else {                                                            \
-				/* Raise the saved exception if any. */					\
-			if (RTOFN(code_index,_failed)) {                             \
-				if (eif_access(RTOFN(code_index,_failed))) {							\
-					oraise (eif_access(RTOFN(code_index,_failed)));                  \
-				}															\
-			}                                                            \
-		}																\
+			RTO_END_EXCEPT                                                  \
+				/* Propagate the exception if any. */                   \
+			if (RTOFN(code_index,_failed)) {                                \
+				if (eif_access(RTOFN(code_index,_failed))) {            \
+					ereturn ();                                     \
+				}                                                       \
+			}                                                               \
+		} else {                                                                \
+				/* Raise the saved exception if any. */                 \
+			if (RTOFN(code_index,_failed)) {                                \
+				if (eif_access(RTOFN(code_index,_failed))) {            \
+					oraise (eif_access(RTOFN(code_index,_failed))); \
+				}                                                       \
+			}                                                               \
+		}                                                                       \
 	}
 
 #define RTOSC(code_index, value)                                             \
@@ -535,7 +535,7 @@ RT_LNK void eif_exit_eiffel_code(void);
 	RTOTDV(name)                                                         \
 	if (!MTOD(OResult)) {                                                \
 		MTOP(EIF_REFERENCE, OResult, RTOC(0));                       \
-		MTOE(OResult, RTOC(0));										\
+		MTOE(OResult, RTOC(0));                                      \
 	}
 
 #define RTOTW(body_id)
@@ -550,7 +550,7 @@ RT_LNK void eif_exit_eiffel_code(void);
 		return r;                                                    \
 	}                                                                    \
 	MTOP(EIF_REFERENCE, OResult, RTOC(0));                               \
-	MTOE(OResult, RTOC(0));												\
+	MTOE(OResult, RTOC(0));                                              \
 	MTOM(OResult);                                                       \
 	r.it_r = RTOTRR = v;                                                 \
 	return r;
@@ -578,7 +578,7 @@ RT_LNK void eif_exit_eiffel_code(void);
 	RTOUDV(once_index)                                                   \
 	if (!MTOD(OResult)) {                                                \
 		MTOP(EIF_REFERENCE, OResult, RTOC(0));                       \
-		MTOE(OResult, RTOC(0));										\
+		MTOE(OResult, RTOC(0));                                      \
 	}
 
 #define RTOUC(once_index, value)                                             \
@@ -587,7 +587,7 @@ RT_LNK void eif_exit_eiffel_code(void);
 	EIF_REFERENCE * PResult = MTOR(EIF_REFERENCE,OResult);               \
 	if (PResult) {                                                       \
 		Result = *PResult;                                           \
-	} else {                                                               \
+	} else {                                                             \
 		PResult = RTOC(0);                                           \
 		MTOP(EIF_REFERENCE,OResult,PResult);                         \
 		Result = (value);                                            \
@@ -619,22 +619,22 @@ RT_LNK void eif_exit_eiffel_code(void);
 		RTO_EXCEPT                                                   \
 			/* Handle exception. */                              \
 			/* Record exception for future use. */               \
-		MTOE(OResult, RTOC(0));									\
-		MTOEV(OResult, RTLA);                                       \
+		MTOE(OResult, RTOC(0));                                      \
+		MTOEV(OResult, RTLA);                                        \
 		RTO_END_EXCEPT                                               \
-			/* Propagate the exception if any. */						\
-		if (MTOF(OResult)) {                                                 \
-			if (*MTOF(OResult))	{											\
-				ereturn ();                                      \
-			}														\
-		}															\
-	} else {																	\
-			/* Raise the saved exception if any.*/								\
-		if (MTOF(OResult)) {                                                 \
-			if (*MTOF(OResult))	{											\
-				oraise (*MTOF(OResult));                                      \
-			}																	\
-		}																		\
+			/* Propagate the exception if any. */                \
+		if (MTOF(OResult)) {                                         \
+			if (*MTOF(OResult))	{                            \
+				ereturn ();                                  \
+			}                                                    \
+		}                                                            \
+	} else {                                                             \
+			/* Raise the saved exception if any.*/               \
+		if (MTOF(OResult)) {                                         \
+			if (*MTOF(OResult))	{                            \
+				oraise (*MTOF(OResult));                     \
+			}                                                    \
+		}                                                            \
 	}
 
 #ifdef EIF_THREADS
@@ -699,8 +699,8 @@ RT_LNK void eif_exit_eiffel_code(void);
 		RTO_EXCEPT                                                   \
 			/* Handle exception.                */               \
 			/* Record exception for future use. */               \
-		RTOC_GLOBAL(failed);										\
-		failed = RTLA;												\
+		RTOC_GLOBAL(failed);                                         \
+		failed = RTLA;                                               \
 		RTO_END_EXCEPT                                               \
 			/* Clear field that holds locking thread id. */      \
 		thread_id = NULL;                                            \
@@ -726,7 +726,7 @@ RT_LNK void eif_exit_eiffel_code(void);
 					/* Evaluation has been started. */               \
 					/* Let it to complete.          */               \
 				RTOPW(mutex, thread_id);                                 \
-			} else {                                                           \
+			} else {                                                         \
 					/* Current thread has not started evaluation. */ \
 					/* It's safe to lock a mutex.                 */ \
 				RTOPL (mutex);                                           \
@@ -738,14 +738,14 @@ RT_LNK void eif_exit_eiffel_code(void);
 				RTOPLE (completed, failed, thread_id);                   \
 					/* Unlock mutex. */                              \
 				RTOPLU (mutex);                                          \
-					/* Propagate the exception if any. */							\
-				if (failed) {                                              \
-					ereturn ();                                             \
-				}															\
+					/* Propagate the exception if any. */            \
+				if (failed) {                                            \
+					ereturn ();                                      \
+				}                                                        \
 			}                                                                \
-		} else {                                                                        \
-				/* Raise the saved exception if any. */								\
-			RTOPRE(failed);														\
+		} else {                                                                 \
+				/* Raise the saved exception if any. */                  \
+			RTOPRE(failed);                                                  \
 		}
 
 #else /* !defined(EIF_HAS_MEMORY_BARRIER) */
@@ -762,20 +762,20 @@ RT_LNK void eif_exit_eiffel_code(void);
 
 #	define RTOFE(completed, failed, mutex, thread_id)                                \
 					/* Use thread-safe epilogue. */                  \
-				RTOPLE (completed, failed, thread_id);                     \
-						/* Unlock mutex. */                              \
-				RTOPLU (mutex);                                                  \
-						/* Propagate the exception if any.*/							\
-				if (failed) {                                                        \
-					ereturn ();                                             \
-				}															\
-			} else {                                                               \
-						/* Unlock mutex. */                              \
-				RTOPLU (mutex);                                                  \
-						/* Raise the saved exception if any.*/					\
-				RTOPRE(failed);											\
-			}															\
-		} else {                                                                   \
+				RTOPLE (completed, failed, thread_id);                   \
+						/* Unlock mutex. */                      \
+				RTOPLU (mutex);                                          \
+						/* Propagate the exception if any.*/     \
+				if (failed) {                                            \
+					ereturn ();                                      \
+				}                                                        \
+			} else {                                                         \
+						/* Unlock mutex. */                      \
+				RTOPLU (mutex);                                          \
+						/* Raise the saved exception if any.*/   \
+				RTOPRE(failed);                                          \
+			}                                                                \
+		} else {                                                                 \
 				/* Mutex cannot be locked.      */                       \
 				/* Evaluation has been started. */                       \
 				/* Let it to complete.          */                       \
@@ -795,7 +795,7 @@ RT_LNK void eif_exit_eiffel_code(void);
 #define RTOQDV(name)                                                         \
 	EIF_process_once_value_t * POResult =                                \
 		EIF_process_once_values + RTOIN(name);                       \
-	MTOT OResult = &(POResult -> value);							\
+	MTOT OResult = &(POResult -> value);                                 \
 	MTOE(OResult, &(POResult -> exception));
 
 #define RTOQDB(type, name)                                                   \
@@ -803,7 +803,7 @@ RT_LNK void eif_exit_eiffel_code(void);
 
 #define RTOQDR(name)                                                         \
 	RTOQDV(name)                                                         \
-	MTOP(EIF_REFERENCE, OResult, &(POResult -> reference));				\
+	MTOP(EIF_REFERENCE, OResult, &(POResult -> reference));              \
 
 #define RTOQRB(type) MTOR(type,OResult)
 #define RTOQRR (*MTOR(EIF_REFERENCE,OResult))
@@ -819,7 +819,7 @@ RT_LNK void eif_exit_eiffel_code(void);
 #define RTOQE                                                                \
 	RTOFE (                                                              \
 		POResult -> completed,                                       \
-		*(POResult -> value.exception),                                    \
+		*(POResult -> value.exception),                              \
 		POResult -> mutex,                                           \
 		POResult -> thread_id                                        \
 	)
@@ -850,7 +850,7 @@ RT_LNK void eif_exit_eiffel_code(void);
 #define RTOPDP(code_index)                                                   \
 	volatile EIF_BOOLEAN RTOFN(code_index,_started) = EIF_FALSE;         \
 	volatile EIF_BOOLEAN RTOFN(code_index,_completed) = EIF_FALSE;       \
-	volatile EIF_REFERENCE RTOFN(code_index,_failed) = NULL;                \
+	volatile EIF_REFERENCE RTOFN(code_index,_failed) = NULL;             \
 	volatile EIF_MUTEX_TYPE * RTOFN(code_index,_mutex) = NULL;           \
 	volatile EIF_POINTER RTOFN(code_index,_thread_id) = NULL;
 
@@ -882,7 +882,7 @@ RT_LNK void eif_exit_eiffel_code(void);
 #define RTOPCP(code_index,c,a)                                               \
 	EIF_MEMORY_READ_BARRIER;                                             \
 	RTO_CP(                                                              \
-		RTOFN(code_index,_completed) && (!RTOFN(code_index,_failed)),  \
+		RTOFN(code_index,_completed) && (!RTOFN(code_index,_failed)),\
 		c,                                                           \
 		a                                                            \
 	)
@@ -890,7 +890,7 @@ RT_LNK void eif_exit_eiffel_code(void);
 #define RTOPCF(code_index,c,a)                                               \
 	((void) EIF_MEMORY_READ_BARRIER,                                     \
 	RTO_CF(                                                              \
-		RTOFN(code_index,_completed) && (!RTOFN(code_index,_failed)),  \
+		RTOFN(code_index,_completed) && (!RTOFN(code_index,_failed)),\
 		RTOPR(code_index),                                           \
 		c,                                                           \
 		a                                                            \

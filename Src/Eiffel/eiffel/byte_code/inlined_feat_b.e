@@ -324,7 +324,7 @@ feature -- Generation
 				-- Generate a check that Current is not Void (see test#final088 when class removal is disabled).
 			if not current_reg.is_current then
 				buf.put_new_line
-				buf.put_string ("(void) ")
+				buf.put_string ({C_CONST}.ignore_value)
 
 				context.suspend_inline_context
 				Context.set_inlined_current_register (Void)

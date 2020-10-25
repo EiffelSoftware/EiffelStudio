@@ -139,7 +139,7 @@ feature -- Status report
 			end
 		end
 
-	has_key_conflict (a_feature_as: FEATURE_AS; is_once_class: BOOLEAN): BOOLEAN
+	has_key_conflict (a_feature_as: FEATURE_AS): BOOLEAN
 			-- Current once presents a conflict in keys and indexing?
 		local
 			is_p,is_t,is_o: BOOLEAN
@@ -148,8 +148,7 @@ feature -- Status report
 			l_keys := keys
 			is_p :=
 				has_key_inside (once_key_process, l_keys) or
-				(attached a_feature_as.indexes as l_indexes and then l_indexes.has_global_once) or
-				is_once_class
+				attached a_feature_as.indexes as l_indexes and then l_indexes.has_global_once
 			is_t := has_key_inside (once_key_thread, l_keys)
 			is_o := has_key_inside (once_key_object, l_keys)
 
@@ -180,11 +179,12 @@ feature -- Status report
 			Result := has_key_inside (a_key, keys)
 		end
 
-	has_key_process (a_feature_as: FEATURE_AS): BOOLEAN
-			-- Does feature has a once key "PROCESS"?
+	has_key_process (f: FEATURE_AS): BOOLEAN
+			-- Does feature specified by `f` in a class with once status `o` have a once key "PROCESS"?
 		do
-			Result := has_key (once_key_process)
-					or (attached a_feature_as.indexes as l_indexes and then l_indexes.has_global_once)
+			Result :=
+				has_key (once_key_process) or
+				attached f.indexes as i and then i.has_global_once
 		end
 
 	has_key_thread: BOOLEAN

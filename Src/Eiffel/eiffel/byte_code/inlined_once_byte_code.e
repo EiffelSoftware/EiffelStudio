@@ -1,6 +1,7 @@
 note
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
+
 class INLINED_ONCE_BYTE_CODE
 
 inherit
@@ -12,9 +13,16 @@ inherit
 	INLINED_BYTE_CODE
 		undefine
 			append_once_mark,
-			is_once, is_process_relative_once, is_object_relative_once,
-			pre_inlined_code, inlined_byte_code_type, generate_once_declaration,
-			generate_once_data, generate_once_prologue, generate_once_epilogue
+			generate_once_data,
+			generate_once_declaration,
+			generate_once_prologue,
+			generate_once_epilogue,
+			inlined_byte_code_type,
+			is_object_relative_once,
+			is_once,
+			is_once_creation,
+			is_process_relative_once,
+			pre_inlined_code
 		redefine
 			make
 		end
@@ -25,22 +33,22 @@ create
 feature -- Update
 
 	make (std: STD_BYTE_CODE)
-			-- Initialize current from non-inlined `std'.
+			-- Initialize current from non-inlined `std`.
 		do
-			Precursor {INLINED_BYTE_CODE} (std)
+			Precursor (std)
 			if std.is_process_relative_once then
 				set_is_process_relative_once
 			elseif std.is_object_relative_once then
 				set_is_object_relative_once
-			else --| default: if std.is_thread_relative_once
+			else
 				set_is_thread_relative_once
 			end
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
-	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
-	licensing_options:	"http://www.eiffel.com/licensing"
+	copyright: "Copyright (c) 1984-2020, Eiffel Software"
+	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
+	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[
 			This file is part of Eiffel Software's Eiffel Development Environment.
 			

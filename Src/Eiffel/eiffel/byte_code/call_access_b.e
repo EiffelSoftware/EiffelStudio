@@ -328,59 +328,6 @@ feature {NONE} -- Finalized C code generation: inlining
 			end
 		end
 
-feature {NONE} -- C code generation
-
-	generate_return_value_conversion (result_register: REGISTER)
-			-- Generate conversion of return value to match the expected return type.
-		require
-			result_register_attached: c_type.is_reference implies attached result_register
-			return_type_not_void: not c_type.is_void
-		local
-			buf: GENERATION_BUFFER
-			return_type: TYPE_C
-			l_context: like context
-		do
-			buf := buffer
-			return_type := c_type
-			l_context := context
-			if return_type.is_reference then
-					-- Return value might be unboxed.
-					-- It should be boxed now.
-					-- The type of the result register has to be preserved.
-				check
-					result_register_attached: attached result_register -- From precondition.
-				end
-				buf.put_string (", (((")
-				l_context.print_argument_register (result_register, buf)
-				buf.put_string (".type & SK_HEAD) == SK_REF)? (EIF_REFERENCE) 0: (")
-				l_context.print_argument_register (result_register, buf)
-				buf.put_character ('.')
-				return_type.generate_typed_field (buf)
-				buf.put_string (" = RTBU(")
-				l_context.print_argument_register (result_register, buf)
-				buf.put_string ("))), (")
-				l_context.print_argument_register (result_register, buf)
-				buf.put_string (".type = SK_POINTER), ")
-				l_context.print_argument_register (result_register, buf)
-				buf.put_character ('.')
-				return_type.generate_typed_field (buf)
-			else
-					-- Return value should be of an expected basic type.
-					-- It can be used as it is.
-				buf.put_character ('.')
-				return_type.generate_typed_field (buf)
-			end
-		end
-
-	routine_macro: TUPLE [unqualified_call, qualified_call, creation_call: STRING]
-			-- Macros that compute address of a routine to be called.
-			-- `Result.unqualified_call' denotes an unqualified call.
-			-- `Result.qualified_call' denotes a qualified call.
-			-- `Result.creation_call' denotes a call to a creation procedure.
-		once
-			Result := ["RTWF", "RTVF", "RTWC"]
-		end
-
 feature {NONE} -- Separate call
 
 	generate_workbench_separate_call_args

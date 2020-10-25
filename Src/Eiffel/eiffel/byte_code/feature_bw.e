@@ -35,12 +35,9 @@ feature -- C code generation
 
 	analyze_on (r: REGISTRABLE)
 			-- Analyze feature call on `reg`.
-		local
-			return_type: like c_type
 		do
 			Precursor (r)
-			return_type := c_type
-			if return_type.is_reference then
+			if is_once_creation or else c_type.is_reference then
 					-- Do not use reference type because this register should not be tracked by GC.
 				result_register := context.get_argument_register (pointer_type.c_type)
 			end
@@ -94,12 +91,13 @@ feature -- C code generation
 		local
 			buf: like buffer
 			return_type: TYPE_C
+			l_context: like context
 		do
 			check
-				result_register_attached: c_type.is_reference implies result_register /= Void
+				result_register_attached: (c_type.is_reference or is_once_creation) implies result_register /= Void
 			end
 			buf := buffer
-			return_type := c_type
+			return_type := if is_once_creation then reference_c_type else c_type end
 			if not return_type.is_void then
 				buf.put_two_character ('(', '(')
 				if return_type.is_reference then
@@ -114,14 +112,45 @@ feature -- C code generation
 			generate_arguments (reg, not is_polymorphic)
 			if not return_type.is_void then
 					-- This is a query. The result value may need conversion.
-				buf := buffer
 				buf.put_character (')')
-				generate_return_value_conversion (result_register)
+					-- Retrieve return value.
+				l_context := context
+				if return_type.is_reference then
+						-- Return value might be unboxed.
+						-- It should be boxed now.
+						-- The type of the result register has to be preserved.
+					check
+						result_register_attached: attached result_register
+					end
+					buf.put_string (", (((")
+					l_context.print_argument_register (result_register, buf)
+					buf.put_string (".type & SK_HEAD) == SK_REF)? (EIF_REFERENCE) 0: (")
+					l_context.print_argument_register (result_register, buf)
+					buf.put_character ('.')
+					return_type.generate_typed_field (buf)
+					buf.put_string (" = RTBU(")
+					l_context.print_argument_register (result_register, buf)
+					buf.put_string ("))), (")
+					l_context.print_argument_register (result_register, buf)
+					buf.put_string (".type = SK_POINTER), ")
+					l_context.print_argument_register (result_register, buf)
+				end
+				buf.put_character ('.')
+				return_type.generate_typed_field (buf)
 				buf.put_character (')')
 			end
 		end
 
-feature {NONE} -- Implementation
+feature {NONE} -- C code generation
+
+	routine_macro: TUPLE [unqualified_call, qualified_call, creation_call: STRING]
+			-- Macros that compute address of a routine to be called.
+			-- `Result.unqualified_call' denotes an unqualified call.
+			-- `Result.qualified_call' denotes a qualified call.
+			-- `Result.creation_call' denotes a call to a creation procedure.
+		once
+			Result := ["RTWF", "RTVF", "RTWC"]
+		end
 
 	generate_workbench_address (t: REGISTRABLE; c: CL_TYPE_A)
 			-- Generate workbench address of a routine that is called on target `t` of type `c`.
@@ -203,7 +232,7 @@ feature {NONE} -- Implementation
 			-- to be normalized before use.
 
 ;note
-	copyright:	"Copyright (c) 1984-2019, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2020, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

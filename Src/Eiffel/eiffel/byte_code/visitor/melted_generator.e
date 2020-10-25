@@ -682,31 +682,30 @@ feature {NONE} -- Visitors
 	process_creation_expr_b (a_node: CREATION_EXPR_B)
 			-- Process `a_node'.
 		local
-			l_special_type: TYPE_A
-			l_class_type: SPECIAL_CLASS_TYPE
 			l_call: ROUTINE_B
 			l_nested: NESTED_B
 			l_is_make_filled: BOOLEAN
+			target_type: TYPE_A
 		do
-			if attached {BASIC_A} context.real_type (a_node.type) as l_basic_type then
+			target_type := context.real_type (a_node.type)
+			if attached {BASIC_A} target_type as l_basic_type then
 					-- Special cases for basic types where nothing needs to be created, we
 					-- simply need to push a default value as their creation procedure
 					-- is `default_create' and it does nothing.
 				l_basic_type.c_type.make_default_byte_code (ba)
 			else
 				l_call := a_node.call
-				if a_node.is_special_creation then
-				 	l_is_make_filled := a_node.is_special_make_filled
-					l_special_type := context.real_type (a_node.type)
+				if
+					a_node.is_special_creation and then
+					attached {SPECIAL_CLASS_TYPE} target_type.associated_class_type (context.context_class_type.type) as l_class_type
+				then
 					check
 						is_special_call_valid: a_node.is_special_call_valid
-						is_special_type: l_special_type /= Void and then
-							l_special_type.base_class.lace_class = system.special_class
+						is_special_type:
+							target_type.has_associated_class and then
+							target_type.base_class.lace_class = system.special_class
 					end
-					l_class_type ?= l_special_type.associated_class_type (context.context_class_type.type)
-					check
-						l_class_type_not_void: l_class_type /= Void
-					end
+				 	l_is_make_filled := a_node.is_special_make_filled
 					l_call.parameters.first.process (Current)
 					if l_is_make_filled then
 						l_call.parameters.i_th (2).process (Current)
@@ -731,7 +730,10 @@ feature {NONE} -- Visitors
 						-- If there is a call, we need to duplicate newly created object
 						-- after its creation. This information is used by the runtime
 						-- to perform this duplication.
-					ba.append_boolean (l_call /= Void)
+						-- The duplication is not needed for once creation procedure calls
+						-- that act as functions and return the object.
+					ba.append_boolean
+						(not (target_type.has_associated_class and then target_type.base_class.is_once) and then attached l_call)
 
 						-- Create associated object.
 					a_node.info.updated_info.make_byte_code (ba)

@@ -381,12 +381,11 @@ feature -- Generation
 				end
 				if attached {SPECIAL_CLASS_TYPE} type.associated_class_type (context.context_class_type.type) as l_class_type then
 					if attached call as l_call then
-						l_call.parameters.first.generate
+						p := l_call.parameters.first
+						p.generate
 						if l_is_make_filled then
-							l_call.parameters [2].generate
 							p := l_call.parameters [2]
-						else
-							p := l_call.parameters.first
+							p.generate
 						end
 					end
 					info.generate_start (buf)
@@ -416,11 +415,7 @@ feature -- Generation
 			if l_is_separate then
 					-- Attach new object to a new region.
 				buf.put_new_line
-				if is_active then
-					buf.put_string ("RTS_PA (")
-				else
-					buf.put_string ("RTS_PP (")
-				end
+				buf.put_string (if is_active then "RTS_PA (" else "RTS_PP (" end)
 				register.print_register
 				buf.put_two_character (')', ';')
 			end
@@ -430,8 +425,9 @@ feature -- Generation
 				if not l_is_make_filled then
 					c.generate_parameters (register)
 				end
-					-- Call a creation procedure
-				c.generate_call (l_is_separate, l_is_separate and is_active, True, Void, register)
+					-- Call a creation procedure (or a creation function for a once class).
+				c.generate_call (l_is_separate, l_is_separate and is_active, True,
+					if attached t.base_class as b and then b.is_once then register else Void end, register)
 				c.set_parent (Void)
 				generate_frozen_debugger_hook_nested
 			end
@@ -497,16 +493,19 @@ feature {BYTE_NODE_VISITOR} -- Assertion support
 	is_special_call_valid: BOOLEAN
 			-- Is current creation call a call to SPECIAL.make_filled if `for_make_filled', otherwise to SPECIAL.make?
 		do
-			Result := call /= Void and then call.parameters /= Void and then
-				((not is_special_make_filled and call.parameters.count = 1) or (is_special_make_filled and call.parameters.count = 2))
+			Result :=
+				attached call as c and then
+				attached c.parameters as p and then
+				p.count = if is_special_make_filled then 2 else 1 end
 		ensure
 			is_special_call_valid: Result implies
-				(call /= Void and then call.parameters /= Void and then
-				((not is_special_make_filled and call.parameters.count = 1) or (is_special_make_filled and call.parameters.count = 2)))
+				(attached call as c and then
+				attached c.parameters as p and then
+				p.count = if is_special_make_filled then 2 else 1 end)
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2019, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2020, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

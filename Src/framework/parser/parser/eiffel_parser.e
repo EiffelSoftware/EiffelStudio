@@ -5359,7 +5359,7 @@ end
 					attached (yyval54) as l_feature_as and then 
 					attached l_feature_as.once_as as l_once_as
 				then
-					if l_once_as.has_key_conflict (yyval54, is_once) then
+					if l_once_as.has_key_conflict (yyval54) then
 						report_one_error (ast_factory.new_vvok1_error (token_line (l_once_as), token_column (l_once_as), filename, yyval54))
 					elseif l_once_as.has_invalid_key (yyval54) then
 						if attached l_once_as.invalid_key (yyval54) as l_once_invalid_key then

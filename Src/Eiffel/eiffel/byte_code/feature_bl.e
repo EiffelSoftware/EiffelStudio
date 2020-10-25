@@ -295,7 +295,7 @@ feature -- C code generation
 			end
 			buf := buffer
 			type_i := real_type (type)
-			type_c := type_i.c_type
+			type_c := (if is_once_creation then typ else type_i end).c_type
 			array_index :=
 				if attached precursor_type then
 					-1
@@ -396,6 +396,14 @@ feature -- C code generation
 					-- There is no feature to call.
 				generate_no_call
 			end
+		end
+
+feature {NONE} -- Status report
+
+	is_once_creation: BOOLEAN
+			-- Is it a call to a once creation procedure?
+		do
+			Result := is_once and then context_type.base_class.is_once
 		end
 
 feature {NONE} -- C code generation: actual arguments

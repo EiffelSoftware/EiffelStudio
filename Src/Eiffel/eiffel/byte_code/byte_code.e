@@ -654,7 +654,7 @@ feature -- Byte code generation
 			Temp_byte_code_array.append_integer (real_body_id - 1)
 
 				-- Result SK value
-			l_type := context.real_type (result_type)
+			l_type := context.real_type (if is_once_creation then real_type (context.current_type) else result_type end)
 			Temp_byte_code_array.append_natural_32 (l_type.sk_value (context.context_class_type.type))
 
 				-- Argument number
@@ -966,6 +966,14 @@ feature -- Status report
 
 	has_hector: BOOLEAN
 			-- Does the current byte code has a hector?
+
+feature {NONE} -- Status report
+
+	is_once_creation: BOOLEAN
+			-- Is it a creation procedure of a once class?
+		do
+				-- False by default.
+		end
 
 feature -- Status setting
 

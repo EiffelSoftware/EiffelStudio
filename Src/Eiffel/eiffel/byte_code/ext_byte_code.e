@@ -297,11 +297,10 @@ feature -- C code generation
 			end
 		end
 
-	generate_return_exp
-			-- Generate the return expression
+	generate_return_exp (type_c: TYPE_C)
+			-- Generate the return expression for a function with return type `type_c`.
 		local
 			l_type: TYPE_A
-			l_type_c: TYPE_C
 			buf: GENERATION_BUFFER
 			l_name: STRING
 			l_class_type: CLASS_TYPE
@@ -321,17 +320,16 @@ feature -- C code generation
 
 				buf.put_new_line
 				if Context.workbench_mode then
-					l_type_c := l_type.c_type
 					buf.put_string (once "{ EIF_TYPED_VALUE r; r.")
-					l_type_c.generate_typed_tag (buf)
+					type_c.generate_typed_tag (buf)
 					buf.put_string (once "; r.")
-					l_type_c.generate_typed_field (buf)
+					type_c.generate_typed_field (buf)
 					buf.put_string (once " = Result; return r; }")
 				else
 					buf.put_string ("return Result;")
 				end
 			else
-				Precursor
+				Precursor (type_c)
 			end
 		end
 

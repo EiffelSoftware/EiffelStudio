@@ -1093,7 +1093,6 @@ feature {NONE} -- Roundtrip
 						if l_explicit_type /= Void then
 								-- Creation type is always attached
 							l_explicit_type := l_explicit_type.as_attached_in (context.current_class)
-							set_type (l_explicit_type, l_as)
 						end
 					end
 
@@ -1132,17 +1131,20 @@ feature {NONE} -- Roundtrip
 								error_handler.warning_list.last.set_location (l_as.type.start_location)
 							end
 
-							if l_explicit_type /= Void then
+							if attached l_explicit_type then
 								instantiator.dispatch (l_explicit_type, context.current_class)
 								l_creation_type := l_explicit_type
 							else
 									-- Creation type is always attached.
 								l_creation_type := l_target_type.as_attached_in (context.current_class)
-								set_type (l_creation_type, l_as)
 							end
 
 								-- Check call validity for creation.
-							process_abstract_creation (l_creation_type, l_as.call, l_as.target.access_name, l_as.target.start_location)
+							process_abstract_creation (l_creation_type, l_as.call, l_as.target.access_name, l_as, l_as.target.start_location)
+							if attached last_type as t then
+									-- Update creation type.
+								l_creation_type := t
+							end
 							if not is_inherited then
 								record_creation_dependence
 									(if
@@ -1223,12 +1225,15 @@ feature {NONE} -- Roundtrip
 						l_duplicated_type.set_frozen_mark
 						l_creation_type := l_duplicated_type
 					end
-					set_type (l_creation_type, l_as)
 					instantiator.dispatch (l_creation_type, context.current_class)
 
 						-- Check call validity for creation.
 					is_in_creation_expression := True
-					process_abstract_creation (l_creation_type, l_as.call, Void, l_as.type.start_location)
+					process_abstract_creation (l_creation_type, l_as.call, Void, l_as, l_as.type.start_location)
+					if attached last_type as t then
+							-- Update creation type.
+						l_creation_type := t
+					end
 					if not is_inherited then
 						record_creation_dependence (l_creation_type)
 					end
@@ -1248,7 +1253,6 @@ feature {NONE} -- Roundtrip
 
 						last_byte_node := l_creation_expr
 					end
-					set_type (l_creation_type, l_as)
 				end
 			end
 			if error_level /= l_error_level then
@@ -6461,7 +6465,40 @@ feature {NONE} -- Visitor
 			end
 		end
 
-	process_abstract_creation (a_creation_type: TYPE_A; a_call: ACCESS_INV_AS; a_name: STRING; a_location: LOCATION_AS)
+	process_creation_call (f: detachable FEATURE_I; t: detachable TYPE_A; c: detachable CLASS_C; a: ACCESS_INV_AS; n: AST_EIFFEL; r: TYPE_A)
+			-- Process a call to creation feature `f` on base type `t` from class `c` of creation type `r`
+			-- updating `last_type` associated with node `n` and `last_calls_target_type`.
+		require
+			attached f ⇒ attached t
+		local
+			target_type: TYPE_A
+			creation_procedure: FEATURE_I
+			creation_type: TYPE_A
+		do
+			target_type := t
+			creation_type := r
+			if attached t and then attached c and then c.is_once then
+				creation_procedure := f
+				if not attached creation_procedure then
+					creation_procedure :=
+						if is_inherited then
+							c.feature_of_rout_id (a.routine_ids.first)
+						else
+							c.feature_of_name_id (a.feature_name.name_id)
+						end
+				end
+				if attached creation_procedure and then creation_procedure.is_process_relative then
+					target_type := t.as_separate
+					creation_type := r.as_separate
+				end
+			end
+			last_calls_target_type := target_type
+			process_call (creation_type, Void, a.feature_name, f, a.parameters, False, False, False, False, False)
+				-- Set type after evaluating the call to override `last_type` set to `VOID_A`.
+			set_type (creation_type, n)
+		end
+
+	process_abstract_creation (a_creation_type: TYPE_A; a_call: ACCESS_INV_AS; a_name: STRING; typed_node: AST_EIFFEL; a_location: LOCATION_AS)
 		require
 			a_creation_type_not_void: a_creation_type /= Void
 			a_location_not_void: a_location /= Void
@@ -6515,7 +6552,7 @@ feature {NONE} -- Visitor
 				l_formal_type ?= l_actual_creation_type
 
 				if l_formal_type.is_single_constraint_without_renaming (l_context_current_class) then
-					l_constraint_type := l_formal_type.constrained_type (l_context_current_class)
+					l_constraint_type := l_formal_type.constrained_type (l_context_current_class).as_attached_in (context.current_class)
 					l_creation_type := l_constraint_type
 					l_creation_class := l_constraint_type.base_class
 					l_is_deferred := l_creation_class.is_deferred
@@ -6617,7 +6654,7 @@ feature {NONE} -- Visitor
 									else
 										l_original_default_create_name_id  := l_feature.feature_name_id
 									end
-									l_creation_type := l_renamed_creation_type.type
+									l_creation_type := l_renamed_creation_type.type.as_attached_in (context.current_class)
 									l_creation_class := l_creation_type.base_class
 									set_type (l_creation_type, a_call)
 								end
@@ -6701,7 +6738,7 @@ feature {NONE} -- Visitor
 										-- to be reported.
 									l_last_type := last_type
 										-- Type check the call
-									process_call (last_type, Void, l_call.feature_name, l_feature, l_call.parameters, False, False, False, False, False)
+									process_creation_call (l_feature, l_creation_type, l_creation_class, l_call, typed_node, a_creation_type)
 										-- Even though this code is very similar to the one in `process_access_feat_as' we do not
 										-- need to adapt last_type as this is a creation procedure without a result, but we still
 										-- need to restore it.
@@ -6719,21 +6756,11 @@ feature {NONE} -- Visitor
 							else
 								check l_creation_class_not_void: l_creation_class /= Void end
 								l_feature := l_creation_class.feature_of_rout_id (l_call.routine_ids.first)
-								check l_creation_type_not_void_if_l_feature_is_available: l_feature /= Void implies l_creation_type /= Void end
-									-- We set `last_calls_target_type' in order to be able to use the same code as we use in the multiconstrained case.
-								last_calls_target_type := l_creation_type
-									-- Type check the call
-								process_call (last_type, Void, l_call.feature_name, l_feature, l_call.parameters, False, False, False, False, False)
+								process_creation_call (l_feature, l_creation_type, l_creation_class, l_call, typed_node, a_creation_type)
 							end
 						else
 								-- Type check the call
-							check
-								l_creation_type_not_void_if_l_feature_is_available:
-									l_feature /= Void implies l_creation_type /= Void
-							end
-								-- We set last_calls_target_type in case we have a multi constrained formal.
-							last_calls_target_type := l_creation_type
-							process_call (last_type, Void, l_call.feature_name, l_feature, l_call.parameters, False, False, False, False, False)
+							process_creation_call (l_feature, l_creation_type, l_creation_class, l_call, typed_node, a_creation_type)
 						end
 						is_qualified_call := l_is_qualified_call
 
@@ -6757,9 +6784,6 @@ feature {NONE} -- Visitor
 								end
 							end
 
-								-- We need to reset `last_type' as it now `VOID_A' after checking the call
-								-- which a procedure.
-							set_type (a_creation_type, a_call)
 							if l_needs_byte_node and then l_orig_call /= Void then
 								l_call_access ?= last_byte_node
 								if l_is_multi_constraint_case and then l_is_default_creation then

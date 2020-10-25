@@ -165,7 +165,7 @@ feature -- C code generation
 				end
 			end
 			if not has_generated then
-				type_c := real_type (type).c_type
+				type_c := (if is_once_creation then class_type else real_type (type) end).c_type
 				entry := routine_entry
 				routine_name := entry.routine_name
 				f := system.class_of_id (entry.class_id).feature_of_feature_id (entry.feature_id)

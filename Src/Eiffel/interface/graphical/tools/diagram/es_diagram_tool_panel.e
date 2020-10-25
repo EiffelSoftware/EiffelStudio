@@ -1,4 +1,4 @@
-note
+﻿note
 	description:
 		"Area in EB_CONTEXT_TOOL notebook designated to view%N%
 		%the context diagram of center class or center cluster."
@@ -1808,14 +1808,12 @@ feature {NONE} -- Events
 	on_zoom_level_select
 			-- User selected a new zoom level.
 		local
-			level_text: STRING
+			level_text: STRING_32
 			level, scale_factor: DOUBLE
 			old_scale: INTEGER
 			new_scale: INTEGER
-			l_str: STRING_GENERAL
 		do
-			level_text := zoom_selector.selected_item.text.twin
-			level_text.keep_head (level_text.count - 1)
+			level_text := zoom_selector.selected_item.text.head (level_text.count - 1)
 			check
 				level_text_is_integer: level_text.is_integer
 			end
@@ -1826,12 +1824,8 @@ feature {NONE} -- Events
 			crop_diagram
 			new_scale := (world.scale_factor * 100).rounded
 			restart_force_directed
-			l_str := interface_names.t_diagram_zoom_cmd
-			l_str.append (" ")
-			l_str.append (level_text.out)
-			l_str.append ("%%")
 			history.register_named_undoable (
-				l_str,
+				interface_names.t_diagram_zoom_cmd + " " + level_text + "%%",
 				[<<agent world.scale (scale_factor), agent crop_diagram, agent zoom_selector.show_as_text (new_scale), agent restart_force_directed>>],
 				[<<agent world.scale (1/scale_factor), agent crop_diagram, agent zoom_selector.show_as_text (old_scale), agent restart_force_directed>>])
 		end
@@ -1844,7 +1838,7 @@ feature {NONE} -- Events
 			if not retried then--and not view_selector.is_empty then
 				reset_history
 
-				develop_window.status_bar.display_message ("Loading diagram for " + view_selector.text)
+				develop_window.status_bar.display_message ({STRING_32} "Loading diagram for " + view_selector.text)
 				develop_window.status_bar.reset_progress_bar_with_range (0 |..| 0)
 
 				if is_force_directed_used then
@@ -2500,7 +2494,7 @@ invariant
 	shortcut_table_not_void: shortcut_table /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2015, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2020, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
@@ -2531,6 +2525,4 @@ note
 			Customer support http://support.eiffel.com
 		]"
 
-end -- class EB_CONTEXT_EDITOR
-
-
+end

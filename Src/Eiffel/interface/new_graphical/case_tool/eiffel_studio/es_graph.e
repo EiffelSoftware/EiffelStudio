@@ -1,8 +1,7 @@
-note
+﻿note
 	description: "Base class graphs showing a representation of eiffel code."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
-	author: ""
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -757,8 +756,8 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	lookup_name_of_class (a_class: CLASS_I): STRING
-			-- Unique lookup name of `a_class'
+	lookup_name_of_class (a_class: CLASS_I): READABLE_STRING_32
+			-- Unique lookup name of `a_class'.
 		require
 			a_class_not_void: a_class /= Void
 		do
@@ -925,7 +924,7 @@ feature {NONE} -- Implementation
 	feature_name_number: INTEGER
 			-- Number to append to next created feature.
 
-	class_name_to_node_lookup: HASH_TABLE [ES_CLASS, STRING]
+	class_name_to_node_lookup: STRING_TABLE [ES_CLASS]
 			-- Lookup tables to speed up `class_from_interface'.
 
 	inheritance_links_lookup: HASH_TABLE_EX [ES_INHERITANCE_LINK, like link_type]
@@ -961,7 +960,7 @@ invariant
 	client_supplier_links_lookup_not_void: client_supplier_links_lookup /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2013, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2020, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
@@ -992,4 +991,4 @@ note
 			Customer support http://support.eiffel.com
 		]"
 
-end -- class ES_GRAPH
+end

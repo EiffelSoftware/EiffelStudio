@@ -535,7 +535,7 @@ feature -- C code generation: once features
 					buf.put_string ("RTOPCF(")
 				end
 				buf.put_integer (code_index)
-			else --| default: is_thread_relative
+			else
 				if type_c.is_void then
 						-- It is a once procedure
 					buf.put_string ("RTOUCP(")
@@ -1777,11 +1777,10 @@ feature -- Access
 			-- variable array, if the type is a pointer one and we are not
 			-- inside a once function.
 		do
-			if not in_inlined_code then
+			if not in_inlined_code and then not result_used then
 				if
-					not result_used and
 					real_type (byte_code.result_type).c_type.is_reference and
-					(not byte_code.is_process_or_thread_relative_once)
+					not byte_code.is_process_or_thread_relative_once
 				then
 					set_local_index ("Result", Result_register)
 				end

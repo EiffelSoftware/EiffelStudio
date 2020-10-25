@@ -104,12 +104,7 @@ feature {NONE} -- Initialization
 					-- We have to do that as otherwise, `t' might be `TYPED_POINTER [G#2]' if this is
 					-- the type we have recorded but it certainly does not make sense in a class with
 					-- only one generic parameter.
-				if attached {like basic_type} type as l_basic_type then
-					basic_type := l_basic_type
-				else
-					check basic_type_attached: False end
-					basic_type := Void
-				end
+				basic_type := {like basic_type} / type
 			end
 			is_changed := True
 			type_id := l_system.type_id_counter.next
@@ -318,30 +313,11 @@ feature -- Access
 		require
 			is_precompiled: is_precompiled
 		do
-			Result := il_casing.type_name (internal_namespace, a_prefix, is_separate, internal_type_name, is_dotnet_name)
+			Result := il_casing.type_name (internal_namespace, a_prefix, internal_type_name, is_dotnet_name)
 		end
 
 	conformance_table: PACKED_BOOLEANS
 			-- Conformance table for current type.
-
-	type_number: INTEGER
-			-- Gives the position on which this CLASS_TYPE occors in its associated class's TYPE_LIST
-		local
-			types: TYPE_LIST
-		do
-			if type_number_int = 0 then
-				types := associated_class.types
-				from
-					types.start
-				until
-					types.after
-				loop
-					type_number_int := type_number_int + 1
-					types.forth
-				end
-			end
-			Result := type_number_int
-		end
 
 	basic_type: BASIC_A
 			-- If `type' is originally a basic type, we keep the BASIC_A instance
@@ -842,12 +818,10 @@ feature -- Generation
 							attached l_obj_once_info_table.items_intersecting_with_rout_id_set (l_feature_i.rout_id_set) as l_obj_once_info_list
 						then
 								--| generate also the related hidden attributes
-							from
-								l_obj_once_info_list.start
-							until
-								l_obj_once_info_list.after
+							across
+								l_obj_once_info_list as o
 							loop
-								if attached l_obj_once_info_list.item as l_obj_info then
+								if attached o.item as l_obj_info then
 									l_attribute_i := l_obj_info.called_attribute_i
 --| FIXME:2010-11-07: find why when using to_generate_in, it is not working great for once per object
 --										if l_attribute_i.to_generate_in (current_class) then
@@ -864,7 +838,6 @@ feature -- Generation
 --											end
 									end
 								end
-								l_obj_once_info_list.forth
 							end
 						end
 					end
@@ -872,22 +845,13 @@ feature -- Generation
 				end
 
 				if current_eiffel_class.has_inline_agents then
-					from
-						l_inline_agent_table := current_eiffel_class.inline_agent_table
-						l_inline_agent_table.start
-					until
-						l_inline_agent_table.after
-					loop
-							-- Generate the C code of `feature_i'
-						generate_feature (l_inline_agent_table.item_for_iteration, buffer, header_buffer)
-						l_inline_agent_table.forth
-					end
+						-- Generate the C code for FEATURE_I.
+					⟳ a: current_eiffel_class.inline_agent_table ¦ generate_feature (a, buffer, header_buffer) ⟲
 				end
 
 				if
 					current_class.has_invariant and then
-					((not final_mode) or else
-					system.keep_assertions)
+					(not final_mode or else system.keep_assertions)
 				then
 					inv_byte_code := Inv_byte_server.disk_item (current_class.class_id)
 					l_byte_context.set_byte_code (create {STD_BYTE_CODE})
@@ -1231,21 +1195,10 @@ feature -- Byte code generation
 		require
 			good_context: associated_class.has_features_to_melt
 			Not_precompiled: not is_precompiled
-		local
-			melted_set: SEARCH_TABLE [MELTED_INFO]
 		do
-			from
-					-- Iteration on the melted list of the associated class
-					-- processed during third pass of the compilation.
-				melted_set := associated_class.melted_set
-				melted_set.start
-			until
-				melted_set.after
-			loop
-					-- Generation of byte code
-				melted_set.item_for_iteration.update_execution_unit (Current)
-				melted_set.forth
-			end
+				-- Iteration on the melted list of the associated class
+				-- processed during third pass of the compilation.
+			⟳ m: associated_class.melted_set ¦ m.update_execution_unit (Current) ⟲
 		end
 
 	melt
@@ -1255,30 +1208,23 @@ feature -- Byte code generation
 			good_context: associated_class.has_features_to_melt
 			Not_precompiled: not is_precompiled
 		local
-			melted_set: SEARCH_TABLE [MELTED_INFO]
 			feat_tbl: FEATURE_TABLE
 			l_melted_info: MELTED_INFO
 		do
-			from
-					-- Iteration on the melted list of the associated class
-					-- processed during third pass of the compilation.
-				melted_set := associated_class.melted_set
-				melted_set.start
-
-					-- Initialization of the byte code context
-				byte_context.init (Current)
-
-				feat_tbl := associated_class.feature_table
-			until
-				melted_set.after
+				-- Initialization of the byte code context
+			byte_context.init (Current)
+			feat_tbl := associated_class.feature_table
+				-- Iteration on the melted list of the associated class
+				-- processed during third pass of the compilation.
+			across
+				associated_class.melted_set as m
 			loop
-				l_melted_info := melted_set.item_for_iteration
+				l_melted_info := m.item
 					-- We need to record the EXECUTION_UNIT associated to the MELTED_INFO
 					-- object. This is necesary if this is a new routine that was never generated before.
 				l_melted_info.update_execution_unit (Current)
 					-- Generation of byte code
 				melt_feature (l_melted_info.associated_feature (associated_class, feat_tbl))
-				melted_set.forth
 			end
 		end
 
@@ -1324,7 +1270,6 @@ feature {NONE} -- Parent table evaluation
 	compute_parent_table (final_mode: BOOLEAN)
 			-- Compute parent table and make it available in `Par_table'.
 		local
-			parents: FIXED_LIST [CL_TYPE_A]
 			parent_type: CL_TYPE_A
 			gen_type: GEN_TYPE_A
 			a_class: CLASS_C
@@ -1332,7 +1277,7 @@ feature {NONE} -- Parent table evaluation
 			gen_type := {GEN_TYPE_A} / type
 			a_class  := associated_class
 
-			Par_table.init (type.generated_id (final_mode, Void),
+			par_table.init (type.generated_id (final_mode, Void),
 				if attached gen_type and then attached  gen_type.generics as gs then gs.count else 0 end,
 				a_class.is_expanded);
 
@@ -1348,24 +1293,20 @@ feature {NONE} -- Parent table evaluation
 				end
 			end
 			if parent_type = Void then
-				from
-					parents := a_class.conforming_parents
-					parents.start
-				until
-					parents.after
+				across
+					a_class.conforming_parents as p
 				loop
-					parent_type := parents.item
-					if gen_type /= Void then
+					parent_type := p.item
+					if attached gen_type then
 						parent_type := parent_type.adapted_in (Current)
 					end
-					Par_table.append_type (parent_type)
-					parents.forth
+					par_table.append_type (parent_type)
 				end
 			end
 		end
 
-	Par_table: PARENT_TABLE
-			-- Buffer for parent table generation
+	par_table: PARENT_TABLE
+			-- Buffer for parent table generation.
 		once
 			create Result.make
 		end
@@ -2028,7 +1969,7 @@ invariant
 
 note
 	ca_ignore: "CA093", "CA093: manifest array type mismatch"
-	copyright:	"Copyright (c) 1984-2019, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2020, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

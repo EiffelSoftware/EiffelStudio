@@ -3647,7 +3647,7 @@ feature -- IL code generation
 				class_name := name.as_lower
 				use_dotnet_naming := System.dotnet_naming_convention
 			end
-			Result := il_casing.type_name (namespace, data_prefix, False, class_name, use_dotnet_naming)
+			Result := il_casing.type_name (namespace, data_prefix, class_name, use_dotnet_naming)
 		ensure
 			result_not_void: Result /= Void
 		end
@@ -3660,7 +3660,7 @@ feature -- IL code generation
 		do
 			is_dotnet_naming := System.dotnet_naming_convention
 			precompiled_namespace := original_class.actual_namespace.twin
-			precompiled_class_name := il_casing.type_name (Void, Void, False, name.as_lower, is_dotnet_naming)
+			precompiled_class_name := il_casing.type_name (Void, Void, name.as_lower, is_dotnet_naming)
 		end
 
 	is_dotnet_naming: BOOLEAN

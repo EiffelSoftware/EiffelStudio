@@ -1,0 +1,92 @@
+test_name 	 once-class-creation-semantics
+test_description A test for types based on once classes.
+
+copy_raw	test.e $CLUSTER test.e
+copy_raw	planet.e $CLUSTER planet.e
+
+define		PRECOMPILED $PRECOMPILED_BASE_SAFE
+define		CONCURRENCY none
+define		VOID_SAFETY all
+copy_sub	Ace $TEST Ace
+
+compile_melted
+compile_result ok
+execute_work 	NONE 	exec_output_nm	175
+execute_result 	ok
+compare		exec_output_nm output
+
+compile_frozen
+compile_result ok
+c_compile_work
+c_compile_result	ok
+execute_work 	NONE 	exec_output_nw	175
+execute_result 	ok
+compare		exec_output_nw output
+
+compile_final
+compile_result ok
+c_compile_final
+c_compile_result	ok
+execute_final 	NONE 	exec_output_nf	175
+execute_result 	ok
+compare		exec_output_nf output
+
+cleanup_compile
+
+define		PRECOMPILED $PRECOMPILED_BASE_SCOOP_SAFE
+define		CONCURRENCY scoop
+define		VOID_SAFETY all
+copy_sub	Ace $TEST Ace
+
+compile_melted
+compile_result ok
+execute_work 	NONE 	exec_output_sm	175
+execute_result 	ok
+compare		exec_output_sm output
+
+compile_frozen
+compile_result ok
+c_compile_work
+c_compile_result	ok
+execute_work 	NONE 	exec_output_sw	175
+execute_result 	ok
+compare		exec_output_sw output
+
+compile_final
+compile_result ok
+c_compile_final
+c_compile_result	ok
+execute_final 	NONE 	exec_output_sf	175
+execute_result 	ok
+compare		exec_output_sf output
+
+cleanup_compile
+
+define		PRECOMPILED $PRECOMPILED_BASE_MT
+define		CONCURRENCY thread
+define		VOID_SAFETY none
+copy_sub	Ace $TEST Ace
+
+compile_melted
+compile_result ok
+execute_work 	NONE 	exec_output_tm	175
+execute_result 	ok
+compare		exec_output_tm output
+
+compile_frozen
+compile_result ok
+c_compile_work
+c_compile_result	ok
+execute_work 	NONE 	exec_output_tw	175
+execute_result 	ok
+compare		exec_output_tw output
+
+compile_final
+compile_result ok
+c_compile_final
+c_compile_result	ok
+execute_final 	NONE 	exec_output_tf	175
+execute_result 	ok
+compare		exec_output_tf output
+
+test_end

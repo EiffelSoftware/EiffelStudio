@@ -1916,6 +1916,7 @@ test once-per-object-nonconforming-2		once020 tcf fail once non-conforming
 test once-per-object-generic-precursor		once021 tcf pass once
 test once-per-object-array-of-expanded		once022 tcf fail once
 test once-per-object-inherited-twice		once023 tcf fail once
+test once-class-creation-semantics		once024 tcf fail once once_creation
 
 -- Compiler termination (exception trace, panic, etc.)
 

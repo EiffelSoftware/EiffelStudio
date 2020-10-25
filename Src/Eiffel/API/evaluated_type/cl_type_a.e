@@ -21,8 +21,7 @@ inherit
 			generic_derivation, associated_class_type, has_associated_class_type,
 			internal_same_generic_derivation_as, internal_generic_derivation,
 			has_associated_class, is_class_valid, instantiated_in, deep_actual_type,
-			is_processor_attachable_to, deanchored_form_marks_free, has_same_marks,
-			is_separate
+			is_processor_attachable_to, deanchored_form_marks_free, has_same_marks
 		end
 
 	SHARED_IL_CASING
@@ -167,12 +166,6 @@ feature -- Properties
 		do
 			l_base_class := base_class
 			Result := is_expanded and l_base_class.is_external and l_base_class.is_enum
-		end
-
-	is_separate: BOOLEAN
-			-- Is the current actual type a separate one ?
-		do
-			Result := (has_separate_mark or else (class_declaration_mark ⊗ once_mark /= 0)) and then not is_expanded
 		end
 
 	is_system_object_or_any: BOOLEAN
@@ -553,7 +546,7 @@ feature {NONE} -- IL code generation
 				-- what our casing conversion routines require to perform
 				-- a good job.
 			Result.to_lower
-			Result := il_casing.type_name (base_class.original_class.actual_namespace, a_prefix, is_separate, Result, System.dotnet_naming_convention)
+			Result := il_casing.type_name (base_class.original_class.actual_namespace, a_prefix, Result, System.dotnet_naming_convention)
 		ensure
 			internal_il_type_name_not_void: Result /= Void
 			internal_il_type_name_not_empty: not Result.is_empty
@@ -900,7 +893,6 @@ feature {COMPILER_EXPORTER} -- Instantiation of a type in the context of a desce
 			i, nb, l_pos: INTEGER
 			l_type_feat: TYPE_FEATURE_I
 			l_result_generics: like generics
-			l_generic_features: HASH_TABLE [TYPE_FEATURE_I, INTEGER]
 			l_quick_positions: NATURAL_64
 			l_slow_positions: PACKED_BOOLEANS
 		do
@@ -922,41 +914,36 @@ feature {COMPILER_EXPORTER} -- Instantiation of a type in the context of a desce
 							-- Descendant is generic but not parent, clearly we have to exclude it.
 						Result := Void
 					else
-						from
-								-- We reset `l_result_generics' to Void since we are using Void as a signaling
-								-- value to duplicate `Result.generics' in case we perform a substitution.
-							l_result_generics := Void
-							l_generic_features := c.generic_features
-							l_generic_features.start
-						until
-							l_generic_features.after
+							-- We reset `l_result_generics' to Void since we are using Void as a signaling
+							-- value to duplicate `Result.generics' in case we perform a substitution.
+						l_result_generics := Void
+						across
+							c.generic_features as g
 						loop
-							l_type_feat := l_generic_features.item_for_iteration
+							l_type_feat := g.item
 								-- When we encounter a formal generic parameter in the descendant,
 								-- we search for it in the ancestor, if none is found, we continue,
 								-- otherwise we replace the descendant formal generic with the parent one.
-							if attached {FORMAL_A} l_type_feat.type as l_formal then
-								if
-									attached l_class.generic_features.item (l_generic_features.key_for_iteration) as l_feat and then
-									attached {FORMAL_A} l_feat.type as l_parent_formal
-								then
-										-- We cannot override `Result' because it is coming from {CLASS_C}.actual_type
-										-- and this is an attribute that is set only once.
-									if l_result_generics = Void then
-										Result := Result.duplicate_for_instantiation
-										l_result_generics := Result.generics
-									end
-									l_pos := l_formal.position
-									l_result_generics.put_i_th (l_parent_generics.i_th (l_parent_formal.position), l_pos)
-										-- Mark that we have done `l_pos'.
-									if nb < 64 then
-										l_quick_positions := l_quick_positions | ({NATURAL_64} 1 |<< l_pos)
-									else
-										l_slow_positions.put (True, l_pos)
-									end
+							if
+								attached {FORMAL_A} l_type_feat.type as l_formal and then
+								attached l_class.generic_features.item (g.key) as l_feat and then
+								attached {FORMAL_A} l_feat.type as l_parent_formal
+							then
+									-- We cannot override `Result' because it is coming from {CLASS_C}.actual_type
+									-- and this is an attribute that is set only once.
+								if l_result_generics = Void then
+									Result := Result.duplicate_for_instantiation
+									l_result_generics := Result.generics
+								end
+								l_pos := l_formal.position
+								l_result_generics.put_i_th (l_parent_generics.i_th (l_parent_formal.position), l_pos)
+									-- Mark that we have done `l_pos'.
+								if nb < 64 then
+									l_quick_positions := l_quick_positions | ({NATURAL_64} 1 |<< l_pos)
+								else
+									l_slow_positions.put (True, l_pos)
 								end
 							end
-							l_generic_features.forth
 						end
 							-- Check now that all the bits are set.
 						if nb < 64 then
@@ -1103,10 +1090,13 @@ feature {CL_TYPE_A, TUPLE_CLASS_B, CIL_CODE_GENERATOR} --Class type declaration 
 invariant
 	class_id_positive: class_id > 0
 	valid_declaration_mark:
-		declaration_mark = no_mark or declaration_mark = expanded_mark or
+		declaration_mark = no_mark or
+		declaration_mark = expanded_mark or
 		declaration_mark = reference_mark
 	valid_class_declaration_mark:
-		class_declaration_mark = no_mark or class_declaration_mark = expanded_mark or class_declaration_mark = once_mark
+		class_declaration_mark = no_mark or
+		class_declaration_mark = expanded_mark or
+		class_declaration_mark = once_mark
 
 note
 	copyright:	"Copyright (c) 1984-2020, Eiffel Software"

@@ -1,4 +1,4 @@
-note
+﻿note
 	description:
 
 		"Maps variables to their type"
@@ -173,12 +173,10 @@ feature -- Access
 					-- To check if the current system is Void-Safe we just do the following comparison.
 					-- system.void_safety_index /= {CONF_TARGET_OPTION}.void_safety_index_none
 
-				if system.void_safety_index /= {CONF_TARGET_OPTION}.void_safety_index_none and then l_type.is_none and then (a_type.is_directly_attached  or a_type.is_directly_implicitly_attached) then
-					-- Avoid void.
-				else
-					if l_type.is_conformant_to (a_context_class, a_type) and then not (a_type.is_expanded and then l_type.is_none) then
-						Result.force_last (cs.key)
-					end
+				if system.void_safety_index /= {CONF_TARGET_OPTION}.void_safety_index_none and then l_type.is_none and then a_type.is_implicitly_attached then
+						-- Avoid void.
+				elseif l_type.is_conformant_to (a_context_class, a_type) and then not (a_type.is_expanded and then l_type.is_none) then
+					Result.force_last (cs.key)
 				end
 			end
 		ensure

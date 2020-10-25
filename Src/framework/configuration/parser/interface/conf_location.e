@@ -177,13 +177,18 @@ feature -- Access queries
 				-- Handle relative path
 			if Result.is_relative then
 				l_root := a_root_location
-				if l_root = Void then
+				if not attached l_root then
 					l_root := target.library_root
 				end
-				if l_root = Void then
+				if not attached l_root then
 					create l_root.make_from_string ("/")
 				end
-				Result := l_root.extended_path (Result).canonical_path
+				Result :=
+					(if Result.is_empty then
+						l_root
+					else
+						l_root.extended_path (Result)
+					end).canonical_path
 			end
 		ensure
 			Result_not_void: Result /= Void
@@ -307,7 +312,7 @@ invariant
 	target_not_void: target /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2018, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2020, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

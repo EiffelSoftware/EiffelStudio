@@ -7616,7 +7616,7 @@ feature {NONE} -- Visitor
 				if attached exit_as then
 					l_loop.set_line_number (exit_as.start_location.line)
 				end
-				l_loop.set_end_location (l_as.end_keyword)
+				l_loop.set_end_location (l_as.end_leaf)
 				last_byte_node := l_loop
 			end
 

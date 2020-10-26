@@ -81,6 +81,7 @@ feature -- Generation
 			l_nb_precond: INTEGER
 			l_old_expr_count: INTEGER
 			keep: BOOLEAN
+			is_once_creation: BOOLEAN
 		do
 			il_generator := a_code_generator
 			keep := context.workbench_mode or else system.keep_assertions
@@ -108,8 +109,15 @@ feature -- Generation
 				-- Set up the local variables
 			a_body.setup_local_variables (True)
 
+			is_once_creation := a_body.is_once_creation
 				-- Initialize use of local variables to IL side
-			r_type := context.real_type (a_body.result_type)
+			r_type := context.real_type
+				(if is_once_creation then
+						-- Record the type of the class itself.
+					context.current_type
+				else
+					a_body.result_type
+				end)
 			if not r_type.is_void then
 				il_generator.put_result_info (r_type)
 			end
@@ -191,7 +199,7 @@ feature -- Generation
 
 				-- Generate prologue for once routine
 			if a_body.is_once then
-				il_generator.generate_once_prologue
+				il_generator.generate_once_prologue (is_once_creation)
 			end
 
 			if a_body.rescue_clause /= Void then
@@ -251,6 +259,10 @@ feature -- Generation
 				initialize_locals (local_list)
 			end
 
+			if is_once_creation then
+				il_generator.generate_current
+				il_generator.generate_result_assignment
+			end
 			if a_body.compound /= Void then
 				if a_body.body_index = context.copy_body_index then
 					generate_copy
@@ -1469,7 +1481,10 @@ feature {NONE} -- Visitors
 						il_generator.generate_metamorphose (l_creation_type)
 						il_generator.generate_load_address (l_creation_type)
 					end
-					if not l_is_il_external then
+					if
+						not l_is_il_external and then
+						not (attached l_creation_type.base_class as b and then b.is_once)
+					then
 						il_generator.duplicate_top
 					end
 
@@ -1719,6 +1734,7 @@ feature {NONE} -- Visitors
 			l_is_in_creation: like is_in_creation_call
 			l_type: TYPE_A
 			creation_expression: CREATION_EXPR_B
+			is_once_creation: BOOLEAN
 		do
 			l_is_in_creation := is_in_creation_call
 			l_is_nested_call := is_nested_call
@@ -1801,8 +1817,19 @@ feature {NONE} -- Visitors
 						generate_il_metamorphose (l_cl_type, l_target_type, True)
 					end
 
+					is_once_creation :=
+						a_node.is_once and then
+						l_class_c.is_once and then
+						l_class_c.creators.has (a_node.feature_name)
 					if l_invariant_checked then
-						generate_il_call_invariant_leading (l_cl_type, not l_is_in_creation)
+						if not is_once_creation then
+							generate_il_call_invariant_leading (l_cl_type, not l_is_in_creation)
+						elseif not l_is_in_creation then
+								-- The invariant after the call should be checked on a returned value.
+								-- But the invariant before the call should be checked on the current value.
+							il_generator.duplicate_top
+							generate_il_call_invariant (l_cl_type, True)
+						end
 					end
 
 						-- Box value type if the call is made to the predefined feature from ANY
@@ -1892,7 +1919,12 @@ feature {NONE} -- Visitors
 						end
 					end
 
-					l_return_type := context.real_type (a_node.type)
+					l_return_type :=
+						if is_once_creation then
+							l_cl_type
+						else
+							context.real_type (a_node.type)
+						end
 						-- Special handling when precursor has a different expanded status
 						-- than current type. We need to find out the return type of the Precursor.
 					if l_precursor_type /= Void and then context.context_class_type.is_expanded then
@@ -1948,7 +1980,13 @@ feature {NONE} -- Visitors
 						end
 					end
 					if l_invariant_checked then
-						generate_il_call_invariant_trailing (l_cl_type, l_return_type)
+						if is_once_creation then
+								-- Use returned value rather than the target object to check invariant.
+							il_generator.duplicate_top
+							generate_il_call_invariant_trailing (l_cl_type, void_type)
+						else
+							generate_il_call_invariant_trailing (l_cl_type, l_return_type)
+						end
 					end
 
 					if
@@ -4363,7 +4401,17 @@ feature {NONE} -- Implementation: Feature calls
 				l_count := p.count
 			end
 
-			l_return_type := context.real_type (a_node.type)
+			l_return_type :=
+				if
+					a_node.is_once and then
+					attached target_type.base_class as b and then
+					b.is_once and then
+					b.creators.has (a_node.feature_name)
+				then
+					target_type
+				else
+					context.real_type (a_node.type)
+				end
 
 			if target_type.is_expanded then
 					-- Generate direct call.

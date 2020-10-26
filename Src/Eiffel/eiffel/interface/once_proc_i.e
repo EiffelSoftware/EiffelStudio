@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "Representation of a once procedure"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -12,15 +12,17 @@ inherit
 		rename
 			is_object_relative_once as is_object_relative
 		redefine
-			is_once, is_object_relative,
+			is_object_relative,
+			is_once,
+			is_once_creation,
 			is_process_relative,
+			prepare_object_relative_once,
 			replicated,
-			transfer_to,
-			transfer_from,
-			unselected,
-			update_api,
 			selected,
-			prepare_object_relative_once
+			transfer_from,
+			transfer_to,
+			unselected,
+			update_api
 		end
 
 feature -- Status report
@@ -39,6 +41,12 @@ feature -- Status report
 
 	is_object_relative: BOOLEAN
 			-- Is once routine per object?
+
+	is_once_creation (c: CLASS_C): BOOLEAN
+			-- Is it a creation procedure in a once class `c`?
+		do
+			Result := c.is_once and then c.creators.has (feature_name)
+		end
 
 feature -- Status setting
 
@@ -375,7 +383,7 @@ invariant
 				(not is_process_relative and not is_thread_relative and     is_object_relative)
 
 note
-	copyright:	"Copyright (c) 1984-2019, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2020, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

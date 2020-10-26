@@ -1447,6 +1447,12 @@ feature -- Conveniences
 			-- Do nothing
 		end
 
+	is_once_creation (c: CLASS_C): BOOLEAN
+			-- Is it a creation procedure in a once class `c`?
+		do
+				-- False by default.
+		end
+
 	is_do: BOOLEAN
 			-- Is current feature a do one ?
 		do

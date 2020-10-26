@@ -361,7 +361,7 @@ feature -- IL Code generation
 			l_byte_context.set_byte_code (create {STD_BYTE_CODE})
 			l_byte_context.set_current_feature (Current)
 			if is_once then
-				il_generator.generate_once_prologue
+				il_generator.generate_once_prologue (False)
 				value.generate_il
 				il_generator.generate_once_store_result
 				il_generator.generate_once_epilogue
@@ -514,7 +514,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2019, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2020, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

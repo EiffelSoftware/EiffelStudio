@@ -2223,27 +2223,23 @@ feature -- Features info
 					-- Evaluate its signature.
 				l_meth_sig := method_sig
 				l_meth_sig.reset
-				if l_is_static and not in_interface then
-					l_meth_sig.set_method_type ({MD_SIGNATURE_CONSTANTS}.Default_sig)
-				else
-					l_meth_sig.set_method_type ({MD_SIGNATURE_CONSTANTS}.Has_current)
-				end
+				l_meth_sig.set_method_type
+					(if l_is_static and not in_interface then
+						{MD_SIGNATURE_CONSTANTS}.Default_sig
+					else
+						{MD_SIGNATURE_CONSTANTS}.Has_current
+					end)
 
-				if l_is_static and not l_is_c_external then
-					l_meth_sig.set_parameter_count (l_parameter_count + 1)
-				else
-					l_meth_sig.set_parameter_count (l_parameter_count)
-				end
+				l_meth_sig.set_parameter_count  (l_parameter_count + (l_is_static and not l_is_c_external).to_integer)
 
 				if a_feature_i.is_type_feature then
 					l_meth_sig.set_return_type (
 						{MD_SIGNATURE_CONSTANTS}.Element_type_class,
 						current_module.ise_type_token)
-				elseif a_feature_i.is_function or l_is_attribute or a_feature_i.is_constant then
-					set_method_return_type (l_meth_sig, l_return_type, l_class_type)
+				elseif l_return_type.is_void then
+					l_meth_sig.set_return_type ( {MD_SIGNATURE_CONSTANTS}.Element_type_void, 0)
 				else
-					l_meth_sig.set_return_type (
-						{MD_SIGNATURE_CONSTANTS}.Element_type_void, 0)
+					set_method_return_type (l_meth_sig, l_return_type, l_class_type)
 				end
 
 				if l_is_static and not l_is_c_external then
@@ -2378,21 +2374,16 @@ feature -- Features info
 					l_meth_sig.set_method_type ({MD_SIGNATURE_CONSTANTS}.Has_current)
 				end
 
-				if is_static and not l_is_c_external then
-					l_meth_sig.set_parameter_count (l_parameter_count + 1)
-				else
-					l_meth_sig.set_parameter_count (l_parameter_count)
-				end
+				l_meth_sig.set_parameter_count (l_parameter_count + (is_static and not l_is_c_external).to_integer)
 
 				if feat.is_type_feature then
-					l_meth_sig.set_return_type (
-						{MD_SIGNATURE_CONSTANTS}.Element_type_class,
+					l_meth_sig.set_return_type
+						({MD_SIGNATURE_CONSTANTS}.Element_type_class,
 						current_module.ise_type_token)
-				elseif feat.is_function or l_is_attribute or feat.is_constant then
-					set_method_return_type (l_meth_sig, l_return_type, signature_declaration_type)
+				elseif l_return_type.is_void then
+					l_meth_sig.set_return_type ( {MD_SIGNATURE_CONSTANTS}.Element_type_void, 0)
 				else
-					l_meth_sig.set_return_type (
-						{MD_SIGNATURE_CONSTANTS}.Element_type_void, 0)
+					set_method_return_type (l_meth_sig, l_return_type, signature_declaration_type)
 				end
 
 				if is_static and not l_is_c_external then
@@ -2548,7 +2539,7 @@ feature -- Features info
 
 						-- Define name of routine used to find out the attribute static type
 						-- if it is generic or a formal.
-					l_type_a := feat.type.actual_type
+					l_type_a := result_type_in (feat, signature_declaration_type).actual_type
 					if l_type_a.is_formal or l_type_a.has_generics then
 							-- Lookup associated TYPE_FEATURE_I to get its name
 						l_type_feature := current_class_type.associated_class.anchored_features.item
@@ -2754,7 +2745,12 @@ feature -- Features info
 			feature_i_not_viod: feature_i /= Void
 			class_type_not_void: class_type /= Void
 		do
-			Result := argument_actual_type_in (feature_i.type, class_type)
+			Result :=
+				if feature_i.is_once_creation (class_type.associated_class) then
+					class_type.type
+				else
+					argument_actual_type_in (feature_i.type, class_type)
+				end
 		ensure
 			result_not_void: Result /= Void
 			void_if_procedure: not feature_i.has_return_value implies Result.is_void
@@ -2965,16 +2961,13 @@ feature -- IL Generation
 			l_is_il_external: BOOLEAN
 			l_meth_token, l_meth_attr: INTEGER
 			i, nb: INTEGER
+			is_once_creation: BOOLEAN
 		do
 			nb := feat.argument_count
 			l_meth_sig := method_sig
 			l_meth_sig.reset
 			l_meth_sig.set_method_type ({MD_SIGNATURE_CONSTANTS}.Default_sig)
-			if is_generic then
-				l_meth_sig.set_parameter_count (nb + 1)
-			else
-				l_meth_sig.set_parameter_count (nb)
-			end
+			l_meth_sig.set_parameter_count (nb + is_generic.to_integer)
 			set_method_return_type (l_meth_sig, current_class_type.type, current_class_type)
 
 			if feat.is_external and then attached {EXTERNAL_I} feat as l_external_i then
@@ -3038,7 +3031,13 @@ feature -- IL Generation
 						-- Take address of expanded object.
 					generate_load_address (current_class_type.type)
 				end
-				duplicate_top
+				if class_c.is_once then
+						-- Result is computed by the called creation method.
+					is_once_creation := True
+				else
+						-- Result is the newly created object.
+					duplicate_top
+				end
 				if nb > 0 then
 					from
 					until
@@ -3051,11 +3050,11 @@ feature -- IL Generation
 				if current_class_type.is_expanded then
 					method_body.put_call ({MD_OPCODES}.Call,
 						feature_token (current_class_type.implementation_id,
-							current_class_type.associated_class.feature_of_rout_id (feat.rout_id_set.first).feature_id), nb, False)
+							current_class_type.associated_class.feature_of_rout_id (feat.rout_id_set.first).feature_id), nb, is_once_creation)
 				else
 					method_body.put_call ({MD_OPCODES}.callvirt,
 						feature_token (current_class_type.type.implemented_type (feat.origin_class_id).static_type_id (Void), feat.origin_feature_id),
-						nb, False)
+						nb, is_once_creation)
 				end
 				fixme ("Generate class invariant check (if enabled).")
 				if current_class_type.type.is_basic then
@@ -3138,6 +3137,7 @@ feature -- IL Generation
 			l_class_type: CLASS_TYPE
 			l_type_i, l_impl_type_i: TYPE_A
 			l_same_signature: BOOLEAN
+			has_return_value: BOOLEAN
 		do
 			l_meth_token := feature_token (current_type_id, feat.feature_id)
 
@@ -3249,14 +3249,16 @@ feature -- IL Generation
 						end
 						i := i + 1
 					end
+					has_return_value :=
+						feat.has_return_value or else
+						feat.is_once_creation (l_class_type.associated_class)
 					if not feat.is_c_external then
-						method_body.put_call ({MD_OPCODES}.call, l_token, nb,
-							feat.has_return_value)
+						method_body.put_call ({MD_OPCODES}.call, l_token, nb, has_return_value)
 					else
-						method_body.put_static_call (l_token, nb, feat.has_return_value)
+						method_body.put_static_call (l_token, nb, has_return_value)
 					end
 					if
-						feat.has_return_value and then
+						has_return_value and then
 						is_verifiable and then
 						not l_same_signature
 					then
@@ -3268,7 +3270,7 @@ feature -- IL Generation
 								mapped_class_type_token (l_type_i.static_type_id (l_cur_type.type)))
 						end
 					end
-					generate_return (feat.has_return_value)
+					generate_return (has_return_value)
 					method_writer.write_current_body
 				end
 			end
@@ -5339,6 +5341,7 @@ feature -- Once management
 		local
 			name: STRING
 			result_sig: like field_sig
+			result_type: TYPE_A
 		do
 			name := feat.feature_name
 
@@ -5362,11 +5365,12 @@ feature -- Once management
 				current_module.define_thread_static_attribute (exception_token)
 			end
 
-			if not feat.type.is_void then
+			result_type := result_type_in (feat, a_context_type)
+			if not result_type.is_void then
 					-- Generate field for result
 				result_sig := field_sig
 				result_sig.reset
-				set_signature_type (result_sig, feat.type, a_context_type)
+				set_signature_type (result_sig, result_type, a_context_type)
 
 				uni_string.set_string (once_result_name (name))
 				result_token := md_emit.define_field (uni_string,
@@ -5397,7 +5401,7 @@ feature -- Once management
 			end
 		end
 
-	generate_once_access_info (feature_i: FEATURE_I)
+	generate_once_access_info (feature_i: FEATURE_I; is_once_creation: BOOLEAN)
 			-- Initialize tokens for fields that are used to store result of `feature_i'.
 		require
 			feature_i_not_void: feature_i /= Void
@@ -5438,7 +5442,7 @@ feature -- Once management
 				done_token := md_emit.define_member_ref (uni_string, class_data_token, done_sig)
 				uni_string.set_string (once_exception_name (name))
 				exception_token := md_emit.define_member_ref (uni_string, class_data_token, exception_sig)
-				if feature_i.has_return_value then
+				if feature_i.has_return_value or else is_once_creation then
 					l_sig := field_sig
 					l_sig.reset
 					set_signature_type (l_sig, result_type_in (feature_i, current_class_type), current_class_type)
@@ -5465,7 +5469,7 @@ feature -- Once management
 			sync_token_set: feature_i.is_process_relative = (sync_token /= 0)
 		end
 
-	generate_once_prologue
+	generate_once_prologue (is_once_creation: BOOLEAN)
 			-- Generate prologue for once feature.
 			-- The feature is used with `generate_once_epilogue' as follows:
 			--    generate_once_prologue
@@ -5533,7 +5537,7 @@ feature -- Once management
 			else
 				set_object_relative_once_generation (False)
 			end
-			generate_once_access_info (byte_context.current_feature)
+			generate_once_access_info (byte_context.current_feature, is_once_creation)
 
 			if ready_token /= 0 then
 				check sync_token /= 0 end
@@ -5576,7 +5580,7 @@ feature -- Once management
 		ensure then
 			once_generation: once_generation
 			done_token_set: done_token /= 0
-			result_token_set: byte_context.current_feature.has_return_value = (result_token /= 0)
+			result_token_set: (byte_context.current_feature.has_return_value or is_once_creation) = (result_token /= 0)
 			ready_token_set: byte_context.current_feature.is_process_relative = (ready_token /= 0)
 			sync_token_set: byte_context.current_feature.is_process_relative = (sync_token /= 0)
 			once_done_label_set: once_done_label /= Void

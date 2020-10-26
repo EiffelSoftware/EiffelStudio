@@ -616,8 +616,8 @@ feature -- Return statements
 
 feature -- Once management
 
-	generate_once_prologue
-			-- Generate prologue for once feature.
+	generate_once_prologue (is_once_creation: BOOLEAN)
+			-- Generate prologue for once feature that is a creation procedure of a once class iff `is_once_creation`.
 			-- The feature is used with `generate_once_epilogue' as follows:
 			--    generate_once_prologue
 			--    ... -- code of once feature body
@@ -1305,7 +1305,7 @@ feature -- Generic conformance
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2019, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2020, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

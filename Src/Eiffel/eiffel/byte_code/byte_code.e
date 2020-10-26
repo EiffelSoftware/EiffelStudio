@@ -967,8 +967,6 @@ feature -- Status report
 	has_hector: BOOLEAN
 			-- Does the current byte code has a hector?
 
-feature {NONE} -- Status report
-
 	is_once_creation: BOOLEAN
 			-- Is it a creation procedure of a once class?
 		do

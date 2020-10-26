@@ -33,6 +33,37 @@ compare		exec_output_nf output
 
 cleanup_compile
 
+define		PRECOMPILED $PRECOMPILED_BASE_MT
+define		CONCURRENCY thread
+define		VOID_SAFETY none
+copy_sub	Ace $TEST Ace
+
+compile_melted
+compile_result ok
+execute_work 	NONE 	exec_output_tm	175
+execute_result 	ok
+compare		exec_output_tm output
+
+compile_frozen
+compile_result ok
+c_compile_work
+c_compile_result	ok
+execute_work 	NONE 	exec_output_tw	175
+execute_result 	ok
+compare		exec_output_tw output
+
+compile_final
+compile_result ok
+c_compile_final
+c_compile_result	ok
+execute_final 	NONE 	exec_output_tf	175
+execute_result 	ok
+compare		exec_output_tf output
+
+cleanup_compile
+
+if DOTNET test_end
+
 define		PRECOMPILED $PRECOMPILED_BASE_SCOOP_SAFE
 define		CONCURRENCY scoop
 define		VOID_SAFETY all
@@ -61,32 +92,5 @@ execute_result 	ok
 compare		exec_output_sf output
 
 cleanup_compile
-
-define		PRECOMPILED $PRECOMPILED_BASE_MT
-define		CONCURRENCY thread
-define		VOID_SAFETY none
-copy_sub	Ace $TEST Ace
-
-compile_melted
-compile_result ok
-execute_work 	NONE 	exec_output_tm	175
-execute_result 	ok
-compare		exec_output_tm output
-
-compile_frozen
-compile_result ok
-c_compile_work
-c_compile_result	ok
-execute_work 	NONE 	exec_output_tw	175
-execute_result 	ok
-compare		exec_output_tw output
-
-compile_final
-compile_result ok
-c_compile_final
-c_compile_result	ok
-execute_final 	NONE 	exec_output_tf	175
-execute_result 	ok
-compare		exec_output_tf output
 
 test_end

@@ -42,7 +42,7 @@ feature {NONE} -- Initialization
 			l_vbox: EV_VERTICAL_BOX
 			l_hbox: EV_HORIZONTAL_BOX
 			l_label: EV_LABEL
-			l_link: EVS_LINK_LABEL
+			l_link: EV_LINK_LABEL
 		do
 			set_background_color ((create{EV_STOCK_COLORS}).black)
 			set_border_width (1)
@@ -376,7 +376,7 @@ invariant
 	filter_changed_actions_attached: filter_changed_actions /= Void
 
 note
-	copyright: "Copyright (c) 1984-2014, Eiffel Software"
+	copyright: "Copyright (c) 1984-2020, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

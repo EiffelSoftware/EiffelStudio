@@ -148,7 +148,7 @@ feature {NONE} -- Initialization
 		local
 			l_hbox: EV_HORIZONTAL_BOX
 			l_sep: EV_HORIZONTAL_SEPARATOR
-			l_label: EVS_LINK_LABEL
+			l_label: EV_LINK_LABEL
 			l_tooltip: STRING_32
 		do
 			create option_bar_box
@@ -832,7 +832,7 @@ feature {NONE} -- Option Preferences
 
 feature {NONE} -- Option behaviour
 
-	on_option_label_selected (a_label: EVS_LINK_LABEL)
+	on_option_label_selected (a_label: EV_LINK_LABEL)
 			-- On option button selected
 		require
 			a_label_not_void: a_label /= Void

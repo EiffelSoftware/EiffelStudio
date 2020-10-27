@@ -206,13 +206,13 @@ feature {NONE} -- Basic operations
 
 feature {NONE} -- User interface elements
 
-	groups_label: attached EVS_HIGHLIGHT_LINK_LABEL
+	groups_label: attached EV_HIGHLIGHT_LINK_LABEL
 			-- Group label.
 
-	class_label: attached EVS_HIGHLIGHT_LINK_LABEL
+	class_label: attached EV_HIGHLIGHT_LINK_LABEL
 			-- Class label.
 
-	feature_label: attached EVS_HIGHLIGHT_LINK_LABEL
+	feature_label: attached EV_HIGHLIGHT_LINK_LABEL
 			-- Feature label.
 
 	stone_selection_widget: attached ES_STONE_SELECTION_WIDGET
@@ -332,7 +332,7 @@ feature {NONE} -- Internationalization
 	l_default_feature: STRING = "(Feature)"
 
 ;note
-	copyright: "Copyright (c) 1984-2009, Eiffel Software"
+	copyright: "Copyright (c) 1984-2020, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

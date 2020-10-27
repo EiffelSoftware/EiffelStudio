@@ -158,7 +158,7 @@ feature -- Access
 	remainder: INTEGER
 			-- Number chars to remove on completion	
 
-	next_panel_label: EVS_LINK_LABEL
+	next_panel_label: EV_LINK_LABEL
 			-- Label for next_panel.
 
 feature -- Settings

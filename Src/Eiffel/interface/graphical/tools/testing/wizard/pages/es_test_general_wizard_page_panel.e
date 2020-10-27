@@ -64,7 +64,7 @@ feature {NONE} -- Initialization
 			-- Initialize `class_tree'.
 		local
 			l_vbox: EV_VERTICAL_BOX
-			l_link_label: EVS_LINK_LABEL
+			l_link_label: EV_LINK_LABEL
 		do
 			create l_vbox
 			l_vbox.set_padding ({ES_UI_CONSTANTS}.horizontal_padding)
@@ -271,7 +271,7 @@ feature {NONE} -- Internationalization
 	launch_wizard_text: STRING = "Always show wizard before launching test creation"
 
 note
-	copyright: "Copyright (c) 1984-2014, Eiffel Software"
+	copyright: "Copyright (c) 1984-2020, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

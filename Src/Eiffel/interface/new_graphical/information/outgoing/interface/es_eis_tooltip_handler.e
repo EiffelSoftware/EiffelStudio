@@ -124,7 +124,7 @@ feature {NONE} -- Implementation
 		require
 			a_context_not_void: a_context /= Void
 		local
-			l_label: EVS_LINK_LABEL
+			l_label: EV_LINK_LABEL
 			l_browser_context: ES_EIS_ENTRY_HELP_CONTEXT
 			l_sep: EV_VERTICAL_SEPARATOR
 			l_hbox: EV_HORIZONTAL_BOX
@@ -260,7 +260,7 @@ feature {NONE} -- Implementation
 			-- Last context to show the tooltip
 
 note
-	copyright: "Copyright (c) 1984-2018, Eiffel Software"
+	copyright: "Copyright (c) 1984-2020, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

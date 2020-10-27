@@ -78,7 +78,7 @@ feature {NONE} -- User interface initialization
 			vb_ctx,vb_when: EV_VERTICAL_BOX
 			b: EV_VERTICAL_BOX
 			f: EV_FRAME
-			link: EVS_LINK_LABEL
+			link: EV_LINK_LABEL
 		do
 				--| Left
 			create vb_ctx
@@ -359,7 +359,7 @@ feature {NONE} -- Helpers
 			end
 		end
 
-	toggle_show_hide_widget (a_show_text: STRING_GENERAL; a_hide_text: STRING_GENERAL; a_link: EVS_LINK_LABEL; a_w: EV_WIDGET)
+	toggle_show_hide_widget (a_show_text: STRING_GENERAL; a_hide_text: STRING_GENERAL; a_link: EV_LINK_LABEL; a_w: EV_WIDGET)
 		do
 			if a_w.is_displayed then
 				a_w.hide
@@ -1033,7 +1033,7 @@ feature -- change
 			lab: EV_LABEL
 			tf: EV_TEXT_FIELD
 			msg_ins_bt: EV_BUTTON
-			help_link: EVS_LINK_LABEL
+			help_link: EV_LINK_LABEL
 		do
 				--| Print message: widgets
 			create cb.make_with_text (interface_names.b_bp_print_message)

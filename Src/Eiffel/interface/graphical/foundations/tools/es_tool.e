@@ -352,7 +352,7 @@ feature -- Access: User interface
 			is_interface_usable: is_interface_usable
 		local
 			l_result: like internal_docking_content
-			l_label: EVS_LINK_LABEL
+			l_label: EV_LINK_LABEL
 		do
 			l_result := internal_docking_content
 			if l_result = Void then
@@ -716,7 +716,7 @@ invariant
 		internal_docking_content.user_widget /= Void
 
 ;note
-	copyright: "Copyright (c) 1984-2018, Eiffel Software"
+	copyright: "Copyright (c) 1984-2020, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

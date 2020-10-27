@@ -86,7 +86,7 @@ feature -- Execution
 			hb: EV_HORIZONTAL_BOX
 			lab: EV_LABEL
 			txt: EV_TEXT
-			lnk: EVS_LINK_LABEL
+			lnk: EV_LINK_LABEL
 			eiffel_image: EV_PIXMAP
 			but: EV_BUTTON
 			l_focus: detachable EV_WIDGET

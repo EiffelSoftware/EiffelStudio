@@ -53,7 +53,7 @@ feature {NONE} -- Initialization
 			l_user_label: EV_LABEL
 			l_pass_label: EV_LABEL
 			l_text: EV_LABEL
-			l_link: EVS_LINK_LABEL
+			l_link: EV_LINK_LABEL
 			l_hbox: EV_HORIZONTAL_BOX
 			l_shrinkable: EV_FIXED
 			l_string: STRING_32
@@ -793,7 +793,7 @@ feature {NONE} -- User interface elements
 	severity_label: EV_LABEL
 				-- Severity label
 
-	log_out_link: EVS_LINK_LABEL
+	log_out_link: EV_LINK_LABEL
 			-- Logged in message lable link to log ou
 
 	username_text: EV_TEXT_FIELD

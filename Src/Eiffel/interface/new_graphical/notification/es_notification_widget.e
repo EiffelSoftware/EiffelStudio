@@ -53,7 +53,7 @@ feature -- Element change
 	build_interface
 		local
 			lab: EVS_LABEL
-			l_action_label: EVS_LINK_LABEL
+			l_action_label: EV_LINK_LABEL
 			l_action_box: EV_HORIZONTAL_BOX
 			l_main: EV_BOX
 			fr, l_action_frame: EV_VERTICAL_BOX

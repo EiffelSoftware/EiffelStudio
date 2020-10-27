@@ -76,7 +76,7 @@ feature {NONE} -- Initialization
 			l_vbox: EV_VERTICAL_BOX
 			l_text_field: EV_TEXT_FIELD
 			l_button: EV_BUTTON
-			l_link_label: EVS_LINK_LABEL
+			l_link_label: EV_LINK_LABEL
 			l_dialog: EV_DIALOG
 		do
 
@@ -346,7 +346,7 @@ feature {NONE} -- Internationalization
 		]"
 
 note
-	copyright: "Copyright (c) 1984-2019, Eiffel Software"
+	copyright: "Copyright (c) 1984-2020, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

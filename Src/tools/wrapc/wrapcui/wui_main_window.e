@@ -195,7 +195,6 @@ feature {NONE} -- GUI Actions
 			-- What happens when user clicks `full_header_button'
 		local
 			l_file_open: EV_FILE_OPEN_DIALOG
-			l_dir: DIRECTORY
 		do
 			create l_file_open.make_with_title ("Locate header file ...")
 			l_file_open.show_modal_to_window (Current)

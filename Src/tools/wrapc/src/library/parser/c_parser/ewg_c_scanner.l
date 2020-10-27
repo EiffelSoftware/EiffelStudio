@@ -122,6 +122,7 @@ NL    [\r\n
 "goto"			{ last_token := TOK_GOTO; last_string_value := text }
 "if"			{ last_token := TOK_IF; last_string_value := text }
 "int"			{ last_token := TOK_INT; last_string_value := text }
+"bool"			{ last_token := TOK_INT; last_string_value := text }
 "_Bool"			{ last_token := TOK_INT; last_string_value := text } -- TODO: introduce proper bool type
 "long"			{ last_token := TOK_LONG; last_string_value := text }
 "register"		{ last_token := TOK_REGISTER; last_string_value := text }

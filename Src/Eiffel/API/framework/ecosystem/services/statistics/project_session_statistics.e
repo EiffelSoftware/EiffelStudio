@@ -1,6 +1,6 @@
 note
 	description: "[
-		The ecosystem's default implementation for the {CODE_ANALYZER_S} interface.
+		The ecosystem's default implementation for the {PROJECT_SESSION_STATISTICS_S} interface.
 	]"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."

@@ -57,15 +57,12 @@ feature {NONE} -- Initialization
 				font.width = keyword_font.width)
 			font_width_cell.put (font_with_zoom_factor_cell.item.width)
 
-			from
-				panel_manager.panels.start
-			until
-				panel_manager.panels.after
+			across
+				panel_manager.panels as ic
 			loop
-				if panel_manager.panels.item /= Void then
-					panel_manager.panels.item.on_font_changed
+				if attached ic.item as l_panel then
+					l_panel.on_font_changed
 				end
-				panel_manager.panels.forth
 			end
 			update
 		end
@@ -811,7 +808,7 @@ feature {NONE} -- Implementation
 			-- Preferences
 
 note
-	copyright:	"Copyright (c) 1984-2019, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2020, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

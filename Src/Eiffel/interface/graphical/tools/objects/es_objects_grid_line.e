@@ -99,14 +99,18 @@ feature {ES_OBJECTS_GRID, ES_OBJECTS_GRID_MANAGER} -- Grid and row attachement
 			row_is_objects_grid_row: attached {ES_OBJECTS_GRID_ROW} a_row
 			is_not_attached_to_row: not is_attached_to_row
 		do
-			row ?= a_row
-			check row /= Void end
-			parent_grid := row.parent_objects_grid
-			check parent_grid = row.parent end
-			row.set_data (Current)
-			if row.parent /= Void then
-				row.clear
-				row.set_background_color (Void)
+			if attached {like row} a_row as r then
+				row := r
+				parent_grid := row.parent_objects_grid
+				check parent_grid = a_row.parent end
+			else
+				check is_objects_grid_row: False end
+				parent_grid := {ES_OBJECTS_GRID} / a_row.parent
+			end
+			a_row.set_data (Current)
+			if a_row.parent /= Void then
+				a_row.clear
+				a_row.set_background_color (Void)
 			end
 			compute_grid_display_done := False
 		ensure
@@ -299,7 +303,7 @@ invariant
 	parent_grid_related_to_attached_row: (row /= Void and then row.parent /= Void) implies parent_grid = row.parent
 
 note
-	copyright:	"Copyright (c) 1984-2017, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2020, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

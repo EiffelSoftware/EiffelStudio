@@ -268,7 +268,7 @@ feature -- Access
 		require
 			is_cluster: is_cluster
 		do
-			Result ?= actual_group
+			Result := {CLUSTER_I} / actual_group
 		ensure
 			Result_not_void: Result /= Void
 		end
@@ -278,7 +278,7 @@ feature -- Access
 		require
 			is_library: is_library
 		do
-			Result ?= actual_group
+			Result := {CONF_LIBRARY} / actual_group
 		ensure
 			Result_not_void: Result /= Void
 		end
@@ -288,7 +288,7 @@ feature -- Access
 		require
 			is_assembly: is_assembly
 		do
-			Result ?= actual_group
+			Result := {CONF_ASSEMBLY} / actual_group
 		ensure
 			Result_not_void: Result /= Void
 		end
@@ -463,7 +463,7 @@ invariant
 	name_prefxi_not_void: is_initialized implies name_prefix /= Void
 
 note
-	copyright: "Copyright (c) 1984-2018, Eiffel Software"
+	copyright: "Copyright (c) 1984-2020, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

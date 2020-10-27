@@ -479,7 +479,7 @@ feature -- Return statements
 
 feature -- Once management
 
-	generate_once_prologue
+	generate_once_prologue (is_once_creation: BOOLEAN)
 			-- Generate prologue for once feature.
 			-- The feature is used with `generate_once_epilogue' as follows:
 			--    generate_once_prologue
@@ -1032,7 +1032,7 @@ feature {CIL_CODE_GENERATOR, CUSTOM_ATTRIBUTE_GENERATOR} -- Custom attribute def
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2018, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2020, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

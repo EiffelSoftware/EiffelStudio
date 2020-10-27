@@ -1441,7 +1441,7 @@ feature -- Once management
 			current_method.code.append_pop_field (once_done)
 		end
 
-	generate_once_prologue
+	generate_once_prologue (is_once_creation: BOOLEAN)
 			-- Generate prologue for once feature.
 			-- The feature is used with `generate_once_epilogue' as follows:
 			--    generate_once_prologue
@@ -2517,7 +2517,7 @@ feature -- Convenience
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2019, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2020, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

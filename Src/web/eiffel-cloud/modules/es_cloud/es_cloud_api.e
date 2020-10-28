@@ -142,7 +142,7 @@ feature -- Access
 
 feature -- Access: licenses
 
-	licenses: LIST [TUPLE [ES_CLOUD_LICENSE, detachable ES_CLOUD_USER, detachable READABLE_STRING_8, detachable ES_CLOUD_ORGANIZATION]]
+	licenses: LIST [TUPLE [license: ES_CLOUD_LICENSE; user: detachable ES_CLOUD_USER; email: detachable READABLE_STRING_8; org: detachable ES_CLOUD_ORGANIZATION]]
 			-- Licenses
 		do
 			Result := es_cloud_storage.licenses
@@ -793,6 +793,43 @@ feature -- Change
 		end
 
 feature -- HTML factory
+
+	append_one_line_license_view_to_html (lic: ES_CLOUD_LICENSE; u: ES_CLOUD_USER; es_cloud_module: ES_CLOUD_MODULE; s: STRING_8)
+		local
+			l_plan: detachable ES_CLOUD_PLAN
+			api: CMS_API
+		do
+			api := cms_api
+			l_plan := lic.plan
+			s.append ("<div class=%"es-license%">")
+			s.append ("<span class=%"license-id%">License ID: </span><span class=%"id%">")
+			s.append ("<a href=%"" + api.location_url (es_cloud_module.license_location (lic), Void) + "%">")
+			s.append (html_encoded (lic.key))
+			s.append ("</a>")
+			s.append ("</span> ")
+			s.append ("<span class=%"user%">User %"")
+			s.append (api.user_html_administration_link (u.cms_user))
+			s.append ("%"</span> ")
+			s.append ("<span class=%"title%">Plan %"")
+			s.append (html_encoded (l_plan.title_or_name))
+			s.append ("%"</span> ")
+			s.append ("<span class=%"details%">")
+			if lic.is_active then
+				if attached lic.expiration_date as exp then
+					s.append ("<span class=%"expiration%">")
+					s.append (lic.days_remaining.out)
+					s.append (" days remaining")
+					s.append ("</span>")
+				else
+					s.append ("<span class=%"status%">Active</span>")
+				end
+			elseif lic.is_fallback then
+				s.append ("<span class=%"status%">Fallback license</span>")
+			else
+				s.append ("<span class=%"status warning%">Expired</span>")
+			end
+			s.append ("</div>")
+		end
 
 	append_short_license_view_to_html (lic: ES_CLOUD_LICENSE; u: ES_CLOUD_USER; es_cloud_module: ES_CLOUD_MODULE; s: STRING_8)
 		local

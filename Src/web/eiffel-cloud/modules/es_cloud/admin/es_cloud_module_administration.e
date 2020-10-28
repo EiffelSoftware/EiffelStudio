@@ -48,7 +48,7 @@ feature {NONE} -- Router/administration
 				create org_hlr.make (l_es_cloud_api)
 				org_hlr.setup_router (a_router, "/cloud/organizations/")
 				a_router.handle ("/cloud/subscriptions/", create {ES_CLOUD_SUBSCRIPTIONS_ADMIN_HANDLER}.make (l_es_cloud_api), a_router.methods_get_post)
-				a_router.handle ("/cloud/licenses/", create {ES_CLOUD_LICENSES_ADMIN_HANDLER}.make (l_es_cloud_api, Current), a_router.methods_get) --_post)
+				a_router.handle ("/cloud/licenses/", create {ES_CLOUD_LICENSES_ADMIN_HANDLER}.make (l_es_cloud_api, Current), a_router.methods_get_post)
 				a_router.handle ("/cloud/licenses/{license}", create {ES_CLOUD_LICENSES_ADMIN_HANDLER}.make (l_es_cloud_api, Current), a_router.methods_get_post)
 				a_router.handle ("/cloud/installations/", create {ES_CLOUD_INSTALLATIONS_ADMIN_HANDLER}.make (l_es_cloud_api), a_router.methods_get_post)
 				a_router.handle ("/cloud/plans/", create {ES_CLOUD_PLANS_ADMIN_HANDLER}.make (l_es_cloud_api), a_router.methods_get_post)

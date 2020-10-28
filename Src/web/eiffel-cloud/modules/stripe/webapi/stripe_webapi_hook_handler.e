@@ -191,6 +191,7 @@ feature -- Execution
 							l_useful_id.append_character ('.')
 							l_useful_id.append_string_general (p_id)
 						end
+						api.log_debug ({STRIPE_MODULE}.name, "Stripe invoice payment event: " + html_encoded (l_useful_id), Void)
 						if l_sub /= Void then
 							stripe_api.process_subscription_cycle (l_sub, l_invoice)
 							rep.add_string_field ("status" , "ok")

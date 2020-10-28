@@ -309,6 +309,8 @@ feature -- Hook
 				attached a_order.reference_id as l_ref_id and then
 				attached api.subscribed_licenses (l_ref_id) as l_licenses
 			then
+				api.cms_api.log_debug (name, "commit_cart and order #" + a_order.name, Void)
+
 				l_email := a_cart.email
 				if l_email = Void then
 					l_email := a_order.email
@@ -360,6 +362,9 @@ feature -- Hook
 --							api.send_extended_license_mail (l_user, l_email, lic)
 --						end
 						api.notify_extended_license (l_user, l_email, lic)
+					else
+						api.cms_api.log_debug (name, "Expecting subscription cycle for license " + html_encoded (lic.key), Void)
+						api.notify_new_license (l_user, if l_user /= Void then l_user.name else Void end, l_email, lic, Void)
 					end
 				end
 			else
@@ -381,6 +386,7 @@ feature -- Hook
 				attached es_cloud_api as api and then
 				attached api.store (a_cart.currency) as l_store
 			then
+				api.cms_api.log_debug (name, "commit_cart_item", Void)
 				l_prov_name := api.config.shop_provider_name
 				if a_cart_item.provider.is_case_insensitive_equal_general (l_prov_name) then
 						-- TODO: check invoice email instead!!!

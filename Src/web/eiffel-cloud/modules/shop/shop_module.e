@@ -391,13 +391,7 @@ feature -- Hook
 				if l_email_addr = Void and l_shop_cart /= Void then
 					l_email_addr := l_shop_cart.email
 				end
-				if
-					l_email_addr /= Void and then
-					(
-						l_order = Void or else
-						not a_validation.is_subscription_cycle -- No email, for monthly charge... TODO?
-					)
-				then
+				if l_email_addr /= Void then
 					create vars.make_caseless (3)
 					vars ["payment_validation"] := a_validation
 					vars ["receipt_or_invoice_urls"] := a_validation.receipt_or_invoice_urls
@@ -452,10 +446,10 @@ feature -- Hook
 						l_order := l_shop_api.cart_to_order (l_shop_cart, a_validation.reference_id)
 					end
 					l_shop_api.invoke_commit_cart (l_shop_cart, l_order)
+				else
+					l_shop_api.cms_api.log_debug (name, "Missing shopping cart information during payment validation.", Void)
 				end
 			end
 		end
-
-
 
 end

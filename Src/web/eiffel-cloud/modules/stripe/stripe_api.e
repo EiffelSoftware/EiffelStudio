@@ -378,6 +378,9 @@ feature -- Subscriptions
 		end
 
 	process_subscription_cycle (sub: STRIPE_SUBSCRIPTION; a_invoice: STRIPE_INVOICE)
+		require
+			attached sub
+			attached a_invoice
 		local
 			l_customer: STRIPE_CUSTOMER
 			l_validation: STRIPE_PAYMENT_VALIDATION
@@ -385,10 +388,7 @@ feature -- Subscriptions
 			if sub.is_active then
 				cms_api.log_debug ({STRIPE_MODULE}.name, "Subscription cycle #" + sub.id, Void)
 
-				if
-					a_invoice /= Void and then
-					attached a_invoice.customer_id as l_cust_id
-				then
+				if attached a_invoice.customer_id as l_cust_id then
 					l_customer := customer (l_cust_id)
 				end
 				if l_customer = Void then
@@ -396,17 +396,15 @@ feature -- Subscriptions
 				end
 				if l_customer /= Void then
 					create l_validation.make_from_subscription_cycle (sub, a_invoice, l_customer)
-					if a_invoice /= Void then
-						if attached a_invoice.metadata as md then
-							l_validation.import_metadata (md)
-						end
-						if attached a_invoice.metadata_string_item ("order.id", True) as l_order_id then
-							l_validation.set_order_id (l_order_id)
-						end
-					elseif attached sub.latest_invoice as l_invoice then
-						record_invoice (l_invoice)
+					if attached a_invoice.metadata as md then
+						l_validation.import_metadata (md)
+					end
+					if attached a_invoice.metadata_string_item ("order.id", True) as l_order_id then
+						l_validation.set_order_id (l_order_id)
 					end
 					invoke_validate_payment (l_validation)
+				else
+					cms_api.log_debug ({STRIPE_MODULE}.name, "Stripe missing customer for subscription: " + html_encoded (sub.id), Void)
 				end
 			end
 		end

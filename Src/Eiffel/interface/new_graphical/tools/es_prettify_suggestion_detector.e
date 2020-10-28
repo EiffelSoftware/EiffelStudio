@@ -19,6 +19,7 @@ inherit
 			on_update
 		end
 
+
 feature -- Installation
 
 	install
@@ -77,6 +78,25 @@ feature -- Event
 
 	consecutive_successful_compilations_index_for_last_notification: NATURAL_32
 
+feature -- Change Element
+
+
+	disable_session
+			-- Disable pretty printer notification for the current session.
+		do
+			is_disabled := True
+		ensure
+			is_disabled
+		end
+
+	enable_session
+			-- Enable pretty printer notification for the current session.
+		do
+			is_disabled := False
+		ensure
+			not is_disabled
+		end
+
 feature {NONE} -- Implementation		
 
 	notify_about_pretty_printer (a_editor: EB_SMART_EDITOR; a_notification_service: NOTIFICATION_S)
@@ -85,19 +105,33 @@ feature {NONE} -- Implementation
 			l_shortcut: MANAGED_SHORTCUT
 			l_locale: SHARED_LOCALE
 			l_msg: STRING_32
+			l_class_name: STRING
 		do
-			create l_locale
-			l_shortcut := preferences.editor_data.shortcuts.item ("prettify")
-			l_msg := l_locale.locale.formatted_string (l_locale.locale.translation_in_context ("The class $1 can be prettified%NUse: $2", "prettify_notification") , [Window_manager.last_focused_development_window.class_name, l_shortcut.display_string])
-			create l_notify.make (l_msg, "prettify")
-			l_notify.set_title (l_locale.locale.translation_in_context ("Code prettify suggestion", "prettify_notification"))
-			l_notify.register_action (agent (i_editor: EB_SMART_EDITOR)
-				do
-					i_editor.prettify
-				end (a_editor), "Apply")
-			a_notification_service.notify (l_notify)
-		end
+			if is_disabled or not preferences.development_window_data.is_pretty_printer_notification_enabled_preference.value  then
+		 		-- do nothing
+		 	else
+				l_class_name := Window_manager.last_focused_development_window.class_name
+				create l_locale
+				l_shortcut := preferences.editor_data.shortcuts.item ("prettify")
+				l_msg := l_locale.locale.formatted_string (l_locale.locale.translation_in_context ("The class $1 can be prettified%NUse: $2", "prettify_notification") , [l_class_name, l_shortcut.display_string])
+				create l_notify.make (l_msg, "prettify")
+				l_notify.set_title (l_locale.locale.translation_in_context ("Code prettify suggestion", "prettify_notification"))
+				l_notify.register_action (agent (i_editor: EB_SMART_EDITOR)
+					do
+						i_editor.prettify
+					end (a_editor), "Apply")
+				l_notify.register_action (agent (o: ES_PRETTIFY_SUGGESTION_DETECTOR)
+					do
+						o.disable_session
+					end (Current), "Later")
+				l_notify.register_action (agent
+					do
+						preferences.development_window_data.update_pretty_printer_notification (False)
+					end , "Never")
 
+				a_notification_service.notify (l_notify)
+			end
+		end
 
 	suggesting_pretty_printer (a_editor: EB_SMART_EDITOR): BOOLEAN
 		local
@@ -126,7 +160,9 @@ feature {NONE} -- Implementation
 			end
 		end
 
-note
+	is_disabled: BOOLEAN
+			-- Has been prettry printer disabled for this session?
+;note
 	copyright: "Copyright (c) 1984-2020, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"

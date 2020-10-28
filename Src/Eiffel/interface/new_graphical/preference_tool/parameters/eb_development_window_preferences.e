@@ -186,6 +186,12 @@ feature {EB_SHARED_PREFERENCES, EB_DEVELOPMENT_WINDOW_SESSION_DATA,
 			Result := pretty_printer_messindex_preference.value.to_natural_32
 		end
 
+	is_pretty_printer_notification_enabled: BOOLEAN
+			-- Is pretty printer notification enabled?
+		do
+			Result := is_pretty_printer_notification_enabled_preference.value
+		end
+
 feature {EB_SHARED_PREFERENCES} -- Preference
 
 	estudio_dbg_menu_allowed_preference: BOOLEAN_PREFERENCE
@@ -250,6 +256,8 @@ feature {EB_SHARED_PREFERENCES} -- Preference
 	pretty_printer_messindex_preference: INTEGER_PREFERENCE
 		-- Compute messindex as the diff between the current code and the pretty printed code.
 
+	is_pretty_printer_notification_enabled_preference: BOOLEAN_PREFERENCE
+			-- Is pretty printer notification enabled?
 
 feature -- Element change
 
@@ -266,6 +274,12 @@ feature -- Element change
 			completion_list_height_preference.set_value (a_height)
 			preferences.save_preference (completion_list_width_preference)
 			preferences.save_preference (completion_list_height_preference)
+		end
+
+	update_pretty_printer_notification (a_bool: BOOLEAN)
+			-- Update pretty printer notification with `a_bool`.
+		do
+			is_pretty_printer_notification_enabled_preference.set_value (a_bool)
 		end
 
 feature -- Basic operations
@@ -326,6 +340,8 @@ feature {NONE} -- Preference Strings
 	pretty_printer_messindex_string: STRING = "interface.development_window.pretty_printer_messindex"
 		-- Compute messindex as the diff between the current code and the pretty printed code.
 
+	is_pretty_printer_notification_enabled_string: STRING = "interface.development_window.is_pretty_printer_notification_enabled"
+
 feature {NONE} -- Implementation
 
 	initialize_preferences
@@ -365,6 +381,7 @@ feature {NONE} -- Implementation
 
 			consecutive_successful_compilations_threshold_preference := l_manager.new_integer_preference_value (l_manager, consecutive_successful_compilations_threshold_string, 4)
 			pretty_printer_messindex_preference := l_manager.new_integer_preference_value (l_manager, pretty_printer_messindex_string, 2)
+			is_pretty_printer_notification_enabled_preference := l_manager.new_boolean_preference_value (l_manager, is_pretty_printer_notification_enabled_string, True)
 
 
 			auto_hide_animation_speed_preference.change_actions.extend (agent on_auto_hide_animation_speed_changed)

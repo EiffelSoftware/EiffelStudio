@@ -275,25 +275,31 @@ feature -- Element change license
 			--  `nb_years` year(s)
 			--  `nb_months` month(s)
 			--  `nb_days` day(s)
-		require
-			lic.has_id
 		local
 			dt: DATE_TIME
-			y,mo,d: INTEGER
+			d: DATE
+			y,mo: INTEGER
+			orig: DATE_TIME
 		do
-			dt := lic.expiration_date
-			if dt = Void then
-				create dt.make_now_utc
+			orig := lic.expiration_date
+			if orig = Void then
+				orig := lic.creation_date
+				create orig.make_by_date_time (orig.date, orig.time)
+				if lic.days_remaining > 0 then
+					orig.day_add (lic.days_remaining)
+				end
 			end
+			create dt.make_by_date_time (orig.date, orig.time)
 			y := dt.year + nb_years
 			mo := dt.month + nb_months
-			d := dt.day + nb_days
 			if mo > 12 then
 				y := y + mo // 12
 				mo := mo \\ 12
 			end
-			lic.set_expiration_date (create {DATE_TIME}.make (y, mo, d, dt.hour, dt.minute, dt.second))
-			save_license (lic)
+			create d.make (y, mo, dt.day)
+			d.day_add (nb_days)
+			create dt.make_by_date_time (d, dt.time)
+			lic.set_expiration_date (dt)
 		end
 
 	save_new_license (a_license: ES_CLOUD_LICENSE; a_user: detachable ES_CLOUD_USER)

@@ -192,11 +192,7 @@ feature -- Hooks configuration
 
 	license_form_validation_action (fd: WSF_FORM_DATA; a_user: detachable ES_CLOUD_USER; a_lic: detachable ES_CLOUD_LICENSE; a_cloud_api: ES_CLOUD_API)
 		local
-			n: INTEGER
 			s_nb: STRING_32
-			orig: DATE_TIME
-			dt: DATE_TIME
-			y,mo: INTEGER
 			nb_months: INTEGER
 			nb_days: INTEGER
 			i: INTEGER
@@ -263,31 +259,12 @@ feature -- Hooks configuration
 								elseif s_nb.is_real then
 									nb_days := (31 * s_nb.to_real).truncated_to_integer --days
 								end
-								orig := lic.expiration_date
-								if orig = Void then
-									orig := lic.creation_date
-									create orig.make_by_date_time (orig.date, orig.time)
-									if lic.days_remaining > 0 then
-										orig.day_add (lic.days_remaining)
-									end
-								end
-								create dt.make_by_date_time (orig.date, orig.time)
 								if nb_months > 0 then
-									n := nb_months
-									y := dt.year
-									mo := dt.month + n
-									if mo <= 12 then
-									else
-										y := y + mo // 12
-										mo := mo \\ 12
-									end
-									create dt.make_by_date_time (create {DATE}.make (y, mo, dt.day), dt.time)
-									lic.set_expiration_date (dt)
+									a_cloud_api.extend_license_with_duration (lic, 0, nb_months, 0)
 								elseif nb_days > 0 then
-									dt.day_add (nb_days)
-									lic.set_expiration_date (dt)
+									a_cloud_api.extend_license_with_duration (lic, 0, 0, nb_days)
 								end
-
+								a_cloud_api.save_license (lic)
 							end
 							if l_is_update then
 								a_cloud_api.update_license (lic, a_user)

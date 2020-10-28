@@ -353,6 +353,7 @@ feature -- Hook
 							l_is_cycle := False
 						end
 					end
+					api.save_license (lic)
 					if l_is_cycle then
 						--FIXME: should we send notification to the user???
 --						if not l_email /= Void then
@@ -448,6 +449,7 @@ feature -- Hook
 											api.record_daily_license_subscription (lic, a_order.reference_id)
 										end
 									end
+									api.save_license (lic)
 
 									if l_user /= Void then
 										if l_trial_lic = Void then

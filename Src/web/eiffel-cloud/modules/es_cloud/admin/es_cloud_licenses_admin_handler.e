@@ -119,6 +119,7 @@ feature -- Execution
 			s: STRING
 			l_user: ES_CLOUD_USER
 			l_plan_filter: detachable READABLE_STRING_GENERAL
+			l_expiring_before_n_days_filter: INTEGER
 			l_org: ES_CLOUD_ORGANIZATION
 			l_email: READABLE_STRING_8
 --			orgs: detachable LIST [ES_CLOUD_ORGANIZATION]
@@ -128,16 +129,30 @@ feature -- Execution
 				if attached {WSF_STRING} req.query_parameter ("plan") as p_plan then
 					l_plan_filter := p_plan.value
 				end
+				if attached {WSF_STRING} req.query_parameter ("expiring_before_n_days") as p_expiring_before_n_days then
+					l_expiring_before_n_days_filter := p_expiring_before_n_days.value.to_integer_32
+					if l_expiring_before_n_days_filter <= 0 then
+						l_expiring_before_n_days_filter := 0
+					end
+				end
 				r := new_generic_response (req, res)
 				add_primary_tabs (r)
 
 				if l_plan_filter /= Void then
 					create s.make_from_string ("<h1>Licenses for plan %"" + html_encoded (l_plan_filter) + "%"</h1>")
-					s.append ("Click <a href=%"" + req.script_url (req.percent_encoded_path_info) + "%">for any plan</a>.")
 				else
 					create s.make_from_string ("<h1>Licenses</h1>")
-					s.append ("See <a href=%"" + api.administration_path ("/cloud/plans/") + " %">available plans</a>.")
+					s.append ("See <a href=%"" + api.administration_path ("/cloud/plans/") + " %">available plans</a>")
 				end
+				if l_expiring_before_n_days_filter > 0 or l_plan_filter /= Void  then
+					s.append (" | <a href=%"" + req.script_url (req.percent_encoded_path_info) + "%">All the licenses</a>")
+				elseif l_expiring_before_n_days_filter = 0 then
+					s.append (" | <a href=%"" + req.script_url (req.percent_encoded_path_info) + "?expiring_before_n_days=7%">Licenses expiring before 7 days</a>")
+				end
+				if l_expiring_before_n_days_filter > 0 then
+					s.append ("<br/>Currently listing licenses expiring before " + l_expiring_before_n_days_filter.out + " days.")
+				end
+
 				s.append ("<form action=%"" + req.percent_encoded_path_info + "%" method=%"post%" >")
 				s.append ("<table class=%"with_border%" style=%"border: solid 1px black%"><tr><th>Entity</th><th>Owner</th><th>Plan</th><th>Conditions</th><th>Until</th><th>Last</th><th>organization(s)</th>")
 				s.append ("</tr>")
@@ -145,6 +160,21 @@ feature -- Execution
 					lst := es_cloud_api.licenses_for_plan (pl)
 				else
 					lst := es_cloud_api.licenses
+				end
+				if l_expiring_before_n_days_filter > 0 then
+					from
+						lst.start
+					until
+						lst.after
+					loop
+						lic := lst.item.license
+						if lic.is_expired or lic.days_remaining <= l_expiring_before_n_days_filter then
+							--Keep
+							lst.forth
+						else
+							lst.remove
+						end
+					end
 				end
 				across
 					lst as ic

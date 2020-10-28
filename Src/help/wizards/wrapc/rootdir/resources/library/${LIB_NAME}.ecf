@@ -23,14 +23,14 @@
 		</external_include>
 
 		<!-- Include headers for the C target library -->
-		<external_include location="$ECF_CONFIG_PATH\C\include">
+		<external_include location="{$WIZ.c_library.c_header_path/}">
 			<condition>
 				<platform value="windows"/>
 			</condition>		
 		</external_include>
 
 		{unless isset="$IS_WINDOWS"}	
-		<external_include location="{$WIZ.c_library.c_header_location/}">
+		<external_include location="{$WIZ.c_library.c_header_path/}">
 			<condition>
 				<platform excluded_value="windows"/>
 			</condition>

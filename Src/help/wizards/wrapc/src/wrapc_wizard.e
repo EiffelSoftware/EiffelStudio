@@ -118,7 +118,6 @@ feature -- Pages
 
 			Result.data.force ("c_library", "name")
 			Result.data.force ("", "c_header_location")
-				--Result.data.force ("header.h", "c_header")
 			Result.data.force ("", "c_compile_options")
 
 			Result.set_validation (agent  (a_page: WIZARD_PAGE)
@@ -135,6 +134,7 @@ feature -- Pages
 								else
 									index := name.last_index_of ({PATH}.unix_separator, name.count)
 								end
+								l_page.data.force (name.substring (1, index), "c_header_path")
 								l_page.data.force (name.substring (index + 1, name.count), "c_header")
 							end
 

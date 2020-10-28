@@ -38,7 +38,10 @@ feature -- Execution
 			l_command: STRING
 			index: INTEGER
 		do
-			l_command := "wrap_c --verbose $COMPILE_OPTIONS--script_pre_process=$PATH$SEPARATORpre_script.bat --script_post_process=$PATH$SEPARATORpost_script.bat --output-dir=generated_wrapper  --full-header=$FULL_PATH --config=$PATH$SEPARATORconfig.xml"
+			l_command := "wrap_c --verbose $COMPILE_OPTIONS --script_pre_process=$PATH$SEPARATORpre_script.bat --script_post_process=$PATH$SEPARATORpost_script.bat --output-dir=generated_wrapper  --full-header=$FULL_PATH --config=$PATH$SEPARATORconfig.xml"
+
+				-- TODO
+				-- Use full path to the target C library.
 
 			collection := a_collection
 			if
@@ -71,7 +74,7 @@ feature -- Execution
 					not l_options.is_empty
 				then
 					variables.force (l_options, "C_COMPILE_OPTIONS")
-					l_command.replace_substring_all ("$COMPILE_OPTIONS", l_options.to_string_8)
+					l_command.replace_substring_all ("$COMPILE_OPTIONS", "--c_compile_options="+l_options.to_string_8)
 				else
 					l_command.replace_substring_all ("$COMPILE_OPTIONS", "")
 				end
@@ -88,6 +91,7 @@ feature -- Execution
 				recursive_copy_templates (application.layout.resources_location, dn)
 
 					-- Copy C headers
+					-- TODO review
 				if {PLATFORM}.is_windows and then
 					attached a_collection.item ("c_header_location") as l_header_location
 				then
@@ -95,7 +99,6 @@ feature -- Execution
 						-- Remove trailing '\' if exist.
 					index := l_path_library.last_index_of ({PATH}.windows_separator, l_path_library.count)
 					l_path_library := l_path_library.substring (1, index - 1)
-
 
 						-- We assume the C library will be in a path like %PATH%\include{\dir}
 					i := l_path_library.last_index_of ('\', l_path_library.count)
@@ -108,7 +111,7 @@ feature -- Execution
 						cdir := cdir.extended ("library").extended ("C").extended ("include")
 
 					end
-					l_command.replace_substring_all ("$FULL_PATH", cdir.absolute_path.extended (l_c_header).name.as_string_32)
+					l_command.replace_substring_all ("$FULL_PATH", l_header_location)
 					create cd.make_with_path (cdir)
 					if not cd.exists then
 						cd.recursive_create_dir

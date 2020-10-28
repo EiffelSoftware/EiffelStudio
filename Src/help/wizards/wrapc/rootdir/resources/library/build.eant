@@ -23,8 +23,8 @@
   <target name="init_wrap_c">
     <set name="system_dir" value="{$CWD/}"/>
     <set name="wrap_c.library_name" value="{$WIZ.library.name/}"/>
-    <set name="wrap_c.full_header_name" value="$ECF_CONFIG_PATH{$PATH_SEPARATOR/}C{$PATH_SEPARATOR/}include" if="{$IS_WINDOWS/}"/>
-    <set name="wrap_c.full_header_name" value="{$WIZ.c_library.c_header_location/}{$PATH_SEPARATOR/}{$WIZ.c_library.c_header/}" unless="{$IS_WINDOWS/}"/>
+    <set name="wrap_c.full_header_name" value="{$WIZ.c_library.c_header_location/}" if="{$IS_WINDOWS/}"/>
+    <set name="wrap_c.full_header_name" value="{$WIZ.c_library.c_header_location/}" unless="{$IS_WINDOWS/}"/>
     
     {if isset="$C_COMPILE_OPTIONS"}<set name="wrap_c.c_compile_options" value="--c_compile_options={$C_COMPILE_OPTIONS/}"/>{/if}
     {unless isset="$C_COMPILE_OPTIONS"}<set name="wrap_c.c_compile_options" value=""/>{/unless}

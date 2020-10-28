@@ -73,6 +73,7 @@ feature -- HTTP Methods
 			l_count: INTEGER
 			b: STRING
 			params: CMS_DATA_QUERY_PARAMETERS
+			l_date, l_prev_date: DATE
 		do
 			if api.has_permission ("view logs") then
 				create {GENERIC_VIEW_CMS_RESPONSE} r.make (req, res, api)
@@ -105,6 +106,11 @@ feature -- HTTP Methods
 					l_logs as ic
 				loop
 					l_log := ic.item
+					l_date := l_log.date.date
+					if l_prev_date = Void or else not l_date.is_equal (l_prev_date) then
+						b.append ("<li class=%"section%">" + l_date.out + "</li>")
+						l_prev_date := l_date
+					end
 					b.append ("<li class=%"log-level-"+ l_log.level.out +" log-" + l_log.level_name + "%">")
 					b.append ("<div class=%"log-header%">")
 					b.append ("<div class=%"log-name%">")

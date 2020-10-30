@@ -1189,70 +1189,61 @@ feature {NONE} -- Roundtrip
 			reset_types
 		end
 
+	process_creation_expression (target_type: TYPE_A; is_active: BOOLEAN; call: ACCESS_FEAT_AS; target_node: TYPE_AS)
+			-- Process a creation expression with the target type `t` with region activity specified by `is_active`
+			-- and call `call` at location identified by `target_node`.
+		local
+			t: TYPE_A
+			e: CREATION_EXPR_B
+		do
+				-- Type of a creation expression is always attached.
+			t := target_type.as_attached_in (context.current_class)
+				-- Type of a creation expression is frozen if this is a class type.
+			if attached {DEANCHORED_TYPE_A} t as d then
+				t := d.duplicate
+				t.set_frozen_mark
+			end
+			instantiator.dispatch (t, context.current_class)
+			is_in_creation_expression := True
+			process_abstract_creation (t, call, Void, target_node, target_node.start_location)
+			if attached last_type as c then
+				if not is_inherited then
+					record_creation_dependence (c)
+				end
+				if
+					is_byte_node_enabled and then
+					attached {ROUTINE_B} last_byte_node as a
+				then
+					create e
+					e.set_is_active (is_active)
+					e.set_call (a)
+					e.set_info (c.create_info)
+					e.set_type (c)
+					e.set_line_number (target_node.start_location.line)
+					last_byte_node := e
+				end
+			end
+		end
+
 	process_creation_expr_as (l_as: CREATION_EXPR_AS)
 			-- Process `l_as'.
 		local
-			l_call_access: ROUTINE_B
-			l_creation_expr: CREATION_EXPR_B
-			l_creation_type: TYPE_A
-			l_create_info: CREATE_INFO
 			l_vgcc3: VGCC3
-			l_needs_byte_node: BOOLEAN
 			l_error_level: NATURAL_32
 		do
-			l_needs_byte_node := is_byte_node_enabled
 			reset_for_unqualified_call_checking
-
 			l_error_level := error_level
 			l_as.type.process (Current)
-			l_creation_type := last_type
-			if l_creation_type /= Void then
-				if l_creation_type.is_none then
+			if attached last_type as t then
+				if t.is_none then
 						-- Cannot create instance of NONE.
 					create l_vgcc3
 					context.init_error (l_vgcc3)
-					l_vgcc3.set_type (l_creation_type)
+					l_vgcc3.set_type (t)
 					l_vgcc3.set_location (l_as.type.start_location)
 					error_handler.insert_error (l_vgcc3)
 				else
-						-- Type of a creation expression is always attached.
-					l_creation_type := l_creation_type.as_attached_in (context.current_class)
-						-- Type of a creation expression is frozen if this is a class type.
-					if
-						attached {DEANCHORED_TYPE_A} l_creation_type as l_type and then
-						attached l_type.duplicate as l_duplicated_type
-					then
-						l_duplicated_type.set_frozen_mark
-						l_creation_type := l_duplicated_type
-					end
-					instantiator.dispatch (l_creation_type, context.current_class)
-
-						-- Check call validity for creation.
-					is_in_creation_expression := True
-					process_abstract_creation (l_creation_type, l_as.call, Void, l_as, l_as.type.start_location)
-					if attached last_type as t then
-							-- Update creation type.
-						l_creation_type := t
-					end
-					if not is_inherited then
-						record_creation_dependence (l_creation_type)
-					end
-
-					if l_needs_byte_node then
-						l_call_access ?= last_byte_node
-
-							-- Compute creation information
-						l_create_info := l_creation_type.create_info
-
-						create l_creation_expr
-						l_creation_expr.set_is_active (l_as.is_active)
-						l_creation_expr.set_call (l_call_access)
-						l_creation_expr.set_info (l_create_info)
-						l_creation_expr.set_type (l_creation_type)
-						l_creation_expr.set_line_number (l_as.type.start_location.line)
-
-						last_byte_node := l_creation_expr
-					end
+					process_creation_expression (t, l_as.is_active, l_as.call, l_as.type)
 				end
 			end
 			if error_level /= l_error_level then
@@ -1327,11 +1318,18 @@ feature {NONE} -- Implementation
 					l_vsta1.set_location (l_as.class_type.start_location)
 					error_handler.insert_error (l_vsta1)
 					reset_types
+				elseif
+					attached l_type.base_class as c and then
+					c.is_once and then
+					c.creators.has (l_as.feature_name.name_8)
+				then
+						-- This is a shorthand for creating an object of a once class.
+					process_creation_expression (l_type, False, l_as, l_as.class_type)
 				else
 					set_type (l_type, l_as.class_type)
 					instantiator.dispatch (l_type, context.current_class)
 					if is_inherited then
-						l_feature := last_type.base_class.feature_of_rout_id (l_as.routine_ids.first)
+						l_feature := l_type.base_class.feature_of_rout_id (l_as.routine_ids.first)
 					else
 						record_non_object_call_dependence (l_type)
 					end
@@ -6465,7 +6463,7 @@ feature {NONE} -- Visitor
 			end
 		end
 
-	process_creation_call (f: detachable FEATURE_I; t: detachable TYPE_A; c: detachable CLASS_C; a: ACCESS_INV_AS; n: AST_EIFFEL; r: TYPE_A)
+	process_creation_call (f: detachable FEATURE_I; t: detachable TYPE_A; c: detachable CLASS_C; a: ACCESS_FEAT_AS; n: AST_EIFFEL; r: TYPE_A)
 			-- Process a call to creation feature `f` on base type `t` from class `c` of creation type `r`
 			-- updating `last_type` associated with node `n` and `last_calls_target_type`.
 		require
@@ -6498,7 +6496,7 @@ feature {NONE} -- Visitor
 			set_type (creation_type, n)
 		end
 
-	process_abstract_creation (a_creation_type: TYPE_A; a_call: ACCESS_INV_AS; a_name: STRING; typed_node: AST_EIFFEL; a_location: LOCATION_AS)
+	process_abstract_creation (a_creation_type: TYPE_A; a_call: ACCESS_FEAT_AS; a_name: STRING; typed_node: AST_EIFFEL; a_location: LOCATION_AS)
 		require
 			a_creation_type_not_void: a_creation_type /= Void
 			a_location_not_void: a_location /= Void
@@ -6512,7 +6510,7 @@ feature {NONE} -- Visitor
 			l_renamed_creation_type: RENAMED_TYPE_A
 			l_is_formal_creation, l_is_default_creation: BOOLEAN
 			l_feature, l_feature_item: FEATURE_I
-			l_orig_call, l_call: ACCESS_INV_AS
+			l_orig_call, l_call: ACCESS_FEAT_AS
 			l_vgcc1: VGCC1
 			l_vgcc11: VGCC11
 			l_vgcc2: VGCC2

@@ -15,18 +15,17 @@ create
 
 feature -- Generator
 
-
 feature -- Generation
 
 	generate (a_eiffel_wrapper_set: EWG_EIFFEL_WRAPPER_SET)
 		local
 			object_name: STRING
 			directory_name: STRING
-			l_content: STRING
+			l_content: STRING_32
+			l_include_path: PATH
 		do
 			object_name := if attached (create {PATH}.make_from_string (directory_structure.callback_c_glue_code_object_name (eiffel_compiler_mode.eiffel_compiler_mode))).entry as l_entry then l_entry.out else "" end
-			directory_name := if attached  (create {PATH}.make_from_string (directory_structure.wrapper_directory_name)).entry as l_entry then l_entry.out else "" end
-
+			directory_name := if attached (create {PATH}.make_from_string (directory_structure.wrapper_directory_name)).entry as l_entry then l_entry.out else "" end
 			if object_name.is_empty or else directory_name.is_empty then
 				error_handler.report_warning_message ("Can't build Makefiles Object name or Wrapper directory namea Unkown !!!")
 			else
@@ -38,6 +37,22 @@ feature -- Generation
 				l_content.replace_substring_all ("$OBJECT_LIST", object_name + ".o")
 				l_content.replace_substring_all ("$OUTPUT_DIRECTORY", directory_name)
 				l_content.replace_substring_all ("$LIBRARY_NAME", directory_structure.config_system.name)
+				if attached directory_structure.config_system.compile_options as l_compile_options then
+					l_content.replace_substring_all ("$COMPILE_OPTIONS", l_compile_options)
+				else
+					l_content.replace_substring_all ("$COMPILE_OPTIONS", "")
+				end
+				if directory_structure.config_system.include_path.is_empty then
+					l_content.replace_substring_all ("$INCLUDE_PATH", "DEFINE_PATH_TO_C_LIBRARY")
+				else
+					if
+						attached directory_structure.config_system.include_path.absolute_path.name as l_path
+					then
+						l_content.replace_substring_all ("$INCLUDE_PATH", l_path)
+					else
+						l_content.replace_substring_all ("$INCLUDE_PATH", "")
+					end
+				end
 				create_make_file (makefilename, l_content)
 
 					-- Windows
@@ -48,14 +63,19 @@ feature -- Generation
 				l_content.replace_substring_all ("$EIF_LIBARY_NAME", "eif_" + directory_structure.config_system.name)
 				l_content.replace_substring_all ("$OBJECT_LIST", object_name + ".$obj")
 				l_content.replace_substring_all ("$OUTPUT_DIRECTORY", directory_name)
+				if attached directory_structure.config_system.compile_options as l_compile_options then
+					l_content.replace_substring_all ("$COMPILE_OPTIONS", l_compile_options)
+				else
+					l_content.replace_substring_all ("$COMPILE_OPTIONS", "")
+				end
+
 				if directory_structure.config_system.include_path.is_empty then
-					l_content.replace_substring_all ("$INCLUDE_PATH", "")
+					l_content.replace_substring_all ("$INCLUDE_PATH", "DEFINE_PATH_TO_C_LIBRARY")
 				else
 					if
-						attached directory_structure.config_system.include_path.entry as l_entry and then
-						not l_entry.out.is_case_insensitive_equal ("include")
+						attached directory_structure.config_system.include_path.absolute_path.name as l_path
 					then
-						l_content.replace_substring_all ("$INCLUDE_PATH", l_entry.out)
+						l_content.replace_substring_all ("$INCLUDE_PATH", l_path)
 					else
 						l_content.replace_substring_all ("$INCLUDE_PATH", "")
 					end
@@ -63,8 +83,6 @@ feature -- Generation
 				create_make_file (makefilename_win, l_content)
 			end
 		end
-
-
 
 feature -- Makefile build
 
@@ -78,103 +96,99 @@ feature -- Makefile build
 			l_raw_file.close
 		end
 
-
 feature {NONE} -- Implementation
 
 	makefilename: STRING = "Makefile.SH"
-		-- Linux makefilename
+			-- Linux makefilename
 
 	makefilename_win: STRING = "Makefile-win.SH"
-		-- Windows makefilename.
-
+			-- Windows makefilename.
 
 	Makefile_windows: STRING = "[
-TOP = ..
-DIR = $dir_sep
-OUTDIR= .
-INDIR= .
-CC = $cc
-OUTPUT_CMD = $output_cmd
-CFLAGS = -I"$rt_include" -I $(TOP)$(DIR)include -I $(TOP)$(DIR)$(TOP)$(DIR)$(TOP)$(DIR)$OUTPUT_DIRECTORY$(DIR)c$(DIR)include -I $(TOP)$(DIR)$(TOP)$(DIR)$(TOP)$(DIR)C$(DIR)include$INCLUDE_PATH  
-JCFLAGS = $(CFLAGS) $optimize $ccflags
-JMTCFLAGS = $(CFLAGS) $optimize $mtccflags
-JILCFLAGS = $(CFLAGS) $optimize $mtccflags  -DEIF_IL_DLL
-LN = copy
-MV = $mv
-RM = $del
-MAKE = $make
-MKDIR = $mkdir
-OBJECTS = $OBJECT_LIST
+				TOP = ..
+				DIR = $dir_sep
+				OUTDIR= .
+				INDIR= .
+				CC = $cc
+				OUTPUT_CMD = $output_cmd
+				CFLAGS = $COMPILE_OPTIONS -I"$rt_include" -I $(TOP)$(DIR)include -I $(TOP)$(DIR)$(TOP)$(DIR)$(TOP)$(DIR)$OUTPUT_DIRECTORY$(DIR)c$(DIR)include -I $INCLUDE_PATH  
+				JCFLAGS = $(CFLAGS) $optimize $ccflags
+				JMTCFLAGS = $(CFLAGS) $optimize $mtccflags
+				JILCFLAGS = $(CFLAGS) $optimize $mtccflags  -DEIF_IL_DLL
+				LN = copy
+				MV = $mv
+				RM = $del
+				MAKE = $make
+				MKDIR = $mkdir
+				OBJECTS = $OBJECT_LIST
+				
+				.c.$obj:
+					$(CC) -c $(JCFLAGS) $<
+				
+				all:: standard
+					$(MAKE) clean
+				
+				standard:: $EIF_LIBARY_NAME.lib
+				
+				clean:
+					$(RM) *.$obj
+					$(RM) *.lib
+				
+				$EIF_LIBARY_NAME.lib: $(OBJECTS)
+					$alib_line
+					$(MKDIR) $(TOP)$(DIR)$(TOP)$(DIR)$(TOP)$(DIR)C$(DIR)spec$(DIR)$(ISE_C_COMPILER)$(DIR)$(ISE_PLATFORM)$(DIR)lib
+					$(MV) $@ $(TOP)$(DIR)$(TOP)$(DIR)$(TOP)$(DIR)C$(DIR)spec$(DIR)$(ISE_C_COMPILER)$(DIR)$(ISE_PLATFORM)$(DIR)lib$(DIR)$@
+			]"
 
-.c.$obj:
-	$(CC) -c $(JCFLAGS) $<
-
-all:: standard
-	$(MAKE) clean
-
-standard:: $EIF_LIBARY_NAME.lib
-
-clean:
-	$(RM) *.$obj
-	$(RM) *.lib
-
-$EIF_LIBARY_NAME.lib: $(OBJECTS)
-	$alib_line
-	$(MKDIR) $(TOP)$(DIR)$(TOP)$(DIR)$(TOP)$(DIR)C$(DIR)spec$(DIR)$(ISE_C_COMPILER)$(DIR)$(ISE_PLATFORM)$(DIR)lib
-	$(MV) $@ $(TOP)$(DIR)$(TOP)$(DIR)$(TOP)$(DIR)C$(DIR)spec$(DIR)$(ISE_C_COMPILER)$(DIR)$(ISE_PLATFORM)$(DIR)lib$(DIR)$@
-]"
-
-
-
-	Makefile_linux:  STRING = "[
-case $CONFIG in
-'')
-    if test ! -f config.sh; then
-        (echo "Can't find config.sh."; exit 1)
-    fi 2>/dev/null
-    . ./config.sh
-    ;;
-esac
-case "$O" in
-*/*) cd `expr X$0 : 'X\(.*\)/'` ;;
-esac
-echo "Extracting "."/Makefile (with variable substitutions)"
-$spitshell >Makefile <<!GROK!THIS!
-SHELL = /bin/sh
-CC= $cc
-AR = ar rc
-CFLAGS = $optimize $ccflags $large -I$rt_include -I../../../$OUTPUT_DIRECTORY/c/include -I../include `pkg-config --cflags $LIBRARY_NAME` -I../../../C/include
-LDFLAGS = $ldflags
-LIBS = $libs
-MAKE = $make
-MKDEP = $mkdep \$(DPFLAGS) --
-MV = $mv
-RANLIB = $ranlib
-RM = $rm -f
-PLATFORM = $ISE_PLATFORM
-
-!GROK!THIS!
-$spitshell >>Makefile <<'!NO!SUBS!'
-.c.o:
-	$(CC) $(CFLAGS) -c $<
-
-OBJECTS = $OBJECT_LIST
-
-$EIF_LIBARY_NAME.a: $(OBJECTS)
-	mkdir -p ../../../C/spec/$(PLATFORM)/lib
-	$(RM) $@
-	$(AR) $@ $(OBJECTS)
-	$(MV) $@ ../../../C/spec/$(PLATFORM)/lib
-	$(RANLIB) ../../../C/spec/$(PLATFORM)/lib/$@
-	$(MAKE) clean
-
-	#$(RM) $EIF_LIBARY_NAME.a $(OBJECTS) Makefile config.sh
-clean:
-	$(RM) $EIF_LIBARY_NAME.a $(OBJECTS)
-!NO!SUBS!
-chmod 644 Makefile
-$eunicefix Makefile
-]"
-	--$EIF_LIBARY_NAME, $OBJECT_LIST, $OUTPUT_DIRECTORY
+	Makefile_linux: STRING = "[
+				case $CONFIG in
+				'')
+				    if test ! -f config.sh; then
+				        (echo "Can't find config.sh."; exit 1)
+				    fi 2>/dev/null
+				    . ./config.sh
+				    ;;
+				esac
+				case "$O" in
+				*/*) cd `expr X$0 : 'X\(.*\)/'` ;;
+				esac
+				echo "Extracting "."/Makefile (with variable substitutions)"
+				$spitshell >Makefile <<!GROK!THIS!
+				SHELL = /bin/sh
+				CC= $cc
+				AR = ar rc
+				CFLAGS =$COMPILE_OPTIONS $optimize $ccflags $large -I$rt_include -I../../../$OUTPUT_DIRECTORY/c/include -I../include `pkg-config --cflags $LIBRARY_NAME` -I $INCLUDE_PATH  
+				LDFLAGS = $ldflags
+				LIBS = $libs
+				MAKE = $make
+				MKDEP = $mkdep \$(DPFLAGS) --
+				MV = $mv
+				RANLIB = $ranlib
+				RM = $rm -f
+				PLATFORM = $ISE_PLATFORM
+				
+				!GROK!THIS!
+				$spitshell >>Makefile <<'!NO!SUBS!'
+				.c.o:
+					$(CC) $(CFLAGS) -c $<
+				
+				OBJECTS = $OBJECT_LIST
+				
+				$EIF_LIBARY_NAME.a: $(OBJECTS)
+					mkdir -p ../../../C/spec/$(PLATFORM)/lib
+					$(RM) $@
+					$(AR) $@ $(OBJECTS)
+					$(MV) $@ ../../../C/spec/$(PLATFORM)/lib
+					$(RANLIB) ../../../C/spec/$(PLATFORM)/lib/$@
+					$(MAKE) clean
+				
+					#$(RM) $EIF_LIBARY_NAME.a $(OBJECTS) Makefile config.sh
+				clean:
+					$(RM) $EIF_LIBARY_NAME.a $(OBJECTS)
+				!NO!SUBS!
+				chmod 644 Makefile
+				$eunicefix Makefile
+			]"
+			--$EIF_LIBARY_NAME, $OBJECT_LIST, $OUTPUT_DIRECTORY
 
 end

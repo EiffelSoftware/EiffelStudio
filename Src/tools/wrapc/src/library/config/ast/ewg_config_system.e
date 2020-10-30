@@ -44,7 +44,6 @@ feature {NONE} -- Initialization
 			create function_excludes.make (10)
 			function_excludes.compare_objects
 			create directory_structure.make (Current)
-
 		end
 
 feature {ANY} -- Access
@@ -72,6 +71,9 @@ feature {ANY} -- Access
 
 	include_path: PATH
 			-- Directory path to the header.
+
+	compile_options: detachable STRING
+			-- C compile options.
 
 feature {ANY}
 
@@ -461,6 +463,13 @@ feature {ANY} -- Operations
 			include_path := a_path
 		ensure
 			include_path_set: include_path = a_path
+		end
+
+	set_comile_options (a_options: like compile_options)
+		do
+			compile_options := a_options
+		ensure
+			compile_options_set: compile_options = a_options
 		end
 
 feature {NONE} -- Implementation

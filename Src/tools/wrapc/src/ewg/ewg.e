@@ -172,6 +172,7 @@ feature -- Basic Operations
 			end
 			create config_system.make (header_file_name)
 			config_system.set_include_path (l_path.parent)
+			config_system.set_comile_options (compiler_options)
 		end
 
 	exceptions_die

@@ -1,4 +1,9 @@
+[![Build Status](https://travis-ci.org/eiffel-wrap-c/WrapC.svg?branch=master)](https://travis-ci.org/eiffel-wrap-c/WrapC)
+
+
 # WrapC
+
+![WrapC logo](./doc/wrapc_logo.svg  "WrapC logo")
 
 `WrapC` is an Eiffel wrapper generator for C libraries, originally known as EWG (http://www.sourceforge.net/projects/ewg)
 It can be used to create libraries that bridge the gap between Eiffel and C. It aims to work for arbitrary ANSI C and with EiffelSoftware compiler.

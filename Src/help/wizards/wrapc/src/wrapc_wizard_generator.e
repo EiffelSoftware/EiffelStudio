@@ -38,7 +38,7 @@ feature -- Execution
 			l_command: STRING
 			index: INTEGER
 		do
-			l_command := "wrap_c --verbose $COMPILE_OPTIONS --script_pre_process=$PATH$SEPARATORpre_script.bat --script_post_process=$PATH$SEPARATORpost_script.bat --output-dir=generated_wrapper  --full-header=$FULL_PATH --config=$PATH$SEPARATORconfig.xml"
+			l_command := "wrap_c --verbose $COMPILE_OPTIONS --script_pre_process=$PATH$SEPARATORpre_script.$FILE_EXTENSION --script_post_process=$PATH$SEPARATORpost_script.$FILE_EXTENSION --output-dir=generated_wrapper  --full-header=$FULL_PATH --config=$PATH$SEPARATORconfig.xml"
 
 				-- TODO
 				-- Use full path to the target C library.
@@ -62,7 +62,9 @@ feature -- Execution
 				variables.force ("${path_separator}", "PATH_SEPARATOR")
 				variables.force ("${ISE_C_COMPILER}", "ISE_C_COMPILER")
 				variables.force ("${ISE_PLATFORM}", "ISE_PLATFORM")
-				variables.force ("${is_windows}", "IS_WINDOWS")
+				if {PLATFORM}.is_windows then
+					variables.force ("${is_windows}", "IS_WINDOWS")
+				end
 				variables.force (c_name, "PREPROCESS_HEADER")
 
 					-- Workaround
@@ -92,37 +94,20 @@ feature -- Execution
 
 					-- Copy C headers
 					-- TODO review
-				if {PLATFORM}.is_windows and then
-					attached a_collection.item ("c_header_location") as l_header_location
+				if	attached a_collection.item ("c_header_location") as l_header_location
 				then
-					l_path_library := l_header_location
-						-- Remove trailing '\' if exist.
-					index := l_path_library.last_index_of ({PATH}.windows_separator, l_path_library.count)
-					l_path_library := l_path_library.substring (1, index - 1)
-
-						-- We assume the C library will be in a path like %PATH%\include{\dir}
-					i := l_path_library.last_index_of ('\', l_path_library.count)
-					l_str := l_path_library.substring (i + 1, l_path_library.count)
-					if l_path_library.has_substring ("include") and then not l_str.is_case_insensitive_equal_general ("include") then
-						cdir := dn
-						cdir := cdir.extended ("library").extended ("C").extended ("include").extended (l_str)
-					else
-						cdir := dn
-						cdir := cdir.extended ("library").extended ("C").extended ("include")
-
-					end
 					l_command.replace_substring_all ("$FULL_PATH", l_header_location)
-					create cd.make_with_path (cdir)
-					if not cd.exists then
-						cd.recursive_create_dir
-					end
-					recursive_copy_templates (create {PATH}.make_from_string (l_path_library), cdir)
-
-					create env
-					env.change_working_path (pdn.extended ("library"))
-					env.launch (l_command)
-
 				end
+				if {PLATFORM}.is_windows then
+					l_command.replace_substring_all ("$FILE_EXTENSION", "bat")
+				else
+					l_command.replace_substring_all ("$FILE_EXTENSION", "sh")
+					l_command.prepend ("./")
+				end
+
+				create env
+				env.change_working_path (pdn.extended ("library"))
+				env.launch (l_command)
 
 				send_response (create {WIZARD_SUCCEED_RESPONSE}.make (dn.extended ("library").extended (pn).appended_with_extension ("ecf"), d.path))
 			else

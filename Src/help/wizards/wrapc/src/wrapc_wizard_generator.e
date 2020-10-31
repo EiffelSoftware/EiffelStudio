@@ -28,15 +28,11 @@ feature -- Execution
 
 	execute (a_collection: WIZARD_DATA)
 		local
-			d, cd: DIRECTORY
-			pdn, dn, cdir: PATH
+			d: DIRECTORY
+			pdn, dn : PATH
 			c_name: STRING
-			l_path_library: STRING
-			l_str: STRING
-			i: INTEGER
 			env: EXECUTION_ENVIRONMENT
-			l_command: STRING
-			index: INTEGER
+			l_command: STRING_32
 		do
 			l_command := "wrap_c --verbose $COMPILE_OPTIONS --script_pre_process=$PATH$SEPARATORpre_script.$FILE_EXTENSION --script_post_process=$PATH$SEPARATORpost_script.$FILE_EXTENSION --output-dir=generated_wrapper  --full-header=$FULL_PATH --config=$PATH$SEPARATORconfig.xml"
 

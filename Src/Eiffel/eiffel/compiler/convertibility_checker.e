@@ -583,8 +583,8 @@ feature {NONE} -- Implementation: checking
 					if a_convert_feat.is_creation_procedure then
 							-- Check it is listed as part of creation procedures of current class.
 						if
-							a_class.creators = Void or else
-							not a_class.creators.has (a_convert_feat.feature_name.internal_name.name)
+							attached a_class.creators as cs implies
+							not cs.has (a_convert_feat.feature_name.internal_name.name_id)
 						then
 								-- Not a creation procedure.
 							create l_vncp.make ("Not a creation procedure.")
@@ -776,16 +776,14 @@ feature {NONE} -- Implementation: access
 			-- Compare two instances `u' and `v' of NAMED_TYPE_A using `same_as'.
 		do
 			if v = Void then
-				Result := (u = Void)
-			elseif u = Void then
-				Result := False
-			else
+				Result := u = Void
+			elseif u /= Void then
 				Result := u.same_as (v)
 			end
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2018, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2020, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

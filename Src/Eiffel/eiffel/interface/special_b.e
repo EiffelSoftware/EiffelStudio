@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "Compiled class SPECIAL"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -40,7 +40,7 @@ feature -- Validity
 				make_feature := feat_table.item_id ({PREDEFINED_NAMES}.make_empty_name_id)
 				if
 					make_feature = Void or else
-					not (make_feature.written_in = class_id) or else
+					make_feature.written_in /= class_id or else
 					not make_feature.same_signature (make_empty_signature) or else
 					not has_creation_routine (make_feature)
 				then
@@ -51,7 +51,7 @@ feature -- Validity
 				make_feature := feat_table.item_id ({PREDEFINED_NAMES}.make_name_id)
 				if
 					make_feature = Void or else
-					not (make_feature.written_in = class_id) or else
+					make_feature.written_in /= class_id or else
 					not make_feature.same_signature (make_signature) or else
 					not has_creation_routine (make_feature)
 				then
@@ -64,7 +64,7 @@ feature -- Validity
 			make_feature := feat_table.item_id ({PREDEFINED_NAMES}.make_filled_name_id)
 			if
 				make_feature = Void or else
-				not (make_feature.written_in = class_id) or else
+				make_feature.written_in /= class_id or else
 				not make_feature.same_signature (make_filled_signature) or else
 				not has_creation_routine (make_feature)
 			then
@@ -75,7 +75,7 @@ feature -- Validity
 				-- Check if class has a feature item (INTEGER): G#1
 			item_feature := feat_table.item_id ({PREDEFINED_NAMES}.item_name_id)
 			if item_feature = Void
-				or else not (item_feature.written_in = class_id)
+				or else item_feature.written_in /= class_id
 				or else not item_feature.same_signature (item_signature)
 			then
 				create special_error.make (special_case_5, Current)
@@ -85,7 +85,7 @@ feature -- Validity
 				-- Check if class has a feature put (G#1, INTEGER)
 			put_feature := feat_table.item_id ({PREDEFINED_NAMES}.put_name_id)
 			if put_feature = Void
-				or else not (put_feature.written_in = class_id)
+				or else put_feature.written_in /= class_id
 				or else not put_feature.same_signature (put_signature)
 			then
 				create special_error.make (special_case_6, Current)
@@ -95,7 +95,7 @@ feature -- Validity
 				-- Check if class has a feature to_array: ARRAY [G#1]
 			to_array_feature := feat_table.item_id ({PREDEFINED_NAMES}.to_array_name_id)
 			if to_array_feature = Void
-				or else not (to_array_feature.written_in = class_id)
+				or else to_array_feature.written_in /= class_id
 				or else not to_array_feature.same_signature (to_array_signature)
 			then
 				create special_error.make (special_case_7, Current)
@@ -115,7 +115,7 @@ feature -- Validity
 						-- Check if class has a feature extend (G#1, INTEGER)
 					put_feature := feat_table.item_id ({PREDEFINED_NAMES}.extend_name_id)
 					if put_feature = Void
-						or else not (put_feature.written_in = class_id)
+						or else put_feature.written_in /= class_id
 						or else not put_feature.same_signature (extend_signature)
 					then
 						create special_error.make (special_case_9, Current)
@@ -268,16 +268,9 @@ feature {NONE} -- Implementation
 		require
 			a_feature_attached: a_feature /= Void
 		do
-			if creators /= Void then
-				from
-					creators.start
-				until
-					Result or else creators.after
-				loop
-					Result := creators.key_for_iteration.is_equal (a_feature.feature_name)
-					creators.forth
-				end
-			end
+			Result :=
+				attached creators as cs and then
+				across cs as c some c.key = a_feature.feature_name_id end
 		end
 
 	make_signature: DYN_PROC_I

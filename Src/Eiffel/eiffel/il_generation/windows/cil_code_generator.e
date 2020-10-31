@@ -934,7 +934,7 @@ feature -- Generation Structure
 
 							if
 								not l_class.is_deferred and
-								(l_class.creators = Void or else not l_class.creators.is_empty)
+								(attached l_class.creators as cs implies not cs.is_empty)
 							then
 								l_uni_string.set_string (l_type.full_il_create_type_name)
 								md_emit.define_exported_type (l_uni_string, l_file_token,
@@ -2899,7 +2899,7 @@ feature -- IL Generation
 		local
 			create_name: STRING
 			l_attributes: INTEGER
-			l_creators: HASH_TABLE [EXPORT_I, STRING]
+			l_creators: like {CLASS_C}.creators
 			l_feat_tbl: FEATURE_TABLE
 			l_type_token: INTEGER
 			l_is_generic: BOOLEAN
@@ -2910,7 +2910,7 @@ feature -- IL Generation
 				-- 1 - class is not deferred
 				-- 2 - class has exported creation procedure
 				-- 3 - class has automatic `default_create' procedure
-			if not class_c.is_deferred and (l_creators = Void or else not l_creators.is_empty) then
+			if not class_c.is_deferred and (attached l_creators implies not l_creators.is_empty) then
 				l_is_generic := class_c.is_generic or else class_c.is_tuple
 				create_name := class_type.full_il_create_type_name
 				l_attributes := {MD_TYPE_ATTRIBUTES}.Public |
@@ -2933,7 +2933,7 @@ feature -- IL Generation
 					across
 						l_creators as c
 					loop
-						generate_creation_procedure (class_c, class_type, l_feat_tbl.item (c.key), l_is_generic)
+						generate_creation_procedure (class_c, class_type, l_feat_tbl.item_id (c.key), l_is_generic)
 					end
 				elseif attached class_c.default_create_feature as f then
 						-- It is not guaranteed that a class defines `default_create', e.g.

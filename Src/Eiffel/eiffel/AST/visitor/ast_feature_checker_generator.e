@@ -332,16 +332,14 @@ feature {NONE} -- Internal type checking
 			-- Check VEVI for attributes and record information necessary to check validity rules for targeted expressions.
 		local
 			c: CLASS_C
-			creators: HASH_TABLE [EXPORT_I, STRING_8]
 		do
 			c := context.current_class
 				-- Optimization: skip deferred classes.
 			if not c.is_deferred and then is_void_safe_initialization then
-				creators := c.creators
 					-- Check if the current feature is a creation procedure.
 				if
-					creators /= Void and then creators.has (current_feature.feature_name) or else
-					c.creation_feature /= Void and then c.creation_feature.feature_id = current_feature.feature_id
+					attached c.creators as cs and then cs.has (current_feature.feature_name_id) or else
+					attached c.creation_feature as cf and then cf.feature_id = current_feature.feature_id
 				then
 					(create {AST_CREATION_PROCEDURE_CHECKER}.make (current_feature, context)).do_nothing
 				end
@@ -1321,7 +1319,7 @@ feature {NONE} -- Implementation
 				elseif
 					attached l_type.base_class as c and then
 					c.is_once and then
-					c.creators.has (l_as.feature_name.name_8)
+					c.creators.has (l_as.feature_name.name_id)
 				then
 						-- This is a shorthand for creating an object of a once class.
 					process_creation_expression (l_type, False, l_as, l_as.class_type)
@@ -3230,7 +3228,6 @@ feature {NONE} -- Visitor
 		local
 			l_arg_pos: INTEGER
 			l_last_id: INTEGER
-			l_local: LOCAL_B
 			l_argument: ARGUMENT_B
 			l_local_info: LOCAL_INFO
 			l_feature: FEATURE_I
@@ -3296,8 +3293,7 @@ feature {NONE} -- Visitor
 					l_type := l_local_info.type
 					l_type := l_type.instantiation_in (last_type.as_implicitly_detachable.as_variant_free, l_last_id)
 					if l_needs_byte_node then
-						create l_local.make (l_local_info.position)
-						last_byte_node := l_local
+						create {LOCAL_B} last_byte_node.make (l_local_info.position)
 					end
 
 					if is_checking_postcondition or else is_checking_precondition then
@@ -6516,7 +6512,7 @@ feature {NONE} -- Visitor
 			l_vgcc2: VGCC2
 			l_vgcc4: VGCC4
 			l_vgcc5: VGCC5
-			l_creators: HASH_TABLE [EXPORT_I, STRING]
+			l_creators: like {CLASS_C}.creators
 			l_needs_byte_node: BOOLEAN
 			l_actual_creation_type: TYPE_A
 			l_type_set: TYPE_SET_A
@@ -6802,18 +6798,19 @@ feature {NONE} -- Visitor
 									l_vgcc5.set_creation_feature (l_creation_class.feature_table.item (last_feature_name))
 									l_vgcc5.set_location (l_call.feature_name)
 									error_handler.insert_error (l_vgcc5)
-								elseif l_creators /= Void then
-									if not l_creators.item (last_feature_name).valid_for (l_context_current_class) then
-											-- Creation procedure is not exported
-										create l_vgcc5
-										context.init_error (l_vgcc5)
-										l_vgcc5.set_target_name (a_name)
-										l_vgcc5.set_type (a_creation_type)
-										l_vgcc5.set_creation_feature (
-											l_creation_class.feature_table.item_id (last_feature_name_id))
-										l_vgcc5.set_location (l_call.feature_name)
-										error_handler.insert_error (l_vgcc5)
-									end
+								elseif
+									attached l_creators and then
+									not l_creators.item (last_feature_name_id).valid_for (l_context_current_class)
+								then
+										-- Creation procedure is not exported
+									create l_vgcc5
+									context.init_error (l_vgcc5)
+									l_vgcc5.set_target_name (a_name)
+									l_vgcc5.set_type (a_creation_type)
+									l_vgcc5.set_creation_feature (
+										l_creation_class.feature_table.item_id (last_feature_name_id))
+									l_vgcc5.set_location (l_call.feature_name)
+									error_handler.insert_error (l_vgcc5)
 								end
 							else
 									-- Check that the creation feature used for creating the generic

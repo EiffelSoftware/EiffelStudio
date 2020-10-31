@@ -1862,28 +1862,13 @@ feature -- Access
 			-- exported to `class_c'.
 		require
 			has_expanded
-		local
-			a: CLASS_C
-			creators: HASH_TABLE [EXPORT_I, STRING]
 		do
-			if is_expanded then
-				a := base_class
-				if a.is_external then
-					Result := True
-				else
-					creators := a.creators
-					if creators = Void then
-						Result := True
-					else
-						creators.search (a.default_create_feature.feature_name)
-						if creators.found then
-							Result := creators.found_item.valid_for (c)
-						end
-					end
-				end
-			else
-				Result := True
-			end
+			Result :=
+				not is_expanded or else
+				attached base_class as b and then
+				(b.is_external or else
+				not attached b.creators as creators or else
+				attached creators [b.default_create_feature.feature_name_id] as e and then e.valid_for (c))
 		end
 
 	is_ancestor_valid: BOOLEAN

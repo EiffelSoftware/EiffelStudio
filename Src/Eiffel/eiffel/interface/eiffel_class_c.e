@@ -1080,7 +1080,7 @@ feature -- Third pass: byte code production and type check
 					until
 						l_constructors.after or l_error
 					loop
-						l_error := not creators.has (l_constructors.item)
+						l_error := not creators.has (names_heap.id_of (l_constructors.item))
 						if not l_error then
 							l_constructors.forth
 						end

@@ -260,7 +260,6 @@ feature {NONE} -- Initialization
 			-- Create and build `file_menu'.
 		local
 			menu_item: EV_MENU_ITEM
-			menu_sep: EV_MENU_SEPARATOR
 			command_menu_item: EB_COMMAND_MENU_ITEM
 		do
 			create file_menu.make_with_text (Interface_names.m_File)
@@ -281,8 +280,7 @@ feature {NONE} -- Initialization
 			file_menu.extend (command_menu_item)
 			auto_recycle (command_menu_item)
 
-			create menu_sep
-			file_menu.extend (menu_sep)
+			file_menu.extend (create {EV_MENU_SEPARATOR})
 
 			create menu_item.make_with_text (Interface_names.m_Close)
 			menu_item.select_actions.extend (agent destroy)
@@ -766,26 +764,14 @@ feature {NONE} -- Implementation: Graphical interface
 			else
 				Result.extend (empty_string)
 			end
-			if exp.creation_routine /= Void then
-				Result.extend (exp.creation_routine.name_32)
-			else
-				Result.extend (empty_string)
-			end
-			if exp.routine /= Void then
-				Result.extend (exp.routine.name_32)
-			else
-				Result.extend (empty_string)
-			end
-			if attached exp.alias_name_32 as l_name then
-				Result.extend (l_name)
-			else
-				Result.extend (empty_string)
-			end
+			Result.extend (if attached exp.creation_routine as r then r.name_32 else empty_string end)
+			Result.extend (if attached exp.routine as r then r.name_32 else empty_string end)
+			Result.extend (if attached exp.alias_name_32 as l_name then l_name else empty_string end)
 			if is_windows then
-				if exp.index /= 0 then
-					Result.extend (exp.index.out)
-				else
+				if exp.index = 0 then
 					Result.extend (empty_string)
+				else
+					Result.extend (exp.index.out)
 				end
 				if exp.call_type /= Void then
 					Result.extend (exp.call_type)
@@ -795,7 +781,7 @@ feature {NONE} -- Implementation: Graphical interface
 			end
 		end
 
-	empty_string: STRING = ""
+	empty_string: STRING_32 = ""
 
 feature {NONE} -- Implementation: Creation routine selection
 
@@ -828,23 +814,14 @@ feature {NONE} -- Implementation: Creation routine selection
 			-- Calculate the list of valid creation procedures.
 		require
 			valid_class_c: cl /= Void and then cl.has_feature_table
-		local
-			i, max: INTEGER
 		do
 			create {ARRAYED_LIST [E_FEATURE]} Result.make (5)
-			if cl.creators /= Void then
-					-- TODO: Replace the following iteration on keys with the direct iteration on hash table with an across loop.
-				if attached cl.creators.current_keys as list_creators then
-					max := list_creators.upper
-					from
-						i := list_creators.lower
-					until
-						i > max
-					loop
-						if attached cl.feature_with_name (list_creators [i]) as tmp_creation and then not tmp_creation.has_arguments then
-							Result.extend (tmp_creation)
-						end
-						i := i + 1
+			if attached cl.creators as cs then
+				across
+					cs as c
+				loop
+					if attached cl.feature_with_name_id (c.key) as f and then not f.has_arguments then
+						Result.extend (f)
 					end
 				end
 			elseif attached cl.default_create_feature as default_create_feature then
@@ -1247,8 +1224,7 @@ feature {NONE} -- Implementation: Properties dialog
 				hb.disable_item_expand (ilab)
 				create index_field
 				index_field.set_leap (1)
-				maxind :=  ((1).to_integer_32 |<< 15) - 1
-				index_field.value_range.adapt (0 |..| maxind)
+				index_field.value_range.adapt (0 |..| ({INTEGER_32} 1 |<< 15 - 1))
 				index_field.set_minimum_width (f.string_width ("20") + 50)
 				hb.extend (index_field)
 				hb.disable_item_expand (index_field)
@@ -1440,10 +1416,10 @@ feature {NONE} -- Implementation: Properties dialog
 					modified_exported_feature.remove_alias_name
 				end
 				if is_windows then
-					if ind /= 0 then
-						modified_exported_feature.set_index (ind)
-					else
+					if ind = 0 then
 						modified_exported_feature.remove_index
+					else
+						modified_exported_feature.set_index (ind)
 					end
 					if not default_calling_convention.same_string_general (cc) then
 						modified_exported_feature.set_call_type (cc)
@@ -1721,10 +1697,8 @@ feature {NONE} -- Implementation: checks
 				end
 				exports.forth
 			end
-			if Result = 0 then
-				if conflicting_exports then
-					Result := -1
-				end
+			if Result = 0 and then conflicting_exports then
+				Result := -1
 			end
 		end
 
@@ -1798,7 +1772,7 @@ invariant
 note
 	ca_ignore:
 		"CA093", "CA093: manifest array type mismatch"
-	copyright:	"Copyright (c) 1984-2018, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2020, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

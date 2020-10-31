@@ -20,19 +20,14 @@ feature
 	is_visible (feat: FEATURE_I; class_id: INTEGER): BOOLEAN
 			-- Is feature name `feat_name' visible in context
 			-- of class `class_id'?
-		local
-			creators: HASH_TABLE [EXPORT_I, STRING]
 		do
-			Result := feat.export_status.is_all
-			if not Result then
+			Result :=
+				feat.export_status.is_all or else
 					-- If it is a creation routine, we can export
 					-- it, so that we match the Eiffel way to create
 					-- an object.
-				creators := System.class_of_id (class_id).creators
-				if creators /= Void then
-					Result := creators.has (feat.feature_name)
-				end
-			end
+				attached system.class_of_id (class_id).creators as cs and then
+				cs.has (feat.feature_name_id)
 		end
 
 	has_visible: BOOLEAN = True
@@ -115,7 +110,7 @@ feature
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2019, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2020, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

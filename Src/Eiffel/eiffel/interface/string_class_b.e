@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "Compiled class STRING"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -55,7 +55,7 @@ feature -- Checking
 		do
 				-- Check if class has an attribute `area' of type SPECIAL [CHARACTER].
 			if
-				not attached {FEATURE_I} feature_table.item_id (Names_heap.area_name_id) as area_feature
+				not attached feature_table.item_id (Names_heap.area_name_id) as area_feature
 				or else not area_type.same_as (area_feature.type.actual_type)
 			then
 				create special_error.make (string_case_1, Current)
@@ -74,51 +74,35 @@ feature -- Checking
 			-- Check for creation procedure, depending on `a_for_immut` for immutable or mutable strings.
 		local
 			creat_feat: FEATURE_I
-			error, done: BOOLEAN
-			special_error: SPECIAL_ERROR
+			done: BOOLEAN
 		do
 				-- Third check if class has one creation procedure with
 				-- one integer argument
-			error := creators = Void
-			if not error then
-				from
-					creators.start
+			if attached creators as cs then
+				across
+					cs as c
 				until
-					done or else creators.after
+					done
 				loop
-					creat_feat := feature_table.item (creators.key_for_iteration)
-					if a_for_immut then
-						if
+					creat_feat := feature_table.item_id (c.key)
+					done :=
+						if a_for_immut then
 							creat_feat.feature_name_id = names_heap.make_from_c_byte_array_name_id and then
 							creat_feat.same_signature (make_from_c_byte_array_signature)
-						then
-							done := True
 						else
-							creators.forth
-						end
-					else
-						if
 							creat_feat.feature_name_id = names_heap.make_name_id and then
 							creat_feat.same_signature (make_signature)
-						then
-							done := True
-						else
-							creators.forth
 						end
-					end
 				end
-				error := not done
-			end;
-			if error then
-				create special_error.make (string_case_3, Current)
-				Error_handler.insert_error (special_error)
+			end
+			if not done then
+				error_handler.insert_error (create {SPECIAL_ERROR}.make (string_case_3, Current))
 			end
 		end
 
 	check_for_set_count_procedure
 		local
 			set_count_feat: FEATURE_I
-			special_error: SPECIAL_ERROR
 		do
 				-- Fourthsence of a procedure `set_count'.
 			set_count_feat := feature_table.item_id (Names_heap.set_count_name_id)
@@ -127,8 +111,7 @@ feature -- Checking
 				or else	not set_count_feat.same_signature (set_count_signature)
 				or else set_count_feat.written_in /= class_id
 			then
-				create special_error.make (string_case_4, Current)
-				Error_handler.insert_error (special_error)
+				Error_handler.insert_error (create {SPECIAL_ERROR}.make (string_case_4, Current))
 			end
 		end
 

@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "Compiled class NATIVE_ARRAY"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -23,93 +23,70 @@ feature -- Validity
 	check_validity
 			-- Check validity of class ARRAY
 		local
-			error: BOOLEAN
-			special_error: SPECIAL_ERROR
 			l_feat_tbl: like feature_table
 			l_feat: FEATURE_I
 			done: BOOLEAN
 		do
 			l_feat_tbl := feature_table
 				-- First check if current class has one formal generic parameter
-			if (generics = Void) or else generics.count /= 1 then
-				create special_error.make (native_array_case_1, Current)
-				Error_handler.insert_error (special_error)
+			if attached generics as g implies g.count /= 1 then
+				Error_handler.insert_error (create {SPECIAL_ERROR}.make (native_array_case_1, Current))
 			end
 
 				-- Second, check if there is only one creation procedure
 				-- having only one integer argument
-			error := creators = Void
-			if not error then
-				from
-					creators.start
+			if attached creators as cs then
+				across
+					cs as c
 				until
-					done or else creators.after
+					done
 				loop
-					l_feat := l_feat_tbl.item (creators.key_for_iteration)
-					if
+					l_feat := l_feat_tbl.item_id (c.key)
+					done :=
 						l_feat.feature_name_id = names_heap.make_name_id and then
 						l_feat.same_signature (make_signature)
-					then
-						done := True
-					else
-						creators.forth
-					end
 				end
-				error := not done
 			end
-			if error then
-				create  special_error.make (native_array_case_2, Current)
-				Error_handler.insert_error (special_error)
+			if not done then
+				Error_handler.insert_error (create {SPECIAL_ERROR}.make (native_array_case_2, Current))
 			end
 
 				-- Third, check if class has a feature item and at alias "@" (INTEGER): G#1
-			l_feat := l_feat_tbl.item_id ({PREDEFINED_NAMES}.item_name_id)
 			if
-				l_feat = Void
-				or else not (l_feat.written_in = class_id)
-				or else not l_feat.same_signature (item_signature)
+				not attached l_feat_tbl.item_id ({PREDEFINED_NAMES}.item_name_id) as f or else
+				f.written_in /= class_id or else
+				not f.same_signature (item_signature)
 			then
-				create special_error.make (native_array_case_3, Current)
-				Error_handler.insert_error (special_error)
+				Error_handler.insert_error (create {SPECIAL_ERROR}.make (native_array_case_3, Current))
 			end
 
-			l_feat := l_feat_tbl.item_id ({PREDEFINED_NAMES}.at_name_id)
 			if
-				l_feat = Void
-				or else not (l_feat.written_in = class_id)
-				or else not l_feat.same_signature (at_signature)
+				(not attached l_feat_tbl.item_id ({PREDEFINED_NAMES}.at_name_id) as f or else
+				f.written_in /= class_id or else
+				not f.same_signature (at_signature)) and then
+				(not attached l_feat_tbl.item_id ({PREDEFINED_NAMES}.infix_at_name_id) as f or else
+				f.written_in /= class_id or else
+				not f.same_signature (infix_at_signature))
 			then
-				l_feat := l_feat_tbl.item_id ({PREDEFINED_NAMES}.infix_at_name_id)
-				if
-					l_feat = Void
-					or else not (l_feat.written_in = class_id)
-					or else not l_feat.same_signature (infix_at_signature)
-				then
-					create special_error.make (native_array_case_4, Current)
-					Error_handler.insert_error (special_error)
-				end
+				Error_handler.insert_error (create {SPECIAL_ERROR}.make (native_array_case_4, Current))
 			end
 
 				-- Fourth, check if class has a feature put (G#1, INTEGER)
-			l_feat := l_feat_tbl.item_id ({PREDEFINED_NAMES}.put_name_id)
 			if
-				l_feat = Void
-				or else not (l_feat.written_in = class_id)
-				or else not l_feat.same_signature (put_signature)
+				not attached l_feat_tbl.item_id ({PREDEFINED_NAMES}.put_name_id) as f or else
+				f.written_in /= class_id or else
+				not f.same_signature (put_signature)
 			then
-				create special_error.make (native_array_case_5, Current)
-				Error_handler.insert_error (special_error)
+				Error_handler.insert_error (create {SPECIAL_ERROR}.make (native_array_case_5, Current))
 			end
 
 				-- Fourth, check if class has a feature count, INTEGER)
-			l_feat := l_feat_tbl.item_id ({PREDEFINED_NAMES}.count_name_id)
 			if
-				l_feat = Void
-				or else not (l_feat.written_in = class_id)
-				or else not l_feat.same_signature (count_signature)
+				not attached l_feat_tbl.item_id ({PREDEFINED_NAMES}.count_name_id) as f or else
+				f.written_in /= class_id or else
+				not f.same_signature (count_signature)
 			then
-				create special_error.make (native_array_case_6, Current)
-				Error_handler.insert_error (special_error)
+				Error_handler.insert_error (create {SPECIAL_ERROR}.make (native_array_case_6, Current))
 			end
 		end
 
@@ -117,17 +94,15 @@ feature -- Generic derivation
 
 	new_type (data: CL_TYPE_A): NATIVE_ARRAY_CLASS_TYPE
 			-- New class type for class NATIVE_ARRAY.
-		local
-			l_data: NATIVE_ARRAY_TYPE_A
 		do
-			l_data ?= data
-			check
-				l_data_not_void: l_data /= Void
-			end
-			create Result.make (l_data)
-			if already_compiled then
-					-- Melt all the code written in the associated class of the new class type
-				melt_all
+			if attached {NATIVE_ARRAY_TYPE_A} data as t then
+				create Result.make (t)
+				if already_compiled then
+						-- Melt all the code written in the associated class of the new class type
+					melt_all
+				end
+			else
+				check valid_data: False end
 			end
 		end
 
@@ -314,4 +289,4 @@ note
 			Customer support http://support.eiffel.com
 		]"
 
-end -- end of NATIVE_ARRAY_B
+end

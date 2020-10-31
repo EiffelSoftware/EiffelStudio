@@ -666,33 +666,16 @@ feature {TYPE_A} -- Helpers
 
 	internal_is_valid_for_class (a_class: CLASS_C): BOOLEAN
 		local
-			l_class: like base_class
-			l_generics: like generics
-			i, nb: INTEGER
+			gs: like generics
 		do
-			l_class := base_class
-			l_generics := generics
-			nb := l_generics.count
+			gs := generics
 			if
-				l_class /= Void and then l_class.is_valid and then
+				attached base_class as l_class and then l_class.is_valid and then
 				l_class.is_expanded = (class_declaration_mark ⊗ expanded_mark /= 0) and then
 				l_class.is_once = (class_declaration_mark ⊗ once_mark /= 0) and then
-				((attached l_class.generics as g and then g.count = nb) or is_tuple)
+				((attached l_class.generics as g and then g.count = gs.count) or is_tuple)
 			then
-				from
-					Result := True
-					i := 1
-					nb := generics.count
-				until
-					i > nb
-				loop
-					if not generics.i_th (i).internal_is_valid_for_class (a_class) then
-						Result := False
-						i := nb + 1
-					else
-						i := i + 1
-					end
-				end
+				Result := ∀ g: gs ¦ g.internal_is_valid_for_class (a_class)
 			end
 		end
 
@@ -861,18 +844,20 @@ feature {TYPE_A} -- Helpers
 				until
 					i > nb or else not Result
 				loop
-					l_type := l_generics.i_th (i)
+					l_type := l_generics [i]
 						-- We use `actual_type' here because if this is an anchor, then we need to know
 						-- if the anchor is a formal since it is crucial for the comparison.
-					if l_type.actual_type.is_formal and current_type /= Void then
+					if
+						l_type.actual_type.is_formal and
+						current_type /= Void and then
 							-- It is a formal, so we need to instantiate the formal in the
 							-- context of the current type. For example, we are looking for
 							-- the class type of A [G] in the context of B [INTEGER], thus
 							-- G is INTEGER. If we were not doing that, we would have to
 							-- create additional objects.
-						if attached {FORMAL_A} l_type.actual_type as l_formal then
-							l_type := current_type.generics.i_th (l_formal.position)
-						end
+						attached {FORMAL_A} l_type.actual_type as l_formal
+					then
+						l_type := current_type.generics [l_formal.position]
 					end
 					if current_type /= Void and then attached {LIKE_CURRENT} l_type.actual_type as l_like_current then
 						l_type := l_like_current.conformance_type
@@ -1328,30 +1313,28 @@ feature -- Primitives
 			l_generics, l_new_generics: like generics
 			l_old_generic, l_new_generic: TYPE_A
 		do
-			if a_ancestor /= a_descendant then
-				if is_loose then
-					from
-						l_generics := generics
-						nb := l_generics.count
-						i := 1
-					until
-						i > nb
-					loop
-						l_old_generic := l_generics.i_th (i)
-						l_new_generic := l_old_generic.evaluated_type_in_descendant (a_ancestor, a_descendant, a_feature)
-						if l_old_generic /= l_new_generic then
-							if Result = Void then
-								Result := duplicate_for_instantiation
-								l_new_generics := Result.generics
-							end
-							l_new_generics.put_i_th (l_new_generic, i)
+			if a_ancestor = a_descendant then
+				Result := Current
+			elseif is_loose then
+				from
+					l_generics := generics
+					nb := l_generics.count
+					i := 1
+				until
+					i > nb
+				loop
+					l_old_generic := l_generics.i_th (i)
+					l_new_generic := l_old_generic.evaluated_type_in_descendant (a_ancestor, a_descendant, a_feature)
+					if l_old_generic /= l_new_generic then
+						if Result = Void then
+							Result := duplicate_for_instantiation
+							l_new_generics := Result.generics
 						end
-						i := i + 1
+						l_new_generics.put_i_th (l_new_generic, i)
 					end
-					if Result = Void then
-						Result := Current
-					end
-				else
+					i := i + 1
+				end
+				if Result = Void then
 					Result := Current
 				end
 			else
@@ -1546,7 +1529,7 @@ feature -- Primitives
 				base_generics := base_class.generics
 				if base_generics /= Void then
 					generic_count := base_generics.count
-					if (generic_count = generics.count) then
+					if generic_count = generics.count then
 						from
 							i := 1
 						until
@@ -1734,7 +1717,7 @@ feature -- Primitives
 		require
 			new_generics_not_void: new_generics /= Void
 		local
-			i, count, pos: INTEGER
+			i, count: INTEGER
 			constraint_type: TYPE_A
 		do
 			from
@@ -1744,10 +1727,8 @@ feature -- Primitives
 				i > count
 			loop
 				constraint_type := generics.i_th (i)
-
 				if constraint_type.is_formal and then attached {FORMAL_A} constraint_type as formal_type then
-					pos := formal_type.position
-					generics.put_i_th (new_generics.i_th (pos), i)
+					generics [i] := new_generics [formal_type.position]
 				elseif constraint_type.generics /= Void and then attached {GEN_TYPE_A} constraint_type as gen_type then
 					gen_type.substitute (new_generics)
 				end
@@ -1800,7 +1781,7 @@ feature -- Primitives
 			is_valid: is_valid
 		local
 			formal_crc_list, crc_list: LINKED_LIST [TUPLE [type_item: RENAMED_TYPE_A; feature_item: FEATURE_I]];
-			creators_table: HASH_TABLE [EXPORT_I, STRING]
+			creators_table: like {CLASS_C}.creators
 			matched: BOOLEAN
 			feat_tbl: FEATURE_TABLE
 			class_c: CLASS_C
@@ -1872,10 +1853,9 @@ feature -- Primitives
 								-- Test if we found the specified feature name among the creation
 								-- procedures of `class_c' and that it is exported to Current, since it
 								-- it is Current that will create instances of the generic parameter.
-							creators_table.search (other_feature_i.feature_name)
 							if
-								not creators_table.found or else
-								not creators_table.found_item.valid_for (base_class)
+								attached creators_table [other_feature_i.feature_name_id] as e implies
+								not e.valid_for (base_class)
 							then
 								if l_unmatched_features = Void then
 									create {LINKED_LIST[FEATURE_I]} l_unmatched_features.make
@@ -1894,18 +1874,18 @@ feature -- Primitives
 							-- At last we check that this class is not deferred.
 						if
 						 	creators_table = Void and then
-							(crc_list.count = 1 and then formal_dec_as.has_default_create)
+							crc_list.count = 1 and then
+							formal_dec_as.has_default_create
 						then
 								-- Ok, no error: We have no create clause which makes `default_create' available
 								-- and the constraint demands only `default_create'
-
-									-- But maybe it is a deferred class?					
-								if class_c /= Void and then class_c.is_deferred then
-									if l_unmatched_features = Void then
-										create {LINKED_LIST[FEATURE_I]} l_unmatched_features.make
-									end
-									l_unmatched_features.extend (crc_list.first.feature_item)
+								-- But maybe it is a deferred class?					
+							if attached class_c and then class_c.is_deferred then
+								if l_unmatched_features = Void then
+									create {LINKED_LIST[FEATURE_I]} l_unmatched_features.make
 								end
+								l_unmatched_features.extend (crc_list.first.feature_item)
+							end
 						else
 								-- Generate list of features not matching constraint.
 							from
@@ -1920,7 +1900,7 @@ feature -- Primitives
 									-- case we should not list `default_create' has not beeing met if listed in the creation
 									-- constraint.
 								feature_i := crc_list.item.feature_item
-								if creators_table /= Void or else not feature_i.rout_id_set.has (system.default_create_rout_id) then
+								if attached creators_table or else not feature_i.rout_id_set.has (system.default_create_rout_id) then
 									l_unmatched_features.extend (feature_i)
 								end
 								crc_list.forth

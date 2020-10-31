@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "Specific description of the ARRAY class which has special requirements for `check_validity'."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -24,64 +24,45 @@ feature
 	check_validity
 			-- Check validity of class ARRAY
 		local
-			error: BOOLEAN;
-			special_error: SPECIAL_ERROR;
-			creat_feat: FEATURE_I;
+			creat_feat: FEATURE_I
 			area_feature: ATTRIBUTE_I
 			done: BOOLEAN
 		do
-			-- First check if current class has one formal generic parameter
-			if (generics = Void) or else generics.count /= 1 then
-				create special_error.make (array_case_1, Current);
-				Error_handler.insert_error (special_error);
-			end;
-
-				-- Check if class has an attribute `area' of type SPECIAL [T].
-			area_feature ?= feature_table.item_id ({PREDEFINED_NAMES}.area_name_id)
-			if
-				(area_feature = Void)
-				or else not area_type.same_as (area_feature.type)
-			then
-				create special_error.make (array_case_2, Current)
-				Error_handler.insert_error (special_error)
+				-- First check if current class has one formal generic parameter
+			if not attached generics as g or else g.count /= 1 then
+				Error_handler.insert_error (create {SPECIAL_ERROR}.make (array_case_1, Current))
 			end
 
-			-- Third check if class has only one reference attribute
-			-- only (which is necessary `area' then).
-			if
-				types.first.skeleton.nb_reference /= 1
-			then
-				create special_error.make (array_case_3, Current);
-				Error_handler.insert_error (special_error);
-			end;
+				-- Check if class has an attribute `area' of type SPECIAL [T].
+			area_feature := {ATTRIBUTE_I} / feature_table.item_id ({PREDEFINED_NAMES}.area_name_id)
+			if not attached area_feature or else not area_type.same_as (area_feature.type) then
+				Error_handler.insert_error (create {SPECIAL_ERROR}.make (array_case_2, Current))
+			end
 
-			-- Fouth, check if there is only one creation procedure
-			-- having only two integer arguments
-			error := creators = Void
-			if not error then
-				from
-					creators.start
+				-- Third check if class has only one reference attribute
+				-- only (which is necessary `area' then).
+			if types.first.skeleton.nb_reference /= 1 then
+				Error_handler.insert_error (create {SPECIAL_ERROR}.make (array_case_3, Current))
+			end
+
+				-- Fouth, check if there is only one creation procedure
+				-- having only two integer arguments
+			if attached creators as cs then
+				across
+					cs as c
 				until
-					done or else creators.after
+					done
 				loop
-					creat_feat := feature_table.item (creators.key_for_iteration);
-					if
+					creat_feat := feature_table.item_id (c.key)
+					done :=
 						creat_feat.feature_name_id = {PREDEFINED_NAMES}.make_name_id and then
 						creat_feat.same_signature (make_signature)
-					then
-						done := True
-					else
-						creators.forth
-					end
 				end
-				error := not done
-			end;
-			if error then
-				create special_error.make (array_case_4, Current);
-				Error_handler.insert_error (special_error);
-			end;
-
-		end; -- check_validity
+			end
+			if not done then
+				Error_handler.insert_error (create {SPECIAL_ERROR}.make (array_case_4, Current))
+			end
+		end
 
 feature {NONE}
 

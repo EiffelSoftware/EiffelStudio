@@ -1820,7 +1820,8 @@ feature {NONE} -- Visitors
 					is_once_creation :=
 						a_node.is_once and then
 						l_class_c.is_once and then
-						l_class_c.creators.has (a_node.feature_name)
+						attached l_class_c.creators as cs and then
+						cs.has (a_node.feature_name_id)
 					if l_invariant_checked then
 						if not is_once_creation then
 							generate_il_call_invariant_leading (l_cl_type, not l_is_in_creation)
@@ -4406,7 +4407,7 @@ feature {NONE} -- Implementation: Feature calls
 					a_node.is_once and then
 					attached target_type.base_class as b and then
 					b.is_once and then
-					b.creators.has (a_node.feature_name)
+					b.creators.has (a_node.feature_name_id)
 				then
 					target_type
 				else

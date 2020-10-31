@@ -344,8 +344,7 @@ feature -- Access
 	has_creator_of_name_id (a_id: INTEGER): BOOLEAN
 			-- Has creator with the same name as `a_feat'?
 		do
-			Result := attached creators as l_creators and then
-						attached names_heap.item (a_id) as l_name and then l_creators.has (l_name)
+			Result := attached creators as cs and then cs.has (a_id)
 		end
 
 	creator_of_name_id (a_id: INTEGER): EXPORT_I
@@ -353,15 +352,15 @@ feature -- Access
 		require
 			has_creator_of_name_id: has_creator_of_name_id (a_id)
 		do
-			Result := creators.item (names_heap.item (a_id))
+			Result := creators.item (a_id)
 		ensure
 			Result_not_void: Result /= Void
 		end
 
 feature {INTERNAL_COMPILER_STRING_EXPORTER} -- Access
 
-	creators: HASH_TABLE [EXPORT_I, STRING]
-			-- Creation procedure names
+	creators: HASH_TABLE [EXPORT_I, like {FEATURE_I}.feature_name_id]
+			-- Creation procedure export status and position in the list of creators indexed by feature name ID.
 
 feature -- Access: Convertibility
 
@@ -1684,17 +1683,14 @@ feature {INTERNAL_COMPILER_STRING_EXPORTER} -- Supplier checking
 			l_vd27: VD27
 			l_feat_tbl: like feature_table
 		do
-			if creators /= Void and then not a_creator.is_empty then
+			if attached creators as cs then
 				l_feat_tbl := feature_table
-				from
-					creators.start
-				until
-					creators.after
+				across
+					cs as c
 				loop
-					if a_creator.same_string (creators.key_for_iteration) then
+					if a_creator.same_string (names_heap.item (c.key)) then
 							-- `creators.key_for_iteration' contains the creation_name
-						l_creation_proc := l_feat_tbl.item (creators.key_for_iteration)
-
+						l_creation_proc := l_feat_tbl.item_id (c.key)
 						inspect
 							l_creation_proc.argument_count
 						when 0 then
@@ -1720,20 +1716,18 @@ feature {INTERNAL_COMPILER_STRING_EXPORTER} -- Supplier checking
 							error_handler.insert_error (create {VSRP3}.make (Current, a_type, l_creation_proc.instantiation_in (a_type)))
 						end
 					end
-					creators.forth
 				end
 			end
 
 			if not a_creator.is_empty and creators = Void then
 					-- Check default create
-				l_creation_proc := default_create_feature
-				if not l_creation_proc.feature_name.is_equal (a_creator) then
+				if not default_create_feature.feature_name.is_equal (a_creator) then
 					create l_vd27
 					l_vd27.set_creation_routine (a_creator)
 					l_vd27.set_root_class (Current)
 					Error_handler.insert_error (l_vd27)
 				end
-			elseif not a_creator.is_empty and not creators.has (a_creator) then
+			elseif not a_creator.is_empty and not creators.has (names_heap.id_of (a_creator)) then
 				create l_vd27
 				l_vd27.set_creation_routine (a_creator)
 				l_vd27.set_root_class (Current)
@@ -1851,17 +1845,11 @@ feature {INTERNAL_COMPILER_STRING_EXPORTER} -- Order relation for inheritance an
 			-- Is `fn' a valid creation procedure ?
 		require
 			good_argument: fn /= Void
-		local
-			dcr_feat : FEATURE_I
 		do
-			if creators /= Void then
-				Result := creators.has (fn)
-			else
-				dcr_feat := default_create_feature
-
-				if dcr_feat /= Void then
-					Result := fn.is_equal (dcr_feat.feature_name)
-				end
+			if attached creators as c then
+				Result := c.has (names_heap.id_of (fn))
+			elseif attached default_create_feature as f then
+				Result := fn.is_equal (f.feature_name)
 			end
 		end
 
@@ -3070,17 +3058,13 @@ feature -- default_create routine
 			-- created with 'default_create'?
 		require
 			has_feature_table: has_feature_table
-		local
-			dcr_feat : FEATURE_I
 		do
-				-- Answer is NO if class is deferred
-			if not is_deferred then
-				dcr_feat := default_create_feature
-					-- Answer is NO if the class has no
-					-- 'default_create'
-				Result := dcr_feat /= Void and then (
-					(creators = Void) or else (not creators.is_empty and then creators.has (dcr_feat.feature_name)))
-			end
+			Result :=
+					-- Answer is NO if class is deferred
+				not is_deferred and then
+					-- Answer is NO if the class has no "default_create".
+				attached default_create_feature as f and then
+					(attached creators as cs implies cs.has (f.feature_name_id))
 		end
 
 feature -- Dead code removal

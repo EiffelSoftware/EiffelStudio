@@ -76,7 +76,6 @@ feature -- Basic operations
 			feat: E_FEATURE
 			l_class_list: LIST[CLASS_C]
 			cls_c: CLASS_C
-			crtrs: HASH_TABLE [EXPORT_I, STRING]
 			show_any_features: BOOLEAN
 			l_current_class_c: CLASS_C
 			l_class_as: CLASS_AS
@@ -154,25 +153,20 @@ feature -- Basic operations
 										add_generics_creation_list (cls_c)
 									else
 											-- Creators
-										crtrs := cls_c.creators
-										if crtrs /= Void then
-											from
-												crtrs.start
-											until
-												crtrs.after
+										if attached cls_c.creators as cs then
+											across
+												cs as c
 											loop
 												if
-													feat_table.has (crtrs.key_for_iteration) and then
-													crtrs.item_for_iteration.is_exported_to (l_current_class_c)
+													attached feat_table [names_heap.item (c.key)] as f and then
+													c.item.is_exported_to (l_current_class_c)
 												then
-													feat := feat_table.item (crtrs.key_for_iteration)
 													if l_has_renaming then
-														add_renaming_to_completion_possibilities (feat, l_constraints, cls_c)
+														add_renaming_to_completion_possibilities (f, l_constraints, cls_c)
 													else
-														add_feature_to_completion_possibilities	(feat)
+														add_feature_to_completion_possibilities	(f)
 													end
 												end
-												crtrs.forth
 											end
 										end
 									end
@@ -1492,7 +1486,7 @@ feature {NONE} -- Implementation
 				not l_list.is_empty and then
 				attached {CLASS_I} l_list.first as l_class_i
 			then
-				if attached {CLASS_C} l_class_i.compiled_representation as l_class_c then
+				if attached l_class_i.compiled_representation as l_class_c then
 					Result.set_pebble (create {CLASSC_STONE}.make (l_class_c))
 				else
 					Result.set_pebble (create {CLASSI_STONE}.make (l_class_i))

@@ -28,6 +28,8 @@ inherit
 			type_output_strategy as ast_type_output_strategy
 		end
 
+	SHARED_NAMES_HEAP
+
 feature -- Access
 
 	has_feature (a_class: CLASS_C; a_feature: FEATURE_I): BOOLEAN
@@ -85,24 +87,18 @@ feature -- Access
 			a_system_attached: a_system /= Void
 		local
 			l_any_class: CLASS_C
-			l_creator_tbl: HASH_TABLE [EXPORT_I, STRING]
 		do
 			create Result.make
-			l_creator_tbl := a_class.creators
 			l_any_class := a_system.any_class.compiled_representation
-			if l_creator_tbl /= Void then
-				from
-					l_creator_tbl.start
-				until
-					l_creator_tbl.after
+			if attached a_class.creators as l_creator_tbl then
+				across
+					l_creator_tbl as c
 				loop
-					if l_creator_tbl.item_for_iteration.is_exported_to (l_any_class) then
-						Result.extend (l_creator_tbl.key_for_iteration)
+					if c.item.is_exported_to (l_any_class) then
+						Result.extend (names_heap.item (c.key))
 					end
-					l_creator_tbl.forth
 				end
 			end
-
 			if a_class.allows_default_creation then
 				Result.extend (a_class.default_create_feature.feature_name)
 			end

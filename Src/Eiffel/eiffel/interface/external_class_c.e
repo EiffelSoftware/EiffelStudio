@@ -931,7 +931,7 @@ feature {NONE} -- Initialization
 							l_record_pos := j
 						end
 						create l_feat_arg.make (k - l_record_pos + 1)
-						create l_arg_ids.make (1, k - j + 1)
+						create l_arg_ids.make_filled (0, 1, k - j + 1)
 					until
 						j > k
 					loop
@@ -984,13 +984,13 @@ feature {NONE} -- Initialization
 				l_feat.set_written_in (l_written_type.class_id)
 
 					-- Add creation routine to `creators' if any.
-				if l_constructor /= Void then
+				if attached l_constructor then
 						-- Special case for value type where creation routines
 						-- are simply generated as normal feature and cannot be used
 						-- as creation procedure because usually there are more
 						-- than one possible creation routine and this is forbidden
 						-- by Eiffel specification on expanded.
-					l_creators.put (l_all_export, l_member.eiffel_name)
+					l_creators.put (l_all_export, names_heap.id_of (l_member.eiffel_name))
 					if external_class.is_expanded then
 						l_feat.set_export_status (l_all_export)
 					else

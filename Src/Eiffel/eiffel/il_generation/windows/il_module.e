@@ -1809,11 +1809,8 @@ feature -- Metadata description
 		local
 			l_sig: like method_sig
 			l_class: CLASS_C
-			l_creators: ARRAY [STRING]
-			l_creators_count: INTEGER
 			l_feature: FEATURE_I
 			l_define_default_ctor: BOOLEAN
-			l_creators_table: HASH_TABLE [EXPORT_I, STRING]
 			i: INTEGER
 			l_constructors: LIST [STRING]
 			l_eiffel_constructor: BOOLEAN
@@ -1821,36 +1818,28 @@ feature -- Metadata description
 		do
 			l_class := class_type.associated_class
 
-			l_creators_table := l_class.creators
-			if l_creators_table /= Void then
-				l_creators := l_creators_table.current_keys
-			end
-
-			if l_creators /= Void and then not l_creators.is_empty then
+			if
+				attached l_class.creators as cs and then
+				not cs.is_empty and then
+				attached cs.current_keys as ns
+			then
 				if l_class.ast.top_indexes /= Void then
 					l_constructors := l_class.ast.top_indexes.dotnet_constructors
 				end
 				l_is_generic := l_class.is_generic
-				from
-					i := l_creators.lower
-					l_creators_count := l_creators.upper
-				until
-					i > l_creators_count
+				across
+					ns as n
 				loop
-					l_feature := l_class.feature_named (l_creators[i])
+					l_feature := l_class.feature_of_name_id (n.item)
 					check
 						l_feature_attached: l_feature /= Void
 					end
-					l_eiffel_constructor := l_constructors /= Void and then l_constructors.has (l_creators [i])
+					l_eiffel_constructor := l_constructors /= Void and then l_constructors.has (l_feature.feature_name)
 					if l_feature.is_il_external or else l_eiffel_constructor then
 						if l_feature.has_arguments then
 							create l_sig.make
 							l_sig.set_method_type ({MD_SIGNATURE_CONSTANTS}.has_current)
-							if l_is_generic then
-								l_sig.set_parameter_count (l_feature.argument_count + 1)
-							else
-								l_sig.set_parameter_count (l_feature.argument_count)
-							end
+							l_sig.set_parameter_count (l_feature.argument_count + l_is_generic.to_integer)
 							l_sig.set_return_type ({MD_SIGNATURE_CONSTANTS}.element_type_void, 0)
 							across
 								l_feature.arguments as a

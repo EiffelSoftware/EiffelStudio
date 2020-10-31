@@ -196,14 +196,14 @@ feature
 			pass_c_not_void: pass_c /= Void
 			class_info_exists: Class_info_server.has (pass_c.class_id);
 		local
-			class_id: INTEGER;
-			resulting_table: like inherited_features;
-			pass3_control: PASS3_CONTROL;
-			depend_unit: DEPEND_UNIT;
-			old_creators, new_creators: HASH_TABLE [EXPORT_I, STRING];
+			class_id: INTEGER
+			resulting_table: like inherited_features
+			pass3_control: PASS3_CONTROL
+			depend_unit: DEPEND_UNIT
+			old_creators, new_creators: like {CLASS_C}.creators
 			old_convert_to, old_convert_from: HASH_TABLE [INTEGER, DEANCHORED_TYPE_A]
-			creation_name: STRING;
-			equiv_tables: BOOLEAN;
+			creation_name: INTEGER
+			equiv_tables: BOOLEAN
 			l_error_level: NATURAL
 			l_is_il_generation: BOOLEAN
 		do
@@ -356,7 +356,7 @@ feature
 			parents.check_validity4
 
 				-- Creators processing
-		   	a_class.set_creators (class_info.creation_table (resulting_table));
+		   	a_class.set_creators (class_info.creation_table (resulting_table))
 				-- No update of `Instantiator' if there is an error
 			if error_handler.error_level /= l_error_level then
 				error_handler.raise_error
@@ -407,7 +407,7 @@ feature
 			end;
 
 				-- Insert the changed creators in the propagators list
-			new_creators := a_class.creators;
+			new_creators := a_class.creators
 			if old_creators = Void then
 				if
 					attached new_creators or else
@@ -416,14 +416,6 @@ feature
 				then
 						-- the clients using !! without a creation routine
 						-- must be recompiled
-debug ("ACTIVITY")
-	io.error.put_string ("Insert -1 in the propagators%N");
-	if new_creators /= Void then
-		io.error.put_string ("Creators have been added");
-	else
-		io.error.put_string ("The class is now deferred%N");
-	end;
-end;
 					if a_class.is_used_as_expanded then
 						create depend_unit.make_expanded_unit (class_id);
 						pass2_control.propagators.extend (depend_unit)
@@ -437,7 +429,7 @@ end;
 				until
 					old_creators.after
 				loop
-					creation_name := old_creators.key_for_iteration;
+					creation_name := old_creators.key_for_iteration
 					if
 						new_creators = Void
 					or else
@@ -446,29 +438,24 @@ end;
 							-- The new export status is more restrictive than the old one
 						not old_creators.item_for_iteration.equiv (new_creators.item (creation_name))
 					then
-						resulting_table.search (creation_name)
+						resulting_table.search_id (creation_name)
 						if resulting_table.found then
 								-- The routine is not a creation routine any more
 								-- or the export status has changed
-debug ("ACTIVITY")
-	io.error.put_string ("Creators: ");
-	io.error.put_string (creation_name);
-	io.error.put_string (" inserted in pass2_control.propagators%N");
-end;
 							create depend_unit.make (class_id, resulting_table.found_item);
 							pass2_control.propagators.extend (depend_unit);
-						end;
-					end;
+						end
+					end
 					old_creators.forth
-				end;
+				end
 				if a_class.is_used_as_expanded and then
 					(new_creators  = Void or else new_creators.count > 1)
 				then
-					create depend_unit.make_expanded_unit (class_id);
+					create depend_unit.make_expanded_unit (class_id)
 					pass2_control.propagators.extend (depend_unit)
-				end;
+				end
 				old_creators := Void
-			end;
+			end
 
 				-- Insert removed routines from convert clauses into propagators list.
 			if old_convert_to /= Void then
@@ -527,13 +514,13 @@ end;
 			if Rescue_status.is_error_exception then
 					-- Error happened during second pass: clear the
 					-- structure
-				clear;
+				clear
 				if a_class.changed then
 						-- Reset the old creation table
-					a_class.set_creators (old_creators);
-				end;
-			end;
-		end;
+					a_class.set_creators (old_creators)
+				end
+			end
+		end
 
 	mark_generic_attribute_seeds (resulting_table: FEATURE_TABLE)
 			-- Mark attributes that are seeds of generic types to generate

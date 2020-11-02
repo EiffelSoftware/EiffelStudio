@@ -417,13 +417,13 @@ feature -- Tree construction
 				if attached a_class_ast.conforming_parents as l_conforming_parents then
 					l_row := extended_parent_list_row (l_conforming_parents, "Inherit", a_class, l_match_list, expand_tree)
 					if expand_tree and l_row.is_expandable then
-						l_row.expand
+						l_row.collapse
 					end
 				end
 				if attached a_class_ast.non_conforming_parents as l_non_conforming_parents then
 					l_row := extended_parent_list_row (l_non_conforming_parents, "Inherit {NONE}", a_class, l_match_list, expand_tree)
 					if expand_tree and l_row.is_expandable then
-						l_row.expand
+						l_row.collapse
 					end
 				end
 
@@ -1100,7 +1100,7 @@ feature {NONE} -- Tree item factory
 		end
 
 ;note
-	copyright:	"Copyright (c) 1984-2019, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2020, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

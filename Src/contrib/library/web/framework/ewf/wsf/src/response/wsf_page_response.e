@@ -97,7 +97,7 @@ feature {WSF_RESPONSE} -- Output
 					h.put_content_length (b.count)
 				end
 				if not h.has_content_type then
-					h.put_content_type_text_plain
+					h.put_content_type_utf_8_text_plain
 				end
 			end
 			res.put_header_lines (h)

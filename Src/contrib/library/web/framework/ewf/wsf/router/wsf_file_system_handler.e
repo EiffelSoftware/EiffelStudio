@@ -336,7 +336,7 @@ feature -- Execution
 				)
 
 				create h.make
-				h.put_content_type_text_html
+				h.put_content_type_utf_8_text_html
 				res.set_status_code ({HTTP_STATUS_CODE}.ok)
 				h.put_content_length (s.count)
 				res.put_header_lines (h)
@@ -430,7 +430,7 @@ feature -- Execution
 				hdl.call ([uri, req, res])
 			else
 				create h.make
-				h.put_content_type_text_plain
+				h.put_content_type_utf_8_text_plain
 				create s.make_empty
 				s.append ("Resource %"" + uri + "%" not found%N")
 				res.set_status_code ({HTTP_STATUS_CODE}.not_found)
@@ -450,7 +450,7 @@ feature -- Execution
 				hdl.call ([uri, req, res])
 			else
 				create h.make
-				h.put_content_type_text_plain
+				h.put_content_type_utf_8_text_plain
 				create s.make_empty
 				s.append ("Resource %"" + uri + "%": Access denied%N")
 				res.set_status_code ({HTTP_STATUS_CODE}.forbidden)
@@ -470,7 +470,7 @@ feature -- Execution
 				hdl.call ([uri, req, res])
 			else
 				create h.make
-				h.put_content_type_text_plain
+				h.put_content_type_utf_8_text_plain
 				create s.make_empty
 				s.append ("Directory index %"" + uri + "%": Access denied%N")
 				res.set_status_code ({HTTP_STATUS_CODE}.forbidden)

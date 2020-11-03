@@ -95,7 +95,7 @@ feature {WSF_RESPONSE} -- Output
 				s.append ("</body>%N")
 				s.append ("</html>%N")
 
-				h.put_content_type_text_html
+				h.put_content_type_utf_8_text_html
 			else
 				s := "Error 412 (Precondition Failed): "
 				s.append (request.request_uri)
@@ -106,7 +106,7 @@ feature {WSF_RESPONSE} -- Output
 					s.append ("%N")
 				end
 
-				h.put_content_type_text_plain
+				h.put_content_type_utf_8_text_plain
 			end
 			h.put_content_length (s.count)
 			res.put_header_text (h.string)

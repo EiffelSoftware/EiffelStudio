@@ -217,7 +217,7 @@ feature {WSF_RESPONSE} -- Output
 				s.append ("</body>%N")
 				s.append ("</html>%N")
 
-				h.put_content_type_text_html
+				h.put_content_type_utf_8_text_html
 			else
 				create s.make_from_string (l_html_error_code_text)
 				s.append (": the request method ")
@@ -270,7 +270,7 @@ feature {WSF_RESPONSE} -- Output
 					s.append (b)
 					s.append ("%N")
 				end
-				h.put_content_type_text_plain
+				h.put_content_type_utf_8_text_plain
 			end
 
 			h.put_content_length (s.count)

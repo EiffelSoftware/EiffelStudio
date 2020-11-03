@@ -125,7 +125,7 @@ feature {NONE} -- Implementation
 			h: HTTP_HEADER
 		do
 			create h.make
-			h.put_content_type_text_plain
+			h.put_content_type_utf_8_text_plain
 			check attached unavailablity_message as m then
 					-- invariant `unavailability_message_attached' plus precondition `unavailable'
 				h.put_content_length (m.count)
@@ -156,7 +156,7 @@ feature {NONE} -- Implementation
 			m: READABLE_STRING_8
 		do
 			create h.make
-			h.put_content_type_text_plain
+			h.put_content_type_utf_8_text_plain
 			h.put_current_date
 			m := "Maximum permitted length for request URI is " + maximum_uri_length.out + " characters"
 			h.put_content_length (m.count)
@@ -206,7 +206,7 @@ feature {NONE} -- Implementation
 			m := system_options_forbidden_text (req)
 			if attached {READABLE_STRING_8} m as l_msg then
 				create h.make
-				h.put_content_type_text_plain
+				h.put_content_type_utf_8_text_plain
 				h.put_current_date
 				h.put_content_length (l_msg.count)
 				res.set_status_code ({HTTP_STATUS_CODE}.forbidden)
@@ -214,7 +214,7 @@ feature {NONE} -- Implementation
 				res.put_string (l_msg)
 			else
 				create h.make
-				h.put_content_type_text_plain
+				h.put_content_type_utf_8_text_plain
 				h.put_current_date
 				h.put_content_length (0)
 				res.set_status_code ({HTTP_STATUS_CODE}.not_found)
@@ -240,7 +240,7 @@ feature {NONE} -- Implementation
 			h: HTTP_HEADER
 		do
 			create h.make
-			h.put_content_type_text_plain
+			h.put_content_type_utf_8_text_plain
 			h.put_current_date
 			h.put_allow (router.all_allowed_methods)
 			h.put_content_length (0)
@@ -263,7 +263,7 @@ feature {NONE} -- Implementation
 			h: HTTP_HEADER
 		do
 			create h.make
-			h.put_content_type_text_plain
+			h.put_content_type_utf_8_text_plain
 			h.put_current_date
 			h.put_location (proxy_server (req).string)
 			h.put_content_length (0)

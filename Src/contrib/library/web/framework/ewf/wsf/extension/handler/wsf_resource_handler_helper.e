@@ -273,7 +273,7 @@ feature -- Handle responses
 			h: HTTP_HEADER
 		do
 			create h.make
-			h.put_content_type_text_plain
+			h.put_content_type_utf_8_text_plain
 			h.put_content_length (a_description.count)
 			h.put_current_date
 			res.set_status_code (a_status_code)

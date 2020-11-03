@@ -16,7 +16,7 @@ feature {NONE} -- Initialization
 			status_code := {HTTP_STATUS_CODE}.ok
 			create header.make_with_count (2)
 			header.put_current_date
-			header.put_content_type_text_html
+			header.put_content_type_utf_8_text_html
 		end
 
 feature -- Access

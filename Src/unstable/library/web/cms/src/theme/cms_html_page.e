@@ -28,7 +28,7 @@ feature {NONE} -- Initialization
 			status_code := {HTTP_STATUS_CODE}.ok
 			create header.make
 			create {ARRAYED_LIST [STRING]} head_lines.make (5)
-			header.put_content_type_text_html
+			header.put_content_type_utf_8_text_html
 			create variables.make (0)
 		end
 

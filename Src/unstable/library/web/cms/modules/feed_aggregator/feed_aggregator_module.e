@@ -96,7 +96,7 @@ feature -- Handle
 					then
 						if attached feed_to_html (p_feed_id.value, nb, True, create {GENERIC_VIEW_CMS_RESPONSE}.make (req, res, a_api)) as l_html then
 							create m.make_with_body (l_html)
-							m.header.put_content_type_text_html
+							m.header.put_content_type_utf_8_text_html
 							res.send (m)
 						else
 							a_api.response_api.send_not_found (Void, req, res)

@@ -93,7 +93,7 @@ feature -- Basic operations
 				else
 					create h.make_with_count (1)
 					h.put_content_length (s.count)
-					h.put_content_type_text_plain
+					h.put_content_type_utf_8_text_plain
 					res.set_status_code ({HTTP_STATUS_CODE}.service_unavailable)
 					res.put_header_lines (h)
 					res.put_string (s)

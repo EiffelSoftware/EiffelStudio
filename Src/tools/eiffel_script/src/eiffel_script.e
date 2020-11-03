@@ -496,13 +496,23 @@ feature -- Query
 	executable_location (a_system: CONF_SYSTEM; a_target: detachable CONF_TARGET): PATH
 		local
 			l_app_id: STRING_32
+			tgt: detachable CONF_TARGET
 		do
 			create l_app_id.make_from_string_general (a_system.name)
+			if a_target /= Void then
+				tgt := a_target
+			else
+				tgt := ecf_target (a_system, Void)
+			end
+			if tgt /= Void then
+				l_app_id.append_character ('.')
+				l_app_id.append (tgt.name)
+			end
 			if not a_system.is_generated_uuid then
 				l_app_id.append_character ('.')
 				l_app_id.append_string_general (a_system.uuid.out)
 			end
-			Result := appcache_location.extended (l_app_id).extended_path (executable_name (a_system, a_target))
+			Result := appcache_location.extended (l_app_id).extended_path (executable_name (a_system, tgt))
 		end
 
 	index_location (a_system: CONF_SYSTEM; a_target: detachable CONF_TARGET): PATH

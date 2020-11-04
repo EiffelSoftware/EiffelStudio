@@ -31,7 +31,7 @@
 				<p class="description">{htmlentities}{$application_description/}{/htmlentities}</p>
 				{/if}
 			</div>
-			{unless isempty="$recaptcha_site_html"}{$recaptcha_site_html/}"<br/>{/unless}
+			{unless isempty="$recaptcha_site_html"}{$recaptcha_site_html/}<br/>{/unless}
 			<button type="submit">Register</button>
 		</fieldset>
 	</form>

@@ -119,9 +119,9 @@ feature -- Request handling
 							s.append ("</li>%N")
 						end
 						if attached u.personal_information as l_information then
-							s.append ("<li class=%"cms_temp_user_detail_information%">Information: ")
+							s.append ("<li class=%"cms_temp_user_detail_information%">Information: <em>")
 							s.append (html_encoded (l_information))
-							s.append ("</li>%N")
+							s.append ("</em></li>%N")
 						end
 						if attached l_user_api.token_by_temp_user_id (u.id) as l_token then
 							s.append ("<li>")
@@ -185,11 +185,15 @@ feature -- Request handling
 							create {GENERIC_VIEW_CMS_RESPONSE} r.make (req, res, a_auth_api.cms_api)
 							create f.make (req.percent_encoded_path_info, "activate-temp-user")
 							f.set_method_post
-							f.extend_html_text ("Activation of user " + html_encoded (a_auth_api.cms_api.user_display_name (l_temp_user)))
+							f.extend_html_text ("<p>Activation of user " + html_encoded (a_auth_api.cms_api.user_display_name (l_temp_user)))
 							if attached l_temp_user.email as l_email then
 								f.extend_html_text (" (email: " + html_encoded (l_email) + ")")
 							end
-							f.extend_html_text (".")
+							f.extend_html_text (" .</p>")
+							if attached l_temp_user.personal_information as l_perso_info then
+								f.extend_html_text ("<p>Information:<br/><blockquote>" + html_encoded (l_perso_info) + "</blockquote></p>%N")
+							end
+							f.extend_html_text ("<br/>")
 							create f_submit.make_with_text ("Activate", "Activate")
 							f.extend (f_submit)
 							create s.make_empty
@@ -220,6 +224,7 @@ feature -- Request handling
 			f: CMS_FORM
 			f_submit: WSF_FORM_SUBMIT_INPUT
 			l_reason: detachable READABLE_STRING_GENERAL
+			tf: WSF_FORM_TEXT_INPUT
 			s: STRING_8
 		do
 			create {GENERIC_VIEW_CMS_RESPONSE} r.make (req, res, a_auth_api.cms_api)
@@ -244,13 +249,20 @@ feature -- Request handling
 							r.set_title ("User rejection")
 							create f.make (req.percent_encoded_path_info, "reject-temp-user")
 							f.set_method_post
-							f.extend_html_text ("Rejection of user " + html_encoded (a_auth_api.cms_api.user_display_name (l_temp_user)))
+							f.extend_html_text ("<p>Rejection of user " + html_encoded (a_auth_api.cms_api.user_display_name (l_temp_user)))
 							if attached l_temp_user.email as l_email then
 								f.extend_html_text (" (email: " + html_encoded (l_email) + ")")
 							end
-							f.extend_html_text (".")
-							f.extend_text_field ("reason", "Reason")
+							f.extend_html_text (" .</p>")
+							if attached l_temp_user.personal_information as l_perso_info then
+								f.extend_html_text ("<p>Information:<br/><blockquote>" + html_encoded (l_perso_info) + "</blockquote></p>%N")
+							end
+
+							create tf.make ("reason")
+							tf.set_placeholder ("Reason to decline...")
+							f.extend (tf)
 							create f_submit.make_with_text ("Reject", "Reject")
+							f.extend_html_text ("<br/>")
 							f.extend (f_submit)
 							create s.make_empty
 							f.append_to_html (r.wsf_theme, s)

@@ -35,7 +35,7 @@ feature -- Execution
 			set_title ("Not Implemented")
 			set_page_title (Void)
 			if main_content = Void then
-				create s.make_from_string (request.percent_encoded_path_info)
+				create s.make_from_string (html_encoded (request.percent_encoded_path_info))
 				s.append (" is not implemented!")
 				set_main_content (s)
 			end

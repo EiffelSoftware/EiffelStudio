@@ -80,7 +80,7 @@ feature -- Execution
 			if attached main_content as l_main_content and then not l_main_content.is_whitespace then
 					-- Keep existing content!
 			else
-				s := "<em>Access denied for resource <strong>" + request.request_uri + "</strong>.</em>"
+				s := "<em>Access denied for resource <strong>" + html_encoded (request.request_uri) + "</strong>.</em>"
 	--			TODO: add a form to ask for missing permissions.
 	--			if
 	--				attached user as u and
@@ -106,7 +106,7 @@ feature -- Execution
 		end
 
 note
-	copyright: "2011-2018, Jocelyn Fiat, Javier Velilla, Eiffel Software and others"
+	copyright: "2011-2020, Jocelyn Fiat, Javier Velilla, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 end
 

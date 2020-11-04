@@ -170,9 +170,15 @@ feature -- Operation
 				has_error and then
 				attached api as l_cms_api
 			then
-				l_cms_api.log_error ("database", generator + "." + l_cms_api.html_encoded (error_handler.as_string_representation) + "%N<p>SQL=%""+  l_cms_api.html_encoded (a_sql_statement) +"%"</p>", Void)
+				if not is_logging_database_error then
+					is_logging_database_error := True
+					l_cms_api.log_error ("database", generator + "." + l_cms_api.html_encoded (error_handler.as_string_representation) + "%N<p>SQL=%""+  l_cms_api.html_encoded (a_sql_statement) +"%"</p>", Void)
+					is_logging_database_error := False
+				end
 			end
 		end
+
+	is_logging_database_error: BOOLEAN
 
 feature -- Helper
 

@@ -1,14 +1,16 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
-<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-18-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-18-0 http://www.eiffel.com/developers/xml/configuration-1-18-0.xsd" name="base_extension" uuid="84FEB062-674A-4440-84B8-7F3F65AC77DD" library_target="base_extension">
+<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-21-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-21-0 http://www.eiffel.com/developers/xml/configuration-1-21-0.xsd" name="base_extension" uuid="84FEB062-674A-4440-84B8-7F3F65AC77DD" library_target="base_extension">
 	<target name="base_extension">
 		<description>Base extension (unstable) library.</description>
 		<root all_classes="true"/>
 		<file_rule>
 			<exclude>/\.svn</exclude>
 		</file_rule>
-		<option namespace="EiffelSoftware.Library.Base">
+		<option warning="none" namespace="EiffelSoftware.Library.Base">
 		</option>
 		<setting name="dotnet_naming_convention" value="true"/>
+		<setting name="total_order_on_reals" value="true"/>
+		<setting name="dead_code_removal" value="feature"/>
 		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf" readonly="true"/>
 		<library name="base_extension_stable" location="$ISE_LIBRARY\library\base_extension\base_extension.ecf" readonly="true"/>
 		<cluster name="base_extension" location=".\" recursive="true">

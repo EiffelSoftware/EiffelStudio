@@ -22,7 +22,7 @@ feature -- Test
 		do
 			create s.make_from_string ("ABcd EF gh I 123 ;ü")
 			t := s.as_upper
-			check_string_equality ("as_upper", t, "ABCD EF GH I 123 ;ü")
+			check_string_equality ("as_upper", t, "ABCD EF GH I 123 ;Ü")
 			check_boolean ("as_upper", t /= s)
 		end
 

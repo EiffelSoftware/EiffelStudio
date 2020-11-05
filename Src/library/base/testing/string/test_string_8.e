@@ -133,7 +133,7 @@ feature -- Tests
 		do
 			create s.make_from_string ("ABcd EF gh I 123 ;ü")
 			t := s.as_lower
-			check_equality ("as_lower", t, "abcd ef gh i 123 ;ü")
+			check_equality ("as_lower", t, "abcd ef gh i 123 ;�")
 			check_boolean ("as_lower", t /= s)
 
 			s.to_lower
@@ -1396,27 +1396,27 @@ feature -- Tests
 			s_32 := "12345"
 			is_8 := "67890"
 			s_8 := "67890"
-			check_equality ("plus", s_8 + is_32, "6789012345")
-			check_equality ("plus", s_8.as_string_32 + s_32, "6789012345")
-			check_equality ("plus", s_8 + is_8, "6789067890")
-			check_equality ("plus", s_8 + s_8, "6789067890")
-			check_equality ("plus", s_8 + "", "67890")
+			check_string_equality ("plus", s_8 + is_32, {IMMUTABLE_STRING_32}"6789012345")
+			check_string_equality ("plus", s_8.as_string_32 + s_32, "6789012345")
+			check_string_equality ("plus", s_8 + is_8, "6789067890")
+			check_string_equality ("plus", s_8 + s_8, "6789067890")
+			check_string_equality ("plus", s_8 + "", "67890")
 
 			s_8 := ""
-			check_equality ("plus", s_8 + is_32, "12345")
-			check_equality ("plus", s_8.as_string_32 + s_32, "12345")
-			check_equality ("plus", s_8 + is_8, "67890")
-			check_equality ("plus", s_8 + s_8, "")
-			check_equality ("plus", s_8 + "", "")
+			check_string_equality ("plus", s_8 + is_32, "12345")
+			check_string_equality ("plus", s_8.as_string_32 + s_32, "12345")
+			check_string_equality ("plus", s_8 + is_8, "67890")
+			check_string_equality ("plus", s_8 + s_8, "")
+			check_string_equality ("plus", s_8 + "", "")
 
 			is_32 := ""
 			s_32 := ""
 			is_8 := ""
-			check_equality ("plus", s_8 + is_32, "")
-			check_equality ("plus", s_8.as_string_32 + s_32, "")
-			check_equality ("plus", s_8 + is_8, "")
-			check_equality ("plus", s_8 + s_8, "")
-			check_equality ("plus", s_8 + "", "")
+			check_string_equality ("plus", s_8 + is_32, "")
+			check_string_equality ("plus", s_8.as_string_32 + s_32, "")
+			check_string_equality ("plus", s_8 + is_8, "")
+			check_string_equality ("plus", s_8 + s_8, "")
+			check_string_equality ("plus", s_8 + "", "")
 		end
 
 	test_precede

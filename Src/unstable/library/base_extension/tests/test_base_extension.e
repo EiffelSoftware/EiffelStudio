@@ -12,12 +12,14 @@ create
 feature
 
 	make
+		local
+			test_graph: TEST_GRAPH
 		do
-
+			create test_graph.make
 		end
 
 note
-	copyright: "Copyright (c) 1984-2013, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2020, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

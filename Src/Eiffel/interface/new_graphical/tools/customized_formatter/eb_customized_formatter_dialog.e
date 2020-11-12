@@ -466,12 +466,12 @@ feature {NONE} -- Implementation/Data
 	next_new_item_index: INTEGER
 			-- Index of next created new formatter
 
-	string_8_from_string_32 (a_string_32: STRING_32): STRING_8
+	string_8_from_string_32 (s: READABLE_STRING_GENERAL): STRING_8
 			-- STRING_8 from STRING_32
 		require
-			a_string_32_attached: a_string_32 /= Void
+			s_attached: s /= Void
 		do
-			Result := a_string_32.as_string_8
+			Result := {UTF_CONVERTER}.utf_32_string_to_utf_8_string_8 (s)
 		end
 
 	string_32_from_string_8 (a_string_8: STRING_8): STRING_32
@@ -479,7 +479,7 @@ feature {NONE} -- Implementation/Data
 		require
 			a_string_8_attached: a_string_8 /= Void
 		do
-			Result := a_string_8.as_string_32
+			Result := a_string_8.to_string_32
 		end
 
 	last_selected_descriptor: G
@@ -645,7 +645,7 @@ invariant
 	formatter_grid_wrapper_attached: item_grid_wrapper /= Void
 	descriptor_row_table_attached: descriptor_row_table /= Void
 note
-	copyright: "Copyright (c) 1984-2016, Eiffel Software"
+	copyright: "Copyright (c) 1984-2020, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

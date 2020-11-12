@@ -153,7 +153,7 @@ feature{NONE} -- Actions
 			end
 		end
 
-	on_metric_change  (a_descriptor: EB_CUSTOMIZED_FORMATTER_DESP; a_metric: STRING_32)
+	on_metric_change  (a_descriptor: EB_CUSTOMIZED_FORMATTER_DESP; a_metric: READABLE_STRING_GENERAL)
 			-- Action to be performed if formatter metric changed for `a_descrptor' from `property_grid'
 		require
 			a_descriptor_attached: a_descriptor /= Void
@@ -164,8 +164,8 @@ feature{NONE} -- Actions
 			l_metric: EB_METRIC
 			l_displayers: EB_FORMATTER_DISPLAYERS
 		do
+			l_metric_name := string_8_from_string_32 (a_metric)
 			if property_grid /= Void and then property_grid.is_displayed then
-				l_metric_name := string_8_from_string_32 (a_metric)
 					-- Set formatter name.
 				if is_default_item_name (string_32_from_string_8 (formatter_name_property.value)) and then formatter_name_property /= Void then
 					formatter_name_property.set_value (interface_names.first_character_as_upper (a_metric))
@@ -207,7 +207,7 @@ feature{NONE} -- Actions
 				end
 			end
 			set_has_changed (True)
-			a_descriptor.set_metric_name (string_32_from_string_8 (a_metric))
+			a_descriptor.set_metric_name (l_metric_name)
 		end
 
 	on_ok
@@ -328,7 +328,7 @@ feature{NONE} -- Implementation/Data
 	displayer_dialog: EB_DISPLAYER_DIALOG
 			-- Displayer dialog
 
-	metric_property: MENU_PROPERTY [STRING_GENERAL]
+	metric_property: MENU_PROPERTY [READABLE_STRING_GENERAL]
 			-- Property to setup metric
 
 	data_from_row (a_row: EV_GRID_ROW): EB_CUSTOMIZED_FORMATTER_DESP
@@ -621,7 +621,7 @@ feature{NONE} -- Implementation
 		end
 
 note
-	copyright: "Copyright (c) 1984-2018, Eiffel Software"
+	copyright: "Copyright (c) 1984-2020, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

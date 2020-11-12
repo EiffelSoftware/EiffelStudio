@@ -145,30 +145,24 @@ feature {NONE} -- Implementation
 	insert_item (item_imp: EV_ITEM_IMP; pos: INTEGER)
 			-- Insert `item_imp' on `pos' in `ev_children'.
 		local
-			sep_imp: detachable EV_MENU_SEPARATOR_IMP
-			menu_imp: detachable EV_MENU_IMP
-			menu_item_imp: detachable EV_MENU_ITEM_IMP
 		do
 			ev_children.go_i_th (pos)
 
-			sep_imp ?= item_imp
-			if sep_imp /= Void then
+			if attached {EV_MENU_SEPARATOR_IMP} item_imp as sep_imp then
 				insert_separator_item (sep_imp, pos)
 			else
-				menu_item_imp ?= item_imp
-				check menu_item_imp /= Void then end
-				menu_imp ?= menu_item_imp
-				if menu_imp /= Void then
-					insert_menu (menu_imp, pos)
-				else
-					insert_menu_item (menu_item_imp, pos)
-				end
-
-					-- Disable `menu_item_imp' if necessary.
-					--| Disabling through the implementation so
-					--| internal_non_sensitive from EV_SENSITIVE_I is not changed.
-				if not menu_item_imp.is_sensitive or not is_sensitive then
-					menu_item_imp.disable_sensitive
+				check attached {EV_MENU_ITEM_IMP} item_imp as menu_item_imp then
+					if attached {EV_MENU_IMP} menu_item_imp as menu_imp then
+						insert_menu (menu_imp, pos)
+					else
+						insert_menu_item (menu_item_imp, pos)
+					end
+						-- Disable `menu_item_imp' if necessary.
+						--| Disabling through the implementation so
+						--| internal_non_sensitive from EV_SENSITIVE_I is not changed.
+					if not menu_item_imp.is_sensitive or not is_sensitive then
+						menu_item_imp.disable_sensitive
+					end
 				end
 			end
 
@@ -184,15 +178,11 @@ feature {NONE} -- Implementation
 			menu_item_imp_not_void: menu_item_imp /= Void
 			valid_pos: pos > 0
 		local
-			sep_imp: detachable EV_MENU_SEPARATOR_IMP
-			menu_imp: detachable EV_MENU_IMP
-			chk_imp: detachable EV_CHECKABLE_MENU_ITEM_IMP
 			menu_flag: INTEGER
 		do
 			menu_flag := Mf_byposition | Mf_ownerdraw
 
-			sep_imp ?= menu_item_imp
-			if sep_imp /= Void then
+			if attached {EV_MENU_SEPARATOR_IMP} menu_item_imp as sep_imp then
 				cwin_insert_menu (wel_item, pos - 1, Mf_separator | menu_flag,
 					default_pointer, cwel_integer_to_pointer (sep_imp.object_id))
 			else
@@ -201,13 +191,11 @@ feature {NONE} -- Implementation
 				else
 					menu_flag := menu_flag | Mf_grayed
 				end
-				menu_imp ?= menu_item_imp
-				if menu_imp /= Void then
+				if attached {EV_MENU_IMP} menu_item_imp as menu_imp then
 					cwin_insert_menu (wel_item, pos - 1, Mf_popup | menu_flag,
 						menu_imp.wel_item, cwel_integer_to_pointer (menu_imp.object_id))
 				else
-					chk_imp ?= menu_item_imp
-					if chk_imp /= Void and then chk_imp.is_selected then
+					if attached {EV_CHECKABLE_MENU_ITEM_IMP} menu_item_imp as chk_imp and then chk_imp.is_selected then
 						menu_flag := menu_flag | Mf_checked
 					end
 					cwin_insert_menu (wel_item, pos - 1, menu_flag,
@@ -225,65 +213,61 @@ feature {NONE} -- Implementation
 			-- Remove `item_imp' from `ev_children'.
 		local
 			pos: INTEGER
-			menu_item_imp: detachable EV_MENU_ITEM_IMP
-			sep_imp: detachable EV_MENU_SEPARATOR_IMP
-			radio_imp: detachable EV_RADIO_MENU_ITEM_IMP
 			rgroup: detachable like radio_group
 		do
-			menu_item_imp ?= item_imp
-			check menu_item_imp /= Void then end
-			pos := ev_children.index_of (menu_item_imp, 1)
+			check attached {EV_MENU_ITEM_IMP} item_imp as menu_item_imp then 
+				pos := ev_children.index_of (menu_item_imp, 1)
 
-				-- Enable `menu_item_imp' if necessary.
-			if not is_sensitive then
-				if not menu_item_imp.internal_non_sensitive then
-					menu_item_imp.enable_sensitive
-				end
-			end
-
-				-- Handle radio grouping.
-			sep_imp ?= item_imp
-			radio_imp ?= item_imp
-			if sep_imp /= Void or else radio_imp /= Void then
-				-- Find the radio-group we need to modify.
-				from
-					rgroup := radio_group
-					ev_children.start
-				until
-					ev_children.item = menu_item_imp
-				loop
-					sep_imp ?= ev_children.item
-					if sep_imp /= Void then
-						rgroup := sep_imp.radio_group
+					-- Enable `menu_item_imp' if necessary.
+				if not is_sensitive then
+					if not menu_item_imp.internal_non_sensitive then
+						menu_item_imp.enable_sensitive
 					end
-					ev_children.forth
 				end
-				-- `rgroup' is now the group above `item_imp'.
-				if radio_imp /= Void then
-					-- Remove from `rgroup'.
-					radio_imp.remove_from_radio_group
-				else
-					sep_imp ?= item_imp
-					check sep_imp /= Void then end
-					if attached sep_imp.radio_group as l_radio_group then
-						if not l_radio_group.is_empty then
-							-- Merge `rgroup' with the one from `sep_imp'.
-							from
-								l_radio_group.last.enable_select
-								l_radio_group.start
-							until
-								l_radio_group.is_empty
-							loop
-								uncheck_item (l_radio_group.item.id)
-								l_radio_group.item.set_radio_group (rgroup)
+
+					-- Handle radio grouping.
+				if 
+					attached {EV_MENU_SEPARATOR_IMP} item_imp
+					or else attached {EV_RADIO_MENU_ITEM_IMP} item_imp
+				then
+					-- Find the radio-group we need to modify.
+					from
+						rgroup := radio_group
+						ev_children.start
+					until
+						ev_children.item = menu_item_imp
+					loop
+						if attached {EV_MENU_SEPARATOR_IMP} ev_children.item as sep_imp then
+							rgroup := sep_imp.radio_group
+						end
+						ev_children.forth
+					end
+					-- `rgroup' is now the group above `item_imp'.
+					if attached {EV_RADIO_MENU_ITEM_IMP} item_imp as radio_imp then
+						-- Remove from `rgroup'.
+						radio_imp.remove_from_radio_group
+					else
+						check attached {EV_MENU_SEPARATOR_IMP} item_imp as sep_imp then
+							if attached sep_imp.radio_group as l_radio_group then
+								if not l_radio_group.is_empty then
+									-- Merge `rgroup' with the one from `sep_imp'.
+									from
+										l_radio_group.last.enable_select
+										l_radio_group.start
+									until
+										l_radio_group.is_empty
+									loop
+										uncheck_item (l_radio_group.item.id)
+										l_radio_group.item.set_radio_group (rgroup)
+									end
+								end
+								sep_imp.remove_radio_group
 							end
 						end
-						sep_imp.remove_radio_group
 					end
 				end
+				remove_position (pos - 1)
 			end
-
-			remove_position (pos - 1)
 
 				-- If `Current' is now empty, then we need to update the
 				-- size of the parent. When an EV_MENU_BAR is empty, it takes
@@ -296,7 +280,6 @@ feature {NONE} -- Implementation
 	insert_separator_item (sep_imp: EV_MENU_SEPARATOR_IMP; pos: INTEGER)
 			-- Insert `sep_imp' on `pos' in `ev_children'.
 		local
-			radio_imp: detachable EV_RADIO_MENU_ITEM_IMP
 			rgroup: detachable LINKED_LIST [EV_RADIO_MENU_ITEM_IMP]
 		do
 			from
@@ -305,8 +288,7 @@ feature {NONE} -- Implementation
 				ev_children.after or else
 					is_menu_separator_imp (ev_children.item)
 			loop
-				radio_imp ?= ev_children.item
-				if radio_imp /= Void then
+				if attached {EV_RADIO_MENU_ITEM_IMP} ev_children.item as radio_imp then
 					if rgroup = Void then
 						create rgroup.make
 					else
@@ -338,8 +320,6 @@ feature {NONE} -- Implementation
 			-- Insert `menu_imp' on `pos' in `ev_children'.
 		local
 			sep_imp: detachable EV_MENU_SEPARATOR_IMP
-			radio_imp: detachable EV_RADIO_MENU_ITEM_IMP
-			chk_imp: detachable EV_CHECK_MENU_ITEM_IMP
 		do
 			cwin_insert_menu (wel_item, pos -1, Mf_byposition | Mf_ownerdraw,
 				cwel_integer_to_pointer (menu_item_imp.id),
@@ -349,8 +329,7 @@ feature {NONE} -- Implementation
 				inserted_on_same_place: position_to_item_id (pos - 1) = (ev_children @ pos).id
 			end
 
-			radio_imp ?= menu_item_imp
-			if radio_imp /= Void then
+			if attached {EV_RADIO_MENU_ITEM_IMP} menu_item_imp as radio_imp then
 				-- Attach it to a radio group.
 				sep_imp := separator_imp_by_index (pos)
 				if sep_imp /= Void then
@@ -384,8 +363,7 @@ feature {NONE} -- Implementation
 			end
 
 				-- If `item_imp' is a check menu item then check if necessary.
-			chk_imp ?= menu_item_imp
-			if chk_imp /= Void then
+			if attached {EV_CHECK_MENU_ITEM_IMP} menu_item_imp as chk_imp then
 				if chk_imp.is_selected then
 					chk_imp.enable_select
 				end
@@ -410,7 +388,6 @@ feature {NONE} -- Implementation
 				an_index > 0 and then an_index <= ev_children.count
 		local
 			cur_item: INTEGER
-			sep_imp: detachable EV_MENU_SEPARATOR_IMP
 		do
 			from
 				ev_children.start
@@ -418,8 +395,7 @@ feature {NONE} -- Implementation
 			until
 				ev_children.off or else an_index = cur_item
 			loop
-				sep_imp ?= ev_children.item
-				if sep_imp /= Void then
+				if attached {EV_MENU_SEPARATOR_IMP} ev_children.item as sep_imp then
 					Result := sep_imp
 				end
 				ev_children.forth
@@ -431,7 +407,6 @@ feature {NONE} -- Implementation
 			-- Propagate the `on_menu_char' message to the submenus until
 			-- the message is handled.
 		local
-			sub_menu: detachable EV_MENU_IMP
 			cur: CURSOR
 		do
 			cur := ev_children.cursor
@@ -440,8 +415,7 @@ feature {NONE} -- Implementation
 			until
 				Result /= default_pointer or ev_children.after
 			loop
-				sub_menu ?= ev_children.item
-				if sub_menu /= Void then
+				if attached {EV_MENU_IMP} ev_children.item as sub_menu then
 					Result := sub_menu.on_menu_char (char_code, corresponding_menu)
 				end
 				ev_children.forth
@@ -477,11 +451,8 @@ feature {EV_ANY_I, EV_POPUP_MENU_HANDLER} -- Implementation
 			l_comparator: PREDICATE [EV_MENU_ITEM_IMP]
 		do
 			l_comparator := agent (a_menu_item: EV_MENU_ITEM_IMP; a_wel_menu: WEL_MENU): BOOLEAN
-				local
-					l_menu: detachable EV_MENU_IMP
 				do
-					l_menu ?= a_menu_item
-					if l_menu /= Void then
+					if attached {EV_MENU_IMP} a_menu_item as l_menu then
 						Result := l_menu.wel_item = a_wel_menu.item
 					end
 				end (?, a_menu)
@@ -504,8 +475,13 @@ feature {EV_ANY_I, EV_POPUP_MENU_HANDLER} -- Implementation
 			l_menu_item := menu_item_from_comparator (l_comparator)
 			if l_menu_item /= Void then
 				l_menu_item.on_activate
-				if item_select_actions_internal /= Void then
-					item_select_actions_internal.call ([l_menu_item.attached_interface])
+				if attached item_select_actions_internal as act then
+					act.call ([l_menu_item.attached_interface])
+				elseif
+					attached l_menu_item.parent as l_menu and then
+					attached l_menu.item_select_actions as act
+				then
+					act.call ([l_menu_item.attached_interface])
 				end
 			end
 		end
@@ -517,7 +493,6 @@ feature {EV_ANY_I, EV_POPUP_MENU_HANDLER} -- Implementation
 		local
 			i: INTEGER
 			l_count: INTEGER
-			l_sub_menu: detachable EV_MENU_IMP
 			l_menu_item: detachable EV_MENU_ITEM_IMP
 		do
 			from
@@ -528,8 +503,7 @@ feature {EV_ANY_I, EV_POPUP_MENU_HANDLER} -- Implementation
 			loop
 				l_menu_item := ev_children @ i
 				if l_menu_item /= Void then
-					l_sub_menu ?= l_menu_item
-					if l_sub_menu /= Void then
+					if attached {EV_MENU_IMP} l_menu_item as l_sub_menu then
 						Result := l_sub_menu.menu_item_from_comparator (a_comparator)
 					end
 					if Result = Void and then a_comparator.item ([l_menu_item]) then
@@ -545,7 +519,7 @@ feature {EV_ANY, EV_ANY_I} -- Implementation
 	interface: detachable EV_MENU_ITEM_LIST note option: stable attribute end;
 
 note
-	copyright:	"Copyright (c) 1984-2017, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2020, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

@@ -21,11 +21,8 @@ feature -- Contract support
 
 	is_parent_recursive (a_list: like item): BOOLEAN
 			-- Is `Current' present in `a_list' hierarchy?
-		local
-			menu_item_list_parent: detachable EV_MENU_ITEM_LIST
 		do
-			menu_item_list_parent ?= parent
-			if menu_item_list_parent /= Void then
+			if attached {EV_MENU_ITEM_LIST} parent as menu_item_list_parent then
 				Result := parent ~ a_list or else menu_item_list_parent.is_parent_recursive (a_list)
 			end
 		end
@@ -40,7 +37,7 @@ invariant
 	item_select_actions_not_void: is_usable implies item_select_actions /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2014, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2020, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

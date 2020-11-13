@@ -129,7 +129,8 @@ feature -- Execution
 									+ "?message=" + url_encoded ({STRING_32} "%N%N-- " + lic.plan.title_or_name + {STRING_32} " license %"" + lic.key + "%".")
 									+ "%">contact us</a>.</div>")
 					s.append ("<div><a href=%"" + api.location_url (es_cloud_module.licenses_location, Void) + "%">All licenses...</a></div>")
-					s.append ("</div>")
+					s.append ("</div>") -- info
+					s.append ("</div>") -- es-licenses
 					r.set_main_content (s)
 					r.execute
 				else

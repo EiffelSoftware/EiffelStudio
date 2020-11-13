@@ -40,7 +40,7 @@ feature -- Element change
 			cols := i
 		end
 
-	set_text_value (s: like default_value)
+	set_text_value (s: detachable READABLE_STRING_GENERAL)
 		do
 			set_default_value (s)
 		end
@@ -59,7 +59,7 @@ feature -- Element change
 			if v = Void then
 				default_value := Void
 			else
-				default_value := v.as_string_32
+				default_value := v.to_string_32
 			end
 		end
 

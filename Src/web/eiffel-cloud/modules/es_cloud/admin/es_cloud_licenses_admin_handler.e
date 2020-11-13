@@ -197,7 +197,7 @@ feature -- Execution
 							s.append ("<td class=%"user%">")
 
 							s.append ("<a href=%"")
-							s.append (api.administration_path ("cloud/installations/?user=" + l_user.id.out))
+							s.append (api.administration_path ("cloud/account/" + l_user.id.out))
 							s.append ("%">")
 							s.append (html_encoded (api.real_user_display_name (l_user)))
 							s.append ("</a>")

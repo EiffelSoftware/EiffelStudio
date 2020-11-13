@@ -50,10 +50,18 @@ feature {NONE} -- Router/administration
 				a_router.handle ("/cloud/subscriptions/", create {ES_CLOUD_SUBSCRIPTIONS_ADMIN_HANDLER}.make (l_es_cloud_api), a_router.methods_get_post)
 				a_router.handle ("/cloud/licenses/", create {ES_CLOUD_LICENSES_ADMIN_HANDLER}.make (l_es_cloud_api, Current), a_router.methods_get_post)
 				a_router.handle ("/cloud/licenses/{license}", create {ES_CLOUD_LICENSES_ADMIN_HANDLER}.make (l_es_cloud_api, Current), a_router.methods_get_post)
+				a_router.handle ("/cloud/account/{user}", create {ES_CLOUD_ACCOUNTS_ADMIN_HANDLER}.make (l_es_cloud_api, Current), a_router.methods_get_post)
 				a_router.handle ("/cloud/installations/", create {ES_CLOUD_INSTALLATIONS_ADMIN_HANDLER}.make (l_es_cloud_api), a_router.methods_get_post)
 				a_router.handle ("/cloud/plans/", create {ES_CLOUD_PLANS_ADMIN_HANDLER}.make (l_es_cloud_api), a_router.methods_get_post)
 				a_router.handle ("/cloud/plans/{pid}", create {ES_CLOUD_PLANS_ADMIN_HANDLER}.make (l_es_cloud_api), a_router.methods_get_post)
 			end
+		end
+
+feature -- Links
+
+	admin_license_location (lic: ES_CLOUD_LICENSE): STRING_8
+		do
+			Result := "/cloud/licenses/" + url_encoded (lic.key)
 		end
 
 feature -- Hooks configuration

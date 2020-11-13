@@ -200,7 +200,7 @@ feature -- Access: licenses
 
 feature -- Limitations		
 
-	license_limitations_string (lic: ES_CLOUD_LICENSE): detachable STRING_8
+	license_limitations_string (lic: ES_CLOUD_LICENSE): detachable READABLE_STRING_8
 			-- Plan limitations JSON string.
 		do
 			if attached lic.plan.usage_limitations_data as l_lims then

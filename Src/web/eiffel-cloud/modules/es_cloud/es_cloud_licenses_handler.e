@@ -128,8 +128,6 @@ feature -- Execution
 									+ api.location_url ("contact", Void)
 									+ "?message=" + url_encoded ({STRING_32} "%N%N-- " + lic.plan.title_or_name + {STRING_32} " license %"" + lic.key + "%".")
 									+ "%">contact us</a>.</div>")
-					s.append ("</div>")
-
 					s.append ("<div><a href=%"" + api.location_url (es_cloud_module.licenses_location, Void) + "%">All licenses...</a></div>")
 					s.append ("</div>")
 					r.set_main_content (s)

@@ -364,13 +364,15 @@ feature {NONE} -- Visibility control
 	visible_toolbar_item_name (command_name: STRING_GENERAL): STRING_GENERAL
 			-- Preference name of a toolbar item of name `command_name` corresponding to its visible status.
 		do
-			Result := command_name + "__visible"
+			Result := command_name.twin
+			Result.append ("__visible")
 		end
 
 	hidden_toolbar_item_name (command_name: STRING_GENERAL): STRING_GENERAL
 			-- Preference name of a toolbar item of name `command_name` corresponding to its hidden status.
 		do
-			Result := command_name + "__hidden"
+			Result := command_name.twin
+			Result.append ("__hidden")
 		end
 
 feature {NONE} -- Implementation
@@ -475,7 +477,7 @@ invariant
 note
 	ca_ignore:
 		"CA093", "CA093: manifest array type mismatch"
-	copyright: "Copyright (c) 1984-2018, Eiffel Software"
+	copyright: "Copyright (c) 1984-2020, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

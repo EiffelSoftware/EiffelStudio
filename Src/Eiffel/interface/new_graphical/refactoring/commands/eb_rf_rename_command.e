@@ -121,13 +121,9 @@ feature -- Events
 			-- Process class stone.
 		local
 			rf: ERF_CLASS_RENAME
-			fs: FEATURE_STONE
-			eif_class: EIFFEL_CLASS_I
 		do
-			fs ?= cs
-			if fs = Void then
-				eif_class ?= cs.class_i
-				if eif_class /= Void then
+			if not attached {FEATURE_STONE} cs then
+				if attached {EIFFEL_CLASS_I} cs.class_i as eif_class then
 					rf := manager.class_rename_refactoring
 					rf.set_class (eif_class)
 					manager.execute_refactoring (rf)
@@ -137,11 +133,8 @@ feature -- Events
 
 	can_drop (a_stone: ANY): BOOLEAN
 			-- Can `a_stone' be dropped onto current?
-		local
-			l_stone: STONE
 		do
-			l_stone ?= a_stone
-			Result := l_stone /= Void and then l_stone.is_valid and then l_stone.is_storable
+			Result := attached {STONE} a_stone as l_stone and then l_stone.is_valid and then l_stone.is_storable
 		end
 
 feature -- Execution
@@ -149,15 +142,11 @@ feature -- Execution
 	execute
 			-- Execute.
 		local
-			cs: CLASSI_STONE
-			fs: FEATURE_STONE
 			window: EB_DEVELOPMENT_WINDOW
 		do
 			window := window_manager.last_focused_development_window
-			cs ?= window.stone
-			if cs /= Void then
-				fs ?= window.stone
-				if fs /= Void then
+			if attached {CLASSI_STONE} window.stone as cs then
+				if attached {FEATURE_STONE} window.stone as fs then
 					drop_feature (fs)
 				else
 					drop_class (cs)
@@ -176,7 +165,7 @@ invariant
 	manager_not_void: manager /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2020, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
@@ -189,22 +178,22 @@ note
 			(available at the URL listed under "license" above).
 			
 			Eiffel Software's Eiffel Development Environment is
-			distributed in the hope that it will be useful,	but
+			distributed in the hope that it will be useful, but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
-			See the	GNU General Public License for more details.
+			See the GNU General Public License for more details.
 			
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,
-			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
+			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 		]"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 end

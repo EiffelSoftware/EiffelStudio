@@ -247,9 +247,18 @@ feature -- Hooks
 			r: CMS_RESPONSE
 		do
 				-- FIXME: we should use WSF_FORM, and integrate the recaptcha using the form alter hook.
-			write_debug_log (generator + ".handle_contact")
 			create {GENERIC_VIEW_CMS_RESPONSE} r.make (req, res, api)
 			r.values.force ("contact", "contact")
+			if attached {WSF_STRING} req.query_parameter ("message") as msg then
+				-- Note: the template has to html-encode this value to be secured.
+				r.values.force (msg.value, "message")
+			end
+			if attached api.user as u then
+				r.values.force (api.real_user_display_name (u), "name")
+				if attached u.email as l_email then
+					r.values.force (l_email, "email")
+				end
+			end
 			r.set_main_content (new_html_contact_form (r, api))
 			r.execute
 		end

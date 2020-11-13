@@ -33,7 +33,7 @@ class ESCL_inst_trash {
 		}
 	}	
 	insert_form() {
-		var but = $("<button title=\"Revoke installation\">&#x1F5D1;</button>");
+		var but = $("<button title=\"Revoke installation\">&#x1F5D1; revoke</button>");
 		this.line.append(but);
 		this.discard_widget = but;
 

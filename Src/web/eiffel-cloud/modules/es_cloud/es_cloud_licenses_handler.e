@@ -122,7 +122,14 @@ feature -- Execution
 					s := ""
 					s.append ("<div class=%"es-licenses%">")
 					append_license_to_html (lic, l_lic_user, s)
+					s.append ("<div class=%"info%">")
 					s.append ("<div><a href=%"" + api.location_url (es_cloud_module.license_location (lic) + "/billing/", Void) + "%">Billing...</a></div>")
+					s.append ("<div>For any operation on this license, please <a href=%""
+									+ api.location_url ("contact", Void)
+									+ "?message=" + url_encoded ({STRING_32} "%N%N-- " + lic.plan.title_or_name + {STRING_32} " license %"" + lic.key + "%".")
+									+ "%">contact us</a>.</div>")
+					s.append ("</div>")
+
 					s.append ("<div><a href=%"" + api.location_url (es_cloud_module.licenses_location, Void) + "%">All licenses...</a></div>")
 					s.append ("</div>")
 					r.set_main_content (s)
@@ -197,7 +204,17 @@ feature -- Execution
 						s.append ("</table>%N")
 						s.append ("</div>")
 					else
+						s.append ("<div class=%"info%">")
 						s.append ("<div>No billing information</div>")
+						s.append ("<div>For any operation on this license, please <a href=%""
+										+ api.location_url ("contact", Void)
+										+ "?message=" + url_encoded ({STRING_32} "%N%N-- " + lic.plan.title_or_name + {STRING_32} " license %"" + lic.key + "%".")
+										+ "%">contact us</a>.</div>")
+						s.append ("<div>To <strong>cancel</strong> your subscription, please <a href=%""
+										+ api.location_url ("contact", Void)
+										+ "?message=" + url_encoded ({STRING_32} "%N%N-- CANCEL SUBSCRIPTION: " + lic.plan.title_or_name + {STRING_32} " license %"" + lic.key + "%".")
+										+ "%">contact us</a>.</div>")
+						s.append ("</div>")
 					end
 					s.append ("</div>")
 					r.set_main_content (s)

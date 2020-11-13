@@ -75,10 +75,10 @@ feature -- Access: License
 					sql_after or has_error
 				loop
 					if attached fetch_license (Void) as lic then
-						-- then 12:es_licenses_users.uid, 13:es_licenses_emails.email, 14:es_licenses_orgs.oid
-						uid := sql_read_integer_64 (12)
-						e := sql_read_string_8 (13)
-						oid := sql_read_integer_64 (14)
+						-- then 13:es_licenses_users.uid, 14:es_licenses_emails.email, 15:es_licenses_orgs.oid
+						uid := sql_read_integer_64 (13)
+						e := sql_read_string_8 (14)
+						oid := sql_read_integer_64 (15)
 						lst.force ([lic, uid, e, oid])
 					else
 						check valid_record: False end
@@ -130,10 +130,10 @@ feature -- Access: License
 					sql_after or has_error
 				loop
 					if attached fetch_license (a_plan) as lic then
-						-- then 12:es_licenses_users.uid, 13:es_licenses_emails.email, 14:es_licenses_orgs.oid
-						uid := sql_read_integer_64 (12)
-						e := sql_read_string_8 (13)
-						oid := sql_read_integer_64 (14)
+						-- then 13:es_licenses_users.uid, 14:es_licenses_emails.email, 15:es_licenses_orgs.oid
+						uid := sql_read_integer_64 (13)
+						e := sql_read_string_8 (14)
+						oid := sql_read_integer_64 (15)
 						lst.force ([lic, uid, e, oid])
 					else
 						check valid_record: False end

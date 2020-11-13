@@ -166,6 +166,7 @@ feature -- Execution
 					s.append ("<div class=%"es-licenses%">")
 					append_license_to_html (lic, l_lic_user, s)
 					if attached es_cloud_api.license_billings (lic) as l_billings then
+						s.append ("<div class=%"info%">")
 						s.append ("<div class=%"es-billing%">")
 						s.append ("<table style=%"border: solid 1px black;%"><tr><th>Date</th><th>Item</th><th>Order-id</th><th>Total</th><th>Invoice/Receipt</th></tr>%N")
 						across
@@ -201,9 +202,7 @@ feature -- Execution
 						end
 						s.append ("</table>%N")
 						s.append ("</div>")
-					else
-						s.append ("<div class=%"info%">")
-						s.append ("<div>No billing information</div>")
+
 						s.append ("<div>For any operation on this license, please <a href=%""
 										+ api.location_url ("contact", Void)
 										+ "?message=" + url_encoded ({STRING_32} "%N%N-- " + lic.plan.title_or_name + {STRING_32} " license %"" + lic.key + "%".")
@@ -211,6 +210,14 @@ feature -- Execution
 						s.append ("<div>To <strong>cancel</strong> your subscription, please <a href=%""
 										+ api.location_url ("contact", Void)
 										+ "?message=" + url_encoded ({STRING_32} "%N%N-- CANCEL SUBSCRIPTION: " + lic.plan.title_or_name + {STRING_32} " license %"" + lic.key + "%".")
+										+ "%">contact us</a>.</div>")
+						s.append ("</div>")
+					else
+						s.append ("<div class=%"info%">")
+						s.append ("<div>No billing information</div>")
+						s.append ("<div>For any operation on this license, please <a href=%""
+										+ api.location_url ("contact", Void)
+										+ "?message=" + url_encoded ({STRING_32} "%N%N-- " + lic.plan.title_or_name + {STRING_32} " license %"" + lic.key + "%".")
 										+ "%">contact us</a>.</div>")
 						s.append ("</div>")
 					end

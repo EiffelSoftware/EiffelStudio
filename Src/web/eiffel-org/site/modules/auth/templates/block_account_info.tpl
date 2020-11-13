@@ -1,4 +1,3 @@
- 	<div class="primary-tabs">
 	 {if isset="$user"}
 		<h3>Account Information</h3>
 		<ul class="user-information">
@@ -39,4 +38,3 @@
 				<a href="{$site_url/}account/roc-login">Go to the login page</a>
 		</div>	
 	{/unless}
-	</div>

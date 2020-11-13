@@ -124,7 +124,7 @@ feature -- Execution
 			Result.extend (fset)
 			create l_plans_choice.make ("new_license_plan")
 			across
-				es_cloud_api.plans as ic
+				es_cloud_api.sorted_plans as ic
 			loop
 				if attached ic.item as pl then
 					create l_plan_item.make (pl.id.out, pl.title_or_name)

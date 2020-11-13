@@ -44,6 +44,9 @@ feature -- Access
 			end
 		end
 
+	plan_limitations_string: detachable READABLE_STRING_8
+			-- Usage limitations from associated plan.
+
 feature -- Access
 
 	associated_plan: detachable ES_ACCOUNT_PLAN
@@ -67,6 +70,11 @@ feature -- Element change
 	set_plan_name (a_plan_name: READABLE_STRING_8)
 		do
 			plan_name := a_plan_name
+		end
+
+	set_plan_limitations_string (a_plan_lim: detachable READABLE_STRING_8)
+		do
+			plan_limitations_string := a_plan_lim
 		end
 
 	set_plan_id (a_plan_id: INTEGER_64)

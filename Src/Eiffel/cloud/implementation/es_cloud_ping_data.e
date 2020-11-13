@@ -32,7 +32,11 @@ feature -- Element change
 
 	report_error (msg: like error_message)
 		do
-			error_message := msg.twin
+			if msg /= Void then
+				error_message := msg.twin
+			else
+				error_message := Void
+			end
 			has_error := True
 		end
 

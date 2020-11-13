@@ -88,7 +88,6 @@ feature -- Access
 			Result := active_account /= Void or else is_guest
 		end
 
-
 	active_account: detachable ES_ACCOUNT
 			-- Active account if signed in, otherwise Void.
 		deferred
@@ -301,18 +300,27 @@ feature -- Events
 					ic.item.on_account_signed_in (acc)
 				end
 			end
+			if account_signed_in_event.is_interface_usable then
+				account_signed_in_event.publish (acc)
+			end
 		end
 
-	on_account_signed_out
+	on_account_signed_out (a_previous_acc: detachable ES_ACCOUNT)
 		do
+			if attached installation as inst then
+				inst.set_associated_license (Void)
+			end
 			if attached observers as lst then
 				across
 					lst as ic
 				loop
-					ic.item.on_account_signed_out
+					ic.item.on_account_signed_out (a_previous_acc)
 				end
 			end
 				-- FIXME: if gpl edition, quit EiffelStudio?
+			if account_signed_out_event.is_interface_usable then
+				account_signed_out_event.publish (a_previous_acc)
+			end
 		end
 
 	on_account_license_issue (a_issue: ES_ACCOUNT_LICENSE_ISSUE)
@@ -362,6 +370,34 @@ feature -- Observer
 					observers := Void
 				end
 			end
+		end
+
+feature -- Events: Connection point
+
+	es_cloud_connection: EVENT_CONNECTION_I [ES_CLOUD_OBSERVER, ES_CLOUD_S]
+			-- Connection point.
+		require
+			is_interface_usable: is_interface_usable
+		deferred
+		ensure
+			result_attached: Result /= Void
+			result_is_interface_usable: Result.is_interface_usable
+		end
+
+feature -- Events
+
+	account_signed_in_event: EVENT_TYPE [TUPLE [acc: detachable ES_ACCOUNT]]
+			-- Events called when an account is signed in.
+		require
+			is_interface_usable: is_interface_usable
+		deferred
+		end
+
+	account_signed_out_event: EVENT_TYPE [TUPLE [acc: detachable ES_ACCOUNT]]
+			-- Events called when an account is signed out.
+		require
+			is_interface_usable: is_interface_usable
+		deferred
 		end
 
 feature {NONE} -- Implementation

@@ -25,6 +25,8 @@ inherit
 			{NONE} all
 		end
 
+	ACCESS_CONTROL_HELPER
+
 create
 	make
 
@@ -198,25 +200,29 @@ feature -- Basic operation
 	execute_refactoring (a_refactoring: ERF_REFACTORING)
 			-- Execute `a_refactoring'.
 		do
-			logger.refactoring_start
-			disable_sensitive
-			window_manager.on_refactoring_start
-			a_refactoring.execute
-			if a_refactoring.success then
-				destroy_redo
-			end
-			window_manager.for_all_development_windows (agent (a_window: EB_DEVELOPMENT_WINDOW)
-				do
-					if
-						attached a_window.editors_manager.current_editor as ed and then
-						ed.text_is_fully_loaded 
-					then
-						ed.reload
-					end
-				end)
-			window_manager.on_refactoring_end
-			enable_sensitive
-			logger.refactoring_end
+			process_under_control ("run", agent (i_refactoring: ERF_REFACTORING)
+					do
+						logger.refactoring_start
+						disable_sensitive
+						window_manager.on_refactoring_start
+						i_refactoring.execute
+						if i_refactoring.success then
+							destroy_redo
+						end
+						window_manager.for_all_development_windows (agent (a_window: EB_DEVELOPMENT_WINDOW)
+							do
+								if
+									attached a_window.editors_manager.current_editor as ed and then
+									ed.text_is_fully_loaded
+								then
+									ed.reload
+								end
+							end)
+						window_manager.on_refactoring_end
+						enable_sensitive
+						logger.refactoring_end
+					end (a_refactoring)
+				)
 		end
 
 feature {NONE} -- Implementation
@@ -287,7 +293,7 @@ invariant
 	redo_command_not_void: redo_command /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2018, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2020, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

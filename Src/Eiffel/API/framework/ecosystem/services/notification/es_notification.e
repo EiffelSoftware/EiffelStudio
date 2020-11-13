@@ -44,9 +44,8 @@ feature -- Events
 	notification_event: EVENT_TYPE [TUPLE [NOTIFICATION_MESSAGE]]
 			-- <Precursor>
 		do
-			if attached internal_notification_event as l_result then
-				Result := l_result
-			else
+			Result := internal_notification_event
+			if Result = Void then
 				create Result
 				internal_notification_event := Result
 				auto_dispose (Result)
@@ -90,7 +89,7 @@ feature {NONE} -- Clean up
 		end
 
 note
-	copyright: "Copyright (c) 1984-2019, Eiffel Software"
+	copyright: "Copyright (c) 1984-2020, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

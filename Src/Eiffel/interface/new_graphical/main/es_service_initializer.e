@@ -51,6 +51,7 @@ feature -- Services
 			a_container.register_with_activator ({ES_CODE_TEMPLATE_CATALOG_S}, agent new_es_code_template_catalog_service, False)
 			a_container.register_with_activator ({CODE_ANALYZER_S [STONE, CA_RULE_VIOLATION]}, agent new_code_analyzer_service, False)
 			a_container.register_with_activator ({PROJECT_SESSION_STATISTICS_S}, agent new_statistics_service, False)
+			a_container.register_with_activator ({ACCESS_CONTROL_S}, agent new_access_control_service, False)
 			if {ES_IDE_SETTINGS}.cloud_enabled then
 				a_container.register_with_activator ({ES_CLOUD_S}, agent new_es_cloud_service, False)
 			end
@@ -152,6 +153,14 @@ feature {NONE} -- Factory
 			create ps.make
 			ps.install
 			Result := ps
+		end
+
+	new_access_control_service: detachable ACCESS_CONTROL_S
+		local
+			s: ES_ACCESS_CONTROL
+		do
+			create s.make
+			Result := S
 		end
 
 	new_es_cloud_service: detachable ES_CLOUD_S

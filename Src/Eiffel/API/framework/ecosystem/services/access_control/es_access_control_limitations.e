@@ -1,92 +1,66 @@
 note
-	description: "Summary description for {ES_ACCOUNT_INSTALLATION}."
+	description: "Summary description for {ES_ACCESS_CONTROL_LIMITATIONS}."
 	author: ""
 	date: "$Date$"
 	revision: "$Revision$"
 
 class
-	ES_ACCOUNT_INSTALLATION
+	ES_ACCESS_CONTROL_LIMITATIONS
 
 create
-	make_with_id
+	make
 
-feature {NONE} -- Creation
+feature {NONE} -- Initialization
 
-	make_with_id (a_id: READABLE_STRING_8)
+	make (a_plan_name: READABLE_STRING_GENERAL)
 		do
-			create id.make_from_string (a_id)
-			is_active := True
 		end
 
 feature -- Access
 
-	id: IMMUTABLE_STRING_8
-
-	creation_date: detachable DATE_TIME
-
-	info: detachable READABLE_STRING_8
-
-	associated_license: detachable ES_ACCOUNT_LICENSE
-
-	associated_plan: detachable ES_ACCOUNT_PLAN
-
-
-feature -- Status report
-
-	is_active: BOOLEAN
-
-feature -- Optional properties
-
-	platform: detachable IMMUTABLE_STRING_8
-
-feature -- Element change
-
-	set_associated_license (lic: like associated_license)
+	add_rule (a_issuer: READABLE_STRING_GENERAL; a_operation: READABLE_STRING_GENERAL; a_rule: ACCESS_CONTROL_RULE)
+		local
+			tb: like rules_table
+			lst: like rules
+			k: like rules_key
 		do
-			associated_license := lic
-			if lic /= Void then
-				associated_plan := lic.associated_plan
-			else
-				associated_plan := Void
+			tb := rules_table
+			if tb = Void then
+				create tb.make_caseless (1)
+				rules_table := tb
+			end
+			k := rules_key (a_issuer, a_operation)
+			lst := tb [k]
+			if lst = Void then
+				create {ARRAYED_LIST [ACCESS_CONTROL_RULE]} lst.make (1)
+				tb [k] := lst
+			end
+			lst.force (a_rule)
+		end
+
+	rules (a_issuer: READABLE_STRING_GENERAL; a_operation: READABLE_STRING_GENERAL): detachable LIST [ACCESS_CONTROL_RULE]
+		do
+			if attached rules_table as tb then
+				Result := tb [rules_key (a_issuer, a_operation)]
 			end
 		end
 
-	set_associated_plan (a_plan: like associated_plan)
+feature {NONE} -- Implementation
+
+	rules_key (a_issuer, a_operation: READABLE_STRING_GENERAL): STRING_32
 		do
-			associated_plan := a_plan
+			create Result.make (a_issuer.count + 1 + a_operation.count)
+			Result.append_string_general (a_issuer.as_upper)
+			Result.append_string_general ("::")
+			Result.append_string_general (a_operation.as_lower)
 		end
 
-	set_platform (pf: detachable READABLE_STRING_8)
-		do
-			if pf = Void then
-				platform := Void
-			else
-				create platform.make_from_string (pf)
-			end
-		end
+	rules_table: detachable STRING_TABLE [like rules]
+			-- List of rules, indexed by `issuer+operation`.
 
-	set_info (inf: detachable READABLE_STRING_8)
-		do
-			info := inf
-		end
+invariant
 
-	mark_active
-		do
-			is_active := True
-		end
-
-	mark_inactive
-		do
-			is_active := False
-		end
-
-	set_creation_date (dt: like creation_date)
-		do
-			creation_date := dt
-		end
-
-
-;note
+note
 	copyright: "Copyright (c) 1984-2020, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"

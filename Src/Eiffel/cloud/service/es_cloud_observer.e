@@ -7,34 +7,51 @@ note
 deferred class
 	ES_CLOUD_OBSERVER
 
+inherit
+	EVENT_OBSERVER_I
+
 feature -- Event
 
 	on_session_state_changed (sess: ES_ACCOUNT_SESSION)
+		require
+			is_interface_usable: attached {USABLE_I} Current as l_usable implies l_usable.is_interface_usable
 		do
 		end
 
 	on_cloud_available (a_is_available: BOOLEAN)
+		require
+			is_interface_usable: attached {USABLE_I} Current as l_usable implies l_usable.is_interface_usable
 		do
 		end
 
 	on_account_signed_in (acc: ES_ACCOUNT)
+		require
+			is_interface_usable: attached {USABLE_I} Current as l_usable implies l_usable.is_interface_usable
 		do
 		end
 
 	on_account_license_issue (a_issue: ES_ACCOUNT_LICENSE_ISSUE)
+		require
+			is_interface_usable: attached {USABLE_I} Current as l_usable implies l_usable.is_interface_usable
 		do
 		end
 
-	on_account_signed_out
+	on_account_signed_out (a_previous_acc: detachable ES_ACCOUNT)
+		require
+			is_interface_usable: attached {USABLE_I} Current as l_usable implies l_usable.is_interface_usable
 		do
 		end
 
 	on_account_updated (acc: detachable ES_ACCOUNT)
+		require
+			is_interface_usable: attached {USABLE_I} Current as l_usable implies l_usable.is_interface_usable
 		do
 		end
 
 	on_session_heartbeat_updated (a_new_hearbeat: NATURAL_32)
 			-- New hearbeat expressed in seconds.
+		require
+			is_interface_usable: attached {USABLE_I} Current as l_usable implies l_usable.is_interface_usable
 		do
 		end
 

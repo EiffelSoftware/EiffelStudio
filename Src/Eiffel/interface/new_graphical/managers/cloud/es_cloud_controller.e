@@ -176,7 +176,7 @@ feature -- Events
 
 	last_license_issue_dialog: detachable ES_CLOUD_LICENSE_ISSUE_DIALOG
 
-	on_account_signed_out
+	on_account_signed_out (a_previous_acc: detachable ES_ACCOUNT)
 		do
 			stop_background_pinging
 			on_account_changed (Void)

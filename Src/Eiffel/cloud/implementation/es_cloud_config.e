@@ -21,8 +21,8 @@ feature {NONE} -- Initialization
 			uri.set_path ("")
 			create server_url.make_from_string (uri.string)
 
-			connection_timeout := 3 -- seconds
-			timeout := 10 -- seconds
+			connection_timeout := 5 -- seconds
+			timeout := 30 -- seconds
 		end
 
 	make_from_separate (cfg: separate ES_CLOUD_CONFIG)
@@ -38,6 +38,8 @@ feature -- Access
 	root_endpoint: IMMUTABLE_STRING_8
 
 	server_url: IMMUTABLE_STRING_8
+
+	secret_api_key: STRING_8 = "secret-722ddbcf1548405c83c6494451d96879"
 
 feature -- Builtin settings	
 

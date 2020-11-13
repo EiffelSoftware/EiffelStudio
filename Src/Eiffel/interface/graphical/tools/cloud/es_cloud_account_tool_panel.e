@@ -98,7 +98,7 @@ feature -- Events
 			refresh
 		end
 
-	on_account_signed_out
+	on_account_signed_out (a_previous_acc: detachable ES_ACCOUNT)
 		do
 			refresh
 		end

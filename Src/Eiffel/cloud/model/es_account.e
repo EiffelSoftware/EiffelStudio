@@ -25,15 +25,7 @@ feature -- Access
 
 	access_token: detachable ES_ACCOUNT_ACCESS_TOKEN
 
---	plan: detachable ES_ACCOUNT_PLAN
-
 feature -- Status report
-
---	has_active_plan: BOOLEAN
---			-- User account has associated active plan?
---		do
---			Result := attached plan as pl and then pl.is_active
---		end
 
 	is_expired: BOOLEAN
 		do
@@ -55,11 +47,6 @@ feature -- Element change
 		do
 			user_id := uid
 		end
-
---	set_plan (a_plan: like plan)
---		do
---			plan := a_plan
---		end
 
 feature -- Comparison
 

@@ -577,7 +577,9 @@ feature -- Sign
 			-- Sign as guest with limitation.
 		local
 			dt: detachable DATE_TIME
+			acc: like active_account
 		do
+			acc := active_account
 			active_account := Void
 			dt := guest_mode_ending_date
 			if dt = Void then
@@ -588,7 +590,7 @@ feature -- Sign
 			guest_mode_signed_in_count := guest_mode_signed_in_count + 1
 			is_guest := True
 			store
-			on_account_signed_out
+			on_account_signed_out (acc)
 		end
 
 	sign_in_with_credential (a_username: READABLE_STRING_GENERAL; a_password: READABLE_STRING_GENERAL)
@@ -644,9 +646,10 @@ feature -- Sign
 			end
 			active_account := Void
 			active_session := Void
+			installation.set_associated_license (Void)
 			is_guest := False
 			store
-			on_account_signed_out
+			on_account_signed_out (acc)
 		end
 
 	quit
@@ -805,7 +808,7 @@ feature -- Updating
 				end
 				store
 				if a_account.is_expired then
-					on_account_signed_out
+					on_account_signed_out (a_account)
 				elseif
 					attached installation as l_installation and then
 					attached l_installation.associated_license as lic
@@ -1042,6 +1045,71 @@ feature -- Storage
 			retried := True
 			retry
 		end
+
+feature -- Events: Connection point
+
+	es_cloud_connection: EVENT_CONNECTION_I [ES_CLOUD_OBSERVER, ES_CLOUD_S]
+			-- <Precursor>
+		do
+			Result := internal_connection
+			if not attached Result then
+				create {EVENT_CONNECTION [ES_CLOUD_OBSERVER, ES_CLOUD_S]} Result.make (
+					agent (o: ES_CLOUD_OBSERVER):
+						ARRAY [TUPLE
+							[event: EVENT_TYPE [TUPLE];
+							action: PROCEDURE]
+						]
+						do
+							Result :=
+								<<
+									[account_signed_in_event, agent o.on_account_signed_in],
+									[account_signed_out_event, agent o.on_account_signed_out]
+								>>
+						end)
+				automation.auto_dispose (Result)
+				internal_connection := Result
+			end
+		end
+
+feature -- Events
+
+	account_signed_in_event: EVENT_TYPE [TUPLE [acc: detachable ES_ACCOUNT]]
+			-- <Precursor>
+		do
+			Result := internal_account_signed_in_event
+			if Result = Void then
+				create Result
+				internal_account_signed_in_event := Result
+				auto_dispose (Result)
+			end
+		end
+
+	account_signed_out_event: EVENT_TYPE [TUPLE [acc: detachable ES_ACCOUNT]]
+			-- <Precursor>
+		do
+			Result := internal_account_signed_out_event
+			if Result = Void then
+				create Result
+				internal_account_signed_out_event := Result
+				auto_dispose (Result)
+			end
+		end
+
+feature {NONE} -- Implementation: Internal cache
+
+	internal_connection: detachable like es_cloud_connection
+			-- Cached version of `es_cloud_connection`.
+			-- Note: Do not use directly!	
+
+	internal_account_signed_in_event: detachable like account_signed_in_event
+			-- Cached version of `account_signed_in_event`.
+			-- Note: Do not use directly!
+
+	internal_account_signed_out_event: detachable like account_signed_out_event
+			-- Cached version of `account_signed_out_event`.
+			-- Note: Do not use directly!
+
+invariant
 
 note
 	copyright: "Copyright (c) 1984-2020, Eiffel Software"

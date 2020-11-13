@@ -21,6 +21,8 @@ inherit
 
 	ITERABLE [CA_RULE_VIOLATION]
 
+	ACCESS_CONTROL_HELPER
+
 create
 	make
 
@@ -160,11 +162,15 @@ feature -- Basic operations
 	start
 			-- <Precursor>
 		do
-				-- Register start and termination event handlers.
-			code_analyzer.add_start_action (agent on_start)
-			code_analyzer.add_completed_action (agent on_finish)
-				-- Perform analysis.
-			code_analyzer.analyze
+			process_under_control ("run", agent
+					do
+							-- Register start and termination event handlers.
+						code_analyzer.add_start_action (agent on_start)
+						code_analyzer.add_completed_action (agent on_finish)
+							-- Perform analysis.
+						code_analyzer.analyze
+					end
+				)
 		end
 
 feature {NONE} -- Events
@@ -217,7 +223,7 @@ feature {ITERABLE} -- Iteration
 		end
 
 ;note
-	copyright: "Copyright (c) 2017, Eiffel Software"
+	copyright: "Copyright (c) 1984-2020, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

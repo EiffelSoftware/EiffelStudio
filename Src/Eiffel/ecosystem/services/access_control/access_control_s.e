@@ -1,92 +1,48 @@
 note
-	description: "Summary description for {ES_ACCOUNT_INSTALLATION}."
-	author: ""
+	description: "[
+			Objects that ...
+		]"
 	date: "$Date$"
 	revision: "$Revision$"
 
-class
-	ES_ACCOUNT_INSTALLATION
+deferred class
+	ACCESS_CONTROL_S
 
-create
-	make_with_id
+inherit
+	SERVICE_I
 
-feature {NONE} -- Creation
+feature -- Execution
 
-	make_with_id (a_id: READABLE_STRING_8)
+	process (issuer: READABLE_STRING_GENERAL; operation: detachable READABLE_STRING_GENERAL; a_action: PROCEDURE)
+		local
+			cl: CELL [detachable READABLE_STRING_GENERAL]
 		do
-			create id.make_from_string (a_id)
-			is_active := True
+			create cl.put (Void)
+			if is_operation_allowed (issuer, operation, cl) then
+				a_action.call (Void)
+				record_operation (issuer, operation)
+			else
+				report_operation_access_not_allowed (issuer, operation, cl.item)
+			end
 		end
 
 feature -- Access
 
-	id: IMMUTABLE_STRING_8
-
-	creation_date: detachable DATE_TIME
-
-	info: detachable READABLE_STRING_8
-
-	associated_license: detachable ES_ACCOUNT_LICENSE
-
-	associated_plan: detachable ES_ACCOUNT_PLAN
-
-
-feature -- Status report
-
-	is_active: BOOLEAN
-
-feature -- Optional properties
-
-	platform: detachable IMMUTABLE_STRING_8
-
-feature -- Element change
-
-	set_associated_license (lic: like associated_license)
-		do
-			associated_license := lic
-			if lic /= Void then
-				associated_plan := lic.associated_plan
-			else
-				associated_plan := Void
-			end
+	is_operation_allowed (issuer: READABLE_STRING_GENERAL; operation: detachable READABLE_STRING_GENERAL; a_denied_reason: detachable CELL [detachable READABLE_STRING_GENERAL]): BOOLEAN
+		deferred
 		end
 
-	set_associated_plan (a_plan: like associated_plan)
-		do
-			associated_plan := a_plan
+feature -- Basic operation
+
+	record_operation (issuer: READABLE_STRING_GENERAL; operation: detachable READABLE_STRING_GENERAL)
+		deferred
 		end
 
-	set_platform (pf: detachable READABLE_STRING_8)
-		do
-			if pf = Void then
-				platform := Void
-			else
-				create platform.make_from_string (pf)
-			end
+	report_operation_access_not_allowed (issuer: READABLE_STRING_GENERAL; operation: detachable READABLE_STRING_GENERAL; a_message: detachable READABLE_STRING_GENERAL)
+		deferred
 		end
 
-	set_info (inf: detachable READABLE_STRING_8)
-		do
-			info := inf
-		end
-
-	mark_active
-		do
-			is_active := True
-		end
-
-	mark_inactive
-		do
-			is_active := False
-		end
-
-	set_creation_date (dt: like creation_date)
-		do
-			creation_date := dt
-		end
-
-
-;note
+note
 	copyright: "Copyright (c) 1984-2020, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"

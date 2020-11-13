@@ -991,6 +991,9 @@ feature {NONE} -- Json handling
 				if attached r.date_time_item ("expiration") as l_expiration then
 					Result.set_expiration_date (l_expiration)
 				end
+				if attached r.string_8_item ("plan_limitations") as lim then
+					Result.set_plan_limitations_string (lim)
+				end
 			end
 		end
 

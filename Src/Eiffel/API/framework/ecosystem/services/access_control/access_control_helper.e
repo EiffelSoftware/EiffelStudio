@@ -1,92 +1,44 @@
 note
-	description: "Summary description for {ES_ACCOUNT_INSTALLATION}."
-	author: ""
+	description: "[
+		Helper for the access control layer.
+		Inherit from this class and use `process_under_control`
+		To use a custom issuer name, redefine `access_control_issuer`.
+	]"
 	date: "$Date$"
 	revision: "$Revision$"
 
-class
-	ES_ACCOUNT_INSTALLATION
+deferred class
+	ACCESS_CONTROL_HELPER
 
-create
-	make_with_id
+feature {NONE} -- Access
 
-feature {NONE} -- Creation
-
-	make_with_id (a_id: READABLE_STRING_8)
+	access_control_issuer: READABLE_STRING_GENERAL
+			-- Issuer identifier.
+			-- Redefine to have custom issuer name.
 		do
-			create id.make_from_string (a_id)
-			is_active := True
+			Result := generator
 		end
 
-feature -- Access
+feature {NONE} -- Operation
 
-	id: IMMUTABLE_STRING_8
-
-	creation_date: detachable DATE_TIME
-
-	info: detachable READABLE_STRING_8
-
-	associated_license: detachable ES_ACCOUNT_LICENSE
-
-	associated_plan: detachable ES_ACCOUNT_PLAN
-
-
-feature -- Status report
-
-	is_active: BOOLEAN
-
-feature -- Optional properties
-
-	platform: detachable IMMUTABLE_STRING_8
-
-feature -- Element change
-
-	set_associated_license (lic: like associated_license)
+	process_under_control (operation: detachable READABLE_STRING_GENERAL; a_action: PROCEDURE)
 		do
-			associated_license := lic
-			if lic /= Void then
-				associated_plan := lic.associated_plan
+			if attached access_control_service.service as l_access_ctrl then
+				l_access_ctrl.process (access_control_issuer, operation, a_action)
 			else
-				associated_plan := Void
+				a_action.call (Void)
 			end
 		end
 
-	set_associated_plan (a_plan: like associated_plan)
-		do
-			associated_plan := a_plan
+feature {NONE} -- Shared access
+
+	access_control_service: SERVICE_CONSUMER [ACCESS_CONTROL_S]
+				-- Access to EiffelStudio access control service
+		once
+			create Result
 		end
 
-	set_platform (pf: detachable READABLE_STRING_8)
-		do
-			if pf = Void then
-				platform := Void
-			else
-				create platform.make_from_string (pf)
-			end
-		end
-
-	set_info (inf: detachable READABLE_STRING_8)
-		do
-			info := inf
-		end
-
-	mark_active
-		do
-			is_active := True
-		end
-
-	mark_inactive
-		do
-			is_active := False
-		end
-
-	set_creation_date (dt: like creation_date)
-		do
-			creation_date := dt
-		end
-
-
-;note
+note
 	copyright: "Copyright (c) 1984-2020, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"

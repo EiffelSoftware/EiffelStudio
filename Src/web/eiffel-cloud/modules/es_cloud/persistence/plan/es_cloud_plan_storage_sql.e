@@ -593,15 +593,16 @@ feature -- Change
 
 			reset_error
 			if l_is_new then
-				create l_params.make (4)
-			else
 				create l_params.make (5)
+			else
+				create l_params.make (6)
 				l_params.force (a_plan.id, "pid")
 			end
 			l_params.force (a_plan.name, "name")
 			l_params.force (a_plan.title, "title")
 			l_params.force (a_plan.description, "description")
 			l_params.force (a_plan.data, "data")
+			l_params.force (a_plan.usage_limitations_data, "limitations")
 			if l_is_new then
 				sql_insert (sql_insert_plan, l_params)
 				sql_finalize_insert (sql_insert_plan)
@@ -639,6 +640,7 @@ feature {NONE} -- Fetcher
 			Result.set_title (sql_read_string_32 (3))
 			Result.set_description (sql_read_string_32 (4))
 			Result.set_data (sql_read_string_32 (5))
+			Result.set_usage_limitations_data (sql_read_string_8 (6))
 		end
 
 	fetch_license (a_plan: detachable ES_CLOUD_PLAN): detachable ES_CLOUD_LICENSE
@@ -666,8 +668,9 @@ feature {NONE} -- Fetcher
 
 				create l_plan.make_with_id_and_name (pid, l_plan_name)
 				l_plan.set_data (sql_read_string_32 (5))
+				l_plan.set_usage_limitations_data (sql_read_string_32 (6))
 
-				i := 5
+				i := 6
 			end
 
 			if l_key = Void then
@@ -699,13 +702,13 @@ feature {NONE} -- Queries: plans
 
 	sql_last_inserted_plan_id: STRING = "SELECT MAX(pid) FROM es_plans;"
 
-	sql_select_plans: STRING = "SELECT pid, name, title, description, data FROM es_plans;"
+	sql_select_plans: STRING = "SELECT pid, name, title, description, data, limitations FROM es_plans;"
 
-	sql_select_plan_by_id: STRING = "SELECT pid, name, title, description, data FROM es_plans WHERE pid=:pid;"
+	sql_select_plan_by_id: STRING = "SELECT pid, name, title, description, data, limitations FROM es_plans WHERE pid=:pid;"
 
-	sql_insert_plan: STRING = "INSERT INTO es_plans (name, title, description, data) VALUES (:name, :title, :description, :data);"
+	sql_insert_plan: STRING = "INSERT INTO es_plans (name, title, description, data, limitations) VALUES (:name, :title, :description, :data, :limitations);"
 
-	sql_update_plan: STRING = "UPDATE es_plans SET name=:name, title=:title, description=:description, data=:data WHERE pid=:pid;"
+	sql_update_plan: STRING = "UPDATE es_plans SET name=:name, title=:title, description=:description, data=:data, limitations=:limitations WHERE pid=:pid;"
 
 	sql_delete_plan: STRING = "DELETE FROM es_plans WHERE pid=:pid;"
 
@@ -721,7 +724,7 @@ feature {NONE} -- Queries: licenses
 
 	sql_select_licenses: STRING = "[
 			SELECT 
-				lic.lid, lic.license_key, lic.pid, es_plans.name, es_plans.data,
+				lic.lid, lic.license_key, lic.pid, es_plans.name, es_plans.data, es_plans.limitations,
 				lic.platform, lic.version, lic.status, lic.creation, lic.expiration, lic.fallback,
 				es_licenses_users.uid, es_licenses_emails.email, es_licenses_orgs.oid
 			FROM es_licenses AS lic 
@@ -747,7 +750,7 @@ feature {NONE} -- Queries: licenses
 
 	sql_select_license_by_id: STRING = "[
 			SELECT
-				lic.lid, lic.license_key, lic.pid, es_plans.name, es_plans.data,
+				lic.lid, lic.license_key, lic.pid, es_plans.name, es_plans.data, es_plans.limitations,
 				lic.platform, lic.version, lic.status, lic.creation, lic.expiration, lic.fallback
 			FROM es_licenses AS lic INNER JOIN es_plans ON lic.pid = es_plans.pid
 			WHERE lic.lid=:lid
@@ -756,7 +759,7 @@ feature {NONE} -- Queries: licenses
 
 	sql_select_license_by_key: STRING = "[
 			SELECT
-				lic.lid, lic.license_key, lic.pid, es_plans.name, es_plans.data,
+				lic.lid, lic.license_key, lic.pid, es_plans.name, es_plans.data, es_plans.limitations,
 				lic.platform, lic.version, lic.status, lic.creation, lic.expiration, lic.fallback
 			FROM es_licenses AS lic INNER JOIN es_plans ON lic.pid = es_plans.pid
 			WHERE lower(lic.license_key)=:lowerkey

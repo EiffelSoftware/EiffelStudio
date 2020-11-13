@@ -54,6 +54,9 @@ feature -- Access
 			-- Maximum number of concurrent sessions for the same plan.
 			-- `0` means no limit
 
+	usage_limitations_data: detachable READABLE_STRING_8
+			-- Usage limitations for current plan, mostly related to IDE tools and services.
+
 feature -- Access: private
 
 	heartbeat: NATURAL
@@ -188,6 +191,14 @@ feature -- Element change
 			end
 		end
 
+	set_usage_limitations_data (s: detachable READABLE_STRING_GENERAL)
+		do
+			if s /= Void then
+				usage_limitations_data := {UTF_CONVERTER}.utf_32_string_to_utf_8_string_8 (s)
+			else
+				usage_limitations_data := Void
+			end
+		end
 
 feature {CMS_STORAGE_SQL_I} -- Element change		
 

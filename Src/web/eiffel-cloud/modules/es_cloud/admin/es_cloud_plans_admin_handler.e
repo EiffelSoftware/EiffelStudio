@@ -45,7 +45,7 @@ feature -- Execution
 			r: like new_generic_response
 			l_plan: detachable ES_CLOUD_PLAN
 			l_plan_name: detachable READABLE_STRING_8
-			l_plan_title, l_plan_description, l_plan_data, l_op: detachable READABLE_STRING_32
+			l_plan_title, l_plan_description, l_plan_data, l_plan_usage_limits, l_op: detachable READABLE_STRING_32
 			l_plan_id: INTEGER
 			l_confirmation_field: WSF_FORM_SUBMIT_INPUT
 			s: STRING
@@ -70,6 +70,7 @@ feature -- Execution
 					l_plan_title := fd.string_item ("title")
 					l_plan_description := fd.string_item ("description")
 					l_plan_data := fd.string_item ("data")
+					l_plan_usage_limits := fd.string_item ("usage_limitations_data")
 					l_op := fd.string_item ("op")
 					if l_plan_id /= 0 then
 						l_plan := es_cloud_api.plan (l_plan_id)
@@ -132,6 +133,7 @@ feature -- Execution
 							l_plan.set_title (l_plan_title)
 							l_plan.set_description (l_plan_description)
 							l_plan.set_data (l_plan_data)
+							l_plan.set_usage_limitations_data (l_plan_usage_limits)
 							es_cloud_api.save_plan (l_plan)
 							if es_cloud_api.has_error then
 								fd.report_error ("Issue while saving plan!")
@@ -158,7 +160,7 @@ feature -- Execution
 			r := new_generic_response (req, res)
 			add_primary_tabs (r)
 			create s.make_from_string ("<h1>Plans...</h1>")
-			s.append ("<table class=%"with_border%" style=%"border: solid 1px black%"><tr><th>Name</th><th>Title</th><th>Description</th><th>data</th><th/>")
+			s.append ("<table class=%"with_border%" style=%"border: solid 1px black%"><tr><th>Name</th><th>Title</th><th>Description</th><th>data</th><th>Limitations</th><th/>")
 			s.append ("</tr>")
 			across
 				es_cloud_api.sorted_plans as ic
@@ -191,7 +193,12 @@ feature -- Execution
 					s.append ("<td>")
 					s.append ("</td>")
 				end
-
+				if attached ic.item.usage_limitations_data as l_lim_data and then not l_lim_data.is_whitespace then
+					s.append ("<td>Yes</td>")
+				else
+					s.append ("<td>")
+					s.append ("</td>")
+				end
 				s.append ("<td>")
 				s.append ("<a href=%""+ api.administration_path ("/cloud/plans/" + url_encoded (ic.item.name)) + "%">Edit</a> | ")
 				s.append ("<a href=%""+ api.administration_path ("/cloud/subscriptions/?plan=" + url_encoded (ic.item.name)) + "%">Subscriptions</a>")
@@ -271,6 +278,15 @@ feature -- Execution
 				l_area.set_text_value (l_desc)
 			end
 			l_area.set_label ("Description")
+			l_area.set_cols (60)
+			l_area.set_rows (25)
+			Result.extend (l_area)
+
+			create l_area.make ("usage_limitations_data")
+			if a_plan /= Void and then attached a_plan.usage_limitations_data as l_lim_data then
+				l_area.set_text_value (l_lim_data)
+			end
+			l_area.set_label ("Usage limitations")
 			l_area.set_cols (60)
 			l_area.set_rows (25)
 			Result.extend (l_area)

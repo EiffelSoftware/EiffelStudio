@@ -144,6 +144,9 @@ feature {NONE} -- Response helper
 				Result.force (date_time_to_string (exp), "expiration")
 				Result.force (lic.days_remaining, "days_remaining")
 			end
+			if attached es_cloud_api.license_limitations_string (lic) as lim then
+				Result.force (lim, "plan_limitations")
+			end
 		end
 
 	license_to_plan_table (lic: ES_CLOUD_LICENSE): STRING_TABLE [detachable ANY]

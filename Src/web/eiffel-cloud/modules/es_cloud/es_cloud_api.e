@@ -198,6 +198,16 @@ feature -- Access: licenses
 			Result := es_cloud_storage.email_licenses (a_email)
 		end
 
+feature -- Limitations		
+
+	license_limitations_string (lic: ES_CLOUD_LICENSE): detachable STRING_8
+			-- Plan limitations JSON string.
+		do
+			if attached lic.plan.usage_limitations_data as l_lims then
+				Result := l_lims
+			end
+		end
+
 feature -- Access trial		
 
 	trial_user_licenses (a_user: ES_CLOUD_USER): detachable ARRAYED_LIST [ES_CLOUD_USER_LICENSE]
@@ -1035,6 +1045,7 @@ feature -- Email processing
 			res: PATH
 			s: STRING_8
 			msg: READABLE_STRING_8
+			l_info: STRING_8
 		do
 			create res.make_from_string ("templates")
 			if attached cms_api.module_theme_resource_location (module, res.extended ("notify_new_license_email.tpl")) as loc and then attached cms_api.resolved_smarty_template (loc) as tpl then
@@ -1076,7 +1087,12 @@ feature -- Email processing
 				s.append ("Notification from site " + cms_api.site_url + " .%N")
 				msg := s
 			end
-			e := cms_api.new_html_email (cms_api.setup.site_notification_email, "[NOTIF] New " + utf_8_encoded (a_license.plan.title_or_name) + " EiffelStudio license " + utf_8_encoded (a_license.key), msg)
+			create l_info.make_empty
+			l_info.append_character (' ')
+			if a_email_addr /= Void then
+				l_info.append (a_email_addr)
+			end
+			e := cms_api.new_html_email (cms_api.setup.site_notification_email, "[NOTIF] New " + utf_8_encoded (a_license.plan.title_or_name) + " EiffelStudio license " + utf_8_encoded (a_license.key) + l_info, msg)
 			cms_api.process_email (e)
 		end
 

@@ -125,7 +125,6 @@ feature -- Execution
 					else
 						r := new_error_response ("Installation not found", req, res)
 					end
-					r.execute
 				else
 					r := new_error_response ("No installation found", req, res)
 				end
@@ -168,6 +167,9 @@ feature -- Execution
 				r.add_link ("license", "license", cloud_user_license_link (a_version, a_user, lic.key))
 
 				r.add_table_iterator_field ("es:plan", license_to_plan_table (lic))
+				if attached es_cloud_api.license_limitations_string (lic) as lim then
+					r.add_string_field ("plan_limitations", lim)
+				end
 --				r.add_table_iterator_field ("es:data", data_to_plan_table (lic))
 			end
 

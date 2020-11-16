@@ -37,6 +37,18 @@ div.pricing-notes dt {
 div.plans_header {
   position: relative;
 }
+div.plans_header div.with-tooltip div.tooltip.product {
+  color: #000;
+  background-color: #fff;
+  border: solid 2px #ccc;
+  -webkit-border-radius: 0.7rem;
+  -moz-border-radius: 0.7rem;
+  -ms-border-radius: 0.7rem;
+  border-radius: 0.7rem;
+}
+div.plans_header div.with-tooltip div.tooltip.product strong {
+  color: #3670b9;
+}
 
 div.plans {
   display: flex;

@@ -1,15 +1,9 @@
 <style>
-{literal}
-div.pricing-header {
-{/literal}
+div.pricing-header {literal}{{/literal}
 	display: inline-block;
 	margin-left: auto;
-{literal}
-}
-{/literal}
-{literal}
-div.pricing-header > div {
-{/literal}
+{literal}}{/literal}
+div.pricing-header > div {literal}{{/literal}
 	font-weight: bold;
 	font-size: x-large;
 	text-align: center;
@@ -18,19 +12,22 @@ div.pricing-header > div {
 	margin-left: 1rem;
 	min-width: 10rem;
 	margin-right: 1rem;
-{literal}
-}
-{/literal}
+{literal}}{/literal}
+div.pricing-header > div > a > div {literal}{{/literal}
+	font-weight: normal;
+	font-size: initial;
+{literal}}{/literal}
+
 </style>
 <div class="pricing-header">
 <div class="with-tooltip">
 <a href="https://www.eiffel.com/eiffelstudio/buy/">For Enterprise
-<div class="tooltip down green">Efficient tools, excellent support with direct access to the technical team, interactive training performed by internationally recognized experts in the field give you the keys to success for the development of rock solid systems that will serve you and your customers for years. Contact us for a quote.</div>
+<div class="tooltip down product">Efficient tools, excellent support with direct access to the technical team, interactive training performed by internationally recognized experts in the field give you the keys to success for the development of rock solid systems that will serve you and your customers for years. <br/><strong>Contact us for a quote</strong>.</div>
 </a>
 </div>
 <div class="with-tooltip">
 <a href="https://www.eiffel.com/eiffelstudio/buy/">For Universities
-<div class="tooltip down green">Eiffel Software’s University Partnership Program has helped universities around the world teach programming and Object-Oriented concepts to its students for years.
+<div class="tooltip down product">Eiffel Software’s University Partnership Program has helped universities around the world teach programming and Object-Oriented concepts to its students for years.
 
 It is free for students and for professors. Eiffel Software also offers a variety of discounts for research and academic developments</div>
 </a>

@@ -124,6 +124,9 @@ feature -- Execution
 			l_email: READABLE_STRING_8
 --			orgs: detachable LIST [ES_CLOUD_ORGANIZATION]
 			lst: LIST [TUPLE [license: ES_CLOUD_LICENSE; user: detachable ES_CLOUD_USER; email: detachable READABLE_STRING_8; org: detachable ES_CLOUD_ORGANIZATION]]
+			f: CMS_FORM
+			f_select: WSF_FORM_SELECT
+			f_opt: WSF_FORM_SELECT_OPTION
 		do
 			if api.has_permission ("admin es licenses") then
 				if attached {WSF_STRING} req.query_parameter ("plan") as p_plan then
@@ -142,13 +145,35 @@ feature -- Execution
 					create s.make_from_string ("<h1>Licenses for plan %"" + html_encoded (l_plan_filter) + "%"</h1>")
 				else
 					create s.make_from_string ("<h1>Licenses</h1>")
-					s.append ("See <a href=%"" + api.administration_path ("/cloud/plans/") + " %">available plans</a>")
+				end
+				s.append ("Filters: ")
+				if attached es_cloud_api.sorted_plans as l_sorted_plans then
+					create f.make (req.percent_encoded_path_info, "license-per-plan")
+					f.add_css_style ("display: inline-block")
+					f.set_method_get
+					create f_select.make ("plan")
+					f.extend (f_select)
+					create f_opt.make ("", "All plans")
+					f_select.add_option (f_opt)
+					across
+						l_sorted_plans as ic
+					loop
+						create f_opt.make (ic.item.name, ic.item.title_or_name)
+						f_select.add_option (f_opt)
+						if l_plan_filter /= Void and then l_plan_filter.is_case_insensitive_equal (ic.item.name) then
+							f_opt.set_is_selected (True)
+						end
+					end
+					f_select.add_html_attribute ("onchange", "this.form.submit();")
+					f.append_to_html (r.wsf_theme, s)
 				end
 				if l_expiring_before_n_days_filter > 0 or l_plan_filter /= Void  then
 					s.append (" | <a href=%"" + req.script_url (req.percent_encoded_path_info) + "%">All the licenses</a>")
 				elseif l_expiring_before_n_days_filter = 0 then
 					s.append (" | <a href=%"" + req.script_url (req.percent_encoded_path_info) + "?expiring_before_n_days=7%">Licenses expiring before 7 days</a>")
 				end
+
+
 				if l_expiring_before_n_days_filter > 0 then
 					s.append ("<br/>Currently listing licenses expiring before " + l_expiring_before_n_days_filter.out + " days.")
 				end

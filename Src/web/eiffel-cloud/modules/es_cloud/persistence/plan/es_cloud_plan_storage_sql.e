@@ -737,10 +737,11 @@ feature {NONE} -- Queries: licenses
 
 	sql_select_licenses_by_plan: STRING = "[
 			SELECT
-				lic.lid, lic.license_key, lic.pid,
+				lic.lid, lic.license_key, lic.pid, es_plans.name, es_plans.data, es_plans.limitations,
 				lic.platform, lic.version, lic.status, lic.creation, lic.expiration, lic.fallback,
 				es_licenses_users.uid, es_licenses_emails.email, es_licenses_orgs.oid
 			FROM es_licenses AS lic
+			LEFT JOIN es_plans ON lic.pid = es_plans.pid 
 			LEFT JOIN es_licenses_users ON lic.lid = es_licenses_users.lid
 			LEFT JOIN es_licenses_emails ON lic.lid = es_licenses_emails.lid
 			LEFT JOIN es_licenses_orgs ON lic.lid = es_licenses_orgs.lid

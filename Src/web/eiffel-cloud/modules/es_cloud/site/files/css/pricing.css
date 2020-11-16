@@ -34,6 +34,10 @@ div.pricing-notes dt {
   font-weight: bold;
 }
 
+div.plans_header {
+  position: relative;
+}
+
 div.plans {
   display: flex;
   flex-wrap: wrap;
@@ -115,8 +119,8 @@ div.pricing input[type="radio"] {
   display: none;
 }
 div.pricing input[type="radio"] + label {
+  display: inline-block;
   margin-left: 1rem;
-  margin-bottom: 20px;
   padding: 1rem;
   color: #00000055;
   font-weight: bold;
@@ -128,18 +132,13 @@ div.pricing input[type="radio"] ~ input[type="radio"] + label {
 }
 div.pricing input[type="radio"]:checked + label {
   border: solid 2px #000;
-  -webkit-border-radius: 1rem;
-  -moz-border-radius: 1rem;
-  -ms-border-radius: 1rem;
-  border-radius: 1rem;
   color: #000000;
   background-color: #fff;
-  transition: all .3s ease-out;
-  transition: all ease-out 1s;
-  -webkit-transition: all ease-out 1s;
-  -moz-transition: all ease-out 1s;
-  -o-transition: all ease-out 1s;
-  -ms-transition: all ease-out 1s;
+  transition: all ease-out 0.2s;
+  -webkit-transition: all ease-out 0.2s;
+  -moz-transition: all ease-out 0.2s;
+  -o-transition: all ease-out 0.2s;
+  -ms-transition: all ease-out 0.2s;
 }
 div.pricing input[type="radio"].year:checked ~ div.plans div.plan div[data-interval="year"] {
   display: block;

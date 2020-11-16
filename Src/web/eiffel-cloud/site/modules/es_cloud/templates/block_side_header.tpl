@@ -1,0 +1,38 @@
+<style>
+{literal}
+div.pricing-header {
+{/literal}
+	display: inline-block;
+	margin-left: auto;
+{literal}
+}
+{/literal}
+{literal}
+div.pricing-header > div {
+{/literal}
+	font-weight: bold;
+	font-size: x-large;
+	text-align: center;
+	display: inline-block;
+	padding: .5rem 1rem .5rem 1rem;
+	margin-left: 1rem;
+	min-width: 10rem;
+	margin-right: 1rem;
+{literal}
+}
+{/literal}
+</style>
+<div class="pricing-header">
+<div class="with-tooltip">
+<a href="https://www.eiffel.com/eiffelstudio/buy/">For Enterprise
+<div class="tooltip down green">Efficient tools, excellent support with direct access to the technical team, interactive training performed by internationally recognized experts in the field give you the keys to success for the development of rock solid systems that will serve you and your customers for years. Contact us for a quote.</div>
+</a>
+</div>
+<div class="with-tooltip">
+<a href="https://www.eiffel.com/eiffelstudio/buy/">For Universities
+<div class="tooltip down green">Eiffel Software’s University Partnership Program has helped universities around the world teach programming and Object-Oriented concepts to its students for years.
+
+It is free for students and for professors. Eiffel Software also offers a variety of discounts for research and academic developments</div>
+</a>
+</div>
+</div>

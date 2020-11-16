@@ -23,6 +23,9 @@ div.pricing-notes {
 		font-weight: bold;
 	}
 }
+div.plans_header {
+	position: relative;
+}
 div.plans {
 	display: flex;
 	flex-wrap: wrap;
@@ -109,8 +112,9 @@ div.pricing {
 		display: none;
 	}
 	input[type="radio"] + label {
+		display: inline-block;
 		margin-left: 1rem;
-		margin-bottom: 20px;
+		//margin-bottom: 20px;
 		padding: 1rem;
 		color: #00000055;
 		font-weight: bold;
@@ -122,11 +126,10 @@ div.pricing {
 	}
 	input[type="radio"]:checked + label {
 		border: solid 2px #000;
-		@include border-radius(1rem);
+		//@include border-radius(.7rem);
 		color: #000000;
 		background-color: #fff;
-		transition: all .3s ease-out;
-		@include transition-ease-out(all,1s);
+		@include transition-ease-out(all,.2s);
 	}
 	input[type="radio"].year:checked ~ div.plans div.plan div[data-interval="year"] {
 		display: block;

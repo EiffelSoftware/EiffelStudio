@@ -98,35 +98,50 @@ body {
 		a:hover {
 			text-decoration: underline;
 		}
-		div.tooltip {
-			visibility: hidden;
-			max-width: 200px;
+	}
+}
+
+div.with-tooltip {
+	display: inline-block;
+	div.tooltip {
+		position: absolute;
+		display: none;
+		visibility: hidden;
+		max-width: 300px;
+		color: #fff;
+		background-color: #5171be;
+		border: solid 1px #373c8d;
+		border-radius: 6px;
+		text-align: center;
+		padding: 1rem;
+		&.blue {
 			background-color: #5171be;
-			color: #fff;
-			border: solid 1px #373c8d;
-			border-radius: 6px;
-			text-align: center;
-			padding: 1rem;
-			position: absolute;
-			top: 0;
-			right: 10px;
-  	  	  	&::after {
-  	  	  	  content: " ";
-  	  	  	  position: absolute;
-  	  	  	  bottom: 100%; /* At the bottom of the tooltip */
-  	  	  	  left: 50%;
-  	  	  	  margin-left: -8px;
-  	  	  	  border-width: 8px;
-  	  	  	  border-style: solid;
-  	  	  	  border-color: transparent transparent #373c8d transparent;
-			}
 		}
-		&:hover .tooltip.down {
-			visibility: visible;
-			@include fade-in(1s);
-			@include slide-down(.2s);
-			margin-top: 3.5rem;
+		&.green {
+			background-color: #5ea458;
 		}
+  	  	/*
+  	  	&::after {
+  	  	  content: " ";
+  	  	  position: absolute;
+  	  	  bottom: 100%; // At the bottom of the tooltip
+  	  	  left: 50%;
+  	  	  margin-left: -8px;
+  	  	  border-width: 8px;
+  	  	  border-style: solid;
+  	  	  border-color: transparent transparent #373c8d transparent;
+		}
+		*/
+		z-index: 999;
+	}
+	&:hover .tooltip.down {
+		position: absolute;
+		visibility: visible;
+		display: block;
+		z-index: 999;
+		@include fade-in(1s);
+		@include slide-down(.2s);
+		margin-top: .3rem;
 	}
 }
 

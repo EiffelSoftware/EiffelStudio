@@ -32,7 +32,7 @@
     {if isset="$page.regions.search"}<!-- Page search -->
     <div class="search">{$page.regions.search/}</div>
     {/if}
-    <div id="built-with-eiffel">
+    <div id="built-with-eiffel" class="with-tooltip">
     <a href="{$site_url/}site/built_with_eiffel">Developed in Eiffel with EiffelStudio
     <div class="tooltip down">Read the story of how we developed this site using Eiffel with EiffelStudio and the Eiffel Web Framework!</div>
     </a>

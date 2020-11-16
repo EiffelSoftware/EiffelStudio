@@ -656,7 +656,7 @@ feature -- Hooks: block
 
 				create l_intervals.make_caseless (2)
 				l_html.append ("<div class=%"empty%"></div>")
-
+				l_html.append ("<div class=%"plans_header%">")
 				l_is_first := True
 				across
 					l_store.items as ic
@@ -672,6 +672,8 @@ feature -- Hooks: block
 								l_html.append (" checked=%"checked%"")
 							end
 							l_html.append ("/>")
+
+							
 							l_html.append ("<label for=%"" + l_int_id + "%">")
 							if attached store_item_interval_title (l_item) as l_interval_title then
 								l_html.append (html_encoded (l_interval_title))
@@ -680,13 +682,16 @@ feature -- Hooks: block
 							end
 							l_html.append ("</label>%N")
 							l_is_first := False
+
 						else
 							l_intervals.force (l_intervals [l_int_id] + 1, l_int_id)
 						end
-
 					end
 				end
-
+				if attached {CMS_SMARTY_TEMPLATE_BLOCK} smarty_template_block (Current, "side_header", api.cms_api) as tpl then
+					tpl.append_to_html (a_response.theme, l_html)
+				end
+				l_html.append ("</div>")
 				l_html.append ("<div class=%"plans%">")
 				across
 					tb as tb_ic

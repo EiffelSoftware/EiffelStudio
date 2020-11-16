@@ -29,7 +29,7 @@ div.pricing-header > div > a > div {literal}{{/literal}
 <a href="https://www.eiffel.com/eiffelstudio/buy/">For Universities
 <div class="tooltip down product">Eiffel Software’s University Partnership Program has helped universities around the world teach programming and Object-Oriented concepts to its students for years.
 
-It is free for students and for professors. Eiffel Software also offers a variety of discounts for research and academic developments</div>
+It is free for students and for professors. Eiffel Software also offers a variety of discounts for research and academic developments.<br/><strong>Contact us</strong></div>
 </a>
 </div>
 </div>

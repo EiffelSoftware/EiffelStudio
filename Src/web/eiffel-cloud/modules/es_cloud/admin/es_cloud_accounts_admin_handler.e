@@ -47,6 +47,15 @@ feature -- Execution
 					r := new_generic_response (req, res)
 					add_primary_tabs (r)
 					create s.make_from_string ("<h1>Account %"" + api.user_html_administration_link (l_user) + "%"</h1>")
+					s.append ("<ul>")
+					s.append ("<li>username: "+ html_encoded (l_user.cms_user.name) +"</li>%N")
+					if attached l_user.cms_user.email as l_email then
+						s.append ("<li>email: "+ html_encoded (l_email) +"</li>%N")
+					end
+					if attached l_user.cms_user.profile_name as l_profname then
+						s.append ("<li>profile_name: "+ html_encoded (l_profname) +"</li>%N")
+					end
+					s.append ("</ul>%N")
 
 					f := new_license_form (req)
 

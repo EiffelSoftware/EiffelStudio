@@ -198,7 +198,11 @@ feature -- Execution
 
 							s.append ("<a href=%"")
 							s.append (api.administration_path ("cloud/account/" + l_user.id.out))
-							s.append ("%">")
+							s.append_character ('%"')
+							if attached l_user.cms_user.email as l_user_email then
+								s.append (" title=%"" + html_encoded (l_user_email) + "%"")
+							end
+							s.append_character ('>')
 							s.append (html_encoded (api.real_user_display_name (l_user)))
 							s.append ("</a>")
 						elseif l_org /= Void then

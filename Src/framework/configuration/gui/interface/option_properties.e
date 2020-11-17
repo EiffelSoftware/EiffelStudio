@@ -458,7 +458,7 @@ feature {NONE} -- Modification
 		require
 			an_options_not_void: an_options /= Void
 			an_inherited_options_not_void: an_inherited_options /= Void
-			properties_not_void: properties /= Void
+			properties_not_void: attached properties as props and then not props.is_destroyed
 		local
 			l_bool_prop: BOOLEAN_PROPERTY
 			l_warning: READABLE_STRING_32

@@ -334,15 +334,15 @@ feature {NONE} -- Layout status
 
 	reset_grid
 		do
-			grid.destroy
+			grid.wipe_out
 				-- Remove grid associated button
 			if attached add_button as but then
-				but.destroy
 				add_button := Void
+				but.destroy
 			end
 			if attached remove_button as but then
-				but.destroy
 				remove_button := Void
+				but.destroy
 			end
 			grid_used := False
 		ensure
@@ -452,11 +452,16 @@ feature {NONE} -- Element initialization
 			-- Prepare `properties'.
 		require
 			not_properties_and_grid: not properties_used or not grid_used
+		local
+			p: like properties
 		do
 			if not properties_used or else attached tabs then
 				configuration_space.wipe_out
 
 				use_properties
+				p := properties
+				create p
+				properties := p
 
 					-- Remove tabs.
 				if attached tabs as t then
@@ -466,7 +471,11 @@ feature {NONE} -- Element initialization
 
 				initialize_properties_for (configuration_space)
 			else
-				properties.reset
+				if properties.is_destroyed then
+					check not properties_used end
+				else
+					properties.reset
+				end
 			end
 		ensure
 			properties_ok: properties_used and then not properties.is_destroyed
@@ -500,7 +509,7 @@ feature {NONE} -- Element initialization
 				g := grid
 				create g
 				grid := g
-				
+
 				vb_grid.extend (g)
 				g.set_column_count_to (2)
 				g.column (1).set_width (200)

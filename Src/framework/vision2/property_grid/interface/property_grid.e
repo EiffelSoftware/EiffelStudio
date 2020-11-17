@@ -76,10 +76,12 @@ feature -- Update
 
 	reset
 			-- Reset to empty property grid.
+		require
+			not is_destroyed
 		local
 			l_column_width1, l_column_width2, l_column_width3: INTEGER
 		do
-			if not is_destroyed and then column_count = 3 then
+			if column_count = 3 then
 				l_column_width1 := column (1).width
 				l_column_width2 := column (name_column).width
 				l_column_width3 := column (value_column).width
@@ -97,9 +99,7 @@ feature -- Update
 
 			sections.wipe_out
 			create expanded_section_store.make (5)
-			if not is_destroyed then
-				hide_horizontal_scroll_bar
-			end
+			hide_horizontal_scroll_bar
 
 			enable_border
 		end
@@ -453,7 +453,7 @@ invariant
 
 note
 	ca_ignore: "CA011", "CA011: too many arguments"
-	copyright: "Copyright (c) 1984-2018, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2020, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

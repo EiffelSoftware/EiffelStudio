@@ -109,6 +109,7 @@ fullrf studio\bitmaps\png\small_12x12.png
 fullrf studio\bitmaps\png\mini_10x10.png
 fullrd studio\help\defaults\unix
 fullrd studio\spec\unix
+fullrd tools\spec\unix
 cdd %STUDIO_DIR\studio\spec
 move windows\compile_library.bat %ISE_PLATFORM\bin\
 move windows\mkdir.bat %ISE_PLATFORM\bin\

@@ -18,7 +18,7 @@ inherit
 
 feature -- Basic operations
 
-	launch (a_uri: READABLE_STRING_32): BOOLEAN
+	launch (a_uri: READABLE_STRING_GENERAL): BOOLEAN
 			-- <Precursor>
 		local
 			l_app: STRING_32
@@ -39,7 +39,7 @@ feature -- Basic operations
 
 feature {NONE} -- Basic operations
 
-	launch_with_app (a_uri: READABLE_STRING_32; a_app: READABLE_STRING_32): BOOLEAN
+	launch_with_app (a_uri: READABLE_STRING_GENERAL; a_app: READABLE_STRING_32): BOOLEAN
 			-- <Precursor>
 		local
 			l_cmd: STRING_32

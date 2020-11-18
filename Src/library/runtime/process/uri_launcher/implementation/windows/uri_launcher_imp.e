@@ -15,7 +15,7 @@ inherit
 
 feature -- Basic operations
 
-	launch (a_uri: READABLE_STRING_32): BOOLEAN
+	launch (a_uri: READABLE_STRING_GENERAL): BOOLEAN
 			-- <Precursor>
 		local
 			l_uri: WEL_STRING

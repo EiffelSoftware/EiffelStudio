@@ -395,17 +395,7 @@ feature {NONE} -- Implementation
 				end (popup, ?, ?, ?, ?, ?, ?, ?, ?))
 			popup.show_relative_to_window (dialog)
 
-			if
-				attached {STRING_32_PREFERENCE} preferences.misc_data.internet_browser_preference as pref and then
-				attached pref.value as l_default_browser and then
-				not l_default_browser.is_empty
-			then
-				is_launched := (create {URI_LAUNCHER}).launch_with_default_app (a_url, l_default_browser)
-			else
-				is_launched := (create {URI_LAUNCHER}).launch (a_url)
-					-- This check is here because it lets us know if the preference wasn't initialized.
-				check internet_browser_preference_set: False end
-			end
+			is_launched := (create {ES_URI_LAUNCHER}).launch (a_url)
 			if is_launched then
 				create t.make_with_interval (5_000) -- 5 seconds
 				t.actions.extend (agent popup.destroy)

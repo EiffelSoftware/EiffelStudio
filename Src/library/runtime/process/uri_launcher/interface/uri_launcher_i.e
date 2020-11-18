@@ -23,7 +23,7 @@ feature -- Basic operations
 		deferred
 		end
 
-	launch_with_default_app (a_uri: READABLE_STRING_32; a_default_app: READABLE_STRING_32): BOOLEAN
+	launch_with_default_app (a_uri: READABLE_STRING_GENERAL; a_default_app: READABLE_STRING_32): BOOLEAN
 			-- Launches a URI in the system's default web-browser, or if that fails, then the supplied
 			-- default application.
 			--
@@ -44,7 +44,7 @@ feature -- Basic operations
 
 feature {NONE} -- Basic operations
 
-	launch_with_app (a_uri: READABLE_STRING_32; a_app: READABLE_STRING_32): BOOLEAN
+	launch_with_app (a_uri: READABLE_STRING_GENERAL; a_app: READABLE_STRING_32): BOOLEAN
 			-- Launches a URI in the system's default web-browser, or if that fails, then the supplied
 			-- default application.
 			--
@@ -63,7 +63,7 @@ feature {NONE} -- Basic operations
 			i: INTEGER
 		do
 				-- Build command string.
-			l_cmd := a_app.as_lower.as_string_32
+			l_cmd := a_app.as_lower.to_string_32
 			i := l_cmd.substring_index ("$url", 1)
 			if i > 0 then
 					-- Use URL replacement.

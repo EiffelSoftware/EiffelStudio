@@ -291,11 +291,9 @@ feature {NONE} -- Welcome dialog
 									create m.make ({STRING_32} "Update is available: " + a_rel.filename, "version_check")
 									m.register_action (agent (i_link: READABLE_STRING_GENERAL)
 											local
-												l_launcher: URI_LAUNCHER
 												b: BOOLEAN
 											do
-												create l_launcher
-												b := l_launcher.launch (i_link)
+												b := (create {ES_URI_LAUNCHER}).launch (i_link)
 											end(a_rel.link)
 										, "Try it now!")
 									s_notif.notify (m)

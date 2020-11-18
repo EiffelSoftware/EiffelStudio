@@ -74,11 +74,9 @@ feature -- Events
 
 	on_download
 		local
-			uri_launcher: URI_LAUNCHER
 			is_launched: BOOLEAN
 		do
-			create uri_launcher
-			is_launched := uri_launcher.launch (release.link)
+			is_launched := (create {ES_URI_LAUNCHER}).launch (release.link)
 			on_next (True)
 		end
 
@@ -96,7 +94,7 @@ feature -- Events
 
 invariant
 note
-	copyright: "Copyright (c) 1984-2019, Eiffel Software"
+	copyright: "Copyright (c) 1984-2020, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

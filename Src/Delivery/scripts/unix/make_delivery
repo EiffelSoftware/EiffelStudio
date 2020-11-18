@@ -212,6 +212,9 @@ if [ ! "$NO_COMPILE" ]; then
 		mv -f tmp $INSTALL_DIR/studio/spec/unix/finish_freezing
 
 		chmod +x $INSTALL_DIR/studio/spec/unix/finish_freezing
+
+		# update tools
+		chmod +x $INSTALL_DIR/tools/spec/unix/estudio-*
 	fi
 
 	if [ -n "$UNIX_LIB_NAME" ]; then
@@ -229,6 +232,14 @@ if [ ! "$NO_COMPILE" ]; then
 		mv -f tmp $INSTALL_DIR/studio/spec/unix/finish_freezing
 
 		chmod +x $INSTALL_DIR/studio/spec/unix/finish_freezing 
+
+		# update tools
+		chmod +x $INSTALL_DIR/tools/spec/unix/estudio-*
+		# update default.xml for unix
+		rm -f tmp
+		sed -e "s/\$ISE_EIFFEL\\/tools\\/spec\\/\$ISE_PLATFORM\\/bin\\/estudio-/estudio-/g" $INSTALL_DIR/studio/eifinit/spec/unix/default.xml > tmp
+		rm -f $INSTALL_DIR/studio/eifinit/spec/unix/default.xml
+		mv -f tmp $INSTALL_DIR/studio/eifinit/spec/unix/default.xml
 	fi
 
 	if [ "$MULTIPLE_EDITIONS" ]; then

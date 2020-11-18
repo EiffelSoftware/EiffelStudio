@@ -1,0 +1,9 @@
+#!/bin/sh
+
+if [ -x "$(command -v "x-terminal-emulator")" ]; then
+	x-terminal-emulator
+elif [ -x "$(command -v "xterm")" ]; then
+	xterm -geometry 100x40
+else
+	echo "Error: can not find terminal emulator"
+fi

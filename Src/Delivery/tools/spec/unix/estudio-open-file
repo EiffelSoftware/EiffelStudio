@@ -1,0 +1,39 @@
+#!/bin/sh
+
+open_terminal () {
+	if [ -x "$(command -v "x-terminal-emulator")" ]; then
+		x-terminal-emulator -e $*
+	elif [ -x "$(command -v "xterm")" ]; then
+		xterm -geometry 100x40 -e $*
+	else
+		echo "Error: can not find terminal emulator"
+	fi
+}
+
+if [ "$ISE_PLATFORM" = "macosx-x86-64" ] || [ "$ISE_PLATFORM" = "macosx-x86" ]; then
+	open $1
+elif [ -x "$(command -v "xdg-open")" ]; then
+	xdg-open $1
+else
+	if [ -n "$EDITOR" ]; then
+		if [ "$EDITOR" = "vi" ]; then
+			open_terminal $EDITOR $1 +$2
+		elif [ "$EDITOR" = "vim" ]; then
+			open_terminal $EDITOR $1 +$2
+		elif [ "$EDITOR" = "nano" ]; then
+			open_terminal $EDITOR $1 +$2
+		else
+			open_terminal $EDITOR $1
+		fi
+	else
+		if [ -x "$(command -v "gvim")" ]; then
+			gvim $1 +$2
+		elif [ -x "$(command -v "vim")" ]; then
+			open_terminal vim $1 +$2
+		elif [ -x "$(command -v "nano")" ]; then
+			open_terminal nano $1 +$2
+		else
+			echo "Error: can not find editor"
+		fi
+	fi
+fi

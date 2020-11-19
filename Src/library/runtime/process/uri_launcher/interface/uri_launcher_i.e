@@ -12,7 +12,7 @@ deferred class
 
 feature -- Basic operations
 
-	launch (a_uri: READABLE_STRING_32): BOOLEAN
+	launch (a_uri: READABLE_STRING_GENERAL): BOOLEAN
 			-- Launches a URI in the system's default web-browser.
 			--
 			-- `a_uri': The URI to launch.

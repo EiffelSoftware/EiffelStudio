@@ -168,7 +168,7 @@ feature -- User interface elements
 	template_grid: attached ES_GRID
 			-- The grid used to show the contracts
 
-	template_label: attached EVS_LINK_LABEL
+	template_label: attached EV_LINK_LABEL
 			-- Label used to edit contracts
 
 	auto_show_check: attached ES_CHECK_BUTTON_PREFERENCED_WIDGET
@@ -258,7 +258,7 @@ invariant
 	template_label_set: template_label /= Void
 
 ;note
-	copyright: "Copyright (c) 1984-2016, Eiffel Software"
+	copyright: "Copyright (c) 1984-2020, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

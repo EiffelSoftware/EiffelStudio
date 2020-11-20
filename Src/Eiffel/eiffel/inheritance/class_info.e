@@ -110,7 +110,8 @@ feature -- Access
 feature {INTERNAL_COMPILER_STRING_EXPORTER} -- Access
 
 	creation_table (feat_table: FEATURE_TABLE): like {CLASS_C}.creators
-			-- Creators table
+			-- Creation table of the current class.
+			-- The function has a side effect: it records creation positions of features in `feat_table`.
 		require
 			good_argument: feat_table /= Void
 		local
@@ -125,12 +126,21 @@ feature {INTERNAL_COMPILER_STRING_EXPORTER} -- Access
 			vgcp3: VGCP3
 			vgcp4: VGCP4
 			has_default_create: BOOLEAN
-			position: NATURAL_32
+			position: like {FEATURE_I}.creator_position
+			is_once: BOOLEAN
 		do
 			a_class := feat_table.associated_class
+			is_once := a_class.is_once
 			if not attached creators as cs then
-				-- Do nothing
+					-- Do nothing.
 				has_default_create := True
+				if a_class.class_id = system.any_id then
+					if attached feat_table.item_id (system.names.default_create_name_id) as f then
+						f.set_creator_position (1)
+					end
+				elseif attached feat_table.feature_of_rout_id (system.default_create_rout_id) as f then
+					f.set_creator_position (1)
+				end
 			elseif a_class.is_deferred then
 				create vgcp1
 				vgcp1.set_class (a_class)
@@ -181,6 +191,8 @@ feature {INTERNAL_COMPILER_STRING_EXPORTER} -- Access
 									vgcp21.set_location (f.item.start_location)
 									Error_handler.insert_error (vgcp21)
 								end
+								a_feature.set_creator_position (position)
+								position := position + 1
 							end
 						end
 					end

@@ -100,23 +100,6 @@ feature -- Code generation: C
 			buf.exdent
 		end
 
-feature {ABSTRACT_INSPECT_B} -- Code generation: C
-
-	generate_with_effect (parent: ABSTRACT_INSPECT_B [ABSTRACT_CASE_B [G], G])
-			-- Generate code for the current case using generation for the effect taken from `parent`.
-		local
-			buf: GENERATION_BUFFER
-		do
-			generate_line_info
-			interval.generate
-			buf := buffer
-			buf.indent
-			parent.generate_effect (content)
-			buf.put_new_line
-			buf.put_string ("break;")
-			buf.exdent
-		end
-
 feature -- Array optimization
 
 	assigns_to (i: INTEGER): BOOLEAN

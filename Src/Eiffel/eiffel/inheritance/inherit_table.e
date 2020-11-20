@@ -107,6 +107,13 @@ inherit
 			copy, is_equal
 		end
 
+	SHARED_EXPORT_STATUS
+		export
+			{NONE} all
+		undefine
+			copy, is_equal
+		end
+
 create
 	make
 
@@ -203,7 +210,6 @@ feature
 			old_creators, new_creators: like {CLASS_C}.creators
 			old_convert_to, old_convert_from: HASH_TABLE [INTEGER, DEANCHORED_TYPE_A]
 			creation_name: INTEGER
-			equiv_tables: BOOLEAN
 			l_error_level: NATURAL
 			l_is_il_generation: BOOLEAN
 		do
@@ -431,10 +437,8 @@ feature
 				loop
 					creation_name := old_creators.key_for_iteration
 					if
-						new_creators = Void
-					or else
-						not new_creators.has (creation_name)
-					or else
+						not attached new_creators or else
+						not new_creators.has (creation_name) or else
 							-- The new export status is more restrictive than the old one
 						not old_creators.item_for_iteration.equiv (new_creators.item (creation_name))
 					then
@@ -442,8 +446,8 @@ feature
 						if resulting_table.found then
 								-- The routine is not a creation routine any more
 								-- or the export status has changed
-							create depend_unit.make (class_id, resulting_table.found_item);
-							pass2_control.propagators.extend (depend_unit);
+							create depend_unit.make (class_id, resulting_table.found_item)
+							pass2_control.propagators.extend (depend_unit)
 						end
 					end
 					old_creators.forth
@@ -466,31 +470,32 @@ feature
 			end
 
 				-- Remember the removed features written in `a_class'
-			pass3_control := a_class.propagators;
-			pass3_control.set_removed_features (pass2_control.removed_features);
-			pass3_control.set_invariant_changed (invariant_changed);
-			pass3_control.set_invariant_removed (invariant_removed);
+			pass3_control := a_class.propagators
+			pass3_control.set_removed_features (pass2_control.removed_features)
+			pass3_control.set_invariant_changed (invariant_changed)
+			pass3_control.set_invariant_removed (invariant_removed)
 
 				-- Process patterns of origin features
-			process_pattern (resulting_table);
-
-			if previous_feature_table /= Void then
-					-- If there is a table in the tmp server,
-					-- the propagation is done again only if the new
-					-- table is different.
-				equiv_tables := resulting_table.equiv (previous_feature_table, pass2_control)
-			else
-					-- There is no table in the tmp server, see if the
-					-- new feature table is equivalent to the old one
-				equiv_tables := resulting_table.equiv (feature_table, pass2_control);
-			end
+			process_pattern (resulting_table)
 
 					-- Propagation
-			Degree_4.process_and_propagate (pass_c, resulting_table, equiv_tables,
-								pass2_control, assert_prop_list, changed_features);
+			Degree_4.process_and_propagate
+				(pass_c, resulting_table,
+				resulting_table.equiv
+					(if attached previous_feature_table then
+							-- If there is a table in the tmp server,
+							-- the propagation is done again only if the new
+							-- table is different.
+						previous_feature_table
+					else
+							-- There is no table in the tmp server, see if the
+							-- new feature table is equivalent to the old one.
+						feature_table
+					end, pass2_control),
+				pass2_control, assert_prop_list, changed_features)
 
 				-- Reset `assert_prop_list' for next iteration.
-			assert_prop_list := Void;
+			assert_prop_list := Void
 
 			if l_is_il_generation then
 				a_class.class_interface.process_features (resulting_table)
@@ -974,57 +979,55 @@ feature
 			-- Analyze local declarations written in the class for a
 			-- syntactically changed class.
 		local
-			feature_clause: FEATURE_CLAUSE_AS;
-			features: EIFFEL_LIST [FEATURE_AS];
+			feature_clause: FEATURE_CLAUSE_AS
+			features: EIFFEL_LIST [FEATURE_AS]
 				-- Reference on the feature list produced by the first pass
-			single_feature: FEATURE_AS;
+			single_feature: FEATURE_AS
 				-- Single standard Eiffel feature
-			name_list: EIFFEL_LIST [FEATURE_NAME];
+			name_list: EIFFEL_LIST [FEATURE_NAME]
 				-- Attribute list names
-			feature_i: FEATURE_I;
-			feat_name: FEATURE_NAME;
-			clauses: EIFFEL_LIST [FEATURE_CLAUSE_AS];
-			l_export_status: EXPORT_I;
+			feature_i: FEATURE_I
+			feat_name: FEATURE_NAME
+			l_export_status: EXPORT_I
 			property_name: STRING
 			property_names: HASH_TABLE [FEATURE_I, STRING]
-			unique_counter: detachable COUNTER
+			unique_counter: COUNTER
+			creation_index_name: FEATURE_NAME
+			n: like class_info.creators.count
 		do
-			clauses := class_info.features;
-			if clauses /= Void then
+			if attached class_info.features as clauses then
 				if system.il_generation then
 					create property_names.make (0)
 				end
 				if a_class.has_unique then
 					create unique_counter
 				end
-				from
-					clauses.start
-				until
-					clauses.after
+				across
+					clauses as c
 				loop
-					feature_clause := clauses.item;
+					feature_clause := c.item
 						-- Evaluation of the export status
 					l_export_status := export_status_generator.
 						feature_clause_export_status (system, a_class, feature_clause)
 					from
 							-- Iteration of the feature written in class
 							-- `a_class'.
-						features := feature_clause.features;
-						features.start;
+						features := feature_clause.features
+						features.start
 					until
 						features.after
 					loop
-						single_feature := features.item;
+						single_feature := features.item
 						from
-							name_list := single_feature.feature_names;
-							name_list.start;
+							name_list := single_feature.feature_names
+							name_list.start
 						until
 							name_list.after
 						loop
-							feat_name := name_list.item;
+							feat_name := name_list.item
 								-- Computes an internal name for the feature
 								-- taking care of prefix/infix notations
-							feature_i := feature_i_from_feature_as (single_feature, feat_name, unique_counter);
+							feature_i := feature_i_from_feature_as (single_feature, feat_name, unique_counter)
 								-- Attributes `body_index', `feature_name' and
 								-- `written_in' are ok now. If it is an old
 								-- instance of FEATURE_I from a previous
@@ -1057,15 +1060,42 @@ feature
 									error_handler.insert_error (create {VIPS}.make (a_class, feature_i))
 								end
 							end
-							name_list.forth;
-						end;
-
-						features.forth;
-					end;
-					clauses.forth;
-				end;
-			end;
-		end;
+							name_list.forth
+						end
+						features.forth
+					end
+				end
+			end
+			if a_class.is_once then
+					-- Add an attribute to keep an index of a creation procedure.
+				n := class_info.creators.count
+				create {FEAT_NAME_ID_AS} creation_index_name.initialize (create {ID_AS}.initialize_from_id (names_heap.inspect_attribute_name_id))
+				feature_i := feature_i_from_feature_as
+					(create {FEATURE_AS}.initialize
+						(create {EIFFEL_LIST [FEATURE_NAME]}.make_from_iterable (<<creation_index_name>>),
+						create {BODY_AS}.initialize
+							(Void,
+							create {CLASS_TYPE_AS}.initialize (create {ID_AS}.initialize
+									-- TODO: Replace manifest type names with computed names to take possible renaming into account.
+								(if n <= 0xFF then
+									"NATURAL_8"
+								elseif n <= 0xFFFF then
+									"NATURAL_16"
+								elseif n <= 0xFFFF_FFFF then
+									"NATURAL_32"
+								else
+									"NATURAL_64"
+								end)),
+							Void, Void, Void, Void, Void, Void),
+						Void,
+						0,
+						a_class.ast.end_position),
+						creation_index_name,
+						Void)
+				feature_i.set_is_hidden (True)
+				analyze_local_feature_declaration (feature_i, feature_i.feature_name_id, export_none)
+			end
+		end
 
 	recompute_declarations
 			-- Recompute local declarations for a non-syntactically changed

@@ -15,6 +15,7 @@ inherit
 		redefine
 			access_for_feature,
 			assigner_name_id,
+			case_value,
 			extension,
 			generate,
 			generate_il,
@@ -22,6 +23,7 @@ inherit
 			is_constant,
 			is_once,
 			is_target_free,
+			is_valid_case,
 			melt,
 			redefinable,
 			set_type,
@@ -35,6 +37,7 @@ inherit
 		redefine
 			access_for_feature,
 			assigner_name_id,
+			case_value,
 			do_check_types,
 			equiv,
 			extension,
@@ -44,6 +47,7 @@ inherit
 			is_constant,
 			is_once,
 			is_target_free,
+			is_valid_case,
 			melt,
 			redefinable,
 			set_type,
@@ -97,6 +101,14 @@ feature -- Status report
 	is_constant: BOOLEAN = True
 			-- Is the current feature a constant one?
 
+	is_valid_case (c: CLASS_C; t: TYPE_A): BOOLEAN
+			-- <Precursor>
+		do
+			Result :=
+				t.same_as (type) or else
+				(not type.is_enum and then not t.is_enum and then value.valid_type (t))
+		end
+
 	redefinable: BOOLEAN = False
 			-- Is a constant redefinable?
 
@@ -110,6 +122,14 @@ feature -- Status report
 			-- <Precursor>
 		do
 			Result := not has_unqualified_call_in_assertion
+		end
+
+feature -- Access: code generation
+
+	case_value (c: CLASS_C; t: TYPE_A): INTERVAL_VAL_B
+			-- <Precursor>
+		do
+			Result := value.inspect_value (t)
 		end
 
 feature -- Settings

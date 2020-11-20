@@ -153,9 +153,15 @@ feature -- Output
 feature -- C code generation
 
 	generate
-			-- Generate the interval.
+			-- Generate the interval for constants.
 		do
-			lower.generate_interval (upper)
+			lower.generate_interval (upper, Void, Void)
+		end
+
+	generate_once (e: EXPR_B; c: ARRAY [FEATURE_I])
+			-- Generate the interval for once creation procedures.
+		do
+			lower.generate_interval (upper, e, c)
 		end
 
 feature -- IL code generation

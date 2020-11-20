@@ -214,10 +214,8 @@ feature -- Element change
 					l_arguments_array.extend (l_feature_args [i].meta_type)
 					i := i + 1
 				end
-				pattern.update (a_feature_i.type.meta_type, l_arguments_array)
-			else
-				pattern.update (a_feature_i.type.meta_type, Void)
 			end
+			pattern.update (a_feature_i.pattern_type, l_arguments_array)
 			info.set_pattern (pattern)
 			info.set_written_in (a_feature_i.generation_class_id)
 
@@ -373,7 +371,7 @@ invariant
 	info_array_exists: info_array /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2014, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2020, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

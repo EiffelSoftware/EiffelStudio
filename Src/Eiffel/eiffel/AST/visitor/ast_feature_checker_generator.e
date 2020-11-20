@@ -3695,8 +3695,7 @@ feature {NONE} -- Visitor
 	process_nested_expr_as (l_as: NESTED_EXPR_AS)
 		local
 			l_target_type: TYPE_A
-			l_target_expr: EXPR_B
-			l_access_expr: ACCESS_EXPR_B
+			target_code: ACCESS_B
 			l_nested: NESTED_B
 			l_is_qualified_call: BOOLEAN
 			l_error_level: NATURAL_32
@@ -3723,9 +3722,11 @@ feature {NONE} -- Visitor
 				end
 				if is_byte_node_enabled then
 					check last_byte_node_not_void: last_byte_node /= Void end
-					l_target_expr ?= last_byte_node
-					create l_access_expr
-					l_access_expr.set_expr (l_target_expr)
+					if attached {ACCESS_B} last_byte_node as b then
+						target_code := b
+					else
+						create {ACCESS_EXPR_B} target_code.make ({EXPR_B} / last_byte_node)
+					end
 				end
 
 					-- Type check the message
@@ -3776,35 +3777,35 @@ feature {NONE} -- Visitor
 						then
 							inspect connective_id
 							when {PREDEFINED_NAMES}.conjuncted_name_id then
-								create {BIN_AND_B} binary_b.make (l_access_expr, p.expression)
+								create {BIN_AND_B} binary_b.make (target_code, p.expression)
 							when {PREDEFINED_NAMES}.conjuncted_semistrict_name_id then
 									-- TODO: replace specialized code with conditional expression after specializing code generation
 									-- to produce the code comparable by efficiency with the binary equivalent.
 									-- a ∧ b ≜ if a then b else False end
 									-- create {IF_EXPRESSION_B} last_byte_node.make (l_access_expr, p.expression, Void, create {BOOL_CONST_B}.make (False), l_target_type, Void)
-								create {B_AND_THEN_B} binary_b.make (l_access_expr, p.expression)
+								create {B_AND_THEN_B} binary_b.make (target_code, p.expression)
 							when {PREDEFINED_NAMES}.disjuncted_exclusive_name_id then
-								create {BIN_XOR_B} binary_b.make (l_access_expr, p.expression)
+								create {BIN_XOR_B} binary_b.make (target_code, p.expression)
 							when {PREDEFINED_NAMES}.disjuncted_name_id then
-								create {BIN_OR_B} binary_b.make (l_access_expr, p.expression)
+								create {BIN_OR_B} binary_b.make (target_code, p.expression)
 							when {PREDEFINED_NAMES}.disjuncted_semistrict_name_id then
 									-- TODO: replace specialized code with conditional expression after specializing code generation
 									-- to produce the code comparable by efficiency with the binary equivalent.
 									-- a ∨ b ≜ if a then True else b end
 									-- create {IF_EXPRESSION_B} last_byte_node.make (l_access_expr, create {BOOL_CONST_B}.make (True), Void, p.expression, l_target_type, Void)
-								create {B_OR_ELSE_B} binary_b.make (l_access_expr, p.expression)
+								create {B_OR_ELSE_B} binary_b.make (target_code, p.expression)
 							when {PREDEFINED_NAMES}.implication_name_id then
 									-- TODO: replace specialized code with conditional expression after specializing code generation
 									-- to produce the code comparable by efficiency with the binary equivalent.
 									-- a ⇒ b ≜ if a then b else True end
 									-- create {IF_EXPRESSION_B} last_byte_node.make (l_access_expr, p.expression, Void, create {BOOL_CONST_B}.make (True), l_target_type, Void)
-								create {B_IMPLIES_B} binary_b.make (l_access_expr, p.expression)
+								create {B_IMPLIES_B} binary_b.make (target_code, p.expression)
 							end
 							binary_b.init (a)
 							last_byte_node := binary_b
 						else
 							create l_nested
-							l_nested.set_target (l_access_expr)
+							l_nested.set_target (target_code)
 							l_nested.set_message (c)
 							c.set_parent (l_nested)
 							last_byte_node := l_nested
@@ -5875,8 +5876,7 @@ feature {NONE} -- Visitor
 						is_qualified_call := l_is_qualified_call
 						if error_level = l_error_level and then is_byte_node_enabled then
 							create nested_b
-							create target_access
-							target_access.set_expr (target_expr)
+							create target_access.make (target_expr)
 							target_access.set_parent (nested_b)
 							if l_is_multi_constraint then
 								l_access_b ?= last_byte_node
@@ -7228,18 +7228,45 @@ feature {NONE} -- Visitor
 			l_formal: FORMAL_A
 			l_type: TYPE_A
 			s: like context.scope
+			local_info: LOCAL_INFO
+			o: OBJECT_TEST_LOCAL_B
+			nested_b: NESTED_B
 		do
 			break_point_slot_count := break_point_slot_count + 1
 
 			a.switch.process (Current)
-			if last_type /= Void then
+			if attached last_type as t then
 				if is_byte_node_enabled and then attached {EXPR_B} last_byte_node as e then
-					l_inspect := f.new_construct (e, a)
+					if
+						not t.is_basic and then
+						attached t.base_class as b and then
+						attached b.feature_of_name_id (names_heap.inspect_attribute_name_id) as i
+					then
+						create local_info.make (t, context.next_object_test_local_position)
+						local_info.enable_is_used
+						context.add_object_test_local (local_info, create {ID_AS}.initialize ("dummy_" + context.hidden_local_counter.next.out))
+						create o.make (local_info.position, current_feature.body_index, t)
+						create nested_b
+						nested_b.set_target (o)
+						nested_b.set_message (i.access (i.type, True, False))
+						nested_b.message.set_parent (nested_b)
+						l_inspect := f.new_construct
+							(create {IF_EXPRESSION_B}.make
+								(create {OBJECT_TEST_B}.make (o, e, t.is_implicitly_attached, t.create_info, True),
+								nested_b,
+								Void,
+								create {INTEGER_CONSTANT}.make_from_type (i.type, False, "0"),
+								i.type,
+								Void),
+							a)
+					else
+						l_inspect := f.new_construct (e, a)
+					end
 				end
 
 					-- Type check if it is an expression conform either to
 					-- and integer or to a character
-				l_type := last_type.actual_type
+				l_type := t.actual_type
 				if not l_type.is_formal then
 					l_constraint_type := l_type
 				elseif attached {FORMAL_A} l_type as formal_type and then not l_formal.is_multi_constrained (context.current_class) then
@@ -7250,6 +7277,7 @@ feature {NONE} -- Visitor
 					attached l_constraint_type implies (
 					not l_constraint_type.is_integer and then not l_constraint_type.is_character and then
 					not l_constraint_type.is_natural and then not l_constraint_type.is_enum and then
+					not (attached l_constraint_type.base_class as b and then b.is_once) and then
 					l_constraint_type.is_known)
 				then
 						-- Error
@@ -7994,7 +8022,7 @@ feature {NONE} -- Visitor
 								instantiator.dispatch (iteration_cursor_type, context.current_class)
 							end
 						end
-							-- Avoid generating new object test local record when processing loop body multiple times.
+							-- Avoid generating new object test local record when processing a loop body multiple times.
 						local_info := context.unchecked_object_test_local (local_id)
 						if local_info = Void then
 							create local_info.make (local_type, context.next_object_test_local_position)
@@ -8012,8 +8040,7 @@ feature {NONE} -- Visitor
 								a.set_parent (new_cursor_b)
 								new_cursor_b.set_target (a)
 							else
-								create access_expr_b
-								access_expr_b.set_expr (e)
+								create access_expr_b.make (e)
 								access_expr_b.set_parent (new_cursor_b)
 								new_cursor_b.set_target (access_expr_b)
 							end
@@ -8247,36 +8274,50 @@ feature {NONE} -- Visitor
 
 	process_once_as (l_as: ONCE_AS)
 		local
-			l_list: BYTE_LIST [BYTE_NODE]
+			ast_compound: like {ONCE_AS}.compound
+			compound: BYTE_LIST [INSTR_B]
 			l_once_byte_code: ONCE_BYTE_CODE
 			l_body: FEATURE_AS
 			l_needs_byte_node: BOOLEAN
+			s: like context.scope
+			n: like {ONCE_AS}.compound.count
+			f: FEATURE_I
 		do
-			l_needs_byte_node := is_byte_node_enabled
 			l_as.set_first_breakpoint_slot_index (break_point_slot_count + 1)
-
-			if l_as.compound /= Void then
-				process_compound (l_as.compound)
-				if l_needs_byte_node then
-					l_list ?= last_byte_node
-				end
+			ast_compound := l_as.compound
+			if attached ast_compound then
+				n := ast_compound.count
 			end
-			if l_needs_byte_node then
+			if current_feature.is_once_creation (context.current_class) then
+				create compound.make (1 + n)
+					-- Record creator position (used in multi-branch constructs).
+				f := context.current_class.feature_of_name_id (names_heap.inspect_attribute_name_id)
+				compound.extend
+					(create {ASSIGN_B}.make
+						(f.access (f.type, False, False),
+						create {INTEGER_CONSTANT}.make_from_type (f.type, False, context.current_feature.creator_position.out)))
+			else
+				create compound.make (n)
+			end
+			if attached ast_compound then
+				s := context.scope
+				process_eiffel_list_with_matcher (ast_compound, Void, compound)
+				context.set_scope (s)
+			end
+			if is_byte_node_enabled then
 				create l_once_byte_code
-				l_once_byte_code.set_compound (l_list)
+				l_once_byte_code.set_compound (compound)
 				l_body := current_feature.body
 				check
 					l_body_not_void: l_body /= Void
 				end
-
 				if l_as.has_key_process (l_body) then
 					l_once_byte_code.set_is_process_relative_once
 				elseif l_as.has_key_object then
 					l_once_byte_code.set_is_object_relative_once
-				else --| default: if l_as.has_key_thread then
+				else
 					l_once_byte_code.set_is_thread_relative_once
 				end
-
 				last_byte_node := l_once_byte_code
 			end
 			break_point_slot_count := break_point_slot_count + 1
@@ -9092,8 +9133,7 @@ feature {NONE} -- Parenthesis alias
 					else
 							-- Target is an (unqualified) expression.
 						check attached {EXPR_B} last_byte_node as v then
-							create target_access_expr
-							target_access_expr.set_expr (v)
+							create target_access_expr.make (v)
 							target_access_expr.set_parent (nested_b)
 							nested_b.set_target (target_access_expr)
 						end
@@ -10881,11 +10921,11 @@ feature {NONE} -- Agents
 				not l_enclosing_feature.is_inline_agent
 			loop
 				l_new_enclosing_feature :=
-					l_cur_class.feature_of_body_index (l_enclosing_feature.enclosing_body_id)
+					l_cur_class.feature_of_body_index (l_enclosing_feature.enclosing_body_id_or_creator_position)
 				if l_new_enclosing_feature = Void then
 						-- then it has to be the class invariant feature
 					check
-						l_enclosing_feature.enclosing_body_id = l_cur_class.invariant_feature.body_index
+						l_enclosing_feature.enclosing_body_id_or_creator_position = l_cur_class.invariant_feature.body_index
 					end
 					l_enclosing_feature := l_cur_class.invariant_feature
 				else

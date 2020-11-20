@@ -12,10 +12,13 @@ inherit
 		rename
 			is_object_relative_once as is_object_relative
 		redefine
+			case_value,
 			is_object_relative,
 			is_once,
 			is_once_creation,
 			is_process_relative,
+			is_valid_case,
+			pattern_type,
 			prepare_object_relative_once,
 			replicated,
 			selected,
@@ -46,6 +49,38 @@ feature -- Status report
 			-- Is it a creation procedure in a once class `c`?
 		do
 			Result := c.is_once and then attached c.creators as cs and then cs.has (feature_name_id)
+		end
+
+	is_valid_case (c: CLASS_C; t: TYPE_A): BOOLEAN
+			-- <Precursor>
+		do
+			Result := is_once_creation (c) and then attached t.base_class as b and then b.class_id = c.class_id
+		end
+
+feature -- C code generation: pattern
+
+	pattern_type: TYPE_A
+			-- <Precursor>
+		do
+			Result := if is_once_creation (access_class) then system.any_type else Precursor end
+		ensure then
+			is_once_creation: is_once_creation (access_class) ⇒ Result.same_as (system.any_type)
+		end
+
+feature -- Access: code generation
+
+	case_value (c: CLASS_C; t: TYPE_A): INTERVAL_VAL_B
+			-- <Precursor>
+		do
+			if
+				attached c.feature_of_name_id (names_heap.inspect_attribute_name_id) as i and then
+				attached {NATURAL_A} i.type as n and then
+				n.size > 32
+			then
+				create {NAT64_VAL_B} Result.make (creator_position.as_natural_64)
+			else
+				create {NAT_VAL_B} Result.make (creator_position.as_natural_32)
+			end
 		end
 
 feature -- Status setting
@@ -280,8 +315,7 @@ feature -- Object relative once
 
 						--| Build ... (create {ISE_EXCEPTION_MANAGER}).once_raise (EXCEPTION)
 					create l_nested_b
-					create l_access_expr_b
-					l_access_expr_b.set_expr (l_creation_expr_b)
+					create l_access_expr_b.make (l_creation_expr_b)
 					l_nested_b.set_target (l_access_expr_b)
 					l_nested_b.set_message (l_ISE_EXCEPTION_MANAGER_once_raise_feature_b)
 					l_ISE_EXCEPTION_MANAGER_once_raise_feature_b.set_parent (l_nested_b)
@@ -332,8 +366,7 @@ feature -- Object relative once
 
 						--| Build ... (create {ISE_EXCEPTION_MANAGER}).last_exception returning an EXCEPTION object
 					create l_nested_b
-					create l_access_expr_b
-					l_access_expr_b.set_expr (l_creation_expr_b)
+					create l_access_expr_b.make (l_creation_expr_b)
 					l_nested_b.set_target (l_access_expr_b)
 					l_nested_b.set_message (l_ISE_EXCEPTION_MANAGER_last_exception_feature_b)
 					l_ISE_EXCEPTION_MANAGER_last_exception_feature_b.set_parent (l_nested_b)

@@ -38,6 +38,19 @@ inherit
 			used
 		end
 
+create
+	make
+
+feature {NONE} -- Creation
+
+	make (e: EXPR_B)
+			-- Initialize with expression `e`.
+		do
+			expr := e
+		ensure
+			expr = e
+		end
+
 feature -- Visitor
 
 	process (v: BYTE_NODE_VISITOR)
@@ -95,17 +108,11 @@ feature -- Status report
 
 feature -- Status
 
-	set_expr (e: EXPR_B)
-			-- Set `expr' to `e'ю
-		do
-			expr := e
-		end
-
 	type: TYPE_A
 			-- Expression type
 		do
 			Result := expr.type
-		end;
+		end
 
 	enlarged: like Current
 			-- Enlarge the expressionю

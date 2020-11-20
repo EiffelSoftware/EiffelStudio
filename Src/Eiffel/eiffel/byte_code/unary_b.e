@@ -108,8 +108,7 @@ feature -- Code generation
 			a_access_expr: ACCESS_EXPR_B
 		do
 			create Result
-			create a_access_expr
-			a_access_expr.set_expr (expr)
+			create a_access_expr.make (expr)
 			a_access_expr.set_parent (Result)
 			Result.set_target (a_access_expr)
 			access.set_parent (Result)
@@ -247,7 +246,7 @@ feature -- Inlining
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2011, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2020, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

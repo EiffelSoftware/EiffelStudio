@@ -482,8 +482,9 @@ feature -- Access
 			Result := inline_agent_nr /= 0
 		end
 
-	enclosing_body_id: INTEGER
+	enclosing_body_id_or_creator_position: INTEGER
 			-- The body id of the enclosing feature of an inline agent
+			-- or the position of the creator in the once class.
 
 	enclosing_feature: FEATURE_I
 			-- Gives the (real) feature in which this features is defined.
@@ -497,7 +498,7 @@ feature -- Access
 				else
 					l_access_class := written_class;
 				end
-				Result := l_access_class.feature_of_body_index (enclosing_body_id)
+				Result := l_access_class.feature_of_body_index (enclosing_body_id_or_creator_position)
 				if Result = Void then
 					Result := l_access_class.invariant_feature
 				end
@@ -515,6 +516,30 @@ feature -- Access
 		-- Is it possible to step into this feature or set breakpoints in it?
 		do
 			Result := not (enclosing_feature.is_invariant or else is_fake_inline_agent)
+		end
+
+	creator_position: like enclosing_body_id_or_creator_position
+			-- Position in the list of creation procedures.
+		do
+			Result := enclosing_body_id_or_creator_position
+		end
+
+feature -- Modification
+
+	set_is_hidden (v: BOOLEAN)
+			-- Set `is_hidden` to `v'.
+		do
+			feature_flags := feature_flags.set_bit_with_mask (v, is_hidden_mask)
+		ensure
+			is_hidden = v
+		end
+
+	set_creator_position (p: like creator_position)
+			-- Set position in the list of creation procedures to `p`.
+		do
+			enclosing_body_id_or_creator_position := p
+		ensure
+			creator_position = p
 		end
 
 feature {INTERNAL_COMPILER_STRING_EXPORTER} -- Access
@@ -1136,7 +1161,7 @@ feature -- Setting
 									not is_fake_inline_agent implies a_inline_agent_nr > 0
 		do
 			inline_agent_nr := a_inline_agent_nr
-			enclosing_body_id := a_enclosing_body_id
+			enclosing_body_id_or_creator_position := a_enclosing_body_id
 		end
 
 	set_is_type_evaluation_delayed (v: BOOLEAN)
@@ -1202,6 +1227,7 @@ feature -- Incrementality
 				and then is_once = other.is_once
 				and then is_process_relative = other.is_process_relative
 				and then is_object_relative_once = other.is_object_relative_once
+				and then enclosing_body_id_or_creator_position = other.enclosing_body_id_or_creator_position
 				and then is_constant = other.is_constant
 				and then is_stable = other.is_stable
 				and then is_transient = other.is_transient
@@ -1213,49 +1239,11 @@ feature -- Incrementality
 				and then has_property_getter = other.has_property_getter
 				and then has_property_setter = other.has_property_setter
 				and then is_ghost = other.is_ghost
-debug ("ACTIVITY")
-	if not Result then
-			io.error.put_boolean (written_in = other.written_in) io.error.put_new_line;
-			io.error.put_boolean (rout_id_set.same_as (other.rout_id_set)) io.error.put_new_line;
-			io.error.put_boolean (is_origin = other.is_origin) io.error.put_new_line;
-			io.error.put_boolean (is_frozen = other.is_frozen) io.error.put_new_line;
-			io.error.put_boolean (is_deferred = other.is_deferred) io.error.put_new_line;
-			io.error.put_boolean (is_external = other.is_external) io.error.put_new_line;
-			io.error.put_boolean (export_status.same_as (other.export_status)) io.error.put_new_line;
-			io.error.put_boolean (same_signature (other)) io.error.put_new_line;
-			io.error.put_boolean (has_precondition = other.has_precondition) io.error.put_new_line;
-			io.error.put_boolean (has_postcondition = other.has_postcondition) io.error.put_new_line;
-			io.error.put_boolean (is_once = other.is_once) io.error.put_new_line;
-			io.error.put_boolean (is_process_or_thread_relative_once = other.is_process_or_thread_relative_once) io.error.put_new_line;
-	end
-end
-			if Result then
-				if assert_id_set /= Void then
-					Result := assert_id_set.same_as (other.assert_id_set)
-				else
-					Result := other.assert_id_set = Void
-				end
-			end
-
-			if Result and then rout_id_set.first = System.default_rescue_rout_id then
-				-- This is the default rescue feature.
-				-- Test whether emptiness of body has changed.
-				Result := is_empty = other.is_empty
-			end
-
-			if Result and then rout_id_set.first = System.default_create_rout_id then
-				-- This is the default create feature.
-				-- Test whether emptiness of body has changed.
-				Result := is_empty = other.is_empty
-			end
-
-debug ("ACTIVITY")
-	if not Result then
-		io.error.put_string ("%T%T")
-		io.error.put_string (feature_name)
-		io.error.put_string (" is not equiv%N")
-	end
-end
+				and then (if attached assert_id_set as s then s.same_as (other.assert_id_set) else not attached other.assert_id_set end)
+					-- Test whether emptiness of a default rescue feature has changed.
+				and then (rout_id_set.first = System.default_rescue_rout_id implies is_empty = other.is_empty)
+					-- Test whether emptiness of a default create feature has changed.
+				and then (rout_id_set.first = System.default_create_rout_id implies is_empty = other.is_empty)
 		end
 
 	select_table_equiv (other: FEATURE_I): BOOLEAN
@@ -1801,6 +1789,24 @@ feature -- Conveniences
 			Result := System.class_of_id (access_in)
 		ensure
 			written_class_not_void: Result /= Void
+		end
+
+feature -- Status report
+
+	is_valid_case (c: CLASS_C; t: TYPE_A): BOOLEAN
+			-- Does the feature accessed on a type with a base class `c` represent a case value compatible with an inspect expression of type `t`?
+		do
+				-- False by default.
+		end
+
+feature -- Access: code generation
+
+	case_value (c: CLASS_C; t: TYPE_A): INTERVAL_VAL_B
+			-- A value of the feature accessed on a type of a base class `c` in a multi-branch construct for an expression of type `t`.
+		require
+			is_valid_case (c, t)
+		do
+			check from_precondition: False then end
 		end
 
 feature {INTERNAL_COMPILER_STRING_EXPORTER} -- Conveniences
@@ -3442,14 +3448,18 @@ feature -- Genericity
 
 feature -- Pattern
 
+	pattern_type: TYPE_A
+			-- Same as `type.meta_type` except once creation procedures.
+		do
+			Result := type.meta_type
+		ensure
+			definition: ¬ is_once_creation (access_class) ⇒ Result.same_as (type.meta_type)
+		end
+
 	frozen pattern: PATTERN
 			-- Feature pattern
 		do
-			if argument_count > 0 then
-				create Result.make (type.meta_type, arguments.pattern_types)
-			else
-				create Result.make (type.meta_type, Void)
-			end
+			create Result.make (pattern_type, if argument_count > 0 then arguments.pattern_types.to_special else Void end)
 		end
 
 	delayed_process_pattern
@@ -3735,7 +3745,7 @@ feature -- Api creation
 			Result.set_ghost (is_ghost)
 			if is_inline_agent then
 				if attached {E_ROUTINE} Result as r then
-					r.set_enclosing_body_id (enclosing_body_id)
+					r.set_enclosing_body_id (enclosing_body_id_or_creator_position)
 					r.set_inline_agent_nr (inline_agent_nr)
 				else
 					check
@@ -3848,7 +3858,7 @@ feature {NONE} -- Debug output
 		end
 
 invariant
-	valid_enclosing_feature: is_inline_agent implies enclosing_body_id > 0
+	valid_enclosing_feature: is_inline_agent implies enclosing_body_id_or_creator_position > 0
 	valid_inline_agent_nr: is_inline_agent implies inline_agent_nr > 0 or is_fake_inline_agent
 
 note

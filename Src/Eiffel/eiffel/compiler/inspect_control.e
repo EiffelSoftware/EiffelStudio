@@ -165,10 +165,10 @@ feature {STATIC_ACCESS_AS} -- Visitor
 
 	process_static_access_as (l_as: STATIC_ACCESS_AS)
 		local
-			feature_i: FEATURE_I
 			class_c: CLASS_C
 			vuex: VUEX
 			l_old_is_inherited: BOOLEAN
+			is_once: BOOLEAN
 		do
 				-- Use `AST_FEATURE_CHECKER_GENERATOR' to properly type check the type of the static access
 			l_old_is_inherited := feature_checker.is_inherited
@@ -193,39 +193,38 @@ feature {STATIC_ACCESS_AS} -- Visitor
 				end
 
 				if class_c /= Void then
-					feature_i := class_c.feature_table.item_id (l_as.feature_name.name_id)
-
-					if feature_i = Void then
+					if not attached class_c.feature_table.item_id (l_as.feature_name.name_id) as feature_i then
 						report_veen (l_as.feature_name)
-					elseif
-						not context.is_ignoring_export and then
-						not feature_i.is_exported_for (context.current_class)
-					then
-						create vuex
-						context.init_error (vuex)
-						vuex.set_static_class (class_c)
-						vuex.set_exported_feature (feature_i)
-						vuex.set_location (l_as.feature_name)
-						error_handler.insert_error (vuex)
-					elseif attached {CONSTANT_I} feature_i as constant_i and then
-						(type.same_as (constant_i.type) or
-							(not constant_i.type.is_enum and then not type.is_enum and then constant_i.value.valid_type (type)))
-					then
-							-- Record dependencies.
-						context.supplier_ids.extend_depend_unit_with_level (class_c.class_id, constant_i, 0)
-							-- Check if this is a unique constant.
-						last_unique_constant := if attached {UNIQUE_I} constant_i as c then c else Void end
-							-- Calculate byte node.
-						last_inspect_value := constant_i.value.inspect_value (type)
-						if not is_inherited then
-							feature_checker.set_is_inherited (False)
-							feature_checker.check_obsolescence (feature_i, class_c, l_as.feature_name)
-							feature_checker.set_is_inherited (l_old_is_inherited)
-							feature_checker.set_routine_ids (constant_i.rout_id_set, l_as)
-							l_as.set_class_id (class_c.class_id)
-						end
 					else
-						report_vomb2 (l_as)
+						is_once := feature_i.is_once_creation (class_c)
+						if
+							not context.is_ignoring_export and then
+							not (feature_i.is_exported_for (context.current_class) or else
+							is_once and then class_c.creators [l_as.feature_name.name_id].is_exported_to (context.current_class))
+						then
+							create vuex
+							context.init_error (vuex)
+							vuex.set_static_class (class_c)
+							vuex.set_exported_feature (feature_i)
+							vuex.set_location (l_as.feature_name)
+							error_handler.insert_error (vuex)
+						elseif feature_i.is_valid_case (class_c, type) then
+								-- Record dependencies.
+							context.supplier_ids.extend_depend_unit_with_level (class_c.class_id, feature_i, 0)
+								-- Check if this is a unique constant.
+							last_unique_constant := {UNIQUE_I} / feature_i
+								-- Calculate byte node.
+							last_inspect_value := feature_i.case_value (class_c, type)
+							if not is_inherited then
+								feature_checker.set_is_inherited (False)
+								feature_checker.check_obsolescence (feature_i, class_c, l_as.feature_name)
+								feature_checker.set_is_inherited (l_old_is_inherited)
+								feature_checker.set_routine_ids (feature_i.rout_id_set, l_as)
+								l_as.set_class_id (class_c.class_id)
+							end
+						else
+							report_vomb2 (l_as)
+						end
 					end
 				end
 			end
@@ -379,7 +378,7 @@ invariant
 	intervals_not_void: intervals /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2018, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2020, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

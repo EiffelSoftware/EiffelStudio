@@ -177,8 +177,7 @@ feature {NONE} -- Implementation: Byte node
 			create Result
 
 				-- Create target.
-			create l_access_expr
-			l_access_expr.set_expr (a_expr)
+			create l_access_expr.make (a_expr)
 			l_access_expr.set_parent (Result)
 			Result.set_target (l_access_expr)
 
@@ -258,7 +257,7 @@ feature {NONE} -- Implementation: Access
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2017, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2020, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

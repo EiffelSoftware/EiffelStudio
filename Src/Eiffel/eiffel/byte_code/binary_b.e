@@ -174,8 +174,7 @@ feature -- Code generation
 			param: BYTE_LIST [PARAMETER_B]
 		do
 				-- Access on expression
-			create access_expr
-			access_expr.set_expr (left)
+			create access_expr.make (left)
 
 				-- Nested buffer for byte code generation of a binary
 				-- operation on non-simple types					
@@ -381,7 +380,7 @@ feature -- Inlining
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2011, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2020, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

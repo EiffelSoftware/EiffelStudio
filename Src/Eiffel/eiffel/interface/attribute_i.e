@@ -157,14 +157,6 @@ feature -- Status setting
 			is_transient_set: is_transient = v
 		end
 
-	set_is_hidden (v: BOOLEAN)
-			-- Set `is_hidden' to `v'.
-		do
-			feature_flags := feature_flags.set_bit_with_mask (v, is_hidden_mask)
-		ensure
-			is_hidden_set: is_hidden = v
-		end
-
 	set_obsolete_message_id (v: like obsolete_message_id)
 			-- Assign `v' to `obsolete_message_id'
 		do
@@ -655,7 +647,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2019, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2020, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

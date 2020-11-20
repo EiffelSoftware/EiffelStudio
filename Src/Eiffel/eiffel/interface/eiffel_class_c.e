@@ -98,7 +98,7 @@ feature -- Access
 					l_inline_agent_table.after
 				loop
 					l_feat := l_inline_agent_table.item_for_iteration
-					if l_feat.enclosing_body_id = body_id then
+					if l_feat.enclosing_body_id_or_creator_position = body_id then
 						if a_removed /= Void then
 								-- for each removed inline-agent feature we save its
 								-- routine id along with its inline_agent_nr
@@ -2055,7 +2055,7 @@ feature -- Inline agents
 					Result /= Void or else l_inline_agent_table.after
 				loop
 					l_feat := l_inline_agent_table.item_for_iteration
-					if l_feat.enclosing_body_id = a_enclosing_body_id and then l_feat.inline_agent_nr = a_inline_agent_nr then
+					if l_feat.enclosing_body_id_or_creator_position = a_enclosing_body_id and then l_feat.inline_agent_nr = a_inline_agent_nr then
 						Result := l_feat
 					else
 						l_inline_agent_table.forth
@@ -2067,7 +2067,7 @@ feature -- Inline agents
 			end
 		ensure
 			valid_agent_found: Result /= Void implies
-				Result.enclosing_body_id = a_enclosing_body_id and
+				Result.enclosing_body_id_or_creator_position = a_enclosing_body_id and
 				Result.inline_agent_nr = a_inline_agent_nr
 		end
 

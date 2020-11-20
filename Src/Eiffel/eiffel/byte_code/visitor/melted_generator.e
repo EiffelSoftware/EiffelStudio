@@ -206,69 +206,58 @@ feature {NONE} -- Visitors
 	process_array_const_b (a_node: ARRAY_CONST_B)
 			-- Process `a_node'.
 		local
-			l_real_ty: GEN_TYPE_A
 			l_feat_i: FEATURE_I
-			l_expr: EXPR_B
 			l_target_type: TYPE_A
 			l_base_class: CLASS_C
 			l_special_info: CREATE_TYPE
 			l_special_type: TYPE_A
 			i: INTEGER
 		do
-			l_real_ty ?= context.real_type (a_node.type)
-			l_target_type := l_real_ty.generics.first
+			if attached {GEN_TYPE_A} context.real_type (a_node.type) as l_real_ty then
+				l_target_type := l_real_ty.generics.first
 
-				-- We first create a SPECIAL in which we will store the information above before
-				-- creating the ARRAY using `make_from_special'.
-				-- First push the number of elements in the SPECIAL
-			ba.append (Bc_int32)
-			ba.append_integer (a_node.expressions.count)
-				-- Then create an instance of the SPECIAL.
-			ba.append (bc_spcreate)
-			if system.is_using_new_special then
-					-- We are going to use `make_empty'
+					-- We first create a SPECIAL in which we will store the information above before
+					-- creating the ARRAY using `make_from_special'.
+					-- First push the number of elements in the SPECIAL
+				ba.append (Bc_int32)
+				ba.append_integer (a_node.expressions.count)
+					-- Then create an instance of the SPECIAL.
+				ba.append (bc_spcreate)
 				ba.append_boolean (False)
-				ba.append_boolean (True)
-			else
-					-- We are going to use `make'
-				ba.append_boolean (False)
-				ba.append_boolean (False)
-			end
-			l_special_info := a_node.special_info.updated_info
-			l_special_info.make_byte_code (ba)
-			ba.append_natural_16 ({SHARED_GEN_CONF_LEVEL}.terminator_type)
-			l_special_type := l_special_info.type
-			check
-				is_special_type: l_special_type /= Void and then l_special_type.base_class.lace_class = System.special_class
-			end
-			if attached {SPECIAL_CLASS_TYPE} l_special_type.associated_class_type (context.context_class_type.type) as l_special_class_type then
-				l_special_class_type.make_creation_byte_code (ba)
-
-					-- We compute the expressions and store them into the special
-				from
-					a_node.expressions.start
-					i := 0
-				until
-					a_node.expressions.after
-				loop
-					l_expr ?= a_node.expressions.item
-					check
-						l_expr_not_void: l_expr /= Void
-					end
-					make_expression_byte_code_for_type (l_expr, l_target_type)
-					ba.append (bc_special_extend)
-					ba.append_integer (i)
-					i := i + 1
-					a_node.expressions.forth
+					-- Specify whether `make_empty` or `make` is going to be used.
+				ba.append_boolean (system.is_using_new_special)
+				l_special_info := a_node.special_info.updated_info
+				l_special_info.make_byte_code (ba)
+				ba.append_natural_16 ({SHARED_GEN_CONF_LEVEL}.terminator_type)
+				l_special_type := l_special_info.type
+				check
+					is_special_type: l_special_type /= Void and then l_special_type.base_class.lace_class = System.special_class
 				end
+				if attached {SPECIAL_CLASS_TYPE} l_special_type.associated_class_type (context.context_class_type.type) as l_special_class_type then
+					l_special_class_type.make_creation_byte_code (ba)
 
-					-- Now we create the ARRAY instance vi the call to `to_array' from SPECIAL
-				l_base_class := l_special_class_type.associated_class
-				l_feat_i := l_base_class.feature_table.item_id ({PREDEFINED_NAMES}.to_array_name_id)
-				ba.append (Bc_array)
-				ba.append_integer (l_feat_i.rout_id_set.first)
-			else
-				check is_special_class_type: False then end
+						-- We compute the expressions and store them into the special
+					across
+						a_node.expressions as es
+					loop
+						if attached {EXPR_B} es.item as e then
+							make_expression_byte_code_for_type (e, l_target_type)
+							ba.append (bc_special_extend)
+							ba.append_integer (i)
+							i := i + 1
+						else
+							check is_expression: False end
+						end
+					end
+
+						-- Now we create the ARRAY instance vi the call to `to_array' from SPECIAL
+					l_base_class := l_special_class_type.associated_class
+					l_feat_i := l_base_class.feature_table.item_id ({PREDEFINED_NAMES}.to_array_name_id)
+					ba.append (Bc_array)
+					ba.append_integer (l_feat_i.rout_id_set.first)
+				else
+					check is_special_class_type: False then end
+				end
 			end
 		end
 
@@ -985,8 +974,6 @@ feature {NONE} -- Visitors
 		local
 			i, l_pos, l_nb_expr_address: INTEGER
 			l_has_hector: BOOLEAN
-			l_parameter_b: PARAMETER_B
-			l_access_expression_b: ACCESS_EXPR_B
 			l_is_in_creation_call: like is_in_creation_call
 			l_is_active_region: like is_active_region
 		do
@@ -996,53 +983,42 @@ feature {NONE} -- Visitors
 			is_active_region := False
 			if a_node.parameters /= Void then
 					-- Generate the expression address byte code
-				from
-					a_node.parameters.start
-				until
-					a_node.parameters.after
+				across
+					a_node.parameters as ps
 				loop
-					l_parameter_b := a_node.parameters.item
-					if l_parameter_b /= Void and then l_parameter_b.is_hector then
+					if attached ps.item as p and then p.is_hector then
 						l_has_hector := True
 						if
-							attached {EXPR_ADDRESS_B} l_parameter_b.expression as l_expr_address_b and then
+							attached {EXPR_ADDRESS_B} p.expression as l_expr_address_b and then
 							l_expr_address_b.is_protected
 						then
 							l_expr_address_b.expr.process (Current)
 							l_nb_expr_address := l_nb_expr_address + 1
 						end
 					end
-					a_node.parameters.forth
 				end
 
-				l_has_hector := l_has_hector or else (a_node.parent /= Void and then a_node.parent.target.is_hector)
+				l_has_hector := l_has_hector or else attached a_node.parent as p and then p.target.is_hector
 
 					-- Generate byte code for parameters
-				from
-					a_node.parameters.start
-				until
-					a_node.parameters.after
-				loop
-					a_node.parameters.item.process (Current)
-					a_node.parameters.forth
-				end
+				⟳ p: a_node.parameters ¦ p.process (Current) ⟲
 			end
 
 			if l_has_hector then
-				if a_node.parent /= Void and then a_node.parent.target.is_hector then
+				if
+					attached a_node.parent as p and then
+					p.target.is_hector and then
+					attached {ACCESS_EXPR_B} p.target as l_access_expression_b
+				then
 						-- We are in the case of a nested calls which have
 						-- a target using the `$' operator. It can only be the case
 						-- of `($a).f (..)'. where `($a)' represents an
 						-- ACCESS_EXPR_B object which contains an HECTOR_B
 						-- or an EXPR_ADDESS_B object.
-					l_access_expression_b ?= a_node.parent.target
-					check
-						has_access_expression: l_access_expression_b /= Void
-					end
 					if attached {HECTOR_B} l_access_expression_b.expr as l_hector_b then
 						make_protected_byte_code (l_hector_b, a_node.parameters.count)
 					elseif
-						attached {EXPR_ADDRESS_B} l_parameter_b.expression as l_expr_address_b and then
+						attached {EXPR_ADDRESS_B} l_access_expression_b.expr as l_expr_address_b and then
 						l_expr_address_b.is_protected
 					then
 						i := i + 1
@@ -1051,18 +1027,15 @@ feature {NONE} -- Visitors
 							a_node.parameters.count + l_nb_expr_address - i)
 					end
 				end
-				from
-					a_node.parameters.start
-				until
-					a_node.parameters.after
+				across
+					a_node.parameters as ps
 				loop
 					l_pos := l_pos + 1
-					l_parameter_b := a_node.parameters.item
-					if l_parameter_b /= Void and then l_parameter_b.is_hector then
-						if attached {HECTOR_B} l_parameter_b.expression as l_hector_b then
+					if attached ps.item as p and then p.is_hector then
+						if attached {HECTOR_B} p.expression as l_hector_b then
 							make_protected_byte_code (l_hector_b, a_node.parameters.count - l_pos)
 						elseif
-							attached {EXPR_ADDRESS_B} l_parameter_b.expression as l_expr_address_b and then
+							attached {EXPR_ADDRESS_B} p.expression as l_expr_address_b and then
 							l_expr_address_b.is_protected
 						then
 							i := i + 1
@@ -1071,7 +1044,6 @@ feature {NONE} -- Visitors
 								a_node.parameters.count + l_nb_expr_address - i)
 						end
 					end
-					a_node.parameters.forth
 				end
 			end
 
@@ -1271,24 +1243,24 @@ feature {NONE} -- Visitors
 	process_inspect_b (b: INSPECT_B)
 			-- <Precursor>
 		local
-			i, l_nb_jump: INTEGER
+			n: like {INSPECT_B}.case_list.count
 		do
 			generate_melted_debugger_hook (ba)
 
 				-- Generate switch expression byte code
 			b.switch.process (Current)
 			if attached b.case_list as cs then
-				l_nb_jump := cs.count
+				n := cs.count
 					-- Generate code for the inspect intervals.
 					-- Because `ba.mark_forward2` and `ba.write_forward2`use a stack,
 					-- the order of intervals need to be reversed, so that compounds come
 					-- in source order to preserve breakpoints order.
-				across cs.new_cursor.reversed is c loop make_case_range (c) end
+				⟳ c: cs.new_cursor.reversed ¦ make_case_range (c) ⟲
 					-- Go to else part.
 				ba.append (Bc_jmp)
 				ba.mark_forward3
 					-- Generate code for the inspect cases.
-				across cs is c loop process_case_b (c) end
+				⟳ c: cs ¦ process_case_b (c) ⟲
 				ba.write_forward3
 			end
 			if attached b.else_part as p then
@@ -1302,12 +1274,11 @@ feature {NONE} -- Visitors
 
 				-- Jumps for cases.
 			from
-				i := l_nb_jump
 			until
-				i < 1
+				n < 1
 			loop
 				ba.write_forward
-				i := i - 1
+				n := n - 1
 			end
 		end
 
@@ -1327,12 +1298,12 @@ feature {NONE} -- Visitors
 					-- Because `ba.mark_forward2` and `ba.write_forward2`use a stack,
 					-- the order of intervals need to be reversed, so that compounds come
 					-- in source order to preserve breakpoints order.
-				across cs.new_cursor.reversed is c loop make_case_range (c) end
+				⟳ c: cs.new_cursor.reversed ¦ make_case_range (c) ⟲
 					-- Go to else part.
 				ba.append (Bc_jmp)
 				ba.mark_forward3
 					-- Generate code for the inspect cases.
-				across cs is c loop process_case_expression_b_for_type (c, t) end
+				⟳ c: cs ¦ process_case_expression_b_for_type (c, t) ⟲
 				ba.write_forward3
 			end
 			if attached b.else_part as p then
@@ -2187,40 +2158,36 @@ feature {NONE} -- Visitors
 	process_tuple_const_b (a_node: TUPLE_CONST_B)
 			-- Process `a_node'.
 		local
-			l_real_ty: TUPLE_TYPE_A
 			l_expr: EXPR_B
 		do
-			l_real_ty ?= context.real_type (a_node.type)
-				-- Need to insert expression into
-				-- the stack back to front in order
-				-- to be inserted into the area correctly
-			from
-				a_node.expressions.finish
-			until
-				a_node.expressions.before
-			loop
-				l_expr := a_node.expressions.item
-				check l_expr_not_void: l_expr /= Void end
-				l_expr.process (Current)
-				if l_expr.is_hector then
-					if attached {HECTOR_B} l_expr as l_hector_b then
-						make_protected_byte_code (l_hector_b, 0)
-					else
-							-- Address expressions are disallowed for tuple
-							-- initialization.
-						check False end
+			if attached {TUPLE_TYPE_A} context.real_type (a_node.type) as l_real_ty then
+					-- Need to insert expression into
+					-- the stack back to front in order
+					-- to be inserted into the area correctly
+				from
+					a_node.expressions.finish
+				until
+					a_node.expressions.before
+				loop
+					l_expr := a_node.expressions.item
+					check l_expr_not_void: l_expr /= Void end
+					l_expr.process (Current)
+					if l_expr.is_hector then
+						if attached {HECTOR_B} l_expr as l_hector_b then
+							make_protected_byte_code (l_hector_b, 0)
+						else
+								-- Address expressions are disallowed for tuple
+								-- initialization.
+							check False end
+						end
 					end
+					a_node.expressions.back
 				end
-				a_node.expressions.back
-			end
-			ba.append (Bc_tuple)
-			l_real_ty.make_type_byte_code (ba, True, context.context_class_type.type)
-			ba.append_short_integer (-1)
-			ba.append_integer (a_node.expressions.count + 1)
-			if l_real_ty.is_basic_uniform then
-				ba.append_integer (1)
-			else
-				ba.append_integer (0)
+				ba.append (Bc_tuple)
+				l_real_ty.make_type_byte_code (ba, True, context.context_class_type.type)
+				ba.append_short_integer (-1)
+				ba.append_integer (a_node.expressions.count + 1)
+				ba.append_integer (l_real_ty.is_basic_uniform.to_integer)
 			end
 		end
 

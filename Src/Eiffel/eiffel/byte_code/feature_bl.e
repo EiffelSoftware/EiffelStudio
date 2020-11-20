@@ -32,7 +32,8 @@ inherit
 			generate_on,
 			generate_parameters_list,
 			is_feature_call,
-			parent
+			parent,
+			return_c_type
 		end
 
 	ROUTINE_BL
@@ -42,7 +43,8 @@ inherit
 			is_process_relative
 		redefine
 			generate_on,
-			parent
+			parent,
+			return_c_type
 		end
 
 	SHARED_DECLARATIONS
@@ -396,6 +398,19 @@ feature -- C code generation
 					-- There is no feature to call.
 				generate_no_call
 			end
+		end
+
+	return_c_type: TYPE_C
+			-- <Precursor>
+		do
+			Result :=
+				if is_once_creation then
+					reference_c_type
+				else
+					c_type
+				end
+		ensure then
+			definition: Result.same_as (if is_once_creation then reference_c_type else c_type end)
 		end
 
 feature {NONE} -- Status report

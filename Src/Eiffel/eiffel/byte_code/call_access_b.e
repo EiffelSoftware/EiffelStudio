@@ -417,11 +417,9 @@ feature {NONE} -- Separate call
 			buf: like buffer
 			l_c_type: like c_type
 		do
-			check return_type_not_void: not c_type.is_void end
-
+			check return_type_not_void: not return_c_type.is_void end
 			buf := buffer
-			l_c_type := c_type
-
+			l_c_type := return_c_type
 				-- Generate return value conversion if necessary.
 			if not is_attribute and l_c_type.is_reference then
 				buf.put_new_line
@@ -429,10 +427,8 @@ feature {NONE} -- Separate call
 				l_c_type.generate_typed_field (buf)
 				buf.put_string (" = RTBU(l_scoop_result);")
 			end
-
 			Precursor (a_result)
 		end
-
 
 feature {NONE} -- Debug
 

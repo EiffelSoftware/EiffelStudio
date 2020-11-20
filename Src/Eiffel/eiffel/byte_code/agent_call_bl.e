@@ -13,23 +13,24 @@ inherit
 		rename
 			parent as parent_b, make as make_agent_call
 		undefine
-			free_register,
-			generate_on,
+			analyze,
 			analyze_on,
-			generate_special_feature,
+			basic_register,
+			call_kind,
+			free_register,
 			generate_access,
 			generate_access_on_type,
 			generate_end,
+			generate_on,
 			generate_parameters,
 			generate_parameters_list,
-			basic_register,
+			generate_special_feature,
 			is_feature_call,
 			is_temporary,
-			analyze,
-			set_register,
 			register,
+			return_c_type,
 			set_parent,
-			call_kind,
+			set_register,
 			set_call_kind
 		redefine
 			enlarged

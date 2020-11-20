@@ -97,6 +97,13 @@ feature -- Access
 			Result.set_parent (p)
 		end
 
+	return_c_type: TYPE_C
+			-- C type returned by the expression.
+			-- (Same as `c_type` except for once creation procedures.)
+		do
+			Result := c_type
+		end
+
 feature -- Status
 
 	read_only: BOOLEAN
@@ -655,10 +662,8 @@ feature {ACCESS_B} -- C code generation: separate call
 			buf := buffer
 			buf.put_new_line
 			a_result.print_register
-			buf.put_three_character (' ', '=', ' ')
-			buf.put_string ("l_scoop_result")
-			buf.put_character ('.')
-			c_type.generate_typed_field (buf)
+			buf.put_string (" = l_scoop_result.")
+			return_c_type.generate_typed_field (buf)
 			buf.put_character (';')
 		end
 

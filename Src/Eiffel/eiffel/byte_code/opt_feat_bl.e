@@ -17,11 +17,12 @@ inherit
 			is_feature_call, generate_special_feature, set_parent,
 			generate_parameters,
 			generate_parameters_list, generate_access_on_type,
-			call_kind, set_call_kind
+			call_kind, set_call_kind,
+			return_c_type
 		redefine
 			parent, is_feature_special, generate_end,
 			generate_metamorphose_end, analyze
-		end;
+		end
 
 	FEATURE_BL
 		undefine

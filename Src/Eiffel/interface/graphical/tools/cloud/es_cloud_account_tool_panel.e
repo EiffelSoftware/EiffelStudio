@@ -661,7 +661,7 @@ feature -- Rich text helper
 		do
 			Result := text_format ("normal")
 			if Result = Void then
-				create Result.default_create
+				create Result.make_with_font_and_color  (preferences.editor_data.font, preferences.editor_data.normal_text_color, preferences.editor_data.normal_background_color)
 				set_text_format (Result, "normal")
 			end
 		end
@@ -672,10 +672,7 @@ feature -- Rich text helper
 		do
 			Result := text_format ("bold")
 			if Result = Void then
-				create Result.default_create
-				ft := Result.font.twin
-				ft.set_weight ({EV_FONT_CONSTANTS}.weight_bold)
-				Result.set_font (ft)
+				create Result.make_with_font_and_color (preferences.editor_data.keyword_font, preferences.editor_data.keyword_text_color, preferences.editor_data.keyword_background_color)
 				set_text_format (Result, "bold")
 			end
 		end
@@ -686,10 +683,9 @@ feature -- Rich text helper
 		do
 			Result := text_format ("italic")
 			if Result = Void then
-				create Result.default_create
-				ft := Result.font.twin
+				ft := normal_format.font.twin
 				ft.set_shape ({EV_FONT_CONSTANTS}.shape_italic)
-				Result.set_font (ft)
+				create Result.make_with_font_and_color (ft, preferences.editor_data.comments_text_color, preferences.editor_data.comments_background_color)
 				set_text_format (Result, "italic")
 			end
 		end

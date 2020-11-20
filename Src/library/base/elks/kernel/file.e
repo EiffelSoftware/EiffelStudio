@@ -2008,7 +2008,7 @@ feature {NONE} -- Implementation
 	file_tnwl (file: POINTER)
 			-- Print a new-line to `file'.
 		external
-			"C signature (FILE *) use %"eif_file.h%""
+			"C blocking signature (FILE *) use %"eif_file.h%""
 		alias
 			"eif_file_tnwl"
 		end
@@ -2016,7 +2016,7 @@ feature {NONE} -- Implementation
 	file_append (file, from_file: POINTER; length: INTEGER)
 			-- Append a copy of `from_file' to `file'
 		external
-			"C signature (FILE *, FILE *, EIF_INTEGER) use %"eif_file.h%""
+			"C blocking signature (FILE *, FILE *, EIF_INTEGER) use %"eif_file.h%""
 		alias
 			"eif_file_append"
 		end
@@ -2024,7 +2024,7 @@ feature {NONE} -- Implementation
 	file_ps (file: POINTER; a_string: POINTER; length: INTEGER)
 			-- Print `a_string' to `file'.
 		external
-			"C signature (FILE *, char *, EIF_INTEGER) use %"eif_file.h%""
+			"C blocking signature (FILE *, char *, EIF_INTEGER) use %"eif_file.h%""
 		alias
 			"eif_file_ps"
 		end

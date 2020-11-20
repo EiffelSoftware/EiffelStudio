@@ -338,9 +338,18 @@ feature -- Event: UI
 
 	on_next
 		do
-			on_close
-			if attached next_action as act then
-				act.call
+			if
+				is_cloud_enabled and then
+				{ES_IDE_SETTINGS}.cloud_required and then
+				attached es_cloud_s.service as cld and then
+				not (cld.is_guest or cld.is_signed_in)
+			then
+				on_quit
+			else
+				on_close
+				if attached next_action as act then
+					act.call
+				end
 			end
 		end
 

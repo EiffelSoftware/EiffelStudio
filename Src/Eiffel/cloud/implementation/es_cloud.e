@@ -648,6 +648,7 @@ feature -- Sign
 			active_session := Void
 			installation.set_associated_license (Void)
 			is_guest := False
+			get_remaining_days_for_guest
 			store
 			on_account_signed_out (acc)
 		end

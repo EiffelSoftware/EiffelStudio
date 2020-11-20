@@ -36,47 +36,40 @@ feature -- Visit nodes
 			if attached a_group.classes as l_classes then
 				l_map := a_group.mapping
 				l_options := a_group.options
-
-					-- check renamings
-				if l_options.is_warning_enabled (w_renaming_unknown_class) then
-					if attached {CONF_VIRTUAL_GROUP} a_group as l_vg then
-						if attached l_vg.renaming as l_ren then
-							from
-								l_ren.start
-							until
-								l_ren.after
-							loop
-								l_name := l_ren.key_for_iteration
-									-- do not use mapping because renaming already deals with changing names in the system,
-									-- also applying mapping would make things too confusing
-								if not attached l_classes.item (l_ren.item_for_iteration) as l_found_ren_item or else not l_found_ren_item.name.same_string_general (l_name) then
-									add_error (create {CONF_ERROR_RENAM}.make (l_name, a_group.target.system.file_name))
-								end
-								l_ren.forth
-							end
+					-- Check renamings.
+				if
+					l_options.is_warning_enabled (w_renaming_unknown_class) and then
+					attached {CONF_VIRTUAL_GROUP} a_group as l_vg and then
+					attached l_vg.renaming as l_ren
+				then
+					across
+						l_ren as r
+					loop
+						l_name := r.key
+							-- do not use mapping because renaming already deals with changing names in the system,
+							-- also applying mapping would make things too confusing
+						if not attached l_classes.item (r.item) as l_found_ren_item or else not l_found_ren_item.name.same_string_general (l_name) then
+							add_error (create {CONF_ERROR_RENAM}.make (l_name, a_group.target.system.file_name))
 						end
 					end
 				end
-					-- check class options
-				if l_options.is_warning_enabled (w_option_unknown_class) then
-					if attached a_group.internal_class_options as l_c_opt then
-						from
-							l_c_opt.start
-						until
-							l_c_opt.after
-						loop
-							l_name := l_c_opt.key_for_iteration
-							if attached l_map.item (l_name) as l_found_name then
-								l_name := l_found_name
-							end
-							if not l_c_opt.item_for_iteration.is_empty and then not l_classes.has (l_name) then
-								add_error (create {CONF_ERROR_CLOPT}.make (l_name, a_group.target.system.file_name))
-							end
-							l_c_opt.forth
+					-- Check class options.
+				if
+					l_options.is_warning_enabled (w_option_unknown_class) and then
+					attached a_group.internal_class_options as l_c_opt
+				then
+					across
+						l_c_opt as o
+					loop
+						l_name := o.key
+						if attached l_map.item (l_name) as l_found_name then
+							l_name := l_found_name
+						end
+						if not o.item.is_empty and then not l_classes.has (l_name) then
+							add_error (create {CONF_ERROR_CLOPT}.make (l_name, a_group.target.system.file_name))
 						end
 					end
 				end
-
 			else
 					-- FIXME: it seems it could be Void, if the group is empty!
 				check

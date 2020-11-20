@@ -6,7 +6,6 @@
 	date: "$Date$"
 	revision: "$Revision$"
 
-
 class EXECUTION_ENVIRONMENT
 
 inherit
@@ -106,9 +105,8 @@ feature -- Access
 	default_shell: STRING_32
 			-- Default shell
 		once
-			if attached item ("SHELL") as l_shell then
-				Result := l_shell
-			else
+			Result := item ("SHELL")
+			if not attached Result then
 				create Result.make_empty
 			end
 		ensure
@@ -683,7 +681,7 @@ feature {NONE} -- External
 		end
 
 note
-	copyright: "Copyright (c) 1984-2019, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2020, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

@@ -2389,7 +2389,7 @@ feature -- Context: Element change
 			-- for debugging purpose only
 		do
 			debug ("debugger_evaluator")
-				io.put_string ("%NExpression=" + expression.text + "%N")
+				io.put_string_32 ({STRING_32} "%NExpression=" + expression.text + "%N")
 				io.put_string (context.to_string)
 			end
 		end

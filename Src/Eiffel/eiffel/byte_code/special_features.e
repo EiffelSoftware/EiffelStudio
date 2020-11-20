@@ -1590,7 +1590,7 @@ feature {NONE} -- Type information
 	real_64_type_id: INTEGER = 6
 			-- Constant defining type
 
-	integer_size: INTEGER
+	integer_size: like {NATURAL_A}.size
 			-- Size of datatype when `type_of' returns `integer_type_id'.
 
 	is_signed_integer: BOOLEAN
@@ -1621,7 +1621,7 @@ feature {NONE} -- Type information
 			then
 				Result := integer_type_id
 				is_signed_integer := False
-				integer_size := if attached {NATURAL_A} b as t then t.size else {INTEGER_8} 0 end
+				integer_size := if attached {NATURAL_A} b as t then t.size else integer_size.zero end
 
 			when
 				{SK_CONST}.sk_int8, {SK_CONST}.sk_int16,
@@ -1629,7 +1629,7 @@ feature {NONE} -- Type information
 			then
 				Result := integer_type_id
 				is_signed_integer := True
-				integer_size := if attached {INTEGER_A} b as t then t.size else {INTEGER_8} 0 end
+				integer_size := if attached {INTEGER_A} b as t then t.size else integer_size.zero end
 
 			when {SK_CONST}.sk_pointer then Result := pointer_type_id
 			when {SK_CONST}.sk_real32 then Result := real_32_type_id

@@ -553,17 +553,6 @@ feature -- Status
 			end
 		end
 
-	generate_workbench_offset (buffer: GENERATION_BUFFER; feature_id: INTEGER)
-			-- Generate offset for attribute of feature id `feature_id'
-			-- in `buffer' in workbench mode only.
-		require
-			has_feature_id: has_feature_id (feature_id);
-			good_argument: buffer /= Void;
-		do
-			search_feature_id (feature_id);
-			buffer.put_integer (workbench_offset);
-		end
-
 	generate (buffer: GENERATION_BUFFER; is_in_attr_table, as_macro: BOOLEAN)
 			-- Generate offset of the attribute at the current position
 		require
@@ -1435,7 +1424,7 @@ invariant
 	class_type_not_void: class_type /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2017, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2020, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

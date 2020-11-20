@@ -86,6 +86,11 @@ feature -- Status Report
 		do
 		end
 
+	is_basic: BOOLEAN
+			-- Is it a built-in basic type?
+		do
+		end
+
 feature -- Byte code generation
 
 	make_default_byte_code (ba: BYTE_ARRAY)
@@ -286,7 +291,7 @@ feature -- C code generation
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2019, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2020, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

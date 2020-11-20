@@ -457,6 +457,7 @@ feature {NONE} -- Implementation: access
 			put ("conjuncted") check found_item = conjuncted_name_id end
 			put ("disjuncted") check found_item = disjuncted_name_id end
 			put ("disjuncted_exclusive") check found_item = disjuncted_exclusive_name_id end
+			put ("inspect") check found_item = inspect_attribute_name_id end
 		end
 
 invariant

@@ -256,6 +256,7 @@ feature -- Constants
 	conjuncted_name_id: INTEGER = 243
 	disjuncted_name_id: INTEGER = 244
 	disjuncted_exclusive_name_id: INTEGER = 245
+	inspect_attribute_name_id: INTEGER = 246
 
 feature -- Classification
 

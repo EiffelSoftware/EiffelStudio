@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "Keeper for non-void entity scopes with an unlimited range of variable indicies."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -16,7 +16,7 @@ create
 feature -- Access
 
 	is_attached (index: like count): BOOLEAN
-			-- Is a variable with the given `index' is not void?
+			-- Is a variable with the given `index` is not void?
 		do
 			Result := scope [index]
 		end
@@ -48,7 +48,7 @@ feature -- Access
 feature -- Status report: variables
 
 	max_count: INTEGER
-			-- Maximum value of `count'
+			-- Maximum value of `count`.
 		do
 			Result := {like count}.max_value
 		end
@@ -59,68 +59,59 @@ feature {NONE} -- Status report
 			-- <Precursor>
 		local
 			s: like scope
-			i: INTEGER
+			i: like count
 		do
 			s := inner_scopes.item
 			if s /= scope then
 				from
 					i := count
 				until
-					i <= 0 or else s [i] and then not scope [i]
+					i > 0 ⇒ s [i] ∧ ¬ scope [i]
 				loop
 					i := i - 1
 				end
 			end
-			Result := i <= 0
+			Result := i ≤ 0
 		end
 
 feature -- Modification: variables
 
 	start_scope (index: like count)
-			-- Mark that a variable with the given `index' is not void.
+			-- Mark that a variable with the given `index` is not void.
 		do
 			scope [index] := True
 		end
 
 	stop_scope (index: like count)
-			-- Mark that a local with the given `position' can be void.
+			-- Mark that a local with the given `position` can be void.
 		do
 			scope [index] := False
 		end
 
 	set_all
 			-- Mark that all variables are not void.
-		local
-			index: like scope.upper
 		do
-			from
-				index := scope.upper
-			until
-				index <= 0
-			loop
-				scope [index] := True
-				index := index - 1
-			end
+			scope.fill_with (True)
 		end
 
 feature {NONE} -- Modification: nesting
 
 	merge_siblings
-			-- Merge sibling scope information from `scope'
+			-- Merge sibling scope information from `scope`.
 			-- into `inner_scopes.item'.
 		local
 			s: like scope
-			i: INTEGER
+			i: like count
 		do
 			s := inner_scopes.item
 			if s /= scope then
 				from
 					i := count
 				until
-					i <= 0
+					i ≤ 0
 				loop
-						-- Mark only items that are set in both scopes
-					s [i] := s [i] and scope [i]
+						-- Mark only items that are set in both scopes.
+					s [i] := s [i] ∧ scope [i]
 					i := i - 1
 				end
 			end
@@ -134,7 +125,7 @@ feature {NONE} -- Initialization
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2013, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2020, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

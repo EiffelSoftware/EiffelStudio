@@ -66,13 +66,13 @@ feature {AST_ATTRIBUTE_INITIALIZATION_TRACKER, AST_LOCAL_INITIALIZATION_TRACKER}
 			-- Mark all variables as set.
 		deferred
 		ensure
-			across 1 |..| count as c all is_set (c.item) end
+			∀ i: 1 |..| count ¦ is_set (i)
 		end
 
 note
 	date: "$Date$"
 	revision: "$Revision$"
-	copyright:	"Copyright (c) 1984-2016, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2020, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

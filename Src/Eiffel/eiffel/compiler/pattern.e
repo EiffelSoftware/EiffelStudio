@@ -54,11 +54,7 @@ feature -- Duplication
 	duplicate: PATTERN
 			-- Duplicate of `Current' to avoid aliasing.
 		do
-			if attached argument_types as l_args then
-				create Result.make (result_type, l_args.twin)
-			else
-				create Result.make (result_type, Void)
-			end
+			create Result.make (result_type, if attached argument_types as a then a.twin else Void end)
 		end
 
 feature -- Access
@@ -207,7 +203,7 @@ invariant
 	result_type_exists: result_type /= Void;
 
 note
-	copyright:	"Copyright (c) 1984-2014, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2020, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

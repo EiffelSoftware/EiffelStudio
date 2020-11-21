@@ -8279,7 +8279,6 @@ feature {NONE} -- Visitor
 			compound: BYTE_LIST [INSTR_B]
 			l_once_byte_code: ONCE_BYTE_CODE
 			l_body: FEATURE_AS
-			l_needs_byte_node: BOOLEAN
 			s: like context.scope
 			n: like {ONCE_AS}.compound.count
 			f: FEATURE_I

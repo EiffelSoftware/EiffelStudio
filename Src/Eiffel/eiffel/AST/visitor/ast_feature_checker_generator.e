@@ -3808,6 +3808,7 @@ feature {NONE} -- Visitor
 							l_nested.set_target (target_code)
 							l_nested.set_message (c)
 							c.set_parent (l_nested)
+							target_code.set_parent (l_nested)
 							last_byte_node := l_nested
 						end
 					else

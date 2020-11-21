@@ -216,48 +216,23 @@ feature -- Inlining
 		end
 
 	pre_inlined_code: like Current
+			-- <Precursor>
 		local
-			inlined_current_b: INLINED_CURRENT_B
-			access: like target
+			call: like target.pre_inlined_code
 		do
-			if parent /= Void then
-				Result := Current
-			else
-					-- First call
-				access := target;
-
-				if
-					access.is_argument or else
-					access.is_local or else
-					access.is_result or else
-					access.is_current or else
-					attached {ACCESS_EXPR_B} access
-				then
-						-- `pre_inlined_code' in the target will take
-						-- care of the special byte code
-					Result := Current
-				else
-						-- The first call is a feature
-						-- Create a dummy nested call:
-						-- Current.feature
-						-- (Current is in fact inlined_current_b)
-
-					create parent;
-
-					parent.set_message (Current)
-
-					create inlined_current_b
-					parent.set_target (inlined_current_b)
-					inlined_current_b.set_parent (parent)
-
-					Result := parent
-				end;
-			end;
-				-- Cannot fail: `parent' of `target' is Current, thus not void
-				-- (no NESTED_B is created)
-			target ?= target.pre_inlined_code
-			message := message.pre_inlined_code
-		end;
+			Result := Current
+			if not attached parent then
+					-- First call.
+				call := target.pre_inlined_code
+				target :=
+					if attached {ACCESS_B} call as t then
+						t
+					else
+						create {ACCESS_EXPR_B}.make (call)
+					end
+				message := message.pre_inlined_code
+			end
+		end
 
 	inlined_byte_code: NESTED_B
 		do
@@ -267,7 +242,7 @@ feature -- Inlining
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2019, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2020, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

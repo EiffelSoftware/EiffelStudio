@@ -3127,6 +3127,7 @@ test	pretty-inline-separate-instruction	pretty030 tcf pass pretty
 test	pretty-manifest-array			pretty031 tcf pass pretty manifest_array
 test	pretty-across-loop			pretty032 tcf pass pretty across iteration loop
 test	pretty-feature-call			pretty033 tcf pass pretty call agent
+test	pretty-export-adaptation		pretty034 tcf pass pretty export
 
 -- Benchmarks
 test	benchmark-scoop-gc-sequential-processor-creation	bench001 tcf pass benchmark scoop scoop_gc gc

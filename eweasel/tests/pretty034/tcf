@@ -1,0 +1,18 @@
+test_name pretty-export-adaptation
+test_description Featues in the list of export adaptation clause should be properly indented.
+
+copy_raw test.e $CLUSTER test.e
+
+preference	pretty_printer.line_processing keep
+preference	pretty_printer.loop_expression_style keep
+prettify	test.e prettify_output
+compile_result ok
+compare		prettify_output test.e
+
+preference	pretty_printer.line_processing wrap
+preference	pretty_printer.loop_expression_style keep
+prettify	test.e prettify_output
+compile_result ok
+compare		prettify_output output
+
+test_end

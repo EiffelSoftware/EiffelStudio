@@ -474,75 +474,81 @@ feature -- Installation
 			ctx: HTTP_CLIENT_REQUEST_CONTEXT
 			resp: like response
 			l_installations_href: READABLE_STRING_8
+			retried: BOOLEAN
 		do
-			debug ("es_cloud")
-				print (generator + ".ping_installation (...)%N")
-			end
-				-- reset previous call data
-			reset_api_call
-			if
-				attached new_http_client_session as sess
-			then
-				ctx := new_jwt_auth_context (a_token)
+			if retried then
+				reset_error
+			else
+				debug ("es_cloud")
+					print (generator + ".ping_installation (...)%N")
+				end
+					-- reset previous call data
+				reset_api_call
+				if
+					attached new_http_client_session as sess
+				then
+					ctx := new_jwt_auth_context (a_token)
 
-				l_installations_href := es_account_installations_endpoint_for_token (a_token, sess)
-				if l_installations_href /= Void then
-					ctx.add_form_parameter ("operation", "ping")
-					ctx.add_form_parameter ("installation_id", params.installation_id)
-					ctx.add_form_parameter ("session_id", params.session_id)
+					l_installations_href := es_account_installations_endpoint_for_token (a_token, sess)
+					if l_installations_href /= Void then
+						ctx.add_form_parameter ("operation", "ping")
+						ctx.add_form_parameter ("installation_id", params.installation_id)
+						ctx.add_form_parameter ("session_id", params.session_id)
 
-					across
-						params.items as ic
-					loop
-						ctx.add_form_parameter (ic.key, ic.item)
+						across
+							params.items as ic
+						loop
+							ctx.add_form_parameter (ic.key, ic.item)
+						end
+						resp := response_post (sess, l_installations_href, ctx, Void)
+						if resp.has_error and then resp.has_internal_error then
+							if a_output /= Void then
+								a_output.report_error (Void)
+							end
+								-- Too bad, but not critical
+						else
+							if attached resp.string_8_item ("_links|es:installation|href") as v then
+								record_endpoint_for_token (a_token, {STRING_32} "_links|es:installation|href;installation=" + params.installation_id.as_string_32, v)
+							end
+							if attached resp.string_8_item ("_links|es:session|href") as v then
+								record_endpoint_for_token (a_token, {STRING_32} "_links|es:session|href;session=" + params.session_id.as_string_32, v)
+							end
+							if a_output /= Void then
+								if attached resp.error then
+									check not_internal_error: not resp.has_internal_error end
+									a_output.report_error (resp.error.message)
+								end
+								if resp.boolean_item_is_true ("es:license_missing") then
+									a_output.license_missing := True
+								end
+								if resp.boolean_item_is_true ("es:license_invalid") then
+									a_output.license_invalid := True
+								end
+								if
+									resp.boolean_item_is_true ("es:license_expired")
+									or resp.boolean_item_is_true ("es:plan_expired")
+								then
+									a_output.license_expired := True
+								end
+								if
+									attached resp.string_32_item ("es:session_state") as l_sess_state and then
+									not l_sess_state.is_case_insensitive_equal_general ("normal")
+								then
+									a_output.session_state_changed := True
+									a_output.session_state := l_sess_state
+								end
+								if attached resp.integer_64_item ("es:session_heartbeat") as l_heartbeat then
+									a_output.heartbeat := l_heartbeat.to_natural_32
+								end
+							end
+						end
+						reset_error
 					end
-					resp := response_post (sess, l_installations_href, ctx, Void)
-					if resp.has_error and then resp.has_internal_error then
-						if a_output /= Void then
-							a_output.report_error (Void)
-						end
-							-- Too bad, but not critical
-					else
-						if attached resp.string_8_item ("_links|es:installation|href") as v then
-							record_endpoint_for_token (a_token, {STRING_32} "_links|es:installation|href;installation=" + params.installation_id.as_string_32, v)
-						end
-						if attached resp.string_8_item ("_links|es:session|href") as v then
-							record_endpoint_for_token (a_token, {STRING_32} "_links|es:session|href;session=" + params.session_id.as_string_32, v)
-						end
-						if a_output /= Void then
-							if attached resp.error then
-								check not_internal_error: not resp.has_internal_error end
-								a_output.report_error (resp.error.message)
-							end
-							if resp.boolean_item_is_true ("es:license_missing") then
-								a_output.license_missing := True
-							end
-							if resp.boolean_item_is_true ("es:license_invalid") then
-								a_output.license_invalid := True
-							end
-							if
-								resp.boolean_item_is_true ("es:license_expired")
-								or resp.boolean_item_is_true ("es:plan_expired")
-							then
-								a_output.license_expired := True
-							end
-							if
-								attached resp.string_32_item ("es:session_state") as l_sess_state and then
-								not l_sess_state.is_case_insensitive_equal_general ("normal")
-							then
-								a_output.session_state_changed := True
-								a_output.session_state := l_sess_state
-							end
-							if attached resp.integer_64_item ("es:session_heartbeat") as l_heartbeat then
-								a_output.heartbeat := l_heartbeat.to_natural_32
-							end
-						end
-					end
-					reset_error
 				end
 			end
 		rescue
-			reset_error
+			retried := True
+			retry
 		end
 
 	installation (a_token: READABLE_STRING_8; a_installation_id: READABLE_STRING_GENERAL): detachable ES_ACCOUNT_INSTALLATION

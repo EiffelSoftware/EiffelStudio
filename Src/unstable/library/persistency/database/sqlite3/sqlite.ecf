@@ -13,16 +13,16 @@
 		<option warning="true">
 		</option>
 		<external_include location="$(ISE_LIBRARY)/unstable/library/persistency/database/sqlite3/spec/include"/>
-		<external_include location="-DSQLITE_THREADSAFE=1">
+		<external_cflag value="-DSQLITE_THREADSAFE=1">
 			<condition>
 				<concurrency excluded_value="none"/>
 			</condition>
-		</external_include>
-		<external_include location="-DSQLITE_THREADSAFE=0">
+		</external_cflag>
+		<external_cflag value="-DSQLITE_THREADSAFE=0">
 			<condition>
 				<concurrency value="none"/>
 			</condition>
-		</external_include>
+		</external_cflag>
 		<external_library location="$(ISE_LIBRARY)/unstable/library/persistency/database/sqlite3/spec/$(ISE_PLATFORM)/lib/libesqlite.a">
 			<condition>
 				<platform excluded_value="windows"/>

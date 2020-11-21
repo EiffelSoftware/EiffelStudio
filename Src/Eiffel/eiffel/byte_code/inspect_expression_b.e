@@ -41,6 +41,9 @@ inherit
 			unanalyze
 		end
 
+create
+	make
+
 feature -- Visitor
 
 	process (v: BYTE_NODE_VISITOR)

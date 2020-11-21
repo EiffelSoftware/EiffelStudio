@@ -11,8 +11,7 @@ feature -- Factory
 	new_construct (e: EXPR_B; a: INSPECT_ABSTRACTION_AS [CASE_ABSTRACTION_AS [detachable AST_EIFFEL], detachable AST_EIFFEL]): INSPECT_B
 			-- <Precursor>
 		do
-			create Result
-			Result.set_switch (e)
+			create Result.make (e)
 			if attached {INSTRUCTION_AS} a as i then
 				Result.set_line_pragma (i.line_pragma)
 			end

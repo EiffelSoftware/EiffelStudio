@@ -13,6 +13,16 @@ inherit
 		end
 	REGISTRABLE
 
+feature {NONE} -- Initialization
+
+	make (s: like switch)
+			-- Assign `s` to `switch`.
+		do
+			switch := s
+		ensure
+			switch = s
+		end
+
 feature -- Access
 
 	switch: EXPR_B
@@ -40,12 +50,6 @@ feature -- Status report
 		end
 
 feature -- Modification
-
-	set_switch (s: like switch)
-			-- Assign `s' to `switch'.
-		do
-			switch := s
-		end
 
 	set_case_list (c: like case_list)
 			-- Assign `c' to `case_list'.
@@ -104,16 +108,7 @@ feature -- C code generation
 			-- Generate C code in `buffer'.
 		local
 			buf: GENERATION_BUFFER
-			start_interval: PROCEDURE
-			stop_interval: PROCEDURE
-			generate_interval: PROCEDURE [INTERVAL_B]
-			start_block: PROCEDURE
-			stop_block: PROCEDURE
-			else_string: STRING_8
-			is_switch: BOOLEAN
 			t: TYPE_A
-			base_class: CLASS_C
-			creators: ARRAY [FEATURE_I]
 		do
 			buf := buffer
 			generate_line_info
@@ -125,69 +120,27 @@ feature -- C code generation
 			switch.generate
 			buffer.put_new_line
 			t := real_type (switch.type)
-			if t.c_type.is_basic then
-				is_switch := True
-				buf.put_string ("switch (")
-				switch.print_register
-				buf.put_string (") {")
-				buf.indent
-				start_interval := agent do_nothing
-				stop_interval := agent do_nothing
-				generate_interval := agent {INTERVAL_B}.generate
-				start_block := agent buf.indent
-				stop_block := agent (b: like buffer)
-					do
-						b.put_new_line
-						b.put_string ("break;")
-						b.exdent
-					end (buffer)
-				else_string := "default:"
-			else
-					-- Build a table of creation procedures indexed by creation ID.
-				base_class := t.base_class
-				create creators.make_empty
-				across base_class.creators as c loop
-					if attached base_class.feature_of_name_id (c.key) as f then
-						creators.force_and_fill (f, f.creator_position)
-					end
-				end
-				buf.put_string ("if (0) {")
-				buf.put_new_line
-				buf.put_character ('}')
-				start_interval := agent (b: like buffer)
-					do
-							-- Make sure the expression is not Void.
-						b.put_string (" else if (")
-						switch.print_register
-						b.put_string (" && (0")
-					end (buf)
-				stop_interval := agent buf.put_three_character (')', ')', ' ')
-				generate_interval := agent {INTERVAL_B}.generate_once (switch, creators)
-				start_block := agent buf.generate_construct_block_open
-				stop_block := agent buf.generate_block_close
-				else_string := "else "
-			end
+			buf.put_string ("switch (")
+			switch.print_register
+			buf.put_three_character (')', ' ', '{')
+			buf.indent
 			if attached case_list as when_parts then
 				across
 					when_parts is w
 				loop
 					w.generate_line_info
-					across
-						w.interval as i
-					loop
-						start_interval.call
-						generate_interval (i.item)
-						stop_interval.call
-					end
-					start_block.call
+					⟳ i: w.interval ¦ i.generate ⟲
+					buf.indent
 					generate_effect (w.content)
-					stop_block.call
+					buf.put_new_line
+					buf.put_string ("break;")
+					buf.exdent
 				end
 			end
 			if attached else_part as p implies has_else_code then
 				buf.put_new_line
-				buf.put_string (else_string)
-				start_block.call
+				buf.put_string ("default:")
+				buf.indent
 				if attached else_part as p then
 					generate_effect (p)
 				else
@@ -195,13 +148,11 @@ feature -- C code generation
 					buf.put_new_line
 					buf.put_string ("RTEC(EN_WHEN);")
 				end
-				stop_block.call
-			end
-			if is_switch then
 				buf.exdent
-				buf.put_new_line
-				buf.put_character ('}')
 			end
+			buf.exdent
+			buf.put_new_line
+			buf.put_character ('}')
 		end
 
 feature {ABSTRACT_CASE_B} -- Code generation: C

@@ -50,21 +50,17 @@ feature {TYPED_INTERVAL_B, TYPED_INTERVAL_VAL_B, BYTE_NODE_VISITOR} -- Data
 
 feature {TYPED_INTERVAL_B} -- C code generation
 
-	generate_interval (other: like Current; once_value: detachable EXPR_B; creators: detachable ARRAY [FEATURE_I])
-			-- Generate interval Current..`other'.
+	generate_interval (other: like Current)
+			-- <Precursor>
 		local
 			l, u: H
 			buf: GENERATION_BUFFER
 			done: BOOLEAN
-			code_index: like {FEATURE_I}.body_index
-			header: like header_generation_buffer
-			f: FEATURE_I
 		do
 				-- Do not use `l > u` as exit test because `l`
 				-- will be out of bounds when `u` is the greatest
 				-- allowed value.
 			from
-				header := header_generation_buffer
 				buf := buffer
 				l := value
 				u := other.value
@@ -72,48 +68,9 @@ feature {TYPED_INTERVAL_B} -- C code generation
 				done
 			loop
 				buf.put_new_line
-				if attached once_value then
-					buf.put_string (" || ")
-					f := creators [position (l)]
-					code_index := f.body_index
-					if system.in_final_mode and not system.has_multithreaded then
-						header.put_new_line
-						header.put_string ("RTOSHF (EIF_REFERENCE, ")
-						header.put_integer (code_index)
-						header.put_character (')')
-						buf.put_string ("RTOSV (")
-						buf.put_integer (code_index)
-					elseif system.in_final_mode and system.has_multithreaded and then f.is_process_relative then
-						header.put_new_line
-						header.put_string ("RTOPHR (EIF_REFERENCE, ")
-						header.put_integer (code_index)
-						header.put_character (')')
-						buf.put_string ("RTOPV (")
-						buf.put_integer (code_index)
-					elseif system.in_final_mode and system.has_multithreaded and then not f.is_process_relative then
-							-- Once routine might be not registered yet
-							-- Let's do it now
-						context.add_thread_relative_once (context.reference_c_type, code_index)
-						buf.put_string ("RTOUV (")
-						buf.put_integer (context.thread_relative_once_index (code_index))
-					elseif not system.in_final_mode and not system.has_multithreaded then
-						buf.put_string ("RTOTV (")
-						buf.put_string (encoder.feature_name (real_type (once_value.type).type_id (context.context_cl_type), code_index))
-					elseif not system.in_final_mode and system.has_multithreaded and then f.is_process_relative then
-						buf.put_string ("RTOQV (")
-						buf.put_string (encoder.feature_name (real_type (once_value.type).type_id (context.context_cl_type), code_index))
-					elseif not system.in_final_mode and system.has_multithreaded and then not f.is_process_relative then
-						buf.put_string ("RTOTV (")
-						buf.put_string (encoder.feature_name (real_type (once_value.type).type_id (context.context_cl_type), code_index))
-					end
-					buf.put_two_character (',', ' ')
-					once_value.print_register
-					buf.put_character (')')
-				else
-					buf.put_string ("case ")
-					generate_value (l)
-					buf.put_character (':')
-				end
+				buf.put_string ("case ")
+				generate_value (l)
+				buf.put_character (':')
 				done := l = u
 				l := next_value (l)
 			end
@@ -135,14 +92,6 @@ feature {NONE} -- Implementation: C code generation
 		deferred
 		ensure
 			result_not_void: Result /= Void
-		end
-
-feature {NONE} -- Code generation
-
-	position (v: like value): like {FEATURE_I}.creator_position
-			-- `v` treated as a position.
-		do
-			check valid_inspect_value_type: False then end
 		end
 
 note

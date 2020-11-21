@@ -11,8 +11,7 @@ feature -- Factory
 	new_construct (e: EXPR_B; a: INSPECT_ABSTRACTION_AS [CASE_ABSTRACTION_AS [detachable AST_EIFFEL], detachable AST_EIFFEL]): INSPECT_EXPRESSION_B
 			-- <Precursor>
 		do
-			create Result
-			Result.set_switch (e)
+			create Result.make (e)
 		end
 
 	new_case_list (n: like new_case_list.count): BYTE_LIST [CASE_EXPRESSION_B]

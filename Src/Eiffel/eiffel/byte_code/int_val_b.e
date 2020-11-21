@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "Representation of a manifest integer constant"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -12,8 +12,7 @@ inherit
 	TYPED_INTERVAL_VAL_B [INTEGER]
 		redefine
 			is_allowed_unique_value,
-			is_signed,
-			position
+			is_signed
 		end
 
 create
@@ -136,14 +135,6 @@ feature {NONE} -- Implementation: C generation
 			-- Value after given value `v'
 		do
 			Result := v + 1
-		end
-
-feature {NONE} -- Code generation
-
-	position (v: like value): like {FEATURE_I}.creator_position
-			-- <Precursor>
-		do
-			Result := v
 		end
 
 note

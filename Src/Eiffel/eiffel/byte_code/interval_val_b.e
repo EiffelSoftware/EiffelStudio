@@ -47,8 +47,8 @@ feature -- Comparison
 
 feature -- Measurement
 
-	distance (other: like Current): DOUBLE
-			-- Distance between `other' and Current
+	distance (other: like Current): REAL_64
+			-- Distance between `other` and Current.
 		require
 			other_not_void: other /= Void
 			same_type: same_type (other)
@@ -98,16 +98,12 @@ feature -- IL code generation
 
 feature {INTERVAL_B} -- C code generation
 
-	generate_interval (other: like Current; e: detachable EXPR_B; creators: detachable ARRAY [FEATURE_I])
-			-- Generate interval Current..`other` for constants or once creation procedures (when `e` is attached).
+	generate_interval (other: like Current)
+			-- Generate interval Current..`other`.
 		require
 			other_not_void: attached other
 			same_type: same_type (other)
 			good_range: Current <= other
-			attached e ⇒ attached creators
-			attached e ⇒ (attached real_type (e.type) as t ∧… attached t.base_class as b ∧…
-				(b.is_once ∧ b.creators.count = creators.count))
-			attached creators ⇒ across creators as p all p.cursor_index = p.item.creator_position end
 		deferred
 		end
 

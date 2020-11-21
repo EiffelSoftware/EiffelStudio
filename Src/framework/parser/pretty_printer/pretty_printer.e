@@ -1014,7 +1014,11 @@ feature {CLASS_AS} -- Inheritance
 	process_export_item_as (l_as: EXPORT_ITEM_AS)
 		do
 			safe_process (l_as.clients)
-			safe_process_and_print (l_as.features, " ", "")
+			if attached {FEATURE_LIST_AS} l_as.features as fs then
+				process_and_print_eiffel_list (fs.features, list_separator_leading_space)
+			else
+				print_inline_indented (l_as.features)
+			end
 		end
 
 	process_class_list_as (l_as: CLASS_LIST_AS)

@@ -109,6 +109,7 @@ feature -- C code generation
 		local
 			buf: GENERATION_BUFFER
 			t: TYPE_A
+			p: like else_part
 		do
 			buf := buffer
 			generate_line_info
@@ -137,12 +138,15 @@ feature -- C code generation
 					buf.exdent
 				end
 			end
-			if attached else_part as p implies has_else_code then
+			p := else_part
+			if attached p implies has_else_code then
 				buf.put_new_line
 				buf.put_string ("default:")
 				buf.indent
-				if attached else_part as p then
+				if attached p then
 					generate_effect (p)
+					buf.put_new_line
+					buf.put_string ("break;")
 				else
 						-- Raise an exception.
 					buf.put_new_line

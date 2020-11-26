@@ -251,9 +251,12 @@ if [ ! "$NO_COMPILE" ]; then
 		exprt $DEFAULT_ISE_SVN/Src/tools/estudio_enterprise estudio_enterprise
 	fi
 
-	remtrace Install iron files
+	remtrace Install tools
 	safe_md $INSTALL_DIR/tools
 	cd $INSTALL_DIR/tools
+	exprt $DEFAULT_ORIGO_SVN/Src/Delivery/tools/spec spec
+
+	remtrace Install iron files
 	exprt $DEFAULT_ORIGO_SVN/Src/tools/iron/delivery/iron iron
 
 	remtrace Generate needed executables of the bin directory

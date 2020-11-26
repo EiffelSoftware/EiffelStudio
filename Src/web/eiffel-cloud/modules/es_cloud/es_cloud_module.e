@@ -71,21 +71,25 @@ feature {CMS_MODULE} -- Access control
 			Result := Precursor
 			Result.force (perm_manage_es_accounts)
 			Result.force (perm_view_es_accounts)
+			Result.force (perm_view_es_licenses)
 			Result.force (perm_discard_own_installations)
 			Result.force (perm_view_any_es_activities)
 			Result.force (perm_view_es_sessions)
 			Result.force (perm_buy_es_license)
+			Result.force (perm_access_es_stats)
 		end
 
 feature -- Access control
 
 	perm_manage_es_accounts: STRING = "manager es accounts"
 	perm_view_es_accounts: STRING = "view es accounts"
+	perm_view_es_licenses: STRING = "view es licenses"
 	perm_view_any_es_activities: STRING = "view any es activities"
 	perm_view_es_sessions: STRING = "view es sessions"
 	perm_discard_own_installations: STRING = "discard own installations"
 	perm_manage_es_licenses: STRING = "manager es licenses"
 	perm_buy_es_license: STRING = "buy es licenses"
+	perm_access_es_stats: STRING = "access es stats"
 
 feature {CMS_API} -- Module Initialization			
 
@@ -194,12 +198,16 @@ feature -- Access: router
 			-- <Precursor>
 		local
 			h: ES_CLOUD_HANDLER
+			h_stats: ES_CLOUD_STATISTICS_HANDLER
 			h_act: ES_CLOUD_ACTIVITIES_HANDLER
 			h_lic: ES_CLOUD_LICENSES_HANDLER
 		do
 			if attached es_cloud_api as l_mod_api then
 				create h.make (l_mod_api)
 				a_router.handle ("/" + root_location, h, a_router.methods_get)
+
+				create h_stats.make (Current, l_mod_api)
+				a_router.handle ("/" + statistics_location, h_stats, a_router.methods_get)
 
 				create h_act.make (l_mod_api)
 				a_router.handle ("/" + activities_location, h_act, a_router.methods_get)
@@ -217,6 +225,8 @@ feature -- Access: router
 	root_location: STRING = "cloud"
 
 	activities_location: STRING = "activities/"
+
+	statistics_location: STRING = "statistics/"
 
 	licenses_location: STRING = "licenses/"
 
@@ -515,6 +525,11 @@ feature -- Hook
 				create lnk.make (a_response.api.translation ("Licenses", Void), licenses_location)
 				lnk.set_weight (10)
 				a_menu_system.primary_menu.extend (lnk)
+				if a_response.has_permission (perm_access_es_stats) then
+					create lnk.make (a_response.api.translation ("Stats", Void), statistics_location)
+					lnk.set_weight (20)
+				end
+				a_menu_system.primary_menu.extend (lnk)
 			end
 		end
 
@@ -673,7 +688,7 @@ feature -- Hooks: block
 							end
 							l_html.append ("/>")
 
-							
+
 							l_html.append ("<label for=%"" + l_int_id + "%">")
 							if attached store_item_interval_title (l_item) as l_interval_title then
 								l_html.append (html_encoded (l_interval_title))

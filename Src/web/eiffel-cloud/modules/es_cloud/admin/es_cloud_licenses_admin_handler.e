@@ -128,7 +128,7 @@ feature -- Execution
 			f_select: WSF_FORM_SELECT
 			f_opt: WSF_FORM_SELECT_OPTION
 		do
-			if api.has_permission ("admin es licenses") then
+			if api.has_permissions (<< {ES_CLOUD_MODULE}.perm_manage_es_accounts, {ES_CLOUD_MODULE}.perm_manage_es_licenses >>) then
 				if attached {WSF_STRING} req.query_parameter ("plan") as p_plan then
 					l_plan_filter := p_plan.value
 				end

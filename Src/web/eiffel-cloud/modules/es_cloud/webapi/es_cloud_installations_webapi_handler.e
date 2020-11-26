@@ -526,6 +526,8 @@ feature {NONE} -- User installation post handling
 			l_inst_limit: NATURAL
 			pl,ve: READABLE_STRING_GENERAL
 			l_licenses: LIST [ES_CLOUD_USER_LICENSE]
+			tb: STRING_TABLE [detachable ANY]
+			l_valid_licenses: ARRAYED_LIST [ES_CLOUD_LICENSE]
 		do
 			if a_user.same_as (api.user) then
 				r := new_response (req, res)
@@ -547,15 +549,15 @@ feature {NONE} -- User installation post handling
 					end
 				end
 				if l_licenses /= Void and then not l_licenses.is_empty then
+					create l_valid_licenses.make (l_licenses.count)
 					across
 						l_licenses as ic
-					until
-						lic /= Void or inst /= Void
 					loop
 						lic := ic.item.license
 						if lic.is_valid (pl, ve) then
-							l_inst_limit := lic.installations_limit
 							l_has_valid_license := True
+
+							l_inst_limit := lic.installations_limit
 							if
 								l_inst_limit = 0
 								or else (
@@ -563,19 +565,29 @@ feature {NONE} -- User installation post handling
 									lst.count.to_natural_32 < l_inst_limit
 								)
 							then
-									-- Found license
-								if pl /= Void and then lic.is_waiting_for_platform_value (pl) then
-										-- Assign platform.
-									lic.set_platforms_restriction (pl)
-								end
-								es_cloud_api.register_installation (lic, a_install_id, a_info)
-								inst := es_cloud_api.installation (a_install_id)
+								l_valid_licenses.force (lic)
 							else
 									-- Reached installation limit for this license!
 								lic := Void
 							end
-						else
-							lic := Void
+						end
+					end
+					lic := Void
+--					l_has_valid_license := not l_valid_licenses.is_empty
+					across
+						l_valid_licenses as ic
+					until
+						lic /= Void or inst /= Void
+					loop
+						lic := l_valid_licenses.first
+						if lic /= Void then
+								-- Found license
+							if pl /= Void and then lic.is_waiting_for_platform_value (pl) then
+									-- Assign platform.
+								lic.set_platforms_restriction (pl)
+							end
+							es_cloud_api.register_installation (lic, a_install_id, a_info)
+							inst := es_cloud_api.installation (a_install_id)
 						end
 					end
 				end
@@ -587,6 +599,17 @@ feature {NONE} -- User installation post handling
 					end
 				else
 					add_installation_to (a_version, a_user, inst, r)
+				end
+				if l_valid_licenses /= Void then
+						-- All valid licenses, so the user may pick from one of them.
+					create tb.make (l_valid_licenses.count)
+					across
+						l_valid_licenses as ic
+					loop
+						lic := ic.item
+						tb.force (license_to_table (lic), lic.key)
+					end
+					r.add_table_iterator_field ("es:adapted_licenses", tb)
 				end
 				add_cloud_user_links_to (a_version, a_user, r)
 				add_user_links_to (a_user, r)

@@ -18,8 +18,7 @@ CREATE TABLE es_plans(
   `name` 	TEXT NOT NULL,
   `title` 	TEXT NOT NULL,
   `description`	TEXT,
-  `data`	TEXT,
-  `limitations`	TEXT
+  `data`	TEXT
 );
 
 CREATE TABLE es_plan_subscriptions(

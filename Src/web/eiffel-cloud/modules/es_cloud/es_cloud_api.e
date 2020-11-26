@@ -810,7 +810,7 @@ feature -- Change
 
 feature -- HTML factory
 
-	append_one_line_license_view_to_html (lic: ES_CLOUD_LICENSE; u: ES_CLOUD_USER; es_cloud_module: ES_CLOUD_MODULE; s: STRING_8)
+	append_one_line_license_view_to_html (lic: ES_CLOUD_LICENSE; u: detachable ES_CLOUD_USER; es_cloud_module: ES_CLOUD_MODULE; s: STRING_8)
 		local
 			l_plan: detachable ES_CLOUD_PLAN
 			api: CMS_API
@@ -823,9 +823,11 @@ feature -- HTML factory
 			s.append (html_encoded (lic.key))
 			s.append ("</a>")
 			s.append ("</span> ")
-			s.append ("<span class=%"user%">User %"")
-			s.append (api.user_html_administration_link (u.cms_user))
-			s.append ("%"</span> ")
+			if u /= Void then
+				s.append ("<span class=%"user%">User %"")
+				s.append (api.user_html_administration_link (u.cms_user))
+				s.append ("%"</span> ")
+			end
 			s.append ("<span class=%"title%">Plan %"")
 			s.append (html_encoded (l_plan.title_or_name))
 			s.append ("%"</span> ")

@@ -19,16 +19,45 @@ div.user-view-cloud-box {
 	}
 }
 
-div.es-licenses div.info {
-	color: #5b5b5b;
-	padding: 1rem;
-	border: solid 1px #ccc;
-	background-color: #f5f5f5;
-	margin-bottom: 1rem;
-	& > div {
+div.es-licenses {
+	&.es-stats {
+		div.es-license {
+			margin-bottom: 2px;
+			position: relative;
+			span.title {
+				display: inline-block;
+				min-width: 7rem;
+				font-weight: bold;
+			}
+			span.license-id {
+				display: inline-block;
+				min-width: 16rem;
+			}
+			span.user {
+				display: inline-block;
+				min-width: 12rem;
+			}
+			span.details {
+				position: absolute;
+				right: 1rem;
+
+			}
+			span.warning {
+				color: #900;
+			}
+		}
+	}
+	div.info {
+		color: #5b5b5b;
 		padding: 1rem;
-		background-color: #fff;
-		position: relative;
-		box-sizing: border-box;
+		border: solid 1px #ccc;
+		background-color: #f5f5f5;
+		margin-bottom: 1rem;
+		& > div {
+			padding: 1rem;
+			background-color: #fff;
+			position: relative;
+			box-sizing: border-box;
+		}
 	}
 }

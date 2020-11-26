@@ -107,12 +107,10 @@ feature -- Execution
 			if attached api.user as u then
 				l_user := u
 			end
-			if
-				attached es_cloud_api.license_by_key (a_lic_key) as lic
-			then
+			if attached es_cloud_api.license_by_key (a_lic_key) as lic then
 				l_lic_user := es_cloud_api.user_for_license (lic)
 				if
-					api.has_permission ({ES_CLOUD_MODULE}.perm_manage_es_licenses) or else
+					api.has_permissions (<<{ES_CLOUD_MODULE}.perm_manage_es_licenses, {ES_CLOUD_MODULE}.perm_view_es_licenses>>) or else
 					(l_lic_user /= Void and then l_user /= Void and then l_user.same_as (l_lic_user))
 				then
 					r := new_generic_response (req, res)
@@ -151,12 +149,10 @@ feature -- Execution
 			if attached api.user as u then
 				l_user := u
 			end
-			if
-				attached es_cloud_api.license_by_key (a_lic_key) as lic
-			then
+			if attached es_cloud_api.license_by_key (a_lic_key) as lic then
 				l_lic_user := es_cloud_api.user_for_license (lic)
 				if
-					api.has_permission ({ES_CLOUD_MODULE}.perm_manage_es_licenses) or else
+					api.has_permissions (<<{ES_CLOUD_MODULE}.perm_manage_es_licenses, {ES_CLOUD_MODULE}.perm_view_es_licenses>>) or else
 					(l_lic_user /= Void and then l_user /= Void and then l_user.same_as (l_lic_user))
 				then
 					r := new_generic_response (req, res)

@@ -41,4 +41,13 @@ feature -- Access
 			Result := cms_user.has_id
 		end
 
+feature -- Element change
+
+	update_user (api: CMS_API)
+		do
+			if attached {CMS_PARTIAL_USER} cms_user as l_partial and then attached api.user_api.user_by_id (l_partial.id) as l_user then
+				cms_user := l_user
+			end
+		end
+
 end

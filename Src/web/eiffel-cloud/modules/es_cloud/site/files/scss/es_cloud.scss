@@ -45,7 +45,12 @@ div.es-licenses {
 			span.details {
 				position: absolute;
 				right: 1rem;
-
+				span.expiration {
+					display: block;
+				}
+				span.status {
+					display: block;
+				}
 			}
 			span.warning {
 				color: #900;

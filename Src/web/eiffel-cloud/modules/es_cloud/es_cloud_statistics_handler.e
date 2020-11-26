@@ -199,6 +199,9 @@ feature -- Execution
 				s.append ("</span> ")
 			end
 			s.append ("<span class=%"details%">")
+			s.append ("<span class=%"date%">Created: ")
+			s.append (date_time_to_iso8601_string (lic.creation_date))
+			s.append ("</span>")
 			if lic.is_active then
 				if attached lic.expiration_date as exp then
 					s.append ("<span class=%"expiration%">")

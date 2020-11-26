@@ -141,7 +141,7 @@ feature -- Access: License
 					sql_forth
 				end
 			end
-			sql_finalize_query (sql_select_licenses)
+			sql_finalize_query (sql_select_licenses_by_plan)
 			if lst = Void then
 				create Result.make (0)
 			else
@@ -659,7 +659,7 @@ feature {NONE} -- Fetcher
 
 			if a_plan /= Void then
 				l_plan := a_plan
-				i := 3
+				i := 6
 			else
 				l_plan_name := sql_read_string (4)
 				if l_plan_name = Void then

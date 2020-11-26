@@ -116,7 +116,7 @@ feature -- Execution
 					r := new_generic_response (req, res)
 					r.add_javascript_url (r.module_name_resource_url ({ES_CLOUD_MODULE}.name, "/files/js/es_cloud.js", Void))
 					r.add_style (r.module_name_resource_url ({ES_CLOUD_MODULE}.name, "/files/css/es_cloud.css", Void), Void)
-					r.set_title ("License " + html_encoded (a_lic_key))
+					r.set_title ("License " + html_encoded (a_lic_key) + " -- " + html_encoded (lic.plan.title_or_name))
 					s := ""
 					s.append ("<div class=%"es-licenses%">")
 					append_license_to_html (lic, l_lic_user, s)
@@ -127,6 +127,9 @@ feature -- Execution
 									+ "?message=" + url_encoded ({STRING_32} "%N%N-- " + lic.plan.title_or_name + {STRING_32} " license %"" + lic.key + "%".")
 									+ "%">contact us</a>.</div>")
 					s.append ("<div><a href=%"" + api.location_url (es_cloud_module.licenses_location, Void) + "%">All licenses...</a></div>")
+					if api.has_permission ({ES_CLOUD_MODULE}.perm_manage_es_licenses) then
+						s.append ("<div><a class=%"button%" href=%"" + api.location_url (es_cloud_api.admin_license_web_location (lic), Void) + "%">EDIT license</a></div>")
+					end
 					s.append ("</div>") -- info
 					s.append ("</div>") -- es-licenses
 					r.set_main_content (s)

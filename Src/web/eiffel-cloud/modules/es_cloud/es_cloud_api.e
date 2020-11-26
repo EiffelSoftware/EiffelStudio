@@ -810,6 +810,11 @@ feature -- Change
 
 feature -- HTML factory
 
+	admin_license_web_location (lic: ES_CLOUD_LICENSE): STRING_8
+		do
+			Result := cms_api.administration_path_location ({ES_CLOUD_MODULE_ADMINISTRATION}.admin_licenses_location + url_encoded (lic.key))
+		end
+
 	append_one_line_license_view_to_html (lic: ES_CLOUD_LICENSE; u: detachable ES_CLOUD_USER; es_cloud_module: ES_CLOUD_MODULE; s: STRING_8)
 		local
 			l_plan: detachable ES_CLOUD_PLAN

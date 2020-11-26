@@ -34,6 +34,10 @@ div.es-licenses.es-stats div.es-license {
   div.es-licenses.es-stats div.es-license span.details {
     position: absolute;
     right: 1rem; }
+    div.es-licenses.es-stats div.es-license span.details span.expiration {
+      display: block; }
+    div.es-licenses.es-stats div.es-license span.details span.status {
+      display: block; }
   div.es-licenses.es-stats div.es-license span.warning {
     color: #900; }
 div.es-licenses div.info {

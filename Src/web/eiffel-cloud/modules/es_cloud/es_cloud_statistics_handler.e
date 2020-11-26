@@ -166,11 +166,22 @@ feature -- Execution
 			s.append ("<span class=%"title%">")
 			s.append (html_encoded (l_plan.title_or_name))
 			s.append ("</span> ")
-			s.append ("<span class=%"license-id%">License: <span class=%"id%">")
+			s.append ("<div class=%"license-id%">License: <span class=%"id%">")
 			s.append ("<a href=%"" + api.location_url (es_cloud_module.license_location (lic), Void) + "%">")
 			s.append (html_encoded (lic.key))
 			s.append ("</a>")
-			s.append ("</span></span> ")
+			s.append ("</span>")
+			if lic.platforms /= Void or lic.version /= Void then
+				s.append ("<span class=%"condition%">")
+				if attached lic.platforms_as_csv_string as l_platforms then
+					s.append (" platforms:" + html_encoded (l_platforms))
+				end
+				if attached lic.version as l_version then
+					s.append (" version:" + html_encoded (l_version))
+				end
+				s.append ("</span>")
+			end
+			s.append ("</div>")
 			if u /= Void then
 				s.append ("<span class=%"user%">User ")
 				s.append (api.user_html_administration_link (u.cms_user))

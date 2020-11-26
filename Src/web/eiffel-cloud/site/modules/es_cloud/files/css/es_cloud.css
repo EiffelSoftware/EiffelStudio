@@ -21,9 +21,13 @@ div.es-licenses.es-stats div.es-license {
     display: inline-block;
     min-width: 7rem;
     font-weight: bold; }
-  div.es-licenses.es-stats div.es-license span.license-id {
+  div.es-licenses.es-stats div.es-license div.license-id {
     display: inline-block;
     min-width: 16rem; }
+    div.es-licenses.es-stats div.es-license div.license-id span.condition {
+      color: #999;
+      font-size: 90%;
+      display: block; }
   div.es-licenses.es-stats div.es-license span.user {
     display: inline-block;
     min-width: 12rem; }

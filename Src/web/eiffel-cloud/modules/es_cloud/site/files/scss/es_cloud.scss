@@ -29,9 +29,14 @@ div.es-licenses {
 				min-width: 7rem;
 				font-weight: bold;
 			}
-			span.license-id {
+			div.license-id {
 				display: inline-block;
 				min-width: 16rem;
+				span.condition {
+					color: #999;
+					font-size: 90%;
+					display: block;
+				}
 			}
 			span.user {
 				display: inline-block;

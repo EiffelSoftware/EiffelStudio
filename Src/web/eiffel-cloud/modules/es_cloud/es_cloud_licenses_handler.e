@@ -116,7 +116,7 @@ feature -- Execution
 					r := new_generic_response (req, res)
 					r.add_javascript_url (r.module_name_resource_url ({ES_CLOUD_MODULE}.name, "/files/js/es_cloud.js", Void))
 					r.add_style (r.module_name_resource_url ({ES_CLOUD_MODULE}.name, "/files/css/es_cloud.css", Void), Void)
-					r.set_title ("License " + html_encoded (a_lic_key) + " -- " + html_encoded (lic.plan.title_or_name))
+					r.set_title ("License " + html_encoded (a_lic_key))
 					s := ""
 					s.append ("<div class=%"es-licenses%">")
 					append_license_to_html (lic, l_lic_user, s)

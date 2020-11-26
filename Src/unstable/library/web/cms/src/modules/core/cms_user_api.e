@@ -127,6 +127,20 @@ feature -- Query
 			end
 		end
 
+	user_email (u: CMS_USER): detachable READABLE_STRING_8
+			-- Email for user `u`.
+		do
+			if
+				attached {CMS_PARTIAL_USER} u as l_partial and then
+				attached user_by_id (l_partial.id) as l_user
+			then
+				Result := l_user.email
+			else
+				Result := u.email
+			end
+		end
+
+
 feature -- Access: user
 
 	user_by_id (a_id: like {CMS_USER}.id): detachable CMS_USER

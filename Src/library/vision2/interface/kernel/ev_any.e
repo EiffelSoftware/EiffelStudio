@@ -1,13 +1,15 @@
-note
-	description:
-		"Base class for Eiffel Vision interface.%N%
-		%Eiffel Vision uses the bridge pattern.%N%
-		%(See bridge pattern notes below.)%N%
-		%Descendents of this class are coupled to descendents of EV_ANY_I%N%
-		%(the base class for Eiffel Vision implementation classes).%N%
-		%EV_ANY's descendants provide a common interface across all%N%
-		%platforms while EV_ANY_I's descendants provide any necessary%N%
-		%platform specific implementation."
+﻿note
+	description: "[
+		Base class for Eiffel Vision interface.
+		
+		Eiffel Vision uses the bridge pattern. (See bridge pattern notes below.)
+		Descendents of this class are coupled to descendents of EV_ANY_I
+		(the base class for Eiffel Vision implementation classes).
+		
+		EV_ANY's descendants provide a common interface across all
+		platforms while EV_ANY_I's descendants provide any necessary
+		platform specific implementation.
+	]"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 	keywords: "interface, base, root, any"
@@ -183,19 +185,20 @@ feature {EV_ANY} -- Implementation
 feature -- Duplication
 
 	copy (other: like Current)
-			-- Update current object using fields of object attached
-			-- to `other', so as to yield equal objects.
+			-- <Precursor>
+		obsolete
+			"[
+				Copy is not permitted for most Vision classes.
+				Copy is supported for:
+					EV_CHARACTER_FORMAT
+					EV_COLOR
+					EV_FONT
+					EV_PIXMAP
+					EV_POINTER_STYLE
+					EV_REGION
+			]"
 		do
-			check
-				can_copy_this_vision2_class: False
-			end
-			-- Copy is not permitted for most Vision2 classes.
-			-- The following Vision2 classes may be copied :-
-				-- EV_FONT
-				-- EV_COLOR
-				-- EV_CURSOR
-				-- EV_POINTER_STYLE
-				-- EV_PIXMAP
+			check can_copy_this_vision2_class: False then end
 		end
 
 feature {NONE} -- Contract support
@@ -258,8 +261,6 @@ invariant
 			-- The interface object (descended from this class)
 			-- and the implementation object (from EV_ANY_I)
 			-- must always be coupled.
-			--| (See bridge pattern notes below.)
-
 
 note
 	copyright:	"Copyright (c) 1984-2020, Eiffel Software and others"

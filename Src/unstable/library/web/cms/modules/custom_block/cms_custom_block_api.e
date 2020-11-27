@@ -95,7 +95,7 @@ feature {NONE} -- Implementation
 
 	block_from_cfg (a_block_id: READABLE_STRING_8; cfg: attached like cms_api.module_configuration): CMS_CUSTOM_BLOCK
 		require
-				cfg.has_item (a_block_id)
+				cfg.has_item ("blocks." + a_block_id)
 		local
 			l_block_pref: READABLE_STRING_8
 		do

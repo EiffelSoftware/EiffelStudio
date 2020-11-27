@@ -243,7 +243,7 @@ feature -- Hooks
 			then
 				get_block_view_login (a_block_id, a_response)
 			elseif a_block_id.is_case_insensitive_equal_general ("account") and then
-				a_response.location.same_string ("account")
+				a_response.location.same_string ({CMS_AUTHENTICATION_MODULE}.roc_account_location)
 			then
 				if
 					attached smarty_template_block (Current, "account_info", a_response.api) as l_tpl_block and then

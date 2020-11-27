@@ -31,7 +31,6 @@ feature -- Access
 			-- Number of items nodes.
 		do
 			error_handler.reset
-			write_information_log (generator + ".nodes_count")
 			sql_query (sql_select_nodes_count, Void)
 			if not has_error and not sql_after then
 				Result := sql_read_natural_64 (1)
@@ -61,8 +60,6 @@ feature -- Access
 			create {ARRAYED_LIST [CMS_NODE]} Result.make (0)
 
 			error_handler.reset
-			write_information_log (generator + ".nodes")
-
 			from
 				sql_query (sql_select_nodes, Void)
 				sql_start
@@ -86,8 +83,6 @@ feature -- Access
 			Result.force (a_node)
 
 			error_handler.reset
-			write_information_log (generator + ".node_revisions")
-
 			from
 				create l_parameters.make (1)
 				l_parameters.force (a_node.id, "nid")
@@ -113,8 +108,6 @@ feature -- Access
 			create {ARRAYED_LIST [CMS_NODE]} Result.make (0)
 
 			error_handler.reset
-			write_information_log (generator + ".trashed_nodes")
-
 			from
 				create l_parameters.make (1)
 				if a_user /= Void and then a_user.has_id then
@@ -146,8 +139,6 @@ feature -- Access
 			create {ARRAYED_LIST [CMS_NODE]} Result.make (0)
 
 			error_handler.reset
-			write_information_log (generator + ".recent_nodes")
-
 			from
 				create l_parameters.make (2)
 				l_parameters.put (a_size, "size")
@@ -224,8 +215,6 @@ feature -- Access
 			create {ARRAYED_LIST [CMS_NODE]} Result.make (0)
 
 			error_handler.reset
-			write_information_log (generator + ".recent_node_changes_before")
-
 			from
 				create l_parameters.make (4)
 				l_parameters.put (a_count, "size")
@@ -252,7 +241,6 @@ feature -- Access
 			l_parameters: STRING_TABLE [ANY]
 		do
 			error_handler.reset
-			write_information_log (generator + ".node_by_id")
 			create l_parameters.make (1)
 			l_parameters.put (a_id, "nid")
 			sql_query (sql_select_node_by_id, l_parameters)
@@ -268,7 +256,6 @@ feature -- Access
 			l_parameters: STRING_TABLE [ANY]
 		do
 			error_handler.reset
-			write_information_log (generator + ".node_by_id_and_revision")
 			create l_parameters.make (1)
 			l_parameters.put (a_node_id, "nid")
 			l_parameters.put (a_revision, "revision")
@@ -283,7 +270,6 @@ feature -- Access
 			-- Last insert node id.
 		do
 			error_handler.reset
-			write_information_log (generator + ".last_inserted_node_id")
 			sql_query (Sql_last_insert_node_id, Void)
 			if not has_error and not sql_after then
 				Result := sql_read_integer_64 (1)
@@ -297,7 +283,6 @@ feature -- Access
 			l_parameters: STRING_TABLE [ANY]
 		do
 			error_handler.reset
-			write_information_log (generator + ".last_inserted_node_revision")
 			if a_node /= Void and then a_node.has_id then
 				create l_parameters.make (1)
 				l_parameters.force (a_node.id, "nid")
@@ -331,7 +316,6 @@ feature -- Access
 			create {ARRAYED_LIST [CMS_NODE]} Result.make (0)
 
 			error_handler.reset
-			write_information_log (generator + ".nodes_of_type")
 			create l_parameters.make (1)
 			l_parameters.put (a_node_type.name, "node_type")
 
@@ -358,7 +342,6 @@ feature -- Access
 			create {ARRAYED_LIST [CMS_NODE]} Result.make (0)
 
 			error_handler.reset
-			write_information_log (generator + ".nodes_of_type_with_title")
 			create l_parameters.make (2)
 			l_parameters.put (a_node_type.name, "node_type")
 			l_parameters.put (a_title, "title")
@@ -397,7 +380,6 @@ feature -- Change: Node
 		local
 			l_parameters: STRING_TABLE [ANY]
 		do
-			write_information_log (generator + ".trash_node_by_id {" + a_id.out + "}")
 
 			error_handler.reset
 			create l_parameters.make (3)
@@ -414,7 +396,6 @@ feature -- Change: Node
 			l_parameters: STRING_TABLE [ANY]
 		do
 			sql_begin_transaction
-			write_information_log (generator + ".delete_node_base {" + a_node.id.out + "}")
 
 			error_handler.reset
 			create l_parameters.make (1)
@@ -442,7 +423,6 @@ feature -- Change: Node
 			l_time: DATE_TIME
 		do
 			create l_time.make_now_utc
-			write_information_log (generator + ".restore_node_by_id {" + a_id.out + "}")
 
 			error_handler.reset
 			create l_parameters.make (1)
@@ -464,7 +444,6 @@ feature {NONE} -- Implementation
 		do
 			error_handler.reset
 
-			write_information_log (generator + ".store_node")
 			create l_parameters.make (10)
 			l_parameters.put (a_node.content_type, "type")
 			l_parameters.put (a_node.title, "title")
@@ -543,7 +522,6 @@ feature -- Helpers
 			-- i.e: specific to each content type data.
 		do
 			error_handler.reset
-			write_information_log (generator + ".fill_node")
 			extended_load (a_node)
 		end
 

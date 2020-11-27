@@ -27,7 +27,6 @@ feature -- Access User Outh
 			l_list: LIST [STRING]
 		do
 			error_handler.reset
-			write_information_log (generator + ".user_oauth2_without_consumer_by_token")
 			l_list := oauth2_consumers
 			from
 				l_list.start
@@ -46,7 +45,6 @@ feature -- Access User Outh
 			l_uid: INTEGER_64
 		do
 			error_handler.reset
-			write_information_log (generator + ".user_oauth2_by_id")
 			create l_parameters.make (1)
 			l_parameters.put (a_uid, "uid")
 			sql_query (select_user_id_oauth2_by_user_id (oauth2_sql_table_name (a_consumer)), l_parameters)
@@ -71,7 +69,6 @@ feature -- Access User Outh
 			l_uid: INTEGER_64
 		do
 			error_handler.reset
-			write_information_log (generator + ".user_oauth2_by_id")
 			create l_parameters.make (1)
 			l_parameters.put (a_oauth_id, "id")
 			sql_query (select_user_id_oauth2_by_id (oauth2_sql_table_name (a_consumer)), l_parameters)
@@ -96,7 +93,6 @@ feature -- Access User Outh
 			l_uid: INTEGER_64
 		do
 			error_handler.reset
-			write_information_log (generator + ".user_by_oauth2_token")
 			create l_parameters.make (1)
 			l_parameters.put (a_token, "token")
 			sql_query (select_user_id_by_oauth2_token (oauth2_sql_table_name (a_consumer)), l_parameters)
@@ -121,7 +117,6 @@ feature --Access: Consumers
 		do
 			error_handler.reset
 			create {ARRAYED_LIST [STRING]} Result.make (0)
-			write_information_log (generator + ".user_by_oauth2_token")
 			sql_query (Sql_oauth_consumers, Void)
 			if not has_error then
 				from
@@ -144,7 +139,6 @@ feature --Access: Consumers
 			l_parameters: STRING_TABLE [detachable ANY]
 		do
 			error_handler.reset
-			write_information_log (generator + ".oauth_consumer_by_name")
 			create l_parameters.make (1)
 			l_parameters.put (a_name, "name")
 			sql_query (sql_oauth_consumer_name, l_parameters)
@@ -165,7 +159,6 @@ feature --Access: Consumers
 			l_parameters: STRING_TABLE [detachable ANY]
 		do
 			error_handler.reset
-			write_information_log (generator + ".oauth_consumer_by_callback")
 			create l_parameters.make (1)
 			l_parameters.put (a_callback, "name")
 			sql_query (sql_oauth_consumer_callback, l_parameters)
@@ -256,8 +249,6 @@ feature -- Change: User OAuth
 			l_parameters: STRING_TABLE [detachable ANY]
 		do
 			error_handler.reset
-
-			write_information_log (generator + ".new_user_oauth2")
 			create l_parameters.make (4)
 			l_parameters.put (a_user.id, "uid")
 			l_parameters.put (a_token, "token")
@@ -276,7 +267,6 @@ feature -- Change: User OAuth
 		do
 			error_handler.reset
 
-			write_information_log (generator + ".update_user_oauth2")
 			create l_parameters.make (4)
 			l_parameters.put (a_user.id, "uid")
 			l_parameters.put (a_token, "token")
@@ -294,7 +284,6 @@ feature -- Change: User OAuth
 		do
 			error_handler.reset
 
-			write_information_log (generator + ".remove_user_oauth2")
 			create l_parameters.make (1)
 			l_parameters.put (a_user.id, "uid")
 

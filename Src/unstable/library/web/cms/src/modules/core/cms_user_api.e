@@ -243,6 +243,7 @@ feature -- Change User
 				error_handler.add_custom_error (0, "bad new user request", "Missing password to create new user!")
 			end
 			if not has_error then
+				cms_api.log ("users", "New user " + cms_api.real_user_display_name (a_user), {CMS_LOG}.level_info, cms_api.user_local_link (a_user, Void))
 				cms_api.hooks.invoke_new_user (a_user)
 			end
 		end

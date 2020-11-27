@@ -467,34 +467,37 @@ feature -- Execution
 			l_path: PATH
 			l_dest_dir: DIRECTORY
 			l_src_dir: DIRECTORY
+			fut: FILE_UTILITIES
 		do
 			l_path := a_module_source_path.location.extended ("site")
-			if a_element /= Void then
-					-- Copy all files under "site/$a_element" into "site/modules/$module_name/$a_element" location.
-				create l_src_dir.make_with_path (l_path.extended (a_element))
-				create l_dest_dir.make_with_path (a_cms_module_target_path.extended (a_element))
-			else
-					-- Copy all files under "site" into "site/modules/$module_name/" location.
-				create l_src_dir.make_with_path (l_path)
-				create l_dest_dir.make_with_path (a_cms_module_target_path)
-			end
-			if not l_dest_dir.exists then
-				l_dest_dir.create_dir
-			end
-			files_count := 0
-			directories_count := -1
-			files_changes_count := 0
+			if fut.directory_path_exists (l_path) then
+				if a_element /= Void then
+						-- Copy all files under "site/$a_element" into "site/modules/$module_name/$a_element" location.
+					create l_src_dir.make_with_path (l_path.extended (a_element))
+					create l_dest_dir.make_with_path (a_cms_module_target_path.extended (a_element))
+				else
+						-- Copy all files under "site" into "site/modules/$module_name/" location.
+					create l_src_dir.make_with_path (l_path)
+					create l_dest_dir.make_with_path (a_cms_module_target_path)
+				end
+				if not l_dest_dir.exists then
+					l_dest_dir.create_dir
+				end
+				files_count := 0
+				directories_count := -1
+				files_changes_count := 0
 
-			if a_module_source_path.is_link_mode then
-				copy_directory (l_src_dir, l_dest_dir, True)
-			else
-				link_directory (l_src_dir, l_dest_dir, True)
-			end
-				-- Detect ecf file (in the future, update main ecf file).
-			if attached ecf_location (a_module_name, a_module_source_path) as l_ecf_loc then
-					-- Found ecf file.
-			elseif not a_module_name.is_case_insensitive_equal ("core") then
-				localized_print_error ({STRING_32} "Missing .ecf file for " + a_module_name + "!%N")
+				if a_module_source_path.is_link_mode then
+					copy_directory (l_src_dir, l_dest_dir, True)
+				else
+					link_directory (l_src_dir, l_dest_dir, True)
+				end
+					-- Detect ecf file (in the future, update main ecf file).
+				if attached ecf_location (a_module_name, a_module_source_path) as l_ecf_loc then
+						-- Found ecf file.
+				elseif not a_module_name.is_case_insensitive_equal ("core") then
+					localized_print_error ({STRING_32} "Missing .ecf file for " + a_module_name + "!%N")
+				end
 			end
 		end
 
@@ -636,6 +639,6 @@ feature {NONE} -- System/copy files
 
 
 note
-	copyright: "2011-2017, Jocelyn Fiat, Javier Velilla, Eiffel Software and others"
+	copyright: "2011-2020, Jocelyn Fiat, Javier Velilla, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 end

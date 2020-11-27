@@ -33,17 +33,17 @@ feature {NONE} -- Initialization
 				create server_url.make_from_string ("https://support.eiffel.com")
 			end
 					-- Storage initialization
---			if attached cms_api.storage.as_sql_storage as l_storage_sql then
---				create {LOGIN_WITH_ESA_STORAGE_SQL} login_with_esa_storage.make (l_storage_sql)
---			else
---					-- FIXME: in case of NULL storage, should Current be disabled?
---				create {LOGIN_WITH_ESA_STORAGE_NULL} login_with_esa_storage
---			end
+			if attached cms_api.storage.as_sql_storage as l_storage_sql then
+				create {LOGIN_WITH_ESA_STORAGE_SQL} login_with_esa_storage.make (l_storage_sql)
+			else
+					-- FIXME: in case of NULL storage, should Current be disabled?
+				create {LOGIN_WITH_ESA_STORAGE_NULL} login_with_esa_storage
+			end
 		end
 
 feature {CMS_MODULE} -- Access storage.
 
---	login_with_esa_storage: LOGIN_WITH_ESA_STORAGE_I
+	login_with_esa_storage: LOGIN_WITH_ESA_STORAGE_I
 
 feature -- Access/ ESA
 
@@ -51,7 +51,7 @@ feature -- Access/ ESA
 
 	is_valid_credential (a_username, a_password: READABLE_STRING_GENERAL): BOOLEAN
 		local
-			log: ESA_SUPPORT_LOGIN
+			acc: ESA_SUPPORT_ACCOUNT
 			cfg: ESA_CLIENT_CONFIGURATION
 			retried: BOOLEAN
 		do
@@ -59,11 +59,9 @@ feature -- Access/ ESA
 				reset_error
 
 				create cfg.make (server_url)
-				create log.make (cfg)
-				log.attempt_logon (a_username, a_password, False)
-				if log.is_logged_in then
-					Result := True
-				end
+				create acc.make (cfg)
+				acc.attempt_logon (a_username, a_password, False)
+				Result := acc.is_logged_in
 			end
 		rescue
 			error_handler.add_custom_error (-1, "Error occurred", Void)
@@ -130,10 +128,39 @@ feature -- Access/ ESA
 
 feature -- Relation with CMS
 
+	esa_account_for_user (u: CMS_USER): detachable ESA_ACCOUNT
+		do
+			Result := login_with_esa_storage.esa_account_for_user (u)
+		end
+
+	user_for_esa_name (a_esa_name: READABLE_STRING_GENERAL): detachable CMS_USER
+		do
+			Result := login_with_esa_storage.user_for_esa_name (a_esa_name)
+		end
+
+	user_for_esa_email (a_esa_email: READABLE_STRING_GENERAL): detachable CMS_USER
+		do
+			Result := login_with_esa_storage.user_for_esa_email (a_esa_email)
+		end
+
+	associate_esa_account (a_user: CMS_USER; a_esa_account : ESA_ACCOUNT)
+		do
+			login_with_esa_storage.associate_esa_account (a_user, a_esa_account)
+			cms_api.log ("login_with_esa", "Associated eiffel.com accout with " + cms_api.real_user_display_name (a_user), {CMS_LOG}.level_info, cms_api.user_local_link (a_user, Void))
+		end
+
+	dissociate_esa_account (a_user: CMS_USER; a_esa_account : ESA_ACCOUNT)
+		do
+			login_with_esa_storage.dissociate_esa_account (a_user, a_esa_account)
+			cms_api.log ("login_with_esa", "Dissociated eiffel.com account from " + cms_api.real_user_display_name (a_user), {CMS_LOG}.level_info, cms_api.user_local_link (a_user, Void))
+		end
+
 	associated_cms_user (a_esa_username, a_password: READABLE_STRING_GENERAL; a_flag_create_user: BOOLEAN): detachable CMS_USER
 			-- CMS user associated with ESA account `a_esa_username:a_password`
 			-- and if none and `a_flag_create_user` then register new user
 			-- with ESA account.
+		require
+			is_valid_credential: is_valid_credential (a_esa_username, a_password)
 		local
 			l_user_api: CMS_USER_API
 		do
@@ -142,7 +169,8 @@ feature -- Relation with CMS
 				Result := l_user_api.user_by_email (a_esa_username)
 			end
 			if Result = Void then
-				Result := l_user_api.user_by_name (a_esa_username)
+				Result := user_for_esa_name (a_esa_username)
+--				Result := l_user_api.user_by_name (a_esa_username)
 			end
 			if Result = Void then
 				if
@@ -150,13 +178,25 @@ feature -- Relation with CMS
 					attached l_esa_account.username as l_esa_user_name and then
 					attached l_esa_account.email as l_esa_user_email
 				then
-						-- Check if email is not already registered...
-					Result := l_user_api.user_by_email (l_esa_user_email)
-					if Result = Void and a_flag_create_user then
-							-- No user with given username or email,
-							-- then register a new user...
-						Result := l_user_api.new_active_user (l_esa_user_name, l_esa_user_email, a_password)
-							-- FIXME: ... store association with ESA in DB?
+						-- Check if ESA name is already registered
+					Result := user_for_esa_name (l_esa_user_name)
+					if Result = Void then
+						Result := user_for_esa_email (l_esa_user_email)
+						if Result /= Void then
+							associate_esa_account (Result, l_esa_account)
+						end
+					end
+					if Result = Void then
+							-- Check if email is not already registered...
+						Result := l_user_api.user_by_email (l_esa_user_email)
+						if Result = Void and a_flag_create_user then
+								-- No user with given username or email,
+								-- then register a new user... but without the ESA password!!!
+							Result := l_user_api.new_active_user (l_esa_user_name, l_esa_user_email, Void)--a_password)
+						end
+						if Result /= Void then
+							associate_esa_account (Result, l_esa_account)
+						end
 					end
 				end
 			end

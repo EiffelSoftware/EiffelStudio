@@ -19,12 +19,12 @@ feature -- Access
 			-- <Precursor>
 		once
 			create Result.make (6)
-			Result.put ({STRING_32} ")", {STRING_32} "(")
-			Result.put ({STRING_32} "]", {STRING_32} "[")
-			Result.put ({STRING_32} "}", {STRING_32} "{")
-			Result.put ({STRING_32} ">>", {STRING_32} "<<")
-			Result.put ({STRING_32} "⟲", {STRING_32} "⟳")
-			Result.put ({STRING_32} "⟧", {STRING_32} "⟦")
+			Result [{STRING_32} "("] := {STRING_32} ")"
+			Result [{STRING_32} "["] := {STRING_32} "]"
+			Result [{STRING_32} "{"] := {STRING_32} "}"
+			Result [{STRING_32} "<<"] := {STRING_32} ">>"
+			Result ["⟳"] := "⟲"
+			Result ["⟦"] := "⟧"
 		end
 
 ;note

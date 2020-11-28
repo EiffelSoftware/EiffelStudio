@@ -1130,7 +1130,6 @@ feature {NONE} -- Implementation: Properties dialog
 			info_width: INTEGER
 			ccw: INTEGER
 			cancelb: EV_BUTTON
-			maxind: INTEGER
 		do
 			create properties_dialog
 			properties_dialog.set_title (Interface_names.t_Feature_properties)

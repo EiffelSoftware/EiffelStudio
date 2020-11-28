@@ -1085,7 +1085,7 @@ feature {NONE} -- Type information
 			when {SK_CONST}.sk_pointer then
 				Result := pointer_type_id
 			else
-				if attached {TYPED_POINTER_A} t as l_typed_pointer then
+				if attached {TYPED_POINTER_A} t then
 					Result := pointer_type_id
 				elseif t.base_class.is_class_any then
 					Result := any_type_id

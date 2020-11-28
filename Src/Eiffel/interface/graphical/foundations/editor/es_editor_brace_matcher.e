@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "[
 			Supports brace match scanning functionality in the editor.
 		]"
@@ -18,15 +18,17 @@ feature -- Access
 	opening_brace_map: HASH_TABLE [STRING_32, STRING_32]
 			-- <Precursor>
 		once
-			create Result.make (4)
-			Result.put (create {STRING_32}.make_from_string (")"), create {STRING_32}.make_from_string ("("))
-			Result.put (create {STRING_32}.make_from_string ("]"), create {STRING_32}.make_from_string ("["))
-			Result.put (create {STRING_32}.make_from_string ("}"), create {STRING_32}.make_from_string ("{"))
-			Result.put (create {STRING_32}.make_from_string (">>"), create {STRING_32}.make_from_string ("<<"))
+			create Result.make (6)
+			Result.put ({STRING_32} ")", {STRING_32} "(")
+			Result.put ({STRING_32} "]", {STRING_32} "[")
+			Result.put ({STRING_32} "}", {STRING_32} "{")
+			Result.put ({STRING_32} ">>", {STRING_32} "<<")
+			Result.put ({STRING_32} "⟲", {STRING_32} "⟳")
+			Result.put ({STRING_32} "⟧", {STRING_32} "⟦")
 		end
 
 ;note
-	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2020, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

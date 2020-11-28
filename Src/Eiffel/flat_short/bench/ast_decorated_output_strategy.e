@@ -377,7 +377,7 @@ feature {NONE} -- Implementation
 				l_as.constant_type.process (Current)
 				if not expr_type_visiting then
 					l_text_formatter_decorator.process_symbol_text (ti_r_curly)
-					l_text_formatter_decorator.process_basic_text (ti_space)
+					l_text_formatter_decorator.put_space
 				end
 			end
 			if not expr_type_visiting then
@@ -639,6 +639,7 @@ feature {NONE} -- Implementation
 				l_type.process (Current)
 				if not expr_type_visiting then
 					l_text_formatter_decorator.process_symbol_text (ti_r_curly)
+					l_text_formatter_decorator.put_space
 				end
 			else
 				last_type := character_type
@@ -665,6 +666,7 @@ feature {NONE} -- Implementation
 				l_type.process (Current)
 				if not expr_type_visiting then
 					l_text_formatter_decorator.process_symbol_text (ti_r_curly)
+					l_text_formatter_decorator.put_space
 				end
 			else
 				last_type := string_type
@@ -836,7 +838,6 @@ feature {NONE} -- Implementation
 			l_rout_id_set: ID_SET
 			l_last_class: like last_class
 			l_last_type: like last_type
-			l_formal: FORMAL_A
 			l_last_type_set: TYPE_SET_A
 			l_is_multiconstraint_formal: BOOLEAN
 			l_type: TYPE_A
@@ -866,8 +867,7 @@ feature {NONE} -- Implementation
 				if not has_error_internal then
 					if last_type /= Void then
 						last_type := last_type.actual_type
-						if last_type.is_formal then
-							l_formal ?= last_type
+						if attached {FORMAL_A} last_type as l_formal then
 							if l_formal.is_multi_constrained (current_class) then
 								l_is_multiconstraint_formal := True
 								l_last_type_set := last_type.to_type_set.constraining_types (current_class)
@@ -1236,7 +1236,6 @@ feature {NONE} -- Implementation
 			chained_assert: CHAINED_ASSERTIONS
 			is_inline_agent: BOOLEAN
 			inline_agent_assertion: ROUTINE_ASSERTIONS
-			l_built_in_as: BUILT_IN_AS
 			l_text_formatter_decorator: like text_formatter_decorator
 			is_next_option: BOOLEAN
 		do
@@ -1361,14 +1360,11 @@ feature {NONE} -- Implementation
 				end
 					-- `end' token should not be printed when the substitution
 					-- of a built-in is an attribute.
-				if not l_as.is_built_in then
+				if
+					attached {BUILT_IN_AS} l_as.routine_body as l_built_in_as implies
+					(attached l_built_in_as.body as b implies not b.is_attribute)
+				then
 					l_text_formatter_decorator.process_keyword_text (ti_end_keyword, Void)
-				else
-					l_built_in_as ?= l_as.routine_body
-					check l_built_in_as_not_void: l_built_in_as /= Void end
-					if l_built_in_as.body /= Void implies not l_built_in_as.body.is_attribute then
-						l_text_formatter_decorator.process_keyword_text (ti_end_keyword, Void)
-					end
 				end
 			end
 			l_text_formatter_decorator.exdent
@@ -1766,7 +1762,6 @@ feature {NONE} -- Implementation
 			l_last_type: TYPE_A
 			l_name: STRING_32
 			l_expr_type: TYPE_A
-			l_formal: FORMAL_A
 			l_feature_list: like feature_from_type_set
 			l_text_formatter_decorator: like text_formatter_decorator
 		do
@@ -1787,8 +1782,7 @@ feature {NONE} -- Implementation
 				end
 			end
 			if not has_error_internal then
-				if l_expr_type.is_formal then
-					l_formal ?= l_expr_type
+				if attached {FORMAL_A} l_expr_type as l_formal then
 					if l_formal.is_multi_constrained (current_class) then
 						l_feature_list := feature_from_type_set (l_formal.constrained_types (current_class), l_as.routine_ids)
 						if not has_error_internal then
@@ -1890,7 +1884,6 @@ feature {NONE} -- Implementation
 		local
 			l_feat: E_FEATURE
 			l_name: STRING_32
-			l_formal: FORMAL_A
 					-- Temporary usage only!
 			l_type: TYPE_A
 			l_left_type: TYPE_A
@@ -1914,8 +1907,7 @@ feature {NONE} -- Implementation
 				last_type := last_type.actual_type
 					-- Find correct left type.
 				l_left_type := last_type
-				if l_left_type.is_formal then
-					l_formal ?= l_left_type
+				if attached {FORMAL_A} l_left_type as l_formal then
 					if l_formal.is_multi_constrained (current_class) then
 						l_is_left_multi_constrained := True
 						l_left_type_set := l_formal.constrained_types (current_class)
@@ -2137,7 +2129,6 @@ feature {NONE} -- Implementation
 		local
 			l_feat: E_FEATURE
 			l_type: TYPE_A
-			l_formal: FORMAL_A
 			l_last_type: TYPE_A
 			l_last_type_set: TYPE_SET_A
 			l_last_class: CLASS_C
@@ -2155,8 +2146,7 @@ feature {NONE} -- Implementation
 			end
 			if not has_error_internal then
 				last_type := last_type.actual_type
-				if last_type.is_formal then
-					l_formal ?= last_type
+				if attached {FORMAL_A} last_type as l_formal then
 					if l_formal.is_multi_constrained (current_class) then
 						l_last_type_set := l_formal.constrained_types (current_class)
 							-- Here we get back the feature and the renamed type where the feature is from (it means that it includes a possible renaming)
@@ -3499,7 +3489,6 @@ feature {NONE} -- Implementation
 			l_constrained_type: TYPE_A
 			l_constrained_type_set: TYPE_SET_A
 			l_is_multi_constrained: BOOLEAN
-			l_formal_dec: FORMAL_CONSTRAINT_AS
 			l_text_formatter_decorator: like text_formatter_decorator
 		do
 			l_text_formatter_decorator := text_formatter_decorator
@@ -3520,10 +3509,7 @@ feature {NONE} -- Implementation
 			end
 			processing_formal_dec := True
 			l_text_formatter_decorator.process_generic_text (l_as.name.name_32)
-			if l_as.has_constraint then
-				l_formal_dec ?= l_as
-				check l_formal_dec_not_void: l_formal_dec /= Void end
-
+			if attached {FORMAL_CONSTRAINT_AS} l_as as l_formal_dec then
 				if l_formal_dec.has_multi_constraints then
 						-- We're in the multi constrained case: G -> {A, B, C}
 					l_is_multi_constrained := True
@@ -3531,7 +3517,6 @@ feature {NONE} -- Implementation
 				else
 					l_constrained_type := l_formal_dec.constraint_type_if_possible (current_class).type
 				end
-
 				l_text_formatter_decorator.put_space
 				l_text_formatter_decorator.set_without_tabs
 				l_text_formatter_decorator.process_symbol_text (ti_constraint)
@@ -3543,7 +3528,6 @@ feature {NONE} -- Implementation
 				if l_is_multi_constrained then
 					l_text_formatter_decorator.process_symbol_text (ti_r_curly)
 				end
-
 				if l_as.has_creation_constraint then
 					from
 						l_as.creation_feature_list.start

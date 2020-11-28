@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "Skeleton for EDITOR_EIFFEL_SCANNER"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -49,8 +49,8 @@ feature -- Access
 	current_group : CONF_GROUP
 			-- Current group
 		do
-			if current_class /= Void then
-				Result ?= current_class.group
+			if attached current_class then
+				Result := current_class.group
 			end
 		end
 
@@ -73,7 +73,7 @@ feature -- Action
 
 	execute (a_string: STRING)
 		do
-			set_input_buffer (new_string_buffer(a_string))
+			set_input_buffer (create {YY_UNICODE_BUFFER}.make_from_utf8_string (a_string))
 			Precursor (a_string)
 		end
 
@@ -111,24 +111,18 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	stone_of_class (a_class: CONF_CLASS): CLASSI_STONE
-			-- Stone of `a_class'
+	stone_of_class (a_class: CONF_CLASS): detachable CLASSI_STONE
+			-- Stone of `a_class'.
 		require
 			a_class_not_void: a_class /= Void
-		local
-			l_class: CLASS_I
 		do
-			l_class ?= a_class
-			check
-				l_class_not_void: l_class /= Void
+			if attached {CLASS_I} a_class as i then
+				if attached i.compiled_class as c then
+					create {CLASSC_STONE} Result.make (c)
+				else
+					create Result.make (i)
+				end
 			end
-			if l_class.is_compiled then
-				create {CLASSC_STONE}Result.make (l_class.compiled_class)
-			else
-				create Result.make (l_class)
-			end
-		ensure
-			result_not_void: Result /= Void
 		end
 
 feature -- Token factory
@@ -160,110 +154,80 @@ feature -- Token factory
 			result_not_void: Result /= Void
 		end
 
-	new_comment (a_str: STRING): EDITOR_TOKEN_COMMENT
-		require
-			a_str_not_void: a_str /= Void
+	new_comment: EDITOR_TOKEN_COMMENT
+			-- A new comment token from the current `unicode_text`.
 		do
-			create Result.make (utf8_to_utf32 (a_str))
+			create Result.make (unicode_text)
 		ensure
 			result_not_void: Result /= Void
 		end
 
-	new_text_in_comment (a_str: STRING): EDITOR_TOKEN_QUOTED_FEATURE_IN_COMMENT
-		require
-			a_str_not_void: a_str /= Void
+	new_text_in_comment: EDITOR_TOKEN_QUOTED_FEATURE_IN_COMMENT
+			-- A new text-inside-comment token from the current `unicode_text`.
 		do
-			create Result.make (utf8_to_utf32 (a_str))
+			create Result.make (unicode_text)
 		ensure
 			result_not_void: Result /= Void
 		end
 
-
-	new_text (a_str: STRING): EDITOR_TOKEN_TEXT
-		require
-			a_str_not_void: a_str /= Void
+	new_text: EDITOR_TOKEN_TEXT
+			-- A new text token from the current `unicode_text`.
 		do
-			create Result.make (utf8_to_utf32 (a_str))
+			create Result.make (unicode_text)
 		ensure
 			result_not_void: Result /= Void
 		end
 
-	new_operator (a_str: STRING): EDITOR_TOKEN_OPERATOR
-		require
-			a_str_not_void: a_str /= Void
+	new_operator: EDITOR_TOKEN_OPERATOR
+			-- A new operator token from the current `unicode_text`.
 		do
-			create Result.make (utf8_to_utf32 (a_str))
+			create Result.make (unicode_text)
 		ensure
 			result_not_void: Result /= Void
 		end
 
-	new_keyword (a_str: STRING): EDITOR_TOKEN_KEYWORD
-		require
-			a_str_not_void: a_str /= Void
+	new_keyword: EDITOR_TOKEN_KEYWORD
+			-- A new keyword token from the current `unicode_text`.
 		do
-			create Result.make (utf8_to_utf32 (a_str))
+			create Result.make (unicode_text)
 		ensure
 			result_not_void: Result /= Void
 		end
 
-	new_class (a_str: STRING): EDITOR_TOKEN_CLASS
-		require
-			a_str_not_void: a_str /= Void
+	new_class: EDITOR_TOKEN_CLASS
+			-- A new class token from the current `unicode_text`.
 		do
-			create Result.make (utf8_to_utf32 (a_str))
+			create Result.make (unicode_text)
 		ensure
 			result_not_void: Result /= Void
 		end
 
-	new_character (a_str: STRING): EDITOR_TOKEN_CHARACTER
-		require
-			a_str_not_void: a_str /= Void
+	new_character: EDITOR_TOKEN_CHARACTER
+			-- A new character token from the current `unicode_text`.
 		do
-			create Result.make (utf8_to_utf32 (a_str))
+			create Result.make (unicode_text)
 		ensure
 			result_not_void: Result /= Void
 		end
 
-	new_string (a_str: STRING): EDITOR_TOKEN_STRING
-		require
-			a_str_not_void: a_str /= Void
+	new_string: EDITOR_TOKEN_STRING
+			-- A new string token from the current `unicode_text`.
 		do
-			create Result.make (utf8_to_utf32 (a_str))
+			create Result.make (unicode_text)
 		ensure
 			result_not_void: Result /= Void
 		end
 
-	new_number (a_str: STRING): EDITOR_TOKEN_NUMBER
-		require
-			a_str_not_void: a_str /= Void
+	new_number: EDITOR_TOKEN_NUMBER
+			-- A new number token from the current `unicode_text`.
 		do
-			create Result.make (utf8_to_utf32 (a_str))
+			create Result.make (unicode_text)
 		ensure
 			result_not_void: Result /= Void
 		end
-
-feature {NONE} -- Encoding conversion
-
-	utf8_to_utf32 (a_string: STRING_8): STRING_32
-			-- UTF32 to UTF8 conversion, Eiffel implementation.
-		require
-			a_string_not_void: a_string /= Void
-		do
-			utf8.convert_to (utf32, a_string)
-			if utf8.last_conversion_successful then
-				Result := utf8.last_converted_string_32
-			else
-				Result := a_string
-			end
-		ensure
-			Result_not_void: Result /= Void
-		end
-
-invariant
-	invariant_clause: True -- Your invariant here
 
 note
-	copyright:	"Copyright (c) 1984-2016, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2020, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

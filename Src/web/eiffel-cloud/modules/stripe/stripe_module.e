@@ -7,12 +7,11 @@ class
 	STRIPE_MODULE
 
 inherit
-	CMS_MODULE
+	CMS_MODULE_WITH_SQL_STORAGE
 		rename
 			module_api as stripe_api
 		redefine
 			initialize,
-			install,
 			setup_hooks,
 			stripe_api,
 			permissions
@@ -118,22 +117,6 @@ feature {CMS_API} -- Module Initialization
 			create Result.make_from_string (s)
 			Result.left_adjust
 			Result.right_adjust
-		end
-
-feature {CMS_API} -- Module management
-
-	install (api: CMS_API)
-		do
-				-- Schema
-			if attached api.storage.as_sql_storage as l_sql_storage then
-				l_sql_storage.sql_execute_file_script (api.module_resource_location (Current, (create {PATH}.make_from_string ("scripts")).extended ("install.sql")), Void)
-
-				if l_sql_storage.has_error then
-					api.logger.put_error ("Could not initialize database for module [" + name + "]", generating_type)
-				else
-					Precursor {CMS_MODULE} (api)
-				end
-			end
 		end
 
 feature {NONE} -- Administration

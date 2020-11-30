@@ -7,7 +7,7 @@ class
 	LOGIN_WITH_ESA_MODULE
 
 inherit
-	CMS_MODULE
+	CMS_MODULE_WITH_SQL_STORAGE
 		rename
 			module_api as login_with_esa_api
 		redefine
@@ -74,15 +74,7 @@ feature {CMS_API} -- Module management
 
 	install (api: CMS_API)
 		do
-				-- Schema
-			if attached api.storage.as_sql_storage as l_sql_storage then
-				l_sql_storage.sql_execute_file_script (api.module_resource_location (Current, (create {PATH}.make_from_string ("scripts")).extended ("install.sql")), Void)
-				if l_sql_storage.has_error then
-					api.logger.put_error ("Could not initialize database for module [" + name + "]", generating_type)
-				else
-					Precursor {CMS_MODULE} (api)
-				end
-			end
+			Precursor (api)
 			if
 				is_installed (api) and then
 				attached api.user_api.anonymous_user_role as ano

@@ -7,13 +7,12 @@ class
 	ES_CLOUD_MODULE
 
 inherit
-	CMS_MODULE
+	CMS_MODULE_WITH_SQL_STORAGE
 		rename
 			module_api as es_cloud_api
 		redefine
 			initialize,
 			install,
-			update,
 			setup_hooks,
 			es_cloud_api,
 			permissions
@@ -112,16 +111,7 @@ feature {CMS_API} -- Module management
 			pl: ES_CLOUD_PLAN
 			l_es_cloud_api: like es_cloud_api
 		do
-				-- Schema
-			if attached api.storage.as_sql_storage as l_sql_storage then
-				l_sql_storage.sql_execute_file_script (api.module_resource_location (Current, (create {PATH}.make_from_string ("scripts")).extended ("install.sql")), Void)
-
-				if l_sql_storage.has_error then
-					api.logger.put_error ("Could not initialize database for module [" + name + "]: " + utf_8_encoded (l_sql_storage.error_handler.as_string_representation), generating_type)
-				else
-					Precursor {CMS_MODULE} (api)
-				end
-			end
+			Precursor {CMS_MODULE_WITH_SQL_STORAGE} (api)
 			if is_installed (api) then
 				create l_es_cloud_api.make (Current, api)
 				es_cloud_api := l_es_cloud_api
@@ -135,41 +125,6 @@ feature {CMS_API} -- Module management
 					l_anonymous_role.add_permission ("use jwt_auth")
 					api.user_api.save_user_role (l_anonymous_role)
 				end
-			end
-		end
-
-	update (a_installed_version: READABLE_STRING_GENERAL; api: CMS_API)
-			-- Update module from version `a_installed_version` to current `version`.
-		local
-			v_from, v_to: STRING_32
-			p: PATH
-		do
-				-- Schema
-			if attached api.storage.as_sql_storage as l_sql_storage then
-				v_from := a_installed_version
-				v_from.left_adjust
-				v_from.right_adjust
-				v_to := version
-				v_to.left_adjust
-				v_to.right_adjust
-				v_from.replace_substring_all (".", "_")
-				v_to.replace_substring_all (".", "_")
-				create p.make_from_string ("scripts")
-				p := p.extended ("update-")
-				p := p.appended (v_from)
-				p := p.appended ("-")
-				p := p.appended (v_to)
-				p := p.appended_with_extension ("sql")
-
-				l_sql_storage.sql_execute_file_script (api.module_resource_location (Current, p), Void)
-
-				if l_sql_storage.has_error then
-					api.log_error (name, "Could not update database for module [" + name + "]: " + utf_8_encoded (l_sql_storage.error_handler.as_string_representation), Void)
-				else
-					Precursor {CMS_MODULE} (a_installed_version, api)
-				end
-			else
-				Precursor (a_installed_version, api)
 			end
 		end
 

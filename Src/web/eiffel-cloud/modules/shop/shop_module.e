@@ -7,12 +7,11 @@ class
 	SHOP_MODULE
 
 inherit
-	CMS_MODULE
+	CMS_MODULE_WITH_SQL_STORAGE
 		rename
 			module_api as shop_api
 		redefine
 			initialize,
-			install,
 			setup_hooks,
 			shop_api,
 			permissions
@@ -90,24 +89,6 @@ feature {CMS_API} -- Module Initialization
 					end
 					create shop_api.make (Current, api, cfg)
 				end
-			end
-		end
-
-feature {CMS_API} -- Module management
-
-	install (api: CMS_API)
-		do
-			Precursor (api)
-			if attached api.storage.as_sql_storage as l_sql_storage then
-				l_sql_storage.sql_execute_file_script (api.module_resource_location (Current, (create {PATH}.make_from_string ("scripts")).extended ("install.sql")), Void)
-
-				if l_sql_storage.has_error then
-					api.logger.put_error ("Could not initialize database for module [" + name + "]", generating_type)
-				else
-					Precursor {CMS_MODULE} (api)
-				end
-			end
-			if is_installed (api) then
 			end
 		end
 

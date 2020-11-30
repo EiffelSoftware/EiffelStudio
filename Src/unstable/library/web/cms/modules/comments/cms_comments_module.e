@@ -9,13 +9,12 @@ class
 	CMS_COMMENTS_MODULE
 
 inherit
-	CMS_MODULE
+	CMS_MODULE_WITH_SQL_STORAGE
 		rename
 			module_api as comments_api
 		redefine
 			setup_hooks,
 			initialize,
-			install,
 			comments_api
 		end
 
@@ -44,22 +43,6 @@ feature {CMS_API} -- Module Initialization
 		do
 			Precursor (api)
 			create comments_api.make (api)
-		end
-
-feature {CMS_API} -- Module management
-
-	install (a_api: CMS_API)
-		do
-				-- Schema
-			if attached a_api.storage.as_sql_storage as l_sql_storage then
-				l_sql_storage.sql_execute_file_script (a_api.module_resource_location (Current, (create {PATH}.make_from_string ("scripts")).extended ("install.sql")), Void)
-
-				if l_sql_storage.has_error then
-					a_api.report_error ("[" + name + "]: installation failed!", l_sql_storage.error_handler.as_string_representation)
-				else
-					Precursor {CMS_MODULE} (a_api)
-				end
-			end
 		end
 
 feature {CMS_API} -- Access: API

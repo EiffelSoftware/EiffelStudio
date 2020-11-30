@@ -7,13 +7,13 @@ class
 	CMS_PAGE_MODULE
 
 inherit
-	CMS_MODULE
+	CMS_MODULE_WITH_SQL_STORAGE
 		rename
 			module_api as page_api
 		redefine
 			setup_hooks,
 			initialize,
-			install, is_installed,
+			is_installed,
 			page_api
 		end
 
@@ -96,23 +96,8 @@ feature {CMS_API} -- Module management
 			-- Is Current module installed?
 		do
 			Result := Precursor (a_api)
-			if Result and attached a_api.storage.as_sql_storage as l_sql_storage then
-				Result := l_sql_storage.sql_table_exists ("page_nodes")
-			end
-		end
-
-	install (a_api: CMS_API)
-		do
-				-- Schema
-			if attached a_api.storage.as_sql_storage as l_sql_storage then
-				if attached a_api.installed_module ({CMS_NODE_MODULE}) as l_node_module then
-					l_sql_storage.sql_execute_file_script (a_api.module_resource_location (l_node_module, (create {PATH}.make_from_string ("scripts")).extended (name).appended_with_extension ("sql")), Void)
-				end
-				if l_sql_storage.has_error then
-					a_api.report_error ("[" + name + "]: installation failed!", l_sql_storage.error_handler.as_string_representation)
-				else
-					Precursor {CMS_MODULE} (a_api)
-				end
+			if Result then
+				Result := has_sql_table ("page_nodes", a_api)
 			end
 		end
 

@@ -9,14 +9,13 @@ class
 	CMS_TAXONOMY_MODULE
 
 inherit
-	CMS_MODULE
+	CMS_MODULE_WITH_SQL_STORAGE
 		rename
 			module_api as taxonomy_api
 		redefine
 			setup_hooks,
 			initialize,
 			install,
-			uninstall,
 			taxonomy_api,
 			permissions
 		end
@@ -73,35 +72,16 @@ feature {CMS_API} -- Module management
 			voc: CMS_VOCABULARY
 			l_taxonomy_api: like taxonomy_api
 		do
-				-- Schema
-			if attached {CMS_STORAGE_SQL_I} api.storage as l_sql_storage then
-				l_sql_storage.sql_execute_file_script (api.module_resource_location (Current, (create {PATH}.make_from_string ("scripts")).extended ("install.sql")), Void)
-				if l_sql_storage.has_error then
-					api.report_error ("[" + name + "]: installation failed!", l_sql_storage.error_handler.as_string_representation)
-				else
-					Precursor (api)
-
-						-- Populate
-					create l_taxonomy_api.make (api)
-					create voc.make ("Tags")
-					voc.set_description ("Enter comma separated tags.")
-					l_taxonomy_api.save_vocabulary (voc)
-					voc.set_is_tags (True)
-					l_taxonomy_api.associate_vocabulary_with_type (voc, "page")
-				end
-			end
-		end
-
-	uninstall (api: CMS_API)
-			-- (export status {CMS_API})
-		do
-			if attached {CMS_STORAGE_SQL_I} api.storage as l_sql_storage then
-				l_sql_storage.sql_execute_file_script (api.module_resource_location (Current, (create {PATH}.make_from_string ("scripts")).extended ("uninstall").appended_with_extension ("sql")), Void)
-				if l_sql_storage.has_error then
-					api.logger.put_error ("Could not remove database for taxonomy module", generating_type)
-				end
-			end
 			Precursor (api)
+			if is_installed (api) then
+					-- Populate
+				create l_taxonomy_api.make (api)
+				create voc.make ("Tags")
+				voc.set_description ("Enter comma separated tags.")
+				l_taxonomy_api.save_vocabulary (voc)
+				voc.set_is_tags (True)
+				l_taxonomy_api.associate_vocabulary_with_type (voc, "page")
+			end
 		end
 
 feature {CMS_API, CMS_MODULE_API, CMS_MODULE} -- Access: API

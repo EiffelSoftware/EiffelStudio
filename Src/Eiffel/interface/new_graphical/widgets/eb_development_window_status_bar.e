@@ -528,7 +528,7 @@ feature {NONE} -- Implementation: event handling
 				compilation_icon.set_tooltip (interface_names.e_compilation_succeeded)
 				on_project_updated
 			when {WORKBENCH_I}.compilation_status_with_warning then
-				p := pixmaps.icon_pixmaps.tool_warning_icon
+				p := pixmaps.icon_pixmaps.compile_warning_icon
 				compilation_icon.set_tooltip (interface_names.e_compilation_succeeded_with_warning)
 				on_project_updated
 			else

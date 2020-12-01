@@ -3276,8 +3276,7 @@ feature {NONE} -- Visitor
 				end
 					-- Set some type attributes of the node.
 				if not is_inherited then
-					l_as.enable_argument
-					l_as.set_argument_position (l_arg_pos)
+					set_argument_position (l_arg_pos, l_as)
 					l_as.set_class_id (class_id_of (l_type))
 				end
 			else
@@ -3333,7 +3332,7 @@ feature {NONE} -- Visitor
 					end
 					if not is_inherited then
 							-- set some type attributes of the node
-						l_as.enable_local
+						set_local (l_as)
 						l_as.set_class_id (class_id_of (l_type))
 					end
 				elseif attached context.object_test_local (l_as.feature_name.name_id) as i then
@@ -3406,7 +3405,7 @@ feature {NONE} -- Visitor
 				l_local_info.enable_is_cursor
 				if not old_is_inherited then
 						-- Record type information for analysis tools.
-					l_as.enable_object_test_local
+					set_inline_local (l_as)
 					if attached last_type as t then
 						l_as.set_class_id (class_id_of (t))
 					end
@@ -3417,7 +3416,7 @@ feature {NONE} -- Visitor
 				is_controlled := l_local_info.is_controlled
 				l_type := l_local_info.type.instantiation_in (last_type.as_implicitly_detachable.as_variant_free, last_type.base_class.class_id)
 				if not is_inherited then
-					l_as.enable_object_test_local
+					set_inline_local (l_as)
 					l_as.set_class_id (class_id_of (l_type))
 				end
 				if is_byte_node_enabled then
@@ -3484,9 +3483,7 @@ feature {NONE} -- Visitor
 					last_byte_node := l_argument
 				end
 				if not is_inherited then
-						-- set some type attributes of the node
-					l_as.enable_argument
-					l_as.set_argument_position (l_arg_pos)
+					set_argument_position (l_arg_pos, l_as)
 					l_as.set_class_id (class_id_of (last_type))
 				end
 				if attached l_as.parameters as p then
@@ -12071,6 +12068,40 @@ feature {INSPECT_CONTROL} -- AST modification
 			end
 		ensure
 			routine_ids_set: ids.is_equal_id_list (a)
+		end
+
+	set_argument_position (p: like {ACCESS_INV_AS}.argument_position; a: ACCESS_INV_AS)
+			-- Set position of an argument `a` to `p`.
+		do
+			if not a.is_argument or a.argument_position /= p then
+				a.enable_argument
+				a.set_argument_position (p)
+					-- Record that AST node is modified.
+				tmp_ast_server.touch (context.current_class.class_id)
+				is_ast_modified := True
+			end
+		end
+
+	set_local (a: ACCESS_INV_AS)
+			-- Mark `a` as a local variable.
+		do
+			if not a.is_local then
+				a.enable_local
+					-- Record that AST node is modified.
+				tmp_ast_server.touch (context.current_class.class_id)
+				is_ast_modified := True
+			end
+		end
+
+	set_inline_local (a: ACCESS_INV_AS)
+			-- Mark `a` as an inline local variable.
+		do
+			if not a.is_object_test_local then
+				a.enable_object_test_local
+					-- Record that AST node is modified.
+				tmp_ast_server.touch (context.current_class.class_id)
+				is_ast_modified := True
+			end
 		end
 
 feature {NONE} -- Separateness

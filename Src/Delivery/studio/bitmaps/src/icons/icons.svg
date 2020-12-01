@@ -621,12 +621,9 @@
 <image x="500" y="1900" width="100" height="100" xlink:href="./20/6.svg" />
 <image x="600" y="1900" width="100" height="100" xlink:href="./20/7.svg" />
 <image x="700" y="1900" width="100" height="100" xlink:href="./20/8.svg" />
-<rect x="800" y="1900" width="100" height="100" fill="transparent" />
-<image x="800" y="1900" width="100" height="100" xlink:href="./20/9.png" />
-<rect x="900" y="1900" width="100" height="100" fill="transparent" />
-<image x="900" y="1900" width="100" height="100" xlink:href="./20/10.png" />
-<rect x="1000" y="1900" width="100" height="100" fill="transparent" />
-<image x="1000" y="1900" width="100" height="100" xlink:href="./20/11.png" />
+<image x="800" y="1900" width="100" height="100" xlink:href="./20/9.svg" />
+<image x="900" y="1900" width="100" height="100" xlink:href="./20/10.svg" />
+<image x="1000" y="1900" width="100" height="100" xlink:href="./20/11.svg" />
 <rect x="1100" y="1900" width="100" height="100" fill="transparent" />
 <image x="1100" y="1900" width="100" height="100" xlink:href="./20/12.png" />
 <rect x="1200" y="1900" width="100" height="100" fill="transparent" />

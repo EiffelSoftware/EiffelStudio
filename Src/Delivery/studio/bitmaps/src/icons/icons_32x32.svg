@@ -621,12 +621,9 @@
 <image x="166" y="628" width="32" height="32" xlink:href="./20/6.svg" />
 <image x="199" y="628" width="32" height="32" xlink:href="./20/7.svg" />
 <image x="232" y="628" width="32" height="32" xlink:href="./20/8.svg" />
-<rect x="265" y="628" width="32" height="32" fill="transparent" />
-<image x="265" y="628" width="32" height="32" xlink:href="./20/9.png" />
-<rect x="298" y="628" width="32" height="32" fill="transparent" />
-<image x="298" y="628" width="32" height="32" xlink:href="./20/10.png" />
-<rect x="331" y="628" width="32" height="32" fill="transparent" />
-<image x="331" y="628" width="32" height="32" xlink:href="./20/11.png" />
+<image x="265" y="628" width="32" height="32" xlink:href="./20/9.svg" />
+<image x="298" y="628" width="32" height="32" xlink:href="./20/10.svg" />
+<image x="331" y="628" width="32" height="32" xlink:href="./20/11.svg" />
 <rect x="364" y="628" width="32" height="32" fill="transparent" />
 <image x="364" y="628" width="32" height="32" xlink:href="./20/12.png" />
 <rect x="397" y="628" width="32" height="32" fill="transparent" />

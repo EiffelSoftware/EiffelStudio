@@ -30,6 +30,7 @@ feature {NONE} -- Initialization
 			pick_ended_actions.extend (agent on_pick_ended)
 			set_item_pebble_function (agent on_pick)
 			set_focused_selection_color (preferences.editor_data.selection_background_color)
+			set_focused_selection_text_color (preferences.editor_data.selection_text_color)
 			set_non_focused_selection_color (preferences.editor_data.focus_out_selection_background_color)
 		end
 
@@ -81,11 +82,8 @@ feature {NONE} -- Implementation
 	last_picked_item: EV_GRID_ITEM
 			-- Last picked item
 
-invariant
-	invariant_clause: True -- Your invariant here
-
-note
-	copyright: "Copyright (c) 1984-2018, Eiffel Software"
+;note
+	copyright: "Copyright (c) 1984-2020, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

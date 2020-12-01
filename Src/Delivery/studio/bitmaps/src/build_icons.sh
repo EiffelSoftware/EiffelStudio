@@ -865,7 +865,11 @@ EnterRow 20
 # animation 8
 # 8.svg
 # error
+SVGadd 8.svg $OVERLAY/red_cross_c.svg 9.svg
 # success
+SVGadd 8.svg $OVERLAY/green_mark_c.svg 10.svg
+# warning
+SVGadd 8.svg $OVERLAY/warning_c.svg 11.svg
 # 
 # [@run]
 # animation 1

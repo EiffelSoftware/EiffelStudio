@@ -164,6 +164,9 @@ if nb > 1:
 		elif reg == 'w':
 			x=0
 			y=l_page_size / 4 / l_scale
+		elif reg == 'c':
+			x=l_page_size / 4 / l_scale
+			y=l_page_size / 4 / l_scale
 		else:
 			# same as 'c' for center
 			x=l_page_size / 4 / l_scale

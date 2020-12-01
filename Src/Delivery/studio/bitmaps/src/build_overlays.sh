@@ -25,6 +25,9 @@ SVGoverlays() {
 	SVGoverlay nw ${l_opt} res/${l_name}.svg res/overlay/${l_name}_nw.svg
 	SVGoverlay w  ${l_opt} res/${l_name}.svg res/overlay/${l_name}_w.svg
 	SVGoverlay e  ${l_opt} res/${l_name}.svg res/overlay/${l_name}_e.svg
+	SVGoverlay n  ${l_opt} res/${l_name}.svg res/overlay/${l_name}_n.svg
+	SVGoverlay s  ${l_opt} res/${l_name}.svg res/overlay/${l_name}_s.svg
+	SVGoverlay c  ${l_opt} res/${l_name}.svg res/overlay/${l_name}_c.svg
 }
 
 SVGoverlays class
@@ -75,5 +78,11 @@ SVGoverlay ne res/close.svg res/overlay/close_ne.svg
 
 SVGclean res/green_mark.svg
 SVGoverlay s res/green_mark.svg res/overlay/green_mark_s.svg
+SVGoverlay n res/green_mark.svg res/overlay/green_mark_n.svg
+SVGoverlay c res/green_mark.svg res/overlay/green_mark_c.svg
+
+SVGclean res/red_cross.svg
+SVGoverlay n res/red_cross.svg res/overlay/red_cross_n.svg
+SVGoverlay c res/red_cross.svg res/overlay/red_cross_c.svg
 
 

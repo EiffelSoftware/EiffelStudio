@@ -1493,9 +1493,9 @@ feature -- Application change
 
 feature -- Compilation events
 
-	on_project_recompiled (is_successful: BOOLEAN)
+	on_project_recompiled (s: like {WORKBENCH_I}.compilation_status)
 		do
-			if is_successful then
+			if s /= {WORKBENCH_I}.compilation_status_with_error then
 				if attached breakpoints_manager as bp then
 					if bp.has_breakpoint then
 						Degree_output.put_resynchronizing_breakpoints_message

@@ -45,7 +45,7 @@ feature -- Access
 
 feature -- Event
 
-	on_project_recompiled (a_is_successfull: BOOLEAN)
+	on_project_recompiled (s: like {WORKBENCH_I}.compilation_status)
 		local
 			l_stats: like project_session_statistics
 		do
@@ -69,7 +69,7 @@ feature -- Event
 				end
 			end
 
-			l_stats.on_project_recompiled (a_is_successfull)
+			l_stats.on_project_recompiled (s /= {WORKBENCH_I}.compilation_status_with_error)
 			on_update
 		end
 

@@ -477,7 +477,7 @@ feature {NONE} -- Implementation: event handling
 					on_application_exited (dbg)
 				end
 				if not eiffel_project.workbench.is_compiling then
-					on_project_compiled (eiffel_project.workbench.successful)
+					on_project_compiled (eiffel_project.workbench.compilation_status)
 				end
 			end
 		end
@@ -513,20 +513,27 @@ feature {NONE} -- Implementation: event handling
 			end
 		end
 
-	on_project_compiled (is_successful: BOOLEAN)
+	on_project_compiled (s: like {WORKBENCH_I}.compilation_status)
 			-- The project has finished compiling.
+		require
+			{WORKBENCH_I}.is_compilation_status (s)
 		local
 			p: EV_PIXMAP
 		do
 			set_project_name (current_project_name)
 			compiling_timer.set_interval (0)
-			if is_successful then
+			inspect s
+			when {WORKBENCH_I}.compilation_status_without_complaint then
 				p := pixmaps.icon_pixmaps.compile_success_icon
-				compilation_icon.set_tooltip (Interface_names.E_compilation_succeeded)
+				compilation_icon.set_tooltip (interface_names.e_compilation_succeeded)
+				on_project_updated
+			when {WORKBENCH_I}.compilation_status_with_warning then
+				p := pixmaps.icon_pixmaps.tool_warning_icon
+				compilation_icon.set_tooltip (interface_names.e_compilation_succeeded_with_warning)
 				on_project_updated
 			else
 				p := pixmaps.icon_pixmaps.compile_error_icon
-				compilation_icon.set_tooltip (Interface_names.E_compilation_failed)
+				compilation_icon.set_tooltip (interface_names.e_compilation_failed)
 			end
 			compilation_icon.set_background_color (debugger_cell.background_color)
 			compilation_icon.clear
@@ -557,7 +564,7 @@ feature {NONE} -- Implementation: event handling
 	compile_start_agent: PROCEDURE
 			-- Agent called when the project is compiled.
 
-	compile_stop_agent: PROCEDURE [BOOLEAN]
+	compile_stop_agent: PROCEDURE [like {WORKBENCH_I}.compilation_status]
 			-- Agent called when the project's compilation is over.
 
 feature {NONE} -- Implementation

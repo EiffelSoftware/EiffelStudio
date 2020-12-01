@@ -79,16 +79,16 @@ feature {NONE} -- Cell
 			end
 		end
 
-	debugger_on_project_recompiled (is_successful: BOOLEAN)
+	debugger_on_project_recompiled (s: NATURAL_8)
 			-- Propagate `Project recompiled' event to `debugger_manager'
 		do
 			if attached Debugger_manager_cell.item as dm then
-				dm.on_project_recompiled (is_successful)
+				dm.on_project_recompiled (s)
 			end
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2011, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2020, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

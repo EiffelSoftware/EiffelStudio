@@ -246,6 +246,9 @@ feature -- Properties
 	successful: BOOLEAN
 			-- Was the last recompilation successful?
 
+	has_warning: BOOLEAN
+			-- Were there warnings during last compilation?
+
 	is_config_changed: BOOLEAN
 			-- Has configuration file changed?
 
@@ -1721,9 +1724,11 @@ feature -- Recompilation
 			do_recompilation (is_for_finalization, a_syntax_analysis, a_system_check, a_generate_code)
 
 			successful := True
+			has_warning := error_handler.has_warning
 		rescue
 			if Rescue_status.is_error_exception then
 				successful := False
+				has_warning := error_handler.has_warning
 			end
 		end
 
@@ -3376,6 +3381,7 @@ feature -- Final mode generation
 			Eiffel_table.wipe_out
 			History_control.wipe_out
 			successful := False
+			has_warning := error_handler.has_warning
 
 				-- Restore previous value.
 			set_dead_code (old_dead_code)

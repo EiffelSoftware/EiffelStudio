@@ -1,10 +1,11 @@
-note
+﻿note
 	description	: "Interface between an eiffel project and the user interface, if any."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
-	author		: "Xavier Rousselot"
-	date		: "$Date$"
-	revision	: "$Revision$"
+	author: "Xavier Rousselot"
+	revised_by: "Alexander Kogtenkov"
+	date: "$Date$"
+	revision: "$Revision$"
 
 class
 	EB_PROJECT_MANAGER
@@ -116,22 +117,22 @@ feature -- Basic operations
 		require
 			project_created: is_created
 		do
-			compile_start_agents.call (Void)
+			compile_start_agents.call
 		end
 
-	on_project_recompiled (is_successful: BOOLEAN)
-			-- `project' ends a compilation (not necessarily successfully).
+	on_project_recompiled (s: like {WORKBENCH_I}.compilation_status)
+			-- The project ends a compilation with the specified status `s`.
 		require
 			project_created: is_created
 		do
-			compile_stop_agents.call ([is_successful])
+			compile_stop_agents.call (s)
 		end
 
 invariant
 	project_not_void: project /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2017, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2020, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
@@ -162,4 +163,4 @@ note
 			Customer support http://support.eiffel.com
 		]"
 
-end -- class EB_PROJECT_MANAGER
+end

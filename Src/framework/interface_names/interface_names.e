@@ -2801,6 +2801,7 @@ feature -- Description texts
 	e_Check_exports: STRING_32			do Result := locale.translation("Check the validity of the library definition")	end
 	e_Compilation_failed: STRING_32		do Result := locale.translation("Eiffel Compilation Failed")	end
 	e_Compilation_succeeded: STRING_32	do Result := locale.translation("Eiffel Compilation Succeeded")	end
+	e_Compilation_succeeded_with_warning: STRING_32	do Result := locale.translation ("Eiffel Compilation Succeeded with warnings") end
 	e_freezing_failed: STRING_32 		do Result := locale.translation("Background Workbench C Compilation Failed")	end
 	e_finalizing_failed: STRING_32		do Result := locale.translation("Background Finalized C compilation Failed")	end
 	e_force_execution_mode: STRING_32		do Result := locale.translation("Force the environment to stay in execution mode")	end

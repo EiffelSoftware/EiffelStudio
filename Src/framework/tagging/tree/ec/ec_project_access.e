@@ -24,7 +24,7 @@ feature {NONE} -- Initialization
 		do
 			project := a_project
 			l_manager := project.manager
-			l_agent := agent
+			l_agent := agent (s: like {WORKBENCH_I}.compilation_status)
 				do
 					increase_build
 				end
@@ -108,7 +108,7 @@ feature -- Element retrival
 		end
 
 note
-	copyright: "Copyright (c) 1984-2012, Eiffel Software"
+	copyright: "Copyright (c) 1984-2020, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

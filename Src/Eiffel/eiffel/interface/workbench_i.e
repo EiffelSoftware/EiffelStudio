@@ -98,6 +98,47 @@ feature -- Attributes
 			end
 		end
 
+feature -- Status report: compilation
+
+	compilation_status_without_complaint: like compilation_status = 0
+			-- The status of a compilation finished without an issue.
+
+	compilation_status_with_warning: like compilation_status = 1
+			-- The status of a compilation finished without an error but with one or more warning.
+
+	compilation_status_with_error: like compilation_status = 2
+			-- The status of a compilation finished with one or more errors.
+
+	is_compilation_status (v: like compilation_status): BOOLEAN
+			-- Does `v` represent a valid compilation status value.
+			-- See `compilation_status`.
+		do
+			Result :=
+				(<<compilation_status_without_complaint,
+				compilation_status_with_warning,
+				compilation_status_with_error>>).has (v)
+		ensure
+			class
+			definition: Result =
+				(<<compilation_status_without_complaint,
+				compilation_status_with_warning,
+				compilation_status_with_error>>).has (v)
+		end
+
+	compilation_status: NATURAL_8
+			-- Status of last compilation.
+		do
+			if not successful then
+				Result := compilation_status_with_error
+			elseif attached system as s and then s.has_warning then
+				Result := compilation_status_with_warning
+			else
+				Result := compilation_status_without_complaint
+			end
+		ensure
+			is_compilation_status (Result)
+		end
+
 feature -- Update
 
 	set_lace (a_lace: like lace)
@@ -680,7 +721,7 @@ feature {E_PROJECT} -- Status update
 		do
 			is_compiling := False
 			if eiffel_project.manager.is_created then
-				Eiffel_project.Manager.on_project_recompiled (successful)
+				Eiffel_project.Manager.on_project_recompiled (compilation_status)
 			end
 		end
 

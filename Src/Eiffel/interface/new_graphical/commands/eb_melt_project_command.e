@@ -156,16 +156,17 @@ feature {NONE} -- Compilation implementation
 	display_eiffel_compilation_status
 			-- Display status of eiffel compilation.
 		do
-			if Workbench.successful then
-				degree_output.put_new_line
-				degree_output.put_string (Interface_names.e_compilation_succeeded)
-				degree_output.put_new_line
-			else
-					-- Need extra break because failure is unexpected.
-				degree_output.put_new_line
-				degree_output.put_string (Interface_names.e_compilation_failed)
-				degree_output.put_new_line
-			end
+			degree_output.put_new_line
+			degree_output.put_string
+				(inspect workbench.compilation_status
+				when {WORKBENCH_I}.compilation_status_without_complaint then
+					Interface_names.e_compilation_succeeded
+				when {WORKBENCH_I}.compilation_status_with_warning then
+					Interface_names.e_compilation_succeeded_with_warning
+				else
+					Interface_names.e_compilation_failed
+				end)
+			degree_output.put_new_line
 		end
 
 	tool_resynchronization
@@ -189,11 +190,16 @@ feature {NONE} -- Compilation implementation
 
 			window_manager.display_message_and_percentage (Interface_names.d_Resynchronizing_tools, 0)
 			window_manager.synchronize_all
-			if Workbench.successful then
+			inspect workbench.compilation_status
+			when {WORKBENCH_I}.compilation_status_without_complaint then
 				if not process_manager.is_c_compilation_running then
 					window_manager.display_message (Interface_names.e_compilation_succeeded)
 				end
-			else
+			when {WORKBENCH_I}.compilation_status_with_warning then
+				if not process_manager.is_c_compilation_running then
+					window_manager.display_message (Interface_names.e_compilation_succeeded_with_warning)
+				end
+			when {WORKBENCH_I}.compilation_status_with_error then
 				window_manager.display_message (Interface_names.e_compilation_failed)
 			end
 			Eb_debugger_manager.on_compile_stop

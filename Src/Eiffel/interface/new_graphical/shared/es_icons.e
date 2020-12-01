@@ -8235,6 +8235,26 @@ feature -- Icons
 			compile_success_icon_buffer_attached: Result /= Void
 		end
 
+	frozen compile_warning_icon: EV_PIXMAP
+			-- Access to 'warning' pixmap.
+		require
+			has_named_icon: has_named_icon (compile_warning_name)
+		once
+			Result := named_icon (compile_warning_name)
+		ensure
+			compile_warning_icon_attached: Result /= Void
+		end
+
+	frozen compile_warning_icon_buffer: EV_PIXEL_BUFFER
+			-- Access to 'warning' pixmap pixel buffer.
+		require
+			has_named_icon: has_named_icon (compile_warning_name)
+		once
+			Result := named_icon_buffer (compile_warning_name)
+		ensure
+			compile_warning_icon_buffer_attached: Result /= Void
+		end
+
 	frozen run_animation_1_icon: EV_PIXMAP
 			-- Access to 'animation 1' pixmap.
 		require
@@ -10291,6 +10311,7 @@ feature -- Constants: Icon names
 	compile_animation_8_name: STRING = "compile animation 8"
 	compile_error_name: STRING = "compile error"
 	compile_success_name: STRING = "compile success"
+	compile_warning_name: STRING = "compile warning"
 	run_animation_1_name: STRING = "run animation 1"
 	run_animation_2_name: STRING = "run animation 2"
 	run_animation_3_name: STRING = "run animation 3"
@@ -10786,11 +10807,12 @@ feature {NONE} -- Basic operations
 			a_table.put ([{NATURAL_8} 8, {NATURAL_8} 20], compile_animation_8_name)
 			a_table.put ([{NATURAL_8} 9, {NATURAL_8} 20], compile_error_name)
 			a_table.put ([{NATURAL_8} 10, {NATURAL_8} 20], compile_success_name)
-			a_table.put ([{NATURAL_8} 11, {NATURAL_8} 20], run_animation_1_name)
-			a_table.put ([{NATURAL_8} 12, {NATURAL_8} 20], run_animation_2_name)
-			a_table.put ([{NATURAL_8} 13, {NATURAL_8} 20], run_animation_3_name)
-			a_table.put ([{NATURAL_8} 14, {NATURAL_8} 20], run_animation_4_name)
-			a_table.put ([{NATURAL_8} 15, {NATURAL_8} 20], run_animation_5_name)
+			a_table.put ([{NATURAL_8} 11, {NATURAL_8} 20], compile_warning_name)
+			a_table.put ([{NATURAL_8} 12, {NATURAL_8} 20], run_animation_1_name)
+			a_table.put ([{NATURAL_8} 13, {NATURAL_8} 20], run_animation_2_name)
+			a_table.put ([{NATURAL_8} 14, {NATURAL_8} 20], run_animation_3_name)
+			a_table.put ([{NATURAL_8} 15, {NATURAL_8} 20], run_animation_4_name)
+			a_table.put ([{NATURAL_8} 16, {NATURAL_8} 20], run_animation_5_name)
 			a_table.put ([{NATURAL_8} 1, {NATURAL_8} 21], project_settings_system_name)
 			a_table.put ([{NATURAL_8} 2, {NATURAL_8} 21], project_settings_target_name)
 			a_table.put ([{NATURAL_8} 3, {NATURAL_8} 21], project_settings_assertions_name)

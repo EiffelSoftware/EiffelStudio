@@ -66,7 +66,7 @@ feature {NONE} -- Initialization
 	make (e: like expression; i: like identifier; r: BOOLEAN)
 			-- Initialize a new ITERATION AST node for an iteration part of a loop in the form
 			-- "across `e` as `i`" -- when `not r`;
-			-- "across `e` is `i`"  or "`i` ∈ `e` |" -- when `r`.
+			-- "across `e` is `i`"  or "∀ `i`: `e` ¦" -- when `r`.
 		require
 			e_attached: e /= Void
 			i_attached: i /= Void
@@ -77,7 +77,7 @@ feature {NONE} -- Initialization
 				--    `identifier'.start
 			create {INSTR_CALL_AS} initialization.initialize (
 				create {NESTED_EXPR_AS}.initialize (
-					create {EXPR_CALL_AS}.initialize (create {ACCESS_ID_AS}.initialize (i, Void)),
+					create {EXPR_CALL_AS}.initialize (create {ACCESS_ID_AS}.make_inline_local (i)),
 					create_access_feat_as ("start", i),
 					Void
 			))
@@ -85,7 +85,7 @@ feature {NONE} -- Initialization
 				--    `identifier'.after
 			create {EXPR_CALL_AS} exit_condition.initialize (
 				create {NESTED_EXPR_AS}.initialize (
-					create {EXPR_CALL_AS}.initialize (create {ACCESS_ID_AS}.initialize (i, Void)),
+					create {EXPR_CALL_AS}.initialize (create {ACCESS_ID_AS}.make_inline_local (i)),
 					create_access_feat_as ("after", i),
 					Void
 			))
@@ -93,7 +93,7 @@ feature {NONE} -- Initialization
 				--    `identifier'.forth
 			create {INSTR_CALL_AS} advance.initialize (
 				create {NESTED_EXPR_AS}.initialize (
-					create {EXPR_CALL_AS}.initialize (create {ACCESS_ID_AS}.initialize (i, Void)),
+					create {EXPR_CALL_AS}.initialize (create {ACCESS_ID_AS}.make_inline_local (i)),
 					create_access_feat_as ("forth", i),
 					Void
 			))
@@ -102,7 +102,7 @@ feature {NONE} -- Initialization
 					--    `identifier'.item
 				create {EXPR_CALL_AS} item.initialize (
 				create {NESTED_EXPR_AS}.initialize (
-					create {EXPR_CALL_AS}.initialize (create {ACCESS_ID_AS}.initialize (i, Void)),
+					create {EXPR_CALL_AS}.initialize (create {ACCESS_ID_AS}.make_inline_local (i)),
 						create_access_feat_as ("item", i),
 						Void
 				))

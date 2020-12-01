@@ -361,14 +361,14 @@ feature -- Preference Strings
 
 feature {NONE} -- Visibility control
 
-	visible_toolbar_item_name (command_name: STRING_GENERAL): STRING_GENERAL
+	visible_toolbar_item_name (command_name: STRING): STRING_GENERAL
 			-- Preference name of a toolbar item of name `command_name` corresponding to its visible status.
 		do
 			Result := command_name.twin
 			Result.append ("__visible")
 		end
 
-	hidden_toolbar_item_name (command_name: STRING_GENERAL): STRING_GENERAL
+	hidden_toolbar_item_name (command_name: STRING_32): STRING_GENERAL
 			-- Preference name of a toolbar item of name `command_name` corresponding to its hidden status.
 		do
 			Result := command_name.twin

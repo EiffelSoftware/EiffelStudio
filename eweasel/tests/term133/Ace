@@ -1,11 +1,15 @@
-<?xml version="1.0" encoding="ISO-8859-1"?><system xmlns="http://www.eiffel.com/developers/xml/configuration-1-0-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-0-0 http://www.eiffel.com/developers/xml/configuration-1-0-0.xsd" name="test" uuid="1e905c60-41eb-42ea-84d7-7858d3cf6686">
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-21-0" name="test">
 	<target name="test">
-		<root class="test" feature="make"/>
+		<root class="TEST" feature="make"/>
 		<setting name="console_application" value="true"/>
-		<setting name="total_order_on_reals" value="true"/>
+		<capability>
+			<concurrency support="none"/>
+			<void_safety support="none"/>
+		</capability>
 		<precompile name="precompile" location="$PRECOMPILED_BASE"/>
 		$EWEASEL_DOTNET_SETTING
 		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf" use_application_options="true"/>
-		<cluster name="root_cluster" location="$CLUSTER\"/>
+		<cluster name="root_cluster" location="$CLUSTER"/>
 	</target>
 </system>

@@ -44,32 +44,27 @@ feature {NONE} -- Initialization
 
 	check_ast (a_ast: AST_EIFFEL)
 		do
-			if attached {FEATURE_AS} a_ast as l_feature then
-				if attached l_feature.body as l_body then
-					if attached {ROUTINE_AS} l_body.content as l_routine then
-						if attached {DO_AS} l_routine.routine_body as l_do then
-							if attached l_do.compound as l_list and then not l_list.is_empty then
-								if attached {INSTR_CALL_AS} l_list.first as l_instruction then
-									if attached {ACCESS_ID_AS} l_instruction.call as l_call then
-										if attached l_call.parameters as l_params and then l_params.count = 2 then
-											if attached {STRING_AS} l_params.i_th (1) as l_string then
-												io.put_string (l_string.value_32.as_string_8)
-												io.put_new_line
-											end
-											if attached {TUPLE_AS} l_params.i_th (2) as l_tuple then
-												io.put_string ("TUPLE_AS")
-												io.put_new_line
-											end
-											if attached {ARRAY_AS} l_params.i_th (2) as l_array then
-												io.put_string ("ARRAY_AS")
-												io.put_new_line
-											end
-										end
-									end
-								end
-							end
-						end
-					end
+			if
+				attached {FEATURE_AS} a_ast as l_feature and then
+				attached l_feature.body as l_body and then
+				attached {ROUTINE_AS} l_body.content as l_routine and then
+				attached {DO_AS} l_routine.routine_body as l_do and then
+				attached l_do.compound as l_list and then not l_list.is_empty and then
+				attached {INSTR_CALL_AS} l_list.first as l_instruction and then
+				attached {ACCESS_ID_AS} l_instruction.call as l_call and then
+				attached l_call.parameters as l_params and then l_params.count = 2
+			then
+				if attached {STRING_AS} l_params.i_th (1) as l_string then
+					io.put_string_32 (l_string.value_32)
+					io.put_new_line
+				end
+				if attached {TUPLE_AS} l_params.i_th (2) as l_tuple then
+					io.put_string ("TUPLE_AS")
+					io.put_new_line
+				end
+				if attached {ARRAY_AS} l_params.i_th (2) as l_array then
+					io.put_string ("ARRAY_AS")
+					io.put_new_line
 				end
 			end
 		end

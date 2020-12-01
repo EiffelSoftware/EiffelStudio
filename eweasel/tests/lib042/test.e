@@ -11,7 +11,7 @@ feature {NONE} -- Creation
 			p: BASE_PROCESS
 			a: ARRAY [READABLE_STRING_32]
 			buffer: SPECIAL [NATURAL_8]
-			i, n: like {SPECIAL [NATURAL_8]}.count
+			n: like {SPECIAL [NATURAL_8]}.count
 		do
 			create buffer.make_filled (0, 512)
 			a := (create {ARGUMENTS_32}).argument_array
@@ -144,14 +144,14 @@ feature {NONE} -- Creation
 						if argument.item.is_integer then
 							write (agent io.put_string, argument.item.to_integer)
 						else
-							exit ("Unexpected value after " + output_option + ".")
+							exit ({STRING_32} "Unexpected value after " + output_option + ".")
 						end
 					elseif argument.item.same_string (error_option) then
 						argument.forth
 						if argument.item.is_integer then
 							write (agent (io.error).put_string, argument.item.to_integer)
 						else
-							exit ("Unexpected value after " + error_option + ".")
+							exit ({STRING_32} "Unexpected value after " + error_option + ".")
 						end
 					end
 				end
@@ -167,9 +167,9 @@ feature {NONE} -- Access
 			create Result
 		end
 
-	exit (message: STRING)
+	exit (message: READABLE_STRING_32)
 		do
-			io.error.put_string (message)
+			io.error.put_string_32 (message)
 			io.error.put_new_line
 			;(create {EXCEPTIONS}).die (-1)
 		end
@@ -286,7 +286,7 @@ feature {NONE} -- Execution
 		do
 			p.wait_for_exit
 			if p.exit_code /= 0 then
-				exit ("%"" + command + "%" has exitited with code " + p.exit_code.out + ".")
+				exit ({STRING_32} "%"" + command + "%" has exitited with code " + p.exit_code.out + ".")
 			end
 			io.put_string ("OK")
 			io.put_new_line

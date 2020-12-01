@@ -6,7 +6,7 @@ create
 
 feature {NONE} -- Creation
 
-	make is
+	make
 			-- Run tests.
 		do
 			(create {A [ANY]}).      test ("ANY")

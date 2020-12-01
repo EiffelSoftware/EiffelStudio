@@ -36,12 +36,12 @@ feature {NONE} -- Testing
 			elseif t < 0 then
 				io.put_string ("Negative type ID is returned.%N")
 			elseif attached {REFLECTOR}.new_instance_of (t) as o then
-				io.put_string ("An object of type " + o.generating_type.name_32.as_string_8 + " has been created.%N")
+				io.put_string_32 ({STRING_32} "An object of type " + o.generating_type.name_32 + " has been created.%N")
 			else
 				io.put_string ("Cannot create an object of type " + type_name + ".%N")
 			end
 		rescue
-			io.put_string ("Aborted with exception: " + if attached {EXCEPTION_MANAGER}.last_exception as e then e.tag.as_string_8 else "" end + "%N")
+			io.put_string_32 ({STRING_32} "Aborted with exception: " + if attached {EXCEPTION_MANAGER}.last_exception as e then e.tag else {IMMUTABLE_STRING_32} "" end + {STRING_32} "%N")
 			{EXCEPTIONS}.die (0)
 		end
 

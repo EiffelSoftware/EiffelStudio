@@ -71,7 +71,7 @@ feature {NONE} -- Output
 				across
 					es as e
 				loop
-					io.put_string (e.item.message)
+					io.put_string_32 (e.item.message)
 					io.put_new_line
 				end
 			elseif attached data then

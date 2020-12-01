@@ -70,7 +70,7 @@ feature {NONE} -- Creation
 
 feature {NONE} -- Tests
 
-	test_redirection (input, output, error: BOOLEAN; arguments: ARRAYED_LIST [READABLE_STRING_32]; name: STRING)
+	test_redirection (input, output, error: BOOLEAN; arguments: ARRAYED_LIST [READABLE_STRING_32]; name: READABLE_STRING_32)
 			-- Test redirection for input if `input', for output if `output', for error if `error'
 			-- by running supplier with all possible variants of `arguments'
 			-- for test named `name'.
@@ -101,9 +101,9 @@ feature {NONE} -- Tests
 					report (input, output, error, name + c.item)
 				else
 					io.put_string ("Test ")
-					io.put_string (name + c.item)
+					io.put_string_32 (name + c.item)
 					io.put_string (": Failed to launch %"")
-					io.put_string (supplier)
+					io.put_string_32 (supplier)
 					io.put_character ('"')
 					io.put_new_line
 				end
@@ -150,11 +150,11 @@ feature {NONE} -- Tests
 
 feature {NONE} -- Reporting
 
-	report (i, o, e: BOOLEAN; name: STRING)
+	report (i, o, e: BOOLEAN; name: READABLE_STRING_32)
 			-- Report results for a test of name `name'.
 		do
 			io.put_string ("Test ")
-			io.put_string (name)
+			io.put_string_32 (name)
 			if
 				is_actual_value_valid (actual_input, client_message, i) and then
 				is_actual_value_valid (actual_output, output_message, o) and then

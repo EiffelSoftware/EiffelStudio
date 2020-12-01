@@ -2,7 +2,7 @@ class A [G]
 
 feature -- Tests
 
-	test (name: STRING) is
+	test (name: STRING)
 			-- Run test cases assuming that name of `G' is `name'.
 		do
 			do_test (create {ARRAY [ARRAY         [G]]}.make_empty, "ARRAY",         name)
@@ -14,7 +14,7 @@ $NA			do_test (create {ARRAY [NATIVE_ARRAY  [G]]}.make_empty, "NATIVE_ARRAY",  n
 
 feature {NONE} -- Implementation
 
-	do_test (a: ANY; middle: STRING; inner: STRING) is
+	do_test (a: ANY; middle: STRING; inner: STRING)
 			-- Test whether `a.generating_type' has value
 			-- "ARRAY [middle [inner]]".
 		require
@@ -22,16 +22,16 @@ feature {NONE} -- Implementation
 			middle /= Void
 			inner /= Void
 		local
-			actual: STRING
+			actual: READABLE_STRING_32
 			expected: STRING
 		do
-			actual := a.generating_type.name_32.as_string_8
+			actual := a.generating_type.name_32
 			expected := "ARRAY [" + middle + " [" + inner + "]]"
-			if not actual.is_equal (expected) then
+			if not actual.same_string_general (expected) then
 				io.put_string ("Expected: %"")
 				io.put_string (expected)
 				io.put_string ("%" but got %"")
-				io.put_string (actual)
+				io.put_string_32 (actual)
 				io.put_string ("%".")
 				io.put_new_line
 			end

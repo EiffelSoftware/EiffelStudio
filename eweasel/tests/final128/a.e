@@ -18,7 +18,7 @@ feature {NONE} -- Creation
 
 	make (s: READABLE_STRING_8)
 		do
-			out := s.mirrored
+			out := s.mirrored.out
 		end
 
 feature -- Output

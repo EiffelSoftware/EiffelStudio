@@ -48,9 +48,9 @@ feature {NONE} -- Access
 			create Result
 		end
 
-	exit (message: STRING)
+	exit (message: READABLE_STRING_32)
 		do
-			io.error.put_string (message)
+			io.error.put_string_32 (message)
 			io.error.put_new_line
 			;(create {EXCEPTIONS}).die (-1)
 		end
@@ -90,7 +90,7 @@ feature {NONE} -- Execution
 			p.has_exited
 		do
 			if p.exit_code /= 0 then
-				exit ("%"" + command + "%" has exitited with code " + p.exit_code.out + ".")
+				exit ({STRING_32} "%"" + command + "%" has exitited with code " + p.exit_code.out + ".")
 			end
 			io.put_string ("Test #" + n.out + ": OK")
 			io.put_new_line

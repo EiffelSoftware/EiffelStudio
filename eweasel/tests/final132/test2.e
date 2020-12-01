@@ -43,7 +43,7 @@ feature {NONE} -- Testing
 				f.close
 			end
 		rescue
-			io.put_string ("Aborted with exception: " + if attached {EXCEPTION_MANAGER}.last_exception as e then e.tag.as_string_8 else "" end + "%N")
+			io.put_string_32 ({STRING_32} "Aborted with exception: " + if attached {EXCEPTION_MANAGER}.last_exception as e then e.tag else {IMMUTABLE_STRING_32} "" end + {STRING_32} "%N")
 			is_retried := True
 			retry
 		end

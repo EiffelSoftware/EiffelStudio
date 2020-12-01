@@ -1,20 +1,19 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
-<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-5-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-5-0 http://www.eiffel.com/developers/xml/configuration-1-5-0.xsd" name="test" uuid="C4C94A3B-11E8-4374-B40E-5F7A8062C232">
+<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-21-0" name="test">
 	<target name="test">
 		<root class="TEST" feature="make"/>
 		<option>
 			<assertions precondition="true" postcondition="true" check="true" invariant="true" loop="true" supplier_precondition="true"/>
 		</option>
-		$EWEASEL_DOTNET_SETTING
 		<setting name="console_application" value="true"/>
-		<setting name="total_order_on_reals" value="true"/>
+		$EWEASEL_DOTNET_SETTING
+		<capability>
+			<concurrency support="none"/>
+			<void_safety support="none"/>
+		</capability>
 		<precompile name="precompile" location="$PRECOMPILED_BASE"/>
 		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf"/>
-		<library name="gobo_kernel" location="$ISE_LIBRARY\library\gobo\gobo_kernel.ecf">
-			<option>
-				<warning name="obsolete_feature" enabled="false"/>
-			</option>
-		</library>
+		<library name="gobo_kernel" location="$ISE_LIBRARY\library\gobo\gobo_kernel.ecf"/>
 		<library name="parser" location="$EIFFEL_SRC\framework\parser\parser.ecf"/>	
 		<cluster name="root_cluster" location="$CLUSTER\"/>
 	</target>

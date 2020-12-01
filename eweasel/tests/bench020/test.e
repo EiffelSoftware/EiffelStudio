@@ -40,7 +40,7 @@ feature
 			loop
 				e.system (command + " " + arguments.first)
 				if e.return_code /= 0 then
-					exit ("%"" + command + "%" failed")
+					exit ({STRING_32} "%"" + command + "%" failed")
 				end
 				i := i - 1
 			end
@@ -62,7 +62,7 @@ feature
 					exit ("Failed to launch")
 				end
 				if p.exit_code /= 0 then
-					exit ("%"" + command + "%" failed")
+					exit ({STRING_32} "%"" + command + "%" failed")
 				end
 				i := i - 1
 			end
@@ -84,7 +84,7 @@ feature
 					exit ("Failed to launch")
 				end
 				if p.exit_code /= 0 then
-					exit ("%"" + command + "%" failed")
+					exit ({STRING_32} "%"" + command + "%" failed")
 				end
 				i := i - 1
 			end
@@ -107,7 +107,7 @@ feature
 					exit ("Failed to launch")
 				end
 				if pp.exit_code /= 0 then
-					exit ("%"" + command + "%" failed")
+					exit ({STRING_32} "%"" + command + "%" failed")
 				end
 				i := i - 1
 			end
@@ -129,11 +129,11 @@ feature
 			create Result
 		end
 
-	exit (message: STRING)
+	exit (message: READABLE_STRING_32)
 		do
-			io.error.put_string (message)
-			io.error.put_new_line;
-			(create {EXCEPTIONS}).die (-1)
+			io.error.put_string_32 (message)
+			io.error.put_new_line
+			;(create {EXCEPTIONS}).die (-1)
 		end
 
 	command: STRING_32

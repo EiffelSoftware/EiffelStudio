@@ -1,18 +1,18 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
-<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-15-0" name="test">
+<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-21-0" name="test">
 	<target name="test">
 		<root class="TEST" feature="make"/>
-		<option void_safety="none"/>
-		<setting name="inlining_size" value="100"/>
 		<setting name="console_application" value="true"/>
-		<setting name="total_order_on_reals" value="true"/>
-		<setting name="concurrency" value="thread"/>
+		<capability>
+			<concurrency support="thread"/>
+			<void_safety support="none"/>
+		</capability>
 		<precompile name="precompile" location="$PRECOMPILED_BASE_MT"/>
 		$EWEASEL_DOTNET_SETTING
 		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf"/>
 		<library name="base_process" location="$ISE_LIBRARY\library\process\base\base_process.ecf"/>
 		<library name="process" location="$ISE_LIBRARY\library\process\process.ecf"/>
 		<library name="time" location="$ISE_LIBRARY\library\time\time.ecf"/>
-		<cluster name="root_cluster" location="$CLUSTER\"/>
+		<cluster name="root_cluster" location="$CLUSTER"/>
 	</target>
 </system>

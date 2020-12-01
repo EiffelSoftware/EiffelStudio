@@ -29,7 +29,7 @@ feature -- Action
 			end
 			if attached compilation_dir_32 as l_compile_dir_32 then
 				if not l_compile_dir_32.same_string_general ("C:\work\projects\tests") then
-					print ("Caught corrupted string_32: " + l_compile_dir_32 + "%N")
+					io.put_string_32 ({STRING_32} "Caught corrupted string_32: " + l_compile_dir_32 + "%N")
 				end
 			end
 		end

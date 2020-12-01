@@ -31,10 +31,10 @@ feature -- Access
 					create {PLANET}.Venus,
 					create {PLANET}.Earth,
 					create {PLANET}.Mars,
-					create {PLANET}.Jupiter,
-					create {PLANET}.Saturn,
-					create {PLANET}.Uranus,
-					create {PLANET}.Neptune
+					{PLANET}.Jupiter,
+					{PLANET}.Saturn,
+					{PLANET}.Uranus,
+					{PLANET}.Neptune
 				>>
 		ensure
 			instance_free: class
@@ -45,14 +45,15 @@ feature -- Access
 	name: STRING
 		do
 				Result :=
-					if Current = create {PLANET}.Mercury then "Mercury"
-					elseif Current = create {PLANET}.Venus then "Venus"
-					elseif Current = create {PLANET}.Earth then "Earth"
-					elseif Current = create {PLANET}.Mars then "Mars"
-					elseif Current = create {PLANET}.Jupiter then "Jupiter"
-					elseif Current = create {PLANET}.Saturn then "Saturn"
-					elseif Current = create {PLANET}.Uranus then "Uranus"
-					elseif Current = create {PLANET}.Neptune then "Neptune"
+					inspect Current
+					when {PLANET}.Mercury then "Mercury"
+					when {PLANET}.Venus then "Venus"
+					when {PLANET}.Earth then "Earth"
+					when {PLANET}.Mars then "Mars"
+					when {PLANET}.Jupiter then "Jupiter"
+					when {PLANET}.Saturn then "Saturn"
+					when {PLANET}.Uranus then "Uranus"
+					when {PLANET}.Neptune then "Neptune"
 					else
 						"Unknown"
 					end

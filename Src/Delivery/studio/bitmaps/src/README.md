@@ -18,4 +18,6 @@ And during development, you can see the difference between previous PNG and new 
 
 Requirements:
 - convert, identify from https://imagemagick.org/
-- optionally inkscape.
+- if possible, install inkscape ( >= 1.0) as the result is more stable.
+note: imagemagick should be compiled with --with-rsvg ...otherwise the result is bad.
+TODO: find better solution for convert.

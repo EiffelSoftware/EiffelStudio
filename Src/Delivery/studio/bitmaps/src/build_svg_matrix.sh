@@ -109,11 +109,15 @@ echo svg_page_size=$svg_page_width x $svg_page_height >> ${target}.txt
 
 function svg_to_png { # icons.svg icons.png width height
 	echo " - SVG to ${2}"
-	#convert -resize ${3}x${4} +antialias -background $background $1 $2
-	echo "   > convert -resize ${3}x${4} -background $background $1 $2 "
-	convert -resize ${3}x${4} -background $background $1 $2
-	#Try with inkscape:
-	#inkscape --without-gui --export-background-opacity=0  --export-width=$3 --export-height=$4 $1 --export-png=$2
+	if [ -x "$(command -v "inkscape")" ]; then
+		#Try with inkscape:
+		echo inkscape --export-background-opacity=0 -w ${3} -h ${4}  $1 --export-filename $2
+		inkscape --export-background-opacity=0 -w ${3} -h ${4}  $1 --export-filename $2 > /dev/null 2>&1
+	else
+		#convert -resize ${3}x${4} +antialias -background $background $1 $2
+		echo "   > convert -resize ${3}x${4} -background $background $1 $2 "
+		convert -resize ${3}x${4} -background $background $1 $2 
+	fi
 }
 
 echo "<svg height=\"$svg_page_height\" viewBox=\"0 0 $svg_page_width $svg_page_height\" width=\"$svg_page_width\" xmlns=\"http://www.w3.org/2000/svg\" xmlns:xlink=\"http://www.w3.org/1999/xlink\">"  > $target
@@ -132,15 +136,19 @@ do
 		x=$(( $x + $wsep + $svg_width ))
 		if [ -e $d/$c.svg ] 
 		then
-			echo "<image x=\"$x\" y=\"$y\" width=\"$svg_width\" height=\"$svg_height\" xlink:href=\"$d/$c.svg\" />" >> $target
+			echo "<image x=\"$x\" y=\"$y\" width=\"$svg_width\" height=\"$svg_height\" xlink:href=\"./$r/$c.svg\" fill=\"transparent\" style=\"fill:none\" />" >> $target
 		else
 			if [ -e $d/$c.png ]
 			then
 				if [ ! -z "$background_png" ]
 				then
-					echo "<rect x=\"$x\" y=\"$y\" width=\"$svg_width\" height=\"$svg_height\" fill=\"$background_png\" />" >> $target
+					if [ "$background_png" == "transparent" ]; then
+						echo "<rect x=\"$x\" y=\"$y\" width=\"$svg_width\" height=\"$svg_height\" fill=\"transparent\" style=\"fill:none\" />" >> $target
+					else
+						echo "<rect x=\"$x\" y=\"$y\" width=\"$svg_width\" height=\"$svg_height\" fill=\"$background_png\" />" >> $target
+					fi
 				fi
-				echo "<image x=\"$x\" y=\"$y\" width=\"$svg_width\" height=\"$svg_height\" xlink:href=\"$d/$c.png\" />" >> $target
+				echo "<image x=\"$x\" y=\"$y\" width=\"$svg_width\" height=\"$svg_height\" xlink:href=\"./$r/$c.png\" fill=\"transparent\" style=\"fill:none\" />" >> $target
 			fi
 		fi
 
@@ -151,6 +159,7 @@ done
 
 echo '</svg>' >> $target
 
+
 tgt=$(basename $target | cut -d'.' -f 1)
 tgt=$(dirname $target)/${tgt}.png
 
@@ -159,7 +168,14 @@ then
 	echo $target is a generic SVG file, without any border!
 else
 	echo $target is a specific SVG file to ${w}x${h} resolution, with a 1px border!
-	svg_to_png $target ${tgt} $svg_page_width $svg_page_height
+
+	abs_target=$(cd "$(dirname "$target")"; pwd)/$(basename "$target")
+
+	pushd $(dirname $abs_target)
+	tgt=$(basename $abs_target | cut -d'.' -f 1)
+	tgt=$(dirname $abs_target)/${tgt}.png
+	svg_to_png $(basename $abs_target) ${tgt} $svg_page_width $svg_page_height
+	popd
 fi
 
 # tgt=$(basename $target | cut -d'.' -f 1)

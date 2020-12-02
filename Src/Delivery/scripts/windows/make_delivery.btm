@@ -302,6 +302,10 @@ iff not defined NO_COMPILE then
 	cdd %EIFFEL_SRC\..
 	co -r %PUBLIC_SVN_REVISION %DEFAULT_PUBLIC_SVN/Src %EIFFEL_SRC
 
+	set SVN_VERSION=%@EXECSTR[set_version %EIFFEL_SRC]
+	remtrace Building the revision %SVN_VERSION%
+	echo %STUDIO_VERSION_MAJOR_MINOR% %SVN_VERSION% > %WORK_DIR%\%STUDIO_VERSION_MAJOR_MINOR%_%SVN_VERSION%.txt
+
 	iff not defined NO_ENTERPRISE_BUILD then
 		remtrace ISE specific files
 		cdd %EIFFEL_SRC

@@ -1,7 +1,12 @@
 setlocal
 
+if "%1" EQU "cancel" (
+	shutdown -a
+	goto EOF
+)
 if "%1" EQU "" (
-	set tmp_delay=600
+	set tmp_delay=7200
+	rem 2 hours=2 * 60 * 60 seconds
 ) else (
 	set tmp_delay=%1
 )

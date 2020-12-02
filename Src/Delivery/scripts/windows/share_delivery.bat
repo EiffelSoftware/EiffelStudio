@@ -46,7 +46,8 @@ if "%T_KIND%" NEQ "" (
 	set T_S3_PATH=%T_S3_PATH%/%T_KIND%
 )
 echo Upload %1 to %T_S3%/%T_S3_PATH%/
-aws s3 cp --acl public-read %T_DST% %T_S3%/%T_S3_PATH%/ > NUL
+echo aws s3 cp --acl public-read %T_DST% %T_S3%/%T_S3_PATH%/%T_FILENAME% 
+aws s3 cp --acl public-read %T_DST% %T_S3%/%T_S3_PATH%/%T_FILENAME% > NUL
 if EXIST %~dp0notify.bat %~dp0notify.bat "New %ISE_PLATFORM% %T_KIND% release %T_FILENAME% built and uploaded to %T_S3%/%T_S3_PATH%/ or %T_S3_WWW%/%T_S3_PATH%/%T_FILENAME% ."
 )
 

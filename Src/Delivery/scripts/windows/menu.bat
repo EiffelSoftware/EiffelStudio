@@ -1,11 +1,13 @@
 @echo off
 setlocal
 set TCCLECMD="C:\Program Files\JPSoft\TCCLE14x64\tcc.exe"
+set AUTO_BUILD="False"
 
 if "%1" EQU "auto" goto auto
 goto menu
 
 :auto
+set AUTO_BUILD="True"
 IF "%~2" == "win64" set ISE_PLATFORM=win64
 IF "%~2" == "windows" set ISE_PLATFORM=windows
 call %~dp0clean_delivery.bat

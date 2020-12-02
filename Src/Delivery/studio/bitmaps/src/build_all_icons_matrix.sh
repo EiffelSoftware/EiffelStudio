@@ -29,21 +29,25 @@ cd mini
 ../build_svg_matrix.sh . ./mini_20x20.svg
 cd ..
 
-#./inc/matrix_from_subpixmaps.sh icons icons/16x16.png
-./inc/matrix_from_subpixmaps.sh icons icons/-icons_16x16.png
-./inc/matrix_from_subpixmaps.sh icons icons/-icons_20x20.png
-./inc/matrix_from_subpixmaps.sh icons icons/-icons_24x24.png
-./inc/matrix_from_subpixmaps.sh icons icons/-icons_32x32.png
+if [ -x "$(command -v "inkscape")" ]; then
+	echo Completed using inkscape
+else
+	#./inc/matrix_from_subpixmaps.sh icons icons/16x16.png
+	./inc/matrix_from_subpixmaps.sh icons icons/-icons_16x16.png
+	./inc/matrix_from_subpixmaps.sh icons icons/-icons_20x20.png
+	./inc/matrix_from_subpixmaps.sh icons icons/-icons_24x24.png
+	./inc/matrix_from_subpixmaps.sh icons icons/-icons_32x32.png
 
-#./inc/matrix_from_subpixmaps.sh small small/12x12.png
-./inc/matrix_from_subpixmaps.sh small small/-small_12x12.png
-./inc/matrix_from_subpixmaps.sh small small/-small_15x15.png
-./inc/matrix_from_subpixmaps.sh small small/-small_18x18.png
-./inc/matrix_from_subpixmaps.sh small small/-small_24x24.png
+	#./inc/matrix_from_subpixmaps.sh small small/12x12.png
+	./inc/matrix_from_subpixmaps.sh small small/-small_12x12.png
+	./inc/matrix_from_subpixmaps.sh small small/-small_15x15.png
+	./inc/matrix_from_subpixmaps.sh small small/-small_18x18.png
+	./inc/matrix_from_subpixmaps.sh small small/-small_24x24.png
 
-#./inc/matrix_from_subpixmaps.sh mini mini/10x10.png
-./inc/matrix_from_subpixmaps.sh mini mini/-mini_10x10.png
-./inc/matrix_from_subpixmaps.sh mini mini/-mini_12x12.png
-./inc/matrix_from_subpixmaps.sh mini mini/-mini_15x15.png
-./inc/matrix_from_subpixmaps.sh mini mini/-mini_20x20.png
+	#./inc/matrix_from_subpixmaps.sh mini mini/10x10.png
+	./inc/matrix_from_subpixmaps.sh mini mini/-mini_10x10.png
+	./inc/matrix_from_subpixmaps.sh mini mini/-mini_12x12.png
+	./inc/matrix_from_subpixmaps.sh mini mini/-mini_15x15.png
+	./inc/matrix_from_subpixmaps.sh mini mini/-mini_20x20.png
 
+fi

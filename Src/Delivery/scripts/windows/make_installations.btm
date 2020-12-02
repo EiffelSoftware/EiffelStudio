@@ -228,7 +228,7 @@ remtrace Uploading ENT AXAR packages online
 
 remtrace Restoring the layout to its original state
 cdd %INSTALL_DIR
-ren %STUDIO_NAME% EiffelStudio
+if not exist EiffelStudio ren %STUDIO_NAME% EiffelStudio
 fullrf %INSTALL_DIR\%STUDIO_NAME%\studio\spec\%ISE_PLATFORM%\bin\ec.exe
 fullrf %INSTALL_DIR\%STUDIO_NAME%\studio\spec\%ISE_PLATFORM%\bin\ecb.exe
 

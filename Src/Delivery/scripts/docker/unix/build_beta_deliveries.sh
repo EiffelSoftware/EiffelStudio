@@ -4,9 +4,9 @@
 # Optional settings #
 #####################
 
-#export SVN_EIFFELSTUDIO_REPO_REVISION=104455
-#export SVN_ISE_BRANCH=/branches/Eiffel_20.05
-#export SVN_EIFFELSTUDIO_BRANCH=/branches/Eiffel_20.05
+#export SVN_EIFFELSTUDIO_REPO_REVISION=103046
+export SVN_ISE_BRANCH=/branches/Eiffel_20.11
+export SVN_EIFFELSTUDIO_BRANCH=/branches/Eiffel_20.11
 
 
 export include_enterprise=false

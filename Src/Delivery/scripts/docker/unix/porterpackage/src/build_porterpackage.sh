@@ -108,7 +108,7 @@ fi
 # Create output folder
 mkdir -p ${DELIV_OUTPUT}
 
-DELIV_LOGDIR=$DELIV_OUTPUT/${DELIV_REVISION}_${ISE_PLATFORM}_logs/
+DELIV_LOGDIR=$DELIV_OUTPUT/${DELIV_REVISION}_pp_logs/
 if [ -d "$DELIV_LOGDIR" ]; then
 	\rm -rf "$DELIV_LOGDIR"
 fi
@@ -128,7 +128,8 @@ if [ ! -d "PorterPackage" ]; then
 		echo Build Standard PorterPackage ...
 		./make_delivery
 	fi
-	cp ./*.log $DELIV_LOGDIR/.
+	cp *.log $DELIV_LOGDIR/.
+	cp */*.log $DELIV_LOGDIR/.
 fi
 if [ -d "PorterPackage" ]; then
 	if [ ! -f "$STUDIO_PORTERPACKAGE_TAR" ]; then

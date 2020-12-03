@@ -108,7 +108,8 @@ if [ ! -d "PorterPackage" ]; then
 		echo Build Standard PorterPackage ...
 		./make_delivery
 	fi
-	cp ./*.log $DELIV_LOGDIR/.
+	cp *.log $DELIV_LOGDIR/.
+	cp */*.log $DELIV_LOGDIR/.
 fi
 if [ -d "PorterPackage" ]; then
 	if [ ! -f "$STUDIO_PORTERPACKAGE_TAR" ]; then
@@ -122,7 +123,7 @@ if [ -d "PorterPackage" ]; then
 		ls -la
 		./compile_exes $ISE_PLATFORM
 		./make_images $ISE_PLATFORM
-		cp compile.log $DELIV_LOGDIR/.
+		cp *.log $DELIV_LOGDIR/.
 		mv Eiffel*.tar.bz2 $DELIV_OUTPUT/.
 	fi
 else

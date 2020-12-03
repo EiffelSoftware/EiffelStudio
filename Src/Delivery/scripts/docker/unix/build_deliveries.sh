@@ -30,7 +30,7 @@ fi
 var_dir=`pwd`/var
 
 if [ "$include_enterprise" = "true" ]; then
-	edition_name="ENT"
+	edition_name="ent"
 	output_dir=$var_dir/ent
 else
 	edition_name="standard"
@@ -50,9 +50,21 @@ share_deliv_folder()
 	dn=$1
 	msg="$2"
 	if [ -e "./share_delivery" ]; then
-		sh ./share_delivery $dn "$msg"
+		sh ./share_delivery $dn "" "$msg"
 	else
 		echo Folder $dn was not shared.
+	fi
+}
+
+share_deliv_file()
+{
+	fn=$1
+	msg="$2"
+	k=$3
+	if [ -e "./share_delivery" ]; then
+		sh ./share_delivery $fn $k "$msg"
+	else
+		echo File $fn was not shared.
 	fi
 }
 
@@ -68,7 +80,15 @@ sh ./build_porterpackage.sh
 if [ -e "$output_dir/last_revision_built" ]; then
 	deliv_revision=`head -n 1 $output_dir/last_revision_built`
 	porterpackage_tar=$output_dir/$deliv_revision/PorterPackage_${deliv_revision}.tar
-	share_deliv_folder $output_dir/${deliv_revision} "New $edition_name Porterpackage for revision ${deliv_revision}"
+	if [ -e "$porterpackage_tar" ]; then
+		pp_filesize=$(stat -c%s "$porterpackage_tar")
+		if (( $pp_filesize < 50000000 )); then
+			echo "ERROR: File size of $porterpackage_tar sounds too small to be valid (size=$pp_filesize), stop delivery!"
+			rm "$porterpackage_tar"
+		else
+			share_deliv_file $output_dir/${deliv_revision}/PorterPackage_${deliv_revision}.tar "New $edition_name Porterpackage for revision ${deliv_revision}" ${edition_name}
+		fi
+	fi
 	if [ -e "$porterpackage_tar" ]; then
 		if [ "$include_64bits" = "true" ]; then
 			echo "===================================="

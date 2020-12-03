@@ -170,7 +170,7 @@ if [ ! "$NO_NEW_EC" ]; then
 			CANCEL
 		fi
 		clean_project
-		move ec.tar.bz2 $EXPORT_DIR/bin/ec_ent.tar.bz2
+		move ec.tar.bz2 $EXPORT_DIR/bin/ec_branded.tar.bz2
 
 		remtrace branded Batch version
 		clean_project

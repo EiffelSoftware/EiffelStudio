@@ -28,8 +28,8 @@ feature {NONE} -- Initialization
 				do
 					increase_build
 				end
-			l_manager.load_agents.extend (l_agent)
 			l_manager.compile_stop_agents.extend (l_agent)
+			l_manager.load_agents.extend (agent increase_build)
 		end
 
 feature -- Access

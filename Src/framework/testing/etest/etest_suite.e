@@ -52,7 +52,7 @@ feature {NONE} -- Initialization
 			l_manager := project_access.project.manager
 
 				-- To update tests at each recompilation.
-			l_manager.compile_stop_agents.extend (agent retrieve_tests)
+			l_manager.compile_stop_agents.extend (agent (s: like {WORKBENCH_I}.compilation_status) do retrieve_tests end)
 
 			if
 				l_project_loaded and then
@@ -290,7 +290,7 @@ feature {NONE} -- Factory
 		end
 
 note
-	copyright: "Copyright (c) 1984-2016, Eiffel Software"
+	copyright: "Copyright (c) 1984-2020, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

@@ -84,7 +84,7 @@ feature {NONE} -- Initialization
 				register_action (eiffel_project.manager.load_agents, agent request_eis_visit)
 			end
 
-			register_action (eiffel_project.manager.compile_stop_agents, agent request_eis_visit)
+			register_action (eiffel_project.manager.compile_stop_agents, agent (s: like {WORKBENCH_I}.compilation_status) do request_eis_visit end)
 
 				-- Request EIS background visiting when focusing in.
 			register_action (content.focus_in_actions, agent request_eis_visit)
@@ -324,7 +324,7 @@ feature {NONE} -- Access
 			-- Agent of `user_widget.refresh_list'
 
 note
-	copyright: "Copyright (c) 1984-2013, Eiffel Software"
+	copyright: "Copyright (c) 1984-2020, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

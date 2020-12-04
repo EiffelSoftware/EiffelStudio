@@ -303,12 +303,15 @@ feature {AST_EIFFEL} -- Visitor: routine body
 	process_once_as (a: ONCE_AS)
 			-- <Precursor>
 		do
-			if a.has_key_object then
-					-- Because this is once-per-object and a creation of the object is processed,
+			if
+				a.has_key_object or else
+				context.current_feature = creation_procedure and then context.current_feature.is_once_creation (context.current_class)
+			then
+					-- Because this is once-per-object or a current creation procedure of a once class,
 					-- it should be safe to process the routine as a normal one.
 				Precursor (a)
 			else
-					-- Attributes set by the once feature are not initialized,
+					-- Attributes set by the once feature are not considered as initialized,
 					-- because the next call to it will not execute the body.
 				keeper.enter_realm
 				Precursor (a)

@@ -20,16 +20,11 @@ feature {NONE} -- Initialization
 			-- `a_project': An Eiffel project.
 		local
 			l_manager: EB_PROJECT_MANAGER
-			l_agent: PROCEDURE
 		do
 			project := a_project
 			l_manager := project.manager
-			l_agent := agent (s: like {WORKBENCH_I}.compilation_status)
-				do
-					increase_build
-				end
-			l_manager.compile_stop_agents.extend (l_agent)
 			l_manager.load_agents.extend (agent increase_build)
+			l_manager.compile_stop_agents.extend (agent (s: like {WORKBENCH_I}.compilation_status) do increase_build end)
 		end
 
 feature -- Access

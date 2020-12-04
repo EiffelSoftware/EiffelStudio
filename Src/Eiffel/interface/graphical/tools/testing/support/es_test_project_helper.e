@@ -185,7 +185,7 @@ feature -- Basic operations
 							melt_project_cmd.execute_and_wait
 						end)
 				eiffel_project.manager.compile_stop_agents.extend_kamikaze (
-					agent
+					agent (s: like {WORKBENCH_I}.compilation_status)
 						do
 							if eiffel_project.successful then
 								window_manager.development_windows.do_all (
@@ -221,7 +221,7 @@ feature -- Basic operations
 		end
 
 note
-	copyright: "Copyright (c) 1984-2015, Eiffel Software"
+	copyright: "Copyright (c) 1984-2020, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

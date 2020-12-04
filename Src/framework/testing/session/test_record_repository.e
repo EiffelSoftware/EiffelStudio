@@ -53,7 +53,7 @@ feature {NONE} -- Initialization
 				retrieve_records_once
 			else
 				eiffel_project.manager.load_agents.extend_kamikaze (agent retrieve_records_once)
-				eiffel_project.manager.compile_stop_agents.extend_kamikaze (agent retrieve_records_once)
+				eiffel_project.manager.compile_stop_agents.extend_kamikaze (agent (s: like {WORKBENCH_I}.compilation_status) do retrieve_records_once end)
 			end
 		end
 
@@ -64,7 +64,7 @@ feature {NONE} -- Initialization
 				if is_project_initialized then
 					retrieve_records
 				else
-					eiffel_project.manager.compile_stop_agents.extend_kamikaze (agent retrieve_records_once)
+					eiffel_project.manager.compile_stop_agents.extend_kamikaze (agent (s: like {WORKBENCH_I}.compilation_status) do retrieve_records_once end)
 				end
 			end
 		end
@@ -505,7 +505,7 @@ invariant
 	same_record_and_property_count: record_storage.count = property_storage.count
 
 note
-	copyright: "Copyright (c) 1984-2019, Eiffel Software"
+	copyright: "Copyright (c) 1984-2020, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

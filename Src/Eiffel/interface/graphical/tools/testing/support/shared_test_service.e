@@ -115,14 +115,16 @@ feature {NONE} -- Basic operations
 			-- `a_debug': True if `debug_button' was pressed, False otherwise.
 		do
 			if a_list = Void or else not a_list.is_empty then
-				launch_session_type ({TEST_EXECUTION_I},
-					agent (a_exec: TEST_EXECUTION_I; a_dbg: BOOLEAN; a_tests: detachable SEQUENCE [TEST_I])
+				launch_session_type ({TEST_SESSION_I},
+					agent (a_session: TEST_SESSION_I; a_dbg: BOOLEAN; a_tests: detachable SEQUENCE [TEST_I])
 						do
-							a_exec.set_debugging (a_dbg)
-							if a_tests /= Void then
-								a_tests.do_all (agent a_exec.queue_test)
-							else
-								a_exec.test_suite.tests.do_all (agent a_exec.queue_test)
+							if attached {TEST_EXECUTION_I} a_session as a_exec then
+								a_exec.set_debugging (a_dbg)
+								if a_tests /= Void then
+									a_tests.do_all (agent a_exec.queue_test)
+								else
+									a_exec.test_suite.tests.do_all (agent a_exec.queue_test)
+								end
 							end
 						end (?, a_debug, a_list))
 			end

@@ -59,7 +59,7 @@ feature {NONE} -- Initialization
 				retrieve_statistics
 			else
 				eiffel_project.manager.load_agents.extend_kamikaze (agent retrieve_statistics)
-				eiffel_project.manager.compile_stop_agents.extend_kamikaze (agent retrieve_statistics)
+				eiffel_project.manager.compile_stop_agents.extend_kamikaze (agent (s: like {WORKBENCH_I}.compilation_status) do retrieve_statistics end)
 			end
 		ensure
 			test_suite_set: test_suite = a_test_suite
@@ -406,7 +406,7 @@ invariant
 	collect_stats_after_retrieving: test_statistics.count > 0 implies has_retrieved_statistics
 
 note
-	copyright: "Copyright (c) 1984-2014, Eiffel Software"
+	copyright: "Copyright (c) 1984-2020, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

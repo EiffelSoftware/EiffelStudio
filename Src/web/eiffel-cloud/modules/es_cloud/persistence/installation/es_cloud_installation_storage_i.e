@@ -23,7 +23,11 @@ feature -- Access: installations
 		deferred
 		end
 
-	installation (a_install_id: READABLE_STRING_GENERAL): detachable ES_CLOUD_INSTALLATION
+	installation (a_install_id: READABLE_STRING_GENERAL; a_license_id: like {ES_CLOUD_LICENSE}.id): detachable ES_CLOUD_INSTALLATION
+		deferred
+		end
+
+	installations (a_install_id: READABLE_STRING_GENERAL): detachable LIST [ES_CLOUD_INSTALLATION]
 		deferred
 		end
 

@@ -21,19 +21,46 @@ feature -- Access: licenses
 
 feature -- Access: installations		
 
-	installation (a_installation_id: READABLE_STRING_GENERAL): detachable ES_CLOUD_INSTALLATION
+	installation (a_installation_id: READABLE_STRING_GENERAL; a_license_id: like {ES_CLOUD_LICENSE}.id): detachable ES_CLOUD_INSTALLATION
 		local
 			l_params: STRING_TABLE [detachable ANY]
 		do
 			reset_error
-			create l_params.make (1)
+			create l_params.make (2)
 			l_params.force (a_installation_id, "iid")
+			l_params.force (a_license_id, "lid")
 			sql_query (sql_select_installation, l_params)
 			sql_start
 			if not has_error and not sql_after then
 				Result := fetch_installation
 			end
 			sql_finalize_query (sql_select_installation)
+		end
+
+	installations (a_installation_id: READABLE_STRING_GENERAL): detachable LIST [ES_CLOUD_INSTALLATION]
+		local
+			l_params: STRING_TABLE [detachable ANY]
+		do
+			reset_error
+			create l_params.make (1)
+			l_params.force (a_installation_id, "iid")
+			sql_query (sql_select_installations_by_iid, l_params)
+			create {ARRAYED_LIST [ES_CLOUD_INSTALLATION]} Result.make (0)
+			if not has_error then
+				from
+					sql_start
+				until
+					sql_after or has_error
+				loop
+					if attached fetch_installation as inst then
+						Result.force (inst)
+					else
+						check valid_record: False end
+					end
+					sql_forth
+				end
+			end
+			sql_finalize_query (sql_select_installations_by_iid)
 		end
 
 	license_installations (a_license_id: like {ES_CLOUD_LICENSE}.id): LIST [ES_CLOUD_INSTALLATION]
@@ -264,7 +291,7 @@ feature -- Change
 			l_params: STRING_TABLE [detachable ANY]
 			l_is_new: BOOLEAN
 		do
-			l_is_new := installation (inst.id) = Void
+			l_is_new := installation (inst.id, inst.license_id) = Void
 
 			reset_error
 			create l_params.make (10)
@@ -364,7 +391,9 @@ feature {NONE} -- Fetcher
 
 feature {NONE} -- Queries: installations
 
-	sql_select_installation: STRING = "SELECT iid, lid, name, info, status, creation FROM es_installations WHERE iid=:iid;"
+	sql_select_installation: STRING = "SELECT iid, lid, name, info, status, creation FROM es_installations WHERE iid=:iid AND lid=:lid ;"
+
+	sql_select_installations_by_iid: STRING = "SELECT iid, lid, name, info, status, creation FROM es_installations WHERE iid=:iid;"
 
 	sql_select_installations: STRING = "SELECT iid, lid, name, info, status, creation FROM es_installations WHERE lid=:lid;"
 

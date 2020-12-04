@@ -262,6 +262,7 @@ feature -- Execution
 			r: like new_response
 			iid: READABLE_STRING_32
 		do
+				-- TODO: require license id!
 			if
 				(a_user.same_as (api.user) and then api.has_permission ({ES_CLOUD_MODULE}.perm_discard_own_installations))
 				or else api.has_permission ({ES_CLOUD_MODULE}.perm_manage_es_accounts)
@@ -269,9 +270,16 @@ feature -- Execution
 				if attached {WSF_STRING} req.path_parameter ("installation_id") as p_iid then
 					iid := p_iid.value
 				end
-				if iid /= Void and then attached es_cloud_api.installation (iid) as l_installation then
-					es_cloud_api.discard_installation (l_installation, a_user)
-					if es_cloud_api.has_error or else es_cloud_api.installation (iid) /= Void then
+				if iid /= Void and then attached es_cloud_api.user_installations_for (a_user, iid) as l_installations then
+					es_cloud_api.reset_error
+					across
+						l_installations as ic
+					until
+						es_cloud_api.has_error
+					loop
+						es_cloud_api.discard_installation (ic.item, a_user)
+					end
+					if es_cloud_api.has_error or else es_cloud_api.user_installations_for (a_user, iid) /= Void then
 						r := new_error_response ("Can not discard installation", req, res)
 					else
 						r := new_response (req, res)
@@ -298,6 +306,8 @@ feature -- Execution
 			r: like new_response
 			f: CMS_FORM
 			l_op: READABLE_STRING_GENERAL
+			l_installation: ES_CLOUD_INSTALLATION
+			lic: ES_CLOUD_LICENSE
 		do
 			if a_user.same_as (api.user) then --or else api.has_permission ({ES_CLOUD_MODULE}.perm_manage_es_accounts) then
 				r := new_response (req, res)
@@ -309,9 +319,25 @@ feature -- Execution
 					check
 						same_installation_id: attached fd.string_item ("installation_id") as f_installation_id and then a_installation_id.same_string (f_installation_id)
 					end
-					if attached es_cloud_api.installation (a_installation_id) as l_installation then
+					if attached es_cloud_api.installations_for (a_installation_id) as lst then
+						across
+							lst as ic
+						until
+							l_installation /= Void
+						loop
+							l_installation := ic.item
+							if l_installation /= Void then
+								if es_cloud_api.user_has_license (a_user, l_installation.license_id) then
+									lic := es_cloud_api.license (l_installation.license_id)
+								else
+									l_installation := Void
+								end
+							end
+						end
+					end
+					if l_installation /= Void and lic /= Void then
 						l_op := if attached {WSF_STRING} req.form_parameter ("operation") as p_op then p_op.value else {STRING_32} "ping" end
-						handle_installation_operation (a_version, a_user, l_installation, l_op, fd, req, res)
+						handle_installation_operation (a_version, a_user, l_installation, lic, l_op, fd, req, res)
 					else
 							-- Check for installation limit!
 						handle_new_installation (a_version, a_user, a_installation_id, fd.string_item ("info"), req, res)
@@ -339,9 +365,12 @@ feature -- Execution
 
 feature {NONE} -- User installation post handling
 
-	handle_installation_operation (a_version: READABLE_STRING_GENERAL; a_user: ES_CLOUD_USER; a_installation: ES_CLOUD_INSTALLATION;
+	handle_installation_operation (a_version: READABLE_STRING_GENERAL; a_user: ES_CLOUD_USER;
+			a_installation: ES_CLOUD_INSTALLATION; a_license: detachable ES_CLOUD_LICENSE;
 			a_op: READABLE_STRING_GENERAL; a_form_data: WSF_FORM_DATA;
 			req: WSF_REQUEST; res: WSF_RESPONSE)
+		require
+			same_license: a_license /= Void implies a_license.id = a_installation.license_id
 		local
 			r: like new_response
 			err: BOOLEAN
@@ -349,7 +378,6 @@ feature {NONE} -- User installation post handling
 			l_active_sessions: detachable STRING_TABLE [LIST [ES_CLOUD_SESSION]]
 			l_session: detachable ES_CLOUD_SESSION
 --			l_user_plan: detachable ES_CLOUD_PLAN_SUBSCRIPTION
-			l_license: ES_CLOUD_LICENSE
 			l_plan: ES_CLOUD_PLAN
 			n, l_sess_limit, l_heartbeat: NATURAL
 			l_inst_location: STRING
@@ -362,19 +390,18 @@ feature {NONE} -- User installation post handling
 					r := new_error_response ("Error: missing session information", req, res)
 				else
 					l_session := es_cloud_api.user_session (a_user, a_installation.id, l_session_id)
-					l_license := es_cloud_api.license (a_installation.license_id)
-					if l_license = Void or else not es_cloud_api.user_has_license (a_user, l_license.id) then
+					if a_license = Void or else not es_cloud_api.user_has_license (a_user, a_license.id) then
 						-- ERROR: no associated valid license!
 						r := new_error_response ("Error: no associated license!", req, res)
 						r.add_boolean_field ("es:license_missing", True)
 						r.add_boolean_field ("es:plan_expired", True) -- For backward compatibility
-					elseif not l_license.is_valid (a_installation.platform, a_installation.product_version) then
+					elseif not a_license.is_valid (a_installation.platform, a_installation.product_version) then
 						-- ERROR: invalid license!
 						create err_msg.make_from_string_general ("invalid license")
-						if attached l_license.version as l_version then
+						if attached a_license.version as l_version then
 							create l_expecting.make_from_string ({STRING_32} " version:" + l_version)
 						end
-						if attached l_license.platforms_as_csv_string as l_platforms then
+						if attached a_license.platforms_as_csv_string as l_platforms then
 							if l_expecting = Void then
 								create l_expecting.make_empty
 							end
@@ -385,10 +412,10 @@ feature {NONE} -- User installation post handling
 						end
 
 						r := new_error_response (err_msg, req, res)
-						if attached l_license.version as l_version then
+						if attached a_license.version as l_version then
 							r.add_string_field ("es:version_limitation", l_version)
 						end
-						if attached l_license.platforms_as_csv_string as l_platforms then
+						if attached a_license.platforms_as_csv_string as l_platforms then
 							r.add_string_field ("es:platforms_limitation", l_platforms)
 						end
 						r.add_boolean_field ("es:license_invalid", True)
@@ -397,19 +424,19 @@ feature {NONE} -- User installation post handling
 					else
 						if
 							attached a_installation.platform as pf and then
-							l_license.is_waiting_for_platform_value (pf)
+							a_license.is_waiting_for_platform_value (pf)
 						then
-							l_license.accept_platform (pf)
-							es_cloud_api.save_license (l_license)
+							a_license.accept_platform (pf)
+							es_cloud_api.save_license (a_license)
 						end
-						l_plan := l_license.plan
+						l_plan := a_license.plan
 							-- Valid license.
 						if l_session /= Void then
 							l_active_sessions := es_cloud_api.user_active_concurrent_sessions (a_user, a_installation.id, l_session)
 						end
 						if l_plan /= Void then
-							l_sess_limit := l_license.concurrent_sessions_limit
-							l_heartbeat := l_license.heartbeat
+							l_sess_limit := a_license.concurrent_sessions_limit
+							l_heartbeat := a_license.heartbeat
 						else
 							l_sess_limit := es_cloud_api.default_concurrent_sessions_limit
 							l_heartbeat :=  es_cloud_api.default_heartbeat
@@ -587,7 +614,7 @@ feature {NONE} -- User installation post handling
 								lic.set_platforms_restriction (pl)
 							end
 							es_cloud_api.register_installation (lic, a_install_id, a_info)
-							inst := es_cloud_api.installation (a_install_id)
+							inst := es_cloud_api.installation (a_install_id, lic.id)
 						end
 					end
 				end

@@ -619,9 +619,42 @@ feature -- Access: subscriptions
 			user_installations_sorter.reverse_sort (Result)
 		end
 
-	installation (a_install_id: READABLE_STRING_GENERAL): detachable ES_CLOUD_INSTALLATION
+	installations_for (a_install_id: READABLE_STRING_GENERAL): detachable LIST [ES_CLOUD_INSTALLATION]
 		do
-			Result := es_cloud_storage.installation (a_install_id)
+			Result := es_cloud_storage.installations (a_install_id)
+		end
+
+	user_installation (a_user: ES_CLOUD_USER; a_install_id: READABLE_STRING_GENERAL): detachable ES_CLOUD_INSTALLATION
+		do
+			if attached user_installations_for (a_user, a_install_id) as lst and then not lst.is_empty then
+				Result := lst.last
+			end
+		end
+
+	user_installations_for (a_user: ES_CLOUD_USER; a_install_id: READABLE_STRING_GENERAL): detachable LIST [ES_CLOUD_INSTALLATION]
+		do
+			Result := installations_for (a_install_id)
+			if Result /= Void then
+				from
+					Result.start
+				until
+					Result.off
+				loop
+					if user_has_license (a_user, Result.item.license_id) then
+						Result.forth
+					else
+						Result.remove
+					end
+				end
+				if Result.is_empty then
+					Result := Void
+				end
+			end
+		end
+
+	installation (a_install_id: READABLE_STRING_GENERAL; a_license_id: like {ES_CLOUD_LICENSE}.id): detachable ES_CLOUD_INSTALLATION
+		do
+			Result := es_cloud_storage.installation (a_install_id, a_license_id)
 		end
 
 	license_installations (a_license: ES_CLOUD_LICENSE): LIST [ES_CLOUD_INSTALLATION]

@@ -39,7 +39,11 @@ feature -- Execution
 					create l_user.make (l_cms_user)
 				end
 				if attached {WSF_STRING} req.query_parameter ("installation") as p_installation then
-					inst := es_cloud_api.installation (p_installation.value)
+					if l_user /= Void then
+						inst := es_cloud_api.user_installation (l_user, p_installation.value)
+					elseif attached es_cloud_api.installations_for (p_installation.value) as lst and then not lst.is_empty then
+						inst := lst.first
+					end
 					if inst /= Void then
 						r := new_generic_response (req, res)
 						add_primary_tabs (r)

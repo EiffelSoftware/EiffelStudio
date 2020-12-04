@@ -626,7 +626,7 @@ feature -- Hooks: block
 
 				create l_intervals.make_caseless (2)
 				l_html.append ("<div class=%"empty%"></div>")
-				l_html.append ("<div class=%"plans_header%">")
+--				l_html.append ("<div class=%"plans_header%">")
 				l_is_first := True
 				across
 					l_store.items as ic
@@ -661,7 +661,7 @@ feature -- Hooks: block
 				if attached {CMS_SMARTY_TEMPLATE_BLOCK} smarty_template_block (Current, "side_header", api.cms_api) as tpl then
 					tpl.append_to_html (a_response.theme, l_html)
 				end
-				l_html.append ("</div>")
+--				l_html.append ("</div>")
 				l_html.append ("<div class=%"plans%">")
 				across
 					tb as tb_ic

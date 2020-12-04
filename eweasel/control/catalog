@@ -1917,6 +1917,8 @@ test once-per-object-generic-precursor		once021 tcf pass once
 test once-per-object-array-of-expanded		once022 tcf fail once
 test once-per-object-inherited-twice		once023 tcf fail once
 test once-class-creation-semantics		once024 tcf pass once once_creation
+test once-class-reference-attribute		once025 tcf pass once once_creation
+test once-class-reference-initialization	once026 tcf pass once once_creation
 
 -- Compiler termination (exception trace, panic, etc.)
 

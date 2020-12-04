@@ -1,0 +1,11 @@
+test_name 	 once-class-reference-initialization
+test_description A test for a type based on a once class with an attribute of a reference type that is set in creation procedures.
+
+copy_raw	test.e $CLUSTER test.e
+copy_raw	week_days.e $CLUSTER week_days.e
+copy_sub	Ace $TEST Ace
+
+compile_melted
+compile_result validity_error WEEK_DAYS VEVI:24
+
+test_end

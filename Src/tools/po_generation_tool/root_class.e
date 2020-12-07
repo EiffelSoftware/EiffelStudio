@@ -26,11 +26,18 @@ feature {NONE} -- Initialization
 			create po_file.make_empty
 			analyze_options
 			if option_error then
+				has_error := True
 				print_option_error
 			elseif is_help_needed then
 				print_usage
 			elseif analyze_files_n_directories then
 				generate
+			else
+				has_error := True
+			end
+			if has_error then
+				io.error.put_string_32 ("Finished with errors.%N")
+				{EXCEPTIONS}.die (1)
 			end
 		end
 
@@ -54,6 +61,9 @@ feature -- Status report
 			-- Did an option error occur?
 
 	is_help_needed: BOOLEAN
+
+	has_error: BOOLEAN
+			-- Has an error been detected?
 
 feature {NONE} -- Implementation
 
@@ -79,44 +89,25 @@ feature {NONE} -- Implementation
 			-- and they will be added to `po_file'.
 		local
 			l_dir: STRING_32
-			l_directorys: like search_directories
-			l_file_names: like file_names
 			l_s: STRING_32
 			l_short_name: STRING_32
 		do
 			create po_file.make_empty
-			l_file_names := file_names
-			from
-				l_file_names.start
-			until
-				l_file_names.after
+			across
+				file_names as f
 			loop
-				l_s := l_file_names.item
+				l_s := f.item
 				l_s.replace_substring_all ("/", "\")
 				l_short_name := l_s.substring (l_s.last_index_of ('\', l_s.count) + 1, l_s.count)
-				debug
-					localized_print (l_s + "%N")
-				end
 				generate_file (l_s, l_short_name)
-				l_file_names.forth
 			end
 				-- Go through directories specified on command line
-			l_directorys := search_directories
-			from
-				l_directorys.start
-			until
-				l_directorys.after
+			across
+				search_directories as d
 			loop
-				l_dir := l_directorys.item.twin
+				l_dir := d.item.twin
 				l_dir.replace_substring_all ("/", "\")
-				debug
-					localized_print (l_dir + "%N")
-				end
 				generate_directory (l_dir)
-				l_directorys.forth
-			end
-			debug
-				 localized_print (po_file.to_string)
 			end
 			write_to_file
 		end
@@ -132,44 +123,25 @@ feature {NONE} -- Implementation
 			po_file_not_void: po_file /= Void
 			a_dir_not_void: a_dir /= Void
 		local
-			l_dirs: LIST [STRING_32]
-			l_files: LIST [STRING_32]
-			l_dir: READABLE_STRING_32
-			l_name, l_short_name: STRING_32
+			l_short_name: STRING_32
 			l_u: FILE_UTILITIES
 		do
-			l_dirs := l_u.directory_names (a_dir)
-			if l_dirs /= Void then
-				from
-					l_dirs.start
-				until
-					l_dirs.after
+			if attached l_u.directory_names (a_dir) as l_dirs then
+				across
+					l_dirs as d
 				loop
-					debug
-						 localized_print (l_dirs.item + "%N")
-					end
-					l_dir := a_dir + operating_environment.directory_separator.out + l_dirs.item
-					generate_directory (l_dir)
-					l_dirs.forth
+					generate_directory (a_dir + operating_environment.directory_separator.out + d.item)
 				end
 			end
 
-			l_files := l_u.file_names (a_dir)
-			if l_files /= Void then
-				from
-					l_files.start
-				until
-					l_files.after
+			if attached l_u.file_names (a_dir) as l_files then
+				across
+					l_files as f
 				loop
-					l_short_name := l_files.item
+					l_short_name := f.item
 					if l_short_name.substring (l_short_name.count - 1, l_short_name.count).same_string (file_suffix) then
-						l_name := a_dir + operating_environment.directory_separator.out + l_short_name
-						generate_file (l_name, l_short_name)
-						debug
-							 localized_print (l_name + "%N")
-						end
+						generate_file (a_dir + operating_environment.directory_separator.out + l_short_name, l_short_name)
 					end
-					l_files.forth
 				end
 			end
 		end
@@ -199,14 +171,16 @@ feature {NONE} -- Implementation
 					create l_generator.make (po_file, l_file.last_string, a_short_name)
 					l_generator.generate
 					if l_generator.has_error then
-						 localized_print ({STRING_32} "Error: parsing failed: entries in %"" + a_name + "%" not generated.%N")
+						has_error := True
+						localized_print ({STRING_32} "Error: parsing failed: entries in %"" + a_name + "%" not generated.%N")
 					else
 						print_analyze_file (a_name)
 					end
 				end
 				l_file.close
 			else
-				 localized_print ({STRING_32} "Error: File reading failed: entries in %"" + a_name + "%" not generated.%N")
+				has_error := True
+				localized_print ({STRING_32} "Error: File reading failed: entries in %"" + a_name + "%" not generated.%N")
 			end
 		rescue
 			l_retried := True
@@ -295,57 +269,44 @@ feature {NONE} -- Implementation
 	analyze_files_n_directories: BOOLEAN
 			-- Validate input files and directories.
 		local
-			l_file_names: like file_names
-			l_search_directories: like search_directories
 			l_name: STRING_32
 			l_file: RAW_FILE
 			l_u: FILE_UTILITIES
 		do
-			l_file_names := file_names
-			l_search_directories := search_directories
 			Result := True
 				-- Check file names.
-			from
-				l_file_names.start
-			until
-				l_file_names.after
+			across
+				file_names as f
 			loop
-				l_name := l_file_names.item
-				if l_name.count > 2 and then l_name.substring (l_name.count - 1, l_name.count).same_string (file_suffix) then
-					if not l_u.file_exists (l_name) then
-						print_file_not_exist (l_name)
-						Result := False
-					end
-				else
+				l_name := f.item
+				if l_name.count <= 2 or else not l_name.substring (l_name.count - 1, l_name.count).same_string (file_suffix) then
 					print_file_name_invalid (l_name)
 					Result := False
+				elseif not l_u.file_exists (l_name) then
+					print_file_not_exist (l_name)
+					Result := False
 				end
-				l_file_names.forth
 			end
 
 				-- Check directories.
 			if Result then
-				from
-					l_search_directories.start
-				until
-					l_search_directories.after
+				across
+					search_directories as d
 				loop
-					l_name := l_search_directories.item
+					l_name := d.item
 					if not l_u.directory_exists (l_name) then
 						print_directory_not_exist (l_name)
 						Result := False
 					end
-					l_search_directories.forth
 				end
 			end
 				-- Check output location
 			if attached output_file_name as o then
 				create l_file.make_with_name (o)
 				if
-					not (
-						(l_file.exists and then l_file.is_writable) or else
-						(not l_file.exists and then l_file.is_creatable)
-					)
+					not
+						((l_file.exists and then l_file.is_writable) or else
+							(not l_file.exists and then l_file.is_creatable))
 				then
 					print_invalid_output_file (o)
 					Result := False
@@ -370,13 +331,13 @@ feature {NONE} -- Implementation
 				localized_print (po_file.to_string)
 				localized_print ("%N")
 			else
-				create l_file.make_with_name (o)
-				l_file.open_write
+				create l_file.make_open_write (o)
 				if l_file.is_writable then
 					l_file.put_string (u.string_32_to_utf_8_string_8 (po_file.to_string))
 					print_file_generated (o)
 				else
 					print_file_not_writable (o)
+					has_error := True
 				end
 				l_file.close
 			end

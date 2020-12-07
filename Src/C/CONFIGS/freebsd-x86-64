@@ -213,7 +213,7 @@ else
 	ld='ld'
 fi
 lintflags=''
-ldflags=""
+ldflags=" -L/usr/local/lib -L/usr/lib "
 ldsharedflags="$ldflags -shared -o"
 libs='-lm -lcompat'
 ln='/bin/ln'

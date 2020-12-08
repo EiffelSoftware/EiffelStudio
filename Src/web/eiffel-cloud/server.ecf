@@ -38,7 +38,7 @@
 		<library name="es_cloud_module" location="modules\es_cloud\es_cloud.ecf" readonly="false"/>
 		<library name="http" location="$ISE_LIBRARY\contrib\library\network\protocol\http\http.ecf"/>
 		<library name="json" location="$ISE_LIBRARY\contrib\library\text\parser\json\library\json.ecf" readonly="false"/>
-		<library name="jwt_auth_module" location="modules\jwt_auth\jwt_auth.ecf" readonly="false"/>
+		<library name="jwt_auth_module" location="$ISE_LIBRARY\unstable\library\web\cms\modules\jwt_auth\jwt_auth.ecf" readonly="false"/>
 		<library name="login_with_esa_module" location="..\cms_modules\login_with_esa\login_with_esa.ecf" readonly="false"/>
 		<library name="eiffel_download_module" location="..\cms_modules\eiffel_download\eiffel_download.ecf" readonly="false"/>
 		<library name="masquerade_auth_module" location="$ISE_LIBRARY\unstable\library\web\cms\dev_modules\masquerade_auth\masquerade_auth.ecf" readonly="false"/>

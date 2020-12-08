@@ -156,7 +156,9 @@ feature -- Access: routes
 							attached fd.string_item ("esa_username") as l_esa_username and then
 							attached fd.string_item ("esa_password") as l_esa_password
 						then
-							if attached api.esa_account (l_esa_username, l_esa_password) as l_esa_acc then
+							if attached api.user_for_esa_name (l_esa_username) as l_existing_user then
+								s.append ("<p>ERROR: the eiffel.com %"" + html_encoded (l_esa_username) + "%" account is already associated with another account!</p>")
+							elseif attached api.esa_account (l_esa_username, l_esa_password) as l_esa_acc then
 								api.associate_esa_account (u, l_esa_acc)
 								if attached api.esa_account_for_user (u) as l_esa_account then
 									s.append ("<p>Account is now associated with the given eiffel.com account</p>")

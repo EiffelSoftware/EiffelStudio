@@ -136,6 +136,9 @@ feature -- Relation with CMS
 	user_for_esa_name (a_esa_name: READABLE_STRING_GENERAL): detachable CMS_USER
 		do
 			Result := login_with_esa_storage.user_for_esa_name (a_esa_name)
+			if Result = Void and then a_esa_name.has ('@') then
+				Result := login_with_esa_storage.user_for_esa_email (a_esa_name)
+			end
 		end
 
 	user_for_esa_email (a_esa_email: READABLE_STRING_GENERAL): detachable CMS_USER

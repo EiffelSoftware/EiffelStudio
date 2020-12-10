@@ -483,8 +483,8 @@ feature -- Hook
 				if a_response.has_permission (perm_access_es_stats) then
 					create lnk.make (a_response.api.translation ("Stats", Void), statistics_location)
 					lnk.set_weight (20)
+					a_menu_system.primary_menu.extend (lnk)
 				end
-				a_menu_system.primary_menu.extend (lnk)
 			end
 		end
 

@@ -41,12 +41,13 @@ CREATE TABLE es_plan_org_sub(
 );
 
 CREATE TABLE es_installations(
-  `iid` VARCHAR(255) PRIMARY KEY NOT NULL ,
+  `iid` VARCHAR(255) NOT NULL ,
   `lid`	INTEGER NOT NULL,
   `name` TEXT,
   `info` TEXT NOT NULL,
   `status` INTEGER NOT NULL,
-  `creation` DATETIME NOT NULL
+  `creation` DATETIME NOT NULL,
+  CONSTRAINT PK_iid_lid_key PRIMARY KEY (iid,lid)
 );
 
 CREATE TABLE es_sessions(

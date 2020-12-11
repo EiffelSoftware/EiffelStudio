@@ -2460,6 +2460,12 @@ msgid ""
 "that supersedes the installed one."
 msgstr ""
 
+#. Source code: locale.translation_in_context ("A once class may not have formal generic parameters.", "compiler.parser"))) as e
+#: eiffel_parser.e:11417
+msgctxt "compiler.parser"
+msgid "A once class may not have formal generic parameters."
+msgstr ""
+
 #. Source code: do Result := locale.translation_in_context ("A pure function must not access built-in attributes closed or owner, or functions marked inv_unfriendly, unless it is itself inv_unfriendly.", "autoproof") end
 #: e2b_messages.e:34
 msgctxt "autoproof"
@@ -29898,12 +29904,6 @@ msgstr ""
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:305
 msgctxt "preference"
 msgid "Once and constant in upper"
-msgstr ""
-
-#. Source code: locale.translation_in_context ("Once class cannot have formal generic parameters.", "compiler.parser"))) as e
-#: eiffel_parser.e:11417
-msgctxt "compiler.parser"
-msgid "Once class cannot have formal generic parameters."
 msgstr ""
 
 #. Source code: Result := locale.formatted_string (locale.translation ("Once function `$1': $2."), [fname, msg])

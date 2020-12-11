@@ -2303,7 +2303,7 @@ Formal_generics:
 				if
 					is_once and then
 					attached (create {SYNTAX_ERROR}.make (token_line ($1), token_column ($1), filename,
-						locale.translation_in_context ("Once class cannot have formal generic parameters.", "compiler.parser"))) as e
+						locale.translation_in_context ("A once class may not have formal generic parameters.", "compiler.parser"))) as e
 				then
 					e.set_associated_class (current_class)
 					error_handler.insert_error (e)

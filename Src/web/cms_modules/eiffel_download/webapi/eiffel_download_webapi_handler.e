@@ -60,8 +60,8 @@ feature -- Execution GET
 			-- Execute handler for `req' and respond in `res'.
 		local
 			rep: HM_WEBAPI_RESPONSE
-			l_value: STRING
-			l_channel: STRING
+			l_value: READABLE_STRING_GENERAL
+			l_channel: READABLE_STRING_GENERAL
 		do
 			if api.has_permissions (<<"view downloads">>) then
 				if
@@ -81,7 +81,7 @@ feature -- Execution GET
 							end
 						else
 								-- Invalid Release
-							rep := new_error_response ("Release [" + l_value + "] invalid" , req, res)
+							rep := new_error_response ("Release [" + utf_8_encoded (l_value) + "] invalid" , req, res)
 							rep.set_status_code ({HTTP_STATUS_CODE}.bad_request)
 						end
 					else
@@ -123,7 +123,7 @@ feature -- Execute Delete
 						create l_dir.make_with_path (api.module_location_by_name ("eiffel_download"))
 
 						if l_dir.exists  then
-							create {RAW_FILE} l_file.make_open_write (l_dir.path.extended ("channel").extended (l_channel).extended ("downloads_configuration_" + release_version_dot_format (l_release.value)+ ".json").name)
+							create {RAW_FILE} l_file.make_open_write (l_dir.path.extended ("channel").extended (l_channel).extended ("downloads_configuration_").appended (release_version_dot_format (l_release.value)).appended_with_extension ("json").name)
 							if l_file.exists then
 								l_file.close
 								delete_uploaded_file (l_file.path)
@@ -222,7 +222,9 @@ feature -- Execute POST
 
 feature {NONE} -- Implementation
 
-	product_options_link (a_prod: DOWNLOAD_PRODUCT; a_prod_opts: DOWNLOAD_PRODUCT_OPTIONS; a_mirror: READABLE_STRING_8): detachable STRING
+	product_options_link (a_prod: DOWNLOAD_PRODUCT; a_prod_opts: DOWNLOAD_PRODUCT_OPTIONS; a_mirror: READABLE_STRING_8): detachable READABLE_STRING_8
+		local
+			s: STRING_8
 		do
 			if attached a_prod_opts.filename as l_filename then
 				a_prod_opts.get_link
@@ -233,19 +235,20 @@ feature {NONE} -- Implementation
 					attached a_prod.name as l_name and then
 					attached a_prod.number as l_number
 				then
-					create Result.make_from_string (a_mirror)
-					Result.append (url_encoded (l_name))
-					Result.append_character (' ')
-					Result.append (url_encoded (l_number))
-					Result.append_character ('/')
-					Result.append (url_encoded (l_build))
-					Result.append_character ('/')
-					Result.append (url_encoded (l_filename))
+					create s.make_from_string (a_mirror)
+					s.append (url_encoded (l_name))
+					s.append_character (' ')
+					s.append (url_encoded (l_number))
+					s.append_character ('/')
+					s.append (url_encoded (l_build))
+					s.append_character ('/')
+					s.append (url_encoded (l_filename))
+					Result := s
 				end
 			end
 		end
 
-	retrieve_by_release_and_platform (req: WSF_REQUEST; res: WSF_RESPONSE; a_release: READABLE_STRING_32; a_platform: READABLE_STRING_32): HM_WEBAPI_RESPONSE
+	retrieve_by_release_and_platform (req: WSF_REQUEST; res: WSF_RESPONSE; a_release: READABLE_STRING_GENERAL; a_platform: READABLE_STRING_GENERAL): HM_WEBAPI_RESPONSE
 		local
 			l_list: LIST [EIFFEL_DOWNLOAD_RESOURCE]
 			l_url: STRING
@@ -277,11 +280,11 @@ feature {NONE} -- Implementation
 									attached l_prod_options.filename as l_filename and then
 									attached product_options_link (l_product, l_prod_options, l_mirror) as l_link
 								then
-									l_url := l_link.twin
+									create l_url.make_from_string (l_link)
 									l_list.force (create {EIFFEL_DOWNLOAD_RESOURCE}.make (l_filename, l_url, l_prod_options.size, l_prod_options.platform))
 								end
 							end
-							Result.add_iterator_field ("downloads_" + l_number , l_list)
+							Result.add_iterator_field ({STRING_32} "downloads_" + l_number , l_list)
 						end
 					end
 				elseif
@@ -309,12 +312,12 @@ feature {NONE} -- Implementation
 									l_platform.is_case_insensitive_equal (a_platform)
 								then
 									if attached product_options_link (ic.item, l_prod_options, l_mirror) as l_link then
-										l_url := l_link.twin
+										create l_url.make_from_string (l_link)
 										l_list.force (create {EIFFEL_DOWNLOAD_RESOURCE}.make (l_filename, l_url, l_prod_options.size, l_prod_options.platform))
 									end
 								end
 							end
-							Result.add_iterator_field ("downloads_" + l_number , l_list)
+							Result.add_iterator_field ({STRING_32} "downloads_" + l_number , l_list)
 						end
 					end
 				elseif
@@ -389,7 +392,7 @@ feature {NONE} -- Implementation
 						Result.add_iterator_field ("downloads", l_list)
 					end
 				else
-					Result := new_error_response ("Release [" + a_release  +"] not found" , req, res)
+					Result := new_error_response ("Release [" + utf_8_encoded (a_release)  +"] not found" , req, res)
 					Result.set_status_code ({HTTP_STATUS_CODE}.bad_request)
 				end
 			else
@@ -490,7 +493,7 @@ feature {NONE} -- Implementation
 			retried: BOOLEAN
 		do
 			if retried then
-				write_error_log (generator.to_string_32 + {STRING_32} "Can not delete file %"" + p.name + "%"")
+				write_error_log (generator + "Can not delete file %"" + p.utf_8_name + "%"")
 			else
 				create f.make_with_path (p)
 				if f.exists then

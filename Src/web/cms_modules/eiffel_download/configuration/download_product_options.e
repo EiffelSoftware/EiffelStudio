@@ -37,7 +37,7 @@ feature -- Access
 	size: INTEGER_64
 			-- Product size.
 
-	link: detachable READABLE_STRING_32
+	link: detachable READABLE_STRING_8
 
 feature -- Link
 

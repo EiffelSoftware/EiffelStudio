@@ -286,7 +286,7 @@ feature {NONE} -- Implemenation: Products
 						l_item.set_key (l_key.unescaped_string_32)
 					end
 					if attached {JSON_STRING} ji.item ("link") as l_link then
-						l_item.set_link (l_link.unescaped_string_32)
+						l_item.set_link (l_link.unescaped_string_8)
 					end
 					Result.force (l_item)
 				end
@@ -301,7 +301,7 @@ feature {NONE} -- Implementation
 			Result := (create {JSON_FILE_READER}).read_json_from (a_fn.name)
 		end
 
-	new_json_parser (a_string: STRING): JSON_PARSER
+	new_json_parser (a_string: READABLE_STRING_8): JSON_PARSER
 		do
 			create Result.make_with_string (a_string)
 		end

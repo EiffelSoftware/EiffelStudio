@@ -14,6 +14,24 @@ feature -- Access
 	products: detachable ARRAYED_LIST [DOWNLOAD_PRODUCT]
 		-- Possible list of product downloads.
 
+	public_products: detachable ARRAYED_LIST [DOWNLOAD_PRODUCT]
+		-- Possible list of public product downloads.
+		do
+			if attached products as lst then
+				create Result.make (lst.count)
+				across
+					lst as ic
+				loop
+					if ic.item.public then
+						Result.force (ic.item)
+					end
+				end
+				if Result.is_empty then
+					Result := Void
+				end
+			end
+		end
+
 feature -- Element Change
 
 	set_mirror (a_mirror: like mirror)

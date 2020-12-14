@@ -129,7 +129,7 @@ feature -- Hooks
 				l_platform := get_platform (l_ua)
 				vals.force (l_platform, "platform")
 
-				if attached l_api.retrieve_product (cfg) as l_product then
+				if attached l_api.retrieve_public_product (cfg) as l_product then
 					if
 						attached l_product.name as l_name and then
 						attached l_product.version  as l_version and then
@@ -292,8 +292,8 @@ feature -- Handler
 					if
 						attached l_api.download_channel_configuration (a_channel) as cfg
 					then
-						vals.force (l_api.retrieve_product (cfg), "product")
-						if attached l_api.retrieve_products (cfg) as l_products then
+						vals.force (l_api.retrieve_public_product (cfg), "product")
+						if attached l_api.retrieve_public_products (cfg) as l_products then
 								-- Compute download links if needed.
 							across
 								l_products as ic
@@ -345,7 +345,7 @@ feature -- Handler
 				create l_ua.make_from_string (req.http_user_agent)
 				write_debug_log (generator + ".handle_download [ User_agent: " + l_ua.user_agent  + " ]")
 
-				if attached l_api.retrieve_product (cfg) as l_product then
+				if attached l_api.retrieve_public_product (cfg) as l_product then
 					if
 						attached l_api.selected_platform (l_product.downloads, get_platform (l_ua)) as l_selected and then
 						attached l_selected.filename as l_filename

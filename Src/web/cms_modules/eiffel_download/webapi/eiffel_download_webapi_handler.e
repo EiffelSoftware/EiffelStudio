@@ -86,7 +86,7 @@ feature -- Execution GET
 						end
 					else
 							-- retrieve all available products for channel `l_channel` using the latest release.
-						rep := retrieve_all_products (l_channel, req, res)
+						rep := retrieve_all_public_products (l_channel, req, res)
 					end
 				else
 						-- Invalid Channel
@@ -258,7 +258,7 @@ feature {NONE} -- Implementation
 					a_release.is_case_insensitive_equal ("all") and then
 					a_platform.is_case_insensitive_equal ("all") and then
 					attached l_download_api.download_channel_configuration (Void) as cfg and then
-					attached l_download_api.retrieve_products (cfg) as l_all_products and then
+					attached l_download_api.retrieve_public_products (cfg) as l_all_products and then
 					attached l_download_api.retrieve_mirror (cfg) as l_mirror
 				then
 						-- all releases and all platforms.
@@ -322,7 +322,7 @@ feature {NONE} -- Implementation
 					not a_release.is_case_insensitive_equal ("all") and then
 					not a_platform.is_case_insensitive_equal ("all") and then
 					attached l_download_api.download_channel_configuration (Void) as cfg and then
-					attached l_download_api.retrieve_product_by_version (cfg, a_release) as prod and then
+					attached l_download_api.retrieve_public_product_by_version (cfg, a_release) as prod and then
 					attached l_download_api.retrieve_mirror (cfg) as l_mirror and then
 					attached prod.build as l_build and then
 					attached prod.name as l_name and then
@@ -361,7 +361,7 @@ feature {NONE} -- Implementation
 					Result := retrieve_by_release_and_platform (req, res, "all", "all")
 				elseif
 					attached l_download_api.download_channel_configuration (Void) as cfg and then
-					attached l_download_api.retrieve_product_by_version (cfg, a_release) as l_product and then
+					attached l_download_api.retrieve_public_product_by_version (cfg, a_release) as l_product and then
 				  	attached l_download_api.retrieve_mirror (cfg) as l_mirror and then
 				   	attached l_product.build as l_build and then
 				  	attached l_product.name as l_name and then
@@ -398,7 +398,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	retrieve_all_products (a_channel: detachable READABLE_STRING_GENERAL; req: WSF_REQUEST; res: WSF_RESPONSE): HM_WEBAPI_RESPONSE
+	retrieve_all_public_products (a_channel: detachable READABLE_STRING_GENERAL; req: WSF_REQUEST; res: WSF_RESPONSE): HM_WEBAPI_RESPONSE
 				-- Retrieve all EiffelStudio available downloads from channel `a_channel` (or stable if not defined).
 		local
 			l_list: LIST [EIFFEL_DOWNLOAD_RESOURCE]
@@ -409,7 +409,7 @@ feature {NONE} -- Implementation
 			if attached download_api as l_download_api then
 				if
 					attached l_download_api.download_channel_configuration (a_channel) as cfg and then
-					attached l_download_api.retrieve_product (cfg) as l_product and then
+					attached l_download_api.retrieve_public_product (cfg) as l_product and then
 					attached l_download_api.retrieve_mirror (cfg) as l_mirror and then
 					attached l_product.build as l_build and then
 					attached l_product.name as l_name and then

@@ -10,7 +10,7 @@
 	{unless isset="$products"} - {$download_channel/} Releases: not available{/unless}
 	{if isset="$products"} - {$download_channel/} Releases{/if}
 	</h2>
-	<p class="intro"> After downloading a release suitable for your system, please follow the <a href="htps://www.eiffel.org/doc/eiffelstudio/Setup and installation">installation instructions</a> and <a href="https://www.youtube.com/channel/UCT6IcRZAfa-uFD0k3Dbi_7A">installation videos</a>.
+	<p class="intro"> After downloading a release suitable for your system, please follow the <a href="https://www.eiffel.org/doc/eiffelstudio/Setup and installation">installation instructions</a> and <a href="https://www.youtube.com/channel/UCT6IcRZAfa-uFD0k3Dbi_7A">installation videos</a>.
 		If you are new to Eiffel, please check the <a href="https://www.eiffel.org/doc/eiffelstudio/EiffelStudio tutorials">tutorials </a> and <a href="https://www.youtube.com/playlist?list=PLhVybat45jE9TObIY8nkkA5OejGnW5yby" target="_blank">videos</a>.
 	</p>
 	{foreach item="ic" from="$products"}

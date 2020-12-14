@@ -58,6 +58,7 @@ feature -- Handle
 			ch: READABLE_STRING_8
 			r: CMS_RESPONSE
 			s: STRING
+			l_can_edit: BOOLEAN
 		do
 			r := new_response (a_api, req, res)
 
@@ -72,19 +73,55 @@ feature -- Handle
 				s.append ("<li><a href=%""+ r.api.administration_path ("eiffel_download/update/channel/" + a_api.url_encoded (ch)) +"%">Update channel "+ a_api.html_encoded (ch) +"</a></li>%N")
 				s.append ("<li><a href=%""+ r.api.administration_path ("eiffel_download/create/channel/" + a_api.url_encoded (ch)) +"%">Create new entry for channel "+ a_api.html_encoded (ch) +"</a></li>%N")
 			end
-			s.append ("<h2>Configurations</h2>%N")
 			if attached module.eiffel_download_api as l_download_api then
+				s.append ("<h2>Configurations</h2>%N")
+				l_can_edit := a_api.has_permission ("manage download")
 				across
 					l_download_api.configuration_files (ch) as ic
 				loop
 					if attached ic.item.entry as e then
 						s.append ("<li>")
 						s.append (a_api.html_encoded (e.name))
-						if a_api.has_permission ("manage download") then
+						if l_can_edit then
 							s.append (" -- <a href=%""+ req.percent_encoded_path_info + "/" + a_api.url_encoded (e.name) +"%">Edit</a>")
 						end
+
 						s.append ("</li>%N")
 					end
+				end
+				s.append ("<h2>Products</h2>%N")
+				across
+					l_download_api.channels as ch_ic
+				loop
+					s.append ("<li>Channel <strong>" + html_encoded (ch_ic.item) + "</strong>:")
+
+					if l_download_api.is_channel_available (ch_ic.item) then
+						if attached l_download_api.download_channel_configuration (ch_ic.item) as cfg then
+							if attached cfg.products as l_products then
+								s.append ("<span>" + l_products.count.out + " products:</span><ul class=%"products%">")
+								across
+									l_products as p_ic
+								loop
+									if p_ic.item.public then
+										s.append ("<li class=%"public%">")
+									else
+										s.append ("<li class=%"private%">PRIVATE: ")
+									end
+									s.append (html_encoded (p_ic.item.full_versioned_name))
+									s.append (" <span class=%"details%"> (" + p_ic.item.downloads_count.out + " download options)</span>")
+									s.append ("</li>")
+								end
+								s.append ("</ul>")
+							else
+								s.append ("<span class=%"error%">No product!</span>")
+							end
+						else
+							s.append ("<span class=%"error%">Invalid!</span>")
+						end
+					else
+						s.append ("<span class=%"error%">Not available!</span>")
+					end
+					s.append ("</li>")
 				end
 			end
 			r.set_title ("Eiffel Downloads: channel " + a_api.html_encoded (ch))

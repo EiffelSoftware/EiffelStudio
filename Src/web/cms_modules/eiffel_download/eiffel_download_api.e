@@ -74,7 +74,6 @@ feature -- Access: config
 		local
 			l_dir: DIRECTORY
 		do
-			write_debug_log (generator + ".download_channel_configuration")
 			if internal_download_configuration = Void then
 				create l_dir.make_with_path (channel_file_location (a_channel))
 				if l_dir.exists then
@@ -151,20 +150,20 @@ feature -- Access
 			Result := cfg.mirror
 		end
 
-	retrieve_product (cfg: DOWNLOAD_CONFIGURATION): detachable DOWNLOAD_PRODUCT
+	retrieve_public_product (cfg: DOWNLOAD_CONFIGURATION): detachable DOWNLOAD_PRODUCT
 			-- Get the latest release.
 		do
-			if attached retrieve_products (cfg)  as l_products then
-				Result := l_products.at (1)
+			if attached retrieve_public_products (cfg) as l_products then
+				Result := l_products.first
 			end
 		end
 
-	retrieve_product_by_version (cfg: DOWNLOAD_CONFIGURATION; a_version: READABLE_STRING_32): detachable DOWNLOAD_PRODUCT
+	retrieve_public_product_by_version (cfg: DOWNLOAD_CONFIGURATION; a_version: READABLE_STRING_32): detachable DOWNLOAD_PRODUCT
 			-- Retrieve product by version a 'a_version'.
 		local
 			l_found: BOOLEAN
 		do
-			if attached retrieve_products (cfg)  as l_products then
+			if attached retrieve_public_products (cfg)  as l_products then
 				from
 					l_products.start
 				until
@@ -179,10 +178,29 @@ feature -- Access
 			end
 		end
 
+	retrieve_public_products (cfg: DOWNLOAD_CONFIGURATION): detachable LIST[DOWNLOAD_PRODUCT]
+			-- List of potential download public products.
+		do
+			Result := public_products_sorted (cfg)
+		end
+
 	retrieve_products (cfg: DOWNLOAD_CONFIGURATION): detachable LIST[DOWNLOAD_PRODUCT]
 			-- List of potential download products.
 		do
 			Result := products_sorted (cfg)
+		end
+
+	public_products_sorted (cfg: DOWNLOAD_CONFIGURATION): detachable LIST[DOWNLOAD_PRODUCT]
+		local
+			l_sort: QUICK_SORTER [DOWNLOAD_PRODUCT]
+			l_comp: COMPARABLE_COMPARATOR [DOWNLOAD_PRODUCT]
+		do
+			if attached cfg.public_products as l_products then
+				Result := l_products
+				create l_comp
+				create l_sort.make (l_comp)
+				l_sort.reverse_sort (Result)
+			end
 		end
 
 	products_sorted (cfg: DOWNLOAD_CONFIGURATION): detachable LIST[DOWNLOAD_PRODUCT]

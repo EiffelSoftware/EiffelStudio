@@ -8,6 +8,20 @@ class
 
 inherit
 	COMPARABLE
+		redefine
+			default_create
+		end
+
+create
+	default_create
+
+feature {NONE} -- Initialization
+
+	default_create
+		do
+			Precursor
+			public := True -- Default
+		end
 
 feature -- Access
 
@@ -70,6 +84,34 @@ feature -- Access
 
 	downloads: detachable LIST [DOWNLOAD_PRODUCT_OPTIONS]
 			-- Possible list of download options.
+
+	downloads_count: INTEGER
+		do
+			if attached downloads as lst then
+				Result := lst.count
+			end
+		end
+
+feature -- Access
+
+	full_versioned_name: STRING_32
+		do
+			if attached name as l_name then
+				create Result.make_from_string (l_name)
+			elseif attached id as l_id then
+				create Result.make_from_string (l_id)
+			else
+				create Result.make_from_string ("product")
+			end
+			if attached number as n then
+				Result.append_character ('-')
+				Result.append (n)
+			end
+			if attached build as l_build then
+				Result.append_character ('-')
+				Result.append (l_build)
+			end
+		end
 
 feature -- Element change
 

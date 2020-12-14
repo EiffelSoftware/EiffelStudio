@@ -90,38 +90,31 @@ feature -- Handle
 					end
 				end
 				s.append ("<h2>Products</h2>%N")
-				across
-					l_download_api.channels as ch_ic
-				loop
-					s.append ("<li>Channel <strong>" + html_encoded (ch_ic.item) + "</strong>:")
-
-					if l_download_api.is_channel_available (ch_ic.item) then
-						if attached l_download_api.download_channel_configuration (ch_ic.item) as cfg then
-							if attached cfg.products as l_products then
-								s.append ("<span>" + l_products.count.out + " products:</span><ul class=%"products%">")
-								across
-									l_products as p_ic
-								loop
-									if p_ic.item.public then
-										s.append ("<li class=%"public%">")
-									else
-										s.append ("<li class=%"private%">PRIVATE: ")
-									end
-									s.append (html_encoded (p_ic.item.full_versioned_name))
-									s.append (" <span class=%"details%"> (" + p_ic.item.downloads_count.out + " download options)</span>")
-									s.append ("</li>")
+				if l_download_api.is_channel_available (ch) then
+					if attached l_download_api.download_channel_configuration (ch) as cfg then
+						if attached cfg.products as l_products then
+							s.append ("<p>" + l_products.count.out + " products:</p><ul class=%"products%">")
+							across
+								l_products as p_ic
+							loop
+								if p_ic.item.public then
+									s.append ("<li class=%"public%">")
+								else
+									s.append ("<li class=%"private%">PRIVATE: ")
 								end
-								s.append ("</ul>")
-							else
-								s.append ("<span class=%"error%">No product!</span>")
+								s.append (html_encoded (p_ic.item.full_versioned_name))
+								s.append (" <span class=%"details%"> (" + p_ic.item.downloads_count.out + " download options)</span>")
+								s.append ("</li>")
 							end
+							s.append ("</ul>")
 						else
-							s.append ("<span class=%"error%">Invalid!</span>")
+							s.append ("<p class=%"error%">No product!</p>")
 						end
 					else
-						s.append ("<span class=%"error%">Not available!</span>")
+						s.append ("<p class=%"error%">Invalid!</p>")
 					end
-					s.append ("</li>")
+				else
+					s.append ("<p class=%"error%">Not available!</p>")
 				end
 			end
 			r.set_title ("Eiffel Downloads: channel " + a_api.html_encoded (ch))

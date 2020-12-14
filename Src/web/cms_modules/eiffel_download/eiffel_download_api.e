@@ -42,11 +42,16 @@ feature -- Access: config
 			p: PATH
 			fut: FILE_UTILITIES
 			lst: detachable LIST [READABLE_STRING_32]
+			l_sort: QUICK_SORTER [READABLE_STRING_32]
+			l_comp: COMPARABLE_COMPARATOR [READABLE_STRING_32]
 		do
 			create {ARRAYED_LIST [PATH]} Result.make (10)
 			p := channel_file_location (a_channel)
 			lst := fut.file_names (p.name)
 			if lst /= Void then
+				create l_comp
+				create l_sort.make (l_comp);
+				l_sort.reverse_sort (lst)
 				across
 					lst as ic
 				loop
@@ -191,29 +196,13 @@ feature -- Access
 		end
 
 	public_products_sorted (cfg: DOWNLOAD_CONFIGURATION): detachable LIST[DOWNLOAD_PRODUCT]
-		local
-			l_sort: QUICK_SORTER [DOWNLOAD_PRODUCT]
-			l_comp: COMPARABLE_COMPARATOR [DOWNLOAD_PRODUCT]
 		do
-			if attached cfg.public_products as l_products then
-				Result := l_products
-				create l_comp
-				create l_sort.make (l_comp)
-				l_sort.reverse_sort (Result)
-			end
+			Result := cfg.sorted_public_products
 		end
 
 	products_sorted (cfg: DOWNLOAD_CONFIGURATION): detachable LIST[DOWNLOAD_PRODUCT]
-		local
-			l_sort: QUICK_SORTER [DOWNLOAD_PRODUCT]
-			l_comp: COMPARABLE_COMPARATOR [DOWNLOAD_PRODUCT]
 		do
-			if attached cfg.products as l_products then
-				Result := l_products
-				create l_comp
-				create l_sort.make (l_comp)
-				l_sort.reverse_sort (Result)
-			end
+			Result := cfg.sorted_products
 		end
 
 	selected_platform (a_downloads: detachable LIST [DOWNLOAD_PRODUCT_OPTIONS]; a_platform: READABLE_STRING_GENERAL): detachable DOWNLOAD_PRODUCT_OPTIONS

@@ -14,8 +14,21 @@ feature -- Access
 	products: detachable ARRAYED_LIST [DOWNLOAD_PRODUCT]
 		-- Possible list of product downloads.
 
+	sorted_products: detachable LIST [DOWNLOAD_PRODUCT]
+		local
+			l_sort: QUICK_SORTER [DOWNLOAD_PRODUCT]
+			l_comp: COMPARABLE_COMPARATOR [DOWNLOAD_PRODUCT]
+		do
+			if attached products as l_products then
+				Result := l_products
+				create l_comp
+				create l_sort.make (l_comp)
+				l_sort.reverse_sort (Result)
+			end
+		end
+
 	public_products: detachable ARRAYED_LIST [DOWNLOAD_PRODUCT]
-		-- Possible list of public product downloads.
+			-- Possible list of public product downloads.
 		do
 			if attached products as lst then
 				create Result.make (lst.count)
@@ -29,6 +42,19 @@ feature -- Access
 				if Result.is_empty then
 					Result := Void
 				end
+			end
+		end
+
+	sorted_public_products: detachable LIST [DOWNLOAD_PRODUCT]
+		local
+			l_sort: QUICK_SORTER [DOWNLOAD_PRODUCT]
+			l_comp: COMPARABLE_COMPARATOR [DOWNLOAD_PRODUCT]
+		do
+			if attached public_products as l_products then
+				Result := l_products
+				create l_comp
+				create l_sort.make (l_comp)
+				l_sort.reverse_sort (Result)
 			end
 		end
 

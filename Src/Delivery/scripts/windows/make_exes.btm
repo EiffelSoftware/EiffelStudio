@@ -8,8 +8,8 @@ endiff
 iff not exist %INSTALL_DIR%\releases\enterprise_version then
 	md %INSTALL_DIR%\releases\enterprise_version
 endiff
-iff not exist %INSTALL_DIR%\releases\enterprise_version-axar then
-	md %INSTALL_DIR%\releases\enterprise_version-axar
+iff not exist %INSTALL_DIR%\releases\axar_enterprise_version then
+	md %INSTALL_DIR%\releases\axar_enterprise_version
 endiff
 iff not exist %INSTALL_DIR%\releases\branded_version then
 	md %INSTALL_DIR%\releases\branded_version

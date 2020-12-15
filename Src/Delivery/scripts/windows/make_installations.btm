@@ -98,7 +98,7 @@ cdd %INIT_DIR\install\content\eiffelstudio
 safe_md %INSTALL_DIR\setups
 safe_md %INSTALL_DIR\setups\standard
 safe_md %INSTALL_DIR\setups\enterprise
-safe_md %INSTALL_DIR\setups\enterprise-axar
+safe_md %INSTALL_DIR\setups\axar_enterprise
 safe_md %INSTALL_DIR\setups\branded
 
 
@@ -208,22 +208,22 @@ remtrace Uploading Branded packages online
 
 if "%NO_AXAR_ENTERPRISE_BUILD%" NEQ "True" (
 	cdd %INSTALL_DIR
-	if exist %INSTALL_DIR\setups\enterprise-axar\%STUDIO_NAME%_axar_%SVN_VERSION-%ISE_PLATFORM%.7z (
-		remtrace Enterprise-axar archive: reuse
+	if exist %INSTALL_DIR\setups\axar_enterprise\%STUDIO_NAME%_axar_%SVN_VERSION-%ISE_PLATFORM%.7z (
+		remtrace axar_enterprise archive: reuse
 	) else (
-		remtrace Enterprise-axar archive
-		safe_copy %INSTALL_DIR\releases\enterprise_version-axar\ec.exe %INSTALL_DIR\%STUDIO_NAME%\studio\spec\%ISE_PLATFORM%\bin
-		safe_copy %INSTALL_DIR\releases\enterprise_version-axar\ecb.exe %INSTALL_DIR\%STUDIO_NAME%\studio\spec\%ISE_PLATFORM%\bin
-		iff exist %INSTALL_DIR\releases\enterprise_version-axar\LICENSE then
-			safe_copy %INSTALL_DIR\releases\enterprise_version-axar\LICENSE %INSTALL_DIR\%STUDIO_NAME%\LICENSE
+		remtrace axar_enterprise archive
+		safe_copy %INSTALL_DIR\releases\axar_enterprise_version\ec.exe %INSTALL_DIR\%STUDIO_NAME%\studio\spec\%ISE_PLATFORM%\bin
+		safe_copy %INSTALL_DIR\releases\axar_enterprise_version\ecb.exe %INSTALL_DIR\%STUDIO_NAME%\studio\spec\%ISE_PLATFORM%\bin
+		iff exist %INSTALL_DIR\releases\axar_enterprise_version\LICENSE then
+			safe_copy %INSTALL_DIR\releases\axar_enterprise_version\LICENSE %INSTALL_DIR\%STUDIO_NAME%\LICENSE
 		else
 			remtrace Missing AXAR Enterprise license text
 		endiff
-		7z a -t7z %INSTALL_DIR\setups\enterprise-axar\%STUDIO_NAME%_axar_%SVN_VERSION-%ISE_PLATFORM%.7z %STUDIO_NAME% -mx9 >>& %INSTALL_LOG
+		7z a -t7z %INSTALL_DIR\setups\axar_enterprise\%STUDIO_NAME%_axar_%SVN_VERSION-%ISE_PLATFORM%.7z %STUDIO_NAME% -mx9 >>& %INSTALL_LOG
 	)
 remtrace Uploading ENT AXAR packages online
-	cdd %INSTALL_DIR\setups\enterprise-axar
-	call share_delivery %STUDIO_NAME%_axar_%SVN_VERSION%-%ISE_PLATFORM%.7z enterprise-axar
+	cdd %INSTALL_DIR\setups\axar_enterprise
+	call share_delivery %STUDIO_NAME%_axar_%SVN_VERSION%-%ISE_PLATFORM%.7z axar_enterprise
 )
 
 remtrace Restoring the layout to its original state

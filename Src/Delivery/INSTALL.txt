@@ -1,0 +1,2 @@
+To install EiffelStudio, follow the procedure for your platform located online at:
+    https://www.eiffel.org/doc/uuid/90bc1970-bd1d-9707-3030-a4a9f613524a

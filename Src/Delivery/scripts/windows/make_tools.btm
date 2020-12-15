@@ -3,24 +3,24 @@ rem Should be called by make_exes.btm
 remtrace Compiling Eiffel Software tools
 
 remtrace Create tools directory for your platform.
-safe_md %STUDIO_DIR\tools
-safe_md %STUDIO_DIR\tools\spec
-safe_md %STUDIO_DIR\tools\spec\%ISE_PLATFORM
-safe_md %STUDIO_DIR\tools\spec\%ISE_PLATFORM\bin
+safe_md %STUDIO_DIR%\tools
+safe_md %STUDIO_DIR%\tools\spec
+safe_md %STUDIO_DIR%\tools\spec\%ISE_PLATFORM
+safe_md %STUDIO_DIR%\tools\spec\%ISE_PLATFORM%\bin
 
 remtrace Recompile iron
-iff exist %STUDIO_DIR\tools\spec\%ISE_PLATFORM\bin\iron.exe then
+iff exist %STUDIO_DIR%\tools\spec\%ISE_PLATFORM%\bin\iron.exe then
 	remtrace iron tool is already built
 else
-	cdd %EIFFEL_SRC\tools\iron\client
+	cdd %EIFFEL_SRC%\tools\iron\client
 	clean_project
 	finalize client.ecf es_iron
 	cleanup_eiffel es_iron iron.exe
 	iff exist iron.exe then
-		move iron.exe %STUDIO_DIR\tools\spec\%ISE_PLATFORM\bin
-		safe_copy %STUDIO_DIR\studio\spec\%ISE_PLATFORM\bin\libcurl.dll %STUDIO_DIR\tools\spec\%ISE_PLATFORM\bin\
-		safe_copy %STUDIO_DIR\studio\spec\%ISE_PLATFORM\bin\libeay32.dll %STUDIO_DIR\tools\spec\%ISE_PLATFORM\bin\
-		safe_copy %STUDIO_DIR\studio\spec\%ISE_PLATFORM\bin\ssleay32.dll %STUDIO_DIR\tools\spec\%ISE_PLATFORM\bin\
+		move iron.exe %STUDIO_DIR%\tools\spec\%ISE_PLATFORM%\bin
+		safe_copy %STUDIO_DIR%\studio\spec\%ISE_PLATFORM%\bin\libcurl.dll %STUDIO_DIR%\tools\spec\%ISE_PLATFORM%\bin\
+		safe_copy %STUDIO_DIR%\studio\spec\%ISE_PLATFORM%\bin\libeay32.dll %STUDIO_DIR%\tools\spec\%ISE_PLATFORM%\bin\
+		safe_copy %STUDIO_DIR%\studio\spec\%ISE_PLATFORM%\bin\ssleay32.dll %STUDIO_DIR%\tools\spec\%ISE_PLATFORM%\bin\
 	else
 		remerror Could not finalize a new iron
 		CANCEL_ON_ERROR
@@ -28,15 +28,15 @@ else
 endiff
 
 remtrace Recompile syntax_updater
-iff exist %STUDIO_DIR\tools\spec\%ISE_PLATFORM\bin\syntax_updater.exe then
+iff exist %STUDIO_DIR%\tools\spec\%ISE_PLATFORM%\bin\syntax_updater.exe then
 	remtrace syntax_updater tool is already built
 else
-	cdd %EIFFEL_SRC\tools\syntax_updater
+	cdd %EIFFEL_SRC%\tools\syntax_updater
 	clean_project
 	finalize syntax_updater.ecf
 	cleanup_eiffel syntax_updater syntax_updater.exe
 	iff exist syntax_updater.exe then
-		move syntax_updater.exe %STUDIO_DIR\tools\spec\%ISE_PLATFORM\bin
+		move syntax_updater.exe %STUDIO_DIR%\tools\spec\%ISE_PLATFORM%\bin
 	else
 		remerror Could not finalize a new syntax_updater
 		CANCEL_ON_ERROR
@@ -44,15 +44,15 @@ else
 endiff
 
 remtrace Recompile espawn
-iff exist %STUDIO_DIR\tools\spec\%ISE_PLATFORM\bin\espawn.exe then
+iff exist %STUDIO_DIR%\tools\spec\%ISE_PLATFORM%\bin\espawn.exe then
 	remtrace espawn tool is already built
 else
-	cdd %EIFFEL_SRC\tools\espawn
+	cdd %EIFFEL_SRC%\tools\espawn
 	clean_project
 	finalize espawn.ecf
 	cleanup_eiffel espawn espawn.exe
 	iff exist espawn.exe then
-		move espawn.exe %STUDIO_DIR\tools\spec\%ISE_PLATFORM\bin
+		move espawn.exe %STUDIO_DIR%\tools\spec\%ISE_PLATFORM%\bin
 	else
 		remerror Could not finalize a new espawn
 		CANCEL_ON_ERROR
@@ -60,15 +60,15 @@ else
 endiff
 
 remtrace Recompile compile_all
-iff exist %STUDIO_DIR\tools\spec\%ISE_PLATFORM\bin\compile_all.exe then
+iff exist %STUDIO_DIR%\tools\spec\%ISE_PLATFORM%\bin\compile_all.exe then
 	remtrace compile_all tool is already built
 else
-	cdd %EIFFEL_SRC\tools\compile_all
+	cdd %EIFFEL_SRC%\tools\compile_all
 	clean_project
 	finalize compile_all.ecf
 	cleanup_eiffel compile_all compile_all.exe
 	iff exist compile_all.exe then
-		move compile_all.exe %STUDIO_DIR\tools\spec\%ISE_PLATFORM\bin
+		move compile_all.exe %STUDIO_DIR%\tools\spec\%ISE_PLATFORM%\bin
 	else
 		remerror Could not finalize a new compile_all
 		CANCEL_ON_ERROR
@@ -76,15 +76,15 @@ else
 endiff
 
 remtrace Recompile eiffel tool
-iff exist %STUDIO_DIR\tools\spec\%ISE_PLATFORM\bin\eiffel.exe then
+iff exist %STUDIO_DIR%\tools\spec\%ISE_PLATFORM%\bin\eiffel.exe then
 	remtrace eiffel tool is already built
 else
-	cdd %EIFFEL_SRC\tools\eiffel_script
+	cdd %EIFFEL_SRC%\tools\eiffel_script
 	clean_project
 	finalize eiffel_script.ecf
 	cleanup_eiffel eiffel_script eiffel.exe
 	iff exist eiffel.exe then
-		move eiffel.exe %STUDIO_DIR\tools\spec\%ISE_PLATFORM\bin
+		move eiffel.exe %STUDIO_DIR%\tools\spec\%ISE_PLATFORM%\bin
 	else
 		remerror Could not finalize a new eiffel tool
 		CANCEL_ON_ERROR
@@ -92,15 +92,15 @@ else
 endiff
 
 remtrace Recompile wrap_c tool
-iff exist %STUDIO_DIR\tools\spec\%ISE_PLATFORM\bin\wrap_c.exe then
+iff exist %STUDIO_DIR%\tools\spec\%ISE_PLATFORM%\bin\wrap_c.exe then
 	remtrace wrap_c tool is already built
 else
-	cdd %EIFFEL_SRC\tools\wrapc\src\ewg
+	cdd %EIFFEL_SRC%\tools\wrapc\src\ewg
 	clean_project
 	finalize system.ecf
 	cleanup_eiffel wrap_c wrap_c.exe
 	iff exist wrap_c.exe then
-		move wrap_c.exe %STUDIO_DIR\tools\spec\%ISE_PLATFORM\bin
+		move wrap_c.exe %STUDIO_DIR%\tools\spec\%ISE_PLATFORM%\bin
 	else
 		remerror Could not finalize a new wrap_c tool
 		CANCEL_ON_ERROR
@@ -108,15 +108,15 @@ else
 endiff
 
 remtrace Recompile eiffel_image_embedder
-iff exist %STUDIO_DIR\tools\spec\%ISE_PLATFORM\bin\eiffel_image_embedder.exe then
+iff exist %STUDIO_DIR%\tools\spec\%ISE_PLATFORM%\bin\eiffel_image_embedder.exe then
 	remtrace eiffel_image_embedder tool is already built
 else
-	cdd %EIFFEL_SRC\tools\eiffel_image_embedder
+	cdd %EIFFEL_SRC%\tools\eiffel_image_embedder
 	clean_project
 	finalize eimgemb.ecf
 	cleanup_eiffel eiffel_image_embedder eimgemb.exe
 	iff exist eimgemb.exe then
-		move eimgemb.exe %STUDIO_DIR\tools\spec\%ISE_PLATFORM\bin
+		move eimgemb.exe %STUDIO_DIR%\tools\spec\%ISE_PLATFORM%\bin
 	else
 		remerror Could not finalize a new eiffel_image_embedder
 		CANCEL_ON_ERROR
@@ -124,15 +124,15 @@ else
 endiff
 
 remtrace Recompile eiffel_echo
-iff exist %STUDIO_DIR\tools\spec\%ISE_PLATFORM\bin\eiffel_echo.exe then
+iff exist %STUDIO_DIR%\tools\spec\%ISE_PLATFORM%\bin\eiffel_echo.exe then
 	remtrace eiffel_echo tool is already built
 else
-	cdd %EIFFEL_SRC\tools\eiffel_echo
+	cdd %EIFFEL_SRC%\tools\eiffel_echo
 	clean_project
 	finalize eiffel_echo.ecf
 	cleanup_eiffel eiffel_echo eiffel_echo.exe
 	iff exist eiffel_echo.exe then
-		move eiffel_echo.exe %STUDIO_DIR\tools\spec\%ISE_PLATFORM\bin
+		move eiffel_echo.exe %STUDIO_DIR%\tools\spec\%ISE_PLATFORM%\bin
 	else
 		remerror Could not finalize a new eiffel_echo
 		CANCEL_ON_ERROR
@@ -140,15 +140,15 @@ else
 endiff
 
 remtrace Recompile po_generation_tool
-iff exist %STUDIO_DIR\tools\spec\%ISE_PLATFORM\bin\po_generation_tool.exe then
+iff exist %STUDIO_DIR%\tools\spec\%ISE_PLATFORM%\bin\po_generation_tool.exe then
 	remtrace po_generation_tool tool is already built
 else
-	cdd %EIFFEL_SRC\tools\po_generation_tool
+	cdd %EIFFEL_SRC%\tools\po_generation_tool
 	clean_project
 	finalize po_generation_tool.ecf
 	cleanup_eiffel po_generation_tool po_generation_tool.exe
 	iff exist po_generation_tool.exe then
-		move po_generation_tool.exe %STUDIO_DIR\tools\spec\%ISE_PLATFORM\bin
+		move po_generation_tool.exe %STUDIO_DIR%\tools\spec\%ISE_PLATFORM%\bin
 	else
 		remerror Could not finalize a new po_generation_tool
 		CANCEL_ON_ERROR
@@ -156,19 +156,19 @@ else
 endiff
 
 remtrace Recompile eiffel_ribbon
-iff exist %STUDIO_DIR\tools\spec\%ISE_PLATFORM\bin\eiffel_ribbon.exe then
+iff exist %STUDIO_DIR%\tools\spec\%ISE_PLATFORM%\bin\eiffel_ribbon.exe then
 	remtrace eiffel_ribbon tool is already built
 else
-	safe_md %STUDIO_DIR\tools\ribbon
-	cdd %STUDIO_DIR\tools\ribbon
+	safe_md %STUDIO_DIR%\tools\ribbon
+	cdd %STUDIO_DIR%\tools\ribbon
 	exprt -r %PUBLIC_SVN_REVISION %DEFAULT_PUBLIC_SVN/Src/tools/eiffel_ribbon/template template
 	exprt -r %PUBLIC_SVN_REVISION %DEFAULT_PUBLIC_SVN/Src/tools/eiffel_ribbon/images images
-	cdd %EIFFEL_SRC\tools\eiffel_ribbon
+	cdd %EIFFEL_SRC%\tools\eiffel_ribbon
 	clean_project
 	finalize eiffel_ribbon.ecf
 	cleanup_eiffel eiffel_ribbon eiffel_ribbon.exe
 	iff exist eiffel_ribbon.exe then
-		move eiffel_ribbon.exe %STUDIO_DIR\tools\spec\%ISE_PLATFORM\bin
+		move eiffel_ribbon.exe %STUDIO_DIR%\tools\spec\%ISE_PLATFORM%\bin
 	else
 		remerror Could not finalize a new eiffel_ribbon
 		CANCEL_ON_ERROR
@@ -176,15 +176,15 @@ else
 endiff
 
 remtrace Recompile ace2ecf
-iff exist %STUDIO_DIR\tools\spec\%ISE_PLATFORM\bin\ace2ecf.exe then
+iff exist %STUDIO_DIR%\tools\spec\%ISE_PLATFORM%\bin\ace2ecf.exe then
 	remtrace ace2ecf tool is already built
 else
-	cdd %EIFFEL_SRC\tools\ace2ecf
+	cdd %EIFFEL_SRC%\tools\ace2ecf
 	clean_project
 	finalize ace2ecf.ecf
 	cleanup_eiffel ace2ecf ace2ecf.exe
 	iff exist ace2ecf.exe then
-		move ace2ecf.exe %STUDIO_DIR\tools\spec\%ISE_PLATFORM\bin
+		move ace2ecf.exe %STUDIO_DIR%\tools\spec\%ISE_PLATFORM%\bin
 	else
 		remerror Could not finalize a new ace2ecf
 		CANCEL_ON_ERROR

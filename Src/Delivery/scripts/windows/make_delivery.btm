@@ -25,6 +25,7 @@ iff %@INDEX[%@LOWER[%$],h] ge 0 then
 	echo   - no_wizards: to discard wizards building
 	echo   - no_install: to generare only the delivery (but not the installation executable) 
 	echo   - no_msi: exclude .msi building
+	echo   - no_reuse: do not reuse executable previously compiled
 	echo   (or nothing to fully regenerate the installation).
 	CANCEL
 endiff
@@ -47,6 +48,11 @@ iff %@INDEX[%@LOWER[%$],no_new_ec] ge 0 then
 	set NO_NEW_EC="True"
 else
 	unset /Q NO_NEW_EC
+endiff
+iff %@INDEX[%@LOWER[%$],no_reuse] ge 0 then
+	set NO_REUSE="True"
+else
+	unset /Q NO_REUSE
 endiff
 iff %@INDEX[%@LOWER[%$],enterprise] ge 0 then
 	set NO_STANDARD_BUILD="True"

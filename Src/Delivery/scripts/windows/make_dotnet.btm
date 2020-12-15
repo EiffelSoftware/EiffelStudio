@@ -15,30 +15,30 @@ IF "%ISE_C_COMPILER%" EQ "msc_vc140" (
 )
 espawn -u:%TMP_ISE_C_COMPILER_VER% "%COMSPEC% /c nmake -f Makefile-release msbuild_20"
 iff exist EiffelSoftware.Runtime.dll then
-	safe_copy EiffelSoftware.Runtime.dll %STUDIO_DIR\studio\spec\%ISE_PLATFORM\lib
-	safe_copy EiffelSoftware.Runtime.dll %STUDIO_DIR\studio\spec\%ISE_PLATFORM\bin
-	safe_copy EiffelSoftware.Runtime.dll %STUDIO_DIR\tools\spec\%ISE_PLATFORM\bin
+	safe_copy EiffelSoftware.Runtime.dll %STUDIO_DIR%\studio\spec\%ISE_PLATFORM%\lib
+	safe_copy EiffelSoftware.Runtime.dll %STUDIO_DIR%\studio\spec\%ISE_PLATFORM%\bin
+	safe_copy EiffelSoftware.Runtime.dll %STUDIO_DIR%\tools\spec\%ISE_PLATFORM%\bin
 else
 	remerror Could not compile .NET runtime
 	CANCEL_ON_ERROR
 endiff
 
 remtrace Compiling Eiffel Assembly Cache EiffelSoftware.MetadataConsumer.dll
-iff exist %STUDIO_DIR\studio\spec\%ISE_PLATFORM\bin\EiffelSoftware.MetadataConsumer.dll then
+iff exist %STUDIO_DIR%\studio\spec\%ISE_PLATFORM%\bin\EiffelSoftware.MetadataConsumer.dll then
 	remtrace EiffelSoftware.MetadataConsumer.dll is already built
 else
-	cdd %EIFFEL_SRC\dotnet\consumer
+	cdd %EIFFEL_SRC%\dotnet\consumer
 	finalize consumer.ecf consumer_20
 	cleanup_dotnet_eiffel consumer_20 EiffelSoftware.MetadataConsumer.dll
 	iff exist libEiffelSoftware.MetadataConsumer.dll then
-		safe_copy EiffelSoftware.MetadataConsumer.dll %STUDIO_DIR\studio\spec\%ISE_PLATFORM\bin
-		safe_copy libEiffelSoftware.MetadataConsumer.dll %STUDIO_DIR\studio\spec\%ISE_PLATFORM\bin
+		safe_copy EiffelSoftware.MetadataConsumer.dll %STUDIO_DIR%\studio\spec\%ISE_PLATFORM%\bin
+		safe_copy libEiffelSoftware.MetadataConsumer.dll %STUDIO_DIR%\studio\spec\%ISE_PLATFORM%\bin
 	else
 		remerror Could not compile EiffelSoftware.MetadataConsumer.dll (consumer_20)
 		iff defined REUSE_MDCONSUMER then
 			remtrace REUSE installation MetadataConsumer dlls...
-			safe_copy %ISE_EIFFEL%\studio\spec\%ISE_PLATFORM%\bin\EiffelSoftware.MetadataConsumer.dll %STUDIO_DIR\studio\spec\%ISE_PLATFORM\bin
-			safe_copy %ISE_EIFFEL%\studio\spec\%ISE_PLATFORM%\bin\libEiffelSoftware.MetadataConsumer.dll %STUDIO_DIR\studio\spec\%ISE_PLATFORM\bin
+			safe_copy %ISE_EIFFEL%\studio\spec\%ISE_PLATFORM%\bin\EiffelSoftware.MetadataConsumer.dll %STUDIO_DIR%\studio\spec\%ISE_PLATFORM%\bin
+			safe_copy %ISE_EIFFEL%\studio\spec\%ISE_PLATFORM%\bin\libEiffelSoftware.MetadataConsumer.dll %STUDIO_DIR%\studio\spec\%ISE_PLATFORM%\bin
 		else
 			CANCEL_ON_ERROR
 		endiff
@@ -46,21 +46,21 @@ else
 endiff
 
 remtrace Compiling Eiffel Metadata Consumer Executable emdc.exe
-iff exist %STUDIO_DIR\tools\spec\%ISE_PLATFORM\bin\emdc.exe then
+iff exist %STUDIO_DIR%\tools\spec\%ISE_PLATFORM%\bin\emdc.exe then
 	remtrace emdc tool is already built
 else
-	cdd %EIFFEL_SRC\dotnet\consumer
+	cdd %EIFFEL_SRC%\dotnet\consumer
 	finalize consumer.ecf emdc
 	cleanup_dotnet_eiffel emdc emdc.exe
 	iff exist libemdc.dll then
-		safe_copy emdc.exe %STUDIO_DIR\tools\spec\%ISE_PLATFORM\bin
-		safe_copy libemdc.dll %STUDIO_DIR\tools\spec\%ISE_PLATFORM\bin
+		safe_copy emdc.exe %STUDIO_DIR%\tools\spec\%ISE_PLATFORM%\bin
+		safe_copy libemdc.dll %STUDIO_DIR%\tools\spec\%ISE_PLATFORM%\bin
 	else
 		remerror Could not compile emdc.exe
 		iff defined REUSE_MDCONSUMER then
 			remtrace REUSE installation MetadataConsumer 
-			safe_copy %ISE_EIFFEL%\tools\spec\%ISE_PLATFORM%\bin\emdc.exe %STUDIO_DIR\tools\spec\%ISE_PLATFORM\bin
-			safe_copy %ISE_EIFFEL%\tools\spec\%ISE_PLATFORM%\bin\libemdc.dll %STUDIO_DIR\tools\spec\%ISE_PLATFORM\bin
+			safe_copy %ISE_EIFFEL%\tools\spec\%ISE_PLATFORM%\bin\emdc.exe %STUDIO_DIR%\tools\spec\%ISE_PLATFORM%\bin
+			safe_copy %ISE_EIFFEL%\tools\spec\%ISE_PLATFORM%\bin\libemdc.dll %STUDIO_DIR%\tools\spec\%ISE_PLATFORM%\bin
 		else
 			CANCEL_ON_ERROR
 		endiff

@@ -1,26 +1,45 @@
-mkdir %STUDIO_DIR\wizards\com\resources
-safe_copy %EIFFEL_SRC\tools\com_wizard\root\resources\*.* %STUDIO_DIR\wizards\com\resources
+mkdir %STUDIO_DIR%\wizards\com\resources
+safe_copy %EIFFEL_SRC%\tools\com_wizard\root\resources\*.* %STUDIO_DIR%\wizards\com\resources
 
 remtrace Compile the COM wizard
-cdd %EIFFEL_SRC\tools\com_wizard\root
+cdd %EIFFEL_SRC%\tools\com_wizard\root
 set_version %EIFFEL_SRC 0000 argument_parser.e
 
-clean_project
-finalize com_wizard.ecf
-cleanup_eiffel com_wizard com_wizard.exe
-iff not exist com_wizard.exe then
-	echo "Couldnt generate the COM wizard"
-	CANCEL
+set T_COM_WIZARD_STUDIO_FILE=%STUDIO_DIR%\wizards\com\com_wizard.exe
+iff defined NO_REUSE then
+	fullrf %T_COM_WIZARD_STUDIO_FILE%
 endiff
-move com_wizard.exe %STUDIO_DIR\wizards\com
-clean_project
+iff exist %T_COM_WIZARD_STUDIO_FILE% then
+	remtrace COM wizard is already built
+else
+	clean_project
+	finalize com_wizard.ecf
+	cleanup_eiffel com_wizard com_wizard.exe
+	iff not exist com_wizard.exe then
+		echo "Couldnt generate the COM wizard"
+		CANCEL
+	endiff
+	move com_wizard.exe %T_COM_WIZARD_STUDIO_FILE%
+	clean_project
+endiff
+set T_COM_WIZARD_STUDIO_FILE=
 
 remtrace Compile COM wizard launcher for GUI mode.
-cdd %EIFFEL_SRC\tools\com_wizard\launcher
-finalize com_wizard_launcher.ecf
-cleanup_eiffel com_wizard_launcher com_wizard_launcher.exe
-iff not exist com_wizard_launcher.exe then
-	echo "Couldnt compile com_wizard_launcher.exe"
-	CANCEL
+
+set T_COM_WIZARD_LAUNCHER_STUDIO_FILE=%STUDIO_DIR%\wizards\com\com_wizard_launcher.exe
+iff defined NO_REUSE then
+	fullrf %T_COM_WIZARD_LAUNCHER_STUDIO_FILE%
 endiff
-move com_wizard_launcher.exe %STUDIO_DIR\wizards\com
+iff exist %T_COM_WIZARD_LAUNCHER_STUDIO_FILE% then
+	remtrace COM wizard launcher is already built
+else
+	cdd %EIFFEL_SRC%\tools\com_wizard\launcher
+	finalize com_wizard_launcher.ecf
+	cleanup_eiffel com_wizard_launcher com_wizard_launcher.exe
+	iff not exist com_wizard_launcher.exe then
+		echo "Couldnt compile com_wizard_launcher.exe"
+		CANCEL
+	endiff
+	move com_wizard_launcher.exe %T_COM_WIZARD_LAUNCHER_STUDIO_FILE%
+endiff
+set T_COM_WIZARD_LAUNCHER_STUDIO_FILE=

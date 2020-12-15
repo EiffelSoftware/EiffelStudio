@@ -1,16 +1,25 @@
 remtrace Compiling EiffelBuild
 REM Should be called by `make_exes.btm'
 cdd %EIFFEL_SRC
-cdd %EIFFEL_SRC\build\Constants
+cdd %EIFFEL_SRC%\build\Constants
 set_version %EIFFEL_SRC 0000 gb_about_dialog_constants.e
 
-cdd %EIFFEL_SRC/build
-clean_project
-finalize esbuilder.ecf
-cleanup_eiffel esbuilder esbuilder.exe
-iff not exist esbuilder.exe then
-	remtrace Could not finalize a new EiffelBuild
-	CANCEL
-else
-	move esbuilder.exe %STUDIO_DIR\esbuilder\spec\%ISE_PLATFORM\bin\
+set T_ESBUILDER_STUDIO_FILE=%STUDIO_DIR%\esbuilder\spec\%ISE_PLATFORM%\bin\esbuilder.exe
+iff defined NO_REUSE then
+	fullrf %T_ESBUILDER_STUDIO_FILE%
 endiff
+iff exist %T_ESBUILDER_STUDIO_FILE% then
+	remtrace esbuilder.exe is already built
+else
+	cdd %EIFFEL_SRC/build
+	clean_project
+	finalize esbuilder.ecf
+	cleanup_eiffel esbuilder esbuilder.exe
+	iff not exist esbuilder.exe then
+		remtrace Could not finalize a new EiffelBuild
+		CANCEL
+	else
+		move esbuilder.exe %T_ESBUILDER_STUDIO_FILE%
+	endiff
+endiff
+set T_ESBUILDER_STUDIO_FILE=

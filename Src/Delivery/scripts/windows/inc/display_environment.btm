@@ -1,21 +1,24 @@
 echo Current configuration:
 echo ----------------------
-echo INIT_DIR=%INIT_DIR  (script root directory)
-echo ISE_EIFFEL=%ISE_EIFFEL
-echo ISE_PLATFORM=%ISE_PLATFORM
-echo DELIV_DIR=%DELIV_DIR
-echo INSTALL_DIR=%INSTALL_DIR
-echo STUDIO_DIR=%STUDIO_DIR
+echo INIT_DIR=%INIT_DIR%  (script root directory)
+echo ISE_EIFFEL=%ISE_EIFFEL%
+echo ISE_PLATFORM=%ISE_PLATFORM%
+echo DELIV_DIR=%DELIV_DIR%
+echo INSTALL_DIR=%INSTALL_DIR%
+echo STUDIO_DIR=%STUDIO_DIR%
 iff defined NO_STANDARD_BUILD then
-	echo NO_STANDARD_BUILD=%NO_STANDARD_BUILD
+	echo NO_STANDARD_BUILD=%NO_STANDARD_BUILD%
 endiff
 iff defined NO_ENTERPRISE_BUILD then
-	echo NO_ENTERPRISE_BUILD=%NO_ENTERPRISE_BUILD
+	echo NO_ENTERPRISE_BUILD=%NO_ENTERPRISE_BUILD%
 endiff
-echo Log file location: %INSTALL_LOG
-echo The private ISE svn repository: %DEFAULT_ISE_SVN
-echo The public svn repository: %DEFAULT_PUBLIC_SVN
-echo The revision that will be generated: %PUBLIC_SVN_REVISION
+iff defined NO_REUSE then
+	echo NO_REUSE=%NO_REUSE%
+endiff
+echo Log file location: %INSTALL_LOG%
+echo The private ISE svn repository: %DEFAULT_ISE_SVN%
+echo The public svn repository: %DEFAULT_PUBLIC_SVN%
+echo The revision that will be generated: %PUBLIC_SVN_REVISION%
 echo ecb version:
 ecb -version
 echo The C environment: ISE_C_COMPILER=%ISE_C_COMPILER% (ISE_C_COMPILER_VER=%ISE_C_COMPILER_VER%)
@@ -33,8 +36,8 @@ endiff
 
 echo MYSQL lib location: %MYSQL%
 echo -----------------------------
-iff exist %INSTALL_DIR .or. isdir %INSTALL_DIR then
-	echo Warning: %INSTALL_DIR will be replaced by the installation script, you will lose everything in it
+iff exist %INSTALL_DIR% .or. isdir %INSTALL_DIR% then
+	echo Warning: %INSTALL_DIR% will be replaced by the installation script, you will lose everything in it
 endiff
 
 iff defined NO_COMPILE then

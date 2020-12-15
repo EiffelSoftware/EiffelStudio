@@ -1,26 +1,35 @@
 remtrace Compiling Vision2_Demo
 REM Should be called by `make_exes.btm'
-cdd %EIFFEL_SRC
-exprt -r %PUBLIC_SVN_REVISION %DEFAULT_PUBLIC_SVN/Src/examples/vision2/widget_test vision2_demo
 
-REM Must now call batch files here, to generate the flatshorts and also retrieve the
-REM build files needed by the test
-
-cdd %EIFFEL_SRC\vision2_demo
-
-call retrieve_build_files.bat -r %PUBLIC_SVN_REVISION %DEFAULT_PUBLIC_SVN  >>& %INSTALL_LOG
-call retrieve_flat_short.bat >>& %INSTALL_LOG
-
-cdd %EIFFEL_SRC\vision2_demo
-clean_project
-finalize vision2_demo.ecf
-cleanup_eiffel vision2_demo vision2_demo.exe
-iff not exist vision2_demo.exe then
-	remtrace Could not finalize a new vision2_demo
-	CANCEL
+set T_VISION2_DEMO_STUDIO_FILE=%STUDIO_DIR%\vision2_demo\spec\%ISE_PLATFORM%\bin\vision2_demo.exe
+iff defined NO_REUSE then
+	fullrf %T_VISION2_DEMO_STUDIO_FILE%
 endiff
-move vision2_demo.exe %STUDIO_DIR\vision2_demo\spec\%ISE_PLATFORM\bin
+iff exist %T_VISION2_DEMO_STUDIO_FILE% then
+	remtrace Reuse existing vision2_demo
+else
+	cdd %EIFFEL_SRC
+	exprt -r %PUBLIC_SVN_REVISION %DEFAULT_PUBLIC_SVN/Src/examples/vision2/widget_test vision2_demo
 
-move /s %EIFFEL_SRC\vision2_demo\tests %STUDIO_DIR\vision2_demo\tests
-move /s %EIFFEL_SRC\vision2_demo\flatshort %STUDIO_DIR\vision2_demo\flatshort
-move %EIFFEL_SRC\vision2_demo\bitmaps\png\*.png %STUDIO_DIR\vision2_demo\bitmaps\png
+	REM Must now call batch files here, to generate the flatshorts and also retrieve the
+	REM build files needed by the test
+
+	cdd %EIFFEL_SRC\vision2_demo
+
+	call retrieve_build_files.bat -r %PUBLIC_SVN_REVISION %DEFAULT_PUBLIC_SVN  >>& %INSTALL_LOG
+	call retrieve_flat_short.bat >>& %INSTALL_LOG
+
+	cdd %EIFFEL_SRC\vision2_demo
+	clean_project
+	finalize vision2_demo.ecf
+	cleanup_eiffel vision2_demo vision2_demo.exe
+	iff not exist vision2_demo.exe then
+		remtrace Could not finalize a new vision2_demo
+		CANCEL
+	endiff
+	move vision2_demo.exe %T_VISION2_DEMO_STUDIO_FILE%
+
+	move /s %EIFFEL_SRC\vision2_demo\tests %STUDIO_DIR\vision2_demo\tests
+	move /s %EIFFEL_SRC\vision2_demo\flatshort %STUDIO_DIR\vision2_demo\flatshort
+	move %EIFFEL_SRC\vision2_demo\bitmaps\png\*.png %STUDIO_DIR\vision2_demo\bitmaps\png
+endiff

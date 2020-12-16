@@ -15,8 +15,8 @@ set SVN_VERSION=%@EXECSTR[set_version %EIFFEL_SRC]
 
 remtrace Build Installation for %SVN_VERSION%
 
-cdd %INIT_DIR\install
-safe_md %INIT_DIR\install\bin
+cdd %INIT_DIR%\install
+safe_md %INIT_DIR%\install\bin
 iff .%ISE_PLATFORM%.==.win64. then
 	set IS_WIN64=yes
 	set WINNAME=x64
@@ -34,14 +34,14 @@ iff .%1.==.. then
 		remtrace Checkout and compile the hallow tool
 		remtrace =============================================
 
-		cdd %EIFFEL_SRC\tools
+		cdd %EIFFEL_SRC%\tools
 		remtrace Compile finish_freezing Clib
-		cd %EIFFEL_SRC\tools\finish_freezing\Clib
+		cd %EIFFEL_SRC%\tools\finish_freezing\Clib
 		default_make
 
-		cdd %EIFFEL_SRC\tools
-		co -r %PUBLIC_SVN_REVISION %DEFAULT_PUBLIC_SVN/Src/tools/hallow hallow
-		cd %EIFFEL_SRC\tools\hallow
+		cdd %EIFFEL_SRC%\tools
+		co -r %PUBLIC_SVN_REVISION% %DEFAULT_PUBLIC_SVN%/Src/tools/hallow hallow
+		cd %EIFFEL_SRC%\tools\hallow
 		clean_project
 		finalize hallow.ecf
 		cleanup_dotnet_eiffel hallow hallow.exe
@@ -49,9 +49,9 @@ iff .%1.==.. then
 			remtrace Couldnt generate hallow.exe
 			CANCEL_ON_ERROR
 		else
-			move hallow.exe %INIT_DIR\install\bin
-			move libhallow.dll %INIT_DIR\install\bin
-			move eiffelsoftware.runtime.dll %INIT_DIR\install\bin
+			move hallow.exe %INIT_DIR%\install\bin
+			move libhallow.dll %INIT_DIR%\install\bin
+			move eiffelsoftware.runtime.dll %INIT_DIR%\install\bin
 		endiff
 	endiff
 
@@ -62,30 +62,38 @@ iff .%1.==.. then
 		remtrace NO_ENTERPRISE_BUILD=%NO_ENTERPRISE_BUILD%
 		cd %EIFFEL_SRC
 		cd tools
-		iff EXIST %INIT_DIR%\isesvn\tools\setup then
-			remtrace Get ISE SVN tools setup from folder
-			iff EXIST setup then
-				fullrd setup
-			endiff
-			xcopy /E /I /Y %INIT_DIR%\isesvn\tools\setup setup
+		iff EXIST setup then
+			remtrace setup already exists in %EIFFEL_SRC%\tools\setup
 		else
-			remtrace Get ISE SVN tools setup from subversion
-			co %DEFAULT_ISE_SVN%/Src/tools/setup setup
+			iff EXIST %INIT_DIR%\isesvn\tools\setup then
+				remtrace Get ISE SVN tools setup from folder
+				iff EXIST setup then
+					fullrd setup
+				endiff
+				xcopy /E /I /Y %INIT_DIR%\isesvn\tools\setup setup
+			else
+				remtrace Get ISE SVN tools setup from subversion
+				co %DEFAULT_ISE_SVN%/Src/tools/setup setup
+			endiff
 		endiff
 
 		remtrace Build studio setup.dll
-		cd %EIFFEL_SRC\tools\setup\studio
-		clean_project
-		finalize setup.ecf
-		cleanup_eiffel setup setup.dll
-		iff not exist setup.dll then
-			remtrace Couldnt generate setup.dll
-			QUIT
-			CANCEL_ON_ERROR
+		iff EXIST %INIT_DIR%\install\binaries\%WINNAME%\setup.dll then
+			remtrace Reuse setup.dll for %WINNAME%
+		else
+			cd %EIFFEL_SRC%\tools\setup\studio
+			clean_project
+			finalize setup.ecf
+			cleanup_eiffel setup setup.dll
+			iff not exist setup.dll then
+				remtrace Couldnt generate setup.dll
+				QUIT
+				CANCEL_ON_ERROR
+			endiff
+			safe_md %INIT_DIR%\install\binaries
+			safe_md %INIT_DIR%\install\binaries\%WINNAME%
+			move setup.dll %INIT_DIR%\install\binaries\%WINNAME%\setup.dll
 		endiff
-		safe_md %INIT_DIR\install\binaries
-		safe_md %INIT_DIR\install\binaries\%WINNAME
-		move setup.dll %INIT_DIR\install\binaries\%WINNAME
 	)
 endiff
 
@@ -94,15 +102,15 @@ remtrace Building the Setups (archive and msi)
 remtrace ==============================================
 
 
-cdd %INIT_DIR\install\content\eiffelstudio
-safe_md %INSTALL_DIR\setups
-safe_md %INSTALL_DIR\setups\standard
-safe_md %INSTALL_DIR\setups\enterprise
-safe_md %INSTALL_DIR\setups\axar_enterprise
-safe_md %INSTALL_DIR\setups\branded
+cdd %INIT_DIR%\install\content\eiffelstudio
+safe_md %INSTALL_DIR%\setups
+safe_md %INSTALL_DIR%\setups\standard
+safe_md %INSTALL_DIR%\setups\enterprise
+safe_md %INSTALL_DIR%\setups\axar_enterprise
+safe_md %INSTALL_DIR%\setups\branded
 
 
-if exist %INSTALL_DIR%\%STUDIO_NAME% (
+if EXIST %INSTALL_DIR%\%STUDIO_NAME% (
     echo issue from previous building!
     ren %INSTALL_DIR%\%STUDIO_NAME% %INSTALL_DIR%\EiffelStudio
 )
@@ -113,24 +121,31 @@ remtrace ==============================================
 remtrace Building the MSIs
 remtrace ==============================================
 
+remtrace Clean previous WIX processing
+remtrace Remove LICENSE from %INSTALL_DIR%\EiffelStudio\LICENSE
+fullrf %INSTALL_DIR%\EiffelStudio\LICENSE
+::fullrd %INIT_DIR%\install\bin\studio_std_%WINNAME%
+::fullrd %INIT_DIR%\install\bin\studio_ent_%WINNAME%
+svn revert -R %INIT_DIR%\install\content\eiffelstudio
+
 remtrace Creating WIX files
 espawn -u:%ISE_C_COMPILER_VER% "nmake /nologo clean"
 espawn -u:%ISE_C_COMPILER_VER% "nmake /nologo"
 
 if "%NO_ENTERPRISE_BUILD%" NEQ "True" (
-	remtrace Preparing Commercial edition
+	remtrace Preparing Enterprise edition
 	remtrace Clean previous ENT WIX files
-	rem fullrd %INIT_DIR%\install\bin\studio_ent_%WINNAME%
+	fullrd %INIT_DIR%\install\bin\studio_ent_%WINNAME%
 	espawn -u:%ISE_C_COMPILER_VER% "nmake /nologo enterprise_%WINNAME"
-	safe_copy %INIT_DIR\install\bin\studio_ent_%WINNAME\package.msi %INSTALL_DIR\setups\enterprise\%STUDIO_NAME%_ent_%SVN_VERSION-%ISE_PLATFORM%.msi
+	safe_copy %INIT_DIR%\install\bin\studio_ent_%WINNAME%\package.msi %INSTALL_DIR%\setups\enterprise\%STUDIO_NAME%_ent_%SVN_VERSION-%ISE_PLATFORM%.msi
 )
 
 if "%NO_STANDARD_BUILD%" NEQ "True" (
 	remtrace Preparing Standard edition
 	remtrace Clean previous Standard WIX files
-	rem fullrd %INIT_DIR%\install\bin\studio_std_%WINNAME%
+	fullrd %INIT_DIR%\install\bin\studio_std_%WINNAME%
 	espawn -u:%ISE_C_COMPILER_VER%  "nmake /nologo standard_%WINNAME"
-	safe_copy %INIT_DIR\install\bin\studio_std_%WINNAME\package.msi %INSTALL_DIR\setups\standard\%STUDIO_NAME%_rev_%SVN_VERSION-%ISE_PLATFORM%.msi
+	safe_copy %INIT_DIR%\install\bin\studio_std_%WINNAME%\package.msi %INSTALL_DIR%\setups\standard\%STUDIO_NAME%_rev_%SVN_VERSION-%ISE_PLATFORM%.msi
 )
 
 :BUILD_ZIP
@@ -140,22 +155,22 @@ remtrace ==============================================
 if "%NO_STANDARD_BUILD%" NEQ "True" (
 	remtrace Build Standard Zip
 	cdd %INSTALL_DIR
-	if exist %INSTALL_DIR\setups\standard\%STUDIO_NAME%_rev_%SVN_VERSION-%ISE_PLATFORM%.7z (
+	if exist %INSTALL_DIR%\setups\standard\%STUDIO_NAME%_rev_%SVN_VERSION-%ISE_PLATFORM%.7z (
 		remtrace Standard archive: reuse
 	) else (
 		ren EiffelStudio %STUDIO_NAME%
 		remtrace Standard archive
-		safe_copy %INSTALL_DIR\releases\standard_version\ec.exe %INSTALL_DIR\%STUDIO_NAME%\studio\spec\%ISE_PLATFORM%\bin
-		safe_copy %INSTALL_DIR\releases\standard_version\ecb.exe %INSTALL_DIR\%STUDIO_NAME%\studio\spec\%ISE_PLATFORM%\bin
-		iff exist %INSTALL_DIR\releases\standard_version\LICENSE then
-			safe_copy %INSTALL_DIR\releases\standard_version\LICENSE %INSTALL_DIR\%STUDIO_NAME%\LICENSE
+		safe_copy %INSTALL_DIR%\releases\standard_version\ec.exe %INSTALL_DIR%\%STUDIO_NAME%\studio\spec\%ISE_PLATFORM%\bin
+		safe_copy %INSTALL_DIR%\releases\standard_version\ecb.exe %INSTALL_DIR%\%STUDIO_NAME%\studio\spec\%ISE_PLATFORM%\bin
+		iff exist %INSTALL_DIR%\releases\standard_version\LICENSE then
+			safe_copy %INSTALL_DIR%\releases\standard_version\LICENSE %INSTALL_DIR%\%STUDIO_NAME%\LICENSE
 		else
 			remtrace Missing Standard license text
 		endiff
-		7z a -t7z %INSTALL_DIR\setups\standard\%STUDIO_NAME%_rev_%SVN_VERSION-%ISE_PLATFORM%.7z %STUDIO_NAME% -mx9 >>& %INSTALL_LOG
+		7z a -t7z %INSTALL_DIR%\setups\standard\%STUDIO_NAME%_rev_%SVN_VERSION-%ISE_PLATFORM%.7z %STUDIO_NAME% -mx9 >>& %INSTALL_LOG
 	)
 	remtrace Uploading Standard packages online
-	cdd %INSTALL_DIR\setups\standard
+	cdd %INSTALL_DIR%\setups\standard
 	call share_delivery %STUDIO_NAME%_rev_%SVN_VERSION%-%ISE_PLATFORM%.7z standard
 	if "%NO_MSI%" NEQ "True" call share_delivery %STUDIO_NAME%_rev_%SVN_VERSION%-%ISE_PLATFORM%.msi standard
 	if not EXIST %STUDIO_NAME%_rev_%SVN_VERSION%-%ISE_PLATFORM%.7z (
@@ -167,70 +182,70 @@ if "%NO_STANDARD_BUILD%" NEQ "True" (
 
 if "%NO_ENTERPRISE_BUILD%" NEQ "True" (
 	cdd %INSTALL_DIR
-	if exist %INSTALL_DIR\setups\enterprise\%STUDIO_NAME%_ent_%SVN_VERSION-%ISE_PLATFORM%.7z (
+	if exist %INSTALL_DIR%\setups\enterprise\%STUDIO_NAME%_ent_%SVN_VERSION-%ISE_PLATFORM%.7z (
 		remtrace Enterprise archive: reuse
 	) else (
 		remtrace Enterprise archive
-		safe_copy %INSTALL_DIR\releases\enterprise_version\ec.exe %INSTALL_DIR\%STUDIO_NAME%\studio\spec\%ISE_PLATFORM%\bin
-		safe_copy %INSTALL_DIR\releases\enterprise_version\ecb.exe %INSTALL_DIR\%STUDIO_NAME%\studio\spec\%ISE_PLATFORM%\bin
-		iff exist %INSTALL_DIR\releases\enterprise_version\LICENSE then
-			safe_copy %INSTALL_DIR\releases\enterprise_version\LICENSE %INSTALL_DIR\%STUDIO_NAME%\LICENSE
+		safe_copy %INSTALL_DIR%\releases\enterprise_version\ec.exe %INSTALL_DIR%\%STUDIO_NAME%\studio\spec\%ISE_PLATFORM%\bin
+		safe_copy %INSTALL_DIR%\releases\enterprise_version\ecb.exe %INSTALL_DIR%\%STUDIO_NAME%\studio\spec\%ISE_PLATFORM%\bin
+		iff exist %INSTALL_DIR%\releases\enterprise_version\LICENSE then
+			safe_copy %INSTALL_DIR%\releases\enterprise_version\LICENSE %INSTALL_DIR%\%STUDIO_NAME%\LICENSE
 		else
 			remtrace Missing Enterprise license text
 		endiff
-		7z a -t7z %INSTALL_DIR\setups\enterprise\%STUDIO_NAME%_ent_%SVN_VERSION-%ISE_PLATFORM%.7z %STUDIO_NAME% -mx9 >>& %INSTALL_LOG
+		7z a -t7z %INSTALL_DIR%\setups\enterprise\%STUDIO_NAME%_ent_%SVN_VERSION-%ISE_PLATFORM%.7z %STUDIO_NAME% -mx9 >>& %INSTALL_LOG
 	)
 remtrace Uploading ENT packages online
-	cdd %INSTALL_DIR\setups\enterprise
+	cdd %INSTALL_DIR%\setups\enterprise
 	call share_delivery %STUDIO_NAME%_ent_%SVN_VERSION%-%ISE_PLATFORM%.7z enterprise
 	if "%NO_MSI%" NEQ "True" call share_delivery %STUDIO_NAME%_ent_%SVN_VERSION%-%ISE_PLATFORM%.msi enterprise
 )
 if "%NO_ENTERPRISE_BUILD%" NEQ "True" (
 	cdd %INSTALL_DIR
-	if exist %INSTALL_DIR\setups\branded\%STUDIO_NAME%_branded_%SVN_VERSION-%ISE_PLATFORM%.7z (
+	if exist %INSTALL_DIR%\setups\branded\%STUDIO_NAME%_branded_%SVN_VERSION-%ISE_PLATFORM%.7z (
 		remtrace Branded archive: reuse
 	) else (
 		remtrace Branded archive
-		safe_copy %INSTALL_DIR\releases\branded_version\ec.exe %INSTALL_DIR\%STUDIO_NAME%\studio\spec\%ISE_PLATFORM%\bin
-		safe_copy %INSTALL_DIR\releases\branded_version\ecb.exe %INSTALL_DIR\%STUDIO_NAME%\studio\spec\%ISE_PLATFORM%\bin
-		iff exist %INSTALL_DIR\releases\branded_version\LICENSE then
-			safe_copy %INSTALL_DIR\releases\branded_version\LICENSE %INSTALL_DIR\%STUDIO_NAME%\LICENSE
+		safe_copy %INSTALL_DIR%\releases\branded_version\ec.exe %INSTALL_DIR%\%STUDIO_NAME%\studio\spec\%ISE_PLATFORM%\bin
+		safe_copy %INSTALL_DIR%\releases\branded_version\ecb.exe %INSTALL_DIR%\%STUDIO_NAME%\studio\spec\%ISE_PLATFORM%\bin
+		iff exist %INSTALL_DIR%\releases\branded_version\LICENSE then
+			safe_copy %INSTALL_DIR%\releases\branded_version\LICENSE %INSTALL_DIR%\%STUDIO_NAME%\LICENSE
 		else
 			remtrace Missing Branded license text
 		endiff
-		7z a -t7z %INSTALL_DIR\setups\branded\%STUDIO_NAME%_branded_%SVN_VERSION-%ISE_PLATFORM%.7z %STUDIO_NAME% -mx9 >>& %INSTALL_LOG
+		7z a -t7z %INSTALL_DIR%\setups\branded\%STUDIO_NAME%_branded_%SVN_VERSION-%ISE_PLATFORM%.7z %STUDIO_NAME% -mx9 >>& %INSTALL_LOG
 	)
 remtrace Uploading Branded packages online
-	cdd %INSTALL_DIR\setups\branded
+	cdd %INSTALL_DIR%\setups\branded
 	call share_delivery %STUDIO_NAME%_branded_%SVN_VERSION%-%ISE_PLATFORM%.7z branded
 	if "%NO_MSI%" NEQ "True" call share_delivery %STUDIO_NAME%_branded_%SVN_VERSION%-%ISE_PLATFORM%.msi branded
 )
 
 if "%NO_AXAR_ENTERPRISE_BUILD%" NEQ "True" (
 	cdd %INSTALL_DIR
-	if exist %INSTALL_DIR\setups\axar_enterprise\%STUDIO_NAME%_axar_%SVN_VERSION-%ISE_PLATFORM%.7z (
+	if exist %INSTALL_DIR%\setups\axar_enterprise\%STUDIO_NAME%_axar_%SVN_VERSION-%ISE_PLATFORM%.7z (
 		remtrace axar_enterprise archive: reuse
 	) else (
 		remtrace axar_enterprise archive
-		safe_copy %INSTALL_DIR\releases\axar_enterprise_version\ec.exe %INSTALL_DIR\%STUDIO_NAME%\studio\spec\%ISE_PLATFORM%\bin
-		safe_copy %INSTALL_DIR\releases\axar_enterprise_version\ecb.exe %INSTALL_DIR\%STUDIO_NAME%\studio\spec\%ISE_PLATFORM%\bin
-		iff exist %INSTALL_DIR\releases\axar_enterprise_version\LICENSE then
-			safe_copy %INSTALL_DIR\releases\axar_enterprise_version\LICENSE %INSTALL_DIR\%STUDIO_NAME%\LICENSE
+		safe_copy %INSTALL_DIR%\releases\axar_enterprise_version\ec.exe %INSTALL_DIR%\%STUDIO_NAME%\studio\spec\%ISE_PLATFORM%\bin
+		safe_copy %INSTALL_DIR%\releases\axar_enterprise_version\ecb.exe %INSTALL_DIR%\%STUDIO_NAME%\studio\spec\%ISE_PLATFORM%\bin
+		iff exist %INSTALL_DIR%\releases\axar_enterprise_version\LICENSE then
+			safe_copy %INSTALL_DIR%\releases\axar_enterprise_version\LICENSE %INSTALL_DIR%\%STUDIO_NAME%\LICENSE
 		else
 			remtrace Missing AXAR Enterprise license text
 		endiff
-		7z a -t7z %INSTALL_DIR\setups\axar_enterprise\%STUDIO_NAME%_axar_%SVN_VERSION-%ISE_PLATFORM%.7z %STUDIO_NAME% -mx9 >>& %INSTALL_LOG
+		7z a -t7z %INSTALL_DIR%\setups\axar_enterprise\%STUDIO_NAME%_axar_%SVN_VERSION-%ISE_PLATFORM%.7z %STUDIO_NAME% -mx9 >>& %INSTALL_LOG
 	)
 remtrace Uploading ENT AXAR packages online
-	cdd %INSTALL_DIR\setups\axar_enterprise
+	cdd %INSTALL_DIR%\setups\axar_enterprise
 	call share_delivery %STUDIO_NAME%_axar_%SVN_VERSION%-%ISE_PLATFORM%.7z axar_enterprise
 )
 
 remtrace Restoring the layout to its original state
 cdd %INSTALL_DIR
 if not exist EiffelStudio ren %STUDIO_NAME% EiffelStudio
-fullrf %INSTALL_DIR\%STUDIO_NAME%\studio\spec\%ISE_PLATFORM%\bin\ec.exe
-fullrf %INSTALL_DIR\%STUDIO_NAME%\studio\spec\%ISE_PLATFORM%\bin\ecb.exe
+fullrf %INSTALL_DIR%\%STUDIO_NAME%\studio\spec\%ISE_PLATFORM%\bin\ec.exe
+fullrf %INSTALL_DIR%\%STUDIO_NAME%\studio\spec\%ISE_PLATFORM%\bin\ecb.exe
 
 remtrace Your deliveries are now ready
 cdd %INIT_DIR

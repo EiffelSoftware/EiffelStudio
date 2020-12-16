@@ -36,23 +36,34 @@ endiff
 ::call %INIT_DIR\inc\set_has_c_compiler HAS_VC140 VC140 
 ::call %INIT_DIR\inc\set_has_c_compiler HAS_VC150 VC150 
 
-set "HAS_VC_MSC=False"
-if "%ISE_VC_MSC%" NEQ "" (
-	call %INIT_DIR\inc\set_has_c_compiler HAS_VC_MSC %ISE_VC_MSC%
-)
-echo HAS_VC_MSC=%HAS_VC_MSC%
+iff not isdir %INIT_DIR%\_cache then
+	md /S %INIT_DIR%\_cache
+endiff
+iff EXIST %INIT_DIR%\_cache\init_c_compilers.btm then
+	call %INIT_DIR%\_cache\init_c_compilers.btm
+else
+	echo echo Init C compilers > %INIT_DIR%\_cache\init_c_compilers.btm
+	set "HAS_VC_MSC=False"
+	if "%ISE_VC_MSC%" NEQ "" (
+		call %INIT_DIR\inc\set_has_c_compiler HAS_VC_MSC %ISE_VC_MSC%
+	)
+	echo HAS_VC_MSC=%HAS_VC_MSC%
+	echo set HAS_VC_MSC=%HAS_VC_MSC% >> %INIT_DIR%\_cache\init_c_compilers.btm
 
-set "HAS_VC_MSC_VC140=False"
-if "%ISE_VC_MSC_VC140%" NEQ "" (
-	call %INIT_DIR\inc\set_has_c_compiler HAS_VC_MSC_VC140 %ISE_VC_MSC_VC140%
-)
-echo HAS_VC_MSC_VC140=%HAS_VC_MSC_VC140%
+	set "HAS_VC_MSC_VC140=False"
+	if "%ISE_VC_MSC_VC140%" NEQ "" (
+		call %INIT_DIR\inc\set_has_c_compiler HAS_VC_MSC_VC140 %ISE_VC_MSC_VC140%
+	)
+	echo HAS_VC_MSC_VC140=%HAS_VC_MSC_VC140%
+	echo set HAS_VC_MSC_VC140=%HAS_VC_MSC_VC140% >> %INIT_DIR%\_cache\init_c_compilers.btm
 
-:: if "%ISE_C_COMPILER_VER%" NEQ "" (
-:: 	IF /I "%ISE_C_COMPILER_VER%" NEQ "VC100" (
-:: 		IF /I "%ISE_C_COMPILER_VER%" NEQ "VC140" (
-:: 			call %INIT_DIR\inc\set_has_c_compiler HAS_C_COMP_VER %ISE_C_COMPILER_VER%
-:: 		)
-:: 	)
-:: )
-::echo HAS_C_COMP_VER=%HAS_C_COMP_VER%
+::	if "%ISE_C_COMPILER_VER%" NEQ "" (
+::		IF /I "%ISE_C_COMPILER_VER%" NEQ "VC100" (
+::			IF /I "%ISE_C_COMPILER_VER%" NEQ "VC140" (
+::				call %INIT_DIR\inc\set_has_c_compiler HAS_C_COMP_VER %ISE_C_COMPILER_VER%
+::			)
+::		)
+::	)
+::	echo HAS_C_COMP_VER=%HAS_C_COMP_VER%
+::	echo set HAS_C_COMP_VER=%HAS_C_COMP_VER% >> %INIT_DIR%\_cache\init_c_compilers.btm
+endiff

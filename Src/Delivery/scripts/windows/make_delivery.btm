@@ -9,6 +9,10 @@ set OLD_ISE_LIBRARY=%ISE_LIBRARY
 set OLD_ISE_SRC=%ISE_SRC
 set TMP_ISE_EIFFEL=%ISE_EIFFEL
 
+REM clear previous cache
+del /syeqxz %~dp0_cache
+
+REM load initialization
 call %~dp0init.btm
 
 remtrace Set up the environment

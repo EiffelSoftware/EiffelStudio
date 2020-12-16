@@ -24,6 +24,9 @@ WXS = \
 	studio_core.wxs \
 	studio_examples.wxs \
 	studio_libraries.wxs \
+	studio_contrib.wxs \
+	studio_unstable.wxs \
+	studio_tools.wxs \
 	studio_gobo.wxs \
 	studio_gdiplus.wxs \
 	studio_ent_ec.wxs \
@@ -34,6 +37,9 @@ WXS_STD = \
 	studio_core.wxs \
 	studio_examples.wxs \
 	studio_libraries.wxs \
+	studio_contrib.wxs \
+	studio_unstable.wxs \
+	studio_tools.wxs \
 	studio_gobo.wxs \
 	studio_gdiplus.wxs \
 	studio_std_ec.wxs
@@ -43,6 +49,9 @@ WXS_ENT = \
 	studio_core.wxs \
 	studio_examples.wxs \
 	studio_libraries.wxs \
+	studio_contrib.wxs \
+	studio_unstable.wxs \
+	studio_tools.wxs \
 	studio_gobo.wxs \
 	studio_gdiplus.wxs \
 	studio_ent_ec.wxs
@@ -56,7 +65,11 @@ studio_gcc.wxs:
 
 studio_core.wxs:
 	$(HALLOW) $(HALLOW_FLAGS) "$(INSTALL_DIR)\EiffelStudio" -dr:"INSTALLDIR" \
-		-de:"\\EiffelStudio\\library$$" -de:"\\EiffelStudio\\examples$$" \
+		-de:"\\EiffelStudio\\library$$" \
+		-de:"\\EiffelStudio\\contrib$$" \
+		-de:"\\EiffelStudio\\unstable$$" \
+		-de:"\\EiffelStudio\\tools$$" \
+		-de:"\\EiffelStudio\\examples$$" \
 		-de:"\\EiffelStudio\\gcc$$" \
 		-fe:"\\EiffelStudio\\studio\\spec\\w.*\\estudio.exe$$" \
 		-fe:"\\EiffelStudio\\esbuilder\\spec\\w.*\\esbuilder.exe$$" \
@@ -70,8 +83,27 @@ studio_examples.wxs:
 
 studio_libraries.wxs:
 	$(HALLOW) $(HALLOW_FLAGS) "$(INSTALL_DIR)\EiffelStudio\library" \
-		-dr:"Dir.Core.library" -de:"\\EiffelStudio\\library\\gobo$$" \
+		-dr:"Dir.Core.library" \
+		-de:"\\EiffelStudio\\library\\gobo$$" \
 		-g:"Core.library" -r -n:"Core.library." > $@.tmp
+	move $@.tmp $@
+
+studio_contrib.wxs:
+	$(HALLOW) $(HALLOW_FLAGS) "$(INSTALL_DIR)\EiffelStudio\contrib" \
+		-dr:"Dir.Core.contrib" \
+		-g:"Core.contrib" -r -n:"Core.contrib." > $@.tmp
+	move $@.tmp $@
+
+studio_unstable.wxs:
+	$(HALLOW) $(HALLOW_FLAGS) "$(INSTALL_DIR)\EiffelStudio\unstable" \
+		-dr:"Dir.Core.unstable" \
+		-g:"Core.unstable" -r -n:"Core.unstable." > $@.tmp
+	move $@.tmp $@
+
+studio_tools.wxs:
+	$(HALLOW) $(HALLOW_FLAGS) "$(INSTALL_DIR)\EiffelStudio\tools" \
+		-dr:"Dir.Core.tools" \
+		-g:"Core.tools" -r -n:"Core.tools." > $@.tmp
 	move $@.tmp $@
 
 studio_gobo.wxs:

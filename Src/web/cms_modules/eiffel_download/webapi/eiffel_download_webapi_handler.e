@@ -65,7 +65,7 @@ feature -- Execution GET
 			l_value: READABLE_STRING_GENERAL
 			l_channel: READABLE_STRING_GENERAL
 		do
-			if api.has_permissions (<<"view downloads">>) then
+			if api.has_permissions (<<{EIFFEL_DOWNLOAD_MODULE}.perm_view_downloads>>) then
 				if
 					attached {WSF_STRING} req.path_parameter ("channel") as p_channel and then
 					is_valid_channel (p_channel.value)
@@ -109,7 +109,7 @@ feature -- Execute Delete
 		do
 			rep := new_response (req, res)
 			if
-				api.has_permissions (<<"delete download">>)
+				api.has_permissions (<<{EIFFEL_DOWNLOAD_MODULE}.perm_delete_download>>)
 			then
 				if
 					attached {WSF_STRING} req.path_parameter ("channel") as p_channel and then
@@ -160,7 +160,7 @@ feature -- Execute POST
 			l_tmp: WSF_UPLOADED_FILE
 			l_data: STRING
 		do
-			if api.has_permissions (<<"update download">>) then
+			if api.has_permissions (<<{EIFFEL_DOWNLOAD_MODULE_ADMINISTRATION}.perm_upload_download>>) then
 				if
 					attached {WSF_STRING} req.path_parameter ("channel") as p_channel and then
 					attached p_channel.value as l_channel and then

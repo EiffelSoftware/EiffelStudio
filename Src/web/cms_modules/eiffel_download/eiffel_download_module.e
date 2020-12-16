@@ -13,6 +13,7 @@ inherit
 		redefine
 			initialize,
 			setup_hooks,
+			permissions,
 			eiffel_download_api
 		end
 
@@ -61,6 +62,19 @@ feature -- Access
 
 	name: STRING = "eiffel_download"
 
+	permissions: LIST [READABLE_STRING_8]
+			-- List of permission ids, used by this module, and declared.
+		do
+			Result := Precursor
+			Result.force ({EIFFEL_DOWNLOAD_MODULE_ADMINISTRATION}.perm_manage_download)
+			Result.force ({EIFFEL_DOWNLOAD_MODULE_ADMINISTRATION}.perm_upload_download)
+			Result.force (perm_view_downloads)
+			Result.force (perm_delete_download)
+		end
+
+	perm_view_downloads: STRING = "view downloads"
+	perm_delete_download: STRING = "delete download"
+
 feature {CMS_EXECUTION} -- Administration
 
 	administration: EIFFEL_DOWNLOAD_MODULE_ADMINISTRATION
@@ -97,7 +111,7 @@ feature -- Router
 			create h_download.make (agent handle_download (a_api, ?, ?))
 			a_router.handle ("/download", h_download, a_router.methods_head_get)
 			a_router.handle ("/download/channel/{channel}", h_download, a_router.methods_head_get)
-			
+
 			a_router.handle ("/downloads", create {WSF_URI_TEMPLATE_AGENT_HANDLER}.make (agent handle_download_channel (a_api, "stable", ?, ?)), a_router.methods_head_get)
 			a_router.handle ("/downloads/channel/{channel}", create {WSF_URI_TEMPLATE_AGENT_HANDLER}.make (agent handle_download_channel (a_api, Void, ?, ?)), a_router.methods_head_get)
 		end
@@ -252,7 +266,6 @@ feature -- Handler
 			r: CMS_RESPONSE
 			ch: READABLE_STRING_GENERAL
 		do
-			write_debug_log (generator + ".handle_download_channel")
 			create {GENERIC_VIEW_CMS_RESPONSE} r.make (req, res, api)
 
 			if a_channel /= Void then
@@ -261,6 +274,9 @@ feature -- Handler
 				ch := p_channel.value
 			else
 				ch := "stable"
+			end
+			if api.has_permission ({EIFFEL_DOWNLOAD_MODULE_ADMINISTRATION}.perm_manage_download) then
+				r.add_to_primary_tabs (api.administration_link ("Manage Downloads", "eiffel_download/channel/" + url_encoded (ch)))
 			end
 			if attached downloads_channel_block ("download_channel", ch, r) as l_block then
 				l_block.set_weight (10)

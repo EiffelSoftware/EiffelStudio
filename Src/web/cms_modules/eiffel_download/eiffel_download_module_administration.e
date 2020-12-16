@@ -32,9 +32,13 @@ feature -- Access
 			-- List of permission ids, used by this module, and declared.
 		do
 			Result := Precursor
-			Result.force ("manage download")
-			Result.force ("upload download")
+			Result.force (perm_manage_download)
+			Result.force (perm_upload_download)
 		end
+
+	perm_manage_download: STRING = "manage download"
+
+	perm_upload_download: STRING = "upload download"
 
 feature {NONE} -- Router/administration
 
@@ -73,14 +77,14 @@ feature -- Handle
 				ch := "stable"
 			end
 			create s.make (1024)
-			if a_api.has_permissions (<<"upload download", "manage download">>) then
+			if a_api.has_permissions (<<perm_manage_download, perm_upload_download>>) then
 				s.append ("<h2>Management</h2>%N")
 				s.append ("<li><a href=%""+ r.api.administration_path ("eiffel_download/update/channel/" + a_api.url_encoded (ch)) +"%">Update channel "+ a_api.html_encoded (ch) +"</a></li>%N")
 				s.append ("<li><a href=%""+ r.api.administration_path ("eiffel_download/create/channel/" + a_api.url_encoded (ch)) +"%">Create new entry for channel "+ a_api.html_encoded (ch) +"</a></li>%N")
 			end
 			if attached module.eiffel_download_api as l_download_api then
 				s.append ("<h2>Configurations</h2>%N")
-				l_can_edit := a_api.has_permission ("manage download")
+				l_can_edit := a_api.has_permission (perm_manage_download)
 				across
 					l_download_api.configuration_files (ch) as ic
 				loop
@@ -147,7 +151,7 @@ feature -- Handle
 			create s.make (1024)
 			if
 				attached module.eiffel_download_api as l_download_api and then
-				a_api.has_permissions (<<"manage download">>) and then
+				a_api.has_permissions (<<perm_manage_download>>) and then
 				attached {WSF_STRING} req.path_parameter ("filename") as p_filename
 			then
 				p := l_download_api.channel_file_location (ch).extended (p_filename.value)

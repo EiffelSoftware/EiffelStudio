@@ -91,32 +91,23 @@ feature -- Access: config
 
 feature -- Persistency
 
-	save_uploaded_configuration (a_channel: READABLE_STRING_GENERAL; a_uploaded_cfg: EIFFEL_UPLOAD_CONFIGURATION)
-		local
-			l_dir: DIRECTORY
-			b: BOOLEAN
-			p: PATH
-			l_file: FILE
+	configuration_file_name (a_channel: READABLE_STRING_GENERAL; a_cfg_number: READABLE_STRING_GENERAL): PATH
 		do
-			create l_dir.make_with_path (channel_file_location (a_channel))
-			if not l_dir.exists then
-				b := (create {CMS_FILE_SYSTEM_UTILITIES}).safe_create_parent_directory (l_dir.path.extended ("dummy-cfg.json"))
-			end
-			if l_dir.exists then
-				p := l_dir.path.extended ("downloads_configuration_" + a_uploaded_cfg.number + ".json")
-				create {PLAIN_TEXT_FILE} l_file.make_with_path (p)
-				l_file.open_write
-				l_file.put_string (a_uploaded_cfg.to_json_representation)
-				l_file.close
-			end
+			create Result.make_from_string ("downloads_configuration_")
+			Result := Result.appended (a_cfg_number).appended_with_extension ("json")
 		end
 
-	uploaded_configuration_exists (a_channel: READABLE_STRING_GENERAL; a_uploaded_cfg: EIFFEL_UPLOAD_CONFIGURATION): BOOLEAN
+	configuration_location (a_channel: READABLE_STRING_GENERAL; a_cfg_number: READABLE_STRING_GENERAL): PATH
+		do
+			Result := channel_file_location (a_channel).extended_path (configuration_file_name (a_channel, a_cfg_number))
+		end
+
+	configuration_exists (a_channel: READABLE_STRING_GENERAL; a_cfg: DOWNLOAD_CONFIGURATION): BOOLEAN
 		local
 			p: PATH
 			f: FILE
 		do
-			p := channel_file_location (a_channel).extended ("downloads_configuration_" + a_uploaded_cfg.number + ".json")
+			p := configuration_location (a_channel, a_cfg.first_number)
 			create {RAW_FILE} f.make_with_path (p)
 			Result := f.exists
 		end
@@ -138,7 +129,7 @@ feature -- Persistency
 					prods.count = 1 and then
 					attached prods.first.number as l_number
 				then
-					p := l_dir.path.extended ({STRING_32} "downloads_configuration_" + l_number + {STRING_32} ".json")
+					p := configuration_location (a_channel, l_number)
 					create {PLAIN_TEXT_FILE} l_file.make_with_path (p)
 					l_file.open_write
 					l_file.put_string (cfg.to_json_representation)

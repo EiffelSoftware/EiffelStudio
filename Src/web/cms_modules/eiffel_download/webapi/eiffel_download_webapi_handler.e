@@ -12,6 +12,8 @@ inherit
 			make as make_cms_webapi_handler
 		end
 
+	EIFFEL_DOWNLOAD_HANDLER_UTILITIES
+
 	WSF_URI_TEMPLATE_HANDLER
 
 	SHARED_LOGGER
@@ -156,13 +158,9 @@ feature -- Execute POST
 		local
 			rep: HM_WEBAPI_RESPONSE
 			l_tmp: WSF_UPLOADED_FILE
-			l_file: FILE
-			l_dir: DIRECTORY
 			l_data: STRING
 		do
-			if
-				api.has_permissions (<<"update download">>)
-			then
+			if api.has_permissions (<<"update download">>) then
 				if
 					attached {WSF_STRING} req.path_parameter ("channel") as p_channel and then
 					attached p_channel.value as l_channel and then
@@ -178,31 +176,29 @@ feature -- Execute POST
 						req.read_input_data_into (l_data)
 					end
 					if l_tmp /= Void then
-						if attached  process_uploaded_file (l_tmp) as l_uploaded then
-							create l_dir.make_with_path (api.module_location_by_name ("eiffel_download").extended ("channel").extended (l_channel))
-							if l_dir.exists then
-								create {RAW_FILE} l_file.make_open_write (l_dir.path.extended ("downloads_configuration_" + l_uploaded.number + ".json").name)
-								l_file.put_string (l_uploaded.to_json_representation)
-								l_file.close
+						if attached configuration_from_file (l_tmp) as cfg then
+								-- save the content
+							download_api.save_configuration (l_channel, cfg)
+								-- Check success
+							if download_api.configuration_exists (l_channel, cfg) then
+								rep.add_string_field ("Success", "File uploaded")
+								rep.add_string_field ("Filename", download_api.configuration_file_name (l_channel, cfg.first_number).name)
+							else
+								rep := new_error_response ("Bad file format" , req, res)
+								rep.set_status_code ({HTTP_STATUS_CODE}.bad_request)
 							end
-							rep.add_string_field ("Success", "File uploaded")
-							rep.add_string_field ("Filename", "downloads_configuration_" + l_uploaded.number + ".json")
 						else
-							rep := new_error_response ("Bad file format" , req, res)
+							rep := new_error_response ("Bad content format" , req, res)
 							rep.set_status_code ({HTTP_STATUS_CODE}.bad_request)
 						end
 					elseif l_data /= Void then
-						if attached  process_uploaded_data (l_data) as l_uploaded then
-							create l_dir.make_with_path (api.module_location_by_name ("eiffel_download").extended ("channel").extended (l_channel))
-							if l_dir.exists then
-								create {RAW_FILE} l_file.make_open_write (l_dir.path.extended ("downloads_configuration_" + l_uploaded.number + ".json").name)
-								l_file.put_string (l_uploaded.to_json_representation)
-								l_file.close
-							end
-							rep.add_string_field ("Success", "File uploaded")
-							rep.add_string_field ("Filename", "downloads_configuration_" + l_uploaded.number + ".json")
+						if attached configuration_from_content (l_data) as cfg then
+								-- save the content
+							download_api.save_configuration (l_channel, cfg)
+							rep.add_string_field ("Success", "Content uploaded")
 						else
-
+							rep := new_error_response ("Bad content format" , req, res)
+							rep.set_status_code ({HTTP_STATUS_CODE}.bad_request)
 						end
 					else
 						rep := new_error_response ("File not found or Missing data content" , req, res)
@@ -469,42 +465,6 @@ feature {NONE} -- Implementation
 			elseif a_version.is_case_insensitive_equal ("all") then
 				Result := True
 			end
-		end
-
-	process_uploaded_file (a_uploaded_file: WSF_UPLOADED_FILE): detachable EIFFEL_UPLOAD_CONFIGURATION
-			-- process the uploaded file.
-		do
-			if attached a_uploaded_file.tmp_path as l_path then
-				Result := (create {EIFFEL_UPLOAD_JSON_CONFIGURATION}).configuration_from_uploaded_json_file (l_path)
-				delete_uploaded_file (l_path)
-			end
-		end
-
-	process_uploaded_data (a_uploaded_data: STRING): detachable EIFFEL_UPLOAD_CONFIGURATION
-			-- process the uploaded data.
-		do
-			Result := (create {EIFFEL_UPLOAD_JSON_CONFIGURATION}).configuration_from_uploaded_json_string (a_uploaded_data)
-		end
-
-	delete_uploaded_file (p: PATH)
-			-- Remove uploaded temporal file at path `p'.
-		local
-			f: RAW_FILE
-			retried: BOOLEAN
-		do
-			if retried then
-				write_error_log (generator + "Can not delete file %"" + p.utf_8_name + "%"")
-			else
-				create f.make_with_path (p)
-				if f.exists then
-					f.delete
-				else
-						-- Not considered as failure.
-				end
-			end
-		rescue
-			retried := True
-			retry
 		end
 
 	release_version_dot_format (a_version: READABLE_STRING_GENERAL): STRING_32

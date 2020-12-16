@@ -13,6 +13,8 @@ inherit
 			permissions
 		end
 
+	EIFFEL_DOWNLOAD_HANDLER_UTILITIES
+
 	CMS_HOOK_AUTO_REGISTER
 
 	CMS_HOOK_RESPONSE_ALTER
@@ -37,11 +39,14 @@ feature -- Access
 feature {NONE} -- Router/administration
 
 	setup_administration_router (a_router: WSF_ROUTER; a_api: CMS_API)
+		local
+			h_up: WSF_URI_TEMPLATE_AGENT_HANDLER
 		do
 			a_router.handle ("/eiffel_download/channel/{channel}", create {WSF_URI_TEMPLATE_AGENT_HANDLER}.make (agent handle_list_admin (a_api, ?, ?)), a_router.methods_get)
 			a_router.handle ("/eiffel_download/channel/{channel}/{filename}", create {WSF_URI_TEMPLATE_AGENT_HANDLER}.make (agent handle_edit_admin (a_api, ?, ?)), a_router.methods_get_put_delete + a_router.methods_post)
-			a_router.handle ("/eiffel_download/update/channel/{channel}", create {WSF_URI_TEMPLATE_AGENT_HANDLER}.make (agent handle_update_download_admin (a_api, ?, ?)), a_router.methods_head_get_post)
-			a_router.handle ("/eiffel_download/create/channel/{channel}", create {WSF_URI_TEMPLATE_AGENT_HANDLER}.make (agent handle_update_download_admin (a_api, ?, ?)), a_router.methods_head_get_post)
+			create h_up.make (agent handle_update_download_admin (a_api, ?, ?))
+			a_router.handle ("/eiffel_download/update/channel/{channel}", h_up, a_router.methods_head_get_post)
+			a_router.handle ("/eiffel_download/create/channel/{channel}", h_up, a_router.methods_head_get_post)
 		end
 
 feature -- Handle
@@ -300,36 +305,27 @@ feature -- Handle
 				if attached wf.last_data as fd then
 					if fd.is_valid then
 						if attached {WSF_STRING} fd.item ("content") as l_content then
-							if attached configuration_from_uploaded_content (l_content) as cfg then
-									-- save the content
-								l_download_api.save_uploaded_configuration (ch, cfg)
 									-- Check success
-								if l_download_api.uploaded_configuration_exists (ch, cfg) then
+							if attached configuration_from_content (l_content.value) as cfg then
+									-- save the content
+								l_download_api.save_configuration (ch, cfg)
+									-- Check success
+								if l_download_api.configuration_exists (ch, cfg) then
 									r.add_notice_message ("Content saved!")
 								else
 									fd.report_invalid_field ("content", "could not save the content!")
 								end
-							elseif attached configuration_from_content (l_content) as cfg then
+							end
+						elseif attached {WSF_UPLOADED_FILE} fd.item ("file") as l_file then
+							if attached configuration_from_file (l_file) as cfg then
 									-- save the content
 								l_download_api.save_configuration (ch, cfg)
 									-- Check success
-								r.add_notice_message ("Content saved!")
-							end
-						elseif attached {WSF_UPLOADED_FILE} fd.item ("file") as l_file then
-							if attached configuration_from_uploaded_file (l_file) as cfg then
-									-- save the file
-								l_download_api.save_uploaded_configuration (ch, cfg)
-									-- Check success
-								if l_download_api.uploaded_configuration_exists (ch, cfg) then
+								if l_download_api.configuration_exists (ch, cfg) then
 									r.add_notice_message ("File saved!")
 								else
 									fd.report_invalid_field ("file", "could not save the file!")
 								end
-							elseif attached configuration_from_file (l_file) as cfg then
-									-- save the content
-								l_download_api.save_configuration (ch, cfg)
-									-- Check success
-								r.add_notice_message ("File saved!")
 							end
 						else
 							fd.report_error ("Invalid input")
@@ -420,60 +416,4 @@ feature -- Hook
 			end
 		end
 
-feature {NONE} -- Implementation
-
-	configuration_from_uploaded_content (a_uploaded_content: WSF_STRING): detachable EIFFEL_UPLOAD_CONFIGURATION
-			-- process the uploaded file.
-		local
-			s: READABLE_STRING_8
-		do
-			s := utf_8_encoded (a_uploaded_content.value)
-			Result := (create {EIFFEL_UPLOAD_JSON_CONFIGURATION}).configuration_from_uploaded_json_string (s)
-		end
-
-	configuration_from_uploaded_file (a_uploaded_file: WSF_UPLOADED_FILE): detachable EIFFEL_UPLOAD_CONFIGURATION
-			-- process the uploaded file.
-		do
-			if attached a_uploaded_file.tmp_path as l_path then
-				Result := (create {EIFFEL_UPLOAD_JSON_CONFIGURATION}).configuration_from_uploaded_json_file (l_path)
-				delete_uploaded_file (l_path)
-			end
-		end
-
-	configuration_from_content (a_string: WSF_STRING): detachable DOWNLOAD_CONFIGURATION
-		local
-			s: READABLE_STRING_8
-		do
-			s := utf_8_encoded (a_string.value)
-			Result := (create {DOWNLOAD_JSON_CONFIGURATION}).configuration_from_string (s, Void)
-		end
-
-	configuration_from_file (a_uploaded_file: WSF_UPLOADED_FILE): detachable DOWNLOAD_CONFIGURATION
-		do
-			if attached a_uploaded_file.tmp_path as l_path then
-				Result := (create {DOWNLOAD_JSON_CONFIGURATION}).configuration_from_file (l_path, Void)
-				delete_uploaded_file (l_path)
-			end
-		end
-
-	delete_uploaded_file (p: PATH)
-			-- Remove uploaded temporal file at path `p'.
-		local
-			f: RAW_FILE
-			retried: BOOLEAN
-		do
-			if retried then
-				write_error_log (generator + "Can not delete file %"" + p.utf_8_name + "%"")
-			else
-				create f.make_with_path (p)
-				if f.exists then
-					f.delete
-				else
-						-- Not considered as failure.
-				end
-			end
-		rescue
-			retried := True
-			retry
-		end
 end

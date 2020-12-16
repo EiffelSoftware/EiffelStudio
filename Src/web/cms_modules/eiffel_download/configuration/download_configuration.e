@@ -89,6 +89,21 @@ feature -- Element Change
 			products := l_products
 		end
 
+feature -- Access
+
+	first_number: READABLE_STRING_32
+		do
+			if
+				attached products as lst and then
+				not lst.is_empty
+			then
+				Result := lst.first.number
+			end
+			if Result = Void then
+				Result := ""
+			end
+		end
+
 feature -- Conversion
 
 	to_json_representation: STRING_8

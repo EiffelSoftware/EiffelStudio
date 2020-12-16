@@ -70,12 +70,14 @@ feature {NONE} -- Router/administration
 			-- <Precursor>
 		local
 			l_root: CMS_ROOT_WEBAPI_HANDLER
+			h: EIFFEL_DOWNLOAD_WEBAPI_HANDLER
 		do
 			if attached module.eiffel_download_api as l_download_api then
 				create l_root.make (a_api)
 				l_root.set_router (a_router)
-				a_router.handle ("/downloads/channel/{channel}/{release}", create {EIFFEL_DOWNLOAD_WEBAPI_HANDLER}.make (l_download_api), a_router.methods_get_put_delete)
-				a_router.handle ("/downloads/channel/{channel}", create {EIFFEL_DOWNLOAD_WEBAPI_HANDLER}.make (l_download_api), a_router.methods_get_post)
+				create h.make (l_download_api)
+				a_router.handle ("/downloads/channel/{channel}/{release}", h, a_router.methods_get_put_delete)
+				a_router.handle ("/downloads/channel/{channel}", h, a_router.methods_get_post)
 			end
 		end
 

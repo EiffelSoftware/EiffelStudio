@@ -1218,7 +1218,7 @@ feature {EV_ANY_I} -- Implementation
 		-- and restore them in on_show if necessary.
 
 
-	on_dpi_changed (a_dpi: INTEGER)
+	on_dpi_changed (a_dpi: NATURAL_32;  a_wp: WEL_WINDOW_POS)
 			-- WM_dpichange message.
 			-- This message is sent to a window whose dpi changed,
 		local
@@ -1257,10 +1257,10 @@ feature {EV_ANY_I} -- Implementation
 			end
 		end
 
-	execute_dpi_actions (a_dpi, a_width, a_height: INTEGER)
+	execute_dpi_actions (a_dpi: NATURAL_32; a_width, a_height: INTEGER)
 			-- execute `resize_actions_internal' if not Void.
 		do
-			trigger_resize_actions (a_width, a_height)
+			trigger_dpi_actions  (a_dpi, a_width, a_height)
 		end
 
 feature {EV_ANY_I} -- Implementation
@@ -1414,8 +1414,8 @@ feature {NONE} -- Implementation for switch non-parented and parented windows
 			l_result: INTEGER
 			l_menu_bar: detachable EV_MENU_BAR
 		do
-			l_width := width
-			l_height := height
+			l_width := {EV_MONITOR_DPI_DETECTOR_IMP}.scaled_size (width)
+			l_height :={EV_MONITOR_DPI_DETECTOR_IMP}.scaled_size (height)
 			l_x := screen_x
 			l_y := screen_y
 
@@ -1566,7 +1566,7 @@ feature {EV_ANY, EV_ANY_I} -- Implementation
 		end
 
 note
-	copyright: "Copyright (c) 1984-2019, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2020, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

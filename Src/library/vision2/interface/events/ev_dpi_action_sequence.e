@@ -6,7 +6,7 @@ note
 class
 	EV_DPI_ACTION_SEQUENCE
 inherit
-	EV_ACTION_SEQUENCE [TUPLE [dpi: INTEGER; x: INTEGER; y: INTEGER; width: INTEGER; height: INTEGER]]
+	EV_ACTION_SEQUENCE [TUPLE [dpi: NATURAL_32; x: INTEGER; y: INTEGER; width: INTEGER; height: INTEGER]]
 
 create
 	default_create
@@ -25,7 +25,7 @@ feature -- Access
 			extend (agent wrapper (?, ?, ?, ?, ?, action))
 		end
 
-	wrapper (a_dpi: INTEGER; a_x: INTEGER; a_y: INTEGER; a_width: INTEGER; a_height: INTEGER; action: PROCEDURE)
+	wrapper (a_dpi: NATURAL_32; a_x: INTEGER; a_y: INTEGER; a_width: INTEGER; a_height: INTEGER; action: PROCEDURE)
 			-- Use this to circumvent tuple type checking. (at your own risk!)
 			-- Calls `action' passing all other arguments.
 		obsolete
@@ -43,7 +43,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2019, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2020, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

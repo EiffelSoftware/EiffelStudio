@@ -1030,7 +1030,7 @@ feature {NONE} -- Implementation
 		deferred
 		end
 
-	dpi_resize_histogram (a_dpi, a_x, a_y, a_width, a_height: INTEGER)
+	dpi_resize_histogram (a_dpi: NATURAL_32; a_x, a_y, a_width, a_height: INTEGER)
 			-- Called by `dpi_changed_actions' of `eiffel_histogram'.
 		do
 			resize_histogram (a_x, a_y, a_width, a_height)
@@ -1041,7 +1041,7 @@ feature {NONE} -- Implementation
 		deferred
 		end
 
-	eiffel_view_frame_dpi_size_change (a_dpi, a_x, a_y, a_width, a_height: INTEGER)
+	eiffel_view_frame_dpi_size_change (a_dpi: NATURAL_32; a_x, a_y, a_width, a_height: INTEGER)
 			-- Called by `dpi_changed_actions' of `eiffel_view_frame'.
 		do
 			eiffel_view_frame_size_change (a_x, a_y, a_width, a_height)
@@ -1057,7 +1057,7 @@ feature {NONE} -- Implementation
 		deferred
 		end
 
-	dpi_resize_history (a_dpi, a_x, a_y, a_width, a_height: INTEGER)
+	dpi_resize_history (a_dpi: NATURAL_32; a_x, a_y, a_width, a_height: INTEGER)
 			-- Called by `dpi_changed_actions' of `eiffel_history'.
 		do
 			resize_history (a_x, a_y, a_width, a_height)
@@ -1115,7 +1115,7 @@ feature {NONE} -- Implementation
 
 
 note
-	copyright:	"Copyright (c) 1984-2019, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2020, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

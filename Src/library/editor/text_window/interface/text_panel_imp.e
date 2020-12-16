@@ -48,7 +48,7 @@ feature {NONE}-- Initialization
 			inner_hbox.extend (editor_viewport)
 			editor_viewport.extend (editor_drawing_area)
 			editor_viewport.resize_actions.extend (agent (x, y, w, h: INTEGER_32) do editor_drawing_area.redraw end)
-			editor_viewport.dpi_changed_actions.extend (agent (dpi, x, y, w, h: INTEGER_32) do editor_drawing_area.redraw end)
+			editor_viewport.dpi_changed_actions.extend (agent (dpi: NATURAL_32; x, y, w, h: INTEGER_32) do editor_drawing_area.redraw end)
 			main_vbox.extend (horizontal_scrollbar)
 			widget.extend (scroll_vbox)
 			scroll_vbox.extend (vertical_scrollbar)
@@ -111,7 +111,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2019, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2020, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

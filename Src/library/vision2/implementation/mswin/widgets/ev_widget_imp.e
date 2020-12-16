@@ -1344,7 +1344,7 @@ feature -- Deferred features
 			end
 		end
 
-	frozen trigger_dpi_actions (a_dpi, a_width, a_height: INTEGER)
+	frozen trigger_dpi_actions (a_dpi: NATURAL_32; a_width, a_height: INTEGER)
 			-- `Current' has been resized.
 		require
 			exists: exists
@@ -1677,7 +1677,7 @@ feature -- Feature that should be directly implemented by externals
 		end
 
 note
-	copyright: "Copyright (c) 1984-2019, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2020, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

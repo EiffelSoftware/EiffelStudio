@@ -932,7 +932,7 @@ feature {NONE} -- Auto Events
 			end
 		end
 
-	on_dpi_resize_events (a_dpi, ax, ay, aw, ah: INTEGER)
+	on_dpi_resize_events (a_dpi: NATURAL_32; ax, ay, aw, ah: INTEGER)
 		do
 			on_resize_events (ax, ay, aw, ah)
 		end
@@ -1399,7 +1399,7 @@ invariant
 	selected_rows_agent_attached: selected_rows_function /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2019, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2020, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

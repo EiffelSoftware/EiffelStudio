@@ -409,7 +409,7 @@ feature -- event
 						aw.destroy
 					end(pw))
 			pw.resize_actions.extend (agent (ag: EV_GRID; x, y, width, height: INTEGER_32) do ag.column (1).resize_to_content end (g, ?, ?, ?, ?))
-			pw.dpi_changed_actions.extend (agent (ag: EV_GRID; a_dpi, x, y, width, height: INTEGER_32) do ag.column (1).resize_to_content end (g, ?, ?, ?, ?, ?))
+			pw.dpi_changed_actions.extend (agent (ag: EV_GRID; a_dpi: NATURAL_32; x, y, width, height: INTEGER_32) do ag.column (1).resize_to_content end (g, ?, ?, ?, ?, ?))
 			pw.show
 			g.set_focus
 		end
@@ -648,7 +648,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright: "Copyright (c) 1984-2019, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2020, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

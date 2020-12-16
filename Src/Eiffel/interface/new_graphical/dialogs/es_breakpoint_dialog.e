@@ -740,12 +740,12 @@ feature {NONE} -- When hits
 						af.set_item_size (avb, af.width - 1, af.height - horizontal_scrollbar_height - 1)
 					end(l_fixed, vb, ?,?,?,?)
 				)
-			l_scroll.dpi_changed_actions.extend (agent (asc: EV_SCROLLABLE_AREA; a_dpi,ax,ay,aw,ah: INTEGER)
+			l_scroll.dpi_changed_actions.extend (agent (asc: EV_SCROLLABLE_AREA; a_dpi: NATURAL_32; ax,ay,aw,ah: INTEGER)
 					do
 						asc.set_item_size (asc.item.minimum_width.max (asc.width - vertical_scrollbar_width), asc.item.minimum_height.max (asc.height - horizontal_scrollbar_height))
 					end(l_scroll, ?,?,?,?,?)
 				)
-			l_fixed.dpi_changed_actions.extend (agent (af: EV_FIXED; avb: EV_BOX; a_dpi,ax,ay,aw,ah: INTEGER)
+			l_fixed.dpi_changed_actions.extend (agent (af: EV_FIXED; avb: EV_BOX; a_dpi: NATURAL_32; ax,ay,aw,ah: INTEGER)
 					do
 						af.set_item_position (avb, 0, 0)
 						af.set_item_size (avb, af.width - 1, af.height - horizontal_scrollbar_height - 1)

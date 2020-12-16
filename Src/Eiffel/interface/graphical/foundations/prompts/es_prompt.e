@@ -117,11 +117,11 @@ feature {NONE} -- User interface initialization
 			l_vbox.disable_item_expand (l_icon)
 
 				-- Box for icon with room for expansion
-			l_hbox.set_padding ({ES_UI_CONSTANTS}.prompt_horizontal_icon_spacing)
+			l_hbox.set_padding ({EV_MONITOR_DPI_DETECTOR_IMP}.scaled_size ({ES_UI_CONSTANTS}.prompt_horizontal_icon_spacing))
 			l_hbox.extend (l_vbox)
 			l_hbox.disable_item_expand (l_vbox)
 
-			l_container.set_padding ({ES_UI_CONSTANTS}.prompt_vertical_padding)
+			l_container.set_padding ({EV_MONITOR_DPI_DETECTOR_IMP}.scaled_size ({ES_UI_CONSTANTS}.prompt_vertical_padding))
 			l_hbox.extend (l_container)
 
 				-- Build prompt interface
@@ -129,7 +129,7 @@ feature {NONE} -- User interface initialization
 
 				-- Create padding for right of prompt
 			create l_cell
-			l_cell.set_minimum_width (25)
+			l_cell.set_minimum_width ({EV_MONITOR_DPI_DETECTOR_IMP}.scaled_size (25))
 			l_hbox.extend (l_cell)
 			l_hbox.disable_item_expand (l_cell)
 
@@ -396,9 +396,9 @@ feature {NONE} -- Element change
 				a_label.hide
 			else
 				if is_shown then
-					l_old_width := dialog.width
-					l_old_height := dialog.height
-					a_label.set_maximum_width (maximum_prompt_text_width)
+					l_old_width := {EV_MONITOR_DPI_DETECTOR_IMP}.scaled_size (dialog.width)
+					l_old_height := {EV_MONITOR_DPI_DETECTOR_IMP}.scaled_size (dialog.height)
+					a_label.set_maximum_width ({EV_MONITOR_DPI_DETECTOR_IMP}.scaled_size (maximum_prompt_text_width))
 				end
 
 					-- Set actual text
@@ -412,16 +412,16 @@ feature {NONE} -- Element change
 
 						-- Adjust prompt text widths to ensure they are not too big for the screen.
 						-- This will cause long text to be wrapped.
-					l_width := prompt_text.font.string_width (prompt_text.text)
-					a_label.set_maximum_width (l_width.min (maximum_prompt_text_width))
+					l_width := {EV_MONITOR_DPI_DETECTOR_IMP}.scaled_size (prompt_text.font.string_width (prompt_text.text))
+					a_label.set_maximum_width (l_width.min ({EV_MONITOR_DPI_DETECTOR_IMP}.scaled_size (maximum_prompt_text_width)))
 					a_label.calculate_size
 					a_label.refresh_now
 
 					a_label.show
 
 					l_dialog := dialog
-					l_width := l_dialog.width
-					l_height := l_dialog.height
+					l_width := {EV_MONITOR_DPI_DETECTOR_IMP}.scaled_size (l_dialog.width)
+					l_height := {EV_MONITOR_DPI_DETECTOR_IMP}.scaled_size (l_dialog.height)
 					if l_old_width /= l_width then
 							-- Calculate new X offset
 						l_x_offset := ((l_old_width - l_width) / 2).floor
@@ -706,12 +706,12 @@ feature {NONE} -- Action handlers
 
 				-- Adjust prompt text widths to ensure they are not too big for the screen.
 				-- This will cause long text to be wrapped.
-			l_width := prompt_text.font.string_width (prompt_text.text)
-			prompt_text.set_maximum_width (l_width.min (maximum_prompt_text_width))
+			l_width := {EV_MONITOR_DPI_DETECTOR_IMP}.scaled_size (prompt_text.font.string_width (prompt_text.text))
+			prompt_text.set_maximum_width (l_width.min ({EV_MONITOR_DPI_DETECTOR_IMP}.scaled_size (maximum_prompt_text_width)))
 			prompt_text.calculate_size
 
-			l_width := prompt_sub_title_label.font.string_width (prompt_sub_title_label.text)
-			prompt_sub_title_label.set_maximum_width (l_width.min (maximum_prompt_text_width))
+			l_width := {EV_MONITOR_DPI_DETECTOR_IMP}.scaled_size (prompt_sub_title_label.font.string_width (prompt_sub_title_label.text))
+			prompt_sub_title_label.set_maximum_width (l_width.min ({EV_MONITOR_DPI_DETECTOR_IMP}.scaled_size (maximum_prompt_text_width)))
 			prompt_sub_title_label.calculate_size
 		end
 
@@ -726,7 +726,7 @@ invariant
 	not_is_size_and_position_remembered: not is_size_and_position_remembered
 
 ;note
-	copyright:	"Copyright (c) 1984-2018, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2020, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

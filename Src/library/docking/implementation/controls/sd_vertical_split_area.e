@@ -54,7 +54,7 @@ feature {NONE} -- Implementation
 				(agent (a_x, a_y, a_width, a_height: INTEGER_32)
 					do remember_top_resize_split_area (Current) end)
 			dpi_changed_actions.extend
-				(agent (a_dpi, a_x, a_y, a_width, a_height: INTEGER_32)
+				(agent (a_dpi: NATURAL_32; a_x, a_y, a_width, a_height: INTEGER_32)
 					do remember_top_resize_split_area (Current) end)
 		end
 
@@ -88,7 +88,7 @@ invariant
 
 note
 	library:	"SmartDocking: Library of reusable components for Eiffel."
-	copyright:	"Copyright (c) 1984-2019, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2020, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

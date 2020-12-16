@@ -125,7 +125,7 @@ feature {NONE} -- Initialization
 					a_split.set_proportion (0.9)
 				end (?, ?, ?, ?, hsp))
 
-			dpi_changed_actions.extend (agent (a_dpi, ia_x, ia_y, ia_width, ia_height: INTEGER; a_split: EV_VERTICAL_SPLIT_AREA)
+			dpi_changed_actions.extend (agent (a_dpi: NATURAL_32; ia_x, ia_y, ia_width, ia_height: INTEGER; a_split: EV_VERTICAL_SPLIT_AREA)
 				do
 					a_split.set_proportion (0.9)
 				end (?, ?, ?, ?, ?, hsp))

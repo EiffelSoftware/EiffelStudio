@@ -225,11 +225,12 @@ feature {NONE} -- WEL Implementation
 		end
 
 
-	on_dpi_changed (a_dpi: INTEGER)
+	on_dpi_changed (a_dpi: NATURAL_32;  a_wp: WEL_WINDOW_POS)
 			-- WM_dpichange message.
 			-- This message is sent to a window whose dpi changed.
 		do
-			-- We don't need to handle `on_move' as descendents do not use it.
+				-- We don't need to handle `on_move' as descendents do not use it.
+			on_window_pos_changed (a_wp)
 		end
 
 
@@ -323,7 +324,7 @@ feature {NONE} -- Features that should be directly implemented by externals.
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2019, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2020, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

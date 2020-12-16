@@ -294,7 +294,7 @@ feature {NONE} -- Implementation
 			update
 		end
 
-	dpi_resize_buffer (a_dpi,a_x, a_y, area_width, area_height: INTEGER)
+	dpi_resize_buffer (a_dpi: NATURAL_32; a_x, a_y, area_width, area_height: INTEGER)
 			-- Resize buffer if it is smaller than `Buffer_scale_factor' times
 			-- the size given by `area_width' and `area_height'.
 		do
@@ -328,7 +328,7 @@ invariant
 	right_drawable_in_the_cell: drawable = drawable_in_the_cell
 
 note
-	copyright: "Copyright (c) 1984-2019, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2020, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

@@ -68,11 +68,11 @@ feature {NONE} -- User interface initialization
 				end
 
 					-- Size size info				
-				l_list.set_minimum_width (300)
+				l_list.set_minimum_width ({EV_MONITOR_DPI_DETECTOR_IMP}.scaled_size (300))
 				l_list.set_column_count_to (1)
-				l_list.column (1).set_width (300)
-				l_list.set_row_height (18)
-				l_list.set_minimum_height (class_list.count.min (14) * 18)
+				l_list.column (1).set_width ({EV_MONITOR_DPI_DETECTOR_IMP}.scaled_size (300))
+				l_list.set_row_height ({EV_MONITOR_DPI_DETECTOR_IMP}.scaled_size (18))
+				l_list.set_minimum_height ({EV_MONITOR_DPI_DETECTOR_IMP}.scaled_size (class_list.count.min (14)) * 18)
 
 					-- Add rows
 				l_list.set_row_count_to (class_list.count)
@@ -121,7 +121,7 @@ invariant
 	class_list_contains_attached_items: not class_list.has (Void)
 
 ;note
-	copyright:	"Copyright (c) 1984-2014, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2020, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

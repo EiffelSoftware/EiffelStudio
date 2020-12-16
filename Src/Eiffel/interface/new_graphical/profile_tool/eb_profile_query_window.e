@@ -102,7 +102,7 @@ feature {NONE} -- Initialization
 			inactive_subqueries_window.set_column_width (inactive_subqueries_window.width, 1)
 		end
 
-	dpi_resize_columns (a_dpi, a_x: INTEGER; a_y: INTEGER; a_width: INTEGER; a_height: INTEGER)
+	dpi_resize_columns (a_dpi: NATURAL_32; a_x: INTEGER; a_y: INTEGER; a_width: INTEGER; a_height: INTEGER)
 			-- Resize the columns for the active & inactive query lists
 		do
 			resize_columns (a_x, a_y, a_width, a_height)
@@ -2009,7 +2009,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2019, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2020, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

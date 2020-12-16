@@ -1301,7 +1301,7 @@ feature {NONE} -- Display functions
 			update_horizontal_scrollbar
 		end
 
-	on_dpi_change (a_dpi, a_x, a_y: INTEGER; a_width, a_height: INTEGER)
+	on_dpi_change (a_dpi: NATURAL_32; a_x, a_y: INTEGER; a_width, a_height: INTEGER)
 			-- Refresh the panel after it has been resized (and moved) to new coordinates (`a_x', `a_y') and
 			-- new size (`a_width', `a_height').
 			--| Note: This feature is called during the creation of the window
@@ -1337,7 +1337,7 @@ feature {NONE} -- Display functions
 			end
 		end
 
-	on_dpi_change_viewport_size (a_dpi, a_x, a_y: INTEGER; a_width, a_height: INTEGER)
+	on_dpi_change_viewport_size (a_dpi: NATURAL_32; a_x, a_y: INTEGER; a_width, a_height: INTEGER)
 			-- Viewport was resized.
 		do
 			on_viewport_size (a_x, a_y, a_width, a_height)
@@ -1961,7 +1961,7 @@ invariant
 	buffered_line_not_void: is_initialized implies buffered_line /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2019, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2020, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

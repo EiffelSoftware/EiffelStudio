@@ -54,7 +54,7 @@ feature {NONE} -- Initialization
 						refresh_wrapped_text
 					end)
 			dpi_changed_actions.extend
-				(agent (a_dpi,x, y, w, h: INTEGER_32)
+				(agent (a_dpi: NATURAL_32; x, y, w, h: INTEGER_32)
 					do
 						refresh_wrapped_text
 					end)
@@ -242,7 +242,7 @@ feature {ES_SCROLLABLE_LABEL} -- Update
 		end
 
 note
-	copyright: "Copyright (c) 1984-2018, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2020, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

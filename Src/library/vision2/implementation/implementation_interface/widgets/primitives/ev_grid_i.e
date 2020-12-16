@@ -4854,7 +4854,7 @@ feature {EV_GRID_LOCKED_I} -- Drawing implementation
 				viewport.item.height >= viewable_height)
 		end
 
-	viewport_dpi_change_resized (a_dpi,an_x, a_y, a_width, a_height: INTEGER)
+	viewport_dpi_change_resized (a_dpi:NATURAL_32; an_x, a_y, a_width, a_height: INTEGER)
 			-- Respond to resizing of `Viewport' to width and height `a_width', `a_height'.
 		require
 			a_width_non_negative: a_width >= 0
@@ -6758,7 +6758,7 @@ invariant
 	tree_node_connector_color_not_void: is_initialized implies tree_node_connector_color /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2019, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2020, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

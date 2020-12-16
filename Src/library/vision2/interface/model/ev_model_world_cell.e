@@ -452,7 +452,7 @@ feature {NONE} -- Implementation
 			vertical_scrollbar.set_leap (drawing_area.height.max (1))
 		end
 
-	on_dpi_resizing (a_dpi, a_x, a_y, a_width, a_height: INTEGER)
+	on_dpi_resizing (a_dpi: NATURAL_32; a_x, a_y, a_width, a_height: INTEGER)
 			-- `area' has been resized.
 			-- Update scrollbars.
 		do
@@ -632,7 +632,7 @@ invariant
 	scroll_speed_positive: scroll_speed >= 0.0
 
 note
-	copyright:	"Copyright (c) 1984-2019, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2020, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

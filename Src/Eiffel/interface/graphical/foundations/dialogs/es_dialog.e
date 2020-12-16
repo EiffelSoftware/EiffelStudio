@@ -111,7 +111,7 @@ feature {NONE} -- Initialization
 --	       						-- Ensure dialog is not off-screen
 --	       					dialog.set_position (l_sp_info.x, l_sp_info.y)
 --	       				end
-       				dialog.set_size (l_sp_info.width, l_sp_info.height)
+       				dialog.set_size ({EV_MONITOR_DPI_DETECTOR_IMP}.scaled_size (l_sp_info.width), {EV_MONITOR_DPI_DETECTOR_IMP}.scaled_size (l_sp_info.height))
        			end
 
        				-- Hook up close action to store session size/position data
@@ -145,12 +145,12 @@ feature {NONE} -- User interface initialization
 			l_main_container.set_border_width (0)
 
 			create l_container
-			l_container.set_border_width (dialog_border_width)
+			l_container.set_border_width ({EV_MONITOR_DPI_DETECTOR_IMP}.scaled_size (dialog_border_width))
 			l_main_container.extend (l_container)
 			build_dialog_interface (l_container)
 
  			create l_container
-			l_container.set_border_width (dialog_button_border_width)
+			l_container.set_border_width ({EV_MONITOR_DPI_DETECTOR_IMP}.scaled_size (dialog_button_border_width))
 			l_main_container.extend (l_container)
 			l_main_container.disable_item_expand (l_container)
 			l_container.extend (create_dialog_button_ribbon)
@@ -1108,7 +1108,7 @@ invariant
 	button_actions_attached: button_actions /= Void
 
 ;note
-	copyright:	"Copyright (c) 1984-2018, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2020, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

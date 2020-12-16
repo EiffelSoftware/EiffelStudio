@@ -207,6 +207,9 @@ feature -- Misc.
 			if attached other.pick_ended_actions_internal as l_event then
 				pick_ended_actions_internal := l_event
 			end
+			if attached other.dpi_changed_actions_internal as l_event then
+				dpi_changed_actions_internal := l_event
+			end
 		end
 
 	raw_image_data: EV_RAW_IMAGE_DATA
@@ -470,7 +473,7 @@ feature {
 	interface: detachable EV_PIXMAP note option: stable attribute end;
 
 note
-	copyright: "Copyright (c) 1984-2019, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2020, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

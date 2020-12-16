@@ -216,7 +216,7 @@ feature {NONE} -- Initialization
 			description_location.key_press_actions.extend (agent on_description_key_pressed)
 			description_text.key_press_actions.extend (agent on_description_key_pressed)
 			widget.resize_actions.extend (agent (x, y, w, h: INTEGER_32) do on_resize end)
-			widget.dpi_changed_actions.extend (agent (dpi, x, y, w, h: INTEGER_32) do on_resize end)
+			widget.dpi_changed_actions.extend (agent (dpi: NATURAL_32; x, y, w, h: INTEGER_32) do on_resize end)
 			view_toggle_button.select_actions.extend (agent toggle_view)
 
 				--| Filter

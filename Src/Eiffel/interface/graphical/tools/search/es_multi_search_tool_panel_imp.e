@@ -52,11 +52,8 @@ feature {NONE} -- Initialize
 			label_search.align_text_left
 
 			create keyword_field
---			keyword_field.set_minimum_width (
---				Layout_constants.Dialog_unit_to_pixels (min_width_of_keyword_field))
-
 			keyword_field.set_minimum_width (
-				{EV_MONITOR_DPI_DETECTOR_IMP}.scaled_size (min_width_of_keyword_field))
+				Layout_constants.Dialog_unit_to_pixels (min_width_of_keyword_field))
 
 			create search_box
 			search_box.set_padding (2)
@@ -70,11 +67,8 @@ feature {NONE} -- Initialize
 
 					-- Replace box
 			create replace_combo_box
---			replace_combo_box.set_minimum_width (
---				Layout_constants.Dialog_unit_to_pixels (min_width_of_keyword_field))
-
 			replace_combo_box.set_minimum_width (
-				{EV_MONITOR_DPI_DETECTOR_IMP}.scaled_size (min_width_of_keyword_field))
+				Layout_constants.Dialog_unit_to_pixels (min_width_of_keyword_field))
 
 			create replace_button.make_with_text (interface_names.b_replace)
 
@@ -89,8 +83,8 @@ feature {NONE} -- Initialize
 
 				-- Ensures alignments of combo boxes by making sure that their preceding
 				-- labels have the same width.
-			label_search.set_minimum_width (label.width.max (label_search.minimum_width))
-			label.set_minimum_width (label_search.minimum_width)
+			label_search.set_minimum_width ({EV_MONITOR_DPI_DETECTOR_IMP}.scaled_size (label.width.max (label_search.minimum_width)))
+			label.set_minimum_width ({EV_MONITOR_DPI_DETECTOR_IMP}.scaled_size (label_search.minimum_width))
 
 					-- Options and replace all
 			create option_and_replace_all_box
@@ -99,7 +93,7 @@ feature {NONE} -- Initialize
 			option_and_replace_all_box.extend (option_frame)
 			create hbox
 			create cell
-			cell.set_minimum_width ({EV_MONITOR_DPI_DETECTOR_IMP}.scaled_size (10))
+			cell.set_minimum_width (10)
 			hbox.extend (cell)
 			hbox.disable_item_expand (cell)
 			option_frame.extend (hbox)
@@ -129,7 +123,7 @@ feature {NONE} -- Initialize
 			hbox.disable_item_expand (vbox)
 
 			create cell
-			cell.set_minimum_width ({EV_MONITOR_DPI_DETECTOR_IMP}.scaled_size (10))
+			cell.set_minimum_width (10)
 			hbox.extend (cell)
 
 			create vbox
@@ -141,7 +135,7 @@ feature {NONE} -- Initialize
 			hbox.disable_item_expand (vbox)
 
 			create cell
-			cell.set_minimum_width ({EV_MONITOR_DPI_DETECTOR_IMP}.scaled_size (10))
+			cell.set_minimum_width (10)
 			hbox.extend (cell)
 
 			create replace_all_click_button.make_with_text (interface_names.b_replace_all)
@@ -152,7 +146,7 @@ feature {NONE} -- Initialize
 			vbox.extend (create {EV_CELL})
 
 			create cell
-			cell.set_minimum_width ({EV_MONITOR_DPI_DETECTOR_IMP}.scaled_size (3))
+			cell.set_minimum_width (3)
 			option_and_replace_all_box.extend (cell)
 			option_and_replace_all_box.disable_item_expand (cell)
 
@@ -170,8 +164,8 @@ feature {NONE} -- Initialize
 			report_box := build_report_box
 
 			create vbox
-			vbox.set_border_width ({EV_MONITOR_DPI_DETECTOR_IMP}.scaled_size (Layout_constants.Small_border_size))
-			vbox.set_padding ({EV_MONITOR_DPI_DETECTOR_IMP}.scaled_size (Layout_constants.Small_border_size))
+			vbox.set_border_width (Layout_constants.Small_border_size)
+			vbox.set_padding (Layout_constants.Small_border_size)
 			vbox.extend (search_box)
 			vbox.disable_item_expand (search_box)
 			vbox.extend (replace_box)
@@ -614,7 +608,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2019, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2020, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

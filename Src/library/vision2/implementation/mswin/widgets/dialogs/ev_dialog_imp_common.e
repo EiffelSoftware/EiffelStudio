@@ -360,6 +360,7 @@ feature {NONE} -- Implementation
 				pointer_motion_actions_internal := l_event
 			end
 
+
 			pointer_x := other_imp.pointer_x
 			pointer_y := other_imp.pointer_y
 			press_action := other_imp.press_action
@@ -372,6 +373,9 @@ feature {NONE} -- Implementation
 			remove_item_actions := other_imp.remove_item_actions
 			if attached other_imp.resize_actions_internal as l_event then
 				resize_actions_internal := l_event
+			end
+			if attached other_imp.dpi_changed_actions_internal as l_event then
+				dpi_changed_actions_internal := l_event
 			end
 
 			rubber_band_is_drawn := other_imp.rubber_band_is_drawn
@@ -663,7 +667,7 @@ feature {EV_ANY, EV_ANY_I} -- Implementation
 			-- Interface for `Current'.
 
 note
-	copyright:	"Copyright (c) 1984-2019, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2020, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

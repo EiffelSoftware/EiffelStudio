@@ -36,7 +36,7 @@ feature {NONE} -- Initialization
 				do
 					update_size
 				end)
-			dpi_changed_actions.extend (agent (a_dpi, x, y, w, h: INTEGER_32)
+			dpi_changed_actions.extend (agent (a_dpi:NATURAL_32; x, y, w, h: INTEGER_32)
 				do
 					update_size
 				end)
@@ -90,7 +90,7 @@ feature {NONE} -- Resizing
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2018, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2020, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

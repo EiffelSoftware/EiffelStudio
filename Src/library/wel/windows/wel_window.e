@@ -1419,7 +1419,7 @@ feature {WEL_WINDOW} -- Messages
 
 feature {NONE} -- Messages
 
-	on_dpi_changed (a_dpi: INTEGER)
+	on_dpi_changed (a_dpi: NATURAL_32;  window_pos: WEL_WINDOW_POS)
 			-- WM_dpichange message.
 			-- This message is sent to a window whose dpi changed,
 		require
@@ -1697,20 +1697,27 @@ feature {NONE} -- Messages
 			exists: exists
 		local
 			l_rect: WEL_RECT
-			l_dpi: INTEGER
+			l_dpi: NATURAL_32
+			l_wp: WEL_WINDOW_POS
 		do
 				-- When we handle the WM_DPICHANGED, the app it's
 				-- responsible to call SetWindowsPos and scale windows controls
 				-- and resources, at the moment only SetWindowsPos is handled.
 				-- a_wparam new dpi setting
 				-- need to use the new DPI retrieved from the a_wparam to calculate the new scale factor.
-			l_dpi := cwin_hi_word (a_wparam)
+			l_dpi := cwin_hi_word (a_wparam).to_natural_32
 
 				-- a_lparam windows rectangle scaled for the new DPI.
 			create l_rect.make_by_pointer (a_lparam)
 			move_and_resize_internal (l_rect.left, l_rect.top, l_rect.width, l_rect.height, True, 0)
 
-			on_dpi_changed (l_dpi)
+			l_wp := Window_pos_internal
+			if l_wp.item /= default_pointer then
+				create l_wp.make_by_pointer (a_lparam)
+			else
+				l_wp.set_item (a_lparam)
+			end
+			on_dpi_changed (l_dpi, l_wp)
 		end
 
 feature {WEL_WINDOW, WEL_DISPATCHER} -- Implementation
@@ -2813,7 +2820,7 @@ feature {WEL_INPUT_EVENT} -- Externals
 
 
 note
-	copyright:	"Copyright (c) 1984-2019, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2020, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

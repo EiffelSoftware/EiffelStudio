@@ -78,9 +78,12 @@
 			</Component>
 			<Directory Id="Dir.gcc" Name="gcc"/>
 			<Directory Id="Dir.Core.examples" Name="examples"/>
+			<Directory Id="Dir.Core.contrib" Name="contrib"/>
 			<Directory Id="Dir.Core.library" Name="library">
 				<Directory Id="Dir.Core.library.gobo" Name="gobo"/>
 			</Directory>
+			<Directory Id="Dir.Core.unstable" Name="unstable"/>
+			<Directory Id="Dir.Core.tools" Name="tools"/>
 			<!-- To comment when building complete delivery -->
 			<!--
 			<Directory Id="Dir.Core.esbuilder.spec.$(var.IsePlatform).bin" Name="testing1"/>

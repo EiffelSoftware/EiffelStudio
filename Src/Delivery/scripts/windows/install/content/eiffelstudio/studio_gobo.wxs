@@ -1,6 +1,6 @@
 <Wix xmlns="http://schemas.microsoft.com/wix/2006/wi">
   <Fragment>
-  	<ComponentGroup Id="Core.library.gobo" />
+  	<ComponentGroup Id="Core.contrib.library.gobo" />
   </Fragment>
 </Wix>
 

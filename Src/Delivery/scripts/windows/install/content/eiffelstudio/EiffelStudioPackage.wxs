@@ -78,10 +78,10 @@
 			</Component>
 			<Directory Id="Dir.gcc" Name="gcc"/>
 			<Directory Id="Dir.Core.examples" Name="examples"/>
-			<Directory Id="Dir.Core.contrib" Name="contrib"/>
-			<Directory Id="Dir.Core.library" Name="library">
-				<Directory Id="Dir.Core.library.gobo" Name="gobo"/>
+			<Directory Id="Dir.Core.contrib" Name="contrib">
+				<Directory Id="Dir.Core.contrib.library.gobo" Name="gobo"/>
 			</Directory>
+			<Directory Id="Dir.Core.library" Name="library"/>
 			<Directory Id="Dir.Core.unstable" Name="unstable"/>
 			<Directory Id="Dir.Core.tools" Name="tools"/>
 			<!-- To comment when building complete delivery -->
@@ -213,16 +213,16 @@
 				<ComponentGroupRef Id="Core.contrib"/>
 			</Feature>
 
+			<Feature Id="Contrib_gobo_feature" Title="Gobo" TypicalDefault="install" Level="1" Display="hidden">
+				<ComponentGroupRef Id="Core.contrib.library.gobo"/>
+			</Feature>
+
 			<Feature Id="Unstable_feature" Title="Unstable" TypicalDefault="install" Level="1" Display="hidden">
 				<ComponentGroupRef Id="Core.unstable"/>
 			</Feature>
 
 			<Feature Id="Tools_feature" Title="Tools" TypicalDefault="install" Level="1" Display="hidden">
 				<ComponentGroupRef Id="Core.tools"/>
-			</Feature>
-
-			<Feature Id="Gobo_feature" Title="Gobo" TypicalDefault="install" Level="1" Display="hidden">
-				<ComponentGroupRef Id="Core.library.gobo"/>
 			</Feature>
 
 			<Feature Id="gdiplus_feature" Title="GDI+" TypicalDefault="install" Level="1" Display="hidden">

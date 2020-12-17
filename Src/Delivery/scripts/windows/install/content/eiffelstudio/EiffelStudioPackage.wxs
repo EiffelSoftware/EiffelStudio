@@ -92,7 +92,23 @@
 		</DirectoryRef>
 
 		<DirectoryRef Id="TARGETDIR">
-			<Directory Id="DesktopFolder" Name="." />
+    		<Directory Id="DesktopFolder" Name="Desktop">
+        		<Component Id="ApplicationShortcutDesktop" Guid="D14CE80C-7D36-4C61-B555-7897D385A17D">
+            		<Shortcut Id="estudioDesktopShortcut"
+                		Name="EiffelStudio $(var.ProductVersion) ($(var.Platform))"
+                		Description="Launch EiffelStudio $(var.ProductVersion)"
+    					Target="[INSTALLDIR]studio\spec\$(var.IsePlatform)\bin\estudio.exe"
+                		/>
+            		<RemoveFolder Id="DesktopFolder" On="uninstall"/>
+            		<RegistryValue
+                		Root="HKCU"
+    					Key="Software\ISE\$(var.ProductKey)"
+                		Name="installed"
+                		Type="integer"
+                		Value="1"
+                		KeyPath="yes"/>
+        		</Component>
+    		</Directory>
 			<Directory Id="ProgramMenuFolder" Name=".">
 				<Directory Id="EiffelStudio" Name="$(var.Product) $(var.ProductVersion) ($(var.Platform))">
 					<Directory Id="EiffelStudio.Documentation" Name="Documentation"/>
@@ -191,6 +207,7 @@
 			<Feature Id="MainProgram" Title="Program" TypicalDefault="install" Level="1" Display="hidden">
 				<ComponentRef Id="Comp.studio_registries" />
 				<ComponentRef Id="Comp.studio_shortcuts" />
+				<ComponentRef Id="ApplicationShortcutDesktop" />
 				<ComponentRef Id="Comp.Core.esbuilder.spec.$(var.IsePlatform).bin.esbuilder.exe" />
 				<ComponentRef Id="Comp.Core.studio.spec.$(var.IsePlatform).bin.estudio.exe" />
 				<ComponentGroupRef Id="Core"/>

@@ -124,6 +124,8 @@ remtrace ==============================================
 remtrace Clean previous WIX processing
 remtrace Remove LICENSE from %INSTALL_DIR%\EiffelStudio\LICENSE
 fullrf %INSTALL_DIR%\EiffelStudio\LICENSE
+fullrf %INSTALL_DIR%\EiffelStudio\studio\spec\%ISE_PLATFORM%\bin\ec.exe
+fullrf %INSTALL_DIR%\EiffelStudio\studio\spec\%ISE_PLATFORM%\bin\ecb.exe
 ::fullrd %INIT_DIR%\install\bin\studio_std_%WINNAME%
 ::fullrd %INIT_DIR%\install\bin\studio_ent_%WINNAME%
 svn revert -R %INIT_DIR%\install\content\eiffelstudio

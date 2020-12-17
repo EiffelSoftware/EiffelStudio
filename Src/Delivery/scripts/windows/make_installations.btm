@@ -126,7 +126,7 @@ remtrace Remove LICENSE from %INSTALL_DIR%\EiffelStudio\LICENSE
 fullrf %INSTALL_DIR%\EiffelStudio\LICENSE
 fullrf %INSTALL_DIR%\EiffelStudio\studio\spec\%ISE_PLATFORM%\bin\ec.exe
 fullrf %INSTALL_DIR%\EiffelStudio\studio\spec\%ISE_PLATFORM%\bin\ecb.exe
-svn revert -R %INIT_DIR%\install\content\eiffelstudio
+svn revert %INIT_DIR%\install\content\eiffelstudio\studio_*
 
 remtrace Creating WIX files
 espawn -u:%ISE_C_COMPILER_VER% "nmake /nologo clean"

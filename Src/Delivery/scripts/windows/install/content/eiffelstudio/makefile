@@ -84,13 +84,13 @@ studio_examples.wxs:
 studio_libraries.wxs:
 	$(HALLOW) $(HALLOW_FLAGS) "$(INSTALL_DIR)\EiffelStudio\library" \
 		-dr:"Dir.Core.library" \
-		-de:"\\EiffelStudio\\library\\gobo$$" \
 		-g:"Core.library" -r -n:"Core.library." > $@.tmp
 	move $@.tmp $@
 
 studio_contrib.wxs:
 	$(HALLOW) $(HALLOW_FLAGS) "$(INSTALL_DIR)\EiffelStudio\contrib" \
 		-dr:"Dir.Core.contrib" \
+		-de:"\\EiffelStudio\\contrib\\library\\gobo$$" \
 		-g:"Core.contrib" -r -n:"Core.contrib." > $@.tmp
 	move $@.tmp $@
 
@@ -107,8 +107,10 @@ studio_tools.wxs:
 	move $@.tmp $@
 
 studio_gobo.wxs:
-	$(HALLOW) $(HALLOW_FLAGS) "$(INSTALL_DIR)\EiffelStudio\library\gobo" \
-		-dr:"Dir.Core.library.gobo" -g:"Core.library.gobo" -r -n:"Core.library.gobo." > $@.tmp
+	$(HALLOW) $(HALLOW_FLAGS) "$(INSTALL_DIR)\EiffelStudio\contrib\library\gobo" \
+		-dr:"Dir.Core.contrib.library.gobo" \
+		-g:"Core.contrib.library.gobo" \
+		-r -n:"Core.contrib.library.gobo." > $@.tmp
 	move $@.tmp $@
 
 studio_gdiplus.wxs:

@@ -48,24 +48,24 @@ else
 	safe_copy %EIFFEL_SRC%\C\CONFIGS\windows-x86-64-mingw %STUDIO_DIR%\studio\config\%ISE_PLATFORM%\mingw\config.sh
 endiff
 
-IF "%ISE_C_COMPILER%" NEQ "msc_vc140" (
-	IF "%HAS_VC_MSC_VC140%" == "True" (
+iff "%ISE_C_COMPILER%" NEQ "msc_vc140" then
+	iff "%HAS_VC_MSC_VC140%" == "True" then
 	  remtrace Compile the run-time for Microsoft (msc_vc140)
 	  espawn -u:%ISE_VC_MSC_VC140% "%COMSPEC% /c %INIT_DIR%\make_runtimes.btm msc_vc140"
-	)
-)
-IF "%ISE_C_COMPILER%" NEQ "msc" (
-	IF "%HAS_VC_MSC%" == "True" (
+	endiff
+endiff
+iff "%ISE_C_COMPILER%" NEQ "msc" then
+	iff "%HAS_VC_MSC%" == "True" then
 	  remtrace Compile the run-time for Microsoft (msc)
 	  espawn -u:%ISE_VC_MSC% "%COMSPEC% /c %INIT_DIR%\make_runtimes.btm msc"
-	)
-)
+	endiff
+endiff
 
 rem Compile last, the version of the runtime corresponding to the compiler compiling the executables
-IF "%ISE_C_COMPILER%" NEQ "" (
+iff "%ISE_C_COMPILER%" NEQ "" then
   remtrace Compile the run-time for Microsoft (%ISE_C_COMPILER%)
   espawn -u:%ISE_C_COMPILER_VER% "%COMSPEC% /c %INIT_DIR%\make_runtimes.btm %ISE_C_COMPILER%"
-)
+endiff
 
 remtrace Copy the header files
 safe_copy %EIFFEL_SRC%\C\run-time\*.h %STUDIO_DIR%\studio\spec\%ISE_PLATFORM%\include
@@ -536,11 +536,11 @@ iff exist %T_GDIPLUS_INSTALL_FILE% then
 	remtrace Reuse existing gdiplus.dll
 else
 	cdd %EIFFEL_SRC%\tools
-	if EXIST %INIT_DIR%\isesvn\tools\gdiplus (
+	iff EXIST %INIT_DIR%\isesvn\tools\gdiplus then
 		xcopy %INIT_DIR%\isesvn\tools\gdiplus gdiplus /E /I /Y
-	) else (
+	else
 		co %DEFAULT_ISE_SVN%/Src/tools/gdiplus gdiplus
-	)
+	endiff
 	move gdiplus\gdiplus.dll %T_GDIPLUS_INSTALL_FILE%
 endiff
 set T_GDIPLUS_INSTALL_FILE=

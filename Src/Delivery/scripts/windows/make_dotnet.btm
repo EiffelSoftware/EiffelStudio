@@ -8,11 +8,11 @@ cd %EIFFEL_SRC%\Eiffel\eiffel\com_il_generation\core\run-time
 sed -e "s/msbuild runtime.sln/msbuild runtime.sln \/p:Platform=\"Any CPU\" \/p:Configuration=Release /" Makefile > Makefile-release
 
 set TMP_ISE_C_COMPILER_VER=%ISE_C_COMPILER_VER%
-IF "%ISE_C_COMPILER%" EQ "msc_vc140" (
-	IF "%HAS_VC_MSC_VC140%" == "True" (
+iff "%ISE_C_COMPILER%" EQ "msc_vc140" then
+	iff "%HAS_VC_MSC_VC140%" == "True" then
 		set TMP_ISE_C_COMPILER_VER=vc140
-	)
-)
+	endiff
+endiff
 espawn -u:%TMP_ISE_C_COMPILER_VER% "%COMSPEC% /c nmake -f Makefile-release msbuild_20"
 iff exist EiffelSoftware.Runtime.dll then
 	safe_copy EiffelSoftware.Runtime.dll %STUDIO_DIR%\studio\spec\%ISE_PLATFORM%\lib

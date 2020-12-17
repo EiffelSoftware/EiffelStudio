@@ -262,32 +262,32 @@ remtrace HAS_VC_MSC=%HAS_VC_MSC%
 remtrace HAS_VC_MSC_VC140=%HAS_VC_MSC_VC140%
 remtrace HAS_C_COMP_VER=%HAS_C_COMP_VER% : ISE_C_COMPILER_VER=%ISE_C_COMPILER_VER% (ISE_C_COMPILER=%ISE_C_COMPILER%)
 
-IF "%HAS_VC_MSC%" == "True" (
+iff "%HAS_VC_MSC%" == "True" then
 	cdd %INIT_DIR
 	remtrace Build the C libraries of non-Eiffel Software C libraries for msc (%ISE_VC_MSC%)
 	call espawn -u:%ISE_VC_MSC% "%COMSPEC% /c compile_c_libraries.btm %STUDIO_DIR% msc"
-)
-IF "%HAS_VC_MSC_VC140%" == "True" (
+endiff
+iff "%HAS_VC_MSC_VC140%" == "True" then
 	cdd %INIT_DIR
 	remtrace Build the C libraries of non-Eiffel Software C libraries for msc_vc140 (%ISE_VC_MSC_VC140%)
 	call espawn -u:%ISE_VC_MSC_VC140% "%COMSPEC% /c compile_c_libraries.btm %STUDIO_DIR% msc_vc140"
-)
+endiff
 cdd %INIT_DIR
 remtrace Build the C libraries of non-Eiffel Software C libraries for mingw
 call compile_c_libraries.btm %STUDIO_DIR% mingw
 
 remtrace Build other C libraries
 
-IF "%HAS_VC_MSC%" == "True" (
+iff "%HAS_VC_MSC%" == "True" then
 	remtrace Build the other C libraries of non-Eiffel Software C libraries for msc (%ISE_VC_MSC%)
 	cdd %INIT_DIR
 	espawn -u:%ISE_VC_MSC% "%COMSPEC% /c compile_other_c_libraries.btm %STUDIO_DIR msc"
-)
-IF "%HAS_VC_MSC_VC140%" == "True" (
+endiff
+iff "%HAS_VC_MSC_VC140%" == "True" then
 	remtrace Build the other C libraries of non-Eiffel Software C libraries for msc_vc140 (%ISE_VC_MSC_VC140%)
 	cdd %INIT_DIR
 	espawn -u:%ISE_VC_MSC_VC140% "%COMSPEC% /c compile_other_c_libraries.btm %STUDIO_DIR msc_vc140"
-)
+endiff
 remtrace Build the other C libraries of non-Eiffel Software C libraries for mingw
 cdd %INIT_DIR
 call compile_other_c_libraries.btm %STUDIO_DIR mingw
@@ -318,22 +318,22 @@ iff not defined NO_COMPILE then
 	iff not defined NO_ENTERPRISE_BUILD then
 		remtrace ISE specific files
 		cdd %EIFFEL_SRC
-		if EXIST %INIT_DIR%\isesvn\library\keygen (
+		iff EXIST %INIT_DIR%\isesvn\library\keygen then
 			xcopy %INIT_DIR%\isesvn\library\keygen library\keygen /E /I /Y
-		) else (
+		else
 			co -r %ISE_SVN_REVISION% %DEFAULT_ISE_SVN%/Src/library/keygen library/keygen
-		)
+		endiff
 		cd tools
-		if EXIST %INIT_DIR%\isesvn\tools\activation (
+		iff EXIST %INIT_DIR%\isesvn\tools\activation then
 			xcopy %INIT_DIR%\isesvn\tools\activation activation /E /I /Y
-		) else (
+		else
 			co -r %ISE_SVN_REVISION% %DEFAULT_ISE_SVN%/Src/tools/activation activation
-		)
-		if EXIST %INIT_DIR%\isesvn\tools\estudio_enterprise (
+		endiff
+		iff EXIST %INIT_DIR%\isesvn\tools\estudio_enterprise then
 			xcopy %INIT_DIR%\isesvn\tools\estudio_enterprise estudio_enterprise /E /I /Y
-		) else (
+		else
 			co -r %ISE_SVN_REVISION% %DEFAULT_ISE_SVN%/Src/tools/estudio_enterprise estudio_enterprise
-		)
+		endiff
 	endiff
 
 	remtrace Build the normal libraries

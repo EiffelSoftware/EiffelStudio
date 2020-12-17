@@ -29,7 +29,6 @@ feature {NONE} -- Router/administration
 			l_account: ES_CLOUD_ACCOUNT_WEBAPI_HANDLER
 			l_inst_hlr: ES_CLOUD_INSTALLATIONS_WEBAPI_HANDLER
 			l_lic_hlr: ES_CLOUD_LICENSES_WEBAPI_HANDLER
-			l_data_hlr: ES_CLOUD_DATA_WEBAPI_HANDLER
 		do
 			if attached module.es_cloud_api as l_mod_api then
 				create l_root.make (l_mod_api)
@@ -51,11 +50,6 @@ feature {NONE} -- Router/administration
 				a_router.handle ("/cloud/{version}/account/{uid}/installations/{installation_id}", l_inst_hlr, a_router.methods_get_put_delete)
 				a_router.handle ("/cloud/{version}/account/{uid}/installations/{installation_id}/session/", l_inst_hlr, a_router.methods_get)
 				a_router.handle ("/cloud/{version}/account/{uid}/installations/{installation_id}/session/{session_id}", l_inst_hlr, a_router.methods_get)
-
-				create l_data_hlr.make (l_mod_api)
-				a_router.handle ("/cloud/{version}/account/{uid}/installations/{installation_id}/session/{session_id}/data/{data_name}", l_data_hlr, a_router.methods_get)
-				a_router.handle ("/cloud/{version}/account/{uid}/data/{data_name}", l_data_hlr, a_router.methods_get)
-
 			end
 		end
 

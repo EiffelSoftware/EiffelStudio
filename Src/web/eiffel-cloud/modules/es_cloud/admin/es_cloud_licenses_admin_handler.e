@@ -121,7 +121,7 @@ feature -- Execution
 			l_plan_filter: detachable READABLE_STRING_GENERAL
 			l_expiring_before_n_days_filter: INTEGER
 			l_org: ES_CLOUD_ORGANIZATION
-			l_email: READABLE_STRING_8
+			l_email, l_user_email: READABLE_STRING_8
 --			orgs: detachable LIST [ES_CLOUD_ORGANIZATION]
 			lst: LIST [TUPLE [license: ES_CLOUD_LICENSE; user: detachable ES_CLOUD_USER; email: detachable READABLE_STRING_8; org: detachable ES_CLOUD_ORGANIZATION]]
 			f: CMS_FORM
@@ -220,16 +220,26 @@ feature -- Execution
 						s.append ("</td>")
 						if l_user /= Void then
 							s.append ("<td class=%"user%">")
+							l_user_email := l_user.cms_user.email
+							if l_user_email = Void then
+								l_user.update_user (api)
+								l_user_email := l_user.cms_user.email
+							end
 
 							s.append ("<a href=%"")
 							s.append (api.administration_path ("cloud/account/" + l_user.id.out))
 							s.append_character ('%"')
-							if attached l_user.cms_user.email as l_user_email then
+							if l_user_email /= Void then
 								s.append (" title=%"" + html_encoded (l_user_email) + "%"")
 							end
 							s.append_character ('>')
 							s.append (html_encoded (api.real_user_display_name (l_user)))
 							s.append ("</a>")
+							if l_user_email /= Void then
+								s.append (" <span class=%"email%">&lt;")
+								s.append (html_encoded (l_user_email))
+								s.append ("&gt;</span>")
+							end
 						elseif l_org /= Void then
 							s.append ("<td class=%"organization%">")
 							s.append ("[ORG] <a href=%"")
@@ -239,7 +249,7 @@ feature -- Execution
 							s.append ("</a>")
 						elseif l_email /= Void then
 							s.append ("<td class=%"email%">")
-							s.append (l_email)
+							s.append (html_encoded (l_email))
 						else
 							s.append ("<td>")
 						end

@@ -20,6 +20,8 @@
       <CustomAction Id="PrepareInstallCdKey" BinaryKey="setup.dll" DllEntry="prepare_install_cd_key" Execute="immediate"/>
       <CustomAction Id="InstallCdKey" BinaryKey="setup.dll" DllEntry="install_cd_key" Impersonate="no" Execute="deferred"/>
     <?endif?>
+
+	<CustomAction Id="LaunchEiffelStudioOnExit" FileKey="Core.studio.spec.$(var.IsePlatform).bin.estudio.exe" ExeCommand="" Execute="immediate" Impersonate="yes" Return="asyncNoWait" />
     <!-- END CUSTOM ACTIONS -->
 
     <CustomAction Id="SET_INSTALLDIR" Property="INSTALLDIR" Value="[INSTALLDIR]" Execute="firstSequence" />

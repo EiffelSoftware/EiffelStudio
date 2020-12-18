@@ -84,6 +84,8 @@
     <!-- Indicates if the View button is displayed to show a how document to install a MS C compiler -->
     <Property Id="IS_VIEW_FULL_ERROR_BUTTON_SHOWN">0</Property>
     <Property Id="INSTALLDESKTOPSHORTCUT">1</Property>
+    <Property Id="LAUNCHAPPLICATIONONEXIT">1</Property>
+
     <!-- END PROPERTIES -->
     
     <!-- INSTALL DESCRIPTION -->

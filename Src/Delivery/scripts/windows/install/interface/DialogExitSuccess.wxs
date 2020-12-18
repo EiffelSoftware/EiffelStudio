@@ -1,22 +1,29 @@
-<?xml version="1.0"?>
+<?xml version="1.0" encoding="utf-8"?>
 <Wix xmlns="http://schemas.microsoft.com/wix/2006/wi">
-  <Fragment>
-    <UI Id="UI.dialog_exit_success">
-      <Dialog Id="DialogExitSuccess" Width="375" Height="220" Title="[ProductName]">
-        <Control Id="Bitmap" Type="Bitmap" X="0" Y="0" Width="375" Height="220" TabSkip="no" Text="backdrop_info.bmp" />
-        <Control Id="Title" Type="Text" X="56" Y="13" Width="309" Height="57" Transparent="yes" NoPrefix="yes">
-          <Text>[BigFont][ProductName] [ProgressType4] Complete</Text>
-        </Control>
-        <Control Id="Description1" Type="Text" X="9" Y="70" Width="356" Height="92" Transparent="yes" NoPrefix="yes">
-          <Text>[ProductName] has been successfully [ProgressType2] on your system.</Text>
-        </Control>
-        <Control Id="Description2" Type="Text" X="9" Y="162" Width="356" Height="21" Transparent="yes" NoPrefix="yes">
-          <Text>Click the Finish button to exit the installer.</Text>
-        </Control>
-        <Control Id="Finish" Type="PushButton" X="309" Y="193" Width="56" Height="17" Cancel="yes" Default="yes" Text="[Button_Finish]">
-          <Publish Event="EndDialog" Value="Exit">1</Publish>
-        </Control>
-      </Dialog>
-    </UI>
-  </Fragment>
+    <Fragment>
+        <UI Id="UI.dialog_exit_success">
+            <Dialog Id="DialogExitSuccess" Width="375" Height="220" Title="[ProductName]">
+                <Control Id="Bitmap" Type="Bitmap" X="0" Y="0" Width="375" Height="220" TabSkip="no" Text="backdrop_info.bmp" />
+                <Control Id="Title" Type="Text" X="56" Y="13" Width="309" Height="57" Transparent="yes" NoPrefix="yes">
+                    <Text>[BigFont][ProductName] [ProgressType4] Complete</Text>
+                </Control>
+                <Control Id="Description1" Type="Text" X="9" Y="70" Width="356" Height="62" Transparent="yes" NoPrefix="yes">
+                    <Text>[ProductName] has been successfully [ProgressType2] on your system.</Text>
+                </Control>
+                <Control Id="Description2" Type="Text" X="9" Y="148" Width="356" Height="15" Transparent="yes" NoPrefix="yes">
+                    <Text>Click the Finish button to exit the installer.</Text>
+                </Control>
+    			<?ifdef EiffelStudio?>
+                <Control Id="OptionalCheckBox" Type="CheckBox" X="9" Y="170" Height="14" Width="354" Text="Launch EiffelStudio when setup exits." TabSkip="no" Property="LAUNCHAPPLICATIONONEXIT" CheckBoxValue="1">
+                </Control>
+    			<?endif?>
+                <Control Id="Finish" Type="PushButton" X="309" Y="193" Width="56" Height="17" Cancel="yes" Default="yes" Text="[Button_Finish]">
+                    <Publish Event="EndDialog" Value="Exit">1</Publish>
+    				<?ifdef EiffelStudio?>
+                    <Publish Event="DoAction" Value="LaunchEiffelStudioOnExit">LAUNCHAPPLICATIONONEXIT=1</Publish>
+    				<?endif?>
+                </Control>
+            </Dialog>
+        </UI>
+    </Fragment>
 </Wix>

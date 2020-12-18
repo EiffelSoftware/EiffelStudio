@@ -166,7 +166,7 @@
 					Target="[INSTALLDIR]esbuilder\spec\$(var.IsePlatform)\bin\esbuilder.exe"
 					/>
 				<Shortcut Id="estudio.exe" Name="$(var.Product) $(var.ProductVersion)"
-					Description="EiffelStudio development environment" Show="normal" Directory="EiffelStudio"
+					Description="EiffelStudio development environment" Show="normal" Directory="ProgramMenuFolder"
 					Target="[INSTALLDIR]studio\spec\$(var.IsePlatform)\bin\estudio.exe"
 					/>
 				<Shortcut Id="esvars.bat" Name="$(var.Product) $(var.ProductVersion) Command Prompt"
@@ -182,10 +182,6 @@
 				<util:InternetShortcut Id="EiffelStudio.Documentation.General" Name="Eiffel Developer Help Center" Target="http://docs.eiffel.com/" Directory="EiffelStudio.Documentation"/>
 				<util:InternetShortcut Id="EiffelStudio.Documentation.COM" Name="EiffelCOM Wizard Documentation" Target="http://docs.eiffel.com/book/platform-specifics/eiffelcom-wizard" Directory="EiffelStudio.Documentation"/>
 				<util:InternetShortcut Id="EiffelStudio.Documentation.ResourceBench" Name="ResourceBench Documentation" Target="http://docs.eiffel.com/book/platform-specifics/resourcebench" Directory="EiffelStudio.Documentation"/>
-				<Shortcut Id="vision2_demo.exe" Name="EiffelVision2 Demo"
-					Description="EiffelVision2 overview presentation" Show="normal" Directory="EiffelStudio.Documentation"
-					Target="[INSTALLDIR]vision2_demo\spec\$(var.IsePlatform)\bin\vision2_demo.exe"
-					/>
 				<Shortcut Id="com_wizard.exe" Name="EiffelCOM Wizard" 
 					Description="A wizard that helps you use and create COM components with Eiffel" Show="normal"
 					Target="[INSTALLDIR]wizards\com\com_wizard_launcher.exe" Directory="EiffelStudio.Tools"

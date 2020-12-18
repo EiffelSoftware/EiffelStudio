@@ -165,7 +165,7 @@
 					Description="GUI Builder using EiffelVision2" Show="normal" Directory="EiffelStudio"
 					Target="[INSTALLDIR]esbuilder\spec\$(var.IsePlatform)\bin\esbuilder.exe"
 					/>
-				<Shortcut Id="estudio.exe" Name="$(var.Product) $(var.ProductVersion)"
+				<Shortcut Id="estudio.exe" Name="$(var.Product) $(var.ProductVersion) ($(var.Platform))"
 					Description="EiffelStudio development environment" Show="normal" Directory="ProgramMenuFolder"
 					Target="[INSTALLDIR]studio\spec\$(var.IsePlatform)\bin\estudio.exe"
 					/>

@@ -310,7 +310,7 @@
 	<PREF NAME="editor.eiffel.show_completion_disambiguated_name" DESCRIPTION="Does completion list show disambiguated name?"><BOOLEAN>False</BOOLEAN></PREF>
 	<PREF NAME="editor.eiffel.show_completion_tooltip" DESCRIPTION="Does completion list show an item's description as a tooltip?"><BOOLEAN>True</BOOLEAN></PREF>
 	<PREF NAME="editor.eiffel.show_obsolete_items" DESCRIPTION="Does completion list show obsolete items?"><BOOLEAN>False</BOOLEAN></PREF>
-	<PREF NAME="editor.eiffel.show_completion_unicode_symbols" DESCRIPTION="Does completion list show Unicode symbols?"><BOOLEAN>False</BOOLEAN></PREF>
+	<PREF NAME="editor.eiffel.show_completion_unicode_symbols" DESCRIPTION="Does completion list show Unicode symbols?"><BOOLEAN>True</BOOLEAN></PREF>
 	<PREF NAME="editor.eiffel.minimum_count_for_unicode_symbols_completion_preference" DESCRIPTION="Minimum number of character before showing unicode symbols in completion list."><INTEGER>3</INTEGER></PREF>
 	<PREF NAME="editor.eiffel.syntax_complete_enabled" DESCRIPTION="Is completion of keywords enabled? The completion of keywords can be changed in Editor->Eiffel->Autocomplete."><BOOLEAN>True</BOOLEAN></PREF>
 	<PREF NAME="editor.eiffel.text_mode_is_windows" DESCRIPTION="Format to use when saving class text. True means using Windows text format, False means using Unix text format."><BOOLEAN>True</BOOLEAN></PREF>

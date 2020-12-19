@@ -191,6 +191,15 @@ feature {INTERNAL_COMPILER_STRING_EXPORTER} -- Access
 									vgcp21.set_location (f.item.start_location)
 									Error_handler.insert_error (vgcp21)
 								end
+								if not is_once then
+										-- Skip checks specific to once classes.
+								elseif not a_feature.is_once then
+									error_handler.insert_error (create {ONCE_CREATION_ERROR}.make ({ONCE_CREATION_ERROR}.reason_non_once, a_feature, a_class, f.item.start_location))
+								elseif a_feature.written_in /= class_id then
+									error_handler.insert_error (create {ONCE_CREATION_ERROR}.make ({ONCE_CREATION_ERROR}.reason_inherited, a_feature, a_class, f.item.start_location))
+								elseif a_feature.is_object_relative_once then
+									error_handler.insert_error (create {ONCE_CREATION_ERROR}.make ({ONCE_CREATION_ERROR}.reason_object_relative, a_feature, a_class, f.item.start_location))
+								end
 								a_feature.set_creator_position (position)
 								position := position + 1
 							end

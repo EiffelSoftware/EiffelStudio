@@ -1,0 +1,4 @@
+Error: invalid creation procedure for a once class.
+What to do: make sure the creation procedure is immediate (i.e., is declared
+  in this class), is a once feature, and its once keys (if any) do not
+  include "OBJECT".

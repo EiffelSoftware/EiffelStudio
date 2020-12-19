@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "Tool that displays account information"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -667,8 +667,6 @@ feature -- Rich text helper
 		end
 
 	bold_format: EV_CHARACTER_FORMAT
-		local
-			ft: EV_FONT
 		do
 			Result := text_format ("bold")
 			if Result = Void then

@@ -1,0 +1,96 @@
+test_name 	 once-class-uniqueness
+test_description Objects of once classes are unique.
+
+copy_raw	direction.e $CLUSTER direction.e
+copy_raw	test.e $CLUSTER test.e
+
+define		PRECOMPILED $PRECOMPILED_BASE_SAFE
+define		CONCURRENCY none
+define		VOID_SAFETY all
+copy_sub	Ace $TEST Ace
+
+compile_melted
+compile_result ok
+execute_work 	NONE 	exec_output_nm
+execute_result 	ok
+compare		exec_output_nm output
+
+compile_frozen
+compile_result ok
+c_compile_work
+c_compile_result	ok
+execute_work 	NONE 	exec_output_nw
+execute_result 	ok
+compare		exec_output_nw output
+
+compile_final
+compile_result ok
+c_compile_final
+c_compile_result	ok
+execute_final 	NONE 	exec_output_nf
+execute_result 	ok
+compare		exec_output_nf output
+
+cleanup_compile
+
+define		PRECOMPILED $PRECOMPILED_BASE_MT
+define		CONCURRENCY thread
+define		VOID_SAFETY none
+copy_sub	Ace $TEST Ace
+
+compile_melted
+compile_result ok
+execute_work 	NONE 	exec_output_tm
+execute_result 	ok
+compare		exec_output_tm output
+
+compile_frozen
+compile_result ok
+c_compile_work
+c_compile_result	ok
+execute_work 	NONE 	exec_output_tw
+execute_result 	ok
+compare		exec_output_tw output
+
+compile_final
+compile_result ok
+c_compile_final
+c_compile_result	ok
+execute_final 	NONE 	exec_output_tf
+execute_result 	ok
+compare		exec_output_tf output
+
+cleanup_compile
+
+if DOTNET test_end
+
+define		PRECOMPILED $PRECOMPILED_BASE_SCOOP_SAFE
+define		CONCURRENCY scoop
+define		VOID_SAFETY all
+copy_sub	Ace $TEST Ace
+
+compile_melted
+compile_result ok
+execute_work 	NONE 	exec_output_sm
+execute_result 	ok
+compare		exec_output_sm output
+
+compile_frozen
+compile_result ok
+c_compile_work
+c_compile_result	ok
+execute_work 	NONE 	exec_output_sw
+execute_result 	ok
+compare		exec_output_sw output
+
+compile_final
+compile_result ok
+c_compile_final
+c_compile_result	ok
+execute_final 	NONE 	exec_output_sf
+execute_result 	ok
+compare		exec_output_sf output
+
+cleanup_compile
+
+test_end

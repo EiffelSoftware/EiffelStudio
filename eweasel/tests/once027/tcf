@@ -1,0 +1,38 @@
+test_name 	 once-class-creation-procedure
+test_description The creation procedure of a once class should be valid.
+
+copy_sub	Ace $TEST Ace
+copy_raw	a.e $CLUSTER a.e
+copy_raw	b.e $CLUSTER b.e
+copy_raw	test.e $CLUSTER test.e
+
+define		PRECOMPILED $PRECOMPILED_BASE_SAFE
+define		CONCURRENCY none
+define		VOID_SAFETY all
+copy_sub	Ace $TEST Ace
+
+compile_melted
+compile_result validity_error B VKCC:7 VKCC:9 VKCC:12
+abort_compile
+
+define		PRECOMPILED $PRECOMPILED_BASE_MT
+define		CONCURRENCY thread
+define		VOID_SAFETY none
+copy_sub	Ace $TEST Ace
+
+compile_melted
+compile_result validity_error B VKCC:7 VKCC:9 VKCC:12
+abort_compile
+
+if DOTNET test_end
+
+define		PRECOMPILED $PRECOMPILED_BASE_SCOOP_SAFE
+define		CONCURRENCY scoop
+define		VOID_SAFETY all
+copy_sub	Ace $TEST Ace
+
+compile_melted
+compile_result validity_error B VKCC:7 VKCC:9 VKCC:12
+abort_compile
+
+test_end

@@ -20,7 +20,7 @@ feature -- Element change
 
 	wipe_out
 		do
-			items.wipe_out
+			items.discard_items
 			insertion_index := items.lower
 			count := 0
 		end
@@ -37,7 +37,6 @@ feature -- Element change
 			end
 			insertion_index := i
 			count := count + 1
---			count := items.count.min (count + 1)
 		end
 
 	delete (m: NOTIFICATION_MESSAGE)
@@ -112,10 +111,8 @@ feature {NONE} -- Implementation
 
 	items: ARRAY [detachable NOTIFICATION_MESSAGE]
 
-invariant
-
-note
-	copyright: "Copyright (c) 1984-2019, Eiffel Software"
+;note
+	copyright: "Copyright (c) 1984-2020, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

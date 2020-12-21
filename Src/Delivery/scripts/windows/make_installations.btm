@@ -111,7 +111,7 @@ safe_md %INSTALL_DIR%\setups\branded
 
 
 iff EXIST %INSTALL_DIR%\%STUDIO_NAME% then
-    echo issue from previous building!
+    echo Rename %STUDIO_NAME% as EiffelStudio (issue from previous build?)
     ren %INSTALL_DIR%\%STUDIO_NAME% %INSTALL_DIR%\EiffelStudio
 endiff
 
@@ -157,7 +157,9 @@ iff "%NO_STANDARD_BUILD%" NEQ "True" then
 	iff exist %INSTALL_DIR%\setups\standard\%STUDIO_NAME%_rev_%SVN_VERSION-%ISE_PLATFORM%.7z then
 		remtrace Standard archive: reuse
 	else
-		ren EiffelStudio %STUDIO_NAME%
+		iff EXIST EiffelStudio then
+		    ren EiffelStudio %STUDIO_NAME%
+		endiff
 		remtrace Standard archive
 		safe_copy %INSTALL_DIR%\releases\standard_version\ec.exe %INSTALL_DIR%\%STUDIO_NAME%\studio\spec\%ISE_PLATFORM%\bin
 		safe_copy %INSTALL_DIR%\releases\standard_version\ecb.exe %INSTALL_DIR%\%STUDIO_NAME%\studio\spec\%ISE_PLATFORM%\bin
@@ -181,10 +183,13 @@ endiff
 
 iff "%NO_ENTERPRISE_BUILD%" NEQ "True" then
 	cdd %INSTALL_DIR
-	iff not exist %INSTALL_DIR%\setups\enterprise\%STUDIO_NAME%_ent_%SVN_VERSION-%ISE_PLATFORM%.7z then
+	iff exist %INSTALL_DIR%\setups\enterprise\%STUDIO_NAME%_ent_%SVN_VERSION-%ISE_PLATFORM%.7z then
 		remtrace Enterprise archive: reuse
 	else
 		remtrace Enterprise archive
+		iff EXIST EiffelStudio then
+		    ren EiffelStudio %STUDIO_NAME%
+		endiff
 		safe_copy %INSTALL_DIR%\releases\enterprise_version\ec.exe %INSTALL_DIR%\%STUDIO_NAME%\studio\spec\%ISE_PLATFORM%\bin
 		safe_copy %INSTALL_DIR%\releases\enterprise_version\ecb.exe %INSTALL_DIR%\%STUDIO_NAME%\studio\spec\%ISE_PLATFORM%\bin
 		iff exist %INSTALL_DIR%\releases\enterprise_version\LICENSE then
@@ -206,6 +211,9 @@ iff "%NO_ENTERPRISE_BUILD%" NEQ "True" then
 		remtrace Branded archive: reuse
 	else
 		remtrace Branded archive
+		iff EXIST EiffelStudio then
+		    ren EiffelStudio %STUDIO_NAME%
+		endiff
 		safe_copy %INSTALL_DIR%\releases\branded_version\ec.exe %INSTALL_DIR%\%STUDIO_NAME%\studio\spec\%ISE_PLATFORM%\bin
 		safe_copy %INSTALL_DIR%\releases\branded_version\ecb.exe %INSTALL_DIR%\%STUDIO_NAME%\studio\spec\%ISE_PLATFORM%\bin
 		iff exist %INSTALL_DIR%\releases\branded_version\LICENSE then
@@ -227,6 +235,9 @@ iff "%NO_AXAR_ENTERPRISE_BUILD%" NEQ "True" then
 		remtrace axar_enterprise archive: reuse
 	else
 		remtrace axar_enterprise archive
+		iff EXIST EiffelStudio then
+		    ren EiffelStudio %STUDIO_NAME%
+		endiff
 		safe_copy %INSTALL_DIR%\releases\axar_enterprise_version\ec.exe %INSTALL_DIR%\%STUDIO_NAME%\studio\spec\%ISE_PLATFORM%\bin
 		safe_copy %INSTALL_DIR%\releases\axar_enterprise_version\ecb.exe %INSTALL_DIR%\%STUDIO_NAME%\studio\spec\%ISE_PLATFORM%\bin
 		iff exist %INSTALL_DIR%\releases\axar_enterprise_version\LICENSE then

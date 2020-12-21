@@ -60,3 +60,15 @@ if [ $rep = y ]; then
 	cp EIFGENs/wizard/F_code/wizard $ISE_EIFFEL/studio/wizards/new_projects/library/spec/$ISE_PLATFORM/
 	echo Library wizard Built!
 fi
+
+echo Make the WrapC wizard [y]? 
+read rep
+if [ $rep = y ]; then
+	echo Building the WrapC wizard
+	# Launch the finalization.
+	ecb -finalize -c_compile -config wrapc_wizard.ecf
+	# Copy the file.
+	mkdir -p $ISE_EIFFEL/studio/wizards/new_projects/wrapc/spec/$ISE_PLATFORM/
+	cp EIFGENs/wizard/F_code/wizard $ISE_EIFFEL/studio/wizards/new_projects/wrapc/spec/$ISE_PLATFORM/
+	echo WrapC wizard Built!
+fi

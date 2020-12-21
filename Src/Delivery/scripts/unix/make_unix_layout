@@ -136,6 +136,7 @@ if [ $ISE_PLATFORM != "unix" ]; then
 	mv $LIB_BIN_DIR/wizards/new_projects/vision2/spec/$ISE_PLATFORM $LIB_BIN_DIR/wizards/new_projects/vision2/spec/unix
 	mv $LIB_BIN_DIR/wizards/new_projects/ewf/spec/$ISE_PLATFORM $LIB_BIN_DIR/wizards/new_projects/ewf/spec/unix
 	mv $LIB_BIN_DIR/wizards/new_projects/library/spec/$ISE_PLATFORM $LIB_BIN_DIR/wizards/new_projects/library/spec/unix
+	mv $LIB_BIN_DIR/wizards/new_projects/wrapc/spec/$ISE_PLATFORM $LIB_BIN_DIR/wizards/new_projects/wrapc/spec/unix
 	mv $LIB_BIN_DIR/wizards/others/precompile/spec/$ISE_PLATFORM $LIB_BIN_DIR/wizards/others/precompile/spec/unix
 	mv $LIB_DIR/library/gobo/spec/$ISE_PLATFORM $LIB_DIR/library/gobo/spec/unix
 	mv $LIB_DIR/library/vision2/spec/$ISE_PLATFORM $LIB_DIR/library/vision2/spec/unix

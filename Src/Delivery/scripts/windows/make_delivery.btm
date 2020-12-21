@@ -199,6 +199,8 @@ exprt -r %PUBLIC_SVN_REVISION %DEFAULT_PUBLIC_SVN/Src/help/wizards/ewf/rootdir %
 move %STUDIO_DIR\studio\wizards\new_projects\ewf\ewf.dsc %STUDIO_DIR\studio\wizards\new_projects\ewf.dsc
 exprt -r %PUBLIC_SVN_REVISION %DEFAULT_PUBLIC_SVN/Src/help/wizards/library/rootdir %STUDIO_DIR\studio\wizards\new_projects\library
 move %STUDIO_DIR\studio\wizards\new_projects\library\library.dsc %STUDIO_DIR\studio\wizards\new_projects\library.dsc
+exprt -r %PUBLIC_SVN_REVISION %DEFAULT_PUBLIC_SVN/Src/help/wizards/wrapc/rootdir %STUDIO_DIR\studio\wizards\new_projects\wrapc
+move %STUDIO_DIR\studio\wizards\new_projects\wrapc\wrapc.dsc %STUDIO_DIR\studio\wizards\new_projects\wrapc.dsc
 
 remtrace C_library
 safe_md %STUDIO_DIR\C_library

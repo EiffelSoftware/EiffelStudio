@@ -30,3 +30,9 @@ mkdir -p $INSTALL_DIR/studio/wizards/new_projects/library/spec/$ISE_PLATFORM
 move wizard $INSTALL_DIR/studio/wizards/new_projects/library/spec/$ISE_PLATFORM
 remtrace Library wizard Built!
 
+remtrace Building the WrapC wizard
+cd $EXPORT_DIR/wrapc_wizard
+untgz_ccode wizard
+mkdir -p $INSTALL_DIR/studio/wizards/new_projects/wrapc/spec/$ISE_PLATFORM
+move wizard $INSTALL_DIR/studio/wizards/new_projects/wrapc/spec/$ISE_PLATFORM
+remtrace WrapC wizard Built!

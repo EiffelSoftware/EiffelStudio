@@ -61,3 +61,17 @@ mv wizard.tar.bz2 $EXPORT_DIR/library_wizard
 clean_project
 echo Library wizard Built!
 
+
+remtrace WrapC wizard
+echo Building the WrapC wizard
+clean_project
+finalize wrapc_wizard.ecf wizard
+tgz_ccode wizard wizard.tar.bz2
+if [ ! -f wizard.tar.bz2 ]; then
+	remtrace Couldnt generate the WrapC wizard
+	CANCEL
+fi
+safe_md $EXPORT_DIR/wrapc_wizard
+mv wizard.tar.bz2 $EXPORT_DIR/wrapc_wizard
+clean_project
+echo WrapC wizard Built!

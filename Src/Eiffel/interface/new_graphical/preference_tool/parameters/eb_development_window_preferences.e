@@ -381,7 +381,7 @@ feature {NONE} -- Implementation
 
 			consecutive_successful_compilations_threshold_preference := l_manager.new_integer_preference_value (l_manager, consecutive_successful_compilations_threshold_string, 4)
 			pretty_printer_messindex_preference := l_manager.new_integer_preference_value (l_manager, pretty_printer_messindex_string, 2)
-			is_pretty_printer_notification_enabled_preference := l_manager.new_boolean_preference_value (l_manager, is_pretty_printer_notification_enabled_string, False)
+			is_pretty_printer_notification_enabled_preference := l_manager.new_boolean_preference_value (l_manager, is_pretty_printer_notification_enabled_string, True)
 
 
 			auto_hide_animation_speed_preference.change_actions.extend (agent on_auto_hide_animation_speed_changed)

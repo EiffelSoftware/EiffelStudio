@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
-<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-21-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-21-0 http://www.eiffel.com/developers/xml/configuration-1-21-0.xsd" name="wrapc_wizard" uuid="2AA2C5A9-7FC1-42D4-8CA6-9D47A7C1279D">
-	<target name="wrapc_wizard">
+<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-21-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-21-0 http://www.eiffel.com/developers/xml/configuration-1-21-0.xsd" name="wizard" uuid="2AA2C5A9-7FC1-42D4-8CA6-9D47A7C1279D">
+	<target name="wizard">
 		<root class="WRAPC_GRAPHICAL_WIZARD" feature="make_and_launch"/>
 		<file_rule>
 			<exclude>/EIFGENs$</exclude>

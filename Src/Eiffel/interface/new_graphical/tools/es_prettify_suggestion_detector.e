@@ -51,7 +51,7 @@ feature -- Event
 		local
 			n, p: NATURAL_32
 		do
-			if attached a_service.project_session_statistics as l_stats then
+			if preferences.development_window_data.is_pretty_printer_notification_enabled and attached a_service.project_session_statistics as l_stats then
 				n := l_stats.consecutive_successful_compilations
 				p := consecutive_successful_compilations_index_for_last_notification
 				if n = 0 or else n < p then

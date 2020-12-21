@@ -256,7 +256,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	dpi_redraw_status_bar (a_dpi,a_x, a_y, a_width, a_height: INTEGER)
+	dpi_redraw_status_bar (a_dpi: NATURAL_32; a_x, a_y, a_width, a_height: INTEGER)
 			-- Called when `status_bar' must be redrawn.
 		do
 			redraw_status_bar (a_x, a_y, a_width, a_height)
@@ -318,7 +318,7 @@ feature {NONE} -- Constants
 	fail_filter: STRING = "^result/fail"
 
 note
-	copyright: "Copyright (c) 1984-2019, Eiffel Software"
+	copyright: "Copyright (c) 1984-2020, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

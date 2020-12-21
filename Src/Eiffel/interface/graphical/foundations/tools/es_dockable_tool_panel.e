@@ -702,7 +702,7 @@ feature {NONE} -- User interface elements
 											ia_tool_bar.update_size
 										end
 									end (Result, ?, ?, ?, ?))
-								register_action (l_widget.widget.dpi_changed_actions, agent (ia_tool_bar: attached SD_GENERIC_TOOL_BAR; a_dpi: INTEGER; ia_x: INTEGER_32; ia_y: INTEGER_32; ia_width: INTEGER_32; ia_height: INTEGER_32)
+								register_action (l_widget.widget.dpi_changed_actions, agent (ia_tool_bar: attached SD_GENERIC_TOOL_BAR; a_dpi: NATURAL; ia_x: INTEGER_32; ia_y: INTEGER_32; ia_width: INTEGER_32; ia_height: INTEGER_32)
 									do
 										if is_interface_usable then
 											ia_tool_bar.update_size
@@ -784,7 +784,7 @@ feature {NONE} -- User interface elements
 										ia_tool_bar.update_size
 									end
 								end (Result, ?, ?, ?, ?))
-							register_action (l_widget.widget.dpi_changed_actions, agent (ia_tool_bar: attached SD_GENERIC_TOOL_BAR; a_dpi:INTEGER_32; ia_x: INTEGER_32; ia_y: INTEGER_32; ia_width: INTEGER_32; ia_height: INTEGER_32)
+							register_action (l_widget.widget.dpi_changed_actions, agent (ia_tool_bar: attached SD_GENERIC_TOOL_BAR; a_dpi:NATURAL_32; ia_x: INTEGER_32; ia_y: INTEGER_32; ia_width: INTEGER_32; ia_height: INTEGER_32)
 								do
 									if is_interface_usable then
 										ia_tool_bar.update_size
@@ -1131,7 +1131,7 @@ invariant
     not_is_initialized: is_initializing implies not is_initialized
 
 ;note
-	copyright: "Copyright (c) 1984-2019, Eiffel Software"
+	copyright: "Copyright (c) 1984-2020, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

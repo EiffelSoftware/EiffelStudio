@@ -549,7 +549,7 @@ feature {NONE} -- Events
 			end
 		end
 
-	dpi_redraw_statistic_bars (a_dpi,a_x, a_y, a_width, a_height: INTEGER; a_bar: EV_DRAWING_AREA; an_id: like statistic_count; a_new: BOOLEAN)
+	dpi_redraw_statistic_bars (a_dpi: NATURAL_32; a_x, a_y, a_width, a_height: INTEGER; a_bar: EV_DRAWING_AREA; an_id: like statistic_count; a_new: BOOLEAN)
 			-- Request status bar redraw.
 		require
 			a_bar_attached: a_bar /= Void
@@ -813,7 +813,7 @@ invariant
 	current_bars_valid: current_bars.count = statistic_count
 
 note
-	copyright: "Copyright (c) 1984-2019, Eiffel Software"
+	copyright: "Copyright (c) 1984-2020, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

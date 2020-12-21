@@ -98,7 +98,7 @@ feature {NONE} -- Initialization: User interface
 					class_types_list.column (class_column).set_width (ia_width)
 				end)
 
-			register_action (class_types_list.dpi_changed_actions, agent (a_dpi,ia_1, ia_2, ia_width, ia_4: INTEGER)
+			register_action (class_types_list.dpi_changed_actions, agent (a_dpi: NATURAL_32; ia_1, ia_2, ia_width, ia_4: INTEGER)
 				do
 					class_types_list.column (class_column).set_width (ia_width)
 				end)
@@ -312,7 +312,7 @@ invariant
 	associated_class_attached: attached associated_class
 
 ;note
-	copyright: "Copyright (c) 1984-2019, Eiffel Software"
+	copyright: "Copyright (c) 1984-2020, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

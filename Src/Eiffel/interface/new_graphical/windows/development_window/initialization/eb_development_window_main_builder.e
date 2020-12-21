@@ -825,8 +825,8 @@ feature -- Command
 			l_window.set_icon_pixmap (develop_window.pixmap)
 
 			register_action (l_window.resize_actions, agent (x,y,w,h: INTEGER) do develop_window.save_size end)
-			register_action (l_window.dpi_changed_actions, agent (dpi: INTEGER; x,y,w,h: INTEGER) do develop_window.update_dpi (dpi) end)
-			register_action (l_window.dpi_changed_actions, agent (dpi: INTEGER; x,y,w,h: INTEGER) do develop_window.save_size_and_dpi end)
+			register_action (l_window.dpi_changed_actions, agent (dpi: NATURAL; x,y,w,h: INTEGER) do develop_window.update_dpi (dpi) end)
+			register_action (l_window.dpi_changed_actions, agent (dpi: NATURAL; x,y,w,h: INTEGER) do develop_window.save_size_and_dpi end)
 			register_action (l_window.move_actions, agent (x,y,w,h: INTEGER) do develop_window.save_position end)
 
 				-- Initialize commands and connect them.

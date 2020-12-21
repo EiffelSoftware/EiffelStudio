@@ -254,6 +254,11 @@ feature -- Access
 				create send_metric_value_in_history_actions_internal
 			end
 			Result := send_metric_value_in_history_actions_internal
+
+				-- Store metric archive history.
+			if metric_manager.has_archive_been_loaded then
+				metric_manager.store_archive_history
+			end
 		ensure
 			result_attached: Result /= Void
 		end

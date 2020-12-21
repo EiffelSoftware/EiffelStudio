@@ -65,7 +65,7 @@ feature {NONE} -- Initialization
 						ensure_popup_window_visible_on_screen
 					end
 				end)
-			register_action (popup_window.dpi_changed_actions, agent (a_dpi,a_ia_x: INTEGER; a_ia_y: INTEGER; a_ia_w: INTEGER; a_ia_h: INTEGER)
+			register_action (popup_window.dpi_changed_actions, agent (a_dpi: NATURAL_32; a_ia_x: INTEGER; a_ia_y: INTEGER; a_ia_w: INTEGER; a_ia_h: INTEGER)
 				do
 					if is_interface_usable and then not is_allowed_off_screen and then is_shown then
 						ensure_popup_window_visible_on_screen
@@ -873,7 +873,7 @@ invariant
 	border_widget_attached: has_border implies border_widget /= Void
 
 ;note
-	copyright: "Copyright (c) 1984-2019, Eiffel Software"
+	copyright: "Copyright (c) 1984-2020, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

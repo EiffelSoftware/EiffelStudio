@@ -39,4 +39,9 @@ remtrace *                 Compiling Library Wizard                          *
 remtrace *****************************************************************
 call make_a_wizard.btm new_projects library library_wizard >>& %INSTALL_LOG
 
+remtrace *****************************************************************
+remtrace *                 Compiling WrapC Wizard                          *
+remtrace *****************************************************************
+call make_a_wizard.btm new_projects wrapc wrapc_wizard >>& %INSTALL_LOG
+
 goto eof

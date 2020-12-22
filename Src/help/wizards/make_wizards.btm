@@ -7,41 +7,41 @@ setdos /x0
 remtrace *****************************************************************
 remtrace *                 Compiling WEL Wizard                          *
 remtrace *****************************************************************
-call make_a_wizard.btm new_projects wel wel_wizard >>& %INSTALL_LOG
+call %~dp0make_a_wizard.btm new_projects wel wel_wizard >>& %INSTALL_LOG
 
 remtrace *****************************************************************
 remtrace *               Compiling Vision2 Wizard                        *
 remtrace *****************************************************************
-call make_a_wizard.btm new_projects vision2 vision2_wizard >>& %INSTALL_LOG
+call %~dp0make_a_wizard.btm new_projects vision2 vision2_wizard >>& %INSTALL_LOG
 
 remtrace *****************************************************************
 remtrace *                Compiling Wizard Wizard                        *
 remtrace *****************************************************************
-REM call make_a_wizard.btm new_projects wizard wizard_wizard >>& %INSTALL_LOG
+REM call %~dp0make_a_wizard.btm new_projects wizard wizard_wizard >>& %INSTALL_LOG
 
 remtrace *****************************************************************
 remtrace *              Compiling Precompilation Wizard                  *
 remtrace *****************************************************************
-call make_a_wizard.btm others precompile precompile_wizard >>& %INSTALL_LOG
+call %~dp0make_a_wizard.btm others precompile precompile_wizard >>& %INSTALL_LOG
 
 remtrace *****************************************************************
 remtrace *                    Compiling .NET Wizard                      *
 remtrace *****************************************************************
-call make_a_wizard.btm new_projects dotnet dotnet_wizard >>& %INSTALL_LOG
+call %~dp0make_a_wizard.btm new_projects dotnet dotnet_wizard >>& %INSTALL_LOG
 
 remtrace *****************************************************************
 remtrace *                 Compiling EWF Wizard                          *
 remtrace *****************************************************************
-call make_a_wizard.btm new_projects ewf ewf_wizard >>& %INSTALL_LOG
+call %~dp0make_a_wizard.btm new_projects ewf ewf_wizard >>& %INSTALL_LOG
 
 remtrace *****************************************************************
 remtrace *                 Compiling Library Wizard                          *
 remtrace *****************************************************************
-call make_a_wizard.btm new_projects library library_wizard >>& %INSTALL_LOG
+call %~dp0make_a_wizard.btm new_projects library library_wizard >>& %INSTALL_LOG
 
 remtrace *****************************************************************
 remtrace *                 Compiling WrapC Wizard                          *
 remtrace *****************************************************************
-call make_a_wizard.btm new_projects wrapc wrapc_wizard >>& %INSTALL_LOG
+call %~dp0make_a_wizard.btm new_projects wrapc wrapc_wizard >>& %INSTALL_LOG
 
 goto eof

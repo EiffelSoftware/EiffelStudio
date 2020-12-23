@@ -57,7 +57,7 @@ feature -- Modification
 					p.forth
 				end
 			end
-			create i.make (create {C_PATTERN}.make (f.c_type, a))
+			create i.make (create {C_PATTERN}.make (f.return_c_type, a))
 			i.set_c_pattern_id (patterns.count + 1)
 			patterns.put (i)
 			check attached patterns.item (i) as p then
@@ -95,7 +95,7 @@ feature -- Modification
 					p.forth
 				end
 			end
-			create i.make (create {C_PATTERN}.make (f.c_type, a))
+			create i.make (create {C_PATTERN}.make (f.return_c_type, a))
 			i.set_c_pattern_id (optimized_patterns.count + 1)
 			optimized_patterns.put (i)
 			check attached optimized_patterns.item (i) as p then
@@ -388,7 +388,7 @@ invariant
 	patterns_attached: attached patterns
 
 note
-	copyright:	"Copyright (c) 1984-2015, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2020, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

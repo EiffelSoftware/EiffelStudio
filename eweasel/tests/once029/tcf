@@ -1,0 +1,179 @@
+test_name 	 once-class-separateness-difference
+test_description Objects of once classes may be different or the same depending on the once key.
+
+copy_raw	test.e $CLUSTER test.e
+
+define		PRECOMPILED $PRECOMPILED_BASE_SAFE
+define		CONCURRENCY none
+define		VOID_SAFETY all
+copy_sub	Ace $TEST Ace
+
+define		ONCE_KEY "("PROCESS")"
+copy_sub	direction.e $CLUSTER direction.e
+
+compile_melted
+compile_result ok
+execute_work 	NONE 	exec_output_nmp
+execute_result 	ok
+compare		exec_output_nmp output_process
+
+compile_frozen
+compile_result ok
+c_compile_work
+c_compile_result	ok
+execute_work 	NONE 	exec_output_nwp
+execute_result 	ok
+compare		exec_output_nwp output_process
+
+compile_final
+compile_result ok
+c_compile_final
+c_compile_result	ok
+execute_final 	NONE 	exec_output_nfp
+execute_result 	ok
+compare		exec_output_nfp output_process
+
+define		ONCE_KEY ""
+copy_sub	direction.e $CLUSTER direction.e
+
+compile_melted
+compile_result ok
+execute_work 	NONE 	exec_output_nm_
+execute_result 	ok
+compare		exec_output_nm_ output_process
+
+compile_frozen
+compile_result ok
+c_compile_work
+c_compile_result	ok
+execute_work 	NONE 	exec_output_nw_
+execute_result 	ok
+compare		exec_output_nw_ output_process
+
+compile_final
+compile_result ok
+c_compile_final
+c_compile_result	ok
+execute_final 	NONE 	exec_output_nf_
+execute_result 	ok
+compare		exec_output_nf_ output_process
+
+cleanup_compile
+
+define		PRECOMPILED $PRECOMPILED_BASE_MT
+define		CONCURRENCY thread
+define		VOID_SAFETY none
+copy_sub	Ace $TEST Ace
+
+define		ONCE_KEY "("PROCESS")"
+copy_sub	direction.e $CLUSTER direction.e
+
+compile_melted
+compile_result ok
+execute_work 	NONE 	exec_output_tmp
+execute_result 	ok
+compare		exec_output_tmp output_process
+
+compile_frozen
+compile_result ok
+c_compile_work
+c_compile_result	ok
+execute_work 	NONE 	exec_output_twp
+execute_result 	ok
+compare		exec_output_twp output_process
+
+compile_final
+compile_result ok
+c_compile_final
+c_compile_result	ok
+execute_final 	NONE 	exec_output_tfp
+execute_result 	ok
+compare		exec_output_tfp output_process
+
+define		ONCE_KEY ""
+copy_sub	direction.e $CLUSTER direction.e
+
+compile_melted
+compile_result ok
+execute_work 	NONE 	exec_output_tm_
+execute_result 	ok
+compare		exec_output_tm_ output_process
+
+compile_frozen
+compile_result ok
+c_compile_work
+c_compile_result	ok
+execute_work 	NONE 	exec_output_tw_
+execute_result 	ok
+compare		exec_output_tw_ output_process
+
+compile_final
+compile_result ok
+c_compile_final
+c_compile_result	ok
+execute_final 	NONE 	exec_output_tf_
+execute_result 	ok
+compare		exec_output_tf_ output_process
+
+cleanup_compile
+
+if DOTNET test_end
+
+define		PRECOMPILED $PRECOMPILED_BASE_SCOOP_SAFE
+define		CONCURRENCY scoop
+define		VOID_SAFETY all
+copy_sub	Ace $TEST Ace
+
+define		ONCE_KEY "("PROCESS")"
+copy_sub	direction.e $CLUSTER direction.e
+
+compile_melted
+compile_result ok
+execute_work 	NONE 	exec_output_smp
+execute_result 	ok
+compare		exec_output_smp output_process
+
+compile_frozen
+compile_result ok
+c_compile_work
+c_compile_result	ok
+execute_work 	NONE 	exec_output_swp
+execute_result 	ok
+compare		exec_output_swp output_process
+
+compile_final
+compile_result ok
+c_compile_final
+c_compile_result	ok
+execute_final 	NONE 	exec_output_sfp
+execute_result 	ok
+compare		exec_output_sfp output_process
+
+define		ONCE_KEY ""
+copy_sub	direction.e $CLUSTER direction.e
+
+compile_melted
+compile_result ok
+execute_work 	NONE 	exec_output_sm_
+execute_result 	ok
+compare		exec_output_sm_ output_thread
+
+compile_frozen
+compile_result ok
+c_compile_work
+c_compile_result	ok
+execute_work 	NONE 	exec_output_sw_
+execute_result 	ok
+compare		exec_output_sw_ output_thread
+
+compile_final
+compile_result ok
+c_compile_final
+c_compile_result	ok
+execute_final 	NONE 	exec_output_sf_
+execute_result 	ok
+compare		exec_output_sf_ output_thread
+
+cleanup_compile
+
+test_end

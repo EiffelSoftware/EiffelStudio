@@ -37,7 +37,7 @@ feature -- C code generation
 			-- Analyze feature call on `reg`.
 		do
 			Precursor (r)
-			if is_once_creation or else c_type.is_reference then
+			if return_c_type.is_reference then
 					-- Do not use reference type because this register should not be tracked by GC.
 				result_register := context.get_argument_register (pointer_type.c_type)
 			end
@@ -94,10 +94,10 @@ feature -- C code generation
 			l_context: like context
 		do
 			check
-				result_register_attached: (c_type.is_reference or is_once_creation) implies result_register /= Void
+				result_register_attached: return_c_type.is_reference implies result_register /= Void
 			end
 			buf := buffer
-			return_type := if is_once_creation then reference_c_type else c_type end
+			return_type := return_c_type
 			if not return_type.is_void then
 				buf.put_two_character ('(', '(')
 				if return_type.is_reference then

@@ -177,14 +177,14 @@ feature -- Basic Operations
 			end
 		end
 
-	send_new_report_email (a_name: READABLE_STRING_GENERAL; a_report: REPORT; a_email: READABLE_STRING_8; a_subscribers: LIST [STRING]; a_url: STRING)
+	send_new_report_email (a_name: READABLE_STRING_GENERAL; a_report: REPORT; a_email: READABLE_STRING_8; a_subscribers: LIST [STRING]; a_url: STRING; a_user_role: USER_ROLE)
 			-- Send report creation confirmation email to interested parties.
 		local
 			l_email: ESA_NOTIFICATION_EMAIL
 			l_etable: STRING_TABLE [STRING]
 		do
 			if successful then
-				create l_email.make (user_mail (a_name), a_email, report_email_subject (a_report, 0), new_report_email_message (a_report, a_url))
+				create l_email.make (user_mail (a_name), a_email, report_email_subject (a_report, 0), new_report_email_message (a_report, a_url, a_user_role))
 				if not a_subscribers.is_empty then
 					create l_etable.make_caseless (1)
 					l_etable.force ("", a_email)
@@ -218,7 +218,7 @@ feature -- Basic Operations
 				then
 
 					create l_message.make_empty
-					l_message.append (new_interaction_email_message(a_user,l_report_interaction, a_report, a_old_report,a_url))
+					l_message.append (new_interaction_email_message(a_user,l_report_interaction, a_report, a_old_report,a_url, a_user_role))
 
 
 					if a_user_role.is_administrator or else a_user_role.is_responsible then
@@ -447,7 +447,7 @@ feature {NONE} -- Implementation
 			Result.append ("/interaction_form")
 		end
 
-	new_report_email_message (a_report: REPORT; a_url: STRING): STRING
+	new_report_email_message (a_report: REPORT; a_url: STRING; a_user_role: USER_ROLE): STRING
 			-- New report message
 		local
 			utf: UTF_CONVERTER
@@ -513,10 +513,10 @@ feature {NONE} -- Implementation
 
 			Result.append (report_email_links (a_url + "/report_detail", a_report.number))
 			Result.append ("%N%N")
-			Result.append (signature (Void))
+			Result.append (signature (Void, a_user_role))
 		end
 
-	new_interaction_email_message (a_user: USER_INFORMATION; a_report_interaction: REPORT_INTERACTION; a_report: REPORT; a_old_report: REPORT; a_url: STRING): STRING
+	new_interaction_email_message (a_user: USER_INFORMATION; a_report_interaction: REPORT_INTERACTION; a_report: REPORT; a_old_report: REPORT; a_url: STRING; a_user_role: USER_ROLE): STRING
 			-- New interaction message.
 		local
 			utf: UTF_CONVERTER
@@ -560,7 +560,7 @@ feature {NONE} -- Implementation
 
 			Result.append (report_email_links (a_url + "/report_detail", a_report.number))
 			Result.append ("%N%N")
-			Result.append (signature (a_user))
+			Result.append (signature (a_user, a_user_role))
 		end
 
 	attachments_text (a_attachments: LIST [REPORT_ATTACHMENT]; a_url: READABLE_STRING_8): STRING
@@ -603,11 +603,13 @@ feature {NONE} -- Implementation
 		end
 
 
-	signature (a_user: detachable USER_INFORMATION): STRING
+	signature (a_user: detachable USER_INFORMATION; a_user_role: USER_ROLE): STRING
 			-- Email signature for user `a_user'.
 		do
 			create Result.make (256)
-			Result.append ("--%NWith best regards,%NThe Customer Support Team.%N")
+			if a_user_role.is_administrator or a_user_role.is_responsible then
+				Result.append ("--%NWith best regards,%NThe Customer Support Team.%N")
+			end
 			if a_user /= Void then
 				Result.append ("%N------------------------------------------------------------%N")
 				Result.append ("Message prepared by: ")

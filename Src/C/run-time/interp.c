@@ -2436,7 +2436,7 @@ rt_private void interpret(int flag, int where)
 #endif
 	 			get_uint16 (&IC);    /* Number of arguments.  */
 #ifdef EIF_THREADS
-	 		EIF_BOOLEAN q =
+	 		EIF_NATURAL_8 scoop_call_flags =
 #endif
 	 			get_bool (&IC); /* Indicator of a query or of an active region creation. */
 
@@ -2553,7 +2553,7 @@ rt_private void interpret(int flag, int where)
 					/* Check if this is indeed a separate call. */
 				if (code == BC_CREATION) {
 						/* Associate new region with the target of a call. */
-					if (q) {
+					if (scoop_call_flags & SCOOP_CALL_MASK_ACTIVE_CREATION) {
 							/* Create a new active region. */
 						RTS_PA (target -> it_ref);
 					}
@@ -2587,27 +2587,23 @@ rt_private void interpret(int flag, int where)
 				case BC_EXTERN_INV:
 				case BC_FEATURE_INV:
 					string = get_string8(&IC, -1); /* Get the feature name. */
-					routine_id = get_int32(&IC);   /* Get the routine_id. */
-					GET_PTYPE;                     /* Get precursor type. */
-					OLD_IC = IC;
-					if (q) {
-						last = eif_opstack_push_empty(&op_stack);    /* Allocate a cell to store result of a call. */
-						last -> type = SK_POINTER;                  /* Avoid GC on result until it is ready.      */
-						RTS_CALL (routine_id, SK_POINTER);           /* Make a separate call to a function. */
-						*last = l_scoop_result;
-					} else {
-						RTS_CALL (routine_id, SK_VOID);  /* Make a separate call to a procedure. */
-					}
 					break;
 				case BC_CREATION:
-					routine_id = get_int32(&IC);       /* Get the feature id. */
-					GET_PTYPE;                         /* Get precursor type. */
-					OLD_IC = IC;
-					RTS_CALL (routine_id, SK_VOID);    /* Make a separate call to a creation procedure. */
 					break;
 				default:
 					OLD_IC  = IC;
 					eif_panic(MTC "illegal separate opcode");
+				}
+				routine_id = get_int32(&IC); /* Get the routine_id. */
+				GET_PTYPE;                   /* Get precursor type. */
+				OLD_IC = IC;
+				if (scoop_call_flags & SCOOP_CALL_MASK_QUERY) {
+					last = eif_opstack_push_empty(&op_stack);   /* Allocate a cell to store result of a call. */
+					last -> type = SK_POINTER;                  /* Avoid GC on result until it is ready.      */
+					RTS_CALL (routine_id, SK_POINTER);          /* Make a separate call to a function. */
+					*last = l_scoop_result;
+				} else {
+					RTS_CALL (routine_id, SK_VOID);  /* Make a separate call to a procedure. */
 				}
 				if (tagval != stagval)		/* Interpreted function called */
 					sync_registers(MTC scur, stop);

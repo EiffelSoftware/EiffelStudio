@@ -2570,13 +2570,26 @@ feature {NONE} -- Implementation
 					-- The call may be separate.
 				ba.append (bc_separate)
 					-- Arguments need to be passed together with feature information.
-				if attached a_node.parameters as p then
-					ba.append_argument_count (p.count)
-				else
-					ba.append_argument_count (0)
-				end
+				ba.append_argument_count (if attached a_node.parameters as p then p.count else 0 end)
 					-- Indicate if this is a query or procedure call and in case of separate creation whether the target region is active.
-				ba.append_boolean (not a_node.type.is_void or else is_active)
+				ba.append_natural_8
+					(if is_creation then
+							-- Add flags specific for object creation.
+							-- Indicate whether the newly created object should be placed in a new active region.
+						if is_active then scoop_call_mask_active_creation else scoop_call_mask_none end
+						⦶
+							-- Indicate whether the creation procedure of a once class returns a value.
+						if l_inst_cont_type.has_associated_class and then l_inst_cont_type.base_class.is_once then
+							scoop_call_mask_query
+						else
+							scoop_call_mask_none
+						end
+					elseif not a_node.type.is_void then
+							-- The call returns a value.
+						scoop_call_mask_query
+					else
+						scoop_call_mask_none
+					end)
 			end
 				-- Note: Manu 08/08/2002: if `a_node.precursor_type' is not Void, it can only means
 				-- that we are currently performing a static access call on a feature

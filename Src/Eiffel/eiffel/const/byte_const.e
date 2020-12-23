@@ -1,7 +1,7 @@
-note
+﻿note
 	description: "[
 		Constant for byte code.
-		Those character values have to match C values defined in "interp.h".
+		Those character values have to match C values defined in "rt_interp.h".
 		]"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -275,8 +275,18 @@ feature -- Access
 		-- Always failing postcondition
 	Bc_postfail: 		CHARACTER = '%/177/';
 
+feature {NONE} -- Access: SCOOP call masks
 
-note
+	scoop_call_mask_none: NATURAL_8 = 0
+			-- The mask of a SCOOP call without any flags set.
+
+	scoop_call_mask_query: NATURAL_8 = 1
+			-- The SCOOP call returns a value.
+
+	scoop_call_mask_active_creation: NATURAL_8 = 2
+			-- An active region has to be created for the object before the call.
+
+;note
 	copyright:	"Copyright (c) 1984-2020, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
@@ -308,4 +318,4 @@ note
 			Customer support http://support.eiffel.com
 		]"
 
-end -- class BYTE_CONST
+end

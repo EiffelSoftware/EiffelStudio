@@ -389,7 +389,7 @@ feature {NONE} -- Separate call
 					name := rout_table.feature_name
 					if rout_table.item.access_type_id /= Context.original_class_type.type_id then
 							-- Remember extern routine declaration
-						Extern_declarations.add_routine_with_signature (real_type (type).c_type.c_string,
+						Extern_declarations.add_routine_with_signature (return_c_type.c_string,
 								name, argument_types)
 					end
 					buf.put_string (name)
@@ -415,7 +415,7 @@ feature {NONE} -- Separate call
 			-- <Precursor>
 		local
 			buf: like buffer
-			l_c_type: like c_type
+			l_c_type: like return_c_type
 		do
 			check return_type_not_void: not return_c_type.is_void end
 			buf := buffer

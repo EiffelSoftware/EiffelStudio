@@ -8,9 +8,9 @@ feature {NONE} -- Creation
 	make
 			-- Run test.
 		local
-			s: STRING_8
+			a: A
 		do
-			s := create {separate STRING_32}.make_empty
+			a := create {separate B}
 		end
 
 end

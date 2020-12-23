@@ -6479,10 +6479,6 @@ feature {NONE} -- Visitor
 							c.feature_of_name_id (a.feature_name.name_id)
 						end
 				end
-				if attached creation_procedure and then creation_procedure.is_process_relative then
-					target_type := t.as_separate
-					creation_type := r.as_separate
-				end
 			end
 			last_calls_target_type := target_type
 			process_call (creation_type, Void, a.feature_name, f, a.parameters, False, False, False, False, False)

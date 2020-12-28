@@ -486,13 +486,14 @@ feature{NONE} -- Implementation
 			l_processed_classes: like processed_classes
 			l_class: QL_CLASS
 			any_class_id: INTEGER
-			l_list2: ARRAYED_LIST [QL_CLASS]
 			l_agent_sorter: AGENT_BASED_EQUALITY_TESTER [QL_CLASS]
 			l_sorter: DS_QUICK_SORTER [QL_CLASS]
 		do
 			l_class := class_table.item (a_row.class_item.class_c.class_id)
-			l_list2 ?= l_class.data
-			if l_list2 /= Void and then not l_list2.is_empty then
+			if
+				attached {ARRAYED_LIST [QL_CLASS]} l_class.data as l_list2 and then
+				not l_list2.is_empty
+			then
 				l_processed_classes := processed_classes
 				any_class_id := system.any_id
 				create l_list.make (l_list2.count)
@@ -508,8 +509,10 @@ feature{NONE} -- Implementation
 				loop
 					l_class := l_list.item_for_iteration
 					if l_processed_classes.has (l_class) then
-						l_list2 ?= l_class.data
-						if l_list2 /= Void and then not l_list2.is_empty then
+						if
+							attached {ARRAYED_LIST [QL_CLASS]} l_class.data and then
+							not l_list2.is_empty
+						then
 							create l_row.make (Current, l_class, True)
 						else
 							create l_row.make (Current, l_class, False)
@@ -518,7 +521,10 @@ feature{NONE} -- Implementation
 					else
 						create l_row.make (Current, l_class, False)
 						a_row.add_child (l_row)
-						if l_class.class_c.class_id /= any_class_id then
+						if
+							attached l_class.class_c as cl_c and then
+							cl_c.class_id /= any_class_id
+						then
 							if l_processed_classes.count = l_processed_classes.capacity then
 								l_processed_classes.resize (l_processed_classes.capacity + 50)
 							end
@@ -534,11 +540,12 @@ feature{NONE} -- Implementation
 	processed_classes: DS_HASH_SET [QL_CLASS]
 			-- Processed classes
 		do
-			if processed_classes_internal = Void then
-				create processed_classes_internal.make (100)
-				processed_classes_internal.set_equality_tester (create {AGENT_BASED_EQUALITY_TESTER [QL_CLASS]}.make(agent is_class_equal))
-			end
 			Result := processed_classes_internal
+			if Result = Void then
+				create Result.make (100)
+				processed_classes_internal := Result
+				Result.set_equality_tester (create {AGENT_BASED_EQUALITY_TESTER [QL_CLASS]}.make (agent is_class_equal))
+			end
 		ensure
 			result_attached: Result /= Void
 		end
@@ -818,7 +825,7 @@ feature{NONE} -- Implementation/Stone
 		end
 
 note
-	copyright: "Copyright (c) 1984-2018, Eiffel Software"
+	copyright: "Copyright (c) 1984-2020, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

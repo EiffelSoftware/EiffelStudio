@@ -215,7 +215,7 @@ feature {NONE} -- Implementation
 			pos: INTEGER
 			rgroup: detachable like radio_group
 		do
-			check attached {EV_MENU_ITEM_IMP} item_imp as menu_item_imp then 
+			check attached {EV_MENU_ITEM_IMP} item_imp as menu_item_imp then
 				pos := ev_children.index_of (menu_item_imp, 1)
 
 					-- Enable `menu_item_imp' if necessary.
@@ -226,7 +226,7 @@ feature {NONE} -- Implementation
 				end
 
 					-- Handle radio grouping.
-				if 
+				if
 					attached {EV_MENU_SEPARATOR_IMP} item_imp
 					or else attached {EV_RADIO_MENU_ITEM_IMP} item_imp
 				then
@@ -479,9 +479,9 @@ feature {EV_ANY_I, EV_POPUP_MENU_HANDLER} -- Implementation
 					act.call ([l_menu_item.attached_interface])
 				elseif
 					attached l_menu_item.parent as l_menu and then
-					attached l_menu.item_select_actions as act
+					attached l_menu.item_select_actions as p_act
 				then
-					act.call ([l_menu_item.attached_interface])
+					p_act.call ([l_menu_item.attached_interface])
 				end
 			end
 		end

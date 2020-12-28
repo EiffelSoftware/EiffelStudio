@@ -59,6 +59,11 @@ extern "C" {
 #define ONCE_MARK_OBJECT_RELATIVE  3	/* Object-relative once routine */
 #define ONCE_MARK_ATTRIBUTE        4	/* Attribute */
 
+/* Masks of SCOOP calls variants */
+#define SCOOP_CALL_MASK_NONE            0 /* An empty mask of the call */
+#define SCOOP_CALL_MASK_QUERY           1 /* The call returns a value */
+#define SCOOP_CALL_MASK_ACTIVE_CREATION 2 /* An active region has to be created for the object before the call */
+
 /*
  * Byte-code tokens
  */

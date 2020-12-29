@@ -304,7 +304,7 @@ feature -- Access: Input
 			s: STRING
 			l_input: WGI_INPUT_STREAM
 			l_raw_data: detachable STRING_8
-			nb, l_step: INTEGER
+			l_length, l_total, nb, l_step: INTEGER
 		do
 			if raw_input_data_recorded and then attached raw_input_data as d then
 				a_medium.put_string (d)
@@ -314,14 +314,20 @@ feature -- Access: Input
 				end
 				l_input := input
 
+				l_length := content_length_value.as_integer_32
 				from
+					l_total := 0
 					l_step := 8_192
 					create s.make (l_step)
 				until
 					l_step = 0 or l_input.end_of_input
 				loop
+					if l_total + l_step > l_length then
+						l_step := l_length - l_total
+					end
 					l_input.append_to_string (s, l_step)
 					nb := l_input.last_appended_count
+					l_total := l_total + nb
 
 					a_medium.put_string (s)
 					if l_raw_data /= Void then
@@ -2115,7 +2121,7 @@ invariant
 	wgi_request.content_type /= Void implies content_type /= Void
 
 note
-	copyright: "2011-2017, Jocelyn Fiat, Javier Velilla, Olivier Ligot, Colin Adams, Eiffel Software and others"
+	copyright: "2011-2020, Jocelyn Fiat, Javier Velilla, Olivier Ligot, Colin Adams, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

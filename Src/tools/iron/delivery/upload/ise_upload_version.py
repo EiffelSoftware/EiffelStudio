@@ -9,25 +9,27 @@ def safe_rmtree(dn):
 	if os.path.exists (dn):
 		shutil.rmtree (dn)
 	else:
-		print "Folder not found: %s" % (dn)
+		print("Folder not found: %s" % (dn))
 
 def safe_rmfile(fn):
 	if os.path.exists (fn):
 		os.remove (fn)
 	else:
-		print "File not found: %s" % (fn)
+		print("File not found: %s" % (fn))
 
 def get_ise_libraries(basedir, br, v, rev):
 	if br == 'trunk':
 		branch_dir="https://svn.eiffel.com/eiffelstudio/trunk"
+#		branch_dir="svn+ssh://svn.eiffel.com/home/svn/repo/eiffelstudio/trunk"
 	else:
 		branch_dir="https://svn.eiffel.com/eiffelstudio/branches/Eiffel_%s" % (v)
+#		branch_dir="svn+ssh://svn.eiffel.com/home/svn/repo/eiffelstudio/branches/Eiffel_%s" % (v)
 	if rev:
 		l_revision=rev
 	else:
 		l_revision="HEAD"
 
-	print "Getting source code from %s  (revision:%s)..." % (branch_dir, l_revision)
+	print("Getting source code from %s  (revision:%s)..." % (branch_dir, l_revision))
 	d = os.path.join (basedir, "library")
 	if os.path.exists (d):
 		call(["svn", "update", "-r", l_revision, d ])
@@ -70,7 +72,7 @@ def get_ise_libraries(basedir, br, v, rev):
 	alter_folder_with (basedir, os.path.join (basedir, "..", "alter"))
 
 def alter_folder_with (a_source, a_alter):
-	print "Altering %s with %s." % (a_source, a_alter)
+	print("Altering %s with %s." % (a_source, a_alter))
 	if os.path.exists (a_alter):
 		if os.path.exists (a_source):
 			names = os.listdir(a_alter)
@@ -105,7 +107,7 @@ def main():
 		os.makedirs(l_sources_dir)
 	get_ise_libraries(l_sources_dir, l_branch, l_version, l_revision)
 
-	print "Upload ISE packages ..."
+	print("Upload ISE packages ...")
 	upload_version(l_sources_dir, cfg_location)
 
 if __name__ == '__main__':

@@ -26,12 +26,12 @@ def module_exists(module_name):
         return True
 
 def cmd_call (cmd):
-	print "CMD=%s" % (cmd)
+	print("CMD=%s" % (cmd))
 	call(cmd, shell=True, stdout=sys.stdout)
 
 def iron_command_name():
 	cmd = 'iron'
-	if os.environ.has_key('IRON_BIN'):
+	if 'IRON_BIN' in os.environ:
 		cmd = os.path.join (os.environ['IRON_BIN'], 'iron')
 		if not os.path.exists (cmd):
 			cmd = "%s.exe" % (cmd) # For Windows
@@ -66,7 +66,7 @@ def package_name_from_iron_package_file (pf):
 def process_iron_package (ipfn, a_sources_dir, a_cfg_location, u,p,repo,v):
 	import re;
 
-	print "----"
+	print("----")
 
 	dict={}
 	p_name = None
@@ -75,18 +75,18 @@ def process_iron_package (ipfn, a_sources_dir, a_cfg_location, u,p,repo,v):
 
 	p_name = package_name_from_iron_package_file (ipfn)
 	if p_name == None:
-		print "Unable to find package name from associated data file from: [%s]" % (ipfn)
+		print("Unable to find package name from associated data file from: [%s]" % (ipfn))
 		return
 
-	if dict.has_key('name'):
+	if 'name' in dict:
 		p_name = trim(dict['name'])
 
-	if dict.has_key ('description'):
+	if 'description' in dict:
 		p_description = trim(dict['description'])
 		if len(p_description) == 0:
 			p_description = None
 
-#	if dict.has_key ('source'):
+#	if 'source' in dict:
 #		p_source = trim(dict['source'])
 #		if len(p_source) == 0:
 #			p_source = None
@@ -114,35 +114,35 @@ def process_iron_package (ipfn, a_sources_dir, a_cfg_location, u,p,repo,v):
 		if is_process_local_archive:
 			l_id = get_package_id (p_name)
 			if l_id == None:
-				print "No id for %s" % (p_name)
+				print("No id for %s" % (p_name))
 			else:
 				if len (l_id) > 0:
 					l_folder =  os.path.join (os.path.abspath('archive'), v, "items", l_id)
 					if not os.path.exists (l_folder):
 						os.makedirs(l_folder)
 					cmd_call ("./iron/spec/unix/bin/iron_build_archive  %s %s %s" % (l_src, l_folder, "archive"))
-					print ""
+					print("")
 		else:
 			cmd = "%s --force --package-archive-source \"%s\" " % (iron_update_cmd, l_src)
 			cmd_call (cmd)
-			print ""
+			print("")
 
-	if not dict.has_key ('maps'):
+	if not 'maps' in dict:
 		if p_source != None:
 			p_sources_dir = os.path.normpath(a_sources_dir)
 			if p_source.startswith (p_sources_dir):
 				p_source = p_source[len(p_sources_dir) + 1:]
 			m = p_source.replace ('\\', '/')
 			m = "/com.eiffel/%s" % (m)
-			print m
+			print(m)
 			dict['maps'] = [m]
-	if dict.has_key ('maps'):
+	if 'maps' in dict:
 		p_maps = dict['maps']
 		if len(p_maps) > 0:
 			for m in p_maps:
 				cmd = "%s --index \"%s\" " % (iron_update_cmd, m)
 				cmd_call (cmd)
-				print ""
+				print("")
 
 def process_iron_package_files(a_dir, a_sources_dir, a_cfg_location, a_login, a_password, a_repo, a_version):
 	l_nodes = os.listdir (a_dir)
@@ -178,15 +178,18 @@ def iron_config(a_cfg_location):
 			if len(k) > 0 and k[1] != '#':
 				d[k]=v
 
-	if d.has_key ('version'):
+	if 'version' in d:
 		l_version = d['version']
-	else:
+	elif 'branch' in d:
+		l_version = d['branch']
+		d['version'] = l_version
+	elif 'repository' in d:
 		l_repo = d['repository']
 		i = l_repo.rfind('/')
 		if i > 0:
 			l_version = l_repo[i+1:]
 			d['version'] = l_version
-	if not d.has_key('branch'):
+	if not 'branch' in d:
 		d['branch'] = l_version
 	return d
 
@@ -197,12 +200,12 @@ def upload_version(a_sources_dir, a_cfg_location):
 	repo = config['repository']
 	l_version = config['version']
 	if l_version:
-		print "user [%s] on repository [%s]" % (l_login, repo)
+		print("user [%s] on repository [%s]" % (l_login, repo))
 		if not os.path.exists (a_sources_dir):
-			print "source directory \"%s\" does not exist" % (a_sources_dir)
+			print("source directory \"%s\" does not exist" % (a_sources_dir))
 			sys.exit()
 
-		print "Set IRON_PATH variable"
+		print("Set IRON_PATH variable")
 		l_iron_path = os.path.join (a_sources_dir, ".iron-%s" % (l_version))
 		os.environ['IRON_PATH'] = l_iron_path
 		if os.path.exists (l_iron_path):
@@ -214,7 +217,7 @@ def upload_version(a_sources_dir, a_cfg_location):
 
 		if debug():
 			pause ("Press [ENTER] to start updating ecf files..,")
-		print "Updating the ecf files for iron packaging ..."
+		print("Updating the ecf files for iron packaging ...")
 		cmd = "%s update_ecf --save -D ISE_LIBRARY=%s %s" % (iron_command_name(), a_sources_dir, a_sources_dir)
 		cmd_call (cmd)
 		#call([iron_command_name(), "update_ecf", "--save", "-D", "ISE_LIBRARY=%s" % (a_sources_dir), a_sources_dir])
@@ -224,7 +227,7 @@ def upload_version(a_sources_dir, a_cfg_location):
 		process_iron_package_files (a_sources_dir, a_sources_dir, a_cfg_location, l_login, l_password, repo, l_version)
 
 	else:
-		print "Invalid iron repository url!"
+		print("Invalid iron repository url!")
 
 
 def main():
@@ -236,7 +239,7 @@ def main():
 			cfg_location = "iron.cfg"
 		upload_version(l_sources_dir, cfg_location)
 	else:
-		print "Usage: prog source_dir {config_filename}"
+		print("Usage: prog source_dir {config_filename}")
 		sys.exit()
 
 if __name__ == '__main__':

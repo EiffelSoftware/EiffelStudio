@@ -166,7 +166,6 @@ feature {NONE} -- Implementation
 	import (p: PATH)
 		local
 			ini: INI_FILE
-			utf: UTF_CONVERTER
 		do
 			create ini.make_with_path (p)
 			name := Void
@@ -175,29 +174,26 @@ feature {NONE} -- Implementation
 			archive := Void
 			indexes := Void
 
-			if attached ini.item ("name") as l_name_8 then
-				name := utf.utf_8_string_8_to_escaped_string_32 (l_name_8)
+			name := ini.adjusted_item ("name")
+			description := ini.adjusted_item ("description")
+			if attached ini.adjusted_item ("source") as l_source then
+				create source.make_from_string (l_source)
 			end
-			if attached ini.item ("description") as l_description_8 then
-				description := utf.utf_8_string_8_to_escaped_string_32 (l_description_8)
-			end
-			if attached ini.item ("source") as l_source_8 then
-				create source.make_from_string (utf.utf_8_string_8_to_escaped_string_32 (l_source_8))
-			elseif attached ini.item ("archive") as l_archive_8 then
-				create archive.make_from_string (utf.utf_8_string_8_to_escaped_string_32 (l_archive_8))
+			if attached ini.adjusted_item ("archive") as l_archive then
+				create archive.make_from_string (l_archive)
 			end
 
 			across
 				ini as c
 			loop
 				if attached c.item as s and then c.key.starts_with ("index") then
-					add_index (utf.utf_8_string_8_to_escaped_string_32 (s))
+					add_index (s)
 				end
 			end
 		end
 
 note
-	copyright: "Copyright (c) 1984-2015, Eiffel Software"
+	copyright: "Copyright (c) 1984-2020, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

@@ -28,7 +28,7 @@ feature -- Access
 	item (a_name: READABLE_STRING_GENERAL): detachable READABLE_STRING_32
 			-- Data associated with `item'
 		do
-			Result := ini.item (a_name)
+			Result := ini.adjusted_item (a_name)
 		end
 
 	package_name: detachable READABLE_STRING_32

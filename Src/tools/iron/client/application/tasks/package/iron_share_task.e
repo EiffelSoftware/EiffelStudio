@@ -59,13 +59,13 @@ feature -- Execute
 			if attached args.configuration_file as l_cfg then
 				create ini.make_with_path (l_cfg)
 				if u = Void then
-					u := ini.item ("username")
+					u := ini.adjusted_item ("username")
 				end
 				if p = Void then
-					p := ini.item ("password")
+					p := ini.adjusted_item ("password")
 				end
 				if repo_url = Void then
-					repo_url := ini.item ("repository")
+					repo_url := ini.adjusted_item ("repository")
 				end
 			end
 			if
@@ -494,7 +494,7 @@ feature -- Execute
 		end
 
 note
-	copyright: "Copyright (c) 1984-2015, Eiffel Software"
+	copyright: "Copyright (c) 1984-2020, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

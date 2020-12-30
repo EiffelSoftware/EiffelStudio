@@ -485,6 +485,9 @@ feature -- Hook
 					lnk.set_weight (20)
 					a_menu_system.primary_menu.extend (lnk)
 				end
+				create lnk.make (a_response.api.translation ("Downloads", Void), "downloads")
+				lnk.set_weight (25)
+				a_menu_system.primary_menu.extend (lnk)
 			end
 		end
 

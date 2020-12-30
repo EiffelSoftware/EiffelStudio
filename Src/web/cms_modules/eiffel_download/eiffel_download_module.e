@@ -107,12 +107,15 @@ feature -- Router
 			-- Router configuration.
 		local
 			h_download: WSF_URI_TEMPLATE_AGENT_HANDLER
+			h: WSF_URI_TEMPLATE_AGENT_HANDLER
 		do
 			create h_download.make (agent handle_download (a_api, ?, ?))
 			a_router.handle ("/download", h_download, a_router.methods_head_get)
 			a_router.handle ("/download/channel/{channel}", h_download, a_router.methods_head_get)
 
-			a_router.handle ("/downloads", create {WSF_URI_TEMPLATE_AGENT_HANDLER}.make (agent handle_download_channel (a_api, "stable", ?, ?)), a_router.methods_head_get)
+			create h.make (agent handle_download_channel (a_api, "stable", ?, ?))
+			a_router.handle ("/downloads", h, a_router.methods_head_get)
+			a_router.handle ("/downloads/", h, a_router.methods_head_get)
 			a_router.handle ("/downloads/channel/{channel}", create {WSF_URI_TEMPLATE_AGENT_HANDLER}.make (agent handle_download_channel (a_api, Void, ?, ?)), a_router.methods_head_get)
 		end
 

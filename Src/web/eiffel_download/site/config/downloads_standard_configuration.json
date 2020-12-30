@@ -1,12 +1,12 @@
 {
-        "mirror": "http://sourceforge.net/projects/eiffelstudio/files/",
+        "mirror": "https://www.eiffel.com/cdn/",
         "products": [
                 {
                         "id": "eiffelstudio-rev", "name": "EiffelStudio",
                         "version": "20.11 REV",
                         "number": "20.11",
-                        "build": "Build_105048",
-                        "download_link_pattern": "${mirror}${name} ${number}/${build}/${filename}/download",
+                        "build": "105048",
+						"download_link_pattern": "${mirror}${name}/${number}/${build}/${filename}",
                         "download": [
                                 {
                                         "filename": "Eiffel_20.11_rev_105048-win64.msi",

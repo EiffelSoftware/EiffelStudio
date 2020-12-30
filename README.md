@@ -7,9 +7,9 @@ Introduction
 
 EiffelStudio is the IDE for the Eiffel programming language.
 
-The master repository for the source code of EiffelStudio is a subversion repository located at:
+The main public repository for the source code of EiffelStudio is a subversion repository located at:
 
-	https://svn.eiffel.com/eiffelstudio
+	https://svn.eiffel.com/eiffelstudio-public
 
 In addition, there is a mirror hosted on GitHub that only contains the development branch (i.e. trunk subdirectory of the above subversion repository) at:
 

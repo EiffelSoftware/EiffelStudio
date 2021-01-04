@@ -55,6 +55,11 @@ feature -- Factory
 				not l_smtp_server.is_whitespace
 			then
 				create l_notification_service.make (l_smtp_server, l_admin_email, l_webmaster_email)
+			elseif
+				attached (create {APP_JSON_CONFIGURATION}).new_sendmail_configuration (l_layout.application_config_path) as l_sendmail_location and then
+				not l_sendmail_location.is_whitespace
+			then
+				create l_notification_service.make_with_sendmail_location (l_sendmail_location, l_admin_email, l_webmaster_email)
 			else
 				create l_notification_service.make_sendmail (l_admin_email, l_webmaster_email)
 			end

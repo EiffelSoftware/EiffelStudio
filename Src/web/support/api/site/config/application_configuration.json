@@ -31,6 +31,9 @@
 		 "username": "",
 		 "password": ""	
 		},
+	"sendmail": {
+		"location": "bin/my_sendmail"
+	},
 	"cookie_session": {
 		"remember_me":604800
 	},

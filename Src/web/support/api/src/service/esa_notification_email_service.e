@@ -13,7 +13,8 @@ inherit
 
 create
 	make,
-	make_sendmail
+	make_sendmail,
+	make_with_sendmail_location
 
 feature {NONE} -- Initialization
 
@@ -35,6 +36,15 @@ feature {NONE} -- Initialization
 			webmaster_email := a_webmaster
 
 			create {NOTIFICATION_SENDMAIL_MAILER} mailer
+			set_successful
+		end
+
+	make_with_sendmail_location (a_sendmail_location: READABLE_STRING_GENERAL; a_admin, a_webmaster: READABLE_STRING_8)
+		do
+			admin_email := a_admin
+			webmaster_email := a_webmaster
+
+			create {NOTIFICATION_SENDMAIL_MAILER} mailer.make_with_location (a_sendmail_location)
 			set_successful
 		end
 

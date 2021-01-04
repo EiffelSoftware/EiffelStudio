@@ -138,6 +138,25 @@ feature -- Application Configuration
 			Result := l_result
 		end
 
+	new_sendmail_configuration (a_path: PATH): detachable READABLE_STRING_32
+			-- Build a new sendmail server configuration.
+		local
+			l_parser: JSON_PARSER
+			l_result: STRING_8
+			utf: UTF_CONVERTER
+		do
+			if attached json_file_from (a_path) as json_file then
+				l_parser := new_json_parser (json_file)
+				if
+					attached {JSON_OBJECT} l_parser.next_parsed_json_value as jv and then l_parser.is_valid and then
+					attached {JSON_OBJECT} jv.item ("sendmail") as l_sendmail and then
+					attached {JSON_STRING} l_sendmail.item ("location") as l_sendmail_loc
+				then
+					Result := l_sendmail_loc.unescaped_string_32
+				end
+			end
+		end
+
 	new_database_configuration (a_path: PATH): detachable DATABASE_CONFIGURATION
 			-- Build a new database configuration.
 		local

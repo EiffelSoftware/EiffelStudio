@@ -10,11 +10,11 @@
 <p>Please register a new account with that email at <a href="{$site_url/}">{$site_url/}</a> .</p>
 {/unless}{/unless}
 
-<p><a href="https://www.eiffel.com/eiffelstudio/try/">Click here to download EiffelStudio.</a></p>
+<p><a href="https://account.eiffel.com/downloads/">Click here to download EiffelStudio.</a></p>
 
 <p>You will find the many resources we offer to our users to make the most of the features of EiffelStudio at <a href="https://www.eiffel.com/resources/">https://www.eiffel.com/resources/</a>.</p>  
 
-<p>For technical questions please join the EiffelStudio usergroup at <a href="https://groups.google.com/g/eiffel-users">https://groups.google.com/g/eiffel-users</a>.</p>
+<p>For technical questions please join the EiffelStudio user group at <a href="https://groups.google.com/g/eiffel-users">https://groups.google.com/g/eiffel-users</a>.</p>
 
 <p>For specific questions and to access the support level you selected at the time of your purchase please visit <a href="https://support.eiffel.com/">the support website</a>.</p>
 

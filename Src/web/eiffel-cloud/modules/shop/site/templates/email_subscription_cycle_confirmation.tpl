@@ -14,7 +14,7 @@
 {foreach key="k" item="i" from="$receipt_or_invoice_urls"}<li><a href="{$i/}">{$k/}</a></li>{/foreach}
 </ul>
 {/if}
-<p>We are honored to have you as customer and happy to be of service to you.</p>
+<p>We are honored to have you as a customer and happy to be of service to you.</p>
 <p>Please feel free to contact us at <a href="{$site_url/}">{$site_url/}</a> for any questions you may have.</p>
 <br/>
 

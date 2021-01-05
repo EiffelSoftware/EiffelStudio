@@ -27,14 +27,21 @@ feature -- Configuration
 			end
 			create Result.make (l_layout)
 			create j_cfg
+
 			if
 				attached j_cfg.new_smtp_configuration (l_layout.application_config_path) as l_smtp_server and then
 				not l_smtp_server.is_whitespace
 			then
 				create email_service.make (l_smtp_server)
+			elseif
+				attached j_cfg.new_sendmail_configuration (l_layout.application_config_path) as l_sendmail_location and then
+				not l_sendmail_location.is_whitespace
+			then
+				create email_service.make_with_sendmail_location (l_sendmail_location)
 			else
 				create email_service.make_sendmail
 			end
+
 			Result.is_using_safe_redirection := j_cfg.using_safe_redirection_solution (l_layout.application_config_path)
 
 			if attached (create {APP_JSON_CONFIGURATION}).new_database_configuration (l_layout.application_config_path) as l_database_config then

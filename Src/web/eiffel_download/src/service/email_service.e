@@ -12,7 +12,8 @@ inherit
 
 create
 	make,
-	make_sendmail
+	make_sendmail,
+	make_with_sendmail_location
 
 feature {NONE} -- Initialization
 
@@ -27,6 +28,12 @@ feature {NONE} -- Initialization
 	make_sendmail
 		do
 			create {NOTIFICATION_SENDMAIL_MAILER} mailer
+			set_successful
+		end
+
+	make_with_sendmail_location (a_sendmail_location: READABLE_STRING_GENERAL)
+		do
+			create {NOTIFICATION_SENDMAIL_MAILER} mailer.make_with_location (a_sendmail_location)
 			set_successful
 		end
 

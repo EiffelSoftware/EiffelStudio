@@ -142,8 +142,6 @@ feature -- Application Configuration
 			-- Build a new sendmail server configuration.
 		local
 			l_parser: JSON_PARSER
-			l_result: STRING_8
-			utf: UTF_CONVERTER
 		do
 			if attached json_file_from (a_path) as json_file then
 				l_parser := new_json_parser (json_file)

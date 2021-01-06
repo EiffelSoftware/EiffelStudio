@@ -59,6 +59,11 @@ feature -- View
 		deferred
 		end
 
+	problem_closed_reports_guest (req: WSF_REQUEST; res: WSF_RESPONSE; a_report_view: detachable ESA_REPORT_VIEW)
+			-- Problem recently closed reports representation for a guest user
+		deferred
+		end
+
 	problem_user_reports (req: WSF_REQUEST; res: WSF_RESPONSE; a_report_view: detachable ESA_REPORT_VIEW)
 			-- Problem reports representation for a given user
 		deferred
@@ -66,6 +71,11 @@ feature -- View
 
 	problem_reports_responsible	(req: WSF_REQUEST; res: WSF_RESPONSE; a_report_view: detachable ESA_REPORT_VIEW)
 			-- Problem reports representation for a given user
+		deferred
+		end
+
+	problem_reports_responsible_closed (req: WSF_REQUEST; res: WSF_RESPONSE; a_report_view: detachable ESA_REPORT_VIEW)
+			-- Problem reports closed or won't fix for responsible users.
 		deferred
 		end
 

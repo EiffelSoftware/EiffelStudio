@@ -64,6 +64,19 @@ feature -- Access
 			post_data_provider_execution
 		end
 
+	problem_reports_closed_guest (a_page_number: INTEGER; a_rows_per_page: INTEGER; a_column: READABLE_STRING_8; a_order: INTEGER; a_username: READABLE_STRING_32; a_filter:READABLE_STRING_32): LIST[REPORT]
+			-- All Problem reports closed or won't fix for the previous week for guest users, filter by page `a_page_numer' and rows per page `a_row_per_page'
+			-- Only not confidential reports
+		do
+			log.write_information (generator + ".problem_reports_closed_guest All Problem reports closed or won't fix for the previous week for guest users, filter by: page" + a_page_number.out + " rows_per_page:" + a_rows_per_page.out + " column:" + a_column + " order:" + a_order.out)
+			create {ARRAYED_LIST [REPORT]} Result.make (0)
+			-- data_provider.connect
+			across data_provider.problem_reports_closed_guest (a_page_number, a_rows_per_page, a_column, a_order, a_username, a_filter) as c loop
+				Result.force (c.item)
+			end
+			post_data_provider_execution
+		end
+
 
 	problem_reports_responsibles (a_page_number, a_rows_per_page, a_category, a_severity, a_priority, a_responsible: INTEGER_32; a_column: READABLE_STRING_32; a_order: INTEGER_32; a_status, a_username: READABLE_STRING_32; a_filter: detachable READABLE_STRING_32; a_content: INTEGER_32): LIST[REPORT]
 			-- All Problem reports for responsible users, filter by page `a_page_numer' and rows per page `a_row_per_page'
@@ -74,6 +87,21 @@ feature -- Access
 			create {ARRAYED_LIST [REPORT]} Result.make (0)
 			-- data_provider.connect
 			across data_provider.problem_reports_responsibles (a_page_number, a_rows_per_page, a_category, a_severity, a_priority, a_responsible, a_column, a_order, a_status, a_username, a_filter, a_content) as c loop
+				Result.force (c.item)
+			end
+			-- data_provider.disconnect
+			post_data_provider_execution
+		end
+
+	problem_reports_responsibles_closed (a_page_number, a_rows_per_page: INTEGER_32): LIST[REPORT]
+			-- All Problem reports for responsible users closed or wont't-fix filter by page `a_page_numer' and rows per page `a_row_per_page' during the last week.
+			-- and category `a_category', severity `a_severity', priority, `a_priority', `a_responsible'
+		do
+			log.write_debug (generator + ".problem_reports_responsibles_closed All Problem reports for responsibles users, filter by: page" + a_page_number.out + " rows_per_page:" + a_rows_per_page.out )
+
+			create {ARRAYED_LIST [REPORT]} Result.make (0)
+			-- data_provider.connect
+			across data_provider.problem_reports_responsibles_closed (a_page_number, a_rows_per_page) as c loop
 				Result.force (c.item)
 			end
 			-- data_provider.disconnect
@@ -476,8 +504,33 @@ feature -- Basic Operations
 			post_data_provider_execution
 		end
 
+	has_closed_or_wontfix_reports (a_username: detachable READABLE_STRING_32 ): BOOLEAN
+			-- There are closed or wontfix reports for guest users or registered users during the last week?
+		do
+			if attached a_username then
+				Result := row_count_problem_reports_closed (a_username, "") > 0
+			else
+				Result := row_count_problem_reports_closed ("", "") > 0
+			end
+		end
+
+	has_closed_or_wontfix_responsible_reports: BOOLEAN
+			-- There are closed or wontfix reports for responsible users during the last week?
+		do
+			Result := row_count_problem_report_responsible_closed > 0
+		end
+
+	row_count_problem_reports_closed (a_username: READABLE_STRING_32; a_filter: READABLE_STRING_32): INTEGER
+			-- Row count for closed or won't fix reports for Guest and non responsible users (last week).
+		do
+
+			log.write_debug (generator+".row_count_problem_reports_closed filter by username:" + a_username.to_string_8)
+			Result := data_provider.row_count_problem_reports_closed (a_username, a_filter)
+			post_data_provider_execution
+		end
+
 	row_count_problem_report_responsible (a_category, a_severity, a_priority, a_responsible: INTEGER_32; a_status, a_username: READABLE_STRING_32; a_filter: detachable READABLE_STRING_32; a_content: INTEGER_32): INTEGER
-			-- Number of problems reports for responsible users.
+			-- Number of problems reports for visible responsible users.
 			-- With filters by category `a_category', severity 'a_severity', priority `a_priority', responsible `a_responsible',
 			-- status `a_status' and submitter `a_submitter'
 		do
@@ -485,6 +538,15 @@ feature -- Basic Operations
 			Result := data_provider.row_count_problem_report_responsible (a_category, a_severity, a_priority, a_responsible, a_status, a_username, a_filter, a_content)
 			post_data_provider_execution
 		end
+
+	row_count_problem_report_responsible_closed: INTEGER
+			-- Number of problems reports closed or won't fix visible for responsible users.
+		do
+			log.write_debug (generator+".row_count_problem_report_responsible_closed")
+			Result := data_provider.row_count_problem_report_responsible_closed
+			post_data_provider_execution
+		end
+
 
 	row_count_problem_report_user (a_username: READABLE_STRING_32;  a_category: INTEGER_32; a_status: READABLE_STRING_8; a_filter: READABLE_STRING_32; a_content: INTEGER): INTEGER
 			-- Number of problem reports for user with username `a_username'

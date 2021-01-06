@@ -144,6 +144,45 @@ feature -- Access
 			post_execution
 		end
 
+	problem_reports_closed_guest (a_page_number: INTEGER; a_rows_per_page: INTEGER; a_column: READABLE_STRING_8; a_order: INTEGER; a_username: READABLE_STRING_32; a_filter:READABLE_STRING_32): DATABASE_ITERATION_CURSOR [REPORT]
+			-- All Problem reports closed or won't fix for guest users for the previous weeks ( the last 7 days)
+			-- Only not confidential reports
+			-- Filtered category `a_category' and status `a_status'
+			-- Order by column `a_column' in a DESC or ASC.
+			-- by the default the order by is done on Number.
+		local
+			l_parameters: STRING_TABLE [ANY]
+			l_query: STRING_32
+			l_encode: DATABASE_SQL_SERVER_ENCODER
+		do
+			debug
+				log.write_information (generator + ".problem_reports_closed_guest")
+			end
+			create l_parameters.make (4)
+			l_parameters.put (a_rows_per_page, "RowsPerPage")
+			l_parameters.put (a_page_number * a_rows_per_page, "Offset")
+			l_parameters.put (string_parameter (a_username, 100),{DATA_PARAMETERS_NAMES}.Username_param)
+			l_parameters.put (0, {DATA_PARAMETERS_NAMES}.Categoryid_param)
+			if attached a_filter then
+				l_parameters.put (l_encode.encoded_string (string_parameter (a_filter, 100)), {DATA_PARAMETERS_NAMES}.Filter_param)
+			end
+			create l_query.make_from_string (Select_problem_reports_closed_template)
+			if a_order = 1 then
+				l_query.replace_substring_all ("$ORD1", "ASC")
+				l_query.replace_substring_all ("$ORD2", "DESC")
+			else
+				l_query.replace_substring_all ("$ORD1", "DESC")
+				l_query.replace_substring_all ("$ORD2", "ASC")
+			end
+			l_query.replace_substring_all ("$Column", l_encode.encoded_string (string_parameter (a_column.to_string_32, 30)).to_string_8)
+
+			db_handler.set_query (create {DATABASE_QUERY}.data_reader (l_query, l_parameters))
+			db_handler.execute_query
+			create Result.make (db_handler, agent new_report)
+			post_execution
+		end
+
+
 	problem_reports_responsibles (a_page_number: INTEGER; a_rows_per_page: INTEGER; a_category: INTEGER; a_severity: INTEGER; a_priority: INTEGER; a_responsible: INTEGER; a_column: READABLE_STRING_32; a_order: INTEGER; a_status: READABLE_STRING_32; a_username: READABLE_STRING_32; a_filter: detachable READABLE_STRING_32; a_content: INTEGER_32): DATABASE_ITERATION_CURSOR [REPORT]
 			-- All Problem reports for responsible users
 			-- All reports are visible for responsible users
@@ -224,6 +263,28 @@ feature -- Access
 			end
 				--| Need to be updated to build the set based on user selection.
 			l_query.replace_substring_all ("$StatusSet", "(" + l_encode.encoded_string (a_status).to_string_8 + ")")
+			db_handler.set_query (create {DATABASE_QUERY}.data_reader (l_query, l_parameters))
+			db_handler.execute_query
+			create Result.make (db_handler, agent new_report_responsible)
+			post_execution
+		end
+
+	problem_reports_responsibles_closed (a_page_number: INTEGER; a_rows_per_page: INTEGER): DATABASE_ITERATION_CURSOR [REPORT]
+			-- All Problem reports for responsible users closed or won't-fix.
+			-- All reports are visible for responsible users
+		local
+			l_parameters: STRING_TABLE [ANY]
+			l_query: STRING_32
+			l_encode: DATABASE_SQL_SERVER_ENCODER
+			l_query_filter: STRING
+		do
+			debug
+				log.write_information (generator + ".problem_reports_responsibles")
+			end
+			create l_parameters.make (2)
+			l_parameters.put (a_rows_per_page, "RowsPerPage")
+			l_parameters.put (a_rows_per_page * a_page_number, "Offset")
+			create l_query.make_from_string (Select_problem_reports_responsibles_closed_template)
 			db_handler.set_query (create {DATABASE_QUERY}.data_reader (l_query, l_parameters))
 			db_handler.execute_query
 			create Result.make (db_handler, agent new_report_responsible)
@@ -997,6 +1058,38 @@ feature -- Basic Operations
 			post_execution
 		end
 
+	row_count_problem_reports_closed (a_username: READABLE_STRING_32; a_filter: READABLE_STRING_32;): INTEGER
+			-- Row count closed or won't fix reports for guest users, for the last week.
+			-- users with role user.
+		local
+			l_parameters: STRING_TABLE [ANY]
+			l_encode: DATABASE_SQL_SERVER_ENCODER
+			l_query: STRING_32
+		do
+			debug
+				log.write_information (generator + ".row_count_problem_reports_closed")
+			end
+
+			create l_parameters.make (2)
+			l_parameters.put (string_parameter (a_username, 50), {DATA_PARAMETERS_NAMES}.Username_param)
+			l_parameters.put (0, {DATA_PARAMETERS_NAMES}.Categoryid_param)
+			if attached a_filter then
+				l_parameters.put (l_encode.encoded_string (string_parameter (a_filter, 100)), {DATA_PARAMETERS_NAMES}.Filter_param)
+			end
+			create l_query.make_from_string (Select_row_count_problem_reports_closed_guest)
+
+			db_handler.set_query (create {DATABASE_QUERY}.data_reader (l_query, l_parameters))
+			db_handler.execute_query
+			if not db_handler.after then
+				db_handler.start
+				if attached db_handler.read_integer_32 (1) as l_count then
+					Result := l_count
+				end
+			end
+
+			post_execution
+		end
+
 	row_count_problem_report_responsible (a_category: INTEGER; a_severity: INTEGER; a_priority: INTEGER; a_responsible: INTEGER; a_status: READABLE_STRING_32; a_username: READABLE_STRING_32; a_filter: detachable READABLE_STRING_32; a_content: INTEGER_32): INTEGER
 			-- Number of problems reports for responsible users.
 			-- Could be filtered by category, serverity, priority, responsible, and username.
@@ -1043,6 +1136,32 @@ feature -- Basic Operations
 			end
 				--| Need to be updated to build the set based on user selection.
 			l_query.replace_substring_all ({STRING_32} "$StatusSet", {STRING_32} "(" + l_encode.encoded_string (a_status) + {STRING_32} ")")
+			db_handler.set_query (create {DATABASE_QUERY}.data_reader (l_query, l_parameters))
+			db_handler.execute_query
+			if not db_handler.after then
+				db_handler.start
+				if attached db_handler.read_integer_32 (1) as l_count then
+					Result := l_count
+				end
+			end
+
+			post_execution
+		end
+
+	row_count_problem_report_responsible_closed: INTEGER
+			-- Number of problems reports closed or won't fix visible for responsible users for the last week.
+		local
+			l_parameters: STRING_TABLE [ANY]
+			l_query: STRING_32
+			l_encode: DATABASE_SQL_SERVER_ENCODER
+		do
+			debug
+				log.write_information (generator + ".row_count_problem_report_responsible_closed")
+			end
+
+			create l_parameters.make (0)
+			create l_query.make_from_string (select_row_count_problem_reports_responsibles_closed)
+
 			db_handler.set_query (create {DATABASE_QUERY}.data_reader (l_query, l_parameters))
 			db_handler.execute_query
 			if not db_handler.after then
@@ -2403,6 +2522,32 @@ feature -- Queries
 			ORDER BY $Column $ORD1
 		]"
 
+
+	Select_problem_reports_closed_template: STRING = "[
+				SELECT Number, Synopsis, PAG2.CategorySynopsis as CategorySynopsis, SubmissionDate, PAG2.StatusID as statusID, PAG2.StatusSynopsis, PAG2.Username
+			 FROM (
+			    SELECT TOP :RowsPerPage
+				   Number, Synopsis, PAG.CategorySynopsis as CategorySynopsis, SubmissionDate, PAG.StatusID as statusID, PAG.StatusSynopsis, PAG.CategoryID, PAG.Username
+			    FROM (
+				SELECT TOP :Offset
+				Number, Synopsis, ProblemReportCategories.CategorySynopsis as CategorySynopsis, SubmissionDate, ProblemReports.StatusID statusID,
+				ProblemReportStatus.StatusSynopsis, ProblemReports.CategoryID, Memberships.Username
+				FROM ProblemReports
+			    INNER JOIN ProblemReportCategories ON ProblemReportCategories.CategoryID = ProblemReports.CategoryID
+			    INNER JOIN ProblemReportStatus ON ProblemReportStatus.StatusID = ProblemReports.StatusID
+			    LEFT JOIN Memberships ON ProblemReports.ContactID = Memberships.ContactID
+			    WHERE (Confidential = 0 or (Confidential = 1 and ProblemReports.ContactID = (SELECT ContactID FROM Memberships WHERE Username = :Username ) ) ) AND ((ProblemReports.CategoryID = :CategoryID) OR (NOT EXISTS (SELECT CategoryID FROM ProblemReportCategories WHERE CategoryID = :CategoryID)))
+					AND ((ProblemReports.StatusID in (3,5) ))
+					AND ProblemReports.LastActivityDate >= dateadd(day, 1-datepart(dw, getdate()), CONVERT(date,getdate()))
+			        AND ProblemReports.LastActivityDate <  dateadd(day, 8-datepart(dw, getdate()), CONVERT(date,getdate()))
+				ORDER BY $Column $ORD1
+				) AS PAG
+				ORDER BY $Column $ORD2
+			) AS PAG2
+			ORDER BY $Column $ORD1
+		]"
+
+
 	Select_row_count_problem_reports: STRING = "[
 					SELECT COUNT(*)
 					FROM dbo.ProblemReports
@@ -2411,6 +2556,17 @@ feature -- Queries
 					AND ((ProblemReports.StatusID in $StatusSet))
 					$SearchBySynopsisAndOrDescription
 				]"
+
+	Select_row_count_problem_reports_closed_guest: STRING = "[
+					SELECT COUNT(*)
+					FROM dbo.ProblemReports
+					where (Confidential = 0 or (Confidential = 1 and ContactID = (SELECT ContactID FROM Memberships WHERE Username = :Username ) ))
+					and ((ProblemReports.CategoryID = :CategoryID) OR (NOT EXISTS (SELECT CategoryID FROM ProblemReportCategories WHERE CategoryID = :CategoryID)))
+					AND ((ProblemReports.StatusID in (3,5)))
+					AND ProblemReports.LastActivityDate >= dateadd(day, 1-datepart(dw, getdate()), CONVERT(date,getdate()))
+					AND ProblemReports.LastActivityDate <  dateadd(day, 8-datepart(dw, getdate()), CONVERT(date,getdate()))
+				]"
+
 
 
 	Select_problem_reports_responsibles_template: STRING = "[
@@ -2463,6 +2619,53 @@ feature -- Queries
 			   ORDER by $Column $ORD1
 		]"
 
+	Select_problem_reports_responsibles_closed_template: STRING = "[
+			 SELECT   PAG2.Number, PAG2.Synopsis, SubmissionDate,
+					 PAG2.Release, PAG2.PriorityID PriorityID, PAG2.PrioritySynopsis,
+					 PAG2.CategorySynopsis, PAG2.SeverityID SeverityID, PAG2.SeveritySynopsis,
+					 PAG2.StatusID StatusID, PAG2.StatusSynopsis,
+					 PAG2.Username as 'DisplayName',
+					 PAG2.ResponsibleID, PAG2.Username
+				FROM (SELECT TOP :RowsPerPage
+				     PAG.Number, PAG.Synopsis, SubmissionDate,
+					 PAG.Release, PAG.PriorityID PriorityID, PAG.PrioritySynopsis,
+					 PAG.CategorySynopsis, PAG.SeverityID SeverityID, PAG.SeveritySynopsis,
+					 PAG.StatusID StatusID, PAG.StatusSynopsis,
+					 PAG.Username as 'DisplayName',
+					 PAG.ResponsibleID, PAG.Username,
+					 PAG.CategoryID,
+					 PAG.ReportID,
+					 PAG.ContactID
+					FROM (SELECT TOP :Offset
+					     ProblemReports.Number, ProblemReports.Synopsis, SubmissionDate = ProblemReports.LastActivityDate,
+						 ProblemReports.Release, ProblemReports.PriorityID PriorityID, ProblemReportPriorities.PrioritySynopsis,
+						 ProblemReportCategories.CategorySynopsis, ProblemReports.SeverityID SeverityID, ProblemReportSeverities.SeveritySynopsis,
+						 ProblemReports.StatusID StatusID, ProblemReportStatus.StatusSynopsis,
+						 Memberships.Username as 'DisplayName',
+						 ProblemReportResponsibles.ResponsibleID, Memberships.Username,
+						 ProblemReports.CategoryID,
+						 ProblemReports.ReportID,
+						 Memberships.ContactID
+						FROM ProblemReports
+						INNER JOIN ProblemReportCategories ON ProblemReports.CategoryID = ProblemReportCategories.CategoryID
+						INNER JOIN ProblemReportPriorities ON ProblemReports.PriorityID = ProblemReportPriorities.PriorityID
+						INNER JOIN ProblemReportSeverities ON ProblemReports.SeverityID = ProblemReportSeverities.SeverityID
+						INNER JOIN ProblemReportStatus ON ProblemReports.StatusID = ProblemReportStatus.StatusID
+						LEFT JOIN Memberships ON ProblemReports.ContactID = Memberships.ContactID
+						LEFT JOIN Contacts ON Contacts.ContactID = ProblemReports.ContactID
+						LEFT JOIN ProblemReportResponsibles ON ProblemReportResponsibles.ReportResponsibleID =
+																(select max (ReportResponsibleID) as ReportResponsibleID
+										    from ProblemReportResponsibles prr, ProblemReports pr
+										    where prr.ReportID = pr.ReportID and pr.ReportID = ProblemReports.ReportID)
+						LEFT JOIN LastActivityDates ON LastActivityDates.ReportID = ProblemReports.ReportID
+						WHERE
+						ProblemReports.StatusID in (3,5)
+						AND ProblemReports.LastActivityDate >= dateadd(day, 1-datepart(dw, getdate()), CONVERT(date,getdate()))
+						AND ProblemReports.LastActivityDate <  dateadd(day, 8-datepart(dw, getdate()), CONVERT(date,getdate()))
+					) AS PAG
+				 )  as PAG2
+		]"
+
 	Select_row_count_problem_reports_responsibles: STRING = "[
 			SELECT COUNT(DISTINCT(number))
 			FROM ProblemReports
@@ -2479,6 +2682,21 @@ feature -- Queries
 			AND ((ProblemReports.SeverityID = :SeverityID) OR (NOT EXISTS (SELECT SeverityID FROM ProblemReportSeverities WHERE SeverityID = :SeverityID)))
 			AND ((ProblemReportResponsibles.ResponsibleID =  :ResponsibleID) OR (NOT EXISTS (SELECT ResponsibleID FROM ProblemReportResponsibles r WHERE r.ResponsibleID = :ResponsibleID)))
 			$SearchBySynopsisAndOrDescription
+		]"
+
+	Select_row_count_problem_reports_responsibles_closed: STRING = "[
+			SELECT COUNT(DISTINCT(number))
+			FROM ProblemReports
+			INNER JOIN ProblemReportCategories ON ProblemReports.CategoryID = ProblemReportCategories.CategoryID
+			LEFT JOIN Memberships ON ProblemReports.ContactID = Memberships.ContactID
+			LEFT JOIN Contacts ON Contacts.ContactID = ProblemReports.ContactID
+			LEFT JOIN ProblemReportResponsibles ON ProblemReportResponsibles.ReportID = ProblemReports.ReportID
+			LEFT JOIN LastActivityDates ON LastActivityDates.ReportID = ProblemReports.ReportID
+			WHERE
+			StatusID in (3,5)
+			AND ProblemReports.LastActivityDate >= dateadd(day, 1-datepart(dw, getdate()), CONVERT(date,getdate()))
+			AND ProblemReports.LastActivityDate <  dateadd(day, 8-datepart(dw, getdate()), CONVERT(date,getdate()))
+
 		]"
 
 	Select_problem_reports_by_user_template: STRING = "[

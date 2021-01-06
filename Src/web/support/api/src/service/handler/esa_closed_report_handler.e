@@ -1,19 +1,12 @@
 note
 	description: "[
-				{REPORT_HANDLER} it's in charge to retrieve reports for Guests and logged in users. 
-				Logged-in Users ::= {USER, INTERNAL, RESPONSIBLE, ADMIN }
-				Responsible users will be able to update reports assigning a responsible to it.
-				Logged-in User whose role is `User', will be able to read visible reports and his own reports
-				Guest User will only see visible reports.
-				Other features
-				Allow filter reports, by severity, category, status, responsible, submitter.
-				Sorting by report number, severirty, category, submissionDate, release, etc.
-		]"
+		{ESA_CLOSED_REPORT_HANDLER} it's in charge to retrieve the latest closed and won't fix reports for Guests and logged in users.
+	]"
 	date: "$Date$"
 	revision: "$Revision$"
 
 class
-	ESA_REPORT_HANDLER
+	ESA_CLOSED_REPORT_HANDLER
 
 inherit
 
@@ -30,18 +23,9 @@ inherit
 			new_mapping as new_uri_mapping
 		end
 
-	WSF_URI_TEMPLATE_HANDLER
-		rename
-			execute as uri_template_execute,
-			new_mapping as new_uri_template_mapping
-		select
-			new_uri_template_mapping
-		end
-
 	WSF_RESOURCE_HANDLER_HELPER
 		redefine
-			do_get,
-			do_post
+			do_get
 		end
 
 	REFACTORING_HELPER
@@ -64,12 +48,6 @@ feature -- execute
 			execute_methods (req, res)
 		end
 
-	uri_template_execute (req: WSF_REQUEST; res: WSF_RESPONSE)
-			-- Execute request handler.
-		do
-			execute_methods (req, res)
-		end
-
 feature -- HTTP Methods
 
 	do_get (req: WSF_REQUEST; res: WSF_RESPONSE)
@@ -79,7 +57,7 @@ feature -- HTTP Methods
 		do
 			if attached {READABLE_STRING_32} current_user_name (req) as l_user then
 				debug
-					log.write_information ( generator + ".do_get Processing request: user:" + l_user.to_string_8  )
+					log.write_information (generator + ".do_get Processing request: user:" + l_user.to_string_8)
 				end
 				l_role := api_service.role (l_user)
 				if l_role.is_user then
@@ -87,7 +65,7 @@ feature -- HTTP Methods
 						-- They are able to see his own reports and also visible reports.
 					user_reports (req, res, l_user)
 					debug
-						log.write_information (generator+".do_get Executed List of reports for registered users" )
+						log.write_information (generator + ".do_get Executed List of reports for registered users")
 					end
 				elseif l_role.is_administrator or else l_role.is_responsible then
 						-- List of reports visible for reponsible and admin users
@@ -100,7 +78,7 @@ feature -- HTTP Methods
 						responsible_reports (req, res)
 					end
 					debug
-						log.write_information (generator+".do_get Executed List of reports for reponsible" )
+						log.write_information (generator + ".do_get Executed List of reports for reponsible")
 					end
 				else
 						-- Internal Users?
@@ -110,42 +88,6 @@ feature -- HTTP Methods
 				user_reports (req, res, Empty_string)
 			end
 		end
-
-
-	do_post (req: WSF_REQUEST; res: WSF_RESPONSE)
-			-- <Precursor>
-		local
-			l_role: USER_ROLE
-			l_rhf: ESA_REPRESENTATION_HANDLER_FACTORY
-		do
-			debug
-				log.write_information (generator+".do_post Processing request"  )
-			end
-			if attached current_user_name (req) as l_user then
-				if attached {WSF_STRING} req.path_parameter ("id") as l_id and then
-				   	l_id.is_integer and then attached extract_data_from_request(req, current_media_type (req)) as l_responsible and then
-				   	l_responsible.is_integer then
-				   	l_role := api_service.role (l_user)
-					if l_role.is_administrator or else l_role.is_responsible then
-						-- List of reports visible for reponsible and admin users
-						api_service.set_problem_report_responsible (l_id.integer_value, l_responsible.to_integer)
-						to_implement ("send_responsible_change_email (l_pr_number, l_new_responsible, authenticated_username)")
-						update_report_responsible (req,res)
-						send_responsible_change_email (l_user, l_id.integer_value, absolute_host (req, ""))
-					else
-					    ---	
-					end
-				else
-					create l_rhf
-					log.write_alert (generator + ".do_get Processing Repor request via the user "+ l_user.to_string_8 + " does not have permissions!")
-					l_rhf.new_representation_handler (esa_config, Empty_string, media_type_variants (req)).new_response_authenticate (req, res)
-				end
-			else
-				to_implement ("Unauthorized")
-				-- Unauthorized
-			end
-		end
-
 
 feature -- Implementation
 
@@ -160,7 +102,7 @@ feature -- Implementation
 			l_categories: LIST [REPORT_CATEGORY]
 			l_priorities: LIST [REPORT_PRIORITY]
 			l_severities: LIST [REPORT_SEVERITY]
-			l_responsibles: LIST[USER]
+			l_responsibles: LIST [USER]
 			l_input_validator: ESA_RESPONSIBLE_REPORT_INPUT_VALIDATOR
 		do
 			create l_rhf
@@ -175,15 +117,14 @@ feature -- Implementation
 					l_priorities := api_service.priorities
 					l_severities := api_service.severities
 
-					l_pages := api_service.row_count_problem_report_responsible (l_input_validator.category, l_input_validator.severity, l_input_validator.priority, l_input_validator.responsible, l_input_validator.status_selected, l_input_validator.submitter, l_input_validator.filter, l_input_validator.filter_content)
+					l_pages := api_service.row_count_problem_report_responsible_closed
 
 						-- Check if the query parameter page has a value less than or equal the the number of existing pages for the current request, if not, we set it as a default value=1
 					if l_input_validator.page > (l_pages // l_input_validator.size) + 1 then
 						l_input_validator.set_page (1)
 					end
 
-
-					l_row :=  api_service.problem_reports_responsibles (l_input_validator.page, l_input_validator.size, l_input_validator.category, l_input_validator.severity, l_input_validator.priority, l_input_validator.responsible, l_input_validator.orderby, l_input_validator.dir_selected, l_input_validator.status_selected, l_input_validator.submitter, l_input_validator.filter, l_input_validator.filter_content)
+					l_row := api_service.problem_reports_responsibles_closed (l_input_validator.page, l_input_validator.size)
 
 					create l_report_view.make (l_row, l_input_validator.page, l_pages // l_input_validator.size, l_categories, list_status, current_user_name (req), l_pages)
 					l_report_view.set_selected_category (l_input_validator.category)
@@ -199,17 +140,16 @@ feature -- Implementation
 					l_report_view.set_filter (l_input_validator.filter)
 					l_report_view.set_filter_content (l_input_validator.filter_content)
 					l_report_view.set_direction (l_input_validator.direction)
-					l_report_view.set_has_closed_reports (api_service.has_closed_or_wontfix_responsible_reports)
 					mark_selected_status (list_status, l_input_validator.status)
 
-					l_rhf.new_representation_handler (esa_config, l_type,  media_type_variants (req)).problem_reports_responsible (req, res, l_report_view)
+					l_rhf.new_representation_handler (esa_config, l_type, media_type_variants (req)).problem_reports_responsible_closed (req, res, l_report_view)
 				else
 						-- Bad request
 					log.write_error (generator + ".responsible_reports " + l_input_validator.error_message)
-					l_rhf.new_representation_handler (esa_config, l_type,  media_type_variants (req)).bad_request_with_errors_page (req, res, l_input_validator.errors)
+					l_rhf.new_representation_handler (esa_config, l_type, media_type_variants (req)).bad_request_with_errors_page (req, res, l_input_validator.errors)
 				end
 			else
-				l_rhf.new_representation_handler (esa_config, Empty_string,  media_type_variants (req)).problem_reports_responsible (req, res, Void)
+				l_rhf.new_representation_handler (esa_config, Empty_string, media_type_variants (req)).problem_reports_responsible_closed (req, res, Void)
 			end
 		end
 
@@ -227,7 +167,7 @@ feature -- Implementation
 				if attached api_service.problem_report_details (l_user, a_id) as l_report then
 					create {ARRAYED_LIST [REPORT]} l_list.make (1)
 					l_list.force (l_report)
-					create l_report_view.make (l_list,0,0, api_service.all_categories,api_service.status, l_user,0)
+					create l_report_view.make (l_list, 0, 0, api_service.all_categories, api_service.status, l_user, 0)
 					l_report_view.set_id (a_id.out)
 					l_report_view.set_responsibles (api_service.responsibles)
 					l_rhf.new_representation_handler (esa_config, l_type, media_type_variants (req)).problem_reports_responsible (req, res, l_report_view)
@@ -236,7 +176,6 @@ feature -- Implementation
 				end
 			end
 		end
-
 
 	user_reports (req: WSF_REQUEST; res: WSF_RESPONSE; a_user: READABLE_STRING_32)
 			-- List of reports for a user `a_user' with role Guest or User.
@@ -248,54 +187,47 @@ feature -- Implementation
 			l_categories: LIST [REPORT_CATEGORY]
 			l_report_view: ESA_REPORT_VIEW
 			l_input_validator: ESA_REPORT_INPUT_VALIDATOR
+			l_status_selected: STRING
 		do
 			to_implement ("Validate request parameters!!!")
-			--| At the moment the page size is hardcoded as 10 items per page.
-			--| we can set a defaut and then let the user customize it, but it's not
-			--| critical at the moment.
+				--| At the moment the page size is hardcoded as 10 items per page.
+				--| we can set a defaut and then let the user customize it, but it's not
+				--| critical at the moment.
 			debug
-				log.write_information ( generator+".user_reports" )
+				log.write_information (generator + ".user_reports")
 			end
 			create l_rhf
 			if attached current_media_type (req) as l_type then
 				create l_input_validator
-				l_input_validator.input_from (req.query_parameters)
-				if not l_input_validator.has_error then
-					l_categories := api_service.all_categories
-					list_status := api_service.status
+					-- Closed and Won't Fix.
+				l_categories := api_service.all_categories
+				list_status := api_service.status
 
-					l_pages := api_service.row_count_problem_reports (l_input_validator.category, l_input_validator.status_selected, a_user, l_input_validator.filter, l_input_validator.filter_content)
+				l_pages := api_service.row_count_problem_reports_closed (a_user, l_input_validator.filter)
 
-						-- Check if the query parameter page has a value less than or equal the the number of existing pages for the current request, if not, we set it as a default value=1
-					if l_input_validator.page > (l_pages // l_input_validator.size) + 1 then
-						l_input_validator.set_page (1)
-					end
+					-- Check if the query parameter page has a value less than or equal the the number of existing pages for the current request, if not, we set it as a default value=1
+				if l_input_validator.page > (l_pages // l_input_validator.size) + 1 then
+					l_input_validator.set_page (1)
+				end
 
-					l_row := api_service.problem_reports_guest (l_input_validator.page, l_input_validator.size, l_input_validator.category, l_input_validator.status_selected, l_input_validator.orderby, l_input_validator.dir_selected, a_user, l_input_validator.filter, l_input_validator.filter_content )
-					create l_report_view.make (l_row, l_input_validator.page, l_pages // l_input_validator.size, l_categories, list_status, current_user_name (req), l_pages)
-					l_report_view.set_size (l_input_validator.size)
-					l_report_view.set_selected_category (l_input_validator.category)
-					l_report_view.set_order_by (l_input_validator.orderby)
-					l_report_view.set_direction (l_input_validator.direction)
-					l_report_view.set_filter (l_input_validator.filter)
-					l_report_view.set_filter_content (l_input_validator.filter_content)
-					l_report_view.set_has_closed_reports (api_service.has_closed_or_wontfix_reports (current_user_name (req)))
-					mark_selected_status (list_status, l_input_validator.status)
+				l_row := api_service.problem_reports_closed_guest (l_input_validator.page, l_input_validator.size, l_input_validator.orderby, l_input_validator.dir_selected, a_user, l_input_validator.filter)
+				create l_report_view.make (l_row, l_input_validator.page, l_pages // l_input_validator.size, l_categories, list_status, current_user_name (req), l_pages)
+				l_report_view.set_size (l_input_validator.size)
+				l_report_view.set_selected_category (l_input_validator.category)
+				l_report_view.set_order_by (l_input_validator.orderby)
+				l_report_view.set_direction (l_input_validator.direction)
+				l_report_view.set_filter (l_input_validator.filter)
+				l_report_view.set_filter_content (l_input_validator.filter_content)
+				mark_selected_status (list_status, l_input_validator.status)
 
-					l_rhf.new_representation_handler (esa_config, l_type, media_type_variants (req)).problem_reports_guest (req, res, l_report_view)
-					debug
-						log.write_information (generator+".user_reports Executed reports guest" )
-					end
-				else
-						-- Bad request
-					log.write_error (generator + ".user_reports " + l_input_validator.error_message)
-					l_rhf.new_representation_handler (esa_config, l_type,  media_type_variants (req)).bad_request_with_errors_page (req, res, l_input_validator.errors)
+				l_rhf.new_representation_handler (esa_config, l_type, media_type_variants (req)).problem_closed_reports_guest (req, res, l_report_view)
+				debug
+					log.write_information (generator + ".user_reports Executed reports guest")
 				end
 			else
-				l_rhf.new_representation_handler (esa_config, Empty_string, media_type_variants (req)).problem_reports_guest (req, res, Void)
+				l_rhf.new_representation_handler (esa_config, Empty_string, media_type_variants (req)).problem_closed_reports_guest (req, res, Void)
 			end
 		end
-
 
 	update_report_responsible (req: WSF_REQUEST; res: WSF_RESPONSE)
 		local
@@ -317,17 +249,17 @@ feature -- Implementation
 	set_selected_status (a_status: LIST [REPORT_STATUS]; a_selected_status: INTEGER)
 			-- Set the current selected status
 		do
-			across a_status as c  loop
+			across a_status as c loop
 				if c.item.id = a_selected_status then
 					c.item.set_selected_id (a_selected_status)
 				end
 			end
 		end
 
-	mark_selected_status (a_status: LIST [REPORT_STATUS]; a_status_selected: LIST [INTEGER] )
+	mark_selected_status (a_status: LIST [REPORT_STATUS]; a_status_selected: LIST [INTEGER])
 			-- Set the current selected status
 		do
-			across a_status_selected as c  loop
+			across a_status_selected as c loop
 				set_selected_status (a_status, c.item)
 			end
 		end
@@ -341,7 +273,7 @@ feature {NONE} --Implementation
 			if a_type /= Void and then a_type.same_string ("application/vnd.collection+json") then
 				Result := extract_data_from_cj (req)
 			else
-				Result :=  extract_data_from_form (req)
+				Result := extract_data_from_form (req)
 			end
 		end
 
@@ -354,11 +286,11 @@ feature {NONE} --Implementation
 			create l_parser.make_with_string (retrieve_data (req))
 			l_parser.parse_content
 			if attached {JSON_OBJECT} l_parser.parsed_json_object as jv and then l_parser.is_parsed and then
-			   attached {JSON_OBJECT} jv.item ("template") as l_template and then
-			   attached {JSON_ARRAY} l_template.item ("data") as l_data and then
+				attached {JSON_OBJECT} jv.item ("template") as l_template and then
+				attached {JSON_ARRAY} l_template.item ("data") as l_data and then
 					--  <"name": "email", "prompt": "Password", "value": "{$form.email/}">,
-			   attached {JSON_OBJECT} l_data.i_th (1) as l_form_data and then attached {JSON_STRING} l_form_data.item ("name") as l_name and then
-				l_name.item.same_string ("responsible") and then  attached {JSON_STRING} l_form_data.item ("value") as l_value
+				attached {JSON_OBJECT} l_data.i_th (1) as l_form_data and then attached {JSON_STRING} l_form_data.item ("name") as l_name and then
+				l_name.item.same_string ("responsible") and then attached {JSON_STRING} l_form_data.item ("value") as l_value
 			then
 				Result := l_value.item
 			end
@@ -374,17 +306,17 @@ feature {NONE} --Implementation
 		end
 
 	build_redirect_uri (req: WSF_REQUEST; a_type: READABLE_STRING_8): STRING_8
-					--	<input type="hidden" name="page" value="{$index/}"/>
-					--  <input type="hidden" name="category" value="{$view.selected_category/}"/>
-					--  <input type="hidden" name="severity" value="{$view.selected_severity/}"/>
-					--  <input type="hidden" name="priority" value="{$view.selected_priority/}"/>
-					--  <input type="hidden" name="responsible" value="{$view.selected_responsible/}"/>
-					--  <input type="hidden" name="status_query" value="{$status_query/}"/>
-					--  <input type="hidden" name="orderBy" value="{$view.orderBy/}"/>
-					--  <input type="hidden" name="dir" value="{$view.dir/}"/>
+			--	<input type="hidden" name="page" value="{$index/}"/>
+			--  <input type="hidden" name="category" value="{$view.selected_category/}"/>
+			--  <input type="hidden" name="severity" value="{$view.selected_severity/}"/>
+			--  <input type="hidden" name="priority" value="{$view.selected_priority/}"/>
+			--  <input type="hidden" name="responsible" value="{$view.selected_responsible/}"/>
+			--  <input type="hidden" name="status_query" value="{$status_query/}"/>
+			--  <input type="hidden" name="orderBy" value="{$view.orderBy/}"/>
+			--  <input type="hidden" name="dir" value="{$view.dir/}"/>
 		do
 			if a_type.same_string ("application/vnd.collection+json") then
-				Result :=(create {URL_ENCODER}).encoded_string (req.path_info)
+				Result := (create {URL_ENCODER}).encoded_string (req.path_info)
 			else
 				create Result.make_from_string ("/reports?")
 				if attached {WSF_STRING} req.form_parameter ("page") as l_page then
@@ -457,9 +389,10 @@ feature {NONE} --Implementation
 				attached l_report.assigned as l_assigned and then
 				attached l_assigned.name as l_name
 			then
-				email_notification_service.send_responsible_change_email (a_user,l_report, api_service.user_account_information (l_name), a_url )
+				email_notification_service.send_responsible_change_email (a_user, l_report, api_service.user_account_information (l_name), a_url)
 			else
 				log.write_error (generator + ".send_responsible_change_email")
 			end
 		end
+
 end

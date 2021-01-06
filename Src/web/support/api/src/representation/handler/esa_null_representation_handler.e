@@ -44,6 +44,13 @@ feature -- View
 			generic_response (req, res)
 		end
 
+	problem_closed_reports_guest (req: WSF_REQUEST; res: WSF_RESPONSE; a_report_view: detachable ESA_REPORT_VIEW)
+			-- Problem recently closed reports representation for a guest user
+		do
+			generic_response (req, res)
+		end
+
+
 	problem_user_reports  (req: WSF_REQUEST; res: WSF_RESPONSE; a_view: ESA_REPORT_VIEW)
 			-- <Precursor>
 		do
@@ -56,6 +63,11 @@ feature -- View
 			generic_response (req, res)
 		end
 
+	problem_reports_responsible_closed 	(req: WSF_REQUEST; res: WSF_RESPONSE; a_report_view: detachable ESA_REPORT_VIEW)
+			-- <Precursor>
+		do
+			generic_response (req, res)
+		end
 
 	report_form (req: WSF_REQUEST; res: WSF_RESPONSE; a_form: ESA_REPORT_FORM_VIEW)
 			-- <Precursor>

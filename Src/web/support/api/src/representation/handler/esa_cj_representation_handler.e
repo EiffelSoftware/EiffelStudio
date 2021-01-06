@@ -66,6 +66,13 @@ feature -- View
 			end
 		end
 
+	problem_closed_reports_guest (req: WSF_REQUEST; res: WSF_RESPONSE; a_report_view: detachable ESA_REPORT_VIEW)
+			-- Problem recently closed reports representation for a guest user
+		do
+			to_implement ("To be Implemented")
+		end
+
+
 	problem_user_reports (req: WSF_REQUEST; res: WSF_RESPONSE; a_report_view: ESA_REPORT_VIEW)
 			-- Problem reports representation for a given user
 		local
@@ -91,6 +98,13 @@ feature -- View
 				end
 			end
 		end
+
+	problem_reports_responsible_closed 	(req: WSF_REQUEST; res: WSF_RESPONSE; a_report_view: detachable ESA_REPORT_VIEW)
+			-- <Precursor>
+		do
+			to_implement ("To be Implemented")
+		end
+
 
 	update_report_responsible (req: WSF_REQUEST; res: WSF_RESPONSE; a_redirect_uri: READABLE_STRING_8)
 			-- <Precursor>

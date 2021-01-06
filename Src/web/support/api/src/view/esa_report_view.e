@@ -107,7 +107,9 @@ feature -- Access
 		-- 1: yes, 0: no.
 
 	count_bugs: INTEGER
-		-- Total number of bugs.	
+		-- Total number of bugs.
+
+	has_closed_reports: BOOLEAN
 
 feature -- Change Element
 
@@ -229,6 +231,15 @@ feature -- Change Element
 			count_bugs := a_count_bugs
 		ensure
 			count_bugs_set: count_bugs = a_count_bugs
+		end
+
+
+	set_has_closed_reports	(a_boolean: BOOLEAN)
+			-- Set `has_closed_reports` with `a_boolean`.
+		do
+			has_closed_reports := a_boolean
+		ensure
+			has_closed_reports_set: has_closed_reports = a_boolean
 		end
 
 end

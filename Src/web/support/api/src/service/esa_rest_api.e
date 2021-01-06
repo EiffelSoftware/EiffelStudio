@@ -1,8 +1,8 @@
 note
 	description: "[
-				REST API configuration
-				We manage URI and Uri templates using Routers. They are used to delegate calls (to the corresponing handlers) based on a URI template. 
-				We define a Rooter and attach handlers to it.
+		REST API configuration
+		We manage URI and Uri templates using Routers. They are used to delegate calls (to the corresponing handlers) based on a URI template. 
+		We define a Rooter and attach handlers to it.
 	]"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -30,6 +30,7 @@ feature -- Initialization
 			configure_api_interaction_report
 			configure_api_interaction_confirm
 			configure_api_report_detail
+			configure_api_closed_report
 			configure_api_report_interaction
 			configure_api_report_form
 			configure_api_report_confirm
@@ -93,6 +94,17 @@ feature -- Configure Resources Routes
 			router.handle ("/reports/{id}", l_report_handler, l_methods)
 		end
 
+	configure_api_closed_report
+		local
+			l_report_handler: ESA_CLOSED_REPORT_HANDLER
+			l_methods: WSF_REQUEST_METHODS
+		do
+			create l_report_handler.make (esa_config)
+			create l_methods
+			l_methods.enable_get
+			router.handle ("/closed_reports", l_report_handler, l_methods)
+		end
+
 	configure_api_reports_user
 		local
 			l_user_report_handler: ESA_USER_REPORT_HANDLER
@@ -125,8 +137,8 @@ feature -- Configure Resources Routes
 			create l_report_interaction_handler.make (esa_config)
 			create l_methods
 			l_methods.enable_get
-		 	router.handle ("/report_interaction/{id}/{name}", l_report_interaction_handler, l_methods)
-		 	router.handle ("/report_interaction/{id}", l_report_interaction_handler, l_methods)
+			router.handle ("/report_interaction/{id}/{name}", l_report_interaction_handler, l_methods)
+			router.handle ("/report_interaction/{id}", l_report_interaction_handler, l_methods)
 
 		end
 
@@ -310,7 +322,6 @@ feature -- Configure Resources Routes
 			router.handle ("/report_detail/{report_id}/interaction_confirm", l_interaction_handler, l_methods)
 		end
 
-
 	configure_api_reminder
 		local
 			l_reminder_handler: ESA_PASSWORD_REMINDER_HANDLER
@@ -323,7 +334,6 @@ feature -- Configure Resources Routes
 			router.handle ("/reminder", l_reminder_handler, l_methods)
 		end
 
-
 	configure_api_logger
 		local
 			l_logger_handler: ESA_LOGGER_HANDLER
@@ -335,7 +345,6 @@ feature -- Configure Resources Routes
 			l_methods.enable_post
 			router.handle ("/logger", l_logger_handler, l_methods)
 		end
-
 
 	configure_api_user_account
 		local
@@ -373,7 +382,6 @@ feature -- Configure Resources Routes
 			router.handle ("/email", l_email_handler, l_methods)
 		end
 
-
 	configure_api_user_confirm_email
 		local
 			l_confirm_email_handler: ESA_EMAIL_CONFIRM_HANDLER
@@ -398,7 +406,6 @@ feature -- Configure Resources Routes
 			router.handle ("/password-reset", l_password_reset_handler, l_methods)
 		end
 
-
 	configure_api_subscribe_to_category
 		local
 			l_register_subscriber_handler: ESA_REGISTER_SUBSCRIBER_HANDLER
@@ -410,6 +417,5 @@ feature -- Configure Resources Routes
 			l_methods.enable_post
 			router.handle ("/subscribe_to_category", l_register_subscriber_handler, l_methods)
 		end
-
 
 end

@@ -14,7 +14,8 @@ inherit
 			setup_hooks,
 			initialize,
 			is_installed,
-			page_api
+			page_api,
+			name_for_resource
 		end
 
 	CMS_HOOK_EXPORT
@@ -43,6 +44,11 @@ feature {NONE} -- Initialization
 feature -- Access
 
 	name: STRING = "page"
+
+	name_for_resource: STRING
+		do
+			Result := {CMS_NODE_MODULE}.name
+		end
 
 feature {CMS_API} -- Module Initialization			
 

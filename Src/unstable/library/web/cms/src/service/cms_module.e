@@ -21,6 +21,12 @@ feature -- Access
 		deferred
 		end
 
+	name_for_resource: STRING
+			-- Name of the module for the resource location.
+		do
+			Result := name
+		end
+
 	description: STRING
 			-- Description of the module.
 
@@ -255,6 +261,6 @@ invariant
 	version_set: not version.is_whitespace
 
 note
-	copyright: "2011-2020, Jocelyn Fiat, Javier Velilla, Eiffel Software and others"
+	copyright: "2011-2021, Jocelyn Fiat, Javier Velilla, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 end

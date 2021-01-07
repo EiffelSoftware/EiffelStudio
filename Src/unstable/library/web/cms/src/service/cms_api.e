@@ -1654,7 +1654,7 @@ feature -- Environment/ module
 			-- Location of resource `a_resource' for `a_module'.
 		do
 				--| site/modules/$modname/$a_resource
-			Result := module_resource_location_by_name (a_module.name, a_resource)
+			Result := module_resource_location_by_name (a_module.name_for_resource, a_resource)
 		end
 
 	module_resource_location_by_name (a_module_name: READABLE_STRING_GENERAL; a_resource: PATH): PATH
@@ -1879,7 +1879,7 @@ feature {NONE} -- Implementation: current user
 		end
 
 note
-	copyright: "2011-2020, Jocelyn Fiat, Javier Velilla, Eiffel Software and others"
+	copyright: "2011-2021, Jocelyn Fiat, Javier Velilla, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 end
 

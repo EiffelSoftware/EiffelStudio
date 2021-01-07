@@ -31,18 +31,18 @@ feature {CMS_API} -- Module management
 
 	install (api: CMS_API)
 		local
-			p: PATH
+			p, l_script_location: PATH
 			fut: FILE_UTILITIES
 		do
 				-- Schema
 			if attached sql_storage (api) as l_sql_storage then
 				p := (create {PATH}.make_from_string ("scripts")).extended (name).appended_with_extension ("sql")
-				if fut.file_path_exists (p) then
-					l_sql_storage.sql_execute_file_script (api.module_resource_location (Current, p), Void)
-				else
+				l_script_location := api.module_resource_location (Current, p)
+				if not fut.file_path_exists (l_script_location) then
 					p := (create {PATH}.make_from_string ("scripts")).extended ("install.sql")
-					l_sql_storage.sql_execute_file_script (api.module_resource_location (Current, p), Void)
+					l_script_location := api.module_resource_location (Current, p)
 				end
+				l_sql_storage.sql_execute_file_script (l_script_location, Void)
 				if l_sql_storage.has_error then
 					api.logger.put_error ("Could not install database for module [" + name + "]: " + utf_8_encoded (l_sql_storage.error_handler.as_string_representation), generating_type)
 				else
@@ -62,7 +62,6 @@ feature {CMS_API} -- Module management
 			end
 			Precursor (api)
 		end
-
 
 	update (a_installed_version: READABLE_STRING_GENERAL; api: CMS_API)
 			-- Update module from version `a_installed_version` to current `version`.
@@ -106,6 +105,6 @@ feature {CMS_API} -- Module management
 		end
 
 note
-	copyright: "2011-2020, Jocelyn Fiat, Javier Velilla, Eiffel Software and others"
+	copyright: "2011-2021, Jocelyn Fiat, Javier Velilla, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 end

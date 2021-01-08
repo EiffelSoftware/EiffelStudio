@@ -314,11 +314,11 @@ feature -- Execution
 				elseif sub.is_daily then
 					s.append ("daily")
 				else
-					if attached sub.subscription_reference as ref then
-						s.append (html_encoded (ref))
-						s.append (",")
-					end
-					s.append ("type#" + sub.interval_type.out + ",interval#" + sub.interval_count.out)
+--					if attached sub.subscription_reference as ref then
+--						s.append (html_encoded (ref))
+--						s.append (",")
+--					end
+--					s.append ("type#" + sub.interval_type.out + ",interval#" + sub.interval_count.out)
 				end
 				s.append ("</span>")
 			end

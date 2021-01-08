@@ -55,10 +55,13 @@ feature -- Execution
 			f: CMS_FORM
 			f_select: WSF_FORM_SELECT
 			f_opt: WSF_FORM_SELECT_OPTION
+			f_div: WSF_WIDGET_DIV
+			f_cb: WSF_FORM_CHECKBOX_INPUT
 			l_plan_filter: detachable READABLE_STRING_GENERAL
 			l_expiring_before_n_days_filter: INTEGER
 			lics: LIST [TUPLE [license: ES_CLOUD_LICENSE; user: detachable ES_CLOUD_USER; email: detachable READABLE_STRING_8; org: detachable ES_CLOUD_ORGANIZATION]]
 			s: STRING
+			l_inc_expired: BOOLEAN
 		do
 			r := new_generic_response (req, res)
 			r.add_javascript_url (r.module_name_resource_url ({ES_CLOUD_MODULE}.name, "/files/js/es_cloud.js", Void))
@@ -69,6 +72,11 @@ feature -- Execution
 			if attached {WSF_STRING} req.query_parameter ("plan") as p_plan then
 				l_plan_filter := p_plan.value
 			end
+
+			if attached {WSF_STRING} req.query_parameter ("with_expired") as p_include_expired then
+				l_inc_expired := p_include_expired.is_case_insensitive_equal ("yes")
+			end
+
 			if attached {WSF_STRING} req.query_parameter ("expiring_before_n_days") as p_expiring_before_n_days then
 				l_expiring_before_n_days_filter := p_expiring_before_n_days.value.to_integer_32
 				if l_expiring_before_n_days_filter <= 0 then
@@ -82,12 +90,15 @@ feature -- Execution
 			end
 
 			s.append ("Filters: ")
+			create f.make (req.percent_encoded_path_info, "licenses-filter")
+			f.set_method_get
+			f.add_css_style ("display: inline-block")
 			if attached es_cloud_api.sorted_plans as l_sorted_plans then
-				create f.make (req.percent_encoded_path_info, "license-per-plan")
-				f.add_css_style ("display: inline-block")
-				f.set_method_get
+				create f_div.make
+				f.extend (f_div)
+				f_div.add_css_style ("display: inline-block")
 				create f_select.make ("plan")
-				f.extend (f_select)
+				f_div.extend (f_select)
 				create f_opt.make ("", "All plans")
 				f_select.add_option (f_opt)
 				across
@@ -100,13 +111,41 @@ feature -- Execution
 					end
 				end
 				f_select.add_html_attribute ("onchange", "this.form.submit();")
-				f.append_to_html (r.wsf_theme, s)
 			end
 			if l_expiring_before_n_days_filter > 0 or l_plan_filter /= Void  then
-				s.append (" | <a href=%"" + req.script_url (req.percent_encoded_path_info) + "%">All the licenses</a>")
-			elseif l_expiring_before_n_days_filter = 0 then
-				s.append (" | <a href=%"" + req.script_url (req.percent_encoded_path_info) + "?expiring_before_n_days=7%">Licenses expiring before 7 days</a>")
+				f.extend_html_text (" | <a href=%"" + req.script_url (req.percent_encoded_path_info) + "%">All the licenses</a>")
 			end
+
+				-- Licenses expiring before 7 days ?
+			f.extend_html_text (" | ")
+			if l_expiring_before_n_days_filter > 0 then
+				create f_cb.make_with_value ("expiring_before_n_days", l_expiring_before_n_days_filter.out)
+				f_cb.set_title ("expiring before " + l_expiring_before_n_days_filter.out + " days")
+				f_cb.set_checked (True)
+			else
+				create f_cb.make_with_value ("expiring_before_n_days", "7")
+				f_cb.set_title ("expiring before 7 days")
+			end
+			f_cb.add_html_attribute ("onchange", "this.form.submit();")
+			create f_div.make
+			f.extend (f_div)
+			f_div.add_css_style ("display: inline-block")
+			f_div.extend (f_cb)
+
+				-- Include expired licenses?
+			f.extend_html_text (" | ")
+			create f_cb.make_with_value ("with_expired", "yes")
+			if l_inc_expired then
+				f_cb.set_checked (True)
+			end
+			f_cb.set_title ("expired licenses")
+			f_cb.add_html_attribute ("onchange", "this.form.submit();")
+			create f_div.make
+			f.extend (f_div)
+			f_div.add_css_style ("display: inline-block")
+			f_div.extend (f_cb)
+
+			f.append_to_html (r.wsf_theme, s)
 
 			if l_expiring_before_n_days_filter > 0 then
 				s.append ("<br/>Currently listing licenses expiring before " + l_expiring_before_n_days_filter.out + " days.")
@@ -126,16 +165,36 @@ feature -- Execution
 					lics.after
 				loop
 					lic := lics.item.license
-					if lic.is_expired or lic.days_remaining <= l_expiring_before_n_days_filter then
-						--Keep
+					if lic.is_expired and l_inc_expired then
+							--Keep
+						lics.forth
+					elseif lic.expiration_date = Void then
+							-- No expiration
+						lics.remove
+					elseif lic.days_remaining <= l_expiring_before_n_days_filter then
+							--Keep
 						lics.forth
 					else
 						lics.remove
 					end
 				end
 			end
+			if not l_inc_expired then
+				from
+					lics.start
+				until
+					lics.after
+				loop
+					if lics.item.license.is_expired then
+						lics.remove
+					else
+						lics.forth
+					end
+				end
+			end
 
 			if lics /= Void and then not lics.is_empty then
+				s.append ("<div class=%"count%">Count="+ lics.count.out + "</div>")
 				across
 					lics as ic
 				loop

@@ -478,10 +478,15 @@ feature -- License subscription
 
 feature -- Billings
 
+	license_subscription (a_license: ES_CLOUD_LICENSE): detachable ES_CLOUD_LICENSE_SUBSCRIPTION
+		do
+			Result := es_cloud_storage.license_subscription (a_license)
+		end
+
 	license_billings (a_license: ES_CLOUD_LICENSE): detachable SHOPPING_BILLS
 		do
 			if
-				attached es_cloud_storage.license_subscription (a_license) as l_sub and then
+				attached license_subscription (a_license) as l_sub and then
 				attached l_sub.subscription_reference as ref
 			then
 				if

@@ -301,6 +301,23 @@ feature -- Execution
 			else
 				s.append ("<span class=%"status warning%">Expired</span>")
 			end
+			if lic.plan.has_price and then attached es_cloud_api.license_subscription (lic) as sub then
+				s.append ("<span class=%"status payment%">")
+				if sub.is_onetime then
+					s.append ("one-time")
+				elseif sub.is_monthly then
+					s.append ("monthly")
+				elseif sub.is_yearly then
+					s.append ("yearly")
+				elseif sub.is_weekly then
+					s.append ("weekly")
+				elseif sub.is_daily then
+					s.append ("daily")
+				else
+					s.append ("???")
+				end
+				s.append ("</span>")
+			end
 			s.append ("</div>")
 		end
 

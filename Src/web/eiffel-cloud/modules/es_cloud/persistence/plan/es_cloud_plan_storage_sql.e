@@ -442,6 +442,8 @@ feature -- Element change: license
 						t := {ES_CLOUD_LICENSE_SUBSCRIPTION}.weekly
 					elseif l_interval.is_case_insensitive_equal_general ("daily") then
 						t := {ES_CLOUD_LICENSE_SUBSCRIPTION}.daily
+					elseif l_interval.is_case_insensitive_equal_general ("onetime") then
+						t := {ES_CLOUD_LICENSE_SUBSCRIPTION}.onetime
 					else
 						check invalid_interval_type: False end
 						t := {ES_CLOUD_LICENSE_SUBSCRIPTION}.undefined_interval
@@ -492,6 +494,8 @@ feature -- Element change: license
 				s.append ("weekly")
 			elseif a_sub.is_daily then
 				s.append ("daily")
+			elseif a_sub.is_onetime then
+				s.append ("onetime")
 			end
 			l_params.force (s, "interval_type")
 			l_params.force (a_sub.subscription_reference, "ref")

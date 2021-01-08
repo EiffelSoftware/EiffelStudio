@@ -84,7 +84,11 @@ feature -- Execution
 				end
 			end
 			if l_plan_filter /= Void then
-				create s.make_from_string ("<h1>Licenses for plan %"" + html_encoded (l_plan_filter) + "%"</h1>")
+				if l_plan_filter.is_case_insensitive_equal ("$") then
+					create s.make_from_string ("<h1>Licenses for priced plans</h1>")
+				else
+					create s.make_from_string ("<h1>Licenses for plan %"" + html_encoded (l_plan_filter) + "%"</h1>")
+				end
 			else
 				create s.make_from_string ("<h1>Licenses</h1>")
 			end
@@ -101,6 +105,11 @@ feature -- Execution
 				f_div.extend (f_select)
 				create f_opt.make ("", "All plans")
 				f_select.add_option (f_opt)
+				create f_opt.make ("$", "has price")
+				f_select.add_option (f_opt)
+				if l_plan_filter /= Void and then l_plan_filter.is_case_insensitive_equal ("$") then
+					f_opt.set_is_selected (True)
+				end
 				across
 					l_sorted_plans as ic
 				loop
@@ -153,8 +162,25 @@ feature -- Execution
 
 				-- List of licenses
 			s.append ("<div class=%"es-licenses es-stats%">")
-			if l_plan_filter /= Void and then attached es_cloud_api.plan_by_name (l_plan_filter) as pl then
-				lics := es_cloud_api.licenses_for_plan (pl)
+			if l_plan_filter /= Void then
+				if l_plan_filter.is_case_insensitive_equal ("$") then
+					lics := es_cloud_api.licenses
+					from
+						lics.start
+					until
+						lics.after
+					loop
+						if lics.item.license.plan.has_price then
+							lics.forth
+						else
+							lics.remove
+						end
+					end
+				elseif attached es_cloud_api.plan_by_name (l_plan_filter) as pl then
+					lics := es_cloud_api.licenses_for_plan (pl)
+				else
+					lics := es_cloud_api.licenses
+				end
 			else
 				lics := es_cloud_api.licenses
 			end

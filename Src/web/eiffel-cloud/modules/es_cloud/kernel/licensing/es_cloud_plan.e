@@ -42,6 +42,9 @@ feature -- Access
 
 	is_public: BOOLEAN
 
+	has_price: BOOLEAN
+			-- Has a price (as opposed to free).
+
 	installations_limit: NATURAL
 			-- Maximum number of installation for the same plan.
 			-- `0` means no limit
@@ -81,6 +84,12 @@ feature -- Access: private
 			s.append (";session.heartbeat="); s.append_natural_32 (heartbeat)
 			s.append (";order.weight="); s.append_integer (weight)
 			s.append (";trial.days="); s.append_natural_32 (trial_period_in_days)
+			s.append (";price=")
+			if has_price then
+				s.append ("yes")
+			else
+				s.append ("no")
+			end
 			s.append (";public=")
 			if is_public then
 				s.append ("yes")
@@ -146,6 +155,9 @@ feature -- Element change
 						l_weight := s.substring (s.index_of ('=', 1) + 1, s.count).to_integer
 					elseif s.starts_with ("trial.days=") then
 						l_trial_days := s.substring (s.index_of ('=', 1) + 1, s.count).to_natural
+					elseif s.starts_with ("price=") then
+						s := s.substring (s.index_of ('=', 1) + 1, s.count)
+						has_price := s.is_case_insensitive_equal ("yes")
 					elseif s.starts_with ("public=") then
 						s := s.substring (s.index_of ('=', 1) + 1, s.count)
 						is_public := s.is_case_insensitive_equal ("yes")

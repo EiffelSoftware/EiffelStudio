@@ -1,0 +1,28 @@
+test_name 	 multi-branch-expression-attachment
+test_description The inspect expression in a multi-branch construct should be attached.
+
+copy_sub	Ace $TEST Ace
+copy_raw	a.e $CLUSTER a.e
+copy_raw	test.e $CLUSTER test.e
+
+define		PRECOMPILED $PRECOMPILED_BASE_SAFE
+define		VOID_SAFETY all
+copy_sub	Ace $TEST Ace
+
+compile_melted
+compile_result validity_error TEST VOMB(1):15 VOMB(1):17
+abort_compile
+
+define		PRECOMPILED $PRECOMPILED_BASE
+define		VOID_SAFETY none
+copy_sub	Ace $TEST Ace
+
+compile_melted
+compile_result ok
+execute_work 	NONE 	exec_output
+execute_result 	ok
+compare		exec_output output
+
+cleanup_compile
+
+test_end

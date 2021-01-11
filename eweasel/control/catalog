@@ -2967,6 +2967,7 @@ test	targeted-unqualified-once-indirect	attach126 tcf pass void_safe targeted va
 test	targeted-creation-expanded-argument	attach127 tcf pass void_safe targeted validity expanded
 test	targeted-assigner-command		attach128 tcf fail void_safe targeted validity assigner
 test	attribute-body-void-result		attach129 tcf pass attached_types void_safe creation attribute validity
+test	multi-branch-expression-attachment	attach130 tcf pass attached_types void_safe inspect once_creation
 
 -- Tests for conformance in general
 test	basic-conformance		conform001 tcf pass conformance

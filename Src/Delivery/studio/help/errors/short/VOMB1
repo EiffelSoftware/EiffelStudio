@@ -1,2 +1,3 @@
 Error: incorrect type for inspect expression.
-What to do: make sure that type is INTEGER, CHARACTER, NATURAL or a .NET enum. 
+What to do: make sure that type is INTEGER, CHARACTER, NATURAL, a .NET enum, or
+  an attached type based on a once class.

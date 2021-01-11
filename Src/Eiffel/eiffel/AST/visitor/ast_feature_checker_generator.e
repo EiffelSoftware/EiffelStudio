@@ -7258,8 +7258,6 @@ feature {NONE} -- Visitor
 					end
 				end
 
-					-- Type check if it is an expression conform either to
-					-- and integer or to a character
 				l_type := t.actual_type
 				if not l_type.is_formal then
 					l_constraint_type := l_type
@@ -7267,11 +7265,17 @@ feature {NONE} -- Visitor
 					l_constraint_type := formal_type.constrained_type (context.current_class)
 				end
 
+					-- Check if the expression type conforms to INTEGER_NN, CHARACTER_NN, NATURAL_NN, enum or
+					-- an attached type based on a once class.
 				if
-					attached l_constraint_type implies (
-					not l_constraint_type.is_integer and then not l_constraint_type.is_character and then
-					not l_constraint_type.is_natural and then not l_constraint_type.is_enum and then
-					not (attached l_constraint_type.base_class as b and then b.is_once) and then
+					attached l_constraint_type implies
+					(not l_constraint_type.is_integer and then
+					not l_constraint_type.is_character and then
+					not l_constraint_type.is_natural and then
+					not l_constraint_type.is_enum and then
+					not (attached l_constraint_type.base_class as b and then
+						b.is_once and then
+						(is_void_safe_conformance implies l_constraint_type.is_implicitly_attached)) and then
 					l_constraint_type.is_known)
 				then
 						-- Error
@@ -12312,7 +12316,7 @@ note
 		"CA033", "CA033 — too long class"
 	date: "$Date$"
 	revision: "$Revision$"
-	copyright: "Copyright (c) 1984-2020, Eiffel Software"
+	copyright: "Copyright (c) 1984-2021, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

@@ -10,10 +10,10 @@
 			<concurrency support="none"/>
 			<void_safety support="none"/>
 		</capability>
-		<precompile name="vision2_pre" location="$ISE_PRECOMP\vision2.ecf"/>
 		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf"/>
 		<library name="time" location="$ISE_LIBRARY\library\time\time.ecf"/>
 		<library name="vision2" location="$ISE_LIBRARY\library\vision2\vision2.ecf"/>
+		<library name="rich_text_printer" location="rich_text_printer\rich_text_printer.ecf" readonly="false"/>
 		<cluster name="root_cluster" location=".\"/>
 	</target>
 	<target name="dotnet" extends="common">

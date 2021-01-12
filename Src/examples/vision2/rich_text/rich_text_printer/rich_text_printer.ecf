@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-21-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-21-0 http://www.eiffel.com/developers/xml/configuration-1-21-0.xsd" name="rich_text_printer" uuid="6502DB03-8A3D-4FCC-93AB-00E1ED1A05C3" library_target="rich_text_printer">
+	<description>EV_RICH_TEXT printer</description>
+	<target name="rich_text_printer">
+		<root all_classes="true"/>
+		<option warning="error">
+			<warning name="obsolete_feature" value="all"/>
+		</option>
+		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf"/>
+		<library name="vision2" location="$ISE_LIBRARY\library\vision2\vision2.ecf"/>
+		<library name="wel" location="$ISE_LIBRARY\library\wel\wel.ecf">
+			<condition>
+				<platform value="windows"/>
+			</condition>
+		</library>
+		<cluster name="rtf_printer" location=".">
+			<cluster name="rtf_printer_mswin" location=".\spec\mswin">
+				<condition>
+					<platform value="windows"/>
+				</condition>
+			</cluster>
+			<cluster name="rtf_printer_other" location=".\spec\other">
+				<condition>
+					<platform excluded_value="windows"/>
+				</condition>
+			</cluster>
+		</cluster>
+	</target>
+</system>

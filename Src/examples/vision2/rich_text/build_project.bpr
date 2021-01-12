@@ -1,1 +1,14 @@
-<?xml version="1.0" encoding="UTF-8"?><Project_settings xmlns="" xmlns:ns1="" xsi="http://www.w3.org/1999/XMLSchema-instance"><Project_type><![CDATA[1]]></Project_type><Project_name><![CDATA[rich_text]]></Project_name><Project_location><![CDATA[E:\projects\rich_text]]></Project_location><Main_window_class_name><![CDATA[MAIN_WINDOW]]></Main_window_class_name><Application_class_name><![CDATA[VISION2_APPLICATION]]></Application_class_name><Complete_project><![CDATA[True]]></Complete_project><Group_locals><![CDATA[True]]></Group_locals><Generate_debugging_output><![CDATA[False]]></Generate_debugging_output><Attributes_local><![CDATA[Optimal]]></Attributes_local><Client_of_window><![CDATA[False]]></Client_of_window><Rebuild_ace_file><![CDATA[False]]></Rebuild_ace_file><Load_constants_from_file><![CDATA[False]]></Load_constants_from_file><Constants_class_name><![CDATA[CONSTANTS]]></Constants_class_name></Project_settings>
+<?xml version="1.0" encoding="UTF-8"?><Project_settings xsi="http://www.w3.org/1999/XMLSchema-instance">
+ <Project_type>1</Project_type>
+ <Project_name>rich_text</Project_name>
+ <Project_location>c:\work\eiffel\studio\trunk\Src\examples\vision2\rich_text</Project_location>
+ <Main_window_class_name>MAIN_WINDOW</Main_window_class_name>
+ <Application_class_name>VISION2_APPLICATION</Application_class_name>
+ <Complete_project>True</Complete_project>
+ <Group_locals>True</Group_locals>
+ <Generate_debugging_output>False</Generate_debugging_output>
+ <Attributes_local>Optimal</Attributes_local>
+ <Rebuild_ace_file>False</Rebuild_ace_file>
+ <Load_constants_from_file>False</Load_constants_from_file>
+ <Constants_class_name>CONSTANTS</Constants_class_name>
+</Project_settings>

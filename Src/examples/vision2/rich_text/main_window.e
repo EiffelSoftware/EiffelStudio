@@ -16,6 +16,13 @@ inherit
 
 feature {NONE} -- Initialization
 
+	user_create_interface_objects
+			-- Create any auxilliary objects needed for MAIN_WINDOW.
+			-- Initialization for these objects must be performed in `user_initialization'.
+		do
+				-- Create attached types defined in class here, initialize them in `user_initialization'.
+		end
+
 	user_initialization
 			-- called by `initialize'.
 			-- Any custom user initialization that
@@ -948,6 +955,12 @@ feature {NONE} -- Implementation
 			end
 		end
 
+	show_tab_control_toggled
+			-- Called by `select_actions' of `show_tab_control_menu_item'.	
+		do
+
+		end
+
 	left_margin_changed (a_value: INTEGER)
 			-- Called by `change_actions' of `left_margin'.
 		local
@@ -1091,6 +1104,17 @@ feature {NONE} -- Implementation
 			-- Heights in points to be added to `size_selection'.
 		once
 			Result := <<8, 9, 10, 11, 12, 14, 16, 18, 20, 22, 24, 26, 28, 36, 48, 72>>
+		end
+
+	print_text
+		local
+			printer: EV_RICH_TEXT_PRINTER
+		do
+			create printer
+			printer.set_job_name ("rich text printer demo")
+			printer.set_rich_text (rich_text)
+			printer.set_window (Current)
+			printer.ask_and_print
 		end
 
 	open_file

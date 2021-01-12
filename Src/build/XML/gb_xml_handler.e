@@ -85,7 +85,7 @@ feature -- Basic operations
 			components.system_status.set_object_structure_changed
 		end
 
-	import (file_name: STRING)
+	import (file_name: PATH)
 			-- Import Build file `file_name'.
 		require
 			file_name_not_void: file_name /= Void
@@ -93,7 +93,7 @@ feature -- Basic operations
 			xml_load: GB_XML_IMPORT
 		do
 			create xml_load.make_with_components (components)
-			xml_load.import (file_name)
+			xml_load.import (file_name.utf_8_name)
 		end
 
 	load_components

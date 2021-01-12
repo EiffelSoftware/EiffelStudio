@@ -547,9 +547,9 @@ feature {NONE} -- Implementation
 							indent + "-- `Result' is EV_PIXMAP constant named `" + pixmap_constant.name + "'." + Indent_less_one +
 							"do" + Indent + "Result := " + pixmap_constant.name + "_cell.item" + indent_less_one + "end" + "%N" +
 							indent_less_two + pixmap_constant.name + "_cell" + ": CELL [EV_PIXMAP]" + indent + "--`Result' is once access to a cell holding vale of `" + pixmap_constant.name + "'." +
-							Indent_less_one + "local" + indent + "a_file_name: FILE_NAME" + indent_less_one + "once" + Indent + "create Result.put (create {EV_PIXMAP})" + indent +
-							"create a_file_name.make_from_string (" + pixmap_constant.directory + ")" + Indent + "a_file_name.set_file_name (%"" + pixmap_constant.filename +"%")" +
-							indent + "set_with_named_file (Result.item, a_file_name)" + Indent_less_one + "end" + "%N"
+							Indent_less_one + "local" + indent + "a_file_name: PATH" + indent_less_one + "once" + Indent + "create Result.put (create {EV_PIXMAP})" + indent +
+							"create a_file_name.make_from_string (" + pixmap_constant.directory + ")" + Indent + "a_file_name := a_file_name.extended (%"" + pixmap_constant.filename +"%")" +
+							indent + "set_with_named_path (Result.item, a_file_name)" + Indent_less_one + "end" + "%N"
 						end
 					end
 					directory_constant ?= constant

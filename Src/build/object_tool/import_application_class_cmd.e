@@ -27,7 +27,7 @@ feature
 		local
 			directory: DIRECTORY
 			description_file: PLAIN_TEXT_FILE
-			description_name: DIRECTORY_NAME
+			description_name: PATH
 			line: STRING
 			dot_index: INTEGER
 		do
@@ -42,8 +42,8 @@ feature
 				line := directory.lastentry.substring (dot_index, directory.lastentry.count)
 				if line.is_equal (".bui") then
 					create description_name.make_from_string (Common_directory)
-					description_name.extend (directory.lastentry)
-					create description_file.make (description_name)
+					description_name := description_name.extended (directory.lastentry)
+					create description_file.make_with_name (description_name)
 					if description_file.exists then
 						description_file.open_read
 						from

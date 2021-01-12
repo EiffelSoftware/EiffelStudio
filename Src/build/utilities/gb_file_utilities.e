@@ -22,16 +22,14 @@ feature -- Basic operations
 			-- or the file names are identical.
 		local
 			file: RAW_FILE
-			new_file_name, old_file_name: FILE_NAME
+			new_file_name, old_file_name: PATH
 		do
 			if not old_name.same_string (new_name) then
-				create new_file_name.make_from_string (directory_path.name)
-				new_file_name.extend (new_name)
-				create old_file_name.make_from_string (directory_path.name)
-				old_file_name.extend (old_name)
-				create file.make (old_file_name)
+				new_file_name := directory_path.path.extended (new_name)
+				old_file_name := directory_path.path.extended (old_name)
+				create file.make_with_path (old_file_name)
 				if file.exists then
-					file.change_name (new_file_name.string)
+					file.rename_path (new_file_name)
 				end
 			end
 		end
@@ -45,16 +43,17 @@ feature -- Basic operations
 			file_name_not_void: file_name /= Void
 		local
 			file: RAW_FILE
-			new_file_name, old_file_name: FILE_NAME
+			new_file_name, old_file_name: PATH
 		do
 			if not original.name.same_string (new.name) then
 				create new_file_name.make_from_string (new.name)
 				create old_file_name.make_from_string (original.name)
-				new_file_name.extend (file_name)
-				old_file_name.extend (file_name)
-				create file.make (old_file_name)
+
+				new_file_name := new.path.extended (file_name)
+				old_file_name := original.path.extended (file_name)
+				create file.make_with_path (old_file_name)
 				if file.exists then
-					file.change_name (new_file_name.string)
+					file.rename_path (new_file_name)
 				end
 			end
 		end
@@ -72,11 +71,10 @@ feature -- Basic operations
 			-- Delete file named `a_file_name' from directory `directory'.
 		local
 			file: RAW_FILE
-			file_name: FILE_NAME
+			file_name: PATH
 		do
-			create file_name.make_from_string (directory.name)
-			file_name.extend (a_file_name)
-			create file.make (file_name)
+			file_name := directory.path.extended (a_file_name)
+			create file.make_with_path (file_name)
 			if file.exists then
 				file.delete
 			end
@@ -86,12 +84,11 @@ feature -- Basic operations
 			-- Restore plain text file file named `a_file_name' in
 			-- `directory' with contents `contents'.
 		local
-			file_name: FILE_NAME
+			file_name: PATH
 			file: PLAIN_TEXT_FILE
 		do
-			create file_name.make_from_string (directory.name)
-			file_name.extend (a_file_name)
-			create file.make (file_name)
+			file_name := directory.path.extended (a_file_name)
+			create file.make_with_path (file_name)
 			file.open_write
 			file.start
 			file.putstring (contents)

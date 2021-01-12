@@ -72,11 +72,11 @@ feature -- Basic Operation
 	create_new_directory
 			-- Actually create directory
 		local
-			temp_file_name: FILE_NAME
+			temp_file_name: PATH
 			root_directory, directory: DIRECTORY
 			directory_exists_dialog: STANDARD_DISCARDABLE_CONFIRMATION_DIALOG
 			created_directories: ARRAYED_LIST [DIRECTORY]
-			test_file_name, test_directory_name: DIRECTORY_NAME
+			test_file_name, test_directory_name: PATH
 			l_path: STRING
 		do
 			create created_directories.make (4)
@@ -84,29 +84,28 @@ feature -- Basic Operation
 			create temp_file_name.make_from_string (l_path)
 			create root_directory.make_open_read (l_path)
 			create test_directory_name.make_from_string (l_path)
-			test_directory_name.extend (unique_name_from_array (root_directory.linear_representation, "TEMP"))
+			test_directory_name := test_directory_name.extended (unique_name_from_array (root_directory.linear_representation, "TEMP"))
 
 			from
 				parent_directory_path.start
 			until
 				parent_directory_path.off
 			loop
-				temp_file_name.extend (parent_directory_path.item)
+				temp_file_name := temp_file_name.extended (parent_directory_path.item)
 				parent_directory_path.forth
 			end
-			temp_file_name.extend (directory_name)
-			create directory.make (temp_file_name)
+			temp_file_name := temp_file_name.extended (directory_name)
+			create directory.make_with_path (temp_file_name)
 			if not directory.exists then
 					-- Now temporarily create a temp dir and a file with name matching `directory_name' to see if the
 					-- file name entered is valid. If not, this raises an exception which we catch to prompt a user that
 					-- the name is invalid. After creating the tmeporary dir and file, we delete them both. Directories
 					-- are only actually created when generating the project if actually needed, but we must create a file
 					-- with the correct name to catch if it is valid or not on the current platform.
-				create test_directory.make (test_directory_name)
+				create test_directory.make_with_path (test_directory_name)
 				test_directory.create_dir
-				test_file_name := test_directory_name.twin
-				test_file_name.extend (directory_name)
-				create directory.make (test_file_name)
+				test_file_name := test_directory_name.extended (directory_name)
+				create directory.make_with_path (test_file_name)
 				directory.create_dir
 				directory.delete
 				test_directory.delete

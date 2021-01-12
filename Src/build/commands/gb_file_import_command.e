@@ -71,7 +71,7 @@ feature -- Basic operations
 				test_file: RAW_FILE
 				error_dialog: EV_ERROR_DIALOG
 				dialog_constants: EV_DIALOG_CONSTANTS
-				file_name: FILE_NAME
+				file_name: PATH
 				id_compressor: GB_ID_COMPRESSOR
 			do
 				create dialog
@@ -102,8 +102,8 @@ feature -- Basic operations
 							-- i.e. that the system_interface file exists.
 							if not project_settings.load_cancelled then
 								create file_name.make_from_string (project_settings.project_location)
-								file_name.extend ("system_interface.xml")
-								create test_file.make (file_name)
+								file_name := file_name.extended ("system_interface.xml")
+								create test_file.make_with_path (file_name)
 								if test_file.exists then
 									components.xml_handler.import (file_name)
 									add_project_to_recent_projects
@@ -117,7 +117,7 @@ feature -- Basic operations
 					end
 				end
 				if test_file /= Void and then not test_file.exists then
-					create error_dialog.make_with_text ("The system interface file '" + system_interface_filename + "' (referenced by the specified .BPR file) is missing.%NIf the file has been moved, please restore the file and try again.%NIf you no longer have a copy of the file, please start a new project.")
+					create error_dialog.make_with_text ("The system interface file '" + system_interface_filename.utf_8_name + "' (referenced by the specified .BPR file) is missing.%NIf the file has been moved, please restore the file and try again.%NIf you no longer have a copy of the file, please start a new project.")
 					create dialog_constants
 						-- Hide unwanted buttons from the dialog
 					error_dialog.button (dialog_constants.ev_retry).hide;
@@ -126,11 +126,11 @@ feature -- Basic operations
 				end
 			end
 
-	system_interface_filename: FILE_NAME
+	system_interface_filename: PATH
 			-- File to be generated.
 		do
 			create Result.make_from_string (components.system_status.current_project_settings.project_location)
-			Result.extend ("system_interface.xml")
+			Result := Result.extended ("system_interface.xml")
 		end
 
 feature {NONE} -- Implementation

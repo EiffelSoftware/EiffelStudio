@@ -72,7 +72,7 @@ feature -- Access
 		local
 			directory: GB_WIDGET_SELECTOR_DIRECTORY_ITEM
 			path: ARRAYED_LIST [STRING]
-			file_name: FILE_NAME
+			file_name: PATH
 			file: RAW_FILE
 		do
 			directory ?= parent
@@ -84,17 +84,17 @@ feature -- Access
 				until
 					path.off
 				loop
-					file_name.extend (path.item)
+					file_name := file_name.extended (path.item)
 					path.forth
 				end
-				file_name.extend (object.name + ".e")
-				create file.make (file_name)
+				file_name := file_name.extended (object.name + ".e")
+				create file.make_with_path (file_name)
 				Result := file.exists
 			else
 					-- In this case, we are not contained in a sub-directory so simply take the root location.
 				create file_name.make_from_string (components.system_status.current_project_settings.project_location)
-				file_name.extend (object.name + ".e")
-				create file.make (file_name)
+				file_name := file_name.extended (object.name + ".e")
+				create file.make_with_path (file_name)
 				Result := file.exists
 			end
 		end

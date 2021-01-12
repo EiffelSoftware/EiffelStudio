@@ -94,7 +94,7 @@ feature -- Basic operation
 			builder_window_hidden: not components.tools.builder_window.is_show_requested
 		end
 				-- Load and parse file `filename'.
-			load_and_parse_xml_file (system_interface_filename)
+			load_and_parse_xml_file (system_interface_filename.utf_8_name)
 
 			components.object_handler.update_all_associated_objects
 
@@ -128,11 +128,11 @@ feature -- Basic operation
 			components.system_status.resume
 		end
 
-	system_interface_filename: FILE_NAME
+	system_interface_filename: PATH
 			-- File to be generated.
 		do
 			create Result.make_from_string (components.system_status.current_project_settings.project_location)
-			Result.extend ("system_interface.xml")
+			Result := Result.extended ("system_interface.xml")
 		end
 
 feature {GB_OBJECT_HANDLER} -- Implementation

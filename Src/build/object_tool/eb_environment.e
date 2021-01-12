@@ -24,7 +24,7 @@ inherit
 
 feature -- Directory names for projects
 
-	Common_directory: DIRECTORY_NAME
+	Common_directory: PATH
 			-- Directory known by EiffelBench used to move 
 			-- information between both tools.
 		do

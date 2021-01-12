@@ -44,7 +44,7 @@ feature -- Basic Operation
 	execute
 			-- Execute `Current'.
 		local
-			temp_file_name: FILE_NAME
+			temp_file_name: PATH
 			directory: DIRECTORY
 			directory_item: GB_WIDGET_SELECTOR_DIRECTORY_ITEM
 		do
@@ -55,10 +55,10 @@ feature -- Basic Operation
 			until
 				directory_name.off
 			loop
-				temp_file_name.extend (directory_name.item)
+				temp_file_name := temp_file_name.extended (directory_name.item)
 				directory_name.forth
 			end
-			create directory.make (temp_file_name)
+			create directory.make_with_path (temp_file_name)
 			if directory.exists and directory.is_empty then
 					-- Only remove the directory if it is present on the disk.
 					-- If a project has not been generated, then there may be no directory yet.
@@ -82,7 +82,7 @@ feature -- Basic Operation
 			-- Calling `execute' followed by `undo' must restore
 			-- the system to its previous state.
 		local
-			temp_file_name: FILE_NAME
+			temp_file_name: PATH
 			directory: DIRECTORY
 		do
 				-- Only restore the directory to the disk if it was actually
@@ -93,10 +93,10 @@ feature -- Basic Operation
 			until
 				directory_name.off
 			loop
-				temp_file_name.extend (directory_name.item)
+				temp_file_name := temp_file_name.extended (directory_name.item)
 				directory_name.forth
 			end
-			create directory.make (temp_file_name)
+			create directory.make_with_path (temp_file_name)
 			if not directory.exists then
 				create_directory (directory)
 			end

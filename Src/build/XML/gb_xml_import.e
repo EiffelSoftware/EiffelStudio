@@ -78,7 +78,7 @@ feature -- Basic operation
 		require
 			file_name_not_void: file_name /= Void
 		local
-			a_file_name: FILE_NAME
+			a_file_name: PATH
 			initial_selection: GB_WIDGET_SELECTOR_ITEM
 		do
 			create import_dialog
@@ -97,7 +97,7 @@ feature -- Basic operation
 			shift_all_ids_upwards
 
 			create a_file_name.make_from_string (file_name)
-			load_and_parse_xml_file (a_file_name)
+			load_and_parse_xml_file (a_file_name.utf_8_name)
 			if parser.is_correct then
 				import_system
 				components.object_handler.update_all_associated_objects

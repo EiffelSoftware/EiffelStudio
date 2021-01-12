@@ -125,7 +125,7 @@ feature -- Basic operations
 						end
 
 						if not location_update_cancelled then
-							create test_file.make (system_interface_filename)
+							create test_file.make_with_path (system_interface_filename)
 							if test_file.exists then
 								components.events.open_project_start_actions.call (Void)
 								components.xml_handler.load
@@ -139,7 +139,7 @@ feature -- Basic operations
 					end
 				end
 				if test_file /= Void and then not test_file.exists and not location_update_cancelled then
-					create error_dialog.make_with_text ("The system interface file '" + system_interface_filename + "' (referenced by the specified .BPR file) is missing.%NIf the file has been moved, please restore the file and try again.%NIf you no longer have a copy of the file, please start a new project.")
+					create error_dialog.make_with_text ("The system interface file '" + system_interface_filename.utf_8_name + "' (referenced by the specified .BPR file) is missing.%NIf the file has been moved, please restore the file and try again.%NIf you no longer have a copy of the file, please start a new project.")
 					create dialog_constants
 						-- Hide unwanted buttons from the dialog
 					error_dialog.button (dialog_constants.ev_retry).hide;
@@ -220,7 +220,7 @@ feature -- Basic operations
 								if not location_update_cancelled then
 										-- Do not load the project, as the used selected "abort" from
 										-- the previous dialog.
-									create test_file.make (system_interface_filename)
+									create test_file.make_with_path (system_interface_filename)
 									if test_file.exists then
 										components.events.open_project_start_actions.call (Void)
 										components.xml_handler.load
@@ -238,7 +238,7 @@ feature -- Basic operations
 					end
 				end
 				if test_file /= Void and then not test_file.exists and not location_update_cancelled then
-					create error_dialog.make_with_text ("The system interface file '" + system_interface_filename + "' (referenced by the specified .BPR file) is missing.%NIf the file has been moved, please restore the file and try again.%NIf you no longer have a copy of the file, please start a new project.")
+					create error_dialog.make_with_text ("The system interface file '" + system_interface_filename.utf_8_name + "' (referenced by the specified .BPR file) is missing.%NIf the file has been moved, please restore the file and try again.%NIf you no longer have a copy of the file, please start a new project.")
 					create dialog_constants
 						-- Hide unwanted buttons from the dialog
 					error_dialog.button (dialog_constants.ev_retry).hide;
@@ -248,11 +248,11 @@ feature -- Basic operations
 				end
 			end
 
-	system_interface_filename: FILE_NAME
+	system_interface_filename: PATH
 			-- File to be generated.
 		do
 			create Result.make_from_string (components.system_status.current_project_settings.project_location)
-			Result.extend ("system_interface.xml")
+			Result := Result.extended ("system_interface.xml")
 		end
 
 feature {NONE} -- Implementation

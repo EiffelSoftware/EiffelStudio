@@ -87,7 +87,7 @@ feature {GB_PIXMAP_SETTINGS_DIALOG}
 		require
 			directory_is_constant: not is_absolute implies components.constants.directory_constant_by_name (directory) /= Void
 		local
-			file_name: FILE_NAME
+			file_name: PATH
 		do
 			if not is_absolute then
 				directory := components.constants.directory_constant_by_name (directory).name
@@ -96,8 +96,8 @@ feature {GB_PIXMAP_SETTINGS_DIALOG}
 				end
 			else
 				create file_name.make_from_string (directory)
-				file_name.extend (filename)
-				value := file_name.out
+				file_name := file_name.extended (filename)
+				value := file_name.utf_8_name
 			end
 			create referers.make (4)
 			retrieve_pixmap_image
@@ -193,12 +193,12 @@ feature {GB_PIXMAP_SETTINGS_DIALOG, GB_DIRECTORY_CONSTANT} -- Implementation
 		local
 			constant_context: GB_CONSTANT_CONTEXT
 			execution_agent: PROCEDURE [EV_PIXMAP, STRING_GENERAL]
-			file_name: FILE_NAME
+			file_name: PATH
 		do
 			if is_absolute then
 				create file_name.make_from_string (directory)
-				file_name.extend (filename)
-				value := file_name.out
+				file_name := file_name.extended (filename)
+				value := file_name.utf_8_name
 			end
 				-- Update image held internally.
 			retrieve_pixmap_image
@@ -223,7 +223,7 @@ feature {NONE} -- Implementation
 			-- Retrieve actual image of pixmap represented by `Current'.
 		local
 			file: RAW_FILE
-			file_name: FILE_NAME
+			file_name: PATH
 			directory_constant: GB_DIRECTORY_CONSTANT
 			directory_value: STRING
 		do
@@ -248,11 +248,11 @@ feature {NONE} -- Implementation
 					directory_value := directory_value.substring (1, directory_value.count - 1)
 				end
 				create file_name.make_from_string (directory_value)
-				file_name.extend (filename)
-				create file.make (file_name)
+				file_name := file_name.extended (filename)
+				create file.make_with_path (file_name)
 				if file.exists then
 					create pixmap
-					pixmap.set_with_named_file (file_name)
+					pixmap.set_with_named_path (file_name)
 					small_pixmap := pixmap.twin
 					small_pixmap := scaled_pixmap (pixmap, 16, 16)
 				else

@@ -524,12 +524,12 @@ feature {GB_COMMAND_MOVE_WINDOW} -- Implementation
 			window_item_not_void: window_item /= Void
 			-- `an_original_directory' and `a_new_directory' area allowed be Void if moving to/from the root.
 		local
-			original, new: FILE_NAME
+			original, new: PATH
 			original_directory, new_directory: DIRECTORY
 			original_path, new_path: ARRAYED_LIST [STRING]
 		do
-			create original.make_from_string (generated_path.string)
-			original_directory := create {DIRECTORY}.make (original)
+			original := generated_path
+			original_directory := create {DIRECTORY}.make_with_path (original)
 			if an_original_directory /= Void then
 				original_path := an_original_directory.path
 				from
@@ -537,8 +537,8 @@ feature {GB_COMMAND_MOVE_WINDOW} -- Implementation
 				until
 					original_path.off
 				loop
-					original.extend (original_path.item)
-					original_directory := create {DIRECTORY}.make (original)
+					original := original.extended (original_path.item)
+					original_directory := create {DIRECTORY}.make_with_path (original)
 					if not original_directory.exists then
 						-- Ensure that the directory actually exists on disk.
 						create_directory (original_directory)
@@ -546,8 +546,8 @@ feature {GB_COMMAND_MOVE_WINDOW} -- Implementation
 					original_path.forth
 				end
 			end
-			create new.make_from_string (generated_path.string)
-			new_directory := create {DIRECTORY}.make (new)
+			new := generated_path
+			new_directory := create {DIRECTORY}.make_with_path (new)
 			if a_new_directory /= Void then
 				new_path := a_new_directory.path
 				from
@@ -555,8 +555,8 @@ feature {GB_COMMAND_MOVE_WINDOW} -- Implementation
 				until
 					new_path.off
 				loop
-					new.extend (new_path.item)
-					new_directory := create {DIRECTORY}.make (new)
+					new := new.extended (new_path.item)
+					new_directory := create {DIRECTORY}.make_with_path (new)
 					if not new_directory.exists then
 							-- Ensure that the directory actually exists on disk.
 						create_directory (new_directory)
@@ -780,7 +780,7 @@ feature {GB_WIDGET_SELECTOR_COMMON_ITEM} -- Implementation
 
 feature {GB_COMMAND_NAME_CHANGE} -- Implementation
 
-	generated_path: FILE_NAME
+	generated_path: PATH
 			-- `Result' is generated directory for current project.
 		do
 			create Result.make_from_string (components.system_status.current_project_settings.actual_generation_location)
@@ -798,7 +798,7 @@ feature {GB_COMMAND_NAME_CHANGE} -- Implementation
 			object_is_top_level_object: object.is_top_level_object
 		local
 			directory_object: GB_WIDGET_SELECTOR_DIRECTORY_ITEM
-			file_name, interface_file_name, implementation_file_name: FILE_NAME
+			file_name, interface_file_name, implementation_file_name: PATH
 			l_eiffel_parser: EIFFEL_PARSER
 			l_class_as: CLASS_AS
 			l_visitor: NAME_CHANGE_VISITOR
@@ -818,7 +818,7 @@ feature {GB_COMMAND_NAME_CHANGE} -- Implementation
 				until
 					directory_path.off
 				loop
-					file_name.extend (directory_path.item)
+					file_name := file_name.extended (directory_path.item)
 					directory_path.forth
 				end
 			end
@@ -828,18 +828,16 @@ feature {GB_COMMAND_NAME_CHANGE} -- Implementation
 			if not (new_name.is_empty or old_name.is_empty) then
 
 					-- Build file names for accessing files.
-				interface_file_name := file_name.twin
-				interface_file_name.extend (new_name + ".e")
-				implementation_file_name := file_name.twin
-				implementation_file_name.extend (new_name + Class_implementation_extension.as_lower + ".e")
+				interface_file_name := file_name.extended (new_name + ".e")
+				implementation_file_name := file_name.extended (new_name + Class_implementation_extension.as_lower + ".e")
 
 				create l_eiffel_parser.make
 
-				rename_file_if_exists (create {DIRECTORY}.make (file_name), old_name + ".e", new_name + ".e")
+				rename_file_if_exists (create {DIRECTORY}.make_with_path (file_name), old_name + ".e", new_name + ".e")
 
 					-- Now parse the contents of the file, and change the class name, and inherited
 					-- name.
-				create file.make (interface_file_name.string)
+				create file.make (interface_file_name.utf_8_name)
 				if file.exists then
 					nb := file.count
 					create file_contents.make_filled ('%U', nb)
@@ -867,7 +865,7 @@ feature {GB_COMMAND_NAME_CHANGE} -- Implementation
 						replace_final_class_name_comment (file_contents, old_name.as_upper, new_name.as_upper)
 
 							-- Open the file, and write the contents back.
-						create output_file.make (interface_file_name.string)
+						create output_file.make_with_path (interface_file_name)
 						output_file.open_write
 						output_file.put_string (file_contents)
 						output_file.close
@@ -877,12 +875,12 @@ feature {GB_COMMAND_NAME_CHANGE} -- Implementation
 				end
 
 
-				rename_file_if_exists (create {DIRECTORY}.make (file_name), old_name + Class_implementation_extension.as_lower + ".e",
+				rename_file_if_exists (create {DIRECTORY}.make_with_path (file_name), old_name + Class_implementation_extension.as_lower + ".e",
 					new_name + Class_implementation_extension.as_lower + ".e")
 
 					-- Now parse the contents of the file, and change the class name, and inherited
 					-- name.
-				create file.make (implementation_file_name.string)
+				create file.make (implementation_file_name.utf_8_name)
 				if file.exists then
 					nb := file.count
 					create file_contents.make_filled ('%U', nb)
@@ -900,7 +898,7 @@ feature {GB_COMMAND_NAME_CHANGE} -- Implementation
 
 							-- Now replace the class name at end after comment.
 						replace_final_class_name_comment (file_contents, (old_name + Class_implementation_extension).as_upper, (new_name + Class_implementation_extension).as_upper)
-						create output_file.make (implementation_file_name.string)
+						create output_file.make (implementation_file_name.utf_8_name)
 						output_file.open_write
 						output_file.put_string (file_contents)
 						output_file.close
@@ -1327,7 +1325,7 @@ feature {GB_WIDGET_SELECTOR_TOOL_BAR, GB_WIDGET_SELECTOR_COMMON_ITEM} -- Impleme
 			represented_path_not_void: represented_path /= Void
 		local
 			iterated_directory: DIRECTORY
-			file_name: FILE_NAME
+			file_name: PATH
 			items: LINEAR [STRING]
 			command_add_directory: GB_COMMAND_ADD_DIRECTORY
 			parent_path: ARRAYED_LIST [STRING]
@@ -1339,9 +1337,8 @@ feature {GB_WIDGET_SELECTOR_TOOL_BAR, GB_WIDGET_SELECTOR_COMMON_ITEM} -- Impleme
 			until
 				items.off
 			loop
-				create file_name.make_from_string (directory.name)
-				file_name.extend (items.item)
-				create iterated_directory.make (file_name)
+				file_name := directory.path.extended (items.item)
+				create iterated_directory.make_with_path (file_name)
 				if iterated_directory.exists and not items.item.same_string (".") and not items.item.same_string ("..") then
 						-- Set the parent path before we add the current item to `represented_path'.
 					parent_path := represented_path.twin

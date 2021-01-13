@@ -41,7 +41,7 @@ feature -- DPI handling
 			Result := a_size
 			l_dpi := dpi
 			if l_dpi > 0 then
-				Result := (Result * (dpi / 96)).rounded
+				Result := (Result * (l_dpi / 96)).rounded
 			end
 		end
 
@@ -61,7 +61,7 @@ feature {NONE} -- Implementation
 	dpi_cache: like dpi
 
 ;note
-	copyright: "Copyright (c) 1984-2019, Eiffel Software"
+	copyright: "Copyright (c) 1984-2021, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

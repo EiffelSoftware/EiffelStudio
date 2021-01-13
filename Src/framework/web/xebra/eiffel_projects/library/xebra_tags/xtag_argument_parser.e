@@ -50,7 +50,7 @@ feature {NONE} -- Access: Usage
 			Result := {XU_CONSTANTS}.Version
 		end
 
-	copyright: STRING = "Copyright Eiffel Software 2009-2020. All Rights Reserved."
+	copyright: STRING = "Copyright Eiffel Software 2009-2021. All Rights Reserved."
 			-- <Precursor>
 
 	switches: ARRAYED_LIST [ARGUMENT_SWITCH]

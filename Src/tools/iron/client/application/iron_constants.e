@@ -38,7 +38,7 @@ feature -- Version
 	copyright: IMMUTABLE_STRING_32
 			-- Associated Copyright.
 		once
-			create Result.make_from_string_general ("Copyright Eiffel Software 2011-2020. All Rights Reserved.")
+			create Result.make_from_string_general ("Copyright Eiffel Software 2011-2021. All Rights Reserved.")
 		end
 		
 note

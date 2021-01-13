@@ -96,7 +96,7 @@ feature -- Status report
 
 feature {NONE} -- Access: Usage
 
-	copyright: STRING = "Copyright Eiffel Software 1985-2020. All Rights Reserved."
+	copyright: STRING = "Copyright Eiffel Software 1985-2021. All Rights Reserved."
 			-- <Precursor>
 
 	name: STRING = "Void-Safe Conversion Tool"

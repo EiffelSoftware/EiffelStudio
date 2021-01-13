@@ -108,7 +108,7 @@ do_sed "s/\(minor_version: .* = \)[0-9][0-9]/\1$to_version_minor/g" $EIFFEL_SRC/
 sort -u file_to_commit.log -o file_to_commit.log
 sed -i -e  "s~$EIFFEL_SRC~\$EIFFEL_SRC~g" file_to_commit.log
 
-echo  -m \"Updated to $to_version .\"  >> commit_changes.sh
+echo  -m \"chore: Updated to $to_version .\"  >> commit_changes.sh
 
 sed -i -e  "s~$EIFFEL_SRC~  \$EIFFEL_SRC~g" commit_changes.sh
 sed -i -e  "s~#EIFFEL_SRC~$EIFFEL_SRC~g" commit_changes.sh

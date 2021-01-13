@@ -21,6 +21,11 @@ inherit
 			out
 		end
 
+	STRING_HANDLER
+		undefine
+			out
+		end
+
 	DEBUG_OUTPUT
 		undefine
 			out
@@ -97,45 +102,45 @@ feature {NONE} -- Initialization
 			l_64: NATURAL_64
 		do
 				-- Set `data_1'
-			l_32 := a_segs[1]
+			l_32 := a_segs [1]
 			l_32 := l_32.bit_shift_left (8)
-			l_32 := l_32 + a_segs[2]
+			l_32 := l_32 + a_segs [2]
 			l_32 := l_32.bit_shift_left (8)
-			l_32 := l_32 + a_segs[3]
+			l_32 := l_32 + a_segs [3]
 			l_32 := l_32.bit_shift_left (8)
-			l_32 := l_32 + a_segs[4]
+			l_32 := l_32 + a_segs [4]
 			data_1 := l_32
 
 				-- Set `data_2'
-			l_16 := a_segs[5]
+			l_16 := a_segs [5]
 			l_16 := l_16.bit_shift_left (8)
-			l_16 := l_16 + a_segs[6]
+			l_16 := l_16 + a_segs [6]
 			data_2 := l_16
 
 				-- Set `data_3'
-			l_16 := a_segs[7]
+			l_16 := a_segs [7]
 			l_16 := l_16.bit_shift_left (8)
-			l_16 := l_16 + a_segs[8]
+			l_16 := l_16 + a_segs [8]
 			data_3 := l_16
 
 				-- Set `data_4'
-			l_16 := a_segs[9]
+			l_16 := a_segs [9]
 			l_16 := l_16.bit_shift_left (8)
-			l_16 := l_16 + a_segs[10]
+			l_16 := l_16 + a_segs [10]
 			data_4 := l_16
 
 				-- Set `data_5'
-			l_64 := a_segs[11]
+			l_64 := a_segs [11]
 			l_64 := l_64.bit_shift_left (8)
-			l_64 := l_64 + a_segs[12]
+			l_64 := l_64 + a_segs [12]
 			l_64 := l_64.bit_shift_left (8)
-			l_64 := l_64 + a_segs[13]
+			l_64 := l_64 + a_segs [13]
 			l_64 := l_64.bit_shift_left (8)
-			l_64 := l_64 + a_segs[14]
+			l_64 := l_64 + a_segs [14]
 			l_64 := l_64.bit_shift_left (8)
-			l_64 := l_64 + a_segs[15]
+			l_64 := l_64 + a_segs [15]
 			l_64 := l_64.bit_shift_left (8)
-			l_64 := l_64 + a_segs[16]
+			l_64 := l_64 + a_segs [16]
 			data_5 := l_64
 		end
 
@@ -225,16 +230,8 @@ feature -- Conversion
 	string: STRING_32
 			-- New string containing terse printable representation.
 		do
-			create Result.make (37)
-			Result.append_string_general (data_1.to_hex_string)
-			Result.append_character (separator_char)
-			Result.append_string_general (data_2.to_hex_string)
-			Result.append_character (separator_char)
-			Result.append_string_general (data_3.to_hex_string)
-			Result.append_character (separator_char)
-			Result.append_string_general (data_4.to_hex_string)
-			Result.append_character (separator_char)
-			Result.append_string_general (data_5.to_hex_string.substring (5, 16))
+			create Result.make (36)
+			append_to_string_32 (separator_char, Result)
 		ensure
 			result_attached: Result /= Void
 			result_is_valid_uuid: is_valid_uuid (Result)
@@ -243,20 +240,96 @@ feature -- Conversion
 	out: STRING
 			-- New string containing terse printable representation.
 		do
-			create Result.make (37)
-			Result.append_string_general (data_1.to_hex_string)
-			Result.append_character (separator_char_8)
-			Result.append_string_general (data_2.to_hex_string)
-			Result.append_character (separator_char_8)
-			Result.append_string_general (data_3.to_hex_string)
-			Result.append_character (separator_char_8)
-			Result.append_string_general (data_4.to_hex_string)
-			Result.append_character (separator_char_8)
-			Result.append_string_general (data_5.to_hex_string.substring (5, 16))
+			create Result.make (36)
+			append_to_string (separator_char_8, Result)
 		ensure then
 			result_attached: Result /= Void
 			result_is_valid_uuid: is_valid_uuid (Result)
 		end
+
+feature -- Custom conversion
+
+	append_to_string (a_delimiter: CHARACTER_8; a_string: STRING_8)
+			-- Append terse printable representation of Current to `a_string` using `a_delimiter` as separator.
+		local
+			start_index, end_index, i, j, l_offset: INTEGER
+			n: NATURAL_64
+		do
+			l_offset := a_string.count
+			a_string.grow (l_offset + 36)
+			a_string.set_count (l_offset + 36)
+			a_string [l_offset + 9] := a_delimiter
+			a_string [l_offset + 14] := a_delimiter
+			a_string [l_offset + 19] := a_delimiter
+			a_string [l_offset + 24] := a_delimiter
+			from j := 1 until j > 5 loop
+				inspect j
+				when 1 then
+					n := data_1
+					start_index := 1; end_index := 8
+				when 2 then
+					n := data_2
+					start_index := 10; end_index := 13
+				when 3 then
+					n := data_3
+					start_index := 15; end_index := 18
+				when 4 then
+					n := data_4
+					start_index := 20; end_index := 23
+				else
+					n := data_5
+					start_index := 25; end_index := 36
+				end
+				from i := end_index until i < start_index loop
+					a_string [l_offset + i] := (n & Nibble_15_mask).to_hex_character
+					n := n |>> 4
+					i := i - 1
+				end
+				j := j + 1
+			end
+		end
+
+	append_to_string_32 (a_delimiter: CHARACTER_32; a_string: STRING_32)
+			-- Append terse printable representation of Current to `a_string` using `a_delimiter` as separator.
+		local
+			start_index, end_index, i, j, l_offset: INTEGER
+			n: NATURAL_64
+		do
+			l_offset := a_string.count
+			a_string.grow (l_offset + 36)
+			a_string.set_count (l_offset + 36)
+			a_string [l_offset + 9] := a_delimiter
+			a_string [l_offset + 14] := a_delimiter
+			a_string [l_offset + 19] := a_delimiter
+			a_string [l_offset + 24] := a_delimiter
+			from j := 1 until j > 5 loop
+				inspect j
+				when 1 then
+					n := data_1
+					start_index := 1; end_index := 8
+				when 2 then
+					n := data_2
+					start_index := 10; end_index := 13
+				when 3 then
+					n := data_3
+					start_index := 15; end_index := 18
+				when 4 then
+					n := data_4
+					start_index := 20; end_index := 23
+				else
+					n := data_5
+					start_index := 25; end_index := 36
+				end
+				from i := end_index until i < start_index loop
+					a_string [l_offset + i] := (n & Nibble_15_mask).to_hex_character
+					n := n |>> 4
+					i := i - 1
+				end
+				j := j + 1
+			end
+		end
+
+feature -- Status report
 
 	debug_output: STRING
 		do
@@ -265,6 +338,8 @@ feature -- Conversion
 
 feature {NONE} -- Implementation
 
+	nibble_15_mask: NATURAL_64 = 0xF
+
 	hex_to_natural_8 (a_char: CHARACTER_32): NATURAL_8
 			-- Converts hex character `a_char' to a `{NATURAL_8}`.
 		require
@@ -272,7 +347,7 @@ feature {NONE} -- Implementation
 		local
 			n: INTEGER
 		do
-			if '0' <= a_char and a_char <= '9'  then
+			if '0' <= a_char and a_char <= '9' then
 				n := a_char.code - ('0').code
 			elseif a_char >= 'a' then
 				n := a_char.code - (('a').code - 10)
@@ -286,9 +361,11 @@ feature {NONE} -- Implementation
 	separator_char_8: CHARACTER = '-'
 			-- UUID separator character.
 
-;note
-	copyright: "Copyright (c) 1984-2018, Eiffel Software and others"
-	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
+;
+
+note
+	copyright: "Copyright (c) 1984-2021, Eiffel Software and others"
+	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software
 			5949 Hollister Ave., Goleta, CA 93117 USA
@@ -296,4 +373,5 @@ feature {NONE} -- Implementation
 			Website http://www.eiffel.com
 			Customer support http://support.eiffel.com
 		]"
+
 end

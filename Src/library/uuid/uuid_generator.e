@@ -81,8 +81,6 @@ feature {NONE} -- Implementation
 
 	seed: INTEGER
 			-- Seed of the random number generator.
-		require
-			rand_not_void: rand /= Void
 		local
 			l_seed: NATURAL_64
 			l_date: C_DATE

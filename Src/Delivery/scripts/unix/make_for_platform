@@ -24,11 +24,11 @@ if [ $# -ge 3 ]; then
 	ssh -p $port -l $user $remote_host "cd local/TEST_DELIV/PorterPackage; sh ./make_images $platform"
 
 		#Upload locally
-	scp -P $port $bandwidth "$user@$remote_host:local/TEST_DELIV/PorterPackage/Eiffel_20.12_ent*bz2" .
-	scp -P $port $bandwidth "$user@$remote_host:local/TEST_DELIV/PorterPackage/Eiffel_20.12_c*bz2" .
+	scp -P $port $bandwidth "$user@$remote_host:local/TEST_DELIV/PorterPackage/Eiffel_21.01_ent*bz2" .
+	scp -P $port $bandwidth "$user@$remote_host:local/TEST_DELIV/PorterPackage/Eiffel_21.01_c*bz2" .
 
 		#Upload to our ftp site
-	scp Eiffel_20.12_c*$platform.tar.bz2 manus@eiffel.com:builds/nightly/
+	scp Eiffel_21.01_c*$platform.tar.bz2 manus@eiffel.com:builds/nightly/
 
 	echo Compilation for $platform is now done
 else

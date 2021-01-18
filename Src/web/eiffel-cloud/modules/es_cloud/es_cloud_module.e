@@ -302,9 +302,12 @@ feature -- Hook
 							api.extend_license_with_duration (lic, 0, 0, 7)
 						elseif a_cart.is_daily then
 							api.extend_license_with_duration (lic, 0, 0, 1)
+						elseif a_cart.is_onetime then
+							l_is_cycle := False
 						else
 							check should_nor_occur: False end
-							l_is_cycle := False
+							-- Missing information, but keep it as a cycle
+							-- l_is_cycle := False
 						end
 					else
 						if a_order.is_yearly (0) then
@@ -315,9 +318,12 @@ feature -- Hook
 							api.extend_license_with_duration (lic, 0, 0, 7 * a_order.interval_count)
 						elseif a_order.is_daily (0) then
 							api.extend_license_with_duration (lic, 0, 0, a_order.interval_count)
+						elseif a_cart.is_onetime then
+							l_is_cycle := False
 						else
 							check should_nor_occur: False end
-							l_is_cycle := False
+							-- Missing information, but keep it as a cycle
+							-- l_is_cycle := False
 						end
 					end
 					api.save_license (lic)

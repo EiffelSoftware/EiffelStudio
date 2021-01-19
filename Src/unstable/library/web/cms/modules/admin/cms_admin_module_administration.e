@@ -28,10 +28,10 @@ feature -- Security
 		do
 			Result := Precursor
 			Result.force (perm_view_system_info)
-			Result.force ("access admin")
-			Result.force ("admin users")
-			Result.force ("admin roles")
-			Result.force ("admin modules")
+			Result.force (perm_access_admin)
+			Result.force (perm_admin_users)
+			Result.force (perm_admin_roles)
+			Result.force (perm_admin_modules)
 			Result.force ("admin cache")
 			Result.force ("admin core caches")
 			Result.force ("clear blocks cache")
@@ -41,6 +41,12 @@ feature -- Security
 		end
 
 	perm_view_system_info: STRING = "view system info"
+
+	perm_admin_modules: STRING = "admin modules"
+	perm_admin_users: STRING = "admin users"
+	perm_admin_roles: STRING = "admin roles"
+	perm_access_admin: STRING = "access admin"
+	perm_view_logs: STRING = "view logs"
 
 feature {NONE} -- Router/administration
 
@@ -161,31 +167,31 @@ feature -- Hooks
 					end
 						-- Global system information
 					create lnk.make ("Info", l_api.administration_path_location ("info"))
-					lnk.set_permission_arguments (<<"view system info">>)
+					lnk.set_permission_arguments (<<perm_view_system_info>>)
 					lnk.set_help ("View information about the system")
 					lnk.set_weight (-1)
 					core_lnk.extend (lnk)
 
 					create lnk.make ("Module", l_api.administration_path_location ("modules"))
-					lnk.set_permission_arguments (<<"manage module">>)
+					lnk.set_permission_arguments (<<perm_admin_modules>>)
 					lnk.set_help ("Manage the modules")
 					lnk.set_weight (1)
 					core_lnk.extend (lnk)
 
 					create lnk.make ("Users", l_api.administration_path_location ("users"))
-					lnk.set_permission_arguments (<<"admin users">>)
+					lnk.set_permission_arguments (<<perm_admin_users>>)
 					lnk.set_help ("View/Edit/Add Users")
 					lnk.set_weight (1)
 					core_lnk.extend (lnk)
 
 					create lnk.make ("Roles", l_api.administration_path_location ("roles"))
-					lnk.set_permission_arguments (<<"admin roles">>)
+					lnk.set_permission_arguments (<<perm_admin_roles>>)
 					lnk.set_help ("View/Edit/Add Roles")
 					lnk.set_weight (1)
 					core_lnk.extend (lnk)
 
 					create lnk.make ("Logs", l_api.administration_path_location ("logs"))
-					lnk.set_permission_arguments (<<"view logs">>)
+					lnk.set_permission_arguments (<<perm_view_logs>>)
 					lnk.set_help ("View logs")
 					lnk.set_weight (2)
 					core_lnk.extend (lnk)

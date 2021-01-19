@@ -54,7 +54,7 @@ feature -- Execution
 					if l_access.is_case_insensitive_equal ("none") then
 						l_denied := True
 					elseif l_access.is_case_insensitive_equal ("permission") then
-						l_denied := not r.has_permission ("install modules")
+						l_denied := not r.has_permission ({CMS_ADMIN_MODULE_ADMINISTRATION}.perm_admin_modules)
 					end
 				else
 					l_denied := True
@@ -92,7 +92,7 @@ feature -- Execution
 					if l_access.is_case_insensitive_equal ("none") then
 						l_denied := True
 					elseif l_access.is_case_insensitive_equal ("permission") then
-						l_denied := not r.has_permission ("install modules")
+						l_denied := not r.has_permission ({CMS_ADMIN_MODULE_ADMINISTRATION}.perm_admin_modules)
 					end
 				else
 					l_denied := True
@@ -154,7 +154,7 @@ feature -- Execution
 						if l_access.is_case_insensitive_equal ("none") then
 							l_denied := True
 						elseif l_access.is_case_insensitive_equal ("permission") then
-							l_denied := not r.has_permission ("install modules")
+							l_denied := not r.has_permission ({CMS_ADMIN_MODULE_ADMINISTRATION}.perm_admin_modules)
 						end
 					else
 						l_denied := True
@@ -182,7 +182,7 @@ feature -- Execution
 					end
 				elseif l_op.same_string ("Update status") then
 					create {GENERIC_VIEW_CMS_RESPONSE} r.make (req, res, api)
-					if api.has_permission ("admin module") then
+					if api.has_permission ({CMS_ADMIN_MODULE_ADMINISTRATION}.perm_admin_modules) then
 						f := installed_modules_collection_web_form (r)
 						f.submit_actions.extend (agent on_update_status_submit)
 						f.process (r)

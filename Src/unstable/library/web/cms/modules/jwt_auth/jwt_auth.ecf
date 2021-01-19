@@ -1,10 +1,13 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
-<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-18-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-18-0 http://www.eiffel.com/developers/xml/configuration-1-18-0.xsd" name="jwt_auth" uuid="A451993F-2998-4282-9521-DB269A955A3B" library_target="jwt_auth">
+<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-21-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-21-0 http://www.eiffel.com/developers/xml/configuration-1-21-0.xsd" name="jwt_auth" uuid="A451993F-2998-4282-9521-DB269A955A3B" library_target="jwt_auth">
 	<target name="jwt_auth">
 		<root all_classes="true"/>
 		<file_rule>
 			<exclude>/EIFGENs$</exclude>
 		</file_rule>
+		<option warning="warning">
+			<warning name="obsolete_class" enabled="true"/>
+		</option>
 		<library name="auth_module" location="$ISE_LIBRARY\unstable\library\web\cms\modules\auth\auth.ecf"/>
 		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf"/>
 		<library name="cms" location="$ISE_LIBRARY\unstable\library\web\cms\cms.ecf" readonly="false"/>
@@ -12,7 +15,6 @@
 		<library name="cms_config" location="$ISE_LIBRARY\unstable\library\web\cms\library\configuration\config.ecf"/>
 		<library name="cms_model" location="$ISE_LIBRARY\unstable\library\web\cms\library\model\cms_model.ecf"/>
 		<library name="cms_session_auth_module" location="$ISE_LIBRARY\unstable\library\web\cms\modules\session_auth\cms_session_auth.ecf" readonly="false"/>
-
 		<library name="error" location="$ISE_LIBRARY\contrib\library\utility\general\error\error.ecf"/>
 		<library name="jwt" location="$ISE_LIBRARY\contrib\library\web\authentication\jwt\jwt.ecf"/>
 		<library name="time" location="$ISE_LIBRARY\library\time\time.ecf"/>

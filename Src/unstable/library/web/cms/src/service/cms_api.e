@@ -590,6 +590,26 @@ feature -- Helpers: URLs
 			Result := location_url ("user/" + u.id.out, Void)
 		end
 
+	administration_location_absolute_url (a_relative_location: READABLE_STRING_8; opts: detachable CMS_API_OPTIONS): STRING
+			-- Absolute URL for `a_location'.
+			--| Options `opts' could be
+			--|  - absolute: True|False	=> return absolute url
+			--|  - query: string		=> append "?query"
+			--|  - fragment: string		=> append "#fragment"
+		do
+			Result := location_absolute_url (administration_path_location (a_relative_location), opts)
+		end
+
+	administration_location_url (a_relative_location: READABLE_STRING_8; opts: detachable CMS_API_OPTIONS): STRING
+			-- URL for `a_location'.
+			--| Options `opts' could be
+			--|  - absolute: True|False	=> return absolute url
+			--|  - query: string		=> append "?query"
+			--|  - fragment: string		=> append "#fragment"
+		do
+			Result := location_url (administration_path_location (a_relative_location), opts)
+		end
+
 feature -- Helpers: html links
 
 	user_display_name (u: CMS_USER): READABLE_STRING_32

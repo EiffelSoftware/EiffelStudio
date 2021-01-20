@@ -187,7 +187,6 @@ feature -- Request execution
 	handle_new_jwt_magic_link (a_uid: READABLE_STRING_GENERAL; req: WSF_REQUEST; res: WSF_RESPONSE)
 			-- Execute handler for `req' and respond in `res'.
 		local
-			tb: STRING_TABLE [detachable ANY]
 			rep: like new_response
 		do
 			if attached user_by_uid (a_uid) as l_user then

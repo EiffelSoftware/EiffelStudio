@@ -61,13 +61,7 @@ feature -- Request execution
 	handle_magic_login (a_uid: READABLE_STRING_GENERAL; req: WSF_REQUEST; res: WSF_RESPONSE)
 			-- Execute handler for `req' and respond in `res'.
 		local
-			inf: JWT_AUTH_TOKEN
 			rep: CMS_RESPONSE
-			fset: WSF_FORM_FIELD_SET
-			tf: WSF_FORM_TEXT_INPUT
-			sub: WSF_FORM_SUBMIT_INPUT
-			l_form: CMS_FORM
-			s: STRING
 		do
 			if attached user_by_uid (a_uid) as l_user then
 				if

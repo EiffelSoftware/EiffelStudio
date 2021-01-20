@@ -125,10 +125,6 @@ feature -- Hook
 	form_alter (a_form: CMS_FORM; a_form_data: detachable WSF_FORM_DATA; a_response: CMS_RESPONSE)
 			-- Hook execution on form `a_form' and its associated data `a_form_data',
 			-- for related response `a_response'.
-		local
-			fset: WSF_FORM_FIELD_SET
-			tf: WSF_FORM_TEXT_INPUT
-			inf: JWT_AUTH_TOKEN
 		do
 			if
 				attached jwt_auth_api as l_jwt_auth_api and then

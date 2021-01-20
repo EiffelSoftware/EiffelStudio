@@ -16,7 +16,7 @@ create
 
 feature {NONE} -- Implemention
 
-	make (a_uri: STRING_8)
+	make (a_uri: READABLE_STRING_8)
 			-- Create a Client configuration with
 			-- service uri set to `a_uri' and default
 			-- timeout.
@@ -78,7 +78,7 @@ feature -- Access
 
 feature {NONE} -- Implementation
 
-	implementation_service_root: STRING
+	implementation_service_root: READABLE_STRING_8
 			-- Root uri to drive the interaction.
 
 	default_timeout: INTEGER = 30

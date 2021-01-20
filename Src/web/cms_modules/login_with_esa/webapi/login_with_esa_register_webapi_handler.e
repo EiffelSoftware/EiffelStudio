@@ -42,12 +42,8 @@ feature -- Execution
 			f: CMS_FORM
 			rep: like new_response
 			l_user_api: CMS_USER_API
-			u: CMS_TEMP_USER
+			l_email: STRING_8
 			acc: ESA_ACCOUNT
-			l_url_activate: STRING
-			l_url_reject: STRING
-			l_token: STRING
-			l_captcha_passed: BOOLEAN
 		do
 			if
 				api.has_permission ("register with esa") and then
@@ -63,8 +59,10 @@ feature -- Execution
 					attached fd.string_item ("last_name") as l_last_name and then
 					attached fd.string_item ("user_name") as l_username and then
 					attached fd.string_item ("password") as l_password and then
-					attached fd.string_item ("email") as l_email
+					attached fd.string_item ("email") as f_email
 				then
+					l_email := f_email.to_string_8
+
 					l_user_api := api.user_api
 					if
 						attached l_user_api.user_by_name (l_username)
@@ -117,7 +115,6 @@ feature -- Forms
 			tf: WSF_FORM_TEXT_INPUT
 			pf: WSF_FORM_PASSWORD_INPUT
 			ef: WSF_FORM_EMAIL_INPUT
-			sub: WSF_FORM_SUBMIT_INPUT
 		do
 			create Result.make (req.percent_encoded_path_info, "esa-registration")
 			Result.set_method_post

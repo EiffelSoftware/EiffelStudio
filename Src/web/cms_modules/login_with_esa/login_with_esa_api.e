@@ -149,13 +149,13 @@ feature -- Relation with CMS
 	associate_esa_account (a_user: CMS_USER; a_esa_account : ESA_ACCOUNT)
 		do
 			login_with_esa_storage.associate_esa_account (a_user, a_esa_account)
-			cms_api.log ("login_with_esa", "Associated eiffel.com accout with " + cms_api.real_user_display_name (a_user), {CMS_LOG}.level_info, cms_api.user_local_link (a_user, Void))
+			cms_api.log ("login_with_esa", "Associated eiffel.com accout with " + utf_8_encoded (cms_api.real_user_display_name (a_user)), {CMS_LOG}.level_info, cms_api.user_local_link (a_user, Void))
 		end
 
 	dissociate_esa_account (a_user: CMS_USER; a_esa_account : ESA_ACCOUNT)
 		do
 			login_with_esa_storage.dissociate_esa_account (a_user, a_esa_account)
-			cms_api.log ("login_with_esa", "Dissociated eiffel.com account from " + cms_api.real_user_display_name (a_user), {CMS_LOG}.level_info, cms_api.user_local_link (a_user, Void))
+			cms_api.log ("login_with_esa", "Dissociated eiffel.com account from " + utf_8_encoded (cms_api.real_user_display_name (a_user)), {CMS_LOG}.level_info, cms_api.user_local_link (a_user, Void))
 		end
 
 	associated_cms_user (a_esa_username, a_password: READABLE_STRING_GENERAL; a_flag_create_user: BOOLEAN): detachable CMS_USER

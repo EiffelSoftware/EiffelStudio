@@ -1,9 +1,9 @@
 note
-        description: "EiffelVision print dialog."
+	description: "EiffelVision print dialog."
 	legal: "See notice at end of class."
-        status: "See notice at end of class."
-        date: "$Date$"
-        revision: "$Revision$"
+	status: "See notice at end of class."
+	date: "$Date$"
+	revision: "$Revision$"
 
 class
 	EV_PRINT_DIALOG

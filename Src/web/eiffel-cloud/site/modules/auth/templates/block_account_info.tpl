@@ -22,15 +22,6 @@
 				</form>
 			</div>	
     	</ul>
-    	<hr>
-    	<h4>Profile</h4>
-    	<ul class="user-profile">
-    		{foreach item="the_value" key="the_name" from="$user.profile"}
-    			<li>	
-			   		<label>{htmlentities}{$the_name/}{/htmlentities}:</label><div>{htmlentities}{$the_value/}{/htmlentities}</div>
-			   	</li>
-    		{/foreach}
-    	</ul>
 	{/if}
 	{unless isset="$user"}
 		<div>

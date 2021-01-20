@@ -227,7 +227,7 @@ feature -- Execution
 							end
 
 							s.append ("<a href=%"")
-							s.append (api.administration_path ("cloud/account/" + l_user.id.out))
+							s.append (es_cloud_api.account_administration_url (l_user))
 							s.append_character ('%"')
 							if l_user_email /= Void then
 								s.append (" title=%"" + html_encoded (l_user_email) + "%"")

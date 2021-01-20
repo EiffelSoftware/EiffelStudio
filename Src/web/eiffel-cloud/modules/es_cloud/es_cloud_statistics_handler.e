@@ -269,7 +269,15 @@ feature -- Execution
 			s.append ("</div>")
 			if u /= Void then
 				s.append ("<span class=%"user%">User ")
-				s.append (api.user_html_administration_link (u.cms_user))
+				if api.has_permission ({ES_CLOUD_MODULE}.perm_manage_es_accounts) then
+					s.append (es_cloud_api.account_html_administration_link (u))
+				elseif api.has_permission ({ES_CLOUD_MODULE}.perm_view_es_accounts) then
+					s.append (es_cloud_api.account_html_link (u))
+				elseif api.has_permission ({CMS_CORE_MODULE}.perm_view_users) then
+					s.append (api.user_html_link (u))
+				else
+					s.append (html_encoded (api.real_user_display_name (u)))
+				end
 				if l_email /= Void then
 					s.append (" &lt;")
 					s.append (html_encoded (l_email))

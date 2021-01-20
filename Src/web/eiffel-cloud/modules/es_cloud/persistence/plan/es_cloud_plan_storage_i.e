@@ -13,7 +13,7 @@ feature -- Error Handling
 		deferred
 		end
 
-feature -- Deferred
+feature -- Organization
 
 	organization (a_id_or_name: READABLE_STRING_GENERAL): detachable ES_CLOUD_ORGANIZATION
 		deferred

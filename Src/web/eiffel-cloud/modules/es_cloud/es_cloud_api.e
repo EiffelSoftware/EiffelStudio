@@ -72,7 +72,7 @@ feature -- Settings
 
 	config: ES_CLOUD_CONFIG
 
-feature -- Access
+feature -- Access: users
 
 	active_user: detachable ES_CLOUD_USER
 		do
@@ -80,6 +80,37 @@ feature -- Access
 				create Result.make (u)
 			end
 		end
+
+	cloud_user (a_user_id: READABLE_STRING_GENERAL): detachable ES_CLOUD_USER
+		do
+			if attached cms_api.user_api.user_by_id_or_name (a_user_id) as u then
+				Result := u
+			end
+		end
+
+	cloud_user_profile (a_user: ES_CLOUD_USER): detachable ES_CLOUD_USER_PROFILE
+		do
+			if attached cms_api.user_api.user_profile (a_user.cms_user) as uprof then
+				create Result.make (a_user)
+				if attached uprof[".cloud.about(wikitext)"] as wk then
+					Result.set_about_wikitext (wk)
+				end
+			end
+		end
+
+	save_cloud_user_profile (a_prof: ES_CLOUD_USER_PROFILE)
+		local
+			uprof: CMS_USER_PROFILE
+		do
+			uprof := cms_api.user_api.user_profile (a_prof.cms_user)
+			if uprof = Void then
+				create uprof.make
+			end
+			uprof[".cloud.about(wikitext)"] := a_prof.about_wikitext
+			cms_api.user_api.save_user_profile (a_prof.cms_user, uprof)
+		end
+
+feature -- Access: plans
 
 	plans: LIST [ES_CLOUD_PLAN]
 		do
@@ -848,6 +879,40 @@ feature -- Change
 
 feature -- HTML factory
 
+	account_url (u: ES_CLOUD_USER): STRING_8
+		require
+			u_with_id: u.has_id
+		do
+			Result := cms_api.location_url ("cloud/account/" + u.id.out, Void)
+		end
+
+	account_html_link (u: ES_CLOUD_USER): STRING_8
+		require
+			u_with_id: u.has_id
+		local
+			t: READABLE_STRING_32
+		do
+			t := cms_api.real_user_display_name (u.cms_user)
+			Result := cms_api.link (t, cms_api.url ("cloud/account/" + u.id.out, Void), Void)
+		end
+
+	account_administration_url (u: ES_CLOUD_USER): STRING_8
+		require
+			u_with_id: u.has_id
+		do
+			Result := cms_api.administration_location_url ("cloud/account/" + u.id.out, Void)
+		end
+
+	account_html_administration_link (u: ES_CLOUD_USER): STRING_8
+		require
+			u_with_id: u.has_id
+		local
+			t: READABLE_STRING_32
+		do
+			t := cms_api.real_user_display_name (u.cms_user)
+			Result := cms_api.link (t, cms_api.administration_path ("cloud/account/" + u.id.out), Void)
+		end
+
 	admin_license_web_location (lic: ES_CLOUD_LICENSE): STRING_8
 		do
 			Result := cms_api.administration_path_location ({ES_CLOUD_MODULE_ADMINISTRATION}.admin_licenses_location + url_encoded (lic.key))
@@ -1030,6 +1095,32 @@ feature -- HTML factory
 
 			s.append ("</ul></div>")
 			s.append ("</div>")
+		end
+
+feature -- User Profile
+
+	default_cloud_user_profile_about_content : STRING_32
+		local
+			res: PATH
+		do
+			create res.make_from_string ("templates")
+			if attached cms_api.module_theme_resource_location (module, res.extended ("default_profile_about_text.tpl")) as loc and then attached cms_api.resolved_smarty_template (loc) as tpl then
+				Result := {UTF_CONVERTER}.utf_8_string_8_to_string_32 (tpl.string)
+			else
+				Result := "[
+						[[Image:https://github.com/eiffelhub/media/raw/master/logo/inline_powered_by_eiffel_logo/png_200x33/powered_by_Eiffel_Logo_inline_blue.png|width=20%]]
+						== Bio ==
+						'''Add a bio ...'
+						== Projects ==
+						* ...
+						== Information ==
+						* '''Company''': ...
+						* '''Location''': ...
+						* '''Contact-me''': email, messenger, ...
+						* '''Website''': [https://...]
+						* '''Social ids''': twitter, github, facebook, ...
+					]"
+			end
 		end
 
 feature -- Email processing

@@ -73,5 +73,38 @@ feature -- Element change
 			country := v.to_string_32
 		end
 
+feature -- Conversion
+
+	to_string: STRING_32
+		do
+			create Result.make (50)
+			if attached line1 as l_line1 then
+				Result.append (l_line1)
+				Result.append_character ('%N')
+			end
+			if attached line2 as l_line2 then
+				Result.append (l_line2)
+				Result.append_character ('%N')
+			end
+			if attached postal_code as l_postal_code then
+				Result.append (l_postal_code)
+				Result.append_character (' ')
+			end
+			if attached city as l_city then
+				Result.append (l_city)
+			end
+			Result.append_character ('%N')
+			if attached state as l_state then
+				Result.append_character ('(')
+				Result.append (l_state)
+				Result.append_character (')')
+				Result.append_character (' ')
+			end
+			if attached country as l_country then
+				Result.append (l_country)
+			end
+
+		end
+
 end
 

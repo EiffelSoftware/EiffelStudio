@@ -153,6 +153,7 @@ feature -- Access: router
 			-- <Precursor>
 		local
 			h: ES_CLOUD_HANDLER
+			h_prof: ES_CLOUD_PROFILE_HANDLER
 			h_stats: ES_CLOUD_STATISTICS_HANDLER
 			h_act: ES_CLOUD_ACTIVITIES_HANDLER
 			h_lic: ES_CLOUD_LICENSES_HANDLER
@@ -160,6 +161,9 @@ feature -- Access: router
 			if attached es_cloud_api as l_mod_api then
 				create h.make (l_mod_api)
 				a_router.handle ("/" + root_location, h, a_router.methods_get)
+
+				create h_prof.make (Current, l_mod_api)
+				a_router.handle ("/" + cloud_profiles_location + "{account_id}", h_prof, a_router.methods_get_post)
 
 				create h_stats.make (Current, l_mod_api)
 				a_router.handle ("/" + statistics_location, h_stats, a_router.methods_get)
@@ -179,6 +183,8 @@ feature -- Access: router
 
 	root_location: STRING = "cloud"
 
+	cloud_profiles_location: STRING = "cloud/profiles/"
+
 	activities_location: STRING = "activities/"
 
 	statistics_location: STRING = "statistics/"
@@ -193,6 +199,11 @@ feature -- Access: router
 	license_location (lic: ES_CLOUD_LICENSE): STRING
 		do
 			Result := licenses_location + url_encoded (lic.key)
+		end
+
+	user_cloud_profile_location (u: ES_CLOUD_USER): STRING
+		do
+			Result := cloud_profiles_location + url_encoded (u.cms_user.name)
 		end
 
 feature -- Hooks configuration
@@ -483,6 +494,10 @@ feature -- Hook
 			lnk: CMS_LOCAL_LINK
 		do
 			if attached a_response.user as u then
+				create lnk.make (a_response.api.translation ("Your Profile", Void), user_cloud_profile_location (u))
+				lnk.set_weight (88)
+				a_menu_system.primary_menu.extend (lnk)
+
 				create lnk.make (a_response.api.translation ("Licenses", Void), licenses_location)
 				lnk.set_weight (10)
 				a_menu_system.primary_menu.extend (lnk)

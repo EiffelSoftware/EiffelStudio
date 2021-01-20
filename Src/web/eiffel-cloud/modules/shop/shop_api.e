@@ -198,6 +198,51 @@ feature -- Access
 			end
 		end
 
+feature -- Access: customer information
+
+	customer_information (a_user: detachable CMS_USER; a_email: detachable READABLE_STRING_8): detachable SHOP_CUSTOMER
+		local
+			l_stripe_customer_ids: ARRAYED_LIST [READABLE_STRING_GENERAL]
+		do
+			if a_user /= Void then
+				create Result.make_with_user (a_user)
+			elseif a_email /= Void then
+				create Result.make_with_email (a_email)
+			end
+			if Result /= Void then
+				if attached {STRIPE_API} cms_api.module_api ({STRIPE_MODULE}) as l_stripe_api then
+					create l_stripe_customer_ids.make (0)
+					if
+						attached Result.user as u and then
+					 	attached l_stripe_api.customer_ids_by_uid (u) as lst
+					then
+						l_stripe_customer_ids.append (lst)
+					end
+					if
+						attached Result.email as e and then
+					 	attached l_stripe_api.customer_ids_by_email (e) as lst
+					then
+						l_stripe_customer_ids.append (lst)
+					end
+					across
+						l_stripe_customer_ids as ic
+					loop
+						if attached {STRIPE_CUSTOMER} l_stripe_api.customer (ic.item) as cust then
+							Result.items ["stripe.customer.id"] := cust.id.to_string_32
+							if attached cust.name as l_name then
+								Result.items ["stripe.customer.name"] := l_name
+							end
+							if attached cust.address as add then
+								Result.items ["stripe.customer.address"] := add.to_string
+							end
+--							Result.items [ic.item + ".json"] := cust.to_json_string
+
+						end
+					end
+				end
+			end
+		end
+
 feature -- Billings
 
 	billings (a_ref: READABLE_STRING_GENERAL): detachable SHOPPING_BILLS

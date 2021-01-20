@@ -20,6 +20,7 @@
 		<library name="shop_module" location="..\shop\shop.ecf" readonly="false"/>
 		<library name="time" location="$ISE_LIBRARY\library\time\time.ecf"/>
 		<library name="uuid" location="$ISE_LIBRARY\library\uuid\uuid.ecf"/>
+		<library name="cms_wikitext_module" location="$ISE_LIBRARY\unstable\library\web\cms\modules\wikitext\wikitext.ecf" readonly="false" use_application_options="true"/>
 		<library name="wsf" location="$ISE_LIBRARY\contrib\library\web\framework\ewf\wsf\wsf.ecf"/>
 		<library name="wsf_html" location="$ISE_LIBRARY\contrib\library\web\framework\ewf\wsf_html\wsf_html.ecf"/>
 		<cluster name="src" location=".\" recursive="true"/>

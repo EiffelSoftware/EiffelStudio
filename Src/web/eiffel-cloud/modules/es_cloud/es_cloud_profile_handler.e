@@ -37,7 +37,7 @@ feature -- Execution
 	execute (req: WSF_REQUEST; res: WSF_RESPONSE)
 			-- Execute handler for `req' and respond in `res'.
 		do
-			if api.has_permissions (<<{ES_CLOUD_MODULE}.perm_view_es_accounts, {ES_CLOUD_MODULE}.perm_manage_es_accounts>>) then
+			if api.has_permissions (<<{ES_CLOUD_MODULE}.perm_view_cloud_profiles, {ES_CLOUD_MODULE}.perm_view_es_accounts, {ES_CLOUD_MODULE}.perm_manage_es_accounts>>) then
 				if
 					attached {WSF_STRING} req.path_parameter ("account_id") as p_acc and then
 					attached es_cloud_api.cloud_user (p_acc.value) as u
@@ -134,12 +134,11 @@ feature -- Execution
 					s.append ("</div>%N")
 				end
 				if l_is_own_profile then
---					s.append ("<a href=%""+ req.percent_encoded_path_info + "?edit=yes" +"%" class=%"button%">&gt;&gt; Edit your profile</a>")
 					s.append ("<a href=%""+ api.url (module.user_cloud_profile_location (a_cloud_user.cms_user), Void) + "?edit=yes" +"%" class=%"button%">&gt;&gt; Edit your profile</a>")
 				end
 				s.append ("</div>%N")
 			end
-			if api.has_permission ({ES_CLOUD_MODULE}.perm_manage_es_accounts) then
+			if api.has_permissions (<<{ES_CLOUD_MODULE}.perm_manage_es_accounts, {ES_CLOUD_MODULE}.perm_view_es_accounts>>) then
 				s.append ("<div>Only for trusted eyes ...<ul>")
 				if attached {SHOP_API} api.module_api ({SHOP_MODULE}) as l_shop_api then
 					if attached l_shop_api.customer_information (a_cloud_user.cms_user, Void) as cust then

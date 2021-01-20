@@ -76,6 +76,7 @@ feature {CMS_MODULE} -- Access control
 			Result.force (perm_view_es_sessions)
 			Result.force (perm_buy_es_license)
 			Result.force (perm_access_es_stats)
+			Result.force (perm_view_cloud_profiles)
 		end
 
 feature -- Access control
@@ -89,6 +90,7 @@ feature -- Access control
 	perm_manage_es_licenses: STRING = "manager es licenses"
 	perm_buy_es_license: STRING = "buy es licenses"
 	perm_access_es_stats: STRING = "access es stats"
+	perm_view_cloud_profiles: STRING = "view cloud profiles"
 
 feature {CMS_API} -- Module Initialization			
 

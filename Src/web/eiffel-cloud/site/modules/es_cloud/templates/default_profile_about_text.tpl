@@ -1,7 +1,7 @@
 [[Image:https://github.com/eiffelhub/media/raw/master/logo/inline_powered_by_eiffel_logo/png_200x33/powered_by_Eiffel_Logo_inline_blue.png|width=20%]]
 
 == Bio ==
-'''Add a bio ...'
+''Add a bio ...''
 == Projects ==
 * ...
 == Information ==

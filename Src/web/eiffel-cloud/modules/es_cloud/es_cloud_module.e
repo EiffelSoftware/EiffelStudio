@@ -163,7 +163,7 @@ feature -- Access: router
 				a_router.handle ("/" + root_location, h, a_router.methods_get)
 
 				create h_prof.make (Current, l_mod_api)
-				a_router.handle ("/" + cloud_profiles_location + "{account_id}", h_prof, a_router.methods_get_post)
+				a_router.handle ("/" + cloud_profile_location + "{account_id}", h_prof, a_router.methods_get_post)
 
 				create h_stats.make (Current, l_mod_api)
 				a_router.handle ("/" + statistics_location, h_stats, a_router.methods_get)
@@ -183,7 +183,7 @@ feature -- Access: router
 
 	root_location: STRING = "cloud"
 
-	cloud_profiles_location: STRING = "cloud/profiles/"
+	cloud_profile_location: STRING = "cloud/profile/"
 
 	activities_location: STRING = "activities/"
 
@@ -203,7 +203,7 @@ feature -- Access: router
 
 	user_cloud_profile_location (u: ES_CLOUD_USER): STRING
 		do
-			Result := cloud_profiles_location + url_encoded (u.cms_user.name)
+			Result := cloud_profile_location + url_encoded (u.cms_user.name)
 		end
 
 feature -- Hooks configuration

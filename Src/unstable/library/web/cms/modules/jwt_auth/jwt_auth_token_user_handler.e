@@ -174,12 +174,8 @@ feature -- Request execution
 	post_jwt_token (a_uid: READABLE_STRING_GENERAL; req: WSF_REQUEST; res: WSF_RESPONSE)
 			-- Execute handler for `req' and respond in `res'.
 		local
-			inf: JWT_AUTH_TOKEN
+
 			rep: CMS_RESPONSE
-			fset: WSF_FORM_FIELD_SET
-			tf: WSF_FORM_TEXT_INPUT
-			sub: WSF_FORM_SUBMIT_INPUT
-			l_form: CMS_FORM
 			s: STRING
 		do
 			if attached user_by_uid (a_uid) as l_user then
@@ -195,7 +191,7 @@ feature -- Request execution
 --							print (jwt_auth_api.user_tokens (l_user, Void))
 							jwt_auth_api.discard_user_token (l_user, p_token.value)
 							if jwt_auth_api.has_error then
-								rep.add_error_message ("Error when trying to discard token " + p_token.value + " !")
+								rep.add_error_message ("Error when trying to discard token " + html_encoded (p_token.value) + " !")
 							else
 								rep.add_success_message ("Token discarded.")
 								rep.set_redirection (req.percent_encoded_path_info)

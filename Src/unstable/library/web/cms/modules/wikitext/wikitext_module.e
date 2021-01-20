@@ -12,12 +12,14 @@ inherit
 			module_api as wikitext_api
 		redefine
 			initialize,
+			install,
 			setup_hooks
 		end
 
 	CMS_HOOK_RESPONSE_ALTER
 
-
+	CMS_API_ACCESS
+	
 create
 	make
 
@@ -35,7 +37,17 @@ feature -- Access
 
 	name: STRING = "wikitext"
 
-feature {CMS_API} -- Module Initialization			
+feature {CMS_API} -- Module Initialization	
+
+	install (api: CMS_API)
+		do
+			Precursor (api)
+			api.content_filters.extend (create {WIKITEXT_FILTER})
+			if api.format ({WIKITEXT_FORMAT}.name) = Void then
+				api.formats.extend (api.new_format ({WIKITEXT_FORMAT}.name, "Wikitext rendered as HTML", <<{WIKITEXT_FILTER}.name>>))
+				api.save_formats
+			end
+		end
 
 	initialize (api: CMS_API)
 			-- <Precursor>
@@ -44,7 +56,7 @@ feature {CMS_API} -- Module Initialization
 
 			api.content_filters.extend (create {WIKITEXT_FILTER})
 			if api.format ({WIKITEXT_FORMAT}.name) = Void then
-				api.formats.extend (api.new_format ("wikitext", "Wikitext rendered as HTML", <<{WIKITEXT_FILTER}.name>>))
+				api.formats.extend (api.new_format ({WIKITEXT_FORMAT}.name, "Wikitext rendered as HTML", <<{WIKITEXT_FILTER}.name>>))
 			end
 		end
 

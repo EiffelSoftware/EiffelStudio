@@ -24,7 +24,7 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	item alias "[]" (k: READABLE_STRING_GENERAL): detachable READABLE_STRING_32
+	item alias "[]" (k: READABLE_STRING_GENERAL): detachable READABLE_STRING_32 assign set_item
 			-- Profile item associated with key `k`.
 		do
 			Result := items.item (k)
@@ -48,10 +48,19 @@ feature -- Access
 
 feature -- Change
 
-	force (v: READABLE_STRING_GENERAL; k: READABLE_STRING_GENERAL)
+	set_item (v: detachable READABLE_STRING_32; k: READABLE_STRING_GENERAL)
+		do
+			force (v, k)
+		end
+
+	force (v: detachable READABLE_STRING_GENERAL; k: READABLE_STRING_GENERAL)
 			-- Associated value `v` with key `k`.
 		do
-			items.force (v.to_string_32, k)
+			if v = Void then
+				items.remove (k)
+			else
+				items.force (v.to_string_32, k)
+			end
 		end
 
 feature -- Access

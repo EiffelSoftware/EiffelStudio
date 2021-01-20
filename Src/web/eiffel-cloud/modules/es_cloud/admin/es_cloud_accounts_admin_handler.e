@@ -55,6 +55,7 @@ feature -- Execution
 					if attached l_user.cms_user.profile_name as l_profname then
 						s.append ("<li>profile_name: "+ html_encoded (l_profname) +"</li>%N")
 					end
+					s.append ("<li>Profile: " + api.url (es_cloud_api.user_cloud_profile_link (l_user), Void) + "</li>%N")
 					s.append ("</ul>%N")
 
 					f := new_license_form (req)

@@ -886,14 +886,17 @@ feature -- HTML factory
 			Result := cms_api.location_url ("cloud/account/" + u.id.out, Void)
 		end
 
-	account_html_link (u: ES_CLOUD_USER): STRING_8
-		require
-			u_with_id: u.has_id
+	user_cloud_profile_link (u: ES_CLOUD_USER): STRING_8
 		local
 			t: READABLE_STRING_32
 		do
 			t := cms_api.real_user_display_name (u.cms_user)
-			Result := cms_api.link (t, cms_api.url ("cloud/account/" + u.id.out, Void), Void)
+			Result := cms_api.link (t, cms_api.url (user_cloud_profile_location (u), Void), Void)
+		end
+
+	user_cloud_profile_location (u: ES_CLOUD_USER): STRING
+		do
+			Result := {ES_CLOUD_MODULE}.cloud_profile_location + url_encoded (u.cms_user.name)
 		end
 
 	account_administration_url (u: ES_CLOUD_USER): STRING_8

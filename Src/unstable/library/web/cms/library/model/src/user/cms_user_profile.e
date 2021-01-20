@@ -1,6 +1,9 @@
 note
 	description: "[
 				User profile used to extend information associated with a {CMS_USER}.
+
+				Any profile item with a key starting by "." will be considered internal,
+				and thus not displayed under the user account view
 			]"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -46,6 +49,13 @@ feature -- Access
 			Result := items.is_empty
 		end
 
+	has_visible_items: BOOLEAN
+			-- Has visible items?
+		do
+			Result := not is_empty and then
+					across items as ic some not ic.item.starts_with (".") end
+		end
+
 feature -- Change
 
 	set_item (v: detachable READABLE_STRING_32; k: READABLE_STRING_GENERAL)
@@ -76,6 +86,6 @@ feature {NONE} -- Implementation
 	items: STRING_TABLE [READABLE_STRING_32]
 
 ;note
-	copyright: "2011-2014, Javier Velilla, Jocelyn Fiat, Eiffel Software and others"
+	copyright: "2011-2021, Javier Velilla, Jocelyn Fiat, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 end

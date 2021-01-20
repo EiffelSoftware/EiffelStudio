@@ -284,6 +284,7 @@ feature -- Handler
 
 	view_account_form_id: STRING = "roccms-user-view"
 	edit_account_form_id: STRING = "roccms-user-edit"
+	register_account_form_id: STRING = "roccms-user-register"
 
 	handle_account (a_auth_api: CMS_AUTHENTICATION_API; req: WSF_REQUEST; res: WSF_RESPONSE)
 		local
@@ -481,7 +482,7 @@ feature -- Handler
 			if a_auth_api.cms_api.has_permission ("account register") then
 				create {GENERIC_VIEW_CMS_RESPONSE} r.make (req, res, a_auth_api.cms_api)
 				if req.is_post_request_method then
-					create f.make (req.percent_encoded_path_info, "roccms-user-register")
+					create f.make (req.percent_encoded_path_info, register_account_form_id)
 					f.extend_text_field ("name", Void)
 					f.extend_password_field ("password", Void)
 					f.extend_text_field ("email", Void)
@@ -928,8 +929,8 @@ feature {NONE} -- Block views
 --						l_tpl_block.set_value (a_response.values.item ("email"), "email")
 --						l_tpl_block.set_value (a_response.values.item ("name"), "name")
 						l_tpl_block.set_value (form_registration_application_description (a_response.api), "application_description")
-						l_tpl_block.set_value ("roccms-user-register", "form_id")
-						if attached recaptcha_site_html ("roccms-user-register", a_response.api) as l_recaptcha_site_html then
+						l_tpl_block.set_value (register_account_form_id, "form_id")
+						if attached recaptcha_site_html (register_account_form_id, a_response.api) as l_recaptcha_site_html then
 							l_tpl_block.set_value (l_recaptcha_site_html, "recaptcha_site_html")
 						end
 						if

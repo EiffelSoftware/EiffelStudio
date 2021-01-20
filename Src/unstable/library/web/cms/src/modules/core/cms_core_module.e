@@ -187,24 +187,28 @@ feature -- Hook
 					attached a_response.user as u and then
 					attached a_response.api.user_api as l_user_profile_api and then
 					attached l_user_profile_api.user_profile (u) as l_profile and then
-					not l_profile.is_empty
+					l_profile.has_visible_items
 				then
 					create fset.make
 					fset.set_legend ("User-Profile")
-					a_form.extend (fset)
 					across
 						l_profile as ic
 					loop
-						create tf.make_with_text (ic.key.to_string_8, ic.item) -- TODO: the key should be basic string 8, check if this is true.
-						tf.set_label (html_encoded (ic.key.to_string_32))
-						a_form.extend (tf)
+						if not ic.key.starts_with (".") then
+							create tf.make_with_text (ic.key.to_string_8, ic.item) -- TODO: the key should be basic string 8, check if this is true.
+							tf.set_label (html_encoded (ic.key.to_string_32))
+							a_form.extend (tf)
+						end
+					end
+					if not fset.is_empty then
+						a_form.extend (fset)
 					end
 				end
 			end
 		end
 
 note
-	copyright: "2011-2020, Jocelyn Fiat, Javier Velilla, Eiffel Software and others"
+	copyright: "2011-2021, Jocelyn Fiat, Javier Velilla, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

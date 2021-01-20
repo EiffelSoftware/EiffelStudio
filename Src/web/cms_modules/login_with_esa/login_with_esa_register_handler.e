@@ -37,8 +37,6 @@ feature -- Execution
 
 	execute (req: WSF_REQUEST; res: WSF_RESPONSE)
 			-- Execute handler for `req' and respond in `res'.
-		local
-			l_uid: READABLE_STRING_GENERAL
 		do
 			if attached api.user as u then
 				send_already_signed_in (u, req, res)
@@ -54,7 +52,6 @@ feature -- Execution
 	send_already_signed_in (u: CMS_USER; req: WSF_REQUEST; res: WSF_RESPONSE)
 		local
 			r: like new_generic_response
-			l_html: STRING
 		do
 			r := new_generic_response (req, res)
 			r.add_notice_message ("You are already signed in as user %"" + html_encoded (api.user_display_name (u)) + "%".")
@@ -90,7 +87,7 @@ feature -- Execution
 			acc: ESA_ACCOUNT
 			l_user_api: CMS_USER_API
 			f: like new_registration_form
-			l_html: STRING
+			l_email, l_html: STRING_8
 			err: BOOLEAN
 			e: STRING
 		do
@@ -106,8 +103,9 @@ feature -- Execution
 					attached fd.string_item ("user_name") as l_username and then
 					attached fd.string_item ("password") as l_password and then
 					attached fd.string_item ("password-bis") as l_password_bis and then
-					attached fd.string_item ("email") as l_email
+					attached fd.string_item ("email") as f_email
 				then
+					l_email := f_email.to_string_8
 					l_user_api := api.user_api
 					if
 						attached l_user_api.user_by_name (l_username)

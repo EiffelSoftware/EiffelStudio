@@ -285,9 +285,6 @@ feature -- Hooks
 		end
 
 	associate_account (a_user: CMS_USER; a_value: CMS_VALUE_TABLE)
-		local
-			l_associated: LIST [STRING]
-			l_not_associated: LIST [STRING]
 		do
 			if attached login_with_esa_api as l_api then
 				if  attached l_api.esa_account_for_user (a_user) as l_acc then

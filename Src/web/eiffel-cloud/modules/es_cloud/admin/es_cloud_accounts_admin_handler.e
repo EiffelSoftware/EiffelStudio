@@ -58,6 +58,31 @@ feature -- Execution
 					s.append ("<li>User profile: " + es_cloud_api.user_cloud_profile_link (l_user) + "</li>%N")
 					s.append ("</ul>%N")
 
+					if api.has_permissions (<<{ES_CLOUD_MODULE}.perm_manage_es_accounts, {ES_CLOUD_MODULE}.perm_view_es_accounts>>) then
+						s.append ("<div>Only for trusted eyes ...<ul>")
+						if attached {SHOP_API} api.module_api ({SHOP_MODULE}) as l_shop_api then
+							if attached l_shop_api.customer_information (l_user.cms_user, Void) as cust then
+								across
+									cust.items as ic
+								loop
+									s.append ("<li><strong>")
+									s.append (html_encoded (ic.key))
+									s.append ("</strong>:")
+									if ic.key.ends_with (".json") then
+										s.append ("<code lang=%"json%">")
+										s.append (utf_8_encoded (ic.item))
+										s.append ("<code>")
+									else
+										s.append (html_encoded (ic.item))
+									end
+									s.append ("</li>%N")
+								end
+							end
+						end
+						s.append ("</ul>%N")
+						s.append ("</div>%N")
+					end
+
 					f := new_license_form (req)
 
 					if req.is_put_post_request_method then

@@ -563,11 +563,40 @@ feature -- Access: global variables
 						else
 							val := item (n)
 						end
-						if attached {WSF_TABLE} val as tb then
-							v := tb.value (k)
-							if q = a_name.count then
-								Result := v
-							else
+						from
+						until
+							Result /= Void or q > a_name.count
+						loop
+							if attached {WSF_TABLE} val as tb then
+								v := tb.value (k)
+								if q = a_name.count then
+									Result := v
+								elseif attached {WSF_TABLE} v as v_table then
+									p := q + 1
+									if a_name[p] = '[' then
+										-- case tb[k1][k2][k3], v = tb[k1]
+										-- now searching for v[k2]
+										q := a_name.index_of_code (93, p + 1) -- 93 ']'
+										if q > p then
+											k := a_name.substring (p + 1, q - 1)
+											v := v_table.value (k)
+											if q = a_name.count then
+												Result := v
+											else
+													-- recursion ...
+												val := v
+											end
+										else
+											-- ???  tb[k1][...
+											q := a_name.count + 1 -- Exit
+										end
+									else
+										-- ??? tb[k1]...
+										q := a_name.count + 1 -- Exit
+									end
+								else
+									q := a_name.count + 1 -- Exit
+								end
 							end
 						end
 					end

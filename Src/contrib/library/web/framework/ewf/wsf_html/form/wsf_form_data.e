@@ -253,28 +253,88 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	get_form_field_item (req: WSF_REQUEST; i: WSF_FORM_FIELD; n: READABLE_STRING_8)
+	get_form_field_item (req: WSF_REQUEST; i: WSF_FORM_FIELD; a_name: READABLE_STRING_8)
 		local
-			v: detachable WSF_VALUE
+			v, val: detachable WSF_VALUE
+			n, k: READABLE_STRING_GENERAL
+			p,q: INTEGER
+			done: BOOLEAN
 		do
 			if form.is_post_method then
-				v := req.table_item (n, agent req.form_parameter)
+				v := req.table_item (a_name, agent req.form_parameter)
 			else
-				v := req.table_item (n, agent req.query_parameter)
+				v := req.table_item (a_name, agent req.query_parameter)
 			end
 			if v = Void then
-				if n.ends_with_general ("[]") then
-					if form.is_post_method then
-						v := req.form_parameter (n.substring (1, n.count - 2))
+				p := a_name.index_of ('[', 1)
+				if p > 0 then
+					q := a_name.index_of (']', p + 1)
+					if q > p then
+						from
+							n := a_name.substring (1, p - 1)
+							k := a_name.substring (p + 1, q - 1)
+							if form.is_post_method then
+								val := req.form_parameter (n)
+							else
+								val := req.query_parameter (n)
+							end
+						until
+							v /= Void or q > a_name.count or done
+						loop
+							if attached {WSF_TABLE} val as tb then
+								if k.is_empty then
+										-- name[]
+									val := tb
+								else
+									val := tb.value (k)
+								end
+								if q = a_name.count then
+										-- name[]
+										-- Keep `v`	as a table value		
+									v := val
+								elseif attached {WSF_TABLE} val as v_table then
+									p := q + 1
+									if a_name [p] = '[' then
+										-- case tb[k1][k2][k3], v = tb[k1]
+										-- now searching for v[k2]
+										q := a_name.index_of (']', p + 1)
+										if q > p then
+											k := a_name.substring (p + 1, q - 1)
+											val := v_table.value (k)
+											if q = a_name.count then
+												v := val
+												q := a_name.count + 1 -- Exit (in case `val` is Void)
+											else
+													-- recursion with `val`...
+												v := Void
+												done := val = Void -- Exit
+											end
+										else
+											-- ???  tb[k1][...
+											done := True
+										end
+									else
+										-- ??? tb[k1]...
+										done := True
+									end
+								else
+									done := True
+								end
+							else
+								done := True
+							end
+						end
 					else
-						v := req.query_parameter (n.substring (1, n.count - 2))
+							-- var[... ? invalid syntax!
 					end
+				else
+					-- not a table syntax ...
 				end
 			end
 			if i.is_required and (v = Void or else v.is_empty) then
-				add_error (i, "Field %"<em>" + n + "</em>%" is required")
+				add_error (i, "Field %"<em>" + a_name + "</em>%" is required")
 			else
-				items.force (v, n)
+				items.force (v, a_name)
 			end
 		end
 

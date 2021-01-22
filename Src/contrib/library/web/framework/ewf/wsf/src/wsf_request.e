@@ -544,6 +544,7 @@ feature -- Access: global variables
 			n,k: READABLE_STRING_GENERAL
 			v: like table_item
 			val: detachable WSF_VALUE
+			done: BOOLEAN
 		do
 			if f /= Void then
 				Result := f.item ([a_name])
@@ -558,17 +559,21 @@ feature -- Access: global variables
 						n := a_name.substring (1, p - 1)
 						k := a_name.substring (p + 1, q - 1)
 
-						if f /= Void then
-							val := f.item ([n])
-						else
-							val := item (n)
-						end
 						from
+							if f /= Void then
+								val := f.item ([n])
+							else
+								val := item (n)
+							end
 						until
-							Result /= Void or q > a_name.count
+							Result /= Void or q > a_name.count or done
 						loop
 							if attached {WSF_TABLE} val as tb then
-								v := tb.value (k)
+								if k.is_empty then
+									v := val
+								else
+									v := tb.value (k)
+								end
 								if q = a_name.count then
 									Result := v
 								elseif attached {WSF_TABLE} v as v_table then
@@ -582,21 +587,25 @@ feature -- Access: global variables
 											v := v_table.value (k)
 											if q = a_name.count then
 												Result := v
+												done := True
 											else
 													-- recursion ...
 												val := v
+												done := v = Void -- Exit
 											end
 										else
 											-- ???  tb[k1][...
-											q := a_name.count + 1 -- Exit
+											done := True
 										end
 									else
 										-- ??? tb[k1]...
-										q := a_name.count + 1 -- Exit
+										done := True
 									end
 								else
-									q := a_name.count + 1 -- Exit
+									done := True
 								end
+							else
+								done := True
 							end
 						end
 					end

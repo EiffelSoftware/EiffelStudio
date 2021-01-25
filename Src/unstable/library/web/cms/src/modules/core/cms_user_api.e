@@ -243,7 +243,7 @@ feature -- Change User
 				error_handler.add_custom_error (0, "bad new user request", "Missing password to create new user!")
 			end
 			if not has_error then
-				cms_api.log ("users", "New user " + cms_api.real_user_display_name (a_user), {CMS_LOG}.level_info, cms_api.user_local_link (a_user, Void))
+				cms_api.log ("users", "New user " + utf_8_encoded (cms_api.real_user_display_name (a_user)), {CMS_LOG}.level_info, cms_api.user_local_link (a_user, Void))
 				cms_api.hooks.invoke_new_user (a_user)
 			end
 		end
@@ -740,6 +740,6 @@ feature -- Change Temp User
 --		end
 
 note
-	copyright: "2011-2020, Jocelyn Fiat, Javier Velilla, Eiffel Software and others"
+	copyright: "2011-2021, Jocelyn Fiat, Javier Velilla, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 end

@@ -49,6 +49,21 @@ feature -- Link
 			append_link_to_html (a_text, a_path, opts, Result)
 		end
 
+	absolute_link (a_text: detachable READABLE_STRING_GENERAL; a_path: READABLE_STRING_8; a_opts: detachable CMS_API_OPTIONS): STRING
+			-- HTML link with title `a_text' and href `a_path'.
+			-- `opts' is used for additional settings.
+		local
+			opts: CMS_API_OPTIONS
+		do
+			create opts.make (1)
+			if a_opts /= Void then
+				opts.import (a_opts)
+			end
+			opts.force (True, "absolute")
+			create Result.make (32)
+			append_link_to_html (a_text, a_path, opts, Result)
+		end
+
 	link_with_raw_text (a_raw_text: detachable READABLE_STRING_8; a_path: READABLE_STRING_8; opts: detachable CMS_API_OPTIONS): STRING
 			-- HTML link with title the html code `a_raw_text' and href `a_path'.
 			-- `opts' is used for additional settings.	
@@ -201,6 +216,6 @@ feature -- Url
 		end
 
 note
-	copyright: "2011-2020, Jocelyn Fiat, Javier Velilla, Eiffel Software and others"
+	copyright: "2011-2021, Jocelyn Fiat, Javier Velilla, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 end

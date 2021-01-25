@@ -547,6 +547,13 @@ feature -- CMS links
 			end
 		end
 
+	user_html_absolute_link (u: CMS_USER): STRING
+		require
+			u_with_name: not u.name.is_whitespace
+		do
+			Result := absolute_link (real_user_display_name (u), "user/" + u.id.out, Void)
+		end
+
 	user_html_link (u: CMS_USER): STRING
 		require
 			u_with_name: not u.name.is_whitespace

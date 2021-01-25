@@ -71,6 +71,9 @@ feature -- Execution
 
 			if attached {WSF_STRING} req.query_parameter ("plan") as p_plan then
 				l_plan_filter := p_plan.value
+				if l_plan_filter.is_whitespace then
+					l_plan_filter := Void
+				end
 			end
 
 			if attached {WSF_STRING} req.query_parameter ("with_expired") as p_include_expired then
@@ -147,7 +150,7 @@ feature -- Execution
 			if l_inc_expired then
 				f_cb.set_checked (True)
 			end
-			f_cb.set_title ("expired licenses")
+			f_cb.set_title ("with expired licenses")
 			f_cb.add_html_attribute ("onchange", "this.form.submit();")
 			create f_div.make
 			f.extend (f_div)

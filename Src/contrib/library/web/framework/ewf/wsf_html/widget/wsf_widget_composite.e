@@ -207,6 +207,12 @@ feature -- Change
 			extend (create {WSF_WIDGET_RAW_TEXT}.make_with_text (t))
 		end
 
+	extend_hidden_input (a_name: READABLE_STRING_8; a_value: READABLE_STRING_GENERAL)
+			-- Extend a hidden input field.
+		do
+			extend (create {WSF_FORM_HIDDEN_INPUT}.make_with_text (a_name, a_value))
+		end
+
 feature {NONE} -- Implementation: Items
 
 	items_by_type_from (a_container: ITERABLE [WSF_WIDGET]; a_type: TYPE [detachable ANY]): detachable ARRAYED_LIST [WSF_WIDGET]

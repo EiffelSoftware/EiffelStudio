@@ -155,7 +155,7 @@ feature -- Execution
 	display_plans (req: WSF_REQUEST; res: WSF_RESPONSE)
 		local
 			r: like new_generic_response
-			s: STRING
+			s: STRING_8
 		do
 			r := new_generic_response (req, res)
 			add_primary_tabs (r)
@@ -246,6 +246,7 @@ feature -- Execution
 			tf: WSF_FORM_TEXT_INPUT
 			l_area: WSF_FORM_TEXTAREA
 			l_submit: WSF_FORM_SUBMIT_INPUT
+			s: STRING_8
 		do
 			create Result.make (req.percent_encoded_path_info, "es-cloud-edit-plan")
 			Result.extend_html_text ("<h1>Create a new plan...</h1>")
@@ -294,6 +295,16 @@ feature -- Execution
 			create tf.make ("data")
 			if a_plan /= Void and then attached a_plan.data as l_data then
 				tf.set_text_value (l_data)
+				create s.make_from_string ("Existing variables: ")
+				across
+					a_plan.data_names as ic
+				loop
+					if not s.is_empty then
+						s.append (", ")
+					end
+					s.append (html_encoded (ic.item))
+				end
+				tf.set_description (s)
 			end
 			tf.set_label ("Data")
 			tf.set_size (70)

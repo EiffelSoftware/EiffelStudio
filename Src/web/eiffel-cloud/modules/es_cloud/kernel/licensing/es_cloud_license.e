@@ -148,6 +148,21 @@ feature -- Status report
 			Result := plan.heartbeat
 		end
 
+	duration_in_days: NATURAL
+			-- Number of days since the creation of the license, until the expiration date, or until today.
+		local
+			dt, l_creation: DATE_TIME
+		do
+			l_creation := creation_date
+			create dt.make_now_utc
+			if attached expiration_date as exp and then
+				exp < dt
+			then
+				dt := exp
+			end
+			Result := (dt.relative_duration (l_creation).seconds_count // (24 * 60 * 60)).to_natural_32
+		end
+
 feature -- Platform restriction
 
 	is_waiting_for_platform_value (a_platform: detachable READABLE_STRING_GENERAL): BOOLEAN

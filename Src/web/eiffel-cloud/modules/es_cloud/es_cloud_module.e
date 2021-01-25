@@ -156,6 +156,7 @@ feature -- Access: router
 		local
 			h: ES_CLOUD_HANDLER
 			h_prof: ES_CLOUD_PROFILE_HANDLER
+			h_forms: ES_CLOUD_FORMS_HANDLER
 			h_stats: ES_CLOUD_STATISTICS_HANDLER
 			h_act: ES_CLOUD_ACTIVITIES_HANDLER
 			h_lic: ES_CLOUD_LICENSES_HANDLER
@@ -170,6 +171,9 @@ feature -- Access: router
 				create h_stats.make (Current, l_mod_api)
 				a_router.handle ("/" + statistics_location, h_stats, a_router.methods_get)
 
+				create h_forms.make (Current, l_mod_api)
+				a_router.handle ("/" + cloud_forms_location + "{form_id}", h_forms, a_router.methods_get_post)
+
 				create h_act.make (l_mod_api)
 				a_router.handle ("/" + activities_location, h_act, a_router.methods_get)
 				a_router.handle ("/" + activities_location + "{license_key}", h_act, a_router.methods_get)
@@ -183,9 +187,11 @@ feature -- Access: router
 			end
 		end
 
-	root_location: STRING = "cloud"
+	root_location: STRING = "cloud/"
 
 	cloud_profile_location: STRING = "cloud/profile/"
+
+	cloud_forms_location: STRING = "cloud/forms/"
 
 	activities_location: STRING = "activities/"
 
@@ -606,7 +612,6 @@ feature -- Hooks: block
 					lic := ic.item.license
 					if not lic.is_expired then
 						l_active_count := l_active_count + 1
-
 					end
 					api.append_short_license_view_to_html (lic, a_user, Current, l_html)
 				end
@@ -685,6 +690,13 @@ feature -- Hooks: block
 					end
 				end
 				if attached {CMS_SMARTY_TEMPLATE_BLOCK} smarty_template_block (Current, "side_header", api.cms_api) as tpl then
+					across
+						a_response.values as tb_ic
+					loop
+						tpl.set_value (tb_ic.item, tb_ic.key)
+					end
+					tpl.set_value (a_response.url ("/" + root_location, Void), "escloud_url")
+					tpl.set_value (a_response.url ("/" + licenses_location, Void), "escloud_licenses_url")
 					tpl.append_to_html (a_response.theme, l_html)
 				end
 --				l_html.append ("</div>")

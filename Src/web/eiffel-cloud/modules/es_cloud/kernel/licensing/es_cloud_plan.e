@@ -15,7 +15,8 @@ feature {NONE} -- Creation
 	make (a_name: READABLE_STRING_8)
 		do
 			create name.make_from_string (a_name)
-			trial_period_in_days := 15 -- Default
+			trial_period_in_days := default_trial_period_in_days -- Default
+			trial_max_period_in_days := 0
 		end
 
 	make_with_id_and_name (a_pid: INTEGER; a_name: READABLE_STRING_8)
@@ -60,6 +61,13 @@ feature -- Access
 	usage_limitations_data: detachable READABLE_STRING_8
 			-- Usage limitations for current plan, mostly related to IDE tools and services.
 
+	additional_data: detachable STRING_TABLE [detachable READABLE_STRING_GENERAL]
+			-- Other data not (yet) mapped to any specific attribute.
+
+feature -- Constant
+
+	default_trial_period_in_days: NATURAL = 30
+
 feature -- Access: private
 
 	heartbeat: NATURAL
@@ -73,6 +81,9 @@ feature -- Access: private
 	trial_period_in_days: NATURAL assign set_trial_period_in_days
 			-- Trial period in days.
 
+	trial_max_period_in_days: NATURAL assign set_trial_max_period_in_days
+			-- Max trial period in days.
+
 	data: detachable IMMUTABLE_STRING_32
 		local
 			s: STRING_32
@@ -84,6 +95,7 @@ feature -- Access: private
 			s.append (";session.heartbeat="); s.append_natural_32 (heartbeat)
 			s.append (";order.weight="); s.append_integer (weight)
 			s.append (";trial.days="); s.append_natural_32 (trial_period_in_days)
+			s.append (";trial.max_days="); s.append_natural_32 (trial_max_period_in_days)
 			s.append (";price=")
 			if has_price then
 				s.append ("yes")
@@ -96,7 +108,30 @@ feature -- Access: private
 			else
 				s.append ("no")
 			end
+			if attached additional_data as o then
+				across
+					o as ic
+				loop
+					s.append (";")
+					s.append (ic.key)
+					s.append ("=")
+					if attached ic.item as v then
+						s.append (v)
+					end
+				end
+			end
 			create Result.make_from_string_32 (s)
+		end
+
+	data_names: ITERABLE [READABLE_STRING_GENERAL]
+		do
+			Result := <<
+					"install.limit", "platforms.limit", "session.limit",
+					"platforms.heartbeat",
+					"order.weight",
+					"trial.days", "trial.max_days",
+					"price", "public"
+				>>
 		end
 
 feature -- Status report	
@@ -128,9 +163,10 @@ feature -- Element change
 
 	set_data (a_data: detachable READABLE_STRING_GENERAL)
 		local
-			sess,inst,platfs,l_heartbeat, l_trial_days: NATURAL
+			sess,inst,platfs,l_heartbeat, l_trial_days, l_max_trial_days: NATURAL
 			l_weight: INTEGER
-			s: READABLE_STRING_GENERAL
+			s,k,v: READABLE_STRING_GENERAL
+			p: INTEGER
 		do
 			sess := 0
 			inst := 0
@@ -138,29 +174,40 @@ feature -- Element change
 			l_heartbeat := 0
 			l_weight := 0
 			l_trial_days := 0
+			l_max_trial_days := 0
+			additional_data := Void
 			if a_data /= Void then
 				across
 					a_data.split (';') as ic
 				loop
 					s := ic.item
-					if s.starts_with ("install.limit=") then
-						inst := s.substring (s.index_of ('=', 1) + 1, s.count).to_natural
-					elseif s.starts_with ("platforms.limit=") then
-						platfs := s.substring (s.index_of ('=', 1) + 1, s.count).to_natural
-					elseif s.starts_with ("session.limit=") then
-						sess := s.substring (s.index_of ('=', 1) + 1, s.count).to_natural
-					elseif s.starts_with ("session.heartbeat=") then
-						l_heartbeat := s.substring (s.index_of ('=', 1) + 1, s.count).to_natural
-					elseif s.starts_with ("order.weight=") then
-						l_weight := s.substring (s.index_of ('=', 1) + 1, s.count).to_integer
-					elseif s.starts_with ("trial.days=") then
-						l_trial_days := s.substring (s.index_of ('=', 1) + 1, s.count).to_natural
-					elseif s.starts_with ("price=") then
-						s := s.substring (s.index_of ('=', 1) + 1, s.count)
-						has_price := s.is_case_insensitive_equal ("yes")
-					elseif s.starts_with ("public=") then
-						s := s.substring (s.index_of ('=', 1) + 1, s.count)
-						is_public := s.is_case_insensitive_equal ("yes")
+					p := s.index_of ('=', 1)
+					if p = 0 then
+							-- Skip ...
+					else
+						k := s.head (p - 1)
+						v := s.substring (p + 1, s.count)
+						if k.starts_with ("install.limit") then
+							inst := v.to_natural
+						elseif s.starts_with ("platforms.limit") then
+							platfs := v.to_natural
+						elseif s.starts_with ("session.limit") then
+							sess := v.to_natural
+						elseif s.starts_with ("session.heartbeat") then
+							l_heartbeat := v.to_natural
+						elseif s.starts_with ("order.weight") then
+							l_weight := v.to_integer
+						elseif s.starts_with ("trial.days") then
+							l_trial_days := v.to_natural
+						elseif s.starts_with ("trial.max_days") then
+							l_max_trial_days := v.to_natural
+						elseif s.starts_with ("price") then
+							has_price := v.is_case_insensitive_equal ("yes")
+						elseif s.starts_with ("public") then
+							is_public := v.is_case_insensitive_equal ("yes")
+						else
+							record_additional_data (v, k)
+						end
 					end
 				end
 			end
@@ -169,15 +216,35 @@ feature -- Element change
 			concurrent_sessions_limit := sess
 			heartbeat := l_heartbeat
 			if l_trial_days = 0 then
-				l_trial_days := 15
+				l_trial_days := default_trial_period_in_days
 			end
 			trial_period_in_days := l_trial_days
+			if l_max_trial_days > l_trial_days then
+				trial_max_period_in_days := l_max_trial_days
+			end
 			weight := l_weight
+		end
+
+	record_additional_data (V, K: READABLE_STRING_GENERAL)
+		local
+			l_others: like additional_data
+		do
+			l_others := additional_data
+			if l_others = Void then
+				create l_others.make_caseless (1)
+				additional_data := l_others
+			end
+			l_others.force (v, k)
 		end
 
 	set_trial_period_in_days (n: NATURAL)
 		do
 			trial_period_in_days := n
+		end
+
+	set_trial_max_period_in_days (n: NATURAL)
+		do
+			trial_max_period_in_days := n
 		end
 
 	set_name (s: READABLE_STRING_8)

@@ -271,6 +271,36 @@ feature -- Access trial
 			end
 		end
 
+	is_eligible_to_trial_extension (lic: ES_CLOUD_LICENSE): BOOLEAN
+			-- Is `lic` eligible to receive a trial extension approval?
+		local
+			dt, l_creation: DATE_TIME
+			nb: INTEGER
+		do
+			nb := lic.plan.trial_max_period_in_days.to_integer_32
+			if nb > 0 then
+				l_creation := lic.creation_date
+				create dt.make_now_utc
+				dt.day_add (- nb)
+				Result := dt < l_creation
+			end
+		end
+
+	potential_trial_extension_days (lic: ES_CLOUD_LICENSE): NATURAL
+			-- Maximum days `lic` could be potentially extended for the trial period.
+		local
+			nb: NATURAL
+			n: NATURAL
+		do
+			nb := lic.plan.trial_max_period_in_days
+			if nb > 0 then
+				n := lic.duration_in_days
+				if n < nb then
+					Result := (nb - n).min (lic.plan.trial_period_in_days)
+				end
+			end
+		end
+
 feature -- Element change license
 
 	auto_assign_trial_to (a_user: ES_CLOUD_USER)
@@ -986,18 +1016,27 @@ feature -- HTML factory
 				s.append ("<span class=%"status warning%">Expired</span>")
 			end
 			s.append ("</div>")
+
 			s.append ("<div class=%"license-id%">License ID: <span class=%"id%">")
 			s.append ("<a href=%"" + api.location_url (es_cloud_module.license_location (lic), Void) + "%">")
 			s.append (html_encoded (lic.key))
 			s.append ("</a>")
 			s.append ("</span></div>")
+			if
+				lic.plan.same_plan (trial_plan) and then
+				lic.is_expired and then
+				is_eligible_to_trial_extension (lic)
+			then
+				s.append ("<div class=%"action%">")
+				s.append ("<a href=%"" + api.location_url (es_cloud_module.cloud_forms_location + {ES_CLOUD_FORMS_HANDLER}.trial_extension_form_id + "?license=" + url_encoded (lic.key), Void) + "%">Ask for extended " + html_encoded (lic.plan.title_or_name) + " license period</a>")
+				s.append ("</div>")
+			end
 			s.append ("</div>") -- header
-			s.append ("<div class=%"details%"><ul>")
+--			s.append ("<div class=%"details%"><ul>")
+--			s.append ("</ul></div>")
 
-			s.append ("</ul></div>")
 			s.append ("</div>")
 		end
-
 
 	append_license_to_html (lic: ES_CLOUD_LICENSE; a_user: detachable ES_CLOUD_USER; es_cloud_module: detachable ES_CLOUD_MODULE; s: STRING_8)
 		local
@@ -1052,6 +1091,16 @@ feature -- HTML factory
 				s.append ("<li class=%"status warning%">SUSPENDED</li>")
 			else
 				s.append ("<li class=%"status warning%">EXPIRED</li>")
+				if
+					es_cloud_module /= Void and then
+					lic.plan.same_plan (trial_plan) and then
+					lic.is_expired and then
+					is_eligible_to_trial_extension (lic)
+				then
+					s.append ("<li class=%"action%">")
+					s.append ("<a href=%"" + api.location_url (es_cloud_module.cloud_forms_location + {ES_CLOUD_FORMS_HANDLER}.trial_extension_form_id + "?license=" + url_encoded (lic.key), Void) + "%">Ask for extended " + html_encoded (lic.plan.title_or_name) + " license period</a>")
+					s.append ("</li>")
+				end
 			end
 			if attached lic.platforms_as_csv_string as l_platforms then
 				s.append ("<li class=%"limit%"><span class=%"title%">Limited to platform(s):</span> " + html_encoded (l_platforms) + "</li>")

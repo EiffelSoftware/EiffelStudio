@@ -35,12 +35,12 @@
 		<library name="cms_sitemap_module" location="$ISE_LIBRARY\unstable\library\web\cms\modules\sitemap\sitemap.ecf" readonly="false" use_application_options="true"/>
 		<library name="cms_taxonomy_module" location="$ISE_LIBRARY\unstable\library\web\cms\modules\taxonomy\taxonomy.ecf" readonly="false"/>
 		<library name="cms_wikitext_module" location="$ISE_LIBRARY\unstable\library\web\cms\modules\wikitext\wikitext.ecf" readonly="false" use_application_options="true"/>
+		<library name="eiffel_download_module" location="..\cms_modules\eiffel_download\eiffel_download.ecf" readonly="false"/>
 		<library name="es_cloud_module" location="modules\es_cloud\es_cloud.ecf" readonly="false"/>
 		<library name="http" location="$ISE_LIBRARY\contrib\library\network\protocol\http\http.ecf"/>
 		<library name="json" location="$ISE_LIBRARY\contrib\library\text\parser\json\library\json.ecf" readonly="false"/>
 		<library name="jwt_auth_module" location="$ISE_LIBRARY\unstable\library\web\cms\modules\jwt_auth\jwt_auth.ecf" readonly="false"/>
 		<library name="login_with_esa_module" location="..\cms_modules\login_with_esa\login_with_esa.ecf" readonly="false"/>
-		<library name="eiffel_download_module" location="..\cms_modules\eiffel_download\eiffel_download.ecf" readonly="false"/>
 		<library name="masquerade_auth_module" location="$ISE_LIBRARY\unstable\library\web\cms\dev_modules\masquerade_auth\masquerade_auth.ecf" readonly="false"/>
 		<library name="recaptcha" location="$ISE_LIBRARY\unstable\library\web\cms\library\recaptcha\recaptcha.ecf" readonly="false"/>
 		<library name="shop_module" location="modules\shop\shop.ecf" readonly="false"/>
@@ -48,6 +48,7 @@
 		<library name="time" location="$ISE_LIBRARY\library\time\time.ecf"/>
 		<library name="wsf" location="$ISE_LIBRARY\contrib\library\web\framework\ewf\wsf\wsf.ecf"/>
 		<library name="wsf_encoder" location="$ISE_LIBRARY\contrib\library\web\framework\ewf\text\encoder\encoder.ecf"/>
+		<library name="wsf_html" location="$ISE_LIBRARY\contrib\library\web\framework\ewf\wsf_html\wsf_html.ecf" readonly="false"/>
 	</target>
 	<target name="es_cloud_any" extends="es_cloud_common">
 		<variable name="httpd_ssl_disabled" value="true"/>

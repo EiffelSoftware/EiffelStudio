@@ -78,10 +78,12 @@ feature -- Execution
 			create s.make_empty
 			s.append ("<p class=%"es-message%">User "+ api.html_encoded (api.real_user_display_name (a_cloud_user.cms_user)) +"</p>")
 
-			f.process_cms_response (r)
+			f.process (r)
 			if
 				attached f.last_data as fd and then
-				attached fd.item_same_string ("op", "Apply") then
+				attached fd.item_same_string ("op", "Apply")
+			then
+				fd.apply_to_associated_form
 				if attached fd.string_item ("about_wikitext") as wk then
 					l_prof.set_about_wikitext (wk)
 				end

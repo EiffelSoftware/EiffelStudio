@@ -155,7 +155,7 @@ feature -- Contributor
 					end
 				end
 				if not l_processed then
-					append_welcome_contributor_header_to (a_cloud_user, s)
+					append_welcome_contributor_header_to (a_cloud_user, s, req)
 					fd.apply_to_associated_form
 					if attached {WSF_STRING} req.query_parameter ("contrib_count") as p then
 						f.set_field_text_value ("contrib_count", p.value)
@@ -163,7 +163,7 @@ feature -- Contributor
 					f.append_to_html (r.wsf_theme, s)
 				end
 			else
-				append_welcome_contributor_header_to (a_cloud_user, s)
+				append_welcome_contributor_header_to (a_cloud_user, s, req)
 				f.append_to_html (r.wsf_theme, s)
 			end
 			r.set_main_content (s)
@@ -181,7 +181,7 @@ feature -- Contributor
 			r.add_style (r.module_name_resource_url ({ES_CLOUD_MODULE}.name, "/files/css/es_cloud.css", Void), Void)
 			r.set_title (api.html_encoded ("Apply for a contributor license"))
 			s := ""
-			append_welcome_contributor_header_to (a_cloud_user, s)
+			append_welcome_contributor_header_to (a_cloud_user, s, req)
 			if a_cloud_user /= Void then
 				f := new_contributor_form (a_cloud_user, req)
 				if req.is_post_request_method then
@@ -193,7 +193,7 @@ feature -- Contributor
 			r.execute
 		end
 
-	append_welcome_contributor_header_to (u: detachable ES_CLOUD_USER; s: STRING_8)
+	append_welcome_contributor_header_to (u: detachable ES_CLOUD_USER; s: STRING_8; req: WSF_REQUEST)
 		do
 			s.append ("<div class=%"cloud-form-header%">")
 			s.append ("[
@@ -203,7 +203,7 @@ feature -- Contributor
 				</p>
 			]")
 			if u = Void then
-				s.append ("<p>To request a <em>contributor</em> license, you <strong>must be logged in</strong> and fill a form - please " + api.link ("SIGN IN NOW", {CMS_AUTHENTICATION_MODULE}.roc_login_location, Void))
+				s.append ("<p>To request a <em>contributor</em> license, you <strong>must be logged in</strong> and fill a form - please " + api.link ("SIGN IN NOW", {CMS_AUTHENTICATION_MODULE}.roc_login_location + "?destination="+ req.percent_encoded_path_info, Void))
 			else
 				s.append ("<p>To request a <em>contributor</em> license, please fill in the following form")
 			end

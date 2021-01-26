@@ -324,7 +324,7 @@ feature -- Hook
 						elseif a_cart.is_onetime then
 							l_is_cycle := False
 						else
-							api.cms_api.log_debug ({ES_CLOUD_MODULE}.name, "Commit cart#" + utf_8_encoded (a_cart.identifier) + " (order#" + utf_8_encoded (a_order.name) + "): unable to determine nature (onetime, monthly,...)", Void)
+							api.cms_api.log_error ({ES_CLOUD_MODULE}.name, "ISSUE: Commit cart#" + utf_8_encoded (a_cart.identifier) + " (order#" + utf_8_encoded (a_order.name) + "): unable to determine nature (onetime, monthly,...)", Void)
 							check should_nor_occur: False end
 							-- Missing information, but keep it as a cycle
 							-- l_is_cycle := False
@@ -341,7 +341,7 @@ feature -- Hook
 						elseif a_cart.is_onetime then
 							l_is_cycle := False
 						else
-							api.cms_api.log_debug ({ES_CLOUD_MODULE}.name, "Commit order#" + utf_8_encoded (a_order.name) + "(cart#" + utf_8_encoded (a_cart.identifier) + "): unable to determine nature (onetime, monthly,...)", Void)
+							api.cms_api.log_error ({ES_CLOUD_MODULE}.name, "ISSUE: Commit order#" + utf_8_encoded (a_order.name) + "(cart#" + utf_8_encoded (a_cart.identifier) + "): unable to determine nature (onetime, monthly,...)", Void)
 							check should_nor_occur: False end
 							-- Missing information, but keep it as a cycle
 							-- l_is_cycle := False
@@ -355,7 +355,7 @@ feature -- Hook
 --						end
 						api.notify_extended_license (l_user, l_email, lic)
 					else
-						api.cms_api.log_debug (name, "Expecting subscription cycle for license " + html_encoded (lic.key), Void)
+						api.cms_api.log_error (name, "ISSUE: Expecting subscription cycle for license " + html_encoded (lic.key), Void)
 						api.notify_new_license (l_user, if l_user /= Void then l_user.name else Void end, l_email, lic, Void)
 					end
 				end

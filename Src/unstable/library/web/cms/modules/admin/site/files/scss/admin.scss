@@ -128,7 +128,8 @@ ul.logs {
 		&.log-error div.log-name {
 			color: red;
 		}
-		&:hover {
+
+		&.active {
 			div.log-header {
 				display: block;
 			}

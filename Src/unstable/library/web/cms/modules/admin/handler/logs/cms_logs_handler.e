@@ -76,7 +76,7 @@ feature -- HTTP Methods
 			l_date, l_prev_date: DATE
 		do
 			if api.has_permission ("view logs") then
-				create {GENERIC_VIEW_CMS_RESPONSE} r.make (req, res, api)
+				r := new_generic_response (req, res)
 				if attached {WSF_STRING} req.query_parameter ("category") as p_cat then
 					l_cat := p_cat.value
 				end
@@ -111,7 +111,7 @@ feature -- HTTP Methods
 						b.append ("<li class=%"section%">" + l_date.out + "</li>")
 						l_prev_date := l_date
 					end
-					b.append ("<li class=%"log-level-"+ l_log.level.out +" log-" + l_log.level_name + "%">")
+					b.append ("<li class=%"log log-level-"+ l_log.level.out +" log-" + l_log.level_name + "%" data-log-id=%"" + l_log.id.out + "%">")
 					b.append ("<div class=%"log-header%">")
 					b.append ("<div class=%"log-name%">")
 					b.append (html_encoded (l_log.level_name))

@@ -62,11 +62,10 @@ feature {NONE} -- Basic operations
 		local
 			l_tpl: CJ_TEMPLATE
 			l_data: CJ_DATA
-			lnk: CJ_LINK
 			l_resp: ESA_SUPPORT_RESPONSE
 			ctx: HTTP_CLIENT_REQUEST_CONTEXT
 		do
-			message := void
+			message := Void
 			create l_tpl.make
 
 				-- first name
@@ -131,7 +130,7 @@ feature {NONE} -- Basic operations
 					attached l_col.error as l_error
 				then
 					if attached l_error.message as l_message then
-						(create {EXCEPTIONS}).raise ("Connection error: HTTP Status " + l_resp.status.out + " " + l_message)
+						(create {EXCEPTIONS}).raise ({STRING_32} "Connection error: HTTP Status " + l_resp.status.out.to_string_32 + {STRING_32} " " + l_message)
 					else
 						(create {EXCEPTIONS}).raise ("Connection error: HTTP Status " + l_resp.status.out)
 					end

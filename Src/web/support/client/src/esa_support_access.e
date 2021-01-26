@@ -46,7 +46,7 @@ feature -- Access
 			l_http_response: STRING_8
 			col: detachable CJ_COLLECTION
 			l_ctx: detachable HTTP_CLIENT_REQUEST_CONTEXT
-			l_url: STRING_8
+			l_url: READABLE_STRING_8
 			l_status: INTEGER
 		do
 			create l_http_response.make_empty
@@ -86,7 +86,7 @@ feature -- Change Element
 			col: detachable CJ_COLLECTION
 			d: detachable STRING_8
 			l_ctx: detachable HTTP_CLIENT_REQUEST_CONTEXT
-			l_url: STRING_8
+			l_url: READABLE_STRING_8
 			l_status: INTEGER
 		do
 			create l_http_response.make_empty

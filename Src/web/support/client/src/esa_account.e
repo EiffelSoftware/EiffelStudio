@@ -27,7 +27,7 @@ feature -- Access : Personal Information
 	last_name: detachable IMMUTABLE_STRING_32
 			-- Last_name.	
 
-	email: detachable STRING_8
+	email: detachable IMMUTABLE_STRING_8
 			-- Email.
 
 	address: detachable IMMUTABLE_STRING_32

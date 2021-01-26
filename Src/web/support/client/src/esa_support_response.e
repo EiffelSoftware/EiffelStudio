@@ -27,7 +27,7 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	href: STRING_8
+	href: READABLE_STRING_8
 		-- URL, which is the actual link.
 
 	http_response: READABLE_STRING_8

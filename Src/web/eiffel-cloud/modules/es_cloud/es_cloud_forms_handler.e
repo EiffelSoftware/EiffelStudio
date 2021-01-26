@@ -67,6 +67,16 @@ feature -- Execution
 					else
 						send_bad_request (req, res)
 					end
+				elseif p_form_id.same_string (university_form_id) then
+					if u /= Void then
+						if req.is_post_request_method then
+							post_cloud_university (u, req, res)
+						else
+							get_cloud_university (u, req, res)
+						end
+					else
+						get_cloud_university (Void, req, res)
+					end
 				else
 					send_not_found (req, res)
 				end
@@ -80,6 +90,8 @@ feature -- Constants
 	contributor_form_id: STRING = "contributor"
 
 	trial_extension_form_id: STRING = "trial_extension"
+
+	university_form_id: STRING = "university"
 
 feature -- Contributor		
 
@@ -319,7 +331,6 @@ feature -- Contributor
 					* Short description:
 					...
 					]")
-				f_contrib_comments.set_description ("Please follow the model and use the wikitext syntax")
 				f_contrib_comments.set_description ("[
 					Please follow the given model (using wikitext syntax):<pre>
 						* Nature: New Library | Addition to existing library | Tools | Documentation | Other
@@ -342,7 +353,6 @@ feature -- Contributor
 				* Short description:
 				...
 				]")
-			f_contrib_comments.set_description ("Please follow the model and use the wikitext syntax")
 			f_contrib_comments.set_description ("[
 				Please follow the given model (using wikitext syntax):<pre>
 					* Nature: New Library | Addition to existing library | Tools | Documentation | Other
@@ -358,11 +368,194 @@ feature -- Contributor
 
 	form_contributor_submit_op_text: STRING = "Submit"
 
+feature -- Contributor		
+
+	post_cloud_university (a_cloud_user: ES_CLOUD_USER; req: WSF_REQUEST; res: WSF_RESPONSE)
+		local
+			f: like new_university_form
+			r: like new_generic_response
+			k: READABLE_STRING_GENERAL
+			s: STRING_8
+			msg: STRING_8
+			l_processed: BOOLEAN
+		do
+			r := new_generic_response (req, res)
+			r.add_javascript_url (r.module_name_resource_url ({ES_CLOUD_MODULE}.name, "/files/js/es_cloud.js", Void))
+			r.add_style (r.module_name_resource_url ({ES_CLOUD_MODULE}.name, "/files/css/es_cloud.css", Void), Void)
+			r.set_title (api.html_encoded (api.real_user_display_name (a_cloud_user.cms_user)))
+			create s.make_empty
+
+			f := new_university_form (a_cloud_user, req)
+			f.process (r)
+			if
+				attached f.last_data as fd and then
+				attached fd.item_same_string ("op", form_university_submit_op_text)
+			then
+				if not (attached {WSF_STRING} req.query_parameter ("op") as q_op and then not q_op.same_string (form_university_submit_op_text)) then
+					create msg.make_empty
+					msg.append ("<h2>Application for a %"university%" license, from user " + api.user_html_absolute_link (a_cloud_user.cms_user) + "</h2>%N")
+					msg.append ("<div><strong>Date</strong>: " + api.date_time_to_iso8601_string (create {DATE_TIME}.make_now_utc) + " (UTC).</div>%N")
+
+					across
+						fd as ic
+					loop
+						k := ic.key
+						if
+							k.same_string ("contrib_count")
+							or k.same_string ("op")
+							or k.same_string ("op_add_contrib")
+						then
+								-- Skip
+						else
+							msg.append ("<h3>" + utf_8_encoded (k) + "</h3>%N<pre>")
+							if attached ic.item as v then
+							 	msg.append (utf_8_encoded (v.string_representation))
+							end
+						 	msg.append ("</pre>%N")
+						end
+					end
+					if attached api.new_html_email (api.setup.site_notification_email, "New Contributor license REQUEST", msg) as e then
+						api.process_email (e)
+						r.add_success_message ("Your application was submitted, and will be analyzed soon.")
+						l_processed := True
+					else
+						r.add_error_message ("Your application was not recorderd, an error occurred, please use the contact page and copy the following text.")
+						across
+							fd as ic
+						loop
+							k := ic.key
+							if
+								k.same_string ("contrib_count")
+								or k.same_string ("op")
+								or k.same_string ("op_add_contrib")
+							then
+									-- Skip
+							else
+								s.append ("<li>" + html_encoded (ic.key) + ":<pre>")
+								if attached ic.item as v then
+								 	s.append (html_encoded (v.string_representation))
+								end
+							 	s.append ("</pre></li>%N")
+							end
+						end
+						l_processed := True
+					end
+				end
+				if not l_processed then
+					append_welcome_university_header_to (a_cloud_user, s, req)
+					fd.apply_to_associated_form
+					if attached {WSF_STRING} req.query_parameter ("contrib_count") as p then
+						f.set_field_text_value ("contrib_count", p.value)
+					end
+					f.append_to_html (r.wsf_theme, s)
+				end
+			else
+				append_welcome_university_header_to (a_cloud_user, s, req)
+				f.append_to_html (r.wsf_theme, s)
+			end
+			r.set_main_content (s)
+			r.execute
+		end
+
+	get_cloud_university (a_cloud_user: detachable ES_CLOUD_USER; req: WSF_REQUEST; res: WSF_RESPONSE)
+		local
+			r: like new_generic_response
+			s: STRING
+			f: like new_university_form
+		do
+			r := new_generic_response (req, res)
+			r.add_javascript_url (r.module_name_resource_url ({ES_CLOUD_MODULE}.name, "/files/js/es_cloud.js", Void))
+			r.add_style (r.module_name_resource_url ({ES_CLOUD_MODULE}.name, "/files/css/es_cloud.css", Void), Void)
+			r.set_title (api.html_encoded ("Apply for a university license"))
+			s := ""
+			append_welcome_university_header_to (a_cloud_user, s, req)
+			if a_cloud_user /= Void then
+				f := new_university_form (a_cloud_user, req)
+				if req.is_post_request_method then
+					f.process (r)
+				end
+				f.append_to_html (r.wsf_theme, s)
+			end
+			r.set_main_content (s)
+			r.execute
+		end
+
+	append_welcome_university_header_to (u: detachable ES_CLOUD_USER; s: STRING_8; req: WSF_REQUEST)
+		do
+			s.append ("<div class=%"cloud-form-header%">")
+			s.append ("[
+				<p>
+				Eiffel Software's University Partnership Program has helped universities around the world teach programming and Object-Oriented concepts to its students for years.<br/>
+				It is free for students and for professors. Eiffel Software also offers a variety of discounts for research and academic developments.
+				</p>
+			]")
+			if u = Void then
+				s.append ("<p>To request a <em>university</em> license, you <strong>must be logged in</strong> and fill a form - please " + api.link ("SIGN IN NOW", {CMS_AUTHENTICATION_MODULE}.roc_login_location + "?destination="+ req.percent_encoded_path_info, Void))
+			else
+				s.append ("<p>To request a <em>university</em> license, please fill in the following form")
+			end
+			s.append (".</p>")
+			s.append ("<p>We ask you to update the form once a year if you wish to retain the license.</p>")
+			s.append ("</div>")
+		end
+
+	new_university_form (u: detachable ES_CLOUD_USER; req: WSF_REQUEST): CMS_FORM
+		local
+			f_name: WSF_FORM_TEXT_INPUT
+			f_university: WSF_FORM_TEXT_INPUT
+			f_position: WSF_FORM_TEXT_INPUT
+			f_email: WSF_FORM_EMAIL_INPUT
+			f_submit: WSF_FORM_SUBMIT_INPUT
+
+			f_comments: WSF_FORM_TEXTAREA
+			f_set: WSF_FORM_FIELD_SET
+		do
+			create Result.make (req.percent_encoded_path_info, "cloud_university")
+			Result.set_method_post
+
+			create f_name.make ("user_name")
+			f_name.set_is_required (True)
+			f_name.set_label ("Your name")
+			if u /= Void then
+				f_name.set_text_value (u.cms_user.name)
+			end
+			Result.extend (f_name)
+			create f_email.make ("user_email")
+			f_email.set_is_required (True)
+			f_email.set_label ("Enter your university email")
+			if u /= Void and then attached u.cms_user.email as e then
+				f_email.set_text_value (e)
+			end
+			f_email.set_description ("Please use your email provided by your university")
+			Result.extend (f_email)
+
+			create f_university.make ("university_name")
+			f_university.set_is_required (True)
+			f_university.set_label ("University name")
+			Result.extend (f_university)
+
+			create f_position.make ("university_position")
+			f_position.set_label ("Position at the university (professor, assistant, student, ...)")
+			Result.extend (f_position)
+
+			create f_comments.make ("comments")
+			f_comments.set_cols (60)
+			f_comments.set_rows (10)
+			f_comments.set_label ("Comments")
+			f_comments.set_description ("Enter any comment or information helping us to know you are who you claim to be.")
+			Result.extend (f_comments)
+
+			create f_submit.make_with_text ("op", form_university_submit_op_text)
+			Result.extend (f_submit)
+		end
+
+	form_university_submit_op_text: STRING = "Submit"
+
 feature -- Trial extension
 
 	post_cloud_trial_extension_request (lic: ES_CLOUD_LICENSE; a_cloud_user: ES_CLOUD_USER; req: WSF_REQUEST; res: WSF_RESPONSE)
 		local
-			f: like new_contributor_form
+			f: like new_trial_extension_request_form
 			r: like new_generic_response
 			k: READABLE_STRING_GENERAL
 			s: STRING_8
@@ -391,10 +584,7 @@ feature -- Trial extension
 						fd as ic
 					loop
 						k := ic.key
-						if
-							k.same_string ("op")
-							or k.same_string ("op_add_contrib")
-						then
+						if k.same_string ("op") then
 								-- Skip
 						else
 							msg.append ("<h3>" + utf_8_encoded (k) + "</h3>%N<pre>")
@@ -414,10 +604,7 @@ feature -- Trial extension
 							fd as ic
 						loop
 							k := ic.key
-							if
-								k.same_string ("op")
-								or k.same_string ("op_add_contrib")
-							then
+							if k.same_string ("op") then
 									-- Skip
 							else
 								s.append ("<li>" + html_encoded (ic.key) + ":<pre>")
@@ -504,7 +691,7 @@ feature -- Trial extension
 	form_trial_extension_request_submit_op_text: STRING = "Submit"
 
 note
-	copyright: "2011-2017, Jocelyn Fiat, Javier Velilla, Eiffel Software and others"
+	copyright: "2011-2021, Jocelyn Fiat, Javier Velilla, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 end
 

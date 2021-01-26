@@ -371,6 +371,8 @@ feature -- Element change license
 			d.day_add (nb_days)
 			create dt.make_by_date_time (d, dt.time)
 			lic.set_expiration_date (dt)
+
+			cms_api.log_debug ({ES_CLOUD_MODULE}.name, "Extended license " + utf_8_encoded (lic.key) + " with " + nb_days.out + " days, " + nb_months.out + " months, " + nb_years.out + " years", Void)
 		end
 
 	save_new_license (a_license: ES_CLOUD_LICENSE; a_user: detachable ES_CLOUD_USER)

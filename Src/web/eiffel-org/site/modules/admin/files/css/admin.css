@@ -121,10 +121,10 @@ ul.logs li div.log-link {
 ul.logs li.log-error div.log-name {
   color: red;
 }
-ul.logs li:hover div.log-header {
+ul.logs li.active div.log-header {
   display: block;
 }
-ul.logs li:hover div.log-message {
+ul.logs li.active div.log-message {
   display: block;
   clear: both;
   border: solid 1px #ccc;

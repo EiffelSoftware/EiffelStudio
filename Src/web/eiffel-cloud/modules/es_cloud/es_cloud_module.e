@@ -293,7 +293,7 @@ feature -- Hook
 				attached a_order.reference_id as l_ref_id and then
 				attached api.subscribed_licenses (l_ref_id) as l_licenses
 			then
-				api.cms_api.log_debug (name, "commit_cart and order #" + a_order.name, Void)
+				api.cms_api.log_debug (name, "commit_cart (cart#" + a_cart.identifier + " order#" + a_order.name + ")", Void)
 
 				l_email := a_cart.email
 				if l_email = Void then
@@ -324,6 +324,7 @@ feature -- Hook
 						elseif a_cart.is_onetime then
 							l_is_cycle := False
 						else
+							api.cms_api.log_debug ({ES_CLOUD_MODULE}.name, "Commit cart#" + utf_8_encoded (a_cart.identifier) + " (order#" + utf_8_encoded (a_order.name) + "): unable to determine nature (onetime, monthly,...)", Void)
 							check should_nor_occur: False end
 							-- Missing information, but keep it as a cycle
 							-- l_is_cycle := False
@@ -340,6 +341,7 @@ feature -- Hook
 						elseif a_cart.is_onetime then
 							l_is_cycle := False
 						else
+							api.cms_api.log_debug ({ES_CLOUD_MODULE}.name, "Commit order#" + utf_8_encoded (a_order.name) + "(cart#" + utf_8_encoded (a_cart.identifier) + "): unable to determine nature (onetime, monthly,...)", Void)
 							check should_nor_occur: False end
 							-- Missing information, but keep it as a cycle
 							-- l_is_cycle := False
@@ -466,25 +468,6 @@ feature -- Hook
 				end
 			end
 		end
-
---	prepare_payment (p: STRIPE_PAYMENT)
---		do
---			if p.category.is_case_insensitive_equal_general ("es_cloud") then
---				if
---					attached es_cloud_api as l_cloud_api and then
---					attached l_cloud_api.store (p.currency) as l_store and then
---					attached l_store.item (p.checkout_id) as l_store_item
---				then
---					p.set_price (l_store_item.price * 100 + l_store_item.cents_price, l_store_item.currency)
---					p.set_business_name ("EiffelSoftware")
---					if attached l_cloud_api.cms_api.user as u then
---						p.set_customer_name (l_cloud_api.cms_api.user_display_name (u))
---						p.set_customer_email (u.email)
---					end
---					p.mark_prepared
---				end
---			end
---		end
 
 	response_alter (a_response: CMS_RESPONSE)
 		do

@@ -30,7 +30,7 @@ feature -- Conversion
 		do
 			create Result.make_empty
 			if attached {STRING_32} json_to_object (j.item (href_key), Void) as l_ucs then
-				Result.set_href (l_ucs)
+				Result.set_href (l_ucs.to_string_8)
 			end
 			if attached {STRING_32} json_to_object (j.item (rel_key), Void) as l_ucs then
 				Result.set_rel (l_ucs)
@@ -90,6 +90,6 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright: "2011-2017, Javier Velilla, Jocelyn Fiat and others"
+	copyright: "2011-2021, Javier Velilla, Jocelyn Fiat and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 end

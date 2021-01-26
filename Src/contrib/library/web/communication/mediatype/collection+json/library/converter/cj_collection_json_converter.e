@@ -29,15 +29,15 @@ feature -- Conversion
 	from_json (a_json_object: like to_json): detachable like object
 		local
 			i: INTEGER
-			l_version: detachable STRING_32
-			l_href: detachable STRING_32
+			l_version: detachable READABLE_STRING_8
+			l_href: detachable READABLE_STRING_8
 		do
 			if attached {JSON_OBJECT} a_json_object.item (collection_key) as j then
 				if attached {STRING_32} json_to_object (j.item (version_key), Void) as l_ucs then
-					l_version := l_ucs
+					l_version := l_ucs.to_string_8
 				end
 				if attached {STRING_32} json_to_object (j.item (href_key), Void) as l_ucs then
-					l_href := l_ucs
+					l_href := l_ucs.to_string_8
 				end
 				if l_href /= Void then
 					if l_version /= Void then
@@ -168,6 +168,6 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright: "2011-2017, Javier Velilla, Jocelyn Fiat and others"
+	copyright: "2011-2021, Javier Velilla, Jocelyn Fiat and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 end

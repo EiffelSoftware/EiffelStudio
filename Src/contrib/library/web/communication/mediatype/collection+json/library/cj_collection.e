@@ -60,15 +60,15 @@ feature {NONE} -- Initialization
 		require
 			valid_version: not a_version.is_empty
 		do
-			make_with_href_and_version (create {like href}.make_empty, a_version)
+			make_with_href_and_version ("", a_version)
 		end
 
 feature -- Access
 
-	version: STRING
+	version: READABLE_STRING_8
 			-- The value should be set to `default_version' i.e: "1.0"
 
-	href: STRING
+	href: READABLE_STRING_8
 			-- Must contain a valid URI
 
 	links: detachable ARRAYED_LIST [CJ_LINK]
@@ -88,14 +88,14 @@ feature -- Access
 
 feature -- Element Change
 
-	set_version (a_version: STRING)
+	set_version (a_version: READABLE_STRING_8)
 		do
 			version := a_version
 		ensure
 			version_set: version ~ a_version
 		end
 
-	set_href (a_href: STRING)
+	set_href (a_href: READABLE_STRING_8)
 		do
 			href := a_href
 		ensure
@@ -153,6 +153,6 @@ feature -- Constants
 	default_version: STRING = "1.0"
 
 note
-	copyright: "2011-2012, Javier Velilla, Jocelyn Fiat and others"
+	copyright: "2011-2021, Javier Velilla, Jocelyn Fiat and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 end

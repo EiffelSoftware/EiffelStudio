@@ -35,7 +35,7 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	href: STRING
+	href: READABLE_STRING_8
 
 	rel: STRING_32
 
@@ -88,6 +88,6 @@ feature -- Element Change
 		end
 
 note
-	copyright: "2011-2012, Javier Velilla, Jocelyn Fiat and others"
+	copyright: "2011-2021, Javier Velilla, Jocelyn Fiat and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 end

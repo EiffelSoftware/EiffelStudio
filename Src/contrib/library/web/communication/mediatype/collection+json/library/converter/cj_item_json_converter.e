@@ -31,7 +31,7 @@ feature -- Conversion
 			i: INTEGER
 		do
 			if attached {STRING_32} json_to_object (j.item (href_key), Void) as l_ucs then
-				create Result.make (l_ucs)
+				create Result.make (l_ucs.to_string_8)
 				if attached {JSON_ARRAY} j.item (data_key) as ja then
 					from
 						i := 1
@@ -92,6 +92,6 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright: "2011-2017, Javier Velilla, Jocelyn Fiat and others"
+	copyright: "2011-2021, Javier Velilla, Jocelyn Fiat and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 end

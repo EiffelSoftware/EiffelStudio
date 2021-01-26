@@ -314,40 +314,41 @@ feature -- Hook
 					lic := ic.item
 					if a_cart.has_details then
 						if a_cart.is_yearly then
-							api.extend_license_with_duration (lic, 1, 0, 0)
+							api.save_license_with_duration_extension (lic, 1, 0, 0)
 						elseif a_cart.is_monthly then
-							api.extend_license_with_duration (lic, 0, 1, 0)
+							api.save_license_with_duration_extension (lic, 0, 1, 0)
 						elseif a_cart.is_weekly then
-							api.extend_license_with_duration (lic, 0, 0, 7)
+							api.save_license_with_duration_extension (lic, 0, 0, 7)
 						elseif a_cart.is_daily then
-							api.extend_license_with_duration (lic, 0, 0, 1)
+							api.save_license_with_duration_extension (lic, 0, 0, 1)
 						elseif a_cart.is_onetime then
 							l_is_cycle := False
 						else
-							api.cms_api.log_error ({ES_CLOUD_MODULE}.name, "ISSUE: Commit cart#" + utf_8_encoded (a_cart.identifier) + " (order#" + utf_8_encoded (a_order.name) + "): unable to determine nature (onetime, monthly,...)", Void)
 							check should_nor_occur: False end
 							-- Missing information, but keep it as a cycle
 							-- l_is_cycle := False
+
+							api.cms_api.log_error ({ES_CLOUD_MODULE}.name, "ISSUE: Commit cart#" + utf_8_encoded (a_cart.identifier) + " (order#" + utf_8_encoded (a_order.name) + "): unable to determine nature (onetime, monthly,...)", Void)
 						end
 					else
 						if a_order.is_yearly (0) then
-							api.extend_license_with_duration (lic, a_order.interval_count, 0, 0)
+							api.save_license_with_duration_extension (lic, a_order.interval_count, 0, 0)
 						elseif a_order.is_monthly (0) then
-							api.extend_license_with_duration (lic, 0, a_order.interval_count, 0)
+							api.save_license_with_duration_extension (lic, 0, a_order.interval_count, 0)
 						elseif a_order.is_weekly (0) then
-							api.extend_license_with_duration (lic, 0, 0, 7 * a_order.interval_count)
+							api.save_license_with_duration_extension (lic, 0, 0, 7 * a_order.interval_count)
 						elseif a_order.is_daily (0) then
-							api.extend_license_with_duration (lic, 0, 0, a_order.interval_count)
+							api.save_license_with_duration_extension (lic, 0, 0, a_order.interval_count)
 						elseif a_cart.is_onetime then
 							l_is_cycle := False
 						else
-							api.cms_api.log_error ({ES_CLOUD_MODULE}.name, "ISSUE: Commit order#" + utf_8_encoded (a_order.name) + "(cart#" + utf_8_encoded (a_cart.identifier) + "): unable to determine nature (onetime, monthly,...)", Void)
 							check should_nor_occur: False end
 							-- Missing information, but keep it as a cycle
 							-- l_is_cycle := False
+
+							api.cms_api.log_error ({ES_CLOUD_MODULE}.name, "ISSUE: Commit order#" + utf_8_encoded (a_order.name) + "(cart#" + utf_8_encoded (a_cart.identifier) + "): unable to determine nature (onetime, monthly,...)", Void)
 						end
 					end
-					api.save_license (lic)
 					if l_is_cycle then
 						--FIXME: should we send notification to the user???
 --						if not l_email /= Void then
@@ -430,25 +431,25 @@ feature -- Hook
 								if lic /= Void then
 									if l_store_item.is_onetime then
 											-- By default, yearly
-										api.extend_license_with_duration (lic, 0, l_store_item.onetime_month_duration.to_integer_32, 0)
+										api.save_license_with_duration_extension (lic, 0, l_store_item.onetime_month_duration.to_integer_32, 0)
 										api.record_onetime_license_payment (lic, l_store_item.onetime_month_duration, a_order.reference_id)
 									else
 										if l_store_item.is_yearly then
-											api.extend_license_with_duration (lic, 1, 0, 0)
+											api.save_license_with_duration_extension (lic, 1, 0, 0)
 											api.record_yearly_license_subscription (lic, a_order.reference_id)
 										elseif l_store_item.is_monthly then
-											api.extend_license_with_duration (lic, 0, 1, 0)
+											api.save_license_with_duration_extension (lic, 0, 1, 0)
 											api.record_monthly_license_subscription (lic, a_order.reference_id)
 										elseif l_store_item.is_weekly then
-											api.extend_license_with_duration (lic, 0, 0, 7)
+											api.save_license_with_duration_extension (lic, 0, 0, 7)
 											api.record_weekly_license_subscription (lic, a_order.reference_id)
 										elseif l_store_item.is_daily then
-											api.extend_license_with_duration (lic, 0, 0, 1)
+											api.save_license_with_duration_extension (lic, 0, 0, 1)
 											api.record_daily_license_subscription (lic, a_order.reference_id)
+										else
+											api.save_license (lic)
 										end
 									end
-									api.save_license (lic)
-
 									if l_user /= Void then
 										if l_trial_lic = Void then
 											api.assign_license_to_user (lic, l_user)

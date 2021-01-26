@@ -467,8 +467,7 @@ feature -- Execution
 							l_licenses as ic
 						loop
 							lic := ic.item
-							es_cloud_api.extend_license_with_duration (lic, 0, nb_months, nb_days)
-							es_cloud_api.save_license (lic)
+							es_cloud_api.save_license_with_duration_extension (lic, 0, nb_months, nb_days)
 							r.add_notice_message ("License " + html_encoded (ic.key) + ": expires in " + lic.days_remaining.out + " days")
 						end
 					elseif

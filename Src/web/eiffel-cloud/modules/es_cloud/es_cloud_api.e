@@ -341,6 +341,19 @@ feature -- Element change license
 			es_cloud_storage.save_license (Result)
 		end
 
+	save_license_with_duration_extension (lic: ES_CLOUD_LICENSE; nb_years, nb_months, nb_days: INTEGER)
+			-- Extend and save the license `lic` life duration by
+			--  `nb_years` year(s)
+			--  `nb_months` month(s)
+			--  `nb_days` day(s)
+
+		do
+			extend_license_with_duration (lic, nb_years, nb_months, nb_days)
+			save_license (lic)
+
+			cms_api.log_debug ({ES_CLOUD_MODULE}.name, "Extended license " + utf_8_encoded (lic.key) + " with " + nb_days.out + " days, " + nb_months.out + " months, " + nb_years.out + " years", create {CMS_LOCAL_LINK}.make (Void, module.license_location (lic)) )
+		end
+
 	extend_license_with_duration (lic: ES_CLOUD_LICENSE; nb_years, nb_months, nb_days: INTEGER)
 			-- Extend the license `lic` life duration by
 			--  `nb_years` year(s)
@@ -371,8 +384,6 @@ feature -- Element change license
 			d.day_add (nb_days)
 			create dt.make_by_date_time (d, dt.time)
 			lic.set_expiration_date (dt)
-
-			cms_api.log_debug ({ES_CLOUD_MODULE}.name, "Extended license " + utf_8_encoded (lic.key) + " with " + nb_days.out + " days, " + nb_months.out + " months, " + nb_years.out + " years", Void)
 		end
 
 	save_new_license (a_license: ES_CLOUD_LICENSE; a_user: detachable ES_CLOUD_USER)

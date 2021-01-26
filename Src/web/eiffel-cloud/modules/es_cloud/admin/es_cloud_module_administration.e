@@ -270,11 +270,12 @@ feature -- Hooks configuration
 									nb_days := (31 * s_nb.to_real).truncated_to_integer --days
 								end
 								if nb_months > 0 then
-									a_cloud_api.extend_license_with_duration (lic, 0, nb_months, 0)
+									a_cloud_api.save_license_with_duration_extension (lic, 0, nb_months, 0)
 								elseif nb_days > 0 then
-									a_cloud_api.extend_license_with_duration (lic, 0, 0, nb_days)
+									a_cloud_api.save_license_with_duration_extension (lic, 0, 0, nb_days)
+								else
+									a_cloud_api.save_license (lic)
 								end
-								a_cloud_api.save_license (lic)
 							end
 							if l_is_update then
 								a_cloud_api.update_license (lic, a_user)

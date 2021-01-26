@@ -400,11 +400,7 @@ feature -- Contributor
 						fd as ic
 					loop
 						k := ic.key
-						if
-							k.same_string ("contrib_count")
-							or k.same_string ("op")
-							or k.same_string ("op_add_contrib")
-						then
+						if k.same_string ("op") then
 								-- Skip
 						else
 							msg.append ("<h3>" + utf_8_encoded (k) + "</h3>%N<pre>")
@@ -414,7 +410,7 @@ feature -- Contributor
 						 	msg.append ("</pre>%N")
 						end
 					end
-					if attached api.new_html_email (api.setup.site_notification_email, "New Contributor license REQUEST", msg) as e then
+					if attached api.new_html_email (api.setup.site_notification_email, "New University license REQUEST", msg) as e then
 						api.process_email (e)
 						r.add_success_message ("Your application was submitted, and will be analyzed soon.")
 						l_processed := True
@@ -424,11 +420,7 @@ feature -- Contributor
 							fd as ic
 						loop
 							k := ic.key
-							if
-								k.same_string ("contrib_count")
-								or k.same_string ("op")
-								or k.same_string ("op_add_contrib")
-							then
+							if k.same_string ("op") then
 									-- Skip
 							else
 								s.append ("<li>" + html_encoded (ic.key) + ":<pre>")
@@ -444,9 +436,6 @@ feature -- Contributor
 				if not l_processed then
 					append_welcome_university_header_to (a_cloud_user, s, req)
 					fd.apply_to_associated_form
-					if attached {WSF_STRING} req.query_parameter ("contrib_count") as p then
-						f.set_field_text_value ("contrib_count", p.value)
-					end
 					f.append_to_html (r.wsf_theme, s)
 				end
 			else
@@ -508,7 +497,6 @@ feature -- Contributor
 			f_submit: WSF_FORM_SUBMIT_INPUT
 
 			f_comments: WSF_FORM_TEXTAREA
-			f_set: WSF_FORM_FIELD_SET
 		do
 			create Result.make (req.percent_encoded_path_info, "cloud_university")
 			Result.set_method_post

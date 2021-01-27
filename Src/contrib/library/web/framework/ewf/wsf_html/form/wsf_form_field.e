@@ -22,6 +22,8 @@ feature -- Access
 
 	description: detachable READABLE_STRING_8
 
+	collapsed_description: detachable READABLE_STRING_8
+
 	is_required: BOOLEAN
 
 	is_invalid: BOOLEAN
@@ -82,6 +84,14 @@ feature -- Element change
 			description := t
 		end
 
+	set_collapsed_description (t: like collapsed_description)
+		do
+			if not is_description_collapsible then
+				is_description_collapsible := t /= Void
+			end
+			collapsed_description := t
+		end
+
 	set_validation_action (act: like validation_action)
 		do
 			validation_action := act
@@ -108,6 +118,7 @@ feature -- Conversion
 	append_to_html (a_theme: WSF_THEME; a_html: STRING_8)
 		local
 			l_class_items: detachable ARRAYED_LIST [READABLE_STRING_8]
+			d: like description
 		do
 			create l_class_items.make (2)
 			if is_required then
@@ -133,9 +144,27 @@ feature -- Conversion
 			append_item_to_html (a_theme, a_html)
 			if attached description as desc then
 				if is_description_collapsible then
-					a_html.append ("<div class=%"description collapsible%"><div>Description ...</div><div>" + desc + "</div></div>")
+					a_html.append ("<div class=%"description collapsible%"><div title=%"Click for more information...%">")
+					if attached collapsed_description as cdesc then
+						a_html.append (cdesc)
+						if desc.starts_with (cdesc) then
+							d := desc.substring (cdesc.count + 1, desc.count)
+						else
+							d := desc
+						end
+					else
+						d := desc
+						a_html.append ("Description ...")
+					end
+					a_html.append ("</div>")
+					a_html.append ("<div class=%"description%">")
+					a_html.append (d)
+					a_html.append ("</div>")
+					a_html.append ("</div>")
 				else
-					a_html.append ("<div class=%"description%">" + desc + "</div>")
+					a_html.append ("<div class=%"description%">")
+					a_html.append (desc)
+					a_html.append ("</div>")
 				end
 			end
 			a_html.append ("</div>")

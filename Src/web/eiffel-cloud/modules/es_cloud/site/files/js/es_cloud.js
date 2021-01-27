@@ -40,7 +40,7 @@ class ESCL_inst_trash {
 		$(this.discard_widget).on('click', this, function(event) { 
 			if (event.data.deleted) {
 			} else {
-				var result = confirm(("You are about to revoke installation\n").concat(event.data.iid, "\nDo you confirm ?"));
+				var result = confirm(("You are about to revoke installation\n").concat(event.data.iid, "\nDo you confirm?"));
 				if (result == true) {
 					event.data.process_discard();
 				} else {

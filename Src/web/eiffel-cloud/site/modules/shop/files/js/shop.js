@@ -139,7 +139,7 @@ class ROCSHOP_cart_item {
 		$(this.discard_widget).on('click', this, function(event) { 
 			if (event.data.deleted) {
 			} else {
-				var result = confirm(("You are about to remove cart item\n").concat(event.data.iid, "\nDo you confirm ?"));
+				var result = confirm(("You are about to remove cart item\n").concat(event.data.iid, "\nDo you confirm?"));
 				if (result == true) {
 					event.data.process_discard();
 				} else {

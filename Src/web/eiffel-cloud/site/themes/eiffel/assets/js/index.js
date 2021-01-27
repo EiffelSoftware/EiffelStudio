@@ -15,11 +15,22 @@ function onRespMenu() {
 }
 
 $().ready(function() {
-  $("time.timeago").timeago();
+  	$("time.timeago").timeago();
 
-  $("#menu-bar div.menu").each(function() {
-		  let respMenu = new ROCCMS_RespMenu($(this));
-		  respMenu.apply();
-  });
+	$("form div.description.collapsible").each(function() { 
+		console.log("Collapsible description...");
+		d = $(this).find('div').first();
+		$(d).next().hide();
+		$(d).click(function() {
+			$(this).toggleClass("expanded");
+			c = $(this).next();
+    		c.toggle();
+		});
+	});
+
+  	$("#menu-bar div.menu").each(function() {
+		let respMenu = new ROCCMS_RespMenu($(this));
+		respMenu.apply();
+  	});
 });
 

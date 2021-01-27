@@ -164,7 +164,11 @@ feature -- Execution
 				f_txt.set_text_value (es_cloud_api.default_cloud_user_profile_about_content)
 			end
 			f_txt.set_label ("Edit your overview")
-			f_txt.set_description ("Use the wikitext syntax")
+			if attached api.format ({WIKITEXT_FORMAT}.name) as ft then
+				f_txt.set_description ("Use the wikitext syntax...%N<ul>" + ft.html_help + "</ul>")
+				f_txt.set_collapsed_description ("Use the wikitext syntax...")
+				f_txt.set_description_collapsible (True)
+			end
 			Result.extend (f_txt)
 			create f_submit.make_with_text ("op", "Apply")
 			Result.extend (f_submit)

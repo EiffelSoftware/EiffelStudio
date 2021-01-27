@@ -71,3 +71,19 @@ div.es-licenses {
 		}
 	}
 }
+
+form#cloud_account_edit {
+	div.description {
+		padding-left: 2em;
+		font-style: italic;
+		color: #555;
+	}
+	input[type="submit"] {
+		margin: .5rem;
+		padding: .5rem 2rem;
+		font-size: 120%;
+		font-weight: bold;
+		color: white;
+		background-color: #3f8ee1;
+	}
+}

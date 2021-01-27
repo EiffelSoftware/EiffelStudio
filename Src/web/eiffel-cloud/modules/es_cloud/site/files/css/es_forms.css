@@ -1,0 +1,51 @@
+form div.horizontal {
+  width: 100%;
+}
+form div.horizontal > div {
+  width: 40%;
+}
+form select[name*="[nature]"] {
+  width: 80%;
+  min-width: 10rem;
+  line-height: 2rem;
+  padding: 1rem !important;
+}
+form input[type="submit"] {
+  margin-top: 0.5rem;
+  padding: 0.3rem 1rem;
+}
+form input[name="op"] {
+  margin: .5rem;
+  padding: .5rem 2rem;
+  font-size: 120%;
+  font-weight: bold;
+  color: white;
+  background-color: #3f8ee1;
+}
+form input[type="email"],
+form input[type="text"] {
+  width: 80%;
+  min-width: 10rem;
+  height: 2rem;
+  padding: 5px;
+}
+form textarea {
+  width: 80%;
+  padding: 5px;
+}
+form input[name*="contributor_"] {
+  width: 80%;
+  min-width: 10rem;
+  height: 2rem;
+  padding: 5px;
+}
+form div > div.description {
+  padding-left: 1rem;
+  font-style: italic;
+  font-size: 90%;
+  line-height: 1rem;
+  color: #555;
+}
+form fieldset legend {
+  font-weight: bold;
+}

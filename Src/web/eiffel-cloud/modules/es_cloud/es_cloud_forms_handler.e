@@ -105,8 +105,8 @@ feature -- Contributor
 			l_processed: BOOLEAN
 		do
 			r := new_generic_response (req, res)
-			r.add_javascript_url (r.module_name_resource_url ({ES_CLOUD_MODULE}.name, "/files/js/es_cloud.js", Void))
-			r.add_style (r.module_name_resource_url ({ES_CLOUD_MODULE}.name, "/files/css/es_cloud.css", Void), Void)
+			r.add_javascript_url (r.module_name_resource_url ({ES_CLOUD_MODULE}.name, "/files/js/es_forms.js", Void))
+			r.add_style (r.module_name_resource_url ({ES_CLOUD_MODULE}.name, "/files/css/es_forms.css", Void), Void)
 			r.set_title (api.html_encoded (api.real_user_display_name (a_cloud_user.cms_user)))
 			create s.make_empty
 
@@ -189,8 +189,8 @@ feature -- Contributor
 			f: like new_contributor_form
 		do
 			r := new_generic_response (req, res)
-			r.add_javascript_url (r.module_name_resource_url ({ES_CLOUD_MODULE}.name, "/files/js/es_cloud.js", Void))
-			r.add_style (r.module_name_resource_url ({ES_CLOUD_MODULE}.name, "/files/css/es_cloud.css", Void), Void)
+			r.add_javascript_url (r.module_name_resource_url ({ES_CLOUD_MODULE}.name, "/files/js/es_forms.js", Void))
+			r.add_style (r.module_name_resource_url ({ES_CLOUD_MODULE}.name, "/files/css/es_forms.css", Void), Void)
 			r.set_title (api.html_encoded ("Apply for a contributor license"))
 			s := ""
 			append_welcome_contributor_header_to (a_cloud_user, s, req)
@@ -233,7 +233,7 @@ feature -- Contributor
 
 			f_contrib_nature: WSF_FORM_SELECT
 			f_nature: WSF_FORM_SELECT_OPTION
-			f_contrib_name: WSF_FORM_TEXT_INPUT
+			f_contrib_name, f_contrib_license, f_contrib_link: WSF_FORM_TEXT_INPUT
 			f_contrib_description, f_contrib_comments: WSF_FORM_TEXTAREA
 			l_hidden: WSF_FORM_HIDDEN_INPUT
 			l_but: WSF_FORM_SUBMIT_INPUT
@@ -242,6 +242,8 @@ feature -- Contributor
 			l_prefix: STRING
 			l_contrib_nb: INTEGER
 			l_contrib_max: INTEGER
+			l_comments_placeholder: STRING_8
+			l_wikitext_desc: STRING_8
 		do
 			l_contrib_max := 3
 			l_contrib_nb := 1
@@ -258,13 +260,18 @@ feature -- Contributor
 			hb.add_css_class ("horizontal")
 			Result.extend (hb)
 
+			if u /= Void then
+				Result.extend_hidden_input ("contributor_username", u.cms_user.name)
+			end
+
 			create f_name.make ("contributor_name")
 			f_name.set_is_required (True)
 			f_name.set_label ("Your name")
 			if u /= Void then
-				f_name.set_text_value (u.cms_user.name)
+				f_name.set_text_value (api.real_user_display_name (u.cms_user))
 			end
 			hb.extend (f_name)
+
 			create f_email.make ("contributor_email")
 			f_email.set_is_required (True)
 			f_email.set_label ("Your email")
@@ -272,6 +279,12 @@ feature -- Contributor
 				f_email.set_text_value (e)
 			end
 			hb.extend (f_email)
+
+			if attached api.format ({WIKITEXT_FORMAT}.name) as ft then
+				l_wikitext_desc := "<ul>" + ft.html_help + "</ul>"
+			else
+				l_wikitext_desc := ""
+			end
 
 			Result.extend_html_text ("<h3>Contributions over the past two years:</h3>")
 			across
@@ -282,9 +295,6 @@ feature -- Contributor
 				f_set.add_css_class ("contrib-frame")
 				f_set.set_legend ("Contribution #" + ic.item.out)
 				Result.extend (f_set)
-				create hb.make
-				hb.add_css_class ("horizontal")
-				f_set.extend (hb)
 
 				create f_contrib_nature.make (l_prefix + "[nature]")
 				create f_nature.make ("new-library", "New library"); f_contrib_nature.add_option (f_nature)
@@ -292,24 +302,46 @@ feature -- Contributor
 				create f_nature.make ("tool", "Tool"); f_contrib_nature.add_option (f_nature)
 				create f_nature.make ("doc", "Documentation"); f_contrib_nature.add_option (f_nature)
 				create f_nature.make ("other", "Other"); f_contrib_nature.add_option (f_nature)
-				f_contrib_nature.set_label ("Nature of the contribution")
-				hb.extend (f_contrib_nature)
+				f_contrib_nature.set_label ("Nature")
+				f_set.extend (f_contrib_nature)
 
 				create f_contrib_name.make (l_prefix + "[name]")
-				f_contrib_name.set_label ("Name of the contribution")
+				f_contrib_name.set_label ("Name")
 				f_contrib_name.set_placeholder ("Name of the contribution")
-				hb.extend (f_contrib_name)
+				f_set.extend (f_contrib_name)
+
+				create f_contrib_license.make (l_prefix + "[license]")
+				f_contrib_license.set_label ("License")
+				f_contrib_license.set_description ("License of the contribution (Eiffel forum, GPL, proprietary, ...)")
+				f_set.extend (f_contrib_license)
+
+				create f_contrib_link.make (l_prefix + "[link]")
+				f_contrib_link.set_label ("Project link")
+				f_contrib_link.set_placeholder ("https://..." )
+				f_set.extend (f_contrib_link)
 
 				create f_contrib_description.make (l_prefix + "[desc]")
 				f_contrib_description.set_cols (60)
 				f_contrib_description.set_rows (5)
 				f_contrib_description.set_label ("Short description")
-				f_contrib_description.set_description ("Use the wikitext syntax")
+				f_contrib_description.set_description ("Please add any useful information related to your contribution." + l_wikitext_desc)
+				f_contrib_description.set_collapsed_description ("Please add any useful information related to your contribution.")
+				f_contrib_description.set_description_collapsible (True)
 				f_set.extend (f_contrib_description)
 			end
 			create l_hidden.make_with_text ("contrib_count", l_contrib_nb.out)
 			l_hidden.set_text_value (l_contrib_nb.out)
 			Result.extend (l_hidden)
+
+			l_comments_placeholder := "[
+				* Nature: New Library | Addition to existing library | Tools | Documentation | Other
+				* Name: ...
+				* Link: ...
+				* License: ...
+				* Short description:
+				...
+				]"
+
 			if l_contrib_nb < l_contrib_max then
 				create l_but.make_with_text ("op_add_contrib", "+Add a contribution")
 				l_but.set_formmethod ("POST")
@@ -325,19 +357,10 @@ feature -- Contributor
 				f_contrib_comments.set_cols (60)
 				f_contrib_comments.set_rows (20)
 				f_contrib_comments.set_label ("Describe your current contributions")
-				f_contrib_comments.set_placeholder ("[
-					* Nature: New Library | Addition to existing library | Tools | Documentation | Other
-					* Name: ...
-					* Short description:
-					...
-					]")
-				f_contrib_comments.set_description ("[
-					Please follow the given model (using wikitext syntax):<pre>
-						* Nature: New Library | Addition to existing library | Tools | Documentation | Other
-						* Name: ...
-						* Short description:
-						...</pre>
-					]")
+				f_contrib_comments.set_placeholder (l_comments_placeholder)
+				f_contrib_comments.set_collapsed_description ("Please follow the given model :<pre>" + l_comments_placeholder + "</pre>")
+				f_contrib_comments.set_description ("Please follow the given model :<pre>" + l_comments_placeholder + "</pre>" + l_wikitext_desc)
+				f_contrib_comments.set_description_collapsible (True)
 				f_set.extend (f_contrib_comments)
 			end
 
@@ -347,19 +370,10 @@ feature -- Contributor
 			f_contrib_comments.set_cols (60)
 			f_contrib_comments.set_rows (20)
 			f_contrib_comments.set_label ("Describe your future contributions")
-			f_contrib_comments.set_placeholder ("[
-				* Nature: New Library | Addition to existing library | Tools | Documentation | Other
-				* Name: ...
-				* Short description:
-				...
-				]")
-			f_contrib_comments.set_description ("[
-				Please follow the given model (using wikitext syntax):<pre>
-					* Nature: New Library | Addition to existing library | Tools | Documentation | Other
-					* Name: ...
-					* Short description:
-					...</pre>
-				]")
+			f_contrib_comments.set_placeholder (l_comments_placeholder)
+			f_contrib_comments.set_description ("Please follow the given model :<pre>" + l_comments_placeholder + "</pre>" + l_wikitext_desc)
+			f_contrib_comments.set_collapsed_description ("Please follow the given model :<pre>" + l_comments_placeholder + "</pre>")
+			f_contrib_comments.set_description_collapsible (True)
 			Result.extend (f_contrib_comments)
 
 			create f_submit.make_with_text ("op", form_contributor_submit_op_text)
@@ -380,8 +394,8 @@ feature -- Contributor
 			l_processed: BOOLEAN
 		do
 			r := new_generic_response (req, res)
-			r.add_javascript_url (r.module_name_resource_url ({ES_CLOUD_MODULE}.name, "/files/js/es_cloud.js", Void))
-			r.add_style (r.module_name_resource_url ({ES_CLOUD_MODULE}.name, "/files/css/es_cloud.css", Void), Void)
+			r.add_javascript_url (r.module_name_resource_url ({ES_CLOUD_MODULE}.name, "/files/js/es_forms.js", Void))
+			r.add_style (r.module_name_resource_url ({ES_CLOUD_MODULE}.name, "/files/css/es_forms.css", Void), Void)
 			r.set_title (api.html_encoded (api.real_user_display_name (a_cloud_user.cms_user)))
 			create s.make_empty
 
@@ -453,8 +467,8 @@ feature -- Contributor
 			f: like new_university_form
 		do
 			r := new_generic_response (req, res)
-			r.add_javascript_url (r.module_name_resource_url ({ES_CLOUD_MODULE}.name, "/files/js/es_cloud.js", Void))
-			r.add_style (r.module_name_resource_url ({ES_CLOUD_MODULE}.name, "/files/css/es_cloud.css", Void), Void)
+			r.add_javascript_url (r.module_name_resource_url ({ES_CLOUD_MODULE}.name, "/files/js/es_forms.js", Void))
+			r.add_style (r.module_name_resource_url ({ES_CLOUD_MODULE}.name, "/files/css/es_forms.css", Void), Void)
 			r.set_title (api.html_encoded ("Apply for a university license"))
 			s := ""
 			append_welcome_university_header_to (a_cloud_user, s, req)
@@ -501,13 +515,18 @@ feature -- Contributor
 			create Result.make (req.percent_encoded_path_info, "cloud_university")
 			Result.set_method_post
 
+			if u /= Void then
+				Result.extend_hidden_input ("login", u.cms_user.name)
+			end
+
 			create f_name.make ("user_name")
 			f_name.set_is_required (True)
 			f_name.set_label ("Your name")
 			if u /= Void then
-				f_name.set_text_value (u.cms_user.name)
+				f_name.set_text_value (api.real_user_display_name (u.cms_user))
 			end
 			Result.extend (f_name)
+
 			create f_email.make ("user_email")
 			f_email.set_is_required (True)
 			f_email.set_label ("Enter your university email")
@@ -551,8 +570,8 @@ feature -- Trial extension
 			l_processed: BOOLEAN
 		do
 			r := new_generic_response (req, res)
-			r.add_javascript_url (r.module_name_resource_url ({ES_CLOUD_MODULE}.name, "/files/js/es_cloud.js", Void))
-			r.add_style (r.module_name_resource_url ({ES_CLOUD_MODULE}.name, "/files/css/es_cloud.css", Void), Void)
+			r.add_javascript_url (r.module_name_resource_url ({ES_CLOUD_MODULE}.name, "/files/js/es_forms.js", Void))
+			r.add_style (r.module_name_resource_url ({ES_CLOUD_MODULE}.name, "/files/css/es_forms.css", Void), Void)
 			r.set_title (api.html_encoded (api.real_user_display_name (a_cloud_user.cms_user)))
 			create s.make_empty
 
@@ -623,8 +642,8 @@ feature -- Trial extension
 			f: like new_trial_extension_request_form
 		do
 			r := new_generic_response (req, res)
-			r.add_javascript_url (r.module_name_resource_url ({ES_CLOUD_MODULE}.name, "/files/js/es_cloud.js", Void))
-			r.add_style (r.module_name_resource_url ({ES_CLOUD_MODULE}.name, "/files/css/es_cloud.css", Void), Void)
+			r.add_javascript_url (r.module_name_resource_url ({ES_CLOUD_MODULE}.name, "/files/js/es_forms.js", Void))
+			r.add_style (r.module_name_resource_url ({ES_CLOUD_MODULE}.name, "/files/css/es_forms.css", Void), Void)
 			r.set_title (api.html_encoded ("Apply for a trial period extension"))
 			s := ""
 			f := new_trial_extension_request_form (lic, a_cloud_user, req)

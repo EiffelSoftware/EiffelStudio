@@ -293,4 +293,15 @@ form div.horizontal > div {
 	padding: 1rem;
 	display: inline-block;
 }
+form div.description.collapsible div:nth-child(0n+1) {
+	&:not(expanded)::before {
+  	  	  content: "[+] ";
+	};
+	&.expanded::before {
+  	  	  content: "[ - ] ";
+	}
+}
+form div.description.collapsible div:nth-child(0n+2) {
+	//display: none;
+}
 

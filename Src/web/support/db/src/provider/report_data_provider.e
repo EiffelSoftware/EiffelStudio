@@ -275,8 +275,6 @@ feature -- Access
 		local
 			l_parameters: STRING_TABLE [ANY]
 			l_query: STRING_32
-			l_encode: DATABASE_SQL_SERVER_ENCODER
-			l_query_filter: STRING
 		do
 			debug
 				log.write_information (generator + ".problem_reports_responsibles")
@@ -1153,7 +1151,6 @@ feature -- Basic Operations
 		local
 			l_parameters: STRING_TABLE [ANY]
 			l_query: STRING_32
-			l_encode: DATABASE_SQL_SERVER_ENCODER
 		do
 			debug
 				log.write_information (generator + ".row_count_problem_report_responsible_closed")

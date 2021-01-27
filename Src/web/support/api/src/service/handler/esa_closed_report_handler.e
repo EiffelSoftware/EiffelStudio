@@ -187,7 +187,6 @@ feature -- Implementation
 			l_categories: LIST [REPORT_CATEGORY]
 			l_report_view: ESA_REPORT_VIEW
 			l_input_validator: ESA_REPORT_INPUT_VALIDATOR
-			l_status_selected: STRING
 		do
 			to_implement ("Validate request parameters!!!")
 				--| At the moment the page size is hardcoded as 10 items per page.

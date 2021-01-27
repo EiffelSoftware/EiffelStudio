@@ -69,7 +69,7 @@ div.es-licenses div.info > div {
 }
 
 form#cloud_account_edit div.description {
-  padding-left: 2em;
+  padding-left: 1rem;
   font-style: italic;
   color: #555;
 }

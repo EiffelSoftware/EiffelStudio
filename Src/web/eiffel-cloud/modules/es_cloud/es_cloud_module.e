@@ -473,10 +473,8 @@ feature -- Hook
 	response_alter (a_response: CMS_RESPONSE)
 		do
 			a_response.add_style (a_response.module_resource_url (Current, "/files/css/es_cloud.css", Void), Void)
-			if a_response.is_front then
-				a_response.set_value (a_response.url ("/" + root_location, Void), "escloud_url")
-				a_response.set_value (a_response.url ("/" + licenses_location, Void), "escloud_licenses_url")
-			end
+			a_response.set_value (a_response.url ("/" + root_location, Void), "escloud_url")
+			a_response.set_value (a_response.url ("/" + licenses_location, Void), "escloud_licenses_url")
 		end
 
 	menu_system_alter (a_menu_system: CMS_MENU_SYSTEM; a_response: CMS_RESPONSE)

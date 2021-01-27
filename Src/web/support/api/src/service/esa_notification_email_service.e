@@ -146,7 +146,7 @@ feature -- Basic Operations
 			create l_message.make (1024)
 			l_message.append ("Your account information on eiffel.com has been updated and your new email address is now ")
 			l_message.append (a_new_email)
-			l_message.append (". Please contact us by phone 805-685-1006 or by fax 805-685-6869 as soon as possible if you haven't requested this change.%N%NThank you for using eiffel.com.%N%NEiffel Software.%N%N------------------------------------------------------------%N")
+			l_message.append (". Please contact us at https://www.eiffel.com/ as soon as possible if you haven't requested this change.%N%NThank you for using eiffel.com.%N%NEiffel Software.%N%N------------------------------------------------------------%N")
 --			l_message.append (Disclaimer)
 --			send_email (from_address (Void), a_old_email, Void, "Eiffel Software - Email Address Updated", l_message)
 		end

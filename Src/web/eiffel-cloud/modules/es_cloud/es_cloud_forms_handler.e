@@ -139,7 +139,7 @@ feature -- Contributor
 						 	msg.append ("</pre>%N")
 						end
 					end
-					if attached api.new_html_email (api.setup.site_notification_email, "New Contributor license REQUEST", msg) as e then
+					if attached api.new_html_email (api.setup.site_notification_email, "New Contributor license REQUEST from " + utf_8_encoded (api.custom_user_name (a_cloud_user.cms_user, True, True, False)) , msg) as e then
 						api.process_email (e)
 						r.add_success_message ("Your application was submitted, and will be analyzed soon.")
 						l_processed := True
@@ -424,7 +424,7 @@ feature -- Contributor
 						 	msg.append ("</pre>%N")
 						end
 					end
-					if attached api.new_html_email (api.setup.site_notification_email, "New University license REQUEST", msg) as e then
+					if attached api.new_html_email (api.setup.site_notification_email, "New University license REQUEST from " + utf_8_encoded (api.custom_user_name (a_cloud_user.cms_user, True, True, False)), msg) as e then
 						api.process_email (e)
 						r.add_success_message ("Your application was submitted, and will be analyzed soon.")
 						l_processed := True
@@ -601,7 +601,7 @@ feature -- Trial extension
 						 	msg.append ("</pre>%N")
 						end
 					end
-					if attached api.new_html_email (api.setup.site_notification_email, "REQUEST for a trial period extension", msg) as e then
+					if attached api.new_html_email (api.setup.site_notification_email, "REQUEST for a trial period extension from " + utf_8_encoded (api.custom_user_name (a_cloud_user.cms_user, True, True, False)), msg) as e then
 						api.process_email (e)
 						r.add_success_message ("Your application was submitted, and will be analyzed soon.")
 						l_processed := True

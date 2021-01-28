@@ -102,6 +102,84 @@ feature -- Validation
 
 feature -- Query
 
+	custom_user_name (a_user: CMS_USER; a_inc_profile_name, a_inc_username, a_inc_email: BOOLEAN): STRING_32
+			-- Custom  name for user `u` and its username.
+			-- various possibilities:
+			-- 	"$profilename ($username) <$email>"
+			-- 	"$profilename ($username)"
+			-- 	"$username"
+			-- 	"$username <$email>"
+			-- 	"$profilename <$email>"
+			-- 	"$profilename"
+			-- 	"$email"
+		local
+			l_id: READABLE_STRING_32
+			l_user: CMS_USER
+		do
+			if a_inc_profile_name or a_inc_email or a_inc_username then
+				if
+					attached {CMS_PARTIAL_USER} a_user as l_partial and then
+					attached user_by_id (l_partial.id) as u
+				then
+					l_user := u
+				else
+					l_user := a_user
+				end
+			else
+				l_user := a_user
+			end
+			if not l_user.name.is_whitespace then
+				l_id := l_user.name
+			else
+				l_id := {STRING_32} "user#" + l_user.id.out
+			end
+			check valid_l_id: not l_id.is_whitespace end
+
+			create Result.make (10)
+			if
+				a_inc_profile_name and then
+				attached l_user.profile_name as pn and then not pn.is_whitespace
+			then
+				Result.append (pn)
+			end
+			if a_inc_username then
+				if Result.is_empty then
+					Result.append (l_id)
+				elseif not Result.same_string (l_id) then
+					if Result.is_empty then
+						Result.append (l_id)
+					else
+						Result.append_character (' ')
+						Result.append_character ('(')
+						Result.append (l_id)
+						Result.append_character (')')
+					end
+				end
+			end
+			if
+				a_inc_email and then
+				attached l_user.email as l_email
+			then
+				if Result.is_empty then
+					Result.append (l_email)
+				else
+					if Result.is_empty then
+						Result.append (l_email)
+					else
+						Result.append_character (' ')
+						Result.append_character ('<')
+						Result.append (l_email)
+						Result.append_character ('>')
+					end
+				end
+			end
+			if Result.is_empty then
+				Result.append (l_id)
+			end
+		ensure
+			valid_name: not Result.is_whitespace
+		end
+
 	user_display_name (u: CMS_USER): READABLE_STRING_32
 			-- Display name for user `u`.
 		do

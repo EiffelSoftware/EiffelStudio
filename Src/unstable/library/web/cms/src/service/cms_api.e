@@ -631,6 +631,20 @@ feature -- Helpers: html links
 			Result := user_api.real_user_display_name (u)
 		end
 
+	custom_user_name (a_user: CMS_USER; a_inc_profile_name, a_inc_username, a_inc_email: BOOLEAN): STRING_32
+			-- Custom  name for user `u` and its username.
+			-- various possibilities:
+			-- 	"$profilename ($username) <$email>"
+			-- 	"$profilename ($username)"
+			-- 	"$username"
+			-- 	"$username <$email>"
+			-- 	"$profilename <$email>"
+			-- 	"$profilename"
+			-- 	"$email"
+		do
+			Result := user_api.custom_user_name (a_user, a_inc_profile_name, a_inc_username, a_inc_email)
+		end
+
 feature -- Settings
 
 	switch_to_site_mode

@@ -19,6 +19,8 @@ feature -- Implementation
 			-- Calculate distance between (`x1', `y1') and (`x2', `y2').
 		do
 			Result := sqrt ((x1 - x2) ^ 2 + (y1 - y2) ^ 2).truncated_to_integer
+		ensure
+			instance_free: class
 		end
 
 	distance_from_line (x, y, x1, y1, x2, y2: INTEGER): INTEGER
@@ -38,6 +40,8 @@ feature -- Implementation
 			x_dist := sine_theta * dx
 			y_dist := sine_theta * dy
 			Result := sqrt (x_dist ^ 2 + y_dist ^ 2).truncated_to_integer
+		ensure
+			instance_free: class
 		end
 
 	line_angle (x1, y1, x2, y2: INTEGER): DOUBLE
@@ -57,18 +61,24 @@ feature -- Implementation
 				end
 				Result := modulo (Result, 2 * Pi)
 			end
+		ensure
+			instance_free: class
 		end
 
 	delta_x (angle: DOUBLE; length: INTEGER): INTEGER
 			-- Get dx component of line segment with `length' and `angle'.
 		do
 			Result := (cosine (angle) * length).rounded
+		ensure
+			instance_free: class
 		end
 
 	delta_y (angle: DOUBLE; length: INTEGER): INTEGER
 			-- Get dy component of line segment with `length' and `angle'.
 		do
 			Result := (sine (angle) * length).rounded
+		ensure
+			instance_free: class
 		end
 
 	point_on_line (x, y, x1, y1, x2, y2, width: INTEGER): BOOLEAN
@@ -93,6 +103,8 @@ feature -- Implementation
 				rsq := dpx ^ 2 + dpy ^ 2
 				Result := rsq <= (width / 2) ^ 2
 			end
+		ensure
+			instance_free: class
 		end
 
 	point_on_segment (x, y, x1, y1, x2, y2, width: INTEGER): BOOLEAN
@@ -115,6 +127,8 @@ feature -- Implementation
 					(dpy.abs <= half_dy.abs) and then
 					point_on_line (x, y, x1, y1, x2, y2, width)
 			end
+		ensure
+			instance_free: class
 		end
 
 	point_on_ellipse (x, y, xc, yc, r1, r2: INTEGER): BOOLEAN
@@ -122,6 +136,8 @@ feature -- Implementation
 			--| With orientation 0.0.
 		do
 			Result := ((x - xc) / r1) ^ 2 + ((y - yc) / r2) ^ 2 <= 1
+		ensure
+			instance_free: class
 		end
 
 	point_on_ellipse_boundary (x, y, xc, yc, r1, r2, width: INTEGER): BOOLEAN
@@ -133,6 +149,8 @@ feature -- Implementation
 			tmp := ((x - xc) / r1) ^ 2 + ((y - yc) / r2) ^ 2
 			semi_width_ratio := width / 100
 			Result := tmp <= (1 + semi_width_ratio) and tmp >= (1 - semi_width_ratio)
+		ensure
+			instance_free: class
 		end
 
 	point_on_rectangle (x, y, x1, y1, x2, y2: INTEGER): BOOLEAN
@@ -140,6 +158,8 @@ feature -- Implementation
 			--| With orientation 0.0.
 		do
 			Result := between (x, x1, x2) and then between (y, y1, y2)
+		ensure
+			instance_free: class
 		end
 
 	point_on_polygon (x, y: INTEGER; points: SPECIAL [EV_COORDINATE]): BOOLEAN
@@ -196,9 +216,9 @@ feature -- Implementation
 				end
 				Result := point_on_line (x, y, points.item (0).x, min, points.item (0).x, max, 6)
 			else
-				
+
 				base := 0
-	
+
 					-- Find a vertex that is not on the halfline.
 				from
 					i := 0
@@ -207,7 +227,7 @@ feature -- Implementation
 				loop
 					i := i + 1
 				end
-	
+
 					-- Walk edges of the polygon.
 				from
 					n := 0
@@ -218,15 +238,15 @@ feature -- Implementation
 					j := (i + 1) \\ points.count
 					dx := points.item (j + base).x - points.item (i + base).x
 					dy := points.item (j + base).y - points.item (i + base).y
-	
+
 						-- Ignore horizontal edges completely.
 					if dy /= 0 then
-	
+
 							-- Check to see if the edge intersects the
 							-- horizontal halfline through (x, y).
 						rx := x - points.item (i + base).x
 						ry := y - points.item (i + base).y
-	
+
 							-- Deal with edges starting or ending the halfline.
 						if points.item (j + base).y = y and then points.item (j + base).x >= x then
 							y_save := points.item (i + base).y
@@ -236,7 +256,7 @@ feature -- Implementation
 								hits := hits - 1
 							end
 						end
-	
+
 							-- Tally intersections with halfline.
 						s := ry / dy
 						if s >= 0.0 and then s <= 1.0 and then (s * dx) >= rx then
@@ -246,10 +266,12 @@ feature -- Implementation
 					i := j
 					n := n + 1
 				end
-	
+
 					-- Inside if number of intersections odd.
 				Result := (hits \\ 2) /= 0
 			end
+		ensure
+			instance_free: class
 		end
 
 	modulo (a, b: DOUBLE): DOUBLE
@@ -266,6 +288,7 @@ feature -- Implementation
 				Result := modulo (a + b, b)
 			end
 		ensure
+			instance_free: class
 			in_interval: Result >= 0.0 and Result < b
 		end
 
@@ -273,8 +296,10 @@ feature -- Implementation
 			-- Is `n' a value between `a' and `b'?
 		do
 			Result := n >= a.min (b) and then n <= a.max (b)
-		end		
-		
+		ensure
+			instance_free: class
+		end
+
 feature {NONE} -- Implementation
 
 	no_dimension (points: SPECIAL [EV_COORDINATE]): BOOLEAN
@@ -294,8 +319,10 @@ feature {NONE} -- Implementation
 				Result := points.item (i).x = points.item (i + 1).x and points.item (i).y = points.item (i + 1).y
 				i := i + 1
 			end
+		ensure
+			instance_free: class
 		end
-		
+
 	all_on_vertical_line (points: SPECIAL [EV_COORDINATE]): BOOLEAN
 			-- Are all `points' an a vertical line?
 			-- That is all x positions are equal
@@ -314,8 +341,10 @@ feature {NONE} -- Implementation
 				Result := points.item (i).x = points.item (i + 1).x
 				i := i + 1
 			end
+		ensure
+			instance_free: class
 		end
-		
+
 	all_on_horizontal_line (points: SPECIAL [EV_COORDINATE]): BOOLEAN
 			-- Are all `points' an a vertical line?
 			-- That is all y positions are equal.
@@ -334,8 +363,10 @@ feature {NONE} -- Implementation
 				Result := points.item (i).y = points.item (i + 1).y
 				i := i + 1
 			end
-		end	
-		
+		ensure
+			instance_free: class
+		end
+
 	as_integer (a_value: DOUBLE): INTEGER
 			-- Truncat `a_value' to INTEGER.
 		do
@@ -344,17 +375,19 @@ feature {NONE} -- Implementation
 			else
 				Result := (a_value - 0.5).truncated_to_integer
 			end
+		ensure
+			instance_free: class
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2021, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 

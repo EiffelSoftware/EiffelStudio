@@ -161,14 +161,14 @@ feature -- Query
 				attached l_user.email as l_email
 			then
 				if Result.is_empty then
-					Result.append (l_email)
+					Result.append_string_general (l_email)
 				else
 					if Result.is_empty then
-						Result.append (l_email)
+						Result.append_string_general (l_email)
 					else
 						Result.append_character (' ')
 						Result.append_character ('<')
-						Result.append (l_email)
+						Result.append_string_general (l_email)
 						Result.append_character ('>')
 					end
 				end

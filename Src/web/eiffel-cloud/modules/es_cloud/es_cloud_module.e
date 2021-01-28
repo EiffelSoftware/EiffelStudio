@@ -554,7 +554,7 @@ feature -- Hooks: block
 			-- If prefixed by "?", condition will be checked
 			-- to determine if it should be displayed (and computed) or not.
 		do
-			Result := <<"?cloud_account_summary", "?cloud_store">>
+			Result := <<"?cloud_account_summary", "?cloud_store", "?cloud_buy">>
 		end
 
 	get_block_view (a_block_id: READABLE_STRING_8; a_response: CMS_RESPONSE)
@@ -571,6 +571,13 @@ feature -- Hooks: block
 					if a_response.request.is_get_request_method then
 						a_response.add_block (new_store_block (l_cloud_api, a_response), "content")
 						a_response.add_style (a_response.module_resource_url (Current, "/files/css/pricing.css", Void), Void)
+					end
+				elseif a_block_id.is_case_insensitive_equal_general ("cloud_buy") then
+					if a_response.request.is_get_request_method then
+						if l_cloud_api.cms_api.has_permission ({ES_CLOUD_MODULE}.perm_buy_es_license) then
+							a_response.add_block (new_buy_block (l_cloud_api, a_response), "content")
+							a_response.add_style (a_response.module_resource_url (Current, "/files/css/es_cloud.css", Void), Void)
+						end
 					end
 				end
 			end
@@ -603,6 +610,20 @@ feature -- Hooks: block
 			end
 			l_html.append ("</div>")
 			create Result.make_raw ("cloud_account_summary", Void, l_html, a_response.api.formats.full_html)
+		end
+
+	new_buy_block (api: ES_CLOUD_API; a_response: CMS_RESPONSE): CMS_BLOCK
+		local
+			s: STRING_8
+		do
+			if attached smarty_template_block (Current, "cloud_buy", a_response.api) as l_tpl_block then
+				l_tpl_block.set_value (a_response.url ("/" + root_location, Void), "escloud_url")
+				l_tpl_block.set_value (a_response.url ("/" + licenses_location, Void), "escloud_licenses_url")
+				Result := l_tpl_block
+			else
+				s := "<div class=%"es-new-license%"><form action=%""+ a_response.location_url ({ES_CLOUD_MODULE}.licenses_location + "_/buy/", Void) +"%" method=%"post%"><input type=%"submit%" class=%"button%" title=%"Buy a new license%" name=%"op%" value=%"Buy a license%"></input></form></div>"
+				create {CMS_CONTENT_BLOCK} Result.make_raw ("cloud_buy", Void, s, a_response.api.formats.full_html)
+			end
 		end
 
 	new_store_block (api: ES_CLOUD_API; a_response: CMS_RESPONSE): CMS_CONTENT_BLOCK

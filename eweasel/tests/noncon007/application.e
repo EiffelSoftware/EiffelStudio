@@ -14,4 +14,4 @@ feature -- Initialization
 		do
 		end
 
-end -- class APPLICATION
+end

@@ -3,10 +3,18 @@ test_description Repeated inheritance should take into account only conforming p
 
 copy_sub Ace $TEST Ace
 copy_raw test.e $CLUSTER test.e
-copy_raw p1.e $CLUSTER p1.e
 copy_raw p2.e $CLUSTER p2.e
 
+define SELECT ""
+copy_sub p1.e $CLUSTER p1.e
+
 compile_melted
+compile_result 	validity_error P1 VMRC(2)
+
+define SELECT "select conforming_from_p2"
+copy_sub p1.e $CLUSTER p1.e
+
+resume_compile
 compile_result 	ok
 execute_work	NONE exec_output
 execute_result ok

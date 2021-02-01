@@ -7,6 +7,7 @@ inherit
 			from_p2 as conforming_from_p2
 		redefine
 			conforming_from_p2
+		$SELECT
 		end
 
 inherit {NONE}

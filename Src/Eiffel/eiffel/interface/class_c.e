@@ -1585,7 +1585,7 @@ feature -- Parent checking
 
 				if
 					l_parent_class.is_frozen and then
-					(l_parent_class.is_external or else (non_conforming_parents_classes = Void or else conforming_parents_classes.has (l_parent_class)))
+					(l_parent_class.is_external or else i < if attached conforming_parents as p then p.count else 0 end)
 						-- We cannot inherit frozen external classes or frozen conforming classes.
 				then
 					create vifi1.make (Current)
@@ -1622,15 +1622,8 @@ feature -- Parent checking
 					-- We have to reset its `types' so that they are recomputed and
 					-- we have to remove existing types from `System.class_types'
 				remove_types
-					-- Force recompilation of all clients, as the code to create objects might have changed
-				from
-					clients.start
-				until
-					clients.after
-				loop
-					clients.item.melt_all
-					clients.forth
-				end
+					-- Force recompilation of all clients, as the code to create objects might have changed.
+				⟳ c: clients ¦ c.melt_all ⟲
 			end
 			if error_handler.error_level /= l_error_level then
 				Error_handler.raise_error
@@ -5348,7 +5341,7 @@ invariant
 	-- has_ast: has_ast
 
 note
-	copyright:	"Copyright (c) 1984-2020, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2021, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

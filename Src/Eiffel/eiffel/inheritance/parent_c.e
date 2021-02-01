@@ -66,14 +66,19 @@ feature
 --			Result := False
 		end
 
-	new_export_for (feature_name_id: INTEGER): EXPORT_I
-			-- New export status for feature named `feature_name_id'.
-			-- Void if none.
+	new_export_for (feature_name_id: INTEGER; original_export: EXPORT_I): EXPORT_I
+			-- Export status for feature named `feature_name_id` combined with its original export status `original_export`.
 		require
 			good_argument: feature_name_id > 0
 		do
-			if exports /= Void then
-				Result := exports.new_export_for (feature_name_id)
+			if attached exports as e and then attached e.new_export_for (feature_name_id) as n then
+				Result := n
+				if not is_non_conforming then
+						-- The new export status extends the inherited one.
+					Result := Result.concatenation (original_export)
+				end
+			else
+				Result := original_export
 			end
 		end
 
@@ -165,10 +170,8 @@ feature
 
 	is_selecting (feature_name_id: INTEGER): BOOLEAN
 			-- Is the current parent selecting `feature_name_id'?
-		require
-			conforming: not is_non_conforming
 		do
-			Result := selecting /= Void and then selecting.has (feature_name_id)
+			Result := attached selecting as s and then s.has (feature_name_id)
 		end
 
 	check_validity1
@@ -598,7 +601,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2020, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2021, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

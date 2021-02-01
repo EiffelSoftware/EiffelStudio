@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "[
 		Class for analysis of instances of FEATURE_I inherited under the
 		same final name. Those features are divided into the sublists:
@@ -461,12 +461,8 @@ feature
 				features.after or else Result.is_all
 			loop
 				info := features.item
-					-- Add adapted export status (if any).
-				if attached info.parent.new_export_for (feature_name_id) as e then
-					Result := Result.concatenation (e)
-				end
-					-- Add inherited export status.
-				Result := Result.concatenation (info.internal_a_feature.export_status)
+					-- Add adapted export status.
+				Result := Result.concatenation (info.parent.new_export_for (feature_name_id,  info.internal_a_feature.export_status))
 				features.forth
 			end
 			from
@@ -475,12 +471,8 @@ feature
 				deferred_features.after or else Result.is_all
 			loop
 				info := deferred_features.item
-					-- Add adapted export status (if any).
-				if attached info.parent.new_export_for (feature_name_id) as e then
-					Result := Result.concatenation (e)
-				end
-					-- Add inherited export status.
-				Result := Result.concatenation (info.internal_a_feature.export_status)
+					-- Add adapted export status.
+				Result := Result.concatenation (info.parent.new_export_for (feature_name_id,  info.internal_a_feature.export_status))
 				deferred_features.forth
 			end
 		end
@@ -489,32 +481,18 @@ feature -- Debug
 
 	trace
 		do
-			io.error.put_string ("INHERIT_FEAT%N");
-			io.error.put_string ("%TDeferred%N");
-			from
-				deferred_features.start
-			until
-				deferred_features.after
-			loop
-				deferred_features.item.trace;
-				deferred_features.forth;
-			end;
-			io.error.put_string ("%TEffective%N");
-			from
-				features.start
-			until
-				features.after
-			loop
-				features.item.trace;
-				features.forth;
-			end;
-			if inherited_info /= Void then
-				io.error.put_string ("Inherited info:%N");
-				inherited_info.trace
+			io.error.put_string ("INHERIT_FEAT%N")
+			io.error.put_string ("%TDeferred%N")
+			⟳ f: deferred_features ¦ f.trace ⟲
+			io.error.put_string ("%TEffective%N")
+			⟳ f: features ¦ f.trace ⟲
+			if attached inherited_info as i then
+				io.error.put_string ("Inherited info:%N")
+				i.trace
 			else
-				io.error.put_string ("Void inherited info%N");
-			end;
-		end;
+				io.error.put_string ("Void inherited info%N")
+			end
+		end
 
 	is_less alias "<" (other: INHERIT_FEAT): BOOLEAN
 			-- Is `other' less than `Current'
@@ -523,7 +501,7 @@ feature -- Debug
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2019, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2021, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

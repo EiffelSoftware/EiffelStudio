@@ -1,18 +1,17 @@
-
 test_name 	non-conforming-inheritance-empty-select	
-test_description Non-conforming inheritance with an empty select clause should report the correct line number for the syntax error, instead of reporting 0
+test_description Non-conforming inheritance with an empty select clause should not report any error.
 
 copy_sub 	Ace $TEST Ace
 
 define		SELECTED_FEATURES "weasel, marten"
 copy_sub 	test.e $CLUSTER test.e
 compile_melted
-compile_result	syntax_error TEST 9
+compile_result	ok
 
 define		SELECTED_FEATURES ""
 copy_sub 	test.e $CLUSTER test.e
-resume_compile
-compile_result	syntax_error TEST 9
+compile_melted
+compile_result	validity_error TEST VMRC(2) VMRC(2)
 
 test_end
 

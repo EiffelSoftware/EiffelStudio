@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-21-0" name="test">
+	<target name="test">
+		<root cluster="root_cluster" class="TEST" feature="make"/>
+		<setting name="console_application" value="true"/>
+		<precompile name="precompile" location="$PRECOMPILED_BASE_SCOOP_SAFE"/>
+		$EWEASEL_DOTNET_SETTING
+		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf"/>
+		<cluster name="root_cluster" location="$CLUSTER\"/>
+	</target>
+</system>

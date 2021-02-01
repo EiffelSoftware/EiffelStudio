@@ -519,27 +519,25 @@ feature -- Access
 			if rescued then
 					--| See why this occurs
 				Result := False
-			else
-				if
-					(body_index /= 0) and then
-					(not is_constant) and then
-					(not is_deferred) and then
-					(not is_unique) and then
-					(not (is_attribute and not is_attribute_with_body)) and then
-					(attached associated_feature_i as fi and then not fi.from_non_conforming_parent)
-						--| Try to support breakpoint in non-conforming inherited feature
-				then
-					Result := attached written_class as cl and then cl.is_debuggable
-				end
+			elseif
+				body_index /= 0 and then
+				not is_constant and then
+				not is_deferred and then
+				not is_unique and then
+				not (is_attribute and not is_attribute_with_body) and then
+				attached written_class as c
+			then
+				Result := c.is_debuggable
 			end
 		ensure
 			debuggable_if: Result implies
-				(body_index /= 0) and then
-				(not (is_attribute and not is_attribute_with_body)) and then
-				(not is_constant) and then
-				(not is_deferred) and then
-				(not is_unique) and then
-				(attached written_class as w_cl and then w_cl.is_debuggable)
+				body_index /= 0 and then
+				not is_constant and then
+				not is_deferred and then
+				not is_unique and then
+				not (is_attribute and not is_attribute_with_body) and then
+				attached written_class as c and then
+				c.is_debuggable
 		rescue
 			rescued := True
 			retry
@@ -1244,7 +1242,7 @@ note
 	ca_ignore: "CA033", "CA033: very large class"
 	date: "$Date$"
 	revision: "$Revision$"
-	copyright:	"Copyright (c) 1984-2020, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2021, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

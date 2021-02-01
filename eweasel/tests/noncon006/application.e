@@ -2,7 +2,7 @@ class
 	APPLICATION
 
 inherit
-	ANY
+	$PARENT
 
 inherit {NONE}
 	P1
@@ -12,10 +12,10 @@ create
 
 feature -- Initialization
 
-	make is
+	make
 			-- Run application.
 		do
 			from_p1
 		end
 
-end -- class APPLICATION
+end

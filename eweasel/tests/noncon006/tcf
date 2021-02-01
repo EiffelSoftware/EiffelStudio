@@ -1,5 +1,4 @@
-
---| Copyright (c) 1993-2006 University of Southern California and contributors.
+--| Copyright (c) 1993-2021 University of Southern California, Eiffel Software and contributors.
 --| All rights reserved.
 --| Your use of this work is governed under the terms of the GNU General
 --| Public License version 2.
@@ -10,13 +9,28 @@ test_name non-conforming-parent-can-be-frozen
 test_description Test that non-conforming parent can be frozen.
 
 copy_sub Ace $TEST Ace
-
-copy_raw application.e $CLUSTER application.e
 copy_raw p1.e $CLUSTER p1.e
+
+define PARENT ""
+copy_sub application.e $CLUSTER application.e
 
 compile_melted
 compile_result 	ok
-c_compile_work
+execute_work	NONE exec_output
+execute_result ok
+compare		exec_output output
+
+define PARENT "P1"
+copy_sub application.e $CLUSTER application.e
+
+compile_melted
+compile_result 	validity_error APPLICATION VIFI(1)
+
+define PARENT "ANY"
+copy_sub application.e $CLUSTER application.e
+
+resume_compile
+compile_result 	ok
 execute_work	NONE exec_output
 execute_result ok
 compare		exec_output output

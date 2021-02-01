@@ -580,16 +580,16 @@ feature -- Access
 	graph: ES_GRAPH
 			-- Current graph.
 
-	class_graph: ES_CLASS_GRAPH
+	class_graph: detachable ES_CLASS_GRAPH
 			-- Current class graph if not Void.
 		do
-			Result ?= graph
+			Result := {ES_CLASS_GRAPH} / graph
 		end
 
-	cluster_graph: ES_CLUSTER_GRAPH
+	cluster_graph: detachable ES_CLUSTER_GRAPH
 			-- Current cluster graph if not Void.
 		do
-			Result ?= graph
+			Result := {ES_CLUSTER_GRAPH} / graph
 		end
 
 	world: EIFFEL_WORLD
@@ -632,13 +632,13 @@ feature -- Access
 	class_view: EIFFEL_CLASS_DIAGRAM
 			-- Class view currently displayed.
 		do
-			Result ?= world
+			Result := {EIFFEL_CLASS_DIAGRAM} / world
 		end
 
 	cluster_view: EIFFEL_CLUSTER_DIAGRAM
 			-- Cluster view currently displayed.
 		do
-			Result ?= world
+			Result := {EIFFEL_CLUSTER_DIAGRAM} / world
 		end
 
 	force_directed_layout: EIFFEL_FORCE_LAYOUT
@@ -754,7 +754,6 @@ feature -- Status settings.
 			-- Enable use of force directed physics.
 		local
 			min_box: EV_RECTANGLE
-			fig: EG_LINKABLE_FIGURE
 		do
 			if timer = Void then
 				create timer.make_with_interval (50)
@@ -764,14 +763,12 @@ feature -- Status settings.
 			timer.actions.extend (agent on_time_out)
 			is_force_directed_used := True
 			if class_graph = Void then
-				fig ?= world.figure_from_model (cluster_graph.center_cluster)
-				if fig /= Void then
+				if attached {EG_LINKABLE_FIGURE} world.figure_from_model (cluster_graph.center_cluster) as fig then
 					min_box := fig.minimum_size
 					force_directed_layout.set_center (min_box.left + min_box.width // 2, min_box.top + min_box.height // 2)
 				end
 			else
-				fig ?= world.figure_from_model (class_graph.center_class)
-				if fig /= Void then
+				if attached {EG_LINKABLE_FIGURE} world.figure_from_model (class_graph.center_class) as fig then
 					force_directed_layout.set_center (fig.port_x, fig.port_y)
 					fig.set_is_fixed (True)
 				end
@@ -862,7 +859,6 @@ feature -- Element change
 			retried: BOOLEAN
 			a_class_graph: ES_CLASS_GRAPH
 			a_class_view: EIFFEL_CLASS_DIAGRAM
-			cf: EIFFEL_CLASS_FIGURE
 			es_class: ES_CLASS
 			was_legend_shown: BOOLEAN
 		do
@@ -949,14 +945,13 @@ feature -- Element change
 					if is_valid_diagram_file (f) then
 						world.load_available_views (f)
 					end
-					world.set_current_view (view_selector.text)
+					world.set_current_view (view_selector.text.to_string_8)
 					if not world.available_views.has (world.current_view) then
 						world.available_views.extend (world.current_view)
 					end
 					layout.layout
 				end
-				cf ?= world.figure_from_model (class_graph.center_class)
-				if cf /= Void then
+				if attached {EIFFEL_CLASS_FIGURE} world.figure_from_model (class_graph.center_class) as cf then
 					cf.set_is_fixed (True)
 				end
 
@@ -1096,7 +1091,7 @@ feature -- Element change
 					if is_valid_diagram_file (f) then
 						world.load_available_views (f)
 					end
-					world.set_current_view (view_selector.text)
+					world.set_current_view (view_selector.text.to_string_8)
 					if not world.available_views.has (world.current_view) then
 						world.available_views.extend (world.current_view)
 					end
@@ -1400,16 +1395,14 @@ feature {ES_DIAGRAM_TOOL_PANEL, EB_CONTEXT_DIAGRAM_COMMAND, EIFFEL_CLASS_FIGURE}
 			-- Launch stone.
 		local
 			l_tool: EB_STONABLE_TOOL
-			fst: FEATURE_STONE
 		do
-			fst ?= a_stone
 			l_tool := decide_tool_to_display (a_stone)
 			if develop_window.is_unified_stone then
 				develop_window.set_stone (a_stone)
 			else
 				l_tool.set_stone (a_stone)
 			end
-			if fst /= Void and then address_manager /= Void then
+			if attached {FEATURE_STONE} a_stone and then address_manager /= Void then
 				address_manager.hide_address_bar
 			end
 		end
@@ -1452,11 +1445,9 @@ feature {EB_DEVELOPMENT_WINDOW_TOOLS, EB_STONE_CHECKER, EB_DEVELOPMENT_WINDOW} -
 			-- If current widget is displayed, the stone is forced.
 			-- Choose default tool to load a feature stone.
 		local
-			fs: FEATURE_STONE
 			cs: CLASSC_STONE
 		do
-			fs ?= new_stone
-			if fs /= Void then
+			if attached {FEATURE_STONE} new_stone as fs then
 				if address_manager /= Void then
 					address_manager.hide_address_bar
 				end
@@ -1490,10 +1481,10 @@ feature {EB_DEVELOPMENT_WINDOW_TOOLS, EB_STONE_CHECKER, EB_DEVELOPMENT_WINDOW} -
 				if last_stone /= Void and then last_stone.is_valid then
 					history_manager.extend (last_stone)
 					stone := last_stone
-					class_stone ?= last_stone
-					cluster_stone ?= last_stone
-					if class_stone /= Void then
-						-- create a new class view
+					if attached {like class_stone} last_stone as cs then
+							-- create a new class view
+						class_stone := cs
+						cluster_stone := Void
 						if
 							is_rebuild_world_needed or else
 							class_graph = Void or else
@@ -1505,20 +1496,20 @@ feature {EB_DEVELOPMENT_WINDOW_TOOLS, EB_STONE_CHECKER, EB_DEVELOPMENT_WINDOW} -
 							create_class_view (class_stone.class_i, True)
 							is_synchronization_needed := False
 						end
-					else
-						if cluster_stone /= Void then
+					elseif attached {like cluster_stone} last_stone as clus then
+						cluster_stone := clus
+						class_stone := Void
 							-- create a cluster view
-							if
-								is_rebuild_world_needed or else
-								cluster_graph = Void or else
-								cluster_graph.center_cluster = Void or else
-								cluster_graph.center_cluster.group /= cluster_stone.group
-							then
-								is_rebuild_world_needed := False
-								store
-								create_cluster_view (cluster_stone.group, True)
-								is_synchronization_needed := False
-							end
+						if
+							is_rebuild_world_needed or else
+							cluster_graph = Void or else
+							cluster_graph.center_cluster = Void or else
+							cluster_graph.center_cluster.group /= cluster_stone.group
+						then
+							is_rebuild_world_needed := False
+							store
+							create_cluster_view (cluster_stone.group, True)
+							is_synchronization_needed := False
 						end
 					end
 						-- Synchronization was not done when invisible.
@@ -1540,11 +1531,8 @@ feature {EB_DEVELOPMENT_WINDOW_TOOLS, EB_STONE_CHECKER, EB_DEVELOPMENT_WINDOW} -
 
 	decide_tool_to_display (a_st: STONE): EB_STONABLE_TOOL
 			-- Decide which tool to display.
-		local
-			fs: FEATURE_STONE
 		do
-			fs ?= a_st
-			if fs /= Void then
+			if attached {FEATURE_STONE} a_st then
 				develop_window.tools.show_default_tool_of_feature
 				Result := develop_window.tools.default_feature_tool
 			else
@@ -1851,7 +1839,7 @@ feature {NONE} -- Events
 				world_cell.disable_resize
 				projector.disable_painting
 
-				world.retrieve_view (view_selector.text)
+				world.retrieve_view (view_selector.text.to_string_8)
 
 				projector.enable_painting
 				world_cell.enable_resize
@@ -2473,11 +2461,8 @@ feature {NONE} -- Implementation for mini tool bar
 
 	window: EV_WINDOW
 			-- Window dialogs can refer to.
-		local
-			conv_dev: EB_DEVELOPMENT_WINDOW
 		do
-			conv_dev ?= develop_window
-			if conv_dev /= Void then
+			if attached {EB_DEVELOPMENT_WINDOW} develop_window as conv_dev then
 				Result := conv_dev.window
 			else
 				create Result

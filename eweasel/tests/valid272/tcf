@@ -1,11 +1,15 @@
-
 test_name	 non-conforming-missing-vmss3
-test_description Compiler should report a VMSS(3) error (select clause not needed) on a class that inherits from a parent class via both conforming and non-conforming inheritance and renames a feature and selects the feature in the conforming inheritance clause
+test_description Compiler should not report an error on a class that inherits from a parent class via both conforming and non-conforming inheritance and renames a feature and selects the feature in the conforming inheritance clause.
 
 copy_sub 	Ace $TEST Ace
-copy_raw 	test.e $CLUSTER test.e
+copy_raw 	test0.e $CLUSTER test.e
 
 compile_melted
-compile_result 	validity_error TEST VMSS(3)
+compile_result 	validity_error TEST VMRC(2)
+
+copy_raw 	test.e $CLUSTER test.e
+
+resume_compile
+compile_result 	ok
 
 test_end

@@ -3,9 +3,6 @@ class TEST
 inherit
 
        ANY
-               select
-                       out
-               end
 
 inherit {NONE}
 

@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "[
 		Duplication (conceptual) and actual duplication (code duplication is handled here).
 		Each line of the ORIGIN_TABLE is processes separately.
@@ -234,8 +234,8 @@ feature
 						l_feature_replication_generator.process_replicated_feature (
 								l_selection_list.item.a_feature,
 								l_selection_list.item.parent,
-								l_selection_list.item = l_selection_list.first and then not l_selection_list.item.internal_a_feature.from_non_conforming_parent,
-									-- Item is selected if first in the selection list and from a conforming parent.
+								l_selection_list.item = l_selection_list.first,
+									-- Item is selected if first in the selection list.
 								l_current_class,
 								old_t,
 								new_t
@@ -268,7 +268,7 @@ feature
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2021, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

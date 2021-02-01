@@ -2230,8 +2230,7 @@ feature {NONE} -- Implementation
 								not l_is_target_of_creation_instruction and then
 								not is_qualified and then
 								l_feature.is_replicated_directly and then
-								not l_feature.from_non_conforming_parent and then
-									-- We are unqualified-calling an inherited conforming feature that is replicated in the current class.
+									-- We are unqualified-calling an inherited feature that is replicated in the current class.
 									-- Therefore the calling feature must also be replicated in the current class.
 								not current_feature.is_replicated_directly and then
 								current_feature.written_class /= System.current_class
@@ -10938,9 +10937,6 @@ feature {NONE} -- Agents
 				Result := Result.instantiation_in (context.current_class_type.conformance_type.as_implicitly_detachable.as_variant_free)
 				if l_enclosing_feature.has_replicated_ast then
 					Result.set_has_replicated_ast (True)
-				end
-				if l_enclosing_feature.from_non_conforming_parent then
-					Result.set_from_non_conforming_parent (True)
 				end
 			end
 

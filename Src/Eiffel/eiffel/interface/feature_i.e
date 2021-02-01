@@ -278,12 +278,6 @@ feature -- Access
 			Result := feature_flags & is_replicated_directly_mask = is_replicated_directly_mask
 		end
 
-	frozen from_non_conforming_parent: BOOLEAN
-			-- Is feature inherited from a non-conforming parent?
-		do
-			Result := feature_flags & from_non_conforming_parent_mask = from_non_conforming_parent_mask
-		end
-
 	frozen is_frozen: BOOLEAN
 			-- Is feature frozen?
 		do
@@ -904,14 +898,6 @@ feature -- Setting
 			feature_flags := feature_flags.set_bit_with_mask (b, is_replicated_directly_mask)
 		ensure
 			is_replicated_directly_set: is_replicated_directly = b
-		end
-
-	frozen set_from_non_conforming_parent (b: BOOLEAN)
-			-- Assign `b' to `from_non_conforming_parent'.
-		do
-			feature_flags := feature_flags.set_bit_with_mask (b, from_non_conforming_parent_mask)
-		ensure
-			from_non_conforming_parent_set: from_non_conforming_parent = b
 		end
 
 	frozen set_is_empty (b : BOOLEAN)
@@ -1851,22 +1837,12 @@ feature -- Export checking
 		require
 			good_argument: client /= Void
 			has_export_status: export_status /= Void
-		local
-			l_ncp_classes: FIXED_LIST [CLASS_C]
 		do
 			Result := export_status.valid_for (client)
 			if not Result then
 					-- We need to check that `Current' is non-conformally inherited by `client'.
-				l_ncp_classes := client.non_conforming_parents_classes
-				if l_ncp_classes /= Void then
-					from
-						l_ncp_classes.start
-					until
-						Result or else l_ncp_classes.after
-					loop
-						Result := export_status.valid_for (l_ncp_classes.item)
-						l_ncp_classes.forth
-					end
+				if attached client.non_conforming_parents_classes as l_ncp_classes then
+					Result := ∃ c: l_ncp_classes ¦ export_status.valid_for (c)
 				end
 			end
 		end
@@ -3780,7 +3756,7 @@ feature {FEATURE_I} -- Feature flags
 	has_replicated_ast_mask: NATURAL_64 =			0x0010_0000
 	has_body_mask: NATURAL_64 =						0x0020_0000 -- Used in ATTRIBUTE_I
 	is_replicated_directly_mask: NATURAL_64 = 		0x0040_0000
-	from_non_conforming_parent_mask: NATURAL_64 = 	0x0080_0000
+	unused_mask: NATURAL_64 = 	0x0080_0000
 	is_selected_mask: NATURAL_64 = 					0x0100_0000
 	is_stable_mask: NATURAL_64 = 					0x0200_0000 -- Used in ATTRIBUTE_I
 	is_transient_mask: NATURAL_64 = 				0x0400_0000 -- Used in ATTRIBUTE_I
@@ -3865,7 +3841,7 @@ note
 	ca_ignore:
 		"CA033", "CA033: very long class",
 		"CA082", "CA082: missing redeclaration of `is_equal`"
-	copyright:	"Copyright (c) 1984-2020, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2021, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "Information about an inherited feature"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -288,12 +288,6 @@ feature -- Status
 			definition: Result = internal_a_feature.has_property_setter
 		end
 
-	non_conforming: BOOLEAN
-			-- Is feature from a non-conforming parent?
-		do
-			Result := parent /= Void and then parent.is_non_conforming
-		end
-
 feature -- Implementation
 
 	reset
@@ -331,7 +325,7 @@ feature -- Debug
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2019, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2021, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
@@ -363,6 +357,3 @@ note
 		]"
 
 end
-
-
-

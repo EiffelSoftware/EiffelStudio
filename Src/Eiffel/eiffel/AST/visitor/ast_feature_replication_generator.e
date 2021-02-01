@@ -136,12 +136,6 @@ feature -- Processing
 					-- is not unreplicated if then inherited by a descendent so we need
 					-- a flag to distinguish the two types of replicated features.
 				a_feature.set_is_replicated_directly (True)
-
-					-- Make sure that `generate_in' is reset for non-conforming attributes as it is
-					-- not needed due to flat inheritance.
-				if a_parent_c.is_non_conforming and then attached {ENCAPSULATED_I} a_feature as l_attr then
-					l_attr.set_generate_in (0)
-				end
 			else
 					-- This routine is either joined or redefined in `a_current_class', if redefined
 					-- in current class then we need to set it as directly replicated so that
@@ -306,7 +300,7 @@ feature {NONE} -- Implementation
 		-- Used for detemining whether a once function needs a new body index.
 
 ;note
-	copyright: "Copyright (c) 1984-2010, Eiffel Software"
+	copyright: "Copyright (c) 1984-2021, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

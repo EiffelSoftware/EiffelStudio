@@ -1,4 +1,4 @@
-note
+﻿note
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 
@@ -74,14 +74,12 @@ feature -- Selection
 			vmrc3: VMRC3
 			l_replicated_features_present: BOOLEAN
 			l_has_old_feature_replication: BOOLEAN
-			l_from_non_conforming_parent: BOOLEAN
 			l_selected_rout_id_set: ROUT_ID_SET
 			replication: FEATURE_I
 			l_inheriting_class_id: INTEGER_32
 		do
 			l_has_old_feature_replication := System.has_old_feature_replication
-			l_from_non_conforming_parent := first.non_conforming
-			l_replicated_features_present := count > 1 or else l_from_non_conforming_parent
+			l_replicated_features_present := count > 1
 
 				-- Process replicated features
 			if l_replicated_features_present then
@@ -91,26 +89,18 @@ feature -- Selection
 				until
 					after
 				loop
-					if l_has_old_feature_replication and then not item.non_conforming then
-							-- Use legacy replication if set and parent is non-conforming
-						if item.a_feature.has_replicated_ast then
-							replication := item.a_feature.replicated (item.internal_a_feature.access_in)
-						else
-							replication := item.a_feature.replicated (item.internal_a_feature.written_in)
-						end
-					else
-						if item.a_feature.has_replicated_ast then
+					replication := item.a_feature.replicated
+						(if item.a_feature.has_replicated_ast then
 								-- Parent feature was already replicated, we need to keep its `access_in'
 								-- it will be modified later in
 								-- `{AST_FEATURE_REPLICATION_GENERATOR}.process_replicated_feature'.
-							replication := item.a_feature.replicated (item.internal_a_feature.access_in)
+							item.internal_a_feature.access_in
+						elseif l_has_old_feature_replication then
+								-- Use legacy replication if set.
+							item.internal_a_feature.written_in
 						else
-							replication := item.a_feature.replicated (l_inheriting_class_id)
-						end
-						if item.non_conforming then
-							replication.set_from_non_conforming_parent (True)
-						end
-					end
+							l_inheriting_class_id
+						end)
 						-- Check if we need to update replicated feature descriptor.
 					if replication.is_type_evaluation_delayed then
 							-- Replicated feature descriptor should be updated to use types computed with a delay.
@@ -128,7 +118,7 @@ feature -- Selection
 					forth
 				end
 
-				if not l_has_old_feature_replication or else l_from_non_conforming_parent then
+				if not l_has_old_feature_replication then
 						-- We only want replication processing enabled for legacy replication
 						-- for non-conforming features.
 					set_has_replicated_features
@@ -204,7 +194,6 @@ feature -- Selection
 			has_multiple_features: count > 1
 		local
 			vmrc2: VMRC2;
-			l_non_conforming_count: INTEGER
 			l_implicit_selection: INHERIT_INFO
 		do
 			from
@@ -231,27 +220,20 @@ feature -- Selection
 						forth
 					end
 				else
-					if item.parent /= Void and then item.parent.is_non_conforming then
-							-- We have a non-conforming parent so increase the counter
-							-- so that implicit selection may be determined
-						l_non_conforming_count := l_non_conforming_count + 1
-						forth
+						-- This routine will be selected.
+					l_implicit_selection := item
+					if Result = Void and then l_implicit_selection /= first then
+							-- Add selected feature to the front of the selection list.
+						put_front (l_implicit_selection)
+						remove
 					else
-							-- This routine will be selected should every other routine come from a non-conforming branch.
-						l_implicit_selection := item
-						if Result = Void and then item /= first then
-								-- Add selected feature to the front of the selection list.
-							put_front (item)
-							remove
-						else
-							forth
-						end
+						forth
 					end
 				end
 			end
 
-			if Result = Void and then l_non_conforming_count >= (count - 1) then
-					-- We have an implicit selection
+			if Result = Void and then count <= 1 then
+					-- We have an implicit selection.
 				if l_implicit_selection /= Void then
 					Result := l_implicit_selection.a_feature
 				else
@@ -526,7 +508,7 @@ end;
 			end;
 		end;
 note
-	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2021, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

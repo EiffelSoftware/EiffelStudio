@@ -584,9 +584,9 @@ feature {NONE} -- Dependency propagation
 						if
 							not polymorphic_calls.has (k) and then
 							attached system.class_of_id (i) as d and then
-							d.simple_conform_to (c)
+							d.inherits_from (c)
 						then
-								-- Mark all calls on conforming targets as processed.
+								-- Mark all calls on descendant targets as processed.
 							polymorphic_calls.put (k)
 							b := e.body_index
 							if not reachable_code.item (b) then
@@ -631,9 +631,9 @@ feature {NONE} -- Dependency propagation
 						if
 							not polymorphic_calls.has (k) and then
 							attached system.class_of_id (i) as d and then
-							d.simple_conform_to (c)
+							d.inherits_from (c)
 						then
-								-- Mark all calls on conforming targets as processed.
+								-- Mark all calls on descendant targets as processed.
 							polymorphic_calls.put (k)
 							if live_classes [i] then
 									-- The routine is going to be processed now, mark the routine ID as processed.
@@ -750,7 +750,7 @@ feature -- Debugging
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2019, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2021, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

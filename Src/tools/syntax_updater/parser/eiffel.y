@@ -1311,20 +1311,11 @@ Select_opt: -- Empty
 	;
 
 Select: TE_SELECT
-			--- { $$ := Void }
 			{
-				if non_conforming_inheritance_flag then
-					report_one_error (create {SYNTAX_ERROR}.make (token_line ($1), token_column ($1),
-						filename, "Non-conforming inheritance may not use select clause"))
-				end
 				$$ := ast_factory.new_select_clause_as (Void, $1)
 			}
 	|	TE_SELECT Feature_list
 			{
-				if non_conforming_inheritance_flag and attached $1 as l_keyword then
-					report_one_error (create {SYNTAX_ERROR}.make (token_line ($1), token_column ($1),
-						filename, "Non-conforming inheritance may not use select clause"))
-				end
 				$$ := ast_factory.new_select_clause_as ($2, $1)
 			}
 	;
@@ -2303,7 +2294,7 @@ Formal_generics:
 				if
 					is_once and then
 					attached (create {SYNTAX_ERROR}.make (token_line ($1), token_column ($1), filename,
-						locale.translation_in_context ("Once class cannot have formal generic parameters.", "compiler.parser"))) as e
+						locale.translation_in_context ("A once class may not have formal generic parameters.", "compiler.parser"))) as e
 				then
 					e.set_associated_class (current_class)
 					error_handler.insert_error (e)
@@ -2320,7 +2311,7 @@ Formal_generics:
 				if
 					is_once and then
 					attached (create {SYNTAX_ERROR}.make (token_line ($1), token_column ($1), filename,
-						locale.translation_in_context ("Once class cannot have formal generic parameters.", "compiler.parser"))) as e
+						locale.translation_in_context ("A once class may not have formal generic parameters.", "compiler.parser"))) as e
 				then
 					e.set_associated_class (current_class)
 					error_handler.insert_error (e)

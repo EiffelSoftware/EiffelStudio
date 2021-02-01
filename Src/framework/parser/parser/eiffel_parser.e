@@ -7664,10 +7664,6 @@ debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line <not available>")
 end
 
-				if non_conforming_inheritance_flag then
-					report_one_error (create {SYNTAX_ERROR}.make (token_line (yyvs14.item (yyvsp14)), token_column (yyvs14.item (yyvsp14)),
-						filename, "Non-conforming inheritance may not use select clause"))
-				end
 				yyval114 := ast_factory.new_select_clause_as (Void, yyvs14.item (yyvsp14))
 			
 if yy_parsing_status >= yyContinue then
@@ -7695,10 +7691,6 @@ debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line <not available>")
 end
 
-				if non_conforming_inheritance_flag and attached yyvs14.item (yyvsp14) as l_keyword then
-					report_one_error (create {SYNTAX_ERROR}.make (token_line (yyvs14.item (yyvsp14)), token_column (yyvs14.item (yyvsp14)),
-						filename, "Non-conforming inheritance may not use select clause"))
-				end
 				yyval114 := ast_factory.new_select_clause_as (yyvs108.item (yyvsp108), yyvs14.item (yyvsp14))
 			
 if yy_parsing_status >= yyContinue then

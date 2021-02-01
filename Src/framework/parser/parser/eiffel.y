@@ -1311,20 +1311,11 @@ Select_opt: -- Empty
 	;
 
 Select: TE_SELECT
-			--- { $$ := Void }
 			{
-				if non_conforming_inheritance_flag then
-					report_one_error (create {SYNTAX_ERROR}.make (token_line ($1), token_column ($1),
-						filename, "Non-conforming inheritance may not use select clause"))
-				end
 				$$ := ast_factory.new_select_clause_as (Void, $1)
 			}
 	|	TE_SELECT Feature_list
 			{
-				if non_conforming_inheritance_flag and attached $1 as l_keyword then
-					report_one_error (create {SYNTAX_ERROR}.make (token_line ($1), token_column ($1),
-						filename, "Non-conforming inheritance may not use select clause"))
-				end
 				$$ := ast_factory.new_select_clause_as ($2, $1)
 			}
 	;

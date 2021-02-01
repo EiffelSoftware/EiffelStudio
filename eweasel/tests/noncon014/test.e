@@ -24,7 +24,7 @@ feature -- Initialization
 			end
 
 			create t2
-			if t2.any_once_cell.item /= Void then
+			if t2.any_once_cell.item = Void then
 				io.put_string ("Not OK%N")
 			else
 				t2.any_once_cell.put ("PATH_NAME")
@@ -32,8 +32,8 @@ feature -- Initialization
 			t2.f
 
 			check
-				not_same_once1: not any_once_cell.item.is_equal (t2.any_once_cell.item)
-				not_same_once2: not t1.any_once_cell.item.is_equal (t2.any_once_cell.item)
+				same_once1: any_once_cell.item.is_equal (t2.any_once_cell.item)
+				same_once2: t1.any_once_cell.item.is_equal (t2.any_once_cell.item)
 			end
 		end
 

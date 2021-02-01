@@ -182,13 +182,13 @@ test basic-non-conforming-inheritance			noncon001 tcf pass non-conforming
 test non-conforming-inheritance-conformance		noncon002 tcf pass non-conforming conformance
 test non-conforming-inheritance-incrementality	noncon003 tcf pass non-conforming
 test non-conforming-inheritance-parent-incrementality	noncon004 tcf pass non-conforming
-test non-conforming-inheritance-is-not-selectable	noncon005 tcf pass non-conforming
+test non-conforming-inheritance-is-selectable	noncon005 tcf pass non-conforming
 test non-conforming-parent-can-be-frozen		noncon006 tcf pass non-conforming
-test at-least-one-conforming-inheritance-path	noncon007 tcf fail non-conforming
+test at-least-one-conforming-inheritance-path	noncon007 tcf pass non-conforming
 test non-conforming-inheritance-client-incrementality	noncon008 tcf pass non-conforming
 test non-conforming-finalization-postcondition-violation	noncon009 tcf pass non-conforming
-test no-repeated-non-conforming-inheritance		noncon010 tcf fail used_to_pass non-conforming
-test repeated-non-conforming-inheritance-of-generic-type	noncon011 tcf pass
+test no-repeated-non-conforming-inheritance		noncon010 tcf pass used_to_pass non-conforming
+test repeated-non-conforming-inheritance-of-generic-type	noncon011 tcf pass non-conforming
 test repeated-non-conforming-inheritance-of-generic-type-from-parents	noncon012 tcf pass non-conforming
 test feature-inherits-export-status				noncon013 tcf pass non-conforming
 test non-conform-once-inheritance				noncon014 tcf pass non-conforming
@@ -200,8 +200,9 @@ test incorrect-vrle-error						noncon020 tcf pass non-conforming
 test non-conforming-reference-attribute-access	noncon021 tcf pass non-conforming
 test non-conforming-constant-access	noncon022 tcf pass non-conforming
 test non-conforming-crash						noncon023 tcf pass non-conforming
-test finalize-with-nonconforming-inheritance			noncon024 tcf fail finalizing non-conforming
+test finalize-with-nonconforming-inheritance			noncon024 tcf pass finalizing non-conforming
 test inline-with-nonconforming-inheritance			noncon025 tcf pass finalizing non-conforming inlining
+test non-conforming-inheritance-export-status			noncon026 tcf pass non-conforming validity export
 
 -- Replication
 test replicate-precursor				replication001 tcf pass replication
@@ -565,10 +566,10 @@ test	crash-on-veen2a					valid268 tcf pass validity
 test	bogus-vsrp3-with-require-else-false	valid269 tcf fail used_to_pass validity
 test	spurious-vuot-in-assertion		valid270 tcf pass validity object_test
 test	spurious-vweq-warning			valid271 tcf pass validity
-test	non-conforming-missing-vmss3		valid272 tcf fail validity non-conforming
+test	non-conforming-missing-vmss3		valid272 tcf pass validity non-conforming
 test	spurious-vtgc3-with-vmfn		valid273 tcf fail validity
 test	duplicate-vfac1				valid274 tcf pass validity assigner
-test	non-conforming-equality			valid275 tcf pass validity conformance equality warning
+test	non-conforming-equality			valid275 tcf pass validity conformance non-conforming equality warning
 test	missing-assigner-feature		valid276 tcf pass validity assigner fixed
 test	insufficiently-exported-assigner-feature valid277 tcf pass validity assigner
 test	invalid-static-inspect-constant	 	valid278 tcf pass validity inspect
@@ -1088,7 +1089,7 @@ test 	once-per-object-link-failure		incr404 tcf fail incrementality once
 test 	is-expanded-crash-2			incr405 tcf pass incrementality
 test 	once-per-object-add-attributes		incr406 tcf fail incrementality once
 test 	once-per-object-to-attribute		incr407 tcf fail incrementality once
-test 	non-conforming-remove-precondition	incr408 tcf fail incrementality non-conforming
+test 	non-conforming-remove-precondition	incr408 tcf pass incrementality non-conforming
 test 	has-stable-attribute-crash		incr409 tcf fail incrementality stable attached_types
 test 	type-to-create-crash			incr410 tcf pass incrementality attached_types
 test 	rout-entry-crash-3			incr411 tcf fail incrementality
@@ -1910,9 +1911,9 @@ test once-per-object-inherited-chained		once014 tcf pass once
 test once-per-object-callee-exception		once015 tcf fail once
 test once-per-object-recursive-call		once016 tcf fail once
 test once-per-object-rescue-gc			once017 tcf pass once
-test once-per-object-nonconforming-inheritance	once018 tcf pass once
+test once-per-object-nonconforming-inheritance	once018 tcf pass once non-conforming
 test once-per-object-redefined-precursor	once019 tcf fail once
-test once-per-object-nonconforming-2		once020 tcf fail once non-conforming
+test once-per-object-nonconforming-2		once020 tcf pass once non-conforming
 test once-per-object-generic-precursor		once021 tcf pass once
 test once-per-object-array-of-expanded		once022 tcf fail once
 test once-per-object-inherited-twice		once023 tcf fail once

@@ -1812,8 +1812,10 @@ feature {NONE} -- Events
 			level, scale_factor: DOUBLE
 			old_scale: INTEGER
 			new_scale: INTEGER
+			t: STRING_32
 		do
-			level_text := zoom_selector.selected_item.text.head (level_text.count - 1)
+			t := zoom_selector.selected_item.text
+			level_text := t.head (t.count - 1)
 			check
 				level_text_is_integer: level_text.is_integer
 			end
@@ -2494,7 +2496,7 @@ invariant
 	shortcut_table_not_void: shortcut_table /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2020, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2021, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

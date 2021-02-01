@@ -3080,7 +3080,7 @@ feature -- Descendants information
 			loop
 				c := class_types.item (i)
 				if c /= Void and then c.is_expanded then
-					expanded_descendants.include (c.conformance_table)
+					expanded_descendants.include (c.binding_table)
 					t := c.type.reference_type
 					if t.has_associated_class_type (Void) then
 						expanded_descendants.put (True, t.associated_class_type (Void).type_id)
@@ -3171,7 +3171,7 @@ invariant
 note
 	date: "$Date$"
 	revision: "$Revision$"
-	copyright:	"Copyright (c) 1984-2020, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2021, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

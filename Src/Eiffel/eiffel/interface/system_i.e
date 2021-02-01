@@ -3213,10 +3213,10 @@ feature -- Final mode generation
 				set_is_precompile_finalized (is_precompiled)
 
 				if il_generation then
-						-- Build conformance table for CLASS_TYPE instances. This is
+						-- Build binding tables for CLASS_TYPE instances. This is
 						-- needed for proper processing of computation of `is_polymorphic'
 						-- on polymorphic table and computation of expanded descendants.
-					process_conformance_table_for_type (agent {CLASS_TYPE}.build_conformance_table)
+					process_conformance_table_for_type (agent {CLASS_TYPE}.build_binding_table)
 
 					byte_context.clear_system_data
 					byte_context.compute_expanded_descendants
@@ -3309,10 +3309,10 @@ feature -- Final mode generation
 					end
 					tmp_opt_byte_server.flush
 
-						-- Build conformance table for CLASS_TYPE instances. This is
+						-- Build binding tables for CLASS_TYPE instances. This is
 						-- needed for proper processing of computation of `is_polymorphic'
 						-- on polymorphic table and computation of expanded descendants.
-					process_conformance_table_for_type (agent {CLASS_TYPE}.build_conformance_table)
+					process_conformance_table_for_type (agent {CLASS_TYPE}.build_binding_table)
 
 						-- Generation of C files associated to the classes of
 						-- the system.
@@ -3336,9 +3336,9 @@ feature -- Final mode generation
 					Tmp_poly_server.clear
 					Tmp_opt_byte_server.clear
 
-						-- Clean conformance table for CLASS_TYPE instances. We don't need
+						-- Clean binding tables for CLASS_TYPE instances. We don't need
 						-- to store them on disk as they are recomputed at each finalization.
-					process_conformance_table_for_type (agent {CLASS_TYPE}.reset_conformance_table)
+					process_conformance_table_for_type (agent {CLASS_TYPE}.reset_binding_table)
 
 					is_class_type_alive_storage.make (0)
 					is_class_type_reachable_storage.make (0)
@@ -3391,9 +3391,9 @@ feature -- Final mode generation
 			skeleton_table := Void
 			remover := Void
 
-				-- Clean conformance table for CLASS_TYPE instances. We don't need
+				-- Clean binding tables for CLASS_TYPE instances. We don't need
 				-- to store them on disk as they are recomputed at each finalization.
-			process_conformance_table_for_type (agent {CLASS_TYPE}.reset_conformance_table)
+			process_conformance_table_for_type (agent {CLASS_TYPE}.reset_binding_table)
 
 				-- Reset `class_types'
 			if l_type_id_mapping /= Void then
@@ -6439,7 +6439,7 @@ invariant
 note
 	date: "$Date$"
 	revision: "$Revision$"
-	copyright:	"Copyright (c) 1984-2020, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2021, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

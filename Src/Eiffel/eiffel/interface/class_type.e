@@ -316,8 +316,9 @@ feature -- Access
 			Result := il_casing.type_name (internal_namespace, a_prefix, internal_type_name, is_dotnet_name)
 		end
 
-	conformance_table: PACKED_BOOLEANS
-			-- Conformance table for current type.
+	binding_table: PACKED_BOOLEANS
+			-- Binding table for current type.
+			-- It takes into account both conforming and non-conforming parents.
 
 	basic_type: BASIC_A
 			-- If `type' is originally a basic type, we keep the BASIC_A instance
@@ -329,19 +330,18 @@ feature -- Access
 
 feature -- Status report
 
-	dynamic_conform_to (a_type: TYPE_A; a_type_id: INTEGER; a_context_type: TYPE_A): BOOLEAN
-			-- Does Current conform to `a_type' in a dynamic binding sense?
-			-- That is to say if you have Current be `B [G#1]' with a conformance
-			-- type be `B [TUPLE]' and the ancestor `a_type' be `A [TUPLE [INTEGER]]'
-			-- then it is conforming even though B [TUPLE] does not conform
-			-- to A [TUPLE [INTEGER]].
+	is_binding_of (a_type: TYPE_A; a_type_id: INTEGER; a_context_type: TYPE_A): BOOLEAN
+			-- Can an object of type `Current` be bound to an entity of type `a_type' in a dynamic binding sense?
+			-- That is to say if `Current` corresponds to "B [G#1]" with the type "B [TUPLE]" and
+			-- `a_type` corresponds to "A [TUPLE [INTEGER]]", `Current` is its binding
+			-- although "B [TUPLE]" does not conform to "A [TUPLE [INTEGER]]".
 		require
 			a_type_not_void: a_type /= Void
 			a_context_type_valid: a_type.is_valid_context_type (a_context_type)
 			a_type_has_class_type: a_type.has_associated_class_type (a_context_type)
 			a_type_id_valid: a_type_id >= 0
 			a_type_related_to_type_id: a_type.type_id (a_context_type) = a_type_id
-			conformance_table_not_void: conformance_table /= Void
+			conformance_table_not_void: binding_table /= Void
 			final_mode: byte_context.final_mode
 		local
 			l_generics: ARRAYED_LIST [TYPE_A]
@@ -353,7 +353,7 @@ feature -- Status report
 		do
 			Result := type_id = a_type_id
 			if not Result then
-				l_packed := conformance_table
+				l_packed := binding_table
 				if a_type_id <= l_packed.upper then
 					Result := l_packed.item (a_type_id)
 					if Result then
@@ -525,53 +525,58 @@ feature {SYSTEM_I} -- Setting
 
 feature -- Update
 
-	reset_conformance_table
-			-- Reset conformance table for current type.
+	reset_binding_table
+			-- Reset binding table for current type.
 		do
-			conformance_table := Void
+			binding_table := Void
 		ensure
-			conformance_table_reset: conformance_table = Void
+			binding_table = Void
 		end
 
-	build_conformance_table
-			-- Build conformance table for current type.
+	build_binding_table
+			-- Build binding table for current type.
 		do
-			create conformance_table.make (type_id)
-			build_conformance_table_of (Current)
+			create binding_table.make (type_id)
+			build_binding_table_of (Current)
 		ensure
-			conformance_table_not_void: conformance_table /= Void
+			attached binding_table
 		end
 
-	build_conformance_table_of (cl: CLASS_TYPE)
-			-- Build recursively the conformance table of class `cl' knowing that
-			-- `cl' conforms to Current.
+	build_binding_table_of (cl: CLASS_TYPE)
+			-- Build recursively the binding table of class `cl' knowing that
+			-- `cl' inherits from Current.
 		require
-			cl_not_void: cl /= Void
-			conformance_table_not_void: cl.conformance_table /= Void
+			attached cl
+			attached cl.binding_table
 		local
-			a_table: like conformance_table
+			a_table: like binding_table
 			l_area: SPECIAL [CL_TYPE_A]
 			i, nb: INTEGER
+			c: CLASS_C
 		do
-			a_table := cl.conformance_table
+			a_table := cl.binding_table
 			if type_id > a_table.upper or else not a_table.item (type_id) then
 					-- The parent has not been inserted yet. We use `force' as `type_id'
 					-- might be greater than what `a_table' can hold.
 				a_table.force (True, type_id)
 					-- Since `cl' conforms to Current, it also conforms to the parent
 					-- of Current.
+				c := associated_class
 				from
-					l_area := associated_class.conforming_parents.area
-					nb := associated_class.conforming_parents.count
+					l_area := c.conforming_parents.area
+					nb := c.conforming_parents.count
 				until
 					i = nb
 				loop
-					l_area.item (i).associated_class_type (type).build_conformance_table_of (cl)
+					l_area.item (i).associated_class_type (type).build_binding_table_of (cl)
 					i := i + 1
+				end
+				if attached c.non_conforming_parents as p then
+					⟳ t: p ¦ t.associated_class_type (type).build_binding_table_of (cl) ⟲
 				end
 				if attached {GEN_TYPE_A} type as g and then not g.is_tuple then
 						-- Mark all generic derivations this one conforms to.
-					g.enumerate_interfaces (agent {CLASS_TYPE}.build_conformance_table_of (cl))
+					g.enumerate_interfaces (agent {CLASS_TYPE}.build_binding_table_of (cl))
 				end
 			end
 		end
@@ -1969,7 +1974,7 @@ invariant
 
 note
 	ca_ignore: "CA093", "CA093: manifest array type mismatch"
-	copyright:	"Copyright (c) 1984-2020, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2021, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

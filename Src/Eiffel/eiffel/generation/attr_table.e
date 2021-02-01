@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "Representation of a table of attribute offsets for the final Eiffel executable."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -43,7 +43,7 @@ feature -- Creation
 			Result := f.new_attr_entry (t, d, c)
 		end
 
-feature -- Status report
+feature -- Access
 
 	polymorphic_status_for_offset (a_type: TYPE_A; a_context_type: CLASS_TYPE): INTEGER_8
 			-- Polymorphic status is the table from entry indexed by `a_type` relative to `a_context_type`
@@ -88,7 +88,7 @@ feature -- Status report
 					if entry.used_for_offset then
 						Result := -1
 						cl_type := system_i.class_type_of_id (entry.type_id)
-						if cl_type.dynamic_conform_to (a_type, type_id, a_context_type.type) then
+						if cl_type.is_binding_of (a_type, type_id, a_context_type.type) then
 							l_buffer.clear_all
 							cl_type.skeleton.generate_offset (l_buffer, entry.feature_id, False, False)
 							if not l_buffer.as_string.is_equal (l_offset) then
@@ -111,15 +111,13 @@ feature -- Code generation
 		require
 			not_is_polymorphic: polymorphic_status_for_offset (a_type, a_context_type) = -1
 		local
-			type_id: INTEGER
 			l_entry: G
 		do
-			type_id := a_type.type_id (a_context_type.type)
-			goto_used_for_offset (type_id)
-				--| In this instruction, we put `False' as third
-				--| arguments. This means we won't generate anything if there is nothing
-				--| to generate. Remember that `True' is used in the generation of attributes
-				--| table in Final mode.
+			goto_used_for_offset (a_type.type_id (a_context_type.type))
+				-- In this instruction, we put `False' as third
+				-- arguments. This means we won't generate anything if there is nothing
+				-- to generate. Remember that `True' is used in the generation of attributes
+				-- table in Final mode.
 			l_entry := array_item (position)
 			system.class_type_of_id (l_entry.type_id).skeleton.generate_offset (buf, l_entry.feature_id, False, True)
 		end
@@ -291,9 +289,10 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2019, Eiffel Software"
-	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
-	licensing_options:	"http://www.eiffel.com/licensing"
+	ca_ignore: "CA011", "CA011: too many arguments"
+	copyright: "Copyright (c) 1984-2021, Eiffel Software"
+	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
+	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[
 			This file is part of Eiffel Software's Eiffel Development Environment.
 			

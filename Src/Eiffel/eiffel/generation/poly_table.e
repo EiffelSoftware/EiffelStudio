@@ -422,7 +422,7 @@ feature -- Status report
 							Result or else i > nb
 						loop
 							entry := array_item (i)
-							if entry.used_for_offset and then system_i.class_type_of_id (entry.type_id).dynamic_conform_to (t, type_id, context_class_type.type) then
+							if entry.used_for_offset and then system_i.class_type_of_id (entry.type_id).is_binding_of (t, type_id, context_class_type.type) then
 								Result := entry.is_initialization_required
 							end
 							i := i + 1
@@ -784,7 +784,7 @@ invariant
 	position >= lower
 
 note
-	copyright:	"Copyright (c) 1984-2019, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2021, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

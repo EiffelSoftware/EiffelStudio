@@ -196,7 +196,7 @@ feature -- Status report
 					entry := array_item (i)
 					if
 						entry.used and then
-						system_i.class_type_of_id (entry.type_id).dynamic_conform_to (a_type, type_id, context_type)
+						system_i.class_type_of_id (entry.type_id).is_binding_of (a_type, type_id, context_type)
 					then
 						if entry.pattern_id /= first_pattern_id then
 								-- If the pattern ID is does not match the one from the current type
@@ -237,7 +237,7 @@ feature -- Status report
 						entry := storage [i]
 						if
 							system_i.is_class_type_alive (entry.type_id) and then
-							system_i.class_type_of_id (entry.type_id).dynamic_conform_to (a_type, type_id, context_type)
+							system_i.class_type_of_id (entry.type_id).is_binding_of (a_type, type_id, context_type)
 						then
 								-- There are used conforming entries in the table.
 							Result := -1
@@ -301,16 +301,15 @@ feature -- Status report
 						entry := array_item (i)
 						if entry.used then
 							l_child_type := system.class_type_of_id (entry.type_id)
-								-- First check we conform to `a_type'.
-							if l_child_type.dynamic_conform_to (a_type, type_id, a_context_type.type) then
-									-- Then check we conform to `l_parent_type'.
-								if l_child_type.dynamic_conform_to (l_parent_type.type, l_parent_type.type_id, Void) then
-										-- Types are still conformant, we continue our descent, and use `l_child_type'
-										-- as our new parent.
+								-- First check that the entry can be dynamically bound to `a_type`.
+							if l_child_type.is_binding_of (a_type, type_id, a_context_type.type) then
+									-- Then check that the entry can be dynamically bound to `l_parent_type`.
+								if l_child_type.is_binding_of (l_parent_type.type, l_parent_type.type_id, Void) then
+										-- Types are still suitable, continue the descent, and use `l_child_type` as the new parent.
 									l_parent_type := l_child_type
 								else
-										-- No conformance here, we cannot inline a call to a deferred routine that
-										-- has only one implementation.
+										-- No dynamic binding here.
+										-- A call to a deferred routine that has only one implementation cannot be inlined.
 									i := nb + 1
 									Result := False
 								end
@@ -493,7 +492,7 @@ feature -- Code generation
 			loop
 				entry := array_item (i)
 				if entry.used then
-					l_done := system_i.class_type_of_id (entry.type_id).dynamic_conform_to (a_type, type_id, context_cl_type)
+					l_done := system_i.class_type_of_id (entry.type_id).is_binding_of (a_type, type_id, context_cl_type)
 				end
 				i := i + 1
 			end
@@ -996,9 +995,10 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2019, Eiffel Software"
-	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
-	licensing_options:	"http://www.eiffel.com/licensing"
+	ca_ignore: "CA011", "CA011: too many arguments"
+	copyright: "Copyright (c) 1984-2021, Eiffel Software"
+	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
+	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[
 			This file is part of Eiffel Software's Eiffel Development Environment.
 			

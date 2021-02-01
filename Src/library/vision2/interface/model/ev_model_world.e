@@ -168,6 +168,22 @@ feature -- Status setting
 			grid_disabled: not grid_enabled
 		end
 
+	enable_anti_aliasing
+			-- Set `is_anti_aliasing_enabled` to `True`.
+		do
+			is_anti_aliasing_enabled := True
+		ensure
+			anti_aliasing_enabled: is_anti_aliasing_enabled
+		end
+
+	disable_anti_aliasing
+			-- Set `is_anti_aliasing_enabled` to `False`.
+		do
+			is_anti_aliasing_enabled := False
+		ensure
+			anti_aliasing_disabled: not is_anti_aliasing_enabled
+		end
+
 	full_redraw
 			-- On next projection, mark entire area as invalid.
 		do

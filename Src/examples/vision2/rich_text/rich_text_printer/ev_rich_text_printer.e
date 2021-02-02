@@ -23,19 +23,38 @@ class
 	EV_RICH_TEXT_PRINTER
 
 inherit
+	EV_PRINT_DIALOG
+		redefine
+			create_implementation,
+			implementation
+		end
+
 	SHARED_EXECUTION_ENVIRONMENT
+		undefine
+			default_create,
+			copy
+		end
+
+create
+	make
+
+feature {NONE} -- Initialization
+
+	make (a_rich_text: EV_RICH_TEXT; a_window: EV_WINDOW)
+		do
+			rich_text := a_rich_text
+			window := a_window
+			default_create
+		end
 
 feature -- Status report
 
 	rich_text: EV_RICH_TEXT
 			-- Text that will be printed next time.
 
-	job_name: STRING_GENERAL
+	job_name: detachable STRING_GENERAL
 			-- Name for the print job.
 			--| Optional, only used on Windows.
-
-	context: EV_PRINT_CONTEXT
-			-- Options used for the print job.
 
 	window: EV_WINDOW
 			-- Window to which dialogs will be relative.
@@ -58,14 +77,6 @@ feature -- Status setting
 			window = wnd
 		end
 
-	set_print_context (pc: EV_PRINT_CONTEXT)
-			-- Define the options used for the next print job.
-		do
-			context := pc
-		ensure
-			context = pc
-		end
-
 	set_job_name (nname: like job_name)
 			-- Set the name of the next print job.
 			--| Only used on Windows. Optional.
@@ -80,7 +91,11 @@ feature -- Conversion
 		local
 			f: RAW_FILE
 		do
-			create f.make_open_temporary_with_prefix (execution_environment.temporary_directory_path.extended ("ev-rtf-printer-").name)
+			if attached execution_environment.temporary_directory_path as tmp then
+				create f.make_open_temporary_with_prefix (tmp.extended ("ev-rtf-printer-").name)
+			else
+				create f.make_open_temporary_with_prefix ("ev-rtf-printer-")
+			end
 			f.close
 			rich_text.save_to_named_path (f.path)
 			create Result.make (f.count)
@@ -98,21 +113,20 @@ feature -- Conversion
 
 feature -- Basic operations
 
-	print_text
+	print_text (ctx: EV_PRINT_CONTEXT)
 			-- Launch an effective print job.
 		require
 			text_set: rich_text /= Void
-			options_set: context /= Void
-			valid_options: context.output_to_file implies (context.file_path /= Void and then
-						(create {RAW_FILE}.make_with_path (context.file_path)).is_creatable)
+			valid_options: (ctx.output_to_file) implies (attached ctx.file_path as fp and then
+						(create {RAW_FILE}.make_with_path (fp)).is_creatable)
 		local
 			retried: BOOLEAN
 		do
 			if not retried then
-				if context.output_to_file then
-					rich_text.save_to_named_path (context.file_path)
+				if ctx.output_to_file then
+					rich_text.save_to_named_path (ctx.file_path)
 				else
-					implementation.send_print_request
+					implementation.send_print_request (ctx)
 				end
 			end
 		rescue
@@ -140,18 +154,6 @@ feature -- Basic operations
 
 feature {NONE} -- Implementation: graphical interface
 
-	implementation: EV_RICH_TEXT_PRINTER_IMP
-			-- Object used to send print requests.
-		do
-			if internal_implementation = Void then
-				create internal_implementation.make (Current)
-			end
-			Result := internal_implementation
-		end
-
-	internal_implementation: detachable like implementation
-			-- Once per object implementation.
-
 	call_print_from (d: EV_PRINT_DIALOG)
 			-- Initialize `Current's parameters with the values in `d' and call `print_text'.
 		require
@@ -162,10 +164,11 @@ feature {NONE} -- Implementation: graphical interface
 			fn: PATH
 			f: FILE
 			err_dlg: EV_ERROR_DIALOG
+			ctx: EV_PRINT_CONTEXT
 		do
-			context := d.print_context
-			fn := context.file_path
-			if context.output_to_file then
+			ctx := d.print_context
+			fn := ctx.file_path
+			if ctx.output_to_file then
 				if fn = Void then
 					create err_dlg.make_with_text ({STRING_32} "Cannot create file %"%"")
 					err_dlg.show_modal_to_window (window)
@@ -175,12 +178,25 @@ feature {NONE} -- Implementation: graphical interface
 						create err_dlg.make_with_text ({STRING_32} "Cannot create file %"" + fn.name + "%"")
 						err_dlg.show_modal_to_window (window)
 					else
-						print_text
+						print_text (ctx)
 					end
 				end
 			else
-				print_text
+				print_text (ctx)
 			end
+		end
+
+feature {EV_ANY, EV_ANY_I, EV_ANY_HANDLER} -- Implementation
+
+	implementation: EV_RICH_TEXT_PRINTER_IMP
+			-- Responsible for interaction with native graphics toolkit.
+
+feature {NONE} -- Implementation
+
+	create_implementation
+			-- See `{EV_ANY}.create_implementation'.
+		do
+			create {EV_RICH_TEXT_PRINTER_IMP} implementation.make
 		end
 
 note

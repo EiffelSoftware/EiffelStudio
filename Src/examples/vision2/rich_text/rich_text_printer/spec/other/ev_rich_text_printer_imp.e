@@ -9,31 +9,23 @@ class
 	EV_RICH_TEXT_PRINTER_IMP
 
 inherit
+	EV_PRINT_DIALOG_IMP
+		redefine
+			interface
+		end
+
 	SHARED_EXECUTION_ENVIRONMENT
 
 create {EV_RICH_TEXT_PRINTER}
 	make
 
-feature {NONE} -- Initialization
-
-	make (interf: EV_RICH_TEXT_PRINTER)
-			-- Initialize `Current' and associate it with `interf'.
-		require
-			valid_interface: interf /= Void
-		do
-			interface := interf
-		ensure
-			set_interface: interface = interf
-		end
-
 feature {EV_RICH_TEXT_PRINTER} -- Basic operations
 
-	send_print_request
+	send_print_request (ctx: EV_PRINT_CONTEXT)
 			-- Send a print request based on the parameters in `interface'.
 		require
-			text_set: interface.rich_text /= Void
-			options_set: interface.context /= Void
-			do_not_print_to_file: not interface.context.output_to_file
+			text_set: attached_interface.rich_text /= Void
+			do_not_print_to_file: not ctx.output_to_file
 		local
 			cmd: STRING_32
 			name: STRING_32
@@ -43,17 +35,23 @@ feature {EV_RICH_TEXT_PRINTER} -- Basic operations
 			wd: EV_WARNING_DIALOG
 			sent_text: STRING_32
 			utf: UTF_CONVERTER
+			i: like attached_interface
 		do
+			i := attached_interface
 			if retried = 0 then
 				cmd := {STRING_32} "lp -d "
-				name := interface.context.printer_name
+				name := ctx.printer_name
 				cmd.append (name)
 
 					-- Generate the file we put the text in.
-				create file.make_open_temporary_with_prefix (execution_environment.temporary_directory_path.extended ("ev-rtf-printer-").name)
+				if attached execution_environment.temporary_directory_path as tmp then
+					create file.make_open_temporary_with_prefix (tmp.extended ("ev-rtf-printer-").name)
+				else
+					create file.make_open_temporary_with_prefix ("ev-rtf-printer-")
+				end
 				fn := file.path
 					--| FIXME: for now, just using the plain text (without formatting)
-				sent_text := interface.rich_text.text
+				sent_text := i.rich_text.text
 				file.put_string (utf.utf_32_string_to_utf_8_string_8 (sent_text))
 				file.close
 
@@ -67,7 +65,7 @@ feature {EV_RICH_TEXT_PRINTER} -- Basic operations
 					create fn.make_from_string ("")
 				end
 				create wd.make_with_text ({STRING_32} "Can not write in file %"" + fn.name + "%"")
-				wd.show_modal_to_window (interface.window)
+				wd.show_modal_to_window (i.window)
 				if file /= Void then
 					file.delete
 				end
@@ -77,13 +75,10 @@ feature {EV_RICH_TEXT_PRINTER} -- Basic operations
 			retry
 		end
 
-feature {EV_RICH_TEXT_PRINTER} -- Implementation
+feature {EV_RICH_TEXT_PRINTER, EV_ANY, EV_ANY_I} -- Implementation
 
-	interface: EV_RICH_TEXT_PRINTER
+	interface: detachable EV_RICH_TEXT_PRINTER note option: stable attribute end;
 			-- The object that is visible from outside.
-
-invariant
-	valid_interface: interface /= Void
 
 note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"

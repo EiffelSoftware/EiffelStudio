@@ -1110,10 +1110,8 @@ feature {NONE} -- Implementation
 		local
 			printer: EV_RICH_TEXT_PRINTER
 		do
-			create printer
+			create printer.make (rich_text, Current)
 			printer.set_job_name ("rich text printer demo")
-			printer.set_rich_text (rich_text)
-			printer.set_window (Current)
 			printer.ask_and_print
 		end
 

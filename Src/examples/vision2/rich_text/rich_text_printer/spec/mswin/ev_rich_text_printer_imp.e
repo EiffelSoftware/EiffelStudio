@@ -11,52 +11,37 @@ class
 
 inherit
 	EV_PRINT_DIALOG_IMP
-		rename
-			interface as dialog_interface,
-			make as dialog_make
-		export
-			{EV_RICH_TEXT_PRINTER_IMP} item
-			{NONE} all
+		redefine
+			interface
 		end
 
 create {EV_RICH_TEXT_PRINTER}
 	make
 
-feature {NONE} -- Initialization
-
-	make (interf: EV_RICH_TEXT_PRINTER)
-			-- Initialize `Current' and associate it with `interf'.
-		require
-			valid_interface: interf /= Void
-		do
-			interface := interf
-		ensure
-			set_interface: interface = interf
-		end
-
 feature {EV_RICH_TEXT_PRINTER} -- Basic operations
 
-	send_print_request
+	send_print_request (ctx: EV_PRINT_CONTEXT)
 			-- Send a print request based on the parameters in `interface'.
 		require
-			text_set: interface.rich_text /= Void
-			options_set: interface.context /= Void
-			do_not_print_to_file: not interface.context.output_to_file
+			text_set: attached_interface.rich_text /= Void
+			do_not_print_to_file: not ctx.output_to_file
 		local
 			wnd: WEL_FRAME_WINDOW -- Needed to create the rich edit component.
 			rich: WEL_RICH_EDIT
 			pdc: WEL_PRINTER_DC
 			txt: STRING
 			l_loader: WEL_RICH_EDIT_BUFFER_LOADER
+			i: like attached_interface
 		do
+			i := attached_interface
 			create wnd.make_top ("_dummy_")
 			create rich.make (wnd, "_dummy_", 10, 10, 300, 500, -1)
-			create pdc.make_by_pointer (interface.context.printer_context)
-			txt := interface.to_rtf
+			create pdc.make_by_pointer (ctx.printer_context)
+			txt := i.to_rtf
 			create l_loader.make (txt)
 			rich.set_text_limit (txt.count)
 			rich.rtf_stream_in (l_loader)
-			if attached interface.job_name as jn then
+			if attached i.job_name as jn then
 				rich.print_all (pdc, jn)
 			else
 				rich.print_all (pdc, "From EV_RICH_TEXT_PRINTER")
@@ -64,13 +49,10 @@ feature {EV_RICH_TEXT_PRINTER} -- Basic operations
 			wnd.destroy
 		end
 
-feature {EV_RICH_TEXT_PRINTER} -- Implementation
+feature {EV_RICH_TEXT_PRINTER, EV_ANY, EV_ANY_I} -- Implementation
 
-	interface: EV_RICH_TEXT_PRINTER
+	interface: detachable EV_RICH_TEXT_PRINTER note option: stable attribute end;
 			-- The object that is visible from outside.
-
-invariant
-	valid_interface: interface /= Void
 
 note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"

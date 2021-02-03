@@ -454,7 +454,6 @@ feature -- Drawing operations
 			release_dc
 		end
 
-
 	draw_segment (x1, y1, x2, y2: INTEGER)
 			-- Draw line segment from (`x1', 'y1') to (`x2', 'y2').
 		do
@@ -462,8 +461,9 @@ feature -- Drawing operations
 				reset_pen
 			end
 			get_dc
-			if attached gdip_graphics as g then
+			if attached gdip_graphics (dc) as g then
 				g.draw_line (gdip_pen, x1, y1, x2, y2)
+				g.dispose
 			else
 				dc.move_to (x1, y1)
 				dc.line_to (x2, y2)
@@ -751,8 +751,9 @@ feature -- Drawing operations
 					reset_pen
 				end
 				get_dc
-				if attached gdip_graphics as g then
+				if attached gdip_graphics (dc) as g then
 					g.draw_rectangle (gdip_pen, x, y, a_width - 1, a_height - 1)
+					g.dispose
 				else
 					dc.rectangle (x, y, x + a_width, y + a_height)
 				end
@@ -771,8 +772,9 @@ feature -- Drawing operations
 					reset_pen
 				end
 				get_dc
-				if attached gdip_graphics as g then
+				if attached gdip_graphics (dc) as g then
 					g.draw_ellipse (gdip_pen, x, y, a_bounding_width - 1, a_bounding_height - 1)
+					g.dispose
 				else
 					dc.ellipse (x, y, x + a_bounding_width, y + a_bounding_height)
 				end
@@ -820,8 +822,9 @@ feature -- Drawing operations
 				reset_pen
 			end
 			get_dc
-			if attached gdip_graphics as g then
+			if attached gdip_graphics (dc) as g then
 				g.draw_lines (gdip_pen, flat_points)
+				g.dispose
 			else
 				dc.polyline (flat_points)
 			end
@@ -928,8 +931,9 @@ feature -- Filling operations
 				reset_brush
 			end
 			get_dc
-			if attached gdip_graphics as g then
+			if attached gdip_graphics (dc) as g then
 				g.fill_ellipse (gdip_brush, x, y, a_bounding_width, a_bounding_height)
+				g.dispose
 			else
 				dc.ellipse (x, y, x + a_bounding_width + 1, y + a_bounding_height + 1)
 			end
@@ -963,8 +967,9 @@ feature -- Filling operations
 				reset_brush
 			end
 			get_dc
-			if attached gdip_graphics as g then
+			if attached gdip_graphics (dc) as g then
 				g.fill_polygon (gdip_brush, flat_points, {WEL_GDIP_FILL_MODE}.alternate)
+				g.dispose
 			else
 				dc.polygon (flat_points)
 			end
@@ -1407,13 +1412,13 @@ feature {NONE} -- Drawing tools
 			Result := (create {WEL_GDIP_STARTER}).is_gdi_plus_installed
 		end
 
-	gdip_graphics: detachable WEL_GDIP_GRAPHICS
+	gdip_graphics (a_dc: like dc): detachable WEL_GDIP_GRAPHICS
 			-- A GDI+ object for drawing if available, `Void` otherwise.
 		require
-			dc_exists: dc.exists
+			a_dc_exists: a_dc.exists
 		do
 			if is_anti_aliasing_enabled and then is_gdip_installed then
-				create Result.make_from_dc (dc)
+				create Result.make_from_dc (a_dc)
 				Result.set_smoothing_mode ({WEL_GDIP_SMOOTHING_MODE}.smoothing_mode_anti_alias_8x8)
 			end
 		ensure
@@ -1460,7 +1465,7 @@ note
 	ca_ignore:
 		"CA011", "CA011: too many arguments",
 		"CA033", "CA033: too large class"
-	copyright:	"Copyright (c) 1984-2018, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2021, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

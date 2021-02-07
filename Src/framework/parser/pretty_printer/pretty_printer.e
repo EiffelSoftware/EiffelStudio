@@ -183,6 +183,7 @@ feature {NONE} -- Initialization
 			change_indent := agent do_nothing
 			set_loop_expression_style (loop_expression_style_default)
 			set_line_processing (line_processing_default)
+			set_is_unindented_comment_kept (is_unindented_comment_kept_default)
 		end
 
 feature -- Access
@@ -224,6 +225,11 @@ feature -- Output format: access
 
 	line_processing_default: NATURAL_8 = 3
 			-- A default value of `line_processing`.
+
+	is_unindented_comment_kept: BOOLEAN
+			-- Should an indented comment be left alone (not indented)?
+
+	is_unindented_comment_kept_default: BOOLEAN = True
 
 feature -- Output format: status
 
@@ -286,6 +292,14 @@ feature -- Output format: modification
 			line_processing := s
 		ensure
 			line_processing = s
+		end
+
+	set_is_unindented_comment_kept (s: BOOLEAN)
+			-- Set `is_unindented_comment_kept` to `s`.
+		do
+			is_unindented_comment_kept := s
+		ensure
+			is_unindented_comment_kept = s
 		end
 
 feature {NONE} -- Access
@@ -389,7 +403,7 @@ feature {NONE} -- Output
 						-- There is no preceeding new line, put it.
 					print_new_line
 					print_indent
-				elseif not white_space_chars.has (last_printed) then
+				elseif not is_white_space (last_printed) then
 						-- New line cannot be inserted, put a space instead.
 					print_space_separator
 				end
@@ -423,7 +437,7 @@ feature {NONE} -- Output
 	print_space_separator
 			-- Print a space character if there is currently none white space character printed before.
 		do
-			if not white_space_chars.has (last_printed) then
+			if not is_white_space (last_printed) then
 				print_string (" ")
 			end
 		end
@@ -2242,6 +2256,7 @@ feature {NONE} -- Comments
 			inline_comment: BOOLEAN
 			c: CHARACTER_32
 			line: STRING_32
+			is_indented: BOOLEAN
 		do
 				-- The string can hold multiple comments, starting with '--'.
 				-- Remove all '%N' and '%R' characters before and after each comment line.
@@ -2264,6 +2279,9 @@ feature {NONE} -- Comments
 					if s [i] = '%N' then
 						print_new_line
 						inline_comment := False
+						is_indented := False
+					elseif is_white_space (s [i]) then
+						is_indented := True
 					end
 					i := i + 1
 				end
@@ -2272,18 +2290,18 @@ feature {NONE} -- Comments
 						-- It may use different indentation.
 					change_indent.apply
 				end
-				if not inline_comment then
-						-- The comment starts on a new line.
-					line := {STRING_32} "%T" + indent
-				elseif not white_space_chars.has (last_printed) then
-						-- The inline comment should be separated
-						-- from the previous token by a white space.
+				if inline_comment and not is_white_space (last_printed) then
+						-- The inline comment should be separated from the previous token by a white space.
 					line := " "
+				elseif not inline_comment and (is_indented or not is_unindented_comment_kept) then
+						-- The comment starts on a new line with computed indentation.
+						-- The comment is originally indended or all comments are requested to be indented.
+					line := {STRING_32} "%T" + indent
 				else
 						-- The inline comment is already separated by a white space.
+						-- The non-inline comment is unindented and kept unindended by request.
 					line := ""
 				end
-
 					-- Look for end of line.
 				from
 				until
@@ -2296,7 +2314,7 @@ feature {NONE} -- Comments
 					-- Remove trailing white spaces.
 				from
 				until
-					line.is_empty or else not white_space_chars.has (line [line.count])
+					line.is_empty or else not is_white_space (line [line.count])
 				loop
 					line.remove_tail (1)
 				end
@@ -2312,6 +2330,7 @@ feature {NONE} -- Comments
 				if l_start_idx = 0 then
 					l_start_idx := n
 				end
+				is_indented := False
 
 					-- Check if the comments are separated with additional new lines.
 				if i < l_start_idx then
@@ -2331,10 +2350,15 @@ feature {NONE} -- Comments
 								-- There are multiple new lines.
 								-- Collapse them into one empty new line.
 							print_new_line
-							i := l_start_idx
-						else
-							i := i + 1
+							is_indented := False
+								-- Make sure this branch is never taken again.
+							c := c.max_value.to_character_32
+						elseif is_white_space (s [i]) then
+							is_indented := True
+						elseif new_line_chars.has (s [i]) then
+							is_indented := False
 						end
+						i := i + 1
 					end
 				end
 
@@ -2346,11 +2370,17 @@ feature {NONE} -- Comments
 			end
 		end
 
-	white_space_chars: STRING_32 = " %T"
-			-- Characters that can be safely removed when they appear at end of a line.
-
 	new_line_chars: STRING_32 = "%N%R"
 			-- Characters that denote an end of a line.
+
+feature {NONE} -- Status report
+
+	is_white_space (c: CHARACTER_32): BOOLEAN
+			-- Is `c` a white space character?
+			-- If yes, such a character can be safely removed when it appears at the end of a line.
+		do
+			Result := c.is_space and then not new_line_chars.has (c)
+		end
 
 invariant
 	out_stream_attached: out_stream /= Void
@@ -2363,7 +2393,7 @@ note
 	ca_ignore: "CA033", "CA033: very large class"
 	date: "$Date$"
 	revision: "$Revision$"
-	copyright: "Copyright (c) 1984-2020, Eiffel Software"
+	copyright: "Copyright (c) 1984-2021, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

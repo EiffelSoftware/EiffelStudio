@@ -721,8 +721,9 @@
 	<PREF NAME="general.update_channel" DESCRIPTION="Update to newer release on stable or beta channel." HIDDEN="False"><LIST>[stable];beta</LIST></PREF>
 	<PREF NAME="general.eis_path" DESCRIPTION="Directories to search for Eiffel Information System incoming mechanism."><STRING></STRING></PREF>
 
-	<PREF NAME="pretty_printer.loop_expression_style" DESCRIPTION="Formatting style of loop expressions used for pretty printing."><LIST>[keep];keyword;symbol</LIST></PREF>
+	<PREF NAME="pretty_printer.keep_unindented_comments" DESCRIPTION="Keep unindented comments unindented?"><BOOLEAN>True</BOOLEAN></PREF>
 	<PREF NAME="pretty_printer.line_processing" DESCRIPTION="Processing of lines when pretty printing:&#xA;&#x9;keep - keep line breaks as they are now;&#xA;&#x9;wrap - wrap long constructs (such as expressions) if they do not fit a given line length limit (not supported yet);&#xA;&#x9;inline - format long expressions on a single line."><LIST>[keep];wrap;inline</LIST></PREF>
+	<PREF NAME="pretty_printer.loop_expression_style" DESCRIPTION="Formatting style of loop expressions used for pretty printing."><LIST>[keep];keyword;symbol</LIST></PREF>
 
 	<PREF NAME="tools.search_tool.init_incremental" DESCRIPTION="Initial status of incremental search."><BOOLEAN>True</BOOLEAN></PREF>
 	<PREF NAME="tools.search_tool.init_match_case" DESCRIPTION="Initial status of match case."><BOOLEAN>False</BOOLEAN></PREF>

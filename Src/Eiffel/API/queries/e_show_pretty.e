@@ -135,12 +135,13 @@ feature {NONE} -- Implementation
 				pretty_printer_preferences := preferences.pretty_printer_preferences
 				p.set_loop_expression_style (pretty_printer_preferences.loop_expression_style)
 				p.set_line_processing (pretty_printer_preferences.line_processing)
+				p.set_is_unindented_comment_kept (pretty_printer_preferences.is_unindented_comment_kept)
 				parser.root_node.process (p)
 			end
 		end
 
 note
-	copyright: "Copyright (c) 1984-2019, Eiffel Software"
+	copyright: "Copyright (c) 1984-2021, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

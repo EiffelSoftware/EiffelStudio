@@ -51,6 +51,10 @@ feature {NONE} -- Initialization
 			if not attached preference_value_line_processing.default_value then
 				preference_value_line_processing.set_default_value (preference_value_line_processing.text_value)
 			end
+
+				-- Unindented comments.
+			preference_value_keep_unindented_comments := f.new_boolean_preference_value
+				(m, preference_name_keep_unindented_comments, True)
 		end
 
 feature -- Access
@@ -77,6 +81,12 @@ feature -- Access
 				[if preference_result_line_processing.valid_index (i) then i else preference_default_line_processing end]
 		ensure
 			{PRETTY_PRINTER}.is_line_processing (Result)
+		end
+
+	is_unindented_comment_kept: BOOLEAN
+			-- Should unindented comments be left alone?
+		do
+			Result := preference_value_keep_unindented_comments.value
 		end
 
 feature {NONE} -- Preferences
@@ -110,8 +120,7 @@ feature {NONE} -- Settings: loop expression style
 	preference_result_loop_expression_style: ARRAYED_LIST [like {PRETTY_PRINTER}.loop_expression_style]
 			-- Values of loop expression styles with indexes corresponding to `preference_string_loop_expression_style`.
 		once
-				-- TODO: Remove explicit array type when 19.11 is out. [2019-11-30]
-			create Result.make_from_array ({ARRAY [like {PRETTY_PRINTER}.loop_expression_style]} <<
+			create Result.make_from_array (<<
 				{PRETTY_PRINTER}.loop_expression_keep,
 				{PRETTY_PRINTER}.loop_expression_keyword,
 				{PRETTY_PRINTER}.loop_expression_symbol
@@ -148,8 +157,7 @@ feature {NONE} -- Settings: new line style
 	preference_result_line_processing: ARRAYED_LIST [like {PRETTY_PRINTER}.loop_expression_style]
 			-- Values of new lines styles with indexes corresponding to `preference_string_line_processing`.
 		once
-				-- TODO: Remove explicit array type when 19.11 is out. [2019-11-30]
-			create Result.make_from_array ({ARRAY [like {PRETTY_PRINTER}.loop_expression_style]} <<
+			create Result.make_from_array (<<
 				{PRETTY_PRINTER}.line_keep,
 				{PRETTY_PRINTER}.line_wrap,
 				{PRETTY_PRINTER}.line_inline
@@ -166,6 +174,17 @@ feature {NONE} -- Settings: new line style
 			preference_result_line_processing.valid_index (Result)
 		end
 
+feature {NONE} -- Settings: commented code preservation
+
+	preference_value_keep_unindented_comments: BOOLEAN_PREFERENCE
+			-- A preference to control whether unindented comments should be left alone.
+
+	preference_name_keep_unindented_comments: STRING
+			-- Name of a preference that tells if unindented comments should be left alone.
+		once
+			Result := preference_name_prefix + "keep_unindented_comments"
+		end
+
 invariant
 	consistent_loop_expression_style: preference_string_loop_expression_style.count = preference_result_loop_expression_style.count
 	consistent_line_processing: preference_string_line_processing.count = preference_result_line_processing.count
@@ -174,7 +193,7 @@ note
 	date: "$Date$"
 	revision: "$Revision$"
 	author: "Alexander Kogtenkov"
-	copyright: "Copyright (c) 1984-2019, Eiffel Software"
+	copyright: "Copyright (c) 1984-2021, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

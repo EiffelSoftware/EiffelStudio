@@ -6,8 +6,15 @@ copy_raw test.e $CLUSTER test.e
 
 preference	pretty_printer.line_processing wrap
 preference	pretty_printer.loop_expression_style keep
-prettify	test.e prettify_output
+
+preference	pretty_printer.keep_unindented_comments true
+prettify	test.e prettify_output_u
 compile_result ok
-compare		prettify_output output
+compare		prettify_output_u output_u
+
+preference	pretty_printer.keep_unindented_comments false
+prettify	test.e prettify_output_i
+compile_result ok
+compare		prettify_output_i output_i
 
 test_end

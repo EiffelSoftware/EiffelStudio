@@ -2,6 +2,12 @@
  -- Comment 2
  	-- Comment 3
  		-- Comment 4
+-- Comment 5
+	-- Comment 6
+-- Comment 7
+-- Comment 8
+		-- Comment 9
+-- Comment 10
 class TEST 
 create
 	make
@@ -15,6 +21,13 @@ feature
 			-- Ermine			   			
 			x := 3			   			
 			-- Mink			   			
+-- Weasel			   			
+--			x := 4			   			
+			-- Stoat			   			
+--			x := 5			   			
+	-- Ermine			   			
+			x := 6			   			
+-- Mink			   			
 		end 
 
 end 
@@ -22,3 +35,9 @@ end
  -- Comment 2
  	-- Comment 3
  		-- Comment 4
+-- Comment 5
+	-- Comment 6
+-- Comment 7
+-- Comment 8
+		-- Comment 9
+-- Comment 10

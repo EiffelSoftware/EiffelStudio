@@ -1,0 +1,37 @@
+class
+	TEST
+
+create
+	make
+
+feature -- Make
+
+-- This is comment 1
+-- This is comment 2
+-- This is comment 3
+
+	make
+		do
+		end
+
+-- This is comment 1
+-- This is comment 2
+-- This is comment 3
+
+	value1: INTEGER
+		do
+		end
+
+-- This is comment 1
+-- This is comment 2
+-- This is comment 3
+
+	value2: INTEGER
+		do
+		end
+
+-- This is comment 1
+-- This is comment 2
+-- This is comment 3
+
+end

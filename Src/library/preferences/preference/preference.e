@@ -226,15 +226,12 @@ feature -- Actions
 
 	change_actions: ACTION_SEQUENCE [TUPLE]
 			-- Actions to be performed when `value' changes, after call to `set_value'.
-		local
-			l_result: like internal_change_actions
 		do
-			l_result := internal_change_actions
-			if l_result = Void then
-				create l_result
-				internal_change_actions := l_result
+			Result := internal_change_actions
+			if Result = Void then
+				create Result
+				internal_change_actions := Result
 			end
-			Result := l_result
 		ensure
 			Result_attached: Result /= Void
 		end
@@ -256,7 +253,7 @@ invariant
 	has_change_actions: change_actions /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2019, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2021, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

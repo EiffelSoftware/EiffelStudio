@@ -567,6 +567,8 @@ feature {NONE} -- Implementation
 					then
 						if attached node.elements as elts and then not elts.is_empty then
 							sub_node := elts.i_th (1)
+						else
+							sub_node := Void
 						end
 
 							-- Found preference
@@ -657,7 +659,7 @@ invariant
 	has_preferences_storage: preferences_storage /= Void
 
 note
-	copyright: "Copyright (c) 1984-2019, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2021, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

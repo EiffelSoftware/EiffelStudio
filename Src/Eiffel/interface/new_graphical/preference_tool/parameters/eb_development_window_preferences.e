@@ -12,6 +12,7 @@ inherit
 	EB_DEVELOPMENT_WINDOW_DATA
 	ES_TOOLBAR_PREFERENCE
 	EB_SHARED_GRAPHICAL_COMMANDS
+	ES_SHARED_FONTS_AND_COLORS
 
 create
 	make
@@ -192,6 +193,19 @@ feature {EB_SHARED_PREFERENCES, EB_DEVELOPMENT_WINDOW_SESSION_DATA,
 			Result := is_pretty_printer_notification_enabled_preference.value
 		end
 
+feature -- General font and color preference
+
+	grid_preferences: EB_GRID_PREFERENCES
+		do
+			Result := internal_grid_preferences
+			if Result = Void then
+				create Result.make (Current)
+				internal_grid_preferences := Result
+			end
+		end
+
+	internal_grid_preferences: detachable like grid_preferences
+
 feature {EB_SHARED_PREFERENCES} -- Preference
 
 	estudio_dbg_menu_allowed_preference: BOOLEAN_PREFERENCE
@@ -258,6 +272,18 @@ feature {EB_SHARED_PREFERENCES} -- Preference
 
 	is_pretty_printer_notification_enabled_preference: BOOLEAN_PREFERENCE
 			-- Is pretty printer notification enabled?
+
+feature {EB_SHARED_PREFERENCES, EB_GRID_PREFERENCES} -- Grid related preferences			
+
+	grid_font_preference: FONT_PREFERENCE
+	grid_foreground_color_preference: COLOR_PREFERENCE
+	grid_background_color_preference: COLOR_PREFERENCE
+	grid_focused_selection_text_color_preference: COLOR_PREFERENCE
+	grid_focused_selection_color_preference: COLOR_PREFERENCE
+	grid_non_focused_selection_text_color_preference: COLOR_PREFERENCE
+	grid_non_focused_selection_color_preference: COLOR_PREFERENCE
+	grid_separator_color_preference: COLOR_PREFERENCE
+	grid_tree_node_connector_color_preference: COLOR_PREFERENCE
 
 feature -- Element change
 
@@ -342,12 +368,24 @@ feature {NONE} -- Preference Strings
 
 	is_pretty_printer_notification_enabled_string: STRING = "interface.development_window.is_pretty_printer_notification_enabled"
 
+	grid_font_string: STRING = "interface.development_window.grid.font"
+	grid_foreground_color_string: STRING = "interface.development_window.grid.foreground_color"
+	grid_background_color_string: STRING = "interface.development_window.grid.background_color"
+	grid_focused_selection_text_color_string: STRING = "interface.development_window.grid.focused_selection_text_color"
+	grid_focused_selection_color_string: STRING = "interface.development_window.grid.focused_selection_color"
+	grid_non_focused_selection_text_color_string: STRING = "interface.development_window.grid.non_focused_selection_text_color"
+	grid_non_focused_selection_color_string: STRING = "interface.development_window.grid.non_focused_selection_color"
+	grid_separator_color_string: STRING = "interface.development_window.grid.separator_color"
+	grid_tree_node_connector_color_string: STRING = "interface.development_window.grid.tree_node_connector_color"
+
 feature {NONE} -- Implementation
 
 	initialize_preferences
 			-- Initialize preference values.
 		local
 			l_manager: EB_PREFERENCE_MANAGER
+			g: ES_GRID
+			glab: EV_GRID_LABEL_ITEM
 		do
 			create l_manager.make (preferences, "development_window")
 			is_force_debug_mode_preference := l_manager.new_boolean_preference_value (l_manager, is_force_debug_mode_string, False)
@@ -383,6 +421,22 @@ feature {NONE} -- Implementation
 			pretty_printer_messindex_preference := l_manager.new_integer_preference_value (l_manager, pretty_printer_messindex_string, 2)
 			is_pretty_printer_notification_enabled_preference := l_manager.new_boolean_preference_value (l_manager, is_pretty_printer_notification_enabled_string, True)
 
+
+			create g
+			create glab
+			if attached glab.font as ft then
+				grid_font_preference := l_manager.new_font_preference_value (l_manager, grid_font_string, glab.font)
+			else
+				grid_font_preference := l_manager.new_font_preference_value (l_manager, grid_font_string, fonts.standard_label_font)
+			end
+			grid_foreground_color_preference := l_manager.new_color_preference_value (l_manager, grid_foreground_color_string, g.foreground_color)
+			grid_background_color_preference := l_manager.new_color_preference_value (l_manager, grid_background_color_string, g.background_color)
+			grid_focused_selection_text_color_preference := l_manager.new_color_preference_value (l_manager, grid_focused_selection_text_color_string, g.focused_selection_text_color)
+			grid_focused_selection_color_preference := l_manager.new_color_preference_value (l_manager, grid_focused_selection_color_string, g.focused_selection_color)
+			grid_non_focused_selection_text_color_preference := l_manager.new_color_preference_value (l_manager, grid_non_focused_selection_text_color_string, g.non_focused_selection_text_color)
+			grid_non_focused_selection_color_preference := l_manager.new_color_preference_value (l_manager, grid_non_focused_selection_color_string, g.non_focused_selection_color)
+			grid_separator_color_preference := l_manager.new_color_preference_value (l_manager, grid_separator_color_string, g.separator_color)
+			grid_tree_node_connector_color_preference := l_manager.new_color_preference_value (l_manager, grid_tree_node_connector_color_string, g.tree_node_connector_color)
 
 			auto_hide_animation_speed_preference.change_actions.extend (agent on_auto_hide_animation_speed_changed)
 			undocked_window_lower_than_main_window_preference.change_actions.extend (agent on_undocked_window_lower_than_main_window)
@@ -438,7 +492,7 @@ invariant
 	estudio_dbg_menu_enabled_preference_not_void: estudio_dbg_menu_enabled_preference /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2020, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2021, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

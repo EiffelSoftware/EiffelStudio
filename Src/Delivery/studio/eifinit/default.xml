@@ -285,7 +285,15 @@
 	<PREF NAME="interface.development_window.consecutive_successful_compilations_threshold" DESCRIPTION="Number of successful compilations in a row. Used with messindex to suggest to use Pretty print"><INTEGER>4</INTEGER></PREF>
 	<PREF NAME="interface.development_window.pretty_printer_messindex" DESCRIPTION="Used to compute the diff between the current code and the pretty printed code."><INTEGER>2</INTEGER></PREF>
 	<PREF NAME="interface.development_window.is_pretty_printer_notification_enabled" DESCRIPTION="Use pretty printer notification?"><BOOLEAN>True</BOOLEAN></PREF>
-
+	<PREF NAME="interface.development_window.grid.font" DESCRIPTION="Font of the IDE grids."></PREF>
+	<PREF NAME="interface.development_window.grid.background_color" DESCRIPTION="Background color for the grids of the IDE."></PREF>
+	<PREF NAME="interface.development_window.grid.foreground_color" DESCRIPTION="Foreground color for the grids of the IDE."></PREF>
+	<PREF NAME="interface.development_window.grid.focused_selection_text_color`" DESCRIPTION="Text color for the focused grid selection."></PREF>
+	<PREF NAME="interface.development_window.grid.focused_selection_color`" DESCRIPTION="Background color for the focused grid selection."></PREF>
+	<PREF NAME="interface.development_window.grid.non_focused_selection_text_color`" DESCRIPTION="Text color for the non focused grid selection."></PREF>
+	<PREF NAME="interface.development_window.grid.non_focused_selection_color`" DESCRIPTION="Background color for the non focused grid selection."></PREF>
+	<PREF NAME="interface.development_window.grid.separator_color`" DESCRIPTION="Color of the grid separator lines."></PREF>
+	<PREF NAME="interface.development_window.grid.tree_node_connector_color`" DESCRIPTION="Color of the grid tree node connector lines."></PREF>
 	<PREF NAME="recent_projects.last_opened_projects" DESCRIPTION="List of recently opened projects."><LIST></LIST></PREF>
 	<PREF NAME="recent_projects.keep_n_projects" DESCRIPTION="Number of recent projects to keep in the list."><INTEGER>10</INTEGER></PREF>
 	

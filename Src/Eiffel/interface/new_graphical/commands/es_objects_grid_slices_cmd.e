@@ -83,10 +83,10 @@ feature -- Status report
 	tool: ES_OBJECTS_GRID_MANAGER
 			-- Object tool `Current' is associated with. `Void' if not `for_tool'.
 
-	name: STRING
+	name: STRING_GENERAL
 			-- Name of the command.
 		once
-			Result := Interface_names.l_Set_slice_limits + "New"
+			Result := Interface_names.l_Set_slice_limits + {STRING_32} "New"
 		end
 
 	description: STRING_GENERAL
@@ -138,7 +138,6 @@ feature -- Basic operations
 		local
 			obj_grid_item: like object_grid_line_for
 			conv_obj: OBJECT_STONE
-			conv_fost: FEATURE_ON_OBJECT_STONE
 		do
 			if attached {OBJECT_STONE} st as ost then
 				conv_obj := ost
@@ -544,7 +543,7 @@ feature {NONE} -- Implementation
 			tf_minf_not_void: tf_minf /= Void
 			tf_maxf_not_void: tf_maxf /= Void
 		local
-			str1, str2, str3: STRING
+			str1, str2, str3: READABLE_STRING_GENERAL
 			i: INTEGER
 			disp_size: INTEGER
 			ok: BOOLEAN

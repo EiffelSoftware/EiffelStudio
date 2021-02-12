@@ -1554,7 +1554,7 @@ feature -- Call stack related
 					l_class := l_func.get_class
 					l_class_token := l_class.token
 					l_module := l_func.get_module
-					l_module_name := l_module.name
+					l_module_name := l_module.name.to_string_8 -- TODO: Unicode support
 
 					l_module_display := l_module_name.twin
 					l_module_display.keep_tail (20)
@@ -1703,7 +1703,7 @@ feature {NONE} -- Constants for dotnet interactions
 			-- {EXCEPTION_MANAGER}.wrapped_exception feature name (for dotnet)
 
 ;note
-	copyright:	"Copyright (c) 1984-2020, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2021, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

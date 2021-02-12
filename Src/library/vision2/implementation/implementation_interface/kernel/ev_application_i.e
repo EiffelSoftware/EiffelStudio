@@ -747,11 +747,8 @@ feature {EV_PICK_AND_DROPABLE_I} -- Pick and drop
 			-- Menu of targets that accept `a_pebble'.
 		local
 			cur: CURSOR
-			trg: detachable EV_ABSTRACT_PICK_AND_DROPABLE
-			pnd_trg: detachable EV_PICK_AND_DROPABLE
 			targets: like pnd_targets
 			identified: detachable IDENTIFIED
-			sensitive: detachable EV_SENSITIVE
 			l_item_data: detachable EV_PND_TARGET_DATA
 			l_search_tree: detachable BINARY_SEARCH_TREE [PROXY_COMPARABLE [EV_PND_TARGET_DATA]]
 			l_object_comparable: PROXY_COMPARABLE [EV_PND_TARGET_DATA]
@@ -781,14 +778,18 @@ feature {EV_PICK_AND_DROPABLE_I} -- Pick and drop
 			until
 				targets.after
 			loop
-				trg ?= identified.id_object (targets.item_for_iteration)
-				pnd_trg ?= trg
-				if trg /= Void and then (pnd_trg = Void or else not pnd_trg.is_destroyed) then
+				if
+					attached {EV_ABSTRACT_PICK_AND_DROPABLE} identified.id_object (targets.item_for_iteration) as trg and then
+					(not attached {EV_PICK_AND_DROPABLE} trg as pnd_trg or else not pnd_trg.is_destroyed)
+				then
 					if
 						attached a_pebble as l_p and then trg.drop_actions.accepts_pebble (l_p)
 					then
-						sensitive ?= trg
-						if not (sensitive /= Void and then (not sensitive.is_destroyed and then not sensitive.is_sensitive)) then
+						if not (attached {EV_SENSITIVE} trg as sensitive and then
+								(not sensitive.is_destroyed and then
+									not sensitive.is_sensitive)
+								)
+						then
 							l_has_targets := True
 							if not l_configurable_item_added and then a_configure_agent /= Void then
 								l_menu.extend (create {EV_MENU_ITEM}.make_with_text_and_action ("Pick", a_configure_agent))
@@ -900,7 +901,6 @@ feature {NONE} -- Debug
 			-- Output all PND targets.
 		local
 			cur: CURSOR
-			trg: detachable EV_ABSTRACT_PICK_AND_DROPABLE
 			identified: IDENTIFIED
 		do
 			cur := pnd_targets.cursor
@@ -910,8 +910,10 @@ feature {NONE} -- Debug
 			until
 				pnd_targets.after
 			loop
-				trg ?= identified.id_object (pnd_targets.item_for_iteration)
-				if trg /= Void and then attached trg.target_name as l_target_name then
+				if
+					attached {EV_ABSTRACT_PICK_AND_DROPABLE} identified.id_object (pnd_targets.item_for_iteration) as trg and then
+					attached trg.target_name as l_target_name
+				then
 					io.error.put_string (l_target_name.to_string_8)
 				end
 				pnd_targets.forth
@@ -1168,33 +1170,17 @@ feature {NONE} -- Implementation
 
 	focused_widget_from_container (a_widget: EV_WIDGET): detachable EV_WIDGET
 			-- Child widget of `a_widget' with keyboard focus, if any
-		local
-			a_container: detachable EV_CONTAINER
-			a_widget_list: LINEAR [EV_WIDGET]
-			chain: detachable CHAIN [EV_WIDGET]
-			cursor: detachable CURSOR
 		do
 			if a_widget.has_focus then
 				Result := a_widget
 			else
-				a_container ?= a_widget
-				if a_container /= Void then
-					chain ?= a_container
-					if chain /= Void then
-						cursor := chain.cursor
-					end
-					from
-						a_widget_list := a_container.linear_representation
-						a_widget_list.start
+				if attached {EV_CONTAINER} a_widget as a_container then
+					across
+						a_container as ic
 					until
-						a_widget_list.off or Result /= Void
+						Result /= Void
 					loop
-						Result := focused_widget_from_container (a_widget_list.item)
-						a_widget_list.forth
-					end
-					if chain /= Void then
-						check cursor /= Void then end
-						chain.go_to (cursor)
+						Result := focused_widget_from_container (ic.item)
 					end
 				end
 			end
@@ -1210,7 +1196,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2020, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2021, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

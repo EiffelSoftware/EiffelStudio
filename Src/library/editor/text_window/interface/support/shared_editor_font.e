@@ -182,12 +182,8 @@ feature {EDITOR_DATA} -- Implementation
 
 	calculate_line_height: INTEGER
 			-- Calculate the  `line_height' based on current font sizes
-		local
-			loc_font: EV_FONT
 		do
-			loc_font := line_height_font
-				-- Windows text editors seem to use an extra pixel spacing.
-			Result := loc_font.ascent + loc_font.descent + {PLATFORM}.is_windows.to_integer
+			Result := line_height_font.line_height
 		end
 
 	calculate_font_with_zoom_factor: EV_FONT
@@ -233,17 +229,15 @@ feature {EDITOR_DATA} -- Implementation
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2008, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2021, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 
-
-
-end -- class EB_SHARED_EDITOR_FONT
+end

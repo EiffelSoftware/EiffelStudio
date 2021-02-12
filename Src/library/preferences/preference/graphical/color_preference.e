@@ -29,14 +29,19 @@ feature {NONE} -- Initialization
 feature {PREFERENCE_EXPORTER} -- Access
 
 	text_value: STRING_32
-			-- String representation of `value'.		
+			-- String representation of `value'.
+		do
+			Result := color_text_value (value)
+		end
+
+	color_text_value (a_value: EV_COLOR): STRING_32
 		do
 			create Result.make (11)
-			Result.append_integer (internal_value.red_8_bit)
+			Result.append_integer (a_value.red_8_bit)
 			Result.append_character (';')
-			Result.append_integer (internal_value.green_8_bit)
+			Result.append_integer (a_value.green_8_bit)
 			Result.append_character (';')
-			Result.append_integer (internal_value.blue_8_bit)
+			Result.append_integer (a_value.blue_8_bit)
 		end
 
 feature -- Access
@@ -45,6 +50,13 @@ feature -- Access
 			-- String description of this preference type.
 		once
 			Result := "COLOR"
+		end
+
+feature -- Element change
+
+	set_as_default_value (a_value: EV_COLOR)
+		do
+			set_default_value (color_text_value (a_value))
 		end
 
 feature -- Query
@@ -127,7 +139,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2014, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2021, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

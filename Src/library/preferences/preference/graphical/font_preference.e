@@ -45,6 +45,11 @@ feature -- Status Setting
 			family := a_value.family
 		end
 
+	set_as_default_value (a_value: EV_FONT)
+		do
+			set_default_value (font_text_value (a_value))
+		end
+
 	string_type: STRING
 			-- String description of this preference type.
 		once
@@ -154,68 +159,69 @@ feature {NONE} -- Implementation
 			-- String generated value for display and saving purposes.
 		require
 			has_value: value /= Void
-		local
-			v: STRING_32
-			l_value: like value
 		do
-			l_value := value
-			check attached l_value end -- implied by precondition `has_value'
+			Result := font_text_value (value)
+		end
 
-			create v.make (50)
-			if attached face as l_face then
-				v.append (l_face)
+	font_text_value (a_value: like value): STRING_32
+			-- String generated value for `a_value` for display and saving purposes.
+		require
+			has_value: a_value /= Void
+		do
+			create Result.make (50)
+			if attached a_value.name as l_face then
+				Result.append (l_face)
 			else
 				check has_face: False end
 			end
 
-			v.append_character ('-')
-			inspect l_value.shape
+			Result.append_character ('-')
+			inspect a_value.shape
 			when shape_italic then
-				v.append_character ('i')
+				Result.append_character ('i')
 			when shape_regular then
-				v.append_character ('r')
+				Result.append_character ('r')
 			else
 				check has_valid_shape: False end
 					-- Use default
-				v.append_character ('r')
+				Result.append_character ('r')
 			end
 
-			v.append_character ('-')
-			inspect l_value.weight
+			Result.append_character ('-')
+			inspect a_value.weight
 			when weight_black then
-				v.append ("black")
+				Result.append ("black")
 			when weight_thin then
-				v.append ("thin")
+				Result.append ("thin")
 			when weight_regular then
-				v.append ("regular")
+				Result.append ("regular")
 			when weight_bold then
-				v.append ("bold")
+				Result.append ("bold")
 			else
 				check has_valid_weight: False end
 					-- Use default
-				v.append ("regular")
+				Result.append ("regular")
 			end
-			v.append_character ('-')
-			v.append_integer (height)
-			v.append_character ('-')
+			Result.append_character ('-')
+			Result.append_integer (height)
+			Result.append_character ('-')
 
-			inspect l_value.family
+			inspect a_value.family
 			when family_roman then
-				v.append ("roman")
+				Result.append ("roman")
 			when family_screen then
-				v.append ("screen")
+				Result.append ("screen")
 			when family_sans then
-				v.append ("sans")
+				Result.append ("sans")
 			when family_modern then
-				v.append ("modern")
+				Result.append ("modern")
 			when family_typewriter then
-				v.append ("typewriter")
+				Result.append ("typewriter")
 			else
 				check has_valid_family: False end
 					-- Use default
-				v.append ("sans")
+				Result.append ("sans")
 			end
-			Result := v
 		end
 
 	set_face (s: READABLE_STRING_GENERAL)
@@ -289,7 +295,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2015, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2021, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

@@ -43,6 +43,7 @@ feature -- Services
 			-- <Precursor>
 		do
 			Precursor {SERVICE_INITIALIZER} (a_container)
+			a_container.register_with_activator ({IDE_S}, agent new_ide_service, False)
 			a_container.register_with_activator ({CODE_TEMPLATE_CATALOG_S}, agent new_code_template_catalog_service, False)
 			a_container.register_with_activator ({FILE_NOTIFIER_S}, agent new_file_notifier_service, False)
 			a_container.register_with_activator ({HELP_PROVIDERS_S}, agent new_help_providers_service, False)
@@ -59,6 +60,14 @@ feature -- Services
 		end
 
 feature {NONE} -- Factory
+
+	new_ide_service: detachable IDE_S
+			-- Creates the ide service.
+		do
+			create {IDE} Result.make
+		ensure
+			result_is_interface_usable: Result /= Void implies Result.is_interface_usable
+		end
 
 	new_code_template_catalog_service: detachable CODE_TEMPLATE_CATALOG_S
 			-- Creates the code templates catalog service.
@@ -292,7 +301,7 @@ feature {NONE} -- Internationalization
 	lb_external_compilation: STRING = "External Compilation"
 
 ;note
-	copyright: "Copyright (c) 1984-2020, Eiffel Software"
+	copyright: "Copyright (c) 1984-2021, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

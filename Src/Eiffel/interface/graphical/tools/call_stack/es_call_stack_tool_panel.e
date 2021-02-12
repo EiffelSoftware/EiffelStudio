@@ -39,6 +39,11 @@ inherit
 			{NONE} all
 		end
 
+	IDE_OBSERVER
+		redefine
+			on_zoom
+		end
+
 	EV_SHARED_APPLICATION
 
 	EB_SHARED_DEBUGGER_MANAGER
@@ -63,6 +68,7 @@ feature {NONE} -- Initialization
 	create_interface_objects
 		do
 			create has_internal_callstack_hidden_notification
+			grid_preferences := preferences.development_window_data.grid_preferences
 		end
 
 	build_tool_interface (a_widget: EV_VERTICAL_BOX)
@@ -72,45 +78,15 @@ feature {NONE} -- Initialization
 			t_label: EV_LABEL
 			g: like stack_grid
 		do
-				--| UI look
-			row_highlight_bg_color := Preferences.debug_tool_data.row_highlight_background_color
-			set_row_highlight_bg_color_agent := agent (v: COLOR_PREFERENCE)
-						do
-							row_highlight_bg_color := v.value
-						end
-			Preferences.debug_tool_data.row_highlight_background_color_preference.change_actions.extend (set_row_highlight_bg_color_agent)
-
-			unsensitive_fg_color := Preferences.debug_tool_data.unsensitive_foreground_color
-			set_unsensitive_fg_color_agent := agent (v: COLOR_PREFERENCE)
-						do
-							unsensitive_fg_color := v.value
-						end
-			Preferences.debug_tool_data.unsensitive_foreground_color_preference.change_actions.extend (set_unsensitive_fg_color_agent)
-
-			row_replayable_bg_color := Preferences.debug_tool_data.row_replayable_background_color
-			set_row_replayable_bg_color_agent := agent (v: COLOR_PREFERENCE)
-						do
-							row_replayable_bg_color := v.value
-							if box_replay_controls /= Void then
-								box_replay_controls.set_background_color (row_replayable_bg_color)
-								box_replay_controls.propagate_background_color
-							end
-						end
-			Preferences.debug_tool_data.row_replayable_background_color_preference.change_actions.extend (set_row_replayable_bg_color_agent)
-
-			internal_bg_color := Preferences.debug_tool_data.internal_background_color
-			set_row_internal_bg_color_agent := agent (v: COLOR_PREFERENCE)
-						do
-							internal_bg_color := v.value
-						end
-			Preferences.debug_tool_data.internal_background_color_preference.change_actions.extend (set_row_internal_bg_color_agent)
-
-
 				--| UI structure			
 			create box2
 			box2.set_padding ({EV_MONITOR_DPI_DETECTOR_IMP}.scaled_size (3))
 
 			special_label_color := (create {EV_STOCK_COLORS}).blue
+
+				-- Stack grid
+			create_stack_grid
+			setup_stack_grid
 
 				--| Replay control box
 			create_box_replay_controls
@@ -162,69 +138,23 @@ feature {NONE} -- Initialization
 			exception.disable_edit
 
 				--| Stack grid
-			create g
-			stack_grid := g
-			g.enable_multiple_row_selection
-			g.enable_partial_dynamic_content
-			g.set_dynamic_content_function (agent compute_stack_grid_item)
-			g.enable_border
-			g.enable_resize_column (Feature_column_index)
-			g.enable_resize_column (Position_column_index)
-
-----| FIXME Jfiat: Use session to store/restore column widths
-			g.set_column_count_to (4)
-			g.column (Feature_column_index).set_title (Interface_names.t_Feature)
-			g.column (Feature_column_index).set_width ({EV_MONITOR_DPI_DETECTOR_IMP}.scaled_size (120))
-			g.column (Position_column_index).set_title (" @") --Interface_names.t_Position)
-			g.column (Position_column_index).set_width ({EV_MONITOR_DPI_DETECTOR_IMP}.scaled_size (20))
-			g.column (Dtype_column_index).set_title (Interface_names.t_Dynamic_type)
-			g.column (Dtype_column_index).set_width ({EV_MONITOR_DPI_DETECTOR_IMP}.scaled_size (100))
-			g.column (Stype_column_index).set_title (Interface_names.t_Static_type)
-			g.column (Stype_column_index).set_width ({EV_MONITOR_DPI_DETECTOR_IMP}.scaled_size (100))
-
-				--| Action/event on call stack grid
-			g.drop_actions.extend (agent on_element_drop)
-			g.key_press_actions.extend (agent key_pressed)
-			g.set_item_pebble_function (agent on_grid_item_pebble_function)
-			g.set_item_accept_cursor_function (agent on_grid_item_accept_cursor_function)
-				--| Action/event on call stack grid (replay mode)
-			g.row_expand_actions.extend (agent on_row_expanded)
-			g.row_select_actions.extend (agent on_row_selected)
-			g.row_deselect_actions.extend (agent on_row_deselected)
-
-				--| Context menu handler
-			g.set_configurable_target_menu_mode
-			if attached develop_window as l_development_window then
-				g.set_configurable_target_menu_handler (agent (l_development_window.menus.context_menu_factory).call_stack_menu)
-			else
-				check is_development_window: False end
-			end
+			g := stack_grid
+				--| Attach to Current dialog
+			a_widget.extend (g)
 
 				--| Call stack level selection mode
 			update_call_stack_level_selection_mode (preferences.debug_tool_data.select_call_stack_level_on_double_click_preference)
 			preferences.debug_tool_data.select_call_stack_level_on_double_click_preference.change_actions.extend (agent update_call_stack_level_selection_mode)
 
-				-- Set scrolling preferences.
-			g.set_mouse_wheel_scroll_size (preferences.editor_data.mouse_wheel_scroll_size)
-			g.set_mouse_wheel_scroll_full_page (preferences.editor_data.mouse_wheel_scroll_full_page)
-			g.set_scrolling_common_line_count (preferences.editor_data.scrolling_common_line_count)
-			preferences.editor_data.mouse_wheel_scroll_size_preference.typed_change_actions.extend (
-				agent g.set_mouse_wheel_scroll_size)
-			preferences.editor_data.mouse_wheel_scroll_full_page_preference.typed_change_actions.extend (
-				agent g.set_mouse_wheel_scroll_full_page)
-			preferences.editor_data.scrolling_common_line_count_preference.typed_change_actions.extend (
-				agent g.set_scrolling_common_line_count)
-
-				--| Specific Grid's behavior
-			g.build_delayed_cleaning
-
-				--| Attach to Current dialog
-			a_widget.extend (g)
 
 				--| Show/hide internal stack
 			initialize_box_internal_callstack_control (a_widget)
 
-			load_preferences
+			if
+				attached {IDE_S} (create {SERVICE_CONSUMER [IDE_S]}).service as l_ide_service
+			then
+				l_ide_service.ide_connection.connect_events (Current)
+			end
 		end
 
 	update_call_stack_level_selection_mode (dbl_click_bpref: BOOLEAN_PREFERENCE)
@@ -232,13 +162,18 @@ feature {NONE} -- Initialization
 			-- changes.
 			-- if true then use double click
 			-- otherwise use single click
+		require
+			stack_grid_set: stack_grid /= Void
+		local
+			g: like stack_grid
 		do
-			stack_grid.pointer_double_press_item_actions.wipe_out
-			stack_grid.pointer_button_press_item_actions.wipe_out
+			g := stack_grid
+			g.pointer_double_press_item_actions.wipe_out
+			g.pointer_button_press_item_actions.wipe_out
 			if dbl_click_bpref.value then
-				stack_grid.pointer_double_press_item_actions.extend (agent on_grid_item_pointer_pressed)
+				g.pointer_double_press_item_actions.extend (agent on_grid_item_pointer_pressed)
 			else
-				stack_grid.pointer_button_press_item_actions.extend (agent on_grid_item_pointer_pressed)
+				g.pointer_button_press_item_actions.extend (agent on_grid_item_pointer_pressed)
 			end
 		end
 
@@ -341,29 +276,6 @@ feature {NONE} -- Initialization
 			request_update
 		end
 
-	load_preferences
-			-- Load preferences
-		require
-			grid_attached: stack_grid /= Void
-		local
-			colp: COLOR_PREFERENCE
-		do
-			colp := preferences.debug_tool_data.grid_background_color_preference
-			stack_grid.set_background_color (colp.value)
-			register_action (colp.typed_change_actions, agent (c: EV_COLOR)
-					do
-						stack_grid.set_background_color (c)
-					end
-				)
-			colp := preferences.debug_tool_data.grid_foreground_color_preference
-			stack_grid.set_foreground_color (colp.value)
-			register_action (colp.typed_change_actions, agent (c: EV_COLOR)
-					do
-						stack_grid.set_foreground_color (c)
-					end
-				)
-		end
-
 feature -- Access: Help
 
 	help_context_id: STRING_32
@@ -372,7 +284,144 @@ feature -- Access: Help
 			Result := {STRING_32} "8C3CD0FE-78AA-7EC6-F36A-2233A4E26755"
 		end
 
+feature {NONE} -- Grid preferences
+
+	grid_preferences: EB_GRID_PREFERENCES
+
+	grid_font: EV_FONT
+
+	setup_stack_grid
+		require
+			stack_grid_set: stack_grid /= Void
+		local
+			agt: PROCEDURE
+		do
+			agt := agent load_stack_grid_preferences
+			load_stack_grid_preferences_agent := agt
+
+			register_action (grid_preferences.change_actions, agt)
+
+			load_stack_grid_preferences
+		end
+
+	load_stack_grid_preferences
+		require
+			stack_grid_set: stack_grid /= Void
+		local
+			prefs: like grid_preferences
+		do
+			prefs := grid_preferences
+			grid_font := prefs.font_with_zoom_factor
+			if attached stack_grid as g then
+				prefs.apply_to (g)
+			else
+				check stack_grid_set: False end
+			end
+
+				--| UI look
+			row_highlight_bg_color := Preferences.debug_tool_data.row_highlight_background_color
+			unsensitive_fg_color := Preferences.debug_tool_data.unsensitive_foreground_color
+			row_replayable_bg_color := Preferences.debug_tool_data.row_replayable_background_color
+			internal_bg_color := Preferences.debug_tool_data.internal_background_color
+
+			if attached box_replay_controls as l_ctrls then
+				l_ctrls.set_background_color (row_replayable_bg_color)
+				l_ctrls.propagate_background_color
+			end
+		end
+
+feature {NONE} -- Grid factory
+
+	new_grid_label_item (a_text: detachable READABLE_STRING_GENERAL): EV_GRID_LABEL_ITEM
+		do
+			if a_text = Void then
+				create Result
+			else
+				create Result.make_with_text (a_text)
+			end
+			setup_grid_label_item (Result)
+		end
+
+	new_grid_label_item_with_pixmaps_on_right (a_text: detachable READABLE_STRING_GENERAL): EV_GRID_PIXMAPS_ON_RIGHT_LABEL_ITEM
+		do
+			if a_text = Void then
+				create Result
+			else
+				create Result.make_with_text (a_text)
+			end
+			setup_grid_label_item (Result)
+		end
+
+	setup_grid_label_item (glab: EV_GRID_LABEL_ITEM)
+		do
+			glab.set_font (grid_font)
+		end
+
 feature {NONE} -- Factory
+
+	create_stack_grid
+		local
+			g: like stack_grid
+		do
+			create g
+			stack_grid := g
+			g.enable_multiple_row_selection
+			g.enable_partial_dynamic_content
+			g.set_dynamic_content_function (agent compute_stack_grid_item)
+			g.enable_border
+			g.enable_resize_column (Feature_column_index)
+			g.enable_resize_column (Position_column_index)
+
+
+----| FIXME Jfiat: Use session to store/restore column widths
+			g.set_column_count_to (4)
+			g.column (Feature_column_index).set_title (Interface_names.t_Feature)
+			g.column (Feature_column_index).set_width ({EV_MONITOR_DPI_DETECTOR_IMP}.scaled_size (120))
+			g.column (Position_column_index).set_title (" @") --Interface_names.t_Position)
+			g.column (Position_column_index).set_width ({EV_MONITOR_DPI_DETECTOR_IMP}.scaled_size (20))
+			g.column (Dtype_column_index).set_title (Interface_names.t_Dynamic_type)
+			g.column (Dtype_column_index).set_width ({EV_MONITOR_DPI_DETECTOR_IMP}.scaled_size (100))
+			g.column (Stype_column_index).set_title (Interface_names.t_Static_type)
+			g.column (Stype_column_index).set_width ({EV_MONITOR_DPI_DETECTOR_IMP}.scaled_size (100))
+
+				--| Action/event on call stack grid
+			g.drop_actions.extend (agent on_element_drop)
+			g.key_press_actions.extend (agent key_pressed)
+			g.set_item_pebble_function (agent on_grid_item_pebble_function)
+			g.set_item_accept_cursor_function (agent on_grid_item_accept_cursor_function)
+				--| Action/event on call stack grid (replay mode)
+			g.row_expand_actions.extend (agent on_row_expanded)
+			g.row_select_actions.extend (agent on_row_selected)
+			g.row_deselect_actions.extend (agent on_row_deselected)
+
+				--| Context menu handler
+			g.set_configurable_target_menu_mode
+			if attached develop_window as l_development_window then
+				g.set_configurable_target_menu_handler (agent (l_development_window.menus.context_menu_factory).call_stack_menu)
+			else
+				check is_development_window: False end
+			end
+
+				-- Set scrolling preferences.
+			g.set_mouse_wheel_scroll_size (preferences.editor_data.mouse_wheel_scroll_size)
+			preferences.editor_data.mouse_wheel_scroll_size_preference.typed_change_actions.extend (
+					agent g.set_mouse_wheel_scroll_size
+				)
+
+			g.set_mouse_wheel_scroll_full_page (preferences.editor_data.mouse_wheel_scroll_full_page)
+			preferences.editor_data.mouse_wheel_scroll_full_page_preference.typed_change_actions.extend (
+					agent g.set_mouse_wheel_scroll_full_page
+				)
+
+			g.set_scrolling_common_line_count (preferences.editor_data.scrolling_common_line_count)
+			preferences.editor_data.scrolling_common_line_count_preference.typed_change_actions.extend (
+					agent g.set_scrolling_common_line_count
+				)
+
+				--| Specific Grid's behavior
+			g.build_delayed_cleaning
+
+		end
 
 	create_widget: EV_VERTICAL_BOX
 			-- Create a new container widget upon request.
@@ -857,6 +906,9 @@ feature {NONE} -- Internal memory management
 			Preferences.debug_tool_data.row_replayable_background_color_preference.change_actions.prune_all (set_row_replayable_bg_color_agent)
 			Preferences.debug_tool_data.unsensitive_foreground_color_preference.change_actions.prune_all (set_unsensitive_fg_color_agent)
 			Preferences.debug_tool_data.internal_background_color_preference.change_actions.prune_all (set_row_internal_bg_color_agent)
+
+			unregister_action (grid_preferences.change_actions, load_stack_grid_preferences_agent)
+
 			has_internal_callstack_hidden_notification.wipe_out
 			Precursor {ES_DEBUGGER_DOCKABLE_STONABLE_TOOL_PANEL}
 		end
@@ -1535,7 +1587,7 @@ feature {NONE} -- Stack grid implementation
 				save_call_stack_cmd.disable_sensitive
 				copy_call_stack_cmd.disable_sensitive
 				l_tooltipable_grid_row := g.grid_extended_new_row (g)
-				create glab.make_with_text (Interface_messages.w_dbg_unable_to_get_call_stack_data)
+				glab := new_grid_label_item (Interface_messages.w_dbg_unable_to_get_call_stack_data)
 				glab.set_tooltip (Interface_messages.w_dbg_double_click_to_refresh_call_stack)
 				glab.set_pixmap (pixmaps.icon_pixmaps.general_mini_error_icon)
 				glab.pointer_double_press_actions.extend (agent (i_x, i_y, i_but: INTEGER; i_x_tilt, i_y_tilt, i_pressure: DOUBLE; i_screen_x, i_screen_y: INTEGER) do update end)
@@ -1609,7 +1661,7 @@ feature {NONE} -- Stack grid implementation
 				--| It can occur the cse is Void, in specific context (unable to get the call stack)
 			if cse = Void then
 				if a_row.item (1) = Void then
-					create glab.make_with_text (Interface_messages.w_dbg_unable_to_get_call_stack_data)
+					glab := new_grid_label_item (Interface_messages.w_dbg_unable_to_get_call_stack_data)
 					glab.set_pixmap (pixmaps.icon_pixmaps.general_mini_error_icon)
 					a_row.set_item (1, glab)
 				end
@@ -1700,7 +1752,7 @@ feature {NONE} -- Stack grid implementation
 
 					--| Fill columns
 				if l_is_melted or l_has_rescue or l_is_class_feature then
-					create glabp.make_with_text (l_feature_name)
+					glabp := new_grid_label_item_with_pixmaps_on_right (l_feature_name)
 					create pixs.make (3)
 					if l_is_melted then
 						pixs.force (pixmaps.mini_pixmaps.callstack_is_melted_icon)
@@ -1721,31 +1773,31 @@ feature {NONE} -- Stack grid implementation
 					end
 					glab := glabp
 				else
-					create glab.make_with_text (l_feature_name)
+					glab := new_grid_label_item (l_feature_name)
 				end
 				glab.set_tooltip (l_tooltip)
 				a_row.set_item (Feature_column_index, glab)
 
 					--| Position
 				if cse.break_nested_index > 0 then
-					create glab.make_with_text (cse.break_index.out + "+" + cse.break_nested_index.out)
+					glab := new_grid_label_item (cse.break_index.out + "+" + cse.break_nested_index.out)
 				else
-					create glab.make_with_text (cse.break_index.out)
+					glab := new_grid_label_item (cse.break_index.out)
 				end
 				a_row.set_item (Position_column_index, glab)
 
 					--| Dynamic Type
 				if l_class_info /= Void then
-					create glab.make_with_text (l_class_info)
+					glab := new_grid_label_item (l_class_info)
 					glab.set_tooltip (l_class_info)
 				else
-					create glab.make_with_text ("Unable to retrieve type")
+					glab := new_grid_label_item ("Unable to retrieve type")
 					check type_retrieved: False end
 				end
 				a_row.set_item (Dtype_column_index, glab)
 
 					--| Origine Type
-				create glab.make_with_text (l_orig_class_info)
+				glab := new_grid_label_item (l_orig_class_info)
 				if l_same_name then
 					glab.set_foreground_color (unsensitive_fg_color)
 				end
@@ -1910,7 +1962,7 @@ feature {NONE} -- Stack grid implementation
 						l_text := cse.break_index.out
 						l_text.append (": ")
 						l_text.append (l_feature_name)
-						create glabp.make_with_text (l_text)
+						glabp := new_grid_label_item_with_pixmaps_on_right (l_text)
 						glabp.set_pixmaps_on_right_count (2)
 						if l_is_melted then
 							glabp.put_pixmap_on_right (pixmaps.mini_pixmaps.callstack_is_melted_icon, 1)
@@ -1926,12 +1978,12 @@ feature {NONE} -- Stack grid implementation
 							l_text.append (cse.break_nested_index.out)
 							l_text.append (": ")
 							l_text.append (l_feature_name)
-							create glab.make_with_text (l_text)
+							glab := new_grid_label_item (l_text)
 						else
 							l_text := cse.break_index.out
 							l_text.append (": ")
 							l_text.append (l_feature_name)
-							create glab.make_with_text (l_text)
+							glab := new_grid_label_item (l_text)
 						end
 					end
 					if rt_info_avail then
@@ -1949,24 +2001,24 @@ feature {NONE} -- Stack grid implementation
 
 						--| Position
 					if cse.replayed_break_nested_index > 0 then
-						create glab.make_with_text (cse.replayed_break_index.out + "." + cse.replayed_break_nested_index.out)
+						glab := new_grid_label_item (cse.replayed_break_index.out + "." + cse.replayed_break_nested_index.out)
 					else
-						create glab.make_with_text (cse.replayed_break_index.out)
+						glab := new_grid_label_item (cse.replayed_break_index.out)
 					end
 					a_row.set_item (Position_column_index, glab)
 
 						--| Dynamic type
 					if l_class_info /= Void then
-						create glab.make_with_text (l_class_info)
+						glab := new_grid_label_item (l_class_info)
 						glab.set_tooltip (l_class_info)
 					else
-						create glab.make_with_text ("Unable to retrieve type")
+						glab := new_grid_label_item ("Unable to retrieve type")
 						check type_retrieved: False end
 					end
 					a_row.set_item (Dtype_column_index, glab)
 
 						--| Original type
-					create glab.make_with_text (l_orig_class_info)
+					glab := new_grid_label_item (l_orig_class_info)
 					if l_same_name then
 						glab.set_foreground_color (unsensitive_fg_color)
 					end
@@ -2031,6 +2083,14 @@ feature {NONE} -- Stone handlers
 			-- Change stack level to the one described by `st'.
 		do
 			Eb_debugger_manager.launch_stone (st)
+		end
+
+feature -- IDE Events
+
+	on_zoom (a_zoom_factor: INTEGER)
+		do
+			grid_preferences.set_zoom_factor (a_zoom_factor)
+--			load_stack_grid_preferences
 		end
 
 feature {NONE} -- Grid Implementation
@@ -2424,6 +2484,8 @@ feature {NONE} -- Implementation, cosmetic
 			lab.refresh_now
 		end
 
+	load_stack_grid_preferences_agent: PROCEDURE
+
 	set_row_highlight_bg_color_agent,
 	set_row_replayable_bg_color_agent,
 	set_row_internal_bg_color_agent,
@@ -2450,7 +2512,7 @@ feature {NONE} -- Implementation, cosmetic
 
 
 ;note
-	copyright: "Copyright (c) 1984-2020, Eiffel Software"
+	copyright: "Copyright (c) 1984-2021, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

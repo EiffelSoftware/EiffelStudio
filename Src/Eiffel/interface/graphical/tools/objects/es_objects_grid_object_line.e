@@ -554,26 +554,31 @@ feature -- Graphical computation
 	new_cell_name: ES_OBJECTS_GRID_CELL
 		do
 			create Result
+			Result.set_font (parent_grid.grid_font)
 		end
 
 	new_cell_type: ES_OBJECTS_GRID_CELL
 		do
 			create Result
+			Result.set_font (parent_grid.grid_font)
 		end
 
 	new_cell_value: ES_OBJECTS_GRID_VALUE_CELL
 		do
 			create Result
+			Result.set_font (parent_grid.grid_font)
 		end
 
 	new_cell_address: ES_OBJECTS_GRID_CELL
 		do
 			create Result
+			Result.set_font (parent_grid.grid_font)
 		end
 
 	new_cell_context: EV_GRID_LABEL_ITEM
 		do
 			create Result
+			Result.set_font (parent_grid.grid_font)
 		end
 
 	set_pixmap (v: EV_PIXMAP)
@@ -1028,7 +1033,7 @@ feature {NONE} -- Filling
 						attached deval.value_from_constant_i (ci) as cdv
 					then
 							-- TODO: Handle Unicode
-						cdv.set_name (f.item.name_32.as_string_8)
+						cdv.set_name ({UTF_CONVERTER}.utf_32_string_to_utf_8_string_8 (f.item.name_32))
 						csts.extend (cdv)
 					end
 				end
@@ -1224,6 +1229,7 @@ feature {NONE} -- Implementation
 	slice_label_item (s: STRING_GENERAL): EV_GRID_LABEL_ITEM
 		do
 			create Result
+			Result.set_font (parent_grid.grid_font)
 			grid_cell_set_text (Result, s)
 			Result.set_foreground_color (parent_grid.slice_row_fg_color)
 		end
@@ -1236,11 +1242,12 @@ feature {NONE} -- Implementation
 	type_label_item (s: STRING): EV_GRID_LABEL_ITEM
 		do
 			create Result
+			Result.set_font (parent_grid.grid_font)
 			grid_cell_set_text (Result, s)
 		end
 
 note
-	copyright: "Copyright (c) 1984-2018, Eiffel Software"
+	copyright: "Copyright (c) 1984-2021, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

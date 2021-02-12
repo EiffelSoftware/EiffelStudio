@@ -55,6 +55,8 @@ feature {NONE} -- Initialization
 			set_debugger_manager (tool_descriptor.debugger_manager)
 
 			create displayed_objects.make
+			grid_preferences := preferences.development_window_data.grid_preferences
+
 			Precursor
 		end
 
@@ -187,6 +189,10 @@ feature -- Access: Help
 		once
 			Result := {STRING_32} "6B736424-1729-0B6F-6DDD-8240F9F8FFD6"
 		end
+
+feature {NONE} -- Grid preferences
+
+	grid_preferences: EB_GRID_PREFERENCES
 
 feature {NONE} -- Factory
 
@@ -354,6 +360,7 @@ feature {NONE} -- Interface
 			g: like objects_grid
 		do
 			create g.make_with_name (a_name, a_id)
+
 			objects_grids.force ([g, True, False, create {ARRAYED_LIST[INTEGER]}.make (6) ,create {ARRAYED_LIST[ES_OBJECTS_GRID_SPECIFIC_LINE]}.make (6)], a_id)
 
 			g.set_objects_grid_item_function (agent objects_grid_object_line)
@@ -1539,7 +1546,7 @@ invariant
 note
 	ca_ignore:
 		"CA093", "CA093: manifest array type mismatch"
-	copyright:	"Copyright (c) 1984-2019, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2021, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

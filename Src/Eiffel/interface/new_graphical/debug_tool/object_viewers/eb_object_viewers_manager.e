@@ -44,7 +44,7 @@ feature {NONE} -- Initialization
 			create {XML_DISPLAY_VIEWER_BOX} v.make (Current, for_tool)
 			v.set_auto_selectable (False)
 			add_viewer (v, vr)
-			
+
 			create {JSON_DISPLAY_VIEWER_BOX} v.make (Current, for_tool)
 			v.set_auto_selectable (False)
 			add_viewer (v, vr)
@@ -266,8 +266,6 @@ feature -- Change
 			is_running: Debugger_manager.application_is_executing
 		local
 			l_item: EV_ANY
-			l_dv: ABSTRACT_DEBUG_VALUE
-			l_line: ES_OBJECTS_GRID_OBJECT_LINE
 		do
 			clear
 			current_object := st
@@ -275,14 +273,10 @@ feature -- Change
 
 			l_item := current_object.ev_item
 			if l_item /= Void then
-				l_dv ?= l_item.data
-				if l_dv /= Void then
+				if attached {ABSTRACT_DEBUG_VALUE} l_item.data as l_dv then
 					current_dump_value := l_dv.dump_value
-				else
-					l_line ?= l_item.data
-					if l_line /= Void then
-						current_dump_value := l_line.associated_dump_value
-					end
+				elseif attached {ES_OBJECTS_GRID_OBJECT_LINE} l_item.data as l_line then
+					current_dump_value := l_line.associated_dump_value
 				end
 			end
 
@@ -331,7 +325,6 @@ feature -- Change
 		local
 			lm: EV_MENU
 			lmi: EV_MENU_ITEM
-			lmci: EV_CHECK_MENU_ITEM
 			v: like current_viewer
 		do
 			lm := internal_menu
@@ -342,9 +335,8 @@ feature -- Change
 					lm.after
 				loop
 					lmi := lm.item
-					v ?= lmi.data
-					lmci ?= lmi
-					if lmci /= Void then
+					v := {like current_viewer} / lmi.data
+					if attached {EV_CHECK_MENU_ITEM} lmi.data as lmci then
 						if v = current_viewer then
 							lmci.enable_select
 						else
@@ -467,8 +459,9 @@ feature {NONE} -- Implementation
 		do
 			p := w.parent
 			if p /= Void then
-				Result ?= p
-				if Result = Void then
+				if attached {EV_WINDOW} p as win then
+					Result := win
+				else
 					Result := parent_window (p)
 				end
 			end
@@ -478,7 +471,7 @@ invariant
 	valid_stone: has_object implies is_stone_valid (current_object)
 
 note
-	copyright: "Copyright (c) 1984-2017, Eiffel Software"
+	copyright: "Copyright (c) 1984-2021, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

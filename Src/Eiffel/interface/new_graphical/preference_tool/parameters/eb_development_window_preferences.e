@@ -385,7 +385,6 @@ feature {NONE} -- Implementation
 		local
 			l_manager: EB_PREFERENCE_MANAGER
 			g: ES_GRID
-			glab: EV_GRID_LABEL_ITEM
 		do
 			create l_manager.make (preferences, "development_window")
 			is_force_debug_mode_preference := l_manager.new_boolean_preference_value (l_manager, is_force_debug_mode_string, False)
@@ -421,16 +420,19 @@ feature {NONE} -- Implementation
 			pretty_printer_messindex_preference := l_manager.new_integer_preference_value (l_manager, pretty_printer_messindex_string, 2)
 			is_pretty_printer_notification_enabled_preference := l_manager.new_boolean_preference_value (l_manager, is_pretty_printer_notification_enabled_string, True)
 
-
 			create g
-			create glab
-			if attached glab.font as ft then
-				grid_font_preference := l_manager.new_font_preference_value (l_manager, grid_font_string, glab.font)
-			else
-				grid_font_preference := l_manager.new_font_preference_value (l_manager, grid_font_string, fonts.standard_label_font)
+			grid_font_preference := l_manager.new_font_preference_value (l_manager, grid_font_string, if attached (create {EV_GRID_LABEL_ITEM}).font as ft then ft else fonts.standard_label_font end)
+			if not grid_font_preference.has_default_value then
+				grid_font_preference.set_as_default_value (fonts.standard_label_font)
 			end
 			grid_foreground_color_preference := l_manager.new_color_preference_value (l_manager, grid_foreground_color_string, g.foreground_color)
+			if not grid_foreground_color_preference.has_default_value then
+				grid_foreground_color_preference.set_as_default_value (g.foreground_color)
+			end
 			grid_background_color_preference := l_manager.new_color_preference_value (l_manager, grid_background_color_string, g.background_color)
+			if not grid_background_color_preference.has_default_value then
+				grid_background_color_preference.set_as_default_value (g.background_color)
+			end
 			grid_focused_selection_text_color_preference := l_manager.new_color_preference_value (l_manager, grid_focused_selection_text_color_string, g.focused_selection_text_color)
 			grid_focused_selection_color_preference := l_manager.new_color_preference_value (l_manager, grid_focused_selection_color_string, g.focused_selection_color)
 			grid_non_focused_selection_text_color_preference := l_manager.new_color_preference_value (l_manager, grid_non_focused_selection_text_color_string, g.non_focused_selection_text_color)

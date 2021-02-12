@@ -17,8 +17,6 @@
 	<PREF NAME="debugger.shortcuts.move_up_watch_expression" DESCRIPTION="Move up the selected expressions from the active watch tool."><SHORTCUT Ctrl="False" Alt="True" Shift="True">Up</SHORTCUT></PREF>
 	<PREF NAME="debugger.shortcuts.move_down_watch_expression" DESCRIPTION="Move down the selected expressions from the active watch tool."><SHORTCUT Ctrl="False" Alt="True" Shift="True">Down</SHORTCUT></PREF>
 	<PREF NAME="debugger.colors.expanded_display_background_color" DESCRIPTION="Background color for expanded display view (default is white, change it to better see white space at end of lines in displayed text)."><COLOR>255;255;255</COLOR></PREF>
-	<PREF NAME="debugger.colors.grid_background_color" DESCRIPTION="Background color for the grids of the debugger's tools (default is white)."><COLOR>255;255;255</COLOR></PREF>
-	<PREF NAME="debugger.colors.grid_foreground_color" DESCRIPTION="Foreground color (i.e: text color) for the grids of the debugger's tools (default is black)."><COLOR>0;0;0</COLOR></PREF>
 	<PREF NAME="debugger.colors.row_highlight_background_color" DESCRIPTION="Highlight background color"><COLOR>255;255;170</COLOR></PREF>
 	<PREF NAME="debugger.colors.row_replayable_background_color" DESCRIPTION="Background color for replayable stack row (c.f execution record and replay feature"><COLOR>205;230;255</COLOR></PREF>
 	<PREF NAME="debugger.colors.unsensitive_foreground_color" DESCRIPTION="Unsensitive foreground color"><COLOR>150;150;150</COLOR></PREF>

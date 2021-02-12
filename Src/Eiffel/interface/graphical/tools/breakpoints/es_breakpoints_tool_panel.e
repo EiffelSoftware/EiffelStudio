@@ -105,6 +105,8 @@ feature {NONE} -- Initialization
 			g.set_configurable_target_menu_handler (agent (develop_window.menus.context_menu_factory).standard_compiler_item_menu)
 
 			load_preferences
+
+			register_action (preferences.development_window_data.grid_preferences.change_actions, agent load_preferences)
 		end
 
 	create_filter_bar (a_widget: EV_BOX)
@@ -199,23 +201,8 @@ feature {NONE} -- Initialization
 			-- Load preferences
 		require
 			grid_attached: grid /= Void
-		local
-			colp: COLOR_PREFERENCE
 		do
-			colp := preferences.debug_tool_data.grid_background_color_preference
-			grid.set_background_color (colp.value)
-			register_action (colp.typed_change_actions, agent (c: EV_COLOR)
-					do
-						grid.set_background_color (c)
-					end
-				)
-			colp := preferences.debug_tool_data.grid_foreground_color_preference
-			grid.set_foreground_color (colp.value)
-			register_action (colp.typed_change_actions, agent (c: EV_COLOR)
-					do
-						grid.set_foreground_color (c)
-					end
-				)
+			preferences.development_window_data.grid_preferences.apply_to (grid)
 		end
 
 feature -- Access: Help
@@ -1405,7 +1392,7 @@ feature {NONE} -- Implementation, cosmetic
 			-- Row highlight background color.
 
 note
-	copyright: "Copyright (c) 1984-2020, Eiffel Software"
+	copyright: "Copyright (c) 1984-2021, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

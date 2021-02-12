@@ -524,7 +524,7 @@ feature {EB_CONTEXT_MENU_FACTORY, ES_WATCH_TOOL} -- Context menu
 		local
 			obj_st: detachable OBJECT_STONE
 			dlg: detachable EB_EXPRESSION_DEFINITION_DIALOG
-			oname: STRING
+			oname: STRING_32
 			cl: detachable CLASS_C
 			ctrl_pressed: BOOLEAN
 		do
@@ -1102,7 +1102,7 @@ feature {NONE} -- Event handling
 			add_expression (l_expr, False)
 		end
 
-	add_object (ost: OBJECT_STONE; oname: STRING)
+	add_object (ost: OBJECT_STONE; oname: READABLE_STRING_GENERAL)
 		require
 			ost_ot_void: ost /= Void
 			oname /= Void
@@ -1112,7 +1112,8 @@ feature {NONE} -- Event handling
 		do
 			debugger_manager.application_status.keep_object (ost.object_address)
 			create expr.make_as_object (ost.dynamic_class , ost.object_address)
-			expr.set_name (oname)
+				-- FIXME: better Unicode support
+			expr.set_name ({UTF_CONVERTER}.utf_32_string_to_utf_8_string_8 (oname))
 			add_expression (expr, False)
 		end
 
@@ -1527,7 +1528,7 @@ feature -- Expressions storage management
 					create f.make_with_path (fn)
 					if not f.exists or else f.is_writable then
 						f.open_write
-						f.put_string (s)
+						f.put_string ({UTF_CONVERTER}.utf_32_string_to_utf_8_string_8 (s))
 						f.close
 					end
 				end
@@ -1832,11 +1833,11 @@ feature {NONE} -- Auto-completion
 
 feature {NONE} -- Implementation
 
-	standard_grid_label (s: STRING): EV_GRID_LABEL_ITEM
-		do
-			create Result
-			Result.set_text (s)
-		end
+--	standard_grid_label (s: STRING): EV_GRID_LABEL_ITEM
+--		do
+--			create Result
+--			Result.set_text (s)
+--		end
 
 	new_watched_item_from_expression_evaluation (evl: DBG_EXPRESSION_EVALUATION; a_grid: ES_OBJECTS_GRID): like watched_item_from
 		require
@@ -1968,7 +1969,7 @@ invariant
 note
 	ca_ignore:
 		"CA093", "CA093: manifest array type mismatch"
-	copyright: "Copyright (c) 1984-2019, Eiffel Software"
+	copyright: "Copyright (c) 1984-2021, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

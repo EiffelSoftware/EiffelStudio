@@ -146,15 +146,12 @@ feature -- ES grid specific
 		end
 
 	grid_data_from_widget (a_item: EV_ANY): ANY
-		local
-			ctler: ES_GRID_ROW_CONTROLLER
 		do
 			if a_item /= Void then
-				ctler ?= a_item.data
-				if ctler /= Void then
+				if attached {ES_GRID_ROW_CONTROLLER} a_item.data as ctler then
 					Result := ctler.data
 				else
-					Result ?= a_item.data
+					Result := a_item.data
 				end
 			end
 		end
@@ -221,8 +218,10 @@ feature -- Clipboard related
 						else
 							if attached {ABSTRACT_DEBUG_VALUE} grid_data_from_widget (lrow) as dv then
 								s := dv.dump_value.full_output
+							elseif attached {READABLE_STRING_GENERAL} lrow.data as l_string then
+								s := l_string.to_string_32
 							else
-								s ?= lrow.data
+								s := Void
 							end
 						end
 						if s = Void then
@@ -269,15 +268,16 @@ feature {NONE} -- Implementation
 		do
 			p := w.parent
 			if p /= Void then
-				Result ?= p
-				if Result = Void then
+				if attached {EV_WINDOW} p as win then
+					Result := win
+				else
 					Result := impl_parent_window (p)
 				end
 			end
 		end
 
 note
-	copyright: "Copyright (c) 1984-2013, Eiffel Software"
+	copyright: "Copyright (c) 1984-2021, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

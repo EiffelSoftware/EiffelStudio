@@ -140,25 +140,28 @@ feature -- Basic operations
 			conv_obj: OBJECT_STONE
 			conv_fost: FEATURE_ON_OBJECT_STONE
 		do
-			conv_obj ?= st
-			if conv_obj = Void then
-				conv_fost ?= st
-				if conv_fost /= Void then
-					conv_obj := conv_fost.object_stone
-				end
+			if attached {OBJECT_STONE} st as ost then
+				conv_obj := ost
+			elseif attached {FEATURE_ON_OBJECT_STONE} st as fost then
+				conv_obj := fost.object_stone
 			end
-			obj_grid_item := object_grid_line_for (conv_obj)
-			Result := obj_grid_item /= Void and then obj_grid_item.object_is_special_value
+			if conv_obj /= Void then
+				obj_grid_item := object_grid_line_for (conv_obj)
+				Result := obj_grid_item /= Void and then obj_grid_item.object_is_special_value
+			end
 		end
 
-	object_grid_line_for (ost: OBJECT_STONE): ES_OBJECTS_GRID_OBJECT_LINE
+	object_grid_line_for (ost: OBJECT_STONE): detachable ES_OBJECTS_GRID_OBJECT_LINE
 			-- Object grid line related to `ost if any.
 		local
 			l_addr: DBG_ADDRESS
 		do
 			if ost /= Void then
-				if attached ost.ev_item as l_item then
-					Result ?= l_item.data
+				if
+					attached ost.ev_item as l_item and then
+					attached {ES_OBJECTS_GRID_OBJECT_LINE} l_item.data as l_line
+				then
+					Result := l_line
 				end
 				if Result = Void then
 					l_addr := ost.object_address
@@ -587,7 +590,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2009, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2021, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

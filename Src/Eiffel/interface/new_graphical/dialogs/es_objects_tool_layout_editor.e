@@ -129,12 +129,16 @@ feature {NONE} -- Access
 			is_initialized: is_initialized or is_initializing
 			not_is_recycled: not is_recycled
 		do
-			Result ?= development_window.shell_tools.tool ({ES_OBJECTS_TOOL})
+			if attached {ES_OBJECTS_TOOL} development_window.shell_tools.tool ({ES_OBJECTS_TOOL}) as t then
+				Result := t
+			else
+				check is_objects_tool: False then
+				end
+			end
 		ensure
 			result_attached: Result /= Void
 			not_result_is_recycled: not Result.is_recycled
 		end
-
 
 feature {NONE} -- User interface elements
 
@@ -316,7 +320,6 @@ feature {NONE} -- Actions
 			not_is_recycled: not is_recycled
 		local
 			i: EV_GRID_ITEM
-			ch: EV_GRID_CHECKABLE_LABEL_ITEM
 			lst: LIST [EV_GRID_ITEM]
 		do
 			lst := grid.selected_items
@@ -332,8 +335,7 @@ feature {NONE} -- Actions
 						move_cell_by (i, +1)
 					end
 				when {EV_KEY_CONSTANTS}.key_space then
-					ch ?= i
-					if ch /= Void then
+					if attached {EV_GRID_CHECKABLE_LABEL_ITEM} i as ch then
 						ch.set_is_checked (not ch.is_checked)
 					end
 				else
@@ -383,9 +385,7 @@ feature {NONE} -- Action handlers
 			not_is_recycled: not is_recycled
 		local
 			i,j,nb: INTEGER
-			s: STRING
 			ar: ARRAY [STRING]
-			g: EV_GRID_CHECKABLE_LABEL_ITEM
 		do
 			from
 				nb := 0
@@ -399,8 +399,7 @@ feature {NONE} -- Action handlers
 				until
 					j > grid.row_count
 				loop
-					g ?= grid.item (i, j)
-					if g /= Void and then g.is_checked then
+					if attached {EV_GRID_CHECKABLE_LABEL_ITEM} grid.item (i, j) as g and then g.is_checked then
 						nb := nb + 1
 					end
 					j := j + 1
@@ -414,21 +413,21 @@ feature {NONE} -- Action handlers
 			until
 				i > grid.column_count
 			loop
-				s ?= grid.column (i).data
-				check s /= Void end
-				ar.put ("#" + s, nb)
-				nb := nb + 1
+				if attached {STRING} grid.column (i).data as s then
+					ar.put ("#" + s, nb)
+					nb := nb + 1
+				end
 
 				from
 					j := 1
 				until
 					j > grid.row_count
 				loop
-					g ?= grid.item (i, j)
-					if g /= Void and then g.is_checked then
-						s ?= g.data
-						ar.put (s, nb)
-						nb := nb + 1
+					if attached {EV_GRID_CHECKABLE_LABEL_ITEM} grid.item (i, j) as g and then g.is_checked then
+						if attached {STRING} g.data as s then
+							ar.put (s, nb)
+							nb := nb + 1
+						end
 					end
 					j := j + 1
 				end
@@ -493,7 +492,7 @@ feature {NONE} -- Factory
 		end
 
 ;note
-	copyright: "Copyright (c) 1984-2016, Eiffel Software"
+	copyright: "Copyright (c) 1984-2021, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

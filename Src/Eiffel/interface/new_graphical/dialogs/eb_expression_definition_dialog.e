@@ -122,7 +122,7 @@ feature {NONE} -- Initialization
 			disable_all_but_object_radios
 		end
 
-	make_with_expression_on_object	(oa: DBG_ADDRESS; a_exp: STRING)
+	make_with_expression_on_object	(oa: DBG_ADDRESS; a_exp: READABLE_STRING_GENERAL)
 		require
 			application_stopped: Debugger_manager.safe_application_is_stopped
 			valid_address: oa /= Void and then Debugger_manager.application.is_valid_and_known_object_address (oa)
@@ -566,7 +566,8 @@ feature {NONE} -- Event handling
 			l_list: LIST [CLASS_I]
 		do
 			if class_radio.is_selected then
-				l_class_name := class_field.text.as_string_8
+				check class_field.text.is_valid_as_string_8 end
+				l_class_name := class_field.text.to_string_8
 				l_class_name.left_adjust
 				l_class_name.right_adjust
 				l_class_name.to_upper
@@ -603,7 +604,8 @@ feature {NONE} -- Event handling
 			if modified_expression = Void then
 				if class_radio.is_selected then
 						-- We try to create an expression related to a class.
-					t := class_field.text.as_string_8
+					check class_field.text.is_valid_as_string_8 end
+					t := class_field.text.to_string_8
 					t.left_adjust
 					t.right_adjust
 					t.to_upper
@@ -643,13 +645,14 @@ feature {NONE} -- Event handling
 							create new_expression.make_with_class (cl, expression_field.text)
 							if new_expression.syntax_error_occurred then
 								set_focus (expression_field)
-								prompts.show_error_prompt (Warning_messages.w_Syntax_error_in_expression (expression_field.text.as_string_8), dialog, Void)
+								prompts.show_error_prompt (Warning_messages.w_Syntax_error_in_expression (expression_field.text), dialog, Void)
 							end
 						end
 					end
 				elseif on_object_radio.is_selected or as_object_radio.is_selected then
 						-- We try to create an expression related to a class.
-					t := address_field.text.as_string_8.as_upper
+					check address_field.text.is_valid_as_string_8 end
+					t := address_field.text.to_string_8.as_upper
 					if t.item (1) = '0' and then t.item (2) = 'X' and t.count > 2 then
 						t := t.substring (3, t.count)
 					end
@@ -669,7 +672,7 @@ feature {NONE} -- Event handling
 						end
 						if new_expression.syntax_error_occurred then
 							set_focus (expression_field)
-							prompts.show_error_prompt (Warning_messages.w_Syntax_error_in_expression (expression_field.text.as_string_8), dialog, Void)
+							prompts.show_error_prompt (Warning_messages.w_Syntax_error_in_expression (expression_field.text), dialog, Void)
 						else
 							check debugger_manager.application_status /= Void end
 							Debugger_manager.application_status.keep_object (add)
@@ -859,7 +862,7 @@ invariant
 	dialog_not_void: dialog /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2019, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2021, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

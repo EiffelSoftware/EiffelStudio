@@ -118,18 +118,18 @@ feature -- Change
 
 feature {NONE} -- Implementation
 
-	call_stack_element: EIFFEL_CALL_STACK_ELEMENT
+	call_stack_element: detachable EIFFEL_CALL_STACK_ELEMENT
 			--
 		local
 			app: APPLICATION_EXECUTION
 		do
 			if debugger_manager.safe_application_is_stopped then
 				app := debugger_manager.application
-				if
-					not app.current_call_stack_is_empty
-				then
+				if not app.current_call_stack_is_empty then
 					check app.status.current_call_stack /= Void end
-					Result ?= app.status.current_call_stack_element
+					if attached {EIFFEL_CALL_STACK_ELEMENT} app.status.current_call_stack_element as elt then
+						Result := elt
+					end
 				end
 			end
 		end
@@ -181,7 +181,7 @@ feature -- Query
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2017, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2021, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

@@ -20,7 +20,8 @@ inherit
 			initialize_preferences,
 			update,
 			init_colors,
-			init_fonts
+			init_fonts,
+			update_font
 		end
 
 	EB_SHORTCUTS_DATA
@@ -629,6 +630,19 @@ feature {NONE} -- Init colors and fonts.
 	init_fonts
 			-- <Precursor>
 		do
+			Precursor
+		end
+
+	update_font
+			-- Font was changed, must redraw tokens due to possible width change.
+		do
+				-- FIXME: change to event handling ... "service"?
+			if
+				attached {IDE_S} (create {SERVICE_CONSUMER [IDE_S]}).service as l_ide_service
+			then
+				l_ide_service.on_zoom (font_zoom_factor_preference.value)
+			end
+
 			Precursor
 		end
 
@@ -1361,7 +1375,7 @@ invariant
 
 
 note
-	copyright: "Copyright (c) 1984-2020, Eiffel Software"
+	copyright: "Copyright (c) 1984-2021, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

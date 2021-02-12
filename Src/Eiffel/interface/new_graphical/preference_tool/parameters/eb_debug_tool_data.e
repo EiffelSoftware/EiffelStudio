@@ -243,8 +243,6 @@ feature {EB_SHARED_PREFERENCES, ES_DOCKABLE_TOOL_PANEL} -- Preference
 	left_debug_layout_preference: ARRAY_PREFERENCE
 	right_debug_layout_preference: ARRAY_PREFERENCE
 	expanded_display_bgcolor_preference: COLOR_PREFERENCE
-	grid_background_color_preference: COLOR_PREFERENCE
-	grid_foreground_color_preference: COLOR_PREFERENCE
 	number_of_watch_tools_preference: INTEGER_PREFERENCE
 	delay_before_cleaning_objects_grid_preference: INTEGER_PREFERENCE
 	row_highlight_background_color_preference: COLOR_PREFERENCE
@@ -393,8 +391,6 @@ feature {NONE} -- Implementation
 			left_debug_layout_preference := l_manager.new_array_preference_value (l_manager, left_debug_layout_string, <<>>)
 			right_debug_layout_preference := l_manager.new_array_preference_value (l_manager, right_debug_layout_string, <<>>)
 			expanded_display_bgcolor_preference := l_manager.new_color_preference_value (l_manager, expanded_display_bgcolor_string, create {EV_COLOR}.make_with_8_bit_rgb (210, 210, 210))
-			grid_background_color_preference := l_manager.new_color_preference_value (l_manager, grid_background_color_string, create {EV_COLOR}.make_with_8_bit_rgb (255, 255, 255))
-			grid_foreground_color_preference := l_manager.new_color_preference_value (l_manager, grid_foreground_color_string, create {EV_COLOR}.make_with_8_bit_rgb (0, 0, 0))
 
 			number_of_watch_tools_preference := l_manager.new_integer_preference_value (l_manager, number_of_watch_tools_string, 1)
 			delay_before_cleaning_objects_grid_preference := l_manager.new_integer_preference_value (l_manager, delay_before_cleaning_objects_string, 500)
@@ -451,8 +447,6 @@ invariant
 	left_debug_layout_preference_not_void: left_debug_layout_preference /= Void
 	right_debug_layout_preference_not_void: right_debug_layout_preference /= Void
 	expanded_display_bgcolor_preference_not_void: expanded_display_bgcolor_preference /= Void
-	grid_background_color_preference_attached: grid_background_color_preference /= Void
-	grid_foreground_color_preference_attached: grid_foreground_color_preference /= Void
 	number_of_watch_tools_preference_not_void: number_of_watch_tools_preference /= Void
 	delay_before_cleaning_objects_grid_preference_not_void: delay_before_cleaning_objects_grid_preference /= Void
 	row_highlight_background_color_preference_not_void: row_highlight_background_color_preference /= Void
@@ -477,7 +471,7 @@ invariant
 note
 	ca_ignore:
 		"CA093", "CA093: manifest array type mismatch"
-	copyright: "Copyright (c) 1984-2020, Eiffel Software"
+	copyright: "Copyright (c) 1984-2021, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

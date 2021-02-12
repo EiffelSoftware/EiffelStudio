@@ -49,32 +49,22 @@ feature {NONE} -- Initialization
 			enable_default_tree_navigation_behavior (True, False, True, True)
 
 			load_preferences
+
+			preferences.development_window_data.grid_preferences.change_actions.extend (agent load_preferences)
+
+			preferences.debugger_data.generating_type_evaluation_enabled_preference.typed_change_actions.extend (agent (b: BOOLEAN)
+					do
+						generating_type_evaluation_enabled := b
+					end
+				)
 		end
 
 	load_preferences
-		local
-			bp: BOOLEAN_PREFERENCE
-			colp: COLOR_PREFERENCE
 		do
-			bp := preferences.debugger_data.generating_type_evaluation_enabled_preference
-			generating_type_evaluation_enabled := bp.value
-			bp.typed_change_actions.extend (agent (b: BOOLEAN)
-					do
-						generating_type_evaluation_enabled := b
-					end)
-
-			colp := preferences.debug_tool_data.grid_background_color_preference
-			set_background_color (colp.value)
-			colp.typed_change_actions.extend (agent (c: EV_COLOR)
-					do
-						set_background_color (c)
-					end)
-			colp := preferences.debug_tool_data.grid_foreground_color_preference
-			set_foreground_color (colp.value)
-			colp.typed_change_actions.extend (agent (c: EV_COLOR)
-					do
-						set_foreground_color (c)
-					end)
+			preferences.development_window_data.grid_preferences.apply_to (Current)
+			grid_font := preferences.development_window_data.grid_preferences.font
+			title_font.set_height (grid_font.height)
+			generating_type_evaluation_enabled := preferences.debugger_data.generating_type_evaluation_enabled_preference.value
 		end
 
 	initialize
@@ -113,9 +103,12 @@ feature {NONE} -- GRID Customization
 
 	row_type: ES_OBJECTS_GRID_ROW do end
 		-- Type used for row objects.
-		-- May be redefined by EV_GRID descendents.		
+		-- May be redefined by EV_GRID descendents.	
 
 feature -- Properties
+
+	grid_font: EV_FONT
+			-- Default text/label font.	
 
 	generating_type_evaluation_enabled: BOOLEAN
 			-- Is generating type representation evaluating {ANY}.generating_type ?
@@ -795,7 +788,7 @@ feature {ES_OBJECTS_GRID_MANAGER} -- Layout managment
 	grid_objects_on_difference_cb (a_row: EV_GRID_ROW; a_val: ANY)
 		do
 			debug ("es_grid_layout")
-				print ("DIFF:: " + grid_objects_id_name_from_row (a_row)
+				print ("DIFF:: " + {UTF_CONVERTER}.utf_32_string_to_utf_8_string_8 (grid_objects_id_name_from_row (a_row))
 					+ " => old=[" + a_val.out + "] new=["
 					+ grid_objects_id_value_from_row (a_row, False).out + "]%N")
 			end
@@ -844,7 +837,7 @@ feature {ES_OBJECTS_GRID_MANAGER} -- Layout managment
 					if Col_value_index <= a_row.count then
 						s := ""
 						if attached {EV_GRID_LABEL_ITEM} a_row.item (Col_value_index) as lab then
-							s.append (lab.text)
+							s.append ({UTF_CONVERTER}.utf_32_string_to_utf_8_string_8 (lab.text))
 						end
 --						if Col_address_index <= a_row.count then
 --							if attached {EV_GRID_LABEL_ITEM} a_row.item (Col_address_index) as lab then
@@ -972,13 +965,18 @@ feature -- Graphical look
 
 	Title_font: EV_FONT
 		once
-			create Result
+			if attached grid_font as ft then
+				Result := ft.twin
+			else
+				create Result
+			end
 			Result.set_shape ({EV_FONT_CONSTANTS}.shape_italic)
 		end
 
 	folder_label_item (s: READABLE_STRING_GENERAL): EV_GRID_LABEL_ITEM
 		do
 			create Result
+			Result.set_font (grid_font)
 			grid_cell_set_text (Result, s)
 			Result.set_foreground_color (folder_row_fg_color)
 		end
@@ -986,12 +984,14 @@ feature -- Graphical look
 	name_label_item (s: READABLE_STRING_GENERAL): EV_GRID_LABEL_ITEM
 		do
 			create Result
+			Result.set_font (grid_font)
 			grid_cell_set_text (Result, s)
 		end
 
 	message_label_item (s: READABLE_STRING_GENERAL): EV_GRID_LABEL_ITEM
 		do
 			create Result
+			Result.set_font (grid_font)
 			grid_cell_set_text (Result, s)
 			Result.set_foreground_color (folder_row_fg_color)
 		end
@@ -1035,7 +1035,7 @@ feature -- Graphical look
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2019, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2021, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

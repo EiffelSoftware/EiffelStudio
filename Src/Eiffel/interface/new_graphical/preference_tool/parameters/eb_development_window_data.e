@@ -70,6 +70,7 @@ feature -- Element change
 			maximized_x_position_set: maximized_x_position = a_x
 			maximized_y_position_set: maximized_y_position = a_y
 		end
+
 	save_window_state (a_minimized, a_maximized: BOOLEAN)
 			-- Save the window state of the window.
 		require
@@ -82,7 +83,7 @@ feature -- Element change
 		end
 
 ;note
-	copyright:	"Copyright (c) 1984-2019, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2021, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

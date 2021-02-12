@@ -225,10 +225,10 @@ feature {NONE} -- CallStack Impl
 
 feature -- Values
 
-	current_call_stack_element_dotnet: CALL_STACK_ELEMENT_DOTNET
+	current_call_stack_element_dotnet: detachable CALL_STACK_ELEMENT_DOTNET
 			-- Current call stack element being displayed
 		do
-			Result ?= current_call_stack_element
+			Result := {CALL_STACK_ELEMENT_DOTNET} / current_call_stack_element
 		end
 
 feature -- Reason for stopping
@@ -280,7 +280,7 @@ feature {APPLICATION_EXECUTION_DOTNET} -- Constants
 			-- Key used to fetch exception other info for IL type name
 
 ;note
-	copyright:	"Copyright (c) 1984-2020, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2021, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

@@ -193,42 +193,38 @@ feature -- Type adaptation
 		require
 			cl_not_void: cl /= Void
 			cl_is_basic: cl.is_basic
-		local
-			l_basic: BASIC_A
 		do
-			l_basic ?= cl.actual_type
-			check
-				l_basic_not_void: l_basic /= Void
+			check l_basic_not_void: attached {BASIC_A} cl.actual_type as l_basic then
+				Result := l_basic.associated_reference_class_type
 			end
-			Result := l_basic.associated_reference_class_type
 		ensure
 			associated_reference_basic_class_type_not_void: Result /= Void
 		end
 
-	frozen class_c_from_type_a (t: TYPE_A; a_ctx_class: CLASS_C): CLASS_C
+	frozen class_c_from_type_a (t: TYPE_A; a_ctx_class: CLASS_C): detachable CLASS_C
 			-- instance of CLASS_C associated with type `t', in context of class `a_ctx_class'.
 		require
 			t_not_void: t /= Void
 			a_ctx_class_not_void: a_ctx_class /= Void
 		local
 			l_type: TYPE_A
-			l_formal: FORMAL_A
 --			l_last_type_set: TYPE_SET_A
 		do
 			if t.has_associated_class then
 				Result := t.base_class
 			else
 				l_type := t.actual_type
-				if l_type.is_formal then
-					l_formal ?= l_type
+				if
+					l_type.is_formal and then
+					attached {FORMAL_A} l_type as l_formal
+				then
 					if l_formal.is_multi_constrained (a_ctx_class) then
 						debug ("refactor_fixme")
 							fixme("Handle multi constrained type...")
 						end
 --						l_last_type_set := l_type.to_type_set.constraining_types (a_ctx_class)
 --						l_type := l_last_type_set.instantiated_in (a_ctx_class.actual_type)
---						if l_type.is_formal then
---							l_formal ?= l_type
+--						if l_type.is_formal and then attached {FORMAL_A} l_type as l_formal then
 --							l_type := l_formal.constrained_type (a_ctx_class)
 --						end
 						l_type := Void
@@ -362,14 +358,20 @@ feature -- Feature access
 		require
 			a_feat /= Void
 		local
-			l_tokens: LIST [STRING]
+			l_tokens: LIST [READABLE_STRING_GENERAL]
 			l_class_id, l_feature_id: INTEGER
 			l_class: CLASS_C
 		do
 				-- The feature name doesn't seem to contain Unicode.
-			l_tokens := a_feat.name_32.as_string_8.split ('#')
-			if l_tokens.count /= 5 or else not equal ("fake inline-agent", l_tokens.i_th (1)) then
+			l_tokens := a_feat.name_32.split ('#')
+
+			if l_tokens.count = 0 then
 				Result := a_feat
+			elseif l_tokens.count /= 5 or else not l_tokens.i_th (1).same_string ("fake inline-agent") then
+				-- TODO: check if this is really 5, and not 4 .
+				Result := a_feat
+			elseif l_tokens.count < 4 then
+				Result := a_feat -- Should not happen
 			elseif not l_tokens.i_th (3).is_integer_32 or not l_tokens.i_th (4).is_integer_32 then
 				Result := a_feat
 			else
@@ -552,7 +554,7 @@ feature -- Status report
 			-- Invariant's feature name
 
 ;note
-	copyright:	"Copyright (c) 1984-2014, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2021, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

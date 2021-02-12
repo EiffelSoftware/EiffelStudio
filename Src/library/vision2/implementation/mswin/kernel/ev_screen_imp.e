@@ -395,11 +395,11 @@ feature -- Implementation
 			else
 				disable_dashed_line_style
 			end
-			if background_color_internal /= Void then
-				set_background_color (background_color)
+			if attached background_color_internal as bg then
+				set_background_color (bg)
 			end
-			if foreground_color_internal /= Void then
-				set_foreground_color (foreground_color)
+			if attached foreground_color_internal as fg then
+				set_foreground_color (fg)
 			end
 		end
 
@@ -435,7 +435,7 @@ invariant
 	dc_not_void: dc /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2018, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2021, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

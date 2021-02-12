@@ -61,7 +61,7 @@ feature -- Extension
 			is_service_proffered: is_service_proffered (a_type, a_promote)
 		end
 
-	register_with_activator (a_type: TYPE [detachable SERVICE_I]; a_activator: FUNCTION [detachable SERVICE_I] a_promote: BOOLEAN)
+	register_with_activator (a_type: TYPE [detachable SERVICE_I]; a_activator: FUNCTION [detachable SERVICE_I]; a_promote: BOOLEAN)
 			-- Registers a service activator function, used to create a service on demand, using a
 			-- identifying service type object.
 			--
@@ -102,7 +102,7 @@ feature -- Removal
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2017, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2021, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

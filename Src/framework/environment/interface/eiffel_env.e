@@ -359,7 +359,6 @@ feature -- Status update
 				l_ise_iron := Void
 			end
 
-
 			if l_ise_iron = Void then
 				if l_iron = Void then
 						-- both are Void
@@ -717,7 +716,7 @@ feature -- Directories (top-level)
 			-- When ISE_PRECOMP is defined:
 			--   $ISE_PRECOMP
 			-- Otherwise if `is_user_files_supported':
-			--   On Windows: C:\Users\manus\Documents\Eiffel User Files\MM.mm\precomp\spec\$ISE_PLATFORM
+			--   On Windows: C:\Users\username\Documents\Eiffel User Files\MM.mm\precomp\spec\$ISE_PLATFORM
 			--   On Mac: ~/Eiffel User Files/MM.mm/precomp/spec/$ISE_PLATFORM
 			--   On Unix: ~/.es/Eiffel User Files/MM.mm/precomp/spec/$ISE_PLATFORM
 			-- Otherwise
@@ -780,12 +779,12 @@ feature -- Directories (top-level)
 
 	iron_path: PATH
 			-- Actual location of the iron installed libraries.
-			-- When ISE_IRON_PATH is defined:
-			--   $ISE_IRON_PATH
-			-- Otherwise if IRON_PATH is defined
-			--	 $IRON_PATH
+			-- When IRON_PATH is defined:
+			--   $IRON_PATH
+			-- Otherwise if ISE_IRON_PATH is defined
+			--	 $ISE_IRON_PATH
 			-- Otherwise if `is_user_files_supported':
-			--   On Windows: C:\Users\manus\Documents\Eiffel User Files\MM.mm\iron
+			--   On Windows: C:\Users\username\Documents\Eiffel User Files\MM.mm\iron
 			--   On Mac: ~/Eiffel User Files/MM.mm/iron
 			--   On Unix: ~/.es/Eiffel User Files/MM.mm/iron
 			-- Otherwise
@@ -795,9 +794,9 @@ feature -- Directories (top-level)
 		local
 			l_value: like get_environment_32
 		do
-			l_value := get_environment_32 ({EIFFEL_CONSTANTS}.ise_iron_path_env)
+			l_value := get_environment_32 ({EIFFEL_CONSTANTS}.iron_path_env)
 			if l_value = Void or else l_value.is_empty then
-				l_value := get_environment_32 ({EIFFEL_CONSTANTS}.iron_path_env)
+				l_value := get_environment_32 ({EIFFEL_CONSTANTS}.ise_iron_path_env)
 			end
 			if l_value = Void or else l_value.is_empty then
 				if is_user_files_supported then
@@ -820,7 +819,7 @@ feature  -- Directories (dotnet)
 	assemblies_path: PATH
 			-- Location of Eiffel Assembly Cache.
 			-- If `is_user_files_supported':
-			--   On Windows: C:\Users\manus\Documents\Eiffel User Files\MM.mm\dotnet\assemblies
+			--   On Windows: C:\Users\username\Documents\Eiffel User Files\MM.mm\dotnet\assemblies
 			--   On Mac: ~/Eiffel User Files/MM.mm/dotnet/assemblies
 			--   On Unix: ~/.es/Eiffel User Files/MM.mm/dotnet/assemblies
 			-- Otherwise
@@ -1107,7 +1106,7 @@ feature -- Directories (top-level user)
 			-- With ISE_APP_DATA defined:
 			--   $ISE_APP_DATA
 			-- When hidden files is available:
-			--   On Windows: C:\Users\manus\AppData\Local\Eiffel Software\.es\MM.mm
+			--   On Windows: C:\Users\username\AppData\Local\Eiffel Software\.es\MM.mm
 			--   On Unix & Mac: ~/.es/MM.mm
 			-- Otherwise we use a subdirectory of `user_files_path':
 			--   `user_files_path'\settings
@@ -1151,7 +1150,7 @@ feature -- Directories (top-level user)
 			-- With ISE_APP_DATA defined:
 			--   $ISE_APP_DATA
 			-- When hidden files is available:
-			--   On Windows: C:\Users\manus\AppData\Local\Eiffel Software\.es\MM.mm
+			--   On Windows: C:\Users\username\AppData\Local\Eiffel Software\.es\MM.mm
 			--   On Unix & Mac: ~/.es/MM.mm
 			-- Otherwise we use a subdirectory of `user_files_path':
 			--   `user_files_path'\settings
@@ -1173,7 +1172,7 @@ feature -- Directories (top-level user)
 			-- With ISE_APP_DATA defined:
 			--   $ISE_APP_DATA
 			-- When hidden files is available:
-			--   On Windows: C:\Users\manus\AppData\Local\Eiffel Software\.es\MM.mm
+			--   On Windows: C:\Users\username\AppData\Local\Eiffel Software\.es\MM.mm
 			--   On Unix & Mac: ~/.es/MM.mm
 			-- Otherwise we use a subdirectory of `user_files_path':
 			--   `user_files_path'\settings
@@ -1200,7 +1199,7 @@ feature -- Directories (top-level user)
 			-- With ISE_USER_FILES is defined:
 			--   $ISE_USER_FILES
 			-- Otherwise
-			--   On Windows: C:\Users\manus\Documents\Eiffel User Files\MM.mm
+			--   On Windows: C:\Users\username\Documents\Eiffel User Files\MM.mm
 			--   On Mac: ~/Eiffel User Files/MM.mm
 			--   On Unix: ~/.es/Eiffel User Files/MM.mm
 			-- When purge the ES stored configuration data, it will not erase the files
@@ -1262,7 +1261,7 @@ feature -- Directories (top-level user)
 			-- With ISE_USER_FILES is defined:
 			--   $ISE_USER_FILES
 			-- Otherwise
-			--   On Windows: C:\Users\manus\Documents\Eiffel User Files\MM.mm
+			--   On Windows: C:\Users\username\Documents\Eiffel User Files\MM.mm
 			--   On Mac: ~/Eiffel User Files/MM.mm
 			--   On Unix: ~/.es/Eiffel User Files/MM.mm
 			-- When purge the ES stored configuration data, it will not erase the files
@@ -1286,7 +1285,7 @@ feature -- Directories (top-level user)
 			-- With ISE_USER_FILES is defined:
 			--   $ISE_USER_FILES
 			-- Otherwise
-			--   On Windows: C:\Users\manus\Documents\Eiffel User Files\MM.mm
+			--   On Windows: C:\Users\username\Documents\Eiffel User Files\MM.mm
 			--   On Mac: ~/Eiffel User Files/MM.mm
 			--   On Unix: ~/.es/Eiffel User Files/MM.mm
 			-- When purge the ES stored configuration data, it will not erase the files
@@ -2244,7 +2243,7 @@ feature {NONE} -- Implementation
 
 	user_directory_name: detachable PATH
 			-- Directory name corresponding to the user directory
-			-- On Windows: C:\Users\manus\Documents
+			-- On Windows: C:\Users\username\Documents
 			-- On Unix & Mac: $HOME
 		once
 			Result := environment.user_directory_path

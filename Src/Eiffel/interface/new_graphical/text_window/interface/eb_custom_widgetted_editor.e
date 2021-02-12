@@ -784,7 +784,9 @@ feature {NONE} -- Implementation
 		do
 			search_bar.trigger_bottom_reached_pixmap (False)
 			search_bar.trigger_first_reached_pixmap (False)
-			search_bar.keyword_field.set_background_color (search_tool.normal_bgcolor)
+			if attached search_tool as l_tool then
+				search_bar.keyword_field.set_background_color (l_tool.normal_bgcolor)
+			end
 		end
 
 feature {NONE} -- Internal implentation cache
@@ -794,7 +796,7 @@ feature {NONE} -- Internal implentation cache
 			-- Note: Do not use directly!
 
 ;note
-	copyright: "Copyright (c) 1984-2019, Eiffel Software"
+	copyright: "Copyright (c) 1984-2021, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

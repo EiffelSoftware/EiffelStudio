@@ -28,7 +28,7 @@
 			<concurrency support="none"/>
 			<void_safety support="none" use="none"/>
 		</capability>
-		<pre_compile_action command="eweasel_pre.bat">
+		<pre_compile_action command="eweasel_pre.bat" working_directory=".\">
 			<description>Update revision number reported by the eweasel command.</description>
 			<condition>
 				<custom name="ISE_PLATFORM" value="win*" match="wildcard"/>

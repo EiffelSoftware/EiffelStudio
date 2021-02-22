@@ -17,28 +17,39 @@ class LINKED_CIRCULAR [G] inherit
 			readable, isfirst, writable, is_equal
 		redefine
 			start, islast
-		select
-			remove, go_i_th, after, before, off,
-			prune_all, prune, first, forth
 		end
 
+inherit {NONE}
+
 	LIST [G]
-		rename
-			after as l_after,
-			before as l_before,
-			remove as l_remove,
-			first as l_first,
-			off as l_off,
-			prune as l_prune,
-			prune_all as l_prune_all,
-			go_i_th as l_go_i_th,
-			forth as l_forth
 		export {NONE}
-			l_after, l_before, l_remove, l_first,
-			l_off, l_prune, l_prune_all, l_go_i_th, l_forth
+			after,
+			before,
+			first,
+			forth,
+			go_i_th,
+			off,
+			prune,
+			prune_all,
+			remove
 		undefine
-			last, exhausted, move, valid_cursor_index,
-			isfirst, readable, islast, start, writable
+			after,
+			before,
+			exhausted,
+			first,
+			go_i_th,
+			isfirst,
+			islast,
+			last,
+			move,
+			off,
+			prune,
+			prune_all,
+			readable,
+			remove,
+			start,
+			valid_cursor_index,
+			writable
 		end
 
 create
@@ -373,7 +384,7 @@ feature {LINKED_CIRCULAR} -- Implementation
 			end
 
 note
-	copyright: "Copyright (c) 1984-2018, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2021, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

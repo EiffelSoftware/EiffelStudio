@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "Serialize/Deserialize data from a medium."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -19,6 +19,8 @@ inherit
 			is_ready_for_writing,
 			medium
 		end
+
+inherit {NONE}
 
 	PLATFORM
 		export
@@ -333,13 +335,12 @@ feature {NONE} -- Buffer update
 			write_chunk_header
 		end
 
-
 invariant
 	medium_not_void: medium /= Void
 
 note
 	library:	"EiffelBase: Library of reusable components for Eiffel."
-	copyright:	"Copyright (c) 1984-2017, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2021, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software
@@ -348,10 +349,5 @@ note
 			Website http://www.eiffel.com
 			Customer support http://support.eiffel.com
 		]"
-
-
-
-
-
 
 end

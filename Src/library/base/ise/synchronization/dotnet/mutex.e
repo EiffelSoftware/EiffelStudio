@@ -10,8 +10,7 @@
 class
 	MUTEX
 
-inherit
-	ANY
+inherit {NONE}
 
 	THREAD_ENVIRONMENT
 		export
@@ -103,8 +102,8 @@ feature {NONE} -- Implementation
 			-- .NET reference to the mutex.
 
 note
-	copyright:	"Copyright (c) 1984-2017, Eiffel Software and others"
-	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
+	copyright: "Copyright (c) 1984-2021, Eiffel Software and others"
+	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software
 			5949 Hollister Ave., Goleta, CA 93117 USA

@@ -14,6 +14,8 @@ inherit
 			default_create
 		end
 
+inherit {NONE}
+
 	SED_STORABLE_FACILITIES
 		export
 			{NONE} all
@@ -138,7 +140,7 @@ feature {NONE} -- Logging
 
 note
 	library:	"EiffelBase: Library of reusable components for Eiffel."
-	copyright:	"Copyright (c) 1984-2017, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2021, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

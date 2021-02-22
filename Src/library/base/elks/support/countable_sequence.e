@@ -1,11 +1,11 @@
-note
+﻿note
 	description: "Infinite sequences, indexed by integers"
 	library: "Free implementation of ELKS library"
 	status: "See notice at end of class."
 	legal: "See notice at end of class."
-	names: countable_sequence, infinite_sequence;
-	access: cursor, membership;
-	contents: generic;
+	names: countable_sequence, infinite_sequence
+	access: cursor, membership
+	contents: generic
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -18,6 +18,13 @@ inherit
 			item as i_th
 		end
 
+	LINEAR [G]
+		redefine
+			linear_representation
+		end
+
+inherit {NONE}
+
 	ACTIVE [G]
 		export
 			{NONE}
@@ -26,11 +33,6 @@ inherit
 					wipe_out, replace, remove
 		redefine
 			replaceable
-		end
-
-	LINEAR [G]
-		redefine
-			linear_representation
 		end
 
 feature -- Access
@@ -127,7 +129,7 @@ feature {NONE} -- Inapplicable
 		end
 
 note
-	copyright: "Copyright (c) 1984-2012, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2021, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

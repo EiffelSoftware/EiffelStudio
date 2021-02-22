@@ -25,8 +25,6 @@ class HASH_TABLE [G, K -> detachable HASHABLE] inherit
 			item as definite_item,
 			has as has_item,
 			valid_key as has
-		export
-			{NONE} prune_all
 		redefine
 			copy, is_equal
 		end
@@ -1765,7 +1763,7 @@ note
 		]"
 	date: "$Date$"
 	revision: "$Revision$"
-	copyright: "Copyright (c) 1984-2019, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2021, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

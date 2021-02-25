@@ -178,7 +178,7 @@ feature -- Execution
 					s.append ("<br/>Currently listing licenses expiring before " + l_expiring_before_n_days_filter.out + " days.")
 				end
 
-				s.append ("<form action=%"" + req.percent_encoded_path_info + "%" method=%"post%" >")
+				s.append ("<form action=%"" + req.percent_encoded_path_info + "%" method=%"post%" class=%"roc-select-all%">")
 				s.append ("<table class=%"with_border%" style=%"border: solid 1px black%"><tr><th>Entity</th><th>Owner</th><th>Plan</th><th>Conditions</th><th>Until</th><th>Last</th><th>organization(s)</th>")
 				s.append ("</tr>")
 				if l_plan_filter /= Void and then attached es_cloud_api.plan_by_name (l_plan_filter) as pl then
@@ -350,7 +350,6 @@ feature -- Execution
 				s.append ("</table>%N")
 
 				s.append ("<input type=%"submit%" name=%"group_action%" value=%"Group-Action%" /></form>")
-
 				s.append ("<br/>%N")
 
 				s.append ("<table class=%"with_border%" style=%"border: solid 1px black%"><tr><th>organizations</th><th>Plan</th><th>Until</th>")

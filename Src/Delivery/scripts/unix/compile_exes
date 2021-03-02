@@ -108,7 +108,7 @@ fullrd $INSTALL_DIR/studio/config/unix
 fullrd $INSTALL_DIR/studio/spec/unix
 
 safe_md $INSTALL_DIR/tools/spec/unix/bin
-mv $INSTALL_DIR/tools/spec/unix/estudio-* $INSTALL_DIR/studio/spec/unix/bin
+mv $INSTALL_DIR/tools/spec/unix/estudio-* $INSTALL_DIR/tools/spec/unix/bin
 fullrd $INSTALL_DIR/tools/spec/$ISE_PLATFORM
 safe_md $INSTALL_DIR/tools/spec/$ISE_PLATFORM
 move $INSTALL_DIR/tools/spec/unix/* $INSTALL_DIR/tools/spec/$ISE_PLATFORM

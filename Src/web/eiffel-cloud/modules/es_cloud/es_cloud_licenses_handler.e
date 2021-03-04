@@ -222,6 +222,9 @@ feature -- Execution
 						s.append ("</div>")
 					end
 					s.append ("</div>")
+					if api.has_permission ({ES_CLOUD_MODULE}.perm_manage_es_licenses) then
+						s.append ("<div><a class=%"button%" href=%"" + api.location_url (es_cloud_api.admin_license_web_location (lic), Void) + "%">EDIT license</a></div>")
+					end
 					r.set_main_content (s)
 					r.execute
 				else

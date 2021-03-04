@@ -488,6 +488,164 @@ feature -- Element change license
 			end
 		end
 
+feature -- Emailing
+
+	send_message_to_expired_licenses (a_licenses: ITERABLE [ES_CLOUD_LICENSE])
+		local
+			lic: ES_CLOUD_LICENSE
+			l_user_lic: ES_CLOUD_USER_LICENSE
+		do
+			across
+				a_licenses as ic
+			loop
+				lic := ic.item
+				if lic.is_expired and not lic.is_suspended then
+					if attached user_for_license (lic) as u then
+						create l_user_lic.make (u, lic)
+						send_message_to_expired_user_license (l_user_lic, Void)
+					end
+				end
+			end
+		end
+
+	send_message_to_expired_user_license (lic: ES_CLOUD_USER_LICENSE; vars: detachable STRING_TABLE [detachable READABLE_STRING_GENERAL])
+		local
+			e: CMS_EMAIL
+			res: PATH
+			s: STRING_8
+			msg: READABLE_STRING_8
+			sub: STRING_8
+			p: INTEGER
+			l_license: ES_CLOUD_LICENSE
+			l_user: CMS_USER
+		do
+			l_user := lic.user.cms_user
+			l_license := lic.license
+			if attached cms_api.user_api.user_email (l_user) as l_user_email then
+				create res.make_from_string ("templates")
+				sub := "Your " + utf_8_encoded (l_license.plan.title_or_name) + " EiffelStudio license " + utf_8_encoded (l_license.key) + "is EXPIRED"
+				if attached cms_api.module_theme_resource_location (module, res.extended ("email_license_expired.tpl")) as loc and then attached cms_api.resolved_smarty_template (loc) as tpl then
+					tpl.set_value (l_license, "license")
+					tpl.set_value (l_license.plan.name, "license_plan_name")
+					tpl.set_value (l_license.plan.title_or_name, "license_plan_title")
+					tpl.set_value (l_license.key, "license_key")
+					if vars /= Void then
+						across
+							vars as ic
+						loop
+							if attached ic.item as v then
+								tpl.set_value (v, ic.key)
+							end
+						end
+					end
+					tpl.set_value (l_user, "user")
+					tpl.set_value (l_user_email, "user_email")
+					tpl.set_value (l_user.name, "user_name")
+					tpl.set_value (cms_api.user_display_name (l_user), "customer_name")
+	--				if a_customer_name /= Void then
+	--					tpl.set_value (html_encoded (a_customer_name), "customer_name")
+	--				end
+					msg := tpl.string
+					if msg.starts_with_general ("Subject:") then
+						p := msg.index_of ('%N', 1)
+						if p > 0 then
+							sub := msg.head (p - 1)
+							msg := msg.substring (p + 1, msg.count)
+							sub.right_adjust
+							sub.remove_head (("Subject:").count)
+							sub.left_adjust
+						end
+					end
+
+					e := cms_api.new_html_email (l_user_email, sub, msg)
+					cms_api.process_email (e)
+				end
+			end
+		end
+
+	send_message_to_licenses_expiring_soon (a_licenses: ITERABLE [ES_CLOUD_LICENSE])
+		local
+			nb: INTEGER
+			lic: ES_CLOUD_LICENSE
+			l_user_lic: ES_CLOUD_USER_LICENSE
+		do
+			across
+				a_licenses as ic
+			loop
+				lic := ic.item
+				if lic.is_expired then
+				elseif
+					lic.expiration_date /= Void
+				then
+					nb := lic.days_remaining
+					if nb > 0 then
+						if attached user_for_license (lic) as u then
+							create l_user_lic.make (u, lic)
+							send_message_to_user_license_expiring_soon (l_user_lic, nb, Void)
+						end
+					end
+				end
+			end
+		end
+
+	send_message_to_user_license_expiring_soon (lic: ES_CLOUD_USER_LICENSE; a_days_remaining: INTEGER; vars: detachable STRING_TABLE [detachable READABLE_STRING_GENERAL])
+		require
+			a_days_remaining > 0
+		local
+			e: CMS_EMAIL
+			res: PATH
+			s: STRING_8
+			msg: READABLE_STRING_8
+			sub: STRING_8
+			p: INTEGER
+			l_license: ES_CLOUD_LICENSE
+			l_user: CMS_USER
+		do
+			l_user := lic.user.cms_user
+			l_license := lic.license
+			if attached cms_api.user_api.user_email (l_user) as l_user_email then
+				create res.make_from_string ("templates")
+				sub := "Your " + utf_8_encoded (l_license.plan.title_or_name) + " EiffelStudio license " + utf_8_encoded (l_license.key) + "is expiring in " + a_days_remaining.out + "day(s)"
+				if attached cms_api.module_theme_resource_location (module, res.extended ("email_license_expiration_coming.tpl")) as loc and then attached cms_api.resolved_smarty_template (loc) as tpl then
+					tpl.set_value (a_days_remaining, "days_remaining")
+					tpl.set_value (l_license, "license")
+					tpl.set_value (l_license.plan.name, "license_plan_name")
+					tpl.set_value (l_license.plan.title_or_name, "license_plan_title")
+					tpl.set_value (l_license.key, "license_key")
+					if vars /= Void then
+						across
+							vars as ic
+						loop
+							if attached ic.item as v then
+								tpl.set_value (v, ic.key)
+							end
+						end
+					end
+					tpl.set_value (l_user, "user")
+					tpl.set_value (l_user_email, "user_email")
+					tpl.set_value (l_user.name, "user_name")
+					tpl.set_value (cms_api.user_display_name (l_user), "customer_name")
+	--				if a_customer_name /= Void then
+	--					tpl.set_value (html_encoded (a_customer_name), "customer_name")
+	--				end
+					msg := tpl.string
+					if msg.starts_with_general ("Subject:") then
+						p := msg.index_of ('%N', 1)
+						if p > 0 then
+							sub := msg.head (p - 1)
+							msg := msg.substring (p + 1, msg.count)
+							sub.right_adjust
+							sub.remove_head (("Subject:").count)
+							sub.left_adjust
+						end
+					end
+
+					e := cms_api.new_html_email (l_user_email, sub, msg)
+					cms_api.process_email (e)
+				end
+			end
+		end
+
 feature -- License subscription
 
 	subscribed_licenses (a_order_ref: READABLE_STRING_GENERAL): detachable LIST [ES_CLOUD_LICENSE]
@@ -959,6 +1117,11 @@ feature -- HTML factory
 			Result := cms_api.link (t, cms_api.administration_path ("cloud/account/" + u.id.out), Void)
 		end
 
+	admin_licenses_web_location: STRING_8
+		do
+			Result := cms_api.administration_path_location ({ES_CLOUD_MODULE_ADMINISTRATION}.admin_licenses_location)
+		end
+
 	admin_license_web_location (lic: ES_CLOUD_LICENSE): STRING_8
 		do
 			Result := cms_api.administration_path_location ({ES_CLOUD_MODULE_ADMINISTRATION}.admin_licenses_location + url_encoded (lic.key))
@@ -1196,8 +1359,12 @@ feature -- Email processing
 			res: PATH
 			s: STRING_8
 			msg: READABLE_STRING_8
+			sub: STRING_8
+			p: INTEGER
 		do
 			create res.make_from_string ("templates")
+
+			sub := "New " + utf_8_encoded (a_license.plan.title_or_name) + " EiffelStudio license " + utf_8_encoded (a_license.key)
 			if attached cms_api.module_theme_resource_location (module, res.extended ("new_license_email.tpl")) as loc and then attached cms_api.resolved_smarty_template (loc) as tpl then
 				tpl.set_value (a_license, "license")
 				tpl.set_value (a_license.plan.name, "license_plan_name")
@@ -1225,6 +1392,16 @@ feature -- Email processing
 				end
 
 				msg := tpl.string
+				if msg.starts_with_general ("Subject:") then
+					p := msg.index_of ('%N', 1)
+					if p > 0 then
+						sub := msg.head (p - 1)
+						msg := msg.substring (p + 1, msg.count)
+						sub.right_adjust
+						sub.remove_head (("Subject:").count)
+						sub.left_adjust
+					end
+				end
 			else
 				create s.make_empty;
 				s.append ("New "+ html_encoded (a_license.plan.title_or_name) +" EiffelStudio license " + utf_8_encoded (a_license.key) + ".%N")
@@ -1236,7 +1413,7 @@ feature -- Email processing
 				msg := s
 			end
 
-			e := cms_api.new_html_email (a_email_addr, "New " + utf_8_encoded (a_license.plan.title_or_name) + " EiffelStudio license " + utf_8_encoded (a_license.key), msg)
+			e := cms_api.new_html_email (a_email_addr, sub, msg)
 			cms_api.process_email (e)
 		end
 

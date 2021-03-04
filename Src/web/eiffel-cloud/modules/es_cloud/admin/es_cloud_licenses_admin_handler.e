@@ -120,41 +120,75 @@ feature -- Execution
 			l_user: ES_CLOUD_USER
 			l_plan_filter: detachable READABLE_STRING_GENERAL
 			l_expiring_before_n_days_filter: INTEGER
+			l_inc_expired, l_only_expired: BOOLEAN
 			l_org: ES_CLOUD_ORGANIZATION
 			l_email, l_user_email: READABLE_STRING_8
 --			orgs: detachable LIST [ES_CLOUD_ORGANIZATION]
-			lst: LIST [TUPLE [license: ES_CLOUD_LICENSE; user: detachable ES_CLOUD_USER; email: detachable READABLE_STRING_8; org: detachable ES_CLOUD_ORGANIZATION]]
+			lics: LIST [TUPLE [license: ES_CLOUD_LICENSE; user: detachable ES_CLOUD_USER; email: detachable READABLE_STRING_8; org: detachable ES_CLOUD_ORGANIZATION]]
 			f: CMS_FORM
 			f_select: WSF_FORM_SELECT
 			f_opt: WSF_FORM_SELECT_OPTION
+			f_div: WSF_WIDGET_DIV
+			f_cb: WSF_FORM_CHECKBOX_INPUT
 		do
 			if api.has_permissions (<< {ES_CLOUD_MODULE}.perm_manage_es_accounts, {ES_CLOUD_MODULE}.perm_manage_es_licenses >>) then
+				r := new_generic_response (req, res)
+				add_primary_tabs (r)
+
 				if attached {WSF_STRING} req.query_parameter ("plan") as p_plan then
 					l_plan_filter := p_plan.value
+					if l_plan_filter.is_whitespace then
+						l_plan_filter := Void
+					end
 				end
+
+				if attached {WSF_STRING} req.query_parameter ("with_expired") as p_include_expired then
+					l_inc_expired := p_include_expired.is_case_insensitive_equal ("yes")
+				end
+
 				if attached {WSF_STRING} req.query_parameter ("expiring_before_n_days") as p_expiring_before_n_days then
 					l_expiring_before_n_days_filter := p_expiring_before_n_days.value.to_integer_32
 					if l_expiring_before_n_days_filter <= 0 then
 						l_expiring_before_n_days_filter := 0
 					end
 				end
-				r := new_generic_response (req, res)
-				add_primary_tabs (r)
+				if attached {WSF_STRING} req.query_parameter ("only_expired") as p_only_expired then
+					l_only_expired := p_only_expired.is_case_insensitive_equal ("yes")
+					if l_only_expired then
+						l_expiring_before_n_days_filter := 0
+						l_inc_expired := True
+					end
+				end
 
 				if l_plan_filter /= Void then
-					create s.make_from_string ("<h1>Licenses for plan %"" + html_encoded (l_plan_filter) + "%"</h1>")
+					if l_plan_filter.is_case_insensitive_equal ("$") then
+						create s.make_from_string ("<h1>Licenses for priced plans</h1>")
+					else
+						create s.make_from_string ("<h1>Licenses for plan %"" + html_encoded (l_plan_filter) + "%"</h1>")
+					end
 				else
 					create s.make_from_string ("<h1>Licenses</h1>")
 				end
+
 				s.append ("Filters: ")
+
+				create f.make (req.percent_encoded_path_info, "licenses-filter")
+				f.set_method_get
+				f.add_css_style ("display: inline-block")
+
 				if attached es_cloud_api.sorted_plans as l_sorted_plans then
-					create f.make (req.percent_encoded_path_info, "license-per-plan")
-					f.add_css_style ("display: inline-block")
-					f.set_method_get
+					create f_div.make
+					f.extend (f_div)
+					f_div.add_css_style ("display: inline-block")
 					create f_select.make ("plan")
-					f.extend (f_select)
+					f_div.extend (f_select)
 					create f_opt.make ("", "All plans")
 					f_select.add_option (f_opt)
+					create f_opt.make ("$", "has price")
+					f_select.add_option (f_opt)
+					if l_plan_filter /= Void and then l_plan_filter.is_case_insensitive_equal ("$") then
+						f_opt.set_is_selected (True)
+					end
 					across
 						l_sorted_plans as ic
 					loop
@@ -165,44 +199,152 @@ feature -- Execution
 						end
 					end
 					f_select.add_html_attribute ("onchange", "this.form.submit();")
-					f.append_to_html (r.wsf_theme, s)
 				end
 				if l_expiring_before_n_days_filter > 0 or l_plan_filter /= Void  then
-					s.append (" | <a href=%"" + req.script_url (req.percent_encoded_path_info) + "%">All the licenses</a>")
-				elseif l_expiring_before_n_days_filter = 0 then
-					s.append (" | <a href=%"" + req.script_url (req.percent_encoded_path_info) + "?expiring_before_n_days=7%">Licenses expiring before 7 days</a>")
+					f.extend_html_text (" | <a href=%"" + req.script_url (req.percent_encoded_path_info) + "%">All the licenses</a>")
 				end
 
+					-- Licenses already expired?
+				if l_expiring_before_n_days_filter = 0 then
+					f.extend_html_text (" | ")
+					create f_cb.make_with_value ("only_expired", "yes")
+					f_cb.set_title ("only expired")
+					f_cb.set_checked (l_only_expired)
+
+					f_cb.add_html_attribute ("onchange", "this.form.submit();")
+					create f_div.make
+					f.extend (f_div)
+					f_div.add_css_style ("display: inline-block")
+					f_div.extend (f_cb)
+				end
+
+					-- Licenses expiring before 7 days ?
+				if not l_only_expired then
+					f.extend_html_text (" | ")
+					if l_expiring_before_n_days_filter > 0 then
+						create f_cb.make_with_value ("expiring_before_n_days", l_expiring_before_n_days_filter.out)
+						f_cb.set_title ("expiring before " + l_expiring_before_n_days_filter.out + " days")
+						f_cb.set_checked (True)
+					else
+						create f_cb.make_with_value ("expiring_before_n_days", "7")
+						f_cb.set_title ("expiring before 7 days")
+					end
+					f_cb.add_html_attribute ("onchange", "this.form.submit();")
+					create f_div.make
+					f.extend (f_div)
+					f_div.add_css_style ("display: inline-block")
+					f_div.extend (f_cb)
+
+					-- Include expired licenses?
+					f.extend_html_text (" | ")
+					create f_cb.make_with_value ("with_expired", "yes")
+					if l_inc_expired then
+						f_cb.set_checked (True)
+					end
+					f_cb.set_title ("with expired licenses")
+					f_cb.add_html_attribute ("onchange", "this.form.submit();")
+
+					create f_div.make
+					f.extend (f_div)
+					f_div.add_css_style ("display: inline-block")
+					f_div.extend (f_cb)
+
+				end
+
+				f.append_to_html (r.wsf_theme, s)
 
 				if l_expiring_before_n_days_filter > 0 then
 					s.append ("<br/>Currently listing licenses expiring before " + l_expiring_before_n_days_filter.out + " days.")
 				end
 
-				s.append ("<form action=%"" + req.percent_encoded_path_info + "%" method=%"post%" class=%"roc-select-all%">")
-				s.append ("<table class=%"with_border%" style=%"border: solid 1px black%"><tr><th>Entity</th><th>Owner</th><th>Plan</th><th>Conditions</th><th>Until</th><th>Last</th><th>organization(s)</th>")
-				s.append ("</tr>")
-				if l_plan_filter /= Void and then attached es_cloud_api.plan_by_name (l_plan_filter) as pl then
-					lst := es_cloud_api.licenses_for_plan (pl)
+					-- Filter licenses
+				if l_plan_filter /= Void then
+					if l_plan_filter.is_case_insensitive_equal ("$") then
+						lics := es_cloud_api.licenses
+						from
+							lics.start
+						until
+							lics.after
+						loop
+							if lics.item.license.plan.has_price then
+								lics.forth
+							else
+								lics.remove
+							end
+						end
+					elseif attached es_cloud_api.plan_by_name (l_plan_filter) as pl then
+						lics := es_cloud_api.licenses_for_plan (pl)
+					else
+						lics := es_cloud_api.licenses
+					end
 				else
-					lst := es_cloud_api.licenses
+					lics := es_cloud_api.licenses
 				end
-				if l_expiring_before_n_days_filter > 0 then
+				if l_only_expired then
 					from
-						lst.start
+						lics.start
 					until
-						lst.after
+						lics.after
 					loop
-						lic := lst.item.license
-						if lic.is_expired or lic.days_remaining <= l_expiring_before_n_days_filter then
-							--Keep
-							lst.forth
+						lic := lics.item.license
+						if lic.is_expired then
+								--Keep
+							lics.forth
+						elseif lic.expiration_date = Void then
+								-- No expiration
+							lics.remove
 						else
-							lst.remove
+							lics.remove
+						end
+					end
+				elseif l_expiring_before_n_days_filter > 0 then
+					from
+						lics.start
+					until
+						lics.after
+					loop
+						lic := lics.item.license
+						if lic.is_expired and l_inc_expired then
+								--Keep
+							lics.forth
+						elseif lic.expiration_date = Void then
+								-- No expiration
+							lics.remove
+						elseif lic.days_remaining <= l_expiring_before_n_days_filter then
+								--Keep
+							lics.forth
+						else
+							lics.remove
 						end
 					end
 				end
+				if not l_inc_expired then
+					from
+						lics.start
+					until
+						lics.after
+					loop
+						if lics.item.license.is_expired then
+							lics.remove
+						else
+							lics.forth
+						end
+					end
+				end
+
+					-- Display...				
+				s.append ("<form action=%"" + req.percent_encoded_path_info + "%" method=%"post%" class=%"roc-select-all%">%N")
 				across
-					lst as ic
+					req.query_parameters as ic
+				loop
+					if attached {WSF_STRING} ic.item as q then
+						s.append ("<input type=%"hidden%" name=%"" + q.url_encoded_name + "%" value =%"" + q.url_encoded_value + "%" />%N")
+					end
+				end
+				s.append ("<table class=%"with_border%" style=%"border: solid 1px black%"><tr><th>Entity</th><th>Owner</th><th>Plan</th><th>Conditions</th><th>Until</th><th>Last</th><th>organization(s)</th>")
+				s.append ("</tr>")
+				across
+					lics as ic
 				loop
 					lic := ic.item.license
 					l_user := ic.item.user
@@ -225,7 +367,6 @@ feature -- Execution
 								l_user.update_user (api)
 								l_user_email := l_user.cms_user.email
 							end
-
 							s.append ("<a href=%"")
 							s.append (es_cloud_api.account_administration_url (l_user))
 							s.append_character ('%"')
@@ -348,7 +489,6 @@ feature -- Execution
 					end
 				end
 				s.append ("</table>%N")
-
 				s.append ("<input type=%"submit%" name=%"group_action%" value=%"Group-Action%" /></form>")
 				s.append ("<br/>%N")
 
@@ -411,7 +551,6 @@ feature -- Execution
 				end
 				s.append ("</table>%N")
 
-
 				r.set_main_content (s)
 				r.execute
 			else
@@ -435,6 +574,9 @@ feature -- Execution
 			l_ch: WSF_FORM_SELECT_OPTION
 			fset: WSF_FORM_FIELD_SET
 			l_trial_plan: detachable ES_CLOUD_PLAN
+			l_all_expired, l_all_expired_soon: BOOLEAN
+			l_expiring_before_n_days: INTEGER
+			l_export: STRING_32
 		do
 			if api.has_permission ("admin es licenses") then
 				if
@@ -442,14 +584,31 @@ feature -- Execution
 					attached {WSF_TABLE} req.form_parameter ("licenses") as p_lics
 				then
 					create l_licenses.make (p_lics.count)
+
+					if attached {WSF_STRING} req.form_parameter ("expiring_before_n_days") as p_expiring_before_n_days then
+						l_all_expired_soon := True
+						l_expiring_before_n_days := p_expiring_before_n_days.integer_value
+					else
+						l_all_expired_soon := False
+					end
+
+					l_all_expired := True
 					across
 						p_lics as ic
 					loop
 						lic := es_cloud_api.license_by_key (ic.key)
 						if lic /= Void then
+							l_all_expired := l_all_expired and lic.is_expired and not lic.is_suspended
+							l_all_expired_soon := l_all_expired_soon and then
+									(
+										not lic.is_expired and then not lic.is_suspended and then
+										lic.expiration_date /= Void and then
+										lic.days_remaining <= l_expiring_before_n_days
+									)
 							l_licenses [ic.key] := lic
 						end
 					end
+					l_all_expired_soon := l_all_expired_soon and not l_all_expired
 
 					r := new_generic_response (req, res)
 					if
@@ -487,6 +646,57 @@ feature -- Execution
 						else
 							r.add_error_message ("Could not find plan %"" + html_encoded (p_new_plan_name.string_representation) + "%".")
 						end
+					elseif
+						p_action.same_string (form_submit_label_export_to_csv)
+					then
+						create l_export.make_from_string ("license_key,status,days_remaining,username,email,profilename,%N")
+						across
+							l_licenses as ic
+						loop
+							lic := ic.item
+							l_export.append (lic.key)
+							l_export.append_character (',')
+							if lic.is_expired then
+								l_export.append ("expired,,") -- status, no days
+							elseif lic.expiration_date /= Void then
+								l_export.append_character (',') -- status
+								l_export.append (lic.days_remaining.out)
+								l_export.append_character (',') -- days
+							else
+								l_export.append ("?,,") -- no status, no days
+							end
+							if attached {ES_CLOUD_USER} es_cloud_api.user_for_license (lic) as l_lic_user then
+								l_export.append_character ('%"')
+								l_export.append (l_lic_user.cms_user.name)
+								l_export.append_character ('%"')
+								l_export.append_character (',') -- name
+								if attached l_lic_user.cms_user.email as l_email then
+									l_export.append (l_email)
+								end
+								l_export.append_character (',') -- email
+								if attached l_lic_user.cms_user.profile_name as l_profilename then
+									l_export.append_character ('%"')
+									l_export.append (l_profilename)
+									l_export.append_character ('%"')
+								end
+								l_export.append_character (',') -- profilename
+							else
+								l_export.append_character (',') -- name
+								l_export.append_character (',') -- email
+								l_export.append_character (',') -- profilename
+							end
+							l_export.append_character ('%N')
+						end
+					elseif
+						l_all_expired and then
+						p_action.same_string (form_submit_label_send_message_for_expired_licenses)
+					then
+						es_cloud_api.send_message_to_expired_licenses (l_licenses)
+					elseif
+						l_all_expired_soon and then
+						p_action.same_string (form_submit_label_send_message_for_soon_expired_licenses)
+					then
+						es_cloud_api.send_message_to_licenses_expiring_soon (l_licenses)
 					end
 
 					create s.make_from_string ("<h1>Action: " + html_encoded (p_action.string_representation) + "</h1>%N")
@@ -535,10 +745,38 @@ feature -- Execution
 						l_choices.add_option (l_ch)
 					end
 					fset.extend (l_choices)
-
 					create l_submit.make_with_text ("group_action", "Change Plan")
 					fset.extend (l_submit)
 
+
+					if l_all_expired then
+						create fset.make
+						fset.set_legend ("Expired license(s)")
+						f.extend (fset)
+						create l_submit.make_with_text ("group_action", form_submit_label_send_message_for_expired_licenses)
+						fset.extend (l_submit)
+					end
+
+					if l_all_expired_soon then
+						create fset.make
+						fset.set_legend ("License(s) expiring soon")
+						fset.extend_html_text ("<em>in less than " + l_expiring_before_n_days.out + " days</em>")
+						fset.extend_hidden_input ("expiring_before_n_days", l_expiring_before_n_days.out)
+						f.extend (fset)
+						create l_submit.make_with_text ("group_action", form_submit_label_send_message_for_soon_expired_licenses)
+						fset.extend (l_submit)
+					end
+
+					create fset.make
+					fset.set_legend ("Export list to table")
+					f.extend (fset)
+					create l_submit.make_with_text ("group_action", form_submit_label_export_to_csv)
+					fset.extend (l_submit)
+					if l_export /= Void and then not l_export.is_whitespace then
+						fset.extend_html_text ("<pre>")
+						fset.extend_raw_text (l_export)
+						fset.extend_html_text ("</pre>")
+					end
 					f.append_to_html (r.wsf_theme, s)
 					r.set_main_content (s)
 					r.execute
@@ -549,5 +787,13 @@ feature -- Execution
 				send_access_denied (req, res)
 			end
 		end
+
+	form_submit_label_export_to_csv: STRING = "Export to CSV"
+
+	form_submit_label_send_message_for_expired_licenses: STRING = "Send messages for expired licenses"
+
+	form_submit_label_send_message_for_soon_expired_licenses: STRING = "Send messages for licenses about to expire"
+
+invariant
 
 end

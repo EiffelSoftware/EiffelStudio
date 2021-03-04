@@ -86,6 +86,7 @@ feature -- Execution
 					l_expiring_before_n_days_filter := 0
 				end
 			end
+
 			if l_plan_filter /= Void then
 				if l_plan_filter.is_case_insensitive_equal ("$") then
 					create s.make_from_string ("<h1>Licenses for priced plans</h1>")
@@ -163,8 +164,7 @@ feature -- Execution
 				s.append ("<br/>Currently listing licenses expiring before " + l_expiring_before_n_days_filter.out + " days.")
 			end
 
-				-- List of licenses
-			s.append ("<div class=%"es-licenses es-stats%">")
+				-- Filter licenses
 			if l_plan_filter /= Void then
 				if l_plan_filter.is_case_insensitive_equal ("$") then
 					lics := es_cloud_api.licenses
@@ -222,6 +222,10 @@ feature -- Execution
 				end
 			end
 
+				-- List of licenses
+			s.append ("<div class=%"es-licenses es-stats%">")
+
+
 			if lics /= Void and then not lics.is_empty then
 				s.append ("<div class=%"count%">Count="+ lics.count.out + "</div>")
 				across
@@ -234,6 +238,10 @@ feature -- Execution
 				end
 			end
 			s.append ("</div>")
+
+			if api.has_permission ({ES_CLOUD_MODULE}.perm_manage_es_licenses) then
+				s.append ("<div><a class=%"button%" href=%"" + api.location_url (es_cloud_api.admin_licenses_web_location, Void) + "%">Admin licenses</a></div>")
+			end
 
 			r.set_main_content (s)
 			r.execute

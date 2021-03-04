@@ -78,8 +78,11 @@ feature -- Conversion
 
 			create l_table_inspector.register (({detachable STRING_TABLE [STRING_8]}).name)
 			create l_table_inspector.register (({detachable STRING_TABLE [STRING_32]}).name)
+			create l_table_inspector.register (({detachable STRING_TABLE [IMMUTABLE_STRING_8]}).name)
+			create l_table_inspector.register (({detachable STRING_TABLE [IMMUTABLE_STRING_32]}).name)
 			create l_table_inspector.register (({detachable STRING_TABLE [READABLE_STRING_8]}).name)
 			create l_table_inspector.register (({detachable STRING_TABLE [READABLE_STRING_32]}).name)
+			create l_table_inspector.register (({detachable STRING_TABLE [READABLE_STRING_GENERAL]}).name)
 			tpl.get_structure
 			tpl.get_output
 			l_table_inspector.unregister
@@ -93,6 +96,6 @@ feature -- Conversion
 		end
 
 note
-	copyright: "2011-2020, Jocelyn Fiat, Javier Velilla, Eiffel Software and others"
+	copyright: "2011-2021, Jocelyn Fiat, Javier Velilla, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 end

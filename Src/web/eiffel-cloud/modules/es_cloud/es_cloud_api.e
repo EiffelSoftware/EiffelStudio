@@ -512,7 +512,6 @@ feature -- Emailing
 		local
 			e: CMS_EMAIL
 			res: PATH
-			s: STRING_8
 			msg: READABLE_STRING_8
 			sub: STRING_8
 			p: INTEGER
@@ -549,7 +548,7 @@ feature -- Emailing
 					if msg.starts_with_general ("Subject:") then
 						p := msg.index_of ('%N', 1)
 						if p > 0 then
-							sub := msg.head (p - 1)
+							sub := msg.head (p - 1).to_string_8
 							msg := msg.substring (p + 1, msg.count)
 							sub.right_adjust
 							sub.remove_head (("Subject:").count)
@@ -594,7 +593,6 @@ feature -- Emailing
 		local
 			e: CMS_EMAIL
 			res: PATH
-			s: STRING_8
 			msg: READABLE_STRING_8
 			sub: STRING_8
 			p: INTEGER
@@ -632,7 +630,7 @@ feature -- Emailing
 					if msg.starts_with_general ("Subject:") then
 						p := msg.index_of ('%N', 1)
 						if p > 0 then
-							sub := msg.head (p - 1)
+							sub := msg.head (p - 1).to_string_8
 							msg := msg.substring (p + 1, msg.count)
 							sub.right_adjust
 							sub.remove_head (("Subject:").count)
@@ -1395,7 +1393,7 @@ feature -- Email processing
 				if msg.starts_with_general ("Subject:") then
 					p := msg.index_of ('%N', 1)
 					if p > 0 then
-						sub := msg.head (p - 1)
+						sub := msg.head (p - 1).to_string_8
 						msg := msg.substring (p + 1, msg.count)
 						sub.right_adjust
 						sub.remove_head (("Subject:").count)

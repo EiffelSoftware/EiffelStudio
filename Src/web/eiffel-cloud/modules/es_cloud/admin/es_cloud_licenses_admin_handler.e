@@ -671,7 +671,7 @@ feature -- Execution
 								l_export.append_character ('%"')
 								l_export.append_character (',') -- name
 								if attached l_lic_user.cms_user.email as l_email then
-									l_export.append (l_email)
+									l_export.append_string_general (l_email)
 								end
 								l_export.append_character (',') -- email
 								if attached l_lic_user.cms_user.profile_name as l_profilename then

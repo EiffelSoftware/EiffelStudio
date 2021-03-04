@@ -528,6 +528,7 @@ feature -- Emailing
 					tpl.set_value (l_license.plan.name, "license_plan_name")
 					tpl.set_value (l_license.plan.title_or_name, "license_plan_title")
 					tpl.set_value (l_license.key, "license_key")
+					tpl.set_value (module.license_location (l_license) , "license_key_url")
 					if vars /= Void then
 						across
 							vars as ic
@@ -610,6 +611,7 @@ feature -- Emailing
 					tpl.set_value (l_license.plan.name, "license_plan_name")
 					tpl.set_value (l_license.plan.title_or_name, "license_plan_title")
 					tpl.set_value (l_license.key, "license_key")
+					tpl.set_value (module.license_location (l_license) , "license_key_url")
 					if vars /= Void then
 						across
 							vars as ic
@@ -1368,6 +1370,7 @@ feature -- Email processing
 				tpl.set_value (a_license.plan.name, "license_plan_name")
 				tpl.set_value (a_license.plan.title_or_name, "license_plan_title")
 				tpl.set_value (a_license.key, "license_key")
+				tpl.set_value (module.license_location (a_license) , "license_key_url")
 				if vars /= Void then
 					across
 						vars as ic
@@ -1429,6 +1432,7 @@ feature -- Email processing
 				tpl.set_value (a_license.plan.name, "license_plan_name")
 				tpl.set_value (a_license.plan.title_or_name, "license_plan_title")
 				tpl.set_value (a_license.key, "license_key")
+				tpl.set_value (module.license_location (a_license) , "license_key_url")
 				if a_user /= Void then
 					tpl.set_value (a_user, "user")
 					tpl.set_value (a_user.email, "user_email")
@@ -1484,6 +1488,7 @@ feature -- Email processing
 				tpl.set_value (a_license, "license")
 				tpl.set_value (a_license.expiration_date, "expiration_date")
 				tpl.set_value (a_license.key, "license_key")
+				tpl.set_value (module.license_location (a_license) , "license_key_url")
 				if a_user /= Void then
 					tpl.set_value (a_user, "user")
 					tpl.set_value (a_user.email, "user_email")

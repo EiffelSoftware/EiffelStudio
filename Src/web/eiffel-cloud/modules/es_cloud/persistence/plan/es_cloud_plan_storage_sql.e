@@ -736,6 +736,7 @@ feature {NONE} -- Queries: licenses
 			LEFT JOIN es_licenses_users ON lic.lid = es_licenses_users.lid
 			LEFT JOIN es_licenses_emails ON lic.lid = es_licenses_emails.lid
 			LEFT JOIN es_licenses_orgs ON lic.lid = es_licenses_orgs.lid
+			ORDER BY lic.creation DESC
 			;
 		]"
 
@@ -750,6 +751,7 @@ feature {NONE} -- Queries: licenses
 			LEFT JOIN es_licenses_emails ON lic.lid = es_licenses_emails.lid
 			LEFT JOIN es_licenses_orgs ON lic.lid = es_licenses_orgs.lid
 			WHERE lic.pid=:pid
+			ORDER BY lic.creation DESC
 			;
 		]"
 

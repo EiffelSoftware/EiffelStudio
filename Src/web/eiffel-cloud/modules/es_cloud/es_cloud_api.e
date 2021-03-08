@@ -1539,7 +1539,6 @@ feature -- Email processing
 	notify_error (a_error_title: READABLE_STRING_8; a_error_message: detachable READABLE_STRING_8)
 		local
 			e: CMS_EMAIL
-			res: PATH
 			s: STRING_8
 		do
 			create s.make_empty;

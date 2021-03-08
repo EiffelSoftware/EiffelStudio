@@ -325,10 +325,14 @@ feature -- Hook
 							l_is_cycle := False
 						else
 							check should_nor_occur: False end
-							-- Missing information, but keep it as a cycle
-							-- l_is_cycle := False
+								-- Missing information, but keep it as a cycle
+								-- l_is_cycle := False
+
+								-- FIXME: Assume it is monthly cycle
+							api.save_license_with_duration_extension (lic, 0, 1, 0)
 
 							api.cms_api.log_error ({ES_CLOUD_MODULE}.name, "ISSUE: Commit cart#" + utf_8_encoded (a_cart.identifier) + " (order#" + utf_8_encoded (a_order.name) + "): unable to determine nature (onetime, monthly,...)", Void)
+							api.notify_error ("Issue with Commit cart#" + utf_8_encoded (a_cart.identifier) + " (order#" + utf_8_encoded (a_order.name) + "): unable to determine nature (onetime, monthly,...)", a_cart.out)
 						end
 					else
 						if a_order.is_yearly (0) then
@@ -343,10 +347,14 @@ feature -- Hook
 							l_is_cycle := False
 						else
 							check should_nor_occur: False end
-							-- Missing information, but keep it as a cycle
-							-- l_is_cycle := False
+								-- Missing information, but keep it as a cycle
+								-- l_is_cycle := False
+
+								-- FIXME: Assume it is monthly cycle
+							api.save_license_with_duration_extension (lic, 0, 1, 0)
 
 							api.cms_api.log_error ({ES_CLOUD_MODULE}.name, "ISSUE: Commit order#" + utf_8_encoded (a_order.name) + "(cart#" + utf_8_encoded (a_cart.identifier) + "): unable to determine nature (onetime, monthly,...)", Void)
+							api.notify_error ("Issue with Commit order#" + utf_8_encoded (a_order.name) + "(cart#" + utf_8_encoded (a_cart.identifier) + "): unable to determine nature (onetime, monthly,...)", a_order.out)
 						end
 					end
 					if l_is_cycle then

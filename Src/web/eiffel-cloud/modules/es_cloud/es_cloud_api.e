@@ -41,7 +41,12 @@ feature {NONE} -- Initialization
 				if attached cfg.resolved_text_item ("api.secret") as s then
 					config.set_api_secret (s)
 				end
-
+				if attached cfg.resolved_text_item ("shop.provider_name") as s then
+					config.set_shop_provider_name (s)
+				end
+				if attached cfg.resolved_text_item ("shop.additional_notification_email") as s then
+					config.set_additional_notification_email (s)
+				end
 				if attached cfg.resolved_text_item ("session.expiration_delay") as s then
 					config.session_expiration_delay := s.to_integer
 				end
@@ -1473,6 +1478,9 @@ feature -- Email processing
 				l_info.append (a_email_addr)
 			end
 			e := cms_api.new_html_email (cms_api.setup.site_notification_email, "[NOTIF] New " + utf_8_encoded (a_license.plan.title_or_name) + " EiffelStudio license " + utf_8_encoded (a_license.key) + l_info, msg)
+			if attached config.additional_notification_email as l_addr then
+				e.add_cc_address (l_addr)
+			end
 			cms_api.process_email (e)
 		end
 
@@ -1522,6 +1530,30 @@ feature -- Email processing
 				msg := s
 			end
 			e := cms_api.new_html_email (cms_api.setup.site_notification_email, "[NOTIF] Extended EiffelStudio license " + utf_8_encoded (a_license.key), msg)
+			if attached config.additional_notification_email as l_addr then
+				e.add_cc_address (l_addr)
+			end
+			cms_api.process_email (e)
+		end
+
+	notify_error (a_error_title: READABLE_STRING_8; a_error_message: detachable READABLE_STRING_8)
+		local
+			e: CMS_EMAIL
+			res: PATH
+			s: STRING_8
+		do
+			create s.make_empty;
+			s.append ("ERROR: " + a_error_title + "%N")
+			if a_error_message /= Void then
+				s.append ("Description:%N")
+				s.append (a_error_message)
+				s.append ("%N")
+			end
+			s.append ("%NNotification from site " + cms_api.site_url + " .%N")
+			e := cms_api.new_html_email (cms_api.setup.site_notification_email, "[ERROR] " + a_error_title, s)
+			if attached config.additional_notification_email as l_addr then
+				e.add_cc_address (l_addr)
+			end
 			cms_api.process_email (e)
 		end
 

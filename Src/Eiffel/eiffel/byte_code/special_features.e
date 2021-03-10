@@ -12,9 +12,8 @@ class SPECIAL_FEATURES
 
 inherit
 	BYTE_CONST
-
 	SHARED_INCLUDE
-
+	SHARED_TYPES
 	SHARED_WORKBENCH
 
 feature -- Access
@@ -29,10 +28,10 @@ feature -- Access
 				if c_type_table.found then
 					function_type := c_type_table.found_item
 					if target_type.is_character_32 then
-							-- Do not inline `lower', `upper' on CHARACTER 32 because the code is only
-							-- provided in the Eiffel code.
+							-- Do not inline "lower", "upper", "is_space" on CHARACTER_32
+							-- because the code is not generated inline.
 						inspect function_type
-						when lower_type, upper_type then
+						when lower_type, upper_type, is_space_type then
 						else
 							Result := True
 						end
@@ -874,20 +873,21 @@ feature {NONE} -- C code generation
 
 	generate_is_space (buffer: GENERATION_BUFFER;
 			basic_type: BASIC_A; target: REGISTRABLE)
-
 			-- Generate fast wrapper for call on `is_space' of CHARACTER.
 		require
 			buffer_not_void: buffer /= Void
 			target_not_void: target /= Void
 			character_type: type_of (basic_type) = character_type_id
 		do
-			buffer.put_string ("EIF_TEST(isspace(")
+			buffer.put_string ("eif_builtin_CHARACTER_8_is_space__")
+			{BUILT_IN_EXTENSION_I}.append_type_name (basic_type, system.byte_context.context_class_type, buffer)
+			buffer.put_character ('_')
+			{BUILT_IN_EXTENSION_I}.append_type_name (boolean_type, system.byte_context.context_class_type, buffer)
+			buffer.put_character ('(')
 			target.print_register
 			buffer.put_character (')')
-			buffer.put_character (')')
-
-				-- Add `ctype.h' for C compilation where `isspace' is declared.
-			shared_include_queue_put ({PREDEFINED_NAMES}.ctype_header_name_id)
+				-- Add "eif_built_in.h" for C compilation where all output functions are declared.
+			shared_include_queue_put ({PREDEFINED_NAMES}.eif_built_in_header_name_id)
 		end
 
 	generate_comparison (buffer: GENERATION_BUFFER; basic_type: BASIC_A; target: REGISTRABLE; parameter: PARAMETER_BL)
@@ -1647,7 +1647,7 @@ feature {NONE} -- Type information
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2020, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2021, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

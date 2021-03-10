@@ -161,6 +161,11 @@ inherit
 
 	INTERNAL_COMPILER_STRING_EXPORTER
 
+	CHARACTER_PROPERTY
+		rename
+			make as make_character_property
+		end
+
 create
 	make
 
@@ -171,6 +176,7 @@ feature {NONE} -- Initialization
 		require
 			out_stream_ready: a_out_stream /= Void
 		do
+			make_character_property
 			out_stream := a_out_stream
 			indent := ""
 			set_will_process_leading_leaves (True)
@@ -2379,7 +2385,7 @@ feature {NONE} -- Status report
 			-- Is `c` a white space character?
 			-- If yes, such a character can be safely removed when it appears at the end of a line.
 		do
-			Result := c.is_space and then not new_line_chars.has (c)
+			Result := is_space (c) and then not new_line_chars.has (c)
 		end
 
 invariant

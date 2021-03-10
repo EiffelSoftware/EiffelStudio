@@ -2389,6 +2389,7 @@ test	library-arguments-command-line-start	lib046 tcf pass library arguments comm
 test	library-sortable-array-empty-search	lib047 tcf pass library
 test	character_8-as_lower-as_upper		lib048 tcf pass library character unicode
 test	character-to_hexa_digit			lib049 tcf pass library character unicode
+test	library-space-character			lib050 tcf pass library character unicode space
 
 test	utf-16-basics			utf001	tcf pass library unicode
 test	utf-8-basics			utf002	tcf pass library unicode

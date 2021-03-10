@@ -2,7 +2,7 @@
 	description: "Declarations for `built_in` externals."
 	date:		"$Date$"
 	revision:	"$Revision$"
-	copyright:	"Copyright (c) 1985-2020, Eiffel Software."
+	copyright:	"Copyright (c) 1985-2021, Eiffel Software."
 	license:	"GPL version 2 see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"Commercial license is available at http://www.eiffel.com/licensing"
 	copying: "[
@@ -81,8 +81,10 @@ extern "C" {
 /* CHARACTER_8 class */
 RT_LNK EIF_CHARACTER_8 eif_CHARACTER_8_as_lower_table [];
 RT_LNK EIF_CHARACTER_8 eif_CHARACTER_8_as_upper_table [];
+RT_LNK EIF_BOOLEAN eif_CHARACTER_8_is_space_table [];
 #define eif_builtin_CHARACTER_8_as_lower__c1_c1(c)	(eif_CHARACTER_8_as_lower_table [(c)])
 #define eif_builtin_CHARACTER_8_as_upper__c1_c1(c)	(eif_CHARACTER_8_as_upper_table [(c)])
+#define eif_builtin_CHARACTER_8_is_space__c1_b(c)	(eif_CHARACTER_8_is_space_table [(c)])
 
 /* EXCEPTION_MANAGER class */
 #define eif_builtin_ISE_EXCEPTION_MANAGER_developer_raise__i4_p_p_(code, meaning, message)			draise(code, meaning, message)

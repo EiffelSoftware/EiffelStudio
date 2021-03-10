@@ -2,7 +2,7 @@
 	description:	"Manipulations with strings and string objects."
 	date:		"$Date$"
 	revision:	"$Revision$"
-	copyright:	"Copyright (c) 2020, Eiffel Software."
+	copyright:	"Copyright (c) 2020-2021, Eiffel Software."
 	license:	"GPL version 2 see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"Commercial license is available at http://www.eiffel.com/licensing"
 	copying: "[
@@ -127,6 +127,34 @@ rt_public EIF_CHARACTER_8 eif_CHARACTER_8_as_upper_table [] =
 	"\320\321\322\323\324\325\326\327\330\331\332\333\334\335\336\337"
 	"\300\301\302\303\304\305\306\307\310\311\312\313\314\315\316\317"
 	"\320\321\322\323\324\325\326\367\330\331\332\333\334\335\336\377";
+
+/*
+doc:	<attribute name="eif_CHARACTER_8_is_space_table" return_type="EIF_BOOLEAN" export="public">
+doc:		<summary>`is_space` status for CHARACTER_8.</summary>
+doc:		<access>Read</access>
+doc:		<thread_safety>Safe: read only.</thread_safety>
+doc:		<synchronization>None.</synchronization>
+doc:	</attribute>
+*/
+rt_public EIF_BOOLEAN eif_CHARACTER_8_is_space_table [] = {
+	/*      	0, 1, 2, 3, 4, 5, 6, 7, 8, 9, A, B, C, D, E, F, */
+	/* 0x */	0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 0, 0, /* 0x09, 0x0A, 0x0B, 0x0C, 0x0D */
+	/* 1x */	0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, /* 0x1C, 0x1D, 0x1E, 0x1F */
+	/* 2x */	1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, /* 0x20 */
+	/* 3x */	0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+	/* 4x */	0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+	/* 5x */	0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+	/* 6x */	0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+	/* 7x */	0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+	/* 8x */	0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, /* 0x85 */
+	/* 9x */	0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+	/* Ax */	1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, /* 0xA0 */
+	/* Bx */	0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+	/* Cx */	0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+	/* Dx */	0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+	/* Ex */	0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+	/* Fx */	0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
+	};
 
 /*
 doc:</file>

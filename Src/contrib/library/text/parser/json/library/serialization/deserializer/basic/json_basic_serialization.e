@@ -72,6 +72,15 @@ feature -- Settings change
 			serialization.set_compact_printing
 		end
 
+	use_reflector_serializer (a_is_type_name_included: BOOLEAN)
+			-- Use reflection mechanism to serialize object structure,
+			-- include type name if `a_is_type_name_included` is True.
+			-- note: it will not deserialize automatically such serialization.
+		do
+			serialization.register (create {JSON_REFLECTOR_SERIALIZER}, {ANY})
+			serialization.context.serializer_context.is_type_name_included := a_is_type_name_included
+		end
+
 feature -- Status report
 
 	has_deserialization_error: BOOLEAN
@@ -136,6 +145,6 @@ invariant
 	serialization /= Void
 
 note
-	copyright: "2010-2018, Javier Velilla, Jocelyn Fiat, Eiffel Software and others https://github.com/eiffelhub/json."
+	copyright: "2010-2021, Javier Velilla, Jocelyn Fiat, Eiffel Software and others https://github.com/eiffelhub/json."
 	license: "https://github.com/eiffelhub/json/blob/master/License.txt"
 end

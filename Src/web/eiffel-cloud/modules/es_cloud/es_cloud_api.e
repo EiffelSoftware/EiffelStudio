@@ -1478,10 +1478,11 @@ feature -- Email processing
 				l_info.append (a_email_addr)
 			end
 			e := cms_api.new_html_email (cms_api.setup.site_notification_email, "[NOTIF] New " + utf_8_encoded (a_license.plan.title_or_name) + " EiffelStudio license " + utf_8_encoded (a_license.key) + l_info, msg)
-			if attached config.additional_notification_email as l_addr then
-				e.add_cc_address (l_addr)
-			end
 			cms_api.process_email (e)
+			if attached config.additional_notification_email as l_addr then
+				e := cms_api.new_html_email (l_addr, "[NOTIF] New " + utf_8_encoded (a_license.plan.title_or_name) + " EiffelStudio license " + utf_8_encoded (a_license.key) + l_info, msg)
+				cms_api.process_email (e)
+			end
 		end
 
 	notify_extended_license (a_user: detachable CMS_USER; a_email_addr: detachable READABLE_STRING_8; a_license: ES_CLOUD_LICENSE)
@@ -1530,10 +1531,11 @@ feature -- Email processing
 				msg := s
 			end
 			e := cms_api.new_html_email (cms_api.setup.site_notification_email, "[NOTIF] Extended EiffelStudio license " + utf_8_encoded (a_license.key), msg)
-			if attached config.additional_notification_email as l_addr then
-				e.add_cc_address (l_addr)
-			end
 			cms_api.process_email (e)
+			if attached config.additional_notification_email as l_addr then
+				e := cms_api.new_html_email (l_addr, "[NOTIF] Extended EiffelStudio license " + utf_8_encoded (a_license.key), msg)
+				cms_api.process_email (e)
+			end
 		end
 
 	notify_error (a_error_title: READABLE_STRING_8; a_error_message: detachable READABLE_STRING_8)
@@ -1550,10 +1552,11 @@ feature -- Email processing
 			end
 			s.append ("%NNotification from site " + cms_api.site_url + " .%N")
 			e := cms_api.new_html_email (cms_api.setup.site_notification_email, "[ERROR] " + a_error_title, s)
-			if attached config.additional_notification_email as l_addr then
-				e.add_cc_address (l_addr)
-			end
 			cms_api.process_email (e)
+			if attached config.additional_notification_email as l_addr then
+				e := cms_api.new_html_email (l_addr, "[ERROR] " + a_error_title, s)
+				cms_api.process_email (e)
+			end
 		end
 
 note

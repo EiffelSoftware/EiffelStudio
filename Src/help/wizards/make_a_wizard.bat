@@ -32,7 +32,7 @@ copy/b %EIFFEL_SRC%\help\wizards\wizard.rc .
 echo -----------------------------------------------------------------
 echo ------- Copying generated executable file into Delivery ---------
 echo -----------------------------------------------------------------
-copy/b wizard.exe %DELIVERY%\studio\wizards\%1\%2\spec\%ISE_PLATFORM%
+copy /b %TEMP%\%3\EIFGENs\wizard\F_code\wizard.exe %DELIVERY%\studio\wizards\%1\%2\spec\%ISE_PLATFORM%
 cd %TEMP%
 popd
 echo -----------------------------------------------------------------

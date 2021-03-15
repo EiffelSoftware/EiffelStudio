@@ -79,7 +79,9 @@
 			<Directory Id="Dir.gcc" Name="gcc"/>
 			<Directory Id="Dir.Core.examples" Name="examples"/>
 			<Directory Id="Dir.Core.contrib" Name="contrib">
-				<Directory Id="Dir.Core.contrib.library.gobo" Name="gobo"/>
+				<Directory Id="Dir.Core.contrib.library" Name="library">
+					<Directory Id="Dir.Core.contrib.library.gobo" Name="gobo"/>
+				</Directory>
 			</Directory>
 			<Directory Id="Dir.Core.library" Name="library"/>
 			<Directory Id="Dir.Core.unstable" Name="unstable"/>
@@ -226,7 +228,11 @@
 				<ComponentGroupRef Id="Core.contrib"/>
 			</Feature>
 
-			<Feature Id="Contrib_gobo_feature" Title="Gobo" TypicalDefault="install" Level="1" Display="hidden">
+			<Feature Id="Contrib_library_feature" Title="Contrib_library" TypicalDefault="install" Level="1" Display="hidden">
+				<ComponentGroupRef Id="Core.contrib.library"/>
+			</Feature>
+
+			<Feature Id="Contrib_library_gobo_feature" Title="Gobo" TypicalDefault="install" Level="1" Display="hidden">
 				<ComponentGroupRef Id="Core.contrib.library.gobo"/>
 			</Feature>
 

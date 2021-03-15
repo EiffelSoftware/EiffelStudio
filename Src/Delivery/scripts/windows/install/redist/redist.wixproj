@@ -68,6 +68,36 @@
     <VerboseOutput>False</VerboseOutput>
     <OutputPath>bin\studio_ent_x86\</OutputPath>
   </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)' == 'studio_branded_x64' ">
+    <OutputName>Redist64</OutputName>
+    <IntermediateOutputPath>obj\x64\</IntermediateOutputPath>
+    <DefineConstants>x64;EiffelEnvision;Source=c:\test_environment</DefineConstants>
+    <IncludeSearchPaths>
+    </IncludeSearchPaths>
+    <Pedantic>False</Pedantic>
+    <ShowSourceTrace>False</ShowSourceTrace>
+    <SuppressSchemaValidation>False</SuppressSchemaValidation>
+    <SuppressSpecificWarnings>
+    </SuppressSpecificWarnings>
+    <TreatWarningsAsErrors>False</TreatWarningsAsErrors>
+    <VerboseOutput>False</VerboseOutput>
+    <OutputPath>bin\studio_branded_x64\</OutputPath>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)' == 'studio_branded_x86' ">
+    <OutputName>Redist</OutputName>
+    <IntermediateOutputPath>obj\x86\</IntermediateOutputPath>
+    <DefineConstants>Debug;x86;EiffelEnvision;Source=c:\test_environment</DefineConstants>
+    <IncludeSearchPaths>
+    </IncludeSearchPaths>
+    <Pedantic>False</Pedantic>
+    <ShowSourceTrace>False</ShowSourceTrace>
+    <SuppressSchemaValidation>False</SuppressSchemaValidation>
+    <SuppressSpecificWarnings>
+    </SuppressSpecificWarnings>
+    <TreatWarningsAsErrors>False</TreatWarningsAsErrors>
+    <VerboseOutput>False</VerboseOutput>
+    <OutputPath>bin\studio_branded_x86\</OutputPath>
+  </PropertyGroup>  
   <ItemGroup>
     <Compile Include="Redist.wxs" />
   </ItemGroup>

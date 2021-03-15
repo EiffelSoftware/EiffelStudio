@@ -212,8 +212,12 @@
 				<?ifdef Enterprise ?>
 					<ComponentGroupRef Id="enterprise_ec"/>
 				<?else?>
-					<ComponentGroupRef Id="standard_ec"/>
-				<?endif?>
+					<?ifdef Branded ?>
+						<ComponentGroupRef Id="branded_ec"/>
+					<?else?>
+						<ComponentGroupRef Id="standard_ec"/>
+					<?endif?>
+				<?endif?>						
 			</Feature>
 
 			<Feature Id="Examples_feature" Title="Examples" TypicalDefault="install" Level="1" Display="hidden">

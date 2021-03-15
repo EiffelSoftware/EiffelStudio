@@ -138,6 +138,12 @@ iff "%NO_ENTERPRISE_BUILD%" NEQ "True" then
 	fullrd %INIT_DIR%\install\bin\studio_ent_%WINNAME%
 	espawn -u:%ISE_C_COMPILER_VER% "nmake /nologo enterprise_%WINNAME"
 	safe_copy %INIT_DIR%\install\bin\studio_ent_%WINNAME%\package.msi %INSTALL_DIR%\setups\enterprise\%STUDIO_NAME%_ent_%SVN_VERSION-%ISE_PLATFORM%.msi
+
+	remtrace Preparing Branded edition
+	remtrace Clean previous Branded WIX files
+	fullrd %INIT_DIR%\install\bin\studio_branded_%WINNAME%
+	espawn -u:%ISE_C_COMPILER_VER% "nmake /nologo branded_%WINNAME"
+	safe_copy %INIT_DIR%\install\bin\studio_branded_%WINNAME%\package.msi %INSTALL_DIR%\setups\branded\%STUDIO_NAME%_branded_%SVN_VERSION-%ISE_PLATFORM%.msi
 endiff
 
 iff "%NO_STANDARD_BUILD%" NEQ "True" then

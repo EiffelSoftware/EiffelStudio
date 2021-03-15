@@ -25,12 +25,14 @@ WXS = \
 	studio_examples.wxs \
 	studio_libraries.wxs \
 	studio_contrib.wxs \
+	studio_contrib_library.wxs \
+	studio_contrib_library_gobo.wxs \
 	studio_unstable.wxs \
 	studio_tools.wxs \
-	studio_gobo.wxs \
 	studio_gdiplus.wxs \
 	studio_ent_ec.wxs \
-	studio_std_ec.wxs
+	studio_std_ec.wxs \
+	studio_branded_ec.wxs
 
 WXS_STD = \
 	studio_gcc.wxs \
@@ -38,9 +40,10 @@ WXS_STD = \
 	studio_examples.wxs \
 	studio_libraries.wxs \
 	studio_contrib.wxs \
+	studio_contrib_library.wxs \
+	studio_contrib_library_gobo.wxs \
 	studio_unstable.wxs \
 	studio_tools.wxs \
-	studio_gobo.wxs \
 	studio_gdiplus.wxs \
 	studio_std_ec.wxs
 
@@ -50,12 +53,25 @@ WXS_ENT = \
 	studio_examples.wxs \
 	studio_libraries.wxs \
 	studio_contrib.wxs \
+	studio_contrib_library.wxs \
+	studio_contrib_library_gobo.wxs \
 	studio_unstable.wxs \
 	studio_tools.wxs \
-	studio_gobo.wxs \
 	studio_gdiplus.wxs \
 	studio_ent_ec.wxs
 
+WXS_BRANDED = \
+	studio_gcc.wxs \
+	studio_core.wxs \
+	studio_examples.wxs \
+	studio_libraries.wxs \
+	studio_contrib.wxs \
+	studio_contrib_library.wxs \
+	studio_contrib_library_gobo.wxs \
+	studio_unstable.wxs \
+	studio_tools.wxs \
+	studio_gdiplus.wxs \
+	studio_branded_ec.wxs
 
 build: $(WXS)
 
@@ -90,8 +106,22 @@ studio_libraries.wxs:
 studio_contrib.wxs:
 	$(HALLOW) $(HALLOW_FLAGS) "$(INSTALL_DIR)\EiffelStudio\contrib" \
 		-dr:"Dir.Core.contrib" \
-		-de:"\\EiffelStudio\\contrib\\library\\gobo$$" \
+		-de:"\\EiffelStudio\\contrib\\library$$" \
 		-g:"Core.contrib" -r -n:"Core.contrib." > $@.tmp
+	move $@.tmp $@
+
+studio_contrib_library.wxs:
+	$(HALLOW) $(HALLOW_FLAGS) "$(INSTALL_DIR)\EiffelStudio\contrib\library" \
+		-dr:"Dir.Core.contrib.library" \
+		-de:"\\EiffelStudio\\contrib\\library\\gobo$$" \
+		-g:"Core.contrib.library" -r -n:"Core.contrib.library." > $@.tmp
+	move $@.tmp $@
+
+studio_contrib_library_gobo.wxs:
+	$(HALLOW) $(HALLOW_FLAGS) "$(INSTALL_DIR)\EiffelStudio\contrib\library\gobo" \
+		-dr:"Dir.Core.contrib.library.gobo" \
+		-g:"Core.contrib.library.gobo" \
+		-r -n:"Core.contrib.library.gobo." > $@.tmp
 	move $@.tmp $@
 
 studio_unstable.wxs:
@@ -106,13 +136,6 @@ studio_tools.wxs:
 		-g:"Core.tools" -r -n:"Core.tools." > $@.tmp
 	move $@.tmp $@
 
-studio_gobo.wxs:
-	$(HALLOW) $(HALLOW_FLAGS) "$(INSTALL_DIR)\EiffelStudio\contrib\library\gobo" \
-		-dr:"Dir.Core.contrib.library.gobo" \
-		-g:"Core.contrib.library.gobo" \
-		-r -n:"Core.contrib.library.gobo." > $@.tmp
-	move $@.tmp $@
-
 studio_gdiplus.wxs:
 	$(HALLOW) $(HALLOW_FLAGS) "$(INSTALL_DIR)\releases" \
 		-dr:"Dir.Core.studio.spec.$$(var.IsePlatform).bin" -g:"gdiplus" -n:"gdiplus" \
@@ -122,6 +145,11 @@ studio_gdiplus.wxs:
 studio_ent_ec.wxs:
 	$(HALLOW) $(HALLOW_FLAGS) "$(INSTALL_DIR)\releases\enterprise_version" \
 		-dr:"Dir.Core.studio.spec.$$(var.IsePlatform).bin" -g:"enterprise_ec" -n:"Core." > $@.tmp
+	move $@.tmp $@
+
+studio_branded_ec.wxs:
+	$(HALLOW) $(HALLOW_FLAGS) "$(INSTALL_DIR)\releases\branded_version" \
+		-dr:"Dir.Core.studio.spec.$$(var.IsePlatform).bin" -g:"branded_ec" -n:"Core." > $@.tmp
 	move $@.tmp $@
 
 studio_std_ec.wxs:
@@ -138,11 +166,17 @@ studio_std_ec.wxs:
 enterprise_x86: $(WXS_ENT)
 	$(MSBUILD) $(MSBUILD_FLAGS) /p:Configuration=studio_ent_x86 /p:Platform=x86 ..\..\package.sln
 
+branded_x86: $(WXS_BRANDED)
+	$(MSBUILD) $(MSBUILD_FLAGS) /p:Configuration=studio_branded_x86 /p:Platform=x86 ..\..\package.sln
+
 standard_x86: $(WXS_STD)
 	$(MSBUILD) $(MSBUILD_FLAGS) /p:Configuration=studio_std_x86 /p:Platform=x86 ..\..\package.sln
 
 enterprise_x64: $(WXS_ENT)
 	$(MSBUILD) $(MSBUILD_FLAGS) /p:Configuration=studio_ent_x64 /p:Platform=x64 ..\..\package.sln
+
+branded_x64: $(WXS_BRANDED)
+	$(MSBUILD) $(MSBUILD_FLAGS) /p:Configuration=studio_branded_x64 /p:Platform=x64 ..\..\package.sln	
 
 standard_x64: $(WXS_STD)
 	$(MSBUILD) $(MSBUILD_FLAGS) /p:Configuration=studio_std_x64 /p:Platform=x64 ..\..\package.sln

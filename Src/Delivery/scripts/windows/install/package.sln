@@ -10,6 +10,8 @@ Global
 		Release|Any CPU = Release|Any CPU
 		studio_ent_x64|x64 = studio_ent_x64|x64
 		studio_ent_x86|x86 = studio_ent_x86|x86
+		studio_branded_x64|x64 = studio_branded_x64|x64
+		studio_branded_x86|x86 = studio_branded_x86|x86
 		studio_std_x64|x64 = studio_std_x64|x64
 		studio_std_x86|x86 = studio_std_x86|x86
 	EndGlobalSection
@@ -26,6 +28,10 @@ Global
 		{01A951F7-BA79-4006-8629-27FFCB510FF0}.studio_ent_x64|x64.Build.0 = studio_ent_x64|x64
 		{01A951F7-BA79-4006-8629-27FFCB510FF0}.studio_ent_x86|x86.ActiveCfg = studio_ent_x86|x86
 		{01A951F7-BA79-4006-8629-27FFCB510FF0}.studio_ent_x86|x86.Build.0 = studio_ent_x86|x86
+		{01A951F7-BA79-4006-8629-27FFCB510FF0}.studio_branded_x64|x64.ActiveCfg = studio_branded_x64|x64
+		{01A951F7-BA79-4006-8629-27FFCB510FF0}.studio_branded_x64|x64.Build.0 = studio_branded_x64|x64
+		{01A951F7-BA79-4006-8629-27FFCB510FF0}.studio_branded_x86|x86.ActiveCfg = studio_branded_x86|x86
+		{01A951F7-BA79-4006-8629-27FFCB510FF0}.studio_branded_x86|x86.Build.0 = studio_branded_x86|x86
 		{01A951F7-BA79-4006-8629-27FFCB510FF0}.studio_std_x64|x64.ActiveCfg = studio_std_x64|x64
 		{01A951F7-BA79-4006-8629-27FFCB510FF0}.studio_std_x64|x64.Build.0 = studio_std_x64|x64
 		{01A951F7-BA79-4006-8629-27FFCB510FF0}.studio_std_x86|x86.ActiveCfg = studio_std_x86|x86

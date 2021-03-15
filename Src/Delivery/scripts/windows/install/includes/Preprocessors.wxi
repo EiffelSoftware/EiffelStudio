@@ -26,8 +26,13 @@
         <?define Edition = "Enterprise"?>
         <?define LicenseFile = "enterprise.rtf"?>
       <?else?>
-        <?define Edition = "Standard"?>
-        <?define LicenseFile = "license.rtf"?>
+        <?ifdef Branded?>
+          <?define Edition = "Branded"?>
+          <?define LicenseFile = "branded.rtf"?>
+        <?else?>
+          <?define Edition = "Standard"?>
+          <?define LicenseFile = "license.rtf"?>
+        <?endif?>
       <?endif?>
       <?ifdef x64?>
         <?define ProductGuid = "01008516-4982-471D-86BF-7762AD16827C" ?>

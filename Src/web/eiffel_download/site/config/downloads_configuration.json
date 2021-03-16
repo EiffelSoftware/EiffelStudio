@@ -1,4 +1,4 @@
-{
+
         "mirror": "https://enterprise:udeief5w9mydgg9di5xy@ftp.eiffel.com/enterprise/",
         "products": [
                 {
@@ -20,64 +20,71 @@
         "cdkey": "68202-61840-31047-54832-19908-91794",
                                         "filename": "Eiffel_20.11_ent_105048-win64.msi",
                                         "platform": "win64",
-                                        "size": "158482557",
-                                        "hash": "166f46d012ff497e553df35ef33e4b2ea64d4ec678cc4d96132dafc238612cd7"
+                                        "size": "158519404",
+                                        "hash": "9446f86eefff6069e08c6aab10cc6c63bcc3c3b22f6f6e167be4ddb46f00bf18"
                                 }
                                 ,{
         "cdkey": "68202-61840-31047-54832-19908-91794",
                                         "filename": "Eiffel_20.11_ent_105048-win64.7z",
                                         "platform": "win64",
-                                        "size": "94795119",
-                                        "hash": "b6f294044674000f6a0a777795c41a5eace70689b010b8b19ea8936b7df6f4cb"
+                                        "size": "94780929",
+                                        "hash": "3cdccb4f870b225a6957648a8e5c3f5db6b19faf728ad528a196325d49659f39"
                                 }
                                 ,{
         "cdkey": "68202-61840-31047-54832-19908-91794",
                                         "filename": "Eiffel_20.11_ent_105048-windows.msi",
                                         "platform": "windows",
-                                        "size": "140129296",
-                                        "hash": "8df6569b3380393c71ffa9c8d61b10214052808ae51e76840e9de41c8543caea"
+                                        "size": "140157968",
+                                        "hash": "fb6ba35dd30e5ad8a1a0a4c430a9550ce57793986f79b41cb11bcdd10c260b40"
                                 }
                                 ,{
         "cdkey": "68202-61840-31047-54832-19908-91794",
                                         "filename": "Eiffel_20.11_ent_105048-windows.7z",
                                         "platform": "windows",
-                                        "size": "82992276",
-                                        "hash": "9d571b026beb7bf3650f17aea0de1adaf7e3a153b178643c6b6816e9e3f642d1"
+                                        "size": "82993370",
+                                        "hash": "0932e9ad9d3f714b554e26a6e0e97ec10f0ffee027429c0f5d038dea58515392"
                                 }
                                 ,{
         "cdkey": "68202-61840-31047-54832-19908-91794",
                                         "filename": "Eiffel_20.11_ent_105048-linux-x86-64.tar.bz2",
                                         "platform": "linux-x86-64",
-                                        "size": "110364794",
-                                        "hash": "544a49003e83ac7d41f9e5e83ad2440833ee0dda7d607fc0ac8af2367f8a7577"
+                                        "size": "110270131",
+                                        "hash": "923bf487f421e7fe7a195d9aedc97ccd491fa2b2af5ee133ad25482b877e4b4a"
                                 }
                                 ,{
         "cdkey": "68202-61840-31047-54832-19908-91794",
                                         "filename": "Eiffel_20.11_ent_105048-linux-x86.tar.bz2",
                                         "platform": "linux-x86",
-                                        "size": "109458871",
-                                        "hash": "b176a3766f1b24c33ebe3769c4bc9755d8a0c95c32125a2ad3d2ee6114f1c26d"
+                                        "size": "109559822",
+                                        "hash": "2c91ca9bc8c4f78f6342e753299d4f28675b2ad526cc070c0a83dc29b1ead1e2"
                                 }
                                 ,{
         "cdkey": "68202-61840-31047-54832-19908-91794",
                                         "filename": "Eiffel_20.11_ent_105048-macosx-x86-64.tar.bz2",
                                         "platform": "macosx-x86-64",
-                                        "size": "99710082",
-                                        "hash": "3e6da9bbdb86a469ae6484a06496fd32d65ff36f665ad2ee3e29e9eccb131882"
+                                        "size": "99610626",
+                                        "hash": "9d7362ef54106a7c2248cf8eebc17a34af0a7ecb3385ac294d1ca613a72a5f04"
+                                }
+                                ,{
+        "cdkey": "68202-61840-31047-54832-19908-91794",
+                                        "filename": "Eiffel_20.11_ent_105048-linux-armv6.tar.bz2",
+                                        "platform": "linux-armv6",
+                                        "size": "107891685",
+                                        "hash": "f28e64d4c88e43623ebb29b57994086cf109c7c48edf3792a93ebbbac71e3218"
                                 }
                                 ,{
         "cdkey": "68202-61840-31047-54832-19908-91794",
                                         "filename": "Eiffel_20.11_ent_105048-linux-armv7.tar.bz2",
                                         "platform": "linux-armv7",
-                                        "size": "104600130",
-                                        "hash": "5f2bafdf269788c160b6666d796792a9b8f1dd17899c7f04cc6e199c729e1d23"
+                                        "size": "104448309",
+                                        "hash": "8fa9de9dcc6cf05317429feb2334e50b6b85b129aa13a5f95e809657502d0c8d"
                                 }
                                 ,{
         "cdkey": "68202-61840-31047-54832-19908-91794",
                                         "filename": "Eiffel_20.11_ent_105048-freebsd-x86-64.tar.bz2",
                                         "platform": "freebsd-x86-64",
-                                        "size": "107184616",
-                                        "hash": "dd24bb5cc5ca2ecd55b140e6bb946582c79df614ce99887f37996c26865b2caf"
+                                        "size": "107165218",
+                                        "hash": "e68e629d7c6d702806c2c958f18e3696b9475654a6925894d4df0c5f1ad32433"
                                 }
                         ]
                 }

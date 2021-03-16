@@ -6,67 +6,67 @@
                         "version": "20.11 REV",
                         "number": "20.11",
                         "build": "105048",
-						"download_link_pattern": "${mirror}${name}/${number}/${build}/${filename}",
+                        "download_link_pattern": "${mirror}${name}/${number}/${build}/${filename}",
                         "download": [
                                 {
                                         "filename": "Eiffel_20.11_rev_105048-win64.msi",
                                         "platform": "win64",
-                                        "size": "158506296",
-                                        "hash": "3749c7f8900f2e8ce1bfed8304a3f8d2106ea5994c1f2ff5d30c2aaf8e8b8b1f"
+                                        "size": "158489895",
+                                        "hash": "d649148deea47d09982f581f0284bc4ccbf3f2790355a051b9c26e00a5087535"
                                 }
                                 ,{
                                         "filename": "Eiffel_20.11_rev_105048-win64.7z",
                                         "platform": "win64",
-                                        "size": "94763435",
-                                        "hash": "4e5d97ac603586df1a38e7411b1fb67ec9efd608f3037b6ab3bffc043ac680db"
+                                        "size": "94756415",
+                                        "hash": "dda9d9117f4135896144191c6db3f3514936a1c81c74375a64a69a559601cf7e"
                                 }
                                 ,{
                                         "filename": "Eiffel_20.11_rev_105048-windows.msi",
                                         "platform": "windows",
-                                        "size": "140092276",
-                                        "hash": "2872b5f7fe192dd8251a508a833cc928db9c001119c34ab5b1db8e20a1a30973"
+                                        "size": "140104564",
+                                        "hash": "5951291eb4fef76762aba70d544a93be153688e3e386c29b1b4357ad65842fd7"
                                 }
                                 ,{
                                         "filename": "Eiffel_20.11_rev_105048-windows.7z",
                                         "platform": "windows",
-                                        "size": "83007072",
-                                        "hash": "2c54444120c899188d909c3d6b3fcd446c4f95faa5e3e5f6b48ff78826ee301b"
+                                        "size": "82991412",
+                                        "hash": "49b4217b1706e0569300db87c8bf88b8a7d3552032f278f70c5dbe061754e459"
                                 }
                                 ,{
                                         "filename": "Eiffel_20.11_rev_105048-linux-x86-64.tar.bz2",
                                         "platform": "linux-x86-64",
-                                        "size": "108679428",
-                                        "hash": "89c10be23f9006c20b659e663895700b6277c92b0ad527c3ef54c87aa55aee1c"
+                                        "size": "108658229",
+                                        "hash": "90d9bcd613bc8880d076c653a6bdb204c160b611f64c05f3cdb4aed7aa97a2dd"
                                 }
                                 ,{
                                         "filename": "Eiffel_20.11_rev_105048-linux-x86.tar.bz2",
                                         "platform": "linux-x86",
-                                        "size": "107723555",
-                                        "hash": "4e80cfea5fe98b4ea4f3429a430b1fd7d888aeae9b14a7d0e6a2f41ad51b3f6f"
+                                        "size": "107836269",
+                                        "hash": "e766da8141973b9fbc6284756abb73f398e71304a0e558e8f73de92adef658c9"
                                 }
                                 ,{
                                         "filename": "Eiffel_20.11_rev_105048-macosx-x86-64.tar.bz2",
                                         "platform": "macosx-x86-64",
-                                        "size": "98496806",
-                                        "hash": "3979b1f98b65dda318148a4a06145a07a52d8c98bd5742c3b002d64666fdfbcf"
+                                        "size": "98335127",
+                                        "hash": "75594f79bb547ff7987e745aeee357856058fba0eafa2245cea2a254957672e7"
                                 }
                                 ,{
                                         "filename": "Eiffel_20.11_rev_105048-linux-armv6.tar.bz2",
                                         "platform": "linux-armv6",
-                                        "size": "106210039",
-                                        "hash": "26123466de5045d5400d033a6c556438857af7b8a8589ac4ab9f6742cd40f353"
+                                        "size": "106294682",
+                                        "hash": "91bc8dbf45f29ff61e01045ee1f1063a141edf94ab7c1b720b4abcafdd1d3ec5"
                                 }
                                 ,{
                                         "filename": "Eiffel_20.11_rev_105048-linux-armv7.tar.bz2",
                                         "platform": "linux-armv7",
-                                        "size": "103054744",
-                                        "hash": "ae4d550da571c09a294c3e1676858044c33c0e10dee085134e1eb425f7558a9f"
+                                        "size": "102980326",
+                                        "hash": "61f9df99629431ec999d061ae297bfeb1b04c5de07ca376ad19399a88b9b07bf"
                                 }
                                 ,{
                                         "filename": "Eiffel_20.11_rev_105048-freebsd-x86-64.tar.bz2",
                                         "platform": "freebsd-x86-64",
-                                        "size": "105664028",
-                                        "hash": "918ced05c43fe285a244f5f1d8ff38c7e6020d755eec004e70489b89ef7f38f5"
+                                        "size": "105574306",
+                                        "hash": "dbda36d59a9ae0d8ac60f6acefa5d6690fd7241e6483d034a0faf04550902a48"
                                 }
                         ]
                 }

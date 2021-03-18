@@ -37,7 +37,8 @@ docker run --rm \
         -e SVN_EIFFELSTUDIO_REPO=$SVN_EIFFELSTUDIO_REPO \
         -e SVN_EIFFELSTUDIO_REPO_REVISION=$SVN_EIFFELSTUDIO_REPO_REVISION \
         -e SVN_EIFFELSTUDIO_BRANCH=$SVN_EIFFELSTUDIO_BRANCH \
-	-e INCLUDE_ENTERPRISE=$include_enterprise \
+		-e INCLUDE_ENTERPRISE=$include_enterprise \
+		--user $(id -u):$(id -g) \
         ${docker_image_name}
 #docker rmi ${docker_image_name}
 

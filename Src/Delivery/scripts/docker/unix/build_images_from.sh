@@ -39,6 +39,7 @@ if [ -e "$porterpackage_archive" ]; then
 			-v ${porterpackage_archive}:/home/eiffel/deliv/porterpackage.tar \
 			-e PORTERPACKAGE_TAR=/home/eiffel/deliv/porterpackage.tar \
 			--network host \
+			--user $(id -u):$(id -g) \
 			${docker_image_name}
 		#docker rmi $docker_image_name 
 	else

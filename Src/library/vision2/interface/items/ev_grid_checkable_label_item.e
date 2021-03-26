@@ -16,7 +16,8 @@ inherit
 		redefine
 			implementation, create_implementation, initialize,
 			computed_initial_grid_label_item_layout, activate, deactivate,
-			is_in_default_state
+			is_in_default_state,
+			set_font
 		end
 
 create
@@ -88,6 +89,13 @@ feature -- Status
 		end
 
 feature -- Status setting
+
+	set_font (a_font: EV_FONT)
+			-- Assign `a_font' to `font'.
+		do
+			Precursor (a_font)
+			implementation.update_check_figure_size
+		end
 
 	enable_sensitive
 			-- Make object sensitive to user input
@@ -228,8 +236,11 @@ feature {NONE} -- Implementation
 
 feature {EV_GRID_LABEL_ITEM_I} -- Implementation
 
-	check_figure_size: INTEGER = 13
+	check_figure_size: INTEGER
 			-- The width/height of the check box.
+		do
+			Result := implementation.check_figure_size
+		end
 
 	check_figure_line_width: INTEGER = 1
 			-- The line width on the sign figure.
@@ -238,14 +249,17 @@ feature {EV_GRID_LABEL_ITEM_I} -- Implementation
 			-- <Precursor>
 		local
 			l_left_text_border: INTEGER
+			l_check_figure_size: INTEGER
 		do
 			Result := Precursor (a_width, a_height)
+			l_check_figure_size := check_figure_size
+
 				-- We do +1 for cosmetics reason.
 			Result.set_checkbox_x (left_border + 1)
 				-- We align the checkbox with the text.
-			Result.set_checkbox_y (Result.text_y + text_height // 2 - check_figure_size // 2)
+			Result.set_checkbox_y (Result.text_y + text_height // 2 - l_check_figure_size // 2)
 				-- We shift the pixmap by the size of the checkbox.
-			Result.set_pixmap_x (Result.checkbox_x + check_figure_size + spacing)
+			Result.set_pixmap_x (Result.checkbox_x + l_check_figure_size + spacing)
 				-- Calculate by how much the text has to go to right left.
 			if attached pixmap as l_pixmap then
 				l_left_text_border := Result.pixmap_x + l_pixmap.width + spacing
@@ -258,18 +272,18 @@ feature {EV_GRID_LABEL_ITEM_I} -- Implementation
 				Result.set_text_x (Result.text_x.max (l_left_text_border))
 			elseif is_left_aligned then
 					-- Move text to the right by the size of the checkbox.
-				Result.set_text_x (Result.text_x + check_figure_size + spacing)
+				Result.set_text_x (Result.text_x + l_check_figure_size + spacing)
 			else
 					-- Move text to the right by half the size of the checkbox since it is centered
 					-- but make sure we do not override the checkbox.
-				Result.set_text_x ((Result.text_x + (check_figure_size + spacing) // 2).max (l_left_text_border))
+				Result.set_text_x ((Result.text_x + (l_check_figure_size + spacing) // 2).max (l_left_text_border))
 			end
 				-- Adapt available text width by substracting the space used by the checkbox.
-			Result.set_available_text_width ((Result.available_text_width - check_figure_size - spacing).max (0))
+			Result.set_available_text_width ((Result.available_text_width - l_check_figure_size - spacing).max (0))
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2012, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2021, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

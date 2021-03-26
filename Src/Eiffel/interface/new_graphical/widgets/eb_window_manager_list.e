@@ -135,24 +135,18 @@ feature -- Observer pattern
 
 	on_item_removed (an_item: EB_WINDOW)
 			-- `an_item' has just been removed.
-		local
-			list_item_to_remove: EV_LIST_ITEM
 		do
 				-- Remove the list item that match `an_item' from the list.
-			list_item_to_remove ?= retrieve_item_by_data (an_item, True)
-			if list_item_to_remove /= void then
+			if attached {EV_LIST_ITEM} retrieve_item_by_data (an_item, True) as list_item_to_remove then
 				prune (list_item_to_remove)
 			end
 		end
 
 	on_item_changed (an_item: EB_WINDOW)
 			-- `an_item' has just changed.
-		local
-			list_item_to_change: EV_LIST_ITEM
 		do
 				-- Remove the list item that match `an_item' from the list.
-			list_item_to_change ?= retrieve_item_by_data (an_item, True)
-			if list_item_to_change /= void then
+			if attached {EV_LIST_ITEM} retrieve_item_by_data (an_item, True) as list_item_to_change then
 				list_item_to_change.set_text (an_item.title)
 			end
 		end
@@ -195,14 +189,12 @@ feature {NONE} -- Implementation
 
 	raise_selected
 			-- Raise Development window corresponding to selected item.
-		local
-			selected_window: EB_WINDOW
 		do
-			if selected_item /= Void then
-				selected_window ?= selected_item.data
-				if selected_window /= Void then
-					selected_window.show
-				end
+			if
+				attached selected_item as l_item and then
+				attached {EB_WINDOW} l_item.data as selected_window
+			then
+				selected_window.show
 			end
 		end
 
@@ -213,11 +205,9 @@ feature {NONE} -- Implementation
 			-- Context menu handler
 		local
 			l_menu: EV_MENU
-			l_window: EB_WINDOW
 			l_item: EV_MENU_ITEM
 		do
-			l_window ?= source_pebble
-			if l_window /= Void and then not l_window.destroyed then
+			if attached {EB_WINDOW} source_pebble as l_window and then not l_window.destroyed then
 				l_menu := l_window.new_menu
 				menu.wipe_out
 				from
@@ -235,7 +225,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2021, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
@@ -248,22 +238,22 @@ note
 			(available at the URL listed under "license" above).
 			
 			Eiffel Software's Eiffel Development Environment is
-			distributed in the hope that it will be useful,	but
+			distributed in the hope that it will be useful, but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
-			See the	GNU General Public License for more details.
+			See the GNU General Public License for more details.
 			
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,
-			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
+			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 		]"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 end -- class EB_WINDOW_MANAGER_LIST

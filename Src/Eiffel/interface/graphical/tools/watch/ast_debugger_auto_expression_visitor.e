@@ -429,19 +429,12 @@ feature {NONE} -- Generic Node Processing
 			-- `a_as': Abstract syntax node to process.
 		require
 			a_as_attached: a_as /= Void
-		local
-			l_static: STATIC_ACCESS_AS
-			l_id: ID_AS
 		do
-			l_id ?= a_as
-			if l_id /= Void then
+			if attached {ID_AS} a_as as l_id then
 				add_auto_span (l_id)
-			else
-				l_static ?= a_as
-				if l_static /= Void then
-					set_is_expression_instruction (True)
-					process_static_access_as (l_static)
-				end
+			elseif attached {STATIC_ACCESS_AS} a_as as l_static then
+				set_is_expression_instruction (True)
+				process_static_access_as (l_static)
 			end
 		end
 
@@ -573,7 +566,7 @@ feature {NONE} -- Auto Span Declaration
 			l_end_loc: LOCATION_AS
 
 			l_start_token, l_end_token: LEAF_AS
-			l_id_as: ID_AS
+
 			reg: ERT_TOKEN_REGION
 		do
 			l_start := start_as
@@ -591,8 +584,7 @@ feature {NONE} -- Auto Span Declaration
 			l_end_token := a_as.last_token (leaf_as_list)
 			if l_start_token /= Void and l_end_token /= Void then
 				if l_start_token = l_end_token then
-					l_id_as ?= l_start_token
-					if l_id_as /= Void then
+					if attached {ID_AS} l_start_token as l_id_as then
 						l_span.i_text := l_id_as.name
 					else
 						l_span.i_text := l_start_token.text (leaf_as_list)
@@ -731,7 +723,7 @@ feature {NONE} -- Implementation
 
 note
 	ca_ignore: "CA011", "CA011: too many arguments"
-	copyright:	"Copyright (c) 1984-2020, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2021, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

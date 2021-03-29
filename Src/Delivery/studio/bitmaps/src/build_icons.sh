@@ -381,6 +381,11 @@ SVGadd 10.svg $OVERLAY/target_sw.svg 15.svg
 SVGadd 10.svg $OVERLAY/refresh_sw.svg 16.svg
 # preferences
 SVGadd $RES/cog.svg $OVERLAY/verify_se.svg 17.svg
+#
+#[@source]
+#version control
+#18.svg
+ 
 # 
 ExitRow
 #----------------------------------------------------------------------------------

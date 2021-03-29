@@ -5,11 +5,11 @@
 ./build_icons.sh
 
 cd icons
-./build_svg_matrix.sh . ./icons.svg
-./build_svg_matrix.sh . ./icons_16x16.svg
-./build_svg_matrix.sh . ./icons_20x20.svg
-./build_svg_matrix.sh . ./icons_24x24.svg
-./build_svg_matrix.sh . ./icons_32x32.svg
+../build_svg_matrix.sh . ./icons.svg
+../build_svg_matrix.sh . ./icons_16x16.svg
+../build_svg_matrix.sh . ./icons_20x20.svg
+../build_svg_matrix.sh . ./icons_24x24.svg
+../build_svg_matrix.sh . ./icons_32x32.svg
 cd ..
 
 

@@ -1,0 +1,328 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg
+   xmlns:dc="http://purl.org/dc/elements/1.1/"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:xlink="http://www.w3.org/1999/xlink"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   inkscape:version="1.0 (4035a4fb49, 2020-05-01)"
+   sodipodi:docname="10.svg"
+   id="svg53"
+   version="1.1"
+   width="100"
+   viewBox="0 0 100 100"
+   height="100">
+  <metadata
+     id="metadata59">
+    <rdf:RDF>
+      <cc:Work
+         rdf:about="">
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type
+           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+        <dc:title></dc:title>
+      </cc:Work>
+    </rdf:RDF>
+  </metadata>
+  <defs
+     id="defs57">
+    <linearGradient
+       y2="9.738761"
+       x2="19.534246"
+       y1="25.097649"
+       x1="34.163204"
+       gradientTransform="matrix(1.1492603,0,0,0.99540827,-7.463018,-0.770413)"
+       gradientUnits="userSpaceOnUse"
+       id="linearGradient884"
+       xlink:href="#a"
+       inkscape:collect="always" />
+    <linearGradient
+       y2="9.738761"
+       x2="19.534246"
+       y1="25.097649"
+       x1="34.163204"
+       gradientTransform="matrix(1.1492603,0,0,0.99540827,-7.463018,-0.770413)"
+       gradientUnits="userSpaceOnUse"
+       id="linearGradient886"
+       xlink:href="#a"
+       inkscape:collect="always" />
+    <linearGradient
+       y2="9.738761"
+       x2="19.534246"
+       y1="25.097649"
+       x1="34.163204"
+       gradientTransform="matrix(1.1492603,0,0,0.99540827,-7.463018,-0.770413)"
+       gradientUnits="userSpaceOnUse"
+       id="linearGradient934"
+       xlink:href="#a"
+       inkscape:collect="always" />
+    <linearGradient
+       y2="9.738761"
+       x2="19.534246"
+       y1="25.097649"
+       x1="34.163204"
+       gradientTransform="matrix(1.1492603,0,0,0.99540827,-7.463018,-0.770413)"
+       gradientUnits="userSpaceOnUse"
+       id="linearGradient936"
+       xlink:href="#a"
+       inkscape:collect="always" />
+  </defs>
+  <sodipodi:namedview
+     inkscape:current-layer="svg53"
+     inkscape:window-maximized="1"
+     inkscape:window-y="0"
+     inkscape:window-x="2880"
+     inkscape:cy="44.615851"
+     inkscape:cx="45.487982"
+     inkscape:zoom="10.08"
+     showgrid="false"
+     id="namedview55"
+     inkscape:window-height="1699"
+     inkscape:window-width="2858"
+     inkscape:pageshadow="2"
+     inkscape:pageopacity="0"
+     guidetolerance="10"
+     gridtolerance="10"
+     objecttolerance="10"
+     borderopacity="1"
+     bordercolor="#666666"
+     pagecolor="#ffffff" />
+  <linearGradient
+     y2="9.738761"
+     y1="25.097649"
+     x2="19.534246"
+     x1="34.163204"
+     gradientUnits="userSpaceOnUse"
+     gradientTransform="matrix(1.1492603 0 0 .99540827 -7.463018 -.770413)"
+     id="a">
+    <stop
+       id="stop2"
+       stop-color="#0046b1"
+       offset="0" />
+    <stop
+       id="stop4"
+       stop-color="#c0dfff"
+       offset="1" />
+  </linearGradient>
+  <g
+     style="stroke-width:1.13403"
+     id="g51"
+     transform="matrix(0.87330314,0,0,0.8741102,-3.9909422,-0.10086768)">
+    <g
+       style="stroke-width:1.13403"
+       id="g27">
+      <path
+         style="stroke-width:1.28602"
+         id="path7"
+         fill-rule="evenodd"
+         fill="#ffffff"
+         d="M 8.2087142,3.7541698 H 66.44782 L 91.791286,27.282001 91.79124,96.24583 H 8.2087142 Z" />
+      <g
+         style="stroke-width:1.28602"
+         id="g25"
+         fill="none">
+        <path
+           style="stroke:url(#linearGradient884)"
+           id="path9"
+           stroke-width="7.27755"
+           stroke-linejoin="round"
+           stroke-linecap="round"
+           stroke="url(#a)"
+           d="M 8.2087142,3.7541698 H 66.44782 c 1.825683,9.7389532 3.073879,19.1965542 -2.322257,25.4170522 11.221908,0.655373 16.443815,-0.600819 27.665723,-1.889221 L 66.44782,3.7541698 91.791286,27.282001 91.79124,96.24583 H 8.2087142 Z" />
+        <g
+           style="stroke-width:1.45839"
+           id="g23"
+           stroke="#87a1c3">
+          <g
+             id="g19"
+             stroke-width="3.40209">
+            <path
+               style="stroke-width:3.40209"
+               id="path11"
+               d="M 20,86 H 80" />
+            <path
+               style="stroke-width:3.40209"
+               id="path13"
+               d="M 20,69.75 H 80" />
+            <path
+               style="stroke-width:3.40209"
+               id="path15"
+               d="M 20,53.5 H 80" />
+            <path
+               style="stroke-width:3.40209"
+               id="path17"
+               d="M 20,37.25 H 80" />
+          </g>
+          <path
+             id="path21"
+             stroke-width="2.77779"
+             d="M 20,21 H 60" />
+        </g>
+      </g>
+    </g>
+    <g
+       style="stroke-width:1.13403"
+       id="g49">
+      <path
+         style="stroke-width:1.28602"
+         id="path29"
+         fill-rule="evenodd"
+         fill="#ffffff"
+         d="M 8.2087142,3.7541698 H 66.44782 L 91.791286,27.282001 91.79124,96.24583 H 8.2087142 Z" />
+      <g
+         style="stroke-width:1.28602"
+         id="g47"
+         fill="none">
+        <path
+           style="stroke:url(#linearGradient886)"
+           id="path31"
+           stroke-width="7.27755"
+           stroke-linejoin="round"
+           stroke-linecap="round"
+           stroke="url(#a)"
+           d="M 8.2087142,3.7541698 H 66.44782 c 1.825683,9.7389532 3.073879,19.1965542 -2.322257,25.4170522 11.221908,0.655373 16.443815,-0.600819 27.665723,-1.889221 L 66.44782,3.7541698 91.791286,27.282001 91.79124,96.24583 H 8.2087142 Z" />
+        <g
+           style="stroke-width:1.45839"
+           id="g45"
+           stroke="#87a1c3">
+          <g
+             id="g41"
+             stroke-width="3.40209">
+            <path
+               style="stroke-width:3.40209"
+               id="path33"
+               d="M 20,86 H 80" />
+            <path
+               style="stroke-width:3.40209"
+               id="path35"
+               d="M 20,69.75 H 80" />
+            <path
+               style="stroke-width:3.40209"
+               id="path37"
+               d="M 20,53.5 H 80" />
+            <path
+               style="stroke-width:3.40209"
+               id="path39"
+               d="M 20,37.25 H 80" />
+          </g>
+          <path
+             id="path43"
+             stroke-width="2.77779"
+             d="M 20,21 H 60" />
+        </g>
+      </g>
+    </g>
+  </g>
+  <g
+     transform="matrix(0.87330314,0,0,0.8741102,16.009058,12.599132)"
+     id="g932"
+     style="stroke-width:1.13403">
+    <g
+       id="g908"
+       style="stroke-width:1.13403">
+      <path
+         d="M 8.2087142,3.7541698 H 66.44782 L 91.791286,27.282001 91.79124,96.24583 H 8.2087142 Z"
+         fill="#ffffff"
+         fill-rule="evenodd"
+         id="path888"
+         style="stroke-width:1.28602" />
+      <g
+         fill="none"
+         id="g906"
+         style="stroke-width:1.28602">
+        <path
+           d="M 8.2087142,3.7541698 H 66.44782 c 1.825683,9.7389532 3.073879,19.1965542 -2.322257,25.4170522 11.221908,0.655373 16.443815,-0.600819 27.665723,-1.889221 L 66.44782,3.7541698 91.791286,27.282001 91.79124,96.24583 H 8.2087142 Z"
+           stroke="url(#a)"
+           stroke-linecap="round"
+           stroke-linejoin="round"
+           stroke-width="7.27755"
+           id="path890"
+           style="stroke:url(#linearGradient934)" />
+        <g
+           stroke="#87a1c3"
+           id="g904"
+           style="stroke-width:1.45839">
+          <g
+             stroke-width="3.40209"
+             id="g900">
+            <path
+               d="M 20,86 H 80"
+               id="path892"
+               style="stroke-width:3.40209" />
+            <path
+               d="M 20,69.75 H 80"
+               id="path894"
+               style="stroke-width:3.40209" />
+            <path
+               d="M 20,53.5 H 80"
+               id="path896"
+               style="stroke-width:3.40209" />
+            <path
+               d="M 20,37.25 H 80"
+               id="path898"
+               style="stroke-width:3.40209" />
+          </g>
+          <path
+             d="M 20,21 H 60"
+             stroke-width="2.77779"
+             id="path902" />
+        </g>
+      </g>
+    </g>
+    <g
+       id="g930"
+       style="stroke-width:1.13403">
+      <path
+         d="M 8.2087142,3.7541698 H 66.44782 L 91.791286,27.282001 91.79124,96.24583 H 8.2087142 Z"
+         fill="#ffffff"
+         fill-rule="evenodd"
+         id="path910"
+         style="stroke-width:1.28602" />
+      <g
+         fill="none"
+         id="g928"
+         style="stroke-width:1.28602">
+        <path
+           d="M 8.2087142,3.7541698 H 66.44782 c 1.825683,9.7389532 3.073879,19.1965542 -2.322257,25.4170522 11.221908,0.655373 16.443815,-0.600819 27.665723,-1.889221 L 66.44782,3.7541698 91.791286,27.282001 91.79124,96.24583 H 8.2087142 Z"
+           stroke="url(#a)"
+           stroke-linecap="round"
+           stroke-linejoin="round"
+           stroke-width="7.27755"
+           id="path912"
+           style="stroke:url(#linearGradient936)" />
+        <g
+           stroke="#87a1c3"
+           id="g926"
+           style="stroke-width:1.45839">
+          <g
+             stroke-width="3.40209"
+             id="g922">
+            <path
+               d="M 20,86 H 80"
+               id="path914"
+               style="stroke-width:3.40209" />
+            <path
+               d="M 20,69.75 H 80"
+               id="path916"
+               style="stroke-width:3.40209" />
+            <path
+               d="M 20,53.5 H 80"
+               id="path918"
+               style="stroke-width:3.40209" />
+            <path
+               d="M 20,37.25 H 80"
+               id="path920"
+               style="stroke-width:3.40209" />
+          </g>
+          <path
+             d="M 20,21 H 60"
+             stroke-width="2.77779"
+             id="path924" />
+        </g>
+      </g>
+    </g>
+  </g>
+</svg>

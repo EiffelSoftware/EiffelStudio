@@ -265,7 +265,8 @@ SVGadd $RES/folder.svg $OVERLAY/target_se.svg 23.svg
 # cluster
 SVGlight 11.svg 24.svg
 # cluster readonly
-SVGgrey 12.svg 25.svg
+SVGgrey 13.svg 25.svg
+SVGadd 25.svg $OVERLAY/lock_sw.svg 25.svg
 # blank
 SVGlight 13.svg 26.svg
 # blank readonly
@@ -281,7 +282,9 @@ SVGadd 29.svg $OVERLAY/override_se.svg 29.svg
 # blank
 SVGadd 13.svg $OVERLAY/override_se.svg 30.svg
 # blank readonly
-SVGadd 25.svg $OVERLAY/override_se.svg 31.svg
+SVGgrey 13.svg 31.svg
+SVGadd 31.svg $OVERLAY/lock_sw.svg 31.svg
+SVGadd 31.svg $OVERLAY/override_se.svg 31.svg
 # 
 
 ExitRow
@@ -418,6 +421,8 @@ SVGadd $RES/compile.svg $OVERLAY/search_se.svg 5.svg
 # show execution point
 # run without breakpoint
 # run finalized
+SVGadd $OVERLAY/packaged_sw.svg 12.svg
+
 # step into
 # step over
 # step out

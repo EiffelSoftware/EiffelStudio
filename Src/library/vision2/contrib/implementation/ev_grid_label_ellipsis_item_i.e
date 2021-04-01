@@ -49,6 +49,9 @@ feature {EV_GRID_DRAWER_I} -- Implementation
 			Precursor
 			if attached interface as l_interface then
 				ft := l_interface.font
+				if ft = Void then
+					ft := internal_default_font
+				end
 				l_spacing := l_interface.spacing
 				ellipsis_height := ft.height_in_points
 				ellipsis_bullet_size := ft.string_width (".")

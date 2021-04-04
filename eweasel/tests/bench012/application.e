@@ -54,9 +54,7 @@ feature {NONE} -- Initialization
 			worker.run
 		end
 
-	pass_to_first_worker (first_worker: separate THREADRING_WORKER;
-	                       worker: detachable separate THREADRING_WORKER
-								 )
+	pass_to_first_worker (first_worker: separate THREADRING_WORKER; worker: detachable separate THREADRING_WORKER)
 		do
 			print ("running - first%N")
 			first_worker.set_next (worker)

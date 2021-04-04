@@ -20,7 +20,9 @@ inherit
 		redefine
 			process_access_feat_as,
 			process_check_as,
+			process_eiffel_list,
 			process_guard_as,
+			process_if_as,
 			process_inline_agent_creation_as,
 			process_precursor_as
 		end
@@ -38,9 +40,13 @@ feature {NONE} -- Initialization
 
 	register_actions (a_checker: CA_ALL_RULES_CHECKER)
 		do
-			a_checker.add_eiffel_list_pre_action (agent check_list)
-			a_checker.add_guard_pre_action (agent check_guard)
-			a_checker.add_if_pre_action (agent check_if)
+			a_checker.add_routine_pre_action (agent (r: ROUTINE_AS)
+				do
+					is_unreachable := False
+					safe_process (r.routine_body)
+					is_unreachable := False
+					safe_process (r.rescue_clause)
+				end)
 		end
 
 feature -- Properties
@@ -75,13 +81,11 @@ feature {NONE} -- Status report
 
 feature {NONE} -- Rule Checking
 
-	check_list (l: EIFFEL_LIST [AST_EIFFEL])
+	process_eiffel_list (l: EIFFEL_LIST [AST_EIFFEL])
 		local
 			done: BOOLEAN
 		do
 			if attached {EIFFEL_LIST [INSTRUCTION_AS]} l as instructions then
-					-- Assume that the block is reachable.
-				is_unreachable := False
 				across
 					instructions as i
 				until
@@ -94,8 +98,8 @@ feature {NONE} -- Rule Checking
 						i.item.process (Current)
 					end
 				end
-					-- Get ready for instructions in an outer or sibling block.
-				is_unreachable := False
+			else
+				Precursor (l)
 			end
 		end
 
@@ -148,23 +152,53 @@ feature {NONE} -- Rule Checking
 	process_guard_as (a: GUARD_AS)
 			-- <Precursor>
 		do
-			is_unreachable := attached a.check_list as l and then ∃ t: l ¦ is_expr_false (t.expr)
-		end
-
-	check_if (a_if: IF_AS)
-		do
-			if attached a_if.compound and then is_expr_false (a_if.condition) then
-				create_violation (a_if.compound, 1)
-			end
-			if attached a_if.else_part and then is_expr_true (a_if.condition) then
-				create_violation (a_if.else_part, 1)
+			if attached a.check_list as l and then ∃ t: l ¦ is_expr_false (t.expr) then
+				is_unreachable := True
+				if attached a.compound as c then
+					create_violation (c, 1)
+				end
 			end
 		end
 
-	check_guard (a: GUARD_AS)
+	process_if_as (a: IF_AS)
+			-- <Precursor>
+		local
+			next_is_unreachable: BOOLEAN
+			new_is_unreachable: BOOLEAN
 		do
-			if attached a.compound as c and then attached a.check_list as l and then ∃ t: l ¦ is_expr_false (t.expr) then
-				create_violation (c, 1)
+			a.condition.process (Current)
+			next_is_unreachable := is_unreachable or else is_expr_true (a.condition)
+			if attached a.compound as c then
+				if is_unreachable or else is_expr_false (a.condition) then
+					create_violation (c, 1)
+				else
+					c.process (Current)
+				end
+			end
+			new_is_unreachable := is_unreachable
+			if attached a.elsif_list as l then
+				across l as e loop
+					is_unreachable := next_is_unreachable
+					if next_is_unreachable then
+						create_violation (l, e.target_index)
+					else
+						e.item.expr.process (Current)
+						next_is_unreachable := next_is_unreachable or is_unreachable or is_expr_true (e.item.expr)
+						if attached e.item.compound as c then
+							if is_unreachable or else is_expr_false (e.item.expr) then
+								create_violation (c, 1)
+							else
+								c.process (Current)
+							end
+						end
+					end
+					new_is_unreachable := new_is_unreachable and is_unreachable
+				end
+			end
+			is_unreachable := next_is_unreachable
+			if attached a.else_part as e then
+				safe_process (e)
+				is_unreachable := new_is_unreachable and is_unreachable
 			end
 		end
 
@@ -178,18 +212,20 @@ feature {NONE} -- Rule Checking
 			Result := attached {BOOL_AS} a_expr as l_bool and then not l_bool.value
 		end
 
-	create_violation (a_list: EIFFEL_LIST[INSTRUCTION_AS] a_index: INTEGER)
+	create_violation (l: EIFFEL_LIST [AST_EIFFEL]; a_index: INTEGER)
 		local
 			l_violation: CA_RULE_VIOLATION
-			l_fix: CA_UNREACHABLE_CODE_FIX
 		do
 			create l_violation.make_with_rule (Current)
-			l_violation.set_location (a_list.at (a_index).start_location)
-
-			create l_fix.make_with_list_and_index (current_context.checking_class, a_list, a_index)
-			l_violation.fixes.extend (l_fix)
-
+			l_violation.set_location (l.at (a_index).start_location)
+			if attached {EIFFEL_LIST [INSTRUCTION_AS]} l as li then
+				l_violation.fixes.extend (create {CA_UNREACHABLE_CODE_FIX}.make_with_list_and_index (current_context.checking_class, li, a_index))
+			end
 			violations.extend (l_violation)
+				-- Avoid reporting duplicates.
+			is_unreachable := False
+		ensure
+			not is_unreachable
 		end
 
 end

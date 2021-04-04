@@ -168,8 +168,8 @@ feature {ERROR_VISITOR} -- Compute surrounding text around error
 		do
 			l_fn := file_name
 			l_file := cached_file.item
-			if l_file = Void or else l_fn /~ l_file.file_name then
-					-- No file, or it has changed/
+			if not attached l_file or else not l_fn.same_string (l_file.file_name) then
+					-- No file, or it has changed.
 				create l_file.make (l_fn)
 				l_file.set_is_contents_auto_refreshed (True)
 				cached_file.put (l_file)
@@ -188,9 +188,8 @@ feature {ERROR_VISITOR} -- Compute surrounding text around error
 
 				-- Convert lines read from source encoding to UTF-8
 			if attached associated_class as l_class then
-				if attached l_class.encoding as l_e then
-					l_encoding := l_e
-				else
+				l_encoding := l_class.encoding
+				if not attached l_encoding then
 					l_encoding := encoding_converter.default_encoding
 				end
 				if attached previous_line as l_pre then
@@ -297,7 +296,7 @@ invariant
 	non_void_help_file_name: help_file_name /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2018, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2021, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

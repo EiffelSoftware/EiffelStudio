@@ -4646,6 +4646,11 @@ feature {NONE} -- Visitor
 			end
 		end
 
+	process_predecessor_as (a: PREDECESSOR_AS)
+			-- <Precursor>
+		do
+		end
+
 	process_type_expr_as (l_as: TYPE_EXPR_AS)
  		local
 			l_type: TYPE_A

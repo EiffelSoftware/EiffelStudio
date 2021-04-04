@@ -81,13 +81,13 @@ OLD_FREE_OPERATOR	{OLD_FREE_OPERATOR_FIRST}{OLD_FREE_OPERATOR_NEXT}*
 
 FREE_OPERATOR_BASE	{Sm}{+}{Sc}{+}{So}{+}{Pc}{+}{Pd}{+}{Po}{-}{BREAK}{-}{SPECIAL_SYMBOL}{+}{STANDARD_SYMBOL}{+}[~]{-}["$%',.:;?]
 FREE_OPERATOR_FIRST	{FREE_OPERATOR_BASE}
-FREE_OPERATOR_NEXT	{FREE_OPERATOR_BASE}{+}{Sk}
+FREE_OPERATOR_NEXT	{FREE_OPERATOR_BASE}{+}{Sk}{+}[.]
 
 -- FOF - free operator first characters
 -- FOM - free operator middle characters
 -- FOL - free operator last characters
-FOF	{FREE_OPERATOR_FIRST}{-}[\-<>]|\-{FREE_OPERATOR_NEXT}{-}[\->]|>{FREE_OPERATOR_NEXT}{-}[>]|<{FREE_OPERATOR_NEXT}{-}[<]
-FOM	{FREE_OPERATOR_NEXT}{-}[\-<>]|\-{FREE_OPERATOR_NEXT}{-}[\->]|>{FREE_OPERATOR_NEXT}{-}[>]|<{FREE_OPERATOR_NEXT}{-}[<]
+FOF	{FREE_OPERATOR_FIRST}{-}[\-]|\-{FREE_OPERATOR_NEXT}{-}[\-]
+FOM	(\-)?{FREE_OPERATOR_NEXT}{-}[\-]
 FOL	{FREE_OPERATOR_NEXT}
 
 %%
@@ -180,6 +180,18 @@ FOL	{FREE_OPERATOR_NEXT}
 				last_detachable_symbol_as_value := ast_factory.new_symbol_as (TE_ADDRESS, Current)
 				last_token := TE_ADDRESS
 			}
+
+"@"			{
+				update_character_locations
+				if syntax_version = obsolete_syntax then
+					process_id_as
+					last_token := TE_FREE
+				else
+					last_symbol_id_value := ast_factory.new_symbol_id_as (TE_AT, Current)
+					last_token := TE_AT
+				end
+			}
+
 ":="		{
 				update_character_locations
 				last_detachable_symbol_as_value := ast_factory.new_symbol_as (TE_ASSIGNMENT, Current)
@@ -190,9 +202,9 @@ FOL	{FREE_OPERATOR_NEXT}
 				last_detachable_symbol_as_value := ast_factory.new_symbol_as (TE_ACCEPT, Current)
 				last_token := TE_ACCEPT
 				if has_syntax_warning and then syntax_version /= obsolete_syntax then
-					report_one_warning (
-						create {SYNTAX_WARNING}.make (line, column, filename,
-							once "Assignment attempt symbol %"?=%" is not part of ECMA/ISO Eiffel and will not be supported in the future. Use object test instead."))
+					report_one_warning
+						(create {SYNTAX_WARNING}.make (line, column, filename,
+						locale.translation_in_context (once "Assignment attempt symbol %"?=%" is not part of ECMA/ISO Eiffel and will not be supported in the future. Use object test instead.", once "parser.eiffel.warning")))
 				end
 			}
 "="	|
@@ -297,20 +309,18 @@ FOL	{FREE_OPERATOR_NEXT}
 				last_detachable_symbol_as_value := ast_factory.new_symbol_as (TE_POWER, Current)
 				last_token := TE_POWER
 			}
-"->"  	|
+"->"	|
 "->"/{SOFT_BREAK}	{
 				update_character_locations
 				last_detachable_symbol_as_value := ast_factory.new_symbol_as (TE_CONSTRAIN, Current)
 				last_token := TE_CONSTRAIN
 			}
-"<<"	|
-"<<"/{SOFT_BREAK}	{
+"<<"/("<<"*[+-]?|">>"*){SOFT_BREAK}?	{
 				update_character_locations
 				last_detachable_symbol_as_value := ast_factory.new_symbol_as (TE_LARRAY, Current)
 				last_token := TE_LARRAY
 			}
-">>"	|
-">>"/{SOFT_BREAK}	{
+">>"/">>"*{SOFT_BREAK}?	{
 				update_character_locations
 				last_detachable_symbol_as_value := ast_factory.new_symbol_as (TE_RARRAY, Current)
 				last_token := TE_RARRAY
@@ -482,19 +492,29 @@ FOL	{FREE_OPERATOR_NEXT}
 			}
 
 
-{OLD_FREE_OPERATOR}	|
-{FOF}{FOM}*({FOL}{-}[\-]\-|{FOL}{-}[\->]>|{FOL}{-}[<]<)?	|
+{FOF}{FOM}*({FOL}{-}[\-]\-)?	|
 {FOF}{FOM}*{FOL}{-}[\-]\-/{BREAK}	|
-{FOF}{FOM}*{FOL}{-}[\->]>/{SOFT_BREAK}	|
-{FOF}{FOM}*{FOL}{-}[<]</{SOFT_BREAK}	|
 {FOF}{FOM}*/{BREAK}	|
-{FOF}{FOM}*({FOL}{-}[\-<>]|\-{FOL}{-}[\->]|>{FOL}{-}[\->]|<{FOL}{-}[\-<])/{SOFT_BREAK}	|
+{FOF}{FOM}*(\-)?({FOL}{-}[\-])/{SOFT_BREAK}	|
 {FOF}/{SOFT_BREAK}	{
 				update_character_locations
 				last_token := TE_FREE
 				process_id_as
 			}
 
+{OLD_FREE_OPERATOR}	{
+				update_character_locations
+				last_token := TE_FREE
+				process_id_as
+				if
+					syntax_version /= obsolete_syntax and then
+					has_syntax_warning
+				then
+					report_one_warning
+						(create {SYNTAX_WARNING}.make (line, column, filename,
+						locale.formatted_string (locale.translation_in_context (once "Obsolete operator notation `$1` is used. Replace it with a contemporary operator (if available) or an unfolded feature call.", once "parser.eiffel.warning"), unicode_text)))
+				end
+			}
 
 -- Reserved words
 
@@ -507,9 +527,9 @@ FOL	{FREE_OPERATOR_NEXT}
 					process_id_as
 					last_token := TE_ID
 					if has_syntax_warning then
-						report_one_warning (
-							create {SYNTAX_WARNING}.make (line, column, filename,
-								once "Keyword `across' is used as identifier."))
+						report_one_warning
+							(create {SYNTAX_WARNING}.make (line, column, filename,
+							locale.translation_in_context (once "Keyword `across` is used as identifier.", once "parser.eiffel.warning")))
 					end
 				end
 			}
@@ -552,9 +572,9 @@ FOL	{FREE_OPERATOR_NEXT}
 					process_id_as
 					last_token := TE_ID
 					if has_syntax_warning then
-						report_one_warning (
-							create {SYNTAX_WARNING}.make (line, column, filename,
-								once "Keyword `attached' is used as identifier."))
+						report_one_warning
+							(create {SYNTAX_WARNING}.make (line, column, filename,
+							locale.translation_in_context (once "Keyword `attached` is used as identifier.", once "parser.eiffel.warning")))
 					end
 				end
 			}
@@ -567,9 +587,9 @@ FOL	{FREE_OPERATOR_NEXT}
 					process_id_as
 					last_token := TE_ID
 					if has_syntax_warning then
-						report_one_warning (
-							create {SYNTAX_WARNING}.make (line, column, filename,
-								once "Keyword `attribute' is used as identifier."))
+						report_one_warning
+							(create {SYNTAX_WARNING}.make (line, column, filename,
+							locale.translation_in_context (once "Keyword `attribute` is used as identifier.", once "parser.eiffel.warning")))
 					end
 				end
 			}
@@ -622,9 +642,9 @@ FOL	{FREE_OPERATOR_NEXT}
 					process_id_as
 					last_token := TE_ID
 					if has_syntax_warning then
-						report_one_warning (
-							create {SYNTAX_WARNING}.make (line, column, filename,
-								once "Keyword `detachable' is used as identifier."))
+						report_one_warning
+							(create {SYNTAX_WARNING}.make (line, column, filename,
+							locale.translation_in_context (once "Keyword `detachable` is used as identifier.", once "parser.eiffel.warning")))
 					end
 				end
 			}
@@ -707,9 +727,9 @@ FOL	{FREE_OPERATOR_NEXT}
 					last_keyword_id_value := ast_factory.new_keyword_id_as (TE_INDEXING, Current)
 					last_token := TE_INDEXING
 					if has_syntax_warning and then syntax_version /= obsolete_syntax then
-						report_one_warning (
-							create {SYNTAX_WARNING}.make (line, column, filename,
-								once "Usage of `indexing' has been replaced by `note'."))
+						report_one_warning
+							(create {SYNTAX_WARNING}.make (line, column, filename,
+							locale.translation_in_context (once "Usage of `indexing` has been replaced by `note`.", once "parser.eiffel.warning")))
 					end
 
 				end
@@ -763,9 +783,9 @@ FOL	{FREE_OPERATOR_NEXT}
 					process_id_as
 					last_token := TE_ID
 					if has_syntax_warning then
-						report_one_warning (
-							create {SYNTAX_WARNING}.make (line, column, filename,
-								once "Keyword `note' is used as identifier."))
+						report_one_warning
+							(create {SYNTAX_WARNING}.make (line, column, filename,
+							locale.translation_in_context (once "Keyword `note` is used as identifier.", once "parser.eiffel.warning")))
 					end
 				end
 			}
@@ -793,13 +813,13 @@ FOL	{FREE_OPERATOR_NEXT}
 --      end
 [oO][nN][cC][eE]/[\"{]	{
 				update_character_locations
-					-- `{' is for the typed manifest string.
-				last_detachable_keyword_as_value := ast_factory.new_once_string_keyword_as (text, line, column, position, 4, character_column, character_position, 4)
+					-- '{' is for the typed manifest string.
+				last_detachable_keyword_as_value := ast_factory.new_once_string_keyword_as (utf8_text, line, column, position, 4, character_column, character_position, 4)
 				last_token := TE_ONCE_STRING
 			}
 [oO][nN][cC][eE]({BREAK}|"--".*\n)+/[\"{]	{
 				update_character_locations
-					-- `{' is for the typed manifest string.
+					-- '{' is for the typed manifest string.
 				last_detachable_keyword_as_value := ast_factory.new_once_string_keyword_as (utf8_text_substring (1, 4), line, column, position, 4, character_column, character_position, 4)
 					-- Assume all trailing characters are in the same line (which would be false if '\n' appears).
 				ast_factory.create_break_as_with_data (utf8_text_substring (5, text_count), line, column + 4, position + 4, text_count - 4, character_column + 4, character_position + 4, unicode_text_count - 4)
@@ -816,9 +836,9 @@ FOL	{FREE_OPERATOR_NEXT}
 				last_token := TE_ID
 				process_id_as
 				if has_syntax_warning then
-					report_one_warning (
-						create {SYNTAX_WARNING}.make (line, column, filename,
-							once "Use of `only', possibly a new keyword in future definition of `Eiffel'."))
+					report_one_warning
+						(create {SYNTAX_WARNING}.make (line, column, filename,
+						locale.translation_in_context (once "Use of `only`, possibly a new keyword in the future standard of Eiffel.", once "parser.eiffel.warning")))
 				end
 			}
 [oO][rR]	{
@@ -890,9 +910,9 @@ FOL	{FREE_OPERATOR_NEXT}
 					process_id_as
 					last_token := TE_ID
 					if has_syntax_warning then
-						report_one_warning (
-							create {SYNTAX_WARNING}.make (line, column, filename,
-								once "Keyword `some' is used as identifier."))
+						report_one_warning
+							(create {SYNTAX_WARNING}.make (line, column, filename,
+							locale.translation_in_context (once "Keyword `some` is used as identifier.", once "parser.eiffel.warning")))
 					end
 				end
 			}
@@ -967,9 +987,9 @@ FOL	{FREE_OPERATOR_NEXT}
 {I}/".."	{		-- This a trick to avoid having:
 					--     when 1..2 then
 					-- to be be erroneously recognized as:
-					--     `when' `1.' `.2' `then'
+					--     `when` `1.` `.2` `then`
 					-- instead of:
-					--     `when' `1' `..' `2' `then'
+					--     `when` `1` `..` `2` `then`
 				update_character_locations
 				token_buffer.wipe_out
 				append_utf8_text_to_string (token_buffer)
@@ -1639,7 +1659,7 @@ FOL	{FREE_OPERATOR_NEXT}
 %%
 
 note
-	copyright:	"Copyright (c) 1984-2020, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2021, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

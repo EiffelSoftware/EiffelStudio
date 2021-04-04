@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "Visitor to traverse an AST."
 
 deferred class
@@ -774,6 +774,14 @@ feature {AST_EIFFEL} -- Expressions visitors
 		deferred
 		end
 
+	process_predecessor_as (a: PREDECESSOR_AS)
+			-- Process `a`.
+		require
+			is_valid
+			attached a
+		deferred
+		end
+
 	process_type_expr_as (l_as: TYPE_EXPR_AS)
 			-- Process `l_as'.
 		require
@@ -1303,7 +1311,7 @@ feature {AST_EIFFEL} -- Clickable visitor
 note
 	date: "$Date$"
 	revision: "$Revision$"
-	copyright: "Copyright (c) 1984-2020, Eiffel Software"
+	copyright: "Copyright (c) 1984-2021, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

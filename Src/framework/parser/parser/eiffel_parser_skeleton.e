@@ -1191,10 +1191,10 @@ feature {NONE} -- Actions
 					-- Report syntax error when we are compiling for ECMA.
 				if syntax_version = ecma_syntax or else syntax_version = provisional_syntax then
 					report_one_error (create {SYNTAX_ERROR}.make (a_keyword_id.line, a_keyword_id.column, a_keyword_id.filename,
-						"Using keyword as identifier."))
+						locale.translation_in_context ("Using keyword as identifier.", once "parser.eiffel.error")))
 				elseif has_syntax_warning then
 					report_one_warning (create {SYNTAX_WARNING}.make (a_keyword_id.line, a_keyword_id.column, a_keyword_id.filename,
-						"Using keyword as identifier."))
+						locale.translation_in_context ("Using keyword as identifier.", once "parser.eiffel.warning")))
 				end
 			end
 		end
@@ -1220,7 +1220,7 @@ feature {NONE} -- Actions
 		do
 			if a_expr /= Void and then not a_expr.is_detachable_expression then
 				report_one_error (create {SYNTAX_ERROR}.make (token_line (a_expr), token_column (a_expr), filename,
-					"Expression used in object test should be `Detachable_expression'."))
+					locale.translation_in_context ("Expression used in object test should be %"Detachable_expression%".", once "parser.eiffel.error")))
 			end
 		end
 
@@ -1391,7 +1391,7 @@ note
 		"CA033", "CA033: very long class"
 	date: "$Date$"
 	revision: "$Revision$"
-	copyright: "Copyright (c) 1984-2020, Eiffel Software"
+	copyright: "Copyright (c) 1984-2021, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

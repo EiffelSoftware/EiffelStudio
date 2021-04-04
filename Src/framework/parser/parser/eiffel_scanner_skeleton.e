@@ -17,15 +17,13 @@ inherit
 			yy_initialize, yy_load_input_buffer, reset, fatal_error
 		end
 
-	EIFFEL_TOKENS
-		export
-			{NONE} all
-		end
-
-	SHARED_ERROR_HANDLER
-		export {NONE} all end
-
 	COMPILER_EXPORTER
+	INTERNAL_COMPILER_STRING_EXPORTER
+	SHARED_ERROR_HANDLER
+
+inherit {NONE}
+
+	EIFFEL_TOKENS
 		export {NONE} all end
 
 	REFACTORING_HELPER
@@ -40,9 +38,8 @@ inherit
 	BOM_CONSTANTS
 		export {NONE} all end
 
-	INTERNAL_COMPILER_STRING_EXPORTER
-
 	SHARED_LOCALE
+		export {NONE} all end
 
 feature {NONE} -- Initialization
 
@@ -69,6 +66,7 @@ feature {NONE} -- Initialization
 		ensure
 			ast_factory_set: ast_factory = a_factory
 			ast_factory_set_with_parser: ast_factory.parser = Current
+			syntax_version = obsolete_syntax
 		end
 
 feature -- Initialization
@@ -88,6 +86,8 @@ feature -- Initialization
 			character_column := column
 			next_character_position := position
 			next_character_column := column
+		ensure then
+			syntax_version = obsolete_syntax
 		end
 
 	yy_initialize
@@ -211,17 +211,32 @@ feature -- Access
 			--   C compiler (e.g., CL does not support strings longer than 0xFFFF bytes)
 			--   CLI specification (e.g., identifiers cannot be longer 0x1FFFFFFF bytes)
 
-	ecma_syntax: NATURAL_8 = 0x00
+	ecma_syntax: like syntax_version = 0x00
 			-- Syntax strictly follows the ECMA specification
 
-	obsolete_syntax: NATURAL_8 = 0x01
+	obsolete_syntax: like syntax_version = 0x01
 			-- Allows pre-ECMA keywords and ignore new ECMA keywords such as `note', `attribute', `attached' and `detachable'
 
-	transitional_syntax: NATURAL_8 = 0x2
+	transitional_syntax: like syntax_version = 0x2
 			-- Allows both pre and ECMA keywords
 
-	provisional_syntax: NATURAL_8 = 0x3
+	provisional_syntax: like syntax_version = 0x3
 			-- ECMA syntax + possible future extensions
+
+feature -- Status report
+
+	is_valid_syntax_version (v: like syntax_version): BOOLEAN
+			-- Is `v` a valid syntax version value?
+		do
+			inspect v
+			when ecma_syntax, obsolete_syntax, transitional_syntax, provisional_syntax then
+				Result := True
+			else
+					-- False otherwise.
+			end
+		ensure
+			definition: Result = (<<ecma_syntax, obsolete_syntax, transitional_syntax, provisional_syntax>>).has (v)
+		end
 
 feature -- Access: Encoding
 
@@ -286,14 +301,14 @@ feature -- Settings
 			is_warning_as_error = b
 		end
 
-	set_syntax_version (a_version: like syntax_version)
-			-- Set `syntax_version' to `a_version'.
+	set_syntax_version (v: like syntax_version)
+			-- Set `syntax_version` to `v`.
 		require
-			valid_version: a_version = ecma_syntax or a_version = transitional_syntax or a_version = obsolete_syntax or a_version = provisional_syntax
+			is_valid_syntax_version (v)
 		do
-			syntax_version := a_version
+			syntax_version := v
 		ensure
-			syntax_version_set: syntax_version = a_version
+			syntax_version = v
 		end
 
 	set_filename (a_filename: like filename)
@@ -521,10 +536,10 @@ feature {AST_FACTORY} -- Error handling
 					a_code)))
 		end
 
-feature {NONE} -- Implementation
+feature {NONE} -- Token processing
 
 	process_id_as
-			-- Process current token which is an identifier
+			-- Process current token which is an identifier.
 		local
 			l_count: INTEGER
 		do
@@ -578,17 +593,12 @@ feature {NONE} -- Implementation
 		require
 			not_empty: str.count >= 0
 		do
-			if
-				attached ast_factory.new_temporary_integer_value (Current, '+', str) as i
-			then
-				if i.natural_64_value <= {NATURAL_32}.Max_value then
-					process_string_character_code (i.natural_32_value)
-				else
-					report_character_code_too_large_error (str)
-				end
-			else
-				check unsupported: False end
+			if not attached ast_factory.new_temporary_integer_value (Current, '+', str) as i then
 				report_string_bad_special_character_error
+			elseif i.natural_64_value > {NATURAL_32}.Max_value then
+				report_character_code_too_large_error (str)
+			else
+				process_string_character_code (i.natural_32_value)
 			end
 		end
 
@@ -646,7 +656,7 @@ feature {NONE} -- Implementation
 					-- `last_token' is set to `yyEOF_token' on error (when string is too long)
 		end
 
-feature {NONE} -- Implementation
+feature {NONE} -- Helper
 
 	is_verbatim_string_closer: BOOLEAN
 			-- Is `text' a valid Verbatim_string_closer?
@@ -752,22 +762,6 @@ feature {NONE} -- Implementation
 			less_memory: Result.capacity <= a_string.capacity
 		end
 
-	cloned_lower_string (a_string: STRING): STRING
-			-- Clone of `a_string'; convert characters to lower case
-			-- (Reduce memory storage if possible.)
-		obsolete "Avoid using this feature because it is not Unicode-friendly."
-		require
-			a_string_not_void: a_string /= Void
-		do
-			create Result.make (a_string.count)
-			Result.append_string (a_string)
-			Result.to_lower
-		ensure
-			cloned_string_not_void: Result /= Void
-			new_object: Result /= a_string
-			less_memory: Result.capacity <= a_string.capacity
-		end
-
 	char_32_from_source (a_str: STRING): CHARACTER_32
 			-- Convert UTF-8 stream to UTF-32 character.
 		require
@@ -780,7 +774,7 @@ feature {NONE} -- Implementation
 		end
 
 	create_break_as_with_saved_data
-			-- Create break as with saved data
+			-- Create break as with saved data.
 		local
 			u: UTF_CONVERTER
 			l_buf: like roundtrip_token_buffer
@@ -854,25 +848,26 @@ feature {NONE} -- Implementation
 		end
 
 	last_counted_character_column: INTEGER
-			-- Last counted character column
+			-- Last counted character column.
 
 feature {NONE} -- Constants
 
 	Initial_buffer_size: INTEGER = 5120
-			-- Initial size for `token_buffer'
+			-- Initial size for `token_buffer`.
 			-- (See `eif_rtlimits.h')
 
 	Initial_verbatim_marker_size: INTEGER = 3
-			-- Initial size for `verbatim_marker'
+			-- Initial size for `verbatim_marker`.
 
 invariant
 	ast_factory_not_void: ast_factory /= Void
 	token_buffer_not_void: token_buffer /= Void
 	verbatim_marker_not_void: verbatim_marker /= Void
 	filename_not_void: filename /= Void
+	is_valid_syntax_version (syntax_version)
 
 note
-	copyright: "Copyright (c) 1984-2020, Eiffel Software"
+	copyright: "Copyright (c) 1984-2021, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

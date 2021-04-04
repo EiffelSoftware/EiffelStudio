@@ -580,6 +580,13 @@ feature
 			safe_process (l_as.feature_name)
 		end
 
+	process_predecessor_as (a: PREDECESSOR_AS)
+			-- <Precursor>
+		do
+			safe_process (a.predecessor_symbol (match_list))
+			safe_process (a.feature_name)
+		end
+
 	process_routine_creation_as (l_as: ROUTINE_CREATION_AS)
 		do
 			check
@@ -1537,7 +1544,7 @@ feature{NONE} -- Implementation
 	ca_ignore: "CA033", "CA033: too large class"
 	date: "$Date$"
 	revision: "$Revision$"
-	copyright: "Copyright (c) 1984-2020, Eiffel Software"
+	copyright: "Copyright (c) 1984-2021, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

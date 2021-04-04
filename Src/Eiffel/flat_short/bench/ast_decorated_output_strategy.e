@@ -1702,6 +1702,34 @@ feature {NONE} -- Implementation
 			end
 		end
 
+	process_predecessor_as (a: PREDECESSOR_AS)
+			-- <Precursor>
+		local
+			l_feat: E_FEATURE
+			i: like {ID_SET_ACCESSOR}.class_id
+		do
+			reset_last_class_and_type
+			if not has_error_internal then
+				if not expr_type_visiting then
+					text_formatter_decorator.set_without_tabs
+					text_formatter_decorator.process_symbol_text (ti_at)
+					format_local_with_as (a.feature_name.internal_name)
+				end
+				i := a.class_id
+				if
+					i /= 0 and then
+					system.has_class_of_id (i) and then
+					attached system.class_of_id (i) as c
+				then
+					last_class := c
+					last_type := object_test_locals_for_current_feature [a.feature_name.visual_name]
+				else
+					last_class := current_class
+					last_type := last_class.actual_type
+				end
+			end
+		end
+
 	process_routine_creation_as (l_as: ROUTINE_CREATION_AS)
 		local
 			l_feat: E_FEATURE
@@ -5091,7 +5119,7 @@ note
 	ca_ignore: "CA033", "CA033: very long class"
 	date: "$Date$"
 	revision: "$Revision$"
-	copyright: "Copyright (c) 1984-2020, Eiffel Software"
+	copyright: "Copyright (c) 1984-2021, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

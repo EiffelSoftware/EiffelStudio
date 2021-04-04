@@ -1,0 +1,10 @@
+test_name 	 ca-unreachable-branching-code
+test_description Multiple branches should be taken into account when detecting unreachable code.
+
+copy_sub	Ace $TEST Ace
+copy_raw	test.e $CLUSTER test.e
+
+analyze_code rule "CA022"
+analyze_code_result violation "TEST CA022:54"
+
+test_end

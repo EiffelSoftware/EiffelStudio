@@ -9806,6 +9806,7 @@ feature {NONE} -- Implementation
 							context.init_error (l_vwoe1)
 							l_vwoe1.set_other_class (a_context_class)
 							l_vwoe1.set_op_name (a_name)
+							l_vwoe1.set_operator_feature (a_feature)
 							l_vwoe1.set_formal_type (l_arg_type)
 							l_vwoe1.set_actual_type (a_right_type)
 							last_alias_error := l_vwoe1

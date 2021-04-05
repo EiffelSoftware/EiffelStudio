@@ -593,6 +593,7 @@ feature -- Roundtrip: leaf_as
 		require
 			attached s
 			valid_code:
+				c = {EIFFEL_TOKENS}.te_at or
 				c = {EIFFEL_TOKENS}.te_block_close or
 				c = {EIFFEL_TOKENS}.te_block_open or
 				c = {EIFFEL_TOKENS}.te_exists or
@@ -2149,7 +2150,7 @@ note
 		"CA033", "CA033: very long class"
 	date: "$Date$"
 	revision: "$Revision$"
-	copyright: "Copyright (c) 1984-2020, Eiffel Software"
+	copyright: "Copyright (c) 1984-2021, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

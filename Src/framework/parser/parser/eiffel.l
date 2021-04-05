@@ -75,20 +75,21 @@ SOFT_BREAK	{BREAK}|"--"
 SPECIAL_SYMBOL	["$',-./:;=>?~]
 STANDARD_SYMBOL	[*+-/<=>\\^]
 
-OLD_FREE_OPERATOR_FIRST	[@#|&]
-OLD_FREE_OPERATOR_NEXT	{ASCII}{-}{Cc}{-}["%]{-}{BREAK}
-OLD_FREE_OPERATOR	{OLD_FREE_OPERATOR_FIRST}{OLD_FREE_OPERATOR_NEXT}*
+-- OFOF - old free operator first characters
+-- OFOM - old free operator middle characters
+-- OFOL - old free operator last characters
+OFOF	[@#|&]
+OFOL	{ASCII}{-}{Cc}{-}["%]{-}{BREAK}
+OFOM	(\-)?({OFOL}{-}[\-])
 
 FREE_OPERATOR_BASE	{Sm}{+}{Sc}{+}{So}{+}{Pc}{+}{Pd}{+}{Po}{-}{BREAK}{-}{SPECIAL_SYMBOL}{+}{STANDARD_SYMBOL}{+}[~]{-}["$%',.:;?]
-FREE_OPERATOR_FIRST	{FREE_OPERATOR_BASE}
-FREE_OPERATOR_NEXT	{FREE_OPERATOR_BASE}{+}{Sk}{+}[.]
 
 -- FOF - free operator first characters
 -- FOM - free operator middle characters
 -- FOL - free operator last characters
-FOF	{FREE_OPERATOR_FIRST}{-}[\-]|\-{FREE_OPERATOR_NEXT}{-}[\-]
-FOM	(\-)?{FREE_OPERATOR_NEXT}{-}[\-]
-FOL	{FREE_OPERATOR_NEXT}
+FOL	{FREE_OPERATOR_BASE}{+}{Sk}{+}[.]
+FOF	{FREE_OPERATOR_BASE}{-}[\-]|\-{FOL}{-}[\-]
+FOM	(\-)?{FOL}{-}[\-]
 
 %%
 
@@ -181,7 +182,7 @@ FOL	{FREE_OPERATOR_NEXT}
 				last_token := TE_ADDRESS
 			}
 
-"@"			{
+"@"/{SOFT_BREAK}?	{
 				update_character_locations
 				if syntax_version = obsolete_syntax then
 					process_id_as
@@ -494,15 +495,15 @@ FOL	{FREE_OPERATOR_NEXT}
 
 {FOF}{FOM}*({FOL}{-}[\-]\-)?	|
 {FOF}{FOM}*{FOL}{-}[\-]\-/{BREAK}	|
-{FOF}{FOM}*/{BREAK}	|
-{FOF}{FOM}*(\-)?({FOL}{-}[\-])/{SOFT_BREAK}	|
-{FOF}/{SOFT_BREAK}	{
+{FOF}{FOM}*/{SOFT_BREAK}	{
 				update_character_locations
 				last_token := TE_FREE
 				process_id_as
 			}
 
-{OLD_FREE_OPERATOR}	{
+{OFOF}{OFOM}*({OFOL}{-}[\-]\-)?	|
+{OFOF}{OFOM}*{OFOL}{-}[\-]\-/{BREAK}	|
+{OFOF}{OFOM}*/{SOFT_BREAK}	{
 				update_character_locations
 				last_token := TE_FREE
 				process_id_as
@@ -1285,8 +1286,8 @@ FOL	{FREE_OPERATOR_NEXT}
 				update_character_locations
 				process_simple_string_as (TE_STR_XOR)
 			}
-\"{OLD_FREE_OPERATOR}\"	|
-\"{FOF}{FOM}*({FOL}{-}[\-]\-|{FOL}{-}[\->]>|{FOL}{-}[<]<)?\"	{
+\"{FOF}{FOM}*({FOL}{-}[\-]\-)?\"	|
+\"{OFOF}{OFOM}*({OFOL}{-}[\-]\-)?\"	{
 				update_character_locations
 				process_simple_string_as (TE_STR_FREE)
 			}

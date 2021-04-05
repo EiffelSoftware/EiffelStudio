@@ -99,10 +99,10 @@ feature -- Access
 				Result := "TE_DIV"
 			when TE_POWER then
 				Result := "TE_POWER"
-			when TE_FREE then
-				Result := "TE_FREE"
 			when TE_AT then
 				Result := "TE_AT"
+			when TE_FREE then
+				Result := "TE_FREE"
 			when TE_NOT then
 				Result := "TE_NOT"
 			when TE_FREE_NOT then
@@ -371,8 +371,8 @@ feature -- Token codes
 	TE_MOD: INTEGER = 286
 	TE_DIV: INTEGER = 287
 	TE_POWER: INTEGER = 288
-	TE_FREE: INTEGER = 289
-	TE_AT: INTEGER = 290
+	TE_AT: INTEGER = 289
+	TE_FREE: INTEGER = 290
 	TE_NOT: INTEGER = 291
 	TE_FREE_NOT: INTEGER = 292
 	TE_STRIP: INTEGER = 293

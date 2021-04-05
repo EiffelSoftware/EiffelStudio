@@ -31,8 +31,7 @@ create
 %left		TE_PLUS TE_MINUS
 %left		TE_STAR TE_SLASH TE_MOD TE_DIV
 %right		TE_POWER
-%left		TE_FREE
-%left		TE_AT
+%left		TE_AT TE_FREE
 %right		TE_NOT TE_FREE_NOT
 %nonassoc	TE_STRIP
 %left		TE_OLD
@@ -3384,7 +3383,10 @@ Free_binary_operator: TE_FREE
 	|	TE_AT
 			{
 				$$ := extract_id_from_symbol ($1)
-				if has_syntax_warning then
+				if
+					syntax_version /= obsolete_syntax and then
+					has_syntax_warning
+				then
 					report_one_warning
 						(create {SYNTAX_WARNING}.make (token_line ($$), token_column ($$), filename,
 						locale.translation_in_context (once "Obsolete operator notation `@` is used. Replace it with a contemporary operator (if available) or an unfolded form of feature call.", once "parser.eiffel.warning")))

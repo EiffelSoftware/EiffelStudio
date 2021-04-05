@@ -457,9 +457,9 @@ feature {NONE} -- Implementation
 			from transactions.start until transactions.after loop
 				if attached hash.item (transactions.item.source.address) as lst then
 					lst.start
-					if not (transactions @ lst.item).source.supports_multiple_transactions or lst.count = 1 then
+					if not transactions [lst.item].source.supports_multiple_transactions or lst.count = 1 then
 						from lst.start until lst.after loop
-							l_optimized_transactions.extend (transactions @ lst.item)
+							l_optimized_transactions.extend (transactions [lst.item])
 							lst.forth
 						end
 					else
@@ -469,7 +469,7 @@ feature {NONE} -- Implementation
 						until
 							lst.after
 						loop
-							multitrans.add_transaction (transactions @ lst.item)
+							multitrans.add_transaction (transactions [lst.item])
 							lst.forth
 						end
 						l_optimized_transactions.extend (multitrans)
@@ -550,7 +550,7 @@ invariant
 	count_equality: (optimized_count > 0) implies (count = optimized_count)
 
 note
-	copyright:	"Copyright (c) 1984-2020, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2021, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

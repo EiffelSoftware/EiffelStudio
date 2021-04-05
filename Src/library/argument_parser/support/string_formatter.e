@@ -93,9 +93,9 @@ feature -- Formatting
 			until
 				i > l_count
 			loop
-				c := l_str @ i
+				c := l_str [i]
 				if i < l_count then
-					n := l_str @ (i + 1)
+					n := l_str [i + 1]
 				end
 				if c = o then
 					if i < l_count then
@@ -278,7 +278,7 @@ feature {NONE} -- Symbols
 			-- Index close characterю
 
 ;note
-	copyright: "Copyright (c) 1984-2019, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2021, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

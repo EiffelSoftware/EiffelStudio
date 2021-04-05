@@ -226,7 +226,7 @@ feature -- Process Vision2 events
 				not ignore_keyboard_input and then
 				not character_string.is_empty
 			then
-	   			c := character_string.as_string_32 @ 1
+	   			c := character_string.as_string_32 [1]
 				if not ((ctrled_key xor alt_key) or else not is_unwanted_characters (c.natural_32_code)) then
 						-- Ignoring ctrled keys and other special keys (Esc, Tab, Enter, Backspace)
 					handle_character (c)
@@ -1078,7 +1078,7 @@ feature {NONE} -- Private Constants
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2019, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2021, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

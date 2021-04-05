@@ -38,7 +38,7 @@ feature -- Access
 			i_large_enough: i >= 1;
 			i_small_enough: i <= Months_in_year
 		do
-			Result := Days_in_months @ i;
+			Result := Days_in_months [i]
 			if i = 2 and then is_leap_year (y) then
 				Result := Result + 1
 			end
@@ -97,7 +97,7 @@ feature {NONE} -- Implementation
 
 note
 	ca_ignore: "CA011", "CA011: too many arguments"
-	copyright: "Copyright (c) 1984-2019, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2021, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

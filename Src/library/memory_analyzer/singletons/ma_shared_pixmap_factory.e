@@ -1,8 +1,9 @@
-note
+﻿note
 	description: "Factory for all of the pixmapped graphics"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 	author: "king"
+	revised_by: "Alexander Kogtenkov"
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -21,7 +22,7 @@ feature
 			a_row, a_column, a_x_offset, a_y_offset: INTEGER
 		do
 			if not retried then
-				a_coord := pixmap_lookup @ fn
+				a_coord := pixmap_lookup [fn]
 				if a_coord /= Void then
 						-- We are looking up an icon with dimension `pixmap_width' by `pixmap_height'
 					a_column := a_coord.y
@@ -103,7 +104,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2017, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2021, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software
@@ -113,7 +114,4 @@ note
 			Customer support http://support.eiffel.com
 		]"
 
-
-
-
-end -- class EB_SHARED_PIXMAP_FACTORY
+end

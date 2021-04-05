@@ -310,7 +310,7 @@ feature -- Removal
 			until
 				i = l_count
 			loop
-				on_item_removed_at (l @ i, 1)
+				on_item_removed_at (l [i], 1)
 				i := i + 1
 			end
 		end
@@ -358,7 +358,7 @@ feature {NONE} -- Implementation
 
 note
 	library:	"EiffelBase: Library of reusable components for Eiffel."
-	copyright:	"Copyright (c) 1984-2018, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2021, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

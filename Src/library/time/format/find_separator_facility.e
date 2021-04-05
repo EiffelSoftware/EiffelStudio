@@ -42,10 +42,10 @@ feature {NONE} -- Implementation
 			until
 				j > Separator_characters.count
 			loop
-				pos := s.index_of (Separator_characters @ j, 1)
+				pos := s.index_of (Separator_characters [j], 1)
 				if pos /= 0 then
 					sep_found := True
-					pos := s.index_of (Separator_characters @ j, i)
+					pos := s.index_of (Separator_characters [j], i)
 					if pos /= 0 and pos < Result then
 						Result := pos
 					end
@@ -58,18 +58,18 @@ feature {NONE} -- Implementation
 					if s.substring (j, j + 2).same_string ("[0]") then
 						j := j + 3
 					end
-					ch := s @ j
+					ch := s [j]
 				until
-					j > s.count or else (s @ j) /= ch
+					j > s.count or else s [j] /= ch
 				loop
 					j := j + 1
 					if j <= s.count then
 							-- Ensure the `mi' does not get seen to be a separator
-						if ch = 'm' and then (s @ j) = 'i' then
-							ch := s @ j
-						elseif ch = 'h' and then (s @ j = '1') and (s.valid_index (j + 1) and then s.item (j + 1) = '2') then
+						if ch = 'm' and then s [j] = 'i' then
+							ch := s [j]
+						elseif ch = 'h' and then s [j] = '1' and (s.valid_index (j + 1) and then s.item (j + 1) = '2') then
 							j := j + 1
-							ch := s @ j
+							ch := s [j]
 						end
 					end
 				end
@@ -119,7 +119,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright: "Copyright (c) 1984-2020, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2021, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

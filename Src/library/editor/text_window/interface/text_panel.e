@@ -843,8 +843,8 @@ feature -- Basic Operations
 					create actions.make_from_array (<<agent reload, agent continue_editing>>)
 					actions.rebase (1)
 					dialog.set_buttons_and_actions (button_labels, actions)
-					dialog.set_default_push_button (dialog.button (button_labels @ 1))
-					dialog.set_default_cancel_button (dialog.button (button_labels @ 2))
+					dialog.set_default_push_button (dialog.button (button_labels [1]))
+					dialog.set_default_cancel_button (dialog.button (button_labels [2]))
 					dialog.set_title ("External edition")
 					if attached reference_window as l_window then
 						dialog.show_modal_to_window (l_window)
@@ -1961,7 +1961,7 @@ invariant
 	buffered_line_not_void: is_initialized implies buffered_line /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2020, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2021, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

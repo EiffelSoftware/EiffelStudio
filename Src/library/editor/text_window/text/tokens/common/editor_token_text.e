@@ -1,8 +1,9 @@
-note
+﻿note
 	description: "Token that describe a generic text."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 	author: "Arnaud PICHERY [ aranud@mail.dotcom.fr ]"
+	revised_by: "Alexander Kogtenkov"
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -57,51 +58,38 @@ feature -- Miscellaneous
 			-- `n' characters of the current string.
 		local
 			i, l_tab_position, l_tab_width: INTEGER
---			l_font_width: INTEGER
 			l_string: STRING_32
---			l_is_fixed: BOOLEAN
 		do
 			if n = 0 then
 				Result := 0
 			else
 					-- It seems width of Unicode chars can not be fixed width.
-				-- l_is_fixed := is_fixed_width
 				if has_tabulation then
 					if attached previous as l_previous and then not l_previous.is_margin_token then
 						l_tab_position := l_previous.position + l_previous.width
 					end
 					from
 						i := 1
---						if l_is_fixed then
---							l_font_width := font_width
---						end
 						create l_string.make_filled (' ', 1)
 						l_tab_width := tabulation_width
 					until
 						i > n or else i > wide_image.count
 					loop
-						if wide_image @ i = '%T' then
+						if wide_image [i] = '%T' then
 							Result := ((((l_tab_position + Result) // l_tab_width) + 1 ) * l_tab_width ) - l_tab_position
 						else
---							if l_is_fixed then
---								Result := Result + l_font_width
---							else
-								l_string.put (wide_image.item (i), 1)
-								Result := Result + font.string_width (l_string)
---							end
+							l_string.put (wide_image.item (i), 1)
+							Result := Result + font.string_width (l_string)
 						end
 						i := i + 1
 					end
 				else
---					if l_is_fixed then
---						Result := Result + (n.min (wide_image.count) * font_width)
---					else
-						if n >= wide_image.count then
-							Result := font.string_width (wide_image)
+					Result := font.string_width
+						(if n >= wide_image.count then
+							wide_image
 						else
-							Result := font.string_width (wide_image.substring (1, n))
-						end
---					end
+							wide_image.substring (1, n)
+						end)
 				end
 			end
 		end
@@ -418,7 +406,7 @@ feature {NONE} -- Implementation
 			until
 				i > n2
 			loop
-				if wide_image @ i = '%T' then
+				if wide_image [i] = '%T' then
 					if l_tab_width = 0 then
 						l_tab_width := font.string_width (once " ")
 					end
@@ -432,7 +420,7 @@ feature {NONE} -- Implementation
 						j := j + 1
 					end
 				else
-					Result.extend (wide_image @ i)
+					Result.extend (wide_image [i])
 				end
 				i := i + 1
 			end
@@ -442,11 +430,12 @@ feature {NONE} -- Implementation
 		do
 				-- Compute the number of pixels represented by a tabulation based on
 				-- user preferences number of spaces per tabulation.
-			if is_fixed_width then
-				Result := editor_preferences.tabulation_spaces * font_width
-			else
-				Result := editor_preferences.tabulation_spaces * font.string_width (once " ")
-			end
+			Result := editor_preferences.tabulation_spaces *
+				if is_fixed_width then
+					font_width
+				else
+					font.string_width (once " ")
+				end
 		end
 
 	gray_text_color: EV_COLOR
@@ -462,17 +451,14 @@ invariant
 	wide_image_not_void: wide_image /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2021, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
-
-
-
-end -- class EDITOR_TOKEN
+end

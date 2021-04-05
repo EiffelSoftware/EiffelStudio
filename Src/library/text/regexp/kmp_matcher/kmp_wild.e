@@ -1,11 +1,11 @@
-note
-	description: "Pattern match algorithm to match a pattern%
-			% containing wild cards.%
-			% Done through the Knuth, Morris, Pratt%
-			% algorithm."
-	legal: "See notice at end of class.";
-	status: "See notice at end of class.";
-	date: "$Date$";
+﻿note
+	description: "[
+		Pattern match algorithm to match a pattern containing wild cards.
+		Done through the Knuth, Morris, Pratt algorithm.
+	]"
+	legal: "See notice at end of class."
+	status: "See notice at end of class."
+	date: "$Date$"
 	revision: "$Revision$"
 
 class KMP_WILD
@@ -116,7 +116,7 @@ feature -- Search
 		do
 			if
 				search_for_pattern and then
-				(found_at = 1 or else pattern @ 1 = string_representation)
+				(found_at = 1 or else pattern [1] = string_representation)
 			then
 				txt := text
 				ls := string_list
@@ -132,7 +132,7 @@ feature -- Search
 							-- Implied by invariant
 						lsi_not_empty: not lsi.is_empty
 					end
-					c := lsi @ 1
+					c := lsi [1]
 					if c = string_representation then
 						as_star := True
 					elseif c = character_representation then
@@ -443,13 +443,13 @@ feature {NONE} -- Implementation
 						i := 0
 						ls.finish
 					until
-						ls.before or else ls.item @ 1 /= character_representation
+						ls.before or else ls.item [1] /= character_representation
 					loop
 						i := i + 1
 						ls.back
 					end
 					lsi := ls.item
-					if ls.before or else lsi @ 1 = string_representation then
+					if ls.before or else lsi [1] = string_representation then
 						Result := True
 					else
 						Result := imp_same_substring (txt, txt_count - lsi.count - i + 1, txt_count - i, lsi)
@@ -509,7 +509,7 @@ invariant
 	different_character_and_string_representation: string_representation /= character_representation
 
 note
-	copyright:	"Copyright (c) 1984-2012, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2021, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

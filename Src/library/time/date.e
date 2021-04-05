@@ -259,7 +259,7 @@ feature -- Status report
 			l_month: INTEGER
 		do
 			l_month := month
-			Result := days_at_months @ l_month
+			Result := days_at_months [l_month]
 			if l_month > 2 and then leap_year then
 				Result := Result + 1
 			end
@@ -573,7 +573,7 @@ invariant
 	year_non_negative: year >= 0
 
 note
-	copyright: "Copyright (c) 1984-2020, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2021, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

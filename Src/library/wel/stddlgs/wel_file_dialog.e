@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "Ancestor of WEL_OPEN_FILE_DIALOG and %
 		%WEL_SAVE_FILE_DIALOG."
 	legal: "See notice at end of class."
@@ -108,7 +108,7 @@ feature -- Access
 					Result.start
 					directory_name := Result.item
 						-- add the final backslash if not present
-					if (directory_name @ directory_name.count) /= '\' then
+					if directory_name [directory_name.count] /= '\' then
 						directory_name.append_character('\')
 					end
 					if not Result.after then
@@ -621,7 +621,7 @@ invariant
 	str_title_exists: str_title.exists
 
 note
-	copyright:	"Copyright (c) 1984-2017, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2021, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software
@@ -631,8 +631,4 @@ note
 			Customer support http://support.eiffel.com
 		]"
 
-
-
-
-end -- class WEL_FILE_DIALOG
-
+end

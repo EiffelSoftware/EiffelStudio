@@ -1,8 +1,6 @@
-note
-	description: "Objects that ..."
+﻿note
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
-	author: ""
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -55,8 +53,8 @@ feature -- Width & height
 					until
 						i > n or else i > internal_image.count
 					loop
-						if internal_image @ i = '%T' then
-							Result := ((((position + Result)) + 1 )) - position
+						if internal_image [i] = '%T' then
+							Result := (position + Result + 1) - position
 						else
 							Result := Result + font.string_width (create {STRING_32}.make_filled (internal_image [i], 1))
 						end
@@ -202,7 +200,7 @@ feature {MARGIN_WIDGET, MARGIN} -- Implementation
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2018, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2021, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software
@@ -212,7 +210,4 @@ note
 			Customer support http://support.eiffel.com
 		]"
 
-
-
-
-end -- class EDITOR_TOKEN_LINE_NUMBER
+end

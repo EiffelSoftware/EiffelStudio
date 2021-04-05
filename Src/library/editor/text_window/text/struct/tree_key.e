@@ -1,8 +1,9 @@
-note
+﻿note
 	description: "Key of a 3-4-5 tree"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 	author: "Christophe Bonnard"
+	revised_by: "Alexander Kogtenkov"
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -54,7 +55,7 @@ feature -- Status report
 				l_parent := parent
 				check l_parent /= Void end -- Implied by precondition `is_valid'.
 			until
-				l_parent.keys @ Result = Current
+				l_parent.keys [Result] = Current
 			loop
 				Result := Result + 1
 				check
@@ -117,7 +118,7 @@ feature -- Basic operations
 			if l_parent.is_leaf then
 				l_parent.insert_key_and_right_child (other, Void, pos_in_parent + 1)
 			else
-				next_node := l_parent.children @ (pos_in_parent +1)
+				next_node := l_parent.children [pos_in_parent +1]
 				check next_child_exist: next_node /= Void end
 				next_node.insert_first (other)
 			end
@@ -136,24 +137,21 @@ feature -- Basic operations
 			if l_parent.is_leaf then
 				l_parent.insert_key_and_left_child (other, Void, pos_in_parent)
 			else
-				previous_node := l_parent.children @ pos_in_parent
+				previous_node := l_parent.children [pos_in_parent]
 				check previous_child_exist: previous_node /= Void end
 				previous_node.insert_last (other)
 			end
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2021, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
-
-
-
-end -- class TREE_KEY
+end

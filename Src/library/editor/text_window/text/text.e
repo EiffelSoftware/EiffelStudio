@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "[
 		Basic, read only text. The text is made of a sequence of EDITOR_LINEs,
 		which are themselves sequences of EDITOR_TOKENs.
@@ -443,7 +443,7 @@ feature {NONE} -- Text Loading
 			until
 				number_of_lines > first_read_block_size or j = 0
 			loop
-				if j > 1 and then l_current_string @ (j - 1) = '%R' then
+				if j > 1 and then l_current_string [j - 1] = '%R' then
 					curr_string := l_current_string.substring (current_pos, j - 2)
 					append_line (new_line_from_lexer (curr_string, True))
 				else
@@ -503,7 +503,7 @@ feature {NONE} -- Text Loading
 				until
 					lines_read > Lines_read_per_idle_action or else j = 0
 				loop
-					if j > 1 and then l_current_string @ (j - 1) = '%R' then
+					if j > 1 and then l_current_string [j - 1] = '%R' then
 							-- Remove the `%R' and let the lexer EOL token.
 						curr_string := l_current_string.substring (current_pos, j - 2)
 						append_line (new_line_from_lexer (curr_string, True))
@@ -530,7 +530,7 @@ feature {NONE} -- Text Loading
 				if j = 0 then
 						-- We have finished reading the file, so we remove
 						-- ourself from the idle actions.
-					if (l_current_string @ l_current_string.count) = '%N' then
+					if l_current_string [l_current_string.count] = '%N' then
 						append_line (new_line_from_lexer ("", is_windows_eol_style))
 					end
 					reading_text_finished := True
@@ -621,7 +621,7 @@ invariant
 	positive_current_pos: current_pos > 0
 
 note
-	copyright:	"Copyright (c) 1984-2017, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2021, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

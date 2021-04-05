@@ -1,8 +1,9 @@
-note
+﻿note
 	description: "Objects that represent the cursor of an editor window "
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 	author: "Christophe Bonnard  / Arnaud PICHERY / Etienne Amodeo"
+	revised_by: "Alexander Kogtenkov"
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -171,7 +172,7 @@ feature -- Access
 			if token = line.eol_token then
 				Result := '%N'
 			else
-				Result := token.wide_image @ pos_in_token
+				Result := token.wide_image [pos_in_token]
 			end
 		end
 
@@ -650,7 +651,7 @@ feature -- Cursor movement
 					end
 				else
 					image := token.wide_image
-					if not token.is_new_line and then not image.is_empty and then pos_in_token /= 1 and then not char_is_separator (image @ (pos_in_token - 1)) then
+					if not token.is_new_line and then not image.is_empty and then pos_in_token /= 1 and then not char_is_separator (image [pos_in_token - 1]) then
 						from
 							index := pos_in_token
 						until
@@ -805,12 +806,12 @@ feature {NONE} -- Implementation
 		-- Whole text displayed.
 
 invariant
-	y_in_lines_positive_or_null		: y_in_lines >= 0
-	pos_in_token_positive			: pos_in_token > 0
-	text_not_void					: text /= Void
+	y_in_lines_positive_or_null: y_in_lines >= 0
+	pos_in_token_positive: pos_in_token > 0
+	text_not_void: text /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2017, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2021, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software
@@ -820,7 +821,4 @@ note
 			Customer support http://support.eiffel.com
 		]"
 
-
-
-
-end -- class TEXT_CURSOR
+end

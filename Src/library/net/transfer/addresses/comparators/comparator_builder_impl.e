@@ -1,8 +1,6 @@
-note
-	description:
-		"Implementation of comparator builder"
+﻿note
+	description: "Implementation of comparator builder."
 	legal: "See notice at end of class."
-
 	status: "See notice at end of class."
 	date: "$Date$"
 	revision: "$Revision$"
@@ -112,26 +110,22 @@ feature -- Basic operations
 			until
 				i = 256
 			loop
-				cur := character_array @ i
-				if i > 0 then
-					last := character_array @ (i - 1)
+				cur := character_array [i]
+				if last = cur then
+					count := count + 1
 				else
-					last := False
-				end
-				if last /= cur then
-					if last = True then
+					if last then
 						create_comparator
 							(start.to_character_8, start.to_character_8 + count)
 					end
 					start := i
 					count := 0
-				else
-					count := count + 1
 				end
+				last := cur
 				i := i + 1
 			end
-			if character_array @ start = True then
-				create_comparator (start.to_character_8, (255).to_integer.to_character_8)
+			if character_array [start] then
+				create_comparator (start.to_character_8, (255).to_character_8)
 			end
 		end
 
@@ -287,18 +281,14 @@ invariant
 			token_type /= 0
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2021, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
-
-
-
-end -- class COMPARATOR_BUILDER_IMPL
-
+end

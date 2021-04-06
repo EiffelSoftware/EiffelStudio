@@ -3055,6 +3055,26 @@ feature -- Icons
 			verifier_preferences_icon_buffer_attached: Result /= Void
 		end
 
+	frozen source_version_control_icon: EV_PIXMAP
+			-- Access to 'version control' pixmap.
+		require
+			has_named_icon: has_named_icon (source_version_control_name)
+		once
+			Result := named_icon (source_version_control_name)
+		ensure
+			source_version_control_icon_attached: Result /= Void
+		end
+
+	frozen source_version_control_icon_buffer: EV_PIXEL_BUFFER
+			-- Access to 'version control' pixmap pixel buffer.
+		require
+			has_named_icon: has_named_icon (source_version_control_name)
+		once
+			Result := named_icon_buffer (source_version_control_name)
+		ensure
+			source_version_control_icon_buffer_attached: Result /= Void
+		end
+
 	frozen project_melt_icon: EV_PIXMAP
 			-- Access to 'melt' pixmap.
 		require
@@ -10052,6 +10072,7 @@ feature -- Constants: Icon names
 	verifier_verify_target_name: STRING = "verifier verify target"
 	verifier_verify_refresh_name: STRING = "verifier verify refresh"
 	verifier_preferences_name: STRING = "verifier preferences"
+	source_version_control_name: STRING = "source version control"
 	project_melt_name: STRING = "project melt"
 	project_quick_melt_name: STRING = "project quick melt"
 	project_freeze_name: STRING = "project freeze"
@@ -10548,6 +10569,7 @@ feature {NONE} -- Basic operations
 			a_table.put ([{NATURAL_8} 15, {NATURAL_8} 7], verifier_verify_target_name)
 			a_table.put ([{NATURAL_8} 16, {NATURAL_8} 7], verifier_verify_refresh_name)
 			a_table.put ([{NATURAL_8} 17, {NATURAL_8} 7], verifier_preferences_name)
+			a_table.put ([{NATURAL_8} 18, {NATURAL_8} 7], source_version_control_name)
 			a_table.put ([{NATURAL_8} 1, {NATURAL_8} 8], project_melt_name)
 			a_table.put ([{NATURAL_8} 2, {NATURAL_8} 8], project_quick_melt_name)
 			a_table.put ([{NATURAL_8} 3, {NATURAL_8} 8], project_freeze_name)

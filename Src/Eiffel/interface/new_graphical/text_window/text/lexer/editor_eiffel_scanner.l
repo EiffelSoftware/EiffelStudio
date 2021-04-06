@@ -28,7 +28,7 @@ O		[0-7]
 D		[0-9]
 H		[0-9A-Fa-f]
 I		{D}(({D}|_)*{D})?
-E		((e|E)[+-]?{D}+)?
+E		([eE][+-]?{D}+)?
 T		{D}{D}{D}
 U		{D}|{D}{D}|{D}{D}{D}
 A		[A-Za-z]
@@ -71,7 +71,10 @@ SPACE [ \t\u{000B}\f]{+}{Zs}
 
 HORIZONAL_BREAK {SPACE}{+}[\r]
 BREAK	{HORIZONAL_BREAK}{+}[\n]
-SOFT_BREAK	{BREAK}|"--"
+SOFT_BREAK	"--"
+
+-- Take care about real values starting from "." (like ".5") to interpret "-.5" as "- 0.5" rather than "-. 5".
+OPERATOR_BREAK	(\.{D}|{SOFT_BREAK})?
 
 SPECIAL_SYMBOL	["$',-./:;=>?~]
 STANDARD_SYMBOL	[*+-/<=>\\^]
@@ -147,8 +150,7 @@ FOM	(\-)?{FOL}{-}[\-]
 "["					|
 "]"					|
 "$"					|
-"?"					|
-"?"/{SOFT_BREAK}			{
+"?"/{SOFT_BREAK}?			{
 						-- Symbols
 					if not in_comments then
 						curr_token := new_text
@@ -158,27 +160,27 @@ FOM	(\-)?{FOL}{-}[\-]
 					update_token_list
 					}
 
-"//"				|
-"\\\\"				|
-"/="				|
-">="				|
-"<="				|
-"->"				|
+"//"/{OPERATOR_BREAK}		|
+"\\\\"/{OPERATOR_BREAK}		|
+"/="/{OPERATOR_BREAK}		|
+"/~"/{OPERATOR_BREAK}		|
+">="/{OPERATOR_BREAK}		|
+"<="/{OPERATOR_BREAK}		|
+"->"/{OPERATOR_BREAK}		|
 ".."				|
-"<<"				|
-">>"				|
+"<<"/("<<"*[+-]?|">>"*){SOFT_BREAK}?	|
+">>"/">>"*{SOFT_BREAK}?		|
 "?="				|
 ":="				|
-"/~"				|
-"-"					|
-"+"					|
-"*"					|
-"/"					|
-"^"					|
-"="					|
-">"					|
-"<"					|
-"~"					{ 
+"-"/{OPERATOR_BREAK}		|
+"+"/{OPERATOR_BREAK}		|
+"*"/{OPERATOR_BREAK}		|
+"/"/{OPERATOR_BREAK}		|
+"^"/{OPERATOR_BREAK}		|
+"="/{OPERATOR_BREAK}		|
+">"/{OPERATOR_BREAK}		|
+"<"/{OPERATOR_BREAK}		|
+"~"/{OPERATOR_BREAK}		{
 						-- Operator Symbol
 					if not in_comments then
 						curr_token := new_operator
@@ -339,6 +341,7 @@ FOM	(\-)?{FOL}{-}[\-]
 ----------/** Eiffel free operators **/-----------------------------------------
 
 {FOF}{FOM}*({FOL}{-}[\-]\-)?	|
+{FOF}{FOM}*({FOL}{-}[\-]\-)?/\.{D}	|
 {FOF}{FOM}*{FOL}{-}[\-]\-/{BREAK}	|
 {FOF}{FOM}*/{SOFT_BREAK}	|
 {OFOF}{OFOM}*({OFOL}{-}[\-]\-)?	|

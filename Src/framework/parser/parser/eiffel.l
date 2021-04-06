@@ -27,7 +27,7 @@ O		[0-7]
 D		[0-9]
 H		[0-9A-Fa-f]
 I		{D}(({D}|_)*{D})?
-E		((e|E)[+-]?{D}+)?
+E		([eE][+-]?{D}+)?
 T		{D}{D}{D}
 U		{D}|{D}{D}|{D}{D}{D}
 A		[A-Za-z]
@@ -70,7 +70,10 @@ SPACE [ \t\u{000B}\f]{+}{Zs}
 
 HORIZONAL_BREAK {SPACE}{+}[\r]
 BREAK	{HORIZONAL_BREAK}{+}[\n]
-SOFT_BREAK	{BREAK}|"--"
+SOFT_BREAK	"--"
+
+-- Take care about real values starting from "." (like ".5") to interpret "-.5" as "- 0.5" rather than "-. 5".
+OPERATOR_BREAK	(\.{D}|{SOFT_BREAK})?
 
 SPECIAL_SYMBOL	["$',-./:;=>?~]
 STANDARD_SYMBOL	[*+-/<=>\\^]
@@ -159,14 +162,12 @@ FOM	(\-)?{FOL}{-}[\-]
 				last_detachable_symbol_as_value := ast_factory.new_symbol_as (TE_DOTDOT, Current)
 				last_token := TE_DOTDOT
 			}
-"?"	|
-"?"/{SOFT_BREAK}	{
+"?"/{SOFT_BREAK}?	{
 				update_character_locations
 				last_detachable_symbol_as_value := ast_factory.new_symbol_as (TE_QUESTION, Current)
 				last_token := TE_QUESTION
 			}
-"~"	|
-"~"/{SOFT_BREAK}	{
+"~"/{OPERATOR_BREAK}	{
 				update_character_locations
 				last_detachable_symbol_as_value := ast_factory.new_symbol_as (TE_TILDE, Current)
 				last_token := TE_TILDE
@@ -208,44 +209,37 @@ FOM	(\-)?{FOL}{-}[\-]
 						locale.translation_in_context (once "Assignment attempt symbol %"?=%" is not part of ECMA/ISO Eiffel and will not be supported in the future. Use object test instead.", once "parser.eiffel.warning")))
 				end
 			}
-"="	|
-"="/{SOFT_BREAK}	{
+"="/{OPERATOR_BREAK}	{
 				update_character_locations
 				last_detachable_symbol_as_value := ast_factory.new_symbol_as (TE_EQ, Current)
 				last_token := TE_EQ
 			}
-"<"	|
-"<"/{SOFT_BREAK}	{
+"<"/{OPERATOR_BREAK}	{
 				update_character_locations
 				last_detachable_symbol_as_value := ast_factory.new_symbol_as (TE_LT, Current)
 				last_token := TE_LT
 			}
-">"	|
-">"/{SOFT_BREAK}	{
+">"/{OPERATOR_BREAK}	{
 				update_character_locations
 				last_detachable_symbol_as_value := ast_factory.new_symbol_as (TE_GT, Current)
 				last_token := TE_GT
 			}
-"<="	|
-"<="/{SOFT_BREAK}	{
+"<="/{OPERATOR_BREAK}	{
 				update_character_locations
 				last_detachable_symbol_as_value := ast_factory.new_symbol_as (TE_LE, Current)
 				last_token := TE_LE
 			}
-">="	|
-">="/{SOFT_BREAK}	{
+">="/{OPERATOR_BREAK}	{
 				update_character_locations
 				last_detachable_symbol_as_value := ast_factory.new_symbol_as (TE_GE, Current)
 				last_token := TE_GE
 			}
-"/~"	|
-"/~"/{SOFT_BREAK}	{
+"/~"/{OPERATOR_BREAK}	{
 				update_character_locations
 				last_detachable_symbol_as_value := ast_factory.new_symbol_as (TE_NOT_TILDE, Current)
 				last_token := TE_NOT_TILDE
 			}
-"/="	|
-"/="/{SOFT_BREAK}		{
+"/="/{OPERATOR_BREAK}	{
 				update_character_locations
 				last_detachable_symbol_as_value := ast_factory.new_symbol_as (TE_NE, Current)
 				last_token := TE_NE
@@ -280,38 +274,32 @@ FOM	(\-)?{FOL}{-}[\-]
 				last_detachable_symbol_as_value := ast_factory.new_square_symbol_as (TE_RSQURE, Current)
 				last_token := TE_RSQURE
 			}
-"+"	|
-"+"/{SOFT_BREAK}			{
+"+"/{OPERATOR_BREAK}	{
 				update_character_locations
 				last_detachable_symbol_as_value := ast_factory.new_symbol_as (TE_PLUS, Current)
 				last_token := TE_PLUS
 			}
-"-"	|
-"-"/{SOFT_BREAK}	{
+"-"/{OPERATOR_BREAK}	{
 				update_character_locations
 				last_detachable_symbol_as_value := ast_factory.new_symbol_as (TE_MINUS, Current)
 				last_token := TE_MINUS
 			}
-"*"	|
-"*"/{SOFT_BREAK}	{
+"*"/{OPERATOR_BREAK}	{
 				update_character_locations
 				last_detachable_symbol_as_value := ast_factory.new_symbol_as (TE_STAR, Current)
 				last_token := TE_STAR
 			}
-"/"	|
-"/"/{SOFT_BREAK}	{
+"/"/{OPERATOR_BREAK}	{
 				update_character_locations
 				last_detachable_symbol_as_value := ast_factory.new_symbol_as (TE_SLASH, Current)
 				last_token := TE_SLASH
 			}
-"^"	|
-"^"/{SOFT_BREAK}	{
+"^"/{OPERATOR_BREAK}	{
 				update_character_locations
 				last_detachable_symbol_as_value := ast_factory.new_symbol_as (TE_POWER, Current)
 				last_token := TE_POWER
 			}
-"->"	|
-"->"/{SOFT_BREAK}	{
+"->"/{OPERATOR_BREAK}	{
 				update_character_locations
 				last_detachable_symbol_as_value := ast_factory.new_symbol_as (TE_CONSTRAIN, Current)
 				last_token := TE_CONSTRAIN
@@ -326,14 +314,12 @@ FOM	(\-)?{FOL}{-}[\-]
 				last_detachable_symbol_as_value := ast_factory.new_symbol_as (TE_RARRAY, Current)
 				last_token := TE_RARRAY
 			}
-"//"	|
-"//"/{SOFT_BREAK}	{
+"//"/{OPERATOR_BREAK}	{
 				update_character_locations
 				last_detachable_symbol_as_value := ast_factory.new_symbol_as (TE_DIV, Current)
 				last_token := TE_DIV
 			}
-"\\\\"	|
-"\\\\"/{SOFT_BREAK}	{
+"\\\\"/{OPERATOR_BREAK}	{
 				update_character_locations
 				last_detachable_symbol_as_value := ast_factory.new_symbol_as (TE_MOD, Current)
 				last_token := TE_MOD
@@ -342,8 +328,7 @@ FOM	(\-)?{FOL}{-}[\-]
 
 -- Free operators
 
-"∀"	|
-"∀"/{SOFT_BREAK}	{
+"∀"/{SOFT_BREAK}?	{
 				update_character_locations
 				if syntax_version = obsolete_syntax then
 					process_id_as
@@ -353,8 +338,7 @@ FOM	(\-)?{FOL}{-}[\-]
 					last_token := TE_FORALL
 				end
 			}
-"∃"	|
-"∃"/{SOFT_BREAK}	{
+"∃"/{SOFT_BREAK}?	{
 				update_character_locations
 				if syntax_version = obsolete_syntax then
 					process_id_as
@@ -364,14 +348,12 @@ FOM	(\-)?{FOL}{-}[\-]
 					last_token := TE_EXISTS
 				end
 			}
-"¦"	|
-"¦"/{SOFT_BREAK}	{
+"¦"/{SOFT_BREAK}?	{
 				update_character_locations
 				last_detachable_symbol_as_value := ast_factory.new_symbol_as (TE_BAR, Current)
 				last_token := TE_BAR
 			}
-"⟳"	|
-"⟳"/{SOFT_BREAK}	{
+"⟳"/{SOFT_BREAK}?	{
 				update_character_locations
 				if syntax_version = obsolete_syntax then
 					process_id_as
@@ -381,8 +363,7 @@ FOM	(\-)?{FOL}{-}[\-]
 					last_token := TE_REPEAT_OPEN
 				end
 			}
-"⟲"	|
-"⟲"/{SOFT_BREAK}	{
+"⟲"/{SOFT_BREAK}?	{
 				update_character_locations
 				if syntax_version = obsolete_syntax then
 					process_id_as
@@ -392,8 +373,7 @@ FOM	(\-)?{FOL}{-}[\-]
 					last_token := TE_REPEAT_CLOSE
 				end
 			}
-\u27E6	|
-\u27E6/{SOFT_BREAK}	{
+\u27E6/{SOFT_BREAK}?	{
 				update_character_locations
 				if syntax_version = obsolete_syntax then
 					process_id_as
@@ -403,8 +383,7 @@ FOM	(\-)?{FOL}{-}[\-]
 					last_token := TE_BLOCK_OPEN
 				end
 			}
-\u27E7	|
-\u27E7/{SOFT_BREAK}	{
+\u27E7/{SOFT_BREAK}?	{
 				update_character_locations
 				if syntax_version = obsolete_syntax then
 					process_id_as
@@ -414,8 +393,7 @@ FOM	(\-)?{FOL}{-}[\-]
 					last_token := TE_BLOCK_CLOSE
 				end
 			}
-\u00AC	|
-\u00AC/{SOFT_BREAK}	{
+\u00AC/{SOFT_BREAK}?	{
 				update_character_locations
 				process_id_as
 				last_token :=
@@ -425,8 +403,7 @@ FOM	(\-)?{FOL}{-}[\-]
 						TE_FREE_NOT
 					end
 			}
-\u2227 |
-\u2227/{SOFT_BREAK}	{
+\u2227/{SOFT_BREAK}?	{
 				update_character_locations
 				process_id_as
 				last_token :=
@@ -436,8 +413,7 @@ FOM	(\-)?{FOL}{-}[\-]
 						TE_FREE_AND
 					end
 			}
-\u2227\u2026	|
-\u2227\u2026/{SOFT_BREAK}	{
+\u2227\u2026/{SOFT_BREAK}?	{
 				update_character_locations
 				process_id_as
 				last_token :=
@@ -447,8 +423,7 @@ FOM	(\-)?{FOL}{-}[\-]
 						TE_FREE_AND_THEN
 					end
 			}
-\u2228	|
-\u2228/{SOFT_BREAK}	{
+\u2228/{SOFT_BREAK}?	{
 				update_character_locations
 				process_id_as
 				last_token :=
@@ -458,8 +433,7 @@ FOM	(\-)?{FOL}{-}[\-]
 						TE_FREE_OR
 					end
 			}
-\u2228\u2026	|
-\u2228\u2026/{SOFT_BREAK}	{
+\u2228\u2026/{SOFT_BREAK}?	{
 				update_character_locations
 				process_id_as
 				last_token :=
@@ -469,8 +443,7 @@ FOM	(\-)?{FOL}{-}[\-]
 						TE_FREE_OR_ELSE
 					end
 			}
-\u21D2	|
-\u21D2/{SOFT_BREAK}	{
+\u21D2/{SOFT_BREAK}?	{
 				update_character_locations
 				process_id_as
 				last_token :=
@@ -480,8 +453,7 @@ FOM	(\-)?{FOL}{-}[\-]
 						TE_FREE_IMPLIES
 					end
 			}
-\u22BB	|
-\u22BB/{SOFT_BREAK}	{
+\u22BB/{SOFT_BREAK}?	{
 				update_character_locations
 				process_id_as
 				last_token :=
@@ -494,6 +466,7 @@ FOM	(\-)?{FOL}{-}[\-]
 
 
 {FOF}{FOM}*({FOL}{-}[\-]\-)?	|
+{FOF}{FOM}*({FOL}{-}[\-]\-)?/\.{D}	|
 {FOF}{FOM}*{FOL}{-}[\-]\-/{BREAK}	|
 {FOF}{FOM}*/{SOFT_BREAK}	{
 				update_character_locations

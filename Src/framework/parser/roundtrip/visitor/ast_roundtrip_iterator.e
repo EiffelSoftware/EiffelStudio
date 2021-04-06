@@ -916,42 +916,61 @@ feature
 			l_until: detachable KEYWORD_AS
 			l_variant_processing_after: BOOLEAN
 			l_variant_part: detachable VARIANT_AS
+			i: ITERATION_AS
 		do
-			safe_process (l_as.iteration)
-			safe_process (l_as.from_keyword (match_list))
-			safe_process (l_as.from_part)
-			safe_process (l_as.invariant_keyword (match_list))
-			safe_process (l_as.full_invariant_list)
-				-- Special code to handle the old or new ordering of the `variant'
-				-- clause in a loop.
-			l_until := l_as.until_keyword (match_list)
-			l_variant_part := l_as.variant_part
-			if l_until = Void then
-					-- Must be across loop
-				l_variant_processing_after := True
-			elseif l_variant_part /= Void then
-				if l_variant_part.start_position > l_until.start_position then
+			i := l_as.iteration
+			if attached i and then i.is_symbolic then
+					-- The loop is of the form
+					-- ⟳ var: expr ¦ compound ⟲
+				safe_process (l_as.repeat_symbol (match_list))
+				i.process (Current)
+				safe_process (l_as.compound)
+				safe_process (l_as.end_symbol)
+			else
+				safe_process (i)
+				safe_process (l_as.from_keyword (match_list))
+				safe_process (l_as.from_part)
+				safe_process (l_as.invariant_keyword (match_list))
+				safe_process (l_as.full_invariant_list)
+					-- Special code to handle the old or new ordering of the `variant'
+					-- clause in a loop.
+				l_until := l_as.until_keyword (match_list)
+				l_variant_part := l_as.variant_part
+				if l_until = Void then
+						-- Must be across loop
 					l_variant_processing_after := True
-				else
+				elseif l_variant_part /= Void then
+					if l_variant_part.start_position > l_until.start_position then
+						l_variant_processing_after := True
+					else
+						l_variant_part.process (Current)
+					end
+				end
+				safe_process (l_until)
+				safe_process (l_as.stop)
+				safe_process (l_as.loop_keyword (match_list))
+				safe_process (l_as.compound)
+				if l_variant_part /= Void and l_variant_processing_after then
 					l_variant_part.process (Current)
 				end
+				safe_process (l_as.end_keyword)
 			end
-			safe_process (l_until)
-			safe_process (l_as.stop)
-			safe_process (l_as.loop_keyword (match_list))
-			safe_process (l_as.compound)
-			if l_variant_part /= Void and l_variant_processing_after then
-				l_variant_part.process (Current)
-			end
-			safe_process (l_as.end_keyword)
 		end
 
-	process_iteration_as (l_as: ITERATION_AS)
+	process_iteration_as (a: ITERATION_AS)
+			-- <Precursor>
 		do
-			safe_process (l_as.across_keyword (match_list))
-			l_as.expression.process (Current)
-			safe_process (l_as.as_keyword (match_list))
-			l_as.identifier.process (Current)
+			if a.is_symbolic then
+				a.identifier.process (Current)
+				safe_process (a.in_symbol (match_list))
+				a.expression.process (Current)
+				safe_process (a.bar_symbol (match_list))
+			else
+				safe_process (a.across_keyword (match_list))
+				a.expression.process (Current)
+				safe_process (a.as_keyword (match_list))
+				a.identifier.process (Current)
+			end
 		end
 
 	process_loop_expr_as (l_as: LOOP_EXPR_AS)
@@ -963,10 +982,7 @@ feature
 					-- The loop is of the form
 					-- ∀ var: expr | expr
 				safe_process (l_as.qualifier_symbol (match_list))
-				i.identifier.process (Current)
-				safe_process (i.in_symbol (match_list))
-				i.expression.process (Current)
-				safe_process (i.bar_symbol (match_list))
+				i.process (Current)
 				l_as.expression.process (Current)
 			else
 					-- The loop is of the form

@@ -3,6 +3,7 @@
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 	author: "Patrick Ruckstuhl"
+	revised_by: "Alexander Kogtenkov"
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -93,11 +94,10 @@ feature -- Basic operations
 		local
 			new_file, tmp_file: RAW_FILE -- It should be PLAIN_TEXT_FILE, however windows will expand %R and %N as %N
 			aok, create_backup, new_created: BOOLEAN
-			tmp_name: READABLE_STRING_GENERAL
+			tmp_name: READABLE_STRING_32
 			retried: BOOLEAN
 			l_notifier: SERVICE_CONSUMER [FILE_NOTIFIER_S]
 			l_text: STRING_32
-			l_stream: STRING
 			l_new_file_name: READABLE_STRING_GENERAL
 		do
 			if not retried then
@@ -128,7 +128,7 @@ feature -- Basic operations
 				end
 
 				-- Create a backup of the file in case there will be a problem during the savings.
-				tmp_name := a_file_name + ".swp"
+				tmp_name := a_file_name.as_string_32 + ".swp"
 				create tmp_file.make_with_name (tmp_name)
 				create_backup := not new_created and not tmp_file.exists and then tmp_file.is_creatable
 				if not create_backup then
@@ -150,8 +150,7 @@ feature -- Basic operations
 						if a_bom /= Void then
 							tmp_file.put_string (a_bom)
 						end
-						l_stream := convert_to_stream (l_text, a_encoding)
-						tmp_file.put_string (l_stream)
+						tmp_file.put_string (convert_to_stream (l_text, a_encoding))
 					end
 					tmp_file.close
 					if create_backup then
@@ -272,15 +271,12 @@ feature {NONE} -- Implementation
 		end
 
 	save_file_with_file_name (a_fsd: EB_FILE_SAVE_DIALOG; a_text: STRING_GENERAL; a_encoding: ENCODING; a_bom: detachable STRING_8)
-		local
-			l_save_file: EB_SAVE_FILE
 		do
-			create l_save_file
-			l_save_file.save (a_fsd.full_file_path.name, a_text, a_encoding, a_bom)
+			(create {EB_SAVE_FILE}).save (a_fsd.full_file_path.name, a_text, a_encoding, a_bom)
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2017, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2021, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

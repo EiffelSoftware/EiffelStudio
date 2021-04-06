@@ -64,9 +64,9 @@ feature {NONE}-- Initialization
 			l_dev_win: EB_DEVELOPMENT_WINDOW
 		do
 			Precursor {EB_CUSTOM_WIDGETTED_EDITOR} (a_dev_window)
-			if dev_window /= Void then
+			if attached dev_window as l_dev_window then
 					-- Register the dev_window as an observer of `Current'
-				text_displayed.add_selection_observer (dev_window.agents)
+				text_displayed.add_selection_observer (l_dev_window.agents)
 			end
 			text_observer_manager.add_cursor_observer (Current)
 			create after_reading_text_actions.make
@@ -163,10 +163,7 @@ feature -- Content Change
 			-- Only we treat `text_displayed' as TEXT_FORMATTER, we need to call this method.
 		do
 			text_displayed.end_processing
-			if not editor_set then
-				setup_editor (1)
-				editor_set := true
-			else
+			if editor_set then
 				update_vertical_scrollbar
 				update_horizontal_scrollbar
 				update_width
@@ -174,6 +171,9 @@ feature -- Content Change
 				update_horizontal_scrollbar
 				refresh_now
 				margin.refresh_now
+			else
+				setup_editor (1)
+				editor_set := True
 			end
 			editor_viewport.enable_sensitive
 		end
@@ -260,7 +260,7 @@ feature -- Possibly delayed operations
 				end
 				refresh_now
 			else
-				after_reading_text_actions.extend(agent display_line_at_top_when_ready (l_num, a_col))
+				after_reading_text_actions.extend (agent display_line_at_top_when_ready (l_num, a_col))
 			end
 		end
 
@@ -281,19 +281,16 @@ feature -- Possibly delayed operations
 					set_first_line_displayed (fld, True)
 				end
 			else
-				after_reading_text_actions.extend(agent highlight_when_ready (a, b))
+				after_reading_text_actions.extend (agent highlight_when_ready (a, b))
 			end
 		end
 
 	scroll_to_when_ready (pos: INTEGER)
 			-- scroll to position `pos' in characters
 			-- does not need the text to be fully loaded
-		local
-			cursor: like cursor_type
 		do
 			if text_is_fully_loaded then
-				cursor := text_displayed.cursor
-				if cursor /= Void then
+				if attached text_displayed.cursor as cursor then
 					if text_displayed.has_selection then
 						text_displayed.disable_selection
 					end
@@ -364,11 +361,11 @@ feature -- Possibly delayed operations
 		local
 			l_deferred_action: PROCEDURE
 		do
-			if text_is_fully_loaded and text_displayed.cursor /= Void then
+			if text_is_fully_loaded and then attached text_displayed.cursor as l_cursor then
 				if text_displayed.has_selection then
 					text_displayed.disable_selection
 				end
-				text_displayed.cursor.set_from_character_pos (1, number_of_lines, text_displayed)
+				l_cursor.set_from_character_pos (1, number_of_lines, text_displayed)
 				if number_of_lines > number_of_lines_displayed then
 					check_cursor_position
 				end
@@ -389,7 +386,7 @@ feature -- Possibly delayed operations
 			if text_is_fully_loaded then
 				display_breakpoint_number (bpn, feat_id)
 			else
-				after_reading_text_actions.extend(agent display_breakpoint_number (bpn, feat_id))
+				after_reading_text_actions.extend (agent display_breakpoint_number (bpn, feat_id))
 			end
 		end
 
@@ -423,8 +420,8 @@ feature -- Compatibility
 			-- Copy current selection to clipboard.
 		do
 			Precursor {EB_CUSTOM_WIDGETTED_EDITOR}
-			if dev_window /= Void then
-				dev_window.update_paste_cmd
+			if attached dev_window as win then
+				win.update_paste_cmd
 			end
 		end
 
@@ -470,36 +467,30 @@ feature {EB_CLICKABLE_MARGIN}-- Process Vision2 Events
 			-- `a_screen_x' and `a_screen_y' are the mouse pointer absolute coordinates on the screen.
 		local
 			l_number: INTEGER
-			ln: like line_type
-			l_stone: STONE
-			bkstn: BREAKABLE_STONE
+			l_pebble: detachable ANY
 			cur: like cursor_type
 		do
-			if button = 1 then
+			if button = {EV_POINTER_CONSTANTS}.left then
 				Precursor {EB_CUSTOM_WIDGETTED_EDITOR} (x_pos, y_pos, button, a_screen_x, a_screen_y)
-			elseif button = 3 then
+			elseif button = {EV_POINTER_CONSTANTS}.right then
 				mouse_right_button_down := True
 				if x_pos <= 0 then
 					l_number := ((y_pos - editor_viewport.y_offset) // line_height) + first_line_displayed
 					if text_displayed.number_of_lines >= l_number then
-						ln ?= text_displayed.line (l_number)
-						bkstn ?= ln.real_first_token.pebble
+						if attached {like line_type} text_displayed.line (l_number) as ln then
+							l_pebble := ln.real_first_token.pebble
+						else
+							check is_line: False end
+						end
 					end
 					create cur.make_from_character_pos (1, 1, text_displayed)
 					position_cursor (cur, 1, y_pos - editor_viewport.y_offset)
 				else
 					create cur.make_from_character_pos (1, 1, text_displayed)
 					position_cursor (cur, x_pos, y_pos - editor_viewport.y_offset)
-					bkstn ?= cur.token.pebble
+					l_pebble := cur.token.pebble
 				end
-				if bkstn = Void then
-					if ctrled_key then
-						l_stone := text_displayed.stone_at (cur)
-						if l_stone /= Void and then l_stone.is_valid then
-							(create {EB_CONTROL_PICK_HANDLER}).launch_stone (l_stone)
-						end
-					end
-				else
+				if attached {BREAKABLE_STONE} l_pebble as bkstn then
 					check
 						cursor_not_void: text_displayed.cursor /= Void
 					end
@@ -508,6 +499,15 @@ feature {EB_CLICKABLE_MARGIN}-- Process Vision2 Events
 					mouse_right_button_down := False
 					mouse_left_button_down := False
 					refresh_now
+				else
+					if ctrled_key then
+						if
+							attached text_displayed.stone_at (cur) as l_stone and then
+							l_stone.is_valid
+						then
+							(create {EB_CONTROL_PICK_HANDLER}).launch_stone (l_stone)
+						end
+					end
 				end
 			end
 			if debug_tooltip_enabled then
@@ -523,8 +523,8 @@ feature {EB_CLICKABLE_MARGIN}-- Process Vision2 Events
 		do
 			l_shortcuts := matching_customizable_commands (ev_key.code, ctrled_key, alt_key, shifted_key)
 				--| Fixme: When l_shortcuts is not empty, l_short_cuts.first can be void.
-			if not l_shortcuts.is_empty and then l_shortcuts.first /= Void then
-				l_shortcuts.first.apply
+			if not l_shortcuts.is_empty and then attached l_shortcuts.first as sc then
+				sc.apply
 				check_cursor_position
 			elseif ev_key.code = {EV_KEY_CONSTANTS}.key_menu then
 				if not text_displayed.is_empty then
@@ -546,8 +546,8 @@ feature {EB_CLICKABLE_MARGIN}-- Process Vision2 Events
 		do
 			l_shortcuts := matching_customizable_commands (ev_key.code, True, alt_key, shifted_key)
 				--| Fixme: When l_shortcuts is not empty, l_short_cuts.first can be void.
-			if not l_shortcuts.is_empty and then l_shortcuts.first /= Void then
-				l_shortcuts.first.apply
+			if not l_shortcuts.is_empty and then attached l_shortcuts.first as sc then
+				sc.apply
 				check_cursor_position
 			elseif ev_key.code = {EV_KEY_CONSTANTS}.key_enter then
 				if attached text_displayed.cursor as l_cursor and then attached l_cursor.token as l_token then
@@ -675,7 +675,6 @@ feature {EB_CLICKABLE_MARGIN} -- Pick and drop
 			x_pos,
 			y_pos		: INTEGER
 			token_pos	: INTEGER
-			bkst		: BREAKABLE_STONE
 			old_offset	: INTEGER
 			l_line		: INTEGER
 			l_update_selection: BOOLEAN
@@ -705,12 +704,13 @@ feature {EB_CLICKABLE_MARGIN} -- Pick and drop
 							position_cursor (cur, x_pos, y_pos)
 						end
 							-- Are we outside a selection?
-						l_update_selection := not text_displayed.has_selection or else
-							(text_displayed.selection_start > cur or text_displayed.selection_end < cur)
+						l_update_selection := not text_displayed.has_selection
+							or else (text_displayed.selection_start > cur or text_displayed.selection_end < cur)
 						if Result /= Void and then Result.is_valid then
-								-- FIXME: Is it really possible to have a BREAKABLE_STONE?
-							bkst ?= Result
-							if bkst = Void then
+							if attached {BREAKABLE_STONE} Result then
+									-- FIXME: Is it really possible to have a BREAKABLE_STONE?
+								Result := Void
+							else
 								l_number := cur.y_in_lines
 								token_pos := cur.token.position
 									-- Pick and drop mode, we set the selection to the pebble.
@@ -737,14 +737,12 @@ feature {EB_CLICKABLE_MARGIN} -- Pick and drop
 								end
 								check_position (cur)
 								editor_drawing_area.set_pebble_position (token_pos + left_margin_width, (l_number - first_line_displayed)*line_height + line_height//2 + editor_viewport.y_offset)
-								if Result.stone_cursor /= Void then
-									editor_drawing_area.set_accept_cursor (Result.stone_cursor)
+								if attached Result.stone_cursor as l_stone_cursor then
+									editor_drawing_area.set_accept_cursor (l_stone_cursor)
 								end
-								if Result.x_stone_cursor /= Void then
-									editor_drawing_area.set_deny_cursor (Result.x_stone_cursor)
+								if attached Result.x_stone_cursor as l_x_stone_cursor then
+									editor_drawing_area.set_deny_cursor (l_x_stone_cursor)
 								end
-							else
-								Result := Void
 							end
 						else
 							Result := Void
@@ -779,13 +777,10 @@ feature {NONE} -- Text Loading
 			-- Finish editor setup as the entire text has been loaded.
 		do
 			Precursor {EB_CUSTOM_WIDGETTED_EDITOR}
-			from
-				after_reading_text_actions.start
-			until
-				after_reading_text_actions.after
+			across
+				after_reading_text_actions as ic
 			loop
-				after_reading_text_actions.item.call(Void)
-				after_reading_text_actions.forth
+				ic.item.call (Void)
 			end
 			after_reading_text_actions.wipe_out
 		end
@@ -827,8 +822,8 @@ feature -- Update
 				create file_path.make_from_string (fn)
 				open_backup := False
 			end
-			if file_path /= Void then
-				create file.make_with_path (file_path)
+			if attached file_path as fp then
+				create file.make_with_path (fp)
 				if file.exists then
 					date_of_file_when_loaded := file.date
 					size_of_file_when_loaded := file_size
@@ -854,24 +849,21 @@ feature {NONE} -- Implementation
 			-- defined by key of code `key_code' and Ctrl if `ctrl', Shift if `shift' and Alt if `alt'.
 		local
 			l_shortcut: SHORTCUT_PREFERENCE
-			l_shortcuts: HASH_TABLE [SHORTCUT_PREFERENCE, STRING]
+			l_shortcuts: STRING_TABLE [SHORTCUT_PREFERENCE]
 		do
 			create Result
 			l_shortcuts := preferences.editor_data.shortcuts
-			from
-				l_shortcuts.start
-			until
-				l_shortcuts.after
+			across
+				l_shortcuts as ic
 			loop
-				l_shortcut := l_shortcuts.item_for_iteration
+				l_shortcut := ic.item
 				if l_shortcut.key.code = key_code then
 					if l_shortcut.matches (create {EV_KEY}.make_with_code (key_code), alt, ctrl, shift) then
-						if customizable_commands.item (l_shortcuts.key_for_iteration) /= Void then
-							Result.extend (customizable_commands.item (l_shortcuts.key_for_iteration))
+						if attached customizable_commands.item (ic.key) as cmd then
+							Result.extend (cmd)
 						end
 					end
 				end
-				l_shortcuts.forth
 			end
 		ensure
 			matching_customizable_commands_not_void: Result /= Void
@@ -883,20 +875,20 @@ feature {NONE} -- Implementation
 			bp_number_is_valid: bp_number > 0
 			text_completely_loaded: text_is_fully_loaded
 		local
-			ln: like line_type
 			bp_count, line_index: INTEGER
-			bp_token: EDITOR_TOKEN_BREAKPOINT
+			ln: like line_type
 		do
 			from
-				ln ?= text_displayed.first_line
+				ln := {like line_type} / text_displayed.first_line
 			until
 				ln = Void or else bp_count = bp_number
 			loop
-				bp_token ?= ln.real_first_token
-				if bp_token /= Void and then bp_token.pebble /= Void then
-					if bp_token.pebble.routine.feature_id = a_feat_id then
+				if
+					attached {EDITOR_TOKEN_BREAKPOINT} ln.real_first_token as bp_token and then
+					attached bp_token.pebble as l_pebble
+				then
+					if l_pebble.routine.feature_id = a_feat_id then
 						bp_count := bp_count + 1
-
 					end
 				end
 				line_index := line_index + 1
@@ -919,8 +911,8 @@ feature {NONE} -- Implementation
 			-- Update the editor as it has just gained the focus.
 		do
 			Precursor {EB_CUSTOM_WIDGETTED_EDITOR}
-			if dev_window /= Void then
-				dev_window.ui.set_current_editor (Current)
+			if attached dev_window as win then
+				win.ui.set_current_editor (Current)
 			end
 		end
 
@@ -948,13 +940,13 @@ feature {NONE} -- Memory management
 	internal_recycle
 			-- Destroy `Current'
 		do
-			if dev_window /= Void and then dev_window.ui.current_editor = Current then
+			if attached dev_window as win and then win.ui.current_editor = Current then
 					-- To avoid reference on recycled editor.
-				dev_window.ui.set_current_editor (Void)
+				win.ui.set_current_editor (Void)
 			end
 			Precursor {EB_CUSTOM_WIDGETTED_EDITOR}
-			if after_reading_text_actions /= Void then
-				after_reading_text_actions.wipe_out
+			if attached after_reading_text_actions as l_actions then
+				l_actions.wipe_out
 			end
 			text_observer_manager.selection_observer_list.wipe_out
 			text_observer_manager.post_notify_actions.wipe_out
@@ -986,7 +978,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright: "Copyright (c) 1984-2017, Eiffel Software"
+	copyright: "Copyright (c) 1984-2021, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

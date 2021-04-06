@@ -1,6 +1,7 @@
 ﻿%{
 note
-	description:"Scanners for Eiffel parsers"
+
+	description: "Scanners for Eiffel parsers"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 	author: "Arnaud PICHERY from an Eric Bezault model"
@@ -16,6 +17,7 @@ inherit
 
 create
 	make
+
 %}
 
 %x VERBATIM_STR1
@@ -74,20 +76,21 @@ SOFT_BREAK	{BREAK}|"--"
 SPECIAL_SYMBOL	["$',-./:;=>?~]
 STANDARD_SYMBOL	[*+-/<=>\\^]
 
-OLD_FREE_OPERATOR_FIRST	[@#|&]
-OLD_FREE_OPERATOR_NEXT	{ASCII}{-}{Cc}{-}["%]{-}{BREAK}
-OLD_FREE_OPERATOR	{OLD_FREE_OPERATOR_FIRST}{OLD_FREE_OPERATOR_NEXT}*
+-- OFOF - old free operator first characters
+-- OFOM - old free operator middle characters
+-- OFOL - old free operator last characters
+OFOF	[@#|&]
+OFOL	{ASCII}{-}{Cc}{-}["%]{-}{BREAK}
+OFOM	(\-)?({OFOL}{-}[\-])
 
 FREE_OPERATOR_BASE	{Sm}{+}{Sc}{+}{So}{+}{Pc}{+}{Pd}{+}{Po}{-}{BREAK}{-}{SPECIAL_SYMBOL}{+}{STANDARD_SYMBOL}{+}[~]{-}["$%',.:;?]
-FREE_OPERATOR_FIRST	{FREE_OPERATOR_BASE}
-FREE_OPERATOR_NEXT	{FREE_OPERATOR_BASE}{+}{Sk}
 
 -- FOF - free operator first characters
 -- FOM - free operator middle characters
 -- FOL - free operator last characters
-FOF	{FREE_OPERATOR_FIRST}{-}[\-<>]|\-{FREE_OPERATOR_NEXT}{-}[\->]|>{FREE_OPERATOR_NEXT}{-}[>]|<{FREE_OPERATOR_NEXT}{-}[<]
-FOM	{FREE_OPERATOR_NEXT}{-}[\-<>]|\-{FREE_OPERATOR_NEXT}{-}[\->]|>{FREE_OPERATOR_NEXT}{-}[>]|<{FREE_OPERATOR_NEXT}{-}[<]
-FOL	{FREE_OPERATOR_NEXT}
+FOL	{FREE_OPERATOR_BASE}{+}{Sk}{+}[.]
+FOF	{FREE_OPERATOR_BASE}{-}[\-]|\-{FOL}{-}[\-]
+FOM	(\-)?{FOL}{-}[\-]
 
 %%
 
@@ -187,20 +190,14 @@ FOL	{FREE_OPERATOR_NEXT}
 
 ----------/** Reserved words **/------------------------------------------------
 
-"∀"	|
-"∀"/{SOFT_BREAK}	|
-"∃"	|
-"∃"/{SOFT_BREAK}	|
-"¦"	|
-"¦"/{SOFT_BREAK}	|
-"⟳"	|
-"⟳"/{SOFT_BREAK}	|
-"⟲"	|
-"⟲"/{SOFT_BREAK}	|
-\u27E6	|
-\u27E6/{SOFT_BREAK}	|
-\u27E7	|
-\u27E7/{SOFT_BREAK}	|
+"@"/{SOFT_BREAK}?	|
+"∀"/{SOFT_BREAK}?	|
+"∃"/{SOFT_BREAK}?	|
+"¦"/{SOFT_BREAK}?	|
+"⟳"/{SOFT_BREAK}?	|
+"⟲"/{SOFT_BREAK}?	|
+\u27E6/{SOFT_BREAK}?	|
+\u27E7/{SOFT_BREAK}?	|
 [aA][gG][eE][nN][tT]					|
 [aA][lL][iI][aA][sS]					|
 [aA][lL][lL]						|
@@ -341,14 +338,12 @@ FOL	{FREE_OPERATOR_NEXT}
 
 ----------/** Eiffel free operators **/-----------------------------------------
 
-{OLD_FREE_OPERATOR}	|
-{FOF}{FOM}*({FOL}{-}[\-]\-|{FOL}{-}[\->]>|{FOL}{-}[<]<)?	|
+{FOF}{FOM}*({FOL}{-}[\-]\-)?	|
 {FOF}{FOM}*{FOL}{-}[\-]\-/{BREAK}	|
-{FOF}{FOM}*{FOL}{-}[\->]>/{SOFT_BREAK}	|
-{FOF}{FOM}*{FOL}{-}[<]</{SOFT_BREAK}	|
-{FOF}{FOM}*/{BREAK}	|
-{FOF}{FOM}*({FOL}{-}[\-<>]|\-{FOL}{-}[\->]|>{FOL}{-}[\->]|<{FOL}{-}[\-<])/{SOFT_BREAK}	|
-{FOF}/{SOFT_BREAK}	{
+{FOF}{FOM}*/{SOFT_BREAK}	|
+{OFOF}{OFOM}*({OFOL}{-}[\-]\-)?	|
+{OFOF}{OFOM}*{OFOL}{-}[\-]\-/{BREAK}	|
+{OFOF}{OFOM}*/{SOFT_BREAK}	{
 										if not in_comments then
 											curr_token := new_operator
 										else
@@ -555,7 +550,7 @@ FOL	{FREE_OPERATOR_NEXT}
 %%
 
 note
-	copyright:	"Copyright (c) 1984-2020, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2021, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

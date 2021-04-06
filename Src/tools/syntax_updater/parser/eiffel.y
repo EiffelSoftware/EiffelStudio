@@ -31,7 +31,7 @@ create
 %left		TE_PLUS TE_MINUS
 %left		TE_STAR TE_SLASH TE_MOD TE_DIV
 %right		TE_POWER
-%left		TE_FREE
+%left		TE_AT TE_FREE
 %right		TE_NOT TE_FREE_NOT
 %nonassoc	TE_STRIP
 %left		TE_OLD
@@ -55,7 +55,7 @@ create
 %token <detachable SYMBOL_AS> 		TE_PLUS TE_MINUS TE_STAR TE_SLASH TE_POWER
 %token <detachable SYMBOL_AS> 		TE_DIV TE_MOD
 	-- Special type for symbols that are either symbols or free operators.
-%token <detachable like {AST_FACTORY}.symbol_id_type as symbol_id>		TE_FORALL TE_EXISTS TE_REPEAT_OPEN TE_REPEAT_CLOSE TE_BLOCK_OPEN TE_BLOCK_CLOSE
+%token <detachable like {AST_FACTORY}.symbol_id_type as symbol_id>		TE_AT TE_BLOCK_CLOSE TE_BLOCK_OPEN TE_EXISTS TE_FORALL TE_REPEAT_CLOSE TE_REPEAT_OPEN
 
 %token <detachable BOOL_AS> TE_FALSE TE_TRUE
 %token <detachable RESULT_AS> TE_RESULT
@@ -142,7 +142,7 @@ create
 %type <detachable FORMAL_AS>			Formal_parameter
 %type <detachable FORMAL_DEC_AS>		Formal_generic
 %type <detachable GUARD_AS>			Guard
-%type <detachable ID_AS>				Class_or_tuple_identifier Class_identifier Tuple_identifier Identifier_as_lower Free_operator 
+%type <detachable ID_AS>				Class_or_tuple_identifier Class_identifier Tuple_identifier Identifier_as_lower Free_binary_operator Free_unary_operator
 %type <detachable IF_AS>				Conditional
 %type <detachable IF_EXPRESSION_AS>			Conditional_expression
 %type <detachable INDEX_AS>			Index_clause Index_clause_impl Note_entry Note_entry_impl
@@ -225,7 +225,7 @@ create
 %type <detachable CONSTRAINT_LIST_AS> Multiple_constraint_list
 %type <detachable CONSTRAINING_TYPE_AS> Single_constraint
 
-%expect 425
+%expect 427
 
 %%
 
@@ -407,9 +407,9 @@ Dotnet_indexing: -- Empty
 						l_list.set_end_keyword ($2)
 				end		
 				if has_syntax_warning then
-					report_one_warning (
-						create {SYNTAX_WARNING}.make (token_line ($2), token_column ($2), filename,
-						once "Missing `attribute' keyword before `end' keyword."))
+					report_one_warning
+						(create {SYNTAX_WARNING}.make (token_line ($2), token_column ($2), filename,
+						locale.translation_in_context (once "Missing `attribute` keyword before `end` keyword.", once "parser.eiffel.warning")))
 				end
 		}
 	|	TE_INDEXING Add_indexing_counter Index_list Remove_counter TE_END
@@ -424,9 +424,9 @@ Dotnet_indexing: -- Empty
 					end
 				end				
 				if has_syntax_warning then
-					report_one_warning (
-						create {SYNTAX_WARNING}.make (token_line ($5), token_column ($5), filename,
-						once "Missing `attribute' keyword before `end' keyword."))
+					report_one_warning
+						(create {SYNTAX_WARNING}.make (token_line ($5), token_column ($5), filename,
+						locale.translation_in_context (once "Missing `attribute` keyword before `end` keyword.", once "parser.eiffel.warning")))
 				end
 			}
 	;
@@ -479,9 +479,9 @@ Index_clause_impl: Identifier_as_lower TE_COLON Index_terms ASemi
 			{
 				$$ := ast_factory.new_index_as (Void, $1, Void)
 				if has_syntax_warning then
-					report_one_warning (
-						create {SYNTAX_WARNING}.make (token_line ($1), token_column ($1), filename,
-						once "Missing `Index' part of `Index_clause'."))
+					report_one_warning
+						(create {SYNTAX_WARNING}.make (token_line ($1), token_column ($1), filename,
+						locale.translation_in_context (once "Missing Index part of Index_clause.", once "parser.eiffel.warning")))
 				end
 			}
 	;
@@ -701,9 +701,9 @@ Client_list: TE_LCURLY TE_RCURLY
 					-- Per ECMA, this should be rejected. For now we only raise
 					-- a warning. And on the compiler side, we will simply consider as {NONE}.
 				if has_syntax_warning then
-					report_one_warning (
-						create {SYNTAX_WARNING}.make (token_line ($1), token_column ($1), filename,
-							once "Empty Client_list is not allowed and will be assumed to be {NONE}."))
+					report_one_warning
+						(create {SYNTAX_WARNING}.make (token_line ($1), token_column ($1), filename,
+						locale.translation_in_context (once "Empty Client_list is not allowed and will be assumed to be {NONE}.", once "parser.eiffel.warning")))
 				end
 				$$ := ast_factory.new_class_list_as (1)
 				if attached $$ as l_list and then attached new_none_id as l_none_id then
@@ -767,9 +767,9 @@ Feature_declaration: Add_counter New_feature_list Remove_counter {enter_scope} D
 				if has_syntax_warning then
 					if attached feature_indexes as fi and then fi.has_global_once then
 						if attached fi.once_status_index_as as fi_tok then
-							report_one_warning (
-								create {SYNTAX_WARNING}.make (token_line (fi_tok), token_column (fi_tok), filename,
-								once "Specifying once_status in indexing note is Obsolete, please use once (%"PROCESS%")."))
+							report_one_warning
+								(create {SYNTAX_WARNING}.make (token_line (fi_tok), token_column (fi_tok), filename,
+								locale.translation_in_context (once "Specifying once_status in indexing note is Obsolete, please use once (%"PROCESS%").", once "parser.eiffel.warning")))
 						else
 							check indexes_has_once_status_index: False end
 						end
@@ -990,9 +990,9 @@ Inheritance: -- Empty
 				if not conforming_inheritance_flag then
 						-- Conforming inheritance
 					if has_syntax_warning then
-						report_one_warning (
-							create {SYNTAX_WARNING}.make (token_line ($1), token_column ($1), filename,
-							once "Use `inherit ANY' or do not specify an empty inherit clause"))
+						report_one_warning
+							(create {SYNTAX_WARNING}.make (token_line ($1), token_column ($1), filename,
+							locale.translation_in_context (once "Use `inherit ANY` or do not specify an empty inherit clause", once "parser.eiffel.warning")))
 					end
 					$$ := ast_factory.new_eiffel_list_parent_as (0)
 					if attached $$ as l_inheritance then
@@ -1001,9 +1001,11 @@ Inheritance: -- Empty
 				else
 						-- Raise error as conforming inheritance has already been specified
 					if non_conforming_inheritance_flag then
-						report_one_error (create {SYNTAX_ERROR}.make (token_line ($1), token_column ($1), filename, "Conforming inheritance clause must come before non conforming inheritance clause"))
+						report_one_error (create {SYNTAX_ERROR}.make (token_line ($1), token_column ($1), filename,
+							locale.translation_in_context ("Conforming inheritance clause must come before non conforming inheritance clause.", once "parser.eiffel.error")))
 					else
-						report_one_error (create {SYNTAX_ERROR}.make (token_line ($1), token_column ($1), filename, "Only one conforming inheritance clause allowed per class"))
+						report_one_error (create {SYNTAX_ERROR}.make (token_line ($1), token_column ($1), filename,
+							locale.translation_in_context ("Only one conforming inheritance clause allowed per class.", once "parser.eiffel.error")))
 					end
 				end
 			}
@@ -1018,9 +1020,11 @@ Inheritance: -- Empty
 				else
 						-- Raise error as conforming inheritance has already been specified
 					if non_conforming_inheritance_flag then
-						report_one_error (create {SYNTAX_ERROR}.make (token_line ($1), token_column ($1), filename, "Conforming inheritance clause must come before non conforming inheritance clause"))
+						report_one_error (create {SYNTAX_ERROR}.make (token_line ($1), token_column ($1), filename,
+							locale.translation_in_context ("Conforming inheritance clause must come before non conforming inheritance clause", once "parser.eiffel.error")))
 					else
-						report_one_error (create {SYNTAX_ERROR}.make (token_line ($1), token_column ($1), filename, "Only one conforming inheritance clause allowed per class"))
+						report_one_error (create {SYNTAX_ERROR}.make (token_line ($1), token_column ($1), filename,
+							locale.translation_in_context ("Only one conforming inheritance clause allowed per class", once "parser.eiffel.error")))
 					end
 				end
 			}
@@ -1037,7 +1041,8 @@ Inheritance: -- Empty
 					non_conforming_inheritance_flag := True
 				else
 						-- Raise error as non conforming inheritance has already been specified
-					report_one_error (create {SYNTAX_ERROR}.make (token_line ($1), token_column ($1), filename, "Only one non-conforming inheritance clause allowed per class"))
+					report_one_error (create {SYNTAX_ERROR}.make (token_line ($1), token_column ($1), filename,
+						locale.translation_in_context ("Only one non-conforming inheritance clause allowed per class", once "parser.eiffel.error")))
 				end
 			}
 		Add_counter Parent_list Remove_counter
@@ -1092,13 +1097,13 @@ Rename: TE_RENAME
 			{
 				$$ := ast_factory.new_rename_clause_as (Void, $1)
 				if is_constraint_renaming then
-					report_one_error (
-						create {SYNTAX_ERROR}.make (token_line ($1), token_column ($1), filename,
-						"Empty rename clause."))
+					report_one_error
+						(create {SYNTAX_ERROR}.make (token_line ($1), token_column ($1), filename,
+						locale.translation_in_context ("Empty rename clause.", once "parser.eiffel.error")))
 				else
-					report_one_warning (
-							create {SYNTAX_WARNING}.make (token_line ($1), token_column ($1), filename,
-							"Remove empty rename clauses."))
+					report_one_warning
+						(create {SYNTAX_WARNING}.make (token_line ($1), token_column ($1), filename,
+						locale.translation_in_context ("Remove empty rename clauses.", once "parser.eiffel.warning")))
 				end
 			}
 	|	TE_RENAME Add_counter Rename_list Remove_counter
@@ -1160,9 +1165,9 @@ New_export_item: Client_list Feature_set ASemi
 						-- Per ECMA, this should be rejected. For now we only raise
 						-- a warning. And on the compiler side, we will simply ignore them altogether.
 					if has_syntax_warning then
-						report_one_warning (
-							create {SYNTAX_WARNING}.make (token_line ($1), token_column ($1), filename,
-								once "Empty Feature_set is not allowed and will be discarded."))
+						report_one_warning
+							(create {SYNTAX_WARNING}.make (token_line ($1), token_column ($1), filename,
+							locale.translation_in_context (once "Empty Feature_set is not allowed and will be discarded.", once "parser.eiffel.warning")))
 					end
 				end
 				$$ := ast_factory.new_export_item_as (ast_factory.new_client_as ($1), $2)
@@ -1329,9 +1334,9 @@ Formal_arguments:	TE_LPARAN TE_RPARAN
 					-- Per ECMA, this should be rejected. For now we only raise
 					-- a warning. And on the compiler side, we will simply ignore them altogether.
 				if has_syntax_warning then
-					report_one_warning (
-						create {SYNTAX_WARNING}.make (token_line ($1), token_column ($1), filename,
-						once "Empty formal argument list is not allowed"))
+					report_one_warning
+						(create {SYNTAX_WARNING}.make (token_line ($1), token_column ($1), filename,
+						locale.translation_in_context (once "Empty formal argument list is not allowed", once "parser.eiffel.warning")))
 				end
 				$$ := ast_factory.new_formal_argu_dec_list_as (Void, $1, $2)
 			}
@@ -1634,7 +1639,7 @@ Assertion: -- Empty
 Assertion_list: Assertion_clause
 			{
 					-- Special list treatment here as we do not want Void
-					-- element in `Assertion_list'.
+					-- element in Assertion_list.
 				if attached $1 as l_val then
 					$$ := ast_factory.new_eiffel_list_tagged_as (counter_value + 1)
 					if attached $$ as l_list then
@@ -1692,7 +1697,7 @@ Assertion_clause:
 	;
 
 -- Type
--- Note that only `Type' should be used in other constructs. If something else is used, please make
+-- Note that only Type should be used in other constructs. If something else is used, please make
 -- sure to put a note (e.g. 'Class_or_tuple_type' being used in 'Constraint_type'.
 
 Type: Class_or_tuple_type
@@ -2093,9 +2098,9 @@ Obsolete_type: TE_EXPANDED Unmarked_class_type
 				$$ := $2
 				ast_factory.set_expanded_class_type ($$, True, $1)
 				if has_syntax_warning then
-					report_one_warning (
-						create {SYNTAX_WARNING}.make (token_line ($1), token_column ($1), filename,
-						once "Make an expanded version of the base class associated with this type."))
+					report_one_warning
+						(create {SYNTAX_WARNING}.make (token_line ($1), token_column ($1), filename,
+						locale.translation_in_context (once "Make an expanded version of the base class associated with this type.", once "parser.eiffel.warning")))
 				end
 			}
 	;
@@ -2120,9 +2125,9 @@ Generics:	TE_LSQURE Type_list TE_RSQURE
 					-- Per ECMA, this should be rejected. For now we only raise
 					-- a warning. And on the compiler side, we will simply ignore them altogether.
 				if has_syntax_warning then
-					report_one_warning (
-						create {SYNTAX_WARNING}.make (token_line ($1), token_column ($1), filename,
-							once "Empty Type_list is not allowed and will be discarded."))
+					report_one_warning
+						(create {SYNTAX_WARNING}.make (token_line ($1), token_column ($1), filename,
+						locale.translation_in_context (once "Empty Type_list is not allowed and will be discarded.", once "parser.eiffel.warning")))
 				end
 				if attached ast_factory.new_eiffel_list_type (0) as l_list then
 					$$ := l_list
@@ -2159,9 +2164,9 @@ Unmarked_tuple_type: Tuple_identifier
 					-- Per ECMA, this should be rejected. For now we only raise
 					-- a warning. And on the compiler side, we will simply ignore them altogether.
 				if has_syntax_warning then
-					report_one_warning (
-						create {SYNTAX_WARNING}.make (token_line ($4), token_column ($4), filename,
-							once "Empty Type_list is not allowed and will be discarded."))
+					report_one_warning
+						(create {SYNTAX_WARNING}.make (token_line ($4), token_column ($4), filename,
+						locale.translation_in_context (once "Empty Type_list is not allowed and will be discarded.", once "parser.eiffel.warning")))
 				end
 				if attached ast_factory.new_eiffel_list_type (0) as l_type_list then
 					l_type_list.set_positions ($4, $5)
@@ -2282,9 +2287,9 @@ Formal_generics:
 					-- Per ECMA, this should be rejected. For now we only raise
 					-- a warning. And on the compiler side, we will simply ignore them altogether.
 				if has_syntax_warning then
-					report_one_warning (
-						create {SYNTAX_WARNING}.make (token_line ($1), token_column ($1), filename,
-							once "Empty Formal_generic_list is not allowed and will be discarded."))
+					report_one_warning
+						(create {SYNTAX_WARNING}.make (token_line ($1), token_column ($1), filename,
+						locale.translation_in_context (once "Empty Formal_generic_list is not allowed and will be discarded.", once "parser.eiffel.warning")))
 				end
 				set_formal_generics_end_positions (True)
 				$$ := ast_factory.new_eiffel_list_formal_dec_as (0)
@@ -2341,10 +2346,10 @@ Formal_parameter: TE_REFERENCE Class_identifier
 				if attached $2 as l_id and then {PREDEFINED_NAMES}.none_class_name_id = l_id.name_id then
 						-- Trigger an error when constraint is NONE.
 						-- Needs to be done manually since current test for
-						-- checking that `$2' is not a class name
+						-- checking that "$2" is not a class name
 						-- will fail for NONE, whereas before there were some
-						-- syntactic conflict since `NONE' was a keyword and
-						-- therefore not part of `TE_ID'.
+						-- syntactic conflict since "NONE" was a keyword and
+						-- therefore not part of TE_ID.
 					raise_error
 				else
 					$$ := ast_factory.new_formal_as ($2, True, False, False, $1)
@@ -2355,10 +2360,10 @@ Formal_parameter: TE_REFERENCE Class_identifier
 				if attached $2 as l_id and then {PREDEFINED_NAMES}.none_class_name_id = l_id.name_id then
 						-- Trigger an error when constraint is NONE.
 						-- Needs to be done manually since current test for
-						-- checking that `$2' is not a class name
+						-- checking that "$2" is not a class name
 						-- will fail for NONE, whereas before there were some
-						-- syntactic conflict since `NONE' was a keyword and
-						-- therefore not part of `TE_ID'.
+						-- syntactic conflict since "NONE" was a keyword and
+						-- therefore not part of TE_ID.
 					raise_error
 				else
 					$$ := ast_factory.new_formal_as ($2, False, True, False, $1)
@@ -2370,10 +2375,10 @@ Formal_parameter: TE_REFERENCE Class_identifier
 				if attached $2 as l_id and then {PREDEFINED_NAMES}.none_class_name_id = l_id.name_id then
 						-- Trigger an error when constraint is NONE.
 						-- Needs to be done manually since current test for
-						-- checking that `$1' is not a class name
+						-- checking that "$1" is not a class name
 						-- will fail for NONE, whereas before there were some
-						-- syntactic conflict since `NONE' was a keyword and
-						-- therefore not part of `TE_ID'.
+						-- syntactic conflict since "NONE" was a keyword and
+						-- therefore not part of TE_ID.
 					raise_error
 				else
 					$$ := ast_factory.new_formal_as ($2, False, False, True, $1)
@@ -2385,10 +2390,10 @@ Formal_parameter: TE_REFERENCE Class_identifier
 				if attached $1 as l_id and then {PREDEFINED_NAMES}.none_class_name_id = l_id.name_id then
 						-- Trigger an error when constraint is NONE.
 						-- Needs to be done manually since current test for
-						-- checking that `$1' is not a class name
+						-- checking that "$1" is not a class name
 						-- will fail for NONE, whereas before there were some
-						-- syntactic conflict since `NONE' was a keyword and
-						-- therefore not part of `TE_ID'.
+						-- syntactic conflict since "NONE" was a keyword and
+						-- therefore not part of TE_ID.
 					raise_error
 				else
 					$$ := ast_factory.new_formal_as ($1, False, False, False, Void)
@@ -2472,7 +2477,7 @@ Constraint_type:
 Multiple_constraint_list:	Single_constraint
 			{
 					-- Special list treatment here as we do not want Void
-					-- element in `Assertion_list'.
+					-- element in Assertion_list.
 				if attached $1 as l_val then
 					$$ := ast_factory.new_eiffel_list_constraining_type_as (counter_value + 1)
 					if attached $$ as l_list then
@@ -2644,9 +2649,9 @@ Loop_instruction:
 	TE_FROM Compound Invariant Variant TE_UNTIL Expression TE_LOOP Compound TE_END
 			{
 				if has_syntax_warning then
-					report_one_warning (
-						create {SYNTAX_WARNING}.make (token_line ($4), token_column ($4), filename,
-						once "Loop variant should appear just before the end keyword of the loop."))
+					report_one_warning
+						(create {SYNTAX_WARNING}.make (token_line ($4), token_column ($4), filename,
+						locale.translation_in_context (once "Loop variant should appear just before the end keyword of the loop.", once "parser.eiffel.warning")))
 				end
 				if attached $3 as l_invariant_pair then
 					$$ := ast_factory.new_loop_as (Void, $2, l_invariant_pair.second, $4, $6, $8, $9, $1, l_invariant_pair.first, $5, $7, Void, Void)
@@ -2824,9 +2829,9 @@ Key_list: -- Empty
 					-- Per ECMA, this should be rejected. For now we only raise
 					-- a warning. And on the compiler side, we will simply ignore them altogether.
 				if has_syntax_warning then
-					report_one_warning (
-						create {SYNTAX_WARNING}.make (token_line ($1), token_column ($1), filename,
-						once "Empty key list is not allowed"))
+					report_one_warning
+						(create {SYNTAX_WARNING}.make (token_line ($1), token_column ($1), filename,
+						locale.translation_in_context (once "Empty key list is not allowed", once "parser.eiffel.warning")))
 				end
 				$$ := ast_factory.new_key_list_as (Void, $1, $2)
 			}
@@ -2914,27 +2919,27 @@ Creation_clause:
 			{
 				$$ := ast_factory.new_create_as (Void, Void, $1)
 				if has_syntax_warning then
-					report_one_warning (
-						create {SYNTAX_WARNING}.make (token_line ($1), token_column ($1), filename,
-						once "Use keyword `create' instead."))
+					report_one_warning
+						(create {SYNTAX_WARNING}.make (token_line ($1), token_column ($1), filename,
+						locale.translation_in_context (once "Use keyword `create` instead.", once "parser.eiffel.warning")))
 				end
 			}
 	|	TE_CREATION Clients Feature_list
 			{
 				$$ := ast_factory.new_create_as ($2, $3, $1)
 				if has_syntax_warning then
-					report_one_warning (
-						create {SYNTAX_WARNING}.make (token_line ($1), token_column ($1), filename,
-						once "Use keyword `create' instead."))
+					report_one_warning
+						(create {SYNTAX_WARNING}.make (token_line ($1), token_column ($1), filename,
+						locale.translation_in_context (once "Use keyword `create` instead.", once "parser.eiffel.warning")))
 				end
 			}
 	|	TE_CREATION Client_list
 			{
 				$$ := ast_factory.new_create_as (ast_factory.new_client_as ($2), Void, $1)
 				if has_syntax_warning then
-					report_one_warning (
-						create {SYNTAX_WARNING}.make (token_line ($1), token_column ($1), filename,
-						once "Use keyword `create' instead."))
+					report_one_warning
+						(create {SYNTAX_WARNING}.make (token_line ($1), token_column ($1), filename,
+						locale.translation_in_context (once "Use keyword `create` instead.", once "parser.eiffel.warning")))
 				end
 			}
 	;
@@ -3034,9 +3039,9 @@ Delayed_actuals: -- Empty
 					-- Per ECMA, this should be rejected. For now we only raise
 					-- a warning. And on the compiler side, we will simply ignore them altogether.
 				if has_syntax_warning then
-					report_one_warning (
-						create {SYNTAX_WARNING}.make (token_line ($1), token_column ($1), filename,
-						once "Empty agent actual list is not allowed"))
+					report_one_warning
+						(create {SYNTAX_WARNING}.make (token_line ($1), token_column ($1), filename,
+						locale.translation_in_context (once "Empty agent actual list is not allowed", once "parser.eiffel.warning")))
 				end
 				$$ := ast_factory.new_delayed_actual_list_as (Void, $1, $2)
 			}
@@ -3100,7 +3105,8 @@ Creation_region: -- Empty
 					if {PREDEFINED_NAMES}.none_class_name_id = l_id.name_id then
 						$$ := False
 					else
-						report_one_error (create {SYNTAX_ERROR}.make (token_line ($2), token_column ($2), filename, "Passive regions should use type specifier %"NONE%"."))
+						report_one_error (create {SYNTAX_ERROR}.make (token_line ($2), token_column ($2), filename,
+							locale.translation_in_context ("Passive regions should use type specifier %"NONE%".", once "parser.eiffel.error")))
 					end
 				end
 			}
@@ -3241,9 +3247,9 @@ Expression:
 					insert_object_test_locals ([l_name, l_type])
 				end
 				if has_syntax_warning then
-					report_one_warning (
-						create {SYNTAX_WARNING}.make (token_line ($1), token_column ($1),
-							filename, once "Use the new syntax for object test `attached {T} exp as x'."))
+					report_one_warning
+						(create {SYNTAX_WARNING}.make (token_line ($1), token_column ($1), filename,
+						locale.translation_in_context (once "Use the following syntax for object test: `attached {T} exp as x`.", once "parser.eiffel.warning")))
 
 				end
 			}
@@ -3296,7 +3302,7 @@ Qualified_binary_expression:
 			{ $$ := ast_factory.new_bin_le_as ($1, $3, $2) }
 	|	Expression TE_LT Expression
 			{ $$ := ast_factory.new_bin_lt_as ($1, $3, $2) }
-	|	Expression Free_operator Expression %prec TE_FREE
+	|	Expression Free_binary_operator Expression %prec TE_FREE
 			{ $$ := ast_factory.new_bin_free_as ($1, $2, $3) }
 	;
 
@@ -3355,7 +3361,7 @@ Qualified_factor:
 			{ $$ := ast_factory.new_un_not_as ($2, $1) }
 	|	TE_FREE_NOT Expression
 			{ $$ := ast_factory.new_un_free_as ($1, $2) }
-	|	Free_operator Expression %prec TE_NOT
+	|	Free_unary_operator Expression %prec TE_NOT
 			{ $$ := ast_factory.new_un_free_as ($1, $2) }
 	;
 
@@ -3367,7 +3373,28 @@ Typed_expression:	Typed
 			{ $$ := $1 }
 	;
 
-Free_operator: TE_FREE
+Free_binary_operator: TE_FREE
+			{
+				if attached $1 as l_free then
+					l_free.to_lower
+				end
+				$$ := $1
+			}
+	|	TE_AT
+			{
+				$$ := extract_id_from_symbol ($1)
+				if
+					syntax_version /= obsolete_syntax and then
+					has_syntax_warning
+				then
+					report_one_warning
+						(create {SYNTAX_WARNING}.make (token_line ($$), token_column ($$), filename,
+						locale.translation_in_context (once "Obsolete operator notation `@` is used. Replace it with a contemporary operator (if available) or an unfolded form of feature call.", once "parser.eiffel.warning")))
+				end
+			}
+	;
+
+Free_unary_operator: TE_FREE
 			{
 				if attached $1 as l_free then
 					l_free.to_lower
@@ -3479,9 +3506,9 @@ Old_a_static_call:
 			{
 				$$ := ast_factory.new_static_access_as ($2, $4, $5, $1, $3);
 				if has_syntax_warning then
-					report_one_warning (
-						create {SYNTAX_WARNING}.make (token_line ($1), token_column ($1),
-							filename, once "Remove the `feature' keyword."))
+					report_one_warning
+						(create {SYNTAX_WARNING}.make (token_line ($1), token_column ($1), filename,
+						locale.translation_in_context (once "Remove the `feature` keyword.", once "parser.eiffel.warning")))
 				end
 			}
 	;
@@ -3537,9 +3564,9 @@ Parameters: -- Empty
 					-- Per ECMA, this should be rejected. For now we only raise
 					-- a warning. And on the compiler side, we will simply ignore them altogether.
 				if has_syntax_warning then
-					report_one_warning (
-						create {SYNTAX_WARNING}.make (token_line ($1), token_column ($1), filename,
-						once "Empty parameter list are not allowed"))
+					report_one_warning
+						(create {SYNTAX_WARNING}.make (token_line ($1), token_column ($1), filename,
+						locale.translation_in_context (once "Empty parameter list are not allowed", once "parser.eiffel.warning")))
 				end
 				$$ := ast_factory.new_parameter_list_as (Void, $1, $2)
 			}
@@ -4126,7 +4153,7 @@ Remove_counter: { remove_counter }
 %%
 
 note
-	copyright:	"Copyright (c) 1984-2020, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2021, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

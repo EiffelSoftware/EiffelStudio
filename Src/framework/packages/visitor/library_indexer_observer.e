@@ -10,10 +10,7 @@ class
 feature -- Visit
 
 	on_ecf_file_found (p: PATH)
-		local
-			s32: READABLE_STRING_32
 		do
-			s32 := "aa" + p.name
 		end
 
 	on_folder_enter (p: PATH)

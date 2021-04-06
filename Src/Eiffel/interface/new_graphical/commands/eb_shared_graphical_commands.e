@@ -177,6 +177,13 @@ feature -- Commands
 			Result.enable_sensitive
 		end
 
+	show_scm_cmd: SCM_CMD
+			-- Display SCM tool.
+		once
+			create Result.make
+			Result.enable_sensitive
+		end
+
 	Show_preferences_cmd: EB_SHOW_PREFERENCES_COMMAND
 			-- Command to Display the User Preferences Editor.
 		once
@@ -204,7 +211,7 @@ feature -- Commands
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2020, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2021, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

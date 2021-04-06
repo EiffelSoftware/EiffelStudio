@@ -1016,6 +1016,11 @@ feature {EB_EXTERNAL_COMMANDS_EDITOR} -- Menu Building
 			l_tools_menu.extend (create {EV_MENU_SEPARATOR})
 
 					-- External commands editor
+			l_command_menu_item := develop_window.show_scm_cmd.new_menu_item
+			auto_recycle (l_command_menu_item)
+			l_tools_menu.extend (l_command_menu_item)
+
+					-- External commands editor
 			l_command_menu_item := develop_window.commands.Edit_external_commands_cmd.new_menu_item
 			auto_recycle (l_command_menu_item)
 			l_tools_menu.extend (l_command_menu_item)
@@ -1662,7 +1667,7 @@ feature -- Docking library menu items
 		end
 
 note
-	copyright: "Copyright (c) 1984-2020, Eiffel Software"
+	copyright: "Copyright (c) 1984-2021, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

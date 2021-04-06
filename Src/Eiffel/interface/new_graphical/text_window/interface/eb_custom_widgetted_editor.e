@@ -758,7 +758,7 @@ feature {NONE} -- Implementation
 			widget := l_widget
 		end
 
-	customizable_commands: HASH_TABLE [PROCEDURE, STRING]
+	customizable_commands: STRING_TABLE [PROCEDURE]
 			-- Hash of customizable commands (agent hashed by shortcut name)
 
 	check_search_bar_visible_procedure: PROCEDURE;

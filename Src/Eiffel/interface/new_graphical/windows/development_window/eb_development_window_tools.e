@@ -196,6 +196,18 @@ feature -- Access
 			end
 		end
 
+	scm_tool: detachable SCM_TOOL
+			-- SCM tool
+		require
+			not_is_recycled: not is_recycled
+		do
+			if attached {SCM_TOOL} develop_window.shell_tools.tool ({SCM_TOOL}) as l_tool then
+				Result := l_tool
+			else
+					-- SCM service is not activated!
+			end
+		end
+
 	info_tool: ES_INFORMATION_TOOL
 			-- Info tool
 		require
@@ -563,7 +575,7 @@ feature {NONE} -- Internal implementation cache
 			-- Note: Do not use directly!
 
 ;note
-	copyright:	"Copyright (c) 1984-2018, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2021, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

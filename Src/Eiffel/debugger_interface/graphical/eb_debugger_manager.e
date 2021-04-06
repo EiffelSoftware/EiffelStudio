@@ -292,6 +292,9 @@ feature {NONE} -- Initialization
 			if show_cloud_account_cmd.is_supported then
 				toolbarable_commands.extend (show_cloud_account_cmd)
 			end
+			if show_scm_cmd.is_supported then
+				toolbarable_commands.extend (show_scm_cmd)
+			end
 			toolbarable_commands.extend (Melt_project_cmd)
 			toolbarable_commands.extend (Freeze_project_cmd)
 			toolbarable_commands.extend (Finalize_project_cmd)
@@ -2616,7 +2619,7 @@ feature {NONE} -- MSIL system implementation
 			-- DLL type constant for MSIL system
 
 note
-	copyright: "Copyright (c) 1984-2020, Eiffel Software"
+	copyright: "Copyright (c) 1984-2021, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

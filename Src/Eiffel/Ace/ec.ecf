@@ -183,9 +183,10 @@
 		<library name="diff" location="$ISE_LIBRARY\library\diff\diff.ecf" readonly="false"/>
 		<library name="docking" location="$ISE_LIBRARY\library\docking\docking.ecf" readonly="false" use_application_options="true"/>
 		<library name="dotnet_assembly_information" location="$EIFFEL_SRC\dotnet\assembly_info\dotnet_assembly_information.ecf" readonly="false" use_application_options="true"/>
-		<library name="eiffel_edition" location="$EIFFEL_SRC\Eiffel\edition\edition.ecf" readonly="false" use_application_options="true"/>
 		<library name="editor" location="$ISE_LIBRARY\library\editor\editor.ecf" readonly="false"/>
+		<library name="eiffel_edition" location="$EIFFEL_SRC\Eiffel\edition\edition.ecf" readonly="false" use_application_options="true"/>
 		<library name="es_cloud" location="$EIFFEL_SRC\Eiffel\cloud\cloud.ecf" readonly="false" use_application_options="true"/>
+		<library name="es_scm" location="$EIFFEL_SRC\Eiffel\scm\scm.ecf" readonly="false" use_application_options="true"/>
 		<library name="es_update_manager" location="$EIFFEL_SRC\framework\update_manager\update_manager.ecf" use_application_options="true"/>
 		<library name="esa_api_client" location="$EIFFEL_SRC\web\support\client\esa_client.ecf"/>
 		<library name="fast_ini" location="$EIFFEL_SRC\framework\file_formats\fast_ini\fast_ini.ecf" readonly="false" use_application_options="true"/>
@@ -314,6 +315,7 @@
 			<visible class="ES_TESTING_RESULTS_TOOL" feature="default_create"/>
 			<visible class="ES_WEB_BROWSER_TOOL" feature="default_create"/>
 			<visible class="ES_WINDOWS_TOOL" feature="default_create"/>
+			<visible class="SCM_TOOL" feature="default_create"/>
 		</cluster>
 		<cluster name="process_gui" location="$ISE_LIBRARY\library\process\gui\" recursive="true"/>
 		<cluster name="tty" location="$EIFFEL_SRC\Eiffel\interface\tty\" recursive="true">

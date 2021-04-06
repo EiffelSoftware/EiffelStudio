@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-21-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-21-0 http://www.eiffel.com/developers/xml/configuration-1-21-0.xsd" name="es_scm" uuid="A0B44C10-FD14-45CF-BEF9-9979A7358BF0" library_target="es_scm">
+	<description>ISE Eiffel - Source Control Management</description>
+	<target name="es_scm">
+		<root all_classes="true"/>
+		<file_rule>
+			<exclude>/EIFGENs$</exclude>
+			<exclude>/\.svn</exclude>
+		</file_rule>
+		<capability>
+			<concurrency support="none" use="thread"/>
+			<void_safety support="none" use="none"/>
+		</capability>
+		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf" readonly="true"/>
+		<library name="base_extension" location="$ISE_LIBRARY\library\base_extension\base_extension.ecf" readonly="false"/>
+		<library name="configuration" location="$EIFFEL_SRC\framework\configuration\configuration_parser.ecf" readonly="false" use_application_options="true"/>
+		<library name="ec_kernel" location="$EIFFEL_SRC\Eiffel\Ace\ec_kernel.ecf"/>
+		<library name="ecosystem" location="$EIFFEL_SRC\Eiffel\ecosystem\ecosystem.ecf" readonly="false" use_application_options="true"/>
+		<library name="environment" location="$EIFFEL_SRC\framework\environment\environment.ecf" readonly="false" use_application_options="true"/>
+		<library name="package_visitor" location="$EIFFEL_SRC\framework\packages\visitor\package_visitor.ecf" readonly="false"/>
+		<library name="patterns" location="$ISE_LIBRARY\library\patterns\patterns.ecf" readonly="false" use_application_options="true"/>
+		<!--
+		<library name="scm_plugins" location="lib\scm_plugins\scm_plugins.ecf" readonly="false"/>
+		-->
+		<library name="time" location="$ISE_LIBRARY\library\time\time.ecf"/>
+
+		<library name="process" location="$ISE_LIBRARY\library\process\base\base_process.ecf"/>
+		<library name="svn" location="$ISE_LIBRARY\contrib\library\svn\svn.ecf"/>
+
+		<cluster name="scm" location=".\">
+			<cluster name="scm_service" location="$|service\"/>
+			<cluster name="scm_model" location="$|model\"/>
+			<cluster name="scm_implementation" location="$|implementation\"/>
+		</cluster>
+		<cluster name="scm_plugins" location=".\lib\scm_plugins" recursive="true">
+			<file_rule>
+				<exclude>/implementation$</exclude>
+			</file_rule>
+			<cluster name="implementation" location="$|implementation\" recursive="true" hidden="true"/>
+		</cluster>
+	</target>
+	<target name="testing" extends="es_scm">
+		<library name="testing" location="$ISE_LIBRARY\library\testing\testing.ecf"/>
+		<tests name="tests" location=".\testing\" recursive="true"/>
+	</target>
+</system>

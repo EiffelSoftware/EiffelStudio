@@ -218,7 +218,7 @@ feature {NONE} -- Access
 		local
 			l_tools: DS_ARRAYED_LIST [TYPE [ES_TOOL [EB_TOOL]]]
 		once
-			create l_tools.make (27)
+			create l_tools.make (28)
 
 				-- Common tools
 			l_tools.put_last ({ES_CLASS_TOOL})
@@ -242,8 +242,11 @@ feature {NONE} -- Access
 			l_tools.put_last ({ES_TESTING_RESULTS_TOOL})
 			l_tools.put_last ({ES_WEB_BROWSER_TOOL})
 
-				-- ES Cloud tools
+				-- ES Cloud tool
 			l_tools.put_last ({ES_CLOUD_ACCOUNT_TOOL})
+
+				-- Source Control Management tool
+			l_tools.put_last ({SCM_TOOL})
 
 
 				-- Custom formatter tools
@@ -684,7 +687,7 @@ invariant
 	internal_requested_tools_contains_attached_items: not is_recycled implies not internal_requested_tools.has_item (Void)
 
 ;note
-	copyright:	"Copyright (c) 1984-2018, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2021, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

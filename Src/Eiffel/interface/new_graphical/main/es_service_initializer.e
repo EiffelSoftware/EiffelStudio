@@ -56,6 +56,7 @@ feature -- Services
 			if {ES_IDE_SETTINGS}.cloud_enabled then
 				a_container.register_with_activator ({ES_CLOUD_S}, agent new_es_cloud_service, False)
 			end
+			a_container.register_with_activator ({SOURCE_CONTROL_MANAGEMENT_S}, agent new_scm_service, False)
 			a_container.register_with_activator ({NOTIFICATION_S}, agent new_notification_service, False)
 		end
 
@@ -176,6 +177,11 @@ feature {NONE} -- Factory
 			-- New EiffelStudio cloud service.
 		do
 			Result := (create {ES_CLOUD_FACTORY}).new_es_cloud
+		end
+
+	new_scm_service: detachable SOURCE_CONTROL_MANAGEMENT_S
+		do
+			Result := (create {SCM_FACTORY}).new_scm
 		end
 
 	new_notification_service: detachable NOTIFICATION_S

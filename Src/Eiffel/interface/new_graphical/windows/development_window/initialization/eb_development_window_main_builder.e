@@ -53,13 +53,14 @@ feature -- Command
 			-- One is saved in preferences
 			-- The other is saved in session manager
 			-- Maybe we should divide the class EB_DEVELOPMENT_WINDOW_DATA into two classes?
-			if(create {SHARED_WORKBENCH}).workbench.system_defined then
-				l_data ?= develop_window.project_session_data.value (develop_window.development_window_data.development_window_data_id)
-			end
-			if l_data = Void then
-				l_data ?= develop_window.session_data.value (develop_window.development_window_data.development_window_data_id)
-			end
-			if l_data = Void then
+			if
+				(create {SHARED_WORKBENCH}).workbench.system_defined and then
+				attached {EB_DEVELOPMENT_WINDOW_DATA} develop_window.project_session_data.value (develop_window.development_window_data.development_window_data_id) as l_project_data
+			then
+				l_data := l_project_data
+			elseif attached {EB_DEVELOPMENT_WINDOW_DATA} develop_window.session_data.value (develop_window.development_window_data.development_window_data_id) as l_session_data then
+				l_data := l_session_data
+			else
 				l_data := develop_window.development_window_data
 			end
 			create l_screen
@@ -144,6 +145,7 @@ feature -- Command
 			l_system_info_cmd: EB_SYSTEM_INFORMATION_CMD
 			l_send_stone_to_context_cmd: EB_STANDARD_CMD
 			l_show_cloud_account_cmd: ES_CLOUD_ACCOUNT_CMD
+			l_show_scm_cmd: SCM_CMD
 
 			l_show_toolbar_commands: HASH_TABLE [EB_SHOW_TOOLBAR_COMMAND, SD_TOOL_BAR_CONTENT]
 			l_editor_commands: ARRAYED_LIST [EB_GRAPHICAL_COMMAND]
@@ -324,6 +326,10 @@ feature -- Command
 			l_show_cloud_account_cmd := develop_window.show_cloud_account_cmd
 			auto_recycle (l_show_cloud_account_cmd)
 			l_dev_commands.toolbarable_commands.extend (l_show_cloud_account_cmd)
+
+			l_show_scm_cmd := develop_window.show_scm_cmd
+			auto_recycle (l_show_scm_cmd)
+			l_dev_commands.toolbarable_commands.extend (l_show_scm_cmd)
 
 			create l_send_stone_to_context_cmd.make
 			auto_recycle (l_send_stone_to_context_cmd)
@@ -928,7 +934,6 @@ feature {NONE} -- Tool construction
 		local
 			l_show_cmd: ES_SHOW_TOOL_COMMAND
 			l_accel: EV_ACCELERATOR
-			l_shortcut: SHORTCUT_PREFERENCE
 			l_dev_commands: EB_DEVELOPMENT_WINDOW_COMMANDS
 		do
 			l_dev_commands := develop_window.commands
@@ -939,8 +944,7 @@ feature {NONE} -- Tool construction
 
 			if a_tool.shortcut_preference_name /= Void and then a_tool.edition = 1 then
 					-- Create shortcuts for first edition only!
-				l_shortcut := develop_window.preferences.misc_shortcut_data.shortcuts.item (a_tool.shortcut_preference_name)
-				if l_shortcut /= Void then
+				if attached develop_window.preferences.misc_shortcut_data.shortcuts.item (a_tool.shortcut_preference_name) as l_shortcut then
 					create l_accel.make_with_key_combination (l_shortcut.key, l_shortcut.is_ctrl, l_shortcut.is_alt, l_shortcut.is_shift)
 					l_accel.actions.extend (agent check_mode_and_show (l_show_cmd, a_tool))
 					l_show_cmd.set_accelerator (l_accel)
@@ -1129,7 +1133,7 @@ feature{NONE} -- Implementation
 		end
 
 note
-	copyright: "Copyright (c) 1984-2020, Eiffel Software"
+	copyright: "Copyright (c) 1984-2021, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

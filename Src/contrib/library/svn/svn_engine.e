@@ -715,6 +715,10 @@ feature {NONE} -- impl
 				cmd.append_string_general (" -u ")
 			end
 			cmd.append_string_general (" --xml status ")
+			-- For unknown reason, it is better to pass the full `a_path.name`, rather than just "."
+			-- even if the current directory is `a_path`
+			-- cmd.append_string_general (".")
+			cmd.append_string_general (a_path.name)
 
 			debug ("SVN_ENGINE")
 				print ({STRING_32} "Command: [" + cmd + "]%N")
@@ -776,7 +780,7 @@ feature {NONE} -- impl
 		end
 
 note
-	copyright: "Copyright (c) 2003-2018, Jocelyn Fiat"
+	copyright: "Copyright (c) 2003-2021, Jocelyn Fiat"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			 Jocelyn Fiat

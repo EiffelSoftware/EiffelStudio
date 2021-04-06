@@ -1,25 +1,28 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
-<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-18-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-18-0 http://www.eiffel.com/developers/xml/configuration-1-18-0.xsd" name="svn" uuid="542546F4-A62F-4E6B-B298-C7EBAE7B82A8" library_target="svn">
-	<target name="svn">
-		<description>Eiffel SVN (Subversion library)</description>
+<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-21-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-21-0 http://www.eiffel.com/developers/xml/configuration-1-21-0.xsd" name="scm" uuid="0750E356-31CC-4766-90A5-434D24697BBF" library_target="scm">
+	<target name="scm">
+		<description>Eiffel SCM (SCM library)</description>
 		<root all_classes="true"/>
 		<file_rule>
+			<exclude>/.git$</exclude>
 			<exclude>/.svn$</exclude>
 			<exclude>/CVS$</exclude>
 			<exclude>/EIFGENs$</exclude>
 		</file_rule>
-		<option warning="true" namespace="EiffelSoftware.Library">
+		<option warning="warning" namespace="EiffelSoftware.Library">
 		</option>
+		<setting name="total_order_on_reals" value="false"/>
+		<setting name="dead_code_removal" value="feature"/>
 		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf"/>
 		<library name="encoding" location="$ISE_LIBRARY\library\encoding\encoding.ecf"/>
 		<library name="process" location="$ISE_LIBRARY\library\process\base\base_process.ecf"/>
+		<library name="svn" location="$ISE_LIBRARY\contrib\library\svn\svn.ecf"/>
 		<library name="time" location="$ISE_LIBRARY\library\time\time.ecf"/>
 		<library name="uri" location="$ISE_LIBRARY\library\text\uri\uri.ecf"/>
 		<library name="xml_parser" location="$ISE_LIBRARY\library\text\parser\xml\parser\xml_parser.ecf"/>
 		<library name="xml_tree" location="$ISE_LIBRARY\library\text\parser\xml\tree\xml_tree.ecf"/>
-		<cluster name="svn" location=".\" recursive="true">
+		<cluster name="scm" location=".\" recursive="true">
 			<file_rule>
-				<exclude>/tests$</exclude>
 				<exclude>/implementation$</exclude>
 			</file_rule>
 			<cluster name="implementation" location="$|implementation\" recursive="true" hidden="true"/>

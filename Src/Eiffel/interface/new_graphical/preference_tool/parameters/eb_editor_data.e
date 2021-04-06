@@ -1204,7 +1204,7 @@ feature -- Keybord shortcuts Customization
 			create Result.make (3)
 		end
 
-	shortcuts: HASH_TABLE [SHORTCUT_PREFERENCE, STRING]
+	shortcuts: STRING_TABLE [SHORTCUT_PREFERENCE]
 			-- Shortcuts
 		once
 			create Result.make (default_shortcut_actions.count)

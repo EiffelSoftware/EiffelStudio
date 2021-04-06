@@ -150,11 +150,7 @@ feature {NONE} -- Initialization
 				--| Show/hide internal stack
 			initialize_box_internal_callstack_control (a_widget)
 
-			if
-				attached {IDE_S} (create {SERVICE_CONSUMER [IDE_S]}).service as l_ide_service
-			then
-				l_ide_service.ide_connection.connect_events (Current)
-			end
+			register_as_ide_observer
 		end
 
 	update_call_stack_level_selection_mode (dbl_click_bpref: BOOLEAN_PREFERENCE)

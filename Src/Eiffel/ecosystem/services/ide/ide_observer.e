@@ -9,6 +9,17 @@ class
 inherit
 	EVENT_OBSERVER_I
 
+feature -- Registration helpers
+
+	register_as_ide_observer
+		do
+			if
+				attached {IDE_S} (create {SERVICE_CONSUMER [IDE_S]}).service as l_ide_service
+			then
+				l_ide_service.ide_connection.connect_events (Current)
+			end
+		end
+
 feature {IDE_S} -- Event handlers
 
 	on_zoom (a_zoom_factor: INTEGER)

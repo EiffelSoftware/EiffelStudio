@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "Core of the application"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -23,8 +23,6 @@ feature {NONE} -- Initialization
 	make
 			-- Create and map the first window: the system window.
 		local
-			compiler: ES_BATCH
-			graphic_compiler: ES_GRAPHIC
 			--| uncomment the following line when profiling
 			--prof_setting: PROFILING_SETTING
 		do
@@ -40,10 +38,10 @@ feature {NONE} -- Initialization
 				argument (1).is_equal ("-from_bench") or else argument (1).is_equal ("-bench"))
 			then
 				set_gui (True)
-				create graphic_compiler.make
+				;(create {ES_GRAPHIC}.make).do_nothing
 			else
 					-- Start the compilation in batch mode from the bench executable.
-				create compiler.make
+				;(create {ES_BATCH}.make).do_nothing
 			end
 
 			--| uncomment the following line when profiling

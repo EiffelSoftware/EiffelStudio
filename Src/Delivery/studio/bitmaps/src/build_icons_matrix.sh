@@ -12,11 +12,14 @@ cd icons
 ../build_svg_matrix.sh . ./icons_32x32.svg
 cd ..
 
-
-#./inc/matrix_from_subpixmaps.sh icons icons/16x16.png
-./inc/matrix_from_subpixmaps.sh icons icons/icons_16x16.png
-./inc/matrix_from_subpixmaps.sh icons icons/icons_20x20.png
-./inc/matrix_from_subpixmaps.sh icons icons/icons_24x24.png
-./inc/matrix_from_subpixmaps.sh icons icons/icons_32x32.png
+if [ -x "$(command -v "inkscape")" ]; then
+	echo Completed using inkscape
+else
+	#./inc/matrix_from_subpixmaps.sh icons icons/16x16.png
+	./inc/matrix_from_subpixmaps.sh icons icons/icons_16x16.png
+	./inc/matrix_from_subpixmaps.sh icons icons/icons_20x20.png
+	./inc/matrix_from_subpixmaps.sh icons icons/icons_24x24.png
+	./inc/matrix_from_subpixmaps.sh icons icons/icons_32x32.png
+fi
 
 

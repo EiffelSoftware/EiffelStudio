@@ -311,6 +311,8 @@ feature -- Hooks
 
 					e := api.new_html_email (l_params.admin_email, "Contact message from " + html_encoded (l_name.value) + " (" + html_encoded (l_contact_email_address) + ")" , email_html_message ("notification", r, vars))
 					e.set_from_address (l_params.admin_email)
+							-- Reply to the contact email address.
+					e.set_reply_to_address (l_contact_email_address)
 					api.process_email (e)
 
 					if not api.has_error then

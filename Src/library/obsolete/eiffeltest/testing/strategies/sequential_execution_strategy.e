@@ -1,8 +1,6 @@
-note
-	description:
-		"Strategy executing tests in the suite in a specified order"
+﻿note
+	description: "Strategy executing tests in the suite in a specified order"
 	legal: "See notice at end of class."
-
 	status: "See notice at end of class."
 	date: "$Date$"
 	revision: "$Revision$"
@@ -28,7 +26,7 @@ feature -- Status report
 	is_ready: BOOLEAN
 			-- Is strategy ready for execution?
 		do
-			Result := Precursor and then not context.is_empty and then 
+			Result := Precursor and then not context.is_empty and then
 				all_indices_valid
 		end
 
@@ -37,13 +35,13 @@ feature -- Status report
 		local
 			i: INTEGER
 		do
-			from 
+			from
 				i := 1
 				Result := True
 			until
 				not Result or i > context.count
 			loop
-				Result := suite.valid_test_index (context @ i)
+				Result := suite.valid_test_index (context [i])
 				i := i + 1
 			end
 		end
@@ -51,14 +49,14 @@ feature -- Status report
 	Has_random_generator: BOOLEAN = False
 			-- Does current object have access to a random number generator?
 			-- (Answer: no)
-	 
+
 feature -- Cursor movement
 
 	forth
 			-- Select next test.
 		do
 			index := index + 1
-			suite.select_test (context @ index)
+			suite.select_test (context [index])
 			is_reset := False
 		end
 
@@ -66,7 +64,7 @@ feature -- Cursor movement
 			-- Select first test.
 		do
 			reset
-			suite.select_test (context @ index)
+			suite.select_test (context [index])
 		ensure then
 			index_reset: index = 1
 		end
@@ -84,7 +82,7 @@ feature {NONE} -- Inapplicable
 			-- Random seed
 		do
 		end
-	 
+
 	set_seed (s: INTEGER)
 			-- Set seed to `s'.
 		do
@@ -97,7 +95,7 @@ feature {NONE} -- Implementation
 
 	index: INTEGER
 			-- Current index
-	
+
 	all_indices_valid: BOOLEAN
 			-- Are all test indices in context valid?
 		require
@@ -110,32 +108,28 @@ feature {NONE} -- Implementation
 		do
 			min := suite.test_count + 1
 			from i := 1 until i > context.count loop
-				val := context @ i
+				val := context [i]
 				if val < min then min := val end
 				if val > max then max := val end
 				i := i + 1
 			end
 			Result := min <= max and then (1 <= min and max <= suite.test_count)
 		end
-	
+
 invariant
 
 	valid_index_constraint: is_test_selected implies
 			(1 <= index and index <= context.count)
-			
+
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2021, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
-
-
-
-end -- class SEQUENTIAL_EXECUTION_STRATEGY
-
+end

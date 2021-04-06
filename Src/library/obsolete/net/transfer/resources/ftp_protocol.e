@@ -488,7 +488,7 @@ feature {NONE} -- Implementation
 			until
 				Result or i = codes.count + 1
 			loop
-				Result := (codes @ i = code)
+				Result := codes [i] = code
 				i := i + 1
 			end
 		end
@@ -692,7 +692,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2019, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2021, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

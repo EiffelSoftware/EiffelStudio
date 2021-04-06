@@ -110,9 +110,9 @@ feature -- Basic operations
 			until
 				i = 256
 			loop
-				cur := character_array @ i
+				cur := character_array [i]
 				if i > 0 then
-					last := character_array @ (i - 1)
+					last := character_array [i - 1]
 				else
 					last := False
 				end
@@ -128,7 +128,7 @@ feature -- Basic operations
 				end
 				i := i + 1
 			end
-			if character_array @ start = True then
+			if character_array [start] then
 				create_comparator (start.to_character_8, (255).to_integer.to_character_8)
 			end
 		end
@@ -285,7 +285,7 @@ invariant
 			token_type /= 0
 
 note
-	copyright:	"Copyright (c) 1984-2019, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2021, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

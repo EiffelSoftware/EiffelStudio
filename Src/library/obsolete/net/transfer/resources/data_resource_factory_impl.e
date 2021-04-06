@@ -136,9 +136,9 @@ feature {NONE} -- Implementation
 			from
 				i := 1
 			until
-				(i = supported_services.count + 1) or (Result /= 0)
+				i = supported_services.count + 1 or Result /= 0
 			loop
-				if equal (service, supported_services @ i) then
+				if equal (service, supported_services [i]) then
 					Result := i
 				end
 				i := i + 1
@@ -242,7 +242,7 @@ invariant
 							not default_service.is_empty
 
 note
-	copyright:	"Copyright (c) 1984-2019, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2021, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

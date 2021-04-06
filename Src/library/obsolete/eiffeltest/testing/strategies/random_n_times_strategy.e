@@ -21,7 +21,7 @@ feature -- Cursor movement
 		do
 			from until stop loop
 				random.forth
-				if runs @ selected_test > 0 then stop := True end
+				if runs [selected_test] > 0 then stop := True end
 			end
 			suite.select_test (selected_test)
 			tests := tests - 1
@@ -55,12 +55,12 @@ feature {NONE} -- Implementation
 			i: INTEGER
 		do
 			Precursor
-			i := runs @ suite.index
+			i := runs [suite.index]
 			runs.put (i - 1, suite.index)
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2019, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2021, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

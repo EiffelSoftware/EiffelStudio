@@ -46,7 +46,7 @@ feature {NONE} -- Initialization
 			file_set: file = f
 			columns_set: columns = c + 1
 			table_created: table /= Void
-			last_column_set: table @ table.count /= Void
+			last_column_set: table [table.count] /= Void
 			result_column: has_result_column
 		end
 
@@ -133,11 +133,11 @@ feature -- Status report
 			until
 				not Result or i > data_values.count
 			loop
-				if data_values @ i /= Void then
-					Result := ((data_values @ i).occurrences ('%T') = 0) and
-						(table @ i).input_accepted (data_values @ i)
+				if data_values [i] /= Void then
+					Result := ((data_values [i]).occurrences ('%T') = 0) and
+						(table [i]).input_accepted (data_values [i])
 				else
-					Result := (table @ i).input_accepted (data_values @ i)
+					Result := (table [i]).input_accepted (data_values [i])
 				end
 				i := i + 1
 			end
@@ -196,7 +196,7 @@ feature -- Element change
 		do
 			table.put (c, pos)
 		ensure
-			handler_set: table @ pos = c
+			handler_set: table [pos] = c
 		end
 
 feature -- Basic operations
@@ -296,7 +296,7 @@ feature {NONE} -- Implementation
 			if suite = Void then create suite.make end
 			create tc.make
 			from i := 1 until i > columns loop
-				(table @ i).inject (tc, (data_values @ i))
+				(table [i]).inject (tc, (data_values [i]))
 				i := i + 1
 			end
 			if is_comment then
@@ -319,7 +319,7 @@ invariant
 	data_values_consistent: has_data_values implies data_values.count = columns
 
 note
-	copyright:	"Copyright (c) 1984-2019, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2021, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

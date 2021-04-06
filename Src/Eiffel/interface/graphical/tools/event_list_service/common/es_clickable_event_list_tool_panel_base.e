@@ -182,7 +182,7 @@ feature {NONE} -- Factory
 		do
 			create l_lines.make (1)
 			l_lines.extend (a_line)
-			Result := create_multiline_clickable_grid_item (l_lines, False, a_allow_selection)
+			Result := create_multiline_clickable_grid_item (l_lines, a_allow_selection, False)
 		ensure
 			result_attached: Result /= Void
 		end
@@ -199,12 +199,10 @@ feature {NONE} -- Factory
 			a_lines_attached: a_lines /= Void
 		local
 			l_tokens: like tokens_list_from_lines
-			l_selectable_item: EB_GRID_EDITOR_ITEM
 			l_shared_writer: EB_SHARED_WRITER
 		do
 			if a_allow_selection then
-				create l_selectable_item
-				Result := l_selectable_item
+				create {EB_GRID_EDITOR_ITEM} Result
 			else
 				create Result
 			end

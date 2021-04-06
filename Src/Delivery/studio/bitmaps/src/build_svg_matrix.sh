@@ -2,7 +2,7 @@
 
 # Usage:
 #
-# build_svg_matrix.sh 16x16 32x32.svg
+# build_svg_matrix.sh rootdir src.svg tgt.png
 #
 # it will build a 32x32.svg icons matrix from 16x16/*/*.svg 
 # and also render as 32x32.png with a 1pixel matrix border!
@@ -46,13 +46,13 @@ else
 	matrix_pixel_border=0
 fi
 
-if [ -z "$3" ] 
+if [ -z "$4" ] 
 then
 	cols=0
 	rows=0
 else
-	cols=$( echo $3 | cut -d'x' -f 1)
-	rows=$( echo $3 | cut -d'x' -f 2)
+	cols=$( echo $4 | cut -d'x' -f 1)
+	rows=$( echo $4 | cut -d'x' -f 2)
 fi
 
 # Main
@@ -60,7 +60,7 @@ fi
 wsep=$matrix_pixel_border
 hsep=$matrix_pixel_border
 
-echo from $rootdir to $svg_target
+echo from directory $rootdir to $svg_target
 mkdir -p $rootdir
 if [ -e ${svg_target} ] 
 then
@@ -167,6 +167,8 @@ then
 	png_target=$(basename $svg_target | cut -d'.' -f 1)
 	png_target=$(dirname $svg_target)/${png_target}.png
 fi
+
+echo "from SVG $svg_target to $png_target"
 
 
 if [ "$(( $w + $h ))" -eq "0" ]

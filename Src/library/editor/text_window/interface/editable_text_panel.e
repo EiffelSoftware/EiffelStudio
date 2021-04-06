@@ -77,8 +77,7 @@ feature -- Access
 	cursor_type: EDITOR_CURSOR
 			-- <Precursor>
 		do
-			check False end -- Not called.
-			Result := cursor_type
+			check False then end
 		end
 
 feature -- Content change

@@ -1433,7 +1433,7 @@ feature {NONE} -- Display functions
 	 			until
 	 				curr_line > last or else l_text.after
 	 			loop
-	 				y_offset := l_editor_viewport.y_offset + ((curr_line - first_line_displayed) * line_height)
+	 				y_offset := l_editor_viewport.y_offset + (curr_line - first_line_displayed) * line_height
 
 					if buffered then
 	 		--			draw_line_to_buffered_line (curr_line, l_text.current_line)
@@ -1864,16 +1864,22 @@ feature {NONE} -- Implementation
 
 	line_type: EDITOR_LINE
 			-- Type of a line.
+		require
+			False
 		do
-			check False end -- Not called.
-			Result := line_type
+			check from_precondition: False then end
+		ensure
+			False
 		end
 
 	cursor_type: TEXT_CURSOR
 			-- Type of a cursor.
+		require
+			False
 		do
-			check False end -- Not called.
-			Result := cursor_type
+			check from_precondition: False then end
+		ensure
+			False
 		end
 
 feature {NONE} -- Encoding conversion

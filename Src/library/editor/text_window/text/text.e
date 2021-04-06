@@ -130,23 +130,21 @@ feature -- Access
 			text_loaded: reading_text_finished
 		local
 			li: like current_line
-			l_string_32: STRING_32
 		do
 			from
 				li := first_line
 				check li /= Void end -- The first line is not void, otherwise a bug.
-				l_string_32 := li.wide_image
+				Result := li.wide_image
 			until
 				li = last_line
 			loop
 				if attached li.eol_token as l_t then
-					l_string_32.append (l_t.wide_image)
+					Result.append (l_t.wide_image)
 				end
 				li := li.next
 				check li /= Void end -- Only the `last_line.next' can be void.
-				l_string_32.append (li.wide_image)
+				Result.append (li.wide_image)
 			end
-			Result := l_string_32
 		end
 
 	first_read_block_size: INTEGER
@@ -223,7 +221,7 @@ feature -- Query
 	after: BOOLEAN
 			-- Is the `current_line' beyond the end of the text ?
 		do
-			Result := (current_line = Void)
+			Result := current_line = Void
 		end
 
 	text_length: INTEGER
@@ -463,11 +461,7 @@ feature {NONE} -- Text Loading
 
 			on_text_block_loaded (True)
 
-			if j /= 0 then
-					-- the file has not been entirely loaded, so we will
-					-- finish loading the file on idle actions.
-				reading_text_finished := False
-			else
+			if j = 0 then
 				if
 					not l_current_string.is_empty and then
 					(l_current_string.item (l_current_string.count) = '%N')
@@ -476,6 +470,10 @@ feature {NONE} -- Text Loading
 				end
 				reading_text_finished := True
 				on_text_loaded
+			else
+					-- the file has not been entirely loaded, so we will
+					-- finish loading the file on idle actions.
+				reading_text_finished := False
 			end
 			ev_application.add_idle_action (finish_reading_string_agent)
 		end

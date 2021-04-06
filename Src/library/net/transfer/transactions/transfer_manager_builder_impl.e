@@ -82,7 +82,7 @@ feature -- Status report
 	is_mode_valid (mode: INTEGER): BOOLEAN
 			-- Is `mode' valid?
 		do
-			Result := (Readable <= mode and mode <= Writable)
+			Result := Readable <= mode and mode <= Writable
 		end
 
 	is_address_correct (addr: STRING_8; mode: INTEGER): BOOLEAN
@@ -206,8 +206,8 @@ feature -- Status setting
 		do
 			create target_proxy.make (host, port)
 		ensure
-			target_proxy_exists: target_proxy /= Void
-			host_port_set: attached {like source_proxy} target_proxy as l_proxy and then (l_proxy.host = host and l_proxy.port = port)
+			target_proxy_exists: attached target_proxy
+			host_port_set: attached target_proxy as p and then (p.host = host and p.port = port)
 		end
 
 	set_proxies (host: STRING_8; port: INTEGER)
@@ -261,7 +261,6 @@ feature -- Element change
 		local
 			l_sr: detachable DATA_RESOURCE
 			l_tr: detachable DATA_RESOURCE
-			ta: SINGLE_TRANSACTION
 			l_timeout: like timeout
 		do
 			last_added_source_correct := is_address_correct (s, Readable)
@@ -297,8 +296,7 @@ feature -- Element change
 						Io.error.put_string (" seconds%N")
 					end
 				end
-				create ta.make (l_sr, l_tr)
-				transactions.extend (ta)
+				transactions.extend (create {SINGLE_TRANSACTION}.make (l_sr, l_tr))
 			end
 		ensure
 			one_more_transaction_if_correct:
@@ -411,19 +409,12 @@ feature {NONE} -- Implementation
 
 	optimized_count: INTEGER
 			-- Number of optimized transactions
-		local
-			l_optimized_transactions: like optimized_transactions
 		do
-			l_optimized_transactions := optimized_transactions
-			if l_optimized_transactions /= Void and then not l_optimized_transactions.is_empty then
-				from
-					l_optimized_transactions.start
-				until
-					l_optimized_transactions.after
-				loop
-					Result := Result + l_optimized_transactions.item.count
-					l_optimized_transactions.forth
-				end
+			if
+				attached optimized_transactions as l_optimized_transactions and then
+				not l_optimized_transactions.is_empty
+			then
+				⟳ t: l_optimized_transactions ¦ Result := Result + t.count ⟲
 			end
 		end
 
@@ -439,44 +430,37 @@ feature {NONE} -- Implementation
 			l_optimized_transactions: like optimized_transactions
 		do
 			create hash.make (count)
-			from transactions.start until transactions.after loop
-				addr := transactions.item.source.address
+			across transactions as t loop
+				addr := t.item.source.address
 				if attached hash.item (addr) as lst then
-					lst.extend (transactions.index)
+					lst.extend (t.target_index)
 				else
 					create l_list.make
-					l_list.extend (transactions.index)
+					l_list.extend (t.target_index)
 					hash.put (l_list, addr)
 				end
-				transactions.forth
 			end
 
 			create l_optimized_transactions.make (count)
 			optimized_transactions := l_optimized_transactions
 
-			from transactions.start until transactions.after loop
-				if attached hash.item (transactions.item.source.address) as lst then
-					lst.start
-					if not transactions [lst.item].source.supports_multiple_transactions or lst.count = 1 then
-						from lst.start until lst.after loop
-							l_optimized_transactions.extend (transactions [lst.item])
-							lst.forth
+			across transactions as t loop
+				if attached hash.item (t.item.source.address) as lst then
+					if not transactions [lst.first].source.supports_multiple_transactions or lst.count = 1 then
+						across lst as c loop
+							l_optimized_transactions.extend (transactions [c.item])
 						end
 					else
-						from
-							lst.start
-							create multitrans.make
-						until
-							lst.after
+						create multitrans.make
+						across
+							lst as c
 						loop
-							multitrans.add_transaction (transactions [lst.item])
-							lst.forth
+							multitrans.add_transaction (transactions [c.item])
 						end
 						l_optimized_transactions.extend (multitrans)
 					end
-					hash.remove (transactions.item.source.address)
+					hash.remove (t.item.source.address)
 				end
-				transactions.forth
 			end
 		ensure
 			optimized:
@@ -495,14 +479,11 @@ feature {NONE} -- Implementation
 			create l_manager.make
 			transfer_manager := l_manager
 			if attached optimized_transactions as l_optimized_transactions then
-				from
-					l_optimized_transactions.start
-					l_manager.stop_on_error
-				until
-					l_optimized_transactions.after
+				l_manager.stop_on_error
+				across
+					l_optimized_transactions as t
 				loop
-					l_manager.add_transaction (l_optimized_transactions.item)
-					l_optimized_transactions.forth
+					l_manager.add_transaction (t.item)
 				end
 			end
 		ensure

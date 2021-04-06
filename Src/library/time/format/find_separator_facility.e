@@ -8,13 +8,12 @@
 class
 	FIND_SEPARATOR_FACILITY
 
-inherit
+inherit {NONE}
+
 	CODE_VALIDITY_CHECKER
 		export
 			{NONE} all
 		end
-
-	ANY
 
 feature {NONE} -- Constants
 

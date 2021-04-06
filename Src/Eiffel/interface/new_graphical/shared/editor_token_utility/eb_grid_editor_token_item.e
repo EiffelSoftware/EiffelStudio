@@ -108,11 +108,7 @@ feature -- Access
 			-- Result `stone_internal' if `stone_function' is not set,
 			-- otherwise invoke `stone_function' to get the actual stone.			
 		do
-			if stone_function = Void then
-				Result := stone_internal
-			else
-				Result := stone_function.item (Void)
-			end
+			Result := if attached stone_function as f then f.item else stone_internal end
 		end
 
 	stone_function: FUNCTION [STONE]

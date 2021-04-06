@@ -81,7 +81,7 @@ feature -- Access
 							--| The key isn't in child `k'.
 						pos := aux
 						k := k + 1
-						bool := (k > arity)
+						bool := k > arity
 						check
 							research_always_successful: not (bool)
 						end
@@ -149,7 +149,7 @@ feature -- Status report
 	is_root: BOOLEAN
 			-- Is Current the root node of the tree?
 		do
-			Result := (parent = Void)
+			Result := parent = Void
 		end
 
 	is_leaf: BOOLEAN

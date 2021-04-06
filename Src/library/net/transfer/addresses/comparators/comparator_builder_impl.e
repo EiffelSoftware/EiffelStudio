@@ -7,8 +7,7 @@
 
 class COMPARATOR_BUILDER_IMPL
 
-inherit
-	ANY
+inherit {NONE}
 
 	ASCII
 		export

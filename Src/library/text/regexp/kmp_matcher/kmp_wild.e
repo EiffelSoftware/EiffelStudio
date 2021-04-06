@@ -259,7 +259,7 @@ feature -- Search
 		local
 			ls: like string_list
 			lsi: STRING_32
-			fa, i, tc, pc, tcmpc: INTEGER
+			fa, i, tc, tcmpc: INTEGER
 			sr, cr: STRING_32
 			found_one: BOOLEAN
 			kmp_matcher: KMP_MATCHER
@@ -288,8 +288,7 @@ feature -- Search
 			create cr.make (1)
 			cr.extend (character_representation)
 			tc := text.count
-			pc := pattern.count
-			tcmpc := tc - pc
+			tcmpc := tc - pattern.count
 			create kmp_matcher.make (pattern, text)
 			str_without_wild := pattern.twin
 			str_without_wild.prune_all (string_representation)
@@ -333,7 +332,7 @@ feature -- Search
 									kmp_matcher.set_pattern (lsi)
 									kmp_matcher.start_at (i)
 									if kmp_matcher.search_for_pattern then
-										found_one := (not is_star implies kmp_matcher.found_at = i)
+										found_one := not is_star implies kmp_matcher.found_at = i
 										if found_one then
 											i := kmp_matcher.found_at + lsi.count
 											if fa = - 1 then
@@ -373,6 +372,13 @@ feature -- Search
 		ensure then
 			created: lengths /= Void
 		end
+
+feature {NONE} -- Attributes
+
+	string_list: LINKED_LIST [STRING_32]
+			-- List of strings.
+			--| Parts not containing `string_representation' and
+			--| `character_representation' are held as items
 
 feature {NONE} -- Implementation
 
@@ -457,15 +463,6 @@ feature {NONE} -- Implementation
 				end
  			end
 		end
-
-feature {NONE} -- Attributes
-
-	string_list: LINKED_LIST [STRING_32]
-			-- List of strings.
-			--| Parts not containing `string_representation' and
-			--| `character_representation' are held as items
-
-feature {NONE} -- Implementation
 
 	imp_same_substring (a_text: STRING_32; a_text_start, a_text_end: INTEGER; a_string: STRING_32): BOOLEAN
 			-- Optimized code for `a_text.substring (a_text_start, a_text_end).is_equal (a_string)'?

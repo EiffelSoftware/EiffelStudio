@@ -72,13 +72,13 @@ feature -- Status report
 	read_mode: BOOLEAN
 			-- Is read mode set?
 		do
-			Result := (mode = Read_mode_id)
+			Result := mode = Read_mode_id
 		end
 
 	write_mode: BOOLEAN
 			-- Is write mode set?
 		do
-			Result := (mode = Write_mode_id)
+			Result := mode = Write_mode_id
 		end
 
 	valid_mode (n: INTEGER): BOOLEAN
@@ -421,15 +421,13 @@ feature {NONE} -- Implementation
 			port_positive: p > 0
 		local
 			af: INET_ADDRESS_FACTORY
-			str: STRING_8
 		do
 			create af
 			Result := Ftp_port_command.twin
 			Result.extend (' ')
 			Result.append (af.create_localhost.host_address)
 			Result.append (",")
-			str := byte_list (p, 2, False)
-			Result.append (str)
+			Result.append (byte_list (p, 2, False))
 		end
 
 	byte_list (n, num: INTEGER; low_first: BOOLEAN): STRING_8
@@ -502,7 +500,7 @@ feature {NONE} -- Implementation
 			if str.count >= 4 then
 				s := str.twin
 				s.left_adjust
-				if s.count >= 4 then Result := (s.item (4) = '-') end
+				if s.count >= 4 then Result := s [4] = '-' end
 			end
 		end
 
@@ -514,13 +512,11 @@ feature {NONE} -- Implementation
 		local
 			i: INTEGER
 			code: INTEGER
-			pos: INTEGER
 			str: STRING
 		do
 			str := a_reply.twin
 			str.left_adjust
-			pos := str.index_of (' ', 1)
-			str.keep_head (pos - 1)
+			str.keep_head (str.index_of (' ', 1) - 1)
 			code := str.to_integer
 			from
 				i := 1

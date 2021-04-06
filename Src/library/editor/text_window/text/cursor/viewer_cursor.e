@@ -465,7 +465,6 @@ feature {NONE} -- Implementation
 		local
 			current_x: INTEGER
 			current_token, l_previous, l_end_token: detachable EDITOR_TOKEN
-			x_in_token: INTEGER
 		do
 				-- Update the current token.
 			from
@@ -489,18 +488,13 @@ feature {NONE} -- Implementation
 					pos_in_token := 1
 					token := current_token
 				else
-						-- we are too far, so the good token is the
+						-- We are too far, so the good token is the
 						-- previous one, we have to look into it.
 					l_previous := current_token.previous
 					check l_previous /= Void end -- Never, otherwise a bug.
 					token := l_previous
-
-						-- rewind our pixel position
-					current_x := current_x - token.width
-					x_in_token := x_in_pixels - current_x
-
-						-- Now retrieve the position inside the token.
-					pos_in_token := token.retrieve_position_by_width(x_in_token)
+						-- Retrieve the position inside the token.
+					pos_in_token := l_previous.retrieve_position_by_width (l_previous.width + x_in_pixels - current_x)
 				end
 			else
 				-- The cursor is further than the end of the line, so

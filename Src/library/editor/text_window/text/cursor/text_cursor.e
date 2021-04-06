@@ -135,11 +135,12 @@ feature -- Access
 			from
 				current_token := token.previous
 				if current_token = Void then
-					if line /= Void then
-						if attached line.previous as l_previous then
-							current_line := l_previous
-							current_token := current_line.eol_token
-						end
+					if
+						attached line and then
+						attached line.previous as l_previous
+					then
+						current_line := l_previous
+						current_token := current_line.eol_token
 					end
 				else
 					current_line := line

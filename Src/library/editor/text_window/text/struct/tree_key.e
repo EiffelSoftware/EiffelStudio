@@ -10,9 +10,6 @@
  class
 	TREE_KEY [G]
 
-inherit
-	ANY
-
 create
 	make
 
@@ -36,11 +33,10 @@ feature -- Status report
 
 	is_valid: BOOLEAN
 			-- Is current valid as key of parent?
-		local
-			l_parent: like parent
 		do
-			l_parent := parent
-			Result := l_parent /= Void and then l_parent.valid_key (Current)
+			Result := attached parent as p and then p.valid_key (Current)
+		ensure
+			attached parent
 		end
 
 	pos_in_parent: INTEGER

@@ -107,22 +107,22 @@ feature -- Formatting
 					end
 				elseif c = cl then
 					l_skip := False
-					if i < l_count then
-						if n = cl then
-							Result.append_character (n)
-							i := i + 1
-							l_skip := True
-						end
+					if i < l_count and n = cl then
+						Result.append_character (n)
+						i := i + 1
+						l_skip := True
 					end
 					if l_match and not l_skip then
 						l_match := False
 						if l_digit.is_integer then
 							l_index := l_digit.to_integer
-							if l_index > 0 and l_index <= l_arg_count then
-								if attached a_args [l_index] as separate_argument then
-									separate separate_argument as argument do
-										Result.append (argument.out)
-									end
+							if
+								l_index > 0 and
+								l_index <= l_arg_count and then
+								attached a_args [l_index] as separate_argument
+							then
+								separate separate_argument as argument do
+									Result.append (argument.out)
 								end
 							end
 						end

@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "[
 		Cell consisting of a text label with optional pixmap.
 		The rules governing the position of `text' and `pixmap' in relation to `Current' are as follows:
@@ -397,7 +397,7 @@ feature -- Status report
 		require
 			not_destroyed: not is_destroyed
 		do
-			Result := boolean_flags.bit_test (1) = True
+			Result := boolean_flags.bit_test (1)
 		end
 
 	is_center_aligned: BOOLEAN
@@ -406,7 +406,7 @@ feature -- Status report
 		require
 			not_destroyed: not is_destroyed
 		do
-			Result := boolean_flags.bit_test (2) = True
+			Result := boolean_flags.bit_test (2)
 		end
 
 	is_right_aligned: BOOLEAN
@@ -415,7 +415,7 @@ feature -- Status report
 		require
 			not_destroyed: not is_destroyed
 		do
-			Result := boolean_flags.bit_test (3) = True
+			Result := boolean_flags.bit_test (3)
 		end
 
 	is_top_aligned: BOOLEAN
@@ -424,7 +424,7 @@ feature -- Status report
 		require
 			not_destroyed: not is_destroyed
 		do
-			Result := boolean_flags.bit_test (4) = True
+			Result := boolean_flags.bit_test (4)
 		end
 
 	is_vertically_center_aligned: BOOLEAN
@@ -433,7 +433,7 @@ feature -- Status report
 		require
 			not_destroyed: not is_destroyed
 		do
-			Result := boolean_flags.bit_test (5) = True
+			Result := boolean_flags.bit_test (5)
 		end
 
 	is_bottom_aligned: BOOLEAN
@@ -442,7 +442,7 @@ feature -- Status report
 		require
 			not_destroyed: not is_destroyed
 		do
-			Result := boolean_flags.bit_test (6) = True
+			Result := boolean_flags.bit_test (6)
 		end
 
 	layout_procedure: detachable PROCEDURE [EV_GRID_LABEL_ITEM, EV_GRID_LABEL_ITEM_LAYOUT]
@@ -464,7 +464,7 @@ feature -- Status report
 		require
 			not_destroyed: not is_destroyed
 		do
-			Result := boolean_flags.bit_test (7) = True
+			Result := boolean_flags.bit_test (7)
 		end
 
 feature {NONE} -- Contract support
@@ -597,27 +597,14 @@ feature {EV_GRID_LABEL_ITEM_I}
 			-- Default left border used for drawing the text.
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2021, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
-
-
-
 end
-
-
-
-
-
-
-
-
-
-

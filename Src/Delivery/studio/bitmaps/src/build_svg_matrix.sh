@@ -23,16 +23,18 @@ background_png="transparent"
 
 # Arguments
 rootdir=$1
-target=$2
-if [ -z "$target" ]
+svg_target=$2
+if [ -z "$svg_target" ]
 then
-	target=$1.svg
+	svg_target=$1.svg
 fi
 
-if [[ $( basename $target | cut -d'.' -f 1 | cut -d'_' -f 2 ) =~ ^[0-9][0-9]*x[0-9][0-9]*$ ]]
+png_target=$3
+
+if [[ $( basename $svg_target | cut -d'.' -f 1 | cut -d'_' -f 2 ) =~ ^[0-9][0-9]*x[0-9][0-9]*$ ]]
 then
-	w=$( basename -- $target | cut -d '_' -f 2 | cut -d'x' -f 1)
-	h=$( basename -- $target | cut -d'x' -f 2 | cut -d'.' -f1 | cut -d'_' -f 1)
+	w=$( basename -- $svg_target | cut -d '_' -f 2 | cut -d'x' -f 1)
+	h=$( basename -- $svg_target | cut -d'x' -f 2 | cut -d'.' -f1 | cut -d'_' -f 1)
 	svg_width=$w
 	svg_height=$h
 	matrix_pixel_border=1
@@ -58,11 +60,11 @@ fi
 wsep=$matrix_pixel_border
 hsep=$matrix_pixel_border
 
-echo from $rootdir to $target
+echo from $rootdir to $svg_target
 mkdir -p $rootdir
-if [ -e ${target} ] 
+if [ -e ${svg_target} ] 
 then
-	rm ${target}
+	rm ${svg_target}
 fi
 
 if [ "$(( $cols + $rows ))" -eq "0" ]
@@ -102,9 +104,9 @@ echo rows=$rows
 svg_page_width=$(( $cols * $svg_width + $cols * $wsep + $wsep ))
 svg_page_height=$(( $rows * $svg_height + $rows * $hsep + $hsep ))
 
-echo $target > ${target}.txt
-echo rows=$rows cols=$cols >> ${target}.txt
-echo svg_page_size=$svg_page_width x $svg_page_height >> ${target}.txt
+echo $svg_target > ${svg_target}.txt
+echo rows=$rows cols=$cols >> ${svg_target}.txt
+echo svg_page_size=$svg_page_width x $svg_page_height >> ${svg_target}.txt
 
 
 function svg_to_png { # icons.svg icons.png width height
@@ -120,7 +122,7 @@ function svg_to_png { # icons.svg icons.png width height
 	fi
 }
 
-echo "<svg height=\"$svg_page_height\" viewBox=\"0 0 $svg_page_width $svg_page_height\" width=\"$svg_page_width\" xmlns=\"http://www.w3.org/2000/svg\" xmlns:xlink=\"http://www.w3.org/1999/xlink\">"  > $target
+echo "<svg height=\"$svg_page_height\" viewBox=\"0 0 $svg_page_width $svg_page_height\" width=\"$svg_page_width\" xmlns=\"http://www.w3.org/2000/svg\" xmlns:xlink=\"http://www.w3.org/1999/xlink\">"  > $svg_target
 
 r=1
 y=-$svg_height
@@ -136,19 +138,19 @@ do
 		x=$(( $x + $wsep + $svg_width ))
 		if [ -e $d/$c.svg ] 
 		then
-			echo "<image x=\"$x\" y=\"$y\" width=\"$svg_width\" height=\"$svg_height\" xlink:href=\"./$r/$c.svg\" fill=\"transparent\" style=\"fill:none\" />" >> $target
+			echo "<image x=\"$x\" y=\"$y\" width=\"$svg_width\" height=\"$svg_height\" xlink:href=\"./$r/$c.svg\" fill=\"transparent\" style=\"fill:none\" />" >> $svg_target
 		else
 			if [ -e $d/$c.png ]
 			then
 				if [ ! -z "$background_png" ]
 				then
 					if [ "$background_png" == "transparent" ]; then
-						echo "<rect x=\"$x\" y=\"$y\" width=\"$svg_width\" height=\"$svg_height\" fill=\"transparent\" style=\"fill:none\" />" >> $target
+						echo "<rect x=\"$x\" y=\"$y\" width=\"$svg_width\" height=\"$svg_height\" fill=\"transparent\" style=\"fill:none\" />" >> $svg_target
 					else
-						echo "<rect x=\"$x\" y=\"$y\" width=\"$svg_width\" height=\"$svg_height\" fill=\"$background_png\" />" >> $target
+						echo "<rect x=\"$x\" y=\"$y\" width=\"$svg_width\" height=\"$svg_height\" fill=\"$background_png\" />" >> $svg_target
 					fi
 				fi
-				echo "<image x=\"$x\" y=\"$y\" width=\"$svg_width\" height=\"$svg_height\" xlink:href=\"./$r/$c.png\" fill=\"transparent\" style=\"fill:none\" />" >> $target
+				echo "<image x=\"$x\" y=\"$y\" width=\"$svg_width\" height=\"$svg_height\" xlink:href=\"./$r/$c.png\" fill=\"transparent\" style=\"fill:none\" />" >> $svg_target
 			fi
 		fi
 
@@ -157,44 +159,47 @@ do
 	let r++
 done
 
-echo '</svg>' >> $target
+echo '</svg>' >> $svg_target
 
 
-tgt=$(basename $target | cut -d'.' -f 1)
-tgt=$(dirname $target)/${tgt}.png
+if [ -z "$png_target" ]
+then
+	png_target=$(basename $svg_target | cut -d'.' -f 1)
+	png_target=$(dirname $svg_target)/${png_target}.png
+fi
+
 
 if [ "$(( $w + $h ))" -eq "0" ]
 then
-	echo $target is a generic SVG file, without any border!
+	echo $svg_target is a generic SVG file, without any border!
 else
-	echo $target is a specific SVG file to ${w}x${h} resolution, with a 1px border!
+	echo $svg_target is a specific SVG file to ${w}x${h} resolution, with a 1px border!
 
-	abs_target=$(cd "$(dirname "$target")"; pwd)/$(basename "$target")
+	abs_svg_target=$(cd "$(dirname "$svg_target")"; pwd)/$(basename "$svg_target")
+	abs_png_target=$(cd "$(dirname "$png_target")"; pwd)/$(basename "$png_target")
 
-	pushd $(dirname $abs_target)
-	tgt=$(basename $abs_target | cut -d'.' -f 1)
-	tgt=$(dirname $abs_target)/${tgt}.png
-	svg_to_png $(basename $abs_target) ${tgt} $svg_page_width $svg_page_height
+	pushd $(dirname $abs_svg_target)
+	svg_to_png $(basename $abs_svg_target) ${abs_png_target} $svg_page_width $svg_page_height
 	popd
 fi
 
-# tgt=$(basename $target | cut -d'.' -f 1)
-# tgt=$(dirname $target)/${tgt}_
+# tgt=$(basename $abs_png_target | cut -d'.' -f 1)
+# tgt=$(dirname $abs_png_target)/${tgt}_
 # res=8
-# svg_to_png $target ${tgt}${res}x${res}.png $(( $cols * $res )) $(( $rows * $res ))
+# svg_to_png $svg_target ${tgt}${res}x${res}.png $(( $cols * $res )) $(( $rows * $res ))
 # 
 # res=16
-# svg_to_png $target ${tgt}${res}x${res}.png $(( $cols * $res )) $(( $rows * $res ))
+# svg_to_png $svg_target ${tgt}${res}x${res}.png $(( $cols * $res )) $(( $rows * $res ))
 # 
 # res=20
-# svg_to_png $target ${tgt}${res}x${res}.png $(( $cols * $res )) $(( $rows * $res ))
+# svg_to_png $svg_target ${tgt}${res}x${res}.png $(( $cols * $res )) $(( $rows * $res ))
 # 
 # res=32
-# svg_to_png $target ${tgt}${res}x${res}.png $(( $cols * $res )) $(( $rows * $res ))
+# svg_to_png $svg_target ${tgt}${res}x${res}.png $(( $cols * $res )) $(( $rows * $res ))
 # 
 # res=64
-# svg_to_png $target ${tgt}${res}x${res}.png $(( $cols * $res )) $(( $rows * $res ))
+# svg_to_png $svg_target ${tgt}${res}x${res}.png $(( $cols * $res )) $(( $rows * $res ))
 # 
 # res=128
-# svg_to_png $target ${tgt}${res}x${res}.png $(( $cols * $res )) $(( $rows * $res ))
+# svg_to_png $svg_target ${tgt}${res}x${res}.png $(( $cols * $res )) $(( $rows * $res ))
 # 

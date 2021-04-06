@@ -17,13 +17,16 @@ rootdir=$1
 #w=$( basename -- $rootdir | cut -d'x' -f 1)
 #h=$( basename -- $rootdir | cut -d'x' -f 2)
 
-target=$2
-if [ -z "$target" ]
+png_target=$2
+if [ -z "$png_target" ]
 then
-	target=$1.png
+	png_target=$1.png
 fi
-w=$( basename -- $target | cut -d'x' -f 1 | cut -d'_' -f 2)
-h=$( basename -- $target | cut -d'_' -f 2 | cut -d'x' -f 2 | cut -d'.' -f1 )
+
+	mv $png_target ${png_target}.bak
+
+w=$( basename -- $png_target | cut -d'x' -f 1 | cut -d'_' -f 2)
+h=$( basename -- $png_target | cut -d'_' -f 2 | cut -d'x' -f 2 | cut -d'.' -f1 )
 
 wsep=1
 hsep=1
@@ -36,11 +39,14 @@ then
 	mkdir -p $tmpdir
 fi
 
-echo from $rootdir to $target
+echo from $rootdir to $png_target
 mkdir -p $rootdir
-if [ -e ${target} ] 
+if [ -e ${png_target} ] 
 then
-	rm ${target}
+	if [ -e ${png_target}.bak ]; then
+		rm ${png_target}.bak
+	fi
+	mv ${png_target} ${png_target}.bak
 fi
 
 echo Compute rows and cols
@@ -102,7 +108,7 @@ function append_icons_row {
 convert -size ${w}x${h} xc:transparent -background transparent $tmpdir/empty.png
 convert -size ${wsep}x$(( $w + $wsep )) -background transparent xc:$color $tmpdir/v.png
 convert -size $(( $cols * ($w + $hsep) + $hsep ))x${hsep} -background transparent xc:$color $tmpdir/h_line.png
-cp $tmpdir/h_line.png ${target}
+cp $tmpdir/h_line.png ${png_target}
 
 r=1
 while ((r<=$rows))
@@ -170,9 +176,9 @@ do
 	if [ -e $tmpdir/row$r.png ]
 	then
 		echo "Row#$r append row $r"
-		append_icons_row $r $tmpdir/row$r.png $target
-		identify ${target}
-		#cp ${target} $rootdir/matrix-$r.png
+		append_icons_row $r $tmpdir/row$r.png $png_target
+		identify ${png_target}
+		#cp ${png_target} $rootdir/matrix-$r.png
 		rm $tmpdir/row$r.png
 	fi
 	let r++

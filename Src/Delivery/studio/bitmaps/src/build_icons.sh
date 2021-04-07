@@ -102,16 +102,16 @@ SVGadd 29.svg $RES/deferred_nw.svg 31.svg
 SVGadd 31.svg $RES/readonly_ne.svg 32.svg
 # frozen
 SVGadd 17.svg $OVERLAY/overridden_sw.svg 33.svg
-# frozen readonly
-SVGadd 33.svg $RES/readonly_ne.svg 34.svg
 ExitRow
 
 #----------------------------------------------------------------------------------
 EnterRow 2
+# frozen readonly
+SVGadd ../1/33.svg $RES/readonly_ne.svg 1.svg
 # uncompiled
-SVGadd ../1/19.svg $OVERLAY/overridden_sw.svg 1.svg
+SVGadd ../1/19.svg $OVERLAY/overridden_sw.svg 2.svg
 # uncompiled readonly
-SVGadd 1.svg $RES/readonly_ne.svg 2.svg
+SVGadd 2.svg $RES/readonly_ne.svg 3.svg
 ExitRow
 
 #----------------------------------------------------------------------------------

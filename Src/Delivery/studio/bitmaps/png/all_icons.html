@@ -1,0 +1,60 @@
+<html>
+	<head>
+		<style>
+		body { background-color: #fff; }
+		div.container { 
+				width: 100%; margin-top: 2rem; 
+				display: flex;
+				flex-direction: row;
+				flex-wrap: wrap;
+			}
+		div.container div { 
+				flex: auto;
+				text-align: center; 
+				padding: 1rem; 
+				border: solid 2px black; 
+			}
+		figcaption {
+			font-size: 140%; font-weight: bold;
+			margin: 1rem;
+		}
+		</style>
+		<script>
+			function changeBackground(color) {
+   	   	   	   document.body.style.background = color;
+			}
+		</script>
+	</head>
+<body>
+	<div style="background-color: white; color: black; padding: 1rem; margin: 1rem;">
+		<strong>Background color:</strong> 
+		<a href="#" onclick="changeBackground('transparent');">None</a> | 
+		<a href="#" onclick="changeBackground('red');">Red</a> | 
+		<a href="#" onclick="changeBackground('green');">Green</a> | 
+		<a href="#" onclick="changeBackground('white');">White</a> | 
+		<a href="#" onclick="changeBackground('black');">Black</a> | 
+		<a href="#" onclick="changeBackground('grey');">Grey</a>
+	</div>
+	<div class="container">
+		<div><figcaption/>16x16.png</figcaption><img src="16x16.png"/></div>
+		<div><figcaption/>icons_16x16.png</figcaption><img src="icons_16x16.png"/></div>
+		<div><figcaption/>icons_20x20.png</figcaption><img src="icons_20x20.png"/></div>
+		<div><figcaption/>icons_24x24.png</figcaption><img src="icons_24x24.png"/></div>
+		<div><figcaption/>icons_32x32.png</figcaption><img src="icons_32x32.png"/></div>
+	</div>
+	<div class="container">
+		<div><figcaption/>10x10.png</figcaption><img src="10x10.png"/></div>
+		<div><figcaption/>mini_10x10.png</figcaption><img src="mini_10x10.png"/></div>
+		<div><figcaption/>mini_12x12.png</figcaption><img src="mini_12x12.png"/></div>
+		<div><figcaption/>mini_15x15.png</figcaption><img src="mini_15x15.png"/></div>
+		<div><figcaption/>mini_20x20.png</figcaption><img src="mini_20x20.png"/></div>
+	</div>
+	<div class="container">
+		<div><figcaption/>12x12.png</figcaption><img src="12x12.png"/></div>
+		<div><figcaption/>small_12x12.png</figcaption><img src="small_12x12.png"/></div>
+		<div><figcaption/>small_15x15.png</figcaption><img src="small_15x15.png"/></div>
+		<div><figcaption/>small_18x18.png</figcaption><img src="small_18x18.png"/></div>
+		<div><figcaption/>small_24x24.png</figcaption><img src="small_24x24.png"/></div>
+	</div>
+</body>
+</html>

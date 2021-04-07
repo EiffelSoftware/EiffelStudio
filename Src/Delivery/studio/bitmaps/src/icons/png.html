@@ -1,0 +1,618 @@
+<html>
+	<head>
+		<style>div.row { 
+		display: flex;
+		flex-direction: row;
+		flex-wrap: wrap;
+		border: solid 1px black;
+		margin-top: 1rem;
+	}
+div.section {
+	flex: auto;
+	border: solid 1px #ccc;
+	padding: 1rem;
+}
+div.section div.icon {									
+	margin-top: .5rem;
+}
+div.section div.icon img {
+	margin-right: 1rem;
+	/* border: solid 1px #000000cc; */
+	vertical-align: middle;
+}
+div.section div.icon.missing {
+	/* background-color: #ff000033; */
+	color: red;
+}									
+div.section div.icon > span.image {
+	display: inline-block;
+	margin-right: 1rem;
+	text-align: center;
+}
+div.section div.icon > span.image.missing {
+	background-color: #ffffffcc;
+	color: red;
+	border: solid 1px red;
+}
+div.section div.icon figcaption {
+	display: inline;
+}
+span.debug {
+	color: #aaa;
+}div.section div.icon:not(.png) figcaption {
+	color: #c00;
+}div.section div.icon:not(.png) figcaption::after {
+	content: " [SVG]"
+}	</style>
+	<script>
+		function changeBackground(fg,bg) {
+   	   	   document.body.style.background = bg;
+   	   	   document.body.style.color = fg;
+		}
+	</script>								
+</head>
+<body><h2>All PNG icons (or SVG if missing)</h2><div style="background-color: white; color: black; padding: 1rem; margin: 1rem;">
+	<strong>Background color:</strong> 
+	<a href="#" onclick="changeBackground('black','transparent');">None</a> | 
+	<a href="#" onclick="changeBackground('black','red');">Red</a> | 
+	<a href="#" onclick="changeBackground('black','green');">Green</a> | 
+	<a href="#" onclick="changeBackground('black','white');">White</a> | 
+	<a href="#" onclick="changeBackground('white','black');">Black</a> | 
+	<a href="#" onclick="changeBackground('black','grey');">Grey</a>
+</div><div><div></div></div>
+<div class="row">
+<div class="section" data-section-name="expanded">
+	<div class="icon svg png"><img src="1/1.png" title="png (1,1) "/><figcaption>expanded_normal <span class="debug">(1,1)</span></figcaption></div>
+	<div class="icon svg png"><img src="1/2.png" title="png (1,2) "/><figcaption>expanded_readonly <span class="debug">(1,2)</span></figcaption></div>
+	<div class="icon svg png"><img src="1/3.png" title="png (1,3) "/><figcaption>expanded_uncompiled <span class="debug">(1,3)</span></figcaption></div>
+	<div class="icon svg png"><img src="1/4.png" title="png (1,4) "/><figcaption>expanded_uncompiled_readonly <span class="debug">(1,4)</span></figcaption></div>
+</div><div class="section sub" data-section-name="expanded override">	<div class="icon svg png"><img src="1/5.png" title="png (1,5) "/><figcaption>expanded_override_normal <span class="debug">(1,5)</span></figcaption></div>
+	<div class="icon svg png"><img src="1/6.png" title="png (1,6) "/><figcaption>expanded_override_readonly <span class="debug">(1,6)</span></figcaption></div>
+	<div class="icon svg png"><img src="1/7.png" title="png (1,7) "/><figcaption>expanded_override_uncompiled <span class="debug">(1,7)</span></figcaption></div>
+	<div class="icon svg png"><img src="1/8.png" title="png (1,8) "/><figcaption>expanded_override_uncompiled_readonly <span class="debug">(1,8)</span></figcaption></div>
+</div><div class="section sub" data-section-name="expanded overriden">	<div class="icon svg png"><img src="1/9.png" title="png (1,9) "/><figcaption>expanded_overriden_normal <span class="debug">(1,9)</span></figcaption></div>
+	<div class="icon svg png"><img src="1/10.png" title="png (1,10) "/><figcaption>expanded_overriden_readonly <span class="debug">(1,10)</span></figcaption></div>
+	<div class="icon svg png"><img src="1/11.png" title="png (1,11) "/><figcaption>expanded_overriden_uncompiled <span class="debug">(1,11)</span></figcaption></div>
+	<div class="icon svg png"><img src="1/12.png" title="png (1,12) "/><figcaption>expanded_overriden_uncompiled_readonly <span class="debug">(1,12)</span></figcaption></div>
+</div><div class="section sub" data-section-name="class">	<div class="icon svg png"><img src="1/13.png" title="png (1,13) "/><figcaption>class_normal <span class="debug">(1,13)</span></figcaption></div>
+	<div class="icon svg png"><img src="1/14.png" title="png (1,14) "/><figcaption>class_readonly <span class="debug">(1,14)</span></figcaption></div>
+	<div class="icon svg png"><img src="1/15.png" title="png (1,15) "/><figcaption>class_deferred <span class="debug">(1,15)</span></figcaption></div>
+	<div class="icon svg png"><img src="1/16.png" title="png (1,16) "/><figcaption>class_deferred_readonly <span class="debug">(1,16)</span></figcaption></div>
+	<div class="icon svg png"><img src="1/17.png" title="png (1,17) "/><figcaption>class_frozen <span class="debug">(1,17)</span></figcaption></div>
+	<div class="icon svg png"><img src="1/18.png" title="png (1,18) "/><figcaption>class_frozen_readonly <span class="debug">(1,18)</span></figcaption></div>
+	<div class="icon svg png"><img src="1/19.png" title="png (1,19) "/><figcaption>class_uncompiled <span class="debug">(1,19)</span></figcaption></div>
+	<div class="icon svg png"><img src="1/20.png" title="png (1,20) "/><figcaption>class_uncompiled_readonly <span class="debug">(1,20)</span></figcaption></div>
+</div><div class="section sub" data-section-name="class override">	<div class="icon svg png"><img src="1/21.png" title="png (1,21) "/><figcaption>class_override_normal <span class="debug">(1,21)</span></figcaption></div>
+	<div class="icon svg png"><img src="1/22.png" title="png (1,22) "/><figcaption>class_override_readonly <span class="debug">(1,22)</span></figcaption></div>
+	<div class="icon svg png"><img src="1/23.png" title="png (1,23) "/><figcaption>class_override_deferred <span class="debug">(1,23)</span></figcaption></div>
+	<div class="icon svg png"><img src="1/24.png" title="png (1,24) "/><figcaption>class_override_deferred_readonly <span class="debug">(1,24)</span></figcaption></div>
+	<div class="icon svg png"><img src="1/25.png" title="png (1,25) "/><figcaption>class_override_frozen <span class="debug">(1,25)</span></figcaption></div>
+	<div class="icon svg png"><img src="1/26.png" title="png (1,26) "/><figcaption>class_override_frozen_readonly <span class="debug">(1,26)</span></figcaption></div>
+	<div class="icon svg png"><img src="1/27.png" title="png (1,27) "/><figcaption>class_override_uncompiled <span class="debug">(1,27)</span></figcaption></div>
+	<div class="icon svg png"><img src="1/28.png" title="png (1,28) "/><figcaption>class_override_uncompiled_readonly <span class="debug">(1,28)</span></figcaption></div>
+</div><div class="section sub" data-section-name="class overriden">	<div class="icon svg png"><img src="1/29.png" title="png (1,29) "/><figcaption>class_overriden_normal <span class="debug">(1,29)</span></figcaption></div>
+	<div class="icon svg png"><img src="1/30.png" title="png (1,30) "/><figcaption>class_overriden_readonly <span class="debug">(1,30)</span></figcaption></div>
+	<div class="icon svg png"><img src="1/31.png" title="png (1,31) "/><figcaption>class_overriden_deferred <span class="debug">(1,31)</span></figcaption></div>
+	<div class="icon svg png"><img src="1/32.png" title="png (1,32) "/><figcaption>class_overriden_deferred_readonly <span class="debug">(1,32)</span></figcaption></div>
+	<div class="icon svg png"><img src="1/33.png" title="png (1,33) "/><figcaption>class_overriden_frozen <span class="debug">(1,33)</span></figcaption></div>
+	<div class="icon svg png"><img src="2/1.png" title="png (2,1) "/><figcaption>class_overriden_frozen_readonly <span class="debug">(2,1)</span></figcaption></div>
+	<div class="icon svg png"><img src="2/2.png" title="png (2,2) "/><figcaption>class_overriden_uncompiled <span class="debug">(2,2)</span></figcaption></div>
+	<div class="icon svg png"><img src="2/3.png" title="png (2,3) "/><figcaption>class_overriden_uncompiled_readonly <span class="debug">(2,3)</span></figcaption></div>
+</div></div>
+<div class="row">
+<div class="section" data-section-name="feature">
+	<div class="icon svg png"><img src="3/1.png" title="png (3,1) "/><figcaption>feature_routine <span class="debug">(3,1)</span></figcaption></div>
+	<div class="icon svg png"><img src="3/2.png" title="png (3,2) "/><figcaption>feature_attribute <span class="debug">(3,2)</span></figcaption></div>
+	<div class="icon svg png"><img src="3/3.png" title="png (3,3) "/><figcaption>feature_once <span class="debug">(3,3)</span></figcaption></div>
+	<div class="icon svg png"><img src="3/4.png" title="png (3,4) "/><figcaption>feature_deferred <span class="debug">(3,4)</span></figcaption></div>
+	<div class="icon svg png"><img src="3/5.png" title="png (3,5) "/><figcaption>feature_external <span class="debug">(3,5)</span></figcaption></div>
+	<div class="icon svg png"><img src="3/6.png" title="png (3,6) "/><figcaption>feature_assigner <span class="debug">(3,6)</span></figcaption></div>
+	<div class="icon svg png"><img src="3/7.png" title="png (3,7) "/><figcaption>feature_deferred_assigner <span class="debug">(3,7)</span></figcaption></div>
+</div><div class="section sub" data-section-name="feature instance_free">	<div class="icon svg png"><img src="3/8.png" title="png (3,8) "/><figcaption>feature_instance_free_routine <span class="debug">(3,8)</span></figcaption></div>
+	<div class="icon svg png"><img src="3/9.png" title="png (3,9) "/><figcaption>feature_instance_free_once <span class="debug">(3,9)</span></figcaption></div>
+	<div class="icon svg png"><img src="3/10.png" title="png (3,10) "/><figcaption>feature_instance_free_deferred <span class="debug">(3,10)</span></figcaption></div>
+	<div class="icon svg png"><img src="3/11.png" title="png (3,11) "/><figcaption>feature_instance_free_external <span class="debug">(3,11)</span></figcaption></div>
+</div><div class="section sub" data-section-name="feature frozen">	<div class="icon svg png"><img src="3/12.png" title="png (3,12) "/><figcaption>feature_frozen_routine <span class="debug">(3,12)</span></figcaption></div>
+	<div class="icon svg png"><img src="3/13.png" title="png (3,13) "/><figcaption>feature_frozen_attribute <span class="debug">(3,13)</span></figcaption></div>
+	<div class="icon svg png"><img src="3/14.png" title="png (3,14) "/><figcaption>feature_frozen_once <span class="debug">(3,14)</span></figcaption></div>
+	<div class="icon svg png"><img src="3/15.png" title="png (3,15) "/><figcaption>feature_frozen_external <span class="debug">(3,15)</span></figcaption></div>
+	<div class="icon svg png"><img src="3/16.png" title="png (3,16) "/><figcaption>feature_frozen_assigner <span class="debug">(3,16)</span></figcaption></div>
+</div><div class="section sub" data-section-name="feature frozen instance_free">	<div class="icon svg png"><img src="3/17.png" title="png (3,17) "/><figcaption>feature_frozen_instance_free_routine <span class="debug">(3,17)</span></figcaption></div>
+	<div class="icon svg png"><img src="3/18.png" title="png (3,18) "/><figcaption>feature_frozen_instance_free_once <span class="debug">(3,18)</span></figcaption></div>
+	<div class="icon svg png"><img src="3/19.png" title="png (3,19) "/><figcaption>feature_frozen_instance_free_external <span class="debug">(3,19)</span></figcaption></div>
+</div><div class="section sub" data-section-name="feature">	<div class="icon svg png"><img src="3/20.png" title="png (3,20) "/><figcaption>feature_constant <span class="debug">(3,20)</span></figcaption></div>
+	<div class="icon svg png"><img src="3/21.png" title="png (3,21) "/><figcaption>feature_obsolete_constant <span class="debug">(3,21)</span></figcaption></div>
+</div><div class="section sub" data-section-name="feature obsolete">	<div class="icon svg png"><img src="3/22.png" title="png (3,22) "/><figcaption>feature_obsolete_routine <span class="debug">(3,22)</span></figcaption></div>
+	<div class="icon svg png"><img src="3/23.png" title="png (3,23) "/><figcaption>feature_obsolete_attribute <span class="debug">(3,23)</span></figcaption></div>
+	<div class="icon svg png"><img src="3/24.png" title="png (3,24) "/><figcaption>feature_obsolete_once <span class="debug">(3,24)</span></figcaption></div>
+	<div class="icon svg png"><img src="3/25.png" title="png (3,25) "/><figcaption>feature_obsolete_deferred <span class="debug">(3,25)</span></figcaption></div>
+	<div class="icon svg png"><img src="3/26.png" title="png (3,26) "/><figcaption>feature_obsolete_external <span class="debug">(3,26)</span></figcaption></div>
+	<div class="icon svg png"><img src="3/27.png" title="png (3,27) "/><figcaption>feature_obsolete_assigner <span class="debug">(3,27)</span></figcaption></div>
+	<div class="icon svg png"><img src="3/28.png" title="png (3,28) "/><figcaption>feature_obsolete_deferred_assigner <span class="debug">(3,28)</span></figcaption></div>
+</div><div class="section sub" data-section-name="feature obsolete instance_free">	<div class="icon svg png"><img src="3/29.png" title="png (3,29) "/><figcaption>feature_obsolete_instance_free_routine <span class="debug">(3,29)</span></figcaption></div>
+	<div class="icon svg png"><img src="3/30.png" title="png (3,30) "/><figcaption>feature_obsolete_instance_free_once <span class="debug">(3,30)</span></figcaption></div>
+	<div class="icon svg png"><img src="3/31.png" title="png (3,31) "/><figcaption>feature_obsolete_instance_free_deferred <span class="debug">(3,31)</span></figcaption></div>
+	<div class="icon svg png"><img src="3/32.png" title="png (3,32) "/><figcaption>feature_obsolete_instance_free_external <span class="debug">(3,32)</span></figcaption></div>
+</div></div>
+<div class="row">
+<div class="section" data-section-name="feature local">
+	<div class="icon png"><img src="4/1.png" title="png (4,1) "/><figcaption>feature_local_variable <span class="debug">(4,1)</span></figcaption></div>
+</div><div class="section sub" data-section-name="feature">	<div class="icon png"><img src="4/2.png" title="png (4,2) "/><figcaption>feature_group <span class="debug">(4,2)</span></figcaption></div>
+</div></div>
+<div class="row">
+<div class="section" data-section-name="top level folder">
+	<div class="icon svg png"><img src="5/1.png" title="png (5,1) "/><figcaption>top_level_folder_clusters <span class="debug">(5,1)</span></figcaption></div>
+	<div class="icon svg png"><img src="5/2.png" title="png (5,2) "/><figcaption>top_level_folder_overrides <span class="debug">(5,2)</span></figcaption></div>
+	<div class="icon svg png"><img src="5/3.png" title="png (5,3) "/><figcaption>top_level_folder_library <span class="debug">(5,3)</span></figcaption></div>
+	<div class="icon svg png"><img src="5/4.png" title="png (5,4) "/><figcaption>top_level_folder_precompiles <span class="debug">(5,4)</span></figcaption></div>
+	<div class="icon png"><img src="5/5.png" title="png (5,5) "/><figcaption>top_level_folder_references <span class="debug">(5,5)</span></figcaption></div>
+	<div class="icon svg png"><img src="5/6.png" title="png (5,6) "/><figcaption>top_level_folder_targets <span class="debug">(5,6)</span></figcaption></div>
+	<div class="icon svg png"><img src="5/7.png" title="png (5,7) "/><figcaption>top_level_folder_remote_targets <span class="debug">(5,7)</span></figcaption></div>
+</div><div class="section sub" data-section-name="folder features">	<div class="icon svg png"><img src="5/8.png" title="png (5,8) "/><figcaption>folder_features_all <span class="debug">(5,8)</span></figcaption></div>
+	<div class="icon svg png"><img src="5/9.png" title="png (5,9) "/><figcaption>folder_features_some <span class="debug">(5,9)</span></figcaption></div>
+	<div class="icon svg png"><img src="5/10.png" title="png (5,10) "/><figcaption>folder_features_none <span class="debug">(5,10)</span></figcaption></div>
+</div><div class="section sub" data-section-name="folder">	<div class="icon svg png"><img src="5/11.png" title="png (5,11) "/><figcaption>folder_cluster <span class="debug">(5,11)</span></figcaption></div>
+	<div class="icon svg png"><img src="5/12.png" title="png (5,12) "/><figcaption>folder_cluster_readonly <span class="debug">(5,12)</span></figcaption></div>
+	<div class="icon svg png"><img src="5/13.png" title="png (5,13) "/><figcaption>folder_blank <span class="debug">(5,13)</span></figcaption></div>
+	<div class="icon svg png"><img src="5/14.png" title="png (5,14) "/><figcaption>folder_blank_readonly <span class="debug">(5,14)</span></figcaption></div>
+	<div class="icon svg png"><img src="5/15.png" title="png (5,15) "/><figcaption>folder_library <span class="debug">(5,15)</span></figcaption></div>
+	<div class="icon svg png"><img src="5/16.png" title="png (5,16) "/><figcaption>folder_library_readonly <span class="debug">(5,16)</span></figcaption></div>
+	<div class="icon svg png"><img src="5/17.png" title="png (5,17) "/><figcaption>folder_precompiled_library <span class="debug">(5,17)</span></figcaption></div>
+	<div class="icon svg png"><img src="5/18.png" title="png (5,18) "/><figcaption>folder_precompiled_library_readonly <span class="debug">(5,18)</span></figcaption></div>
+	<div class="icon png"><img src="5/19.png" title="png (5,19) "/><figcaption>folder_assembly <span class="debug">(5,19)</span></figcaption></div>
+	<div class="icon png"><img src="5/20.png" title="png (5,20) "/><figcaption>folder_namespace <span class="debug">(5,20)</span></figcaption></div>
+	<div class="icon png"><img src="5/21.png" title="png (5,21) "/><figcaption>folder_preference <span class="debug">(5,21)</span></figcaption></div>
+	<div class="icon png"><img src="5/22.png" title="png (5,22) "/><figcaption>folder_config <span class="debug">(5,22)</span></figcaption></div>
+	<div class="icon svg png"><img src="5/23.png" title="png (5,23) "/><figcaption>folder_target <span class="debug">(5,23)</span></figcaption></div>
+</div><div class="section sub" data-section-name="folder hidden">	<div class="icon svg png"><img src="5/24.png" title="png (5,24) "/><figcaption>folder_hidden_cluster <span class="debug">(5,24)</span></figcaption></div>
+	<div class="icon svg png"><img src="5/25.png" title="png (5,25) "/><figcaption>folder_hidden_cluster_readonly <span class="debug">(5,25)</span></figcaption></div>
+	<div class="icon svg png"><img src="5/26.png" title="png (5,26) "/><figcaption>folder_hidden_blank <span class="debug">(5,26)</span></figcaption></div>
+	<div class="icon svg png"><img src="5/27.png" title="png (5,27) "/><figcaption>folder_hidden_blank_readonly <span class="debug">(5,27)</span></figcaption></div>
+</div><div class="section sub" data-section-name="folder override">	<div class="icon svg png"><img src="5/28.png" title="png (5,28) "/><figcaption>folder_override_cluster <span class="debug">(5,28)</span></figcaption></div>
+	<div class="icon svg png"><img src="5/29.png" title="png (5,29) "/><figcaption>folder_override_cluster_readonly <span class="debug">(5,29)</span></figcaption></div>
+	<div class="icon svg png"><img src="5/30.png" title="png (5,30) "/><figcaption>folder_override_blank <span class="debug">(5,30)</span></figcaption></div>
+	<div class="icon svg png"><img src="5/31.png" title="png (5,31) "/><figcaption>folder_override_blank_readonly <span class="debug">(5,31)</span></figcaption></div>
+</div></div>
+<div class="row">
+<div class="section" data-section-name="tool">
+	<div class="icon png"><img src="6/1.png" title="png (6,1) "/><figcaption>tool_features <span class="debug">(6,1)</span></figcaption></div>
+	<div class="icon svg png"><img src="6/2.png" title="png (6,2) "/><figcaption>tool_clusters <span class="debug">(6,2)</span></figcaption></div>
+	<div class="icon svg png"><img src="6/3.png" title="png (6,3) "/><figcaption>tool_class <span class="debug">(6,3)</span></figcaption></div>
+	<div class="icon png"><img src="6/4.png" title="png (6,4) "/><figcaption>tool_feature <span class="debug">(6,4)</span></figcaption></div>
+	<div class="icon svg png"><img src="6/5.png" title="png (6,5) "/><figcaption>tool_search <span class="debug">(6,5)</span></figcaption></div>
+	<div class="icon svg png"><img src="6/6.png" title="png (6,6) "/><figcaption>tool_advanced_search <span class="debug">(6,6)</span></figcaption></div>
+	<div class="icon svg png"><img src="6/7.png" title="png (6,7) "/><figcaption>tool_diagram <span class="debug">(6,7)</span></figcaption></div>
+	<div class="icon svg png"><img src="6/8.png" title="png (6,8) "/><figcaption>tool_error <span class="debug">(6,8)</span></figcaption></div>
+	<div class="icon svg png"><img src="6/9.png" title="png (6,9) "/><figcaption>tool_warning <span class="debug">(6,9)</span></figcaption></div>
+	<div class="icon png"><img src="6/10.png" title="png (6,10) "/><figcaption>tool_breakpoints <span class="debug">(6,10)</span></figcaption></div>
+	<div class="icon png"><img src="6/11.png" title="png (6,11) "/><figcaption>tool_external_commands <span class="debug">(6,11)</span></figcaption></div>
+	<div class="icon png"><img src="6/12.png" title="png (6,12) "/><figcaption>tool_preferences <span class="debug">(6,12)</span></figcaption></div>
+	<div class="icon png"><img src="6/13.png" title="png (6,13) "/><figcaption>tool_call_stack <span class="debug">(6,13)</span></figcaption></div>
+	<div class="icon png"><img src="6/14.png" title="png (6,14) "/><figcaption>tool_favorites <span class="debug">(6,14)</span></figcaption></div>
+	<div class="icon png"><img src="6/15.png" title="png (6,15) "/><figcaption>tool_output <span class="debug">(6,15)</span></figcaption></div>
+	<div class="icon png"><img src="6/16.png" title="png (6,16) "/><figcaption>tool_external_output <span class="debug">(6,16)</span></figcaption></div>
+	<div class="icon png"><img src="6/17.png" title="png (6,17) "/><figcaption>tool_objects <span class="debug">(6,17)</span></figcaption></div>
+	<div class="icon png"><img src="6/18.png" title="png (6,18) "/><figcaption>tool_watch <span class="debug">(6,18)</span></figcaption></div>
+	<div class="icon png"><img src="6/19.png" title="png (6,19) "/><figcaption>tool_c_output <span class="debug">(6,19)</span></figcaption></div>
+	<div class="icon png"><img src="6/20.png" title="png (6,20) "/><figcaption>tool_config <span class="debug">(6,20)</span></figcaption></div>
+	<div class="icon png"><img src="6/21.png" title="png (6,21) "/><figcaption>tool_metric <span class="debug">(6,21)</span></figcaption></div>
+	<div class="icon png"><img src="6/22.png" title="png (6,22) "/><figcaption>tool_output_successful <span class="debug">(6,22)</span></figcaption></div>
+	<div class="icon png"><img src="6/23.png" title="png (6,23) "/><figcaption>tool_output_failed <span class="debug">(6,23)</span></figcaption></div>
+	<div class="icon png"><img src="6/24.png" title="png (6,24) "/><figcaption>tool_c_output_successful <span class="debug">(6,24)</span></figcaption></div>
+	<div class="icon png"><img src="6/25.png" title="png (6,25) "/><figcaption>tool_c_output_failed <span class="debug">(6,25)</span></figcaption></div>
+	<div class="icon png"><img src="6/26.png" title="png (6,26) "/><figcaption>tool_threads <span class="debug">(6,26)</span></figcaption></div>
+	<div class="icon png"><img src="6/27.png" title="png (6,27) "/><figcaption>tool_find_results <span class="debug">(6,27)</span></figcaption></div>
+	<div class="icon png"><img src="6/28.png" title="png (6,28) "/><figcaption>tool_properties <span class="debug">(6,28)</span></figcaption></div>
+	<div class="icon png"><img src="6/29.png" title="png (6,29) "/><figcaption>tool_errors_list_with_errors_and_warnings <span class="debug">(6,29)</span></figcaption></div>
+	<div class="icon png"><img src="6/30.png" title="png (6,30) "/><figcaption>tool_errors_list_with_errors <span class="debug">(6,30)</span></figcaption></div>
+	<div class="icon png"><img src="6/31.png" title="png (6,31) "/><figcaption>tool_errors_list_with_warnings <span class="debug">(6,31)</span></figcaption></div>
+	<div class="icon png"><img src="6/32.png" title="png (6,32) "/><figcaption>tool_contract_editor <span class="debug">(6,32)</span></figcaption></div>
+	<div class="icon png"><img src="6/33.png" title="png (6,33) "/><figcaption>tool_terminal <span class="debug">(6,33)</span></figcaption></div>
+</div></div>
+<div class="row">
+<div class="section" data-section-name="library">
+	<div class="icon svg png"><img src="7/1.png" title="png (7,1) "/><figcaption>library_iron_package <span class="debug">(7,1)</span></figcaption></div>
+	<div class="icon svg png"><img src="7/2.png" title="png (7,2) "/><figcaption>library_iron_library <span class="debug">(7,2)</span></figcaption></div>
+</div><div class="section sub" data-section-name="analyzer">	<div class="icon svg png"><img src="7/3.png" title="png (7,3) "/><figcaption>analyzer_analyze <span class="debug">(7,3)</span></figcaption></div>
+	<div class="icon svg png"><img src="7/4.png" title="png (7,4) "/><figcaption>analyzer_analyze_class <span class="debug">(7,4)</span></figcaption></div>
+	<div class="icon svg png"><img src="7/5.png" title="png (7,5) "/><figcaption>analyzer_analyze_editor <span class="debug">(7,5)</span></figcaption></div>
+	<div class="icon svg png"><img src="7/6.png" title="png (7,6) "/><figcaption>analyzer_analyze_cluster <span class="debug">(7,6)</span></figcaption></div>
+	<div class="icon svg png"><img src="7/7.png" title="png (7,7) "/><figcaption>analyzer_analyze_target <span class="debug">(7,7)</span></figcaption></div>
+	<div class="icon svg png"><img src="7/8.png" title="png (7,8) "/><figcaption>analyzer_analyze_refresh <span class="debug">(7,8)</span></figcaption></div>
+	<div class="icon svg png"><img src="7/9.png" title="png (7,9) "/><figcaption>analyzer_preferences <span class="debug">(7,9)</span></figcaption></div>
+</div><div class="section sub" data-section-name="verifier">	<div class="icon svg png"><img src="7/10.png" title="png (7,10) "/><figcaption>verifier_verify <span class="debug">(7,10)</span></figcaption></div>
+	<div class="icon svg png"><img src="7/11.png" title="png (7,11) "/><figcaption>verifier_verify_feature <span class="debug">(7,11)</span></figcaption></div>
+	<div class="icon svg png"><img src="7/12.png" title="png (7,12) "/><figcaption>verifier_verify_class <span class="debug">(7,12)</span></figcaption></div>
+	<div class="icon svg png"><img src="7/13.png" title="png (7,13) "/><figcaption>verifier_verify_editor <span class="debug">(7,13)</span></figcaption></div>
+	<div class="icon svg png"><img src="7/14.png" title="png (7,14) "/><figcaption>verifier_verify_cluster <span class="debug">(7,14)</span></figcaption></div>
+	<div class="icon svg png"><img src="7/15.png" title="png (7,15) "/><figcaption>verifier_verify_target <span class="debug">(7,15)</span></figcaption></div>
+	<div class="icon svg png"><img src="7/16.png" title="png (7,16) "/><figcaption>verifier_verify_refresh <span class="debug">(7,16)</span></figcaption></div>
+	<div class="icon svg png"><img src="7/17.png" title="png (7,17) "/><figcaption>verifier_preferences <span class="debug">(7,17)</span></figcaption></div>
+</div><div class="section sub" data-section-name="source">	<div class="icon svg png"><img src="7/18.png" title="png (7,18) "/><figcaption>source_version_control <span class="debug">(7,18)</span></figcaption></div>
+</div></div>
+<div class="row">
+<div class="section" data-section-name="project">
+	<div class="icon svg png"><img src="8/1.png" title="png (8,1) "/><figcaption>project_melt <span class="debug">(8,1)</span></figcaption></div>
+	<div class="icon svg png"><img src="8/2.png" title="png (8,2) "/><figcaption>project_quick_melt <span class="debug">(8,2)</span></figcaption></div>
+	<div class="icon svg png"><img src="8/3.png" title="png (8,3) "/><figcaption>project_freeze <span class="debug">(8,3)</span></figcaption></div>
+	<div class="icon svg png"><img src="8/4.png" title="png (8,4) "/><figcaption>project_finalize <span class="debug">(8,4)</span></figcaption></div>
+	<div class="icon svg png"><img src="8/5.png" title="png (8,5) "/><figcaption>project_discover_melt <span class="debug">(8,5)</span></figcaption></div>
+</div><div class="section sub" data-section-name="debug">	<div class="icon svg png"><img src="8/6.png" title="png (8,6) "/><figcaption>debug_run <span class="debug">(8,6)</span></figcaption></div>
+	<div class="icon svg png"><img src="8/7.png" title="png (8,7) "/><figcaption>debug_pause <span class="debug">(8,7)</span></figcaption></div>
+	<div class="icon svg png"><img src="8/8.png" title="png (8,8) "/><figcaption>debug_stop <span class="debug">(8,8)</span></figcaption></div>
+	<div class="icon svg png"><img src="8/9.png" title="png (8,9) "/><figcaption>debug_restart <span class="debug">(8,9)</span></figcaption></div>
+	<div class="icon png"><img src="8/10.png" title="png (8,10) "/><figcaption>debug_show_execution_point <span class="debug">(8,10)</span></figcaption></div>
+	<div class="icon svg png"><img src="8/11.png" title="png (8,11) "/><figcaption>debug_run_without_breakpoint <span class="debug">(8,11)</span></figcaption></div>
+	<div class="icon svg png"><img src="8/12.png" title="png (8,12) "/><figcaption>debug_run_finalized <span class="debug">(8,12)</span></figcaption></div>
+	<div class="icon png"><img src="8/13.png" title="png (8,13) "/><figcaption>debug_step_into <span class="debug">(8,13)</span></figcaption></div>
+	<div class="icon png"><img src="8/14.png" title="png (8,14) "/><figcaption>debug_step_over <span class="debug">(8,14)</span></figcaption></div>
+	<div class="icon png"><img src="8/15.png" title="png (8,15) "/><figcaption>debug_step_out <span class="debug">(8,15)</span></figcaption></div>
+	<div class="icon png"><img src="8/16.png" title="png (8,16) "/><figcaption>debug_exception_dialog <span class="debug">(8,16)</span></figcaption></div>
+	<div class="icon png"><img src="8/17.png" title="png (8,17) "/><figcaption>debug_disable_assertions <span class="debug">(8,17)</span></figcaption></div>
+	<div class="icon png"><img src="8/18.png" title="png (8,18) "/><figcaption>debug_resume_assertions <span class="debug">(8,18)</span></figcaption></div>
+	<div class="icon png"><img src="8/19.png" title="png (8,19) "/><figcaption>debug_exception_handling <span class="debug">(8,19)</span></figcaption></div>
+</div><div class="section sub" data-section-name="debugger object">	<div class="icon svg png"><img src="8/20.png" title="png (8,20) "/><figcaption>debugger_object_immediate <span class="debug">(8,20)</span></figcaption></div>
+	<div class="icon png"><img src="8/21.png" title="png (8,21) "/><figcaption>debugger_object_eiffel <span class="debug">(8,21)</span></figcaption></div>
+	<div class="icon png"><img src="8/22.png" title="png (8,22) "/><figcaption>debugger_object_dotnet <span class="debug">(8,22)</span></figcaption></div>
+	<div class="icon png"><img src="8/23.png" title="png (8,23) "/><figcaption>debugger_object_dotnet_static <span class="debug">(8,23)</span></figcaption></div>
+	<div class="icon png"><img src="8/24.png" title="png (8,24) "/><figcaption>debugger_object_static <span class="debug">(8,24)</span></figcaption></div>
+	<div class="icon png"><img src="8/25.png" title="png (8,25) "/><figcaption>debugger_object_void <span class="debug">(8,25)</span></figcaption></div>
+	<div class="icon png"><img src="8/26.png" title="png (8,26) "/><figcaption>debugger_object_expanded <span class="debug">(8,26)</span></figcaption></div>
+	<div class="icon png"><img src="8/27.png" title="png (8,27) "/><figcaption>debugger_object_dotnet_expanded <span class="debug">(8,27)</span></figcaption></div>
+	<div class="icon png"><img src="8/28.png" title="png (8,28) "/><figcaption>debugger_object_watched <span class="debug">(8,28)</span></figcaption></div>
+	<div class="icon png"><img src="8/29.png" title="png (8,29) "/><figcaption>debugger_object_watched_disabled <span class="debug">(8,29)</span></figcaption></div>
+	<div class="icon png"><img src="8/30.png" title="png (8,30) "/><figcaption>debugger_object_expand <span class="debug">(8,30)</span></figcaption></div>
+</div><div class="section sub" data-section-name="breakpoints">	<div class="icon png"><img src="8/31.png" title="png (8,31) "/><figcaption>breakpoints_delete <span class="debug">(8,31)</span></figcaption></div>
+	<div class="icon png"><img src="8/32.png" title="png (8,32) "/><figcaption>breakpoints_disable <span class="debug">(8,32)</span></figcaption></div>
+	<div class="icon png"><img src="8/33.png" title="png (8,33) "/><figcaption>breakpoints_enable <span class="debug">(8,33)</span></figcaption></div>
+</div><div class="section sub" data-section-name="callstack">	<div class="icon svg png"><img src="9/1.png" title="png (9,1) "/><figcaption>callstack_active_arrow <span class="debug">(9,1)</span></figcaption></div>
+	<div class="icon svg png"><img src="9/2.png" title="png (9,2) "/><figcaption>callstack_empty_arrow <span class="debug">(9,2)</span></figcaption></div>
+	<div class="icon svg png"><img src="9/3.png" title="png (9,3) "/><figcaption>callstack_marked_arrow <span class="debug">(9,3)</span></figcaption></div>
+	<div class="icon png"><img src="9/4.png" title="png (9,4) "/><figcaption>callstack_replayed_active <span class="debug">(9,4)</span></figcaption></div>
+	<div class="icon png"><img src="9/5.png" title="png (9,5) "/><figcaption>callstack_replayed_empty <span class="debug">(9,5)</span></figcaption></div>
+	<div class="icon png"><img src="9/6.png" title="png (9,6) "/><figcaption>callstack_replayed_marked <span class="debug">(9,6)</span></figcaption></div>
+</div><div class="section sub" data-section-name="debugger environment">	<div class="icon png"><img src="9/7.png" title="png (9,7) "/><figcaption>debugger_environment_force_execution_mode <span class="debug">(9,7)</span></figcaption></div>
+	<div class="icon png"><img src="9/8.png" title="png (9,8) "/><figcaption>debugger_environment_with_breakpoints <span class="debug">(9,8)</span></figcaption></div>
+	<div class="icon png"><img src="9/9.png" title="png (9,9) "/><figcaption>debugger_environment_without_breakpoints <span class="debug">(9,9)</span></figcaption></div>
+</div><div class="section sub" data-section-name="execution">	<div class="icon png"><img src="9/10.png" title="png (9,10) "/><figcaption>execution_record <span class="debug">(9,10)</span></figcaption></div>
+	<div class="icon png"><img src="9/11.png" title="png (9,11) "/><figcaption>execution_replay <span class="debug">(9,11)</span></figcaption></div>
+	<div class="icon png"><img src="9/12.png" title="png (9,12) "/><figcaption>execution_object_storage <span class="debug">(9,12)</span></figcaption></div>
+	<div class="icon png"><img src="9/13.png" title="png (9,13) "/><figcaption>execution_ignore_contract_violation <span class="debug">(9,13)</span></figcaption></div>
+</div><div class="section sub" data-section-name="debugger value">	<div class="icon png"><img src="9/14.png" title="png (9,14) "/><figcaption>debugger_value_routine_return <span class="debug">(9,14)</span></figcaption></div>
+</div><div class="section sub" data-section-name="debug">	<div class="icon png"><img src="9/15.png" title="png (9,15) "/><figcaption>debug_detach <span class="debug">(9,15)</span></figcaption></div>
+	<div class="icon png"><img src="9/16.png" title="png (9,16) "/><figcaption>debug_attach <span class="debug">(9,16)</span></figcaption></div>
+</div></div>
+<div class="row">
+<div class="section" data-section-name="general">
+	<div class="icon svg"><img src="10/1.svg" style="width: 16" title="png (10,1) "/><figcaption>general_blank <span class="debug">(10,1)</span></figcaption></div>
+	<div class="icon svg png"><img src="10/2.png" title="png (10,2) "/><figcaption>general_dialog <span class="debug">(10,2)</span></figcaption></div>
+	<div class="icon svg png"><img src="10/3.png" title="png (10,3) "/><figcaption>general_open <span class="debug">(10,3)</span></figcaption></div>
+	<div class="icon svg png"><img src="10/4.png" title="png (10,4) "/><figcaption>general_save <span class="debug">(10,4)</span></figcaption></div>
+	<div class="icon svg png"><img src="10/5.png" title="png (10,5) "/><figcaption>general_save_all <span class="debug">(10,5)</span></figcaption></div>
+	<div class="icon png"><img src="10/6.png" title="png (10,6) "/><figcaption>general_add <span class="debug">(10,6)</span></figcaption></div>
+	<div class="icon png"><img src="10/7.png" title="png (10,7) "/><figcaption>general_edit <span class="debug">(10,7)</span></figcaption></div>
+	<div class="icon png"><img src="10/8.png" title="png (10,8) "/><figcaption>general_remove <span class="debug">(10,8)</span></figcaption></div>
+	<div class="icon svg png"><img src="10/9.png" title="png (10,9) "/><figcaption>general_delete <span class="debug">(10,9)</span></figcaption></div>
+	<div class="icon svg png"><img src="10/10.png" title="png (10,10) "/><figcaption>general_document <span class="debug">(10,10)</span></figcaption></div>
+	<div class="icon png"><img src="10/11.png" title="png (10,11) "/><figcaption>general_cut <span class="debug">(10,11)</span></figcaption></div>
+	<div class="icon svg png"><img src="10/12.png" title="png (10,12) "/><figcaption>general_copy <span class="debug">(10,12)</span></figcaption></div>
+	<div class="icon svg png"><img src="10/13.png" title="png (10,13) "/><figcaption>general_paste <span class="debug">(10,13)</span></figcaption></div>
+	<div class="icon svg png"><img src="10/14.png" title="png (10,14) "/><figcaption>general_undo <span class="debug">(10,14)</span></figcaption></div>
+	<div class="icon svg png"><img src="10/15.png" title="png (10,15) "/><figcaption>general_redo <span class="debug">(10,15)</span></figcaption></div>
+	<div class="icon svg png"><img src="10/16.png" title="png (10,16) "/><figcaption>general_error <span class="debug">(10,16)</span></figcaption></div>
+	<div class="icon svg png"><img src="10/17.png" title="png (10,17) "/><figcaption>general_mini_error <span class="debug">(10,17)</span></figcaption></div>
+	<div class="icon svg png"><img src="10/18.png" title="png (10,18) "/><figcaption>general_warning <span class="debug">(10,18)</span></figcaption></div>
+	<div class="icon png"><img src="10/19.png" title="png (10,19) "/><figcaption>general_show_tool_tips <span class="debug">(10,19)</span></figcaption></div>
+	<div class="icon svg png"><img src="10/20.png" title="png (10,20) "/><figcaption>general_close <span class="debug">(10,20)</span></figcaption></div>
+	<div class="icon svg png"><img src="10/21.png" title="png (10,21) "/><figcaption>general_arrow_up <span class="debug">(10,21)</span></figcaption></div>
+	<div class="icon svg png"><img src="10/22.png" title="png (10,22) "/><figcaption>general_arrow_down <span class="debug">(10,22)</span></figcaption></div>
+	<div class="icon svg png"><img src="10/23.png" title="png (10,23) "/><figcaption>general_tick <span class="debug">(10,23)</span></figcaption></div>
+	<div class="icon png"><img src="10/24.png" title="png (10,24) "/><figcaption>general_word_wrap <span class="debug">(10,24)</span></figcaption></div>
+	<div class="icon png"><img src="10/25.png" title="png (10,25) "/><figcaption>general_send_enter <span class="debug">(10,25)</span></figcaption></div>
+	<div class="icon png"><img src="10/26.png" title="png (10,26) "/><figcaption>general_reset <span class="debug">(10,26)</span></figcaption></div>
+	<div class="icon png"><img src="10/27.png" title="png (10,27) "/><figcaption>general_hand <span class="debug">(10,27)</span></figcaption></div>
+	<div class="icon png"><img src="10/28.png" title="png (10,28) "/><figcaption>general_print <span class="debug">(10,28)</span></figcaption></div>
+	<div class="icon png"><img src="10/29.png" title="png (10,29) "/><figcaption>general_undo_history <span class="debug">(10,29)</span></figcaption></div>
+	<div class="icon png"><img src="10/30.png" title="png (10,30) "/><figcaption>general_check_document <span class="debug">(10,30)</span></figcaption></div>
+	<div class="icon svg png"><img src="10/31.png" title="png (10,31) "/><figcaption>general_move_up <span class="debug">(10,31)</span></figcaption></div>
+	<div class="icon svg png"><img src="10/32.png" title="png (10,32) "/><figcaption>general_move_down <span class="debug">(10,32)</span></figcaption></div>
+	<div class="icon svg png"><img src="10/33.png" title="png (10,33) "/><figcaption>general_move_left <span class="debug">(10,33)</span></figcaption></div>
+	<div class="icon svg png"><img src="11/1.png" title="png (11,1) "/><figcaption>general_move_right <span class="debug">(11,1)</span></figcaption></div>
+	<div class="icon svg png"><img src="11/2.png" title="png (11,2) "/><figcaption>general_close_document <span class="debug">(11,2)</span></figcaption></div>
+	<div class="icon png"><img src="11/3.png" title="png (11,3) "/><figcaption>general_close_all_documents <span class="debug">(11,3)</span></figcaption></div>
+	<div class="icon png"><img src="11/4.png" title="png (11,4) "/><figcaption>general_show_hidden <span class="debug">(11,4)</span></figcaption></div>
+	<div class="icon svg png"><img src="11/5.png" title="png (11,5) "/><figcaption>general_refresh <span class="debug">(11,5)</span></figcaption></div>
+	<div class="icon png"><img src="11/6.png" title="png (11,6) "/><figcaption>general_filter <span class="debug">(11,6)</span></figcaption></div>
+	<div class="icon svg png"><img src="11/7.png" title="png (11,7) "/><figcaption>general_information <span class="debug">(11,7)</span></figcaption></div>
+	<div class="icon svg png"><img src="11/8.png" title="png (11,8) "/><figcaption>general_notifications <span class="debug">(11,8)</span></figcaption></div>
+	<div class="icon svg png"><img src="11/9.png" title="png (11,9) "/><figcaption>general_notifications_not_empty <span class="debug">(11,9)</span></figcaption></div>
+	<div class="icon svg png"><img src="11/10.png" title="png (11,10) "/><figcaption>general_notifications_suspended <span class="debug">(11,10)</span></figcaption></div>
+</div></div>
+<div class="row">
+<div class="section" data-section-name="sort">
+	<div class="icon png"><img src="12/1.png" title="png (12,1) "/><figcaption>sort_descending <span class="debug">(12,1)</span></figcaption></div>
+	<div class="icon png"><img src="12/2.png" title="png (12,2) "/><figcaption>sort_acending <span class="debug">(12,2)</span></figcaption></div>
+	<div class="icon png"><img src="12/3.png" title="png (12,3) "/><figcaption>sort_grouped <span class="debug">(12,3)</span></figcaption></div>
+</div><div class="section sub" data-section-name="command">	<div class="icon png"><img src="12/4.png" title="png (12,4) "/><figcaption>command_send_to_external_editor <span class="debug">(12,4)</span></figcaption></div>
+	<div class="icon png"><img src="12/5.png" title="png (12,5) "/><figcaption>command_error_info <span class="debug">(12,5)</span></figcaption></div>
+	<div class="icon svg png"><img src="12/6.png" title="png (12,6) "/><figcaption>command_system_info <span class="debug">(12,6)</span></figcaption></div>
+	<div class="icon svg png"><img src="12/7.png" title="png (12,7) "/><figcaption>command_show_features_of_any <span class="debug">(12,7)</span></figcaption></div>
+	<div class="icon png"><img src="12/8.png" title="png (12,8) "/><figcaption>command_go_to_definition <span class="debug">(12,8)</span></figcaption></div>
+</div><div class="section sub" data-section-name="refactor">	<div class="icon png"><img src="12/9.png" title="png (12,9) "/><figcaption>refactor_feature_up <span class="debug">(12,9)</span></figcaption></div>
+	<div class="icon png"><img src="12/10.png" title="png (12,10) "/><figcaption>refactor_rename <span class="debug">(12,10)</span></figcaption></div>
+</div><div class="section sub" data-section-name="context">	<div class="icon png"><img src="12/11.png" title="png (12,11) "/><figcaption>context_link <span class="debug">(12,11)</span></figcaption></div>
+	<div class="icon png"><img src="12/12.png" title="png (12,12) "/><figcaption>context_unlink <span class="debug">(12,12)</span></figcaption></div>
+	<div class="icon png"><img src="12/13.png" title="png (12,13) "/><figcaption>context_sync <span class="debug">(12,13)</span></figcaption></div>
+</div><div class="section sub" data-section-name="search">	<div class="icon png"><img src="12/14.png" title="png (12,14) "/><figcaption>search_bottom_reached <span class="debug">(12,14)</span></figcaption></div>
+	<div class="icon png"><img src="12/15.png" title="png (12,15) "/><figcaption>search_first_reached <span class="debug">(12,15)</span></figcaption></div>
+</div><div class="section sub" data-section-name="windows">	<div class="icon png"><img src="12/16.png" title="png (12,16) "/><figcaption>windows_minimize_all <span class="debug">(12,16)</span></figcaption></div>
+	<div class="icon png"><img src="12/17.png" title="png (12,17) "/><figcaption>windows_raise_all <span class="debug">(12,17)</span></figcaption></div>
+	<div class="icon png"><img src="12/18.png" title="png (12,18) "/><figcaption>windows_raise_all_unsaved <span class="debug">(12,18)</span></figcaption></div>
+	<div class="icon png"><img src="12/19.png" title="png (12,19) "/><figcaption>windows_windows <span class="debug">(12,19)</span></figcaption></div>
+</div><div class="section sub" data-section-name="toolbar">	<div class="icon png"><img src="12/20.png" title="png (12,20) "/><figcaption>toolbar_separator <span class="debug">(12,20)</span></figcaption></div>
+</div><div class="section sub" data-section-name="priority">	<div class="icon svg png"><img src="12/21.png" title="png (12,21) "/><figcaption>priority_high <span class="debug">(12,21)</span></figcaption></div>
+	<div class="icon png"><img src="12/22.png" title="png (12,22) "/><figcaption>priority_low <span class="debug">(12,22)</span></figcaption></div>
+</div><div class="section sub" data-section-name="tab">	<div class="icon svg png"><img src="12/23.png" title="png (12,23) "/><figcaption>tab_close <span class="debug">(12,23)</span></figcaption></div>
+	<div class="icon svg png"><img src="12/24.png" title="png (12,24) "/><figcaption>tab_close_all <span class="debug">(12,24)</span></figcaption></div>
+</div><div class="section sub" data-section-name="grid">	<div class="icon png"><img src="12/25.png" title="png (12,25) "/><figcaption>grid_expand_all <span class="debug">(12,25)</span></figcaption></div>
+	<div class="icon png"><img src="12/26.png" title="png (12,26) "/><figcaption>grid_collapse_all <span class="debug">(12,26)</span></figcaption></div>
+</div></div>
+<div class="row">
+<div class="section" data-section-name="view">
+	<div class="icon svg png"><img src="13/1.png" title="png (13,1) "/><figcaption>view_previous <span class="debug">(13,1)</span></figcaption></div>
+	<div class="icon svg png"><img src="13/2.png" title="png (13,2) "/><figcaption>view_next <span class="debug">(13,2)</span></figcaption></div>
+	<div class="icon svg png"><img src="13/3.png" title="png (13,3) "/><figcaption>view_editor <span class="debug">(13,3)</span></figcaption></div>
+	<div class="icon svg png"><img src="13/4.png" title="png (13,4) "/><figcaption>view_flat <span class="debug">(13,4)</span></figcaption></div>
+	<div class="icon svg png"><img src="13/5.png" title="png (13,5) "/><figcaption>view_clickable <span class="debug">(13,5)</span></figcaption></div>
+	<div class="icon svg png"><img src="13/6.png" title="png (13,6) "/><figcaption>view_contracts <span class="debug">(13,6)</span></figcaption></div>
+	<div class="icon svg png"><img src="13/7.png" title="png (13,7) "/><figcaption>view_flat_contracts <span class="debug">(13,7)</span></figcaption></div>
+	<div class="icon svg png"><img src="13/8.png" title="png (13,8) "/><figcaption>view_editor_feature <span class="debug">(13,8)</span></figcaption></div>
+	<div class="icon png"><img src="13/9.png" title="png (13,9) "/><figcaption>view_clickable_feature <span class="debug">(13,9)</span></figcaption></div>
+	<div class="icon svg png"><img src="13/10.png" title="png (13,10) "/><figcaption>view_unmodified <span class="debug">(13,10)</span></figcaption></div>
+</div></div>
+<div class="row">
+<div class="section" data-section-name="new">
+	<div class="icon png"><img src="14/1.png" title="png (14,1) "/><figcaption>new_eiffel_project <span class="debug">(14,1)</span></figcaption></div>
+	<div class="icon svg png"><img src="14/2.png" title="png (14,2) "/><figcaption>new_cluster <span class="debug">(14,2)</span></figcaption></div>
+	<div class="icon svg png"><img src="14/3.png" title="png (14,3) "/><figcaption>new_override_cluster <span class="debug">(14,3)</span></figcaption></div>
+	<div class="icon svg png"><img src="14/4.png" title="png (14,4) "/><figcaption>new_library <span class="debug">(14,4)</span></figcaption></div>
+	<div class="icon svg png"><img src="14/5.png" title="png (14,5) "/><figcaption>new_precompiled_library <span class="debug">(14,5)</span></figcaption></div>
+	<div class="icon png"><img src="14/6.png" title="png (14,6) "/><figcaption>new_reference <span class="debug">(14,6)</span></figcaption></div>
+	<div class="icon svg png"><img src="14/7.png" title="png (14,7) "/><figcaption>new_feature <span class="debug">(14,7)</span></figcaption></div>
+	<div class="icon svg png"><img src="14/8.png" title="png (14,8) "/><figcaption>new_class <span class="debug">(14,8)</span></figcaption></div>
+	<div class="icon svg png"><img src="14/9.png" title="png (14,9) "/><figcaption>new_window <span class="debug">(14,9)</span></figcaption></div>
+	<div class="icon png"><img src="14/10.png" title="png (14,10) "/><figcaption>new_editor <span class="debug">(14,10)</span></figcaption></div>
+	<div class="icon svg png"><img src="14/11.png" title="png (14,11) "/><figcaption>new_document <span class="debug">(14,11)</span></figcaption></div>
+	<div class="icon png"><img src="14/12.png" title="png (14,12) "/><figcaption>new_metric <span class="debug">(14,12)</span></figcaption></div>
+	<div class="icon png"><img src="14/13.png" title="png (14,13) "/><figcaption>new_supplier_link <span class="debug">(14,13)</span></figcaption></div>
+	<div class="icon png"><img src="14/14.png" title="png (14,14) "/><figcaption>new_aggregate_supplier_link <span class="debug">(14,14)</span></figcaption></div>
+	<div class="icon png"><img src="14/15.png" title="png (14,15) "/><figcaption>new_inheritance_link <span class="debug">(14,15)</span></figcaption></div>
+	<div class="icon png"><img src="14/16.png" title="png (14,16) "/><figcaption>new_and <span class="debug">(14,16)</span></figcaption></div>
+	<div class="icon png"><img src="14/17.png" title="png (14,17) "/><figcaption>new_or <span class="debug">(14,17)</span></figcaption></div>
+	<div class="icon png"><img src="14/18.png" title="png (14,18) "/><figcaption>new_include <span class="debug">(14,18)</span></figcaption></div>
+	<div class="icon png"><img src="14/19.png" title="png (14,19) "/><figcaption>new_object <span class="debug">(14,19)</span></figcaption></div>
+	<div class="icon png"><img src="14/20.png" title="png (14,20) "/><figcaption>new_makefile <span class="debug">(14,20)</span></figcaption></div>
+	<div class="icon png"><img src="14/21.png" title="png (14,21) "/><figcaption>new_resource <span class="debug">(14,21)</span></figcaption></div>
+	<div class="icon png"><img src="14/22.png" title="png (14,22) "/><figcaption>new_pre_compilation_task <span class="debug">(14,22)</span></figcaption></div>
+	<div class="icon png"><img src="14/23.png" title="png (14,23) "/><figcaption>new_post_compilation_task <span class="debug">(14,23)</span></figcaption></div>
+	<div class="icon svg png"><img src="14/24.png" title="png (14,24) "/><figcaption>new_target <span class="debug">(14,24)</span></figcaption></div>
+	<div class="icon svg png"><img src="14/25.png" title="png (14,25) "/><figcaption>new_remote_target <span class="debug">(14,25)</span></figcaption></div>
+	<div class="icon png"><img src="14/26.png" title="png (14,26) "/><figcaption>new_cflag <span class="debug">(14,26)</span></figcaption></div>
+	<div class="icon png"><img src="14/27.png" title="png (14,27) "/><figcaption>new_linker_flag <span class="debug">(14,27)</span></figcaption></div>
+</div></div>
+<div class="row">
+<div class="section" data-section-name="feature">
+	<div class="icon png"><img src="15/1.png" title="png (15,1) "/><figcaption>feature_callers <span class="debug">(15,1)</span></figcaption></div>
+	<div class="icon png"><img src="15/2.png" title="png (15,2) "/><figcaption>feature_callees <span class="debug">(15,2)</span></figcaption></div>
+	<div class="icon png"><img src="15/3.png" title="png (15,3) "/><figcaption>feature_assigners <span class="debug">(15,3)</span></figcaption></div>
+	<div class="icon png"><img src="15/4.png" title="png (15,4) "/><figcaption>feature_assignees <span class="debug">(15,4)</span></figcaption></div>
+	<div class="icon png"><img src="15/5.png" title="png (15,5) "/><figcaption>feature_creators <span class="debug">(15,5)</span></figcaption></div>
+	<div class="icon png"><img src="15/6.png" title="png (15,6) "/><figcaption>feature_creaters <span class="debug">(15,6)</span></figcaption></div>
+	<div class="icon png"><img src="15/7.png" title="png (15,7) "/><figcaption>feature_implementers <span class="debug">(15,7)</span></figcaption></div>
+	<div class="icon png"><img src="15/8.png" title="png (15,8) "/><figcaption>feature_ancestors <span class="debug">(15,8)</span></figcaption></div>
+	<div class="icon png"><img src="15/9.png" title="png (15,9) "/><figcaption>feature_descendents <span class="debug">(15,9)</span></figcaption></div>
+	<div class="icon png"><img src="15/10.png" title="png (15,10) "/><figcaption>feature_homonyms <span class="debug">(15,10)</span></figcaption></div>
+</div><div class="section sub" data-section-name="class">	<div class="icon png"><img src="15/11.png" title="png (15,11) "/><figcaption>class_ancestors <span class="debug">(15,11)</span></figcaption></div>
+	<div class="icon png"><img src="15/12.png" title="png (15,12) "/><figcaption>class_descendents <span class="debug">(15,12)</span></figcaption></div>
+	<div class="icon png"><img src="15/13.png" title="png (15,13) "/><figcaption>class_clients <span class="debug">(15,13)</span></figcaption></div>
+	<div class="icon png"><img src="15/14.png" title="png (15,14) "/><figcaption>class_supliers <span class="debug">(15,14)</span></figcaption></div>
+</div><div class="section sub" data-section-name="class features">	<div class="icon svg png"><img src="15/15.png" title="png (15,15) "/><figcaption>class_features_attribute <span class="debug">(15,15)</span></figcaption></div>
+	<div class="icon svg png"><img src="15/16.png" title="png (15,16) "/><figcaption>class_features_routine <span class="debug">(15,16)</span></figcaption></div>
+	<div class="icon png"><img src="15/17.png" title="png (15,17) "/><figcaption>class_features_invariant <span class="debug">(15,17)</span></figcaption></div>
+	<div class="icon png"><img src="15/18.png" title="png (15,18) "/><figcaption>class_features_creator <span class="debug">(15,18)</span></figcaption></div>
+	<div class="icon png"><img src="15/19.png" title="png (15,19) "/><figcaption>class_features_deferred <span class="debug">(15,19)</span></figcaption></div>
+	<div class="icon svg png"><img src="15/20.png" title="png (15,20) "/><figcaption>class_features_once <span class="debug">(15,20)</span></figcaption></div>
+	<div class="icon svg png"><img src="15/21.png" title="png (15,21) "/><figcaption>class_features_external <span class="debug">(15,21)</span></figcaption></div>
+	<div class="icon png"><img src="15/22.png" title="png (15,22) "/><figcaption>class_features_exported <span class="debug">(15,22)</span></figcaption></div>
+	<div class="icon svg png"><img src="15/23.png" title="png (15,23) "/><figcaption>class_features_instance_free_routine <span class="debug">(15,23)</span></figcaption></div>
+</div></div>
+<div class="row">
+<div class="section" data-section-name="metric">
+	<div class="icon png"><img src="16/1.png" title="png (16,1) "/><figcaption>metric_basic <span class="debug">(16,1)</span></figcaption></div>
+	<div class="icon png"><img src="16/2.png" title="png (16,2) "/><figcaption>metric_linear <span class="debug">(16,2)</span></figcaption></div>
+	<div class="icon png"><img src="16/3.png" title="png (16,3) "/><figcaption>metric_ratio <span class="debug">(16,3)</span></figcaption></div>
+	<div class="icon png"><img src="16/4.png" title="png (16,4) "/><figcaption>metric_basic_readonly <span class="debug">(16,4)</span></figcaption></div>
+	<div class="icon png"><img src="16/5.png" title="png (16,5) "/><figcaption>metric_linear_readonly <span class="debug">(16,5)</span></figcaption></div>
+	<div class="icon png"><img src="16/6.png" title="png (16,6) "/><figcaption>metric_ratio_readonly <span class="debug">(16,6)</span></figcaption></div>
+	<div class="icon png"><img src="16/7.png" title="png (16,7) "/><figcaption>metric_common_criteria <span class="debug">(16,7)</span></figcaption></div>
+	<div class="icon png"><img src="16/8.png" title="png (16,8) "/><figcaption>metric_relational_criteria <span class="debug">(16,8)</span></figcaption></div>
+	<div class="icon png"><img src="16/9.png" title="png (16,9) "/><figcaption>metric_text_criteria <span class="debug">(16,9)</span></figcaption></div>
+	<div class="icon png"><img src="16/10.png" title="png (16,10) "/><figcaption>metric_group <span class="debug">(16,10)</span></figcaption></div>
+	<div class="icon png"><img src="16/11.png" title="png (16,11) "/><figcaption>metric_folder <span class="debug">(16,11)</span></figcaption></div>
+	<div class="icon png"><img src="16/12.png" title="png (16,12) "/><figcaption>metric_send_to_archive <span class="debug">(16,12)</span></figcaption></div>
+	<div class="icon png"><img src="16/13.png" title="png (16,13) "/><figcaption>metric_quick <span class="debug">(16,13)</span></figcaption></div>
+	<div class="icon png"><img src="16/14.png" title="png (16,14) "/><figcaption>metric_show_details <span class="debug">(16,14)</span></figcaption></div>
+	<div class="icon png"><img src="16/15.png" title="png (16,15) "/><figcaption>metric_run_and_show_details <span class="debug">(16,15)</span></figcaption></div>
+	<div class="icon png"><img src="16/16.png" title="png (16,16) "/><figcaption>metric_export_to_file <span class="debug">(16,16)</span></figcaption></div>
+	<div class="icon png"><img src="16/17.png" title="png (16,17) "/><figcaption>metric_and <span class="debug">(16,17)</span></figcaption></div>
+	<div class="icon png"><img src="16/18.png" title="png (16,18) "/><figcaption>metric_or <span class="debug">(16,18)</span></figcaption></div>
+</div><div class="section sub" data-section-name="metric not">	<div class="icon png"><img src="16/19.png" title="png (16,19) "/><figcaption>metric_not_common_criteria <span class="debug">(16,19)</span></figcaption></div>
+	<div class="icon png"><img src="16/20.png" title="png (16,20) "/><figcaption>metric_not_relational_criteria <span class="debug">(16,20)</span></figcaption></div>
+	<div class="icon png"><img src="16/21.png" title="png (16,21) "/><figcaption>metric_not_text_criteria <span class="debug">(16,21)</span></figcaption></div>
+	<div class="icon png"><img src="16/22.png" title="png (16,22) "/><figcaption>metric_not_and <span class="debug">(16,22)</span></figcaption></div>
+	<div class="icon png"><img src="16/23.png" title="png (16,23) "/><figcaption>metric_not_or <span class="debug">(16,23)</span></figcaption></div>
+</div><div class="section sub" data-section-name="metric domain">	<div class="icon png"><img src="16/24.png" title="png (16,24) "/><figcaption>metric_domain_application <span class="debug">(16,24)</span></figcaption></div>
+	<div class="icon png"><img src="16/25.png" title="png (16,25) "/><figcaption>metric_domain_custom <span class="debug">(16,25)</span></figcaption></div>
+	<div class="icon png"><img src="16/26.png" title="png (16,26) "/><figcaption>metric_domain_delayed <span class="debug">(16,26)</span></figcaption></div>
+</div><div class="section sub" data-section-name="metric unit">	<div class="icon svg png"><img src="16/27.png" title="png (16,27) "/><figcaption>metric_unit_target <span class="debug">(16,27)</span></figcaption></div>
+	<div class="icon svg png"><img src="16/28.png" title="png (16,28) "/><figcaption>metric_unit_group <span class="debug">(16,28)</span></figcaption></div>
+	<div class="icon svg png"><img src="16/29.png" title="png (16,29) "/><figcaption>metric_unit_class <span class="debug">(16,29)</span></figcaption></div>
+	<div class="icon png"><img src="16/30.png" title="png (16,30) "/><figcaption>metric_unit_generic <span class="debug">(16,30)</span></figcaption></div>
+	<div class="icon png"><img src="16/31.png" title="png (16,31) "/><figcaption>metric_unit_feature <span class="debug">(16,31)</span></figcaption></div>
+	<div class="icon png"><img src="16/32.png" title="png (16,32) "/><figcaption>metric_unit_local_or_argument <span class="debug">(16,32)</span></figcaption></div>
+	<div class="icon png"><img src="16/33.png" title="png (16,33) "/><figcaption>metric_unit_assertion <span class="debug">(16,33)</span></figcaption></div>
+	<div class="icon png"><img src="17/1.png" title="png (17,1) "/><figcaption>metric_unit_line <span class="debug">(17,1)</span></figcaption></div>
+	<div class="icon png"><img src="17/2.png" title="png (17,2) "/><figcaption>metric_unit_compilation <span class="debug">(17,2)</span></figcaption></div>
+	<div class="icon png"><img src="17/3.png" title="png (17,3) "/><figcaption>metric_unit_ratio <span class="debug">(17,3)</span></figcaption></div>
+</div><div class="section sub" data-section-name="metric">	<div class="icon png"><img src="17/4.png" title="png (17,4) "/><figcaption>metric_filter <span class="debug">(17,4)</span></figcaption></div>
+</div></div>
+<div class="row">
+<div class="section" data-section-name="diagram">
+	<div class="icon png"><img src="18/1.png" title="png (18,1) "/><figcaption>diagram_zoom_in <span class="debug">(18,1)</span></figcaption></div>
+	<div class="icon png"><img src="18/2.png" title="png (18,2) "/><figcaption>diagram_zoom_out <span class="debug">(18,2)</span></figcaption></div>
+	<div class="icon png"><img src="18/3.png" title="png (18,3) "/><figcaption>diagram_target_cluster_or_class <span class="debug">(18,3)</span></figcaption></div>
+	<div class="icon png"><img src="18/4.png" title="png (18,4) "/><figcaption>diagram_show_legend <span class="debug">(18,4)</span></figcaption></div>
+	<div class="icon png"><img src="18/5.png" title="png (18,5) "/><figcaption>diagram_crop <span class="debug">(18,5)</span></figcaption></div>
+	<div class="icon png"><img src="18/6.png" title="png (18,6) "/><figcaption>diagram_choose_color <span class="debug">(18,6)</span></figcaption></div>
+	<div class="icon png"><img src="18/7.png" title="png (18,7) "/><figcaption>diagram_force_right_angles <span class="debug">(18,7)</span></figcaption></div>
+	<div class="icon png"><img src="18/8.png" title="png (18,8) "/><figcaption>diagram_toogle_physics <span class="debug">(18,8)</span></figcaption></div>
+	<div class="icon png"><img src="18/9.png" title="png (18,9) "/><figcaption>diagram_physics_settings <span class="debug">(18,9)</span></figcaption></div>
+	<div class="icon png"><img src="18/10.png" title="png (18,10) "/><figcaption>diagram_supplier_link <span class="debug">(18,10)</span></figcaption></div>
+	<div class="icon png"><img src="18/11.png" title="png (18,11) "/><figcaption>diagram_inheritance_link <span class="debug">(18,11)</span></figcaption></div>
+	<div class="icon png"><img src="18/12.png" title="png (18,12) "/><figcaption>diagram_export_to_png <span class="debug">(18,12)</span></figcaption></div>
+	<div class="icon svg png"><img src="18/13.png" title="png (18,13) "/><figcaption>diagram_pinned <span class="debug">(18,13)</span></figcaption></div>
+	<div class="icon svg png"><img src="18/14.png" title="png (18,14) "/><figcaption>diagram_unpinned <span class="debug">(18,14)</span></figcaption></div>
+	<div class="icon png"><img src="18/15.png" title="png (18,15) "/><figcaption>diagram_anchor <span class="debug">(18,15)</span></figcaption></div>
+	<div class="icon png"><img src="18/16.png" title="png (18,16) "/><figcaption>diagram_remove_anchor <span class="debug">(18,16)</span></figcaption></div>
+	<div class="icon png"><img src="18/17.png" title="png (18,17) "/><figcaption>diagram_toggle_quality <span class="debug">(18,17)</span></figcaption></div>
+	<div class="icon png"><img src="18/18.png" title="png (18,18) "/><figcaption>diagram_depth_of_relations <span class="debug">(18,18)</span></figcaption></div>
+	<div class="icon png"><img src="18/19.png" title="png (18,19) "/><figcaption>diagram_fit_to_screen <span class="debug">(18,19)</span></figcaption></div>
+	<div class="icon png"><img src="18/20.png" title="png (18,20) "/><figcaption>diagram_show_labels <span class="debug">(18,20)</span></figcaption></div>
+	<div class="icon png"><img src="18/21.png" title="png (18,21) "/><figcaption>diagram_fill_cluster <span class="debug">(18,21)</span></figcaption></div>
+	<div class="icon png"><img src="18/22.png" title="png (18,22) "/><figcaption>diagram_view_uml <span class="debug">(18,22)</span></figcaption></div>
+</div></div>
+<div class="row">
+<div class="section" data-section-name="preference">
+	<div class="icon png"><img src="19/1.png" title="png (19,1) "/><figcaption>preference_boolean <span class="debug">(19,1)</span></figcaption></div>
+	<div class="icon png"><img src="19/2.png" title="png (19,2) "/><figcaption>preference_color <span class="debug">(19,2)</span></figcaption></div>
+	<div class="icon png"><img src="19/3.png" title="png (19,3) "/><figcaption>preference_string <span class="debug">(19,3)</span></figcaption></div>
+	<div class="icon png"><img src="19/4.png" title="png (19,4) "/><figcaption>preference_list <span class="debug">(19,4)</span></figcaption></div>
+	<div class="icon png"><img src="19/5.png" title="png (19,5) "/><figcaption>preference_numerical <span class="debug">(19,5)</span></figcaption></div>
+	<div class="icon png"><img src="19/6.png" title="png (19,6) "/><figcaption>preference_font <span class="debug">(19,6)</span></figcaption></div>
+	<div class="icon png"><img src="19/7.png" title="png (19,7) "/><figcaption>preference_shortcut <span class="debug">(19,7)</span></figcaption></div>
+	<div class="icon svg png"><img src="19/8.png" title="png (19,8) "/><figcaption>preference_option <span class="debug">(19,8)</span></figcaption></div>
+</div><div class="section sub" data-section-name="document">	<div class="icon svg png"><img src="19/9.png" title="png (19,9) "/><figcaption>document_eiffel_project <span class="debug">(19,9)</span></figcaption></div>
+	<div class="icon svg png"><img src="19/10.png" title="png (19,10) "/><figcaption>document_eiffel_project_compiled <span class="debug">(19,10)</span></figcaption></div>
+	<div class="icon svg png"><img src="19/11.png" title="png (19,11) "/><figcaption>document_blank <span class="debug">(19,11)</span></figcaption></div>
+	<div class="icon png"><img src="19/12.png" title="png (19,12) "/><figcaption>document_eiffel_project_large <span class="debug">(19,12)</span></figcaption></div>
+</div></div>
+<div class="row">
+<div class="section" data-section-name="compile">
+	<div class="icon svg png"><img src="20/1.png" title="png (20,1) "/><figcaption>compile_animation_1 <span class="debug">(20,1)</span></figcaption></div>
+	<div class="icon svg png"><img src="20/2.png" title="png (20,2) "/><figcaption>compile_animation_2 <span class="debug">(20,2)</span></figcaption></div>
+	<div class="icon svg png"><img src="20/3.png" title="png (20,3) "/><figcaption>compile_animation_3 <span class="debug">(20,3)</span></figcaption></div>
+	<div class="icon svg png"><img src="20/4.png" title="png (20,4) "/><figcaption>compile_animation_4 <span class="debug">(20,4)</span></figcaption></div>
+	<div class="icon svg png"><img src="20/5.png" title="png (20,5) "/><figcaption>compile_animation_5 <span class="debug">(20,5)</span></figcaption></div>
+	<div class="icon svg png"><img src="20/6.png" title="png (20,6) "/><figcaption>compile_animation_6 <span class="debug">(20,6)</span></figcaption></div>
+	<div class="icon svg png"><img src="20/7.png" title="png (20,7) "/><figcaption>compile_animation_7 <span class="debug">(20,7)</span></figcaption></div>
+	<div class="icon svg png"><img src="20/8.png" title="png (20,8) "/><figcaption>compile_animation_8 <span class="debug">(20,8)</span></figcaption></div>
+	<div class="icon svg png"><img src="20/9.png" title="png (20,9) "/><figcaption>compile_error <span class="debug">(20,9)</span></figcaption></div>
+	<div class="icon svg png"><img src="20/10.png" title="png (20,10) "/><figcaption>compile_success <span class="debug">(20,10)</span></figcaption></div>
+	<div class="icon svg png"><img src="20/11.png" title="png (20,11) "/><figcaption>compile_warning <span class="debug">(20,11)</span></figcaption></div>
+</div><div class="section sub" data-section-name="run">	<div class="icon png"><img src="20/12.png" title="png (20,12) "/><figcaption>run_animation_1 <span class="debug">(20,12)</span></figcaption></div>
+	<div class="icon png"><img src="20/13.png" title="png (20,13) "/><figcaption>run_animation_2 <span class="debug">(20,13)</span></figcaption></div>
+	<div class="icon png"><img src="20/14.png" title="png (20,14) "/><figcaption>run_animation_3 <span class="debug">(20,14)</span></figcaption></div>
+	<div class="icon png"><img src="20/15.png" title="png (20,15) "/><figcaption>run_animation_4 <span class="debug">(20,15)</span></figcaption></div>
+	<div class="icon png"><img src="20/16.png" title="png (20,16) "/><figcaption>run_animation_5 <span class="debug">(20,16)</span></figcaption></div>
+</div></div>
+<div class="row">
+<div class="section" data-section-name="project settings">
+	<div class="icon svg png"><img src="21/1.png" title="png (21,1) "/><figcaption>project_settings_system <span class="debug">(21,1)</span></figcaption></div>
+	<div class="icon svg png"><img src="21/2.png" title="png (21,2) "/><figcaption>project_settings_target <span class="debug">(21,2)</span></figcaption></div>
+	<div class="icon png"><img src="21/3.png" title="png (21,3) "/><figcaption>project_settings_assertions <span class="debug">(21,3)</span></figcaption></div>
+	<div class="icon svg png"><img src="21/4.png" title="png (21,4) "/><figcaption>project_settings_groups <span class="debug">(21,4)</span></figcaption></div>
+	<div class="icon svg png"><img src="21/5.png" title="png (21,5) "/><figcaption>project_settings_advanced <span class="debug">(21,5)</span></figcaption></div>
+	<div class="icon svg png"><img src="21/6.png" title="png (21,6) "/><figcaption>project_settings_warnings <span class="debug">(21,6)</span></figcaption></div>
+	<div class="icon png"><img src="21/7.png" title="png (21,7) "/><figcaption>project_settings_debug <span class="debug">(21,7)</span></figcaption></div>
+	<div class="icon png"><img src="21/8.png" title="png (21,8) "/><figcaption>project_settings_externals <span class="debug">(21,8)</span></figcaption></div>
+	<div class="icon png"><img src="21/9.png" title="png (21,9) "/><figcaption>project_settings_tasks <span class="debug">(21,9)</span></figcaption></div>
+	<div class="icon png"><img src="21/10.png" title="png (21,10) "/><figcaption>project_settings_variables <span class="debug">(21,10)</span></figcaption></div>
+	<div class="icon png"><img src="21/11.png" title="png (21,11) "/><figcaption>project_settings_type_mappings <span class="debug">(21,11)</span></figcaption></div>
+	<div class="icon svg png"><img src="21/12.png" title="png (21,12) "/><figcaption>project_settings_edit_library <span class="debug">(21,12)</span></figcaption></div>
+	<div class="icon png"><img src="21/13.png" title="png (21,13) "/><figcaption>project_settings_include_file <span class="debug">(21,13)</span></figcaption></div>
+	<div class="icon png"><img src="21/14.png" title="png (21,14) "/><figcaption>project_settings_object_file <span class="debug">(21,14)</span></figcaption></div>
+	<div class="icon png"><img src="21/15.png" title="png (21,15) "/><figcaption>project_settings_make_file <span class="debug">(21,15)</span></figcaption></div>
+	<div class="icon png"><img src="21/16.png" title="png (21,16) "/><figcaption>project_settings_resource_file <span class="debug">(21,16)</span></figcaption></div>
+	<div class="icon png"><img src="21/17.png" title="png (21,17) "/><figcaption>project_settings_task <span class="debug">(21,17)</span></figcaption></div>
+	<div class="icon png"><img src="21/18.png" title="png (21,18) "/><figcaption>project_settings_cflag <span class="debug">(21,18)</span></figcaption></div>
+	<div class="icon png"><img src="21/19.png" title="png (21,19) "/><figcaption>project_settings_linker_flag <span class="debug">(21,19)</span></figcaption></div>
+	<div class="icon png"><img src="21/20.png" title="png (21,20) "/><figcaption>project_settings_default_highlighted <span class="debug">(21,20)</span></figcaption></div>
+	<div class="icon png"><img src="21/21.png" title="png (21,21) "/><figcaption>project_settings_default <span class="debug">(21,21)</span></figcaption></div>
+</div></div>
+<div class="row">
+<div class="section" data-section-name="overlay">
+	<div class="icon svg png"><img src="22/1.png" title="png (22,1) "/><figcaption>overlay_locked <span class="debug">(22,1)</span></figcaption></div>
+	<div class="icon svg png"><img src="22/2.png" title="png (22,2) "/><figcaption>overlay_error <span class="debug">(22,2)</span></figcaption></div>
+	<div class="icon svg png"><img src="22/3.png" title="png (22,3) "/><figcaption>overlay_warning <span class="debug">(22,3)</span></figcaption></div>
+	<div class="icon svg png"><img src="22/4.png" title="png (22,4) "/><figcaption>overlay_packaged <span class="debug">(22,4)</span></figcaption></div>
+	<div class="icon svg png"><img src="22/5.png" title="png (22,5) "/><figcaption>overlay_search <span class="debug">(22,5)</span></figcaption></div>
+	<div class="icon svg png"><img src="22/6.png" title="png (22,6) "/><figcaption>overlay_new <span class="debug">(22,6)</span></figcaption></div>
+	<div class="icon svg png"><img src="22/7.png" title="png (22,7) "/><figcaption>overlay_flag <span class="debug">(22,7)</span></figcaption></div>
+	<div class="icon svg png"><img src="22/8.png" title="png (22,8) "/><figcaption>overlay_information <span class="debug">(22,8)</span></figcaption></div>
+	<div class="icon svg png"><img src="22/9.png" title="png (22,9) "/><figcaption>overlay_edit <span class="debug">(22,9)</span></figcaption></div>
+	<div class="icon svg png"><img src="22/10.png" title="png (22,10) "/><figcaption>overlay_class <span class="debug">(22,10)</span></figcaption></div>
+	<div class="icon svg png"><img src="22/11.png" title="png (22,11) "/><figcaption>overlay_cluster <span class="debug">(22,11)</span></figcaption></div>
+	<div class="icon svg png"><img src="22/12.png" title="png (22,12) "/><figcaption>overlay_target <span class="debug">(22,12)</span></figcaption></div>
+	<div class="icon svg png"><img src="22/13.png" title="png (22,13) "/><figcaption>overlay_library <span class="debug">(22,13)</span></figcaption></div>
+	<div class="icon svg png"><img src="22/14.png" title="png (22,14) "/><figcaption>overlay_clusters <span class="debug">(22,14)</span></figcaption></div>
+	<div class="icon svg png"><img src="22/15.png" title="png (22,15) "/><figcaption>overlay_editor <span class="debug">(22,15)</span></figcaption></div>
+	<div class="icon svg png"><img src="22/16.png" title="png (22,16) "/><figcaption>overlay_refresh <span class="debug">(22,16)</span></figcaption></div>
+	<div class="icon svg png"><img src="22/17.png" title="png (22,17) "/><figcaption>overlay_class_left <span class="debug">(22,17)</span></figcaption></div>
+	<div class="icon svg png"><img src="22/18.png" title="png (22,18) "/><figcaption>overlay_cluster_left <span class="debug">(22,18)</span></figcaption></div>
+	<div class="icon svg png"><img src="22/19.png" title="png (22,19) "/><figcaption>overlay_target_left <span class="debug">(22,19)</span></figcaption></div>
+	<div class="icon svg png"><img src="22/20.png" title="png (22,20) "/><figcaption>overlay_library_left <span class="debug">(22,20)</span></figcaption></div>
+	<div class="icon svg png"><img src="22/21.png" title="png (22,21) "/><figcaption>overlay_clusters_left <span class="debug">(22,21)</span></figcaption></div>
+	<div class="icon svg png"><img src="22/22.png" title="png (22,22) "/><figcaption>overlay_editor_left <span class="debug">(22,22)</span></figcaption></div>
+	<div class="icon svg png"><img src="22/23.png" title="png (22,23) "/><figcaption>overlay_refresh_left <span class="debug">(22,23)</span></figcaption></div>
+	<div class="icon svg png"><img src="22/24.png" title="png (22,24) "/><figcaption>overlay_instance_free <span class="debug">(22,24)</span></figcaption></div>
+	<div class="icon svg png"><img src="22/25.png" title="png (22,25) "/><figcaption>overlay_feature_left <span class="debug">(22,25)</span></figcaption></div>
+	<div class="icon svg png"><img src="22/26.png" title="png (22,26) "/><figcaption>overlay_verifier_right <span class="debug">(22,26)</span></figcaption></div>
+</div></div>
+<div class="row">
+<div class="section" data-section-name="errors and warnings">
+	<div class="icon png"><img src="23/1.png" title="png (23,1) "/><figcaption>errors_and_warnings_next_error <span class="debug">(23,1)</span></figcaption></div>
+	<div class="icon png"><img src="23/2.png" title="png (23,2) "/><figcaption>errors_and_warnings_previous_error <span class="debug">(23,2)</span></figcaption></div>
+	<div class="icon png"><img src="23/3.png" title="png (23,3) "/><figcaption>errors_and_warnings_next_warning <span class="debug">(23,3)</span></figcaption></div>
+	<div class="icon png"><img src="23/4.png" title="png (23,4) "/><figcaption>errors_and_warnings_previous_warning <span class="debug">(23,4)</span></figcaption></div>
+	<div class="icon png"><img src="23/5.png" title="png (23,5) "/><figcaption>errors_and_warnings_filter <span class="debug">(23,5)</span></figcaption></div>
+	<div class="icon png"><img src="23/6.png" title="png (23,6) "/><figcaption>errors_and_warnings_filter_active <span class="debug">(23,6)</span></figcaption></div>
+	<div class="icon png"><img src="23/7.png" title="png (23,7) "/><figcaption>errors_and_warnings_expand_errors <span class="debug">(23,7)</span></figcaption></div>
+	<div class="icon png"><img src="23/8.png" title="png (23,8) "/><figcaption>errors_and_warnings_fix_ignore <span class="debug">(23,8)</span></figcaption></div>
+	<div class="icon png"><img src="23/9.png" title="png (23,9) "/><figcaption>errors_and_warnings_fix_apply <span class="debug">(23,9)</span></figcaption></div>
+</div></div>
+<div class="row">
+<div class="section" data-section-name="information">
+	<div class="icon png"><img src="24/1.png" title="png (24,1) "/><figcaption>information_tag <span class="debug">(24,1)</span></figcaption></div>
+	<div class="icon png"><img src="24/2.png" title="png (24,2) "/><figcaption>information_tags <span class="debug">(24,2)</span></figcaption></div>
+	<div class="icon png"><img src="24/3.png" title="png (24,3) "/><figcaption>information_no_tag <span class="debug">(24,3)</span></figcaption></div>
+	<div class="icon png"><img src="24/4.png" title="png (24,4) "/><figcaption>information_affected_target <span class="debug">(24,4)</span></figcaption></div>
+	<div class="icon png"><img src="24/5.png" title="png (24,5) "/><figcaption>information_auto_sweeping <span class="debug">(24,5)</span></figcaption></div>
+	<div class="icon png"><img src="24/6.png" title="png (24,6) "/><figcaption>information_sweep_now <span class="debug">(24,6)</span></figcaption></div>
+	<div class="icon png"><img src="24/7.png" title="png (24,7) "/><figcaption>information_edit_auto_node <span class="debug">(24,7)</span></figcaption></div>
+	<div class="icon svg png"><img src="24/8.png" title="png (24,8) "/><figcaption>information_with_info_sign <span class="debug">(24,8)</span></figcaption></div>
+	<div class="icon png"><img src="24/9.png" title="png (24,9) "/><figcaption>information_affected_resource <span class="debug">(24,9)</span></figcaption></div>
+</div></div>
+<div class="row">
+<div class="section" data-section-name="testing">
+	<div class="icon png"><img src="25/1.png" title="png (25,1) "/><figcaption>testing_new_unit_test <span class="debug">(25,1)</span></figcaption></div>
+	<div class="icon svg png"><img src="25/2.png" title="png (25,2) "/><figcaption>testing_failure <span class="debug">(25,2)</span></figcaption></div>
+	<div class="icon png"><img src="25/3.png" title="png (25,3) "/><figcaption>testing_run_last_tests <span class="debug">(25,3)</span></figcaption></div>
+	<div class="icon png"><img src="25/4.png" title="png (25,4) "/><figcaption>testing_run_last_failed_tests_first <span class="debug">(25,4)</span></figcaption></div>
+	<div class="icon png"><img src="25/5.png" title="png (25,5) "/><figcaption>testing_all_test_runs <span class="debug">(25,5)</span></figcaption></div>
+	<div class="icon svg png"><img src="25/6.png" title="png (25,6) "/><figcaption>testing_see_failure_trace <span class="debug">(25,6)</span></figcaption></div>
+	<div class="icon png"><img src="25/7.png" title="png (25,7) "/><figcaption>testing_compare_with_expected_result <span class="debug">(25,7)</span></figcaption></div>
+	<div class="icon png"><img src="25/8.png" title="png (25,8) "/><figcaption>testing_tool <span class="debug">(25,8)</span></figcaption></div>
+	<div class="icon png"><img src="25/9.png" title="png (25,9) "/><figcaption>testing_result_tool <span class="debug">(25,9)</span></figcaption></div>
+</div>
+	</body>
+</html>

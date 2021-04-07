@@ -1,4 +1,4 @@
-<svg height="526" viewBox="0 0 715 526" width="715" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+<svg height="526" viewBox="0 0 694 526" width="694" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
 <image x="1" y="1" width="20" height="20" xlink:href="./1/1.svg" fill="transparent" style="fill:none" />
 <image x="22" y="1" width="20" height="20" xlink:href="./1/2.svg" fill="transparent" style="fill:none" />
 <image x="43" y="1" width="20" height="20" xlink:href="./1/3.svg" fill="transparent" style="fill:none" />
@@ -32,7 +32,6 @@
 <image x="631" y="1" width="20" height="20" xlink:href="./1/31.svg" fill="transparent" style="fill:none" />
 <image x="652" y="1" width="20" height="20" xlink:href="./1/32.svg" fill="transparent" style="fill:none" />
 <image x="673" y="1" width="20" height="20" xlink:href="./1/33.svg" fill="transparent" style="fill:none" />
-<image x="694" y="1" width="20" height="20" xlink:href="./1/34.svg" fill="transparent" style="fill:none" />
 <image x="1" y="22" width="20" height="20" xlink:href="./2/1.svg" fill="transparent" style="fill:none" />
 <image x="22" y="22" width="20" height="20" xlink:href="./2/2.svg" fill="transparent" style="fill:none" />
 <image x="43" y="22" width="20" height="20" xlink:href="./2/3.svg" fill="transparent" style="fill:none" />
@@ -604,6 +603,8 @@
 <image x="211" y="379" width="20" height="20" xlink:href="./19/11.svg" fill="transparent" style="fill:none" />
 <rect x="232" y="379" width="20" height="20" fill="transparent" style="fill:none" />
 <image x="232" y="379" width="20" height="20" xlink:href="./19/12.png" fill="transparent" style="fill:none" />
+<rect x="253" y="379" width="20" height="20" fill="transparent" style="fill:none" />
+<image x="253" y="379" width="20" height="20" xlink:href="./19/13.png" fill="transparent" style="fill:none" />
 <image x="1" y="400" width="20" height="20" xlink:href="./20/1.svg" fill="transparent" style="fill:none" />
 <image x="22" y="400" width="20" height="20" xlink:href="./20/2.svg" fill="transparent" style="fill:none" />
 <image x="43" y="400" width="20" height="20" xlink:href="./20/3.svg" fill="transparent" style="fill:none" />

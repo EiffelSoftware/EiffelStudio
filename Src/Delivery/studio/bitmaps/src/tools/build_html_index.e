@@ -23,6 +23,8 @@ feature {NONE} -- Initialization
 			ini_location: PATH
 			icons_location: PATH
 			output_location: PATH
+			i,n: INTEGER
+			s: READABLE_STRING_GENERAL
 		do
 			if argument_count >= 3 then
 				create ini_location.make_from_string (argument (1))
@@ -35,12 +37,28 @@ feature {NONE} -- Initialization
 				output_location := output_location.absolute_path.canonical_path
 
 				is_png_mode := False
+				is_svg_mode := False
 				check is_svg_mode: is_svg_mode end
-				if argument_count > 3 and then attached argument (4) as l_type then
-					if l_type.is_case_insensitive_equal ("--png") then
-						is_png_mode := True
-					elseif l_type.is_case_insensitive_equal ("--svg") then
-						is_png_mode := False
+				if argument_count > 3 then
+					from
+						i := 4
+						n := argument_count
+					until
+						i > n
+					loop
+						s := argument (i)
+						if s /= Void then
+							if s.is_case_insensitive_equal ("--png") then
+								is_png_mode := True
+							end
+							if s.is_case_insensitive_equal ("--svg") then
+								is_svg_mode := True
+							end
+						end
+						i := i + 1
+					end
+					if not is_svg_mode and not is_png_mode  then
+						is_svg_mode := True -- Default
 					end
 				end
 
@@ -68,6 +86,7 @@ feature -- Execution
 			fut: FILE_UTILITIES
 			cl: detachable STRING_8
 			l_missing: BOOLEAN
+			l_has_svg, l_has_png: BOOLEAN
 		do
 			create ini.make_with_path (a_ini_location)
 			if ini.exists and then ini.is_access_readable then
@@ -79,8 +98,11 @@ feature -- Execution
 					fn2.remove_head (fn1.count + 1)
 				end
 					--
-
-				l_icons_path := {UTF_CONVERTER}.utf_32_string_to_utf_8_string_8 (fn2)
+				if not fn2.is_empty then
+					l_icons_path := {UTF_CONVERTER}.utf_32_string_to_utf_8_string_8 (fn2) + "/"
+				else
+					l_icons_path := ""
+				end
 
 				create output.make_with_path (a_output_location)
 				if not output.exists or else output.is_access_writable then
@@ -103,18 +125,27 @@ feature -- Execution
 										border: solid 1px #ccc;
 										padding: 1rem;
 									}
+									div.section div.icon {									
+										margin-top: .5rem;
+									}
 									div.section div.icon img {
 										margin-right: 1rem;
+										/* border: solid 1px #000000cc; */
+										vertical-align: middle;
 									}
 									div.section div.icon.missing {
-										background-color: #ff0000cc;
-										color: black;
-									}
-									
+										/* background-color: #ff000033; */
+										color: red;
+									}									
 									div.section div.icon > span.image {
 										display: inline-block;
 										margin-right: 1rem;
 										text-align: center;
+									}
+									div.section div.icon > span.image.missing {
+										background-color: #ffffffcc;
+										color: red;
+										border: solid 1px red;
 									}
 									div.section div.icon figcaption {
 										display: inline;
@@ -125,22 +156,29 @@ feature -- Execution
 							]")
 					if is_svg_mode then
 						output.put_string ("[
-										div.section div.icon.png figcaption {
+										div.section div.icon.png:not(.svg) figcaption {
 											color: #c00;
 										}
-										div.section div.icon.png figcaption::after {
+								]")
+
+						if not is_png_mode then
+							output.put_string ("[
+										div.section div.icon.png:not(.svg) figcaption::after {
 											content: " [PNG]"
 										}
 								]")
-					else
+						end
+					elseif not is_svg_mode then
 						output.put_string ("[
-										div.section div.icon.svg figcaption {
+										div.section div.icon:not(.png) figcaption {
 											color: #c00;
 										}
-										div.section div.icon.svg figcaption::after {
-											content: " [SVG]"
-										}
-								]")
+									]")
+						output.put_string ("[
+									div.section div.icon:not(.png) figcaption::after {
+										content: " [SVG]"
+									}
+							]")
 					end
 					output.put_string ("[
 								</style>
@@ -155,7 +193,11 @@ feature -- Execution
 							]")
 
 					if is_svg_mode then
-						output.put_string ("<h2>All SVG icons (or PNG if missing)</h2>")
+						if is_png_mode then
+							output.put_string ("<h2>All SVG and PNG icons</h2>")
+						else
+							output.put_string ("<h2>All SVG icons (or PNG if missing)</h2>")
+						end
 					else
 						output.put_string ("<h2>All PNG icons (or SVG if missing)</h2>")
 					end
@@ -213,45 +255,72 @@ feature -- Execution
 								index := 1
 								line := line + 1
 							end
-							l_missing := False
-							if is_svg_mode then
-								if fut.file_path_exists (a_icons_location.extended (line.out).extended (index.out).appended_with_extension ("svg")) then
-									output.put_string ("%T<div class=%"icon svg%">")
-									if pw > 0 then
-										output.put_string ("<img src=%"" + l_icons_path + "/" + line.out + "/" + index.out + ".svg%" style=%"width: "+ pw.out +"%" />")
-									else
-										output.put_string ("<img src=%"" + l_icons_path + "/" + line.out + "/" + index.out + ".svg%" />")
-									end
-								elseif fut.file_path_exists (a_icons_location.extended (line.out).extended (index.out).appended_with_extension ("png")) then
-									output.put_string ("%T<div class=%"icon png%">")
-									output.put_string ("<img src=%"" + l_icons_path + "/" + line.out + "/" + index.out + ".png%" />")
-								else
-									l_missing := True
-								end
-							else
-								if fut.file_path_exists (a_icons_location.extended (line.out).extended (index.out).appended_with_extension ("png")) then
-									output.put_string ("%T<div class=%"icon png%">")
-									output.put_string ("<img src=%"" + l_icons_path + "/" + line.out + "/" + index.out + ".png%" />")
-								elseif fut.file_path_exists (a_icons_location.extended (line.out).extended (index.out).appended_with_extension ("svg")) then
-									output.put_string ("%T<div class=%"icon svg%">")
-									if pw > 0 then
-										output.put_string ("<img src=%"" + l_icons_path + "/" + line.out + "/" + index.out + ".svg%" style=%"width: "+ pw.out +"%" />")
-									else
-										output.put_string ("<img src=%"" + l_icons_path + "/" + line.out + "/" + index.out + ".svg%" />")
-									end
-								else
-									l_missing := True
-								end
+							l_has_svg := fut.file_path_exists (a_icons_location.extended (line.out).extended (index.out).appended_with_extension ("svg"))
+							l_has_png := fut.file_path_exists (a_icons_location.extended (line.out).extended (index.out).appended_with_extension ("png"))
+							l_missing := not (l_has_png or l_has_svg)
+							cl := ""
+							if l_has_svg then
+								cl.append (" svg")
+							end
+							if l_has_png then
+								cl.append (" png")
 							end
 							if l_missing then
-								output.put_string ("%T<div class=%"icon missing%">")
-
-								if pw > 0 then
-									output.put_string ("<span class=%"image%" style=%"width: "+ pw.out +"%">?</span>")
+								cl.append (" missing")
+							end
+							output.put_string ("%T<div class=%"icon" + cl + "%">")
+							if is_svg_mode then
+								if l_has_svg then
+									output.put_string ("<img src=%"" + l_icons_path + line.out + "/" + index.out + ".svg%"")
+									if pw > 0 then
+										output.put_string (" style=%"width: "+ pw.out +"%"")
+									end
+									output.put_string (" title=%"svg ("+ line.out + "," + index.out + ") %"")
+									output.put_string ("/>")
 								else
-									output.put_string ("<span class=%"image%">?</span>")
+									if l_has_png and not is_png_mode then
+										output.put_string ("<img src=%"" + l_icons_path + line.out + "/" + index.out + ".png%"")
+										output.put_string (" title=%"png ("+ line.out + "," + index.out + ") %"")
+										output.put_string ("/>")
+									else
+										output.put_string ("<span class=%"image missing%"")
+										if pw > 0 then
+											output.put_string (" style=%"min-width: "+ pw.out +"; min-height: "+ ph.out +"%"")
+										end
+										output.put_string (">?</span>")
+									end
 								end
 							end
+							if is_png_mode then
+								if l_has_png then
+									output.put_string ("<img src=%"" + l_icons_path + line.out + "/" + index.out + ".png%"")
+									output.put_string (" title=%"png ("+ line.out + "," + index.out + ") %"")
+									output.put_string ("/>")
+								else
+									if l_has_svg and not is_svg_mode then
+										output.put_string ("<img src=%"" + l_icons_path + line.out + "/" + index.out + ".svg%"")
+										if pw > 0 then
+											output.put_string (" style=%"width: "+ pw.out +"%"")
+										end
+										output.put_string (" title=%"png ("+ line.out + "," + index.out + ") %"")
+										output.put_string ("/>")
+									else
+										output.put_string ("<span class=%"image missing%"")
+										if pw > 0 then
+											output.put_string (" style=%"min-width: "+ pw.out +"; min-height: "+ ph.out +"%"")
+										end
+										output.put_string (">?</span>")
+									end
+								end
+							end
+							if l_missing and (is_svg_mode xor is_png_mode) then
+								output.put_string ("<span class=%"image missing%"")
+								if pw > 0 then
+									output.put_string (" style=%"min-width: "+ pw.out +"; min-height: "+ ph.out +"%"")
+								end
+								output.put_string (">?</span>")
+							end
+
 							output.put_string ("<figcaption>")
 							output.put_string (icon_name)
 							output.put_string (" <span class=%"debug%">(" + line.out + "," + index.out + ")</span>")
@@ -289,10 +358,7 @@ feature -- Access
 	is_svg_mode: BOOLEAN
 			-- Use SVG, then PNG
 			-- Default: True
-		do
-			Result := not is_png_mode
-		end
-			
+
 	is_png_mode: BOOLEAN
 			-- Use PNG, then SVG
 			-- Default: False

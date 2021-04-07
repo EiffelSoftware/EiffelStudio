@@ -1,0 +1,79 @@
+<html>
+	<head>
+		<style>div.row { 
+		display: flex;
+		flex-direction: row;
+		flex-wrap: wrap;
+		border: solid 1px black;
+		margin-top: 1rem;
+	}
+div.section {
+	flex: auto;
+	border: solid 1px #ccc;
+	padding: 1rem;
+}
+div.section div.icon {									
+	margin-top: .5rem;
+}
+div.section div.icon img {
+	margin-right: 1rem;
+	/* border: solid 1px #000000cc; */
+	vertical-align: middle;
+}
+div.section div.icon.missing {
+	/* background-color: #ff000033; */
+	color: red;
+}									
+div.section div.icon > span.image {
+	display: inline-block;
+	margin-right: 1rem;
+	text-align: center;
+}
+div.section div.icon > span.image.missing {
+	background-color: #ffffffcc;
+	color: red;
+	border: solid 1px red;
+}
+div.section div.icon figcaption {
+	display: inline;
+}
+span.debug {
+	color: #aaa;
+}div.section div.icon:not(.png) figcaption {
+	color: #c00;
+}div.section div.icon:not(.png) figcaption::after {
+	content: " [SVG]"
+}	</style>
+	<script>
+		function changeBackground(fg,bg) {
+   	   	   document.body.style.background = bg;
+   	   	   document.body.style.color = fg;
+		}
+	</script>								
+</head>
+<body><h2>All PNG icons (or SVG if missing)</h2><div style="background-color: white; color: black; padding: 1rem; margin: 1rem;">
+	<strong>Background color:</strong> 
+	<a href="#" onclick="changeBackground('black','transparent');">None</a> | 
+	<a href="#" onclick="changeBackground('black','red');">Red</a> | 
+	<a href="#" onclick="changeBackground('black','green');">Green</a> | 
+	<a href="#" onclick="changeBackground('black','white');">White</a> | 
+	<a href="#" onclick="changeBackground('white','black');">Black</a> | 
+	<a href="#" onclick="changeBackground('black','grey');">Grey</a>
+</div><div><div></div></div>
+<div class="row">
+<div class="section" data-section-name="bp">
+	<div class="icon svg png"><img src="1/1.png" title="png (1,1) "/><figcaption>bp_current_line <span class="debug">(1,1)</span></figcaption></div>
+	<div class="icon svg png"><img src="1/2.png" title="png (1,2) "/><figcaption>bp_slot <span class="debug">(1,2)</span></figcaption></div>
+	<div class="icon svg png"><img src="1/3.png" title="png (1,3) "/><figcaption>bp_enabled <span class="debug">(1,3)</span></figcaption></div>
+	<div class="icon svg png"><img src="1/4.png" title="png (1,4) "/><figcaption>bp_disabled <span class="debug">(1,4)</span></figcaption></div>
+	<div class="icon svg png"><img src="1/5.png" title="png (1,5) "/><figcaption>bp_slot_current_line <span class="debug">(1,5)</span></figcaption></div>
+	<div class="icon svg png"><img src="1/6.png" title="png (1,6) "/><figcaption>bp_enabled_current_line <span class="debug">(1,6)</span></figcaption></div>
+	<div class="icon svg png"><img src="1/7.png" title="png (1,7) "/><figcaption>bp_disabled_current_line <span class="debug">(1,7)</span></figcaption></div>
+	<div class="icon svg png"><img src="1/8.png" title="png (1,8) "/><figcaption>bp_slot_other_frame <span class="debug">(1,8)</span></figcaption></div>
+	<div class="icon svg png"><img src="1/9.png" title="png (1,9) "/><figcaption>bp_enabled_other_frame <span class="debug">(1,9)</span></figcaption></div>
+	<div class="icon svg png"><img src="1/10.png" title="png (1,10) "/><figcaption>bp_disabled_other_frame <span class="debug">(1,10)</span></figcaption></div>
+	<div class="icon svg png"><img src="1/11.png" title="png (1,11) "/><figcaption>bp_enabled_conditional <span class="debug">(1,11)</span></figcaption></div>
+	<div class="icon svg png"><img src="1/12.png" title="png (1,12) "/><figcaption>bp_disabled_conditional <span class="debug">(1,12)</span></figcaption></div>
+</div>
+	</body>
+</html>

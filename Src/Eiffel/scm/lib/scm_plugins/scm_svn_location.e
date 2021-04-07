@@ -41,9 +41,17 @@ feature -- Execution
 			if attached a_commit_set.message as m then
 				res := scm.commit (a_commit_set.changelist, m, opts)
 				if res.succeed then
-					a_commit_set.report_success (res.message)
+					if attached res.message as msg then
+						a_commit_set.report_success (msg)
+					else
+						a_commit_set.report_success ("SVN commit completed")
+					end
 				else
-					a_commit_set.report_error (res.message)
+					if attached res.message as msg then
+						a_commit_set.report_error (msg)
+					else
+						a_commit_set.report_error ("SVN commit failed")
+					end
 					has_error := True
 				end
 			else
@@ -53,8 +61,8 @@ feature -- Execution
 			end
 		end
 note
-	copyright: "Copyright (c) 1984-2021, Eiffel Software"
-	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
+	copyright: "Copyright (c) 1984-2021, Eiffel Software and others"
+	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[
 			This file is part of Eiffel Software's Eiffel Development Environment.

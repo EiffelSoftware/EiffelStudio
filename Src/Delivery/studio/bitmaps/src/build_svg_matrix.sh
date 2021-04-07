@@ -111,15 +111,22 @@ echo svg_page_size=$svg_page_width x $svg_page_height >> ${svg_target}.txt
 
 function svg_to_png { # icons.svg icons.png width height
 	echo " - SVG to ${2}"
-	if [ -x "$(command -v "inkscape")" ]; then
-		#Try with inkscape:
-		echo inkscape --export-background-opacity=0 -w ${3} -h ${4}  $1 --export-filename $2
-		inkscape --export-background-opacity=0 -w ${3} -h ${4}  $1 --export-filename $2 > /dev/null 2>&1
-	else
-		#convert -resize ${3}x${4} +antialias -background $background $1 $2
-		echo "   > convert -resize ${3}x${4} -background $background $1 $2 "
-		convert -resize ${3}x${4} -background $background $1 $2 
-	fi
+	#Try with inkscape:
+	#inkscape_version=$(inkscape -V | grep -i Inkscape | cut -d' ' -f 2 | cut -d' ' -f 1)
+	case "$(inkscape -V | grep -i Inkscape | cut -d' ' -f 2 | cut -d' ' -f 1)" in
+		0.*)
+			echo "   > Use inkscape v0.* to resize ${3}x${4} $1 $2 "
+			inkscape --without-gui --export-background-opacity=0 -w ${3} -h ${4}  $1 --export-png=$2 > /dev/null 2>&1
+			;;
+		1.*)
+			echo "   > Use inkscape v1.* to resize ${3}x${4} $1 $2 "
+			inkscape --export-background-opacity=0 -w ${3} -h ${4}  $1 --export-filename=$2 > /dev/null 2>&1
+			;;
+		*)
+			echo "   > convert -resize ${3}x${4} -background $background $1 $2 "
+			convert -resize ${3}x${4} -background $background $1 $2 
+			;;
+	esac
 }
 
 echo "<svg height=\"$svg_page_height\" viewBox=\"0 0 $svg_page_width $svg_page_height\" width=\"$svg_page_width\" xmlns=\"http://www.w3.org/2000/svg\" xmlns:xlink=\"http://www.w3.org/1999/xlink\">"  > $svg_target

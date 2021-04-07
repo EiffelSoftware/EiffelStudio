@@ -2,28 +2,17 @@
 
 # Usage:
 #
-# matrix_from_subpixmaps.sh 16x16 32x32.png
+# legacy_png_matrix_from_subpixmaps.sh icons icons/16x16.png
 #
-# it will build an icons matrix of 32x32 into 32x32.png
-
-# requirement:
-# - convert, identify from https://imagemagick.org/
-#
-# notes:
-# - for now, using imagemagick convert to generate PNG from SVG
-#   but inkscape may produce nicer png.
-
 rootdir=$1
-#w=$( basename -- $rootdir | cut -d'x' -f 1)
-#h=$( basename -- $rootdir | cut -d'x' -f 2)
-
 png_target=$2
 if [ -z "$png_target" ]
 then
-	png_target=$1.png
+	echo Missing PNG target filename
+	exit 
 fi
 
-	mv $png_target ${png_target}.bak
+mv $png_target ${png_target}.bak
 
 w=$( basename -- $png_target | cut -d'x' -f 1 | cut -d'_' -f 2)
 h=$( basename -- $png_target | cut -d'_' -f 2 | cut -d'x' -f 2 | cut -d'.' -f1 )
@@ -31,9 +20,10 @@ h=$( basename -- $png_target | cut -d'_' -f 2 | cut -d'x' -f 2 | cut -d'.' -f1 )
 wsep=1
 hsep=1
 color="rgb(217,217,217)"
-color="transparent"
+#color="rgb(255,000,000)"
+#color="transparent"
 
-tmpdir=/tmp/${w}x${h}
+tmpdir=/tmp/legacy_${w}x${h}
 if [ ! -e $tmpdir ]
 then
 	mkdir -p $tmpdir
@@ -117,6 +107,7 @@ function append_icons_row {
 convert -size ${w}x${h} xc:transparent -background transparent $tmpdir/empty.png
 convert -size ${wsep}x$(( $w + $wsep )) -background transparent xc:$color $tmpdir/v.png
 convert -size $(( $cols * ($w + $hsep) + $hsep ))x${hsep} -background transparent xc:$color $tmpdir/h_line.png
+
 cp $tmpdir/h_line.png ${png_target}
 
 r=1
@@ -137,32 +128,17 @@ do
 		while ((c<=$cols))
 		do
 			icon=$tmpdir/$r-$c.png
-			#echo "Append icon at position ${r},${c}"
-#			if [ -e $d/$c.png ]
-#			then
-#				echo "($r,$c) resize to ${w}x${h}"
-#				convert -resize ${w}x${h} $d/$c.png $icon
-#				#cp $d/$c.png $icon
-#				#identify $icon
-#			else
-#				if [ -e $d/$c.svg ] 
-#				then
-#					svg_to_png $d/$c.svg $icon
-#				else
-#					cp $tmpdir/empty.png $icon
-#				fi
-#			fi
-
-			if [ -e $d/$c.svg ] 
+			# First existing legacy PNG, then new SVG
+			if [ -e $d/$c.png ]
 			then
-				svg_to_png $d/$c.svg $icon
+				echo "($r,$c) resize to ${w}x${h}"
+				convert -resize ${w}x${h} -background transparent $d/$c.png $icon
+				#cp $d/$c.png $icon
+				#identify $icon
 			else
-				if [ -e $d/$c.png ]
+				if [ -e $d/$c.svg ] 
 				then
-					echo "($r,$c) resize to ${w}x${h}"
-					convert -resize ${w}x${h} -background transparent $d/$c.png $icon
-					#cp $d/$c.png $icon
-					#identify $icon
+					svg_to_png $d/$c.svg $icon
 				else
 					cp $tmpdir/empty.png $icon
 				fi
@@ -192,6 +168,8 @@ do
 	fi
 	let r++
 done
-rm $tmpdir/v.png
-rm $tmpdir/h_line.png
+
+#rm $tmpdir/v.png
+#rm $tmpdir/h_line.png
+\rm -rf $tmpdir
 

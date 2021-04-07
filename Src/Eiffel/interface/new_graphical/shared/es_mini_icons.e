@@ -935,26 +935,6 @@ feature -- Icons
 			reserved_reserved_1_icon_buffer_attached: Result /= Void
 		end
 
-	frozen reserved_reserved_2_icon: EV_PIXMAP
-			-- Access to 'reserved 2' pixmap.
-		require
-			has_named_icon: has_named_icon (reserved_reserved_2_name)
-		once
-			Result := named_icon (reserved_reserved_2_name)
-		ensure
-			reserved_reserved_2_icon_attached: Result /= Void
-		end
-
-	frozen reserved_reserved_2_icon_buffer: EV_PIXEL_BUFFER
-			-- Access to 'reserved 2' pixmap pixel buffer.
-		require
-			has_named_icon: has_named_icon (reserved_reserved_2_name)
-		once
-			Result := named_icon_buffer (reserved_reserved_2_name)
-		ensure
-			reserved_reserved_2_icon_buffer_attached: Result /= Void
-		end
-
 	frozen evaluation_refresh_icon: EV_PIXMAP
 			-- Access to 'refresh' pixmap.
 		require
@@ -973,6 +953,26 @@ feature -- Icons
 			Result := named_icon_buffer (evaluation_refresh_name)
 		ensure
 			evaluation_refresh_icon_buffer_attached: Result /= Void
+		end
+
+	frozen evaluation_unused_icon_icon: EV_PIXMAP
+			-- Access to 'unused icon' pixmap.
+		require
+			has_named_icon: has_named_icon (evaluation_unused_icon_name)
+		once
+			Result := named_icon (evaluation_unused_icon_name)
+		ensure
+			evaluation_unused_icon_icon_attached: Result /= Void
+		end
+
+	frozen evaluation_unused_icon_icon_buffer: EV_PIXEL_BUFFER
+			-- Access to 'unused icon' pixmap pixel buffer.
+		require
+			has_named_icon: has_named_icon (evaluation_unused_icon_name)
+		once
+			Result := named_icon_buffer (evaluation_unused_icon_name)
+		ensure
+			evaluation_unused_icon_icon_buffer_attached: Result /= Void
 		end
 
 	frozen new_feature_icon: EV_PIXMAP
@@ -1437,27 +1437,7 @@ feature -- Icons
 
 feature -- Icons: Animations
 	
-	frozen reserved_reserved_anim: ARRAY [EV_PIXMAP]
-			-- Access to 'reserved_reserved' pixmap animation items.
-		once
-			Result := <<
-				named_icon (reserved_reserved_1_name),
-				named_icon (reserved_reserved_2_name)
-			>>
-		ensure
-			reserved_reserved_anim_attached: Result /= Void
-		end
-
-	frozen reserved_reserved_buffer_anim: ARRAY [EV_PIXEL_BUFFER]
-			-- Access to 'reserved_reserved' pixel buffer animation items.
-		once
-			Result := <<
-				named_icon_buffer (reserved_reserved_1_name),
-				named_icon_buffer (reserved_reserved_2_name)
-			>>
-		ensure
-			reserved_reserved_buffer_anim_attached: Result /= Void
-		end
+	-- No animation frames detected.
 
 feature -- Constants: Icon names
 
@@ -1506,8 +1486,8 @@ feature -- Constants: Icon names
 	hidden_show_in_callstack_name: STRING = "hidden show in callstack"
 	hidden_hide_in_callstack_name: STRING = "hidden hide in callstack"
 	reserved_reserved_1_name: STRING = "reserved reserved 1"
-	reserved_reserved_2_name: STRING = "reserved reserved 2"
 	evaluation_refresh_name: STRING = "evaluation refresh"
+	evaluation_unused_icon_name: STRING = "evaluation unused icon"
 	new_feature_name: STRING = "new feature"
 	new_class_name: STRING = "new class"
 	new_cluster_name: STRING = "new cluster"
@@ -1582,8 +1562,8 @@ feature {NONE} -- Basic operations
 			a_table.put ([{NATURAL_8} 8, {NATURAL_8} 4], hidden_show_in_callstack_name)
 			a_table.put ([{NATURAL_8} 9, {NATURAL_8} 4], hidden_hide_in_callstack_name)
 			a_table.put ([{NATURAL_8} 10, {NATURAL_8} 4], reserved_reserved_1_name)
-			a_table.put ([{NATURAL_8} 11, {NATURAL_8} 4], reserved_reserved_2_name)
-			a_table.put ([{NATURAL_8} 12, {NATURAL_8} 4], evaluation_refresh_name)
+			a_table.put ([{NATURAL_8} 11, {NATURAL_8} 4], evaluation_refresh_name)
+			a_table.put ([{NATURAL_8} 12, {NATURAL_8} 4], evaluation_unused_icon_name)
 			a_table.put ([{NATURAL_8} 1, {NATURAL_8} 5], new_feature_name)
 			a_table.put ([{NATURAL_8} 2, {NATURAL_8} 5], new_class_name)
 			a_table.put ([{NATURAL_8} 3, {NATURAL_8} 5], new_cluster_name)

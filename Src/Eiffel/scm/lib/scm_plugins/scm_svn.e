@@ -98,8 +98,17 @@ feature -- Operations: working copy
 				end
 				opts.set_parameters (s)
 			end
-			if attached svn.commit (l_changelist, a_log_message, opts) as res then
-					--
+			if attached {SVN_RESULT} svn.commit (l_changelist, a_log_message, opts) as res then
+				if res.succeed then
+					create Result.make_success
+					Result.set_message (res.message)
+				else
+					create Result.make_failure
+				end
+				Result.set_command (res.command)
+			else
+				create Result.make_failure
+				Result.set_message ("Error: can not launch svn to process the commit")
 			end
 		end
 
@@ -121,8 +130,8 @@ feature -- Access
 		end
 
 note
-	copyright: "Copyright (c) 1984-2021, Eiffel Software"
-	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
+	copyright: "Copyright (c) 1984-2021, Eiffel Software and others"
+	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software
 			5949 Hollister Ave., Goleta, CA 93117 USA

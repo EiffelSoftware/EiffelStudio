@@ -89,8 +89,6 @@ feature -- Execution
 	commit (a_changelist: SCM_CHANGELIST; a_log_message: READABLE_STRING_GENERAL; a_options: SCM_OPTIONS): SCM_RESULT
 			-- Commit changes for locations `a_changelist`, and return information about command execution.
 		local
-			res_add, res_commit: detachable PROCESS_COMMAND_RESULT
-			s: detachable READABLE_STRING_8
 			cmd: STRING_32
 			fn: READABLE_STRING_32
 			l_log: STRING_32
@@ -115,7 +113,9 @@ feature -- Execution
 			debug ("GIT_ENGINE")
 				print ({STRING_32} "Command: [" + cmd + "]%N")
 			end
-			res_add := process_misc.output_of_command (cmd, a_changelist.root.location)
+			if attached process_misc.output_of_command (cmd, a_changelist.root.location) as res_add then
+					-- Todo
+			end
 			debug ("GIT_ENGINE")
 				print ("-> terminated %N")
 			end
@@ -134,16 +134,20 @@ feature -- Execution
 			debug ("GIT_ENGINE")
 				print ({STRING_32} "Command: [" + cmd + "]%N")
 			end
-			res_commit := process_misc.output_of_command (cmd, a_changelist.root.location)
-			debug ("GIT_ENGINE")
-				print ("-> terminated %N")
-			end
-			if res_commit.exit_code = 0 then
-				create Result.make_success
-				Result.set_message (res_commit.output)
+			if attached process_misc.output_of_command (cmd, a_changelist.root.location) as res_commit then
+				if res_commit.exit_code = 0 then
+					create Result.make_success
+					Result.set_message (res_commit.output)
+				else
+					create Result.make_failure
+					Result.set_message (res_commit.error_output)
+				end
 			else
 				create Result.make_failure
-				Result.set_message (res_commit.error_output)
+				Result.set_message ("Error: can not launch git [" + process_misc.last_error.out + "]")
+			end
+			debug ("GIT_ENGINE")
+				print ("-> terminated %N")
 			end
 			Result.set_command (cmd)
 		end
@@ -216,8 +220,8 @@ invariant
 --	invariant_clause: True
 
 note
-	copyright: "Copyright (c) 1984-2021, Eiffel Software"
-	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
+	copyright: "Copyright (c) 1984-2021, Eiffel Software and others"
+	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software
 			5949 Hollister Ave., Goleta, CA 93117 USA

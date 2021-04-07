@@ -183,7 +183,10 @@ feature {NONE} -- Removal
 		do
 			if palette.reference_tracked then
 				palette.decrement_reference
+			elseif palette.references_count = 0 then
+				palette.delete
 			end
+			info_header.dispose
 			Precursor
 		end
 
@@ -339,7 +342,7 @@ feature {WEL_BITMAP}
 	info_header: WEL_BITMAP_INFO_HEADER;
 
 note
-	copyright:	"Copyright (c) 1984-2018, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2021, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

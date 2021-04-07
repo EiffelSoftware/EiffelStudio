@@ -11,6 +11,8 @@ cd icons
 ../build_svg_matrix.sh . ./icons_32x32.svg ./icons_32x32.png
 cd ..
 ./inc/legacy_png_matrix_from_subpixmaps.sh icons icons/16x16.png
+eiffel tools/build_html_index.ecf ../png/icons.ini icons icons.html --svg
+eiffel tools/build_html_index.ecf ../png/icons.ini icons icons-png.html --png
 
 ./build_small_icons.sh
 cd small
@@ -21,6 +23,9 @@ cd small
 ../build_svg_matrix.sh . ./small_24x24.svg ./small_24x24.png
 cd ..
 ./inc/legacy_png_matrix_from_subpixmaps.sh small small/12x12.png
+eiffel tools/build_html_index.ecf ../png/small.ini small small.html --svg
+eiffel tools/build_html_index.ecf ../png/small.ini small small-png.html --png
+
 
 ./build_mini_icons.sh
 cd mini
@@ -31,6 +36,8 @@ cd mini
 ../build_svg_matrix.sh . ./mini_20x20.svg ./mini_20x20.png
 cd ..
 ./inc/legacy_png_matrix_from_subpixmaps.sh mini mini/10x10.png
+eiffel tools/build_html_index.ecf ../png/mini.ini mini mini.html --svg
+eiffel tools/build_html_index.ecf ../png/mini.ini mini mini-png.html --png
 
 if [ -x "$(command -v "inkscape")" ]; then
 	echo Completed using inkscape

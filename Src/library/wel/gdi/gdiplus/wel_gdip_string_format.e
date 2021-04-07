@@ -5,7 +5,6 @@ note
 	date: "$Date$"
 	revision: "$Revision$"
 
-
 class
 	WEL_GDIP_STRING_FORMAT
 
@@ -30,6 +29,30 @@ feature{NONE} -- Initlization
 			check ok: l_result = {WEL_GDIP_STATUS}.ok end
 		end
 
+feature -- Status Change
+
+	set_alignment (a_value : INTEGER)
+			-- StringAlignmentNear     = 0
+			-- StringAlignmentCenter   = 1
+			-- StringAlignmentFar      = 2
+		local
+			l_result: INTEGER
+		do
+			l_result := c_gdip_set_string_format_align (gdi_plus_handle, item, a_value)
+			check ok: l_result = {WEL_GDIP_STATUS}.ok end
+		end
+
+	set_line_alignment (a_value : INTEGER)
+			-- StringAlignmentNear     = 0
+			-- StringAlignmentCenter   = 1
+			-- StringAlignmentFar      = 2
+		local
+			l_result: INTEGER
+		do
+			l_result := c_gdip_set_string_format_line_align (gdi_plus_handle, item, a_value)
+			check ok: l_result = {WEL_GDIP_STATUS}.ok end
+		end
+
 feature -- Destroy
 
 	destroy_item
@@ -48,7 +71,53 @@ feature -- Destroy
 			end
 		end
 
-feature{NONE} -- C externals
+feature {NONE} -- C externals
+
+	c_gdip_set_string_format_align (a_gdiplus_handle, a_format: POINTER; a_value: INTEGER): INTEGER
+		require
+			a_gdiplus_handle_not_null: a_gdiplus_handle /= default_pointer
+		external
+			"C inline use %"wel_gdi_plus.h%""
+		alias
+			"[
+			{
+				static FARPROC GdipSetStringFormatAlign= NULL;
+				EIF_INTEGER Result = 1;
+				
+				if (!GdipSetStringFormatAlign) {
+					GdipSetStringFormatAlign = GetProcAddress ((HMODULE) $a_gdiplus_handle, "GdipSetStringFormatAlign");
+				}
+				if (GdipSetStringFormatAlign) {
+					Result = (EIF_INTEGER) (FUNCTION_CAST_TYPE (GpStatus, WINGDIPAPI, (GpStringFormat  *, INT)) GdipSetStringFormatAlign)
+								((GpStringFormat  *) $a_format, (INT) $a_value);
+				}
+				return Result;
+			}
+			]"
+		end
+
+	c_gdip_set_string_format_line_align (a_gdiplus_handle, a_format: POINTER; a_value: INTEGER): INTEGER
+		require
+			a_gdiplus_handle_not_null: a_gdiplus_handle /= default_pointer
+		external
+			"C inline use %"wel_gdi_plus.h%""
+		alias
+			"[
+			{
+				static FARPROC GdipSetStringFormatLineAlign= NULL;
+				EIF_INTEGER Result = 1;
+				
+				if (!GdipSetStringFormatLineAlign) {
+					GdipSetStringFormatLineAlign = GetProcAddress ((HMODULE) $a_gdiplus_handle, "GdipSetStringFormatLineAlign");
+				}
+				if (GdipSetStringFormatLineAlign) {
+					Result = (EIF_INTEGER) (FUNCTION_CAST_TYPE (GpStatus, WINGDIPAPI, (GpStringFormat  *, INT)) GdipSetStringFormatLineAlign)
+								((GpStringFormat  *) $a_format, (INT) $a_value);
+				}
+				return Result;
+			}
+			]"
+		end
 
 	c_gdip_string_format_get_generic_default (a_gdiplus_handle: POINTER; a_result_status: TYPED_POINTER [INTEGER]): POINTER
 			-- Get default
@@ -100,14 +169,14 @@ feature{NONE} -- C externals
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2021, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 end

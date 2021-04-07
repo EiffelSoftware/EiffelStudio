@@ -290,6 +290,14 @@ feature -- Removal
 
 feature -- Basic operations
 
+	redraw (window: WEL_COMPOSITE_WINDOW)
+			-- Redraws the menu bar of the specified window.
+			-- If the menu bar changes after the system has created the window,
+			-- this function must be called to draw the changed menu bar.
+		do
+			cwin_draw_menu_bar (window.item)
+		end
+
 	hilite_menu_item (window: WEL_COMPOSITE_WINDOW; an_id: INTEGER)
 			-- Hilite the item identified by `an_id' in the
 			-- `window''s menu.
@@ -737,7 +745,7 @@ feature {NONE} -- Externals
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2011, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2021, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software
@@ -747,8 +755,5 @@ note
 			Customer support http://support.eiffel.com
 		]"
 
-
-
-
-end -- class WEL_MENU
+end
 

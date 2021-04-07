@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
 <system xmlns="http://www.eiffel.com/developers/xml/configuration-1-18-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-18-0 http://www.eiffel.com/developers/xml/configuration-1-18-0.xsd" name="test_svn" uuid="4A9FB811-4F47-4A9B-ACB8-4E1F39AEC875">
-	<target name="test_svn">
+	<target name="test_svn" extends="svn" extends_location="../../svn.ecf">
 		<root class="TEST_SVN" feature="make"/>
 		<file_rule>
 			<exclude>/.svn$</exclude>
@@ -12,9 +12,7 @@
 		</option>
 		<setting name="console_application" value="true"/>
 		<setting name="executable_name" value="test_svn"/>
-		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf"/>
 		<library name="base_extension" location="$ISE_LIBRARY\library\base_extension\base_extension.ecf"/>
-		<library name="svn" location="..\..\svn.ecf" readonly="false"/>
 		<library name="uuid" location="$ISE_LIBRARY\library\uuid\uuid.ecf"/>
 		<cluster name="tests" location=".\" recursive="true"/>
 	</target>

@@ -133,7 +133,9 @@ feature -- Extension
 			end
 
 				-- Publish events
-			message_logged_events.publish ([l_string, a_cat, a_level])
+			if not message_logged_events.is_publishing then
+				message_logged_events.publish ([l_string, a_cat, a_level])
+			end
 		end
 
 	put_message_format_with_severity (a_msg:  READABLE_STRING_GENERAL; a_args: TUPLE; a_cat: NATURAL_8; a_level: INTEGER_8)
@@ -224,7 +226,7 @@ invariant
 	log_cache_count_small_enought: log_cache.count <= log_cache_length
 
 ;note
-	copyright: "Copyright (c) 1984-2018, Eiffel Software"
+	copyright: "Copyright (c) 1984-2021, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

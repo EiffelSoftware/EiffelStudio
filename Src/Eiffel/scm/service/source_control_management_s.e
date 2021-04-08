@@ -12,11 +12,23 @@ inherit
 feature -- Status report
 
 	is_available: BOOLEAN
-			-- Is account service available?
+			-- Is SCM service available?
+		deferred
+		end
+
+	is_svn_available: BOOLEAN
+		deferred
+		end
+
+	is_git_available: BOOLEAN
 		deferred
 		end
 
 feature -- Access
+
+	config: SCM_CONFIG
+		deferred
+		end
 
 	check_scm_availability
 		deferred

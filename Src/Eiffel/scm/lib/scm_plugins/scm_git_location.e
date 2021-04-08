@@ -20,23 +20,23 @@ feature -- Access
 
 feature -- Execution
 
-	changes (loc: PATH): detachable SCM_STATUS_LIST
+	changes (loc: PATH; cfg: SCM_CONFIG): detachable SCM_STATUS_LIST
 		local
-			scm: SCM
+			scm: SCM_GIT
 		do
 			reset_error
-			create {SCM_GIT} scm
+			create scm.make (cfg)
 			Result := scm.statuses (loc, True, Void)
 		end
 
-	commit (a_commit_set: SCM_SINGLE_COMMIT_SET)
+	commit (a_commit_set: SCM_SINGLE_COMMIT_SET; cfg: SCM_CONFIG)
 		local
-			scm: SCM
+			scm: SCM_GIT
 			opts: SCM_OPTIONS
 			res: SCM_RESULT
 		do
 			reset_error
-			create {SCM_GIT} scm
+			create scm.make (cfg)
 			create opts
 
 			if attached a_commit_set.message as m then
@@ -63,8 +63,8 @@ feature -- Execution
 		end
 
 note
-	copyright: "Copyright (c) 1984-2021, Eiffel Software and others"
-	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
+	copyright: "Copyright (c) 1984-2021, Eiffel Software"
+	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[
 			This file is part of Eiffel Software's Eiffel Development Environment.

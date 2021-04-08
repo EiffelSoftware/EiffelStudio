@@ -78,6 +78,21 @@ feature -- Output
 			localized_print (a_str)
 		end
 
+feature -- Access tool info
+
+	version: detachable IMMUTABLE_STRING_32
+		local
+			res: detachable PROCESS_COMMAND_RESULT
+			cmd: STRING_32
+		do
+			create cmd.make_from_string (svn_executable_path)
+			cmd.append_string (" --version --quiet")
+			res := process_misc.output_of_command (cmd, Void)
+			if res /= Void and then res.exit_code = 0 then
+				create Result.make_from_string_general (res.output)
+			end
+		end
+
 feature -- Access: working copy
 
 	statuses (a_path: READABLE_STRING_GENERAL; is_verbose, is_recursive, is_remote: BOOLEAN; a_options: detachable SVN_OPTIONS): detachable LIST [SVN_STATUS_INFO]

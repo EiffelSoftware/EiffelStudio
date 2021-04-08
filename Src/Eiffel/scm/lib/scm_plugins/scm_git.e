@@ -10,15 +10,42 @@ class
 inherit
 	SCM
 
+create
+	make
+
+feature -- Status report
+
+	is_available: BOOLEAN
+			-- Is Current available according the `config` value?
+		local
+			scm: like new_scm_engine
+		do
+			scm := new_scm_engine
+			if attached scm.version as v then
+				Result := True
+			end
+		end
+
+feature -- Factory
+
+	new_scm_engine: GIT_ENGINE
+		do
+			if attached config.git_command as l_git_cmd then
+				create Result.make_with_executable_path (l_git_cmd)
+			else
+				create Result
+			end
+		end
+
 feature -- Access: working copy
 
 	statuses (a_path: PATH; is_recursive: BOOLEAN; a_options: detachable SCM_OPTIONS): detachable SCM_STATUS_LIST
 			-- Statuses of nodes under `a_path'.	
 			-- Also process subfolders is `is_recursive' is True.
 		local
-			git: GIT_ENGINE
+			git: like new_scm_engine
 		do
-			create git
+			git := new_scm_engine
 			Result := git.statuses (a_path, is_recursive, a_options)
 		end
 
@@ -51,9 +78,9 @@ feature -- Operations: working copy
 	commit (a_changelist: SCM_CHANGELIST; a_log_message: READABLE_STRING_GENERAL; a_options: SCM_OPTIONS): SCM_RESULT
 			-- Commit changes for locations `a_changelist', and return information about command execution.
 		local
-			git: GIT_ENGINE
+			git: like new_scm_engine
 		do
-			create git
+			git := new_scm_engine
 			Result := git.commit (a_changelist, a_log_message, a_options)
 		end
 

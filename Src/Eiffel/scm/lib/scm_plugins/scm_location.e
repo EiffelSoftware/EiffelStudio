@@ -31,14 +31,14 @@ feature -- Status report
 
 feature -- Execution
 
-	changes (loc: PATH): detachable SCM_STATUS_LIST
+	changes (loc: PATH; cfg: SCM_CONFIG): detachable SCM_STATUS_LIST
 			-- Related path of changed nodes.
 		deferred
 		ensure
 			not has_error implies Result /= Void
 		end
 
-	commit (a_commit_set: SCM_SINGLE_COMMIT_SET)
+	commit (a_commit_set: SCM_SINGLE_COMMIT_SET; cfg: SCM_CONFIG)
 		require
 			same_location: same_as (a_commit_set.changelist.root)
 			is_ready: a_commit_set.is_ready

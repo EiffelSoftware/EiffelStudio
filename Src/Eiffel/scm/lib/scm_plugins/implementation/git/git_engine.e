@@ -31,8 +31,6 @@ feature {NONE} -- Initialization
 			set_git_executable_path (v)
 		end
 
-feature -- Status
-
 feature -- Access
 
 	git_executable_location: PATH
@@ -47,6 +45,21 @@ feature -- Element change
 	set_git_executable_location (v: PATH)
 		do
 			git_executable_location := v
+		end
+
+feature -- Access tool info
+
+	version: detachable IMMUTABLE_STRING_32
+		local
+			res: detachable PROCESS_COMMAND_RESULT
+			cmd: STRING_32
+		do
+			create cmd.make_from_string (git_executable_location.name)
+			cmd.append_string (" --version")
+			res := process_misc.output_of_command (cmd, Void)
+			if res /= Void and then res.exit_code = 0 then
+				create Result.make_from_string_general (res.output)
+			end
 		end
 
 feature -- Execution
@@ -220,8 +233,8 @@ invariant
 --	invariant_clause: True
 
 note
-	copyright: "Copyright (c) 1984-2021, Eiffel Software and others"
-	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
+	copyright: "Copyright (c) 1984-2021, Eiffel Software"
+	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	source: "[
 			Eiffel Software
 			5949 Hollister Ave., Goleta, CA 93117 USA

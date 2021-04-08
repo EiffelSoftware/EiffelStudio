@@ -1,65 +1,35 @@
 note
-	description: "Summary description for {SCM_SVN_LOCATION}."
-	author: ""
+	description: "Configuration for the SCM service."
 	date: "$Date$"
 	revision: "$Revision$"
 
-class
-	SCM_SVN_LOCATION
-
-inherit
-	SCM_LOCATION
-
-create
-	make
+deferred class
+	SCM_CONFIG
 
 feature -- Access
 
-	nature: STRING = "SVN"
+	default_git_command: STRING_32 = "git"
 
-feature -- Execution	
+	default_svn_command: STRING_32 = "svn"
 
-	changes (loc: PATH; cfg: SCM_CONFIG): detachable SCM_STATUS_LIST
-		local
-			scm: SCM_SVN
-		do
-			reset_error
-			create scm.make (cfg)
-			Result := scm.statuses (loc, True, Void)
+	git_command: detachable READABLE_STRING_32
+		deferred
 		end
 
-	commit (a_commit_set: SCM_SINGLE_COMMIT_SET; cfg: SCM_CONFIG)
-		local
-			scm: SCM_SVN
-			opts: SCM_OPTIONS
-			res: SCM_RESULT
-		do
-			reset_error
-			create scm.make (cfg)
-			create opts
-
-			if attached a_commit_set.message as m then
-				res := scm.commit (a_commit_set.changelist, m, opts)
-				if res.succeed then
-					if attached res.message as msg then
-						a_commit_set.report_success (msg)
-					else
-						a_commit_set.report_success ("SVN commit completed")
-					end
-				else
-					if attached res.message as msg then
-						a_commit_set.report_error (msg)
-					else
-						a_commit_set.report_error ("SVN commit failed")
-					end
-					has_error := True
-				end
-			else
-				has_error := True
-				check is_ready: False end
-				a_commit_set.report_error ("commit is not ready, message is missing")
-			end
+	svn_command: detachable READABLE_STRING_32
+		deferred
 		end
+
+feature -- Element change
+
+	set_svn_command (v: READABLE_STRING_GENERAL)
+		deferred
+		end
+
+	set_git_command (v: READABLE_STRING_GENERAL)
+		deferred
+		end
+
 note
 	copyright: "Copyright (c) 1984-2021, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"

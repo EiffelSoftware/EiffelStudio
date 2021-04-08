@@ -11,6 +11,24 @@ note
 deferred class
 	SCM
 
+feature {NONE} -- Initialization
+
+	make (cfg: SCM_CONFIG)
+		do
+			config := cfg
+		end
+
+feature {NONE} -- Internals.		
+
+	config: SCM_CONFIG
+
+feature -- Status report
+
+	is_available: BOOLEAN
+			-- Is Current available according the `config` value?
+		deferred
+		end
+
 feature -- Access: working copy
 
 	statuses (a_path: PATH; is_recursive: BOOLEAN; a_options: detachable SCM_OPTIONS): detachable SCM_STATUS_LIST

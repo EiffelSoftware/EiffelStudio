@@ -10,18 +10,45 @@ class
 inherit
 	SCM
 
+create
+	make
+
+feature -- Status report
+
+	is_available: BOOLEAN
+			-- Is Current available according the `config` value?
+		local
+			scm: like new_scm_engine
+		do
+			scm := new_scm_engine
+			if attached scm.version as v then
+				Result := True
+			end
+		end
+
+feature -- Factory
+
+	new_scm_engine: SVN_ENGINE
+		do
+			if attached config.svn_command as l_svn_cmd then
+				create Result.make_with_executable_path (l_svn_cmd)
+			else
+				create Result
+			end
+		end
+
 feature -- Access: working copy
 
 	statuses (a_path: PATH; is_recursive: BOOLEAN; a_options: detachable SCM_OPTIONS): detachable SCM_STATUS_LIST
 			-- Statuses of nodes under `a_path'.	
 			-- Also process subfolders is `is_recursive' is True.
 		local
-			svn: SVN_ENGINE
+			svn: like new_scm_engine
 			opts: detachable SVN_OPTIONS
 			st: SVN_STATUS_INFO
 			p: PATH
 		do
-			create svn
+			svn := new_scm_engine
 			if attached svn.statuses (a_path.name, False, is_recursive, False, opts) as l_statuses then
 				create Result.make (l_statuses.count)
 				across
@@ -71,12 +98,13 @@ feature -- Operations: working copy
 	commit (a_changelist: SCM_CHANGELIST; a_log_message: detachable READABLE_STRING_GENERAL; a_options: detachable SCM_OPTIONS): SCM_RESULT
 			-- Commit changes for locations `a_changelist', and return information about command execution.
 		local
-			svn: SVN_ENGINE
+			svn: like new_scm_engine
 			l_changelist: SVN_CHANGELIST
 			opts: detachable SVN_OPTIONS
 			s: STRING_32
 		do
-			create svn
+			svn := new_scm_engine
+
 			create l_changelist.make
 			across
 				a_changelist as ic
@@ -130,8 +158,8 @@ feature -- Access
 		end
 
 note
-	copyright: "Copyright (c) 1984-2021, Eiffel Software and others"
-	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
+	copyright: "Copyright (c) 1984-2021, Eiffel Software"
+	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	source: "[
 			Eiffel Software
 			5949 Hollister Ave., Goleta, CA 93117 USA

@@ -133,8 +133,9 @@ feature -- Execution
 							cb_lab: EV_GRID_CHECKABLE_LABEL_ITEM
 						do
 							if
+								attached parent_grid.scm_s.service as scm_service and then
 								attached {SCM_GROUP} i_row.data as scm and then
-								attached scm.root.changes (scm.location) as l_chgs
+								attached scm.root.changes (scm.location, scm_service.config) as l_chgs
 							then
 								nb := l_chgs.changes_count
 								if nb = 0 then

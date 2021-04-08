@@ -45,6 +45,7 @@ feature {NONE} -- Initialization
 			main_box := a_widget
 			if attached scm_s.service as scm then
 				scm.register_observer (Current)
+				scm.check_scm_availability
 			end
 			update
 		end
@@ -79,8 +80,9 @@ feature {NONE} -- Factory
     create_mini_tool_bar_items: detachable ARRAYED_LIST [SD_TOOL_BAR_ITEM]
 		local
 			togb: SD_TOOL_BAR_TOGGLE_BUTTON
+			but: SD_TOOL_BAR_BUTTON
         do
-        	create Result.make (1)
+        	create Result.make (2)
 
         	create togb.make
         	togb.set_text (scm_names.button_setup)
@@ -88,6 +90,15 @@ feature {NONE} -- Factory
         	togb.select_actions.extend (agent on_setup_selected)
         	Result.extend (togb)
         	toggle_button_setup := togb
+
+        	create but.make
+			but.set_text (scm_names.button_config)
+			but.set_pixmap (pixmaps.icon_pixmaps.tool_preferences_icon)
+			but.set_pixel_buffer (pixmaps.icon_pixmaps.tool_preferences_icon_buffer)
+        	but.set_tooltip (scm_names.tooltip_button_config)
+        	but.select_actions.extend (agent on_preferences_selected)
+        	Result.extend (but)
+
         end
 
     create_tool_bar_items: detachable ARRAYED_LIST [SD_TOOL_BAR_ITEM]
@@ -194,6 +205,16 @@ feature {NONE} -- Action handlers
 			end
 		end
 
+	on_preferences_selected
+		local
+			dlg: SCM_CONFIG_DIALOG
+		do
+			if attached scm_s.service as scm then
+				create dlg.make (scm)
+				dlg.show_on_active_window
+			end
+		end
+
 	on_show
 			-- Performs actions when the user widget is displayed.
 		do
@@ -240,7 +261,7 @@ feature -- Access: Help
 	help_context_id: STRING_32
 			-- <Precursor>
 		once
-			Result := {STRING_32} "TO-FILL"
+			Result := {STRING_32} "6109AFC3-43A4-4524-9ED8-C02B486CABAF"
 		end
 
 note

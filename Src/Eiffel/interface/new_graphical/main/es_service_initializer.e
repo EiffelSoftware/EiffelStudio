@@ -180,8 +180,11 @@ feature {NONE} -- Factory
 		end
 
 	new_scm_service: detachable SOURCE_CONTROL_MANAGEMENT_S
+		local
+			cfg: SCM_ES_CONFIG
 		do
-			Result := (create {SCM_FACTORY}).new_scm
+			create cfg.make
+			Result := (create {SCM_FACTORY}).new_scm (cfg)
 		end
 
 	new_notification_service: detachable NOTIFICATION_S

@@ -13,6 +13,11 @@ inherit
 			create_interface_objects
 		end
 
+	SHARED_SOURCE_CONTROL_MANAGEMENT_SERVICE
+		undefine
+			default_create, copy
+		end
+
 	SCM_SHARED_RESOURCES
 		undefine
 			default_create, copy

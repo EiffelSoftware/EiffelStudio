@@ -20,11 +20,8 @@ create
 
 feature {NONE} -- Creation
 
-	make
-		local
-			cfg: SCM_CONFIG
+	make (cfg: SCM_CONFIG)
 		do
-			create cfg.make
 			config := cfg
 
 			eiffel_project.manager.compile_stop_agents.extend (agent on_project_recompiled)
@@ -75,9 +72,9 @@ feature -- Operations
 				a_commit.reset
 				if attached {SCM_SINGLE_COMMIT_SET} a_commit as l_single then
 					if attached {SCM_SVN_LOCATION} l_single.changelist.root as l_svn_loc then
-						l_svn_loc.commit (l_single)
+						l_svn_loc.commit (l_single, config)
 					elseif attached {SCM_GIT_LOCATION} l_single.changelist.root as l_git_loc then
-						l_git_loc.commit (l_single)
+						l_git_loc.commit (l_single, config)
 					end
 				elseif attached {SCM_MULTI_COMMIT_SET} a_commit as l_multi then
 					across
@@ -118,11 +115,18 @@ feature -- Status report
 
 	is_available: BOOLEAN
 			-- Is account service available?
-		do
-		end
+
+	is_svn_available: BOOLEAN
+			-- Is svn available?
+
+	is_git_available: BOOLEAN
+			-- Is git available?
 
 	check_scm_availability
 		do
+			is_available := True
+			is_git_available := (create {SCM_GIT}.make (config)).is_available
+			is_svn_available := (create {SCM_SVN}.make (config)).is_available
 		end
 
 feature -- Events

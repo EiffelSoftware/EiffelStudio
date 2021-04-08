@@ -8,9 +8,9 @@ class
 
 feature -- Creation
 
-	new_scm: SOURCE_CONTROL_MANAGEMENT_S
+	new_scm (cfg: SCM_CONFIG): SOURCE_CONTROL_MANAGEMENT_S
 		do
-			create {SOURCE_CONTROL_MANAGEMENT} Result.make
+			create {SOURCE_CONTROL_MANAGEMENT} Result.make (cfg)
 		end
 
 note

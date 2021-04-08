@@ -215,6 +215,9 @@ feature -- Preference
 	use_postscript_preference: BOOLEAN_PREFERENCE
 	terms_accepted_preference: BOOLEAN_PREFERENCE
 
+	svn_command_preference: STRING_PREFERENCE
+	git_command_preference: STRING_PREFERENCE
+
 feature {NONE} -- Preference Strings
 
 	acrobat_reader_string: STRING = "general.acrobat_reader"
@@ -234,6 +237,9 @@ feature {NONE} -- Preference Strings
 	eis_path_preference_string: STRING = "general.eis_path"
 	use_postscript_preference_string: STRING = "general.use_postscript"
 	terms_accepted_preference_string: STRING = "general.terms_accepted"
+
+	svn_command_string: STRING = "general.plugins.svn_command"
+	git_command_string: STRING = "general.plugins.git_command"
 
 feature {NONE} -- Implementation
 
@@ -286,6 +292,9 @@ feature {NONE} -- Implementation
 
 			terms_accepted_preference := l_manager.new_boolean_preference_value (l_manager, terms_accepted_preference_string, False)
 			terms_accepted_preference.set_hidden (True)
+
+			svn_command_preference := l_manager.new_string_preference_value (l_manager, svn_command_string, "svn")
+			git_command_preference := l_manager.new_string_preference_value (l_manager, git_command_string, "git")
 		end
 
 	preferences: PREFERENCES
@@ -413,8 +422,11 @@ invariant
 	use_postscript_preference_not_void: use_postscript_preference /= Void
 	terms_accepted_preference_not_void: terms_accepted_preference /= Void
 
+	svn_command_preference_set: svn_command_preference /= Void
+	git_command_preference_set: git_command_preference /= Void
+
 note
-	copyright: "Copyright (c) 1984-2020, Eiffel Software"
+	copyright: "Copyright (c) 1984-2021, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

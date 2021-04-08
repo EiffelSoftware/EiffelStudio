@@ -32,6 +32,7 @@ feature -- Dialogs
 	text_no_output: STRING_32 do Result := locale.translation_in_context ("No output ...", "scm") end
 
 	title_scm_save: STRING_32 do Result := locale.translation_in_context ("Source Control / Save", "scm") end
+	title_scm_config: STRING_32 do Result := locale.translation_in_context ("Source Control / Configuration", "scm") end
 
 	label_resetting: STRING_32 do Result := locale.translation_in_context ("Resetting ...", "scm") end
 
@@ -50,7 +51,7 @@ feature -- Dialogs
 
 feature -- Tools
 
-	desc_scm_tool: STRING_32 do Result := locale.translation_in_context ("Source Control Management (svn, git, ...)", "scm") end
+	desc_scm_tool: STRING_32 do Result := locale.translation_in_context ("Source Control Management", "scm") end
 
 feature -- General
 
@@ -59,6 +60,10 @@ feature -- General
 	tooltip_button_check: STRING_32 do Result := locale.translation_in_context ("Check for changes", "scm") end
 	button_setup: STRING_32 do Result := locale.translation_in_context ("Setup", "scm") end
 	tooltip_button_setup: STRING_32 do Result := locale.translation_in_context ("Open the settings", "scm") end
+
+	button_config: STRING_32 do Result := locale.translation_in_context ("Config", "scm") end
+	tooltip_button_config: STRING_32 do Result := locale.translation_in_context ("Open the configuration dialog", "scm") end
+
 	button_check_all: STRING_32 do Result := locale.translation_in_context ("Check All", "scm") end
 	button_save: STRING_32 do Result := locale.translation_in_context ("Save", "scm") end
 	button_save_all: STRING_32 do Result := locale.translation_in_context ("Save All", "scm") end

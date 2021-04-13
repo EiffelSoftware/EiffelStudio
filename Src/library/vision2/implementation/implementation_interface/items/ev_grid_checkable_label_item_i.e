@@ -127,10 +127,16 @@ feature {NONE} -- Implementation
 			a_drawable.set_line_width (lw)
 			a_drawable.draw_rectangle (l_start_x, l_start_y, l_check_figure_size, l_check_figure_size)
 			a_drawable.draw_rectangle (l_start_x + 1, l_start_y + 1, l_check_figure_size - 2, l_check_figure_size - 2)
-			if attached_interface.is_checked then
-				l_start_x := l_start_x + 3 * lw
-				l_start_y := l_start_y + 2 * lw
-				draw_check_sign_at (a_drawable, l_check_figure_size - 7 * lw, l_start_x, l_start_y)
+			if attached attached_interface as l_interface then
+				if l_interface.is_checked then
+					l_start_x := l_start_x + 2 * lw
+					l_start_y := l_start_y + 2 * lw
+					if l_interface.is_indeterminate then
+						draw_indeterminate_sign_at (a_drawable, l_check_figure_size - 5 * lw, l_start_x, l_start_y)
+					else
+						draw_check_sign_at (a_drawable, l_check_figure_size - 5 * lw, l_start_x, l_start_y)
+					end
+				end
 			end
 				-- Restore the line width.
 			a_drawable.set_line_width (l_old_lw)
@@ -158,6 +164,12 @@ feature {NONE} -- Implementation
 			l_check_figure[6] := create {EV_COORDINATE}.make (a_start_x + x1, a_start_y + y3)
 
 			a_drawable.fill_polygon (l_check_figure)
+		end
+
+	draw_indeterminate_sign_at (a_drawable: EV_DRAWABLE; a_size: INTEGER; a_start_x, a_start_y: INTEGER)
+			-- Draw the check sign, with size `a_size` at position (a_start_x, a_start_y) on `a_drawable`.
+		do
+			a_drawable.fill_rectangle (a_start_x + 1, a_start_y + 1, a_size - 1, a_size - 1)
 		end
 
 feature {EV_ANY, EV_ANY_I} -- Implementation

@@ -48,6 +48,15 @@ feature -- Access
 	is_toggle_on_label_allowed: BOOLEAN
 			-- Is clicking on label changing the checkbox's status?
 
+feature -- Properties
+
+	is_indeterminate: BOOLEAN
+			-- Current is indeterminate
+			-- Usually when it repreѕents a group of checkboxes
+			-- and not all of them
+			-- Use the [#] style, instead of [v] style.
+			-- Default: False
+
 feature -- Change
 
 	enable_toggle_on_label
@@ -78,6 +87,12 @@ feature -- Change
 			if is_checked /= b then
 				implementation.set_is_checked (b)
 			end
+		end
+
+	set_is_indeterminate (b: BOOLEAN)
+			-- Set `is_indeterminate` to `b`.
+		do
+			is_indeterminate := b
 		end
 
 feature -- Status

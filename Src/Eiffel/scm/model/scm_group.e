@@ -7,6 +7,9 @@ note
 deferred class
 	SCM_GROUP
 
+inherit
+	DEBUG_OUTPUT
+
 feature {NONE} -- Initialization
 
 	make (a_name: READABLE_STRING_GENERAL; a_location: PATH; a_root: SCM_LOCATION)
@@ -36,6 +39,15 @@ feature -- Access
 			n := location.name
 			gn := g.location.name
 			Result := gn.count > n.count and then gn.starts_with (n)
+		end
+
+
+feature -- Status report
+
+	debug_output: STRING_32
+			-- String that should be displayed in debugger to represent `Current'.
+		do
+			Result := name + " %"" + location.name + "%""
 		end
 
 feature -- Element change

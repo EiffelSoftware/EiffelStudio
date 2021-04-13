@@ -34,19 +34,23 @@ feature {NONE} -- Initialization
 		do
 			Precursor
 
-			set_column_count_to (4)
+			set_column_count_to (5)
 			column (checkbox_column).set_title ("")
-			column (name_column).set_title ("Name")
-			column (scm_column).set_title ("SCM")
+			column (filename_column).set_title (scm_names.header_name)
+			column (parent_column).set_title (scm_names.header_folder)
+			column (scm_column).set_title (scm_names.header_repository)
 			column (info_column).set_title ("...")
 
 			set_auto_resizing_column (checkbox_column, True)
 --			column (checkbox_column).set_width (20)
-			set_auto_resizing_column (name_column, True)
+			set_auto_resizing_column (filename_column, True)
+			set_auto_resizing_column (parent_column, True)
 			set_auto_resizing_column (scm_column, True)
 
 			row_select_actions.extend (agent on_row_selected)
 			row_deselect_actions.extend (agent on_row_deselected)
+
+			set_item_pebble_function (agent pebble_for_item)
 
 			enable_default_tree_navigation_behavior (True, True, True, True)
 			key_press_actions.extend (agent  (k: EV_KEY)
@@ -64,6 +68,25 @@ feature {NONE} -- Initialization
 					end
 				end
 			)
+		end
+
+feature -- Actions
+
+	pebble_for_item (a_item: EV_GRID_ITEM): detachable ANY
+		local
+			st: FILE_LOCATION_STONE
+		do
+			if attached {SCM_GROUP} a_item.data as g then
+				create st.make_with_path (g.location)
+				Result := st
+			elseif attached {PATH} a_item.data as p then
+				create st.make_with_path (p)
+				Result := st
+			elseif attached {SCM_STATUS} a_item.data as l_status then
+				create st.make_with_path (l_status.location)
+				Result := st
+			else
+			end
 		end
 
 feature -- Events
@@ -151,10 +174,11 @@ feature -- Query
 
 feature -- Layout settings
 
-	checkbox_column: INTEGER = 2
-	name_column: INTEGER = 1
-	scm_column: INTEGER = 3
-	info_column: INTEGER = 4
+	filename_column: INTEGER = 1
+	parent_column: INTEGER = 2
+	checkbox_column: INTEGER = 3
+	scm_column: INTEGER = 4
+	info_column: INTEGER = 5
 
 feature -- Operations
 

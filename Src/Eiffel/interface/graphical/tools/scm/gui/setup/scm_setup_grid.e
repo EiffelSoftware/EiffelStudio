@@ -108,8 +108,6 @@ feature -- Basic operation
 					r.set_item (3, new_scm_label (Void))
 				end
 			end
-
-			resize_columns
 		end
 
 	potential_parent_row (fn: READABLE_STRING_GENERAL): detachable EV_GRID_ROW

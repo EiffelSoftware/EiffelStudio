@@ -22,7 +22,8 @@ feature -- Operation
 			a_row.set_item (a_grid.checkbox_column, create {EV_GRID_ITEM})
 
 			create glab.make_with_text (root_location.location.name)
-			a_row.set_item (a_grid.name_column, glab)
+			a_row.set_item (a_grid.filename_column, glab)
+			a_row.set_item (a_grid.parent_column, create {EV_GRID_ITEM}) -- TODO
 			a_row.set_item (a_grid.scm_column, create {EV_GRID_LABEL_ITEM}.make_with_text ("?"))
 
 			across

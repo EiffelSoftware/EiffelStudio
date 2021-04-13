@@ -199,6 +199,8 @@ feature {NONE} -- Implementation
 					Result.force (create {SCM_STATUS_ADDED}.make (a_path.extended (l_line)))
 				elseif k.has ('D') then
 					Result.force (create {SCM_STATUS_DELETED}.make (a_path.extended (l_line)))
+				elseif k.has ('C') then
+					Result.force (create {SCM_STATUS_CONFLICTED}.make (a_path.extended (l_line)))
 				elseif k.has ('?') then
 					Result.force (create {SCM_STATUS_UNVERSIONED}.make (a_path.extended (l_line)))
 				end

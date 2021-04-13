@@ -18,8 +18,47 @@ feature -- Access
 
 	location: PATH
 
+	location_path_name: STRING_32
+		do
+			Result := internal_location_path_name
+			if Result = Void then
+				Result := location.name
+				internal_location_path_name := Result
+			end
+		end
+
 	nature: STRING
 		deferred
+		end
+
+feature {NONE} -- Internals
+
+	internal_location_path_name: detachable like location_path_name
+
+feature -- Query
+
+	relative_location (a_location: PATH): READABLE_STRING_32
+		local
+			rn,n: READABLE_STRING_32
+			p: PATH
+			i:  INTEGER
+		do
+			rn := location_path_name
+			n := a_location.name
+			i := n.index_of (a_location.directory_separator, rn.count)
+			if i > 0 then
+				create p.make_from_string (n.head (i - 1))
+			else
+				create p.make_from_string (n.head (rn.count))
+			end
+			if p.same_as (location) then
+				if n.same_string (rn) then
+					rn := location.parent.name
+				end
+				Result := n.substring (rn.count + 2, n.count)
+			else
+				Result := n
+			end
 		end
 
 feature -- Status report

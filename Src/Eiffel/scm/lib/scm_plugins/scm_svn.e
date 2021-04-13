@@ -62,6 +62,8 @@ feature -- Access: working copy
 						Result.force (create {SCM_STATUS_ADDED}.make (p))
 					elseif st.wc_status_code = st.status_deleted then
 						Result.force (create {SCM_STATUS_DELETED}.make (p))
+					elseif st.wc_status_code = st.status_conflict then
+						Result.force (create {SCM_STATUS_CONFLICTED}.make (p))
 					elseif st.wc_status_code = st.status_unknown then
 						Result.force (create {SCM_STATUS_UNVERSIONED}.make (p))
 					end

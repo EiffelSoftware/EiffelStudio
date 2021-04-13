@@ -23,8 +23,8 @@ feature {NONE} -- Initialization
 		do
 			target := a_target
 			location := a_target.system.directory.absolute_path.canonical_path
-			create locations.make (0)
-			create locations_by_root.make (0)
+			create locations.make_equal (0)
+			create locations_by_root.make_equal (0)
 			create change_actions
 		end
 
@@ -67,7 +67,7 @@ feature -- Basic operations
 
 	locations: STRING_TABLE [SCM_GROUP]
 
-	locations_by_root: STRING_TABLE [TUPLE [root: SCM_LOCATION; groups: STRING_TABLE [SCM_GROUP]]]
+	locations_by_root: HASH_TABLE [TUPLE [root: SCM_LOCATION; groups: STRING_TABLE [SCM_GROUP]], PATH]
 
 	analyze
 		local
@@ -119,17 +119,17 @@ feature -- Basic operations
 
 	record_group (g: SCM_GROUP)
 		local
-			l_root_dirname: READABLE_STRING_GENERAL
+			l_root_dirname: PATH
 			l_data: TUPLE [root: SCM_LOCATION; groups: STRING_TABLE [SCM_GROUP]]
 			tb: STRING_TABLE [SCM_GROUP]
 		do
 			locations[g.name] := g
 
-			l_root_dirname := g.root.location.name
+			l_root_dirname := g.root.location
 			l_data := locations_by_root [l_root_dirname]
 			if l_data = Void then
-				create tb.make_caseless (1)
-				locations_by_root [l_root_dirname] := [g.root ,tb]
+				create tb.make_equal (1)
+				locations_by_root [l_root_dirname] := [g.root, tb]
 			else
 				tb := l_data.groups
 			end

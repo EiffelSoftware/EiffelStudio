@@ -9,6 +9,14 @@ class
 inherit
 	SHARED_LOCALE
 
+feature -- Header
+
+	header_name: STRING_32 do Result := locale.translation_in_context ("Name", "scm") end
+
+	header_folder: STRING_32 do Result := locale.translation_in_context ("Folder", "scm") end
+
+	header_repository: STRING_32 do Result := locale.translation_in_context ("Repository", "scm") end
+
 feature -- Menu
 
 	menu_scm: STRING_32 do Result := locale.translation_in_context ("Source Control Management", "scm") end
@@ -21,7 +29,9 @@ feature -- Menu
 
 feature -- Dialogs
 
-	question_show_unversioned_files: STRING_32 do Result := locale.translation_in_context ("Show unversioned files?", "scm") end
+	question_show_unversioned_files: STRING_32 do Result := locale.translation_in_context ("Show unversioned files", "scm") end
+
+	question_include_all_content: STRING_32 do Result := locale.translation_in_context ("Include all content", "scm") end
 
 	label_changes: STRING_32 do Result := locale.translation_in_context ("Changes", "scm") end
 

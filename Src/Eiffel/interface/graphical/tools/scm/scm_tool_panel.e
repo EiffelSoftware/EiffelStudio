@@ -162,15 +162,6 @@ feature {NONE} -- Action handlers
 			end
 		end
 
-	on_check_selected
-		do
-			if
-				attached scm_s.service as scm
-			then
-				-- TODO
-			end
-		end
-
 	on_setup_selected
 		local
 			b: like main_box
@@ -229,7 +220,11 @@ feature {NONE} -- Action handlers
 			b: like main_box
 			l_status: SCM_STATUS_BOX
 			l_setup: SCM_SETUP_BOX
+			l_style: EV_POINTER_STYLE
 		do
+			l_style := widget.pointer_style
+			widget.set_pointer_style ((create {EV_STOCK_PIXMAPS}).busy_cursor)
+
 			b := main_box
 			b.wipe_out
 			if
@@ -254,6 +249,7 @@ feature {NONE} -- Action handlers
 					b.extend (l_setup)
 				end
 			end
+			widget.set_pointer_style (l_style)
 		end
 
 feature -- Access: Help

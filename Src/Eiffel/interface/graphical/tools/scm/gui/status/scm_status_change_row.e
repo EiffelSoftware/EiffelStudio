@@ -7,6 +7,19 @@ note
 class
 	SCM_STATUS_CHANGE_ROW
 
+inherit
+	ANY
+
+	SCM_SHARED_RESOURCES
+		undefine
+			default_create, copy
+		end
+
+	ES_SHARED_FONTS_AND_COLORS
+		undefine
+			default_create, copy
+		end
+
 create
 	make
 
@@ -15,21 +28,30 @@ convert
 
 feature {NONE} -- Initialization
 
-	make (a_grid: SCM_STATUS_GRID; a_root: like root_location; a_groups: STRING_TABLE [SCM_GROUP])
+	make (a_wc_row: SCM_STATUS_WC_ROW; a_root: like root_location; a_status: SCM_STATUS)
 		do
+			wc_row := a_wc_row
+			parent_grid := a_wc_row.parent_grid
 			root_location := a_root
-			groups := a_groups
+			status := a_status
 		end
 
 feature -- Access
 
 	parent_grid: SCM_STATUS_GRID
 
+	wc_row: SCM_STATUS_WC_ROW
+
 	row: EV_GRID_ROW
 
 	root_location: SCM_LOCATION
 
-	groups: STRING_TABLE [SCM_GROUP]
+	change_location: PATH
+		do
+			Result := status.location
+		end
+
+	status: SCM_STATUS
 
 feature -- Execution
 
@@ -38,16 +60,81 @@ feature -- Execution
 			parent_grid := a_grid
 			row := a_row
 			a_row.set_data (Current)
-			if a_row.parent /= Void then
+			a_row.set_data (status)
+			if a_row.parent = parent_grid then
 				a_row.clear
---				a_row.set_background_color (Void)
 			end
 			update_row (a_grid, a_row)
 		end
 
 	update_row (a_grid: SCM_STATUS_GRID; a_row: EV_GRID_ROW)
+		local
+			l_scm_root: SCM_LOCATION
+			sr: EV_GRID_ROW
+			st: SCM_STATUS
+			rel_loc: READABLE_STRING_32
+			lab, l_parent_lab: EV_GRID_LABEL_ITEM
+			cb_lab: EV_GRID_CHECKABLE_LABEL_ITEM
 		do
+			l_scm_root := root_location
+			st := status
+			sr := row
+
+			cb_lab := wc_row.new_checkable_label_item (Void)
+			row.set_item (parent_grid.checkbox_column, cb_lab)
+
+			if attached st.location.entry as e then
+				rel_loc := e.name
+			else
+				rel_loc := l_scm_root.relative_location (st.location)
+			end
+			lab := wc_row.new_label_item (rel_loc)
+			lab.set_data (st)
+
+			lab.pointer_double_press_actions.extend (agent (i_loc: PATH; i_x, i_y, i_button: INTEGER; i_x_tilt, i_y_tilt, i_pressure: DOUBLE; i_screen_x, i_screen_y: INTEGER)
+					do
+						if attached parent_grid as pg then
+							pg.open_file_location (i_loc)
+						end
+					end(st.location, ?,?,?,?,?,?,?,?)
+				)
+			sr.set_item (parent_grid.filename_column, lab)
+
+			l_parent_lab := wc_row.new_label_item (l_scm_root.relative_location (st.location.parent))
+			l_parent_lab.pointer_double_press_actions.extend (agent (i_loc: PATH; i_x, i_y, i_button: INTEGER; i_x_tilt, i_y_tilt, i_pressure: DOUBLE; i_screen_x, i_screen_y: INTEGER)
+					do
+						if attached parent_grid as pg then
+							pg.open_directory_location (i_loc)
+						end
+					end(st.location.parent, ?,?,?,?,?,?,?,?)
+				)
+			sr.set_item (parent_grid.parent_column, l_parent_lab)
+
+			if attached {SCM_STATUS_UNVERSIONED} st then
+				lab.set_foreground_color (colors.disabled_foreground_color)
+				l_parent_lab.set_foreground_color (colors.disabled_foreground_color)
+			else
+				sr.set_item (parent_grid.scm_column, wc_row.new_label_item (st.status_as_string))
+				cb_lab.set_is_checked (True)
+				wc_row.increment_changes_count
+			end
+
+			cb_lab.set_data (st)
+			cb_lab.checked_changed_actions.extend (agent wc_row.on_checkbox_change_checked (parent_grid, ?))
 		end
+
+--	parent_path_name (a_path: READABLE_STRING_GENERAL): READABLE_STRING_32
+--		local
+--			p: PATH
+--		do
+--			create p.make_from_string (a_path)
+--			p := p.parent
+--			if p.is_current_symbol then
+--				Result := {STRING_32} ""
+--			else
+--				Result := p.name
+--			end
+--		end
 
 note
 	copyright: "Copyright (c) 1984-2021, Eiffel Software"

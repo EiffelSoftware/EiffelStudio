@@ -1,27 +1,59 @@
-note
-	description: "Summary description for {SCM_DIRECTORY}."
-	author: ""
+﻿note
+	description: "Objects that represents a file location"
 	date: "$Date$"
 	revision: "$Revision$"
 
 class
-	SCM_DIRECTORY
+	FILE_LOCATION_STONE
 
 inherit
-	SCM_GROUP
-		redefine
-			debug_output
-		end
+	FILED_STONE
 
 create
-	make
+	make_with_path
 
-feature -- Status report
+feature{NONE} -- Initialization
 
-	debug_output: STRING_32
-			-- String that should be displayed in debugger to represent `Current'.
+	make_with_path (a_path: PATH)
+			-- Initialize with `a_path`.
 		do
-			Result := {STRING_32} "[dir] " + Precursor
+			file_name := a_path.name
+		end
+
+feature -- Access
+
+	file_name: READABLE_STRING_GENERAL
+
+	stone_cursor: EV_POINTER_STYLE
+			-- Cursor associated with Current stone during transport
+			-- when widget at cursor position is compatible with Current stone
+		once
+			Result := Cursors.cur_object
+		end
+
+	x_stone_cursor: EV_POINTER_STYLE
+			-- Cursor associated with Current stone during transport
+			-- when widget at cursor position is not compatible with Current stone
+		once
+			Result := Cursors.cur_X_object
+		end
+
+	stone_signature: STRING_32
+		do
+			Result := file_name.to_string_32
+		end
+
+	history_name: STRING_32
+		do
+			Result := Interface_names.s_location_stone
+			Result.append_string (stone_signature)
+		end
+
+	header: STRING_GENERAL
+			-- Display class name, class' cluster and class location in
+			-- window title bar.
+		do
+			Result := {STRING_32} "Location %"" + file_name + {STRING_32} "%""
 		end
 
 note

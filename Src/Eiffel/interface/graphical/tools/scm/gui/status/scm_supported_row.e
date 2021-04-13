@@ -23,15 +23,33 @@ feature -- Operation
 			glab: EV_GRID_LABEL_ITEM
 			eglab: EV_GRID_LABEL_ELLIPSIS_ITEM
 			gcblab: EV_GRID_CHECKABLE_LABEL_ITEM
+			cblab: EV_GRID_CHECKABLE_LABEL_ITEM
+			l_groups: ARRAYED_LIST [PATH]
 			l_scm_rows: like scm_rows
 			l_subrow: EV_GRID_ROW
-			g: SCM_GROUP
+			gloc: PATH
+			grel: READABLE_STRING_32
 			j: INTEGER
 		do
 			a_row.set_item (a_grid.checkbox_column, create {EV_GRID_ITEM})
 
-			glab := new_label_item (root_location.location.name)
-			a_row.set_item (a_grid.name_column, glab)
+			add_new_span_label_item_to (root_location.location.name, a_grid.filename_column, <<a_grid.parent_column>>, a_row)
+			if attached a_row.item (a_grid.filename_column) as gi then
+				gi.set_data (root_location.location)
+				gi.pointer_double_press_actions.extend (agent (i_loc: PATH; i_x, i_y, i_button: INTEGER; i_x_tilt, i_y_tilt, i_pressure: DOUBLE; i_screen_x, i_screen_y: INTEGER)
+						do
+							if attached parent_grid as pg then
+								pg.open_directory_location (i_loc)
+							end
+						end(root_location.location, ?,?,?,?,?,?,?,?)
+					)
+			end
+
+			cblab := new_checkable_label_item ("")
+			a_row.set_item (a_grid.checkbox_column, cblab)
+			cblab.set_is_checked (True)
+			cblab.checked_changed_actions.extend (agent propagate_checkbox_state_to_subrows (?, a_grid.checkbox_column))
+
 
 			eglab := new_label_ellipsis_item (scm_name)
 			eglab.ellipsis_actions.extend (agent on_options (eglab))
@@ -48,14 +66,26 @@ feature -- Operation
 				then
 					l_label.set_font (a_grid.bold_font)
 					l_label.set_foreground_color (a_grid.stock_colors.blue)
+				elseif
+					attached {EV_GRID_SPAN_LABEL_ITEM} a_row.item (idx.item) as l_span_label
+				then
+					l_span_label.set_font (a_grid.bold_font)
+					l_span_label.set_foreground_color (a_grid.stock_colors.blue)
 				end
 			end
 			a_grid.fill_empty_grid_items (a_row)
-
-			if
-				attached groups as l_groups and then
-				not l_groups.is_empty
+			if all_content_included then
+				create l_groups.make (1)
+				l_groups.extend (root_location.location)
+			elseif
+				attached sorted_group_locations as l_group_locations and then
+				not l_group_locations.is_empty
 			then
+				l_groups := l_group_locations
+			end
+
+
+			if l_groups /= Void and then not l_groups.is_empty then
 				l_scm_rows := scm_rows -- FIXME
 				if l_scm_rows = Void then
 					create l_scm_rows.make (l_groups.count)
@@ -68,22 +98,34 @@ feature -- Operation
 				across
 					l_groups as g_ic
 				loop
-					g := g_ic.item
-					if g.is_included then
-						j := j + 1
-						a_row.insert_subrow (a_row.subrow_count + 1)
-						l_subrow := a_row.subrow (a_row.subrow_count)
-						l_subrow.set_data (g)
-						l_scm_rows.force (l_subrow)
-						gcblab := new_checkable_label_item (Void)
-						l_subrow.set_item (a_grid.checkbox_column, gcblab)
-						gcblab.set_is_checked (True)
-						gcblab.checked_changed_actions.extend (agent propagate_checkbox_state_to_subrows (?, a_grid.checkbox_column))
-						glab := new_label_item (g.location.name)
-						l_subrow.set_item (a_grid.name_column, glab)
+					gloc := g_ic.item
+					grel := root_location.relative_location (gloc)
 
-						a_grid.fill_empty_grid_items (l_subrow)
-					end
+					j := j + 1
+					a_row.insert_subrow (a_row.subrow_count + 1)
+					l_subrow := a_row.subrow (a_row.subrow_count)
+					l_subrow.set_data (gloc)
+					l_scm_rows.force (l_subrow)
+					gcblab := new_checkable_label_item (Void)
+					l_subrow.set_item (a_grid.checkbox_column, gcblab)
+					gcblab.set_is_checked (True)
+					gcblab.checked_changed_actions.extend (agent propagate_checkbox_state_to_subrows (?, a_grid.checkbox_column))
+
+					glab := new_label_item (grel)
+					glab.set_data (gloc)
+
+					glab.pointer_double_press_actions.extend (agent (i_loc: PATH; i_x, i_y, i_button: INTEGER; i_x_tilt, i_y_tilt, i_pressure: DOUBLE; i_screen_x, i_screen_y: INTEGER)
+							do
+								if attached parent_grid as pg then
+									pg.open_directory_location (i_loc)
+								end
+							end(gloc, ?,?,?,?,?,?,?,?)
+						)
+					l_subrow.set_item (a_grid.filename_column, glab)
+
+					l_subrow.set_item (a_grid.parent_column, create {EV_GRID_ITEM})
+
+					a_grid.fill_empty_grid_items (l_subrow)
 				end
 				if a_row.subrow_count = 0 then
 					a_row.collapse
@@ -136,11 +178,22 @@ feature -- Operation
 						update_statuses
 					end
 				)
-				if repo_unversioned_files_included then
-					mci.enable_select
-				end
-				m.extend (mci)
-				m.show
+			if repo_unversioned_files_included then
+				mci.enable_select
+			end
+			m.extend (mci)
+
+			create mci.make_with_text_and_action (scm_names.question_include_all_content, agent
+					do
+						all_content_included := not all_content_included
+						update
+					end
+				)
+			if all_content_included then
+				mci.enable_select
+			end
+			m.extend (mci)
+			m.show
 		end
 
 note

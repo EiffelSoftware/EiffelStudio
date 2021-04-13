@@ -28,6 +28,11 @@ inherit
 			default_create, copy
 		end
 
+	SHARED_EXECUTION_ENVIRONMENT
+		undefine
+			default_create, copy
+		end
+
 	EB_SHARED_PREFERENCES
 		undefine
 			default_create, copy
@@ -154,6 +159,27 @@ feature -- Factory
 			set_label_item (Result)
 		end
 
+	add_new_span_label_item_to (a_text: detachable READABLE_STRING_GENERAL; a_master_column: INTEGER; a_span_columns: ITERABLE [INTEGER]; a_row: EV_GRID_ROW)
+		require
+			a_row /= Void and then not a_row.is_destroyed
+			row_parent_is_current: a_row.parent = Current
+		local
+			span: EV_GRID_SPAN_LABEL_ITEM
+		do
+			if a_text /= Void then
+				create span.make_master_with_text (a_master_column, a_text)
+			else
+				create span.make_master (a_master_column)
+			end
+			span.set_font (grid_font)
+			a_row.set_item (a_master_column, span)
+			across
+				a_span_columns as ic
+			loop
+				a_row.set_item (ic.item, create {EV_GRID_SPAN_LABEL_ITEM}.make_span (a_master_column))
+			end
+		end
+
 	new_checkable_label_item (a_text: detachable READABLE_STRING_GENERAL): EV_GRID_CHECKABLE_LABEL_ITEM
 		do
 			if a_text /= Void then
@@ -216,31 +242,53 @@ feature -- IDE Events
 			grid_preferences.set_zoom_factor (a_zoom_factor)
 		end
 
+	open_directory_location (a_location: PATH)
+		local
+			l_loc_name: READABLE_STRING_32
+			l_cmd: STRING_32
+			l_target: STRING_32
+		do
+			if attached preferences.misc_data.file_browser_command as cmd then
+				l_loc_name := a_location.name
+				create l_target.make (2 + l_loc_name.count)
+				l_target.append_character ('%"')
+				l_target.append_string_general (l_loc_name)
+				l_target.append_character ('%"')
+				create l_cmd.make_from_string (cmd)
+				l_cmd.replace_substring_all ("$target", l_target)
+				execution_environment.launch (l_cmd)
+			end
+		end
+
+	open_file_location (a_location: PATH)
+			-- Open directory `a_full_path' in file browser and select the file
+		local
+			l_cmd: STRING_32
+			l_platform: PLATFORM
+			l_path: STRING_32
+		do
+			if attached preferences.misc_data.file_browser_command as cmd then
+				l_path := a_location.name
+
+				create l_platform
+				if l_platform.is_windows then
+					-- We add argument to select file
+					l_path	:= {STRING_32} "/select,%"" + l_path + {STRING_32} "%""
+				elseif l_platform.is_unix then
+					-- "nautilus" don't accept last file name, we removed it here
+					-- We should find a way to select file in "nautilus" file browser like Windows explorer does
+					l_path := a_location.parent.name
+				end
+				create l_cmd.make_from_string (cmd)
+				l_cmd.replace_substring_all ({STRING_32} "$target", l_path)
+				execution_environment.launch (l_cmd)
+			end
+		end
+
 feature -- Event
 
 	on_resize_action (a_x: INTEGER; a_y: INTEGER; a_width: INTEGER; a_height: INTEGER)
 		do
---			resize_columns
-		end
-
-	resize_columns
-		local
---			g: EV_GRID
---			w, n, i: INTEGER
-		do
---			g := Current
---			if g.row_count > 0 then
---				n := g.column_count
---				from i := 1 until i = n loop
---					if
---						g.column_displayed (i)
---					then
---						w := g.column (i).required_width_of_item_span (1, g.row_count)
---						g.column (i).set_width (w + 5)
---					end
---					i := i + 1
---				end
---			end
 		end
 
 feature {NONE} -- Internal memory management

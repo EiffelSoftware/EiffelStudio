@@ -132,7 +132,13 @@ feature {NONE} -- Implementation
 		require
 			row /= Void
 		do
-			Result ?= row.item (span_master_column)
+			if is_master then
+				Result := Current
+			elseif attached row as l_row then
+				Result := {like Current} / l_row.item (span_master_column)
+			else
+				check row_set: False end
+			end
 		ensure
 			Result /= Void
 		end
@@ -141,27 +147,43 @@ feature {NONE} -- Implementation
 			-- Redraw span cell
 		local
 			l_text: like text
+			focused: BOOLEAN
 			c: INTEGER
 			prev_width: INTEGER
 			w: INTEGER
-			m: like master_item
 			bg,fg: detachable EV_COLOR
 			ft: detachable EV_FONT
+			m: like master_item
 		do
 			if attached parent as g then
+				focused := g.implementation.drawables_have_focus
+				m := master_item
+
 				bg := background_color
 				if bg = Void then
 					bg := row.background_color
-					if bg = Void then
-						bg := g.background_color
-					end
 				end
 				fg := foreground_color
 				if fg = Void then
 					fg := row.foreground_color
-					if fg = Void then
-						fg := g.foreground_color
+				end
+				if bg = Void then
+					if is_selected or else (m /= Void and then m.is_selected) then
+						if focused then
+							bg := g.focused_selection_color
+							fg := g.focused_selection_text_color
+						else
+							bg := g.non_focused_selection_color
+							fg := g.non_focused_selection_text_color
+						end
+					else
+						bg := g.background_color
+						if fg = Void then
+							fg := g.foreground_color
+						end
 					end
+				elseif fg = Void then
+					fg := g.foreground_color
 				end
 
 				a_drawable.set_foreground_color (bg)
@@ -179,19 +201,17 @@ feature {NONE} -- Implementation
 						a_drawable.draw_pixmap (3 + w, 2, pix)
 						w := w + pix.width + extra_space_after_pixmap
 					end
-					if is_selected then
-						a_drawable.set_foreground_color (create {EV_COLOR})
-						a_drawable.enable_dashed_line_style
-						a_drawable.draw_rectangle (1, 1, width - 2, height - 2)
-						a_drawable.disable_dashed_line_style
-					end
+--FIXME: is it needed?
+--					if is_selected then
+--						a_drawable.set_foreground_color (create {EV_COLOR})
+--						a_drawable.enable_dashed_line_style
+--						a_drawable.draw_rectangle (1, 1, width - 2, height - 2)
+--						a_drawable.disable_dashed_line_style
+--					end
+				elseif m /= Void then
+					l_text := m.text
 				else
-					m := master_item
-					if m /= Void then
-						l_text := m.text
-					else
-						check has_master: False end
-					end
+					check has_master: False end
 				end
 
 				if l_text /= Void then
@@ -240,13 +260,12 @@ feature {NONE} -- Implementation
 					end
 					a_drawable.draw_text_top_left (3 + w, 2, l_text)
 				end
-
 			end
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2009, Eiffel Software"
-	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
+	copyright:	"Copyright (c) 1984-2021, Eiffel Software and others"
+	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
 			This file is part of Eiffel Software's Eiffel Development Environment.

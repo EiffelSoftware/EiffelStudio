@@ -141,10 +141,10 @@ feature -- Update
 				l_item.select_actions.extend (agent clear_description)
 				l_row.set_item (name_column, l_item)
 
---				create l_item.make_span (name_column)
---				l_item.activate_actions.extend (agent switch_expand_section (l_row, ?))
---				l_item.select_actions.extend (agent clear_description)
---				l_row.set_item (value_column, l_item)
+				create l_item.make_span (name_column)
+				l_item.activate_actions.extend (agent switch_expand_section (l_row, ?))
+				l_item.select_actions.extend (agent clear_description)
+				l_row.set_item (value_column, l_item)
 
 				l_row.set_background_color (separator_color)
 				sections.force (l_row, a_name)
@@ -453,7 +453,7 @@ invariant
 
 note
 	ca_ignore: "CA011", "CA011: too many arguments"
-	copyright: "Copyright (c) 1984-2020, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2021, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

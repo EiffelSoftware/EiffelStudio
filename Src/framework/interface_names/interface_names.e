@@ -2334,6 +2334,7 @@ feature -- Stone names
 	s_folder_stone: STRING_32			do Result := locale.translation("Folder ")	end
 	s_library_stone: STRING_32			do Result := locale.translation("Library ")	end
 	s_target_stone: STRING_32 			do Result := locale.translation("Target ")	end
+	s_location_stone: STRING_32 		do Result := locale.translation("Location ") end
 
 feature -- Fixed shortcut names
 
@@ -3064,7 +3065,7 @@ feature -- String escape
 		end
 
 note
-	copyright: "Copyright (c) 1984-2020, Eiffel Software"
+	copyright: "Copyright (c) 1984-2021, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

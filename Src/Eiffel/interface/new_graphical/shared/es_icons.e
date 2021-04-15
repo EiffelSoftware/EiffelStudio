@@ -3075,6 +3075,106 @@ feature -- Icons
 			source_version_control_icon_buffer_attached: Result /= Void
 		end
 
+	frozen source_modified_icon: EV_PIXMAP
+			-- Access to 'modified' pixmap.
+		require
+			has_named_icon: has_named_icon (source_modified_name)
+		once
+			Result := named_icon (source_modified_name)
+		ensure
+			source_modified_icon_attached: Result /= Void
+		end
+
+	frozen source_modified_icon_buffer: EV_PIXEL_BUFFER
+			-- Access to 'modified' pixmap pixel buffer.
+		require
+			has_named_icon: has_named_icon (source_modified_name)
+		once
+			Result := named_icon_buffer (source_modified_name)
+		ensure
+			source_modified_icon_buffer_attached: Result /= Void
+		end
+
+	frozen source_added_icon: EV_PIXMAP
+			-- Access to 'added' pixmap.
+		require
+			has_named_icon: has_named_icon (source_added_name)
+		once
+			Result := named_icon (source_added_name)
+		ensure
+			source_added_icon_attached: Result /= Void
+		end
+
+	frozen source_added_icon_buffer: EV_PIXEL_BUFFER
+			-- Access to 'added' pixmap pixel buffer.
+		require
+			has_named_icon: has_named_icon (source_added_name)
+		once
+			Result := named_icon_buffer (source_added_name)
+		ensure
+			source_added_icon_buffer_attached: Result /= Void
+		end
+
+	frozen source_deleted_icon: EV_PIXMAP
+			-- Access to 'deleted' pixmap.
+		require
+			has_named_icon: has_named_icon (source_deleted_name)
+		once
+			Result := named_icon (source_deleted_name)
+		ensure
+			source_deleted_icon_attached: Result /= Void
+		end
+
+	frozen source_deleted_icon_buffer: EV_PIXEL_BUFFER
+			-- Access to 'deleted' pixmap pixel buffer.
+		require
+			has_named_icon: has_named_icon (source_deleted_name)
+		once
+			Result := named_icon_buffer (source_deleted_name)
+		ensure
+			source_deleted_icon_buffer_attached: Result /= Void
+		end
+
+	frozen source_conflicted_icon: EV_PIXMAP
+			-- Access to 'conflicted' pixmap.
+		require
+			has_named_icon: has_named_icon (source_conflicted_name)
+		once
+			Result := named_icon (source_conflicted_name)
+		ensure
+			source_conflicted_icon_attached: Result /= Void
+		end
+
+	frozen source_conflicted_icon_buffer: EV_PIXEL_BUFFER
+			-- Access to 'conflicted' pixmap pixel buffer.
+		require
+			has_named_icon: has_named_icon (source_conflicted_name)
+		once
+			Result := named_icon_buffer (source_conflicted_name)
+		ensure
+			source_conflicted_icon_buffer_attached: Result /= Void
+		end
+
+	frozen source_unversioned_icon: EV_PIXMAP
+			-- Access to 'unversioned' pixmap.
+		require
+			has_named_icon: has_named_icon (source_unversioned_name)
+		once
+			Result := named_icon (source_unversioned_name)
+		ensure
+			source_unversioned_icon_attached: Result /= Void
+		end
+
+	frozen source_unversioned_icon_buffer: EV_PIXEL_BUFFER
+			-- Access to 'unversioned' pixmap pixel buffer.
+		require
+			has_named_icon: has_named_icon (source_unversioned_name)
+		once
+			Result := named_icon_buffer (source_unversioned_name)
+		ensure
+			source_unversioned_icon_buffer_attached: Result /= Void
+		end
+
 	frozen project_melt_icon: EV_PIXMAP
 			-- Access to 'melt' pixmap.
 		require
@@ -10073,6 +10173,11 @@ feature -- Constants: Icon names
 	verifier_verify_refresh_name: STRING = "verifier verify refresh"
 	verifier_preferences_name: STRING = "verifier preferences"
 	source_version_control_name: STRING = "source version control"
+	source_modified_name: STRING = "source modified"
+	source_added_name: STRING = "source added"
+	source_deleted_name: STRING = "source deleted"
+	source_conflicted_name: STRING = "source conflicted"
+	source_unversioned_name: STRING = "source unversioned"
 	project_melt_name: STRING = "project melt"
 	project_quick_melt_name: STRING = "project quick melt"
 	project_freeze_name: STRING = "project freeze"
@@ -10570,6 +10675,11 @@ feature {NONE} -- Basic operations
 			a_table.put ([{NATURAL_8} 16, {NATURAL_8} 7], verifier_verify_refresh_name)
 			a_table.put ([{NATURAL_8} 17, {NATURAL_8} 7], verifier_preferences_name)
 			a_table.put ([{NATURAL_8} 18, {NATURAL_8} 7], source_version_control_name)
+			a_table.put ([{NATURAL_8} 19, {NATURAL_8} 7], source_modified_name)
+			a_table.put ([{NATURAL_8} 20, {NATURAL_8} 7], source_added_name)
+			a_table.put ([{NATURAL_8} 21, {NATURAL_8} 7], source_deleted_name)
+			a_table.put ([{NATURAL_8} 22, {NATURAL_8} 7], source_conflicted_name)
+			a_table.put ([{NATURAL_8} 23, {NATURAL_8} 7], source_unversioned_name)
 			a_table.put ([{NATURAL_8} 1, {NATURAL_8} 8], project_melt_name)
 			a_table.put ([{NATURAL_8} 2, {NATURAL_8} 8], project_quick_melt_name)
 			a_table.put ([{NATURAL_8} 3, {NATURAL_8} 8], project_freeze_name)

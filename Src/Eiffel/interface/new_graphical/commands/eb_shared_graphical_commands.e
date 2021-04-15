@@ -177,13 +177,6 @@ feature -- Commands
 			Result.enable_sensitive
 		end
 
-	show_scm_cmd: SCM_CMD
-			-- Display SCM tool.
-		once
-			create Result.make
-			Result.enable_sensitive
-		end
-
 	Show_preferences_cmd: EB_SHOW_PREFERENCES_COMMAND
 			-- Command to Display the User Preferences Editor.
 		once

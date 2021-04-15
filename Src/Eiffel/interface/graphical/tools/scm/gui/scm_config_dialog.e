@@ -38,6 +38,11 @@ feature {NONE} -- Initialization
 			scm_service := a_service
 			create git_field
 			create svn_field
+			create git_diff_field
+			create svn_diff_field
+			create git_field_error
+			create svn_field_error
+
 			make_dialog
 		end
 
@@ -45,10 +50,18 @@ feature -- Access
 
 	scm_service: SOURCE_CONTROL_MANAGEMENT_S
 
+	is_git_command_valid: BOOLEAN
+	is_svn_command_valid: BOOLEAN
+
 feature -- Widgets
 
 	git_field,
 	svn_field: EV_TEXT_FIELD
+
+	git_field_error, svn_field_error: EV_CELL
+
+	git_diff_field,
+	svn_diff_field: EV_TEXT_FIELD
 
 feature {NONE} -- User interface initialization
 
@@ -61,33 +74,17 @@ feature {NONE} -- User interface initialization
 			hb: EV_HORIZONTAL_BOX
 			field: EV_TEXT_FIELD
 			lab: EV_LABEL
+			labs: ARRAYED_LIST [EV_LABEL]
+			w: INTEGER
 		do
 			create vb
 			vb.set_padding_width (default_padding_size)
 			a_container.extend (vb)
 
-				-- Subversion
-			create lab.make_with_text ("Set the Subversion command")
-			lab.set_font (fonts.highlighted_label_font)
-			lab.align_text_left
-			vb.extend (lab)
-			vb.disable_item_expand (lab)
-
-			create hb
-			vb.extend (hb)
-			vb.disable_item_expand (hb)
-			create lab.make_with_text ("Command ")
-			hb.extend (lab)
-			hb.disable_item_expand (lab)
-			field := svn_field
-			if attached scm_service.config.svn_command as svn_cmd then
-				field.set_text (scm_service.config.svn_command)
-			end
-			register_input_widget (field)
-			hb.extend (field)
+			create labs.make (4)
 
 				-- Git
-			create lab.make_with_text ("Set the GIT command")
+			create lab.make_with_text (scm_names.label_set_git_commands)
 			lab.set_font (fonts.highlighted_label_font)
 			lab.align_text_left
 			vb.extend (lab)
@@ -95,24 +92,92 @@ feature {NONE} -- User interface initialization
 			create hb
 			vb.extend (hb)
 			vb.disable_item_expand (hb)
-			create lab.make_with_text ("Command ")
+			create lab.make_with_text (scm_names.label_command)
+			labs.force (lab)
 			hb.extend (lab)
 			hb.disable_item_expand (lab)
 			field := git_field
 			if attached scm_service.config.git_command as git_cmd then
-				field.set_text (scm_service.config.git_command)
+				field.set_text (git_cmd)
+			end
+			register_input_widget (field)
+			hb.extend (field)
+			hb.extend (git_field_error)
+			hb.disable_item_expand (git_field_error)
+
+			create hb
+			vb.extend (hb)
+			vb.disable_item_expand (hb)
+			create lab.make_with_text (scm_names.label_diff_command)
+			labs.force (lab)
+			hb.extend (lab)
+			hb.disable_item_expand (lab)
+			field := git_diff_field
+			if attached scm_service.config.git_diff_command as git_diff_cmd then
+				field.set_text (git_diff_cmd)
 			end
 			register_input_widget (field)
 			hb.extend (field)
 
+				-- Subversion
+			create lab.make_with_text (scm_names.label_set_svn_commands)
+			lab.set_font (fonts.highlighted_label_font)
+			lab.align_text_left
+			vb.extend (lab)
+			vb.disable_item_expand (lab)
 
-			set_button_text (dialog_buttons.ok_button, interface_names.b_save)
-			set_button_text (dialog_buttons.cancel_button, interface_names.b_close)
+			create hb
+			vb.extend (hb)
+			vb.disable_item_expand (hb)
+			create lab.make_with_text (scm_names.label_command)
+			labs.force (lab)
+			hb.extend (lab)
+			hb.disable_item_expand (lab)
+			field := svn_field
+			if attached scm_service.config.svn_command as svn_cmd then
+				field.set_text (svn_cmd)
+			end
+			register_input_widget (field)
+			hb.extend (field)
+			hb.extend (svn_field_error)
+			hb.disable_item_expand (svn_field_error)
+
+			create hb
+			vb.extend (hb)
+			vb.disable_item_expand (hb)
+			create lab.make_with_text (scm_names.label_diff_command)
+			labs.force (lab)
+			hb.extend (lab)
+			hb.disable_item_expand (lab)
+			field := svn_diff_field
+			if attached scm_service.config.svn_diff_command as svn_diff_cmd then
+				field.set_text (svn_diff_cmd)
+			end
+			register_input_widget (field)
+			hb.extend (field)
+
+				-- same width for the labels in `labs`
+			across
+				labs as ic
+			loop
+				w := w.max (ic.item.width)
+			end
+			across
+				labs as ic
+			loop
+				ic.item.set_minimum_width (w)
+			end
+
+				-- Common
+			set_button_text (dialog_buttons.apply_button, interface_names.b_apply)
+			set_button_text (dialog_buttons.close_button, interface_names.b_close)
 			set_button_text (dialog_buttons.reset_button, interface_names.b_reset)
 
-			set_button_action_before_close (dialog_buttons.ok_button, agent on_save)
-			set_button_action_before_close (dialog_buttons.cancel_button, agent on_close)
+			set_button_action_before_close (dialog_buttons.apply_button, agent on_save)
+			set_button_action_before_close (dialog_buttons.close_button, agent on_close)
 			set_button_action_before_close (dialog_buttons.reset_button, agent on_reset)
+
+			check_commands_validity
 		end
 
 feature {NONE} -- Helpers
@@ -158,35 +223,50 @@ feature -- Action
 			a_tf.set_text (v)
 		end
 
-	on_save
+	check_commands_validity
 		local
 			l_old_svn_cmd, l_old_git_cmd: detachable READABLE_STRING_32
-			err: BOOLEAN
 		do
-			l_old_svn_cmd := scm_service.config.svn_command
 			l_old_git_cmd := scm_service.config.git_command
+			l_old_svn_cmd := scm_service.config.svn_command
 
 			scm_service.config.set_git_command (git_field.text)
 			scm_service.config.set_svn_command (svn_field.text)
 
 			scm_service.check_scm_availability
+			is_git_command_valid := scm_service.is_git_available
+			is_svn_command_valid := scm_service.is_svn_available
 
-			if not scm_service.is_svn_available then
-				err := True
-				notify_error_on_text_field (svn_field)
-			else
-				reset_text_field (svn_field)
-			end
+			scm_service.config.set_git_command (l_old_git_cmd)
+			scm_service.config.set_svn_command (l_old_svn_cmd)
 
-			if not scm_service.is_git_available then
-				err := True
-				notify_error_on_text_field (git_field)
-			else
+			if is_git_command_valid then
 				reset_text_field (git_field)
+				git_field_error.wipe_out
+			else
+				notify_error_on_text_field (git_field)
+				git_field_error.replace (stock_pixmaps.command_error_info_icon)
 			end
-			if err then
-				veto_close
+
+			if is_svn_command_valid then
+				reset_text_field (svn_field)
+				svn_field_error.wipe_out
+			else
+				notify_error_on_text_field (svn_field)
+				svn_field_error.replace (stock_pixmaps.command_error_info_icon)
 			end
+			if is_git_command_valid and is_svn_command_valid then
+				dialog_window_buttons.item ({ES_DIALOG_BUTTONS}.close_button).enable_sensitive
+			else
+				dialog_window_buttons.item ({ES_DIALOG_BUTTONS}.close_button).disable_sensitive
+			end
+		end
+
+	on_save
+		do
+			check_commands_validity
+
+			veto_close
 		end
 
 	on_reset
@@ -201,6 +281,7 @@ feature -- Action
 			else
 				git_field.set_text (scm_service.config.default_svn_command)
 			end
+			check_commands_validity
 			veto_close
 		end
 
@@ -222,29 +303,33 @@ feature -- Access
 			Result := scm_names.title_scm_config
 		end
 
-	buttons: DS_SET [INTEGER]
+	buttons: DS_HASH_SET [INTEGER]
 			-- Set of button id's for dialog
 			-- Note: Use {ES_DIALOG_BUTTONS} or `dialog_buttons' to determine the id's correspondance.
 		once
-			Result := dialog_buttons.reset_ok_cancel_buttons
+			create Result.make (3)
+			Result.put_last ({ES_DIALOG_BUTTONS}.reset_button)
+			Result.put_last ({ES_DIALOG_BUTTONS}.apply_button)
+			Result.put_last ({ES_DIALOG_BUTTONS}.close_button)
 		end
+
 
 	default_button: INTEGER
 			-- The dialog's default action button
 		once
-			Result := dialog_buttons.cancel_button
+			Result := dialog_buttons.close_button
 		end
 
 	default_cancel_button: INTEGER
 			-- The dialog's default cancel button
 		once
-			Result := dialog_buttons.cancel_button
+			Result := dialog_buttons.close_button
 		end
 
 	default_confirm_button: INTEGER
 			-- The dialog's default confirm button
 		once
-			Result := dialog_buttons.ok_button
+			Result := dialog_buttons.apply_button
 		end
 
 	is_size_and_position_remembered: BOOLEAN = False

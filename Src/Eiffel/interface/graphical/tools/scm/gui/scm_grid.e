@@ -194,8 +194,6 @@ feature {NONE} -- Grid preferences
 
 	grid_preferences: EB_GRID_PREFERENCES
 
-	grid_font: EV_FONT
-
 	load_grid_preferences_agent: PROCEDURE
 
 	setup_grid
@@ -231,6 +229,8 @@ feature {NONE} -- Grid preferences
 
 feature -- Access
 
+	grid_font: EV_FONT
+	
 	bold_font: EV_FONT
 
 	selected_row: detachable EV_GRID_ROW

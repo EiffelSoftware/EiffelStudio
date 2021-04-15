@@ -145,7 +145,6 @@ feature -- Command
 			l_system_info_cmd: EB_SYSTEM_INFORMATION_CMD
 			l_send_stone_to_context_cmd: EB_STANDARD_CMD
 			l_show_cloud_account_cmd: ES_CLOUD_ACCOUNT_CMD
-			l_show_scm_cmd: SCM_CMD
 
 			l_show_toolbar_commands: HASH_TABLE [EB_SHOW_TOOLBAR_COMMAND, SD_TOOL_BAR_CONTENT]
 			l_editor_commands: ARRAYED_LIST [EB_GRAPHICAL_COMMAND]
@@ -326,10 +325,6 @@ feature -- Command
 			l_show_cloud_account_cmd := develop_window.show_cloud_account_cmd
 			auto_recycle (l_show_cloud_account_cmd)
 			l_dev_commands.toolbarable_commands.extend (l_show_cloud_account_cmd)
-
-			l_show_scm_cmd := develop_window.show_scm_cmd
-			auto_recycle (l_show_scm_cmd)
-			l_dev_commands.toolbarable_commands.extend (l_show_scm_cmd)
 
 			create l_send_stone_to_context_cmd.make
 			auto_recycle (l_send_stone_to_context_cmd)

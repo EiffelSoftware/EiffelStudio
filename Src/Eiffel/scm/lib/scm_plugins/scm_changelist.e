@@ -21,6 +21,7 @@ feature {NONE} -- Initialization
 	make_with_location (a_location: SCM_LOCATION)
 		do
 			create {ARRAYED_LIST [READABLE_STRING_32]} items.make (1)
+			items.compare_objects
 			root := a_location
 		end
 
@@ -40,6 +41,13 @@ feature -- Access
 	count: INTEGER
 		do
 			Result := items.count
+		end
+
+feature -- Status report
+
+	has (p: PATH): BOOLEAN
+		do
+			Result := items.has (p.name)
 		end
 
 feature -- Element change

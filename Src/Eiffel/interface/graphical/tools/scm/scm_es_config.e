@@ -23,8 +23,10 @@ feature {NONE} -- Initialization
 			-- Initialize `Current'.
 		do
 			git_command_pref := preferences.misc_data.git_command_preference
-
 			svn_command_pref := preferences.misc_data.svn_command_preference
+			git_diff_command_pref := preferences.misc_data.git_diff_command_preference
+			svn_diff_command_pref := preferences.misc_data.svn_diff_command_preference
+
 		end
 
 feature {NONE} -- Preferences
@@ -32,6 +34,10 @@ feature {NONE} -- Preferences
 	git_command_pref: STRING_PREFERENCE
 
 	svn_command_pref: STRING_PREFERENCE
+
+	git_diff_command_pref: STRING_PREFERENCE
+
+	svn_diff_command_pref: STRING_PREFERENCE
 
 feature -- Access
 
@@ -51,6 +57,22 @@ feature -- Access
 			end
 		end
 
+	git_diff_command: detachable STRING_32
+		do
+			Result := git_diff_command_pref.value
+			if Result.is_whitespace then
+				Result := Void
+			end
+		end
+
+	svn_diff_command: detachable STRING_32
+		do
+			Result := svn_diff_command_pref.value
+			if Result.is_whitespace then
+				Result := Void
+			end
+		end
+
 feature -- Element change
 
 	set_git_command (v: READABLE_STRING_GENERAL)
@@ -61,6 +83,16 @@ feature -- Element change
 	set_svn_command (v: READABLE_STRING_GENERAL)
 		do
 			svn_command_pref.set_value_from_string (v)
+		end
+
+	set_git_diff_command (v: READABLE_STRING_GENERAL)
+		do
+			git_diff_command_pref.set_value_from_string (v)
+		end
+
+	set_svn_diff_command (v: READABLE_STRING_GENERAL)
+		do
+			svn_diff_command_pref.set_value_from_string (v)
 		end
 
 invariant

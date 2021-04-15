@@ -20,6 +20,14 @@ feature -- Access
 		deferred
 		end
 
+	git_diff_command: detachable READABLE_STRING_32
+		deferred
+		end
+
+	svn_diff_command: detachable READABLE_STRING_32
+		deferred
+		end
+
 feature -- Element change
 
 	set_svn_command (v: READABLE_STRING_GENERAL)
@@ -27,6 +35,14 @@ feature -- Element change
 		end
 
 	set_git_command (v: READABLE_STRING_GENERAL)
+		deferred
+		end
+
+	set_svn_diff_command (v: READABLE_STRING_GENERAL)
+		deferred
+		end
+
+	set_git_diff_command (v: READABLE_STRING_GENERAL)
 		deferred
 		end
 

@@ -85,8 +85,8 @@ feature {NONE} -- Factory
         	create Result.make (2)
 
         	create togb.make
-        	togb.set_text (scm_names.button_setup)
-        	togb.set_tooltip (scm_names.tooltip_button_setup)
+        	togb.set_text (scm_names.button_project)
+        	togb.set_tooltip (scm_names.tooltip_button_project)
         	togb.select_actions.extend (agent on_setup_selected)
         	Result.extend (togb)
         	toggle_button_setup := togb
@@ -221,6 +221,7 @@ feature {NONE} -- Action handlers
 			l_status: SCM_STATUS_BOX
 			l_setup: SCM_SETUP_BOX
 			l_style: EV_POINTER_STYLE
+			but: EV_BUTTON
 		do
 			l_style := widget.pointer_style
 			widget.set_pointer_style ((create {EV_STOCK_PIXMAPS}).busy_cursor)
@@ -248,6 +249,9 @@ feature {NONE} -- Action handlers
 					l_setup.set_workspace (ws)
 					b.extend (l_setup)
 				end
+			else
+				create but.make_with_text_and_action (interface_names.b_update, agent refresh)
+				b.extend (but)
 			end
 			widget.set_pointer_style (l_style)
 		end

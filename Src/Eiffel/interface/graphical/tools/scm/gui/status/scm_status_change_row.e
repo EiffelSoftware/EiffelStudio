@@ -53,6 +53,18 @@ feature -- Access
 
 	status: SCM_STATUS
 
+	is_selected: BOOLEAN
+
+feature -- Element change
+
+	set_selected (b: BOOLEAN)
+		do
+			is_selected := b
+			if attached {EV_GRID_CHECKABLE_LABEL_ITEM} row.item (parent_grid.checkbox_column) as cb then
+				cb.set_is_checked (b)
+			end
+		end
+
 feature -- Execution
 
 	attach_to_grid_row (a_grid: SCM_STATUS_GRID; a_row: EV_GRID_ROW)
@@ -90,6 +102,9 @@ feature -- Execution
 			end
 			lab := wc_row.new_label_item (rel_loc)
 			lab.set_data (st)
+			if attached status_pixmap (st) as pix then
+				lab.set_pixmap (pix)
+			end
 
 			lab.pointer_double_press_actions.extend (agent (i_loc: PATH; i_x, i_y, i_button: INTEGER; i_x_tilt, i_y_tilt, i_pressure: DOUBLE; i_screen_x, i_screen_y: INTEGER)
 					do
@@ -115,7 +130,7 @@ feature -- Execution
 				l_parent_lab.set_foreground_color (colors.disabled_foreground_color)
 			else
 				sr.set_item (parent_grid.scm_column, wc_row.new_label_item (st.status_as_string))
-				cb_lab.set_is_checked (True)
+--				cb_lab.set_is_checked (True)
 				wc_row.increment_changes_count
 			end
 
@@ -123,18 +138,21 @@ feature -- Execution
 			cb_lab.checked_changed_actions.extend (agent wc_row.on_checkbox_change_checked (parent_grid, ?))
 		end
 
---	parent_path_name (a_path: READABLE_STRING_GENERAL): READABLE_STRING_32
---		local
---			p: PATH
---		do
---			create p.make_from_string (a_path)
---			p := p.parent
---			if p.is_current_symbol then
---				Result := {STRING_32} ""
---			else
---				Result := p.name
---			end
---		end
+	status_pixmap (a_status: SCM_STATUS): detachable EV_PIXMAP
+		do
+			if attached {SCM_STATUS_MODIFIED} a_status then
+				Result := icon_pixmaps.source_modified_icon
+			elseif attached {SCM_STATUS_ADDED} a_status then
+				Result := icon_pixmaps.source_added_icon
+			elseif attached {SCM_STATUS_DELETED} a_status then
+				Result := icon_pixmaps.source_deleted_icon
+			elseif attached {SCM_STATUS_CONFLICTED} a_status then
+				Result := icon_pixmaps.source_conflicted_icon
+			elseif attached {SCM_STATUS_UNVERSIONED} a_status then
+				Result := icon_pixmaps.source_unversioned_icon
+			else
+			end
+		end
 
 note
 	copyright: "Copyright (c) 1984-2021, Eiffel Software"

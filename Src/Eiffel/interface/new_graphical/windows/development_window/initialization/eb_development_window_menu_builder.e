@@ -265,7 +265,7 @@ feature {EB_EXTERNAL_COMMANDS_EDITOR} -- Menu Building
 			create Result.make_with_text (develop_window.Interface_names.m_class_info)
 			l_i := 1
 
-			create l_empty_menu.make_with_text (develop_window.Interface_names.m_formatter_separators @ l_i)
+			create l_empty_menu.make_with_text (develop_window.Interface_names.m_formatter_separators [l_i])
 			l_i := l_i + 1
 			l_empty_menu.disable_sensitive
 			Result.extend (l_empty_menu)
@@ -279,7 +279,7 @@ feature {EB_EXTERNAL_COMMANDS_EDITOR} -- Menu Building
 				if l_form /= Void then
 					Result.extend (l_form.new_menu_item)
 				else
-					create l_empty_menu.make_with_text (develop_window.Interface_names.m_formatter_separators @ l_i)
+					create l_empty_menu.make_with_text (develop_window.Interface_names.m_formatter_separators [l_i])
 					l_i := l_i + 1
 					l_empty_menu.disable_sensitive
 					Result.extend (l_empty_menu)
@@ -1016,11 +1016,6 @@ feature {EB_EXTERNAL_COMMANDS_EDITOR} -- Menu Building
 			l_tools_menu.extend (create {EV_MENU_SEPARATOR})
 
 					-- External commands editor
-			l_command_menu_item := develop_window.show_scm_cmd.new_menu_item
-			auto_recycle (l_command_menu_item)
-			l_tools_menu.extend (l_command_menu_item)
-
-					-- External commands editor
 			l_command_menu_item := develop_window.commands.Edit_external_commands_cmd.new_menu_item
 			auto_recycle (l_command_menu_item)
 			l_tools_menu.extend (l_command_menu_item)
@@ -1223,6 +1218,11 @@ feature {EB_EXTERNAL_COMMANDS_EDITOR} -- Menu Building
 				insert_show_tool_menu_item (Result, {ES_OUTPUTS_TOOL})
 			end
 			insert_show_tool_menu_item (Result, {ES_CONSOLE_TOOL})
+			if attached (create {SERVICE_CONSUMER [SOURCE_CONTROL_MANAGEMENT_S]}).service then
+				Result.extend (create {EV_MENU_SEPARATOR})
+				insert_show_tool_menu_item (Result, {SCM_TOOL})
+			end
+
 			if attached (create {SERVICE_CONSUMER [EVENT_LIST_S]}).service then
 				Result.extend (create {EV_MENU_SEPARATOR})
 				insert_show_tool_menu_item (Result, {ES_ERROR_LIST_TOOL})

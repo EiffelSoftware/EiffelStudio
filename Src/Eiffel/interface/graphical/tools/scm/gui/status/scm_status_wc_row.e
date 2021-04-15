@@ -100,6 +100,8 @@ feature {SCM_STATUS_CHANGE_ROW} -- Internal
 
 	row: detachable EV_GRID_ROW
 
+	recorded_changes: like changes
+
 	scm_rows: detachable ARRAYED_LIST [EV_GRID_ROW]
 
 feature -- Factory
@@ -172,6 +174,7 @@ feature -- Execution
 		local
 			r: EV_GRID_ROW
 		do
+			recorded_changes := changes
 			if attached row as l_row and attached parent_grid as l_grid then
 				reset_changes_count
 				across
@@ -235,49 +238,13 @@ feature -- Execution
 											sr := i_row.subrow (i_row.subrow_count)
 											create ch_row.make (Current, root_location, st)
 											ch_row.attach_to_grid_row (i_grid, sr)
---											sr.set_data (st)
+											if
+												attached recorded_changes as l_recorded_changes and then
+												l_recorded_changes.has (st.location)
+											then
+												ch_row.set_selected (True)
+											end
 
---											cb_lab := new_checkable_label_item (Void)
---											sr.set_item (i_grid.checkbox_column, cb_lab)
-
---											if attached st.location.entry as e then
---												rel_loc := e.name
---											else
---												rel_loc := l_scm_root.relative_location (st.location)
---											end
---											lab := new_label_item (rel_loc)
---											lab.set_data (st)
-
---											lab.pointer_double_press_actions.extend (agent (i_loc: PATH; i_x, i_y, i_button: INTEGER; i_x_tilt, i_y_tilt, i_pressure: DOUBLE; i_screen_x, i_screen_y: INTEGER)
---													do
---														if attached parent_grid as pg then
---															pg.open_file_location (i_loc)
---														end
---													end(st.location, ?,?,?,?,?,?,?,?)
---												)
---											sr.set_item (i_grid.filename_column, lab)
-
---											l_parent_lab := new_label_item (parent_path_name (rel_loc))
---											l_parent_lab.pointer_double_press_actions.extend (agent (i_loc: PATH; i_x, i_y, i_button: INTEGER; i_x_tilt, i_y_tilt, i_pressure: DOUBLE; i_screen_x, i_screen_y: INTEGER)
---													do
---														if attached parent_grid as pg then
---															pg.open_directory_location (i_loc)
---														end
---													end(st.location.parent, ?,?,?,?,?,?,?,?)
---												)
---											sr.set_item (i_grid.parent_column, l_parent_lab)
-
---											if attached {SCM_STATUS_UNVERSIONED} st then
---												lab.set_foreground_color (colors.disabled_foreground_color)
---												l_parent_lab.set_foreground_color (colors.disabled_foreground_color)
---											else
---												sr.set_item (i_grid.scm_column, new_label_item (st.status_as_string))
---												cb_lab.set_is_checked (True)
---												changes_count := changes_count + 1
---											end
-
---											cb_lab.set_data (st)
---											cb_lab.checked_changed_actions.extend (agent on_checkbox_change_checked (i_grid, ?))
 											i_grid.fill_empty_grid_items (sr)
 										end
 									end
@@ -307,8 +274,12 @@ feature -- Execution
 						else
 							glab.set_foreground_color (a_grid.foreground_color)
 						end
+						glab.set_font (a_grid.bold_font)
 					else
-						glab.set_foreground_color (colors.disabled_foreground_color)
+						if attached {SCM_STATUS_UNVERSIONED} st then
+							glab.set_foreground_color (colors.disabled_foreground_color)
+						end
+						glab.set_font (a_grid.grid_font)
 					end
 				end
 			end

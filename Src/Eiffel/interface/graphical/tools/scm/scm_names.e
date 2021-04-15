@@ -33,6 +33,11 @@ feature -- Dialogs
 
 	question_include_all_content: STRING_32 do Result := locale.translation_in_context ("Include all content", "scm") end
 
+	label_set_svn_commands: STRING_32 do Result := locale.translation_in_context ("Set the Subversion commands", "scm") end
+	label_set_git_commands: STRING_32 do Result := locale.translation_in_context ("Set the GIT commands", "scm") end
+	label_command: STRING_32 do Result := locale.translation_in_context ("Command ", "scm") end
+	label_diff_command: STRING_32 do Result := locale.translation_in_context ("Diff command ", "scm") end
+
 	label_changes: STRING_32 do Result := locale.translation_in_context ("Changes", "scm") end
 
 	label_operation_logs: STRING_32 do Result := locale.translation_in_context ("Operation logs", "scm") end
@@ -68,8 +73,8 @@ feature -- General
 	button_scm: STRING_32 do Result := locale.translation_in_context ("Source Control Management", "scm") end
 	button_check: STRING_32 do Result := locale.translation_in_context ("Check", "scm") end
 	tooltip_button_check: STRING_32 do Result := locale.translation_in_context ("Check for changes", "scm") end
-	button_setup: STRING_32 do Result := locale.translation_in_context ("Setup", "scm") end
-	tooltip_button_setup: STRING_32 do Result := locale.translation_in_context ("Open the settings", "scm") end
+	button_project: STRING_32 do Result := locale.translation_in_context ("Project", "scm") end
+	tooltip_button_project: STRING_32 do Result := locale.translation_in_context ("Open the project structure", "scm") end
 
 	button_config: STRING_32 do Result := locale.translation_in_context ("Config", "scm") end
 	tooltip_button_config: STRING_32 do Result := locale.translation_in_context ("Open the configuration dialog", "scm") end

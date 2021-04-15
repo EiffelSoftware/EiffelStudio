@@ -184,6 +184,11 @@
 <image x="1500" y="600" width="100" height="100" xlink:href="./7/16.svg" fill="transparent" style="fill:none" />
 <image x="1600" y="600" width="100" height="100" xlink:href="./7/17.svg" fill="transparent" style="fill:none" />
 <image x="1700" y="600" width="100" height="100" xlink:href="./7/18.svg" fill="transparent" style="fill:none" />
+<image x="1800" y="600" width="100" height="100" xlink:href="./7/19.svg" fill="transparent" style="fill:none" />
+<image x="1900" y="600" width="100" height="100" xlink:href="./7/20.svg" fill="transparent" style="fill:none" />
+<image x="2000" y="600" width="100" height="100" xlink:href="./7/21.svg" fill="transparent" style="fill:none" />
+<image x="2100" y="600" width="100" height="100" xlink:href="./7/22.svg" fill="transparent" style="fill:none" />
+<image x="2200" y="600" width="100" height="100" xlink:href="./7/23.svg" fill="transparent" style="fill:none" />
 <image x="0" y="700" width="100" height="100" xlink:href="./8/1.svg" fill="transparent" style="fill:none" />
 <image x="100" y="700" width="100" height="100" xlink:href="./8/2.svg" fill="transparent" style="fill:none" />
 <image x="200" y="700" width="100" height="100" xlink:href="./8/3.svg" fill="transparent" style="fill:none" />
@@ -616,16 +621,11 @@
 <image x="800" y="1900" width="100" height="100" xlink:href="./20/9.svg" fill="transparent" style="fill:none" />
 <image x="900" y="1900" width="100" height="100" xlink:href="./20/10.svg" fill="transparent" style="fill:none" />
 <image x="1000" y="1900" width="100" height="100" xlink:href="./20/11.svg" fill="transparent" style="fill:none" />
-<rect x="1100" y="1900" width="100" height="100" fill="transparent" style="fill:none" />
-<image x="1100" y="1900" width="100" height="100" xlink:href="./20/12.png" fill="transparent" style="fill:none" />
-<rect x="1200" y="1900" width="100" height="100" fill="transparent" style="fill:none" />
-<image x="1200" y="1900" width="100" height="100" xlink:href="./20/13.png" fill="transparent" style="fill:none" />
-<rect x="1300" y="1900" width="100" height="100" fill="transparent" style="fill:none" />
-<image x="1300" y="1900" width="100" height="100" xlink:href="./20/14.png" fill="transparent" style="fill:none" />
-<rect x="1400" y="1900" width="100" height="100" fill="transparent" style="fill:none" />
-<image x="1400" y="1900" width="100" height="100" xlink:href="./20/15.png" fill="transparent" style="fill:none" />
-<rect x="1500" y="1900" width="100" height="100" fill="transparent" style="fill:none" />
-<image x="1500" y="1900" width="100" height="100" xlink:href="./20/16.png" fill="transparent" style="fill:none" />
+<image x="1100" y="1900" width="100" height="100" xlink:href="./20/12.svg" fill="transparent" style="fill:none" />
+<image x="1200" y="1900" width="100" height="100" xlink:href="./20/13.svg" fill="transparent" style="fill:none" />
+<image x="1300" y="1900" width="100" height="100" xlink:href="./20/14.svg" fill="transparent" style="fill:none" />
+<image x="1400" y="1900" width="100" height="100" xlink:href="./20/15.svg" fill="transparent" style="fill:none" />
+<image x="1500" y="1900" width="100" height="100" xlink:href="./20/16.svg" fill="transparent" style="fill:none" />
 <image x="0" y="2000" width="100" height="100" xlink:href="./21/1.svg" fill="transparent" style="fill:none" />
 <image x="100" y="2000" width="100" height="100" xlink:href="./21/2.svg" fill="transparent" style="fill:none" />
 <rect x="200" y="2000" width="100" height="100" fill="transparent" style="fill:none" />

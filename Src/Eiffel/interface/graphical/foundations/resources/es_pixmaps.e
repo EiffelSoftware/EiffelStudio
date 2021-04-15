@@ -368,7 +368,7 @@ invariant
 	matrix_buffer_height_big_enough: matrix_buffer.height.to_natural_32 >= matrix_pixel_height
 
 ;note
-	copyright: "Copyright (c) 1984-2019, Eiffel Software"
+	copyright: "Copyright (c) 1984-2021, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

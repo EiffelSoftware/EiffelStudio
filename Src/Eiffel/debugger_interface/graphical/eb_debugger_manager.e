@@ -292,9 +292,6 @@ feature {NONE} -- Initialization
 			if show_cloud_account_cmd.is_supported then
 				toolbarable_commands.extend (show_cloud_account_cmd)
 			end
-			if show_scm_cmd.is_supported then
-				toolbarable_commands.extend (show_scm_cmd)
-			end
 			toolbarable_commands.extend (Melt_project_cmd)
 			toolbarable_commands.extend (Freeze_project_cmd)
 			toolbarable_commands.extend (Finalize_project_cmd)

@@ -217,6 +217,8 @@ feature -- Preference
 
 	svn_command_preference: STRING_PREFERENCE
 	git_command_preference: STRING_PREFERENCE
+	svn_diff_command_preference: STRING_PREFERENCE
+	git_diff_command_preference: STRING_PREFERENCE
 
 feature {NONE} -- Preference Strings
 
@@ -240,6 +242,8 @@ feature {NONE} -- Preference Strings
 
 	svn_command_string: STRING = "general.plugins.svn_command"
 	git_command_string: STRING = "general.plugins.git_command"
+	svn_diff_command_string: STRING = "general.plugins.svn_diff_command"
+	git_diff_command_string: STRING = "general.plugins.git_diff_command"
 
 feature {NONE} -- Implementation
 
@@ -295,6 +299,8 @@ feature {NONE} -- Implementation
 
 			svn_command_preference := l_manager.new_string_preference_value (l_manager, svn_command_string, "svn")
 			git_command_preference := l_manager.new_string_preference_value (l_manager, git_command_string, "git")
+			svn_diff_command_preference := l_manager.new_string_preference_value (l_manager, svn_diff_command_string, "svn diff")
+			git_diff_command_preference := l_manager.new_string_preference_value (l_manager, git_diff_command_string, "git diff")
 		end
 
 	preferences: PREFERENCES
@@ -424,6 +430,8 @@ invariant
 
 	svn_command_preference_set: svn_command_preference /= Void
 	git_command_preference_set: git_command_preference /= Void
+	svn_diff_command_preference_set: svn_diff_command_preference /= Void
+	git_diff_command_preference_set: git_diff_command_preference /= Void
 
 note
 	copyright: "Copyright (c) 1984-2021, Eiffel Software"

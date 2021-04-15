@@ -303,6 +303,11 @@ feature -- Execution
 				s.append ("</span> ")
 			end
 			s.append ("<span class=%"details%">")
+			if attached es_cloud_api.last_license_session (lic) as sess then
+				s.append ("<span class=%"usage%">Used: "+ api.formatted_date_time_ago (sess.last_date) +"</span>")
+			else
+				s.append ("<span class=%"usage warning%">Never used</span>")
+			end
 			s.append ("<span class=%"date%">Created: ")
 			s.append (date_time_to_iso8601_string (lic.creation_date))
 			s.append ("</span>")
@@ -320,6 +325,7 @@ feature -- Execution
 			else
 				s.append ("<span class=%"status warning%">Expired</span>")
 			end
+
 			if lic.plan.has_price and then attached es_cloud_api.license_subscription (lic) as sub then
 				s.append ("<span class=%"status payment%">")
 				if sub.is_onetime then

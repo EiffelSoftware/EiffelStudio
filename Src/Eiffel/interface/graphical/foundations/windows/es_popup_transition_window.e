@@ -236,6 +236,15 @@ feature {NONE} -- User interface elements
 
 feature -- Basic operation
 
+	update_size
+		local
+			w,h: INTEGER
+		do
+			w := message_label.minimum_width + icon_pixmap.minimum_width + padding_width * 3
+			h := message_label.minimum_height + padding_width * 2
+			popup_window.set_size (w, h)
+		end
+
 	show (a_x: INTEGER; a_y: INTEGER; a_mouse_x: INTEGER; a_mouse_y: INTEGER)
 			-- Displays the pop up window at a designated position on screen.
 			--
@@ -249,6 +258,7 @@ feature -- Basic operation
 			a_mouse_x_big_enough: a_mouse_x >= -1
 			a_mouse_y_big_enough: a_mouse_y >= -1
 		do
+			update_size
 			show_popup_window (a_x, a_y, a_mouse_x, a_mouse_y)
 			if not {PLATFORM}.is_windows then
 					-- Done because of locking performed on entire screen on *nix
@@ -273,6 +283,7 @@ feature -- Basic operation
 			a_window_is_displayed: a_window.is_displayed
 			a_window_is_detroyed: not a_window.is_destroyed
 		do
+			update_size
 			show_popup_window_relative_to_window (a_window)
 			if not {PLATFORM}.is_windows then
 					-- Done because of locking performed on entire screen on *nix
@@ -318,7 +329,7 @@ feature {NONE} -- Internationalization
 	l_please_wait: STRING = "Please wait..."
 
 ;note
-	copyright: "Copyright (c) 1984-2009, Eiffel Software"
+	copyright: "Copyright (c) 1984-2021, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

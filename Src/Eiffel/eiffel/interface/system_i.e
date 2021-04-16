@@ -912,7 +912,7 @@ end
 			until
 				i > cts.upper or Result /= Void
 			loop
-				Result := cts @ i
+				Result := cts [i]
 				if Result /= Void and then Result.static_type_id /= id then
 					Result := Void
 				end

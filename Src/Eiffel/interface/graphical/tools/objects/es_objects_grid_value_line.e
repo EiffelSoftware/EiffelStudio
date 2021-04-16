@@ -232,7 +232,7 @@ feature -- Graphical changes
 					set_type (Void)
 					set_address (Void)
 					set_scoop_pid_value (0)
-					set_pixmap (Icons @ ({VALUE_TYPES}.Void_value))
+					set_pixmap (Icons [{VALUE_TYPES}.Void_value])
 				else --| dv /= Void |--
 					if title /= Void then
 						set_name (title)
@@ -255,7 +255,7 @@ feature -- Graphical changes
 						if attached  {DUMMY_MESSAGE_DEBUG_VALUE} dv as dmdv then
 							set_value (dmdv.display_message)
 							set_type (debugger_names.l_no_information)
-							set_pixmap (Icons @ (dmdv.display_kind))
+							set_pixmap (Icons [dmdv.display_kind])
 						else
 							check is_error_message_value: False end
 						end
@@ -268,7 +268,7 @@ feature -- Graphical changes
 								gi.pointer_double_press_actions.extend (agent (i_excdv: EXCEPTION_DEBUG_VALUE; i_x, i_y, i_but: INTEGER; i_x_tilt, i_y_tilt, i_pressure: DOUBLE; i_screen_x, i_screen_y: INTEGER) do show_exception_dialog (i_excdv) end (excdv, ?,?,?,?,?,?,?,?))
 							end
 							set_type (debugger_names.l_exception_data)
-							set_pixmap (Icons @ (dv.kind))
+							set_pixmap (Icons [dv.kind])
 							if excdv.has_value then
 								attach_debug_value_to_grid_row (grid_extended_new_subrow (row), excdv.debug_value, Void)
 							end
@@ -279,13 +279,13 @@ feature -- Graphical changes
 --					when {VALUE_TYPES}.Procedure_return_message_value then
 --						set_value (interface_names.l_called)
 --						set_type (once "")
---						set_pixmap (Icons @ (dv.kind))
+--						set_pixmap (Icons [dv.kind])
 					else
 						last_dump_value := dv.dump_value
 						set_value (last_dump_value.output_for_debugger)
 						set_type (last_dump_value.generating_type_representation (generating_type_evaluation_enabled))
 
-						set_pixmap (Icons @ (dv.kind))
+						set_pixmap (Icons [dv.kind])
 						if dv.expandable then
 							row.ensure_expandable
 							set_expand_action (agent on_row_expand)
@@ -315,7 +315,7 @@ invariant
 	object_not_void: object /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2019, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2021, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

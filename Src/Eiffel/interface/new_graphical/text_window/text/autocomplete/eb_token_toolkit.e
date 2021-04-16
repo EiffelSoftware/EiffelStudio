@@ -99,7 +99,7 @@ feature -- basic operations
 				until
 					Result or else i > words.upper
 				loop
-					Result := image.is_case_insensitive_equal_general (words @ i)
+					Result := image.is_case_insensitive_equal_general (words [i])
 					i:= i + 1
 				end
 			end
@@ -219,7 +219,7 @@ feature {NONE} -- Constants
 	result_word: STRING_32 = "result"
 
 note
-	copyright:	"Copyright (c) 1984-2017, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2021, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

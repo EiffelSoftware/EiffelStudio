@@ -1639,7 +1639,7 @@ feature -- Call stack related
 				until
 					c > l_chains.upper
 				loop
-					l_chain := l_chains @ c
+					l_chain := l_chains [c]
 					if l_chain /= Void then
 						l_output := " ### Callstack from Chain : " + l_chain.item.out + " (" + l_chain.get_reason_to_string + ")###%N"
 						l_enum_frames := l_chain.enumerate_frames
@@ -1651,7 +1651,7 @@ feature -- Call stack related
 							until
 								i > l_frames.upper
 							loop
-								l_frame := l_frames @ i
+								l_frame := l_frames [i]
 								l_output.append_string ("... chain::" + c.out + " frame::" + i.out + " =%N")
 								l_output.append_string (frame_callstack_info (l_frame))
 								l_frame.clean_on_dispose

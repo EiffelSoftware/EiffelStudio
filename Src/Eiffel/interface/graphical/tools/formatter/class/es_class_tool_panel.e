@@ -158,7 +158,7 @@ feature -- Status setting
 					-- The "default default formatter" is the ancestors (which is rather fast).
 				real_index := 5
 			end
-			(formatters @ real_index).execute
+			(formatters [real_index]).execute
 		end
 
 feature {NONE} -- Implementation
@@ -239,7 +239,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright: "Copyright (c) 1984-2020, Eiffel Software"
+	copyright: "Copyright (c) 1984-2021, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

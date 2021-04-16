@@ -358,7 +358,7 @@ feature{NONE} -- Actions
 			until
 				i > l_notebook_count
 			loop
-				if attached {EB_METRIC_PANEL} (l_notebook @ i) as l_panel then
+				if attached {EB_METRIC_PANEL} (l_notebook [i]) as l_panel then
 					if is_shown and then i = l_selected_index then
 						l_panel.set_is_selected (True)
 						l_panel.on_select
@@ -550,7 +550,7 @@ invariant
 	notify_project_unloaded_agent_attached: notify_project_unloaded_agent /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2020, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2021, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

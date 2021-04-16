@@ -103,7 +103,7 @@ feature -- Basic operation
 			then
 				l_editors := search_tool.develop_window.editors_manager.editor_editing (class_i)
 				if not l_editors.is_empty then
-					editor := l_editors @ 1
+					editor := l_editors [1]
 				end
 				if not l_editors.is_empty and search_tool.check_class_succeed and not search_tool.is_item_source_changed (l_item) then
 					l_text ?= editor.text_displayed
@@ -233,7 +233,7 @@ feature {NONE} -- Implementation
 			-- Search tool
 
 note
-	copyright:	"Copyright (c) 1984-2015, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2021, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

@@ -323,7 +323,7 @@ feature -- Interface
 				mname.append (shortcut_string)
 			end
 			create Result.make_with_text (mname)
-			Result.set_pixmap (symbol @ 1)
+			Result.set_pixmap (symbol [1])
 		ensure
 			new_standalone_menu_item_not_void: Result /= Void
 		end
@@ -343,7 +343,7 @@ feature -- Interface
 			tt: STRING_32
 		do
 			create Result
-			Result.set_pixmap (symbol @ 1)
+			Result.set_pixmap (symbol [1])
 			create tt.make_from_string_general (capital_command_name)
 			if shortcut_available then
 				tt.append (Opening_parenthesis)
@@ -362,7 +362,7 @@ feature -- Interface
 			tt: STRING_32
 		do
 			create Result.make
-			Result.set_pixmap (symbol @ 1)
+			Result.set_pixmap (symbol [1])
 			Result.set_pixel_buffer (pixel_buffer)
 			create tt.make_from_string_general (capital_command_name)
 			if shortcut_available then
@@ -668,7 +668,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright: "Copyright (c) 1984-2019, Eiffel Software"
+	copyright: "Copyright (c) 1984-2021, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

@@ -1230,7 +1230,7 @@ feature -- Resource Update
 			text_saved := True
 			save_only := False
 			str := title.twin.as_string_32
-			if str @ 1 = '*' then
+			if str [1] = '*' then
 				str.keep_tail (str.count - 2)
 				set_title (str)
 			end
@@ -2605,7 +2605,7 @@ invariant
 	window_id_positive: window_id > 0
 
 note
-	copyright: "Copyright (c) 1984-2020, Eiffel Software"
+	copyright: "Copyright (c) 1984-2021, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

@@ -728,7 +728,7 @@ feature {NONE} -- Implementation
 					if l_enum_args.get_count > 0 then
 						l_enum_args.reset
 						l_array_objects := l_enum_args.next (1)
-						Result := debug_value_from_icdv (l_array_objects @ (l_array_objects.lower), dynamic_class)
+						Result := debug_value_from_icdv (l_array_objects [l_array_objects.lower], dynamic_class)
 					end
 					l_enum_args.clean_on_dispose
 				end
@@ -809,7 +809,7 @@ feature {NONE} -- Implementation
 					until
 						l_object_index > l_array_objects.upper --| or else l_object_index > nb_object -- FIXME: JFIAT
 					loop
-						l_icd_val := l_array_objects @ l_object_index
+						l_icd_val := l_array_objects [l_object_index]
 						if l_icd_val /= Void then
 							l_abstract_debug_value := debug_value_from_icdv (l_icd_val, Void)
 							Result.extend (l_abstract_debug_value)
@@ -832,7 +832,7 @@ invariant
 note
 	date		: "$Date$"
 	revision	: "$Revision $"
-	copyright:	"Copyright (c) 1984-2019, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2021, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

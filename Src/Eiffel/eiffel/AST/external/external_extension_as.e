@@ -163,7 +163,7 @@ feature {NONE} -- Implementation
 			a_type: STRING
 		do
 			if c_signature /= Void then
-				if c_signature @ 1 = '(' then
+				if c_signature [1] = '(' then
 					end_arg_list := c_signature.index_of (')', 1)
 					create argument_types.make_empty
 					from
@@ -322,7 +322,7 @@ feature {NONE} -- Implementation
 			-- Special part
 
 note
-	copyright:	"Copyright (c) 1984-2018, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2021, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

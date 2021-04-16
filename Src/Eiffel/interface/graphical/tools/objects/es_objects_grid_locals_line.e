@@ -132,7 +132,7 @@ feature {NONE} -- Implementation
 					until
 						i > dbg_nb
 					loop
-						parent_grid.attach_debug_value_from_line_to_grid_row (parent_grid.row (r), tmp @ i, Current ,Void)
+						parent_grid.attach_debug_value_from_line_to_grid_row (parent_grid.row (r), tmp [i], Current ,Void)
 						r := r + 1
 						i := i + 1
 					end
@@ -150,7 +150,7 @@ feature -- Query
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2019, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2021, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

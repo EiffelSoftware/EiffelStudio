@@ -291,7 +291,7 @@ feature {NONE} -- Implementation
 						Result.append_character (',')
 						Result.append_character (' ')
 					end
-					Result.append (argument_types @ i)
+					Result.append (argument_types [i])
 					i := i + 1
 				end
 			end
@@ -322,7 +322,7 @@ feature {NONE} -- Attributes
 			-- Once names
 
 note
-	copyright:	"Copyright (c) 1984-2019, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2021, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

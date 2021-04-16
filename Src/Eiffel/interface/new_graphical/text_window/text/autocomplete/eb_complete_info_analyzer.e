@@ -1040,7 +1040,7 @@ feature {NONE} -- Implementation
 			if tfs /= Void then
 				index := tfs.feature_index_in_table
 				if features_ast.valid_index (index) then
-					Result := features_ast @ index
+					Result := features_ast [index]
 				end
 			end
 			current_token := token
@@ -1566,7 +1566,7 @@ feature {NONE} -- Implementation
 note
 	date: "$Date$"
 	revision: "$Revision$"
-	copyright: "Copyright (c) 1984-2020, Eiffel Software"
+	copyright: "Copyright (c) 1984-2021, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

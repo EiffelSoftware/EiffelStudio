@@ -741,12 +741,12 @@ feature {ES_MULTI_SEARCH_TOOL_PANEL} -- Implementation
 				l_row_index := 1
 			end
 			if has_selected_row then
-				(selected_rows @ 1).disable_select
+				(selected_rows [1]).disable_select
 			end
 			if l_row_index > 0 and l_row_index <= row_count then
 				select_row (l_row_index)
 				if has_selected_row then
-					go_to_line_of_editor (selected_rows @ 1)
+					go_to_line_of_editor (selected_rows [1])
 				end
 			end
 		end
@@ -778,7 +778,7 @@ invariant
 	search_tool_set: search_tool /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2013, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2021, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

@@ -195,7 +195,7 @@ feature {NONE} -- Class info analyzer
 				from
 					if is_string (current_token) and then not current_token.wide_image.is_empty then
 							-- we check if there is a string split on several lines
-						if current_token.wide_image @ 1 = '%%' then
+						if current_token.wide_image [1] = '%%' then
 							uncomplete_string := True
 						end
 					end
@@ -226,7 +226,7 @@ feature {NONE} -- Class info analyzer
 						else
 							if is_string (current_token) and then not current_token.wide_image.is_empty then
 									-- we check if a string is split on several lines
-								if current_token.wide_image @ 1 = '%%' then
+								if current_token.wide_image [1] = '%%' then
 									uncomplete_string := True
 								else
 										-- if the string is on one lines, we skip it
@@ -264,7 +264,7 @@ feature {NONE} -- Class info analyzer
 				from
 					if is_string (current_token) and then not current_token.wide_image.is_empty then
 							-- we check if there is a string split on several lines
-						if current_token.wide_image @ current_token.wide_image.count = '%%' then
+						if current_token.wide_image [current_token.wide_image.count] = '%%' then
 							uncomplete_string := True
 						end
 					end
@@ -294,7 +294,7 @@ feature {NONE} -- Class info analyzer
 						else
 							if is_string (current_token) and then not current_token.wide_image.is_empty then
 									-- we check if a string is split on several lines
-								if current_token.wide_image @ 1 = '%%' then
+								if current_token.wide_image [1] = '%%' then
 									uncomplete_string := True
 								else
 										-- if the string is on one lines, we skip it
@@ -390,7 +390,7 @@ feature {NONE} -- Build completion possibilities
 			-- Function to retrieve group
 
 ;note
-	copyright:	"Copyright (c) 1984-2019, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2021, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

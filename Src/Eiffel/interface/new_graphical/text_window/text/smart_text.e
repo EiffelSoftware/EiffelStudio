@@ -702,7 +702,7 @@ feature -- Syntax completion
 					i < 1
 				loop
 					inspect
-						to_be_inserted @ (i + 1)
+						to_be_inserted [i + 1]
 					when '%%' then
 						to_be_inserted.remove (i)
 						i := i + 1
@@ -1071,7 +1071,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2019, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2021, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

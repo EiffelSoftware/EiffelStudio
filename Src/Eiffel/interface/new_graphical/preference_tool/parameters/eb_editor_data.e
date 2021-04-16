@@ -1145,11 +1145,11 @@ feature -- Syntax Completion Customization
 			-- should the corresponding keyword in `completed_keywords' be completed ?
 		once
 			create Result.make (35)
-			Result.put (class_completed_keywords, complete_keywords_names_keys @ 1)
-			Result.put (feature_completed_keywords, complete_keywords_names_keys @ 2)
-			Result.put (inherit_completed_keywords, complete_keywords_names_keys @ 3)
-			Result.put (control_completed_keywords, complete_keywords_names_keys @ 4)
-			Result.put (other_completed_keywords, complete_keywords_names_keys @ 5)
+			Result.put (class_completed_keywords, complete_keywords_names_keys [1])
+			Result.put (feature_completed_keywords, complete_keywords_names_keys [2])
+			Result.put (inherit_completed_keywords, complete_keywords_names_keys [3])
+			Result.put (control_completed_keywords, complete_keywords_names_keys [4])
+			Result.put (other_completed_keywords, complete_keywords_names_keys [5])
 		end
 
 	complete_keywords_names_keys: ARRAYED_LIST [STRING]

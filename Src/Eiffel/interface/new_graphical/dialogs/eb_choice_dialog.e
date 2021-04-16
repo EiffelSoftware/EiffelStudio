@@ -74,7 +74,7 @@ feature
 			loop
 				create lr
 				if pixmap_list /= Void then
-					lr.set_pixmap (pixmap_list @ name_list.index)
+					lr.set_pixmap (pixmap_list [name_list.index])
 				end
 				lr.set_text (name_list.item)
 
@@ -223,7 +223,7 @@ invariant
 	destroy_actions_not_void: destroy_actions /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2021, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

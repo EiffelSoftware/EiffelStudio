@@ -173,7 +173,7 @@ feature {APPLICATION_STATUS} -- Restricted access
 								until
 									i > l_frames.upper or else (n > 0 and level > n)
 								loop
-									l_frame := l_frames @ i
+									l_frame := l_frames [i]
 									l_frame_il := l_frame.query_interface_icor_debug_il_frame
 									if l_frame.last_call_succeed and then l_frame_il /= Void then
 											--| AT THIS POINT WE HAVE A VALID CALL STACK ELEMENT
@@ -326,7 +326,7 @@ feature -- cleaning
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2015, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2021, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

@@ -1834,7 +1834,7 @@ feature {NONE} -- Implementation
 						l_name := l_as.operator_name_32
 						if in_bench_mode then
 							l_text_formatter_decorator.process_operator_text (l_name, l_feat)
-						elseif (l_name @ 1).is_character_8 and then (l_name @ 1).to_character_8.is_alpha then
+						elseif (l_name [1]).is_character_8 and then (l_name [1]).to_character_8.is_alpha then
 							l_text_formatter_decorator.process_keyword_text (l_name, Void)
 						else
 							l_text_formatter_decorator.process_symbol_text (l_name)
@@ -1982,7 +1982,7 @@ feature {NONE} -- Implementation
 						l_text_formatter_decorator.put_space
 						if in_bench_mode then
 							l_text_formatter_decorator.process_operator_text (l_name, l_feat)
-						elseif (l_name @ 1).is_character_8 and then (l_name @ 1).to_character_8.is_alpha then
+						elseif (l_name [1]).is_character_8 and then (l_name [1]).to_character_8.is_alpha then
 							l_text_formatter_decorator.process_keyword_text (l_name, Void)
 						else
 							l_text_formatter_decorator.process_symbol_text (l_name)

@@ -483,7 +483,7 @@ feature -- Automatically indented output
 				if i /= 1 then
 					put_string (sep)
 				end
-				put_string ((a @ i).out)
+				put_string ((a [i]).out)
 				i := i + 1
 			end
 		end
@@ -768,9 +768,9 @@ feature -- prototype code generation
 				until
 					i > nb
 				loop
-					put_string (arg_types @ i)
+					put_string (arg_types [i])
 					current_buffer.append_character (' ')
-					put_string (arg_names @ i)
+					put_string (arg_names [i])
 					if i /= nb then
 						put_string (l_sep)
 					end
@@ -826,7 +826,7 @@ feature {GENERATION_BUFFER} -- prototype code generation
 					if i /= 1 then
 						put_string (l_sep)
 					end
-					put_string (arg_types @ i)
+					put_string (arg_types [i])
 					i := i + 1
 				end
 			end
@@ -973,7 +973,7 @@ invariant
 	buffers_not_void: buffers /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2020, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2021, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

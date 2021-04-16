@@ -60,7 +60,7 @@ feature -- Status setting
 			real_index: INTEGER
 		do
 			real_index := 2
-			(formatters @ real_index).execute
+			(formatters [real_index]).execute
 		end
 
 	close
@@ -139,7 +139,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2020, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2021, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

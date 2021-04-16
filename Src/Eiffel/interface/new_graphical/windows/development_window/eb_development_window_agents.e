@@ -82,7 +82,7 @@ feature -- Text observer Agents
 			if is_interface_usable and then develop_window.is_interface_usable then
 				if not develop_window.text_edited then
 					l_str := develop_window.title.twin.as_string_32
-					if l_str @ 1 /= '*' then
+					if l_str [1] /= '*' then
 						l_str.prepend ("* ")
 						develop_window.set_title (l_str)
 					end
@@ -105,7 +105,7 @@ feature -- Text observer Agents
 		do
 			if is_interface_usable and then develop_window.is_interface_usable then
 				str := develop_window.title.twin.as_string_32
-				if str @ 1 = '*' then
+				if str [1] = '*' then
 					str.keep_tail (str.count - 2)
 					develop_window.set_title (str)
 				end
@@ -433,7 +433,7 @@ invariant
 	not_void: not is_recycled implies develop_window /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2018, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2021, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

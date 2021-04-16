@@ -128,8 +128,8 @@ rt_private rt_inline void rt_copy_s1_to_s4 (const char * p1, EIF_CHARACTER_32 * 
 				c
 #			else
 				((c >> 24) & 0xff) |
-				((c >> 08) & 0xff00) |
-				((c << 08) & 0xff0000) |
+				((c >> 8) & 0xff00) |
+				((c << 8) & 0xff0000) |
 				((c << 24) & 0xff000000)
 #			endif
 			;
@@ -986,8 +986,8 @@ rt_public EIF_REFERENCE eif_out__c4_s4 (EIF_CHARACTER_32 c)
 				c
 #			else
 				((c >> 24) & 0xff) |
-				((c >> 08) & 0xff00) |
-				((c << 08) & 0xff0000) |
+				((c >> 8) & 0xff00) |
+				((c << 8) & 0xff0000) |
 				((c << 24) & 0xff000000)
 #			endif
 			;

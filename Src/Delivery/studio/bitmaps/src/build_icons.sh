@@ -421,7 +421,7 @@ SVGadd $RES/compile.svg $OVERLAY/search_se.svg 5.svg
 # show execution point
 # run without breakpoint
 # run finalized
-SVGadd $OVERLAY/packaged_sw.svg 12.svg
+SVGadd 11.svg $OVERLAY/packaged_sw.svg 12.svg
 
 # step into
 # step over

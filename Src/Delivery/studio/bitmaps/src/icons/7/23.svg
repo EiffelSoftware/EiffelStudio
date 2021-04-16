@@ -38,8 +38,8 @@
      guidetolerance="10"
      inkscape:pageopacity="0"
      inkscape:pageshadow="2"
-     inkscape:window-width="2880"
-     inkscape:window-height="1721"
+     inkscape:window-width="3840"
+     inkscape:window-height="2080"
      id="namedview38"
      showgrid="false"
      showguides="true"
@@ -47,7 +47,7 @@
      inkscape:zoom="2.52"
      inkscape:cx="269.44822"
      inkscape:cy="247.17771"
-     inkscape:window-x="-11"
+     inkscape:window-x="2869"
      inkscape:window-y="-11"
      inkscape:window-maximized="1"
      inkscape:current-layer="svg36"
@@ -93,6 +93,6 @@
   <path
      id="rect868"
      style="fill:#bebebe;fill-opacity:1;stroke:#575757;stroke-width:7.99998;stroke-linecap:square;stroke-linejoin:miter;stroke-opacity:1;paint-order:stroke fill markers"
-     d="m 17.875,11.499996 v 77.000008 h 64.25 V 11.499996 H 62.875 V 70.642853 H 37.125 V 11.499996 Z"
+     d="m 21.875,17.499996 v 65.000008 h 56.25 V 17.499996 H 60.875 V 64.642853 H 39.125 V 17.499996 Z"
      sodipodi:nodetypes="ccccccccc" />
 </svg>

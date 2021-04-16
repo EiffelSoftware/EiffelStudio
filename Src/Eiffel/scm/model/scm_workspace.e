@@ -79,7 +79,7 @@ feature -- Basic operations
 		do
 			create idx.make (Void)
 			idx.set_is_stopping_at_library (True)
-			idx.set_is_indexing_class (True)
+			idx.set_is_indexing_class (False)
 			obs := Current
 			idx.register_observer (obs)
 

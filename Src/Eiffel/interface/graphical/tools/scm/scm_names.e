@@ -25,7 +25,8 @@ feature -- Menu
 
 	menu_check: STRING_32 do Result := locale.translation_in_context ("Check", "scm") end
 
-	menu_save: STRING_32 do Result := locale.translation_in_context ("Save", "scm") end
+	menu_save: STRING_32 do Result := locale.translation_in_context ("Save ...", "scm") end
+	menu_configuration: STRING_32 do Result := locale.translation_in_context ("Configuration ...", "scm") end
 
 feature -- Dialogs
 

@@ -256,15 +256,25 @@ feature -- Action
 				svn_field_error.replace (stock_pixmaps.command_error_info_icon)
 			end
 			if is_git_command_valid and is_svn_command_valid then
-				dialog_window_buttons.item ({ES_DIALOG_BUTTONS}.close_button).enable_sensitive
+--				dialog_window_buttons.item ({ES_DIALOG_BUTTONS}.close_button).enable_sensitive
+				set_button_text (dialog_buttons.close_button, interface_names.b_close)
 			else
-				dialog_window_buttons.item ({ES_DIALOG_BUTTONS}.close_button).disable_sensitive
+--				dialog_window_buttons.item ({ES_DIALOG_BUTTONS}.close_button).disable_sensitive
+				set_button_text (dialog_buttons.close_button, interface_names.b_cancel)
 			end
 		end
 
 	on_save
 		do
 			check_commands_validity
+			if is_git_command_valid then
+				scm_service.config.set_git_command (git_field.text)
+				scm_service.config.set_git_diff_command (git_diff_field.text)
+			end
+			if is_svn_command_valid then
+				scm_service.config.set_svn_command (svn_field.text)
+				scm_service.config.set_svn_diff_command (svn_diff_field.text)
+			end
 
 			veto_close
 		end

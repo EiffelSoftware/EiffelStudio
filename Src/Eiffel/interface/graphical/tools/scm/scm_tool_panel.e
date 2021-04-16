@@ -222,36 +222,61 @@ feature {NONE} -- Action handlers
 			l_setup: SCM_SETUP_BOX
 			l_style: EV_POINTER_STYLE
 			but: EV_BUTTON
+			lab: EV_LABEL
 		do
 			l_style := widget.pointer_style
 			widget.set_pointer_style ((create {EV_STOCK_PIXMAPS}).busy_cursor)
 
 			b := main_box
 			b.wipe_out
-			if
-				attached scm_s.service as scm and then
-				attached scm.workspace as ws
-			then
-				if is_status_mode then
-					l_status := status_box
-					if l_status = Void then
-						create l_status
-						status_box := l_status
+			if attached scm_s.service as scm then
+				if attached scm.workspace as ws then
+					if is_status_mode then
+						l_status := status_box
+						if l_status = Void then
+							create l_status
+							status_box := l_status
+						end
+						l_status.set_workspace (ws)
+						b.extend (l_status)
+					else
+						l_setup := setup_box
+						if l_setup = Void then
+							create l_setup
+							setup_box := l_setup
+						end
+						l_setup.set_workspace (ws)
+						b.extend (l_setup)
 					end
-					l_status.set_workspace (ws)
-					b.extend (l_status)
 				else
-					l_setup := setup_box
-					if l_setup = Void then
-						create l_setup
-						setup_box := l_setup
+					if scm.is_git_available then
+						create lab.make_with_text ("GIT support: yes")
+					else
+						create lab.make_with_text ("GIT support: not available")
 					end
-					l_setup.set_workspace (ws)
-					b.extend (l_setup)
+					b.extend (lab)
+					b.disable_item_expand (lab)
+
+					if scm.is_svn_available then
+						create lab.make_with_text ("Subversion support: yes")
+					else
+						create lab.make_with_text ("Subversion support: not available")
+					end
+					b.extend (lab)
+					b.disable_item_expand (lab)
+
+					create but.make_with_text_and_action (scm_names.button_config, agent on_preferences_selected)
+					but.set_tooltip (scm_names.tooltip_button_config)
+					b.extend (but)
+					b.disable_item_expand (but)
+
+					create but.make_with_text_and_action (interface_names.b_update, agent refresh)
+					b.extend (but)
+					b.disable_item_expand (but)
 				end
 			else
-				create but.make_with_text_and_action (interface_names.b_update, agent refresh)
-				b.extend (but)
+				create lab.make_with_text ("Source control tool is not available.")
+				b.extend (lab)
 			end
 			widget.set_pointer_style (l_style)
 		end

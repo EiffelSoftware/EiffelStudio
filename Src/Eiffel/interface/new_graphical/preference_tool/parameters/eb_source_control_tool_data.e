@@ -1,0 +1,103 @@
+note
+	description: "All shared preferences for the source control tool."
+	legal: "See notice at end of class."
+	status: "See notice at end of class."
+	date: ""
+	revision: ""
+
+class
+	EB_SOURCE_CONTROL_TOOL_DATA
+
+create
+	make
+
+feature {EB_PREFERENCES} -- Initialization
+
+	make (a_preferences: PREFERENCES)
+			-- Create
+		require
+			preferences_not_void: a_preferences /= Void
+		do
+			preferences := a_preferences
+			initialize_preferences
+		ensure
+			preferences_not_void: preferences /= Void
+		end
+
+feature -- Value
+
+feature {EB_SHARED_PREFERENCES} -- Preference
+
+	svn_command_preference: STRING_PREFERENCE
+	git_command_preference: STRING_PREFERENCE
+	svn_diff_command_preference: STRING_PREFERENCE
+	git_diff_command_preference: STRING_PREFERENCE
+
+feature {NONE} -- Preference Strings
+
+	svn_command_string: STRING = "tools.source_control.svn_command"
+
+	git_command_string: STRING = "tools.source_control.git_command"
+
+	svn_diff_command_string: STRING = "tools.source_control.svn_diff_command"
+	
+	git_diff_command_string: STRING = "tools.source_control.git_diff_command"
+
+feature {NONE} -- Implementation
+
+	initialize_preferences
+			-- Initialize preference values.
+		local
+			l_manager: EB_PREFERENCE_MANAGER
+		do
+			create l_manager.make (preferences, "tools.source_control")
+
+			svn_command_preference := l_manager.new_string_preference_value (l_manager, svn_command_string, "svn")
+			git_command_preference := l_manager.new_string_preference_value (l_manager, git_command_string, "git")
+			svn_diff_command_preference := l_manager.new_string_preference_value (l_manager, svn_diff_command_string, "svn diff")
+			git_diff_command_preference := l_manager.new_string_preference_value (l_manager, git_diff_command_string, "git diff")
+		end
+
+	preferences: PREFERENCES
+			-- Preferences
+
+invariant
+	preferences_not_void: preferences /= Void
+	svn_command_preference_set: svn_command_preference /= Void
+	git_command_preference_set: git_command_preference /= Void
+	svn_diff_command_preference_set: svn_diff_command_preference /= Void
+	git_diff_command_preference_set: git_diff_command_preference /= Void
+
+note
+	copyright: "Copyright (c) 1984-2021, Eiffel Software"
+	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
+	licensing_options: "http://www.eiffel.com/licensing"
+	copying: "[
+			This file is part of Eiffel Software's Eiffel Development Environment.
+			
+			Eiffel Software's Eiffel Development Environment is free
+			software; you can redistribute it and/or modify it under
+			the terms of the GNU General Public License as published
+			by the Free Software Foundation, version 2 of the License
+			(available at the URL listed under "license" above).
+			
+			Eiffel Software's Eiffel Development Environment is
+			distributed in the hope that it will be useful, but
+			WITHOUT ANY WARRANTY; without even the implied warranty
+			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+			See the GNU General Public License for more details.
+			
+			You should have received a copy of the GNU General Public
+			License along with Eiffel Software's Eiffel Development
+			Environment; if not, write to the Free Software Foundation,
+			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
+		]"
+	source: "[
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
+		]"
+
+end

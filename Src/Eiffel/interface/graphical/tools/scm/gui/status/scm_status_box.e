@@ -44,9 +44,6 @@ feature {NONE} -- Initialization
 			but: EV_BUTTON
 			unver_cb: EV_CHECK_BUTTON
 		do
-			create grid_cell
-			b.extend (grid_cell)
-
 			create bar
 			bar.set_padding_width (5)
 			bar.set_border_width (10)
@@ -100,7 +97,9 @@ feature {NONE} -- Initialization
 					end
 				)
 			bar.extend (but); bar.disable_item_expand (but)
-
+			
+			create grid_cell
+			b.extend (grid_cell)
 		end
 
 feature -- Access

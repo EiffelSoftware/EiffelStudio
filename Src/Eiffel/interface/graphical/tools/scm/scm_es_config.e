@@ -22,11 +22,11 @@ feature {NONE} -- Initialization
 	make
 			-- Initialize `Current'.
 		do
-			git_command_pref := preferences.misc_data.git_command_preference
-			svn_command_pref := preferences.misc_data.svn_command_preference
-			git_diff_command_pref := preferences.misc_data.git_diff_command_preference
-			svn_diff_command_pref := preferences.misc_data.svn_diff_command_preference
+			git_command_pref := preferences.source_control_tool_data.git_command_preference
+			git_diff_command_pref := preferences.source_control_tool_data .git_diff_command_preference
 
+			svn_command_pref := preferences.source_control_tool_data.svn_command_preference
+			svn_diff_command_pref := preferences.source_control_tool_data.svn_diff_command_preference
 		end
 
 feature {NONE} -- Preferences

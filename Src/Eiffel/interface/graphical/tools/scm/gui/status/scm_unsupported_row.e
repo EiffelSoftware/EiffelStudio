@@ -39,6 +39,10 @@ feature -- Operation
 			a_grid.fill_empty_grid_items (a_row)
 		end
 
+feature -- Status report
+
+	is_supported: BOOLEAN = False
+
 note
 	copyright: "Copyright (c) 1984-2021, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"

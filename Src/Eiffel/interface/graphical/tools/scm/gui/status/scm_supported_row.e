@@ -30,7 +30,9 @@ feature -- Operation
 			gloc: PATH
 			grel: READABLE_STRING_32
 			j: INTEGER
+			l_is_supported: like is_supported
 		do
+			l_is_supported := is_supported
 			a_row.set_item (a_grid.checkbox_column, create {EV_GRID_ITEM})
 
 			add_new_span_label_item_to (root_location.location.name, a_grid.filename_column, <<a_grid.parent_column>>, a_row)
@@ -65,12 +67,21 @@ feature -- Operation
 					attached {EV_GRID_LABEL_ITEM} a_row.item (idx.item) as l_label
 				then
 					l_label.set_font (a_grid.bold_font)
-					l_label.set_foreground_color (a_grid.stock_colors.blue)
+					if l_is_supported then
+						l_label.set_foreground_color (a_grid.stock_colors.blue)
+					else
+						l_label.set_foreground_color (a_grid.stock_colors.grey)
+					end
 				elseif
 					attached {EV_GRID_SPAN_LABEL_ITEM} a_row.item (idx.item) as l_span_label
 				then
 					l_span_label.set_font (a_grid.bold_font)
-					l_span_label.set_foreground_color (a_grid.stock_colors.blue)
+
+					if l_is_supported then
+						l_span_label.set_foreground_color (a_grid.stock_colors.blue)
+					else
+						l_span_label.set_foreground_color (a_grid.stock_colors.grey)
+					end
 				end
 			end
 			a_grid.fill_empty_grid_items (a_row)
@@ -83,7 +94,6 @@ feature -- Operation
 			then
 				l_groups := l_group_locations
 			end
-
 
 			if l_groups /= Void and then not l_groups.is_empty then
 				l_scm_rows := scm_rows -- FIXME
@@ -142,8 +152,23 @@ feature -- Operation
 			m: EV_MENU
 			mi: EV_MENU_ITEM
 			mci: EV_CHECK_MENU_ITEM
+			l_is_supported: BOOLEAN
 		do
+			l_is_supported := is_supported
 			create m
+			if not l_is_supported then
+				create mi.make_with_text_and_action (scm_names.menu_configuration, agent
+					local
+						dlg: SCM_CONFIG_DIALOG
+					do
+						if attached scm_s.service as scm then
+							create dlg.make (scm)
+							dlg.show_on_active_window
+						end
+					end)
+
+			end
+
 			create mi.make_with_text_and_action (scm_names.menu_save, agent
 					do
 						if
@@ -154,13 +179,18 @@ feature -- Operation
 						end
 					end)
 			m.extend (mi)
-
 			if changes_count = 0 then
+				mi.disable_sensitive
+			end
+			if not l_is_supported then
 				mi.disable_sensitive
 			end
 
 			create mi.make_with_text_and_action (scm_names.menu_check, agent update_statuses)
 			m.extend (mi)
+			if not l_is_supported then
+				mi.disable_sensitive
+			end
 
 			create mci.make_with_text_and_action (scm_names.question_show_unversioned_files, agent
 					do
@@ -182,6 +212,10 @@ feature -- Operation
 				mci.enable_select
 			end
 			m.extend (mci)
+			if not l_is_supported then
+				mci.disable_sensitive
+			end
+
 
 			create mci.make_with_text_and_action (scm_names.question_include_all_content, agent
 					do
@@ -192,6 +226,10 @@ feature -- Operation
 			if all_content_included then
 				mci.enable_select
 			end
+			if not l_is_supported then
+				mci.disable_sensitive
+			end
+
 			m.extend (mci)
 			m.show
 		end

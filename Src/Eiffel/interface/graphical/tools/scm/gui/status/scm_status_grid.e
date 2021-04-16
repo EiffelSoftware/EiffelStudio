@@ -159,7 +159,6 @@ feature -- Access
 feature -- Query
 
 	changes_for	(loc: SCM_LOCATION): detachable SCM_CHANGELIST
-		local
 		do
 			across
 				scm_rows as ic
@@ -191,14 +190,12 @@ feature -- Operations
 			l_wc_row: SCM_STATUS_WC_ROW
 		do
 			set_row_count_to (0)
---			scm_rows := Void
 			create scm_rows.make (1)
 			if
 				attached workspace as ws and then
 				attached ws.locations_by_root as locs and then
 				not locs.is_empty
 			then
---				set_row_count_to (locs.count)
 				across
 					locs as ic
 				loop
@@ -218,7 +215,6 @@ feature -- Operations
 					l_wc_row.attach_to_grid_row (Current, l_row)
 					scm_rows.force (l_wc_row)
 				end
---				resize_columns
 			end
 		end
 

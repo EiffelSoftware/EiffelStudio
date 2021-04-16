@@ -25,6 +25,11 @@ inherit
 			default_create, copy
 		end
 
+	SHARED_SOURCE_CONTROL_MANAGEMENT_SERVICE
+		undefine
+			default_create, copy
+		end
+
 convert
 	row: {EV_GRID_ROW}
 
@@ -93,6 +98,12 @@ feature -- Access
 	all_content_included: BOOLEAN
 
 	repo_unversioned_files_included: BOOLEAN
+
+feature -- Status report
+
+	is_supported: BOOLEAN
+		deferred
+		end
 
 feature {SCM_STATUS_CHANGE_ROW} -- Internal
 
@@ -174,87 +185,90 @@ feature -- Execution
 		local
 			r: EV_GRID_ROW
 		do
-			recorded_changes := changes
-			if attached row as l_row and attached parent_grid as l_grid then
-				reset_changes_count
-				across
-					scm_rows as ic
-				loop
-					r := ic.item
-					r.set_item (l_grid.info_column, new_label_item (scm_names.label_checking))
-					l_grid.refresh_now
-				end
+			if is_supported then
+				recorded_changes := changes
+				if attached row as l_row and attached parent_grid as l_grid then
+					reset_changes_count
+					across
+						scm_rows as ic
+					loop
+						r := ic.item
+						r.set_item (l_grid.info_column, new_label_item (scm_names.label_checking))
+						l_grid.refresh_now
+					end
 
-				across
-					scm_rows as ic
-				loop
-					r := ic.item
-					ev_application.add_idle_action_kamikaze (agent  (i_row: EV_GRID_ROW; i_grid: SCM_STATUS_GRID)
-						local
-							sr: EV_GRID_ROW
-							ch_row: SCM_STATUS_CHANGE_ROW
-							st: SCM_STATUS
-							s: STRING_32
-							nb, unb: INTEGER
-						do
-							if
-								attached parent_grid.scm_s.service as scm_service and then
-								attached root_location as l_scm_root and then
-								attached {PATH} i_row.data as l_scm_location and then
-								attached l_scm_root.changes (l_scm_location, scm_service.config) as l_chgs
-							then
-								nb := l_chgs.changes_count
-								if nb = 0 then
-									i_row.hide
-								elseif nb = 1 then
-									i_row.show
-								else
-									i_row.show
-								end
-								s := scm_names.label_changes_count (nb)
-								unb := l_chgs.unversioned_count
-								if unb > 0 then
-									s.append_string_general (" (")
-									s.append_string (scm_names.label_unversioned)
-									s.append_string_general (" ")
-									s.append_string (unb.out)
-									s.append_string_general (")")
-								end
-								i_row.set_item (i_grid.info_column, new_label_item (s))
-
-								i_grid.grid_remove_and_clear_subrows_from (i_row)
+					across
+						scm_rows as ic
+					loop
+						r := ic.item
+						ev_application.add_idle_action_kamikaze (agent  (i_row: EV_GRID_ROW; i_grid: SCM_STATUS_GRID)
+							local
+								sr: EV_GRID_ROW
+								ch_row: SCM_STATUS_CHANGE_ROW
+								st: SCM_STATUS
+								s: STRING_32
+								nb, unb: INTEGER
+							do
 								if
-									nb > 0 or (unversioned_files_included (i_grid, l_scm_location) and unb > 0)
+									attached parent_grid.scm_s.service as scm_service and then
+									attached root_location as l_scm_root and then
+									attached {PATH} i_row.data as l_scm_location and then
+									attached l_scm_root.changes (l_scm_location, scm_service.config) as l_chgs
 								then
-									across
-										l_chgs as ch_ic
-									loop
-										st := ch_ic.item
-										if
-											not attached {SCM_STATUS_UNVERSIONED} st
-											or unversioned_files_included (i_grid, l_scm_location)
-										then
-											i_row.insert_subrow (i_row.subrow_count + 1)
-											sr := i_row.subrow (i_row.subrow_count)
-											create ch_row.make (Current, root_location, st)
-											ch_row.attach_to_grid_row (i_grid, sr)
-											if
-												attached recorded_changes as l_recorded_changes and then
-												l_recorded_changes.has (st.location)
-											then
-												ch_row.set_selected (True)
-											end
+									nb := l_chgs.changes_count
+									if nb = 0 then
+										i_row.hide
+									elseif nb = 1 then
+										i_row.show
+									else
+										i_row.show
+									end
+									s := scm_names.label_changes_count (nb)
+									unb := l_chgs.unversioned_count
+									if unb > 0 then
+										s.append_string_general (" (")
+										s.append_string (scm_names.label_unversioned)
+										s.append_string_general (" ")
+										s.append_string (unb.out)
+										s.append_string_general (")")
+									end
+									i_row.set_item (i_grid.info_column, new_label_item (s))
 
-											i_grid.fill_empty_grid_items (sr)
+									i_grid.grid_remove_and_clear_subrows_from (i_row)
+									if
+										nb > 0 or (unversioned_files_included (i_grid, l_scm_location) and unb > 0)
+									then
+										across
+											l_chgs as ch_ic
+										loop
+											st := ch_ic.item
+											if
+												not attached {SCM_STATUS_UNVERSIONED} st
+												or unversioned_files_included (i_grid, l_scm_location)
+											then
+												i_row.insert_subrow (i_row.subrow_count + 1)
+												sr := i_row.subrow (i_row.subrow_count)
+												create ch_row.make (Current, root_location, st)
+												ch_row.attach_to_grid_row (i_grid, sr)
+												if
+													attached recorded_changes as l_recorded_changes and then
+													l_recorded_changes.has (st.location)
+												then
+													ch_row.set_selected (True)
+												end
+
+												i_grid.fill_empty_grid_items (sr)
+											end
 										end
 									end
+									i_row.expand
+								else
+									i_row.set_item (i_grid.info_column, new_label_item ("..."))
 								end
-								i_row.expand
-							else
-								i_row.set_item (i_grid.info_column, new_label_item ("..."))
-							end
-							on_change_checked (i_grid)
-						end (r, l_grid))
+								update_check_status_for_row (i_grid, i_row)
+								on_change_checked (i_grid)
+							end (r, l_grid))
+					end
 				end
 			end
 		end
@@ -283,7 +297,55 @@ feature -- Execution
 					end
 				end
 			end
+			if attached a_cb.row.parent_row as l_parent_row then
+				update_check_status_for_row (a_grid, l_parent_row)
+			end
 			a_grid.on_changes_updated (Current)
+		end
+
+	update_check_status_for_row (a_grid: SCM_STATUS_GRID; r: EV_GRID_ROW)
+		local
+			i,n: INTEGER
+			l_checked_count: INTEGER
+			l_unchecked_count: INTEGER
+		do
+			if
+				attached {EV_GRID_CHECKABLE_LABEL_ITEM} r.item (a_grid.checkbox_column) as row_cb
+			then
+				from
+					i := 1
+					n := r.subrow_count
+				until
+					i > n
+				loop
+					if
+						attached r.subrow (i) as sr and then
+						attached {EV_GRID_CHECKABLE_LABEL_ITEM} sr.item (a_grid.checkbox_column) as i_cb
+					then
+						if i_cb.is_checked then
+							l_checked_count := l_checked_count + 1
+						else
+							l_unchecked_count := l_unchecked_count + 1
+						end
+					end
+					i := i + 1
+				end
+				row_cb.checked_changed_actions.block
+				if l_checked_count > 0 then
+					if not row_cb.is_checked then
+						row_cb.set_is_checked (True)
+					end
+				elseif row_cb.is_checked then
+					row_cb.set_is_checked (False)
+				end
+				if l_checked_count > 0 and l_unchecked_count > 0 then
+					row_cb.set_is_indeterminate (True)
+				else
+					row_cb.set_is_indeterminate (False)
+				end
+				row_cb.checked_changed_actions.resume
+				row_cb.redraw
+			end
 		end
 
 	on_change_checked (a_grid: SCM_STATUS_GRID)

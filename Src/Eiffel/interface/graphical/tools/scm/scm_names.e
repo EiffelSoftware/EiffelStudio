@@ -39,6 +39,9 @@ feature -- Dialogs
 	label_command: STRING_32 do Result := locale.translation_in_context ("Command ", "scm") end
 	label_diff_command: STRING_32 do Result := locale.translation_in_context ("Diff command ", "scm") end
 
+
+	label_not_available_check_configuration: STRING_32 do Result := locale.translation_in_context ("Not available, check the configuration...", "scm") end
+
 	label_changes: STRING_32 do Result := locale.translation_in_context ("Changes", "scm") end
 
 	label_operation_logs: STRING_32 do Result := locale.translation_in_context ("Operation logs", "scm") end

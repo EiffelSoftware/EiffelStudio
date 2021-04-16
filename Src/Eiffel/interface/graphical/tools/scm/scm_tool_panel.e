@@ -17,7 +17,8 @@ inherit
 
 	SCM_OBSERVER
 		redefine
-			on_workspace_updated
+			on_workspace_updated,
+			on_configuration_updated
 		end
 
 	SHARED_SOURCE_CONTROL_MANAGEMENT_SERVICE
@@ -159,6 +160,16 @@ feature {NONE} -- Action handlers
 				else
 					l_setup.reset
 				end
+			end
+		end
+
+	on_configuration_updated (cfg: SCM_CONFIG)
+		local
+			l_status: SCM_STATUS_BOX
+		do
+			l_status := status_box
+			if l_status /= Void then
+				l_status.on_configuration_updated
 			end
 		end
 

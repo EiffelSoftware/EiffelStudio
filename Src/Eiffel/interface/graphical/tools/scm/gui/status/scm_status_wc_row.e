@@ -105,7 +105,7 @@ feature -- Status report
 		deferred
 		end
 
-feature {SCM_STATUS_CHANGE_ROW} -- Internal
+feature {SCM_STATUS_CHANGE_ROW, SCM_STATUS_WC_LOCATION_ROW} -- Internal
 
 	parent_grid: SCM_STATUS_GRID
 
@@ -113,7 +113,7 @@ feature {SCM_STATUS_CHANGE_ROW} -- Internal
 
 	recorded_changes: like changes
 
-	scm_rows: detachable ARRAYED_LIST [EV_GRID_ROW]
+	scm_rows: detachable ARRAYED_LIST [SCM_STATUS_WC_LOCATION_ROW]
 
 feature -- Factory
 
@@ -183,7 +183,7 @@ feature -- Execution
 
 	update_statuses
 		local
-			r: EV_GRID_ROW
+			r: SCM_STATUS_WC_LOCATION_ROW
 		do
 			if is_supported then
 				recorded_changes := changes
@@ -192,8 +192,7 @@ feature -- Execution
 					across
 						scm_rows as ic
 					loop
-						r := ic.item
-						r.set_item (l_grid.info_column, new_label_item (scm_names.label_checking))
+						ic.item.set_is_checking
 						l_grid.refresh_now
 					end
 
@@ -201,182 +200,42 @@ feature -- Execution
 						scm_rows as ic
 					loop
 						r := ic.item
-						ev_application.add_idle_action_kamikaze (agent  (i_row: EV_GRID_ROW; i_grid: SCM_STATUS_GRID)
-							local
-								sr: EV_GRID_ROW
-								ch_row: SCM_STATUS_CHANGE_ROW
-								st: SCM_STATUS
-								s: STRING_32
-								nb, unb: INTEGER
-							do
-								if
-									attached parent_grid.scm_s.service as scm_service and then
-									attached root_location as l_scm_root and then
-									attached {PATH} i_row.data as l_scm_location and then
-									attached l_scm_root.changes (l_scm_location, scm_service.config) as l_chgs
-								then
-									nb := l_chgs.changes_count
-									if nb = 0 then
-										i_row.hide
-									elseif nb = 1 then
-										i_row.show
-									else
-										i_row.show
-									end
-									s := scm_names.label_changes_count (nb)
-									unb := l_chgs.unversioned_count
-									if unb > 0 then
-										s.append_string_general (" (")
-										s.append_string (scm_names.label_unversioned)
-										s.append_string_general (" ")
-										s.append_string (unb.out)
-										s.append_string_general (")")
-									end
-									i_row.set_item (i_grid.info_column, new_label_item (s))
-
-									i_grid.grid_remove_and_clear_subrows_from (i_row)
-									if
-										nb > 0 or (unversioned_files_included (i_grid, l_scm_location) and unb > 0)
-									then
-										across
-											l_chgs as ch_ic
-										loop
-											st := ch_ic.item
-											if
-												not attached {SCM_STATUS_UNVERSIONED} st
-												or unversioned_files_included (i_grid, l_scm_location)
-											then
-												i_row.insert_subrow (i_row.subrow_count + 1)
-												sr := i_row.subrow (i_row.subrow_count)
-												create ch_row.make (Current, root_location, st)
-												ch_row.attach_to_grid_row (i_grid, sr)
-												if
-													attached recorded_changes as l_recorded_changes and then
-													l_recorded_changes.has (st.location)
-												then
-													ch_row.set_selected (True)
-												end
-
-												i_grid.fill_empty_grid_items (sr)
-											end
-										end
-									end
-									i_row.expand
-								else
-									i_row.set_item (i_grid.info_column, new_label_item ("..."))
-								end
-								update_check_status_for_row (i_grid, i_row)
-								on_change_checked (i_grid)
-							end (r, l_grid))
+						ev_application.add_idle_action_kamikaze (agent r.update_statuses)
 					end
 				end
 			end
 		end
 
-	on_checkbox_change_checked (a_grid: SCM_STATUS_GRID; a_cb: EV_GRID_CHECKABLE_LABEL_ITEM)
+	on_checkbox_change_checked (a_change_row: SCM_STATUS_CHANGE_ROW; a_cb: EV_GRID_CHECKABLE_LABEL_ITEM)
+		local
+			g: like parent_grid
 		do
+			g := a_change_row.parent_grid
 			if a_cb.is_checked then
 				increment_changes_count
 			else
 				decrement_changes_count
 			end
 			if attached a_cb.row as r and then attached {SCM_STATUS} r.data as st then
-				if attached {EV_GRID_LABEL_ITEM} r.item (a_grid.filename_column) as glab then
+				if attached {EV_GRID_LABEL_ITEM} r.item (g.filename_column) as glab then
 					if a_cb.is_checked then
 						if attached {SCM_STATUS_UNVERSIONED} st then
-							glab.set_foreground_color (a_grid.stock_colors.dark_red)
+							glab.set_foreground_color (g.stock_colors.dark_red)
 						else
-							glab.set_foreground_color (a_grid.foreground_color)
+							glab.set_foreground_color (g.foreground_color)
 						end
-						glab.set_font (a_grid.bold_font)
+						glab.set_font (g.bold_font)
 					else
 						if attached {SCM_STATUS_UNVERSIONED} st then
 							glab.set_foreground_color (colors.disabled_foreground_color)
 						end
-						glab.set_font (a_grid.grid_font)
+						glab.set_font (g.grid_font)
 					end
 				end
 			end
-			if attached a_cb.row.parent_row as l_parent_row then
-				update_check_status_for_row (a_grid, l_parent_row)
-			end
-			a_grid.on_changes_updated (Current)
-		end
 
-	update_check_status_for_row (a_grid: SCM_STATUS_GRID; r: EV_GRID_ROW)
-		local
-			i,n: INTEGER
-			l_checked_count: INTEGER
-			l_unchecked_count: INTEGER
-		do
-			if
-				attached {EV_GRID_CHECKABLE_LABEL_ITEM} r.item (a_grid.checkbox_column) as row_cb
-			then
-				from
-					i := 1
-					n := r.subrow_count
-				until
-					i > n
-				loop
-					if
-						attached r.subrow (i) as sr and then
-						attached {EV_GRID_CHECKABLE_LABEL_ITEM} sr.item (a_grid.checkbox_column) as i_cb
-					then
-						if i_cb.is_checked then
-							l_checked_count := l_checked_count + 1
-						else
-							l_unchecked_count := l_unchecked_count + 1
-						end
-					end
-					i := i + 1
-				end
-				row_cb.checked_changed_actions.block
-				if l_checked_count > 0 then
-					if not row_cb.is_checked then
-						row_cb.set_is_checked (True)
-					end
-				elseif row_cb.is_checked then
-					row_cb.set_is_checked (False)
-				end
-				if l_checked_count > 0 and l_unchecked_count > 0 then
-					row_cb.set_is_indeterminate (True)
-				else
-					row_cb.set_is_indeterminate (False)
-				end
-				row_cb.checked_changed_actions.resume
-				row_cb.redraw
-			end
-		end
-
-	on_change_checked (a_grid: SCM_STATUS_GRID)
-		local
-			i,n: INTEGER
-			l_row: EV_GRID_ROW
-		do
-			reset_changes_count
-			if attached parent_grid as l_grid then
-				across
-					scm_rows as ic
-				loop
-					l_row := ic.item
-					from
-						i := 1
-						n := l_row.subrow_count
-					until
-						i > n
-					loop
-						if
-							attached l_row.subrow (i) as l_subrow and then
-							attached {EV_GRID_CHECKABLE_LABEL_ITEM} l_subrow.item (l_grid.checkbox_column) as cb and then
-							cb.is_checked
-						then
-							increment_changes_count
-						end
-						i := i + 1
-					end
-				end
-			end
-			a_grid.on_changes_updated (Current)
+			a_change_row.wc_location_row.update_check_status_for_row
+			g.on_changes_updated (Current)
 		end
 
 	changes_count: INTEGER
@@ -428,46 +287,12 @@ feature -- Execution
 			end
 		end
 
-feature {NONE} -- Implementation
+feature {SCM_STATUS_WC_LOCATION_ROW} -- Implementation
 
 	propagate_checkbox_state_to_subrows (cb: EV_GRID_CHECKABLE_LABEL_ITEM; a_opt_col: INTEGER)
-		local
-			i, n, j, k: INTEGER
-			b: BOOLEAN
 		do
-			if attached cb.row as r then
-				n := r.subrow_count
-				if n > 0 then
-					b := cb.is_checked
-					from
-						i := 1
-					until
-						i > n
-					loop
-						if attached r.subrow (i) as sr then
-							if
-								a_opt_col > 0 and then
-								attached {EV_GRID_CHECKABLE_LABEL_ITEM} sr.item (a_opt_col) as sub_cb
-							then
-								sub_cb.set_is_checked (b)
-							else
-								from
-									j := 1
-									k := sr.count
-								until
-									j > k
-								loop
-									if attached {EV_GRID_CHECKABLE_LABEL_ITEM} sr.item (j) as sub_cb then
-										sub_cb.set_is_checked (b)
-									end
-								end
-								j := j + 1
-
-							end
-						end
-						i := i + 1
-					end
-				end
+			if attached parent_grid as g then
+				g.propagate_checkbox_state_to_subrows (cb, a_opt_col)
 			end
 		end
 

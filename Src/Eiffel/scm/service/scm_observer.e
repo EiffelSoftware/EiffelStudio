@@ -23,6 +23,12 @@ feature -- Event
 		do
 		end
 
+	on_configuration_updated (cfg: SCM_CONFIG)
+		require
+			is_interface_usable: attached {USABLE_I} Current as l_usable implies l_usable.is_interface_usable
+		do
+		end
+
 note
 	copyright: "Copyright (c) 1984-2021, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"

@@ -53,6 +53,8 @@ feature -- Access
 	is_git_command_valid: BOOLEAN
 	is_svn_command_valid: BOOLEAN
 
+	is_changed: BOOLEAN
+
 feature -- Widgets
 
 	git_field,
@@ -265,17 +267,34 @@ feature -- Action
 		end
 
 	on_save
+		local
+			cfg: SCM_CONFIG
 		do
 			check_commands_validity
+			cfg := scm_service.config
 			if is_git_command_valid then
-				scm_service.config.set_git_command (git_field.text)
-				scm_service.config.set_git_diff_command (git_diff_field.text)
+				if not cfg.git_command.same_string (git_field.text) then
+					is_changed := True
+					scm_service.config.set_git_command (git_field.text)
+				end
+				if not cfg.git_diff_command.same_string (git_diff_field.text) then
+					is_changed := True
+					scm_service.config.set_git_diff_command (git_diff_field.text)
+				end
 			end
 			if is_svn_command_valid then
-				scm_service.config.set_svn_command (svn_field.text)
-				scm_service.config.set_svn_diff_command (svn_diff_field.text)
+				if not cfg.svn_command.same_string (svn_field.text) then
+					is_changed := True
+					scm_service.config.set_svn_command (svn_field.text)
+				end
+				if not cfg.svn_diff_command.same_string (svn_diff_field.text) then
+					is_changed := True
+					scm_service.config.set_svn_diff_command (svn_diff_field.text)
+				end
 			end
-
+			if is_changed then
+				scm_service.on_configuration_updated (cfg)
+			end
 			veto_close
 		end
 

@@ -97,7 +97,7 @@ feature {NONE} -- Initialization
 					end
 				)
 			bar.extend (but); bar.disable_item_expand (but)
-			
+
 			create grid_cell
 			b.extend (grid_cell)
 		end
@@ -228,6 +228,15 @@ feature -- Basic operation
 				end
 			else
 				check service_available: False end
+			end
+		end
+
+	on_configuration_updated
+		do
+			across
+				grid.scm_rows as ic
+			loop
+				ic.item.update
 			end
 		end
 

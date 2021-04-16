@@ -79,6 +79,20 @@ feature -- Events
 			end
 		end
 
+	on_configuration_updated (cfg: SCM_CONFIG)
+		do
+			debug ("scm")
+				print (generator + ".on_configuration_updated (" + cfg.out + ")%N")
+			end
+			if attached observers as lst then
+				across
+					lst as ic
+				loop
+					ic.item.on_configuration_updated (cfg)
+				end
+			end
+		end
+
 feature -- Observer
 
 	register_observer (obs: SCM_OBSERVER)

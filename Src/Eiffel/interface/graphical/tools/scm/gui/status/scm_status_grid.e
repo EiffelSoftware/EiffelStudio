@@ -89,12 +89,54 @@ feature -- Actions
 			end
 		end
 
+	propagate_checkbox_state_to_subrows (cb: EV_GRID_CHECKABLE_LABEL_ITEM; a_opt_col: INTEGER)
+		local
+			i, n, j, k: INTEGER
+			b: BOOLEAN
+		do
+			if attached cb.row as r then
+				n := r.subrow_count
+				if n > 0 then
+					b := cb.is_checked
+					from
+						i := 1
+					until
+						i > n
+					loop
+						if attached r.subrow (i) as sr then
+							if
+								a_opt_col > 0 and then
+								attached {EV_GRID_CHECKABLE_LABEL_ITEM} sr.item (a_opt_col) as sub_cb
+							then
+								sub_cb.set_is_checked (b)
+							else
+								from
+									j := 1
+									k := sr.count
+								until
+									j > k
+								loop
+									if attached {EV_GRID_CHECKABLE_LABEL_ITEM} sr.item (j) as sub_cb then
+										sub_cb.set_is_checked (b)
+									end
+								end
+								j := j + 1
+							end
+						end
+						i := i + 1
+					end
+				end
+			end
+		end
+
 feature -- Events
 
 	on_row_selected (r: EV_GRID_ROW)
 		do
 			if attached {SCM_STATUS_WC_ROW} r.data as l_wc_row then
 				on_wc_selected (l_wc_row)
+			elseif attached {SCM_STATUS_WC_LOCATION_ROW} r.data as l_wc_loc_row then
+				on_wc_selected (l_wc_loc_row.parent_row)
 			end
 		end
 
@@ -102,13 +144,15 @@ feature -- Events
 		do
 			if attached {SCM_STATUS_WC_ROW} r.data as l_wc_row then
 				on_wc_deselected (l_wc_row)
+			elseif attached {SCM_STATUS_WC_LOCATION_ROW} r.data as l_wc_loc_row then
+				on_wc_deselected (l_wc_loc_row.parent_row)
 			end
 		end
 
 	on_wc_selected (a_repo: SCM_STATUS_WC_ROW)
 		do
 			status_box.set_selected_repository (a_repo.root_location)
-			if a_repo.changes_count > 0 then
+			if a_repo.is_supported and then a_repo.changes_count > 0 then
 				status_box.save_selected_repo_button.enable_sensitive
 			else
 				status_box.save_selected_repo_button.disable_sensitive

@@ -28,10 +28,11 @@ convert
 
 feature {NONE} -- Initialization
 
-	make (a_wc_row: SCM_STATUS_WC_ROW; a_root: like root_location; a_status: SCM_STATUS)
+	make (a_wc_location_row: SCM_STATUS_WC_LOCATION_ROW; a_root: like root_location; a_status: SCM_STATUS)
 		do
-			wc_row := a_wc_row
-			parent_grid := a_wc_row.parent_grid
+			wc_location_row := a_wc_location_row
+			wc_row := a_wc_location_row.parent_row
+			parent_grid := a_wc_location_row.parent_grid
 			root_location := a_root
 			status := a_status
 		end
@@ -39,6 +40,8 @@ feature {NONE} -- Initialization
 feature -- Access
 
 	parent_grid: SCM_STATUS_GRID
+
+	wc_location_row: SCM_STATUS_WC_LOCATION_ROW
 
 	wc_row: SCM_STATUS_WC_ROW
 
@@ -135,7 +138,7 @@ feature -- Execution
 			end
 
 			cb_lab.set_data (st)
-			cb_lab.checked_changed_actions.extend (agent wc_row.on_checkbox_change_checked (parent_grid, ?))
+			cb_lab.checked_changed_actions.extend (agent wc_row.on_checkbox_change_checked (Current, ?))
 		end
 
 	status_pixmap (a_status: SCM_STATUS): detachable EV_PIXMAP

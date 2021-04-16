@@ -22,14 +22,12 @@ feature -- Operation
 		local
 			glab: EV_GRID_LABEL_ITEM
 			eglab: EV_GRID_LABEL_ELLIPSIS_ITEM
-			gcblab: EV_GRID_CHECKABLE_LABEL_ITEM
 			cblab: EV_GRID_CHECKABLE_LABEL_ITEM
 			l_groups: ARRAYED_LIST [PATH]
 			l_scm_rows: like scm_rows
+			l_scm_location_row: SCM_STATUS_WC_LOCATION_ROW
 			l_subrow: EV_GRID_ROW
 			gloc: PATH
-			grel: READABLE_STRING_32
-			j: INTEGER
 			l_is_supported: like is_supported
 		do
 			l_is_supported := is_supported
@@ -49,7 +47,7 @@ feature -- Operation
 
 			cblab := new_checkable_label_item ("")
 			a_row.set_item (a_grid.checkbox_column, cblab)
-			cblab.set_is_checked (True)
+			cblab.set_is_checked (l_is_supported)
 			cblab.checked_changed_actions.extend (agent propagate_checkbox_state_to_subrows (?, a_grid.checkbox_column))
 
 
@@ -57,6 +55,22 @@ feature -- Operation
 			eglab.ellipsis_actions.extend (agent on_options (eglab))
 			glab := eglab --new_label_item (scm_name)
 			a_row.set_item (a_grid.scm_column, glab)
+
+			if not l_is_supported then
+				glab := new_label_item (scm_names.label_not_available_check_configuration)
+				glab.pointer_double_press_actions.extend (agent (i_x, i_y, i_button: INTEGER; i_x_tilt, i_y_tilt, i_pressure: DOUBLE; i_screen_x, i_screen_y: INTEGER)
+						local
+							dlg: SCM_CONFIG_DIALOG
+						do
+							if attached scm_s.service as scm then
+								create dlg.make (scm)
+								dlg.show_on_active_window
+							end
+						end
+					)
+				a_row.set_item (a_grid.info_column, glab)
+			end
+
 
 --			glab.pointer_button_press_actions.extend (agent on_options)
 
@@ -104,36 +118,19 @@ feature -- Operation
 
 --				l_row.insert_subrows (ic.item.groups.count, 1)
 
-				j := 0
 				across
 					l_groups as g_ic
 				loop
 					gloc := g_ic.item
-					grel := root_location.relative_location (gloc)
-
-					j := j + 1
 					a_row.insert_subrow (a_row.subrow_count + 1)
 					l_subrow := a_row.subrow (a_row.subrow_count)
-					l_subrow.set_data (gloc)
-					l_scm_rows.force (l_subrow)
-					gcblab := new_checkable_label_item (Void)
-					l_subrow.set_item (a_grid.checkbox_column, gcblab)
-					gcblab.set_is_checked (True)
-					gcblab.checked_changed_actions.extend (agent propagate_checkbox_state_to_subrows (?, a_grid.checkbox_column))
 
-					glab := new_label_item (grel)
-					glab.set_data (gloc)
-
-					glab.pointer_double_press_actions.extend (agent (i_loc: PATH; i_x, i_y, i_button: INTEGER; i_x_tilt, i_y_tilt, i_pressure: DOUBLE; i_screen_x, i_screen_y: INTEGER)
-							do
-								if attached parent_grid as pg then
-									pg.open_directory_location (i_loc)
-								end
-							end(gloc, ?,?,?,?,?,?,?,?)
-						)
-					l_subrow.set_item (a_grid.filename_column, glab)
-
-					l_subrow.set_item (a_grid.parent_column, create {EV_GRID_ITEM})
+					if l_is_supported then
+						create l_scm_location_row.make_checked (a_grid, Current, l_subrow, gloc)
+					else
+						create l_scm_location_row.make (a_grid, Current, l_subrow, gloc)
+					end
+					l_scm_rows.force (l_scm_location_row)
 
 					a_grid.fill_empty_grid_items (l_subrow)
 				end
@@ -166,7 +163,7 @@ feature -- Operation
 							dlg.show_on_active_window
 						end
 					end)
-
+					m.extend (mi)
 			end
 
 			create mi.make_with_text_and_action (scm_names.menu_save, agent

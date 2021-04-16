@@ -31,6 +31,9 @@ feature {NONE} -- Initialization
 			create server_url.make_from_string (cfg.server_url)
 			connection_timeout := cfg.connection_timeout
 			timeout := cfg.timeout
+			if attached cfg.user_agent as ua then
+				create {IMMUTABLE_STRING_8} user_agent.make_from_string (ua)
+			end
 		end
 
 feature -- Access
@@ -40,6 +43,8 @@ feature -- Access
 	server_url: IMMUTABLE_STRING_8
 
 	secret_api_key: STRING_8 = "secret-722ddbcf1548405c83c6494451d96879"
+
+	user_agent: detachable IMMUTABLE_STRING_8
 
 feature -- Builtin settings	
 
@@ -67,6 +72,11 @@ feature -- Conversion
 
 feature -- Element change
 
+	set_user_agent (ua: READABLE_STRING_8)
+		do
+			user_agent := ua
+		end
+
 	set_connection_timeout (a_secs: like connection_timeout)
 		do
 			connection_timeout := a_secs
@@ -78,7 +88,7 @@ feature -- Element change
 		end
 
 ;note
-	copyright: "Copyright (c) 1984-2020, Eiffel Software"
+	copyright: "Copyright (c) 1984-2021, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

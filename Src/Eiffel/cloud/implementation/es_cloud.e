@@ -36,6 +36,7 @@ feature {NONE} -- Creation
 			cfg: ES_CLOUD_CONFIG
 			env: ES_INSTALLATION_ENVIRONMENT
 			i: INTEGER
+			ua: STRING_8
 		do
 			create cfg.make (a_server_url)
 			config := cfg
@@ -43,6 +44,9 @@ feature {NONE} -- Creation
 			if is_eiffel_layout_defined then
 					-- On Windows: Computer\HKEY_CURRENT_USER\Software\ISE\Eiffel_MM.mm\installation\es_cloud\$variable_name
 				create env.make (eiffel_layout)
+				create ua.make_from_string ("EiffelStudio/" + eiffel_layout.version_name)
+				ua.append (" (" + eiffel_layout.eiffel_platform + ")")
+				cfg.set_user_agent (ua)
 				if
 					attached env.application_item ("timeout", "es_cloud", eiffel_layout.version_name) as v and then
 					v.is_integer
@@ -1113,7 +1117,7 @@ feature {NONE} -- Implementation: Internal cache
 invariant
 
 note
-	copyright: "Copyright (c) 1984-2020, Eiffel Software"
+	copyright: "Copyright (c) 1984-2021, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

@@ -899,6 +899,9 @@ feature {NONE} -- Implementation
 			create cl
 			Result := cl.new_session (config.server_url)
 			Result.add_header ("Accept", "application/json,text/html;q=0.9,*.*;q=0.8")
+			if attached config.user_agent as ua then
+				Result.add_header ({HTTP_HEADER_NAMES}.header_user_agent, ua)
+			end
 			Result.set_connect_timeout (config.connection_timeout)
 			Result.set_timeout (config.timeout)
 			Result.set_is_insecure (True) -- For now api.eiffel.com has no valid SSL certificate.
@@ -1067,7 +1070,7 @@ feature {NONE} -- Json handling
 		end
 
 note
-	copyright: "Copyright (c) 1984-2020, Eiffel Software"
+	copyright: "Copyright (c) 1984-2021, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

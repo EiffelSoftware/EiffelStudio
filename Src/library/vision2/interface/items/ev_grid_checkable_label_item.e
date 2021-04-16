@@ -92,7 +92,10 @@ feature -- Change
 	set_is_indeterminate (b: BOOLEAN)
 			-- Set `is_indeterminate` to `b`.
 		do
-			is_indeterminate := b
+			if b /= is_indeterminate then
+				is_indeterminate := b
+				redraw
+			end
 		end
 
 feature -- Status

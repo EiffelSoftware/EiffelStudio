@@ -656,7 +656,10 @@ feature -- Hooks: block
 					l_store.items as ic
 				loop
 					l_item := ic.item
-					if attached l_item.name as l_name then
+					if
+						l_item.is_published and then
+						attached l_item.name as l_name
+					then
 						lst := tb [l_name]
 						if lst = Void then
 							create lst.make (1)

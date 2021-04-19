@@ -164,7 +164,7 @@ feature {ACCESS_CONTROL_RULE} -- Implementation
 			if lim = Void then
 				create lim.make (l_plan_name)
 				lim_tb [l_plan_name] := lim
-				if attached a_license.plan_limitations_string as s_plan_lim then
+				if a_license /= Void and then attached a_license.plan_limitations_string as s_plan_lim then
 					populate_limitation (s_plan_lim, lim)
 				end
 			end
@@ -276,7 +276,7 @@ invariant
 --	invariant_clause: True
 
 note
-	copyright: "Copyright (c) 1984-2020, Eiffel Software"
+	copyright: "Copyright (c) 1984-2021, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

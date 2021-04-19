@@ -32,6 +32,7 @@ feature -- Menu
 				r.add_to_primary_tabs (api.administration_link ("ES Licenses", "/cloud/licenses/"))
 				r.add_to_primary_tabs (api.administration_link ("ES Installations", "/cloud/installations/"))
 				r.add_to_primary_tabs (api.administration_link ("ES Organizations", "/cloud/organizations/"))
+				r.add_to_primary_tabs (api.administration_link ("ES Store", "/cloud/store/"))
 			end
 		end
 

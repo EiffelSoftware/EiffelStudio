@@ -240,7 +240,7 @@ feature -- Hook
 		do
 			if
 				attached es_cloud_api as api and then
-				attached api.store (a_cart.currency) as l_store
+				attached api.store (a_cart.currency, False) as l_store
 			then
 				l_prov_name := api.config.shop_provider_name
 				if a_cart_item.provider.is_case_insensitive_equal_general (l_prov_name) then
@@ -385,7 +385,7 @@ feature -- Hook
 		do
 			if
 				attached es_cloud_api as api and then
-				attached api.store (a_cart.currency) as l_store
+				attached api.store (a_cart.currency, False) as l_store
 			then
 				api.cms_api.log_debug (name, "commit_cart_item", Void)
 				l_prov_name := api.config.shop_provider_name
@@ -649,7 +649,7 @@ feature -- Hooks: block
 			create l_html.make (1024)
 			l_html.append ("<div class=%"pricing%"><form action=%"%">")
 			if
-				attached api.store (Void) as l_store
+				attached api.store (Void, False) as l_store
 			then
 				create tb.make_caseless (3)
 				across

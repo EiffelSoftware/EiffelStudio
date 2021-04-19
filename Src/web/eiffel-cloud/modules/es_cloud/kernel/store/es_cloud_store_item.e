@@ -17,6 +17,7 @@ feature {NONE} -- Initialization
 			create id.make_from_string_general (a_id)
 			currency := "usd"
 			onetime_month_duration := 12
+			is_published := True
 		end
 
 feature -- Access
@@ -81,6 +82,8 @@ feature -- Status report
 			Result := price = 0 and then cents_price = 0
 		end
 
+	is_published: BOOLEAN
+
 feature -- Element change
 
 	set_title (a_title: detachable READABLE_STRING_GENERAL)
@@ -123,6 +126,11 @@ feature -- Element change
 			is_onetime
 		do
 			onetime_month_duration := a_nb
+		end
+
+	set_is_published (b: like is_published)
+		do
+			is_published := b
 		end
 
 end

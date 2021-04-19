@@ -737,11 +737,119 @@ feature -- Billings
 
 feature -- Access: store
 
-	store (a_currency: detachable READABLE_STRING_8): ES_CLOUD_STORE
+	store_to_json (a_store: ES_CLOUD_STORE): STRING
+		local
+			jo, j: JSON_OBJECT
+			vis: JSON_PRETTY_STRING_VISITOR
+			l_store_item: ES_CLOUD_STORE_ITEM
+		do
+			create jo.make_with_capacity (a_store.items.count)
+			across
+				a_store.items as ic
+			loop
+				l_store_item := ic.item
+				create j.make_with_capacity (7)
+				if attached l_store_item.name as l_name then
+					j.put_string (l_name, "plan")
+				end
+				if attached l_store_item.title as l_title then
+					j.put_string (l_title, "title")
+				end
+				j.put_natural (l_store_item.price, "price")
+				if l_store_item.cents_price > 0 then
+					j.put_natural (l_store_item.cents_price, "price.cents")
+				end
+				j.put_string (l_store_item.currency, "currency")
+				if l_store_item.is_onetime then
+					j.put_string ("onetime", "interval")
+					if l_store_item.onetime_month_duration > 0 then
+						j.put_natural (l_store_item.onetime_month_duration, "duration")
+					end
+				elseif attached l_store_item.interval as l_interval then
+					j.put_string (l_interval, "interval")
+				end
+				if l_store_item.is_published then
+					j.put_string ("published", "status")
+				else
+					j.put_string ("test", "status")
+				end
+				jo.put (j, l_store_item.id)
+			end
+
+			create Result.make_empty
+			create vis.make (Result)
+			vis.visit_json_object (jo)
+		end
+
+	json_to_store (a_json: READABLE_STRING_8; a_currency: detachable READABLE_STRING_8; a_include_all: BOOLEAN): detachable ES_CLOUD_STORE
+		do
+			Result := config_to_store (create {JSON_CONFIG}.make_from_string (a_json), a_currency, a_include_all)
+		end
+
+	config_to_store (cfg: CONFIG_READER; a_currency: detachable READABLE_STRING_8; a_include_all: BOOLEAN): detachable ES_CLOUD_STORE
 		local
 			l_item: ES_CLOUD_STORE_ITEM
 			l_cents: NATURAL_32
 			l_visible: BOOLEAN
+		do
+			if a_currency = Void then
+				create Result.make
+			else
+				create Result.make_with_currency (a_currency)
+			end
+			if attached cfg.table_keys ("") as lst then
+				across
+					lst as ic
+				loop
+					if
+						attached cfg.text_table_item (ic.item) as tb and then
+						attached tb.item ("plan") as l_plan and then
+						attached tb.item ("price") as l_price and then
+						attached tb.item ("currency") as l_currency
+					then
+						if attached tb.item ("status") as l_status then
+							if
+								l_status.is_case_insensitive_equal ("published")
+							then
+								l_visible := True
+							else
+								l_visible := False
+							end
+						else
+							l_visible := True
+						end
+						if l_visible or a_include_all then
+							if attached tb.item ("price.cents") as l_cents_price then
+								l_cents := l_cents_price.to_natural_32
+							else
+								l_cents := 0
+							end
+							create l_item.make (ic.item)
+							l_item.set_price (l_price.to_natural_32, l_cents, l_currency.to_string_8, tb.item ("interval"))
+							l_item.set_title (tb.item ("title"))
+							l_item.set_price_title (tb.item ("price.title"))
+							l_item.set_name (l_plan)
+							l_item.set_is_published (l_visible)
+							if
+								l_item.is_onetime and then
+								attached tb.item ("duration") as l_duration and then
+								l_duration.is_natural_32
+							then
+								l_item.set_onetime_month_duration (l_duration.to_natural_32)
+							end
+							Result.extend (l_item)
+						end
+					end
+				end
+			end
+		end
+
+	save_store (a_store: ES_CLOUD_STORE)
+		do
+			cms_api.storage.set_custom_value ("cloud.store." + a_store.currency, store_to_json (a_store), module.name_for_resource)
+		end
+
+	store (a_currency: detachable READABLE_STRING_8; a_include_all: BOOLEAN): ES_CLOUD_STORE
 		do
 			Result := internal_store (a_currency)
 			if Result = Void then
@@ -750,52 +858,18 @@ feature -- Access: store
 				else
 					create Result.make_with_currency (a_currency)
 				end
-				if attached cms_api.module_configuration_by_name ({ES_CLOUD_MODULE}.name, "store-" + Result.currency) as cfg then
+				if
+					attached cms_api.storage.custom_value ("cloud.store." + Result.currency, module.name_for_resource) as l_store_json and then
+					attached json_to_store ({UTF_CONVERTER}.utf_32_string_to_utf_8_string_8 (l_store_json), Result.currency, a_include_all) as l_store
+				then
+					Result := l_store
 					set_internal_store (Result)
-					if attached cfg.table_keys ("") as lst then
-						across
-							lst as ic
-						loop
-							if
-								attached cfg.text_table_item (ic.item) as tb and then
-								attached tb.item ("plan") as l_plan and then
-								attached tb.item ("price") as l_price and then
-								attached tb.item ("currency") as l_currency
-							then
-								if attached tb.item ("status") as l_status then
-									if
-										l_status.is_case_insensitive_equal ("published")
-									then
-										l_visible := True
-									else
-										l_visible := False
-									end
-								else
-									l_visible := True
-								end
-								if l_visible then
-									if attached tb.item ("price.cents") as l_cents_price then
-										l_cents := l_cents_price.to_natural_32
-									else
-										l_cents := 0
-									end
-									create l_item.make (ic.item)
-									l_item.set_price (l_price.to_natural_32, l_cents, l_currency.to_string_8, tb.item ("interval"))
-									l_item.set_title (tb.item ("title"))
-									l_item.set_price_title (tb.item ("price.title"))
-									l_item.set_name (l_plan)
-									if
-										l_item.is_onetime and then
-										attached tb.item ("duration") as l_duration and then
-										l_duration.is_natural_32
-									then
-										l_item.set_onetime_month_duration (l_duration.to_natural_32)
-									end
-									Result.extend (l_item)
-								end
-							end
-						end
-					end
+				elseif
+					attached cms_api.module_configuration_by_name ({ES_CLOUD_MODULE}.name, "store-" + Result.currency) as cfg and then
+					attached config_to_store (cfg, Result.currency, a_include_all) as l_store
+				then
+					Result := l_store
+					set_internal_store (Result)
 				end
 			end
 		end

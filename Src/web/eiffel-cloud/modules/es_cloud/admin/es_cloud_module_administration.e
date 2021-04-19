@@ -35,6 +35,7 @@ feature -- Security
 			Result.force ("admin es licenses")
 			Result.force ("admin es plans")
 			Result.force ("admin es organizations")
+			Result.force ("admin es store")
 		end
 
 feature {NONE} -- Router/administration
@@ -54,6 +55,8 @@ feature {NONE} -- Router/administration
 				a_router.handle ("/cloud/installations/", create {ES_CLOUD_INSTALLATIONS_ADMIN_HANDLER}.make (l_es_cloud_api), a_router.methods_get_post)
 				a_router.handle ("/cloud/plans/", create {ES_CLOUD_PLANS_ADMIN_HANDLER}.make (l_es_cloud_api), a_router.methods_get_post)
 				a_router.handle ("/cloud/plans/{pid}", create {ES_CLOUD_PLANS_ADMIN_HANDLER}.make (l_es_cloud_api), a_router.methods_get_post)
+				a_router.handle ("/cloud/store/", create {ES_CLOUD_STORE_ADMIN_HANDLER}.make (l_es_cloud_api), a_router.methods_get_post)
+				a_router.handle ("/cloud/store/{currency}", create {ES_CLOUD_STORE_ADMIN_HANDLER}.make (l_es_cloud_api), a_router.methods_get_post)
 			end
 		end
 
@@ -105,6 +108,8 @@ feature -- Hooks configuration
 				lnk := a_response.api.administration_link ("Organizations", "cloud/organizations/")
 				l_parent.extend (lnk)
 
+				lnk := a_response.api.administration_link ("Store", "cloud/store/")
+				l_parent.extend (lnk)
 			end
 		end
 

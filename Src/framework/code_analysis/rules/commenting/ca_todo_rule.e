@@ -3,7 +3,7 @@
 			RULE #80: TODO
 
 			A comment line starting with the string
-			'TODO' or 'To do' means remaining work to be done.
+			'TODO' or 'FIXME' means remaining work to be done.
 		]"
 	author: "Stefan Zurfluh"
 	revised_by: "Alexander Kogtenkov"
@@ -105,16 +105,25 @@ feature {NONE} -- AST Visit
 		do
 			create l_comment.make_from_string (a_comment.content_32)
 			l_comment.left_adjust
-			l_comment.to_lower
-			if l_comment.starts_with ("todo") or l_comment.starts_with ("to do") then
-					-- We will remove the leading "TODO" from the string that will be
-					-- stored in the rule violation. Here, we save the correct number
-					-- of characters to remove.
-				l_toremove := 4
-				if l_comment.starts_with ("to do") then
+				-- We will remove the leading "TODO" from the string that will be
+				-- stored in the rule violation. Here, we save the correct number
+				-- of characters to remove.
+				-- Check for spaced variants first, they should come in upper case.
+			if l_comment.starts_with ("TO DO") then
+				l_toremove := 5
+			elseif l_comment.starts_with ("FIX ME") then
+				l_toremove := 6
+			end
+			if l_toremove = 0 then
+				l_comment.to_lower
+				if l_comment.starts_with ("todo") then
+					l_toremove := 4
+				elseif l_comment.starts_with ("fixme") then
 					l_toremove := 5
 				end
+			end
 
+			if l_toremove > 0 then
 					-- Initialize `l_todo' to the original TODO-comment (without the TODO).
 				create l_todo.make_from_string (a_comment.content_32)
 				l_todo.left_adjust

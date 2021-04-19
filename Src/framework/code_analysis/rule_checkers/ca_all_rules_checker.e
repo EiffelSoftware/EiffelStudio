@@ -70,6 +70,7 @@ inherit
 			process_parameter_list_as,
 			process_paran_as,
 			process_precursor_as,
+			process_predecessor_as,
 			process_real_as,
 			process_routine_as,
 			process_static_access_as,
@@ -191,6 +192,8 @@ feature {NONE} -- Initialization
 			create paran_post_actions
 			create precursor_pre_actions
 			create precursor_post_actions
+			create predecessor_pre_actions
+			create predecessor_post_actions
 			create routine_pre_actions
 			create routine_post_actions
 			create static_access_pre_actions
@@ -705,6 +708,16 @@ feature {CA_STANDARD_RULE} -- Adding agents
 			precursor_post_actions.extend (a)
 		end
 
+	add_predecessor_pre_action (a: PROCEDURE [PREDECESSOR_AS])
+		do
+			predecessor_pre_actions.extend (a)
+		end
+
+	add_predecessor_post_action (a: PROCEDURE [PREDECESSOR_AS])
+		do
+			predecessor_post_actions.extend (a)
+		end
+
 	add_routine_agent_pre_action (a_action:  PROCEDURE [AGENT_ROUTINE_CREATION_AS])
 		do
 			agent_routine_pre_action.extend (a_action)
@@ -876,6 +889,8 @@ feature {NONE} -- Agent lists
 	parameter_list_pre_actions, parameter_list_post_actions: ACTION_SEQUENCE [TUPLE [PARAMETER_LIST_AS]]
 
 	precursor_pre_actions, precursor_post_actions: ACTION_SEQUENCE [TUPLE [PRECURSOR_AS]]
+
+	predecessor_pre_actions, predecessor_post_actions: ACTION_SEQUENCE [TUPLE [PREDECESSOR_AS]]
 
 	routine_pre_actions, routine_post_actions: ACTION_SEQUENCE [TUPLE [ROUTINE_AS]]
 
@@ -1273,6 +1288,13 @@ feature {NONE} -- Processing
 			precursor_pre_actions.call (a)
 			Precursor (a)
 			precursor_post_actions.call (a)
+		end
+
+	process_predecessor_as (a: PREDECESSOR_AS)
+		do
+			predecessor_pre_actions.call (a)
+			Precursor (a)
+			predecessor_post_actions.call (a)
 		end
 
 	process_routine_as (a_routine: ROUTINE_AS)

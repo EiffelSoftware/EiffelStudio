@@ -45,6 +45,7 @@ inherit
 			process_address_result_as,
 			process_address_current_as,
 			process_address_as,
+			process_predecessor_as,
 			process_routine_creation_as,
 			process_un_free_as,
 			process_un_minus_as,
@@ -572,23 +573,17 @@ feature {NONE} -- Implementation
 			l_rout_id_set: ID_SET
 			l_last_class: like last_class
 			l_last_type: like last_type
-			l_formal: FORMAL_A
 			l_last_type_set: TYPE_SET_A
-			l_named_tuple_type: NAMED_TUPLE_TYPE_A
 			l_type: TYPE_A
 			l_pos: INTEGER
 			l_actual_argument_typs: like expr_types
 			l_is_multi_constrained: BOOLEAN
 		do
-			if l_as.is_argument then
-			elseif l_as.is_local then
-			elseif l_as.is_tuple_access then
-			else
+			if l_as.is_feature then
 				if not has_error_internal then
 					if last_type /= Void then
 						last_type := last_type.actual_type
-						if last_type.is_formal then
-							l_formal ?= last_type
+						if attached {FORMAL_A} last_type as l_formal then
 							if l_formal.is_multi_constrained (current_class) then
 								l_is_multi_constrained := True
 								l_last_type_set := last_type.to_type_set.constraining_types (current_class)
@@ -670,12 +665,8 @@ feature {NONE} -- Implementation
 				if not attached last_type and then locals_for_current_feature.has_key (l_as.access_name) then
 					last_type := locals_for_current_feature.found_item
 				end
-			elseif l_as.is_tuple_access then
+			elseif attached {NAMED_TUPLE_TYPE_A} last_type.actual_type as l_named_tuple_type then
 				if not has_error_internal then
-					l_named_tuple_type ?= last_type.actual_type
-					check
-						l_named_tuple_type /= Void
-					end
 					l_pos := l_named_tuple_type.label_position (l_as.access_name)
 					if l_pos > 0 then
 						last_type := l_named_tuple_type.generics.i_th (l_pos)
@@ -985,19 +976,13 @@ feature {NONE} -- Implementation
 		end
 
 	process_address_result_as (l_as: ADDRESS_RESULT_AS)
-		local
-			l_type: TYPE_A
 		do
-			l_type ?= current_feature.type
-			create {TYPED_POINTER_A} last_type.make_typed (l_type)
+			create {TYPED_POINTER_A} last_type.make_typed (current_feature.type)
 		end
 
 	process_address_current_as (l_as: ADDRESS_CURRENT_AS)
-		local
-			l_type: TYPE_A
 		do
-			l_type ?= current_class.actual_type
-			create {TYPED_POINTER_A} last_type.make_typed (l_type)
+			create {TYPED_POINTER_A} last_type.make_typed (current_class.actual_type)
 		end
 
 	process_address_as (l_as: ADDRESS_AS)
@@ -1012,6 +997,7 @@ feature {NONE} -- Implementation
 					if locals_for_current_feature.has_key (l_as.feature_name.internal_name.name) then
 						create {TYPED_POINTER_A} last_type.make_typed (locals_for_current_feature.found_item)
 					end
+						-- TODO: handle object test locals, loop cursors, etc.
 				else
 					l_feat := feature_in_class (current_class, l_as.routine_ids)
 					if l_feat /= Void and then l_feat.is_attribute then
@@ -1021,6 +1007,13 @@ feature {NONE} -- Implementation
 					end
 				end
 			end
+		end
+
+	process_predecessor_as (a: PREDECESSOR_AS)
+			-- <Precursor>
+		do
+			reset_last_class_and_type
+				-- TODO: handle the case.
 		end
 
 	process_routine_creation_as (l_as: ROUTINE_CREATION_AS)
@@ -1058,7 +1051,6 @@ feature {NONE} -- Implementation
 			l_type: TYPE_A
 			l_expr_type: TYPE_A
 			l_last_type: TYPE_A
-			l_formal: FORMAL_A
 			l_feature_list: like feature_from_type_set
 		do
 			check
@@ -1068,8 +1060,7 @@ feature {NONE} -- Implementation
 				l_expr_type := expr_type (l_as.expr)
 			end
 			if not has_error_internal then
-				if l_expr_type.is_formal then
-					l_formal ?= l_expr_type
+				if attached {FORMAL_A} l_expr_type as l_formal then
 					if l_formal.is_multi_constrained (current_class) then
 						l_feature_list := feature_from_type_set (l_formal.constrained_types (current_class), l_as.routine_ids)
 						if not has_error_internal then
@@ -1141,7 +1132,6 @@ feature {NONE} -- Implementation
 	process_binary_as (l_as: BINARY_AS)
 		local
 			l_feat: E_FEATURE
-			l_formal: FORMAL_A
 			l_type: TYPE_A
 			l_left_type, l_right_type: TYPE_A
 			l_left_class: CLASS_C
@@ -1158,8 +1148,7 @@ feature {NONE} -- Implementation
 				last_type := last_type.actual_type
 					-- Find correct left type and left class.
 				l_left_type := last_type
-				if l_left_type.is_formal then
-					l_formal ?= l_left_type
+				if attached {FORMAL_A} l_left_type as l_formal then
 					if l_formal.is_multi_constrained (current_class) then
 						l_is_left_multi_constrained := True
 						l_left_type_set := l_formal.constrained_types (current_class)
@@ -1174,8 +1163,7 @@ feature {NONE} -- Implementation
 					end
 					l_right_type := l_right_type.actual_type
 
-					if l_right_type.is_formal then
-						l_formal ?= l_right_type
+					if attached {FORMAL_A} l_right_type as l_formal then
 						if l_formal.is_multi_constrained (current_class) then
 							l_is_right_multi_constrained := True
 							l_right_type_set := l_formal.constrained_types (current_class)
@@ -1361,7 +1349,6 @@ feature {NONE} -- Implementation
 			l_feat: E_FEATURE
 			l_type: TYPE_A
 			l_last_type: TYPE_A
-			l_formal: FORMAL_A
 			l_last_type_set: TYPE_SET_A
 			l_last_class: CLASS_C
 			l_result: LIST[TUPLE[feature_item: E_FEATURE; type: RENAMED_TYPE_A]]
@@ -1373,8 +1360,7 @@ feature {NONE} -- Implementation
 			end
 			if not has_error_internal then
 				last_type := last_type.actual_type
-				if last_type.is_formal then
-					l_formal ?= last_type
+				if attached {FORMAL_A} last_type as l_formal then
 					if l_formal.is_multi_constrained (current_class) then
 						l_last_type_set := l_formal.constrained_types (current_class)
 							-- Here we get back the feature and the renamed type where the feature is from (it means that it includes a possible renaming)
@@ -2471,18 +2457,17 @@ feature {NONE} -- Implementation: helpers
 			-- Formal constraint class from `a_type_feature_i'.
 		local
 			l_type: TYPE_A
-			l_formal: FORMAL_A
-			l_formal_dec: FORMAL_CONSTRAINT_AS
 		do
 			l_type := a_type_feature_i.type
-			l_formal ?= l_type
-			if l_formal /= Void then
+			if attached {FORMAL_A} l_type as l_formal then
 				check
 					current_class_has_generics: current_class.generics /= Void
 				end
-				l_formal_dec ?= current_class.generics.i_th (l_formal.position)
-				check l_formal_dec_not_void: l_formal_dec /= Void end
-				Result := l_formal_dec.constraint_type (current_class).base_class
+				if attached {FORMAL_CONSTRAINT_AS} current_class.generics.i_th (l_formal.position) as l_formal_dec then
+					Result := l_formal_dec.constraint_type (current_class).base_class
+				else
+					check False end
+				end
 			else
 				Result := l_type.base_class
 			end
@@ -2769,7 +2754,7 @@ invariant
 note
 	date: "$Date$"
 	revision: "$Revision$"
-	copyright:	"Copyright (c) 1984-2020, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2021, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

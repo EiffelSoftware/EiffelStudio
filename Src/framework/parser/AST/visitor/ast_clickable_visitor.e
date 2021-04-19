@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "Visitor to compute CLICK_LIST"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -19,6 +19,7 @@ inherit
 			process_class_type_as,
 			process_generic_class_type_as,
 			process_named_tuple_type_as,
+			process_predecessor_as,
 			process_rename_as,
 			process_client_as,
 			process_convert_feat_as,
@@ -96,19 +97,13 @@ feature {NONE} -- Implementation
 		end
 
 	process_feat_name_id_as (l_as: FEAT_NAME_ID_AS)
-		local
-			l_click_ast: CLICK_AST
 		do
-			create l_click_ast.initialize (l_as, l_as)
-			internal_click_list.extend (l_click_ast)
+			internal_click_list.extend (create {CLICK_AST}.initialize (l_as, l_as))
 		end
 
 	process_feature_name_alias_as (l_as: FEATURE_NAME_ALIAS_AS)
-		local
-			l_click_ast: CLICK_AST
 		do
-			create l_click_ast.initialize (l_as, l_as)
-			internal_click_list.extend (l_click_ast)
+			internal_click_list.extend (create {CLICK_AST}.initialize (l_as, l_as))
 		end
 
 	process_class_as (l_as: CLASS_AS)
@@ -153,6 +148,12 @@ feature {NONE} -- Implementation
 			safe_process (l_as.generics)
 		end
 
+	process_predecessor_as (a: PREDECESSOR_AS)
+			-- <Precursor>
+		do
+			internal_click_list.extend (create {CLICK_AST}.initialize (a.feature_name, a.feature_name))
+		end
+
 	process_rename_as (l_as: RENAME_AS)
 		local
 			l_click_ast: CLICK_AST
@@ -195,7 +196,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2019, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2021, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

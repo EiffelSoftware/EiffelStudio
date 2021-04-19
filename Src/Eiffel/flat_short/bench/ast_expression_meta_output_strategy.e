@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "AST visitor to extract expression meta which is evaluated later by debugger."
 	date: "$Date$"
 	revision: "$Revision$"
@@ -23,6 +23,7 @@ inherit
 			process_bracket_as,
 			process_expr_call_as,
 			process_address_as,
+			process_predecessor_as,
 			format_feature_name
 		end
 
@@ -206,7 +207,20 @@ feature {NONE} -- Processing
 				push_expression
 				text_formatter_decorator.set_meta_data (expression_meta_from_as (a_as))
 			end
-			Precursor {AST_DECORATED_OUTPUT_STRATEGY}(a_as)
+			Precursor (a_as)
+			if not expr_type_visiting then
+				pop_expression
+			end
+		end
+
+	process_predecessor_as (a: PREDECESSOR_AS)
+			-- <Precursor>
+		do
+			if not expr_type_visiting then
+				push_expression
+				text_formatter_decorator.set_meta_data (expression_meta_from_as (a))
+			end
+			Precursor (a)
 			if not expr_type_visiting then
 				pop_expression
 			end
@@ -274,10 +288,11 @@ feature {NONE} -- Implementaiton
 	expression_meta_from_as (a_as: AST_EIFFEL): detachable READABLE_STRING_GENERAL
 			-- Get expression meta from AST
 		do
-			if attached source_class as l_class then
-				if attached Match_list_server.item (l_class.class_id) as l_list and then a_as.is_text_available (l_list) then
-					Result := a_as.text_32 (l_list)
-				end
+			if
+				attached source_class as l_class and then
+				attached Match_list_server.item (l_class.class_id) as l_list and then a_as.is_text_available (l_list)
+			then
+				Result := a_as.text_32 (l_list)
 			end
 		end
 
@@ -299,7 +314,7 @@ feature {NONE} -- Implementaiton
 			-- Stack to record expression meta info
 
 note
-	copyright: "Copyright (c) 1984-2013, Eiffel Software"
+	copyright: "Copyright (c) 1984-2021, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

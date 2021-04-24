@@ -1,8 +1,8 @@
-note
+﻿note
 	description: "[
-			Factory to create a custom attribute to a specific
-			.NET feature or class given provided information.
-		]"
+		Factory to create a custom attribute to a specific
+		.NET feature or class given provided information.
+	]"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 	date: "$Date$"
@@ -113,20 +113,18 @@ feature {CIL_CODE_GENERATOR} -- Generation
 			a_owner_token_valid: a_owner_token /= 0
 			has_custom_attributes: ca /= Void
 		local
-			ca_b: CUSTOM_ATTRIBUTE_B
 			l_gen: CUSTOM_ATTRIBUTE_GENERATOR
 		do
-			from
-				l_gen := custom_attribute_generator
-				ca.start
-			until
-				ca.after
+			l_gen := custom_attribute_generator
+			across
+				ca as c
 			loop
-				ca_b ?= ca.item
-				check ca_b_not_void: ca_b /= Void end
-				l_gen.generate (ca_b, a_owner_token, cil_generator)
-				ca.forth
+				if attached {CUSTOM_ATTRIBUTE_B} c.item as b then
+					l_gen.generate (b, a_owner_token, cil_generator)
+				end
 			end
+		ensure
+			class
 		end
 
 feature {NONE} -- Implementation
@@ -136,11 +134,12 @@ feature {NONE} -- Implementation
 		once
 			create Result
 		ensure
-			custom_attribute_generator_not_void: Result /= Void
+			class
+			attached Result
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2021, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
@@ -171,4 +170,4 @@ note
 			Customer support http://support.eiffel.com
 		]"
 
-end -- class CUSTOM_ATTRIBUTE_FACTORY
+end

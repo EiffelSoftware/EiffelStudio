@@ -1,8 +1,8 @@
-note
+﻿note
 	description: "[
 		Implementation of multiple inheritance by using multiple inheritance
 		of interfaces. No simple inheritance of implementation is performed
-		]"
+	]"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 	date: "$Date$"
@@ -69,7 +69,6 @@ feature -- IL Generation
 			fid: INTEGER
 			p: PAIR [INTEGER, INTEGER]
 			ct: INTEGER
-			ca: BYTE_LIST [BYTE_NODE]
 			t: TYPE_A
 		do
 				-- Reset data
@@ -99,29 +98,24 @@ feature -- IL Generation
 			generate_il_implementation_parents (class_interface, implemented_feature_processor,
 				local_feature_processor, inherited_feature_processor)
 
-			from
-				postponed_property_setters.start
-			until
-				postponed_property_setters.after
+			across
+				postponed_property_setters as s
 			loop
-				p := postponed_property_setters.item
+				p := s.item
 				fid := p.first
 				tid := p.second
 				current_module.insert_property_setter
 					(feature_token (tid, current_class.feature_of_feature_id
 						(fid).property_setter_in (current_class_type).feature_id), tid, fid)
-				postponed_property_setters.forth
 			end
 			postponed_property_setters.wipe_out
 
-			from
-				tid := class_type.static_type_id
-				ct := actual_class_type_token (tid)
-				properties.start
-			until
-				properties.after
+			tid := class_type.static_type_id
+			ct := actual_class_type_token (tid)
+			across
+				properties as property
 			loop
-				fid := properties.item
+				fid := property.item
 				f := current_class.feature_of_feature_id (fid)
 				uni_string.set_string (f.property_name)
 				property_sig.reset
@@ -133,19 +127,17 @@ feature -- IL Generation
 				end
 				set_signature_type (property_sig, t, class_type)
 				st := current_module.defined_property_setter_token (tid, fid)
-				if st & {MD_TOKEN_TYPES}.md_method_def /= {MD_TOKEN_TYPES}.md_method_def then
+				if st & {MD_TOKEN_TYPES}.md_method_def = 0 then
 					st := {MD_TOKEN_TYPES}.md_method_def
 				end
 				gt := current_module.defined_property_getter_token (tid, fid)
-				if gt & {MD_TOKEN_TYPES}.md_method_def /= {MD_TOKEN_TYPES}.md_method_def then
+				if gt & {MD_TOKEN_TYPES}.md_method_def = 0 then
 					gt := {MD_TOKEN_TYPES}.md_method_def
 				end
 				pt := md_emit.define_property (ct, uni_string, 0, property_sig, st, gt)
-				ca := f.property_custom_attributes
-				if ca /= Void then
-					(create {CUSTOM_ATTRIBUTE_FACTORY}).generate_custom_attributes (pt, ca)
+				if attached f.property_custom_attributes as ca then
+					{CUSTOM_ATTRIBUTE_FACTORY}.generate_custom_attributes (pt, ca)
 				end
-				properties.forth
 			end
 			properties.wipe_out
 
@@ -182,21 +174,13 @@ feature -- IL Generation
 
 	generate_il_type_features (class_c: CLASS_C; class_type: CLASS_TYPE;
 			type_features: HASH_TABLE [TYPE_FEATURE_I, INTEGER]; type_feature_processor: PROCEDURE [TYPE_FEATURE_I])
-
 			-- Generate IL code for feature that represents type information of `class_c'.
 		require
 			class_c_not_void: class_c /= Void
 			class_type_not_void: class_type /= Void
 		do
-			if type_features /= Void and then type_feature_processor /= Void then
-				from
-					type_features.start
-				until
-					type_features.after
-				loop
-					type_feature_processor.call ([type_features.item_for_iteration])
-					type_features.forth
-				end
+			if attached type_features and then attached type_feature_processor then
+				⟳ f: type_features ¦ type_feature_processor (f) ⟲
 			end
 		end
 
@@ -211,19 +195,14 @@ feature -- IL Generation
 			local_feature_processor_not_void: local_feature_processor /= Void
 			inherited_feature_processor_not_void: inherited_feature_processor /= Void
 		local
-			parents: ARRAYED_LIST [CLASS_INTERFACE]
 			l_interface: CLASS_INTERFACE
 			l_cl_type: CLASS_TYPE
 		do
-			from
-				parents := class_interface.parents
-				parents.start
-			until
-				parents.after
+			across
+				class_interface.parents as p
 			loop
-				l_interface := parents.item
+				l_interface := p.item
 				l_cl_type := l_interface.class_type
-
 				if not processed_tbl.has (l_cl_type.static_type_id) then
 					processed_tbl.put (l_cl_type.static_type_id)
 					generate_il_implementation_inherited (l_interface, l_interface.associated_class, l_cl_type,
@@ -231,7 +210,6 @@ feature -- IL Generation
 					generate_il_implementation_parents (l_interface,
 						implemented_feature_processor, local_feature_processor, inherited_feature_processor)
 				end
-				parents.forth
 			end
 		end
 
@@ -248,21 +226,16 @@ feature -- IL Generation
 			not_external_class_type: not class_type.is_external
 		local
 			select_tbl: SELECT_TABLE
-			features: SEARCH_TABLE [INTEGER]
 			feat: FEATURE_I
 			l_class_id: INTEGER
 		do
 				-- Generate code
-			from
-				features := class_interface.features
-				select_tbl := class_c.feature_table.select_table
-				l_class_id := current_class_type.type.class_id
-				features.start
-			until
-				features.after
+			select_tbl := class_c.feature_table.select_table
+			l_class_id := current_class_type.type.class_id
+			across
+				class_interface.features as f
 			loop
-				feat := select_tbl.item (features.item_for_iteration)
-
+				feat := select_tbl.item (f.item)
 					-- Generate code for current class only.
 				if not feat.is_deferred then
 					if feat.written_in = l_class_id or feat.is_attribute or feat.is_object_relative_once then
@@ -285,7 +258,6 @@ feature -- IL Generation
 							current_class_type.associated_class.is_deferred
 					end
 				end
-				features.forth
 			end
 		end
 
@@ -303,21 +275,16 @@ feature -- IL Generation
 			inherited_feature_processor_not_void: inherited_feature_processor /= Void
 		local
 			select_tbl: SELECT_TABLE
-			features: SEARCH_TABLE [INTEGER]
 			inh_feat, feat: FEATURE_I
 			rout_id, l_class_id: INTEGER
 		do
 				-- Generate code
-			from
-				features := class_interface.features
-				select_tbl := class_c.feature_table.select_table
-				l_class_id := current_class_type.type.class_id
-				features.start
-			until
-				features.after
+			select_tbl := class_c.feature_table.select_table
+			l_class_id := current_class_type.type.class_id
+			across
+				class_interface.features as f
 			loop
-				inh_feat := select_tbl.item (features.item_for_iteration)
-
+				inh_feat := select_tbl.item (f.item)
 					-- Generate local definition of `inh_feat' which
 					-- calls static definition.
 				rout_id := inh_feat.rout_id_set.first
@@ -369,7 +336,6 @@ feature -- IL Generation
 						end
 					end
 				end
-				features.forth
 			end
 		end
 
@@ -401,17 +367,18 @@ feature -- IL Generation
 				end
 				if not is_single_class then
 						-- Generate static definition of a routine `feat' if the class type is not expanded.
-					if not is_replicated or else feat.is_once or else feat.is_replicated_directly then
-						if not is_expanded or else feat.is_attribute or else feat.is_external then
-							generate_feature (feat, False, True, False)
-							if is_replicated then
-								byte_context.change_class_type_context (current_class_type, current_class_type.type,
-									written_class_type, written_class_type.type)
-							end
-							generate_feature_code (feat, True)
-							if is_replicated then
-								byte_context.restore_class_type_context
-							end
+					if
+						(not is_replicated or else feat.is_once or else feat.is_replicated_directly) and then
+						(not is_expanded or else feat.is_attribute or else feat.is_external)
+					then
+						generate_feature (feat, False, True, False)
+						if is_replicated then
+							byte_context.change_class_type_context (current_class_type, current_class_type.type,
+								written_class_type, written_class_type.type)
+						end
+						generate_feature_code (feat, True)
+						if is_replicated then
+							byte_context.restore_class_type_context
 						end
 					end
 
@@ -600,7 +567,8 @@ feature -- IL Generation
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
+	ca_ignore: "CA011", "CA011: too many arguments"
+	copyright:	"Copyright (c) 1984-2021, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
@@ -631,4 +599,4 @@ note
 			Customer support http://support.eiffel.com
 		]"
 
-end -- class INTERFACE_IL_CODE_GENERATOR
+end

@@ -1347,19 +1347,15 @@ feature -- Metadata description
 						{MD_TYPE_ATTRIBUTES}.Ansi_class
 
 					if class_type.is_generated_as_single_type then
-						l_attributes := l_attributes | {MD_TYPE_ATTRIBUTES}.Is_class |
-							{MD_TYPE_ATTRIBUTES}.Serializable
-						if class_c.is_deferred then
-							l_attributes := l_attributes | {MD_TYPE_ATTRIBUTES}.abstract
-						end
-						if class_c.is_optimized_as_frozen or class_type.is_expanded then
-							l_attributes := l_attributes | {MD_TYPE_ATTRIBUTES}.Sealed
-						end
-
-						single_parent_mapping.put (single_inheritance_parent_id,
-							class_type.implementation_id)
+						l_attributes := l_attributes ⦶
+							{MD_TYPE_ATTRIBUTES}.Is_class ⦶
+							{MD_TYPE_ATTRIBUTES}.Serializable ⦶
+							({MD_TYPE_ATTRIBUTES}.abstract ⊗ (- class_c.is_deferred.to_integer.to_integer_16)) ⦶
+							({MD_TYPE_ATTRIBUTES}.Sealed ⊗ (- (class_c.is_optimized_as_frozen or class_type.is_expanded).to_integer.to_integer_16))
+						single_parent_mapping.put (single_inheritance_parent_id, class_type.implementation_id)
 					else
-						l_attributes := l_attributes | {MD_TYPE_ATTRIBUTES}.Is_interface |
+						l_attributes := l_attributes |
+							{MD_TYPE_ATTRIBUTES}.Is_interface |
 							{MD_TYPE_ATTRIBUTES}.Abstract
 					end
 
@@ -1381,7 +1377,6 @@ feature -- Metadata description
 				end
 
 				class_mapping.put (l_type_token, class_type.static_type_id)
-
 			end
 		end
 
@@ -1407,19 +1402,14 @@ feature -- Metadata description
 			then
 				l_type_token := md_emit.define_type_ref (l_uni_string, assembly_token (class_type))
 			else
-				l_attributes := {MD_TYPE_ATTRIBUTES}.Public |
-					{MD_TYPE_ATTRIBUTES}.Auto_layout |
-					{MD_TYPE_ATTRIBUTES}.Ansi_class |
-					{MD_TYPE_ATTRIBUTES}.Is_class |
-					{MD_TYPE_ATTRIBUTES}.Serializable
-
-				if class_c.is_deferred then
-					l_attributes := l_attributes | {MD_TYPE_ATTRIBUTES}.Abstract
-				end
-
-				if class_c.is_optimized_as_frozen or class_type.is_expanded then
-					l_attributes := l_attributes | {MD_TYPE_ATTRIBUTES}.Sealed
-				end
+				l_attributes :=
+					{MD_TYPE_ATTRIBUTES}.Public ⦶
+					{MD_TYPE_ATTRIBUTES}.Auto_layout ⦶
+					{MD_TYPE_ATTRIBUTES}.Ansi_class ⦶
+					{MD_TYPE_ATTRIBUTES}.Is_class ⦶
+					{MD_TYPE_ATTRIBUTES}.Serializable ⦶
+					({MD_TYPE_ATTRIBUTES}.Abstract ⊗ (- class_c.is_deferred.to_integer.to_integer_16)) ⦶
+					({MD_TYPE_ATTRIBUTES}.Sealed ⊗ (- (class_c.is_optimized_as_frozen or class_type.is_expanded).to_integer.to_integer_16))
 
 				update_parents (class_type, class_c, False)
 				single_parent_mapping.put (single_inheritance_parent_id,
@@ -1452,14 +1442,14 @@ feature -- Metadata description
 		end
 
 	update_parents (class_type: CLASS_TYPE; class_c: CLASS_C; for_interface: BOOLEAN)
-			-- Generate ancestors map of `class_type' associated to `class_c' for context
-			-- `for_interface'.
+			-- Generate ancestors map of `class_type` associated to `class_c` for context
+			-- `for_interface`, updating `last_parents` accordingly.
 		require
 			is_generated: is_generated
 			class_c_not_void: class_c /= Void
 			class_type_not_void: class_type /= Void
 		local
-			parents: FIXED_LIST [CL_TYPE_A]
+			parents: like {CLASS_C}.parents
 			l_parent_type: CLASS_TYPE
 			l_list: SEARCH_TABLE [INTEGER]
 			id: INTEGER
@@ -1471,7 +1461,12 @@ feature -- Metadata description
 			l_has_an_eiffel_parent: BOOLEAN
 			interface_class_type: CLASS_TYPE
 		do
-			parents := class_c.conforming_parents
+			parents :=
+				if for_interface then
+					class_c.conforming_parents
+				else
+					class_c.parents
+				end
 			create l_list.make (parents.count)
 			create l_parents.make_filled (0, 0, parents.count)
 			l_single_inheritance_parent_id := 0
@@ -1559,11 +1554,7 @@ feature -- Metadata description
 						-- need inheritance to ANY to let the runtime know that we are
 						-- an Eiffel type on the interface, and the implementation should
 						-- inherit the associated interface type which inherits from ANY.
-					if for_interface then
-						l_parents.force (actual_class_type_token (any_type_id), i)
-					else
-						l_parents.force (actual_class_type_token (class_type.static_type_id), i)
-					end
+					l_parents.force (actual_class_type_token (if for_interface then any_type_id else class_type.static_type_id end), i)
 					i := i + 1
 				else
 					if class_type.is_expanded then
@@ -3705,7 +3696,7 @@ invariant
 	dll_or_console_valid: not is_assembly_module implies (is_dll and is_console_application)
 
 note
-	copyright:	"Copyright (c) 1984-2020, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2021, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

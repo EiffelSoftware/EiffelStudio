@@ -105,45 +105,35 @@ feature -- Settings
 feature -- Control
 
 	process_features (feat_tbl: FEATURE_TABLE)
-			-- Added `features' into current.
+			-- Add `features` into current.
 		local
-			class_c, parent_class: like associated_class
+			class_c: like associated_class
 			feat: FEATURE_I
 			l_parents: FIXED_LIST [CL_TYPE_A]
-			parent_type: CL_TYPE_A
 			l_list: SEARCH_TABLE [INTEGER]
 			i, id: INTEGER
-			par_feats: SPECIAL [SELECT_TABLE]
-			l_class_id: INTEGER
+			par_feats: SPECIAL [detachable SELECT_TABLE]
 		do
 			features.wipe_out
-
 			class_c := associated_class
-			l_class_id := class_c.class_id
-
 				-- Initialize parent feature tables.
-			l_parents := class_c.conforming_parents
-			from
-				create l_list.make (l_parents.count)
-				par_feats := (create {ARRAY [SELECT_TABLE]}.make (1, l_parents.count)).area
-				i := 0
-				l_parents.start
-			until
-				l_parents.after
+			l_parents := class_c.parents
+			create l_list.make (l_parents.count)
+			create par_feats.make_filled (Void, l_parents.count)
+			check i = 0 end
+			across
+				l_parents as p
 			loop
-				parent_type := l_parents.item
-				id := parent_type.class_id
+				id := p.item.class_id
 				if not l_list.has (id) then
 						-- Do not recheck twice the same parent.
 					l_list.force (id)
-					parent_class := System.class_of_id (id)
-					par_feats.put (parent_class.feature_table.select_table, i)
+					par_feats.put (System.class_of_id (id).feature_table.select_table, i)
 					i := i + 1
 				end
-				l_parents.forth
 			end
-
 			from
+					-- ca_ignore: "CA024", "Internal and external iteration cursors in FEATURE_TABLE are different."
 				feat_tbl.start
 			until
 				feat_tbl.after
@@ -356,17 +346,18 @@ feature {NONE} -- Implementation
 					(inh_feat.is_il_external implies
 					(inh_feat.written_in /= new_feat.written_in or else inh_feat.written_feature_id /= new_feat.written_feature_id)) and then
 					not new_feat.rout_id_set.has (inh_feat.rout_id_set.first)
-			if Result then
-				if attached {IL_EXTENSION_I} new_feat.extension as l_ext then
-					l_type := l_ext.type
-					Result := l_type /= {SHARED_IL_CONSTANTS}.Creator_type and
-						l_type /= {SHARED_IL_CONSTANTS}.Static_type and
-						l_type /= {SHARED_IL_CONSTANTS}.Static_field_type and
-						l_type /= {SHARED_IL_CONSTANTS}.Field_type
+			if
+				Result and then
+				attached {IL_EXTENSION_I} new_feat.extension as l_ext
+			then
+				l_type := l_ext.type
+				Result := l_type /= {SHARED_IL_CONSTANTS}.Creator_type and
+					l_type /= {SHARED_IL_CONSTANTS}.Static_type and
+					l_type /= {SHARED_IL_CONSTANTS}.Static_field_type and
+					l_type /= {SHARED_IL_CONSTANTS}.Field_type and
 						-- Do not process inherited frozen routines from .NET types
-						-- as we cannot rename them.
-					Result := Result and then not inh_feat.is_frozen
-				end
+						-- because we cannot rename them.
+					not inh_feat.is_frozen
 			end
 		end
 
@@ -381,7 +372,7 @@ invariant
 	il_generation: system.il_generation
 
 note
-	copyright:	"Copyright (c) 1984-2018, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2021, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
@@ -412,4 +403,4 @@ note
 			Customer support http://support.eiffel.com
 		]"
 
-end -- class CLASS_INTERFACE
+end

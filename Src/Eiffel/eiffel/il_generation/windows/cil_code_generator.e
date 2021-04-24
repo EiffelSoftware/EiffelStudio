@@ -1206,8 +1206,7 @@ feature -- Class info
 				external_class_mapping.put (class_type.type, class_type.full_il_type_name)
 			end
 
-				-- Only conforming parents should be iterated as non-conforming features will get generated locally.
-			parents := class_c.conforming_parents
+			parents := class_c.parents
 			create class_interface.make_from_context (class_c.class_interface, class_type)
 			create pars.make (parents.count)
 
@@ -1318,7 +1317,6 @@ feature -- Class info
 			l_ca: MD_CUSTOM_ATTRIBUTE
 			l_class_name: STRING_32
 			l_meth_attr: INTEGER
-			l_gen_type: GEN_TYPE_A
 			i, nb: INTEGER
 			l_type: TYPE_A
 			l_class_type: CLASS_TYPE
@@ -1331,8 +1329,7 @@ feature -- Class info
 			create l_ca.make
 			l_ca.put_string (l_class_name)
 
-			if class_type.is_generic then
-				l_gen_type ?= class_type.type
+			if attached {GEN_TYPE_A} class_type.type as l_gen_type then
 				from
 					l_ca.put_integer_32 (l_gen_type.generics.count)
 					i := l_gen_type.generics.lower
@@ -2094,7 +2091,6 @@ feature -- Features info
 			l_return_type: TYPE_A
 			l_is_c_external: BOOLEAN
 			l_class_token: like current_class_token
-			l_ext: IL_EXTENSION_I
 			l_naming_convention: BOOLEAN
 			l_is_single_class: BOOLEAN
 			l_is_static: BOOLEAN
@@ -2110,12 +2106,9 @@ feature -- Features info
 			l_is_attribute := a_feature_i.is_attribute
 			l_is_c_external := a_feature_i.is_c_external
 
-			if a_feature_i.is_il_external then
-				l_ext ?= a_feature_i.extension
-				check
-					has_extension: l_ext /= Void
-				end
-				l_is_static := not l_ext.need_current (l_ext.type)
+			if attached {IL_EXTENSION_I} a_feature_i.extension as e then
+				l_is_static := not e.need_current (e.type)
+				l_name := e.alias_name
 			elseif l_class_type.is_expanded and then l_is_attribute then
 				l_is_static := True
 			elseif not l_is_single_class then
@@ -2134,9 +2127,7 @@ feature -- Features info
 
 				-- When we are handling with an external feature, we have to extract its
 				-- real name, not the Eiffel one.
-			if l_ext /= Void then
-				l_name := l_ext.alias_name
-			else
+			if not attached l_name then
 				if a_feature_i.is_type_feature then
 					l_name := a_feature_i.feature_name
 				else
@@ -2351,8 +2342,8 @@ feature -- Features info
 			if is_override then
 				l_feature_name := Override_prefix + l_feature_name + override_counter.next.out
 			end
-			last_property_getter_token :=  {MD_TOKEN_TYPES}.md_method_def
-			last_property_setter_token :=  {MD_TOKEN_TYPES}.md_method_def
+			last_property_getter_token := {MD_TOKEN_TYPES}.md_method_def
+			last_property_setter_token := {MD_TOKEN_TYPES}.md_method_def
 			l_is_attribute := feat.is_attribute
 			l_is_c_external := feat.is_c_external
 			l_parameter_count := feat.argument_count
@@ -2368,11 +2359,12 @@ feature -- Features info
 			else
 				l_meth_sig := method_sig
 				l_meth_sig.reset
-				if is_static and not in_interface then
-					l_meth_sig.set_method_type ({MD_SIGNATURE_CONSTANTS}.Default_sig)
-				else
-					l_meth_sig.set_method_type ({MD_SIGNATURE_CONSTANTS}.Has_current)
-				end
+				l_meth_sig.set_method_type
+					(if is_static and not in_interface then
+						{MD_SIGNATURE_CONSTANTS}.Default_sig
+					else
+						{MD_SIGNATURE_CONSTANTS}.Has_current
+					end)
 
 				l_meth_sig.set_parameter_count (l_parameter_count + (is_static and not l_is_c_external).to_integer)
 
@@ -2407,8 +2399,7 @@ feature -- Features info
 			end
 			if is_static then
 				if l_is_c_external then
-					l_name := encoder.feature_name (current_class_type.type_id,
-						feat.body_index)
+					l_name := encoder.feature_name (current_class_type.type_id, feat.body_index)
 				else
 					if l_is_attribute then
 						l_name := "$$" + il_casing.camel_casing (
@@ -2428,12 +2419,10 @@ feature -- Features info
 				if feat.has_property_getter or else feat.has_property_setter then
 						-- Define property.
 					l_meth_sig := method_sig
-					l_meth_attr := {MD_METHOD_ATTRIBUTES}.Public |
-						{MD_METHOD_ATTRIBUTES}.Hide_by_signature |
-						{MD_METHOD_ATTRIBUTES}.Virtual
-					if in_interface then
-						l_meth_attr := l_meth_attr | {MD_METHOD_ATTRIBUTES}.Abstract
-					end
+					l_meth_attr := {MD_METHOD_ATTRIBUTES}.Public ⦶
+						{MD_METHOD_ATTRIBUTES}.Hide_by_signature ⦶
+						{MD_METHOD_ATTRIBUTES}.Virtual ⦶
+						({MD_METHOD_ATTRIBUTES}.Abstract ⊗ (- in_interface.to_integer.to_integer_16))
 					if feat.has_property and then
 						(is_single_class or else in_interface) and then
 						not is_override_or_c_external
@@ -2497,11 +2486,8 @@ feature -- Features info
 			uni_string.set_string (l_name)
 
 			if l_is_attribute_generated_as_field then
-				if feat.origin_class_id = 0 then
-					l_declaration_class := system.class_of_id (feat.access_in)
-				else
-					l_declaration_class := system.class_of_id (feat.origin_class_id)
-				end
+				l_declaration_class := system.class_of_id
+					(if feat.origin_class_id = 0 then feat.access_in else feat.origin_class_id end)
 				if
 					l_declaration_class.is_true_external or else
 					(l_declaration_class.is_single and then l_declaration_class /= current_class)
@@ -2580,13 +2566,10 @@ feature -- Features info
 					if is_static then
 						l_meth_attr := l_meth_attr | {MD_METHOD_ATTRIBUTES}.Static
 					else
-						l_meth_attr := l_meth_attr | {MD_METHOD_ATTRIBUTES}.Virtual
-						if feat.is_origin then
-							l_meth_attr := l_meth_attr | {MD_METHOD_ATTRIBUTES}.New_slot
-						end
-						if feat.is_deferred and not is_empty and not is_override_or_c_external then
-							l_meth_attr := l_meth_attr | {MD_METHOD_ATTRIBUTES}.Abstract
-						end
+						l_meth_attr := l_meth_attr ⦶
+							{MD_METHOD_ATTRIBUTES}.Virtual ⦶
+							({MD_METHOD_ATTRIBUTES}.New_slot ⊗ (- feat.is_origin.to_integer.to_integer_16)) ⦶
+							({MD_METHOD_ATTRIBUTES}.Abstract ⊗ (- (feat.is_deferred and not is_empty and not is_override_or_c_external).to_integer.to_integer_16))
 					end
 				end
 
@@ -2616,22 +2599,15 @@ feature -- Features info
 
 				if not is_static and l_is_attribute and not is_override_or_c_external then
 						-- Let's define attribute setter.
-					if in_interface then
-						l_meth_attr := {MD_METHOD_ATTRIBUTES}.Public |
-							{MD_METHOD_ATTRIBUTES}.Hide_by_signature |
-							{MD_METHOD_ATTRIBUTES}.Virtual |
-							{MD_METHOD_ATTRIBUTES}.Abstract
-					else
-						l_meth_attr := {MD_METHOD_ATTRIBUTES}.Public |
-							{MD_METHOD_ATTRIBUTES}.Hide_by_signature |
-							{MD_METHOD_ATTRIBUTES}.Virtual
-					end
+					l_meth_attr := {MD_METHOD_ATTRIBUTES}.Public ⦶
+						{MD_METHOD_ATTRIBUTES}.Hide_by_signature ⦶
+						{MD_METHOD_ATTRIBUTES}.Virtual ⦶
+						({MD_METHOD_ATTRIBUTES}.Abstract ⊗ (- in_interface.to_integer.to_integer_16))
 
 					l_meth_sig.reset
 					l_meth_sig.set_method_type ({MD_SIGNATURE_CONSTANTS}.Has_current)
 					l_meth_sig.set_parameter_count (1)
-					l_meth_sig.set_return_type (
-						{MD_SIGNATURE_CONSTANTS}.Element_type_void, 0)
+					l_meth_sig.set_return_type ({MD_SIGNATURE_CONSTANTS}.Element_type_void, 0)
 					set_signature_type (l_meth_sig, l_return_type, signature_declaration_type)
 					uni_string.set_string (setter_prefix + l_name)
 					l_setter_token := md_emit.define_method (uni_string, current_class_token,
@@ -4373,8 +4349,6 @@ feature {IL_MODULE} -- Initialization of expanded attributes
 		require
 			class_type_not_void: class_type /= Void
 		local
-			attribute_type: CL_TYPE_A
-			desc: EXPANDED_DESC
 			skeleton: SKELETON
 		do
 			from
@@ -4383,9 +4357,12 @@ feature {IL_MODULE} -- Initialization of expanded attributes
 			until
 				skeleton.off or else skeleton.item.level /= skeleton.expanded_level
 			loop
-				desc ?= skeleton.item
-				attribute_type ?= desc.cl_type_i
-				if attribute_type.is_true_expanded and then not attribute_type.is_external then
+				if
+					attached {EXPANDED_DESC} skeleton.item as desc and then
+					attached {CL_TYPE_A} desc.cl_type_i as attribute_type and then
+					attribute_type.is_true_expanded and then
+					not attribute_type.is_external
+				then
 					duplicate_top
 					create_expanded_object (attribute_type)
 					method_body.put_opcode_mdtoken ({MD_OPCODES}.stfld, attribute_token (class_type.implementation_id, skeleton.item.feature_id))
@@ -4400,7 +4377,6 @@ feature {IL_MODULE} -- Initialization of expanded attributes
 			class_type_not_void: class_type /= Void
 		local
 			attribute_type: TYPE_A
-			desc: EXPANDED_DESC
 			skeleton: SKELETON
 		do
 			from
@@ -4409,9 +4385,10 @@ feature {IL_MODULE} -- Initialization of expanded attributes
 			until
 				Result or else skeleton.off or else skeleton.item.level /= skeleton.expanded_level
 			loop
-				desc ?= skeleton.item
-				attribute_type := desc.cl_type_i
-				Result := attribute_type.is_true_expanded and then not attribute_type.is_external
+				if attached {EXPANDED_DESC} skeleton.item as desc then
+					attribute_type := desc.cl_type_i
+					Result := attribute_type.is_true_expanded and then not attribute_type.is_external
+				end
 				skeleton.forth
 			end
 		end
@@ -4772,16 +4749,11 @@ feature -- Addresses
 	generate_attribute_address (type_i: TYPE_A; attr_type: TYPE_A; a_feature_id: INTEGER)
 			-- Generate address to attribute of `a_feature_id' in `type_i'.
 		local
-			cl_type: CL_TYPE_A
 			local_number: INTEGER
-			l_class_type: CLASS_TYPE
 		do
-			cl_type ?= type_i
-			if cl_type /= Void then
-				l_class_type := cl_type.associated_class_type (current_class_type.type)
-			end
 			if
-				l_class_type /= Void and then
+				attached {CL_TYPE_A} type_i as cl_type and then
+				attached cl_type.associated_class_type (current_class_type.type) as l_class_type and then
 				l_class_type.is_generated_as_single_type
 			then
 				method_body.put_opcode_mdtoken ({MD_OPCODES}.Ldflda,
@@ -4889,29 +4861,29 @@ feature -- Addresses
 	generate_load_from_address_as_basic (a_type: TYPE_A)
 			-- Load value of a basic type `a_type' from address of an Eiffel object pushed on stack.
 		local
-			l_cl_type: CL_TYPE_A
 			l_table: FEATURE_TABLE
 			l_feat: FEATURE_I
 		do
-			l_cl_type ?= a_type
-			l_table := l_cl_type.base_class.feature_table
-				-- Try to get an attribute by name.
-			l_feat := l_table.item_id ({PREDEFINED_NAMES}.item_name_id)
-			if l_feat = Void or else not l_feat.is_attribute then
-					-- Find attribute explicitly.
-				from
-					l_table.start
-				until
-					l_table.after or else l_table.item_for_iteration.is_attribute
-				loop
-					l_table.forth
+			if attached {CL_TYPE_A} a_type as l_cl_type then
+				l_table := l_cl_type.base_class.feature_table
+					-- Try to get an attribute by name.
+				l_feat := l_table.item_id ({PREDEFINED_NAMES}.item_name_id)
+				if l_feat = Void or else not l_feat.is_attribute then
+						-- Find attribute explicitly.
+					from
+						l_table.start
+					until
+						l_table.after or else l_table.item_for_iteration.is_attribute
+					loop
+						l_table.forth
+					end
+					l_feat := l_table.item_for_iteration
 				end
-				l_feat := l_table.item_for_iteration
+				check
+					l_feat_attached: l_feat /= Void -- This is ensured by {CLASS_B}.check_validity
+				end
+				generate_attribute (True, l_cl_type, l_feat.feature_id)
 			end
-			check
-				l_feat_attached: l_feat /= Void -- This is ensured by {CLASS_B}.check_validity
-			end
-			generate_attribute (True, l_cl_type, l_feat.feature_id)
 		end
 
 feature -- Assignments
@@ -4967,34 +4939,32 @@ feature -- Assignments
 	generate_check_cast (source_type, target_type: TYPE_A)
 			-- Generate `checkcast' byte code instruction.
 		local
-			l_source, l_target: CL_TYPE_A
 			l_token: INTEGER
-			l_native_array: NATIVE_ARRAY_TYPE_A
 			l_sig: MD_TYPE_SIGNATURE
 			l_target_type: TYPE_A
 		do
 				-- It makes sense to cast if and only if target is not expanded, nor a formal or NONE.
 				-- In the last two cases it is useless because those types are mapped to System.Object.
 			l_target_type := target_type.actual_type
-			if is_verifiable and not l_target_type.is_expanded and not l_target_type.is_none and not l_target_type.is_formal then
-				l_source ?= source_type
-				l_target ?= l_target_type
-				if
-					source_type = Void or else
-					l_source = Void or else l_target = Void or else
-					not l_source.base_class.simple_conform_to (l_target.base_class)
-				then
-					l_native_array ?= l_target_type
-					if l_native_array /= Void then
-							-- Try to optimize this a little bit more.
-						create l_sig.make
-						set_signature_type (l_sig, l_native_array, current_class_type)
-						l_token := md_emit.define_type_spec (l_sig)
-					else
-						l_token := mapped_class_type_token (l_target_type.static_type_id (current_class_type.type))
-					end
-					method_body.put_opcode_mdtoken ({MD_OPCODES}.Castclass, l_token)
+			if
+				is_verifiable and
+				not l_target_type.is_expanded and
+				not l_target_type.is_none and
+				not l_target_type.is_formal and then
+				(not attached source_type or else
+				not attached {CL_TYPE_A} source_type as s or else
+				not attached {CL_TYPE_A} l_target_type as t or else
+				not s.base_class.simple_conform_to (t.base_class))
+			then
+				if attached {NATIVE_ARRAY_TYPE_A} l_target_type as l_native_array then
+						-- Try to optimize this a little bit more.
+					create l_sig.make
+					set_signature_type (l_sig, l_native_array, current_class_type)
+					l_token := md_emit.define_type_spec (l_sig)
+				else
+					l_token := mapped_class_type_token (l_target_type.static_type_id (current_class_type.type))
 				end
+				method_body.put_opcode_mdtoken ({MD_OPCODES}.Castclass, l_token)
 			end
 		end
 
@@ -5008,13 +4978,9 @@ feature -- Assignments
 			end
 			l_class_type := type_i.associated_class_type (current_class_type.type)
 			if l_class_type.is_generated_as_single_type then
-				if need_target then
-					method_body.put_opcode_mdtoken ({MD_OPCODES}.Stfld,
+				method_body.put_opcode_mdtoken
+					(if need_target then {MD_OPCODES}.Stfld else {MD_OPCODES}.Stsfld end,
 						attribute_token (l_class_type.static_type_id, a_feature_id))
-				else
-					method_body.put_opcode_mdtoken ({MD_OPCODES}.Stsfld,
-						attribute_token (l_class_type.static_type_id, a_feature_id))
-				end
 			elseif l_class_type.is_expanded then
 				method_body.put_call ({MD_OPCODES}.Call,
 					setter_token (l_class_type.implementation_id, a_feature_id), 1, False)
@@ -5265,6 +5231,7 @@ feature -- Once management
 			method_body := Void
 				-- Generate data for once features in class `class_c'
 				-- (they are either immediate or replicated in it)
+				-- ca_ignore: "CA024", "Internal and external coursors have different implementation."
 			from
 				feature_table := class_c.feature_table
 				feature_table.start
@@ -5937,7 +5904,6 @@ feature -- Array manipulation
 			continue_loop_label: IL_LABEL
 			array_variable: INTEGER
 			index_variable: INTEGER
-			cl_type_i: CL_TYPE_A
 		do
 			if actual_generic.is_true_expanded and not actual_generic.is_external then
 					-- Initialize elements with their default values:
@@ -5968,12 +5934,12 @@ feature -- Array manipulation
 				duplicate_top
 				generate_local_assignment (index_variable)
 				method_body.put_opcode_mdtoken ({MD_OPCODES}.ldelema, actual_class_type_token (actual_generic.static_type_id))
-				cl_type_i ?= array_type.generics.first
-				check
-					cl_type_i_attached: cl_type_i /= Void
+				if attached {CL_TYPE_A} array_type.generics.first as cl_type_i then
+					create_expanded_object (cl_type_i)
+					method_body.put_opcode_mdtoken ({MD_OPCODES}.stobj, actual_class_type_token (actual_generic.static_type_id))
+				else
+					check is_type_expected: False end
 				end
-				create_expanded_object (cl_type_i)
-				method_body.put_opcode_mdtoken ({MD_OPCODES}.stobj, actual_class_type_token (actual_generic.static_type_id))
 				mark_label (enter_loop_label)
 				generate_local (index_variable)
 				branch_on_true (continue_loop_label)
@@ -6423,11 +6389,8 @@ feature -- Assertions
 			i, id: INTEGER
 			l_list: SEARCH_TABLE [INTEGER]
 		do
-			parents := current_class_type.associated_class.conforming_parents
+			parents := current_class_type.associated_class.parents
 			create l_list.make (parents.count)
-				--| FIXME IEK: We currently only iterate conforming parents for invariant generation
-				--| as invariants from a non-conforming branch would have to be flat generated in the
-				--| current class.
 			across
 				parents as p
 			loop
@@ -6437,8 +6400,13 @@ feature -- Assertions
 					l_list.force (id)
 					if not cl_type.is_external then
 						generate_current_as_reference
-						method_body.put_call ({MD_OPCODES}.Call,
-							invariant_token (id), 0, False)
+						if
+							system.il_verifiable and then
+							not current_class.simple_conform_to (cl_type.associated_class)
+						then
+							generate_check_cast (current_class_type.type, cl_type.type)
+						end
+						method_body.put_call ({MD_OPCODES}.Call, invariant_token (id), 0, False)
 					end
 					i := i + 1
 				end
@@ -7413,27 +7381,25 @@ feature {NONE} -- Implementation: generation
 				l_type_i := l_org_type_i
 			end
 
-			if l_type_i.is_formal then
-				l_formal_type ?= l_type_i
+			if attached {FORMAL_A} l_type_i as f then
+				l_formal_type := f
 				l_type_id := formal_type_id
 			elseif l_type_i.is_none then
 				l_type_id := none_type_id
-			else
-				l_cl_type ?= l_type_i
+			elseif attached {CL_TYPE_A} l_type_i as c then
+				l_cl_type := c
 				if l_cl_type.is_basic then
 					l_type_id := basic_type_id
-				else
-					l_gen_type ?= l_cl_type
-					if l_gen_type /= Void then
-						l_tuple_type ?= l_gen_type
-						if l_tuple_type /= Void then
-							l_type_id := tuple_type_id
-						else
-							l_type_id := generic_type_id
-						end
+				elseif attached {GEN_TYPE_A} l_cl_type as g then
+					l_gen_type := g
+					if attached {TUPLE_TYPE_A} l_gen_type as t then
+						l_tuple_type := t
+						l_type_id := tuple_type_id
 					else
-						l_type_id := class_type_id
+						l_type_id := generic_type_id
 					end
+				else
+					l_type_id := class_type_id
 				end
 			end
 
@@ -8298,7 +8264,7 @@ note
 		"CA011", "CA011: too many arguments",
 		"CA033", "CA033: very long class",
 		"CA093", "CA093: manifest array type mismatch"
-	copyright:	"Copyright (c) 1984-2020, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2021, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

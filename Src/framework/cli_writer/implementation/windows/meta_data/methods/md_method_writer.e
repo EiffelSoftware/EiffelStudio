@@ -84,14 +84,10 @@ feature -- Update
 			not_is_closed: not is_closed
 		do
 			is_closed := True
-			from
-				method_locations.start
-			until
-				method_locations.after
+			across
+				method_locations as l
 			loop
-				md_emit.set_method_rva (method_locations.key_for_iteration,
-					top_rva + method_locations.item_for_iteration)
-				method_locations.forth
+				md_emit.set_method_rva (l.key, top_rva + l.item)
 			end
 		ensure
 			is_closed: is_closed
@@ -107,15 +103,12 @@ feature -- Settings
 			-- cross-assembly Eiffel inheritance.
 		require
 			not_is_closed: not is_closed
-		local
-			source_pos: INTEGER
 		do
 			check
 				has_source: method_locations.has (source_meth)
 				not_has_new_meth: not method_locations.has (new_meth)
 			end
-			source_pos := method_locations.item (source_meth)
-			method_locations.put (source_pos, new_meth)
+			method_locations.put (method_locations.item (source_meth), new_meth)
 		end
 
 	write_current_body
@@ -132,6 +125,8 @@ feature -- Settings
 			is_fat_seh: BOOLEAN
 			i: INTEGER
 			l_old_exceptions: detachable ARRAY [MD_EXCEPTION_CATCH]
+			handler_size: INTEGER
+			is_fat_handler: BOOLEAN
 		do
 			l_pos := current_position
 			l_m := item
@@ -197,8 +192,8 @@ feature -- Settings
 
 					update_size (l_pos + Exception_header.count)
 					Exception_header.write_to_stream (l_m, l_pos)
-					l_pos := l_pos + Exception_header.count
 					is_fat_seh := Exception_header.is_fat
+					l_pos := l_pos + Exception_header.count
 					if l_old_exceptions /= Void then
 						from
 							i := l_old_exceptions.lower
@@ -207,26 +202,38 @@ feature -- Settings
 						loop
 							l_ex := l_old_exceptions.item (i)
 							if l_ex.is_defined then
-								l_ex.write_to_stream (is_fat_seh, l_m, l_pos)
-								l_pos := l_pos + l_ex.count (is_fat_seh)
+								is_fat_handler := l_ex.is_fat or is_fat_seh
+								handler_size := l_ex.count (is_fat_handler)
+								update_size (l_pos + handler_size)
+								l_ex.write_to_stream (is_fat_handler, l_m, l_pos)
+								l_pos := l_pos + handler_size
 							end
 							i := i + 1
 						end
 					end
 					l_ex := l_meth.exception_block
 					if l_ex.is_defined then
-						l_ex.write_to_stream (is_fat_seh, l_m, l_pos)
-						l_pos := l_pos + l_ex.count (is_fat_seh)
+						is_fat_handler := l_ex.is_fat or is_fat_seh
+						handler_size := l_ex.count (is_fat_handler)
+						update_size (l_pos + handler_size)
+						l_ex.write_to_stream (is_fat_handler, l_m, l_pos)
+						l_pos := l_pos + handler_size
 					end
 					l_ex := l_meth.once_catch_block
 					if l_ex.is_defined then
-						l_ex.write_to_stream (is_fat_seh, l_m, l_pos)
-						l_pos := l_pos + l_ex.count (is_fat_seh)
+						is_fat_handler := l_ex.is_fat or is_fat_seh
+						handler_size := l_ex.count (is_fat_handler)
+						update_size (l_pos + handler_size)
+						l_ex.write_to_stream (is_fat_handler, l_m, l_pos)
+						l_pos := l_pos + handler_size
 					end
 					l_ex := l_meth.once_finally_block
 					if l_ex.is_defined then
-						l_ex.write_to_stream (is_fat_seh, l_m, l_pos)
-						l_pos := l_pos + l_ex.count (is_fat_seh)
+						is_fat_handler := l_ex.is_fat or is_fat_seh
+						handler_size := l_ex.count (is_fat_handler)
+						update_size (l_pos + handler_size)
+						l_ex.write_to_stream (is_fat_handler, l_m, l_pos)
+						l_pos := l_pos + handler_size
 					end
 				end
 
@@ -296,7 +303,7 @@ invariant
 	method_locations_not_void: method_locations /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2020, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2021, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

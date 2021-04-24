@@ -1,14 +1,12 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
-<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-18-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-18-0 http://www.eiffel.com/developers/xml/configuration-1-18-0.xsd" name="cli_writer" uuid="84FFF212-5219-4511-9F00-76D44E3287DB" library_target="default">
+<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-21-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-21-0 http://www.eiffel.com/developers/xml/configuration-1-21-0.xsd" name="cli_writer" uuid="84FFF212-5219-4511-9F00-76D44E3287DB" library_target="default">
 	<target name="default">
 		<root all_classes="true"/>
 		<file_rule>
 			<exclude>/\.svn$</exclude>
 		</file_rule>
-		<option warning="true">
+		<option warning="error">
 		</option>
-		<capability>
-		</capability>
 		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf"/>
 		<library name="cli_writer_clib" location="$EIFFEL_SRC\framework\cli_writer\cli_writer_clib.ecf"/>
 		<library name="com_light" location="$EIFFEL_SRC\framework\com_light\com_light.ecf"/>

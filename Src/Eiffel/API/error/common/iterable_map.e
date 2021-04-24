@@ -1,10 +1,10 @@
 ﻿note
 	description: "[
 			An iterable based on another one whose items of one type are mapped to values of another type with a specified function.
-			First parameter specifies a type of elements in the original iterable structure.
-			Second parameter specifies a type of elements returned by this iterable structure.
+			The first parameter specifies the type of elements in the original iterable structure.
+			The second parameter specifies the type of elements returned by this iterable structure.
 			
-			Example. The following expression produced an iterable with a sequence of two values: "no" and "yes":
+			Example. The following expression produces an iterable with a sequence of two values: "no" and "yes":
 				
 					create {ITERABLE_MAP [BOOLEAN, STRING]}.make
 						(agent (v: BOOLEAN)

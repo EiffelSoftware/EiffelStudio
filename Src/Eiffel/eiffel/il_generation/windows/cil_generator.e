@@ -716,17 +716,20 @@ feature {NONE} -- Type description
 			types: TYPE_LIST
 			l_class_processed: BOOLEAN
 			cl_type: CLASS_TYPE
+			put_degree: PROCEDURE [CLASS_C, INTEGER]
 		do
 			from
 				i := classes.lower
 				nb := classes.upper
 				j := compiled_classes_count
-				if is_single_module then
-					if is_finalizing then
-						degree_output.put_start_degree (-3, j)
-					else
-						degree_output.put_start_degree (-1, j)
-					end
+				if not is_single_module then
+					put_degree := agent degree_output.put_degree_1
+				elseif is_finalizing then
+					put_degree := agent degree_output.put_degree_minus_3
+					degree_output.put_start_degree (-3, j)
+				else
+					put_degree := agent degree_output.put_degree_minus_1
+					degree_output.put_start_degree (-1, j)
 				end
 			until
 				i > nb or j = 0
@@ -746,15 +749,7 @@ feature {NONE} -- Type description
 							cil_generator.set_current_module_with (cl_type)
 
 							if not l_class_processed then
-								if is_single_module then
-									if is_finalizing then
-										degree_output.put_degree_minus_3 (class_c, j)
-									else
-										degree_output.put_degree_minus_1 (class_c, j)
-									end
-								else
-									degree_output.put_degree_1 (class_c, j)
-								end
+								put_degree (class_c, j)
 								System.set_current_class (class_c)
 								l_class_processed := True
 								j := j - 1
@@ -1158,7 +1153,7 @@ invariant
 	system_exists: System /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2019, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2021, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

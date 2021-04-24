@@ -1466,7 +1466,7 @@ feature -- Conveniences
 		end
 
 	frozen is_il_external: BOOLEAN
-			-- Is current feature a C external one?
+			-- Is current feature an IL external one?
 		do
 			Result :=
 				attached {IL_EXTENSION_I} extension or else

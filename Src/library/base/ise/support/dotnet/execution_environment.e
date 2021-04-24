@@ -294,7 +294,7 @@ feature {NONE} -- Implementation
 			l_si: SYSTEM_DLL_PROCESS_START_INFO
 			l_pos: INTEGER
 		do
-			if (current_working_path.name @ 2) = ':' then -- assume a volume
+			if current_working_path.name [2] = ':' then -- assume a volume
 				internal_launch_from_local_volume (s, should_wait)
 			else
 				l_pos := s.index_of (' ', 1)

@@ -69,12 +69,14 @@ feature -- Properties
 	conf_system: CONF_SYSTEM
 			-- Complete configuration system.
 
-	conf_state: CONF_STATE
+	conf_state: detachable CONF_STATE
 			-- Current state, needed for conditioning.
 		require
 			target_not_void: target /= Void
 		do
-			Result := conf_state_from_target (target)
+			if eiffel_system_defined then
+				Result := conf_state_from_target (target)
+			end
 		end
 
 	conf_state_from_target (a_target: CONF_TARGET): CONF_STATE
@@ -600,6 +602,23 @@ feature -- Access
 					end)
 		end
 
+	library_at_location (a_location: PATH; a_recursive: BOOLEAN): detachable LIST [CONF_LIBRARY]
+			-- List of system libraries identified by ecf file at `a_location`
+			-- `a_location`:  location of the library eiffel configuration file
+			-- `a_recursive': If True `library_at_location' will also look in sub libraries.
+			-- note: there should be at most one library for one location.
+		require
+			a_location_valid: a_location /= Void and then attached a_location.extension as ext and then ext.is_case_insensitive_equal ("ecf")
+		local
+			l_vis: CONF_FIND_LIBRARY_BY_LOCATION_VISITOR
+		do
+			create l_vis.make
+			l_vis.set_location (a_location)
+			l_vis.set_recursive (True)
+			target.process (l_vis)
+			Result := l_vis.found_libraries
+		end
+
 feature -- Update
 
 	set_new_target (a_target: like new_target)
@@ -930,7 +949,7 @@ invariant
 	target_in_conf_system: (conf_system /= Void and new_target = Void) implies target.system = conf_system
 
 note
-	copyright:	"Copyright (c) 1984-2020, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2021, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

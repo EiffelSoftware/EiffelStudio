@@ -411,6 +411,7 @@ feature -- Access: working copy
 					print (s)
 				end
 				create Result.make_success
+				Result.set_message (s)
 			end
 		end
 

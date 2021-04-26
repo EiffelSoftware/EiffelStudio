@@ -667,6 +667,8 @@ feature -- Access
 			else
 				Result := unix_separator
 			end
+		ensure
+			instance_free: class
 		end
 
 feature -- Status setting
@@ -1453,7 +1455,7 @@ invariant
 	no_forward_slash_on_windows: {PLATFORM}.is_windows implies not storage.has_substring ("/%U")
 
 note
-	copyright: "Copyright (c) 1984-2020, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2021, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

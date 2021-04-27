@@ -759,9 +759,11 @@
 	<PREF NAME="tools.refactoring.class_rename.update_strings" DESCRIPTION="Should occurrences of the class name in strings be changed?" HIDDEN="True"><BOOLEAN>False</BOOLEAN></PREF>
 	<PREF NAME="tools.refactoring.class_rename.allow_duplicate" DESCRIPTION="Is this ok to reuse an existing class name?" HIDDEN="True"><BOOLEAN>False</BOOLEAN></PREF>
 	<PREF NAME="tools.source_control.git_command" DESCRIPTION="GIT command (the binary is required to support GIT)."><STRING>git</STRING></PREF>
-	<PREF NAME="tools.source_control.git_diff_command" DESCRIPTION="GIT diff command."><STRING>git diff</STRING></PREF>
+	<PREF NAME="tools.source_control.use_external_git_diff_command" DESCRIPTION="Use external diff command for GIT?"><BOOLEAN>False</BOOLEAN></PREF>
+	<PREF NAME="tools.source_control.external_git_diff_command" DESCRIPTION="External GIT diff command (use $location as placeholder)."><STRING>path-to-external-git-diff-tool $location</STRING></PREF>
 	<PREF NAME="tools.source_control.svn_command" DESCRIPTION="Subversion command (the binary is required to support Subversion)."><STRING>svn</STRING></PREF>
-	<PREF NAME="tools.source_control.svn_diff_command" DESCRIPTION="Subversion diff command."><STRING>svn diff</STRING></PREF>
+	<PREF NAME="tools.source_control.use_external_svn_diff_command" DESCRIPTION="Use external diff command for Subversion?"><BOOLEAN>False</BOOLEAN></PREF>
+	<PREF NAME="tools.source_control.external_svn_diff_command" DESCRIPTION="External Subversion diff command (use $location as placeholder)."><STRING>path-to-external-git-svn-tool $location</STRING></PREF>
 
 	<PREF NAME="shortcuts.general.close_focusing_docking_tool_or_editor" DESCRIPTION="Close focusing docking tool or editor."><SHORTCUT Ctrl="True">F4</SHORTCUT></PREF>
 	<PREF NAME="shortcuts.general.focus_on_class_address" DESCRIPTION="Focus on class address input field."><SHORTCUT>F6</SHORTCUT></PREF>

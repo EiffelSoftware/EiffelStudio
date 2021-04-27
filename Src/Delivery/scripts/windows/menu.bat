@@ -139,7 +139,7 @@ set NO_ENTERPRISE_BUILD=
 goto end
 
 :make_installations_no_install
-set NO_ENTERPRISE_BUILD=
+set NO_ENTERPRISE_BUILD=True
 %TCCLECMD% /C make_installations.btm no_install
 goto end
 

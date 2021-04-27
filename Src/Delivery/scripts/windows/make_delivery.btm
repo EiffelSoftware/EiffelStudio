@@ -68,8 +68,8 @@ iff %@INDEX[%@LOWER[%$],standard] ge 0 then
 endiff
 iff %@INDEX[%@LOWER[%$],no_wizard] ge 0 then
 	set NO_WIZARDS="True"
-else
-	unset /Q NO_WIZARDS
+::else
+::	unset /Q NO_WIZARDS
 endiff
 
 cdd %INIT_DIR

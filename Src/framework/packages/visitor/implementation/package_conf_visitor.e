@@ -15,7 +15,8 @@ inherit
 			visit_target,
 			visit_library,
 			visit_cluster,
-			visit_class
+			visit_class,
+			reset
 		end
 
 	CONF_ITERATOR
@@ -103,15 +104,24 @@ feature -- Settings
 
 	is_stopping_at_library: BOOLEAN
 
+	is_stopping_at_readonly_library: BOOLEAN
+
 	is_indexing_class: BOOLEAN
 
 	is_ignoring_redirection: BOOLEAN
+	
+	is_visiting_same_ecf_library_once: BOOLEAN
 
 feature -- Settings change
 
 	set_is_stopping_at_library (b: BOOLEAN)
 		do
 			is_stopping_at_library := b
+		end
+
+	set_is_stopping_at_readonly_library (b: BOOLEAN)
+		do
+			is_stopping_at_readonly_library := b
 		end
 
 	set_is_indexing_class (b: BOOLEAN)
@@ -122,6 +132,11 @@ feature -- Settings change
 	set_is_ignoring_redirection (b: BOOLEAN)
 		do
 			is_ignoring_redirection := b
+		end
+
+	set_is_visiting_same_ecf_library_once (b: BOOLEAN)
+		do
+			is_visiting_same_ecf_library_once := b
 		end
 
 feature -- Change
@@ -221,19 +236,49 @@ feature -- Change
 			end
 		end
 
+feature -- Change
+
+	reset
+		do
+			Precursor
+			visited_library_locations := Void
+		end
+
+feature {NONE} -- Implementation
+
+	visited_library_locations: detachable ARRAYED_LIST [PATH]
+
 feature -- Visitor
 
 	visit_ecf_file (p: PATH)
 		local
 			f: RAW_FILE
+			libs: like visited_library_locations
+			l_lib_location: PATH
 		do
-			create f.make_with_path (p)
-			if
-				f.exists and then
-				f.is_access_readable and then
-				attached configuration_from (p) as cfg
-			then
-				visit_system (cfg)
+			if is_visiting_same_ecf_library_once then
+				l_lib_location := p
+				libs := visited_library_locations
+				if libs = Void then
+					create libs.make (10)
+					libs.compare_objects
+					visited_library_locations := libs
+				end
+			end
+			if libs = Void or else not libs.has (p) then
+					-- Not yet visited.
+				create f.make_with_path (p)
+				if
+					f.exists and then
+					f.is_access_readable and then
+					attached configuration_from (p) as cfg
+				then
+					visit_system (cfg)
+				end
+				if libs /= Void then
+					check not libs.has (p) end
+					libs.force (p)
+				end
 			end
 		end
 
@@ -260,7 +305,10 @@ feature -- Visitor
 				last_target := a_target
 
 				if is_any_setting then
-					if is_indexing_class or not is_stopping_at_library then
+					if 
+						is_indexing_class 
+						or not (is_stopping_at_library or is_stopping_at_readonly_library)
+					then
 						across
 							a_target.clusters as ic
 						loop
@@ -293,7 +341,10 @@ feature -- Visitor
 							end
 						end
 					else
-						if is_indexing_class or not is_stopping_at_library then
+						if 
+							is_indexing_class 
+							or not (is_stopping_at_library or is_stopping_at_readonly_library)
+						then
 							across
 								a_target.clusters as ic
 							loop
@@ -330,8 +381,11 @@ feature -- Visitor
 		local
 			l_last_target: like last_target
 		do
-				-- Do not visit clusters, ...
-			if not is_stopping_at_library then
+			if is_stopping_at_library then
+					-- Do not visit clusters, ...
+			elseif a_library.is_readonly and is_stopping_at_readonly_library then
+					-- Do not visit clusters of readonly library, ...
+			else
 				Precursor (a_library)
 				l_last_target := last_target
 				visit_ecf_file (a_library.location.evaluated_path)

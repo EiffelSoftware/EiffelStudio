@@ -15,8 +15,7 @@ inherit
 
 	PACKAGE_CONF_VISITOR
 		rename
-			make as make_visitor,
-			reset as reset_visitor
+			make as make_visitor
 		export
 			{NONE} all;
 			{ANY} set_is_stopping_at_library, set_is_indexing_class, set_is_ignoring_redirection,
@@ -25,7 +24,8 @@ inherit
 			visit_target,
 			visit_library,
 			visit_cluster,
-			visit_class
+			visit_class,
+			reset
 		end
 
 create
@@ -52,7 +52,7 @@ feature -- Change
 
 	reset
 		do
-			reset_visitor
+			Precursor
 		end
 
 feature -- Execution
@@ -60,7 +60,7 @@ feature -- Execution
 	visit_target (a_target: CONF_TARGET)
 		do
 			on_target (a_target)
-			Precursor {PACKAGE_CONF_VISITOR}(a_target)
+			Precursor {PACKAGE_CONF_VISITOR} (a_target)
 		end
 
 	visit_library (a_library: CONF_LIBRARY)
@@ -76,7 +76,9 @@ feature -- Execution
 				a_library.is_enabled (l_state)
 			then
 				on_library (a_library)
-				if not is_stopping_at_library then
+				if is_stopping_at_library then
+				elseif a_library.is_readonly and is_stopping_at_readonly_library then
+				else
 					Precursor {PACKAGE_CONF_VISITOR}(a_library)
 				end
 			end

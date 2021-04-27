@@ -199,7 +199,7 @@ feature {WSF_WEBSOCKET_EXECUTION} -- Basic Operation
 			end
 		end
 
-feature {WEB_SOCKET_HANDLER} -- Networking
+feature {WEB_SOCKET_HANDLER, WEB_SOCKET_WRITER} -- Networking
 
 	socket: HTTPD_STREAM_SOCKET
 			-- Underlying connected socket.

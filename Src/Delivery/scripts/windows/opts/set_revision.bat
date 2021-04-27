@@ -1,0 +1,1 @@
+set PUBLIC_SVN_REVISION=%1

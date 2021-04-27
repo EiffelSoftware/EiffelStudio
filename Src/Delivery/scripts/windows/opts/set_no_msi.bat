@@ -1,1 +1,1 @@
-set NO_MSI="True"
+set NO_MSI=True

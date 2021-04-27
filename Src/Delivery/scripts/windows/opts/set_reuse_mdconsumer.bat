@@ -1,1 +1,1 @@
-set REUSE_MDCONSUMER="True" 
+set REUSE_MDCONSUMER=True

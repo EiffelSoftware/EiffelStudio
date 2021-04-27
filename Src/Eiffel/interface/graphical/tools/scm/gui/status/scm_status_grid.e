@@ -18,6 +18,12 @@ inherit
 			copy
 		end
 
+	SHARED_WORKBENCH
+		undefine
+			default_create,
+			copy
+		end
+
 create
 	make_with_workspace
 
@@ -25,14 +31,18 @@ feature {NONE} -- Initialization
 
 	make_with_workspace (box: SCM_STATUS_BOX; ws: SCM_WORKSPACE)
 		do
-			default_create
 			status_box := box
+			default_create
 			set_workspace (ws)
 		end
 
 	initialize
 		do
 			Precursor
+
+			set_configurable_target_menu_mode
+			set_configurable_target_menu_handler (agent context_menu_handler)
+			set_item_pebble_function (agent pebble_for_item)
 
 			set_column_count_to (5)
 			column (checkbox_column).set_title ("")
@@ -49,8 +59,6 @@ feature {NONE} -- Initialization
 
 			row_select_actions.extend (agent on_row_selected)
 			row_deselect_actions.extend (agent on_row_deselected)
-
-			set_item_pebble_function (agent pebble_for_item)
 
 			enable_default_tree_navigation_behavior (True, True, True, True)
 			key_press_actions.extend (agent  (k: EV_KEY)
@@ -72,20 +80,41 @@ feature {NONE} -- Initialization
 
 feature -- Actions
 
+	context_menu_handler (a_menu: EV_MENU; a_target_list: ARRAYED_LIST [EV_PND_TARGET_DATA]; a_source: EV_PICK_AND_DROPABLE; a_pebble: detachable ANY)
+		local
+			mi: EV_MENU_ITEM
+		do
+			create mi.make_with_text ("TOTO")
+			a_menu.extend (mi)
+		end
+
 	pebble_for_item (a_item: EV_GRID_ITEM): detachable ANY
 		local
 			st: FILE_LOCATION_STONE
+			grp: SCM_GROUP
 		do
-			if attached {SCM_GROUP} a_item.data as g then
-				create st.make_with_path (g.location)
-				Result := st
-			elseif attached {PATH} a_item.data as p then
-				create st.make_with_path (p)
-				Result := st
-			elseif attached {SCM_STATUS} a_item.data as l_status then
-				create st.make_with_path (l_status.location)
-				Result := st
-			else
+			if attached a_item.row as l_row then
+				if attached {SCM_STATUS_WC_LOCATION_ROW} l_row.data as l_loc_row then
+					grp := l_loc_row.associated_group
+				elseif
+					attached l_row.parent_row as l_parent_row and then
+					attached {SCM_STATUS_WC_LOCATION_ROW} l_parent_row.data as l_loc_row
+				then
+					grp := l_loc_row.associated_group
+				end
+			end
+			if Result = Void then
+				if attached {SCM_GROUP} a_item.data as g then
+					create st.make_with_path (g.location)
+					Result := st
+				elseif attached {SCM_STATUS} a_item.data as l_status then
+					create st.make_with_path (l_status.location)
+					Result := st
+				elseif attached {PATH} a_item.data as l_path then
+					create st.make_with_path (l_path)
+					Result := st
+				else
+				end
 			end
 		end
 
@@ -137,6 +166,7 @@ feature -- Events
 				on_wc_selected (l_wc_row)
 			elseif attached {SCM_STATUS_WC_LOCATION_ROW} r.data as l_wc_loc_row then
 				on_wc_selected (l_wc_loc_row.parent_row)
+			elseif attached {SCM_STATUS} r.data as st then
 			end
 		end
 
@@ -146,6 +176,8 @@ feature -- Events
 				on_wc_deselected (l_wc_row)
 			elseif attached {SCM_STATUS_WC_LOCATION_ROW} r.data as l_wc_loc_row then
 				on_wc_deselected (l_wc_loc_row.parent_row)
+			else
+				on_wc_deselected (Void)
 			end
 		end
 
@@ -159,7 +191,7 @@ feature -- Events
 			end
 		end
 
-	on_wc_deselected (a_repo: SCM_STATUS_WC_ROW)
+	on_wc_deselected (a_repo: detachable SCM_STATUS_WC_ROW)
 		do
 			status_box.set_selected_repository (Void)
 		end
@@ -192,9 +224,9 @@ feature -- Events
 
 feature -- Access
 
-	status_box: detachable SCM_STATUS_BOX
+	status_box: SCM_STATUS_BOX
 
-	workspace: detachable SCM_WORKSPACE
+	workspace: SCM_WORKSPACE
 
 	scm_rows: detachable ARRAYED_LIST [SCM_STATUS_WC_ROW]
 
@@ -308,6 +340,8 @@ feature -- Operations
 feature -- Basic operation
 
 	set_workspace (ws: SCM_WORKSPACE)
+		require
+			ws /= Void
 		do
 			workspace := ws
 			populate

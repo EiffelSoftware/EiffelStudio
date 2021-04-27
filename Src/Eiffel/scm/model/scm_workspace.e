@@ -78,8 +78,10 @@ feature -- Basic operations
 			g: SCM_GROUP
 		do
 			create idx.make (Void)
-			idx.set_is_stopping_at_library (True)
+			idx.set_is_stopping_at_library (False)
+			idx.set_is_stopping_at_readonly_library (True)
 			idx.set_is_indexing_class (False)
+			idx.set_is_visiting_same_ecf_library_once (True)
 			obs := Current
 			idx.register_observer (obs)
 
@@ -91,6 +93,7 @@ feature -- Basic operations
 			end
 
 			idx.visit_target (target)
+			idx.reset
 
 			across
 				locations_by_root as ic
@@ -182,6 +185,8 @@ feature -- Visitor
 		end
 
 	on_library (lib: CONF_LIBRARY)
+		local
+			l_scm_lib: SCM_LIBRARY
 		do
 			Precursor (lib)
 			if
@@ -189,7 +194,12 @@ feature -- Visitor
 				is_included (p) and then
 				attached scm_root (p) as r
 			then
-				record_group (create {SCM_LIBRARY}.make (lib.name, p.parent, r))
+				create l_scm_lib.make (lib.name, p.parent, r)
+				if lib.is_readonly then
+					l_scm_lib.set_is_readonly (True)
+					l_scm_lib.exclude
+				end
+				record_group (l_scm_lib)
 			end
 		end
 

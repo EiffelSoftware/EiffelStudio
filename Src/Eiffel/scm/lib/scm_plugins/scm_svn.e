@@ -149,9 +149,17 @@ feature -- Access
 		do
 		end
 
-	diff (a_location: READABLE_STRING_GENERAL; a_options: detachable SCM_OPTIONS): detachable STRING
+	diff (a_location: READABLE_STRING_GENERAL; a_options: detachable SCM_OPTIONS): detachable STRING_32
 			-- Difference for `a_location', between `a_start' and `a_end' if provided.
+		local
+			svn: like new_scm_engine
+			opts: detachable SVN_OPTIONS
+			utf: UTF_CONVERTER
 		do
+			svn := new_scm_engine
+			if attached svn.diff (a_location, Void, Void, opts) as l_diff then
+				Result := utf.utf_8_string_8_to_string_32 (l_diff)
+			end
 		end
 
 	content (a_location: READABLE_STRING_GENERAL; a_ref: detachable SCM_COMMIT_REFERENCE; a_options: detachable SCM_OPTIONS): detachable STRING

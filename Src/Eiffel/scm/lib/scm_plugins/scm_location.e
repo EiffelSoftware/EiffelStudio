@@ -86,6 +86,12 @@ feature -- Execution
 			a_commit_set.is_processed
 		end
 
+	diff (a_changelist: SCM_CHANGELIST; cfg: SCM_CONFIG): detachable SCM_DIFF
+		require
+			same_location: same_as (a_changelist.root)
+		deferred
+		end
+
 feature -- Error		
 
 	reset_error

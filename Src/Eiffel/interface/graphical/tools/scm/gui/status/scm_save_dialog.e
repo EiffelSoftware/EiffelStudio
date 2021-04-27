@@ -240,7 +240,7 @@ feature -- Action
 			dialog.set_pointer_style ((create {EV_STOCK_PIXMAPS}).busy_cursor)
 			
 			commit.set_message (commit_log_text.text)
-			scm_service.commit_and_push (commit)
+			scm_service.commit (commit)
 
 			dialog.set_pointer_style (l_pointer_style)
 

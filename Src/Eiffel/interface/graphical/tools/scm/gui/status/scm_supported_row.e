@@ -53,7 +53,15 @@ feature -- Operation
 
 			eglab := new_label_ellipsis_item (scm_name)
 			eglab.ellipsis_actions.extend (agent on_options (eglab))
-			glab := eglab --new_label_item (scm_name)
+			glab := eglab
+--			glab := new_label_item (scm_name)
+			glab.pointer_button_press_actions.extend (agent (i_item: EV_GRID_ITEM; i_x, i_y, i_button: INTEGER; i_x_tilt, i_y_tilt, i_pressure: DOUBLE; i_screen_x, i_screen_y: INTEGER)
+						do
+							if i_button = {EV_POINTER_CONSTANTS}.right then
+								on_options (i_item)
+							end
+						end (glab, ?,?,?,?,?,?,?,?)
+					)
 			a_row.set_item (a_grid.scm_column, glab)
 
 			if not l_is_supported then
@@ -144,6 +152,26 @@ feature -- Operation
 			end
 		end
 
+	show_diff (a_only_selected_items: BOOLEAN)
+		local
+			ch_list: SCM_CHANGELIST
+		do
+			if attached scm_s.service as scm then
+				if a_only_selected_items then
+					ch_list := parent_grid.changes_for (root_location)
+				else
+					create ch_list.make_with_location (root_location)
+					ch_list.extend_path (root_location.location)
+				end
+				if
+					ch_list /= Void and then
+					attached scm.diff (ch_list) as l_diff
+				then
+					parent_grid.status_box.show_diff (l_diff)
+				end
+			end
+		end
+
 	on_options (a_item: EV_GRID_ITEM)
 		local
 			m: EV_MENU
@@ -168,12 +196,7 @@ feature -- Operation
 
 			create mi.make_with_text_and_action (scm_names.menu_save, agent
 					do
-						if
-							attached parent_grid as g and then
-							attached g.status_box as box
-						then
-							box.save_location (root_location)
-						end
+						parent_grid.status_box.save_location (root_location)
 					end)
 			m.extend (mi)
 			if changes_count = 0 then
@@ -186,6 +209,17 @@ feature -- Operation
 			create mi.make_with_text_and_action (scm_names.menu_check, agent update_statuses)
 			m.extend (mi)
 			if not l_is_supported then
+				mi.disable_sensitive
+			end
+
+			create mi.make_with_text_and_action (scm_names.menu_diff, agent show_diff (False))
+			m.extend (mi)
+			if not l_is_supported then
+				mi.disable_sensitive
+			end
+			create mi.make_with_text_and_action (scm_names.menu_diff_selection, agent show_diff (True))
+			m.extend (mi)
+			if not l_is_supported or changes_count = 0 then
 				mi.disable_sensitive
 			end
 

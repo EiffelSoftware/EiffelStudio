@@ -1,39 +1,79 @@
 note
-	description: "Summary description for {SCM_LIBRARY}."
+	description: "Summary description for {SCM_DIFF}."
 	author: ""
 	date: "$Date$"
 	revision: "$Revision$"
 
 class
-	SCM_LIBRARY
-
-inherit
-	SCM_GROUP
-		redefine
-			debug_output
-		end
+	SCM_DIFF
 
 create
 	make
 
-feature -- Status report
+feature	{NONE} -- Initialization
 
-	is_readonly: BOOLEAN
-
-	debug_output: STRING_32
-			-- String that should be displayed in debugger to represent `Current'.
+	make (nb: INTEGER)
 		do
-			Result := {STRING_32} "[lib] " + Precursor
+			create unified_diffs.make_equal (nb)
 		end
 
-feature -- Element change
+feature -- Operation
 
-	set_is_readonly (b: BOOLEAN)
+	put_string_diff (a_location: READABLE_STRING_GENERAL; s: READABLE_STRING_GENERAL)
 		do
-			is_readonly := b
+			unified_diffs [a_location] := create {IMMUTABLE_STRING_32}.make_from_string_general (s)
 		end
 
-note
+	put_string_8_diff (a_location: READABLE_STRING_GENERAL; s: READABLE_STRING_8)
+		local
+			utf: UTF_CONVERTER
+		do
+			put_string_diff (a_location, utf.utf_8_string_8_to_string_32 (s))
+		end
+
+feature -- Access: error
+
+	has_error: BOOLEAN
+
+	error_message: detachable IMMUTABLE_STRING_32
+
+	report_error (a_mesg: READABLE_STRING_GENERAL)
+		do
+			create error_message.make_from_string_general (a_mesg)
+			has_error := True
+		end
+
+	reset_error
+		do
+			has_error := False
+			error_message := Void
+		end
+
+feature -- Access	
+
+	unified_diffs: STRING_TABLE [IMMUTABLE_STRING_32]
+
+	full_text: STRING_32
+		do
+			create Result.make_empty
+			across
+				unified_diffs as ic
+			loop
+				Result.append_string (ic.item)
+				Result.append_character ('%N')
+			end
+		end
+
+feature -- Access: source
+
+	changelist: detachable SCM_CHANGELIST
+
+	set_changelist (cl: like changelist)
+		do
+			changelist := cl
+		end
+
+;note
 	copyright: "Copyright (c) 1984-2021, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"

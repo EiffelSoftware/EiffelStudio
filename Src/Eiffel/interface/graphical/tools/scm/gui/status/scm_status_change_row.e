@@ -15,6 +15,21 @@ inherit
 			default_create, copy
 		end
 
+	SHARED_EXECUTION_ENVIRONMENT
+		undefine
+			default_create, copy
+		end
+
+	SHARED_SOURCE_CONTROL_MANAGEMENT_SERVICE
+		undefine
+			default_create, copy
+		end
+
+	EV_SHARED_APPLICATION
+		undefine
+			default_create, copy
+		end
+
 	ES_SHARED_FONTS_AND_COLORS
 		undefine
 			default_create, copy
@@ -89,6 +104,7 @@ feature -- Execution
 			st: SCM_STATUS
 			rel_loc: READABLE_STRING_32
 			lab, l_parent_lab: EV_GRID_LABEL_ITEM
+			l_scm_lab: EV_GRID_LABEL_ELLIPSIS_ITEM
 			cb_lab: EV_GRID_CHECKABLE_LABEL_ITEM
 		do
 			l_scm_root := root_location
@@ -109,12 +125,43 @@ feature -- Execution
 				lab.set_pixmap (pix)
 			end
 
-			lab.pointer_double_press_actions.extend (agent (i_loc: PATH; i_x, i_y, i_button: INTEGER; i_x_tilt, i_y_tilt, i_pressure: DOUBLE; i_screen_x, i_screen_y: INTEGER)
+			lab.pointer_double_press_actions.extend (agent (a_root: SCM_LOCATION; i_loc: PATH; i_x, i_y, i_button: INTEGER; i_x_tilt, i_y_tilt, i_pressure: DOUBLE; i_screen_x, i_screen_y: INTEGER)
+					local
+						ch_list: SCM_CHANGELIST
+						l_ext_cmd: READABLE_STRING_GENERAL
 					do
 						if attached parent_grid as pg then
-							pg.open_file_location (i_loc)
+							if
+								attached scm_s.service as scm and then
+								ev_application.ctrl_pressed
+							then
+								if
+									attached {SCM_GIT_LOCATION} a_root and then
+									scm.config.use_external_git_diff_command
+								then
+									l_ext_cmd := scm.config.external_git_diff_command (i_loc)
+								elseif
+									attached {SCM_SVN_LOCATION} a_root and then
+									scm.config.use_external_svn_diff_command
+								then
+									l_ext_cmd := scm.config.external_svn_diff_command (i_loc)
+								else
+									l_ext_cmd := Void
+								end
+								if l_ext_cmd /= Void then
+									execution_environment.launch (l_ext_cmd)
+								else
+									create ch_list.make_with_location (wc_row.root_location)
+									ch_list.extend_path (i_loc)
+									if attached scm.diff (ch_list) as diff then
+										parent_grid.status_box.show_diff (diff)
+									end
+								end
+							else
+								pg.open_file_location (i_loc)
+							end
 						end
-					end(st.location, ?,?,?,?,?,?,?,?)
+					end(root_location, st.location, ?,?,?,?,?,?,?,?)
 				)
 			sr.set_item (parent_grid.filename_column, lab)
 
@@ -132,8 +179,16 @@ feature -- Execution
 				lab.set_foreground_color (colors.disabled_foreground_color)
 				l_parent_lab.set_foreground_color (colors.disabled_foreground_color)
 			else
-				sr.set_item (parent_grid.scm_column, wc_row.new_label_item (st.status_as_string))
---				cb_lab.set_is_checked (True)
+				l_scm_lab := wc_row.new_label_ellipsis_item (st.status_as_string)
+				sr.set_item (parent_grid.scm_column, l_scm_lab)
+				l_scm_lab.ellipsis_actions.extend (agent on_options (l_scm_lab))
+				l_scm_lab.pointer_button_press_actions.extend (agent (i_item: EV_GRID_ITEM; i_x, i_y, i_button: INTEGER; i_x_tilt, i_y_tilt, i_pressure: DOUBLE; i_screen_x, i_screen_y: INTEGER)
+							do
+								if i_button = {EV_POINTER_CONSTANTS}.right then
+									on_options (i_item)
+								end
+							end (l_scm_lab, ?,?,?,?,?,?,?,?)
+						)
 				wc_row.increment_changes_count
 			end
 
@@ -156,6 +211,31 @@ feature -- Execution
 			else
 			end
 		end
+
+	show_diff
+		local
+			ch_list: SCM_CHANGELIST
+		do
+			if attached scm_s.service as scm then
+				create ch_list.make_with_location (root_location)
+				ch_list.extend_path (status.location)
+				if attached scm.diff (ch_list) as l_diff then
+					parent_grid.status_box.show_diff (l_diff)
+				end
+			end
+		end
+
+	on_options (a_item: EV_GRID_ITEM)
+		local
+			m: EV_MENU
+			mi: EV_MENU_ITEM
+		do
+			create m
+			create mi.make_with_text_and_action (scm_names.menu_diff, agent show_diff)
+			m.extend (mi)
+			m.show
+		end
+
 
 note
 	copyright: "Copyright (c) 1984-2021, Eiffel Software"

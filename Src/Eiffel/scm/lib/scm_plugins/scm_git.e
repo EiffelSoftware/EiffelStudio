@@ -91,9 +91,13 @@ feature -- Access
 		do
 		end
 
-	diff (a_location: READABLE_STRING_GENERAL; a_options: detachable SCM_OPTIONS): detachable STRING
+	diff (a_location: READABLE_STRING_GENERAL; a_options: detachable SCM_OPTIONS): detachable STRING_32
 			-- Difference for `a_location', between `a_start' and `a_end' if provided.
+		local
+			git: like new_scm_engine
 		do
+			git := new_scm_engine
+			Result := git.diff (create {PATH}.make_from_string (a_location), a_options)
 		end
 
 	content (a_location: READABLE_STRING_GENERAL; a_ref: detachable SCM_COMMIT_REFERENCE; a_options: detachable SCM_OPTIONS): detachable STRING

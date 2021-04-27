@@ -71,7 +71,7 @@ feature -- Access
 		deferred
 		end
 
-	diff (a_location: READABLE_STRING_GENERAL; a_options: detachable SCM_OPTIONS): detachable STRING
+	diff (a_location: READABLE_STRING_GENERAL; a_options: detachable SCM_OPTIONS): detachable READABLE_STRING_32
 			-- Difference for `a_location', between `a_start' and `a_end' if provided.
 		deferred
 		end

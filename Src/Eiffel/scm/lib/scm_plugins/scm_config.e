@@ -20,11 +20,19 @@ feature -- Access
 		deferred
 		end
 
-	git_diff_command: detachable READABLE_STRING_32
+	use_external_git_diff_command: BOOLEAN
 		deferred
 		end
 
-	svn_diff_command: detachable READABLE_STRING_32
+	use_external_svn_diff_command: BOOLEAN
+		deferred
+		end
+
+	external_git_diff_command (a_location: detachable PATH): detachable READABLE_STRING_32
+		deferred
+		end
+
+	external_svn_diff_command (a_location: detachable PATH): detachable READABLE_STRING_32
 		deferred
 		end
 
@@ -38,11 +46,19 @@ feature -- Element change
 		deferred
 		end
 
-	set_svn_diff_command (v: READABLE_STRING_GENERAL)
+	set_use_external_svn_diff_command (v: BOOLEAN)
 		deferred
 		end
 
-	set_git_diff_command (v: READABLE_STRING_GENERAL)
+	set_use_external_git_diff_command (v: BOOLEAN)
+		deferred
+		end
+
+	set_external_svn_diff_command (v: READABLE_STRING_GENERAL)
+		deferred
+		end
+
+	set_external_git_diff_command (v: READABLE_STRING_GENERAL)
 		deferred
 		end
 

@@ -30,8 +30,11 @@ feature {EB_SHARED_PREFERENCES} -- Preference
 
 	svn_command_preference: STRING_PREFERENCE
 	git_command_preference: STRING_PREFERENCE
-	svn_diff_command_preference: STRING_PREFERENCE
-	git_diff_command_preference: STRING_PREFERENCE
+	use_external_svn_diff_command_preference: BOOLEAN_PREFERENCE
+	use_external_git_diff_command_preference: BOOLEAN_PREFERENCE
+	external_svn_diff_command_preference: STRING_PREFERENCE
+	external_git_diff_command_preference: STRING_PREFERENCE
+
 
 feature {NONE} -- Preference Strings
 
@@ -39,9 +42,13 @@ feature {NONE} -- Preference Strings
 
 	git_command_string: STRING = "tools.source_control.git_command"
 
-	svn_diff_command_string: STRING = "tools.source_control.svn_diff_command"
-	
-	git_diff_command_string: STRING = "tools.source_control.git_diff_command"
+	use_external_svn_diff_command_string: STRING = "tools.source_control.use_external_svn_diff_command"
+
+	use_external_git_diff_command_string: STRING = "tools.source_control.use_external_git_diff_command"
+
+	external_svn_diff_command_string: STRING = "tools.source_control.external_svn_diff_command"
+
+	external_git_diff_command_string: STRING = "tools.source_control.external_git_diff_command"
 
 feature {NONE} -- Implementation
 
@@ -54,8 +61,10 @@ feature {NONE} -- Implementation
 
 			svn_command_preference := l_manager.new_string_preference_value (l_manager, svn_command_string, "svn")
 			git_command_preference := l_manager.new_string_preference_value (l_manager, git_command_string, "git")
-			svn_diff_command_preference := l_manager.new_string_preference_value (l_manager, svn_diff_command_string, "svn diff")
-			git_diff_command_preference := l_manager.new_string_preference_value (l_manager, git_diff_command_string, "git diff")
+			use_external_svn_diff_command_preference := l_manager.new_boolean_preference_value (l_manager, use_external_svn_diff_command_string, False)
+			use_external_git_diff_command_preference := l_manager.new_boolean_preference_value (l_manager, use_external_git_diff_command_string, False)
+			external_svn_diff_command_preference := l_manager.new_string_preference_value (l_manager, external_svn_diff_command_string, "")
+			external_git_diff_command_preference := l_manager.new_string_preference_value (l_manager, external_git_diff_command_string, "")
 		end
 
 	preferences: PREFERENCES
@@ -65,8 +74,10 @@ invariant
 	preferences_not_void: preferences /= Void
 	svn_command_preference_set: svn_command_preference /= Void
 	git_command_preference_set: git_command_preference /= Void
-	svn_diff_command_preference_set: svn_diff_command_preference /= Void
-	git_diff_command_preference_set: git_diff_command_preference /= Void
+	use_external_svn_diff_command_preference_set: use_external_svn_diff_command_preference /= Void
+	use_external_git_diff_command_preference_set: use_external_git_diff_command_preference /= Void
+	external_svn_diff_command_preference_set: external_svn_diff_command_preference /= Void
+	external_git_diff_command_preference_set: external_git_diff_command_preference /= Void
 
 note
 	copyright: "Copyright (c) 1984-2021, Eiffel Software"

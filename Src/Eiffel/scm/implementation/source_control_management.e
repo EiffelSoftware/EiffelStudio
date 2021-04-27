@@ -61,7 +61,26 @@ feature -- Access
 
 feature -- Operations
 
-	commit_and_push (a_commit: SCM_COMMIT_SET)
+	diff (a_changelist: SCM_CHANGELIST): detachable SCM_DIFF
+		local
+			retried: BOOLEAN
+		do
+			if retried then
+				create Result.make (0)
+				Result.report_error ({STRING_32} "Exception raised ...") -- FIXME: provide more informations.
+			else
+				if attached {SCM_SVN_LOCATION} a_changelist.root as l_svn_loc then
+					Result := l_svn_loc.diff (a_changelist, config)
+				elseif attached {SCM_GIT_LOCATION} a_changelist.root as l_git_loc then
+					Result := l_git_loc.diff (a_changelist, config)
+				end
+			end
+		rescue
+			retried := True
+			retry
+		end
+
+	commit (a_commit: SCM_COMMIT_SET)
 		local
 			l_single_commit: SCM_SINGLE_COMMIT_SET
 			retried: BOOLEAN
@@ -81,7 +100,7 @@ feature -- Operations
 						l_multi.changelists as ic
 					loop
 						create l_single_commit.make_with_changelist (a_commit.message, ic.item)
-						commit_and_push (l_single_commit)
+						commit (l_single_commit)
 						if l_single_commit.is_processed then
 							if l_single_commit.has_error then
 								a_commit.report_error (l_single_commit.execution_message)

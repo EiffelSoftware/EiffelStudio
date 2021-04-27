@@ -40,9 +40,13 @@ feature -- Access
 
 feature -- Operations
 
-	commit_and_push (a_commit: SCM_COMMIT_SET)
+	commit (a_commit: SCM_COMMIT_SET)
 		require
 			is_ready: a_commit.is_ready
+		deferred
+		end
+
+	diff (a_changelist: SCM_CHANGELIST): detachable SCM_DIFF
 		deferred
 		end
 

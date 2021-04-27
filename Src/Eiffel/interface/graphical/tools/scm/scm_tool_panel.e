@@ -194,7 +194,7 @@ feature {NONE} -- Action handlers
 					status_box := Void
 				else
 					set_status_mode
-					create l_status
+					create l_status.make (develop_window)
 					status_box := l_status
 					l_status.set_workspace (ws)
 					b.extend (l_status)
@@ -234,6 +234,8 @@ feature {NONE} -- Action handlers
 			l_style: EV_POINTER_STYLE
 			but: EV_BUTTON
 			lab: EV_LABEL
+			wlab: EVS_LABEL
+			cl: EV_CELL
 		do
 			l_style := widget.pointer_style
 			widget.set_pointer_style ((create {EV_STOCK_PIXMAPS}).busy_cursor)
@@ -245,7 +247,7 @@ feature {NONE} -- Action handlers
 					if is_status_mode then
 						l_status := status_box
 						if l_status = Void then
-							create l_status
+							create l_status.make (develop_window)
 							status_box := l_status
 						end
 						l_status.set_workspace (ws)
@@ -260,24 +262,30 @@ feature {NONE} -- Action handlers
 						b.extend (l_setup)
 					end
 				else
-					if scm.is_git_available then
-						create lab.make_with_text ("GIT support: yes")
-					else
-						create lab.make_with_text ("GIT support: not available")
-					end
+					create wlab.make_with_text (scm_names.text_about_source_control_tool)
+					wlab.set_is_text_ellipsed (False)
+					wlab.set_minimum_width (100)
+					wlab.set_is_text_wrapped (True)
+					b.extend (wlab)
+
+					create cl
+					b.extend (cl)
+
+					create lab.make_with_text (scm_names.label_git_support_status (scm.is_git_available))
 					b.extend (lab)
 					b.disable_item_expand (lab)
 
-					if scm.is_svn_available then
-						create lab.make_with_text ("Subversion support: yes")
-					else
-						create lab.make_with_text ("Subversion support: not available")
-					end
+					create lab.make_with_text (scm_names.label_svn_support_status (scm.is_svn_available))
 					b.extend (lab)
 					b.disable_item_expand (lab)
 
 					create but.make_with_text_and_action (scm_names.button_config, agent on_preferences_selected)
 					but.set_tooltip (scm_names.tooltip_button_config)
+					b.extend (but)
+					b.disable_item_expand (but)
+
+					create but.make_with_text_and_action (scm_names.button_project, agent on_setup_selected)
+					but.set_tooltip (scm_names.tooltip_button_project)
 					b.extend (but)
 					b.disable_item_expand (but)
 

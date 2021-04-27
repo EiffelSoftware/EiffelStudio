@@ -38,6 +38,33 @@ feature {NONE} -- Initialization
 			set_auto_resizing_column (2, True)
 
 			enable_default_tree_navigation_behavior (True, True, True, True)
+			enable_multiple_row_selection
+
+			key_press_actions.extend (agent  (k: EV_KEY)
+				local
+					b: BOOLEAN
+				do
+					if k.code = {EV_KEY_CONSTANTS}.key_space then
+						if attached selected_rows_in_grid as lst then
+							b := True
+							across
+								lst as ic
+							loop
+								if attached {EV_GRID_CHECKABLE_LABEL_ITEM} ic.item.item (1) as cb then
+									b := b and cb.is_checked
+								end
+							end
+							across
+								lst as ic
+							loop
+								if attached {EV_GRID_CHECKABLE_LABEL_ITEM} ic.item.item (1) as cb then
+									cb.set_is_checked (not b)
+								end
+							end
+						end
+					end
+				end
+			)
 		end
 
 feature -- Access
@@ -81,8 +108,12 @@ feature -- Basic operation
 				end
 				r.set_data (fn)
 				create gcb.make_with_text (ic.key)
-				if attached {SCM_LIBRARY} ic.item then
-					gcb.set_pixmap (icon_pixmaps.folder_library_icon)
+				if attached {SCM_LIBRARY} ic.item as l_scm_lib then
+					if l_scm_lib.is_readonly then
+						gcb.set_pixmap (icon_pixmaps.folder_library_readonly_icon)
+					else
+						gcb.set_pixmap (icon_pixmaps.folder_library_icon)
+					end
 				elseif attached {SCM_CLUSTER} ic.item then
 					gcb.set_pixmap (icon_pixmaps.folder_cluster_icon)
 				elseif attached {SCM_DIRECTORY} ic.item then
@@ -91,7 +122,7 @@ feature -- Basic operation
 				gcb.set_is_checked (ic.item.is_included)
 				gcb.checked_changed_actions.extend (agent (i_cb: EV_GRID_CHECKABLE_LABEL_ITEM; i_g: SCM_GROUP)
 						do
-							if i_cb.is_selected then
+							if i_cb.is_checked then
 								i_g.include
 							else
 								i_g.exclude
@@ -123,7 +154,9 @@ feature -- Basic operation
 				if
 					attached row (i) as r and then
 					attached {READABLE_STRING_GENERAL} r.data as r_fn and then
-					fn.starts_with (r_fn)
+					fn.count > r_fn.count and then
+					fn.starts_with (r_fn) and then
+					fn [r_fn.count + 1] = {PATH}.directory_separator
 				then
 					Result := r
 				end

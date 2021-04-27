@@ -27,10 +27,23 @@ inherit
 			copy
 		end
 
+	EB_SHARED_WINDOW_MANAGER
+		undefine
+			default_create,
+			is_equal,
+			copy
+		end
+
 create
-	default_create
+	make
 
 feature {NONE} -- Initialization
+
+	make (win: EB_DEVELOPMENT_WINDOW)
+		do
+			development_window := win
+			default_create
+		end
 
 	initialize
 		do
@@ -103,6 +116,8 @@ feature {NONE} -- Initialization
 		end
 
 feature -- Access
+
+	development_window: EB_DEVELOPMENT_WINDOW
 
 	check_selected_repo_button,
 	save_selected_repo_button: EV_BUTTON
@@ -237,6 +252,20 @@ feature -- Basic operation
 				grid.scm_rows as ic
 			loop
 				ic.item.update
+			end
+		end
+
+	show_diff (a_diff: SCM_DIFF)
+		local
+			d: SCM_DIFF_DIALOG
+		do
+			if attached scm_s.service as scm then
+				create d.make (scm, a_diff)
+				d.set_is_modal (False)
+				if attached development_window as devwin then
+					d.set_size (devwin.dpi_scaler.scaled_size (700).min (devwin.window.width), devwin.dpi_scaler.scaled_size (500).min (devwin.window.height))
+				end
+				d.show_on_active_window
 			end
 		end
 

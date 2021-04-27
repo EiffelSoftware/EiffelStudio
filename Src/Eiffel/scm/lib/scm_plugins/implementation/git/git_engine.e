@@ -99,6 +99,46 @@ feature -- Execution
 			end
 		end
 
+	diff (a_path: PATH; a_options: detachable SCM_OPTIONS): detachable STRING_32
+		local
+			res: detachable PROCESS_COMMAND_RESULT
+			s: detachable READABLE_STRING_8
+			cmd: STRING_32
+			fut: FILE_UTILITIES
+		do
+			create cmd.make_from_string (git_executable_location.name)
+			cmd.append_string_general (" diff")
+			cmd.append_string (option_to_command_line_flags ("diff", a_options))
+
+			debug ("GIT_ENGINE")
+				print ({STRING_32} "Command: [" + cmd + "]%N")
+			end
+			if fut.file_path_exists (a_path) then
+				cmd.append_string_general (" %"")
+				cmd.append_string_general (a_path.name)
+				cmd.append_string_general ("%"")
+				res := process_misc.output_of_command (cmd, a_path.parent)
+			else
+				cmd.append_string_general (" . ")
+				res := process_misc.output_of_command (cmd, a_path)
+			end
+			debug ("GIT_ENGINE")
+				print ("-> terminated %N")
+			end
+			if res = Void then
+				debug ("GIT_ENGINE")
+					print ("-> terminated : None .%N")
+				end
+			else
+				s := res.output
+				Result := {UTF_CONVERTER}.utf_8_string_8_to_string_32 (s)
+				debug ("GIT_ENGINE")
+					print ("-> terminated : count=" + s.count.out + " .%N")
+					print (s)
+				end
+			end
+		end
+
 	commit (a_changelist: SCM_CHANGELIST; a_log_message: READABLE_STRING_GENERAL; a_options: SCM_OPTIONS): SCM_RESULT
 			-- Commit changes for locations `a_changelist`, and return information about command execution.
 		local

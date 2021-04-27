@@ -38,8 +38,10 @@ feature {NONE} -- Initialization
 			scm_service := a_service
 			create git_field
 			create svn_field
-			create git_diff_field
-			create svn_diff_field
+			create use_external_git_diff_field
+			create use_external_svn_diff_field
+			create external_git_diff_field
+			create external_svn_diff_field
 			create git_field_error
 			create svn_field_error
 
@@ -62,8 +64,11 @@ feature -- Widgets
 
 	git_field_error, svn_field_error: EV_CELL
 
-	git_diff_field,
-	svn_diff_field: EV_TEXT_FIELD
+	use_external_git_diff_field,
+	use_external_svn_diff_field: EV_CHECK_BUTTON
+
+	external_git_diff_field,
+	external_svn_diff_field: EV_TEXT_FIELD
 
 feature {NONE} -- User interface initialization
 
@@ -75,6 +80,7 @@ feature {NONE} -- User interface initialization
 			vb: EV_VERTICAL_BOX
 			hb: EV_HORIZONTAL_BOX
 			field: EV_TEXT_FIELD
+			cb: EV_CHECK_BUTTON
 			lab: EV_LABEL
 			labs: ARRAYED_LIST [EV_LABEL]
 			w: INTEGER
@@ -114,12 +120,36 @@ feature {NONE} -- User interface initialization
 			labs.force (lab)
 			hb.extend (lab)
 			hb.disable_item_expand (lab)
-			field := git_diff_field
-			if attached scm_service.config.git_diff_command as git_diff_cmd then
-				field.set_text (git_diff_cmd)
+			cb := use_external_git_diff_field
+			register_input_widget (cb)
+			hb.extend (cb)
+			hb.disable_item_expand (cb)
+
+			field := external_git_diff_field
+			field.set_minimum_width_in_characters (20)
+			if attached scm_service.config.external_git_diff_command (Void) as external_git_diff_cmd then
+				field.set_text (external_git_diff_cmd)
 			end
 			register_input_widget (field)
 			hb.extend (field)
+
+			if scm_service.config.use_external_git_diff_command then
+				cb.enable_select
+				field.enable_sensitive
+			else
+				field.disable_sensitive
+			end
+			cb.select_actions.extend (agent (i_cb: EV_CHECK_BUTTON; a_field: EV_TEXT_FIELD)
+					do
+						if i_cb.is_selected then
+							a_field.enable_sensitive
+						else
+							a_field.disable_sensitive
+						end
+					end(cb, field)
+				)
+
+
 
 				-- Subversion
 			create lab.make_with_text (scm_names.label_set_svn_commands)
@@ -151,12 +181,35 @@ feature {NONE} -- User interface initialization
 			labs.force (lab)
 			hb.extend (lab)
 			hb.disable_item_expand (lab)
-			field := svn_diff_field
-			if attached scm_service.config.svn_diff_command as svn_diff_cmd then
-				field.set_text (svn_diff_cmd)
+			cb := use_external_svn_diff_field
+			register_input_widget (cb)
+			hb.extend (cb)
+			hb.disable_item_expand (cb)
+			field := external_svn_diff_field
+			field.set_minimum_width_in_characters (20)
+			if attached scm_service.config.external_svn_diff_command (Void) as external_svn_diff_cmd then
+				field.set_text (external_svn_diff_cmd)
 			end
 			register_input_widget (field)
 			hb.extend (field)
+
+			if scm_service.config.use_external_svn_diff_command then
+				cb.enable_select
+				field.enable_sensitive
+			else
+				field.disable_sensitive
+			end
+
+			cb.select_actions.extend (agent (i_cb: EV_CHECK_BUTTON; a_field: EV_TEXT_FIELD)
+					do
+						if i_cb.is_selected then
+							a_field.enable_sensitive
+						else
+							a_field.disable_sensitive
+						end
+					end(cb, field)
+				)
+
 
 				-- same width for the labels in `labs`
 			across
@@ -273,24 +326,45 @@ feature -- Action
 			check_commands_validity
 			cfg := scm_service.config
 			if is_git_command_valid then
-				if not cfg.git_command.same_string (git_field.text) then
+				if
+					not attached cfg.git_command as l_cmd or else
+					not l_cmd.same_string (git_field.text)
+				then
 					is_changed := True
-					scm_service.config.set_git_command (git_field.text)
+					cfg.set_git_command (git_field.text)
 				end
-				if not cfg.git_diff_command.same_string (git_diff_field.text) then
+				if
+					not attached cfg.external_git_diff_command (Void) as l_ext_cmd or else
+					not l_ext_cmd.same_string (external_git_diff_field.text)
+				then
 					is_changed := True
-					scm_service.config.set_git_diff_command (git_diff_field.text)
+					cfg.set_external_git_diff_command (external_git_diff_field.text)
+				end
+				if use_external_git_diff_field.is_selected /= cfg.use_external_git_diff_command then
+					is_changed := True
+					cfg.set_use_external_git_diff_command (use_external_git_diff_field.is_selected)
 				end
 			end
 			if is_svn_command_valid then
-				if not cfg.svn_command.same_string (svn_field.text) then
+				if
+					not attached cfg.svn_command as l_cmd or else
+					not l_cmd.same_string (svn_field.text)
+				then
 					is_changed := True
-					scm_service.config.set_svn_command (svn_field.text)
+					cfg.set_svn_command (svn_field.text)
 				end
-				if not cfg.svn_diff_command.same_string (svn_diff_field.text) then
+				if
+					not attached cfg.external_svn_diff_command (Void) as l_ext_cmd or else
+					not l_ext_cmd.same_string (external_svn_diff_field.text)
+				then
 					is_changed := True
-					scm_service.config.set_svn_diff_command (svn_diff_field.text)
+					cfg.set_external_svn_diff_command (external_svn_diff_field.text)
 				end
+				if use_external_svn_diff_field.is_selected /= cfg.use_external_svn_diff_command then
+					is_changed := True
+					cfg.set_use_external_svn_diff_command (use_external_svn_diff_field.is_selected)
+				end
+
 			end
 			if is_changed then
 				scm_service.on_configuration_updated (cfg)
@@ -299,17 +373,44 @@ feature -- Action
 		end
 
 	on_reset
+		local
+			cfg: SCM_CONFIG
 		do
-			if attached scm_service.config.git_command as v then
+			cfg := scm_service.config
+
+			if attached cfg.git_command as v then
 				git_field.set_text (v)
 			else
-				git_field.set_text (scm_service.config.default_git_command)
+				git_field.set_text (cfg.default_git_command)
 			end
-			if attached scm_service.config.svn_command as v then
+			if attached cfg.svn_command as v then
 				svn_field.set_text (v)
 			else
-				git_field.set_text (scm_service.config.default_svn_command)
+				git_field.set_text (cfg.default_svn_command)
 			end
+
+			if attached cfg.external_git_diff_command (Void) as v then
+				external_git_diff_field.set_text (v)
+			else
+				external_git_diff_field.remove_text
+			end
+			if attached cfg.external_svn_diff_command (Void) as v then
+				external_svn_diff_field.set_text (v)
+			else
+				external_svn_diff_field.remove_text
+			end
+
+			if cfg.use_external_git_diff_command then
+				use_external_git_diff_field.enable_select
+			else
+				use_external_git_diff_field.disable_select
+			end
+			if cfg.use_external_svn_diff_command then
+				use_external_svn_diff_field.enable_select
+			else
+				use_external_svn_diff_field.disable_select
+			end
+
 			check_commands_validity
 			veto_close
 		end

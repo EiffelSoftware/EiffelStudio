@@ -189,23 +189,25 @@ feature -- Execution
 				recorded_changes := changes
 				if attached row as l_row and attached parent_grid as l_grid then
 					reset_changes_count
-					across
-						scm_rows as ic
-					loop
-						ic.item.set_is_checking
-						l_grid.refresh_now
-					end
+					if attached scm_rows as l_scm_rows then
+						across
+							l_scm_rows as ic
+						loop
+							ic.item.set_is_checking
+							l_grid.refresh_now
+						end
 
-					across
-						scm_rows as ic
-					loop
-						r := ic.item
-						ev_application.add_idle_action_kamikaze (agent r.update_statuses)
+						across
+							l_scm_rows as ic
+						loop
+							r := ic.item
+							ev_application.add_idle_action_kamikaze (agent r.update_statuses)
+						end
 					end
 				end
 			end
 		end
-
+		
 	on_checkbox_change_checked (a_change_row: SCM_STATUS_CHANGE_ROW; a_cb: EV_GRID_CHECKABLE_LABEL_ITEM)
 		local
 			g: like parent_grid
@@ -263,26 +265,29 @@ feature -- Execution
 		do
 			if attached parent_grid as l_grid then
 				create Result.make_with_location (root_location)
-				across
-					scm_rows as ic
-				loop
-					l_row := ic.item
-					from
-						i := 1
-						n := l_row.subrow_count
-					until
-						i > n
+				if attached scm_rows as l_scm_rows then
+					across
+						l_scm_rows as ic
 					loop
-						if
-							attached l_row.subrow (i) as l_subrow and then
-							attached {EV_GRID_CHECKABLE_LABEL_ITEM} l_subrow.item (l_grid.checkbox_column) as cb and then
-							cb.is_checked and then
-							attached {SCM_STATUS} l_subrow.data as l_status
-						then
-							Result.extend_path (l_status.location)
+						l_row := ic.item
+						from
+							i := 1
+							n := l_row.subrow_count
+						until
+							i > n
+						loop
+							if
+								attached l_row.subrow (i) as l_subrow and then
+								attached {EV_GRID_CHECKABLE_LABEL_ITEM} l_subrow.item (l_grid.checkbox_column) as cb and then
+								cb.is_checked and then
+								attached {SCM_STATUS} l_subrow.data as l_status
+							then
+								Result.extend_path (l_status.location)
+							end
+							i := i + 1
 						end
-						i := i + 1
 					end
+
 				end
 			end
 		end

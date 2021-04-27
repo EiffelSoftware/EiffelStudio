@@ -40,12 +40,17 @@ convert
 feature {NONE} -- Initialization
 
 	make (a_parent_grid: like parent_grid; a_parent_row: like parent_row; a_row: EV_GRID_ROW; a_location: PATH)
+		require
+			a_parent_grid /= Void
+			a_parent_row /= Void
+			a_row /= Void
+			a_location /= Void
 		do
 			parent_grid := a_parent_grid
 			parent_row := a_parent_row
 			row := a_row
 			location := a_location
-			a_row.set_data (a_location)
+			a_row.set_data (Current)
 
 			build_row
 		end
@@ -67,6 +72,21 @@ feature -- Access
 	row: EV_GRID_ROW
 
 	is_checked: BOOLEAN
+
+	associated_group: detachable SCM_GROUP
+		do
+			if attached parent_row.groups as l_groups then
+				if l_groups.count = 1 then
+					across
+						l_groups as ic
+					loop
+						Result := ic.item
+					end
+				else
+					Result := l_groups.item (location.name)
+				end
+			end
+		end
 
 feature -- Statistics
 
@@ -128,6 +148,13 @@ feature -- Initialization
 			if parent_row.is_supported then
 				eglab := new_label_ellipsis_item ("")
 				eglab.ellipsis_actions.extend (agent on_options (eglab))
+				eglab.pointer_button_press_actions.extend (agent (i_item: EV_GRID_ITEM; i_x, i_y, i_button: INTEGER; i_x_tilt, i_y_tilt, i_pressure: DOUBLE; i_screen_x, i_screen_y: INTEGER)
+							do
+								if i_button = {EV_POINTER_CONSTANTS}.right then
+									on_options (i_item)
+								end
+							end (eglab, ?,?,?,?,?,?,?,?)
+						)
 				row.set_item (g.scm_column, eglab)
 			end
 		end
@@ -171,7 +198,7 @@ feature -- Operations
 					s.append_string_general (" (")
 					s.append_string (scm_names.label_unversioned)
 					s.append_string_general (" ")
-					s.append_string (unb.out)
+					s.append_integer (unb)
 					s.append_string_general (")")
 				end
 				row.set_item (g.info_column, new_label_item (s))
@@ -286,6 +313,26 @@ feature -- Operations
 			end
 		end
 
+	show_diff (a_only_selected_items: BOOLEAN)
+		local
+			ch_list: SCM_CHANGELIST
+		do
+			if attached scm_s.service as scm then
+				if a_only_selected_items then
+					ch_list := parent_grid.changes_for (parent_row.root_location)
+				else
+					create ch_list.make_with_location (parent_row.root_location)
+					ch_list.extend_path (location)
+				end
+				if
+					ch_list /= Void and then
+					attached scm.diff (ch_list) as l_diff
+				then
+					parent_grid.status_box.show_diff (l_diff)
+				end
+			end
+		end
+
 feature -- Factory
 
 	new_label_item (a_text: detachable READABLE_STRING_GENERAL): EV_GRID_LABEL_ITEM
@@ -325,15 +372,11 @@ feature -- Operation
 		do
 			l_is_supported := parent_row.is_supported
 			if l_is_supported then
+				update_changes_count
 				create m
 				create mi.make_with_text_and_action (scm_names.menu_save, agent
 						do
-							if
-								attached parent_grid as g and then
-								attached g.status_box as box
-							then
-								box.save_location (parent_row.root_location)
-							end
+							parent_grid.status_box.save_location (parent_row.root_location)
 						end)
 				m.extend (mi)
 				if changes_count = 0 then
@@ -342,6 +385,14 @@ feature -- Operation
 
 				create mi.make_with_text_and_action (scm_names.menu_check, agent update_statuses)
 				m.extend (mi)
+
+				create mi.make_with_text_and_action (scm_names.menu_diff, agent show_diff (False))
+				m.extend (mi)
+
+				if changes_count > 0 then
+					create mi.make_with_text_and_action (scm_names.menu_diff_selection, agent show_diff (True))
+					m.extend (mi)
+				end
 
 				m.show
 			end

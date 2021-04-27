@@ -23,10 +23,12 @@ feature {NONE} -- Initialization
 			-- Initialize `Current'.
 		do
 			git_command_pref := preferences.source_control_tool_data.git_command_preference
-			git_diff_command_pref := preferences.source_control_tool_data .git_diff_command_preference
+			use_external_git_diff_command_pref := preferences.source_control_tool_data.use_external_git_diff_command_preference
+			external_git_diff_command_pref := preferences.source_control_tool_data.external_git_diff_command_preference
 
 			svn_command_pref := preferences.source_control_tool_data.svn_command_preference
-			svn_diff_command_pref := preferences.source_control_tool_data.svn_diff_command_preference
+			external_svn_diff_command_pref := preferences.source_control_tool_data.external_svn_diff_command_preference
+			use_external_svn_diff_command_pref := preferences.source_control_tool_data.use_external_svn_diff_command_preference
 		end
 
 feature {NONE} -- Preferences
@@ -35,9 +37,13 @@ feature {NONE} -- Preferences
 
 	svn_command_pref: STRING_PREFERENCE
 
-	git_diff_command_pref: STRING_PREFERENCE
+	external_git_diff_command_pref: STRING_PREFERENCE
 
-	svn_diff_command_pref: STRING_PREFERENCE
+	external_svn_diff_command_pref: STRING_PREFERENCE
+
+	use_external_git_diff_command_pref: BOOLEAN_PREFERENCE
+
+	use_external_svn_diff_command_pref: BOOLEAN_PREFERENCE
 
 feature -- Access
 
@@ -57,19 +63,66 @@ feature -- Access
 			end
 		end
 
-	git_diff_command: detachable STRING_32
+	use_external_git_diff_command: BOOLEAN
 		do
-			Result := git_diff_command_pref.value
+			Result := use_external_git_diff_command_pref.value
+		end
+
+	use_external_svn_diff_command: BOOLEAN
+		do
+			Result := use_external_svn_diff_command_pref.value
+		end
+
+	external_git_diff_command (a_location: detachable PATH): detachable STRING_32
+		local
+			fn: READABLE_STRING_32
+		do
+			Result := external_git_diff_command_pref.value
 			if Result.is_whitespace then
 				Result := Void
 			end
+			if Result /= Void and a_location /= Void then
+				fn := a_location.name
+				if fn.has (' ') then
+					fn := {STRING_32} "%"" + fn + {STRING_32} "%""
+				end
+				Result := expanded_string (Result, <<["$location", fn]>>)
+			elseif Result = Void and not use_external_git_diff_command  then
+				Result := "path-to-git-diff-tool $location"
+			end
 		end
 
-	svn_diff_command: detachable STRING_32
+	external_svn_diff_command (a_location: detachable PATH): detachable STRING_32
+		local
+			fn: READABLE_STRING_32
 		do
-			Result := svn_diff_command_pref.value
+			Result := external_svn_diff_command_pref.value
 			if Result.is_whitespace then
 				Result := Void
+			end
+			if Result /= Void and a_location /= Void then
+				fn := a_location.name
+				if fn.has (' ') then
+					fn := {STRING_32} "%"" + fn + {STRING_32} "%""
+				end
+				Result := expanded_string (Result, <<["$location", fn]>>)
+			elseif Result = Void and not use_external_svn_diff_command  then
+				Result := "path-to-svn-diff-tool $location"
+			end
+		end
+
+	expanded_string (a_pattern: READABLE_STRING_GENERAL; a_values: ITERABLE [TUPLE [name: READABLE_STRING_GENERAL; text: READABLE_STRING_GENERAL]]): STRING_32
+		local
+			i: INTEGER
+		do
+			create Result.make_from_string_general (a_pattern)
+			i := 0
+			across
+				a_values as ic
+			loop
+				i := i + 1
+				Result.replace_substring_all (ic.item.name, ic.item.text)
+				Result.replace_substring_all ("$" + i.out, ic.item.text)
 			end
 		end
 
@@ -85,14 +138,24 @@ feature -- Element change
 			svn_command_pref.set_value_from_string (v)
 		end
 
-	set_git_diff_command (v: READABLE_STRING_GENERAL)
+	set_use_external_git_diff_command (v: BOOLEAN)
 		do
-			git_diff_command_pref.set_value_from_string (v)
+			use_external_git_diff_command_pref.set_value (v)
 		end
 
-	set_svn_diff_command (v: READABLE_STRING_GENERAL)
+	set_use_external_svn_diff_command (v: BOOLEAN)
 		do
-			svn_diff_command_pref.set_value_from_string (v)
+			use_external_svn_diff_command_pref.set_value (v)
+		end
+
+	set_external_git_diff_command (v: READABLE_STRING_GENERAL)
+		do
+			external_git_diff_command_pref.set_value_from_string (v)
+		end
+
+	set_external_svn_diff_command (v: READABLE_STRING_GENERAL)
+		do
+			external_svn_diff_command_pref.set_value_from_string (v)
 		end
 
 invariant

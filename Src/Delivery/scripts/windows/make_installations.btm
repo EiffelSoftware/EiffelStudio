@@ -58,7 +58,7 @@ iff .%1.==.. then
 	remtrace ==================================================
 	remtrace Recompile Custom actions for installation program
 	remtrace ==================================================
-	iff "%NO_ENTERPRISE_BUILD%" NEQ "True" then
+	iff not defined NO_ENTERPRISE_BUILD then
 		remtrace NO_ENTERPRISE_BUILD=%NO_ENTERPRISE_BUILD%
 		cd %EIFFEL_SRC
 		cd tools
@@ -115,7 +115,9 @@ iff EXIST %INSTALL_DIR%\%STUDIO_NAME% then
     ren %INSTALL_DIR%\%STUDIO_NAME% %INSTALL_DIR%\EiffelStudio
 endiff
 
-if "%NO_MSI%" EQU "True" goto BUILD_ZIP
+iff defined NO_MSI then 
+	goto BUILD_ZIP
+endiff
 
 remtrace ==============================================
 remtrace Building the MSIs
@@ -132,7 +134,7 @@ remtrace Creating WIX files
 espawn -u:%ISE_C_COMPILER_VER% "nmake /nologo clean"
 espawn -u:%ISE_C_COMPILER_VER% "nmake /nologo"
 
-iff "%NO_ENTERPRISE_BUILD%" NEQ "True" then
+iff not defined NO_ENTERPRISE_BUILD then
 	remtrace Preparing Enterprise edition
 	remtrace Clean previous ENT WIX files
 	fullrd %INIT_DIR%\install\bin\studio_ent_%WINNAME%
@@ -146,7 +148,7 @@ iff "%NO_ENTERPRISE_BUILD%" NEQ "True" then
 	safe_copy %INIT_DIR%\install\bin\studio_branded_%WINNAME%\package.msi %INSTALL_DIR%\setups\branded\%STUDIO_NAME%_branded_%SVN_VERSION-%ISE_PLATFORM%.msi
 endiff
 
-iff "%NO_STANDARD_BUILD%" NEQ "True" then
+iff not defined NO_STANDARD_BUILD then
 	remtrace Preparing Standard edition
 	remtrace Clean previous Standard WIX files
 	fullrd %INIT_DIR%\install\bin\studio_std_%WINNAME%
@@ -158,7 +160,7 @@ endiff
 remtrace ==============================================
 remtrace Building the Zips
 remtrace ==============================================
-iff "%NO_STANDARD_BUILD%" NEQ "True" then
+iff not defined NO_STANDARD_BUILD then
 	cdd %INSTALL_DIR
 	iff exist %INSTALL_DIR%\setups\standard\%STUDIO_NAME%_rev_%SVN_VERSION-%ISE_PLATFORM%.7z then
 		remtrace Standard archive: reuse
@@ -179,7 +181,9 @@ iff "%NO_STANDARD_BUILD%" NEQ "True" then
 	remtrace Uploading Standard packages online
 	cdd %INSTALL_DIR%\setups\standard
 	call share_delivery %STUDIO_NAME%_rev_%SVN_VERSION%-%ISE_PLATFORM%.7z standard
-	if "%NO_MSI%" NEQ "True" call share_delivery %STUDIO_NAME%_rev_%SVN_VERSION%-%ISE_PLATFORM%.msi standard
+	iff not defined NO_MSI then
+		call share_delivery %STUDIO_NAME%_rev_%SVN_VERSION%-%ISE_PLATFORM%.msi standard
+	endiff
 	iff not EXIST %STUDIO_NAME%_rev_%SVN_VERSION%-%ISE_PLATFORM%.7z then
 		if EXIST %~dp0notify.bat %~dp0notify.bat "Failure : no %STUDIO_NAME%_rev_%SVN_VERSION%-%ISE_PLATFORM%.7z release!"
 	endiff
@@ -187,7 +191,7 @@ else
 	remtrace DO NOT Build Standard Zip
 endiff
 
-iff "%NO_ENTERPRISE_BUILD%" NEQ "True" then
+iff not defined NO_ENTERPRISE_BUILD then
 	cdd %INSTALL_DIR
 	iff exist %INSTALL_DIR%\setups\enterprise\%STUDIO_NAME%_ent_%SVN_VERSION-%ISE_PLATFORM%.7z then
 		remtrace Enterprise archive: reuse
@@ -208,10 +212,12 @@ iff "%NO_ENTERPRISE_BUILD%" NEQ "True" then
 remtrace Uploading ENT packages online
 	cdd %INSTALL_DIR%\setups\enterprise
 	call share_delivery %STUDIO_NAME%_ent_%SVN_VERSION%-%ISE_PLATFORM%.7z enterprise
-	if "%NO_MSI%" NEQ "True" call share_delivery %STUDIO_NAME%_ent_%SVN_VERSION%-%ISE_PLATFORM%.msi enterprise
+	iff not defined NO_MSI then
+		call share_delivery %STUDIO_NAME%_ent_%SVN_VERSION%-%ISE_PLATFORM%.msi enterprise
+	endiff
 endiff
 
-iff "%NO_ENTERPRISE_BUILD%" NEQ "True" then
+iff not defined NO_ENTERPRISE_BUILD then
 	cdd %INSTALL_DIR
 	iff exist %INSTALL_DIR%\setups\branded\%STUDIO_NAME%_branded_%SVN_VERSION-%ISE_PLATFORM%.7z then
 		remtrace Branded archive: reuse
@@ -232,10 +238,12 @@ iff "%NO_ENTERPRISE_BUILD%" NEQ "True" then
 remtrace Uploading Branded packages online
 	cdd %INSTALL_DIR%\setups\branded
 	call share_delivery %STUDIO_NAME%_branded_%SVN_VERSION%-%ISE_PLATFORM%.7z branded
-	if "%NO_MSI%" NEQ "True" call share_delivery %STUDIO_NAME%_branded_%SVN_VERSION%-%ISE_PLATFORM%.msi branded
+	iff not defined NO_MSI then
+		call share_delivery %STUDIO_NAME%_branded_%SVN_VERSION%-%ISE_PLATFORM%.msi branded
+	endiff
 endiff
 
-iff "%NO_AXAR_ENTERPRISE_BUILD%" NEQ "True" then
+iff not defined NO_AXAR_ENTERPRISE_BUILD then
 	cdd %INSTALL_DIR
 	iff exist %INSTALL_DIR%\setups\axar_enterprise\%STUDIO_NAME%_axar_%SVN_VERSION-%ISE_PLATFORM%.7z then
 		remtrace axar_enterprise archive: reuse

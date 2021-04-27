@@ -788,7 +788,17 @@ feature -- Stone process
 			l_override_pref: STRING
 			l_editor: EB_SMART_EDITOR
 		do
-			if not is_processing_stone and then a_stone /= Void then
+			if a_stone = Void then
+					-- We reset the stone.
+				old_set_stone (Void)
+
+				update_save_symbol
+			elseif
+				attached {FILE_LOCATION_STONE} a_stone as l_file_location_stone and then
+				attached stone_from_file_location (l_file_location_stone.file_name) as l_stone
+			then
+				set_stone (l_stone)
+			elseif not is_processing_stone then
 				is_processing_stone := True
 
 				l_override_pref := preferences.development_window_data.override_tab_behavior
@@ -838,15 +848,50 @@ feature -- Stone process
 
 				update_save_symbol
 				is_processing_stone := False
-			elseif a_stone = Void then
-					-- We reset the stone.
-				old_set_stone (Void)
-
-				update_save_symbol
 			end
 		ensure then
 			-- stone_set: If there are no errors with the store, then: not is_processing_stone implies stone = a_stone
 			-- editor_stone: If there are no errors with the store, then: (not is_processing_stone and then attached a_stone) implies editors_manager.current_editor.stone = a_stone
+		end
+
+	stone_from_file_location (a_file_name: READABLE_STRING_GENERAL): detachable STONE
+		local
+			p: PATH
+			l_item: CLASS_I
+			l_dropped_class_name: STRING_32
+		do
+			if workbench.universe_defined then
+				create p.make_from_string (a_file_name)
+				if
+					attached p.entry as e and then
+					attached e.extension as ext
+				then
+					if
+						universe.target /= Void and then
+						ext.is_case_insensitive_equal_general ("e")
+					then
+							-- FIXME: file name and class name must be same, problem here?
+						l_dropped_class_name := e.name
+						l_dropped_class_name.remove_tail (2) -- removed ".e"
+						across
+							universe.classes_with_name (l_dropped_class_name.as_upper) as class_cursor
+						until
+							Result /= Void
+						loop
+							l_item := class_cursor.item
+							if l_item.file_name.same_as (p) then
+								create {CLASSI_STONE} Result.make (l_item)
+							end
+						end
+					elseif ext.is_case_insensitive_equal_general ("ecf") then
+						if attached universe.library_at_location (p, True) as libs then
+							if libs.count > 0 then
+								create {CLUSTER_STONE} Result.make (libs.first)
+							end
+						end
+					end
+				end
+			end
 		end
 
 	refresh

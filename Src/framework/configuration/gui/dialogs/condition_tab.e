@@ -885,7 +885,7 @@ feature {NONE} -- Implementation
 			Result := <<conf_interface_names.boolean_true, conf_interface_names.boolean_false>>
 		ensure
 			Result_not_void: Result /= Void
-			Result_has_two_value: Result @ 1 /= Void and Result @ 2 /= Void
+			Result_has_two_value: Result [1] /= Void and Result [2] /= Void
 		end
 
 	boolean_value_from_name (a_string: READABLE_STRING_GENERAL): BOOLEAN
@@ -909,7 +909,7 @@ feature {NONE} -- Constants
 	comp_wildcard_mismatch: STRING_8 = "wildcard-mismatch"
 
 note
-	copyright:	"Copyright (c) 1984-2020, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2021, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

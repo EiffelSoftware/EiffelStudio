@@ -18,6 +18,8 @@
 			reuse_variables="true" />
 		<geant target="compile" file="build.eant" dir="implementation/gtk/Clib" unless="${is_windows}"
 			reuse_variables="true" />
+		<geant target="compile" file="build.eant" dir="implementation/gtk34/Clib" unless="${is_windows}"
+			reuse_variables="true" />
 	</target>
 	
 	<target name="clean">

@@ -12,14 +12,14 @@ class
 
 feature -- Externals
 
-	gtk_orientation_horizontal: INTEGER_32
+	gtk_orientation_horizontal: NATURAL_8
 		external
 			"C inline use <ev_gtk.h>"
 		alias
 			"return GTK_ORIENTATION_HORIZONTAL"
 		end
 
-	gtk_orientation_vertical: INTEGER_32
+	gtk_orientation_vertical: NATURAL_8
 		external
 			"C inline use <ev_gtk.h>"
 		alias

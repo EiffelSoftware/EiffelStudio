@@ -170,7 +170,7 @@ feature -- GtkWidget Externals
 
 feature -- GtkBox Externals
 
-	frozen gtk_box_new (orientation: INTEGER; spacing: INTEGER): POINTER
+	frozen gtk_box_new (orientation: NATURAL_8; spacing: INTEGER): POINTER
 		note
 			eis: "name=gtk_box_new", "src=https://developer.gnome.org/gtk3/stable/GtkBox.html#gtk-box-new", "protocol=uri"
 		external
@@ -178,7 +178,6 @@ feature -- GtkBox Externals
 		alias
 			"[
 				return gtk_box_new ((GtkOrientation)$orientation, (gint)$spacing);
-
 			]"
 		end
 

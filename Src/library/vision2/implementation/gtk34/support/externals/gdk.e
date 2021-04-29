@@ -877,7 +877,7 @@ feature -- GdkPixbuf
 		external
 			"C inline use <ev_gtk.h>"
 		alias
-			"return gdk_pixbuf_get_from_window ((GdkWindow *) $a_window, (gint) $a_x, (gint) $a_y, (gint) $a_width, (gint) $a_height);"
+			"return gdk_pixbuf_get_from_window ((GdkWindow *) $a_window, (gint) $a_src_x, (gint) $a_src_y, (gint) $a_width, (gint) $a_height);"
 		end
 
 	frozen gdk_pixbuf_get_pixels (a_pixbuf: POINTER): POINTER

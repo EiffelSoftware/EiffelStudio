@@ -112,12 +112,14 @@ feature -- Status setting
 			-- Enable vertical toolbar style.
 		do
 			is_vertical := True
+			{GTK2}.gtk_orientable_set_orientation  (list_widget, 1)
 		end
 
 	disable_vertical
 			-- Disable vertical toolbar style (ie: Horizontal).
 		do
 			is_vertical := False
+			{GTK2}.gtk_orientable_set_orientation  (list_widget, 0)
 		end
 
 feature {EV_DOCKABLE_SOURCE_I} -- Implementation
@@ -146,9 +148,9 @@ feature -- Implementation
 				check l_item_imp /= Void end
 				if l_item_imp /= Void then
 					l_width := l_width + l_item_imp.width
-					if a_x < l_width then
-						Result ?= l_item_imp
-					end
+				end
+				if a_x < l_width then
+					Result ?= l_item_imp
 				end
 				i := i + 1
 			end
@@ -168,7 +170,7 @@ feature -- Implementation
 					i > count
 				loop
 					tbb_imp ?= i_th (i).implementation
-					if tbb_imp /= Void and then not tbb_imp.text.is_equal ("") then
+					if tbb_imp /= Void and then not tbb_imp.text.is_empty then
 						has_text := True
 					end
 					if tbb_imp /= Void and then tbb_imp.internal_pixmap /= Void then
@@ -275,7 +277,7 @@ feature {EV_ANY, EV_ANY_I} -- Implementation
 	interface: detachable EV_TOOL_BAR note option: stable attribute end;
 
 note
-	copyright:	"Copyright (c) 1984-2019, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2021, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

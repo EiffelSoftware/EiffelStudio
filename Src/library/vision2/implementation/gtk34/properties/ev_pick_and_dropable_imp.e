@@ -113,8 +113,18 @@ feature {NONE} -- Implementation
 			-- Grab all the mouse and keyboard events.
 		local
 			l_interface: detachable EV_WIDGET
+			l_grab_widget: POINTER
 		do
 			if not has_capture then
+					-- On Solaris, if a menu is selected, then `enable_capture' will not close the menu
+					-- as GTK does on other platforms. Note that `gtk_menu_shell_cancel' will only
+					-- work on GTK 2.4 or above, it is a no-op otherwise.
+				l_grab_widget := {GTK}.gtk_grab_get_current
+				if l_grab_widget /= default_pointer then
+					if {GTK}.gtk_is_menu (l_grab_widget) then
+						{GTK}.gtk_menu_shell_cancel (l_grab_widget)
+					end
+				end
 				if not has_focus then
 					internal_set_focus
 				end
@@ -125,6 +135,7 @@ feature {NONE} -- Implementation
 				if app_implementation.focused_popup_window /= top_level_window_imp then
 					grab_keyboard_and_mouse
 				end
+				app_implementation.disable_debugger
 			end
 		end
 
@@ -139,6 +150,7 @@ feature {NONE} -- Implementation
 				end
 				App_implementation.set_captured_widget (Void)
 			end
+			App_implementation.enable_debugger
 		end
 
 	has_capture: BOOLEAN
@@ -151,14 +163,19 @@ feature {NONE} -- Implementation
 			-- Perform a global mouse and keyboard grab.
 		local
 			i: INTEGER
+			l_display: POINTER
+			l_seat: POINTER
 		do
 				-- We have to disable the debugger before grabing any inputs
 				-- as otherwise if we stop the session it will deadlock. Ideally
 				-- we should only have to do it if the debugger display is different
 				-- from the application display but we cannot detect this.
+			l_display := {GTK}.gtk_widget_get_display (event_widget)
+			l_seat := {GDK}.gdk_display_get_default_seat (l_display)
 			App_implementation.disable_debugger
 			i := {GTK}.gdk_seat_grab (
-				{GDK_HELPERS}.default_seat,
+--				{GDK_HELPERS}.default_seat,
+				l_seat,
 				{GTK}.gtk_widget_get_window (event_widget),
 				{GDK_ENUMS}.seat_capability_all,
 				True, null, null, null, null)
@@ -166,8 +183,14 @@ feature {NONE} -- Implementation
 
 	release_keyboard_and_mouse
 			-- Release mouse and keyboard grab.
+		local
+			l_display: POINTER
+			l_seat: POINTER
 		do
-			{GTK}.gdk_seat_ungrab ({GDK_HELPERS}.default_seat)
+			l_display := {GTK}.gtk_widget_get_display (event_widget)
+			l_seat := {GDK}.gdk_display_get_default_seat (l_display)
+--			{GTK}.gdk_seat_ungrab ({GDK_HELPERS}.default_seat)
+			{GTK}.gdk_seat_ungrab (l_seat)
 			app_implementation.enable_debugger
 		end
 
@@ -206,7 +229,7 @@ feature -- Implementation
 			l_pebble: like pebble
 		do
 				-- Force any pending graphics calls.
-			{GTK}.gdk_flush
+			{GDK}.gdk_display_flush ({GTK}.gtk_widget_get_display (event_widget))
 			update_pointer_style (pointed_target)
 			l_pebble := pebble
 			if l_pebble /= Void then
@@ -484,7 +507,7 @@ feature {EV_ANY, EV_ANY_I} -- Implementation
 	interface: detachable EV_PICK_AND_DROPABLE note option: stable attribute end;
 
 note
-	copyright:	"Copyright (c) 1984-2016, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2021, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

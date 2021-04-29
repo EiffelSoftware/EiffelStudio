@@ -72,6 +72,8 @@ feature {EV_ANY_I} -- Access
 			"C inline use %"ev_any_imp.h%""
 		alias
 			"c_ev_any_imp_get_eif_reference_from_object_id ($a_c_object)"
+		ensure
+			is_class: class
 		end
 
 feature {EV_ANY, EV_ANY_IMP} -- Implementation
@@ -179,7 +181,9 @@ feature {NONE} -- Implementation
 
 				-- The object has been marked for destruction from its parent so we unref
 				-- so that gtk will reap back the memory.
-			{GTK2}.g_object_unref (c_object)
+			if c_object /= default_pointer then
+				{GTK2}.g_object_unref (c_object)
+			end
 			c_object := l_null
 			set_is_destroyed (True)
 
@@ -237,10 +241,12 @@ feature -- Measurement
 			"C [macro <stdio.h>]"
 		alias
 			"NULL"
+		ensure
+			is_class: class
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2018, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2021, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

@@ -57,7 +57,8 @@ feature {NONE} -- Initialization
 			Precursor {EV_MENU_ITEM_LIST_IMP}
 				-- We set the image here for the image menu item instead of packing it in a box.
 			pixmapable_imp_initialize
-			{GTK2}.gtk_image_menu_item_set_image (menu_item, pixmap_box)
+			--{GTK2}.gtk_image_menu_item_set_image (menu_item, pixmap_box)
+			image_menu_item_new
 		end
 
 feature -- Basic operations
@@ -97,7 +98,7 @@ feature -- Basic operations
 				couple_object_id_with_gtk_object (list_widget, object_id)
 				app_implementation.set_currently_shown_control (interface)
 				app_implementation.do_once_on_idle (agent
-					c_gtk_menu_popup (list_widget,
+					c_gtk_menu_popup_at_pointer (list_widget,
 							l_x, l_y, 0, {GTK2}.gtk_get_current_event_time)
 				)
 			end
@@ -119,16 +120,34 @@ feature {NONE} -- Externals
 			]"
 		end
 
-	frozen c_gtk_menu_popup (a_menu: POINTER; a_x, a_y, a_button: INTEGER; a_event_time: NATURAL_32)
+	frozen c_gtk_menu_popup_at_pointer (a_menu: POINTER; a_x, a_y, a_button: INTEGER; a_event_time: NATURAL_32)
 		external
 			"C inline use %"ev_c_util.h%""
 		alias
 			"[
 			{
-				menu_position *pos = malloc (sizeof (menu_position));
-				pos->x_position = (gint) $a_x;
-				pos->y_position = (gint) $a_y;
-				gtk_menu_popup ((GtkMenu*) $a_menu, NULL, NULL, (GtkMenuPositionFunc) c_gtk_menu_position_func, (gpointer) pos, (guint) $a_button, (guint32) $a_event_time);
+			     /* From: https://git.eclipse.org/c/platform/eclipse.platform.swt.git/commit/?id=7714fdbf1ce0110744da9c164486c12254d5bd6f
+				 *  GTK Feature: gtk_menu_popup is deprecated as of GTK3.22 and the new method gtk_menu_popup_at_pointer
+				 *  requires an event to hook on to. This requires the popup & events related to the menu be handled
+				 *  immediately and not as a post event in display, requiring the current event.
+				 */
+				GdkEvent *event_ptr = gtk_get_current_event();
+				if (event_ptr == NULL) {
+					GdkEvent *event = gdk_event_new (GDK_BUTTON_PRESS);
+					((GdkEventButton*)event)->time = (guint32) $a_event_time;
+					((GdkEventButton*)event)->x = (gdouble) $a_x;
+					((GdkEventButton*)event)->y = (gdouble) $a_y;
+					((GdkEventButton*)event)->type = GDK_BUTTON_PRESS;
+					((GdkEventButton*)event)->button = (guint) $a_button;
+					gtk_widget_realize ($a_menu);
+					((GdkEventButton*)event)->window = g_object_ref(gtk_widget_get_window ($a_menu));
+					((GdkEventButton*)event)->device = gdk_seat_get_pointer (gdk_display_get_default_seat (gdk_display_get_default ()));
+					gtk_menu_popup_at_pointer ((GtkMenu*) $a_menu, event);
+					gdk_event_free (event);
+				} else {
+					gtk_menu_popup_at_pointer ((GtkMenu*) $a_menu, event_ptr);
+					gdk_event_free (event_ptr);
+				}	
 			}
 			]"
 		end
@@ -169,7 +188,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2019, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2021, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

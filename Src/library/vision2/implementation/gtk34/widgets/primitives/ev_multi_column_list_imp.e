@@ -170,8 +170,8 @@ feature {NONE} -- Implementation
 					check an_item /= Void end
 					if an_item /= Void then
 						call_deselect_actions (an_item)
-						previous_selection.forth
 					end
+					previous_selection.forth
 				end
 
 				from
@@ -360,7 +360,7 @@ feature {NONE} -- Implementation
 						attached column_titles.i_th (i) as l_temp_title then
 					temp_title := l_temp_title
 				else
-					temp_title := once ""
+					temp_title := once {STRING_32} ""
 				end
 
 				if column_widths /= Void and then
@@ -659,7 +659,7 @@ feature -- Element change
 				a_column_not_null: a_column_ptr /= default_pointer
 			end
 			l_txt := a_txt.as_string_32
-			l_txt.replace_substring_all (once "_", once "__")
+			l_txt.replace_substring_all (once {STRING_32} "_", once {STRING_32} "__")
 			a_cs := l_txt
 			{GTK2}.gtk_tree_view_column_set_title (a_column_ptr, a_cs.item)
 		end
@@ -1086,12 +1086,12 @@ feature {NONE} -- Implementation
 			loop
 					-- Set the text in the cell
 				if list.after then
-					txt := ""
+					txt := Void
 				else
 					txt := list.item
-					if txt = Void then
-						txt := ""
-					end
+				end
+				if txt = Void then
+					create txt.make_empty
 				end
 				set_text_on_position (column_counter, a_row, txt)
 					-- Pixmap gets updated when the text does.
@@ -1166,14 +1166,16 @@ feature {NONE} -- Implementation
 			item_imp := (ev_children @ (a_position))
 			item_imp.set_parent_imp (Void)
 			l_list_iter := item_imp.list_iter
-			check l_list_iter /= Void then end
-			{GTK2}.gtk_list_store_remove (list_store, l_list_iter.item)
-			-- remove the row from the `ev_children'
-			ev_children.go_i_th (a_position)
-			ev_children.remove
-			child_array.go_i_th (a_position)
-			child_array.remove
-			update_pnd_status
+			check l_list_iter /= Void end
+			if l_list_iter /= Void then
+				{GTK2}.gtk_list_store_remove (list_store, l_list_iter.item)
+				-- remove the row from the `ev_children'
+				ev_children.go_i_th (a_position)
+				ev_children.remove
+				child_array.go_i_th (a_position)
+				child_array.remove
+				update_pnd_status
+			end
 		end
 
 feature -- Access
@@ -1218,7 +1220,7 @@ feature {EV_ANY, EV_ANY_I} -- Implementation
 	interface: detachable EV_MULTI_COLUMN_LIST note option: stable attribute end;
 
 note
-	copyright:	"Copyright (c) 1984-2019, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2021, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

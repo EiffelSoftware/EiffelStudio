@@ -68,7 +68,7 @@ feature -- Initialization
 			else
 				{GTK2}.gtk_label_set_ellipsize (text_label, 3)
 			end
-			box := {GTK}.gtk_hbox_new (False, 0)
+			box := {GTK}.gtk_box_new ({GTK_ORIENTATION}.gtk_orientation_horizontal, 0)
 			{GTK}.gtk_widget_show (box)
 			{GTK}.gtk_box_pack_start (box, pixmap_box, False, False, 0)
 			{GTK}.gtk_box_pack_end (box, text_label, True, True, 0)
@@ -375,6 +375,11 @@ feature {EV_GTK_DEPENDENT_INTERMEDIARY_ROUTINES} -- Event handling
 								l_parent_imp.item_pointer_double_press_actions.call ([attached_interface, l_x, {GTK}.gdk_event_button_struct_y (gdk_event).truncated_to_integer, {GTK}.gdk_event_button_struct_button (gdk_event)])
 							end
 						end
+					elseif
+						event_type = {EV_GTK_ENUMS}.gdk_expose_enum
+					 then
+								-- Handle any potential resize.
+						handle_resize
 					end
 				end
 			end
@@ -461,7 +466,7 @@ feature {EV_ANY, EV_ANY_I} -- Implementation
 		-- Interface object of `Current'.
 
 note
-	copyright:	"Copyright (c) 1984-2014, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2021, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

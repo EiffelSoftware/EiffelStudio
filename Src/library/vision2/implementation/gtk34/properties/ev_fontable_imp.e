@@ -37,19 +37,20 @@ feature -- Status setting
 		local
 			font_imp: detachable EV_FONT_IMP
 			l_private_font: detachable EV_FONT
+			l_pango_context: POINTER
 		do
 			if private_font /= a_font then
 				l_private_font := a_font.twin
 				private_font := l_private_font
 				font_imp ?= l_private_font.implementation
 				check font_imp /= Void then end
+					-- TODO check implementation with
+					-- GtkStyleProvider example
+					-- https://github.com/vain/slinp/commit/3f56e9473f62b3704d92b560715658556108ec78
 
-				if font_imp.font_is_default then
-						-- If we are setting with the default font then we set to NULL so that its size is controlled by the user
-					{GTK2}.gtk_widget_modify_font (fontable_widget, default_pointer)
-				else
-					{GTK2}.gtk_widget_modify_font (fontable_widget, font_imp.font_description)
-				end
+					-- Examples using pango context
+					-- https://cpp.hotexamples.com/examples/-/-/gtk_widget_get_pango_context/cpp-gtk_widget_get_pango_context-function-examples.html
+				l_pango_context := {GTK2}.gtk_widget_get_pango_context (fontable_widget)
 			end
 		end
 
@@ -72,7 +73,7 @@ feature {EV_ANY, EV_ANY_I} -- Implementation
 	interface: detachable EV_FONTABLE note option: stable attribute end;
 
 note
-	copyright:	"Copyright (c) 1984-2013, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2021, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

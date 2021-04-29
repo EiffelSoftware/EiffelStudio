@@ -44,9 +44,14 @@ feature {NONE} -- Initlization
 		do
 			l_pix_buf_imp ?= a_pixel_buffer.implementation
 			check l_pix_buf_imp /= Void then end
-			set_gdkpixbuf ({GTK}.gdk_pixbuf_copy (l_pix_buf_imp.gdk_pixbuf))
-			set_x_hotspot (a_x_hotspot)
-			set_y_hotspot (a_x_hotspot)
+				-- FIXME JV
+				-- Workaround to avoid the Gtk critical message
+				-- GdkPixbuf-CRITICAL gdk_pixbuf_copy: assertion 'GDK_IS_PIXBUF (pixbuf)' failed
+			if {GDK}.gdk_is_pixbuf (l_pix_buf_imp.gdk_pixbuf) then
+				set_gdkpixbuf ({GTK}.gdk_pixbuf_copy (l_pix_buf_imp.gdk_pixbuf))
+				set_x_hotspot (a_x_hotspot)
+				set_y_hotspot (a_x_hotspot)
+			end
 		end
 
 	init_predefined (a_constant: INTEGER)
@@ -271,6 +276,11 @@ feature -- Duplication
 		do
 			if attached {like Current} a_pointer_style.implementation as l_pointer_style_imp then
 				if l_pointer_style_imp.gdk_pixbuf /= default_pointer then
+					if not {GDK}.gdk_is_pixbuf (l_pointer_style_imp.gdk_pixbuf) then
+						debug ("gtk_log")
+							print (generator + ".copy_from_pointer_style gdk_is_pixbuf is False" )
+						end
+					end
 					set_gdkpixbuf ({GTK}.gdk_pixbuf_copy (l_pointer_style_imp.gdk_pixbuf))
 				end
 				predefined_cursor_code := l_pointer_style_imp.predefined_cursor_code
@@ -293,7 +303,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2019, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2021, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

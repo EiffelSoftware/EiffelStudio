@@ -68,6 +68,27 @@ feature -- Access
 
 feature -- Element change
 
+	block_resize_actions
+			-- Block any resize actions that may occur.
+		do
+			if attached item as l_item then
+				-- The blocking of resize actions is due to set uposition causing temporary resizing.
+				if l_item.implementation.resize_actions_internal /= Void then
+					l_item.implementation.resize_actions.block
+				end
+			end
+		end
+
+	unblock_resize_actions
+			-- Unblock all resize actions.
+		do
+			if attached item as l_item then
+				if l_item.implementation.resize_actions_internal /= Void then
+					l_item.implementation.resize_actions.resume
+				end
+			end
+		end
+
 	set_x_offset (a_x: INTEGER)
 			-- Set `x_offset' to `a_x'.
 		do
@@ -82,6 +103,7 @@ feature -- Element change
 			l_x_offset_changed := a_x /= internal_x_offset
 			l_y_offset_changed := a_y /= internal_y_offset
 			if l_x_offset_changed or else l_y_offset_changed then
+				block_resize_actions
 				if l_x_offset_changed then
 					internal_x_offset := a_x
 					{GTK}.gtk_adjustment_set_value (horizontal_adjustment, a_x + internal_x_y_offset)
@@ -90,12 +112,18 @@ feature -- Element change
 					internal_y_offset := a_y
 					{GTK}.gtk_adjustment_set_value (vertical_adjustment, a_y + internal_x_y_offset)
 				end
-				if l_x_offset_changed then
-					{GTK}.gtk_adjustment_value_changed (horizontal_adjustment)
-				end
-				if l_y_offset_changed then
-					{GTK}.gtk_adjustment_value_changed (vertical_adjustment)
-				end
+				--if l_x_offset_changed then
+					-- GTK+ emits `value-changed` itself whenever the value changes.
+					-- {GTK}.gtk_adjustment_value_changed (horizontal_adjustment)
+				--end
+				--if l_y_offset_changed then
+					-- {GTK}.gtk_adjustment_value_changed (vertical_adjustment)
+					-- GTK+ emits `value-changed` itself whenever the value changes.
+					-- ie GTK do something like this g_signal_emit_by_name(container_widget, "value-changed")
+					--|TODO double check in other case implement it in Eiffel like this.
+					--|real_signal_connect (container_widget, once "value-changed", agent (app_implementation.gtk_marshal).y_offset_changed (internal_id), Void)
+				--end
+				unblock_resize_actions
 			end
 		end
 
@@ -198,7 +226,7 @@ feature {EV_ANY, EV_ANY_I} -- Implementation
 	interface: detachable EV_VIEWPORT note option: stable attribute end;
 
 note
-	copyright:	"Copyright (c) 1984-2013, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2021, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

@@ -63,6 +63,7 @@ feature {NONE} -- Initialization
 
 			enable_word_wrapping
 			set_editable (True)
+			set_background_color ((create {EV_STOCK_COLORS}).white)
 			initialize_buffer_events
 			Precursor {EV_TEXT_COMPONENT_IMP}
 		end

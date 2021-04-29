@@ -50,7 +50,7 @@ feature {NONE} -- Implementation
 			v_imp: detachable EV_WIDGET_IMP
 		do
 			v_imp ?= v.implementation
-			check v_imp /= Void end
+			check v_imp /= Void then end
 			if v_imp /= Void then
 				gtk_insert_i_th (list_widget, v_imp.c_object, i - 1)
 				child_array.go_i_th (i)

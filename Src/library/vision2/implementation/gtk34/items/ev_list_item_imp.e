@@ -153,22 +153,18 @@ feature -- Status setting
 
 	enable_select
 			-- Select the item.
-		local
-			l_parent_imp: like parent_imp
 		do
-			l_parent_imp := parent_imp
-			check l_parent_imp /= Void then end
-			l_parent_imp.select_item (l_parent_imp.index_of (attached_interface, 1))
+			check attached {EV_LIST_ITEM_LIST_IMP} parent_imp as l_parent_imp then
+				l_parent_imp.select_item (l_parent_imp.index_of (attached_interface, 1))
+			end
 		end
 
 	disable_select
 			-- Deselect the item.
-		local
-			l_parent_imp: like parent_imp
 		do
-			l_parent_imp := parent_imp
-			check l_parent_imp /= Void then end
-			l_parent_imp.deselect_item (l_parent_imp.index_of (attached_interface, 1))
+			check attached {EV_LIST_ITEM_LIST_IMP} parent_imp as l_parent_imp then
+				l_parent_imp.deselect_item (l_parent_imp.index_of (attached_interface, 1))
+			end
 		end
 
 	text: STRING_32
@@ -233,19 +229,13 @@ feature -- Measurement
 			-- Horizontal offset relative to parent `x_position' in pixels.
 		local
 			l_h_adjust: POINTER
-			l_parent_imp: like parent_imp
-			l_list_imp: detachable EV_LIST_IMP
 		do
 			-- Return parents horizontal scrollbar offset.
-			l_parent_imp := parent_imp
-			if l_parent_imp /= Void then
-				l_list_imp ?= l_parent_imp
-				if l_list_imp /= Void then
-						--| FIXME Combo box list needs to be attained somehow
-					l_h_adjust := {GTK}.gtk_scrolled_window_get_hadjustment (l_list_imp.scrollable_area)
-					if l_h_adjust /= default_pointer then
-						Result := - {GTK}.gtk_adjustment_get_value (l_h_adjust).rounded
-					end
+			if attached {EV_LIST_IMP} parent_imp as l_list_imp then
+					--| FIXME Combo box list needs to be attained somehow
+				l_h_adjust := {GTK}.gtk_scrolled_window_get_hadjustment (l_list_imp.scrollable_area)
+				if l_h_adjust /= default_pointer then
+					Result := - {GTK}.gtk_adjustment_get_value (l_h_adjust).rounded
 				end
 			end
 		end
@@ -254,15 +244,11 @@ feature -- Measurement
 			-- Vertical offset relative to parent `y_position' in pixels.
 		local
 			l_v_adjust: POINTER
-			l_parent_imp: like parent_imp
-			l_list_imp: detachable EV_LIST_IMP
 		do
 			-- Return parents horizontal scrollbar offset.
-			l_parent_imp := parent_imp
-			if l_parent_imp /= Void then
+			if attached parent_imp as l_parent_imp then
 				Result := (l_parent_imp.index_of (interface, 1) - 1) * l_parent_imp.row_height
-				l_list_imp ?= l_parent_imp
-				if l_list_imp /= Void then
+				if attached {EV_LIST_IMP} l_parent_imp as l_list_imp then
 						--| FIXME Combo box list needs to be attained somehow
 					l_v_adjust := {GTK}.gtk_scrolled_window_get_hadjustment (l_list_imp.scrollable_area)
 					if l_v_adjust /= default_pointer then
@@ -274,66 +260,48 @@ feature -- Measurement
 
 	screen_x: INTEGER
 			-- Horizontal offset relative to screen.
-		local
-			l_parent_imp: like parent_imp
 		do
-			l_parent_imp := parent_imp
-			if l_parent_imp /= Void then
+			if attached parent_imp as l_parent_imp then
 				Result := l_parent_imp.screen_x + x_position
 			end
 		end
 
 	screen_y: INTEGER
 			-- Vertical offset relative to screen.
-		local
-			l_parent_imp: like parent_imp
 		do
-			l_parent_imp := parent_imp
-			if l_parent_imp /= Void then
+			if attached parent_imp as l_parent_imp then
 				Result := l_parent_imp.screen_y + y_position
 			end
 		end
 
 	width: INTEGER
 			-- Horizontal size in pixels.
-		local
-			l_parent_imp: like parent_imp
 		do
-			l_parent_imp := parent_imp
-			if l_parent_imp /= Void then
+			if attached parent_imp as l_parent_imp then
 				Result := l_parent_imp.width
 			end
 		end
 
 	height: INTEGER
 			-- Vertical size in pixels.
-		local
-			l_parent_imp: like parent_imp
 		do
-			l_parent_imp := parent_imp
-			if l_parent_imp /= Void then
+			if attached parent_imp as l_parent_imp then
 				Result := l_parent_imp.height
 			end
 		end
 
 	minimum_width: INTEGER
 			-- Minimum horizontal size in pixels.
-		local
-			l_parent_imp: like parent_imp
 		do
-			l_parent_imp := parent_imp
-			if l_parent_imp /= Void then
+			if attached parent_imp as l_parent_imp then
 				Result := l_parent_imp.minimum_width
 			end
 		end
 
 	minimum_height: INTEGER
 			-- Minimum vertical size in pixels.
-		local
-			l_parent_imp: like parent_imp
 		do
-			l_parent_imp := parent_imp
-			if l_parent_imp /= Void then
+			if attached parent_imp as l_parent_imp then
 				Result := l_parent_imp.row_height
 			end
 		end
@@ -387,7 +355,7 @@ feature {EV_ANY, EV_ANY_I} -- Implementation
 	interface: detachable EV_LIST_ITEM note option: stable attribute end;
 
 note
-	copyright:	"Copyright (c) 1984-2014, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2021, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

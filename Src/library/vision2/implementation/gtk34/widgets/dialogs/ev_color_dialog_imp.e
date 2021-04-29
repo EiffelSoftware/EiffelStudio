@@ -48,6 +48,7 @@ feature {NONE} -- Initialization
 			Precursor {EV_STANDARD_DIALOG_IMP}
 			set_is_initialized (False)
 			enable_closeable
+			forbid_resize
 			set_is_initialized (True)
 		end
 

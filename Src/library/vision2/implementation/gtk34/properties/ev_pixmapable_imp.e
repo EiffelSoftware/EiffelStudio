@@ -21,7 +21,7 @@ feature -- Initialization
 	pixmapable_imp_initialize
 			-- Create a GtkHBox to hold a GtkPixmap.
 		do
-			pixmap_box := {GTK}.gtk_hbox_new (False, 0)
+			pixmap_box := {GTK3}.gtk_box_new ( {GTK_ORIENTATION}.gtk_orientation_horizontal, 0)
 		end
 
 feature -- Access
@@ -115,7 +115,7 @@ feature {EV_ANY, EV_ANY_I} -- Implementation
 	interface: detachable EV_PIXMAPABLE note option: stable attribute end;
 
 note
-	copyright:	"Copyright (c) 1984-2013, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2021, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

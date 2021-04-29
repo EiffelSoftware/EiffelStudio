@@ -656,8 +656,10 @@ feature {EV_TREE_NODE_IMP} -- Implementation
 			a_g_value_string_struct := g_value_string_struct
 			{GTK2}.g_value_unset (a_g_value_string_struct)
 			l_list_iter := a_tree_node_imp.list_iter
-			check l_list_iter /= Void then end
-			{GTK2}.gtk_tree_model_get_value (tree_store, l_list_iter.item, 1, a_g_value_string_struct)
+			check l_list_iter /= Void end
+			if l_list_iter /= Void then
+				{GTK2}.gtk_tree_model_get_value (tree_store, l_list_iter.item, 1, a_g_value_string_struct)
+			end
 			a_string := {GTK2}.g_value_get_string (a_g_value_string_struct)
 			if a_string /= default_pointer then
 				a_cs := App_implementation.reusable_gtk_c_string
@@ -680,8 +682,10 @@ feature {EV_TREE_NODE_IMP} -- Implementation
 			str_value := g_value_string_struct
 			{GTK2}.g_value_take_string (str_value, a_cs.item)
 			l_list_iter := a_tree_node_imp.list_iter
-			check l_list_iter /= Void then end
-			{GTK2}.gtk_tree_store_set_value (tree_store, l_list_iter.item, 1, str_value)
+			check l_list_iter /= Void end
+			if l_list_iter /= Void then
+				{GTK2}.gtk_tree_store_set_value (tree_store, l_list_iter.item, 1, str_value)
+			end
 		end
 
 	g_value_string_struct: POINTER
@@ -699,8 +703,10 @@ feature {EV_TREE_NODE_IMP} -- Implementation
 		do
 			a_pix := a_tree_node_imp.gdk_pixbuf
 			l_list_iter := a_tree_node_imp.list_iter
-			check l_list_iter /= Void then end
-			{GTK2}.gtk_tree_store_set_pixbuf (tree_store, l_list_iter.item, 0, a_pix)
+			check l_list_iter /= Void end
+			if l_list_iter /= Void then
+				{GTK2}.gtk_tree_store_set_pixbuf (tree_store, l_list_iter.item, 0, a_pix)
+			end
 		end
 
 	tree_store: POINTER

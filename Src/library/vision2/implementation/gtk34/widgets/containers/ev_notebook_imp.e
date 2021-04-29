@@ -272,7 +272,7 @@ feature {EV_NOTEBOOK, EV_NOTEBOOK_TAB_IMP} -- Element change
 				a_event_box := {GTK}.gtk_event_box_new
 				{GTK2}.gtk_event_box_set_visible_window (a_event_box, False)
 				{GTK}.gtk_widget_show (a_event_box)
-				a_hbox := {GTK}.gtk_hbox_new (False, default_tab_label_spacing)
+				a_hbox := {GTK}.gtk_box_new ({GTK_ORIENTATION}.gtk_orientation_horizontal, default_tab_label_spacing)
 				{GTK}.gtk_container_add (a_event_box, a_hbox)
 				{GTK}.gtk_widget_show (a_hbox)
 				a_image := {GTK2}.gtk_image_new
@@ -368,7 +368,7 @@ feature {EV_ANY_I, EV_ANY} -- Implementation
 			-- functionality implemented by `Current'
 
 note
-	copyright:	"Copyright (c) 1984-2016, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2021, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

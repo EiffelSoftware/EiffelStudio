@@ -141,11 +141,11 @@ feature  -- Access
 			if p /= NULL then
 				create a_cs.share_from_pointer (p)
 				Result := a_cs.string
-				if Result.is_equal ("%T") then
-					Result := ""
+				if Result.same_string_general ("%T") then
+					create Result.make_empty
 				end
 			else
-				Result := ""
+				create Result.make_empty
 			end
 		end
 
@@ -441,11 +441,11 @@ feature {NONE} -- Implementation
 		local
 			bar_imp: detachable EV_VERTICAL_BOX_IMP
 		do
-			vbox := {GTK}.gtk_vbox_new (False, 0)
-
+			vbox := {GTK}.gtk_box_new ({GTK_ORIENTATION}.gtk_orientation_vertical, 0)
 			{GTK}.gtk_widget_show (vbox)
 			{GTK}.gtk_container_add (client_area, vbox)
-			container_widget := {GTK}.gtk_hbox_new (False, 0)
+			container_widget := {GTK}.gtk_box_new ({GTK_ORIENTATION}.gtk_orientation_horizontal, 0)
+			{GTK}.gtk_box_set_homogeneous (container_widget, True)
 			{GTK}.gtk_widget_show (container_widget)
 
 			bar_imp ?= upper_bar.implementation
@@ -558,32 +558,66 @@ feature {NONE} -- Composite handling
 		local
 			l_opacity_symbol: POINTER
 		do
-			l_opacity_symbol := gtk_window_set_opacity_symbol
+			l_opacity_symbol := gtk_widget_set_opacity_symbol
 			if l_opacity_symbol /= default_pointer then
-				gtk_window_set_opacity_call (l_opacity_symbol, c_object, a_opacity)
+				gtk_widget_set_opacity_call (l_opacity_symbol, c_object, a_opacity)
 			end
 		end
 
-	gtk_window_set_opacity_symbol: POINTER
-			-- Symbol for `gtk_window_set_opacity'
+	gtk_widget_set_opacity_symbol: POINTER
+			-- Symbol for `gtk_widget_set_opacity '
 		once
-			Result := app_implementation.symbol_from_symbol_name ("gtk_window_set_opacity")
+			Result := app_implementation.symbol_from_symbol_name ("gtk_widget_set_opacity")
 		end
 
-	gtk_window_set_opacity_call (a_function: POINTER; a_window: POINTER; a_opacity: REAL_32)
+	gtk_widget_set_opacity_call (a_function: POINTER; a_window: POINTER; a_opacity: REAL_32)
 		external
 			"C inline use <ev_gtk.h>"
 		alias
 			"(FUNCTION_CAST(void, (GtkWidget*, gdouble)) $a_function)((GtkWidget*) $a_window, (gdouble) $a_opacity);"
 		end
 
+	gtk_window_set_opacity_symbol: POINTER
+			-- Symbol for `gtk_window_set_opacity'
+		obsolete
+			"gtk_window_set_opacity has been deprecated since version 3.8. Use gtk_widget_set_opacity instead. [2022-06-01]"
+		once
+			Result := app_implementation.symbol_from_symbol_name ("gtk_window_set_opacity")
+		end
+
+	gtk_window_set_opacity_call (a_function: POINTER; a_window: POINTER; a_opacity: REAL_32)
+		obsolete
+			"Use gtk_widget_set_opacity_call instead. [2022-06-01]"
+		external
+			"C inline use <ev_gtk.h>"
+		alias
+			"(FUNCTION_CAST(void, (GtkWidget*, gdouble)) $a_function)((GtkWidget*) $a_window, (gdouble) $a_opacity);"
+		end
+
+	gdk_screen_is_composited_symbol: POINTER
+			-- Symbol for `gdk_screen_is_composited'
+		once
+			Result := app_implementation.symbol_from_symbol_name ("gdk_screen_is_composited")
+		end
+
+	gdk_screen_is_composited_call (a_function: POINTER; a_screen: POINTER): BOOLEAN
+		external
+			"C inline use <ev_gtk.h>"
+		alias
+			"return (FUNCTION_CAST(gboolean, (GdkScreen*)) $a_function)((GdkScreen*) $a_screen);"
+		end
+
 	gtk_widget_is_composited_symbol: POINTER
 			-- Symbol for `gtk_widget_is_composited'
+		obsolete
+			"Use gdk_screen_is_composited_symbol [2021-06-01]"
 		once
 			Result := app_implementation.symbol_from_symbol_name ("gtk_widget_is_composited")
 		end
 
-	gtk_widget_is_composited_call (a_function: POINTER; a_widget: POINTER): BOOLEAN
+	gdk_widget_is_composited_call (a_function: POINTER; a_widget: POINTER): BOOLEAN
+		obsolete
+			"Use gdk_screen_is_composited_call [2021-06-01]"
 		external
 			"C inline use <ev_gtk.h>"
 		alias
@@ -632,7 +666,7 @@ feature {EV_ANY, EV_ANY_I} -- Implementation
 		-- Interface object of `Current'
 
 note
-	copyright:	"Copyright (c) 1984-2016, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2021, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

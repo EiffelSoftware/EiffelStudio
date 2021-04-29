@@ -40,7 +40,8 @@ feature {NONE} -- Initialization
 			p := {GTK}.gtk_separator_new (0)
 			{GTK}.gtk_widget_show (p)
 			{GTK}.gtk_container_add (c_object, p)
-			{GTK2}.gtk_widget_set_minimum_size (c_object, -1, 1)
+			--{GTK2}.gtk_widget_set_minimum_size (c_object, -1, 1)
+			{GTK}.gtk_widget_set_size_request (c_object, -1, 1)
 			Precursor
 		end
 
@@ -49,7 +50,7 @@ feature {EV_ANY, EV_ANY_I} -- Implementation
 	interface: detachable EV_HORIZONTAL_SEPARATOR note option: stable attribute end;
 
 note
-	copyright:	"Copyright (c) 1984-2012, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2021, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

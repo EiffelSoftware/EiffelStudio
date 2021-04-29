@@ -66,7 +66,8 @@ feature {NONE} -- Initialization
 			fixed_widget := {GTK2}.gtk_fixed_new
 			{GTK}.gtk_widget_show (fixed_widget)
 			{GTK}.gtk_container_add (viewport, fixed_widget)
-			container_widget := {GTK}.gtk_hbox_new (True, 0)
+			container_widget := {GTK}.gtk_box_new ({GTK_ORIENTATION}.gtk_orientation_horizontal, 0)
+			{GTK}.gtk_box_set_homogeneous(container_widget, True)
 			{GTK}.gtk_widget_show (container_widget)
 			{GTK}.gtk_container_add (fixed_widget, container_widget)
 			{GTK2}.gtk_widget_set_minimum_size (scrolled_window, 1, 1)
@@ -123,7 +124,7 @@ feature -- Element change
 			internal_set_value_from_adjustment (horizontal_adjustment, a_x)
 				-- The code below could be optimized so that `expose_actions' are not
 				-- called immediately on `item'.
-			{GTK}.gtk_adjustment_value_changed (horizontal_adjustment)
+			--{GTK}.gtk_adjustment_value_changed (horizontal_adjustment)
 		end
 
 	set_y_offset (a_y: INTEGER)
@@ -132,7 +133,11 @@ feature -- Element change
 			internal_set_value_from_adjustment (vertical_adjustment, a_y)
 				-- The code below could be optimized so that `expose_actions' are not
 				-- called immediately on `item'.
-			{GTK}.gtk_adjustment_value_changed (vertical_adjustment)
+			--{GTK}.gtk_adjustment_value_changed (vertical_adjustment)
+			-- GTK+ emits `value-changed` itself whenever the value changes.
+			-- ie GTK do something like this g_signal_emit_by_name(container_widget, "value-changed")
+			--|TODO double check in other case implement it in Eiffel like this.
+			--|real_signal_connect (container_widget, once "value-changed", agent (app_implementation.gtk_marshal).y_offset_changed (internal_id), Void)
 		end
 
 	set_horizontal_step (a_step: INTEGER)
@@ -140,7 +145,7 @@ feature -- Element change
 		do
 			if horizontal_step /= a_step then
 				{GTK}.gtk_adjustment_set_step_increment (horizontal_adjustment, a_step)
-				{GTK}.gtk_adjustment_changed (horizontal_adjustment)
+				--{GTK}.gtk_adjustment_changed (horizontal_adjustment)
 			end
 		end
 
@@ -149,7 +154,7 @@ feature -- Element change
 		do
 			if vertical_step /= a_step then
 				{GTK}.gtk_adjustment_set_step_increment (vertical_adjustment, a_step)
-				{GTK}.gtk_adjustment_changed (vertical_adjustment)
+				--{GTK}.gtk_adjustment_changed (vertical_adjustment)
 			end
 		end
 
@@ -229,7 +234,11 @@ feature {NONE} -- Implementation
 				item_imp ?= l_item.implementation
 				check item_imp /= Void end
 				if item_imp /= Void then
-					{GTK_WINDOW}.move (container_widget, ((fixed_width - item_imp.width) // 2).max (0), ((fixed_height - item_imp.height) // 2).max (0))
+					check container_widget /= default_pointer end
+						-- Move if and only if container widget is a Window.
+					if {GTK}.gtk_is_window (container_widget) then
+						{GTK_WINDOW}.move (container_widget, ((fixed_width - item_imp.width) // 2).max (0), ((fixed_height - item_imp.height) // 2).max (0))
+					end
 				end
 			end
 		end
@@ -288,7 +297,7 @@ feature {EV_ANY, EV_ANY_I} -- Implementation
 			-- functionality implemented by `Current'
 
 note
-	copyright:	"Copyright (c) 1984-2016, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2021, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

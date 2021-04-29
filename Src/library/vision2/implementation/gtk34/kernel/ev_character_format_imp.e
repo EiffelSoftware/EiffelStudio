@@ -72,9 +72,9 @@ feature -- Access
 		do
 			a_color := fcolor
 			create Result
-			Result.set_red_with_8_bit (a_color & 0xFF)
-			Result.set_green_with_8_bit ((a_color |>> 8) & 0xFF)
-			Result.set_blue_with_8_bit ((a_color |>> 16) & 0xFF)
+			Result.set_red_with_8_bit (a_color & 0x000000FF)
+			Result.set_green_with_8_bit ((a_color & 0x0000FF00) |>> 8)
+			Result.set_blue_with_8_bit (a_color |>> 16)
 		end
 
 	background_color: EV_COLOR
@@ -84,9 +84,9 @@ feature -- Access
 		do
 			a_color := bcolor
 			create Result
-			Result.set_red_with_8_bit (a_color & 0xFF)
-			Result.set_green_with_8_bit ((a_color |>> 8) & 0xFF)
-			Result.set_blue_with_8_bit ((a_color |>> 16) & 0xFF)
+			Result.set_red_with_8_bit (a_color & 0x000000FF)
+			Result.set_green_with_8_bit ((a_color & 0x0000FF00) |>> 8)
+			Result.set_blue_with_8_bit (a_color |>> 16)
 		end
 
 	effects: EV_CHARACTER_FORMAT_EFFECTS
@@ -140,9 +140,9 @@ feature -- Status setting
 		do
 			fcolor := a_blue;
 			fcolor := fcolor |<< 8
-			fcolor := fcolor | a_green
+			fcolor := fcolor + a_green
 			fcolor := fcolor |<< 8
-			fcolor := fcolor | a_red
+			fcolor := fcolor + a_red
 		end
 
 	set_bcolor (a_red, a_green, a_blue: INTEGER)
@@ -150,9 +150,9 @@ feature -- Status setting
 		do
 			bcolor := a_blue;
 			bcolor := bcolor |<< 8
-			bcolor := bcolor | a_green
+			bcolor := bcolor + a_green
 			bcolor := bcolor |<< 8
-			bcolor := bcolor | a_red
+			bcolor := bcolor + a_red
 			bcolor_set := True
 		end
 
@@ -211,7 +211,7 @@ feature {EV_RICH_TEXT_IMP} -- Implementation
 				a_text_tag := {GTK2}.gtk_text_tag_table_lookup (a_tag_table, a_text_tag_name.item)
 				if a_text_tag = default_pointer then
 					a_text_tag := {GTK2}.gtk_text_tag_new (a_text_tag_name.item)
-					{GTK2}.g_object_set_pointer (a_text_tag, {GTK_PROPERTIES}.family, a_text_tag_name.item)
+					{GTK2}.g_object_set_string (a_text_tag, {GTK_PROPERTIES}.family, a_text_tag_name.item)
 					{GTK2}.gtk_text_tag_table_add (a_tag_table, a_text_tag)
 				end
 				{GTK2}.gtk_text_buffer_apply_tag (a_text_buffer, a_text_tag, a_start_iter, a_end_iter)
@@ -286,7 +286,9 @@ feature {EV_RICH_TEXT_IMP} -- Implementation
 				if a_text_tag = default_pointer then
 					a_text_tag := {GTK2}.gtk_text_tag_new (a_text_tag_name.item)
 
-					{GDK}.set_rgba_struct_with_bgr24 (App_implementation.reusable_rgba_struct, fcolor)
+					{GDK}.set_rgba_struct_blue (App_implementation.reusable_rgba_struct, (fcolor |>> 16) * 257)
+					{GDK}.set_rgba_struct_green (App_implementation.reusable_rgba_struct, ((fcolor |<< 16) |>> 24) * 257)
+					{GDK}.set_rgba_struct_red (App_implementation.reusable_rgba_struct, ((fcolor |<< 24) |>> 24) * 257)
 					{GTK2}.g_object_set_pointer (a_text_tag, {GTK_PROPERTIES}.foreground_rgba, App_implementation.reusable_rgba_struct)
 					{GTK2}.gtk_text_tag_table_add (a_tag_table, a_text_tag)
 				end
@@ -299,7 +301,9 @@ feature {EV_RICH_TEXT_IMP} -- Implementation
 				if a_text_tag = default_pointer then
 					a_text_tag := {GTK2}.gtk_text_tag_new (a_text_tag_name.item)
 
-					{GDK}.set_rgba_struct_with_bgr24 (App_implementation.reusable_rgba_struct, bcolor)
+					{GDK}.set_rgba_struct_blue (App_implementation.reusable_rgba_struct, (bcolor |>> 16) * 257)
+					{GDK}.set_rgba_struct_green (App_implementation.reusable_rgba_struct, ((bcolor |<< 16) |>> 24) * 257)
+					{GDK}.set_rgba_struct_red (App_implementation.reusable_rgba_struct, ((bcolor |<< 24) |>> 24) * 257)
 					{GTK2}.g_object_set_pointer (a_text_tag, {GTK_PROPERTIES}.background_rgba, App_implementation.reusable_rgba_struct)
 					{GTK2}.gtk_text_tag_table_add (a_tag_table, a_text_tag)
 				end
@@ -407,7 +411,7 @@ feature {EV_RICH_TEXT_IMP} -- Implementation
 				temp_string.keep_tail (6)
 				temp_string.prepend_character ('#')
 				propvalue := temp_string
-				{GTK2}.g_object_set_pointer (Result, {GTK_PROPERTIES}.foreground, propvalue.item)
+				{GTK2}.g_object_set_string (Result, {GTK_PROPERTIES}.foreground, propvalue.item)
 			end
 
 			if applicable_attributes.background_color then
@@ -418,7 +422,7 @@ feature {EV_RICH_TEXT_IMP} -- Implementation
 				temp_string.keep_tail (6)
 				temp_string.prepend_character ('#')
 				propvalue := temp_string
-				{GTK2}.g_object_set_pointer (Result, {GTK_PROPERTIES}.background, propvalue.item)
+				{GTK2}.g_object_set_string (Result, {GTK_PROPERTIES}.background, propvalue.item)
 			end
 
 			if (applicable_attributes.effects_striked_out or else applicable_attributes.effects_underlined or else applicable_attributes.effects_vertical_offset) then
@@ -505,7 +509,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2020, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2021, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

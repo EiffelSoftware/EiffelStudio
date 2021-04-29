@@ -38,8 +38,12 @@ feature {NONE} -- Initialization
 
 	make
 			-- Create an initialize GTK horizontal box.
+		local
+			hbox: POINTER
 		do
-			set_c_object ({GTK}.gtk_box_new (0, Default_spacing))
+			hbox := {GTK}.gtk_box_new ({GTK_ORIENTATION}.gtk_orientation_horizontal, Default_spacing)
+			{GTK}.gtk_box_set_homogeneous (hbox, Default_homogeneous)
+			set_c_object (hbox)
 			Precursor
 		end
 
@@ -48,7 +52,7 @@ feature {EV_ANY, EV_ANY_I} -- Implementation
 	interface: detachable EV_HORIZONTAL_BOX note option: stable attribute end;
 
 note
-	copyright:	"Copyright (c) 1984-2019, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2021, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

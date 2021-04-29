@@ -43,11 +43,13 @@ feature {NONE} -- Initialization
 			set_c_object
 				({GTK2}.gtk_file_chooser_dialog_new (a_cs.item, NULL, {GTK2}.gtk_file_chooser_action_select_folder_enum))
 
-			l_but := {GTK2}.gtk_dialog_add_button (c_object, {GTK2}.gtk_stock_ok_enum, {GTK2}.gtk_response_ok_enum)
-			l_but := {GTK2}.gtk_dialog_add_button (c_object, {GTK2}.gtk_stock_cancel_enum, {GTK2}.gtk_response_cancel_enum)
+			l_but := {GTK2}.gtk_dialog_add_button (c_object, {GTK2}.gtk_ok_enum_label, {GTK2}.gtk_response_ok_enum)
+			l_but := {GTK2}.gtk_dialog_add_button (c_object, {GTK2}.gtk_cancel_enum_label, {GTK2}.gtk_response_cancel_enum)
 
 			Precursor {EV_STANDARD_DIALOG_IMP}
 			set_is_initialized (False)
+
+			{GTK2}.gtk_dialog_set_default_response (c_object, {GTK2}.gtk_response_accept_enum)				
 			enable_closeable
 			set_start_path (App_implementation.current_working_path)
 			set_is_initialized (True)
@@ -95,7 +97,7 @@ feature {EV_ANY, EV_ANY_I} -- Implementation
 	interface: detachable EV_DIRECTORY_DIALOG note option: stable attribute end;
 
 note
-	copyright:	"Copyright (c) 1984-2013, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2021, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

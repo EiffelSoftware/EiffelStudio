@@ -15,12 +15,22 @@ feature -- Access
 	dpi: NATURAL
 			-- <Precursor>
 		do
-			Result := 96
+			Result := dpi_cache
+		end
+
+	dpi_cache: NATURAL
+		local
+			ev: EV_SCREEN_IMP
+		once
+			create ev.make
+			Result := ev.horizontal_resolution.to_natural_32
+		ensure
+			is_class: class
 		end
 
 
 note
-	copyright: "Copyright (c) 1984-2019, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2021, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

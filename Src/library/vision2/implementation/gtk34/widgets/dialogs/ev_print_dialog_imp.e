@@ -62,7 +62,7 @@ feature {NONE} -- Initialization
 			Precursor {EV_STANDARD_DIALOG_IMP}
 			set_title ("Print")
 			set_is_initialized (False)
-			hbox := {GTK}.gtk_hbox_new (False, 0)
+			hbox := {GTK}.gtk_box_new ({GTK_ORIENTATION}.gtk_orientation_horizontal, 0)
 			{GTK}.gtk_widget_show (hbox)
 			{GTK}.gtk_container_add (client_area_from_c_object (c_object), hbox)
 			create main_dialog_container
@@ -558,7 +558,7 @@ feature {EV_ANY, EV_ANY_I} -- Implementation
 	interface: detachable EV_PRINT_DIALOG note option: stable attribute end;
 
 note
-	copyright:	"Copyright (c) 1984-2014, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2021, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

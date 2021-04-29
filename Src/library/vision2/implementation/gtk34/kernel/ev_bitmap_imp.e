@@ -15,8 +15,8 @@ inherit
 
 	EV_DRAWABLE_IMP
 		redefine
-			interface,
-			clear_rectangle
+			interface
+			--clear_rectangle
 		end
 
 create
@@ -32,71 +32,90 @@ feature -- Initialization
 
 	make
 			-- Set up action sequence connections and create graphics context.
+		local
+			l_app_imp: like app_implementation
 		do
 --			drawable := {GTK}.gdk_pixmap_new (default_pointer, 1, 1, 1)
 --			gc := {GTK}.gdk_gc_new (drawable)
 --			set_default_colors
 --			init_default_values
+			l_app_imp := app_implementation
+
+			set_size (1, 1)
+				-- Initialize the Graphical Context
+			clear_rectangle (0, 0, 1, 1)
+
 			set_is_initialized (True)
 		end
 
 feature -- Status Setting
 
+--	set_size (a_width, a_height: INTEGER)
+--			-- Set the size of the pixmap to `a_width' by `a_height'.
+--		local
+----			oldpix: POINTER
+----			l_width, l_height: INTEGER
+--		do
+----			if drawable /= default_pointer then
+----				oldpix := drawable
+----				l_width := width
+----				l_height := height
+----			end
+
+----			drawable := {GTK}.gdk_pixmap_new (default_pointer, a_width, a_height, 1)
+----			clear_rectangle (0, 0, a_width, a_height)
+
+----			if oldpix /= default_pointer then
+----				{GTK}.gdk_draw_pixmap (drawable, gc, oldpix, 0, 0, 0, 0, l_width, l_height)
+----				{GTK}.gdk_bitmap_unref (oldpix)
+----			end
+--		end
+
 	set_size (a_width, a_height: INTEGER)
 			-- Set the size of the pixmap to `a_width' by `a_height'.
-		local
---			oldpix: POINTER
---			l_width, l_height: INTEGER
 		do
-			width := a_width
-			height := a_height
---			if drawable /= default_pointer then
---				oldpix := drawable
---				l_width := width
---				l_height := height
---			end
-
---			drawable := {GTK}.gdk_pixmap_new (default_pointer, a_width, a_height, 1)
---			clear_rectangle (0, 0, a_width, a_height)
-
---			if oldpix /= default_pointer then
---				{GTK}.gdk_draw_pixmap (drawable, gc, oldpix, 0, 0, 0, 0, l_width, l_height)
---				{GTK}.gdk_bitmap_unref (oldpix)
---			end
+			if cairo_surface /= default_pointer then
+				{CAIRO}.surface_destroy (cairo_surface)
+				{CAIRO}.destroy (drawable)
+			end
+			cairo_surface := {CAIRO}.image_surface_create ({CAIRO}.format_argb32, a_width, a_height)
+			drawable := {CAIRO}.create_context (cairo_surface)
+			init_default_values
 		end
 
-	clear_rectangle (a_x, a_y, a_width, a_height: INTEGER)
-			-- Erase rectangle specified with `background_color'.
-		do
---			{GTK}.gdk_gc_set_foreground (gc, fg_color)
---			{GTK}.gdk_gc_set_background (gc, bg_color)
+--	clear_rectangle (a_x, a_y, a_width, a_height: INTEGER)
+--			-- Erase rectangle specified with `background_color'.
+--		do
+----			{GTK}.gdk_gc_set_foreground (gc, fg_color)
+----			{GTK}.gdk_gc_set_background (gc, bg_color)
 
---			{GTK}.gdk_draw_rectangle (drawable, gc, 1, a_x, a_y, a_width, a_height)
+----			{GTK}.gdk_draw_rectangle (drawable, gc, 1, a_x, a_y, a_width, a_height)
 
-			set_default_colors
-		end
+----			set_default_colors
+--		end
 
 feature -- Access
 
+	cairo_surface: POINTER
+		-- Cairo drawable surface used for storing pixmap data in RGB format.
+
+
 	width: INTEGER
-		-- Width in pixels of mask bitmap.
---		local
-----			a_y: INTEGER
---		do
---			if drawable /= default_pointer then
-----				{GTK}.gdk_window_get_size (drawable, $Result, $a_y)
---			end
---		end
+			-- Width in pixels of mask bitmap.
+		do
+			if cairo_surface /= default_pointer then
+				Result := {CAIRO}.image_surface_get_width (cairo_surface)
+			end
+		end
+
 
 	height: INTEGER
-		-- Width in pixels of mask bitmap.
---		local
-----			a_x: INTEGER
---		do
---			if drawable /= default_pointer then
-----				{GTK}.gdk_window_get_size (drawable, $a_x, $Result)
---			end
---		end
+			-- Width in pixels of mask bitmap.
+		do
+			if cairo_surface /= default_pointer then
+				Result := {CAIRO}.image_surface_get_height (cairo_surface)
+			end
+		end
 
 feature {NONE} -- Implementation
 
@@ -162,7 +181,7 @@ feature {EV_ANY, EV_ANY_I} -- Implementation
 	interface: detachable EV_BITMAP note option: stable attribute end;
 
 note
-	copyright: "Copyright (c) 1984-2013, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2021, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

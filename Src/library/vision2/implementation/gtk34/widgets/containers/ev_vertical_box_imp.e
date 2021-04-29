@@ -37,8 +37,12 @@ feature {NONE} -- Initialization
 		end
 
 	make
+		local
+			vbox: POINTER
 		do
-			set_c_object ({GTK}.gtk_box_new (1, Default_spacing))
+			vbox := {GTK}.gtk_box_new ({GTK_ORIENTATION}.gtk_orientation_vertical, Default_spacing)
+			{GTK}.gtk_box_set_homogeneous (vbox, Default_homogeneous)
+			set_c_object (vbox)
 			Precursor
 		end
 
@@ -47,7 +51,7 @@ feature {EV_ANY, EV_ANY_I} -- Implementation
     interface: detachable EV_VERTICAL_BOX note option: stable attribute end;
 
 note
-	copyright:	"Copyright (c) 1984-2019, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2021, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

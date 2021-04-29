@@ -60,6 +60,7 @@ feature {NONE} -- Initialization
 			-- Connect action sequences to GTK signals.
 		do
 			Precursor {EV_PICK_AND_DROPABLE_IMP}
+			{GTK2}.gtk_widget_set_redraw_on_allocate (c_object, False)
 			set_is_initialized (True)
 		end
 
@@ -72,15 +73,19 @@ feature {NONE} -- Initialization
 				target_entry[0].target = "STRING";
 				target_entry[0].flags = 0;
 				target_entry[0].info = 0;
+			
+				guint n_targets = G_N_ELEMENTS (target_entry);
+				
 				gtk_drag_dest_set (
 					(GtkWidget*) $a_widget,
-					GTK_DEST_DEFAULT_DROP,
+					GTK_DEST_DEFAULT_MOTION | GTK_DEST_DEFAULT_HIGHLIGHT | GTK_DEST_DEFAULT_DROP,
 					target_entry,
-					sizeof (target_entry) / sizeof (GtkTargetEntry),
-					GDK_ACTION_LINK
+					n_targets,
+					GDK_ACTION_COPY|GDK_ACTION_MOVE|GDK_ACTION_LINK
 				);
 			]"
 		end
+
 
 feature -- Event handling
 
@@ -97,6 +102,7 @@ feature -- Event handling
 		end
 
 	init_dpi_changed_actions (a_dpi_changed_actions: like dpi_changed_actions)
+			-- Initialize `a_dpi_changed_actions' accordingly to the current widget.
 		do
 			-- TODO
 		end
@@ -362,12 +368,24 @@ feature {EV_ANY_I} -- Implementation
 
 	refresh_now
 			-- Flush any pending redraws due for `Current'.
+		local
+			flag: BOOLEAN
 		do
 			if {GTK}.gtk_widget_get_window (c_object) /= default_pointer then
-				{GTK2}.gdk_window_process_updates (
-					{GTK}.gtk_widget_get_window (c_object),
-					False
-				)
+				-- FIXME JV
+				-- gdk_window_process_updates has been deprecated since version 3.22 and should not be used in newly-written code.
+--				{GTK2}.gdk_window_process_updates (
+--					{GTK}.gtk_widget_get_window (c_object),
+--					False
+--				)
+				-- https://stackoverflow.com/questions/34912757/how-do-you-force-a-screen-refresh-in-gtk-3-8
+				{GTK}.gtk_widget_queue_draw (c_object)
+				from
+				until
+					{GTK2}.events_pending
+			    loop
+			    	flag := {GTK2}.gtk_event_iteration
+			    end
 			end
 		end
 
@@ -534,7 +552,7 @@ feature {EV_ANY, EV_ANY_I, EV_INTERMEDIARY_ROUTINES} -- Implementation
 	interface: detachable EV_WIDGET note option: stable attribute end;
 
 note
-	copyright:	"Copyright (c) 1984-2019, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2021, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

@@ -311,6 +311,7 @@ feature {EV_INTERMEDIARY_ROUTINES, EV_APPLICATION_IMP}
 			l_accel_called: BOOLEAN
 			l_window_imp: detachable EV_WINDOW_IMP
 			a_focus_widget: detachable EV_WIDGET_IMP
+			l_standard_dialog: detachable EV_STANDARD_DIALOG_IMP
 			l_tab_controlable: detachable EV_TAB_CONTROLABLE_I
 			l_disable_default_processing: BOOLEAN
 			l_char: CHARACTER_32
@@ -382,11 +383,11 @@ feature {EV_INTERMEDIARY_ROUTINES, EV_APPLICATION_IMP}
 					if a_key /= Void and then a_key.text.count /= 1 and then not a_key.is_numpad then
 						inspect a_key.code
 						when {EV_KEY_CONSTANTS}.key_space then
-							l_key_string := once " "
+							l_key_string := once {STRING_32} " "
 						when {EV_KEY_CONSTANTS}.key_enter then
-							l_key_string := once "%N"
+							l_key_string := once {STRING_32} "%N"
 						when {EV_KEY_CONSTANTS}.key_tab then
-							l_key_string := once "%T"
+							l_key_string := once {STRING_32} "%T"
 						else
 							l_key_string := Void
 						end
@@ -399,6 +400,9 @@ feature {EV_INTERMEDIARY_ROUTINES, EV_APPLICATION_IMP}
 			if a_focus_widget = Void then
 					-- If the focus widget is not available then set it to the current window.
 				a_focus_widget ?= l_any
+				if a_focus_widget = Void then
+					l_standard_dialog ?= l_any
+				end
 			end
 			if a_focus_widget /= Void and then a_focus_widget.is_sensitive and then a_focus_widget.has_focus then
 				if a_key /= Void then
@@ -449,6 +453,10 @@ feature {EV_INTERMEDIARY_ROUTINES, EV_APPLICATION_IMP}
 					end
 				end
 			else
+				if l_standard_dialog /= Void and then a_key_press then
+						-- Standard dialogs are not widgets and have to be handled separately.
+					l_standard_dialog.on_key_event (a_key, l_key_string, a_key_press)
+				end
 					-- Execute the gdk event as normal.
 				{GTK}.gtk_main_do_event (a_key_event)
 			end

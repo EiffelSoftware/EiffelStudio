@@ -52,8 +52,8 @@ feature {NONE} -- Initialization
 	make
 			-- Initialize `Current'.
 		do
-			set_c_object ({GTK}.gtk_frame_new (NULL))
-			{GTK}.gtk_frame_set_label (container_widget, NULL)
+			set_c_object ({GTK}.gtk_frame_new (default_pointer))
+			{GTK}.gtk_frame_set_label (container_widget, default_pointer)
 			set_style (Ev_frame_etched_in)
 			align_text_left
 			Precursor {EV_CELL_IMP}
@@ -190,7 +190,7 @@ feature {EV_ANY, EV_ANY_I} -- Implementation
 			-- dependent functionality implemented by `Current'
 
 note
-	copyright:	"Copyright (c) 1984-2019, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2021, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

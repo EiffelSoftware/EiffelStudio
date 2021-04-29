@@ -43,7 +43,7 @@ feature {NONE} -- Initialization
 	make
 			-- Initialize `Current'.
 		do
-			set_c_object ({GTK}.gtk_layout_new ({GTK}.null_pointer, {GTK}.null_pointer))
+			set_c_object ({GTK}.gtk_layout_new (default_pointer, default_pointer))
 			{GTK2}.gtk_layout_set_size (container_widget, 32768, 32768)
 			Precursor
 		end
@@ -186,6 +186,7 @@ feature {EV_ANY_I} -- Implementation
 			{GTK}.gtk_widget_show (l_parent_box)
 			{GTK}.gtk_container_add (l_parent_box, a_child)
 			{GTK}.gtk_layout_put (a_container, l_parent_box, internal_x_y_offset, internal_x_y_offset)
+			{GTK}.gtk_container_check_resize (container_widget)
 		end
 
 	gtk_container_remove (a_container, a_child: POINTER)
@@ -205,7 +206,7 @@ feature {EV_ANY, EV_ANY_I} -- Implementation
 			-- functionality implemented by `Current'
 
 note
-	copyright:	"Copyright (c) 1984-2013, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2021, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

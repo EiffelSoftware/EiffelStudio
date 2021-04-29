@@ -42,43 +42,43 @@ feature -- Commands
 	asterisk
 			-- Asterisk beep.
 		do
-			{GTK}.gdk_beep
+			{GTK}.gdk_diplay_beep ({GDK}.gdk_display_get_default)
 		end
 
 	exclamation
 			-- Exclamation beep.
 		do
-			{GTK}.gdk_beep
+			{GTK}.gdk_diplay_beep ({GDK}.gdk_display_get_default)
 		end
 
 	hand
 			-- Hand beep.
 		do
-			{GTK}.gdk_beep
+			{GTK}.gdk_diplay_beep ({GDK}.gdk_display_get_default)
 		end
 
 	question
 			-- Question beep.
 		do
-			{GTK}.gdk_beep
+			{GTK}.gdk_diplay_beep ({GDK}.gdk_display_get_default)
 		end
 
 	ok
 			-- Ok beep.
 			-- System default beep.
 		do
-			{GTK}.gdk_beep
+			{GTK}.gdk_diplay_beep ({GDK}.gdk_display_get_default)
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2021, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 

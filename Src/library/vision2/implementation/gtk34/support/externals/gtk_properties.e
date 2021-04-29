@@ -334,6 +334,17 @@ feature -- Gtk properties
 			]"
 		end
 
+	gtk_menu_icons: POINTER
+			-- "gtk-menu-bar-accel" property.
+		external
+			"C inline"
+		alias
+			"[
+			static char *v = "gtk-menu-images";
+			return (EIF_POINTER) v;
+			]"
+		end
+
 note
 	copyright: "Copyright (c) 1984-2016, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"

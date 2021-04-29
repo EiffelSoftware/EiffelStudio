@@ -55,12 +55,15 @@ feature -- Status setting
 			-- Show `Current' modal with respect to `a_window'.
 		do
 			selected_button := Void
+
 			Precursor (a_window)
+
 			if user_clicked_ok then
 				ok_actions.call (Void)
 			else
 				cancel_actions.call (Void)
 			end
+
 		end
 
 	set_title (a_title: READABLE_STRING_GENERAL)
@@ -153,7 +156,7 @@ feature {EV_INTERMEDIARY_ROUTINES} -- Implementation
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2014, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2021, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

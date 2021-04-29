@@ -60,10 +60,12 @@ feature -- Element change
 			Precursor {EV_TOGGLE_BUTTON_IMP} (txt)
 
 				-- We left-align and vertical_center-position the text
-			{GTK}.gtk_misc_set_alignment (text_label, {REAL_32} 0.0, {REAL_32} 0.5)
+			{GTK}.gtk_label_set_xalign(text_label, {REAL_32} 0.0)
+			{GTK}.gtk_label_set_yalign(text_label, {REAL_32} 0.5)
 
-			if gtk_pixmap /= NULL then
-				{GTK}.gtk_misc_set_alignment (pixmap_box, {REAL_32} 0.0, {REAL_32} 0.5)
+			if gtk_pixmap /= default_pointer then
+				{GTK3}.gtk_widget_set_halign(pixmap_box, {GTK_ALIGN}.gtk_align_end)
+				{GTK3}.gtk_widget_set_valign(pixmap_box, {GTK_ALIGN}.gtk_align_center)
 			end
 		end
 
@@ -72,7 +74,7 @@ feature {EV_ANY, EV_ANY_I} -- Implementation
 	interface: detachable EV_CHECK_BUTTON note option: stable attribute end;
 
 note
-	copyright:	"Copyright (c) 1984-2014, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2021, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

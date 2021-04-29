@@ -84,20 +84,28 @@ feature {NONE} -- Initialization
 					-- Store the value of the debug mode.
 				saved_debug_state := debug_state
 				enable_ev_gtk_log (0)
+				debug ("gtk_log")
+					enable_ev_gtk_log (2)
+				end
 					-- 0 = No messages, 1 = Gtk Log Messages, 2 = Gtk Log Messages with Eiffel exception.
 				{GTK}.gdk_set_show_events (False)
 
-				best_available_color_depth := {GTK2}.gdk_visual_get_best_depth.min (24)
+				best_available_color_depth := {GDK}.gdk_visual_get_depth({GDK}.gdk_screen_get_system_visual({GDK}.gdk_display_get_default_screen ({GDK}.gdk_display_get_default))).min (24)
 
 				gtk_dependent_initialize
 
 				set_tooltip_delay (500)
 
 					-- Uncomment for Gtk 2.x only
---				feature {GTK2}.gdk_window_set_debug_updates (True)
+					-- The --gtk-debug=updates command line option passed to GTK+ programs enables this debug option at application startup time.
+					-- That's usually more useful than calling gdk_window_set_debug_updates() yourself, though you might want to use this function to enable updates
+					-- sometime after application startup time.
+				-- {GTK2}.gdk_window_set_debug_updates (True)
+					-- Deprecated since 3.22.		
+
 
 					-- We do not want X Errors to exit the system so we ignore them indefinitely.
-				{GTK}.gdk_error_trap_push
+				{GDK}.gdk_x11_display_error_trap_push ({GDK}.gdk_display_get_default)
 
 				update_screen_meta_data
 
@@ -123,44 +131,63 @@ feature {NONE} -- Initialization
 			-- Update the default screen meta data.
 		local
 			l_rect: POINTER
-			l_primary_monitor_number: INTEGER
 			l_supports_composite_symbol: POINTER
+			l_workarea: POINTER
 		do
 			is_display_remote := False
 
 				-- Check whether display supports transparency
-			l_supports_composite_symbol := gdk_display_supports_composite_symbol
+			l_supports_composite_symbol := gdk_screen_is_composited_symbol
 			if l_supports_composite_symbol /= default_pointer then
-				is_display_alpha_capable := gdk_display_supports_composite_call (l_supports_composite_symbol, {GDK}.gdk_display_get_default)
+				is_display_alpha_capable := gdk_screen_is_composited_call (l_supports_composite_symbol, {GDK}.gdk_screen_get_default)
 			end
 
-			screen_monitor_count := {GTK2}.gdk_screen_get_n_monitors ({GTK2}.gdk_screen_get_default)
+			screen_monitor_count := {GDK}.gdk_display_get_n_monitors ({GDK}.gdk_display_get_default)
 			l_rect := reusable_rectangle_struct
 
-			l_primary_monitor_number := {GTK2}.gdk_screen_get_primary_monitor ({GTK2}.gdk_screen_get_default)
-			{GTK2}.gdk_screen_get_monitor_geometry ({GTK2}.gdk_screen_get_default, l_primary_monitor_number, l_rect)
-			screen_primary_monitor_number := l_primary_monitor_number + 1
+			screen_primary_monitor := {GDK}.gdk_display_get_primary_monitor ({GDK}.gdk_display_get_default)
+			{GDK}.gdk_monitor_get_geometry (screen_primary_monitor, l_rect)
 
 			screen_virtual_x := -{GTK}.gdk_rectangle_struct_x (l_rect)
 			screen_virtual_y := -{GTK}.gdk_rectangle_struct_y (l_rect)
 			screen_width := {GTK}.gdk_rectangle_struct_width (l_rect)
 			screen_height := {GTK}.gdk_rectangle_struct_height (l_rect)
 
-			screen_virtual_width := {GTK}.gdk_screen_width
-			screen_virtual_height := {GTK}.gdk_screen_height
+			l_workarea := {GTK}.c_gdk_rectangle_struct_allocate
+			c_get_screen_geometry (l_workarea)
+			screen_virtual_width := {GTK}.gdk_rectangle_struct_width (l_workarea)
+			screen_virtual_height := {GTK}.gdk_rectangle_struct_height (l_workarea)
+
 		end
 
 	gdk_display_supports_composite_symbol: POINTER
 			-- Symbol for `gdk_display_supports_composite'
+		obsolete
+			"Use gdk_screen_is_composited_symbol instead. [2021-06-01]"
 		once
 			Result := symbol_from_symbol_name ("gdk_display_supports_composite")
 		end
 
 	gdk_display_supports_composite_call (a_function: POINTER; a_display: POINTER): BOOLEAN
+		obsolete
+			"Use gdk_screen_is_composited_call instead. [2021-06-01]"
 		external
 			"C inline use <ev_gtk.h>"
 		alias
 			"return (FUNCTION_CAST(gboolean, (GdkDisplay*)) $a_function)((GdkDisplay*) $a_display);"
+		end
+
+	gdk_screen_is_composited_symbol: POINTER
+			-- Symbol for `gdk_display_supports_composite'
+		once
+			Result := symbol_from_symbol_name ("gdk_screen_is_composited")
+		end
+
+	gdk_screen_is_composited_call (a_function: POINTER; a_screen: POINTER): BOOLEAN
+		external
+			"C inline use <ev_gtk.h>"
+		alias
+			"return (FUNCTION_CAST(gboolean, (GdkScreen*)) $a_function)((GdkScreen*) $a_screen);"
 		end
 
 feature -- Implementation
@@ -194,7 +221,7 @@ feature {EV_ANY_I} -- Implementation
 	screen_width: INTEGER
 	screen_height: INTEGER
 	screen_monitor_count: INTEGER
-	screen_primary_monitor_number: INTEGER
+	screen_primary_monitor: POINTER
 		-- Screen meta data.
 
 	best_available_color_depth: INTEGER
@@ -362,6 +389,9 @@ feature {EV_ANY_I} -- Implementation
 									if {GTK}.gtk_widget_get_state_flags (l_pnd_imp.c_object) & {GTK}.GTK_STATE_FLAG_INSENSITIVE_ENUM = 0 then
 										if {GTK}.gtk_widget_get_window (l_pnd_imp.visual_widget) /= {GTK}.gdk_event_motion_struct_window (gdk_event) then
 												-- If the event we received is not from the associating widget window then we remap its correct x and y values.
+												-- TODO JV review
+												-- Calling `gtk_widget_realize` since gtk_widget_get_window return NULL if the windows is no realized.
+											{GTK}.gtk_widget_realize (l_pnd_imp.visual_widget)
 											i := {GTK}.gdk_window_get_origin ({GTK}.gtk_widget_get_window (l_pnd_imp.visual_widget), $l_widget_x, $l_widget_y)
 											l_widget_x := l_screen_x - l_widget_x
 											l_widget_y := l_screen_y - l_widget_y
@@ -716,6 +746,7 @@ feature {EV_ANY_I} -- Implementation
 					end
 					{GTK}.gdk_event_free (gdk_event)
 				else
+						-- https://stackoverflow.com/questions/23817161/proper-way-force-refresh-of-window-in-gtk-3-using-pygobject
 					if {GTK2}.events_pending then
 						process_gtk_events
 					else
@@ -851,7 +882,13 @@ feature -- Basic operation
 	process_graphical_events
 			-- Process all pending graphical events and redraws.
 		do
+				-- FIXME
+				-- No code that allows this functionality in GTK4
+				-- has been deprecated since version 3.22 and should not be used in newly-written code.
 			{GTK}.gdk_window_process_all_updates
+
+				-- Potential replacements
+			--{GDK}.gdk_display_flush ({GDK}.gdk_display_get_default)
 		end
 
 	motion_tuple: TUPLE [x: INTEGER; y: INTEGER; x_tilt: DOUBLE; y_tilt: DOUBLE; pressure: DOUBLE; screen_x: INTEGER; screen_y: INTEGER]
@@ -970,7 +1007,7 @@ feature -- Basic operation
 			l_file_list: detachable LIST [STRING_32]
 			l_success: BOOLEAN
 			l_widget_imp: detachable EV_WIDGET_IMP
-			l_string, l_file: STRING_32
+			l_string, l_file: STRING_8
 		do
 			from
 				a_context := {GTK}.gdk_event_dnd_struct_context (a_event)
@@ -979,7 +1016,7 @@ feature -- Basic operation
 				a_time := {GTK}.gdk_event_dnd_struct_time (a_event)
 				a_target_list := {GTK}.gdk_drag_context_list_targets (a_context)
 				l_string := "STRING"
-				l_file := "file://"
+				l_file :=  "file://"
 			until
 				a_target_list = {GTK}.null_pointer
 			loop
@@ -1032,6 +1069,9 @@ feature -- Basic operation
 				end
 			end
 			{GTK}.gdk_drop_finish (a_context, l_success, a_time)
+			{GTK}.gtk_drag_finish (a_context, l_success, False, a_time)
+			{GTK}.g_free (prop_data)
+			{GTK}.g_free (a_target_list)
 		end
 
 
@@ -1083,7 +1123,9 @@ feature -- Basic operation
 			-- End the application.
 		do
 			if not is_destroyed then
-				{GTK2}.g_object_unref (tooltips)
+				if tooltips /= default_pointer then
+					{GTK2}.g_object_unref (tooltips)
+				end
 				set_is_destroyed (True)
 					-- This will exit our main loop
 				destroy_actions.call (Void)
@@ -1415,13 +1457,52 @@ feature {NONE} -- External implementation
 			"gtk_init_check (&eif_argc, &eif_argv)"
 		end
 
+
+	c_get_screen_geometry (geometry: POINTER)
+		external
+			"C inline use <ev_gtk.h>"
+		alias
+			"[
+				{
+				  GdkDisplay *display = gdk_display_get_default ();
+				  int num_monitors = gdk_display_get_n_monitors (display);
+
+				  gint x, y, w, h;
+
+				  x = y = G_MAXINT;
+				  w = h = G_MININT;
+
+				  for (int i = 0; i < num_monitors; i++)
+				    {
+				      GdkRectangle rect;
+				      GdkMonitor *monitor = gdk_display_get_monitor (display, i);
+				      gdk_monitor_get_geometry (monitor, &rect);
+
+				      x = MIN (x, rect.x);
+				      y = MIN (y, rect.y);
+				      w = MAX (w, rect.x + rect.width);
+				      h = MAX (h, rect.y + rect.height);
+				    }
+
+				  ((GdkRectangle *)$geometry)->width = w - x;
+				  ((GdkRectangle *)$geometry)->height = h - y;
+				}
+			]"
+		end
+
+
+
+
+
+
+
 feature {NONE} -- Externals
 
 	static_mutex: POINTER;
 		-- Pointer to the global static mutex
 
 note
-	copyright:	"Copyright (c) 1984-2016, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2021, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

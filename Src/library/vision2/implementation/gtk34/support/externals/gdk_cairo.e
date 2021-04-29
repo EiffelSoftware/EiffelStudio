@@ -9,6 +9,8 @@ class
 feature -- Externals
 
 	create_context (a_window: POINTER): POINTER
+		obsolete
+			"gdk_cairo_create is deprecated: Use 'gdk_window_begin_draw_frame() and gdk_drawing_context_get_cairo_context()' instead [2021-06-01]"
 		external
 			"C signature (GdkWindow *): cairo_t * use %"ev_gtk.h%""
 		alias
@@ -43,8 +45,30 @@ feature -- Externals
 			"gdk_cairo_region"
 		end
 
+	cairo_region_create: POINTER
+		external
+			"C inline use %"ev_gtk.h%""
+		alias
+			"return cairo_region_create();"
+		end
+
+	cairo_region_destroy (a_region: POINTER)
+		external
+			"C inline use %"ev_gtk.h%""
+		alias
+			"cairo_region_destroy($a_region)"
+		end
+
+
+	gdk_drawing_context_get_cairo_context (a_context: POINTER): POINTER
+		external
+			"C inline use %"ev_gtk.h%""
+		alias
+			"return gdk_drawing_context_get_cairo_context ((GdkDrawingContext *)$a_context);"
+		end
+
 note
-	copyright: "Copyright (c) 1984-2016, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2021, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

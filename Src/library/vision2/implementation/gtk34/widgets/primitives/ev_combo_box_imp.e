@@ -127,10 +127,8 @@ feature {NONE} -- Initialization
 			a_attribute: EV_GTK_C_STRING
 			a_cs: EV_GTK_C_STRING
 			a_vbox: POINTER
-			a_focus_list: POINTER
 		do
-
-			a_vbox := {GTK}.gtk_vbox_new (False, 0)
+			a_vbox := {GTK3}.gtk_box_new ({GTK_ORIENTATION}.gtk_orientation_vertical, 0)
 			set_c_object (a_vbox)
 			container_widget := {GTK2}.gtk_combo_box_new_with_entry
 			{GTK}.gtk_widget_show (container_widget)
@@ -138,9 +136,13 @@ feature {NONE} -- Initialization
 			entry_widget := {GTK}.gtk_bin_get_child (container_widget)
 
 				-- Alter focus chain so that button cannot be selected via the keyboard.
-			a_focus_list := {GTK}.g_list_append (default_pointer, entry_widget)
-			{GTK2}.gtk_container_set_focus_chain (container_widget, a_focus_list)
-			{GTK}.g_list_free (a_focus_list)
+			--a_focus_list := {GTK}.g_list_append (default_pointer, entry_widget)
+			--	-- TODO check how to replace this code.
+			-- Check https://github.com/FreeRDP/Remmina/commit/0bdded543d8d425470858046f3bf7f43681d932e
+			-- the code is not used anymore.
+			--	-- https://gitlab.gnome.org/GNOME/gtk/-/issues/1430
+			--{GTK2}.gtk_container_set_focus_chain (container_widget, a_focus_list)
+			--{GTK}.g_list_free (a_focus_list)
 
 				-- This is a hack, remove when the toggle button can be retrieved via the API.
 			real_signal_connect (container_widget, once "realize", agent (app_implementation.gtk_marshal).on_combo_box_toggle_button_event (internal_id, 1), Void)
@@ -294,16 +296,18 @@ feature {EV_GTK_DEPENDENT_INTERMEDIARY_ROUTINES} -- Event handling
 			a_toggle: POINTER
 		do
 			return_combo_toggle (container_widget, $a_toggle)
-			check
-				toggle_button_set: a_toggle /= default_pointer
-			end
-				-- Set the size of the toggle so that it isn't bigger than the entry size
-			{GTK}.gtk_widget_set_size_request (a_toggle, -1, 1)
-			{GTK}.gtk_widget_set_can_focus (a_toggle, False)
+			if a_toggle /= default_pointer then
+				check
+					toggle_button_set: a_toggle /= default_pointer
+				end
+					-- Set the size of the toggle so that it isn't bigger than the entry size
+				{GTK}.gtk_widget_set_size_request (a_toggle, -1, 1)
+				{GTK}.gtk_widget_set_can_focus (a_toggle, False)
 
-			real_signal_connect (a_toggle, once "toggled", agent (app_implementation.gtk_marshal).on_combo_box_toggle_button_event (internal_id, 2), Void)
-			{GTK2}.g_signal_handler_disconnect (container_widget, retrieve_toggle_button_signal_connection_id)
-			retrieve_toggle_button_signal_connection_id := 0
+				real_signal_connect (a_toggle, once "toggled", agent (app_implementation.gtk_marshal).on_combo_box_toggle_button_event (internal_id, 2), Void)
+				{GTK2}.g_signal_handler_disconnect (container_widget, retrieve_toggle_button_signal_connection_id)
+				retrieve_toggle_button_signal_connection_id := 0
+			end
 		end
 
 	toggle_button_toggled
@@ -366,7 +370,7 @@ feature {EV_ANY, EV_ANY_I} -- Implementation
 	interface: detachable EV_COMBO_BOX note option: stable attribute end;
 
 note
-	copyright:	"Copyright (c) 1984-2019, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2021, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

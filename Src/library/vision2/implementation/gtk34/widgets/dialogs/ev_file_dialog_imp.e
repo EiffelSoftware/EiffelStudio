@@ -41,13 +41,17 @@ feature {NONE} -- Initialization
 			a_cs := "Select file"
 			set_c_object
 				({GTK2}.gtk_file_chooser_dialog_new (a_cs.item, NULL, file_chooser_action))
-			l_but := {GTK2}.gtk_dialog_add_button (c_object, {GTK2}.gtk_stock_ok_enum, {GTK2}.gtk_response_ok_enum)
-			l_but := {GTK2}.gtk_dialog_add_button (c_object, {GTK2}.gtk_stock_cancel_enum, {GTK2}.gtk_response_cancel_enum)
+			l_but := {GTK2}.gtk_dialog_add_button (c_object, {GTK2}.gtk_ok_enum_label, {GTK2}.gtk_response_ok_enum)
+			l_but := {GTK2}.gtk_dialog_add_button (c_object, {GTK2}.gtk_cancel_enum_label, {GTK2}.gtk_response_cancel_enum)
 			create filters.make (0)
 			Precursor {EV_STANDARD_DIALOG_IMP}
 			set_is_initialized (False)
 
-			filter := "*.*"
+			filter := {STRING_32} "*.*"
+
+			{GTK2}.gtk_file_chooser_set_local_only (c_object, True)
+			{GTK2}.gtk_dialog_set_default_response (c_object, {GTK2}.gtk_response_accept_enum)
+
 			enable_closeable
 			set_start_path (App_implementation.current_working_path)
 			set_is_initialized (True)
@@ -123,9 +127,9 @@ feature -- Element change
 			then
 				filter_name.remove_head (2)
 				filter_name.put (filter_name.item (1).upper, 1)
-				filter_name.append (" Files (")
+				filter_name.append_string_general (" Files (")
 				filter_name.append_string_general (a_filter)
-				filter_name.append (")")
+				filter_name.append_character (')')
 			end
 
 			remove_file_filters
@@ -155,6 +159,13 @@ feature -- Element change
 		do
 			create a_cs.make_from_path (a_path)
 			{GTK2}.gtk_file_chooser_set_filename (c_object, a_cs.item)
+				-- Force the `current_name' to be what is specified in `a_path'.
+				-- If we do not do that and `a_path' has no file associated on disk
+				-- GTK won't put the file name user specified in the name entry of the dialog.
+			if attached a_path.entry as l_entry then
+				create a_cs.make_from_path (l_entry)
+				{GTK2}.gtk_file_chooser_set_current_name (c_object, a_cs.item)
+			end
 		end
 
 	set_start_path (a_path: PATH)
@@ -240,7 +251,7 @@ feature {NONE} -- Implementation
 						until
 							filter_string_list.off
 						loop
-							if filter_string_list.item.is_equal ("*.*") then
+							if filter_string_list.item.same_string_general ("*.*") then
 								a_cs := "*"
 							else
 								a_cs := filter_string_list.item
@@ -272,7 +283,7 @@ feature {EV_ANY, EV_ANY_I} -- Implementation
 	interface: detachable EV_FILE_DIALOG note option: stable attribute end;
 
 note
-	copyright:	"Copyright (c) 1984-2019, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2021, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

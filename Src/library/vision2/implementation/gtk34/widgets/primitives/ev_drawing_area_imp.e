@@ -59,7 +59,8 @@ feature {NONE} -- Initialization
 
 			{GTK2}.gtk_widget_set_redraw_on_allocate (c_object, False)
 			{GTK2}.gtk_widget_set_app_paintable (c_object, True)
-			{GTK2}.gtk_widget_set_double_buffered (visual_widget, False)
+			-- TODO double check.
+			--{GTK2}.gtk_widget_set_double_buffered (visual_widget, False)
 
 			real_signal_connect (c_object, once "button-press-event", agent (app_implementation.gtk_marshal).on_button_event (app_implementation, ?), app_implementation.gtk_marshal.button_event_translate_agent)
 			real_signal_connect (c_object, once "button-release-event", agent (app_implementation.gtk_marshal).on_button_event (app_implementation, ?), app_implementation.gtk_marshal.button_event_translate_agent)
@@ -89,14 +90,18 @@ feature -- Implementation
 
 	enable_double_buffering
 			-- Enable backbuffer for `Current'.
+		obsolete
+			"double buffering is enabled by default [2021-06-01]"
 		do
-			{GTK2}.gtk_widget_set_double_buffered (visual_widget, True)
+		  -- {GTK2}.gtk_widget_set_double_buffered (visual_widget, True)
 		end
 
 	disable_double_buffering
 			-- Disable backbuffer for `Current'.
+		obsolete
+			"Disabling double buffering is mostly detrimental to the performance of an app. [2021-06-01]"
 		do
-			{GTK2}.gtk_widget_set_double_buffered (visual_widget, False)
+			-- {GTK2}.gtk_widget_set_double_buffered (visual_widget, False)
 		end
 
 feature {NONE} -- Implementation
@@ -121,8 +126,26 @@ feature {NONE} -- Implementation
 
 	redraw_rectangle (a_x, a_y, a_width, a_height: INTEGER)
 			-- Redraw the rectangle area defined by `a_x', `a_y', `a_width', a_height'.
+		local
+			flag: BOOLEAN
 		do
-			{GTK}.gtk_widget_queue_draw_area (visual_widget, a_x, a_y, a_width, a_height)
+				-- TODO JV review
+				-- Workaround, sometimes we got a negative vaue for width `a_width`.
+				-- For example from EV_GRID_I
+			if a_width < 0 then
+				{GTK}.gtk_widget_queue_draw_area (visual_widget, a_x, a_y, 0, a_height)
+			else
+				{GTK}.gtk_widget_queue_draw_area (visual_widget, a_x, a_y, a_width, a_height)
+			end
+			from
+			until
+				{GTK2}.events_pending
+			loop
+				flag := {GTK2}.gtk_event_iteration
+				debug ("gtk3_redraw")
+					print (generator + ".redraw " + flag.out + "%N")
+				end
+			end
 		end
 
 	clear_and_redraw
@@ -158,19 +181,22 @@ feature {EV_ANY_I} -- Implementation
 	get_drawable: POINTER
 			-- Drawable used for rendering docking components.
 		local
-			l_window: POINTER
+			l_window, l_surface: POINTER
 		do
 			if in_expose_actions then
 					-- We have been called via an expose event.
 				check drawable_not_null: drawable /= null end
 				Result := drawable
 			else
-					-- User is drawing directly to the window outside
-					-- of an expose event. We need to create a drawable
-					-- context for each draw operations.
+						-- User is drawing directly to the window outside
+						-- of an expose event. We need to create a drawable
+						-- context for each draw operations.
 				l_window := {GTK}.gtk_widget_get_window (c_object)
 				if l_window /= default_pointer then
-					Result := {GDK_CAIRO}.create_context (l_window)
+--					Result := {GDK_CAIRO}.create_context (l_window)
+--					initialize_drawable (Result)
+					l_surface := {GDK}.gdk_window_create_similar_surface (l_window, 0x3000, {GDK}.gdk_window_get_width(l_window), {GDK}.gdk_window_get_height(l_window) )
+					Result := {CAIRO}.create_context (l_surface)
 					initialize_drawable (Result)
 				end
 			end
@@ -179,8 +205,9 @@ feature {EV_ANY_I} -- Implementation
 	release_drawable (a_drawable: POINTER)
 			-- Release resources of drawable `a_drawable'.
 		do
-			if not in_expose_actions and a_drawable /= null then
+			if not in_expose_actions and a_drawable /= default_pointer then
 				{CAIRO}.destroy (a_drawable)
+				cairo_context := Void
 			end
 		end
 
@@ -270,7 +297,7 @@ feature {EV_ANY, EV_ANY_I} -- Implementation
 		-- Interface object of Current.
 
 note
-	copyright:	"Copyright (c) 1984-2016, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2021, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

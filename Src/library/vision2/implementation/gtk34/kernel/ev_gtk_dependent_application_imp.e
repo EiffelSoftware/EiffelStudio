@@ -33,24 +33,82 @@ feature -- Initialize
 	gtk_dependent_initialize
 			-- Gtk dependent code for `initialize'
 		local
-			css_context: POINTER
+			css_provider: POINTER
 			l_style: STRING
 			l_cs: C_STRING
 			l_error: POINTER
 		do
 				-- Initialize custom styles for gtk.
-			css_context := {GTK_CSS}.gtk_css_provider_get_default
+			css_provider := {GTK_CSS}.gtk_css_provider_new
 			l_style := "[
 				* {
-					-GtkWindow-resize-grip-height: 0;
-					-GtkWindow-resize-grip-width: 0;
-					-GtkComboBox-appears-as-list: 1;
-					-GtkToolbar-shadow-type: none;
+					-GtkWindow-resize-grip-height: 0px;
+					-GtkWindow-resize-grip-width: 0px;
+					-GtkComboBox-appears-as-list: 1px;
+
+					 background-color: @bg_color;
+			  		 color: @fg_color;
+
+					 -Clearlooks-colorize-scrollbar: true;
+					 -Clearlooks-style: classic;
 				}
-			]"
+
+			*:hover {
+			  background-color: shade (@bg_color, 1.02);
+			}
+
+			*:selected {
+			  background-color: @selected_bg_color;
+			  color: @selected_fg_color;
+			}
+
+			*:disabled {
+			  color: shade (@bg_color, 0.7);
+			}
+
+			*:active {
+			  background-color: shade (@bg_color, 0.9);
+			}
+
+			.tooltip {
+			  padding: 4px;
+
+			  background-color: @tooltip_bg_color;
+			  color: @tooltip_fg_color;
+			}
+
+			.toolbar {
+				background-color: shade (@bg_color, 0.9);
+			}
+
+			.button {
+			  padding: 3px;
+			  background-color: shade (@bg_color, 1.04);
+			}
+
+			.button:hover {
+			  background-color: shade (@bg_color, 1.06);
+			}
+
+			.button:active {
+			  background-color: shade (@bg_color, 0.85);
+			}
+
+			.entry {
+			  padding: 3px;
+
+			  background-color: @base_color;
+			  color: @text_color;
+			}
+
+			.entry:selected {
+			  background-color: mix (@selected_bg_color, @base_color, 0.4);
+			  -Clearlooks-focus-color: shade (0.65, @selected_bg_color)
+			}
+	]"
 
 			create l_cs.make (l_style)
-			if not {GTK_CSS}.gtk_css_provider_load_from_data (css_context, l_cs.item, l_cs.bytes_count, $l_error) then
+			if not {GTK_CSS}.gtk_css_provider_load_from_data (css_provider, l_cs.item, l_cs.bytes_count, $l_error) then
 				-- Handle error
 			end
 		end
@@ -127,17 +185,17 @@ feature -- Implementation
 			split_values.compare_objects
 			default_font_point_height_internal := split_values.last.to_integer
 
-			if split_values.has (once "italic") or else split_values.has (once "oblique") then
+			if split_values.has (once {STRING_32} "italic") or else split_values.has (once {STRING_32} "oblique") then
 				default_font_style_internal := {EV_FONT_CONSTANTS}.shape_italic
 			else
 				default_font_style_internal := {EV_FONT_CONSTANTS}.shape_regular
 			end
 
-			if split_values.has (once "bold") then
+			if split_values.has (once {STRING_32} "bold") then
 				default_font_weight_internal := {EV_FONT_CONSTANTS}.weight_bold
-			elseif split_values.has (once "light") then
+			elseif split_values.has (once {STRING_32} "light") then
 				default_font_weight_internal := {EV_FONT_CONSTANTS}.weight_thin
-			elseif split_values.has (once "superbold") then
+			elseif split_values.has (once {STRING_32} "superbold") then
 				default_font_weight_internal := {EV_FONT_CONSTANTS}.weight_black
 			else
 				default_font_weight_internal := {EV_FONT_CONSTANTS}.weight_regular
@@ -193,7 +251,7 @@ feature -- Implementation
 		local
 			font_name_ptr: POINTER
 		do
-			font_name_ptr := {GTK2}.g_object_get_pointer (default_gtk_settings, {GTK_PROPERTIES}.gtk_font_name)
+			{GTK2}.g_object_get_string (default_gtk_settings, gtk_font_name_setting.item, $font_name_ptr)
 			if font_name_ptr /= default_pointer then
 				if previous_font_settings /= default_pointer then
 					Result := c_strcmp (previous_font_settings, font_name_ptr) /= 0
@@ -237,14 +295,14 @@ feature -- Implementation
 			a_cs: EV_GTK_C_STRING
 			l_result: detachable STRING_32
 		do
-			font_name_ptr := {GTK2}.g_object_get_pointer (default_gtk_settings, {GTK_PROPERTIES}.gtk_font_name)
+			{GTK2}.g_object_get_string (default_gtk_settings, gtk_font_name_setting.item, $font_name_ptr)
 			if font_name_ptr /= default_pointer then
 				create a_cs.make_from_pointer (font_name_ptr)
 				l_result := a_cs.string
 			end
 					-- Sometimes when gtk isn't setup correctly the 'gtk-font-name' setting cannot be found, so the default is used instead.
 			if l_result = Void or else l_result.is_empty then
-				Result := once "Sans 10"
+				Result := once {STRING_32} "Sans 10"
 			else
 				Result := l_result
 			end
@@ -367,7 +425,7 @@ feature {NONE} -- Externals
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2016, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2021, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

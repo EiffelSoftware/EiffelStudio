@@ -40,6 +40,8 @@ feature {EV_ANY_I} -- Implementation
 	drawable: POINTER
 			-- Pointer to the current Cairo context for `Current'.
 
+	cairo_context: detachable EV_CAIRO_CONTEXT
+
 feature {EV_DRAWABLE_IMP} -- Implementation
 
 	gc_clip_area: detachable EV_RECTANGLE
@@ -155,6 +157,8 @@ feature -- Element change
 				l_internal_background_color.set_red_with_8_bit (a_color.red_8_bit)
 				l_internal_background_color.set_green_with_8_bit (a_color.green_8_bit)
 				l_internal_background_color.set_blue_with_8_bit (a_color.blue_8_bit)
+				-- TODO check the following.
+				-- internal_set_color (False, a_color.red_16_bit, a_color.green_16_bit, a_color.blue_16_bit)
 				internal_set_color (False, a_color.red, a_color.green, a_color.blue)
 			end
 		end
@@ -173,8 +177,10 @@ feature -- Element change
 				l_internal_foreground_color.set_red_with_8_bit (a_color.red_8_bit)
 				l_internal_foreground_color.set_green_with_8_bit (a_color.green_8_bit)
 				l_internal_foreground_color.set_blue_with_8_bit (a_color.blue_8_bit)
+				-- TODO cehck the following.
+				-- internal_set_color (True, a_color.red_16_bit, a_color.green_16_bit, a_color.blue_16_bit)
+				internal_set_color (True, a_color.red, a_color.green, a_color.blue)
 			end
-			internal_set_color (True, a_color.red, a_color.green, a_color.blue)
 		end
 
 	set_line_width (a_width: INTEGER)
@@ -882,7 +888,7 @@ feature {EV_ANY, EV_ANY_I} -- Implementation
 	interface: detachable EV_DRAWABLE note option: stable attribute end
 
 note
-	copyright:	"Copyright (c) 1984-2019, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2021, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

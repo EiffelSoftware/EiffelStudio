@@ -58,10 +58,14 @@ void c_ev_any_imp_set_eif_oid_in_c_object (GtkWidget* c_object, int eif_oid, voi
 		"eif_oid",
 		(gpointer) (rt_int_ptr) eif_oid
 	);
-	g_signal_connect (
-		G_OBJECT (c_object),
-		"destroy",
-		(GCallback) c_ev_any_imp_c_object_dispose,
-		(gpointer) (rt_int_ptr) eif_oid
-	);
+	if (GTK_IS_TREE_VIEW_COLUMN (c_object)) {
+		// Signal destroy is not applicable to object type GtkTreeViewColumn
+	}else {
+		g_signal_connect (
+			G_OBJECT (c_object),
+			"destroy",
+			(GCallback) c_ev_any_imp_c_object_dispose,
+			(gpointer) (rt_int_ptr) eif_oid
+		);
+	 }	
 }

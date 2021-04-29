@@ -67,25 +67,37 @@ feature -- Implementation
 
 	horizontal_resolution_internal: INTEGER
 			-- Number of pixels per inch along horizontal axis
+		local
+			l_monitor: POINTER
+			l_workarea: POINTER
 		once
-			Result := ({GTK}.gdk_screen_width / {GTK2}.gdk_screen_get_width_mm ({GTK2}.gdk_screen_get_default) * 25.4).rounded
+			l_monitor := {GDK}.gdk_display_get_primary_monitor({GDK}.gdk_display_get_default)
+			{GDK}.gdk_monitor_get_workarea(l_monitor, l_workarea)
+
+			Result := ({GTK}.gdk_rectangle_struct_width(l_workarea) / {GDK}.gdk_monitor_get_width_mm (l_monitor) * 25.4).rounded
 		end
 
 	vertical_resolution_internal: INTEGER
 			-- Number of pixels per inch along vertical axis
+		local
+			l_monitor: POINTER
+			l_workarea: POINTER
 		once
-			Result := ({GTK}.gdk_screen_height / {GTK2}.gdk_screen_get_height_mm ({GTK2}.gdk_screen_get_default) * 25.4).rounded
+			l_monitor := {GDK}.gdk_display_get_primary_monitor({GDK}.gdk_display_get_default())
+			{GDK}.gdk_monitor_get_workarea(l_monitor, l_workarea)
+
+			Result := ({GTK}.gdk_rectangle_struct_height(l_workarea) / {GDK}.gdk_monitor_get_height_mm (l_monitor) * 25.4).rounded
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2021, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 

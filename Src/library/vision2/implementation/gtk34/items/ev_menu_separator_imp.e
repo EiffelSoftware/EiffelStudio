@@ -54,7 +54,7 @@ feature {NONE} -- Initialization
 			-- Create and initialize menu item box.
 			--| This is just to satisfy pixmapable and textable contracts.
 		do
-			box := {GTK}.gtk_hbox_new (False, 0)
+			box := {GTK}.gtk_box_new ({GTK_ORIENTATION}.gtk_orientation_horizontal, 0)
 			box := {GTK2}.g_object_ref (box)
 			box := {GTK}.g_object_ref_sink (box)
 			{GTK}.gtk_box_pack_start (box, text_label, True, True, 0)
@@ -128,7 +128,7 @@ feature {EV_ANY, EV_ANY_I} -- Implementation
 	interface: detachable EV_MENU_SEPARATOR note option: stable attribute end;
 
 note
-	copyright:	"Copyright (c) 1984-2014, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2021, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

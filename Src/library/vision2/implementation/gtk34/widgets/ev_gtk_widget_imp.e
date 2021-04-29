@@ -96,7 +96,7 @@ feature {EV_ANY_I, EV_INTERMEDIARY_ROUTINES} -- Implementation
 		do
 			l_alloc := l_alloc.memory_alloc ({GTK}.c_gtk_allocation_struct_size)
 			{GTK}.gtk_widget_get_allocation (c_object, l_alloc)
-			Result := {GTK}.gtk_allocation_struct_y (l_alloc)
+			Result := {GTK}.gtk_allocation_struct_x (l_alloc)
 			l_alloc.memory_free
 			Result := Result.max (0)
 		end
@@ -140,10 +140,10 @@ feature {EV_ANY_I, EV_INTERMEDIARY_ROUTINES} -- Implementation
 	preferred_width: INTEGER
 			-- Preferred width of `Current' from gtk.
 		local
-			gr, l_null: POINTER
+			gr: POINTER
 		do
 			gr := reusable_requisition_struct.item
-			{GTK}.gtk_widget_get_preferred_size (c_object, gr, l_null)
+			{GTK}.gtk_widget_get_preferred_size (c_object, gr, default_pointer)
 			Result := {GTK}.gtk_requisition_struct_width (gr)
 		end
 
@@ -173,10 +173,10 @@ feature {EV_ANY_I, EV_INTERMEDIARY_ROUTINES} -- Implementation
 	preferred_height: INTEGER
 			-- Preferred height of `Current' from gtk.
 		local
-			gr, l_null: POINTER
+			gr: POINTER
 		do
 			gr := reusable_requisition_struct.item
-			{GTK}.gtk_widget_get_preferred_size (c_object, gr, l_null)
+			{GTK}.gtk_widget_get_preferred_size (c_object, gr, default_pointer)
 			Result := {GTK}.gtk_requisition_struct_height (gr)
 		end
 
@@ -219,7 +219,7 @@ feature {EV_ANY_I, EV_INTERMEDIARY_ROUTINES} -- Implementation
 				a_window := {GTK}.gtk_widget_get_window (c_object)
 				if a_window /= default_pointer then
 					{GTK}.gdk_window_set_cursor (a_window, a_cursor_ptr)
-					{GTK2}.gdk_cursor_unref (a_cursor_ptr)
+					{GTK2}.g_object_unref (a_cursor_ptr)
 				end
 				previously_set_pointer_style := a_cursor
 			end
@@ -267,6 +267,9 @@ feature {EV_ANY_I, EV_INTERMEDIARY_ROUTINES} -- Implementation
 				end
 			end
 			{GTK}.gtk_window_set_focus (l_window, l_widget)
+			if l_widget /= default_pointer and then not {GTK}.gtk_widget_is_focus (l_widget) then
+				{GTK}.gtk_widget_grab_focus (l_widget)
+			end
 		end
 
 	has_focus: BOOLEAN
@@ -318,6 +321,15 @@ feature {EV_ANY_I, EV_INTERMEDIARY_ROUTINES} -- Implementation
 				l_alloc.memory_free
 			end
 			Result := l_minimum_height.max (l_allocated_height)
+		end
+
+	aux_info_struct: POINTER
+			-- Pointer to the auxillary information struct used for retrieving when widget is unmapped
+		do
+			Result := {GTK}.g_object_get_data (
+				c_object,
+				aux_info_string.item
+			)
 		end
 
 	show
@@ -410,7 +422,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2016, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2021, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

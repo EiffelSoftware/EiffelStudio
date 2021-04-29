@@ -45,7 +45,7 @@ feature -- Access
 	split_position: INTEGER
 			-- Position from the left/top of the splitter from `Current'.
 		do
-			Result := {GTK}.gtk_paned_get_position (container_widget)
+			Result := {GTK}.gtk_paned_get_position (container_widget).max (minimum_split_position).min (maximum_split_position)
 		end
 
 	set_first (an_item: attached like item)
@@ -56,8 +56,9 @@ feature -- Access
 			item_imp ?= an_item.implementation
 			check item_imp /= Void then end
 			item_imp.set_parent_imp (Current)
+			{GTK}.gtk_paned_pack1 (container_widget, item_imp.c_object, False, False)
 			first := an_item
-			set_item_resize (an_item, False)
+			set_item_resize (first, False)
 		end
 
 	set_second (an_item: attached like item)
@@ -68,8 +69,9 @@ feature -- Access
 			item_imp ?= an_item.implementation
 			check item_imp /= Void then end
 			item_imp.set_parent_imp (Current)
+			{GTK}.gtk_paned_pack2 (container_widget, item_imp.c_object, True, False)
 			second := an_item
-			set_item_resize (an_item, True)
+			set_item_resize (second, True)
 		end
 
 	prune (an_item: like item)
@@ -160,7 +162,7 @@ feature {EV_ANY, EV_ANY_I} -- Implementation
 	interface: detachable EV_SPLIT_AREA note option: stable attribute end;
 
 note
-	copyright:	"Copyright (c) 1984-2013, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2021, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

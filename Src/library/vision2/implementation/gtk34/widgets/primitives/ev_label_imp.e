@@ -75,19 +75,22 @@ feature -- Status Setting
 	align_text_top
 			-- Set vertical text alignment of current label to top.
 		do
-			--{GTK}.gtk_misc_set_alignment (text_label, 0, 0.5)
+			{GTK}.gtk_label_set_xalign (text_label, 0)
+			{GTK}.gtk_label_set_yalign (text_label, 0.5)
 		end
 
 	align_text_vertical_center
 			-- Set text alignment of current label to be in the center vertically.
 		do
-			--{GTK}.gtk_misc_set_alignment (text_label, 0.5, 0.5)
+			{GTK}.gtk_label_set_xalign (text_label, 0.5)
+			{GTK}.gtk_label_set_yalign (text_label, 0.5)
 		end
 
 	align_text_bottom
 			-- Set vertical text alignment of current label to bottom.
 		do
-			--{GTK}.gtk_misc_set_alignment (text_label, 0.5, 0.5)
+			{GTK}.gtk_label_set_xalign (text_label, 0.5)
+			{GTK}.gtk_label_set_yalign (text_label, 0.5)
 		end
 
 feature {NONE} -- Implementation
@@ -100,7 +103,7 @@ feature {EV_ANY, EV_ANY_I} -- Implementation
 	interface: detachable EV_LABEL note option: stable attribute end;
 
 note
-	copyright:	"Copyright (c) 1984-2016, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2021, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

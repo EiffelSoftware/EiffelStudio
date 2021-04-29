@@ -138,9 +138,20 @@ feature -- Drawing operations
 
 	redraw
 			-- Force `Current' to redraw itself.
+		local
+			flag: BOOLEAN
 		do
 			if is_displayed then
 				{GTK}.gtk_widget_queue_draw (visual_widget)
+				from
+				until
+					{GTK2}.events_pending
+				loop
+					flag := {GTK2}.gtk_event_iteration
+					debug ("gtk3_redraw")
+						print (generator + ".redraw " + flag.out + "%N")
+					end
+				end
 			end
 		end
 
@@ -154,8 +165,17 @@ feature -- Drawing operations
 
 	disable_double_buffering
 			-- Disable double buffering for exposed areas.
+		note
+			eis: "name=gtk_widget_set_double_buffered", "src=https://developer.gnome.org/gtk3/stable/GtkWidget.html#gtk-widget-set-double-buffered"
+		obsolete
+			"Disabling double buffering is mostly detrimental to the performance of an app. [2021-06-01]"
+			-- In 3.10 GTK and GDK have been restructured for translucent drawing.
+			-- Since then expose events for double-buffered widgets are culled into a single event to the toplevel GDK window.
+			-- If you now unset double buffering, you will cause a separate rendering pass for every widget.
+			-- This will likely cause rendering problems - in particular related to stacking -
+			-- and usually increases rendering times significantly.
 		do
-			{GTK2}.gtk_widget_set_double_buffered (visual_widget, False)
+			-- {GTK2}.gtk_widget_set_double_buffered (visual_widget, False)
 		end
 
 feature -- Measurement
@@ -198,6 +218,12 @@ feature -- Element change
 
 	cairo_surface: POINTER
 		-- Cairo drawable surface used for storing pixmap data in RGB format.
+
+	pixbuf: POINTER
+		-- Converts the Cairo surface to a GdkPixbuf
+		do
+			Result:= {GDK}.gdk_pixbuf_get_from_surface(cairo_surface, 0, 0, width, height)
+		end
 
 	set_with_default
 			-- Initialize the pixmap with the default
@@ -401,8 +427,20 @@ feature {EV_STOCK_PIXMAPS_IMP, EV_PIXMAPABLE_IMP, EV_PIXEL_BUFFER_IMP} -- Implem
 			a_stock_id_not_null: a_stock_id /= NULL
 		local
 			stock_pixbuf: POINTER
+			l_error: POINTER
+			l_screen: POINTER
 		do
-			stock_pixbuf := {GTK2}.gtk_widget_render_icon (c_object, a_stock_id, {GTK2}.gtk_icon_size_dialog_enum, default_pointer)
+				-- Check if the current widget realized as well
+				-- Gtk-WARNING produces "Drawing a gadget with negative dimensions"
+			if not {GTK2}.gtk_widget_get_realized (c_object) then
+				{GTK}.gtk_widget_realize (c_object)
+			end
+			if {GTK2}.gtk_widget_has_screen(c_object) then
+				l_screen:= {GTK2}.gtk_widget_get_screen(c_object)
+			else
+				l_screen:= {GDK}.gdk_screen_get_default
+			end
+			stock_pixbuf := {GTK2}.gtk_icon_theme_load_icon ({GTK2}.gtk_icon_theme_get_for_screen(l_screen), a_stock_id, 48, 0, $l_error)
 			if stock_pixbuf /= NULL then
 					-- If a stock pixmap can be found then set it, else do nothing.
 				set_pixmap_from_pixbuf (stock_pixbuf)
@@ -478,7 +516,7 @@ feature {EV_ANY, EV_ANY_I} -- Implementation
 	interface: detachable EV_PIXMAP note option: stable attribute end;
 
 note
-	copyright:	"Copyright (c) 1984-2019, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2021, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

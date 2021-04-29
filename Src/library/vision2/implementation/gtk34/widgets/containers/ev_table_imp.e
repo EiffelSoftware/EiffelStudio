@@ -46,12 +46,12 @@ feature {NONE} -- Implementation
 	make
 			-- Create and initialize `Current'.
 		do
-			set_c_object ({GTK}.gtk_table_new (Default_row_spacing, Default_column_spacing, Default_homogeneous))
+			set_c_object ({GTK3}.gtk_grid_new)
 
 			-- Initialize internal values
 			rows := 1
 			columns := 1
-			create internal_array.make_filled (Void, 1, 1)
+			create internal_array.make_filled (Void, rows, columns)
 			rebuild_internal_item_list
 			Precursor
 		end
@@ -63,12 +63,12 @@ feature -- Status report
 
 	row_spacing: INTEGER
 		do
-			Result := {GTK}.gtk_table_get_default_row_spacing (container_widget)
+			Result := {GTK3}.gtk_grid_get_row_spacing (container_widget)
 		end
 
 	column_spacing: INTEGER
 		do
-			Result := {GTK}.gtk_table_get_default_col_spacing (container_widget)
+			Result := {GTK3}.gtk_grid_get_column_spacing (container_widget)
 		end
 
 	border_width: INTEGER
@@ -83,7 +83,8 @@ feature -- Status settings
 			-- Homogenous controls whether each object in
 			-- the box has the same size.
 		do
-			{GTK}.gtk_table_set_homogeneous (container_widget, True)
+			{GTK3}.gtk_grid_set_row_homogeneous (container_widget, True)
+			{GTK3}.gtk_grid_set_column_homogeneous (container_widget, True)
 			is_homogeneous := True
 		end
 
@@ -91,7 +92,8 @@ feature -- Status settings
 			-- Homogenous controls whether each object in
 			-- the box has the same size.
 		do
-			{GTK}.gtk_table_set_homogeneous (container_widget, False)
+			{GTK3}.gtk_grid_set_row_homogeneous (container_widget, False)
+			{GTK3}.gtk_grid_set_column_homogeneous (container_widget, False)
 			is_homogeneous := False
 		end
 
@@ -104,13 +106,13 @@ feature -- Status settings
 	set_row_spacing (a_value: INTEGER)
 			-- Spacing between two rows of the table.
 		do
-			{GTK}.gtk_table_set_row_spacings (container_widget, a_value)
+			{GTK3}.gtk_grid_set_row_spacing (container_widget, a_value)
 		end
 
 	set_column_spacing (a_value: INTEGER)
 			-- Spacing between two columns of the table.
 		do
-			{GTK}.gtk_table_set_col_spacings (container_widget, a_value)
+			{GTK3}.gtk_grid_set_column_spacing (container_widget, a_value)
 		end
 
 	put (v: EV_WIDGET; a_column, a_row, column_span, row_span: INTEGER)
@@ -123,13 +125,13 @@ feature -- Status settings
 			check item_imp /= Void end
 			if item_imp /= Void then
 				on_new_item (item_imp)
-				{GTK}.gtk_table_attach_defaults (
+				{GTK3}.gtk_grid_attach (
 						container_widget,
 						item_imp.c_object,
 						a_column - 1,
-						a_column - 1 + column_span,
 						a_row - 1,
-						a_row - 1 + row_span
+						column_span,
+						row_span
 				)
 			end
 		end
@@ -258,8 +260,10 @@ feature {EV_ANY_I, EV_ANY} -- Status Settings
 
 	resize (a_column, a_row: INTEGER)
 		do
+			-- Now using GtkGrid, resizes automatically
+
 			Precursor {EV_TABLE_I} (a_column, a_row)
-			{GTK}.gtk_table_resize (container_widget, a_row, a_column)
+			--{GTK}.gtk_table_resize (container_widget, a_row, a_column)
 		end
 
 	set_item_span (v: EV_WIDGET; column_span, row_span: INTEGER)
@@ -279,7 +283,7 @@ feature {EV_ANY, EV_ANY_I} -- Implementation
 	interface: detachable EV_TABLE note option: stable attribute end;
 
 note
-	copyright:	"Copyright (c) 1984-2013, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2021, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

@@ -41,15 +41,20 @@ feature -- Initialization
 	make_with_pixmap (a_pixmap: EV_PIXMAP)
 			-- Create with `a_pixmap''s image data.
 		local
-			l_pixmap_imp: detachable EV_PIXMAP_IMP
 			l_pixbuf: POINTER
+			-- l_window: POINTER
 		do
-			l_pixmap_imp ?= a_pixmap.implementation
-			check
-				l_pixmap_imp /= Void
+			if attached {EV_PIXMAP_IMP} a_pixmap.implementation as l_pixmap_imp  then
+				-- FIXME JV
+				-- find a way to replace gdk_pixbuf_get_from_drawable
+				-- options gdk_pixbuf_get_from_window or
+				--l_pixbuf := {GTK2}.gdk_pixbuf_get_from_drawable (default_pointer, l_pixmap_imp.drawable, default_pointer, 0, 0, 0, 0, l_pixmap_imp.width, l_pixmap_imp.height)
+				--l_window := {GDK}.gdk_screen_get_root_window ({GDK}.gdk_screen_get_default)
+				--l_pixbuf := {GTK}.gdk_pixbuf_new (0, False, 8, l_pixmap_imp.width, l_pixmap_imp.height)
+				--l_pixbuf := {GTK}.gdk_pixbuf_get_from_window (l_window, 0, 0, l_pixmap_imp.width, l_pixmap_imp.height)
+				l_pixbuf := l_pixmap_imp.pixbuf
+				set_gdkpixbuf (l_pixbuf)
 			end
-				--			l_pixbuf := {GTK2}.gdk_pixbuf_get_from_drawable (default_pointer, l_pixmap_imp.drawable, default_pointer, 0, 0, 0, 0, l_pixmap_imp.width, l_pixmap_imp.height)
-			set_gdkpixbuf (l_pixbuf)
 		end
 
 	make
@@ -107,45 +112,44 @@ feature -- Command
 			l_cs, l_file_type: EV_GTK_C_STRING
 			g_error: POINTER
 			l_writeable_formats: ARRAYED_LIST [STRING_32]
-			l_extension: STRING_32
-			l_format: detachable STRING_32
+			l_extension: READABLE_STRING_32
+			l_format: detachable READABLE_STRING_32
 			l_dep: EV_GTK_ENVIRONMENT
 			i: INTEGER
 		do
 			create l_dep
 			l_writeable_formats := l_dep.writeable_pixbuf_formats
-			if attached a_file_name.name.split ('.') as l_list and then not l_list.is_empty then
-				l_extension := l_list.last.as_upper
-				if l_extension.is_equal ({STRING_32} "JPEG") then
-					l_extension := {STRING_32} "JPG"
-				end
+			if a_file_name.has_extension ("jpeg") then
+				l_extension := {STRING_32} "jpg"
+			elseif attached a_file_name.extension as l_ext then
+				l_extension := l_ext
 			else
-				l_extension := {STRING_32} "PNG"
+				l_extension := {STRING_32} "png"
 			end
 			from
 				i := 1
 			until
 				i > l_writeable_formats.count
 			loop
-				if l_writeable_formats [i].as_upper.is_equal (l_extension) then
+				if l_writeable_formats [i].is_case_insensitive_equal (l_extension) then
 					l_format := l_extension
 				end
 				i := i + 1
 			end
 			if l_format /= Void then
-				if l_format.is_equal ({STRING_32} "JPG") then
+				if l_format.is_case_insensitive_equal ({STRING_32} "jpg") then
 					l_format := {STRING_32} "jpeg"
 				end
 				if {GTK}.gtk_maj_ver >= 2 then
 					create l_cs.make_from_path (a_file_name)
-					l_file_type := l_format
+					create l_file_type.set_with_eiffel_string (l_format)
 					{GTK2}.gdk_pixbuf_save (gdk_pixbuf, l_cs.item, l_file_type.item, $g_error)
 					if g_error /= default_pointer then
 							-- GdkPixbuf could not save the image so we raise an exception.
 						(create {EXCEPTIONS}).raise ("Could not save image file.")
 					end
 				else
-					if l_format.is_equal ({STRING_32} "PNG") and then attached internal_pixmap as l_internal_pixmap then
+					if l_format.is_case_insensitive_equal ({STRING_32} "jpg") and then attached internal_pixmap as l_internal_pixmap then
 						l_internal_pixmap.save_to_named_path (create {EV_PNG_FORMAT}, a_file_name)
 					else
 						(create {EXCEPTIONS}).raise ("Could not save image file.")
@@ -219,6 +223,11 @@ feature -- Command
 			end
 			l_pixbuf := {GTK2}.gdk_pixbuf_scale_simple (gdk_pixbuf, a_width, a_height, l_scale_type)
 				-- We need to pass in a copy of the pixbuf as subpixbuf shares the pixels.
+			if not {GDK}.gdk_is_pixbuf (l_pixbuf) then
+				debug ("gtk_log")
+					print (generator + ".stretched gdk_is_pixbuf is False" )
+				end
+			end
 			l_imp.set_gdkpixbuf ({GTK}.gdk_pixbuf_copy (l_pixbuf))
 		end
 
@@ -232,6 +241,9 @@ feature -- Command
 			l_subpixbuf := {GTK}.gdk_pixbuf_new_subpixbuf (gdk_pixbuf, l_rect.x, l_rect.y, l_rect.width, l_rect.height)
 			if area.contains (a_rect) then
 					-- We need to pass in a copy of the pixbuf as subpixbuf shares the pixels.
+				if not {GDK}.gdk_is_pixbuf (l_subpixbuf) then
+					print (generator + ".sub_pixel_buffer gdk_is_pixbuf is False" )
+				end
 				create Result
 				Result.actual_implementation.set_gdkpixbuf ({GTK}.gdk_pixbuf_copy (l_subpixbuf))
 			else
@@ -260,8 +272,11 @@ feature -- Command
 		do
 			l_n_channels := {GTK}.gdk_pixbuf_get_n_channels (gdk_pixbuf)
 			l_bytes_per_sample := {GTK}.gdk_pixbuf_get_bits_per_sample (gdk_pixbuf) // 8
+
 			l_row_stride := {GTK}.gdk_pixbuf_get_rowstride (gdk_pixbuf)
+
 			byte_pos := (a_y * l_row_stride + (a_x * l_n_channels * l_bytes_per_sample)).as_integer_32
+
 			l_managed_pointer := reusable_managed_pointer
 				-- Share with a size big enough to read at `byte_pos'.
 			l_managed_pointer.set_from_pointer ({GTK}.gdk_pixbuf_get_pixels (gdk_pixbuf), byte_pos + {PLATFORM}.natural_32_bytes)
@@ -280,8 +295,11 @@ feature -- Command
 		do
 			l_n_channels := {GTK}.gdk_pixbuf_get_n_channels (gdk_pixbuf)
 			l_bytes_per_sample := {GTK}.gdk_pixbuf_get_bits_per_sample (gdk_pixbuf) // 8
+
 			l_row_stride := {GTK}.gdk_pixbuf_get_rowstride (gdk_pixbuf)
+
 			byte_pos := (a_y * l_row_stride + (a_x * l_n_channels * l_bytes_per_sample)).as_integer_32
+
 			l_managed_pointer := reusable_managed_pointer
 			l_managed_pointer.set_from_pointer ({GTK}.gdk_pixbuf_get_pixels (gdk_pixbuf), byte_pos + (l_bytes_per_sample * l_n_channels).to_integer_32)
 				-- Data is stored at a byte level of R G B A which is big endian, so we need to set big endian.
@@ -307,28 +325,31 @@ feature -- Command
 			l_string_size := a_font.string_size (a_text)
 			l_width := (l_x + l_string_size.width).min (width) - l_x
 			l_height := (l_y + l_string_size.height).min (height) - l_y
+
 			create l_pixmap.make_with_size (l_width, l_height)
 			l_pixmap.set_font (a_font)
+
 			l_grey_value := 75
 			l_composite_alpha := 200
+
 			create l_color.make_with_8_bit_rgb (l_grey_value, l_grey_value, l_grey_value)
 
 				-- Create a pixmap with a grey background so that anti-aliasing is not so harsh.
 			l_pixmap.set_background_color (l_color)
 			l_pixmap.clear
 			l_pixmap.draw_text_top_left (0, 0, a_text)
+
 			l_pixmap_imp ?= l_pixmap.implementation
-			check
-				l_pixmap_imp /= Void
-			end
+			check l_pixmap_imp /= Void then end
+
 			create l_pixbuf
 			l_pixbuf_imp ?= l_pixbuf.implementation
-			check
-				l_pixbuf_imp /= Void
-			end
+			check l_pixbuf_imp /= Void then end
 
 				-- Retrieve pixbuf from drawable and set the previous background color 'l_grey_value' to transparent alpha.
-				--			l_pixbuf_ptr := {GTK2}.gdk_pixbuf_get_from_drawable (default_pointer, l_pixmap_imp.drawable, default_pointer, 0, 0, 0, 0, l_width, l_height)
+				-- TODO check how to replace gdk_pixbuf_get_from_drawable
+--			l_pixbuf_ptr := {GTK2}.gdk_pixbuf_get_from_drawable (default_pointer, l_pixmap_imp.drawable, default_pointer, 0, 0, 0, 0, l_width, l_height)
+			l_pixbuf_ptr := {GTK}.gdk_pixbuf_get_from_window ({GDK}.gdk_screen_get_root_window ({GDK}.gdk_screen_get_default), 0, 0, l_width, l_height)
 			l_pixbuf_ptr2 := {GTK2}.gdk_pixbuf_add_alpha (l_pixbuf_ptr, True, l_grey_value, l_grey_value, l_grey_value)
 				-- Clean up
 			{GTK2}.g_object_unref (l_pixbuf_ptr)
@@ -438,14 +459,29 @@ feature {EV_STOCK_PIXMAPS_IMP} -- Implementation
 		local
 			stock_pixbuf: POINTER
 			l_label: POINTER
+			l_error: POINTER
+			l_screen: POINTER
 		do
 			l_label := {GTK}.gtk_label_new (default_pointer)
 			l_label := {GTK2}.g_object_ref (l_label)
-			stock_pixbuf := {GTK2}.gtk_widget_render_icon (l_label, a_stock_id, {GTK2}.gtk_icon_size_dialog_enum, default_pointer)
+
+
+			if {GTK2}.gtk_widget_has_screen(l_label) then
+				l_screen:= {GTK2}.gtk_widget_get_screen(l_label)
+			else
+				l_screen:= {GDK}.gdk_screen_get_default
+			end
+
+			stock_pixbuf := {GTK2}.gtk_icon_theme_load_icon ({GTK2}.gtk_icon_theme_get_for_screen(l_screen), a_stock_id, 48, 0, $l_error)
 			{GTK2}.g_object_unref (l_label)
 			l_label := default_pointer
 			if stock_pixbuf /= default_pointer then
 					-- If a stock pixmap can be found then set it, else do nothing.
+				if not {GDK}.gdk_is_pixbuf (stock_pixbuf) then
+					debug ("gtk_log")
+						print (generator + ".set_from_stock_id gdk_is_pixbuf is False" )
+					end
+				end
 				set_gdkpixbuf ({GTK}.gdk_pixbuf_copy (stock_pixbuf))
 				{GTK2}.g_object_unref (stock_pixbuf)
 			end
@@ -523,7 +559,7 @@ feature -- Obsolete
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2016, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2021, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

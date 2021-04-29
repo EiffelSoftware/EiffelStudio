@@ -123,7 +123,6 @@ feature -- Element change
 		do
 			if step /= a_step then
 				{GTK}.gtk_adjustment_set_step_increment (adjustment, a_step)
-				{GTK}.gtk_adjustment_changed (adjustment)
 			end
 		ensure then
 			value_same: value = old value
@@ -137,7 +136,6 @@ feature -- Element change
 			if leap /= a_leap then
 				{GTK}.gtk_adjustment_set_upper (adjustment, value_range.upper)
 				{GTK}.gtk_adjustment_set_page_increment (adjustment, a_leap)
-				{GTK}.gtk_adjustment_changed (adjustment)
 			end
 		end
 
@@ -155,7 +153,6 @@ feature -- Element change
 			{GTK}.gtk_adjustment_set_lower (adjustment, value_range.lower.to_real)
 			internal_set_upper
 			internal_set_value (temp_value)
-			{GTK}.gtk_adjustment_changed (adjustment)
 		end
 
 feature {EV_ANY, EV_ANY_I} -- Implementation
@@ -213,7 +210,7 @@ feature {EV_INTERMEDIARY_ROUTINES} -- Implementation
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2014, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2021, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

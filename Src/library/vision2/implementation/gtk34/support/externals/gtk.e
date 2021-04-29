@@ -7,6 +7,13 @@ class
 
 feature
 
+	gtk_is_widget (obj: POINTER): BOOLEAN
+		external
+			"C inline use <ev_gtk.h>"
+		alias
+			"GTK_IS_WIDGET($obj)"
+		end
+
 	gtk_widget_set_hexpand (a_widget: POINTER; a_expand: BOOLEAN)
 		external
 			"C signature (GtkWidget*, gboolean) use <ev_gtk.h>"
@@ -55,6 +62,13 @@ feature
 	gtk_widget_queue_compute_expand (a_widget: POINTER)
 		external
 			"C signature (GtkWidget*) use <ev_gtk.h>"
+		end
+
+	gtk_widget_get_display (a_widget: POINTER): POINTER
+		external
+			"C inline use <ev_gtk.h>"
+		alias
+			"return gtk_widget_get_display ((GtkWidget *)$a_widget)"
 		end
 
 	gdk_window_create_similar_surface (a_window, a_content: POINTER; a_width, a_height: INTEGER): POINTER
@@ -131,11 +145,15 @@ feature
 		end
 
 	frozen gtk_table_get_default_row_spacing (a_table_struct: POINTER): INTEGER
+		obsolete
+			"Deprecated. Use gtk_grid_get_row_spacing() with GtkGrid. [2021-06-01]"
 		external
 			"C signature (GtkTable*): guint use <ev_gtk.h>"
 		end
 
 	frozen gtk_table_get_default_col_spacing (a_table_struct: POINTER): INTEGER
+		obsolete
+			"Deprecated. Use gtk_grid_get_column_spacing() with GtkGrid. [2021-06-01]"
 		external
 			"C signature (GtkTable*): guint use <ev_gtk.h>"
 		end
@@ -215,6 +233,11 @@ feature
 		end
 
 	frozen gdk_window_process_all_updates
+		-- FIXME JV
+		note
+			eis: "name:gdk_window_process_all_updates", "src=https://developer.gnome.org/gdk3/stable/gdk3-Windows.html#gdk-window-process-all-updates"
+		--obsolete
+		--	"gdk_window_process_all_updates has been deprecated since version 3.22 and should not be used in newly-written code. [2021-06-01]"
 		external
 			"C inline use <ev_gtk.h>"
 		alias
@@ -440,6 +463,14 @@ feature
 			"C [macro <ev_gtk.h>]"
 		alias
 			"sizeof(GtkAllocation)"
+		end
+
+
+	frozen c_gtk_allocation_struct_allocate: POINTER
+		external
+			"C [macro <stdlib.h>]"
+		alias
+			"calloc (sizeof(GtkAllocation), 1)"
 		end
 
 	frozen gtk_is_container (w: POINTER): BOOLEAN
@@ -694,6 +725,28 @@ feature
 			"GDK_BUTTON_MOTION_MASK"
 		end
 
+	frozen gdk_button1_motion_mask_enum: INTEGER_32
+		external
+			"C macro use <ev_gtk.h>"
+		alias
+			"GDK_BUTTON1_MOTION_MASK"
+		end
+
+	frozen gdk_button2_motion_mask_enum: INTEGER_32
+		external
+			"C macro use <ev_gtk.h>"
+		alias
+			"GDK_BUTTON2_MOTION_MASK"
+		end
+
+	frozen gdk_button3_motion_mask_enum: INTEGER_32
+		external
+			"C macro use <ev_gtk.h>"
+		alias
+			"GDK_BUTTON3_MOTION_MASK"
+		end
+
+
 	frozen gdk_key_press_enum: INTEGER_32
 		external
 			"C macro use <ev_gtk.h>"
@@ -748,6 +801,69 @@ feature
 			"C macro use <ev_gtk.h>"
 		alias
 			"GDK_VISIBILITY_NOTIFY_MASK"
+		end
+
+	frozen gdk_structure_mask_enum: INTEGER_32
+		external
+			"C macro use <ev_gtk.h>"
+		alias
+			"GDK_STRUCTURE_MASK"
+		end
+
+	frozen gdk_property_change_mask_enum: INTEGER_32
+		external
+			"C macro use <ev_gtk.h>"
+		alias
+			"GDK_PROPERTY_CHANGE_MASK"
+		end
+
+	frozen gdk_proximity_in_mask_enum: INTEGER_32
+		external
+			"C macro use <ev_gtk.h>"
+		alias
+			"GDK_PROXIMITY_IN_MASK"
+		end
+
+	frozen gdk_proximity_out_mask_enum: INTEGER_32
+		external
+			"C macro use <ev_gtk.h>"
+		alias
+			"GDK_PROXIMITY_OUT_MASK"
+		end
+
+	frozen gdk_substructure_mask_enum: INTEGER_32
+		external
+			"C macro use <ev_gtk.h>"
+		alias
+			"GDK_SUBSTRUCTURE_MASK"
+		end
+
+	frozen gdk_scroll_mask_enum: INTEGER_32
+		external
+			"C macro use <ev_gtk.h>"
+		alias
+			"GDK_SCROLL_MASK"
+		end
+
+	frozen gdk_touch_mask_enum: INTEGER_32
+		external
+			"C macro use <ev_gtk.h>"
+		alias
+			"GDK_TOUCH_MASK"
+		end
+
+	frozen gdk_smooth_scroll_mask_enum: INTEGER_32
+		external
+			"C macro use <ev_gtk.h>"
+		alias
+			"GDK_SMOOTH_SCROLL_MASK"
+		end
+
+	frozen gdk_touchpad_gesture_mask_enum: INTEGER_32
+		external
+			"C macro use <ev_gtk.h>"
+		alias
+			"GDK_TOUCHPAD_GESTURE_MASK"
 		end
 
 	frozen gtk_window_toplevel_enum: INTEGER_32
@@ -987,8 +1103,17 @@ feature
 		end
 
 	frozen gdk_beep
+		obsolete
+			"gdk_beep is deprecated: Use 'gdk_display_beep' instead [2021-06-01]"
 		external
 			"C () | <ev_gtk.h>"
+		end
+
+	frozen gdk_display_beep (display: POINTER)
+		external
+			"C inline use <ev_gtk.h>"
+		alias
+			"gdk_display_beep ((GdkDisplay *)$display)"
 		end
 
 	frozen gdk_atom_intern (a_atom_name: POINTER; a_only_if_exists: INTEGER_32): POINTER
@@ -1041,12 +1166,23 @@ feature
 			"C (GdkDragContext*, gboolean, guint32) | <ev_gtk.h>"
 		end
 
+	frozen gtk_drag_finish (a_context: POINTER; a_success: BOOLEAN; del: BOOLEAN; a_time: NATURAL_32)
+		external
+			"C (GdkDragContext*, gboolean, gboolean, guint32) | <ev_gtk.h>"
+		ensure
+			is_class: class
+		end
+
 	frozen gdk_error_trap_pop: INTEGER_32
+		obsolete
+			"gdk_error_trap_pop is deprecated: Use 'gdk_x11_display_error_trap_pop' instead [2021-06-01]"
 		external
 			"C (): gint | <ev_gtk.h>"
 		end
 
 	frozen gdk_error_trap_push
+		obsolete
+			"gdk_error_trap_push is deprecated: Use 'gdk_x11_display_error_trap_push' instead [2021-06-01]"
 		external
 			"C () | <ev_gtk.h>"
 		end
@@ -1067,6 +1203,8 @@ feature
 		end
 
 	frozen gdk_flush
+		obsolete
+			"gdk_flush is deprecated: Use 'gdk_display_flush instead [2021-06-01]"
 		external
 			"C () | <ev_gtk.h>"
 		end
@@ -1117,11 +1255,15 @@ feature
 		end
 
 	frozen gdk_screen_height: INTEGER_32
+		obsolete
+			"gdk_screen_height is deprecated [2021-06-01]"
 		external
 			"C (): gint | <ev_gtk.h>"
 		end
 
 	frozen gdk_screen_width: INTEGER_32
+		obsolete
+			"gdk_screen_width is deprecated [2021-06-01]"
 		external
 			"C (): gint | <ev_gtk.h>"
 		end
@@ -1216,7 +1358,11 @@ feature
 			"C (GtkWindow*, gboolean) | <ev_gtk.h>"
 		end
 
+
+
 	frozen gtk_adjustment_changed (a_adjustment: POINTER)
+		obsolete
+			"gtk_adjustment_changed is deprecated [2021-06-01]"
 		external
 			"C (GtkAdjustment*) | <ev_gtk.h>"
 		end
@@ -1232,16 +1378,22 @@ feature
 		end
 
 	frozen gtk_adjustment_value_changed (a_adjustment: POINTER)
+		obsolete
+			"gtk_adjustment_value_changed is deprecated. GTK+ emits “value-changed” itself whenever the value changes. [2021-06-01] "
 		external
 			"C (GtkAdjustment*) | <ev_gtk.h>"
 		end
 
 	frozen gtk_alignment_new (a_xalign: REAL_32; a_yalign: REAL_32; a_xscale: REAL_32; a_yscale: REAL_32): POINTER
+		obsolete
+			"gtk_alignment_new is deprecated [2021-06-01]"
 		external
 			"C (gfloat, gfloat, gfloat, gfloat): GtkWidget* | <ev_gtk.h>"
 		end
 
 	frozen gtk_alignment_set (a_alignment: POINTER; a_xalign: REAL_32; a_yalign: REAL_32; a_xscale: REAL_32; a_yscale: REAL_32)
+		obsolete
+			"gtk_alignment_set is deprecated [2021-06-01]"
 		external
 			"C (GtkAlignment*, gfloat, gfloat, gfloat, gfloat) | <ev_gtk.h>"
 		end
@@ -1322,6 +1474,8 @@ feature
 		end
 
 	frozen gtk_container_resize_children (a_container: POINTER)
+		obsolete
+			"gtk_container_resize_children is deprecated [2021-06-01]"
 		external
 			"C (GtkContainer*) | <ev_gtk.h>"
 		end
@@ -1407,6 +1561,18 @@ feature
 			"C (GtkEntry*, gchar*) | <ev_gtk.h>"
 		end
 
+	frozen gtk_entry_set_width_chars (a_entry: POINTER; n_chars: INTEGER)
+		external
+			"C inline use <ev_gtk.h>"
+		alias
+			"[
+				gtk_entry_set_width_chars ((GtkEntry *)$a_entry,
+			                           (gint)$n_chars);
+
+			]"
+		end
+
+
 	frozen gtk_entry_set_visibility (a_entry: POINTER; a_visible: BOOLEAN)
 		external
 			"C (GtkEntry*, gboolean) | <ev_gtk.h>"
@@ -1490,6 +1656,8 @@ feature
 		end
 
 	frozen gtk_hbox_new (a_homogeneous: BOOLEAN; a_spacing: INTEGER_32): POINTER
+		obsolete
+			"gtk_hbox_new’ is deprecated: Use 'gtk_box_new' instead [2021-06-01]"
 		external
 			"C (gboolean, gint): GtkWidget* | <ev_gtk.h>"
 		end
@@ -1522,6 +1690,20 @@ feature
 	frozen gtk_label_set_text (a_label: POINTER; a_str: POINTER)
 		external
 			"C (GtkLabel*, gchar*) | <ev_gtk.h>"
+		end
+
+	frozen gtk_label_set_xalign (a_label: POINTER; a_real: REAL_32)
+		external
+			"C inline use <ev_gtk.h>"
+		alias
+			"gtk_label_set_xalign ((GtkLabel*) $a_label, (gfloat) $a_real)"
+		end
+
+	frozen gtk_label_set_yalign (a_label: POINTER; a_real: REAL_32)
+		external
+			"C inline use <ev_gtk.h>"
+		alias
+			"gtk_label_set_yalign ((GtkLabel*) $a_label, (gfloat) $a_real)"
 		end
 
 	frozen gtk_main_do_event (a_event: POINTER)
@@ -1565,6 +1747,8 @@ feature
 		end
 
 	frozen gtk_menu_popup (a_menu: POINTER; a_parent_menu_shell: POINTER; a_parent_menu_item: POINTER; a_func: POINTER; a_data: POINTER; a_button: INTEGER_32; a_activate_time: INTEGER_32)
+		obsolete
+			"gtk_menu_popup’ is deprecated: Use '(gtk_menu_popup_at_widget, gtk_menu_popup_at_pointer, gtk_menu_popup_at_rect)' instead [2021-06-01]"
 		external
 			"C (GtkMenu*, GtkWidget*, GtkWidget*, GtkMenuPositionFunc, gpointer, guint, guint32) | <ev_gtk.h>"
 		end
@@ -1592,11 +1776,15 @@ feature
 		end
 
 	frozen gtk_misc_set_alignment (a_misc: POINTER; a_xalign: REAL_32; a_yalign: REAL_32)
+		obsolete
+			"Use GtkWidget's alignment ('halign' and 'valign') and margin properties or GtkLabel's 'xalign' and 'yalign' properties. [2021-06-01]"
 		external
 			"C (GtkMisc*, gfloat, gfloat) | <ev_gtk.h>"
 		end
 
 	frozen gtk_misc_set_padding (a_misc: POINTER; a_xpad: INTEGER_32; a_ypad: INTEGER_32)
+		obsolete
+			"Use GtkWidget alignment and margin properties. [2021-06-01]"
 		external
 			"C (GtkMisc*, gint, gint) | <ev_gtk.h>"
 		end
@@ -1732,11 +1920,15 @@ feature
 		end
 
 	frozen gtk_style_context_get_background_color (a_context: POINTER; a_state: INTEGER; a_color: POINTER)
+		obsolete
+			"gtk_style_context_get_background_color’ is deprecated: Use 'gtk_render_background' instead [2021-06-01]"
 		external
 			"C signature (GtkStyleContext*, GtkStateFlags, GdkRGBA*) use <ev_gtk.h>"
 		end
 
 	frozen gtk_style_context_get_border_color (a_context: POINTER; a_state: INTEGER; a_color: POINTER)
+		obsolete
+			"gtk_style_context_get_border_color is deprecated: Use 'gtk_render_frame' instead [2021-06-01]"
 		external
 			"C signature (GtkStyleContext*, GtkStateFlags, GdkRGBA*) use <ev_gtk.h>"
 		end
@@ -1813,31 +2005,43 @@ feature
 		end
 
 	frozen gtk_table_attach_defaults (a_table: POINTER; a_widget: POINTER; a_left_attach: INTEGER_32; a_right_attach: INTEGER_32; a_top_attach: INTEGER_32; a_bottom_attach: INTEGER_32)
+		obsolete
+			"Deprecated. Use gtk_grid_attach() with GtkGrid. Note that the attach arguments differ between those two functions. [2021-06-01]"
 		external
 			"C (GtkTable*, GtkWidget*, guint, guint, guint, guint) | <ev_gtk.h>"
 		end
 
 	frozen gtk_table_new (a_rows: INTEGER_32; a_columns: INTEGER_32; a_homogeneous: BOOLEAN): POINTER
+		obsolete
+			"gtk_table_new’ is deprecated: Use 'GtkGrid' instead [2021-06-01]"
 		external
 			"C (guint, guint, gboolean): GtkWidget* | <ev_gtk.h>"
 		end
 
 	frozen gtk_table_resize (a_table: POINTER; a_rows: INTEGER_32; a_columns: INTEGER_32)
+		obsolete
+			"gtk_table_resize is deprecated: Use 'GtkGrid' instead, GtkGrid resizes automatically. [2021-06-01]"
 		external
 			"C (GtkTable*, guint, guint) | <ev_gtk.h>"
 		end
 
 	frozen gtk_table_set_col_spacings (a_table: POINTER; a_spacing: INTEGER_32)
+		obsolete
+			"gtk_table_set_col_spacings’ is deprecated: Use gtk_grid_set_column_spacing() with GtkGrid. [2021-06-01]"
 		external
 			"C (GtkTable*, guint) | <ev_gtk.h>"
 		end
 
 	frozen gtk_table_set_homogeneous (a_table: POINTER; a_homogeneous: BOOLEAN)
+		obsolete
+			"gtk_table_set_homogeneous is deprecated. Use gtk_grid_set_row_homogeneous() and gtk_grid_set_column_homogeneous() with GtkGrid. [2021-06-01]"
 		external
 			"C (GtkTable*, gboolean) | <ev_gtk.h>"
 		end
 
 	frozen gtk_table_set_row_spacings (a_table: POINTER; a_spacing: INTEGER_32)
+		obsolete
+			"gtk_table_set_row_spacings is deprecated. Use gtk_grid_get_row_spacing() with GtkGrid [2021-06-01]"
 		external
 			"C (GtkTable*, guint) | <ev_gtk.h>"
 		end
@@ -1948,6 +2152,8 @@ feature
 		end
 
 	frozen gtk_widget_set_style (a_widget: POINTER; a_style: POINTER)
+		obsolete
+			"gtk_widget_set_style is deprecated [2021-06-01]"
 		external
 			"C (GtkWidget*, GtkStyle*) | <ev_gtk.h>"
 		end
@@ -1980,6 +2186,47 @@ feature
 	frozen gtk_widget_get_preferred_size (a_widget: POINTER; a_minimum_size, a_preferred_size: POINTER)
 		external
 			"C (GtkWidget*, GtkRequisition*, GtkRequisition*) | <ev_gtk.h>"
+		end
+
+	frozen gtk_widget_get_preferred_height_for_width ( widget: POINTER; width: INTEGER; minimum_height, natural_height: POINTER)
+		external
+			"C inline use <ev_gtk.h>"
+		alias
+			"[
+				gtk_widget_get_preferred_height_for_width  ((GtkWidget *)$widget,
+                                (gint)$width,
+                                (gint *)$minimum_height,
+                                (gint *)$natural_height)
+             ]"
+		end
+
+
+	frozen gtk_widget_get_preferred_width_for_height ( widget: POINTER; height: INTEGER; minimum_width, natural_width: POINTER)
+		external
+			"C inline use <ev_gtk.h>"
+		alias
+			"[
+				gtk_widget_get_preferred_width_for_height
+                               ((GtkWidget *)$widget,
+                                (gint)$height,
+                                (gint *)$minimum_width,
+                                (gint *)$natural_width);
+
+             ]"
+		end
+
+
+	frozen gtk_widget_get_preferred_width ( widget: POINTER; minimum_width, natural_width: POINTER)
+		external
+			"C inline use <ev_gtk.h>"
+		alias
+			"[
+				gtk_widget_get_preferred_width
+                               ((GtkWidget *)$widget,
+                                (gint *)$minimum_width,
+                                (gint *)$natural_width);
+
+             ]"
 		end
 
 	frozen gtk_window_new (a_type: INTEGER_32): POINTER
@@ -2552,6 +2799,18 @@ feature
 			"C signature (GtkWidget*, GtkAllocation*) use <ev_gtk.h>"
 		end
 
+	frozen  gtk_widget_get_allocated_size (a_widget: POINTER; allocation: POINTER; baseline: INTEGER)
+		external
+			"C inline use <ev_gtk.h>"
+		alias
+			"[
+			gtk_widget_get_allocated_size ((GtkWidget *)$a_widget,
+                               (GtkAllocation *)$allocation,
+                               (int *)$baseline);
+
+			]"
+		end
+
 	frozen gtk_widget_get_allocated_width (a_c_struct: POINTER): INTEGER_32
 		external
 			"C signature (GtkWidget*): int use <ev_gtk.h>"
@@ -2568,6 +2827,9 @@ feature
 		end
 
 	frozen gtk_widget_get_style (a_c_struct: POINTER): POINTER
+		obsolete
+			"Use 'gtk_widget_get_style_context' instead [2021-06-01]"
+			--|Use GtkStyleContext instead
 		external
 			"C signature (GtkWidget*): GtkStyle* use <ev_gtk.h>"
 		end
@@ -2576,6 +2838,17 @@ feature
 		external
 			"C signature (GtkWidget*): GdkWindow* use <ev_gtk.h>"
 		end
+
+
+	frozen gtk_widget_show_all (widget: POINTER)
+		note
+			eis:"name=gtk_widget_show_all","src=https://developer.gnome.org/gtk3/stable/GtkWidget.html#gtk-widget-show-all"
+		external
+			"C inline use <ev_gtk.h>"
+		alias
+			"gtk_widget_show_all ((GtkWidget *)$widget)"
+		end
+
 
 	frozen gtk_window_get_focus (a_c_struct: POINTER): POINTER
 		external
@@ -2715,8 +2988,75 @@ feature
 			"calloc (sizeof(GdkGeometry), 1)"
 		end
 
+feature --GdkColor
+
+	frozen set_gdk_color_struct_blue (a_c_struct: POINTER; a_blue: INTEGER_32)
+		obsolete "Use GdkRGBA"
+		external
+			"C [struct <ev_gtk.h>] (GdkColor, gushort)"
+		alias
+			"blue"
+		ensure
+			is_class: class
+		end
+
+	frozen set_gdk_color_struct_green (a_c_struct: POINTER; a_green: INTEGER_32)
+		obsolete "Use GdkRGBA"
+		external
+			"C [struct <ev_gtk.h>] (GdkColor, gushort)"
+		alias
+			"green"
+		ensure
+			is_class: class
+		end
+
+	frozen set_gdk_color_struct_pixel (a_c_struct: POINTER; a_pixel: INTEGER_32)
+		obsolete "Use GdkRGBA"
+		external
+			"C [struct <ev_gtk.h>] (GdkColor, gulong)"
+		alias
+			"pixel"
+		ensure
+			is_class: class
+		end
+
+	frozen set_gdk_color_struct_red (a_c_struct: POINTER; a_red: INTEGER_32)
+		obsolete "Use GdkRGBA"
+		external
+			"C [struct <ev_gtk.h>] (GdkColor, gushort)"
+		alias
+			"red"
+		ensure
+			is_class: class
+		end
+
+
+	frozen g_object_get_data (object: POINTER; key: POINTER): POINTER
+		external
+			"C inline use <ev_gtk.h>"
+		alias
+			"[
+				return g_object_get_data ((GObject *)$object,
+                   (const gchar *)$key);
+              ]"
+		end
+
+
+
+	frozen GDK_ALL_EVENTS_MASK_ENUM: INTEGER_32
+		external
+			"C macro use <ev_gtk.h>"
+		alias
+			"GDK_ALL_EVENTS_MASK"
+		ensure
+			is_class: class
+		end
+
+
+
+
 note
-	copyright: "Copyright (c) 1984-2016, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2021, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

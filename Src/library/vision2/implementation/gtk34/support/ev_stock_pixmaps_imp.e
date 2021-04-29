@@ -148,6 +148,8 @@ feature {EV_ANY_HANDLER, EV_ANY_I} -- Externals
 			"C | %"ev_c_util.h%""
 		alias
 			"information_pixmap_xpm"
+		ensure
+			is_class: class
 		end
 
 	frozen error_pixmap_xpm: POINTER
@@ -155,6 +157,8 @@ feature {EV_ANY_HANDLER, EV_ANY_I} -- Externals
 			"C | %"ev_c_util.h%""
 		alias
 			"error_pixmap_xpm"
+		ensure
+			is_class: class
 		end
 
 	frozen warning_pixmap_xpm: POINTER
@@ -162,6 +166,8 @@ feature {EV_ANY_HANDLER, EV_ANY_I} -- Externals
 			"C | %"ev_c_util.h%""
 		alias
 			"warning_pixmap_xpm"
+		ensure
+			is_class: class
 		end
 
 	frozen question_pixmap_xpm: POINTER
@@ -169,6 +175,8 @@ feature {EV_ANY_HANDLER, EV_ANY_I} -- Externals
 			"C | %"ev_c_util.h%""
 		alias
 			"question_pixmap_xpm"
+		ensure
+			is_class: class
 		end
 
 	frozen collate_pixmap_xpm: POINTER
@@ -176,6 +184,8 @@ feature {EV_ANY_HANDLER, EV_ANY_I} -- Externals
 			"C | %"ev_c_util.h%""
 		alias
 			"collate_pixmap_xpm"
+		ensure
+			is_class: class
 		end
 
 	frozen no_collate_pixmap_xpm: POINTER
@@ -183,6 +193,8 @@ feature {EV_ANY_HANDLER, EV_ANY_I} -- Externals
 			"C | %"ev_c_util.h%""
 		alias
 			"no_collate_pixmap_xpm"
+		ensure
+			is_class: class
 		end
 
 	frozen landscape_pixmap_xpm: POINTER
@@ -190,6 +202,8 @@ feature {EV_ANY_HANDLER, EV_ANY_I} -- Externals
 			"C | %"ev_c_util.h%""
 		alias
 			"landscape_pixmap_xpm"
+		ensure
+			is_class: class
 		end
 
 	frozen portrait_pixmap_xpm: POINTER
@@ -197,6 +211,8 @@ feature {EV_ANY_HANDLER, EV_ANY_I} -- Externals
 			"C | %"ev_c_util.h%""
 		alias
 			"portrait_pixmap_xpm"
+		ensure
+			is_class: class
 		end
 
 	frozen busy_cursor_xpm: POINTER
@@ -204,6 +220,8 @@ feature {EV_ANY_HANDLER, EV_ANY_I} -- Externals
 			"C | %"ev_c_util.h%""
 		alias
 			"busy_cursor_xpm"
+		ensure
+			is_class: class
 		end
 
 	frozen crosshair_cursor_xpm: POINTER
@@ -211,6 +229,8 @@ feature {EV_ANY_HANDLER, EV_ANY_I} -- Externals
 			"C | %"ev_c_util.h%""
 		alias
 			"crosshair_cursor_xpm"
+		ensure
+			is_class: class
 		end
 
 	frozen help_cursor_xpm: POINTER
@@ -218,6 +238,8 @@ feature {EV_ANY_HANDLER, EV_ANY_I} -- Externals
 			"C | %"ev_c_util.h%""
 		alias
 			"help_cursor_xpm"
+		ensure
+			is_class: class
 		end
 
 	frozen ibeam_cursor_xpm: POINTER
@@ -225,6 +247,8 @@ feature {EV_ANY_HANDLER, EV_ANY_I} -- Externals
 			"C | %"ev_c_util.h%""
 		alias
 			"ibeam_cursor_xpm"
+		ensure
+			is_class: class
 		end
 
 	frozen no_cursor_xpm: POINTER
@@ -232,6 +256,8 @@ feature {EV_ANY_HANDLER, EV_ANY_I} -- Externals
 			"C | %"ev_c_util.h%""
 		alias
 			"no_cursor_xpm"
+		ensure
+			is_class: class
 		end
 
 	frozen sizeall_cursor_xpm: POINTER
@@ -239,6 +265,8 @@ feature {EV_ANY_HANDLER, EV_ANY_I} -- Externals
 			"C | %"ev_c_util.h%""
 		alias
 			"sizeall_cursor_xpm"
+		ensure
+			is_class: class
 		end
 
 	frozen sizenesw_cursor_xpm: POINTER
@@ -246,6 +274,8 @@ feature {EV_ANY_HANDLER, EV_ANY_I} -- Externals
 			"C | %"ev_c_util.h%""
 		alias
 			"sizenesw_cursor_xpm"
+		ensure
+			is_class: class
 		end
 
 	frozen sizens_cursor_xpm: POINTER
@@ -253,6 +283,8 @@ feature {EV_ANY_HANDLER, EV_ANY_I} -- Externals
 			"C | %"ev_c_util.h%""
 		alias
 			"sizens_cursor_xpm"
+		ensure
+			is_class: class
 		end
 
 	frozen sizenwse_cursor_xpm: POINTER
@@ -260,6 +292,8 @@ feature {EV_ANY_HANDLER, EV_ANY_I} -- Externals
 			"C | %"ev_c_util.h%""
 		alias
 			"sizenwse_cursor_xpm"
+		ensure
+			is_class: class
 		end
 
 	frozen sizewe_cursor_xpm: POINTER
@@ -267,6 +301,8 @@ feature {EV_ANY_HANDLER, EV_ANY_I} -- Externals
 			"C | %"ev_c_util.h%""
 		alias
 			"sizewe_cursor_xpm"
+		ensure
+			is_class: class
 		end
 
 	frozen standard_cursor_xpm: POINTER
@@ -274,6 +310,8 @@ feature {EV_ANY_HANDLER, EV_ANY_I} -- Externals
 			"C | %"ev_c_util.h%""
 		alias
 			"standard_cursor_xpm"
+		ensure
+			is_class: class
 		end
 
 	frozen uparrow_cursor_xpm: POINTER
@@ -281,6 +319,8 @@ feature {EV_ANY_HANDLER, EV_ANY_I} -- Externals
 			"C | %"ev_c_util.h%""
 		alias
 			"uparrow_cursor_xpm"
+		ensure
+			is_class: class
 		end
 
 	frozen wait_cursor_xpm: POINTER
@@ -288,6 +328,8 @@ feature {EV_ANY_HANDLER, EV_ANY_I} -- Externals
 			"C | %"ev_c_util.h%""
 		alias
 			"wait_cursor_xpm"
+		ensure
+			is_class: class
 		end
 
 note

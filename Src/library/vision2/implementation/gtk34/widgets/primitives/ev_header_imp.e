@@ -131,11 +131,13 @@ feature -- Element change
 					-- We are taking the dummy right column in to account
 			end
 			item_imp ?= v.implementation
-			check item_imp /= Void then end
-			child_array.go_i_th (i)
-			child_array.put_left (v)
-			{GTK2}.gtk_tree_view_insert_column (visual_widget, item_imp.c_object, i - 1)
-			item_imp.set_parent_imp (Current)
+			check item_imp /= Void end
+			if item_imp /= Void then
+				child_array.go_i_th (i)
+				child_array.put_left (v)
+				{GTK2}.gtk_tree_view_insert_column (visual_widget, item_imp.c_object, i - 1)
+				item_imp.set_parent_imp (Current)
+			end
 		end
 
 	remove_i_th (a_position: INTEGER)
@@ -145,9 +147,11 @@ feature -- Element change
 		do
 			child_array.go_i_th (a_position)
 			item_imp ?= child_array.item.implementation
-			check item_imp /= Void then end
-			item_imp.set_parent_imp (Void)
-			{GTK2}.gtk_tree_view_remove_column (visual_widget, item_imp.c_object)
+			check item_imp /= Void end
+			if item_imp /= Void then
+				item_imp.set_parent_imp (Void)
+				{GTK2}.gtk_tree_view_remove_column (visual_widget, item_imp.c_object)
+			end
 			child_array.remove
 		end
 

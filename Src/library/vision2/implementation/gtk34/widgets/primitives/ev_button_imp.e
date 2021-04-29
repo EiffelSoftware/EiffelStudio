@@ -80,18 +80,21 @@ feature {NONE} -- Initialization
 	initialize_button_box
 			-- Create and initialize button box.
 		local
-			box: POINTER
 			hbox: POINTER
 		do
-			box := {GTK}.gtk_alignment_new (0, 0, 0, 0)
-			{GTK}.gtk_container_add (visual_widget, box)
-			hbox := {GTK}.gtk_hbox_new (False, 0)
+			hbox := {GTK}.gtk_box_new ({GTK_ORIENTATION}.gtk_orientation_horizontal, 0)
+			{GTK}.gtk_container_add (visual_widget, hbox)
+			{GTK3}.gtk_widget_set_halign(hbox, {GTK_ALIGN}.gtk_align_start)
+			{GTK3}.gtk_widget_set_valign(hbox, {GTK_ALIGN}.gtk_align_start)
+			{GTK}.gtk_widget_set_hexpand(hbox, False)
+			{GTK}.gtk_widget_set_vexpand(hbox, False)
 			{GTK}.gtk_widget_show (hbox)
-			{GTK}.gtk_container_add (box, hbox)
 			{GTK}.gtk_container_add (hbox, pixmap_box)
-			{GTK}.gtk_misc_set_padding (text_label, 4, 0)
+ 			{GTK3}.gtk_widget_set_halign (text_label, {GTK_ALIGN}.gtk_align_start)
+ 			{GTK3}.gtk_widget_set_margin_start (text_label, 4)
+ 			{GTK3}.gtk_widget_set_margin_end (text_label, 4)
 			{GTK}.gtk_container_add (hbox, text_label)
-			{GTK}.gtk_widget_show (box)
+			{GTK}.gtk_widget_show (hbox)
 		ensure
 			button_box /= default_pointer
 		end
@@ -126,21 +129,31 @@ feature -- Status Setting
 			-- Display `text' centered.
 		do
 			Precursor {EV_TEXTABLE_IMP}
-			{GTK}.gtk_alignment_set (button_box, {REAL_32} 0.5, {REAL_32} 0.5, 0, 0)
+			{GTK3}.gtk_widget_set_halign (button_box, {GTK_ALIGN}.gtk_align_center)
+			{GTK3}.gtk_widget_set_valign (button_box, {GTK_ALIGN}.gtk_align_center)
+				-- TODO check if hexpand and vexpand are really needed.
+			{GTK}.gtk_widget_set_hexpand (button_box, false)
+			{GTK}.gtk_widget_set_vexpand (button_box, false)
 		end
 
 	align_text_left
 			-- Display `text' left aligned.
 		do
 			Precursor {EV_TEXTABLE_IMP}
-			{GTK}.gtk_alignment_set (button_box, {REAL_32} 0.0, {REAL_32} 0.5, 0, 0)
+			{GTK3}.gtk_widget_set_halign (button_box, {GTK_ALIGN}.gtk_align_start)
+			{GTK3}.gtk_widget_set_valign (button_box, {GTK_ALIGN}.gtk_align_center)
+			{GTK}.gtk_widget_set_hexpand (button_box, false)
+			{GTK}.gtk_widget_set_vexpand (button_box, false)
 		end
 
 	align_text_right
 			-- Display `text' right aligned.
 		do
 			Precursor {EV_TEXTABLE_IMP}
-			{GTK}.gtk_alignment_set (button_box, {REAL_32} 1.0, {REAL_32} 0.5, 0, 0)
+			{GTK3}.gtk_widget_set_halign(button_box, {GTK_ALIGN}.gtk_align_end)
+			{GTK3}.gtk_widget_set_valign(button_box, {GTK_ALIGN}.gtk_align_center)
+			{GTK}.gtk_widget_set_hexpand(button_box, false)
+			{GTK}.gtk_widget_set_vexpand(button_box, false)
 		end
 
 	enable_default_push_button
@@ -153,16 +166,40 @@ feature -- Status Setting
 	disable_default_push_button
 			-- Remove the style of the button corresponding
 			-- to the default push button.
+		local
+			flag: BOOLEAN
 		do
 			is_default_push_button := False
 			{GTK2}.gtk_widget_set_can_default (visual_widget, False)
+			{GTK}.gtk_widget_queue_draw (visual_widget)
+			from
+			until
+				{GTK2}.events_pending
+			loop
+				flag := {GTK2}.gtk_event_iteration
+				debug ("gtk3_redraw")
+					print (generator + ".redraw " + flag.out + "%N")
+				end
+			end
 		end
 
 	enable_can_default
 			-- Allow the style of the button to be the default push button.
+		local
+			flag: BOOLEAN
 		do
 			is_default_push_button := True
 			{GTK2}.gtk_widget_set_can_default (visual_widget, True)
+			{GTK}.gtk_widget_queue_draw (visual_widget)
+			from
+			until
+				{GTK2}.events_pending
+			loop
+				flag := {GTK2}.gtk_event_iteration
+				debug ("gtk3_redraw")
+					print (generator + ".redraw " + flag.out + "%N")
+				end
+			end
 		end
 
 	set_foreground_color (a_color: EV_COLOR)
@@ -229,7 +266,7 @@ invariant
 	button_box_not_null: is_usable implies button_box /= NULL
 
 note
-	copyright:	"Copyright (c) 1984-2019, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2021, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

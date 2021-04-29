@@ -175,6 +175,7 @@ feature -- Status setting
 			is_minimized := True
 			is_maximized := False
 			{GTK2}.gtk_window_iconify (c_object)
+			show
 		end
 
 	maximize
@@ -183,6 +184,7 @@ feature -- Status setting
 			is_maximized := True
 			is_minimized := False
 			{GTK2}.gtk_window_maximize (c_object)
+			show
 		end
 
 	restore
@@ -221,7 +223,7 @@ feature -- Element change
 			end
 			icon_pixmap_internal := pixmap_imp.interface
 			--| FIXME IEK Implement with gtk 3 feature.
---			{GTK}.gdk_window_set_icon ({GTK}.gtk_widget_struct_window (c_object), NULL, pixmap_imp.drawable, pixmap_imp.mask)
+			{GTK2}.gtk_window_set_icon (c_object, pixmap_imp.pixbuf)
 		end
 
 feature {NONE} -- Implementation
@@ -242,7 +244,7 @@ feature {EV_ANY, EV_ANY_I} -- Implementation
 	interface: detachable EV_TITLED_WINDOW note option: stable attribute end;
 
 note
-	copyright:	"Copyright (c) 1984-2014, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2021, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

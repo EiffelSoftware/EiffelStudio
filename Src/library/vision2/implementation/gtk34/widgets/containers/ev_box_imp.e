@@ -56,15 +56,17 @@ feature {EV_ANY, EV_ANY_I} -- Status report
 			wid_imp: detachable EV_WIDGET_IMP
 		do
 			wid_imp ?= child.implementation
-			check wid_imp /= Void then end
-			{GTK}.gtk_box_query_child_packing (
-				container_widget,
-				wid_imp.c_object,
-				$expand,
-				$fill,
-				$pad,
-				$pack_type
-			)
+			check wid_imp /= Void end
+			if wid_imp /= Void then
+				{GTK}.gtk_box_query_child_packing (
+					container_widget,
+					wid_imp.c_object,
+					$expand,
+					$fill,
+					$pad,
+					$pack_type
+				)
+			end
 			Result := expand.to_boolean
 		end
 

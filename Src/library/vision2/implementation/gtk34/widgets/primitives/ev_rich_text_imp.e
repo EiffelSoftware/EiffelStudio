@@ -947,7 +947,7 @@ feature {EV_ANY, EV_ANY_I} -- Implementation
 	interface: detachable EV_RICH_TEXT note option: stable attribute end;
 
 note
-	copyright:	"Copyright (c) 1984-2016, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2021, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

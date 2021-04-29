@@ -52,10 +52,24 @@ feature {NONE} -- Initialization
 	initialize_menu_item
 			-- Create and initialize gtk menu object.
 		do
-			set_c_object ({GTK2}.gtk_image_menu_item_new)
-			pixmapable_imp_initialize
-			{GTK2}.gtk_image_menu_item_set_image (menu_item, pixmap_box)
+			 -- How to avoid GtkImageMenuItem and keep icons on menu items
+			 -- https://gist.github.com/andreldm/62ecee0d87cde8ec5f3d0e36e404511c
+			 -- https://stackoverflow.com/questions/48452717/how-to-replace-the-deprecated-gtk3-gtkimagemenuitem
+			set_c_object ({GTK}.gtk_menu_item_new)
+
+
+			 pixmapable_imp_initialize
+				-- TODO refactor deprecated in GTK 3.10.
+				-- {GTK2}.gtk_image_menu_item_set_image (menu_item, pixmap_box)
+			image_menu_item_new
 		end
+
+	image_menu_item_new
+		do
+				-- Code based on https://github.com/mate-desktop/pluma/pull/311/commits/7c692bd51aa1b5cf670625936c28fed187184c4c
+			{GTK}.gtk_widget_show (menu_item)
+		end
+
 
 	make
 			-- Initialize `Current'
@@ -67,7 +81,7 @@ feature {NONE} -- Initialization
 			real_signal_connect_after (menu_item, once "activate", agent (App_implementation.gtk_marshal).menu_item_activate_intermediary (c_object), Void)
 			textable_imp_initialize
 
-			box := {GTK}.gtk_hbox_new (False, 0)
+			box := {GTK}.gtk_box_new ({GTK_ORIENTATION}.gtk_orientation_horizontal, 0)
 			{GTK}.gtk_container_add (menu_item, box)
 			{GTK}.gtk_widget_show (box)
 
@@ -79,10 +93,12 @@ feature {NONE} -- Initialization
 
 			accel_label := {GTK}.gtk_label_new (default_pointer)
 				-- We right align accelerator text.
-			{GTK}.gtk_misc_set_alignment (accel_label, {REAL_32} 1.0, {REAL_32} 0.5)
-			{GTK}.gtk_misc_set_padding (accel_label, 0, 0)
+			{GTK}.gtk_label_set_xalign (accel_label, {REAL_32} 1.0)
+			{GTK}.gtk_label_set_yalign (accel_label, {REAL_32} 0.5)
 			{GTK}.gtk_box_pack_start (box, accel_label, True, True, 2)
 			{GTK}.gtk_label_set_justify (accel_label, {GTK}.gtk_justify_right_enum)
+
+			{GTK2}.g_object_set_menu_icons ({GTK}.gtk_settings_get_default, {GTK_PROPERTIES}.gtk_menu_icons, True)
 		end
 
 		accel_label: POINTER
@@ -137,11 +153,8 @@ feature {EV_ANY_I, EV_INTERMEDIARY_ROUTINES} -- Implementation
 	accelerators_enabled: BOOLEAN = True
 
 	on_activate
-		local
-			p_imp: detachable EV_MENU_ITEM_LIST_IMP
 		do
-			p_imp ?= parent_imp
-			if p_imp /= Void then
+			if attached {EV_MENU_ITEM_LIST_IMP} parent_imp as p_imp then
 				if p_imp.item_select_actions_internal /= Void then
 					p_imp.item_select_actions.call ([attached_interface])
 				end
@@ -158,7 +171,7 @@ feature {EV_ANY, EV_ANY_I} -- Implementation
 	interface: detachable EV_MENU_ITEM note option: stable attribute end;
 
 note
-	copyright:	"Copyright (c) 1984-2014, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2021, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

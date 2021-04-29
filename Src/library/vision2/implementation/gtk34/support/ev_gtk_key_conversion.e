@@ -320,6 +320,8 @@ feature {EV_ANY_I} -- Externals
 			"C [macro <gdk/gdkkeysyms.h>]"
 		alias
 			"GDK_KEY_asciitilde"
+		ensure
+			is_class: class
 		end
 
 	Key_exclamation_keysym: NATURAL_32
@@ -327,6 +329,8 @@ feature {EV_ANY_I} -- Externals
 			"C [macro <gdk/gdkkeysyms.h>]"
 		alias
 			"GDK_KEY_exclam"
+		ensure
+			is_class: class
 		end
 
 	Key_at_keysym: NATURAL_32
@@ -334,6 +338,8 @@ feature {EV_ANY_I} -- Externals
 			"C [macro <gdk/gdkkeysyms.h>]"
 		alias
 			"GDK_KEY_at"
+		ensure
+			is_class: class
 		end
 
 	Key_numbersign_keysym: NATURAL_32
@@ -341,6 +347,8 @@ feature {EV_ANY_I} -- Externals
 			"C [macro <gdk/gdkkeysyms.h>]"
 		alias
 			"GDK_KEY_numbersign"
+		ensure
+			is_class: class
 		end
 
 	Key_dollar_keysym: NATURAL_32
@@ -348,6 +356,8 @@ feature {EV_ANY_I} -- Externals
 			"C [macro <gdk/gdkkeysyms.h>]"
 		alias
 			"GDK_KEY_dollar"
+		ensure
+			is_class: class
 		end
 
 	Key_percent_keysym: NATURAL_32
@@ -355,6 +365,8 @@ feature {EV_ANY_I} -- Externals
 			"C [macro <gdk/gdkkeysyms.h>]"
 		alias
 			"GDK_KEY_percent"
+		ensure
+			is_class: class
 		end
 
 	Key_asciicircum_keysym: NATURAL_32
@@ -362,6 +374,8 @@ feature {EV_ANY_I} -- Externals
 			"C [macro <gdk/gdkkeysyms.h>]"
 		alias
 			"GDK_KEY_asciicircum"
+		ensure
+			is_class: class
 		end
 
 	Key_ampersand_keysym: NATURAL_32
@@ -369,6 +383,8 @@ feature {EV_ANY_I} -- Externals
 			"C [macro <gdk/gdkkeysyms.h>]"
 		alias
 			"GDK_KEY_ampersand"
+		ensure
+			is_class: class
 		end
 
 	Key_asterisk_keysym: NATURAL_32
@@ -376,6 +392,8 @@ feature {EV_ANY_I} -- Externals
 			"C [macro <gdk/gdkkeysyms.h>]"
 		alias
 			"GDK_KEY_asterisk"
+		ensure
+			is_class: class
 		end
 
 	Key_parenleft_keysym: NATURAL_32
@@ -383,6 +401,8 @@ feature {EV_ANY_I} -- Externals
 			"C [macro <gdk/gdkkeysyms.h>]"
 		alias
 			"GDK_KEY_parenleft"
+		ensure
+			is_class: class
 		end
 
 	Key_parenright_keysym: NATURAL_32
@@ -390,6 +410,8 @@ feature {EV_ANY_I} -- Externals
 			"C [macro <gdk/gdkkeysyms.h>]"
 		alias
 			"GDK_KEY_parenright"
+		ensure
+			is_class: class
 		end
 
 	Key_underscore_keysym: NATURAL_32
@@ -397,6 +419,8 @@ feature {EV_ANY_I} -- Externals
 			"C [macro <gdk/gdkkeysyms.h>]"
 		alias
 			"GDK_KEY_underscore"
+		ensure
+			is_class: class
 		end
 
 	Key_plus_keysym: NATURAL_32
@@ -404,6 +428,8 @@ feature {EV_ANY_I} -- Externals
 			"C [macro <gdk/gdkkeysyms.h>]"
 		alias
 			"GDK_KEY_plus"
+		ensure
+			is_class: class
 		end
 
 	Key_colon_keysym: NATURAL_32
@@ -411,6 +437,8 @@ feature {EV_ANY_I} -- Externals
 			"C [macro <gdk/gdkkeysyms.h>]"
 		alias
 			"GDK_KEY_colon"
+		ensure
+			is_class: class
 		end
 
 	Key_quotedbl_keysym: NATURAL_32
@@ -418,6 +446,8 @@ feature {EV_ANY_I} -- Externals
 			"C [macro <gdk/gdkkeysyms.h>]"
 		alias
 			"GDK_KEY_quotedbl"
+		ensure
+			is_class: class
 		end
 
 	Key_less_keysym: NATURAL_32
@@ -425,6 +455,8 @@ feature {EV_ANY_I} -- Externals
 			"C [macro <gdk/gdkkeysyms.h>]"
 		alias
 			"GDK_KEY_less"
+		ensure
+			is_class: class
 		end
 
 	Key_greater_keysym: NATURAL_32
@@ -432,6 +464,8 @@ feature {EV_ANY_I} -- Externals
 			"C [macro <gdk/gdkkeysyms.h>]"
 		alias
 			"GDK_KEY_greater"
+		ensure
+			is_class: class
 		end
 
 	Key_question_keysym: NATURAL_32
@@ -439,6 +473,8 @@ feature {EV_ANY_I} -- Externals
 			"C [macro <gdk/gdkkeysyms.h>]"
 		alias
 			"GDK_KEY_question"
+		ensure
+			is_class: class
 		end
 
 	Key_braceleft_keysym: NATURAL_32
@@ -446,6 +482,8 @@ feature {EV_ANY_I} -- Externals
 			"C [macro <gdk/gdkkeysyms.h>]"
 		alias
 			"GDK_KEY_braceleft"
+		ensure
+			is_class: class
 		end
 
 	Key_braceright_keysym: NATURAL_32
@@ -453,6 +491,8 @@ feature {EV_ANY_I} -- Externals
 			"C [macro <gdk/gdkkeysyms.h>]"
 		alias
 			"GDK_KEY_braceright"
+		ensure
+			is_class: class
 		end
 
 	Key_bar_keysym: NATURAL_32
@@ -460,6 +500,8 @@ feature {EV_ANY_I} -- Externals
 			"C [macro <gdk/gdkkeysyms.h>]"
 		alias
 			"GDK_KEY_bar"
+		ensure
+			is_class: class
 		end
 
 	Key_0_keysym: NATURAL_32
@@ -467,6 +509,8 @@ feature {EV_ANY_I} -- Externals
 			"C [macro <gdk/gdkkeysyms.h>]"
 		alias
 			"GDK_KEY_0"
+		ensure
+			is_class: class
 		end
 
 	frozen Key_1_keysym: NATURAL_32
@@ -474,6 +518,8 @@ feature {EV_ANY_I} -- Externals
 			"C [macro <gdk/gdkkeysyms.h>]"
 		alias
 			"GDK_KEY_1"
+		ensure
+			is_class: class
 		end
 
 	Key_2_keysym: NATURAL_32
@@ -481,6 +527,8 @@ feature {EV_ANY_I} -- Externals
 			"C [macro <gdk/gdkkeysyms.h>]"
 		alias
 			"GDK_KEY_2"
+		ensure
+			is_class: class
 		end
 
 	Key_3_keysym: NATURAL_32
@@ -488,6 +536,8 @@ feature {EV_ANY_I} -- Externals
 			"C [macro <gdk/gdkkeysyms.h>]"
 		alias
 			"GDK_KEY_3"
+		ensure
+			is_class: class
 		end
 
 	Key_4_keysym: NATURAL_32
@@ -495,6 +545,8 @@ feature {EV_ANY_I} -- Externals
 			"C [macro <gdk/gdkkeysyms.h>]"
 		alias
 			"GDK_KEY_4"
+		ensure
+			is_class: class
 		end
 
 	Key_5_keysym: NATURAL_32
@@ -502,6 +554,8 @@ feature {EV_ANY_I} -- Externals
 			"C [macro <gdk/gdkkeysyms.h>]"
 		alias
 			"GDK_KEY_5"
+		ensure
+			is_class: class
 		end
 
 	Key_6_keysym: NATURAL_32
@@ -509,6 +563,8 @@ feature {EV_ANY_I} -- Externals
 			"C [macro <gdk/gdkkeysyms.h>]"
 		alias
 			"GDK_KEY_6"
+		ensure
+			is_class: class
 		end
 
 	Key_7_keysym: NATURAL_32
@@ -516,6 +572,8 @@ feature {EV_ANY_I} -- Externals
 			"C [macro <gdk/gdkkeysyms.h>]"
 		alias
 			"GDK_KEY_7"
+		ensure
+			is_class: class
 		end
 
 	Key_8_keysym: NATURAL_32
@@ -523,6 +581,8 @@ feature {EV_ANY_I} -- Externals
 			"C [macro <gdk/gdkkeysyms.h>]"
 		alias
 			"GDK_KEY_8"
+		ensure
+			is_class: class
 		end
 
 	Key_9_keysym: NATURAL_32
@@ -530,6 +590,8 @@ feature {EV_ANY_I} -- Externals
 			"C [macro <gdk/gdkkeysyms.h>]"
 		alias
 			"GDK_KEY_9"
+		ensure
+			is_class: class
 		end
 
 	Key_numpad_0_keysym: NATURAL_32
@@ -537,6 +599,8 @@ feature {EV_ANY_I} -- Externals
 			"C [macro <gdk/gdkkeysyms.h>]"
 		alias
 			"GDK_KEY_KP_0"
+		ensure
+			is_class: class
 		end
 
 	Key_numpad_1_keysym: NATURAL_32
@@ -544,6 +608,8 @@ feature {EV_ANY_I} -- Externals
 			"C [macro <gdk/gdkkeysyms.h>]"
 		alias
 			"GDK_KEY_KP_1"
+		ensure
+			is_class: class
 		end
 
 	Key_numpad_2_keysym: NATURAL_32
@@ -551,6 +617,8 @@ feature {EV_ANY_I} -- Externals
 			"C [macro <gdk/gdkkeysyms.h>]"
 		alias
 			"GDK_KEY_KP_2"
+		ensure
+			is_class: class
 		end
 
 	Key_numpad_3_keysym: NATURAL_32
@@ -558,6 +626,8 @@ feature {EV_ANY_I} -- Externals
 			"C [macro <gdk/gdkkeysyms.h>]"
 		alias
 			"GDK_KEY_KP_3"
+		ensure
+			is_class: class
 		end
 
 	Key_numpad_4_keysym: NATURAL_32
@@ -565,6 +635,8 @@ feature {EV_ANY_I} -- Externals
 			"C [macro <gdk/gdkkeysyms.h>]"
 		alias
 			"GDK_KEY_KP_4"
+		ensure
+			is_class: class
 		end
 
 	Key_numpad_5_keysym: NATURAL_32
@@ -572,6 +644,8 @@ feature {EV_ANY_I} -- Externals
 			"C [macro <gdk/gdkkeysyms.h>]"
 		alias
 			"GDK_KEY_KP_5"
+		ensure
+			is_class: class
 		end
 
 	Key_numpad_6_keysym: NATURAL_32
@@ -579,6 +653,8 @@ feature {EV_ANY_I} -- Externals
 			"C [macro <gdk/gdkkeysyms.h>]"
 		alias
 			"GDK_KEY_KP_6"
+		ensure
+			is_class: class
 		end
 
 	Key_numpad_7_keysym: NATURAL_32
@@ -586,6 +662,8 @@ feature {EV_ANY_I} -- Externals
 			"C [macro <gdk/gdkkeysyms.h>]"
 		alias
 			"GDK_KEY_KP_7"
+		ensure
+			is_class: class
 		end
 
 	Key_numpad_8_keysym: NATURAL_32
@@ -593,6 +671,8 @@ feature {EV_ANY_I} -- Externals
 			"C [macro <gdk/gdkkeysyms.h>]"
 		alias
 			"GDK_KEY_KP_8"
+		ensure
+			is_class: class
 		end
 
 	Key_numpad_9_keysym: NATURAL_32
@@ -600,6 +680,8 @@ feature {EV_ANY_I} -- Externals
 			"C [macro <gdk/gdkkeysyms.h>]"
 		alias
 			"GDK_KEY_KP_9"
+		ensure
+			is_class: class
 		end
 
 	Key_numpad_add_keysym: NATURAL_32
@@ -607,6 +689,8 @@ feature {EV_ANY_I} -- Externals
 			"C [macro <gdk/gdkkeysyms.h>]"
 		alias
 			"GDK_KEY_KP_Add"
+		ensure
+			is_class: class
 		end
 
 	Key_numpad_divide_keysym: NATURAL_32
@@ -614,6 +698,8 @@ feature {EV_ANY_I} -- Externals
 			"C [macro <gdk/gdkkeysyms.h>]"
 		alias
 			"GDK_KEY_KP_Divide"
+		ensure
+			is_class: class
 		end
 
 	Key_numpad_multiply_keysym: NATURAL_32
@@ -621,6 +707,8 @@ feature {EV_ANY_I} -- Externals
 			"C [macro <gdk/gdkkeysyms.h>]"
 		alias
 			"GDK_KEY_KP_Multiply"
+		ensure
+			is_class: class
 		end
 
 	Key_num_lock_keysym: NATURAL_32
@@ -628,6 +716,8 @@ feature {EV_ANY_I} -- Externals
 			"C [macro <gdk/gdkkeysyms.h>]"
 		alias
 			"GDK_KEY_Num_Lock"
+		ensure
+			is_class: class
 		end
 
 	Key_numpad_subtract_keysym: NATURAL_32
@@ -635,6 +725,8 @@ feature {EV_ANY_I} -- Externals
 			"C [macro <gdk/gdkkeysyms.h>]"
 		alias
 			"GDK_KEY_KP_Subtract"
+		ensure
+			is_class: class
 		end
 
 	Key_numpad_decimal_keysym: NATURAL_32
@@ -642,6 +734,8 @@ feature {EV_ANY_I} -- Externals
 			"C [macro <gdk/gdkkeysyms.h>]"
 		alias
 			"GDK_KEY_KP_Decimal"
+		ensure
+			is_class: class
 		end
 
 	Key_f1_keysym: NATURAL_32
@@ -649,6 +743,8 @@ feature {EV_ANY_I} -- Externals
 			"C [macro <gdk/gdkkeysyms.h>]"
 		alias
 			"GDK_KEY_F1"
+		ensure
+			is_class: class
 		end
 
 	Key_f2_keysym: NATURAL_32
@@ -656,6 +752,8 @@ feature {EV_ANY_I} -- Externals
 			"C [macro <gdk/gdkkeysyms.h>]"
 		alias
 			"GDK_KEY_F2"
+		ensure
+			is_class: class
 		end
 
 	Key_f3_keysym: NATURAL_32
@@ -663,6 +761,8 @@ feature {EV_ANY_I} -- Externals
 			"C [macro <gdk/gdkkeysyms.h>]"
 		alias
 			"GDK_KEY_F3"
+		ensure
+			is_class: class
 		end
 
 	Key_f4_keysym: NATURAL_32
@@ -670,6 +770,8 @@ feature {EV_ANY_I} -- Externals
 			"C [macro <gdk/gdkkeysyms.h>]"
 		alias
 			"GDK_KEY_F4"
+		ensure
+			is_class: class
 		end
 
 	Key_f5_keysym: NATURAL_32
@@ -677,6 +779,8 @@ feature {EV_ANY_I} -- Externals
 			"C [macro <gdk/gdkkeysyms.h>]"
 		alias
 			"GDK_KEY_F5"
+		ensure
+			is_class: class
 		end
 
 	Key_f6_keysym: NATURAL_32
@@ -684,6 +788,8 @@ feature {EV_ANY_I} -- Externals
 			"C [macro <gdk/gdkkeysyms.h>]"
 		alias
 			"GDK_KEY_F6"
+		ensure
+			is_class: class
 		end
 
 	Key_f7_keysym: NATURAL_32
@@ -691,6 +797,8 @@ feature {EV_ANY_I} -- Externals
 			"C [macro <gdk/gdkkeysyms.h>]"
 		alias
 			"GDK_KEY_F7"
+		ensure
+			is_class: class
 		end
 
 	Key_f8_keysym: NATURAL_32
@@ -698,6 +806,8 @@ feature {EV_ANY_I} -- Externals
 			"C [macro <gdk/gdkkeysyms.h>]"
 		alias
 			"GDK_KEY_F8"
+		ensure
+			is_class: class
 		end
 
 	Key_f9_keysym: NATURAL_32
@@ -705,6 +815,8 @@ feature {EV_ANY_I} -- Externals
 			"C [macro <gdk/gdkkeysyms.h>]"
 		alias
 			"GDK_KEY_F9"
+		ensure
+			is_class: class
 		end
 
 	Key_f10_keysym: NATURAL_32
@@ -712,6 +824,8 @@ feature {EV_ANY_I} -- Externals
 			"C [macro <gdk/gdkkeysyms.h>]"
 		alias
 			"GDK_KEY_F10"
+		ensure
+			is_class: class
 		end
 
 	Key_f11_keysym: NATURAL_32
@@ -719,6 +833,8 @@ feature {EV_ANY_I} -- Externals
 			"C [macro <gdk/gdkkeysyms.h>]"
 		alias
 			"GDK_KEY_F11"
+		ensure
+			is_class: class
 		end
 
 	Key_f12_keysym: NATURAL_32
@@ -726,6 +842,8 @@ feature {EV_ANY_I} -- Externals
 			"C [macro <gdk/gdkkeysyms.h>]"
 		alias
 			"GDK_KEY_F12"
+		ensure
+			is_class: class
 		end
 
 	Key_space_keysym: NATURAL_32
@@ -733,6 +851,8 @@ feature {EV_ANY_I} -- Externals
 			"C [macro <gdk/gdkkeysyms.h>]"
 		alias
 			"GDK_KEY_space"
+		ensure
+			is_class: class
 		end
 
 	Key_back_space_keysym: NATURAL_32
@@ -740,6 +860,8 @@ feature {EV_ANY_I} -- Externals
 			"C [macro <gdk/gdkkeysyms.h>]"
 		alias
 			"GDK_KEY_BackSpace"
+		ensure
+			is_class: class
 		end
 
 	Key_enter_keysym: NATURAL_32
@@ -747,6 +869,8 @@ feature {EV_ANY_I} -- Externals
 			"C [macro <gdk/gdkkeysyms.h>]"
 		alias
 			"GDK_KEY_Return"
+		ensure
+			is_class: class
 		end
 
 	Key_kp_enter_keysym: NATURAL_32
@@ -754,6 +878,8 @@ feature {EV_ANY_I} -- Externals
 			"C [macro <gdk/gdkkeysyms.h>]"
 		alias
 			"GDK_KEY_KP_Enter"
+		ensure
+			is_class: class
 		end
 
 	Key_escape_keysym: NATURAL_32
@@ -761,6 +887,8 @@ feature {EV_ANY_I} -- Externals
 			"C [macro <gdk/gdkkeysyms.h>]"
 		alias
 			"GDK_KEY_Escape"
+		ensure
+			is_class: class
 		end
 
 	Key_tab_keysym: NATURAL_32
@@ -768,6 +896,8 @@ feature {EV_ANY_I} -- Externals
 			"C [macro <gdk/gdkkeysyms.h>]"
 		alias
 			"GDK_KEY_Tab"
+		ensure
+			is_class: class
 		end
 
 	Key_shift_tab_keysym: NATURAL_32
@@ -775,6 +905,8 @@ feature {EV_ANY_I} -- Externals
 			"C [macro <gdk/gdkkeysyms.h>]"
 		alias
 			"GDK_KEY_ISO_Left_Tab"
+		ensure
+			is_class: class
 		end
 
 	Key_pause_keysym: NATURAL_32
@@ -782,6 +914,8 @@ feature {EV_ANY_I} -- Externals
 			"C [macro <gdk/gdkkeysyms.h>]"
 		alias
 			"GDK_KEY_Pause"
+		ensure
+			is_class: class
 		end
 
 	Key_caps_lock_keysym: NATURAL_32
@@ -789,6 +923,8 @@ feature {EV_ANY_I} -- Externals
 			"C [macro <gdk/gdkkeysyms.h>]"
 		alias
 			"GDK_KEY_Caps_Lock"
+		ensure
+			is_class: class
 		end
 
 	Key_scroll_lock_keysym: NATURAL_32
@@ -796,6 +932,8 @@ feature {EV_ANY_I} -- Externals
 			"C [macro <gdk/gdkkeysyms.h>]"
 		alias
 			"GDK_KEY_F23"
+		ensure
+			is_class: class
 		end
 
 	Key_comma_keysym: NATURAL_32
@@ -803,6 +941,8 @@ feature {EV_ANY_I} -- Externals
 			"C [macro <gdk/gdkkeysyms.h>]"
 		alias
 			"GDK_KEY_comma"
+		ensure
+			is_class: class
 		end
 
 	Key_equal_keysym: NATURAL_32
@@ -810,6 +950,8 @@ feature {EV_ANY_I} -- Externals
 			"C [macro <gdk/gdkkeysyms.h>]"
 		alias
 			"GDK_KEY_equal"
+		ensure
+			is_class: class
 		end
 
 	Key_period_keysym: NATURAL_32
@@ -817,6 +959,8 @@ feature {EV_ANY_I} -- Externals
 			"C [macro <gdk/gdkkeysyms.h>]"
 		alias
 			"GDK_KEY_period"
+		ensure
+			is_class: class
 		end
 
 	Key_semicolon_keysym: NATURAL_32
@@ -824,6 +968,8 @@ feature {EV_ANY_I} -- Externals
 			"C [macro <gdk/gdkkeysyms.h>]"
 		alias
 			"GDK_KEY_semicolon"
+		ensure
+			is_class: class
 		end
 
 	Key_open_bracket_keysym: NATURAL_32
@@ -831,6 +977,8 @@ feature {EV_ANY_I} -- Externals
 			"C [macro <gdk/gdkkeysyms.h>]"
 		alias
 			"GDK_KEY_bracketleft"
+		ensure
+			is_class: class
 		end
 
 	Key_close_bracket_keysym: NATURAL_32
@@ -838,6 +986,8 @@ feature {EV_ANY_I} -- Externals
 			"C [macro <gdk/gdkkeysyms.h>]"
 		alias
 			"GDK_KEY_bracketright"
+		ensure
+			is_class: class
 		end
 
 	Key_slash_keysym: NATURAL_32
@@ -845,6 +995,8 @@ feature {EV_ANY_I} -- Externals
 			"C [macro <gdk/gdkkeysyms.h>]"
 		alias
 			"GDK_KEY_slash"
+		ensure
+			is_class: class
 		end
 
 	Key_backslash_keysym: NATURAL_32
@@ -852,6 +1004,8 @@ feature {EV_ANY_I} -- Externals
 			"C [macro <gdk/gdkkeysyms.h>]"
 		alias
 			"GDK_KEY_backslash"
+		ensure
+			is_class: class
 		end
 
 	Key_quote_keysym: NATURAL_32
@@ -859,6 +1013,8 @@ feature {EV_ANY_I} -- Externals
 			"C [macro <gdk/gdkkeysyms.h>]"
 		alias
 			"GDK_KEY_quoteright"
+		ensure
+			is_class: class
 		end
 
 	Key_backquote_keysym: NATURAL_32
@@ -866,6 +1022,8 @@ feature {EV_ANY_I} -- Externals
 			"C [macro <gdk/gdkkeysyms.h>]"
 		alias
 			"GDK_KEY_quoteleft"
+		ensure
+			is_class: class
 		end
 
 	Key_dash_keysym: NATURAL_32
@@ -873,6 +1031,8 @@ feature {EV_ANY_I} -- Externals
 			"C [macro <gdk/gdkkeysyms.h>]"
 		alias
 			"GDK_KEY_minus"
+		ensure
+			is_class: class
 		end
 
 	Key_up_keysym: NATURAL_32
@@ -880,6 +1040,8 @@ feature {EV_ANY_I} -- Externals
 			"C [macro <gdk/gdkkeysyms.h>]"
 		alias
 			"GDK_KEY_Up"
+		ensure
+			is_class: class
 		end
 
 	Key_kp_up_keysym: NATURAL_32
@@ -887,6 +1049,8 @@ feature {EV_ANY_I} -- Externals
 			"C [macro <gdk/gdkkeysyms.h>]"
 		alias
 			"GDK_KEY_KP_Up"
+		ensure
+			is_class: class
 		end
 
 	Key_down_keysym: NATURAL_32
@@ -894,6 +1058,8 @@ feature {EV_ANY_I} -- Externals
 			"C [macro <gdk/gdkkeysyms.h>]"
 		alias
 			"GDK_KEY_Down"
+		ensure
+			is_class: class
 		end
 
 	Key_kp_down_keysym: NATURAL_32
@@ -901,6 +1067,8 @@ feature {EV_ANY_I} -- Externals
 			"C [macro <gdk/gdkkeysyms.h>]"
 		alias
 			"GDK_KEY_KP_Down"
+		ensure
+			is_class: class
 		end
 
 	Key_left_keysym: NATURAL_32
@@ -908,6 +1076,8 @@ feature {EV_ANY_I} -- Externals
 			"C [macro <gdk/gdkkeysyms.h>]"
 		alias
 			"GDK_KEY_Left"
+		ensure
+			is_class: class
 		end
 
 	Key_kp_left_keysym: NATURAL_32
@@ -915,6 +1085,8 @@ feature {EV_ANY_I} -- Externals
 			"C [macro <gdk/gdkkeysyms.h>]"
 		alias
 			"GDK_KEY_KP_Left"
+		ensure
+			is_class: class
 		end
 
 	Key_right_keysym: NATURAL_32
@@ -922,6 +1094,8 @@ feature {EV_ANY_I} -- Externals
 			"C [macro <gdk/gdkkeysyms.h>]"
 		alias
 			"GDK_KEY_Right"
+		ensure
+			is_class: class
 		end
 
 	Key_kp_right_keysym: NATURAL_32
@@ -929,6 +1103,8 @@ feature {EV_ANY_I} -- Externals
 			"C [macro <gdk/gdkkeysyms.h>]"
 		alias
 			"GDK_KEY_KP_Right"
+		ensure
+			is_class: class
 		end
 
 	Key_page_up_keysym: NATURAL_32
@@ -936,6 +1112,8 @@ feature {EV_ANY_I} -- Externals
 			"C [macro <gdk/gdkkeysyms.h>]"
 		alias
 			"GDK_KEY_Page_Up"
+		ensure
+			is_class: class
 		end
 
 	Key_kp_page_up_keysym: NATURAL_32
@@ -943,6 +1121,8 @@ feature {EV_ANY_I} -- Externals
 			"C [macro <gdk/gdkkeysyms.h>]"
 		alias
 			"GDK_KEY_KP_Page_Up"
+		ensure
+			is_class: class
 		end
 
 	Key_page_down_keysym: NATURAL_32
@@ -950,6 +1130,8 @@ feature {EV_ANY_I} -- Externals
 			"C [macro <gdk/gdkkeysyms.h>]"
 		alias
 			"GDK_KEY_Page_Down"
+		ensure
+			is_class: class
 		end
 
 	Key_kp_page_down_keysym: NATURAL_32
@@ -957,6 +1139,8 @@ feature {EV_ANY_I} -- Externals
 			"C [macro <gdk/gdkkeysyms.h>]"
 		alias
 			"GDK_KEY_KP_Page_Down"
+		ensure
+			is_class: class
 		end
 
 	Key_home_keysym: NATURAL_32
@@ -964,6 +1148,8 @@ feature {EV_ANY_I} -- Externals
 			"C [macro <gdk/gdkkeysyms.h>]"
 		alias
 			"GDK_KEY_Home"
+		ensure
+			is_class: class
 		end
 
 	Key_kp_home_keysym: NATURAL_32
@@ -971,6 +1157,8 @@ feature {EV_ANY_I} -- Externals
 			"C [macro <gdk/gdkkeysyms.h>]"
 		alias
 			"GDK_KEY_KP_Home"
+		ensure
+			is_class: class
 		end
 
 	Key_end_keysym: NATURAL_32
@@ -978,6 +1166,8 @@ feature {EV_ANY_I} -- Externals
 			"C [macro <gdk/gdkkeysyms.h>]"
 		alias
 			"GDK_KEY_End"
+		ensure
+			is_class: class
 		end
 
 	Key_kp_end_keysym: NATURAL_32
@@ -985,6 +1175,8 @@ feature {EV_ANY_I} -- Externals
 			"C [macro <gdk/gdkkeysyms.h>]"
 		alias
 			"GDK_KEY_KP_End"
+		ensure
+			is_class: class
 		end
 
 	Key_insert_keysym: NATURAL_32
@@ -992,6 +1184,8 @@ feature {EV_ANY_I} -- Externals
 			"C [macro <gdk/gdkkeysyms.h>]"
 		alias
 			"GDK_KEY_Insert"
+		ensure
+			is_class: class
 		end
 
 	Key_kp_insert_keysym: NATURAL_32
@@ -999,6 +1193,8 @@ feature {EV_ANY_I} -- Externals
 			"C [macro <gdk/gdkkeysyms.h>]"
 		alias
 			"GDK_KEY_KP_Insert"
+		ensure
+			is_class: class
 		end
 
 	Key_delete_keysym: NATURAL_32
@@ -1006,6 +1202,8 @@ feature {EV_ANY_I} -- Externals
 			"C [macro <gdk/gdkkeysyms.h>]"
 		alias
 			"GDK_KEY_Delete"
+		ensure
+			is_class: class
 		end
 
 	Key_kp_delete_keysym: NATURAL_32
@@ -1013,6 +1211,8 @@ feature {EV_ANY_I} -- Externals
 			"C [macro <gdk/gdkkeysyms.h>]"
 		alias
 			"GDK_KEY_KP_Delete"
+		ensure
+			is_class: class
 		end
 
 	Key_a_upper_keysym: NATURAL_32
@@ -1020,6 +1220,8 @@ feature {EV_ANY_I} -- Externals
 			"C [macro <gdk/gdkkeysyms.h>]"
 		alias
 			"GDK_KEY_A"
+		ensure
+			is_class: class
 		end
 
 	Key_b_upper_keysym: NATURAL_32
@@ -1027,6 +1229,8 @@ feature {EV_ANY_I} -- Externals
 			"C [macro <gdk/gdkkeysyms.h>]"
 		alias
 			"GDK_KEY_B"
+		ensure
+			is_class: class
 		end
 
 	Key_c_upper_keysym: NATURAL_32
@@ -1034,6 +1238,8 @@ feature {EV_ANY_I} -- Externals
 			"C [macro <gdk/gdkkeysyms.h>]"
 		alias
 			"GDK_KEY_C"
+		ensure
+			is_class: class
 		end
 
 	Key_d_upper_keysym: NATURAL_32
@@ -1041,6 +1247,8 @@ feature {EV_ANY_I} -- Externals
 			"C [macro <gdk/gdkkeysyms.h>]"
 		alias
 			"GDK_KEY_D"
+		ensure
+			is_class: class
 		end
 
 	Key_e_upper_keysym: NATURAL_32
@@ -1048,6 +1256,8 @@ feature {EV_ANY_I} -- Externals
 			"C [macro <gdk/gdkkeysyms.h>]"
 		alias
 			"GDK_KEY_E"
+		ensure
+			is_class: class
 		end
 
 	Key_f_upper_keysym: NATURAL_32
@@ -1055,6 +1265,8 @@ feature {EV_ANY_I} -- Externals
 			"C [macro <gdk/gdkkeysyms.h>]"
 		alias
 			"GDK_KEY_F"
+		ensure
+			is_class: class
 		end
 
 	Key_g_upper_keysym: NATURAL_32
@@ -1062,6 +1274,8 @@ feature {EV_ANY_I} -- Externals
 			"C [macro <gdk/gdkkeysyms.h>]"
 		alias
 			"GDK_KEY_G"
+		ensure
+			is_class: class
 		end
 
 	Key_h_upper_keysym: NATURAL_32
@@ -1069,6 +1283,8 @@ feature {EV_ANY_I} -- Externals
 			"C [macro <gdk/gdkkeysyms.h>]"
 		alias
 			"GDK_KEY_H"
+		ensure
+			is_class: class
 		end
 
 	Key_i_upper_keysym: NATURAL_32
@@ -1076,6 +1292,8 @@ feature {EV_ANY_I} -- Externals
 			"C [macro <gdk/gdkkeysyms.h>]"
 		alias
 			"GDK_KEY_I"
+		ensure
+			is_class: class
 		end
 
 	Key_j_upper_keysym: NATURAL_32
@@ -1083,6 +1301,8 @@ feature {EV_ANY_I} -- Externals
 			"C [macro <gdk/gdkkeysyms.h>]"
 		alias
 			"GDK_KEY_J"
+		ensure
+			is_class: class
 		end
 
 	Key_k_upper_keysym: NATURAL_32
@@ -1090,6 +1310,8 @@ feature {EV_ANY_I} -- Externals
 			"C [macro <gdk/gdkkeysyms.h>]"
 		alias
 			"GDK_KEY_K"
+		ensure
+			is_class: class
 		end
 
 	Key_l_upper_keysym: NATURAL_32
@@ -1097,6 +1319,8 @@ feature {EV_ANY_I} -- Externals
 			"C [macro <gdk/gdkkeysyms.h>]"
 		alias
 			"GDK_KEY_L"
+		ensure
+			is_class: class
 		end
 
 	Key_m_upper_keysym: NATURAL_32
@@ -1104,6 +1328,8 @@ feature {EV_ANY_I} -- Externals
 			"C [macro <gdk/gdkkeysyms.h>]"
 		alias
 			"GDK_KEY_M"
+		ensure
+			is_class: class
 		end
 
 	Key_n_upper_keysym: NATURAL_32
@@ -1111,6 +1337,8 @@ feature {EV_ANY_I} -- Externals
 			"C [macro <gdk/gdkkeysyms.h>]"
 		alias
 			"GDK_KEY_N"
+		ensure
+			is_class: class
 		end
 
 	Key_o_upper_keysym: NATURAL_32
@@ -1118,6 +1346,8 @@ feature {EV_ANY_I} -- Externals
 			"C [macro <gdk/gdkkeysyms.h>]"
 		alias
 			"GDK_KEY_O"
+		ensure
+			is_class: class
 		end
 
 	Key_p_upper_keysym: NATURAL_32
@@ -1125,6 +1355,8 @@ feature {EV_ANY_I} -- Externals
 			"C [macro <gdk/gdkkeysyms.h>]"
 		alias
 			"GDK_KEY_P"
+		ensure
+			is_class: class
 		end
 
 	Key_q_upper_keysym: NATURAL_32
@@ -1132,6 +1364,8 @@ feature {EV_ANY_I} -- Externals
 			"C [macro <gdk/gdkkeysyms.h>]"
 		alias
 			"GDK_KEY_Q"
+		ensure
+			is_class: class
 		end
 
 	Key_r_upper_keysym: NATURAL_32
@@ -1139,6 +1373,8 @@ feature {EV_ANY_I} -- Externals
 			"C [macro <gdk/gdkkeysyms.h>]"
 		alias
 			"GDK_KEY_R"
+		ensure
+			is_class: class
 		end
 
 	Key_s_upper_keysym: NATURAL_32
@@ -1146,6 +1382,8 @@ feature {EV_ANY_I} -- Externals
 			"C [macro <gdk/gdkkeysyms.h>]"
 		alias
 			"GDK_KEY_S"
+		ensure
+			is_class: class
 		end
 
 	Key_t_upper_keysym: NATURAL_32
@@ -1153,6 +1391,8 @@ feature {EV_ANY_I} -- Externals
 			"C [macro <gdk/gdkkeysyms.h>]"
 		alias
 			"GDK_KEY_T"
+		ensure
+			is_class: class
 		end
 
 	Key_u_upper_keysym: NATURAL_32
@@ -1160,6 +1400,8 @@ feature {EV_ANY_I} -- Externals
 			"C [macro <gdk/gdkkeysyms.h>]"
 		alias
 			"GDK_KEY_U"
+		ensure
+			is_class: class
 		end
 
 	Key_v_upper_keysym: NATURAL_32
@@ -1167,6 +1409,8 @@ feature {EV_ANY_I} -- Externals
 			"C [macro <gdk/gdkkeysyms.h>]"
 		alias
 			"GDK_KEY_V"
+		ensure
+			is_class: class
 		end
 
 	Key_w_upper_keysym: NATURAL_32
@@ -1174,6 +1418,8 @@ feature {EV_ANY_I} -- Externals
 			"C [macro <gdk/gdkkeysyms.h>]"
 		alias
 			"GDK_KEY_W"
+		ensure
+			is_class: class
 		end
 
 	Key_x_upper_keysym: NATURAL_32
@@ -1181,6 +1427,8 @@ feature {EV_ANY_I} -- Externals
 			"C [macro <gdk/gdkkeysyms.h>]"
 		alias
 			"GDK_KEY_X"
+		ensure
+			is_class: class
 		end
 
 	Key_y_upper_keysym: NATURAL_32
@@ -1188,6 +1436,8 @@ feature {EV_ANY_I} -- Externals
 			"C [macro <gdk/gdkkeysyms.h>]"
 		alias
 			"GDK_KEY_Y"
+		ensure
+			is_class: class
 		end
 
 	Key_z_upper_keysym: NATURAL_32
@@ -1195,6 +1445,8 @@ feature {EV_ANY_I} -- Externals
 			"C [macro <gdk/gdkkeysyms.h>]"
 		alias
 			"GDK_KEY_Z"
+		ensure
+			is_class: class
 		end
 
 	frozen Key_a_keysym: NATURAL_32
@@ -1202,6 +1454,8 @@ feature {EV_ANY_I} -- Externals
 			"C [macro <gdk/gdkkeysyms.h>]"
 		alias
 			"GDK_KEY_a"
+		ensure
+			is_class: class
 		end
 
 	Key_b_keysym: NATURAL_32
@@ -1209,6 +1463,8 @@ feature {EV_ANY_I} -- Externals
 			"C [macro <gdk/gdkkeysyms.h>]"
 		alias
 			"GDK_KEY_b"
+		ensure
+			is_class: class
 		end
 
 	Key_c_keysym: NATURAL_32
@@ -1216,6 +1472,8 @@ feature {EV_ANY_I} -- Externals
 			"C [macro <gdk/gdkkeysyms.h>]"
 		alias
 			"GDK_KEY_c"
+		ensure
+			is_class: class
 		end
 
 	Key_d_keysym: NATURAL_32
@@ -1223,6 +1481,8 @@ feature {EV_ANY_I} -- Externals
 			"C [macro <gdk/gdkkeysyms.h>]"
 		alias
 			"GDK_KEY_d"
+		ensure
+			is_class: class
 		end
 
 	Key_e_keysym: NATURAL_32
@@ -1230,6 +1490,8 @@ feature {EV_ANY_I} -- Externals
 			"C [macro <gdk/gdkkeysyms.h>]"
 		alias
 			"GDK_KEY_e"
+		ensure
+			is_class: class
 		end
 
 	Key_f_keysym: NATURAL_32
@@ -1237,6 +1499,8 @@ feature {EV_ANY_I} -- Externals
 			"C [macro <gdk/gdkkeysyms.h>]"
 		alias
 			"GDK_KEY_f"
+		ensure
+			is_class: class
 		end
 
 	Key_g_keysym: NATURAL_32
@@ -1244,6 +1508,8 @@ feature {EV_ANY_I} -- Externals
 			"C [macro <gdk/gdkkeysyms.h>]"
 		alias
 			"GDK_KEY_g"
+		ensure
+			is_class: class
 		end
 
 	Key_h_keysym: NATURAL_32
@@ -1251,6 +1517,8 @@ feature {EV_ANY_I} -- Externals
 			"C [macro <gdk/gdkkeysyms.h>]"
 		alias
 			"GDK_KEY_h"
+		ensure
+			is_class: class
 		end
 
 	Key_i_keysym: NATURAL_32
@@ -1258,6 +1526,8 @@ feature {EV_ANY_I} -- Externals
 			"C [macro <gdk/gdkkeysyms.h>]"
 		alias
 			"GDK_KEY_i"
+		ensure
+			is_class: class
 		end
 
 	Key_j_keysym: NATURAL_32
@@ -1265,6 +1535,8 @@ feature {EV_ANY_I} -- Externals
 			"C [macro <gdk/gdkkeysyms.h>]"
 		alias
 			"GDK_KEY_j"
+		ensure
+			is_class: class
 		end
 
 	Key_k_keysym: NATURAL_32
@@ -1272,6 +1544,8 @@ feature {EV_ANY_I} -- Externals
 			"C [macro <gdk/gdkkeysyms.h>]"
 		alias
 			"GDK_KEY_k"
+		ensure
+			is_class: class
 		end
 
 	Key_l_keysym: NATURAL_32
@@ -1279,6 +1553,8 @@ feature {EV_ANY_I} -- Externals
 			"C [macro <gdk/gdkkeysyms.h>]"
 		alias
 			"GDK_KEY_l"
+		ensure
+			is_class: class
 		end
 
 	Key_m_keysym: NATURAL_32
@@ -1286,6 +1562,8 @@ feature {EV_ANY_I} -- Externals
 			"C [macro <gdk/gdkkeysyms.h>]"
 		alias
 			"GDK_KEY_m"
+		ensure
+			is_class: class
 		end
 
 	Key_n_keysym: NATURAL_32
@@ -1293,6 +1571,8 @@ feature {EV_ANY_I} -- Externals
 			"C [macro <gdk/gdkkeysyms.h>]"
 		alias
 			"GDK_KEY_n"
+		ensure
+			is_class: class
 		end
 
 	Key_o_keysym: NATURAL_32
@@ -1300,6 +1580,8 @@ feature {EV_ANY_I} -- Externals
 			"C [macro <gdk/gdkkeysyms.h>]"
 		alias
 			"GDK_KEY_o"
+		ensure
+			is_class: class
 		end
 
 	Key_p_keysym: NATURAL_32
@@ -1307,6 +1589,8 @@ feature {EV_ANY_I} -- Externals
 			"C [macro <gdk/gdkkeysyms.h>]"
 		alias
 			"GDK_KEY_p"
+		ensure
+			is_class: class
 		end
 
 	Key_q_keysym: NATURAL_32
@@ -1314,6 +1598,8 @@ feature {EV_ANY_I} -- Externals
 			"C [macro <gdk/gdkkeysyms.h>]"
 		alias
 			"GDK_KEY_q"
+		ensure
+			is_class: class
 		end
 
 	Key_r_keysym: NATURAL_32
@@ -1321,6 +1607,8 @@ feature {EV_ANY_I} -- Externals
 			"C [macro <gdk/gdkkeysyms.h>]"
 		alias
 			"GDK_KEY_r"
+		ensure
+			is_class: class
 		end
 
 	Key_s_keysym: NATURAL_32
@@ -1328,6 +1616,8 @@ feature {EV_ANY_I} -- Externals
 			"C [macro <gdk/gdkkeysyms.h>]"
 		alias
 			"GDK_KEY_s"
+		ensure
+			is_class: class
 		end
 
 	Key_t_keysym: NATURAL_32
@@ -1335,6 +1625,8 @@ feature {EV_ANY_I} -- Externals
 			"C [macro <gdk/gdkkeysyms.h>]"
 		alias
 			"GDK_KEY_t"
+		ensure
+			is_class: class
 		end
 
 	Key_u_keysym: NATURAL_32
@@ -1342,6 +1634,8 @@ feature {EV_ANY_I} -- Externals
 			"C [macro <gdk/gdkkeysyms.h>]"
 		alias
 			"GDK_KEY_u"
+		ensure
+			is_class: class
 		end
 
 	Key_v_keysym: NATURAL_32
@@ -1349,6 +1643,8 @@ feature {EV_ANY_I} -- Externals
 			"C [macro <gdk/gdkkeysyms.h>]"
 		alias
 			"GDK_KEY_v"
+		ensure
+			is_class: class
 		end
 
 	Key_w_keysym: NATURAL_32
@@ -1356,6 +1652,8 @@ feature {EV_ANY_I} -- Externals
 			"C [macro <gdk/gdkkeysyms.h>]"
 		alias
 			"GDK_KEY_w"
+		ensure
+			is_class: class
 		end
 
 	Key_x_keysym: NATURAL_32
@@ -1363,6 +1661,8 @@ feature {EV_ANY_I} -- Externals
 			"C [macro <gdk/gdkkeysyms.h>]"
 		alias
 			"GDK_KEY_x"
+		ensure
+			is_class: class
 		end
 
 	Key_y_keysym: NATURAL_32
@@ -1370,6 +1670,8 @@ feature {EV_ANY_I} -- Externals
 			"C [macro <gdk/gdkkeysyms.h>]"
 		alias
 			"GDK_KEY_y"
+		ensure
+			is_class: class
 		end
 
 	Key_z_keysym: NATURAL_32
@@ -1377,6 +1679,8 @@ feature {EV_ANY_I} -- Externals
 			"C [macro <gdk/gdkkeysyms.h>]"
 		alias
 			"GDK_KEY_z"
+		ensure
+			is_class: class
 		end
 
 	Key_shift_keysym: NATURAL_32
@@ -1384,6 +1688,8 @@ feature {EV_ANY_I} -- Externals
 			"C [macro <gdk/gdkkeysyms.h>]"
 		alias
 			"GDK_KEY_Shift_L"
+		ensure
+			is_class: class
 		end
 
 	Key_right_shift_keysym: NATURAL_32
@@ -1391,6 +1697,8 @@ feature {EV_ANY_I} -- Externals
 			"C [macro <gdk/gdkkeysyms.h>]"
 		alias
 			"GDK_KEY_Shift_R"
+		ensure
+			is_class: class
 		end
 
 	Key_ctrl_keysym: NATURAL_32
@@ -1398,6 +1706,8 @@ feature {EV_ANY_I} -- Externals
 			"C [macro <gdk/gdkkeysyms.h>]"
 		alias
 			"GDK_KEY_Control_L"
+		ensure
+			is_class: class
 		end
 
 	Key_right_ctrl_keysym: NATURAL_32
@@ -1405,6 +1715,8 @@ feature {EV_ANY_I} -- Externals
 			"C [macro <gdk/gdkkeysyms.h>]"
 		alias
 			"GDK_KEY_Control_R"
+		ensure
+			is_class: class
 		end
 
 	Key_left_meta_keysym: NATURAL_32
@@ -1412,6 +1724,8 @@ feature {EV_ANY_I} -- Externals
 			"C [macro <gdk/gdkkeysyms.h>]"
 		alias
 			"GDK_KEY_Meta_L"
+		ensure
+			is_class: class
 		end
 
 	Key_right_meta_keysym: NATURAL_32
@@ -1419,6 +1733,8 @@ feature {EV_ANY_I} -- Externals
 			"C [macro <gdk/gdkkeysyms.h>]"
 		alias
 			"GDK_KEY_Meta_R"
+		ensure
+			is_class: class
 		end
 
 	Key_left_alt_keysym: NATURAL_32
@@ -1426,6 +1742,8 @@ feature {EV_ANY_I} -- Externals
 			"C macro use <gdk/gdkkeysyms.h>"
 		alias
 			"GDK_KEY_Alt_L"
+		ensure
+			is_class: class
 		end
 
 	Key_right_alt_keysym: NATURAL_32
@@ -1433,6 +1751,8 @@ feature {EV_ANY_I} -- Externals
 			"C macro use <gdk/gdkkeysyms.h>"
 		alias
 			"GDK_KEY_Alt_R"
+		ensure
+			is_class: class
 		end
 
 	Key_menu_keysym: NATURAL_32
@@ -1440,6 +1760,8 @@ feature {EV_ANY_I} -- Externals
 			"C macro use <gdk/gdkkeysyms.h>"
 		alias
 			"GDK_KEY_Menu"
+		ensure
+			is_class: class
 		end
 
 note

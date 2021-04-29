@@ -32,7 +32,8 @@ inherit
 			interface,
 			supports_pixbuf_alpha,
 			device_x_offset,
-			device_y_offset
+			device_y_offset,
+			release_drawable
 		end
 
 	EV_GTK_DEPENDENT_ROUTINES
@@ -51,13 +52,21 @@ feature {NONE} -- Initialization
 	make
 			-- Set up action sequence connections and create graphics context.
 		local
-			l_window: POINTER
+			gdkwin, l_surface: POINTER
 		do
 				-- In order to access the screen, the EV_APPLICATION needs to be created
+
 			app_implementation.do_nothing
 
-			l_window := {GTK2}.gdk_screen_get_root_window ({GTK2}.gdk_screen_get_default)
-			drawable := {GDK_CAIRO}.create_context (l_window)
+				-- TODO
+				-- Check https://cpp.hotexamples.com/examples/-/-/gdk_cairo_region_create_from_surface/cpp-gdk_cairo_region_create_from_surface-function-examples.html
+
+			gdkwin := {GTK2}.gdk_screen_get_root_window ({GDK}.gdk_screen_get_default)
+
+			l_surface := {GDK}.gdk_window_create_similar_surface (gdkwin, 0x3000, {GDK}.gdk_window_get_width(gdkwin), {GDK}.gdk_window_get_height(gdkwin) )
+			drawable := {CAIRO}.create_context (l_surface)
+
+
 			init_default_values
 
 				-- Set offset values to match Win32 implementation.
@@ -65,6 +74,14 @@ feature {NONE} -- Initialization
 			device_y_offset := -app_implementation.screen_virtual_y.as_integer_16
 
 			set_is_initialized (True)
+		end
+
+	release_drawable (a_drawable: POINTER)
+			-- Release resources of drawable `a_drawable'.
+		do
+--			if {CAIRO}.get_reference_count (a_drawable) > 0 then
+--				{GDK_CAIRO}.cairo_region_destroy (a_drawable)
+--			end
 		end
 
 feature -- Status report
@@ -141,13 +158,13 @@ feature -- Status report
 	monitor_area_from_position (a_x, a_y: INTEGER): EV_RECTANGLE
 			-- Full area of monitor nearest to coordinates (a_x, a_y)
 		local
-			l_mon_num: INTEGER
+			l_mon: POINTER
 			l_rect: POINTER
 			l_x, l_y, l_width, l_height: INTEGER
 		do
-			l_mon_num := {GTK2}.gdk_screen_get_monitor_at_point ({GTK2}.gdk_screen_get_default, a_x + device_x_offset, a_y + device_y_offset)
+			l_mon := {GDK}.gdk_display_get_monitor_at_point ({GDK}.gdk_display_get_default, a_x + device_x_offset, a_y + device_y_offset)
 			l_rect := {GTK}.c_gdk_rectangle_struct_allocate
-			{GTK2}.gdk_screen_get_monitor_geometry ({GTK2}.gdk_screen_get_default, l_mon_num, l_rect)
+			{GDK}.gdk_monitor_get_geometry(l_mon, l_rect)
 
 			l_x := {GTK}.gdk_rectangle_struct_x (l_rect) - device_x_offset
 			l_y := {GTK}.gdk_rectangle_struct_y (l_rect) - device_y_offset
@@ -162,17 +179,17 @@ feature -- Status report
 			-- Full area of monitor of which most of `a_window' is located.
 			-- Returns nearest monitor area if `a_window' does not overlap any monitors.
 		local
-			l_mon_num: INTEGER
 			l_window_imp: detachable EV_WINDOW_IMP
 			l_rect: POINTER
 			l_x, l_y, l_width, l_height: INTEGER
+			l_monitor: POINTER
 		do
 			l_window_imp ?= a_window.implementation
 			check l_window_imp /= Void then end
-			l_mon_num := {GTK2}.gdk_screen_get_monitor_at_window ({GTK2}.gdk_screen_get_default, {GTK}.gtk_widget_get_window (l_window_imp.c_object))
+			l_monitor := {GDK}.gdk_display_get_monitor_at_window ({GDK}.gdk_display_get_default, {GTK}.gtk_widget_get_window (l_window_imp.c_object))
 
 			l_rect := {GTK}.c_gdk_rectangle_struct_allocate
-			{GTK2}.gdk_screen_get_monitor_geometry ({GTK2}.gdk_screen_get_default, l_mon_num, l_rect)
+			{GDK}.gdk_monitor_get_geometry(l_monitor, l_rect)
 
 			l_x := {GTK}.gdk_rectangle_struct_x (l_rect) - device_x_offset
 			l_y := {GTK}.gdk_rectangle_struct_y (l_rect) - device_y_offset
@@ -213,9 +230,25 @@ feature -- Basic operation
 
 	redraw
 			-- Redraw the entire area.
+		local
+			flag: BOOLEAN
 		do
+
 			{GTK2}.gdk_window_invalidate_rect (drawable, default_pointer, True)
-			{GTK2}.gdk_window_process_updates (drawable, True)
+			-- FIXME JV gdk_window_process_updates has been deprecated since version 3.22 and should not be used in newly-written code.
+			--{GTK2}.gdk_window_process_updates (drawable, True)
+			--{GTK}.gtk_widget_queue_draw (drawable)
+			-- https://stackoverflow.com/questions/34912757/how-do-you-force-a-screen-refresh-in-gtk-3-8
+			{GTK}.gtk_widget_queue_draw (drawable)
+			from
+			until
+				{GTK2}.events_pending
+			loop
+				flag := {GTK2}.gtk_event_iteration
+				debug ("gtk3_redraw")
+					print (generator + ".redraw " + flag.out + "%N")
+				end
+			end
 		end
 
 	set_pointer_position (a_x, a_y: INTEGER)
@@ -569,7 +602,7 @@ feature {EV_ANY, EV_ANY_I} -- Implementation
 	interface: detachable EV_SCREEN note option: stable attribute end;
 
 note
-	copyright:	"Copyright (c) 1984-2019, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2021, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

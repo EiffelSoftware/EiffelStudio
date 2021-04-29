@@ -142,11 +142,8 @@ feature -- Implementation
 
 	on_pnd_deferred_item_parent_selection_change (a_object_id: INTEGER)
 			-- A selection event has occurred on a PND deferred item parent.
-		local
-			a_pnd_widget: detachable EV_PND_DEFERRED_ITEM_PARENT
 		do
-			a_pnd_widget ?= eif_id_object (a_object_id)
-			if a_pnd_widget /= Void then
+			if attached {EV_PND_DEFERRED_ITEM_PARENT} eif_id_object (a_object_id) as a_pnd_widget then
 				a_pnd_widget.call_selection_action_sequences
 			end
 		end
@@ -196,6 +193,8 @@ feature -- Implementation
 			check l_any_imp /= Void end
 			if l_any_imp /= Void then
 				l_any_imp.process_gdk_event (n_args, args)
+			else
+				check event_object_not_coupled: False end
 			end
 		end
 
@@ -207,10 +206,12 @@ feature {EV_ANY_I} -- Externals
 			"C (GtkWidget*): EIF_REFERENCE | %"ev_any_imp.h%""
 		alias
 			"c_ev_any_imp_get_eif_reference_from_object_id"
+		ensure
+			is_class: class
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2013, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2021, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

@@ -31,7 +31,6 @@ feature -- Element change
 				{GTK}.gtk_adjustment_set_upper (adjustment, value_range.upper + a_leap)
 				{GTK}.gtk_adjustment_set_page_increment (adjustment, a_leap)
 				{GTK}.gtk_adjustment_set_page_size (adjustment, a_leap)
-				{GTK}.gtk_adjustment_changed (adjustment)
 			end
 		ensure then
 			range_same: value_range.is_equal (old value_range)
@@ -53,7 +52,7 @@ feature {EV_ANY, EV_ANY_I} -- Implementation
 	interface: detachable EV_SCROLL_BAR note option: stable attribute end;
 
 note
-	copyright:	"Copyright (c) 1984-2012, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2021, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

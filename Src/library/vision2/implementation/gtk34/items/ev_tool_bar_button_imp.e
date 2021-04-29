@@ -169,6 +169,7 @@ feature -- Element change
 			internal_tooltip := a_text.as_string_32.twin
 			a_cs := App_implementation.c_string_from_eiffel_string (a_text)
 			--| FIXME IEK Needs proper implementation
+			{GTK2}.gtk_tool_item_set_tooltip_text (visual_widget, a_cs.item)
 		end
 
 	set_gray_pixmap (a_gray_pixmap: EV_PIXMAP)
@@ -277,7 +278,7 @@ feature {EV_ANY, EV_ANY_I} -- Implementation
 	interface: detachable EV_TOOL_BAR_BUTTON note option: stable attribute end;
 
 note
-	copyright:	"Copyright (c) 1984-2016, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2021, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

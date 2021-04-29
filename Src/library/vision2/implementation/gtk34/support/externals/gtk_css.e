@@ -9,6 +9,8 @@ class
 feature -- GtkCsProvider
 
 	frozen gtk_css_provider_get_default: POINTER
+		obsolete
+			"gtk_css_provider_get_default is deprecated: Use 'gtk_css_provider_new' [2021-06-01]"
 		external
 			"C signature (): GtkCssProvider * use <ev_gtk.h>"
 		end
@@ -30,7 +32,7 @@ feature -- GtkCsProvider
 
 
 note
-	copyright: "Copyright (c) 1984-2016, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2021, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

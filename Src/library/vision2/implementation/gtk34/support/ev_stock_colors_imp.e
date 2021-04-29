@@ -61,11 +61,12 @@ feature {EV_ANY_I, EV_ANY_HANDLER} -- Implementation
 			a_style: POINTER
 			a_gdk_rgba: POINTER
 			a_r, a_g, a_b: REAL_32
+			gtk_c_string: EV_GTK_C_STRING
 		do
 			a_style := {GTK}.gtk_widget_get_style_context (a_widget)
 				-- Style context if owned by gtk and must not be freed.
 
-			a_gdk_rgba := {GTK}.c_gdk_rgba_struct_allocate
+			--a_gdk_rgba := {GTK}.c_gdk_rgba_struct_allocate
 
 				-- GTK3 does not recommend using this way, but if we must, the
 				-- recommended way is this: saving the context, setting the state,
@@ -75,13 +76,22 @@ feature {EV_ANY_I, EV_ANY_HANDLER} -- Implementation
 			inspect
 				style_type
 			when fg_style then
-				{GTK}.gtk_style_context_get_color (a_style, {GTK}.gtk_style_context_get_state (a_style), a_gdk_rgba)
+				--{GTK}.gtk_style_context_get_color (a_style, {GTK}.gtk_style_context_get_state (a_style), a_gdk_rgba)
+				{GTK2}.gtk_style_context_get (a_style, {GTK}.gtk_style_context_get_state (a_style), {GTK2}.GTK_STYLE_PROPERTY_COLOR, $a_gdk_rgba )
 			when bg_style then
-				{GTK}.gtk_style_context_get_background_color (a_style, {GTK}.gtk_style_context_get_state (a_style), a_gdk_rgba)
+--				{GTK}.gtk_style_context_get_background_color (a_style, {GTK}.gtk_style_context_get_state (a_style), a_gdk_rgba)
+				--gtk_c_string := "background-color"
+				--{GTK2}.gtk_style_context_lookup_color (a_style, gtk_c_string.item, a_gdk_rgba)
+				{GTK2}.gtk_style_context_get (a_style, {GTK}.gtk_style_context_get_state (a_style), {GTK2}.GTK_STYLE_PROPERTY_BACKGROUND_COLOR, $a_gdk_rgba )
 			when text_style then
-				{GTK}.gtk_style_context_get_color (a_style, {GTK}.gtk_style_context_get_state (a_style), a_gdk_rgba)
+				--{GTK}.gtk_style_context_get_color (a_style, {GTK}.gtk_style_context_get_state (a_style), a_gdk_rgba)
+				{GTK2}.gtk_style_context_get (a_style, {GTK}.gtk_style_context_get_state (a_style), {GTK2}.GTK_STYLE_PROPERTY_FONT, $a_gdk_rgba )
 			when base_style then
-				{GTK}.gtk_style_context_get_background_color (a_style, {GTK}.gtk_style_context_get_state (a_style), a_gdk_rgba)
+--				{GTK}.gtk_style_context_get_background_color (a_style, {GTK}.gtk_style_context_get_state (a_style), a_gdk_rgba)
+				gtk_c_string := "background-color"
+				--{GTK2}.gtk_style_context_lookup_color (a_style, gtk_c_string.item, a_gdk_rgba)
+				{GTK2}.gtk_style_context_get (a_style, {GTK}.gtk_style_context_get_state (a_style), gtk_c_string.item, $a_gdk_rgba )
+
 			end
 			{GTK}.gtk_style_context_restore (a_style)
 
@@ -89,7 +99,8 @@ feature {EV_ANY_I, EV_ANY_HANDLER} -- Implementation
 			a_g := {GDK}.rgba_struct_green (a_gdk_rgba).truncated_to_real
 			a_b := {GDK}.rgba_struct_blue (a_gdk_rgba).truncated_to_real
 			create Result.make_with_rgb (a_r, a_g, a_b)
-			a_gdk_rgba.memory_free
+			--a_gdk_rgba.memory_free
+			{GDK}.rgba_free (a_gdk_rgba)
 		end
 
 	text_style: INTEGER = 1
@@ -99,7 +110,7 @@ feature {EV_ANY_I, EV_ANY_HANDLER} -- Implementation
 		-- Different coloring styles used in gtk.
 
 note
-	copyright:	"Copyright (c) 1984-2016, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2021, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

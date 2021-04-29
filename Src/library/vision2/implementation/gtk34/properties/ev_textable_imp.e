@@ -21,8 +21,11 @@ feature {NONE} -- Initialization
 			-- Create a GtkLabel to display the text.
 		do
 			text_label := {GTK}.gtk_label_new (default_pointer)
-			{GTK}.gtk_misc_set_alignment (text_label, {REAL_32} 0.0, {REAL_32} 0.5)
-			{GTK}.gtk_misc_set_padding (text_label, 2, 0)
+			{GTK}.gtk_label_set_xalign(text_label, {REAL_32} 0.0)
+			{GTK}.gtk_label_set_yalign(text_label, {REAL_32} 0.5)
+			{GTK3}.gtk_widget_set_margin_start (text_label, 2)
+			{GTK3}.gtk_widget_set_margin_end (text_label, 2)
+			--{GTK3}.gtk_widget_set_halign (text_label, {GTK}.gtk_justify_left_enum)
 		end
 
 feature -- Access
@@ -66,21 +69,24 @@ feature -- Status setting
 	align_text_center
 			-- Display `text' centered.
 		do
-			{GTK}.gtk_misc_set_alignment (text_label, {REAL_32} 0.5, {REAL_32} 0.5)
+			{GTK}.gtk_label_set_xalign(text_label, {REAL_32} 0.5)
+			{GTK}.gtk_label_set_yalign(text_label, {REAL_32} 0.5)
 			{GTK}.gtk_label_set_justify (text_label, {GTK}.gtk_justify_center_enum)
 		end
 
 	align_text_left
 			-- Display `text' left aligned.
 		do
-			{GTK}.gtk_misc_set_alignment (text_label, {REAL_32} 0.0, {REAL_32} 0.5)
+			{GTK}.gtk_label_set_xalign(text_label, {REAL_32} 0.0)
+			{GTK}.gtk_label_set_yalign(text_label, {REAL_32} 0.5)
 			{GTK}.gtk_label_set_justify (text_label, {GTK}.gtk_justify_left_enum)
 		end
 
 	align_text_right
 			-- Display `text' right aligned.
 		do
-			{GTK}.gtk_misc_set_alignment (text_label, {REAL_32} 1.0, {REAL_32} 0.5)
+			{GTK}.gtk_label_set_xalign(text_label, {REAL_32} 1.0)
+			{GTK}.gtk_label_set_yalign(text_label, {REAL_32} 0.5)
 			{GTK}.gtk_label_set_justify (text_label, {GTK}.gtk_justify_right_enum)
 		end
 
@@ -193,7 +199,7 @@ invariant
 	text_label_not_void: is_usable implies text_label /= default_pointer
 
 note
-	copyright:	"Copyright (c) 1984-2014, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2021, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

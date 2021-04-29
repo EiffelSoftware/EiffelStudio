@@ -55,7 +55,7 @@ feature {NONE} -- Initialization
 		local
 			a_vbox: POINTER
 		do
-			a_vbox := {GTK}.gtk_vbox_new (False, 0)
+			a_vbox := {GTK3}.gtk_box_new ({GTK_ORIENTATION}.gtk_orientation_vertical, 0)
 			set_c_object (a_vbox)
 			entry_widget := new_entry_widget
 			{GTK}.gtk_widget_show (entry_widget)
@@ -89,6 +89,11 @@ feature -- Status setting
 			a_cs: EV_GTK_C_STRING
 		do
 			a_cs := a_text
+
+			-- TODO JV
+			-- Double check if this is really needed.
+			{GTK}.gtk_entry_set_width_chars (entry_widget, 1)
+
 			{GTK}.gtk_entry_set_text (entry_widget, a_cs.item)
 			on_change_actions
 		end
@@ -232,12 +237,25 @@ feature -- status settings
 
 	hide_border
 			-- Hide the border of `Current'.
+		local
+			l_context: POINTER
+			l_provider: POINTER
+			l_css_data: C_STRING
+			l_error: POINTER
 		do
-			gtk_hide_border (entry_widget)
+			l_context := {GTK3}.gtk_widget_get_style_context (entry_widget)
+			l_provider := {GTK_CSS}.gtk_css_provider_new
+			create l_css_data.make ("entry { border:none }")
+			if not {GTK_CSS}.gtk_css_provider_load_from_data (l_provider, l_css_data.item, -1, $l_error) then
+				-- Handle error
+			end
+			{GTK2}.gtk_style_context_add_provider (l_context, l_provider, 800)
 			{GTK2}.gtk_entry_set_has_frame (entry_widget, False)
 		end
 
 	gtk_hide_border (a_entry: POINTER)
+		obsolete
+			"Obsolete, use {EV_TEXT_FIELD_IMP}.hide_border instead [2021-06-01]"
 		external
 			"C inline use <ev_gtk.h>"
 		alias
@@ -392,7 +410,7 @@ feature {EV_ANY, EV_ANY_I} -- Implementation
 			-- functionality implemented by `Current'
 
 note
-	copyright:	"Copyright (c) 1984-2019, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2021, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

@@ -336,24 +336,26 @@ feature -- Insertion
 			a_tree_iter: EV_GTK_TREE_ITER_STRUCT
 		do
 			item_imp ?= v.implementation
-			check item_imp /= Void then end
-			item_imp.set_parent_imp (Current)
+			check item_imp /= Void end
+			if item_imp /= Void then
+				item_imp.set_parent_imp (Current)
 
-			child_array.go_i_th (i)
-			child_array.put_left (v)
+				child_array.go_i_th (i)
+				child_array.put_left (v)
 
-				-- Add row to model
-			create a_tree_iter.make
-			item_imp.set_list_iter (a_tree_iter)
-			{GTK2}.gtk_list_store_insert (list_store, a_tree_iter.item, i - 1)
-			set_text_on_position (i, v.text)
+					-- Add row to model
+				create a_tree_iter.make
+				item_imp.set_list_iter (a_tree_iter)
+				{GTK2}.gtk_list_store_insert (list_store, a_tree_iter.item, i - 1)
+				set_text_on_position (i, v.text)
 
-			if attached v.pixmap as l_pixmap then
-				set_row_pixmap (i, l_pixmap)
-			end
+				if attached v.pixmap as l_pixmap then
+					set_row_pixmap (i, l_pixmap)
+				end
 
-			if item_imp.is_transport_enabled then
-				update_pnd_connection (True)
+				if item_imp.is_transport_enabled then
+					update_pnd_connection (True)
+				end
 			end
 		end
 
@@ -382,10 +384,10 @@ feature {NONE} -- Implementation
 				check l_list_iter /= Void end
 				if l_list_iter /= Void then
 					{GTK2}.gtk_list_store_remove (list_store, l_list_iter.item)
-					-- remove the row from the `ev_children'
-					child_array.go_i_th (an_index)
-					child_array.remove
 				end
+				-- remove the row from the `ev_children'
+				child_array.go_i_th (an_index)
+				child_array.remove
 				--update_pnd_status
 			end
 		end
@@ -399,7 +401,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2019, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2021, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

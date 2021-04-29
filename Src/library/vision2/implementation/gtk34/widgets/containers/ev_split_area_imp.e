@@ -58,7 +58,7 @@ feature -- Access
 			item_imp.set_parent_imp (Current)
 			{GTK}.gtk_paned_pack1 (container_widget, item_imp.c_object, False, False)
 			first := an_item
-			set_item_resize (first, False)
+			set_item_resize (an_item, False)
 		end
 
 	set_second (an_item: attached like item)
@@ -71,7 +71,7 @@ feature -- Access
 			item_imp.set_parent_imp (Current)
 			{GTK}.gtk_paned_pack2 (container_widget, item_imp.c_object, True, False)
 			second := an_item
-			set_item_resize (second, True)
+			set_item_resize (an_item, True)
 		end
 
 	prune (an_item: like item)

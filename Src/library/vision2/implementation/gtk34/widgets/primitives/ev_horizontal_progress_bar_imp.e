@@ -29,7 +29,7 @@ feature {NONE} -- Initialization
 			-- Initialize `Current'.
 		do
 			Precursor {EV_PROGRESS_BAR_IMP}
-			{GTK2}.gtk_orientable_set_orientation (gtk_progress_bar, {GTK_ORIENTATION}.gtk_orientation_horizontal.as_natural_8)
+			{GTK2}.gtk_orientable_set_orientation (gtk_progress_bar, {GTK_ORIENTATION}.gtk_orientation_horizontal)
 			set_minimum_height (16)
 		end
 

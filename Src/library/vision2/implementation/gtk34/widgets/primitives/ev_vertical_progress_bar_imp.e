@@ -29,7 +29,8 @@ feature {NONE} -- Initialization
 			-- Initialize `Current'.
 		do
 			Precursor {EV_PROGRESS_BAR_IMP}
-			{GTK2}.gtk_orientable_set_orientation (gtk_progress_bar, 1)
+			{GTK2}.gtk_orientable_set_orientation (gtk_progress_bar, {GTK_ORIENTATION}.gtk_orientation_vertical)
+			{GTK}.gtk_progress_bar_set_inverted (gtk_progress_bar, True)
 		end
 
 feature {EV_ANY, EV_ANY_I} -- Implementation
@@ -37,7 +38,7 @@ feature {EV_ANY, EV_ANY_I} -- Implementation
 	interface: detachable EV_VERTICAL_PROGRESS_BAR note option: stable attribute end;
 
 note
-	copyright:	"Copyright (c) 1984-2012, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2021, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

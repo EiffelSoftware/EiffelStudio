@@ -17,18 +17,34 @@ inherit
 	EV_GAUGE_IMP
 		redefine
 			interface,
-			make, value_changed_handler
+			make, value_changed_handler,
+			needs_event_box,
+			event_widget
 		end
 
 feature {NONE} -- Implementation
 
 	make
 			-- Create and initialize `Current'
+		local
+			l_c_progress_bar: POINTER
 		do
-			set_c_object ({GTK}.gtk_progress_bar_new)
-			gtk_progress_bar := c_object
+			l_c_progress_bar := {GTK}.gtk_progress_bar_new
+			set_c_object (l_c_progress_bar)
+			gtk_progress_bar := l_c_progress_bar
 			enable_segmentation
 			Precursor
+		end
+
+	needs_event_box: BOOLEAN
+			-- Does `a_widget' need an event box?
+		do
+			Result := True
+		end
+
+	event_widget: POINTER
+		do
+			Result := visual_widget
 		end
 
 feature -- Status report

@@ -1,6 +1,5 @@
 note
-	description: "Summary description for {SCM_SUPPORTED_ROW}."
-	author: ""
+	description: "Grid row holding a SCM supported working copy (svn wc, or git repo)."
 	date: "$Date$"
 	revision: "$Revision$"
 

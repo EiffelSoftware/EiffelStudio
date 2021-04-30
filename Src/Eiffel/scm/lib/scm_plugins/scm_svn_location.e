@@ -1,6 +1,5 @@
 note
-	description: "Summary description for {SCM_SVN_LOCATION}."
-	author: ""
+	description: "Subversion location."
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -26,6 +25,23 @@ feature -- Execution
 			reset_error
 			create scm.make (cfg)
 			Result := scm.statuses (loc, True, Void)
+		end
+
+	revert (a_changelist: SCM_CHANGELIST; cfg: SCM_CONFIG)
+		local
+			scm: SCM_SVN
+		do
+			reset_error
+			create scm.make (cfg)
+			create Result.make (a_changelist.count)
+			Result.set_changelist (a_changelist)
+			across
+				a_changelist as ic
+			loop
+				if attached scm.diff (ic.item, Void) as d then
+					Result.put_string_diff (ic.item, d)
+				end
+			end
 		end
 
 	diff (a_changelist: SCM_CHANGELIST; cfg: SCM_CONFIG): detachable SCM_DIFF

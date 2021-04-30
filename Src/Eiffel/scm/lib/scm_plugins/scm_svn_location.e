@@ -27,19 +27,50 @@ feature -- Execution
 			Result := scm.statuses (loc, True, Void)
 		end
 
-	revert (a_changelist: SCM_CHANGELIST; cfg: SCM_CONFIG)
+	revert (a_changelist: SCM_CHANGELIST; cfg: SCM_CONFIG): detachable STRING_32
 		local
 			scm: SCM_SVN
 		do
 			reset_error
 			create scm.make (cfg)
-			create Result.make (a_changelist.count)
-			Result.set_changelist (a_changelist)
-			across
-				a_changelist as ic
-			loop
-				if attached scm.diff (ic.item, Void) as d then
-					Result.put_string_diff (ic.item, d)
+			if attached scm.revert (a_changelist, Void) as res then
+				if res.succeed then
+					if attached res.message as msg then
+						Result := msg
+					else
+						Result := "SVN revert completed"
+					end
+				else
+					if attached res.message as msg then
+						Result := msg
+					else
+						Result := "SVN revert failed"
+					end
+					has_error := True
+				end
+			end
+		end
+
+	update (a_changelist: SCM_CHANGELIST; cfg: SCM_CONFIG): detachable STRING_32
+		local
+			scm: SCM_SVN
+		do
+			reset_error
+			create scm.make (cfg)
+			if attached scm.update (a_changelist, Void) as res then
+				if res.succeed then
+					if attached res.message as msg then
+						Result := msg
+					else
+						Result := "SVN update completed"
+					end
+				else
+					if attached res.message as msg then
+						Result := msg
+					else
+						Result := "SVN update failed"
+					end
+					has_error := True
 				end
 			end
 		end

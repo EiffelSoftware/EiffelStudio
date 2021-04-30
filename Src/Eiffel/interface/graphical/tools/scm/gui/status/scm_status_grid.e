@@ -82,10 +82,10 @@ feature -- Actions
 
 	context_menu_handler (a_menu: EV_MENU; a_target_list: ARRAYED_LIST [EV_PND_TARGET_DATA]; a_source: EV_PICK_AND_DROPABLE; a_pebble: detachable ANY)
 		local
-			mi: EV_MENU_ITEM
+--			mi: EV_MENU_ITEM
 		do
-			create mi.make_with_text ("TOTO")
-			a_menu.extend (mi)
+--			create mi.make_with_text ("...")
+--			a_menu.extend (mi)
 		end
 
 	pebble_for_item (a_item: EV_GRID_ITEM): detachable ANY

@@ -225,6 +225,32 @@ feature -- Execution
 			end
 		end
 
+	do_revert
+		local
+			ch_list: SCM_CHANGELIST
+		do
+			if attached scm_s.service as scm then
+				create ch_list.make_with_location (root_location)
+				ch_list.extend_path (status.location)
+				if attached scm.revert (ch_list) as l_output then
+					parent_grid.status_box.show_command_execution ("Revert", l_output)
+				end
+			end
+		end
+
+	do_update
+		local
+			ch_list: SCM_CHANGELIST
+		do
+			if attached scm_s.service as scm then
+				create ch_list.make_with_location (root_location)
+				ch_list.extend_path (status.location)
+				if attached scm.update (ch_list) as l_output then
+					parent_grid.status_box.show_command_execution ("Update", l_output)
+				end
+			end
+		end
+
 	on_options (a_item: EV_GRID_ITEM)
 		local
 			m: EV_MENU
@@ -233,6 +259,19 @@ feature -- Execution
 			create m
 			create mi.make_with_text_and_action (scm_names.menu_diff, agent show_diff)
 			m.extend (mi)
+
+			create mi.make_with_text_and_action (scm_names.menu_update, agent do_update)
+			m.extend (mi)
+
+			if
+				attached {SCM_STATUS_MODIFIED} status
+				or attached {SCM_STATUS_ADDED} status
+				or attached {SCM_STATUS_DELETED} status
+				or attached {SCM_STATUS_CONFLICTED} status
+			then
+				create mi.make_with_text_and_action (scm_names.menu_revert, agent do_revert)
+				m.extend (mi)
+			end
 			m.show
 		end
 

@@ -269,6 +269,20 @@ feature -- Basic operation
 			end
 		end
 
+	show_command_execution (a_op: READABLE_STRING_GENERAL; a_output: READABLE_STRING_GENERAL)
+		local
+			d: SCM_COMMAND_EXECUTION_DIALOG
+		do
+			if attached scm_s.service as scm then
+				create d.make (scm, a_op, a_output)
+				d.set_is_modal (False)
+				if attached development_window as devwin then
+					d.set_size (devwin.dpi_scaler.scaled_size (700).min (devwin.window.width), devwin.dpi_scaler.scaled_size (500).min (devwin.window.height))
+				end
+				d.show_on_active_window
+			end
+		end
+
 feature -- Access
 
 	workspace: detachable SCM_WORKSPACE

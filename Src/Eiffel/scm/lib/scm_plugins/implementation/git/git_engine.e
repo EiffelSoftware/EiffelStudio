@@ -139,6 +139,50 @@ feature -- Execution
 			end
 		end
 
+	revert (a_changelist: SCM_CHANGELIST; a_options: detachable SCM_OPTIONS): SCM_RESULT
+		local
+			cmd: STRING_32
+			fn: READABLE_STRING_32
+			l_log: STRING_32
+		do
+			create cmd.make_from_string (git_executable_location.name)
+			cmd.append_string (option_to_command_line_flags ("checkout", a_options))
+			cmd.append_string_general (" checkout -- ")
+			across
+				a_changelist as ic
+			loop
+				fn := ic.item
+				cmd.append_character (' ')
+				if fn.has (' ') or fn.has ('%T') then
+					cmd.append_character ('"')
+					cmd.append_string_general (fn)
+					cmd.append_character ('"')
+				else
+					cmd.append_string_general (fn)
+				end
+			end
+
+			debug ("GIT_ENGINE")
+				print ({STRING_32} "Command: [" + cmd + "]%N")
+			end
+			if attached process_misc.output_of_command (cmd, a_changelist.root.location) as res_revert then
+				if res_revert.exit_code = 0 then
+					create Result.make_success
+					Result.set_message (res_revert.output)
+				else
+					create Result.make_failure
+					Result.set_message (res_revert.error_output)
+				end
+			else
+				create Result.make_failure
+				Result.set_message ("Error: can not launch git [" + process_misc.last_error.out + "]")
+			end
+			debug ("GIT_ENGINE")
+				print ("-> terminated %N")
+			end
+			Result.set_command (cmd)
+		end
+
 	commit (a_changelist: SCM_CHANGELIST; a_log_message: READABLE_STRING_GENERAL; a_options: SCM_OPTIONS): SCM_RESULT
 			-- Commit changes for locations `a_changelist`, and return information about command execution.
 		local

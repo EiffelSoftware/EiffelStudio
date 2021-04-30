@@ -51,10 +51,20 @@ feature -- Access: working copy
 
 feature -- Operations: working copy
 
+	revert (a_changelist: SCM_CHANGELIST; a_options: detachable SCM_OPTIONS): SCM_RESULT
+			-- Revert `a_location'.
+		local
+			git: like new_scm_engine
+		do
+			git := new_scm_engine
+			Result := git.revert (a_changelist, a_options)
+		end
+
 	update (a_changelist: SCM_CHANGELIST; a_options: detachable SCM_OPTIONS): SCM_RESULT
 			-- Update working copy at `a_changelist', and return information about command execution.
 		do
 			create Result.make_failure
+			Result.set_message ("Updating with GIT is not yet implemented")
 		end
 
 	add (a_changelist: SCM_CHANGELIST; a_options: detachable SCM_OPTIONS): SCM_RESULT

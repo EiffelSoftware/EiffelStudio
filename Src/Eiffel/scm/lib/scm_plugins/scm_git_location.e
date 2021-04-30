@@ -1,6 +1,5 @@
 note
-	description: "Summary description for {SCM_GIT_LOCATION}."
-	author: ""
+	description: "Git location."
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -27,6 +26,54 @@ feature -- Execution
 			reset_error
 			create scm.make (cfg)
 			Result := scm.statuses (loc, True, Void)
+		end
+
+	update (a_changelist: SCM_CHANGELIST; cfg: SCM_CONFIG): detachable STRING_32
+		local
+			scm: SCM_GIT
+		do
+			reset_error
+			create scm.make (cfg)
+			if attached scm.update (a_changelist, Void) as res then
+				if res.succeed then
+					if attached res.message as msg then
+						Result := msg
+					else
+						Result := "GIT update completed"
+					end
+				else
+					if attached res.message as msg then
+						Result := msg
+					else
+						Result := "GIT update failed"
+					end
+					has_error := True
+				end
+			end
+		end
+
+	revert (a_changelist: SCM_CHANGELIST; cfg: SCM_CONFIG): detachable STRING_32
+		local
+			scm: SCM_GIT
+		do
+			reset_error
+			create scm.make (cfg)
+			if attached scm.revert (a_changelist, Void) as res then
+				if res.succeed then
+					if attached res.message as msg then
+						Result := msg
+					else
+						Result := "GIT revert completed"
+					end
+				else
+					if attached res.message as msg then
+						Result := msg
+					else
+						Result := "GIT revert failed"
+					end
+					has_error := True
+				end
+			end
 		end
 
 	diff (a_changelist: SCM_CHANGELIST; cfg: SCM_CONFIG): detachable SCM_DIFF

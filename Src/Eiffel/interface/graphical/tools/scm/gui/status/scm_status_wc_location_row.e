@@ -313,6 +313,23 @@ feature -- Operations
 			end
 		end
 
+	do_update
+		local
+			ch_list: SCM_CHANGELIST
+		do
+			if attached scm_s.service as scm then
+				create ch_list.make_with_location (parent_row.root_location)
+				ch_list.extend_path (location)
+				if
+					ch_list /= Void and then
+					attached scm.update (ch_list) as l_update
+				then
+					parent_grid.status_box.show_command_execution ("Update", l_update)
+				end
+			end
+		end
+
+
 	show_diff (a_only_selected_items: BOOLEAN)
 		local
 			ch_list: SCM_CHANGELIST
@@ -384,6 +401,9 @@ feature -- Operation
 				end
 
 				create mi.make_with_text_and_action (scm_names.menu_check, agent update_statuses)
+				m.extend (mi)
+
+				create mi.make_with_text_and_action (scm_names.menu_update, agent do_update)
 				m.extend (mi)
 
 				create mi.make_with_text_and_action (scm_names.menu_diff, agent show_diff (False))

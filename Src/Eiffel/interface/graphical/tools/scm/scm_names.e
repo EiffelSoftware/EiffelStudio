@@ -27,6 +27,9 @@ feature -- Menu
 
 	menu_diff: STRING_32 do Result := locale.translation_in_context ("Diff ...", "scm") end
 	menu_diff_selection: STRING_32 do Result := locale.translation_in_context ("Diff selection ...", "scm") end
+	menu_revert: STRING_32 do Result := locale.translation_in_context ("Revert ...", "scm") end
+	menu_update: STRING_32 do Result := locale.translation_in_context ("Update ...", "scm") end
+
 	menu_save: STRING_32 do Result := locale.translation_in_context ("Save ...", "scm") end
 	menu_configuration: STRING_32 do Result := locale.translation_in_context ("Configuration ...", "scm") end
 
@@ -78,6 +81,10 @@ feature -- Dialogs
 	text_no_output: STRING_32 do Result := locale.translation_in_context ("No output ...", "scm") end
 
 	title_scm_diff: STRING_32 do Result := locale.translation_in_context ("Source Control / Diff", "scm") end
+	title_scm_command_execution (a_title: READABLE_STRING_GENERAL): STRING_32
+		do
+			Result := locale.formatted_string (locale.translation_in_context ("Source Control / $1", "scm"), [a_title])
+		end
 	title_scm_save: STRING_32 do Result := locale.translation_in_context ("Source Control / Save", "scm") end
 	title_scm_config: STRING_32 do Result := locale.translation_in_context ("Source Control / Configuration", "scm") end
 

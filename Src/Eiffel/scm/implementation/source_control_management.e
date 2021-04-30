@@ -61,6 +61,42 @@ feature -- Access
 
 feature -- Operations
 
+	update (a_changelist: SCM_CHANGELIST): detachable STRING_32
+		local
+			retried: BOOLEAN
+		do
+			if retried then
+				Result := {STRING_32} "Exception raised ..." -- FIXME: provide more informations.
+			else
+				if attached {SCM_SVN_LOCATION} a_changelist.root as l_svn_loc then
+					Result := l_svn_loc.update (a_changelist, config)
+				elseif attached {SCM_GIT_LOCATION} a_changelist.root as l_git_loc then
+					Result := l_git_loc.update (a_changelist, config)
+				end
+			end
+		rescue
+			retried := True
+			retry
+		end
+
+	revert (a_changelist: SCM_CHANGELIST): detachable STRING_32
+		local
+			retried: BOOLEAN
+		do
+			if retried then
+				Result := {STRING_32} "Exception raised ..." -- FIXME: provide more informations.
+			else
+				if attached {SCM_SVN_LOCATION} a_changelist.root as l_svn_loc then
+					Result := l_svn_loc.revert (a_changelist, config)
+				elseif attached {SCM_GIT_LOCATION} a_changelist.root as l_git_loc then
+					Result := l_git_loc.revert (a_changelist, config)
+				end
+			end
+		rescue
+			retried := True
+			retry
+		end
+
 	diff (a_changelist: SCM_CHANGELIST): detachable SCM_DIFF
 		local
 			retried: BOOLEAN

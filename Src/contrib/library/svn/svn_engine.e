@@ -156,6 +156,48 @@ feature -- Access: working copy
 			end
 		end
 
+	revert (a_changelist: SVN_CHANGELIST; a_options: detachable SVN_OPTIONS): SVN_RESULT
+			-- <Precursor>
+		local
+			res: detachable PROCESS_COMMAND_RESULT
+			s: detachable STRING
+			cmd: STRING_32
+		do
+			debug ("SVN_ENGINE")
+				print ({STRING_32} "svn revert [" + a_changelist.as_command_line_arguments +"].%N")
+			end
+
+			create cmd.make_from_string (svn_executable_path)
+			cmd.append_string (option_to_command_line_flags (a_options))
+			cmd.append_string (" revert ")
+			a_changelist.append_as_command_line_arguments_to (cmd)
+
+			debug ("SVN_ENGINE")
+				print ("Command: [" + cmd + "]%N")
+			end
+			res := process_misc.output_of_command (cmd, Void)
+			debug ("SVN_ENGINE")
+				print ("-> terminated %N")
+			end
+			if res = Void or else res.exit_code /= 0 then
+				debug ("SVN_ENGINE")
+					print ("-> terminated : None .%N")
+				end
+				create Result.make_failure
+				Result.set_command (cmd)
+				if res /= Void then
+					Result.set_message ("Exit code: " + res.exit_code.out + "%N" + res.error_output)
+				end
+			else
+				s := res.output
+				debug ("SVN_ENGINE")
+					print ("-> terminated : count=" + s.count.out + " .%N")
+					print (s)
+				end
+				create Result.make_success
+			end
+		end
+
 	update (a_changelist: SVN_CHANGELIST; a_rev: detachable SVN_RANGE_INDEX; a_options: detachable SVN_OPTIONS): SVN_RESULT
 			-- <Precursor>
 		local

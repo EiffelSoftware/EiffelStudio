@@ -1462,11 +1462,14 @@ feature -- Metadata description
 			interface_class_type: CLASS_TYPE
 		do
 			parents :=
-				if for_interface then
-					class_c.conforming_parents
-				else
+					-- TODO: support mutliple .override directives for methods inherited from non-conforming parents.
+					-- (See `{CIL_CODE_GENERATOR}.generate_method_impl`. It should be applied to every non-conformig parent
+					-- again to allow using only conforming parents when generating interfaces.)
+--				if for_interface then
+--					class_c.conforming_parents
+--				else
 					class_c.parents
-				end
+--				end
 			create l_list.make (parents.count)
 			create l_parents.make_filled (0, 0, parents.count)
 			l_single_inheritance_parent_id := 0

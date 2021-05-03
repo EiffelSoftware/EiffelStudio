@@ -1782,6 +1782,12 @@ feature {NONE} -- Visitors
 							creation_expression.set_info (l_type.create_info)
 							creation_expression.set_type (l_type)
 							process_creation_expr_b (creation_expression)
+							if l_type.is_expanded then
+									-- Box expanded object.
+								il_generator.generate_metamorphose (l_type)
+									-- Take address of expanded object.
+								il_generator.generate_load_address (l_type)
+							end
 						elseif a_node.is_instance_free then
 								-- A call to the class feature that does not need "Current".
 							il_generator.put_void
@@ -1834,7 +1840,12 @@ feature {NONE} -- Visitors
 					elseif not a_node.is_first and then l_cl_type.is_basic then
 							-- Address of a value is required.
 						il_generator.generate_load_address (l_cl_type)
-					elseif a_node.is_first and then l_precursor_type /= Void and then context.context_class_type.is_expanded then
+					elseif
+						a_node.is_first and then
+						not a_node.is_instance_free and then
+						attached l_precursor_type and then
+						context.context_class_type.is_expanded
+					then
 						check
 							precursor_not_expanded: not l_precursor_type.is_expanded
 						end

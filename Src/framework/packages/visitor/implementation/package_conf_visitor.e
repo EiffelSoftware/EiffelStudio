@@ -58,6 +58,7 @@ feature {NONE} -- Initialization
 		do
 			is_any_setting := True
 			is_ignoring_redirection := False
+			is_first_visited_target := True
 
 			is_il_generation := False
 			build := {CONF_CONSTANTS}.Build_workbench
@@ -242,11 +243,14 @@ feature -- Change
 		do
 			Precursor
 			visited_library_locations := Void
+			is_first_visited_target := True
 		end
 
 feature {NONE} -- Implementation
 
 	visited_library_locations: detachable ARRAYED_LIST [PATH]
+
+	is_first_visited_target: BOOLEAN
 
 feature -- Visitor
 
@@ -306,7 +310,8 @@ feature -- Visitor
 
 				if is_any_setting then
 					if 
-						is_indexing_class 
+						is_first_visited_target
+						or is_indexing_class 
 						or not (is_stopping_at_library or is_stopping_at_readonly_library)
 					then
 						across
@@ -320,6 +325,7 @@ feature -- Visitor
 							visit_cluster (ic.item)
 						end
 					end
+					is_first_visited_target := False
 					across
 						a_target.libraries as ic
 					loop
@@ -342,7 +348,8 @@ feature -- Visitor
 						end
 					else
 						if 
-							is_indexing_class 
+							is_first_visited_target
+							or is_indexing_class 
 							or not (is_stopping_at_library or is_stopping_at_readonly_library)
 						then
 							across
@@ -395,7 +402,7 @@ feature -- Visitor
 
 	visit_cluster (a_cluster: CONF_CLUSTER)
 		do
-			if attached a_cluster.classes as l_classes then
+			if is_indexing_class and then attached a_cluster.classes as l_classes then
 				across
 					l_classes as ic
 				loop
@@ -412,6 +419,7 @@ feature -- Visitor
 
 	visit_class (a_class: CONF_CLASS)
 		do
+			check is_indexing_class end
 			Precursor (a_class)
 		end
 

@@ -267,9 +267,7 @@ feature {NONE} -- Action handlers
 					wlab.set_minimum_width (100)
 					wlab.set_is_text_wrapped (True)
 					b.extend (wlab)
-
-					create cl
-					b.extend (cl)
+					b.disable_item_expand (wlab)
 
 					create lab.make_with_text (scm_names.label_git_support_status (scm.is_git_available))
 					b.extend (lab)
@@ -292,6 +290,9 @@ feature {NONE} -- Action handlers
 					create but.make_with_text_and_action (interface_names.b_update, agent refresh)
 					b.extend (but)
 					b.disable_item_expand (but)
+
+					create cl
+					b.extend (cl)
 				end
 			else
 				create lab.make_with_text ("Source control tool is not available.")

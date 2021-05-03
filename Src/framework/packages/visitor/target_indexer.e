@@ -101,6 +101,7 @@ feature -- Execution
 				if is_any_setting then
 					update_conditions_to_any_setting (a_cluster.internal_conditions)
 					if
+						is_indexing_class and then
 						attached current_conf_state as l_state and then
 						a_cluster.is_enabled (l_state)
 					then
@@ -153,6 +154,7 @@ feature -- Execution
 	visit_class (a_class: CONF_CLASS)
 		do
 			check not is_stopping_at_library end
+			check is_indexing_class end
 			on_class (a_class)
 			Precursor {PACKAGE_CONF_VISITOR}(a_class)
 		end

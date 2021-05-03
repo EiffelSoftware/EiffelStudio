@@ -85,6 +85,7 @@ feature -- Basic operation
 			r: EV_GRID_ROW
 			i, j: INTEGER
 			fn: READABLE_STRING_GENERAL
+			grp: SCM_GROUP
 		do
 			workspace := w
 --			w.analyze
@@ -93,9 +94,10 @@ feature -- Basic operation
 
 			i := 0
 			across
-				w.locations as ic
+				w.sorted_locations as ic
 			loop
-				fn := ic.item.location.name
+				grp := ic.item.group
+				fn := grp.location.name
 				if attached {EV_GRID_ROW} potential_parent_row (fn) as pr then
 					j := pr.subrow_count + 1
 					pr.insert_subrow (j)
@@ -107,19 +109,19 @@ feature -- Basic operation
 					r := row (i)
 				end
 				r.set_data (fn)
-				create gcb.make_with_text (ic.key)
-				if attached {SCM_LIBRARY} ic.item as l_scm_lib then
+				create gcb.make_with_text (ic.item.name)
+				if attached {SCM_LIBRARY} grp as l_scm_lib then
 					if l_scm_lib.is_readonly then
 						gcb.set_pixmap (icon_pixmaps.folder_library_readonly_icon)
 					else
 						gcb.set_pixmap (icon_pixmaps.folder_library_icon)
 					end
-				elseif attached {SCM_CLUSTER} ic.item then
+				elseif attached {SCM_CLUSTER} grp then
 					gcb.set_pixmap (icon_pixmaps.folder_cluster_icon)
-				elseif attached {SCM_DIRECTORY} ic.item then
+				elseif attached {SCM_DIRECTORY} grp then
 					gcb.set_pixmap (icon_pixmaps.folder_blank_icon)
 				end
-				gcb.set_is_checked (ic.item.is_included)
+				gcb.set_is_checked (grp.is_included)
 				gcb.checked_changed_actions.extend (agent (i_cb: EV_GRID_CHECKABLE_LABEL_ITEM; i_g: SCM_GROUP)
 						do
 							if i_cb.is_checked then
@@ -127,13 +129,13 @@ feature -- Basic operation
 							else
 								i_g.exclude
 							end
-						end(?, ic.item)
+						end(?, grp)
 					)
 
 				r.set_item (1, gcb)
 				create glab.make_with_text (fn)
 				r.set_item (2, glab)
-				if attached ic.item.root as v then
+				if attached grp.root as v then
 					r.set_item (3, new_scm_label (v))
 				else
 					r.set_item (3, new_scm_label (Void))

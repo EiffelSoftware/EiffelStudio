@@ -1,4 +1,4 @@
-FROM daald/ubuntu32:trusty
+FROM i386/ubuntu:18.04
 
 LABEL maintainer="Jocelyn Fiat <jfiat@eiffel.com>"
 

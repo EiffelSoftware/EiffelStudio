@@ -67,6 +67,53 @@ feature -- Basic operations
 
 	locations: STRING_TABLE [SCM_GROUP]
 
+	sorted_locations: ARRAYED_LIST [TUPLE [name: READABLE_STRING_GENERAL; group: SCM_GROUP]]
+		local
+			l_sorter: QUICK_SORTER [TUPLE [name: READABLE_STRING_GENERAL; group: SCM_GROUP]]
+		do
+			create Result.make (locations.count)
+			across
+				locations as ic
+			loop
+				Result.force ([ic.key, ic.item])
+			end
+			create l_sorter.make (create {AGENT_EQUALITY_TESTER [TUPLE [name: READABLE_STRING_GENERAL; group: SCM_GROUP]]}.make (agent (d1,d2: TUPLE [name: READABLE_STRING_GENERAL; group: SCM_GROUP]): BOOLEAN
+						-- Is `d1` less than `d2` ?
+					local
+						p1,p2: PATH
+						l_continue: BOOLEAN
+					do
+						if d1.group.generating_type = d2.group.generating_type then
+							l_continue := True
+						elseif attached {SCM_DIRECTORY} d1.group then
+							Result := True -- can be cluster or lib
+						elseif attached {SCM_CLUSTER} d1.group then
+								-- d2.group can not be a cluster
+								-- it can be either dir or lib
+								--   if a dir, then d1 is greater
+								--   if a lib, then d1 is less
+							Result := not attached {SCM_DIRECTORY} d2.group
+						else
+							check attached {SCM_LIBRARY} d1.group end
+							if attached {SCM_LIBRARY} d2.group then
+								l_continue := True
+							else
+								Result := False
+							end
+						end
+						if l_continue then
+							p1 := d1.group.location
+							p2 := d2.group.location
+							if p1.same_as (p2) then
+								Result := d1.name < d2.name
+							else
+								Result := p1 < p2
+							end
+						end
+					end))
+			l_sorter.sort (Result)
+		end
+
 	locations_by_root: HASH_TABLE [TUPLE [root: SCM_LOCATION; groups: STRING_TABLE [SCM_GROUP]], PATH]
 
 	analyze

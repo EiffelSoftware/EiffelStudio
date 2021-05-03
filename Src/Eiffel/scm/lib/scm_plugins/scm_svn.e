@@ -75,8 +75,47 @@ feature -- Operations: working copy
 
 	update (a_changelist: SCM_CHANGELIST; a_options: detachable SCM_OPTIONS): SCM_RESULT
 			-- Update working copy at `a_changelist', and return information about command execution.
+		local
+			svn: like new_scm_engine
+			l_changelist: SVN_CHANGELIST
+			opts: detachable SVN_OPTIONS
+			s: STRING_32
 		do
-			create Result.make_failure
+			svn := new_scm_engine
+
+			create l_changelist.make
+			across
+				a_changelist as ic
+			loop
+				l_changelist.extend (ic.item)
+			end
+			if a_options /= Void then
+				create opts
+				create s.make_empty
+				if a_options.is_simulation then
+					s.append_string_general (" --dry-run ")
+				end
+				across
+					a_options.parameters as ic
+				loop
+					s.append_string_general (" ")
+					s.append_string (ic.item)
+					s.append_string_general (" ")
+				end
+				opts.set_parameters (s)
+			end
+			if attached {SVN_RESULT} svn.update (l_changelist, Void, opts) as res then
+				if res.succeed then
+					create Result.make_success
+					Result.set_message (res.message)
+				else
+					create Result.make_failure
+				end
+				Result.set_command (res.command)
+			else
+				create Result.make_failure
+				Result.set_message ("Error: can not launch svn to process the update")
+			end
 		end
 
 	add (a_changelist: SCM_CHANGELIST; a_options: detachable SCM_OPTIONS): SCM_RESULT

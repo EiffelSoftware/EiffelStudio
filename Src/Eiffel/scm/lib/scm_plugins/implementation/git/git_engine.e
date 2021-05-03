@@ -143,7 +143,6 @@ feature -- Execution
 		local
 			cmd: STRING_32
 			fn: READABLE_STRING_32
-			l_log: STRING_32
 		do
 			create cmd.make_from_string (git_executable_location.name)
 			cmd.append_string (option_to_command_line_flags ("checkout", a_options))

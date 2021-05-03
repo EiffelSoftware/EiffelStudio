@@ -194,7 +194,6 @@ feature -- Access
 			svn: like new_scm_engine
 			opts: detachable SVN_OPTIONS
 			l_changelist: SVN_CHANGELIST
-			utf: UTF_CONVERTER
 			s: STRING_32
 		do
 			svn := new_scm_engine

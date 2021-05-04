@@ -32,7 +32,7 @@ feature {NONE} -- Initialize
 	make
 			-- Initialize `Current'
 		do
-			Precursor
+			Precursor {EV_DRAWING_AREA_IMP}
 			enable_double_buffering
 			{GTK2}.gtk_widget_set_redraw_on_allocate (c_object, False)
 		end
@@ -62,7 +62,7 @@ feature {EV_ANY, EV_ANY_I} -- Implementation
 
 ;note
 	library:	"SmartDocking: Library of reusable components for Eiffel."
-	copyright:	"Copyright (c) 1984-2017, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2021, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

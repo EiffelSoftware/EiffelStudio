@@ -17,11 +17,18 @@ feature -- GdkPixBuf
 
 feature -- Gobject
 
-	g_object_unref (object: POINTER)
+	frozen g_object_ref (a_c_object: POINTER): POINTER
 		external
 			"C inline use <ev_gtk.h>"
 		alias
-			"g_object_unref($object)"
+			"g_object_ref((gpointer) $a_c_object)"
+		end
+
+	frozen g_object_unref (a_c_object: POINTER)
+		external
+			"C inline use <ev_gtk.h>"
+		alias
+			"g_object_unref((gpointer) $a_c_object)"
 		end
 
 feature -- GdkDisplay
@@ -150,6 +157,31 @@ feature -- GdkMonitor
 		end
 
 feature -- GdkWindow
+
+	frozen gdk_window_get_frame_extents (a_window, a_rect: POINTER)
+		external
+			"C signature (GdkWindow*, GdkRectangle*) use <ev_gtk.h>"
+		end
+
+	frozen gdk_window_get_update_area (a_window: POINTER): POINTER
+		external
+			"C signature (GdkWindow*): cairo_region_t* use <ev_gtk.h>"
+		end
+
+	frozen gdk_window_is_viewable (a_window: POINTER): BOOLEAN
+		external
+			"C signature (GdkWindow*): EIF_BOOLEAN use <ev_gtk.h>"
+		end
+
+	frozen gdk_window_is_visible (a_window: POINTER): BOOLEAN
+		external
+			"C signature (GdkWindow*): EIF_BOOLEAN use <ev_gtk.h>"
+		end
+
+	frozen gdk_window_get_position (a_window: POINTER; a_x, a_y: TYPED_POINTER [INTEGER])
+		external
+			"C signature (GdkWindow*, gint*, gint*) use <ev_gtk.h>"
+		end
 
 	frozen gdk_window_get_device_position (a_window, a_device: POINTER; a_x, a_y: TYPED_POINTER [INTEGER]; a_mask: POINTER): POINTER
 		external
@@ -282,6 +314,19 @@ feature -- GdkWindow
               ]"
 		end
 
+	frozen gdk_window_create_similar_image_surface (window: POINTER; format, width, height, scale: INTEGER): POINTER
+		external
+			"C inline use <ev_gtk.h>"
+		alias
+			"[
+				return gdk_window_create_similar_image_surface ((GdkWindow *)$window,
+                                   (cairo_format_t)$format,
+                                   (int)$width,
+                                   (int)$height,
+                                   (int)$scale);
+              ]"
+		end
+
 	gdk_window_get_width (window: POINTER): INTEGER
 		external
 			"C inline use <ev_gtk.h>"
@@ -289,13 +334,56 @@ feature -- GdkWindow
 			"return gdk_window_get_width ((GdkWindow *)$window);"
 		end
 
-
 	gdk_window_get_height (window: POINTER): INTEGER
 		external
 			"C inline use <ev_gtk.h>"
 		alias
 			"return gdk_window_get_height ((GdkWindow *)$window);"
 		end
+
+	frozen gdk_window_invalidate_rect (a_window, a_rectangle: POINTER; invalidate_children: BOOLEAN)
+		external
+			"C signature (GdkWindow*, GdkRectangle*, gboolean) use <ev_gtk.h>"
+		end
+
+	frozen gdk_window_set_debug_updates (a_setting: BOOLEAN)
+		obsolete
+			"gdk_window_set_debug_updates is deprecated [2021-06-01]"
+		external
+			"C signature (gboolean) use <ev_gtk.h>"
+		end
+
+	frozen gdk_window_set_modal_hint (a_window: POINTER; a_hint: BOOLEAN)
+		external
+			"C signature (GdkWindow*, gboolean) use <ev_gtk.h>"
+		end
+
+	frozen gdk_window_peek_children (a_window: POINTER): POINTER
+		external
+			"C signature (GdkWindow*): GList use <ev_gtk.h>"
+		end
+
+	frozen gdk_window_process_updates (a_window: POINTER; process_children: BOOLEAN)
+			-- https://gitlab.gnome.org/GNOME/gtk/-/issues/2792
+			-- FIXME JV
+		note
+			eis: "name=gdk_window_process_updates", "src=https://developer.gnome.org/gdk3/stable/gdk3-Windows.html#gdk-window-process-updates"
+--		obsolete
+--			"gdk_window_process_updates has been deprecated since version 3.22 and should not be used in newly-written code. [2021-06-01]"
+		external
+			"C signature (GdkWindow*, gboolean) use <ev_gtk.h>"
+		end
+
+	frozen gdk_window_freeze_updates (a_window: POINTER)
+		external
+			"C signature (GdkWindow*) use <ev_gtk.h>"
+		end
+
+	frozen gdk_window_thaw_updates (a_window: POINTER)
+		external
+			"C signature (GdkWindow*) use <ev_gtk.h>"
+		end
+
 
 feature -- GdkDrawing		
 
@@ -349,6 +437,22 @@ feature -- GdkVisual
 			"C inline use <ev_gtk.h>"
 		alias
 			"gdk_visual_get_depth ((GdkVisual*) $a_visual)"
+		end
+
+	frozen gdk_visual_get_best_depth: INTEGER
+		obsolete
+			"gdk_visual_get_best_depth is deprecated [2021-06-01]"
+		external
+			"C signature (): EIF_INTEGER use <ev_gtk.h>"
+		end
+
+feature -- Query
+
+	frozen gdk_query_depths (a_depths, a_count: POINTER)
+		obsolete
+			"gdk_query_depths is deprecated [2021-06-01]"
+		external
+			"C signature (gint**, gint*) use <ev_gtk.h>"
 		end
 
 feature -- GdkEvent
@@ -624,6 +728,15 @@ feature -- GdkEvent
 		end
 
 
+feature -- Scroll
+
+	frozen gdk_event_scroll_struct_scroll_direction (a_c_struct: POINTER): INTEGER_32
+		external
+			"C [struct <ev_gtk.h>] (GdkEventScroll): EIF_INTEGER"
+		alias
+			"direction"
+		end
+
 feature -- GdkColor
 
 	frozen color_struct_size: INTEGER_32
@@ -863,7 +976,110 @@ feature -- GdkRGBA
 			is_class: class
 		end
 
+feature -- GType
+
+	frozen sizeof_gtype: INTEGER_32
+			-- Size of the `GType' C type
+		external
+			"C macro use <ev_gtk.h>"
+		alias
+			"sizeof(GType)"
+		end
+
+	frozen add_g_type_boolean (an_array: POINTER; a_pos: INTEGER_32)
+			-- Add G_TYPE_BOOLEAN constant in `an_array' at `a_pos' bytes from beginning
+			-- of `an_array'.
+		external
+			"C inline use <ev_gtk.h>"
+		alias
+			"[
+				{
+					GType type = G_TYPE_BOOLEAN;
+					memcpy ((char *) $an_array + $a_pos, &type, sizeof(GType));
+				}
+			]"
+		end
+
+	frozen add_g_type_string (an_array: POINTER; a_pos: INTEGER_32)
+			-- Add G_TYPE_STRING constant in `an_array' at `a_pos' bytes from beginning
+			-- of `an_array'.
+		external
+			"C inline use <ev_gtk.h>"
+		alias
+			"[
+				{
+					GType type = G_TYPE_STRING;
+					memcpy ((char *) $an_array + $a_pos, &type, sizeof(GType));
+				}
+			]"
+		end
+
 feature -- GdkPixbuf
+
+	frozen add_gdk_type_pixbuf (an_array: POINTER; a_pos: INTEGER_32)
+			-- Add GDK_TYPE_PIXBUF constant in `an_array' at `a_pos' bytes from beginning
+			-- of `an_array'.
+		external
+			"C inline use <ev_gtk.h>"
+		alias
+			"[
+				{
+					GType type = GDK_TYPE_PIXBUF;
+					memcpy ((char *) $an_array + $a_pos, &type, sizeof(GType));
+				}
+			]"
+		end
+
+	frozen gdk_pixbuf_scale_simple (a_gdkpixbuf: POINTER; a_width, a_height, a_interp_mode: INTEGER_32): POINTER
+		external
+			"C inline use <ev_gtk.h>"
+		alias
+			"gdk_pixbuf_scale_simple ((GdkPixbuf*) $a_gdkpixbuf, (int) $a_width, (int) $a_height, (int) $a_interp_mode)"
+		end
+
+	frozen gdk_pixbuf_scale (src, dest: POINTER; dest_x, dest_y, dest_width, dest_height: INTEGER_32; offset_x, offset_y, scale_x, scale_y: REAL_64; interp_type: INTEGER_32)
+		external
+			"C signature (GdkPixbuf*, GdkPixbuf*, int, int, int, int, double, double, double, double, GdkInterpType) use <ev_gtk.h>"
+		end
+
+
+	frozen gdk_pixbuf_composite (src, dest: POINTER; dest_x, dest_y, dest_width, dest_height: INTEGER_32; offset_x, offset_y, scale_x, scale_y: REAL_64; interp_type, overall_alpha: INTEGER_32)
+		external
+			"C signature (GdkPixbuf*, GdkPixbuf*, int, int, int, int, double, double, double, double, GdkInterpType, int) use <ev_gtk.h>"
+		end
+
+	frozen gdk_pixbuf_copy_area (src: POINTER; src_x, src_y, a_width, a_height: INTEGER_32; dest: POINTER; dest_x, dest_y: INTEGER_32)
+		external
+			"C signature (GdkPixbuf*, int, int, int, int, GdkPixbuf*, int, int) use <ev_gtk.h>"
+		end
+
+	frozen gdk_pixbuf_get_formats: POINTER
+		external
+			"C signature (): GSList* use <ev_gtk.h>"
+		end
+
+	frozen gdk_pixbuf_get_has_alpha (a_pixbuf: POINTER): BOOLEAN
+		external
+			"C signature (GdkPixbuf*): gboolean use <ev_gtk.h>"
+		end
+
+	frozen gdk_pixbuf_format_is_writable (a_pixbuf_format: POINTER): BOOLEAN
+		external
+			"C signature (GdkPixbufFormat*): gboolean use <ev_gtk.h>"
+		end
+
+	frozen gdk_pixbuf_format_get_name (a_pixbuf_format: POINTER): POINTER
+		external
+			"C signature (GdkPixbufFormat*): gchar* use <ev_gtk.h>"
+		end
+
+	frozen gdk_pixbuf_save (a_pixbuf, a_file_handle, a_filetype: POINTER; a_error: TYPED_POINTER [POINTER])
+		external
+			"C inline use <ev_gtk.h>"
+		alias
+			"gdk_pixbuf_save ((GdkPixbuf*) $a_pixbuf, (char*) $a_file_handle, (char*) $a_filetype, (GError**) $a_error, NULL)"
+		end
+
 
 	frozen gdk_pixbuf_get_from_surface (a_surface: POINTER; a_x, a_y, a_width, a_height: INTEGER_32): POINTER
 		external
@@ -986,8 +1202,83 @@ feature -- GdkPixbuf
 			"gdk_pixbuf_fill ((GdkPixbuf*)$a_pixbuf, (guint32) $rgba);"
 		end
 
+	frozen gdk_pixbuf_add_alpha (a_pixbuf: POINTER; substitute_color: BOOLEAN; r, g, b: NATURAL_8): POINTER
+		external
+			"C signature (GdkPixbuf*, gboolean, guchar, guchar, guchar): GdkPixbuf* use <ev_gtk.h>"
+		end
 
 feature -- GdkScreen
+
+	frozen gdk_screen_get_width_mm (a_screen: POINTER): INTEGER_32
+		obsolete
+			"gdk_screen_get_width_mm is deprecated [2021-06-01]"
+		external
+			"C signature (GdkScreen*): gint use <ev_gtk.h>"
+		end
+
+	frozen gdk_screen_get_height_mm (a_screen: POINTER): INTEGER_32
+		obsolete
+			"gdk_screen_get_height_mm is deprecated [2021-06-01]"
+		external
+			"C signature (GdkScreen*): gint use <ev_gtk.h>"
+		end
+
+	frozen gdk_screen_get_n_monitors (a_screen: POINTER): INTEGER_32
+		obsolete
+			"gdk_screen_get_n_monitors is deprecated: Use 'gdk_display_get_n_monitors' instead [2021-06-01]"
+		external
+			"C signature (GdkScreen*): gint use <ev_gtk.h>"
+		end
+
+	frozen gdk_screen_get_monitor_geometry (a_screen: POINTER; a_monitor_number: INTEGER_32; a_rect: POINTER)
+		obsolete
+			"gdk_screen_get_monitor_geometry is deprecated: Use 'gdk_monitor_get_geometry' instead [2021-06-01]"
+		external
+			"C signature (GdkScreen*, gint, GdkRectangle*) use <ev_gtk.h>"
+		end
+
+	frozen gdk_screen_get_monitor_at_point (a_screen: POINTER; a_x, a_y: INTEGER_32): INTEGER_32
+		external
+			"C signature (GdkScreen*, gint, gint): gint use <ev_gtk.h>"
+		end
+
+	frozen gdk_screen_get_monitor_at_window (a_screen: POINTER; a_window: POINTER): INTEGER_32
+		obsolete
+			"gdk_screen_get_monitor_at_window is deprecated: Use 'gdk_display_get_monitor_at_window' instead [2021-06-01]"
+		external
+			"C signature (GdkScreen*, GdkWindow*): gint use <ev_gtk.h>"
+		end
+
+
+	frozen gdk_screen_get_resolution (a_screen: POINTER): INTEGER_32
+		external
+			"C inline use <ev_gtk.h>"
+		alias
+			"[
+				return gdk_screen_get_resolution ((GdkScreen*)$a_screen);
+			]"
+		end
+
+	frozen gdk_screen_get_primary_monitor (a_screen: POINTER): INTEGER_32
+		obsolete
+			"gdk_screen_get_primary_monitor is deprecated: Use 'gdk_display_get_primary_monitor' instead [2021-06-01]"
+		external
+			"C inline use <ev_gtk.h>"
+		alias
+			"[
+				return gdk_screen_get_primary_monitor ((GdkScreen*)$a_screen);
+			]"
+		end
+
+	frozen gdk_screen_is_composited (a_screen: POINTER): BOOLEAN
+		external
+			"C inline use <ev_gtk.h>"
+		alias
+			"[
+				return gdk_screen_is_composited ((GdkScreen*)$a_screen);
+			]"
+		end
+
 
 	frozen gdk_screen_get_system_visual (a_screen: POINTER): POINTER
 		external
@@ -1204,6 +1495,18 @@ feature -- Selection, Drag, Drop
 			"C (GdkDisplay *, GdkCursorType): GdkCursor* | <ev_gtk.h>"
 		end
 
+	frozen gdk_cursor_new_from_pixbuf (a_display, a_pixbuf: POINTER; a_x, a_y: INTEGER_32): POINTER
+		external
+			"C signature (GdkDisplay*, GdkPixbuf*, gint, gint): GdkCursor* use <ev_gtk.h>"
+		end
+
+	frozen gdk_cursor_unref (a_cursor: POINTER)
+		obsolete
+			"gdk_cursor_unref is deprecated: Use 'g_object_unref' instead [2021-06-01]"
+		external
+			"C signature (GdkCursor *) use <ev_gtk.h>"
+		end
+
 	frozen gdk_selection_property_get (a_window: POINTER; a_data: TYPED_POINTER [POINTER]; a_target: POINTER; prop_type: TYPED_POINTER [INTEGER_32]): INTEGER_32
 		external
 			"C signature (GdkWindow*, guchar**, GdkAtom*, gint*): gint use <ev_gtk.h>"
@@ -1268,6 +1571,11 @@ feature -- Atom
 		end
 
 feature -- Keyval		
+
+	frozen gdk_keyval_to_unicode (a_keyval: NATURAL_32): NATURAL_32
+		external
+			"C (guint): guint | <ev_gtk.h>"
+		end
 
 	frozen gdk_keyval_from_name (a_keyval_name: POINTER): INTEGER_32
 		external
@@ -1658,6 +1966,104 @@ feature -- MASK, enum
 			"C macro use <ev_gtk.h>"
 		alias
 			"GDK_FUNC_ALL"
+		end
+
+	frozen gdk_window_state_withdrawn_enum: INTEGER_32
+		external
+			"C macro use <ev_gtk.h>"
+		alias
+			"GDK_WINDOW_STATE_WITHDRAWN"
+		end
+
+	frozen gdk_window_state_iconified_enum: INTEGER_32
+		external
+			"C macro use <ev_gtk.h>"
+		alias
+			"GDK_WINDOW_STATE_ICONIFIED"
+		end
+
+	frozen gdk_window_state_maximized_enum: INTEGER_32
+		external
+			"C macro use <ev_gtk.h>"
+		alias
+			"GDK_WINDOW_STATE_MAXIMIZED"
+		end
+
+	frozen gdk_window_state_sticky_enum: INTEGER_32
+		external
+			"C macro use <ev_gtk.h>"
+		alias
+			"GDK_WINDOW_STATE_STICKY"
+		end
+
+	frozen gdk_window_state_fullscreen_enum: INTEGER_32
+		external
+			"C macro use <ev_gtk.h>"
+		alias
+			"GDK_WINDOW_STATE_FULLSCREEN"
+		end
+
+	frozen gdk_window_state_above_enum: INTEGER_32
+		external
+			"C macro use <ev_gtk.h>"
+		alias
+			"GDK_WINDOW_STATE_ABOVE"
+		end
+
+	frozen gdk_window_state_below_enum: INTEGER_32
+		external
+			"C macro use <ev_gtk.h>"
+		alias
+			"GDK_WINDOW_STATE_BELOW"
+		end
+
+	frozen gdk_scroll_up_enum: INTEGER_32
+		external
+			"C macro use <ev_gtk.h>"
+		alias
+			"GDK_SCROLL_UP"
+		end
+
+	frozen gdk_scroll_down_enum: INTEGER_32
+		external
+			"C macro use <ev_gtk.h>"
+		alias
+			"GDK_SCROLL_DOWN"
+		end
+
+	frozen gdk_type_pixbuf: INTEGER_32
+		external
+			"C inline use <ev_gtk.h>"
+		alias
+			"GDK_TYPE_PIXBUF"
+		end
+
+	frozen gdk_interp_bilinear: INTEGER_32
+		external
+			"C macro use <ev_gtk.h>"
+		alias
+			"GDK_INTERP_BILINEAR"
+		end
+
+	frozen gdk_interp_hyper: INTEGER_32
+		external
+			"C macro use <ev_gtk.h>"
+		alias
+			"GDK_INTERP_HYPER"
+		end
+
+	frozen gdk_interp_nearest: INTEGER_32
+		external
+			"C macro use <ev_gtk.h>"
+		alias
+			"GDK_INTERP_NEAREST"
+		end
+
+	frozen gdk_interp_tiles: INTEGER_32
+		external
+			"C macro use <ev_gtk.h>"
+		alias
+			"GDK_INTERP_TILES"
 		end
 
 feature -- Error trap

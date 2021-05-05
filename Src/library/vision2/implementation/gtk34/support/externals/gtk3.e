@@ -7,15 +7,10 @@
 class
 	GTK3
 
+inherit
+	GTK2
+
 feature -- GtkWidget Externals
-
-	frozen gtk_widget_get_style_context (a_widget: POINTER): POINTER
-		note
-			eis: "name=gtk_widget_get_style_context", "src=https://developer.gnome.org/gtk3/stable/GtkWidget.html#gtk-widget-get-style-context"
-		external
-			"C (GtkWidget*): GtkStyleContext* | <ev_gtk.h>"
-		end
-
 
 	frozen gtk_widget_get_halign (a_widget: POINTER): INTEGER
 			-- Gets the value of the `halign` property.
@@ -168,7 +163,7 @@ feature -- GtkWidget Externals
 			"gtk_widget_set_margin_bottom ((GtkWidget *)$a_widget, (gint)$margin)"
 		end
 
-feature -- GtkBox Externals
+feature -- Box		
 
 	frozen gtk_box_new (orientation: NATURAL_8; spacing: INTEGER): POINTER
 		note
@@ -176,10 +171,9 @@ feature -- GtkBox Externals
 		external
 			"C inline use <ev_gtk.h>"
 		alias
-			"[
-				return gtk_box_new ((GtkOrientation)$orientation, (gint)$spacing);
-			]"
+			"gtk_box_new ((GtkOrientation)$orientation, (gint)$spacing)"
 		end
+
 
 feature -- GtkGrid Externals
 
@@ -254,44 +248,14 @@ feature -- GtkGrid Externals
 			"gtk_grid_set_column_spacing ((GtkGrid *)$a_grid, (guint)$spacing)"
 		end
 
-feature -- GtkStyleContext externals
+feature -- Style
 
-	frozen gtk_render_frame (context: POINTER; cr: POINTER; x, y, width, height: REAL_64)
-			-- Renders a frame around the rectangle defined by x , y , width , height .
+	frozen gtk_widget_get_style_context (a_widget: POINTER): POINTER
 		note
-			eis: "name=gtk_render_frame", "src=https://developer.gnome.org/gtk3/stable/GtkStyleContext.html#gtk-render-frame"
+			eis: "name=gtk_widget_get_style_context", "src=https://developer.gnome.org/gtk3/stable/GtkWidget.html#gtk-widget-get-style-context"
 		external
-			"C inline use <ev_gtk.h>"
-		alias
-			"[
-				return gtk_render_frame ((GtkStyleContext *)$context,
-                  (cairo_t *)$cr,
-                  (gdouble)$x,
-                  (gdouble)$y,
-                  (gdouble)$width,
-                  (gdouble)$height)
-
-			]"
+			"C (GtkWidget*): GtkStyleContext* | <ev_gtk.h>"
 		end
-
-	frozen gtk_render_background (context: POINTER; cr: POINTER; x, y, width, height: REAL_64)
-			-- Renders the background of an element.		
-		note
-			eis: "name=gtk_render_background", "src=https://developer.gnome.org/gtk3/stable/GtkStyleContext.html#gtk-render-background"
-		external
-			"C inline use <ev_gtk.h>"
-		alias
-			"[
-				return gtk_render_background ((GtkStyleContext *)$context,
-                       (cairo_t *)$cr,
-                       (gdouble)$x,
-                       (gdouble)$y,
-                       (gdouble)$width,
-                       (gdouble)$height);
-
-			]"
-		end
-
 
 feature -- GtkMenu externals
 

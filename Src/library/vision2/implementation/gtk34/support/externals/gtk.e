@@ -6,7 +6,7 @@ class
 	GTK
 
 inherit
-	GDK
+	GTK3
 
 feature -- GTK version	
 
@@ -83,16 +83,6 @@ feature -- Window
 			"C inline use <ev_gtk.h>"
 		alias
 			"gtk_window_set_skip_pager_hint ((GtkWindow*) $a_window, (gboolean) $a_setting);"
-		end
-
-	frozen gtk_window_set_accept_focus (a_window: POINTER; a_accept: BOOLEAN)
-		external
-			"C (GtkWindow*, gboolean) | <ev_gtk.h>"
-		end
-
-	frozen gtk_window_get_focus (a_c_struct: POINTER): POINTER
-		external
-			"C signature (GtkWindow*): GtkWidget* use <ev_gtk.h>"
 		end
 
 	frozen gtk_window_get_title (a_c_struct: POINTER): POINTER
@@ -199,21 +189,6 @@ feature -- Container
 	frozen gtk_container_get_border_width (a_c_struct: POINTER): INTEGER_32
 		external
 			"C signature (GtkContainer*): EIF_INTEGER use <ev_gtk.h>"
-		end
-
-
-feature -- Event box
-
-	frozen gtk_event_box_new: POINTER
-		external
-			"C (): GtkWidget* | <ev_gtk.h>"
-		end
-
-	frozen gtk_is_event_box (a_object: POINTER): BOOLEAN
-		external
-			"C macro use <ev_gtk.h>"
-		alias
-			"GTK_IS_EVENT_BOX"
 		end
 
 
@@ -387,11 +362,6 @@ feature -- Widgets
 			"C (GtkWidget*, gint) | <ev_gtk.h>"
 		end
 
-	frozen gtk_widget_destroy (a_widget: POINTER)
-		external
-			"C (GtkWidget*) | <ev_gtk.h>"
-		end
-
 	frozen gtk_widget_event (a_widget: POINTER; a_event: POINTER): BOOLEAN
 		external
 			"C (GtkWidget*, GdkEvent*): gboolean | <ev_gtk.h>"
@@ -419,12 +389,16 @@ feature -- Widgets
 
 	frozen gtk_widget_queue_draw (a_widget: POINTER)
 		external
-			"C (GtkWidget*) | <ev_gtk.h>"
+			"C inline use <ev_gtk.h>"
+		alias
+			"gtk_widget_queue_draw ($a_widget)"
 		end
 
 	frozen gtk_widget_queue_draw_area (a_widget: POINTER; a_x: INTEGER_32; a_y: INTEGER_32; a_width: INTEGER_32; a_height: INTEGER_32)
 		external
 			"C (GtkWidget*, gint, gint, gint, gint) | <ev_gtk.h>"
+		alias
+			"gtk_widget_queue_draw_area"
 		end
 
 	frozen gtk_widget_queue_resize (a_widget: POINTER)
@@ -527,11 +501,6 @@ feature -- Widgets
 
 feature -- Widget Style		
 
-	frozen gtk_widget_get_style_context (a_widget: POINTER): POINTER
-		external
-			"C (GtkWidget*): GtkStyleContext* | <ev_gtk.h>"
-		end
-
 	frozen gtk_style_context_get_color (a_context: POINTER; a_state: INTEGER; a_color: POINTER)
 		external
 			"C signature (GtkStyleContext*, GtkStateFlags, GdkRGBA*) use <ev_gtk.h>"
@@ -619,66 +588,6 @@ feature -- Source
 		external
 			"C signature (guint) use <ev_gtk.h>"
 		end
-
-feature -- Layout	, Adjustment	
-
-	gtk_layout_new (a_hadjustment, a_vadjustment: POINTER): POINTER
-		external
-			"C signature (GtkAdjustment*, GtkAdjustment*): GtkWidget* use <ev_gtk.h>"
-		end
-
-	gtk_layout_put (a_layout, a_child: POINTER; a_x, a_y: INTEGER)
-		external
-			"C signature (GtkLayout*, GtkWidget*, gint, gint) use <ev_gtk.h>"
-		end
-
-	gtk_layout_move (a_layout, a_child: POINTER; a_x, a_y: INTEGER)
-		external
-			"C signature (GtkLayout*, GtkWidget*, gint, gint) use <ev_gtk.h>"
-		end
-
-	gtk_layout_set_size (a_layout: POINTER; a_x, a_y: NATURAL_32)
-		external
-			"C signature (GtkLayout*, guint, guint) use <ev_gtk.h>"
-		end
-
-	gtk_layout_get_size (a_layout: POINTER; a_x, a_y: TYPED_POINTER [NATURAL_32])
-		external
-			"C signature (GtkLayout*, guint*, guint*) use <ev_gtk.h>"
-		end
-
-	gtk_layout_get_bin_window (a_layout: POINTER): POINTER
-		external
-			"C signature (GtkLayout*): GdkWindow* use <ev_gtk.h>"
-		end
-
-
---GtkWidget *         gtk_layout_new                      (GtkAdjustment *hadjustment,
---                                                         GtkAdjustment *vadjustment);
---
---
---
---void                gtk_layout_put                      (GtkLayout *layout,
---                                                         GtkWidget *child_widget,
---                                                         gint x,
---                                                         gint y);
---void                gtk_layout_move                     (GtkLayout *layout,
---                                                         GtkWidget *child_widget,
---                                                         gint x,
---                                                         gint y);
---void                gtk_layout_set_size                 (GtkLayout *layout,
---                                                         guint width,
---                                                         guint height);
---void                gtk_layout_get_size                 (GtkLayout *layout,
---                                                         guint *width,
---                                                         guint *height);
---GtkAdjustment *     gtk_layout_get_hadjustment          (GtkLayout *layout);
---GtkAdjustment *     gtk_layout_get_vadjustment          (GtkLayout *layout);
---void                gtk_layout_set_hadjustment          (GtkLayout *layout,
---                                                         GtkAdjustment *adjustment);
---void                gtk_layout_set_vadjustment          (GtkLayout *layout,
---                                                         GtkAdjustment *adjustment);
---GdkWindow *         gtk_layout_get_bin_window           (GtkLayout *layout);
 
 feature -- CellLayout
 
@@ -1137,11 +1046,6 @@ feature -- Alignment
 
 feature -- Box
 
-	frozen gtk_box_new (a_orientation: INTEGER; a_spacing: INTEGER_32): POINTER
-		external
-			"C (GtkOrientation, gint): GtkWidget* | <ev_gtk.h>"
-		end
-
 	frozen gtk_hbox_new (a_homogeneous: BOOLEAN; a_spacing: INTEGER_32): POINTER
 		obsolete
 			"gtk_hbox_new is deprecated: Use 'gtk_box_new' instead [2021-06-01]"
@@ -1392,11 +1296,7 @@ feature -- Entry
 		external
 			"C inline use <ev_gtk.h>"
 		alias
-			"[
-				gtk_entry_set_width_chars ((GtkEntry *)$a_entry,
-			                           (gint)$n_chars);
-
-			]"
+			"gtk_entry_set_width_chars ((GtkEntry *)$a_entry, (gint)$n_chars)"
 		end
 
 	frozen gtk_entry_set_visibility (a_entry: POINTER; a_visible: BOOLEAN)
@@ -1548,12 +1448,6 @@ feature -- Label
 		external
 			"C signature (GtkLabel*): EIF_INTEGER use <ev_gtk.h>"
 		end
-
-	frozen gtk_label_get_label (a_c_struct: POINTER): POINTER
-		external
-			"C signature (GtkLabel*): EIF_POINTER use <ev_gtk.h>"
-		end
-
 
 feature -- Misc
 

@@ -305,7 +305,7 @@ feature {EV_GTK_DEPENDENT_INTERMEDIARY_ROUTINES} -- Event handling
 				{GTK}.gtk_widget_set_can_focus (a_toggle, False)
 
 				real_signal_connect (a_toggle, once "toggled", agent (app_implementation.gtk_marshal).on_combo_box_toggle_button_event (internal_id, 2), Void)
-				{GTK2}.g_signal_handler_disconnect (container_widget, retrieve_toggle_button_signal_connection_id)
+				{GTK2}.signal_disconnect (container_widget, retrieve_toggle_button_signal_connection_id)
 				retrieve_toggle_button_signal_connection_id := 0
 			end
 		end

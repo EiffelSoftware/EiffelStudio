@@ -97,7 +97,11 @@ feature -- Event handling
 			if not {GTK}.gtk_is_window (c_object) then
 					-- Window resize events are connected separately
 				l_app_imp := app_implementation
-				l_app_imp.gtk_marshal.signal_connect (c_object, l_app_imp.size_allocate_event_string, agent (l_app_imp.gtk_marshal).on_size_allocate_intermediate (internal_id, ?, ?, ?, ?), l_app_imp.gtk_marshal.size_allocate_translate_agent, False)
+				real_signal_connect (c_object,
+						{EV_GTK_EVENT_STRINGS}.size_allocate_event_name,
+						agent (l_app_imp.gtk_marshal).on_size_allocate_intermediate (internal_id, ?, ?, ?, ?),
+						l_app_imp.gtk_marshal.size_allocate_translate_agent
+					)
 			end
 		end
 
@@ -368,25 +372,19 @@ feature {EV_ANY_I} -- Implementation
 
 	refresh_now
 			-- Flush any pending redraws due for `Current'.
-		local
-			flag: BOOLEAN
 		do
 			if {GTK}.gtk_widget_get_window (c_object) /= default_pointer then
-				-- FIXME JV
-				-- gdk_window_process_updates has been deprecated since version 3.22 and should not be used in newly-written code.
---				{GTK2}.gdk_window_process_updates (
---					{GTK}.gtk_widget_get_window (c_object),
---					False
---				)
-				-- https://stackoverflow.com/questions/34912757/how-do-you-force-a-screen-refresh-in-gtk-3-8
+				-- FIXME JV: gdk_window_process_updates has been deprecated since version 3.22 and should not be used in newly-written code.
+				--		{GTK2}.gdk_window_process_updates ({GTK}.gtk_widget_get_window (c_object), False)
+				-- 		https://stackoverflow.com/questions/34912757/how-do-you-force-a-screen-refresh-in-gtk-3-8
 				{GTK}.gtk_widget_queue_draw (c_object)
-				from
-				until
-					{GTK2}.events_pending
-			    loop
-			    	flag := {GTK2}.gtk_event_iteration
-			    end
+				process_pending_events
 			end
+		end
+
+	process_pending_events
+		do
+			app_implementation.process_pending_events_on_default_context
 		end
 
 feature {EV_CONTAINER_IMP} -- Implementation

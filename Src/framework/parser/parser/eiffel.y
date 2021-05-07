@@ -31,11 +31,12 @@ create
 %left		TE_PLUS TE_MINUS
 %left		TE_STAR TE_SLASH TE_MOD TE_DIV
 %right		TE_POWER
-%left		TE_AT TE_FREE
+%left		TE_FREE
 %right		TE_NOT TE_FREE_NOT
 %nonassoc	TE_STRIP
 %left		TE_OLD
 %left		TE_DOT
+%left		TE_AT
 %right		TE_LPARAN TE_BLOCK_OPEN
 
 %token <detachable ID_AS> TE_FREE TE_FREE_AND TE_FREE_AND_THEN TE_FREE_IMPLIES TE_FREE_NOT TE_FREE_OR TE_FREE_OR_ELSE TE_FREE_XOR TE_ID TE_TUPLE
@@ -132,7 +133,7 @@ create
 %type <detachable ELSIF_EXPRESSION_AS>		Elseif_part_expression
 %type <detachable ENSURE_AS>			Postcondition
 %type <detachable EXPORT_ITEM_AS>		New_export_item
-%type <detachable EXPR_AS>				Bracket_target Expression Factor Qualified_factor Typed_expression Actual_parameter 
+%type <detachable EXPR_AS>				Actual_parameter Bracket_target Expression Factor Predecessor Typed_expression
 %type <detachable BRACKET_AS>			Bracket_expression Call_bracket_expression
 %type <detachable EXTERNAL_AS>			External
 %type <detachable EXTERNAL_LANG_AS>	External_language
@@ -225,7 +226,7 @@ create
 %type <detachable CONSTRAINT_LIST_AS> Multiple_constraint_list
 %type <detachable CONSTRAINING_TYPE_AS> Single_constraint
 
-%expect 427
+%expect 435
 
 %%
 
@@ -3137,6 +3138,23 @@ Call: A_feature
 			{ $$ := $1 }
 	;
 
+-- Predecessor
+
+Predecessor:	TE_AT Identifier_as_lower
+			{
+				if syntax_version = obsolete_syntax then
+					$$ := ast_factory.new_un_free_as (extract_id_from_symbol ($1), ast_factory.new_expr_call_as (ast_factory.new_access_id_as ($2, Void)))
+					if has_syntax_warning then
+						report_one_warning
+							(create {SYNTAX_WARNING}.make (token_line (extract_id_from_symbol ($1)), token_column (extract_id_from_symbol ($1)), filename,
+							locale.translation_in_context (once "Obsolete operator notation `@` is used. Replace it with a contemporary operator (if available) or an unfolded form of feature call.", once "parser.eiffel.warning")))
+					end
+				else
+					$$ := ast_factory.new_predecessor_as ($2, extract_symbol ($1))
+				end
+			}
+	;
+
 -- Check instruction
 
 Check: TE_CHECK Assertion TE_END
@@ -3340,16 +3358,7 @@ Factor: TE_VOID
 			{ $$ := $1 }
 	|	Call
 			{ $$ := ast_factory.new_expr_call_as ($1) }
-	|	Qualified_factor
-			{ $$ := $1 }
-	|	Conditional_expression
-			{ $$ := $1 }
-	|	Multi_branch_expression
-			{ $$ := $1 }
-	;
-
-Qualified_factor:
-		Bracket_expression 
+	|	Bracket_expression 
 			{ $$ := $1 }
 	|	Call_bracket_expression 
 			{ $$ := $1 }
@@ -3363,6 +3372,10 @@ Qualified_factor:
 			{ $$ := ast_factory.new_un_free_as ($1, $2) }
 	|	Free_unary_operator Expression %prec TE_NOT
 			{ $$ := ast_factory.new_un_free_as ($1, $2) }
+	|	Conditional_expression
+			{ $$ := $1 }
+	|	Multi_branch_expression
+			{ $$ := $1 }
 	;
 
 Typed_expression:	Typed			
@@ -3445,6 +3458,8 @@ Qualified_call:
 	|	Bracket_expression TE_DOT Feature_access
 			{ $$ := ast_factory.new_nested_expr_as ($1, $3, $2) }
 	|	Call_bracket_expression TE_DOT Feature_access
+			{ $$ := ast_factory.new_nested_expr_as ($1, $3, $2) }
+	|	Predecessor TE_DOT Feature_access
 			{ $$ := ast_factory.new_nested_expr_as ($1, $3, $2) }
 	;
 
@@ -3554,6 +3569,8 @@ Bracket_target:
 	|	Creation_expression
 			{ $$ := $1 }
 	|	Loop_expression
+			{ $$ := $1 }
+	|	Predecessor
 			{ $$ := $1 }
 	;
 

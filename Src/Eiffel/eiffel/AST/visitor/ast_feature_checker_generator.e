@@ -3200,7 +3200,7 @@ feature {NONE} -- Visitor
 			end
 			l_class_id := l_type.base_class.class_id
 			if attached context.object_test_local (l_as.feature_name.name_id) as i then
-				process_object_test_local (i, l_as)
+				process_object_test_local (i, l_as, False)
 			else
 				if is_inherited then
 					l_feature := l_type.base_class.feature_of_rout_id (l_as.routine_ids.first)
@@ -3335,7 +3335,7 @@ feature {NONE} -- Visitor
 						l_as.set_class_id (class_id_of (l_type))
 					end
 				elseif attached context.object_test_local (l_as.feature_name.name_id) as i then
-					process_object_test_local (i, l_as)
+					process_object_test_local (i, l_as, False)
 					is_type_set := True
 				else
 						-- Look for a feature
@@ -3383,15 +3383,15 @@ feature {NONE} -- Visitor
 			end
 		end
 
-	process_object_test_local (l_local_info: LOCAL_INFO; l_as: ACCESS_INV_AS)
-			-- Process object test local identified by `i` in access node `a`
-			-- including an optional call to a parenthesis alias and set `last_type` accordingly.
+	process_object_test_local (l_local_info: LOCAL_INFO; a: ACCESS_INV_AS; is_predecessor: BOOLEAN)
+			-- Process object test local identified by `i` in access node `a` (interpreted as a predecessor call
+			-- when `is_predecessor` is set) including an optional call to a parenthesis alias and set `last_type` accordingly.
 		local
 			l_type: TYPE_A
 			l_vuar1: VUAR1
 			old_is_inherited: BOOLEAN
 		do
-			if l_local_info.is_cursor then
+			if not is_predecessor and l_local_info.is_cursor then
 					-- Process access to the feature `item` on the cursor variable.
 					-- Disable expansion of the variable name in recursive calls.
 				l_local_info.disable_is_cursor
@@ -3404,9 +3404,9 @@ feature {NONE} -- Visitor
 				l_local_info.enable_is_cursor
 				if not old_is_inherited then
 						-- Record type information for analysis tools.
-					set_inline_local (l_as)
+					set_inline_local (a)
 					if attached last_type as t then
-						l_as.set_class_id (class_id_of (t))
+						a.set_class_id (class_id_of (t))
 					end
 				end
 			else
@@ -3415,25 +3415,25 @@ feature {NONE} -- Visitor
 				is_controlled := l_local_info.is_controlled
 				l_type := l_local_info.type.instantiation_in (last_type.as_implicitly_detachable.as_variant_free, last_type.base_class.class_id)
 				if not is_inherited then
-					set_inline_local (l_as)
-					l_as.set_class_id (class_id_of (l_type))
+					set_inline_local (a)
+					a.set_class_id (class_id_of (l_type))
 				end
 				if is_byte_node_enabled then
 					create {OBJECT_TEST_LOCAL_B} last_byte_node.make (l_local_info.position, current_feature.body_index, l_type)
 				end
-				if attached l_as.parameters as p then
+				if attached a.parameters as p then
 					create l_vuar1
 					context.init_error (l_vuar1)
-					l_vuar1.set_local_name (l_as.feature_name.name)
-					l_vuar1.set_location (l_as.feature_name)
-					look_for_parenthesis_alias (l_as.internal_parameters, l_vuar1, l_type)
+					l_vuar1.set_local_name (a.feature_name.name)
+					l_vuar1.set_location (a.feature_name)
+					look_for_parenthesis_alias (a.internal_parameters, l_vuar1, l_type)
 					if attached last_type as t then
 							-- Record type of the object test local.
-						set_type (l_type, l_as.feature_name)
+						set_type (l_type, a.feature_name)
 						l_type := t
 					end
 				end
-				set_type (l_type, l_as)
+				set_type (l_type, a)
 			end
 		end
 
@@ -3511,7 +3511,7 @@ feature {NONE} -- Visitor
 					l_veen2b.set_location (l_as.feature_name)
 					error_handler.insert_error (l_veen2b)
 				elseif attached context.object_test_local (l_as.feature_name.name_id) as i then
-					process_object_test_local (i, l_as)
+					process_object_test_local (i, l_as, False)
 				else
 						-- Look for a feature
 					l_feature := Void
@@ -4648,7 +4648,23 @@ feature {NONE} -- Visitor
 
 	process_predecessor_as (a: PREDECESSOR_AS)
 			-- <Precursor>
+		local
+			e: VEEN
 		do
+			reset_for_unqualified_call_checking
+			if
+				attached context.object_test_local (a.name.name_id) as i and then
+				i.is_cursor
+			then
+				process_object_test_local (i, create {ACCESS_INV_AS}.make (a.name, Void, Void), True)
+			else
+					-- Report an unknown entity name.
+				create e
+				context.init_error (e)
+				e.set_identifier (a.name.name)
+				e.set_location (a.start_location)
+				error_handler.insert_error (e)
+			end
 		end
 
 	process_type_expr_as (l_as: TYPE_EXPR_AS)

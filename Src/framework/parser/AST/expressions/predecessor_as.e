@@ -13,18 +13,18 @@ create
 
 feature {NONE} -- Initialization
 
-	initialize (f: like feature_name; s: like predecessor_symbol)
-			-- Create a new predecessor AST node.
+	initialize (n: like name; s: like predecessor_symbol)
+			-- Create a new predecessor AST node with name `n` and symbol `s`.
 		require
-			attached f
+			attached n
 		do
 			make_id_set
-			feature_name := f
+			name := n
 			if attached s then
 				predecessor_symbol_index := s.index
 			end
 		ensure
-			feature_name = f
+			name = n
 			predecessor_symbol_set: attached s implies predecessor_symbol_index = s.index
 			routine_ids.is_empty
 		end
@@ -63,8 +63,8 @@ feature -- Roundtrip
 
 feature -- Attributes
 
-	feature_name: FEATURE_NAME
-			-- Feature name to address.
+	name: ID_AS
+			-- The name of the variable.
 
 feature -- Roundtrip/Token
 
@@ -72,13 +72,13 @@ feature -- Roundtrip/Token
 		do
 			Result := predecessor_symbol (a_list)
 			if not attached Result then
-				Result := feature_name.first_token (a_list)
+				Result := name
 			end
 		end
 
 	last_token (a_list: detachable LEAF_AS_LIST): detachable LEAF_AS
 		do
-			Result := feature_name.last_token (a_list)
+			Result := name
 		end
 
 feature -- Comparison
@@ -86,13 +86,13 @@ feature -- Comparison
 	is_equivalent (other: like Current): BOOLEAN
 			-- Is `other' equivalent to the current object ?
 		do
-			Result := equivalent (feature_name, other.feature_name)
+			Result := equivalent (name, other.name)
 		end
 
 note
 	date: "$Date$"
 	revision: "$Revision$"
-	copyright: "Copyright (c) 2021, Eiffel Software"
+	copyright: "Copyright (c) 1984-2021, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

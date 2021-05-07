@@ -379,9 +379,9 @@ feature {NONE} -- Visitor implementation
 				recursive_descendants.has (a.class_id) and then
 				a.routine_ids /= Void and then
 				a.routine_ids.has (feature_i.rout_id_set.first) and then
-				old_feature_name.is_case_insensitive_equal (a.feature_name.visual_name)
+				old_feature_name.is_case_insensitive_equal (a.name.name)
 			then
-				a.feature_name.replace_text (new_feature_name, match_list)
+				a.name.replace_text (new_feature_name, match_list)
 				has_modified := True
 			end
 		end

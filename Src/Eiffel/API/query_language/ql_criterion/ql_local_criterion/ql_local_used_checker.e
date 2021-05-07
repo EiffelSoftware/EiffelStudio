@@ -74,7 +74,7 @@ feature{NONE} -- Access
 		do
 			if not last_is_used then
 				check last_local_name_id /= 0 end
-				last_is_used := a.feature_name.internal_name.name_id = last_local_name_id
+				last_is_used := a.name.name_id = last_local_name_id
 			end
 		end
 

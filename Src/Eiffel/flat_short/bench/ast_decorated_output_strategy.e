@@ -1705,7 +1705,6 @@ feature {NONE} -- Implementation
 	process_predecessor_as (a: PREDECESSOR_AS)
 			-- <Precursor>
 		local
-			l_feat: E_FEATURE
 			i: like {ID_SET_ACCESSOR}.class_id
 		do
 			reset_last_class_and_type
@@ -1713,7 +1712,7 @@ feature {NONE} -- Implementation
 				if not expr_type_visiting then
 					text_formatter_decorator.set_without_tabs
 					text_formatter_decorator.process_symbol_text (ti_at)
-					format_local_with_as (a.feature_name.internal_name)
+					format_local_with_as (a.name)
 				end
 				i := a.class_id
 				if
@@ -1722,7 +1721,7 @@ feature {NONE} -- Implementation
 					attached system.class_of_id (i) as c
 				then
 					last_class := c
-					last_type := object_test_locals_for_current_feature [a.feature_name.visual_name]
+					last_type := object_test_locals_for_current_feature [a.name.name]
 				else
 					last_class := current_class
 					last_type := last_class.actual_type

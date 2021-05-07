@@ -584,7 +584,7 @@ feature
 			-- <Precursor>
 		do
 			safe_process (a.predecessor_symbol (match_list))
-			safe_process (a.feature_name)
+			safe_process (a.name)
 		end
 
 	process_routine_creation_as (l_as: ROUTINE_CREATION_AS)

@@ -291,7 +291,7 @@ feature {NONE} -- Implementation
 	process_predecessor_as (a: PREDECESSOR_AS)
 			-- <Precursor>
 		do
-			safe_process (a.feature_name)
+			safe_process (a.name)
 		end
 
 	process_routine_creation_as (l_as: ROUTINE_CREATION_AS)

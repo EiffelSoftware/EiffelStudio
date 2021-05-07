@@ -19,7 +19,6 @@ inherit
 			process_class_type_as,
 			process_generic_class_type_as,
 			process_named_tuple_type_as,
-			process_predecessor_as,
 			process_rename_as,
 			process_client_as,
 			process_convert_feat_as,
@@ -146,12 +145,6 @@ feature {NONE} -- Implementation
 			create l_click_ast.initialize (l_as.class_name, l_as)
 			internal_click_list.extend (l_click_ast)
 			safe_process (l_as.generics)
-		end
-
-	process_predecessor_as (a: PREDECESSOR_AS)
-			-- <Precursor>
-		do
-			internal_click_list.extend (create {CLICK_AST}.initialize (a.feature_name, a.feature_name))
 		end
 
 	process_rename_as (l_as: RENAME_AS)

@@ -93,7 +93,6 @@ feature {NONE} -- Initialization
 				)
 
 			check cairo_surface.is_default_pointer end
-			get_new_cairo_surface
 
 			init_default_values
 --			disable_double_buffering -- deprecated!
@@ -131,8 +130,10 @@ feature -- filling operations
 			cr: like cairo_context
 		do
 			cr := cairo_context
-			check not cr.is_default_pointer end
-			release_cairo_context (cr)
+			if not cr.is_default_pointer then
+				release_cairo_context (cr)
+				cairo_context := default_pointer
+			end
 		end
 
 feature {EV_APPLICATION_IMP} -- Implementation
@@ -235,64 +236,59 @@ feature {EV_ANY_I} -- Implementation
 			l_surface,
 			l_widget,
 			l_window: POINTER
-			cr: POINTER
 		do
 			check
 				no_surface: cairo_surface.is_default_pointer
 			end
-			print (generator + ".get_cairo_surface%N")
+			debug ("gdk_event")
+				print (generator + ".get_new_cairo_surface%N")
+			end
 			l_widget := c_object
 			l_window := {GTK}.gtk_widget_get_window (l_widget)
 			if l_window /= default_pointer then
 				l_surface := {GDK}.gdk_window_create_similar_surface (
 						l_window,
-						{CAIRO}.cairo_content_color, -- TODO: use with _alpha ?
+						{CAIRO}.cairo_content_color_alpha,
 						{GTK}.gtk_widget_get_allocated_width (l_widget),
 						{GTK}.gtk_widget_get_allocated_height (l_widget)
 					)
 				cairo_surface := l_surface
-
-				get_new_cairo_context
-				cr := cairo_context
-				{CAIRO}.paint (cr)
-				{CAIRO}.destroy (cr)
-				cairo_context := default_pointer
 			end
 		end
 
 	get_cairo_context
 			-- Drawable used for rendering docking components.
---		require
---			no_drawable: cairo_context.is_default_pointer
 		local
 		 	l_surface, cr: POINTER
 		do
 			cr := cairo_context
 			if cr.is_default_pointer then
-						-- User is drawing directly to the window outside
-						-- of an expose event. We need to create a drawable
-						-- context for each draw operations.
 				l_surface := cairo_surface
-				if l_surface.is_default_pointer then
-					get_new_cairo_surface
-					l_surface := cairo_surface
-				end
+				if not l_surface.is_default_pointer then
+					cr := {CAIRO}.create_context (l_surface)
+					cairo_context := cr
 
-				cr := {CAIRO}.create_context (l_surface)
-				cairo_context := cr
-				initialize_cairo_context (cr)
+					initialize_cairo_context (cr)
+				end
 			end
 		end
 
 	release_cairo_context (cr: POINTER)
 			-- Release resources of cairo context `cr'.
+		local
+			retried: BOOLEAN
 		do
-			if
-				not in_expose_actions and
-				not cr.is_default_pointer
-			then
--- FIXME				{CAIRO}.destroy (cr)
+			if retried then
+			elseif cr.is_default_pointer then
+					-- Should not occur
+			elseif not in_expose_actions then
+				{CAIRO}.destroy (cr)
+			else
+				-- do not destroy
 			end
+		rescue
+			retried := True
+			retry
 		end
 
 feature {EV_INTERMEDIARY_ROUTINES} -- Implementation
@@ -305,24 +301,20 @@ feature {EV_INTERMEDIARY_ROUTINES} -- Implementation
 		local
 			l_x, l_y, l_width, l_height: REAL_64
 			l_surface: like cairo_surface
-			l_old_cr: like cairo_context
 		do
+			l_surface := cairo_surface;
 			debug ("gdk_event")
-				print (generator + ".process_draw_event ("+ a_cairo_context.out +")%N")
+				print (generator + ".process_draw_event ("+ a_cairo_context.out +")  surface=" + l_surface.out + "%N")
 			end
 
-			l_surface := cairo_surface;
 			check has_surface: not l_surface.is_default_pointer end
 
 			{CAIRO}.set_source_surface (a_cairo_context, l_surface, 0, 0) --l_x, l_y)
 
 			if attached expose_actions_internal as l_actions then
 				in_expose_actions := True
-				l_old_cr := cairo_context
-				cairo_context := a_cairo_context
 				{CAIRO}.clip_extents (a_cairo_context, $l_x, $l_y, $l_width, $l_height)
 				l_actions.call (l_x.truncated_to_integer, l_y.truncated_to_integer, l_width.truncated_to_integer, l_height.truncated_to_integer)
-				cairo_context := l_old_cr
 				in_expose_actions := False
 			end
 

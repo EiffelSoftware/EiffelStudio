@@ -1800,6 +1800,14 @@ feature -- Access
 			end
 		end
 
+	new_predecessor_as (n: detachable ID_AS; s: detachable SYMBOL_AS): detachable PREDECESSOR_AS
+			-- New predecessor AST node from name `n` and symbol `s`.
+		do
+			if attached n then
+				create Result.initialize (n, s)
+			end
+		end
+
 	new_qualified_anchored_type (t: detachable TYPE_AS; d: detachable SYMBOL_AS; f: detachable ID_AS): detachable QUALIFIED_ANCHORED_TYPE_AS
 			-- New QUALIFIED_ANCHORED_TYPE AST node for an anchored type of the form "t.f" where "t" is known to be an anchored type.
 		require

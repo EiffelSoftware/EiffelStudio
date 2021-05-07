@@ -63,7 +63,7 @@ inherit
 			new_symbol_as, new_square_symbol_as,
 			create_break_as, create_break_as_with_data,
 			new_filled_id_as_with_existing_stub,
-			new_feature_keyword_as,
+			new_feature_keyword_as, new_predecessor_as,
 			new_class_list_as, new_local_dec_list_as, new_formal_argu_dec_list_as, new_key_list_as,
 			new_delayed_actual_list_as, new_parameter_list_as,
 			new_rename_clause_as, new_export_clause_as, new_undefine_clause_as, new_redefine_clause_as, new_select_clause_as,
@@ -974,6 +974,11 @@ feature -- Access
 		do
 		end
 
+	new_predecessor_as (n: detachable ID_AS; s: detachable SYMBOL_AS): detachable PREDECESSOR_AS
+			-- <Precursor>
+		do
+		end
+
 	new_real_as (t: detachable TYPE_AS; v: detachable READABLE_STRING_8; buf: READABLE_STRING_8; s_as: detachable SYMBOL_AS; l, c, p, n, cc, cp, cn: INTEGER): detachable REAL_AS
 			-- New REAL AST node
 		do
@@ -1170,7 +1175,7 @@ note
 		"CA033", "CA033: very long class"
 	date: "$Date$"
 	revision: "$Revision$"
-	copyright:	"Copyright (c) 1984-2020, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2021, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

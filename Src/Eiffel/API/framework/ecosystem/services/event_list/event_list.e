@@ -310,7 +310,11 @@ feature {NONE} -- Events
 			a_event_attached: a_event_item /= Void
 			current_contains_a_event: a_event_item.is_persistent implies all_items.has (a_event_item)
 		do
-			if is_interface_usable and then item_added_event.is_interface_usable then
+			if
+				is_interface_usable and then
+				item_added_event.is_interface_usable and then
+				not item_added_event.is_publishing
+			then
 				item_added_event.publish ([Current, a_event_item])
 			end
 		end
@@ -325,7 +329,11 @@ feature {NONE} -- Events
 			a_event_item_is_persistent: a_event_item.is_persistent
 			not_current_contains_a_event: not all_items.has (a_event_item)
 		do
-			if is_interface_usable and then item_removed_event.is_interface_usable then
+			if
+				is_interface_usable and then
+				item_removed_event.is_interface_usable  and then
+				not item_removed_event.is_publishing
+			then
 				item_removed_event.publish ([Current, a_event_item])
 			end
 		end
@@ -340,7 +348,11 @@ feature {NONE} -- Events
 			a_event_item_is_persistent: a_event_item.is_persistent
 			current_contains_a_event: all_items.has (a_event_item)
 		do
-			if is_interface_usable and then item_changed_event.is_interface_usable then
+			if
+				is_interface_usable and then
+				item_changed_event.is_interface_usable and then
+				not item_changed_event.is_publishing
+			then
 				item_changed_event.publish ([Current, a_event_item])
 			end
 		end
@@ -362,7 +374,11 @@ feature {NONE} -- Events
 			not_a_old_cookie_items_contains_a_event_item: not items (a_old_cookie).has (a_event_item)
 			a_new_cookie_items_contains_a_event_item: items (a_new_cookie).has (a_event_item)
 		do
-			if is_interface_usable and then item_adopted_event.is_interface_usable then
+			if
+				is_interface_usable and then
+			 	item_adopted_event.is_interface_usable and then
+			 	not item_adopted_event.is_publishing
+			 then
 				item_adopted_event.publish ([Current, a_event_item, a_new_cookie, a_old_cookie])
 			end
 		end
@@ -372,7 +388,11 @@ feature {NONE} -- Events
 		require
 			is_interface_usable: is_interface_usable
 		do
-			if is_interface_usable and then item_clean_up_event.is_interface_usable then
+			if
+				is_interface_usable and then
+			 	item_clean_up_event.is_interface_usable and then
+			 	not item_clean_up_event.is_publishing
+			 then
 				item_clean_up_event.publish ([Current])
 			end
 		end
@@ -396,7 +416,7 @@ invariant
 	internal_event_items_index_contains_attached_items: not internal_event_items_index.has_item (Void)
 
 ;note
-	copyright: "Copyright (c) 1984-2018, Eiffel Software"
+	copyright: "Copyright (c) 1984-2021, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

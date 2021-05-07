@@ -40,6 +40,12 @@ feature {NONE} -- Initialization
 
 feature {EV_ANY_I} -- Implementation
 
+	get_drawable: like cairo_context
+			-- Bridge to `cairo_context` for backward compatibility.
+		do
+			Result := cairo_context
+		end
+
 	cairo_context: POINTER
 			-- Pointer to the current Cairo context for `Current'.
 
@@ -753,6 +759,12 @@ feature -- filling operations
 		end
 
 feature {EV_ANY_I} -- Implementation
+
+	release_drawable (a_drawable: POINTER)
+			--| Kept for backward compatibility.
+		do
+			release_cairo_context (a_drawable)
+		end
 
 	release_cairo_context (cr: POINTER)
 			-- Release resources of cairo context `cr'.

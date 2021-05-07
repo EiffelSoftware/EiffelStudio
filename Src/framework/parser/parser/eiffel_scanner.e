@@ -914,6 +914,68 @@ end
 				end
 			
 when 62 then
+	yy_column := yy_column + yy_end - yy_start - yy_more_len
+	yy_position := yy_position + yy_end - yy_start - yy_more_len
+--|#line <not available> "eiffel.l"
+debug ("GELEX")
+	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line <not available>")
+end
+
+				update_character_locations
+				last_token := TE_FREE
+				process_id_as
+				if
+					syntax_version /= obsolete_syntax and then
+					has_syntax_warning
+				then
+					report_one_warning
+						(create {SYNTAX_WARNING}.make (line, column, filename,
+						locale.formatted_string (locale.translation_in_context (once "Obsolete operator notation `$1` is used. Replace it with a contemporary operator (if available) or an unfolded feature call.", once "parser.eiffel.warning"), unicode_text)))
+				end
+			
+when 63 then
+	yy_end := yy_end - 1
+	yy_column := yy_column + yy_end - yy_start - yy_more_len
+	yy_position := yy_position + yy_end - yy_start - yy_more_len
+--|#line <not available> "eiffel.l"
+debug ("GELEX")
+	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line <not available>")
+end
+
+				update_character_locations
+				last_token := TE_FREE
+				process_id_as
+				if
+					syntax_version /= obsolete_syntax and then
+					has_syntax_warning
+				then
+					report_one_warning
+						(create {SYNTAX_WARNING}.make (line, column, filename,
+						locale.formatted_string (locale.translation_in_context (once "Obsolete operator notation `$1` is used. Replace it with a contemporary operator (if available) or an unfolded feature call.", once "parser.eiffel.warning"), unicode_text)))
+				end
+			
+when 64 then
+	yy_end := yy_end - 2
+	yy_column := yy_column + yy_end - yy_start - yy_more_len
+	yy_position := yy_position + yy_end - yy_start - yy_more_len
+--|#line <not available> "eiffel.l"
+debug ("GELEX")
+	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line <not available>")
+end
+
+				update_character_locations
+				last_token := TE_FREE
+				process_id_as
+				if
+					syntax_version /= obsolete_syntax and then
+					has_syntax_warning
+				then
+					report_one_warning
+						(create {SYNTAX_WARNING}.make (line, column, filename,
+						locale.formatted_string (locale.translation_in_context (once "Obsolete operator notation `$1` is used. Replace it with a contemporary operator (if available) or an unfolded feature call.", once "parser.eiffel.warning"), unicode_text)))
+				end
+			
+when 65 then
 	yy_column := yy_column + 6
 	yy_position := yy_position + 6
 --|#line <not available> "eiffel.l"
@@ -935,7 +997,7 @@ end
 					end
 				end
 			
-when 63 then
+when 66 then
 	yy_column := yy_column + 5
 	yy_position := yy_position + 5
 --|#line <not available> "eiffel.l"
@@ -947,7 +1009,7 @@ end
 				last_detachable_keyword_as_value := ast_factory.new_keyword_as (TE_AGENT, Current)
 				last_token := TE_AGENT
 			
-when 64 then
+when 67 then
 	yy_column := yy_column + 5
 	yy_position := yy_position + 5
 --|#line <not available> "eiffel.l"
@@ -959,7 +1021,7 @@ end
 				last_detachable_keyword_as_value := ast_factory.new_keyword_as (TE_ALIAS, Current)
 				last_token := TE_ALIAS
 			
-when 65 then
+when 68 then
 	yy_column := yy_column + 3
 	yy_position := yy_position + 3
 --|#line <not available> "eiffel.l"
@@ -971,7 +1033,7 @@ end
 				last_detachable_keyword_as_value := ast_factory.new_keyword_as (TE_ALL, Current)
 				last_token := TE_ALL
 			
-when 66 then
+when 69 then
 	yy_column := yy_column + 3
 	yy_position := yy_position + 3
 --|#line <not available> "eiffel.l"
@@ -983,7 +1045,7 @@ end
 				last_detachable_keyword_as_value := ast_factory.new_keyword_as (TE_AND, Current)
 				last_token := TE_AND
 			
-when 67 then
+when 70 then
 	yy_column := yy_column + 2
 	yy_position := yy_position + 2
 --|#line <not available> "eiffel.l"
@@ -995,7 +1057,7 @@ end
 				last_detachable_keyword_as_value := ast_factory.new_keyword_as (TE_AS, Current)
 				last_token := TE_AS
 			
-when 68 then
+when 71 then
 	yy_column := yy_column + 6
 	yy_position := yy_position + 6
 --|#line <not available> "eiffel.l"
@@ -1007,7 +1069,7 @@ end
 				last_keyword_id_value := ast_factory.new_keyword_id_as (TE_ASSIGN, Current)
 				last_token := TE_ASSIGN
 			
-when 69 then
+when 72 then
 	yy_column := yy_column + 8
 	yy_position := yy_position + 8
 --|#line <not available> "eiffel.l"
@@ -1029,7 +1091,7 @@ end
 					end
 				end
 			
-when 70 then
+when 73 then
 	yy_column := yy_column + 9
 	yy_position := yy_position + 9
 --|#line <not available> "eiffel.l"
@@ -1051,7 +1113,7 @@ end
 					end
 				end
 			
-when 71 then
+when 74 then
 	yy_column := yy_column + 5
 	yy_position := yy_position + 5
 --|#line <not available> "eiffel.l"
@@ -1063,7 +1125,7 @@ end
 				last_detachable_keyword_as_value := ast_factory.new_keyword_as (TE_CHECK, Current)
 				last_token := TE_CHECK
 			
-when 72 then
+when 75 then
 	yy_column := yy_column + 5
 	yy_position := yy_position + 5
 --|#line <not available> "eiffel.l"
@@ -1075,7 +1137,7 @@ end
 				last_detachable_keyword_as_value := ast_factory.new_keyword_as (TE_CLASS, Current)
 				last_token := TE_CLASS
 			
-when 73 then
+when 76 then
 	yy_column := yy_column + 7
 	yy_position := yy_position + 7
 --|#line <not available> "eiffel.l"
@@ -1087,7 +1149,7 @@ end
 				last_detachable_keyword_as_value := ast_factory.new_keyword_as (TE_CONVERT, Current)
 				last_token := TE_CONVERT
 			
-when 74 then
+when 77 then
 	yy_column := yy_column + 6
 	yy_position := yy_position + 6
 --|#line <not available> "eiffel.l"
@@ -1099,7 +1161,7 @@ end
 				last_detachable_keyword_as_value := ast_factory.new_keyword_as (TE_CREATE, Current)
 				last_token := TE_CREATE
 			
-when 75 then
+when 78 then
 	yy_column := yy_column + 8
 	yy_position := yy_position + 8
 --|#line <not available> "eiffel.l"
@@ -1111,7 +1173,7 @@ end
 				last_detachable_keyword_as_value := ast_factory.new_creation_keyword_as (Current)
 				last_token := TE_CREATION
 			
-when 76 then
+when 79 then
 	yy_column := yy_column + 7
 	yy_position := yy_position + 7
 --|#line <not available> "eiffel.l"
@@ -1123,7 +1185,7 @@ end
 				last_detachable_current_as_value := ast_factory.new_current_as (Current)
 				last_token := TE_CURRENT
 			
-when 77 then
+when 80 then
 	yy_column := yy_column + 5
 	yy_position := yy_position + 5
 --|#line <not available> "eiffel.l"
@@ -1135,7 +1197,7 @@ end
 				last_detachable_keyword_as_value := ast_factory.new_keyword_as (TE_DEBUG, Current)
 				last_token := TE_DEBUG
 			
-when 78 then
+when 81 then
 	yy_column := yy_column + 8
 	yy_position := yy_position + 8
 --|#line <not available> "eiffel.l"
@@ -1147,7 +1209,7 @@ end
 				last_detachable_deferred_as_value := ast_factory.new_deferred_as (Current)
 				last_token := TE_DEFERRED
 			
-when 79 then
+when 82 then
 	yy_column := yy_column + 10
 	yy_position := yy_position + 10
 --|#line <not available> "eiffel.l"
@@ -1169,7 +1231,7 @@ end
 					end
 				end
 			
-when 80 then
+when 83 then
 	yy_column := yy_column + 2
 	yy_position := yy_position + 2
 --|#line <not available> "eiffel.l"
@@ -1181,7 +1243,7 @@ end
 				last_detachable_keyword_as_value := ast_factory.new_keyword_as (TE_DO, Current)
 				last_token := TE_DO
 			
-when 81 then
+when 84 then
 	yy_column := yy_column + 4
 	yy_position := yy_position + 4
 --|#line <not available> "eiffel.l"
@@ -1193,7 +1255,7 @@ end
 				last_detachable_keyword_as_value := ast_factory.new_keyword_as (TE_ELSE, Current)
 				last_token := TE_ELSE
 			
-when 82 then
+when 85 then
 	yy_column := yy_column + 6
 	yy_position := yy_position + 6
 --|#line <not available> "eiffel.l"
@@ -1205,7 +1267,7 @@ end
 				last_detachable_keyword_as_value := ast_factory.new_keyword_as (TE_ELSEIF, Current)
 				last_token := TE_ELSEIF
 			
-when 83 then
+when 86 then
 	yy_column := yy_column + 3
 	yy_position := yy_position + 3
 --|#line <not available> "eiffel.l"
@@ -1217,7 +1279,7 @@ end
 				last_detachable_keyword_as_value := ast_factory.new_end_keyword_as (Current)
 				last_token := TE_END
 			
-when 84 then
+when 87 then
 	yy_column := yy_column + 6
 	yy_position := yy_position + 6
 --|#line <not available> "eiffel.l"
@@ -1229,7 +1291,7 @@ end
 				last_detachable_keyword_as_value := ast_factory.new_keyword_as (TE_ENSURE, Current)
 				last_token := TE_ENSURE
 			
-when 85 then
+when 88 then
 	yy_column := yy_column + 8
 	yy_position := yy_position + 8
 --|#line <not available> "eiffel.l"
@@ -1241,7 +1303,7 @@ end
 				last_detachable_keyword_as_value := ast_factory.new_keyword_as (TE_EXPANDED, Current)
 				last_token := TE_EXPANDED
 			
-when 86 then
+when 89 then
 	yy_column := yy_column + 6
 	yy_position := yy_position + 6
 --|#line <not available> "eiffel.l"
@@ -1253,7 +1315,7 @@ end
 				last_detachable_keyword_as_value := ast_factory.new_keyword_as (TE_EXPORT, Current)
 				last_token := TE_EXPORT
 			
-when 87 then
+when 90 then
 	yy_column := yy_column + 8
 	yy_position := yy_position + 8
 --|#line <not available> "eiffel.l"
@@ -1265,7 +1327,7 @@ end
 				last_detachable_keyword_as_value := ast_factory.new_keyword_as (TE_EXTERNAL, Current)
 				last_token := TE_EXTERNAL
 			
-when 88 then
+when 91 then
 	yy_column := yy_column + 5
 	yy_position := yy_position + 5
 --|#line <not available> "eiffel.l"
@@ -1277,7 +1339,7 @@ end
 				last_detachable_bool_as_value := ast_factory.new_boolean_as (False, Current)
 				last_token := TE_FALSE
 			
-when 89 then
+when 92 then
 	yy_column := yy_column + 7
 	yy_position := yy_position + 7
 --|#line <not available> "eiffel.l"
@@ -1289,7 +1351,7 @@ end
 				last_detachable_keyword_as_value := ast_factory.new_keyword_as (TE_FEATURE, Current)
 				last_token := TE_FEATURE
 			
-when 90 then
+when 93 then
 	yy_column := yy_column + 4
 	yy_position := yy_position + 4
 --|#line <not available> "eiffel.l"
@@ -1301,7 +1363,7 @@ end
 				last_detachable_keyword_as_value := ast_factory.new_keyword_as (TE_FROM, Current)
 				last_token := TE_FROM
 			
-when 91 then
+when 94 then
 	yy_column := yy_column + 6
 	yy_position := yy_position + 6
 --|#line <not available> "eiffel.l"
@@ -1313,7 +1375,7 @@ end
 				last_detachable_keyword_as_value := ast_factory.new_frozen_keyword_as (Current)
 				last_token := TE_FROZEN
 			
-when 92 then
+when 95 then
 	yy_column := yy_column + 2
 	yy_position := yy_position + 2
 --|#line <not available> "eiffel.l"
@@ -1325,7 +1387,7 @@ end
 				last_detachable_keyword_as_value := ast_factory.new_keyword_as (TE_IF, Current)
 				last_token := TE_IF
 			
-when 93 then
+when 96 then
 	yy_column := yy_column + 7
 	yy_position := yy_position + 7
 --|#line <not available> "eiffel.l"
@@ -1337,7 +1399,7 @@ end
 				last_detachable_keyword_as_value := ast_factory.new_keyword_as (TE_IMPLIES, Current)
 				last_token := TE_IMPLIES
 			
-when 94 then
+when 97 then
 	yy_column := yy_column + 8
 	yy_position := yy_position + 8
 --|#line <not available> "eiffel.l"
@@ -1360,7 +1422,7 @@ end
 
 				end
 			
-when 95 then
+when 98 then
 	yy_column := yy_column + 7
 	yy_position := yy_position + 7
 --|#line <not available> "eiffel.l"
@@ -1372,7 +1434,7 @@ end
 				last_detachable_keyword_as_value := ast_factory.new_keyword_as (TE_INHERIT, Current)
 				last_token := TE_INHERIT
 			
-when 96 then
+when 99 then
 	yy_column := yy_column + 7
 	yy_position := yy_position + 7
 --|#line <not available> "eiffel.l"
@@ -1384,7 +1446,7 @@ end
 				last_detachable_keyword_as_value := ast_factory.new_keyword_as (TE_INSPECT, Current)
 				last_token := TE_INSPECT
 			
-when 97 then
+when 100 then
 	yy_column := yy_column + 9
 	yy_position := yy_position + 9
 --|#line <not available> "eiffel.l"
@@ -1396,7 +1458,7 @@ end
 				last_detachable_keyword_as_value := ast_factory.new_keyword_as (TE_INVARIANT, Current)
 				last_token := TE_INVARIANT
 			
-when 98 then
+when 101 then
 	yy_column := yy_column + 2
 	yy_position := yy_position + 2
 --|#line <not available> "eiffel.l"
@@ -1408,7 +1470,7 @@ end
 				last_keyword_id_value := ast_factory.new_keyword_id_as (TE_IS, Current)
 				last_token := TE_IS
 			
-when 99 then
+when 102 then
 	yy_column := yy_column + 4
 	yy_position := yy_position + 4
 --|#line <not available> "eiffel.l"
@@ -1420,7 +1482,7 @@ end
 				last_detachable_keyword_as_value := ast_factory.new_keyword_as (TE_LIKE, Current)
 				last_token := TE_LIKE
 			
-when 100 then
+when 103 then
 	yy_column := yy_column + 5
 	yy_position := yy_position + 5
 --|#line <not available> "eiffel.l"
@@ -1432,7 +1494,7 @@ end
 				last_detachable_keyword_as_value := ast_factory.new_keyword_as (TE_LOCAL, Current)
 				last_token := TE_LOCAL
 			
-when 101 then
+when 104 then
 	yy_column := yy_column + 4
 	yy_position := yy_position + 4
 --|#line <not available> "eiffel.l"
@@ -1444,7 +1506,7 @@ end
 				last_detachable_keyword_as_value := ast_factory.new_keyword_as (TE_LOOP, Current)
 				last_token := TE_LOOP
 			
-when 102 then
+when 105 then
 	yy_column := yy_column + 3
 	yy_position := yy_position + 3
 --|#line <not available> "eiffel.l"
@@ -1456,7 +1518,7 @@ end
 				last_detachable_keyword_as_value := ast_factory.new_keyword_as (TE_NOT, Current)
 				last_token := TE_NOT
 			
-when 103 then
+when 106 then
 	yy_column := yy_column + 4
 	yy_position := yy_position + 4
 --|#line <not available> "eiffel.l"
@@ -1478,7 +1540,7 @@ end
 					end
 				end
 			
-when 104 then
+when 107 then
 	yy_column := yy_column + 8
 	yy_position := yy_position + 8
 --|#line <not available> "eiffel.l"
@@ -1490,7 +1552,7 @@ end
 				last_detachable_keyword_as_value := ast_factory.new_keyword_as (TE_OBSOLETE, Current)
 				last_token := TE_OBSOLETE
 			
-when 105 then
+when 108 then
 	yy_column := yy_column + 3
 	yy_position := yy_position + 3
 --|#line <not available> "eiffel.l"
@@ -1502,7 +1564,7 @@ end
 				last_detachable_keyword_as_value := ast_factory.new_keyword_as (TE_OLD, Current)
 				last_token := TE_OLD
 			
-when 106 then
+when 109 then
 	yy_end := yy_end - 1
 	yy_column := yy_column + 4
 	yy_position := yy_position + 4
@@ -1516,7 +1578,7 @@ end
 				last_detachable_keyword_as_value := ast_factory.new_once_string_keyword_as (utf8_text, line, column, position, 4, character_column, character_position, 4)
 				last_token := TE_ONCE_STRING
 			
-when 107 then
+when 110 then
 	yy_end := yy_end - 1
 yy_set_line_column
 	yy_position := yy_position + yy_end - yy_start - yy_more_len
@@ -1532,7 +1594,7 @@ end
 				ast_factory.create_break_as_with_data (utf8_text_substring (5, text_count), line, column + 4, position + 4, text_count - 4, character_column + 4, character_position + 4, unicode_text_count - 4)
 				last_token := TE_ONCE_STRING
 			
-when 108 then
+when 111 then
 	yy_column := yy_column + 4
 	yy_position := yy_position + 4
 --|#line <not available> "eiffel.l"
@@ -1544,7 +1606,7 @@ end
 				last_detachable_keyword_as_value := ast_factory.new_keyword_as (TE_ONCE, Current)
 				last_token := TE_ONCE
 			
-when 109 then
+when 112 then
 	yy_column := yy_column + 4
 	yy_position := yy_position + 4
 --|#line <not available> "eiffel.l"
@@ -1561,7 +1623,7 @@ end
 						locale.translation_in_context (once "Use of `only`, possibly a new keyword in the future standard of Eiffel.", once "parser.eiffel.warning")))
 				end
 			
-when 110 then
+when 113 then
 	yy_column := yy_column + 2
 	yy_position := yy_position + 2
 --|#line <not available> "eiffel.l"
@@ -1573,7 +1635,7 @@ end
 				last_detachable_keyword_as_value := ast_factory.new_keyword_as (TE_OR, Current)
 				last_token := TE_OR
 			
-when 111 then
+when 114 then
 yy_set_line_column
 	yy_position := yy_position + yy_end - yy_start - yy_more_len
 --|#line <not available> "eiffel.l"
@@ -1585,7 +1647,7 @@ end
 				last_detachable_keyword_as_value := ast_factory.new_keyword_as (TE_PARTIAL_CLASS, Current)
 				last_token := TE_PARTIAL_CLASS
 			
-when 112 then
+when 115 then
 	yy_column := yy_column + 9
 	yy_position := yy_position + 9
 --|#line <not available> "eiffel.l"
@@ -1597,7 +1659,7 @@ end
 				last_detachable_keyword_as_value := ast_factory.new_precursor_keyword_as (Current)
 				last_token := TE_PRECURSOR
 			
-when 113 then
+when 116 then
 	yy_column := yy_column + 8
 	yy_position := yy_position + 8
 --|#line <not available> "eiffel.l"
@@ -1609,7 +1671,7 @@ end
 				last_detachable_keyword_as_value := ast_factory.new_keyword_as (TE_REDEFINE, Current)
 				last_token := TE_REDEFINE
 			
-when 114 then
+when 117 then
 	yy_column := yy_column + 9
 	yy_position := yy_position + 9
 --|#line <not available> "eiffel.l"
@@ -1621,7 +1683,7 @@ end
 				last_detachable_keyword_as_value := ast_factory.new_keyword_as (TE_REFERENCE, Current)
 				last_token := TE_REFERENCE
 			
-when 115 then
+when 118 then
 	yy_column := yy_column + 6
 	yy_position := yy_position + 6
 --|#line <not available> "eiffel.l"
@@ -1633,7 +1695,7 @@ end
 				last_detachable_keyword_as_value := ast_factory.new_keyword_as (TE_RENAME, Current)
 				last_token := TE_RENAME
 			
-when 116 then
+when 119 then
 	yy_column := yy_column + 7
 	yy_position := yy_position + 7
 --|#line <not available> "eiffel.l"
@@ -1645,7 +1707,7 @@ end
 				last_detachable_keyword_as_value := ast_factory.new_keyword_as (TE_REQUIRE, Current)
 				last_token := TE_REQUIRE
 			
-when 117 then
+when 120 then
 	yy_column := yy_column + 6
 	yy_position := yy_position + 6
 --|#line <not available> "eiffel.l"
@@ -1657,7 +1719,7 @@ end
 				last_detachable_keyword_as_value := ast_factory.new_keyword_as (TE_RESCUE, Current)
 				last_token := TE_RESCUE
 			
-when 118 then
+when 121 then
 	yy_column := yy_column + 6
 	yy_position := yy_position + 6
 --|#line <not available> "eiffel.l"
@@ -1669,7 +1731,7 @@ end
 				last_detachable_result_as_value := ast_factory.new_result_as (Current)
 				last_token := TE_RESULT
 			
-when 119 then
+when 122 then
 	yy_column := yy_column + 5
 	yy_position := yy_position + 5
 --|#line <not available> "eiffel.l"
@@ -1681,7 +1743,7 @@ end
 				last_detachable_retry_as_value := ast_factory.new_retry_as (Current)
 				last_token := TE_RETRY
 			
-when 120 then
+when 123 then
 	yy_column := yy_column + 6
 	yy_position := yy_position + 6
 --|#line <not available> "eiffel.l"
@@ -1693,7 +1755,7 @@ end
 				last_detachable_keyword_as_value := ast_factory.new_keyword_as (TE_SELECT, Current)
 				last_token := TE_SELECT
 			
-when 121 then
+when 124 then
 	yy_column := yy_column + 8
 	yy_position := yy_position + 8
 --|#line <not available> "eiffel.l"
@@ -1705,7 +1767,7 @@ end
 				last_detachable_keyword_as_value := ast_factory.new_keyword_as (TE_SEPARATE, Current)
 				last_token := TE_SEPARATE
 			
-when 122 then
+when 125 then
 	yy_column := yy_column + 4
 	yy_position := yy_position + 4
 --|#line <not available> "eiffel.l"
@@ -1727,7 +1789,7 @@ end
 					end
 				end
 			
-when 123 then
+when 126 then
 	yy_column := yy_column + 5
 	yy_position := yy_position + 5
 --|#line <not available> "eiffel.l"
@@ -1739,7 +1801,7 @@ end
 				last_detachable_keyword_as_value := ast_factory.new_keyword_as (TE_STRIP, Current)
 				last_token := TE_STRIP
 			
-when 124 then
+when 127 then
 	yy_column := yy_column + 4
 	yy_position := yy_position + 4
 --|#line <not available> "eiffel.l"
@@ -1751,7 +1813,7 @@ end
 				last_detachable_keyword_as_value := ast_factory.new_keyword_as (TE_THEN, Current)
 				last_token := TE_THEN
 			
-when 125 then
+when 128 then
 	yy_column := yy_column + 4
 	yy_position := yy_position + 4
 --|#line <not available> "eiffel.l"
@@ -1763,7 +1825,7 @@ end
 				last_detachable_bool_as_value := ast_factory.new_boolean_as (True, Current)
 				last_token := TE_TRUE
 			
-when 126 then
+when 129 then
 	yy_column := yy_column + 5
 	yy_position := yy_position + 5
 --|#line <not available> "eiffel.l"
@@ -1775,7 +1837,7 @@ end
 				last_token := TE_TUPLE
 				process_id_as
 			
-when 127 then
+when 130 then
 	yy_column := yy_column + 8
 	yy_position := yy_position + 8
 --|#line <not available> "eiffel.l"
@@ -1787,7 +1849,7 @@ end
 				last_detachable_keyword_as_value := ast_factory.new_keyword_as (TE_UNDEFINE, Current)
 				last_token := TE_UNDEFINE
 			
-when 128 then
+when 131 then
 	yy_column := yy_column + 6
 	yy_position := yy_position + 6
 --|#line <not available> "eiffel.l"
@@ -1799,7 +1861,7 @@ end
 				last_detachable_unique_as_value := ast_factory.new_unique_as (Current)
 				last_token := TE_UNIQUE
 			
-when 129 then
+when 132 then
 	yy_column := yy_column + 5
 	yy_position := yy_position + 5
 --|#line <not available> "eiffel.l"
@@ -1811,7 +1873,7 @@ end
 				last_detachable_keyword_as_value := ast_factory.new_keyword_as (TE_UNTIL, Current)
 				last_token := TE_UNTIL
 			
-when 130 then
+when 133 then
 	yy_column := yy_column + 7
 	yy_position := yy_position + 7
 --|#line <not available> "eiffel.l"
@@ -1823,7 +1885,7 @@ end
 				last_detachable_keyword_as_value := ast_factory.new_keyword_as (TE_VARIANT, Current)
 				last_token := TE_VARIANT
 			
-when 131 then
+when 134 then
 	yy_column := yy_column + 4
 	yy_position := yy_position + 4
 --|#line <not available> "eiffel.l"
@@ -1835,7 +1897,7 @@ end
 				last_detachable_void_as_value := ast_factory.new_void_as (Current)
 				last_token := TE_VOID
 			
-when 132 then
+when 135 then
 	yy_column := yy_column + 4
 	yy_position := yy_position + 4
 --|#line <not available> "eiffel.l"
@@ -1847,7 +1909,7 @@ end
 				last_detachable_keyword_as_value := ast_factory.new_keyword_as (TE_WHEN, Current)
 				last_token := TE_WHEN
 			
-when 133 then
+when 136 then
 	yy_column := yy_column + 3
 	yy_position := yy_position + 3
 --|#line <not available> "eiffel.l"
@@ -1859,7 +1921,7 @@ end
 				last_detachable_keyword_as_value := ast_factory.new_keyword_as (TE_XOR, Current)
 				last_token := TE_XOR
 			
-when 134 then
+when 137 then
 	yy_column := yy_column + yy_end - yy_start - yy_more_len
 	yy_position := yy_position + yy_end - yy_start - yy_more_len
 --|#line <not available> "eiffel.l"
@@ -1871,7 +1933,7 @@ end
 				last_token := TE_ID
 				process_id_as
 			
-when 135 then
+when 138 then
 	yy_column := yy_column + yy_end - yy_start - yy_more_len
 	yy_position := yy_position + yy_end - yy_start - yy_more_len
 --|#line <not available> "eiffel.l"
@@ -1889,7 +1951,7 @@ end
 				append_utf8_text_to_string (token_buffer)
 				last_token := TE_INTEGER
 			
-when 136 then
+when 139 then
 	yy_end := yy_end - 2
 	yy_column := yy_column + yy_end - yy_start - yy_more_len
 	yy_position := yy_position + yy_end - yy_start - yy_more_len
@@ -1908,7 +1970,7 @@ end
 				append_utf8_text_to_string (token_buffer)
 				last_token := TE_INTEGER
 			
-when 137 then
+when 140 then
 	yy_column := yy_column + yy_end - yy_start - yy_more_len
 	yy_position := yy_position + yy_end - yy_start - yy_more_len
 --|#line <not available> "eiffel.l"
@@ -1921,7 +1983,7 @@ end
 				append_utf8_text_to_string (token_buffer)
 				last_token := TE_INTEGER
 			
-when 138 then
+when 141 then
 	yy_column := yy_column + yy_end - yy_start - yy_more_len
 	yy_position := yy_position + yy_end - yy_start - yy_more_len
 --|#line <not available> "eiffel.l"
@@ -1934,7 +1996,7 @@ end
 				append_utf8_text_to_string (token_buffer)
 				last_token := TE_INTEGER
 			
-when 139 then
+when 142 then
 	yy_column := yy_column + yy_end - yy_start - yy_more_len
 	yy_position := yy_position + yy_end - yy_start - yy_more_len
 --|#line <not available> "eiffel.l"
@@ -1947,7 +2009,7 @@ end
 				append_utf8_text_to_string (token_buffer)
 				last_token := TE_INTEGER
 			
-when 140 then
+when 143 then
 	yy_column := yy_column + yy_end - yy_start - yy_more_len
 	yy_position := yy_position + yy_end - yy_start - yy_more_len
 --|#line <not available> "eiffel.l"
@@ -1958,7 +2020,7 @@ end
 				update_character_locations
 				report_invalid_integer_error (token_buffer)
 			
-when 141 then
+when 144 then
 	yy_column := yy_column + yy_end - yy_start - yy_more_len
 	yy_position := yy_position + yy_end - yy_start - yy_more_len
 --|#line <not available> "eiffel.l"
@@ -1972,7 +2034,7 @@ end
 				token_buffer.to_lower
 				last_token := TE_REAL
 			
-when 142 then
+when 145 then
 	yy_column := yy_column + 3
 	yy_position := yy_position + 3
 --|#line <not available> "eiffel.l"
@@ -1985,7 +2047,7 @@ end
 				last_detachable_char_as_value := ast_factory.new_character_as (char_32_from_source (utf8_text_substring (2, text_count - 1)), line, column, position, text_count, character_column, character_position, unicode_text_count, roundtrip_token_buffer)
 				last_token := TE_CHAR
 			
-when 143 then
+when 146 then
 	yy_column := yy_column + 3
 	yy_position := yy_position + 3
 --|#line <not available> "eiffel.l"
@@ -1999,7 +2061,7 @@ end
 				last_detachable_char_as_value := ast_factory.new_character_as ('%'', line, column, position, text_count, character_column, character_position, unicode_text_count, roundtrip_token_buffer)
 				last_token := TE_CHAR
 			
-when 144 then
+when 147 then
 	yy_column := yy_column + 4
 	yy_position := yy_position + 4
 --|#line <not available> "eiffel.l"
@@ -2012,7 +2074,7 @@ end
 				last_detachable_char_as_value := ast_factory.new_character_as ('%A', line, column, position, text_count, character_column, character_position, unicode_text_count, roundtrip_token_buffer)
 				last_token := TE_CHAR
 			
-when 145 then
+when 148 then
 	yy_column := yy_column + 4
 	yy_position := yy_position + 4
 --|#line <not available> "eiffel.l"
@@ -2025,7 +2087,7 @@ end
 				last_detachable_char_as_value := ast_factory.new_character_as ('%B', line, column, position, text_count, character_column, character_position, unicode_text_count, roundtrip_token_buffer)
 				last_token := TE_CHAR
 			
-when 146 then
+when 149 then
 	yy_column := yy_column + 4
 	yy_position := yy_position + 4
 --|#line <not available> "eiffel.l"
@@ -2038,7 +2100,7 @@ end
 				last_detachable_char_as_value := ast_factory.new_character_as ('%C', line, column, position, text_count, character_column, character_position, unicode_text_count, roundtrip_token_buffer)
 				last_token := TE_CHAR
 			
-when 147 then
+when 150 then
 	yy_column := yy_column + 4
 	yy_position := yy_position + 4
 --|#line <not available> "eiffel.l"
@@ -2051,7 +2113,7 @@ end
 				last_detachable_char_as_value := ast_factory.new_character_as ('%D', line, column, position, text_count, character_column, character_position, unicode_text_count, roundtrip_token_buffer)
 				last_token := TE_CHAR
 			
-when 148 then
+when 151 then
 	yy_column := yy_column + 4
 	yy_position := yy_position + 4
 --|#line <not available> "eiffel.l"
@@ -2064,7 +2126,7 @@ end
 				last_detachable_char_as_value := ast_factory.new_character_as ('%F', line, column, position, text_count, character_column, character_position, unicode_text_count, roundtrip_token_buffer)
 				last_token := TE_CHAR
 			
-when 149 then
+when 152 then
 	yy_column := yy_column + 4
 	yy_position := yy_position + 4
 --|#line <not available> "eiffel.l"
@@ -2077,7 +2139,7 @@ end
 				last_detachable_char_as_value := ast_factory.new_character_as ('%H', line, column, position, text_count, character_column, character_position, unicode_text_count, roundtrip_token_buffer)
 				last_token := TE_CHAR
 			
-when 150 then
+when 153 then
 	yy_column := yy_column + 4
 	yy_position := yy_position + 4
 --|#line <not available> "eiffel.l"
@@ -2090,7 +2152,7 @@ end
 				last_detachable_char_as_value := ast_factory.new_character_as ('%L', line, column, position, text_count, character_column, character_position, unicode_text_count, roundtrip_token_buffer)
 				last_token := TE_CHAR
 			
-when 151 then
+when 154 then
 	yy_column := yy_column + 4
 	yy_position := yy_position + 4
 --|#line <not available> "eiffel.l"
@@ -2103,7 +2165,7 @@ end
 				last_detachable_char_as_value := ast_factory.new_character_as ('%N', line, column, position, text_count, character_column, character_position, unicode_text_count, roundtrip_token_buffer)
 				last_token := TE_CHAR
 			
-when 152 then
+when 155 then
 	yy_column := yy_column + 4
 	yy_position := yy_position + 4
 --|#line <not available> "eiffel.l"
@@ -2116,7 +2178,7 @@ end
 				last_detachable_char_as_value := ast_factory.new_character_as ('%Q', line, column, position, text_count, character_column, character_position, unicode_text_count, roundtrip_token_buffer)
 				last_token := TE_CHAR
 			
-when 153 then
+when 156 then
 	yy_column := yy_column + 4
 	yy_position := yy_position + 4
 --|#line <not available> "eiffel.l"
@@ -2129,7 +2191,7 @@ end
 				last_detachable_char_as_value := ast_factory.new_character_as ('%R', line, column, position, text_count, character_column, character_position, unicode_text_count, roundtrip_token_buffer)
 				last_token := TE_CHAR
 			
-when 154 then
+when 157 then
 	yy_column := yy_column + 4
 	yy_position := yy_position + 4
 --|#line <not available> "eiffel.l"
@@ -2142,7 +2204,7 @@ end
 				last_detachable_char_as_value := ast_factory.new_character_as ('%S', line, column, position, text_count, character_column, character_position, unicode_text_count, roundtrip_token_buffer)
 				last_token := TE_CHAR
 			
-when 155 then
+when 158 then
 	yy_column := yy_column + 4
 	yy_position := yy_position + 4
 --|#line <not available> "eiffel.l"
@@ -2155,7 +2217,7 @@ end
 				last_detachable_char_as_value := ast_factory.new_character_as ('%T', line, column, position, text_count, character_column, character_position, unicode_text_count, roundtrip_token_buffer)
 				last_token := TE_CHAR
 			
-when 156 then
+when 159 then
 	yy_column := yy_column + 4
 	yy_position := yy_position + 4
 --|#line <not available> "eiffel.l"
@@ -2168,7 +2230,7 @@ end
 				last_detachable_char_as_value := ast_factory.new_character_as ('%U', line, column, position, text_count, character_column, character_position, unicode_text_count, roundtrip_token_buffer)
 				last_token := TE_CHAR
 			
-when 157 then
+when 160 then
 	yy_column := yy_column + 4
 	yy_position := yy_position + 4
 --|#line <not available> "eiffel.l"
@@ -2181,7 +2243,7 @@ end
 				last_detachable_char_as_value := ast_factory.new_character_as ('%V', line, column, position, text_count, character_column, character_position, unicode_text_count, roundtrip_token_buffer)
 				last_token := TE_CHAR
 			
-when 158 then
+when 161 then
 	yy_column := yy_column + 4
 	yy_position := yy_position + 4
 --|#line <not available> "eiffel.l"
@@ -2194,7 +2256,7 @@ end
 				last_detachable_char_as_value := ast_factory.new_character_as ('%%', line, column, position, text_count, character_column, character_position, unicode_text_count, roundtrip_token_buffer)
 				last_token := TE_CHAR
 			
-when 159 then
+when 162 then
 	yy_column := yy_column + 4
 	yy_position := yy_position + 4
 --|#line <not available> "eiffel.l"
@@ -2207,7 +2269,7 @@ end
 				last_detachable_char_as_value := ast_factory.new_character_as ('%'', line, column, position, text_count, character_column, character_position, unicode_text_count, roundtrip_token_buffer)
 				last_token := TE_CHAR
 			
-when 160 then
+when 163 then
 	yy_column := yy_column + 4
 	yy_position := yy_position + 4
 --|#line <not available> "eiffel.l"
@@ -2220,7 +2282,7 @@ end
 				last_detachable_char_as_value := ast_factory.new_character_as ('%"', line, column, position, text_count, character_column, character_position, unicode_text_count, roundtrip_token_buffer)
 				last_token := TE_CHAR
 			
-when 161 then
+when 164 then
 	yy_column := yy_column + 4
 	yy_position := yy_position + 4
 --|#line <not available> "eiffel.l"
@@ -2233,7 +2295,7 @@ end
 				last_detachable_char_as_value := ast_factory.new_character_as ('%(', line, column, position, text_count, character_column, character_position, unicode_text_count, roundtrip_token_buffer)
 				last_token := TE_CHAR
 			
-when 162 then
+when 165 then
 	yy_column := yy_column + 4
 	yy_position := yy_position + 4
 --|#line <not available> "eiffel.l"
@@ -2246,7 +2308,7 @@ end
 				last_detachable_char_as_value := ast_factory.new_character_as ('%)', line, column, position, text_count, character_column, character_position, unicode_text_count, roundtrip_token_buffer)
 				last_token := TE_CHAR
 			
-when 163 then
+when 166 then
 	yy_column := yy_column + 4
 	yy_position := yy_position + 4
 --|#line <not available> "eiffel.l"
@@ -2259,7 +2321,7 @@ end
 				last_detachable_char_as_value := ast_factory.new_character_as ('%<', line, column, position, text_count, character_column, character_position, unicode_text_count, roundtrip_token_buffer)
 				last_token := TE_CHAR
 			
-when 164 then
+when 167 then
 	yy_column := yy_column + 4
 	yy_position := yy_position + 4
 --|#line <not available> "eiffel.l"
@@ -2270,54 +2332,6 @@ end
 				update_character_locations
 				ast_factory.set_buffer (roundtrip_token_buffer, Current)
 				last_detachable_char_as_value := ast_factory.new_character_as ('%>', line, column, position, text_count, character_column, character_position, unicode_text_count, roundtrip_token_buffer)
-				last_token := TE_CHAR
-			
-when 165 then
-	yy_column := yy_column + yy_end - yy_start - yy_more_len
-	yy_position := yy_position + yy_end - yy_start - yy_more_len
---|#line <not available> "eiffel.l"
-debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line <not available>")
-end
-
-				update_character_locations
-				ast_factory.set_buffer (roundtrip_token_buffer, Current)
-				token_buffer.wipe_out
-					-- We discard the '%/ and the final /'.
-				append_utf8_text_substring_to_string (4, text_count - 2, token_buffer)
-				last_detachable_char_as_value := ast_factory.new_character_value_as (Current, token_buffer, roundtrip_token_buffer)
-				last_token := TE_CHAR
-			
-when 166 then
-	yy_column := yy_column + yy_end - yy_start - yy_more_len
-	yy_position := yy_position + yy_end - yy_start - yy_more_len
---|#line <not available> "eiffel.l"
-debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line <not available>")
-end
-
-				update_character_locations
-				ast_factory.set_buffer (roundtrip_token_buffer, Current)
-				token_buffer.wipe_out
-					-- We discard the '%/ and the final /'.
-				append_utf8_text_substring_to_string (4, text_count - 2, token_buffer)
-				last_detachable_char_as_value := ast_factory.new_character_value_as (Current, token_buffer, roundtrip_token_buffer)
-				last_token := TE_CHAR
-			
-when 167 then
-	yy_column := yy_column + yy_end - yy_start - yy_more_len
-	yy_position := yy_position + yy_end - yy_start - yy_more_len
---|#line <not available> "eiffel.l"
-debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line <not available>")
-end
-
-				update_character_locations
-				ast_factory.set_buffer (roundtrip_token_buffer, Current)
-				token_buffer.wipe_out
-					-- We discard the '%/ and the final /'.
-				append_utf8_text_substring_to_string (4, text_count - 2, token_buffer)
-				last_detachable_char_as_value := ast_factory.new_character_value_as (Current, token_buffer, roundtrip_token_buffer)
 				last_token := TE_CHAR
 			
 when 168 then
@@ -2345,7 +2359,12 @@ debug ("GELEX")
 end
 
 				update_character_locations
-				report_invalid_integer_error (token_buffer)
+				ast_factory.set_buffer (roundtrip_token_buffer, Current)
+				token_buffer.wipe_out
+					-- We discard the '%/ and the final /'.
+				append_utf8_text_substring_to_string (4, text_count - 2, token_buffer)
+				last_detachable_char_as_value := ast_factory.new_character_value_as (Current, token_buffer, roundtrip_token_buffer)
+				last_token := TE_CHAR
 			
 when 170 then
 	yy_column := yy_column + yy_end - yy_start - yy_more_len
@@ -2356,9 +2375,12 @@ debug ("GELEX")
 end
 
 				update_character_locations
-					-- Unrecognized character.
-					-- (catch-all rules (no backing up))
-				report_character_missing_quote_error (utf8_text)
+				ast_factory.set_buffer (roundtrip_token_buffer, Current)
+				token_buffer.wipe_out
+					-- We discard the '%/ and the final /'.
+				append_utf8_text_substring_to_string (4, text_count - 2, token_buffer)
+				last_detachable_char_as_value := ast_factory.new_character_value_as (Current, token_buffer, roundtrip_token_buffer)
+				last_token := TE_CHAR
 			
 when 171 then
 	yy_column := yy_column + yy_end - yy_start - yy_more_len
@@ -2369,11 +2391,51 @@ debug ("GELEX")
 end
 
 				update_character_locations
+				ast_factory.set_buffer (roundtrip_token_buffer, Current)
+				token_buffer.wipe_out
+					-- We discard the '%/ and the final /'.
+				append_utf8_text_substring_to_string (4, text_count - 2, token_buffer)
+				last_detachable_char_as_value := ast_factory.new_character_value_as (Current, token_buffer, roundtrip_token_buffer)
+				last_token := TE_CHAR
+			
+when 172 then
+	yy_column := yy_column + yy_end - yy_start - yy_more_len
+	yy_position := yy_position + yy_end - yy_start - yy_more_len
+--|#line <not available> "eiffel.l"
+debug ("GELEX")
+	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line <not available>")
+end
+
+				update_character_locations
+				report_invalid_integer_error (token_buffer)
+			
+when 173 then
+	yy_column := yy_column + yy_end - yy_start - yy_more_len
+	yy_position := yy_position + yy_end - yy_start - yy_more_len
+--|#line <not available> "eiffel.l"
+debug ("GELEX")
+	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line <not available>")
+end
+
+				update_character_locations
 					-- Unrecognized character.
 					-- (catch-all rules (no backing up))
 				report_character_missing_quote_error (utf8_text)
 			
-when 172 then
+when 174 then
+	yy_column := yy_column + yy_end - yy_start - yy_more_len
+	yy_position := yy_position + yy_end - yy_start - yy_more_len
+--|#line <not available> "eiffel.l"
+debug ("GELEX")
+	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line <not available>")
+end
+
+				update_character_locations
+					-- Unrecognized character.
+					-- (catch-all rules (no backing up))
+				report_character_missing_quote_error (utf8_text)
+			
+when 175 then
 	yy_column := yy_column + 3
 	yy_position := yy_position + 3
 --|#line <not available> "eiffel.l"
@@ -2384,7 +2446,7 @@ end
 				update_character_locations
 				process_simple_string_as (TE_STR_LT)
 			
-when 173 then
+when 176 then
 	yy_column := yy_column + 3
 	yy_position := yy_position + 3
 --|#line <not available> "eiffel.l"
@@ -2395,7 +2457,7 @@ end
 				update_character_locations
 				process_simple_string_as (TE_STR_GT)
 			
-when 174 then
+when 177 then
 	yy_column := yy_column + 4
 	yy_position := yy_position + 4
 --|#line <not available> "eiffel.l"
@@ -2406,7 +2468,7 @@ end
 				update_character_locations
 				process_simple_string_as (TE_STR_LE)
 			
-when 175 then
+when 178 then
 	yy_column := yy_column + 4
 	yy_position := yy_position + 4
 --|#line <not available> "eiffel.l"
@@ -2417,7 +2479,7 @@ end
 				update_character_locations
 				process_simple_string_as (TE_STR_GE)
 			
-when 176 then
+when 179 then
 	yy_column := yy_column + 3
 	yy_position := yy_position + 3
 --|#line <not available> "eiffel.l"
@@ -2428,7 +2490,7 @@ end
 				update_character_locations
 				process_simple_string_as (TE_STR_PLUS)
 			
-when 177 then
+when 180 then
 	yy_column := yy_column + 3
 	yy_position := yy_position + 3
 --|#line <not available> "eiffel.l"
@@ -2439,7 +2501,7 @@ end
 				update_character_locations
 				process_simple_string_as (TE_STR_MINUS)
 			
-when 178 then
+when 181 then
 	yy_column := yy_column + 3
 	yy_position := yy_position + 3
 --|#line <not available> "eiffel.l"
@@ -2450,7 +2512,7 @@ end
 				update_character_locations
 				process_simple_string_as (TE_STR_STAR)
 			
-when 179 then
+when 182 then
 	yy_column := yy_column + 3
 	yy_position := yy_position + 3
 --|#line <not available> "eiffel.l"
@@ -2461,7 +2523,7 @@ end
 				update_character_locations
 				process_simple_string_as (TE_STR_SLASH)
 			
-when 180 then
+when 183 then
 	yy_column := yy_column + 3
 	yy_position := yy_position + 3
 --|#line <not available> "eiffel.l"
@@ -2472,7 +2534,7 @@ end
 				update_character_locations
 				process_simple_string_as (TE_STR_POWER)
 			
-when 181 then
+when 184 then
 	yy_column := yy_column + 4
 	yy_position := yy_position + 4
 --|#line <not available> "eiffel.l"
@@ -2483,7 +2545,7 @@ end
 				update_character_locations
 				process_simple_string_as (TE_STR_DIV)
 			
-when 182 then
+when 185 then
 	yy_column := yy_column + 4
 	yy_position := yy_position + 4
 --|#line <not available> "eiffel.l"
@@ -2494,7 +2556,7 @@ end
 				update_character_locations
 				process_simple_string_as (TE_STR_MOD)
 			
-when 183 then
+when 186 then
 	yy_column := yy_column + 4
 	yy_position := yy_position + 4
 --|#line <not available> "eiffel.l"
@@ -2505,7 +2567,7 @@ end
 				update_character_locations
 				process_simple_string_as (TE_STR_BRACKET)
 			
-when 184 then
+when 187 then
 	yy_column := yy_column + 4
 	yy_position := yy_position + 4
 --|#line <not available> "eiffel.l"
@@ -2516,7 +2578,7 @@ end
 				update_character_locations
 				process_simple_string_as (TE_STR_PARENTHESES)
 			
-when 185 then
+when 188 then
 	yy_column := yy_column + 5
 	yy_position := yy_position + 5
 --|#line <not available> "eiffel.l"
@@ -2527,7 +2589,7 @@ end
 				update_character_locations
 				process_simple_string_as (TE_STR_AND)
 			
-when 186 then
+when 189 then
 	yy_column := yy_column + 10
 	yy_position := yy_position + 10
 --|#line <not available> "eiffel.l"
@@ -2538,7 +2600,7 @@ end
 				update_character_locations
 				process_simple_string_as (TE_STR_AND_THEN)
 			
-when 187 then
+when 190 then
 	yy_column := yy_column + 9
 	yy_position := yy_position + 9
 --|#line <not available> "eiffel.l"
@@ -2549,7 +2611,7 @@ end
 				update_character_locations
 				process_simple_string_as (TE_STR_IMPLIES)
 			
-when 188 then
+when 191 then
 	yy_column := yy_column + 5
 	yy_position := yy_position + 5
 --|#line <not available> "eiffel.l"
@@ -2560,7 +2622,7 @@ end
 				update_character_locations
 				process_simple_string_as (TE_STR_NOT)
 			
-when 189 then
+when 192 then
 	yy_column := yy_column + 4
 	yy_position := yy_position + 4
 --|#line <not available> "eiffel.l"
@@ -2571,7 +2633,7 @@ end
 				update_character_locations
 				process_simple_string_as (TE_STR_OR)
 			
-when 190 then
+when 193 then
 	yy_column := yy_column + 9
 	yy_position := yy_position + 9
 --|#line <not available> "eiffel.l"
@@ -2582,7 +2644,7 @@ end
 				update_character_locations
 				process_simple_string_as (TE_STR_OR_ELSE)
 			
-when 191 then
+when 194 then
 	yy_column := yy_column + 5
 	yy_position := yy_position + 5
 --|#line <not available> "eiffel.l"
@@ -2593,7 +2655,7 @@ end
 				update_character_locations
 				process_simple_string_as (TE_STR_XOR)
 			
-when 192 then
+when 195 then
 	yy_column := yy_column + yy_end - yy_start - yy_more_len
 	yy_position := yy_position + yy_end - yy_start - yy_more_len
 --|#line <not available> "eiffel.l"
@@ -2604,7 +2666,7 @@ end
 				update_character_locations
 				process_simple_string_as (TE_STR_FREE)
 			
-when 193 then
+when 196 then
 	yy_column := yy_column + yy_end - yy_start - yy_more_len
 	yy_position := yy_position + yy_end - yy_start - yy_more_len
 --|#line <not available> "eiffel.l"
@@ -2615,7 +2677,18 @@ end
 				update_character_locations
 				process_simple_string_as (TE_STR_FREE)
 			
-when 194 then
+when 197 then
+	yy_column := yy_column + yy_end - yy_start - yy_more_len
+	yy_position := yy_position + yy_end - yy_start - yy_more_len
+--|#line <not available> "eiffel.l"
+debug ("GELEX")
+	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line <not available>")
+end
+
+				update_character_locations
+				process_simple_string_as (TE_STR_FREE)
+			
+when 198 then
 	yy_column := yy_column + 2
 	yy_position := yy_position + 2
 --|#line <not available> "eiffel.l"
@@ -2626,7 +2699,7 @@ end
 				update_character_locations
 				process_simple_string_as (TE_EMPTY_STRING)
 			
-when 195 then
+when 199 then
 	yy_column := yy_column + yy_end - yy_start - yy_more_len
 	yy_position := yy_position + yy_end - yy_start - yy_more_len
 --|#line <not available> "eiffel.l"
@@ -2638,7 +2711,7 @@ end
 					-- Regular string.
 				process_simple_string_as (TE_STRING)
 			
-when 196 then
+when 200 then
 	yy_column := yy_column + yy_end - yy_start - yy_more_len
 	yy_position := yy_position + yy_end - yy_start - yy_more_len
 --|#line <not available> "eiffel.l"
@@ -2660,7 +2733,7 @@ end
 				start_location.set_position (line, column, position, text_count, character_column, character_position, unicode_text_count)
 				set_start_condition (VERBATIM_STR3)
 			
-when 197 then
+when 201 then
 	yy_line := yy_line + 1
 	yy_column := 1
 	yy_position := yy_position + yy_end - yy_start - yy_more_len
@@ -2673,7 +2746,7 @@ end
 				ast_factory.append_text_to_buffer (roundtrip_token_buffer, Current)
 				set_start_condition (VERBATIM_STR1)
 			
-when 198 then
+when 202 then
 	yy_column := yy_column + 1
 	yy_position := yy_position + 1
 --|#line <not available> "eiffel.l"
@@ -2692,7 +2765,7 @@ end
 				set_start_condition (INITIAL)
 				report_missing_end_of_verbatim_string_error (token_buffer)
 			
-when 199 then
+when 203 then
 	yy_column := yy_column + yy_end - yy_start - yy_more_len
 	yy_position := yy_position + yy_end - yy_start - yy_more_len
 --|#line <not available> "eiffel.l"
@@ -2751,7 +2824,7 @@ end
 					set_start_condition (VERBATIM_STR2)
 				end
 			
-when 200 then
+when 204 then
 	yy_column := yy_column + yy_end - yy_start - yy_more_len
 	yy_position := yy_position + yy_end - yy_start - yy_more_len
 --|#line <not available> "eiffel.l"
@@ -2764,7 +2837,7 @@ end
 				append_utf8_text_to_string (token_buffer)
 				set_start_condition (VERBATIM_STR2)
 			
-when 201 then
+when 205 then
 	yy_line := yy_line + 1
 	yy_column := 1
 	yy_position := yy_position + yy_end - yy_start - yy_more_len
@@ -2781,7 +2854,7 @@ end
 					token_buffer.remove (token_buffer.count - 1)
 				end
 			
-when 202 then
+when 206 then
 	yy_column := yy_column + yy_end - yy_start - yy_more_len
 	yy_position := yy_position + yy_end - yy_start - yy_more_len
 --|#line <not available> "eiffel.l"
@@ -2796,7 +2869,7 @@ end
 				set_start_condition (INITIAL)
 				report_missing_end_of_verbatim_string_error (token_buffer)
 			
-when 203 then
+when 207 then
 	yy_line := yy_line + 1
 	yy_column := 1
 	yy_position := yy_position + yy_end - yy_start - yy_more_len
@@ -2814,7 +2887,7 @@ end
 				end
 				set_start_condition (VERBATIM_STR1)
 			
-when 204 then
+when 208 then
 	yy_column := yy_column + yy_end - yy_start - yy_more_len
 	yy_position := yy_position + yy_end - yy_start - yy_more_len
 --|#line <not available> "eiffel.l"
@@ -2829,7 +2902,7 @@ end
 				set_start_condition (INITIAL)
 				report_missing_end_of_verbatim_string_error (token_buffer)
 			
-when 205 then
+when 209 then
 	yy_column := yy_column + yy_end - yy_start - yy_more_len
 	yy_position := yy_position + yy_end - yy_start - yy_more_len
 --|#line <not available> "eiffel.l"
@@ -2847,7 +2920,7 @@ end
 				start_location.set_position (line, column, position, text_count, character_column, character_position, unicode_text_count)
 				set_start_condition (SPECIAL_STR)
 			
-when 206 then
+when 210 then
 	yy_column := yy_column + yy_end - yy_start - yy_more_len
 	yy_position := yy_position + yy_end - yy_start - yy_more_len
 --|#line <not available> "eiffel.l"
@@ -2859,7 +2932,7 @@ end
 				ast_factory.append_text_to_buffer (roundtrip_token_buffer, Current)
 				append_utf8_text_to_string (token_buffer)
 			
-when 207 then
+when 211 then
 	yy_column := yy_column + 2
 	yy_position := yy_position + 2
 --|#line <not available> "eiffel.l"
@@ -2871,7 +2944,7 @@ end
 				ast_factory.append_two_characters_to_buffer (roundtrip_token_buffer, '%%', 'A')
 				token_buffer.append_character ('%A')
 			
-when 208 then
+when 212 then
 	yy_column := yy_column + 2
 	yy_position := yy_position + 2
 --|#line <not available> "eiffel.l"
@@ -2883,7 +2956,7 @@ end
 				ast_factory.append_two_characters_to_buffer (roundtrip_token_buffer, '%%', 'B')
 				token_buffer.append_character ('%B')
 			
-when 209 then
+when 213 then
 	yy_column := yy_column + 2
 	yy_position := yy_position + 2
 --|#line <not available> "eiffel.l"
@@ -2895,7 +2968,7 @@ end
 				ast_factory.append_two_characters_to_buffer (roundtrip_token_buffer, '%%', 'C')
 				token_buffer.append_character ('%C')
 			
-when 210 then
+when 214 then
 	yy_column := yy_column + 2
 	yy_position := yy_position + 2
 --|#line <not available> "eiffel.l"
@@ -2907,7 +2980,7 @@ end
 				ast_factory.append_two_characters_to_buffer (roundtrip_token_buffer, '%%', 'D')
 				token_buffer.append_character ('%D')
 			
-when 211 then
+when 215 then
 	yy_column := yy_column + 2
 	yy_position := yy_position + 2
 --|#line <not available> "eiffel.l"
@@ -2919,7 +2992,7 @@ end
 				ast_factory.append_two_characters_to_buffer (roundtrip_token_buffer, '%%', 'F')
 				token_buffer.append_character ('%F')
 			
-when 212 then
+when 216 then
 	yy_column := yy_column + 2
 	yy_position := yy_position + 2
 --|#line <not available> "eiffel.l"
@@ -2931,7 +3004,7 @@ end
 				ast_factory.append_two_characters_to_buffer (roundtrip_token_buffer, '%%', 'H')
 				token_buffer.append_character ('%H')
 			
-when 213 then
+when 217 then
 	yy_column := yy_column + 2
 	yy_position := yy_position + 2
 --|#line <not available> "eiffel.l"
@@ -2943,7 +3016,7 @@ end
 				ast_factory.append_two_characters_to_buffer (roundtrip_token_buffer, '%%', 'L')
 				token_buffer.append_character ('%L')
 			
-when 214 then
+when 218 then
 	yy_column := yy_column + 2
 	yy_position := yy_position + 2
 --|#line <not available> "eiffel.l"
@@ -2955,7 +3028,7 @@ end
 				ast_factory.append_two_characters_to_buffer (roundtrip_token_buffer, '%%', 'N')
 				token_buffer.append_character ('%N')
 			
-when 215 then
+when 219 then
 	yy_column := yy_column + 2
 	yy_position := yy_position + 2
 --|#line <not available> "eiffel.l"
@@ -2967,7 +3040,7 @@ end
 				ast_factory.append_two_characters_to_buffer (roundtrip_token_buffer, '%%', 'Q')
 				token_buffer.append_character ('%Q')
 			
-when 216 then
+when 220 then
 	yy_column := yy_column + 2
 	yy_position := yy_position + 2
 --|#line <not available> "eiffel.l"
@@ -2979,7 +3052,7 @@ end
 				ast_factory.append_two_characters_to_buffer (roundtrip_token_buffer, '%%', 'R')
 				token_buffer.append_character ('%R')
 			
-when 217 then
+when 221 then
 	yy_column := yy_column + 2
 	yy_position := yy_position + 2
 --|#line <not available> "eiffel.l"
@@ -2991,7 +3064,7 @@ end
 				ast_factory.append_two_characters_to_buffer (roundtrip_token_buffer, '%%', 'S')
 				token_buffer.append_character ('%S')
 			
-when 218 then
+when 222 then
 	yy_column := yy_column + 2
 	yy_position := yy_position + 2
 --|#line <not available> "eiffel.l"
@@ -3003,7 +3076,7 @@ end
 				ast_factory.append_two_characters_to_buffer (roundtrip_token_buffer, '%%', 'T')
 				token_buffer.append_character ('%T')
 			
-when 219 then
+when 223 then
 	yy_column := yy_column + 2
 	yy_position := yy_position + 2
 --|#line <not available> "eiffel.l"
@@ -3015,7 +3088,7 @@ end
 				ast_factory.append_two_characters_to_buffer (roundtrip_token_buffer, '%%', 'U')
 				token_buffer.append_character ('%U')
 			
-when 220 then
+when 224 then
 	yy_column := yy_column + 2
 	yy_position := yy_position + 2
 --|#line <not available> "eiffel.l"
@@ -3027,7 +3100,7 @@ end
 				ast_factory.append_two_characters_to_buffer (roundtrip_token_buffer, '%%', 'V')
 				token_buffer.append_character ('%V')
 			
-when 221 then
+when 225 then
 	yy_column := yy_column + 2
 	yy_position := yy_position + 2
 --|#line <not available> "eiffel.l"
@@ -3039,7 +3112,7 @@ end
 				ast_factory.append_two_characters_to_buffer (roundtrip_token_buffer, '%%', '%%')
 				token_buffer.append_character ('%%')
 			
-when 222 then
+when 226 then
 	yy_column := yy_column + 2
 	yy_position := yy_position + 2
 --|#line <not available> "eiffel.l"
@@ -3051,7 +3124,7 @@ end
 				ast_factory.append_two_characters_to_buffer (roundtrip_token_buffer, '%%', '%'')
 				token_buffer.append_character ('%'')
 			
-when 223 then
+when 227 then
 	yy_column := yy_column + 2
 	yy_position := yy_position + 2
 --|#line <not available> "eiffel.l"
@@ -3063,7 +3136,7 @@ end
 				ast_factory.append_two_characters_to_buffer (roundtrip_token_buffer, '%%', '%"')
 				token_buffer.append_character ('%"')
 			
-when 224 then
+when 228 then
 	yy_column := yy_column + 2
 	yy_position := yy_position + 2
 --|#line <not available> "eiffel.l"
@@ -3075,7 +3148,7 @@ end
 				ast_factory.append_two_characters_to_buffer (roundtrip_token_buffer, '%%', '(')
 				token_buffer.append_character ('%(')
 			
-when 225 then
+when 229 then
 	yy_column := yy_column + 2
 	yy_position := yy_position + 2
 --|#line <not available> "eiffel.l"
@@ -3087,7 +3160,7 @@ end
 				ast_factory.append_two_characters_to_buffer (roundtrip_token_buffer, '%%', ')')
 				token_buffer.append_character ('%)')
 			
-when 226 then
+when 230 then
 	yy_column := yy_column + 2
 	yy_position := yy_position + 2
 --|#line <not available> "eiffel.l"
@@ -3099,7 +3172,7 @@ end
 				ast_factory.append_two_characters_to_buffer (roundtrip_token_buffer, '%%', '<')
 				token_buffer.append_character ('%<')
 			
-when 227 then
+when 231 then
 	yy_column := yy_column + 2
 	yy_position := yy_position + 2
 --|#line <not available> "eiffel.l"
@@ -3111,55 +3184,55 @@ end
 				ast_factory.append_two_characters_to_buffer (roundtrip_token_buffer, '%%', '>')
 				token_buffer.append_character ('%>')
 			
-when 228 then
-	yy_column := yy_column + yy_end - yy_start - yy_more_len
-	yy_position := yy_position + yy_end - yy_start - yy_more_len
---|#line <not available> "eiffel.l"
-debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line <not available>")
-end
-
-				update_character_locations
-				ast_factory.append_text_to_buffer (roundtrip_token_buffer, Current)
-				process_string_character_as_value (utf8_text_substring (3, text_count - 1))
-			
-when 229 then
-	yy_column := yy_column + yy_end - yy_start - yy_more_len
-	yy_position := yy_position + yy_end - yy_start - yy_more_len
---|#line <not available> "eiffel.l"
-debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line <not available>")
-end
-
-				update_character_locations
-				ast_factory.append_text_to_buffer (roundtrip_token_buffer, Current)
-				process_string_character_as_value (utf8_text_substring (3, text_count - 1))
-			
-when 230 then
-	yy_column := yy_column + yy_end - yy_start - yy_more_len
-	yy_position := yy_position + yy_end - yy_start - yy_more_len
---|#line <not available> "eiffel.l"
-debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line <not available>")
-end
-
-				update_character_locations
-				ast_factory.append_text_to_buffer (roundtrip_token_buffer, Current)
-				process_string_character_as_value (utf8_text_substring (3, text_count - 1))
-			
-when 231 then
-	yy_column := yy_column + yy_end - yy_start - yy_more_len
-	yy_position := yy_position + yy_end - yy_start - yy_more_len
---|#line <not available> "eiffel.l"
-debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line <not available>")
-end
-
-				update_character_locations
-				ast_factory.append_text_to_buffer (roundtrip_token_buffer, Current)
-				process_string_character_as_value (utf8_text_substring (3, text_count - 1))
-			
 when 232 then
+	yy_column := yy_column + yy_end - yy_start - yy_more_len
+	yy_position := yy_position + yy_end - yy_start - yy_more_len
+--|#line <not available> "eiffel.l"
+debug ("GELEX")
+	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line <not available>")
+end
+
+				update_character_locations
+				ast_factory.append_text_to_buffer (roundtrip_token_buffer, Current)
+				process_string_character_as_value (utf8_text_substring (3, text_count - 1))
+			
+when 233 then
+	yy_column := yy_column + yy_end - yy_start - yy_more_len
+	yy_position := yy_position + yy_end - yy_start - yy_more_len
+--|#line <not available> "eiffel.l"
+debug ("GELEX")
+	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line <not available>")
+end
+
+				update_character_locations
+				ast_factory.append_text_to_buffer (roundtrip_token_buffer, Current)
+				process_string_character_as_value (utf8_text_substring (3, text_count - 1))
+			
+when 234 then
+	yy_column := yy_column + yy_end - yy_start - yy_more_len
+	yy_position := yy_position + yy_end - yy_start - yy_more_len
+--|#line <not available> "eiffel.l"
+debug ("GELEX")
+	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line <not available>")
+end
+
+				update_character_locations
+				ast_factory.append_text_to_buffer (roundtrip_token_buffer, Current)
+				process_string_character_as_value (utf8_text_substring (3, text_count - 1))
+			
+when 235 then
+	yy_column := yy_column + yy_end - yy_start - yy_more_len
+	yy_position := yy_position + yy_end - yy_start - yy_more_len
+--|#line <not available> "eiffel.l"
+debug ("GELEX")
+	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line <not available>")
+end
+
+				update_character_locations
+				ast_factory.append_text_to_buffer (roundtrip_token_buffer, Current)
+				process_string_character_as_value (utf8_text_substring (3, text_count - 1))
+			
+when 236 then
 yy_set_line_column
 	yy_position := yy_position + yy_end - yy_start - yy_more_len
 --|#line <not available> "eiffel.l"
@@ -3172,7 +3245,7 @@ end
 					-- Left as-is for compatibility with previous releases.
 				ast_factory.append_text_to_buffer (roundtrip_token_buffer, Current)
 			
-when 233 then
+when 237 then
 	yy_column := yy_column + yy_end - yy_start - yy_more_len
 	yy_position := yy_position + yy_end - yy_start - yy_more_len
 --|#line <not available> "eiffel.l"
@@ -3212,7 +3285,7 @@ end
 					end
 				end
 			
-when 234 then
+when 238 then
 	yy_column := yy_column + 1
 	yy_position := yy_position + 1
 --|#line <not available> "eiffel.l"
@@ -3226,7 +3299,7 @@ end
 				set_start_condition (INITIAL)
 				report_string_bad_special_character_error
 			
-when 235 then
+when 239 then
 	yy_line := yy_line + 1
 	yy_column := 1
 	yy_position := yy_position + 1
@@ -3240,7 +3313,7 @@ end
 				set_start_condition (INITIAL)
 				report_string_missing_quote_error (token_buffer)
 			
-when 236 then
+when 240 then
 	yy_column := yy_column + 1
 	yy_position := yy_position + 1
 --|#line <not available> "eiffel.l"
@@ -3251,7 +3324,7 @@ end
 				update_character_locations
 				report_unknown_token_error (text_item (1))
 			
-when 237 then
+when 241 then
 yy_set_line_column
 	yy_position := yy_position + 1
 --|#line <not available> "eiffel.l"
@@ -3344,23 +3417,25 @@ feature {NONE} -- Table templates
 		local
 			an_array: ARRAY [INTEGER]
 		once
-			create an_array.make_filled (0, 0, 2574)
+			create an_array.make_filled (0, 0, 2917)
 			yy_nxt_template_1 (an_array)
 			yy_nxt_template_2 (an_array)
 			yy_nxt_template_3 (an_array)
 			yy_nxt_template_4 (an_array)
-			an_array.area.fill_with (273, 789, 814)
+			an_array.area.fill_with (277, 791, 816)
 			yy_nxt_template_5 (an_array)
 			yy_nxt_template_6 (an_array)
 			yy_nxt_template_7 (an_array)
-			an_array.area.fill_with (462, 1292, 1317)
 			yy_nxt_template_8 (an_array)
+			an_array.area.fill_with (476, 1467, 1492)
 			yy_nxt_template_9 (an_array)
 			yy_nxt_template_10 (an_array)
 			yy_nxt_template_11 (an_array)
 			yy_nxt_template_12 (an_array)
 			yy_nxt_template_13 (an_array)
-			an_array.area.fill_with (839, 2478, 2574)
+			yy_nxt_template_14 (an_array)
+			yy_nxt_template_15 (an_array)
+			an_array.area.fill_with (866, 2821, 2917)
 			Result := yy_fixed_array (an_array)
 		end
 
@@ -3379,16 +3454,16 @@ feature {NONE} -- Table templates
 			   63,   64,   14,   65,   14,   17,   17,   66,   67,   68,
 			   69,   70,   71,   72,   73,   74,   75,   14,   77,   77,
 
-			  252,   78,   78,  253,   79,   79,   81,   82,   81,  685,
-			   83,   81,   82,   81,  683,   83,   88,   89,   88,   88,
+			  256,   78,   78,  257,   79,   79,   81,   82,   81,  857,
+			   83,   81,   82,   81,  846,   83,   88,   89,   88,   88,
 			   89,   88,   91,   92,   91,   91,   92,   91,   94,   94,
-			   94,   94,   94,   94,   97,   98,  125,   93,  126,  205,
-			   93,  127,  128,   95,  129,  130,   95,  132,  133,  135,
-			  195,  136,  136,  136,  136,  149,  150,  159,  134,  153,
-			  154,  155,  156,   84,  151,  152,  252,  160,   84,  256,
-			  205,  157,  158,  208,  209,  210,  211,  212,   98,  213,
-			   98,  472,  195,  473,   84,  214,   98,  215,   98,   84,
-			   99,  676,   99,  100,  101,  102,   99,  103,  102,   99, yy_Dummy>>,
+			   94,   94,   94,   94,   97,   98,  126,   93,  127,  209,
+			   93,  128,  129,   95,  130,  131,   95,  133,  134,  136,
+			  199,  137,  137,  137,  137,  150,  151,  160,  135,  154,
+			  155,  156,  157,   84,  152,  153,  256,  161,   84,  260,
+			  209,  158,  159,  212,  213,  214,  215,  216,   98,  217,
+			   98,  491,  199,  492,   84,  218,   98,  219,   98,   84,
+			   99,  845,   99,  100,  101,  102,   99,  103,  102,   99, yy_Dummy>>,
 			1, 200, 0)
 		end
 
@@ -3397,26 +3472,26 @@ feature {NONE} -- Table templates
 		do
 			yy_array_subcopy (an_array, <<
 			  104,   99,  105,  106,   99,  107,   99,  108,   99,   99,
-			   99,   99,   99,   99,  109,  100,  110,   99,  102,  111,
-			   99,   99,   99,   99,   99,   99,   99,  112,   99,   99,
-			   99,   99,  113,  114,   99,   99,   99,   99,   99,   99,
-			   99,   99,  115,   99,   99,  116,  117,   99,  118,  100,
-			   99,  111,   99,   99,   99,   99,   99,   99,  112,   99,
-			  113,   99,   99,   99,   99,   99,   99,  119,   99,  100,
+			   99,   99,   99,   99,  109,  100,  110,   99,  111,  112,
+			   99,   99,   99,   99,   99,   99,   99,  113,   99,   99,
+			   99,   99,  114,  115,   99,   99,   99,   99,   99,   99,
+			   99,   99,  116,   99,   99,  117,  118,   99,  119,  100,
+			   99,  112,   99,   99,   99,   99,   99,   99,  113,   99,
+			  114,   99,   99,   99,   99,   99,   99,  120,   99,  100,
 			  100,   99,  100,   99,  100,  100,  100,  100,  100,  100,
-			  100,  100,   99,   99,  100,  100,   99,  120,  735,  120,
-			   97,   98,  120,  137,  138,  139,  120,  120,  202,  122,
+			  100,  100,   99,   99,  100,  100,   99,  121,  839,  121,
+			   97,   98,  121,  138,  139,  140,  121,  121,  206,  123,
 
-			  123,  120,  142,  140,  143,  143,  143,  143,  120,  120,
-			  120,  287,  120,  352,  174,  179,  144,  145,  142,  180,
-			  143,  143,  143,  143,  175,  176,  202,  177,  216,   98,
-			  736,  207,  181,  221,   98,  224,   98,  178,  146,  287,
-			  120,  283,  120,  120,  120,  147,  174,  179,  144,  145,
-			  186,  180,  182,  350,  176,  177,  187,  141,  181,  183,
-			  184,  147,  284,  120,  120,  185,  120,   96,   96,   96,
-			   96,   96,   96,   96,   96,   96,  217,   98,   96,   96,
-			  120,  186,  120,  830,  182,  120,  225,   98,  184,  120,
-			  120,  185,  161,  123,  120,  281,  203,  374,  193,  290, yy_Dummy>>,
+			  124,  121,  143,  141,  144,  144,  144,  144,  121,  121,
+			  121,  834,  121,  296,  178,  183,  145,  146,  143,  184,
+			  144,  144,  144,  144,  179,  180,  206,  181,  190,  220,
+			   98,  211,  185,  197,  191,  225,   98,  182,  147,  287,
+			  121,  296,  121,  121,  121,  148,  178,  183,  145,  146,
+			  198,  184,  228,   98,  180,  181,  289,  142,  185,  190,
+			  288,  148,  280,  121,  121,  197,  121,   96,   96,   96,
+			   96,   96,   96,   96,   96,   96,  198,  290,   96,   96,
+			  162,  442,  162,  163,  280,  162,  163,  163,  163,  162,
+			  162,  163,  164,  165,  162,  163,  163,  163,  163,  163, yy_Dummy>>,
 			1, 200, 200)
 		end
 
@@ -3424,27 +3499,27 @@ feature {NONE} -- Table templates
 			-- Fill chunk #3 of template for `yy_nxt'.
 		do
 			yy_array_subcopy (an_array, <<
-			  163,  120,  120,  120,  164,  120,  219,   98,  282,  165,
-			  204,  166,  276,  199,  169,  194,  167,  168,  170,  264,
-			   98,  171,  373,  200,  172,  290,  201,  173,  203,  374,
-			  193,  819,  163,  120,  276,  120,  120,  120,  165,  166,
-			  743,  194,  167,  168,  199,  169,  218,  170,  373,  200,
-			  172,  393,  201,  173,  285,  818,  120,  120,  378,  120,
-			   96,   96,   96,   96,   96,   96,   96,   96,   96,  189,
-			  812,   96,   96,  196,  807,  286,  220,   97,   98,  190,
-			  393,  191,  744,  197,  378,  192,  333,  334,  198,  339,
-			  340,  254,  252,  254,  560,  253,  259,  260,  259,  341,
+			  163,  162,  162,  162,  163,  162,  167,  207,  221,   98,
+			  168,  186,  442,  223,   98,  169,  708,  170,  187,  188,
+			  299,  208,  171,  172,  189,  229,   98,  263,  264,  263,
+			  268,   98,  163,  162,  163,  162,  162,  162,  167,  207,
+			  265,  265,  265,  186,  169,  170,  299,  188,  171,  172,
+			  189,  265,  265,  265,  163,  163,  162,  162,  163,  162,
+			   96,   96,   96,   96,   96,   96,   96,   96,   96,  173,
+			  775,   96,   96,  174,  193,  285,  175,  200,  222,  176,
+			  817,  203,  177,  224,  194,  866,  195,  201,  286,  387,
+			  196,  204,  202,  392,  205,   97,   98,  258,  256,  258,
 
-			  342,  189,  261,  261,  261,  196,  343,  344,  190,  191,
-			  377,  192,  349,  349,  198,  228,  228,  228,  681,  229,
-			  361,  362,  230,  560,  231,  232,  233,  261,  261,  261,
-			  367,  368,  234,  379,  380,   94,   94,   94,  748,  235,
-			  252,  236,  377,  253,  237,  238,  239,  240,  255,  241,
-			   95,  242,  292,  293,  292,  243,  384,  244,  587,  379,
-			  245,  246,  247,  248,  249,  250,  380,  264,   98,  255,
-			  266,  266,  266,  266,   99,  267,   99,  382,  381,   99,
-			  383,   99,  384,   99,   99,  388,   99,  587,   99,  292,
-			  293,  292,  351,  351,  351,   99,   99,   99,  297,   99, yy_Dummy>>,
+			  173,  257,  174,  342,  343,  176,  193,  816,  177,  200,
+			  348,  349,  203,  194,  195,  387,  196,  204,  202,  392,
+			  205,  232,  232,  232,  388,  233,  350,  351,  234,  771,
+			  235,  236,  237,   94,   94,   94,  268,   98,  238,  270,
+			  270,  270,  270,  352,  353,  239,  256,  240,   95,  257,
+			  241,  242,  243,  244,  259,  245,  388,  246,  301,  302,
+			  301,  247,  815,  248,  358,  358,  249,  250,  251,  252,
+			  253,  254,  360,  360,  360,  259,   99,  271,   99,  370,
+			  371,   99,  632,   99,  633,   99,   99,  391,   99,  866,
+			   99,  301,  302,  301,  376,  377,  480,   99,   99,   99, yy_Dummy>>,
 			1, 200, 400)
 		end
 
@@ -3452,262 +3527,313 @@ feature {NONE} -- Table templates
 			-- Fill chunk #4 of template for `yy_nxt'.
 		do
 			yy_array_subcopy (an_array, <<
-			   99,  302,  302,  302,  302,  382,  369,   98,   99,  294,
-			  381,  388,  383,   99,   99,  264,   98,  370,  329,  329,
-			  329,  329,  389,   99,  790,  298,  119,   99,  839,   99,
-			   99,  142,   99,  348,  348,  348,  348,  390,  404,   99,
-			  391,   99,  264,   98,  392,  331,  331,  331,  331,  405,
-			   99,   99,  409,   99,  389,   99,   99,   99,   99,   99,
-			   99,   99,   99,  390,  404,   99,   99,  268,  269,  268,
-			  392,  394,  268,  789,  147,  405,  268,  268,  409,  270,
-			  268,  268,  420,  744,  353,  353,  353,  353,  268,  268,
-			  268,  466,  268,  839,  839,  839,  839,  839,  839,  839,
+			  393,   99,   99,  311,  311,  311,  311,  472,  268,   98,
+			   99,  338,  338,  338,  338,   99,   99,  268,   98,  391,
+			  340,  340,  340,  340,  394,   99,  393,  307,  120,   99,
+			  814,   99,   99,  143,   99,  357,  357,  357,  357,  378,
+			   98,   99,  810,   99,  362,  362,  362,  362,  303,  396,
+			  379,  407,   99,   99,  395,   99,  394,   99,   99,   99,
+			   99,   99,   99,   99,   99,  445,  446,   99,   99,  272,
+			  273,  272,  397,  408,  272,  763,  148,  396,  272,  272,
+			  407,  274,  272,  272,  398,  363,  395,  681,  420,  402,
+			  272,  272,  272,  789,  272,  866,  866,  866,  866,  866,
 
-			  839,  839,  458,  394,  839,  839,   97,   98,  420,  332,
-			  332,  332,  332,  406,  335,  335,  335,  335,  431,  432,
-			  268,  788,  268,  268,  268,  354,  428,  264,   98,  336,
-			  338,  338,  338,  338,  264,   98,  839,  356,  356,  356,
-			  356,  443,   98,  268,  268,  406,  268,  268,  268,  268,
-			  268,  268,  268,  268,  268,  268,  787,  428,  268,  268,
-			   99,  336,   99,  271,  272,  271,  273,  103,  271,  273,
-			  273,  273,  271,  271,  273,  274,  271,  271,  273,  273,
-			  273,  273,  273,  273,  271,  271,  271,  273,  271, yy_Dummy>>,
-			1, 189, 600)
+			  866,  866,  866,  866,  397,  408,  866,  866,   97,   98,
+			  398,  341,  341,  341,  341,  402,  344,  344,  344,  344,
+			  420,  418,  272,  764,  272,  272,  272,  424,  744,  268,
+			   98,  345,  347,  347,  347,  347,  268,   98,  708,  365,
+			  365,  365,  365,  457,   98,  272,  272,  418,  272,  272,
+			  272,  272,  272,  272,  272,  272,  272,  272,  271,  424,
+			  272,  272,   99,  345,   99,  275,  276,  275,  277,  103,
+			  275,  277,  277,  277,  275,  275,  277,  278,  275,  275,
+			  277,  277,  277,  277,  277,  277,  275,  275,  275,  277,
+			  275, yy_Dummy>>,
+			1, 191, 600)
 		end
 
 	yy_nxt_template_5 (an_array: ARRAY [INTEGER])
 			-- Fill chunk #5 of template for `yy_nxt'.
 		do
 			yy_array_subcopy (an_array, <<
-			  275,  271,  273,  271,  271,  271,  273,  273,  273,  273,
-			  273,  273,  273,  273,  273,  273,  273,  273,  273,  273,
-			  273,  273,  275,  273,  271,  271,  273,  271,  268,  268,
-			  268,  268,  268,  268,  268,  268,  268,   99,   99,  268,
-			  268,   99,  280,  100,  422,  783,  100,  410,   99,  252,
-			  100,  100,  256,   99,  100,  100,  345,  421,  346,  346,
-			  346,  346,  100,  429,  100,  427,  100,   99,  736,  375,
-			  422,  402,  376,  347,  357,   99,  358,   98,  417,  410,
-			   99,   99,  418,  403,  385,  359,  467,  360,  386,  421,
-			   99,  427,  430,  119,  100,  429,  100,  458,  100,   99,
+			  279,  275,  277,  275,  275,  275,  277,  277,  277,  277,
+			  277,  277,  277,  277,  277,  277,  277,  277,  277,  277,
+			  277,  277,  279,  277,  275,  275,  277,  275,  272,  272,
+			  272,  272,  272,  272,  272,  272,  272,   99,   99,  272,
+			  272,   99,  284,  100,  459,   98,  100,  271,   99,  704,
+			  100,  100,  435,   99,  100,  100,  354,  419,  355,  355,
+			  355,  355,  100,  403,  100,  381,  100,   99,  386,  386,
+			  386,  386,  695,  356,  366,   99,  367,   98,  404,  416,
+			   99,   99,  692,  419,  435,  368,  389,  369,  421,  390,
+			   99,  417,  481,  120,  100,  403,  100,  422,  100,   99,
 
-			  375,  376,  387,  402,  558,  347,   99,  417,   99,  264,
-			   98,  471,  364,  364,  364,  364,  385,  559,  430,  468,
-			  386,  100,  299,  654,  299,  445,   98,  299,  387,  407,
-			  458,  299,  299,  762,  301,  299,  299,  471,  408,  228,
-			  228,  228,  540,  299,  299,  299,  451,  299,  264,   98,
-			  424,  366,  366,  366,  366,  425,  397,  259,  260,  259,
-			  398,  407,  452,  453,  453,  453,  426,  408,  254,  252,
-			  254,  399,  253,  540,  400,  299,  476,  299,  299,  299,
-			  469,  737,  424,  261,  261,  261,  425,  458,  397,  538,
-			  474,  398,  426,  292,  293,  292,  717,  399,  299,  299, yy_Dummy>>,
-			1, 200, 815)
+			  232,  232,  232,  472,  404,  356,   99,  465,   99,  268,
+			   98,  416,  373,  373,  373,  373,  256,  389,  390,  260,
+			  421,  100,  291,  292,  291,  293,  422,  291,  293,  293,
+			  293,  291,  291,  293,  294,  291,  291,  293,  293,  293,
+			  293,  293,  293,  291,  291,  291,  293,  291,  268,   98,
+			  443,  375,  375,  375,  375,  423,  405,  434,  431,  586,
+			  406,  688,  432,  675,  436,  441,  444,  268,   98,  482,
+			  448,  448,  448,  448,  295,  291,  293,  291,  291,  291,
+			  472,  423,  443,  434,  762,  399,  406,  431,  586,  400,
+			  436,  441,  444,  263,  264,  263,  295,  293,  291,  291, yy_Dummy>>,
+			1, 200, 817)
 		end
 
 	yy_nxt_template_6 (an_array: ARRAY [INTEGER])
 			-- Fill chunk #6 of template for `yy_nxt'.
 		do
 			yy_array_subcopy (an_array, <<
-			  400,  299,  131,  131,  131,  131,  131,  131,  131,  131,
-			  131,  585,  469,  131,  131,  305,  474,  538,  306,  681,
-			  307,  308,  309,  528,   98,  255,  264,   98,  310,  434,
-			  434,  434,  434,  264,   98,  311,  539,  312,  543,  585,
-			  313,  314,  315,  316,  531,  317,  255,  318,  292,  293,
-			  292,  319,  267,  320,  264,   98,  321,  322,  323,  324,
-			  325,  326,  299,  530,  299,  349,  349,  299,  539,  584,
-			  543,  299,  299,  546,  372,  299,  299,  487,  488,  488,
-			  488,  544,  541,  299,  299,  299,  677,  299,  411,  668,
-			  412,  264,   98,  665,  436,  436,  436,  436,  413,  542,
+			  293,  291,  121,  401,  121,  490,  663,  121,  265,  265,
+			  265,  121,  121,  488,  306,  124,  121,  399,  258,  256,
+			  258,  400,  257,  121,  121,  121,  763,  121,  411,  401,
+			  493,  490,  412,  495,  438,  466,  467,  467,  467,  439,
+			  301,  302,  301,  413,  472,  488,  414,  658,  268,   98,
+			  440,  450,  450,  450,  450,  121,  493,  121,  121,  121,
+			  411,  547,   98,  412,  268,   98,  438,  566,  655,  413,
+			  439,  564,  414,  549,  565,  259,  440,  770,  121,  121,
+			  557,  121,   96,   96,   96,   96,   96,   96,   96,   96,
+			   96,  358,  358,   96,   96,  308,  259,  308,  566,  564,
 
-			  584,  414,  545,  415,  416,  546,  521,  544,  456,  456,
-			  456,  464,  293,  464,  541,  299,  661,  299,  299,  299,
-			  411,  481,  412,  265,  457,  542,  413,  414,  545,  415,
-			  416,  264,   98,  547,  506,  506,  506,  506,  299,  299,
-			  747,  299,  131,  131,  131,  131,  131,  131,  131,  131,
-			  131,  264,   98,  131,  131,  273,  460,  273,  548,  547,
-			  273,  552,  158,  648,  273,  273,  276,  461,  273,  273,
-			  477,  477,  477,  351,  351,  351,  273,  273,  273,  636,
-			  273,  556,  748,  557,  548,  301,  478,  552,  276,  839,
-			  839,  839,  839,  839,  839,  839,  839,  839,  549,  631, yy_Dummy>>,
-			1, 200, 1015)
+			  308,  301,  302,  301,  308,  308,  565,  310,  308,  308,
+			  470,  470,  470,  478,  302,  478,  308,  308,  308,  771,
+			  308,  425,  569,  426,  651,  269,  471,  301,  302,  301,
+			  570,  427,  540,  584,  428,  571,  429,  430,  506,  507,
+			  507,  507,  526,  526,  526,  526,  585,  573,  308,  354,
+			  308,  308,  308,  425,  569,  426,  570,  345,  574,  427,
+			  428,  571,  429,  430,  611,  360,  360,  360,  280,  613,
+			  543,  308,  308,  573,  308,  132,  132,  132,  132,  132,
+			  132,  132,  132,  132,  574,  572,  132,  132,  314,  345,
+			  280,  315,  611,  316,  317,  318,  500,  578,  613,  268, yy_Dummy>>,
+			1, 200, 1017)
 		end
 
 	yy_nxt_template_7 (an_array: ARRAY [INTEGER])
 			-- Fill chunk #7 of template for `yy_nxt'.
 		do
 			yy_array_subcopy (an_array, <<
-			  839,  839,  507,  507,  507,  507,  628,  556,  273,  557,
-			  273,  273,  273,  508,  523,  508,  593,  336,  509,  509,
-			  509,  509,  264,   98,  624,  511,  511,  511,  511,  345,
-			  549,  273,  273,  524,  273,   99,   99,   99,   99,   99,
-			   99,   99,   99,   99,  593,  522,   99,   99,   99,  336,
-			   99,  102,  267,  102,  462,  103,  102,  462,  462,  462,
-			  102,  102,  462,   99,  102,  102,  462,  462,  462,  462,
-			  462,  462,  102,  102,  102,  462,  102, yy_Dummy>>,
-			1, 77, 1215)
+			   98,  319,  525,  525,  525,  525,  542,  575,  320,  541,
+			  321,  268,   98,  322,  323,  324,  325,  572,  326,  774,
+			  327,  637,  550,  578,  328,  307,  329,  701,  701,  330,
+			  331,  332,  333,  334,  335,  383,  635,  383,  384,  575,
+			  383,  384,  384,  384,  383,  383,  384,  385,  383,  383,
+			  384,  384,  384,  384,  384,  384,  383,  383,  383,  384,
+			  383,  775,  268,   98,  866,  866,  866,  866,  866,  866,
+			  866,  866,  866,  159,  576,  866,  866,  527,  631,  527,
+			  619,  582,  528,  528,  528,  528,  292,  384,  383,  384,
+			  383,  383,  383,  866,  866,  866,  866,  866,  866,  866,
+
+			  866,  866,  577,  581,  866,  866,  576,  582,  619,  384,
+			  384,  383,  383,  384,  383,  132,  132,  132,  132,  132,
+			  132,  132,  132,  132,  668,  579,  132,  132,  277,  474,
+			  277,  709,  709,  277,  577,  581,  583,  277,  277,  580,
+			  475,  277,  277,  470,  470,  470,  630,  598,  276,  277,
+			  277,  277,  668,  277,  470,  470,  470,  579,  529,  471,
+			  268,   98,  583,  530,  530,  530,  530,  587,  273,  531,
+			  471,  268,   98,  598,  532,  532,  532,  532,  470,  470,
+			  470,  277,  629,  277,  277,  277,  268,   98,  634,  534,
+			  534,  534,  534,  533,  471,  537,  603,  537,  597,  587, yy_Dummy>>,
+			1, 200, 1217)
 		end
 
 	yy_nxt_template_8 (an_array: ARRAY [INTEGER])
 			-- Fill chunk #8 of template for `yy_nxt'.
 		do
 			yy_array_subcopy (an_array, <<
-			  463,  102,  462,  102,  102,  102,  462,  462,  462,  462,
-			  462,  462,  462,  462,  462,  462,  462,  462,  462,  462,
-			  462,  462,  463,  462,  102,  102,  462,  102,  100,  100,
-			  100,  100,  100,  100,  100,  100,  100,   99,   99,  100,
-			  100,   99,  479,  479,  479,  456,  456,  456,  456,  456,
-			  456,  456,  456,  456,  550,  610,  605,  480,  606,   96,
-			  510,  457,  551,  512,  457,   96,  514,  457,  264,   98,
-			  298,  513,  513,  513,  513,  264,   98,  641,  515,  515,
-			  515,  515,  527,  527,  527,  527,  550,  516,  516,  516,
-			  516,  518,  555,  518,  551,  608,  519,  519,  519,  519,
-
-			  528,   98,  517,  561,  142,  641,  520,  520,  520,  520,
-			  525,  360,  526,  526,  526,  526,  264,   98,  604,  533,
-			  533,  533,  533,  354,  555,  839,  839,  839,  839,  839,
-			  839,  839,  839,  839,  517,  561,  839,  839,  839,  839,
-			  839,  839,  839,  839,  839,  839,  839,  147,  272,  839,
-			  839,  674,  674,  354,  456,  456,  456,  456,  456,  456,
-			  456,  456,  456,  562,  564,  553,  565,  572,  577,  529,
-			  457,  566,  532,  457,  568,  534,  457,  264,   98,  554,
-			  535,  535,  535,  535,  456,  456,  456,  570,  573,  574,
-			  575,  576,  578,  572,  577,  562,  564,  553,  565,  536, yy_Dummy>>,
-			1, 200, 1318)
+			  538,  538,  538,  538,  277,  277,  595,  277,   99,   99,
+			   99,   99,   99,   99,   99,   99,   99,  634,  593,   99,
+			   99,   99,  603,   99,  102,  271,  102,  476,  103,  102,
+			  476,  476,  476,  102,  102,  476,   99,  102,  102,  476,
+			  476,  476,  476,  476,  476,  102,  102,  102,  476,  102, yy_Dummy>>,
+			1, 50, 1417)
 		end
 
 	yy_nxt_template_9 (an_array: ARRAY [INTEGER])
 			-- Fill chunk #9 of template for `yy_nxt'.
 		do
 			yy_array_subcopy (an_array, <<
-			  457,  580,  581,  566,  589,  582,  568,  583,  586,  588,
-			  579,  590,  591,  592,  269,  607,  456,  456,  456,  570,
-			  573,  574,  575,  576,  578,  349,  349,  580,  630,  603,
-			  589,  594,  457,  609,  581,  629,  579,  582,  571,  583,
-			  586,  588,  590,  591,  607,  592,  264,   98,  569,  595,
-			  595,  595,  595,  456,  456,  456,  456,  456,  456,  630,
-			  598,  453,  453,  453,  453,  609,  521,  629,  596,  457,
-			  625,  597,  457,  599,  600,  598,  453,  453,  453,  453,
-			   97,   98,  480,  266,  266,  266,  266,  567,  292,  293,
-			  292,  464,  293,  464,  122,  601,  625,  302,  302,  302,
+			  477,  102,  476,  102,  102,  102,  476,  476,  476,  476,
+			  476,  476,  476,  476,  476,  476,  476,  476,  476,  476,
+			  476,  476,  477,  476,  102,  102,  476,  102,  100,  100,
+			  100,  100,  100,  100,  100,  100,  100,   99,   99,  100,
+			  100,   99,  293,  484,  293,  293,  589,  293,  293,  293,
+			  293,  293,  293,  293,  485,  293,  293,  293,  293,  293,
+			  293,  293,  293,  293,  293,  293,  293,  293,  535,  535,
+			  535,  535,  546,  546,  546,  546,  470,  470,  470,  588,
+			  590,  563,  591,  536,  382,  470,  470,  470,  470,  470,
+			  470,  548,  471,  562,  295,  293,  293,  293,  293,  293,
 
-			  302,  694,  602,  604,  626,  599,  600,  611,  488,  488,
-			  488,  488,  509,  509,  509,  509,  627,  602,  462,  460,
-			  462,  563,  357,  462,  358,   98,  537,  462,  462,  694,
-			  626,  462,  462,  359,  611,  488,  488,  488,  488,  462,
-			  462,  462,  627,  462,  632,  633,  276,  612,  613,  615,
-			  839,  839,  839,  839,  839,  839,  839,  839,  839,  524,
-			  634,  839,  839,  509,  509,  509,  509,  522,  276,  614,
-			  632,  462,  505,  462,  462,  462,  615,  633,  652,  612,
-			  613,  616,  616,  616,  616,  619,  634,  619,  635,  638,
-			  620,  620,  620,  620,  462,  462,  336,  462,   99,   99, yy_Dummy>>,
-			1, 200, 1518)
+			  551,  471,  592,  553,  471,  143,  561,  539,  539,  539,
+			  539,  588,  590,  363,  591,  536,  295,  293,  293,  293,
+			  293,  293,  111,  271,  111,  486,  543,  111,  486,  486,
+			  486,  111,  111,  486,  592,  111,  111,  486,  486,  486,
+			  486,  486,  486,  111,  111,  111,  486,  111,  148,  544,
+			  594,  545,  545,  545,  545,  268,   98,  596,  552,  552,
+			  552,  552,  268,   98,  606,  554,  554,  554,  554,  470,
+			  470,  470,  547,   98,  487,  111,  486,  111,  111,  111,
+			  599,  600,  594,  369,  555,  471,  702,  702,  702,  596,
+			  606,  541,  363,  556,  556,  556,  487,  486,  111,  111, yy_Dummy>>,
+			1, 200, 1493)
 		end
 
 	yy_nxt_template_10 (an_array: ARRAY [INTEGER])
 			-- Fill chunk #10 of template for `yy_nxt'.
 		do
 			yy_array_subcopy (an_array, <<
-			   99,   99,   99,   99,   99,   99,   99,  652,  637,   99,
-			   99,  618,  618,  618,  618,  519,  519,  519,  519,  131,
-			  635,  638,  617,  639,  644,  131,  517,  504,  336,  519,
-			  519,  519,  519,  621,  637,  520,  520,  520,  520,  525,
-			  647,  622,  622,  622,  622,  525,  640,  527,  527,  527,
-			  527,  456,  456,  456,  639,  642,  644,  643,  517,  645,
-			  646,  649,  650,  651,  653,  658,  623,  457,  503,  657,
-			  659,  647,  640,  662,  666,  660,  354,  663,  664,  667,
-			  669,  642,  354,  643,  670,  645,  672,  649,  354,  651,
-			  673,  658,  646,  653,  650,  654,  654,  654,  671,  655,
+			  486,  111,  496,  496,  496,  308,  567,  308,  557,  558,
+			  308,  601,  599,  600,  308,  308,  602,  310,  497,  308,
+			  559,  559,  559,  568,  604,  607,  308,  308,  308,  615,
+			  308,  608,  609,  652,  610,  560,  616,  612,  567,  614,
+			  524,  617,  605,  601,  618,  359,  359,  653,  602,  568,
+			  523,  301,  302,  301,  522,  615,  604,  607,  308,  652,
+			  308,  308,  308,  608,  609,  610,  630,  616,  605,  612,
+			  521,  614,  617,  653,  268,   98,  618,  621,  621,  621,
+			  621,  308,  308,  636,  308,  132,  132,  132,  132,  132,
+			  132,  132,  132,  132,  520,  654,  132,  132,  498,  498,
 
-			  657,  660,  659,  663,  662,  667,  666,  664,  678,  679,
-			  656,  502,  669,  680,  501,  672,  670,  675,  675,  675,
-			  682,  682,  673,  700,  671,  453,  453,  453,  453,  684,
-			  684,  684,  695,  702,  678,  686,  686,  686,  686,  693,
-			  679,  696,  680,  616,  616,  616,  616,  688,  688,  688,
-			  688,  700,  689,  689,  689,  689,  703,  697,  687,  620,
-			  620,  620,  620,  695,  702,  693,  602,  517,  620,  620,
-			  620,  620,  655,  696,  701,  345,  615,  689,  689,  689,
-			  689,  704,  692,  697,  527,  527,  527,  527,  703,  705,
-			  687,  698,  691,  690,  706,  699,  708,  711,  500,  517, yy_Dummy>>,
-			1, 200, 1718)
+			  498,  470,  470,  470,  470,  470,  470,  470,  470,  470,
+			  358,  358,  679,  499,  519,  636,  620,  471,  518,  622,
+			  471,  654,  623,  471,  624,  467,  467,  467,  467,  624,
+			  467,  467,  467,  467,  301,  302,  301,  625,  626,   97,
+			   98,  679,  270,  270,  270,  270,  478,  302,  478,  631,
+			  123,  540,  517,  311,  311,  311,  311,  499,  656,  627,
+			  638,  507,  507,  507,  507,  659,  628,  657,  660,  625,
+			  626,  628,  528,  528,  528,  528,  528,  528,  528,  528,
+			  661,  866,  866,  866,  866,  866,  866,  866,  866,  866,
+			  656,  659,  866,  866,  476,  474,  476,  516,  657,  476, yy_Dummy>>,
+			1, 200, 1693)
 		end
 
 	yy_nxt_template_11 (an_array: ARRAY [INTEGER])
 			-- Fill chunk #11 of template for `yy_nxt'.
 		do
 			yy_array_subcopy (an_array, <<
-			  701,  707,  709,  710,  499,  712,  713,  719,  714,  715,
-			  498,  723,  730,  704,  720,  718,  721,  722,  724,  727,
-			  706,  705,  708,  698,  691,  147,  699,  725,  711,  707,
-			  709,  728,  726,  719,  729,  710,  712,  723,  713,  714,
-			  730,  715,  654,  654,  654,  720,  716,  718,  721,  722,
-			  724,  727,  738,  725,  731,  674,  674,  656,  726,  739,
-			  740,  497,  728,  741,  682,  682,  729,  733,  675,  675,
-			  675,  745,  684,  684,  684,  749,  686,  686,  686,  686,
-			  496,  495,  750,  738,  750,  760,  740,  751,  751,  751,
-			  751,  739,  752,  752,  752,  752,  732,  689,  689,  689,
+			  660,  280,  642,  476,  476,  680,  661,  476,  476,  645,
+			  645,  645,  645,  664,  721,  476,  476,  476,  515,  476,
+			  866,  866,  866,  280,  536,  866,  866,  866,  866,  866,
+			  866,  866,  866,  866,  680,  560,  866,  866,  646,  664,
+			  646,  727,  721,  647,  647,  647,  647,  476,  514,  476,
+			  476,  476,  538,  538,  538,  538,  536,  538,  538,  538,
+			  538,  366,  561,  367,   98,  386,  386,  386,  386,  727,
+			  476,  476,  368,  476,   99,   99,   99,   99,   99,   99,
+			   99,   99,   99,  701,  701,   99,   99,  486,  484,  486,
+			  486,  662,  486,  486,  486,  486,  486,  486,  486,  691,
 
-			  689,  755,  755,  755,  755,  742,  759,  753,  761,  734,
-			  763,  760,  754,  746,  764,  765,  756,  615,  756,  716,
-			  766,  757,  757,  757,  757,  345,  767,  755,  755,  755,
-			  755,  768,  770,  769,  761,  771,  763,  773,  759,  753,
-			  772,  774,  758,  775,  754,  776,  764,  765,  777,  778,
-			  779,  494,  766,  780,  782,  781,  674,  674,  767,  769,
-			  770,  771,  784,  768,  785,  802,  772,  774,  786,  773,
-			  801,  776,  775,  825,  758,  493,  777,  778,  492,  780,
-			  782,  491,  779,  781,  675,  675,  675,  490,  806,  489,
-			  785,  800,  486,  802,  784,  803,  801,  732,  804,  825, yy_Dummy>>,
-			1, 200, 1918)
+			  486,  486,  486,  486,  486,  486,  486,  486,  486,  486,
+			  486,  486,  486,  638,  507,  507,  507,  507,  734,  470,
+			  470,  470,  665,  662,  759,  666,  639,  640,  691,  513,
+			  643,  643,  643,  643,  650,  471,  671,  361,  361,  487,
+			  486,  486,  486,  486,  486,  345,  734,  648,  641,  539,
+			  539,  539,  539,  673,  665,  642,  666,  667,  639,  640,
+			  669,  487,  486,  486,  486,  486,  486,  670,  671,  672,
+			  544,  644,  649,  649,  649,  649,  544,  345,  546,  546,
+			  546,  546,  676,  667,  674,  673,  669,  684,  677,  686,
+			  363,  678,  689,  670,  693,  672,  681,  681,  681,  685, yy_Dummy>>,
+			1, 200, 1893)
 		end
 
 	yy_nxt_template_12 (an_array: ARRAY [INTEGER])
 			-- Fill chunk #12 of template for `yy_nxt'.
 		do
 			yy_array_subcopy (an_array, <<
-			  786,  751,  751,  751,  751,  751,  751,  751,  751,  791,
-			  791,  791,  791,  792,  485,  792,  805,  806,  793,  793,
-			  793,  793,  484,  800,  753,  734,  794,  803,  794,  808,
-			  804,  795,  795,  795,  795,  796,  796,  796,  796,  757,
-			  757,  757,  757,  757,  757,  757,  757,  798,  805,  798,
-			  797,  809,  799,  799,  799,  799,  753,  808,  810,  810,
-			  810,  813,  814,  815,  816,  828,  753,  483,  482,  817,
-			  793,  793,  793,  793,  793,  793,  793,  793,  795,  795,
-			  795,  795,  797,  809,  795,  795,  795,  795,  823,  811,
-			  824,  828,  617,  813,  814,  815,  816,  817,  753,  820,
+			  682,  687,  690,  694,  696,  697,  698,  700,  676,  699,
+			  512,  683,  511,  363,  706,  674,  722,  678,  684,  363,
+			  677,  686,  705,  689,  707,  685,  693,  687,  690,  694,
+			  703,  703,  698,  711,  711,  711,  696,  697,  699,  700,
+			  467,  467,  467,  467,  720,  706,  723,  722,  705,  713,
+			  713,  713,  713,  707,  643,  643,  643,  643,  715,  715,
+			  715,  715,  716,  716,  716,  716,  724,  729,  730,  714,
+			  720,  728,  163,  682,  163,  510,  163,  536,  723,  163,
+			  731,  628,  647,  647,  647,  647,  647,  647,  647,  647,
+			  642,  354,  724,  716,  716,  716,  716,  728,  729,  732,
 
-			  820,  820,  820,  821,  827,  821,  829,  122,  822,  822,
-			  822,  822,  831,  797,  797,  799,  799,  799,  799,  824,
-			  823,  811,  799,  799,  799,  799,  810,  810,  810,  822,
-			  822,  822,  822,  827,  822,  822,  822,  822,  829,  690,
-			  832,  833,  834,  475,  831,  797,  797,  470,  465,  835,
-			  836,  837,  838,  162,  162,  162,  459,  826,   76,   76,
-			   76,   76,   76,   76,   76,   76,   76,  267,  458,  832,
-			  455,  258,  227,  833,  834,  835,  836,  837,  838,   80,
-			   80,   80,   80,   80,   80,   80,   80,   80,  450,  826,
-			   85,   85,   85,   85,   85,   85,   85,   85,   85,   87, yy_Dummy>>,
-			1, 200, 2118)
+			  730,  714,  719,  717,  546,  546,  546,  546,  718,  536,
+			  733,  725,  731,  735,  736,  726,  737,  509,  738,  739,
+			  740,  746,  741,  742,  745,  748,  681,  681,  681,  747,
+			  743,  732,  749,  750,  751,  752,  733,  753,  754,  735,
+			  718,  683,  736,  725,  755,  148,  726,  746,  737,  738,
+			  739,  756,  740,  741,  757,  742,  745,  748,  765,  750,
+			  747,  752,  766,  753,  749,  767,  751,  758,  701,  701,
+			  754,  760,  702,  702,  702,  755,  768,  709,  709,  786,
+			  791,  802,  757,  756,  772,  711,  711,  711,  508,  765,
+			  505,  767,  792,  504,  766,  776,  713,  713,  713,  713, yy_Dummy>>,
+			1, 200, 2093)
 		end
 
 	yy_nxt_template_13 (an_array: ARRAY [INTEGER])
 			-- Fill chunk #13 of template for `yy_nxt'.
 		do
 			yy_array_subcopy (an_array, <<
-			   87,   87,   87,   87,   87,   87,   87,   87,   90,   90,
-			   90,   90,   90,   90,   90,   90,   90,  121,  449,  121,
-			  448,  121,  121,  121,  124,  124,  124,  124,  124,  124,
-			  124,  124,  226,  226,  226,  447,  226,  226,  226,  226,
-			  251,  251,  251,  251,  251,  251,  251,  251,  251,  255,
-			  255,  255,  255,  255,  255,  255,  255,  255,  257,  257,
-			  257,  257,  257,  257,  257,  257,  257,  103,  446,  103,
-			  103,  103,  103,  103,  103,  300,  444,  300,  442,  300,
-			  300,  300,  303,  303,  303,  303,  303,  303,  303,  303,
-			  454,  454,  454,  454,  454,  454,  454,  454,  717,  717,
+			  777,  787,  777,  743,  503,  778,  778,  778,  778,  759,
+			  802,  786,  791,  761,  779,  779,  779,  779,  769,  716,
+			  716,  716,  716,  793,  792,  788,  773,  787,  790,  780,
+			  782,  782,  782,  782,  781,  794,  783,  642,  783,  795,
+			  797,  784,  784,  784,  784,  354,  796,  782,  782,  782,
+			  782,  788,  798,  799,  790,  793,  800,  801,  803,  804,
+			  806,  780,  785,  805,  807,  808,  781,  794,  797,  809,
+			  811,  795,  796,  702,  702,  702,  813,  812,  798,  799,
+			  710,  710,  502,  801,  803,  827,  501,  804,  800,  123,
+			  807,  805,  806,  808,  785,  809,  778,  778,  778,  778,
 
-			  717,  717,  717,  717,  717,  717,  717,  783,  783,  783,
-			  783,  783,  783,  783,  783,  441,  440,  439,  438,  437,
-			  435,  433,  423,  419,  401,  396,  395,  371,  365,  363,
-			  355,  337,  332,  330,  328,  327,  304,  297,  296,  295,
-			  291,  289,  288,  279,  278,  277,  265,  263,  262,  258,
-			  227,  223,  222,  206,  188,  148,  839,   86,   86,   13, yy_Dummy>>,
-			1, 160, 2318)
+			  828,  494,  811,  812,  778,  778,  778,  778,  813,  818,
+			  818,  818,  818,  819,  761,  819,  830,  827,  820,  820,
+			  820,  820,  831,  821,  780,  821,  828,  829,  822,  822,
+			  822,  822,  823,  823,  823,  823,  784,  784,  784,  784,
+			  784,  784,  784,  784,  825,  832,  825,  824,  830,  826,
+			  826,  826,  826,  833,  831,  829,  780,  835,  836,  844,
+			  837,  837,  837,  840,  841,  842,  843,  780,  820,  820,
+			  820,  820,  820,  820,  820,  820,  850,  832,  489,  824,
+			  712,  712,  833,  483,  479,  835,  473,  844,  851,  271,
+			  836,  838,  472,  644,  469,  840,  841,  842,  843,  780, yy_Dummy>>,
+			1, 200, 2293)
+		end
+
+	yy_nxt_template_14 (an_array: ARRAY [INTEGER])
+			-- Fill chunk #14 of template for `yy_nxt'.
+		do
+			yy_array_subcopy (an_array, <<
+			  822,  822,  822,  822,  822,  822,  822,  822,  850,  847,
+			  847,  847,  847,  848,  852,  848,  854,  851,  849,  849,
+			  849,  849,  855,  838,  824,  826,  826,  826,  826,  826,
+			  826,  826,  826,  837,  837,  837,  856,  824,  858,  860,
+			  852,  849,  849,  849,  849,  854,  859,  861,  855,  849,
+			  849,  849,  849,   96,  862,  863,  824,  864,  865,  132,
+			   96,   96,  262,  717,  853,  231,  132,  132,  856,  824,
+			  858,  860,  464,  463,  462,  859,  461,  460,  458,  861,
+			  862,  863,  456,  864,  865,  122,  455,  122,  454,  122,
+			  122,  122,  122,  122,  453,  452,  853,   76,   76,   76,
+
+			   76,   76,   76,   76,   76,   76,   76,   76,   76,   80,
+			   80,   80,   80,   80,   80,   80,   80,   80,   80,   80,
+			   80,   85,   85,   85,   85,   85,   85,   85,   85,   85,
+			   85,   85,   85,   87,   87,   87,   87,   87,   87,   87,
+			   87,   87,   87,   87,   87,   90,   90,   90,   90,   90,
+			   90,   90,   90,   90,   90,   90,   90,  125,  451,  125,
+			  125,  125,  125,  125,  125,  125,  125,  125,  125,  166,
+			  166,  166,  166,  230,  449,  230,  230,  230,  447,  230,
+			  230,  230,  230,  230,  230,  255,  255,  255,  255,  255,
+			  255,  255,  255,  255,  255,  255,  255,  259,  259,  259, yy_Dummy>>,
+			1, 200, 2493)
+		end
+
+	yy_nxt_template_15 (an_array: ARRAY [INTEGER])
+			-- Fill chunk #15 of template for `yy_nxt'.
+		do
+			yy_array_subcopy (an_array, <<
+			  259,  259,  259,  259,  259,  259,  259,  259,  259,  261,
+			  261,  261,  261,  261,  261,  261,  261,  261,  261,  261,
+			  261,  103,  437,  103,  433,  103,  103,  103,  103,  103,
+			  103,  103,  103,  309,  415,  309,  410,  309,  309,  309,
+			  309,  309,  312,  409,  312,  312,  312,  312,  312,  312,
+			  312,  312,  312,  312,  468,  382,  468,  468,  468,  468,
+			  468,  468,  468,  468,  468,  468,  384,  384,  384,  381,
+			  384,  380,  384,  374,  372,  384,  744,  744,  744,  744,
+			  744,  744,  744,  744,  744,  744,  744,  744,  810,  364,
+			  810,  810,  810,  810,  810,  810,  810,  810,  810,  810,
+
+			  346,  341,  339,  337,  336,  313,  305,  304,  300,  298,
+			  297,  283,  282,  281,  269,  267,  266,  262,  231,  227,
+			  226,  210,  192,  149,  866,   86,   86,   13, yy_Dummy>>,
+			1, 128, 2693)
 		end
 
 	yy_chk_template: SPECIAL [INTEGER]
@@ -3715,7 +3841,7 @@ feature {NONE} -- Table templates
 		local
 			an_array: ARRAY [INTEGER]
 		once
-			create an_array.make_filled (0, 0, 2574)
+			create an_array.make_filled (0, 0, 2917)
 			an_array.put (0, 0)
 			an_array.area.fill_with (1, 1, 97)
 			yy_chk_template_1 (an_array)
@@ -3723,18 +3849,19 @@ feature {NONE} -- Table templates
 			yy_chk_template_2 (an_array)
 			yy_chk_template_3 (an_array)
 			yy_chk_template_4 (an_array)
-			an_array.area.fill_with (102, 762, 856)
+			an_array.area.fill_with (102, 764, 858)
 			yy_chk_template_5 (an_array)
 			yy_chk_template_6 (an_array)
 			yy_chk_template_7 (an_array)
-			an_array.area.fill_with (274, 1265, 1359)
+			an_array.area.fill_with (278, 1440, 1534)
 			yy_chk_template_8 (an_array)
 			yy_chk_template_9 (an_array)
 			yy_chk_template_10 (an_array)
 			yy_chk_template_11 (an_array)
 			yy_chk_template_12 (an_array)
 			yy_chk_template_13 (an_array)
-			an_array.area.fill_with (839, 2477, 2574)
+			yy_chk_template_14 (an_array)
+			an_array.area.fill_with (866, 2820, 2917)
 			Result := yy_fixed_array (an_array)
 		end
 
@@ -3743,15 +3870,15 @@ feature {NONE} -- Table templates
 		do
 			yy_array_subcopy (an_array, <<
 			    3,    4,   80,    3,    4,   80,    3,    4,    5,    5,
-			    5,  862,    5,    6,    6,    6,  861,    6,    9,    9,
+			    5,  844,    5,    6,    6,    6,  813,    6,    9,    9,
 			    9,   10,   10,   10,   11,   11,   11,   12,   12,   12,
 			   15,   15,   15,   16,   16,   16,   17,   17,   21,   11,
 			   21,   55,   12,   24,   24,   15,   25,   25,   16,   27,
 			   27,   28,   50,   28,   28,   28,   28,   34,   34,   37,
 			   27,   35,   35,   36,   36,    5,   34,   34,   84,   37,
 			    6,   84,   55,   36,   36,   60,   60,   63,   63,   64,
-			   64,   65,   65,  290,   50,  290,    5,   66,   66,   67,
-			   67,    6,   18,  860, yy_Dummy>>,
+			   64,   65,   65,  299,   50,  299,    5,   66,   66,   67,
+			   67,    6,   18,  812, yy_Dummy>>,
 			1, 94, 98)
 		end
 
@@ -3759,27 +3886,27 @@ feature {NONE} -- Table templates
 			-- Fill chunk #2 of template for `yy_chk'.
 		do
 			yy_array_subcopy (an_array, <<
-			   19,  676,   19,   58,   58,   19,   29,   29,   29,   19,
+			   19,  803,   19,   58,   58,   19,   29,   29,   29,   19,
 			   19,   53,   19,   19,   19,   30,   29,   30,   30,   30,
-			   30,   19,   19,   19,  111,   19,  858,   42,   44,   30,
+			   30,   19,   19,   19,  797,   19,  112,   42,   44,   30,
 			   30,   31,   44,   31,   31,   31,   31,   42,   43,   53,
-			   43,   68,   68,  676,   58,   44,   71,   71,   74,   74,
-			   43,   30,  111,   19,  109,   19,   19,   19,   30,   42,
-			   44,   30,   30,   46,   44,   45,  857,   43,   43,   46,
-			   29,   44,   45,   45,   31,  109,   19,   19,   45,   19,
-			   19,   19,   19,   19,   19,   19,   19,   19,   19,   69,
-			   69,   19,   19,   38,   46,   38,  817,   45,   38,   75,
+			   43,   46,   68,   68,   58,   44,   49,   46,   71,   71,
+			   43,   30,  109,   19,  112,   19,   19,   19,   30,   42,
+			   44,   30,   30,   49,   44,   74,   74,   43,   43,  110,
+			   29,   44,   46,  109,   31,  103,   19,   19,   49,   19,
+			   19,   19,   19,   19,   19,   19,   19,   19,   19,   49,
+			  110,   19,   19,   38,  208,   38,   38,  103,   38,   38,
 
-			   75,   45,   38,   38,   45,   38,   38,   38,  108,   54,
-			  164,   49,  114,   39,   38,   38,   38,   39,   38,   70,
-			   70,  108,   39,   54,   39,  103,   52,   41,   49,   39,
-			   39,   41,   96,   96,   41,  163,   52,   41,  114,   52,
-			   41,   54,  164,   49,  786,   39,   38,  103,   38,   38,
-			   38,   39,   39,  683,   49,   39,   39,   52,   41,   69,
-			   41,  163,   52,   41,  179,   52,   41,  110,  785,   38,
-			   38,  167,   38,   38,   38,   38,   38,   38,   38,   38,
-			   38,   38,   48,  776,   38,   38,   51,  770,  110,   70,
-			  131,  131,   48,  179,   48,  683,   51,  167,   48,  134, yy_Dummy>>,
+			   38,   38,   38,   38,   38,   38,   38,   38,   38,   38,
+			   38,   38,   38,   38,   38,   38,   38,   38,   38,   39,
+			   54,   69,   69,   39,   45,  208,   70,   70,   39,  776,
+			   39,   45,   45,  115,   54,   39,   39,   45,   75,   75,
+			   88,   88,   88,   96,   96,   38,   38,   38,   38,   38,
+			   38,   39,   54,   91,   91,   91,   45,   39,   39,  115,
+			   45,   39,   39,   45,   92,   92,   92,   38,   38,   38,
+			   38,   38,   38,   38,   38,   38,   38,   38,   38,   38,
+			   38,   38,   41,  775,   38,   38,   41,   48,  108,   41,
+			   51,   69,   41,  774,   52,   41,   70,   48,  773,   48, yy_Dummy>>,
 			1, 200, 287)
 		end
 
@@ -3787,27 +3914,27 @@ feature {NONE} -- Table templates
 			-- Fill chunk #3 of template for `yy_chk'.
 		do
 			yy_array_subcopy (an_array, <<
-			  134,   51,  139,  139,   81,   81,   81,  396,   81,   88,
-			   88,   88,  140,  140,   48,   91,   91,   91,   51,  141,
-			  141,   48,   48,  166,   48,  144,  144,   51,   79,   79,
-			   79,  749,   79,  152,  152,   79,  396,   79,   79,   79,
-			   92,   92,   92,  157,  157,   79,  168,  169,   94,   94,
-			   94,  748,   79,  251,   79,  166,  251,   79,   79,   79,
-			   79,   81,   79,   94,   79,  116,  116,  116,   79,  173,
-			   79,  423,  168,   79,   79,   79,   79,   79,   79,  169,
-			   98,   98,   81,   98,   98,   98,   98,   99,   99,   99,
-			  171,  170,   99,  172,   99,  173,   99,   99,  176,   99,
+			   51,  108,  167,   48,   52,   51,  171,   52,  132,  132,
+			   81,   81,   81,   41,   81,   41,  135,  135,   41,   48,
+			  772,   41,   51,  140,  140,   52,   48,   48,  167,   48,
+			   52,   51,  171,   52,   79,   79,   79,  168,   79,  141,
+			  141,   79,  771,   79,   79,   79,   94,   94,   94,   98,
+			   98,   79,   98,   98,   98,   98,  142,  142,   79,  255,
+			   79,   94,  255,   79,   79,   79,   79,   81,   79,  168,
+			   79,  120,  120,  120,   79,  770,   79,  145,  145,   79,
+			   79,   79,   79,   79,   79,  146,  146,  146,   81,   99,
+			   99,   99,  153,  153,   99,  488,   99,  488,   99,   99,
 
-			  423,   99,  119,  119,  119,  145,  145,  145,   99,   99,
-			   99,  123,   99,   99,  123,  123,  123,  123,  171,  158,
-			  158,   99,  116,  170,  176,  172,   99,   99,  128,  128,
-			  158,  128,  128,  128,  128,  177,   99,  747,  121,   99,
-			   99,  746,   99,   99,  143,   99,  143,  143,  143,  143,
-			  177,  188,   99,  178,   99,  130,  130,  178,  130,  130,
-			  130,  130,  189,   99,   99,  193,   99,  177,   99,   99,
-			   99,   99,   99,   99,   99,   99,  177,  188,   99,   99,
-			  100,  100,  100,  178,  180,  100,  745,  143,  189,  100,
-			  100,  193,  100,  100,  100,  198,  744,  147,  147,  147, yy_Dummy>>,
+			  170,   99,  769,   99,  117,  117,  117,  158,  158,  286,
+			   99,   99,   99,  172,   99,   99,  124,  124,  124,  124,
+			  286,  129,  129,   99,  129,  129,  129,  129,   99,   99,
+			  131,  131,  170,  131,  131,  131,  131,  173,   99,  172,
+			  122,   99,   99,  768,   99,   99,  144,   99,  144,  144,
+			  144,  144,  159,  159,   99,  764,   99,  148,  148,  148,
+			  148,  117,  175,  159,  183,   99,   99,  174,   99,  173,
+			   99,   99,   99,   99,   99,   99,   99,   99,  211,  211,
+			   99,   99,  100,  100,  100,  176,  184,  100,  763,  144,
+			  175,  100,  100,  183,  100,  100,  100,  177,  148,  174, yy_Dummy>>,
 			1, 200, 487)
 		end
 
@@ -3815,239 +3942,282 @@ feature {NONE} -- Table templates
 			-- Fill chunk #4 of template for `yy_chk'.
 		do
 			yy_array_subcopy (an_array, <<
-			  147,  100,  100,  100,  282,  100,  121,  121,  121,  121,
-			  121,  121,  121,  121,  121,  282,  180,  121,  121,  133,
-			  133,  198,  133,  133,  133,  133,  190,  136,  136,  136,
-			  136,  207,  207,  100,  743,  100,  100,  100,  147,  204,
-			  138,  138,  136,  138,  138,  138,  138,  150,  150,  742,
-			  150,  150,  150,  150,  218,  218,  100,  100,  190,  100,
-			  100,  100,  100,  100,  100,  100,  100,  100,  100,  741,
-			  204,  100,  100,  102,  136, yy_Dummy>>,
-			1, 75, 687)
+			  744,  194,  180,  100,  100,  100,  726,  100,  122,  122,
+			  122,  122,  122,  122,  122,  122,  122,  176,  184,  122,
+			  122,  134,  134,  177,  134,  134,  134,  134,  180,  137,
+			  137,  137,  137,  194,  192,  100,  704,  100,  100,  100,
+			  198,  683,  139,  139,  137,  139,  139,  139,  139,  151,
+			  151,  638,  151,  151,  151,  151,  222,  222,  100,  100,
+			  192,  100,  100,  100,  100,  100,  100,  100,  100,  100,
+			  100,  631,  198,  100,  100,  102,  137, yy_Dummy>>,
+			1, 77, 687)
 		end
 
 	yy_chk_template_5 (an_array: ARRAY [INTEGER])
 			-- Fill chunk #5 of template for `yy_chk'.
 		do
 			yy_array_subcopy (an_array, <<
-			  107,  107,  200,  737,  107,  194,  107,  255,  107,  107,
-			  255,  107,  107,  107,  142,  199,  142,  142,  142,  142,
-			  107,  205,  107,  203,  107,  107,  736,  165,  200,  187,
-			  165,  142,  151,  107,  151,  151,  196,  194,  107,  107,
-			  196,  187,  174,  151,  284,  151,  174,  199,  107,  203,
-			  206,  107,  107,  205,  107,  284,  107,  107,  165,  165,
-			  174,  187,  395,  142,  107,  196,  107,  154,  154,  289,
-			  154,  154,  154,  154,  174,  395,  206,  286,  174,  107,
-			  122,  717,  122,  220,  220,  122,  174,  191,  286,  122,
-			  122,  699,  122,  122,  122,  289,  191,  228,  228,  228,
+			  107,  107,  224,  224,  107,  630,  107,  629,  107,  107,
+			  203,  107,  107,  107,  143,  193,  143,  143,  143,  143,
+			  107,  181,  107,  165,  107,  107,  165,  165,  165,  165,
+			  610,  143,  152,  107,  152,  152,  181,  191,  107,  107,
+			  606,  193,  203,  152,  169,  152,  195,  169,  107,  191,
+			  288,  107,  107,  181,  107,  195,  107,  107,  232,  232,
+			  232,  288,  181,  143,  107,  232,  107,  155,  155,  191,
+			  155,  155,  155,  155,  259,  169,  169,  259,  195,  107,
+			  111,  111,  111,  111,  195,  111,  111,  111,  111,  111,
+			  111,  111,  111,  111,  111,  111,  111,  111,  111,  111,
 
-			  378,  122,  122,  122,  228,  122,  156,  156,  202,  156,
-			  156,  156,  156,  202,  184,  259,  259,  259,  184,  191,
-			  234,  234,  234,  234,  202,  191,  254,  254,  254,  184,
-			  254,  378,  184,  122,  295,  122,  122,  122,  287,  677,
-			  202,  261,  261,  261,  202,  295,  184,  374,  291,  184,
-			  202,  275,  275,  275,  656,  184,  122,  122,  184,  122,
-			  122,  122,  122,  122,  122,  122,  122,  122,  122,  421,
-			  287,  122,  122,  125,  291,  374,  125,  611,  125,  125,
-			  125,  357,  357,  254,  209,  209,  125,  209,  209,  209,
-			  209,  360,  360,  125,  375,  125,  380,  421,  125,  125, yy_Dummy>>,
-			1, 200, 857)
+			  111,  111,  111,  111,  111,  111,  157,  157,  209,  157,
+			  157,  157,  157,  197,  182,  202,  200,  410,  182,  602,
+			  200,  587,  204,  207,  210,  213,  213,  290,  213,  213,
+			  213,  213,  111,  111,  111,  111,  111,  111,  290,  197,
+			  209,  202,  703,  178,  182,  200,  410,  178,  204,  207,
+			  210,  263,  263,  263,  111,  111,  111,  111,  111,  111,
+			  121,  178,  121,  298,  574,  121,  265,  265,  265,  121,
+			  121,  296,  121,  121,  121,  178,  258,  258,  258,  178,
+			  258,  121,  121,  121,  703,  121,  188,  178,  300,  298,
+			  188,  304,  206,  238,  238,  238,  238,  206,  279,  279, yy_Dummy>>,
+			1, 200, 859)
 		end
 
 	yy_chk_template_6 (an_array: ARRAY [INTEGER])
 			-- Fill chunk #6 of template for `yy_chk'.
 		do
 			yy_array_subcopy (an_array, <<
-			  125,  125,  360,  125,  254,  125,  292,  292,  292,  125,
-			  604,  125,  359,  359,  125,  125,  125,  125,  125,  125,
-			  161,  359,  161,  349,  349,  161,  375,  420,  380,  161,
-			  161,  383,  161,  161,  161,  310,  310,  310,  310,  381,
-			  379,  161,  161,  161,  603,  161,  195,  584,  195,  211,
-			  211,  580,  211,  211,  211,  211,  195,  379,  420,  195,
-			  382,  195,  195,  383,  349,  381,  264,  264,  264,  276,
-			  276,  276,  379,  161,  576,  161,  161,  161,  195,  300,
-			  195,  264,  264,  379,  195,  195,  382,  195,  195,  334,
-			  334,  384,  334,  334,  334,  334,  161,  161,  685,  161,
+			  279,  188,  304,  296,  188,  569,  215,  215,  206,  215,
+			  215,  215,  215,  121,  300,  121,  121,  121,  188,  366,
+			  366,  188,  368,  368,  206,  392,  566,  188,  206,  388,
+			  188,  368,  389,  258,  206,  710,  121,  121,  561,  121,
+			  121,  121,  121,  121,  121,  121,  121,  121,  121,  358,
+			  358,  121,  121,  123,  258,  123,  392,  388,  123,  295,
+			  295,  295,  123,  123,  389,  123,  123,  123,  268,  268,
+			  268,  280,  280,  280,  123,  123,  123,  710,  123,  199,
+			  394,  199,  548,  268,  268,  301,  301,  301,  395,  199,
+			  358,  409,  199,  396,  199,  199,  319,  319,  319,  319,
 
-			  161,  161,  161,  161,  161,  161,  161,  161,  161,  370,
-			  370,  161,  161,  273,  273,  273,  385,  384,  273,  390,
-			  370,  561,  273,  273,  276,  273,  273,  273,  297,  297,
-			  297,  351,  351,  351,  273,  273,  273,  548,  273,  393,
-			  685,  394,  385,  297,  297,  390,  276,  300,  300,  300,
-			  300,  300,  300,  300,  300,  300,  386,  543,  300,  300,
-			  335,  335,  335,  335,  540,  393,  273,  394,  273,  273,
-			  273,  336,  351,  336,  429,  335,  336,  336,  336,  336,
-			  340,  340,  529,  340,  340,  340,  340,  525,  386,  273,
-			  273,  524,  273,  273,  273,  273,  273,  273,  273,  273, yy_Dummy>>,
-			1, 200, 1057)
+			  344,  344,  344,  344,  409,  398,  123,  544,  123,  123,
+			  123,  199,  394,  199,  395,  344,  399,  199,  199,  396,
+			  199,  199,  435,  360,  360,  360,  280,  437,  543,  123,
+			  123,  398,  123,  123,  123,  123,  123,  123,  123,  123,
+			  123,  123,  399,  397,  123,  123,  126,  344,  280,  126,
+			  435,  126,  126,  126,  309,  404,  437,  343,  343,  126,
+			  343,  343,  343,  343,  360,  400,  126,  541,  126,  369,
+			  369,  126,  126,  126,  126,  397,  126,  712,  126,  493,
+			  369,  404,  126,  311,  126,  625,  625,  126,  126,  126,
+			  126,  126,  126,  164,  490,  164,  164,  400,  164,  164, yy_Dummy>>,
+			1, 200, 1059)
 		end
 
 	yy_chk_template_7 (an_array: ARRAY [INTEGER])
 			-- Fill chunk #7 of template for `yy_chk'.
 		do
 			yy_array_subcopy (an_array, <<
-			  273,  273,  429,  522,  273,  273,  274,  335, yy_Dummy>>,
-			1, 8, 1257)
+			  164,  164,  164,  164,  164,  164,  164,  164,  164,  164,
+			  164,  164,  164,  164,  164,  164,  164,  164,  164,  712,
+			  379,  379,  309,  309,  309,  309,  309,  309,  309,  309,
+			  309,  379,  401,  309,  309,  345,  486,  345,  443,  407,
+			  345,  345,  345,  345,  483,  164,  164,  164,  164,  164,
+			  164,  311,  311,  311,  311,  311,  311,  311,  311,  311,
+			  402,  406,  311,  311,  401,  407,  443,  164,  164,  164,
+			  164,  164,  164,  164,  164,  164,  164,  164,  164,  164,
+			  164,  164,  579,  405,  164,  164,  277,  277,  277,  639,
+			  639,  277,  402,  406,  408,  277,  277,  405,  277,  277,
+
+			  277,  348,  348,  348,  476,  423,  473,  277,  277,  277,
+			  579,  277,  350,  350,  350,  405,  348,  348,  349,  349,
+			  408,  349,  349,  349,  349,  411,  472,  350,  350,  351,
+			  351,  423,  351,  351,  351,  351,  352,  352,  352,  277,
+			  469,  277,  277,  277,  353,  353,  489,  353,  353,  353,
+			  353,  352,  352,  356,  428,  356,  422,  411,  356,  356,
+			  356,  356,  277,  277,  419,  277,  277,  277,  277,  277,
+			  277,  277,  277,  277,  277,  489,  417,  277,  277,  278,
+			  428, yy_Dummy>>,
+			1, 181, 1259)
 		end
 
 	yy_chk_template_8 (an_array: ARRAY [INTEGER])
 			-- Fill chunk #8 of template for `yy_chk'.
 		do
 			yy_array_subcopy (an_array, <<
-			  298,  298,  298,  339,  339,  339,  341,  341,  341,  343,
-			  343,  343,  387,  474,  469,  298,  469,  845,  339,  339,
-			  388,  341,  341,  845,  343,  343,  342,  342,  302,  342,
-			  342,  342,  342,  344,  344,  553,  344,  344,  344,  344,
-			  354,  354,  354,  354,  387,  346,  346,  346,  346,  347,
-			  392,  347,  388,  471,  347,  347,  347,  347,  531,  531,
-			  346,  397,  348,  553,  348,  348,  348,  348,  353,  531,
-			  353,  353,  353,  353,  362,  362,  462,  362,  362,  362,
-			  362,  354,  392,  298,  298,  298,  298,  298,  298,  298,
-			  298,  298,  346,  397,  298,  298,  302,  302,  302,  302,
+			  293,  293,  293,  293,  413,  293,  293,  293,  293,  293,
+			  293,  293,  293,  293,  293,  293,  293,  293,  293,  293,
+			  293,  293,  293,  293,  293,  293,  355,  355,  355,  355,
+			  363,  363,  363,  363,  367,  367,  367,  412,  414,  387,
+			  415,  355,  386,  370,  370,  370,  376,  376,  376,  367,
+			  367,  384,  293,  293,  293,  293,  293,  293,  370,  370,
+			  416,  376,  376,  357,  383,  357,  357,  357,  357,  412,
+			  414,  363,  415,  355,  293,  293,  293,  293,  293,  293,
+			  294,  294,  294,  294,  361,  294,  294,  294,  294,  294,
+			  294,  294,  416,  294,  294,  294,  294,  294,  294,  294,
 
-			  302,  302,  302,  302,  302,  348,  459,  302,  302,  599,
-			  599,  353,  358,  358,  358,  361,  361,  361,  367,  367,
-			  367,  398,  400,  391,  401,  409,  414,  358,  358,  402,
-			  361,  361,  404,  367,  367,  368,  368,  391,  368,  368,
-			  368,  368,  369,  369,  369,  407,  410,  411,  412,  413,
-			  415,  409,  414,  398,  400,  391,  401,  369,  369,  416,
-			  417,  402,  425,  418,  404,  419,  422,  424,  415,  426,
-			  427,  428,  458,  470,  431,  431,  431,  407,  410,  411,
-			  412,  413,  415,  521,  521,  416,  542,  455,  425,  431,
-			  431,  472,  417,  541,  415,  418,  408,  419,  422,  424, yy_Dummy>>,
-			1, 200, 1360)
+			  294,  294,  294,  294,  294,  294,  357,  362,  418,  362,
+			  362,  362,  362,  371,  371,  421,  371,  371,  371,  371,
+			  377,  377,  430,  377,  377,  377,  377,  378,  378,  378,
+			  550,  550,  294,  294,  294,  294,  294,  294,  424,  425,
+			  418,  550,  378,  378,  626,  626,  626,  421,  430,  359,
+			  362,  381,  381,  381,  294,  294,  294,  294,  294,  294,
+			  306,  306,  306,  306,  393,  306,  381,  381,  306,  426,
+			  424,  425,  306,  306,  427,  306,  306,  306,  382,  382,
+			  382,  393,  429,  431,  306,  306,  306,  439,  306,  432,
+			  433,  563,  434,  382,  440,  436,  393,  438,  342,  441, yy_Dummy>>,
+			1, 200, 1535)
 		end
 
 	yy_chk_template_9 (an_array: ARRAY [INTEGER])
 			-- Fill chunk #9 of template for `yy_chk'.
 		do
 			yy_array_subcopy (an_array, <<
-			  426,  427,  470,  428,  432,  432,  405,  432,  432,  432,
-			  432,  443,  443,  443,  445,  445,  445,  542,  452,  452,
-			  452,  452,  452,  472,  521,  541,  443,  443,  537,  445,
-			  445,  452,  452,  453,  453,  453,  453,  453,  457,  457,
-			  481,  457,  457,  457,  457,  403,  463,  463,  463,  464,
-			  464,  464,  478,  452,  537,  478,  478,  478,  478,  628,
-			  452,  463,  538,  452,  452,  488,  488,  488,  488,  488,
-			  508,  508,  508,  508,  539,  453,  461,  461,  461,  399,
-			  530,  461,  530,  530,  373,  461,  461,  628,  538,  461,
-			  461,  530,  487,  487,  487,  487,  487,  461,  461,  461,
+			  429,  426,  442,  884,  884,  564,  427,  393,  335,  477,
+			  477,  477,  334,  439,  429,  431,  306,  563,  306,  306,
+			  306,  432,  433,  434,  477,  440,  429,  436,  333,  438,
+			  441,  564,  446,  446,  442,  446,  446,  446,  446,  306,
+			  306,  491,  306,  306,  306,  306,  306,  306,  306,  306,
+			  306,  306,  332,  565,  306,  306,  307,  307,  307,  445,
+			  445,  445,  457,  457,  457,  459,  459,  459,  540,  540,
+			  592,  307,  331,  491,  445,  445,  330,  457,  457,  565,
+			  459,  459,  466,  466,  466,  466,  466,  467,  467,  467,
+			  467,  467,  487,  487,  487,  466,  466,  471,  471,  592,
 
-			  539,  461,  544,  545,  464,  487,  487,  488,  481,  481,
-			  481,  481,  481,  481,  481,  481,  481,  352,  546,  481,
-			  481,  509,  509,  509,  509,  350,  464,  487,  544,  461,
-			  333,  461,  461,  461,  487,  545,  566,  487,  487,  507,
-			  507,  507,  507,  517,  546,  517,  547,  550,  517,  517,
-			  517,  517,  461,  461,  507,  461,  461,  461,  461,  461,
-			  461,  461,  461,  461,  461,  566,  549,  461,  461,  516,
-			  516,  516,  516,  518,  518,  518,  518,  848,  547,  550,
-			  507,  551,  556,  848,  516,  326,  507,  519,  519,  519,
-			  519,  520,  549,  520,  520,  520,  520,  526,  560,  526, yy_Dummy>>,
-			1, 200, 1560)
+			  471,  471,  471,  471,  478,  478,  478,  487,  497,  540,
+			  329,  497,  497,  497,  497,  500,  567,  466,  507,  507,
+			  507,  507,  507,  570,  466,  568,  571,  466,  466,  467,
+			  527,  527,  527,  527,  528,  528,  528,  528,  572,  307,
+			  307,  307,  307,  307,  307,  307,  307,  307,  567,  570,
+			  307,  307,  475,  475,  475,  328,  568,  475,  571,  478,
+			  507,  475,  475,  595,  572,  475,  475,  535,  535,  535,
+			  535,  575,  655,  475,  475,  475,  327,  475,  562,  562,
+			  562,  478,  535,  500,  500,  500,  500,  500,  500,  500,
+			  500,  500,  595,  562,  500,  500,  536,  575,  536,  662, yy_Dummy>>,
+			1, 200, 1735)
 		end
 
 	yy_chk_template_10 (an_array: ARRAY [INTEGER])
 			-- Fill chunk #10 of template for `yy_chk'.
 		do
 			yy_array_subcopy (an_array, <<
-			  526,  526,  526,  527,  552,  527,  527,  527,  527,  528,
-			  528,  528,  551,  554,  556,  555,  516,  557,  559,  562,
-			  563,  564,  569,  573,  528,  528,  325,  572,  574,  560,
-			  552,  577,  581,  575,  520,  578,  579,  582,  587,  554,
-			  526,  555,  588,  557,  590,  562,  527,  564,  591,  573,
-			  559,  569,  563,  570,  570,  570,  589,  570,  572,  575,
-			  574,  578,  577,  582,  581,  579,  605,  607,  570,  324,
-			  587,  609,  323,  590,  588,  600,  600,  600,  612,  612,
-			  591,  635,  589,  602,  602,  602,  602,  613,  613,  613,
-			  629,  638,  605,  615,  615,  615,  615,  625,  607,  630,
+			  655,  536,  536,  536,  536,  475,  326,  475,  475,  475,
+			  537,  537,  537,  537,  535,  538,  538,  538,  538,  549,
+			  558,  549,  549,  558,  558,  558,  558,  662,  475,  475,
+			  549,  475,  475,  475,  475,  475,  475,  475,  475,  475,
+			  475,  759,  759,  475,  475,  485,  485,  485,  485,  573,
+			  485,  485,  485,  485,  485,  485,  485,  605,  485,  485,
+			  485,  485,  485,  485,  485,  485,  485,  485,  485,  485,
+			  485,  506,  506,  506,  506,  506,  670,  547,  547,  547,
+			  576,  573,  759,  577,  506,  506,  605,  325,  526,  526,
+			  526,  526,  547,  547,  582,  885,  885,  485,  485,  485,
 
-			  609,  616,  616,  616,  616,  617,  617,  617,  617,  635,
-			  618,  618,  618,  618,  639,  633,  616,  619,  619,  619,
-			  619,  629,  638,  625,  602,  618,  620,  620,  620,  620,
-			  570,  630,  637,  621,  615,  621,  621,  621,  621,  640,
-			  622,  633,  622,  622,  622,  622,  639,  641,  616,  634,
-			  621,  618,  642,  634,  645,  648,  322,  618,  637,  643,
-			  646,  647,  321,  649,  650,  658,  651,  653,  320,  662,
-			  673,  640,  659,  657,  660,  661,  663,  667,  642,  641,
-			  645,  634,  621,  622,  634,  664,  648,  643,  646,  670,
-			  666,  658,  671,  647,  649,  662,  650,  651,  673,  653, yy_Dummy>>,
-			1, 200, 1760)
+			  485,  485,  485,  526,  670,  539,  506,  539,  539,  539,
+			  539,  585,  576,  506,  577,  578,  506,  506,  580,  485,
+			  485,  485,  485,  485,  485,  581,  582,  583,  545,  526,
+			  545,  545,  545,  545,  546,  526,  546,  546,  546,  546,
+			  588,  578,  586,  585,  580,  598,  589,  600,  539,  590,
+			  603,  581,  607,  583,  596,  596,  596,  599,  596,  601,
+			  604,  608,  613,  614,  615,  617,  588,  616,  324,  596,
+			  323,  545,  634,  586,  656,  590,  598,  546,  589,  600,
+			  632,  603,  636,  599,  607,  601,  604,  608,  889,  889,
+			  615,  640,  640,  640,  613,  614,  616,  617,  628,  628, yy_Dummy>>,
+			1, 200, 1935)
 		end
 
 	yy_chk_template_11 (an_array: ARRAY [INTEGER])
 			-- Fill chunk #11 of template for `yy_chk'.
 		do
 			yy_array_subcopy (an_array, <<
-			  654,  654,  654,  659,  654,  657,  660,  661,  663,  667,
-			  678,  664,  674,  674,  674,  654,  666,  679,  680,  319,
-			  670,  682,  682,  682,  671,  675,  675,  675,  675,  684,
-			  684,  684,  684,  686,  686,  686,  686,  686,  318,  317,
-			  687,  678,  687,  696,  680,  687,  687,  687,  687,  679,
-			  688,  688,  688,  688,  674,  689,  689,  689,  689,  690,
-			  690,  690,  690,  682,  695,  688,  697,  675,  700,  696,
-			  689,  684,  701,  702,  691,  686,  691,  654,  705,  691,
-			  691,  691,  691,  692,  707,  692,  692,  692,  692,  708,
-			  711,  710,  697,  712,  700,  714,  695,  688,  713,  715,
+			  628,  628,  652,  634,  657,  656,  632,  642,  642,  642,
+			  642,  636,  643,  643,  643,  643,  644,  644,  644,  644,
+			  645,  645,  645,  645,  660,  665,  666,  643,  652,  664,
+			  886,  596,  886,  322,  886,  645,  657,  886,  667,  628,
+			  646,  646,  646,  646,  647,  647,  647,  647,  642,  648,
+			  660,  648,  648,  648,  648,  664,  665,  668,  666,  643,
+			  649,  645,  649,  649,  649,  649,  648,  645,  669,  661,
+			  667,  672,  673,  661,  674,  321,  675,  676,  677,  685,
+			  678,  680,  684,  687,  681,  681,  681,  686,  681,  668,
+			  688,  689,  690,  691,  669,  693,  694,  672,  648,  681,
 
-			  692,  718,  689,  719,  701,  702,  720,  721,  723,  316,
-			  705,  727,  730,  728,  732,  732,  707,  710,  711,  712,
-			  738,  708,  739,  762,  713,  715,  740,  714,  760,  719,
-			  718,  808,  692,  315,  720,  721,  314,  727,  730,  313,
-			  723,  728,  734,  734,  734,  312,  767,  311,  739,  759,
-			  309,  762,  738,  764,  760,  732,  765,  808,  740,  750,
-			  750,  750,  750,  751,  751,  751,  751,  752,  752,  752,
-			  752,  753,  308,  753,  766,  767,  753,  753,  753,  753,
-			  307,  759,  752,  734,  754,  764,  754,  773,  765,  754,
-			  754,  754,  754,  755,  755,  755,  755,  756,  756,  756, yy_Dummy>>,
-			1, 200, 1960)
+			  673,  661,  697,  649,  661,  685,  674,  675,  676,  698,
+			  677,  678,  700,  680,  684,  687,  705,  689,  686,  691,
+			  706,  693,  688,  707,  690,  701,  701,  701,  694,  702,
+			  702,  702,  702,  697,  709,  709,  709,  722,  728,  745,
+			  700,  698,  711,  711,  711,  711,  320,  705,  318,  707,
+			  729,  317,  706,  713,  713,  713,  713,  713,  714,  723,
+			  714,  681,  316,  714,  714,  714,  714,  701,  745,  722,
+			  728,  702,  715,  715,  715,  715,  709,  716,  716,  716,
+			  716,  732,  729,  724,  711,  723,  727,  715,  717,  717,
+			  717,  717,  716,  734,  718,  713,  718,  735,  738,  718, yy_Dummy>>,
+			1, 200, 2135)
 		end
 
 	yy_chk_template_12 (an_array: ARRAY [INTEGER])
 			-- Fill chunk #12 of template for `yy_chk'.
 		do
 			yy_array_subcopy (an_array, <<
-			  756,  757,  757,  757,  757,  758,  766,  758,  755,  774,
-			  758,  758,  758,  758,  752,  773,  775,  775,  775,  777,
-			  778,  780,  781,  812,  791,  306,  305,  784,  792,  792,
-			  792,  792,  793,  793,  793,  793,  794,  794,  794,  794,
-			  755,  774,  795,  795,  795,  795,  801,  775,  804,  812,
-			  791,  777,  778,  780,  781,  784,  791,  796,  796,  796,
-			  796,  797,  811,  797,  814,  299,  797,  797,  797,  797,
-			  824,  820,  796,  798,  798,  798,  798,  804,  801,  775,
-			  799,  799,  799,  799,  810,  810,  810,  821,  821,  821,
-			  821,  811,  822,  822,  822,  822,  814,  820,  826,  827,
+			  718,  718,  718,  719,  737,  719,  719,  719,  719,  724,
+			  739,  740,  727,  732,  741,  742,  746,  747,  750,  715,
+			  719,  748,  754,  755,  716,  734,  738,  757,  765,  735,
+			  737,  761,  761,  761,  767,  766,  739,  740,  890,  890,
+			  315,  742,  746,  786,  314,  747,  741,  308,  754,  748,
+			  750,  755,  719,  757,  777,  777,  777,  777,  787,  303,
+			  765,  766,  778,  778,  778,  778,  767,  779,  779,  779,
+			  779,  780,  761,  780,  791,  786,  780,  780,  780,  780,
+			  792,  781,  779,  781,  787,  789,  781,  781,  781,  781,
+			  782,  782,  782,  782,  783,  783,  783,  783,  784,  784,
 
-			  832,  294,  824,  820,  796,  288,  277,  833,  834,  835,
-			  836,  849,  849,  849,  271,  810,  840,  840,  840,  840,
-			  840,  840,  840,  840,  840,  270,  268,  826,  262,  257,
-			  226,  827,  832,  833,  834,  835,  836,  841,  841,  841,
-			  841,  841,  841,  841,  841,  841,  225,  810,  842,  842,
-			  842,  842,  842,  842,  842,  842,  842,  843,  843,  843,
-			  843,  843,  843,  843,  843,  843,  844,  844,  844,  844,
-			  844,  844,  844,  844,  844,  846,  224,  846,  223,  846,
-			  846,  846,  847,  847,  847,  847,  847,  847,  847,  847,
-			  850,  850,  850,  222,  850,  850,  850,  850,  851,  851, yy_Dummy>>,
-			1, 200, 2160)
+			  784,  784,  785,  793,  785,  782,  791,  785,  785,  785,
+			  785,  794,  792,  789,  779,  800,  801,  811,  802,  802,
+			  802,  804,  805,  807,  808,  818,  819,  819,  819,  819,
+			  820,  820,  820,  820,  828,  793,  297,  782,  891,  891,
+			  794,  291,  281,  800,  275,  811,  831,  274,  801,  802,
+			  272,  818,  266,  804,  805,  807,  808,  818,  821,  821,
+			  821,  821,  822,  822,  822,  822,  828,  823,  823,  823,
+			  823,  824,  835,  824,  838,  831,  824,  824,  824,  824,
+			  839,  802,  823,  825,  825,  825,  825,  826,  826,  826,
+			  826,  837,  837,  837,  841,  847,  851,  854,  835,  848, yy_Dummy>>,
+			1, 200, 2335)
 		end
 
 	yy_chk_template_13 (an_array: ARRAY [INTEGER])
 			-- Fill chunk #13 of template for `yy_chk'.
 		do
 			yy_array_subcopy (an_array, <<
-			  851,  851,  851,  851,  851,  851,  851,  852,  852,  852,
-			  852,  852,  852,  852,  852,  852,  853,  853,  853,  853,
-			  853,  853,  853,  853,  853,  854,  221,  854,  854,  854,
-			  854,  854,  854,  855,  219,  855,  217,  855,  855,  855,
-			  856,  856,  856,  856,  856,  856,  856,  856,  859,  859,
-			  859,  859,  859,  859,  859,  859,  863,  863,  863,  863,
-			  863,  863,  863,  863,  863,  864,  864,  864,  864,  864,
-			  864,  864,  864,  216,  215,  214,  213,  212,  210,  208,
-			  201,  197,  186,  183,  181,  159,  155,  153,  149,  137,
-			  132,  129,  127,  126,  124,  120,  118,  117,  115,  113,
+			  848,  848,  848,  838,  853,  859,  839,  849,  849,  849,
+			  849,  872,  860,  861,  823,  862,  863,  875,  872,  872,
+			  261,  847,  837,  230,  875,  875,  841,  847,  851,  854,
+			  229,  228,  227,  853,  226,  225,  223,  859,  860,  861,
+			  221,  862,  863,  873,  220,  873,  219,  873,  873,  873,
+			  873,  873,  218,  217,  837,  867,  867,  867,  867,  867,
+			  867,  867,  867,  867,  867,  867,  867,  868,  868,  868,
+			  868,  868,  868,  868,  868,  868,  868,  868,  868,  869,
+			  869,  869,  869,  869,  869,  869,  869,  869,  869,  869,
+			  869,  870,  870,  870,  870,  870,  870,  870,  870,  870,
 
-			  112,  106,  105,  104,   97,   95,   93,   85,   76,   73,
-			   72,   56,   47,   32,   13,    8,    7, yy_Dummy>>,
-			1, 117, 2360)
+			  870,  870,  870,  871,  871,  871,  871,  871,  871,  871,
+			  871,  871,  871,  871,  871,  874,  216,  874,  874,  874,
+			  874,  874,  874,  874,  874,  874,  874,  876,  876,  876,
+			  876,  877,  214,  877,  877,  877,  212,  877,  877,  877,
+			  877,  877,  877,  878,  878,  878,  878,  878,  878,  878,
+			  878,  878,  878,  878,  878,  879,  879,  879,  879,  879,
+			  879,  879,  879,  879,  879,  879,  879,  880,  880,  880,
+			  880,  880,  880,  880,  880,  880,  880,  880,  880,  881,
+			  205,  881,  201,  881,  881,  881,  881,  881,  881,  881,
+			  881,  882,  190,  882,  187,  882,  882,  882,  882,  882, yy_Dummy>>,
+			1, 200, 2535)
+		end
+
+	yy_chk_template_14 (an_array: ARRAY [INTEGER])
+			-- Fill chunk #14 of template for `yy_chk'.
+		do
+			yy_array_subcopy (an_array, <<
+			  883,  185,  883,  883,  883,  883,  883,  883,  883,  883,
+			  883,  883,  887,  163,  887,  887,  887,  887,  887,  887,
+			  887,  887,  887,  887,  888,  888,  888,  162,  888,  160,
+			  888,  156,  154,  888,  892,  892,  892,  892,  892,  892,
+			  892,  892,  892,  892,  892,  892,  893,  150,  893,  893,
+			  893,  893,  893,  893,  893,  893,  893,  893,  138,  133,
+			  130,  128,  127,  125,  119,  118,  116,  114,  113,  106,
+			  105,  104,   97,   95,   93,   85,   76,   73,   72,   56,
+			   47,   32,   13,    8,    7, yy_Dummy>>,
+			1, 85, 2735)
 		end
 
 	yy_base_template: SPECIAL [INTEGER]
@@ -4055,7 +4225,7 @@ feature {NONE} -- Table templates
 		local
 			an_array: ARRAY [INTEGER]
 		once
-			create an_array.make_filled (0, 0, 864)
+			create an_array.make_filled (0, 0, 893)
 			yy_base_template_1 (an_array)
 			yy_base_template_2 (an_array)
 			yy_base_template_3 (an_array)
@@ -4068,27 +4238,27 @@ feature {NONE} -- Table templates
 			-- Fill chunk #1 of template for `yy_base'.
 		do
 			yy_array_subcopy (an_array, <<
-			    0,    0,    0,   96,   97,  105,  110, 2474, 2473,  115,
-			  118,  121,  124, 2474, 2477,  127,  130,  118,  189,  283,
-			 2477,  128, 2477, 2477,  125,  128, 2477,  131,  132,  277,
-			  285,  301, 2447, 2477,  139,  143,  145,  141,  376,  368,
-			    0,  377,  280,  284,  285,  317,  312, 2428,  438,  368,
-			  116,  439,  376,  255,  366,  102, 2427, 2477,  274, 2477,
-			  157, 2477, 2477,  159,  161,  163,  169,  171,  312,  360,
-			  390,  317, 2454, 2453,  319,  370, 2463, 2477, 2477,  514,
-			   98,  490, 2477, 2477,  164, 2465, 2477, 2477,  495, 2477,
-			 2477,  501,  526, 2450,  534, 2449,  403, 2448,  551,  570,
+			    0,    0,    0,   96,   97,  105,  110, 2817, 2816,  115,
+			  118,  121,  124, 2817, 2820,  127,  130,  118,  189,  283,
+			 2820,  128, 2820, 2820,  125,  128, 2820,  131,  132,  277,
+			  285,  301, 2790, 2820,  139,  143,  145,  141,  376,  374,
+			    0,  432,  280,  284,  285,  376,  290, 2771,  443,  303,
+			  116,  443,  444,  255,  377,  102, 2770, 2820,  274, 2820,
+			  157, 2820, 2820,  159,  161,  163,  169,  171,  313,  392,
+			  397,  319, 2797, 2796,  336,  409, 2806, 2820, 2820,  520,
+			   98,  496, 2820, 2820,  164, 2808, 2820, 2820,  426, 2820,
+			 2820,  439,  450, 2793,  532, 2792,  414, 2791,  520,  572,
 
-			  663, 2477,  759,  356, 2451, 2457, 2456,  852,  390,  336,
-			  449,  268, 2418, 2415,  352, 2414,  551, 2400, 2451,  588,
-			 2439,  609,  933,  582, 2444, 1025, 2443, 2436,  599, 2435,
-			  626,  461, 2434,  690,  470, 2477,  695, 2433,  711,  473,
-			  483,  490,  854,  614,  493,  573,    0,  665, 2477, 2432,
-			  718,  875,  504, 2431,  908, 2430,  947,  514,  590, 2429,
-			 2477, 1073,    0,  375,  363,  846,  477,  410,  484,  500,
-			  548,  534,  546,  509,  868,    0,  537,  589,  595,  410,
-			  641, 2400,    0, 2398,  938,    0, 2402,  854,  589,  601,
-			  680,  912,    0,  605,  828, 1070,  852, 2399,  635,  838, yy_Dummy>>,
+			  665, 2820,  761,  306, 2794, 2800, 2799,  854,  470,  334,
+			  351,  935,  270, 2761, 2758,  373, 2757,  590, 2743, 2794,
+			  557, 1015,  611, 1108,  584, 2788, 1200, 2787, 2780,  592,
+			 2779,  601,  479, 2778,  692,  487, 2820,  697, 2777,  713,
+			  494,  510,  527,  856,  616,  545,  553,    0,  625, 2820,
+			 2766,  720,  877,  563, 2751,  910, 2750,  949,  578,  623,
+			 2748, 2820, 2746, 2732, 1248,  866,    0,  442,  490,  865,
+			  554,  445,  551,  590,  624,  606,  638,  637,  971,    0,
+			  641,  847,  928,  610,  643, 2692,    0, 2684, 1012,    0,
+			 2687,  864,  672,  826,  655,  873,    0,  925,  693, 1105, yy_Dummy>>,
 			1, 200, 0)
 		end
 
@@ -4096,27 +4266,27 @@ feature {NONE} -- Table templates
 			-- Fill chunk #2 of template for `yy_base'.
 		do
 			yy_array_subcopy (an_array, <<
-			  809, 2395,  932,  833,  688,  844,  860,  702, 2423, 1025,
-			 2422, 1090, 2421, 2420, 2419, 2418, 2417, 2380,  725, 2378,
-			  924, 2370, 2337, 2322, 2320, 2290, 2285, 2477,  953, 2477,
-			 2477, 2477, 2477, 2477,  958, 2477, 2477, 2477, 2477, 2477,
-			 2477, 2477, 2477, 2477, 2477, 2477, 2477, 2477, 2477, 2477,
-			 2477,  538, 2477, 2477,  982,  862, 2477, 2287, 2477,  971,
-			 2477,  997, 2282, 2477, 1122, 2477, 2477, 2477, 2270, 2477,
-			 2280, 2258, 2477, 1166, 1262, 1007, 1125, 2261, 2477, 2477,
-			 2477, 2477,  686, 2477,  896, 2477,  929,  962, 2220,  877,
-			  178,  958, 1062, 2477, 2256,  986, 2477, 1184, 1359, 2209,
+			  934, 2675,  927,  835,  931, 2670, 1018,  935,  343,  933,
+			  936,  649, 2655,  968, 2651, 1049, 2635, 2572, 2571, 2565,
+			 2563, 2559,  727, 2555,  845, 2554, 2553, 2551, 2550, 2549,
+			 2553, 2820,  916, 2820, 2820, 2820, 2820, 2820, 1033, 2820,
+			 2820, 2820, 2820, 2820, 2820, 2820, 2820, 2820, 2820, 2820,
+			 2820, 2820, 2820, 2820, 2820,  544, 2820, 2820, 1034,  931,
+			 2820, 2553, 2820, 1009, 2820, 1024, 2481, 2820, 1126, 2820,
+			 2820, 2820, 2469, 2820, 2477, 2463, 2820, 1341, 1437, 1056,
+			 1129, 2472, 2820, 2820, 2820, 2820,  591, 2820,  904, 2820,
+			  981, 2460, 2820, 1531, 1611, 1117,  997, 2426,  973,  178,
 
-			 1120, 2477, 1372, 2477, 2477, 2176, 2175, 2130, 2122, 2100,
-			 1073, 2097, 2095, 2089, 2086, 2083, 2059, 1989, 1988, 1969,
-			 1918, 1912, 1906, 1822, 1819, 1776, 1735, 2477, 2477, 2477,
-			 2477, 2477, 2477, 1674, 1130, 1198, 1214, 2477, 2477, 1362,
-			 1221, 1365, 1370, 1368, 1377, 2477, 1386, 1395, 1405, 1061,
-			 1625, 1169, 1617, 1411, 1381, 2477, 2477, 1022, 1471, 1053,
-			 1032, 1474, 1418, 2477, 2477, 2477, 2477, 1477, 1479, 1501,
-			 1150, 2477, 2477, 1600,  961, 1021,    0,    0,  919, 1067,
-			 1021, 1048, 1066, 1058, 1101, 1123, 1179, 1342, 1346,    0,
-			 1126, 1453, 1376, 1148, 1149,  877,  453, 1387, 1447, 1594, yy_Dummy>>,
+			 1000, 1143, 2820, 2389, 1045, 2820, 1694, 1790, 2366, 1197,
+			 2820, 1226, 2820, 2820, 2369, 2365, 2287, 2276, 2273, 1136,
+			 2271, 2200, 2158, 2095, 2093, 2012, 1931, 1901, 1880, 1835,
+			 1801, 1797, 1777, 1753, 1737, 1733, 2820, 2820, 2820, 2820,
+			 2820, 2820, 1717, 1200, 1140, 1280, 2820, 2820, 1359, 1361,
+			 1370, 1372, 1394, 1387, 2820, 1542, 1398, 1581, 1089, 1624,
+			 1163, 1559, 1625, 1546, 2820, 2820, 1062, 1568, 1065, 1212,
+			 1577, 1632, 2820, 2820, 2820, 2820, 1580, 1639, 1661, 1263,
+			 2820, 1685, 1712, 1583, 1570, 2820, 1561, 1530, 1045, 1061,
+			    0,    0, 1046, 1669, 1107, 1099, 1101, 1172, 1117, 1125, yy_Dummy>>,
 			1, 200, 200)
 		end
 
@@ -4124,27 +4294,27 @@ feature {NONE} -- Table templates
 			-- Fill chunk #3 of template for `yy_base'.
 		do
 			yy_array_subcopy (an_array, <<
-			 1452, 1450, 1459, 1560, 1458, 1522,    0, 1471, 1502, 1436,
-			 1474, 1473, 1474, 1479, 1436, 1478, 1472, 1486, 1493, 1491,
-			 1046,  983, 1492,  517, 1493, 1476, 1491, 1492, 1498, 1188,
-			    0, 1533, 1548, 2477, 2477, 2477, 2477, 2477, 2477, 2477,
-			 2477, 2477, 2477, 1570, 2477, 1573, 2477, 2477, 2477, 2477,
-			 2477, 2477, 1560, 1575,    0, 1477, 2477, 1582, 1527, 1461,
-			 2477, 1632, 1420, 1605, 1608, 2477, 2477, 2477, 2477, 1371,
-			 1492, 1408, 1517, 2477, 1368, 2477, 2477, 2477, 1596, 2477,
-			 2477, 1584, 2477, 2477, 2477, 2477, 2477, 1634, 1607, 2477,
-			 2477, 2477, 2477, 2477, 2477, 2477, 2477, 2477, 2477, 2477,
+			 1190, 1261, 1285,    0, 1164, 1312, 1286, 1250, 1304, 1108,
+			  935, 1350, 1538, 1494, 1543, 1541, 1565, 1390, 1609, 1379,
+			    0, 1616, 1361, 1315, 1641, 1640, 1670, 1679, 1363, 1685,
+			 1610, 1684, 1694, 1691, 1689, 1138, 1696, 1145, 1698, 1676,
+			 1691, 1696, 1704, 1254,    0, 1793, 1751, 2820, 2820, 2820,
+			 2820, 2820, 2820, 2820, 2820, 2820, 2820, 1796, 2820, 1799,
+			 2820, 2820, 2820, 2820, 2820, 2820, 1799, 1804,    0, 1329,
+			 2820, 1816, 1380, 1360, 2820, 1883, 1347, 1743, 1838, 2820,
+			 2820, 2820, 2820, 1298, 2820, 1976, 1279, 1826,  579, 1364,
+			 1248, 1742, 2820, 1233, 2820, 2820, 2820, 1827, 2820, 2820,
 
-			 2477, 2477, 2477, 2477, 2477, 2477, 2477, 1680, 1611, 1662,
-			 2477, 2477, 2477, 2477, 2477, 2477, 1710, 1689, 1714, 1728,
-			 1734, 1524, 1200,    0, 1188, 1227, 1740, 1746, 1768, 1223,
-			 1626, 1402, 2477, 2477, 2477, 2477, 2477, 1540, 1573, 1586,
-			 1185, 1521, 1508, 1174, 1614, 1629, 1629, 1672, 1158, 1679,
-			 1675, 1703, 1717, 1352, 1726, 1728, 1708, 1727,    0, 1744,
-			 1720, 1125, 1732, 1746, 1734,    0, 1655,    0,    0, 1741,
-			 1812,    0, 1749, 1733, 1753, 1746, 1089, 1753, 1745, 1755,
-			 1054, 1760, 1750,    0, 1059,    0,    0, 1764, 1767, 1766,
-			 1763, 1778,    0,    0, 2477, 2477, 2477, 2477, 2477, 1450, yy_Dummy>>,
+			 1834, 2820, 2820, 2820, 2820, 2820, 1988, 1835, 2820, 2820,
+			 2820, 2820, 2820, 2820, 2820, 2820, 2820, 2820, 2820, 2820,
+			 2820, 2820, 2820, 2820, 2820, 2820, 2004, 1846, 1850, 2820,
+			 2820, 2820, 2820, 2820, 2820, 1883, 1917, 1926, 1931, 2023,
+			 1784, 1166,    0, 1127, 1149, 2046, 2052, 2011, 1125, 1940,
+			 1649, 2820, 2820, 2820, 2820, 2820, 2820, 2820, 1939, 2820,
+			 2820, 1081, 1912, 1678, 1691, 1740, 1049, 1819, 1822, 1024,
+			 1810, 1827, 1824, 1950,  987, 1859, 1983, 1980, 2003, 1298,
+			 2006, 2013, 1995, 2012,    0, 2012, 2039,  927, 2028, 2047,
+			 2037,    0, 1764,    0,    0, 1857, 2088,    0, 2042, 2042, yy_Dummy>>,
 			1, 200, 400)
 		end
 
@@ -4152,27 +4322,27 @@ feature {NONE} -- Table templates
 			-- Fill chunk #4 of template for `yy_base'.
 		do
 			yy_array_subcopy (an_array, <<
-			 1816,    0, 1824, 1032, 1062, 1777, 2477, 1789, 2477, 1790,
-			 2477, 1024, 1819, 1828,    0, 1834, 1842, 1846, 1851, 1858,
-			 1867, 1876, 1883, 2477, 2477, 1809,    0,    0, 1576, 1813,
-			 1828,    0,    0, 1828, 1875, 1798,    0, 1845, 1814, 1839,
-			 1865, 1874, 1863, 1876,    0, 1867, 1877, 1887, 1877, 1885,
-			 1892, 1888,    0, 1893, 1959, 2477,  995, 1903, 1878, 1894,
-			 1900, 1901, 1882, 1902, 1896,    0, 1901, 1907,    0,    0,
-			 1911, 1918,    0, 1887, 1954, 1967,  270,  925, 1933, 1943,
-			 1930, 2477, 1963,  422, 1971, 1137, 1975, 1986, 1991, 1996,
-			 2000, 2020, 2026,    0,    0, 1990, 1953, 1977,    0,  904,
+			 2047, 2047,  936, 2047, 2045, 1951,  845, 2055, 2049,    0,
+			  844,    0,    0, 2063, 2063, 2049, 2061, 2070,    0,    0,
+			 2820, 2820, 2820, 2820, 2820, 1225, 1660,    0, 2114,  797,
+			  859,  753, 2066, 2820, 2069, 2820, 2076, 2820,  728, 1329,
+			 2107,    0, 2123, 2128, 2132, 2136, 2156, 2160, 2167, 2178,
+			 2820, 2820, 2089,    0,    0, 1864, 2072, 2108,    0,    0,
+			 2112, 2170, 1891,    0, 2117, 2123, 2126, 2139, 2159, 2154,
+			 1968,    0, 2159, 2164, 2175, 2173, 2174, 2181, 2177,    0,
+			 2182, 2218, 2820,  712, 2187, 2167, 2184, 2184, 2191, 2179,
+			 2193, 2179,    0, 2181, 2201,    0,    0, 2199, 2210,    0,
 
-			 1979, 1998, 2003,    0,    0, 2004,    0, 2014, 2015,    0,
-			 2003, 2007, 2004, 2009, 2025, 2010, 2477,  936, 2020, 2015,
-			 2023, 2024,    0, 2034,    0,    0,    0, 2022, 2030,    0,
-			 2023, 2477, 2055, 2477, 2083, 2477,  823,  794, 2046, 2034,
-			 2052,  746,  718,  711,  623,  663,  610,  614,  478,  508,
-			 2100, 2104, 2108, 2117, 2130, 2134, 2138, 2142, 2151, 2076,
-			 2039,    0, 2040,    0, 2080, 2085, 2101, 2065,    0,    0,
-			  438,    0,    0, 2104, 2135, 2175,  426, 2145, 2148,    0,
-			 2147, 2148,    0,    0, 2144,  450,  426, 2477, 2477, 2477,
-			 2477, 2150, 2169, 2173, 2177, 2183, 2198, 2207, 2214, 2221, yy_Dummy>>,
+			 2204, 2242, 2246,  983,  652, 2214, 2221, 2210, 2820, 2251,
+			 1076, 2259, 1218, 2270, 2279, 2288, 2293, 2304, 2315, 2321,
+			    0,    0, 2238, 2244, 2269,    0,  649, 2272, 2239, 2255,
+			    0,    0, 2282,    0, 2298, 2298,    0, 2291, 2290, 2296,
+			 2297, 2319, 2301, 2820,  685, 2233, 2303, 2309, 2313,    0,
+			 2319,    0,    0,    0, 2308, 2315,    0, 2313, 2820, 1957,
+			 2820, 2347, 2820,  615,  576, 2329, 2322, 2335,  620,  571,
+			  552,  469,  497,  467,  470,  410,  406, 2370, 2378, 2383,
+			 2392, 2402, 2406, 2410, 2414, 2423, 2345, 2344,    0, 2377,
+			    0, 2376, 2384, 2405, 2405,    0,    0,  275,    0,    0, yy_Dummy>>,
 			1, 200, 600)
 		end
 
@@ -4180,14 +4350,17 @@ feature {NONE} -- Table templates
 			-- Fill chunk #5 of template for `yy_base'.
 		do
 			yy_array_subcopy (an_array, <<
-			    0, 2172,    0,    0, 2167,    0,    0,    0, 2042,    0,
-			 2243, 2181, 2136,    0, 2190,    0,    0,  378, 2477, 2477,
-			 2197, 2228, 2233,    0, 2196,    0, 2217, 2229,    0,    0,
-			 2477,    0, 2230, 2219, 2220, 2221, 2222,    0, 2477, 2477,
-			 2275, 2296, 2307, 2316, 2325, 1375, 2333, 2340, 1735, 2265,
-			 2348, 2357, 2366, 2375, 2383, 2391, 2398,  347,  307, 2406,
-			  185,  108,  103, 2415, 2423, yy_Dummy>>,
-			1, 65, 800)
+			 2407, 2417, 2452,  244, 2422, 2425,    0, 2424, 2425,    0,
+			    0, 2409,  186,  109, 2820, 2820, 2820, 2820, 2426, 2442,
+			 2446, 2474, 2478, 2483, 2492, 2499, 2503,    0, 2435,    0,
+			    0, 2440,    0,    0,    0, 2458,    0, 2525, 2468, 2468,
+			    0, 2495,    0,    0,  104, 2820, 2820, 2496, 2515, 2523,
+			    0, 2497,    0, 2498, 2502,    0,    0, 2820,    0, 2510,
+			 2499, 2500, 2502, 2503,    0, 2820, 2820, 2589, 2601, 2613,
+			 2625, 2637, 2543, 2575, 2649, 2549, 2655, 2665, 2677, 2689,
+			 2701, 2713, 2723, 2734, 1731, 2023, 2162, 2746, 2758, 2116,
+			 2366, 2466, 2768, 2780, yy_Dummy>>,
+			1, 94, 800)
 		end
 
 	yy_def_template: SPECIAL [INTEGER]
@@ -4195,21 +4368,21 @@ feature {NONE} -- Table templates
 		local
 			an_array: ARRAY [INTEGER]
 		once
-			create an_array.make_filled (0, 0, 864)
+			create an_array.make_filled (0, 0, 893)
 			yy_def_template_1 (an_array)
-			an_array.area.fill_with (849, 162, 206)
+			an_array.area.fill_with (876, 166, 210)
 			yy_def_template_2 (an_array)
-			an_array.area.fill_with (839, 303, 332)
+			an_array.area.fill_with (866, 312, 341)
 			yy_def_template_3 (an_array)
-			an_array.area.fill_with (849, 373, 430)
+			an_array.area.fill_with (876, 387, 444)
 			yy_def_template_4 (an_array)
-			an_array.area.fill_with (839, 482, 520)
+			an_array.area.fill_with (866, 501, 539)
 			yy_def_template_5 (an_array)
-			an_array.area.fill_with (849, 537, 593)
+			an_array.area.fill_with (876, 563, 619)
 			yy_def_template_6 (an_array)
-			an_array.area.fill_with (849, 625, 653)
+			an_array.area.fill_with (876, 652, 680)
 			yy_def_template_7 (an_array)
-			an_array.area.fill_with (839, 840, 864)
+			an_array.area.fill_with (866, 867, 893)
 			Result := yy_fixed_array (an_array)
 		end
 
@@ -4217,113 +4390,117 @@ feature {NONE} -- Table templates
 			-- Fill chunk #1 of template for `yy_def'.
 		do
 			yy_array_subcopy (an_array, <<
-			    0,  839,    1,  840,  840,  841,  841,  842,  842,  843,
-			  843,  844,  844,  839,  839,  839,  839,  845,  839,  846,
-			  839,  847,  839,  839,  845,  845,  839,  848,  839,  845,
-			  839,  839,  839,  839,  845,  845,  845,  839,  846,  849,
-			  849,  849,  849,  849,  849,  849,  849,  849,  849,  849,
-			  849,  849,  849,  849,  849,  849,  849,  839,  845,  839,
-			  845,  839,  839,  845,  845,  845,  845,  845,  845,  845,
-			  845,  845,  839,  839,  845,  845,  850,  839,  839,  839,
-			  851,  851,  839,  839,  852,  853,  839,  839,  839,  839,
-			  839,  839,  839,  839,  839,  839,  845,  848,  845,   18,
+			    0,  866,    1,  867,  867,  868,  868,  869,  869,  870,
+			  870,  871,  871,  866,  866,  866,  866,  872,  866,  873,
+			  866,  874,  866,  866,  872,  872,  866,  875,  866,  872,
+			  866,  866,  866,  866,  872,  872,  872,  866,  866,  876,
+			  876,  876,  876,  876,  876,  876,  876,  876,  876,  876,
+			  876,  876,  876,  876,  876,  876,  876,  866,  872,  866,
+			  872,  866,  866,  872,  872,  872,  872,  872,  872,  872,
+			  872,  872,  866,  866,  872,  872,  877,  866,  866,  866,
+			  878,  878,  866,  866,  879,  880,  866,  866,  866,  866,
+			  866,  866,  866,  866,  866,  866,  872,  875,  872,   18,
 
-			   99,  839,  839,  854,   99,  100,  100,   18,  100,  100,
-			  100,   99,   99,   99,   99,   99,   99,  100,  100,   99,
-			   38,  846,  855,   38,  856,  856,  856,  848,  845,  848,
-			  845,  845,  839,  845,  845,  839,  839,  848,  845,  845,
-			  845,  845,  839,  839,  857,  857,  858,  839,  839,  848,
-			  845,  845,  845,  848,  845,  848,  845,  845,  845,  839,
-			  839,  855, yy_Dummy>>,
-			1, 162, 0)
+			   99,  866,  866,  881,   99,  100,  100,   18,  100,  100,
+			  100,  100,   99,   99,   99,   99,   99,   99,  100,  100,
+			   99,  873,  873,  882,  121,  883,  883,  883,  875,  872,
+			  875,  872,  872,  866,  872,  872,  866,  866,  875,  872,
+			  872,  872,  872,  866,  866,  884,  884,  885,  866,  866,
+			  875,  872,  872,  872,  875,  872,  875,  872,  872,  872,
+			  866,  866,   38,  886,  866,   38, yy_Dummy>>,
+			1, 166, 0)
 		end
 
 	yy_def_template_2 (an_array: ARRAY [INTEGER])
 			-- Fill chunk #2 of template for `yy_def'.
 		do
 			yy_array_subcopy (an_array, <<
-			  845,  848,  845,  848,  845,  848,  848,  848,  848,  848,
-			  848,  845,  848,  845,  848,  839,  839,  848,  848,  850,
-			  839,  839,  839,  839,  839,  839,  839,  839,  839,  839,
-			  839,  839,  839,  839,  839,  839,  839,  839,  839,  839,
-			  839,  839,  839,  839,  851,  839,  839,  851,  852,  839,
-			  853,  839,  839,  839,  839,  859,  839,  848,  839,  839,
-			  839,  100,  839,  107,  102,  839,  102,  839,  273,  854,
-			   99,  839,  839,  839,  839,  100,  839,  100,  839,  100,
-			   99,   99,   99,   99,   99,   99,  839,   99,  100,  839,
-			  161,  855,   38,  846,  839,  846, yy_Dummy>>,
-			1, 96, 207)
+			  872,  875,  872,  875,  872,  875,  875,  875,  875,  875,
+			  875,  872,  875,  872,  875,  866,  866,  875,  875,  877,
+			  866,  866,  866,  866,  866,  866,  866,  866,  866,  866,
+			  866,  866,  866,  866,  866,  866,  866,  866,  866,  866,
+			  866,  866,  866,  866,  878,  866,  866,  878,  879,  866,
+			  880,  866,  866,  866,  866,  887,  866,  875,  866,  866,
+			  866,  100,  866,  107,  102,  866,  102,  866,  277,  881,
+			   99,  866,  866,  866,  866,  100,  866,  100,  866,  100,
+			  111,  866,   99,  107,  293,   99,   99,   99,   99,   99,
+			   99,  866,   99,  100,  866,  882,  882,  121,  873,  866,
+
+			  873, yy_Dummy>>,
+			1, 101, 211)
 		end
 
 	yy_def_template_3 (an_array: ARRAY [INTEGER])
 			-- Fill chunk #3 of template for `yy_def'.
 		do
 			yy_array_subcopy (an_array, <<
-			  848,  845,  839,  839,  839,  839,  848,  845,  848,  845,
-			  848,  845,  839,  839,  839,  839,  857,  857,  857,  858,
-			  839,  839,  839,  839,  845,  848,  845,  845,  848,  845,
-			  839,  839,  839,  839,  848,  845,  848,  845,  839,  839, yy_Dummy>>,
-			1, 40, 333)
+			  875,  872,  866,  866,  866,  866,  875,  872,  875,  872,
+			  875,  872,  866,  866,  866,  866,  884,  884,  884,  885,
+			  866,  866,  866,  866,  872,  875,  872,  872,  875,  872,
+			  866,  866,  866,  866,  875,  872,  875,  872,  866,  164,
+			  888,   38,  886,  866,  886, yy_Dummy>>,
+			1, 45, 342)
 		end
 
 	yy_def_template_4 (an_array: ARRAY [INTEGER])
 			-- Fill chunk #4 of template for `yy_def'.
 		do
 			yy_array_subcopy (an_array, <<
-			  848,  845,  839,  839,  839,  839,  839,  839,  839,  839,
-			  839,  839,  848,  839,  848,  839,  839,  839,  839,  839,
-			  839,  839,  839,  859,  859,  839,  845,  107,  274,  839,
-			  274,  273,  273,  854,  839,  839,  839,  839,   99,   99,
-			   99,   99,  839,   99,  839,  839,  839,   38,  839,  839,
-			  855, yy_Dummy>>,
-			1, 51, 431)
+			  875,  872,  866,  866,  866,  866,  866,  866,  866,  866,
+			  866,  866,  875,  866,  875,  866,  866,  866,  866,  866,
+			  866,  866,  866,  887,  887,  866,  872,  107,  278,  866,
+			  278,  277,  277,  881,  866,  866,  866,  866,  294,  866,
+			   99,  293,  293,   99,   99,   99,   99,  866,   99,  866,
+			  866,  866,  121,  866,  866,  882, yy_Dummy>>,
+			1, 56, 445)
 		end
 
 	yy_def_template_5 (an_array: ARRAY [INTEGER])
 			-- Fill chunk #5 of template for `yy_def'.
 		do
 			yy_array_subcopy (an_array, <<
-			  857,  857,  351,  858,  839,  839,  839,  848,  839,  845,
-			  845,  839,  839,  839,  839,  839, yy_Dummy>>,
-			1, 16, 521)
+			  884,  884,  360,  885,  866,  866,  866,  875,  866,  872,
+			  872,  866,  866,  866,  866,  866,  866,  866,   38,  866,
+			  866,  164,  888, yy_Dummy>>,
+			1, 23, 540)
 		end
 
 	yy_def_template_6 (an_array: ARRAY [INTEGER])
 			-- Fill chunk #6 of template for `yy_def'.
 		do
 			yy_array_subcopy (an_array, <<
-			  839,  839,  839,  839,  839,  839,  839,  860,  839,  859,
-			  461,   99,  839,   99,  839,   99,  839,  839,  861,  861,
-			  862,  839,  839,  839,  839,  839,  839,  839,  839,  839,
-			  839, yy_Dummy>>,
-			1, 31, 594)
+			  866,  866,  866,  866,  866,  866,  866,  889,  866,  887,
+			  475,  485,   99,  866,   99,  866,   99,  866,  866,  890,
+			  890,  891,  866,  866,  866,  866,  866,  866,  866,  866,
+			  866,  866, yy_Dummy>>,
+			1, 32, 620)
 		end
 
 	yy_def_template_7 (an_array: ARRAY [INTEGER])
 			-- Fill chunk #7 of template for `yy_def'.
 		do
 			yy_array_subcopy (an_array, <<
-			  839,  839,  839,  849,  849,  849,  849,  849,  849,  849,
-			  849,  849,  849,  849,  849,  849,  849,  849,  849,  849,
-			  839,  839,  860,  859,   99,   99,   99,  839,  861,  861,
-			  861,  862,  839,  839,  839,  839,  839,  839,  839,  849,
-			  849,  849,  849,  849,  849,  849,  849,  849,  849,  849,
-			  849,  849,  849,  849,  849,  849,  849,  849,  849,  849,
-			  849,  849,  839,  863,  849,  849,  849,  849,  849,  849,
-			  849,  849,  849,  849,  849,  849,  849,  839,  839,  839,
-			  839,  839,  860,  859,   99,   99,   99,  839,  682,  839,
-			  861,  839,  684,  839,  862,  839,  839,  839,  839,  839,
+			  866,  866,  866,  876,  876,  876,  876,  876,  876,  876,
+			  876,  876,  876,  876,  876,  876,  876,  876,  876,  876,
+			  866,  866,  889,  887,   99,   99,   99,  866,  890,  890,
+			  890,  891,  866,  866,  866,  866,  866,  866,  866,  876,
+			  876,  876,  876,  876,  876,  876,  876,  876,  876,  876,
+			  876,  876,  876,  876,  876,  876,  876,  876,  876,  876,
+			  876,  876,  866,  892,  876,  876,  876,  876,  876,  876,
+			  876,  876,  876,  876,  876,  876,  876,  866,  866,  866,
+			  866,  866,  889,  887,   99,   99,   99,  866,  709,  866,
+			  890,  866,  711,  866,  891,  866,  866,  866,  866,  866,
 
-			  839,  839,  839,  839,  839,  849,  849,  849,  849,  849,
-			  849,  849,  849,  849,  849,  849,  849,  849,  849,  849,
-			  849,  849,  849,  849,  849,  849,  849,  849,  849,  864,
-			   99,   99,   99,  839,  839,  839,  839,  839,  839,  839,
-			  839,  839,  839,  839,  839,  839,  849,  849,  849,  849,
-			  849,  849,  849,  849,  849,  849,  839,  849,  849,  849,
-			  849,  849,  849,   99,  839,  839,  839,  839,  839,  849,
-			  849,  849,  839,  849,  849,  849,  839,  849,  839,  849,
-			  839,  849,  839,  849,  839,    0, yy_Dummy>>,
-			1, 186, 654)
+			  866,  866,  866,  866,  866,  876,  876,  876,  876,  876,
+			  876,  876,  876,  876,  876,  876,  876,  876,  876,  876,
+			  876,  876,  876,  876,  876,  876,  876,  876,  876,  893,
+			   99,   99,   99,  866,  866,  866,  866,  866,  866,  866,
+			  866,  866,  866,  866,  866,  866,  876,  876,  876,  876,
+			  876,  876,  876,  876,  876,  876,  866,  876,  876,  876,
+			  876,  876,  876,   99,  866,  866,  866,  866,  866,  876,
+			  876,  876,  866,  876,  876,  876,  866,  876,  866,  876,
+			  866,  876,  866,  876,  866,    0, yy_Dummy>>,
+			1, 186, 681)
 		end
 
 	yy_ec_template: SPECIAL [INTEGER]
@@ -5473,16 +5650,16 @@ feature {NONE} -- Table templates
 			-- Template for `yy_meta'
 		once
 			Result := yy_fixed_array (<<
-			    0,    9,    1,    9,    2,    3,    2,    4,    5,    2,
-			    4,    4,    4,    2,    2,    4,    2,    2,    2,    6,
-			    6,    6,    6,    4,    4,    2,    2,    2,    4,    2,
-			    6,    6,    6,    6,    6,    6,    7,    7,    7,    7,
-			    7,    7,    7,    7,    7,    7,    7,    7,    7,    7,
-			    7,    7,    7,    7,    7,    7,    4,    2,    4,    2,
-			    8,    2,    6,    6,    6,    6,    6,    6,    7,    7,
-			    7,    7,    7,    7,    7,    7,    7,    7,    4,    4,
-			    2,    2,    4,    2,    2,    2,    2,    2,    2,    2,
-			    2,    2,    2,    9,    9,    2,    2,    9, yy_Dummy>>)
+			    0,    1,    2,    1,    3,    4,    3,    5,    6,    3,
+			    5,    5,    5,    3,    3,    5,    3,    3,    3,    7,
+			    7,    7,    7,    5,    5,    3,    3,    3,    5,    3,
+			    8,    8,    8,    8,    8,    8,    9,    9,    9,    9,
+			    9,    9,    9,    9,    9,    9,    9,    9,    9,    9,
+			    9,    9,    9,    9,    9,    9,    5,    3,    5,    3,
+			   10,    3,    8,    8,    8,    8,    8,    8,    9,    9,
+			    9,    9,    9,    9,    9,    9,    9,    9,    5,    5,
+			    3,    3,    5,    3,   11,   11,   11,   11,   11,   11,
+			   11,   11,   11,   12,   12,   11,   11,   12, yy_Dummy>>)
 		end
 
 	yy_accept_template: SPECIAL [INTEGER]
@@ -5490,7 +5667,7 @@ feature {NONE} -- Table templates
 		local
 			an_array: ARRAY [INTEGER]
 		once
-			create an_array.make_filled (0, 0, 840)
+			create an_array.make_filled (0, 0, 867)
 			yy_accept_template_1 (an_array)
 			yy_accept_template_2 (an_array)
 			yy_accept_template_3 (an_array)
@@ -5515,15 +5692,15 @@ feature {NONE} -- Table templates
 			  239,  241,  244,  246,  248,  249,  249,  250,  250,  251,
 
 			  252,  253,  254,  255,  255,  256,  257,  258,  259,  260,
-			  261,  262,  263,  264,  265,  266,  267,  269,  270,  271,
-			  273,  275,  276,  276,  278,  279,  280,  281,  281,  282,
-			  282,  283,  284,  285,  286,  288,  289,  290,  290,  291,
-			  293,  295,  297,  298,  299,  299,  299,  299,  299,  300,
-			  300,  301,  303,  305,  305,  306,  306,  307,  309,  311,
-			  311,  312,  312,  313,  314,  315,  316,  317,  319,  320,
-			  321,  322,  323,  324,  325,  326,  328,  329,  330,  331,
-			  332,  333,  334,  336,  337,  338,  340,  341,  342,  343,
-			  344,  345,  346,  348,  349,  350,  351,  352,  353,  354, yy_Dummy>>,
+			  261,  262,  263,  264,  265,  266,  267,  268,  270,  271,
+			  272,  274,  276,  277,  277,  279,  280,  281,  282,  282,
+			  283,  283,  284,  285,  286,  287,  289,  290,  291,  291,
+			  292,  294,  296,  298,  299,  300,  300,  300,  300,  300,
+			  301,  301,  302,  304,  306,  306,  307,  307,  308,  310,
+			  312,  312,  313,  315,  316,  316,  318,  319,  320,  321,
+			  322,  323,  325,  326,  327,  328,  329,  330,  331,  332,
+			  334,  335,  336,  337,  338,  339,  340,  342,  343,  344,
+			  346,  347,  348,  349,  350,  351,  352,  354,  355,  356, yy_Dummy>>,
 			1, 200, 0)
 		end
 
@@ -5531,27 +5708,27 @@ feature {NONE} -- Table templates
 			-- Fill chunk #2 of template for `yy_accept'.
 		do
 			yy_array_subcopy (an_array, <<
-			  355,  356,  357,  358,  359,  360,  361,  362,  364,  364,
-			  365,  365,  366,  366,  366,  366,  366,  366,  366,  368,
-			  368,  370,  370,  370,  370,  370,  370,  371,  372,  372,
-			  373,  374,  375,  376,  377,  377,  378,  379,  380,  381,
-			  382,  383,  384,  385,  386,  387,  388,  389,  390,  391,
-			  392,  393,  394,  395,  396,  397,  398,  400,  401,  402,
-			  402,  403,  404,  405,  406,  407,  408,  409,  410,  411,
-			  413,  414,  415,  418,  419,  420,  422,  423,  424,  427,
-			  430,  432,  435,  436,  439,  440,  443,  444,  445,  446,
-			  447,  448,  449,  450,  451,  452,  453,  456,  458,  459,
+			  357,  358,  359,  360,  361,  362,  363,  364,  365,  366,
+			  367,  368,  370,  370,  371,  371,  372,  372,  372,  372,
+			  372,  372,  372,  374,  374,  376,  376,  376,  376,  376,
+			  376,  377,  378,  378,  379,  380,  381,  382,  383,  383,
+			  384,  385,  386,  387,  388,  389,  390,  391,  392,  393,
+			  394,  395,  396,  397,  398,  399,  400,  401,  402,  403,
+			  404,  406,  407,  408,  408,  409,  410,  411,  412,  413,
+			  414,  415,  416,  417,  419,  420,  421,  424,  425,  426,
+			  428,  429,  430,  433,  436,  438,  441,  442,  445,  446,
+			  449,  450,  451,  454,  455,  456,  458,  459,  460,  461,
 
-			  461,  462,  464,  466,  467,  469,  470,  471,  472,  473,
-			  474,  475,  476,  477,  478,  479,  480,  481,  482,  483,
-			  484,  485,  486,  487,  488,  489,  490,  491,  493,  495,
-			  497,  499,  501,  502,  502,  503,  504,  504,  506,  508,
-			  509,  510,  511,  512,  513,  514,  515,  516,  516,  517,
-			  519,  520,  522,  523,  524,  524,  526,  528,  530,  532,
-			  533,  534,  535,  536,  538,  540,  542,  544,  545,  546,
-			  547,  548,  549,  552,  553,  554,  555,  557,  559,  560,
-			  561,  562,  563,  564,  565,  566,  567,  568,  569,  570,
-			  572,  573,  574,  575,  576,  577,  578,  579,  580,  581, yy_Dummy>>,
+			  462,  463,  464,  465,  466,  467,  470,  472,  473,  475,
+			  476,  478,  480,  481,  483,  484,  485,  486,  487,  488,
+			  489,  490,  491,  492,  493,  494,  495,  496,  497,  498,
+			  499,  500,  501,  502,  503,  504,  505,  507,  509,  511,
+			  513,  515,  516,  516,  517,  518,  518,  520,  522,  523,
+			  524,  525,  526,  527,  528,  529,  530,  530,  531,  533,
+			  534,  536,  537,  538,  538,  540,  542,  544,  546,  547,
+			  548,  549,  550,  552,  554,  556,  558,  559,  560,  561,
+			  562,  563,  565,  566,  568,  569,  572,  574,  575,  576,
+			  577,  579,  581,  582,  583,  584,  585,  586,  587,  588, yy_Dummy>>,
 			1, 200, 200)
 		end
 
@@ -5559,27 +5736,27 @@ feature {NONE} -- Table templates
 			-- Fill chunk #3 of template for `yy_accept'.
 		do
 			yy_array_subcopy (an_array, <<
-			  582,  583,  584,  585,  586,  588,  589,  591,  592,  593,
-			  594,  595,  596,  597,  598,  599,  600,  601,  602,  603,
-			  604,  605,  606,  607,  608,  609,  610,  611,  612,  613,
-			  614,  616,  617,  618,  620,  622,  624,  626,  628,  630,
-			  632,  634,  636,  638,  639,  641,  642,  644,  645,  646,
-			  648,  650,  651,  651,  651,  652,  653,  654,  655,  656,
-			  657,  659,  660,  661,  663,  663,  665,  668,  671,  674,
-			  675,  676,  677,  678,  680,  681,  683,  686,  688,  690,
-			  691,  692,  692,  693,  694,  695,  696,  697,  698,  699,
-			  700,  701,  702,  703,  704,  705,  706,  707,  708,  709,
+			  589,  590,  591,  592,  594,  595,  596,  597,  598,  599,
+			  600,  601,  602,  603,  604,  605,  606,  607,  608,  610,
+			  611,  613,  614,  615,  616,  617,  618,  619,  620,  621,
+			  622,  623,  624,  625,  626,  627,  628,  629,  630,  631,
+			  632,  633,  634,  635,  636,  638,  639,  640,  642,  644,
+			  646,  648,  650,  652,  654,  656,  658,  660,  661,  663,
+			  664,  666,  667,  668,  670,  672,  673,  673,  673,  674,
+			  675,  676,  677,  678,  679,  681,  682,  683,  685,  685,
+			  687,  690,  693,  696,  697,  699,  700,  701,  703,  704,
+			  705,  706,  707,  709,  710,  712,  715,  717,  719,  720,
 
-			  710,  711,  712,  713,  714,  715,  717,  719,  720,  720,
-			  721,  723,  725,  727,  729,  731,  733,  734,  734,  734,
-			  735,  736,  736,  736,  736,  736,  736,  737,  738,  739,
-			  741,  743,  745,  747,  749,  751,  753,  755,  756,  757,
-			  758,  759,  760,  761,  762,  763,  764,  765,  766,  767,
-			  768,  769,  771,  772,  773,  774,  775,  776,  777,  779,
-			  780,  781,  782,  783,  784,  785,  787,  788,  790,  792,
-			  793,  795,  797,  798,  799,  800,  801,  802,  803,  804,
-			  805,  806,  807,  808,  810,  811,  813,  815,  816,  817,
-			  818,  819,  820,  822,  824,  826,  828,  830,  832,  833, yy_Dummy>>,
+			  721,  721,  722,  723,  724,  725,  726,  727,  728,  729,
+			  730,  731,  732,  733,  734,  735,  736,  737,  738,  739,
+			  740,  741,  742,  743,  744,  746,  748,  749,  749,  750,
+			  752,  754,  756,  758,  760,  762,  763,  763,  763,  764,
+			  765,  765,  765,  765,  765,  765,  766,  767,  768,  770,
+			  772,  774,  776,  778,  780,  782,  784,  786,  788,  790,
+			  791,  792,  792,  792,  793,  794,  795,  796,  797,  798,
+			  799,  800,  801,  802,  803,  804,  805,  806,  808,  809,
+			  810,  811,  812,  813,  814,  816,  817,  818,  819,  820,
+			  821,  822,  824,  825,  827,  829,  830,  832,  834,  835, yy_Dummy>>,
 			1, 200, 400)
 		end
 
@@ -5587,27 +5764,27 @@ feature {NONE} -- Table templates
 			-- Fill chunk #4 of template for `yy_accept'.
 		do
 			yy_array_subcopy (an_array, <<
-			  833,  833,  833,  833,  834,  835,  836,  838,  839,  841,
-			  842,  844,  845,  845,  845,  845,  845,  846,  846,  847,
-			  847,  848,  849,  850,  852,  853,  854,  856,  858,  859,
-			  860,  861,  863,  865,  866,  867,  868,  870,  871,  872,
-			  873,  874,  875,  876,  877,  879,  880,  881,  882,  883,
-			  884,  885,  886,  888,  889,  889,  890,  890,  891,  892,
-			  893,  894,  895,  896,  897,  898,  900,  901,  902,  904,
-			  906,  907,  908,  910,  911,  911,  911,  911,  912,  913,
-			  914,  915,  916,  916,  916,  916,  916,  916,  916,  917,
-			  918,  918,  918,  919,  921,  923,  924,  925,  926,  928,
+			  836,  837,  838,  839,  840,  841,  842,  843,  844,  845,
+			  847,  848,  850,  852,  853,  854,  855,  856,  857,  859,
+			  861,  863,  865,  867,  869,  870,  870,  870,  870,  870,
+			  871,  872,  873,  874,  876,  877,  879,  880,  882,  883,
+			  883,  883,  883,  883,  884,  884,  885,  885,  886,  887,
+			  888,  890,  891,  892,  894,  896,  897,  898,  899,  901,
+			  903,  904,  905,  906,  908,  909,  910,  911,  912,  913,
+			  914,  915,  917,  918,  919,  920,  921,  922,  923,  924,
+			  926,  927,  927,  928,  928,  929,  930,  931,  932,  933,
+			  934,  935,  936,  938,  939,  940,  942,  944,  945,  946,
 
-			  929,  930,  931,  932,  934,  936,  937,  939,  940,  941,
-			  943,  944,  945,  946,  947,  948,  949,  950,  950,  951,
-			  952,  953,  954,  956,  957,  959,  961,  963,  964,  965,
-			  967,  968,  969,  969,  970,  970,  971,  971,  972,  973,
-			  974,  975,  975,  975,  975,  975,  975,  975,  975,  975,
-			  975,  975,  976,  977,  977,  977,  978,  978,  979,  979,
-			  980,  981,  983,  984,  986,  987,  988,  989,  990,  992,
-			  994,  995,  997,  999, 1000, 1001, 1002, 1003, 1004, 1005,
-			 1007, 1008, 1009, 1011, 1013, 1014, 1015, 1016, 1018, 1019,
-			 1021, 1022, 1023, 1023, 1024, 1024, 1025, 1026, 1026, 1026, yy_Dummy>>,
+			  948,  949,  949,  949,  949,  950,  951,  952,  953,  954,
+			  954,  954,  954,  954,  954,  954,  955,  956,  956,  956,
+			  957,  959,  961,  962,  963,  964,  966,  967,  968,  969,
+			  970,  972,  974,  975,  977,  978,  979,  981,  982,  983,
+			  984,  985,  986,  987,  988,  988,  989,  990,  991,  992,
+			  994,  995,  997,  999, 1001, 1002, 1003, 1005, 1006, 1007,
+			 1007, 1008, 1008, 1009, 1009, 1010, 1011, 1012, 1013, 1013,
+			 1013, 1013, 1013, 1013, 1013, 1013, 1013, 1013, 1013, 1014,
+			 1015, 1015, 1015, 1016, 1016, 1017, 1017, 1018, 1019, 1021,
+			 1022, 1024, 1025, 1026, 1027, 1028, 1030, 1032, 1033, 1035, yy_Dummy>>,
 			1, 200, 600)
 		end
 
@@ -5615,12 +5792,14 @@ feature {NONE} -- Table templates
 			-- Fill chunk #5 of template for `yy_accept'.
 		do
 			yy_array_subcopy (an_array, <<
-			 1027, 1029, 1030, 1032, 1034, 1035, 1037, 1039, 1041, 1042,
-			 1044, 1044, 1045, 1046, 1048, 1049, 1051, 1053, 1054, 1056,
-			 1058, 1059, 1059, 1060, 1062, 1063, 1065, 1065, 1066, 1068,
-			 1070, 1072, 1074, 1074, 1075, 1075, 1076, 1076, 1078, 1079,
-			 1079, yy_Dummy>>,
-			1, 41, 800)
+			 1037, 1038, 1039, 1040, 1041, 1042, 1043, 1045, 1046, 1047,
+			 1049, 1051, 1052, 1053, 1054, 1056, 1057, 1059, 1060, 1061,
+			 1061, 1062, 1062, 1063, 1064, 1064, 1064, 1065, 1067, 1068,
+			 1070, 1072, 1073, 1075, 1077, 1079, 1080, 1082, 1082, 1083,
+			 1084, 1086, 1087, 1089, 1091, 1092, 1094, 1096, 1097, 1097,
+			 1098, 1100, 1101, 1103, 1103, 1104, 1106, 1108, 1110, 1112,
+			 1112, 1113, 1113, 1114, 1114, 1116, 1117, 1117, yy_Dummy>>,
+			1, 68, 800)
 		end
 
 	yy_acclist_template: SPECIAL [INTEGER]
@@ -5628,7 +5807,7 @@ feature {NONE} -- Table templates
 		local
 			an_array: ARRAY [INTEGER]
 		once
-			create an_array.make_filled (0, 0, 1078)
+			create an_array.make_filled (0, 0, 1116)
 			yy_acclist_template_1 (an_array)
 			yy_acclist_template_2 (an_array)
 			yy_acclist_template_3 (an_array)
@@ -5642,27 +5821,27 @@ feature {NONE} -- Table templates
 			-- Fill chunk #1 of template for `yy_acclist'.
 		do
 			yy_array_subcopy (an_array, <<
-			    0,  202,  202,  204,  204,  238,  236,  237,    1,  236,
-			  237,    1,  237,   55,  236,  237,  205,  236,  237,   55,
-			   59,  236,  237,   14,  236,  237,  170,  236,  237,   25,
-			  236,  237,   26,  236,  237,   33,   55,  236,  237,   31,
-			   55,  236,  237,    9,  236,  237,   32,  236,  237,   13,
-			  236,  237,   34,   55,  236,  237,  135,  236,  237,  135,
-			  236,  237,    8,  236,  237,    7,  236,  237,   19,   55,
-			  236,  237,   18,   55,  236,  237,   20,   55,  236,  237,
-			   11,  236,  237,   15,   55,   59,  236,  237,  134,  236,
-			  237,  134,  236,  237,  134,  236,  237,  134,  236,  237,
+			    0,  206,  206,  208,  208,  242,  240,  241,    1,  240,
+			  241,    1,  241,   55,  240,  241,  209,  240,  241,   55,
+			   62,  240,  241,   14,  240,  241,  173,  240,  241,   25,
+			  240,  241,   26,  240,  241,   33,   55,  240,  241,   31,
+			   55,  240,  241,    9,  240,  241,   32,  240,  241,   13,
+			  240,  241,   34,   55,  240,  241,  138,  240,  241,  138,
+			  240,  241,    8,  240,  241,    7,  240,  241,   19,   55,
+			  240,  241,   18,   55,  240,  241,   20,   55,  240,  241,
+			   11,  240,  241,   15,   55,   59,  240,  241,  137,  240,
+			  241,  137,  240,  241,  137,  240,  241,  137,  240,  241,
 
-			  134,  236,  237,  134,  236,  237,  134,  236,  237,  134,
-			  236,  237,  134,  236,  237,  134,  236,  237,  134,  236,
-			  237,  134,  236,  237,  134,  236,  237,  134,  236,  237,
-			  134,  236,  237,  134,  236,  237,  134,  236,  237,  134,
-			  236,  237,   29,  236,  237,   55,  236,  237,   30,  236,
-			  237,   35,   55,  236,  237,   27,  236,  237,   28,  236,
-			  237,   12,   55,  236,  237,   43,   55,  236,  237,   48,
-			   55,  236,  237,   53,   55,  236,  237,   41,   55,  236,
-			  237,   42,   55,  236,  237,   49,   55,  236,  237,   51,
-			   55,  236,  237,   54,   55,  236,  237,   46,  236,  237, yy_Dummy>>,
+			  137,  240,  241,  137,  240,  241,  137,  240,  241,  137,
+			  240,  241,  137,  240,  241,  137,  240,  241,  137,  240,
+			  241,  137,  240,  241,  137,  240,  241,  137,  240,  241,
+			  137,  240,  241,  137,  240,  241,  137,  240,  241,  137,
+			  240,  241,   29,  240,  241,   55,  240,  241,   30,  240,
+			  241,   35,   55,  240,  241,   27,  240,  241,   28,  240,
+			  241,   12,   55,  240,  241,   43,   55,  240,  241,   48,
+			   55,  240,  241,   53,   55,  240,  241,   41,   55,  240,
+			  241,   42,   55,  240,  241,   49,   55,  240,  241,   51,
+			   55,  240,  241,   54,   55,  240,  241,   46,  240,  241, yy_Dummy>>,
 			1, 200, 0)
 		end
 
@@ -5670,27 +5849,27 @@ feature {NONE} -- Table templates
 			-- Fill chunk #2 of template for `yy_acclist'.
 		do
 			yy_array_subcopy (an_array, <<
-			   47,  236,  237,   45,   55,  236,  237,   44,   55,  236,
-			  237,  206,  237,  235,  237,  233,  237,  234,  237,  202,
-			  237,  202,  237,  201,  237,  200,  237,  202,  237,  204,
-			  237,  203,  237,  198,  237,  198,  237,  197,  237,    6,
-			  237,    5,    6,  237,    5,  237,    6,  237,    1,   55,
-			   55,  205,  205,  194,  205,  205,  205,  205,  205,  205,
-			  205,  205,  205,  205,  205,  205,  205,  205, -433,  205,
-			  205,  205, -433,   55,   59,   59,   55,   59,  170,  170,
-			  170,   55,   55,   55,    2,   55,   36,   55,   10,  141,
-			   55,   39,   55,   24,   55,   23,   55,  141,  135,   16,
+			   47,  240,  241,   45,   55,  240,  241,   44,   55,  240,
+			  241,  210,  241,  239,  241,  237,  241,  238,  241,  206,
+			  241,  206,  241,  205,  241,  204,  241,  206,  241,  208,
+			  241,  207,  241,  202,  241,  202,  241,  201,  241,    6,
+			  241,    5,    6,  241,    5,  241,    6,  241,    1,   55,
+			   55,  209,  209,  198,  209,  209,  209,  209,  209,  209,
+			  209,  209,  209,  209,  209,  209,  209,  209,  209, -441,
+			  209,  209,  209, -441,   55,   62,   62,   55,   62,  173,
+			  173,  173,   55,   55,   55,    2,   55,   36,   55,   10,
+			  144,   55,   39,   55,   24,   55,   23,   55,  144,  138,
 
-			   55,   37,   55,   21,   55,   55,   55,   22,   55,   38,
-			   55,   17,  134,  134,  134,  134,  134,   67,  134,  134,
-			  134,  134,  134,  134,  134,  134,   80,  134,  134,  134,
-			  134,  134,  134,  134,   92,  134,  134,  134,   98,  134,
-			  134,  134,  134,  134,  134,  134,  110,  134,  134,  134,
-			  134,  134,  134,  134,  134,  134,  134,  134,  134,  134,
-			  134,  134,   40,   55,   55,   55,   50,   55,   52,   55,
-			  206,  233,  223,  221,  222,  224,  225,  226,  227,  207,
-			  208,  209,  210,  211,  212,  213,  214,  215,  216,  217,
-			  218,  219,  220,  202,  201,  200,  202,  202,  199,  200, yy_Dummy>>,
+			   16,   55,   37,   55,   21,   55,   55,   55,   22,   55,
+			   38,   55,   17,   55,   59,   59,   55,   59,  137,  137,
+			  137,  137,  137,   70,  137,  137,  137,  137,  137,  137,
+			  137,  137,   83,  137,  137,  137,  137,  137,  137,  137,
+			   95,  137,  137,  137,  101,  137,  137,  137,  137,  137,
+			  137,  137,  113,  137,  137,  137,  137,  137,  137,  137,
+			  137,  137,  137,  137,  137,  137,  137,  137,   40,   55,
+			   55,   55,   50,   55,   52,   55,  210,  237,  227,  225,
+			  226,  228,  229,  230,  231,  211,  212,  213,  214,  215,
+			  216,  217,  218,  219,  220,  221,  222,  223,  224,  206, yy_Dummy>>,
 			1, 200, 200)
 		end
 
@@ -5698,27 +5877,27 @@ feature {NONE} -- Table templates
 			-- Fill chunk #3 of template for `yy_acclist'.
 		do
 			yy_array_subcopy (an_array, <<
-			  204,  203,  197,    5,    4,    2,   55,   58,   56,  195,
-			  205,  192,  195,  205,  205,  192,  193,  195,  205,  205,
-			  205, -433, -433,  205,  178,  192,  195,  176,  192,  195,
-			  177,  195,  179,  192,  195,  205,  172,  192,  195,  205,
-			  173,  192,  195,  205,  205,  205,  205,  205,  205,  205,
-			 -196,  205,  205,  180,  192,  195,   55,   59,   59,   55,
-			   59,   59,   58,   61,   56,   59,  170,  142,  170,  170,
-			  170,  170,  170,  170,  170,  170,  170,  170,  170,  170,
-			  170,  170,  170,  170,  170,  170,  170,  170,  170,  170,
-			  170,  143,  170,   33,   58,   33,   56,   31,   58,   31,
+			  205,  204,  206,  206,  203,  204,  208,  207,  201,    5,
+			    4,    2,   55,   58,   56,  199,  209,  195,  199,  209,
+			  209,  195,  197,  199,  209,  209,  209, -441, -441,  209,
+			  181,  195,  199,  179,  195,  199,  180,  199,  182,  195,
+			  199,  209,  175,  195,  199,  209,  176,  195,  199,  209,
+			  209,  195,  196,  199,  209,  209,  209, -441,  209,  209,
+			  209,  209,  209,  209, -200,  209,  209,  183,  195,  199,
+			   55,   62,   62,   55,   62,   62,   58,   64,   56,   62,
+			  173,  145,  173,  173,  173,  173,  173,  173,  173,  173,
+			  173,  173,  173,  173,  173,  173,  173,  173,  173,  173,
 
-			   56,   32,   55,  141,   34,   58,   34,   56,   55,   55,
-			   55,   55,   55,   55,  136,  141,  135,  139,  140,  140,
-			  138,  140,  137,  135,   19,   58,   19,   56,   37,   55,
-			   37,   55,   55,   55,   55,   55,   18,   58,   18,   56,
-			   20,   58,   20,   56,   55,   55,   55,   55,   11,   15,
-			   58,   61,  134,  134,  134,   65,  134,   66,  134,  134,
-			  134,  134,  134,  134,  134,  134,  134,  134,  134,  134,
-			   83,  134,  134,  134,  134,  134,  134,  134,  134,  134,
-			  134,  134,  134,  134,  134,  134,  102,  134,  134,  105,
-			  134,  134,  134,  134,  134,  134,  134,  134,  134,  134, yy_Dummy>>,
+			  173,  173,  173,  173,  173,  146,  173,   33,   58,   33,
+			   56,   31,   58,   31,   56,   32,   55,  144,   34,   58,
+			   34,   56,   55,   55,   55,   55,   55,   55,  139,  144,
+			  138,  142,  143,  143,  141,  143,  140,  138,   19,   58,
+			   19,   56,   37,   55,   37,   55,   55,   55,   55,   55,
+			   18,   58,   18,   56,   20,   58,   20,   56,   55,   55,
+			   55,   55,   11,   55,   59,   59,   55,   59,   59,   15,
+			   58,   61,   56,   59,  137,  137,  137,   68,  137,   69,
+			  137,  137,  137,  137,  137,  137,  137,  137,  137,  137,
+			  137,  137,   86,  137,  137,  137,  137,  137,  137,  137, yy_Dummy>>,
 			1, 200, 400)
 		end
 
@@ -5726,27 +5905,27 @@ feature {NONE} -- Table templates
 			-- Fill chunk #4 of template for `yy_acclist'.
 		do
 			yy_array_subcopy (an_array, <<
-			  134,  134,  134,  134,  134,  134,  134,  134,  134,  134,
-			  134,  134,  134,  134,  133,  134,   55,   55,   35,   58,
-			   35,   56,   12,   58,   12,   56,   43,   58,   48,   58,
-			   53,   58,   41,   58,   42,   58,   49,   58,   55,   51,
-			   58,   55,   54,   58,   46,   47,   45,   58,   44,   58,
-			  232,    4,    4,   57,   55,  205,  205,  193,  195,  205,
-			  205,  205, -433,  184,  195,  181,  192,  195,  174,  192,
-			  195,  175,  192,  195,  205,  205,  205,  205,  189,  195,
-			  205,  183,  195,  182,  192,  195,   57,   60,   55,   59,
-			   60,   61,  160,  158,  159,  161,  162,  171,  171,  163,
+			  137,  137,  137,  137,  137,  137,  137,  137,  105,  137,
+			  137,  108,  137,  137,  137,  137,  137,  137,  137,  137,
+			  137,  137,  137,  137,  137,  137,  137,  137,  137,  137,
+			  137,  137,  137,  137,  137,  137,  136,  137,   55,   55,
+			   35,   58,   35,   56,   12,   58,   12,   56,   43,   58,
+			   48,   58,   53,   58,   41,   58,   42,   58,   49,   58,
+			   55,   51,   58,   55,   54,   58,   46,   47,   45,   58,
+			   44,   58,  236,    4,    4,   57,   55,  209,  209,  197,
+			  199,  209,  209,  209, -441,  187,  199,  184,  195,  199,
+			  177,  195,  199,  178,  195,  199,  209,  196,  199,  209,
 
-			  164,  144,  145,  146,  147,  148,  149,  150,  151,  152,
-			  153,  154,  155,  156,  157,   36,   58,   36,   56,  141,
-			  141,   39,   58,   39,   56,   24,   58,   24,   56,   23,
-			   58,   23,   56,  141,  141,  135,  135,  135,   55,   37,
-			   58,   37,   55,   37,   55,   21,   58,   21,   56,   22,
-			   58,   22,   56,   38,   58,  134,  134,  134,  134,  134,
-			  134,  134,  134,  134,  134,  134,  134,  134,  134,   81,
-			  134,  134,  134,  134,  134,  134,  134,   90,  134,  134,
-			  134,  134,  134,  134,  134,   99,  134,  134,  101,  134,
-			  103,  134,  134,  108,  134,  109,  134,  134,  134,  134, yy_Dummy>>,
+			  209,  209, -441,  209,  209,  209,  209,  192,  199,  209,
+			  186,  199,  185,  195,  199,   57,   63,   55,   62,   63,
+			   64,  163,  161,  162,  164,  165,  174,  174,  166,  167,
+			  147,  148,  149,  150,  151,  152,  153,  154,  155,  156,
+			  157,  158,  159,  160,   36,   58,   36,   56,  144,  144,
+			   39,   58,   39,   56,   24,   58,   24,   56,   23,   58,
+			   23,   56,  144,  144,  138,  138,  138,   55,   37,   58,
+			   37,   55,   37,   55,   21,   58,   21,   56,   22,   58,
+			   22,   56,   38,   58,   57,   60,   58,   61,   55,   59,
+			   60,   61,  137,  137,  137,  137,  137,  137,  137,  137, yy_Dummy>>,
 			1, 200, 600)
 		end
 
@@ -5754,27 +5933,27 @@ feature {NONE} -- Table templates
 			-- Fill chunk #5 of template for `yy_acclist'.
 		do
 			yy_array_subcopy (an_array, <<
-			  134,  134,  134,  134,  134,  134,  134,  134,  122,  134,
-			  134,  124,  134,  125,  134,  134,  134,  134,  134,  134,
-			  131,  134,  132,  134,   40,   58,   40,   56,   50,   58,
-			   52,   58,  228,    4,  205,  205,  185,  195,  205,  188,
-			  195,  205,  191,  195,  171,  141,  141,  141,  141,  135,
-			   37,   58,   37,  134,   63,  134,   64,  134,  134,  134,
-			  134,   71,  134,   72,  134,  134,  134,  134,   77,  134,
-			  134,  134,  134,  134,  134,  134,  134,   88,  134,  134,
-			  134,  134,  134,  134,  134,  134,  100,  134,  134,  106,
-			  134,  134,  134,  134,  134,  134,  134,  134,  119,  134,
+			  137,  137,  137,  137,  137,  137,   84,  137,  137,  137,
+			  137,  137,  137,  137,   93,  137,  137,  137,  137,  137,
+			  137,  137,  102,  137,  137,  104,  137,  106,  137,  137,
+			  111,  137,  112,  137,  137,  137,  137,  137,  137,  137,
+			  137,  137,  137,  137,  137,  125,  137,  137,  127,  137,
+			  128,  137,  137,  137,  137,  137,  137,  134,  137,  135,
+			  137,   40,   58,   40,   56,   50,   58,   52,   58,  232,
+			    4,  209,  209,  209,  188,  199,  209,  191,  199,  209,
+			  194,  199,  174,  144,  144,  144,  144,  138,   37,   58,
+			   37,  137,   66,  137,   67,  137,  137,  137,  137,   74,
 
-			  134,  134,  123,  134,  126,  134,  134,  134,  129,  134,
-			  134,    4,  205,  205,  205,  165,  141,  141,  141,   62,
-			  134,   68,  134,  134,  134,  134,   74,  134,  134,  134,
-			  134,  134,   82,  134,   84,  134,  134,   86,  134,  134,
-			  134,   91,  134,  134,  134,  134,  134,  134,  134,  107,
-			  134,  134,  134,  134,  115,  134,  134,  117,  134,  118,
-			  134,  120,  134,  134,  134,  128,  134,  134,  231,  230,
-			  229,    4,  205,  205,  205,  141,  141,  141,  141,  134,
-			  134,   73,  134,  134,   76,  134,  134,  134,  134,  134,
-			   89,  134,   93,  134,  134,   95,  134,   96,  134,  134, yy_Dummy>>,
+			  137,   75,  137,  137,  137,  137,   80,  137,  137,  137,
+			  137,  137,  137,  137,  137,   91,  137,  137,  137,  137,
+			  137,  137,  137,  137,  103,  137,  137,  109,  137,  137,
+			  137,  137,  137,  137,  137,  137,  122,  137,  137,  137,
+			  126,  137,  129,  137,  137,  137,  132,  137,  137,    4,
+			  209,  209,  209,  168,  144,  144,  144,   65,  137,   71,
+			  137,  137,  137,  137,   77,  137,  137,  137,  137,  137,
+			   85,  137,   87,  137,  137,   89,  137,  137,  137,   94,
+			  137,  137,  137,  137,  137,  137,  137,  110,  137,  137,
+			  137,  137,  118,  137,  137,  120,  137,  121,  137,  123, yy_Dummy>>,
 			1, 200, 800)
 		end
 
@@ -5782,27 +5961,32 @@ feature {NONE} -- Table templates
 			-- Fill chunk #6 of template for `yy_acclist'.
 		do
 			yy_array_subcopy (an_array, <<
-			  134,  134,  134,  134,  134,  116,  134,  134,  134,  130,
-			  134,    3,    4,  205,  205,  205,  168,  169,  169,  167,
-			  169,  166,  141,  141,  141,  141,  141,   69,  134,  134,
-			   75,  134,   78,  134,  134,   85,  134,   87,  134,   94,
-			  134,  134,  104,  134,  134,  134,  113,  134,  134,  121,
-			  134,  127,  134,  205,  187,  195,  190,  195,  141,  141,
-			   70,  134,  134,   97,  134,  134,  112,  134,  114,  134,
-			  186,  195,   79,  134,  134,  134,  111,  134,  111, yy_Dummy>>,
-			1, 79, 1000)
+			  137,  137,  137,  131,  137,  137,  235,  234,  233,    4,
+			  209,  209,  209,  144,  144,  144,  144,  137,  137,   76,
+			  137,  137,   79,  137,  137,  137,  137,  137,   92,  137,
+			   96,  137,  137,   98,  137,   99,  137,  137,  137,  137,
+			  137,  137,  137,  119,  137,  137,  137,  133,  137,    3,
+			    4,  209,  209,  209,  171,  172,  172,  170,  172,  169,
+			  144,  144,  144,  144,  144,   72,  137,  137,   78,  137,
+			   81,  137,  137,   88,  137,   90,  137,   97,  137,  137,
+			  107,  137,  137,  137,  116,  137,  137,  124,  137,  130,
+			  137,  209,  190,  199,  193,  199,  144,  144,   73,  137,
+
+			  137,  100,  137,  137,  115,  137,  117,  137,  189,  199,
+			   82,  137,  137,  137,  114,  137,  114, yy_Dummy>>,
+			1, 117, 1000)
 		end
 
 feature {NONE} -- Constants
 
-	yyJam_base: INTEGER = 2477
+	yyJam_base: INTEGER = 2820
 			-- Position in `yy_nxt'/`yy_chk' tables
 			-- where default jam table starts
 
-	yyJam_state: INTEGER = 839
+	yyJam_state: INTEGER = 866
 			-- State id corresponding to jam state
 
-	yyTemplate_mark: INTEGER = 840
+	yyTemplate_mark: INTEGER = 867
 			-- Mark between normal states and templates
 
 	yyNull_equiv_class: INTEGER = 97
@@ -5825,10 +6009,10 @@ feature {NONE} -- Constants
 			-- regular expression with both leading
 			-- and trailing parts having variable length?
 
-	yyNb_rules: INTEGER = 237
+	yyNb_rules: INTEGER = 241
 			-- Number of rules
 
-	yyEnd_of_buffer: INTEGER = 238
+	yyEnd_of_buffer: INTEGER = 242
 			-- End of buffer rule code
 
 	yyLine_used: BOOLEAN = true

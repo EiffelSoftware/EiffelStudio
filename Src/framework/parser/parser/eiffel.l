@@ -81,9 +81,14 @@ STANDARD_SYMBOL	[*+-/<=>\\^]
 -- OFOF - old free operator first characters
 -- OFOM - old free operator middle characters
 -- OFOL - old free operator last characters
-OFOF	[@#|&]
-OFOL	{ASCII}{-}{Cc}{-}["%]{-}{BREAK}
-OFOM	(\-)?({OFOL}{-}[\-])
+-- OFOx1 - old free operators starting from "@" (it excludes previously available operators like "@foo")
+-- OFOx2 - old free operators startind from "#|&"
+OFOF1	[@]
+OFOL1	{ASCII}{-}{Cc}{-}["%A-Za-z]{-}{BREAK}
+OFOM1	(\-)?({OFOL1}{-}[\-])
+OFOF2	[#|&]
+OFOL2	{ASCII}{-}{Cc}{-}["%]{-}{BREAK}
+OFOM2	(\-)?({OFOL2}{-}[\-])
 
 FREE_OPERATOR_BASE	{Sm}{+}{Sc}{+}{So}{+}{Pc}{+}{Pd}{+}{Po}{-}{BREAK}{-}{SPECIAL_SYMBOL}{+}{STANDARD_SYMBOL}{+}[~]{-}["$%',.:;?]
 
@@ -474,9 +479,12 @@ FOM	(\-)?{FOL}{-}[\-]
 				process_id_as
 			}
 
-{OFOF}{OFOM}*({OFOL}{-}[\-]\-)?	|
-{OFOF}{OFOM}*{OFOL}{-}[\-]\-/{BREAK}	|
-{OFOF}{OFOM}*/{SOFT_BREAK}	{
+{OFOF1}{OFOM1}*({OFOL1}{-}[\-]\-)?	|
+{OFOF1}{OFOM1}*{OFOL1}{-}[\-]\-/{BREAK}	|
+{OFOF1}{OFOM1}*/{SOFT_BREAK}	|
+{OFOF2}{OFOM2}*({OFOL2}{-}[\-]\-)?	|
+{OFOF2}{OFOM2}*{OFOL2}{-}[\-]\-/{BREAK}	|
+{OFOF2}{OFOM2}*/{SOFT_BREAK}	{
 				update_character_locations
 				last_token := TE_FREE
 				process_id_as
@@ -1260,7 +1268,8 @@ FOM	(\-)?{FOL}{-}[\-]
 				process_simple_string_as (TE_STR_XOR)
 			}
 \"{FOF}{FOM}*({FOL}{-}[\-]\-)?\"	|
-\"{OFOF}{OFOM}*({OFOL}{-}[\-]\-)?\"	{
+\"{OFOF1}{OFOM1}*({OFOL1}{-}[\-]\-)?\"	|
+\"{OFOF2}{OFOM2}*({OFOL2}{-}[\-]\-)?\"	{
 				update_character_locations
 				process_simple_string_as (TE_STR_FREE)
 			}

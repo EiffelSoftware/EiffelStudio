@@ -52,7 +52,11 @@ feature {NONE} -- Initialization
 			-- Initialize `text_buffer' events
 		do
 			Precursor {EV_TEXT_IMP}
-			real_signal_connect (text_buffer, "mark_set", agent (app_implementation.gtk_marshal).text_buffer_mark_set_intermediary (object_id, ?, ?), Void)
+			real_signal_connect (text_buffer,
+					{EV_GTK_EVENT_STRINGS}.mark_set_event_name,
+					agent (app_implementation.gtk_marshal).text_buffer_mark_set_intermediary (object_id, ?, ?),
+					Void
+				)
 		end
 
 feature {NONE} -- Implementation

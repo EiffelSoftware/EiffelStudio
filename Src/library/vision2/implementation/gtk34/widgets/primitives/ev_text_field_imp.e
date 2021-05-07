@@ -253,19 +253,6 @@ feature -- status settings
 			{GTK2}.gtk_entry_set_has_frame (entry_widget, False)
 		end
 
-	gtk_hide_border (a_entry: POINTER)
-		obsolete
-			"Obsolete, use {EV_TEXT_FIELD_IMP}.hide_border instead [2021-06-01]"
-		external
-			"C inline use <ev_gtk.h>"
-		alias
-			"[
-				#if GTK_MINOR_VERSION >= 10
-					gtk_entry_set_inner_border ((GtkEntry*) $a_entry, NULL);
-				#endif
-			]"
-		end
-
 	set_editable (a_editable: BOOLEAN)
 			-- Set editable state to `a_editable'.
 		do

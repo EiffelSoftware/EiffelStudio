@@ -45,7 +45,7 @@ feature {NONE} -- Initialization
 			value_range.change_actions.extend (agent set_range)
 			real_signal_connect (
 				adjustment,
-				once "value-changed",
+				{EV_GTK_EVENT_STRINGS}.value_changed_event_name,
 				agent (App_implementation.gtk_marshal).on_gauge_value_changed_intermediary (c_object),
 				Void
 			)

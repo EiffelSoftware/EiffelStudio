@@ -71,7 +71,11 @@ feature {NONE} -- Initialization
 	initialize_buffer_events
 			-- Initialize events for `Current'
 		do
-			real_signal_connect (text_buffer, "changed", agent (App_implementation.gtk_marshal).text_component_change_intermediary (c_object), Void)
+			real_signal_connect (text_buffer,
+					{EV_GTK_EVENT_STRINGS}.changed_event_name,
+					agent (App_implementation.gtk_marshal).text_component_change_intermediary (c_object),
+					Void
+				)
 		end
 
 feature -- Access
@@ -666,7 +670,7 @@ feature {EV_ANY, EV_ANY_I} -- Implementation
 	interface: detachable EV_TEXT note option: stable attribute end;
 
 note
-	copyright:	"Copyright (c) 1984-2019, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2021, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

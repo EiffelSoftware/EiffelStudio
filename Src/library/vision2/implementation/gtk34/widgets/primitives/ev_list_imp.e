@@ -92,7 +92,11 @@ feature -- Initialize
 			previous_selection := selected_items
 
 			a_selection := {GTK2}.gtk_tree_view_get_selection (tree_view)
-			real_signal_connect (a_selection, "changed", agent (app_implementation.gtk_marshal).on_pnd_deferred_item_parent_selection_change (internal_id), Void)
+			real_signal_connect (a_selection,
+						{EV_GTK_EVENT_STRINGS}.changed_event_name,
+						agent (app_implementation.gtk_marshal).on_pnd_deferred_item_parent_selection_change (internal_id),
+						Void
+					)
 			initialize_pixmaps
 		end
 
@@ -411,7 +415,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2014, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2021, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

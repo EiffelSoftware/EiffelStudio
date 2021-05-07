@@ -64,7 +64,11 @@ feature {EV_ANY_I, EV_GTK_CALLBACK_MARSHAL} -- Implementation
 	init_select_actions (a_select_actions: EV_NOTIFY_ACTION_SEQUENCE)
 			-- <Precursor>
 		do
-			real_signal_connect (visual_widget, "clicked", agent (App_implementation.gtk_marshal).toolbar_item_select_actions_intermediary (internal_id), Void)
+			real_signal_connect (visual_widget,
+					{EV_GTK_EVENT_STRINGS}.clicked_event_name,
+					agent (App_implementation.gtk_marshal).toolbar_item_select_actions_intermediary (internal_id),
+					Void
+				)
 		end
 
 feature {NONE} -- Implementation
@@ -100,7 +104,7 @@ feature {EV_ANY, EV_ANY_I} -- Implementation
 			-- Interface of `Current'
 
 note
-	copyright:	"Copyright (c) 1984-2014, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2021, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

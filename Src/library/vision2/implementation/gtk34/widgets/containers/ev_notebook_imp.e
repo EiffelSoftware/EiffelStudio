@@ -56,7 +56,10 @@ feature {NONE} -- Initialization
 			set_c_object ({GTK}.gtk_notebook_new ())
 			{GTK}.gtk_notebook_set_show_border (visual_widget, True)
 			{GTK}.gtk_notebook_set_scrollable (visual_widget, True)
-			real_signal_connect (visual_widget, "switch-page", agent (App_implementation.gtk_marshal).on_notebook_page_switch_intermediary (c_object, ?), agent (App_implementation.gtk_marshal).page_switch_translate)
+			real_signal_connect (visual_widget, {EV_GTK_EVENT_STRINGS}.switch_page_event_name,
+					agent (App_implementation.gtk_marshal).on_notebook_page_switch_intermediary (c_object, ?),
+					agent (App_implementation.gtk_marshal).page_switch_translate
+				)
 			Precursor {EV_WIDGET_LIST_IMP}
 			selected_item_index_internal := 0
 			initialize_pixmaps

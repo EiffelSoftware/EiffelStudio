@@ -43,16 +43,11 @@ feature -- Expose actions intermediary agent routines
 
 	create_expose_actions_intermediary (a_c_object: POINTER; a_x, a_y, a_width, a_height: INTEGER)
 			-- Area needs to be redrawn
-		local
-			l_drawing_area_imp: detachable EV_DRAWING_AREA_IMP
-			l_pixmap_imp: detachable EV_PIXMAP_IMP
 		do
-			l_drawing_area_imp ?= c_get_eif_reference_from_object_id (a_c_object)
-			if l_drawing_area_imp /= Void then
-				l_drawing_area_imp.call_expose_actions (a_x, a_y, a_width, a_height)
-			else
-				l_pixmap_imp ?= c_get_eif_reference_from_object_id (a_c_object)
-				if l_pixmap_imp /= Void then
+			if attached c_get_eif_reference_from_object_id (a_c_object) as l_imp then
+				if attached {EV_DRAWING_AREA_IMP} l_imp as l_drawing_area_imp then
+					l_drawing_area_imp.call_expose_actions (a_x, a_y, a_width, a_height)
+				elseif attached {EV_PIXMAP_IMP} l_imp as l_pixmap_imp then
 					l_pixmap_imp.call_expose_actions (a_x, a_y, a_width, a_height)
 				end
 			end
@@ -62,34 +57,32 @@ feature {EV_ANY_IMP} -- Gauge intermediary agent routines
 
 	on_gauge_value_changed_intermediary (a_c_object: POINTER)
 			-- Gauge value changed
-		local
-			a_gauge_imp: detachable EV_GAUGE_IMP
 		do
-			a_gauge_imp ?= c_get_eif_reference_from_object_id (a_c_object)
-			check a_gauge_imp /= Void then end
-			a_gauge_imp.value_changed_handler
+			check attached {EV_GAUGE_IMP} c_get_eif_reference_from_object_id (a_c_object) as l_gauge_imp then
+				l_gauge_imp.value_changed_handler
+			end
 		end
 
 feature -- Widget intermediary agent routines
 
 	on_size_allocate_intermediate (a_object_id, a_x, a_y, a_width, a_height: INTEGER)
 			-- Size allocate happened on widget.
-		local
-			a_widget: detachable EV_WIDGET_IMP
 		do
-			a_widget ?= eif_id_object (a_object_id)
-			if a_widget /= Void and then not a_widget.is_destroyed then
+			if
+				attached {EV_WIDGET_IMP} eif_id_object (a_object_id) as a_widget and then
+			 	not a_widget.is_destroyed
+			then
 				a_widget.on_size_allocate (a_x, a_y, a_width, a_height)
 			end
 		end
 
 	on_set_focus_event_intermediary (a_object_id: INTEGER; a_widget_ptr: POINTER)
 			-- Set Focus handling intermediary.
-		local
-			a_window: detachable EV_WINDOW_IMP
 		do
-			a_window ?= eif_id_object (a_object_id)
-			if a_window /= Void and then not a_window.is_destroyed then
+			if
+				attached {EV_WINDOW_IMP} eif_id_object (a_object_id) as a_window and then
+				not a_window.is_destroyed
+			then
 				a_window.on_set_focus_event (a_widget_ptr)
 			end
 		end
@@ -238,7 +231,7 @@ feature {EV_ANY_IMP} -- Dialog intermediary agent routines
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2019, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2021, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

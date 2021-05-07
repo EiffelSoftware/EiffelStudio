@@ -145,9 +145,12 @@ feature {NONE} -- Initialization
 			--{GTK}.g_list_free (a_focus_list)
 
 				-- This is a hack, remove when the toggle button can be retrieved via the API.
-			real_signal_connect (container_widget, once "realize", agent (app_implementation.gtk_marshal).on_combo_box_toggle_button_event (internal_id, 1), Void)
+			real_signal_connect (container_widget,
+						{EV_GTK_EVENT_STRINGS}.realize_event_name,
+			 			agent (app_implementation.gtk_marshal).on_combo_box_toggle_button_event (internal_id, 1),
+			 			Void
+			 		)
 			retrieve_toggle_button_signal_connection_id := last_signal_connection_id
-
 
 			Precursor {EV_LIST_ITEM_LIST_IMP}
 			align_text_left
@@ -176,7 +179,11 @@ feature {NONE} -- Initialization
 
 			set_minimum_width_in_characters (4)
 
-			real_signal_connect (container_widget, once "changed", agent (app_implementation.gtk_marshal).on_pnd_deferred_item_parent_selection_change (internal_id), Void)
+			real_signal_connect (container_widget,
+					{EV_GTK_EVENT_STRINGS}.changed_event_name,
+					agent (app_implementation.gtk_marshal).on_pnd_deferred_item_parent_selection_change (internal_id),
+					Void
+				)
 			initialize_tab_behavior
 			initialize_hints
 		end
@@ -304,7 +311,11 @@ feature {EV_GTK_DEPENDENT_INTERMEDIARY_ROUTINES} -- Event handling
 				{GTK}.gtk_widget_set_size_request (a_toggle, -1, 1)
 				{GTK}.gtk_widget_set_can_focus (a_toggle, False)
 
-				real_signal_connect (a_toggle, once "toggled", agent (app_implementation.gtk_marshal).on_combo_box_toggle_button_event (internal_id, 2), Void)
+				real_signal_connect (a_toggle,
+						{EV_GTK_EVENT_STRINGS}.toggled_event_name,
+						agent (app_implementation.gtk_marshal).on_combo_box_toggle_button_event (internal_id, 2),
+						Void
+					)
 				{GTK2}.signal_disconnect (container_widget, retrieve_toggle_button_signal_connection_id)
 				retrieve_toggle_button_signal_connection_id := 0
 			end

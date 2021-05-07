@@ -50,40 +50,34 @@ feature -- Access
 
 	set_first (an_item: attached like item)
 			-- Make `an_item' `first'.
-		local
-			item_imp: detachable EV_WIDGET_IMP
 		do
-			item_imp ?= an_item.implementation
-			check item_imp /= Void then end
-			item_imp.set_parent_imp (Current)
-			{GTK}.gtk_paned_pack1 (container_widget, item_imp.c_object, False, False)
+			check attached {EV_WIDGET_IMP} an_item.implementation as item_imp then
+				item_imp.set_parent_imp (Current)
+				{GTK}.gtk_paned_pack1 (container_widget, item_imp.c_object, False, False)
+			end
 			first := an_item
 			set_item_resize (an_item, False)
 		end
 
 	set_second (an_item: attached like item)
 			-- Make `an_item' `second'.
-		local
-			item_imp: detachable EV_WIDGET_IMP
 		do
-			item_imp ?= an_item.implementation
-			check item_imp /= Void then end
-			item_imp.set_parent_imp (Current)
-			{GTK}.gtk_paned_pack2 (container_widget, item_imp.c_object, True, False)
+			check attached {EV_WIDGET_IMP} an_item.implementation as item_imp then
+				item_imp.set_parent_imp (Current)
+				{GTK}.gtk_paned_pack2 (container_widget, item_imp.c_object, True, False)
+			end
 			second := an_item
 			set_item_resize (an_item, True)
 		end
 
 	prune (an_item: like item)
 			-- Remove `an_item' if present from `Current'.
-		local
-			item_imp: detachable EV_WIDGET_IMP
 		do
 			if has (an_item) and then an_item /= Void then
-				item_imp ?= an_item.implementation
-				check item_imp /= Void then end
-				item_imp.set_parent_imp (Void)
-				{GTK}.gtk_container_remove ({GTK}.gtk_widget_get_parent (item_imp.c_object), item_imp.c_object)
+				check attached {EV_WIDGET_IMP} an_item.implementation as item_imp then
+					item_imp.set_parent_imp (Void)
+					{GTK}.gtk_container_remove ({GTK}.gtk_widget_get_parent (item_imp.c_object), item_imp.c_object)
+				end
 				if an_item = first then
 					first_expandable := False
 					first := Void

@@ -270,7 +270,11 @@ feature {EV_ANY_I, EV_GTK_CALLBACK_MARSHAL} -- Implementation
 	init_select_actions (a_select_actions: EV_NOTIFY_ACTION_SEQUENCE)
 			-- <Precursor>
 		do
-			real_signal_connect (c_object, once "clicked", agent (App_implementation.gtk_marshal).new_toolbar_item_select_actions_intermediary (internal_id), Void)
+			real_signal_connect (c_object,
+					{EV_GTK_EVENT_STRINGS}.clicked_event_name,
+					agent (App_implementation.gtk_marshal).new_toolbar_item_select_actions_intermediary (internal_id),
+					Void
+				)
 		end
 
 feature {EV_ANY, EV_ANY_I} -- Implementation

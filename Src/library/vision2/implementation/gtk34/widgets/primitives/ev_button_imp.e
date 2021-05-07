@@ -166,40 +166,20 @@ feature -- Status Setting
 	disable_default_push_button
 			-- Remove the style of the button corresponding
 			-- to the default push button.
-		local
-			flag: BOOLEAN
 		do
 			is_default_push_button := False
 			{GTK2}.gtk_widget_set_can_default (visual_widget, False)
 			{GTK}.gtk_widget_queue_draw (visual_widget)
-			from
-			until
-				{GTK2}.events_pending
-			loop
-				flag := {GTK2}.gtk_event_iteration
-				debug ("gtk3_redraw")
-					print (generator + ".redraw " + flag.out + "%N")
-				end
-			end
+			process_pending_events
 		end
 
 	enable_can_default
 			-- Allow the style of the button to be the default push button.
-		local
-			flag: BOOLEAN
 		do
 			is_default_push_button := True
 			{GTK2}.gtk_widget_set_can_default (visual_widget, True)
 			{GTK}.gtk_widget_queue_draw (visual_widget)
-			from
-			until
-				{GTK2}.events_pending
-			loop
-				flag := {GTK2}.gtk_event_iteration
-				debug ("gtk3_redraw")
-					print (generator + ".redraw " + flag.out + "%N")
-				end
-			end
+			process_pending_events
 		end
 
 	set_foreground_color (a_color: EV_COLOR)
@@ -253,7 +233,11 @@ feature {NONE} -- implementation
 			l_app_imp: EV_APPLICATION_IMP
 		do
 			l_app_imp := app_implementation
-			l_app_imp.gtk_marshal.signal_connect (visual_widget, l_app_imp.clicked_event_string, agent (l_app_imp.gtk_marshal).button_select_intermediary (c_object), Void, False)
+			real_signal_connect (visual_widget,
+					{EV_GTK_EVENT_STRINGS}.clicked_event_name,
+				 	agent (l_app_imp.gtk_marshal).button_select_intermediary (c_object),
+				 	Void
+				 )
 		end
 
 feature {EV_ANY, EV_ANY_I} -- implementation

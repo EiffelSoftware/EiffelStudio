@@ -23,13 +23,16 @@ feature {NONE} -- Initialization
 
 	init_default_values
 			-- Set default values. Call during initialization.
+		local
+			cr: like cairo_context
 		do
 			disable_dashed_line_style
-			set_drawing_mode (drawing_mode_copy)
 			set_line_width (1)
-			if drawable /= default_pointer then
-				{CAIRO}.set_antialias (drawable, {CAIRO}.antialias_none)
-				{CAIRO}.set_line_cap (drawable, {CAIRO}.line_cap_butt)
+			set_drawing_mode (drawing_mode_copy)
+			cr := cairo_context
+			if cr /= default_pointer then
+				{CAIRO}.set_antialias (cr, {CAIRO}.antialias_none)
+				{CAIRO}.set_line_cap (cr, {CAIRO}.line_cap_butt)
 			end
 			aliasing_mode := {CAIRO}.antialias_none
 			line_cap_mode := {CAIRO}.line_cap_butt
@@ -37,10 +40,44 @@ feature {NONE} -- Initialization
 
 feature {EV_ANY_I} -- Implementation
 
-	drawable: POINTER
+	cairo_context: POINTER
 			-- Pointer to the current Cairo context for `Current'.
 
-	cairo_context: detachable EV_CAIRO_CONTEXT
+	get_new_cairo_context
+		local
+			cr: like cairo_context
+		do
+			cr := cairo_context
+			if not cr.is_default_pointer then
+				release_cairo_context (cr)
+				cr := default_pointer
+				cairo_context := cr
+			end
+			get_cairo_context
+		end
+
+	get_cairo_context
+		deferred
+		end
+
+	pre_drawing
+		local
+			cr: like cairo_context
+		do
+			cr := cairo_context
+			{CAIRO}.save (cr)
+		end
+
+	post_drawing
+		local
+			cr: like cairo_context
+		do
+			cr := cairo_context
+			if not cr.is_default_pointer then
+				{CAIRO}.restore (cr)
+				release_cairo_context (cr)
+			end
+		end
 
 feature {EV_DRAWABLE_IMP} -- Implementation
 
@@ -186,8 +223,8 @@ feature -- Element change
 	set_line_width (a_width: INTEGER)
 			-- Assign `a_width' to `line_width'.
 		do
-			if drawable /= default_pointer then
-				{CAIRO}.set_line_width (drawable, a_width)
+			if cairo_context /= default_pointer then
+				{CAIRO}.set_line_width (cairo_context, a_width)
 			end
 			line_width := a_width
 		end
@@ -195,8 +232,8 @@ feature -- Element change
 	set_drawing_mode (a_mode: INTEGER)
 			-- Set drawing mode to `a_mode'.
 		do
-			if drawable /= default_pointer then
-				{CAIRO}.set_operator (drawable, cairo_drawing_mode (a_mode))
+			if cairo_context /= default_pointer then
+				{CAIRO}.set_operator (cairo_context, cairo_drawing_mode (a_mode))
 			end
 				-- Store set drawing mode.
 			drawing_mode := a_mode
@@ -233,7 +270,8 @@ feature -- Element change
 		local
 			l_drawable: POINTER
 		do
-			l_drawable := get_drawable
+			get_cairo_context
+			l_drawable := cairo_context
 			if l_drawable /= default_pointer then
 				gc_clip_area := an_area.twin
 				{CAIRO}.rectangle (l_drawable,
@@ -242,7 +280,7 @@ feature -- Element change
 					an_area.width,
 					an_area.height)
 				{CAIRO}.clip (l_drawable)
-				release_drawable (l_drawable)
+				release_cairo_context (l_drawable)
 			else
 				check has_drawable: False end
 			end
@@ -260,10 +298,11 @@ feature -- Element change
 			l_drawable: POINTER
 		do
 			gc_clip_area := Void
-			l_drawable := get_drawable
+			get_cairo_context
+			l_drawable := cairo_context
 			if l_drawable /= default_pointer then
 				{CAIRO}.reset_clip (l_drawable)
-				release_drawable (l_drawable)
+				release_cairo_context (l_drawable)
 			else
 				check has_drawble: False end
 			end
@@ -293,8 +332,8 @@ feature -- Element change
 			-- Draw lines dashed.
 		do
 			dashed_line_style := True
-			if drawable /= default_pointer then
-				{CAIRO}.set_dashed_line_style (drawable, True)
+			if cairo_context /= default_pointer then
+				{CAIRO}.set_dashed_line_style (cairo_context, True)
 			end
 		end
 
@@ -302,8 +341,8 @@ feature -- Element change
 			-- Draw lines solid.
 		do
 			dashed_line_style := False
-			if drawable /= default_pointer then
-				{CAIRO}.set_dashed_line_style (drawable, False)
+			if cairo_context /= default_pointer then
+				{CAIRO}.set_dashed_line_style (cairo_context, False)
 			end
 		end
 
@@ -326,9 +365,9 @@ feature -- Clearing operations
 		local
 			l_drawable: POINTER
 		do
-			l_drawable := get_drawable
+			pre_drawing
+			l_drawable := cairo_context
 			if l_drawable /= default_pointer then
-				{CAIRO}.save (l_drawable)
 				if attached internal_background_color as l_bg_color then
 					{CAIRO}.set_source_rgb (l_drawable, l_bg_color.red, l_bg_color.green, l_bg_color.blue)
 				else
@@ -337,10 +376,8 @@ feature -- Clearing operations
 				end
 				{CAIRO}.rectangle (l_drawable, x + device_x_offset + 0.5, y + device_y_offset + 0.5, a_width, a_height)
 				{CAIRO}.fill (l_drawable)
-
-				{CAIRO}.restore (l_drawable)
-				release_drawable (l_drawable)
 			end
+			post_drawing
 		end
 
 feature -- Drawing operations
@@ -397,11 +434,9 @@ feature -- Drawing operations
 			l_ellipsize_symbol: POINTER
 			l_drawable: POINTER
 		do
-			l_drawable := get_drawable
+			pre_drawing
+			l_drawable := cairo_context
 			if l_drawable /= default_pointer then
-
-				{CAIRO}.save (l_drawable)
-
 					-- Set x_orig and y_orig to be the device translated values which must be used for the rest of the routine.
 				l_x := x + device_x_offset
 				l_y := y + device_y_offset
@@ -446,10 +481,8 @@ feature -- Drawing operations
 					-- Free allocated resources
 				{GTK2}.g_object_unref (a_pango_layout)
 
-				{CAIRO}.restore (l_drawable)
-
-				release_drawable (l_drawable)
 			end
+			post_drawing
 		end
 
 	pango_layout_set_ellipsize_symbol: POINTER
@@ -463,15 +496,14 @@ feature -- Drawing operations
 		local
 			l_drawable: POINTER
 		do
-			l_drawable := get_drawable
+			pre_drawing
+			l_drawable := cairo_context
 			if l_drawable /= default_pointer then
-				{CAIRO}.save (l_drawable)
 				{CAIRO}.move_to (l_drawable, x1 + device_x_offset + 0.5, y1 + device_y_offset + 0.5)
 				{CAIRO}.line_to (l_drawable, x2 + device_x_offset + 0.5, y2 + device_y_offset + 0.5)
 				{CAIRO}.stroke (l_drawable)
-				{CAIRO}.restore (l_drawable)
-				release_drawable (l_drawable)
 			end
+			post_drawing
 		end
 
 	draw_arc (x, y, a_width, a_height: INTEGER; a_start_angle, an_aperture: REAL)
@@ -489,15 +521,15 @@ feature -- Drawing operations
 		local
 			l_drawable: POINTER
 		do
-			l_drawable := get_drawable
+			pre_drawing
+			l_drawable := cairo_context
 			if l_drawable /= default_pointer and then attached {EV_PIXEL_BUFFER_IMP} a_pixel_buffer.implementation as l_pixel_buffer_imp then
-				{CAIRO}.save (l_drawable)
 				{GDK_CAIRO}.set_source_pixbuf (l_drawable, l_pixel_buffer_imp.gdk_pixbuf, area.x, area.y)
 				{CAIRO}.rectangle (l_drawable, a_x + device_x_offset + 0.5, a_y + device_y_offset + 0.5, area.width, area.height)
 				{CAIRO}.fill (l_drawable)
-				{CAIRO}.restore (l_drawable)
-				release_drawable (l_drawable)
+
 			end
+			post_drawing
 		end
 
 	supports_pixbuf_alpha: BOOLEAN
@@ -517,14 +549,16 @@ feature -- Drawing operations
 		local
 			l_drawable: POINTER
 		do
-			l_drawable := get_drawable
-			if l_drawable /= default_pointer and then attached {EV_PIXMAP_IMP} a_pixmap.implementation as l_pixmap_imp then
-				{CAIRO}.save (l_drawable)
-				{CAIRO}.set_source_surface (l_drawable, l_pixmap_imp.cairo_surface, x - x_src, y - y_src)
-				{CAIRO}.rectangle (l_drawable, x + device_x_offset + 0.5, y + device_y_offset + 0.5, src_width, src_height)
-				{CAIRO}.fill (l_drawable)
-				{CAIRO}.restore (l_drawable)
-				release_drawable (l_drawable)
+			if attached {EV_PIXMAP_IMP} a_pixmap.implementation as l_pixmap_imp then
+				pre_drawing
+				l_drawable := cairo_context
+				if l_drawable /= default_pointer then
+					{CAIRO}.set_source_surface (l_drawable, l_pixmap_imp.cairo_surface, x - x_src, y - y_src)
+					{CAIRO}.rectangle (l_drawable, x + device_x_offset + 0.5, y + device_y_offset + 0.5, src_width, src_height)
+					{CAIRO}.fill (l_drawable)
+
+				end
+				post_drawing
 			end
 		end
 
@@ -571,10 +605,12 @@ feature -- Drawing operations
 			l_close: BOOLEAN
 			l_drawable: POINTER
 		do
-			l_drawable := get_drawable
-			if l_drawable /= default_pointer then
-				if (a_width > 0 and a_height > 0 ) then
-					{CAIRO}.save (l_drawable)
+			if (a_width > 0 and a_height > 0 ) then
+				pre_drawing
+--				get_cairo_context
+				l_drawable := cairo_context
+				if l_drawable /= default_pointer then
+--					pre_drawing_operation (l_drawable)
 
 					l_close := a_close and then an_aperture /= (2 * {DOUBLE_MATH}.Pi)
 
@@ -606,10 +642,8 @@ feature -- Drawing operations
 					if a_width /= a_height then
 						{CAIRO}.scale (l_drawable, 1.0, 1.0)
 					end
-
-					{CAIRO}.restore (l_drawable)
-					release_drawable (l_drawable)
 				end
+				post_drawing
 			end
 		end
 
@@ -630,10 +664,10 @@ feature -- Drawing operations
 			l_drawable: POINTER
 		do
 			if not points.is_empty then
-				l_drawable := get_drawable
+				pre_drawing
+				l_drawable := cairo_context
 				if l_drawable /= default_pointer then
 					from
-						{CAIRO}.save (l_drawable)
 						l_count := points.count
 						{CAIRO}.move_to (l_drawable, points [1].x_precise + 0.5, points [1].y_precise + 0.5)
 						i := 2
@@ -647,9 +681,9 @@ feature -- Drawing operations
 						{CAIRO}.close_path (l_drawable)
 					end
 					{CAIRO}.stroke (l_drawable)
-					{CAIRO}.restore (l_drawable)
-					release_drawable (l_drawable)
+
 				end
+				post_drawing
 			end
 		end
 
@@ -677,9 +711,9 @@ feature -- filling operations
 			l_drawable: POINTER
 		do
 			if a_width > 0 and then a_height > 0 then
-				l_drawable := get_drawable
+				pre_drawing
+				l_drawable := cairo_context
 				if l_drawable /= default_pointer then
-					{CAIRO}.save (l_drawable)
 						-- If width or height are zero then nothing will be rendered.
 					{CAIRO}.rectangle (l_drawable, x + device_x_offset + 0.5, y + device_y_offset + 0.5, a_width - line_width, a_height - line_width)
 					if a_fill then
@@ -687,9 +721,9 @@ feature -- filling operations
 						{CAIRO}.fill (l_drawable)
 					end
 					{CAIRO}.stroke (l_drawable)
-					{CAIRO}.restore (l_drawable)
-					release_drawable (l_drawable)
+
 				end
+				post_drawing
 			end
 		end
 
@@ -720,20 +754,10 @@ feature -- filling operations
 
 feature {EV_ANY_I} -- Implementation
 
-	get_surface: POINTER
-			-- Surface that holds drawable data.
-		do
-
-		end
-
-	get_drawable: POINTER
-			-- Drawable used for rendering docking components.
-		do
-			Result := drawable
-		end
-
-	release_drawable (a_drawable: POINTER)
-			-- Release resources of drawable `a_drawable'.
+	release_cairo_context (cr: POINTER)
+			-- Release resources of cairo context `cr'.
+		require
+			not cr.is_default_pointer
 		do
 			--| By default do nothing, redefined in descendents
 		end
@@ -810,8 +834,8 @@ feature {NONE} -- Implementation
 	internal_set_color (a_foreground: BOOLEAN; a_red, a_green, a_blue: REAL_64)
 			-- Set `gc' color to (a_red, a_green, a_blue), `a_foreground' sets foreground color, otherwise background is set.
 		do
-			if drawable /= default_pointer and then a_foreground then
-				{CAIRO}.set_source_rgb (drawable, a_red, a_green, a_blue)
+			if cairo_context /= default_pointer and then a_foreground then
+				{CAIRO}.set_source_rgb (cairo_context, a_red, a_green, a_blue)
 			end
 		end
 

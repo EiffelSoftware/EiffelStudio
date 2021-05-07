@@ -48,7 +48,7 @@ feature {EV_ANY_IMP} -- Notebook intermediary agent routines
 
 feature -- Draw signal intermediary.
 
-	create_draw_actions_intermediary (a_c_object: POINTER; a_cairo_context: POINTER)
+	draw_actions_intermediary (a_c_object: POINTER; a_cairo_context: POINTER)
 			-- "draw" signal has been emitted.
 		do
 			if attached {EV_ANY_IMP} c_get_eif_reference_from_object_id (a_c_object) as l_any_imp then
@@ -56,16 +56,24 @@ feature -- Draw signal intermediary.
 			end
 		end
 
+	configure_event_intermediary (a_c_object: POINTER; a_x, a_y, a_width, a_height: INTEGER)
+			-- "configure-event" signal has been emitted.
+		do
+			if attached {EV_ANY_IMP} c_get_eif_reference_from_object_id (a_c_object) as l_any_imp then
+				l_any_imp.process_configure_event (a_x, a_y, a_width, a_height)
+			end
+		end
+
 feature {EV_ANY_IMP} -- Gauge intermediary agent routines
 
 	on_gauge_value_changed_intermediary (a_c_object: POINTER)
 			-- Gauge value changed
-		local
-			a_gauge_imp: detachable EV_GAUGE_IMP
 		do
-			a_gauge_imp ?= c_get_eif_reference_from_object_id (a_c_object)
-			check a_gauge_imp /= Void then end
-			a_gauge_imp.value_changed_handler
+			if attached {EV_GAUGE_IMP} c_get_eif_reference_from_object_id (a_c_object) as l_gauge_imp then
+				l_gauge_imp.value_changed_handler
+			else
+				check is_gauge_imp: False end
+			end
 		end
 
 feature -- Widget intermediary agent routines
@@ -166,7 +174,7 @@ feature {EV_ANY_IMP} -- Dialog intermediary agent routines
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2016, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2021, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

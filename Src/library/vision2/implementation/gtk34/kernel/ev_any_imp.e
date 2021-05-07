@@ -208,6 +208,12 @@ feature {EV_GTK_DEPENDENT_INTERMEDIARY_ROUTINES} -- Implementation
 			-- Redefined by descendents.
 		end
 
+	process_configure_event (a_x, a_y, a_width, a_height: INTEGER)
+			-- A "configure-event" signal has occurred
+		do
+			-- Redefined by descendents.
+		end
+
 feature {EV_ANY_I, EV_INTERMEDIARY_ROUTINES} -- Access
 
 	visual_widget: POINTER

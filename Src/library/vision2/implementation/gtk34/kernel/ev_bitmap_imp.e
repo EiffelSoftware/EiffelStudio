@@ -35,8 +35,8 @@ feature -- Initialization
 		local
 			l_app_imp: like app_implementation
 		do
---			drawable := {GTK}.gdk_pixmap_new (default_pointer, 1, 1, 1)
---			gc := {GTK}.gdk_gc_new (drawable)
+--			cairo_context := {GTK}.gdk_pixmap_new (default_pointer, 1, 1, 1)
+--			gc := {GTK}.gdk_gc_new (cairo_context)
 --			set_default_colors
 --			init_default_values
 			l_app_imp := app_implementation
@@ -76,10 +76,10 @@ feature -- Status Setting
 		do
 			if cairo_surface /= default_pointer then
 				{CAIRO}.surface_destroy (cairo_surface)
-				{CAIRO}.destroy (drawable)
+				{CAIRO}.destroy (cairo_context)
 			end
 			cairo_surface := {CAIRO}.image_surface_create ({CAIRO}.format_argb32, a_width, a_height)
-			drawable := {CAIRO}.create_context (cairo_surface)
+			cairo_context := {CAIRO}.create_context (cairo_surface)
 			init_default_values
 		end
 
@@ -89,7 +89,7 @@ feature -- Status Setting
 ----			{GTK}.gdk_gc_set_foreground (gc, fg_color)
 ----			{GTK}.gdk_gc_set_background (gc, bg_color)
 
-----			{GTK}.gdk_draw_rectangle (drawable, gc, 1, a_x, a_y, a_width, a_height)
+----			{GTK}.gdk_draw_rectangle (cairo_context, gc, 1, a_x, a_y, a_width, a_height)
 
 ----			set_default_colors
 --		end
@@ -99,6 +99,19 @@ feature -- Access
 	cairo_surface: POINTER
 		-- Cairo drawable surface used for storing pixmap data in RGB format.
 
+	get_cairo_context
+		local
+			cr: like cairo_context
+			l_surface: like cairo_surface
+		do
+			cr := cairo_context
+			if cr.is_default_pointer then
+				l_surface := cairo_surface
+				if not l_surface.is_default_pointer then
+					cairo_context := {CAIRO}.create_context (l_surface)
+				end
+			end
+		end
 
 	width: INTEGER
 			-- Width in pixels of mask bitmap.
@@ -146,9 +159,9 @@ feature {NONE} -- Implementation
 
 	destroy
 		do
-			if drawable /= default_pointer then
---				{GTK}.gdk_bitmap_unref (drawable)
-				drawable := default_pointer
+			if cairo_context /= default_pointer then
+--				{GTK}.gdk_bitmap_unref (cairo_context)
+				cairo_context := default_pointer
 			end
 			set_is_destroyed (True)
 		end
@@ -156,8 +169,8 @@ feature {NONE} -- Implementation
 	dispose
 			-- Cleanup
 		do
---			if drawable /= default_pointer then
---				{GTK}.gdk_bitmap_unref (drawable)
+--			if cairo_context /= default_pointer then
+--				{GTK}.gdk_bitmap_unref (cairo_context)
 --			end
 		end
 

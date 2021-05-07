@@ -84,12 +84,13 @@ feature {EV_ANY_IMP} -- Access
 feature -- Implementation
 
 	signal_connect (
-		a_c_object: POINTER;
-		a_signal_name: EV_GTK_C_STRING;
-		an_agent: PROCEDURE;
-		translate: detachable FUNCTION [INTEGER, POINTER, TUPLE];
-		invoke_after_handler: BOOLEAN)
-				--
+					a_c_object: POINTER;
+					a_signal_name: EV_GTK_C_STRING;
+					an_agent: PROCEDURE;
+					translate: detachable FUNCTION [INTEGER, POINTER, TUPLE];
+					invoke_after_handler: BOOLEAN
+				)
+			-- Signal connect, depending on `invoke_after_handler` invoked before or after default handler.
 		local
 			l_agent: PROCEDURE
 		do
@@ -108,6 +109,28 @@ feature -- Implementation
 			)
 		end
 
+	signal_connect_before (
+					a_c_object: POINTER;
+					a_signal_name: EV_GTK_C_STRING;
+					an_agent: PROCEDURE;
+					translate: detachable FUNCTION [INTEGER, POINTER, TUPLE]
+				)
+			-- Signal connect, invoke after default handler.
+		do
+			signal_connect (a_c_object, a_signal_name, an_agent, translate, False)
+		end
+
+	signal_connect_after (
+					a_c_object: POINTER;
+					a_signal_name: EV_GTK_C_STRING;
+					an_agent: PROCEDURE;
+					translate: detachable FUNCTION [INTEGER, POINTER, TUPLE]
+				)
+			-- Signal connect, invoke after default handler.
+		do
+			signal_connect (a_c_object, a_signal_name, an_agent, translate, True)
+		end
+
 	last_signal_connection_id: INTEGER
 		-- Last signal connection id.
 
@@ -121,6 +144,24 @@ feature -- Agent functions.
 					-- Converted GtkWidget* to tuple.
 				do
 					Result := [{GTK2}.gtk_value_pointer (p)]
+				end
+		end
+
+	size_allocate_translate_agent: FUNCTION [INTEGER, POINTER, TUPLE]
+			-- Translation agent used for size allocation events
+		once
+			Result :=
+			agent (n: INTEGER; p: POINTER): TUPLE
+				local
+					gtk_alloc: POINTER
+				do
+					gtk_alloc := {GTK2}.gtk_value_pointer (p)
+					Result := dimension_tuple (
+						{GTK}.gtk_allocation_struct_x (gtk_alloc),
+						{GTK}.gtk_allocation_struct_y (gtk_alloc),
+						{GTK}.gtk_allocation_struct_width (gtk_alloc),
+						{GTK}.gtk_allocation_struct_height (gtk_alloc)
+					)
 				end
 		end
 
@@ -140,28 +181,6 @@ feature -- Agent functions.
 						{GTK}.gdk_event_configure_struct_height (gdk_configure)
 					)
 			end
-		end
-
-	size_allocate_translate_agent: FUNCTION [INTEGER, POINTER, TUPLE]
-			-- Translation agent used for size allocation events
-		once
-			Result :=
-			agent (n: INTEGER; p: POINTER): TUPLE
-				local
-					gtk_alloc: POINTER
-				do
-					gtk_alloc := {GTK2}.gtk_value_pointer (p)
-					Result := dimension_tuple (
-						{GTK}.gtk_allocation_struct_x (gtk_alloc),
-						{GTK}.gtk_allocation_struct_y (gtk_alloc),
-						{GTK}.gtk_allocation_struct_width (gtk_alloc),
-						{GTK}.gtk_allocation_struct_height (gtk_alloc)
---						{GTK}.gdk_rectangle_struct_x (gtk_alloc),
---						{GTK}.gdk_rectangle_struct_y (gtk_alloc),
---						{GTK}.gdk_rectangle_struct_width (gtk_alloc),
---						{GTK}.gdk_rectangle_struct_height (gtk_alloc)
-					)
-				end
 		end
 
 	draw_translate_agent: FUNCTION [INTEGER, POINTER, TUPLE]
@@ -226,7 +245,6 @@ feature {NONE} -- Implementation
 		local
 			retry_count: INTEGER
 			l_integer_pointer_tuple: detachable like integer_pointer_tuple
-			app_imp: detachable EV_APPLICATION_IMP
 		do
 			if retry_count = 0 then
 				if n_args > 0 then
@@ -237,13 +255,13 @@ feature {NONE} -- Implementation
 				action.call (l_integer_pointer_tuple)
 
 				if a_return_value /= default_pointer then
-				--	{GTK2}.g_value_set_boolean (a_return_value, True)
+					{GTK2}.g_value_set_boolean (a_return_value, False) -- TODO: #gtk check if this is ok to return FALSE?
 				end
 
 			elseif retry_count = 1 then
-				app_imp ?= (create {EV_ENVIRONMENT}).implementation.application_i
-				check app_imp /= Void then end
-				app_imp.on_exception_action (app_imp.new_exception)
+				check attached {EV_APPLICATION_IMP} (create {EV_ENVIRONMENT}).implementation.application_i as app_imp then
+					app_imp.on_exception_action (app_imp.new_exception)
+				end
 			end
 		rescue
 			retry_count := retry_count + 1

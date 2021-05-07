@@ -17,7 +17,8 @@ inherit
 
 	EV_DRAWABLE_IMP
 		redefine
-			interface, get_drawable, release_drawable
+			pre_drawing, post_drawing,
+			interface, release_cairo_context
 		end
 
 	EV_PRIMITIVE_IMP
@@ -27,6 +28,7 @@ inherit
 			set_foreground_color,
 			set_background_color
 		redefine
+			needs_event_box, event_widget,
 			interface,
 			call_button_event_actions,
 			make,
@@ -34,6 +36,7 @@ inherit
 			on_size_allocate,
 			on_widget_mapped,
 			process_draw_event,
+			process_configure_event,
 			button_actions_handled_by_signals
 		end
 
@@ -53,29 +56,83 @@ feature {NONE} -- Initialization
 	make
 			-- Initialize `Current'.
 		local
-			l_expose_actions: like expose_actions
+			l_drawing_area: POINTER
+			l_c_object: POINTER
+			l_app_imp: like App_implementation
 		do
-			set_c_object ({GTK}.gtk_drawing_area_new)
+			l_drawing_area := {GTK}.gtk_drawing_area_new
+			set_c_object (l_drawing_area)
+			l_c_object := c_object
 
-			{GTK2}.gtk_widget_set_redraw_on_allocate (c_object, False)
-			{GTK2}.gtk_widget_set_app_paintable (c_object, True)
-			-- TODO double check.
-			--{GTK2}.gtk_widget_set_double_buffered (visual_widget, False)
+			{GTK2}.gtk_widget_set_redraw_on_allocate (l_c_object, False)
+			{GTK2}.gtk_widget_set_app_paintable (l_c_object, True)
 
-			real_signal_connect (c_object, once "button-press-event", agent (app_implementation.gtk_marshal).on_button_event (app_implementation, ?), app_implementation.gtk_marshal.button_event_translate_agent)
-			real_signal_connect (c_object, once "button-release-event", agent (app_implementation.gtk_marshal).on_button_event (app_implementation, ?), app_implementation.gtk_marshal.button_event_translate_agent)
+			l_app_imp := App_implementation
 
-			line_width := 1
-			drawing_mode := drawing_mode_copy
+			real_signal_connect (l_c_object,
+					{EV_GTK_EVENT_STRINGS}.button_press_event_name,
+					agent (l_app_imp.gtk_marshal).on_button_event (l_app_imp, ?),
+					l_app_imp.gtk_marshal.button_event_translate_agent
+				)
+			real_signal_connect (l_c_object,
+					{EV_GTK_EVENT_STRINGS}.button_release_event_name,
+					agent (l_app_imp.gtk_marshal).on_button_event (l_app_imp, ?),
+					l_app_imp.gtk_marshal.button_event_translate_agent
+				)
 
-			real_set_background_color (c_object, background_color)
+			real_signal_connect (l_drawing_area,
+					{EV_GTK_EVENT_STRINGS}.configure_event_name,
+					agent (l_app_imp.gtk_marshal).configure_event_intermediary (l_drawing_area, ?, ?, ?, ?),
+					l_app_imp.gtk_marshal.configure_translate_agent
+				)
+
+			real_signal_connect_after (l_drawing_area,
+					{EV_GTK_EVENT_STRINGS}.draw_event_name,
+					agent (l_app_imp.gtk_marshal).draw_actions_intermediary (l_drawing_area, ?),
+					l_app_imp.gtk_marshal.draw_translate_agent
+				)
+
+			check cairo_surface.is_default_pointer end
+			get_new_cairo_surface
+
+			init_default_values
+--			disable_double_buffering -- deprecated!
+
+			real_set_background_color (l_c_object, background_color)
 
 			Precursor {EV_PRIMITIVE_IMP}
 
-			l_expose_actions := expose_actions
-
 			disable_tabable_to
 			disable_tabable_from
+		end
+
+	needs_event_box: BOOLEAN
+			-- Does `a_widget' need an event box?
+		do
+			Result := False
+		end
+
+	event_widget: POINTER
+		do
+			Result := visual_widget
+		end
+
+feature -- filling operations
+
+	drawing_context: POINTER
+
+	pre_drawing
+		do
+			get_new_cairo_context
+		end
+
+	post_drawing
+		local
+			cr: like cairo_context
+		do
+			cr := cairo_context
+			check not cr.is_default_pointer end
+			release_cairo_context (cr)
 		end
 
 feature {EV_APPLICATION_IMP} -- Implementation
@@ -93,7 +150,7 @@ feature -- Implementation
 		obsolete
 			"double buffering is enabled by default [2021-06-01]"
 		do
-		  -- {GTK2}.gtk_widget_set_double_buffered (visual_widget, True)
+		  -- {GTK2}.gtk_widget_set_double_buffered (c_object, True)
 		end
 
 	disable_double_buffering
@@ -101,7 +158,7 @@ feature -- Implementation
 		obsolete
 			"Disabling double buffering is mostly detrimental to the performance of an app. [2021-06-01]"
 		do
-			-- {GTK2}.gtk_widget_set_double_buffered (visual_widget, False)
+			-- {GTK2}.gtk_widget_set_double_buffered (c_object, False)
 		end
 
 feature {NONE} -- Implementation
@@ -122,12 +179,11 @@ feature {NONE} -- Implementation
 			-- Redraw the entire area.
 		do
 			{GTK}.gtk_widget_queue_draw (visual_widget)
+			process_pending_events
 		end
 
 	redraw_rectangle (a_x, a_y, a_width, a_height: INTEGER)
 			-- Redraw the rectangle area defined by `a_x', `a_y', `a_width', a_height'.
-		local
-			flag: BOOLEAN
 		do
 				-- TODO JV review
 				-- Workaround, sometimes we got a negative vaue for width `a_width`.
@@ -137,15 +193,7 @@ feature {NONE} -- Implementation
 			else
 				{GTK}.gtk_widget_queue_draw_area (visual_widget, a_x, a_y, a_width, a_height)
 			end
-			from
-			until
-				{GTK2}.events_pending
-			loop
-				flag := {GTK2}.gtk_event_iteration
-				debug ("gtk3_redraw")
-					print (generator + ".redraw " + flag.out + "%N")
-				end
-			end
+			process_pending_events
 		end
 
 	clear_and_redraw
@@ -178,36 +226,72 @@ feature {NONE} -- Implementation
 
 feature {EV_ANY_I} -- Implementation
 
-	get_drawable: POINTER
-			-- Drawable used for rendering docking components.
+	cairo_surface: POINTER
+
+	get_new_cairo_surface
+		require
+			cairo_surface.is_default_pointer
 		local
-			l_window, l_surface: POINTER
+			l_surface,
+			l_widget,
+			l_window: POINTER
+			cr: POINTER
 		do
-			if in_expose_actions then
-					-- We have been called via an expose event.
-				check drawable_not_null: drawable /= null end
-				Result := drawable
-			else
-						-- User is drawing directly to the window outside
-						-- of an expose event. We need to create a drawable
-						-- context for each draw operations.
-				l_window := {GTK}.gtk_widget_get_window (c_object)
-				if l_window /= default_pointer then
---					Result := {GDK_CAIRO}.create_context (l_window)
---					initialize_drawable (Result)
-					l_surface := {GDK}.gdk_window_create_similar_surface (l_window, 0x3000, {GDK}.gdk_window_get_width(l_window), {GDK}.gdk_window_get_height(l_window) )
-					Result := {CAIRO}.create_context (l_surface)
-					initialize_drawable (Result)
-				end
+			check
+				no_surface: cairo_surface.is_default_pointer
+			end
+			print (generator + ".get_cairo_surface%N")
+			l_widget := c_object
+			l_window := {GTK}.gtk_widget_get_window (l_widget)
+			if l_window /= default_pointer then
+				l_surface := {GDK}.gdk_window_create_similar_surface (
+						l_window,
+						{CAIRO}.cairo_content_color, -- TODO: use with _alpha ?
+						{GTK}.gtk_widget_get_allocated_width (l_widget),
+						{GTK}.gtk_widget_get_allocated_height (l_widget)
+					)
+				cairo_surface := l_surface
+
+				get_new_cairo_context
+				cr := cairo_context
+				{CAIRO}.paint (cr)
+				{CAIRO}.destroy (cr)
+				cairo_context := default_pointer
 			end
 		end
 
-	release_drawable (a_drawable: POINTER)
-			-- Release resources of drawable `a_drawable'.
+	get_cairo_context
+			-- Drawable used for rendering docking components.
+--		require
+--			no_drawable: cairo_context.is_default_pointer
+		local
+		 	l_surface, cr: POINTER
 		do
-			if not in_expose_actions and a_drawable /= default_pointer then
-				{CAIRO}.destroy (a_drawable)
-				cairo_context := Void
+			cr := cairo_context
+			if cr.is_default_pointer then
+						-- User is drawing directly to the window outside
+						-- of an expose event. We need to create a drawable
+						-- context for each draw operations.
+				l_surface := cairo_surface
+				if l_surface.is_default_pointer then
+					get_new_cairo_surface
+					l_surface := cairo_surface
+				end
+
+				cr := {CAIRO}.create_context (l_surface)
+				cairo_context := cr
+				initialize_cairo_context (cr)
+			end
+		end
+
+	release_cairo_context (cr: POINTER)
+			-- Release resources of cairo context `cr'.
+		do
+			if
+				not in_expose_actions and
+				not cr.is_default_pointer
+			then
+-- FIXME				{CAIRO}.destroy (cr)
 			end
 		end
 
@@ -220,38 +304,68 @@ feature {EV_INTERMEDIARY_ROUTINES} -- Implementation
 			-- Call the expose actions for the drawing area.
 		local
 			l_x, l_y, l_width, l_height: REAL_64
+			l_surface: like cairo_surface
+			l_old_cr: like cairo_context
 		do
-			in_expose_actions := True
-
-			drawable := a_cairo_context
-
-			{CAIRO}.clip_extents (a_cairo_context, $l_x, $l_y, $l_width, $l_height)
-
-			initialize_drawable (a_cairo_context)
-
-			if expose_actions_internal /= Void then
-				expose_actions_internal.call (app_implementation.gtk_marshal.dimension_tuple (l_x.truncated_to_integer, l_y.truncated_to_integer, l_width.truncated_to_integer, l_height.truncated_to_integer))
+			debug ("gdk_event")
+				print (generator + ".process_draw_event ("+ a_cairo_context.out +")%N")
 			end
 
-			drawable := default_pointer
+			l_surface := cairo_surface;
+			check has_surface: not l_surface.is_default_pointer end
 
-			in_expose_actions := False
+			{CAIRO}.set_source_surface (a_cairo_context, l_surface, 0, 0) --l_x, l_y)
+
+			if attached expose_actions_internal as l_actions then
+				in_expose_actions := True
+				l_old_cr := cairo_context
+				cairo_context := a_cairo_context
+				{CAIRO}.clip_extents (a_cairo_context, $l_x, $l_y, $l_width, $l_height)
+				l_actions.call (l_x.truncated_to_integer, l_y.truncated_to_integer, l_width.truncated_to_integer, l_height.truncated_to_integer)
+				cairo_context := l_old_cr
+				in_expose_actions := False
+			end
+
+			{CAIRO}.paint (a_cairo_context)
 		end
 
-	initialize_drawable (a_drawable: POINTER)
-			-- Initialize new `drawable' to existing parameters.
+	process_configure_event (a_x, a_y, a_width, a_height: INTEGER)
+			-- A "configure-event" signal has occurred
+		local
+			l_surface: POINTER
 		do
-			{CAIRO}.set_antialias (a_drawable, aliasing_mode)
-			{CAIRO}.set_line_cap (a_drawable, line_cap_mode)
-			{CAIRO}.set_line_width (a_drawable, line_width)
+			debug ("gdk_event")
+				print (generator + ".process_configure_event ("+ a_x.out + ", " + a_y.out + ", " + a_width.out + ", " + a_height.out + ")%N")
+			end
+			l_surface := cairo_surface
+			if not l_surface.is_default_pointer then
+				{CAIRO}.surface_flush (l_surface)
+				{CAIRO}.surface_destroy (l_surface)
+				cairo_surface := default_pointer
+			end
+			if cairo_surface.is_default_pointer then
+				get_new_cairo_surface
+			end
+		end
+
+feature {NONE} -- Implementation		
+
+	initialize_cairo_context (cr: POINTER)
+			-- Initialize new `drawable' to existing parameters.
+		require
+			not cr.is_default_pointer
+		do
+			{CAIRO}.set_antialias (cr, aliasing_mode)
+			{CAIRO}.set_line_cap (cr, line_cap_mode)
+			{CAIRO}.set_line_width (cr, line_width)
 			if attached internal_foreground_color as l_color then
-				{CAIRO}.set_source_rgb (a_drawable, l_color.red, l_color.green, l_color.blue)
+				{CAIRO}.set_source_rgb (cr, l_color.red, l_color.green, l_color.blue)
 			else
 					-- No colors specified, it will be black
-				{CAIRO}.set_source_rgb (a_drawable, 0.0, 0.0, 0.0)
+				{CAIRO}.set_source_rgb (cr, 0.0, 0.0, 0.0)
 			end
-			{CAIRO}.set_operator (a_drawable, cairo_drawing_mode (drawing_mode))
-			{CAIRO}.set_dashed_line_style (a_drawable, dashed_line_style)
+			{CAIRO}.set_operator (cr, cairo_drawing_mode (drawing_mode))
+			{CAIRO}.set_dashed_line_style (cr, dashed_line_style)
 		end
 
 	internal_set_focus
@@ -259,14 +373,14 @@ feature {EV_INTERMEDIARY_ROUTINES} -- Implementation
 		local
 			l_can_focus: BOOLEAN
 		do
-			l_can_focus := {GTK}.gtk_widget_get_can_focus (visual_widget)
+			l_can_focus := {GTK}.gtk_widget_get_can_focus (c_object)
 			if not l_can_focus then
-				{GTK}.gtk_widget_set_can_focus (visual_widget, True)
+				{GTK}.gtk_widget_set_can_focus (c_object, True)
 			end
 			Precursor {EV_PRIMITIVE_IMP}
 				-- Reset focus handling.
 			if not l_can_focus then
-				{GTK}.gtk_widget_set_can_focus (visual_widget, False)
+				{GTK}.gtk_widget_set_can_focus (c_object, False)
 			end
 		end
 
@@ -276,7 +390,12 @@ feature {NONE} -- Implementation
 			-- Call pointer_button_press_actions or pointer_double_press_actions
 			-- depending on event type in first position of `event_data'.
 		do
-			if a_type = {EV_GTK_ENUMS}.gdk_button_press_enum and then not {GTK}.gtk_widget_has_focus (visual_widget) and then (a_button = 1 and then a_button <= 3) and then not focus_on_press_disabled then
+			if
+				a_type = {EV_GTK_ENUMS}.gdk_button_press_enum and then
+			 	not {GTK}.gtk_widget_has_focus (c_object) and then
+			 	(a_button = 1 and then a_button <= 3) and then
+			 	not focus_on_press_disabled
+			 then
 					-- As a button has been pressed on the drawing area then
 				set_focus
 			end
@@ -284,11 +403,7 @@ feature {NONE} -- Implementation
 		end
 
 	init_expose_actions (a_expose_actions: like expose_actions)
-		local
-			l_app_imp: like app_implementation
 		do
-			l_app_imp := app_implementation
-			l_app_imp.gtk_marshal.signal_connect (visual_widget, once "draw", agent (l_app_imp.gtk_marshal).create_draw_actions_intermediary (c_object, ?), l_app_imp.gtk_marshal.draw_translate_agent, True)
 		end
 
 feature {EV_ANY, EV_ANY_I} -- Implementation

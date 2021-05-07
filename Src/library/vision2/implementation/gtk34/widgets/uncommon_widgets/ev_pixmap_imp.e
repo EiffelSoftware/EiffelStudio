@@ -21,7 +21,6 @@ inherit
 	EV_DRAWABLE_IMP
 		redefine
 			interface,
-			drawable,
 			pixbuf_from_drawable_at_position
 		end
 
@@ -61,12 +60,20 @@ feature {NONE} -- Initialization
 			Precursor {EV_PRIMITIVE_IMP}
 			l_app_imp := app_implementation
 
+				-- Connect Draw event (replacing previous expose-event)
+			real_signal_connect_after (visual_widget,
+					{EV_GTK_EVENT_STRINGS}.draw_event_name,
+					agent (l_app_imp.gtk_marshal).draw_actions_intermediary (c_object, ?),
+					l_app_imp.gtk_marshal.draw_translate_agent
+				)
+
 			set_size (1, 1)
+
 				-- Initialize the Graphical Context
 			init_default_values
 			clear_rectangle (0, 0, 1, 1)
 
-				-- Initialize expose actions so blitting may occur.
+				-- Initialize expose actions so blitting may occur.	
 			l_expose_actions := expose_actions
 		end
 
@@ -138,20 +145,10 @@ feature -- Drawing operations
 
 	redraw
 			-- Force `Current' to redraw itself.
-		local
-			flag: BOOLEAN
 		do
 			if is_displayed then
 				{GTK}.gtk_widget_queue_draw (visual_widget)
-				from
-				until
-					{GTK2}.events_pending
-				loop
-					flag := {GTK2}.gtk_event_iteration
-					debug ("gtk3_redraw")
-						print (generator + ".redraw " + flag.out + "%N")
-					end
-				end
+				process_pending_events
 			end
 		end
 
@@ -216,11 +213,8 @@ feature -- Element change
 			{GTK2}.g_object_unref (filepixbuf)
 		end
 
-	cairo_surface: POINTER
-		-- Cairo drawable surface used for storing pixmap data in RGB format.
-
 	pixbuf: POINTER
-		-- Converts the Cairo surface to a GdkPixbuf
+			-- Converts the Cairo surface to a GdkPixbuf
 		do
 			Result:= {GDK}.gdk_pixbuf_get_from_surface(cairo_surface, 0, 0, width, height)
 		end
@@ -262,10 +256,10 @@ feature -- Element change
 		do
 			if cairo_surface /= default_pointer then
 				{CAIRO}.surface_destroy (cairo_surface)
-				{CAIRO}.destroy (drawable)
+				{CAIRO}.destroy (cairo_context)
 			end
 			cairo_surface := {CAIRO}.image_surface_create ({CAIRO}.format_argb32, a_width, a_height)
-			drawable := {CAIRO}.create_context (cairo_surface)
+			cairo_context := {CAIRO}.create_context (cairo_surface)
 			init_default_values
 		end
 
@@ -298,8 +292,8 @@ feature {EV_INTERMEDIARY_ROUTINES} -- Implementation
 			l_width := {GTK}.gtk_widget_get_allocated_width (c_object)
 			l_height := {GTK}.gtk_widget_get_allocated_height (c_object)
 
-			if expose_actions_internal /= Void then
-				expose_actions_internal.call (app_implementation.gtk_marshal.dimension_tuple (0, 0, l_width, l_height))
+			if attached expose_actions_internal as l_expose_actions then
+				l_expose_actions.call (app_implementation.gtk_marshal.dimension_tuple (0, 0, l_width, l_height))
 			end
 
 			{CAIRO}.set_source_surface (a_cairo_context, cairo_surface, (l_width - width) / 2, (l_height - height) / 2)
@@ -359,16 +353,18 @@ feature -- Duplication
 			-- (So as to satisfy `is_equal'.)
 		local
 			l_width, l_height: INTEGER
+			cr: POINTER
 		do
 			if attached {EV_PIXMAP_IMP} other.implementation as l_other_imp then
 				l_width := l_other_imp.width
 				l_height := l_other_imp.height
 				cairo_surface := {CAIRO}.image_surface_create ({CAIRO}.format_argb32, l_width, l_height)
-				drawable := {CAIRO}.create_context (cairo_surface)
+				cr := {CAIRO}.create_context (cairo_surface)
+				cairo_context := cr
 				init_default_values
-				{CAIRO}.set_source_surface (drawable, l_other_imp.cairo_surface, 0, 0)
-				{CAIRO}.paint (drawable)
-				{CAIRO}.set_source_rgb (drawable, 0, 0, 0)
+				{CAIRO}.set_source_surface (cr, l_other_imp.cairo_surface, 0, 0)
+				{CAIRO}.paint (cr)
+				{CAIRO}.set_source_rgb (cr, 0, 0, 0)
 			end
 		end
 
@@ -376,27 +372,45 @@ feature {EV_ANY_I, EV_GTK_DEPENDENT_APPLICATION_IMP} -- Implementation
 
 	set_pixmap_from_pixbuf (a_pixbuf: POINTER)
 			-- Attempt to load pixmap data from a file specified by `file_name'.
+		local
+			cr: POINTER
 		do
 			cairo_surface := {CAIRO}.image_surface_create (
 				{CAIRO}.FORMAT_ARGB32,
 				{GTK}.gdk_pixbuf_get_width (a_pixbuf),
 				{GTK}.gdk_pixbuf_get_height (a_pixbuf)
 			)
-			drawable := {CAIRO}.create_context (cairo_surface)
+			cr := {CAIRO}.create_context (cairo_surface)
+			cairo_context := cr
 			set_drawing_mode (drawing_mode_copy)
 
 				-- Temporarily set the source to the pixbuf so that we can draw it on to the drawable.
-			{GDK_CAIRO}.set_source_pixbuf (drawable, a_pixbuf, 0, 0)
-			{CAIRO}.paint (drawable)
+			{GDK_CAIRO}.set_source_pixbuf (cr, a_pixbuf, 0, 0)
+			{CAIRO}.paint (cr)
 
 				-- Reset the cairo context back to rgb source of black.
-			{CAIRO}.set_source_rgb (drawable, 0, 0, 0)
+			{CAIRO}.set_source_rgb (cr, 0, 0, 0)
 		end
 
 feature {EV_ANY_I} -- Implementation
 
-	drawable: POINTER
-			-- Pointer to the GdkPixmap image data.
+
+	cairo_surface: POINTER
+			-- Cairo drawable surface used for storing pixmap data in RGB format.
+
+	get_cairo_context
+		local
+			cr: like cairo_context
+			l_surface: like cairo_surface
+		do
+			cr := cairo_context
+			if cr.is_default_pointer then
+				l_surface := cairo_surface
+				if not l_surface.is_default_pointer then
+					cairo_context := {CAIRO}.create_context (l_surface)
+				end
+			end
+		end
 
 feature {EV_GTK_DEPENDENT_APPLICATION_IMP, EV_ANY_I} -- Implementation
 
@@ -450,12 +464,7 @@ feature {EV_STOCK_PIXMAPS_IMP, EV_PIXMAPABLE_IMP, EV_PIXEL_BUFFER_IMP} -- Implem
 
 	init_expose_actions (a_expose_actions: like expose_actions)
 			-- <Precursor>
-			-- Attach to GTK "draw" signal.
-		local
-			l_app_imp: EV_APPLICATION_IMP
 		do
-			l_app_imp := app_implementation
-			l_app_imp.gtk_marshal.signal_connect (visual_widget, once "draw", agent (l_app_imp.gtk_marshal).create_draw_actions_intermediary (c_object, ?), l_app_imp.gtk_marshal.draw_translate_agent, True)
 		end
 
 feature {NONE} -- Implementation

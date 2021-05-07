@@ -33,7 +33,7 @@ inherit
 			supports_pixbuf_alpha,
 			device_x_offset,
 			device_y_offset,
-			release_drawable
+			release_cairo_context
 		end
 
 	EV_GTK_DEPENDENT_ROUTINES
@@ -64,8 +64,7 @@ feature {NONE} -- Initialization
 			gdkwin := {GTK2}.gdk_screen_get_root_window ({GDK}.gdk_screen_get_default)
 
 			l_surface := {GDK}.gdk_window_create_similar_surface (gdkwin, 0x3000, {GDK}.gdk_window_get_width(gdkwin), {GDK}.gdk_window_get_height(gdkwin) )
-			drawable := {CAIRO}.create_context (l_surface)
-
+			cairo_context := {CAIRO}.create_context (l_surface)
 
 			init_default_values
 
@@ -76,11 +75,16 @@ feature {NONE} -- Initialization
 			set_is_initialized (True)
 		end
 
-	release_drawable (a_drawable: POINTER)
-			-- Release resources of drawable `a_drawable'.
+
+	get_cairo_context
 		do
---			if {CAIRO}.get_reference_count (a_drawable) > 0 then
---				{GDK_CAIRO}.cairo_region_destroy (a_drawable)
+		end
+
+	release_cairo_context (cr: POINTER)
+			-- Release resources of cairo context `cr'.
+		do
+--			if {CAIRO}.get_reference_count (cr) > 0 then
+--				{GDK_CAIRO}.cairo_region_destroy (cr)
 --			end
 		end
 
@@ -230,25 +234,15 @@ feature -- Basic operation
 
 	redraw
 			-- Redraw the entire area.
-		local
-			flag: BOOLEAN
 		do
 
-			{GTK2}.gdk_window_invalidate_rect (drawable, default_pointer, True)
+			{GTK2}.gdk_window_invalidate_rect (cairo_context, default_pointer, True)
 			-- FIXME JV gdk_window_process_updates has been deprecated since version 3.22 and should not be used in newly-written code.
 			--{GTK2}.gdk_window_process_updates (drawable, True)
 			--{GTK}.gtk_widget_queue_draw (drawable)
 			-- https://stackoverflow.com/questions/34912757/how-do-you-force-a-screen-refresh-in-gtk-3-8
-			{GTK}.gtk_widget_queue_draw (drawable)
-			from
-			until
-				{GTK2}.events_pending
-			loop
-				flag := {GTK2}.gtk_event_iteration
-				debug ("gtk3_redraw")
-					print (generator + ".redraw " + flag.out + "%N")
-				end
-			end
+			{GTK}.gtk_widget_queue_draw (cairo_context)
+			app_implementation.process_pending_events_on_default_context
 		end
 
 	set_pointer_position (a_x, a_y: INTEGER)

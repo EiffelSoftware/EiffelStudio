@@ -189,7 +189,8 @@ feature {NONE} -- Implementation
 		do
 			if not is_show_requested then
 				{GTK}.gtk_window_set_position (c_object, window_position_enum)
-				{GTK}.gtk_widget_show (c_object)
+--				{GTK}.gtk_widget_show (c_object)
+				{GTK}.gtk_widget_show_all (c_object)
 			end
 		end
 
@@ -497,7 +498,7 @@ feature {EV_ANY_I} -- Implementation
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2013, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2021, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

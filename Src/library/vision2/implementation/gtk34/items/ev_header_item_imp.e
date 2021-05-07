@@ -411,7 +411,7 @@ feature {EV_HEADER_IMP} -- Implementation
 				item_event_id := last_signal_connection_id
 
 					-- Hook up to "draw" signal so that we can check if we need to resize `Current'.
-				l_app_imp.gtk_marshal.signal_connect (a_button, once "draw", agent (l_app_imp.gtk_marshal).create_draw_actions_intermediary (c_object, ?), l_app_imp.gtk_marshal.draw_translate_agent, False)
+				l_app_imp.gtk_marshal.signal_connect (a_button, {EV_GTK_EVENT_STRINGS}.draw_event_name, agent (l_app_imp.gtk_marshal).draw_actions_intermediary (c_object, ?), l_app_imp.gtk_marshal.draw_translate_agent, False)
 			else
 				if item_event_id /= 0 then
 					a_button := {GTK2}.gtk_tree_view_column_get_button (c_object)

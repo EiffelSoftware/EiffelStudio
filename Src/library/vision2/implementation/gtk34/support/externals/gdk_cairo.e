@@ -59,7 +59,6 @@ feature -- Externals
 			"cairo_region_destroy($a_region)"
 		end
 
-
 	gdk_drawing_context_get_cairo_context (a_context: POINTER): POINTER
 		external
 			"C inline use %"ev_gtk.h%""

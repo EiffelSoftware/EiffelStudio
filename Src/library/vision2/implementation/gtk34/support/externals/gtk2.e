@@ -834,6 +834,34 @@ feature -- Events
 			"g_main_context_dispatch(g_main_context_default())"
 		end
 
+	frozen g_main_context_default: POINTER
+		external
+			"C inline use <ev_gtk.h>"
+		alias
+			"g_main_context_default()"
+		end
+
+	frozen g_main_context_dispatch (a_context: POINTER)
+		external
+			"C inline use <ev_gtk.h>"
+		alias
+			"g_main_context_dispatch((GMainContext*) $a_context)"
+		end
+
+	frozen g_main_context_release (a_context: POINTER)
+		external
+			"C inline use <ev_gtk.h>"
+		alias
+			"g_main_context_release((GMainContext*) $a_context)"
+		end
+
+	frozen g_main_context_acquire (a_context: POINTER): BOOLEAN
+		external
+			"C inline use <ev_gtk.h>"
+		alias
+			"g_main_context_acquire((GMainContext*) $a_context)"
+		end
+
 feature -- Widgets		
 
 	frozen gtk_widget_is_toplevel (a_widget: POINTER): BOOLEAN

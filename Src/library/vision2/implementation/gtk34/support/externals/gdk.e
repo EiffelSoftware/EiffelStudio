@@ -577,6 +577,20 @@ feature -- GdkEvent
 			"y_root"
 		end
 
+	frozen gdk_event_configure_struct_x (a_c_struct: POINTER): INTEGER_32
+		external
+			"C [struct <ev_gtk.h>] (GdkEventConfigure): EIF_INTEGER"
+		alias
+			"x"
+		end
+
+	frozen gdk_event_configure_struct_y (a_c_struct: POINTER): INTEGER_32
+		external
+			"C [struct <ev_gtk.h>] (GdkEventConfigure): EIF_INTEGER"
+		alias
+			"y"
+		end
+
 	frozen gdk_event_configure_struct_height (a_c_struct: POINTER): INTEGER_32
 		external
 			"C [struct <ev_gtk.h>] (GdkEventConfigure): EIF_INTEGER"
@@ -596,20 +610,6 @@ feature -- GdkEvent
 			"C [struct <ev_gtk.h>] (GdkEventSetting): EIF_POINTER"
 		alias
 			"name"
-		end
-
-	frozen gdk_event_configure_struct_x (a_c_struct: POINTER): INTEGER_32
-		external
-			"C [struct <ev_gtk.h>] (GdkEventConfigure): EIF_INTEGER"
-		alias
-			"x"
-		end
-
-	frozen gdk_event_configure_struct_y (a_c_struct: POINTER): INTEGER_32
-		external
-			"C [struct <ev_gtk.h>] (GdkEventConfigure): EIF_INTEGER"
-		alias
-			"y"
 		end
 
 	frozen gdk_event_crossing_struct_subwindow (a_c_struct: POINTER): POINTER

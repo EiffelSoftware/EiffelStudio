@@ -725,9 +725,9 @@ feature -- Externals
 
 	paint (cr: POINTER)
 		external
-			"C signature (cairo_t*) use <cairo.h>"
+			"C inline use <cairo.h>"
 		alias
-			"cairo_paint"
+			"cairo_paint ((cairo_t*)$cr)"
 		ensure
 			is_class: class
 		end
@@ -941,6 +941,28 @@ feature -- Cairo Rectangle Int
 			is_class: class
 		end
 
+feature -- Enum _cairo_content		
+
+	frozen cairo_content_color: INTEGER_32
+		external
+			"C macro use <ev_gtk.h>"
+		alias
+			"CAIRO_CONTENT_COLOR"
+		end
+
+	frozen cairo_content_alpha: INTEGER_32
+		external
+			"C macro use <ev_gtk.h>"
+		alias
+			"CAIRO_CONTENT_ALPHA"
+		end
+
+	frozen cairo_content_color_alpha: INTEGER_32
+		external
+			"C macro use <ev_gtk.h>"
+		alias
+			"CAIRO_CONTENT_COLOR_ALPHA"
+		end
 
 note
 	copyright: "Copyright (c) 1984-2021, Eiffel Software and others"

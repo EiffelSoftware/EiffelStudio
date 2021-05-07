@@ -278,6 +278,11 @@ feature -- Widgets
 			"C signature (GtkWidget*): gboolean use <ev_gtk.h>"
 		end
 
+	frozen gtk_widget_is_visible (a_widget: POINTER): BOOLEAN
+		external
+			"C signature (GtkWidget*): gboolean use <ev_gtk.h>"
+		end
+
 	frozen gtk_widget_is_focus (a_widget: POINTER): BOOLEAN
 		external
 			"C signature (GtkWidget*): gboolean use <ev_gtk.h>"
@@ -391,14 +396,14 @@ feature -- Widgets
 		external
 			"C inline use <ev_gtk.h>"
 		alias
-			"gtk_widget_queue_draw ($a_widget)"
+			"gtk_widget_queue_draw ((GtkWidget *)$a_widget)"
 		end
 
 	frozen gtk_widget_queue_draw_area (a_widget: POINTER; a_x: INTEGER_32; a_y: INTEGER_32; a_width: INTEGER_32; a_height: INTEGER_32)
 		external
-			"C (GtkWidget*, gint, gint, gint, gint) | <ev_gtk.h>"
+			"C inline use <ev_gtk.h>"
 		alias
-			"gtk_widget_queue_draw_area"
+			"gtk_widget_queue_draw_area ((GtkWidget *) $a_widget, (gint) $a_x, (gint) $a_y, (gint) $a_width, (gint) $a_height)"
 		end
 
 	frozen gtk_widget_queue_resize (a_widget: POINTER)

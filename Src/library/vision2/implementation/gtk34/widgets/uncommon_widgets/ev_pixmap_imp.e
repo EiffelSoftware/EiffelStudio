@@ -80,65 +80,69 @@ feature {NONE} -- Initialization
 	init_from_pointer_style (a_pointer_style: EV_POINTER_STYLE)
 			-- Initialize from `a_pointer_style'
 		local
-			a_pointer_style_imp: detachable EV_POINTER_STYLE_IMP
-			l_pixbuf: POINTER
+			l_pixbuf, l_xpm: POINTER
 		do
-			a_pointer_style_imp ?= a_pointer_style.implementation
-			check a_pointer_style_imp /= Void then end
-
-			if a_pointer_style_imp.predefined_cursor_code > 0 then
-				-- We are building from a stock cursor.
-				inspect
-					a_pointer_style_imp.predefined_cursor_code
-				when {EV_POINTER_STYLE_CONSTANTS}.busy_cursor then
-					set_from_xpm_data ({EV_STOCK_PIXMAPS_IMP}.busy_cursor_xpm)
-				when {EV_POINTER_STYLE_CONSTANTS}.wait_cursor then
-					set_from_xpm_data ({EV_STOCK_PIXMAPS_IMP}.wait_cursor_xpm)
-				when {EV_POINTER_STYLE_CONSTANTS}.crosshair_cursor then
-					set_from_xpm_data ({EV_STOCK_PIXMAPS_IMP}.crosshair_cursor_xpm)
-				when {EV_POINTER_STYLE_CONSTANTS}.help_cursor then
-					set_from_xpm_data ({EV_STOCK_PIXMAPS_IMP}.help_cursor_xpm)
-				when {EV_POINTER_STYLE_CONSTANTS}.ibeam_cursor then
-					set_from_xpm_data ({EV_STOCK_PIXMAPS_IMP}.ibeam_cursor_xpm)
-				when {EV_POINTER_STYLE_CONSTANTS}.no_cursor then
-					set_from_xpm_data ({EV_STOCK_PIXMAPS_IMP}.no_cursor_xpm)
-				when {EV_POINTER_STYLE_CONSTANTS}.sizeall_cursor then
-					set_from_xpm_data ({EV_STOCK_PIXMAPS_IMP}.sizeall_cursor_xpm)
-				when {EV_POINTER_STYLE_CONSTANTS}.sizenesw_cursor then
-					set_from_xpm_data ({EV_STOCK_PIXMAPS_IMP}.sizenesw_cursor_xpm)
-				when {EV_POINTER_STYLE_CONSTANTS}.sizens_cursor then
-					set_from_xpm_data ({EV_STOCK_PIXMAPS_IMP}.sizens_cursor_xpm)
-				when {EV_POINTER_STYLE_CONSTANTS}.sizenwse_cursor then
-					set_from_xpm_data ({EV_STOCK_PIXMAPS_IMP}.sizenwse_cursor_xpm)
-				when {EV_POINTER_STYLE_CONSTANTS}.sizewe_cursor then
-					set_from_xpm_data ({EV_STOCK_PIXMAPS_IMP}.sizewe_cursor_xpm)
-				when {EV_POINTER_STYLE_CONSTANTS}.uparrow_cursor then
-					set_from_xpm_data ({EV_STOCK_PIXMAPS_IMP}.uparrow_cursor_xpm)
-				when {EV_POINTER_STYLE_CONSTANTS}.standard_cursor then
-					set_from_xpm_data ({EV_STOCK_PIXMAPS_IMP}.standard_cursor_xpm)
+			check
+				attached {EV_POINTER_STYLE_IMP} a_pointer_style.implementation as a_pointer_style_imp
+			then
+				if a_pointer_style_imp.predefined_cursor_code > 0 then
+						-- We are building from a stock cursor.
+					inspect
+						a_pointer_style_imp.predefined_cursor_code
+					when {EV_POINTER_STYLE_CONSTANTS}.busy_cursor then
+						l_xpm := {EV_STOCK_PIXMAPS_IMP}.busy_cursor_xpm
+					when {EV_POINTER_STYLE_CONSTANTS}.wait_cursor then
+						l_xpm := {EV_STOCK_PIXMAPS_IMP}.wait_cursor_xpm
+					when {EV_POINTER_STYLE_CONSTANTS}.crosshair_cursor then
+						l_xpm := {EV_STOCK_PIXMAPS_IMP}.crosshair_cursor_xpm
+					when {EV_POINTER_STYLE_CONSTANTS}.help_cursor then
+						l_xpm := {EV_STOCK_PIXMAPS_IMP}.help_cursor_xpm
+					when {EV_POINTER_STYLE_CONSTANTS}.ibeam_cursor then
+						l_xpm := {EV_STOCK_PIXMAPS_IMP}.ibeam_cursor_xpm
+					when {EV_POINTER_STYLE_CONSTANTS}.no_cursor then
+						l_xpm := {EV_STOCK_PIXMAPS_IMP}.no_cursor_xpm
+					when {EV_POINTER_STYLE_CONSTANTS}.sizeall_cursor then
+						l_xpm := {EV_STOCK_PIXMAPS_IMP}.sizeall_cursor_xpm
+					when {EV_POINTER_STYLE_CONSTANTS}.sizenesw_cursor then
+						l_xpm := {EV_STOCK_PIXMAPS_IMP}.sizenesw_cursor_xpm
+					when {EV_POINTER_STYLE_CONSTANTS}.sizens_cursor then
+						l_xpm := {EV_STOCK_PIXMAPS_IMP}.sizens_cursor_xpm
+					when {EV_POINTER_STYLE_CONSTANTS}.sizenwse_cursor then
+						l_xpm := {EV_STOCK_PIXMAPS_IMP}.sizenwse_cursor_xpm
+					when {EV_POINTER_STYLE_CONSTANTS}.sizewe_cursor then
+						l_xpm := {EV_STOCK_PIXMAPS_IMP}.sizewe_cursor_xpm
+					when {EV_POINTER_STYLE_CONSTANTS}.uparrow_cursor then
+						l_xpm := {EV_STOCK_PIXMAPS_IMP}.uparrow_cursor_xpm
+					when {EV_POINTER_STYLE_CONSTANTS}.standard_cursor then
+						l_xpm := {EV_STOCK_PIXMAPS_IMP}.standard_cursor_xpm
+					else
+						l_xpm := default_pointer
+					end
+					if l_xpm.is_default_pointer then
+						l_xpm := default_pointer
+						set_size (a_pointer_style.width, a_pointer_style.height)
+						clear
+					else
+						set_from_xpm_data (l_xpm)
+					end
 				else
-					set_size (a_pointer_style.width, a_pointer_style.height)
-					clear
-				end
-			else
-				l_pixbuf := a_pointer_style_imp.gdk_pixbuf
-				if l_pixbuf /= default_pointer then
-					set_pixmap_from_pixbuf (a_pointer_style_imp.gdk_pixbuf)
-				else
-					set_size (a_pointer_style.width, a_pointer_style.height)
-					clear
+					l_pixbuf := a_pointer_style_imp.gdk_pixbuf
+					if l_pixbuf /= default_pointer then
+						set_pixmap_from_pixbuf (a_pointer_style_imp.gdk_pixbuf)
+					else
+						set_size (a_pointer_style.width, a_pointer_style.height)
+						clear
+					end
 				end
 			end
 		end
 
 	init_from_pixel_buffer (a_pixel_buffer: EV_PIXEL_BUFFER)
 			-- Initialize from `a_pixel_buffer'
-		local
-			l_pixel_buffer_imp: detachable EV_PIXEL_BUFFER_IMP
 		do
-			l_pixel_buffer_imp ?= a_pixel_buffer.implementation
-			check l_pixel_buffer_imp /= Void then end
-			set_pixmap_from_pixbuf (l_pixel_buffer_imp.gdk_pixbuf)
+			check attached {EV_PIXEL_BUFFER_IMP} a_pixel_buffer.implementation as l_pixel_buffer_imp then
+				set_pixmap_from_pixbuf (l_pixel_buffer_imp.gdk_pixbuf)
+			end
 		end
 
 feature -- Drawing operations
@@ -216,7 +220,7 @@ feature -- Element change
 	pixbuf: POINTER
 			-- Converts the Cairo surface to a GdkPixbuf
 		do
-			Result:= {GDK}.gdk_pixbuf_get_from_surface(cairo_surface, 0, 0, width, height)
+			Result:= {GDK}.gdk_pixbuf_get_from_surface (cairo_surface, 0, 0, width, height)
 		end
 
 	set_with_default
@@ -292,11 +296,12 @@ feature {EV_INTERMEDIARY_ROUTINES} -- Implementation
 			l_width := {GTK}.gtk_widget_get_allocated_width (c_object)
 			l_height := {GTK}.gtk_widget_get_allocated_height (c_object)
 
+			{CAIRO}.set_source_surface (a_cairo_context, cairo_surface, (l_width - width) / 2, (l_height - height) / 2)
+
 			if attached expose_actions_internal as l_expose_actions then
 				l_expose_actions.call (app_implementation.gtk_marshal.dimension_tuple (0, 0, l_width, l_height))
 			end
 
-			{CAIRO}.set_source_surface (a_cairo_context, cairo_surface, (l_width - width) / 2, (l_height - height) / 2)
 			{CAIRO}.paint (a_cairo_context)
 		end
 
@@ -393,7 +398,6 @@ feature {EV_ANY_I, EV_GTK_DEPENDENT_APPLICATION_IMP} -- Implementation
 		end
 
 feature {EV_ANY_I} -- Implementation
-
 
 	cairo_surface: POINTER
 			-- Cairo drawable surface used for storing pixmap data in RGB format.
@@ -502,8 +506,14 @@ feature {NONE} -- Implementation
 
 	destroy
 			-- Destroy the pixmap and resources.
+		local
+			l_surface: like cairo_surface
 		do
 			Precursor {EV_PRIMITIVE_IMP}
+			l_surface := cairo_surface
+			if not l_surface.is_default_pointer then
+				{CAIRO}.surface_destroy (l_surface)
+			end
 		end
 
 feature {NONE} -- Externals

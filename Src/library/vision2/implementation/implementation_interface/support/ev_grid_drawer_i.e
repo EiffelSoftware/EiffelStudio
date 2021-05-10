@@ -639,7 +639,7 @@ feature -- Basic operations
 			g := grid
 			if not g.is_locked then
 				-- Perform no re-drawing if the update of the grid is locked.
-
+				drawable.start_drawing_session
 				g.reset_redraw_object_counter
 					-- Although this feature is connected to the `expose_actions' of a drawing area,
 					-- there is currently a bug/feature on Windows where it is possible for the Wm_paint
@@ -1242,61 +1242,61 @@ feature -- Basic operations
 								visible_row_indexes.forth
 							end
 						end
-						-- Now draw in the background area where no items were displayed if required.
-						-- Note that we perform the vertical and horizontal drawing separately so there may be overlap if both are
-						-- being drawn at once. This does not matter as it is simpler to implement, has no real performance impact as
-						-- it is simply drawing a rectangle and does not flicker.
+							-- Now draw in the background area where no items were displayed if required.
+							-- Note that we perform the vertical and horizontal drawing separately so there may be overlap if both are
+							-- being drawn at once. This does not matter as it is simpler to implement, has no real performance impact as
+							-- it is simply drawing a rectangle and does not flicker.
 
-					rectangle_width := internal_client_width - (column_offsets @ (column_offsets.count) - internal_client_x)
-						-- We compute the rectangle width based on the position of the final item within `column_offsets'.
-					if rectangle_width > 0 then
-						if item_buffer_pixmap.width < rectangle_width or item_buffer_pixmap.height < internal_client_height then
-							item_buffer_pixmap.set_size (rectangle_width, internal_client_height)
-						end
-							-- Check to see if we must draw the background to the right of the items.
-						if g.fill_background_actions_internal /= Void and then not g.fill_background_actions.is_empty then
-							g.fill_background_actions.call ([item_buffer_pixmap, column_offsets @ (column_offsets.count), internal_client_y, rectangle_width, internal_client_height])
-						else
-							item_buffer_pixmap.set_foreground_color (g.background_color)
-							item_buffer_pixmap.fill_rectangle (0, 0, rectangle_width, internal_client_height)
-						end
-						temp_rectangle.move_and_resize (0, 0, rectangle_width, internal_client_height)
-						if locked_row = Void then
-							drawable.draw_sub_pixmap  (horizontal_buffer_offset + internal_client_width - rectangle_width, vertical_buffer_offset, item_buffer_pixmap, temp_rectangle)
-						else
-							drawable.draw_sub_pixmap  (horizontal_buffer_offset + internal_client_width - rectangle_width, 0, item_buffer_pixmap, temp_rectangle)
-						end
-					end
-					if current_row = Void or else current_row.index >= g.visible_row_count then
-						if not g.uses_row_offsets then
-								-- Special handling for fixed row heights as `row_offsets' does not exist.
-							v_y := (row_height * (row_count))
-							rectangle_height := internal_client_height - (v_y - internal_client_y)
-						else
-							check row_offsets /= Void then end
-							v_y := row_offsets @ (row_count + 1)
-							rectangle_height := internal_client_height - (v_y - internal_client_y)
-						end
-						if rectangle_height > 0 then
-							-- Check to see if must draw the background below the items.
-
-							if item_buffer_pixmap.width < internal_client_width or item_buffer_pixmap.height < rectangle_height then
-								item_buffer_pixmap.set_size (internal_client_width, rectangle_height)
+						rectangle_width := internal_client_width - (column_offsets @ (column_offsets.count) - internal_client_x)
+							-- We compute the rectangle width based on the position of the final item within `column_offsets'.
+						if rectangle_width > 0 then
+							if item_buffer_pixmap.width < rectangle_width or item_buffer_pixmap.height < internal_client_height then
+								item_buffer_pixmap.set_size (rectangle_width, internal_client_height)
 							end
+								-- Check to see if we must draw the background to the right of the items.
 							if g.fill_background_actions_internal /= Void and then not g.fill_background_actions.is_empty then
-								g.fill_background_actions.call ([item_buffer_pixmap, internal_client_x, v_y , internal_client_width, rectangle_height])
+								g.fill_background_actions.call ([item_buffer_pixmap, column_offsets @ (column_offsets.count), internal_client_y, rectangle_width, internal_client_height])
 							else
 								item_buffer_pixmap.set_foreground_color (g.background_color)
-								item_buffer_pixmap.fill_rectangle (0, 0, internal_client_width, rectangle_height)
+								item_buffer_pixmap.fill_rectangle (0, 0, rectangle_width, internal_client_height)
 							end
-							temp_rectangle.move_and_resize (0, 0, internal_client_width, rectangle_height)
-							if locked_column = Void then
-								drawable.draw_sub_pixmap (horizontal_buffer_offset, vertical_buffer_offset + internal_client_height - rectangle_height, item_buffer_pixmap, temp_rectangle)
+							temp_rectangle.move_and_resize (0, 0, rectangle_width, internal_client_height)
+							if locked_row = Void then
+								drawable.draw_sub_pixmap  (horizontal_buffer_offset + internal_client_width - rectangle_width, vertical_buffer_offset, item_buffer_pixmap, temp_rectangle)
 							else
-								drawable.draw_sub_pixmap (0, vertical_buffer_offset + internal_client_height - rectangle_height, item_buffer_pixmap, temp_rectangle)
+								drawable.draw_sub_pixmap  (horizontal_buffer_offset + internal_client_width - rectangle_width, 0, item_buffer_pixmap, temp_rectangle)
 							end
 						end
-					end
+						if current_row = Void or else current_row.index >= g.visible_row_count then
+							if not g.uses_row_offsets then
+									-- Special handling for fixed row heights as `row_offsets' does not exist.
+								v_y := (row_height * (row_count))
+								rectangle_height := internal_client_height - (v_y - internal_client_y)
+							else
+								check row_offsets /= Void then end
+								v_y := row_offsets @ (row_count + 1)
+								rectangle_height := internal_client_height - (v_y - internal_client_y)
+							end
+							if rectangle_height > 0 then
+								-- Check to see if must draw the background below the items.
+
+								if item_buffer_pixmap.width < internal_client_width or item_buffer_pixmap.height < rectangle_height then
+									item_buffer_pixmap.set_size (internal_client_width, rectangle_height)
+								end
+								if g.fill_background_actions_internal /= Void and then not g.fill_background_actions.is_empty then
+									g.fill_background_actions.call ([item_buffer_pixmap, internal_client_x, v_y , internal_client_width, rectangle_height])
+								else
+									item_buffer_pixmap.set_foreground_color (g.background_color)
+									item_buffer_pixmap.fill_rectangle (0, 0, internal_client_width, rectangle_height)
+								end
+								temp_rectangle.move_and_resize (0, 0, internal_client_width, rectangle_height)
+								if locked_column = Void then
+									drawable.draw_sub_pixmap (horizontal_buffer_offset, vertical_buffer_offset + internal_client_height - rectangle_height, item_buffer_pixmap, temp_rectangle)
+								else
+									drawable.draw_sub_pixmap (0, vertical_buffer_offset + internal_client_height - rectangle_height, item_buffer_pixmap, temp_rectangle)
+								end
+							end
+						end
 					else
 							-- In this situation, the grid is completely empty, so we simply fill the background color.
 						if g.fill_background_actions_internal /= Void and then not g.fill_background_actions.is_empty then
@@ -1317,6 +1317,7 @@ feature -- Basic operations
 						g.redraw_resizing_line
 					end
 				end
+				drawable.end_drawing_session
 			end
 		end
 
@@ -1450,7 +1451,7 @@ invariant
 	temp_rectangle_not_void: temp_rectangle /= Void
 
 note
-	copyright: "Copyright (c) 1984-2013, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2021, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

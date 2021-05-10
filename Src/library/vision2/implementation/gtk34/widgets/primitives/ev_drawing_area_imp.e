@@ -12,11 +12,15 @@ inherit
 	EV_DRAWING_AREA_I
 		redefine
 			interface,
-			init_expose_actions
+			init_expose_actions,
+			start_drawing_session,
+			end_drawing_session
 		end
 
 	EV_DRAWABLE_IMP
 		redefine
+			start_drawing_session,
+			end_drawing_session,
 			pre_drawing, post_drawing,
 			interface, release_cairo_context
 		end
@@ -28,16 +32,16 @@ inherit
 			set_foreground_color,
 			set_background_color
 		redefine
-			needs_event_box, event_widget,
 			interface,
 			call_button_event_actions,
 			make,
 			internal_set_focus,
 			on_size_allocate,
-			on_widget_mapped,
 			process_draw_event,
 			process_configure_event,
-			button_actions_handled_by_signals
+			button_actions_handled_by_signals,
+			destroy,
+			c_object_dispose
 		end
 
 create
@@ -74,23 +78,27 @@ feature {NONE} -- Initialization
 					agent (l_app_imp.gtk_marshal).on_button_event (l_app_imp, ?),
 					l_app_imp.gtk_marshal.button_event_translate_agent
 				)
+			button_press_connection_id := last_signal_connection_id
 			real_signal_connect (l_c_object,
 					{EV_GTK_EVENT_STRINGS}.button_release_event_name,
 					agent (l_app_imp.gtk_marshal).on_button_event (l_app_imp, ?),
 					l_app_imp.gtk_marshal.button_event_translate_agent
 				)
+			button_release_connection_id := last_signal_connection_id
 
 			real_signal_connect (l_drawing_area,
 					{EV_GTK_EVENT_STRINGS}.configure_event_name,
 					agent (l_app_imp.gtk_marshal).configure_event_intermediary (l_drawing_area, ?, ?, ?, ?),
 					l_app_imp.gtk_marshal.configure_translate_agent
 				)
+			configure_event_connection_id := last_signal_connection_id
 
 			real_signal_connect_after (l_drawing_area,
 					{EV_GTK_EVENT_STRINGS}.draw_event_name,
 					agent (l_app_imp.gtk_marshal).draw_actions_intermediary (l_drawing_area, ?),
 					l_app_imp.gtk_marshal.draw_translate_agent
 				)
+			draw_connection_id := last_signal_connection_id
 
 			check cairo_surface.is_default_pointer end
 
@@ -105,15 +113,51 @@ feature {NONE} -- Initialization
 			disable_tabable_from
 		end
 
-	needs_event_box: BOOLEAN
-			-- Does `a_widget' need an event box?
+feature {NONE} -- Dispose
+
+	button_press_connection_id,
+	button_release_connection_id,
+	configure_event_connection_id,
+	draw_connection_id: INTEGER_32
+
+	destroy
 		do
-			Result := False
+			Precursor
 		end
 
-	event_widget: POINTER
+	c_object_dispose
+			-- Called when `c_object' is destroyed.
+			-- Only called if `Current' is referenced from `c_object'.
+			-- Render `Current' unusable.
+		local
+			i: INTEGER
 		do
-			Result := visual_widget
+			i := button_press_connection_id
+			if i > 0 then
+				{GTK2}.signal_disconnect (c_object, i)
+			end
+			i := button_release_connection_id
+			if i > 0 then
+				{GTK2}.signal_disconnect (c_object, i)
+			end
+			i := configure_event_connection_id
+			if i > 0 then
+				{GTK2}.signal_disconnect (c_object, i)
+			end
+			i := draw_connection_id
+			if i > 0 then
+				{GTK2}.signal_disconnect (c_object, i)
+			end
+			if not cairo_surface.is_default_pointer then
+				{CAIRO}.surface_destroy (cairo_surface)
+				cairo_surface := default_pointer
+			end
+			if not cairo_context.is_default_pointer then
+				release_cairo_context (cairo_context)
+				cairo_context := default_pointer
+			end
+
+			Precursor
 		end
 
 feature -- filling operations
@@ -122,10 +166,21 @@ feature -- filling operations
 
 	pre_drawing
 		do
-			get_new_cairo_context
+			if not is_in_drawing_session then
+				get_new_cairo_context
+			end
 		end
 
 	post_drawing
+		do
+			if not is_in_drawing_session then
+				clear_cairo_context
+			end
+		end
+
+	clear_cairo_context
+		require
+			not is_in_drawing_session
 		local
 			cr: like cairo_context
 		do
@@ -133,6 +188,24 @@ feature -- filling operations
 			if not cr.is_default_pointer then
 				release_cairo_context (cr)
 				cairo_context := default_pointer
+			end
+		end
+
+feature {NONE} -- Session implementation		
+
+	start_drawing_session
+		do
+			if not is_in_drawing_session then
+				get_new_cairo_context
+			end
+			Precursor
+		end
+
+	end_drawing_session
+		do
+			Precursor
+			if not is_in_drawing_session then
+				clear_cairo_context
 			end
 		end
 
@@ -170,12 +243,6 @@ feature {NONE} -- Implementation
 			Precursor (a_x, a_y, a_width, a_height)
 		end
 
-	on_widget_mapped
-			-- <Precursor>
-		do
-			Precursor
-		end
-
 	redraw
 			-- Redraw the entire area.
 		do
@@ -187,7 +254,7 @@ feature {NONE} -- Implementation
 			-- Redraw the rectangle area defined by `a_x', `a_y', `a_width', a_height'.
 		do
 				-- TODO JV review
-				-- Workaround, sometimes we got a negative vaue for width `a_width`.
+				-- Workaround, sometimes we got a negative value for width `a_width`.
 				-- For example from EV_GRID_I
 			if a_width < 0 then
 				{GTK}.gtk_widget_queue_draw_area (visual_widget, a_x, a_y, 0, a_height)
@@ -284,6 +351,7 @@ feature {EV_ANY_I} -- Implementation
 			elseif not in_expose_actions then
 				{CAIRO}.destroy (cr)
 			else
+				do_nothing
 				-- do not destroy
 			end
 		rescue
@@ -301,6 +369,7 @@ feature {EV_INTERMEDIARY_ROUTINES} -- Implementation
 		local
 			l_x, l_y, l_width, l_height: REAL_64
 			l_surface: like cairo_surface
+			l_old_context: like cairo_context
 		do
 			l_surface := cairo_surface;
 			debug ("gdk_event")
@@ -313,8 +382,11 @@ feature {EV_INTERMEDIARY_ROUTINES} -- Implementation
 
 			if attached expose_actions_internal as l_actions then
 				in_expose_actions := True
+				l_old_context := cairo_context
+				cairo_context := a_cairo_context
 				{CAIRO}.clip_extents (a_cairo_context, $l_x, $l_y, $l_width, $l_height)
 				l_actions.call (l_x.truncated_to_integer, l_y.truncated_to_integer, l_width.truncated_to_integer, l_height.truncated_to_integer)
+				cairo_context := l_old_context
 				in_expose_actions := False
 			end
 

@@ -221,6 +221,22 @@ feature -- Element change
 			dashed_line_style_disabled: not dashed_line_style
 		end
 
+feature -- Session
+
+	start_drawing_session
+			-- Start a drawing session.
+			-- Used for optimization, to group sequence of drawings.
+		do
+			implementation.start_drawing_session
+		end
+
+	end_drawing_session
+			-- End a drawing session.
+			-- Used for optimization, to group sequence of drawings.
+		do
+			implementation.end_drawing_session
+		end
+
 feature -- Clearing operations
 
 	clear
@@ -558,7 +574,7 @@ invariant
 	drawing_mode_valid: is_usable implies valid_drawing_mode (drawing_mode)
 
 note
-	copyright:	"Copyright (c) 1984-2018, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2021, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

@@ -167,6 +167,33 @@ feature -- Element change
 		deferred
 		end
 
+feature -- Session
+
+	is_in_drawing_session: BOOLEAN
+		do
+			Result := drawing_session_depth > 0
+		end
+
+	drawing_session_depth: INTEGER
+
+	start_drawing_session
+			-- Start a drawing session.
+			-- Used for optimization, to group sequence of drawings.
+		do
+			drawing_session_depth := drawing_session_depth + 1
+		ensure
+			drawing_session_depth > 0
+		end
+
+	end_drawing_session
+			-- End a drawing session.
+			-- Used for optimization, to group sequence of drawings.
+		require
+			drawing_session_depth > 0
+		do
+			drawing_session_depth := drawing_session_depth - 1
+		end
+
 feature -- Clearing and drawing operations
 
 	redraw
@@ -391,7 +418,7 @@ feature {EV_ANY, EV_ANY_I} -- Implementation
 	interface: detachable EV_DRAWABLE note option: stable attribute end;
 
 note
-	copyright: "Copyright (c) 1984-2018, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2021, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

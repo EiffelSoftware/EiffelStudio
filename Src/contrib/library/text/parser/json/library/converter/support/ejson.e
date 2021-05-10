@@ -60,7 +60,7 @@ feature -- Access
 				until
 					i > a.upper
 				loop
-					if attached value (a @ i) as v then
+					if attached value (a [i]) as v then
 						ja.add (v)
 					else
 						check
@@ -283,6 +283,6 @@ feature {NONE} -- Implementation (JSON parser)
 		end
 
 note
-	copyright: "2010-2017, Javier Velilla, Jocelyn Fiat, Eiffel Software and others https://github.com/eiffelhub/json."
+	copyright: "2010-2021, Javier Velilla, Jocelyn Fiat, Eiffel Software and others https://github.com/eiffelhub/json."
 	license: "https://github.com/eiffelhub/json/blob/master/License.txt"
 end -- class EJSON

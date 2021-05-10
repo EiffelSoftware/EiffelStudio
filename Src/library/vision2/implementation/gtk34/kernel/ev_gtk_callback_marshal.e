@@ -388,9 +388,6 @@ note
 			Customer support http://support.eiffel.com
 		]"
 
-
-
-
 end -- class EV_GTK_CALLBACK_MARSHAL
 
 

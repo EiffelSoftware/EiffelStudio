@@ -3653,7 +3653,6 @@ feature {EV_GRID_COLUMN_I, EV_GRID_I, EV_GRID_DRAWER_I, EV_GRID_ROW_I, EV_GRID_I
 		local
 			l_virtual_x_position: INTEGER
 			l_locked_indexes: ARRAYED_LIST [EV_GRID_LOCKED_I]
-			l_locked_row: detachable EV_GRID_LOCKED_ROW_I
 			l_cursor: CURSOR
 		do
 			if not is_locked and then is_displayed then
@@ -3666,8 +3665,7 @@ feature {EV_GRID_COLUMN_I, EV_GRID_I, EV_GRID_DRAWER_I, EV_GRID_ROW_I, EV_GRID_I
 				until
 					l_locked_indexes.off
 				loop
-					l_locked_row ?= l_locked_indexes.item
-					if l_locked_row /= Void then
+					if attached {EV_GRID_LOCKED_ROW_I} l_locked_indexes.item as l_locked_row then
 						l_locked_row.redraw_client_area
 					end
 					l_locked_indexes.forth
@@ -6758,7 +6756,7 @@ invariant
 	tree_node_connector_color_not_void: is_initialized implies tree_node_connector_color /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2020, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2021, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

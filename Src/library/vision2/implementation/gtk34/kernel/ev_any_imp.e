@@ -232,12 +232,11 @@ feature {EV_INTERMEDIARY_ROUTINES, EV_ANY_I, EV_STOCK_PIXMAPS_IMP} -- Implementa
 			--
 		local
 			env: EV_ENVIRONMENT
-			l_app_imp: detachable EV_APPLICATION_IMP
 		once
 			create env
-			l_app_imp ?= env.implementation.application_i
-			check l_app_imp /= Void then end
-			Result := l_app_imp
+			check attached {EV_APPLICATION_IMP} env.implementation.application_i as l_app_imp then
+				Result := l_app_imp
+			end
 		end
 
 feature -- Measurement

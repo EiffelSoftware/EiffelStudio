@@ -470,20 +470,20 @@ FOM	(\-)?{FOL}{-}[\-]
 			}
 
 
-{FOF}{FOM}*({FOL}{-}[\-]\-)?	|
-{FOF}{FOM}*({FOL}{-}[\-]\-)?/\.{D}	|
-{FOF}{FOM}*{FOL}{-}[\-]\-/{BREAK}	|
+{FOF}{FOM}*({FOL}{-}[\-])?\-?	|
+{FOF}{FOM}*({FOL}{-}[\-])?\-?/\.{D}	|
+{FOF}{FOM}*({FOL}{-}[\-])?\-/{BREAK}	|
 {FOF}{FOM}*/{SOFT_BREAK}	{
 				update_character_locations
 				last_token := TE_FREE
 				process_id_as
 			}
 
-{OFOF1}{OFOM1}*({OFOL1}{-}[\-]\-)?	|
-{OFOF1}{OFOM1}*{OFOL1}{-}[\-]\-/{BREAK}	|
+{OFOF1}{OFOM1}*({OFOL1}{-}[\-])?\-?	|
+{OFOF1}{OFOM1}*({OFOL1}{-}[\-])?\-/{BREAK}	|
 {OFOF1}{OFOM1}*/{SOFT_BREAK}	|
-{OFOF2}{OFOM2}*({OFOL2}{-}[\-]\-)?	|
-{OFOF2}{OFOM2}*{OFOL2}{-}[\-]\-/{BREAK}	|
+{OFOF2}{OFOM2}*({OFOL2}{-}[\-])?\-?	|
+{OFOF2}{OFOM2}*({OFOL2}{-}[\-])?\-/{BREAK}	|
 {OFOF2}{OFOM2}*/{SOFT_BREAK}	{
 				update_character_locations
 				last_token := TE_FREE
@@ -1267,9 +1267,9 @@ FOM	(\-)?{FOL}{-}[\-]
 				update_character_locations
 				process_simple_string_as (TE_STR_XOR)
 			}
-\"{FOF}{FOM}*({FOL}{-}[\-]\-)?\"	|
-\"{OFOF1}{OFOM1}*({OFOL1}{-}[\-]\-)?\"	|
-\"{OFOF2}{OFOM2}*({OFOL2}{-}[\-]\-)?\"	{
+\"{FOF}{FOM}*({FOL}{-}[\-])?\-?\"	|
+\"{OFOF1}{OFOM1}*({OFOL1}{-}[\-])?\-?\"	|
+\"{OFOF2}{OFOM2}*({OFOL2}{-}[\-])?\-?\"	{
 				update_character_locations
 				process_simple_string_as (TE_STR_FREE)
 			}

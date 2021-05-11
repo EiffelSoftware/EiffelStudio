@@ -82,9 +82,14 @@ STANDARD_SYMBOL	[*+-/<=>\\^]
 -- OFOF - old free operator first characters
 -- OFOM - old free operator middle characters
 -- OFOL - old free operator last characters
-OFOF	[@#|&]
-OFOL	{ASCII}{-}{Cc}{-}["%]{-}{BREAK}
-OFOM	(\-)?({OFOL}{-}[\-])
+-- OFOx1 - old free operators starting from "@" (it excludes previously available operators like "@foo")
+-- OFOx2 - old free operators startind from "#|&"
+OFOF1	[@]
+OFOL1	{ASCII}{-}{Cc}{-}["%A-Za-z]{-}{BREAK}
+OFOM1	(\-)?({OFOL1}{-}[\-])
+OFOF2	[#|&]
+OFOL2	{ASCII}{-}{Cc}{-}["%]{-}{BREAK}
+OFOM2	(\-)?({OFOL2}{-}[\-])
 
 FREE_OPERATOR_BASE	{Sm}{+}{Sc}{+}{So}{+}{Pc}{+}{Pd}{+}{Po}{-}{BREAK}{-}{SPECIAL_SYMBOL}{+}{STANDARD_SYMBOL}{+}[~]{-}["$%',.:;?]
 
@@ -344,9 +349,12 @@ FOM	(\-)?{FOL}{-}[\-]
 {FOF}{FOM}*({FOL}{-}[\-]\-)?/\.{D}	|
 {FOF}{FOM}*{FOL}{-}[\-]\-/{BREAK}	|
 {FOF}{FOM}*/{SOFT_BREAK}	|
-{OFOF}{OFOM}*({OFOL}{-}[\-]\-)?	|
-{OFOF}{OFOM}*{OFOL}{-}[\-]\-/{BREAK}	|
-{OFOF}{OFOM}*/{SOFT_BREAK}	{
+{OFOF1}{OFOM1}*({OFOL1}{-}[\-])?\-?	|
+{OFOF1}{OFOM1}*({OFOL1}{-}[\-])?\-/{BREAK}	|
+{OFOF1}{OFOM1}*/{SOFT_BREAK}	|
+{OFOF2}{OFOM2}*({OFOL2}{-}[\-])?\-?	|
+{OFOF2}{OFOM2}*({OFOL2}{-}[\-])?\-/{BREAK}	|
+{OFOF2}{OFOM2}*/{SOFT_BREAK}	{
 										if not in_comments then
 											curr_token := new_operator
 										else

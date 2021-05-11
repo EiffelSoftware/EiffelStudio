@@ -1,5 +1,5 @@
 
---| Copyright (c) 1993-2006 University of Southern California and contributors.
+--| Copyright (c) 1993-2021 University of Southern California, Eiffel Software and contributors.
 --| All rights reserved.
 --| Your use of this work is governed under the terms of the GNU General
 --| Public License version 2.
@@ -15,7 +15,7 @@ feature
 		do
 		end
 
-	p2 alias "@weasel": INTEGER is
+	p2 alias "#weasel": INTEGER is
 		do
 		end
 
@@ -23,7 +23,7 @@ feature
 		do
 		end
 
-	i2 alias "@weasel" (n: INTEGER): INTEGER is
+	i2 alias "#weasel" (n: INTEGER): INTEGER is
 		do
 		end
 

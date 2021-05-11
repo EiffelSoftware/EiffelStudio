@@ -1,5 +1,5 @@
 
---| Copyright (c) 1993-2006 University of Southern California and contributors.
+--| Copyright (c) 1993-2021 University of Southern California, Eiffel Software and contributors.
 --| All rights reserved.
 --| Your use of this work is governed under the terms of the GNU General
 --| Public License version 2.
@@ -74,7 +74,7 @@ copy_sub 	 test1.e  $CLUSTER test1.e
 resume_compile
 compile_result 	 validity_error TEST VRFA
 
-define		 TEST1_FEATURE "f alias "@weasel": REAL is do end"
+define		 TEST1_FEATURE "f alias "#weasel": REAL is do end"
 copy_sub 	 test1.e  $CLUSTER test1.e
 resume_compile
 compile_result 	 ok

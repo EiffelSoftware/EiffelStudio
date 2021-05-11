@@ -1,5 +1,5 @@
 
---| Copyright (c) 1993-2006 University of Southern California and contributors.
+--| Copyright (c) 1993-2021 University of Southern California, Eiffel Software and contributors.
 --| All rights reserved.
 --| Your use of this work is governed under the terms of the GNU General
 --| Public License version 2.
@@ -11,7 +11,7 @@ feature
 		do
 		end
 		
-	p2 alias "###", p3 alias "+", p4 alias "@weasel", p5 alias "###weasel": INTEGER;
+	p2 alias "###", p3 alias "+", p4 alias "#weasel", p5 alias "###weasel": INTEGER;
 		
 	i1 alias "###" (b: BOOLEAN): INTEGER is
 		once
@@ -21,7 +21,7 @@ feature
 		once
 		end
 		
-	i3 alias "@weasel", i4 alias "###weasel" (b: like Current): like Current is
+	i3 alias "#weasel", i4 alias "###weasel" (b: like Current): like Current is
 		external
 			"C"
 		alias

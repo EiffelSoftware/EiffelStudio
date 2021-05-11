@@ -15,7 +15,7 @@ feature
 		do
 		end
 
-	f2 alias "@weasel": INTEGER is
+	f2 alias "#+": INTEGER is
 		do
 		end
 
@@ -23,7 +23,7 @@ feature
 		do
 		end
 
-	f4 alias "@wimp" (n: INTEGER): INTEGER is
+	f4 alias "#-" (n: INTEGER): INTEGER is
 		do
 		end
 

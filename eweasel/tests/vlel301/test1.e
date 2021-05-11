@@ -1,5 +1,5 @@
 
---| Copyright (c) 1993-2006 University of Southern California and contributors.
+--| Copyright (c) 1993-2021 University of Southern California, Eiffel Software and contributors.
 --| All rights reserved.
 --| Your use of this work is governed under the terms of the GNU General
 --| Public License version 2.
@@ -15,11 +15,11 @@ feature
 		do
 		end
 
-	f2 alias "@weasel": INTEGER is
+	f2 alias "#weasel": INTEGER is
 		do
 		end
 
-	f3 alias "@wuss": INTEGER is
+	f3 alias "#wuss": INTEGER is
 		do
 		end
 
@@ -27,11 +27,11 @@ feature
 		do
 		end
 
-	f5 alias "@wimp" (n: INTEGER): INTEGER is
+	f5 alias "#wimp" (n: INTEGER): INTEGER is
 		do
 		end
 
-	f6 alias "@wuss" (n: INTEGER): INTEGER is
+	f6 alias "#wuss" (n: INTEGER): INTEGER is
 		do
 		end
 

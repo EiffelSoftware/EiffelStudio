@@ -1,5 +1,5 @@
 
---| Copyright (c) 1993-2006 University of Southern California and contributors.
+--| Copyright (c) 1993-2021 University of Southern California, Eiffel Software and contributors.
 --| All rights reserved.
 --| Your use of this work is governed under the terms of the GNU General
 --| Public License version 2.
@@ -17,12 +17,12 @@ copy_sub 	 test.e  $CLUSTER test.e
 compile_melted
 compile_result 	 validity_error TEST VHRC(1)
 
-define		 RENAME "rename p0 as p0 alias "@weasel" end"
+define		 RENAME "rename p0 as p0 alias "#weasel" end"
 copy_sub 	 test.e  $CLUSTER test.e
 resume_compile
 compile_result 	 validity_error TEST VHRC(1)
 
-define		 RENAME "rename p0 as p0 alias "@weasel" end"
+define		 RENAME "rename p0 as p0 alias "#weasel" end"
 copy_sub 	 test.e  $CLUSTER test.e
 resume_compile
 compile_result 	 validity_error TEST VHRC(1)

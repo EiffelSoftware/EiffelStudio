@@ -1,5 +1,5 @@
 
---| Copyright (c) 1993-2006 University of Southern California and contributors.
+--| Copyright (c) 1993-2021 University of Southern California, Eiffel Software and contributors.
 --| All rights reserved.
 --| Your use of this work is governed under the terms of the GNU General
 --| Public License version 2.
@@ -21,7 +21,7 @@ feature
 		once
 		end
 		
-	i3 alias "@free_operator" (b: like Current): like Current is
+	i3 alias "#free_operator" (b: like Current): like Current is
 		external
 			"C"
 		alias

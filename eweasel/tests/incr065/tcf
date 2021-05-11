@@ -1,5 +1,5 @@
 
---| Copyright (c) 1993-2006 University of Southern California and contributors.
+--| Copyright (c) 1993-2021 University of Southern California, Eiffel Software and contributors.
 --| All rights reserved.
 --| Your use of this work is governed under the terms of the GNU General
 --| Public License version 2.
@@ -11,17 +11,17 @@ test_description After initial compilation, several infix features of the same n
 
 copy_sub 	 Ace $TEST Ace
 
-define		 FEATURE_NAME @index
+define		 FEATURE_NAME #index
 copy_sub 	 test.e  $CLUSTER test.e
 compile_melted
 compile_result 	 ok
 
-define		 FEATURE_NAME @INdex
+define		 FEATURE_NAME #INdex
 copy_sub 	 test.e  $CLUSTER test.e
 compile_melted
 compile_result 	 ok
 
-define		 FEATURE_NAME @INDEX
+define		 FEATURE_NAME #INDEX
 copy_sub 	 test.e  $CLUSTER test.e
 compile_melted
 compile_result 	 ok

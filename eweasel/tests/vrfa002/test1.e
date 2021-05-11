@@ -1,5 +1,5 @@
 
---| Copyright (c) 1993-2006 University of Southern California and contributors.
+--| Copyright (c) 1993-2021 University of Southern California, Eiffel Software and contributors.
 --| All rights reserved.
 --| Your use of this work is governed under the terms of the GNU General
 --| Public License version 2.
@@ -9,7 +9,7 @@ feature
 	
 	$TEST1_FEATURE
 
-	at alias "@weasel" (n: INTEGER): like Current is
+	at alias "#weasel" (n: INTEGER): like Current is
 		do
 		end
 end

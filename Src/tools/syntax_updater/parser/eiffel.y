@@ -31,12 +31,12 @@ create
 %left		TE_PLUS TE_MINUS
 %left		TE_STAR TE_SLASH TE_MOD TE_DIV
 %right		TE_POWER
-%left		TE_FREE
+%left		TE_FREE TE_AT
 %right		TE_NOT TE_FREE_NOT
 %nonassoc	TE_STRIP
 %left		TE_OLD
 %left		TE_DOT
-%left		TE_AT
+%left		PREDECESSOR_OPERATOR
 %right		TE_LPARAN TE_BLOCK_OPEN
 
 %token <detachable ID_AS> TE_FREE TE_FREE_AND TE_FREE_AND_THEN TE_FREE_IMPLIES TE_FREE_NOT TE_FREE_OR TE_FREE_OR_ELSE TE_FREE_XOR TE_ID TE_TUPLE
@@ -143,7 +143,7 @@ create
 %type <detachable FORMAL_AS>			Formal_parameter
 %type <detachable FORMAL_DEC_AS>		Formal_generic
 %type <detachable GUARD_AS>			Guard
-%type <detachable ID_AS>				Class_or_tuple_identifier Class_identifier Tuple_identifier Identifier_as_lower Free_binary_operator Free_unary_operator
+%type <detachable ID_AS>				Class_or_tuple_identifier Class_identifier Tuple_identifier Identifier_as_lower
 %type <detachable IF_AS>				Conditional
 %type <detachable IF_EXPRESSION_AS>			Conditional_expression
 %type <detachable INDEX_AS>			Index_clause Index_clause_impl Note_entry Note_entry_impl
@@ -3140,7 +3140,7 @@ Call: A_feature
 
 -- Predecessor
 
-Predecessor:	TE_AT Identifier_as_lower
+Predecessor:	TE_AT Identifier_as_lower %prec PREDECESSOR_OPERATOR
 			{
 				if syntax_version = obsolete_syntax then
 					$$ := ast_factory.new_un_free_as (extract_id_from_symbol ($1), ast_factory.new_expr_call_as (ast_factory.new_access_id_as ($2, Void)))
@@ -3320,8 +3320,27 @@ Qualified_binary_expression:
 			{ $$ := ast_factory.new_bin_le_as ($1, $3, $2) }
 	|	Expression TE_LT Expression
 			{ $$ := ast_factory.new_bin_lt_as ($1, $3, $2) }
-	|	Expression Free_binary_operator Expression %prec TE_FREE
-			{ $$ := ast_factory.new_bin_free_as ($1, $2, $3) }
+	|	Expression TE_FREE Expression
+			{
+				if attached $2 as l_free then
+					l_free.to_lower
+				end
+				$$ := ast_factory.new_bin_free_as ($1, $2, $3)
+			}
+	|	Expression TE_AT Expression
+			{
+				if attached extract_id_from_symbol ($2) as operator then
+					if
+						syntax_version /= obsolete_syntax and then
+						has_syntax_warning
+					then
+						report_one_warning
+							(create {SYNTAX_WARNING}.make (token_line (operator), token_column (operator), filename,
+							locale.translation_in_context (once "Obsolete operator notation `@` is used. Replace it with a contemporary operator (if available) or an unfolded form of feature call.", once "parser.eiffel.warning")))
+					end
+					$$ := ast_factory.new_bin_free_as ($1, operator, $3)
+				end
+			}
 	;
 
 Factor: TE_VOID
@@ -3370,8 +3389,13 @@ Factor: TE_VOID
 			{ $$ := ast_factory.new_un_not_as ($2, $1) }
 	|	TE_FREE_NOT Expression
 			{ $$ := ast_factory.new_un_free_as ($1, $2) }
-	|	Free_unary_operator Expression %prec TE_NOT
-			{ $$ := ast_factory.new_un_free_as ($1, $2) }
+	|	TE_FREE Expression %prec TE_NOT
+			{
+				if attached $1 as l_free then
+					l_free.to_lower
+				end
+				$$ := ast_factory.new_un_free_as ($1, $2)
+			}
 	|	Conditional_expression
 			{ $$ := $1 }
 	|	Multi_branch_expression
@@ -3384,36 +3408,6 @@ Typed_expression:	Typed
 			{ $$ := $1 }
 	|	Typed_nosigned_real
 			{ $$ := $1 }
-	;
-
-Free_binary_operator: TE_FREE
-			{
-				if attached $1 as l_free then
-					l_free.to_lower
-				end
-				$$ := $1
-			}
-	|	TE_AT
-			{
-				$$ := extract_id_from_symbol ($1)
-				if
-					syntax_version /= obsolete_syntax and then
-					has_syntax_warning
-				then
-					report_one_warning
-						(create {SYNTAX_WARNING}.make (token_line ($$), token_column ($$), filename,
-						locale.translation_in_context (once "Obsolete operator notation `@` is used. Replace it with a contemporary operator (if available) or an unfolded form of feature call.", once "parser.eiffel.warning")))
-				end
-			}
-	;
-
-Free_unary_operator: TE_FREE
-			{
-				if attached $1 as l_free then
-					l_free.to_lower
-				end
-				$$ := $1
-			}
 	;
 
 -- Bracket expression

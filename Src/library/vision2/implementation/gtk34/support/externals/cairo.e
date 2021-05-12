@@ -312,18 +312,18 @@ feature -- Externals
 
 	surface_destroy (cr: POINTER)
 		external
-			"C signature (cairo_surface_t*) use <cairo.h>"
+			"C inline use <cairo.h>"
 		alias
-			"cairo_surface_destroy"
+			"cairo_surface_destroy((cairo_surface_t*) $cr)"
 		ensure
 			is_class: class
 		end
 
 	get_reference_count (cr: POINTER): NATURAL_32
 		external
-			"C signature (cairo_t*): unsigned int use <cairo.h>"
+			"C inline use <cairo.h>"
 		alias
-			"cairo_get_reference_count"
+			"cairo_get_reference_count((cairo_t*) $cr)"
 		ensure
 			is_class: class
 		end

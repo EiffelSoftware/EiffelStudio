@@ -6,16 +6,10 @@ note
 class
 	GDK_CAIRO
 
-feature -- Externals
+--inherit
+--	GDK_CAIRO_DEPRECATED
 
-	create_context (a_window: POINTER): POINTER
-		obsolete
-			"gdk_cairo_create is deprecated: Use 'gdk_window_begin_draw_frame() and gdk_drawing_context_get_cairo_context()' instead [2021-06-01]"
-		external
-			"C signature (GdkWindow *): cairo_t * use %"ev_gtk.h%""
-		alias
-			"gdk_cairo_create"
-		end
+feature -- Externals
 
 	set_source_rgba (a_context, a_rgba: POINTER)
 		external

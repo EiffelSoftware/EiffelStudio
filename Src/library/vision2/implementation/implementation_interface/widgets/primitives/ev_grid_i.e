@@ -4478,13 +4478,13 @@ feature {EV_GRID_LOCKED_I} -- Drawing implementation
 	static_fixed_x_offset: INTEGER
 			-- Default X offset of viewport contained within static fixed.
 		do
-			Result := 15000
+			Result := buffered_drawable_size // 2
 		end
 
 	static_fixed_y_offset: INTEGER
 			-- Default Y offset of viewport container within static fixed.
 		do
-			Result := 15000
+			Result := buffered_drawable_size // 2
 		end
 
 	header_item_resizing (header_item: EV_HEADER_ITEM)
@@ -4907,7 +4907,7 @@ feature {EV_GRID_LOCKED_I} -- Drawing implementation
 	resizing_line_border: INTEGER = 4
 		-- Distance that resizing line is displayed from top and bottom edges of `drawable'.
 
-	buffered_drawable_size: INTEGER = 30000
+	buffered_drawable_size: INTEGER = 30_000 
 		-- Default size of `drawable' used for scrolling purposes.
 
 	horizontal_redraw_triggered_by_viewport_resize: BOOLEAN
@@ -4941,7 +4941,7 @@ feature {EV_GRID_ROW_I, EV_GRID_COLUMN_I} -- Implementation
 			if l_widget.parent = Void then
 				static_fixed.extend (l_widget)
 			end
-			static_fixed.set_item_position (l_widget, 15000 + l_locked_column.offset, 15000)
+			static_fixed.set_item_position (l_widget, static_fixed_x_offset + l_locked_column.offset, static_fixed_y_offset)
 			static_fixed.set_item_size (l_widget, a_column.width, viewport.height)
 			l_locked_column.internal_set_virtual_y_position (virtual_y_position)
 		end
@@ -4960,7 +4960,7 @@ feature {EV_GRID_ROW_I, EV_GRID_COLUMN_I} -- Implementation
 			if l_widget.parent = Void then
 				static_fixed.extend (l_widget)
 			end
-			static_fixed.set_item_position (l_widget, 15000, 15000 + l_locked_row.offset)
+			static_fixed.set_item_position (l_widget, static_fixed_x_offset, static_fixed_y_offset + l_locked_row.offset)
 			static_fixed.set_item_size (l_widget, viewport.width, a_row.height)
 			l_locked_row.internal_set_virtual_x_position (virtual_x_position)
 		end
@@ -6413,7 +6413,7 @@ feature {NONE} -- Implementation
 			counts_equal: rows.count = internal_row_data.count
 		end
 
-	maximum_header_width: INTEGER = 30000
+	maximum_header_width: INTEGER = 30_000
 		-- Maximium width of `header'.
 
 	default_scroll_bar_leap: INTEGER = 16

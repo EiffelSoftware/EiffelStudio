@@ -41,8 +41,9 @@ feature {NONE} -- Initialization
 			if c_object = default_pointer then
 					-- Only set c_object if not already set by a descendent.
 				viewport := {GTK}.gtk_layout_new ({GTK}.null_pointer, {GTK}.null_pointer)
-				{GTK2}.gtk_layout_set_size (viewport, internal_x_y_offset * 2, internal_x_y_offset * 2)
 				set_c_object (viewport)
+				{GTK}.gtk_viewport_set_shadow_type (viewport, {GTK}.GTK_SHADOW_NONE_ENUM)
+				{GTK2}.gtk_layout_set_size (viewport, internal_x_y_offset * 2, internal_x_y_offset * 2)
 				container_widget := viewport
 				reset_offset_to_origin
 			end

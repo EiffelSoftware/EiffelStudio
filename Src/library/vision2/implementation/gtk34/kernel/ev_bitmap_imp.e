@@ -96,6 +96,25 @@ feature -- Status Setting
 
 feature -- Access
 
+	pre_drawing
+		local
+			cr: like cairo_context
+		do
+			cr := cairo_context
+			{CAIRO}.save (cr)
+		end
+
+	post_drawing
+		local
+			cr: like cairo_context
+		do
+			cr := cairo_context
+			if not cr.is_default_pointer then
+				{CAIRO}.restore (cr)
+				release_cairo_context (cr)
+			end
+		end
+
 	cairo_surface: POINTER
 		-- Cairo drawable surface used for storing pixmap data in RGB format.
 

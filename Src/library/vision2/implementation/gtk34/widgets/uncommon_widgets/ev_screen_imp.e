@@ -75,6 +75,25 @@ feature {NONE} -- Initialization
 			set_is_initialized (True)
 		end
 
+	pre_drawing
+		local
+			cr: like cairo_context
+		do
+			cr := cairo_context
+			{CAIRO}.save (cr)
+		end
+
+	post_drawing
+		local
+			cr: like cairo_context
+		do
+			cr := cairo_context
+			if not cr.is_default_pointer then
+				{CAIRO}.restore (cr)
+				release_cairo_context (cr)
+			end
+		end
+
 
 	get_cairo_context
 		do

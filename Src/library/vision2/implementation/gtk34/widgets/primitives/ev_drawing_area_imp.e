@@ -21,7 +21,6 @@ inherit
 		redefine
 			start_drawing_session,
 			end_drawing_session,
-			pre_drawing, post_drawing,
 			interface, release_cairo_context
 		end
 
@@ -41,6 +40,7 @@ inherit
 			process_configure_event,
 			button_actions_handled_by_signals,
 			destroy,
+			dispose,
 			c_object_dispose
 		end
 
@@ -65,6 +65,7 @@ feature {NONE} -- Initialization
 			l_app_imp: like App_implementation
 		do
 			l_drawing_area := {GTK}.gtk_drawing_area_new
+			{GTK}.gtk_widget_set_size_request (l_drawing_area, 100, 100)
 			set_c_object (l_drawing_area)
 			l_c_object := c_object
 
@@ -78,27 +79,21 @@ feature {NONE} -- Initialization
 					agent (l_app_imp.gtk_marshal).on_button_event (l_app_imp, ?),
 					l_app_imp.gtk_marshal.button_event_translate_agent
 				)
-			button_press_connection_id := last_signal_connection_id
 			real_signal_connect (l_c_object,
 					{EV_GTK_EVENT_STRINGS}.button_release_event_name,
 					agent (l_app_imp.gtk_marshal).on_button_event (l_app_imp, ?),
 					l_app_imp.gtk_marshal.button_event_translate_agent
 				)
-			button_release_connection_id := last_signal_connection_id
-
 			real_signal_connect (l_drawing_area,
 					{EV_GTK_EVENT_STRINGS}.configure_event_name,
 					agent (l_app_imp.gtk_marshal).configure_event_intermediary (l_drawing_area, ?, ?, ?, ?),
 					l_app_imp.gtk_marshal.configure_translate_agent
 				)
-			configure_event_connection_id := last_signal_connection_id
-
 			real_signal_connect_after (l_drawing_area,
 					{EV_GTK_EVENT_STRINGS}.draw_event_name,
 					agent (l_app_imp.gtk_marshal).draw_actions_intermediary (l_drawing_area, ?),
 					l_app_imp.gtk_marshal.draw_translate_agent
 				)
-			draw_connection_id := last_signal_connection_id
 
 			check cairo_surface.is_default_pointer end
 
@@ -115,54 +110,51 @@ feature {NONE} -- Initialization
 
 feature {NONE} -- Dispose
 
-	button_press_connection_id,
-	button_release_connection_id,
-	configure_event_connection_id,
-	draw_connection_id: INTEGER_32
-
 	destroy
 		do
+			if not cairo_context.is_default_pointer then
+				release_cairo_context (cairo_context)
+				cairo_context := default_pointer
+			end
+			if not cairo_surface.is_default_pointer then
+				release_cairo_surface (cairo_surface)
+				cairo_surface := default_pointer
+			end
+			Precursor {EV_PRIMITIVE_IMP}
+		end
+
+	dispose
+		do
 			Precursor
+			if not cairo_context.is_default_pointer then
+				release_cairo_context (cairo_context)
+				cairo_context := default_pointer
+			end
+
+			if not cairo_surface.is_default_pointer then
+				release_cairo_surface (cairo_surface)
+				cairo_surface := default_pointer
+			end
 		end
 
 	c_object_dispose
 			-- Called when `c_object' is destroyed.
 			-- Only called if `Current' is referenced from `c_object'.
 			-- Render `Current' unusable.
-		local
-			i: INTEGER
 		do
-			i := button_press_connection_id
-			if i > 0 then
-				{GTK2}.signal_disconnect (c_object, i)
-			end
-			i := button_release_connection_id
-			if i > 0 then
-				{GTK2}.signal_disconnect (c_object, i)
-			end
-			i := configure_event_connection_id
-			if i > 0 then
-				{GTK2}.signal_disconnect (c_object, i)
-			end
-			i := draw_connection_id
-			if i > 0 then
-				{GTK2}.signal_disconnect (c_object, i)
-			end
-			if not cairo_surface.is_default_pointer then
-				{CAIRO}.surface_destroy (cairo_surface)
-				cairo_surface := default_pointer
-			end
 			if not cairo_context.is_default_pointer then
 				release_cairo_context (cairo_context)
 				cairo_context := default_pointer
+			end
+			if not cairo_surface.is_default_pointer then
+				release_cairo_surface (cairo_surface)
+				cairo_surface := default_pointer
 			end
 
 			Precursor
 		end
 
 feature -- filling operations
-
-	drawing_context: POINTER
 
 	pre_drawing
 		do
@@ -296,30 +288,39 @@ feature {EV_ANY_I} -- Implementation
 
 	cairo_surface: POINTER
 
-	get_new_cairo_surface
+	get_new_cairo_surface (a_width, a_height: INTEGER)
 		require
 			cairo_surface.is_default_pointer
 		local
 			l_surface,
 			l_widget,
 			l_window: POINTER
+			w,h:  INTEGER
 		do
 			check
 				no_surface: cairo_surface.is_default_pointer
 			end
-			debug ("gdk_event")
-				print (generator + ".get_new_cairo_surface%N")
-			end
 			l_widget := c_object
 			l_window := {GTK}.gtk_widget_get_window (l_widget)
 			if l_window /= default_pointer then
+				w := {GTK}.gtk_widget_get_allocated_width (l_widget)
+				h := {GTK}.gtk_widget_get_allocated_height (l_widget)
+				check same_width: w = a_width end
+				check same_height: h = a_height end
+				debug ("gtk3_redraw")
+					print (generator + ".get_new_cairo_surface ("+ l_window.out + ", .., w=" + w.out + ", h=" + h.out +")%N")
+				end
+
 				l_surface := {GDK}.gdk_window_create_similar_surface (
 						l_window,
 						{CAIRO}.cairo_content_color_alpha,
-						{GTK}.gtk_widget_get_allocated_width (l_widget),
-						{GTK}.gtk_widget_get_allocated_height (l_widget)
+						w, h
 					)
 				cairo_surface := l_surface
+			else
+				debug ("gtk3_redraw")
+					print (generator + ".get_new_cairo_surface: no window !!!%N")
+				end
 			end
 		end
 
@@ -333,30 +334,25 @@ feature {EV_ANY_I} -- Implementation
 				l_surface := cairo_surface
 				if not l_surface.is_default_pointer then
 					cr := {CAIRO}.create_context (l_surface)
-					cairo_context := cr
-
 					initialize_cairo_context (cr)
+					cairo_context := cr
 				end
+			end
+		end
+
+	release_cairo_surface (a_surface: POINTER)
+		do
+			if not a_surface.is_default_pointer then
+				{CAIRO}.surface_destroy (a_surface)
 			end
 		end
 
 	release_cairo_context (cr: POINTER)
 			-- Release resources of cairo context `cr'.
-		local
-			retried: BOOLEAN
 		do
-			if retried then
-			elseif cr.is_default_pointer then
-					-- Should not occur
-			elseif not in_expose_actions then
-				{CAIRO}.destroy (cr)
-			else
-				do_nothing
-				-- do not destroy
+			if not in_expose_actions then
+				Precursor (cr)
 			end
-		rescue
-			retried := True
-			retry
 		end
 
 feature {EV_INTERMEDIARY_ROUTINES} -- Implementation
@@ -372,7 +368,7 @@ feature {EV_INTERMEDIARY_ROUTINES} -- Implementation
 			l_old_context: like cairo_context
 		do
 			l_surface := cairo_surface;
-			debug ("gdk_event")
+			debug ("gtk3_redraw")
 				print (generator + ".process_draw_event ("+ a_cairo_context.out +")  surface=" + l_surface.out + "%N")
 			end
 
@@ -398,17 +394,22 @@ feature {EV_INTERMEDIARY_ROUTINES} -- Implementation
 		local
 			l_surface: POINTER
 		do
-			debug ("gdk_event")
+			debug ("gtk3_redraw")
 				print (generator + ".process_configure_event ("+ a_x.out + ", " + a_y.out + ", " + a_width.out + ", " + a_height.out + ")%N")
+			end
+
+			if not cairo_context.is_default_pointer then
+				release_cairo_context (cairo_context)
+				cairo_context := default_pointer
 			end
 			l_surface := cairo_surface
 			if not l_surface.is_default_pointer then
 				{CAIRO}.surface_flush (l_surface)
-				{CAIRO}.surface_destroy (l_surface)
+				release_cairo_surface (l_surface)
 				cairo_surface := default_pointer
 			end
 			if cairo_surface.is_default_pointer then
-				get_new_cairo_surface
+				get_new_cairo_surface (a_width, a_height)
 			end
 		end
 

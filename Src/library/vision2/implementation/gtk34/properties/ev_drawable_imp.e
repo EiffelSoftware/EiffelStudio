@@ -50,14 +50,10 @@ feature {EV_ANY_I} -- Implementation
 			-- Pointer to the current Cairo context for `Current'.
 
 	get_new_cairo_context
-		local
-			cr: like cairo_context
 		do
-			cr := cairo_context
-			if not cr.is_default_pointer then
-				release_cairo_context (cr)
-				cr := default_pointer
-				cairo_context := cr
+			if not cairo_context.is_default_pointer then
+				release_cairo_context (cairo_context)
+				cairo_context := default_pointer
 			end
 			get_cairo_context
 		end
@@ -67,22 +63,11 @@ feature {EV_ANY_I} -- Implementation
 		end
 
 	pre_drawing
-		local
-			cr: like cairo_context
-		do
-			cr := cairo_context
-			{CAIRO}.save (cr)
+		deferred
 		end
 
 	post_drawing
-		local
-			cr: like cairo_context
-		do
-			cr := cairo_context
-			if not cr.is_default_pointer then
-				{CAIRO}.restore (cr)
-				release_cairo_context (cr)
-			end
+		deferred
 		end
 
 feature {EV_DRAWABLE_IMP} -- Implementation
@@ -287,6 +272,7 @@ feature -- Element change
 					an_area.height)
 				{CAIRO}.clip (l_drawable)
 				release_cairo_context (l_drawable)
+				cairo_context := default_pointer
 			else
 				check has_drawable: False end
 			end
@@ -309,8 +295,9 @@ feature -- Element change
 			if l_drawable /= default_pointer then
 				{CAIRO}.reset_clip (l_drawable)
 				release_cairo_context (l_drawable)
+				cairo_context := default_pointer
 			else
-				check has_drawble: False end
+				check has_drawable: False end
 			end
 		end
 
@@ -562,7 +549,6 @@ feature -- Drawing operations
 					{CAIRO}.set_source_surface (l_drawable, l_pixmap_imp.cairo_surface, x - x_src, y - y_src)
 					{CAIRO}.rectangle (l_drawable, x + device_x_offset + 0.5, y + device_y_offset + 0.5, src_width, src_height)
 					{CAIRO}.fill (l_drawable)
-
 				end
 				post_drawing
 			end
@@ -763,15 +749,30 @@ feature {EV_ANY_I} -- Implementation
 	release_drawable (a_drawable: POINTER)
 			--| Kept for backward compatibility.
 		do
-			release_cairo_context (a_drawable)
+			if not a_drawable.is_default_pointer then
+				release_cairo_context (a_drawable)
+			end
 		end
 
 	release_cairo_context (cr: POINTER)
 			-- Release resources of cairo context `cr'.
 		require
 			not cr.is_default_pointer
+		local
+			retried: BOOLEAN
+			ref_count: NATURAL_32
 		do
-			--| By default do nothing, redefined in descendents
+			ref_count := {CAIRO}.get_reference_count (cr)
+			if
+				not retried and then
+				ref_count > 0 and then
+				not cr.is_default_pointer
+			then
+				{CAIRO}.destroy (cr)
+			end
+		rescue
+			retried := True
+			retry
 		end
 
 feature {NONE} -- Implemention

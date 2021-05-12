@@ -45,6 +45,7 @@ inherit
 			set_configurable_target_menu_mode,
 			set_configurable_target_menu_handler
 		redefine
+			destroy,
 			interface,
 			make,
 			old_make,
@@ -91,6 +92,15 @@ feature {NONE} -- Initialization
 			{GTK}.gtk_container_check_resize (c_object)
 
 			set_is_initialized (True)
+		end
+
+feature {NONE} -- Dispose
+
+	destroy
+		do
+			drawable.destroy
+			
+			Precursor
 		end
 
 feature -- Element change
@@ -171,7 +181,7 @@ feature {EV_ANY, EV_ANY_I} -- Implementation
 			-- functionality implemented by `Current'.
 
 note
-	copyright:	"Copyright (c) 1984-2019, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2021, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

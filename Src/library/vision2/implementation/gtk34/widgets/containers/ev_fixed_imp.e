@@ -44,7 +44,7 @@ feature {NONE} -- Initialization
 			-- Initialize `Current'.
 		do
 			set_c_object ({GTK}.gtk_layout_new (default_pointer, default_pointer))
-			{GTK2}.gtk_layout_set_size (container_widget, 32768, 32768)
+			{GTK2}.gtk_widget_set_has_window (container_widget, True)
 			Precursor
 		end
 

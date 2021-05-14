@@ -418,7 +418,8 @@ feature {EV_ANY_I} -- Implementation
 			if not cr.is_default_pointer then
 				{CAIRO}.restore (cr)
 				{REFACTORING_HELPER}.fixme ("FIXME: if we release the context here, we get a Operatin system signal failure, following {EV_APPLICTION_IMP}.process_gtk_events")
---FIXME			release_cairo_context (cr)
+				release_cairo_context (cr)
+				cairo_context := default_pointer
 			end
 		end
 

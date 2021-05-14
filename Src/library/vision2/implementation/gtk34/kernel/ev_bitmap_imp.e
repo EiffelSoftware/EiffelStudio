@@ -74,10 +74,7 @@ feature -- Status Setting
 	set_size (a_width, a_height: INTEGER)
 			-- Set the size of the pixmap to `a_width' by `a_height'.
 		do
-			if cairo_surface /= default_pointer then
-				{CAIRO}.surface_destroy (cairo_surface)
-				{CAIRO}.destroy (cairo_context)
-			end
+			release_previous_cairo_surface
 			cairo_surface := {CAIRO}.image_surface_create ({CAIRO}.format_argb32, a_width, a_height)
 			cairo_context := {CAIRO}.create_context (cairo_surface)
 			init_default_values
@@ -112,6 +109,7 @@ feature -- Access
 			if not cr.is_default_pointer then
 				{CAIRO}.restore (cr)
 				release_cairo_context (cr)
+				cairo_context := default_pointer
 			end
 		end
 
@@ -207,6 +205,28 @@ feature {NONE} -- Implementation
 		do
 			-- Not applicable
 		end
+
+
+	release_previous_cairo_surface
+		do
+			if not cairo_context.is_default_pointer then
+				release_cairo_context (cairo_context)
+				cairo_context := default_pointer
+			end
+			if not cairo_surface.is_default_pointer then
+				release_cairo_surface (cairo_surface)
+				cairo_surface := default_pointer
+			end
+		end
+
+	release_cairo_surface (a_surface: POINTER)
+		do
+			if not a_surface.is_default_pointer then
+				print (generator + ".dispose : surface_destroy (" + cairo_surface.out + ")%N")
+				{CAIRO}.surface_destroy (a_surface)
+			end
+		end
+
 
 feature {EV_ANY, EV_ANY_I} -- Implementation
 

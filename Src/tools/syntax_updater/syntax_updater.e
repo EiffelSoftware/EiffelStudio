@@ -119,7 +119,7 @@ feature {NONE} -- File discovering and processing
 				across
 					dir_names as dir
 				loop
-					if not dir.item.is_current_symbol and then not dir.item.is_parent_symbol  then
+					if not dir.item.is_current_symbol and then not dir.item.is_parent_symbol then
 						create l_file.make_with_path (a_dir.path.extended_path (dir.item))
 						if l_file.exists then
 							if l_file.is_directory then
@@ -174,8 +174,8 @@ feature {NONE} -- Implementation
 				display_error ({STRING_32} "Could not retrieve configuration " + a_file.name + "!")
 				display_error (l_loader.last_error.text)
 
-				-- We only process an ECF file that is not a redirection, otherwise we would
-				-- be replacing the redirection with the content of the redirected ECF.
+					-- We only process an ECF file that is not a redirection, otherwise we would
+					-- be replacing the redirection with the content of the redirected ECF.
 			elseif l_loader.last_redirection = Void then
 
 					-- Remove the `is_obsolete_routine_type' option if present on all targets.
@@ -231,7 +231,7 @@ feature {NONE} -- Implementation
 						if attached {SYNTAX_ERROR} error_handler.error_list.last as l_syntax1 then
 							display_error ({STRING_32} "Syntax error at (" + l_syntax1.line.out + ", " + l_syntax1.column.out + ") in file: " + file_name.name)
 							if not l_syntax1.error_message.is_empty then
-								display_error ({STRING} "    " + l_syntax1.error_message)
+								display_error ({STRING_32} "    " + l_syntax1.error_message)
 							end
 						else
 							display_error ({STRING_32} "Syntax error in file: " + file_name.name)
@@ -476,8 +476,8 @@ invariant
 	string_buffer_not_void: string_buffer /= Void
 
 note
-	copyright: "Copyright (c) 1984-2018, Eiffel Software"
-	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
+	copyright: "Copyright (c) 1984-2021, Eiffel Software"
+	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[
 			This file is part of Eiffel Software's Eiffel Development Environment.
@@ -506,4 +506,5 @@ note
 			Website http://www.eiffel.com
 			Customer support http://support.eiffel.com
 		]"
+
 end

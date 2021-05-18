@@ -85,7 +85,7 @@ feature -- AST visiting
 				end
 			end
 			if l_has_constant then
-				l_as.content.process (Current)
+				safe_process (l_as.content)
 				safe_process (l_as.indexing_clause)
 			else
 				safe_process (l_as.indexing_clause)
@@ -152,10 +152,13 @@ feature -- AST visiting
 					context.add_string ("attached ")
 				else
 					context.add_string ("attached {")
-					if attached l_as.type.first_token (match_list) as l_leaf then
+					if
+						attached l_as.type as t and then
+						attached t.first_token (match_list) as l_leaf
+					then
 						l_index := l_leaf.index
 						last_index := l_index
-						l_as.type.process (Current)
+						t.process (Current)
 					end
 					context.add_string ("} ")
 				end
@@ -165,10 +168,13 @@ feature -- AST visiting
 					l_as.expression.process (Current)
 				end
 				context.add_string (" as ")
-				if attached l_as.name.first_token (match_list) as l_leaf then
+				if
+					attached l_as.name as n and then
+					attached n.first_token (match_list) as l_leaf
+				then
 					l_index := l_leaf.index
 					last_index := l_index
-					l_as.name.process (Current)
+					n.process (Current)
 				end
 				if attached l_as.last_token (match_list) as l_leaf then
 					last_index := l_leaf.index
@@ -442,38 +448,48 @@ feature {NONE} -- Implementation
 			else
 				is_updated := True
 				if l_has_two_parameter then
-					if l_tuple /= Void and then attached l_tuple.generics as l_generics then
+					if
+						attached l_tuple and then
+						attached l_tuple.generics as l_generics
+					then
 							-- Case of a tuple with actual generic parameters
 						process_leading_leaves (l_as.opening_bracket_as_index)
-						last_index := l_tuple.generics.opening_bracket_as_index
+						last_index := l_generics.opening_bracket_as_index
 						safe_process (l_generics)
 						last_index := l_as.closing_bracket_as_index
 					elseif l_keep_as_tuple_type /= Void then
 							-- Case of a named tuple or formal constrained to TUPLE, we leave it as is.
 						safe_process (l_as.opening_bracket_as (match_list))
-						last_index := l_keep_as_tuple_type.first_token (match_list).index
+						if attached l_keep_as_tuple_type.first_token (match_list) as t then
+							last_index := t.index
+						end
 						safe_process (l_keep_as_tuple_type)
 						safe_process (l_as.closing_bracket_as (match_list))
-					else
+					elseif attached l_as.closing_bracket_as (match_list) as t then
 							-- Case of an agent of the form PROCEDURE [ANY, TUPLE],
 							-- the new declaration is simply PROCEDURE.
 							-- We drop everything between the brackets, including them.
-						last_index := l_as.closing_bracket_as (match_list).index
+						last_index := t.index
 					end
 				else
-					if l_tuple /= Void and then attached l_tuple.generics as l_generics then
+					if
+						attached l_tuple and then
+						attached l_tuple.generics as l_generics
+					then
 						safe_process (l_as.opening_bracket_as (match_list))
-						last_index := l_tuple.generics.opening_bracket_as_index
+						last_index := l_generics.opening_bracket_as_index
 						across l_generics as l_gen loop
 							safe_process (l_gen.item)
 						end
-						last_index := l_tuple.generics.closing_bracket_as_index
+						last_index := l_generics.closing_bracket_as_index
 						safe_process (l_as.i_th (3))
 						safe_process (l_as.closing_bracket_as (match_list))
 					elseif l_keep_as_tuple_type /= Void then
 							-- Case of a named tuple with actual generic parameters, we leave it as is.
 						safe_process (l_as.opening_bracket_as (match_list))
-						last_index := l_keep_as_tuple_type.first_token (match_list).index
+						if attached l_keep_as_tuple_type.first_token (match_list) as t then
+							last_index := t.index
+						end
 						safe_process (l_keep_as_tuple_type)
 						safe_process (l_as.i_th (3))
 						safe_process (l_as.closing_bracket_as (match_list))
@@ -482,7 +498,9 @@ feature {NONE} -- Implementation
 							-- the new declaration is FUNCTION [STRING].
 						safe_process (l_as.opening_bracket_as (match_list))
 							-- Dropping the first generic parameter, and keeping the one from the tuple.
-						last_index := l_as.i_th (3).first_token (match_list).index
+						if attached l_as.i_th (3).first_token (match_list) as t then
+							last_index := t.index
+						end
 						safe_process (l_as.i_th (3))
 						safe_process (l_as.closing_bracket_as (match_list))
 					end
@@ -500,8 +518,11 @@ feature {NONE} -- Implementation
 			elseif attached {FORMAL_AS} a_type as l_formal then
 					-- Check if we are handling a formal who is constraint to TUPLE
 				if
-					parsed_class.generics.i_th (l_formal.position).constraints.count = 1 and then
-					is_tuple_type (parsed_class.generics.i_th (l_formal.position).constraint.type)
+					attached parsed_class as c and then
+					attached c.generics as g and then
+					g [l_formal.position].constraints.count = 1 and then
+					attached g [l_formal.position].constraint as t and then
+					is_tuple_type (t.type)
 				then
 					Result := True
 				end
@@ -520,7 +541,7 @@ feature {NONE} -- Implementation
 			-- Name of agent types being in use.
 
 note
-	copyright: "Copyright (c) 1984-2020, Eiffel Software"
+	copyright: "Copyright (c) 1984-2021, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

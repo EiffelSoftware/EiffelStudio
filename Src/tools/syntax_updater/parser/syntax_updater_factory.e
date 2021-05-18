@@ -47,27 +47,24 @@ feature -- Status setting
 
 feature -- Processing
 
-	new_creation_keyword_as (a_scn: EIFFEL_SCANNER): KEYWORD_AS
+	new_creation_keyword_as (a_scn: EIFFEL_SCANNER): detachable KEYWORD_AS
 		do
 			has_obsolete_constructs := True
 		end
 
-	new_keyword_as (a_code: INTEGER_32; a_scn: EIFFEL_SCANNER): KEYWORD_AS
+	new_keyword_as (a_code: INTEGER_32; a_scn: EIFFEL_SCANNER): detachable KEYWORD_AS
 			-- New KEYWORD_AS only for `feature' and `creation'.
 		do
 			inspect a_code
 			when {EIFFEL_TOKENS}.te_feature  then
 				create Result.make (a_code, a_scn.text, a_scn.line, a_scn.column, a_scn.position, a_scn.text_count, a_scn.character_column, a_scn.character_position, a_scn.unicode_text_count)
-
 			when {EIFFEL_TOKENS}.te_is, {EIFFEL_TOKENS}.te_indexing then
 				has_obsolete_constructs := True
-
 			else
-
 			end
 		end
 
-	new_keyword_id_as (a_code: INTEGER_32; a_scn: EIFFEL_SCANNER_SKELETON): like keyword_id_type
+	new_keyword_id_as (a_code: INTEGER_32; a_scn: EIFFEL_SCANNER_SKELETON): detachable like keyword_id_type
 			-- New KEYWORD AST node
 		do
 			inspect a_code
@@ -77,22 +74,22 @@ feature -- Processing
 			end
 		end
 
-	new_old_syntax_object_test_as (start: SYMBOL_AS; name: ID_AS; type: TYPE_AS; expression: EXPR_AS): OBJECT_TEST_AS
+	new_old_syntax_object_test_as (start: detachable SYMBOL_AS; name: detachable ID_AS; type: detachable TYPE_AS; expression: detachable EXPR_AS): detachable OBJECT_TEST_AS
 		do
 			has_obsolete_constructs := True
 		end
 
-	new_old_routine_creation_as (l: AST_EIFFEL; t: OPERAND_AS; f: ID_AS; o: DELAYED_ACTUAL_LIST_AS; is_qualified: BOOLEAN; a_as: SYMBOL_AS): PAIR [ROUTINE_CREATION_AS, LOCATION_AS]
-		do
-			has_obsolete_constructs := True
-		end
+--	new_old_routine_creation_as (l: AST_EIFFEL; t: OPERAND_AS; f: ID_AS; o: DELAYED_ACTUAL_LIST_AS; is_qualified: BOOLEAN; a_as: SYMBOL_AS): PAIR [ROUTINE_CREATION_AS, LOCATION_AS]
+--		do
+--			has_obsolete_constructs := True
+--		end
 
-	new_static_access_as (c: TYPE_AS; f: ID_AS; p: PARAMETER_LIST_AS; f_as: KEYWORD_AS; d_as: SYMBOL_AS): STATIC_ACCESS_AS
+	new_static_access_as (c: detachable TYPE_AS; f: detachable ID_AS; p: detachable PARAMETER_LIST_AS; f_as: detachable KEYWORD_AS; d_as: detachable SYMBOL_AS): detachable STATIC_ACCESS_AS
 		do
 			has_obsolete_constructs := has_obsolete_constructs or else f_as /= Void
 		end
 
-	new_filled_id_as (a_scn: EIFFEL_SCANNER_SKELETON): ID_AS
+	new_filled_id_as (a_scn: EIFFEL_SCANNER_SKELETON): detachable ID_AS
 		local
 			l_cnt: INTEGER_32
 			l_str: STRING_8
@@ -115,10 +112,10 @@ feature -- Processing
 			end
 		end
 
-	new_class_type_as (n: ID_AS; g: TYPE_LIST_AS): CLASS_TYPE_AS
+	new_class_type_as (n: detachable ID_AS; g: detachable TYPE_LIST_AS): detachable CLASS_TYPE_AS
 			-- <Precursor>
 		do
-			if n /= Void then
+			if attached n then
 				check
 					is_not_empty: not n.name_32.is_empty
 					is_agent_name:
@@ -141,7 +138,7 @@ feature {NONE} -- Implementation
 
 note
 	ca_ignore: "CA011", "CA011: too many arguments"
-	copyright: "Copyright (c) 1984-2020, Eiffel Software"
+	copyright: "Copyright (c) 1984-2021, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

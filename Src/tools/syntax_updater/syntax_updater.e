@@ -172,27 +172,31 @@ feature {NONE} -- Implementation
 			l_loader.retrieve_configuration (a_file.name)
 			if l_loader.is_error then
 				display_error ({STRING_32} "Could not retrieve configuration " + a_file.name + "!")
-				display_error (l_loader.last_error.text)
+				if attached l_loader.last_error as e then
+					display_error (e.text)
+				end
 
 					-- We only process an ECF file that is not a redirection, otherwise we would
 					-- be replacing the redirection with the content of the redirected ECF.
 			elseif l_loader.last_redirection = Void then
 
-					-- Remove the `is_obsolete_routine_type' option if present on all targets.
-				if is_updating_agents then
-					across l_loader.last_system.targets as l_target loop
-						if attached l_target.item.internal_options as l_options then
-							l_options.unset_is_obsolete_routine_type
+				if attached l_loader.last_system as s then
+						-- Remove the `is_obsolete_routine_type' option if present on all targets.
+					if is_updating_agents then
+						across s.targets as l_target loop
+							if attached l_target.item.internal_options as l_options then
+								l_options.unset_is_obsolete_routine_type
+							end
 						end
 					end
+						-- Resave the file in the right format
+					create l_saver.make
+					l_saver.process_system (s)
+					create l_file.make_with_path (a_file)
+					safe_open_write (l_file)
+					l_file.put_string (l_saver.text)
+					l_file.close
 				end
-					-- Resave the file in the right format
-				create l_saver.make
-				l_saver.process_system (l_loader.last_system)
-				create l_file.make_with_path (a_file)
-				safe_open_write (l_file)
-				l_file.put_string (l_saver.text)
-				l_file.close
 			end
 		end
 
@@ -241,62 +245,67 @@ feature {NONE} -- Implementation
 							-- Slow parsing to rewrite the class using the new constructs.
 						parse_eiffel_class (parser, string_buffer, False)
 						check no_error: not error_handler.has_error end
-
-						visitor.setup (parser.root_node, parser.match_list, True, True)
-							-- Free some memory from the parser that we don't need.
-						parser.reset
-						parser.reset_nodes
-							-- Perform the visiting
-						visitor.process_ast_node (visitor.parsed_class)
-						if visitor.is_updated then
-							is_eiffel_class_updated := True
-							l_text := visitor.text
-							parse_eiffel_class (fast_parser, l_text, True)
-							if error_handler.has_error then
-									-- We ignore syntax errors since we want to test roundtrip parsing
-									-- on valid Eiffel classes.
-								display_error ({STRING_32} "After conversion syntax error in file: " + file_name.name)
-								if attached {SYNTAX_ERROR} error_handler.error_list.last as l_syntax2 then
-									display_error ({STRING_32} " (" + l_syntax2.line.out + ", " + l_syntax2.column.out + ")" + l_syntax2.error_message)
-								end
-								if has_option (force_switch) then
-									l_generate_output := True
-									display_error (" (converted)")
-								else
-									l_generate_output := False
-								end
-								error_handler.wipe_out
-							else
-								l_generate_output := True
-							end
-							if l_generate_output then
-								if attached original_encoding as l_encoding then
-									utf8.convert_to (l_encoding, l_text)
-									if utf8.last_conversion_successful then
-										l_text := utf8.last_converted_stream
-										l_converted := True
+						check
+							attached parser.root_node as r
+							attached parser.match_list as m
+							attached visitor.parsed_class as c
+						then
+							visitor.setup (r, m, True, True)
+								-- Free some memory from the parser that we don't need.
+							parser.reset
+							parser.reset_nodes
+								-- Perform the visiting
+							visitor.process_ast_node (c)
+							if visitor.is_updated then
+								is_eiffel_class_updated := True
+								l_text := visitor.text
+								parse_eiffel_class (fast_parser, l_text, True)
+								if error_handler.has_error then
+										-- We ignore syntax errors since we want to test roundtrip parsing
+										-- on valid Eiffel classes.
+									display_error ({STRING_32} "After conversion syntax error in file: " + file_name.name)
+									if attached {SYNTAX_ERROR} error_handler.error_list.last as l_syntax2 then
+										display_error ({STRING_32} " (" + l_syntax2.line.out + ", " + l_syntax2.column.out + ")" + l_syntax2.error_message)
+									end
+									if has_option (force_switch) then
+										l_generate_output := True
+										display_error (" (converted)")
 									else
-										display_error ("Encoding conversion failed: UTF-8 to " + l_encoding.code_page)
+										l_generate_output := False
 									end
-								end
-								create outfile.make_with_path (file_name)
-								safe_open_write (outfile)
-								if last_open_successful then
-									if l_converted and then attached original_bom as l_bom then
-										outfile.put_string (l_bom)
-									end
-									outfile.put_string (l_text)
-									outfile.close
-									if has_option (verbose_switch) then
-										display_message ({STRING_32} "Converted: " + file_name.name)
-									end
+									error_handler.wipe_out
 								else
-									display_error ({STRING_32} "Could not write to: " + file_name.name)
+									l_generate_output := True
+								end
+								if l_generate_output then
+									if attached original_encoding as l_encoding then
+										utf8.convert_to (l_encoding, l_text)
+										if utf8.last_conversion_successful then
+											l_text := utf8.last_converted_stream
+											l_converted := True
+										else
+											display_error ("Encoding conversion failed: UTF-8 to " + l_encoding.code_page)
+										end
+									end
+									create outfile.make_with_path (file_name)
+									safe_open_write (outfile)
+									if last_open_successful then
+										if l_converted and then attached original_bom as l_bom then
+											outfile.put_string (l_bom)
+										end
+										outfile.put_string (l_text)
+										outfile.close
+										if has_option (verbose_switch) then
+											display_message ({STRING_32} "Converted: " + file_name.name)
+										end
+									else
+										display_error ({STRING_32} "Could not write to: " + file_name.name)
+									end
 								end
 							end
+								-- Free our memory.
+							visitor.reset
 						end
-							-- Free our memory.
-						visitor.reset
 					end
 				else
 					display_error ({STRING_32} "Couldn't open: " + file_name.name)

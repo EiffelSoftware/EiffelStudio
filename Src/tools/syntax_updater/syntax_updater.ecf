@@ -1,22 +1,19 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
-<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-20-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-20-0 http://www.eiffel.com/developers/xml/configuration-1-20-0.xsd" name="syntax_updater" uuid="F8339F54-4EB3-4743-946E-9BFAA27DBA90">
+<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-21-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-21-0 http://www.eiffel.com/developers/xml/configuration-1-21-0.xsd" name="syntax_updater" uuid="F8339F54-4EB3-4743-946E-9BFAA27DBA90">
 	<target name="syntax_updater">
 		<description>Let you set convert your Eiffel source code from old syntax constructs to new one.</description>
 		<root class="SYNTAX_UPDATER" feature="make"/>
 		<file_rule>
 			<exclude>/\.svn$</exclude>
 		</file_rule>
-		<option warning="true" full_class_checking="false" is_obsolete_routine_type="true" syntax="transitional">
+		<option warning="error">
 			<assertions precondition="true" postcondition="true" check="true" loop="true" supplier_precondition="true"/>
 		</option>
 		<setting name="console_application" value="true"/>
 		<setting name="exception_trace" value="true"/>
-		<setting name="inlining" value="true"/>
-		<setting name="inlining_size" value="0"/>
 		<setting name="dead_code_removal" value="all"/>
 		<capability>
 			<concurrency support="none"/>
-			<void_safety support="none"/>
 		</capability>
 		<pre_compile_action working_directory=".\parser\" command="make" succeed="true">
 			<description>Generate Parser Files</description>

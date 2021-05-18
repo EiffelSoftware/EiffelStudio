@@ -275,8 +275,6 @@ feature -- Element change
 					an_area.width,
 					an_area.height)
 				{CAIRO}.clip (l_drawable)
-				release_cairo_context (l_drawable)
-				cairo_context := default_pointer
 			else
 				check has_drawable: False end
 			end
@@ -298,8 +296,6 @@ feature -- Element change
 			l_drawable := cairo_context
 			if l_drawable /= default_pointer then
 				{CAIRO}.reset_clip (l_drawable)
-				release_cairo_context (l_drawable)
-				cairo_context := default_pointer
 			else
 				check has_drawable: False end
 			end
@@ -309,14 +305,11 @@ feature -- Element change
 			-- Set tile used to fill figures.
 			-- Set to Void to use `background_color' to fill.
 		local
-			tile_imp: detachable EV_PIXMAP_IMP
 			l_tile: like tile
 		do
 			create l_tile
 			tile := l_tile
 			l_tile.copy (a_pixmap)
-			tile_imp ?= l_tile.implementation
-			check tile_imp /= Void end
 		end
 
 	remove_tile
@@ -347,6 +340,9 @@ feature -- Element change
 			-- <Precursor>
 		do
 				-- TODO: provide implementation.
+			if cairo_context /= default_pointer then
+				{CAIRO}.set_antialias (cairo_context, if value then {CAIRO}.antialias_best else {CAIRO}.antialias_none end)
+			end
 		end
 
 feature -- Clearing operations

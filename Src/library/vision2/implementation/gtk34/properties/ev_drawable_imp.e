@@ -64,9 +64,13 @@ feature {EV_ANY_I} -- Implementation
 
 	pre_drawing
 		deferred
+		ensure
+			has_cairo_context: not cairo_context.is_default_pointer
 		end
 
 	post_drawing
+		require
+			has_cairo_context: not cairo_context.is_default_pointer
 		deferred
 		end
 
@@ -430,6 +434,8 @@ feature -- Drawing operations
 			pre_drawing
 			l_drawable := cairo_context
 			if l_drawable /= default_pointer then
+				{CAIRO}.save (l_drawable) -- TODO: check if this is not too much here. But otherwise the next drawing may be translated or rotated which is unexpected.
+
 					-- Set x_orig and y_orig to be the device translated values which must be used for the rest of the routine.
 				l_x := x + device_x_offset
 				l_y := y + device_y_offset
@@ -473,7 +479,7 @@ feature -- Drawing operations
 
 					-- Free allocated resources
 				{GTK2}.g_object_unref (a_pango_layout)
-
+				{CAIRO}.restore (l_drawable)
 			end
 			post_drawing
 		end

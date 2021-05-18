@@ -91,7 +91,7 @@ feature -- Status Setting
 ----			set_default_colors
 --		end
 
-feature -- Access
+feature {EV_ANY_I} -- Implementation
 
 	pre_drawing
 		local
@@ -129,6 +129,8 @@ feature -- Access
 				end
 			end
 		end
+
+feature -- Access		
 
 	width: INTEGER
 			-- Width in pixels of mask bitmap.

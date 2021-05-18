@@ -154,7 +154,7 @@ feature {NONE} -- Dispose
 			Precursor
 		end
 
-feature -- filling operations
+feature {EV_ANY_I} -- Implementation
 
 	pre_drawing
 		do
@@ -207,24 +207,6 @@ feature {EV_APPLICATION_IMP} -- Implementation
 			-- Are the button actions (press/release) handled by signals?
 		do
 			Result := True
-		end
-
-feature -- Implementation
-
-	enable_double_buffering
-			-- Enable backbuffer for `Current'.
-		obsolete
-			"double buffering is enabled by default [2021-06-01]"
-		do
-		  -- {GTK2}.gtk_widget_set_double_buffered (c_object, True)
-		end
-
-	disable_double_buffering
-			-- Disable backbuffer for `Current'.
-		obsolete
-			"Disabling double buffering is mostly detrimental to the performance of an app. [2021-06-01]"
-		do
-			-- {GTK2}.gtk_widget_set_double_buffered (c_object, False)
 		end
 
 feature {NONE} -- Implementation
@@ -367,20 +349,25 @@ feature {EV_INTERMEDIARY_ROUTINES} -- Implementation
 			l_surface: like cairo_surface
 			l_old_context: like cairo_context
 		do
-			l_surface := cairo_surface;
+			l_surface := cairo_surface
 			debug ("gtk3_redraw")
-				print (generator + ".process_draw_event ("+ a_cairo_context.out +")  surface=" + l_surface.out + "%N")
+				print (($current).out + "::" + generator + ".process_draw_event ("+ a_cairo_context.out +")  surface=" + l_surface.out + "%N")
 			end
 
 			check has_surface: not l_surface.is_default_pointer end
 
-			{CAIRO}.set_source_surface (a_cairo_context, l_surface, 0, 0) --l_x, l_y)
+			{CAIRO}.set_source_surface (a_cairo_context, l_surface, 0, 0)
 
 			if attached expose_actions_internal as l_actions then
 				in_expose_actions := True
 				l_old_context := cairo_context
 				cairo_context := a_cairo_context
 				{CAIRO}.clip_extents (a_cairo_context, $l_x, $l_y, $l_width, $l_height)
+
+				debug ("gtk3_redraw")
+					print (($current).out + "::" + generator + ".process_draw_event ... " + " x=" + l_x.out + " y=" + l_y.out + " w=" + l_width.out + " h=" + l_height.out + "%N")
+				end
+
 				l_actions.call (l_x.truncated_to_integer, l_y.truncated_to_integer, l_width.truncated_to_integer, l_height.truncated_to_integer)
 				cairo_context := l_old_context
 				in_expose_actions := False
@@ -392,21 +379,29 @@ feature {EV_INTERMEDIARY_ROUTINES} -- Implementation
 	process_configure_event (a_x, a_y, a_width, a_height: INTEGER)
 			-- A "configure-event" signal has occurred
 		local
-			l_surface: POINTER
+			l_old_surface, l_new_surface, cr: POINTER
 		do
 			debug ("gtk3_redraw")
-				print (generator + ".process_configure_event ("+ a_x.out + ", " + a_y.out + ", " + a_width.out + ", " + a_height.out + ")%N")
+				print (($current).out + "::" + generator + ".process_configure_event ("+ a_x.out + ", " + a_y.out + ", " + a_width.out + ", " + a_height.out + ")%N")
 			end
 
 			if not cairo_context.is_default_pointer then
 				release_cairo_context (cairo_context)
 				cairo_context := default_pointer
 			end
-			l_surface := cairo_surface
-			if not l_surface.is_default_pointer then
-				{CAIRO}.surface_flush (l_surface)
-				release_cairo_surface (l_surface)
+			l_old_surface := cairo_surface
+			if not l_old_surface.is_default_pointer then
+				{CAIRO}.surface_flush (l_old_surface)
 				cairo_surface := default_pointer
+
+				get_new_cairo_surface (a_width, a_height)
+				l_new_surface := cairo_surface
+				cr := {CAIRO}.create_context (l_new_surface)
+				{CAIRO}.set_source_surface (cr, l_old_surface, 0, 0)
+				{CAIRO}.set_operator (cr, {CAIRO}.OPERATOR_SOURCE)
+				{CAIRO}.paint (cr)
+				release_cairo_context (cr)
+				release_cairo_surface (l_old_surface)
 			end
 			if cairo_surface.is_default_pointer then
 				get_new_cairo_surface (a_width, a_height)

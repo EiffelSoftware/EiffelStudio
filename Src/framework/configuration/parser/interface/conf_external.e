@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "Objects that represent an external."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -76,12 +76,12 @@ feature -- Access, stored in configuration file
 			-- The file location.
 		local
 			s: STRING_32
+			p: READABLE_STRING_32
 		do
 			create s.make_from_string (internal_location)
-			if attached target.library_root as l_path then
-				s.replace_substring_all ({STRING_32} "$ECF_CONFIG_PATH", l_path.name)
-				s.replace_substring_all ({STRING_32} "$(ECF_CONFIG_PATH)", l_path.name)
-			end
+			p := target.library_root.name
+			s.replace_substring_all ({STRING_32} "$ECF_CONFIG_PATH", p)
+			s.replace_substring_all ({STRING_32} "$(ECF_CONFIG_PATH)", p)
 				-- There is no reason to have a location ending by backslash.
 				-- Remove it to avoid confusion with escaped double quote `\"`.
 			if s.count > 0 and then s [s.count] = {CHARACTER_32} '\' then
@@ -155,7 +155,7 @@ invariant
 	target_not_void: target /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2020, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2021, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

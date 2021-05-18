@@ -279,7 +279,7 @@ feature -- Access, in compiled only, not stored to configuration file
 			environ_variables.put (a_value, a_key)
 		end
 
-	library_root: detachable PATH
+	library_root: PATH
 			-- Root location to use for relative paths, defaults to the location of the configuration file.
 			--| note: it is also use to replace $ECF_CONFIG_PATH value.
 		require
@@ -1429,7 +1429,7 @@ invariant
 	environ_variables_not_void: environ_variables /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2019, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2021, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

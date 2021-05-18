@@ -81,7 +81,7 @@ feature -- Access queries
 			Result_not_void: Result /= Void
 		end
 
-	evaluated_path_relative_to_location (a_root_location: detachable PATH): PATH
+	evaluated_path_relative_to_location (a_root_location: PATH): PATH
 			-- The fully resolved path with file name relative to directory `a_root_location`.
 		local
 			i, j, k: INTEGER
@@ -92,7 +92,6 @@ feature -- Access queries
 			l_offset: INTEGER
 			l_stop: BOOLEAN
 			l_result: STRING_32
-			l_root: detachable PATH
 		do
 			create l_result.make_from_string (original_path)
 
@@ -176,18 +175,11 @@ feature -- Access queries
 
 				-- Handle relative path
 			if Result.is_relative then
-				l_root := a_root_location
-				if not attached l_root then
-					l_root := target.library_root
-				end
-				if not attached l_root then
-					create l_root.make_from_string ("/")
-				end
 				Result :=
 					(if Result.is_empty then
-						l_root
+						a_root_location
 					else
-						l_root.extended_path (Result)
+						a_root_location.extended_path (Result)
 					end).canonical_path
 			end
 		ensure
@@ -312,7 +304,7 @@ invariant
 	target_not_void: target /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2020, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2021, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

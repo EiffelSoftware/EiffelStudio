@@ -417,9 +417,6 @@ feature {EV_ANY_I} -- Implementation
 			cr := cairo_context
 			if not cr.is_default_pointer then
 				{CAIRO}.restore (cr)
-				{REFACTORING_HELPER}.fixme ("FIXME: if we release the context here, we get a Operatin system signal failure, following {EV_APPLICTION_IMP}.process_gtk_events")
-				release_cairo_context (cr)
-				cairo_context := default_pointer
 			end
 		end
 
@@ -441,7 +438,6 @@ feature {EV_ANY_I} -- Implementation
 	release_cairo_surface (a_surface: POINTER)
 		do
 			if not a_surface.is_default_pointer then
-				print (generator + ".dispose : surface_destroy (" + cairo_surface.out + ")%N")
 				{CAIRO}.surface_destroy (a_surface)
 			end
 		end

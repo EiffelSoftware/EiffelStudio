@@ -48,6 +48,7 @@ feature -- Redefine
 			is_start_draw_called := True
 
 			if attached tool_bar as l_tool_bar then
+				l_tool_bar.start_drawing_session
 				from
 					l_items := l_tool_bar.items
 					l_rect := a_rectangle.twin
@@ -73,6 +74,9 @@ feature -- Redefine
 	end_draw
 			-- <Precursor>
 		do
+			if attached tool_bar as l_tool_bar then
+				l_tool_bar.end_drawing_session
+			end
 			is_start_draw_called := False
 		end
 
@@ -480,7 +484,7 @@ feature {NONE} -- Externals
 
 note
 	library:	"SmartDocking: Library of reusable components for Eiffel."
-	copyright:	"Copyright (c) 1984-2016, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2021, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

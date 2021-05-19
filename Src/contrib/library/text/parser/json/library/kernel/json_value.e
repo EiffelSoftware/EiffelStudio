@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "[
 		JSON_VALUE represents a value in JSON. 
 		        A value can be
@@ -57,7 +57,7 @@ feature -- Access
 		do
 		end
 
-	chained_item alias "@" (a_key: JSON_STRING): JSON_VALUE
+	chained_item alias "@" alias "/" (a_key: JSON_STRING): JSON_VALUE
 			-- Item associated with key `a_key` if exists.
 			-- Note: if item does not exists, return also JSON_NULL.
 		do
@@ -96,6 +96,6 @@ feature -- Visitor pattern
 		end
 
 note
-	copyright: "2010-2018, Javier Velilla, Jocelyn Fiat, Eiffel Software and others https://github.com/eiffelhub/json."
+	copyright: "2010-2021, Javier Velilla, Jocelyn Fiat, Eiffel Software and others https://github.com/eiffelhub/json."
 	license: "https://github.com/eiffelhub/json/blob/master/License.txt"
 end

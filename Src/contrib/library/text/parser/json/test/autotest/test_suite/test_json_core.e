@@ -1113,11 +1113,11 @@ feature -- Test
 			parser.parse_content
 			assert ("parsing ok", parser.is_parsed and parser.is_valid)
 			if attached parser.parsed_json_value as j_value then
-				assert("name", (j_value@"name").same_string ("John Smith"))
-				assert("zip is number", (j_value@"address"@"zip").is_number)
-				assert("zip", (j_value@"address"@"zip").representation.same_string ("10001"))
-				assert("notes@2@title", (j_value@"notes"@"2"@"title").same_caseless_string ("second note"))
-				assert("notes@2@text", (j_value@"notes"@"2"@"text").same_string ("2nd"))
+				assert("name", (j_value / "name").same_string ("John Smith"))
+				assert("zip is number", (j_value / "address" / "zip").is_number)
+				assert("zip", (j_value / "address" / "zip").representation.same_string ("10001"))
+				assert("notes / 2 / title", (j_value / "notes" / "2" / "title").same_caseless_string ("second note"))
+				assert("notes / 2 / text", (j_value / "notes" / "2" / "text").same_string ("2nd"))
 			end
 		end
 

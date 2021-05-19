@@ -272,7 +272,7 @@ feature -- Access
 			end
 		end
 
-	chained_item alias "@" (a_key: JSON_STRING): JSON_VALUE
+	chained_item alias "@" alias "/" (a_key: JSON_STRING): JSON_VALUE
 			-- <Precursor>.
 		do
 			if attached item (a_key) as v then
@@ -382,6 +382,6 @@ invariant
 	items_not_void: items /= Void
 
 note
-	copyright: "2010-2018, Javier Velilla, Jocelyn Fiat, Eiffel Software and others https://github.com/eiffelhub/json."
+	copyright: "2010-2021, Javier Velilla, Jocelyn Fiat, Eiffel Software and others https://github.com/eiffelhub/json."
 	license: "https://github.com/eiffelhub/json/blob/master/License.txt"
 end

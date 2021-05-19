@@ -78,6 +78,8 @@ feature {NONE} -- Initialization
 			t_label: EV_LABEL
 			g: like stack_grid
 		do
+			create_interface_objects
+			
 				--| UI structure			
 			create box2
 			box2.set_padding ({EV_MONITOR_DPI_DETECTOR_IMP}.scaled_size (3))
@@ -180,8 +182,6 @@ feature {NONE} -- Initialization
 			togg: SD_TOOL_BAR_TOGGLE_BUTTON
 			p: BOOLEAN_PREFERENCE
         do
-        	create_interface_objects
-
 			create Result.make (5)
 
 			create togg.make

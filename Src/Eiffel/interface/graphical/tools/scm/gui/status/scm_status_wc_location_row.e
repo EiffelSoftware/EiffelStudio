@@ -181,7 +181,7 @@ feature -- Operations
 				attached g.scm_s.service as scm_service and then
 				attached parent_row.root_location as l_scm_root and then
 				attached location as l_scm_location and then
-				attached l_scm_root.changes (l_scm_location, scm_service.config) as l_chgs
+				attached scm_service.statuses (l_scm_root, l_scm_location) as l_chgs
 			then
 				nb := l_chgs.changes_count
 				changes_count := nb

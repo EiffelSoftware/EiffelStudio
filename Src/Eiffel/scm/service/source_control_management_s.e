@@ -40,6 +40,11 @@ feature -- Access
 
 feature -- Operations
 
+	statuses (a_root: SCM_LOCATION; a_location: PATH): detachable SCM_STATUS_LIST
+		do
+			Result := a_root.changes (a_location, config)
+		end
+
 	commit (a_commit: SCM_COMMIT_SET)
 		require
 			is_ready: a_commit.is_ready

@@ -9,7 +9,10 @@ class
 	ES_FEATURES_GRID
 
 inherit
-	ES_GRID
+	ES_IDE_GRID
+		redefine
+			internal_recycle
+		end
 
 	EB_EDITOR_TOKEN_GRID_SUPPORT
 		rename
@@ -17,7 +20,8 @@ inherit
 		undefine
 			default_create, is_equal, copy
 		redefine
-			evs_on_pebble_function
+			evs_on_pebble_function,
+			internal_recycle
 		end
 
 	CHARACTER_ROUTINES
@@ -38,13 +42,6 @@ inherit
 		end
 
 	EB_SHARED_WINDOW_MANAGER
-		export
-			{NONE} all
-		undefine
-			default_create, is_equal, copy
-		end
-
-	EB_SHARED_PREFERENCES
 		export
 			{NONE} all
 		undefine
@@ -115,6 +112,14 @@ feature {NONE} -- Initialization
 
 			set_configurable_target_menu_mode
 			set_configurable_target_menu_handler (agent on_menu_handler (?, ?, ?, ?))
+		end
+
+feature {NONE} -- Implementation		
+
+	internal_recycle
+		do
+			Precursor {EB_EDITOR_TOKEN_GRID_SUPPORT}
+			Precursor {ES_IDE_GRID}
 		end
 
 feature -- Status report
@@ -383,7 +388,7 @@ feature -- Tree construction
 		require
 			a_mesg_not_void: a_mesg /= Void
 		do
-			extend_item (create {EV_GRID_LABEL_ITEM}.make_with_text (a_mesg))
+			extend_item (new_grid_label_item (a_mesg))
 		end
 
 	extend_sub_item	(a_row: EV_GRID_ROW; a_grid_item: EV_GRID_ITEM)
@@ -949,7 +954,7 @@ feature {NONE} -- Tree item factory
 
 	add_tree_item_for_text (a_row: EV_GRID_ROW; a_text: STRING_GENERAL)
 		do
-			a_row.set_item (1, create {EV_GRID_LABEL_ITEM}.make_with_text (a_text))
+			a_row.set_item (1, new_grid_label_item (a_text))
 		end
 
 	update_tree_item_for_e_feature (a_row: EV_GRID_ROW; ef: E_FEATURE)
@@ -994,7 +999,7 @@ feature {NONE} -- Tree item factory
 		local
 			lab: EV_GRID_LABEL_ITEM
 		do
-			create lab.make_with_text (a_text)
+			lab := new_grid_label_item (a_text)
 			lab.set_pixmap (pix)
 			lab.set_data (a_parent_list)
 			if is_clickable then
@@ -1008,7 +1013,7 @@ feature {NONE} -- Tree item factory
 		local
 			lab: EV_GRID_LABEL_ITEM
 		do
-			create lab.make_with_text (a_text)
+			lab := new_grid_label_item (a_text)
 			if pix /= Void then
 				lab.set_pixmap (pix)
 			end
@@ -1036,7 +1041,7 @@ feature {NONE} -- Tree item factory
 			l_text := feature_name (ef)
 
 			if is_editor_token_enabled then
-				create gf.make_with_text (l_text.as_string_8)
+				gf := new_grid_editor_token_item (l_text.to_string_8)
 				gf.set_pixmap (pix)
 				gf.set_data (ef)
 
@@ -1061,7 +1066,7 @@ feature {NONE} -- Tree item factory
 		local
 			lab: EV_GRID_LABEL_ITEM
 		do
-			create lab.make_with_text (a_text)
+			lab := new_grid_label_item (a_text)
 			lab.set_pixmap (pix)
 			lab.set_data (a_text)
 			if is_clickable and ffn /= Void then
@@ -1078,7 +1083,7 @@ feature {NONE} -- Tree item factory
 		local
 			lab: EV_GRID_LABEL_ITEM
 		do
-			create lab.make_with_text (a_text)
+			lab := new_grid_label_item (a_text)
 			lab.set_pixmap (pix)
 			lab.set_data (fc)
 			if is_clickable then
@@ -1092,15 +1097,27 @@ feature {NONE} -- Tree item factory
 		local
 			lab: EV_GRID_LABEL_ITEM
 		do
-			create lab.make_with_text (a_text)
+			lab := new_grid_label_item (a_text)
 			lab.set_pixmap (pix)
 			lab.set_data (fd)
 			a_row.set_data (fd)
 			a_row.set_item (1, lab)
 		end
 
+feature -- Grid item factory
+
+	new_grid_editor_token_item (a_text: detachable READABLE_STRING_8): EB_GRID_EDITOR_TOKEN_ITEM
+		do
+			if a_text = Void then
+				create Result
+			else
+				create Result.make_with_text (a_text)
+			end
+--			setup_grid_label_item (Result)
+		end
+
 ;note
-	copyright:	"Copyright (c) 1984-2020, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2021, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

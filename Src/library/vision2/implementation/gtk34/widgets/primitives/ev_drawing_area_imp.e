@@ -179,7 +179,6 @@ feature {EV_ANY_I} -- Implementation
 			cr := cairo_context
 			if not cr.is_default_pointer then
 				release_cairo_context (cr)
-				cairo_context := default_pointer
 			end
 		end
 

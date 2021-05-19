@@ -22,4 +22,6 @@
 	<PREF NAME="tools.diagram_tool.uml.uml_class_feature_section_font" DESCRIPTION="Font for class feature sections in UML class figures."><FONT>sans-r-bold-9-sans</FONT></PREF>
 	<PREF NAME="tools.diagram_tool.uml.uml_client_label_font" DESCRIPTION="Font for feature names on UML client supplier links."><FONT>sans-r-regular-9-sans</FONT></PREF>
 	<PREF NAME="tools.diagram_tool.uml.uml_cluster_name_font" DESCRIPTION="UML cluster name font."><FONT>sans-r-regular-9-sans</FONT></PREF>
+	<PREF NAME="tools.source_control.git_command" DESCRIPTION="GIT command (the binary is required to support GIT)."><STRING>/usr/bin/git</STRING></PREF>
+	<PREF NAME="tools.source_control.svn_command" DESCRIPTION="Subversion command (the binary is required to support Subversion)."><STRING>/usr/bin/svn</STRING></PREF>
 </EIFFEL_DOCUMENT>

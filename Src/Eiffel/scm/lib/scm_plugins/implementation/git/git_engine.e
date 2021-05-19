@@ -56,7 +56,7 @@ feature -- Access tool info
 		do
 			create cmd.make_from_string (git_executable_location.name)
 			cmd.append_string (" --version")
-			res := process_misc.output_of_command (cmd, Void)
+			res := output_of_command (cmd, Void)
 			if res /= Void and then res.exit_code = 0 then
 				create Result.make_from_string_general (res.output)
 			end
@@ -81,7 +81,7 @@ feature -- Execution
 			debug ("GIT_ENGINE")
 				print ({STRING_32} "Command: [" + cmd + "]%N")
 			end
-			res := process_misc.output_of_command (cmd, a_path)
+			res := output_of_command (cmd, a_path)
 			debug ("GIT_ENGINE")
 				print ("-> terminated %N")
 			end
@@ -117,10 +117,10 @@ feature -- Execution
 				cmd.append_string_general (" %"")
 				cmd.append_string_general (a_path.name)
 				cmd.append_string_general ("%"")
-				res := process_misc.output_of_command (cmd, a_path.parent)
+				res := output_of_command (cmd, a_path.parent)
 			else
 				cmd.append_string_general (" . ")
-				res := process_misc.output_of_command (cmd, a_path)
+				res := output_of_command (cmd, a_path)
 			end
 			debug ("GIT_ENGINE")
 				print ("-> terminated %N")
@@ -164,7 +164,7 @@ feature -- Execution
 			debug ("GIT_ENGINE")
 				print ({STRING_32} "Command: [" + cmd + "]%N")
 			end
-			if attached process_misc.output_of_command (cmd, a_changelist.root.location) as res_revert then
+			if attached output_of_command (cmd, a_changelist.root.location) as res_revert then
 				if res_revert.exit_code = 0 then
 					create Result.make_success
 					Result.set_message (res_revert.output)
@@ -209,7 +209,7 @@ feature -- Execution
 			debug ("GIT_ENGINE")
 				print ({STRING_32} "Command: [" + cmd + "]%N")
 			end
-			if attached process_misc.output_of_command (cmd, a_changelist.root.location) as res_add then
+			if attached output_of_command (cmd, a_changelist.root.location) as res_add then
 					-- Todo
 			end
 			debug ("GIT_ENGINE")
@@ -230,7 +230,7 @@ feature -- Execution
 			debug ("GIT_ENGINE")
 				print ({STRING_32} "Command: [" + cmd + "]%N")
 			end
-			if attached process_misc.output_of_command (cmd, a_changelist.root.location) as res_commit then
+			if attached output_of_command (cmd, a_changelist.root.location) as res_commit then
 				if res_commit.exit_code = 0 then
 					create Result.make_success
 					Result.set_message (res_commit.output)

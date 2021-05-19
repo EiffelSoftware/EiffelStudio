@@ -87,7 +87,7 @@ feature -- Access tool info
 		do
 			create cmd.make_from_string (svn_executable_path)
 			cmd.append_string (" --version --quiet")
-			res := process_misc.output_of_command (cmd, Void)
+			res := output_of_command (cmd, Void)
 			if res /= Void and then res.exit_code = 0 then
 				create Result.make_from_string_general (res.output)
 			end
@@ -133,7 +133,7 @@ feature -- Access: working copy
 			debug ("SVN_ENGINE")
 				print ("Command: [" + cmd + "]%N")
 			end
-			res := process_misc.output_of_command (cmd, Void)
+			res := output_of_command (cmd, Void)
 			debug ("SVN_ENGINE")
 				print ("-> terminated %N")
 			end
@@ -175,7 +175,7 @@ feature -- Access: working copy
 			debug ("SVN_ENGINE")
 				print ("Command: [" + cmd + "]%N")
 			end
-			res := process_misc.output_of_command (cmd, Void)
+			res := output_of_command (cmd, Void)
 			debug ("SVN_ENGINE")
 				print ("-> terminated %N")
 			end
@@ -225,7 +225,7 @@ feature -- Access: working copy
 			debug ("SVN_ENGINE")
 				print ("Command: [" + cmd + "]%N")
 			end
-			res := process_misc.output_of_command (cmd, Void)
+			res := output_of_command (cmd, Void)
 			debug ("SVN_ENGINE")
 				print ("-> terminated %N")
 			end
@@ -267,7 +267,7 @@ feature -- Access: working copy
 			debug ("SVN_ENGINE")
 				print ("Command: [" + cmd + "]%N")
 			end
-			res := process_misc.output_of_command (cmd, Void)
+			res := output_of_command (cmd, Void)
 			debug ("SVN_ENGINE")
 				print ("-> terminated %N")
 			end
@@ -317,7 +317,7 @@ feature -- Access: working copy
 			debug ("SVN_ENGINE")
 				print ("Command: [" + cmd + "]%N")
 			end
-			res := process_misc.output_of_command (cmd, Void)
+			res := output_of_command (cmd, Void)
 			debug ("SVN_ENGINE")
 				print ("-> terminated %N")
 			end
@@ -362,7 +362,7 @@ feature -- Access: working copy
 			debug ("SVN_ENGINE")
 				print ("Command: [" + cmd + "]%N")
 			end
-			res := process_misc.output_of_command (cmd, Void)
+			res := output_of_command (cmd, Void)
 			debug ("SVN_ENGINE")
 				print ("-> terminated %N")
 			end
@@ -415,7 +415,7 @@ feature -- Access: working copy
 			debug ("SVN_ENGINE")
 				print ("Command: svn commit ...%N")
 			end
-			res := process_misc.output (svn_executable_path, args, Void)
+			res := output (svn_executable_path, args, Void)
 			debug ("SVN_ENGINE")
 				print ("-> terminated %N")
 			end
@@ -478,7 +478,7 @@ feature -- Access: svn
 			debug ("SVN_ENGINE")
 				print ("Command: [" + cmd + "]%N")
 			end
-			res := process_misc.output_of_command (cmd, Void)
+			res := output_of_command (cmd, Void)
 			debug ("SVN_ENGINE")
 				print ("-> terminated %N")
 			end
@@ -540,7 +540,7 @@ feature -- Access: svn
 			debug ("SVN_ENGINE")
 				print ("Command: [" + cmd + "]%N")
 			end
-			res := process_misc.output_of_command (cmd, Void)
+			res := output_of_command (cmd, Void)
 			debug ("SVN_ENGINE")
 				print ("-> terminated %N")
 			end
@@ -595,7 +595,7 @@ feature -- Access: svn
 			debug ("SVN_ENGINE")
 				print ({STRING_32} "Command: [" + cmd + "]%N")
 			end
-			res := process_misc.output_of_command (cmd, Void)
+			res := output_of_command (cmd, Void)
 			debug ("SVN_ENGINE")
 				print ("-> terminated %N")
 			end
@@ -664,7 +664,7 @@ feature -- Access: svn
 			debug ("SVN_ENGINE")
 				print ({STRING_32} "Command: [" + cmd + "]%N")
 			end
-			res := process_misc.output_of_command (cmd, Void)
+			res := output_of_command (cmd, Void)
 			debug ("SVN_ENGINE")
 				print ("-> terminated %N")
 			end
@@ -781,7 +781,7 @@ feature {NONE} -- impl
 			debug ("SVN_ENGINE")
 				print ({STRING_32} "Command: [" + cmd + "]%N")
 			end
-			res := process_misc.output_of_command (cmd, a_path)
+			res := output_of_command (cmd, a_path)
 			debug ("SVN_ENGINE")
 				print ("-> terminated %N")
 			end

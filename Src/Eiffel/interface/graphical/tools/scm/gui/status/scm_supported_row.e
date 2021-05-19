@@ -63,7 +63,9 @@ feature -- Operation
 					)
 			a_row.set_item (a_grid.scm_column, glab)
 
-			if not l_is_supported then
+			if l_is_supported then
+				a_row.set_item (a_grid.info_column, Void)
+			else
 				glab := new_label_item (scm_names.label_not_available_check_configuration)
 				glab.pointer_double_press_actions.extend (agent (i_x, i_y, i_button: INTEGER; i_x_tilt, i_y_tilt, i_pressure: DOUBLE; i_screen_x, i_screen_y: INTEGER)
 						local

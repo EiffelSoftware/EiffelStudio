@@ -179,6 +179,8 @@ feature -- Session
 	start_drawing_session
 			-- Start a drawing session.
 			-- Used for optimization, to group sequence of drawings.
+			-- note: as a drawing session can be inside another drawing session
+			-- `end_drawing_session` has to be called as many time as `start_drawing_session` was called.			
 		do
 			drawing_session_depth := drawing_session_depth + 1
 		ensure
@@ -188,6 +190,8 @@ feature -- Session
 	end_drawing_session
 			-- End a drawing session.
 			-- Used for optimization, to group sequence of drawings.
+			-- note: as a drawing session can be inside another drawing session
+			-- `end_drawing_session` has to be called as many time as `start_drawing_session` was called.			
 		require
 			drawing_session_depth > 0
 		do

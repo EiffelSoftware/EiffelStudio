@@ -44,6 +44,13 @@ feature -- Display
 			"return gdk_display_get_screen ((GdkDisplay *)$a_display, (gint)$a_screen_num);"
 		end
 
+	frozen gdk_screen_get_monitor_at_point (a_screen: POINTER; a_x, a_y: INTEGER_32): INTEGER_32
+		obsolete
+			"gdk_screen_get_monitor_at_point is deprecated [2021-06-01]"
+		external
+			"C signature (GdkScreen*, gint, gint): gint use <ev_gtk.h>"
+		end
+
 feature -- Screen
 
 	frozen gdk_screen_get_width_mm (a_screen: POINTER): INTEGER_32

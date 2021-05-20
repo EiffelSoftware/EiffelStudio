@@ -1140,11 +1140,6 @@ feature -- GdkPixbuf
 
 feature -- GdkScreen
 
-	frozen gdk_screen_get_monitor_at_point (a_screen: POINTER; a_x, a_y: INTEGER_32): INTEGER_32
-		external
-			"C signature (GdkScreen*, gint, gint): gint use <ev_gtk.h>"
-		end
-
 	frozen gdk_screen_get_resolution (a_screen: POINTER): INTEGER_32
 		external
 			"C inline use <ev_gtk.h>"

@@ -6,14 +6,10 @@ note
 class
 	GTK_CSS
 
-feature -- GtkCsProvider
+inherit
+	GTK_CSS_DEPRECATED
 
-	frozen gtk_css_provider_get_default: POINTER
-		obsolete
-			"gtk_css_provider_get_default is deprecated: Use 'gtk_css_provider_new' [2021-06-01]"
-		external
-			"C signature (): GtkCssProvider * use <ev_gtk.h>"
-		end
+feature -- GtkCsProvider
 
 	frozen gtk_css_provider_new: POINTER
 		external

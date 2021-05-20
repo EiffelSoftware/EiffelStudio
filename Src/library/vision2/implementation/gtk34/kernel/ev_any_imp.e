@@ -158,9 +158,6 @@ feature {NONE} -- Implementation
 				-- Disable the marshaller so we do not get C to Eiffel calls
 				-- during GC cycle otherwise bad things may happen.
 			{EV_GTK_CALLBACK_MARSHAL}.c_ev_gtk_callback_marshal_set_is_enabled (False)
-			debug ("gtk_memory")
-				print ("{EV_ANY_IMP} " + generator + ".dispose ...%N")
-			end
 			l_c_object := c_object
 			if not l_c_object.is_default_pointer then
 					-- Disconnect dispose signal for `c_object'.
@@ -183,9 +180,6 @@ feature {NONE} -- Implementation
 			-- Only called if `Current' is referenced from `c_object'.
 			-- Render `Current' unusable.
 		do
-			debug ("gtk_memory")
-				print ("{EV_ANY_IMP} " + generator + ".c_object_dispose ...%N")
-			end
 				-- Disable the marshaller so we do not get C to Eiffel calls
 				-- during GC cycle otherwise bad things may happen.
 			{EV_GTK_CALLBACK_MARSHAL}.c_ev_gtk_callback_marshal_set_is_enabled (False)

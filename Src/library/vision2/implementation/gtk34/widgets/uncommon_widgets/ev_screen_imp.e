@@ -231,7 +231,6 @@ feature {NONE} -- Implementation
 			{CAIRO}.set_dashed_line_style (cr, dashed_line_style)
  		end
 
-
 feature -- Status report
 
 	pointer_position: EV_COORDINATE

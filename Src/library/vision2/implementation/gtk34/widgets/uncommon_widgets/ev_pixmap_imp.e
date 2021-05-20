@@ -559,9 +559,12 @@ feature {NONE} -- Implementation
 	dispose
 		do
 			Precursor
-			clear_cairo_context
+			if not cairo_context.is_default_pointer then
+				{CAIRO}.destroy (cairo_context)
+				cairo_context := default_pointer
+			end
 			if not cairo_surface.is_default_pointer then
-				release_cairo_surface (cairo_surface)
+				{CAIRO}.surface_destroy (cairo_surface)
 				cairo_surface := default_pointer
 			end
 		end
@@ -571,9 +574,12 @@ feature {NONE} -- Implementation
 			-- Only called if `Current' is referenced from `c_object'.
 			-- Render `Current' unusable.
 		do
-			clear_cairo_context
+			if not cairo_context.is_default_pointer then
+				{CAIRO}.destroy (cairo_context)
+				cairo_context := default_pointer
+			end
 			if not cairo_surface.is_default_pointer then
-				release_cairo_surface (cairo_surface)
+				{CAIRO}.surface_destroy (cairo_surface)
 				cairo_surface := default_pointer
 			end
 			Precursor

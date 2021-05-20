@@ -335,7 +335,6 @@ feature {EV_INTERMEDIARY_ROUTINES} -- Implementation
 			check
 				outside_drawing_session: not is_in_drawing_session
 			end
-			start_drawing_session
 			l_surface := cairo_surface
 			debug ("gtk3_redraw")
 				print (($current).out + "::" + generator + ".process_draw_event ("+ a_cairo_context.out +")  surface=" + l_surface.out + "%N")
@@ -354,14 +353,14 @@ feature {EV_INTERMEDIARY_ROUTINES} -- Implementation
 				debug ("gtk3_redraw")
 					print (($current).out + "::" + generator + ".process_draw_event ... " + " x=" + l_x.out + " y=" + l_y.out + " w=" + l_width.out + " h=" + l_height.out + "%N")
 				end
-
+				start_drawing_session
 				l_actions.call (l_x.truncated_to_integer, l_y.truncated_to_integer, l_width.truncated_to_integer, l_height.truncated_to_integer)
+				end_drawing_session
 				cairo_context := l_old_context
 				in_expose_actions := False
 			end
 
 			{CAIRO}.paint (a_cairo_context)
-			end_drawing_session
 		end
 
 	process_configure_event (a_x, a_y, a_width, a_height: INTEGER)

@@ -794,9 +794,8 @@ feature {EV_ANY_I} -- Implementation
 			if not cr.is_default_pointer then
 				release_cairo_context (cr)
 				ref_count := {CAIRO}.get_reference_count (cr)
-				if ref_count = 0 then
-					cairo_context := default_pointer
-				else
+				cairo_context := default_pointer
+				if ref_count > 0 then
 					debug ("gtk_memory")
 						print (generator + ".clear_cairo_context: ctx=" + cr.out + " ref_count=" + ref_count.out + "%N")
 					end

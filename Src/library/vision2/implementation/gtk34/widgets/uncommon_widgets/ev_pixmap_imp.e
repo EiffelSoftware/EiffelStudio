@@ -405,18 +405,22 @@ feature {EV_ANY_I} -- Implementation
 		local
 			cr: like cairo_context
 		do
-			get_cairo_context
-			cr := cairo_context
-			{CAIRO}.save (cr)
+			if not is_in_drawing_session then
+				get_cairo_context
+				cr := cairo_context
+				{CAIRO}.save (cr)
+			end
 		end
 
 	post_drawing
 		local
 			cr: like cairo_context
 		do
-			cr := cairo_context
-			if not cr.is_default_pointer then
-				{CAIRO}.restore (cr)
+			if not is_in_drawing_session then
+				cr := cairo_context
+				if not cr.is_default_pointer then
+					{CAIRO}.restore (cr)
+				end
 			end
 		end
 
@@ -425,10 +429,7 @@ feature {EV_ANY_I} -- Implementation
 
 	release_previous_cairo_surface
 		do
-			if not cairo_context.is_default_pointer then
-				release_cairo_context (cairo_context)
-				cairo_context := default_pointer
-			end
+			clear_cairo_context
 			if not cairo_surface.is_default_pointer then
 				release_cairo_surface (cairo_surface)
 				cairo_surface := default_pointer
@@ -547,10 +548,7 @@ feature {NONE} -- Implementation
 	destroy
 			-- Destroy the pixmap and resources.
 		do
-			if not cairo_context.is_default_pointer then
-				release_cairo_context (cairo_context)
-				cairo_context := default_pointer
-			end
+			clear_cairo_context
 			if not cairo_surface.is_default_pointer then
 				release_cairo_surface (cairo_surface)
 				cairo_surface := default_pointer
@@ -561,10 +559,7 @@ feature {NONE} -- Implementation
 	dispose
 		do
 			Precursor
-			if not cairo_context.is_default_pointer then
-				release_cairo_context (cairo_context)
-				cairo_context := default_pointer
-			end
+			clear_cairo_context
 			if not cairo_surface.is_default_pointer then
 				release_cairo_surface (cairo_surface)
 				cairo_surface := default_pointer
@@ -576,10 +571,7 @@ feature {NONE} -- Implementation
 			-- Only called if `Current' is referenced from `c_object'.
 			-- Render `Current' unusable.
 		do
-			if not cairo_context.is_default_pointer then
-				release_cairo_context (cairo_context)
-				cairo_context := default_pointer
-			end
+			clear_cairo_context
 			if not cairo_surface.is_default_pointer then
 				release_cairo_surface (cairo_surface)
 				cairo_surface := default_pointer

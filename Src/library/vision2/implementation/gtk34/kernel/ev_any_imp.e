@@ -104,6 +104,9 @@ feature {EV_ANY_I, EV_APPLICATION_IMP} -- Event handling
 		local
 			l_app_imp: EV_APPLICATION_IMP
 		do
+			debug ("gtk_signal")
+				print (generator + ": calling signal_connect ( .. )%N")
+			end
 			l_app_imp := app_implementation
 			l_app_imp.gtk_marshal.signal_connect (a_c_object, a_signal_name, an_agent, translate, False)
 		end
@@ -124,6 +127,10 @@ feature {EV_ANY_I, EV_APPLICATION_IMP} -- Event handling
 		local
 			l_app_imp: EV_APPLICATION_IMP
 		do
+			debug ("gtk_signal")
+				print (generator + ": calling signal_connect ( .. ) AFTER%N")
+			end
+
 			l_app_imp := app_implementation
 			l_app_imp.gtk_marshal.signal_connect (a_c_object, l_app_imp.c_string_from_eiffel_string (a_signal_name), an_agent, translate, True)
 		end
@@ -146,13 +153,16 @@ feature {NONE} -- Implementation
 			-- Called by the Eiffel GC when `Current' is destroyed.
 			-- Destroy `c_object'.
 		local
-			l_c_object, l_null: POINTER
+			l_c_object: POINTER
 		do
 				-- Disable the marshaller so we do not get C to Eiffel calls
 				-- during GC cycle otherwise bad things may happen.
 			{EV_GTK_CALLBACK_MARSHAL}.c_ev_gtk_callback_marshal_set_is_enabled (False)
+			debug ("gtk_memory")
+				print ("{EV_ANY_IMP} " + generator + ".dispose ...%N")
+			end
 			l_c_object := c_object
-			if l_c_object /= l_null then
+			if not l_c_object.is_default_pointer then
 					-- Disconnect dispose signal for `c_object'.
 				{GTK2}.signal_disconnect_by_data (l_c_object, internal_id)
 					-- Unref `c_object' so that is may get collected by gtk.
@@ -172,19 +182,19 @@ feature {NONE} -- Implementation
 			-- Called when `c_object' is destroyed.
 			-- Only called if `Current' is referenced from `c_object'.
 			-- Render `Current' unusable.
-		local
-			l_null: POINTER
 		do
+			debug ("gtk_memory")
+				print ("{EV_ANY_IMP} " + generator + ".c_object_dispose ...%N")
+			end
 				-- Disable the marshaller so we do not get C to Eiffel calls
 				-- during GC cycle otherwise bad things may happen.
 			{EV_GTK_CALLBACK_MARSHAL}.c_ev_gtk_callback_marshal_set_is_enabled (False)
 
 				-- The object has been marked for destruction from its parent so we unref
 				-- so that gtk will reap back the memory.
-			if c_object /= default_pointer then
+			if not c_object.is_default_pointer then
 				{GTK2}.g_object_unref (c_object)
 			end
-			c_object := l_null
 			set_is_destroyed (True)
 
 				-- Renable marshaller.
@@ -209,7 +219,7 @@ feature {EV_GTK_DEPENDENT_INTERMEDIARY_ROUTINES} -- Implementation
 		end
 
 	process_configure_event (a_x, a_y, a_width, a_height: INTEGER)
-			-- A "configure-event" signal has occurred
+			-- "configure-event" signal occurred
 		do
 			-- Redefined by descendents.
 		end

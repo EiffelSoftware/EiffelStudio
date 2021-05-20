@@ -46,15 +46,23 @@ feature {EV_ANY_I} -- Implementation
 			Result := cairo_context
 		end
 
+	release_drawable (cr: like get_drawable)
+		do
+			if cr /= cairo_context then
+				release_cairo_context (cr)
+			else
+				-- Do not release it here
+				-- note: in previous implementation,
+				-- get_drawable was creating a new context
+			end
+		end
+
 	cairo_context: POINTER
 			-- Pointer to the current Cairo context for `Current'.
 
 	get_new_cairo_context
 		do
-			if not cairo_context.is_default_pointer then
-				release_cairo_context (cairo_context)
-				cairo_context := default_pointer
-			end
+			clear_cairo_context
 			get_cairo_context
 		end
 
@@ -748,14 +756,6 @@ feature -- filling operations
 
 feature {EV_ANY_I} -- Implementation
 
-	release_drawable (a_drawable: POINTER)
-			--| Kept for backward compatibility.
-		do
-			if not a_drawable.is_default_pointer then
-				release_cairo_context (a_drawable)
-			end
-		end
-
 	release_cairo_context (cr: POINTER)
 			-- Release resources of cairo context `cr'.
 		require
@@ -764,17 +764,44 @@ feature {EV_ANY_I} -- Implementation
 			retried: BOOLEAN
 			ref_count: NATURAL_32
 		do
-			ref_count := {CAIRO}.get_reference_count (cr)
 			if
 				not retried and then
-				ref_count > 0 and then
 				not cr.is_default_pointer
 			then
-				{CAIRO}.destroy (cr)
+				ref_count := {CAIRO}.get_reference_count (cr)
+				if ref_count > 0 then
+					{CAIRO}.destroy (cr)
+				else
+					debug ("gtk_memory")
+						print (generator + ".release_cairo_context (cr:" + cr.out + ") no more reference ref_count=0%N")
+					end
+				end
 			end
 		rescue
 			retried := True
 			retry
+		end
+
+	clear_cairo_context
+		require
+			not is_in_drawing_session
+		local
+			cr: like cairo_context
+			ref_count: NATURAL_32
+		do
+			cr := cairo_context
+			if not cr.is_default_pointer then
+				release_cairo_context (cr)
+				ref_count := {CAIRO}.get_reference_count (cr)
+				if ref_count = 0 then
+					cairo_context := default_pointer
+				else
+					debug ("gtk_memory")
+						print (generator + ".clear_cairo_context: ctx=" + cr.out + " ref_count=" + ref_count.out + "%N")
+					end
+					check no_more_reference: False end
+				end
+			end
 		end
 
 feature {NONE} -- Implemention

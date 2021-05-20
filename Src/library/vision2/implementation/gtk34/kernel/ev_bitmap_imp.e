@@ -108,8 +108,7 @@ feature {EV_ANY_I} -- Implementation
 			cr := cairo_context
 			if not cr.is_default_pointer then
 				{CAIRO}.restore (cr)
-				release_cairo_context (cr)
-				cairo_context := default_pointer
+				clear_cairo_context
 			end
 		end
 
@@ -139,7 +138,6 @@ feature -- Access
 				Result := {CAIRO}.image_surface_get_width (cairo_surface)
 			end
 		end
-
 
 	height: INTEGER
 			-- Width in pixels of mask bitmap.
@@ -208,13 +206,9 @@ feature {NONE} -- Implementation
 			-- Not applicable
 		end
 
-
 	release_previous_cairo_surface
 		do
-			if not cairo_context.is_default_pointer then
-				release_cairo_context (cairo_context)
-				cairo_context := default_pointer
-			end
+			clear_cairo_context
 			if not cairo_surface.is_default_pointer then
 				release_cairo_surface (cairo_surface)
 				cairo_surface := default_pointer
@@ -224,11 +218,12 @@ feature {NONE} -- Implementation
 	release_cairo_surface (a_surface: POINTER)
 		do
 			if not a_surface.is_default_pointer then
-				print (generator + ".dispose : surface_destroy (" + cairo_surface.out + ")%N")
+				debug ("gtk_memory")
+					print (generator + ".release_cairo_surface (" + a_surface.out + ")%N")
+				end
 				{CAIRO}.surface_destroy (a_surface)
 			end
 		end
-
 
 feature {EV_ANY, EV_ANY_I} -- Implementation
 

@@ -24,7 +24,9 @@ inherit
 			monitor_area_from_position,
 			monitor_area_from_window,
 			working_area_from_position,
-			working_area_from_window
+			working_area_from_window,
+			start_drawing_session,
+			end_drawing_session
 		end
 
 	EV_DRAWABLE_IMP
@@ -33,7 +35,9 @@ inherit
 			supports_pixbuf_alpha,
 			device_x_offset,
 			device_y_offset,
-			release_cairo_context
+			start_drawing_session,
+			end_drawing_session,
+			clear_cairo_context
 		end
 
 	EV_GTK_DEPENDENT_ROUTINES
@@ -52,7 +56,7 @@ feature {NONE} -- Initialization
 	make
 			-- Set up action sequence connections and create graphics context.
 		local
-			gdkwin, l_surface: POINTER
+--			gdkwin, l_surface: POINTER
 		do
 				-- In order to access the screen, the EV_APPLICATION needs to be created
 
@@ -61,12 +65,13 @@ feature {NONE} -- Initialization
 				-- TODO
 				-- Check https://cpp.hotexamples.com/examples/-/-/gdk_cairo_region_create_from_surface/cpp-gdk_cairo_region_create_from_surface-function-examples.html
 
-			gdkwin := {GTK2}.gdk_screen_get_root_window ({GDK}.gdk_screen_get_default)
+			window := {GTK2}.gdk_screen_get_root_window ({GDK}.gdk_screen_get_default)
+			get_new_cairo_region
 
-			l_surface := {GDK}.gdk_window_create_similar_surface (gdkwin, 0x3000, {GDK}.gdk_window_get_width(gdkwin), {GDK}.gdk_window_get_height(gdkwin) )
-			cairo_context := {CAIRO}.create_context (l_surface)
+--			l_surface := {GDK}.gdk_window_create_similar_surface (gdkwin, 0x3000, {GDK}.gdk_window_get_width(gdkwin), {GDK}.gdk_window_get_height(gdkwin) )
+--			cairo_context := {CAIRO}.create_context (l_surface)
 
-			init_default_values
+--			init_default_values
 
 				-- Set offset values to match Win32 implementation.
 			device_x_offset := -app_implementation.screen_virtual_x.as_integer_16
@@ -75,37 +80,157 @@ feature {NONE} -- Initialization
 			set_is_initialized (True)
 		end
 
+	get_new_cairo_region
+		local
+			reg: like cairo_region
+		do
+			reg := cairo_region
+			if not reg.is_default_pointer then
+				{GDK_CAIRO}.cairo_region_destroy (reg)
+				cairo_region := default_pointer
+			end
+			get_cairo_region
+		end
+
+	get_cairo_region
+		do
+			debug ("gdk_event")
+				print (generator + ".get_cairo_region%N")
+			end
+			if cairo_region.is_default_pointer then
+				cairo_region := {GDK_CAIRO}.cairo_region_create
+			end
+		end
+
+feature -- Access		
+
+	window: POINTER
+			-- Window to the default screen		
+
+	cairo_region: POINTER
+			-- Pointer to the current Cairo region for `Current`.
+
+	drawing_area :POINTER
+			-- Pointer to the current drawing area
+
+	drawing_context: POINTER
+			-- Pointer to the current DrawingContext for `Current`.	
+
+feature {NONE} -- Session implementation		
+
+	start_drawing_session
+		do
+			if not is_in_drawing_session then
+				get_new_cairo_region
+				get_new_cairo_context
+			end
+			Precursor
+		end
+
+	end_drawing_session
+		do
+			Precursor
+			if not is_in_drawing_session then
+				clear_cairo_context
+			end
+		end
+
+feature {NONE} -- Implementation
+
 	pre_drawing
 		local
 			cr: like cairo_context
 		do
-			cr := cairo_context
-			{CAIRO}.save (cr)
+			if not is_in_drawing_session then
+				get_cairo_context
+				cr := cairo_context
+				{CAIRO}.save (cr)
+			end
 		end
 
 	post_drawing
 		local
 			cr: like cairo_context
 		do
-			cr := cairo_context
-			if not cr.is_default_pointer then
-				{CAIRO}.restore (cr)
-				release_cairo_context (cr)
+			if not is_in_drawing_session then
+				cr := cairo_context
+				if not cr.is_default_pointer then
+					{CAIRO}.restore (cr)
+				end
 			end
 		end
 
-
 	get_cairo_context
+			-- Drawable used for rendering docking components.
+		local
+		 	l_window, cr, ctx: POINTER
 		do
+			cr := cairo_context
+			if cr.is_default_pointer then
+				ctx := drawing_context
+				if ctx.is_default_pointer then
+--					l_window := {GTK2}.gdk_screen_get_root_window ({GDK}.gdk_screen_get_default)
+					l_window := window
+					if not l_window.is_default_pointer then
+						get_new_cairo_region
+						ctx := {GDK}.gdk_window_begin_draw_frame  (l_window, cairo_region)
+						drawing_context := ctx
+					end
+				end
+				if not ctx.is_default_pointer then
+					cr := {GDK_CAIRO}.gdk_drawing_context_get_cairo_context (ctx)
+					initialize_cairo_context (cr)
+					cairo_context := cr
+				end
+			end
+ 		end
+
+	end_drawing_context (a_drawing_context: POINTER)
+		require
+			has_context: not a_drawing_context.is_default_pointer
+		local
+			l_window: POINTER
+ 		do
+			l_window := window
+			if l_window /= default_pointer then
+				{GDK}.gdk_window_end_draw_frame (l_window, a_drawing_context)
+			end
 		end
 
-	release_cairo_context (cr: POINTER)
-			-- Release resources of cairo context `cr'.
+	clear_cairo_context
+		local
+			ctx: like drawing_context
 		do
---			if {CAIRO}.get_reference_count (cr) > 0 then
---				{GDK_CAIRO}.cairo_region_destroy (cr)
---			end
+			ctx := drawing_context
+			if not ctx.is_default_pointer then
+				-- FIXME: release context?
+				end_drawing_context (ctx)
+				drawing_context := default_pointer
+			end
+
+			Precursor
 		end
+
+feature {NONE} -- Implementation		
+
+	initialize_cairo_context (cr: POINTER)
+			-- Initialize new `drawable' to existing parameters.
+		require
+			not cr.is_default_pointer
+		do
+			{CAIRO}.set_antialias (cr, aliasing_mode)
+			{CAIRO}.set_line_cap (cr, line_cap_mode)
+			{CAIRO}.set_line_width (cr, line_width)
+			if attached internal_foreground_color as l_color then
+				{CAIRO}.set_source_rgb (cr, l_color.red, l_color.green, l_color.blue)
+			else
+					-- No colors specified, it will be black
+				{CAIRO}.set_source_rgb (cr, 0.0, 0.0, 0.0)
+			end
+			{CAIRO}.set_operator (cr, cairo_drawing_mode (drawing_mode))
+			{CAIRO}.set_dashed_line_style (cr, dashed_line_style)
+ 		end
+
 
 feature -- Status report
 

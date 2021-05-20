@@ -112,10 +112,7 @@ feature {NONE} -- Dispose
 
 	destroy
 		do
-			if not cairo_context.is_default_pointer then
-				release_cairo_context (cairo_context)
-				cairo_context := default_pointer
-			end
+			clear_cairo_context
 			if not cairo_surface.is_default_pointer then
 				release_cairo_surface (cairo_surface)
 				cairo_surface := default_pointer
@@ -126,10 +123,7 @@ feature {NONE} -- Dispose
 	dispose
 		do
 			Precursor
-			if not cairo_context.is_default_pointer then
-				release_cairo_context (cairo_context)
-				cairo_context := default_pointer
-			end
+			clear_cairo_context
 
 			if not cairo_surface.is_default_pointer then
 				release_cairo_surface (cairo_surface)
@@ -142,10 +136,7 @@ feature {NONE} -- Dispose
 			-- Only called if `Current' is referenced from `c_object'.
 			-- Render `Current' unusable.
 		do
-			if not cairo_context.is_default_pointer then
-				release_cairo_context (cairo_context)
-				cairo_context := default_pointer
-			end
+			clear_cairo_context
 			if not cairo_surface.is_default_pointer then
 				release_cairo_surface (cairo_surface)
 				cairo_surface := default_pointer
@@ -167,18 +158,6 @@ feature {EV_ANY_I} -- Implementation
 		do
 			if not is_in_drawing_session then
 				clear_cairo_context
-			end
-		end
-
-	clear_cairo_context
-		require
-			not is_in_drawing_session
-		local
-			cr: like cairo_context
-		do
-			cr := cairo_context
-			if not cr.is_default_pointer then
-				release_cairo_context (cr)
 			end
 		end
 
@@ -348,6 +327,10 @@ feature {EV_INTERMEDIARY_ROUTINES} -- Implementation
 			l_surface: like cairo_surface
 			l_old_context: like cairo_context
 		do
+			check
+				outside_drawing_session: not is_in_drawing_session
+			end
+			start_drawing_session
 			l_surface := cairo_surface
 			debug ("gtk3_redraw")
 				print (($current).out + "::" + generator + ".process_draw_event ("+ a_cairo_context.out +")  surface=" + l_surface.out + "%N")
@@ -373,6 +356,7 @@ feature {EV_INTERMEDIARY_ROUTINES} -- Implementation
 			end
 
 			{CAIRO}.paint (a_cairo_context)
+			end_drawing_session
 		end
 
 	process_configure_event (a_x, a_y, a_width, a_height: INTEGER)
@@ -384,10 +368,7 @@ feature {EV_INTERMEDIARY_ROUTINES} -- Implementation
 				print (($current).out + "::" + generator + ".process_configure_event ("+ a_x.out + ", " + a_y.out + ", " + a_width.out + ", " + a_height.out + ")%N")
 			end
 
-			if not cairo_context.is_default_pointer then
-				release_cairo_context (cairo_context)
-				cairo_context := default_pointer
-			end
+			clear_cairo_context
 			l_old_surface := cairo_surface
 			if not l_old_surface.is_default_pointer then
 				{CAIRO}.surface_flush (l_old_surface)

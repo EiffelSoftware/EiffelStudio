@@ -212,6 +212,7 @@ feature {NONE} -- Implementation
 			l_helper: SD_COLOR_HELPER
 			l_clipping_width: INTEGER
 		do
+			start_drawing_session
 			create l_helper
 
 			if is_focus_color_enable then
@@ -249,6 +250,7 @@ feature {NONE} -- Implementation
 				end
 
 			end
+			end_drawing_session
 		end
 
 	clear_for_theme
@@ -266,7 +268,7 @@ invariant
 
 note
 	library:	"SmartDocking: Library of reusable components for Eiffel."
-	copyright:	"Copyright (c) 1984-2017, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2021, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

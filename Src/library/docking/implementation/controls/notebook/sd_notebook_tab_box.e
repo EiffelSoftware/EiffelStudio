@@ -239,6 +239,7 @@ feature {NONE} -- Agents
 			l_snapshot: like internal_tabs
 			l_item: SD_NOTEBOOK_TAB
 		do
+			start_drawing_session
 			from
 				create l_target.make (a_x, a_y, a_width, a_height)
 				l_snapshot := internal_tabs.twin
@@ -252,6 +253,7 @@ feature {NONE} -- Agents
 				end
 				l_snapshot.forth
 			end
+			end_drawing_session
 		end
 
 	on_pointer_motion (a_x: INTEGER_32; a_y: INTEGER_32; a_x_tilt: REAL_64; a_y_tilt: REAL_64; a_pressure: REAL_64; a_screen_x: INTEGER_32; a_screen_y: INTEGER_32)
@@ -549,7 +551,7 @@ invariant
 
 note
 	library:	"SmartDocking: Library of reusable components for Eiffel."
-	copyright:	"Copyright (c) 1984-2017, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2021, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

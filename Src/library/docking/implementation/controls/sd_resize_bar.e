@@ -104,6 +104,7 @@ feature {NONE} -- Agents
 		local
 			l_stock_colors: EV_STOCK_COLORS
 		do
+			start_drawing_session
 			clear
 			create l_stock_colors
 			if direction = {SD_ENUMERATION}.left or direction = {SD_ENUMERATION}.right then
@@ -117,6 +118,7 @@ feature {NONE} -- Agents
 				set_foreground_color (l_stock_colors.black)
 				draw_segment (0, height - 1, width - 1, height - 1)
 			end
+			end_drawing_session
 		end
 
 	on_pointer_motion (a_x, a_y: INTEGER; a_x_tilt, a_y_tilt, a_pressure: DOUBLE; a_screen_x, a_screen_y: INTEGER)
@@ -217,7 +219,7 @@ invariant
 
 note
 	library:	"SmartDocking: Library of reusable components for Eiffel."
-	copyright:	"Copyright (c) 1984-2017, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2021, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

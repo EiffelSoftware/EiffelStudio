@@ -44,17 +44,18 @@ feature {EV_ANY_I} -- Implementation
 			-- Bridge to `cairo_context` for backward compatibility.
 		do
 			Result := cairo_context
+			if Result.is_default_pointer then
+				get_cairo_context
+				Result := cairo_context
+			else
+				Result := {CAIRO}.add_reference (Result)
+			end
 		end
 
 	release_drawable (cr: like get_drawable)
 		do
-			if cr /= cairo_context then
-				release_cairo_context (cr)
-			else
-				-- Do not release it here
-				-- note: in previous implementation,
-				-- get_drawable was creating a new context
-			end
+				-- Decrement the reference count (related to `get_drawable`)
+			release_cairo_context (cr)
 		end
 
 	cairo_context: POINTER

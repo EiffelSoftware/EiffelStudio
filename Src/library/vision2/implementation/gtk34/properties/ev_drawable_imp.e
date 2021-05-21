@@ -62,7 +62,14 @@ feature {EV_ANY_I} -- Implementation
 	cairo_context: POINTER
 			-- Pointer to the current Cairo context for `Current'.
 
+	has_cairo_context: BOOLEAN
+			-- Has non null `cairo_context` ?
+		do
+			Result := not cairo_context.is_default_pointer
+		end
+
 	get_new_cairo_context
+			-- Get a new `cairo_context`, and release previous context if any.
 		do
 			clear_cairo_context
 			get_cairo_context
@@ -74,11 +81,15 @@ feature {EV_ANY_I} -- Implementation
 		deferred
 		end
 
+feature {EV_ANY_I} -- Drawing wrapper
+
 	pre_drawing
+			-- Operation executed before any drawing operation
 		deferred
 		end
 
 	post_drawing
+			-- Operation executed after any drawing operation
 		deferred
 		end
 

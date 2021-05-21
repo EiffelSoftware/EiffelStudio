@@ -80,28 +80,6 @@ feature {NONE} -- Initialization
 			set_is_initialized (True)
 		end
 
-	get_new_cairo_region
-		local
-			reg: like cairo_region
-		do
-			reg := cairo_region
-			if not reg.is_default_pointer then
-				{GDK_CAIRO}.cairo_region_destroy (reg)
-				cairo_region := default_pointer
-			end
-			get_cairo_region
-		end
-
-	get_cairo_region
-		do
-			debug ("gdk_event")
-				print (generator + ".get_cairo_region%N")
-			end
-			if cairo_region.is_default_pointer then
-				cairo_region := {GDK_CAIRO}.cairo_region_create
-			end
-		end
-
 feature -- Access		
 
 	window: POINTER
@@ -116,26 +94,7 @@ feature -- Access
 	drawing_context: POINTER
 			-- Pointer to the current DrawingContext for `Current`.	
 
-feature {NONE} -- Session implementation		
-
-	start_drawing_session
-		do
-			if not is_in_drawing_session then
-				get_new_cairo_region
-				get_new_cairo_context
-			end
-			Precursor
-		end
-
-	end_drawing_session
-		do
-			Precursor
-			if not is_in_drawing_session then
-				clear_cairo_context
-			end
-		end
-
-feature {NONE} -- Implementation
+feature {EV_ANY_I} -- Drawing wrapper
 
 	pre_drawing
 		local
@@ -157,6 +116,48 @@ feature {NONE} -- Implementation
 				if not cr.is_default_pointer then
 					{CAIRO}.restore (cr)
 				end
+			end
+		end
+
+feature {NONE} -- Session implementation		
+
+	start_drawing_session
+		do
+			Precursor
+				-- If the drawing session is on the top (i.e not inside another session)
+				-- Create a new cairo context (that will be released by `end_drawing_session`)
+			if is_in_top_drawing_session then
+				get_new_cairo_region
+				get_new_cairo_context
+			end
+		end
+
+	end_drawing_session
+		do
+				-- If the drawing session is on the top (i.e not inside another session)
+				-- clear cairo context created in `start_drawing_session`
+			if is_in_top_drawing_session then
+				clear_cairo_region
+				clear_cairo_context
+			end
+			Precursor
+		end
+
+feature {EV_ANY_I} -- cairo object access	
+
+	get_new_cairo_region
+		do
+			clear_cairo_region
+			get_cairo_region
+		end
+
+	get_cairo_region
+		do
+			debug ("gdk_event")
+				print (generator + ".get_cairo_region%N")
+			end
+			if cairo_region.is_default_pointer then
+				cairo_region := {GDK_CAIRO}.cairo_region_create
 			end
 		end
 
@@ -194,6 +195,17 @@ feature {NONE} -- Implementation
 			l_window := window
 			if l_window /= default_pointer then
 				{GDK}.gdk_window_end_draw_frame (l_window, a_drawing_context)
+			end
+		end
+
+	clear_cairo_region
+		local
+			reg: like cairo_region
+		do
+			reg := cairo_region
+			if not reg.is_default_pointer then
+				{GDK_CAIRO}.cairo_region_destroy (reg)
+				cairo_region := default_pointer
 			end
 		end
 

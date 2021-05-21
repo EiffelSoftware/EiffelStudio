@@ -12,16 +12,14 @@ inherit
 	EV_DRAWING_AREA_I
 		redefine
 			interface,
-			init_expose_actions,
 			start_drawing_session,
 			end_drawing_session
 		end
 
 	EV_DRAWABLE_IMP
 		redefine
-			start_drawing_session,
-			end_drawing_session,
-			interface, release_cairo_context
+			start_drawing_session, end_drawing_session,
+			interface
 		end
 
 	EV_PRIMITIVE_IMP
@@ -150,7 +148,7 @@ feature {NONE} -- Dispose
 			Precursor
 		end
 
-feature {EV_ANY_I} -- Implementation
+feature {EV_ANY_I} -- Drawing wrapper
 
 	pre_drawing
 		do
@@ -184,10 +182,165 @@ feature {NONE} -- Session implementation
 
 	end_drawing_session
 		do
+				-- If the drawing session is on the top (i.e not inside another session)
+				-- clear cairo context created in `start_drawing_session`
 			if is_in_top_drawing_session then
 				clear_cairo_context
 			end
 			Precursor
+		end
+
+feature {EV_ANY_I} -- cairo object access
+
+	cairo_surface: POINTER
+
+	get_new_cairo_surface (a_width, a_height: INTEGER)
+		require
+			cairo_surface.is_default_pointer
+		local
+			l_surface,
+			l_widget,
+			l_window: POINTER
+			w,h:  INTEGER
+		do
+			check
+				no_surface: cairo_surface.is_default_pointer
+			end
+			l_widget := c_object
+			l_window := {GTK}.gtk_widget_get_window (l_widget)
+			if l_window /= default_pointer then
+				w := {GTK}.gtk_widget_get_allocated_width (l_widget)
+				h := {GTK}.gtk_widget_get_allocated_height (l_widget)
+				check same_width: w = a_width end
+				check same_height: h = a_height end
+				debug ("gtk3_redraw")
+					print (generator + ".get_new_cairo_surface ("+ l_window.out + ", .., w=" + w.out + ", h=" + h.out +")%N")
+				end
+
+				l_surface := {GDK}.gdk_window_create_similar_surface (
+						l_window,
+						{CAIRO}.cairo_content_color_alpha,
+						w, h
+					)
+				cairo_surface := l_surface
+			else
+				debug ("gtk3_redraw")
+					print (generator + ".get_new_cairo_surface: no window !!!%N")
+				end
+			end
+		end
+
+	get_cairo_context
+			-- Drawable used for rendering docking components.
+		local
+		 	l_surface, cr: POINTER
+		do
+			cr := cairo_context
+			if cr.is_default_pointer then
+				l_surface := cairo_surface
+				if not l_surface.is_default_pointer then
+					cr := {CAIRO}.create_context (l_surface)
+					initialize_cairo_context (cr)
+					cairo_context := cr
+				end
+			end
+		end
+
+feature {EV_ANY_I} -- cairo object release			
+
+	release_cairo_surface (a_surface: POINTER)
+		do
+			if not a_surface.is_default_pointer then
+				{CAIRO}.surface_destroy (a_surface)
+			end
+		end
+
+feature {NONE} -- Implementation		
+
+	initialize_cairo_context (cr: POINTER)
+			-- Initialize new `drawable' to existing parameters.
+		require
+			not cr.is_default_pointer
+		do
+			{CAIRO}.set_antialias (cr, aliasing_mode)
+			{CAIRO}.set_line_cap (cr, line_cap_mode)
+			{CAIRO}.set_line_width (cr, line_width)
+			if attached internal_foreground_color as l_color then
+				{CAIRO}.set_source_rgb (cr, l_color.red, l_color.green, l_color.blue)
+			else
+					-- No colors specified, it will be black
+				{CAIRO}.set_source_rgb (cr, 0.0, 0.0, 0.0)
+			end
+			{CAIRO}.set_operator (cr, cairo_drawing_mode (drawing_mode))
+			{CAIRO}.set_dashed_line_style (cr, dashed_line_style)
+		end
+
+feature {EV_INTERMEDIARY_ROUTINES} -- Implementation
+
+	in_expose_actions: BOOLEAN
+			-- Is `Current' in an expose action?
+
+	process_draw_event (a_cairo_context: POINTER)
+			-- Call the expose actions for the drawing area.
+		local
+			l_x, l_y, l_width, l_height: REAL_64
+			l_surface: like cairo_surface
+		do
+			check
+				outside_drawing_session: not is_in_drawing_session
+			end
+			l_surface := cairo_surface
+			debug ("gtk3_redraw")
+				print (($current).out + "::" + generator + ".process_draw_event ("+ a_cairo_context.out +")  surface=" + l_surface.out + "%N")
+			end
+
+			check has_surface: not l_surface.is_default_pointer end
+
+			{CAIRO}.set_source_surface (a_cairo_context, l_surface, 0, 0)
+
+			if attached expose_actions_internal as l_expose_actions then
+				in_expose_actions := True
+
+				{CAIRO}.clip_extents (a_cairo_context, $l_x, $l_y, $l_width, $l_height)
+
+					-- Even if the callback on "draw" event provides a cairo_context, the implementation
+					-- will use a new one using the expected cairo_surface.
+				start_drawing_session
+				l_expose_actions.call (l_x.truncated_to_integer, l_y.truncated_to_integer, l_width.truncated_to_integer, l_height.truncated_to_integer)
+				end_drawing_session
+				in_expose_actions := False
+			end
+
+			{CAIRO}.paint (a_cairo_context)
+		end
+
+	process_configure_event (a_x, a_y, a_width, a_height: INTEGER)
+			-- A "configure-event" signal has occurred
+		local
+			l_old_surface, l_new_surface, cr: POINTER
+		do
+			debug ("gtk3_redraw")
+				print (($current).out + "::" + generator + ".process_configure_event ("+ a_x.out + ", " + a_y.out + ", " + a_width.out + ", " + a_height.out + ")%N")
+			end
+
+			clear_cairo_context
+			l_old_surface := cairo_surface
+			if not l_old_surface.is_default_pointer then
+				{CAIRO}.surface_flush (l_old_surface)
+				cairo_surface := default_pointer
+
+				get_new_cairo_surface (a_width, a_height)
+				l_new_surface := cairo_surface
+				cr := {CAIRO}.create_context (l_new_surface)
+				{CAIRO}.set_source_surface (cr, l_old_surface, 0, 0)
+				{CAIRO}.set_operator (cr, {CAIRO}.OPERATOR_SOURCE)
+				{CAIRO}.paint (cr)
+				release_cairo_context (cr)
+				release_cairo_surface (l_old_surface)
+			end
+			if cairo_surface.is_default_pointer then
+				get_new_cairo_surface (a_width, a_height)
+			end
 		end
 
 feature {EV_APPLICATION_IMP} -- Implementation
@@ -255,169 +408,6 @@ feature {NONE} -- Implementation
 			end
 		end
 
-feature {EV_ANY_I} -- Implementation
-
-	cairo_surface: POINTER
-
-	get_new_cairo_surface (a_width, a_height: INTEGER)
-		require
-			cairo_surface.is_default_pointer
-		local
-			l_surface,
-			l_widget,
-			l_window: POINTER
-			w,h:  INTEGER
-		do
-			check
-				no_surface: cairo_surface.is_default_pointer
-			end
-			l_widget := c_object
-			l_window := {GTK}.gtk_widget_get_window (l_widget)
-			if l_window /= default_pointer then
-				w := {GTK}.gtk_widget_get_allocated_width (l_widget)
-				h := {GTK}.gtk_widget_get_allocated_height (l_widget)
-				check same_width: w = a_width end
-				check same_height: h = a_height end
-				debug ("gtk3_redraw")
-					print (generator + ".get_new_cairo_surface ("+ l_window.out + ", .., w=" + w.out + ", h=" + h.out +")%N")
-				end
-
-				l_surface := {GDK}.gdk_window_create_similar_surface (
-						l_window,
-						{CAIRO}.cairo_content_color_alpha,
-						w, h
-					)
-				cairo_surface := l_surface
-			else
-				debug ("gtk3_redraw")
-					print (generator + ".get_new_cairo_surface: no window !!!%N")
-				end
-			end
-		end
-
-	get_cairo_context
-			-- Drawable used for rendering docking components.
-		local
-		 	l_surface, cr: POINTER
-		do
-			cr := cairo_context
-			if cr.is_default_pointer then
-				l_surface := cairo_surface
-				if not l_surface.is_default_pointer then
-					cr := {CAIRO}.create_context (l_surface)
-					initialize_cairo_context (cr)
-					cairo_context := cr
-				end
-			end
-		end
-
-	release_cairo_surface (a_surface: POINTER)
-		do
-			if not a_surface.is_default_pointer then
-				{CAIRO}.surface_destroy (a_surface)
-			end
-		end
-
-	release_cairo_context (cr: POINTER)
-			-- Release resources of cairo context `cr'.
-		do
-			if not in_expose_actions then
-				Precursor (cr)
-			end
-		end
-
-feature {EV_INTERMEDIARY_ROUTINES} -- Implementation
-
-	in_expose_actions: BOOLEAN
-			-- Is `Current' in an expose action?
-
-	process_draw_event (a_cairo_context: POINTER)
-			-- Call the expose actions for the drawing area.
-		local
-			l_x, l_y, l_width, l_height: REAL_64
-			l_surface: like cairo_surface
-			l_old_context: like cairo_context
-		do
-			check
-				outside_drawing_session: not is_in_drawing_session
-			end
-			l_surface := cairo_surface
-			debug ("gtk3_redraw")
-				print (($current).out + "::" + generator + ".process_draw_event ("+ a_cairo_context.out +")  surface=" + l_surface.out + "%N")
-			end
-
-			check has_surface: not l_surface.is_default_pointer end
-
-			{CAIRO}.set_source_surface (a_cairo_context, l_surface, 0, 0)
-
-			if attached expose_actions_internal as l_expose_actions then
-				in_expose_actions := True
-				l_old_context := cairo_context
-				cairo_context := a_cairo_context
-				{CAIRO}.clip_extents (a_cairo_context, $l_x, $l_y, $l_width, $l_height)
-
-				debug ("gtk3_redraw")
-					print (($current).out + "::" + generator + ".process_draw_event ... " + " x=" + l_x.out + " y=" + l_y.out + " w=" + l_width.out + " h=" + l_height.out + "%N")
-				end
-				start_drawing_session
-				l_expose_actions.call (l_x.truncated_to_integer, l_y.truncated_to_integer, l_width.truncated_to_integer, l_height.truncated_to_integer)
-				end_drawing_session
-				cairo_context := l_old_context
-				in_expose_actions := False
-			end
-
-			{CAIRO}.paint (a_cairo_context)
-		end
-
-	process_configure_event (a_x, a_y, a_width, a_height: INTEGER)
-			-- A "configure-event" signal has occurred
-		local
-			l_old_surface, l_new_surface, cr: POINTER
-		do
-			debug ("gtk3_redraw")
-				print (($current).out + "::" + generator + ".process_configure_event ("+ a_x.out + ", " + a_y.out + ", " + a_width.out + ", " + a_height.out + ")%N")
-			end
-
-			clear_cairo_context
-			l_old_surface := cairo_surface
-			if not l_old_surface.is_default_pointer then
-				{CAIRO}.surface_flush (l_old_surface)
-				cairo_surface := default_pointer
-
-				get_new_cairo_surface (a_width, a_height)
-				l_new_surface := cairo_surface
-				cr := {CAIRO}.create_context (l_new_surface)
-				{CAIRO}.set_source_surface (cr, l_old_surface, 0, 0)
-				{CAIRO}.set_operator (cr, {CAIRO}.OPERATOR_SOURCE)
-				{CAIRO}.paint (cr)
-				release_cairo_context (cr)
-				release_cairo_surface (l_old_surface)
-			end
-			if cairo_surface.is_default_pointer then
-				get_new_cairo_surface (a_width, a_height)
-			end
-		end
-
-feature {NONE} -- Implementation		
-
-	initialize_cairo_context (cr: POINTER)
-			-- Initialize new `drawable' to existing parameters.
-		require
-			not cr.is_default_pointer
-		do
-			{CAIRO}.set_antialias (cr, aliasing_mode)
-			{CAIRO}.set_line_cap (cr, line_cap_mode)
-			{CAIRO}.set_line_width (cr, line_width)
-			if attached internal_foreground_color as l_color then
-				{CAIRO}.set_source_rgb (cr, l_color.red, l_color.green, l_color.blue)
-			else
-					-- No colors specified, it will be black
-				{CAIRO}.set_source_rgb (cr, 0.0, 0.0, 0.0)
-			end
-			{CAIRO}.set_operator (cr, cairo_drawing_mode (drawing_mode))
-			{CAIRO}.set_dashed_line_style (cr, dashed_line_style)
-		end
-
 	internal_set_focus
 			-- Grab keyboard focus.
 		local
@@ -450,10 +440,6 @@ feature {NONE} -- Implementation
 				set_focus
 			end
 			Precursor {EV_PRIMITIVE_IMP} (a_type, a_x, a_y, a_button, a_x_tilt, a_y_tilt, a_pressure, a_screen_x, a_screen_y)
-		end
-
-	init_expose_actions (a_expose_actions: like expose_actions)
-		do
 		end
 
 feature {EV_ANY, EV_ANY_I} -- Implementation

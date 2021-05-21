@@ -19,6 +19,8 @@ inherit
 			--clear_rectangle
 		end
 
+	DISPOSABLE
+
 create
 	make
 
@@ -50,33 +52,12 @@ feature -- Initialization
 
 feature -- Status Setting
 
---	set_size (a_width, a_height: INTEGER)
---			-- Set the size of the pixmap to `a_width' by `a_height'.
---		local
-----			oldpix: POINTER
-----			l_width, l_height: INTEGER
---		do
-----			if drawable /= default_pointer then
-----				oldpix := drawable
-----				l_width := width
-----				l_height := height
-----			end
-
-----			drawable := {GTK}.gdk_pixmap_new (default_pointer, a_width, a_height, 1)
-----			clear_rectangle (0, 0, a_width, a_height)
-
-----			if oldpix /= default_pointer then
-----				{GTK}.gdk_draw_pixmap (drawable, gc, oldpix, 0, 0, 0, 0, l_width, l_height)
-----				{GTK}.gdk_bitmap_unref (oldpix)
-----			end
---		end
-
 	set_size (a_width, a_height: INTEGER)
 			-- Set the size of the pixmap to `a_width' by `a_height'.
 		do
 			release_previous_cairo_surface
 			cairo_surface := {CAIRO}.image_surface_create ({CAIRO}.format_argb32, a_width, a_height)
-			cairo_context := {CAIRO}.create_context (cairo_surface)
+			get_new_cairo_context
 			init_default_values
 		end
 
@@ -91,13 +72,16 @@ feature -- Status Setting
 ----			set_default_colors
 --		end
 
-feature {EV_ANY_I} -- Implementation
+feature {EV_ANY_I} -- Drawing wrapper
 
 	pre_drawing
 		local
 			cr: like cairo_context
 		do
+				-- If inside drawing session
+				-- the cairo context is already created in `start_drawing_session`
 			if not is_in_drawing_session then
+					-- Reuse or get once a new cairo_context
 				get_cairo_context
 				cr := cairo_context
 				if not cr.is_default_pointer then
@@ -110,6 +94,8 @@ feature {EV_ANY_I} -- Implementation
 		local
 			cr: like cairo_context
 		do
+				-- If inside drawing session
+				-- keep the cairo context for the next draw operation, it will be releazed by `end_drawing_session`
 			if not is_in_drawing_session then
 				cr := cairo_context
 				if not cr.is_default_pointer then
@@ -118,8 +104,10 @@ feature {EV_ANY_I} -- Implementation
 			end
 		end
 
+feature {EV_ANY_I} -- cairo object access
+
 	cairo_surface: POINTER
-		-- Cairo drawable surface used for storing pixmap data in RGB format.
+			-- Cairo drawable surface used for storing pixmap data in RGB format.
 
 	get_cairo_context
 		local
@@ -133,6 +121,22 @@ feature {EV_ANY_I} -- Implementation
 					cairo_context := {CAIRO}.create_context (l_surface)
 				end
 			end
+		end
+
+feature {EV_ANY_I} -- cairo object release
+
+	release_cairo_surface (a_surface: POINTER)
+		do
+			if not a_surface.is_default_pointer then
+				{CAIRO}.surface_destroy (a_surface)
+			end
+		end
+
+	release_previous_cairo_surface
+		do
+			clear_cairo_context
+			release_cairo_surface (cairo_surface)
+			cairo_surface := default_pointer
 		end
 
 feature -- Access		
@@ -180,23 +184,6 @@ feature {NONE} -- Implementation
 --			{GTK}.gdk_gc_set_background (gc, fg_color)
 		end
 
-	destroy
-		do
-			if cairo_context /= default_pointer then
---				{GTK}.gdk_bitmap_unref (cairo_context)
-				cairo_context := default_pointer
-			end
-			set_is_destroyed (True)
-		end
-
-	dispose
-			-- Cleanup
-		do
---			if cairo_context /= default_pointer then
---				{GTK}.gdk_bitmap_unref (cairo_context)
---			end
-		end
-
 	flush
 			-- Force all queued draw to be called.
 		do
@@ -212,22 +199,28 @@ feature {NONE} -- Implementation
 			-- Not applicable
 		end
 
-	release_previous_cairo_surface
+feature {EV_ANY_I} -- Cleaning		
+
+	destroy
 		do
 			clear_cairo_context
 			if not cairo_surface.is_default_pointer then
 				release_cairo_surface (cairo_surface)
 				cairo_surface := default_pointer
 			end
+			set_is_destroyed (True)
 		end
 
-	release_cairo_surface (a_surface: POINTER)
+	dispose
+			-- Cleanup
 		do
-			if not a_surface.is_default_pointer then
-				debug ("gtk_memory")
-					print (generator + ".release_cairo_surface (" + a_surface.out + ")%N")
-				end
-				{CAIRO}.surface_destroy (a_surface)
+			if not cairo_context.is_default_pointer then
+				{CAIRO}.destroy (cairo_context)
+				cairo_context := default_pointer
+			end
+			if not cairo_surface.is_default_pointer then
+				{CAIRO}.surface_destroy (cairo_surface)
+				cairo_surface := default_pointer
 			end
 		end
 

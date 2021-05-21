@@ -14,8 +14,7 @@ inherit
 		redefine
 			interface,
 			flush,
-			save_to_named_path,
-			init_expose_actions
+			save_to_named_path
 		end
 
 	EV_DRAWABLE_IMP
@@ -287,6 +286,9 @@ feature {EV_GTK_DEPENDENT_APPLICATION_IMP, EV_ANY_I} -- Implementation
 
 feature {EV_INTERMEDIARY_ROUTINES} -- Implementation
 
+	in_expose_actions: BOOLEAN
+			-- Is `Current' in an expose action?
+
 	process_draw_event (a_cairo_context: POINTER)
 			-- Call the expose actions for the drawing area.
 		local
@@ -298,7 +300,13 @@ feature {EV_INTERMEDIARY_ROUTINES} -- Implementation
 			{CAIRO}.set_source_surface (a_cairo_context, cairo_surface, (l_width - width) / 2, (l_height - height) / 2)
 
 			if attached expose_actions_internal as l_expose_actions then
+				in_expose_actions := True
+					-- Even if the callback on "draw" event provides a cairo_context, the implementation
+					-- will use a new one using the expected cairo_surface.
+				start_drawing_session
 				l_expose_actions.call (app_implementation.gtk_marshal.dimension_tuple (0, 0, l_width, l_height))
+				end_drawing_session
+				in_expose_actions := False
 			end
 
 			{CAIRO}.paint (a_cairo_context)
@@ -399,7 +407,7 @@ feature {EV_ANY_I, EV_GTK_DEPENDENT_APPLICATION_IMP} -- Implementation
 			{CAIRO}.set_source_rgb (cr, 0, 0, 0)
 		end
 
-feature {EV_ANY_I} -- Implementation
+feature {EV_ANY_I} -- Drawing wrapper
 
 	pre_drawing
 		local
@@ -408,6 +416,7 @@ feature {EV_ANY_I} -- Implementation
 				-- If inside drawing session
 				-- the cairo context is already created in `start_drawing_session`
 			if not is_in_drawing_session then
+					-- Reuse or get once a new cairo_context
 				get_cairo_context
 				cr := cairo_context
 				if not cr.is_default_pointer then
@@ -430,24 +439,10 @@ feature {EV_ANY_I} -- Implementation
 			end
 		end
 
+feature {EV_ANY_I} -- cairo object access
+
 	cairo_surface: POINTER
 			-- Cairo drawable surface used for storing pixmap data in RGB format.
-
-	release_previous_cairo_surface
-		do
-			clear_cairo_context
-			if not cairo_surface.is_default_pointer then
-				release_cairo_surface (cairo_surface)
-				cairo_surface := default_pointer
-			end
-		end
-
-	release_cairo_surface (a_surface: POINTER)
-		do
-			if not a_surface.is_default_pointer then
-				{CAIRO}.surface_destroy (a_surface)
-			end
-		end
 
 	get_cairo_context
 		local
@@ -461,6 +456,22 @@ feature {EV_ANY_I} -- Implementation
 					cairo_context := {CAIRO}.create_context (l_surface)
 				end
 			end
+		end
+
+feature {EV_ANY_I} -- cairo object release
+
+	release_cairo_surface (a_surface: POINTER)
+		do
+			if not a_surface.is_default_pointer then
+				{CAIRO}.surface_destroy (a_surface)
+			end
+		end
+
+	release_previous_cairo_surface
+		do
+			clear_cairo_context
+			release_cairo_surface (cairo_surface)
+			cairo_surface := default_pointer
 		end
 
 feature {EV_GTK_DEPENDENT_APPLICATION_IMP, EV_ANY_I} -- Implementation
@@ -511,11 +522,6 @@ feature {EV_STOCK_PIXMAPS_IMP, EV_PIXMAPABLE_IMP, EV_PIXEL_BUFFER_IMP} -- Implem
 				set_pixmap_from_pixbuf (stock_pixbuf)
 				{GTK2}.g_object_unref (stock_pixbuf)
 			end
-		end
-
-	init_expose_actions (a_expose_actions: like expose_actions)
-			-- <Precursor>
-		do
 		end
 
 feature {NONE} -- Implementation

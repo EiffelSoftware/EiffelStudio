@@ -147,14 +147,16 @@ feature {NONE} -- Implementation
 			-- Handle `drawing_area' expose actions
 		local
 			l_shared: SD_SHARED
+			l_drawing_area: like drawing_area
 		do
+			l_drawing_area := drawing_area
 			create l_shared
-			drawing_area.set_foreground_color (l_shared.tool_bar_title_bar_color)
-			drawing_area.fill_rectangle (0, 0, drawing_area.width, drawing_area.height)
+			l_drawing_area.set_foreground_color (l_shared.tool_bar_title_bar_color)
+			l_drawing_area.fill_rectangle (0, 0, l_drawing_area.width, l_drawing_area.height)
 
-			drawing_area.set_foreground_color ((create {EV_STOCK_COLORS}).white)
+			l_drawing_area.set_foreground_color ((create {EV_STOCK_COLORS}).white)
 			if attached content as l_content then
-				drawing_area.draw_ellipsed_text_top_left (2, l_shared.title_bar_text_start_y, l_content.title, drawing_area.width)
+				l_drawing_area.draw_ellipsed_text_top_left (2, l_shared.title_bar_text_start_y, l_content.title, l_drawing_area.width)
 			end
 		end
 
@@ -184,7 +186,7 @@ invariant
 
 note
 	library:	"SmartDocking: Library of reusable components for Eiffel."
-	copyright:	"Copyright (c) 1984-2017, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2021, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

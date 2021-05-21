@@ -4,7 +4,7 @@ note
 	date: "$Date$"
 	revision: "$Revision$"
 
-deferred class
+class
 	ES_IDE_GRID
 
 inherit
@@ -78,13 +78,15 @@ feature -- IDE Events
 			grid_preferences.set_zoom_factor (a_zoom_factor)
 		end
 
+feature -- IDE properties
+
+	grid_font: EV_FONT
+
 feature {NONE} -- IDE Grid settings
 
 	grid_preferences: EB_GRID_PREFERENCES
 
 	load_ide_grid_preferences_agent: PROCEDURE
-
-	grid_font: EV_FONT
 
 	load_ide_grid_preferences
 		local

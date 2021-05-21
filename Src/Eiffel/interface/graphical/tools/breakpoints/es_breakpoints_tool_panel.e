@@ -104,9 +104,6 @@ feature {NONE} -- Initialization
 			g.set_configurable_target_menu_mode
 			g.set_configurable_target_menu_handler (agent (develop_window.menus.context_menu_factory).standard_compiler_item_menu)
 
-			load_preferences
-
-			register_action (preferences.development_window_data.grid_preferences.change_actions, agent load_preferences)
 		end
 
 	create_filter_bar (a_widget: EV_BOX)
@@ -197,14 +194,6 @@ feature {NONE} -- Initialization
 			update
 		end
 
-	load_preferences
-			-- Load preferences
-		require
-			grid_attached: grid /= Void
-		do
-			preferences.development_window_data.grid_preferences.apply_to (grid)
-		end
-
 feature -- Access: Help
 
 	help_context_id: STRING_32
@@ -243,7 +232,7 @@ feature -- Widgets
 	filter_bar: EV_HORIZONTAL_BOX
 			-- Filter bar
 
-	grid: ES_GRID
+	grid: ES_IDE_GRID
 			-- Grid containing the breakpoints list.
 
 	grid_wrapper: EVS_GRID_WRAPPER [EV_GRID_ROW]

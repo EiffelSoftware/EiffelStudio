@@ -13,6 +13,7 @@ inherit
 	ES_DEBUGGER_DOCKABLE_STONABLE_TOOL_PANEL [EV_VERTICAL_BOX]
 		redefine
 			create_mini_tool_bar_items,
+			on_before_initialize,
 			on_after_initialized,
 			internal_recycle,
 			show,
@@ -39,11 +40,6 @@ inherit
 			{NONE} all
 		end
 
-	IDE_OBSERVER
-		redefine
-			on_zoom
-		end
-
 	EV_SHARED_APPLICATION
 
 	EB_SHARED_DEBUGGER_MANAGER
@@ -65,10 +61,9 @@ create
 
 feature {NONE} -- Initialization
 
-	create_interface_objects
+	on_before_initialize
 		do
 			create has_internal_callstack_hidden_notification
-			grid_preferences := preferences.development_window_data.grid_preferences
 		end
 
 	build_tool_interface (a_widget: EV_VERTICAL_BOX)
@@ -78,8 +73,7 @@ feature {NONE} -- Initialization
 			t_label: EV_LABEL
 			g: like stack_grid
 		do
-			create_interface_objects
-			
+
 				--| UI structure			
 			create box2
 			box2.set_padding ({EV_MONITOR_DPI_DETECTOR_IMP}.scaled_size (3))
@@ -151,8 +145,6 @@ feature {NONE} -- Initialization
 
 				--| Show/hide internal stack
 			initialize_box_internal_callstack_control (a_widget)
-
-			register_as_ide_observer
 		end
 
 	update_call_stack_level_selection_mode (dbl_click_bpref: BOOLEAN_PREFERENCE)
@@ -282,20 +274,15 @@ feature -- Access: Help
 
 feature {NONE} -- Grid preferences
 
-	grid_preferences: EB_GRID_PREFERENCES
-
 	grid_font: EV_FONT
+		do
+			Result := stack_grid.grid_font
+		end
 
 	setup_stack_grid
 		require
 			stack_grid_set: stack_grid /= Void
-		local
-			agt: PROCEDURE
 		do
-			agt := agent load_stack_grid_preferences
-			load_stack_grid_preferences_agent := agt
-
-			register_action (grid_preferences.change_actions, agt)
 
 			load_stack_grid_preferences
 		end
@@ -303,16 +290,7 @@ feature {NONE} -- Grid preferences
 	load_stack_grid_preferences
 		require
 			stack_grid_set: stack_grid /= Void
-		local
-			prefs: like grid_preferences
 		do
-			prefs := grid_preferences
-			grid_font := prefs.font_with_zoom_factor
-			if attached stack_grid as g then
-				prefs.apply_to (g)
-			else
-				check stack_grid_set: False end
-			end
 
 				--| UI look
 			row_highlight_bg_color := Preferences.debug_tool_data.row_highlight_background_color
@@ -606,7 +584,7 @@ feature {NONE} -- Internal Widgets
 	exception_dialog_button: SD_TOOL_BAR_BUTTON
 			-- Button to display exception dialog.
 
-	stack_grid: ES_GRID
+	stack_grid: ES_IDE_GRID
 			-- Graphical representation of the execution stack.
 
 	box_thread: EV_HORIZONTAL_BOX
@@ -902,8 +880,6 @@ feature {NONE} -- Internal memory management
 			Preferences.debug_tool_data.row_replayable_background_color_preference.change_actions.prune_all (set_row_replayable_bg_color_agent)
 			Preferences.debug_tool_data.unsensitive_foreground_color_preference.change_actions.prune_all (set_unsensitive_fg_color_agent)
 			Preferences.debug_tool_data.internal_background_color_preference.change_actions.prune_all (set_row_internal_bg_color_agent)
-
-			unregister_action (grid_preferences.change_actions, load_stack_grid_preferences_agent)
 
 			has_internal_callstack_hidden_notification.wipe_out
 			Precursor {ES_DEBUGGER_DOCKABLE_STONABLE_TOOL_PANEL}
@@ -2081,14 +2057,6 @@ feature {NONE} -- Stone handlers
 			Eb_debugger_manager.launch_stone (st)
 		end
 
-feature -- IDE Events
-
-	on_zoom (a_zoom_factor: INTEGER)
-		do
-			grid_preferences.set_zoom_factor (a_zoom_factor)
---			load_stack_grid_preferences
-		end
-
 feature {NONE} -- Grid Implementation
 
 	replayed_call_stack_element_from_row (a_row: EV_GRID_ROW): detachable REPLAYED_CALL_STACK_ELEMENT
@@ -2479,8 +2447,6 @@ feature {NONE} -- Implementation, cosmetic
 			lab.set_font (f)
 			lab.refresh_now
 		end
-
-	load_stack_grid_preferences_agent: PROCEDURE
 
 	set_row_highlight_bg_color_agent,
 	set_row_replayable_bg_color_agent,

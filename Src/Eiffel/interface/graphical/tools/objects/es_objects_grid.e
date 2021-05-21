@@ -9,8 +9,9 @@ class
 	ES_OBJECTS_GRID
 
 inherit
-	ES_GRID
+	ES_IDE_GRID
 		redefine
+			internal_recycle,
 			initialize, grid_menu, row_type, on_row_expand, on_row_collapse
 		end
 
@@ -25,6 +26,7 @@ inherit
 		undefine
 			default_create, copy
 		redefine
+			internal_recycle,
 			evs_on_pebble_function
 		end
 
@@ -61,15 +63,13 @@ feature {NONE} -- Initialization
 
 	load_preferences
 		do
-			preferences.development_window_data.grid_preferences.apply_to (Current)
-			grid_font := preferences.development_window_data.grid_preferences.font
 			title_font.set_height (grid_font.height)
 			generating_type_evaluation_enabled := preferences.debugger_data.generating_type_evaluation_enabled_preference.value
 		end
 
 	initialize
 		do
-			Precursor {ES_GRID}
+			Precursor {ES_IDE_GRID}
 			make_with_grid (Current)
 
 			col_pixmap_index := 1
@@ -99,16 +99,21 @@ feature {NONE} -- Initialization
 			create_kept_object_references
 		end
 
+feature {NONE} -- Implementation		
+
+	internal_recycle
+		do
+			Precursor {EB_EDITOR_TOKEN_GRID_SUPPORT}
+			Precursor {ES_IDE_GRID}
+		end
+
 feature {NONE} -- GRID Customization
 
 	row_type: ES_OBJECTS_GRID_ROW do end
 		-- Type used for row objects.
 		-- May be redefined by EV_GRID descendents.	
 
-feature -- Properties
-
-	grid_font: EV_FONT
-			-- Default text/label font.	
+feature -- Properties	
 
 	generating_type_evaluation_enabled: BOOLEAN
 			-- Is generating type representation evaluating {ANY}.generating_type ?

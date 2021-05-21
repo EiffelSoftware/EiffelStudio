@@ -20,7 +20,7 @@ create
 	set_with_eiffel_string, share_from_pointer, make_from_pointer, make_from_path
 
 convert
-	set_with_eiffel_string ({READABLE_STRING_GENERAL, STRING, STRING_32})
+	set_with_eiffel_string ({READABLE_STRING_GENERAL, STRING_8, STRING_32})
 
 feature {NONE} -- Initialization
 
@@ -294,7 +294,7 @@ feature {NONE} -- Externals
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2013, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2021, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

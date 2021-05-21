@@ -170,8 +170,16 @@ feature -- Element change
 feature -- Session
 
 	is_in_drawing_session: BOOLEAN
+			-- Is inside a start/end drawing session?
 		do
 			Result := drawing_session_depth > 0
+		end
+
+	is_in_top_drawing_session: BOOLEAN
+			-- Is in the top start/end drawing session?
+			-- i.e: not inside another similar drawing session.
+		do
+			Result := drawing_session_depth = 1
 		end
 
 	drawing_session_depth: INTEGER

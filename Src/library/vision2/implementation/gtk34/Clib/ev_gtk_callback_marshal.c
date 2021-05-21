@@ -60,7 +60,7 @@ void c_ev_gtk_callback_marshal (
 			eif_access ((EIF_OBJECT) closure->data),
 			(EIF_INTEGER) n_param_values - 1,
 			(EIF_POINTER) ((GValue*)param_values + 1),
-			return_value	
+			return_value
        	 	);
 }
 
@@ -114,10 +114,9 @@ guint c_ev_gtk_callback_marshal_timeout_connect (
 	connection_id = g_timeout_add_full (
 				G_PRIORITY_DEFAULT,
 				delay,
-				(GSourceFunc)
-        c_ev_gtk_callback_marshal_true_callback,
-        eif_adopt (agent),          // User data for function.
-        (GDestroyNotify) eif_wean // To call on hook disconnect.
+				(GSourceFunc) c_ev_gtk_callback_marshal_true_callback,
+				eif_adopt (agent),          // User data for function.
+				(GDestroyNotify) eif_wean // To call on hook disconnect.
 			);
 	return (connection_id);
 }

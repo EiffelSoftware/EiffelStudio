@@ -405,10 +405,14 @@ feature {EV_ANY_I} -- Implementation
 		local
 			cr: like cairo_context
 		do
+				-- If inside drawing session
+				-- the cairo context is already created in `start_drawing_session`
 			if not is_in_drawing_session then
 				get_cairo_context
 				cr := cairo_context
-				{CAIRO}.save (cr)
+				if not cr.is_default_pointer then
+					{CAIRO}.save (cr)
+				end
 			end
 		end
 
@@ -416,6 +420,8 @@ feature {EV_ANY_I} -- Implementation
 		local
 			cr: like cairo_context
 		do
+				-- If inside drawing session
+				-- keep the cairo context for the next draw operation, it will be releazed by `end_drawing_session`
 			if not is_in_drawing_session then
 				cr := cairo_context
 				if not cr.is_default_pointer then

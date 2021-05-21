@@ -97,18 +97,24 @@ feature {EV_ANY_I} -- Implementation
 		local
 			cr: like cairo_context
 		do
-			cr := cairo_context
-			{CAIRO}.save (cr)
+			if not is_in_drawing_session then
+				get_cairo_context
+				cr := cairo_context
+				if not cr.is_default_pointer then
+					{CAIRO}.save (cr)
+				end
+			end
 		end
 
 	post_drawing
 		local
 			cr: like cairo_context
 		do
-			cr := cairo_context
-			if not cr.is_default_pointer then
-				{CAIRO}.restore (cr)
-				clear_cairo_context
+			if not is_in_drawing_session then
+				cr := cairo_context
+				if not cr.is_default_pointer then
+					{CAIRO}.restore (cr)
+				end
 			end
 		end
 
@@ -239,4 +245,4 @@ note
 			Website http://www.eiffel.com
 			Customer support http://support.eiffel.com
 		]"
-end -- class EV_SCREEN_IMP
+end

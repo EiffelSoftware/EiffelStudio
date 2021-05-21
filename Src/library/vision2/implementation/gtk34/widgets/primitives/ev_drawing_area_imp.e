@@ -154,6 +154,8 @@ feature {EV_ANY_I} -- Implementation
 
 	pre_drawing
 		do
+				-- If inside drawing session
+				-- the cairo context is already created in `start_drawing_session`
 			if not is_in_drawing_session then
 				get_new_cairo_context
 			end
@@ -161,6 +163,8 @@ feature {EV_ANY_I} -- Implementation
 
 	post_drawing
 		do
+				-- If inside drawing session
+				-- keep the cairo context for the next draw operation, it will be releazed by `end_drawing_session`
 			if not is_in_drawing_session then
 				clear_cairo_context
 			end
@@ -170,18 +174,20 @@ feature {NONE} -- Session implementation
 
 	start_drawing_session
 		do
-			if not is_in_drawing_session then
+			Precursor
+				-- If the drawing session is on the top (i.e not inside another session)
+				-- Create a new cairo context (that will be released by `end_drawing_session`)
+			if is_in_top_drawing_session then
 				get_new_cairo_context
 			end
-			Precursor
 		end
 
 	end_drawing_session
 		do
-			Precursor
-			if not is_in_drawing_session then
+			if is_in_top_drawing_session then
 				clear_cairo_context
 			end
+			Precursor
 		end
 
 feature {EV_APPLICATION_IMP} -- Implementation
@@ -323,7 +329,7 @@ feature {EV_ANY_I} -- Implementation
 feature {EV_INTERMEDIARY_ROUTINES} -- Implementation
 
 	in_expose_actions: BOOLEAN
-		-- Is `Current' in an expose action?
+			-- Is `Current' in an expose action?
 
 	process_draw_event (a_cairo_context: POINTER)
 			-- Call the expose actions for the drawing area.
@@ -344,7 +350,7 @@ feature {EV_INTERMEDIARY_ROUTINES} -- Implementation
 
 			{CAIRO}.set_source_surface (a_cairo_context, l_surface, 0, 0)
 
-			if attached expose_actions_internal as l_actions then
+			if attached expose_actions_internal as l_expose_actions then
 				in_expose_actions := True
 				l_old_context := cairo_context
 				cairo_context := a_cairo_context
@@ -354,7 +360,7 @@ feature {EV_INTERMEDIARY_ROUTINES} -- Implementation
 					print (($current).out + "::" + generator + ".process_draw_event ... " + " x=" + l_x.out + " y=" + l_y.out + " w=" + l_width.out + " h=" + l_height.out + "%N")
 				end
 				start_drawing_session
-				l_actions.call (l_x.truncated_to_integer, l_y.truncated_to_integer, l_width.truncated_to_integer, l_height.truncated_to_integer)
+				l_expose_actions.call (l_x.truncated_to_integer, l_y.truncated_to_integer, l_width.truncated_to_integer, l_height.truncated_to_integer)
 				end_drawing_session
 				cairo_context := l_old_context
 				in_expose_actions := False

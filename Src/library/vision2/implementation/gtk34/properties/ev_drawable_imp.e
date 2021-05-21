@@ -45,6 +45,7 @@ feature {EV_ANY_I} -- Implementation
 		do
 			Result := cairo_context
 			if Result.is_default_pointer then
+				check has_cairo_context: False end
 				get_cairo_context
 				Result := cairo_context
 			else
@@ -65,6 +66,8 @@ feature {EV_ANY_I} -- Implementation
 		do
 			clear_cairo_context
 			get_cairo_context
+		ensure
+			not cairo_context.is_default_pointer implies {CAIRO}.get_reference_count (cairo_context) = 1
 		end
 
 	get_cairo_context
@@ -73,13 +76,9 @@ feature {EV_ANY_I} -- Implementation
 
 	pre_drawing
 		deferred
-		ensure
-			has_cairo_context: not cairo_context.is_default_pointer
 		end
 
 	post_drawing
-		require
-			has_cairo_context: not cairo_context.is_default_pointer
 		deferred
 		end
 
@@ -778,6 +777,9 @@ feature {EV_ANY_I} -- Implementation
 					end
 				end
 			end
+		ensure
+			not cr.is_default_pointer implies {CAIRO}.get_reference_count (cr) = 0 or
+				{CAIRO}.get_reference_count (cr) < old ({CAIRO}.get_reference_count (cr))
 		rescue
 			retried := True
 			retry
@@ -785,7 +787,7 @@ feature {EV_ANY_I} -- Implementation
 
 	clear_cairo_context
 		require
-			not is_in_drawing_session
+			is_in_top_drawing_session xor not is_in_drawing_session
 		local
 			cr: like cairo_context
 			ref_count: NATURAL_32
@@ -802,6 +804,8 @@ feature {EV_ANY_I} -- Implementation
 					check no_more_reference: False end
 				end
 			end
+		ensure
+			no_more_ref: {CAIRO}.get_reference_count (old (cairo_context)) = 0
 		end
 
 feature {NONE} -- Implemention

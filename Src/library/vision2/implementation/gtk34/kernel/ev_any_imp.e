@@ -204,6 +204,8 @@ feature {EV_GTK_DEPENDENT_INTERMEDIARY_ROUTINES} -- Implementation
 			-- A "draw" signal has occurred
 		do
 			-- Redefined by descendents.
+		ensure
+			same_ref_count: {CAIRO}.get_reference_count (a_cairo_context) = old ({CAIRO}.get_reference_count (a_cairo_context))
 		end
 
 	process_gdk_event (n_args: INTEGER; args: POINTER)

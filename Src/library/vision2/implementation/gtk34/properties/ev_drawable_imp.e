@@ -237,7 +237,7 @@ feature -- Element change
 				l_internal_foreground_color.set_red_with_8_bit (a_color.red_8_bit)
 				l_internal_foreground_color.set_green_with_8_bit (a_color.green_8_bit)
 				l_internal_foreground_color.set_blue_with_8_bit (a_color.blue_8_bit)
-				-- TODO cehck the following.
+				-- TODO check the following.
 				-- internal_set_color (True, a_color.red_16_bit, a_color.green_16_bit, a_color.blue_16_bit)
 				internal_set_color (True, a_color.red, a_color.green, a_color.blue)
 			end
@@ -385,20 +385,27 @@ feature -- Clearing operations
 			-- Erase rectangle specified with `background_color'.
 		local
 			l_drawable: POINTER
+			fg: like internal_foreground_color
 		do
-			pre_drawing
-			l_drawable := cairo_context
-			if l_drawable /= default_pointer then
-				if attached internal_background_color as l_bg_color then
-					{CAIRO}.set_source_rgb (l_drawable, l_bg_color.red, l_bg_color.green, l_bg_color.blue)
-				else
-						-- White
-					{CAIRO}.set_source_rgb (l_drawable, 1.0, 1.0, 1.0)
+			if a_width > 0 and then a_height > 0 then
+				pre_drawing
+				l_drawable := cairo_context
+				if l_drawable /= default_pointer then
+					fg := foreground_color
+					if attached internal_background_color as l_bg_color then
+						{CAIRO}.set_source_rgb (l_drawable, l_bg_color.red, l_bg_color.green, l_bg_color.blue)
+					else
+							-- White
+						{CAIRO}.set_source_rgb (l_drawable, 1.0, 1.0, 1.0)
+					end
+					fill_rectangle (x, y, a_width, a_height)
+						-- Restore previous source rgb color
+					if fg /= Void then
+						{CAIRO}.set_source_rgb (l_drawable, fg.red, fg.green, fg.blue)
+					end
 				end
-				{CAIRO}.rectangle (l_drawable, x + device_x_offset + 0.5, y + device_y_offset + 0.5, a_width, a_height)
-				{CAIRO}.fill (l_drawable)
+				post_drawing
 			end
-			post_drawing
 		end
 
 feature -- Drawing operations
@@ -899,7 +906,10 @@ feature {NONE} -- Implementation
 	internal_set_color (a_foreground: BOOLEAN; a_red, a_green, a_blue: REAL_64)
 			-- Set `gc' color to (a_red, a_green, a_blue), `a_foreground' sets foreground color, otherwise background is set.
 		do
-			if cairo_context /= default_pointer and then a_foreground then
+			if
+				not cairo_context.is_default_pointer and then
+				a_foreground
+			then
 				{CAIRO}.set_source_rgb (cairo_context, a_red, a_green, a_blue)
 			end
 		end

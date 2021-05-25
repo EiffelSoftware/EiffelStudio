@@ -582,9 +582,11 @@ feature -- Drawing operations
 				pre_drawing
 				l_drawable := cairo_context
 				if l_drawable /= default_pointer then
+					{CAIRO}.save (cairo_context)
 					{CAIRO}.set_source_surface (l_drawable, l_pixmap_imp.cairo_surface, x - x_src, y - y_src)
 					{CAIRO}.rectangle (l_drawable, x + device_x_offset + 0.5, y + device_y_offset + 0.5, src_width, src_height)
 					{CAIRO}.fill (l_drawable)
+					{CAIRO}.restore (cairo_context) -- Restore source rgb color, ...
 				end
 				post_drawing
 			end

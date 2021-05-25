@@ -611,6 +611,34 @@ feature -- GdkEvent
 			"focus"
 		end
 
+	frozen gdk_event_crossing_struct_x (a_c_struct: POINTER): REAL_64
+		external
+			"C [struct <ev_gtk.h>] (GdkEventCrossing): EIF_DOUBLE"
+		alias
+			"x"
+		end
+
+	frozen gdk_event_crossing_struct_y (a_c_struct: POINTER): REAL_64
+		external
+			"C [struct <ev_gtk.h>] (GdkEventCrossing): EIF_DOUBLE"
+		alias
+			"y"
+		end
+
+	frozen gdk_event_crossing_struct_x_root (a_c_struct: POINTER): REAL_64
+		external
+			"C [struct <ev_gtk.h>] (GdkEventCrossing): EIF_DOUBLE"
+		alias
+			"x_root"
+		end
+
+	frozen gdk_event_crossing_struct_y_root (a_c_struct: POINTER): REAL_64
+		external
+			"C [struct <ev_gtk.h>] (GdkEventCrossing): EIF_DOUBLE"
+		alias
+			"y_root"
+		end
+
 	frozen gdk_event_expose_struct_area (a_c_struct: POINTER): POINTER
 		external
 			"C [struct <ev_gtk.h>] (GdkEventExpose): EIF_POINTER"

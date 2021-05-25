@@ -47,7 +47,7 @@ feature {EV_ANY_I} -- Implementation
 			if Result.is_default_pointer then
 				check has_cairo_context: False end
 				get_cairo_context
-				Result := cairo_context
+				Result := {CAIRO}.add_reference (cairo_context)
 			else
 				Result := {CAIRO}.add_reference (Result)
 			end
@@ -85,11 +85,15 @@ feature {EV_ANY_I} -- Drawing wrapper
 
 	pre_drawing
 			-- Operation executed before any drawing operation
+		require
+			not is_destroyed
 		deferred
 		end
 
 	post_drawing
 			-- Operation executed after any drawing operation
+		require
+			not is_destroyed
 		deferred
 		end
 

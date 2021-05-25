@@ -199,6 +199,7 @@ feature {NONE} -- Session implementation
 				-- clear cairo context created in `start_drawing_session`
 			if is_in_top_drawing_session then
 				clear_cairo_context
+				update_if_needed
 			end
 			Precursor
 		end

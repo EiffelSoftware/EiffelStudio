@@ -12,6 +12,7 @@ class
 inherit
 	EV_PIXMAP_I
 		redefine
+			end_drawing_session,
 			interface,
 			flush,
 			save_to_named_path
@@ -20,6 +21,7 @@ inherit
 	EV_DRAWABLE_IMP
 		redefine
 			interface,
+			end_drawing_session,
 			pixbuf_from_drawable_at_position
 		end
 
@@ -444,7 +446,18 @@ feature {EV_ANY_I} -- Drawing wrapper
 				if not cr.is_default_pointer then
 					{CAIRO}.restore (cr)
 				end
+				update_if_needed
 			end
+		end
+
+feature {NONE} -- Session implementation				
+
+	end_drawing_session
+		do
+			if is_in_top_drawing_session then
+				update_if_needed
+			end
+			Precursor
 		end
 
 feature {EV_ANY_I} -- cairo object access

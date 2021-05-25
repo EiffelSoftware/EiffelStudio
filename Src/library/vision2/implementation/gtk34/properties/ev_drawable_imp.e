@@ -81,6 +81,11 @@ feature {EV_ANY_I} -- Implementation
 		deferred
 		end
 
+	update_if_needed
+			-- Force update of `Current' if needed
+		deferred
+		end
+
 feature {EV_ANY_I} -- Drawing wrapper
 
 	pre_drawing
@@ -532,7 +537,6 @@ feature -- Drawing operations
 		do
 			draw_ellipse_internal (x, y, a_width, a_height, a_start_angle, an_aperture, False, False)
 		end
-
 
 	draw_sub_pixel_buffer (a_x, a_y: INTEGER; a_pixel_buffer: EV_PIXEL_BUFFER; area: EV_RECTANGLE)
 			-- Draw `area' of `a_pixel_buffer' with upper-left corner on (`a_x', `a_y').

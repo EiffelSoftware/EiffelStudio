@@ -36,6 +36,7 @@ inherit
 			on_size_allocate,
 			process_draw_event,
 			process_configure_event,
+			process_enter_event, process_leave_event,
 			button_actions_handled_by_signals,
 			destroy,
 			dispose,
@@ -91,6 +92,17 @@ feature {NONE} -- Initialization
 					{EV_GTK_EVENT_STRINGS}.draw_event_name,
 					agent (l_app_imp.gtk_marshal).draw_actions_intermediary (l_drawing_area, ?),
 					l_app_imp.gtk_marshal.draw_translate_agent
+				)
+
+			real_signal_connect_after (l_drawing_area,
+					{EV_GTK_EVENT_STRINGS}.enter_notify_event_name,
+					agent (l_app_imp.gtk_marshal).enter_event_intermediary (l_drawing_area, ?, ?, ?, ?),
+					l_app_imp.gtk_marshal.enter_leave_translate_agent
+				)
+			real_signal_connect_after (l_drawing_area,
+					{EV_GTK_EVENT_STRINGS}.leave_notify_event_name,
+					agent (l_app_imp.gtk_marshal).leave_event_intermediary (l_drawing_area, ?, ?, ?, ?),
+					l_app_imp.gtk_marshal.enter_leave_translate_agent
 				)
 
 			check cairo_surface.is_default_pointer end
@@ -165,6 +177,7 @@ feature {EV_ANY_I} -- Drawing wrapper
 				-- keep the cairo context for the next draw operation, it will be releazed by `end_drawing_session`
 			if not is_in_drawing_session then
 				clear_cairo_context
+				update_if_needed
 			end
 		end
 
@@ -298,7 +311,10 @@ feature {EV_INTERMEDIARY_ROUTINES} -- Implementation
 
 			{CAIRO}.set_source_surface (a_cairo_context, l_surface, 0, 0)
 
-			if attached expose_actions_internal as l_expose_actions then
+			if
+				attached expose_actions_internal as l_expose_actions and then
+				not l_expose_actions.is_empty
+			then
 				in_expose_actions := True
 
 				{CAIRO}.clip_extents (a_cairo_context, $l_x, $l_y, $l_width, $l_height)
@@ -341,6 +357,18 @@ feature {EV_INTERMEDIARY_ROUTINES} -- Implementation
 			if cairo_surface.is_default_pointer then
 				get_new_cairo_surface (a_width, a_height)
 			end
+		end
+
+	process_enter_event (a_x, a_y, a_screen_x, a_screen_y: INTEGER)
+			-- "enter-notify-event" signal occurred
+		do
+			redraw
+		end
+
+	process_leave_event (a_x, a_y, a_screen_x, a_screen_y: INTEGER)
+			-- "leave-notify-event" signal occurred
+		do
+			redraw
 		end
 
 feature {EV_APPLICATION_IMP} -- Implementation

@@ -148,6 +148,14 @@ feature {NONE} -- Initialization
 
 feature -- Drawing operations
 
+	update_if_needed
+			-- Update `Current' if needed.
+		do
+			if not in_expose_actions then
+				{GTK}.gtk_widget_queue_draw (visual_widget)
+			end
+		end
+
 	redraw
 			-- Force `Current' to redraw itself.
 		do

@@ -64,6 +64,22 @@ feature -- Draw signal intermediary.
 			end
 		end
 
+	enter_event_intermediary (a_c_object: POINTER; a_x, a_y, a_screen_x, a_screen_y: INTEGER)
+			-- "enter-notify-event" signal has been emitted.
+		do
+			if attached {EV_ANY_IMP} c_get_eif_reference_from_object_id (a_c_object) as l_any_imp then
+				l_any_imp.process_enter_event (a_x, a_y, a_screen_x, a_screen_y)
+			end
+		end
+
+	leave_event_intermediary (a_c_object: POINTER; a_x, a_y, a_screen_x, a_screen_y: INTEGER)
+			-- "leave-notify-event" signal has been emitted.
+		do
+			if attached {EV_ANY_IMP} c_get_eif_reference_from_object_id (a_c_object) as l_any_imp then
+				l_any_imp.process_leave_event (a_x, a_y, a_screen_x, a_screen_y)
+			end
+		end
+
 feature {EV_ANY_IMP} -- Gauge intermediary agent routines
 
 	on_gauge_value_changed_intermediary (a_c_object: POINTER)

@@ -107,6 +107,14 @@ feature -- Implementation
 				l_agent,
 				invoke_after_handler
 			)
+			debug("gtk_signal")
+				print (generator + ".signal_connect ("
+							+ a_c_object.out +", "
+							+ a_signal_name.string.to_string_8 + ", "
+							+ if attached an_agent.target as tgt then tgt.generator else "NoTarget" end
+							+ " ...,"+ invoke_after_handler.out +") -> "+ last_signal_connection_id.out +"%N")
+			end
+
 		end
 
 	signal_connect_before (
@@ -167,6 +175,7 @@ feature -- Agent functions.
 
 	configure_translate_agent: FUNCTION [INTEGER, POINTER, TUPLE]
 			-- Translation agent used for size allocation events
+			-- see https://developer.gnome.org/gdk3/unstable/gdk3-Event-Structures.html#GdkEventConfigure
 		once
 			Result :=
 			agent (n: INTEGER; p: POINTER): TUPLE
@@ -187,6 +196,25 @@ feature -- Agent functions.
 			-- Translation agent used for draw events
 		once
 			Result := agent gtk_value_pointer_to_tuple (?, ?)
+		end
+
+	enter_leave_translate_agent: FUNCTION [INTEGER, POINTER, TUPLE]
+			-- Translation agent used for enter|leave notify events
+			-- see : https://developer.gnome.org/gdk3/unstable/gdk3-Event-Structures.html#GdkEventCrossing
+		once
+			Result :=
+			agent (n: INTEGER; p: POINTER): TUPLE
+				local
+					gdk_event_crossing: POINTER
+				do
+					gdk_event_crossing := {GTK2}.gtk_value_pointer (p)
+					Result := dimension_tuple (
+						{GTK}.gdk_event_crossing_struct_x (gdk_event_crossing).truncated_to_integer,
+						{GTK}.gdk_event_crossing_struct_y (gdk_event_crossing).truncated_to_integer,
+						{GTK}.gdk_event_crossing_struct_x_root (gdk_event_crossing).truncated_to_integer,
+						{GTK}.gdk_event_crossing_struct_y_root (gdk_event_crossing).truncated_to_integer
+					)
+			end
 		end
 
 	response_translate_agent: FUNCTION [INTEGER, POINTER, TUPLE]

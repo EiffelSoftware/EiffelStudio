@@ -220,6 +220,18 @@ feature {EV_GTK_DEPENDENT_INTERMEDIARY_ROUTINES} -- Implementation
 			-- Redefined by descendents.
 		end
 
+	process_enter_event (a_x, a_y, a_screen_x, a_screen_y: INTEGER)
+			-- "enter-notify-event" signal occurred
+		do
+			-- Redefined by descendents.
+		end
+
+	process_leave_event (a_x, a_y, a_screen_x, a_screen_y: INTEGER)
+			-- "leave-notify-event" signal occurred
+		do
+			-- Redefined by descendents.
+		end
+
 feature {EV_ANY_I, EV_INTERMEDIARY_ROUTINES} -- Access
 
 	visual_widget: POINTER

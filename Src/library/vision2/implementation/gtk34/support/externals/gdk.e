@@ -832,6 +832,10 @@ feature -- GdkRGBA
 
 	frozen set_rgba_struct_with_8_bit_rgb (a_rgba_struct: POINTER; r, g, b: INTEGER_32)
 			-- Set `a_rgba_struct' with red `r', green `g' and blue `b' and alpha of 1.0.
+		require
+			r >= 0 and r <= 255
+			g >= 0 and g <= 255
+			b >= 0 and b <= 255
 		external
 			"C inline use <ev_gtk.h>"
 		alias
@@ -846,6 +850,10 @@ feature -- GdkRGBA
 
 	frozen set_rgba_struct_with_16_bit_rgb (a_rgba_struct: POINTER; r, g, b: INTEGER_32)
 			-- Set `a_rgba_struct' with red `r', green `g' and blue `b' and alpha of 1.0.
+		require
+			r >= 0 and r <= 65535
+			g >= 0 and g <= 65535
+			b >= 0 and b <= 65535
 		external
 			"C inline use <ev_gtk.h>"
 		alias
@@ -858,46 +866,69 @@ feature -- GdkRGBA
 			]"
 		end
 
-	frozen set_rgba_struct_blue (a_c_struct: POINTER; a_blue: REAL_64)
+	frozen set_rgba_struct_with_rgba (a_rgba_struct: POINTER; r, g, b, a: REAL_64)
+			-- Set `a_rgba_struct' with red `r', green `g' and blue `b' and alpha of 1.0.
+		require
+			r >= 0.0 and r <= 1.0
+			g >= 0.0 and g <= 1.0
+			b >= 0.0 and b <= 1.0
+			a >= 0.0 and a <= 1.0
 		external
-			"C [struct <ev_gtk.h>] (GdkRGBA, gdouble)"
+			"C inline use <ev_gtk.h>"
 		alias
-			"blue"
-		end
-
-	frozen set_rgba_struct_green (a_c_struct: POINTER; a_green: REAL_64)
-		external
-			"C [struct <ev_gtk.h>] (GdkRGBA, gdouble)"
-		alias
-			"green"
-		end
-
-	frozen set_rgba_struct_alpha (a_c_struct: POINTER; a_alpha: REAL_64)
-		external
-			"C [struct <ev_gtk.h>] (GdkRGBA, gdouble)"
-		alias
-			"alpha"
+			"[
+				GdkRGBA *rgba = (GdkRGBA *) $a_rgba_struct;
+				rgba->red = $r;
+				rgba->green = $g;
+				rgba->blue = $b;
+				rgba->alpha = $a;
+			]"
+		ensure
+			instance_free: class
 		end
 
 	frozen set_rgba_struct_red (a_c_struct: POINTER; a_red: REAL_64)
+		require
+			a_red >= 0.0 and a_red <= 1.0
 		external
 			"C [struct <ev_gtk.h>] (GdkRGBA, gdouble)"
 		alias
 			"red"
+		ensure
+			instance_free: class
 		end
 
-	frozen rgba_struct_blue (a_c_struct: POINTER): REAL_64
+	frozen set_rgba_struct_green (a_c_struct: POINTER; a_green: REAL_64)
+		require
+			a_green >= 0.0 and a_green <= 1.0
 		external
-			"C [struct <ev_gtk.h>] (GdkRGBA): gdouble"
-		alias
-			"blue"
-		end
-
-	frozen rgba_struct_green (a_c_struct: POINTER): REAL_64
-		external
-			"C [struct <ev_gtk.h>] (GdkRGBA): gdouble"
+			"C [struct <ev_gtk.h>] (GdkRGBA, gdouble)"
 		alias
 			"green"
+		ensure
+			instance_free: class
+		end
+
+	frozen set_rgba_struct_blue (a_c_struct: POINTER; a_blue: REAL_64)
+		require
+			a_blue >= 0.0 and a_blue <= 1.0
+		external
+			"C [struct <ev_gtk.h>] (GdkRGBA, gdouble)"
+		alias
+			"blue"
+		ensure
+			instance_free: class
+		end
+
+	frozen set_rgba_struct_alpha (a_c_struct: POINTER; a_alpha: REAL_64)
+		require
+			a_alpha >= 0.0 and a_alpha <= 1.0
+		external
+			"C [struct <ev_gtk.h>] (GdkRGBA, gdouble)"
+		alias
+			"alpha"
+		ensure
+			instance_free: class
 		end
 
 	frozen rgba_struct_red (a_c_struct: POINTER): REAL_64
@@ -905,6 +936,26 @@ feature -- GdkRGBA
 			"C [struct <ev_gtk.h>] (GdkRGBA): gdouble"
 		alias
 			"red"
+		ensure
+			Result >= 0.0 and Result <= 1.0
+		end
+
+	frozen rgba_struct_green (a_c_struct: POINTER): REAL_64
+		external
+			"C [struct <ev_gtk.h>] (GdkRGBA): gdouble"
+		alias
+			"green"
+		ensure
+			Result >= 0.0 and Result <= 1.0
+		end
+
+	frozen rgba_struct_blue (a_c_struct: POINTER): REAL_64
+		external
+			"C [struct <ev_gtk.h>] (GdkRGBA): gdouble"
+		alias
+			"blue"
+		ensure
+			Result >= 0.0 and Result <= 1.0
 		end
 
 	frozen rgba_struct_alpha (a_c_struct: POINTER): REAL_64
@@ -912,6 +963,8 @@ feature -- GdkRGBA
 			"C [struct <ev_gtk.h>] (GdkRGBA): gdouble"
 		alias
 			"red"
+		ensure
+			Result >= 0.0 and Result <= 1.0
 		end
 
 	frozen gdk_rgba_to_string (a_rgba: POINTER): POINTER

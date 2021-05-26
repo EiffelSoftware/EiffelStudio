@@ -114,7 +114,7 @@ feature -- Status setting
 				{GDK}.set_rgba_struct_red (color, r / m)
 				{GDK}.set_rgba_struct_green (color, g / m)
 				{GDK}.set_rgba_struct_blue (color, b / m)
-				{GDK}.set_rgba_struct_alpha (color, a_color.lightness)
+				{GDK}.set_rgba_struct_alpha (color, 1.0)
 
 				create l_hex_string.make_from_c ({GDK}.gdk_rgba_to_string (color))
 				create l_css_data.make ("* {background:"+ l_hex_string + "; }")
@@ -134,7 +134,7 @@ feature -- Status setting
 				{GDK}.set_rgba_struct_red (color, nr / m)
 				{GDK}.set_rgba_struct_green (color, ng / m)
 				{GDK}.set_rgba_struct_blue (color, nb / m)
-				{GDK}.set_rgba_struct_alpha (color, a_color.lightness)
+				{GDK}.set_rgba_struct_alpha (color, 1.0)
 				create l_hex_string.make_from_c ({GDK}.gdk_rgba_to_string (color))
 				create l_css_data.make ("*:active{ background:"+ l_hex_string + ";} ")
 				l_provider := {GTK_CSS}.gtk_css_provider_new
@@ -151,7 +151,7 @@ feature -- Status setting
 				{GDK}.set_rgba_struct_red (color, nr / m)
 				{GDK}.set_rgba_struct_green (color, ng / m )
 				{GDK}.set_rgba_struct_blue (color, nb / m)
-				{GDK}.set_rgba_struct_alpha (color, a_color.lightness)
+				{GDK}.set_rgba_struct_alpha (color, 1.0)
 				create l_hex_string.make_from_c ({GDK}.gdk_rgba_to_string (color))
 
 				create l_css_data.make ("*:hover{ background:"+ l_hex_string + ";} ")
@@ -165,7 +165,7 @@ feature -- Status setting
 				{GDK}.set_rgba_struct_red   (color, (m - r) / m)
 				{GDK}.set_rgba_struct_green (color, (m - g) / m)
 				{GDK}.set_rgba_struct_blue  (color, (m - b//2) / m)
-				{GDK}.set_rgba_struct_alpha  (color, a_color.lightness)
+				{GDK}.set_rgba_struct_alpha  (color, 1.0)
 
 				create l_hex_string.make_from_c ({GDK}.gdk_rgba_to_string (color))
 				create l_css_data.make ("*	:selected{ background:"+ l_hex_string + ";} ")
@@ -229,7 +229,7 @@ feature -- Status setting
 				{GDK}.set_rgba_struct_red (color, l_foreground_color_imp.red_16_bit / m)
 				{GDK}.set_rgba_struct_green (color, l_foreground_color_imp.green_16_bit / m)
 				{GDK}.set_rgba_struct_blue (color, l_foreground_color_imp.blue_16_bit / m)
-				{GDK}.set_rgba_struct_alpha (color, a_color.lightness)
+				{GDK}.set_rgba_struct_alpha (color, 1.0)
 
 				l_context := {GTK}.gtk_widget_get_style_context (a_c_object)
 				l_provider := {GTK_CSS}.gtk_css_provider_new

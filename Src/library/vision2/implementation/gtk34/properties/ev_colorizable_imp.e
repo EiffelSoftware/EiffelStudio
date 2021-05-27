@@ -101,6 +101,7 @@ feature -- Status setting
 			l_error: POINTER
 			l_hex_string: STRING
 			color: POINTER
+			l_css: STRING
 		do
 			if a_color /= Void then
 					-- TODO check the old implementation used 16 bits.
@@ -117,7 +118,7 @@ feature -- Status setting
 				{GDK}.set_rgba_struct_alpha (color, 1.0)
 
 				create l_hex_string.make_from_c ({GDK}.gdk_rgba_to_string (color))
-				create l_css_data.make ("* {background:"+ l_hex_string + "; }")
+				create l_css_data.make ("* {background-color:"+ l_hex_string + "; }")
 
 				if not {GTK_CSS}.gtk_css_provider_load_from_data (l_provider, l_css_data.item, -1, $l_error) then
 					-- TODO Handle error
@@ -135,8 +136,9 @@ feature -- Status setting
 				{GDK}.set_rgba_struct_green (color, ng / m)
 				{GDK}.set_rgba_struct_blue (color, nb / m)
 				{GDK}.set_rgba_struct_alpha (color, 1.0)
+
 				create l_hex_string.make_from_c ({GDK}.gdk_rgba_to_string (color))
-				create l_css_data.make ("*:active{ background:"+ l_hex_string + ";} ")
+				create l_css_data.make ("*:active{ background-color:"+ l_hex_string + ";} ")
 				l_provider := {GTK_CSS}.gtk_css_provider_new
 				if not {GTK_CSS}.gtk_css_provider_load_from_data (l_provider, l_css_data.item, -1, $l_error) then
 					-- TODO Handle error
@@ -154,7 +156,7 @@ feature -- Status setting
 				{GDK}.set_rgba_struct_alpha (color, 1.0)
 				create l_hex_string.make_from_c ({GDK}.gdk_rgba_to_string (color))
 
-				create l_css_data.make ("*:hover{ background:"+ l_hex_string + ";} ")
+				create l_css_data.make ("*:hover{ background-color:"+ l_hex_string + ";} ")
 				l_provider := {GTK_CSS}.gtk_css_provider_new
 				if not {GTK_CSS}.gtk_css_provider_load_from_data (l_provider, l_css_data.item, -1, $l_error) then
 					-- TODO Handle error
@@ -168,7 +170,9 @@ feature -- Status setting
 				{GDK}.set_rgba_struct_alpha  (color, 1.0)
 
 				create l_hex_string.make_from_c ({GDK}.gdk_rgba_to_string (color))
-				create l_css_data.make ("*	:selected{ background:"+ l_hex_string + ";} ")
+				create l_css_data.make ("*:selected{ background-color:"+ l_hex_string + ";} ")
+
+
 				l_provider := {GTK_CSS}.gtk_css_provider_new
 				if not {GTK_CSS}.gtk_css_provider_load_from_data (l_provider, l_css_data.item, -1, $l_error) then
 					-- TODO Handle error
@@ -180,14 +184,33 @@ feature -- Status setting
 				{GDK}.set_rgba_struct_red   (color, (mx + ((r - mx)//4)) / m)
 				{GDK}.set_rgba_struct_green (color, (mx + ((g - mx)//4)) / m)
 				{GDK}.set_rgba_struct_blue  (color, (mx + ((b - mx)//4)) / m)
+				{GDK}.set_rgba_struct_alpha (color, 1.0)
 
 				create l_hex_string.make_from_c ({GDK}.gdk_rgba_to_string (color))
-				create l_css_data.make ("*:disabled{ background:"+ l_hex_string + ";} ")
+				create l_css_data.make ("*:disabled{ background-color:"+ l_hex_string + ";} ")
 				l_provider := {GTK_CSS}.gtk_css_provider_new
 				if not {GTK_CSS}.gtk_css_provider_load_from_data (l_provider, l_css_data.item, -1, $l_error) then
 					-- TODO Handle error
 				end
 				{GTK2}.gtk_style_context_add_provider (l_context, l_provider, {EV_GTK_ENUMS}.gtk_style_provider_priority_application)
+
+
+					--| Set the text selection background and color.
+					--| TODO at the moment the colors are hardcoded.
+				l_css := "[
+				
+			    .view text selection {
+				  background-color: blue;
+				  color: yellow;
+				}
+				]"
+				create l_css_data.make (l_css)
+				l_provider := {GTK_CSS}.gtk_css_provider_new
+				if not {GTK_CSS}.gtk_css_provider_load_from_data (l_provider, l_css_data.item, -1, $l_error) then
+					-- TODO Handle error
+				end
+				{GTK2}.gtk_style_context_add_provider (l_context, l_provider, {EV_GTK_ENUMS}.gtk_style_provider_priority_application)
+
 			end
 			if color /= default_pointer then
 				color.memory_free
@@ -234,7 +257,7 @@ feature -- Status setting
 				l_context := {GTK}.gtk_widget_get_style_context (a_c_object)
 				l_provider := {GTK_CSS}.gtk_css_provider_new
 				create l_hex_string.make_from_c ({GDK}.gdk_rgba_to_string (color))
-				create l_css_data.make ("	* { color:"+ l_hex_string + "; } \n	*:active{ color:"+ l_hex_string + ";} \n	*:hover{ color:"+ l_hex_string + ";} \n")
+				create l_css_data.make ("	* { color:"+ l_hex_string + "; } \n	*:active{ color:"+ l_hex_string + ";} \n *:hover{ color:"+ l_hex_string + ";} \n")
 				{GTK2}.gtk_style_context_add_provider (l_context, l_provider, {EV_GTK_ENUMS}.gtk_style_provider_priority_application)
 				if not {GTK_CSS}.gtk_css_provider_load_from_data (l_provider, l_css_data.item, -1, $l_error) then
 					-- TODO Handle error

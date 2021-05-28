@@ -1061,10 +1061,14 @@ feature -- Basic operation
 				end
 					-- We do not want to propagate if right clicking in a popup parent (for activation focus handling) unless PND is activated.
 					-- or if the widget is insensitive or the top level window has a modal child.
-				l_ignore_event :=
-					l_popup_parent /= Void and then l_text_component_imp /= Void and then {GTK}.gdk_event_button_struct_button (a_gdk_event) = 3 and then (l_pnd_item.pebble = Void and l_pnd_item.pebble_function = Void) or else
-					not {GTK}.gtk_widget_is_sensitive (l_pnd_item.c_object) or else
-					l_top_level_window_imp /= Void and then l_top_level_window_imp.has_modal_window and then captured_widget = Void
+				l_ignore_event := l_popup_parent /= Void and then
+								l_text_component_imp /= Void and then
+								{GTK}.gdk_event_button_struct_button (a_gdk_event) = 3 and then
+								(l_pnd_item.pebble = Void and l_pnd_item.pebble_function = Void)
+							or else not {GTK}.gtk_widget_is_sensitive (l_pnd_item.c_object)
+							or else l_top_level_window_imp /= Void and then
+								l_top_level_window_imp.has_modal_window and then
+								captured_widget = Void
 						-- If a widget has capture then we don't want to ignore the event.
 			end
 
@@ -1081,26 +1085,38 @@ feature -- Basic operation
 					)
 			end
 
+
 			if not l_ignore_event then
-				if pick_and_drop_source = Void and then not a_recursive then
+				if
+					pick_and_drop_source = Void and then
+					not a_recursive and then
+					(l_pnd_item = Void or else not l_pnd_item.button_actions_handled_by_signals)
+				then
 						-- We don't want signals firing during transport.
 					{GTK}.gtk_main_do_event (a_gdk_event)
 				end
-				if l_pnd_item /= Void and then (not l_pnd_item.button_actions_handled_by_signals or a_recursive) then
-					l_pnd_item.on_mouse_button_event (
-						{GTK}.gdk_event_button_struct_type (a_gdk_event),
-						{GTK}.gdk_event_button_struct_x (a_gdk_event).truncated_to_integer,
-						{GTK}.gdk_event_button_struct_y (a_gdk_event).truncated_to_integer,
-						{GTK}.gdk_event_button_struct_button (a_gdk_event),
-						0.5,
-						0.5,
-						0.5,
-						l_screen_x,
-						l_screen_y
-					)
+				if l_pnd_item /= Void then
+					if
+						not a_recursive and then
+						l_pnd_item.button_actions_handled_by_signals and then
+						attached {EV_ANY_IMP} l_pnd_item as l_any_imp
+					then
+						l_any_imp.process_button_event (a_gdk_event, a_recursive)
+					else
+						l_pnd_item.on_mouse_button_event (
+							{GTK}.gdk_event_button_struct_type (a_gdk_event),
+							{GTK}.gdk_event_button_struct_x (a_gdk_event).truncated_to_integer,
+							{GTK}.gdk_event_button_struct_y (a_gdk_event).truncated_to_integer,
+							{GTK}.gdk_event_button_struct_button (a_gdk_event),
+							0.5,
+							0.5,
+							0.5,
+							l_screen_x,
+							l_screen_y
+						)
+					end
 				end
 			end
-
 			use_stored_display_data := False
 		end
 

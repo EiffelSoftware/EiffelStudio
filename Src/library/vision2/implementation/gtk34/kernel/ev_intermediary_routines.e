@@ -34,6 +34,13 @@ feature {EV_ANY_IMP} -- Button intermediary agent routines
 			a_application_imp.process_button_event (a_gdk_event, True)
 		end
 
+	on_button_widget_event (a_c_object: POINTER; a_gdk_event: POINTER)
+		do
+			if attached {EV_ANY_IMP} c_get_eif_reference_from_object_id (a_c_object) as l_any_imp then
+				l_any_imp.process_button_event (a_gdk_event, False)
+			end
+		end
+
 feature {EV_ANY_IMP} -- Notebook intermediary agent routines
 
 	on_notebook_page_switch_intermediary (a_c_object: POINTER; a_page: NATURAL_32)

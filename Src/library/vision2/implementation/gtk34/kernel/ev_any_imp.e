@@ -198,7 +198,7 @@ feature {NONE} -- Implementation
 			c_object_detached: c_object = default_pointer
 		end
 
-feature {EV_GTK_DEPENDENT_INTERMEDIARY_ROUTINES} -- Implementation
+feature {EV_GTK_DEPENDENT_INTERMEDIARY_ROUTINES, EV_APPLICATION_I} -- Implementation
 
 	process_draw_event (a_cairo_context: POINTER)
 			-- A "draw" signal has occurred
@@ -228,6 +228,12 @@ feature {EV_GTK_DEPENDENT_INTERMEDIARY_ROUTINES} -- Implementation
 
 	process_leave_event (a_x, a_y, a_screen_x, a_screen_y: INTEGER)
 			-- "leave-notify-event" signal occurred
+		do
+			-- Redefined by descendents.
+		end
+
+	process_button_event (a_gdk_event: POINTER; a_recursive: BOOLEAN)
+			-- "button-press-event", "button-release-event", ... signal occurred
 		do
 			-- Redefined by descendents.
 		end

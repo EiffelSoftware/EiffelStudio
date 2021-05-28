@@ -37,6 +37,7 @@ inherit
 			process_draw_event,
 			process_configure_event,
 			process_enter_event, process_leave_event,
+			process_button_event,
 			button_actions_handled_by_signals,
 			destroy,
 			dispose,
@@ -75,12 +76,12 @@ feature {NONE} -- Initialization
 
 			real_signal_connect (l_c_object,
 					{EV_GTK_EVENT_STRINGS}.button_press_event_name,
-					agent (l_app_imp.gtk_marshal).on_button_event (l_app_imp, ?),
+					agent (l_app_imp.gtk_marshal).on_button_widget_event (l_drawing_area, ?),
 					l_app_imp.gtk_marshal.button_event_translate_agent
 				)
 			real_signal_connect (l_c_object,
 					{EV_GTK_EVENT_STRINGS}.button_release_event_name,
-					agent (l_app_imp.gtk_marshal).on_button_event (l_app_imp, ?),
+					agent (l_app_imp.gtk_marshal).on_button_widget_event (l_drawing_area, ?),
 					l_app_imp.gtk_marshal.button_event_translate_agent
 				)
 			real_signal_connect (l_drawing_area,
@@ -228,7 +229,7 @@ feature {EV_ANY_I} -- cairo object access
 				check same_width: w = a_width end
 				check same_height: h = a_height end
 				debug ("gtk3_redraw")
-					print (generator + ".get_new_cairo_surface ("+ l_window.out + ", .., w=" + w.out + ", h=" + h.out +")%N")
+					print (generator + ".get_new_cairo_surface -> "+ l_window.out + ", .., w=" + w.out + ", h=" + h.out +"%N")
 				end
 
 				l_surface := {GDK}.gdk_window_create_similar_surface (
@@ -239,7 +240,7 @@ feature {EV_ANY_I} -- cairo object access
 				cairo_surface := l_surface
 			else
 				debug ("gtk3_redraw")
-					print (generator + ".get_new_cairo_surface: no window !!!%N")
+					print (generator + ".get_new_cairo_surface -> no window !!!%N")
 				end
 			end
 		end
@@ -305,7 +306,7 @@ feature {EV_INTERMEDIARY_ROUTINES} -- Implementation
 			end
 			l_surface := cairo_surface
 			debug ("gtk3_redraw")
-				print (($current).out + "::" + generator + ".process_draw_event ("+ a_cairo_context.out +")  surface=" + l_surface.out + "%N")
+				print (($Current).out + "::" + generator + ".process_draw_event ("+ a_cairo_context.out +")  surface=" + l_surface.out + " ref_count="+ {CAIRO}.get_reference_count (a_cairo_context).out +"%N")
 			end
 
 			check has_surface: not l_surface.is_default_pointer end
@@ -337,7 +338,7 @@ feature {EV_INTERMEDIARY_ROUTINES} -- Implementation
 			l_old_surface, l_new_surface, cr: POINTER
 		do
 			debug ("gtk3_redraw")
-				print (($current).out + "::" + generator + ".process_configure_event ("+ a_x.out + ", " + a_y.out + ", " + a_width.out + ", " + a_height.out + ")%N")
+				print (($Current).out + "::" + generator + ".process_configure_event ("+ a_x.out + ", " + a_y.out + ", " + a_width.out + ", " + a_height.out + ")%N")
 			end
 
 			clear_cairo_context
@@ -370,6 +371,28 @@ feature {EV_INTERMEDIARY_ROUTINES} -- Implementation
 			-- "leave-notify-event" signal occurred
 		do
 			redraw
+		end
+
+	process_button_event (a_gdk_event: POINTER; a_recursive: BOOLEAN)
+			-- "button-press-event" signal occurred
+		local
+			l_screen_x, l_screen_y: INTEGER
+		do
+			if attached app_implementation as l_app_imp then
+				l_screen_x := {GTK}.gdk_event_button_struct_x_root (a_gdk_event).truncated_to_integer + l_app_imp.screen_virtual_x
+				l_screen_y := {GTK}.gdk_event_button_struct_y_root (a_gdk_event).truncated_to_integer + l_app_imp.screen_virtual_y
+				on_mouse_button_event (
+						{GTK}.gdk_event_button_struct_type (a_gdk_event),
+						{GTK}.gdk_event_button_struct_x (a_gdk_event).truncated_to_integer,
+						{GTK}.gdk_event_button_struct_y (a_gdk_event).truncated_to_integer,
+						{GTK}.gdk_event_button_struct_button (a_gdk_event),
+						0.5,
+						0.5,
+						0.5,
+						l_screen_x,
+						l_screen_y
+					)
+			end
 		end
 
 feature {EV_APPLICATION_IMP} -- Implementation

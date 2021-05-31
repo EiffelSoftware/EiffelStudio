@@ -626,9 +626,7 @@ feature -- Access
 						l_components.forth
 					end
 				end
-				across l_components as l_component loop
-					internal_path_append_into (l_storage, l_component.item.storage, directory_separator)
-				end
+				⟳ c: l_components ¦ internal_path_append_into (l_storage, c.storage, directory_separator) ⟲
 					-- Everything was built from normalized strings.
 				create Result.make_from_normalized_storage (l_storage)
 			else

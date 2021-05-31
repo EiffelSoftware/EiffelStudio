@@ -296,7 +296,7 @@ feature -- Special checking
 			a_error_handler_not_void: a_error_handler /= Void
 		local
 			l_associated_class: CLASS_C
-			l_temp, l_cl_generics: EIFFEL_LIST [FORMAL_DEC_AS]
+			l_cl_generics: EIFFEL_LIST [FORMAL_DEC_AS]
 			l_class_i: CLASS_I
 			l_cluster: CONF_GROUP
 			l_vtct: VTCT
@@ -331,18 +331,7 @@ feature -- Special checking
 						-- The generic parameters to check (INTEGER in the example above).
 					if attached l_class_type.generics as l_class_type_generics then
 						if not l_is_tuple_type then
-							from
-								l_temp := l_cl_generics
-								create l_cl_generics.make_filled (l_temp.count)
-								l_pos := l_temp.index
-								l_temp.start
-							until
-								l_temp.after
-							loop
-								l_cl_generics.put_i_th (l_temp.item, l_temp.index)
-								l_temp.forth
-							end
-							l_temp.go_i_th (l_pos)
+							l_cl_generics := l_cl_generics.twin
 							if attached {GEN_TYPE_A} l_type_a as l_gen_type then
 								from
 									l_cursor1 := l_class_type_generics.index
@@ -1087,7 +1076,7 @@ invariant
 
 note
 	ca_ignore: "CA033", "CA033 — very long class"
-	copyright:	"Copyright (c) 1984-2019, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2021, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

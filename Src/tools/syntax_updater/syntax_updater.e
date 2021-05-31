@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "System's root class."
 
 class
@@ -31,7 +31,7 @@ feature {NONE} -- Initialization
 				-- which is important to allow for such a syntax converter
 			parser.set_il_parser
 			fast_parser.set_il_parser
-			create visitor.make_with_default_context
+			create visitor.make
 
 			create string_buffer.make (102400)
 
@@ -52,7 +52,9 @@ feature {NONE} -- File discovering and processing
 		do
 				-- Set settings from command line
 			visitor.set_is_updating_agents (is_updating_agents)
+			visitor.set_is_updating_iteration (is_updating_iteration)
 			fast_factory.set_is_updating_agents (is_updating_agents)
+			fast_factory.set_is_updating_iteration (is_updating_iteration)
 
 				-- Reset `is_eiffel_class_updated' to its default value, False.
 			is_eiffel_class_updated := False
@@ -131,11 +133,7 @@ feature {NONE} -- File discovering and processing
 								update_eiffel_class (l_file.path)
 									-- We do not process ECFs if no Eiffel classes have been modified in `a_dir',
 									-- so we have to store all the ECFs we encounter before converting them.
-								if
-									is_updating_ecfs and then
-									attached l_file.path.extension as l_extension and then l_extension.count = 3 and then
-									l_extension.same_caseless_characters_general ("ecf", 1, 3, 1)
-								then
+								if is_updating_ecfs and then l_file.path.has_extension ("ecf") then
 									l_ecf_lists.extend (l_file.path)
 								end
 							end
@@ -144,11 +142,7 @@ feature {NONE} -- File discovering and processing
 				end
 				if is_eiffel_class_updated then
 						-- Only update ECFs if some Eiffel classes have been modified.
-					across
-						l_ecf_lists as ecf
-					loop
-						process_configuration (ecf.item)
-					end
+					⟳ e: l_ecf_lists ¦ process_configuration (e) ⟲
 				end
 				is_eiffel_class_updated := l_previous_modified or else is_eiffel_class_updated
 			end
@@ -157,16 +151,15 @@ feature {NONE} -- File discovering and processing
 feature {NONE} -- Implementation
 
 	process_configuration (a_file: PATH)
-			-- Process configuration file `a_file' located in `a_dir'
+			-- Process configuration file `a_file`.
 		require
 			is_updating_ecfs: is_updating_ecfs
-			a_file_ok: a_file /= Void and then not a_file.is_empty
-			a_file_is_ecf: attached a_file.extension as l_extension and then l_extension.count = 3 and then
-				l_extension.same_caseless_characters_general ("ecf", 1, 3, 1)
+			a_file_is_ecf: a_file.has_extension ("ecf")
 		local
 			l_loader: CONF_LOAD
 			l_saver: CONF_PRINT_VISITOR
 			l_file: PLAIN_TEXT_FILE
+			has_error: BOOLEAN
 		do
 			create l_loader.make (create {CONF_PARSE_FACTORY})
 			l_loader.retrieve_configuration (a_file.name)
@@ -175,17 +168,46 @@ feature {NONE} -- Implementation
 				if attached l_loader.last_error as e then
 					display_error (e.text)
 				end
-
-					-- We only process an ECF file that is not a redirection, otherwise we would
-					-- be replacing the redirection with the content of the redirected ECF.
 			elseif l_loader.last_redirection = Void then
-
+					-- Process only an ECF file that is not a redirection, otherwise
+					-- the redirection would be replaced with the content of the redirected ECF.
 				if attached l_loader.last_system as s then
-						-- Remove the `is_obsolete_routine_type' option if present on all targets.
 					if is_updating_agents then
-						across s.targets as l_target loop
-							if attached l_target.item.internal_options as l_options then
-								l_options.unset_is_obsolete_routine_type
+							-- Remove the `is_obsolete_routine_type' option if present on all targets.
+							-- Report only one agent-related error per configuration.
+						has_error := False
+						across s.targets as t loop
+							if attached t.item.internal_options as o then
+								if not o.is_obsolete_routine_type and not has_error then
+									display_error ({STRING_32} "Configuration %"" + a_file.name + "%" uses up-to-date agent types.")
+									has_error := True
+								end
+								o.unset_is_obsolete_routine_type
+							end
+						end
+					end
+					if is_updating_iteration then
+							-- Remove `is_obsolete_iteration` on all targets and their own clusters.
+							-- Report only one agent-related error per configuration.
+						has_error := False
+						across s.targets as t loop
+							if attached t.item.internal_options as o then
+								if not o.is_obsolete_iteration and not has_error then
+									display_error ({STRING_32} "Configuration %"" + a_file.name + "%" uses up-to-date iteration syntax.")
+									has_error := True
+								end
+								o.unset_is_obsolete_iteration
+							end
+							if attached t.item.internal_clusters as cs then
+								across cs as c loop
+									if attached c.item.internal_options as o then
+										if not o.is_obsolete_iteration and not has_error then
+											display_error ({STRING_32} "Configuration %"" + a_file.name + "%" uses up-to-date iteration syntax.")
+											has_error := True
+										end
+										o.unset_is_obsolete_iteration
+									end
+								end
 							end
 						end
 					end
@@ -211,10 +233,7 @@ feature {NONE} -- Implementation
 			l_generate_output: BOOLEAN
 			l_converted: BOOLEAN
 		do
-			if
-				attached file_name.extension as l_extension and then l_extension.count = 1 and then
-				l_extension.same_caseless_characters_general ("e", 1, 1, 1)
-			then
+			if file_name.has_extension ("e") then
 				create file.make_with_path (file_name)
 				count := file.count
 				safe_open_read (file)
@@ -248,14 +267,13 @@ feature {NONE} -- Implementation
 						check
 							attached parser.root_node as r
 							attached parser.match_list as m
-							attached visitor.parsed_class as c
 						then
 							visitor.setup (r, m, True, True)
 								-- Free some memory from the parser that we don't need.
 							parser.reset
 							parser.reset_nodes
 								-- Perform the visiting
-							visitor.process_ast_node (c)
+							visitor.process_ast_node (r)
 							if visitor.is_updated then
 								is_eiffel_class_updated := True
 								l_text := visitor.text
@@ -321,35 +339,28 @@ feature {NONE} -- Implementation
 		require
 			a_parser_not_void: a_parser /= Void
 			a_buffer_not_void: a_buffer /= Void
+		local
+			is_parsed: BOOLEAN
 		do
-				-- First we do it using the old conventions.
-			a_parser.set_syntax_version ({EIFFEL_PARSER}.obsolete_syntax)
-			if not a_verification then
-				a_parser.parse_class_from_string (a_buffer, Void, Void)
-				original_encoding := a_parser.detected_encoding
-				original_bom := a_parser.detected_bom
-			else
-				a_parser.parse_from_utf8_string (a_buffer, Void)
-			end
-			if error_handler.has_error then
+				-- Perform parsing using different syntax conventions in the order:
+				-- obsolete, transitional, standard.
+			across
+				<<{EIFFEL_PARSER}.obsolete_syntax,
+				{EIFFEL_PARSER}.transitional_syntax,
+				{EIFFEL_PARSER}.ecma_syntax>> as s
+			until
+				is_parsed
+			loop
 				error_handler.wipe_out
-					-- There was an error, let's try to see if the code is using transitional syntax.
-				a_parser.set_syntax_version ({EIFFEL_PARSER}.transitional_syntax)
+				a_parser.set_syntax_version (s.item)
 				if not a_verification then
 					a_parser.parse_class_from_string (a_buffer, Void, Void)
+					original_encoding := a_parser.detected_encoding
+					original_bom := a_parser.detected_bom
 				else
 					a_parser.parse_from_utf8_string (a_buffer, Void)
 				end
-				if error_handler.has_error then
-					error_handler.wipe_out
-						-- Still an error, let's try to see if the code is strictly ECMA compliant.
-					a_parser.set_syntax_version ({EIFFEL_PARSER}.ecma_syntax)
-					if not a_verification then
-						a_parser.parse_class_from_string (a_buffer, Void, Void)
-					else
-						a_parser.parse_from_utf8_string (a_buffer, Void)
-					end
-				end
+				is_parsed := not error_handler.has_error
 			end
 		end
 
@@ -397,7 +408,7 @@ feature {NONE} -- Encoding
 	original_bom: detachable STRING
 			-- Bom of the encoding detected by last parsing
 
-feature {NONE}
+feature {NONE} -- Parser
 
 	parser: EIFFEL_PARSER
 	fast_parser: EIFFEL_PARSER
@@ -437,27 +448,36 @@ feature {NONE} -- Arguments processing
 			Result := has_option (agents_switch)
 		end
 
+	is_updating_iteration: BOOLEAN
+			-- Will iteration syntax be updated?
+		do
+			Result := has_option (iteration_switch)
+		end
+
 	is_updating_ecfs: BOOLEAN
 			-- Will ECFs be updated?
 		do
-			Result := has_option (ecf_switch) or else is_updating_agents
+			Result := has_option (ecf_switch) or else is_updating_agents or else is_updating_iteration
 		end
 
 	name: STRING = "Eiffel Syntax Updater"
-	version: STRING = "6.4.1"
+	version: STRING = "21.05.01"
 	copyright: STRING = "Copyright Eiffel Software 2007-2021. All Rights Reserved."
 
 	non_switched_argument_name: STRING = "Directory"
 	non_switched_argument_description: STRING = "Directory to process"
 	non_switched_argument_type: STRING = "Directory"
-	verbose_switch: STRING = "v|verbose"
-	verbose_switch_description: STRING = "Verbose output of processing"
-	force_switch: STRING = "f|force"
-	force_switch_description: STRING = "Force generation of syntactically incorrect classes"
+
 	agents_switch: STRING = "a|agents"
-	agents_swith_description: STRING = "Update type of agents to new 15.11 definition. Implies -e."
+	agents_switch_description: STRING = "Update type of agents to new 15.11 definition. Implies -e."
 	ecf_switch: STRING = "e|ecf"
 	ecf_switch_description: STRING = "Update ECF if Eiffel classes have been updated"
+	force_switch: STRING = "f|force"
+	force_switch_description: STRING = "Force generation of syntactically incorrect classes"
+	iteration_switch: STRING = "i|iteration"
+	iteration_switch_description: STRING = "Update iteration loops to the syntax supported by 21.05 and above. Implies -e."
+	verbose_switch: STRING = "v|verbose"
+	verbose_switch_description: STRING = "Verbose output of processing"
 			-- Our arguments
 
 	switches: ARRAYED_LIST [ARGUMENT_SWITCH]
@@ -466,7 +486,8 @@ feature {NONE} -- Arguments processing
 			Result.extend (create {ARGUMENT_SWITCH}.make (verbose_switch, verbose_switch_description, True, False))
 			Result.extend (create {ARGUMENT_SWITCH}.make (force_switch, force_switch_description, True, False))
 			Result.extend (create {ARGUMENT_SWITCH}.make (ecf_switch, ecf_switch_description, True, False))
-			Result.extend (create {ARGUMENT_SWITCH}.make (agents_switch, agents_swith_description, True, False))
+			Result.extend (create {ARGUMENT_SWITCH}.make (agents_switch, agents_switch_description, True, False))
+			Result.extend (create {ARGUMENT_SWITCH}.make (iteration_switch, iteration_switch_description, True, False))
 		end
 
 feature {NONE} -- Environment

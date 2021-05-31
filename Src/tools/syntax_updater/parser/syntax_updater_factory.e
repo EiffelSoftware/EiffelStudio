@@ -9,13 +9,15 @@ class
 inherit
 	AST_NULL_FACTORY
 		redefine
+			new_class_type_as,
 			new_creation_keyword_as,
+			new_filled_id_as,
+			new_iteration_as,
 			new_keyword_as,
 			new_keyword_id_as,
 			new_old_syntax_object_test_as,
 			new_static_access_as,
-			new_class_type_as,
-			new_filled_id_as
+			new_temporary_integer_value
 		end
 
 feature -- Access
@@ -27,6 +29,10 @@ feature -- Access
 			-- Are we updating agents to drop the first actual generic parameter
 			-- and replacing TUPLE with nothing, i.e. PROCEDURE [ANY, TUPLE [STRING]]
 			-- becoming PROCEDURE [STRING].
+
+	is_updating_iteration: BOOLEAN
+			-- Is it requested to update iteration by replacing "is" with "as" or
+			-- by removing ".item" when iteration uses "as"?
 
 feature -- Status setting
 
@@ -45,11 +51,25 @@ feature -- Status setting
 			is_updating_agents_set: is_updating_agents = v
 		end
 
+	set_is_updating_iteration (v: like is_updating_iteration)
+			-- Set `is_updating_iteration` to `v`.
+		do
+			is_updating_iteration := v
+		ensure
+			is_updating_iteration = v
+		end
+
 feature -- Processing
 
 	new_creation_keyword_as (a_scn: EIFFEL_SCANNER): detachable KEYWORD_AS
 		do
 			has_obsolete_constructs := True
+		end
+
+	new_iteration_as (a: detachable KEYWORD_AS; e: detachable EXPR_AS; b: detachable KEYWORD_AS; i: detachable ID_AS; is_restricted: BOOLEAN): detachable ITERATION_AS
+			-- <Precursor>
+		do
+			has_obsolete_constructs := is_updating_iteration
 		end
 
 	new_keyword_as (a_code: INTEGER_32; a_scn: EIFFEL_SCANNER): detachable KEYWORD_AS
@@ -128,13 +148,28 @@ feature -- Processing
 			end
 		end
 
-feature {NONE} -- Implementation
+	new_temporary_integer_value (scanner: EIFFEL_SCANNER_SKELETON; sign: CHARACTER_8; buffer: READABLE_STRING_8): detachable INTEGER_AS
+			-- <Precursor>
+		do
+				-- Return regular value because it is used to check characters and strings using characters codes.
+			Result := standard_factory.new_temporary_integer_value (scanner, sign, buffer)
+		end
+
+feature {NONE} -- Routine classes
 
 	routine_class_name: STRING_8 = "ROUTINE"
 	procedure_class_name: STRING_8 = "PROCEDURE"
 	function_class_name: STRING_8 = "FUNCTION"
 	predicate_class_name: STRING_8 = "PREDICATE"
 			-- Name of agent types being in use.
+
+feature {NONE} -- Routine classes
+
+	standard_factory: AST_FACTORY
+			-- A standard factory.
+		once
+			create Result
+		end
 
 note
 	ca_ignore: "CA011", "CA011: too many arguments"

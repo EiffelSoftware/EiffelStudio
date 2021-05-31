@@ -9,24 +9,41 @@ class
 
 inherit
 	AST_ROUNDTRIP_PRINTER_VISITOR
+		rename
+			make as make_roundtrip,
+			make_with_default_context as make
 		redefine
+			context,
+			make,
 			process_body_as,
 			process_create_as,
+			process_class_type_as,
+			process_formal_as,
+			process_generic_class_type_as,
 			process_indexing_clause_as,
+			process_iteration_as,
+			process_like_cur_as,
+			process_like_id_as,
+			process_loop_as,
+			process_loop_expr_as,
+			process_named_tuple_type_as,
+			process_nested_expr_as,
 			process_object_test_as,
 			process_static_access_as,
-			process_like_id_as,
-			process_like_cur_as,
-			process_formal_as,
-			process_class_type_as,
-			process_generic_class_type_as,
-			process_named_tuple_type_as,
-			context,
 			reset
 		end
 
 create
-	make_with_default_context
+	make
+
+feature {NONE} -- Creation
+
+	make
+			-- <Precursor>
+		do
+			Precursor
+			create iteration_cursors.make (1)
+		end
 
 feature -- Status report
 
@@ -38,6 +55,10 @@ feature -- Status report
 			-- and replacing TUPLE with nothing, i.e. PROCEDURE [ANY, TUPLE [STRING]]
 			-- becoming PROCEDURE [STRING].
 
+	is_updating_iteration: BOOLEAN
+			-- Is it requested to update iteration by replacing "is" with "as" or
+			-- by removing ".item" when iteration uses "as"?
+
 feature -- Status setting
 
 	set_is_updating_agents (v: like is_updating_agents)
@@ -46,6 +67,14 @@ feature -- Status setting
 			is_updating_agents := v
 		ensure
 			is_updating_agents_set: is_updating_agents = v
+		end
+
+	set_is_updating_iteration (v: like is_updating_iteration)
+			-- Set `is_updating_iteration` to `v`.
+		do
+			is_updating_iteration := v
+		ensure
+			is_updating_iteration = v
 		end
 
 feature -- Reset
@@ -132,6 +161,114 @@ feature -- AST visiting
 			safe_process (l_as.end_keyword (match_list))
 		end
 
+	process_iteration_as (a: ITERATION_AS)
+			-- <Precursor>
+		do
+			if
+				is_updating_iteration and then
+				not a.is_symbolic and then
+				a.is_restricted and then
+				attached a.as_keyword (match_list) as k and then
+				k.is_is_keyword
+			then
+					-- Replace "is" with "as".
+				is_updated := True
+				safe_process (a.across_keyword (match_list))
+				a.expression.process (Current)
+				process_leading_leaves (k.index)
+				last_index := k.index
+				context.add_string ("as")
+				a.identifier.process (Current)
+			else
+					-- Do not change the iteration.
+				Precursor (a)
+			end
+		end
+
+	process_loop_as (a: LOOP_AS)
+			-- <Precursor>
+		do
+			if
+				is_updating_iteration and then
+				attached a.iteration as i and then
+				not i.is_symbolic and then
+				not i.is_restricted
+			then
+					-- Put the cursor name to the cursor name stack.
+				iteration_cursors.extend (i.identifier.name_id)
+					-- Update the loop.
+				Precursor (a)
+					-- Remove the cursor name from the stack.
+				iteration_cursors.remove
+			else
+					-- Do not change the loop.
+				Precursor (a)
+			end
+		end
+
+	process_loop_expr_as (a: LOOP_EXPR_AS)
+			-- <Precursor>
+		local
+			i: ITERATION_AS
+		do
+			i := a.iteration
+			if
+				is_updating_iteration and then
+				not i.is_symbolic and then
+				not i.is_restricted
+			then
+					-- Put the cursor name to the cursor name stack.
+				iteration_cursors.extend (i.identifier.name_id)
+					-- Update the loop.
+				Precursor (a)
+					-- Remove the cursor name from the stack.
+				iteration_cursors.remove
+			else
+					-- Do not change the loop.
+				Precursor (a)
+			end
+		end
+
+	process_nested_expr_as (a: NESTED_EXPR_AS)
+			-- <Precursor>
+		do
+			if
+				attached {EXPR_CALL_AS} a.target as c and then
+				attached {ACCESS_INV_AS} c.call as f and then
+				attached f.feature_name as n and then
+				iteration_cursors.has (n.name_id)
+			then
+					-- This is a call to feature on the iteration cursor.
+				is_updated := True
+				if
+					attached a.message as m and then
+					attached m.feature_name as q and then
+					q.name_id = {PREDEFINED_NAMES}.item_name_id
+				then
+						-- This is call to the feature "item", remove it:
+						-- "c.item" becomes "c".
+					safe_process (a.target)
+					process_leading_leaves (a.dot_symbol_index)
+					last_index := a.dot_symbol_index
+					process_leading_leaves (q.index)
+					last_index := a.message.index
+				else
+						-- This is call to a feature other than "item", add a predecessor:
+						-- "c.key" becomes "@ c.key".
+					process_leading_leaves (n.index)
+					last_index := n.index
+					context.add_string ("@ ")
+					context.add_string (n.text (match_list))
+					safe_process (a.dot_symbol (match_list))
+					safe_process (a.message)
+				end
+			else
+				safe_process (a.target)
+				safe_process (a.dot_symbol (match_list))
+				safe_process (a.message)
+			end
+		end
+
 	process_object_test_as (l_as: OBJECT_TEST_AS)
 		local
 			l_index: INTEGER
@@ -199,6 +336,11 @@ feature -- AST visiting
 			safe_process (l_as.feature_name)
 			safe_process (l_as.internal_parameters)
 		end
+
+feature {NONE} -- Iteration
+
+	iteration_cursors: ARRAYED_STACK [like {ID_AS}.name_id]
+			-- Iteration cursor name IDs for loops being processed.
 
 feature -- Types
 

@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "Match list server for a class indexed by class id."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -58,21 +58,22 @@ feature -- Access
 					-- lazy computation, create match list if needed
 				if Result = Void or else Result.generated /= l_class.lace_class.file_date then
 					l_text := l_class.text
-						-- If the file associated with `l_class' has been removed we might get no text
+						-- If the file associated with `l_class` has been removed we might get no text
 						-- thus the protection.
 					if l_text /= Void then
 						l_options := l_class.lace_class.options
 						l_scanner := matchlist_scanner
-						inspect l_options.syntax.index
-						when {CONF_OPTION}.syntax_index_obsolete then
-							l_scanner.set_syntax_version ({EIFFEL_SCANNER}.obsolete_syntax)
-						when {CONF_OPTION}.syntax_index_transitional then
-							l_scanner.set_syntax_version ({EIFFEL_SCANNER}.transitional_syntax)
-						when {CONF_OPTION}.syntax_index_provisional then
-							l_scanner.set_syntax_version ({EIFFEL_SCANNER}.provisional_syntax)
-						else
-							l_scanner.set_syntax_version ({EIFFEL_SCANNER}.ecma_syntax)
-						end
+						l_scanner.set_syntax_version
+							(inspect l_options.syntax.index
+							when {CONF_OPTION}.syntax_index_obsolete then
+								{EIFFEL_SCANNER}.obsolete_syntax
+							when {CONF_OPTION}.syntax_index_transitional then
+								{EIFFEL_SCANNER}.transitional_syntax
+							when {CONF_OPTION}.syntax_index_provisional then
+								{EIFFEL_SCANNER}.provisional_syntax
+							else
+								{EIFFEL_SCANNER}.ecma_syntax
+							end)
 						error_handler.save
 						l_scanner.set_filename (l_class.file_name)
 						l_scanner.scan_utf8_string (l_text)
@@ -127,7 +128,7 @@ feature {NONE} -- Implementation
 			-- Size of a HASH_TABLE' block
 
 note
-	copyright:	"Copyright (c) 1984-2014, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2021, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
@@ -158,4 +159,4 @@ note
 			Customer support http://support.eiffel.com
 		]"
 
-end -- class `MATCH_LIST_SERVER'
+end

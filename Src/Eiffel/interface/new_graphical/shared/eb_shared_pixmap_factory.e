@@ -1,8 +1,8 @@
-note
+﻿note
 	description: "Factory for all of the pixmapped graphics"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
-	author: "king"
+	author: "$Author$"
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -21,7 +21,7 @@ feature {NONE} -- Implementation
 			l_rectangle: like reusable_rectangle
 		do
 			l_table := pixmap_lookup_table
-			a_coord := l_table @ a_pixmap_constant
+			a_coord := l_table [a_pixmap_constant]
 			l_columns := l_table.columns
 			a_column := (a_coord - 1) \\ l_columns
 			a_row := (a_coord - a_column) // l_columns
@@ -112,7 +112,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2012, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2021, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
@@ -143,4 +143,4 @@ note
 			Customer support http://support.eiffel.com
 		]"
 
-end -- class EB_SHARED_PIXMAP_FACTORY
+end

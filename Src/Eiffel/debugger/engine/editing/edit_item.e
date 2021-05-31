@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "Shared feature between editing an attribute and editing a local variable"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -173,7 +173,7 @@ feature {NONE} -- Implementation
 			elseif attached {CHARACTER_B} l_dyn_class as type_char then
 				io.put_string("Enter a CHARACTER value: ")
 				io.readline
-				value_char := io.last_string @ 1
+				value_char := io.last_string [1]
 				generic_modify_item
 				send_char_value(value_char)
 				receive_ack
@@ -260,7 +260,7 @@ feature {NONE} -- Implementation: to be implemented
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2016, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2021, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
@@ -291,4 +291,4 @@ note
 			Customer support http://support.eiffel.com
 		]"
 
-end -- class EDIT_ITEM
+end

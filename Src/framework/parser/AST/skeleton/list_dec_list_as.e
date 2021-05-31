@@ -10,7 +10,7 @@ inherit
 		end
 
 create
-	make_filled
+	make_filled_with
 
 create {LIST_DEC_LIST_AS}
 	make
@@ -80,7 +80,7 @@ feature
 note
 	date: "$Date$"
 	revision: "$Revision$"
-	copyright:	"Copyright (c) 1984-2013, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2021, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "List used in abstract syntax trees."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -14,48 +14,106 @@ inherit
 		end
 
 create
-	make
-
-create {CONSTRUCT_LIST}
-	make_filled
+	make,
+	make_filled_with
 
 feature {NONE} -- Initialization
 
 	make (n: INTEGER)
 			-- Creation of the list.
 		do
-			insertion_position := n.min (1)
 			Precursor (n)
+			insertion_position := 0
+		ensure then
+			insertion_position = 0
 		end
 
 	make_filled (n: INTEGER)
 			-- Creation of the list.
+		obsolete "Use `make` or `make_filled_with` instead. [2021-05-31]"
 		do
-			insertion_position := n
 			Precursor (n)
+			insertion_position := n
+		ensure then
+			insertion_position = n
 		end
 
-feature -- Special insertion
+	make_filled_with (v: T; n: INTEGER)
+			-- Create the list with `n` elements `v`.
+			-- The list is `reverse_extend`-ed by one `v`.
+		do
+			make (n)
+			area.extend_filled (v)
+			insertion_position := n - 1
+		ensure
+			full
+			count = n
+			insertion_position = n - 1
+			occurrences (v) = n
+		end
+
+feature -- Modification
 
 	reverse_extend (v: T)
-			-- Add `v' to `Current'
+			-- Put `v` at `insertion_position` and decrement the latter.
+			-- Expects that the list was initialized by `make_filled_with`.
+			-- See also: `back_extend`.
 		require
-			extendible: extendible
+			count > 0
+			insertion_position > 0
 		local
 			l_pos: INTEGER
 		do
 			l_pos := insertion_position - 1
 			insertion_position := l_pos
 			area.put (v, l_pos)
+		ensure
+			decremented: insertion_position = old insertion_position - 1
+			extended: Current [insertion_position + 1] = v
+			preserved: old insertion_position > count ⇒ ∀ i: (insertion_position + 2) |..| count ¦ Current [i] = (old twin) [i]
 		end
 
-feature {NONE} -- Implementation
+	back_extend (v: T)
+			-- Put `v` at `insertion_position` when `insertion_position > 0`.
+			-- Put `v` at `capacity` otherwise.
+			-- Set `insertion_position` to the previous position.
+			-- Slightly less efficient version of `reverse_extend`, but also works for lists created by `make`.
+		require
+			capacity > 0
+			insertion_position > 0 ⇒ full
+		local
+			j: like insertion_position
+		do
+			j := insertion_position
+			if j > 0 then
+				j := j - 1
+				insertion_position := j
+				area.put (v, j)
+			else
+				area.extend_filled (v)
+				insertion_position := count - 1
+			end
+		ensure
+			same_capacity: capacity = old capacity
+			full
+			decremented_if_positive: old insertion_position > 0 ⇒ insertion_position = old insertion_position - 1
+			decremented_if_zero: old insertion_position = 0 ⇒ insertion_position = capacity - 1
+			extended: Current [insertion_position + 1] = v
+			preserved: old insertion_position > count ⇒ ∀ i: (insertion_position + 2) |..| count ¦ Current [i] = (old twin) [i]
+			filled: old insertion_position = 0 ⇒ occurrences (v) = count
+		end
 
-	insertion_position: INTEGER;
-			-- Insertion position for `reverse_extend'.
+feature -- Access
+
+	insertion_position: INTEGER
+			-- Insertion position for `reverse_extend` and `back_extend`.
+
+invariant
+	insertion_position ≥ 0
+	insertion_position ≤ count
 
 note
-	copyright:	"Copyright (c) 1984-2009, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2021, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

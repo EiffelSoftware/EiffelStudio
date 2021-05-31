@@ -1,8 +1,7 @@
-note
+﻿note
 	description: "Object that represents a list of formal generic declaraction"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
-	author: ""
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -17,7 +16,7 @@ inherit
 
 create
 	make,
-	make_filled
+	make_filled_with
 
 feature -- Visitor
 
@@ -135,7 +134,7 @@ feature -- Settings
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2014, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2021, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

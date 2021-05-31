@@ -1,8 +1,7 @@
-note
+﻿note
 	description: "Object that represents a CONVERT_FEAT_AS list"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
-	author: ""
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -16,7 +15,7 @@ inherit
 		end
 
 create
-	make, make_filled
+	make, make_filled_with
 
 feature -- Visitor
 
@@ -61,7 +60,7 @@ feature -- Roundtrip
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2014, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2021, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

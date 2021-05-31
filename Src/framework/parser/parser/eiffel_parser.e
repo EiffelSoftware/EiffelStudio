@@ -3827,7 +3827,7 @@ debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line <not available>")
 end
 
-				if attached ast_factory.new_indexing_clause_as (0) as l_list then
+				if attached ast_factory.new_indexing_clause_as (Void, 0) as l_list then
 					yyval117 := l_list
 					l_list.set_indexing_keyword (extract_keyword (yyvs15.item (yyvsp15)))
 				end
@@ -3880,7 +3880,7 @@ debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line <not available>")
 end
 
-				if attached ast_factory.new_indexing_clause_as (0) as l_list then
+				if attached ast_factory.new_indexing_clause_as (Void, 0) as l_list then
 					yyval117 := l_list
 					l_list.set_indexing_keyword (extract_keyword (yyvs15.item (yyvsp15)))
 				end
@@ -3935,7 +3935,7 @@ debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line <not available>")
 end
 
-				if attached ast_factory.new_indexing_clause_as (0) as l_list then
+				if attached ast_factory.new_indexing_clause_as (Void, 0) as l_list then
 						yyval117 := l_list
 						l_list.set_indexing_keyword (extract_keyword (yyvs15.item (yyvsp15)))
 						l_list.set_end_keyword (yyvs14.item (yyvsp14))
@@ -4006,9 +4006,8 @@ debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line <not available>")
 end
 
-				yyval117 := ast_factory.new_indexing_clause_as (counter_value + 1)
-				if attached yyval117 as l_list and then attached yyvs62.item (yyvsp62) as l_val then
-					l_list.reverse_extend (l_val)
+				if attached yyvs62.item (yyvsp62) as v then
+					yyval117 := ast_factory.new_indexing_clause_as (v, counter_value + 1)
 				end
 			
 if yy_parsing_status >= yyContinue then
@@ -4037,8 +4036,8 @@ debug ("GEYACC")
 end
 
 				yyval117 := yyvs117.item (yyvsp117)
-				if attached yyval117 as l_list and then attached yyvs62.item (yyvsp62) as l_val then
-					l_list.reverse_extend (l_val)
+				if attached yyval117 as l_list and then attached yyvs62.item (yyvsp62) as v then
+					l_list.reverse_extend (v)
 				end
 			
 if yy_parsing_status >= yyContinue then
@@ -4059,9 +4058,8 @@ debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line <not available>")
 end
 
-				yyval117 := ast_factory.new_indexing_clause_as (counter_value + 1)
-				if attached yyval117 as l_list and then attached yyvs62.item (yyvsp62) as l_val then
-					l_list.reverse_extend (l_val)
+				if attached yyvs62.item (yyvsp62) as v then
+					yyval117 := ast_factory.new_indexing_clause_as (v, counter_value + 1)
 				end
 			
 if yy_parsing_status >= yyContinue then
@@ -4090,8 +4088,8 @@ debug ("GEYACC")
 end
 
 				yyval117 := yyvs117.item (yyvsp117)
-				if attached yyval117 as l_list and then attached yyvs62.item (yyvsp62) as l_val then
-					l_list.reverse_extend (l_val)
+				if attached yyval117 as l_list and then attached yyvs62.item (yyvsp62) as v then
+					l_list.reverse_extend (v)
 				end
 			
 if yy_parsing_status >= yyContinue then
@@ -4240,9 +4238,8 @@ debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line <not available>")
 end
 
-				yyval95 := ast_factory.new_eiffel_list_atomic_as (counter_value + 1)
-				if attached yyval95 as l_list and then attached yyvs31.item (yyvsp31) as l_val then
-					l_list.reverse_extend (l_val)
+				if attached yyvs31.item (yyvsp31) as v then
+					yyval95 := ast_factory.new_eiffel_list_atomic_as (v, counter_value + 1)
 				end
 			
 if yy_parsing_status >= yyContinue then
@@ -4296,7 +4293,7 @@ debug ("GEYACC")
 end
 
 -- TO DO: remove this TE_SEMICOLON (see: INDEX_AS.index_list /= Void)
-				yyval95 := ast_factory.new_eiffel_list_atomic_as (0)
+				yyval95 := ast_factory.new_eiffel_list_atomic_as (Void, 0)
 			
 if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 1
@@ -4323,9 +4320,8 @@ debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line <not available>")
 end
 
-				yyval95 := ast_factory.new_eiffel_list_atomic_as (counter_value + 1)
-				if attached yyval95 as l_list and then attached yyvs31.item (yyvsp31) as l_val then
-					l_list.reverse_extend (l_val)
+				if attached yyvs31.item (yyvsp31) as v then
+					yyval95 := ast_factory.new_eiffel_list_atomic_as (v, counter_value + 1)
 				end
 			
 if yy_parsing_status >= yyContinue then
@@ -4354,8 +4350,8 @@ debug ("GEYACC")
 end
 
 				yyval95 := yyvs95.item (yyvsp95)
-				if attached yyval95 as l_list and then attached yyvs31.item (yyvsp31) as l_val then
-					l_list.reverse_extend (l_val)
+				if attached yyval95 as l_list and then attached yyvs31.item (yyvsp31) as v then
+					l_list.reverse_extend (v)
 					ast_factory.reverse_extend_separator (l_list, yyvs4.item (yyvsp4))
 				end
 			
@@ -4920,9 +4916,8 @@ debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line <not available>")
 end
 
-				yyval107 := ast_factory.new_eiffel_list_feature_clause_as (counter_value + 1)
-				if attached yyval107 as l_list and then attached yyvs55.item (yyvsp55) as l_val then
-					l_list.reverse_extend (l_val)
+				if attached yyvs55.item (yyvsp55) as v then
+					yyval107 := ast_factory.new_eiffel_list_feature_clause_as (v, counter_value + 1)
 				end
 			
 if yy_parsing_status >= yyContinue then
@@ -4974,7 +4969,7 @@ debug ("GEYACC")
 end
 
 yyval55 := ast_factory.new_feature_clause_as (yyvs39.item (yyvsp39),
-				ast_factory.new_eiffel_list_feature_as (0), fclause_pos, feature_clause_end_position) 
+				ast_factory.new_eiffel_list_feature_as (Void, 0), fclause_pos, feature_clause_end_position) 
 if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 2
 	yyvsp55 := yyvsp55 + 1
@@ -5141,11 +5136,12 @@ end
 						(create {SYNTAX_WARNING}.make (token_line (yyvs4.item (yyvsp4 - 1)), token_column (yyvs4.item (yyvsp4 - 1)), filename,
 						locale.translation_in_context (once "Empty Client_list is not allowed and will be assumed to be {NONE}.", once "parser.eiffel.warning")))
 				end
-				yyval116 := ast_factory.new_class_list_as (1)
-				if attached yyval116 as l_list and then attached new_none_id as l_none_id then
-					l_list.reverse_extend (l_none_id)
-					l_list.set_lcurly_symbol (yyvs4.item (yyvsp4 - 1))
-					l_list.set_rcurly_symbol (yyvs4.item (yyvsp4))
+				if attached new_none_id as l_none_id then
+					yyval116 := ast_factory.new_class_list_as (l_none_id, 1)
+					if attached yyval116 as l_list then
+						l_list.set_lcurly_symbol (yyvs4.item (yyvsp4 - 1))
+						l_list.set_rcurly_symbol (yyvs4.item (yyvsp4))
+					end
 				end
 			
 if yy_parsing_status >= yyContinue then
@@ -5197,10 +5193,9 @@ debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line <not available>")
 end
 
-				yyval116 := ast_factory.new_class_list_as (counter_value + 1)
-				if attached yyval116 as l_list and then attached yyvs2.item (yyvsp2) as l_val then
-					l_list.reverse_extend (l_val)
-					suppliers.insert_light_supplier_id (l_val)
+				if attached yyvs2.item (yyvsp2) as v then
+					yyval116 := ast_factory.new_class_list_as (v, counter_value + 1)
+					suppliers.insert_light_supplier_id (v)
 				end
 			
 if yy_parsing_status >= yyContinue then
@@ -5254,9 +5249,8 @@ debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line <not available>")
 end
 
-				yyval106 := ast_factory.new_eiffel_list_feature_as (counter_value + 1)
-				if attached yyval106 as l_list and then attached yyvs54.item (yyvsp54) as l_val then
-					l_list.reverse_extend (l_val)
+				if attached yyvs54.item (yyvsp54) as v then
+					yyval106 := ast_factory.new_eiffel_list_feature_as (v, counter_value + 1)
 				end
 			
 if yy_parsing_status >= yyContinue then
@@ -5448,9 +5442,8 @@ debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line <not available>")
 end
 
-				yyval108 := ast_factory.new_eiffel_list_feature_name (counter_value + 1)
-				if attached yyval108 as l_list and then attached yyvs94.item (yyvsp94) as l_val then
-					l_list.reverse_extend (l_val)
+				if attached yyvs94.item (yyvsp94) as v then
+					yyval108 := ast_factory.new_eiffel_list_feature_name (v, counter_value + 1)
 				end
 			
 if yy_parsing_status >= yyContinue then
@@ -6294,7 +6287,7 @@ end
 							(create {SYNTAX_WARNING}.make (token_line (yyvs14.item (yyvsp14)), token_column (yyvs14.item (yyvsp14)), filename,
 							locale.translation_in_context (once "Use `inherit ANY` or do not specify an empty inherit clause", once "parser.eiffel.warning")))
 					end
-					yyval123 := ast_factory.new_eiffel_list_parent_as (0)
+					yyval123 := ast_factory.new_eiffel_list_parent_as (Void, 0)
 					if attached yyval123 as l_inheritance then
 						l_inheritance.set_inheritance_tokens (yyvs14.item (yyvsp14), Void, Void, Void)
 					end
@@ -6435,9 +6428,8 @@ debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line <not available>")
 end
 
-				yyval123 := ast_factory.new_eiffel_list_parent_as (counter_value + 1)
-				if attached yyval123 as l_list and then attached yyvs75.item (yyvsp75) as l_val then
-					l_list.reverse_extend (l_val)
+				if attached yyvs75.item (yyvsp75) as v then
+					yyval123 := ast_factory.new_eiffel_list_parent_as (v, counter_value + 1)
 				end
 			
 if yy_parsing_status >= yyContinue then
@@ -6773,9 +6765,8 @@ debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line <not available>")
 end
 
-				yyval124 := ast_factory.new_eiffel_list_rename_as (counter_value + 1)
-				if attached yyval124 as l_list and then attached yyvs79.item (yyvsp79) as l_val then
-					l_list.reverse_extend (l_val)
+				if attached yyvs79.item (yyvsp79) as v then
+					yyval124 := ast_factory.new_eiffel_list_rename_as (v, counter_value + 1)
 				end
 			
 if yy_parsing_status >= yyContinue then
@@ -6952,9 +6943,8 @@ debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line <not available>")
 end
 
-				yyval102 := ast_factory.new_eiffel_list_export_item_as (counter_value + 1)
-				if attached yyval102 as l_list and then attached yyvs49.item (yyvsp49) as l_val then
-					l_list.reverse_extend (l_val)
+				if attached yyvs49.item (yyvsp49) as v then
+					yyval102 := ast_factory.new_eiffel_list_export_item_as (v, counter_value + 1)
 				end
 			
 if yy_parsing_status >= yyContinue then
@@ -7168,9 +7158,8 @@ debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line <not available>")
 end
 
-			yyval98 := ast_factory.new_eiffel_list_convert (counter_value + 1)
-			if attached yyval98 as l_list and then attached yyvs41.item (yyvsp41) as l_val then
-				l_list.reverse_extend (l_val)
+			if attached yyvs41.item (yyvsp41) as v then
+				yyval98 := ast_factory.new_eiffel_list_convert (v, counter_value + 1)
 			end
 		
 if yy_parsing_status >= yyContinue then
@@ -7303,13 +7292,11 @@ debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line <not available>")
 end
 
-				yyval109 := ast_factory.new_eiffel_list_feature_name_id (counter_value + 1)
 				if
-					attached yyval109 as l_list and then
 					attached yyvs2.item (yyvsp2) as l_val and then
 					attached ast_factory.new_feature_name_id_as (l_val) as l_id
 				then
-					l_list.reverse_extend (l_id)
+					yyval109 := ast_factory.new_eiffel_list_feature_name_id (l_id, counter_value + 1)
 				end
 			
 if yy_parsing_status >= yyContinue then
@@ -7384,9 +7371,8 @@ debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line <not available>")
 end
 
-				yyval108 := ast_factory.new_eiffel_list_feature_name (counter_value + 1)
-				if attached yyval108 as l_list and then attached yyvs94.item (yyvsp94) as l_val then
-					l_list.reverse_extend (l_val)
+				if attached yyvs94.item (yyvsp94) as v then
+					yyval108 := ast_factory.new_eiffel_list_feature_name (v, counter_value + 1)
 				end
 			
 if yy_parsing_status >= yyContinue then
@@ -7792,9 +7778,8 @@ debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line <not available>")
 end
 
-				yyval130 := ast_factory.new_eiffel_list_type_dec_as (counter_value + 1)
-				if attached yyval130 as l_list and then attached yyvs91.item (yyvsp91) as l_val then
-					l_list.reverse_extend (l_val)
+				if attached yyvs91.item (yyvsp91) as v then
+					yyval130 := ast_factory.new_eiffel_list_type_dec_as (v, counter_value + 1)
 				end
 			
 if yy_parsing_status >= yyContinue then
@@ -7878,9 +7863,8 @@ debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line <not available>")
 end
 
-				yyval131 := ast_factory.new_eiffel_list_list_dec_as (counter_value + 1)
-				if attached yyval131 as l_list and then attached yyvs92.item (yyvsp92) as l_val then
-					l_list.reverse_extend (l_val)
+				if attached yyvs92.item (yyvsp92) as v then
+					yyval131 := ast_factory.new_eiffel_list_list_dec_as (v, counter_value + 1)
 				end
 			
 if yy_parsing_status >= yyContinue then
@@ -7999,10 +7983,12 @@ debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line <not available>")
 end
 
-				yyval22 := ast_factory.new_identifier_list (counter_value + 1)
-				if attached yyval22 as l_list and then attached yyvs2.item (yyvsp2) as l_val then
-					l_list.reverse_extend (l_val.name_id)
-					ast_factory.reverse_extend_identifier (l_list, l_val)
+				
+				if attached yyvs2.item (yyvsp2) as v then
+					yyval22 := ast_factory.new_identifier_list (v.name_id, counter_value + 1)
+					if attached yyval22 as l_list then
+						ast_factory.reverse_extend_identifier (l_list, v)
+					end
 				end
 			
 if yy_parsing_status >= yyContinue then
@@ -8056,7 +8042,7 @@ debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line <not available>")
 end
 
-yyval22 := ast_factory.new_identifier_list (0) 
+yyval22 := ast_factory.new_identifier_list (0, 0) 
 if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 0
 	yyvsp22 := yyvsp22 + 1
@@ -8495,7 +8481,7 @@ debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line <not available>")
 end
 
-yyval132 := ast_factory.new_local_dec_list_as (ast_factory.new_eiffel_list_type_dec_as (0), yyvs14.item (yyvsp14)) 
+yyval132 := ast_factory.new_local_dec_list_as (ast_factory.new_eiffel_list_type_dec_as (Void, 0), yyvs14.item (yyvsp14)) 
 if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 1
 	yyvsp132 := yyvsp132 + 1
@@ -8593,9 +8579,8 @@ debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line <not available>")
 end
 
-				yyval119 := ast_factory.new_eiffel_list_instruction_as (counter_value + 1)
-				if attached yyval119 as l_list and then attached yyvs65.item (yyvsp65) as l_val then
-					l_list.reverse_extend (l_val)
+				if attached yyvs65.item (yyvsp65) as v then
+					yyval119 := ast_factory.new_eiffel_list_instruction_as (v, counter_value + 1)
 				end
 			
 if yy_parsing_status >= yyContinue then
@@ -9424,7 +9409,7 @@ end
 				if attached yyvs86.item (yyvsp86) as l_val then
 					yyval128 := ast_factory.new_eiffel_list_tagged_as (counter_value + 1)
 					if attached yyval128 as l_list then
-						l_list.reverse_extend (l_val)
+						l_list.back_extend (l_val)
 					end
 				else
 					yyval128 := ast_factory.new_eiffel_list_tagged_as (counter_value)
@@ -9457,7 +9442,7 @@ end
 
 				yyval128 := yyvs128.item (yyvsp128)
 				if attached yyval128 as l_list and then attached yyvs86.item (yyvsp86) as l_val then
-					l_list.reverse_extend (l_val)
+					l_list.back_extend (l_val)
 				end
 			
 if yy_parsing_status >= yyContinue then
@@ -10943,7 +10928,7 @@ end
 						(create {SYNTAX_WARNING}.make (token_line (yyvs4.item (yyvsp4 - 1)), token_column (yyvs4.item (yyvsp4 - 1)), filename,
 						locale.translation_in_context (once "Empty Type_list is not allowed and will be discarded.", once "parser.eiffel.warning")))
 				end
-				if attached ast_factory.new_eiffel_list_type (0) as l_list then
+				if attached ast_factory.new_eiffel_list_type (Void, 0) as l_list then
 					yyval129 := l_list
 					l_list.set_positions (yyvs4.item (yyvsp4 - 1), yyvs4.item (yyvsp4))
 				end	
@@ -10991,9 +10976,8 @@ debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line <not available>")
 end
 
-				yyval129 := ast_factory.new_eiffel_list_type (counter_value + 1)
-				if attached yyval129 as l_list and then attached yyvs88.item (yyvsp88) as l_val then
-					l_list.reverse_extend (l_val)
+				if attached yyvs88.item (yyvsp88) as v then
+					yyval129 := ast_factory.new_eiffel_list_type (v, counter_value + 1)
 				end
 			
 if yy_parsing_status >= yyContinue then
@@ -11079,7 +11063,7 @@ end
 						(create {SYNTAX_WARNING}.make (token_line (yyvs4.item (yyvsp4 - 1)), token_column (yyvs4.item (yyvsp4 - 1)), filename,
 						locale.translation_in_context (once "Empty Type_list is not allowed and will be discarded.", once "parser.eiffel.warning")))
 				end
-				if attached ast_factory.new_eiffel_list_type (0) as l_type_list then
+				if attached ast_factory.new_eiffel_list_type (Void, 0) as l_type_list then
 					l_type_list.set_positions (yyvs4.item (yyvsp4 - 1), yyvs4.item (yyvsp4))
 					yyval88 := ast_factory.new_class_type_as (yyvs2.item (yyvsp2), l_type_list)
 				else
@@ -11185,9 +11169,8 @@ debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line <not available>")
 end
 
-				yyval129 := ast_factory.new_eiffel_list_type (counter_value + 1)
-				if attached yyval129 as l_list and then attached yyvs88.item (yyvsp88) as l_val then
-					l_list.reverse_extend (l_val)
+				if attached yyvs88.item (yyvsp88) as v then
+					yyval129 := ast_factory.new_eiffel_list_type (v, counter_value + 1)
 				end
 				last_rsqure.force (yyvs4.item (yyvsp4))
 			
@@ -11271,16 +11254,15 @@ debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line <not available>")
 end
 
-				yyval130 := ast_factory.new_eiffel_list_type_dec_as (counter2_value + 1)
-				if
-					attached yyval130 as l_named_list and then attached yyvs2.item (yyvsp2) as l_name and then
-					attached ast_factory.new_identifier_list (counter_value + 1) as l_list and then
-					attached ast_factory.new_type_dec_as (l_list, yyvs88.item (yyvsp88), yyvs4.item (yyvsp4 - 1)) as l_type_dec_as
-				then
-					l_name.to_lower		
-					l_list.reverse_extend (l_name.name_id)
-					ast_factory.reverse_extend_identifier (l_list, l_name)
-					l_named_list.reverse_extend (l_type_dec_as)
+				if attached yyvs2.item (yyvsp2) as l_name then
+					l_name.to_lower
+					if
+						attached ast_factory.new_identifier_list (l_name.name_id, counter_value + 1) as l_list and then
+						attached ast_factory.new_type_dec_as (l_list, yyvs88.item (yyvsp88), yyvs4.item (yyvsp4 - 1)) as l_type_dec_as
+					then
+						ast_factory.reverse_extend_identifier (l_list, l_name)
+						yyval130 := ast_factory.new_eiffel_list_type_dec_as (l_type_dec_as, counter2_value + 1)
+					end
 				end
 				last_rsqure.force (yyvs4.item (yyvsp4))
 			
@@ -11344,15 +11326,15 @@ end
 
 				remove_counter
 				yyval130 := yyvs130.item (yyvsp130)
-				if
-					attached yyval130 as l_named_list and then attached yyvs2.item (yyvsp2) as l_name and then yyvs88.item (yyvsp88) /= Void and then
-					attached ast_factory.new_identifier_list (counter_value + 1) as l_list and then
-					attached ast_factory.new_type_dec_as (l_list, yyvs88.item (yyvsp88), yyvs4.item (yyvsp4 - 1)) as l_type_dec_as
-				then
-					l_name.to_lower		
-					l_list.reverse_extend (l_name.name_id)
-					ast_factory.reverse_extend_identifier (l_list, l_name)
-					l_named_list.reverse_extend (l_type_dec_as)
+				if attached yyval130 as l_named_list and then attached yyvs2.item (yyvsp2) as l_name and then attached yyvs88.item (yyvsp88) then
+					l_name.to_lower
+					if
+						attached ast_factory.new_identifier_list (l_name.name_id, counter_value + 1) as l_list and then
+						attached ast_factory.new_type_dec_as (l_list, yyvs88.item (yyvsp88), yyvs4.item (yyvsp4 - 1)) as l_type_dec_as
+					then
+						ast_factory.reverse_extend_identifier (l_list, l_name)
+						l_named_list.reverse_extend (l_type_dec_as)
+					end
 				end
 			
 if yy_parsing_status >= yyContinue then
@@ -11410,7 +11392,7 @@ end
 						locale.translation_in_context (once "Empty Formal_generic_list is not allowed and will be discarded.", once "parser.eiffel.warning")))
 				end
 				set_formal_generics_end_positions (True)
-				yyval115 := ast_factory.new_eiffel_list_formal_dec_as (0)
+				yyval115 := ast_factory.new_eiffel_list_formal_dec_as (Void, 0)
 				if attached yyval115 as l_formals then
 					l_formals.set_squre_symbols (yyvs4.item (yyvsp4 - 1), yyvs4.item (yyvsp4))
 				end
@@ -11481,9 +11463,8 @@ debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line <not available>")
 end
 
-				yyval115 := ast_factory.new_eiffel_list_formal_dec_as (counter_value + 1)
-				if attached yyval115 as l_list and then attached yyvs58.item (yyvsp58) as l_val then
-					l_list.reverse_extend (l_val)
+				if attached yyvs58.item (yyvsp58) as v then
+					yyval115 := ast_factory.new_eiffel_list_formal_dec_as (v, counter_value + 1)
 				end
 			
 if yy_parsing_status >= yyContinue then
@@ -11776,7 +11757,7 @@ end
 					attached yyvs136.item (yyvsp136) as l_val and then
 					attached ast_factory.new_eiffel_list_constraining_type_as (1) as l_list
 				then
-					l_list.reverse_extend (l_val)
+					l_list.back_extend (l_val)
 					yyval134 := ast_factory.new_constraint_triple (yyvs4.item (yyvsp4), l_list, yyvs111.item (yyvsp111))
 				else
 					yyval134 := ast_factory.new_constraint_triple (yyvs4.item (yyvsp4), Void, yyvs111.item (yyvsp111))
@@ -11985,7 +11966,7 @@ end
 				if attached yyvs136.item (yyvsp136) as l_val then
 					yyval135 := ast_factory.new_eiffel_list_constraining_type_as (counter_value + 1)
 					if attached yyval135 as l_list then
-						l_list.reverse_extend (l_val)
+						l_list.back_extend (l_val)
 					end
 				else
 					yyval135 := ast_factory.new_eiffel_list_constraining_type_as (counter_value)
@@ -12018,7 +11999,7 @@ end
 
 				yyval135 := yyvs135.item (yyvsp135)
 				if attached yyval135 as l_list and then attached yyvs136.item (yyvsp136) as l_val then
-					l_list.reverse_extend (l_val)
+					l_list.back_extend (l_val)
 					ast_factory.reverse_extend_separator (l_list, yyvs4.item (yyvsp4))
 				end
 			
@@ -12255,9 +12236,8 @@ debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line <not available>")
 end
 
-				yyval100 := ast_factory.new_eiffel_list_elseif_as (counter_value + 1)
-				if attached yyval100 as l_list and then attached yyvs46.item (yyvsp46) as l_val then
-					l_list.reverse_extend (l_val)
+				if attached yyvs46.item (yyvsp46) as v then
+					yyval100 := ast_factory.new_eiffel_list_elseif_as (v, counter_value + 1)
 				end
 			
 if yy_parsing_status >= yyContinue then
@@ -12368,7 +12348,7 @@ end
 					yyval63 := ast_factory.new_inspect_as (yyvs50.item (yyvsp50), yyvs96.item (yyvsp96), yyvs119.item (yyvsp119), yyvs14.item (yyvsp14), yyvs14.item (yyvsp14 - 2), yyvs14.item (yyvsp14 - 1))
 				else
 					yyval63 := ast_factory.new_inspect_as (yyvs50.item (yyvsp50), yyvs96.item (yyvsp96),
-						ast_factory.new_eiffel_list_instruction_as (0), yyvs14.item (yyvsp14), yyvs14.item (yyvsp14 - 2), yyvs14.item (yyvsp14 - 1))
+						ast_factory.new_eiffel_list_instruction_as (Void, 0), yyvs14.item (yyvsp14), yyvs14.item (yyvsp14 - 2), yyvs14.item (yyvsp14 - 1))
 				end
 			
 if yy_parsing_status >= yyContinue then
@@ -12442,9 +12422,8 @@ debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line <not available>")
 end
 
-				yyval96 := ast_factory.new_eiffel_list_case_as (counter_value + 1)
-				if attached yyval96 as l_list and then attached yyvs36.item (yyvsp36) as l_val then
-					l_list.reverse_extend (l_val)
+				if attached yyvs36.item (yyvsp36) as v then
+					yyval96 := ast_factory.new_eiffel_list_case_as (v, counter_value + 1)
 				end
 			
 if yy_parsing_status >= yyContinue then
@@ -12524,9 +12503,8 @@ debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line <not available>")
 end
 
-				yyval120 := ast_factory.new_eiffel_list_interval_as (counter_value + 1)
-				if attached yyval120 as l_list and then attached yyvs68.item (yyvsp68) as l_val then
-					l_list.reverse_extend (l_val)
+				if attached yyvs68.item (yyvsp68) as v then
+					yyval120 := ast_factory.new_eiffel_list_interval_as (v, counter_value + 1)
 				end
 			
 if yy_parsing_status >= yyContinue then
@@ -13935,9 +13913,8 @@ debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line <not available>")
 end
 
-				yyval126 := ast_factory.new_eiffel_list_string_as (counter_value + 1)
-				if attached yyval126 as l_list and then attached yyvs16.item (yyvsp16) as l_val then
-					l_list.reverse_extend (l_val)
+				if attached yyvs16.item (yyvsp16) as v then
+					yyval126 := ast_factory.new_eiffel_list_string_as (v, counter_value + 1)
 				end
 			
 if yy_parsing_status >= yyContinue then
@@ -14016,7 +13993,7 @@ debug ("GEYACC")
 end
 
 				if yyvs119.item (yyvsp119) = Void then
-					yyval19 := ast_factory.new_keyword_instruction_list_pair (yyvs14.item (yyvsp14), ast_factory.new_eiffel_list_instruction_as (0))
+					yyval19 := ast_factory.new_keyword_instruction_list_pair (yyvs14.item (yyvsp14), ast_factory.new_eiffel_list_instruction_as (Void, 0))
 				else
 					yyval19 := ast_factory.new_keyword_instruction_list_pair (yyvs14.item (yyvsp14), yyvs119.item (yyvsp119))
 				end
@@ -14202,9 +14179,8 @@ debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line <not available>")
 end
 
-				yyval99 := ast_factory.new_eiffel_list_create_as (counter_value + 1)
-				if attached yyval99 as l_list and then attached yyvs42.item (yyvsp42) as l_val then
-					l_list.reverse_extend (l_val)
+				if attached yyvs42.item (yyvsp42) as v then
+					yyval99 := ast_factory.new_eiffel_list_create_as (v, counter_value + 1)
 				end
 			
 if yy_parsing_status >= yyContinue then
@@ -14978,9 +14954,8 @@ debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line <not available>")
 end
 
-				yyval121 := ast_factory.new_eiffel_list_operand_as (counter_value + 1)
-				if attached yyval121 as l_list and then attached yyvs74.item (yyvsp74) as l_val then
-					l_list.reverse_extend (l_val)
+				if attached yyvs74.item (yyvsp74) as v then
+					yyval121 := ast_factory.new_eiffel_list_operand_as (v, counter_value + 1)
 				end
 			
 if yy_parsing_status >= yyContinue then
@@ -15648,9 +15623,8 @@ debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line <not available>")
 end
 
-				yyval110 := ast_factory.new_eiffel_list_named_expression_as (counter_value + 1)
-				if attached yyval110 as l_list and then attached yyvs72.item (yyvsp72) as l_val then
-					l_list.reverse_extend (l_val)
+				if attached yyvs72.item (yyvsp72) as v then
+					yyval110 := ast_factory.new_eiffel_list_named_expression_as (v, counter_value + 1)
 				end
 			
 if yy_parsing_status >= yyContinue then
@@ -18213,9 +18187,8 @@ debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line <not available>")
 end
 
-				yyval104 := ast_factory.new_eiffel_list_expr_as (counter_value + 1)
-				if attached yyval104 as l_list and then attached yyvs50.item (yyvsp50) as l_val then
-					l_list.reverse_extend (l_val)
+				if attached yyvs50.item (yyvsp50) as v then
+					yyval104 := ast_factory.new_eiffel_list_expr_as (v, counter_value + 1)
 				end
 			
 if yy_parsing_status >= yyContinue then
@@ -18268,9 +18241,8 @@ debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line <not available>")
 end
 
-				yyval104 := ast_factory.new_eiffel_list_expr_as (counter_value + 1)
-				if attached yyval104 as l_list and then attached yyvs50.item (yyvsp50) as l_val then
-					l_list.reverse_extend (l_val)
+				if attached yyvs50.item (yyvsp50) as v then
+					yyval104 := ast_factory.new_eiffel_list_expr_as (v, counter_value + 1)
 				end
 			
 if yy_parsing_status >= yyContinue then
@@ -18796,9 +18768,8 @@ debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line <not available>")
 end
 
-				yyval101 := ast_factory.new_eiffel_list_elseif_expression_as (counter_value + 1)
-				if attached yyval101 as l_list and then attached yyvs47.item (yyvsp47) as l_val then
-					l_list.reverse_extend (l_val)
+				if attached yyvs47.item (yyvsp47) as v then
+					yyval101 := ast_factory.new_eiffel_list_elseif_expression_as (v, counter_value + 1)
 				end
 			
 if yy_parsing_status >= yyContinue then
@@ -18975,9 +18946,8 @@ debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line <not available>")
 end
 
-				yyval97 := ast_factory.new_eiffel_list_case_expression_as (counter_value + 1)
-				if attached yyval97 as l_list and then attached yyvs37.item (yyvsp37) as l_val then
-					l_list.reverse_extend (l_val)
+				if attached yyvs37.item (yyvsp37) as v then
+					yyval97 := ast_factory.new_eiffel_list_case_expression_as (v, counter_value + 1)
 				end
 			
 if yy_parsing_status >= yyContinue then
@@ -21001,7 +20971,7 @@ debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line <not available>")
 end
 
-yyval29 := ast_factory.new_array_as (ast_factory.new_eiffel_list_expr_as (0), yyvs4.item (yyvsp4 - 1), yyvs4.item (yyvsp4)) 
+yyval29 := ast_factory.new_array_as (ast_factory.new_eiffel_list_expr_as (Void, 0), yyvs4.item (yyvsp4 - 1), yyvs4.item (yyvsp4)) 
 if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 2
 	yyvsp29 := yyvsp29 + 1
@@ -21027,7 +20997,7 @@ debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line <not available>")
 end
 
-				yyval29 := ast_factory.new_array_as (ast_factory.new_eiffel_list_expr_as (0), yyvs4.item (yyvsp4 - 1), yyvs4.item (yyvsp4))
+				yyval29 := ast_factory.new_array_as (ast_factory.new_eiffel_list_expr_as (Void, 0), yyvs4.item (yyvsp4 - 1), yyvs4.item (yyvsp4))
 				if attached yyval29 as a then
 					a.set_type (yyvs88.item (yyvsp88))
 				end
@@ -21119,7 +21089,7 @@ debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line <not available>")
 end
 
-yyval87 := ast_factory.new_tuple_as (ast_factory.new_eiffel_list_expr_as (0), yyvs4.item (yyvsp4 - 1), yyvs4.item (yyvsp4)) 
+yyval87 := ast_factory.new_tuple_as (ast_factory.new_eiffel_list_expr_as (Void, 0), yyvs4.item (yyvsp4 - 1), yyvs4.item (yyvsp4)) 
 if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 2
 	yyvsp87 := yyvsp87 + 1

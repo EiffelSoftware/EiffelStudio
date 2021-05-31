@@ -228,13 +228,14 @@ feature -- Access
 		end
 
 	new_eiffel_list_constraining_type_as (n: INTEGER): detachable CONSTRAINT_LIST_AS
-			-- New empty list of `CONSTRAINING_TYPE_AS'
+			-- New empty list of `{CONSTRAINING_TYPE_AS}`.
 		require
-			n_non_negative: n >= 0
+			n >= 0
 		do
-			create Result.make_filled (n)
+			create Result.make (n)
 		ensure
-			list_full: Result /= Void implies Result.capacity = n and Result.all_default
+			attached Result ⇒ Result.capacity = n
+			attached Result ⇒ Result.is_empty
 		end
 
 	new_alias_list (n: INTEGER): CONSTRUCT_LIST [ALIAS_NAME_INFO]
@@ -244,7 +245,7 @@ feature -- Access
 		do
 			create Result.make (n)
 		ensure
-			list_full: Result /= Void implies Result.capacity = n and Result.all_default
+			list_full: Result /= Void implies Result.capacity = n and Result.is_empty
 		end
 
 	new_alias_name_info (k_as: detachable KEYWORD_AS; n_as: detachable STRING_AS): detachable ALIAS_NAME_INFO
@@ -1093,94 +1094,115 @@ feature -- Access
 			create Result.make (c, k_as)
 		end
 
-	new_eiffel_list_atomic_as (n: INTEGER): detachable EIFFEL_LIST [ATOMIC_AS]
-			-- New empty list of ATOMIC_AS
+	new_eiffel_list_atomic_as (a: detachable ATOMIC_AS; n: INTEGER): detachable EIFFEL_LIST [ATOMIC_AS]
+			-- New list with `n` elements `a`.
 		require
-			n_non_negative: n >= 0
+			n >= 0
+			n > 0 ⇒ attached a
 		do
-			create Result.make_filled (n)
+			if attached a then
+				create Result.make_filled_with (a, n)
+			else
+				check from_precondition: n = 0 end
+				create Result.make (0)
+			end
 		ensure
-			list_full: Result /= Void implies Result.capacity = n and Result.all_default
+			attached Result ⇒ Result.count = n ∧ Result.full
+			attached Result ∧ attached a ⇒ Result.occurrences (a) = n
 		end
 
-	new_eiffel_list_case_as (n: INTEGER): detachable EIFFEL_LIST [CASE_AS]
-			-- New empty list of CASE_AS
+	new_eiffel_list_case_as (a: CASE_AS; n: INTEGER): detachable EIFFEL_LIST [CASE_AS]
+			-- New list with `n` elements `a`.
 		require
-			n_non_negative: n >= 0
+			n >= 0
 		do
-			create Result.make_filled (n)
+			create Result.make_filled_with (a, n)
 		ensure
-			list_full: Result /= Void implies (Result.capacity = n and Result.all_default)
+			attached Result ⇒ Result.count = n ∧ Result.full
+			attached Result ⇒ Result.occurrences (a) = n
 		end
 
-	new_eiffel_list_case_expression_as (n: INTEGER): detachable EIFFEL_LIST [CASE_EXPRESSION_AS]
-			-- New empty list of `{CASE_EXPRESSION_AS}`.
+	new_eiffel_list_case_expression_as (a: CASE_EXPRESSION_AS; n: INTEGER): detachable EIFFEL_LIST [CASE_EXPRESSION_AS]
+			-- New list with `n` elements `a`.
 		require
-			n_non_negative: n >= 0
+			n >= 0
 		do
-			create Result.make_filled (n)
+			create Result.make_filled_with (a, n)
 		ensure
-			list_full: attached Result implies (Result.capacity = n and Result.all_default)
+			attached Result ⇒ Result.count = n ∧ Result.full
+			attached Result ⇒ Result.occurrences (a) = n
 		end
 
-	new_eiffel_list_convert (n: INTEGER): detachable CONVERT_FEAT_LIST_AS
-			-- New empty list of CONVERT_FEAT_AS
+	new_eiffel_list_convert (a: CONVERT_FEAT_AS; n: INTEGER): detachable CONVERT_FEAT_LIST_AS
+			-- New conversion list with `n` elements `a`.
 		require
-			n_non_negative: n >= 0
+			n >= 0
 		do
-			create Result.make_filled (n)
+			create Result.make_filled_with (a, n)
 		ensure
-			list_full: Result /= Void implies Result.capacity = n and Result.all_default
+			attached Result ⇒ Result.count = n ∧ Result.full
+			attached Result ⇒ Result.occurrences (a) = n
 		end
 
-	new_eiffel_list_create_as (n: INTEGER): detachable EIFFEL_LIST [CREATE_AS]
-			-- New empty list of CREATE_AS
+	new_eiffel_list_create_as (a: CREATE_AS; n: INTEGER): detachable EIFFEL_LIST [CREATE_AS]
+			-- New list with `n` elements `a`.
 		require
-			n_non_negative: n >= 0
+			n >= 0
 		do
-			create Result.make_filled (n)
+			create Result.make_filled_with (a, n)
 		ensure
-			list_full: Result /= Void implies Result.capacity = n and Result.all_default
+			attached Result ⇒ Result.count = n ∧ Result.full
+			attached Result ⇒ Result.occurrences (a) = n
 		end
 
-	new_eiffel_list_elseif_as (n: INTEGER): detachable EIFFEL_LIST [ELSIF_AS]
-			-- New empty list of ELSIF_AS
+	new_eiffel_list_elseif_as (a: ELSIF_AS; n: INTEGER): detachable EIFFEL_LIST [ELSIF_AS]
+			-- New list with `n` elements `a`.
 		require
-			n_non_negative: n >= 0
+			n >= 0
 		do
-			create Result.make_filled (n)
+			create Result.make_filled_with (a, n)
 		ensure
-			list_full: Result /= Void implies Result.capacity = n and Result.all_default
+			attached Result ⇒ Result.count = n ∧ Result.full
+			attached Result ⇒ Result.occurrences (a) = n
 		end
 
-	new_eiffel_list_elseif_expression_as (n: INTEGER): detachable EIFFEL_LIST [ELSIF_EXPRESSION_AS]
-			-- New empty list of {ELSIF_EXPRESSION_AS} with capacity `n'.
+	new_eiffel_list_elseif_expression_as (a: ELSIF_EXPRESSION_AS; n: INTEGER): detachable EIFFEL_LIST [ELSIF_EXPRESSION_AS]
+			-- New list with `n` elements `a`.
 		require
-			n_non_negative: n >= 0
+			n >= 0
 		do
-			create Result.make_filled (n)
+			create Result.make_filled_with (a, n)
 		ensure
-			list_full: Result /= Void implies Result.capacity = n and Result.all_default
+			attached Result ⇒ Result.count = n ∧ Result.full
+			attached Result ⇒ Result.occurrences (a) = n
 		end
 
-	new_eiffel_list_export_item_as (n: INTEGER): detachable EIFFEL_LIST [EXPORT_ITEM_AS]
-			-- New empty list of EXPORT_ITEM_AS
+	new_eiffel_list_export_item_as (a: EXPORT_ITEM_AS; n: INTEGER): detachable EIFFEL_LIST [EXPORT_ITEM_AS]
+			-- New list with `n` elements `a`.
 		require
-			n_non_negative: n >= 0
+			n >= 0
 		do
-			create Result.make_filled (n)
+			create Result.make_filled_with (a, n)
 		ensure
-			list_full: Result /= Void implies Result.capacity = n and Result.all_default
+			attached Result ⇒ Result.count = n ∧ Result.full
+			attached Result ⇒ Result.occurrences (a) = n
 		end
 
-	new_eiffel_list_expr_as (n: INTEGER): detachable EIFFEL_LIST [EXPR_AS]
-			-- New empty list of PARAMETER_LIST_AS
+	new_eiffel_list_expr_as (a: detachable EXPR_AS; n: INTEGER): detachable EIFFEL_LIST [EXPR_AS]
+			-- New expression list with `n` elements `a`.
 		require
-			n_non_negative: n >= 0
+			n >= 0
+			n > 0 ⇒ attached a
 		do
-			create Result.make_filled (n)
+			if attached a then
+				create Result.make_filled_with (a, n)
+			else
+				check from_precondition: n = 0 end
+				create Result.make (0)
+			end
 		ensure
-			list_full: Result /= Void implies Result.capacity = n and Result.all_default
+			attached Result ⇒ Result.count = n ∧ Result.full
+			attached Result ∧ attached a ⇒ Result.occurrences (a) = n
 		end
 
 	new_parameter_list_as (l: detachable EIFFEL_LIST [EXPR_AS]; lp_as, rp_as: detachable SYMBOL_AS): detachable PARAMETER_LIST_AS
@@ -1191,184 +1213,232 @@ feature -- Access
 			end
 		end
 
-	new_eiffel_list_feature_as (n: INTEGER): detachable EIFFEL_LIST [FEATURE_AS]
-			-- New empty list of FEATURE_AS
+	new_eiffel_list_feature_as (a: detachable FEATURE_AS; n: INTEGER): detachable EIFFEL_LIST [FEATURE_AS]
+			-- New feature list with `n` elements `a`.
 		require
-			n_non_negative: n >= 0
+			n >= 0
+			n > 0 ⇒ attached a
 		do
-			create Result.make_filled (n)
+			if attached a then
+				create Result.make_filled_with (a, n)
+			else
+				check from_precondition: n = 0 end
+				create Result.make (0)
+			end
 		ensure
-			list_full: Result /= Void implies Result.capacity = n and Result.all_default
+			attached Result ⇒ Result.count = n ∧ Result.full
+			attached Result ∧ attached a ⇒ Result.occurrences (a) = n
 		end
 
-	new_eiffel_list_feature_clause_as (n: INTEGER): detachable EIFFEL_LIST [FEATURE_CLAUSE_AS]
-			-- New empty list of FEATURE_CLAUSE_AS
+	new_eiffel_list_feature_clause_as (a: FEATURE_CLAUSE_AS; n: INTEGER): detachable EIFFEL_LIST [FEATURE_CLAUSE_AS]
+			-- New list with `n` elements `a`.
 		require
-			n_non_negative: n >= 0
+			n >= 0
 		do
-			create Result.make_filled (n)
+			create Result.make_filled_with (a, n)
 		ensure
-			list_full: Result /= Void implies Result.capacity = n and Result.all_default
+			attached Result ⇒ Result.count = n ∧ Result.full
+			attached Result ⇒ Result.occurrences (a) = n
 		end
 
-	new_eiffel_list_feature_name (n: INTEGER): detachable EIFFEL_LIST [FEATURE_NAME]
-			-- New empty list of FEATURE_NAME
+	new_eiffel_list_feature_name (a: FEATURE_NAME; n: INTEGER): detachable EIFFEL_LIST [FEATURE_NAME]
+			-- New list with `n` elements `a`.
 		require
-			n_non_negative: n >= 0
+			n >= 0
 		do
-			create Result.make_filled (n)
+			create Result.make_filled_with (a, n)
 		ensure
-			list_full: Result /= Void implies Result.capacity = n and Result.all_default
+			attached Result ⇒ Result.count = n ∧ Result.full
+			attached Result ⇒ Result.occurrences (a) = n
 		end
 
-	new_eiffel_list_feature_name_id (n: INTEGER): detachable EIFFEL_LIST [FEAT_NAME_ID_AS]
-			-- New empty list of `{FEATURE_NAME_ID_AS}`.
+	new_eiffel_list_feature_name_id (a: FEAT_NAME_ID_AS; n: INTEGER): detachable EIFFEL_LIST [FEAT_NAME_ID_AS]
+			-- New list with `n` elements `a`.
 		require
-			n_non_negative: n >= 0
+			n >= 0
 		do
-			create Result.make_filled (n)
+			create Result.make_filled_with (a, n)
 		ensure
-			list_full: Result /= Void implies Result.capacity = n and Result.all_default
+			attached Result ⇒ Result.count = n ∧ Result.full
+			attached Result ⇒ Result.occurrences (a) = n
 		end
 
-	new_eiffel_list_formal_dec_as (n: INTEGER): detachable FORMAL_GENERIC_LIST_AS
-			-- New empty list of FORMAL_DEC_AS
+	new_eiffel_list_formal_dec_as (a: detachable FORMAL_DEC_AS; n: INTEGER): detachable FORMAL_GENERIC_LIST_AS
+			-- New formal generic list with `n` elements `a`.
 		require
-			n_non_negative: n >= 0
+			n >= 0
+			n > 0 ⇒ attached a
 		do
-			create Result.make_filled (n)
+			if attached a then
+				create Result.make_filled_with (a, n)
+			else
+				check from_precondition: n = 0 end
+				create Result.make (0)
+			end
 		ensure
-			list_full: Result /= Void implies Result.capacity = n and Result.all_default
+			attached Result ⇒ Result.count = n ∧ Result.full
+			attached Result ∧ attached a ⇒ Result.occurrences (a) = n
 		end
 
-	new_eiffel_list_id_as (n: INTEGER): detachable EIFFEL_LIST [ID_AS]
-			-- New empty list of ID_AS
+	new_indexing_clause_as (a: detachable INDEX_AS; n: INTEGER): detachable INDEXING_CLAUSE_AS
+			-- New note clause list with `n` elements `a`.
 		require
-			n_non_negative: n >= 0
+			n >= 0
+			n > 0 ⇒ attached a
 		do
-			create Result.make_filled (n)
+			if attached a then
+				create Result.make_filled_with (a, n)
+			else
+				check from_precondition: n = 0 end
+				create Result.make (0)
+			end
 		ensure
-			list_full: Result /= Void implies Result.capacity = n and Result.all_default
+			attached Result ⇒ Result.count = n ∧ Result.full
+			attached Result ∧ attached a ⇒ Result.occurrences (a) = n
 		end
 
-	new_indexing_clause_as (n: INTEGER): detachable INDEXING_CLAUSE_AS
-			-- New empty list of INDEX_AS
+	new_eiffel_list_instruction_as (a: detachable INSTRUCTION_AS; n: INTEGER): detachable EIFFEL_LIST [INSTRUCTION_AS]
+			-- New instruction list with `n` elements `a`.
 		require
-			n_non_negative: n >= 0
+			n >= 0
+			n > 0 ⇒ attached a
 		do
-			create Result.make_filled (n)
+			if attached a then
+				create Result.make_filled_with (a, n)
+			else
+				check from_precondition: n = 0 end
+				create Result.make (0)
+			end
 		ensure
-			list_full: Result /= Void implies Result.capacity = n and Result.all_default
+			attached Result ⇒ Result.count = n ∧ Result.full
+			attached Result ∧ attached a ⇒ Result.occurrences (a) = n
 		end
 
-	new_eiffel_list_instruction_as (n: INTEGER): detachable EIFFEL_LIST [INSTRUCTION_AS]
-			-- New empty list of INSTRUCTION_AS
+	new_eiffel_list_interval_as (a: INTERVAL_AS; n: INTEGER): detachable EIFFEL_LIST [INTERVAL_AS]
+			-- New list with `n` elements `a`.
 		require
-			n_non_negative: n >= 0
+			n >= 0
 		do
-			create Result.make_filled (n)
+			create Result.make_filled_with (a, n)
 		ensure
-			list_full: Result /= Void implies Result.capacity = n and Result.all_default
+			attached Result ⇒ Result.count = n ∧ Result.full
+			attached Result ⇒ Result.occurrences (a) = n
 		end
 
-	new_eiffel_list_interval_as (n: INTEGER): detachable EIFFEL_LIST [INTERVAL_AS]
-			-- New empty list of INTERVAL_AS
+	new_eiffel_list_named_expression_as (a: NAMED_EXPRESSION_AS; n: INTEGER): detachable EIFFEL_LIST [NAMED_EXPRESSION_AS]
+			-- New list with `n` elements `a`.
 		require
-			n_non_negative: n >= 0
+			n >= 0
 		do
-			create Result.make_filled (n)
+			create Result.make_filled_with (a, n)
 		ensure
-			list_full: Result /= Void implies Result.capacity = n and Result.all_default
+			attached Result ⇒ Result.count = n ∧ Result.full
+			attached Result ⇒ Result.occurrences (a) = n
 		end
 
-	new_eiffel_list_named_expression_as (n: INTEGER): detachable EIFFEL_LIST [NAMED_EXPRESSION_AS]
-			-- New empty list of `{NAMED_EXPRESSION_AS}'.
+	new_eiffel_list_operand_as (a: OPERAND_AS; n: INTEGER): detachable EIFFEL_LIST [OPERAND_AS]
 		require
-			n_non_negative: n >= 0
+			n >= 0
 		do
-			create Result.make_filled (n)
+			create Result.make_filled_with (a, n)
 		ensure
-			list_full: Result /= Void implies Result.capacity = n and Result.all_default
+			attached Result ⇒ Result.count = n ∧ Result.full
+			attached Result ⇒ Result.occurrences (a) = n
 		end
 
-	new_eiffel_list_operand_as (n: INTEGER): detachable EIFFEL_LIST [OPERAND_AS]
-			-- New empty list of OPERAND_AS
+	new_eiffel_list_parent_as (a: detachable PARENT_AS; n: INTEGER): detachable PARENT_LIST_AS
+			-- New parent list with `n` elements `a`.
 		require
-			n_non_negative: n >= 0
+			n >= 0
+			n > 0 ⇒ attached a
 		do
-			create Result.make_filled (n)
+			if attached a then
+				create Result.make_filled_with (a, n)
+			else
+				check from_precondition: n = 0 end
+				create Result.make (0)
+			end
 		ensure
-			list_full: Result /= Void implies Result.capacity = n and Result.all_default
+			attached Result ⇒ Result.count = n ∧ Result.full
+			attached Result ∧ attached a ⇒ Result.occurrences (a) = n
 		end
 
-	new_eiffel_list_parent_as (n: INTEGER): detachable PARENT_LIST_AS
-			-- New empty list of PARENT_AS
+	new_eiffel_list_rename_as (a: RENAME_AS; n: INTEGER): detachable EIFFEL_LIST [RENAME_AS]
+			-- New list with `n` elements `a`.
 		require
-			n_non_negative: n >= 0
+			n >= 0
 		do
-			create Result.make_filled (n)
+			create Result.make_filled_with (a, n)
 		ensure
-			list_full: Result /= Void implies Result.capacity = n and Result.all_default
+			attached Result ⇒ Result.count = n ∧ Result.full
+			attached Result ⇒ Result.occurrences (a) = n
 		end
 
-	new_eiffel_list_rename_as (n: INTEGER): detachable EIFFEL_LIST [RENAME_AS]
-			-- New empty list of RENAME_AS
+	new_eiffel_list_string_as (a: STRING_AS; n: INTEGER): detachable EIFFEL_LIST [STRING_AS]
+			-- New list with `n` elements `a`.
 		require
-			n_non_negative: n >= 0
+			n >= 0
 		do
-			create Result.make_filled (n)
+			create Result.make_filled_with (a, n)
 		ensure
-			list_full: Result /= Void implies Result.capacity = n and Result.all_default
-		end
-
-	new_eiffel_list_string_as (n: INTEGER): detachable EIFFEL_LIST [STRING_AS]
-			-- New empty list of STRING_AS
-		require
-			n_non_negative: n >= 0
-		do
-			create Result.make_filled (n)
-		ensure
-			list_full: Result /= Void implies Result.capacity = n and Result.all_default
+			attached Result ⇒ Result.count = n ∧ Result.full
+			attached Result ⇒ Result.occurrences (a) = n
 		end
 
 	new_eiffel_list_tagged_as (n: INTEGER): detachable EIFFEL_LIST [TAGGED_AS]
-			-- New empty list of TAGGED_AS
+			-- New empty list of `{TAGGED_AS}`.
 		require
-			n_non_negative: n >= 0
+			n >= 0
 		do
-			create Result.make_filled (n)
+			create Result.make (n)
 		ensure
-			list_full: Result /= Void implies Result.capacity = n and Result.all_default
+			attached Result ⇒ Result.capacity = n
+			attached Result ⇒ Result.is_empty
 		end
 
-	new_eiffel_list_type (n: INTEGER): detachable TYPE_LIST_AS
-			-- New empty list of TYPE
+	new_eiffel_list_type (a: detachable TYPE_AS; n: INTEGER): detachable TYPE_LIST_AS
+			-- New type list with `n` elements `a`.
 		require
-			n_non_negative: n >= 0
+			n >= 0
+			n > 0 ⇒ attached a
 		do
-			create Result.make_filled (n)
+			if attached a then
+				create Result.make_filled_with (a, n)
+			else
+				check from_precondition: n = 0 end
+				create Result.make (0)
+			end
 		ensure
-			list_full: Result /= Void implies Result.capacity = n and Result.all_default
+			attached Result ⇒ Result.count = n ∧ Result.full
+			attached Result ∧ attached a ⇒ Result.occurrences (a) = n
 		end
 
-	new_eiffel_list_list_dec_as (n: INTEGER): detachable LIST_DEC_LIST_AS
-			-- New empty list of LIST_DEC_AS
+	new_eiffel_list_list_dec_as (a: LIST_DEC_AS; n: INTEGER): detachable LIST_DEC_LIST_AS
+			-- New identifier list with `n` elements `a`.
 		require
-			n_non_negative: n >= 0
+			n >= 0
 		do
-			create Result.make_filled (n)
+			create Result.make_filled_with (a, n)
 		ensure
-			list_full: Result /= Void implies Result.capacity = n and Result.all_default
+			attached Result ⇒ Result.count = n ∧ Result.full
+			attached Result ⇒ Result.occurrences (a) = n
 		end
 
-	new_eiffel_list_type_dec_as (n: INTEGER): detachable TYPE_DEC_LIST_AS
-			-- New empty list of TYPE_DEC_AS
+	new_eiffel_list_type_dec_as (a: detachable TYPE_DEC_AS; n: INTEGER): detachable TYPE_DEC_LIST_AS
+			-- New variable declaration list with `n` elements `a`.
 		require
-			n_non_negative: n >= 0
+			n >= 0
+			n > 0 ⇒ attached a
 		do
-			create Result.make_filled (n)
+			if attached a then
+				create Result.make_filled_with (a, n)
+			else
+				check from_precondition: n = 0 end
+				create Result.make (0)
+			end
 		ensure
-			list_full: Result /= Void implies Result.capacity = n and Result.all_default
+			attached Result ⇒ Result.count = n ∧ Result.full
+			attached Result ∧ attached a ⇒ Result.occurrences (a) = n
 		end
 
 	new_elseif_as (e: detachable EXPR_AS; c: detachable EIFFEL_LIST [INSTRUCTION_AS]; l_as, t_as: detachable KEYWORD_AS): detachable ELSIF_AS
@@ -1539,12 +1609,15 @@ feature -- Access
 			create Result.initialize (c, a, t, l, e)
 		end
 
-	new_identifier_list (n: INTEGER): detachable IDENTIFIER_LIST
-			-- New ARRAYED_LIST [INTEGER]
+	new_identifier_list (a: like {ID_AS}.name_id; n: INTEGER): detachable IDENTIFIER_LIST
+			-- New identifier list with `n` elements `a`.
 		require
-			n_non_negative: n >= 0
+			n >= 0
 		do
-			create Result.make_filled (n)
+			create Result.make_filled_with (a, n)
+		ensure
+			attached Result ⇒ Result.count = n ∧ Result.full
+			attached Result ⇒ Result.occurrences (a) = n
 		end
 
 	new_if_as (cnd: detachable EXPR_AS; cmp: detachable EIFFEL_LIST [INSTRUCTION_AS];
@@ -2056,14 +2129,14 @@ feature -- Access
 				a_scn.character_column, a_scn.character_position, a_scn.unicode_text_count)
 		end
 
-	new_class_list_as (n: INTEGER): detachable CLASS_LIST_AS
-			-- New empty list of CLASS_LIST AST node
+	new_class_list_as (a: ID_AS; n: INTEGER): detachable CLASS_LIST_AS
+			-- New list with `n` elements `a`.
 		require
 			n_non_negative: n >= 0
 		do
-			create Result.make_filled (n)
+			create Result.make_filled_with (a, n)
 		ensure
-			list_full: Result /= Void implies Result.capacity = n and Result.all_default
+			list_full: attached Result implies Result.capacity = n and Result.occurrences (a) = n
 		end
 
 	new_local_dec_list_as (l: detachable EIFFEL_LIST [LIST_DEC_AS]; k_as: detachable KEYWORD_AS): detachable LOCAL_DEC_LIST_AS
@@ -2145,6 +2218,12 @@ feature -- Access
 		end
 
 feature {NONE} -- Implementation
+
+	default_atomic: ATOMIC_AS
+			-- A default atomic node.
+		once
+			create {NONE_ID_AS} Result.make
+		end
 
 	reusable_string_buffer: STRING
 			-- Reusable string buffer to avoid creation of unnecessary string objects

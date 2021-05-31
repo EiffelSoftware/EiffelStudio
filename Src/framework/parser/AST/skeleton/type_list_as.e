@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "Specialized EIFFEL_LIST for a list of TYPE_AS, mostly used for the actual generics and %
 		%find the location of `[' and `]'."
 	legal: "See notice at end of class."
@@ -16,7 +16,7 @@ inherit
 		end
 
 create
-	make, make_filled
+	make, make_filled_with
 
 feature -- Roundtrip/Token
 
@@ -88,7 +88,7 @@ feature
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2014, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2021, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

@@ -377,7 +377,7 @@ Indexing: -- Empty
 			}
 	|	TE_INDEXING
 			{
-				if attached ast_factory.new_indexing_clause_as (0) as l_list then
+				if attached ast_factory.new_indexing_clause_as (Void, 0) as l_list then
 					$$ := l_list
 					l_list.set_indexing_keyword (extract_keyword ($1))
 				end
@@ -391,7 +391,7 @@ Indexing: -- Empty
 			}
 	|	TE_NOTE
 			{
-				if attached ast_factory.new_indexing_clause_as (0) as l_list then
+				if attached ast_factory.new_indexing_clause_as (Void, 0) as l_list then
 					$$ := l_list
 					l_list.set_indexing_keyword (extract_keyword ($1))
 				end
@@ -402,7 +402,7 @@ Dotnet_indexing: -- Empty
 			-- { $$ := Void }
 	|	TE_INDEXING TE_END
 		{
-				if attached ast_factory.new_indexing_clause_as (0) as l_list then
+				if attached ast_factory.new_indexing_clause_as (Void, 0) as l_list then
 						$$ := l_list
 						l_list.set_indexing_keyword (extract_keyword ($1))
 						l_list.set_end_keyword ($2)
@@ -434,32 +434,30 @@ Dotnet_indexing: -- Empty
 
 Index_list: Index_clause
 			{
-				$$ := ast_factory.new_indexing_clause_as (counter_value + 1)
-				if attached $$ as l_list and then attached $1 as l_val then
-					l_list.reverse_extend (l_val)
+				if attached $1 as v then
+					$$ := ast_factory.new_indexing_clause_as (v, counter_value + 1)
 				end
 			}
 	|	Index_clause Increment_counter Index_list
 			{
 				$$ := $3
-				if attached $$ as l_list and then attached $1 as l_val then
-					l_list.reverse_extend (l_val)
+				if attached $$ as l_list and then attached $1 as v then
+					l_list.reverse_extend (v)
 				end
 			}
 	;
 
 Note_list: Note_entry
 			{
-				$$ := ast_factory.new_indexing_clause_as (counter_value + 1)
-				if attached $$ as l_list and then attached $1 as l_val then
-					l_list.reverse_extend (l_val)
+				if attached $1 as v then
+					$$ := ast_factory.new_indexing_clause_as (v, counter_value + 1)
 				end
 			}
 	|	Note_entry ASemi Increment_counter Note_list
 			{
 				$$ := $4
-				if attached $$ as l_list and then attached $1 as l_val then
-					l_list.reverse_extend (l_val)
+				if attached $$ as l_list and then attached $1 as v then
+					l_list.reverse_extend (v)
 				end
 			}
 	;
@@ -495,9 +493,8 @@ Note_entry_impl: Identifier_as_lower TE_COLON Note_values
 
 Index_terms: Index_value
 			{
-				$$ := ast_factory.new_eiffel_list_atomic_as (counter_value + 1)
-				if attached $$ as l_list and then attached $1 as l_val then
-					l_list.reverse_extend (l_val)
+				if attached $1 as v then
+					$$ := ast_factory.new_eiffel_list_atomic_as (v, counter_value + 1)
 				end
 			}
 	|	Index_value TE_COMMA Increment_counter Index_terms
@@ -511,22 +508,21 @@ Index_terms: Index_value
 	|	TE_SEMICOLON
 			{
 -- TO DO: remove this TE_SEMICOLON (see: INDEX_AS.index_list /= Void)
-				$$ := ast_factory.new_eiffel_list_atomic_as (0)
+				$$ := ast_factory.new_eiffel_list_atomic_as (Void, 0)
 			}
 	;
 
 Note_values: Index_value
 			{
-				$$ := ast_factory.new_eiffel_list_atomic_as (counter_value + 1)
-				if attached $$ as l_list and then attached $1 as l_val then
-					l_list.reverse_extend (l_val)
+				if attached $1 as v then
+					$$ := ast_factory.new_eiffel_list_atomic_as (v, counter_value + 1)
 				end
 			}
 	|	Index_value TE_COMMA Increment_counter Note_values
 			{
 				$$ := $4
-				if attached $$ as l_list and then attached $1 as l_val then
-					l_list.reverse_extend (l_val)
+				if attached $$ as l_list and then attached $1 as v then
+					l_list.reverse_extend (v)
 					ast_factory.reverse_extend_separator (l_list, $2)
 				end
 			}
@@ -653,9 +649,8 @@ Features: -- Empty
 
 Feature_clause_list: Feature_clause
 			{
-				$$ := ast_factory.new_eiffel_list_feature_clause_as (counter_value + 1)
-				if attached $$ as l_list and then attached $1 as l_val then
-					l_list.reverse_extend (l_val)
+				if attached $1 as v then
+					$$ := ast_factory.new_eiffel_list_feature_clause_as (v, counter_value + 1)
 				end
 			}
 	|	Feature_clause Increment_counter Feature_clause_list
@@ -669,7 +664,7 @@ Feature_clause_list: Feature_clause
 
 Feature_clause: Feature_client_clause End_feature_clause_pos
 			{ $$ := ast_factory.new_feature_clause_as ($1,
-				ast_factory.new_eiffel_list_feature_as (0), fclause_pos, feature_clause_end_position) }
+				ast_factory.new_eiffel_list_feature_as (Void, 0), fclause_pos, feature_clause_end_position) }
 	|	Feature_client_clause Add_counter Feature_declaration_list Remove_counter End_feature_clause_pos
 			{ $$ := ast_factory.new_feature_clause_as ($1, $3, fclause_pos, feature_clause_end_position) }
 	;
@@ -706,11 +701,12 @@ Client_list: TE_LCURLY TE_RCURLY
 						(create {SYNTAX_WARNING}.make (token_line ($1), token_column ($1), filename,
 						locale.translation_in_context (once "Empty Client_list is not allowed and will be assumed to be {NONE}.", once "parser.eiffel.warning")))
 				end
-				$$ := ast_factory.new_class_list_as (1)
-				if attached $$ as l_list and then attached new_none_id as l_none_id then
-					l_list.reverse_extend (l_none_id)
-					l_list.set_lcurly_symbol ($1)
-					l_list.set_rcurly_symbol ($2)
+				if attached new_none_id as l_none_id then
+					$$ := ast_factory.new_class_list_as (l_none_id, 1)
+					if attached $$ as l_list then
+						l_list.set_lcurly_symbol ($1)
+						l_list.set_rcurly_symbol ($2)
+					end
 				end
 			}
 	|	TE_LCURLY Add_counter Class_list Remove_counter TE_RCURLY
@@ -725,10 +721,9 @@ Client_list: TE_LCURLY TE_RCURLY
 
 Class_list: Class_or_tuple_identifier
 			{
-				$$ := ast_factory.new_class_list_as (counter_value + 1)
-				if attached $$ as l_list and then attached $1 as l_val then
-					l_list.reverse_extend (l_val)
-					suppliers.insert_light_supplier_id (l_val)
+				if attached $1 as v then
+					$$ := ast_factory.new_class_list_as (v, counter_value + 1)
+					suppliers.insert_light_supplier_id (v)
 				end
 			}
 	|	Class_or_tuple_identifier TE_COMMA Increment_counter Class_list
@@ -744,9 +739,8 @@ Class_list: Class_or_tuple_identifier
 
 Feature_declaration_list: Feature_declaration
 			{
-				$$ := ast_factory.new_eiffel_list_feature_as (counter_value + 1)
-				if attached $$ as l_list and then attached $1 as l_val then
-					l_list.reverse_extend (l_val)
+				if attached $1 as v then
+					$$ := ast_factory.new_eiffel_list_feature_as (v, counter_value + 1)
 				end
 			}
 	|	Feature_declaration Increment_counter Feature_declaration_list
@@ -797,9 +791,8 @@ Feature_declaration: Add_counter New_feature_list Remove_counter {enter_scope} D
 
 New_feature_list: New_feature
 			{
-				$$ := ast_factory.new_eiffel_list_feature_name (counter_value + 1)
-				if attached $$ as l_list and then attached $1 as l_val then
-					l_list.reverse_extend (l_val)
+				if attached $1 as v then
+					$$ := ast_factory.new_eiffel_list_feature_name (v, counter_value + 1)
 				end
 			}
 	|	New_feature TE_COMMA Increment_counter New_feature_list
@@ -995,7 +988,7 @@ Inheritance: -- Empty
 							(create {SYNTAX_WARNING}.make (token_line ($1), token_column ($1), filename,
 							locale.translation_in_context (once "Use `inherit ANY` or do not specify an empty inherit clause", once "parser.eiffel.warning")))
 					end
-					$$ := ast_factory.new_eiffel_list_parent_as (0)
+					$$ := ast_factory.new_eiffel_list_parent_as (Void, 0)
 					if attached $$ as l_inheritance then
 						l_inheritance.set_inheritance_tokens ($1, Void, Void, Void)
 					end
@@ -1058,9 +1051,8 @@ Inheritance: -- Empty
 			
 Parent_list: Parent
 			{
-				$$ := ast_factory.new_eiffel_list_parent_as (counter_value + 1)
-				if attached $$ as l_list and then attached $1 as l_val then
-					l_list.reverse_extend (l_val)
+				if attached $1 as v then
+					$$ := ast_factory.new_eiffel_list_parent_as (v, counter_value + 1)
 				end
 			}
 	|	Parent Increment_counter Parent_list
@@ -1113,9 +1105,8 @@ Rename: TE_RENAME
 
 Rename_list: Rename_pair
 			{
-				$$ := ast_factory.new_eiffel_list_rename_as (counter_value + 1)
-				if attached $$ as l_list and then attached $1 as l_val then
-					l_list.reverse_extend (l_val)
+				if attached $1 as v then
+					$$ := ast_factory.new_eiffel_list_rename_as (v, counter_value + 1)
 				end
 			}
 	|	Rename_pair TE_COMMA Increment_counter Rename_list
@@ -1146,9 +1137,8 @@ New_exports: TE_EXPORT Add_counter New_export_list Remove_counter
 
 New_export_list: New_export_item
 			{
-				$$ := ast_factory.new_eiffel_list_export_item_as (counter_value + 1)
-				if attached $$ as l_list and then attached $1 as l_val then
-					l_list.reverse_extend (l_val)
+				if attached $1 as v then
+					$$ := ast_factory.new_eiffel_list_export_item_as (v, counter_value + 1)
 				end
 			}
 	|	New_export_item Increment_counter New_export_list
@@ -1196,9 +1186,8 @@ Convert_clause: -- Empty
 
 Convert_list: Convert_feature
 		{
-			$$ := ast_factory.new_eiffel_list_convert (counter_value + 1)
-			if attached $$ as l_list and then attached $1 as l_val then
-				l_list.reverse_extend (l_val)
+			if attached $1 as v then
+				$$ := ast_factory.new_eiffel_list_convert (v, counter_value + 1)
 			end
 		}
 	|	Convert_feature TE_COMMA Increment_counter Convert_list
@@ -1232,13 +1221,11 @@ Creation_list: Add_counter Creation_list_impl Remove_counter
 
 Creation_list_impl: Identifier_as_lower
 			{
-				$$ := ast_factory.new_eiffel_list_feature_name_id (counter_value + 1)
 				if
-					attached $$ as l_list and then
 					attached $1 as l_val and then
 					attached ast_factory.new_feature_name_id_as (l_val) as l_id
 				then
-					l_list.reverse_extend (l_id)
+					$$ := ast_factory.new_eiffel_list_feature_name_id (l_id, counter_value + 1)
 				end
 			}
 	|	Identifier_as_lower TE_COMMA Increment_counter Creation_list_impl
@@ -1261,9 +1248,8 @@ Feature_list: Add_counter Feature_list_impl Remove_counter
 
 Feature_list_impl: Feature_name
 			{
-				$$ := ast_factory.new_eiffel_list_feature_name (counter_value + 1)
-				if attached $$ as l_list and then attached $1 as l_val then
-					l_list.reverse_extend (l_val)
+				if attached $1 as v then
+					$$ := ast_factory.new_eiffel_list_feature_name (v, counter_value + 1)
 				end
 			}
 	|	Feature_name TE_COMMA Increment_counter Feature_list_impl
@@ -1347,9 +1333,8 @@ Formal_arguments:	TE_LPARAN TE_RPARAN
 
 Entity_declaration_list: Entity_declaration_group
 			{
-				$$ := ast_factory.new_eiffel_list_type_dec_as (counter_value + 1)
-				if attached $$ as l_list and then attached $1 as l_val then
-					l_list.reverse_extend (l_val)
+				if attached $1 as v then
+					$$ := ast_factory.new_eiffel_list_type_dec_as (v, counter_value + 1)
 				end
 			}
 	|	Entity_declaration_group Increment_counter Entity_declaration_list
@@ -1372,9 +1357,8 @@ Entity_declaration_group: Add_counter Identifier_list Remove_counter TE_COLON Ty
 
 Local_declaration_list: Local_declaration_group
 			{
-				$$ := ast_factory.new_eiffel_list_list_dec_as (counter_value + 1)
-				if attached $$ as l_list and then attached $1 as l_val then
-					l_list.reverse_extend (l_val)
+				if attached $1 as v then
+					$$ := ast_factory.new_eiffel_list_list_dec_as (v, counter_value + 1)
 				end
 			}
 	|	Local_declaration_group Increment_counter Local_declaration_list
@@ -1408,10 +1392,12 @@ Local_declaration_group:
 
 Identifier_list: Identifier_as_lower
 			{
-				$$ := ast_factory.new_identifier_list (counter_value + 1)
-				if attached $$ as l_list and then attached $1 as l_val then
-					l_list.reverse_extend (l_val.name_id)
-					ast_factory.reverse_extend_identifier (l_list, l_val)
+				
+				if attached $1 as v then
+					$$ := ast_factory.new_identifier_list (v.name_id, counter_value + 1)
+					if attached $$ as l_list then
+						ast_factory.reverse_extend_identifier (l_list, v)
+					end
 				end
 			}
 	|	Identifier_as_lower TE_COMMA Increment_counter Identifier_list 
@@ -1426,7 +1412,7 @@ Identifier_list: Identifier_as_lower
 	;
 
 Strip_identifier_list: -- Empty
-			{ $$ := ast_factory.new_identifier_list (0) }
+			{ $$ := ast_factory.new_identifier_list (0, 0) }
 	|	Add_counter Identifier_list Remove_counter
 			{ $$ := $2 }
 	;
@@ -1513,7 +1499,7 @@ Internal: TE_DO Compound
 Local_declarations: -- Empty
 			-- { $$ := Void }
 	|	TE_LOCAL
-			{ $$ := ast_factory.new_local_dec_list_as (ast_factory.new_eiffel_list_type_dec_as (0), $1) }
+			{ $$ := ast_factory.new_local_dec_list_as (ast_factory.new_eiffel_list_type_dec_as (Void, 0), $1) }
 	|	TE_LOCAL Add_counter Local_declaration_list Remove_counter
 			{ $$ := ast_factory.new_local_dec_list_as ($3, $1) }
 	;
@@ -1526,9 +1512,8 @@ Compound: Optional_semicolons
 
 Instruction_list: Instruction
 			{
-				$$ := ast_factory.new_eiffel_list_instruction_as (counter_value + 1)
-				if attached $$ as l_list and then attached $1 as l_val then
-					l_list.reverse_extend (l_val)
+				if attached $1 as v then
+					$$ := ast_factory.new_eiffel_list_instruction_as (v, counter_value + 1)
 				end
 			}
 	|	Instruction Increment_counter Instruction_list
@@ -1644,7 +1629,7 @@ Assertion_list: Assertion_clause
 				if attached $1 as l_val then
 					$$ := ast_factory.new_eiffel_list_tagged_as (counter_value + 1)
 					if attached $$ as l_list then
-						l_list.reverse_extend (l_val)
+						l_list.back_extend (l_val)
 					end
 				else
 					$$ := ast_factory.new_eiffel_list_tagged_as (counter_value)
@@ -1661,7 +1646,7 @@ Assertion_list: Assertion_clause
 			{
 				$$ := $3
 				if attached $$ as l_list and then attached $1 as l_val then
-					l_list.reverse_extend (l_val)
+					l_list.back_extend (l_val)
 				end
 			}
 	;
@@ -2130,7 +2115,7 @@ Generics:	TE_LSQURE Type_list TE_RSQURE
 						(create {SYNTAX_WARNING}.make (token_line ($1), token_column ($1), filename,
 						locale.translation_in_context (once "Empty Type_list is not allowed and will be discarded.", once "parser.eiffel.warning")))
 				end
-				if attached ast_factory.new_eiffel_list_type (0) as l_list then
+				if attached ast_factory.new_eiffel_list_type (Void, 0) as l_list then
 					$$ := l_list
 					l_list.set_positions ($1, $2)
 				end	
@@ -2143,9 +2128,8 @@ Type_list: Add_counter Type_list_impl Remove_counter
 
 Type_list_impl: Type
 			{
-				$$ := ast_factory.new_eiffel_list_type (counter_value + 1)
-				if attached $$ as l_list and then attached $1 as l_val then
-					l_list.reverse_extend (l_val)
+				if attached $1 as v then
+					$$ := ast_factory.new_eiffel_list_type (v, counter_value + 1)
 				end
 			}
 	|	Type TE_COMMA Increment_counter Type_list_impl
@@ -2169,7 +2153,7 @@ Unmarked_tuple_type: Tuple_identifier
 						(create {SYNTAX_WARNING}.make (token_line ($4), token_column ($4), filename,
 						locale.translation_in_context (once "Empty Type_list is not allowed and will be discarded.", once "parser.eiffel.warning")))
 				end
-				if attached ast_factory.new_eiffel_list_type (0) as l_type_list then
+				if attached ast_factory.new_eiffel_list_type (Void, 0) as l_type_list then
 					l_type_list.set_positions ($4, $5)
 					$$ := ast_factory.new_class_type_as ($1, l_type_list)
 				else
@@ -2200,9 +2184,8 @@ Unmarked_tuple_type: Tuple_identifier
 
 Actual_parameter_list:	Type TE_RSQURE				
 			{
-				$$ := ast_factory.new_eiffel_list_type (counter_value + 1)
-				if attached $$ as l_list and then attached $1 as l_val then
-					l_list.reverse_extend (l_val)
+				if attached $1 as v then
+					$$ := ast_factory.new_eiffel_list_type (v, counter_value + 1)
 				end
 				last_rsqure.force ($2)
 			}
@@ -2230,16 +2213,15 @@ Actual_parameter_list:	Type TE_RSQURE
 	
 Named_parameter_list: TE_ID TE_COLON Type TE_RSQURE
 			{
-				$$ := ast_factory.new_eiffel_list_type_dec_as (counter2_value + 1)
-				if
-					attached $$ as l_named_list and then attached $1 as l_name and then
-					attached ast_factory.new_identifier_list (counter_value + 1) as l_list and then
-					attached ast_factory.new_type_dec_as (l_list, $3, $2) as l_type_dec_as
-				then
-					l_name.to_lower		
-					l_list.reverse_extend (l_name.name_id)
-					ast_factory.reverse_extend_identifier (l_list, l_name)
-					l_named_list.reverse_extend (l_type_dec_as)
+				if attached $1 as l_name then
+					l_name.to_lower
+					if
+						attached ast_factory.new_identifier_list (l_name.name_id, counter_value + 1) as l_list and then
+						attached ast_factory.new_type_dec_as (l_list, $3, $2) as l_type_dec_as
+					then
+						ast_factory.reverse_extend_identifier (l_list, l_name)
+						$$ := ast_factory.new_eiffel_list_type_dec_as (l_type_dec_as, counter2_value + 1)
+					end
 				end
 				last_rsqure.force ($4)
 			}
@@ -2262,15 +2244,15 @@ Named_parameter_list: TE_ID TE_COLON Type TE_RSQURE
 			{
 				remove_counter
 				$$ := $7
-				if
-					attached $$ as l_named_list and then attached $1 as l_name and then $3 /= Void and then
-					attached ast_factory.new_identifier_list (counter_value + 1) as l_list and then
-					attached ast_factory.new_type_dec_as (l_list, $3, $2) as l_type_dec_as
-				then
-					l_name.to_lower		
-					l_list.reverse_extend (l_name.name_id)
-					ast_factory.reverse_extend_identifier (l_list, l_name)
-					l_named_list.reverse_extend (l_type_dec_as)
+				if attached $$ as l_named_list and then attached $1 as l_name and then attached $3 then
+					l_name.to_lower
+					if
+						attached ast_factory.new_identifier_list (l_name.name_id, counter_value + 1) as l_list and then
+						attached ast_factory.new_type_dec_as (l_list, $3, $2) as l_type_dec_as
+					then
+						ast_factory.reverse_extend_identifier (l_list, l_name)
+						l_named_list.reverse_extend (l_type_dec_as)
+					end
 				end
 			}
 	;
@@ -2293,7 +2275,7 @@ Formal_generics:
 						locale.translation_in_context (once "Empty Formal_generic_list is not allowed and will be discarded.", once "parser.eiffel.warning")))
 				end
 				set_formal_generics_end_positions (True)
-				$$ := ast_factory.new_eiffel_list_formal_dec_as (0)
+				$$ := ast_factory.new_eiffel_list_formal_dec_as (Void, 0)
 				if attached $$ as l_formals then
 					l_formals.set_squre_symbols ($1, $2)
 				end
@@ -2327,9 +2309,8 @@ Formal_generics:
 
 Formal_generic_list: Formal_generic
 			{
-				$$ := ast_factory.new_eiffel_list_formal_dec_as (counter_value + 1)
-				if attached $$ as l_list and then attached $1 as l_val then
-					l_list.reverse_extend (l_val)
+				if attached $1 as v then
+					$$ := ast_factory.new_eiffel_list_formal_dec_as (v, counter_value + 1)
 				end
 			}
 	|	Formal_generic TE_COMMA Increment_counter Formal_generic_list
@@ -2435,7 +2416,7 @@ Constraint: -- Empty
 					attached $2 as l_val and then
 					attached ast_factory.new_eiffel_list_constraining_type_as (1) as l_list
 				then
-					l_list.reverse_extend (l_val)
+					l_list.back_extend (l_val)
 					$$ := ast_factory.new_constraint_triple ($1, l_list, $3)
 				else
 					$$ := ast_factory.new_constraint_triple ($1, Void, $3)
@@ -2482,7 +2463,7 @@ Multiple_constraint_list:	Single_constraint
 				if attached $1 as l_val then
 					$$ := ast_factory.new_eiffel_list_constraining_type_as (counter_value + 1)
 					if attached $$ as l_list then
-						l_list.reverse_extend (l_val)
+						l_list.back_extend (l_val)
 					end
 				else
 					$$ := ast_factory.new_eiffel_list_constraining_type_as (counter_value)
@@ -2499,7 +2480,7 @@ Multiple_constraint_list:	Single_constraint
 			{
 				$$ := $4
 				if attached $$ as l_list and then attached $1 as l_val then
-					l_list.reverse_extend (l_val)
+					l_list.back_extend (l_val)
 					ast_factory.reverse_extend_separator (l_list, $2)
 				end
 			}
@@ -2533,9 +2514,8 @@ Elseif_list: Add_counter Elseif_part_list Remove_counter
 
 Elseif_part_list: Elseif_part
 			{
-				$$ := ast_factory.new_eiffel_list_elseif_as (counter_value + 1)
-				if attached $$ as l_list and then attached $1 as l_val then
-					l_list.reverse_extend (l_val)
+				if attached $1 as v then
+					$$ := ast_factory.new_eiffel_list_elseif_as (v, counter_value + 1)
 				end
 			}
 	|	Elseif_part Increment_counter Elseif_part_list
@@ -2559,7 +2539,7 @@ Multi_branch: TE_INSPECT Expression When_part_list_opt TE_END
 					$$ := ast_factory.new_inspect_as ($2, $3, $5, $6, $1, $4)
 				else
 					$$ := ast_factory.new_inspect_as ($2, $3,
-						ast_factory.new_eiffel_list_instruction_as (0), $6, $1, $4)
+						ast_factory.new_eiffel_list_instruction_as (Void, 0), $6, $1, $4)
 				end
 			}
 	;
@@ -2572,9 +2552,8 @@ When_part_list_opt: -- Empty
 
 When_part_list: When_part
 			{
-				$$ := ast_factory.new_eiffel_list_case_as (counter_value + 1)
-				if attached $$ as l_list and then attached $1 as l_val then
-					l_list.reverse_extend (l_val)
+				if attached $1 as v then
+					$$ := ast_factory.new_eiffel_list_case_as (v, counter_value + 1)
 				end
 			}
 	|	When_part Increment_counter When_part_list
@@ -2592,9 +2571,8 @@ When_part: TE_WHEN Add_counter Choices Remove_counter TE_THEN Compound
 
 Choices: Choice
 			{
-				$$ := ast_factory.new_eiffel_list_interval_as (counter_value + 1)
-				if attached $$ as l_list and then attached $1 as l_val then
-					l_list.reverse_extend (l_val)
+				if attached $1 as v then
+					$$ := ast_factory.new_eiffel_list_interval_as (v, counter_value + 1)
 				end
 			}
 	|	Choice TE_COMMA Increment_counter Choices
@@ -2842,9 +2820,8 @@ Key_list: -- Empty
 
 String_list: Non_empty_string
 			{
-				$$ := ast_factory.new_eiffel_list_string_as (counter_value + 1)
-				if attached $$ as l_list and then attached $1 as l_val then
-					l_list.reverse_extend (l_val)
+				if attached $1 as v then
+					$$ := ast_factory.new_eiffel_list_string_as (v, counter_value + 1)
 				end
 			}
 	|	Non_empty_string TE_COMMA Increment_counter String_list
@@ -2862,7 +2839,7 @@ Rescue: -- Empty
 	|	TE_RESCUE Compound
 			{
 				if $2 = Void then
-					$$ := ast_factory.new_keyword_instruction_list_pair ($1, ast_factory.new_eiffel_list_instruction_as (0))
+					$$ := ast_factory.new_keyword_instruction_list_pair ($1, ast_factory.new_eiffel_list_instruction_as (Void, 0))
 				else
 					$$ := ast_factory.new_keyword_instruction_list_pair ($1, $2)
 				end
@@ -2889,9 +2866,8 @@ Creators: -- Empty
 
 Creation_clause_list: Creation_clause
 			{
-				$$ := ast_factory.new_eiffel_list_create_as (counter_value + 1)
-				if attached $$ as l_list and then attached $1 as l_val then
-					l_list.reverse_extend (l_val)
+				if attached $1 as v then
+					$$ := ast_factory.new_eiffel_list_create_as (v, counter_value + 1)
 				end
 			}
 	|	Creation_clause Increment_counter Creation_clause_list
@@ -3052,9 +3028,8 @@ Delayed_actuals: -- Empty
 
 Delayed_actual_list: Delayed_actual
 			{
-				$$ := ast_factory.new_eiffel_list_operand_as (counter_value + 1)
-				if attached $$ as l_list and then attached $1 as l_val then
-					l_list.reverse_extend (l_val)
+				if attached $1 as v then
+					$$ := ast_factory.new_eiffel_list_operand_as (v, counter_value + 1)
 				end
 			}
 	|	Delayed_actual TE_COMMA Increment_counter Delayed_actual_list
@@ -3183,9 +3158,8 @@ Separate_argument: Expression TE_AS Identifier_as_lower
 
 Separate_argument_list: Separate_argument
 			{
-				$$ := ast_factory.new_eiffel_list_named_expression_as (counter_value + 1)
-				if attached $$ as l_list and then attached $1 as l_val then
-					l_list.reverse_extend (l_val)
+				if attached $1 as v then
+					$$ := ast_factory.new_eiffel_list_named_expression_as (v, counter_value + 1)
 				end
 			}
 	|	Separate_argument TE_COMMA Increment_counter Separate_argument_list
@@ -3593,9 +3567,8 @@ Actual_parameter: Expression
 
 Parameter_list: Actual_parameter
 			{
-				$$ := ast_factory.new_eiffel_list_expr_as (counter_value + 1)
-				if attached $$ as l_list and then attached $1 as l_val then
-					l_list.reverse_extend (l_val)
+				if attached $1 as v then
+					$$ := ast_factory.new_eiffel_list_expr_as (v, counter_value + 1)
 				end
 			}
 	|	Actual_parameter TE_COMMA Increment_counter Parameter_list
@@ -3610,9 +3583,8 @@ Parameter_list: Actual_parameter
 
 Expression_list: Expression
 			{
-				$$ := ast_factory.new_eiffel_list_expr_as (counter_value + 1)
-				if attached $$ as l_list and then attached $1 as l_val then
-					l_list.reverse_extend (l_val)
+				if attached $1 as v then
+					$$ := ast_factory.new_eiffel_list_expr_as (v, counter_value + 1)
 				end
 			}
 	|	Expression TE_COMMA Increment_counter Expression_list
@@ -3734,9 +3706,8 @@ Elseif_list_expression: Add_counter Elseif_part_list_expression Remove_counter
 
 Elseif_part_list_expression: Elseif_part_expression
 			{
-				$$ := ast_factory.new_eiffel_list_elseif_expression_as (counter_value + 1)
-				if attached $$ as l_list and then attached $1 as l_val then
-					l_list.reverse_extend (l_val)
+				if attached $1 as v then
+					$$ := ast_factory.new_eiffel_list_elseif_expression_as (v, counter_value + 1)
 				end
 			}
 	|	Elseif_part_expression Increment_counter Elseif_part_list_expression
@@ -3768,9 +3739,8 @@ When_expression_part_list_opt: -- Empty
 
 When_expression_part_list: When_expression_part
 			{
-				$$ := ast_factory.new_eiffel_list_case_expression_as (counter_value + 1)
-				if attached $$ as l_list and then attached $1 as l_val then
-					l_list.reverse_extend (l_val)
+				if attached $1 as v then
+					$$ := ast_factory.new_eiffel_list_case_expression_as (v, counter_value + 1)
 				end
 			}
 	|	When_expression_part Increment_counter When_expression_part_list
@@ -4114,10 +4084,10 @@ Infix_operator: TE_STR_LT
 
 Manifest_array:
 	TE_LARRAY TE_RARRAY
-			{ $$ := ast_factory.new_array_as (ast_factory.new_eiffel_list_expr_as (0), $1, $2) }
+			{ $$ := ast_factory.new_array_as (ast_factory.new_eiffel_list_expr_as (Void, 0), $1, $2) }
 	|	Typed TE_LARRAY TE_RARRAY
 			{
-				$$ := ast_factory.new_array_as (ast_factory.new_eiffel_list_expr_as (0), $2, $3)
+				$$ := ast_factory.new_array_as (ast_factory.new_eiffel_list_expr_as (Void, 0), $2, $3)
 				if attached $$ as a then
 					a.set_type ($1)
 				end
@@ -4134,7 +4104,7 @@ Manifest_array:
 	;
 
 Manifest_tuple: TE_LSQURE TE_RSQURE
-			{ $$ := ast_factory.new_tuple_as (ast_factory.new_eiffel_list_expr_as (0), $1, $2) }
+			{ $$ := ast_factory.new_tuple_as (ast_factory.new_eiffel_list_expr_as (Void, 0), $1, $2) }
 	|	TE_LSQURE Add_counter Expression_list Remove_counter TE_RSQURE
 			{ $$ := ast_factory.new_tuple_as ($3, $1, $5) }
 	;

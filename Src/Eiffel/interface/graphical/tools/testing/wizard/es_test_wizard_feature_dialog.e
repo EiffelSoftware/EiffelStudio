@@ -1,8 +1,5 @@
-note
-	description: "[
-		Dialog showing a selectable class and feature tree.
-	]"
-	author: ""
+﻿note
+	description: "Dialog showing a selectable class and feature tree."
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -135,10 +132,11 @@ feature {NONE} -- Events
 			-- Called when item is selected in `feature_tree'.
 		do
 			selected_feature := Void
-			if feature_tree.selected_item /= Void then
-				if attached {like selected_feature} feature_tree.selected_item.data as l_feat then
-					selected_feature := l_feat
-				end
+			if
+				attached feature_tree.selected_item as i and then
+				attached {like selected_feature} i.data as l_feat
+			then
+				selected_feature := l_feat
 			end
 		end
 
@@ -264,36 +262,32 @@ feature {NONE} -- Implementation: feature tree
 			l_match_list: LEAF_AS_LIST
 			l_features: EIFFEL_LIST [FEATURE_AS]
 			l_export_status: EXPORT_I
-			l_name: STRING
+			l_name: STRING_32
 			l_retried: BOOLEAN
 			l_comments: EIFFEL_COMMENTS
 		do
 			if not l_retried then
 				l_match_list := match_list_server.item (a_class.class_id)
-
-				from
-					a_fcl.start
-				until
-					a_fcl.after
+				across
+					a_fcl as c
 				loop
-					if a_fcl.item = Void then
+					if c.item = Void then
 						feature_tree.extend (create {EV_TREE_ITEM}.make_with_text (
 							Warning_messages.w_short_internal_error ("Void feature clause")))
 					else
-						l_features := a_fcl.item.features
-						l_comments := a_fcl.item.comment (l_match_list)
+						l_features := c.item.features
+						l_comments := c.item.comment (l_match_list)
 						if l_comments = Void or else l_comments.is_empty then
-							l_name := " "
+							l_name := ""
 						else
-								-- |FIXME: Unicode Improvement
-							l_name := l_comments.first.content_32.as_string_8
+							l_name := l_comments.first.content_32
 						end
 						l_name.right_adjust
 					end
 
 					l_tree_item := build_tree_folder (l_name, l_features, a_class)
 
-					l_export_status := export_status_generator.feature_clause_export_status (system, a_class, a_fcl.item)
+					l_export_status := export_status_generator.feature_clause_export_status (system, a_class, c.item)
 					if l_export_status.is_none then
 						l_tree_item.set_pixmap (pixmaps.icon_pixmaps.folder_features_none_icon)
 					elseif l_export_status.is_set then
@@ -302,17 +296,15 @@ feature {NONE} -- Implementation: feature tree
 						l_tree_item.set_pixmap (pixmaps.icon_pixmaps.folder_features_all_icon)
 					end
 
-					l_tree_item.set_data (a_fcl.item)
+					l_tree_item.set_data (c.item)
 					-- l_tree_item.set_configurable_target_menu_mode
-					-- l_tree_item.set_configurable_target_menu_handler (agent context_menu_factory.feature_clause_item_menu (?, ?, ?, ?, a_fcl.item))
+					-- l_tree_item.set_configurable_target_menu_handler (agent context_menu_factory.feature_clause_item_menu (?, ?, ?, ?, c.item))
 
 					feature_tree.extend (l_tree_item)
 					if l_tree_item.is_expandable then
 						l_tree_item.expand
 					end
-					a_fcl.forth
 				end
-
 
 				-- Expand tree codes here
 
@@ -329,7 +321,7 @@ feature {NONE} -- Implementation: feature tree
 			retry
 		end
 
-	build_tree_folder (n: STRING; fl: EIFFEL_LIST [FEATURE_AS]; a_class: CLASS_C): EV_TREE_ITEM
+	build_tree_folder (n: READABLE_STRING_32; fl: EIFFEL_LIST [FEATURE_AS]; a_class: CLASS_C): EV_TREE_ITEM
 			-- Build the tree node corresponding to feature clause named `n'.
 			-- Modified from {EB_FEATURES_TREE}, now the class replaced by {ES}
 		require
@@ -340,44 +332,32 @@ feature {NONE} -- Implementation: feature tree
 			ef: E_FEATURE
 			st: FEATURE_STONE
 			fa: FEATURE_AS
-			f_names: EIFFEL_LIST [FEATURE_NAME]
 			f_item_name: STRING_32
 			l_first_item_name: STRING_32
 			l_external: BOOLEAN
 		do
 			create Result
 			l_external := a_class.is_external
-			if
-				n /= Void and then
-				not n.is_equal ("")
-			then
-				Result.set_text (n)
-			else
-				Result.set_text (Interface_names.l_no_feature_group_clause)
-			end
-			from
-				fl.start
-			until
-				fl.after
+			Result.set_text
+				(if attached n and then not n.is_empty then n else Interface_names.l_no_feature_group_clause end)
+			across
+				fl as f
 			loop
-				fa := fl.item
+				fa := f.item
 				if fa = Void then
 					Result.extend (create {EV_TREE_ITEM}.make_with_text (
 						warning_messages.w_short_internal_error ("Void feature")))
 				else
 					l_first_item_name := Void
-					from
-						f_names := fa.feature_names
-						f_names.start
-					until
-						f_names.after
+					across
+						fa.feature_names as fn
 					loop
-						f_item_name := f_names.item.internal_name.name_32
+						f_item_name := fn.item.internal_name.name_32
 						if l_first_item_name = Void then
 							l_first_item_name := f_item_name
 						end
 						if a_class.has_feature_table then
-							ef := a_class.feature_with_name_id (f_names.item.internal_name.name_id)
+							ef := a_class.feature_with_name_id (fn.item.internal_name.name_id)
 							if ef /= Void and then ef.written_in /= a_class.class_id then
 								ef := Void
 							end
@@ -386,7 +366,7 @@ feature {NONE} -- Implementation: feature tree
 						if ef = Void then
 							l_tree_item.set_text (f_item_name)
 							l_tree_item.set_data (f_item_name)
-							l_tree_item.set_pixmap (pixmap_factory.pixmap_from_feature_ast (l_external, fa, f_names.index))
+							l_tree_item.set_pixmap (pixmap_factory.pixmap_from_feature_ast (l_external, fa, fn.target_index))
 						else
 							l_tree_item.set_data (ef)
 							-- if is_clickable then
@@ -396,17 +376,15 @@ feature {NONE} -- Implementation: feature tree
 							-- l_tree_item.set_configurable_target_menu_handler (agent feature_item_handler (?, ?, ?, ?, True, Void))
 							-- end
 							l_tree_item.set_text (feature_name (ef))
-							l_tree_item.set_pixmap (pixmap_factory.pixmap_from_feature_ast (l_external, fa, f_names.index))
+							l_tree_item.set_pixmap (pixmap_factory.pixmap_from_feature_ast (l_external, fa, fn.target_index))
 							create st.make (ef)
 							l_tree_item.set_pebble (st)
 							l_tree_item.set_accept_cursor (st.stone_cursor)
 							l_tree_item.set_deny_cursor (st.X_stone_cursor)
 						end
 						Result.extend (l_tree_item)
-						f_names.forth
 					end
 				end
-				fl.forth
 			end
 		end
 
@@ -419,7 +397,7 @@ feature {NONE} -- Implementation: feature tree
 		end
 
 ;note
-	copyright: "Copyright (c) 1984-2010, Eiffel Software"
+	copyright: "Copyright (c) 1984-2021, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

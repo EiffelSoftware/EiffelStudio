@@ -182,18 +182,13 @@ feature -- Action
 			-- Remove the C generated files when we remove `Current' from system.
 		local
 			retried: BOOLEAN
-			l_types: TYPE_LIST
 		do
-			if not retried and System.makefile_generator /= Void and then has_types then
-				from
-					l_types := types
-					l_types.start
-				until
-					l_types.after
-				loop
-					l_types.item.remove_c_generated_files
-					l_types.forth
-				end
+			if
+				not retried and
+				attached System.makefile_generator and then
+				attached types as ts
+			then
+				⟳ t: ts ¦ t.remove_c_generated_files ⟲
 			end
 		rescue
 			retried := True
@@ -266,17 +261,19 @@ feature -- Action
 					parser.set_has_syntax_warning (False)
 					parser.set_warning_as_error (False)
 				end
-				inspect l_options.syntax.index
-				when {CONF_OPTION}.syntax_index_obsolete then
-					parser.set_syntax_version ({EIFFEL_SCANNER}.obsolete_syntax)
-				when {CONF_OPTION}.syntax_index_transitional then
-					parser.set_syntax_version ({EIFFEL_SCANNER}.transitional_syntax)
-				when {CONF_OPTION}.syntax_index_provisional then
-					parser.set_syntax_version ({EIFFEL_SCANNER}.provisional_syntax)
-				else
-					parser.set_syntax_version ({EIFFEL_SCANNER}.ecma_syntax)
-				end
+				parser.set_syntax_version
+					(inspect l_options.syntax.index
+					when {CONF_OPTION}.syntax_index_obsolete then
+						{EIFFEL_SCANNER}.obsolete_syntax
+					when {CONF_OPTION}.syntax_index_transitional then
+						{EIFFEL_SCANNER}.transitional_syntax
+					when {CONF_OPTION}.syntax_index_provisional then
+						{EIFFEL_SCANNER}.provisional_syntax
+					else
+						{EIFFEL_SCANNER}.ecma_syntax
+					end)
 				parser.set_is_ignoring_attachment_marks (lace_class.is_void_unsafe)
+				parser.set_is_explicit_iteration_cursor (lace_class.is_explicit_iteration_cursor)
 				Inst_context.set_group (cluster)
 				parser.parse_class_from_file (file, Current, Void)
 				if l_error_level = error_handler.error_level then
@@ -2110,7 +2107,6 @@ feature {NONE} -- Backup implementation
 		local
 			l_dir_name, l_fname: PATH
 			l_dir: DIRECTORY
-			l_over: ARRAYED_LIST [CONF_CLASS]
 			u: GOBO_FILE_UTILITIES
 		do
 				-- create cluster directory if necessary
@@ -2124,25 +2120,20 @@ feature {NONE} -- Backup implementation
 			u.copy_file_path (a_class.full_file_name, l_fname)
 
 				-- if the class does override, also copy the overriden classes
-			if a_class.does_override then
-				from
-					l_over := a_class.overrides
-					l_over.start
-				until
-					l_over.after
+			if attached a_class.overrides as os then
+				across
+					os as o
 				loop
 						-- Compute actual location of cluster where overriden class is located.
-					l_dir_name := workbench.backup_subdirectory.extended (
-						l_over.item.group.target.system.uuid.out)
+					l_dir_name := workbench.backup_subdirectory.extended (o.item.group.target.system.uuid.out)
 					create l_dir.make_with_path (l_dir_name)
 					if not l_dir.exists then
 							-- We need to create the directory.
 						u.create_directory_path (l_dir_name)
 							-- But also to copy the config files.
-						adapt_and_copy_configuration (l_over.item.group.target.system, workbench.backup_subdirectory)
+						adapt_and_copy_configuration (o.item.group.target.system, workbench.backup_subdirectory)
 					end
-					copy_class (l_over.item, l_dir_name)
-					l_over.forth
+					copy_class (o.item, l_dir_name)
 				end
 			end
 		end
@@ -2187,7 +2178,7 @@ invariant
 
 note
 	ca_ignore: "CA033", "CA033: very long class"
-	copyright:	"Copyright (c) 1984-2020, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2021, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

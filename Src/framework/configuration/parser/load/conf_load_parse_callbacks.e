@@ -1708,16 +1708,24 @@ feature {NONE} -- Implementation attribute processing
 					set_parse_error_message (conf_interface_names.e_parse_invalid_value (o_is_attached_by_default))
 				end
 			end
+				-- Should obsolete loops be used?
+			if attached current_attributes.item (at_is_obsolete_iteration) as a then
+				if not includes_this_or_after (namespace_1_22_0) then
+					report_unknown_attribute (o_is_obsolete_iteration)
+				elseif a.is_boolean then
+					l_current_option.set_is_obsolete_iteration (a.to_boolean)
+				else
+					set_parse_error_message (conf_interface_names.e_parse_invalid_value (a))
+				end
+			end
 				-- Should obsolete routine types be used?
 			if attached current_attributes.item (at_is_obsolete_routine_type) as l_is_obsolete_routine_type then
-				if includes_this_or_after (namespace_1_15_0) then
-					if l_is_obsolete_routine_type.is_boolean then
-						l_current_option.set_is_obsolete_routine_type (l_is_obsolete_routine_type.to_boolean)
-					else
-						set_parse_error_message (conf_interface_names.e_parse_invalid_value (o_is_obsolete_routine_type))
-					end
-				else
+				if not includes_this_or_after (namespace_1_15_0) then
 					report_unknown_attribute (o_is_obsolete_routine_type)
+				elseif l_is_obsolete_routine_type.is_boolean then
+					l_current_option.set_is_obsolete_routine_type (l_is_obsolete_routine_type.to_boolean)
+				else
+					set_parse_error_message (conf_interface_names.e_parse_invalid_value (o_is_obsolete_routine_type))
 				end
 			end
 				-- Capability: Void safety.
@@ -2462,14 +2470,13 @@ feature {NONE} -- Processing of options
 			default_options: CONF_TARGET_OPTION
 			new_options: CONF_TARGET_OPTION
 		do
-			if
-				a_namespace.same_string (namespace_1_21_0)
-			then
+			if a_namespace.same_string (namespace_1_22_0) then
+					-- Use the defaults of ES 21.05.
+				default_options := default_options_21_05
+			elseif a_namespace.same_string (namespace_1_21_0) then
 					-- Use the defaults of ES 19.11.
 				default_options := default_options_19_11
-			elseif
-				a_namespace.same_string (namespace_1_20_0)
-			then
+			elseif a_namespace.same_string (namespace_1_20_0) then
 					-- Use the defaults of ES 19.05.
 				default_options := default_options_19_05
 			elseif
@@ -2484,9 +2491,7 @@ feature {NONE} -- Processing of options
 			then
 					-- Use the defaults of ES 16.11.
 				default_options := default_options_16_11
-			elseif
-				a_namespace.same_string (namespace_1_15_0)
-			then
+			elseif a_namespace.same_string (namespace_1_15_0) then
 					-- Use the defaults of ES 15.11.
 				default_options := default_options_15_11
 			elseif
@@ -3039,8 +3044,10 @@ feature {NONE} -- Implementation state transitions
 				-- * full_class_checking
 				-- * cat_call_detection
 				-- * is_attached_by_default
+				-- * is_obsolete_iteration
+				-- * is_obsolete_routine_type
 				-- * is_void_safe
-			create l_attr.make (16)
+			create l_attr.make (17)
 			l_attr.force (at_trace, o_is_trace)
 			l_attr.force (at_profile, o_is_profile)
 			l_attr.force (at_optimize, o_is_optimize)
@@ -3051,6 +3058,7 @@ feature {NONE} -- Implementation state transitions
 			l_attr.force (at_namespace, o_namespace)
 			l_attr.force (at_full_class_checking, o_is_full_class_checking)
 			l_attr.force (at_is_attached_by_default, o_is_attached_by_default)
+			l_attr.force (at_is_obsolete_iteration, o_is_obsolete_iteration)
 			l_attr.force (at_is_obsolete_routine_type, o_is_obsolete_routine_type)
 			l_attr.force (at_syntax_level, "syntax_level")
 			l_attr.force (at_syntax, o_syntax)
@@ -3303,6 +3311,14 @@ feature {NONE} -- Implementation state transitions
 
 feature {NONE} -- Default options
 
+	default_options_21_05: CONF_TARGET_OPTION
+			-- Default options of 21.05.
+		once
+			create Result.make_21_05
+		ensure
+			result_attached: Result /= Void
+		end
+
 	default_options_19_11: CONF_TARGET_OPTION
 			-- Default options of 19.11.
 		once
@@ -3394,7 +3410,7 @@ invariant
 	factory_not_void: factory /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2020, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2021, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

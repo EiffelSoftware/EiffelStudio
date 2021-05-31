@@ -132,6 +132,37 @@ feature {NONE} -- Modification: language properties
 			end
 		end
 
+	add_obsolete_iteration_property (an_options, an_inherited_options: CONF_OPTION; a_inherits: BOOLEAN; a_check_non_client_option: BOOLEAN)
+			-- Add an obsolete iteration property that  may come from `an_options' (defined on the node itself) itself
+			-- or from `an_inherited_options' (final value after inheritance).
+		do
+			add_boolean_property
+				(
+					an_options,
+					an_inherited_options,
+					a_inherits,
+					a_check_non_client_option,
+					locale.translation_in_context (once "Obsolete iteration syntax", once "compiler"),
+					locale.translation_in_context (once "[
+						Is obsolete iteration syntax used?
+						
+						Contemporary syntax for iteration provides direct access to
+						the iteration item and uses keyword `as`:
+								across foo as x loop ... x ... @x.key ... end
+						
+						Obsolete syntax for iteration provides direct access to
+						the iteration item (using `is`) or cursor (using `as`):
+								across foo as x loop ... x.item ... x.key ... end
+								across foo is x loop ... x ... @x.key ... end
+					]", once "compiler"),
+					agent {CONF_OPTION}.is_obsolete_iteration,
+					agent an_options.set_is_obsolete_iteration,
+					agent an_options.unset_is_obsolete_iteration,
+					an_options.is_obsolete_iteration_configured,
+					at_is_obsolete_iteration
+				)
+		end
+
 	add_array_property (an_options, an_inherited_options: CONF_OPTION; a_inherits: BOOLEAN; a_check_non_client_option: BOOLEAN)
 			-- Add a manifest array type check property that  may come from `an_options' (defined on the node itself) itself
 			-- or from `an_inherited_options' (final value after inheritance).
@@ -161,27 +192,67 @@ feature {NONE} -- Modification: language properties
 	add_full_checking_property (an_options, an_inherited_options: CONF_OPTION; a_inherits: BOOLEAN; a_check_non_client_option: BOOLEAN)
 			-- Add a full class checking property that  may come from `an_options' (defined on the node itself) itself
 			-- or from `an_inherited_options' (final value after inheritance).
+		do
+			add_boolean_property
+				(
+					an_options,
+					an_inherited_options,
+					a_inherits,
+					a_check_non_client_option,
+					conf_interface_names.option_full_class_checking_name,
+					conf_interface_names.option_full_class_checking_description,
+					agent {CONF_OPTION}.is_full_class_checking,
+					agent an_options.set_full_class_checking,
+					agent an_options.unset_full_class_checking,
+					an_options.is_full_class_checking_configured,
+					at_full_class_checking
+				)
+		end
+
+feature {NONE} -- Modification: property addition
+
+	add_boolean_property (
+		an_options: CONF_OPTION;
+		an_inherited_options: CONF_OPTION;
+		a_inherits: BOOLEAN;
+		a_check_non_client_option: BOOLEAN;
+		name: READABLE_STRING_32;
+		description: READABLE_STRING_32;
+		get: FUNCTION [CONF_OPTION, BOOLEAN];
+		set: PROCEDURE [BOOLEAN];
+		unset: PROCEDURE;
+		is_set: BOOLEAN;
+		option_id: INTEGER)
+			-- Add a boolean property that  may come from `an_options' (defined on the node itself) itself
+			-- or from `an_inherited_options' (final value after inheritance).
+			-- Arguments:
+			-- • `name` — the name of the option;
+			-- • `description` — the description of the option;
+			-- • `get` — the function to get the value of the option from the given option collection;
+			-- • `set` — the procedure to set the option to the specified value;
+			-- • `unset` — the procedure to mark the option as unset;
+			-- • `is_set` — a flag indicating whether the option is set;
+			-- • `option_id` — ID of the option in the parser;
 		local
 			l_bool_prop: BOOLEAN_PROPERTY
 		do
-			l_bool_prop := new_boolean_property (conf_interface_names.option_full_class_checking_name, an_inherited_options.is_full_class_checking)
-			l_bool_prop.set_description (conf_interface_names.option_full_class_checking_description)
-			l_bool_prop.change_value_actions.extend (agent an_options.set_full_class_checking)
+			l_bool_prop := new_boolean_property (name, get (an_options))
+			l_bool_prop.set_description (description)
+			l_bool_prop.change_value_actions.extend (set)
 			if a_inherits then
-				l_bool_prop.set_refresh_action (agent an_inherited_options.is_full_class_checking)
-				l_bool_prop.use_inherited_actions.extend (agent an_options.unset_full_class_checking)
+				l_bool_prop.set_refresh_action (agent get.item (an_inherited_options))
+				l_bool_prop.use_inherited_actions.extend (unset)
 				l_bool_prop.use_inherited_actions.extend (agent l_bool_prop.enable_inherited)
 				l_bool_prop.use_inherited_actions.extend (agent handle_value_changes (False))
 				l_bool_prop.change_value_actions.extend (agent change_no_argument_boolean_wrapper (?, agent l_bool_prop.enable_overriden))
 				l_bool_prop.change_value_actions.extend (agent change_no_argument_boolean_wrapper (?, agent handle_value_changes (False)))
-
-				if an_options.is_full_class_checking_configured then
+				if is_set then
 					l_bool_prop.enable_overriden
 				else
 					l_bool_prop.enable_inherited
 				end
 			end
-			if a_check_non_client_option and then is_non_client_option (at_full_class_checking) then
+			if a_check_non_client_option and then is_non_client_option (option_id) then
 				l_bool_prop.enable_readonly
 			end
 			properties.add_property (l_bool_prop)
@@ -322,6 +393,8 @@ feature {NONE} -- Modification
 			add_full_checking_property (an_options, an_inherited_options, a_inherits, a_check_non_client_option)
 				-- Syntax.
 			add_syntax_property (an_options, an_inherited_options, a_inherits, a_check_non_client_option)
+				-- Loop syntax.
+			add_obsolete_iteration_property (an_options, an_inherited_options, a_inherits, a_check_non_client_option)
 				-- Manifest array type checks.
 			add_array_property (an_options, an_inherited_options, a_inherits, a_check_non_client_option)
 			if attached properties.current_section as l_current_section then
@@ -892,7 +965,7 @@ feature {NONE} -- Refresh displayed data.
 			-- Last added choice property
 
 ;note
-	copyright: "Copyright (c) 1984-2020, Eiffel Software"
+	copyright: "Copyright (c) 1984-2021, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

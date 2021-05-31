@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "This allows undoable class file renaming."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -61,10 +61,10 @@ feature {NONE} -- Implementation
 	class_i: EIFFEL_CLASS_I
 			-- The class we changed.
 
-	old_name_ext: STRING
+	old_name_ext: STRING_32
 			-- The old name of the file including the extension but without path.
 
-	new_name_ext: STRING
+	new_name_ext: STRING_32
 			-- The new name of the file including the extension but without path.
 
 invariant
@@ -73,7 +73,7 @@ invariant
 	new_name_ext_set: new_name_ext /= Void and not new_name_ext.is_empty
 
 note
-	copyright:	"Copyright (c) 1984-2012, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2021, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

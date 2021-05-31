@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "Process BUILT_IN_AS nodes."
 	date: "$Date$"
 	revision: "$Revision$"
@@ -143,6 +143,7 @@ feature {NONE} -- Implementation
 					set_syntax_version ({EIFFEL_SCANNER}.ecma_syntax)
 					if attached {CLASS_C} current_class as l_class then
 						set_is_ignoring_attachment_marks (l_class.lace_class.is_void_unsafe)
+						set_is_explicit_iteration_cursor (l_class.lace_class.is_explicit_iteration_cursor)
 					end
 					l_file.read_string (l_count)
 					l_str := l_file.last_string
@@ -190,7 +191,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright: "Copyright (c) 1984-2016, Eiffel Software"
+	copyright: "Copyright (c) 1984-2021, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

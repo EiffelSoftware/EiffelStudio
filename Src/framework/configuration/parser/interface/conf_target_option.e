@@ -31,14 +31,15 @@ create
 	make_16_11,
 	make_18_01,
 	make_19_05,
-	make_19_11
+	make_19_11,
+	make_21_05
 
 feature {NONE} -- Creation
 
 	default_create
 			-- <Precursor>
 		do
-			make_19_11
+			make_21_05
 		end
 
 	make_6_3
@@ -277,7 +278,7 @@ feature -- Duplication
 			if other /= Current then
 				Precursor (other)
 					-- Duplicate options that are not included in {CONF_OPTION}.
-					-- Take into account that they are 
+					-- Take into account that they are
 				array_override := array_override.twin
 				concurrency := concurrency.twin
 				dead_code := dead_code.twin
@@ -341,7 +342,7 @@ invariant
 
 note
 	ca_ignore: "CA093", "CA093: manifest array type mismatch"
-	copyright:	"Copyright (c) 1984-2019, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2021, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

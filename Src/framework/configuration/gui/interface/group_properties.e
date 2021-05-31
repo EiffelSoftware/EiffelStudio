@@ -267,6 +267,8 @@ feature {NONE} -- Implementation
 				add_full_checking_property (a_group.changeable_internal_options, a_group.options, True, a_group.is_library)
 					-- Syntax.
 				add_syntax_property (a_group.changeable_internal_options, a_group.options, True, a_group.is_library)
+					-- Loop syntax.
+				add_obsolete_iteration_property (a_group.changeable_internal_options, a_group.options, True, a_group.is_library)
 					-- Manifest array type checks.
 				add_array_property (a_group.changeable_internal_options, a_group.options, True, a_group.is_library)
 				if attached l_cluster then
@@ -486,15 +488,15 @@ feature {NONE} -- Output generation
 	output_renaming (a_table: STRING_TABLE [READABLE_STRING_32]): STRING_32
 			-- Generate a text representation of `a_table'.
 		do
-			if a_table /= Void and then not a_table.is_empty then
-				from
-					create Result.make (20)
-					a_table.start
-				until
-					a_table.after
+			if attached a_table and then not a_table.is_empty then
+				create Result.make (20)
+				across
+					a_table as t
 				loop
-					Result.append_string_general (a_table.key_for_iteration+"=>"+a_table.item_for_iteration+";")
-					a_table.forth
+					Result.append_string_general (t.key)
+					Result.append ("=>")
+					Result.append (t.item)
+					Result.append_character (';')
 				end
 				Result.remove_tail (1)
 			else
@@ -505,17 +507,15 @@ feature {NONE} -- Output generation
 	output_class_options (a_table: STRING_TABLE [CONF_OPTION]): STRING_32
 			-- Generate a text representation of class options table `a_table'.
 		do
-			if a_table /= Void and then not a_table.is_empty then
-				from
-					create Result.make (20)
-					a_table.start
-				until
-					a_table.after
+			if attached a_table and then not a_table.is_empty then
+				create Result.make (20)
+				across
+					a_table as t
 				loop
-					if not a_table.item_for_iteration.is_empty then
-						Result.append_string_general (a_table.key_for_iteration+";")
+					if not t.item.is_empty then
+						Result.append_string_general (t.key)
+						Result.append_character (';')
 					end
-					a_table.forth
 				end
 				if not Result.is_empty then
 					Result.remove_tail (1)
@@ -591,7 +591,7 @@ feature {NONE} -- Inheritance handling
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2020, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2021, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

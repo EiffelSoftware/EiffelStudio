@@ -429,8 +429,6 @@ feature -- Visit nodes
 
 	process_override (an_override: CONF_OVERRIDE)
 			-- Visit `an_override'.
-		local
-			l_overrides: detachable LIST [CONF_GROUP]
 		do
 				-- ignore subclusters, except if we are handling one.
 			if an_override.parent = Void or current_is_subcluster then
@@ -439,17 +437,13 @@ feature -- Visit nodes
 				append_attr_cluster (an_override)
 				append_val_group (an_override)
 				append_val_cluster (an_override)
-				l_overrides := an_override.override
-				if l_overrides /= Void then
-					from
-						l_overrides.start
-					until
-						l_overrides.after
+				if attached an_override.override as os then
+					across
+						os as o
 					loop
 						append_tag_open ({STRING_32} "overrides")
-						append_text_attribute ("group", l_overrides.item.name)
+						append_text_attribute ("group", o.item.name)
 						append_tag_close_empty
-						l_overrides.forth
 					end
 				end
 				append_post_group ({STRING_32} "override")
@@ -479,17 +473,14 @@ feature {NONE} -- Implementation
 		local
 			l_sorted_list: ARRAYED_LIST [READABLE_STRING_GENERAL]
 		do
-			from
-				create l_sorted_list.make_from_array (a_groups.current_keys)
-				;(create {QUICK_SORTER [READABLE_STRING_GENERAL]}.make (create {COMPARABLE_COMPARATOR [READABLE_STRING_GENERAL]})).sort (l_sorted_list)
-				l_sorted_list.start
-			until
-				l_sorted_list.after
+			create l_sorted_list.make_from_array (a_groups.current_keys)
+			;(create {QUICK_SORTER [READABLE_STRING_GENERAL]}.make (create {COMPARABLE_COMPARATOR [READABLE_STRING_GENERAL]})).sort (l_sorted_list)
+			across
+				l_sorted_list as i
 			loop
-				if attached a_groups.item (l_sorted_list.item_for_iteration) as l_grp then
+				if attached a_groups.item (i.item) as l_grp then
 					l_grp.process (Current)
 				end
-				l_sorted_list.forth
 			end
 		end
 
@@ -765,35 +756,33 @@ feature {NONE} -- Implementation
 						l_condition.custom.is_empty
 				end
 				if not l_done then
-					from
-						a_conditions.start
-					until
-						a_conditions.after
+					across
+						a_conditions as c
 					loop
 						append_tag_open ({STRING_32} "condition")
 						append_tag_close
 
-						l_condition := a_conditions.item
+						l_condition := c.item
 						if attached l_condition.platform as p then
 							append_condition_list (p, agent get_platform_name, {STRING_32} "platform")
 						end
 						if attached l_condition.build as b then
 							append_condition_list (b, agent get_build_name, {STRING_32} "build")
 						end
-						if attached l_condition.concurrency as c then
+						if attached l_condition.concurrency as concurrency then
 							if includes_this_or_after (namespace_1_8_0) then
 									-- Use "concurrency" condition.
-								append_condition_list (c, agent get_concurrency_name, {STRING_32} "concurrency")
+								append_condition_list (concurrency, agent get_concurrency_name, {STRING_32} "concurrency")
 							else
 									-- Use "multithreaded" condition.
 								append_tag_open ({STRING_32} "multithreaded")
-								append_boolean_attribute ("value", c.value.has (concurrency_none) = c.invert)
+								append_boolean_attribute ("value", concurrency.value.has (concurrency_none) = concurrency.invert)
 								append_tag_close_empty
 							end
 						end
-						if attached l_condition.void_safety as c and then includes_this_or_after (namespace_1_19_0) then
+						if attached l_condition.void_safety as v and then includes_this_or_after (namespace_1_19_0) then
 								-- Add "void_safety" condition.
-							append_condition_list (c, agent get_void_safety_name, {STRING_32} "void_safety")
+							append_condition_list (v, agent get_void_safety_name, {STRING_32} "void_safety")
 						end
 
 							-- Don't print dotnet for assemblies.
@@ -842,7 +831,6 @@ feature {NONE} -- Implementation
 						end
 
 						append_end_tag ({STRING_32} "condition")
-						a_conditions.forth
 					end
 				end
 			end
@@ -853,17 +841,14 @@ feature {NONE} -- Implementation
 	append_mapping (a_mapping: detachable STRING_TABLE [READABLE_STRING_32])
 			-- Append `a_mapping'.
 		do
-			if a_mapping /= Void then
-				from
-					a_mapping.start
-				until
-					a_mapping.after
+			if attached a_mapping then
+				across
+					a_mapping as m
 				loop
 					append_tag_open ({STRING_32} "mapping")
-					append_text_attribute ("old_name", a_mapping.key_for_iteration)
-					append_text_attribute ("new_name", a_mapping.item_for_iteration)
+					append_text_attribute ("old_name", m.key)
+					append_text_attribute ("new_name", m.item)
 					append_tag_close_empty
-					a_mapping.forth
 				end
 			end
 		end
@@ -878,12 +863,10 @@ feature {NONE} -- Implementation
 			l_ext: CONF_EXTERNAL
 		do
 			if not an_externals.is_empty then
-				from
-					an_externals.start
-				until
-					an_externals.after
+				across
+					an_externals as e
 				loop
-					l_ext := an_externals.item
+					l_ext := e.item
 					append_tag_open (a_name)
 					append_text_attribute (a_value, l_ext.internal_location)
 					append_tag_close
@@ -898,7 +881,6 @@ feature {NONE} -- Implementation
 					else
 						append_end_tag (a_name)
 					end
-					an_externals.forth
 				end
 			end
 		end
@@ -911,12 +893,10 @@ feature {NONE} -- Implementation
 		local
 			l_action: CONF_ACTION
 		do
-			from
-				an_actions.start
-			until
-				an_actions.after
+			across
+				an_actions as a
 			loop
-				l_action := an_actions.item
+				l_action := a.item
 				append_tag_open (a_name)
 				if attached l_action.working_directory as l_wdir then
 					append_text_attribute ("working_directory", l_wdir.original_path)
@@ -929,7 +909,6 @@ feature {NONE} -- Implementation
 				append_description_tag (l_action.description)
 				append_conditionals (l_action.internal_conditions, False)
 				append_end_tag (a_name)
-				an_actions.forth
 			end
 		end
 
@@ -938,33 +917,24 @@ feature {NONE} -- Implementation
 		local
 			l_rule: CONF_FILE_RULE
 		do
-			from
-				a_file_rules.start
-			until
-				a_file_rules.after
+			across
+				a_file_rules as r
 			loop
-				l_rule := a_file_rules.item
-
+				l_rule := r.item
 				if not l_rule.is_empty then
 					append_tag_open ({STRING_32} "file_rule")
 					append_tag_close
 					append_description_tag (l_rule.description)
 						-- Save patterns lexicographically ordered.
 					if attached l_rule.ordered_exclude as p then
-						across p as pc loop
-							append_tag ({STRING_32} "exclude", pc.item)
-						end
+						⟳ i: p ¦ append_tag ({STRING_32} "exclude", i) ⟲
 					end
 					if attached l_rule.ordered_include as p then
-						across p as pc loop
-							append_tag ({STRING_32} "include", pc.item)
-						end
+						⟳ i: p ¦ append_tag ({STRING_32} "include", i) ⟲
 					end
 					append_conditionals (l_rule.internal_conditions, False)
 					append_end_tag ({STRING_32} "file_rule")
 				end
-
-				a_file_rules.forth
 			end
 		end
 
@@ -1001,7 +971,6 @@ feature {NONE} -- Implementation
 			l_str: detachable READABLE_STRING_32
 			l_debugs, l_warnings: detachable STRING_TABLE [BOOLEAN]
 			l_sorted_list: ARRAYED_LIST [READABLE_STRING_GENERAL]
-			l_sorter: QUICK_SORTER [READABLE_STRING_GENERAL]
 			w: READABLE_STRING_GENERAL
 		do
 			if an_options.is_trace_configured then
@@ -1042,6 +1011,12 @@ feature {NONE} -- Implementation
 				append_boolean_attribute (o_is_attached_by_default, an_options.is_attached_by_default)
 			end
 			if
+				(an_options.is_obsolete_iteration_configured or else an_options.is_obsolete_iteration) and then
+				is_after_or_equal (namespace, namespace_1_22_0)
+			then
+				append_boolean_attribute (o_is_obsolete_iteration, an_options.is_obsolete_iteration)
+			end
+			if
 				(an_options.is_obsolete_routine_type_configured or else an_options.is_obsolete_routine_type) and then
 				is_after_or_equal (namespace, namespace_1_15_0)
 			then
@@ -1057,18 +1032,19 @@ feature {NONE} -- Implementation
 					l_str := an_options.void_safety.item
 				else
 						-- Earlier namespaces with less void-safety levels.
-					inspect
-						an_options.void_safety.index
-					when {CONF_OPTION}.void_safety_index_none then
-						l_str := {STRING_32} "none"
-					when
-						{CONF_OPTION}.void_safety_index_conformance,
-						{CONF_OPTION}.void_safety_index_initialization
-					then
-						l_str := {STRING_32} "initialization"
-					else
-						l_str := {STRING_32} "all"
-					end
+					l_str :=
+						inspect
+							an_options.void_safety.index
+						when {CONF_OPTION}.void_safety_index_none then
+							{STRING_32} "none"
+						when
+							{CONF_OPTION}.void_safety_index_conformance,
+							{CONF_OPTION}.void_safety_index_initialization
+						then
+							{STRING_32} "initialization"
+						else
+							{STRING_32} "all"
+						end
 					if is_after_or_equal (namespace, namespace_1_9_0) then
 						append_boolean_attribute ("is_void_safe", an_options.void_safety.index = {CONF_OPTION}.void_safety_index_all)
 					end
@@ -1096,18 +1072,15 @@ feature {NONE} -- Implementation
 			l_debugs := an_options.debugs
 			if l_debugs /= Void and then not l_debugs.is_empty then
 				create l_sorted_list.make_from_array (l_debugs.current_keys)
-				create l_sorter.make (create {STRING_COMPARATOR}.make)
-				l_sorter.sort (l_sorted_list)
-				from
-					l_sorted_list.start
-				until
-					l_sorted_list.after
+				;(create {QUICK_SORTER [READABLE_STRING_GENERAL]}.make
+					(create {STRING_COMPARATOR}.make)).sort (l_sorted_list)
+				across
+					l_sorted_list as d
 				loop
 					append_tag_open ({STRING_32} "debug")
-					append_text_attribute ("name", l_sorted_list.item_for_iteration)
-					append_boolean_attribute ("enabled", l_debugs.item (l_sorted_list.item_for_iteration))
+					append_text_attribute ("name", d.item)
+					append_boolean_attribute ("enabled", l_debugs.item (d.item))
 					append_tag_close_empty
-					l_sorted_list.forth
 				end
 			end
 
@@ -1142,8 +1115,8 @@ feature {NONE} -- Implementation
 				l_warnings.force (an_options.warning_obsolete_call.index /= {CONF_OPTION}.warning_term_index_none, w_obsolete_feature)
 			end
 			create l_sorted_list.make_from_array (l_warnings.current_keys)
-			create l_sorter.make (create {STRING_COMPARATOR}.make)
-			l_sorter.sort (l_sorted_list)
+			;(create {QUICK_SORTER [READABLE_STRING_GENERAL]}.make
+				(create {STRING_COMPARATOR}.make)).sort (l_sorted_list)
 			across
 				l_sorted_list as i
 			loop
@@ -1187,27 +1160,21 @@ feature {NONE} -- Implementation
 		require
 			a_visible_not_void: a_visible /= Void
 		local
-			l_vis_feat: detachable STRING_TABLE [READABLE_STRING_32]
 			l_class: READABLE_STRING_GENERAL
 			l_feat: detachable READABLE_STRING_GENERAL
 			l_feat_rename, l_class_rename: detachable READABLE_STRING_32
 		do
-			from
-				a_visible.start
-			until
-				a_visible.after
+			across
+				a_visible as v
 			loop
-				l_class := a_visible.key_for_iteration
-				l_class_rename := a_visible.item_for_iteration.class_renamed
-				l_vis_feat := a_visible.item_for_iteration.features
-				if l_vis_feat /= Void then
-					from
-						l_vis_feat.start
-					until
-						l_vis_feat.after
+				l_class := v.key
+				l_class_rename := v.item.class_renamed
+				if attached v.item.features as l_vis_feat then
+					across
+						l_vis_feat as f
 					loop
-						l_feat := l_vis_feat.key_for_iteration
-						l_feat_rename := l_vis_feat.item_for_iteration
+						l_feat := f.key
+						l_feat_rename := f.item
 						if l_feat.same_string ("*") then
 							l_feat := Void
 						end
@@ -1226,7 +1193,6 @@ feature {NONE} -- Implementation
 							append_text_attribute ("feature_rename", l_feat_rename)
 						end
 						append_tag_close_empty
-						l_vis_feat.forth
 					end
 				else
 					append_tag_open ({STRING_32} "visible")
@@ -1236,9 +1202,7 @@ feature {NONE} -- Implementation
 					end
 					append_tag_close_empty
 				end
-				a_visible.forth
 			end
-
 		end
 
 	append_pre_group (a_tag: READABLE_STRING_32; a_group: CONF_GROUP)
@@ -1284,26 +1248,20 @@ feature {NONE} -- Implementation
 				attached {CONF_VIRTUAL_GROUP} a_group as l_vg and then
 				attached l_vg.renaming as l_renaming
 			then
-				from
-					l_renaming.start
-				until
-					l_renaming.after
+				across
+					l_renaming as r
 				loop
 					append_tag_open ({STRING_32} "renaming")
-					append_text_attribute ("old_name", l_renaming.key_for_iteration)
-					append_text_attribute ("new_name", l_renaming.item_for_iteration)
+					append_text_attribute ("old_name", r.key)
+					append_text_attribute ("new_name", r.item)
 					append_tag_close_empty
-					l_renaming.forth
 				end
 			end
 			if attached a_group.internal_class_options as l_c_opt then
-				from
-					l_c_opt.start
-				until
-					l_c_opt.after
+				across
+					l_c_opt as o
 				loop
-					append_class_options (l_c_opt.item_for_iteration, l_c_opt.key_for_iteration)
-					l_c_opt.forth
+					append_class_options (o.item, o.key)
 				end
 			end
 		end
@@ -1364,14 +1322,11 @@ feature {NONE} -- Implementation
 			end
 				-- process subclusters
 			if attached a_cluster.children as l_clusters then
-				from
-					l_clusters.start
-				until
-					l_clusters.after
+				across
+					l_clusters as c
 				loop
 					current_is_subcluster := True
-					l_clusters.item.process (Current)
-					l_clusters.forth
+					c.item.process (Current)
 				end
 			end
 		end
@@ -1393,39 +1348,21 @@ feature {NONE} -- Implementation
 			-- Append `a_note' recursively.
 		require
 			a_note_not_void: a_note /= Void
-		local
-			l_name: READABLE_STRING_GENERAL
-			l_value: STRING_32
-			l_attr: like {CONF_NOTE_ELEMENT}.attributes
 		do
 			if not a_note.element_name.is_empty then
 				append_tag_open (a_note.element_name)
-				l_attr := a_note.attributes
-				from
-					l_attr.start
-				until
-					l_attr.after
+				across
+					a_note.attributes as a
 				loop
-					l_name := l_attr.key_for_iteration
-					l_value := l_attr.item_for_iteration
-					if l_value = Void then
-						l_value := once {STRING_32} ""
+					if attached a.key as n and then not n.is_empty then
+						append_text_attribute (n, if attached a.item as v then v else once {STRING_32} "" end)
 					end
-					if l_name /= Void and then not l_name.is_empty then
-						append_text_attribute (l_name, l_value)
-					end
-					l_attr.forth
 				end
-
 				if a_note.is_empty then
 					append_tag_close_empty
 				else
 					append_tag_close
-					across
-						a_note as ic
-					loop
-						append_note_recursive (ic.item)
-					end
+					⟳ i: a_note ¦ append_note_recursive (i) ⟲
 					append_end_tag (a_note.element_name)
 				end
 			end
@@ -1456,7 +1393,7 @@ feature {NONE} -- Match attribute
 
 note
 	ca_ignore: "CA033", "CA033 — very long class"
-	copyright:	"Copyright (c) 1984-2019, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2021, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

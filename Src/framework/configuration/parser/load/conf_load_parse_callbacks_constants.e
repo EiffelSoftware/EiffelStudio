@@ -17,6 +17,7 @@ feature {NONE} -- Access
 					at_catcall_detection,
 					at_full_class_checking,
 					at_is_attached_by_default,
+					at_is_obsolete_iteration,
 					at_is_void_safe,
 					at_manifest_array_type,
 					at_namespace,
@@ -166,6 +167,7 @@ feature {NONE} -- Implementation constants
 	at_use: INTEGER = 1068
 	at_match: INTEGER = 1069
 	at_manifest_array_type: INTEGER = 1070
+	at_is_obsolete_iteration: INTEGER = 1071
 
 		-- Undefined tag starting number
 	undefined_tag_start: INTEGER = 100000
@@ -174,7 +176,7 @@ feature {NONE} -- Implementation constants
 			-- Name of the attribute "enabled".
 
 note
-	copyright: "Copyright (c) 1984-2018, Eiffel Software"
+	copyright: "Copyright (c) 1984-2021, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

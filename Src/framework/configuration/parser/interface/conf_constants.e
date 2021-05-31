@@ -190,6 +190,7 @@ feature -- Option names
 	o_is_debug: STRING_32 = "debug"
 	o_is_full_class_checking: STRING_32 = "full_class_checking"
 	o_is_msil_application_optimize: STRING_32 = "msil_application_optimize"
+	o_is_obsolete_iteration: STRING_32 = "is_obsolete_iteration"
 	o_is_obsolete_routine_type: STRING_32 = "is_obsolete_routine_type"
 	o_is_optimize: STRING_32 = "optimize"
 	o_is_profile: STRING_32 = "profile"
@@ -284,7 +285,7 @@ feature -- Extension
 			-- File extension for an Eiffel source file without the dot
 
 ;note
-	copyright:	"Copyright (c) 1984-2019, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2021, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

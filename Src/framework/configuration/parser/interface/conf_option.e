@@ -39,14 +39,15 @@ create
 	make_14_05,
 	make_15_11,
 	make_18_01,
-	make_19_11
+	make_19_11,
+	make_21_05
 
 feature {NONE} -- Creation
 
 	default_create
 			-- Initialize options to the defaults of the current version.
 		do
-			make_19_11
+			make_21_05
 		end
 
 	make_6_3
@@ -58,6 +59,7 @@ feature {NONE} -- Creation
 			create void_safety.make (void_safety_name, void_safety_index_none)
 			create catcall_detection.make (catcall_detection_values, catcall_detection_index_none)
 			is_obsolete_routine_type := True
+			is_obsolete_iteration := True
 			create warning.make (warning_name, warning_index_none)
 			create warning_obsolete_call.make (warning_term_name, warning_term_index_current)
 		end
@@ -134,6 +136,14 @@ feature {NONE} -- Creation
 			warning.put_default_index (warning_index_warning)
 		end
 
+	make_21_05
+			-- Initialize options to the defaults of 21.05.
+			-- Difference from `make_19_11`: loops without "is" keyword.
+		do
+			make_19_11
+			is_obsolete_iteration := False
+		end
+
 feature -- Status
 
 	is_profile_configured: BOOLEAN
@@ -160,6 +170,9 @@ feature -- Status
 	is_obsolete_routine_type_configured: BOOLEAN
 			-- Is `is_obsolete_routine_type' configured?
 
+	is_obsolete_iteration_configured: BOOLEAN
+			-- Is `is_obsolete_iteration` configured?
+
 	is_empty: BOOLEAN
 			-- Is `Current' empty? No settings are set?
 		do
@@ -173,6 +186,7 @@ feature -- Status
 				catcall_detection.is_set or
 				is_attached_by_default_configured or
 				is_obsolete_routine_type_configured or
+				is_obsolete_iteration_configured or
 				void_safety.is_set or
 				assertions /= Void or
 				local_namespace /= Void or
@@ -196,6 +210,7 @@ feature -- Status
 				is_full_class_checking_configured or
 				is_attached_by_default_configured or
 				is_obsolete_routine_type_configured or
+				is_obsolete_iteration_configured or
 				assertions /= Void or
 				local_namespace /= Void or
 				warnings /= Void or
@@ -261,11 +276,24 @@ feature -- Status update
 			is_attached_by_default := False
 		end
 
+	unset_is_obsolete_iteration
+			-- Unset `unset_is_obsolete_iteration`.
+		do
+			is_obsolete_iteration_configured := False
+			is_obsolete_iteration := False
+		ensure
+			not is_obsolete_iteration_configured
+			not is_obsolete_iteration
+		end
+
 	unset_is_obsolete_routine_type
-			-- Unset `is_obsolete_routine_type'.
+			-- Unset `is_obsolete_routine_type`.
 		do
 			is_obsolete_routine_type_configured := False
 			is_obsolete_routine_type := False
+		ensure
+			not is_obsolete_routine_type_configured
+			not is_obsolete_routine_type
 		end
 
 feature -- Access, stored in configuration file
@@ -299,6 +327,16 @@ feature -- Access, stored in configuration file
 
 	is_attached_by_default: BOOLEAN
 			-- Is type declaration considered attached by default?
+
+	is_obsolete_iteration: BOOLEAN
+			-- Is an obsolete iteration syntax used?
+			-- Obsolete iteration syntax uses "is" with direct access to the iteration item,
+			-- or uses "as" with direct access to the iteration cursor.
+			-- Obsolete:
+			-- 		across foo as x loop ... x.item ... x.key ... end
+			-- 		across foo is x loop ... x ... @x.key ... end
+			-- Contemporary:
+			-- 		across foo as x loop ... x ... @x.key ... end
 
 	is_obsolete_routine_type: BOOLEAN
 			-- Is an obsolete routine type declaration used?
@@ -664,6 +702,17 @@ feature {CONF_ACCESS} -- Update, stored in configuration file.
 			is_attached_by_default_configured: is_attached_by_default_configured
 		end
 
+	set_is_obsolete_iteration (v: BOOLEAN)
+			-- Set `is_obsolete_iteration` to `v`.
+			-- See also: `unset_is_obsolete_iteration`.
+		do
+			is_obsolete_iteration_configured := True
+			is_obsolete_iteration := v
+		ensure
+			is_obsolete_iteration = v
+			is_obsolete_iteration_configured
+		end
+
 	set_is_obsolete_routine_type (v: BOOLEAN)
 			-- Set `is_obsolete_routine_type' to `v'.
 		do
@@ -720,57 +769,59 @@ feature -- Comparison
 
 	is_equal (other: like Current): BOOLEAN
 		do
-			if assertions ~ other.assertions
-			and then debugs ~ other.debugs
-			and then description ~ other.description
-			and then is_attached_by_default = other.is_attached_by_default
-			and then is_attached_by_default_configured = other.is_attached_by_default_configured
-			and then is_obsolete_routine_type = other.is_obsolete_routine_type
-			and then is_obsolete_routine_type_configured = other.is_obsolete_routine_type_configured
-			and then catcall_detection ~ other.catcall_detection
-			and then is_debug = other.is_debug
-			and then is_debug_configured = other.is_debug_configured
-			and then is_full_class_checking = other.is_full_class_checking
-			and then is_full_class_checking_configured = other.is_full_class_checking_configured
-			and then is_msil_application_optimize = other.is_msil_application_optimize
-			and then is_msil_application_optimize_configured = other.is_msil_application_optimize_configured
-			and then is_optimize = other.is_optimize
-			and then is_optimize_configured = other.is_optimize_configured
-			and then is_profile = other.is_profile
-			and then is_profile_configured = other.is_profile_configured
-			and then is_trace = other.is_trace
-			and then is_trace_configured = other.is_trace_configured
-			and then local_namespace ~ other.local_namespace
-			and then namespace ~ other.namespace
-			and then void_safety ~ other.void_safety
-			and then syntax ~ other.syntax
-			and then array ~ other.array
-			and then warning ~ other.warning
-			and then warning_obsolete_call ~ other.warning_obsolete_call
-			and then warnings ~ other.warnings
-			then
-				Result := True
-			end
+			Result :=
+				assertions ~ other.assertions ∧…
+				debugs ~ other.debugs ∧…
+				description ~ other.description ∧…
+				is_attached_by_default = other.is_attached_by_default ∧…
+				is_attached_by_default_configured = other.is_attached_by_default_configured ∧…
+				is_obsolete_iteration = other.is_obsolete_iteration ∧…
+				is_obsolete_iteration_configured = other.is_obsolete_iteration_configured ∧…
+				is_obsolete_routine_type = other.is_obsolete_routine_type ∧…
+				is_obsolete_routine_type_configured = other.is_obsolete_routine_type_configured ∧…
+				catcall_detection ~ other.catcall_detection ∧…
+				is_debug = other.is_debug ∧…
+				is_debug_configured = other.is_debug_configured ∧…
+				is_full_class_checking = other.is_full_class_checking ∧…
+				is_full_class_checking_configured = other.is_full_class_checking_configured ∧…
+				is_msil_application_optimize = other.is_msil_application_optimize ∧…
+				is_msil_application_optimize_configured = other.is_msil_application_optimize_configured ∧…
+				is_optimize = other.is_optimize ∧…
+				is_optimize_configured = other.is_optimize_configured ∧…
+				is_profile = other.is_profile ∧…
+				is_profile_configured = other.is_profile_configured ∧…
+				is_trace = other.is_trace ∧…
+				is_trace_configured = other.is_trace_configured ∧…
+				local_namespace ~ other.local_namespace ∧…
+				namespace ~ other.namespace ∧…
+				void_safety ~ other.void_safety ∧…
+				syntax ~ other.syntax ∧…
+				array ~ other.array ∧…
+				warning ~ other.warning ∧…
+				warning_obsolete_call ~ other.warning_obsolete_call ∧…
+				warnings ~ other.warnings
 		end
 
 	is_equal_options (other: like Current): BOOLEAN
 			-- Are `current' and `other' equal considering the options that are in the compiled result?
 		do
-			Result := equal (assertions, other.assertions) and
+			Result :=
+				assertions ~ other.assertions and
 				is_debug = other.is_debug and
 				is_optimize = other.is_optimize and
 				is_profile = other.is_profile and
 				is_full_class_checking = other.is_full_class_checking and
 				catcall_detection.index = other.catcall_detection.index and
 				is_attached_by_default = other.is_attached_by_default and
+				is_obsolete_iteration = other.is_obsolete_iteration and
 				is_obsolete_routine_type = other.is_obsolete_routine_type and
 				is_trace = other.is_trace and
 				void_safety.index = other.void_safety.index and
 				syntax.index = other.syntax.index and
 				array.index = other.array.index and
 				warning.index = other.warning.index and
-				equal(local_namespace, other.local_namespace) and
-				equal (debugs, other.debugs)
+				local_namespace ~ other.local_namespace and
+				debugs ~ other.debugs
 		end
 
 	is_void_safety_supported (other: CONF_OPTION): BOOLEAN
@@ -894,6 +945,10 @@ feature -- Merging
 					is_full_class_checking := other.is_full_class_checking
 				end
 				catcall_detection.set_safely (other.catcall_detection)
+				if not is_obsolete_iteration_configured then
+					is_obsolete_iteration_configured := other.is_obsolete_iteration_configured or else is_obsolete_iteration /~ other.is_obsolete_iteration
+					is_obsolete_iteration := other.is_obsolete_iteration
+				end
 				if not is_obsolete_routine_type_configured then
 					is_obsolete_routine_type_configured := other.is_obsolete_routine_type_configured or else is_obsolete_routine_type /~ other.is_obsolete_routine_type
 					is_obsolete_routine_type := other.is_obsolete_routine_type
@@ -937,7 +992,7 @@ invariant
 
 note
 	ca_ignore: "CA093", "CA093: manifest array type mismatch"
-	copyright: "Copyright (c) 1984-2019, Eiffel Software"
+	copyright: "Copyright (c) 1984-2021, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

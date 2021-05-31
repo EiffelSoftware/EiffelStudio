@@ -2039,7 +2039,7 @@ feature {NONE} -- Configuration setting
 					check
 						valid_value: attached l_item.value as v
 					then
-						current_target.remove_variable (v.as_string_8)
+						current_target.remove_variable (v)
 					end
 				else
 					check expected_selected_row_item_type: False end
@@ -2181,7 +2181,7 @@ invariant
 	selected_target_ok: selected_target /= Void and then not selected_target.is_empty
 
 note
-	copyright: "Copyright (c) 1984-2020, Eiffel Software"
+	copyright: "Copyright (c) 1984-2021, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

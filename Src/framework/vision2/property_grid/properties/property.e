@@ -38,7 +38,7 @@ feature {NONE} -- Initialization
 			a_name_ok: a_name /= Void
 		do
 			name := a_name
-			create {STRING_32}description.make_empty
+			create {STRING_32} description.make_empty
 			default_create
 			pointer_button_press_actions.extend (agent check_right_click)
 		ensure
@@ -54,10 +54,10 @@ feature {NONE} -- Initialization
 
 feature  -- Access
 
-	name: STRING_GENERAL
+	name: READABLE_STRING_GENERAL
 			-- Name of the property.
 
-	description: STRING_GENERAL
+	description: READABLE_STRING_GENERAL
 			-- Description of the property.
 
 	is_inherited: BOOLEAN
@@ -238,7 +238,7 @@ feature {NONE} -- Contract
 			-- Default state.
 
 note
-	copyright: "Copyright (c) 1984-2018, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2021, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

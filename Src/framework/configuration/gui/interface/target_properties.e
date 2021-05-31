@@ -273,6 +273,9 @@ feature {NONE} -- Implementation
 				-- Syntax.			
 			add_syntax_property (current_target.changeable_internal_options, current_target.options, l_extends, False)
 				-- Manifest array type checks.
+				-- Loop syntax.
+			add_obsolete_iteration_property (current_target.changeable_internal_options, current_target.options, l_extends, False)
+				-- Manifest array type checks.
 			add_array_property (current_target.changeable_internal_options, current_target.options, l_extends, False)
 			add_choice_property
 				(locale.translation_in_context ("Override manifest array type checks", "configuration.option"),
@@ -776,7 +779,7 @@ feature {NONE} -- Validation and warning generation
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2020, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2021, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

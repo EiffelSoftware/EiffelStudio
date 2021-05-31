@@ -5041,7 +5041,7 @@ feature {NONE} -- Implementation: helpers
 			if not expr_type_visiting then
 				l_text_formatter_decorator.put_space
 				l_text_formatter_decorator.process_keyword_text
-					(if l_as.is_restricted then ti_is_keyword else ti_as_keyword end, Void)
+					(if l_as.is_restricted and then current_class.lace_class.is_explicit_iteration_cursor then ti_is_keyword else ti_as_keyword end, Void)
 				l_text_formatter_decorator.put_space
 				l_as.identifier.process (Current)
 				exdent.call (Void)

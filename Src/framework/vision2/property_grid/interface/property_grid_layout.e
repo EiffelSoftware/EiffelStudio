@@ -74,7 +74,7 @@ feature {NONE} -- Text
 	down_button_text: STRING_GENERAL do Result := names.b_Down_text	end
 	change_button_text: STRING_GENERAL do Result := names.b_change	end
 
-	dialog_title (a_name: STRING_GENERAL): STRING_GENERAL
+	dialog_title (a_name: READABLE_STRING_GENERAL): STRING_GENERAL
 		do
 			Result := names.t_dialog_title (a_name)
 		end
@@ -113,4 +113,14 @@ feature {NONE} -- Onces for global setting of layout values.
 			create Result.put (0)
 		end
 
+note
+	copyright: "Copyright (c) 1984-2021, Eiffel Software and others"
+	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
+	source: "[
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
+		]"
 end

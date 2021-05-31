@@ -807,6 +807,7 @@ feature {NONE} -- Option names
 			Result.force (o_is_debug)
 			Result.force (o_is_full_class_checking)
 			Result.force (o_is_msil_application_optimize)
+			Result.force (o_is_obsolete_iteration)
 			Result.force (o_is_obsolete_routine_type)
 			Result.force (o_is_optimize)
 			Result.force (o_is_profile)
@@ -827,7 +828,7 @@ feature {NONE} -- Option names
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2019, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2021, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

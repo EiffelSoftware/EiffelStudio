@@ -172,6 +172,7 @@ feature -- Initialization
 			last_rsqure.wipe_out
 			current_class := Void
 			is_ignoring_attachment_marks := False
+			is_explicit_iteration_cursor := False
 			is_frozen_class := False
 			is_external_class := False
 			is_partial_class := False
@@ -223,6 +224,11 @@ feature -- Status report
 				-- frozen/variant annotations but won't record them.
 			Result := syntax_version /= provisional_syntax
 		end
+
+	is_explicit_iteration_cursor: BOOLEAN
+			-- Does iteration use an explicit cursor?
+			-- If yes, the iteration item is accessed via an explicit call "c.item".
+			-- Otherwise, it is accessed without a call ("c"), but other accesser use a predecessor ("@c.key").
 
 	is_type_inference_supported: BOOLEAN
 			-- Is type inference supported so that some type declarations are optional?
@@ -638,6 +644,14 @@ feature -- Settings
 			is_ignoring_attachment_marks := v
 		ensure
 			is_ignoring_attachment_marks_set: is_ignoring_attachment_marks = v
+		end
+
+	set_is_explicit_iteration_cursor (v: like is_explicit_iteration_cursor)
+			-- Set `is_explicit_iteration_cursor` to `v`.
+		do
+			is_explicit_iteration_cursor := v
+		ensure
+			is_explicit_iteration_cursor = v
 		end
 
 feature -- Modification

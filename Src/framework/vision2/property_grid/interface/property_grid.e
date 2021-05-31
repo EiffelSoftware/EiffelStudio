@@ -177,8 +177,8 @@ feature -- Update
 					l_name_item.set_left_border (3)
 					l_name_item.select_actions.extend (agent show_description (a_property))
 					a_property.select_actions.extend (agent show_description (a_property))
-					if a_property.description /= Void then
-						l_name_item.set_tooltip (a_property.description)
+					if attached a_property.description as d then
+						l_name_item.set_tooltip (d)
 					end
 					l_name_item.activate_actions.extend (agent activate_property (a_property, ?))
 		--			l_row.set_item (1, create {EV_GRID_ITEM})
@@ -347,28 +347,14 @@ feature {NONE} -- Actions
 				end
 			when {EV_KEY_CONSTANTS}.key_home then
 				if attached first_visible_row as l_visible_row and then l_visible_row.count > 0 then
-					from
-						l_selection.start
-					until
-						l_selection.after
-					loop
-						l_selection.item.disable_select
-						l_selection.forth
-					end
+					⟳ i: l_selection ¦ i.disable_select ⟲
 					if attached l_visible_row.item (1) as l_item then
 						l_item.enable_select
 					end
 				end
 			when {EV_KEY_CONSTANTS}.key_end then
 				if attached last_visible_row as l_visible_row and then l_visible_row.count > 0 then
-					from
-						l_selection.start
-					until
-						l_selection.after
-					loop
-						l_selection.item.disable_select
-						l_selection.forth
-					end
+					⟳ i: l_selection ¦ i.disable_select ⟲
 					if attached l_visible_row.item (1) as l_item then
 						l_item.enable_select
 					end

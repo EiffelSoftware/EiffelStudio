@@ -779,12 +779,13 @@ feature -- Change
 
 	show
 			-- Show tool
-		local
-			g: like stack_grid
 		do
 			Precursor {ES_DEBUGGER_DOCKABLE_STONABLE_TOOL_PANEL}
-			g := stack_grid
-			if g.is_displayed and then g.is_sensitive then
+			if
+				attached stack_grid as g and then
+				g.is_displayed and then
+				g.is_sensitive
+			then
 				g.set_focus
 			end
 			request_update

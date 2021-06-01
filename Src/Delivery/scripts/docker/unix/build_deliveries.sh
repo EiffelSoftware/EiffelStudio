@@ -86,7 +86,11 @@ if [ -e "$output_dir/last_revision_built" ]; then
 			echo "ERROR: File size of $porterpackage_tar sounds too small to be valid (size=$pp_filesize), stop delivery!"
 			rm "$porterpackage_tar"
 		else
-			share_deliv_file $output_dir/${deliv_revision}/PorterPackage_${deliv_revision}.tar "New $edition_name Porterpackage for revision ${deliv_revision}" ${edition_name}
+			if [ "$edition_name" = "ent" ]; then
+				share_deliv_file $output_dir/${deliv_revision}/PorterPackage_ent_${deliv_revision}.tar "New $edition_name Porterpackage for revision ${deliv_revision}" ${edition_name}
+			else
+				share_deliv_file $output_dir/${deliv_revision}/PorterPackage_${deliv_revision}.tar "New $edition_name Porterpackage for revision ${deliv_revision}" ${edition_name}
+			fi
 		fi
 	fi
 	if [ -e "$porterpackage_tar" ]; then

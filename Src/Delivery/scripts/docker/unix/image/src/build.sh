@@ -1,17 +1,18 @@
 #!/bin/bash
 
-export DELIV_DIR=$1
+export DELIV_WS_DIR=$1
 export DELIV_PORTERPACKAGE_TAR=$2
+export DELIV_IMAGE_OUTPUT=$3
 
-echo Build delivery ${DELIV_PORTERPACKAGE_TAR} DELIV_DIR=$DELIV_DIR
+echo Build delivery ${DELIV_PORTERPACKAGE_TAR} DELIV_WS_DIR=$DELIV_WS_DIR
 
-if [ ! -d "$DELIV_DIR" ]; then
-	echo Create $DELIV_DIR
-	mkdir -p $DELIV_DIR
+if [ ! -d "$DELIV_WS_DIR" ]; then
+	echo Create $DELIV_WS_DIR
+	mkdir -p $DELIV_WS_DIR
 fi
 
 
-cd $DELIV_DIR
+cd $DELIV_WS_DIR
 STUDIO_PORTERPACKAGE_TAR=$DELIV_PORTERPACKAGE_TAR
 if [ -f "$STUDIO_PORTERPACKAGE_TAR" ]; then
 	tar xf "$STUDIO_PORTERPACKAGE_TAR"
@@ -22,7 +23,6 @@ if [ -d "PorterPackage" ]; then
 
 	echo - Platform: $ISE_PLATFORM 
 	echo - Revision: $DELIV_REVISION
-	DELIV_IMAGE_OUTPUT=$DELIV_DIR/image/
 	if [ ! -d "${DELIV_IMAGE_OUTPUT}" ]; then
 		mkdir -p ${DELIV_IMAGE_OUTPUT}
 	fi

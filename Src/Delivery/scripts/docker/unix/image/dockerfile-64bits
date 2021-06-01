@@ -8,6 +8,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends --no-install-su
         gcc make dist \
         libxtst-dev \
         libgtk2.0-dev \
+        libgtk-3-dev \
         libssl-dev \
 		pax \
 		dos2unix \
@@ -15,18 +16,31 @@ RUN apt-get update && apt-get install -y --no-install-recommends --no-install-su
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/*
 
-
-RUN mkdir -p /home/eiffel
-COPY ./src/build.sh /home/eiffel/build.sh
-RUN mkdir -p /home/eiffel/deliv/output \
-	&& dos2unix /home/eiffel/build.sh
-
-
 #Define delivery variables
+ENV USER_ID=1001 USER_GID=1001
+
+# Define Eiffel environment variables
 ENV ISE_PLATFORM=linux-x86-64
-ENV PORTERPACKAGE_TAR=/home/eiffel/deliv/porterpackage.tar
+ENV PORTERPACKAGE_TAR=/home/eiffel/porterpackage.tar
+
+RUN mkdir -p /home/eiffel/deliv/image && mkdir /home/eiffel/workspace 
+COPY ./src/build.sh /home/eiffel/build.sh
+RUN dos2unix /home/eiffel/build.sh
+
 VOLUME /home/eiffel/deliv/image
 
+# now creating user
+RUN groupadd --gid "${USER_GID}" "eiffel" && \
+    useradd \
+      --uid ${USER_ID} \
+      --gid ${USER_GID} \
+      --shell /bin/bash \
+      eiffel && \
+      chown -R eiffel:${USER_GID} /home/eiffel && \
+      chmod a+w -R /home/eiffel/workspace && \
+      chmod a+w -R /home/eiffel/deliv/image 
+
+USER eiffel
 WORKDIR /home/eiffel
-CMD /bin/bash /home/eiffel/build.sh /home/eiffel/deliv $PORTERPACKAGE_TAR
+CMD /bin/bash /home/eiffel/build.sh /home/eiffel/workspace $PORTERPACKAGE_TAR /home/eiffel/deliv/image
 

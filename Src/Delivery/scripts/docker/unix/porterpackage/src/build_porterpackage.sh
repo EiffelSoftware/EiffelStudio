@@ -1,9 +1,21 @@
 #!/bin/bash
 
-echo SVN_EIFFELSTUDIO_REPO=$SVN_EIFFELSTUDIO_REPO
-echo SVN_ISE_REPO=$SVN_ISE_REPO
+echo User: $(id -u):$(id -g)
+echo + SVN_ISE_REPO=$SVN_ISE_REPO
+echo + SVN_ISE_BRANCH=$SVN_ISE_BRANCH
+echo + SVN_EIFFELSTUDIO_REPO=$SVN_EIFFELSTUDIO_REPO
+echo + SVN_EIFFELSTUDIO_REPO_REVISION=$SVN_EIFFELSTUDIO_REPO_REVISION
+if [ -z "$SVN_EIFFELSTUDIO_BRANCH" ]; then 
+	export SVN_EIFFELSTUDIO_BRANCH=/trunk
+	echo ++SVN_EIFFELSTUDIO_BRANCH=$SVN_EIFFELSTUDIO_BRANCH
+else
+	echo + SVN_EIFFELSTUDIO_BRANCH=$SVN_EIFFELSTUDIO_BRANCH
+fi
+echo + INCLUDE_ENTERPRISE=$INCLUDE_ENTERPRISE
+echo + ONLY_PORTERPACKAGE=$ONLY_PORTERPACKAGE
 
 export DELIV_DIR=$1
+echo = DELIV_DIR=$DELIV_DIR
 if [ ! -d "$DELIV_DIR" ]; then
 	echo Create $DELIV_DIR
 	mkdir -p $DELIV_DIR
@@ -13,7 +25,6 @@ if [ ! -d "$DELIV_DIR/output" ]; then
 	mkdir -p $DELIV_DIR/output
 fi
 
-echo DELIV_DIR=$DELIV_DIR
 
 echo Install EiffelStudio
 if [ -z "$EIFFEL_SETUP_CHANNEL" ]; then
@@ -36,17 +47,9 @@ export ISE_EIFFEL=/home/eiffel/Eiffel/${EIFFEL_SETUP_CHANNEL}
 export ISE_LIBRARY=$ISE_EIFFEL
 export PATH=$PATH:$ISE_EIFFEL/studio/spec/$ISE_PLATFORM/bin:$ISE_EIFFEL/tools/spec/$ISE_PLATFORM/bin:$ISE_EIFFEL/library/gobo/spec/$ISE_PLATFORM/bin:$ISE_EIFFEL/esbuilder/spec/$ISE_PLATFORM/bin
 
-
 export ORIGO_SVN_REVISION=$SVN_EIFFELSTUDIO_REPO_REVISION
-if [ -z "$SVN_EIFFELSTUDIO_BRANCH" ]; then 
-	export SVN_EIFFELSTUDIO_BRANCH=/trunk
-fi
 
-echo ISE_EIFFEL=$ISE_EIFFEL
-echo SVN_EIFFELSTUDIO_BRANCH=$SVN_EIFFELSTUDIO_BRANCH
-echo SVN_ISE_BRANCH=$SVN_ISE_BRANCH
-echo ONLY_PORTERPACKAGE=$ONLY_PORTERPACKAGE
-echo INCLUDE_ENTERPRISE=$INCLUDE_ENTERPRISE
+echo = ISE_EIFFEL=$ISE_EIFFEL
 
 # Initialization
 export PATH=$PATH:.
@@ -64,31 +67,31 @@ if [ -z "$SVN_ISE_BRANCH" ]; then
 else
 	export DEFAULT_ISE_SVN=$SVN_ISE_REPO$SVN_ISE_BRANCH
 fi
-echo DEFAULT_ISE_SVN=$DEFAULT_ISE_SVN
-
+echo = DEFAULT_ISE_SVN=$DEFAULT_ISE_SVN
 
 echo Build PorterPackage in $DELIV_DIR
 echo Use EiffelStudio svn url: $DEFAULT_ORIGO_SVN_ROOT$SVN_EIFFELSTUDIO_BRANCH
 echo Use ISE svn url: $DEFAULT_ISE_SVN
 
 # Main
+export DELIV_WORKSPACE=/home/eiffel/workspace
 
-if [ -d "$DELIV_DIR/scripts-unix" ]; then
-	echo Clean $DELIV_DIR/scripts-unix
-	\rm -rf $DELIV_DIR/scripts-unix
+if [ -d "$DELIV_WORKSPACE/tmp" ]; then
+	echo Clean $DELIV_WORKSPACE/tmp
+	\rm -rf $DELIV_WORKSPACE/tmp
 fi
 
 echo Build delivery for $ISE_PLATFORM 
 echo revision: $ORIGO_SVN_REVISION
-echo svn checkout --config-option config:miscellany:use-commit-times=yes $SVN_EIFFELSTUDIO_REPO$SVN_EIFFELSTUDIO_BRANCH/Src/Delivery/scripts/unix $DELIV_DIR/scripts-unix
-svn checkout --config-option config:miscellany:use-commit-times=yes $SVN_EIFFELSTUDIO_REPO$SVN_EIFFELSTUDIO_BRANCH/Src/Delivery/scripts/unix $DELIV_DIR/scripts-unix
+echo svn checkout --config-option config:miscellany:use-commit-times=yes $SVN_EIFFELSTUDIO_REPO$SVN_EIFFELSTUDIO_BRANCH/Src/Delivery/scripts/unix $DELIV_WORKSPACE/tmp
+svn checkout --config-option config:miscellany:use-commit-times=yes $SVN_EIFFELSTUDIO_REPO$SVN_EIFFELSTUDIO_BRANCH/Src/Delivery/scripts/unix $DELIV_WORKSPACE/tmp
 
 echo Get revision from source code
 if [ ! "$ORIGO_SVN_REVISION" ]; then
-	DELIV_REVISION=`$DELIV_DIR/scripts-unix/set_version.sh $DEFAULT_ORIGO_SVN_ROOT$SVN_EIFFELSTUDIO_BRANCH`
+	DELIV_REVISION=`$DELIV_WORKSPACE/tmp/set_version.sh $DEFAULT_ORIGO_SVN_ROOT$SVN_EIFFELSTUDIO_BRANCH`
 else
 	if [ "$ORIGO_SVN_REVISION" = "HEAD" ]; then
-		DELIV_REVISION=`$DELIV_DIR/scripts-unix/set_version.sh $DEFAULT_ORIGO_SVN_ROOT$SVN_EIFFELSTUDIO_BRANCH`
+		DELIV_REVISION=`$DELIV_WORKSPACE/tmp/set_version.sh $DEFAULT_ORIGO_SVN_ROOT$SVN_EIFFELSTUDIO_BRANCH`
 	else
 		DELIV_REVISION=$ORIGO_SVN_REVISION
 	fi
@@ -114,7 +117,7 @@ if [ -d "$DELIV_LOGDIR" ]; then
 fi
 mkdir -p "$DELIV_LOGDIR"
 
-cd $DELIV_DIR/scripts-unix
+cd $DELIV_WORKSPACE/tmp
 STUDIO_PORTERPACKAGE_TAR=$DELIV_OUTPUT/PorterPackage_${DELIV_REVISION}.tar
 if [ -f "$STUDIO_PORTERPACKAGE_TAR" ]; then
 	echo Reuse $STUDIO_PORTERPACKAGE_TAR

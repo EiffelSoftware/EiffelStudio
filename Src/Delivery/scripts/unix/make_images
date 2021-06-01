@@ -41,6 +41,9 @@ cp -r runtimes/* $INSTALL_DIR/studio/spec/$ISE_PLATFORM/lib
 
 remtrace Preparing Standard version
 bunzip2 -c $EXPORT_DIR/ecs/ec_std.bz2 > $INSTALL_DIR/studio/spec/$ISE_PLATFORM/bin/ec
+if [ ! -z "$INCLUDE_GTK3" ]; then
+	bunzip2 -c $EXPORT_DIR/ecs/ec_gtk34_std.bz2 > $INSTALL_DIR/studio/spec/$ISE_PLATFORM/bin/ec-gtk34
+fi
 bunzip2 -c $EXPORT_DIR/ecs/ecb_std.bz2 > $INSTALL_DIR/studio/spec/$ISE_PLATFORM/bin/ecb
 chmod a+rx $INSTALL_DIR/studio/spec/$ISE_PLATFORM/bin/ec
 chmod go-w $INSTALL_DIR/studio/spec/$ISE_PLATFORM/bin/ec 
@@ -57,6 +60,9 @@ bzip2 Eiffel_${STUDIO_VERSION_MAJOR_MINOR}_rev_$FILE_SVN_REVISION-$ISE_PLATFORM.
 if [ "$MULTIPLE_EDITIONS" ]; then
 	remtrace Preparing Enterprise version
 	bunzip2 -c $EXPORT_DIR/ecs/ec_ent.bz2 > $INSTALL_DIR/studio/spec/$ISE_PLATFORM/bin/ec
+	if [ ! -z "$INCLUDE_GTK3" ]; then
+		bunzip2 -c $EXPORT_DIR/ecs/ec_gtk34_ent.bz2 > $INSTALL_DIR/studio/spec/$ISE_PLATFORM/bin/ec-gtk34
+	fi
 	bunzip2 -c $EXPORT_DIR/ecs/ecb_ent.bz2 > $INSTALL_DIR/studio/spec/$ISE_PLATFORM/bin/ecb
 	chmod a+rx $INSTALL_DIR/studio/spec/$ISE_PLATFORM/bin/ec
 	chmod go-w $INSTALL_DIR/studio/spec/$ISE_PLATFORM/bin/ec 
@@ -83,6 +89,9 @@ if [ "$MULTIPLE_EDITIONS" ]; then
 
 	remtrace Preparing Branded version
 	bunzip2 -c $EXPORT_DIR/ecs/ec_branded.bz2 > $INSTALL_DIR/studio/spec/$ISE_PLATFORM/bin/ec
+	if [ ! -z "$INCLUDE_GTK3" ]; then
+		bunzip2 -c $EXPORT_DIR/ecs/ec_gtk34_branded.bz2 > $INSTALL_DIR/studio/spec/$ISE_PLATFORM/bin/ec-gtk34
+	fi
 	bunzip2 -c $EXPORT_DIR/ecs/ecb_branded.bz2 > $INSTALL_DIR/studio/spec/$ISE_PLATFORM/bin/ecb
 	chmod a+rx $INSTALL_DIR/studio/spec/$ISE_PLATFORM/bin/ec
 	chmod go-w $INSTALL_DIR/studio/spec/$ISE_PLATFORM/bin/ec 

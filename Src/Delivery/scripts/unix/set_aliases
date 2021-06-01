@@ -40,6 +40,14 @@ FILE_SVN_REVISION=""
 # Version of GTK
 GTK_DIR=gtk2
 
+if [ ! "$INCLUDE_GTK3" ]; then
+	#By default include GTK3
+	INCLUDE_GTK3="True"
+fi
+if [ ! "$INCLUDE_GTK3" = "True" ]; then
+	unset INCLUDE_GTK3
+fi
+
 # Used only when making PorterPackage to checkout the sources
 NEW_EIFFEL_SRC=`pwd`/tmpdev
 NEW_ISE_SRC=`pwd`/tmpdev

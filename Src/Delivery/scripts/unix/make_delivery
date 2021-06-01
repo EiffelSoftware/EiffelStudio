@@ -42,12 +42,19 @@ NO_DOCUMENTATION=""
 else
 NO_DOCUMENTATION="True"
 fi
+
 awk 'index($0, "no_new_ec") != 0 { exit 54 }' tmpin$$.tmp
 if [ $? -eq 54 ] ;  then
 NO_NEW_EC="True"
 else
 NO_NEW_EC=""
 fi
+
+awk 'index($0, "no_gtk3") != 0 { exit 54 }' tmpin$$.tmp
+if [ $? -eq 54 ] ;  then
+INCLUDE_GTK3=""
+fi
+
 awk 'index($0, "all") != 0 { exit 54 }' tmpin$$.tmp
 if [ $? -eq 54 ] ;  then
 MULTIPLE_EDITIONS="True"

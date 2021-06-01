@@ -108,6 +108,20 @@ if [ ! "$NO_NEW_EC" ]; then
 	clean_project
 	move ec.tar.bz2 $EXPORT_DIR/bin/ec_std.tar.bz2
 
+	if [ ! -z "$INCLUDE_GTK3" ]; then
+		remtrace Standard EiffelStudio edition - gtk34
+		export vision_implementation=gtk34
+		finalize ec.ecf bench
+		unset vision_implementation
+		tgz_ccode bench ec_gtk34.tar.bz2
+		if [ ! -f ec_gtk34.tar.bz2 ]; then
+			echo Could not finalize a new EiffelStudio for GTK34
+			CANCEL
+		fi
+		clean_project
+		move ec_gtk34.tar.bz2 $EXPORT_DIR/bin/ec_gtk34_std.tar.bz2
+	fi
+
 	remtrace Batch version
 	clean_project
 	finalize ec.ecf batch
@@ -138,6 +152,20 @@ if [ ! "$NO_NEW_EC" ]; then
 		fi
 		clean_project
 		move ec.tar.bz2 $EXPORT_DIR/bin/ec_ent.tar.bz2
+
+		if [ ! -z "$INCLUDE_GTK3" ]; then
+			remtrace Enterprise EiffelStudio edition - gtk34
+			export vision_implementation=gtk34
+			finalize ec.ecf bench
+			unset vision_implementation
+			tgz_ccode bench ec_gtk34.tar.bz2
+			if [ ! -f ec_gtk34.tar.bz2 ]; then
+				echo Could not finalize a new Enterprise EiffelStudio for GTK34
+				CANCEL
+			fi
+			clean_project
+			move ec_gtk34.tar.bz2 $EXPORT_DIR/bin/ec_gtk34_ent.tar.bz2
+		fi
 
 		remtrace enterprise Batch version
 		clean_project
@@ -171,6 +199,20 @@ if [ ! "$NO_NEW_EC" ]; then
 		fi
 		clean_project
 		move ec.tar.bz2 $EXPORT_DIR/bin/ec_branded.tar.bz2
+
+		if [ ! -z "$INCLUDE_GTK3" ]; then
+			remtrace Branded EiffelStudio edition - gtk34
+			export vision_implementation=gtk34
+			finalize ec.ecf bench
+			unset vision_implementation
+			tgz_ccode bench ec_gtk34.tar.bz2
+			if [ ! -f ec_gtk34.tar.bz2 ]; then
+				echo Could not finalize a new Branded EiffelStudio for GTK34
+				CANCEL
+			fi
+			clean_project
+			move ec_gtk34.tar.bz2 $EXPORT_DIR/bin/ec_gtk34_branded.tar.bz2
+		fi
 
 		remtrace branded Batch version
 		clean_project

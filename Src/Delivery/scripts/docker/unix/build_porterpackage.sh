@@ -11,9 +11,12 @@ if [ "$include_enterprise" = "true" ]; then
 else
 	output_dir=$var_dir/standard
 fi
+mkdir -p $output_dir 
 docker_image_name=local/eiffel-deliv-porterpackage
 docker rmi ${docker_image_name}
+
 docker build -t ${docker_image_name} -f ./porterpackage/dockerfile porterpackage
+
 if [ -d "$var_dir/eiffel" ]; then
 	echo Use Eiffel installation from $var_dir/eiffel/...
         t_docker_vol_opts="-v $var_dir/eiffel:/home/eiffel/Eiffel"
@@ -38,6 +41,8 @@ docker run --rm \
         -e SVN_EIFFELSTUDIO_REPO_REVISION=$SVN_EIFFELSTUDIO_REPO_REVISION \
         -e SVN_EIFFELSTUDIO_BRANCH=$SVN_EIFFELSTUDIO_BRANCH \
 		-e INCLUDE_ENTERPRISE=$include_enterprise \
+		-e USER_ID=$(id -u) \
+		-e USER_GID=$(id -g) \
 		--user $(id -u):$(id -g) \
         ${docker_image_name}
 #docker rmi ${docker_image_name}

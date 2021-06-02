@@ -269,6 +269,10 @@ if [ -z "$MULTIPLE_EDITIONS" ]; then
 	bunzip2 -c $EXPORT_DIR/ecs/ecb_std.bz2 > $INSTALL_DIR/studio/spec/$ISE_PLATFORM/bin/ecb
 	chmod a+rx $INSTALL_DIR/studio/spec/$ISE_PLATFORM/bin/ec
 	chmod go-w $INSTALL_DIR/studio/spec/$ISE_PLATFORM/bin/ec 
+	if [ ! -z "$INCLUDE_GTK3" ]; then
+		chmod a+rx $INSTALL_DIR/studio/spec/$ISE_PLATFORM/bin/ec-gtk34
+		chmod go-w $INSTALL_DIR/studio/spec/$ISE_PLATFORM/bin/ec-gtk34
+	fi
 	chmod a+rx $INSTALL_DIR/studio/spec/$ISE_PLATFORM/bin/ecb
 	chmod go-w $INSTALL_DIR/studio/spec/$ISE_PLATFORM/bin/ecb
 else

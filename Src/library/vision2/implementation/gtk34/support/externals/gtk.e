@@ -579,7 +579,7 @@ feature -- ProgressBar
 			"C signature (GtkProgressBar*, gboolean) use <ev_gtk.h>"
 		end
 
-feature -- EntryBuffer		
+feature -- EntryBuffer
 
 	frozen gtk_entry_get_buffer (a_entry: POINTER): POINTER
 		external

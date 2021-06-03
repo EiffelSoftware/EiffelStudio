@@ -11,7 +11,6 @@ deferred class
 	EV_COLORIZABLE_IMP
 
 inherit
-
 	EV_COLORIZABLE_I
 		redefine
 			interface
@@ -94,129 +93,67 @@ feature -- Status setting
 			--| and set it back into the widget.
 			--| (See gtk/docs/styles.txt)
 		local
-			r, g, b, nr, ng, nb, m, mx: INTEGER
+			r, g, b, m, mx: INTEGER
 			l_context: POINTER
 			l_provider: POINTER
+			l_css: STRING
 			l_css_data: C_STRING
 			l_error: POINTER
-			l_hex_string: STRING
-			color: POINTER
-			l_css: STRING
 		do
 			if a_color /= Void then
+				create l_css.make (1024)
+
 					-- TODO check the old implementation used 16 bits.
 				r := a_color.red_16_bit
 				g := a_color.green_16_bit
 				b := a_color.blue_16_bit
-				m := a_color.Max_16_bit
-				l_context := {GTK}.gtk_widget_get_style_context (a_c_object)
-				l_provider := {GTK_CSS}.gtk_css_provider_new
-				color := {GTK}.c_gdk_rgba_struct_allocate
-				{GDK}.set_rgba_struct_red (color, r / m)
-				{GDK}.set_rgba_struct_green (color, g / m)
-				{GDK}.set_rgba_struct_blue (color, b / m)
-				{GDK}.set_rgba_struct_alpha (color, 1.0)
+				m := a_color.max_16_bit
 
-				create l_hex_string.make_from_c ({GDK}.gdk_rgba_to_string (color))
-				create l_css_data.make ("* {background-color:"+ l_hex_string + "; }")
-
-				if not {GTK_CSS}.gtk_css_provider_load_from_data (l_provider, l_css_data.item, -1, $l_error) then
-					-- TODO Handle error
-				end
-				{GTK2}.gtk_style_context_add_provider (l_context, l_provider, {EV_GTK_ENUMS}.gtk_style_provider_priority_application)
+				l_css.append ("* {background-color:" + new_rgb_color_string (r, g, b) + ";}%N")
 
 					--| Set active state color.
-				nr := (r * Highlight_scale).rounded
-				ng := (g * Highlight_scale).rounded
-				nb := (b * Highlight_scale).rounded
-				if nr < 0 then nr := 0 end
-				if ng < 0 then ng := 0 end
-				if nb < 0 then nb := 0 end
-				{GDK}.set_rgba_struct_red (color, nr / m)
-				{GDK}.set_rgba_struct_green (color, ng / m)
-				{GDK}.set_rgba_struct_blue (color, nb / m)
-				{GDK}.set_rgba_struct_alpha (color, 1.0)
-
-				create l_hex_string.make_from_c ({GDK}.gdk_rgba_to_string (color))
-				create l_css_data.make ("*:active{ background-color:"+ l_hex_string + ";} ")
-				l_provider := {GTK_CSS}.gtk_css_provider_new
-				if not {GTK_CSS}.gtk_css_provider_load_from_data (l_provider, l_css_data.item, -1, $l_error) then
-					-- TODO Handle error
-				end
-				{GTK2}.gtk_style_context_add_provider (l_context, l_provider, {EV_GTK_ENUMS}.gtk_style_provider_priority_application)
+				l_css.append ("*:active {background-color:"
+						+ new_rgb_color_string ((r * Highlight_scale).rounded.max (0),
+												(g * Highlight_scale).rounded.max (0),
+												(b * Highlight_scale).rounded.max (0))
+						+ ";}%N"
+					)
 
 					--| Set prelight state color.
-				nr := (r * Prelight_scale).rounded.min (m)
-				ng := (g * Prelight_scale).rounded.min (m)
-				nb := (b * Prelight_scale).rounded.min (m)
-
-				{GDK}.set_rgba_struct_red (color, nr / m)
-				{GDK}.set_rgba_struct_green (color, ng / m )
-				{GDK}.set_rgba_struct_blue (color, nb / m)
-				{GDK}.set_rgba_struct_alpha (color, 1.0)
-				create l_hex_string.make_from_c ({GDK}.gdk_rgba_to_string (color))
-
-				create l_css_data.make ("*:hover{ background-color:"+ l_hex_string + ";} ")
-				l_provider := {GTK_CSS}.gtk_css_provider_new
-				if not {GTK_CSS}.gtk_css_provider_load_from_data (l_provider, l_css_data.item, -1, $l_error) then
-					-- TODO Handle error
-				end
-				{GTK2}.gtk_style_context_add_provider (l_context, l_provider, {EV_GTK_ENUMS}.gtk_style_provider_priority_application)
+				l_css.append ("*:hover {background-color:"
+						+ new_rgb_color_string ((r * Prelight_scale).rounded.min (m),
+												(g * Prelight_scale).rounded.min (m),
+												(b * Prelight_scale).rounded.min (m))
+						+ ";}%N"
+					)
 
 					--| Set selected state color to reverse.
-				{GDK}.set_rgba_struct_red   (color, (m - r) / m)
-				{GDK}.set_rgba_struct_green (color, (m - g) / m)
-				{GDK}.set_rgba_struct_blue  (color, (m - b//2) / m)
-				{GDK}.set_rgba_struct_alpha  (color, 1.0)
-
-				create l_hex_string.make_from_c ({GDK}.gdk_rgba_to_string (color))
-				create l_css_data.make ("*:selected{ background-color:"+ l_hex_string + ";} ")
-
-
-				l_provider := {GTK_CSS}.gtk_css_provider_new
-				if not {GTK_CSS}.gtk_css_provider_load_from_data (l_provider, l_css_data.item, -1, $l_error) then
-					-- TODO Handle error
-				end
-				{GTK2}.gtk_style_context_add_provider (l_context, l_provider, {EV_GTK_ENUMS}.gtk_style_provider_priority_application)
+				l_css.append ("*:selected {background-color:" + new_rgb_color_string (m - r, m - g, m - b // 2) + ";}%N")
 
 					--| Set the insensitive state color.
 				mx := r.max (g).max (b)
-				{GDK}.set_rgba_struct_red   (color, (mx + ((r - mx)//4)) / m)
-				{GDK}.set_rgba_struct_green (color, (mx + ((g - mx)//4)) / m)
-				{GDK}.set_rgba_struct_blue  (color, (mx + ((b - mx)//4)) / m)
-				{GDK}.set_rgba_struct_alpha (color, 1.0)
-
-				create l_hex_string.make_from_c ({GDK}.gdk_rgba_to_string (color))
-				create l_css_data.make ("*:disabled{ background-color:"+ l_hex_string + ";} ")
-				l_provider := {GTK_CSS}.gtk_css_provider_new
-				if not {GTK_CSS}.gtk_css_provider_load_from_data (l_provider, l_css_data.item, -1, $l_error) then
-					-- TODO Handle error
-				end
-				{GTK2}.gtk_style_context_add_provider (l_context, l_provider, {EV_GTK_ENUMS}.gtk_style_provider_priority_application)
-
+				l_css.append ("*:disabled {background-color:"
+						+ new_rgb_color_string (mx + ((r - mx) // 4),
+												mx + ((g - mx) // 4),
+												mx + ((b - mx) // 4))
+						+ ";}%N"
+					)
 
 					--| Set the text selection background and color.
 					--| TODO at the moment the colors are hardcoded.
-				l_css := "[
-				
-			    .view text selection {
-				  background-color: blue;
-				  color: yellow;
-				}
-				]"
+				l_css.append (".view text selection { background-color: blue; color: yellow; }%N")
+
 				create l_css_data.make (l_css)
+				l_context := {GTK}.gtk_widget_get_style_context (a_c_object)
 				l_provider := {GTK_CSS}.gtk_css_provider_new
+				{GTK2}.gtk_style_context_add_provider (l_context, l_provider, {EV_GTK_ENUMS}.gtk_style_provider_priority_application)
 				if not {GTK_CSS}.gtk_css_provider_load_from_data (l_provider, l_css_data.item, -1, $l_error) then
 					-- TODO Handle error
 				end
-				{GTK2}.gtk_style_context_add_provider (l_context, l_provider, {EV_GTK_ENUMS}.gtk_style_provider_priority_application)
 
-			end
-			if color /= default_pointer then
-				color.memory_free
-			end
-			if l_provider /= default_pointer then
-				{GTK2}.g_object_unref (l_provider)
+				if not l_provider.is_default_pointer then
+					{GTK2}.g_object_unref (l_provider)
+				end
 			end
 		end
 
@@ -235,36 +172,28 @@ feature -- Status setting
 	real_set_foreground_color (a_c_object: POINTER; a_color: detachable EV_COLOR)
 			-- Implementation of `set_foreground_color'
 		local
+			r,g,b: INTEGER
 			l_context: POINTER
 			l_provider: POINTER
 			l_css_data: C_STRING
 			l_error: POINTER
-			l_hex_string: STRING
-			color: POINTER
+			l_color_string: STRING
 			l_foreground_color_imp: like foreground_color_imp
-			m: INTEGER_32
 		do
 			if a_color /= Void then
 				l_foreground_color_imp := foreground_color_imp
 				check l_foreground_color_imp /= Void then end
-				color := {GTK}.c_gdk_rgba_struct_allocate
-				m := a_color.max_16_bit
-				{GDK}.set_rgba_struct_red (color, l_foreground_color_imp.red_16_bit / m)
-				{GDK}.set_rgba_struct_green (color, l_foreground_color_imp.green_16_bit / m)
-				{GDK}.set_rgba_struct_blue (color, l_foreground_color_imp.blue_16_bit / m)
-				{GDK}.set_rgba_struct_alpha (color, 1.0)
+				r := l_foreground_color_imp.red_16_bit
+				g := l_foreground_color_imp.green_16_bit
+				b := l_foreground_color_imp.blue_16_bit
 
 				l_context := {GTK}.gtk_widget_get_style_context (a_c_object)
 				l_provider := {GTK_CSS}.gtk_css_provider_new
-				create l_hex_string.make_from_c ({GDK}.gdk_rgba_to_string (color))
-				create l_css_data.make ("	* { color:"+ l_hex_string + "; } \n	*:active{ color:"+ l_hex_string + ";} \n *:hover{ color:"+ l_hex_string + ";} \n")
 				{GTK2}.gtk_style_context_add_provider (l_context, l_provider, {EV_GTK_ENUMS}.gtk_style_provider_priority_application)
+				l_color_string := new_rgb_color_string (r, g, b)
+				create l_css_data.make ("*, *:active, *:hover { color:"+ l_color_string + "; }%N")
 				if not {GTK_CSS}.gtk_css_provider_load_from_data (l_provider, l_css_data.item, -1, $l_error) then
 					-- TODO Handle error
-				end
-
-				if color /= default_pointer  then
-					color.memory_free
 				end
 			end
 		end
@@ -279,6 +208,51 @@ feature -- Status setting
 		end
 
 feature {NONE} -- Implementation
+
+	new_gdk_rgba_string (r,g,b: INTEGER; a: REAL_64; a_reuse_color_object: POINTER): STRING
+			-- New color string from `r,g,b,a`
+			-- reusing the Gtk struct `a_reuse_color_object`, if it is set
+			-- otherwise allocate a new struct.
+		require
+			valid_red:   r >= 0 and r <= {EV_COLOR}.max_16_bit
+			valid_green: g >= 0 and g <= {EV_COLOR}.max_16_bit
+			valid_blue:  b >= 0 and b <= {EV_COLOR}.max_16_bit
+			valid_alpha: a >= 0.0 and a <= 1.0
+		local
+			color: POINTER
+		do
+			if a_reuse_color_object.is_default_pointer then
+				color := {GTK}.c_gdk_rgba_struct_allocate
+			else
+				color := a_reuse_color_object
+			end
+			{GDK}.set_rgba_struct_red (color, r / {EV_COLOR}.max_16_bit)
+			{GDK}.set_rgba_struct_green (color, g / {EV_COLOR}.max_16_bit)
+			{GDK}.set_rgba_struct_blue (color, b / {EV_COLOR}.max_16_bit)
+			{GDK}.set_rgba_struct_alpha (color, a)
+			create Result.make_from_c ({GDK}.gdk_rgba_to_string (color))
+			if a_reuse_color_object.is_default_pointer and not color.is_default_pointer then
+				color.memory_free
+			end
+		end
+
+	new_rgb_color_string (r,g,b: INTEGER): STRING
+			-- New color string from `r,g,b`
+		require
+			valid_red:   r >= 0 and r <= {EV_COLOR}.max_16_bit
+			valid_green: g >= 0 and g <= {EV_COLOR}.max_16_bit
+			valid_blue:  b >= 0 and b <= {EV_COLOR}.max_16_bit
+		do
+			create Result.make (16)
+			Result.append ("rgb(")
+			Result.append_integer (r)
+			Result.append_character (',')
+			Result.append_integer (g)
+			Result.append_character (',')
+			Result.append_integer (b)
+			Result.append_character (')')
+				-- Alpha is 1.0, then no need to specify it in CSS.
+		end
 
 	visual_widget: POINTER
 		deferred
@@ -331,7 +305,6 @@ feature {NONE} -- Implementation
 			l_gdk_rgba.memory_free
 		end
 
-
 feature {EV_ANY, EV_ANY_I} -- Implementation
 
 	interface: detachable EV_COLORIZABLE note option: stable attribute end;
@@ -347,10 +320,7 @@ note
 			Customer support http://support.eiffel.com
 		]"
 
-
-
-
-end -- EV_COLORIZABLE_IMP
+end
 
 
 

@@ -633,11 +633,19 @@ feature {EV_MENU_BAR_IMP, EV_ACCELERATOR_IMP, EV_APPLICATION_IMP} -- Implementat
 	on_focus_changed (a_has_focus: BOOLEAN)
 			-- Called from focus intermediary agents when focus for `Current' has changed.
 			-- if `a_has_focus' then `Current' has just received focus.
+		local
+			l_c_widget: POINTER
 		do
 			internal_has_focus := a_has_focus
 			Precursor {EV_CELL_IMP} (a_has_focus)
 			if a_has_focus then
-				on_set_focus_event ({GTK}.gtk_window_get_focus (c_object))
+				l_c_widget := {GTK}.gtk_window_get_focus (c_object)
+				if l_c_widget /= c_object then
+					on_set_focus_event (l_c_widget)
+				else
+					-- Probably being called by `on_set_focus_event`, then avoid infinite loop.
+					do_nothing
+				end
 			else
 				on_set_focus_event (default_pointer)
 			end

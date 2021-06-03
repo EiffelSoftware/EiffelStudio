@@ -4252,9 +4252,19 @@ feature {EV_GRID_LOCKED_I} -- Drawing implementation
 			create header
 			create fixed
 
+			set_default_size_values
 			set_default_colors
 			set_separator_color (black.twin)
 			set_node_pixmaps (initial_expand_node_pixmap, initial_collapse_node_pixmap)
+		end
+
+	set_default_size_values
+			-- Set default size values (for `buffered_drawable_size`, ...)
+			-- note: depending on the platform, and implementation
+			-- this can be redefined to have smaller values.
+		do
+			buffered_drawable_size := 30_000
+			maximum_header_width := 30_000
 		end
 
 	initialize_grid
@@ -4907,8 +4917,12 @@ feature {EV_GRID_LOCKED_I} -- Drawing implementation
 	resizing_line_border: INTEGER = 4
 		-- Distance that resizing line is displayed from top and bottom edges of `drawable'.
 
-	buffered_drawable_size: INTEGER = 30_000 
-		-- Default size of `drawable' used for scrolling purposes.
+	maximum_header_width: INTEGER
+		-- Maximium width of `header'.
+
+	buffered_drawable_size: INTEGER
+			-- Default size of `drawable' used for scrolling purposes.
+			-- Warning: the value may be different between Windows, Linux (gtk, gtk34)
 
 	horizontal_redraw_triggered_by_viewport_resize: BOOLEAN
 
@@ -6412,9 +6426,6 @@ feature {NONE} -- Implementation
 			internal_row_data_count_resized: internal_row_data.count = new_count
 			counts_equal: rows.count = internal_row_data.count
 		end
-
-	maximum_header_width: INTEGER = 30_000
-		-- Maximium width of `header'.
 
 	default_scroll_bar_leap: INTEGER = 16
 	default_scroll_bar_step: INTEGER = 1

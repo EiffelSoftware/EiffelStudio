@@ -17,7 +17,8 @@ inherit
 			propagate_background_color,
 			propagate_foreground_color
 		redefine
-			interface
+			interface,
+			set_default_size_values
 		end
 
 	EV_CELL_IMP
@@ -94,12 +95,24 @@ feature {NONE} -- Initialization
 			set_is_initialized (True)
 		end
 
+	set_default_size_values
+			-- <Precursor/>
+		do
+				-- For gtk3, as it is using cairo_surface, using 30_000 is not possible
+				-- due to (huge) memory usage
+			Precursor
+			buffered_drawable_size := 4_000
+			maximum_header_width := 4_000
+		end
+
 feature {NONE} -- Dispose
 
 	destroy
 		do
 			drawable.destroy
-			
+			fixed.destroy
+			viewport.destroy
+
 			Precursor
 		end
 

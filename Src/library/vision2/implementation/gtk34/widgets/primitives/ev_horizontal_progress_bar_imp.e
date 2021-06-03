@@ -33,6 +33,10 @@ feature {NONE} -- Initialization
 			set_minimum_height (16)
 		end
 
+feature -- Status report
+
+	is_vertical: BOOLEAN = False
+
 feature {EV_ANY, EV_ANY_I} -- Implementation
 
 	interface: detachable EV_HORIZONTAL_PROGRESS_BAR note option: stable attribute end;

@@ -19,7 +19,12 @@ inherit
 			interface,
 			make, value_changed_handler,
 			needs_event_box,
-			event_widget
+			event_widget,
+			set_minimum_height,
+			set_minimum_width,
+			set_minimum_size,
+			real_set_background_color,
+			real_set_foreground_color
 		end
 
 feature {NONE} -- Implementation
@@ -52,6 +57,15 @@ feature -- Status report
 	is_segmented: BOOLEAN
 			-- Is display segmented?
 
+	is_vertical: BOOLEAN
+		deferred
+		end
+
+	is_horizontal: BOOLEAN
+		do
+			Result := not is_vertical
+		end
+
 feature -- Status setting
 
 	enable_segmentation
@@ -64,6 +78,77 @@ feature -- Status setting
 			-- Display bar without segments.
 		do
 			is_segmented := False
+		end
+
+feature -- Element change / colors
+
+	real_set_background_color (a_c_object: POINTER; a_color: detachable EV_COLOR)
+		do
+			Precursor (a_c_object, a_color)
+			apply_css (a_c_object)
+		end
+
+	real_set_foreground_color (a_c_object: POINTER; a_color: detachable EV_COLOR)
+		do
+			Precursor (a_c_object, a_color)
+			apply_css (a_c_object)
+		end
+
+	apply_css (a_c_object: POINTER)
+		local
+			l_context: POINTER
+			l_provider: POINTER
+			l_css: STRING
+			l_css_data: C_STRING
+			l_error: POINTER
+			cl: STRING
+		do
+			create l_css.make (2048)
+			if is_vertical then
+				cl := "" -- ".vertical"
+				l_css.append ("progressbar" + cl + " > trough { min-width: " + minimum_width.out + "px; }%N")
+				l_css.append ("progressbar" + cl + " > trough > progress { min-width: " + minimum_width.out + "px; }%N")
+			else
+				cl := ".horizontal"
+				l_css.append ("progressbar" + cl + " > trough { min-height: " + minimum_height.out + "px; }%N")
+				l_css.append ("progressbar" + cl + " > trough > progress { min-height: " + minimum_height.out + "px; }%N")
+			end
+			if attached background_color_internal as bg then
+				l_css.append ("progressbar" + cl + " > trough { background-color: rgb(" + bg.red_8_bit.out + "," + bg.green_8_bit.out + "," + bg.blue_8_bit.out + "); }%N")
+			end
+			if attached foreground_color_internal as fg then
+				l_css.append ("progressbar" + cl + " > trough > progress { background-color: rgb(" + fg.red_8_bit.out + "," + fg.green_8_bit.out + "," + fg.blue_8_bit.out + "); }%N")
+			end
+			create l_css_data.make (l_css)
+			l_context := {GTK}.gtk_widget_get_style_context (a_c_object)
+			l_provider := {GTK_CSS}.gtk_css_provider_new
+			{GTK2}.gtk_style_context_add_provider (l_context, l_provider, {EV_GTK_ENUMS}.gtk_style_provider_priority_application)
+			if not {GTK_CSS}.gtk_css_provider_load_from_data (l_provider, l_css_data.item, -1, $l_error) then
+				-- TODO Handle error
+			end
+			if not l_provider.is_default_pointer then
+				{GTK2}.g_object_unref (l_provider)
+			end
+		end
+
+feature -- Element change
+
+	set_minimum_width (a_minimum_width: INTEGER)
+		do
+			Precursor (a_minimum_width)
+			apply_css (visual_widget)
+		end
+
+	set_minimum_height (a_minimum_height: INTEGER)
+		do
+			Precursor (a_minimum_height)
+			apply_css (visual_widget)
+		end
+
+	set_minimum_size (a_minimum_width, a_minimum_height: INTEGER)
+		do
+			Precursor (a_minimum_width, a_minimum_height)
+			apply_css (visual_widget)
 		end
 
 feature {EV_INTERMEDIARY_ROUTINES}

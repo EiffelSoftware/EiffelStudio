@@ -33,6 +33,10 @@ feature {NONE} -- Initialization
 			{GTK}.gtk_progress_bar_set_inverted (gtk_progress_bar, True)
 		end
 
+feature -- Status report
+
+	is_vertical: BOOLEAN = True
+
 feature {EV_ANY, EV_ANY_I} -- Implementation
 
 	interface: detachable EV_VERTICAL_PROGRESS_BAR note option: stable attribute end;

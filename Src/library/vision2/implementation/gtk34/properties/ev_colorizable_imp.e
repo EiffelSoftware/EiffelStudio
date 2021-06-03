@@ -109,33 +109,43 @@ feature -- Status setting
 				b := a_color.blue_16_bit
 				m := a_color.max_16_bit
 
-				l_css.append ("* {background-color:" + new_rgb_color_string (r, g, b) + ";}%N")
+				l_css.append ("* {background-color:"
+						+ new_rgb_color_string (r / m,
+												g / m,
+												b / m)
+						+ ";}%N"
+					)
 
 					--| Set active state color.
 				l_css.append ("*:active {background-color:"
-						+ new_rgb_color_string ((r * Highlight_scale).rounded.max (0),
-												(g * Highlight_scale).rounded.max (0),
-												(b * Highlight_scale).rounded.max (0))
+						+ new_rgb_color_string ((r * Highlight_scale).rounded.max (0) / m,
+												(g * Highlight_scale).rounded.max (0) / m,
+												(b * Highlight_scale).rounded.max (0) / m)
 						+ ";}%N"
 					)
 
 					--| Set prelight state color.
 				l_css.append ("*:hover {background-color:"
-						+ new_rgb_color_string ((r * Prelight_scale).rounded.min (m),
-												(g * Prelight_scale).rounded.min (m),
-												(b * Prelight_scale).rounded.min (m))
+						+ new_rgb_color_string ((r * Prelight_scale).rounded.min (m) / m,
+												(g * Prelight_scale).rounded.min (m) / m,
+												(b * Prelight_scale).rounded.min (m) / m)
 						+ ";}%N"
 					)
 
 					--| Set selected state color to reverse.
-				l_css.append ("*:selected {background-color:" + new_rgb_color_string (m - r, m - g, m - b // 2) + ";}%N")
+				l_css.append ("*:selected {background-color:"
+						+ new_rgb_color_string ((m - r) / m,
+												(m - g) / m,
+												(m - b // 2) / m )
+						+ ";}%N"
+					)
 
 					--| Set the insensitive state color.
 				mx := r.max (g).max (b)
 				l_css.append ("*:disabled {background-color:"
-						+ new_rgb_color_string (mx + ((r - mx) // 4),
-												mx + ((g - mx) // 4),
-												mx + ((b - mx) // 4))
+						+ new_rgb_color_string ((mx + ((r - mx) // 4)) / m,
+												(mx + ((g - mx) // 4)) / m,
+												(mx + ((b - mx) // 4)) / m )
 						+ ";}%N"
 					)
 
@@ -172,7 +182,7 @@ feature -- Status setting
 	real_set_foreground_color (a_c_object: POINTER; a_color: detachable EV_COLOR)
 			-- Implementation of `set_foreground_color'
 		local
-			r,g,b: INTEGER
+			r,g,b,m: INTEGER
 			l_context: POINTER
 			l_provider: POINTER
 			l_css_data: C_STRING
@@ -186,11 +196,12 @@ feature -- Status setting
 				r := l_foreground_color_imp.red_16_bit
 				g := l_foreground_color_imp.green_16_bit
 				b := l_foreground_color_imp.blue_16_bit
+				m := {EV_COLOR}.max_16_bit
 
 				l_context := {GTK}.gtk_widget_get_style_context (a_c_object)
 				l_provider := {GTK_CSS}.gtk_css_provider_new
 				{GTK2}.gtk_style_context_add_provider (l_context, l_provider, {EV_GTK_ENUMS}.gtk_style_provider_priority_application)
-				l_color_string := new_rgb_color_string (r, g, b)
+				l_color_string := new_rgb_color_string (r / m, g / m, b / m)
 				create l_css_data.make ("*, *:active, *:hover { color:"+ l_color_string + "; }%N")
 				if not {GTK_CSS}.gtk_css_provider_load_from_data (l_provider, l_css_data.item, -1, $l_error) then
 					-- TODO Handle error
@@ -209,14 +220,14 @@ feature -- Status setting
 
 feature {NONE} -- Implementation
 
-	new_gdk_rgba_string (r,g,b: INTEGER; a: REAL_64; a_reuse_color_object: POINTER): STRING
+	new_gdk_rgba_string (r,g,b: REAL_64; a: REAL_64; a_reuse_color_object: POINTER): STRING
 			-- New color string from `r,g,b,a`
 			-- reusing the Gtk struct `a_reuse_color_object`, if it is set
 			-- otherwise allocate a new struct.
 		require
-			valid_red:   r >= 0 and r <= {EV_COLOR}.max_16_bit
-			valid_green: g >= 0 and g <= {EV_COLOR}.max_16_bit
-			valid_blue:  b >= 0 and b <= {EV_COLOR}.max_16_bit
+			valid_red:   r >= 0.0 and r <= 1.0
+			valid_green: g >= 0.0 and g <= 1.0
+			valid_blue:  b >= 0.0 and b <= 1.0
 			valid_alpha: a >= 0.0 and a <= 1.0
 		local
 			color: POINTER
@@ -226,9 +237,9 @@ feature {NONE} -- Implementation
 			else
 				color := a_reuse_color_object
 			end
-			{GDK}.set_rgba_struct_red (color, r / {EV_COLOR}.max_16_bit)
-			{GDK}.set_rgba_struct_green (color, g / {EV_COLOR}.max_16_bit)
-			{GDK}.set_rgba_struct_blue (color, b / {EV_COLOR}.max_16_bit)
+			{GDK}.set_rgba_struct_red (color, r)
+			{GDK}.set_rgba_struct_green (color, g)
+			{GDK}.set_rgba_struct_blue (color, b)
 			{GDK}.set_rgba_struct_alpha (color, a)
 			create Result.make_from_c ({GDK}.gdk_rgba_to_string (color))
 			if a_reuse_color_object.is_default_pointer and not color.is_default_pointer then
@@ -236,20 +247,20 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	new_rgb_color_string (r,g,b: INTEGER): STRING
+	new_rgb_color_string (r,g,b: REAL_64): STRING
 			-- New color string from `r,g,b`
 		require
-			valid_red:   r >= 0 and r <= {EV_COLOR}.max_16_bit
-			valid_green: g >= 0 and g <= {EV_COLOR}.max_16_bit
-			valid_blue:  b >= 0 and b <= {EV_COLOR}.max_16_bit
+			valid_red:   r >= 0.0 and r <= 1.0
+			valid_green: g >= 0.0 and g <= 1.0
+			valid_blue:  b >= 0.0 and b <= 1.0
 		do
 			create Result.make (16)
 			Result.append ("rgb(")
-			Result.append_integer (r)
+			Result.append_integer ((r * {EV_COLOR}.max_8_bit).truncated_to_integer)
 			Result.append_character (',')
-			Result.append_integer (g)
+			Result.append_integer ((g * {EV_COLOR}.max_8_bit).truncated_to_integer)
 			Result.append_character (',')
-			Result.append_integer (b)
+			Result.append_integer ((b * {EV_COLOR}.max_8_bit).truncated_to_integer)
 			Result.append_character (')')
 				-- Alpha is 1.0, then no need to specify it in CSS.
 		end

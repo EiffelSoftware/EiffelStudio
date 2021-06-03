@@ -1,5 +1,4 @@
 ﻿note
-
 	description: "Eiffel scanner skeletons"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -418,18 +417,22 @@ feature {NONE} -- Error handling
 			a_text_not_void: a_text /= Void
 			too_long_token: a_text.count > maximum_string_length
 		do
-			report_one_error
-				(create {SYNTAX_ERROR}.make (line, column, filename,
-					locale.plural_translation_in_context
-						("Identifier, manifest string or free operator is $1 character long.",
-						"Identifier, manifest string or free operator is $1 characters long.",
-						"compiler.parser",
-						 a_text.count) +
-					locale.plural_translation_in_context
-						(" It exceeds limit of $1 character.",
-						" It exceeds limit of $1 characters.",
-						"compiler.parser",
-						maximum_string_length)))
+			report_one_error (
+				create {SYNTAX_ERROR}.make (line, column, filename,
+					locale.formatted_string (locale.plural_translation_in_context (
+							"Identifier, manifest string or free operator is $1 character long.",
+							"Identifier, manifest string or free operator is $1 characters long.",
+							"compiler.parser",
+							 a_text.count
+							), [a_text.count])
+					+ locale.formatted_string (locale.plural_translation_in_context (
+							" It exceeds limit of $1 character.",
+							" It exceeds limit of $1 characters.",
+							"compiler.parser",
+							maximum_string_length
+							), [maximum_string_length])
+					)
+				)
 		end
 
 	report_unknown_token_error (a_token: CHARACTER)

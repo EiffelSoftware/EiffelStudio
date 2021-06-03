@@ -172,7 +172,6 @@ feature -- Display updates
 	project_rectangle (u: EV_RECTANGLE)
 			-- Project area under `u'
 		local
-			pixmap: detachable EV_PIXMAP
 			u_x, u_y, u_width, u_height: INTEGER
 			l_rect: EV_RECTANGLE
 		do
@@ -202,8 +201,10 @@ feature -- Display updates
 
 			world.validate
 
-			pixmap ?= drawable
-			if pixmap /= Void and then attached area as l_area then
+			if 
+				attached {EV_PIXMAP} drawable as pixmap and then
+				attached area as l_area 
+			then
 				l_rect.set_x (u_x - drawable_position.x)
 				l_rect.set_y (u_y - drawable_position.y)
 				l_rect.set_width (u_width)
@@ -219,12 +220,12 @@ feature -- Display updates
 
 	update_rectangle (u: EV_RECTANGLE; a_x, a_y: INTEGER)
 			-- Flush `u' on `area' at (`a_x', `a_y').
-		local
-			pixmap: detachable EV_PIXMAP
 		do
 			if world.is_show_requested then
-				pixmap ?= drawable
-				if pixmap /= Void and then attached area as l_area then
+				if
+					attached {EV_PIXMAP} drawable as pixmap and then
+					attached area as l_area
+				then
 					u.set_x (u.x + area_x - drawable_position.x)
 					u.set_y (u.y + area_y - drawable_position.y)
 					l_area.draw_sub_pixmap (a_x, a_y, pixmap, u)
@@ -236,11 +237,12 @@ feature -- Display updates
 			-- Update display by drawing the right part of the buffer on `area'.
 		local
 			u: EV_RECTANGLE
-			pixmap: detachable EV_PIXMAP
 		do
 			if world.is_show_requested then
-				pixmap ?= drawable
-				if pixmap /= Void and then attached area as l_area then
+				if
+					attached {EV_PIXMAP} drawable as pixmap and then
+					attached area as l_area
+				then
 					create u.set (
 						area_x - drawable_position.x,
 						area_y - drawable_position.y,
@@ -281,13 +283,8 @@ feature {NONE} -- Implementation
 	resize_buffer (a_x, a_y, area_width, area_height: INTEGER)
 			-- Resize buffer if it is smaller than `Buffer_scale_factor' times
 			-- the size given by `area_width' and `area_height'.
-		local
-			buffer: detachable EV_PIXMAP
 		do
-			buffer ?= drawable
-			if
-				buffer /= Void
-			then
+			if attached {EV_PIXMAP} drawable as buffer then
 				buffer.reset_for_buffering ((area_width.max (1) * Buffer_scale_factor).rounded, (area_height.max (1) * Buffer_scale_factor).rounded)
 			end
 			move_buffer
@@ -328,7 +325,7 @@ invariant
 	right_drawable_in_the_cell: drawable = drawable_in_the_cell
 
 note
-	copyright: "Copyright (c) 1984-2020, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2021, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

@@ -202,7 +202,7 @@ feature {NONE} -- Initialization
 
 feature -- Implementation
 
-	 call_post_launch_actions
+	call_post_launch_actions
 			-- <Precursor>
 		do
 			if gtk_is_launchable then
@@ -293,6 +293,26 @@ feature {EV_ANY_I} -- Implementation
 			sleep (msec)
 		end
 
+	print_debug_event (a_event_id: INTEGER; a_event_msg: READABLE_STRING_8; w: POINTER)
+			-- Print debug event information if debug clause is enabled.
+		local
+			cs: EV_GTK_C_STRING
+		do
+			debug ("gdk_event")
+				print (a_event_msg + " <" + a_event_id.out + ">")
+				if not w.is_default_pointer then
+					create cs.share_from_pointer ({GTK}.gtk_widget_get_name (w))
+					print (" " + cs.string.to_string_8)
+
+					print ("=" + w.out)
+					if attached {EV_ANY_IMP} ({EV_GTK_DEPENDENT_INTERMEDIARY_ROUTINES}.c_get_eif_reference_from_object_id (w)) as l_any_imp then
+						print (" {" + l_any_imp.generator + "}")
+					end
+				end
+				print ("%N")
+			end
+		end
+
 	process_underlying_toolkit_event_queue
 			-- Process all pending GDK events and then dispatch GTK iteration until no more
 			-- events are pending.
@@ -353,7 +373,7 @@ feature {EV_ANY_I} -- Implementation
 						l_event_type
 					when GDK_MOTION_NOTIFY then
 						debug ("gdk_event")
-							print ("GDK_MOTION_NOTIFY%N")
+							print_debug_event (l_event_type, "GDK_MOTION_NOTIFY", event_widget)
 						end
 						l_user_event := True
 							-- Set up storage to avoid server roundtrips.
@@ -434,14 +454,14 @@ feature {EV_ANY_I} -- Implementation
 					when GDK_BUTTON_PRESS, GDK_2BUTTON_PRESS, GDK_3BUTTON_PRESS, GDK_BUTTON_RELEASE then
 						-- Note: GDK_DOUBLE_BUTTON_PRESS = GDK_2BUTTON_PRESS
 						debug ("gdk_event")
-							print ("GDK_BUTTON_EVENT <" + l_event_type.out + ">%N")
+							print_debug_event (l_event_type, "GDK_BUTTON_EVENT", event_widget)
 						end
 						l_user_event := True
 						l_call_event := False
 						process_button_event (gdk_event, False)
 					when GDK_SCROLL then
 						debug ("gdk_event")
-							print ("GDK_SCROLL%N")
+							print_debug_event (l_event_type, "GDK_SCROLL", event_widget)
 						end
 						if not is_in_transport then
 							if attached focused_popup_window as l_focused_popup_window then
@@ -475,25 +495,25 @@ feature {EV_ANY_I} -- Implementation
 						l_user_event := True
 					when GDK_PROXIMITY_IN, GDK_PROXIMITY_OUT then
 						debug ("gdk_event")
-							print ("?GDK_PROXIMITY_IN%N")
+							print_debug_event (l_event_type, "?GDK_PROXIMITY_IN", event_widget)
 						end
 					when GDK_PROPERTY_NOTIFY then
 						debug ("gdk_event")
-							print ("?GDK_PROPERTY_NOTIFY%N")
+							print_debug_event (l_event_type, "?GDK_PROPERTY_NOTIFY", event_widget)
 						end
 					when GDK_EXPOSE then
 							-- This is only called on gtk 1.2 as expose compression is
 							-- performed in gdk with 2.x and above.
 						debug ("gdk_event")
-							print ("?GDK_EXPOSE%N")
+							print_debug_event (l_event_type, "?GDK_EXPOSE", event_widget)
 						end
 					when GDK_NO_EXPOSE then
 						debug ("gdk_event")
-							print ("?GDK_NO_EXPOSE%N")
+							print_debug_event (l_event_type, "?GDK_NO_EXPOSE", event_widget)
 						end
 					when GDK_FOCUS_CHANGE then
 						debug ("gdk_event")
-							print ("GDK_FOCUS_CHANGE%N")
+							print_debug_event (l_event_type, "GDK_FOCUS_CHANGE", event_widget)
 						end
 						l_top_level_window_imp ?= eif_object_from_gtk_object (event_widget)
 						if l_top_level_window_imp /= Void then
@@ -504,7 +524,7 @@ feature {EV_ANY_I} -- Implementation
 						end
 					when GDK_CONFIGURE then
 						debug ("gdk_event")
-							print ("GDK_CONFIGURE%N")
+							print_debug_event (l_event_type, "GDK_CONFIGURE", event_widget)
 						end
 						if attached {EV_GTK_WINDOW_IMP} eif_object_from_gtk_object (event_widget) as l_gtk_win_imp then
 							l_call_event := False
@@ -520,7 +540,7 @@ feature {EV_ANY_I} -- Implementation
 						end
 					when GDK_MAP then
 						debug ("gdk_event")
-							print ("GDK_MAP%N")
+							print_debug_event (l_event_type, "GDK_MAP", event_widget)
 						end
 						l_call_event := False
 						{GTK}.gtk_main_do_event (gdk_event)
@@ -531,7 +551,7 @@ feature {EV_ANY_I} -- Implementation
 						l_widget_imp := Void
 					when GDK_UNMAP then
 						debug ("gdk_event")
-							print ("GDK_UNMAP%N")
+							print_debug_event (l_event_type, "GDK_UNMAP", event_widget)
 						end
 						l_call_event := False
 						{GTK}.gtk_main_do_event (gdk_event)
@@ -549,15 +569,15 @@ feature {EV_ANY_I} -- Implementation
 						end
 					when GDK_SELECTION_CLEAR then
 						debug ("gdk_event")
-							print ("?GDK_SELECTION_CLEAR%N")
+							print_debug_event (l_event_type, "?GDK_SELECTION_CLEAR", event_widget)
 						end
 					when GDK_SELECTION_REQUEST then
 						debug ("gdk_event")
-							print ("?GDK_SELECTION_REQUEST%N")
+							print_debug_event (l_event_type, "?GDK_SELECTION_REQUEST", event_widget)
 						end
 					when GDK_SELECTION_NOTIFY then
 						debug ("gdk_event")
-							print ("GDK_SELECTION_NOTIFY%N")
+							print_debug_event (l_event_type, "GDK_SELECTION_NOTIFY", event_widget)
 						end
 						if attached focused_widget as l_focus_widget then
 							l_widget_imp ?= l_focus_widget.implementation
@@ -575,15 +595,15 @@ feature {EV_ANY_I} -- Implementation
 						l_widget_imp := Void
 					when GDK_CLIENT_EVENT then
 						debug ("gdk_event")
-							print ("?GDK_CLIENT_EVENT%N")
+							print_debug_event (l_event_type, "?GDK_CLIENT_EVENT", event_widget)
 						end
 					when GDK_VISIBILITY_NOTIFY then
 						debug ("gdk_event")
-							print ("?GDK_VISIBILITY_NOTIFY%N")
+							print_debug_event (l_event_type, "?GDK_VISIBILITY_NOTIFY", event_widget)
 						end
 					when GDK_WINDOW_STATE then
 						debug ("gdk_event")
-							print ("GDK_WINDOW_STATE%N")
+							print_debug_event (l_event_type, "GDK_WINDOW_STATE", event_widget)
 						end
 						l_top_level_window_imp ?= eif_object_from_gtk_object (event_widget)
 						if l_top_level_window_imp /= Void then
@@ -595,7 +615,7 @@ feature {EV_ANY_I} -- Implementation
 						end
 					when GDK_ENTER_NOTIFY, GDK_LEAVE_NOTIFY then
 						debug ("gdk_event")
-							print ("GDK_ENTER_LEAVE_NOTIFY%N")
+							print_debug_event (l_event_type, "GDK_ENTER_LEAVE_NOTIFY", event_widget)
 						end
 						l_gdk_window := {GTK}.gdk_event_any_struct_window (gdk_event)
 						l_call_event := False
@@ -637,9 +657,9 @@ feature {EV_ANY_I} -- Implementation
 					when GDK_KEY_PRESS, GDK_KEY_RELEASE then
 						debug ("gdk_event")
 							if l_event_type = GDK_KEY_PRESS then
-								print ("GDK_KEY_PRESS%N")
+								print_debug_event (l_event_type, "GDK_KEY_PRESS", event_widget)
 							else
-								print ("GDK_KEY_RELEASE%N")
+								print_debug_event (l_event_type, "GDK_KEY_RELEASE", event_widget)
 							end
 						end
 						l_user_event := True
@@ -681,7 +701,7 @@ feature {EV_ANY_I} -- Implementation
 						end
 					when GDK_DELETE then
 						debug ("gdk_event")
-							print ("GDK_DELETE%N")
+							print_debug_event (l_event_type, "GDK_DELETE", event_widget)
 						end
 						l_user_event := True
 						l_call_event := False
@@ -692,41 +712,41 @@ feature {EV_ANY_I} -- Implementation
 						end
 					when GDK_DESTROY then
 						debug ("gdk_event")
-							print ("?GDK_DESTROY%N")
+							print_debug_event (l_event_type, "?GDK_DESTROY", event_widget)
 						end
 					when GDK_DRAG_ENTER then
 						debug ("gdk_event")
-							print ("?GDK_DRAG_ENTER%N")
+							print_debug_event (l_event_type, "?GDK_DRAG_ENTER", event_widget)
 						end
 					when GDK_DRAG_LEAVE then
 						debug ("gdk_event")
-							print ("?GDK_DRAG_LEAVE%N")
+							print_debug_event (l_event_type, "?GDK_DRAG_LEAVE", event_widget)
 						end
 					when GDK_DRAG_MOTION then
 						debug ("gdk_event")
-							print ("?GDK_DRAG_MOTION%N")
+							print_debug_event (l_event_type, "?GDK_DRAG_MOTION", event_widget)
 						end
 					when GDK_DRAG_STATUS then
 						debug ("gdk_event")
-							print ("?GDK_DRAG_STATUS%N")
+							print_debug_event (l_event_type, "?GDK_DRAG_STATUS", event_widget)
 						end
 					when GDK_DROP_START then
 						debug ("gdk_event")
-							print ("GDK_DROP_START%N")
+							print_debug_event (l_event_type, "GDK_DROP_START", event_widget)
 						end
 							-- Some text has been drag dropped on a widget.
 						handle_dnd (gdk_event)
 					when GDK_DROP_FINISHED then
 						debug ("gdk_event")
-							print ("?GDK_DROP_FINISHED%N")
+							print_debug_event (l_event_type, "?GDK_DROP_FINISHED", event_widget)
 						end
 					when GDK_NOTHING then
 						debug ("gdk_event")
-							print ("?GDK_NOTHING%N")
+							print_debug_event (l_event_type, "?GDK_NOTHING", event_widget)
 					 	end
 					when GDK_SETTING then
 						debug ("gdk_event")
-							print ("GDK_SETTING%N")
+							print_debug_event (l_event_type, "GDK_SETTING", event_widget)
 					 	end
 						l_call_event := False
 						create l_event_string.make_from_c ({GTK}.gdk_event_setting_struct_name (gdk_event))
@@ -749,63 +769,63 @@ feature {EV_ANY_I} -- Implementation
 						l_call_theme_events := False
 					when GDK_OWNER_CHANGE then
 						debug ("gdk_event")
-							print ("?GDK_OWNER_CHANGE%N")
+							print_debug_event (l_event_type, "?GDK_OWNER_CHANGE", event_widget)
 						end
 					when GDK_GRAB_BROKEN then
 						debug ("gdk_event")
-							print ("?GDK_GRAB_BROKEN%N")
+							print_debug_event (l_event_type, "?GDK_GRAB_BROKEN", event_widget)
 						end
 					when GDK_DAMAGE then
 						debug ("gdk_event")
-							print ("?GDK_DAMAGE%N")
+							print_debug_event (l_event_type, "?GDK_DAMAGE", event_widget)
 						end
 					when GDK_TOUCH_BEGIN then
 						debug ("gdk_event")
-							print ("?GDK_TOUCH_BEGIN%N")
+							print_debug_event (l_event_type, "?GDK_TOUCH_BEGIN", event_widget)
 						end
 					when GDK_TOUCH_UPDATE then
 						debug ("gdk_event")
-							print ("?GDK_TOUCH_UPDATE%N")
+							print_debug_event (l_event_type, "?GDK_TOUCH_UPDATE", event_widget)
 						end
 					when GDK_TOUCH_END then
 						debug ("gdk_event")
-							print ("?GDK_TOUCH_END%N")
+							print_debug_event (l_event_type, "?GDK_TOUCH_END", event_widget)
 						end
 					when GDK_TOUCH_CANCEL then
 						debug ("gdk_event")
-							print ("?GDK_TOUCH_CANCEL%N")
+							print_debug_event (l_event_type, "?GDK_TOUCH_CANCEL", event_widget)
 						end
 					when GDK_TOUCHPAD_SWIPE then
 						debug ("gdk_event")
-							print ("?GDK_TOUCHPAD_SWIPE%N")
+							print_debug_event (l_event_type, "?GDK_TOUCHPAD_SWIPE", event_widget)
 						end
 					when GDK_TOUCHPAD_PINCH then
 						debug ("gdk_event")
-							print ("?GDK_TOUCHPAD_PINCH%N")
+							print_debug_event (l_event_type, "?GDK_TOUCHPAD_PINCH", event_widget)
 						end
 					when GDK_PAD_BUTTON_PRESS then
 						debug ("gdk_event")
-							print ("?GDK_PAD_BUTTON_PRESS%N")
+							print_debug_event (l_event_type, "?GDK_PAD_BUTTON_PRESS", event_widget)
 						end
 					when GDK_PAD_BUTTON_RELEASE then
 						debug ("gdk_event")
-							print ("?GDK_PAD_BUTTON_RELEASE%N")
+							print_debug_event (l_event_type, "?GDK_PAD_BUTTON_RELEASE", event_widget)
 						end
 					when GDK_PAD_RING then
 						debug ("gdk_event")
-							print ("?GDK_PAD_RING%N")
+							print_debug_event (l_event_type, "?GDK_PAD_RING", event_widget)
 						end
 					when GDK_PAD_STRIP then
 						debug ("gdk_event")
-							print ("?GDK_PAD_STRIP%N")
+							print_debug_event (l_event_type, "?GDK_PAD_STRIP", event_widget)
 						end
 					when GDK_PAD_GROUP_MODE then
 						debug ("gdk_event")
-							print ("?GDK_PAD_GROUP_MODE%N")
+							print_debug_event (l_event_type, "?GDK_PAD_GROUP_MODE", event_widget)
 						end
 					when GDK_EVENT_LAST then
 						debug ("gdk_event")
-							print ("?GDK_EVENT_LAST%N")
+							print_debug_event (l_event_type, "?GDK_EVENT_LAST", event_widget)
 						end
 					else
 						l_call_event := False

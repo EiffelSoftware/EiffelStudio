@@ -16,21 +16,21 @@ feature -- GTK version
 		external
 			"C [macro <ev_gtk.h>]"
 		alias
-			"gtk_major_version"
+			"GTK_MAJOR_VERSION"
 		end
 
 	frozen gtk_min_ver: INTEGER_32
 		external
 			"C [macro <ev_gtk.h>]"
 		alias
-			"gtk_minor_version"
+			"GTK_MINOR_VERSION"
 		end
 
 	frozen gtk_mic_ver: INTEGER_32
 		external
 			"C [macro <ev_gtk.h>]"
 		alias
-			"gtk_micro_version"
+			"GTK_MICRO_VERSION"
 		end
 
 feature -- Module		
@@ -396,6 +396,11 @@ feature -- Widgets
 	frozen gtk_widget_set_name (a_widget: POINTER; a_name: POINTER)
 		external
 			"C (GtkWidget*, gchar*) | <ev_gtk.h>"
+		end
+
+	frozen gtk_widget_get_name (a_widget: POINTER): POINTER
+		external
+			"C signature (GtkWidget*): const gchar * use <ev_gtk.h>"
 		end
 
 	frozen gtk_widget_set_sensitive (a_widget: POINTER; a_sensitive: BOOLEAN)

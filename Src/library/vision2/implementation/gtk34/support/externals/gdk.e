@@ -962,7 +962,7 @@ feature -- GdkRGBA
 		external
 			"C [struct <ev_gtk.h>] (GdkRGBA): gdouble"
 		alias
-			"red"
+			"alpha"
 		ensure
 			Result >= 0.0 and Result <= 1.0
 		end

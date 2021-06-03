@@ -10,6 +10,36 @@ class
 inherit
 	GTK2
 
+feature -- GTK version	
+
+	frozen gtk_get_major_version: INTEGER_32
+		external
+			"C inline use <ev_gtk.h>"
+		alias
+			"gtk_get_major_version()"
+		end
+
+	frozen gtk_get_minor_version: INTEGER_32
+		external
+			"C inline use <ev_gtk.h>"
+		alias
+			"gtk_get_minor_version()"
+		end
+
+	frozen gtk_get_micro_version: INTEGER_32
+		external
+			"C inline use <ev_gtk.h>"
+		alias
+			"gtk_get_micro_version()"
+		end
+
+	frozen gtk_check_version (a_required_major, a_required_minor, a_required_micro: INTEGER): POINTER
+		external
+			"C inline use <ev_gtk.h>"
+		alias
+			"gtk_check_version((guint*) $a_required_major, (guint*) $a_required_minor, (guint*) $a_required_micro)"
+		end
+
 feature -- GtkWidget Externals
 
 	frozen gtk_widget_get_halign (a_widget: POINTER): INTEGER
@@ -174,6 +204,21 @@ feature -- Box
 			"gtk_box_new ((GtkOrientation)$orientation, (gint)$spacing)"
 		end
 
+
+feature -- GtkPaned
+
+	frozen gtk_paned_set_wide_handle (a_paned: POINTER; a_wide: BOOLEAN)
+		external
+			"C inline use <ev_gtk.h>"
+		alias
+			"[
+				#if GTK_CHECK_VERSION(3,16,0)
+				gtk_paned_set_wide_handle ((GtkPaned*) $a_paned, (gboolean) $a_wide)
+				#endif
+			]"
+		ensure
+			is_class: class
+		end
 
 feature -- GtkGrid Externals
 

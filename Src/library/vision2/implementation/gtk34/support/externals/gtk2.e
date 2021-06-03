@@ -27,27 +27,33 @@ feature -- Style constants
 
 --GTK_STYLE_CONTEXT_GET_CLASS (o: UNKNOWN)
 
-  GTK_STYLE_PROPERTY_BACKGROUND_COLOR: POINTER
-  	external
-  		"C inline use <ev_gtk.h>"
-  	alias
-  		"GTK_STYLE_PROPERTY_BACKGROUND_COLOR"
-  	end
+	GTK_STYLE_PROPERTY_BACKGROUND_COLOR: POINTER
+		external
+			"C inline use <ev_gtk.h>"
+		alias
+			"GTK_STYLE_PROPERTY_BACKGROUND_COLOR"
+		end
 
-  GTK_STYLE_PROPERTY_COLOR: POINTER
-  	external
-  		"C inline use <ev_gtk.h>"
-  	alias
-  		"GTK_STYLE_PROPERTY_COLOR"
-  	end
+	GTK_STYLE_PROPERTY_COLOR: POINTER
+		external
+			"C inline use <ev_gtk.h>"
+		alias
+			"GTK_STYLE_PROPERTY_COLOR"
+		end
 
+	GTK_STYLE_PROPERTY_FONT: POINTER
+		external
+			"C inline use <ev_gtk.h>"
+		alias
+			"GTK_STYLE_PROPERTY_FONT"
+		end
 
-  GTK_STYLE_PROPERTY_FONT: POINTER
-  	external
-  		"C inline use <ev_gtk.h>"
-  	alias
-  		"GTK_STYLE_PROPERTY_FONT"
-  	end
+	GTK_STYLE_PROVIDER_PRIORITY_APPLICATION: NATURAL_32
+		external
+			"C inline use <ev_gtk.h>"
+		alias
+			"GTK_STYLE_PROVIDER_PRIORITY_APPLICATION"
+		end
 
 --GTK_STYLE_PROPERTY_FONT
 

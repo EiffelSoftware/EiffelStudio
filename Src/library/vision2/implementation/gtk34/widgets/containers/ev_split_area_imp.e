@@ -38,6 +38,7 @@ feature {NONE} -- Initialization
 			second_expandable := True
 			{GTK}.gtk_container_set_border_width (container_widget, 0)
 			{GTK2}.gtk_widget_set_redraw_on_allocate (container_widget, False)
+			{GTK3}.gtk_paned_set_wide_handle (container_widget, True)
 		end
 
 feature -- Access

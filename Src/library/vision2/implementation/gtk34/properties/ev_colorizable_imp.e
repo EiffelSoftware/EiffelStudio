@@ -84,6 +84,29 @@ feature -- Status setting
 			end
 		end
 
+	real_set_default_background_color (a_c_object: POINTER)
+			-- Set the (style) background to the default application background color.
+		local
+			l_context: POINTER
+			l_provider: POINTER
+			l_css: STRING
+			l_css_data: C_STRING
+			l_error: POINTER
+		do
+--			real_set_background_color (a_c_object, {GTK}.default_background_color)
+			l_context := {GTK}.gtk_widget_get_style_context (a_c_object)
+			l_css := "* { background-color: " + {GTK}.rgba_string_default_background_color + ";}%N"
+			create l_css_data.make (l_css)
+			l_provider := {GTK_CSS}.gtk_css_provider_new
+			{GTK2}.gtk_style_context_add_provider (l_context, l_provider, {EV_GTK_ENUMS}.gtk_style_provider_priority_application)
+			if not {GTK_CSS}.gtk_css_provider_load_from_data (l_provider, l_css_data.item, -1, $l_error) then
+				-- TODO Handle error
+			end
+			if not l_provider.is_default_pointer then
+				{GTK2}.g_object_unref (l_provider)
+			end
+		end
+
 	real_set_background_color (a_c_object: POINTER; a_color: detachable EV_COLOR)
 			-- Implementation of `set_background_color'
 			-- Used also by classes that inherit EV_WIDGET_IMP but not

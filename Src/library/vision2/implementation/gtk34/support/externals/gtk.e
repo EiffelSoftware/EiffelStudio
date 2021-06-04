@@ -1718,7 +1718,102 @@ feature -- GTK
 			"NULL"
 		end
 
-feature -- Color Helper	
+feature -- Color Helper
+
+	rgba_struct_to_style_color_string (a_c_rgba: POINTER): STRING
+		local
+			r,g,b: INTEGER
+			a: REAL_64
+			f: FORMAT_DOUBLE
+		do
+			r := ({GDK}.rgba_struct_red (a_c_rgba) * {EV_COLOR}.max_8_bit).truncated_to_integer
+			g := ({GDK}.rgba_struct_green (a_c_rgba) * {EV_COLOR}.max_8_bit).truncated_to_integer
+			b := ({GDK}.rgba_struct_blue (a_c_rgba) * {EV_COLOR}.max_8_bit).truncated_to_integer
+			a := {GDK}.rgba_struct_alpha (a_c_rgba)
+			if a < 1.0 then
+				create f.make (1, 7)
+				Result := "rgb(" + r.out + "," + g.out + "," + b.out + "," + f.formatted (a) +")"
+			else
+				Result := "rgb(" + r.out + "," + g.out + "," + b.out + ")"
+			end
+		ensure
+			instance_free: class
+		end
+
+	rgba_struct_to_color (a_c_rgba: POINTER): EV_COLOR
+		do
+			create Result.make_with_rgb (
+					{GDK}.rgba_struct_red (a_c_rgba).truncated_to_real,
+					{GDK}.rgba_struct_green (a_c_rgba).truncated_to_real,
+					{GDK}.rgba_struct_blue (a_c_rgba).truncated_to_real
+				)
+				-- FIXME: alpha value for now as EV_COLOR does not support it.						
+		ensure
+			instance_free: class
+		end
+
+	rgba_string_style_color (a_style_ctx: POINTER; a_name: READABLE_STRING_8): STRING
+		local
+			l_gtk_c_string: EV_GTK_C_STRING
+			c_rgba: POINTER
+		do
+			c_rgba := {GTK}.c_gdk_rgba_struct_allocate
+			create l_gtk_c_string.set_with_eiffel_string (a_name)
+			{GTK2}.gtk_style_context_lookup_color (a_style_ctx, l_gtk_c_string.item, c_rgba)
+			Result := rgba_struct_to_style_color_string (c_rgba)
+		ensure
+			instance_free: class
+		end
+
+	rgba_string_default_background_color: STRING
+		local
+			c_rgba: POINTER
+			p: POINTER
+			ctx: POINTER
+		do
+			p := {GTK}.gtk_dialog_new
+			if not p.is_default_pointer then
+				ctx := 	{GTK}.gtk_widget_get_style_context (p)
+				{GTK2}.gtk_style_context_get (
+						ctx,
+						{GTK}.gtk_state_flag_normal_enum, --{GTK}.gtk_style_context_get_state (ctx),
+						{GTK2}.GTK_STYLE_PROPERTY_BACKGROUND_COLOR,
+						$c_rgba
+					)
+				Result := rgba_struct_to_style_color_string (c_rgba)
+				{GDK}.rgba_free (c_rgba)
+				{GTK}.gtk_widget_destroy (p)
+			else
+				Result := "rgb(0,0,0)"
+			end
+		ensure
+			instance_free: class
+		end
+
+	default_background_color: EV_COLOR
+		local
+			c_rgba: POINTER
+			p: POINTER
+			ctx: POINTER
+		do
+			p := {GTK}.gtk_dialog_new
+			if not p.is_default_pointer then
+				ctx := 	{GTK}.gtk_widget_get_style_context (p)
+				{GTK2}.gtk_style_context_get (
+						ctx,
+						{GTK}.gtk_state_flag_normal_enum, --{GTK}.gtk_style_context_get_state (ctx),
+						{GTK2}.GTK_STYLE_PROPERTY_BACKGROUND_COLOR,
+						$c_rgba
+					)
+				Result := rgba_struct_to_color (c_rgba)
+				{GDK}.rgba_free (c_rgba)
+				{GTK}.gtk_widget_destroy (p)
+			else
+				create Result.default_create
+			end
+		ensure
+			instance_free: class
+		end
 
 	new_gdk_rgba_string (r,g,b: REAL_64; a: REAL_64; a_reuse_color_object: POINTER): STRING
 			-- New color string from `r,g,b,a`
@@ -1749,39 +1844,13 @@ feature -- Color Helper
 			instance_free: class
 		end
 
-	rgba_string_style_color (a_style_ctx: POINTER; a_name: READABLE_STRING_8): STRING
-		local
-			l_gtk_c_string: EV_GTK_C_STRING
-			c_rgba: POINTER
-			r,g,b: INTEGER
-			a: REAL_64
-			f: FORMAT_DOUBLE
-		do
-			c_rgba := {GTK}.c_gdk_rgba_struct_allocate
-			create l_gtk_c_string.set_with_eiffel_string (a_name)
-			{GTK2}.gtk_style_context_lookup_color (a_style_ctx, l_gtk_c_string.item, c_rgba)
-
-			r := ({GDK}.rgba_struct_red (c_rgba) * {EV_COLOR}.max_8_bit).truncated_to_integer
-			g := ({GDK}.rgba_struct_green (c_rgba) * {EV_COLOR}.max_8_bit).truncated_to_integer
-			b := ({GDK}.rgba_struct_blue (c_rgba) * {EV_COLOR}.max_8_bit).truncated_to_integer
-			a := {GDK}.rgba_struct_alpha (c_rgba).truncated_to_real
-			if a < 1.0 then
-				create f.make (1, 7)
-				Result := "rgb(" + r.out + "," + g.out + "," + b.out + "," + f.formatted (a) +")"
-			else
-				Result := "rgb(" + r.out + "," + g.out + "," + b.out + ")"
-			end
-		ensure
-			instance_free: class
-		end
-
 	gnome_color_names: ITERABLE [STRING_8]
 		do
 			Result := <<
-					"theme_fg_color",
-					"theme_text_color",
-					"theme_bg_color",
-					"theme_base_color",
+				"theme_fg_color",
+				"theme_text_color",
+				"theme_bg_color",
+				"theme_base_color",
     				"theme_selected_bg_color",
     				"theme_selected_fg_color",
     				"insensitive_bg_color",

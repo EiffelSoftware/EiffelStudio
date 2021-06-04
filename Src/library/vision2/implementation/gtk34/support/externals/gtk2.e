@@ -268,6 +268,7 @@ feature -- Style
 		end
 
 	gtk_style_context_lookup_color (context: POINTER; color_name: POINTER; color: POINTER)
+			-- Lookup color named `color_name` for context `context`
 		external
 			"C signature (GtkStyleContext*, gchar*, GdkRGBA*) use <ev_gtk.h>"
 		end

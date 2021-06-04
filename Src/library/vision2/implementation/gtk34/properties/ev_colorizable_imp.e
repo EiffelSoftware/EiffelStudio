@@ -101,6 +101,8 @@ feature -- Status setting
 			l_error: POINTER
 		do
 			if a_color /= Void then
+				l_context := {GTK}.gtk_widget_get_style_context (a_c_object)
+
 				create l_css.make (1024)
 
 					-- TODO check the old implementation used 16 bits.
@@ -150,11 +152,16 @@ feature -- Status setting
 					)
 
 					--| Set the text selection background and color.
-					--| TODO at the moment the colors are hardcoded.
-				l_css.append (".view text selection { background-color: blue; color: yellow; }%N")
+					--| FIXME: this is probably not the good location
+					--| move to EV_TEXT_IMP ?
+				l_css.append (".view text selection { background-color: "
+								+ {GTK}.rgba_string_style_color (l_context, "theme_selected_bg_color")
+								+ "; color: "
+								+ {GTK}.rgba_string_style_color (l_context, "theme_selected_fg_color")
+								+ "; }%N")
+
 
 				create l_css_data.make (l_css)
-				l_context := {GTK}.gtk_widget_get_style_context (a_c_object)
 				l_provider := {GTK_CSS}.gtk_css_provider_new
 				{GTK2}.gtk_style_context_add_provider (l_context, l_provider, {EV_GTK_ENUMS}.gtk_style_provider_priority_application)
 				if not {GTK_CSS}.gtk_css_provider_load_from_data (l_provider, l_css_data.item, -1, $l_error) then
@@ -263,6 +270,24 @@ feature {NONE} -- Implementation
 			Result.append_integer ((b * {EV_COLOR}.max_8_bit).truncated_to_integer)
 			Result.append_character (')')
 				-- Alpha is 1.0, then no need to specify it in CSS.
+		end
+
+	rgb_string_color (a_style_ctx: POINTER; a_name: READABLE_STRING_8): STRING
+		local
+			l_gtk_c_string: EV_GTK_C_STRING
+			c_rgba: POINTER
+			r,g,b: INTEGER
+			a: REAL_64
+		do
+			c_rgba := {GTK}.c_gdk_rgba_struct_allocate
+			create l_gtk_c_string.set_with_eiffel_string (a_name)
+			{GTK2}.gtk_style_context_lookup_color (a_style_ctx, l_gtk_c_string.item, c_rgba)
+
+			r := ({GDK}.rgba_struct_red (c_rgba) * {EV_COLOR}.max_8_bit).truncated_to_integer
+			g := ({GDK}.rgba_struct_green (c_rgba) * {EV_COLOR}.max_8_bit).truncated_to_integer
+			b := ({GDK}.rgba_struct_blue (c_rgba) * {EV_COLOR}.max_8_bit).truncated_to_integer
+			a := {GDK}.rgba_struct_alpha (c_rgba).truncated_to_real
+			Result := "rgb(" + r.out + "," + g.out + "," + b.out + ")"
 		end
 
 	visual_widget: POINTER

@@ -1718,7 +1718,91 @@ feature -- GTK
 			"NULL"
 		end
 
+feature -- Color Helper	
 
+	new_gdk_rgba_string (r,g,b: REAL_64; a: REAL_64; a_reuse_color_object: POINTER): STRING
+			-- New color string from `r,g,b,a`
+			-- reusing the Gtk struct `a_reuse_color_object`, if it is set
+			-- otherwise allocate a new struct.
+		require
+			valid_red:   r >= 0.0 and r <= 1.0
+			valid_green: g >= 0.0 and g <= 1.0
+			valid_blue:  b >= 0.0 and b <= 1.0
+			valid_alpha: a >= 0.0 and a <= 1.0
+		local
+			color: POINTER
+		do
+			if a_reuse_color_object.is_default_pointer then
+				color := {GTK}.c_gdk_rgba_struct_allocate
+			else
+				color := a_reuse_color_object
+			end
+			{GDK}.set_rgba_struct_red (color, r)
+			{GDK}.set_rgba_struct_green (color, g)
+			{GDK}.set_rgba_struct_blue (color, b)
+			{GDK}.set_rgba_struct_alpha (color, a)
+			create Result.make_from_c ({GDK}.gdk_rgba_to_string (color))
+			if a_reuse_color_object.is_default_pointer and not color.is_default_pointer then
+				color.memory_free
+			end
+		ensure
+			instance_free: class
+		end
+
+	rgba_string_style_color (a_style_ctx: POINTER; a_name: READABLE_STRING_8): STRING
+		local
+			l_gtk_c_string: EV_GTK_C_STRING
+			c_rgba: POINTER
+			r,g,b: INTEGER
+			a: REAL_64
+			f: FORMAT_DOUBLE
+		do
+			c_rgba := {GTK}.c_gdk_rgba_struct_allocate
+			create l_gtk_c_string.set_with_eiffel_string (a_name)
+			{GTK2}.gtk_style_context_lookup_color (a_style_ctx, l_gtk_c_string.item, c_rgba)
+
+			r := ({GDK}.rgba_struct_red (c_rgba) * {EV_COLOR}.max_8_bit).truncated_to_integer
+			g := ({GDK}.rgba_struct_green (c_rgba) * {EV_COLOR}.max_8_bit).truncated_to_integer
+			b := ({GDK}.rgba_struct_blue (c_rgba) * {EV_COLOR}.max_8_bit).truncated_to_integer
+			a := {GDK}.rgba_struct_alpha (c_rgba).truncated_to_real
+			if a < 1.0 then
+				create f.make (1, 7)
+				Result := "rgb(" + r.out + "," + g.out + "," + b.out + "," + f.formatted (a) +")"
+			else
+				Result := "rgb(" + r.out + "," + g.out + "," + b.out + ")"
+			end
+		ensure
+			instance_free: class
+		end
+
+	gnome_color_names: ITERABLE [STRING_8]
+		do
+			Result := <<
+					"theme_fg_color",
+					"theme_text_color",
+					"theme_bg_color",
+					"theme_base_color",
+    				"theme_selected_bg_color",
+    				"theme_selected_fg_color",
+    				"insensitive_bg_color",
+    				"insensitive_fg_color",
+    				"insensitive_base_color",
+    				"theme_unfocused_fg_color",
+    				"theme_unfocused_text_color",
+    				"theme_unfocused_bg_color",
+    				"theme_unfocused_base_color",
+    				"theme_unfocused_selected_bg_color",
+    				"theme_unfocused_selected_fg_color",
+    				"unfocused_insensitive_color",
+    				"borders",
+    				"unfocused_borders",
+    				"warning_color",
+    				"error_color",
+    				"success_color"
+    			>>
+    	ensure
+    		instance_free: class
+	end
 
 note
 	copyright: "Copyright (c) 1984-2021, Eiffel Software and others"

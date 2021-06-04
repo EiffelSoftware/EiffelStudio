@@ -62,8 +62,15 @@ feature {EV_ANY_I} -- Access
 			if internal_id = 0 then
 				internal_id := eif_current_object_id
 			end
+--			if needs_event_box then
+--				{EV_GTK_CALLBACK_MARSHAL}.set_eif_oid_in_c_object (a_c_object, internal_id, $c_object_dispose)
+--			end
 			{EV_GTK_CALLBACK_MARSHAL}.set_eif_oid_in_c_object (l_c_object, internal_id, $c_object_dispose)
 			c_object := l_c_object
+
+			debug ("gtk_name")
+				{GTK}.gtk_widget_set_name (c_object, (create {EV_GTK_C_STRING}.set_with_eiffel_string (generator + " #" + internal_id.out)).item)
+			end
 		end
 
 	frozen eif_object_from_c (a_c_object: POINTER): detachable EV_ANY_IMP
@@ -234,6 +241,12 @@ feature {EV_GTK_DEPENDENT_INTERMEDIARY_ROUTINES, EV_APPLICATION_I} -- Implementa
 
 	process_button_event (a_gdk_event: POINTER; a_recursive: BOOLEAN)
 			-- "button-press-event", "button-release-event", ... signal occurred
+		do
+			-- Redefined by descendents.
+		end
+
+	process_motion_notify_event (a_gdk_event: POINTER)
+			-- "motion-notify-event" signal occurred
 		do
 			-- Redefined by descendents.
 		end

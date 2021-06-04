@@ -62,6 +62,10 @@ feature {NONE} -- Initialization
 			Precursor {EV_PICK_AND_DROPABLE_IMP}
 			{GTK2}.gtk_widget_set_redraw_on_allocate (c_object, False)
 			set_is_initialized (True)
+
+			debug ("gtk_name")
+				{GTK}.gtk_widget_set_name (c_object, (create {EV_GTK_C_STRING}.set_with_eiffel_string (generator + " #" + internal_id.out)).item)
+			end
 		end
 
 	initialize_file_drop (a_widget: POINTER)

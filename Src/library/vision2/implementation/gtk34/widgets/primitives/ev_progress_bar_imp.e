@@ -39,6 +39,7 @@ feature {NONE} -- Implementation
 			gtk_progress_bar := l_c_progress_bar
 			enable_segmentation
 			Precursor
+			apply_css (visual_widget)
 		end
 
 	needs_event_box: BOOLEAN
@@ -104,6 +105,7 @@ feature -- Element change / colors
 			cl: STRING
 		do
 			create l_css.make (2048)
+			l_context := {GTK}.gtk_widget_get_style_context (a_c_object)
 			if is_vertical then
 				cl := "" -- ".vertical"
 				l_css.append ("progressbar" + cl + " > trough { min-width: " + minimum_width.out + "px; }%N")
@@ -113,14 +115,18 @@ feature -- Element change / colors
 				l_css.append ("progressbar" + cl + " > trough { min-height: " + minimum_height.out + "px; }%N")
 				l_css.append ("progressbar" + cl + " > trough > progress { min-height: " + minimum_height.out + "px; }%N")
 			end
-			if attached background_color_internal as bg then
+			if attached background_color_imp as bg then
 				l_css.append ("progressbar" + cl + " > trough { background-color: rgb(" + bg.red_8_bit.out + "," + bg.green_8_bit.out + "," + bg.blue_8_bit.out + "); }%N")
+			elseif attached {GTK}.rgba_string_style_color (l_context, "theme_selected_fg_color") as bg_str then
+				l_css.append ("progressbar" + cl + " > trough { background-color: " + bg_str + "; }%N")
 			end
-			if attached foreground_color_internal as fg then
+			if attached foreground_color_imp as fg then
 				l_css.append ("progressbar" + cl + " > trough > progress { background-color: rgb(" + fg.red_8_bit.out + "," + fg.green_8_bit.out + "," + fg.blue_8_bit.out + "); }%N")
+			elseif attached {GTK}.rgba_string_style_color (l_context, "theme_selected_bg_color") as fg_str then
+				l_css.append ("progressbar" + cl + " > trough > progress { background-color: " + fg_str + "; }%N")
+
 			end
 			create l_css_data.make (l_css)
-			l_context := {GTK}.gtk_widget_get_style_context (a_c_object)
 			l_provider := {GTK_CSS}.gtk_css_provider_new
 			{GTK2}.gtk_style_context_add_provider (l_context, l_provider, {EV_GTK_ENUMS}.gtk_style_provider_priority_application)
 			if not {GTK_CSS}.gtk_css_provider_load_from_data (l_provider, l_css_data.item, -1, $l_error) then

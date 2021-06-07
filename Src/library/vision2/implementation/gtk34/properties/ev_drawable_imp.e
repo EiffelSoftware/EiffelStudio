@@ -47,16 +47,19 @@ feature {EV_ANY_I} -- Implementation
 			if Result.is_default_pointer then
 				check has_cairo_context: False end
 				get_cairo_context
-				Result := {CAIRO}.add_reference (cairo_context)
+-- FIXME: uncomment those lines, once the FIXME in release_drawable is fixed (2021-06-07).
+--				Result := {CAIRO}.add_reference (cairo_context)
 			else
-				Result := {CAIRO}.add_reference (Result)
+--				Result := {CAIRO}.add_reference (Result)
 			end
 		end
 
 	release_drawable (cr: like get_drawable)
 		do
 				-- Decrement the reference count (related to `get_drawable`)
-			release_cairo_context (cr)
+-- FIXME: the call to release_cairo_context is commented, otherwise we have a memory corruption (2021-06-07).
+--		  for now, keep it commented to test complex GUI without crash.
+--			release_cairo_context (cr)
 		end
 
 	cairo_context: POINTER
@@ -798,10 +801,11 @@ feature {EV_ANY_I} -- Implementation
 			then
 				ref_count := {CAIRO}.get_reference_count (cr)
 				if ref_count > 0 then
+					check valid_count: ref_count < 10_000 end
 					{CAIRO}.destroy (cr)
 				else
 					debug ("gtk_memory")
-						print (generator + ".release_cairo_context (cr:" + cr.out + ") no more reference ref_count=0%N")
+						(create {EV_DEBUG}).on_error (Current, generator + ".release_cairo_context (cr:" + cr.out + ") no more reference ref_count=0%N")
 					end
 				end
 			end
@@ -827,7 +831,7 @@ feature {EV_ANY_I} -- Implementation
 				cairo_context := default_pointer
 				if ref_count > 0 then
 					debug ("gtk_memory")
-						print (generator + ".clear_cairo_context: ctx=" + cr.out + " ref_count=" + ref_count.out + "%N")
+						(create {EV_DEBUG}).on_error (Current, generator + ".clear_cairo_context: ctx=" + cr.out + " ref_count=" + ref_count.out + "%N")
 					end
 					check no_more_reference: False end
 				end

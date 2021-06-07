@@ -65,7 +65,7 @@ feature {NONE} -- Initialization
 			l_app_imp: like App_implementation
 		do
 			l_drawing_area := {GTK}.gtk_drawing_area_new
-			{GTK}.gtk_widget_set_size_request (l_drawing_area, 100, 100)
+			{GTK}.gtk_widget_set_size_request (l_drawing_area, 1, 1)
 			set_c_object (l_drawing_area)
 			l_c_object := c_object
 

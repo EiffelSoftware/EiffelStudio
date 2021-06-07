@@ -805,7 +805,7 @@ feature {EV_ANY_I} -- Implementation
 					{CAIRO}.destroy (cr)
 				else
 					debug ("gtk_memory")
-						(create {EV_DEBUG}).on_error (Current, generator + ".release_cairo_context (cr:" + cr.out + ") no more reference ref_count=0%N")
+						print (generator + ".release_cairo_context (cr:" + cr.out + ") no more reference ref_count=0%N")
 					end
 				end
 			end
@@ -831,7 +831,7 @@ feature {EV_ANY_I} -- Implementation
 				cairo_context := default_pointer
 				if ref_count > 0 then
 					debug ("gtk_memory")
-						(create {EV_DEBUG}).on_error (Current, generator + ".clear_cairo_context: ctx=" + cr.out + " ref_count=" + ref_count.out + "%N")
+						print (generator + ".clear_cairo_context: ctx=" + cr.out + " ref_count=" + ref_count.out + "%N")
 					end
 					check no_more_reference: False end
 				end

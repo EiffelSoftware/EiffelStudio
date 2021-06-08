@@ -8,7 +8,7 @@ feature {NONE} -- Initialization
 
 	make
 		local
-			b1; b2; b3; b4; b5; b6; b7; b8; b9; b10; b11; b12; b13; b14
+			b1; b2; b3; b4; b5; b6; b7; b8; b9; b10; b11
 		do
 				-- Output.
 			report (1, b1.generating_type)
@@ -22,9 +22,6 @@ feature {NONE} -- Initialization
 			report (9, b9.generating_type)
 			report (10, b10.generating_type)
 			report (11, b11.generating_type)
-			report (12, b12.generating_type)
-			report (13, b13.generating_type)
-			report (14, b14.generating_type)
 				-- Conditional instruction.
 			if b1 then
 			elseif b2 then
@@ -48,7 +45,6 @@ feature {NONE} -- Initialization
 			end
 				-- Loop expression.
 			;(across "" as c invariant b9 until b10 all b11 end).do_nothing
-			;(across "" is c invariant b12 until b13 some b14 end).do_nothing
 		end
 
 feature {NONE} -- Output

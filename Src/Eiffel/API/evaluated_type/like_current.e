@@ -135,8 +135,8 @@ feature -- Properties
 	is_expanded: BOOLEAN
 			-- Is type expanded?
 		do
-			if conformance_type /= Void then
-				Result := conformance_type.is_expanded
+			if attached conformance_type as t then
+				Result := t.is_expanded
 			end
 		end
 
@@ -175,8 +175,10 @@ feature -- Properties
 		do
 			if is_directly_attached then
 				Result := True
-			elseif not has_detachable_mark and then attached conformance_type as t then
-				Result := t.is_attached
+			elseif attached conformance_type as t then
+				Result :=
+					t.is_expanded or else
+					(not has_detachable_mark and then t.is_attached)
 			end
 		end
 
@@ -185,8 +187,10 @@ feature -- Properties
 		do
 			if is_directly_implicitly_attached then
 				Result := True
-			elseif not has_detachable_mark and then attached conformance_type as t then
-				Result := t.is_implicitly_attached
+			elseif attached conformance_type as t then
+				Result :=
+					t.is_expanded or else
+					(not has_detachable_mark and then t.is_implicitly_attached)
 			end
 		end
 
@@ -701,16 +705,13 @@ feature {COMPILER_EXPORTER} -- Primitives
 			-- Instantiation of Current in the context of `class_type'
 			-- assuming that Current is written in the associated class
 			-- of `class_type'.
-		local
-			l_like: like Current
 		do
 			Result := class_type
 			if Result.is_like_current then
 					-- We cannot allow aliasing as otherwise we might end up updating
 					-- `like Current' type that should not be updated (Allowing the
 					-- aliasing would break eweasel test#valid218).
-				create l_like.make (class_type.conformance_type)
-				Result := l_like
+				create {like Current} Result.make (class_type.conformance_type)
 			end
 			Result := Result.to_other_attachment (Current)
 			Result := Result.to_other_variant (Current)
@@ -722,7 +723,9 @@ feature {COMPILER_EXPORTER} -- Primitives
 
 	evaluated_type_in_descendant (a_ancestor, a_descendant: CLASS_C; a_feature: FEATURE_I): LIKE_CURRENT
 		do
-			if a_ancestor /= a_descendant then
+			if a_ancestor = a_descendant then
+				Result := Current
+			else
 				create Result.make (a_descendant.actual_type)
 				Result := Result.to_other_attachment (Current)
 					-- Promote separateness status if present.
@@ -730,8 +733,6 @@ feature {COMPILER_EXPORTER} -- Primitives
 					Result := Result.to_other_separateness (Current)
 				end
 				Result := Result.to_other_variant (Current)
-			else
-				Result := Current
 			end
 		end
 
@@ -771,7 +772,7 @@ feature {COMPILER_EXPORTER} -- Primitives
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2019, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2021, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

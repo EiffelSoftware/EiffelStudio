@@ -1296,12 +1296,12 @@ feature -- Duplication
 					Result := duplicate
 					Result.set_attached_mark
 				end
-			elseif other.is_implicitly_attached then
+			elseif other.is_directly_implicitly_attached then
 				if not is_attached and then not is_implicitly_attached then
 					Result := as_implicitly_attached
 				end
 			elseif other.has_detachable_mark then
-				if not is_expanded and then not has_detachable_mark then
+				if not has_detachable_mark then
 					Result := duplicate
 					Result.set_detachable_mark
 				end
@@ -2119,7 +2119,7 @@ invariant
 	separate_mark_consistency: not is_expanded implies (has_separate_mark implies is_separate)
 
 note
-	copyright:	"Copyright (c) 1984-2020, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2021, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

@@ -213,8 +213,10 @@ feature -- Status report
 		do
 			if is_directly_attached then
 				Result := True
-			elseif not has_detachable_mark and then attached actual_type as t then
-				Result := t.is_attached
+			elseif attached actual_type as t then
+				Result :=
+					t.is_expanded or else
+					(not has_detachable_mark and then t.is_attached)
 			end
 		end
 
@@ -223,8 +225,10 @@ feature -- Status report
 		do
 			if is_directly_implicitly_attached then
 				Result := True
-			elseif not has_detachable_mark and then attached actual_type as t then
-				Result := t.is_implicitly_attached
+			elseif attached actual_type as t then
+				Result :=
+					t.is_expanded or else
+					(not has_detachable_mark and then t.is_implicitly_attached)
 			end
 		end
 
@@ -687,7 +691,7 @@ feature {TYPE_A} -- Helpers
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2019, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2021, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

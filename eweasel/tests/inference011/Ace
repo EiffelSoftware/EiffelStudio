@@ -1,11 +1,9 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
-<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-12-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-12-0 http://www.eiffel.com/developers/xml/configuration-1-12-0.xsd" name="test">
+<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-21-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-21-0 http://www.eiffel.com/developers/xml/configuration-1-21-0.xsd" name="test" uuid="8C183704-5D63-4D59-8B62-76D3C38348DE">
 	<target name="test">
 		<root class="TEST" feature="make"/>
-		<option warning="true" syntax="provisional"/>
 		<setting name="console_application" value="true"/>
-		<setting name="total_order_on_reals" value="true"/>
-		<precompile name="precompile" location="$PRECOMPILED_BASE_SAFE"/>
+		<precompile name="precompile" location="$PRECOMPILED_BASE_SCOOP_SAFE"/>
 		$EWEASEL_DOTNET_SETTING
 		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf"/>
 		<cluster name="root_cluster" location="$CLUSTER\"/>

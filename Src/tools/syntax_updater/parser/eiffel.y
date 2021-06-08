@@ -2682,6 +2682,8 @@ Loop_instruction:
 			}
 	| TE_REPEAT_OPEN Identifier_as_lower TE_COLON Expression TE_BAR {enter_scope; add_scope_iteration ($2)} Compound TE_REPEAT_CLOSE
 			{
+				insert_supplier ("ITERABLE", $2)
+				insert_supplier ("ITERATION_CURSOR", $2)
 				$$ := ast_factory.new_loop_as (ast_factory.new_symbolic_iteration_as ($2, $3, $4, $5), Void, Void, Void, Void, $7, Void, Void, Void, Void, Void, extract_symbol ($1), extract_symbol ($8))
 				leave_scope
 			}
@@ -2745,7 +2747,7 @@ Iteration:
 			{
 				insert_supplier ("ITERABLE", $4)
 				insert_supplier ("ITERATION_CURSOR", $4)
-				$$ := ast_factory.new_iteration_as (extract_keyword ($1), $2, $3, $4, False)
+				$$ := ast_factory.new_iteration_as (extract_keyword ($1), $2, $3, $4, not is_explicit_iteration_cursor)
 				enter_scope
 				add_scope_iteration ($4)
 			}
@@ -2754,6 +2756,7 @@ Iteration:
 				insert_supplier ("ITERABLE", $4)
 				insert_supplier ("ITERATION_CURSOR", $4)
 				$$ := ast_factory.new_iteration_as (extract_keyword ($1), $2, extract_keyword ($3), $4, True)
+				report_deprecated_use_of_keyword_is (extract_keyword ($3))
 				enter_scope
 				add_scope_iteration ($4)
 			}

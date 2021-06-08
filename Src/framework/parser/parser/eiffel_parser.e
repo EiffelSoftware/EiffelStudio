@@ -13214,6 +13214,8 @@ debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line <not available>")
 end
 
+				insert_supplier ("ITERABLE", yyvs2.item (yyvsp2))
+				insert_supplier ("ITERATION_CURSOR", yyvs2.item (yyvsp2))
 				yyval71 := ast_factory.new_loop_as (ast_factory.new_symbolic_iteration_as (yyvs2.item (yyvsp2), yyvs4.item (yyvsp4 - 1), yyvs50.item (yyvsp50), yyvs4.item (yyvsp4)), Void, Void, Void, Void, yyvs119.item (yyvsp119), Void, Void, Void, Void, Void, extract_symbol (yyvs6.item (yyvsp6 - 1)), extract_symbol (yyvs6.item (yyvsp6)))
 				leave_scope
 			
@@ -13458,7 +13460,7 @@ end
 
 				insert_supplier ("ITERABLE", yyvs2.item (yyvsp2))
 				insert_supplier ("ITERATION_CURSOR", yyvs2.item (yyvsp2))
-				yyval118 := ast_factory.new_iteration_as (extract_keyword (yyvs15.item (yyvsp15)), yyvs50.item (yyvsp50), yyvs14.item (yyvsp14), yyvs2.item (yyvsp2), False)
+				yyval118 := ast_factory.new_iteration_as (extract_keyword (yyvs15.item (yyvsp15)), yyvs50.item (yyvsp50), yyvs14.item (yyvsp14), yyvs2.item (yyvsp2), not is_explicit_iteration_cursor)
 				enter_scope
 				add_scope_iteration (yyvs2.item (yyvsp2))
 			
@@ -13493,6 +13495,7 @@ end
 				insert_supplier ("ITERABLE", yyvs2.item (yyvsp2))
 				insert_supplier ("ITERATION_CURSOR", yyvs2.item (yyvsp2))
 				yyval118 := ast_factory.new_iteration_as (extract_keyword (yyvs15.item (yyvsp15 - 1)), yyvs50.item (yyvsp50), extract_keyword (yyvs15.item (yyvsp15)), yyvs2.item (yyvsp2), True)
+				report_deprecated_use_of_keyword_is (extract_keyword (yyvs15.item (yyvsp15)))
 				enter_scope
 				add_scope_iteration (yyvs2.item (yyvsp2))
 			

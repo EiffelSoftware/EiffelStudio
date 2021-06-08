@@ -73,9 +73,9 @@ feature {NONE} -- Output
 			create a.make_filled (0, lower, lower + count - 1)
 				-- Fill the array with items `1`, `2`, ..., `count`.
 			across
-				a as c
+				a is c
 			loop
-				a [c.target_index] := c.cursor_index
+				a [@c.target_index] := @c.cursor_index
 			end
 				-- Insert a new item.
 			a.force_and_fill (value, index)

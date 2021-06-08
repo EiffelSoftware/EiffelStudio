@@ -5,6 +5,6 @@ copy_sub 	 Ace $TEST Ace
 copy_raw 	 test.e  $CLUSTER test.e
 
 compile_melted
-compile_result   validity_error TEST "Syntax Error:19" "Syntax Error:20" "Syntax Error:22" "Syntax Error:45" "Syntax Error:46" "Syntax Error:48"
+compile_result   validity_error TEST "Syntax Error:12" "Syntax Error:13" "Syntax Error:15"
 
 test_end

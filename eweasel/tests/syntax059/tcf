@@ -8,7 +8,7 @@ define AS is
 copy_sub a.e $CLUSTER a.e
 
 compile_melted
-compile_result	ok
+compile_result	syntax_warning A 15; A 21; A 29; A 38; A 47; A 58; A 66; A 77; A 88; A 102; A 113; A 127; A 140
 execute_work	NONE exec_output_m
 execute_result	ok
 compare		exec_output_m output

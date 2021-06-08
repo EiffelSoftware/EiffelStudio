@@ -12,7 +12,7 @@ feature {NONE} -- Creation
 		do
 			create c
 			across
-				0 |..| 255 is i
+				0 |..| 255 as i
 			loop
 				c.set_item (i.to_character_8)
 				if i.to_character_8.as_lower.to_character_32 /= i.to_character_32.as_lower then

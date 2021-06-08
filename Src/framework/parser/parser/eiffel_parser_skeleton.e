@@ -686,6 +686,9 @@ feature {NONE} -- Scopes
 	scopes: ARRAYED_STACK [like {ARRAYED_STACK [TUPLE]}.count]
 			-- The number of elements in `scope_identifiers` before entering current scope.
 
+	scope_kind_unknown: NATURAL_8 = 0
+			-- Skope kind for an unknown entity name.
+
 	scope_kind_argument: NATURAL_8 = 1
 			-- Scope kind for a formal argument.
 
@@ -776,6 +779,25 @@ feature {NONE} -- Scopes
 		do
 			if attached identifier then
 				scope_identifiers.put (identifier.name_id, scope_kind_test)
+			end
+		end
+
+	identifier_kind (identifier: detachable ID_AS): like scope_kind_argument
+		local
+			i: like {ID_AS}.name_id
+		do
+			Result := scope_kind_unknown
+			if attached identifier then
+				i := identifier.name_id
+				across
+					scope_identifiers as s
+				until
+					Result /= scope_kind_unknown
+				loop
+					if s.item.identifier = i then
+						Result := s.item.identifier_kind
+					end
+				end
 			end
 		end
 

@@ -67,9 +67,21 @@ feature {EV_ANY_I} -- Access
 --			end
 			{EV_GTK_CALLBACK_MARSHAL}.set_eif_oid_in_c_object (l_c_object, internal_id, $c_object_dispose)
 			c_object := l_c_object
-
 			debug ("gtk_name")
-				{GTK}.gtk_widget_set_name (c_object, (create {EV_GTK_C_STRING}.set_with_eiffel_string (generator + " #" + internal_id.out)).item)
+				update_gtk_name
+			end
+		end
+
+	update_gtk_name
+		do
+			debug ("gtk_name")
+				if not c_object.is_default_pointer then
+					if attached interface as l_interface then
+						{GTK}.gtk_widget_set_name (c_object, (create {EV_GTK_C_STRING}.set_with_eiffel_string (l_interface.generator + " (" + generator + ")" + " #" + internal_id.out)).item)
+					else
+						{GTK}.gtk_widget_set_name (c_object, (create {EV_GTK_C_STRING}.set_with_eiffel_string (generator + " #" + internal_id.out)).item)
+					end
+				end
 			end
 		end
 

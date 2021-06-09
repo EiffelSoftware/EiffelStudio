@@ -63,8 +63,10 @@ feature {NONE} -- Initialization
 			{GTK2}.gtk_widget_set_redraw_on_allocate (c_object, False)
 			set_is_initialized (True)
 
+			init_gtk_allocate_event_signal_connection (c_object)
+
 			debug ("gtk_name")
-				{GTK}.gtk_widget_set_name (c_object, (create {EV_GTK_C_STRING}.set_with_eiffel_string (generator + " #" + internal_id.out)).item)
+				update_gtk_name
 			end
 		end
 
@@ -90,23 +92,12 @@ feature {NONE} -- Initialization
 			]"
 		end
 
-
 feature -- Event handling
 
 	init_resize_actions (a_resize_actions: like resize_actions)
 			-- <Precursor>
-		local
-			l_app_imp: like app_implementation
 		do
-			if not {GTK}.gtk_is_window (c_object) then
-					-- Window resize events are connected separately
-				l_app_imp := app_implementation
-				real_signal_connect (c_object,
-						{EV_GTK_EVENT_STRINGS}.size_allocate_event_name,
-						agent (l_app_imp.gtk_marshal).on_size_allocate_intermediate (internal_id, ?, ?, ?, ?),
-						l_app_imp.gtk_marshal.size_allocate_translate_agent
-					)
-			end
+			-- TODO
 		end
 
 	init_dpi_changed_actions (a_dpi_changed_actions: like dpi_changed_actions)
@@ -115,13 +106,29 @@ feature -- Event handling
 			-- TODO
 		end
 
-
 	init_file_drop_actions (a_file_drop_actions: like file_drop_actions)
 			-- <Precursor>
 		do
 		end
 
 feature {EV_WINDOW_IMP, EV_INTERMEDIARY_ROUTINES, EV_ANY_I, EV_APPLICATION_IMP} -- Implementation
+
+	init_gtk_allocate_event_signal_connection (a_c_object: POINTER)
+		require
+			not a_c_object.is_default_pointer
+		local
+			l_app_imp: like app_implementation
+		do
+			if not {GTK}.gtk_is_window (a_c_object) then
+					-- Window resize events are connected separately
+				l_app_imp := app_implementation
+				real_signal_connect (a_c_object,
+						{EV_GTK_EVENT_STRINGS}.size_allocate_event_name,
+						agent (l_app_imp.gtk_marshal).on_size_allocate_intermediate (internal_id, ?, ?, ?, ?),
+						l_app_imp.gtk_marshal.size_allocate_translate_agent
+					)
+			end
+		end
 
 	on_key_event (a_key: detachable EV_KEY; a_key_string: detachable STRING_32; a_key_press: BOOLEAN)
 			-- Used for key event actions sequences.
@@ -158,8 +165,8 @@ feature {EV_WINDOW_IMP, EV_INTERMEDIARY_ROUTINES, EV_ANY_I, EV_APPLICATION_IMP} 
 				l_y := a_y - l_x_y_offset
 				previous_width := a_width.to_integer_16
 				previous_height := a_height.to_integer_16
-				if resize_actions_internal /= Void then
-					resize_actions_internal.call (app_implementation.gtk_marshal.dimension_tuple (l_x, l_y, a_width, a_height))
+				if attached resize_actions_internal as l_resize_actions then
+					l_resize_actions.call (app_implementation.gtk_marshal.dimension_tuple (l_x, l_y, a_width, a_height))
 				end
 			end
 			if attached parent_imp as l_parent_imp then

@@ -202,11 +202,16 @@ feature  -- Agents
 					l_docking_manager.internal_viewport.set_item_height (l_height)
 				end
 				l_height := l_docking_manager.fixed_area.height
+				l_main_container := l_docking_manager.query.inner_container_main
 				if l_height > 0 then
-					l_docking_manager.fixed_area.set_item_height (l_docking_manager.query.inner_container_main, l_height)
+					l_docking_manager.fixed_area.set_item_height (l_main_container, l_height)
 				end
 			end
 			l_docking_manager.tool_bar_manager.on_resize (a_x, a_y, l_docking_manager.internal_viewport.width, l_docking_manager.internal_viewport.height, a_force)
+
+				-- Make sure the viewport item is also resized when the viewport is resized.
+				-- FIXME: check why code above in `on_resize (..)` is not enought.
+			l_docking_manager.internal_viewport.set_item_size (a_width, a_height)
 		end
 
 
@@ -571,7 +576,7 @@ invariant
 
 note
 	library:	"SmartDocking: Library of reusable components for Eiffel."
-	copyright:	"Copyright (c) 1984-2020, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2021, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

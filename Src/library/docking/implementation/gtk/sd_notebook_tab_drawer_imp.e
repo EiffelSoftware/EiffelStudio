@@ -193,8 +193,10 @@ feature -- Command
 			if attached tab.parent as l_parent then
 				if attached {SD_DRAWING_AREA_IMP} l_parent.implementation as l_imp then
 					l_drawable := l_imp.get_drawable
-					c_gtk_paint_focus (l_drawable, {GTK}.gtk_widget_get_style_context (l_imp.c_object), a_rect.x, a_rect.y, a_rect.width, a_rect.height)
-					l_imp.release_drawable (l_drawable)
+					if not l_drawable.is_default_pointer then
+						c_gtk_paint_focus (l_drawable, {GTK}.gtk_widget_get_style_context (l_imp.c_object), a_rect.x, a_rect.y, a_rect.width, a_rect.height)
+						l_imp.release_drawable (l_drawable)
+					end
 				end
 			else
 				check False end -- Implied by `tab' is displaying on screen

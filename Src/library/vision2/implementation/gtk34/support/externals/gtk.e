@@ -1284,6 +1284,13 @@ feature -- Scrollbar
 
 feature -- Label		
 
+	frozen gtk_is_label (w: POINTER): BOOLEAN
+		external
+			"C [macro <ev_gtk.h>]"
+		alias
+			"GTK_IS_LABEL"
+		end
+
 	frozen gtk_label_new (a_str: POINTER): POINTER
 		external
 			"C (gchar*): GtkWidget* | <ev_gtk.h>"
@@ -1317,6 +1324,17 @@ feature -- Label
 		external
 			"C signature (GtkLabel*): EIF_INTEGER use <ev_gtk.h>"
 		end
+
+	frozen gtk_label_set_attributes (label: POINTER; attrs: POINTER)
+		external
+			"C inline use <ev_gtk.h>"
+		alias
+			"[
+				gtk_label_set_attributes ((GtkLabel *)$label,
+                		          (PangoAttrList *)$attrs);
+                		    ]"
+		end
+
 
 feature -- Object		
 
@@ -1872,6 +1890,16 @@ feature -- Color Helper
     	ensure
     		instance_free: class
 	end
+
+
+feature -- Gobject Type
+
+	g_type_name (a_type:  POINTER): POINTER
+		external
+			"C inline use <ev_gtk.h>"
+		alias
+			"return g_type_name ((GType)$a_type);"
+		end
 
 note
 	copyright: "Copyright (c) 1984-2021, Eiffel Software and others"

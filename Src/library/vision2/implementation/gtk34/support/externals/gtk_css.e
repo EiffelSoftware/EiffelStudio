@@ -21,6 +21,18 @@ feature -- GtkCsProvider
 			"C signature (GtkCssProvider *, const gchar *, gssize , GError **): gboolean use <ev_gtk.h>"
 		end
 
+
+	frozen gtk_css_provider_load_from_path  (css_provider, path: POINTER; error: TYPED_POINTER [POINTER]): BOOLEAN
+		external
+			"C inline use <ev_gtk.h>"
+		alias
+			"[
+			   return gtk_css_provider_load_from_path ((GtkCssProvider *)$css_provider,
+                                 (const gchar *)$path,
+                                 (GError **)$error);
+                                ]"
+		end
+
 	frozen gtk_css_provider_to_string (provider: POINTER): POINTER
 		external
 			"C signature (GtkCssProvider *): char * use <ev_gtk.h>"

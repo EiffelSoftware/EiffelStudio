@@ -533,6 +533,57 @@ feature -- Matrix
 		end
 
 
+feature -- Pango Attribute
+
+	pango_attr_list_new: POINTER
+		external
+			"C inline use <ev_gtk.h>"
+		alias
+			"return pango_attr_list_new();"
+		end
+
+	pango_attr_family_new (family: POINTER): POINTER
+		external
+			"C inline use <ev_gtk.h>"
+		alias
+			"return pango_attr_family_new ((const char *)$family);"
+		end
+
+	pango_attr_style_new (style: INTEGER): POINTER
+		external
+			"C inline use <ev_gtk.h>"
+		alias
+			"return pango_attr_style_new ((PangoStyle)$style);"
+		end
+
+	pango_attr_font_desc_new (desc: POINTER): POINTER
+		external
+			"C inline use <ev_gtk.h>"
+		alias
+			"return pango_attr_font_desc_new ((const PangoFontDescription *)$desc);"
+		end
+
+	pango_attr_list_insert (list: POINTER; attr: POINTER)
+		external
+			"C inline use <ev_gtk.h>"
+		alias
+			"pango_attr_list_insert ((PangoAttrList *)$list, (PangoAttribute *)$attr);	"
+		end
+
+	pango_attr_list_unref (list: POINTER)
+		external
+			"C inline use <ev_gtk.h>"
+		alias
+			"pango_attr_list_unref ((PangoAttrList *)$list);"
+		end
+
+	pango_attribute_destroy (attr: POINTER)
+		external
+			"C inline use <ev_gtk.h>"
+		alias
+			"pango_attribute_destroy ((PangoAttribute *)$attr);"
+		end
+
 note
 	copyright: "Copyright (c) 1984-2021, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"

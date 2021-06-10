@@ -37,7 +37,9 @@ feature -- Status setting
 		local
 			font_imp: detachable EV_FONT_IMP
 			l_private_font: detachable EV_FONT
-			l_pango_context: POINTER
+			--l_pango_context: POINTER
+			l_pango_attr_list: POINTER
+			l_pango_attr: POINTER
 		do
 			if private_font /= a_font then
 				l_private_font := a_font.twin
@@ -50,9 +52,22 @@ feature -- Status setting
 
 					-- Examples using pango context
 					-- https://cpp.hotexamples.com/examples/-/-/gtk_widget_get_pango_context/cpp-gtk_widget_get_pango_context-function-examples.html
-				l_pango_context := {GTK2}.gtk_widget_get_pango_context (fontable_widget)
+				if {GTK}.gtk_is_label (fontable_widget) then
+					l_pango_attr_list := {PANGO}.pango_attr_list_new
+					l_pango_attr := {PANGO}.pango_attr_font_desc_new (font_imp.font_description)
+					{PANGO}.pango_attr_list_insert (l_pango_attr_list, l_pango_attr)
+					{GTK}.gtk_label_set_attributes (fontable_widget, l_pango_attr_list)
+					{PANGO}.pango_attr_list_unref (l_pango_attr_list)
+				else
+					debug ("gtk_name")
+						print (generator + ".set_font -> fontable_widget is not a label")
+					end
+				end
 			end
 		end
+
+
+
 
 feature {NONE} -- Implementation
 

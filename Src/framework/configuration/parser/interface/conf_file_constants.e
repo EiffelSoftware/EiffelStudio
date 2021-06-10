@@ -234,6 +234,7 @@ feature -- Status report
 		do
 			Result := namespace_order.has (n)
 		ensure
+			class
 			consistency: Result = namespace_order.has (n)
 		end
 
@@ -353,6 +354,8 @@ feature {NONE} -- Ordering
 			Result.extend (21, namespace_1_21_0)
 			Result.extend (22, namespace_1_22_0)
 				-- When adding a new namespace, do not forget to increment the counter index too!
+		ensure
+			class
 		end
 
 note

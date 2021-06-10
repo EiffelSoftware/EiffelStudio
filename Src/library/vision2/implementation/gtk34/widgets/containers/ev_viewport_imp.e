@@ -141,10 +141,12 @@ feature -- Element change
 			l_c_object: POINTER
 			l_alloc: POINTER
 		do
-			if attached item as l_item and then attached {EV_WIDGET_IMP} l_item.implementation as w_imp then
+			if
+				attached item as l_item and then
+				attached {EV_WIDGET_IMP} l_item.implementation as w_imp
+			then
 				l_c_object := w_imp.c_object
 				l_parent_box := {GTK}.gtk_widget_get_parent (l_c_object)
-
 				l_alloc := l_alloc.memory_alloc ({GTK}.c_gtk_allocation_struct_size)
 				{GTK}.gtk_widget_get_allocation (l_parent_box, l_alloc)
 				{GTK}.set_gtk_allocation_struct_width (l_alloc, a_width)

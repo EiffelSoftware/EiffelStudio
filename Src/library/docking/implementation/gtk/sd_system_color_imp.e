@@ -45,7 +45,7 @@ feature -- Access
 	non_focused_selection_color: EV_COLOR
 			-- Non focused selection color for title bar.
 		do
-			Result := normal_color
+			Result := stock_colors_imp.color_from_state (tree_view, {EV_STOCK_COLORS_IMP}.base_style, {GTK}.gtk_state_flag_active_enum)
 		end
 
 	non_focused_title_text_color: EV_COLOR
@@ -57,7 +57,7 @@ feature -- Access
 	non_focused_selection_title_color: EV_COLOR
 			-- Non focused selection title color.
 		do
-			Result := insesitive_color
+			Result := insensitive_color
 		end
 
 	active_border_color: EV_COLOR
@@ -69,13 +69,13 @@ feature -- Access
 	focused_title_text_color: EV_COLOR
 			-- Focused title text color.
 		do
-			Result := (create {EV_GRID}).focused_selection_text_color
+			Result := stock_colors_imp.color_from_state (tree_view, {EV_STOCK_COLORS_IMP}.bg_style, {GTK}.gtk_state_flag_normal_enum)
 		end
 
 	button_text_color: EV_COLOR
 			-- Button text color.
 		do
-			Result := (create {EV_GRID}).foreground_color
+			Result := stock_colors_imp.color_from_state (tree_view, {EV_STOCK_COLORS_IMP}.fg_style, {GTK}.gtk_state_flag_normal_enum)
 		end
 
 feature -- Font
@@ -118,7 +118,7 @@ feature {NONE} -- GTK text_aa colors.
 			Result := stock_colors_imp.color_from_state (tree_view, {EV_STOCK_COLORS_IMP}.bg_style, {GTK}.gtk_state_flag_selected_enum)
 		end
 
-	insesitive_color: EV_COLOR
+	insensitive_color: EV_COLOR
 			-- State indicating that the widget is unresponsive to user actions.
 		do
 			Result := stock_colors_imp.color_from_state (tree_view, {EV_STOCK_COLORS_IMP}.bg_style, {GTK}.gtk_state_flag_insensitive_enum)
@@ -140,7 +140,7 @@ feature {NONE} -- Implementation
 
 note
 	library:	"SmartDocking: Library of reusable components for Eiffel."
-	copyright:	"Copyright (c) 1984-2017, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2021, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

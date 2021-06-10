@@ -44,7 +44,7 @@ feature {NONE} -- Initialization
 			end
 
 			expose_actions.extend (agent on_expose_action)
-			set_background_color ((create {EV_GRID}).non_focused_selection_color)
+			set_background_color ((create {SD_SYSTEM_COLOR_IMP}.make).non_focused_selection_color)
 		ensure
 			a_direction_set: a_direction = direction
 		end

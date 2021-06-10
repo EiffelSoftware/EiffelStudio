@@ -444,7 +444,7 @@ feature {NONE} -- Agents
 
 				l_custom_widget := internal_custom_widget
 				if l_custom_widget /= Void  then
-					-- We have to check if `internal_custome_widget' is_destroyed, it makes sense while an application is exiting.
+					-- We have to check if `internal_custom_widget' is_destroyed, it makes sense while an application is exiting.
 					-- See bug#13731
 					if not l_custom_widget.is_destroyed then
 						if a_width >= tool_bar_width + l_custom_widget.minimum_width + (internal_shared.highlight_before_width + internal_shared.highlight_tail_width) then
@@ -748,7 +748,7 @@ invariant
 
 note
 	library:	"SmartDocking: Library of reusable components for Eiffel."
-	copyright:	"Copyright (c) 1984-2020, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2021, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

@@ -29,7 +29,7 @@ feature -- Access
 		do
 			Result := internal_options
 			if not attached Result then
-				create Result
+				Result := {CONF_TARGET_OPTION}.create_from_namespace_or_latest (namespace)
 			end
 		end
 
@@ -40,7 +40,7 @@ feature -- Access
 			if not attached Result then
 				Result := internal_options
 				if not attached Result then
-					create Result
+					Result := {CONF_TARGET_OPTION}.create_from_namespace_or_latest (namespace)
 				end
 			end
 		ensure
@@ -53,6 +53,13 @@ feature -- Access
 			Result := internal_settings
 		ensure
 			Result_not_void: Result /= Void
+		end
+
+	namespace: like namespace_1_0_0
+			-- The XML namespace associated with the target.
+		do
+				-- The latest namespace by default.
+			Result := latest_namespace
 		end
 
 feature -- Access: settings
@@ -275,21 +282,21 @@ feature {CONF_ACCESS} -- Update, stored in configuration file
 			a_name_ok: a_name /= Void and then not a_name.is_empty
 			a_value_not_void: a_value /= Void
 		local
-			l_opts: like internal_options
+			o: like internal_options
 		do
-			l_opts := internal_options
+			o := internal_options
 			if a_name.is_case_insensitive_equal_general (s_concurrency) then
-				if l_opts = Void then
-					create l_opts
-					internal_options := l_opts
+				if not attached o then
+					o := {like internal_options}.create_from_namespace_or_latest (namespace)
+					internal_options := o
 				end
-				l_opts.concurrency.put (a_value)
+				o.concurrency.put (a_value)
 			elseif a_name.is_case_insensitive_equal_general (s_void_safety) then
-				if l_opts = Void then
-					create l_opts
-					internal_options := l_opts
+				if not attached o then
+					o := {like internal_options}.create_from_namespace_or_latest (namespace)
+					internal_options := o
 				end
-				l_opts.void_safety.put (a_value)
+				o.void_safety.put (a_value)
 			end
 		end
 
@@ -318,7 +325,7 @@ feature {CONF_VISITOR, CONF_ACCESS} -- Implementation, attributes that are store
 		do
 			Result := internal_options
 			if not attached Result then
-				create Result
+				Result := {like options}.create_from_namespace_or_latest (namespace)
 				internal_options := Result
 			end
 		ensure
@@ -345,7 +352,7 @@ invariant
 	internal_settings_attached: attached internal_settings
 
 note
-	copyright:	"Copyright (c) 1984-2019, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2021, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

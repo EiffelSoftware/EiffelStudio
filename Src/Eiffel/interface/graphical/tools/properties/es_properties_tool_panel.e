@@ -199,7 +199,7 @@ feature {EB_STONE_CHECKER, EB_CONTEXT_MENU_FACTORY} -- Actions
 					l_lib_use := l_group.target.system.used_in_libraries
 				elseif attached {CLASSI_STONE} a_stone as l_cs then
 					l_group := l_cs.class_i.group
-					if 
+					if
 						l_group.is_used_in_library and then
 						attached l_group.target.system.lowest_used_in_library as l_lowest_used_in_library
 					then
@@ -208,7 +208,7 @@ feature {EB_STONE_CHECKER, EB_CONTEXT_MENU_FACTORY} -- Actions
 					current_system := l_group.target.system
 					if l_group.classes_set and then l_group.classes.has (l_cs.class_i.config_class.name) then
 						l_class_options := l_group.changeable_class_options (l_cs.class_i.config_class)
-						create l_inh_options
+						l_inh_options := {CONF_OPTION}.create_from_namespace_or_latest (latest_namespace)
 						l_inh_options.merge (l_class_options)
 						l_inh_options.merge (l_group.options)
 						properties.reset
@@ -339,7 +339,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright: "Copyright (c) 1984-2018, Eiffel Software"
+	copyright: "Copyright (c) 1984-2021, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

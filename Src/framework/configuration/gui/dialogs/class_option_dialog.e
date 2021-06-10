@@ -165,7 +165,7 @@ feature {NONE} -- Agents
 					create l_value.make (1)
 					value := l_value
 				end
-				l_value.force (create {CONF_OPTION}, l_name)
+				l_value.force ({CONF_OPTION}.create_from_namespace_or_latest (latest_namespace), l_name)
 				current_class := l_name
 				refresh
 			end
@@ -196,7 +196,7 @@ feature {NONE} -- Agents
 				class_in_value: attached value as l_value and then
 				attached l_value.item (a_class) as l_opts
 			then
-				create l_inh_opts
+				l_inh_opts := {CONF_OPTION}.create_from_namespace_or_latest (latest_namespace)
 				l_inh_opts.merge (l_opts)
 				l_inh_opts.merge (group_options)
 
@@ -281,7 +281,7 @@ invariant
 	elements: is_initialized implies class_list /= Void and new_class /= Void
 
 note
-	copyright: "Copyright (c) 1984-2020, Eiffel Software"
+	copyright: "Copyright (c) 1984-2021, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

@@ -113,7 +113,7 @@ feature -- Access queries
 		do
 				-- Only options that can be overridden should be taken from the local definition,
 				-- so `internal_options' cannot be used as a starting point, the clean object is used instead.
-			create Result
+			Result := {CONF_OPTION}.create_from_namespace_or_latest (namespace)
 
 				-- Apply local options if present.
 			if attached internal_options as l_internal_options then
@@ -136,7 +136,7 @@ feature -- Access queries
 		do
 				-- Only options that can be overridden should be taken from the local definition,
 				-- so `internal_options' cannot be used as a starting point, the clean object is used instead.
-			create Result
+			Result := {CONF_OPTION}.create_from_namespace_or_latest (namespace)
 
 				-- Apply local options if present.
 			if attached forced_options as o then
@@ -236,7 +236,7 @@ invariant
 	library_target_set: classes_set implies library_target /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2019, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2021, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

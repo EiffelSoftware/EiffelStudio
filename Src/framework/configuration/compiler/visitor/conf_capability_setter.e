@@ -159,7 +159,7 @@ feature {NONE} -- Traversal
 		do
 			o := parent.internal_options
 			if not attached o then
-				create o
+				o := {like {CONF_TARGET}.internal_options}.create_from_namespace_or_latest (parent.namespace)
 			end
 			if
 				o.catcall_detection.index /= root_catcall_detection_index or else
@@ -178,7 +178,7 @@ feature {NONE} -- Traversal
 note
 	date: "$Date$"
 	revision: "$Revision$"
-	copyright: "Copyright (c) 1984-2019, Eiffel Software"
+	copyright: "Copyright (c) 1984-2021, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

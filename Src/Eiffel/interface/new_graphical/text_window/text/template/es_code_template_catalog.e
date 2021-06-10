@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "[
 		Service implementation for manipulating and querying the global code template catalog, based on the service description {ES_CODE_TEMPLATE_CATALOG_S}.
 	]"
@@ -358,7 +358,7 @@ feature {NONE} -- Basic operations
 				if not l_file.is_empty then
 					l_file.read_stream (l_file.count)
 					l_parser := eiffel_parser_wrapper
-					l_parser.parse_with_option_32 (Heavy_eiffel_parser, l_file.last_string, create {CONF_OPTION}, False, Void)
+					l_parser.parse_with_option_32 (Heavy_eiffel_parser, l_file.last_string, {CONF_OPTION}.create_from_namespace_or_latest ({CONF_FILE_CONSTANTS}.latest_namespace), False, Void)
 					if
 						attached l_parser.ast_node as l_ast_node and then
 						attached l_parser.ast_match_list as l_ast_match_list
@@ -416,7 +416,7 @@ invariant
 	cataloged_template_definitions_attached: attached cataloged_template_definitions
 
 ;note
-	copyright: "Copyright (c) 1984-2016, Eiffel Software"
+	copyright: "Copyright (c) 1984-2021, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

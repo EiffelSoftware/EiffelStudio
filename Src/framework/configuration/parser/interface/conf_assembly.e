@@ -123,21 +123,14 @@ feature -- Access queries
 			-- Get class by name.
 		local
 			l_dep: CONF_GROUP
-			l_groups: like accessible_groups
 		do
 			Result := Precursor (a_class, a_dependencies)
 			if a_dependencies then
-				l_groups := accessible_groups
-				from
-					l_groups.start
-				until
-					l_groups.after
-				loop
-					l_dep := l_groups.item_for_iteration
+				across accessible_groups as g loop
+					l_dep := g.item
 					if l_dep.classes_set then
 						Result.append (l_dep.class_by_name (a_class, False))
 					end
-					l_groups.forth
 				end
 			end
 		end
@@ -170,8 +163,8 @@ feature -- Access queries
 	options: CONF_OPTION
 			-- Options of this assembly.
 		once
-				-- assemblies have no options
-			create Result
+				-- Assemblies have no options.
+			Result := {CONF_OPTION}.create_from_namespace_or_latest (latest_namespace)
 		end
 
 	adapted_options: CONF_OPTION
@@ -288,7 +281,8 @@ feature -- Visit
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2019, Eiffel Software"
+	ca_ignore: "CA011", "CA011: too many arguments"
+	copyright:	"Copyright (c) 1984-2021, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

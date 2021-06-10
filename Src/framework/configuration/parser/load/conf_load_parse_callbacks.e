@@ -1598,10 +1598,10 @@ feature {NONE} -- Implementation attribute processing
 				not attached current_group as l_current_group and then
 				attached current_target
 			then
-				l_target_option := factory.new_target_option
+				l_target_option := factory.new_target_option (if attached current_namespace as n then n else latest_namespace end)
 				l_current_option := l_target_option
 			else
-				l_current_option := factory.new_option
+				l_current_option := factory.new_option (if attached current_namespace as n then n else latest_namespace end)
 			end
 			current_option := l_current_option
 			if attached current_attributes.item (at_trace) as l_trace then
@@ -2467,72 +2467,9 @@ feature {NONE} -- Processing of options
 			t_attached: t /= Void
 			a_namespace_attached: a_namespace /= Void
 		local
-			default_options: CONF_TARGET_OPTION
 			new_options: CONF_TARGET_OPTION
 		do
-			if a_namespace.same_string (namespace_1_22_0) then
-					-- Use the defaults of ES 21.05.
-				default_options := default_options_21_05
-			elseif a_namespace.same_string (namespace_1_21_0) then
-					-- Use the defaults of ES 19.11.
-				default_options := default_options_19_11
-			elseif a_namespace.same_string (namespace_1_20_0) then
-					-- Use the defaults of ES 19.05.
-				default_options := default_options_19_05
-			elseif
-				a_namespace.same_string (namespace_1_19_0) or else
-				a_namespace.same_string (namespace_1_18_0)
-			then
-					-- Use the defaults of ES 18.01.
-				default_options := default_options_18_01
-			elseif
-				a_namespace.same_string (namespace_1_17_0) or else
-				a_namespace.same_string (namespace_1_16_0)
-			then
-					-- Use the defaults of ES 16.11.
-				default_options := default_options_16_11
-			elseif a_namespace.same_string (namespace_1_15_0) then
-					-- Use the defaults of ES 15.11.
-				default_options := default_options_15_11
-			elseif
-				a_namespace.same_string (namespace_1_14_0) or else
-				a_namespace.same_string (namespace_1_13_0)
-			then
-					-- Use the defaults of ES 14.05.
-				default_options := default_options_14_05
-			elseif
-				a_namespace.same_string (namespace_1_12_0) or else
-				a_namespace.same_string (namespace_1_11_0)
-			then
-					-- Use the defaults of ES 7.3.
-				default_options := default_options_7_3
-			elseif
-				a_namespace.same_string (namespace_1_10_0) or else
-				a_namespace.same_string (namespace_1_9_0)
-			then
-					-- Use the defaults of ES 7.0.
-				default_options := default_options_7_0
-			elseif
-				a_namespace.same_string (namespace_1_8_0) or else
-				a_namespace.same_string (namespace_1_7_0) or else
-				a_namespace.same_string (namespace_1_6_0) or else
-				a_namespace.same_string (namespace_1_5_0)
-			then
-					-- Use the defaults of ES 6.4.
-				default_options := default_options_6_4
-			elseif
-				a_namespace.same_string (namespace_1_4_0) or else
-				a_namespace.same_string (namespace_1_3_0) or else
-				a_namespace.same_string (namespace_1_2_0) or else
-				a_namespace.same_string (namespace_1_0_0)
-			then
-					-- Use the defaults of ES 6.3 and below.
-				default_options := default_options_6_3
-			else
-					-- Unknown version, do not change anything just in case it is above the current one.
-				-- default_options := Void
-			end
-			if attached default_options then
+			if attached {CONF_TARGET_OPTION}.create_from_namespace (a_namespace) as default_options then
 				new_options := t.options
 				new_options.merge (default_options)
 				t.set_options (new_options)
@@ -3307,96 +3244,6 @@ feature {NONE} -- Implementation state transitions
 			name_attached: name /= Void
 		do
 			set_parse_error_message (conf_interface_names.e_parse_invalid_attribute (name))
-		end
-
-feature {NONE} -- Default options
-
-	default_options_21_05: CONF_TARGET_OPTION
-			-- Default options of 21.05.
-		once
-			create Result.make_21_05
-		ensure
-			result_attached: Result /= Void
-		end
-
-	default_options_19_11: CONF_TARGET_OPTION
-			-- Default options of 19.11.
-		once
-			create Result.make_19_11
-		ensure
-			result_attached: Result /= Void
-		end
-
-	default_options_19_05: CONF_TARGET_OPTION
-			-- Default options of 19.05.
-		once
-			create Result.make_19_05
-		ensure
-			result_attached: Result /= Void
-		end
-
-	default_options_18_01: CONF_TARGET_OPTION
-			-- Default options of 18.01.
-		once
-			create Result.make_18_01
-		ensure
-			result_attached: Result /= Void
-		end
-
-	default_options_16_11: CONF_TARGET_OPTION
-			-- Default options of 16.11.
-		once
-			create Result.make_16_11
-		ensure
-			result_attached: Result /= Void
-		end
-
-	default_options_15_11: CONF_TARGET_OPTION
-			-- Default options of 15.11.
-		once
-			create Result.make_15_11
-		ensure
-			result_attached: Result /= Void
-		end
-
-	default_options_14_05: CONF_TARGET_OPTION
-			-- Default options of 14.05.
-		once
-			create Result.make_14_05
-		ensure
-			result_attached: Result /= Void
-		end
-
-	default_options_7_3: CONF_TARGET_OPTION
-			-- Default options of 7.3.
-		once
-			create Result.make_7_3
-		ensure
-			result_attached: Result /= Void
-		end
-
-	default_options_7_0: CONF_TARGET_OPTION
-			-- Default options of 7.0.
-		once
-			create Result.make_7_0
-		ensure
-			result_attached: Result /= Void
-		end
-
-	default_options_6_4: CONF_TARGET_OPTION
-			-- Default options of 6.4.
-		once
-			create Result.make_6_4
-		ensure
-			result_attached: Result /= Void
-		end
-
-	default_options_6_3: CONF_TARGET_OPTION
-			-- Default options of 6.3.
-		once
-			create Result.make_6_3
-		ensure
-			result_attached: Result /= Void
 		end
 
 feature -- Assertions

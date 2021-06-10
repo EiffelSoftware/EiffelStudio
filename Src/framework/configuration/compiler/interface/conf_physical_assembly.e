@@ -308,7 +308,7 @@ feature -- Access queries
 			-- Options of this assembly.
 		once
 				-- Assemblies have no options.
-			create Result
+			Result := {CONF_OPTION}.create_from_namespace_or_latest (latest_namespace)
 				-- But we have to treat classes as void-safe, as otherwise
 				-- nothing from an assembly can be used in a void-safe project.
 			Result.void_safety.put_index ({CONF_OPTION}.void_safety_index_all)
@@ -461,7 +461,7 @@ invariant
 	assemblies_not_void: assemblies /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2019, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2021, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

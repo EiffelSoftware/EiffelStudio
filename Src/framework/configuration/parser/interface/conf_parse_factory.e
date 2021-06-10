@@ -126,18 +126,18 @@ feature -- Factory
 			Result_not_void: Result /= Void
 		end
 
-	new_option: CONF_OPTION
-			-- Create a `CONF_OPTION' object.
+	new_option (n: like namespace_1_0_0): CONF_OPTION
+			-- Create a `CONF_OPTION' object for the namespace `n`.
 		do
-			create Result
+			Result := {CONF_OPTION}.create_from_namespace_or_latest (n)
 		ensure
 			Result_not_void: Result /= Void
 		end
 
-	new_target_option: CONF_TARGET_OPTION
-			-- Create a `CONF_TARGET_OPTION' object.
+	new_target_option (n: like namespace_1_0_0): CONF_TARGET_OPTION
+			-- Create a `CONF_TARGET_OPTION' object for the namespace `n`.
 		do
-			create Result
+			Result := {CONF_TARGET_OPTION}.create_from_namespace_or_latest (n)
 		ensure
 			Result_not_void: Result /= Void
 		end
@@ -344,7 +344,8 @@ feature -- Factory
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2019, Eiffel Software"
+	ca_ignore: "CA011", "CA011: too many arguments"
+	copyright:	"Copyright (c) 1984-2021, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

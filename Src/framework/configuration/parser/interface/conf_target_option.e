@@ -12,7 +12,6 @@ inherit
 	CONF_OPTION
 		redefine
 			copy,
-			default_create,
 			is_empty,
 			make_6_3,
 			make_16_11,
@@ -20,27 +19,10 @@ inherit
 			merge
 		end
 
-create
-	default_create,
-	make_6_3,
-	make_6_4,
-	make_7_0,
-	make_7_3,
-	make_14_05,
-	make_15_11,
-	make_16_11,
-	make_18_01,
-	make_19_05,
-	make_19_11,
-	make_21_05
+create {CONF_TARGET_OPTION}
+	make_from_namespace
 
 feature {NONE} -- Creation
-
-	default_create
-			-- <Precursor>
-		do
-			make_21_05
-		end
 
 	make_6_3
 			-- <Precursor>

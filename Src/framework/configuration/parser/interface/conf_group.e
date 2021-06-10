@@ -304,17 +304,10 @@ feature -- Access queries
 		do
 			if attached classes as l_classes then
 				Result := l_classes.twin
-				if attached accessible_groups as l_groups then
-					from
-						l_groups.start
-					until
-						l_groups.after
-					loop
-						l_grp := l_groups.item_for_iteration
-						if attached l_grp.classes as l_grp_classes then
-							Result.merge (l_grp_classes)
-						end
-						l_groups.forth
+				across accessible_groups as g loop
+					l_grp := g.item
+					if attached l_grp.classes as l_grp_classes then
+						Result.merge (l_grp_classes)
 					end
 				end
 			else
@@ -329,22 +322,10 @@ feature -- Access queries
 			-- Class mappings that are accessible within `Current'.
 		require
 			classes_set: classes_set
-		local
-			l_groups: like accessible_groups
-			l_grp: CONF_GROUP
 		do
 			Result :=  mapping.twin
-			l_groups := accessible_groups
-			if l_groups /= Void then
-				from
-					l_groups.start
-				until
-					l_groups.after
-				loop
-					l_grp := l_groups.item_for_iteration
-					Result.merge (l_grp.mapping)
-					l_groups.forth
-				end
+			if attached accessible_groups as l_groups then
+				⟳ g: l_groups ¦ Result.merge (g.mapping) ⟲
 			end
 		ensure
 			Result_not_void: Result /= Void
@@ -356,6 +337,12 @@ feature -- Access queries
 			a_name_ok: a_name /= Void and then not a_name.is_empty
 			a_name_lower: a_name.same_string (a_name.as_lower)
 		deferred
+		end
+
+	namespace: like namespace_1_0_0
+			-- The XML namespace associated with the group.
+		do
+			Result := target.namespace
 		end
 
 feature -- Comparison
@@ -564,15 +551,13 @@ feature {CONF_ACCESS} -- Update, in compiled only, not stored to configuration f
 					overriders := l_overriders
 				end
 				l_overriders.extend (an_overrider)
-				if attached an_overrider.classes as l_classes then
-					from
-						l_classes.start
-					until
-						l_classes.after
+				if attached an_overrider.classes as cs then
+					across
+						cs as c
 					loop
-						l_overrider := l_classes.item_for_iteration
+						l_overrider := c.item
 						l_ovs := class_by_name (l_overrider.name, False)
-						if l_ovs /= Void and then l_ovs.count > 0 then
+						if not l_ovs.is_empty then
 							l_overridee := l_ovs.first
 							if l_overridee.is_overriden then
 								set_error (
@@ -602,7 +587,6 @@ feature {CONF_ACCESS} -- Update, in compiled only, not stored to configuration f
 								a_modified_classes.remove (l_overrider)
 							end
 						end
-						l_classes.forth
 					end
 				end
 			end
@@ -657,15 +641,12 @@ feature {CONF_VISITOR, CONF_ACCESS} -- Implementation, attributes stored in conf
 
 	changeable_internal_options: attached like internal_options
 			-- A possibility to change settings without knowing if we have some options already set.
-		local
-			l_internal_options: like internal_options
 		do
-			l_internal_options := internal_options
-			if l_internal_options = Void then
-				create l_internal_options
-				internal_options := l_internal_options
+			Result := internal_options
+			if not attached Result then
+				Result := {like internal_options}.create_from_namespace_or_latest (namespace)
+				internal_options := Result
 			end
-			Result := l_internal_options
 		ensure
 			Result_not_void: Result /= Void
 		end
@@ -675,17 +656,14 @@ feature {CONF_VISITOR, CONF_ACCESS} -- Implementation, attributes stored in conf
 		require
 			a_class_not_void: a_class /= Void
 			valid_group_for_class: attached classes as l_classes implies l_classes.has (a_class.name)
-		local
-			res: detachable like changeable_class_options
 		do
 			if attached internal_class_options as l_internal_options then
-				res := l_internal_options.item (a_class.name)
+				Result := l_internal_options.item (a_class.name)
 			end
-			if res = Void then
-				create res
-				add_class_options (res, a_class.name)
+			if not attached Result then
+				Result := {like internal_options}.create_from_namespace_or_latest (namespace)
+				add_class_options (Result, a_class.name)
 			end
-			Result := res
 		end
 
 feature {CONF_VISITOR} -- Modification
@@ -752,7 +730,7 @@ invariant
 	is_error_same_as_last_error: is_error = (last_error /= Void)
 
 note
-	copyright: "Copyright (c) 1984-2019, Eiffel Software"
+	copyright: "Copyright (c) 1984-2021, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

@@ -12,42 +12,117 @@ inherit
 	CONF_VALIDITY
 		redefine
 			copy,
-			default_create,
 			is_equal
 		end
 
 	CONF_ACCESS
 		redefine
 			copy,
-			default_create,
 			is_equal
 		end
 
 	CONF_FILE_CONSTANTS
 		redefine
 			copy,
-			default_create,
 			is_equal
 		end
 
-create
-	default_create,
-	make_6_3,
-	make_6_4,
-	make_7_0,
-	make_7_3,
-	make_14_05,
-	make_15_11,
-	make_18_01,
-	make_19_11,
-	make_21_05
+create {CONF_OPTION}
+	make_from_namespace
+
+feature -- Creation
+
+	create_from_namespace (n: attached like namespace): detachable like Current
+			-- Create options with the defaults associated with namespace `n` if it is known.
+			-- Return `Void` if the namespace is unknown.
+			-- See also: `create_from_namespace_or_latest`.
+		do
+			if is_namespace_known (n) then
+				create Result.make_from_namespace (n)
+			end
+		ensure
+			class
+			is_namespace_known (n) ⇒ attached Result
+		end
+
+	create_from_namespace_or_latest (n: attached like namespace): like Current
+			-- Create options with the defaults associated with namespace `n` if it is known.
+			-- Create options with the defaults associated with `latest_namespace` otherwise.
+			-- See also: `create_from_namespace`.
+		do
+			create Result.make_from_namespace (if is_namespace_known (n) then n else latest_namespace end)
+		ensure
+			class
+		end
 
 feature {NONE} -- Creation
 
-	default_create
-			-- Initialize options to the defaults of the current version.
+	make_from_namespace (n: attached like namespace)
+			-- Initialize options to the defaults associated with namespace `n`.
+		require
+			is_namespace_known (n)
 		do
-			make_21_05
+			if n.same_string (namespace_1_22_0) then
+					-- Use the defaults of ES 21.05.
+				make_21_05
+			elseif n.same_string (namespace_1_21_0) then
+					-- Use the defaults of ES 19.11.
+				make_19_11
+			elseif n.same_string (namespace_1_20_0) then
+					-- Use the defaults of ES 19.05.
+				make_19_05
+			elseif
+				n.same_string (namespace_1_19_0) or else
+				n.same_string (namespace_1_18_0)
+			then
+					-- Use the defaults of ES 18.01.
+				make_18_01
+			elseif
+				n.same_string (namespace_1_17_0) or else
+				n.same_string (namespace_1_16_0)
+			then
+					-- Use the defaults of ES 16.11.
+				make_16_11
+			elseif n.same_string (namespace_1_15_0) then
+					-- Use the defaults of ES 15.11.
+				make_15_11
+			elseif
+				n.same_string (namespace_1_14_0) or else
+				n.same_string (namespace_1_13_0)
+			then
+					-- Use the defaults of ES 14.05.
+				make_14_05
+			elseif
+				n.same_string (namespace_1_12_0) or else
+				n.same_string (namespace_1_11_0)
+			then
+					-- Use the defaults of ES 7.3.
+				make_7_3
+			elseif
+				n.same_string (namespace_1_10_0) or else
+				n.same_string (namespace_1_9_0)
+			then
+					-- Use the defaults of ES 7.0.
+				make_7_0
+			elseif
+				n.same_string (namespace_1_8_0) or else
+				n.same_string (namespace_1_7_0) or else
+				n.same_string (namespace_1_6_0) or else
+				n.same_string (namespace_1_5_0)
+			then
+					-- Use the defaults of ES 6.4.
+				make_6_4
+			elseif
+				n.same_string (namespace_1_4_0) or else
+				n.same_string (namespace_1_3_0) or else
+				n.same_string (namespace_1_2_0) or else
+				n.same_string (namespace_1_0_0)
+			then
+					-- Use the defaults of ES 6.3 and below.
+				make_6_3
+			else
+				check from_precondition: False then end
+			end
 		end
 
 	make_6_3
@@ -876,50 +951,48 @@ feature -- Merging
 			l_warnings: like warnings
 			l_debugs: like debugs
 		do
-			if other /= Void then
-				if assertions = Void then
-					assertions := other.assertions
-				end
-				l_debugs := debugs
-				if l_debugs = Void then
-					l_debugs := other.debugs
-					debugs := l_debugs
-				elseif attached other.debugs as l_other_debugs then
-					l_tmp := l_other_debugs.twin
-					l_tmp.merge (l_debugs)
-					debugs := l_tmp
-				end
-				l_warnings := warnings
-				if l_warnings = Void then
-					l_warnings := other.warnings
-					warnings := l_warnings
-				elseif attached other.warnings as l_other_warnings then
-					l_warnings := l_other_warnings.twin
-					l_warnings.merge (l_warnings)
-					warnings := l_warnings
-				end
-				if not is_profile_configured then
-					is_profile_configured := other.is_profile_configured or else is_profile /~ other.is_profile
-					is_profile := other.is_profile
-				end
-				if not is_trace_configured then
-					is_trace_configured := other.is_trace_configured or else is_trace /~ other.is_trace
-					is_trace := other.is_trace
-				end
-				if not is_optimize_configured then
-					is_optimize_configured := other.is_optimize_configured or else is_optimize /~ other.is_optimize
-					is_optimize := other.is_optimize
-				end
-				if not is_debug_configured then
-					is_debug_configured := other.is_debug_configured or else is_debug /~ other.is_debug
-					is_debug := other.is_debug
-				end
-				warning.set_safely (other.warning)
-				warning_obsolete_call.set_safely (other.warning_obsolete_call)
-				if not is_msil_application_optimize_configured then
-					is_msil_application_optimize_configured := other.is_msil_application_optimize_configured or else is_msil_application_optimize /~ other.is_msil_application_optimize
-					is_msil_application_optimize := other.is_msil_application_optimize
-				end
+			if assertions = Void then
+				assertions := other.assertions
+			end
+			l_debugs := debugs
+			if l_debugs = Void then
+				l_debugs := other.debugs
+				debugs := l_debugs
+			elseif attached other.debugs as l_other_debugs then
+				l_tmp := l_other_debugs.twin
+				l_tmp.merge (l_debugs)
+				debugs := l_tmp
+			end
+			l_warnings := warnings
+			if l_warnings = Void then
+				l_warnings := other.warnings
+				warnings := l_warnings
+			elseif attached other.warnings as l_other_warnings then
+				l_warnings := l_other_warnings.twin
+				l_warnings.merge (l_warnings)
+				warnings := l_warnings
+			end
+			if not is_profile_configured then
+				is_profile_configured := other.is_profile_configured or else is_profile /~ other.is_profile
+				is_profile := other.is_profile
+			end
+			if not is_trace_configured then
+				is_trace_configured := other.is_trace_configured or else is_trace /~ other.is_trace
+				is_trace := other.is_trace
+			end
+			if not is_optimize_configured then
+				is_optimize_configured := other.is_optimize_configured or else is_optimize /~ other.is_optimize
+				is_optimize := other.is_optimize
+			end
+			if not is_debug_configured then
+				is_debug_configured := other.is_debug_configured or else is_debug /~ other.is_debug
+				is_debug := other.is_debug
+			end
+			warning.set_safely (other.warning)
+			warning_obsolete_call.set_safely (other.warning_obsolete_call)
+			if not is_msil_application_optimize_configured then
+				is_msil_application_optimize_configured := other.is_msil_application_optimize_configured or else is_msil_application_optimize /~ other.is_msil_application_optimize
+				is_msil_application_optimize := other.is_msil_application_optimize
 			end
 		end
 
@@ -927,49 +1000,47 @@ feature -- Merging
 			-- Merge with other, if the values aren't defined in `Current' take the values of `other'.
 			-- Apply this to all options.
 		do
-			if attached other then
-				merge_client (other)
-					-- Computation of `namespace' by using values in `other'.
-				namespace :=
-					if
-						attached if attached other.namespace as n then n else other.local_namespace end as o
-					then
-						if attached local_namespace as l then o + "." + l else o.twin end
-					elseif attached local_namespace as l then
-						l.twin
-					else
-						Void
-					end
-				if not is_full_class_checking_configured then
-					is_full_class_checking_configured := other.is_full_class_checking_configured or else is_full_class_checking /~ other.is_full_class_checking
-					is_full_class_checking := other.is_full_class_checking
+			merge_client (other)
+				-- Computation of `namespace' by using values in `other'.
+			namespace :=
+				if
+					attached if attached other.namespace as n then n else other.local_namespace end as o
+				then
+					if attached local_namespace as l then o + "." + l else o.twin end
+				elseif attached local_namespace as l then
+					l.twin
+				else
+					Void
 				end
-				catcall_detection.set_safely (other.catcall_detection)
-				if not is_obsolete_iteration_configured then
-					is_obsolete_iteration_configured := other.is_obsolete_iteration_configured or else is_obsolete_iteration /~ other.is_obsolete_iteration
-					is_obsolete_iteration := other.is_obsolete_iteration
-				end
-				if not is_obsolete_routine_type_configured then
-					is_obsolete_routine_type_configured := other.is_obsolete_routine_type_configured or else is_obsolete_routine_type /~ other.is_obsolete_routine_type
-					is_obsolete_routine_type := other.is_obsolete_routine_type
-				end
-				syntax.set_safely (other.syntax)
-				array.set_safely (other.array)
-				warning.set_safely (other.warning)
-				void_safety.set_safely (other.void_safety)
-					-- The merge for `is_attached_by_default' should happen after merging `void_safety'
-					-- because the latter is used to default to `True' if the resulting project is not Void-safe.
-				if not is_attached_by_default_configured then
-					if not other.is_attached_by_default_configured and then void_safety.index = void_safety_index_none then
-							-- Default attached-by-default to True, so that if a user decides to switch the option,
-							-- he get's attached-by-default automatically.
-						is_attached_by_default_configured := not other.is_attached_by_default
-						is_attached_by_default := True
-					else
-							-- Use general merging scheme.
-						is_attached_by_default_configured := other.is_attached_by_default_configured or else is_attached_by_default /~ other.is_attached_by_default
-						is_attached_by_default := other.is_attached_by_default
-					end
+			if not is_full_class_checking_configured then
+				is_full_class_checking_configured := other.is_full_class_checking_configured or else is_full_class_checking /~ other.is_full_class_checking
+				is_full_class_checking := other.is_full_class_checking
+			end
+			catcall_detection.set_safely (other.catcall_detection)
+			if not is_obsolete_iteration_configured then
+				is_obsolete_iteration_configured := other.is_obsolete_iteration_configured or else is_obsolete_iteration /~ other.is_obsolete_iteration
+				is_obsolete_iteration := other.is_obsolete_iteration
+			end
+			if not is_obsolete_routine_type_configured then
+				is_obsolete_routine_type_configured := other.is_obsolete_routine_type_configured or else is_obsolete_routine_type /~ other.is_obsolete_routine_type
+				is_obsolete_routine_type := other.is_obsolete_routine_type
+			end
+			syntax.set_safely (other.syntax)
+			array.set_safely (other.array)
+			warning.set_safely (other.warning)
+			void_safety.set_safely (other.void_safety)
+				-- The merge for `is_attached_by_default' should happen after merging `void_safety'
+				-- because the latter is used to default to `True' if the resulting project is not Void-safe.
+			if not is_attached_by_default_configured then
+				if not other.is_attached_by_default_configured and then void_safety.index = void_safety_index_none then
+						-- Default attached-by-default to True, so that if a user decides to switch the option,
+						-- he get's attached-by-default automatically.
+					is_attached_by_default_configured := not other.is_attached_by_default
+					is_attached_by_default := True
+				else
+						-- Use general merging scheme.
+					is_attached_by_default_configured := other.is_attached_by_default_configured or else is_attached_by_default /~ other.is_attached_by_default
+					is_attached_by_default := other.is_attached_by_default
 				end
 			end
 		end

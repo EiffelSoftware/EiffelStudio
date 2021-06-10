@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "Utility class to retrieve useful information for code template at feature level"
 	author: "javierv"
 	date: "$Date$"
@@ -246,7 +246,7 @@ feature {NONE} -- Template Implementation.
 			epw: EIFFEL_PARSER_WRAPPER
 		do
 			create epw
-			epw.parse_with_option_32 (entity_feature_parser, {STRING_32} "feature " + a_code, create {CONF_OPTION}, True, Void)
+			epw.parse_with_option_32 (entity_feature_parser, {STRING_32} "feature " + a_code, {CONF_OPTION}.create_from_namespace_or_latest ({CONF_FILE_CONSTANTS}.latest_namespace), True, Void)
 			if attached {FEATURE_AS} epw.ast_node as l_feature_node then
 				Result := l_feature_node
 			end
@@ -276,7 +276,7 @@ feature {NONE} -- Template Implementation.
 		end
 
 note
-	copyright: "Copyright (c) 1984-2016, Eiffel Software"
+	copyright: "Copyright (c) 1984-2021, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

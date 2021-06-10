@@ -27,6 +27,7 @@ inherit
 			make as make_settings,
 			setting_boolean as versioned_setting_boolean
 		redefine
+			namespace,
 			options,
 			settings
 		end
@@ -105,6 +106,12 @@ feature -- Access, stored in configuration file
 
 	is_abstract: BOOLEAN
 			-- Is this an abstract target? (i.e. cannot be used to compile the system).
+
+	namespace: like namespace_1_0_0
+			-- The XML namespace associated with the target.
+		do
+			Result := system.namespace
+		end
 
 feature -- Access: settings
 

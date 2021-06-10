@@ -165,7 +165,10 @@ feature {EV_WINDOW_IMP, EV_INTERMEDIARY_ROUTINES, EV_ANY_I, EV_APPLICATION_IMP} 
 				l_y := a_y - l_x_y_offset
 				previous_width := a_width.to_integer_16
 				previous_height := a_height.to_integer_16
-				if attached resize_actions_internal as l_resize_actions then
+				if
+					attached resize_actions_internal as l_resize_actions and then
+					not l_resize_actions.is_empty
+				then
 					l_resize_actions.call (app_implementation.gtk_marshal.dimension_tuple (l_x, l_y, a_width, a_height))
 				end
 			end

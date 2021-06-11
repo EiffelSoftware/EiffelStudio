@@ -124,8 +124,8 @@ feature -- Basic operation
 					l_desc.replace_substring_all ({STRING_32} ">", {STRING_32} "&gt;")
 					current_target.set_description (l_desc)
 				end
-				if current_options = Void then
-					create current_options
+				if not attached current_options then
+					current_options := {CONF_TARGET_OPTION}.create_from_namespace_or_latest (latest_namespace)
 				end
 				current_options.warning.put_index ({CONF_OPTION}.warning_index_warning)
 					-- disable some warnings by default
@@ -247,9 +247,9 @@ feature {NONE} -- Implementation of data retrieval
 
 				if l_lib /= Void then
 						-- remove the same library if it has already been added because of a precompile
-					l_lib_pre := current_target.libraries.item ("pre_"+l_lib.name)
+					l_lib_pre := current_target.libraries.item ({STRING_32} "pre_" + l_lib.name)
 					if l_lib_pre /= Void and then l_lib_pre.location.is_equal (l_lib.location) then
-						current_target.remove_library ("pre_"+l_lib.name)
+						current_target.remove_library ({STRING_32} "pre_" + l_lib.name)
 					end
 
 					current_target.add_library (l_lib)
@@ -537,8 +537,8 @@ feature {NONE} -- Implementation of data retrieval
 					if l_name.is_case_insensitive_equal ("description") then
 						current_target.set_description (l_value.value.as_string_32)
 					elseif attached {DEBUG_SD} l_option as l_debug then
-						if current_options = Void then
-							create current_options
+						if not attached current_options then
+							current_options := {CONF_TARGET_OPTION}.create_from_namespace_or_latest (latest_namespace)
 						end
 							-- because the old config had debugs enabled by default we enable them
 						if not current_options.is_debug_configured then
@@ -559,8 +559,8 @@ feature {NONE} -- Implementation of data retrieval
 							end
 						end
 					elseif l_option.is_trace then
-						if current_options = Void then
-							create current_options
+						if not attached current_options then
+							current_options := {CONF_TARGET_OPTION}.create_from_namespace_or_latest (latest_namespace)
 						end
 						if l_value = Void then
 							set_error (create {CONF_ERROR_PARSE}.make ("Empty trace value."))
@@ -568,8 +568,8 @@ feature {NONE} -- Implementation of data retrieval
 							current_options.set_trace (l_value.is_yes)
 						end
 					elseif l_option.is_optimize then
-						if current_options = Void then
-							create current_options
+						if not attached current_options then
+							current_options := {CONF_TARGET_OPTION}.create_from_namespace_or_latest (latest_namespace)
 						end
 						if l_value = Void then
 							set_error (create {CONF_ERROR_PARSE}.make ("Empty optimize value."))
@@ -577,8 +577,8 @@ feature {NONE} -- Implementation of data retrieval
 							current_options.set_optimize (l_value.is_yes)
 						end
 					elseif l_option.is_assertion then
-						if current_options = Void then
-							create current_options
+						if not attached current_options then
+							current_options := {CONF_TARGET_OPTION}.create_from_namespace_or_latest (latest_namespace)
 						end
 						l_assertions := current_options.assertions
 						if l_assertions = Void then
@@ -671,8 +671,8 @@ feature {NONE} -- Implementation of data retrieval
 							end
 							l_conf_vers.set_copyright (l_value.value.as_string_32)
 						elseif l_name.is_equal ("namespace") then
-							if current_options = Void then
-								create current_options
+							if not attached current_options then
+								current_options := {CONF_TARGET_OPTION}.create_from_namespace_or_latest (latest_namespace)
 							end
 							current_options.set_local_namespace (l_value.value.as_string_32)
 						elseif l_name.is_equal ("override_cluster") then
@@ -683,8 +683,8 @@ feature {NONE} -- Implementation of data retrieval
 							end
 							l_conf_vers.set_product (l_value.value.as_string_32)
 						elseif l_name.is_equal ("profile") then
-							if current_options = Void then
-								create current_options
+							if not attached current_options then
+								current_options := {CONF_TARGET_OPTION}.create_from_namespace_or_latest (latest_namespace)
 							end
 							current_options.set_profile (l_value.is_yes)
 						elseif l_name.is_equal ("trademark") then
@@ -727,8 +727,8 @@ feature {NONE} -- Implementation of data retrieval
 								end
 							end
 						elseif l_name.is_equal ("syntax_warning") and l_value /= Void then
-							if current_options = Void then
-								create current_options
+							if not attached current_options then
+								current_options := {CONF_TARGET_OPTION}.create_from_namespace_or_latest (latest_namespace)
 							end
 							current_options.add_warning (w_syntax, l_value.is_yes)
 						elseif l_name.is_equal ("old_verbatim_strings_warning") and l_value /= Void then
@@ -926,7 +926,7 @@ invariant
 	extension_name_not_empty: not extension_name.is_empty
 
 note
-	copyright:	"Copyright (c) 1984-2019, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2021, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

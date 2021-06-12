@@ -1,12 +1,12 @@
 class
 	TEST
 
-creation
+create
 	make
 
 feature 
 
-	make is
+	make
 		do
 		end
 

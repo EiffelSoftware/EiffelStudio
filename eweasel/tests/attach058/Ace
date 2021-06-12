@@ -1,15 +1,18 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
-<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-5-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-5-0 http://www.eiffel.com/developers/xml/configuration-1-5-0.xsd" name="test" uuid="9701b21d-1100-498b-92b6-668accd2e473">
+<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-21-0" name="test">
 	<target name="test">
 		<root class="TEST" feature="make"/>
-		<option warning="true" void_safety="$VOID_SAFETY_MAX" is_attached_by_default="true">
-			<warning name="vjrv" enabled="false"/>
+		<option>
 			<warning name="syntax" enabled="false"/>
+			<warning name="vjrv" enabled="false"/>
 			<warning name="vweq" enabled="false"/>
 		</option>
 		<setting name="console_application" value="true"/>
 		<setting name="total_order_on_reals" value="true"/>
 		$EWEASEL_DOTNET_SETTING
+		<capability>
+			<void_safety support="$VOID_SAFETY_MAX"/>
+		</capability>
 		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf" use_application_options="true"/>
 		<cluster name="root_cluster" location="$CLUSTER\">
 			<class_option class="A" void_safety="$VOID_SAFETY_A"/>

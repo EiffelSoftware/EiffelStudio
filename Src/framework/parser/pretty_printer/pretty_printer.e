@@ -124,6 +124,7 @@ inherit
 			process_agent_routine_creation_as,
 			process_inline_agent_creation_as,
 			process_delayed_actual_list_as,
+			process_predecessor_as,
 			process_tuple_as,
 			process_unary_as,
 			process_un_free_as,
@@ -1712,6 +1713,13 @@ feature {AST_VISITOR} -- Expressions
 			safe_process (l_as.lparan_symbol (match_list))
 			print_list_inline (l_as.operands)
 			safe_process (l_as.rparan_symbol (match_list))
+		end
+
+	process_predecessor_as (a: PREDECESSOR_AS)
+			-- <Precursor>
+		do
+			safe_process (a.predecessor_symbol (match_list))
+			print_inline_indented (a.name)
 		end
 
 	process_tuple_as (l_as: TUPLE_AS)

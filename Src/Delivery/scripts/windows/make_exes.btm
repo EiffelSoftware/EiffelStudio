@@ -8,9 +8,6 @@ endiff
 iff not exist %INSTALL_DIR%\releases\enterprise_version then
 	md %INSTALL_DIR%\releases\enterprise_version
 endiff
-iff not exist %INSTALL_DIR%\releases\axar_enterprise_version then
-	md %INSTALL_DIR%\releases\axar_enterprise_version
-endiff
 iff not exist %INSTALL_DIR%\releases\branded_version then
 	md %INSTALL_DIR%\releases\branded_version
 endiff
@@ -217,70 +214,6 @@ else
 
 			exprtfile -r %PUBLIC_SVN_REVISION %DEFAULT_PUBLIC_SVN/Src/Delivery/scripts/licensing/eiffelstudio/license.txt > %INSTALL_DIR%\releases\%T_EDITION%_version\LICENSE
 			set T_EDITION=
-		endiff
-		iff not defined NO_AXAR_ENTERPRISE_BUILD then
-			remtrace AXAR-Enterprise edition for EiffelStudio
-			cdd %EIFFEL_SRC%\Eiffel\API\constants
-			safe_copy system_constants.e system_constants.e-BAK
-			sed -e "s/Version_type_name:\ STRING\ =\ \".*\"/Version_type_name:\ STRING\ =\ \"AXAR-Enterprise\ Edition\"/g" system_constants.e >> new_system_constants.e
-			move new_system_constants.e system_constants.e
-			cdd %FINALIZATION_DIR
-
-			safe_md %EIFFEL_SRC%\Eiffel\interface\new_graphical\overrides\axar
-			safe_copy %EIFFEL_SRC%\tools\estudio_enterprise\axar\*.e %EIFFEL_SRC%\Eiffel\interface\new_graphical\overrides\axar\.
-			remtrace Backup original es_ide_settings.e
-			move %EIFFEL_SRC%\tools\estudio_enterprise\es_ide_settings.e %EIFFEL_SRC%\tools\estudio_enterprise\es_ide_settings.e-BAK
-
-			set T_EDITION=axar_enterprise
-			set T_ECB_INSTALL_FILE=%INSTALL_DIR%\releases\%T_EDITION%_version\ecb.exe
-			iff defined NO_REUSE then
-				fullrf %T_ECB_INSTALL_FILE%
-			endiff
-			iff exist %T_ECB_INSTALL_FILE% then
-				remtrace Reuse %T_ECB_INSTALL_FILE%
-			else
-				clean_project
-				finalize ec.ecf batch
-				cleanup_eiffel batch ecb.exe
-				iff exist ecb.exe then
-					remtrace Copy AXAR ecb.exe to release
-					move ecb.exe %T_ECB_INSTALL_FILE%
-				else
-					remerror Could not finalize a new "%T_EDITION%" batch version of the compiler
-					CANCEL_ON_ERROR
-				endiff
-			endiff
-			set T_ECB_INSTALL_FILE=
-
-			set T_EC_INSTALL_FILE=%INSTALL_DIR%\releases\%T_EDITION%_version\ec.exe
-			iff defined NO_REUSE then
-				fullrf %T_EC_INSTALL_FILE%
-			endiff
-			iff exist %T_EC_INSTALL_FILE% then
-				remtrace Reuse %T_EC_INSTALL_FILE%
-			else
-				clean_project
-				finalize ec.ecf bench
-				cleanup_eiffel bench ec.exe
-				iff exist ec.exe then
-					remtrace Copy AXAR ec.exe to release
-					move ec.exe %T_EC_INSTALL_FILE%
-				else
-					remerror Could not finalize a new "%T_EDITION%" EiffelStudio
-					CANCEL_ON_ERROR
-				endiff
-			endiff
-			set T_EC_INSTALL_FILE=
-
-			exprtfile -r %PUBLIC_SVN_REVISION %DEFAULT_PUBLIC_SVN/Src/Delivery/scripts/licensing/eiffelstudio/license.txt > %INSTALL_DIR%\releases\%T_EDITION%_version\LICENSE
-			set T_EDITION=
-
-			remtrace Clean AXAR additional file.
-			fullrd %EIFFEL_SRC%\Eiffel\interface\new_graphical\overrides\axar
-			remtrace Restore original es_ide_settings.e
-			move %EIFFEL_SRC%\tools\estudio_enterprise\es_ide_settings.e-BAK %EIFFEL_SRC%\tools\estudio_enterprise\es_ide_settings.e
-			cdd %EIFFEL_SRC%\Eiffel\API\constants
-			move system_constants.e-BAK system_constants.e
 		endiff
 		iff not defined NO_ENTERPRISE_BUILD then
 			remtrace Branded edition for EiffelStudio

@@ -45,7 +45,7 @@ feature -- Access
 	non_focused_selection_color: EV_COLOR
 			-- Non focused selection color for title bar.
 		do
-			Result := stock_colors_imp.color_from_state (tree_view, {EV_STOCK_COLORS_IMP}.base_style, {GTK}.gtk_state_flag_active_enum)
+			Result := normal_color
 		end
 
 	non_focused_title_text_color: EV_COLOR

@@ -470,9 +470,7 @@ feature -- Matrix
 		external
 			"C inline use <ev_gtk.h>"
 		alias
-			"[
-				pango_matrix_free ((PangoMatrix*) $a_pango_matrix);
-			]"
+			"pango_matrix_free ((PangoMatrix*) $a_pango_matrix);"
 		ensure
 			is_class: class
 		end
@@ -481,9 +479,7 @@ feature -- Matrix
 		external
 			"C inline use <ev_gtk.h>"
 		alias
-			"[
-				pango_matrix_rotate ((PangoMatrix*) $a_matrix, (double) $a_degrees);
-			]"
+			"pango_matrix_rotate ((PangoMatrix*) $a_matrix, (double) $a_degrees);"
 		ensure
 			is_class: class
 		end
@@ -492,9 +488,7 @@ feature -- Matrix
 		external
 			"C inline use <ev_gtk.h>"
 		alias
-			"[
-				pango_matrix_translate ((PangoMatrix*) $a_matrix, (double) $a_x, (double) $a_y);
-			]"
+			"pango_matrix_translate ((PangoMatrix*) $a_matrix, (double) $a_x, (double) $a_y);"
 		ensure
 			is_class: class
 		end
@@ -503,9 +497,7 @@ feature -- Matrix
 		external
 			"C inline use <ev_gtk.h>"
 		alias
-			"[
-				pango_context_set_matrix ((PangoContext*) $a_context, (PangoMatrix*) $a_matrix);
-			]"
+			"pango_context_set_matrix ((PangoContext*) $a_context, (PangoMatrix*) $a_matrix);"
 		ensure
 			is_class: class
 		end
@@ -514,9 +506,7 @@ feature -- Matrix
 		external
 			"C inline use <ev_gtk.h>"
 		alias
-			"[
-				pango_context_set_font_description ((PangoContext*) $a_context, (const PangoFontDescription*) $a_font_description);
-			]"
+			"pango_context_set_font_description ((PangoContext*) $a_context, (const PangoFontDescription*) $a_font_description);"
 		ensure
 			is_class: class
 		end
@@ -525,13 +515,10 @@ feature -- Matrix
 		external
 			"C inline use <ev_gtk.h>"
 		alias
-			"[
-				((PangoMatrix*)$a_c_struct)->xx = (gdouble) $a_x;
-			]"
+			"((PangoMatrix*)$a_c_struct)->xx = (gdouble) $a_x;"
 		ensure
 			is_class: class
 		end
-
 
 feature -- Pango Attribute
 
@@ -567,7 +554,7 @@ feature -- Pango Attribute
 		external
 			"C inline use <ev_gtk.h>"
 		alias
-			"pango_attr_list_insert ((PangoAttrList *)$list, (PangoAttribute *)$attr);	"
+			"pango_attr_list_insert ((PangoAttrList *)$list, (PangoAttribute *)$attr);"
 		end
 
 	pango_attr_list_unref (list: POINTER)

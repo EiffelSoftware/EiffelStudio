@@ -55,7 +55,6 @@ feature -- GtkWidget Externals
 			"return gtk_widget_get_halign ((GtkWidget *)$a_widget)"
 		end
 
-
 	frozen gtk_widget_set_halign (a_widget: POINTER; align: INTEGER)
 			-- Sets the horizontal alignment of widget . See the `halign` property.
 		note
@@ -91,7 +90,6 @@ feature -- GtkWidget Externals
 			"return gtk_widget_get_valign_with_baseline ((GtkWidget *)$a_widget)"
 		end
 
-
 	frozen gtk_widget_set_valign (a_widget: POINTER; align: INTEGER)
 			-- Sets the vertical alignment of widget . See the `valign` property.		
 		note
@@ -101,7 +99,6 @@ feature -- GtkWidget Externals
 		alias
 			"return gtk_widget_set_valign ((GtkWidget *)$a_widget, (GtkAlign)$align) "
 		end
-
 
 	frozen gtk_widget_get_margin_start (a_widget: POINTER): INTEGER
 			-- Gets the value of the `margin-start` property.
@@ -114,7 +111,6 @@ feature -- GtkWidget Externals
 			"return gtk_widget_get_margin_start ((GtkWidget *)$a_widget)"
 		end
 
-
 	frozen gtk_widget_set_margin_start (a_widget: POINTER; margin: INTEGER)
 			-- Sets the start margin of widget . See the `margin-start` property.
 		note
@@ -124,7 +120,6 @@ feature -- GtkWidget Externals
 		alias
 			"gtk_widget_set_margin_start ((GtkWidget *)$a_widget, (gint)$margin)"
 		end
-
 
 	frozen gtk_widget_get_margin_end (a_widget: POINTER): INTEGER
 			-- Gets the value of the `margin-end` property.
@@ -137,7 +132,6 @@ feature -- GtkWidget Externals
 			"return gtk_widget_get_margin_end ((GtkWidget *)$a_widget)"
 		end
 
-
 	frozen gtk_widget_set_margin_end (a_widget: POINTER; margin: INTEGER)
 			-- Sets the end margin of widget . See the `margin-end` property.
 		note
@@ -147,7 +141,6 @@ feature -- GtkWidget Externals
 		alias
 			"gtk_widget_set_margin_end ((GtkWidget *)$a_widget, (gint)$margin)"
 		end
-
 
 	frozen gtk_widget_get_margin_top (a_widget: POINTER): INTEGER
 			-- Gets the value of the `margin-top` property.
@@ -160,7 +153,6 @@ feature -- GtkWidget Externals
 			"return gtk_widget_get_margin_top ((GtkWidget *)$a_widget)"
 		end
 
-
 	frozen gtk_widget_set_margin_top (a_widget: POINTER; margin: INTEGER)
 			-- Sets the top margin of widget . See the `margin-top` property.
 		note
@@ -170,7 +162,6 @@ feature -- GtkWidget Externals
 		alias
 			"gtk_widget_set_margin_top ((GtkWidget *)$a_widget, (gint)$margin)"
 		end
-
 
 	frozen gtk_widget_get_margin_bottom (a_widget: POINTER): INTEGER
 			-- Gets the value of the `margin-bottom` property.
@@ -203,7 +194,6 @@ feature -- Box
 		alias
 			"gtk_box_new ((GtkOrientation)$orientation, (gint)$spacing)"
 		end
-
 
 feature -- GtkPaned
 
@@ -283,7 +273,6 @@ feature -- GtkGrid Externals
 			"gtk_grid_set_row_spacing ((GtkGrid *)$a_grid, (guint)$spacing)"
 		end
 
-
 	frozen gtk_grid_set_column_spacing (a_grid: POINTER; spacing: INTEGER)
 		note
 			eis:"name=gtk_grid_set_column_spacing", "src=https://developer.gnome.org/gtk3/stable/GtkGrid.html#gtk-grid-set-column-spacing"
@@ -321,13 +310,13 @@ feature -- GtkMenu externals
 
 feature -- GTK Layout
 
-
 	frozen gtk_is_layout (w: POINTER): BOOLEAN
 		external
 			"C [macro <ev_gtk.h>]"
 		alias
 			"GTK_IS_LAYOUT"
 		end
+		
 note
 	copyright: "Copyright (c) 1984-2021, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"

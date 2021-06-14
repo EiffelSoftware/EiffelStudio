@@ -1329,12 +1329,8 @@ feature -- Label
 		external
 			"C inline use <ev_gtk.h>"
 		alias
-			"[
-				gtk_label_set_attributes ((GtkLabel *)$label,
-                		          (PangoAttrList *)$attrs);
-                		    ]"
+			"gtk_label_set_attributes ((GtkLabel *)$label, (PangoAttrList *)$attrs);"
 		end
-
 
 feature -- Object		
 

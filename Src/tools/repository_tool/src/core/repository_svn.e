@@ -76,7 +76,7 @@ feature -- Access
 
 	revision_diff (a_rev: SVN_REVISION_INFO): detachable STRING
 		do
-			Result := engine.diff (location, a_rev.revision, 0, options)
+			Result := engine.diff (location, a_rev.revision, (a_rev.revision - 1).max (0), options)
 		end
 
 	revision_path_content (a_path: STRING; a_rev: SVN_REVISION_INFO): detachable STRING
@@ -107,9 +107,12 @@ feature -- Implementation
 	options: SVN_ENGINE_OPTIONS
 		do
 			create Result
-			Result.set_username (username)
-			Result.set_password (password)
-
+			if attached username as l_username then
+				Result.set_username (l_username)
+			end
+			if attached password as l_password then
+				Result.set_password (l_password)
+			end
 		end
 
 	engine: SVN_ENGINE

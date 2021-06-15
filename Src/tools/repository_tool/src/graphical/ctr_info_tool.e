@@ -499,11 +499,11 @@ feature {NONE} -- Implementation
 	show_info_diff
 		do
 			show_info ("service.diff.file", Void)
---			if attached ctr_window as w then
---				if attached current_log as l_log then
---					w.show_log_diff (l_log)
---				end
---			end
+			if attached ctr_window as w then
+				if attached current_log as l_log then
+					w.show_log_diff (l_log)
+				end
+			end
 		end
 
 	show_info (a_service: STRING; a_path: detachable STRING)

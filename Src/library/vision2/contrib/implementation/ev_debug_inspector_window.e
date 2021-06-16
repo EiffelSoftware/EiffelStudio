@@ -47,6 +47,7 @@ feature {NONE} -- Initialization
 			create offset.make_empty
 			create info_output
 			create grid
+			create details_checkbox
 		end
 
 	initialize
@@ -57,6 +58,7 @@ feature {NONE} -- Initialization
 			nb: EV_NOTEBOOK
 			hb: EV_HORIZONTAL_BOX
 			but: EV_BUTTON
+			cbut: EV_CHECK_BUTTON
 		do
 			Precursor
 			create vb
@@ -84,6 +86,12 @@ feature {NONE} -- Initialization
 			hb.extend (but)
 			hb.disable_item_expand (but)
 
+			cbut := details_checkbox
+			cbut.set_text ("Details?")
+			cbut.select_actions.extend (agent update)
+			hb.extend (cbut)
+			hb.disable_item_expand (cbut)
+
 			create nb
 			vb.extend (nb)
 
@@ -93,6 +101,9 @@ feature {NONE} -- Initialization
 
 			g := grid
 			g.set_background_color (colors.default_background_color)
+			g.enable_column_separators
+			g.enable_row_separators
+			g.set_separator_color (colors.gray)
 			nb.extend (g)
 			nb.set_item_text (g, "Grid")
 			nb.item_tab (g).enable_select
@@ -103,6 +114,10 @@ feature {NONE} -- Initialization
 			g.column (3).set_title ("Address")
 			g.column (4).set_title ("Implementation")
 			g.column (5).set_title ("Identifier?")
+			if has_details then
+				g.set_column_count_to (6)
+				g.column (6).set_title ("Details")
+			end
 			g.enable_single_row_selection
 			g.enable_tree
 			g.key_press_actions.extend (agent (k: EV_KEY; ig: EV_GRID)
@@ -129,6 +144,29 @@ feature {NONE} -- Initialization
 						end
 					end(?, g)
 				)
+
+			g.row_select_actions.extend (agent on_row_selected)
+			g.row_deselect_actions.extend (agent on_row_deselected)
+
+			g.item_select_actions.extend (agent (gi: EV_GRID_ITEM)
+				do
+					if
+						not gi.is_destroyed and then
+						attached gi.row as r
+					then
+						on_row_selected (r)
+					end
+				end)
+
+			g.item_deselect_actions.extend (agent (gi: EV_GRID_ITEM)
+				do
+					if
+						not gi.is_destroyed and then
+						attached gi.row as r
+					then
+						on_row_deselected (r)
+					end
+				end)
 
 			g.pointer_double_press_item_actions.extend (agent (ix: INTEGER; iy: INTEGER; ibut: INTEGER; i: detachable EV_GRID_ITEM)
 					do
@@ -172,6 +210,40 @@ feature {NONE} -- Initialization
 			end
 
 			close_request_actions.extend (agent destroy_and_exit_if_last)
+		end
+
+	on_row_selected (r: EV_GRID_ROW)
+		local
+			i,n: INTEGER
+		do
+			from
+				i := 1
+				n := r.count
+			until
+				i > n
+			loop
+				if attached {EV_GRID_LABEL_ITEM} r.item (i) as glab then
+					glab.set_font (selection_font)
+				end
+				i := i + 1
+			end
+		end
+
+	on_row_deselected (r: EV_GRID_ROW)
+		local
+			i,n: INTEGER
+		do
+			from
+				i := 1
+				n := r.count
+			until
+				i > n
+			loop
+				if attached {EV_GRID_LABEL_ITEM} r.item (i) as glab then
+					glab.set_font (normal_font)
+				end
+				i := i + 1
+			end
 		end
 
 	on_item_left_double_pressed (a_item: detachable EV_GRID_ITEM)
@@ -273,15 +345,36 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
+	dropped_widget: detachable EV_ANY
+
+	has_details: BOOLEAN
+		do
+			Result := details_checkbox.is_selected
+		end
+
 	observed_window: detachable EV_WINDOW
 
 	info_output: EV_RICH_TEXT
 
 	grid: EV_GRID
 
+	details_checkbox: EV_CHECK_BUTTON
+
 	colors: EV_STOCK_COLORS
 		once
 			create Result
+		end
+
+	normal_font: EV_FONT
+		once
+			create Result
+--			Result.set_shape ({EV_FONT_CONSTANTS}.shape_italic)
+		end
+
+	selection_font: EV_FONT
+		once
+			create Result
+			Result.set_weight ({EV_FONT_CONSTANTS}.weight_bold)
 		end
 
 	pixmaps: EV_STOCK_PIXMAPS
@@ -302,6 +395,11 @@ feature -- Events
 	on_double_clicked (a_x, a_y, a_but: INTEGER; a_x_tilt, a_y_tilt, a_pressure: REAL_64; a_screen_x, a_screen_y: INTEGER)
 		do
 			drop_widget (ev_application.focused_widget)
+		end
+
+	update
+		do
+			drop_widget (dropped_widget)
 		end
 
 	use_selection
@@ -335,6 +433,7 @@ feature -- Events
 
 	drop_widget (w: detachable EV_ANY)
 		do
+			dropped_widget := w
 			info_output.set_text ("")
 			show_widget (w)
 			show_tree (w)
@@ -436,7 +535,8 @@ feature -- Events
 						if sr /= Void then
 							if sr.data /= a_widget then
 								check a_parents.is_empty end
-								ev_application.add_idle_action_kamikaze (agent expand_parents_until (sr, a_parents, a_widget, a_grid))
+--								ev_application.add_idle_action_kamikaze (agent expand_parents_until (sr, a_parents, a_widget, a_grid))
+								expand_parents_until (sr, a_parents, a_widget, a_grid)
 							else
 --								if sr.is_expandable and then not sr.is_expanded then
 --									sr.expand
@@ -458,6 +558,7 @@ feature -- Events
 --			sr: EV_GRID_ROW
 			n: INTEGER
 			lab: EV_GRID_LABEL_ITEM
+			s: STRING_32
 		do
 			r.set_data (w)
 			r.set_background_color (colors.default_background_color)
@@ -469,24 +570,45 @@ feature -- Events
 				g.remove_row (r.index + n)
 			end
 			if w = Void then
-				r.set_item (1, create {EV_GRID_LABEL_ITEM}.make_with_text ("Void"))
+				r.set_item (1, new_label ("Void"))
 				r.set_item (2, create {EV_GRID_ITEM})
 				r.set_item (3, create {EV_GRID_ITEM})
 				r.set_background_color (colors.color_read_only)
 			else
-				create lab.make_with_text (w.generating_type.name_32)
+				lab := new_label (w.generating_type.name_32)
 				r.set_item (1, lab)
-				r.set_item (2, create {EV_GRID_LABEL_ITEM}.make_with_text ("..."))
-				r.set_item (3, create {EV_GRID_LABEL_ITEM}.make_with_text (($w).out))
+				r.set_item (2, new_label  ("..."))
+				r.set_item (3, new_label  (($w).out))
 				if attached w.implementation as l_imp then
-					r.set_item (4, create {EV_GRID_LABEL_ITEM}.make_with_text (l_imp.generating_type.name_32))
+					r.set_item (4, new_label  (l_imp.generating_type.name_32))
 				else
 					r.set_item (4, create {EV_GRID_ITEM})
 				end
 				if attached {EV_IDENTIFIABLE} w as l_id and then l_id.has_identifier_name_set then
-					r.set_item (5, create {EV_GRID_LABEL_ITEM}.make_with_text (l_id.identifier_name))
+					r.set_item (5, new_label  (l_id.identifier_name))
 				else
 					r.set_item (5, create {EV_GRID_ITEM})
+				end
+				if has_details then
+					r.set_item (6, create {EV_GRID_ITEM})
+					if attached {EV_POSITIONED} w as l_pos then
+						create s.make_empty
+						s.append ("(" + l_pos.x_position.out)
+						s.append ("," + l_pos.y_position.out)
+						s.append (")")
+
+						s.append (" @(" + l_pos.screen_x.out)
+						s.append ("," + l_pos.screen_y.out)
+						s.append (")")
+						
+						s.append (" " + l_pos.width.out)
+						s.append (" x " + l_pos.height.out)
+						s.append (" (min: ")
+						s.append (l_pos.minimum_width.out)
+						s.append (" x " + l_pos.minimum_height.out)
+						s.append (")")
+						r.set_item (6, new_label (s))
+					end
 				end
 				lab.set_foreground_color (colors.blue)
 				if
@@ -499,11 +621,11 @@ feature -- Events
 						n := n + 1
 					end
 					if n = 0 then
-						create lab.make_with_text (n.out)
+						lab := new_label (n.out)
 						r.set_item (2, lab)
 						lab.set_foreground_color (colors.grey)
 					else
-						r.set_item (2, create {EV_GRID_LABEL_ITEM}.make_with_text (n.out))
+						r.set_item (2, new_label  (n.out))
 					end
 					if n > 0 then
 						r.ensure_expandable
@@ -532,6 +654,11 @@ feature -- Events
 			end
 			g.column (1).resize_to_content
 			g.column (2).resize_to_content
+			g.column (4).resize_to_content
+			g.column (5).resize_to_content
+			if has_details then
+				g.column (6).resize_to_content
+			end
 		end
 
 	expand_items_row (a_row: EV_GRID_ROW; a_iterable: ITERABLE [EV_WIDGET]; a_grid: EV_GRID; l_auto_select: BOOLEAN)
@@ -620,6 +747,14 @@ feature -- Events
 	offset: STRING_32
 
 	offset_step: STRING_32 = "  "
+
+feature -- Factory
+
+	new_label (s: READABLE_STRING_GENERAL): EV_GRID_LABEL_ITEM
+		do
+			create Result.make_with_text (s)
+			Result.set_font (normal_font)
+		end
 
 note
 	copyright: "Copyright (c) 1984-2021, Eiffel Software and others"

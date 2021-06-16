@@ -138,8 +138,6 @@ feature {NONE} -- Implementation
 			l_show_pretty: E_SHOW_PRETTY
 			src,s: STRING_32
 			l_diff: DIFF_TEXT
-			l_class_i: CLASS_I
-			l_modifier: ES_CLASS_LICENSER
 		do
 				-- Relicense current text editor.
 			src := relicense (a_editor.wide_text, a_editor)

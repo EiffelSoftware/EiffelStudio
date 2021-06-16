@@ -121,26 +121,57 @@ feature {NONE} -- Agents
 
 	on_new_widget_inspection
 		local
-			w: EV_IDENTIFIABLE
+			w: EV_ANY
 			sc: EV_SCREEN
-			l_w: EV_WIDGET
 		do
-			if attached window as win then
-				win.show
-			end
 			create sc
-			l_w := sc.widget_at_mouse_pointer
-
-			if l_w = Void then
-				l_w := ev_application.focused_widget
+			w := sc.widget_at_mouse_pointer
+			if w = Void then
+				w := widget_at_position_from (window, sc.pointer_position)
 			end
-			if l_w /= Void then
-				if attached {EV_IDENTIFIABLE} l_w as l_idw then
-					w := l_idw
-				end
+			if w = Void then
+				w := ev_application.focused_widget
 			end
 			if attached inspector as insp then
 				insp.drop_widget (w)
+			end
+		end
+
+	widget_at_position_from (a_container: detachable EV_CONTAINER; a_position: EV_COORDINATE): detachable EV_ANY
+		local
+			l_any: EV_ANY
+		do
+			if a_container /= Void and then is_position_over_item (a_position, a_container) then
+				across
+					a_container as ic
+				loop
+					l_any := ic.item
+					if attached {EV_CONTAINER} l_any as l_cont then
+						Result := widget_at_position_from (l_cont, a_position)
+					end
+					if Result = Void then
+						if is_position_over_item (a_position, l_any) then
+							Result := l_any
+						end
+					end
+				end
+				if Result = Void then
+					Result := a_container
+				end
+			end
+		end
+
+	is_position_over_item (a_position: EV_COORDINATE; a_any: EV_ANY): BOOLEAN
+		do
+			if attached {EV_POSITIONED} a_any as l_item then
+				if
+					a_position.x >= l_item.screen_x and then
+					a_position.y >= l_item.screen_y and then
+					a_position.x <= l_item.screen_x + l_item.width and then
+					a_position.y <= l_item.screen_y + l_item.height
+				then
+					Result := True
+				end
 			end
 		end
 

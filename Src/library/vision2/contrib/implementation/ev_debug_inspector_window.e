@@ -32,7 +32,7 @@ feature {NONE} -- Initialization
 			set_size (400, 300)
 		end
 
-	make_with_widget (w: EV_IDENTIFIABLE)
+	make_with_widget (w: EV_ANY)
 		do
 			make_with_title ("EV Inspector")
 			drop_widget (w)
@@ -72,17 +72,13 @@ feature {NONE} -- Initialization
 			hb.disable_item_expand (but)
 			but.drop_actions.extend (agent (obj: ANY)
 					do
-						if attached {EV_IDENTIFIABLE} obj as lw then
+						if attached {EV_ANY} obj as lw then
 							drop_widget (lw)
 						else
 							drop_widget (Void)
 						end
 					end
 				)
-
-			create but.make_with_text_and_action ("Window", agent drop_widget (observed_window))
-			hb.extend (but)
-			hb.disable_item_expand (but)
 
 			create but.make_with_text_and_action ("Clear", agent drop_widget (Void))
 			hb.extend (but)
@@ -101,9 +97,12 @@ feature {NONE} -- Initialization
 			nb.set_item_text (g, "Grid")
 			nb.item_tab (g).enable_select
 
-			g.set_column_count_to (3)
+			g.set_column_count_to (5)
 			g.column (1).set_title ("Item")
-			g.column (2).set_title ("Address")
+			g.column (2).set_title ("Childs")
+			g.column (3).set_title ("Address")
+			g.column (4).set_title ("Implementation")
+			g.column (5).set_title ("Identifier?")
 			g.enable_single_row_selection
 			g.enable_tree
 			g.key_press_actions.extend (agent (k: EV_KEY; ig: EV_GRID)
@@ -163,7 +162,7 @@ feature {NONE} -- Initialization
 
 				g.drop_actions.extend (agent (obj: ANY)
 						do
-							if attached {EV_IDENTIFIABLE} obj as lw then
+							if attached {EV_ANY} obj as lw then
 								drop_widget (lw)
 							else
 								drop_widget (Void)
@@ -308,7 +307,7 @@ feature -- Events
 	use_selection
 		local
 			win: EV_DEBUG_INSPECTOR_WINDOW
-			w: EV_IDENTIFIABLE
+			w: EV_ANY
 		do
 			if
 				attached grid as g and then
@@ -319,7 +318,7 @@ feature -- Events
 				until
 					w /= Void
 				loop
-					if attached {EV_IDENTIFIABLE} ic.item.data as l_id then
+					if attached {EV_ANY} ic.item.data as l_id then
 						w := l_id
 					end
 				end
@@ -334,14 +333,14 @@ feature -- Events
 			end
 		end
 
-	drop_widget (w: detachable EV_IDENTIFIABLE)
+	drop_widget (w: detachable EV_ANY)
 		do
 			info_output.set_text ("")
 			show_widget (w)
 			show_tree (w)
 		end
 
-	fill_parents_chain (a_id: EV_IDENTIFIABLE; a_chain: ARRAYED_STACK [EV_WIDGET])
+	fill_parents_chain (a_id: EV_ANY; a_chain: ARRAYED_STACK [EV_WIDGET])
 		do
 			if
 				attached {EV_WIDGET} a_id as w and then
@@ -352,7 +351,7 @@ feature -- Events
 			end
 		end
 
-	show_tree (w: detachable EV_IDENTIFIABLE)
+	show_tree (w: detachable EV_ANY)
 		local
 			g: like grid
 			r: EV_GRID_ROW
@@ -366,21 +365,21 @@ feature -- Events
 				create l_parents.make (5)
 				fill_parents_chain (w, l_parents)
 				if l_parents.is_empty then
-					attach_to_row (w, r, g, True, True)
+					attach_to_row (w, r, g, True)
 					r.set_data (w)
 				elseif attached l_parents.item as wi then
-					attach_to_row (wi, r, g, False, False)
+					attach_to_row (wi, r, g, False)
 					r.set_data (wi)
 					l_parents.remove
 					expand_parents_until (r, l_parents, w, g)
 				end
 			else
-				attach_to_row (w, r, g, True, True)
+				attach_to_row (w, r, g, True)
 				r.set_data (w)
 			end
 		end
 
-	expand_parents_until (a_row: EV_GRID_ROW; a_parents: ARRAYED_STACK [EV_WIDGET]; a_widget: EV_IDENTIFIABLE; a_grid: EV_GRID)
+	expand_parents_until (a_row: EV_GRID_ROW; a_parents: ARRAYED_STACK [EV_WIDGET]; a_widget: EV_ANY; a_grid: EV_GRID)
 		require
 			not a_parents.is_empty
 		local
@@ -398,7 +397,7 @@ feature -- Events
 					a_row.expand
 				end
 				if attached {ITERABLE [EV_WIDGET]} a_row.data as l_iterable then
-					l_items_row := a_row.subrow (a_row.subrow_count)
+					l_items_row := a_row
 					if l_items_row /= Void then
 						if l_items_row.is_expandable and then not l_items_row.is_expanded then
 							expand_items_row (l_items_row, l_iterable, a_grid, False)
@@ -453,10 +452,12 @@ feature -- Events
 			end
 		end
 
-	attach_to_row (w: detachable EV_IDENTIFIABLE; r: EV_GRID_ROW; g: EV_GRID; a_include_parent: BOOLEAN; a_auto_expand: BOOLEAN)
+	attach_to_row (w: detachable EV_ANY; r: EV_GRID_ROW; g: EV_GRID; a_auto_expand: BOOLEAN)
 		local
-			sr,pr: EV_GRID_ROW
+--			pr,
+--			sr: EV_GRID_ROW
 			n: INTEGER
+			lab: EV_GRID_LABEL_ITEM
 		do
 			r.set_data (w)
 			r.set_background_color (colors.default_background_color)
@@ -470,42 +471,27 @@ feature -- Events
 			if w = Void then
 				r.set_item (1, create {EV_GRID_LABEL_ITEM}.make_with_text ("Void"))
 				r.set_item (2, create {EV_GRID_ITEM})
+				r.set_item (3, create {EV_GRID_ITEM})
 				r.set_background_color (colors.color_read_only)
 			else
-				r.set_item (1, create {EV_GRID_LABEL_ITEM}.make_with_text (w.generating_type.name))
-				r.set_item (2, create {EV_GRID_LABEL_ITEM}.make_with_text (($w).out))
-				r.set_foreground_color (colors.blue)
-				if
-					a_include_parent and
-					attached w.parent as p
-				then
-					r.insert_subrow (r.subrow_count + 1)
-					sr := r.subrow (r.subrow_count)
-					pr := sr
-					sr.set_item (1, create {EV_GRID_LABEL_ITEM}.make_with_text ("Parent ..."))
-					sr.set_item (2, create {EV_GRID_ITEM})
-					sr.set_background_color (colors.yellow)
-					sr.ensure_expandable
-					sr.expand_actions.extend_kamikaze (agent (i_r: EV_GRID_ROW; i_w: EV_IDENTIFIABLE; i_g: EV_GRID; i_auto_expand: BOOLEAN)
-							local
-								ssr: EV_GRID_ROW
-							do
-								i_r.insert_subrow (i_r.subrow_count + 1)
-								ssr := i_r.subrow (i_r.subrow_count)
-								ssr.set_data (i_w)
-								attach_to_row (i_w, ssr, i_g, True, i_auto_expand)
-								if i_auto_expand then
-									ssr.expand
-								end
-							end(sr, p, g, a_auto_expand)
-						)
+				create lab.make_with_text (w.generating_type.name_32)
+				r.set_item (1, lab)
+				r.set_item (2, create {EV_GRID_LABEL_ITEM}.make_with_text ("..."))
+				r.set_item (3, create {EV_GRID_LABEL_ITEM}.make_with_text (($w).out))
+				if attached w.implementation as l_imp then
+					r.set_item (4, create {EV_GRID_LABEL_ITEM}.make_with_text (l_imp.generating_type.name_32))
+				else
+					r.set_item (4, create {EV_GRID_ITEM})
 				end
+				if attached {EV_IDENTIFIABLE} w as l_id and then l_id.has_identifier_name_set then
+					r.set_item (5, create {EV_GRID_LABEL_ITEM}.make_with_text (l_id.identifier_name))
+				else
+					r.set_item (5, create {EV_GRID_ITEM})
+				end
+				lab.set_foreground_color (colors.blue)
 				if
 					attached {ITERABLE [EV_WIDGET]} w as l_iterable
 				then
-					r.insert_subrow (r.subrow_count + 1)
-					sr := r.subrow (r.subrow_count)
-					sr.set_background_color (colors.cyan)
 					n := 0
 					across
 						l_iterable as ic
@@ -513,18 +499,15 @@ feature -- Events
 						n := n + 1
 					end
 					if n = 0 then
-						sr.set_item (1, create {EV_GRID_LABEL_ITEM}.make_with_text ("No item ..."))
-						sr.set_background_color (colors.grey)
-					elseif n = 1 then
-						sr.set_item (1, create {EV_GRID_LABEL_ITEM}.make_with_text ("One item ..."))
+						create lab.make_with_text (n.out)
+						r.set_item (2, lab)
+						lab.set_foreground_color (colors.grey)
 					else
-						sr.set_item (1, create {EV_GRID_LABEL_ITEM}.make_with_text (n.out + " items ..."))
+						r.set_item (2, create {EV_GRID_LABEL_ITEM}.make_with_text (n.out))
 					end
-
-					sr.set_item (2, create {EV_GRID_ITEM})
 					if n > 0 then
-						sr.ensure_expandable
-						sr.collapse_actions.extend (agent (i_r: EV_GRID_ROW; i_g: EV_GRID)
+						r.ensure_expandable
+						r.collapse_actions.extend (agent (i_r: EV_GRID_ROW; i_g: EV_GRID)
 								local
 									nb: INTEGER
 								do
@@ -539,20 +522,16 @@ feature -- Events
 									i_g.column (1).resize_to_content
 									i_r.enable_select
 									i_r.ensure_expandable
-								end(sr, g)
+								end(r, g)
 							)
-						sr.expand_actions.extend (agent expand_items_row (sr, l_iterable, g, a_auto_expand))
---						if pr = Void and n = 1 then
---							sr.enable_select
---							sr.expand
---						end
+						r.expand_actions.extend (agent expand_items_row (r, l_iterable, g, a_auto_expand))
 					end
-				end
-				if pr /= Void then
-					pr.enable_select
+				else
+					r.set_item (2, create {EV_GRID_ITEM})
 				end
 			end
 			g.column (1).resize_to_content
+			g.column (2).resize_to_content
 		end
 
 	expand_items_row (a_row: EV_GRID_ROW; a_iterable: ITERABLE [EV_WIDGET]; a_grid: EV_GRID; l_auto_select: BOOLEAN)
@@ -570,7 +549,7 @@ feature -- Events
 					if fr = Void then
 						fr := ssr
 					end
-					attach_to_row (ic.item, ssr, a_grid, False, l_auto_select)
+					attach_to_row (ic.item, ssr, a_grid, l_auto_select)
 				end
 			end
 			if l_auto_select and fr /= Void then
@@ -586,7 +565,7 @@ feature -- Events
 			info_output.append_text ("%N")
 		end
 
-	show_widget (w: detachable EV_IDENTIFIABLE)
+	show_widget (w: detachable EV_ANY)
 		do
 			if w /= Void then
 				info_output.append_text (offset)
@@ -596,7 +575,7 @@ feature -- Events
 				info_output.append_text ("%N")
 
 				if
-					attached w.parent as p and then
+					attached parent_of (w) as p and then
 					p /= w
 				then
 					info_output.append_text ("Parents...%N")
@@ -608,6 +587,18 @@ feature -- Events
 				info_output.append_text (offset)
 				info_output.append_text ("None")
 				info_output.append_text ("%N")
+			end
+		end
+
+	parent_of (a_any: detachable EV_ANY): detachable EV_ANY
+		do
+			if a_any = Void then
+			elseif attached {EV_IDENTIFIABLE} a_any as l_id then
+				Result := l_id.parent
+			elseif attached {EV_WIDGET} a_any as w then
+				Result := w.parent
+			elseif attached {EV_CONTAINABLE} a_any as l_c then
+				Result := l_c.parent
 			end
 		end
 

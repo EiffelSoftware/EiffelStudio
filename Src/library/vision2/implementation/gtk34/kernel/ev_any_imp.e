@@ -73,14 +73,26 @@ feature {EV_ANY_I} -- Access
 		end
 
 	update_gtk_name
+		local
+			s: STRING_32
 		do
 			debug ("gtk_name")
 				if not c_object.is_default_pointer then
 					if attached interface as l_interface then
-						{GTK}.gtk_widget_set_name (c_object, (create {EV_GTK_C_STRING}.set_with_eiffel_string (l_interface.generator + " (" + generator + ")" + " #" + internal_id.out)).item)
+						if attached {EV_IDENTIFIABLE} l_interface as l_id and then l_id.has_identifier_name_set  then
+							create s.make_from_string_general (l_id.full_identifier_path)
+							s.prepend_character ('%"')
+							s.append_character ('%"')
+						else
+							create s.make_empty
+						end
+						s.append (l_interface.generating_type.name_32)
+						s.append_string_general (" (" + generator + ")")
 					else
-						{GTK}.gtk_widget_set_name (c_object, (create {EV_GTK_C_STRING}.set_with_eiffel_string (generator + " #" + internal_id.out)).item)
+						create s.make_from_string_general (generating_type.name_32)
 					end
+					s.append_string_general (" #" + internal_id.out)
+					{GTK}.gtk_widget_set_name (c_object, (create {EV_GTK_C_STRING}.set_with_eiffel_string (s)).item)
 				end
 			end
 		end

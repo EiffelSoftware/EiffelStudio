@@ -316,6 +316,7 @@ feature {EV_ANY_I} -- Implementation
 	process_underlying_toolkit_event_queue
 			-- Process all pending GDK events and then dispatch GTK iteration until no more
 			-- events are pending.
+			-- Read more about events at https://developer.gnome.org/gdk3/stable/gdk3-Events.html 
 		local
 			gdk_event: POINTER
 			l_event_type: INTEGER

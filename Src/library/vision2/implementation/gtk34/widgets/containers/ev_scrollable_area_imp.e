@@ -161,25 +161,25 @@ feature -- Element change
 	show_horizontal_scroll_bar
 			-- Display horizontal scroll bar.
 		do
-			set_scrolling_policy ({GTK}.gTK_POLICY_ALWAYS_ENUM, vertical_policy)
+			set_scrolling_policy ({GTK}.GTK_POLICY_ALWAYS_ENUM, vertical_policy)
 		end
 
 	hide_horizontal_scroll_bar
 			-- Do not display horizontal scroll bar.
 		do
-			set_scrolling_policy ({GTK}.gTK_POLICY_NEVER_ENUM, vertical_policy)
+			set_scrolling_policy ({GTK}.GTK_POLICY_NEVER_ENUM, vertical_policy)
 		end
 
 	show_vertical_scroll_bar
 			-- Display vertical scroll bar.
 		do
-			set_scrolling_policy (horizontal_policy, {GTK}.gTK_POLICY_ALWAYS_ENUM)
+			set_scrolling_policy (horizontal_policy, {GTK}.GTK_POLICY_ALWAYS_ENUM)
 		end
 
 	hide_vertical_scroll_bar
 			-- Do not display vertical scroll bar.
 		do
-			set_scrolling_policy (horizontal_policy, {GTK}.gTK_POLICY_NEVER_ENUM)
+			set_scrolling_policy (horizontal_policy, {GTK}.GTK_POLICY_NEVER_ENUM)
 		end
 
 feature {NONE} -- Implementation
@@ -226,19 +226,17 @@ feature {NONE} -- Implementation
 
 	on_size_allocate (a_x: INTEGER; a_y: INTEGER; a_width: INTEGER; a_height: INTEGER)
 			-- Set item in center of `Current' if smaller.
-		local
-			item_imp: detachable EV_WIDGET_IMP
 		do
 			Precursor {EV_VIEWPORT_IMP} (a_x, a_y, a_width, a_height)
 			if attached item as l_item then
-				item_imp ?= l_item.implementation
-				check item_imp /= Void end
-				if item_imp /= Void then
+				if attached {EV_WIDGET_IMP} l_item.implementation as item_imp then
 					check container_widget /= default_pointer end
 						-- Move if and only if container widget is a Window.
 					if {GTK}.gtk_is_window (container_widget) then
 						{GTK_WINDOW}.move (container_widget, ((fixed_width - item_imp.width) // 2).max (0), ((fixed_height - item_imp.height) // 2).max (0))
 					end
+				else
+					check is_widget_imp: False end
 				end
 			end
 		end

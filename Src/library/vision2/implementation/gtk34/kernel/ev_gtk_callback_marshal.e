@@ -229,6 +229,11 @@ feature -- Agent functions.
 			Result := agent gtk_value_pointer_to_tuple (?, ?)
 		end
 
+	motion_notify_event_translate_agent: FUNCTION [INTEGER, POINTER, TUPLE]
+		once
+			Result := agent gtk_value_pointer_to_tuple (?, ?)
+		end
+
 feature {EV_ANY_IMP} -- Agent implementation routines
 
 	gtk_value_int_to_tuple (n_args: INTEGER; args: POINTER): TUPLE [INTEGER]

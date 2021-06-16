@@ -33,82 +33,101 @@ feature -- Initialize
 	gtk_dependent_initialize
 			-- Gtk dependent code for `initialize'
 		local
+			l_style_ctx: POINTER
 			css_provider: POINTER
 			l_style: STRING
 			l_cs: C_STRING
 			l_error: POINTER
+			l_display, l_screen: POINTER
+			dlg: POINTER
+			l_color: STRING
+			n: STRING
 		do
 				-- Initialize custom styles for gtk.
-			css_provider := {GTK_CSS}.gtk_css_provider_new
 			l_style := "[
 				* {
 					-GtkWindow-resize-grip-height: 0px;
 					-GtkWindow-resize-grip-width: 0px;
 					-GtkComboBox-appears-as-list: 1px;
-
-					 background-color: @bg_color;
-			  		 color: @fg_color;
-
-					 -Clearlooks-colorize-scrollbar: true;
-					 -Clearlooks-style: classic;
+					background-color: @bg_color;
+					color: @fg_color;
+					-Clearlooks-colorize-scrollbar: true;
+					-Clearlooks-style: classic;
 				}
-
-			*:hover {
-			  background-color: shade (@bg_color, 1.02);
-			}
-
-			*:selected {
-			  background-color: @selected_bg_color;
-			  color: @selected_fg_color;
-			}
-
-			*:disabled {
-			  color: shade (@bg_color, 0.7);
-			}
-
-			*:active {
-			  background-color: shade (@bg_color, 0.9);
-			}
-
-			.tooltip {
-			  padding: 4px;
-
-			  background-color: @tooltip_bg_color;
-			  color: @tooltip_fg_color;
-			}
-
-			.toolbar {
-				background-color: shade (@bg_color, 0.9);
-			}
-
-			.button {
-			  padding: 3px;
-			  background-color: shade (@bg_color, 1.04);
-			}
-
-			.button:hover {
-			  background-color: shade (@bg_color, 1.06);
-			}
-
-			.button:active {
-			  background-color: shade (@bg_color, 0.85);
-			}
-
-			.entry {
-			  padding: 3px;
-
-			  background-color: @base_color;
-			  color: @text_color;
-			}
-
-			.entry:selected {
-			  background-color: mix (@selected_bg_color, @base_color, 0.4);
-			  -Clearlooks-focus-color: shade (0.65, @selected_bg_color)
-			}
+				*:hover {
+					background-color: shade (@bg_color, 1.02);
+				}
+				*:selected {
+					background-color: @selected_bg_color;
+					color: @selected_fg_color;
+				}
+				*:disabled {
+					color: shade (@bg_color, 0.7);
+				}
+				*:active {
+					background-color: shade (@bg_color, 0.9);
+				}
+				.tooltip {
+					padding: 4px;
+					background-color: @tooltip_bg_color;
+					color: @tooltip_fg_color;
+				}
+				.toolbar {
+					background-color: shade (@bg_color, 0.9);
+				}
+				.button {
+					padding: 3px;
+					background-color: shade (@bg_color, 1.04);
+				}
+				.button:hover {
+					background-color: shade (@bg_color, 1.06);
+				}
+				.button:active {
+					background-color: shade (@bg_color, 0.85);
+				}
+				.entry {
+					padding: 3px;
+					background-color: @base_color;
+					color: @text_color;
+				}
+				.entry:selected {
+					background-color: mix (@selected_bg_color, @base_color, 0.4);
+					-Clearlooks-focus-color: shade (0.65, @selected_bg_color)
+				}
+				.view text selection {
+					background-color: @selected_bg_color; 
+					color: @selected_fg_color;
+				}
 	]"
 
+			dlg := {GTK2}.gtk_dialog_new
+			l_style_ctx := {GTK}.gtk_widget_get_style_context (dlg)
+			across {GTK}.gnome_color_names as ic loop
+				n := ic.item
+				l_color := {GTK}.rgba_string_style_color (l_style_ctx, ic.item)
+				if l_color /= Void then
+					l_style.replace_substring_all ("@" + n, l_color)
+					if n.starts_with ("theme_") then
+						n.remove_head (6)
+						l_style.replace_substring_all ("@" + n, l_color)
+					end
+				end
+			end
+
 			create l_cs.make (l_style)
-			if not {GTK_CSS}.gtk_css_provider_load_from_data (css_provider, l_cs.item, l_cs.bytes_count, $l_error) then
+
+			css_provider := {GTK_CSS}.gtk_css_provider_new
+			l_display := {GTK}.gdk_display_get_default
+			l_screen := {GTK}.gdk_display_get_default_screen (l_display)
+			{GTK}.gtk_style_context_add_provider_for_screen (l_screen, css_provider, {GTK}.GTK_STYLE_PROVIDER_PRIORITY_APPLICATION)
+
+			if
+				False and then
+				not {GTK_CSS}.gtk_css_provider_load_from_data (css_provider, l_cs.item, l_cs.bytes_count, $l_error)
+			then
+				debug ("gtk_log")
+					print ("ERROR: gtk_css_provider_load_from_data -> " + l_error.out + "%N")
+				end
 				-- Handle error
 			end
 		end

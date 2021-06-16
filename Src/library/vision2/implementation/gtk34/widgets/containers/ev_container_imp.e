@@ -308,6 +308,10 @@ feature -- Status setting
 --			mem_ptr, pix_ptr: POINTER
 			i: INTEGER
 		do
+			debug ("refactor_fixme")
+				{REFACTORING_HELPER}.to_implement ("implement container background")
+			end
+
 			real_set_background_color (c_object, (create {EV_STOCK_COLORS}).gray)
 			if attached background_pixmap as l_background_pixmap then
 				pix_imp ?= l_background_pixmap.implementation

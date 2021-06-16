@@ -98,8 +98,12 @@ feature {EV_ANY_I, EV_ANY_HANDLER} -- Implementation
 			a_r := {GDK}.rgba_struct_red (a_gdk_rgba).truncated_to_real
 			a_g := {GDK}.rgba_struct_green (a_gdk_rgba).truncated_to_real
 			a_b := {GDK}.rgba_struct_blue (a_gdk_rgba).truncated_to_real
+			debug ("gtk_log")
+				if attached {GDK}.rgba_struct_alpha (a_gdk_rgba).truncated_to_real as l_alpha then
+					do_nothing -- for debugging purpose.
+				end
+			end
 			create Result.make_with_rgb (a_r, a_g, a_b)
-			--a_gdk_rgba.memory_free
 			{GDK}.rgba_free (a_gdk_rgba)
 		end
 

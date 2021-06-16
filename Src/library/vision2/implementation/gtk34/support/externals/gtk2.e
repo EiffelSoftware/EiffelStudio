@@ -969,8 +969,14 @@ feature -- Enum
 			"C signature (GtkWidget*): gchar* use <ev_gtk.h>"
 		end
 
-
 	frozen gtk_widget_set_minimum_size (a_widget: POINTER; a_width, a_height: INTEGER_32)
+		do
+			gtk_widget_set_size_request (a_widget, a_width, a_height)
+		ensure
+			instance_free: class
+		end
+
+	frozen gtk_widget_set_size_request (a_widget: POINTER; a_width, a_height: INTEGER_32)
 		external
 			"C inline use <ev_gtk.h>"
 		alias

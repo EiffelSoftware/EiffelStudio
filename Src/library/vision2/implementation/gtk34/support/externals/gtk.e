@@ -253,11 +253,6 @@ feature -- Widgets
 			"return gtk_widget_get_display ((GtkWidget *)$a_widget)"
 		end
 
-	frozen gtk_widget_set_size_request (a_widget: POINTER; a_width, a_height: INTEGER_32)
-		external
-			"C signature (GtkWidget*, gint, gint) use <ev_gtk.h>"
-		end
-
 	frozen gtk_widget_is_sensitive (a_widget: POINTER): BOOLEAN
 		external
 			"C signature (GtkWidget*): gboolean use <ev_gtk.h>"

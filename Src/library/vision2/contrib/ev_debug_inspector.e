@@ -122,9 +122,18 @@ feature {NONE} -- Agents
 	on_new_widget_inspection
 		local
 			w: EV_IDENTIFIABLE
+			sc: EV_SCREEN
+			l_w: EV_WIDGET
 		do
-			if attached {EV_IDENTIFIABLE} ev_application.focused_widget as l_idw then
-				w := l_idw
+			l_w := ev_application.focused_widget
+			if l_w = Void then
+				create sc
+				l_w := sc.widget_at_mouse_pointer
+			end
+			if l_w /= Void then
+				if attached {EV_IDENTIFIABLE} l_w as l_idw then
+					w := l_idw
+				end
 			end
 			if attached inspector as insp then
 				insp.drop_widget (w)

@@ -125,10 +125,14 @@ feature {NONE} -- Agents
 			sc: EV_SCREEN
 			l_w: EV_WIDGET
 		do
-			l_w := ev_application.focused_widget
+			if attached window as win then
+				win.show
+			end
+			create sc
+			l_w := sc.widget_at_mouse_pointer
+
 			if l_w = Void then
-				create sc
-				l_w := sc.widget_at_mouse_pointer
+				l_w := ev_application.focused_widget
 			end
 			if l_w /= Void then
 				if attached {EV_IDENTIFIABLE} l_w as l_idw then

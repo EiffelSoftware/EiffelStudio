@@ -70,6 +70,19 @@ feature {NONE} -- Initialization
 			create but.make_with_text_and_action ("Open selection", agent use_selection)
 			hb.extend (but)
 			hb.disable_item_expand (but)
+			but.drop_actions.extend (agent (obj: ANY)
+					do
+						if attached {EV_IDENTIFIABLE} obj as lw then
+							drop_widget (lw)
+						else
+							drop_widget (Void)
+						end
+					end
+				)
+
+			create but.make_with_text_and_action ("Window", agent drop_widget (observed_window))
+			hb.extend (but)
+			hb.disable_item_expand (but)
 
 			create but.make_with_text_and_action ("Clear", agent drop_widget (Void))
 			hb.extend (but)
@@ -118,6 +131,14 @@ feature {NONE} -- Initialization
 					end(?, g)
 				)
 
+			g.pointer_double_press_item_actions.extend (agent (ix: INTEGER; iy: INTEGER; ibut: INTEGER; i: detachable EV_GRID_ITEM)
+					do
+						if ibut = {EV_POINTER_CONSTANTS}.left then
+							on_item_left_double_pressed (i)
+						end
+					end
+				)
+
 			if is_pnd_supported then
 				g.set_item_pebble_function (agent (gi: EV_GRID_ITEM): detachable ANY
 						do
@@ -126,6 +147,19 @@ feature {NONE} -- Initialization
 							end
 						end
 					)
+
+				g.set_item_accept_cursor_function (agent (gi: EV_GRID_ITEM): EV_POINTER_STYLE
+						do
+							if attached {EV_GRID_LABEL_ITEM} gi and then gi.column.index = 1 then
+								Result := pixmaps.crosshair_cursor
+							else
+								Result := pixmaps.standard_cursor
+							end
+						end)
+				g.set_item_deny_cursor_function (agent (gi: EV_GRID_ITEM): EV_POINTER_STYLE
+						do
+							Result := pixmaps.no_cursor
+						end)
 
 				g.drop_actions.extend (agent (obj: ANY)
 						do
@@ -141,6 +175,103 @@ feature {NONE} -- Initialization
 			close_request_actions.extend (agent destroy_and_exit_if_last)
 		end
 
+	on_item_left_double_pressed (a_item: detachable EV_GRID_ITEM)
+		local
+			bb: EV_VERTICAL_BOX
+			bg: EV_COLOR
+			t: EV_TIMEOUT
+			done: BOOLEAN
+			e: BOOLEAN
+			c: CURSOR
+		do
+			if a_item /= Void and then attached a_item.row as l_row then
+				if attached {EV_WIDGET} l_row.data as w then
+					if attached {EV_BOX} w.parent as p_box then
+						create bb
+						bb.set_background_color (colors.magenta)
+						bb.set_border_width (1)
+						bb.set_padding_width (1)
+						from
+							c := p_box.cursor
+							p_box.start
+						until
+							p_box.item = w
+						loop
+							p_box.forth
+						end
+						if p_box.item = w then
+							e := p_box.is_item_expanded (w)
+							p_box.replace (bb)
+							if e then
+								p_box.enable_item_expand (bb)
+							else
+								p_box.disable_item_expand (bb)
+							end
+							bb.extend (w)
+							done := True
+							create t.make_with_interval (500)
+							t.actions.extend (agent (i_p: EV_BOX; i_b: EV_VERTICAL_BOX; i_w: EV_WIDGET; i_expand: BOOLEAN; i_t: EV_TIMEOUT)
+									local
+										cur: CURSOR
+									do
+										i_t.destroy
+										cur := i_p.cursor
+										from
+											i_p.start
+										until
+											i_p.item = i_b
+										loop
+											i_p.forth
+										end
+										if i_p.item = i_b then
+											i_p.replace (i_w)
+											if i_expand then
+												i_p.enable_item_expand (i_w)
+											else
+												i_p.disable_item_expand (i_w)
+											end
+										end
+										i_p.go_to (cur)
+									end (p_box, bb, w, e, t)
+								)
+						end
+						p_box.go_to (c)
+					elseif attached {EV_CELL} w.parent as p_cell then
+						create bb
+						bb.set_background_color (colors.magenta)
+						bb.set_border_width (1)
+						bb.set_padding_width (1)
+						p_cell.replace (bb)
+						bb.extend (w)
+						done := True
+						create t.make_with_interval (500)
+						t.actions.extend (agent (i_p: EV_CELL; i_w: EV_WIDGET; i_t: EV_TIMEOUT)
+								do
+									i_t.destroy
+--									i_w.rep
+									i_p.replace (i_w)
+								end (p_cell, w, t)
+							)
+					end
+					if not done then
+						bg := w.background_color
+						w.set_background_color (colors.red)
+						if bg /= Void then
+							create t.make_with_interval (500)
+							t.actions.extend (agent (iw: EV_COLORIZABLE; i_bg: detachable EV_COLOR; i_t: EV_TIMEOUT)
+									do
+										i_t.destroy
+										if i_bg /= Void then
+											iw.set_background_color (i_bg)
+										end
+									end (w, bg, t)
+								)
+						end
+					end
+				end
+			end
+		end
+
 feature -- Access
 
 	observed_window: detachable EV_WINDOW
@@ -154,15 +285,17 @@ feature -- Access
 			create Result
 		end
 
+	pixmaps: EV_STOCK_PIXMAPS
+		once
+			create Result
+		end
+
 	is_pnd_supported: BOOLEAN
 		local
 			env: EXECUTION_ENVIRONMENT
 		once
 			create env
-			-- FIXME: remove when PnD is working safely with GTK34
-			if not attached env.item ("vision_implementation") as v or else not v.same_string ("gtk34") then
-				Result := True
-			end
+			Result := True
 		end
 
 feature -- Events		
@@ -208,20 +341,119 @@ feature -- Events
 			show_tree (w)
 		end
 
+	fill_parents_chain (a_id: EV_IDENTIFIABLE; a_chain: ARRAYED_STACK [EV_WIDGET])
+		do
+			if
+				attached {EV_WIDGET} a_id as w and then
+				attached w.parent as l_parent
+			then
+				a_chain.extend (l_parent)
+				fill_parents_chain (l_parent, a_chain)
+			end
+		end
+
 	show_tree (w: detachable EV_IDENTIFIABLE)
 		local
 			g: like grid
 			r: EV_GRID_ROW
+			l_parents: ARRAYED_STACK [EV_WIDGET]
 		do
 			g := grid
 			g.set_row_count_to (0)
 			g.insert_new_row (g.row_count + 1)
 			r := g.row (g.row_count)
-			attach_to_row (w, r, g, True)
-			r.set_data (w)
+			if w /= Void then
+				create l_parents.make (5)
+				fill_parents_chain (w, l_parents)
+				if l_parents.is_empty then
+					attach_to_row (w, r, g, True, True)
+					r.set_data (w)
+				elseif attached l_parents.item as wi then
+					attach_to_row (wi, r, g, False, False)
+					r.set_data (wi)
+					l_parents.remove
+					expand_parents_until (r, l_parents, w, g)
+				end
+			else
+				attach_to_row (w, r, g, True, True)
+				r.set_data (w)
+			end
 		end
 
-	attach_to_row (w: detachable EV_IDENTIFIABLE; r: EV_GRID_ROW; g: EV_GRID; a_include_parent: BOOLEAN)
+	expand_parents_until (a_row: EV_GRID_ROW; a_parents: ARRAYED_STACK [EV_WIDGET]; a_widget: EV_IDENTIFIABLE; a_grid: EV_GRID)
+		require
+			not a_parents.is_empty
+		local
+			l_items_row, sr: EV_GRID_ROW
+			nxt: EV_WIDGET
+			i,n: INTEGER
+		do
+			if attached a_row.data as l_data then
+				print ("expand_parents_until (" + l_data.generator + ", a_parent.count=" + a_parents.count.out + " ...%N")
+			else
+				print ("expand_parents_until (No row data !!!, a_parent.count=" + a_parents.count.out + " ...%N")
+			end
+			if a_row.is_expandable then
+				if not a_row.is_expanded then
+					a_row.expand
+				end
+				if attached {ITERABLE [EV_WIDGET]} a_row.data as l_iterable then
+					l_items_row := a_row.subrow (a_row.subrow_count)
+					if l_items_row /= Void then
+						if l_items_row.is_expandable and then not l_items_row.is_expanded then
+							expand_items_row (l_items_row, l_iterable, a_grid, False)
+							if l_items_row.is_expandable then
+								l_items_row.expand
+							end
+						end
+						l_items_row.enable_select
+						sr := Void
+						nxt := Void
+						if not a_parents.is_empty then
+							nxt := a_parents.item
+							a_parents.remove
+						end
+						from
+							i := 1
+							n := l_items_row.subrow_count
+						until
+							sr /= Void or i > n
+						loop
+							sr := l_items_row.subrow (i)
+							if sr.data = a_widget then
+									-- Found final widget
+							elseif nxt /= Void then
+								if sr.data = nxt then
+										-- Found next widget in parents chain
+								else
+									sr := Void
+								end
+							else
+									-- Skip
+								sr := Void
+							end
+							i := i + 1
+						end
+						if sr /= Void then
+							if sr.data /= a_widget then
+								check a_parents.is_empty end
+								ev_application.add_idle_action_kamikaze (agent expand_parents_until (sr, a_parents, a_widget, a_grid))
+							else
+--								if sr.is_expandable and then not sr.is_expanded then
+--									sr.expand
+--								end
+								sr.ensure_visible
+								sr.enable_select
+--								ev_application.add_idle_action_kamikaze (agent sr.ensure_visible)
+--								ev_application.add_idle_action_kamikaze (agent sr.enable_select)
+							end
+						end
+					end
+				end
+			end
+		end
+
+	attach_to_row (w: detachable EV_IDENTIFIABLE; r: EV_GRID_ROW; g: EV_GRID; a_include_parent: BOOLEAN; a_auto_expand: BOOLEAN)
 		local
 			sr,pr: EV_GRID_ROW
 			n: INTEGER
@@ -254,25 +486,32 @@ feature -- Events
 					sr.set_item (2, create {EV_GRID_ITEM})
 					sr.set_background_color (colors.yellow)
 					sr.ensure_expandable
-					sr.expand_actions.extend_kamikaze (agent (i_r: EV_GRID_ROW; i_w: EV_IDENTIFIABLE; i_g: EV_GRID)
+					sr.expand_actions.extend_kamikaze (agent (i_r: EV_GRID_ROW; i_w: EV_IDENTIFIABLE; i_g: EV_GRID; i_auto_expand: BOOLEAN)
 							local
 								ssr: EV_GRID_ROW
 							do
 								i_r.insert_subrow (i_r.subrow_count + 1)
 								ssr := i_r.subrow (i_r.subrow_count)
 								ssr.set_data (i_w)
-								attach_to_row (i_w, ssr, i_g, True)
-								ssr.expand
-							end(sr, p, g)
+								attach_to_row (i_w, ssr, i_g, True, i_auto_expand)
+								if i_auto_expand then
+									ssr.expand
+								end
+							end(sr, p, g, a_auto_expand)
 						)
 				end
 				if
-					attached {EV_CONTAINER} w as l_container
+					attached {ITERABLE [EV_WIDGET]} w as l_iterable
 				then
 					r.insert_subrow (r.subrow_count + 1)
 					sr := r.subrow (r.subrow_count)
 					sr.set_background_color (colors.cyan)
-					n := l_container.count
+					n := 0
+					across
+						l_iterable as ic
+					loop
+						n := n + 1
+					end
 					if n = 0 then
 						sr.set_item (1, create {EV_GRID_LABEL_ITEM}.make_with_text ("No item ..."))
 						sr.set_background_color (colors.grey)
@@ -302,29 +541,11 @@ feature -- Events
 									i_r.ensure_expandable
 								end(sr, g)
 							)
-						sr.expand_actions.extend (agent (i_r: EV_GRID_ROW; i_w: EV_CONTAINER; i_g: EV_GRID)
-								local
-									fr, ssr: EV_GRID_ROW
-								do
-									across
-										i_w as ic
-									loop
-										i_r.insert_subrow (i_r.subrow_count + 1)
-										ssr := i_r.subrow (i_r.subrow_count)
-										if fr = Void then
-											fr := ssr
-										end
-										attach_to_row (ic.item, ssr, i_g, False)
-									end
-									if fr /= Void then
-										fr.enable_select
-									end
-								end(sr, l_container, g)
-							)
-						if pr = Void and n = 1 then
-							sr.enable_select
-							sr.expand
-						end
+						sr.expand_actions.extend (agent expand_items_row (sr, l_iterable, g, a_auto_expand))
+--						if pr = Void and n = 1 then
+--							sr.enable_select
+--							sr.expand
+--						end
 					end
 				end
 				if pr /= Void then
@@ -332,6 +553,30 @@ feature -- Events
 				end
 			end
 			g.column (1).resize_to_content
+		end
+
+	expand_items_row (a_row: EV_GRID_ROW; a_iterable: ITERABLE [EV_WIDGET]; a_grid: EV_GRID; l_auto_select: BOOLEAN)
+		local
+			fr,
+			ssr: EV_GRID_ROW
+		do
+			a_row.expand_actions.block
+			if a_row.subrow_count = 0 then
+				across
+					a_iterable as ic
+				loop
+					a_row.insert_subrow (a_row.subrow_count + 1)
+					ssr := a_row.subrow (a_row.subrow_count)
+					if fr = Void then
+						fr := ssr
+					end
+					attach_to_row (ic.item, ssr, a_grid, False, l_auto_select)
+				end
+			end
+			if l_auto_select and fr /= Void then
+				fr.enable_select
+			end
+			a_row.expand_actions.resume
 		end
 
 	show_text (t: READABLE_STRING_GENERAL)

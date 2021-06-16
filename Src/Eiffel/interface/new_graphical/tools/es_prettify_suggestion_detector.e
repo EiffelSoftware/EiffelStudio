@@ -138,17 +138,26 @@ feature {NONE} -- Implementation
 			l_show_pretty: E_SHOW_PRETTY
 			src,s: STRING_32
 			l_diff: DIFF_TEXT
+			l_class_i: CLASS_I
+			l_modifier: ES_CLASS_LICENSER
 		do
+				-- Relicense current text editor.
+			src := relicense (a_editor.wide_text, a_editor)
+
 				-- Create a string to write prettified text.
 			create s.make_empty
 
 				-- Prettify code.
 			create l_show_pretty.make_string (a_editor.file_path.name, s)
-					-- Check if formatting is successful.
+
+				-- Relicense prettify code.
+			s := relicense (s, a_editor)
+
+				-- Check if formatting is successful.
 			if not l_show_pretty.error then
 				create l_diff
-				src := a_editor.wide_text
 				src.replace_substring_all ("%R%N", "%N")
+				s.replace_substring_all ("%R%N", "%N")
 				l_diff.set_text ({UTF_CONVERTER}.utf_32_string_to_utf_8_string_8 (src), {UTF_CONVERTER}.utf_32_string_to_utf_8_string_8 (s))
 				l_diff.compute_diff
 				if
@@ -160,10 +169,28 @@ feature {NONE} -- Implementation
 			end
 		end
 
+	relicense (a_class_text: READABLE_STRING_GENERAL; a_editor: EB_SMART_EDITOR): STRING_32
+			-- Relicenser for the class represented in the current editor `a_editor`.
+			-- with a given class text `a_class_text`.
+		local
+			l_class_i: CLASS_I
+			l_modifier: ES_CLASS_LICENSER
+		do
+			Result := a_class_text
+			if a_editor.is_interface_usable and then attached {CLASSI_STONE} a_editor.stone as l_class then
+					-- We have the class stone
+				l_class_i := l_class.class_i
+				if l_class_i /= Void then
+					create l_modifier
+					Result := l_modifier.relicense_text (a_class_text, l_class_i)
+				end
+			end
+		end
+
 	is_disabled: BOOLEAN
 			-- Has been prettry printer disabled for this session?
 ;note
-	copyright: "Copyright (c) 1984-2020, Eiffel Software"
+	copyright: "Copyright (c) 1984-2021, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

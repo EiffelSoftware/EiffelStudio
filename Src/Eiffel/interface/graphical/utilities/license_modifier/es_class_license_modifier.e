@@ -14,7 +14,31 @@ inherit
 	INTERNAL_COMPILER_STRING_EXPORTER
 
 create
-	make
+	make,
+	make_with_text
+
+feature {NONE} -- Initialization
+
+	make_with_text (a_class_text: STRING_32; a_class: like context_class )
+			-- Initialize a class text modifier using a context class.
+			--
+			-- `a_class_text`: Class text to modify.
+			-- `a_class': Associated context class to modify class text for.
+
+		require
+			a_class_attached: attached a_class
+			a_class_text_attached: attached a_class_text
+		local
+			l_text: detachable STRING_32
+		do
+			make (a_class)
+			l_text := a_class_text
+			original_text := l_text
+			modified_data := new_modified_data_with_text (l_text)
+		ensure
+			context_class_set: context_class = a_class
+			not_is_dirty: not is_dirty
+		end
 
 feature -- Access
 
@@ -371,6 +395,19 @@ feature -- Constants
 	default_license_name: STRING = "default"
 			-- Default license name.
 
+feature {NONE} -- Implementation
+
+	new_modified_data_with_text (a_class_text: STRING_32): like modified_data
+			-- Creates a new class modifier data object based on Current's state
+			-- and `a_class_text`.
+		local
+			l_class: like context_class
+		do
+			l_class := context_class
+			create Result.make (l_class, a_class_text)
+		end
+
+
 feature {NONE} -- Implementation: Internal cache
 
 	internal_license: detachable like license
@@ -378,7 +415,7 @@ feature {NONE} -- Implementation: Internal cache
 			-- Note: Do not use directly!
 
 ;note
-	copyright: "Copyright (c) 1984-2020, Eiffel Software"
+	copyright: "Copyright (c) 1984-2021, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

@@ -228,6 +228,175 @@ feature -- Basic operatons
 			retry
 		end
 
+
+	relicense_text (a_class_text: READABLE_STRING_GENERAL; a_class: CLASS_I): STRING_32
+			-- Initialize a class licenser for a given class with the given class text.
+			--
+			-- `a_class_text`: a class text to relicense.
+			-- `a_class': The class to license.
+
+		require
+			a_class_attached: attached a_class
+		local
+			l_mod: ES_CLASS_LICENSE_MODIFIER
+			l_name: detachable STRING_32
+			l_fn: detachable PATH
+			l_parent: detachable PATH
+			l_path: STRING_32
+			l_index: INTEGER
+			l_license: detachable like load_license
+			l_libraries: LIST [CONF_LIBRARY]
+			l_library: CONF_LIBRARY
+			l_uuid: UUID
+			l_parameters: STRING_TABLE [ANY]
+			l_use_old_syntax: BOOLEAN
+			l_load_default: BOOLEAN
+			retried: BOOLEAN
+		do
+			if not retried then
+				Result := a_class_text
+				create l_mod.make_with_text (a_class_text, a_class)
+				l_mod.prepare
+				if l_mod.is_prepared and then l_mod.is_ast_available then
+					l_use_old_syntax := a_class.options.syntax.index = {CONF_OPTION}.syntax_index_obsolete
+
+						-- Parsed successfully.
+					l_name := l_mod.license_name
+					if attached l_name then
+							-- Try to load the license
+						l_license := load_named_license (l_name, l_use_old_syntax)
+					else
+							-- Try to use a license file from an ECF because there was not license referene name in the class.
+						if a_class.target.system /~ a_class.universe.conf_system then
+								-- Libraries do not have variables so we need to load the configuration and fetch the variables.
+							l_uuid := a_class.target.system.uuid
+							if attached l_uuid then
+									-- Fetch the library reference and load the configuration.
+								l_libraries := a_class.universe.library_of_uuid (l_uuid, True)
+								if not l_libraries.is_empty then
+										-- Create the path to the license file.
+									l_library := l_libraries.first
+									create l_path.make_from_string (l_library.path)
+								end
+							end
+						else
+							check system_defined: a_class.workbench.system_defined end
+							create l_path.make_from_string (a_class.workbench.eiffel_ace.file_name)
+						end
+
+						l_load_default := True
+						if l_path /= Void then
+							l_index := l_path.last_index_of ('.', l_path.count)
+							if l_index > 1 then
+									-- Try to load the license
+								l_path.keep_head (l_index - 1)
+
+									-- ecf filename - ".ecf" + ".lic"
+								create l_fn.make_from_string (l_path)
+								l_fn := l_fn.appended_with_extension (license_extension)
+								if (create {RAW_FILE}.make_with_path (l_fn)).exists then
+									l_license := load_license (l_fn, l_use_old_syntax)
+									l_load_default := False
+								else
+									l_parent := l_fn.parent
+									if l_parent = Void then
+										create l_parent.make_current
+									end
+										-- ecf filename - "-safe.ecf" + ".lic"
+									if
+										attached l_fn.entry as l_fn_entry and then
+										l_fn_entry.name.ends_with_general ("-safe.lic")
+									then
+										l_path := l_fn_entry.name
+										l_path.remove_tail (("-safe.lic").count)
+										l_fn := l_parent.extended (l_path).appended_with_extension (license_extension)
+										if (create {RAW_FILE}.make_with_path (l_fn)).exists then
+											l_license := load_license (l_fn, l_use_old_syntax)
+											l_load_default := False
+										end
+									end
+									if l_license = Void then
+											-- ecf parent folder name "license.lic"
+										l_fn := l_parent.extended (default_license_filename).appended_with_extension (license_extension)
+										if (create {RAW_FILE}.make_with_path (l_fn)).exists then
+											l_license := load_license (l_fn, l_use_old_syntax)
+											l_load_default := False
+										else
+												-- ecf parent folder name "licence.lic"
+											l_fn := l_parent.extended (alternative_default_license_filename).appended_with_extension (license_extension)
+											if (create {RAW_FILE}.make_with_path (l_fn)).exists then
+												l_license := load_license (l_fn, l_use_old_syntax)
+												l_load_default := False
+											end
+										end
+									end
+								end
+							end
+						end
+
+						if l_load_default then
+							check l_license_detached: not attached l_license end
+
+								-- No license was loaded, try the default
+							l_license := load_named_license (create {STRING_32}.make_from_string ("default"), l_use_old_syntax)
+						end
+					end
+
+					if attached l_license then
+						if not l_license.is_empty then
+							if not l_mod.is_valid_license (l_license) then
+									-- Render the invalid license template.
+								l_license := locale_formatter.translation (invalid_license_license)
+								if attached wizard_enginer.service as wizard_enginer_service then
+									create l_parameters.make (1)
+									if l_use_old_syntax then
+										l_parameters.force ({EIFFEL_KEYWORD_CONSTANTS}.indexing_keyword, note_keyword_symbol)
+									else
+										l_parameters.force ({EIFFEL_KEYWORD_CONSTANTS}.note_keyword, note_keyword_symbol)
+									end
+									l_license := wizard_enginer_service.render_template (l_license, l_parameters)
+								else
+									l_license := Void
+								end
+							end
+
+							if attached l_license and then l_mod.is_valid_license (l_license) then
+								l_mod.set_license (l_license)
+								if l_mod.is_dirty then
+									Result := l_mod.text
+								end
+							else
+								check False end
+							end
+						end
+					end
+				else
+						-- The class contains sytax errors
+					if attached logger.service as logger_service then
+							-- Log error.
+						logger_service.put_message_format_with_severity (
+							"Unable to apply license because class {1} contains syntax errors.",
+							[a_class.name],
+							{ENVIRONMENT_CATEGORIES}.editor,
+							{PRIORITY_LEVELS}.high)
+					end
+				end
+			else
+					-- There was an exception
+				if attached logger.service as logger_service then
+						-- Log error.
+					logger_service.put_message_format_with_severity (
+						"Unable to apply license to class {1} because of an internal exception.",
+						[a_class.name],
+						{ENVIRONMENT_CATEGORIES}.editor,
+						{PRIORITY_LEVELS}.high)
+				end
+			end
+		rescue
+			retried := True
+			retry
+		end
+
 feature {NONE} -- Basic operation
 
 	load_license (a_file_name: PATH; a_use_old_syntax: BOOLEAN): detachable STRING_32
@@ -340,7 +509,7 @@ feature {NONE} -- Internationalization
 			-- Default invalid license.
 
 ;note
-	copyright:	"Copyright (c) 1984-2019, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2021, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

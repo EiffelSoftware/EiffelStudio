@@ -72,7 +72,7 @@ feature -- GUI
 			Result := if attached s then
 				locale.formatted_string (translation_in_context ("Analyze '$1'", once "code_analyzer.menu"), s)
 			else
-				translation_in_context ("Analize Editor Item", once "code_analyzer.menu")
+				translation_in_context ("Analyze Editor Item", once "code_analyzer.menu")
 			end
 		end
 

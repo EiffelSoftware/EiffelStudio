@@ -1,6 +1,5 @@
 note
 	description: "Summary description for {SCM_STATUS_BOX}."
-	author: ""
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -252,6 +251,13 @@ feature -- Basic operation
 				grid.scm_rows as ic
 			loop
 				ic.item.update
+			end
+		end
+
+	on_statuses_updated (a_root: SCM_LOCATION; a_location: PATH; a_statuses: detachable SCM_STATUS_LIST)
+		do
+			if attached grid as g then
+				g.on_statuses_updated (a_root, a_location, a_statuses)
 			end
 		end
 

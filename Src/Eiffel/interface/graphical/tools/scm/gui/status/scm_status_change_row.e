@@ -196,22 +196,6 @@ feature -- Execution
 			cb_lab.checked_changed_actions.extend (agent wc_row.on_checkbox_change_checked (Current, ?))
 		end
 
-	status_pixmap (a_status: SCM_STATUS): detachable EV_PIXMAP
-		do
-			if attached {SCM_STATUS_MODIFIED} a_status then
-				Result := icon_pixmaps.source_modified_icon
-			elseif attached {SCM_STATUS_ADDED} a_status then
-				Result := icon_pixmaps.source_added_icon
-			elseif attached {SCM_STATUS_DELETED} a_status then
-				Result := icon_pixmaps.source_deleted_icon
-			elseif attached {SCM_STATUS_CONFLICTED} a_status then
-				Result := icon_pixmaps.source_conflicted_icon
-			elseif attached {SCM_STATUS_UNVERSIONED} a_status then
-				Result := icon_pixmaps.source_unversioned_icon
-			else
-			end
-		end
-
 	show_diff
 		local
 			ch_list: SCM_CHANGELIST

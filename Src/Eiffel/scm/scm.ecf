@@ -19,20 +19,17 @@
 		<library name="environment" location="$EIFFEL_SRC\framework\environment\environment.ecf" readonly="false" use_application_options="true"/>
 		<library name="package_visitor" location="$EIFFEL_SRC\framework\packages\visitor\package_visitor.ecf" readonly="false"/>
 		<library name="patterns" location="$ISE_LIBRARY\library\patterns\patterns.ecf" readonly="false" use_application_options="true"/>
-		<!--
-		<library name="scm_plugins" location="lib\scm_plugins\scm_plugins.ecf" readonly="false"/>
-		-->
-		<library name="time" location="$ISE_LIBRARY\library\time\time.ecf"/>
-
 		<library name="process" location="$ISE_LIBRARY\library\process\base\base_process.ecf"/>
 		<library name="svn" location="$ISE_LIBRARY\contrib\library\svn\svn.ecf"/>
-
+		<library name="thread" location="$ISE_LIBRARY\library\thread\thread.ecf"/>
+		<library name="time" location="$ISE_LIBRARY\library\time\time.ecf"/>
+		<library name="vision2" location="$ISE_LIBRARY\library\vision2\vision2.ecf"/>
 		<cluster name="scm" location=".\">
 			<cluster name="scm_service" location="$|service\"/>
 			<cluster name="scm_model" location="$|model\"/>
 			<cluster name="scm_implementation" location="$|implementation\"/>
 		</cluster>
-		<cluster name="scm_plugins" location=".\lib\scm_plugins" recursive="true">
+		<cluster name="scm_plugins" location=".\lib\scm_plugins\" recursive="true">
 			<file_rule>
 				<exclude>/implementation$</exclude>
 			</file_rule>

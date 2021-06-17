@@ -65,6 +65,8 @@ feature -- Element change
 
 feature -- Basic operations
 
+	locations_by_root: HASH_TABLE [TUPLE [root: SCM_LOCATION; groups: STRING_TABLE [SCM_GROUP]], PATH]
+
 	locations: STRING_TABLE [SCM_GROUP]
 
 	sorted_locations: ARRAYED_LIST [TUPLE [name: READABLE_STRING_GENERAL; group: SCM_GROUP]]
@@ -113,8 +115,6 @@ feature -- Basic operations
 					end))
 			l_sorter.sort (Result)
 		end
-
-	locations_by_root: HASH_TABLE [TUPLE [root: SCM_LOCATION; groups: STRING_TABLE [SCM_GROUP]], PATH]
 
 	analyze
 		local

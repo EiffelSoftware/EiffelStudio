@@ -156,6 +156,12 @@ feature -- Commands
 			Result.disable_sensitive
 		end
 
+	Source_control_cmd: SCM_CMD
+		once
+			create Result.make
+			Result.enable_sensitive
+		end
+
 	System_cmd: EB_SYSTEM_CMD
 			-- Project setting command
 		once

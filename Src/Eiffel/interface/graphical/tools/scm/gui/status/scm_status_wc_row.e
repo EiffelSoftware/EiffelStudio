@@ -207,7 +207,29 @@ feature -- Execution
 				end
 			end
 		end
-		
+
+	on_statuses_updated (a_location: PATH; a_statuses: detachable SCM_STATUS_LIST)
+		local
+			r: SCM_STATUS_WC_LOCATION_ROW
+		do
+			if is_supported then
+				recorded_changes := changes
+				if attached row as l_row and attached parent_grid as l_grid then
+					reset_changes_count
+					if attached scm_rows as l_scm_rows then
+						across
+							l_scm_rows as ic
+						loop
+							r := ic.item
+							if a_location.same_as (r.location) then
+								r.on_statuses_updated (a_statuses)
+							end
+						end
+					end
+				end
+			end
+		end
+
 	on_checkbox_change_checked (a_change_row: SCM_STATUS_CHANGE_ROW; a_cb: EV_GRID_CHECKABLE_LABEL_ITEM)
 		local
 			g: like parent_grid

@@ -17,6 +17,12 @@ feature -- Event
 		do
 		end
 
+	on_statuses_updated (a_root: SCM_LOCATION; a_location: PATH; a_statuses: detachable SCM_STATUS_LIST)
+		require
+			is_interface_usable: attached {USABLE_I} Current as l_usable implies l_usable.is_interface_usable
+		do
+		end
+
 	on_change_detected (ch: SCM_CHANGE)
 		require
 			is_interface_usable: attached {USABLE_I} Current as l_usable implies l_usable.is_interface_usable

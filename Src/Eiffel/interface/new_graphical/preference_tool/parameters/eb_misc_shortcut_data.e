@@ -195,6 +195,7 @@ feature {NONE} -- Modifiable shortcuts
 			l_hash.put ([True, True, False, key_strings.item (key_comma).twin.as_string_8], "show_testing_tool")
 			l_hash.put ([True, True, False, key_strings.item (key_period).twin.as_string_8], "show_testing_results_tool")
 			l_hash.put ([True, True, False, key_strings.item (Key_q).twin.as_string_8], "show_information_tool")
+			l_hash.put ([True, False, True, key_strings.item (Key_s).twin.as_string_8], "show_source_control_tool")
 			Result.extend ([l_hash, main_window_group])
 		end
 

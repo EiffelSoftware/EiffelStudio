@@ -156,6 +156,14 @@ feature -- Initialization
 							end (eglab, ?,?,?,?,?,?,?,?)
 						)
 				row.set_item (g.scm_column, eglab)
+				if
+					attached g.scm_s.service as scm_service and then
+					attached location as l_scm_location
+				then
+					if attached scm_service.cached_statuses (l_scm_location) as l_statuses then
+						on_statuses_updated (l_statuses)
+					end
+				end
 			end
 		end
 
@@ -166,7 +174,7 @@ feature -- Operations
 			row.set_item (parent_grid.info_column, new_label_item (scm_names.label_checking))
 		end
 
-	update_statuses
+	on_statuses_updated (a_statuses: detachable SCM_STATUS_LIST)
 		local
 			sr: EV_GRID_ROW
 			ch_row: SCM_STATUS_CHANGE_ROW
@@ -179,9 +187,8 @@ feature -- Operations
 			g := parent_grid
 			if
 				attached g.scm_s.service as scm_service and then
-				attached parent_row.root_location as l_scm_root and then
 				attached location as l_scm_location and then
-				attached scm_service.statuses (l_scm_root, l_scm_location) as l_chgs
+				attached a_statuses as l_chgs
 			then
 				nb := l_chgs.changes_count
 				changes_count := nb
@@ -234,6 +241,20 @@ feature -- Operations
 			else
 				changes_count := 0
 				row.set_item (g.info_column, new_label_item ("..."))
+			end
+			update_check_status_for_row
+			update_changes_count
+		end
+
+	update_statuses
+		do
+			reset_changes_count
+			if
+				attached parent_grid.scm_s.service as scm_service and then
+				attached parent_row.root_location as l_scm_root and then
+				attached location as l_scm_location
+			then
+				on_statuses_updated (scm_service.statuses (l_scm_root, l_scm_location))
 			end
 			update_check_status_for_row
 			update_changes_count

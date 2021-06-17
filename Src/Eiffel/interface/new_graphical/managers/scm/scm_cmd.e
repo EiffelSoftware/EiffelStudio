@@ -20,6 +20,13 @@ inherit
 	EB_SHARED_WINDOW_MANAGER
 		export {NONE} all end
 
+	EB_SHARED_PREFERENCES
+		export
+			{NONE} all
+		end
+
+	SCM_SHARED_RESOURCES
+
 	SHARED_SCM_NAMES
 
 	SHARED_SOURCE_CONTROL_MANAGEMENT_SERVICE
@@ -32,7 +39,20 @@ feature {NONE} -- Initialization
 	make
 			-- Initialize default_values.
 		do
+			init_accelerator
 			enable_sensitive
+		end
+
+	init_accelerator
+		local
+			l_shortcut: SHORTCUT_PREFERENCE
+		do
+			l_shortcut := preferences.misc_shortcut_data.shortcuts.item ("show_source_control_tool")
+			if l_shortcut /= Void then
+				create accelerator.make_with_key_combination (l_shortcut.key, l_shortcut.is_ctrl, l_shortcut.is_alt, l_shortcut.is_shift)
+				set_referred_shortcut (l_shortcut)
+				accelerator.actions.extend (agent execute_from_accelerator)
+			end
 		end
 
 feature -- Status
@@ -55,8 +75,9 @@ feature -- Access
 	initialize_sd_toolbar_item (a_item: EB_SD_COMMAND_TOOL_BAR_BUTTON; display_text: BOOLEAN)
 		do
 			Precursor (a_item, display_text)
-			if attached {EB_SD_COMMAND_TOOL_BAR_DUAL_POPUP_BUTTON} a_item as b then
-				b.set_menu (drop_down_menu)
+			if attached {EB_SD_COMMAND_TOOL_BAR_DUAL_POPUP_BUTTON} a_item as but then
+				but.set_menu_function (agent updated_drop_down_menu)
+--				b.set_menu (drop_down_menu)
 			end
 		end
 
@@ -67,14 +88,26 @@ feature -- Access
 
 feature -- Basic operations
 
+	execute_from_accelerator
+			-- Execute from accelerator
+		do
+			execute
+		end
+
 	execute
 			-- Open the SCM account tool.
 		do
-			if
-				attached window_manager.last_focused_development_window as win and then
-				attached win.tools.scm_tool as l_tool
-			then
-				l_tool.show (True)
+			if is_sensitive then
+				if
+					attached window_manager.last_focused_development_window as win and then
+					attached win.tools.scm_tool as l_tool
+				then
+					if l_tool.is_shown then
+						updated_drop_down_menu.show
+					else
+						l_tool.show (True)
+					end
+				end
 			end
 		end
 
@@ -120,6 +153,11 @@ feature -- Basic operations
 			end
 		end
 
+	update_sensitive
+		do
+			enable_sensitive
+		end
+
 feature -- Access
 
 	name: STRING = "SCM_tool"
@@ -162,6 +200,43 @@ feature {NONE} -- Implementation
 			Result := scm_names.menu_scm
 		end
 
+feature -- Drop down menu
+
+	current_editor_status_menu_item: detachable EV_MENU_ITEM
+
+	updated_drop_down_menu: EV_MENU
+		do
+			if attached current_editor_status_menu_item as l_menu_item then
+				l_menu_item.disable_sensitive
+				l_menu_item.remove_pixmap
+				if
+					attached scm_s.service as scm and then
+					attached scm.is_available
+				then
+					if attached {FILED_STONE} editor_stone as st then
+						if
+							attached scm.file_status (create {PATH}.make_from_string (st.file_name)) as l_status
+						then
+							l_menu_item.set_pixmap (status_pixmap (l_status))
+							l_menu_item.set_text (scm_names.menu_editor_status (st.stone_name, l_status.status_as_string))
+							if
+								attached {SCM_STATUS_MODIFIED} l_status
+								or attached {SCM_STATUS_CONFLICTED} l_status
+							then
+								l_menu_item.enable_sensitive
+							else
+								l_menu_item.disable_sensitive
+							end
+						else
+							l_menu_item.set_text (scm_names.menu_editor_status (st.stone_name, Void))
+							l_menu_item.disable_sensitive
+						end
+					end
+				end
+			end
+			Result := drop_down_menu
+		end
+
 	drop_down_menu: EV_MENU
 			-- Drop down menu for `new_sd_toolbar_item'.
 		local
@@ -173,6 +248,17 @@ feature {NONE} -- Implementation
 					create l_item
 					l_item.set_text (scm_names.menu_status)
 					l_item.enable_sensitive
+					l_item.select_actions.extend (agent scm.update_statuses)
+					Result.extend (l_item)
+
+					l_item := current_editor_status_menu_item
+					if l_item = void then
+						create l_item
+						current_editor_status_menu_item := l_item
+						l_item.set_text (scm_names.menu_editor_status (Void, Void))
+						l_item.disable_sensitive
+						l_item.select_actions.extend (agent show_editor_diff)
+					end
 					Result.extend (l_item)
 				else
 						-- Check availability
@@ -183,6 +269,38 @@ feature {NONE} -- Implementation
 			end
 		ensure
 			not_void: Result /= Void
+		end
+
+feature {NONE} -- Implementation
+
+	show_editor_diff
+		local
+			dlg: SCM_DIFF_DIALOG
+		do
+			if attached {FILED_STONE} editor_stone as l_file_stone then
+				if
+					attached scm_s.service as scm and then
+					scm.is_available
+				then
+					if attached scm.diff_at_location (create {PATH}.make_from_string (l_file_stone.file_name)) as l_diff then
+						create dlg.make (scm, l_diff)
+						dlg.set_is_modal (False)
+						if attached Window_manager.last_focused_development_window as devwin then
+							dlg.set_size (devwin.dpi_scaler.scaled_size (700).min (devwin.window.width), devwin.dpi_scaler.scaled_size (500).min (devwin.window.height))
+						end
+						dlg.show_on_active_window
+					end
+				end
+			end
+		end
+
+	editor_stone: STONE
+			-- Currently selected editor stone if any.
+			-- (export status {NONE})
+		do
+			if attached Window_manager.last_focused_development_window as w and then attached w.stone as stone then
+				Result := stone
+			end
 		end
 
 note

@@ -18,7 +18,8 @@ inherit
 	SCM_OBSERVER
 		redefine
 			on_workspace_updated,
-			on_configuration_updated
+			on_configuration_updated,
+			on_statuses_updated
 		end
 
 	SHARED_SOURCE_CONTROL_MANAGEMENT_SERVICE
@@ -161,6 +162,7 @@ feature {NONE} -- Action handlers
 					l_setup.reset
 				end
 			end
+			update_associated_interface_elements
 		end
 
 	on_configuration_updated (cfg: SCM_CONFIG)
@@ -171,6 +173,18 @@ feature {NONE} -- Action handlers
 			if l_status /= Void then
 				l_status.on_configuration_updated
 			end
+			update_associated_interface_elements
+		end
+
+	on_statuses_updated (a_root: SCM_LOCATION; a_location: PATH; a_statuses: detachable SCM_STATUS_LIST)
+		local
+			l_status: SCM_STATUS_BOX
+		do
+			l_status := status_box
+			if l_status /= Void then
+				l_status.on_statuses_updated (a_root, a_location, a_statuses)
+			end
+			update_associated_interface_elements
 		end
 
 	on_setup_selected
@@ -299,6 +313,24 @@ feature {NONE} -- Action handlers
 				b.extend (lab)
 			end
 			widget.set_pointer_style (l_style)
+			update_associated_interface_elements
+		end
+
+	update_associated_interface_elements
+		local
+			w: EB_DEVELOPMENT_WINDOW
+		do
+			if attached Window_manager.development_windows as win_lst then
+				across
+					win_lst as ic
+				loop
+					w := ic.item
+--					w.tools.scm_tool.update
+					if attached w.source_control_cmd as cmd then
+						cmd.refresh
+					end
+				end
+			end
 		end
 
 feature -- Access: Help

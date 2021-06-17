@@ -1,41 +1,43 @@
 note
-	description: "Summary description for {SCM_SHARED_RESOURCES}."
+	description: "Summary description for {SCM_ASYNC_STATUSES_DATA}."
+	author: ""
 	date: "$Date$"
 	revision: "$Revision$"
 
-deferred class
-	SCM_SHARED_RESOURCES
+class
+	SCM_ASYNC_STATUSES_DATA
 
-inherit
-	EB_SHARED_PIXMAPS
+create
+	make
 
-	SHARED_SCM_NAMES
+feature {NONE} -- Initialization
 
-feature -- Access	
-
-	stock_colors: EV_STOCK_COLORS
-		once
-			create Result
-		end
-
-	status_pixmap (a_status: SCM_STATUS): detachable EV_PIXMAP
+	make (a_root: like root; a_path: like path; cfg: like config)
 		do
-			if attached {SCM_STATUS_MODIFIED} a_status then
-				Result := icon_pixmaps.source_modified_icon
-			elseif attached {SCM_STATUS_ADDED} a_status then
-				Result := icon_pixmaps.source_added_icon
-			elseif attached {SCM_STATUS_DELETED} a_status then
-				Result := icon_pixmaps.source_deleted_icon
-			elseif attached {SCM_STATUS_CONFLICTED} a_status then
-				Result := icon_pixmaps.source_conflicted_icon
-			elseif attached {SCM_STATUS_UNVERSIONED} a_status then
-				Result := icon_pixmaps.source_unversioned_icon
-			else
-			end
+			root := a_root
+			path := a_path
+			config := cfg
 		end
 
-invariant
-note
+feature -- Access
+
+	root: SCM_LOCATION
+	path: PATH
+	config: SCM_CONFIG
+
+	statuses: detachable SCM_STATUS_LIST assign set_statuses
+
+	completed: BOOLEAN
+
+feature -- Element change
+
+	set_statuses (sts: like statuses)
+		do
+			completed := True
+			statuses := sts
+		end
+
+;note
 	copyright: "Copyright (c) 1984-2021, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"

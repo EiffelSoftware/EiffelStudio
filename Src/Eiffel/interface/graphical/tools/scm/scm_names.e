@@ -19,11 +19,28 @@ feature -- Header
 
 feature -- Menu
 
-	menu_scm: STRING_32 do Result := locale.translation_in_context ("Source Control Management", "scm") end
+	menu_scm: STRING_32 do Result := locale.translation_in_context ("Source Control", "scm") end
 
-	menu_status: STRING_32 do Result := locale.translation_in_context ("Status", "scm") end
+	menu_status: STRING_32 do Result := locale.translation_in_context ("Update status", "scm") end
 
-	menu_check: STRING_32 do Result := locale.translation_in_context ("Check", "scm") end
+	menu_check: STRING_32 do Result := locale.translation_in_context ("Update status", "scm") end
+
+	menu_editor_status (a_name: detachable READABLE_STRING_GENERAL; a_status: detachable READABLE_STRING_GENERAL): STRING_32
+		do
+			if a_name = Void then
+				Result := locale.translation_in_context ("Editor status", "scm")
+			elseif a_status = Void then
+				Result := locale.formatted_string (
+						locale.translation_in_context ("$1", "scm"),
+						[a_name]
+					)
+			else
+				Result := locale.formatted_string (
+						locale.translation_in_context ("$1 - $2", "scm"),
+						[a_name, a_status]
+					)
+			end
+		end
 
 	menu_diff: STRING_32 do Result := locale.translation_in_context ("Diff ...", "scm") end
 	menu_diff_selection: STRING_32 do Result := locale.translation_in_context ("Diff selection ...", "scm") end
@@ -109,7 +126,7 @@ feature -- Tools
 
 feature -- General
 
-	button_scm: STRING_32 do Result := locale.translation_in_context ("Source Control Management", "scm") end
+	button_scm: STRING_32 do Result := locale.translation_in_context ("Source Control", "scm") end
 	button_check: STRING_32 do Result := locale.translation_in_context ("Check", "scm") end
 	tooltip_button_check: STRING_32 do Result := locale.translation_in_context ("Check for changes", "scm") end
 	button_project: STRING_32 do Result := locale.translation_in_context ("Project", "scm") end

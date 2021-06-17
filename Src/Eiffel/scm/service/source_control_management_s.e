@@ -38,7 +38,25 @@ feature -- Access
 		deferred
 		end
 
+feature -- Status
+
+	file_status (a_path: PATH): detachable SCM_STATUS
+			-- SCM status of `a_path`
+			-- Result can be Modified, Deleted, Added, Unversioned, ...
+		deferred
+		end
+
+	scm_root_location (a_path: PATH): detachable SCM_LOCATION
+			-- SCM location containing `a_path`, if any.
+		deferred
+		end
+
 feature -- Operations
+
+	update_statuses
+			-- Update statuses for all known SCM locations, i.e for the workspace
+		deferred
+		end
 
 	statuses (a_root: SCM_LOCATION; a_location: PATH): detachable SCM_STATUS_LIST
 		do
@@ -63,6 +81,24 @@ feature -- Operations
 		deferred
 		end
 
+	diff_at_location (a_path: PATH): detachable SCM_DIFF
+		local
+			l_changelist: SCM_CHANGELIST
+		do
+			if attached scm_root_location (a_path) as loc then
+				create l_changelist.make_with_location (loc)
+				l_changelist.extend_path (a_path)
+				Result := diff (l_changelist)
+			end
+		end
+
+feature -- Cache
+
+	cached_statuses (a_location: PATH): detachable SCM_STATUS_LIST
+			-- Status list for `a_location` from cache, if any.
+		deferred
+		end
+
 feature -- Events
 
 	on_workspace_updated (ws: detachable SCM_WORKSPACE)
@@ -78,6 +114,23 @@ feature -- Events
 					lst as ic
 				loop
 					ic.item.on_workspace_updated (ws)
+				end
+			end
+		end
+
+	on_statuses_updated (a_root: SCM_LOCATION; a_location: PATH; a_statuses: detachable SCM_STATUS_LIST)
+		do
+			debug ("scm")
+				print (generator + ".on_statuses_updated (...)%N")
+			end
+			if statuses_updated_event.is_interface_usable then
+				statuses_updated_event.publish ([a_root, a_location, a_statuses])
+			end
+			if attached observers as lst then
+				across
+					lst as ic
+				loop
+					ic.item.on_statuses_updated (a_root, a_location, a_statuses)
 				end
 			end
 		end
@@ -153,6 +206,13 @@ feature -- Events
 
 	change_detected_event: EVENT_TYPE [TUPLE [acc: detachable SCM_CHANGE]]
 			-- Events called when an change is detected.
+		require
+			is_interface_usable: is_interface_usable
+		deferred
+		end
+
+	statuses_updated_event: EVENT_TYPE [TUPLE [root: SCM_LOCATION; location: PATH; statuses: SCM_STATUS_LIST]]
+			-- Events called when scm location statuses are updated.
 		require
 			is_interface_usable: is_interface_usable
 		deferred

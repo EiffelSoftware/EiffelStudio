@@ -1190,6 +1190,7 @@ feature -- Events
 			analyze_editor_cmd.update_sensitive
 			analyze_parent_cmd.update_sensitive
 			analyze_target_cmd.update_sensitive
+			source_control_cmd.update_sensitive
 			for_all (agent create_project_action)
 		end
 
@@ -1222,6 +1223,7 @@ feature -- Events
 				analyze_editor_cmd.update_sensitive
 				analyze_parent_cmd.update_sensitive
 				analyze_target_cmd.update_sensitive
+				source_control_cmd.update_sensitive
 				clean_compile_project_cmd.enable_sensitive
 				System_cmd.enable_sensitive
 				System_information_cmd.enable_sensitive
@@ -1245,6 +1247,7 @@ feature -- Events
 				analyze_editor_cmd.disable_sensitive
 				analyze_parent_cmd.disable_sensitive
 				analyze_target_cmd.disable_sensitive
+				source_control_cmd.disable_sensitive
 			end
 				-- Recreate window configuration from last session of project if any.
 			load_session
@@ -1282,6 +1285,7 @@ feature -- Events
 			analyze_editor_cmd.disable_sensitive
 			analyze_parent_cmd.disable_sensitive
 			analyze_target_cmd.disable_sensitive
+			source_control_cmd.disable_sensitive
 		end
 
 feature {NONE} -- Implementation
@@ -1659,7 +1663,7 @@ feature{NONE} -- Implementation
 note
 	ca_ignore:
 		"CA033", "CA033: too long class"
-	copyright:	"Copyright (c) 1984-2020, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2021, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

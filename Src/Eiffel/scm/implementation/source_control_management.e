@@ -8,12 +8,18 @@ class
 
 inherit
 	SOURCE_CONTROL_MANAGEMENT_S
+		redefine
+			statuses,
+			on_statuses_updated
+		end
 
 	DISPOSABLE_SAFE
 
 	EIFFEL_LAYOUT
 
 	SHARED_EIFFEL_PROJECT
+
+	EV_SHARED_APPLICATION
 
 create
 	make
@@ -23,6 +29,7 @@ feature {NONE} -- Creation
 	make (cfg: SCM_CONFIG)
 		do
 			config := cfg
+			create mutex.make
 
 			eiffel_project.manager.compile_stop_agents.extend (agent on_project_recompiled)
 		end
@@ -59,7 +66,115 @@ feature -- Access
 			end
 		end
 
+feature -- Async Operations
+
+	mutex: MUTEX
+
+	update_statuses
+			-- Update statuses for all known SCM locations, i.e for the workspace
+		local
+			grp: SCM_GROUP
+			wt: WORKER_THREAD
+			m: MUTEX
+			cfg: SCM_FLAT_CONFIG
+			l_root: SCM_LOCATION
+			l_path: PATH
+			tu: SCM_ASYNC_STATUSES_DATA
+			l_results: ARRAYED_LIST [SCM_ASYNC_STATUSES_DATA]
+		do
+			if attached workspace as ws then
+				create m.make
+				create l_results.make (ws.locations.count)
+				across
+					ws.locations as ic
+				loop
+					grp := ic.item
+					create cfg.make_from_config (config)
+					l_root := grp.root.deep_twin
+					l_path := grp.location
+					create tu.make (l_root, l_path, cfg)
+					l_results.extend (tu)
+					create wt.make (agent async_update_statuses (tu, m))
+					wt.launch
+				end
+				ev_application.add_idle_action_kamikaze (agent check_for_async_update_statuses_completion (l_results, m))
+			end
+		end
+
+	async_update_statuses (a_data: SCM_ASYNC_STATUSES_DATA; a_mutex: MUTEX)
+		do
+			if attached a_data.root.changes (a_data.path, a_data.config) as sts then
+				a_mutex.lock
+				a_data.statuses := sts
+				a_mutex.unlock
+			end
+		end
+
+	check_for_async_update_statuses_completion (
+			a_list: LIST [SCM_ASYNC_STATUSES_DATA];
+			a_mutex: MUTEX)
+		local
+			t: EV_TIMEOUT
+		do
+			create t
+--			timeout := t
+			t.actions.extend (agent (i_list: LIST [SCM_ASYNC_STATUSES_DATA]; i_t: EV_TIMEOUT; i_m: MUTEX)
+					local
+						n: INTEGER
+					do
+						i_m.lock
+						n := i_list.count
+						across
+							i_list as ic
+						loop
+							if
+								attached ic.item as d and then
+								d.completed
+							then
+								n := n - 1
+							end
+						end
+
+						-- ...check
+						i_m.unlock
+						if n = 0 then
+							i_t.destroy
+--							timeout := Void
+							across
+								i_list as ic
+							loop
+								if attached ic.item as d then
+									on_statuses_updated (d.root, d.path, d.statuses)
+								end
+							end
+							i_list.wipe_out
+
+						else
+								-- continue timeout
+						end
+					end(a_list, t, a_mutex)
+				)
+				t.set_interval (500) -- interval in milliseconds)
+		end
+
 feature -- Operations
+
+	on_statuses_updated (a_root: SCM_LOCATION; a_location: PATH; a_statuses: detachable SCM_STATUS_LIST)
+		do
+			record_statuses_cache (a_statuses, a_location)
+			if attached {LOGGER_S} (create {SERVICE_CONSUMER [LOGGER_S]}).service as l_logger_service then
+				if a_statuses /= Void then
+					l_logger_service.put_message ({STRING_32} "Updated statuses: "+ a_statuses.changes_count.out +" changes (unversioned="+ a_statuses.unversioned_count.out +")" + a_location.name, {ENVIRONMENT_CATEGORIES}.tools)
+				end
+			end
+			Precursor (a_root, a_location, a_statuses)
+		end
+
+	statuses (a_root: SCM_LOCATION; a_location: PATH): detachable SCM_STATUS_LIST
+		do
+			Result := Precursor (a_root, a_location)
+			record_statuses_cache (Result, a_location)
+		end
 
 	update (a_changelist: SCM_CHANGELIST): detachable STRING_32
 		local
@@ -154,16 +269,85 @@ feature -- Operations
 			retry
 		end
 
+feature -- Status
+
+	file_status (a_path: PATH): detachable SCM_STATUS
+		local
+			l_file_path: PATH
+			p: PATH
+			n: READABLE_STRING_GENERAL
+			b: BOOLEAN
+		do
+			if attached statuses_cache as l_statuses_cache then
+				l_file_path := a_path.absolute_path.canonical_path
+				n := l_file_path.name
+				across
+					l_statuses_cache as ic
+				until
+					b
+				loop
+					p := ic.key
+					if n.starts_with (p.name) then
+							-- Found SCM location
+						b := True
+						if attached ic.item as l_statuses then
+							Result := l_statuses.status (l_file_path)
+						end
+					end
+				end
+			end
+		end
+
+	scm_root_location (a_path: PATH): detachable SCM_LOCATION
+		do
+			if attached workspace as ws then
+				Result := ws.scm_root (a_path.absolute_path.canonical_path)
+			end
+		end
+
 feature {NONE} -- Access: internals
 
 	internal_workspace: detachable like workspace
+
+
+	statuses_cache: detachable HASH_TABLE [detachable SCM_STATUS_LIST, PATH]
+			-- Statuses indexed by scm location.
 
 feature -- Element change
 
 	set_workspace (ws: like workspace)
 		do
+			reset_statuses_cache
 			internal_workspace := ws
 			on_workspace_updated (ws)
+		end
+
+feature -- Element change
+
+	reset_statuses_cache
+		do
+			statuses_cache := Void
+		end
+
+	record_statuses_cache (a_statuses: detachable SCM_STATUS_LIST; a_location: PATH)
+		local
+			l_statuses: like statuses_cache
+		do
+			l_statuses := statuses_cache
+			if a_statuses /= Void and l_statuses = Void then
+				create l_statuses.make_equal (1)
+				statuses_cache := l_statuses
+			end
+			if l_statuses /= Void then
+				l_statuses [a_location] := a_statuses
+			end
+		end
+
+	cached_statuses (a_location: PATH): detachable SCM_STATUS_LIST
+		do
+			if attached statuses_cache as l_statuses_cache then
+				Result := l_statuses_cache [a_location]
+			end
 		end
 
 feature -- Status report
@@ -213,6 +397,7 @@ feature -- Events: Connection point
 							Result :=
 								<<
 									[workspace_updated_event, agent o.on_workspace_updated],
+									[statuses_updated_event, agent o.on_statuses_updated],
 									[change_detected_event, agent o.on_change_detected]
 								>>
 						end)
@@ -230,6 +415,17 @@ feature -- Events
 			if Result = Void then
 				create Result
 				internal_workspace_updated_event := Result
+				auto_dispose (Result)
+			end
+		end
+
+	statuses_updated_event: EVENT_TYPE [TUPLE [root: SCM_LOCATION; location: PATH; statuses: SCM_STATUS_LIST]]
+			-- <Precursor>
+		do
+			Result := internal_statuses_updated_event
+			if Result = Void then
+				create Result
+				internal_statuses_updated_event := Result
 				auto_dispose (Result)
 			end
 		end
@@ -253,6 +449,10 @@ feature {NONE} -- Implementation: Internal cache
 
 	internal_workspace_updated_event: detachable like workspace_updated_event
 			-- Cached version of `workspace_updated_event`.
+			-- Note: Do not use directly!
+
+	internal_statuses_updated_event: detachable like statuses_updated_event
+			-- Cached version of `statuses_updated_event`.
 			-- Note: Do not use directly!
 
 	internal_change_detected_event: detachable like change_detected_event

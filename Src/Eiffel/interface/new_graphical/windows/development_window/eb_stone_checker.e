@@ -1263,30 +1263,29 @@ feature {NONE} -- Implementation functions
 			not_void: a_editor_manager /= Void
 			not_void: develop_window /= Void
 		local
-			l_class_stone: CLASSI_STONE
-			l_cluster_stone: CLUSTER_STONE
+			st: STONE
 			l_group: CONF_GROUP
 			l_content: SD_CONTENT
 			l_factory: EB_PIXMAPABLE_ITEM_PIXMAP_FACTORY
 		do
 			if a_editor /= Void then
 				create l_factory
-				if a_stone /= Void and then a_stone /~ a_editor.stone then
-					l_class_stone ?= a_stone
-					l_cluster_stone ?= a_stone
-				else
-					l_class_stone ?= a_editor.stone
-					l_cluster_stone ?= a_editor.stone
+				st := a_editor.stone
+				if a_stone /= Void and then a_stone /~ st then
+					st := a_stone
 				end
 
 				l_content := a_editor.docking_content
-				if l_class_stone /= Void and then l_class_stone.is_valid then
+				if
+					attached {CLASSI_STONE} st as l_class_stone and then
+					l_class_stone.is_valid
+				then
 					l_content.set_pixmap (l_factory.pixmap_from_class_i (l_class_stone.class_i))
 					l_content.set_short_title (l_class_stone.class_name)
 					l_content.set_long_title (l_class_stone.class_name)
 					-- We should synchronize title with editor saving state, see bug#14443
 					a_editor.set_title_saved_with (not a_editor.changed, l_class_stone.class_name)
-				elseif l_cluster_stone /= Void then
+				elseif attached {CLUSTER_STONE} st as l_cluster_stone then
 					l_group := l_cluster_stone.group
 					l_content.set_pixmap (l_factory.pixmap_from_group (l_group))
 					l_content.set_short_title (l_group.name)
@@ -1407,7 +1406,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2018, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2021, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

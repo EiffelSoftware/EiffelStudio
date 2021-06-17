@@ -1,4 +1,4 @@
-FROM i386/ubuntu:18.04
+FROM 32bit/ubuntu
 
 LABEL maintainer="Jocelyn Fiat <jfiat@eiffel.com>"
 

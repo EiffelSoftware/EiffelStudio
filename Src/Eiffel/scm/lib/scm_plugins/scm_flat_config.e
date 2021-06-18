@@ -35,12 +35,12 @@ feature -- Access
 
 	external_svn_diff_command_value: detachable READABLE_STRING_32
 
-	external_git_diff_command (a_location: detachable PATH): detachable STRING_32
+	external_git_diff_command (a_location: detachable PATH): detachable READABLE_STRING_32
 		local
 			fn: READABLE_STRING_32
 		do
 			Result := external_git_diff_command_value
-			if Result.is_whitespace then
+			if Result /= Void and then Result.is_whitespace then
 				Result := Void
 			end
 			if Result /= Void and a_location /= Void then
@@ -54,12 +54,12 @@ feature -- Access
 			end
 		end
 
-	external_svn_diff_command (a_location: detachable PATH): detachable STRING_32
+	external_svn_diff_command (a_location: detachable PATH): detachable READABLE_STRING_32
 		local
 			fn: READABLE_STRING_32
 		do
 			Result := external_svn_diff_command_value
-			if Result.is_whitespace then
+			if Result /= Void and then Result.is_whitespace then
 				Result := Void
 			end
 			if Result /= Void and a_location /= Void then
@@ -123,8 +123,8 @@ feature -- Element change
 
 
 note
-	copyright: "Copyright (c) 1984-2021, Eiffel Software"
-	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
+	copyright: "Copyright (c) 1984-2021, Eiffel Software and others"
+	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[
 			This file is part of Eiffel Software's Eiffel Development Environment.

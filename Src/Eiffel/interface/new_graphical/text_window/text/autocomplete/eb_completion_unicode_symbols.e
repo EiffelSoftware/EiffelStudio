@@ -53,13 +53,13 @@ feature {NONE} -- Persistency
 		local
 			p: PATH
 			f: PLAIN_TEXT_FILE
-			utf: UTF_CONVERTER
-			l_line: STRING
+			l_line: like {PLAIN_TEXT_FILE}.last_string
 			s32: STRING_32
 			l_section_name: STRING
-			l_section_list: detachable LIST [TUPLE [symbol: STRING_32; description: READABLE_STRING_GENERAL]]
+			l_section_list: like sections.item
 			symb: STRING_32
-			i,j: INTEGER
+			i, j: INTEGER
+			code: NATURAL_32
 		do
 			p := eiffel_layout.eifinit_path.extended ("unicode_symbols.cfg")
 			if attached eiffel_layout.user_priority_file_name (p, True) as pp then
@@ -67,13 +67,6 @@ feature {NONE} -- Persistency
 			end
 			items.wipe_out
 			sections.wipe_out
-			l_section_name := "Default"
-			l_section_list := sections [l_section_name]
-			if l_section_list = Void then
-				create {ARRAYED_LIST [TUPLE [symbol: STRING_32; desc: READABLE_STRING_GENERAL]]} l_section_list.make (10)
-				sections.put (l_section_list, l_section_name)
-			end
-
 			create f.make_with_path (p)
 			if f.exists and then f.is_access_readable then
 				f.open_read
@@ -83,46 +76,76 @@ feature {NONE} -- Persistency
 				loop
 					f.read_line
 					l_line := f.last_string
-					l_line.left_adjust
-					l_line.right_adjust
-					if l_line.is_empty then
-							-- Ignore line
-					elseif l_line.starts_with_general ("--") then
-						if l_line.count > 2 and then l_line[3] = '[' then
-							j := l_line.index_of (']', 3)
-							if j > 3 then
-								l_section_name := l_line.substring (4, j - 1)
-								l_section_name.adjust
-								l_section_list := sections [l_section_name]
-								if l_section_list = Void then
-									create {ARRAYED_LIST [TUPLE [symbol: STRING_32; desc: READABLE_STRING_GENERAL]]} l_section_list.make (10)
-									sections.put (l_section_list, l_section_name)
+					l_line.adjust
+					from
+						i := 1
+					until
+						i > l_line.count or else not l_line [i].is_space
+					loop
+						i := i + 1
+					end
+					if
+						i <= l_line.count and then
+						l_line [i] /= '#' and then
+						attached l_line.split (';') as properties and then
+						properties.count >=2 and then
+						attached properties [1] as codes and then
+						attached properties [2] as name
+					then
+							-- The file comes in standard UCD format:
+							-- <code points>; <description>; <section name>
+							-- Code points come as a sequence white-space separated hexadecimal numbers without any prefixes.
+						create symb.make_empty
+						from
+							i := 1
+						until
+							i > codes.count or else not attached symb
+						loop
+							code := 0
+							from
+								j := i
+							until
+								j > codes.count or else codes [j].is_space
+							loop
+								if codes [j].is_hexa_digit then
+									code := code ⧀ 4 + codes [j].to_hexa_digit
+								else
+									symb := Void
+									j := codes.count
 								end
-
+								j := j + 1
+							end
+							if j > i and then attached symb then
+									-- A potential code point is found, append it to the completion sequence.
+								if j - i <= 8 then
+									symb.extend (code.to_character_32)
+								else
+									symb := Void
+								end
+								i := j
 							else
-								-- Ignore line
+									-- Skip a white-space character.
+								i := i + 1
 							end
-						else
-							-- Ignore line
 						end
-					else
-							-- format: `character code`:`name`
-						symb := Void
-						s32 := Void
-						i := l_line.index_of (':', 1)
-						if i > 0 then
-							symb := symbol_from_string (l_line.head (i - 1))
-							s32 := utf.utf_8_string_8_to_string_32 (l_line.substring (i + 1, l_line.count))
-							s32.left_adjust
-						else
-							symb := symbol_from_string (l_line)
+						l_section_name := Void
+						if properties.count >= 3 then
+							l_section_name := properties [3]
+							l_section_name.adjust
 						end
-						if symb /= Void and then not symb.is_empty and then symb [1] /= '%U' then
-							if s32 = Void then
-								s32 := symb
+						if not attached l_section_name or else l_section_name.is_empty then
+							l_section_name := once "Unsorted"
+						end
+						if attached symb and then not symb.is_empty then
+							l_section_list := sections [l_section_name]
+							if not attached l_section_list then
+								create {ARRAYED_LIST [like sections.item.item]} l_section_list.make (10)
+								sections.put (l_section_list, l_section_name)
 							end
+							name.adjust
+							s32 := if name.is_empty then symb else {UTF_CONVERTER}.utf_8_string_8_to_string_32 (name) end
 							items [s32] := symb
-							l_section_list.force ([symb, s32])
+							l_section_list.extend ([symb, s32])
 						end
 					end
 				end
@@ -178,52 +201,8 @@ feature {NONE} -- Persistency
 			end
 		end
 
-	symbol_from_string (a_string: READABLE_STRING_8): STRING_32
-		local
-			i,j: INTEGER
-			s: STRING_32
-		do
-			s := {UTF_CONVERTER}.utf_8_string_8_to_string_32 (a_string)
-			j := s.index_of ('>', 1)
-			if j = 0 then
-				create Result.make (1)
-				append_unescape_string (s, Result)
-			else
-				create Result.make (s.occurrences ('>') + 1)
-				from
-					i := 1
-				until
-					j = 0
-				loop
-					append_unescape_string (s.substring (i, j - 1), Result)
-					i := j + 1
-					j := s.index_of ('>', i)
-					if j = 0 and i < s.count then
-						j := s.count + 1
-					end
-				end
-			end
-		end
-
-	append_unescape_string (s: READABLE_STRING_32; a_target: STRING_32)
-		local
-			i: INTEGER
-		do
-			if s.starts_with_general ("0x") or s.starts_with_general ("U+") then
-				i := {HEXADECIMAL_STRING_CONVERTER}.hex_to_integer_32 (s.substring (3, s.count))
-				a_target.append_character (i.to_character_32)
-			elseif s.count >= 3 and s.is_integer then
-				i := s.to_integer
-				if i >= 128 then
-					a_target.append_character (i.to_character_32)
-				end
-			else
-				a_target.append (s)
-			end
-		end
-
 note
-	copyright: "Copyright (c) 1984-2020, Eiffel Software"
+	copyright: "Copyright (c) 1984-2021, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

@@ -57,6 +57,9 @@ create
 	make,
 	make_from_iterable
 
+convert
+	make_from_iterable ({ARRAY [G]})
+
 feature {NONE} -- Initialization
 
 	make (n: INTEGER)
@@ -74,11 +77,7 @@ feature {NONE} -- Initialization
 		do
 			create l.make (estimated_count_of (other))
 			list := l
-			across
-				other as o
-			loop
-				l.extend (o.item)
-			end
+			⟳ o: other ¦ l.extend (o) ⟲
 		end
 
 feature -- Access

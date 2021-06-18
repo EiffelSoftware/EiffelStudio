@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
-<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-21-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-21-0 http://www.eiffel.com/developers/xml/configuration-1-21-0.xsd" name="base_testing" uuid="587E708C-4003-477D-99D9-5EEE91FF993B" library_target="base_testing">
+<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-22-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-22-0 http://www.eiffel.com/developers/xml/configuration-1-22-0.xsd" name="base_testing" uuid="587E708C-4003-477D-99D9-5EEE91FF993B" library_target="base_testing">
 	<target name="base_testing">
 		<description>Eiffel Base Testing support classes</description>
 		<root class="AUTOTEST" feature="make"/>

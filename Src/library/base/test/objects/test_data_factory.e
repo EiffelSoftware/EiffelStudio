@@ -54,18 +54,12 @@ feature -- Test data
 			-- Put each element in `list' into a `CELL [ANY]'.
 			-- Useful for testing polymorphic attachment.
 		do
-			across
-				list as item
-			from
-				create Result.make (list.count)
-			loop
-
-				Result.extend (create {CELL [ANY]}.put (item.item))
-			end
+			create Result.make (list.count)
+			⟳ item: list ¦ Result.extend (create {CELL [ANY]}.put (item)) ⟲
 		end
 
 note
-	copyright: "Copyright (c) 1984-2019, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2021, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

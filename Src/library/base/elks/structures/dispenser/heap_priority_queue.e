@@ -28,6 +28,9 @@ create
 	make,
 	make_from_iterable
 
+convert
+	make_from_iterable ({ARRAY [G]})
+
 feature {NONE} -- Initialization
 
 	make (n: INTEGER)
@@ -235,7 +238,7 @@ feature -- Duplication
 		obsolete
 			"[
 				Create a new container explicitly using `make_from_iterable` if available.
-				Otherwise, replace a call to the feature with code that creates and initializes container.
+				Otherwise, replace the call to the feature with code that creates and initializes the container.
 				[2018-11-30]
 			]"
 		require
@@ -260,13 +263,8 @@ feature -- Duplication
 			end
 
 				--| Insert `n' greatest items into new queue.
-			across
-				l_tmp as x
-			from
-				create Result.make (n)
-			loop
-				Result.put (x.item)
-			end
+			create Result.make (n)
+			⟳ x: l_tmp ¦ Result.put (x) ⟲
 		end
 
 feature -- Removal
@@ -310,9 +308,9 @@ feature -- Removal
 			l_item: G
 			l_done: BOOLEAN
 		do
-				--| Create an ARRAYED_LIST with all items of Current except first
-				--| occurrence of `v'. Then recreate current with items from ARRAYED_LIST
-				--| if `v' was found.
+				-- Create an ARRAYED_LIST with all items of Current except the first
+				-- occurrence of `v'. Then recreate current object with items from ARRAYED_LIST
+				-- if `v' was found.
 			create l_tmp.make (count)
 			if object_comparison then
 				from
@@ -347,14 +345,9 @@ feature -- Removal
 			end
 
 			if l_tmp.count = count - 1 then
-					--| Item was found, we can update `Current'.
-				across
-					l_tmp as x
-				from
-					wipe_out
-				loop
-					put (x.item)
-				end
+					-- Item was found, we can update `Current'.
+				wipe_out
+				⟳ x: l_tmp ¦ put (x) ⟲
 			end
 		end
 

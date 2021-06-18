@@ -57,6 +57,9 @@ create
 	make,
 	make_from_iterable
 
+convert
+	make_from_iterable ({ARRAY [G]})
+
 feature {NONE} -- Initialization
 
 	make
@@ -72,11 +75,7 @@ feature {NONE} -- Initialization
 		do
 			create l.make
 			list := l
-			across
-				other as o
-			loop
-				l.extend (o.item)
-			end
+			⟳ o: other ¦ l.extend (o) ⟲
 		end
 
 feature -- Measurement
@@ -304,84 +303,84 @@ feature {LINKED_CIRCULAR} -- Implementation
 	list: LINKED_LIST [G]
 
 	standard_after: BOOLEAN
-			do
-				Result := list.after
-			end
+		do
+			Result := list.after
+		end
 
 	standard_back
-			do
-				list.back
-			end
+		do
+			list.back
+		end
 
 	standard_before: BOOLEAN
-			do
-				Result := list.before
-			end
+		do
+			Result := list.before
+		end
 
 	standard_finish
-			do
-				list.finish
-			end
+		do
+			list.finish
+		end
 
 	standard_forth
-			do
-				list.forth
-			end
+		do
+			list.forth
+		end
 
 	standard_go_i_th (i: INTEGER)
-			do
-				list.go_i_th (i)
-			end
+		do
+			list.go_i_th (i)
+		end
 
 	standard_index: INTEGER
-			do
-				Result := list.index
-			end
+		do
+			Result := list.index
+		end
 
 	standard_isfirst: BOOLEAN
-			do
-				Result := list.isfirst
-			end
+		do
+			Result := list.isfirst
+		end
 
 	standard_islast: BOOLEAN
-			do
-				Result := list.islast
-			end
+		do
+			Result := list.islast
+		end
 
 	standard_move (i: INTEGER)
-			do
-				list.move (i)
-			end
+		do
+			list.move (i)
+		end
 
 	standard_off: BOOLEAN
-			do
-				Result := list.off
-			end
+		do
+			Result := list.off
+		end
 
 	standard_remove
-			do
-				list.remove
-			end
+		do
+			list.remove
+		end
 
 	standard_remove_left
-			do
-				list.remove_left
-			end
+		do
+			list.remove_left
+		end
 
 	standard_remove_right
-			do
-				list.remove_right
-			end
+		do
+			list.remove_right
+		end
 
 	standard_search (v: G)
-			do
-				list.search (v)
-			end
+		do
+			list.search (v)
+		end
 
 	standard_start
-			do
-				list.start
-			end
+		do
+			list.start
+		end
 
 note
 	copyright: "Copyright (c) 1984-2021, Eiffel Software and others"

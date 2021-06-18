@@ -1,6 +1,7 @@
-note
+﻿note
 	description: "A factory class for generating different SPECIAL objects."
 	author: "Roman Schmocker"
+	revised_by: "Alexander Kogtenkov"
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -93,13 +94,8 @@ feature -- Reference types
 	different_any_special: SPECIAL [ANY]
 			-- A SPECIAL filled with different ANY objects.
 		do
-			across
-				1 |..| Default_size as index
-			from
-				create Result.make_empty (Default_size)
-			loop
-				Result.extend (create {ANY})
-			end
+			create Result.make_empty (Default_size)
+			⟳ i: 1 |..| Default_size ¦ Result.extend (create {ANY}) ⟲
 		end
 
 	object_graph_special: SPECIAL [OBJECT_GRAPH_ITEM]
@@ -123,19 +119,11 @@ feature -- Reference types
 			-- A SPECIAL containing SPECIAL[ANY] object, where the ANY object is always the same.
 		local
 			any: ANY
-			inner: SPECIAL[ANY]
 		do
-			across
-				1 |..| Default_size as index
-			from
-				create Result.make_empty (Default_size)
-				create any
-			loop
-				create inner.make_filled (any, Default_size)
-				Result.extend (inner)
-			end
+			create Result.make_empty (default_size)
+			create any
+			⟳ i: 1 |..| Default_size ¦ Result.extend (create {SPECIAL[ANY]}.make_filled (any, default_size)) ⟲
 		end
-
 
 	special_special_different_any: SPECIAL [SPECIAL [ANY]]
 			-- A SPECIAL containing SPECIAL[ANY] object, where the ANY object is always different.
@@ -147,19 +135,11 @@ feature -- Reference types
 			from
 				create Result.make_empty (Default_size)
 			loop
-
-				across
-					1 |..| Default_size as index2
-				from
-					create inner.make_empty (Default_size)
-				loop
-					inner.extend (create {ANY})
-				end
-
+				create inner.make_empty (Default_size)
+				⟳ i: 1 |..| Default_size ¦ inner.extend (create {ANY}) ⟲
 				Result.extend (inner)
 			end
 		end
-
 
 feature -- Copy-semantics references
 
@@ -173,43 +153,30 @@ feature -- Copy-semantics references
 			Result.extend (special_with_expanded_and_copysemantics)
 		end
 
-	special_any_with_integer: SPECIAL[ANY]
+	special_any_with_integer: SPECIAL [ANY]
 			-- A SPECIAL[ANY] filled with integer values.
 		do
-			across
-				1 |..| Default_size as index
-			from
-				create Result.make_empty (Default_size)
-			loop
-				Result.extend (index.item)
-			end
+			create Result.make_empty (Default_size)
+			⟳ index: 1 |..| Default_size ¦ Result.extend (index) ⟲
 		end
 
 	special_any_with_expanded: SPECIAL[ANY]
-			-- A SPECIAL[ANY] with a userdefined expanded object.
+			-- A SPECIAL [ANY] with a userdefined expanded object.
 		local
 			cell: E_DOUBLE_CELL [detachable ANY, detachable ANY]
 		do
 			cell.first := create {ANY}
 			cell.second := create {ANY}
-
-			across
-				1 |..| Default_size as index
-			from
-				create Result.make_empty (Default_size)
-			loop
-				Result.extend (cell)
-			end
+			create Result.make_filled (cell, default_size)
 		end
 
-	special_with_expanded: SPECIAL[ E_DOUBLE_CELL [detachable separate ANY, detachable separate ANY]]
+	special_with_expanded: SPECIAL [E_DOUBLE_CELL [detachable separate ANY, detachable separate ANY]]
 			-- A SPECIAL with a user-defined expanded object.
 		local
 			cell: E_DOUBLE_CELL [detachable ANY, detachable ANY]
 		do
 			cell.first := create {ANY}
 			cell.second := create {ANY}
-
 			create Result.make_filled (cell, Default_size)
 		end
 
@@ -220,12 +187,11 @@ feature -- Copy-semantics references
 		do
 			cell.first := 42
 			cell.second := create {ANY}
-
 			create Result.make_filled (cell, Default_size)
 		end
 
 note
-	copyright: "Copyright (c) 1984-2018, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2021, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

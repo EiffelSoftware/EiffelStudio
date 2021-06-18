@@ -55,6 +55,9 @@ create
 	make_from_array,
 	make_from_iterable
 
+convert
+	make_from_iterable ({ARRAY [G]})
+
 feature -- Initialization
 
 	make (n: INTEGER)
@@ -119,7 +122,7 @@ feature {NONE} -- Initialization
 					a := a.aliased_resized_area (n)
 					area_v2 := a
 				end
-				a.extend (o.item)
+				a.extend (o)
 			end
 		end
 
@@ -894,7 +897,7 @@ invariant
 
 note
 	ca_ignore: "CA033", "CA033: very large class"
-	copyright: "Copyright (c) 1984-2019, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2021, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

@@ -35,6 +35,9 @@ create
 	make_from_iterable,
 	make_filled
 
+convert
+	make_from_iterable ({ARRAY [G]})
+
 feature -- Initialization
 
 	make (n: INTEGER_32)
@@ -63,7 +66,7 @@ feature {NONE} -- Creation
 				if not extendible then
 					capacity := capacity + 1
 				end
-				extend (o.item)
+				extend (o)
 			end
 			capacity := count
 		end
@@ -80,7 +83,7 @@ feature -- Status report
 		end
 
 note
-	copyright: "Copyright (c) 1984-2018, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2021, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

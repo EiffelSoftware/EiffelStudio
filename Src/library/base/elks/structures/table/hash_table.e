@@ -56,7 +56,11 @@ class HASH_TABLE [G, K -> detachable HASHABLE] inherit
 
 create
 	make,
-	make_equal
+	make_equal,
+	make_from_iterable_tuples
+
+convert
+	make_from_iterable_tuples ({ARRAY [TUPLE [G, K]]})
 
 feature -- Initialization
 
@@ -114,6 +118,26 @@ feature -- Initialization
 			more_than_minimum: capacity > minimum_capacity
 			no_status: not special_status
 			compare_objects: object_comparison
+		end
+
+	make_from_iterable_tuples (other: ITERABLE [TUPLE [G, K]])
+		local
+			t: TUPLE [value: G; key: K]
+		do
+			make
+				(if attached {FINITE [TUPLE [G, K]]} other as f then
+					f.count
+				elseif attached {READABLE_INDEXABLE [TUPLE [G, K]]} other as r then
+					r.upper - r.lower + 1
+				else
+					0
+				end)
+			across
+				other as o
+			loop
+				t := o
+				force (t.value, t.key)
+			end
 		end
 
 	accommodate (n: INTEGER)
@@ -502,12 +526,12 @@ feature -- Comparison
 				until
 					not Result
 				loop
-					other.search (l_c.key)
+					other.search (@ l_c.key)
 					if other.found then
 						if object_comparison then
-							Result := l_c.item ~ other.found_item
+							Result := l_c ~ other.found_item
 						else
-							Result := l_c.item = other.found_item
+							Result := l_c = other.found_item
 						end
 					else
 						Result := False
@@ -530,7 +554,7 @@ feature -- Comparison
 				-- If any of the tables are empty, it is clearly disjoint,
 				-- otherwise we check that no elements of `other' appears in Current.
 			Result := is_empty or else other.is_empty or else
-				not across other as o some has (o.key) end
+				not across other as o some has (@ o.key) end
 		end
 
 feature -- Status report
@@ -970,13 +994,11 @@ feature -- Element change
 		require
 			other_not_void: other /= Void
 		do
-			across
-				other as other_cursor
-			loop
-				force (other_cursor.item, other_cursor.key)
+			if other /= Current then
+				⟳ o: other ¦ force (o, @ o.key) ⟲
 			end
 		ensure
-			inserted: across other as other_cursor all has (other_cursor.key) end
+			inserted: ∀ o: other ¦ item (@ o.key) = o
 		end
 
 feature -- Removal

@@ -318,7 +318,7 @@ feature {RT_DBG_EXECUTION_RECORDER, RT_DBG_CALL_RECORD} -- Change
 				across
 					l_calls.new_cursor.reversed as i
 				loop
-					c := i.item
+					c := i
 					if not c.is_closed then
 						c.deep_close
 					end

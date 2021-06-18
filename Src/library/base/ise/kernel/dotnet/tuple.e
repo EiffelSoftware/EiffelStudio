@@ -14,7 +14,6 @@ inherit
 			copy, is_equal, default_create
 		end
 
-
 	READABLE_INDEXABLE [detachable separate ANY]
 		redefine
 			copy, is_equal, default_create
@@ -713,7 +712,7 @@ feature -- Type queries
 			then
 				Result := True
 			else
-				-- Nothing to do here since Result already initialized to False.
+					-- Nothing to do here since Result already initialized to False.
 			end
 		end
 
@@ -853,7 +852,7 @@ feature -- Access
 			--| warning: this function has poor performance, use it with parsimony.
 		local
 			l_reflector: REFLECTOR
-			i, n1,n2: INTEGER
+			i, n1, n2: INTEGER
 			t1, t2: TYPE [detachable TUPLE]
 			l_type_id: INTEGER
 			l_items: SPECIAL [detachable separate ANY]
@@ -912,9 +911,9 @@ feature -- Access
 		ensure
 			has_expected_count: Result /= Void implies Result.count = count + a_other.count
 			has_expected_items: Result /= Void implies (
-						(across 1 |..| count as ic_1 all Result[ic_1.item] = item (ic_1.item) end) and
-						(across 1 |..| a_other.count as ic_2 all Result[count + ic_2.item] = a_other [ic_2.item] end)
-					)
+					(∀ k: 1 |..| count ¦ Result [k] = item (k)) and
+					(∀ k: 1 |..| a_other.count ¦ Result [count + k] = a_other [k])
+				)
 		end
 
 feature -- Type conversion queries
@@ -1294,8 +1293,7 @@ feature {NONE} -- Implementation
 			else
 					-- Void element we need to retrieve type from actual generic
 					-- parameter.
-				l_item := reverse_lookup.item (
-					 {ISE_RUNTIME}.type_of_generic_parameter (Current, pos))
+				l_item := reverse_lookup.item ({ISE_RUNTIME}.type_of_generic_parameter (Current, pos))
 			end
 			if l_item = Void then
 				Result := reference_code
@@ -1354,9 +1352,9 @@ invariant
 	non_void_native_array: native_array /= Void
 
 note
-	library:	"EiffelBase: Library of reusable components for Eiffel."
-	copyright:	"Copyright (c) 1984-2017, Eiffel Software and others"
-	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
+	library: "EiffelBase: Library of reusable components for Eiffel."
+	copyright: "Copyright (c) 1984-2021, Eiffel Software and others"
+	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software
 			5949 Hollister Ave., Goleta, CA 93117 USA

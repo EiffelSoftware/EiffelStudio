@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "Set of features to store/retrieve using all the various possibilities."
 	date: "$Date$"
 	revision: "$Revision$"
@@ -93,7 +93,7 @@ feature -- Operations
 
 			across c_storable_types as l_type loop
 				if a_append_extension then
-					create l_file.make_with_path (l_path.appended_with_extension (l_type.item))
+					create l_file.make_with_path (l_path.appended_with_extension (l_type))
 				else
 					create l_file.make_with_path (l_path)
 				end
@@ -101,7 +101,7 @@ feature -- Operations
 					l_file.open_read
 					l_obj := safe_c_retrieved (l_file)
 					if l_obj /= Void then
-						Result.put (l_obj, l_type.item)
+						Result.put (l_obj, l_type)
 					end
 					l_file.close
 				end
@@ -109,7 +109,7 @@ feature -- Operations
 
 			across sed_storable_types as l_type loop
 				if a_append_extension then
-					create l_file.make_with_path (l_path.appended_with_extension (l_type.item))
+					create l_file.make_with_path (l_path.appended_with_extension (l_type))
 				else
 					create l_file.make_with_path (l_path)
 				end
@@ -119,7 +119,7 @@ feature -- Operations
 					retrieved_errors := Void
 					l_obj := safe_sed_retrieved (l_reader, True)
 					if l_obj /= Void then
-						Result.put (l_obj, l_type.item)
+						Result.put (l_obj, l_type)
 					end
 					l_file.close
 				end
@@ -264,4 +264,14 @@ feature -- SED serializations
 			Result.extend (sed_recoverable_extension)
 		end
 
+note
+	copyright: "Copyright (c) 1984-2021, Eiffel Software and others"
+	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
+	source: "[
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
+		]"
 end

@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "[
 		Eiffel tests that can be executed by testing tool.
 	]"
@@ -19,14 +19,10 @@ feature -- Test string iteration cursor
 			l_cursor: STRING_ITERATION_CURSOR
 			l_new_string: STRING_32
 		do
-			l_string_32 := "Testing string general cursor"
+			l_string_32 := {STRING_32} "Testing string general cursor"
 			create l_cursor.make (l_string_32)
 			create l_new_string.make_empty
-			across
-				l_cursor as lc
-			loop
-				l_new_string.append_character (lc.item)
-			end
+			⟳ c: l_cursor ¦ l_new_string.append_character (c) ⟲
 			assert ("Same String", l_string_32.same_string (l_new_string))
 		end
 
@@ -36,14 +32,10 @@ feature -- Test string iteration cursor
 			l_cursor: STRING_ITERATION_CURSOR
 			l_new_string: STRING_32
 		do
-			l_string_32 := "Testing string general cursor"
+			l_string_32 := {STRING_32} "Testing string general cursor"
 			create l_cursor.make_from_substring (l_string_32, 9, 9 + 5)
 			create l_new_string.make_empty
-			across
-				l_cursor as lc
-			loop
-				l_new_string.append_character (lc.item)
-			end
+			⟳ c: l_cursor ¦ l_new_string.append_character (c) ⟲
 			assert ("Same String", l_string_32.substring (9, 9 + 5).same_string (l_new_string))
 		end
 
@@ -53,14 +45,10 @@ feature -- Test string iteration cursor
 			l_cursor: STRING_ITERATION_CURSOR
 			l_new_string: STRING_8
 		do
-			l_string_8 := "Testing string general cursor"
+			l_string_8 := {STRING_8} "Testing string general cursor"
 			create l_cursor.make (l_string_8)
 			create l_new_string.make_empty
-			across
-				l_cursor as lc
-			loop
-				l_new_string.append_character (lc.item.to_character_8)
-			end
+			⟳ c: l_cursor ¦ l_new_string.append_character (c.to_character_8) ⟲
 			assert ("Same String", l_string_8.same_string (l_new_string))
 		end
 
@@ -70,19 +58,15 @@ feature -- Test string iteration cursor
 			l_cursor: STRING_ITERATION_CURSOR
 			l_new_string: STRING_8
 		do
-			l_string := "Testing string general cursor"
+			l_string := {STRING_8} "Testing string general cursor"
 			create l_cursor.make_from_substring (l_string, 9, 9 + 5)
 			create l_new_string.make_empty
-			across
-				l_cursor as lc
-			loop
-				l_new_string.append_character (lc.item.to_character_8)
-			end
+			⟳ c: l_cursor ¦ l_new_string.append_character (c.to_character_8) ⟲
 			assert ("Same String", l_string.substring (9, 9 + 5).same_string (l_new_string))
 		end
 
 note
-	copyright: "Copyright (c) 1984-2014, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2021, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

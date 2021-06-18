@@ -109,7 +109,7 @@ feature -- Element Change
 			across
 				if s = Current then s.twin else s end as c
 			loop
-				extend (c.item)
+				extend (c)
 			end
 		end
 

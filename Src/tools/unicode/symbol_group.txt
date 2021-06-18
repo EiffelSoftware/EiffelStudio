@@ -1,0 +1,10 @@
+2190..21FF; Arrows
+2200..22FF; Mathematical Operators
+2300..23FF; Miscellaneous Technical
+27C0..27EF; Miscellaneous Mathematical Symbols-A
+27F0..27FF; Supplemental Arrows-A
+2900..297F; Supplemental Arrows-B
+2980..29FF; Miscellaneous Mathematical Symbols-B
+2A00..2AFF; Supplemental Mathematical Operators
+2B00..2BFF; Miscellaneous Symbols and Arrows
+FF00..FFEF; Halfwidth and Fullwidth Forms

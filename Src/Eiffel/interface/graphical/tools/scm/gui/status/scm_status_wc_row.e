@@ -112,6 +112,55 @@ feature {SCM_STATUS_CHANGE_ROW, SCM_STATUS_WC_LOCATION_ROW} -- Internal
 	row: detachable EV_GRID_ROW
 
 	recorded_changes: like changes
+		do
+			if attached parent_grid.status_box.active_changelist as coll then
+				Result := coll.changelist (root_location)
+			end
+		end
+
+	add_change_to_active_changelist (a_status: SCM_STATUS)
+		local
+			lst: SCM_CHANGELIST
+		do
+			if attached parent_grid.status_box.active_changelist as coll then
+				lst := coll.changelist (root_location)
+				if lst = Void then
+					create lst.make_with_location (root_location)
+					coll.put_changelist (lst)
+				end
+				if not lst.has_path (a_status.location) then
+					lst.extend_path (a_status.location)
+				end
+			end
+		end
+
+	remove_change_from_active_changelist (a_status: SCM_STATUS)
+		do
+			if
+				attached parent_grid.status_box.active_changelist as coll and then
+				attached coll.changelist (root_location) as lst
+			then
+				lst.remove_path (a_status.location)
+			end
+		end
+
+	set_recorded_changes (a_changes: like changes)
+		local
+			lst: SCM_CHANGELIST
+		do
+			if attached parent_grid.status_box.active_changelist as coll then
+				lst := coll.changelist (root_location)
+				if lst = Void then
+					coll.put_changelist (a_changes)
+				else
+					across
+						a_changes as ic
+					loop
+						lst.extend (ic.item)
+					end
+				end
+			end
+		end
 
 	scm_rows: detachable ARRAYED_LIST [SCM_STATUS_WC_LOCATION_ROW]
 
@@ -186,7 +235,7 @@ feature -- Execution
 			r: SCM_STATUS_WC_LOCATION_ROW
 		do
 			if is_supported then
-				recorded_changes := changes
+				set_recorded_changes (changes)
 				if attached row as l_row and attached parent_grid as l_grid then
 					reset_changes_count
 					if attached scm_rows as l_scm_rows then
@@ -208,12 +257,23 @@ feature -- Execution
 			end
 		end
 
+	apply_changelist (a_changes: detachable SCM_CHANGELIST)
+		do
+			if attached scm_rows as lst then
+				across
+					lst as ic
+				loop
+					ic.item.apply_changelist (a_changes)
+				end
+			end
+		end
+
 	on_statuses_updated (a_location: PATH; a_statuses: detachable SCM_STATUS_LIST)
 		local
 			r: SCM_STATUS_WC_LOCATION_ROW
 		do
 			if is_supported then
-				recorded_changes := changes
+				set_recorded_changes (changes)
 				if attached row as l_row and attached parent_grid as l_grid then
 					reset_changes_count
 					if attached scm_rows as l_scm_rows then
@@ -240,7 +300,17 @@ feature -- Execution
 			else
 				decrement_changes_count
 			end
-			if attached a_cb.row as r and then attached {SCM_STATUS} r.data as st then
+
+			if
+				attached a_cb.row as r and then
+				attached {SCM_STATUS_CHANGE_ROW} r.data as l_ch_row and then
+				attached l_ch_row.status as st
+			then
+				if a_cb.is_checked then
+					add_change_to_active_changelist (st)
+				else
+					remove_change_from_active_changelist (st)
+				end
 				if attached {EV_GRID_LABEL_ITEM} r.item (g.filename_column) as glab then
 					if a_cb.is_checked then
 						if attached {SCM_STATUS_UNVERSIONED} st then
@@ -302,14 +372,13 @@ feature -- Execution
 								attached l_row.subrow (i) as l_subrow and then
 								attached {EV_GRID_CHECKABLE_LABEL_ITEM} l_subrow.item (l_grid.checkbox_column) as cb and then
 								cb.is_checked and then
-								attached {SCM_STATUS} l_subrow.data as l_status
+								attached {SCM_STATUS_CHANGE_ROW} l_subrow.data as l_ch_row
 							then
-								Result.extend_path (l_status.location)
+								Result.extend_path (l_ch_row.status.location)
 							end
 							i := i + 1
 						end
 					end
-
 				end
 			end
 		end

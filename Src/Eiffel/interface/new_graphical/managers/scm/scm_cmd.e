@@ -111,6 +111,18 @@ feature -- Basic operations
 			end
 		end
 
+	go_to_the_tool
+		do
+			if is_sensitive then
+				if
+					attached window_manager.last_focused_development_window as win and then
+					attached win.tools.scm_tool as l_tool
+				then
+					l_tool.show (True)
+				end
+			end
+		end
+
 	refresh
 		do
 			refresh_items
@@ -202,38 +214,8 @@ feature {NONE} -- Implementation
 
 feature -- Drop down menu
 
-	current_editor_status_menu_item: detachable EV_MENU_ITEM
-
 	updated_drop_down_menu: EV_MENU
 		do
-			if attached current_editor_status_menu_item as l_menu_item then
-				l_menu_item.disable_sensitive
-				l_menu_item.remove_pixmap
-				if
-					attached scm_s.service as scm and then
-					attached scm.is_available
-				then
-					if attached {FILED_STONE} editor_stone as st then
-						if
-							attached scm.file_status (create {PATH}.make_from_string (st.file_name)) as l_status
-						then
-							l_menu_item.set_pixmap (status_pixmap (l_status))
-							l_menu_item.set_text (scm_names.menu_editor_status (st.stone_name, l_status.status_as_string))
-							if
-								attached {SCM_STATUS_MODIFIED} l_status
-								or attached {SCM_STATUS_CONFLICTED} l_status
-							then
-								l_menu_item.enable_sensitive
-							else
-								l_menu_item.disable_sensitive
-							end
-						else
-							l_menu_item.set_text (scm_names.menu_editor_status (st.stone_name, Void))
-							l_menu_item.disable_sensitive
-						end
-					end
-				end
-			end
 			Result := drop_down_menu
 		end
 
@@ -241,25 +223,83 @@ feature -- Drop down menu
 			-- Drop down menu for `new_sd_toolbar_item'.
 		local
 			l_item: EV_MENU_ITEM
+			l_menu_status_item,
+			l_menu_revert_item,
+			l_menu_diff_item: EV_MENU_ITEM
+			l_menu_add_to_item: EV_MENU
+			mi: EV_MENU_ITEM
+			l_status: SCM_STATUS
 		do
 			create Result
 			if attached scm_s.service as scm then
 				if scm.is_available then
+					create l_menu_status_item
+					l_menu_status_item.set_text (scm_names.menu_editor_status (Void, Void))
+					l_menu_status_item.disable_sensitive
+					l_menu_status_item.select_actions.extend (agent on_editor_change_selected)
+					Result.extend (l_menu_status_item)
+
+					Result.extend (create {EV_MENU_SEPARATOR})
+
+					create l_menu_diff_item
+					l_menu_diff_item.set_text (scm_names.menu_diff)
+					l_menu_diff_item.disable_sensitive
+					l_menu_diff_item.select_actions.extend (agent on_editor_diff_selected)
+					Result.extend (l_menu_diff_item)
+
+					create l_menu_add_to_item
+					l_menu_add_to_item.set_text (scm_names.menu_add_to_changelist (Void, 0))
+					l_menu_add_to_item.disable_sensitive
+					Result.extend (l_menu_add_to_item)
+
+					create l_menu_revert_item
+					l_menu_revert_item.set_text (scm_names.menu_revert)
+					l_menu_revert_item.disable_sensitive
+					l_menu_revert_item.select_actions.extend (agent on_editor_revert_selected)
+					Result.extend (l_menu_revert_item)
+
+					Result.extend (create {EV_MENU_SEPARATOR})
 					create l_item
 					l_item.set_text (scm_names.menu_status)
 					l_item.enable_sensitive
 					l_item.select_actions.extend (agent scm.update_statuses)
 					Result.extend (l_item)
 
-					l_item := current_editor_status_menu_item
-					if l_item = void then
-						create l_item
-						current_editor_status_menu_item := l_item
-						l_item.set_text (scm_names.menu_editor_status (Void, Void))
-						l_item.disable_sensitive
-						l_item.select_actions.extend (agent show_editor_diff)
-					end
+
+					create l_item
+					l_item.set_text (scm_names.menu_go_to_tool)
+					l_item.enable_sensitive
+					l_item.select_actions.extend (agent go_to_the_tool)
 					Result.extend (l_item)
+
+					if attached {FILED_STONE} editor_stone as st then
+						l_status := scm.file_status (create {PATH}.make_from_string (st.file_name))
+						if
+							l_status /= Void
+						then
+							l_menu_status_item.set_data (l_status)
+							l_menu_status_item.set_pixmap (status_pixmap (l_status))
+							l_menu_status_item.set_text (scm_names.menu_editor_status (st.stone_name, l_status.status_as_string))
+							if
+								attached {SCM_STATUS_MODIFIED} l_status
+								or attached {SCM_STATUS_CONFLICTED} l_status
+							then
+								l_menu_diff_item.enable_sensitive
+								l_menu_revert_item.enable_sensitive
+							end
+						else
+							l_menu_status_item.set_text (scm_names.menu_editor_status (st.stone_name, Void))
+						end
+						l_menu_add_to_item.enable_sensitive
+						across
+							scm.changelists as ic
+						loop
+							create mi.make_with_text (scm_names.menu_add_to_changelist (ic.key, ic.item.count))
+							mi.select_actions.extend (agent on_editor_add_selected (ic.key, st.file_name))
+							l_menu_add_to_item.extend (mi)
+						end
+					end
+
 				else
 						-- Check availability
 					create l_item.make_with_text (scm_names.menu_check)
@@ -273,7 +313,11 @@ feature -- Drop down menu
 
 feature {NONE} -- Implementation
 
-	show_editor_diff
+	on_editor_change_selected
+		do
+		end
+
+	on_editor_diff_selected
 		local
 			dlg: SCM_DIFF_DIALOG
 		do
@@ -289,6 +333,43 @@ feature {NONE} -- Implementation
 							dlg.set_size (devwin.dpi_scaler.scaled_size (700).min (devwin.window.width), devwin.dpi_scaler.scaled_size (500).min (devwin.window.height))
 						end
 						dlg.show_on_active_window
+					end
+				end
+			end
+		end
+
+	on_editor_add_selected (a_name: READABLE_STRING_GENERAL; a_location: READABLE_STRING_GENERAL)
+		local
+			p: PATH
+		do
+			if
+				attached scm_s.service as scm and then
+				scm.is_available
+			then
+				if attached scm.changelists [a_name] as ch then
+					create p.make_from_string (a_location)
+					ch.extend_path (scm.scm_root_location (p), p)
+					scm.on_changelist_updated (ch)
+				end
+			end
+		end
+
+	on_editor_revert_selected
+		local
+			ch: SCM_CHANGELIST
+			p: PATH
+			s: READABLE_STRING_GENERAL
+		do
+			if
+				attached scm_s.service as scm and then
+				scm.is_available
+			then
+				if attached {FILED_STONE} editor_stone as l_file_stone then
+					create p.make_from_string (l_file_stone.file_name)
+					if attached	scm.scm_root_location (p) as rt then
+						create ch.make_with_location (rt)
+						ch.extend_path (p)
+						s := scm.revert (ch) -- FIXME report output
 					end
 				end
 			end

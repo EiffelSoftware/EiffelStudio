@@ -19,6 +19,7 @@ inherit
 		redefine
 			on_workspace_updated,
 			on_configuration_updated,
+			on_changelist_updated,
 			on_statuses_updated
 		end
 
@@ -176,6 +177,20 @@ feature {NONE} -- Action handlers
 			update_associated_interface_elements
 		end
 
+	on_changelist_updated (ch: SCM_CHANGELIST_COLLECTION)
+		local
+			l_status: SCM_STATUS_BOX
+		do
+			l_status := status_box
+			if
+				l_status /= Void and then
+				attached l_status.active_changelist_name as l_name and then
+				l_name.same_string (ch.name)
+			then
+				l_status.on_changelist_selected (ch)
+			end
+		end
+
 	on_statuses_updated (a_root: SCM_LOCATION; a_location: PATH; a_statuses: detachable SCM_STATUS_LIST)
 		local
 			l_status: SCM_STATUS_BOX
@@ -208,7 +223,7 @@ feature {NONE} -- Action handlers
 					status_box := Void
 				else
 					set_status_mode
-					create l_status.make (develop_window)
+					create l_status.make (scm, develop_window)
 					status_box := l_status
 					l_status.set_workspace (ws)
 					b.extend (l_status)
@@ -261,7 +276,7 @@ feature {NONE} -- Action handlers
 					if is_status_mode then
 						l_status := status_box
 						if l_status = Void then
-							create l_status.make (develop_window)
+							create l_status.make (scm, develop_window)
 							status_box := l_status
 						end
 						l_status.set_workspace (ws)

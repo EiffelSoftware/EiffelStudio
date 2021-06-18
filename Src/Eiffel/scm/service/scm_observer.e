@@ -23,6 +23,12 @@ feature -- Event
 		do
 		end
 
+	on_changelist_updated (ch: SCM_CHANGELIST_COLLECTION)
+		require
+			is_interface_usable: attached {USABLE_I} Current as l_usable implies l_usable.is_interface_usable
+		do
+		end
+
 	on_change_detected (ch: SCM_CHANGE)
 		require
 			is_interface_usable: attached {USABLE_I} Current as l_usable implies l_usable.is_interface_usable

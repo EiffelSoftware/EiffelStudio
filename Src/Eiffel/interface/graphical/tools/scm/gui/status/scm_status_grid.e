@@ -183,17 +183,10 @@ feature -- Events
 
 	on_wc_selected (a_repo: SCM_STATUS_WC_ROW)
 		do
-			status_box.set_selected_repository (a_repo.root_location)
-			if a_repo.is_supported and then a_repo.changes_count > 0 then
-				status_box.save_selected_repo_button.enable_sensitive
-			else
-				status_box.save_selected_repo_button.disable_sensitive
-			end
 		end
 
 	on_wc_deselected (a_repo: detachable SCM_STATUS_WC_ROW)
 		do
-			status_box.set_selected_repository (Void)
 		end
 
 	on_changes_updated (a_repo: SCM_STATUS_WC_ROW)
@@ -209,16 +202,6 @@ feature -- Events
 				status_box.save_all_repo_button.enable_sensitive
 			else
 				status_box.save_all_repo_button.disable_sensitive
-			end
-			if
-				attached status_box.selected_repository as loc and then
-				loc.same_as (a_repo.root_location)
-			then
-				if a_repo.changes_count > 0 then
-					status_box.save_selected_repo_button.enable_sensitive
-				else
-					status_box.save_selected_repo_button.disable_sensitive
-				end
 			end
 		end
 
@@ -320,6 +303,17 @@ feature -- Operations
 					ic.item.reset
 				end
 				refresh_now
+			end
+		end
+
+	apply_changelist_collection (a_changelist_collection: SCM_CHANGELIST_COLLECTION)
+		do
+			if attached scm_rows as lst then
+				across
+					lst as ic
+				loop
+					ic.item.apply_changelist (a_changelist_collection.changelist (ic.item.root_location))
+				end
 			end
 		end
 

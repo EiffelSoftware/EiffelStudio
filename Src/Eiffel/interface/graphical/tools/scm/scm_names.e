@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "Summary description for {SCM_NAMES}."
 	date: "$Date$"
 	revision: "$Revision$"
@@ -42,6 +42,15 @@ feature -- Menu
 			end
 		end
 
+	menu_add_to_changelist (a_name: detachable READABLE_STRING_GENERAL; a_count: INTEGER): STRING_32
+		do
+			if a_name = Void then
+				Result := locale.translation_in_context ("Add to changelist", "scm")
+			else
+				Result := locale.formatted_string (locale.translation_in_context ("$1 ($2)", "scm"), [a_name, a_count])
+			end
+		end
+
 	menu_diff: STRING_32 do Result := locale.translation_in_context ("Diff ...", "scm") end
 	menu_diff_selection: STRING_32 do Result := locale.translation_in_context ("Diff selection ...", "scm") end
 	menu_revert: STRING_32 do Result := locale.translation_in_context ("Revert ...", "scm") end
@@ -49,6 +58,8 @@ feature -- Menu
 
 	menu_save: STRING_32 do Result := locale.translation_in_context ("Save ...", "scm") end
 	menu_configuration: STRING_32 do Result := locale.translation_in_context ("Configuration ...", "scm") end
+
+	menu_go_to_tool: STRING_32 do Result := locale.translation_in_context ("Go to the tool", "scm") end
 
 feature -- Dialogs
 
@@ -139,9 +150,11 @@ feature -- General
 	button_config: STRING_32 do Result := locale.translation_in_context ("Config", "scm") end
 	tooltip_button_config: STRING_32 do Result := locale.translation_in_context ("Open the configuration dialog", "scm") end
 
-	button_check_all: STRING_32 do Result := locale.translation_in_context ("Check All", "scm") end
-	button_save: STRING_32 do Result := locale.translation_in_context ("Save", "scm") end
-	button_save_all: STRING_32 do Result := locale.translation_in_context ("Save All", "scm") end
+	button_check_all: STRING_32 do Result := locale.translation_in_context ({STRING_32} "🗘 Status", "scm") end
+	button_save_changelist: STRING_32 do Result := locale.translation_in_context ("Save Changelist", "scm") end
+	button_save_changelist_tooltip: STRING_32 do Result := locale.translation_in_context ("Save active changelist", "scm") end
+	button_clear_changelist: STRING_32 do Result := locale.translation_in_context ("Clear", "scm") end
+	button_clear_changelist_tooltip: STRING_32 do Result := locale.translation_in_context ("Clear the active changelist", "scm") end
 
 
 ;note

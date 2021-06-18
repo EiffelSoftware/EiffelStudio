@@ -29,6 +29,10 @@ feature {NONE} -- Creation
 	make (cfg: SCM_CONFIG)
 		do
 			config := cfg
+
+			create changelists.make_caseless (1)
+			create_new_changelist ("default")
+
 			create mutex.make
 
 			eiffel_project.manager.compile_stop_agents.extend (agent on_project_recompiled)
@@ -64,6 +68,18 @@ feature -- Access
 					Result.analyze
 				end
 			end
+		end
+
+	changelists: STRING_TABLE [SCM_CHANGELIST_COLLECTION]
+
+feature -- Changelist
+
+	create_new_changelist (a_name: READABLE_STRING_GENERAL)
+		local
+			ch: SCM_CHANGELIST_COLLECTION
+		do
+			create ch.make (a_name, 10)
+			changelists [ch.name] := ch
 		end
 
 feature -- Async Operations

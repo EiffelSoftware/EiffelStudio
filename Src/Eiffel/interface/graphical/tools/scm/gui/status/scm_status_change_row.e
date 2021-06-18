@@ -90,7 +90,7 @@ feature -- Execution
 			parent_grid := a_grid
 			row := a_row
 			a_row.set_data (Current)
-			a_row.set_data (status)
+--			a_row.set_data (status)
 			if a_row.parent = parent_grid then
 				a_row.clear
 			end

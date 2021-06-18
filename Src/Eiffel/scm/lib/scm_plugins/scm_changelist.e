@@ -9,6 +9,8 @@ class
 inherit
 	ITERABLE [READABLE_STRING_32]
 
+	DEBUG_OUTPUT
+
 create
 	make_with_location
 
@@ -43,23 +45,67 @@ feature -- Access
 			Result := items.count
 		end
 
+	debug_output: STRING_32
+		do
+			create Result.make (10)
+			Result.append_string_general ("count=" + count.out)
+			Result.append_string_general (" [")
+			Result.append_string_general (root.nature)
+			Result.append_string_general ("] %"")
+			Result.append_string (root.location.name)
+			Result.append_string_general ("%"")
+		end
+
 feature -- Status report
 
-	has (p: PATH): BOOLEAN
+	has_path (p: PATH): BOOLEAN
 		do
-			Result := items.has (p.name)
+			Result := has (p.name)
+		end
+
+	has (a_name: READABLE_STRING_GENERAL): BOOLEAN
+		do
+			across
+				items as ic
+			until
+				Result
+			loop
+				Result := a_name.same_string (ic.item)
+			end
 		end
 
 feature -- Element change
 
 	extend_path (p: PATH)
+		require
+			not has_path (p)
 		do
 			extend (p.name)
+		ensure
+			has_path (p)
 		end
 
 	extend (a_name: READABLE_STRING_GENERAL)
+		require
+			not has (a_name)
 		do
 			items.force (create {IMMUTABLE_STRING_32}.make_from_string_general (a_name))
+		ensure
+			has (a_name)
+		end
+
+	remove_path (p: PATH)
+		do
+			remove (p.name)
+		ensure
+			not has_path (p)
+		end
+
+	remove (a_name: READABLE_STRING_GENERAL)
+		do
+			items.prune_all (create {IMMUTABLE_STRING_32}.make_from_string_general (a_name))
+		ensure
+			not has (a_name)
 		end
 
 feature -- Conversion

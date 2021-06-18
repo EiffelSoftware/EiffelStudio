@@ -228,7 +228,7 @@ feature -- Operations
 							ch_row.attach_to_grid_row (g, sr)
 							if
 								attached parent_row.recorded_changes as l_recorded_changes and then
-								l_recorded_changes.has (st.location)
+								l_recorded_changes.has_path (st.location)
 							then
 								ch_row.set_selected (True)
 							end
@@ -244,6 +244,32 @@ feature -- Operations
 			end
 			update_check_status_for_row
 			update_changes_count
+		end
+
+	apply_changelist (a_changes: detachable SCM_CHANGELIST)
+		local
+			sr: EV_GRID_ROW
+			i,n: INTEGER
+		do
+			from
+				i := 1
+				n := row.subrow_count
+			until
+				i > n
+			loop
+				sr := row.subrow (i)
+				if attached {SCM_STATUS_CHANGE_ROW} sr.data as l_ch_row then
+					if
+						a_changes /= Void and then
+						a_changes.has_path (l_ch_row.status.location)
+					then
+						l_ch_row.set_selected (True)
+					else
+						l_ch_row.set_selected (False)
+					end
+				end
+				i := i + 1
+			end
 		end
 
 	update_statuses

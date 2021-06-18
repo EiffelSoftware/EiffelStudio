@@ -38,6 +38,16 @@ feature -- Access
 		deferred
 		end
 
+	changelists: STRING_TABLE [SCM_CHANGELIST_COLLECTION]
+		deferred
+		end
+
+	create_new_changelist (a_name: READABLE_STRING_GENERAL)
+		deferred
+		ensure
+			changelists.count > 0
+		end
+
 feature -- Status
 
 	file_status (a_path: PATH): detachable SCM_STATUS
@@ -131,6 +141,20 @@ feature -- Events
 					lst as ic
 				loop
 					ic.item.on_statuses_updated (a_root, a_location, a_statuses)
+				end
+			end
+		end
+
+	on_changelist_updated (ch: SCM_CHANGELIST_COLLECTION)
+		do
+			debug ("scm")
+				print (generator + ".on_changelist_updated (" + ch.name + ")%N")
+			end
+			if attached observers as lst then
+				across
+					lst as ic
+				loop
+					ic.item.on_changelist_updated (ch)
 				end
 			end
 		end

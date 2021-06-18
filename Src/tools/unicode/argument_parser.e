@@ -39,6 +39,26 @@ feature -- Access
 			end
 		end
 
+	filter_file: detachable READABLE_STRING_32
+			-- Name of the filter file (if any) to select entries from the input file.
+		require
+			is_successful: is_successful
+		once
+			if attached {ARGUMENT_OPTION} option_of_name (filter_switch) as o then
+				Result := o.value
+			end
+		end
+
+	group_file: detachable READABLE_STRING_32
+			-- Name of the group file (if any) to annotate entries from the input file.
+		require
+			is_successful: is_successful
+		once
+			if attached {ARGUMENT_OPTION} option_of_name (group_switch) as o then
+				Result := o.value
+			end
+		end
+
 	input_file: detachable READABLE_STRING_32
 			-- Density of generated tables.
 		require
@@ -105,12 +125,20 @@ feature -- Status report
 			Result := has_option (range_switch)
 		end
 
+	is_negated: BOOLEAN
+			-- Is filter negated (i.e. take only entries not in the filter into account)?
+		require
+			is_successful: is_successful
+		once
+			Result := has_option (negate_switch)
+		end
+
 feature -- Usage
 
 	name: STRING = "Unicode Helper Generator"
 			-- <Precursor>
 
-	version: STRING = "1.4"
+	version: STRING = "1.5"
 			-- <Precursor>
 
 feature {NONE} -- Usage
@@ -121,10 +149,13 @@ feature {NONE} -- Usage
 	switches: ARRAYED_LIST [ARGUMENT_SWITCH]
 			-- <Precursor>
 		once
-			create Result.make (8)
+			create Result.make (11)
 			Result.extend (create {ARGUMENT_VALUE_SWITCH}.make (category_switch, "Categories to select", True, True, "category", "2-letter general category value", False))
 			Result.extend (create {ARGUMENT_VALUE_SWITCH}.make (density_switch, "Density for tables", True, False, "density", "Density of table as a ratio", False))
-			Result.extend (create {ARGUMENT_VALUE_SWITCH}.make (input_file_switch, "UnicodeData.txt file", False, False, "file", "Name of UnicodeData.txt file", False))
+			Result.extend (create {ARGUMENT_VALUE_SWITCH}.make (filter_switch, "Filter to select entries from UnicodeData.txt", True, False, "filter", "Filter file in standard Unicode UCD format with entries to keep", False))
+			Result.extend (create {ARGUMENT_VALUE_SWITCH}.make (group_switch, "Groups to annotate entries from UnicodeData.txt", True, False, "filter", "Group file in standard Unicode UCD format with group names", False))
+			Result.extend (create {ARGUMENT_VALUE_SWITCH}.make (input_file_switch, "UnicodeData.txt file", True, False, "file", "Name of UnicodeData.txt file", False))
+			Result.extend (create {ARGUMENT_SWITCH}.make (negate_switch, "Negate filter (i.e. output entries not in the filter)", True, False))
 			Result.extend (create {ARGUMENT_VALUE_SWITCH}.make (output_switch, "Directory where files will be generated", True, False, "dir", "Directory for outputs", False))
 			Result.extend (create {ARGUMENT_VALUE_SWITCH}.make (property_template_switch, "Template used for generation of character properties", True, False, "template", "Template file", False))
 			Result.extend (create {ARGUMENT_SWITCH}.make (range_switch, "Output ranges of specified categories instead of generating character properties", True, False))
@@ -142,7 +173,10 @@ feature {NONE} -- Switches
 
 	category_switch: STRING_32 = "c|category"
 	density_switch: STRING_32 = "d|density"
+	filter_switch: STRING_32 = "f|filter"
+	group_switch: STRING_32 = "g|group"
 	input_file_switch: STRING_32 = "i|input"
+	negate_switch: STRING_32 = "n|negate"
 	output_switch: STRING_32 = "o|output_directory"
 	property_template_switch: STRING_32 = "p|property_template"
 	range_switch: STRING_32 = "r|range"

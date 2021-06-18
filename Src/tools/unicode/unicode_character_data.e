@@ -6,6 +6,12 @@
 class
 	UNICODE_CHARACTER_DATA
 
+inherit
+	ANY
+		redefine
+			out
+		end
+
 create
 	make
 
@@ -65,7 +71,7 @@ feature {NONE} -- Initialization
 				code := to_natural (l_list.i_th (1))
 				name := l_list.i_th (2)
 				general_category := l_list.i_th (3)
-				canonical_combining_class := to_natural (l_list.i_th (4))
+				canonical_combining_class := from_decimal (l_list.i_th (4))
 				bidirectional_category := l_list.i_th (5)
 				character_decomposition_tag := void_if_empty (l_list.i_th (6))
 				decimal_digit_value := void_if_empty (l_list.i_th (7))
@@ -115,6 +121,12 @@ feature -- Access
 
 	code: NATURAL_32
 			-- Value for current character code.
+
+	hexadecimal_code: STRING_8
+			-- Hexadecimal representation of `code`.
+		do
+			Result := hexadecimal_code_point (code)
+		end
 
 	name: STRING
 			-- Name of the current character.
@@ -307,17 +319,40 @@ feature {NONE} -- Implementation
 			same_string_if_not_empty: not a_string.is_empty implies Result = a_string
 		end
 
+	from_decimal (s: STRING): NATURAL_32
+			-- Convert `s` in decimal notation to a NATURAL_32.
+			-- If `s` is empty, then `0` as a signaling value that nothing was specified.
+		do
+			if s.is_empty then
+				Result := 0
+			else
+				decimal_convertor.parse_string_with_type (s, {NUMERIC_INFORMATION}.type_natural_32)
+				Result := decimal_convertor.parsed_natural_32
+			end
+		end
+
 	to_natural (a_string: STRING): NATURAL_32
-			-- Convert `a_string' to a NATURAL_32.
+			-- Convert `a_string` in hexadecimal notation to a NATURAL_32.
 			-- If `a_string' is empty, then 0 as a signaling value that nothing was specified.
 		do
 			if a_string.is_empty then
 				Result := 0
 			else
-				ctoi_convertor.reset ({NUMERIC_INFORMATION}.type_natural_32)
 				ctoi_convertor.parse_string_with_type (a_string, {NUMERIC_INFORMATION}.type_natural_32)
 				Result := ctoi_convertor.parsed_natural_32
 			end
+		end
+
+	decimal_convertor: STRING_TO_INTEGER_CONVERTOR
+			-- Convertor used to convert decimal string to integer or natural.
+		once
+			create Result.make
+			Result.set_leading_separators (" ")
+			Result.set_trailing_separators (" ")
+			Result.set_leading_separators_acceptable (True)
+			Result.set_trailing_separators_acceptable (True)
+		ensure
+			ctoi_convertor_not_void: Result /= Void
 		end
 
 	ctoi_convertor: HEXADECIMAL_STRING_TO_INTEGER_CONVERTER
@@ -425,6 +460,57 @@ feature -- General category
 			Result ["Cs"] := category_other_surrogate
 			Result ["Co"] := category_other_private_use
 			Result ["Cn"] := category_other_not_assigned
+		ensure
+			class
+		end
+
+feature -- Output
+
+	out: like {ANY}.out
+			-- <Precursor>
+		do
+			Result := hexadecimal_code
+			Result.append_character (';')
+			Result.append (name)
+			Result.append_character (';')
+			Result.append (general_category)
+			Result.append_character (';')
+			Result.append_natural_32 (canonical_combining_class)
+			Result.append_character (';')
+			Result.append (bidirectional_category)
+			Result.append_character (';')
+			if attached character_decomposition_tag as s then Result.append (s) end
+			Result.append_character (';')
+			if attached decimal_digit_value as s then Result.append (s) end
+			Result.append_character (';')
+			if attached digit_value as s then Result.append (s) end
+			Result.append_character (';')
+			if attached numeric_value as s then Result.append (s) end
+			Result.append_character (';')
+			Result.append_character (if is_mirrored then 'Y' else 'N' end)
+			Result.append_character (';')
+			if attached v1_name as s then Result.append (s) end
+			Result.append_character (';')
+			if attached iso_10646_comment as s then Result.append (s) end
+			Result.append_character (';')
+			if upper_code /= 0 then Result.append (hexadecimal_code_point (upper_code)) end
+			Result.append_character (';')
+			if lower_code /= 0 then Result.append (hexadecimal_code_point (lower_code)) end
+			Result.append_character (';')
+			if title_code /= 0 then Result.append (hexadecimal_code_point (title_code)) end
+		end
+
+	hexadecimal_code_point (n: like code): like code.to_hex_string
+			-- Code point `n` as a string with 4 or more hexadecimal digits.
+		do
+			Result := n.to_hex_string
+			Result.keep_tail
+				(if n <= 0xFFFF then 4
+				elseif n <= 0xF_FFFF then 5
+				elseif n <= 0xFF_FFFF then 6
+				elseif n <= 0xFFF_FFFF then 7
+				else 8
+				end)
 		ensure
 			class
 		end

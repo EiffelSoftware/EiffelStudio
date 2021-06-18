@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
-<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-21-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-21-0 http://www.eiffel.com/developers/xml/configuration-1-21-0.xsd" name="unicode_helper_generator" uuid="AA452682-C95E-4E11-AE63-8C4E50C0C066">
+<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-22-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-22-0 http://www.eiffel.com/developers/xml/configuration-1-22-0.xsd" name="unicode_helper_generator" uuid="AA452682-C95E-4E11-AE63-8C4E50C0C066">
 	<target name="unicode_helper_generator">
 		<root class="UNICODE_HELPER_GENERATOR" feature="make"/>
-		<option warning="error">
+		<option warning="error" is_obsolete_iteration="true">
 		</option>
 		<setting name="check_for_void_target" value="false"/>
 		<setting name="console_application" value="true"/>

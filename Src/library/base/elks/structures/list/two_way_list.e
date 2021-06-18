@@ -29,6 +29,9 @@ create
 create {TWO_WAY_LIST}
 	make_sublist
 
+convert
+	make_from_iterable ({ARRAY [G]})
+
 feature -- Access
 
 	first_element: detachable like new_cell

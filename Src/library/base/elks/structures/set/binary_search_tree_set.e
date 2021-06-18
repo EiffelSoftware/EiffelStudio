@@ -24,6 +24,9 @@ create
 	make,
 	make_from_iterable
 
+convert
+	make_from_iterable ({ARRAY [G]})
+
 feature {NONE} -- Initialization
 
 	make

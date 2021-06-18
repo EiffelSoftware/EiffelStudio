@@ -67,6 +67,9 @@ create
 create {TWO_WAY_SORTED_SET}
 	make_sublist
 
+convert
+	make_from_iterable ({ARRAY [G]})
+
 feature {NONE} -- Creation
 
 	make_from_iterable (other: ITERABLE [G])

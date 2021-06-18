@@ -353,6 +353,7 @@ feature {NONE} -- Implementation
 			loop
 				error_handler.wipe_out
 				a_parser.set_syntax_version (s.item)
+				a_parser.set_is_explicit_iteration_cursor (is_updating_iteration)
 				if not a_verification then
 					a_parser.parse_class_from_string (a_buffer, Void, Void)
 					original_encoding := a_parser.detected_encoding

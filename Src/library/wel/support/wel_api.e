@@ -524,6 +524,20 @@ feature -- File input/output
 			is_class: class
 		end
 
+	cwin_read_file_with_error (file_handle: POINTER; buffer: POINTER; number_of_bytes_to_read: NATURAL_32; number_of_bytes_read: TYPED_POINTER [NATURAL_32]; overlapped: POINTER; last_error: TYPED_POINTER [NATURAL_32]): BOOLEAN
+			-- SDK ReadFile.
+		external
+			"C blocking inline use <winbase.h>"
+		alias
+			"[
+				BOOL b = ReadFile ($file_handle, $buffer, $number_of_bytes_to_read, $number_of_bytes_read, $overlapped);
+				* $last_error = GetLastError ();
+				return EIF_TEST (b);
+			]"
+		ensure
+			is_class: class
+		end
+
 	cwin_write_file (file_handle: POINTER; buffer: POINTER; number_of_bytes_to_write: NATURAL_32; number_of_bytes_written: TYPED_POINTER [NATURAL_32]; overlapped: POINTER): BOOLEAN
 			-- SDK WriteFile.
 		external
@@ -982,7 +996,7 @@ feature -- API
 
 
 note
-	copyright:	"Copyright (c) 1984-2019, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2020, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

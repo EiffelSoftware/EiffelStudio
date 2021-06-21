@@ -8,6 +8,9 @@ class
 
 inherit
 	FILED_STONE
+		redefine
+			stone_name
+		end
 
 create
 	make_with_path
@@ -54,6 +57,19 @@ feature -- Access
 			-- window title bar.
 		do
 			Result := {STRING_32} "Location %"" + file_name + {STRING_32} "%""
+		end
+
+	stone_name: READABLE_STRING_32
+			-- <Precursor/>
+		local
+			p: PATH
+		do
+			create p.make_from_string (file_name)
+			if attached p.entry as e then
+				Result := e.name
+			else
+				Result := p.name
+			end
 		end
 
 note

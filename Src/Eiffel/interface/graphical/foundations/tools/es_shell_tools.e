@@ -246,7 +246,7 @@ feature {NONE} -- Access
 			l_tools.put_last ({ES_CLOUD_ACCOUNT_TOOL})
 
 				-- Source Control Management tool
-			l_tools.put_last ({SCM_TOOL})
+			l_tools.put_last ({ES_SCM_TOOL})
 
 
 				-- Custom formatter tools

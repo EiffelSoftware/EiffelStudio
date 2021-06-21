@@ -1220,7 +1220,7 @@ feature {EB_EXTERNAL_COMMANDS_EDITOR} -- Menu Building
 			insert_show_tool_menu_item (Result, {ES_CONSOLE_TOOL})
 			if attached (create {SERVICE_CONSUMER [SOURCE_CONTROL_MANAGEMENT_S]}).service then
 				Result.extend (create {EV_MENU_SEPARATOR})
-				insert_show_tool_menu_item (Result, {SCM_TOOL})
+				insert_show_tool_menu_item (Result, {ES_SCM_TOOL})
 			end
 
 			if attached (create {SERVICE_CONSUMER [EVENT_LIST_S]}).service then

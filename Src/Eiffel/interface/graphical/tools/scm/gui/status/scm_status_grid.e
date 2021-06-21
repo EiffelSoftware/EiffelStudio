@@ -51,6 +51,7 @@ feature {NONE} -- Initialization
 			column (scm_column).set_title (scm_names.header_repository)
 			column (info_column).set_title ("...")
 
+
 			set_auto_resizing_column (checkbox_column, True)
 --			column (checkbox_column).set_width (20)
 			set_auto_resizing_column (filename_column, True)
@@ -83,14 +84,77 @@ feature -- Actions
 	context_menu_handler (a_menu: EV_MENU; a_target_list: ARRAYED_LIST [EV_PND_TARGET_DATA]; a_source: EV_PICK_AND_DROPABLE; a_pebble: detachable ANY)
 		local
 			mi: EV_MENU_ITEM
+			mm: EV_MENU
+			l_shift_pressed: BOOLEAN
+			l_show_menu: BOOLEAN
 		do
-			create mi.make_with_text ("...")
-			a_menu.extend (mi)
+			l_shift_pressed := ev_application.shift_pressed
+			if preferences.misc_data.is_pnd_mode then
+				l_show_menu := l_shift_pressed
+			else
+				l_show_menu := not l_shift_pressed
+			end
+			if l_show_menu then
+					-- See  `pebble_for_item`
+				if attached {FILED_STONE} a_pebble as l_file_location_stone then
+					if
+						attached status_box as l_status_box and then
+						attached l_status_box.scm_service as scm and then
+						attached {SCM_STATUS_STONE} l_file_location_stone as l_status_stone
+					then
+						if attached l_status_stone.status as l_status then
+							create mi
+							mi.set_data (l_status)
+							mi.set_pixmap (status_pixmap (l_status))
+							mi.set_text (scm_names.menu_item_status (l_status_stone.stone_name, l_status.status_as_string))
+							a_menu.extend (mi)
+							mi.disable_sensitive
+							a_menu.extend (create {EV_MENU_SEPARATOR})
+							if
+								attached {SCM_STATUS_MODIFIED} l_status
+								or attached {SCM_STATUS_CONFLICTED} l_status
+							then
+								create mi
+								mi.set_text (scm_names.menu_diff)
+								mi.select_actions.extend (agent l_status_box.show_location_diff (Void, l_status.location))
+								a_menu.extend (mi)
+							end
+							create mm.make_with_text (scm_names.menu_add_to_changelist (Void, 0))
+							across
+								scm.changelists as ic
+							loop
+								create mi.make_with_text (scm_names.menu_add_to_changelist (ic.key, ic.item.count))
+								mi.select_actions.extend (agent (i_scm: SOURCE_CONTROL_MANAGEMENT_S; i_chglist_name: READABLE_STRING_GENERAL; i_location: PATH)
+										do
+											if attached i_scm.changelists [i_chglist_name] as ch then
+												ch.extend_path (i_scm.scm_root_location (i_location), i_location)
+												i_scm.on_changelist_updated (ch)
+											end
+										end(scm, ic.key, l_status.location)
+									)
+								mm.extend (mi)
+							end
+							if mm.count > 0 then
+								a_menu.extend (mm)
+							end
+						end
+					end
+
+					a_menu.extend (create {EV_MENU_SEPARATOR})
+					create mi.make_with_text (scm_names.open_location)
+					mi.select_actions.extend (agent open_file_location (create {PATH}.make_from_string (l_file_location_stone.file_name)))
+					a_menu.extend (mi)
+				elseif attached {PATH} a_pebble as l_path then
+						-- Should not occur anymore
+					create mi.make_with_text (scm_names.open_parent_location)
+					mi.select_actions.extend (agent open_directory_location (l_path))
+					a_menu.extend (mi)
+				end
+			end
 		end
 
 	pebble_for_item (a_item: EV_GRID_ITEM): detachable ANY
 		local
-			st: FILE_LOCATION_STONE
 			grp: SCM_GROUP
 		do
 			if attached a_item.row as l_row then
@@ -105,14 +169,11 @@ feature -- Actions
 			end
 			if Result = Void then
 				if attached {SCM_GROUP} a_item.data as g then
-					create st.make_with_path (g.location)
-					Result := st
+					create {FILE_LOCATION_STONE} Result.make_with_path (g.location)
 				elseif attached {SCM_STATUS} a_item.data as l_status then
-					create st.make_with_path (l_status.location)
-					Result := st
+					create {SCM_STATUS_STONE} Result.make (l_status)
 				elseif attached {PATH} a_item.data as l_path then
-					create st.make_with_path (l_path)
-					Result := st
+
 				else
 				end
 			end

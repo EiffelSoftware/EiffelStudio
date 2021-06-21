@@ -36,8 +36,9 @@ convert
 
 feature {NONE} -- Initialization
 
-	make (a_service: SOURCE_CONTROL_MANAGEMENT_S; a_commit: SCM_COMMIT_SET)
+	make (a_service: SOURCE_CONTROL_MANAGEMENT_S; a_commit: SCM_COMMIT_SET; a_parent_box: SCM_STATUS_BOX)
 		do
+			parent_box := a_parent_box
 			scm_service := a_service
 			commit := a_commit
 			create commit_log_box
@@ -54,6 +55,8 @@ feature {NONE} -- Initialization
 feature -- Access
 
 	scm_service: SOURCE_CONTROL_MANAGEMENT_S
+
+	parent_box: SCM_STATUS_BOX
 
 	commit: SCM_COMMIT_SET
 
@@ -151,14 +154,23 @@ feature {NONE} -- User interface initialization
 			if attached dialog_window_buttons [dialog_buttons.reset_button] as but then
 				but.hide
 			end
+			if attached dialog_window_buttons [dialog_buttons.open_button] as but then
+				if attached {SCM_SINGLE_COMMIT_SET} commit as l_single_commit_set then
+					but.show
+				else
+					but.hide
+				end
+			end
 
 			set_button_text (dialog_buttons.ok_button, interface_names.b_save)
 			set_button_text (dialog_buttons.cancel_button, interface_names.b_cancel)
 			set_button_text (dialog_buttons.reset_button, interface_names.b_close)
+			set_button_text (dialog_buttons.open_button, scm_names.button_diff)
 
 			set_button_action_before_close (dialog_buttons.ok_button, agent on_ok)
 			set_button_action_before_close (dialog_buttons.cancel_button, agent on_cancel)
 			set_button_action_before_close (dialog_buttons.reset_button, agent on_close)
+			set_button_action_before_close (dialog_buttons.open_button, agent on_open_diff)
 		end
 
 feature -- Access: Help
@@ -224,6 +236,28 @@ feature -- Action
 				)
 		end
 
+	on_open_diff
+		local
+			d: SCM_DIFF
+		do
+			if attached {SCM_MULTI_COMMIT_SET} commit as l_multi_commit_set then
+				-- TODO: improve this non user friendly behavior.
+				across
+					l_multi_commit_set.changelists as ic
+				loop
+					d := scm_service.diff (ic.item)
+					if d /= Void then
+						parent_box.show_diff (d)
+					end
+				end
+			elseif attached {SCM_SINGLE_COMMIT_SET} commit as l_single_commit_set then
+				d := scm_service.diff (l_single_commit_set.changelist)
+				if d /= Void then
+					parent_box.show_diff (d)
+				end
+			end
+		end
+
 	on_ok
 		local
 			err: BOOLEAN
@@ -238,7 +272,7 @@ feature -- Action
 
 			l_pointer_style := dialog.pointer_style
 			dialog.set_pointer_style ((create {EV_STOCK_PIXMAPS}).busy_cursor)
-			
+
 			commit.set_message (commit_log_text.text)
 			scm_service.commit (commit)
 
@@ -296,11 +330,15 @@ feature -- Access
 			Result := scm_names.title_scm_save
 		end
 
-	buttons: DS_SET [INTEGER]
+	buttons: DS_HASH_SET [INTEGER]
 			-- Set of button id's for dialog
 			-- Note: Use {ES_DIALOG_BUTTONS} or `dialog_buttons' to determine the id's correspondance.
 		once
-			Result := dialog_buttons.reset_ok_cancel_buttons
+			create Result.make (4)
+			Result.put_last (dialog_buttons.reset_button)
+			Result.put_last (dialog_buttons.ok_button)
+			Result.put_last (dialog_buttons.cancel_button)
+			Result.put_last (dialog_buttons.open_button)
 		end
 
 	default_button: INTEGER

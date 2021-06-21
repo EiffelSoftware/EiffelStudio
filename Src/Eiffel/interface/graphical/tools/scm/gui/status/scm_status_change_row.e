@@ -121,42 +121,19 @@ feature -- Execution
 			end
 			lab := wc_row.new_label_item (rel_loc)
 			lab.set_data (st)
+			lab.set_tooltip (scm_names.double_click_show_diff_tooltip)
 			if attached status_pixmap (st) as pix then
 				lab.set_pixmap (pix)
 			end
 
 			lab.pointer_double_press_actions.extend (agent (a_root: SCM_LOCATION; i_loc: PATH; i_x, i_y, i_button: INTEGER; i_x_tilt, i_y_tilt, i_pressure: DOUBLE; i_screen_x, i_screen_y: INTEGER)
-					local
-						ch_list: SCM_CHANGELIST
-						l_ext_cmd: READABLE_STRING_GENERAL
 					do
 						if attached parent_grid as pg then
 							if
 								attached scm_s.service as scm and then
-								ev_application.ctrl_pressed
+								not (ev_application.ctrl_pressed or ev_application.shift_pressed or ev_application.alt_pressed)
 							then
-								if
-									attached {SCM_GIT_LOCATION} a_root and then
-									scm.config.use_external_git_diff_command
-								then
-									l_ext_cmd := scm.config.external_git_diff_command (i_loc)
-								elseif
-									attached {SCM_SVN_LOCATION} a_root and then
-									scm.config.use_external_svn_diff_command
-								then
-									l_ext_cmd := scm.config.external_svn_diff_command (i_loc)
-								else
-									l_ext_cmd := Void
-								end
-								if l_ext_cmd /= Void then
-									execution_environment.launch (l_ext_cmd)
-								else
-									create ch_list.make_with_location (wc_row.root_location)
-									ch_list.extend_path (i_loc)
-									if attached scm.diff (ch_list) as diff then
-										parent_grid.status_box.show_diff (diff)
-									end
-								end
+								pg.status_box.show_location_diff (a_root, i_loc)
 							else
 								pg.open_file_location (i_loc)
 							end
@@ -166,6 +143,7 @@ feature -- Execution
 			sr.set_item (parent_grid.filename_column, lab)
 
 			l_parent_lab := wc_row.new_label_item (l_scm_root.relative_location (st.location.parent))
+			l_parent_lab.set_data (st.location.parent)
 			l_parent_lab.pointer_double_press_actions.extend (agent (i_loc: PATH; i_x, i_y, i_button: INTEGER; i_x_tilt, i_y_tilt, i_pressure: DOUBLE; i_screen_x, i_screen_y: INTEGER)
 					do
 						if attached parent_grid as pg then
@@ -197,16 +175,8 @@ feature -- Execution
 		end
 
 	show_diff
-		local
-			ch_list: SCM_CHANGELIST
 		do
-			if attached scm_s.service as scm then
-				create ch_list.make_with_location (root_location)
-				ch_list.extend_path (status.location)
-				if attached scm.diff (ch_list) as l_diff then
-					parent_grid.status_box.show_diff (l_diff)
-				end
-			end
+			parent_grid.status_box.show_location_diff (root_location, status.location)
 		end
 
 	do_revert

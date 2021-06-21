@@ -27,17 +27,29 @@ feature -- Menu
 
 	menu_editor_status (a_name: detachable READABLE_STRING_GENERAL; a_status: detachable READABLE_STRING_GENERAL): STRING_32
 		do
-			if a_name = Void then
-				Result := locale.translation_in_context ("Editor status", "scm")
+			if a_name = Void or else a_name.is_whitespace then
+				Result := menu_item_status (locale.translation_in_context ("Editor status", "scm"), a_status)
+			else
+				Result := menu_item_status (a_name, a_status)
+			end
+		end
+
+	menu_item_status (a_item_name: detachable READABLE_STRING_GENERAL; a_status: detachable READABLE_STRING_GENERAL): STRING_32
+		do
+			if a_item_name = Void or else a_item_name.is_whitespace then
+				Result := locale.formatted_string (
+						locale.translation_in_context ("Status - $1", "scm"),
+						[a_item_name]
+					)
 			elseif a_status = Void then
 				Result := locale.formatted_string (
 						locale.translation_in_context ("$1", "scm"),
-						[a_name]
+						[a_item_name]
 					)
 			else
 				Result := locale.formatted_string (
 						locale.translation_in_context ("$1 - $2", "scm"),
-						[a_name, a_status]
+						[a_item_name, a_status]
 					)
 			end
 		end
@@ -60,6 +72,10 @@ feature -- Menu
 	menu_configuration: STRING_32 do Result := locale.translation_in_context ("Configuration ...", "scm") end
 
 	menu_go_to_tool: STRING_32 do Result := locale.translation_in_context ("Go to the tool", "scm") end
+
+	open_location: STRING_32 do Result := locale.translation_in_context ("Open location ...", "scm") end
+
+	open_parent_location: STRING_32 do Result := locale.translation_in_context ("Open parent location ...", "scm") end
 
 feature -- Dialogs
 
@@ -135,6 +151,8 @@ feature -- Tools
 
 	desc_scm_tool: STRING_32 do Result := locale.translation_in_context ("Source Control Management", "scm") end
 
+	double_click_show_diff_tooltip: STRING_32 do Result := locale.translation_in_context ("Double-clicked to show the differences", "scm") end
+
 feature -- General
 
 	button_scm: STRING_32 do Result := locale.translation_in_context ("Source Control", "scm") end
@@ -150,7 +168,7 @@ feature -- General
 	button_config: STRING_32 do Result := locale.translation_in_context ("Config", "scm") end
 	tooltip_button_config: STRING_32 do Result := locale.translation_in_context ("Open the configuration dialog", "scm") end
 
-	button_check_all: STRING_32 do Result := locale.translation_in_context ({STRING_32} "🗘 Status", "scm") end
+	button_check_all: STRING_32 do Result := locale.translation_in_context ("Status", "scm") end
 	button_save_changelist: STRING_32 do Result := locale.translation_in_context ("Save Changelist", "scm") end
 	button_save_changelist_tooltip: STRING_32 do Result := locale.translation_in_context ("Save active changelist", "scm") end
 	button_clear_changelist: STRING_32 do Result := locale.translation_in_context ("Clear", "scm") end

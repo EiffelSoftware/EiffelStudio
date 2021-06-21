@@ -376,7 +376,6 @@ feature -- Operations
 			end
 		end
 
-
 	show_diff (a_only_selected_items: BOOLEAN)
 		local
 			ch_list: SCM_CHANGELIST

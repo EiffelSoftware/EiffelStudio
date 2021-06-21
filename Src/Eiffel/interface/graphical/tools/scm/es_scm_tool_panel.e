@@ -6,7 +6,7 @@
 	revision: "$Revision$"
 
 class
-	SCM_TOOL_PANEL
+	ES_SCM_TOOL_PANEL
 
 inherit
 	ES_DOCKABLE_TOOL_PANEL [EV_VERTICAL_BOX]

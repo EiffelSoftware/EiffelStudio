@@ -12,6 +12,13 @@ inherit
 			initialize
 		end
 
+	EV_LAYOUT_CONSTANTS
+		undefine
+			default_create,
+			is_equal,
+			copy
+		end
+
 	EB_SHARED_PIXMAPS
 		undefine
 			default_create,
@@ -27,6 +34,13 @@ inherit
 		end
 
 	EB_SHARED_WINDOW_MANAGER
+		undefine
+			default_create,
+			is_equal,
+			copy
+		end
+
+	SHARED_EXECUTION_ENVIRONMENT
 		undefine
 			default_create,
 			is_equal,
@@ -61,21 +75,13 @@ feature {NONE} -- Initialization
 			pix_cell: EV_CELL
 		do
 			create bar
-			bar.set_padding_width (5)
-			bar.set_border_width (10)
+			bar.set_padding_width (small_padding_size)
+			bar.set_border_width (small_border_size)
 			b.extend (bar)
 			b.disable_item_expand (bar)
 
-			create unver_cb.make_with_text (scm_names.question_show_unversioned_files)
-			bar.extend (unver_cb); bar.disable_item_expand (unver_cb)
-			unver_cb.select_actions.extend (agent (a_cb: EV_CHECK_BUTTON)
-					do
-						include_unversioned_files (a_cb.is_selected)
-					end(unver_cb))
-
-			bar.extend (create {EV_CELL})
-
 			create but.make_with_text (scm_names.button_check_all)
+			but.set_pixmap (icon_pixmaps.general_refresh_icon)
 			check_all_repo_button := but
 			but.select_actions.extend (agent
 					do
@@ -85,7 +91,7 @@ feature {NONE} -- Initialization
 			bar.extend (but); bar.disable_item_expand (but)
 
 			bar.extend (create {EV_CELL})
-			
+
 			create but.make_with_text (scm_names.button_save_changelist)
 			but.set_tooltip (scm_names.button_save_changelist_tooltip)
 			save_all_repo_button := but
@@ -116,6 +122,22 @@ feature {NONE} -- Initialization
 
 			create grid_cell
 			b.extend (grid_cell)
+
+			create bar
+			bar.set_padding_width (small_padding_size)
+			bar.set_border_width (small_border_size)
+			b.extend (bar)
+			b.disable_item_expand (bar)
+
+			create unver_cb.make_with_text (scm_names.question_show_unversioned_files)
+			bar.extend (unver_cb); bar.disable_item_expand (unver_cb)
+			unver_cb.select_actions.extend (agent (a_cb: EV_CHECK_BUTTON)
+					do
+						include_unversioned_files (a_cb.is_selected)
+					end(unver_cb))
+
+--			bar.extend (create {EV_CELL})
+
 		end
 
 feature -- Access
@@ -140,6 +162,7 @@ feature -- Basic operation
 			end
 			create g.make_with_workspace (Current, ws)
 			g.drop_actions.extend (agent stone_dropped_on_grid)
+
 			grid_cell.replace (g)
 			grid := g
 
@@ -186,7 +209,7 @@ feature -- Basic operation
 		local
 			l_save_dialog: SCM_SAVE_DIALOG
 		do
-			create l_save_dialog.make (scm_service, a_commit)
+			create l_save_dialog.make (scm_service, a_commit, Current)
 			l_save_dialog.set_size (800, 600)
 			l_save_dialog.show_on_active_window
 			if a_commit.is_processed then
@@ -256,6 +279,42 @@ feature -- Basic operation
 				d.set_size (devwin.dpi_scaler.scaled_size (700).min (devwin.window.width), devwin.dpi_scaler.scaled_size (500).min (devwin.window.height))
 			end
 			d.show_on_active_window
+		end
+
+	show_location_diff (a_root: detachable SCM_LOCATION; a_location: PATH)
+		local
+			l_root: SCM_LOCATION
+			ch_list: SCM_CHANGELIST
+			l_ext_cmd: READABLE_STRING_GENERAL
+		do
+			l_root := a_root
+			if l_root = Void then
+				l_root := scm_service.scm_root_location (a_location)
+			end
+			if l_root /= Void then
+				if
+					attached {SCM_GIT_LOCATION} l_root and then
+					scm_service.config.use_external_git_diff_command
+				then
+					l_ext_cmd := scm_service.config.external_git_diff_command (a_location)
+				elseif
+					attached {SCM_SVN_LOCATION} l_root and then
+					scm_service.config.use_external_svn_diff_command
+				then
+					l_ext_cmd := scm_service.config.external_svn_diff_command (a_location)
+				else
+					l_ext_cmd := Void
+				end
+				if l_ext_cmd /= Void then
+					execution_environment.launch (l_ext_cmd)
+				else
+					create ch_list.make_with_location (l_root)
+					ch_list.extend_path (a_location)
+					if attached scm_service.diff (ch_list) as diff then
+						show_diff (diff)
+					end
+				end
+			end
 		end
 
 	show_command_execution (a_op: READABLE_STRING_GENERAL; a_output: READABLE_STRING_GENERAL)

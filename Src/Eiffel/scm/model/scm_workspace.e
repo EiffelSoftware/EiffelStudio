@@ -1,6 +1,5 @@
 note
 	description: "Summary description for {SCM_WORKSPACE}."
-	author: ""
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -47,27 +46,11 @@ feature -- Status
 			end
 		end
 
-feature -- Element change
-
-	limit_to_inside_directory (loc: detachable PATH)
-		do
-			if loc = Void then
-				inside_directory := Void
-			else
-				inside_directory := loc.absolute_path.canonical_path
-			end
-		end
-
-	limit_to_application_location
-		do
-			limit_to_inside_directory (target.system.directory)
-		end
-
-feature -- Basic operations
-
-	locations_by_root: HASH_TABLE [TUPLE [root: SCM_LOCATION; groups: STRING_TABLE [SCM_GROUP]], PATH]
+feature -- Access
 
 	locations: STRING_TABLE [SCM_GROUP]
+
+	locations_by_root: HASH_TABLE [TUPLE [root: SCM_LOCATION; groups: STRING_TABLE [SCM_GROUP]], PATH]
 
 	sorted_locations: ARRAYED_LIST [TUPLE [name: READABLE_STRING_GENERAL; group: SCM_GROUP]]
 		local
@@ -115,6 +98,55 @@ feature -- Basic operations
 					end))
 			l_sorter.sort (Result)
 		end
+
+	scm_root (loc: detachable PATH): detachable SCM_LOCATION
+		local
+			p: PATH
+			l_git_fn: PATH
+			l_svn_fn: PATH
+			fut: FILE_UTILITIES
+		do
+			if loc /= Void then
+				l_git_fn := loc.extended (".git")
+				if fut.directory_path_exists (l_git_fn) then
+					create {SCM_GIT_LOCATION} Result.make (loc)
+				else
+					l_svn_fn := loc.extended (".svn")
+					if fut.directory_path_exists (l_svn_fn) then
+						create {SCM_SVN_LOCATION} Result.make (loc)
+					else
+						p := loc.parent
+						if p.same_as (loc) then
+								-- Reach bottom
+						else
+							Result := scm_root (p)
+						end
+					end
+				end
+			end
+		end
+
+feature -- Event
+
+	change_actions: ACTION_SEQUENCE
+
+feature -- Element change
+
+	limit_to_inside_directory (loc: detachable PATH)
+		do
+			if loc = Void then
+				inside_directory := Void
+			else
+				inside_directory := loc.absolute_path.canonical_path
+			end
+		end
+
+	limit_to_application_location
+		do
+			limit_to_inside_directory (target.system.directory)
+		end
+
+feature -- Analyze
 
 	analyze
 		local
@@ -167,6 +199,8 @@ feature -- Basic operations
 			end
 		end
 
+feature {NONE} -- Implementation		
+
 	record_group (g: SCM_GROUP)
 		local
 			l_root_dirname: PATH
@@ -185,37 +219,6 @@ feature -- Basic operations
 			end
 			tb [g.name] := g
 		end
-
-	scm_root (loc: detachable PATH): detachable SCM_LOCATION
-		local
-			p: PATH
-			l_git_fn: PATH
-			l_svn_fn: PATH
-			fut: FILE_UTILITIES
-		do
-			if loc /= Void then
-				l_git_fn := loc.extended (".git")
-				if fut.directory_path_exists (l_git_fn) then
-					create {SCM_GIT_LOCATION} Result.make (loc)
-				else
-					l_svn_fn := loc.extended (".svn")
-					if fut.directory_path_exists (l_svn_fn) then
-						create {SCM_SVN_LOCATION} Result.make (loc)
-					else
-						p := loc.parent
-						if p.same_as (loc) then
-								-- Reach bottom
-						else
-							Result := scm_root (p)
-						end
-					end
-				end
-			end
-		end
-
-feature -- Event
-
-	change_actions: ACTION_SEQUENCE
 
 feature -- Visitor
 

@@ -1,62 +1,37 @@
 note
-	description: "[
-		Source Control tool.
-	]"
-	legal: "See notice at end of class."
-	status: "See notice at end of class.";
-	date: "$date$";
-	revision: "$revision$"
+	description: "Summary description for {SCM_STATUS_STONE}."
+	author: ""
+	date: "$Date$"
+	revision: "$Revision$"
 
-frozen class
-	SCM_TOOL
+class
+	SCM_STATUS_STONE
 
 inherit
-	ES_TOOL [SCM_TOOL_PANEL]
+	FILE_LOCATION_STONE
 
-create {NONE}
-	default_create
+create
+	make
+
+feature {NONE} -- Initialization
+
+	make (a_status: SCM_STATUS)
+		do
+			status := a_status
+			make_with_path (a_status.location)
+		end
 
 feature -- Access
 
-	icon: EV_PIXEL_BUFFER
-			-- <Precursor>
-		do
-			Result := stock_pixmaps.source_version_control_icon_buffer
-		end
+	status: SCM_STATUS
 
-	icon_pixmap: EV_PIXMAP
-			-- <Precursor>
-		do
-			Result := stock_pixmaps.source_version_control_icon
-		end
+invariant
 
-	title: STRING_32
-			-- <Precursor>
-		do
-			Result := locale_formatter.translation ("Source Control")
-		end
-
-feature -- Operations
-
-	update
-		do
-			if is_tool_instantiated then
-				panel.update
-			end
-		end
-
-feature {NONE} -- Factory
-
-	new_tool: SCM_TOOL_PANEL
-			-- <Precursor>
-		do
-			create Result.make (window, Current)
-		end
-
-;note
-	copyright:	"Copyright (c) 1984-2021, Eiffel Software"
-	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
-	licensing_options:	"http://www.eiffel.com/licensing"
+	status /= Void
+note
+	copyright: "Copyright (c) 1984-2021, Eiffel Software"
+	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
+	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[
 			This file is part of Eiffel Software's Eiffel Development Environment.
 			
@@ -84,5 +59,4 @@ feature {NONE} -- Factory
 			Website http://www.eiffel.com
 			Customer support http://support.eiffel.com
 		]"
-
 end

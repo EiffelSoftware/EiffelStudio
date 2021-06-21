@@ -169,6 +169,8 @@ feature {NONE} -- Modifiable shortcuts
 
 	show_tool_shortcuts: like default_shortcut_actions
 			-- Show tool shortcuts. (Alt/Ctrl/Shift/KeyString)
+			-- note: be careful about magic being {ES_TOOL}.shortcut_preference_name
+			--       and {ES_TOOL}.name for ES_*_TOOL class names.
 		local
 			l_hash: HASH_TABLE [TUPLE [BOOLEAN, BOOLEAN, BOOLEAN, STRING], STRING]
 		do
@@ -195,7 +197,7 @@ feature {NONE} -- Modifiable shortcuts
 			l_hash.put ([True, True, False, key_strings.item (key_comma).twin.as_string_8], "show_testing_tool")
 			l_hash.put ([True, True, False, key_strings.item (key_period).twin.as_string_8], "show_testing_results_tool")
 			l_hash.put ([True, True, False, key_strings.item (Key_q).twin.as_string_8], "show_information_tool")
-			l_hash.put ([True, False, True, key_strings.item (Key_s).twin.as_string_8], "show_source_control_tool")
+			l_hash.put ([True, False, True, key_strings.item (Key_s).twin.as_string_8], "show_scm_tool")
 			Result.extend ([l_hash, main_window_group])
 		end
 

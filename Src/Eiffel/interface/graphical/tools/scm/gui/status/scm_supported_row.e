@@ -170,22 +170,17 @@ feature -- Operation
 		end
 
 	show_diff (a_only_selected_items: BOOLEAN)
-		local
-			ch_list: SCM_CHANGELIST
 		do
-			if attached scm_s.service as scm then
-				if a_only_selected_items then
-					ch_list := parent_grid.changes_for (root_location)
-				else
-					create ch_list.make_with_location (root_location)
-					ch_list.extend_path (root_location.location)
-				end
+			if a_only_selected_items then
 				if
-					ch_list /= Void and then
+					attached scm_s.service as scm and then
+					attached parent_grid.changes_for (root_location) as ch_list and then
 					attached scm.diff (ch_list) as l_diff
 				then
 					parent_grid.status_box.show_diff (l_diff)
 				end
+			else
+				parent_grid.status_box.show_location_diff (root_location, root_location.location)
 			end
 		end
 

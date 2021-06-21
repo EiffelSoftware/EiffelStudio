@@ -196,12 +196,12 @@ feature -- Access
 			end
 		end
 
-	scm_tool: detachable SCM_TOOL
+	scm_tool: detachable ES_SCM_TOOL
 			-- SCM tool
 		require
 			not_is_recycled: not is_recycled
 		do
-			if attached {SCM_TOOL} develop_window.shell_tools.tool ({SCM_TOOL}) as l_tool then
+			if attached {ES_SCM_TOOL} develop_window.shell_tools.tool ({ES_SCM_TOOL}) as l_tool then
 				Result := l_tool
 			else
 					-- SCM service is not activated!

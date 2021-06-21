@@ -47,7 +47,7 @@ feature {NONE} -- Initialization
 		local
 			l_shortcut: SHORTCUT_PREFERENCE
 		do
-			l_shortcut := preferences.misc_shortcut_data.shortcuts.item ("show_source_control_tool")
+			l_shortcut := preferences.misc_shortcut_data.shortcuts.item ("show_scm_tool") -- See {ES_TOOL}.shortcut_preference_name
 			if l_shortcut /= Void then
 				create accelerator.make_with_key_combination (l_shortcut.key, l_shortcut.is_ctrl, l_shortcut.is_alt, l_shortcut.is_shift)
 				set_referred_shortcut (l_shortcut)

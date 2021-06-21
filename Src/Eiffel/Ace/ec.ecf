@@ -315,7 +315,7 @@
 			<visible class="ES_TESTING_RESULTS_TOOL" feature="default_create"/>
 			<visible class="ES_WEB_BROWSER_TOOL" feature="default_create"/>
 			<visible class="ES_WINDOWS_TOOL" feature="default_create"/>
-			<visible class="SCM_TOOL" feature="default_create"/>
+			<visible class="ES_SCM_TOOL" feature="default_create"/>
 		</cluster>
 		<cluster name="process_gui" location="$ISE_LIBRARY\library\process\gui\" recursive="true"/>
 		<cluster name="tty" location="$EIFFEL_SRC\Eiffel\interface\tty\" recursive="true">

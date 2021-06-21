@@ -87,8 +87,10 @@ if [ -e "$output_dir/last_revision_built" ]; then
 			rm "$porterpackage_tar"
 		else
 			if [ "$edition_name" = "ent" ]; then
+				echo "Sharing the $edition_name PorterPackage to (ent)"
 				share_deliv_file $output_dir/${deliv_revision}/PorterPackage_ent_${deliv_revision}.tar "New $edition_name Porterpackage for revision ${deliv_revision}" ${edition_name}
 			else
+				echo "Sharing the $edition_name PorterPackage to (std)"
 				share_deliv_file $output_dir/${deliv_revision}/PorterPackage_${deliv_revision}.tar "New $edition_name Porterpackage for revision ${deliv_revision}" ${edition_name}
 			fi
 		fi

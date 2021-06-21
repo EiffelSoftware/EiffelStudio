@@ -131,8 +131,8 @@ if [ ! -d "PorterPackage" ]; then
 		echo Build Standard PorterPackage ...
 		./make_delivery
 	fi
+	echo Copy log files to $DELIV_LOGDIR
 	cp *.log $DELIV_LOGDIR/.
-	cp */*.log $DELIV_LOGDIR/.
 fi
 if [ -d "PorterPackage" ]; then
 	if [ ! -f "$STUDIO_PORTERPACKAGE_TAR" ]; then
@@ -142,6 +142,7 @@ if [ -d "PorterPackage" ]; then
 	echo PorterPackage is ready: $STUDIO_PORTERPACKAGE_TAR
 	ls -la $DELIV_OUTPUT
 	echo ${DELIV_REVISION} > $DELIV_DIR/output/last_revision_built
+	echo content of $DELIV_DIR/output/
 	ls -la $DELIV_DIR/output/
 else
 	echo Missing PorterPackage!

@@ -52,6 +52,76 @@ feature {NONE} -- Persistency
 	load
 		local
 			p: PATH
+			l_section_name: STRING
+			l_section_list: like sections.item
+		do
+			items.wipe_out
+			sections.wipe_out
+			p := eiffel_layout.eifinit_path.extended ("unicode_symbols.cfg")
+			import_file (p)
+			if attached eiffel_layout.user_priority_file_name (p, True) as pp then
+				import_file (pp)
+			end
+
+			if items.is_empty then
+				l_section_name := "Symbols"
+				l_section_list := sections [l_section_name]
+				if not attached l_section_list then
+					create {ARRAYED_LIST [like sections.item.item]} l_section_list.make (20)
+					sections.put (l_section_list, l_section_name)
+				end
+					-- Hardcoded
+					-- Miscellaneous mathematical symbols
+				items ["For all"] := {STRING_32} "%/8704/"
+				items ["Complement"] := {STRING_32} "%/8705/"
+				items ["Partial differential"] := {STRING_32} "%/8706/"
+				items ["There exists"] := {STRING_32} "%/8707/"
+				items ["There does not exists"] := {STRING_32} "%/8708/"
+				items ["Empty set"] := {STRING_32} "%/8709/"
+				items ["Increment"] := {STRING_32} "%/8710/"
+				items ["Nabla"] := {STRING_32} "%/8711/"
+					-- Set membership
+				items ["Element_of"] := {STRING_32} "%/8712/"
+				items ["Not an element of"] := {STRING_32} "%/8713/"
+				items ["Small element of"] := {STRING_32} "%/8714/"
+				items ["Contains as member"] := {STRING_32} "%/8715/"
+				items ["Does not contain as member"] := {STRING_32} "%/8716/"
+					-- Miscellaneous mathematical symbol
+				items ["End of proof"] := {STRING_32} "%/8717/"
+					-- N-ary operators
+				items ["N-ary product"] := {STRING_32} "%/8718/"
+				items ["N-ary coproduct"] := {STRING_32} "%/8719/"
+				items ["N-ary summation"] := {STRING_32} "%/8720/"
+					-- ...
+					-- Operators
+				items ["Minus sign"] := {STRING_32} "%/8721/"
+				items ["Minus-or-plus sign"] := {STRING_32} "%/8722/"
+				items ["Dot plus"] := {STRING_32} "%/8723/"
+					-- ..
+				items ["Ring operator"] := {STRING_32} "%/8728/"
+				items ["Bullet operator"] := {STRING_32} "%/8729/"
+				items ["Square root"] := {STRING_32} "%/8730/"
+				items ["Cube root"] := {STRING_32} "%/8731/"
+				items ["Fourth root"] := {STRING_32} "%/8732/"
+				items ["Proportional to"] := {STRING_32} "%/8733/"
+					-- Miscellaneous mathematical symbol
+				items ["Infinity"] := {STRING_32} "%/8734/"
+					-- ..
+					-- Logical and set operators
+				items ["Logical AND"] := {STRING_32} "%/8743/"
+				items ["Logical OR"] := {STRING_32} "%/8744/"
+				items ["Intersection"] := {STRING_32} "%/8745/"
+				items ["Union"] := {STRING_32} "%/8746/"
+				across
+					items as ic
+				loop
+					l_section_list.extend ([ic.item, ic.key])
+				end
+			end
+		end
+
+	import_file (a_path: PATH)
+		local
 			f: PLAIN_TEXT_FILE
 			l_line: like {PLAIN_TEXT_FILE}.last_string
 			s32: STRING_32
@@ -61,13 +131,7 @@ feature {NONE} -- Persistency
 			i, j: INTEGER
 			code: NATURAL_32
 		do
-			p := eiffel_layout.eifinit_path.extended ("unicode_symbols.cfg")
-			if attached eiffel_layout.user_priority_file_name (p, True) as pp then
-				p := pp
-			end
-			items.wipe_out
-			sections.wipe_out
-			create f.make_with_path (p)
+			create f.make_with_path (a_path)
 			if f.exists and then f.is_access_readable then
 				f.open_read
 				from
@@ -150,54 +214,6 @@ feature {NONE} -- Persistency
 					end
 				end
 				f.close
-			else
-					-- Hardcoded
-					-- Miscellaneous mathematical symbols
-				items ["For all"] := {STRING_32} "%/8704/"
-				items ["Complement"] := {STRING_32} "%/8705/"
-				items ["Partial differential"] := {STRING_32} "%/8706/"
-				items ["There exists"] := {STRING_32} "%/8707/"
-				items ["There does not exists"] := {STRING_32} "%/8708/"
-				items ["Empty set"] := {STRING_32} "%/8709/"
-				items ["Increment"] := {STRING_32} "%/8710/"
-				items ["Nabla"] := {STRING_32} "%/8711/"
-					-- Set membership
-				items ["Element_of"] := {STRING_32} "%/8712/"
-				items ["Not an element of"] := {STRING_32} "%/8713/"
-				items ["Small element of"] := {STRING_32} "%/8714/"
-				items ["Contains as member"] := {STRING_32} "%/8715/"
-				items ["Does not contain as member"] := {STRING_32} "%/8716/"
-					-- Miscellaneous mathematical symbol
-				items ["End of proof"] := {STRING_32} "%/8717/"
-					-- N-ary operators
-				items ["N-ary product"] := {STRING_32} "%/8718/"
-				items ["N-ary coproduct"] := {STRING_32} "%/8719/"
-				items ["N-ary summation"] := {STRING_32} "%/8720/"
-					-- ...
-					-- Operators
-				items ["Minus sign"] := {STRING_32} "%/8721/"
-				items ["Minus-or-plus sign"] := {STRING_32} "%/8722/"
-				items ["Dot plus"] := {STRING_32} "%/8723/"
-					-- ..
-				items ["Ring operator"] := {STRING_32} "%/8728/"
-				items ["Bullet operator"] := {STRING_32} "%/8729/"
-				items ["Square root"] := {STRING_32} "%/8730/"
-				items ["Cube root"] := {STRING_32} "%/8731/"
-				items ["Fourth root"] := {STRING_32} "%/8732/"
-				items ["Proportional to"] := {STRING_32} "%/8733/"
-					-- Miscellaneous mathematical symbol
-				items ["Infinity"] := {STRING_32} "%/8734/"
-					-- ..
-					-- Logical and set operators
-				items ["Logical AND"] := {STRING_32} "%/8743/"
-				items ["Logical OR"] := {STRING_32} "%/8744/"
-				items ["Intersection"] := {STRING_32} "%/8745/"
-				items ["Union"] := {STRING_32} "%/8746/"
-				across
-					items as ic
-				loop
-					l_section_list.extend ([ic.item, ic.key])
-				end
 			end
 		end
 

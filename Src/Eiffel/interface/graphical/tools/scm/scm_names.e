@@ -179,6 +179,13 @@ feature -- General
 	button_clear_changelist: STRING_32 do Result := locale.translation_in_context ("Clear", "scm") end
 	button_clear_changelist_tooltip: STRING_32 do Result := locale.translation_in_context ("Clear the active changelist", "scm") end
 
+feature -- Messages
+
+	message_git_push (a_root: SCM_LOCATION): STRING_32
+		do
+			Result := locale.formatted_string (locale.translation_in_context ("git push (GIT repository %"$1%")", "scm"), [a_root.location_path_name])
+		end
+
 
 ;note
 	copyright: "Copyright (c) 1984-2021, Eiffel Software"

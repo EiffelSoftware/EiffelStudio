@@ -108,6 +108,13 @@ feature -- Element change
 			not has (a_name)
 		end
 
+	wipe_out
+		do
+			items.wipe_out
+		ensure
+			count = 0
+		end
+
 feature -- Conversion
 
 	as_command_line_arguments: STRING_32

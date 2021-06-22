@@ -182,12 +182,14 @@ feature {NONE} -- Action handlers
 			l_status: SCM_STATUS_BOX
 		do
 			l_status := status_box
-			if
-				l_status /= Void and then
-				attached l_status.active_changelist_name as l_name and then
-				l_name.same_string (ch.name)
-			then
-				l_status.on_changelist_selected (ch)
+			if l_status /= Void then
+				l_status.on_changelist_combo_changed
+				if
+					attached l_status.active_changelist_name as l_name and then
+					l_name.same_string (ch.name)
+				then
+					l_status.on_changelist_selected (ch)
+				end
 			end
 		end
 

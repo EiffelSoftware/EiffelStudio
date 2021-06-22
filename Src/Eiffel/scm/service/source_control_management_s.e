@@ -79,6 +79,12 @@ feature -- Operations
 		deferred
 		end
 
+	post_commit_operations (a_commit: SCM_COMMIT_SET): detachable LIST [SCM_POST_COMMIT_OPERATION]
+		require
+			is_processed: a_commit.is_processed
+		deferred
+		end
+
 	update (a_changelist: SCM_CHANGELIST): detachable STRING_32
 		deferred
 		end

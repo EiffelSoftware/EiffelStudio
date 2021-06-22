@@ -235,6 +235,9 @@ feature -- Basic operation
 				create l_commit.make_with_changelist (Void, l_changelist)
 				open_save_dialog (l_commit)
 				if l_commit.is_processed then
+					if not l_commit.has_error then
+						l_changelist.wipe_out
+					end
 					update_statuses (loc)
 				end
 			end
@@ -252,6 +255,15 @@ feature -- Basic operation
 				else
 					create {SCM_MULTI_COMMIT_SET} l_commit.make_with_changelists (Void, lst)
 					open_save_dialog (l_commit)
+				end
+				if l_commit /= Void and then l_commit.is_processed then
+					if not l_commit.has_error then
+						across
+							lst as ic
+						loop
+							ic.item.wipe_out
+						end
+					end
 				end
 			end
 		end
@@ -336,7 +348,7 @@ feature -- Basic operation
 					show_command_execution ("Revert", l_output)
 				end
 			end
-		end	
+		end
 
 	show_update_operation (a_root: detachable SCM_LOCATION; a_location: PATH)
 		local
@@ -411,7 +423,7 @@ feature -- Changelist
 				Result := changelists [n]
 			elseif
 				attached changelist_combo as l_combo and then
-				attached l_combo.text as l_name
+				attached {READABLE_STRING_GENERAL} l_combo.selected_item.data as l_name
 			then
 				Result := changelists [l_name]
 			elseif not changelists.is_empty then
@@ -423,18 +435,17 @@ feature -- Changelist
 	on_changelist_combo_changed
 		local
 			l_new: SCM_CHANGELIST_COLLECTION
-			l_name: READABLE_STRING_GENERAL
 		do
 			if attached changelist_combo as l_combo then
-				l_name := l_combo.text
-				if not changelists.has (l_name) then
-					create l_new.make (l_name, 10)
-					changelists [l_new.name] := l_new
+				if attached {READABLE_STRING_GENERAL} l_combo.selected_item.data as l_name then
+					if not changelists.has (l_name) then
+						create l_new.make (l_name, 10)
+						changelists [l_new.name] := l_new
+					end
+					if attached changelists [l_name] as sel then
+						on_changelist_selected (sel)
+					end
 				end
-				if attached changelists [l_name] as sel then
-					on_changelist_selected (sel)
-				end
-
 				update_changelist_combo (l_combo)
 			end
 		end
@@ -452,13 +463,18 @@ feature -- Changelist
 	update_changelist_combo (a_combo: EV_COMBO_BOX)
 		local
 			li: EV_LIST_ITEM
+			fn: READABLE_STRING_GENERAL
 		do
 			a_combo.return_actions.block
 			a_combo.wipe_out
 			across
 				changelists as ic
 			loop
-				create li.make_with_text (ic.item.name)
+				if fn = Void then
+					fn := ic.item.name
+				end
+				create li.make_with_text (ic.item.name + {STRING_32} " (" + ic.item.count.out.to_string_32 + {STRING_32} ")")
+				li.set_data (ic.item.name)
 				a_combo.extend (li)
 				if attached active_changelist_name as sel then
 					if sel.same_string (ic.item.name) then
@@ -469,6 +485,9 @@ feature -- Changelist
 				end
 				li.select_actions.extend (agent on_changelist_selected (ic.item))
 				li.set_tooltip (ic.item.count.out + " item(s)")
+			end
+			if active_changelist_name = Void then
+				active_changelist_name := fn
 			end
 			a_combo.return_actions.resume
 		end

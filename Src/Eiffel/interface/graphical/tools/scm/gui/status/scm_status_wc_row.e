@@ -130,6 +130,7 @@ feature {SCM_STATUS_CHANGE_ROW, SCM_STATUS_WC_LOCATION_ROW} -- Internal
 				end
 				if not lst.has_path (a_status.location) then
 					lst.extend_path (a_status.location)
+					parent_grid.status_box.on_changelist_combo_changed
 				end
 			end
 		end
@@ -141,6 +142,7 @@ feature {SCM_STATUS_CHANGE_ROW, SCM_STATUS_WC_LOCATION_ROW} -- Internal
 				attached coll.changelist (root_location) as lst
 			then
 				lst.remove_path (a_status.location)
+				parent_grid.status_box.on_changelist_combo_changed
 			end
 		end
 

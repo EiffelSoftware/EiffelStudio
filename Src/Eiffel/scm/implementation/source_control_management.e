@@ -285,6 +285,29 @@ feature -- Operations
 			retry
 		end
 
+	post_commit_operations (a_commit: SCM_COMMIT_SET): detachable LIST [SCM_POST_COMMIT_OPERATION]
+		local
+			l_git_count: INTEGER
+		do
+			create {ARRAYED_LIST [SCM_POST_COMMIT_OPERATION]} Result.make (1)
+			if attached {SCM_MULTI_COMMIT_SET} a_commit as l_multi then
+				across
+					l_multi.changelists as ic
+				loop
+					if attached {SCM_GIT_LOCATION} ic.item.root then
+						Result.extend (create {SCM_POST_COMMIT_GIT_PUSH_OPERATION}.make_with_location (ic.item.root))
+					end
+				end
+			elseif attached {SCM_SINGLE_COMMIT_SET} a_commit as l_single then
+				if attached {SCM_GIT_LOCATION} l_single.changelist.root then
+					Result.extend (create {SCM_POST_COMMIT_GIT_PUSH_OPERATION}.make_with_location (l_single.changelist.root))
+				end
+			end
+			if Result.is_empty then
+				Result := Void
+			end
+		end
+
 feature -- Status
 
 	file_status (a_path: PATH): detachable SCM_STATUS

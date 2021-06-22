@@ -178,7 +178,8 @@ feature -- Access: Help
 	help_context_id: STRING_32
 			-- <Precursor>
 		once
-			Result := {STRING_32} "FIXME..." -- FIXME
+			Result := {STRING_32} "6109AFC3-43A4-4524-9ED8-C02B486CABAF"
+			-- Same as {ES_SCM_TOOL_PANEL}.help_context_id
 		end
 
 feature {NONE} -- Helpers
@@ -256,7 +257,7 @@ feature -- Action
 					parent_box.show_diff (d)
 				end
 			end
-			
+
 			veto_close
 		end
 
@@ -288,6 +289,17 @@ feature -- Action
 				progress_log_text.set_text (m)
 			else
 				progress_log_text.set_text (scm_names.text_no_output)
+			end
+
+			if attached scm_service.post_commit_operations (commit) as l_ops and then not l_ops.is_empty then
+				progress_log_text.append_text ("%NYou may need to do the following manual operation(s):%N")
+				across
+					l_ops as ic
+				loop
+					if attached {SCM_POST_COMMIT_GIT_PUSH_OPERATION} ic.item as l_git_push then
+						progress_log_text.append_text ({STRING_32} " - " + scm_names.message_git_push (l_git_push.root_location) + "%N")
+					end
+				end
 			end
 
 			err := commit.has_error

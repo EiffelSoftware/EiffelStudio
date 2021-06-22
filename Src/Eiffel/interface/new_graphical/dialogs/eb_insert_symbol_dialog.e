@@ -143,6 +143,7 @@ feature {NONE} -- Initialization
 				)
 
 			on_category_changed
+			symbols_grid.focus_in_actions.extend (agent on_symbols_grid_focused_in)
 			show_actions.extend (agent categories_choice.set_focus)
 		end
 
@@ -199,7 +200,7 @@ feature -- Events
 			loop
 				s := ic.key
 				if m.prefix_string (l_query, s.to_string_32) then
-					if ic.item.count = 1 then
+					if ic.item.count > 1 then
 						lst.extend ([ic.item, ic.key])
 					end
 				end
@@ -208,12 +209,9 @@ feature -- Events
 		end
 
 	on_symbol_selected
-		local
-			s: STRING_32
 		do
 			if attached current_symbol as cs then
-				create s.make_filled (cs.symbol, 1)
-				preview_label.set_text (s)
+				preview_label.set_text (cs.symbol)
 			else
 				preview_label.remove_text
 			end
@@ -257,17 +255,17 @@ feature -- Events
 					lst as ic
 				loop
 					sym := ic.item.symbol
-					if sym.count = 1 then
+					if sym.count > 0 then
 						create s.make_from_string (sym)
 						create gi.make_with_text (s)
 						gi.align_text_center
 						gi.align_text_vertically_center
 						gi.set_tooltip (ic.item.description)
-						gi.set_data ([sym [1], ic.item.description])
+						gi.set_data ([sym, ic.item.description])
 						gi.select_actions.extend (agent (i_data: attached like current_symbol)
 							do
 								current_symbol := i_data
-							end([sym [1], ic.item.description]))
+							end([sym, ic.item.description]))
 
 						j := j + 1
 						if j > nb then
@@ -293,7 +291,7 @@ feature -- Events
 			current_symbol := Void
 			if
 				a_grid_item /= Void and then
-				attached {TUPLE [symbol: CHARACTER_32; description: READABLE_STRING_GENERAL]} a_grid_item.data as d
+				attached {TUPLE [symbol: STRING_32; description: READABLE_STRING_GENERAL]} a_grid_item.data as d
 			then
 				current_symbol := d
 				on_symbol_selected
@@ -311,20 +309,62 @@ feature -- Events
 			on_grid_item_selected (a_grid_item)
 		end
 
-	on_copy_symbol
+	on_symbols_grid_focused_in
 		local
-			s: STRING_32
+			r,c,rn,cn: INTEGER
+			gi: EV_GRID_ITEM
+		do
+			if attached symbols_grid as g then
+				if attached g.selected_items as lst and then lst.count > 0 then
+					-- Already selected
+				elseif attached current_symbol as curr then
+					from
+						r := 1
+						rn := g.row_count
+					until
+						r > rn or gi /= Void
+					loop
+						from
+							c := 1
+							cn := g.row (r).count
+						until
+							c > cn or gi /= Void
+						loop
+							gi := g.item (c, r)
+							if
+								gi /= Void and then
+								attached {TUPLE [symbol: STRING_32; description: READABLE_STRING_GENERAL]} gi.data as d and then
+								d.symbol.same_string (curr.symbol)
+							then
+									-- Found :)
+							else
+								gi := Void
+							end
+							c := c + 1
+						end
+						r := r + 1
+					end
+				elseif g.row_count > 0 and g.row (1).count > 0 then
+					gi := g.item (1, 1)
+				end
+				if gi /= Void then
+					gi.ensure_visible
+					gi.enable_select
+				end
+			end
+		end
+
+	on_copy_symbol
 		do
 			if attached current_symbol as curr then
-				create s.make_filled (curr.symbol, 1)
-				ev_application.clipboard.set_text (s)
+				ev_application.clipboard.set_text (curr.symbol)
 			end
 		end
 
 	on_insert_symbol
 		do
 			if attached current_symbol as curr then
-				editor.text_displayed.insert_char (curr.symbol)
+				editor.text_displayed.insert_string (curr.symbol)
 				on_close
 			end
 		end
@@ -357,7 +397,7 @@ feature -- Access: data
 
 	current_section: detachable READABLE_STRING_32
 
-	current_symbol: detachable TUPLE [symbol: CHARACTER_32; description: READABLE_STRING_GENERAL]
+	current_symbol: detachable TUPLE [symbol: STRING_32; description: READABLE_STRING_GENERAL]
 
 
 feature {NONE} -- Implementation
@@ -370,7 +410,7 @@ invariant
 note
 	date: "$Date$"
 	revision: "$Revision$"
-	copyright: "Copyright (c) 1984-2020, Eiffel Software"
+	copyright: "Copyright (c) 1984-2021, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

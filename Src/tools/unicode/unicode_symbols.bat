@@ -1,10 +1,10 @@
 @echo off
 
+call "%~dp0%\unicode_version.bat"
+
 set "TEMP_DATA=%TEMP%\unicode_symbols_data.txt"
 set "TEMP_FILTER=%TEMP%\unicode_symbols_filter.txt"
 set "TEMP_OUTPUT=%TEMP%\symbols_output.txt"
-
-set "UNICODE_VERSION=13.0.0"
 
 set "GROUP=symbol_group.txt"
 
@@ -42,6 +42,10 @@ echo 27F3;Loop begin;Eiffel>> "%OUTPUT%"
 echo 27F2;Loop end;Eiffel>> "%OUTPUT%"
 echo 27E6;Agent begin;Eiffel>> "%OUTPUT%"
 echo 27E7;Agent end;Eiffel>> "%OUTPUT%"
+echo 0022;Double quote;Eiffel>> "%OUTPUT%"
+echo 0027;Single quote;Eiffel>> "%OUTPUT%"
+echo 0060;Back quote;Eiffel>> "%OUTPUT%"
+echo 007E;Tilda;Eiffel>> "%OUTPUT%"
 echo.>> "%OUTPUT%"
 echo # Automatically generated Unicode %UNICODE_VERSION% symbols>> "%OUTPUT%"
 type "%TEMP_OUTPUT%" >> "%OUTPUT%"

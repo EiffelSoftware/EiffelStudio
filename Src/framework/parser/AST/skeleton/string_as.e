@@ -208,14 +208,14 @@ feature -- Roundtrip/Token
 
 	first_token (a_list: detachable LEAF_AS_LIST): LEAF_AS
 		do
-			if a_list = Void then
-				Result := Current
-			else
-				if attached type as l_type and then attached l_type.first_token (a_list) as l_result then
-					Result := l_result
-				else
-					Result := Current
+			if attached a_list then
+				Result := once_string_keyword (a_list)
+				if not attached Result and then attached type as t then
+					Result := t.first_token (a_list)
 				end
+			end
+			if not attached Result then
+				Result := Current
 			end
 		end
 
@@ -223,9 +223,9 @@ invariant
 	value_not_void: value /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2020, Eiffel Software"
-	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
-	licensing_options:	"http://www.eiffel.com/licensing"
+	copyright: "Copyright (c) 1984-2021, Eiffel Software"
+	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
+	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[
 			This file is part of Eiffel Software's Eiffel Development Environment.
 			

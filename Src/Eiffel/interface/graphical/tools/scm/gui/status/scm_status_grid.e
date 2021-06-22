@@ -119,6 +119,16 @@ feature -- Actions
 								mi.select_actions.extend (agent l_status_box.show_location_diff (Void, l_status.location))
 								a_menu.extend (mi)
 							end
+							create mi
+							mi.set_text (scm_names.menu_revert)
+							mi.select_actions.extend (agent l_status_box.show_revert_operation (Void, l_status.location))
+							a_menu.extend (mi)
+
+							create mi
+							mi.set_text (scm_names.menu_update)
+							mi.select_actions.extend (agent l_status_box.show_update_operation (Void, l_status.location))
+							a_menu.extend (mi)
+
 							create mm.make_with_text (scm_names.menu_add_to_changelist (Void, 0))
 							across
 								scm.changelists as ic

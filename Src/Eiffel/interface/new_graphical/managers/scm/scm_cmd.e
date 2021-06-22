@@ -31,6 +31,8 @@ inherit
 
 	SHARED_SOURCE_CONTROL_MANAGEMENT_SERVICE
 
+	SHARED_EXECUTION_ENVIRONMENT
+
 create
 	make
 
@@ -225,10 +227,13 @@ feature -- Drop down menu
 			l_item: EV_MENU_ITEM
 			l_menu_status_item,
 			l_menu_revert_item,
+			l_menu_update_item,
 			l_menu_diff_item: EV_MENU_ITEM
 			l_menu_add_to_item: EV_MENU
 			mi: EV_MENU_ITEM
 			l_status: SCM_STATUS
+			l_file_location: PATH
+			l_scm_root: SCM_LOCATION
 		do
 			create Result
 			if attached scm_s.service as scm then
@@ -247,16 +252,22 @@ feature -- Drop down menu
 					l_menu_diff_item.select_actions.extend (agent on_editor_diff_selected)
 					Result.extend (l_menu_diff_item)
 
-					create l_menu_add_to_item
-					l_menu_add_to_item.set_text (scm_names.menu_add_to_changelist (Void, 0))
-					l_menu_add_to_item.disable_sensitive
-					Result.extend (l_menu_add_to_item)
-
 					create l_menu_revert_item
 					l_menu_revert_item.set_text (scm_names.menu_revert)
 					l_menu_revert_item.disable_sensitive
 					l_menu_revert_item.select_actions.extend (agent on_editor_revert_selected)
 					Result.extend (l_menu_revert_item)
+
+					create l_menu_update_item
+					l_menu_update_item.set_text (scm_names.menu_update)
+					l_menu_update_item.disable_sensitive
+					l_menu_update_item.select_actions.extend (agent on_editor_update_selected)
+					Result.extend (l_menu_update_item)
+
+					create l_menu_add_to_item
+					l_menu_add_to_item.set_text (scm_names.menu_add_to_changelist (Void, 0))
+					l_menu_add_to_item.disable_sensitive
+					Result.extend (l_menu_add_to_item)
 
 					Result.extend (create {EV_MENU_SEPARATOR})
 					create l_item
@@ -265,7 +276,6 @@ feature -- Drop down menu
 					l_item.select_actions.extend (agent scm.update_statuses)
 					Result.extend (l_item)
 
-
 					create l_item
 					l_item.set_text (scm_names.menu_go_to_tool)
 					l_item.enable_sensitive
@@ -273,33 +283,42 @@ feature -- Drop down menu
 					Result.extend (l_item)
 
 					if attached {FILED_STONE} editor_stone as st then
-						l_status := scm.file_status (create {PATH}.make_from_string (st.file_name))
-						if
-							l_status /= Void
-						then
-							l_menu_status_item.set_data (l_status)
-							l_menu_status_item.set_pixmap (status_pixmap (l_status))
-							l_menu_status_item.set_text (scm_names.menu_editor_status (st.stone_name, l_status.status_as_string))
-							if
-								attached {SCM_STATUS_MODIFIED} l_status
-								or attached {SCM_STATUS_CONFLICTED} l_status
-							then
-								l_menu_diff_item.enable_sensitive
-								l_menu_revert_item.enable_sensitive
-							end
+						create l_file_location.make_from_string (st.file_name)
+						l_scm_root := scm.scm_root_location (l_file_location)
+						if l_scm_root = Void then
+							l_menu_status_item.set_text (scm_names.menu_file_outside_any_repository)
 						else
-							l_menu_status_item.set_text (scm_names.menu_editor_status (st.stone_name, Void))
-						end
-						l_menu_add_to_item.enable_sensitive
-						across
-							scm.changelists as ic
-						loop
-							create mi.make_with_text (scm_names.menu_add_to_changelist (ic.key, ic.item.count))
-							mi.select_actions.extend (agent on_editor_add_selected (ic.key, st.file_name))
-							l_menu_add_to_item.extend (mi)
+							l_status := scm.file_status (l_file_location)
+							if
+								l_status /= Void
+							then
+								l_menu_status_item.set_data (l_status)
+								l_menu_status_item.set_pixmap (status_pixmap (l_status))
+								l_menu_status_item.set_text (scm_names.menu_editor_status (st.stone_name, l_status.status_as_string))
+								if
+									attached {SCM_STATUS_MODIFIED} l_status
+									or attached {SCM_STATUS_CONFLICTED} l_status
+								then
+									l_menu_diff_item.enable_sensitive
+									l_menu_revert_item.enable_sensitive
+								end
+							else
+								l_menu_status_item.set_text (scm_names.menu_editor_status (st.stone_name, Void))
+							end
+							l_menu_add_to_item.enable_sensitive
+							across
+								scm.changelists as ic
+							loop
+								create mi.make_with_text (scm_names.menu_add_to_changelist (ic.key, ic.item.count))
+								mi.select_actions.extend (agent on_editor_add_selected (ic.key, st.file_name))
+								l_menu_add_to_item.extend (mi)
+							end
+							if not attached {SCM_GIT_LOCATION} l_scm_root then
+									-- Not yet available for git
+								l_menu_update_item.enable_sensitive
+							end
 						end
 					end
-
 				else
 						-- Check availability
 					create l_item.make_with_text (scm_names.menu_check)
@@ -320,19 +339,44 @@ feature {NONE} -- Implementation
 	on_editor_diff_selected
 		local
 			dlg: SCM_DIFF_DIALOG
+			l_ext_cmd: READABLE_STRING_GENERAL
+			ch_list: SCM_CHANGELIST
+			l_location: PATH
 		do
 			if attached {FILED_STONE} editor_stone as l_file_stone then
 				if
 					attached scm_s.service as scm and then
 					scm.is_available
 				then
-					if attached scm.diff_at_location (create {PATH}.make_from_string (l_file_stone.file_name)) as l_diff then
-						create dlg.make (scm, l_diff)
-						dlg.set_is_modal (False)
-						if attached Window_manager.last_focused_development_window as devwin then
-							dlg.set_size (devwin.dpi_scaler.scaled_size (700).min (devwin.window.width), devwin.dpi_scaler.scaled_size (500).min (devwin.window.height))
+					create l_location.make_from_string (l_file_stone.file_name)
+					if attached scm.scm_root_location (l_location) as l_scm_root then
+						if
+							attached {SCM_GIT_LOCATION} l_scm_root and then
+							scm.config.use_external_git_diff_command
+						then
+							l_ext_cmd := scm.config.external_git_diff_command (l_location)
+						elseif
+							attached {SCM_SVN_LOCATION} l_scm_root and then
+							scm.config.use_external_svn_diff_command
+						then
+							l_ext_cmd := scm.config.external_svn_diff_command (l_location)
+						else
+							l_ext_cmd := Void
 						end
-						dlg.show_on_active_window
+						if l_ext_cmd /= Void then
+							execution_environment.launch (l_ext_cmd)
+						else
+							create ch_list.make_with_location (l_scm_root)
+							ch_list.extend_path (l_location)
+							if attached scm.diff (ch_list) as l_diff then
+								create dlg.make (scm, l_diff)
+								dlg.set_is_modal (False)
+								if attached Window_manager.last_focused_development_window as devwin then
+									dlg.set_size (devwin.dpi_scaler.scaled_size (700).min (devwin.window.width), devwin.dpi_scaler.scaled_size (500).min (devwin.window.height))
+								end
+								dlg.show_on_active_window
+							end
+						end
 					end
 				end
 			end
@@ -370,8 +414,48 @@ feature {NONE} -- Implementation
 						create ch.make_with_location (rt)
 						ch.extend_path (p)
 						s := scm.revert (ch) -- FIXME report output
+						show_command_execution ("Revert", s)
 					end
 				end
+			end
+		end
+
+	on_editor_update_selected
+		local
+			ch: SCM_CHANGELIST
+			p: PATH
+			s: READABLE_STRING_GENERAL
+		do
+			if
+				attached scm_s.service as scm and then
+				scm.is_available
+			then
+				if attached {FILED_STONE} editor_stone as l_file_stone then
+					create p.make_from_string (l_file_stone.file_name)
+					if attached	scm.scm_root_location (p) as rt then
+						create ch.make_with_location (rt)
+						ch.extend_path (p)
+						s := scm.update (ch)
+						show_command_execution ("Update", s)
+					end
+				end
+			end
+		end
+
+	show_command_execution (a_op: READABLE_STRING_GENERAL; a_output: READABLE_STRING_GENERAL)
+		local
+			d: SCM_COMMAND_EXECUTION_DIALOG
+		do
+			if
+				attached scm_s.service as scm and then
+				scm.is_available
+			then
+				create d.make (scm, a_op, a_output)
+				d.set_is_modal (False)
+				if attached window_manager.last_focused_development_window as devwin then
+					d.set_size (devwin.dpi_scaler.scaled_size (700).min (devwin.window.width), devwin.dpi_scaler.scaled_size (500).min (devwin.window.height))
+				end
+				d.show_on_active_window
 			end
 		end
 

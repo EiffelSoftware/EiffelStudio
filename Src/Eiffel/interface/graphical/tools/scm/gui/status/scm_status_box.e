@@ -80,6 +80,8 @@ feature {NONE} -- Initialization
 			b.extend (bar)
 			b.disable_item_expand (bar)
 
+			bar.extend (create {EV_CELL})
+
 			create but.make_with_text (scm_names.button_check_all)
 			but.set_pixmap (icon_pixmaps.general_refresh_icon)
 			check_all_repo_button := but
@@ -243,6 +245,7 @@ feature -- Basic operation
 			l_commit: SCM_COMMIT_SET
 		do
 			if attached active_changelist as lst then
+				lst.remove_empty_changelists
 				if lst.changelist_count = 1 and then attached lst.first_changelist as l_changelist then
 					create {SCM_SINGLE_COMMIT_SET} l_commit.make_with_changelist (Void, l_changelist)
 					open_save_dialog (l_commit)
@@ -313,6 +316,42 @@ feature -- Basic operation
 					if attached scm_service.diff (ch_list) as diff then
 						show_diff (diff)
 					end
+				end
+			end
+		end
+
+	show_revert_operation (a_root: detachable SCM_LOCATION; a_location: PATH)
+		local
+			l_root: SCM_LOCATION
+			ch_list: SCM_CHANGELIST
+		do
+			l_root := a_root
+			if l_root = Void then
+				l_root := scm_service.scm_root_location (a_location)
+			end
+			if l_root /= Void then
+				create ch_list.make_with_location (l_root)
+				ch_list.extend_path (a_location)
+				if attached scm_service.revert (ch_list) as l_output then
+					show_command_execution ("Revert", l_output)
+				end
+			end
+		end	
+
+	show_update_operation (a_root: detachable SCM_LOCATION; a_location: PATH)
+		local
+			l_root: SCM_LOCATION
+			ch_list: SCM_CHANGELIST
+		do
+			l_root := a_root
+			if l_root = Void then
+				l_root := scm_service.scm_root_location (a_location)
+			end
+			if l_root /= Void then
+				create ch_list.make_with_location (l_root)
+				ch_list.extend_path (a_location)
+				if attached scm_service.update (ch_list) as l_output then
+					show_command_execution ("Update", l_output)
 				end
 			end
 		end

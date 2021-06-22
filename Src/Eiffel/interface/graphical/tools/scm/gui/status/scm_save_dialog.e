@@ -256,6 +256,8 @@ feature -- Action
 					parent_box.show_diff (d)
 				end
 			end
+			
+			veto_close
 		end
 
 	on_ok

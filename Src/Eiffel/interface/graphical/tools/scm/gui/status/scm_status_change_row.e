@@ -180,29 +180,13 @@ feature -- Execution
 		end
 
 	do_revert
-		local
-			ch_list: SCM_CHANGELIST
 		do
-			if attached scm_s.service as scm then
-				create ch_list.make_with_location (root_location)
-				ch_list.extend_path (status.location)
-				if attached scm.revert (ch_list) as l_output then
-					parent_grid.status_box.show_command_execution ("Revert", l_output)
-				end
-			end
+			parent_grid.status_box.show_revert_operation (root_location, status.location)
 		end
 
 	do_update
-		local
-			ch_list: SCM_CHANGELIST
 		do
-			if attached scm_s.service as scm then
-				create ch_list.make_with_location (root_location)
-				ch_list.extend_path (status.location)
-				if attached scm.update (ch_list) as l_output then
-					parent_grid.status_box.show_command_execution ("Update", l_output)
-				end
-			end
+			parent_grid.status_box.show_update_operation (root_location, status.location)
 		end
 
 	on_options (a_item: EV_GRID_ITEM)

@@ -34,6 +34,11 @@ feature -- Menu
 			end
 		end
 
+	menu_file_outside_any_repository: STRING_32
+		do
+			Result := locale.translation_in_context ("Outside any repository.", "scm")
+		end
+
 	menu_item_status (a_item_name: detachable READABLE_STRING_GENERAL; a_status: detachable READABLE_STRING_GENERAL): STRING_32
 		do
 			if a_item_name = Void or else a_item_name.is_whitespace then
@@ -169,7 +174,7 @@ feature -- General
 	tooltip_button_config: STRING_32 do Result := locale.translation_in_context ("Open the configuration dialog", "scm") end
 
 	button_check_all: STRING_32 do Result := locale.translation_in_context ("Status", "scm") end
-	button_save_changelist: STRING_32 do Result := locale.translation_in_context ("Save Changelist", "scm") end
+	button_save_changelist: STRING_32 do Result := locale.translation_in_context ("Save", "scm") end
 	button_save_changelist_tooltip: STRING_32 do Result := locale.translation_in_context ("Save active changelist", "scm") end
 	button_clear_changelist: STRING_32 do Result := locale.translation_in_context ("Clear", "scm") end
 	button_clear_changelist_tooltip: STRING_32 do Result := locale.translation_in_context ("Clear the active changelist", "scm") end

@@ -90,6 +90,21 @@ feature -- Element change
 			end
 		end
 
+	remove_empty_changelists
+		do
+			from
+				changelists.start
+			until
+				changelists.off
+			loop
+				if attached changelists.item_for_iteration as l_chlist and then l_chlist.count = 0 then
+					changelists.remove
+				else
+					changelists.forth
+				end
+			end
+		end
+
 	wipe_out
 		do
 			changelists.wipe_out

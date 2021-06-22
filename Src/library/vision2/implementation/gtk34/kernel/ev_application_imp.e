@@ -316,7 +316,7 @@ feature {EV_ANY_I} -- Implementation
 	process_underlying_toolkit_event_queue
 			-- Process all pending GDK events and then dispatch GTK iteration until no more
 			-- events are pending.
-			-- Read more about events at https://developer.gnome.org/gdk3/stable/gdk3-Events.html 
+			-- Read more about events at https://developer.gnome.org/gdk3/stable/gdk3-Events.html
 		local
 			gdk_event: POINTER
 			l_event_type: INTEGER
@@ -1017,10 +1017,10 @@ feature -- Basic operation
 				-- FIXME
 				-- No code that allows this functionality in GTK4
 				-- has been deprecated since version 3.22 and should not be used in newly-written code.
-			{GTK}.gdk_window_process_all_updates
+			--{GTK}.gdk_window_process_all_updates
 
 				-- Potential replacements
-			--{GDK}.gdk_display_flush ({GDK}.gdk_display_get_default)
+			{GDK}.gdk_display_flush ({GDK}.gdk_display_get_default)
 		end
 
 	motion_tuple: TUPLE [x: INTEGER; y: INTEGER; x_tilt: DOUBLE; y_tilt: DOUBLE; pressure: DOUBLE; screen_x: INTEGER; screen_y: INTEGER]

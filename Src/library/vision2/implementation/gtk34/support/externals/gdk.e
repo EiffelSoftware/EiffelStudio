@@ -201,8 +201,8 @@ feature -- GdkWindow
 		-- FIXME JV
 		note
 			eis: "name:gdk_window_process_all_updates", "src=https://developer.gnome.org/gdk3/stable/gdk3-Windows.html#gdk-window-process-all-updates"
-		--obsolete
-		--	"gdk_window_process_all_updates has been deprecated since version 3.22 and should not be used in newly-written code. [2021-06-01]"
+		obsolete
+			"gdk_window_process_all_updates has been deprecated since version 3.22 and should not be used in newly-written code. [2021-06-01]"
 		external
 			"C inline use <ev_gtk.h>"
 		alias
@@ -355,8 +355,8 @@ feature -- GdkWindow
 			-- FIXME JV
 		note
 			eis: "name=gdk_window_process_updates", "src=https://developer.gnome.org/gdk3/stable/gdk3-Windows.html#gdk-window-process-updates"
---		obsolete
---			"gdk_window_process_updates has been deprecated since version 3.22 and should not be used in newly-written code. [2021-06-01]"
+		obsolete
+			"gdk_window_process_updates has been deprecated since version 3.22 and should not be used in newly-written code. [2021-06-01]"
 		external
 			"C signature (GdkWindow*, gboolean) use <ev_gtk.h>"
 		end

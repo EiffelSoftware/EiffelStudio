@@ -39,7 +39,7 @@ feature {NONE} -- Initialization
 			set_size (400, 300)
 		end
 
-feature {NONE} -- Initialization		
+feature {NONE} -- Initialization
 
 	create_interface_objects
 		do
@@ -73,13 +73,24 @@ feature {NONE} -- Initialization
 			hb.extend (but)
 			hb.disable_item_expand (but)
 			but.drop_actions.extend (agent (obj: ANY)
-					do
-						if attached {EV_ANY} obj as lw then
-							drop_widget (lw)
-						else
-							drop_widget (Void)
+						do
+							if attached {EV_ANY} obj as lw then
+								drop_widget (lw)
+							else
+								drop_widget (Void)
+							end
 						end
-					end
+				)
+
+			create but.make_with_text_and_action ("Info", agent show_info (Void))
+			hb.extend (but)
+			hb.disable_item_expand (but)
+			but.drop_actions.extend (agent (obj: ANY)
+						do
+							if attached {EV_ANY} obj as lw then
+								show_info (lw)
+							end
+						end
 				)
 
 			create but.make_with_text_and_action ("Clear", agent drop_widget (Void))
@@ -120,69 +131,75 @@ feature {NONE} -- Initialization
 			end
 			g.enable_single_row_selection
 			g.enable_tree
+			g.key_press_string_actions.extend (agent (ks: STRING_32; ig: EV_GRID)
+						do
+							if ks.same_string_general ("?") then
+								show_info (Void)
+							end
+						end (?, g)
+				)
 			g.key_press_actions.extend (agent (k: EV_KEY; ig: EV_GRID)
-					do
-						inspect k.code
-						when {EV_KEY_CONSTANTS}.key_left then
-							across
-								ig.selected_rows as ic
-							loop
-								ic.item.collapse
-							end
-						when {EV_KEY_CONSTANTS}.key_right then
-							across
-								ig.selected_rows as ic
-							loop
-								if ic.item.is_expanded and then ic.item.subrow_count > 0 then
-									ic.item.subrow (1).enable_select
-								elseif ic.item.is_expandable then
-									ic.item.expand
+						do
+							inspect k.code
+							when {EV_KEY_CONSTANTS}.key_left then
+								across
+									ig.selected_rows as ic
+								loop
+									ic.item.collapse
 								end
+							when {EV_KEY_CONSTANTS}.key_right then
+								across
+									ig.selected_rows as ic
+								loop
+									if ic.item.is_expanded and then ic.item.subrow_count > 0 then
+										ic.item.subrow (1).enable_select
+									elseif ic.item.is_expandable then
+										ic.item.expand
+									end
+								end
+							else
 							end
-						else
-
-						end
-					end(?, g)
+						end (?, g)
 				)
 
 			g.row_select_actions.extend (agent on_row_selected)
 			g.row_deselect_actions.extend (agent on_row_deselected)
 
 			g.item_select_actions.extend (agent (gi: EV_GRID_ITEM)
-				do
-					if
-						not gi.is_destroyed and then
-						attached gi.row as r
-					then
-						on_row_selected (r)
-					end
-				end)
+					do
+						if
+							not gi.is_destroyed and then
+							attached gi.row as r
+						then
+							on_row_selected (r)
+						end
+					end)
 
 			g.item_deselect_actions.extend (agent (gi: EV_GRID_ITEM)
-				do
-					if
-						not gi.is_destroyed and then
-						attached gi.row as r
-					then
-						on_row_deselected (r)
-					end
-				end)
+					do
+						if
+							not gi.is_destroyed and then
+							attached gi.row as r
+						then
+							on_row_deselected (r)
+						end
+					end)
 
 			g.pointer_double_press_item_actions.extend (agent (ix: INTEGER; iy: INTEGER; ibut: INTEGER; i: detachable EV_GRID_ITEM)
-					do
-						if ibut = {EV_POINTER_CONSTANTS}.left then
-							on_item_left_double_pressed (i)
+						do
+							if ibut = {EV_POINTER_CONSTANTS}.left then
+								on_item_left_double_pressed (i)
+							end
 						end
-					end
 				)
 
 			if is_pnd_supported then
 				g.set_item_pebble_function (agent (gi: EV_GRID_ITEM): detachable ANY
-						do
-							if attached gi.row as r then
-								Result := r.data
+							do
+								if attached gi.row as r then
+									Result := r.data
+								end
 							end
-						end
 					)
 
 				g.set_item_accept_cursor_function (agent (gi: EV_GRID_ITEM): EV_POINTER_STYLE
@@ -199,13 +216,13 @@ feature {NONE} -- Initialization
 						end)
 
 				g.drop_actions.extend (agent (obj: ANY)
-						do
-							if attached {EV_ANY} obj as lw then
-								drop_widget (lw)
-							else
-								drop_widget (Void)
+							do
+								if attached {EV_ANY} obj as lw then
+									drop_widget (lw)
+								else
+									drop_widget (Void)
+								end
 							end
-						end
 					)
 			end
 
@@ -214,7 +231,7 @@ feature {NONE} -- Initialization
 
 	on_row_selected (r: EV_GRID_ROW)
 		local
-			i,n: INTEGER
+			i, n: INTEGER
 		do
 			from
 				i := 1
@@ -231,7 +248,7 @@ feature {NONE} -- Initialization
 
 	on_row_deselected (r: EV_GRID_ROW)
 		local
-			i,n: INTEGER
+			i, n: INTEGER
 		do
 			from
 				i := 1
@@ -248,97 +265,26 @@ feature {NONE} -- Initialization
 
 	on_item_left_double_pressed (a_item: detachable EV_GRID_ITEM)
 		local
-			bb: EV_VERTICAL_BOX
-			bg: EV_COLOR
-			t: EV_TIMEOUT
-			done: BOOLEAN
-			e: BOOLEAN
-			c: CURSOR
+			pop: EV_POPUP_WINDOW
 		do
 			if a_item /= Void and then attached a_item.row as l_row then
-				if attached {EV_WIDGET} l_row.data as w then
-					if attached {EV_BOX} w.parent as p_box then
-						create bb
-						bb.set_background_color (colors.magenta)
-						bb.set_border_width (1)
-						bb.set_padding_width (1)
-						from
-							c := p_box.cursor
-							p_box.start
-						until
-							p_box.item = w
-						loop
-							p_box.forth
-						end
-						if p_box.item = w then
-							e := p_box.is_item_expanded (w)
-							p_box.replace (bb)
-							if e then
-								p_box.enable_item_expand (bb)
-							else
-								p_box.disable_item_expand (bb)
-							end
-							bb.extend (w)
-							done := True
-							create t.make_with_interval (500)
-							t.actions.extend (agent (i_p: EV_BOX; i_b: EV_VERTICAL_BOX; i_w: EV_WIDGET; i_expand: BOOLEAN; i_t: EV_TIMEOUT)
-									local
-										cur: CURSOR
-									do
-										i_t.destroy
-										cur := i_p.cursor
-										from
-											i_p.start
-										until
-											i_p.item = i_b
-										loop
-											i_p.forth
-										end
-										if i_p.item = i_b then
-											i_p.replace (i_w)
-											if i_expand then
-												i_p.enable_item_expand (i_w)
-											else
-												i_p.disable_item_expand (i_w)
-											end
-										end
-										i_p.go_to (cur)
-									end (p_box, bb, w, e, t)
-								)
-						end
-						p_box.go_to (c)
-					elseif attached {EV_CELL} w.parent as p_cell then
-						create bb
-						bb.set_background_color (colors.magenta)
-						bb.set_border_width (1)
-						bb.set_padding_width (1)
-						p_cell.replace (bb)
-						bb.extend (w)
-						done := True
-						create t.make_with_interval (500)
-						t.actions.extend (agent (i_p: EV_CELL; i_w: EV_WIDGET; i_t: EV_TIMEOUT)
-								do
-									i_t.destroy
---									i_w.rep
-									i_p.replace (i_w)
-								end (p_cell, w, t)
-							)
-					end
-					if not done then
-						bg := w.background_color
-						w.set_background_color (colors.red)
-						if bg /= Void then
-							create t.make_with_interval (500)
-							t.actions.extend (agent (iw: EV_COLORIZABLE; i_bg: detachable EV_COLOR; i_t: EV_TIMEOUT)
-									do
-										i_t.destroy
-										if i_bg /= Void then
-											iw.set_background_color (i_bg)
-										end
-									end (w, bg, t)
-								)
-						end
-					end
+				if attached {EV_WIDGET} l_row.data as w and then w.is_show_requested then
+					create pop
+					pop.set_background_color (colors.red)
+					pop.set_size (w.width, w.height)
+					pop.set_position (w.screen_x, w.screen_y)
+					pop.pointer_enter_actions.extend (agent pop.destroy)
+					pop.show
+					pop.show_actions.extend_kamikaze (agent (i_pop: EV_POPUP_WINDOW)
+							local
+								t: EV_TIMEOUT
+							do
+								create t
+								t.actions.extend (agent i_pop.destroy)
+								t.actions.extend (agent t.destroy)
+								t.set_interval (300)
+							end(pop)
+						)
 				end
 			end
 		end
@@ -390,7 +336,7 @@ feature -- Access
 			Result := True
 		end
 
-feature -- Events		
+feature -- Events
 
 	on_double_clicked (a_x, a_y, a_but: INTEGER; a_x_tilt, a_y_tilt, a_pressure: REAL_64; a_screen_x, a_screen_y: INTEGER)
 		do
@@ -405,7 +351,18 @@ feature -- Events
 	use_selection
 		local
 			win: EV_DEBUG_INSPECTOR_WINDOW
-			w: EV_ANY
+		do
+			if attached selected_entry as w then
+				create win.make_with_widget (w)
+				if attached observed_window as obswin then
+					win.show_relative_to_window (obswin)
+				else
+					win.show_relative_to_window (Current)
+				end
+			end
+		end
+
+	selected_entry: detachable EV_ANY
 		do
 			if
 				attached grid as g and then
@@ -414,18 +371,10 @@ feature -- Events
 				across
 					l_rows as ic
 				until
-					w /= Void
+					Result /= Void
 				loop
 					if attached {EV_ANY} ic.item.data as l_id then
-						w := l_id
-					end
-				end
-				if w /= Void then
-					create win.make_with_widget (w)
-					if attached observed_window as obswin then
-						win.show_relative_to_window (obswin)
-					else
-						win.show_relative_to_window (Current)
+						Result := l_id
 					end
 				end
 			end
@@ -437,6 +386,71 @@ feature -- Events
 			info_output.set_text ("")
 			show_widget (w)
 			show_tree (w)
+		end
+
+	show_info (a_any: detachable EV_ANY)
+		local
+			w: EV_ANY
+			dlg: EV_INFORMATION_DIALOG
+			s, txt: STRING_32
+		do
+			if a_any /= Void then
+				w := a_any
+			else
+				w := selected_entry
+			end
+			if w /= Void then
+				create dlg
+				create txt.make_empty
+				txt.append ("Type: ")
+				txt.append (w.generating_type.name_32)
+				txt.append ("%N")
+				txt.append (" - address: 0x")
+				txt.append (($w).out)
+				txt.append ("%N")
+				if attached {EV_POSITIONED} w as l_pos then
+					txt.append (" - position=(")
+					txt.append_integer (l_pos.x_position)
+					txt.append (",")
+					txt.append_integer (l_pos.y_position)
+					txt.append (") screen=(")
+					txt.append_integer (l_pos.screen_x)
+					txt.append (",")
+					txt.append_integer (l_pos.screen_y)
+					txt.append (")%N")
+					txt.append (" - size=")
+					txt.append_integer (l_pos.width)
+					txt.append (" x ")
+					txt.append_integer (l_pos.height)
+
+					txt.append (" - min=")
+					txt.append_integer (l_pos.minimum_width)
+					txt.append (" x ")
+					txt.append_integer (l_pos.minimum_height)
+					txt.append ("%N")
+				end
+				if
+					attached {EV_TEXTABLE} w as l_text
+				then
+					s := l_text.text
+					if s.has ('%N') then
+						s := s.twin
+						s.replace_substring_all ("%N", "%%N")
+					end
+					txt.append (" - text=%"")
+					if txt.count > 100 then
+						txt.append (s.head (100))
+						txt.append ("%"...")
+					else
+						txt.append (s)
+						txt.append ("%"")
+					end
+					txt.append ("%N")
+				end
+				dlg.set_text (txt)
+				dlg.set_title ({STRING_32} "Info {" + w.generating_type.name_32 + {STRING_32} "}")
+				dlg.show_relative_to_window (Current)
+			end
 		end
 
 	fill_parents_chain (a_id: EV_ANY; a_chain: ARRAYED_STACK [EV_WIDGET])
@@ -484,7 +498,7 @@ feature -- Events
 		local
 			l_items_row, sr: EV_GRID_ROW
 			nxt: EV_WIDGET
-			i,n: INTEGER
+			i, n: INTEGER
 		do
 			if attached a_row.data as l_data then
 				print ("expand_parents_until (" + l_data.generator + ", a_parent.count=" + a_parents.count.out + " ...%N")
@@ -577,15 +591,15 @@ feature -- Events
 			else
 				lab := new_label (w.generating_type.name_32)
 				r.set_item (1, lab)
-				r.set_item (2, new_label  ("..."))
-				r.set_item (3, new_label  (($w).out))
+				r.set_item (2, new_label ("..."))
+				r.set_item (3, new_label (($w).out))
 				if attached w.implementation as l_imp then
-					r.set_item (4, new_label  (l_imp.generating_type.name_32))
+					r.set_item (4, new_label (l_imp.generating_type.name_32))
 				else
 					r.set_item (4, create {EV_GRID_ITEM})
 				end
 				if attached {EV_IDENTIFIABLE} w as l_id and then l_id.has_identifier_name_set then
-					r.set_item (5, new_label  (l_id.identifier_name))
+					r.set_item (5, new_label (l_id.identifier_name))
 				else
 					r.set_item (5, create {EV_GRID_ITEM})
 				end
@@ -600,7 +614,7 @@ feature -- Events
 						s.append (" @(" + l_pos.screen_x.out)
 						s.append ("," + l_pos.screen_y.out)
 						s.append (")")
-						
+
 						s.append (" " + l_pos.width.out)
 						s.append (" x " + l_pos.height.out)
 						s.append (" (min: ")
@@ -625,26 +639,26 @@ feature -- Events
 						r.set_item (2, lab)
 						lab.set_foreground_color (colors.grey)
 					else
-						r.set_item (2, new_label  (n.out))
+						r.set_item (2, new_label (n.out))
 					end
 					if n > 0 then
 						r.ensure_expandable
 						r.collapse_actions.extend (agent (i_r: EV_GRID_ROW; i_g: EV_GRID)
-								local
-									nb: INTEGER
-								do
-									from
-										nb := i_r.subrow_count_recursive
-									until
-										nb = 0
-									loop
-										i_g.remove_row (i_r.index + nb)
-										nb := i_r.subrow_count_recursive
-									end
-									i_g.column (1).resize_to_content
-									i_r.enable_select
-									i_r.ensure_expandable
-								end(r, g)
+									local
+										nb: INTEGER
+									do
+										from
+											nb := i_r.subrow_count_recursive
+										until
+											nb = 0
+										loop
+											i_g.remove_row (i_r.index + nb)
+											nb := i_r.subrow_count_recursive
+										end
+										i_g.column (1).resize_to_content
+										i_r.enable_select
+										i_r.ensure_expandable
+									end (r, g)
 							)
 						r.expand_actions.extend (agent expand_items_row (r, l_iterable, g, a_auto_expand))
 					end
@@ -766,4 +780,5 @@ note
 			Website http://www.eiffel.com
 			Customer support http://support.eiffel.com
 		]"
+
 end

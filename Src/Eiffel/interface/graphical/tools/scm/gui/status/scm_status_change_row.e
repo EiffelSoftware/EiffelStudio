@@ -126,19 +126,19 @@ feature -- Execution
 				lab.set_pixmap (pix)
 			end
 
-			lab.pointer_double_press_actions.extend (agent (a_root: SCM_LOCATION; i_loc: PATH; i_x, i_y, i_button: INTEGER; i_x_tilt, i_y_tilt, i_pressure: DOUBLE; i_screen_x, i_screen_y: INTEGER)
+			lab.pointer_double_press_actions.extend (agent (a_root: SCM_LOCATION; i_status: SCM_STATUS; i_x, i_y, i_button: INTEGER; i_x_tilt, i_y_tilt, i_pressure: DOUBLE; i_screen_x, i_screen_y: INTEGER)
 					do
 						if attached parent_grid as pg then
 							if
 								attached scm_s.service as scm and then
 								not (ev_application.ctrl_pressed or ev_application.shift_pressed or ev_application.alt_pressed)
 							then
-								pg.status_box.show_location_diff (a_root, i_loc)
+								pg.status_box.show_status_diff (a_root, i_status)
 							else
-								pg.open_file_location (i_loc)
+								pg.open_file_location (i_status.location)
 							end
 						end
-					end(root_location, st.location, ?,?,?,?,?,?,?,?)
+					end(root_location, st, ?,?,?,?,?,?,?,?)
 				)
 			sr.set_item (parent_grid.filename_column, lab)
 
@@ -176,17 +176,17 @@ feature -- Execution
 
 	show_diff
 		do
-			parent_grid.status_box.show_location_diff (root_location, status.location)
+			parent_grid.status_box.show_status_diff (root_location, status)
 		end
 
 	do_revert
 		do
-			parent_grid.status_box.show_revert_operation (root_location, status.location)
+			parent_grid.status_box.show_revert_operation (root_location, status)
 		end
 
 	do_update
 		do
-			parent_grid.status_box.show_update_operation (root_location, status.location)
+			parent_grid.status_box.show_update_operation (root_location, status)
 		end
 
 	on_options (a_item: EV_GRID_ITEM)

@@ -192,15 +192,20 @@ feature -- Operations
 			then
 				nb := l_chgs.changes_count
 				changes_count := nb
+				unb := l_chgs.unversioned_count
 				if nb = 0 then
-					row.hide
+					if parent_row.unversioned_files_included (g, l_scm_location) and unb > 0 then
+						row.show
+					else
+						row.hide
+					end
 				elseif nb = 1 then
 					row.show
 				else
 					row.show
 				end
 				s := scm_names.label_changes_count (nb)
-				unb := l_chgs.unversioned_count
+
 				if unb > 0 then
 					s.append_string_general (" (")
 					s.append_string (scm_names.label_unversioned)
@@ -214,6 +219,7 @@ feature -- Operations
 				if
 					nb > 0 or (parent_row.unversioned_files_included (g, l_scm_location) and unb > 0)
 				then
+					check row.is_show_requested end
 					across
 						l_chgs as ch_ic
 					loop
@@ -360,7 +366,7 @@ feature -- Operations
 			end
 		end
 
-	do_update
+	do_location_update
 		local
 			ch_list: SCM_CHANGELIST
 		do
@@ -376,17 +382,27 @@ feature -- Operations
 			end
 		end
 
-	show_diff (a_only_selected_items: BOOLEAN)
+	show_location_diff
 		local
 			ch_list: SCM_CHANGELIST
 		do
 			if attached scm_s.service as scm then
-				if a_only_selected_items then
-					ch_list := parent_grid.changes_for (parent_row.root_location)
-				else
-					create ch_list.make_with_location (parent_row.root_location)
-					ch_list.extend_path (location)
+				create ch_list.make_with_location (parent_row.root_location)
+				ch_list.extend_path (location)
+				if
+					attached scm.diff (ch_list) as l_diff
+				then
+					parent_grid.status_box.show_diff (l_diff)
 				end
+			end
+		end
+
+	show_changes_diff
+		local
+			ch_list: SCM_CHANGELIST
+		do
+			if attached scm_s.service as scm then
+				ch_list := parent_grid.changes_for (parent_row.root_location)
 				if
 					ch_list /= Void and then
 					attached scm.diff (ch_list) as l_diff
@@ -449,14 +465,14 @@ feature -- Operation
 				create mi.make_with_text_and_action (scm_names.menu_check, agent update_statuses)
 				m.extend (mi)
 
-				create mi.make_with_text_and_action (scm_names.menu_update, agent do_update)
+				create mi.make_with_text_and_action (scm_names.menu_update, agent do_location_update)
 				m.extend (mi)
 
-				create mi.make_with_text_and_action (scm_names.menu_diff, agent show_diff (False))
+				create mi.make_with_text_and_action (scm_names.menu_diff, agent show_location_diff)
 				m.extend (mi)
 
 				if changes_count > 0 then
-					create mi.make_with_text_and_action (scm_names.menu_diff_selection, agent show_diff (True))
+					create mi.make_with_text_and_action (scm_names.menu_diff_selection, agent show_changes_diff)
 					m.extend (mi)
 				end
 

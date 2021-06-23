@@ -128,8 +128,8 @@ feature {SCM_STATUS_CHANGE_ROW, SCM_STATUS_WC_LOCATION_ROW} -- Internal
 					create lst.make_with_location (root_location)
 					coll.put_changelist (lst)
 				end
-				if not lst.has_path (a_status.location) then
-					lst.extend_path (a_status.location)
+				if not lst.has_status (a_status) then
+					lst.extend_status (a_status)
 					parent_grid.status_box.on_changelist_combo_changed
 				end
 			end
@@ -158,7 +158,7 @@ feature {SCM_STATUS_CHANGE_ROW, SCM_STATUS_WC_LOCATION_ROW} -- Internal
 					across
 						a_changes as ic
 					loop
-						lst.extend (ic.item)
+						lst.extend_status (ic.item)
 					end
 				end
 			end
@@ -376,7 +376,9 @@ feature -- Execution
 								cb.is_checked and then
 								attached {SCM_STATUS_CHANGE_ROW} l_subrow.data as l_ch_row
 							then
-								Result.extend_path (l_ch_row.status.location)
+								if not Result.has_status (l_ch_row.status) then
+									Result.extend_status (l_ch_row.status)
+								end
 							end
 							i := i + 1
 						end

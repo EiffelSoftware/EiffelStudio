@@ -153,7 +153,7 @@ feature -- Operation
 			end
 		end
 
-	show_update
+	show_location_update
 		local
 			ch_list: SCM_CHANGELIST
 		do
@@ -169,19 +169,20 @@ feature -- Operation
 			end
 		end
 
-	show_diff (a_only_selected_items: BOOLEAN)
+	show_changes_diff
 		do
-			if a_only_selected_items then
-				if
-					attached scm_s.service as scm and then
-					attached parent_grid.changes_for (root_location) as ch_list and then
-					attached scm.diff (ch_list) as l_diff
-				then
-					parent_grid.status_box.show_diff (l_diff)
-				end
-			else
-				parent_grid.status_box.show_location_diff (root_location, root_location.location)
+			if
+				attached scm_s.service as scm and then
+				attached parent_grid.changes_for (root_location) as ch_list and then
+				attached scm.diff (ch_list) as l_diff
+			then
+				parent_grid.status_box.show_diff (l_diff)
 			end
+		end
+
+	show_location_diff
+		do
+			parent_grid.status_box.show_location_diff (root_location, root_location.location)
 		end
 
 	on_options (a_item: EV_GRID_ITEM)
@@ -224,18 +225,18 @@ feature -- Operation
 				mi.disable_sensitive
 			end
 
-			create mi.make_with_text_and_action (scm_names.menu_update, agent show_update)
+			create mi.make_with_text_and_action (scm_names.menu_update, agent show_location_update)
 			m.extend (mi)
 			if not l_is_supported then
 				mi.disable_sensitive
 			end
 
-			create mi.make_with_text_and_action (scm_names.menu_diff, agent show_diff (False))
+			create mi.make_with_text_and_action (scm_names.menu_diff, agent show_location_diff)
 			m.extend (mi)
 			if not l_is_supported then
 				mi.disable_sensitive
 			end
-			create mi.make_with_text_and_action (scm_names.menu_diff_selection, agent show_diff (True))
+			create mi.make_with_text_and_action (scm_names.menu_diff_selection, agent show_changes_diff)
 			m.extend (mi)
 			if not l_is_supported or changes_count = 0 then
 				mi.disable_sensitive

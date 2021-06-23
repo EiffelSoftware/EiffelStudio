@@ -249,19 +249,16 @@ feature -- Drop down menu
 					create l_menu_diff_item
 					l_menu_diff_item.set_text (scm_names.menu_diff)
 					l_menu_diff_item.disable_sensitive
-					l_menu_diff_item.select_actions.extend (agent on_editor_diff_selected)
 					Result.extend (l_menu_diff_item)
 
 					create l_menu_revert_item
 					l_menu_revert_item.set_text (scm_names.menu_revert)
 					l_menu_revert_item.disable_sensitive
-					l_menu_revert_item.select_actions.extend (agent on_editor_revert_selected)
 					Result.extend (l_menu_revert_item)
 
 					create l_menu_update_item
 					l_menu_update_item.set_text (scm_names.menu_update)
 					l_menu_update_item.disable_sensitive
-					l_menu_update_item.select_actions.extend (agent on_editor_update_selected)
 					Result.extend (l_menu_update_item)
 
 					create l_menu_add_to_item
@@ -300,7 +297,14 @@ feature -- Drop down menu
 									or attached {SCM_STATUS_CONFLICTED} l_status
 								then
 									l_menu_diff_item.enable_sensitive
+									l_menu_diff_item.select_actions.extend (agent on_editor_diff_selected (l_status))
 									l_menu_revert_item.enable_sensitive
+									l_menu_revert_item.select_actions.extend (agent on_editor_revert_selected (l_status))
+								end
+								if not attached {SCM_GIT_LOCATION} l_scm_root then
+										-- Not yet available for git
+									l_menu_update_item.enable_sensitive
+									l_menu_update_item.select_actions.extend (agent on_editor_update_selected (l_status))
 								end
 							else
 								l_menu_status_item.set_text (scm_names.menu_editor_status (st.stone_name, Void))
@@ -310,12 +314,12 @@ feature -- Drop down menu
 								scm.changelists as ic
 							loop
 								create mi.make_with_text (scm_names.menu_add_to_changelist (ic.key, ic.item.count))
-								mi.select_actions.extend (agent on_editor_add_selected (ic.key, st.file_name))
+								if l_status /= Void then
+									mi.select_actions.extend (agent on_editor_add_selected (ic.key, l_status))
+								else
+									mi.select_actions.extend (agent on_editor_add_selected (ic.key, create {SCM_STATUS_UNKNOWN}.make_with_name (st.file_name))) -- FIXME: check this code.
+								end
 								l_menu_add_to_item.extend (mi)
-							end
-							if not attached {SCM_GIT_LOCATION} l_scm_root then
-									-- Not yet available for git
-								l_menu_update_item.enable_sensitive
 							end
 						end
 					end
@@ -336,108 +340,95 @@ feature {NONE} -- Implementation
 		do
 		end
 
-	on_editor_diff_selected
+	on_editor_diff_selected (a_status: SCM_STATUS)
 		local
 			dlg: SCM_DIFF_DIALOG
 			l_ext_cmd: READABLE_STRING_GENERAL
 			ch_list: SCM_CHANGELIST
 			l_location: PATH
 		do
-			if attached {FILED_STONE} editor_stone as l_file_stone then
-				if
-					attached scm_s.service as scm and then
-					scm.is_available
-				then
-					create l_location.make_from_string (l_file_stone.file_name)
-					if attached scm.scm_root_location (l_location) as l_scm_root then
-						if
-							attached {SCM_GIT_LOCATION} l_scm_root and then
-							scm.config.use_external_git_diff_command
-						then
-							l_ext_cmd := scm.config.external_git_diff_command (l_location)
-						elseif
-							attached {SCM_SVN_LOCATION} l_scm_root and then
-							scm.config.use_external_svn_diff_command
-						then
-							l_ext_cmd := scm.config.external_svn_diff_command (l_location)
-						else
-							l_ext_cmd := Void
-						end
-						if l_ext_cmd /= Void then
-							execution_environment.launch (l_ext_cmd)
-						else
-							create ch_list.make_with_location (l_scm_root)
-							ch_list.extend_path (l_location)
-							if attached scm.diff (ch_list) as l_diff then
-								create dlg.make (scm, l_diff)
-								dlg.set_is_modal (False)
-								if attached Window_manager.last_focused_development_window as devwin then
-									dlg.set_size (devwin.dpi_scaler.scaled_size (700).min (devwin.window.width), devwin.dpi_scaler.scaled_size (500).min (devwin.window.height))
-								end
-								dlg.show_on_active_window
+			if
+				attached scm_s.service as scm and then
+				scm.is_available
+			then
+				l_location := a_status.location
+				if attached scm.scm_root_location (l_location) as l_scm_root then
+					if
+						attached {SCM_GIT_LOCATION} l_scm_root and then
+						scm.config.use_external_git_diff_command
+					then
+						l_ext_cmd := scm.config.external_git_diff_command (l_location)
+					elseif
+						attached {SCM_SVN_LOCATION} l_scm_root and then
+						scm.config.use_external_svn_diff_command
+					then
+						l_ext_cmd := scm.config.external_svn_diff_command (l_location)
+					else
+						l_ext_cmd := Void
+					end
+					if l_ext_cmd /= Void then
+						execution_environment.launch (l_ext_cmd)
+					else
+						create ch_list.make_with_location (l_scm_root)
+						ch_list.extend_status (a_status)
+						if attached scm.diff (ch_list) as l_diff then
+							create dlg.make (scm, l_diff)
+							dlg.set_is_modal (False)
+							if attached Window_manager.last_focused_development_window as devwin then
+								dlg.set_size (devwin.dpi_scaler.scaled_size (700).min (devwin.window.width), devwin.dpi_scaler.scaled_size (500).min (devwin.window.height))
 							end
+							dlg.show_on_active_window
 						end
 					end
 				end
 			end
 		end
 
-	on_editor_add_selected (a_name: READABLE_STRING_GENERAL; a_location: READABLE_STRING_GENERAL)
-		local
-			p: PATH
+	on_editor_add_selected (a_name: READABLE_STRING_GENERAL; a_status: SCM_STATUS)
 		do
 			if
 				attached scm_s.service as scm and then
 				scm.is_available
 			then
 				if attached scm.changelists [a_name] as ch then
-					create p.make_from_string (a_location)
-					ch.extend_path (scm.scm_root_location (p), p)
+					ch.extend_status (scm.scm_root_location (a_status.location), a_status)
 					scm.on_changelist_updated (ch)
 				end
 			end
 		end
 
-	on_editor_revert_selected
+	on_editor_revert_selected (a_status: SCM_STATUS)
 		local
 			ch: SCM_CHANGELIST
-			p: PATH
 			s: READABLE_STRING_GENERAL
 		do
 			if
 				attached scm_s.service as scm and then
 				scm.is_available
 			then
-				if attached {FILED_STONE} editor_stone as l_file_stone then
-					create p.make_from_string (l_file_stone.file_name)
-					if attached	scm.scm_root_location (p) as rt then
-						create ch.make_with_location (rt)
-						ch.extend_path (p)
-						s := scm.revert (ch) -- FIXME report output
-						show_command_execution ("Revert", s)
-					end
+				if attached	scm.scm_root_location (a_status.location) as rt then
+					create ch.make_with_location (rt)
+					ch.extend_status (a_status)
+					s := scm.revert (ch)
+					show_command_execution ("Revert", s)
 				end
 			end
 		end
 
-	on_editor_update_selected
+	on_editor_update_selected (a_status: SCM_STATUS)
 		local
 			ch: SCM_CHANGELIST
-			p: PATH
 			s: READABLE_STRING_GENERAL
 		do
 			if
 				attached scm_s.service as scm and then
 				scm.is_available
 			then
-				if attached {FILED_STONE} editor_stone as l_file_stone then
-					create p.make_from_string (l_file_stone.file_name)
-					if attached	scm.scm_root_location (p) as rt then
-						create ch.make_with_location (rt)
-						ch.extend_path (p)
-						s := scm.update (ch)
-						show_command_execution ("Update", s)
-					end
+				if attached	scm.scm_root_location (a_status.location) as rt then
+					create ch.make_with_location (rt)
+					ch.extend_status (a_status)
+					s := scm.update (ch)
+					show_command_execution ("Update", s)
 				end
 			end
 		end

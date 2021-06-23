@@ -97,16 +97,16 @@ feature -- Operations
 		deferred
 		end
 
-	diff_at_location (a_path: PATH): detachable SCM_DIFF
-		local
-			l_changelist: SCM_CHANGELIST
-		do
-			if attached scm_root_location (a_path) as loc then
-				create l_changelist.make_with_location (loc)
-				l_changelist.extend_path (a_path)
-				Result := diff (l_changelist)
-			end
-		end
+--	diff_at_location (a_path: PATH): detachable SCM_DIFF
+--		local
+--			l_changelist: SCM_CHANGELIST
+--		do
+--			if attached scm_root_location (a_path) as loc then
+--				create l_changelist.make_with_location (loc)
+--				l_changelist.extend_path (a_path)
+--				Result := diff (l_changelist)
+--			end
+--		end
 
 feature -- Cache
 

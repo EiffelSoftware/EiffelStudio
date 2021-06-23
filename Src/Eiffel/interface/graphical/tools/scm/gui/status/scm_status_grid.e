@@ -116,17 +116,17 @@ feature -- Actions
 							then
 								create mi
 								mi.set_text (scm_names.menu_diff)
-								mi.select_actions.extend (agent l_status_box.show_location_diff (Void, l_status.location))
+								mi.select_actions.extend (agent l_status_box.show_status_diff (Void, l_status))
 								a_menu.extend (mi)
 							end
 							create mi
 							mi.set_text (scm_names.menu_revert)
-							mi.select_actions.extend (agent l_status_box.show_revert_operation (Void, l_status.location))
+							mi.select_actions.extend (agent l_status_box.show_revert_operation (Void, l_status))
 							a_menu.extend (mi)
 
 							create mi
 							mi.set_text (scm_names.menu_update)
-							mi.select_actions.extend (agent l_status_box.show_update_operation (Void, l_status.location))
+							mi.select_actions.extend (agent l_status_box.show_update_operation (Void, l_status))
 							a_menu.extend (mi)
 
 							create mm.make_with_text (scm_names.menu_add_to_changelist (Void, 0))
@@ -134,13 +134,13 @@ feature -- Actions
 								scm.changelists as ic
 							loop
 								create mi.make_with_text (scm_names.menu_add_to_changelist (ic.key, ic.item.count))
-								mi.select_actions.extend (agent (i_scm: SOURCE_CONTROL_MANAGEMENT_S; i_chglist_name: READABLE_STRING_GENERAL; i_location: PATH)
+								mi.select_actions.extend (agent (i_scm: SOURCE_CONTROL_MANAGEMENT_S; i_chglist_name: READABLE_STRING_GENERAL; i_status: SCM_STATUS)
 										do
 											if attached i_scm.changelists [i_chglist_name] as ch then
-												ch.extend_path (i_scm.scm_root_location (i_location), i_location)
+												ch.extend_status (i_scm.scm_root_location (i_status.location), i_status)
 												i_scm.on_changelist_updated (ch)
 											end
-										end(scm, ic.key, l_status.location)
+										end(scm, ic.key, l_status)
 									)
 								mm.extend (mi)
 							end

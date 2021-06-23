@@ -186,8 +186,13 @@ feature -- Basic operation
 				if attached {FILED_STONE} a_pebble as l_filed_stone then
 					create p.make_from_string (l_filed_stone.file_name)
 					if attached scm_service.scm_root_location (p) as l_root then
-						ch.extend_path (l_root, p)
-						scm_service.on_changelist_updated (ch)
+						if
+							attached scm_service.statuses (l_root, p) as l_statuses and then
+							attached l_statuses.status (p) as st
+						then
+							ch.extend_status (l_root, st)
+							scm_service.on_changelist_updated (ch)
+						end
 					end
 				end
 			end
@@ -212,7 +217,9 @@ feature -- Basic operation
 			l_save_dialog: SCM_SAVE_DIALOG
 		do
 			create l_save_dialog.make (scm_service, a_commit, Current)
-			l_save_dialog.set_size (800, 600)
+			if attached development_window as devwin then
+				l_save_dialog.set_size (devwin.dpi_scaler.scaled_size (800).min (devwin.window.width), devwin.dpi_scaler.scaled_size (600).min (devwin.window.height))
+			end
 			l_save_dialog.show_on_active_window
 			if a_commit.is_processed then
 				if attached {SCM_SINGLE_COMMIT_SET} a_commit as l_single then
@@ -296,6 +303,42 @@ feature -- Basic operation
 			d.show_on_active_window
 		end
 
+	show_status_diff (a_root: detachable SCM_LOCATION; a_status: SCM_STATUS)
+		local
+			l_root: SCM_LOCATION
+			ch_list: SCM_CHANGELIST
+			l_ext_cmd: READABLE_STRING_GENERAL
+		do
+			l_root := a_root
+			if l_root = Void then
+				l_root := scm_service.scm_root_location (a_status.location)
+			end
+			if l_root /= Void then
+				if
+					attached {SCM_GIT_LOCATION} l_root and then
+					scm_service.config.use_external_git_diff_command
+				then
+					l_ext_cmd := scm_service.config.external_git_diff_command (a_status.location)
+				elseif
+					attached {SCM_SVN_LOCATION} l_root and then
+					scm_service.config.use_external_svn_diff_command
+				then
+					l_ext_cmd := scm_service.config.external_svn_diff_command (a_status.location)
+				else
+					l_ext_cmd := Void
+				end
+				if l_ext_cmd /= Void then
+					execution_environment.launch (l_ext_cmd)
+				else
+					create ch_list.make_with_location (l_root)
+					ch_list.extend_status (a_status)
+					if attached scm_service.diff (ch_list) as diff then
+						show_diff (diff)
+					end
+				end
+			end
+		end
+
 	show_location_diff (a_root: detachable SCM_LOCATION; a_location: PATH)
 		local
 			l_root: SCM_LOCATION
@@ -324,7 +367,7 @@ feature -- Basic operation
 					execution_environment.launch (l_ext_cmd)
 				else
 					create ch_list.make_with_location (l_root)
-					ch_list.extend_path (a_location)
+					ch_list.extend_status (create {SCM_STATUS_UNKNOWN}.make (a_location))
 					if attached scm_service.diff (ch_list) as diff then
 						show_diff (diff)
 					end
@@ -332,36 +375,36 @@ feature -- Basic operation
 			end
 		end
 
-	show_revert_operation (a_root: detachable SCM_LOCATION; a_location: PATH)
+	show_revert_operation (a_root: detachable SCM_LOCATION; a_status: SCM_STATUS)
 		local
 			l_root: SCM_LOCATION
 			ch_list: SCM_CHANGELIST
 		do
 			l_root := a_root
 			if l_root = Void then
-				l_root := scm_service.scm_root_location (a_location)
+				l_root := scm_service.scm_root_location (a_status.location)
 			end
 			if l_root /= Void then
 				create ch_list.make_with_location (l_root)
-				ch_list.extend_path (a_location)
+				ch_list.extend_status (a_status)
 				if attached scm_service.revert (ch_list) as l_output then
 					show_command_execution ("Revert", l_output)
 				end
 			end
 		end
 
-	show_update_operation (a_root: detachable SCM_LOCATION; a_location: PATH)
+	show_update_operation (a_root: detachable SCM_LOCATION; a_status: SCM_STATUS)
 		local
 			l_root: SCM_LOCATION
 			ch_list: SCM_CHANGELIST
 		do
 			l_root := a_root
 			if l_root = Void then
-				l_root := scm_service.scm_root_location (a_location)
+				l_root := scm_service.scm_root_location (a_status.location)
 			end
 			if l_root /= Void then
 				create ch_list.make_with_location (l_root)
-				ch_list.extend_path (a_location)
+				ch_list.extend_status (a_status)
 				if attached scm_service.update (ch_list) as l_output then
 					show_command_execution ("Update", l_output)
 				end

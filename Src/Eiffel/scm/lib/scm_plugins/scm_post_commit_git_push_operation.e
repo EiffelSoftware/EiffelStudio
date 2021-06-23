@@ -1,80 +1,30 @@
 note
-	description: "Summary description for {SCM_COMMIT_SET}."
+	description: "Summary description for {SCM_POST_COMMIT_GIT_PUSH_OPERATION}."
 	date: "$Date$"
 	revision: "$Revision$"
 
 class
-	SCM_MULTI_COMMIT_SET
+	SCM_POST_COMMIT_GIT_PUSH_OPERATION
 
 inherit
-	SCM_COMMIT_SET
+	SCM_POST_COMMIT_OPERATION
 
 create
-	make_with_changelists
+	make_with_location
 
 feature {NONE} -- Initialization
 
-	make_with_changelists (a_message: detachable READABLE_STRING_GENERAL; a_changelists: ITERABLE [SCM_CHANGELIST])
+	make_with_location (a_root_location: SCM_LOCATION)
 		do
-			set_message (a_message)
-			create changelists.make (1)
-			across
-				a_changelists as ic
-			loop
-				changelists [ic.item.root.location.name] := ic.item
-			end
+			root_location := a_root_location
 		end
 
 feature -- Access
 
-	changelists: STRING_TABLE [SCM_CHANGELIST]
+	root_location: SCM_LOCATION
 
-feature -- Conversion	
-
-	changes_description: STRING_32
-		local
-			changelist: SCM_CHANGELIST
-			rt,rel: READABLE_STRING_32
-		do
-			create Result.make_empty
-			across
-				changelists as c_ic
-			loop
-				changelist := c_ic.item
-				if changelist.count > 0 then
-					rt := changelist.root.location.name
-					Result.append_string ({STRING_32} "# [" + changelist.root.nature.to_string_32 + {STRING_32} "] " + rt + "%N")
-					across
-						changelist as ic
-					loop
-						rel := ic.item.location.name
-						if rel.starts_with (rt) then
-							rel := rel.substring (rt.count + 1, rel.count)
-						end
-						Result.append_string ({STRING_32} " - (" + ic.item.status_as_string + ") " + rel + "%N")
-					end
-				end
-			end
-		end
-
-feature -- Status report
-
-	is_ready: BOOLEAN
-			-- Is Current commit ready to be processed?
-		do
-			if has_message then
-				Result := True
-				across
-					changelists as ic
-				until
-					not Result
-				loop
-					Result := Result and then ic.item.count > 0
-				end
-			end
-		end
-
-;note
+invariant
+note
 	copyright: "Copyright (c) 1984-2021, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"

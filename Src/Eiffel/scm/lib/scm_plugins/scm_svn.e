@@ -87,7 +87,7 @@ feature -- Operations: working copy
 			across
 				a_changelist as ic
 			loop
-				l_changelist.extend (ic.item)
+				l_changelist.extend (ic.item.location.name)
 			end
 			if a_options /= Void then
 				create opts
@@ -110,6 +110,7 @@ feature -- Operations: working copy
 					Result.set_message (res.message)
 				else
 					create Result.make_failure
+					Result.set_message (res.message)
 				end
 				Result.set_command (res.command)
 			else
@@ -120,20 +121,111 @@ feature -- Operations: working copy
 
 	add (a_changelist: SCM_CHANGELIST; a_options: detachable SCM_OPTIONS): SCM_RESULT
 			-- Add items from `a_changelist', and return information about command execution.
+		local
+			svn: like new_scm_engine
+			l_changelist: SVN_CHANGELIST
+			opts: detachable SVN_OPTIONS
+			s: STRING_32
 		do
-			create Result.make_failure
+			svn := new_scm_engine
+
+			create l_changelist.make
+			across
+				a_changelist as ic
+			loop
+				if
+					attached {SCM_STATUS_UNVERSIONED} ic.item
+					or attached {SCM_STATUS_UNKNOWN} ic.item
+				then
+					l_changelist.extend_path (ic.item.location)
+				end
+			end
+			if a_options /= Void then
+				create opts
+				create s.make_empty
+				if a_options.is_simulation then
+					s.append_string_general (" --dry-run ")
+				end
+				across
+					a_options.parameters as ic
+				loop
+					s.append_string_general (" ")
+					s.append_string (ic.item)
+					s.append_string_general (" ")
+				end
+				opts.set_parameters (s)
+			end
+			if attached {SVN_RESULT} svn.add (l_changelist, opts) as res then
+				if res.succeed then
+					create Result.make_success
+					Result.set_message (res.message)
+				else
+					create Result.make_failure
+					Result.set_message (res.message)
+				end
+				Result.set_command (res.command)
+			else
+				create Result.make_failure
+				Result.set_message ("Error: can not launch svn to process the add operation")
+			end
 		end
 
 	delete (a_changelist: SCM_CHANGELIST; a_options: detachable SCM_OPTIONS): SCM_RESULT
 			-- Delete items from `a_changelist', and return information about command execution.
+		local
+			svn: like new_scm_engine
+			l_changelist: SVN_CHANGELIST
+			opts: detachable SVN_OPTIONS
+			s: STRING_32
 		do
-			create Result.make_failure
+			svn := new_scm_engine
+
+			create l_changelist.make
+			across
+				a_changelist as ic
+			loop
+				if
+					attached {SCM_STATUS_UNVERSIONED} ic.item
+					or attached {SCM_STATUS_UNKNOWN} ic.item
+				then
+					l_changelist.extend_path (ic.item.location)
+				end
+			end
+			if a_options /= Void then
+				create opts
+				create s.make_empty
+				if a_options.is_simulation then
+					s.append_string_general (" --dry-run ")
+				end
+				across
+					a_options.parameters as ic
+				loop
+					s.append_string_general (" ")
+					s.append_string (ic.item)
+					s.append_string_general (" ")
+				end
+				opts.set_parameters (s)
+			end
+			if attached {SVN_RESULT} svn.delete (l_changelist, opts) as res then
+				if res.succeed then
+					create Result.make_success
+					Result.set_message (res.message)
+				else
+					create Result.make_failure
+					Result.set_message (res.message)
+				end
+				Result.set_command (res.command)
+			else
+				create Result.make_failure
+				Result.set_message ("Error: can not launch svn to process the delete operation")
+			end
 		end
 
 	move (a_location, a_new_location: READABLE_STRING_GENERAL; a_options: detachable SCM_OPTIONS): SCM_RESULT
 			-- Move from `a_location' to `a_new_location', and return information about command execution.
 		do
 			create Result.make_failure
+			Result.set_message ("Error: not yet implemented")
 		end
 
 	commit (a_changelist: SCM_CHANGELIST; a_log_message: detachable READABLE_STRING_GENERAL; a_options: detachable SCM_OPTIONS): SCM_RESULT
@@ -150,7 +242,7 @@ feature -- Operations: working copy
 			across
 				a_changelist as ic
 			loop
-				l_changelist.extend (ic.item)
+				l_changelist.extend (ic.item.location.name)
 			end
 			if a_options /= Void then
 				create opts
@@ -173,6 +265,7 @@ feature -- Operations: working copy
 					Result.set_message (res.message)
 				else
 					create Result.make_failure
+					Result.set_message (res.message)
 				end
 				Result.set_command (res.command)
 			else
@@ -202,7 +295,7 @@ feature -- Access
 			across
 				a_changelist as ic
 			loop
-				l_changelist.extend (ic.item)
+				l_changelist.extend (ic.item.location.name)
 			end
 			if a_options /= Void then
 				create opts
@@ -225,6 +318,7 @@ feature -- Access
 					Result.set_message (res.message)
 				else
 					create Result.make_failure
+					Result.set_message (res.message)
 				end
 				Result.set_command (res.command)
 			else

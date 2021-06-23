@@ -39,29 +39,42 @@ feature -- Access: working copy
 
 feature -- Operations: working copy
 
+	commit (a_changelist: SCM_CHANGELIST; a_log_message: detachable READABLE_STRING_GENERAL; a_options: detachable SCM_OPTIONS): SCM_RESULT
+			-- Commit changes for locations `a_changelist', and return information about command execution.
+		deferred
+		end
+
+	revert (a_changelist: SCM_CHANGELIST; a_options: detachable SCM_OPTIONS): SCM_RESULT
+			-- Revert locations from a_changelist.
+		deferred
+		end
+
 	update (a_changelist: SCM_CHANGELIST; a_options: detachable SCM_OPTIONS): SCM_RESULT
 			-- Update working copy at `a_changelist', and return information about command execution.
 		deferred
 		end
 
+feature {NONE} -- Operations: not fully implemented by all descendants
+
 	add (a_changelist: SCM_CHANGELIST; a_options: detachable SCM_OPTIONS): SCM_RESULT
 			-- Add items from `a_changelist', and return information about command execution.
 		deferred
+			--| Not fully implemented by all descendants
+			--| then exported to NONE for now
 		end
 
 	delete (a_changelist: SCM_CHANGELIST; a_options: detachable SCM_OPTIONS): SCM_RESULT
 			-- Delete items from `a_changelist', and return information about command execution.
 		deferred
+			--| Not fully implemented by all descendants
+			--| then exported to NONE for now
 		end
 
 	move (a_location, a_new_location: READABLE_STRING_GENERAL; a_options: detachable SCM_OPTIONS): SCM_RESULT
 			-- Move from `a_location' to `a_new_location', and return information about command execution.
 		deferred
-		end
-
-	commit (a_changelist: SCM_CHANGELIST; a_log_message: detachable READABLE_STRING_GENERAL; a_options: detachable SCM_OPTIONS): SCM_RESULT
-			-- Commit changes for locations `a_changelist', and return information about command execution.
-		deferred
+			--| Not fully implemented by all descendants
+			--| then exported to NONE for now
 		end
 
 feature -- Access

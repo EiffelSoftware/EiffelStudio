@@ -76,7 +76,7 @@ feature -- Element change
 			changelists.force (a_chlst)
 		end
 
-	extend_path (a_root: SCM_LOCATION; a_location: PATH)
+	extend_status (a_root: SCM_LOCATION; a_status: SCM_STATUS)
 		local
 			lst: like changelist
 		do
@@ -85,10 +85,24 @@ feature -- Element change
 				create lst.make_with_location (a_root)
 				put_changelist (lst)
 			end
-			if not lst.has_path (a_location) then
-				lst.extend_path (a_location)
+			if not lst.has_status (a_status) then
+				lst.extend_status (a_status)
 			end
 		end
+
+--	extend_path (a_root: SCM_LOCATION; a_location: PATH)
+--		local
+--			lst: like changelist
+--		do
+--			lst := changelist (a_root)
+--			if lst = Void then
+--				create lst.make_with_location (a_root)
+--				put_changelist (lst)
+--			end
+--			if not lst.has_path (a_location) then
+--				lst.extend_path (a_location)
+--			end
+--		end
 
 	remove_empty_changelists
 		do

@@ -1,69 +1,25 @@
 note
-	description: "Summary description for {SCM_SINGLE_COMMIT_SET}."
+	description: "[
+			Unknown SCM status, to use when the file status is really unknown, it may not even be inside a working copy.
+		]"
 	date: "$Date$"
 	revision: "$Revision$"
 
 class
-	SCM_SINGLE_COMMIT_SET
+	SCM_STATUS_UNKNOWN
 
 inherit
-	SCM_COMMIT_SET
+	SCM_STATUS
 
 create
 	make,
-	make_with_changelist
+	make_with_name
 
-feature {NONE} -- Initialization
+feature -- Status
 
-	make (a_message: detachable READABLE_STRING_GENERAL; a_location: SCM_LOCATION)
-		do
-			make_with_changelist (a_message, create {SCM_CHANGELIST}.make_with_location (a_location))
-		end
+	status_as_string: STRING = "unknown"
 
-	make_with_changelist (a_message: detachable READABLE_STRING_GENERAL; a_changelist: SCM_CHANGELIST)
-		do
-			changelist := a_changelist
-			set_message (a_message)
-		ensure
-			changelist_set: changelist /= Void
-		end
-
-feature -- Access
-
-	changelist: SCM_CHANGELIST
-
-feature -- Conversion	
-
-	changes_description: STRING_32
-		local
-			ch: SCM_CHANGELIST
-			rt,rel: READABLE_STRING_32
-		do
-			create Result.make_empty
-			rt := changelist.root.location.name
-			across
-				changelist as ic
-			loop
-				rel := ic.item.location.name
-				if rel.starts_with (rt) then
-					rel := rel.substring (rt.count + 1, rel.count)
-				end
-				Result.append_string ({STRING_32} " - (" + ic.item.status_as_string + ") " + rel + "%N")
-			end
-		end
-
-feature -- Status report
-
-	is_ready: BOOLEAN
-			-- Is Current commit ready to be processed?
-		do
-			Result := has_message and then changelist.count > 0
-		end
-
-invariant
-	changelist /= Void
-
-;note
+note
 	copyright: "Copyright (c) 1984-2021, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"

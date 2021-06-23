@@ -30,10 +30,10 @@ feature -- Execution
 
 	update (a_changelist: SCM_CHANGELIST; cfg: SCM_CONFIG): detachable STRING_32
 		local
-			scm: SCM_GIT
+			scm: SCM
 		do
 			reset_error
-			create scm.make (cfg)
+			create {SCM_GIT} scm.make (cfg)
 			if attached scm.update (a_changelist, Void) as res then
 				if res.succeed then
 					if attached res.message as msg then
@@ -87,8 +87,8 @@ feature -- Execution
 			across
 				a_changelist as ic
 			loop
-				if attached scm.diff (ic.item, Void) as d then
-					Result.put_string_diff (ic.item, d)
+				if attached scm.diff (ic.item.location.name, Void) as d then
+					Result.put_string_diff (ic.item.location.name, d)
 				end
 			end
 		end

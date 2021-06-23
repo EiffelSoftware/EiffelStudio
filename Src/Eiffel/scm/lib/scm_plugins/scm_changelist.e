@@ -7,7 +7,7 @@ class
 	SCM_CHANGELIST
 
 inherit
-	ITERABLE [READABLE_STRING_32]
+	ITERABLE [SCM_STATUS]
 
 	DEBUG_OUTPUT
 
@@ -22,7 +22,7 @@ feature {NONE} -- Initialization
 
 	make_with_location (a_location: SCM_LOCATION)
 		do
-			create {ARRAYED_LIST [READABLE_STRING_32]} items.make (1)
+			create {ARRAYED_LIST [SCM_STATUS]} items.make (1)
 			items.compare_objects
 			root := a_location
 		end
@@ -31,10 +31,10 @@ feature -- Access
 
 	root: SCM_LOCATION
 
-	items: LIST [READABLE_STRING_32]
+	items: LIST [SCM_STATUS]
 			-- Elements of current changelist.
 
-	new_cursor: INDEXABLE_ITERATION_CURSOR [READABLE_STRING_32]
+	new_cursor: INDEXABLE_ITERATION_CURSOR [SCM_STATUS]
 			-- <Precursor>
 		do
 			Result := items.new_cursor
@@ -70,29 +70,47 @@ feature -- Status report
 			until
 				Result
 			loop
-				Result := a_name.same_string (ic.item)
+				Result := a_name.same_string (ic.item.location.name)
+			end
+		end
+
+	has_status (a_status: SCM_STATUS): BOOLEAN
+		do
+			across
+				items as ic
+			until
+				Result
+			loop
+				Result := a_status.location.same_as (ic.item.location)
 			end
 		end
 
 feature -- Element change
 
+	extend_status (a_status: SCM_STATUS)
+		require
+			not has_status (a_status)
+		do
+			items.force (a_status)
+		end
+
 	extend_path (p: PATH)
 		require
 			not has_path (p)
 		do
-			extend (p.name)
+			extend_status (create {SCM_STATUS_UNKNOWN}.make (p))
 		ensure
 			has_path (p)
 		end
 
-	extend (a_name: READABLE_STRING_GENERAL)
-		require
-			not has (a_name)
-		do
-			items.force (create {IMMUTABLE_STRING_32}.make_from_string_general (a_name))
-		ensure
-			has (a_name)
-		end
+--	extend (a_name: READABLE_STRING_GENERAL)
+--		require
+--			not has (a_name)
+--		do
+--			extend_status (create {SCM_STATUS_UNKNOWN}.make_with_name (a_name))
+--		ensure
+--			has (a_name)
+--		end
 
 	remove_path (p: PATH)
 		do
@@ -103,7 +121,20 @@ feature -- Element change
 
 	remove (a_name: READABLE_STRING_GENERAL)
 		do
-			items.prune_all (create {IMMUTABLE_STRING_32}.make_from_string_general (a_name))
+			from
+				items.start
+			until
+				items.off
+			loop
+				if
+					attached items.item_for_iteration as l_status and then
+					a_name.same_string (l_status.location.name)
+				then
+					items.remove
+				else
+					items.forth
+				end
+			end
 		ensure
 			not has (a_name)
 		end
@@ -131,13 +162,13 @@ feature -- Conversion
 			across
 				items as ic
 			loop
-				i := ic.item
+				i := ic.item.location.name
 				if i.has (' ') or i.has ('%T') then
 					a_output.append_string_general ("%"")
-					a_output.append_string_general (ic.item)
+					a_output.append_string_general (i)
 					a_output.append_string_general ("%"")
 				else
-					a_output.append_string_general (ic.item)
+					a_output.append_string_general (i)
 				end
 				a_output.append_character (' ')
 			end

@@ -150,7 +150,7 @@ feature -- Execution
 			across
 				a_changelist as ic
 			loop
-				fn := ic.item
+				fn := ic.item.location.name
 				cmd.append_character (' ')
 				if fn.has (' ') or fn.has ('%T') then
 					cmd.append_character ('"')
@@ -195,7 +195,7 @@ feature -- Execution
 			across
 				a_changelist as ic
 			loop
-				fn := ic.item
+				fn := ic.item.location.name
 				cmd.append_character (' ')
 				if fn.has (' ') or fn.has ('%T') then
 					cmd.append_character ('"')

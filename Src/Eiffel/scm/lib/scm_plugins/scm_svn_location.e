@@ -86,8 +86,8 @@ feature -- Execution
 			across
 				a_changelist as ic
 			loop
-				if attached scm.diff (ic.item, Void) as d then
-					Result.put_string_diff (ic.item, d)
+				if attached scm.diff (ic.item.location.name, Void) as d then
+					Result.put_string_diff (ic.item.location.name, d)
 				end
 			end
 		end
@@ -97,26 +97,54 @@ feature -- Execution
 			scm: SCM_SVN
 			opts: SCM_OPTIONS
 			res: SCM_RESULT
+			lst_to_add: SCM_CHANGELIST
 		do
 			reset_error
 			create scm.make (cfg)
 			create opts
 
 			if attached a_commit_set.message as m then
-				res := scm.commit (a_commit_set.changelist, m, opts)
-				if res.succeed then
-					if attached res.message as msg then
-						a_commit_set.report_success (msg)
-					else
-						a_commit_set.report_success ("SVN commit completed")
+				create lst_to_add.make_with_location (a_commit_set.changelist.root)
+				across
+					a_commit_set.changelist as ic
+				loop
+					if
+						attached {SCM_STATUS_UNVERSIONED} ic.item
+						or attached {SCM_STATUS_UNKNOWN} ic.item  -- should not occurs
+					then
+						lst_to_add.extend_status (ic.item)
 					end
-				else
-					if attached res.message as msg then
-						a_commit_set.report_error (msg)
-					else
-						a_commit_set.report_error ("SVN commit failed")
+				end
+				if
+					not a_commit_set.has_error and then
+					lst_to_add.count > 0
+				then
+					res := scm.add (lst_to_add, opts)
+					if res.failed then
+						has_error := True
+						if attached res.message as msg then
+							a_commit_set.report_error (msg)
+						else
+							a_commit_set.report_error ("SVN add failed")
+						end
 					end
-					has_error := True
+				end
+				if not a_commit_set.has_error then
+					res := scm.commit (a_commit_set.changelist, m, opts)
+					if res.succeed then
+						if attached res.message as msg then
+							a_commit_set.report_success (msg)
+						else
+							a_commit_set.report_success ("SVN commit completed")
+						end
+					else
+						if attached res.message as msg then
+							a_commit_set.report_error (msg)
+						else
+							a_commit_set.report_error ("SVN commit failed")
+						end
+						has_error := True
+					end
 				end
 			else
 				has_error := True

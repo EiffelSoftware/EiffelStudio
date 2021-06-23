@@ -60,31 +60,6 @@ feature -- Operations: working copy
 			Result := git.revert (a_changelist, a_options)
 		end
 
-	update (a_changelist: SCM_CHANGELIST; a_options: detachable SCM_OPTIONS): SCM_RESULT
-			-- Update working copy at `a_changelist', and return information about command execution.
-		do
-			create Result.make_failure
-			Result.set_message ("Updating with GIT is not yet implemented")
-		end
-
-	add (a_changelist: SCM_CHANGELIST; a_options: detachable SCM_OPTIONS): SCM_RESULT
-			-- Add items from `a_changelist', and return information about command execution.
-		do
-			create Result.make_failure
-		end
-
-	delete (a_changelist: SCM_CHANGELIST; a_options: detachable SCM_OPTIONS): SCM_RESULT
-			-- Delete items from `a_changelist', and return information about command execution.
-		do
-			create Result.make_failure
-		end
-
-	move (a_location, a_new_location: READABLE_STRING_GENERAL; a_options: detachable SCM_OPTIONS): SCM_RESULT
-			-- Move from `a_location' to `a_new_location', and return information about command execution.
-		do
-			create Result.make_failure
-		end
-
 	commit (a_changelist: SCM_CHANGELIST; a_log_message: READABLE_STRING_GENERAL; a_options: SCM_OPTIONS): SCM_RESULT
 			-- Commit changes for locations `a_changelist', and return information about command execution.
 		local
@@ -94,11 +69,42 @@ feature -- Operations: working copy
 			Result := git.commit (a_changelist, a_log_message, a_options)
 		end
 
+	update (a_changelist: SCM_CHANGELIST; a_options: detachable SCM_OPTIONS): SCM_RESULT
+			-- Update working copy at `a_changelist', and return information about command execution.
+		do
+			create Result.make_failure
+			Result.set_message ("Error: GIT [update] not yet supported")
+		end
+
+feature {NONE} -- Operations: not fully implemented by all descendants		
+
+	add (a_changelist: SCM_CHANGELIST; a_options: detachable SCM_OPTIONS): SCM_RESULT
+			-- Add items from `a_changelist', and return information about command execution.
+		do
+			create Result.make_failure
+			Result.set_message ("Error: [add] not yet implemented for GIT")
+		end
+
+	delete (a_changelist: SCM_CHANGELIST; a_options: detachable SCM_OPTIONS): SCM_RESULT
+			-- Delete items from `a_changelist', and return information about command execution.
+		do
+			create Result.make_failure
+			Result.set_message ("Error: [delete] not yet implemented for GIT")
+		end
+
+	move (a_location, a_new_location: READABLE_STRING_GENERAL; a_options: detachable SCM_OPTIONS): SCM_RESULT
+			-- Move from `a_location' to `a_new_location', and return information about command execution.
+		do
+			create Result.make_failure
+			Result.set_message ("Error: [move] not yet implemented for GIT")
+		end
+
 feature -- Access
 
 	logs (a_location: READABLE_STRING_GENERAL; is_verbose: BOOLEAN; a_limit: INTEGER; a_options: detachable SCM_OPTIONS): detachable LIST [SCM_COMMIT_LOG]
 			-- Logs for `a_location' between `a_start' and `a_end' if provided, with a limit of `a_limit' entries.
 		do
+			-- FIXME: to implement
 		end
 
 	diff (a_location: READABLE_STRING_GENERAL; a_options: detachable SCM_OPTIONS): detachable STRING_32
@@ -113,6 +119,7 @@ feature -- Access
 	content (a_location: READABLE_STRING_GENERAL; a_ref: detachable SCM_COMMIT_REFERENCE; a_options: detachable SCM_OPTIONS): detachable STRING
 			-- Content of `a_location', for commit related to `a_ref' if provided.
 		do
+			-- FIXME: to implement
 		end
 
 note

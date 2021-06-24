@@ -51,7 +51,8 @@ inherit
 			initialize,
 			destroy,
 			set_background_color,
-			create_interface_objects
+			create_interface_objects,
+			debug_output
 		end
 
 	SD_WIDGETS_LISTS
@@ -944,7 +945,8 @@ feature {NONE} -- Output
 
 	debug_output: STRING_32
 		do
-			Result := {STRING_32} "SD_TOOL_BAR: "
+			Result := Precursor
+			Result.append ("::SD_TOOL_BAR: ")
 			Result.append
 				(if attached content as c then
 					c.title
@@ -959,7 +961,7 @@ invariant
 
 note
 	library:	"SmartDocking: Library of reusable components for Eiffel."
-	copyright:	"Copyright (c) 1984-2017, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2021, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

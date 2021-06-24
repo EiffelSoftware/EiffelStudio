@@ -1,18 +1,20 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
-<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-15-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-15-0 http://www.eiffel.com/developers/xml/configuration-1-15-0.xsd" name="test" uuid="71024DB8-7A82-4941-9E4F-7DC8291314F6">
+<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-22-0" name="test">
 	<target name="test">
-		<description>--| Copyright (c) 1993-2020 University of Southern California and contributors.
+		<description>--| Copyright (c) 1993-2021 University of Southern California and contributors.
 --| All rights reserved.
 --| Your use of this work is governed under the terms of the GNU General
 --| Public License version 2.</description>
 		<root cluster="root_cluster" class="TEST" feature="make"/>
-		<option warning="true" full_class_checking="false" is_attached_by_default="false" void_safety="none" syntax="transitional">
+		<option>
 			<assertions precondition="true"/>
 			<warning name="syntax" enabled="false"/>
 			<warning name="vjrv" enabled="false"/>
 		</option>
 		<setting name="console_application" value="true"/>
-		<setting name="total_order_on_reals" value="true"/>
+		<capability>
+			<void_safety support="none" use="none"/>
+		</capability>
 		<mapping old_name="IMMUTABLE_STRING" new_name="IMMUTABLE_STRING_8"/>
 		<mapping old_name="READABLE_STRING" new_name="READABLE_STRING_8"/>
 		<mapping old_name="STRING" new_name="STRING_8"/>
@@ -32,11 +34,11 @@
 		<assembly name="system_" location="$ISE_DOTNET_FRAMEWORK\System.dll" prefix="SYSTEM_DLL_"/>
 		<assembly name="system_xml" location="$ISE_DOTNET_FRAMEWORK\System.Xml.dll" prefix="XML_"/>
 		$ENCODING_EXTERNALS
-		$ENCODING_CLUSTER
+		<cluster name="cursors" location="$ISE_LIBRARY\library\base\elks\structures\cursors\"/>
 		<cluster name="elks_exceptions" location="$ISE_LIBRARY\library\base\elks\kernel\exceptions\"/>
+		$ENCODING_CLUSTER
 		<cluster name="exceptions" location="$ISE_LIBRARY\library\base\ise\kernel\exceptions\"/>
 		<cluster name="kernel" location="$ISE_LIBRARY\library\base\elks\kernel\"/>
-		<cluster name="cursors" location="$ISE_LIBRARY\library\base\elks\structures\cursors\"/>
 		<cluster name="refactoring" location="$REFACTORING\"/>
 		<cluster name="string" location="$ISE_LIBRARY\library\base\elks\kernel\string\"/>
 		<override name="root_cluster" location="$CLUSTER\"/>

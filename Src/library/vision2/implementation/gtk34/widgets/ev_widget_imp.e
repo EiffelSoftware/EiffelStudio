@@ -22,7 +22,10 @@ inherit
 			make,
 			destroy,
 			x_position,
-			y_position
+			y_position,
+			width, height,
+			real_minimum_width,
+			real_minimum_height
 		end
 
 	EV_SENSITIVE_IMP
@@ -158,6 +161,10 @@ feature {EV_WINDOW_IMP, EV_INTERMEDIARY_ROUTINES, EV_ANY_I, EV_APPLICATION_IMP} 
 			l_x, l_y: INTEGER
 		do
 			if a_width /= previous_width or else a_height /= previous_height then
+				debug ("gtk_sizing")
+					print (attached_interface.debug_output + {STRING_32} ".on_size_allocate (x=" + a_x.out + ",y=" + a_y.out + ",w=" + a_width.out + ",h=" + a_height.out + ")%N")
+				end
+
 				if attached parent_imp as l_parent_imp then
 					l_x_y_offset := l_parent_imp.internal_x_y_offset
 				end
@@ -313,7 +320,62 @@ feature -- Status setting
 	hide
 			-- Request that `Current' not be displayed even when its parent is.
 		do
+				-- With GTK3, when a widget is hidden, the *width and *height queries
+				-- does not return anymore the previous size.
+				-- To keep existing behavior and size information
+				-- record them in associated (size and minimum size) attributes.
+			hidden_width := width
+			hidden_height := height
+
+			hidden_minimum_width := minimum_width
+			hidden_minimum_height := minimum_height
 			{GTK}.gtk_widget_hide (c_object)
+		end
+
+	hidden_width,
+	hidden_height: INTEGER
+
+	hidden_minimum_width,
+	hidden_minimum_height: INTEGER
+
+	width: INTEGER
+		do
+			Result := Precursor
+			if not is_show_requested then
+				if Result <= 0 and hidden_width > 0 then
+					Result := hidden_width
+				end
+			end
+		end
+
+	height: INTEGER
+		do
+			Result := Precursor
+			if not is_show_requested then
+				if Result <= 0 and hidden_height > 0 then
+					Result := hidden_height
+				end
+			end
+		end
+
+	real_minimum_width: INTEGER
+		do
+			Result := Precursor
+			if not is_show_requested then
+				if Result <= 0 and hidden_minimum_width > 0 then
+					Result := hidden_minimum_width
+				end
+			end
+		end
+
+	real_minimum_height: INTEGER
+		do
+			Result := Precursor
+			if not is_show_requested then
+				if Result <= 0 and hidden_minimum_height > 0 then
+					Result := hidden_minimum_height
+				end
+			end
 		end
 
 feature -- Element change
@@ -321,6 +383,10 @@ feature -- Element change
 	set_minimum_width (a_minimum_width: INTEGER)
 			-- Set the minimum horizontal size to `a_minimum_width'.
 		do
+			debug ("gtk_sizing")
+				print (generating_type.name_32 + {STRING_32} ".set_minimum_width (w=" + a_minimum_width.out + ")%N")
+			end
+
 			{GTK2}.gtk_widget_set_minimum_size (c_object, a_minimum_width, height_request)
 
 				-- If the parent is a fixed or scrollable area we need to update the item size.
@@ -334,6 +400,10 @@ feature -- Element change
 	set_minimum_height (a_minimum_height: INTEGER)
 			-- Set the minimum vertical size to `a_minimum_height'.
 		do
+			debug ("gtk_sizing")
+				print (generating_type.name_32 + {STRING_32} ".set_minimum_height (h=" + a_minimum_height.out + ")%N")
+			end
+
 			{GTK2}.gtk_widget_set_minimum_size (c_object, width_request, a_minimum_height)
 
 				-- If the parent is a fixed or scrollable area we need to update the item size.
@@ -348,6 +418,9 @@ feature -- Element change
 			-- Set the minimum horizontal size to `a_minimum_width'.
 			-- Set the minimum vertical size to `a_minimum_height'.
 		do
+			debug ("gtk_sizing")
+				print (generating_type.name_32 + {STRING_32} ".set_minimum_size (w=" + a_minimum_width.out + ",h=" + a_minimum_height.out + ")%N")
+			end
 			{GTK2}.gtk_widget_set_minimum_size (c_object, a_minimum_width, a_minimum_height)
 
 				-- If the parent is a fixed or scrollable area we need to update the item size.
@@ -356,6 +429,24 @@ feature -- Element change
 			elseif attached {EV_FIXED_IMP} parent_imp as l_fixed_parent then
 				l_fixed_parent.set_item_size (attached_interface, a_minimum_width.max (width), a_minimum_height.max (height))
 			end
+		end
+
+	set_widget_size (a_width, a_height: INTEGER)
+		local
+			l_c_object: POINTER
+			l_alloc: POINTER
+		do
+			debug ("gtk_sizing")
+				print (attached_interface.debug_output + {STRING_32} ".set_widget_size (w=" + a_width.out + ",h=" + a_height.out + ")%N")
+			end
+			l_c_object := c_object
+			l_alloc := l_alloc.memory_alloc ({GTK}.c_gtk_allocation_struct_size)
+			{GTK}.gtk_widget_get_allocation (l_c_object, l_alloc)
+			{GTK}.set_gtk_allocation_struct_width (l_alloc, a_width)
+			{GTK}.set_gtk_allocation_struct_height (l_alloc, a_height)
+			{GTK2}.gtk_widget_size_allocate (l_c_object, l_alloc)
+			l_alloc.memory_free
+			{GTK}.gtk_container_check_resize (l_c_object)
 		end
 
 feature -- Measurement

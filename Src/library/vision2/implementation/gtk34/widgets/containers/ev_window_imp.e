@@ -29,7 +29,8 @@ inherit
 			height,
 			show,
 			has,
-			update_for_pick_and_drop
+			update_for_pick_and_drop,
+			real_minimum_width, real_minimum_height
 		redefine
 			interface,
 			make,

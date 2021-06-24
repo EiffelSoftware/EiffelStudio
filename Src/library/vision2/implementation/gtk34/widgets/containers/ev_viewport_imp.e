@@ -141,6 +141,9 @@ feature -- Element change
 			l_c_object: POINTER
 			l_alloc: POINTER
 		do
+			debug ("gtk_sizing")
+				print (attached_interface.debug_output + {STRING_32} ".set_item_size (w=" + a_width.out + ",h=" + a_height.out + ")%N")
+			end
 			if
 				attached item as l_item and then
 				attached {EV_WIDGET_IMP} l_item.implementation as w_imp

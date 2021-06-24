@@ -63,38 +63,68 @@ feature -- Status setting
 	set_item_position_and_size (a_widget: EV_WIDGET; a_x, a_y, a_width, a_height: INTEGER)
 			-- Assign `a_widget' with a position of `a_x' and a_y', and a dimension of `a_width' and `a_height'.
 		local
-			l_parent_box: POINTER
-			w_imp: detachable EV_WIDGET_IMP
+			l_item_c_object,
+			l_parent_container: POINTER
 			l_alloc: POINTER
+			w,h: INTEGER
+			l_size_smaller: BOOLEAN
 		do
-			w_imp ?= a_widget.implementation
-			check w_imp /= Void then end
-			l_parent_box := {GTK}.gtk_widget_get_parent (w_imp.c_object)
-
-			{GTK2}.gtk_layout_move (container_widget, l_parent_box, a_x, a_y)
-
-			l_alloc := l_alloc.memory_alloc ({GTK}.c_gtk_allocation_struct_size)
-			{GTK}.gtk_widget_get_allocation (l_parent_box, l_alloc)
-
-
-			{GTK}.set_gtk_allocation_struct_x (l_alloc, a_x + internal_x_y_offset)
-			{GTK}.set_gtk_allocation_struct_y (l_alloc, a_y + internal_x_y_offset)
-			{GTK}.set_gtk_allocation_struct_width (l_alloc, a_width)
-			{GTK}.set_gtk_allocation_struct_height (l_alloc, a_height)
-			{GTK2}.gtk_widget_set_minimum_size (l_parent_box, a_width, a_height)
-			{GTK2}.gtk_widget_size_allocate (l_parent_box, l_alloc)
-
-			l_alloc.memory_free
-
-			if (a_x + a_width > minimum_width) then
-				set_minimum_width (a_x + a_width)
+			debug ("gtk_sizing")
+				print (attached_interface.debug_output + {STRING_32} ".set_item_position_and_size (" + a_widget.debug_output + ",x=" + a_x.out + ",y=" + a_y.out + ",w=" + a_width.out + ",h=" + a_height.out + ")%N")
 			end
 
-			if (a_y + a_height > minimum_height) then
-				set_minimum_height (a_y + a_height)
-			end
+			check attached {EV_WIDGET_IMP} a_widget.implementation as w_imp then
+				l_item_c_object := w_imp.c_object
+				if not l_item_c_object.is_default_pointer then
+					l_parent_container := {GTK}.gtk_widget_get_parent (l_item_c_object)
+					{GTK2}.gtk_layout_move (container_widget, l_parent_container, a_x, a_y)
 
-			--{GTK}.gtk_container_check_resize (l_parent_box)
+					l_alloc := l_alloc.memory_alloc ({GTK}.c_gtk_allocation_struct_size)
+					{GTK}.gtk_widget_get_allocation (l_parent_container, l_alloc)
+					{GTK}.set_gtk_allocation_struct_x (l_alloc, a_x + internal_x_y_offset)
+					{GTK}.set_gtk_allocation_struct_y (l_alloc, a_y + internal_x_y_offset)
+					{GTK}.set_gtk_allocation_struct_width (l_alloc, a_width)
+					{GTK}.set_gtk_allocation_struct_height (l_alloc, a_height)
+					{GTK2}.gtk_widget_set_minimum_size (l_parent_container, a_width, a_height)
+					{GTK2}.gtk_widget_size_allocate (l_parent_container, l_alloc)
+					l_alloc.memory_free
+
+				end
+			end
+			w := a_widget.x_position + a_widget.width
+			h := a_widget.y_position + a_widget.height
+			if w > minimum_width then
+				set_minimum_width (w)
+			else
+				l_size_smaller := w < minimum_width
+			end
+			if h > minimum_height then
+				set_minimum_height (h)
+			else
+				l_size_smaller := h < minimum_height
+			end
+			if
+				l_size_smaller and then
+				attached cursor as l_cursor
+			then
+					-- Update the minimum size by checking position and size of all childs.
+				from
+					start
+				until
+					off
+				loop
+					if attached {EV_WIDGET} item as l_widget then
+						w := (l_widget.x_position + l_widget.width).max (w)
+						h := (l_widget.y_position + l_widget.height).max (h)
+					end
+					forth
+				end
+				go_to (l_cursor)
+				set_minimum_size (w, h)
+			end
+--			if not l_parent_container.is_default_pointer then
+--				{GTK}.gtk_container_check_resize (l_parent_container)
+--			end
 		end
 
 	set_item_position (a_widget: EV_WIDGET; a_x, a_y: INTEGER)
@@ -107,12 +137,13 @@ feature -- Status setting
 	set_item_size (a_widget: EV_WIDGET; a_width, a_height: INTEGER)
 			-- Set `a_widget.width' to `a_width'.
 			-- Set `a_widget.height' to `a_height'.
-		local
-			w_imp: detachable EV_WIDGET_IMP
 		do
-			w_imp ?= a_widget.implementation
-			check w_imp /= Void then end
-			set_item_position_and_size (a_widget, x_position_of_child (w_imp), y_position_of_child (w_imp), a_width, a_height)
+			debug ("gtk_sizing")
+				print (generating_type.name_32 + {STRING_32} ".set_item_size ("+ a_widget.debug_output +",w=" + a_width.out + ",h=" + a_height.out + ")%N")
+			end
+			check attached {EV_WIDGET_IMP} a_widget.implementation as w_imp then
+				set_item_position_and_size (a_widget, x_position_of_child (w_imp), y_position_of_child (w_imp), a_width, a_height)
+			end
 		end
 
 feature {EV_ANY_I} -- Implementation

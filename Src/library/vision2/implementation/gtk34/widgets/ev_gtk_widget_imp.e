@@ -120,7 +120,12 @@ feature {EV_ANY_I, EV_INTERMEDIARY_ROUTINES} -- Implementation
 			Result ?= app_implementation.gtk_widget_imp_at_pointer_position
 		end
 
-	minimum_width, real_minimum_width: INTEGER
+	minimum_width: INTEGER
+		do
+			Result := real_minimum_width
+		end
+
+	real_minimum_width: INTEGER
 			-- Minimum width that the widget may occupy.
 		do
 			if not is_destroyed then
@@ -140,10 +145,10 @@ feature {EV_ANY_I, EV_INTERMEDIARY_ROUTINES} -- Implementation
 	preferred_width: INTEGER
 			-- Preferred width of `Current' from gtk.
 		local
-			gr: POINTER
+			gr,pgr: POINTER
 		do
 			gr := reusable_requisition_struct.item
-			{GTK}.gtk_widget_get_preferred_size (c_object, gr, default_pointer)
+			{GTK}.gtk_widget_get_preferred_size (c_object, gr, pgr)
 			Result := {GTK}.gtk_requisition_struct_width (gr)
 		end
 
@@ -153,7 +158,12 @@ feature {EV_ANY_I, EV_INTERMEDIARY_ROUTINES} -- Implementation
 			create Result.make ({GTK}.c_gtk_requisition_struct_size)
 		end
 
-	minimum_height, real_minimum_height: INTEGER
+	minimum_height: INTEGER
+		do
+			Result := real_minimum_height
+		end
+
+	real_minimum_height: INTEGER
 			-- Minimum width that the widget may occupy.
 		do
 			if not is_destroyed then

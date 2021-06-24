@@ -13,6 +13,11 @@ deferred class
 inherit
 	EV_ANY
 
+	DEBUG_OUTPUT
+		undefine
+			default_create, copy
+		end
+
 feature -- Access
 
 	parent: detachable EV_IDENTIFIABLE
@@ -70,6 +75,24 @@ feature -- Access
 
 feature -- Status report
 
+	debug_output: STRING_32
+		do
+			create Result.make (10)
+			Result.append_character ('<')
+			Result.append (($Current).out)
+			Result.append_character ('>')
+
+			if has_identifier_name_set then
+				Result.append_character (' ')
+
+				Result.append_character ('%"')
+				Result.append (identifier_name)
+				Result.append_character ('%"')
+				Result.append_character (' ')
+			end
+			Result.append (generating_type.name_32)
+		end
+
 	has_parent: BOOLEAN
 			-- Does identifiable has a parent?
 		do
@@ -113,14 +136,14 @@ feature {NONE} -- Implementation
 invariant
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2021, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 end -- EV_IDENTIFIABLE

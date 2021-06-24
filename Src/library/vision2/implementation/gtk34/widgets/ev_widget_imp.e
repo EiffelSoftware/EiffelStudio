@@ -224,8 +224,8 @@ feature {EV_WINDOW_IMP, EV_INTERMEDIARY_ROUTINES, EV_ANY_I, EV_APPLICATION_IMP} 
 				if app_implementation.focus_out_actions_internal /= Void then
 					app_implementation.focus_out_actions.call ([attached_interface])
 				end
-				if focus_out_actions_internal /= Void then
-					focus_out_actions_internal.call (Void)
+				if attached focus_out_actions_internal as l_focus_out_actions_internal then
+					l_focus_out_actions_internal.call (Void)
 				end
 			end
 		end
@@ -291,8 +291,8 @@ feature {EV_ANY_I, EV_INTERMEDIARY_ROUTINES} -- Implementation
 					if app_implementation.mouse_wheel_actions_internal /= Void then
 						app_implementation.mouse_wheel_actions.call ([attached_interface, -mouse_wheel_delta])
 					end
-					if attached mouse_wheel_actions_internal as l_mouse_wheel_actions_internal/= Void then
-						mouse_wheel_actions_internal.call ([-mouse_wheel_delta])
+					if attached mouse_wheel_actions_internal as l_mouse_wheel_actions_internal then
+						l_mouse_wheel_actions_internal.call ([-mouse_wheel_delta])
 					end
 				end
 

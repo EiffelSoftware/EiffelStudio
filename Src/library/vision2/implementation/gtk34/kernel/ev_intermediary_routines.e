@@ -60,14 +60,6 @@ feature -- Motion notification
 
 feature -- map,unmap event
 
-	on_widget_realize_event_intermediary (a_c_object: POINTER)
-			-- Set realize event handling intermediary.
-		do
-			if attached {EV_WIDGET_IMP} c_get_eif_reference_from_object_id (a_c_object) as l_widget_imp then
-				l_widget_imp.on_widget_realized
-			end
-		end
-
 	on_widget_mapped_signal_intermediary (a_c_object: POINTER)
 			-- Set mapped handling intermediary.
 		do

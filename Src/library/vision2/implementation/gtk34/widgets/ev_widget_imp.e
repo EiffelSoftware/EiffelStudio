@@ -67,6 +67,7 @@ feature {NONE} -- Initialization
 			set_is_initialized (True)
 
 			init_gtk_allocate_event_signal_connection (c_object)
+			init_gtk_mapping_signal_connection (c_object)
 
 			debug ("gtk_name")
 				update_gtk_name
@@ -133,23 +134,47 @@ feature {EV_WINDOW_IMP, EV_INTERMEDIARY_ROUTINES, EV_ANY_I, EV_APPLICATION_IMP} 
 			end
 		end
 
+	init_gtk_mapping_signal_connection (a_c_object: POINTER)
+		require
+			not a_c_object.is_default_pointer
+		local
+			l_app_imp: like app_implementation
+		do
+			l_app_imp := app_implementation
+			real_signal_connect (a_c_object,
+					{EV_GTK_EVENT_STRINGS}.map_signal_name,
+					agent (l_app_imp.gtk_marshal).on_widget_mapped_signal_intermediary (c_object),
+					Void
+				)
+			real_signal_connect (a_c_object,
+					{EV_GTK_EVENT_STRINGS}.unmap_signal_name,
+					agent (l_app_imp.gtk_marshal).on_widget_unmapped_signal_intermediary (c_object),
+					Void
+				)
+		end
+
 	on_key_event (a_key: detachable EV_KEY; a_key_string: detachable STRING_32; a_key_press: BOOLEAN)
 			-- Used for key event actions sequences.
 		do
 			if a_key_press then
-				if a_key /= Void and then key_press_actions_internal /= Void then
-					key_press_actions_internal.call ([a_key])
+				if
+					a_key /= Void and then
+					attached key_press_actions_internal as l_key_press_actions_internal
+				then
+					l_key_press_actions_internal.call ([a_key])
 				end
-				if key_press_string_actions_internal /= Void then
-					if a_key_string /= Void then
-						key_press_string_actions_internal.call ([a_key_string])
-					end
+				if
+					attached key_press_string_actions_internal as l_key_press_string_actions_internal and then
+					a_key_string /= Void
+				then
+					l_key_press_string_actions_internal.call ([a_key_string])
 				end
 			else
-				if a_key /= Void then
-					if key_release_actions_internal /= Void then
-						key_release_actions_internal.call ([a_key])
-					end
+				if
+					a_key /= Void and then
+					attached key_release_actions_internal as l_key_release_actions_internal
+				then
+					l_key_release_actions_internal.call ([a_key])
 				end
 			end
 		end
@@ -192,8 +217,8 @@ feature {EV_WINDOW_IMP, EV_INTERMEDIARY_ROUTINES, EV_ANY_I, EV_APPLICATION_IMP} 
 				if app_implementation.focus_in_actions_internal /= Void then
 					app_implementation.focus_in_actions.call ([attached_interface])
 				end
-				if focus_in_actions_internal /= Void then
-					focus_in_actions_internal.call (Void)
+				if attached focus_in_actions_internal as l_focus_in_actions_internal then
+					l_focus_in_actions_internal.call (Void)
 				end
 			else
 				if app_implementation.focus_out_actions_internal /= Void then
@@ -210,13 +235,13 @@ feature {EV_WINDOW_IMP, EV_INTERMEDIARY_ROUTINES, EV_ANY_I, EV_APPLICATION_IMP} 
 		do
 			if a_pointer_enter then
 					-- The mouse pointer has entered `Current'.
-				if pointer_enter_actions_internal /= Void then
-					pointer_enter_actions_internal.call (Void)
+				if attached pointer_enter_actions_internal as l_pointer_enter_actions_internal then
+					l_pointer_enter_actions_internal.call (Void)
 				end
 			else
 					-- The mouse pointer has left `Current'.
-				if pointer_leave_actions_internal /= Void then
-					pointer_leave_actions_internal.call (Void)
+				if attached pointer_leave_actions_internal as l_pointer_leave_actions_internal then
+					l_pointer_leave_actions_internal.call (Void)
 				end
 			end
 		end
@@ -258,15 +283,15 @@ feature {EV_ANY_I, EV_INTERMEDIARY_ROUTINES} -- Implementation
 					if app_implementation.mouse_wheel_actions_internal /= Void then
 						app_implementation.mouse_wheel_actions.call ([attached_interface, mouse_wheel_delta])
 					end
-					if mouse_wheel_actions_internal /= Void then
-						mouse_wheel_actions_internal.call ([mouse_wheel_delta])
+					if attached mouse_wheel_actions_internal as l_mouse_wheel_actions_internal then
+						l_mouse_wheel_actions_internal.call ([mouse_wheel_delta])
 					end
 				elseif a_button = 5 and mouse_wheel_delta > 0 then
 						-- This is for scrolling down
 					if app_implementation.mouse_wheel_actions_internal /= Void then
 						app_implementation.mouse_wheel_actions.call ([attached_interface, -mouse_wheel_delta])
 					end
-					if mouse_wheel_actions_internal /= Void then
+					if attached mouse_wheel_actions_internal as l_mouse_wheel_actions_internal/= Void then
 						mouse_wheel_actions_internal.call ([-mouse_wheel_delta])
 					end
 				end
@@ -276,15 +301,15 @@ feature {EV_ANY_I, EV_INTERMEDIARY_ROUTINES} -- Implementation
 						if app_implementation.pointer_button_press_actions_internal /= Void then
 							app_implementation.pointer_button_press_actions.call ([attached_interface, a_button, a_screen_x, a_screen_y])
 						end
-						if pointer_button_press_actions_internal /= Void then
-							pointer_button_press_actions_internal.call (t)
+						if attached pointer_button_press_actions_internal as l_pointer_button_press_actions_internal then
+							l_pointer_button_press_actions_internal.call (t)
 						end
 					elseif a_type = {GTK}.GDK_2BUTTON_PRESS_ENUM then
 						if app_implementation.pointer_double_press_actions_internal /= Void then
 							app_implementation.pointer_double_press_actions.call ([attached_interface, a_button, a_screen_x, a_screen_y])
 						end
-						if pointer_double_press_actions_internal /= Void then
-							pointer_double_press_actions_internal.call (t)
+						if attached pointer_double_press_actions_internal as l_pointer_double_press_actions_internal then
+							l_pointer_double_press_actions_internal.call (t)
 						end
 					end
 				end
@@ -294,8 +319,8 @@ feature {EV_ANY_I, EV_INTERMEDIARY_ROUTINES} -- Implementation
 					if app_implementation.pointer_button_release_actions_internal /= Void then
 						app_implementation.pointer_button_release_actions.call ([attached_interface, a_button, a_screen_x, a_screen_y])
 					end
-					if pointer_button_release_actions_internal /= Void then
-						pointer_button_release_actions_internal.call (t)
+					if attached pointer_button_release_actions_internal as l_pointer_button_release_actions_internal then
+						l_pointer_button_release_actions_internal.call (t)
 					end
 				end
 			end
@@ -306,12 +331,9 @@ feature -- Access
 	parent: detachable EV_CONTAINER
 			-- Container widget that contains `Current'.
 			-- (Void if `Current' is not in a container)
-		local
-			a_par_imp: detachable EV_CONTAINER_IMP
 		do
-			a_par_imp := parent_imp
-			if a_par_imp /= Void then
-				Result := a_par_imp.interface
+			if attached parent_imp as l_par_imp then
+				Result := l_par_imp.interface
 			end
 		end
 
@@ -531,7 +553,10 @@ feature {EV_INTERMEDIARY_ROUTINES, EV_APPLICATION_IMP} -- Implementation
 		do
 				-- Make sure that the pointer style is correctly set when the widget is mapped.
 				-- This is needed for gtkwidgets that have not yet been realized.
-			if previously_set_pointer_style = Void and then attached pointer_style as l_pointer_style then
+			if
+				attached pointer_style as l_pointer_style and then
+				previously_set_pointer_style /= l_pointer_style
+			then
 				internal_set_pointer_style (l_pointer_style)
 			end
 		end
@@ -539,6 +564,7 @@ feature {EV_INTERMEDIARY_ROUTINES, EV_APPLICATION_IMP} -- Implementation
 	on_widget_unmapped
 			-- `Current' has been unmapped from the screen
 		do
+			previously_set_pointer_style := Void
 		end
 
 feature {EV_WIDGET_I} -- Implementation

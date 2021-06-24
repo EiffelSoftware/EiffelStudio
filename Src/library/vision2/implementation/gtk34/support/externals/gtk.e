@@ -339,6 +339,16 @@ feature -- Widgets
 			"C (GtkWidget*, gint) | <ev_gtk.h>"
 		end
 
+	frozen gtk_widget_set_events (a_widget: POINTER; a_events: INTEGER_32)
+		external
+			"C (GtkWidget*, gint) | <ev_gtk.h>"
+		end
+
+	frozen gtk_widget_get_events (a_widget: POINTER): INTEGER_32
+		external
+			"C (GtkWidget*): gint | <ev_gtk.h>"
+		end
+
 	frozen gtk_widget_event (a_widget: POINTER; a_event: POINTER): BOOLEAN
 		external
 			"C (GtkWidget*, GdkEvent*): gboolean | <ev_gtk.h>"

@@ -51,10 +51,36 @@ feature {EV_ANY_IMP} -- Notebook intermediary agent routines
 feature -- Motion notification
 
 	on_motion_notify_event_intermediary (a_c_object: POINTER; a_gdk_event: POINTER)
-			-- Set Focus handling intermediary.
+			-- Set motion notify handling intermediary.
 		do
 			if attached {EV_ANY_IMP} c_get_eif_reference_from_object_id (a_c_object) as l_any_imp then
 				l_any_imp.process_motion_notify_event (a_gdk_event)
+			end
+		end
+
+feature -- map,unmap event
+
+	on_widget_realize_event_intermediary (a_c_object: POINTER)
+			-- Set realize event handling intermediary.
+		do
+			if attached {EV_WIDGET_IMP} c_get_eif_reference_from_object_id (a_c_object) as l_widget_imp then
+				l_widget_imp.on_widget_realized
+			end
+		end
+
+	on_widget_mapped_signal_intermediary (a_c_object: POINTER)
+			-- Set mapped handling intermediary.
+		do
+			if attached {EV_WIDGET_IMP} c_get_eif_reference_from_object_id (a_c_object) as l_widget_imp then
+				l_widget_imp.on_widget_mapped
+			end
+		end
+
+	on_widget_unmapped_signal_intermediary (a_c_object: POINTER)
+			-- Set unmapped handling intermediary.
+		do
+			if attached {EV_WIDGET_IMP} c_get_eif_reference_from_object_id (a_c_object) as l_widget_imp then
+				l_widget_imp.on_widget_unmapped
 			end
 		end
 
@@ -156,12 +182,12 @@ feature -- Button intermediary agent routines
 			l_any_imp: detachable EV_ANY_IMP
 		do
 			l_any_imp := c_get_eif_reference_from_object_id (a_c_object)
-			if 
-				attached {EV_RADIO_BUTTON_IMP} l_any_imp as l_rad_imp and then 
-				not l_rad_imp.is_selected 
+			if
+				attached {EV_RADIO_BUTTON_IMP} l_any_imp as l_rad_imp and then
+				not l_rad_imp.is_selected
 			then
 				-- Do nothing as we shouldn't call the select actions of a radio button if it isn't selected
-			elseif 
+			elseif
 				attached {EV_BUTTON_IMP} l_any_imp as l_button_imp and then
 				attached l_button_imp.select_actions_internal as l_button_imp_select_actions and then
 				l_button_imp.parent_imp /= Void
@@ -175,9 +201,9 @@ feature {EV_ANY_IMP} -- Menu intermediary agent routines
 	menu_item_activate_intermediary (a_c_object: POINTER)
 			-- Item activated
 		do
-			if 
-				attached {EV_MENU_ITEM_IMP} c_get_eif_reference_from_object_id (a_c_object) as l_menu_item_imp and then 
-				l_menu_item_imp.allow_on_activate 
+			if
+				attached {EV_MENU_ITEM_IMP} c_get_eif_reference_from_object_id (a_c_object) as l_menu_item_imp and then
+				l_menu_item_imp.allow_on_activate
 			then
 					-- Add event to idle actions so that menu may closed
 					-- This also prevents crashes with dbus handled menus if events are processed during activate.

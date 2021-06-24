@@ -34,8 +34,21 @@ feature -- Event names
 	configure_event_name: STRING = "configure-event"
 			-- configure_event_name constant.
 
-	map_event_name: STRING = "map_event"
+	map_signal_name: STRING = "map"
+			-- map signal name constant.
+			--| The ::map signal is emitted when widget is going to be mapped, that is when the widget is visible
+
+	unmap_signal_name: STRING = "unmap"
+			-- unmap signal name constant.
+			--| The ::unmap signal is emitted when widget is going to be unmapped, which means that either it or any of its parents up to the toplevel widget have been set as hidden.
+
+	map_event_name: STRING = "map-event"
 			-- map_event_name constant.
+			--| The ::map-event signal will be emitted when the widget 's window is mapped
+
+	unmap_event_name: STRING = "unmap-event"
+			-- map_event_name constant.
+			--| The ::unmap-event signal will be emitted when the widget 's window is unmapped. A window is unmapped when it becomes invisible on the screen.			
 
 	enter_notify_event_name: STRING = "enter-notify-event"
 			-- enter_notify_event_name constant.

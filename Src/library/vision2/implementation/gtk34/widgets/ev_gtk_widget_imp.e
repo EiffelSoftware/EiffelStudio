@@ -18,17 +18,17 @@ feature {EV_INTERMEDIARY_ROUTINES} -- Implementation
 			-- Mask of all the gdk events the gdkwindow shall receive.
 		once
 			Result :=
-				{GTK}.GDK_EXPOSURE_MASK_ENUM
-				| {GTK}.GDK_POINTER_MOTION_MASK_ENUM
-				| {GTK}.GDK_BUTTON_PRESS_MASK_ENUM
-				| {GTK}.GDK_BUTTON_RELEASE_MASK_ENUM
-				| {GTK}.GDK_KEY_PRESS_MASK_ENUM
-				| {GTK}.GDK_KEY_RELEASE_MASK_ENUM
-				| {GTK}.GDK_ENTER_NOTIFY_MASK_ENUM
-				| {GTK}.GDK_LEAVE_NOTIFY_MASK_ENUM
-				| {GTK}.GDK_FOCUS_CHANGE_MASK_ENUM
-				| {GTK}.GDK_VISIBILITY_NOTIFY_MASK_ENUM
-				| {GTK}.GDK_POINTER_MOTION_HINT_MASK_ENUM
+				{GDK}.GDK_EXPOSURE_MASK_ENUM
+				| {GDK}.GDK_POINTER_MOTION_MASK_ENUM
+				| {GDK}.GDK_BUTTON_PRESS_MASK_ENUM
+				| {GDK}.GDK_BUTTON_RELEASE_MASK_ENUM
+				| {GDK}.GDK_KEY_PRESS_MASK_ENUM
+				| {GDK}.GDK_KEY_RELEASE_MASK_ENUM
+				| {GDK}.GDK_ENTER_NOTIFY_MASK_ENUM
+				| {GDK}.GDK_LEAVE_NOTIFY_MASK_ENUM
+				| {GDK}.GDK_FOCUS_CHANGE_MASK_ENUM
+				| {GDK}.GDK_VISIBILITY_NOTIFY_MASK_ENUM
+				| {GDK}.GDK_POINTER_MOTION_HINT_MASK_ENUM
 		end
 
 feature {NONE} -- Implementation
@@ -220,18 +220,17 @@ feature {EV_ANY_I, EV_INTERMEDIARY_ROUTINES} -- Implementation
 		local
 			a_cursor_ptr: POINTER
 			a_window: POINTER
-			a_cursor_imp: detachable EV_POINTER_STYLE_IMP
 		do
 			if a_cursor /= previously_set_pointer_style then
-				a_cursor_imp ?= a_cursor.implementation
-				check a_cursor_imp /= Void then end
-				a_cursor_ptr := a_cursor_imp.gdk_cursor_from_pointer_style
-				a_window := {GTK}.gtk_widget_get_window (c_object)
-				if a_window /= default_pointer then
-					{GTK}.gdk_window_set_cursor (a_window, a_cursor_ptr)
-					{GTK2}.g_object_unref (a_cursor_ptr)
+				check attached {EV_POINTER_STYLE_IMP} a_cursor.implementation as a_cursor_imp then
+					a_cursor_ptr := a_cursor_imp.gdk_cursor_from_pointer_style
+					a_window := {GTK}.gtk_widget_get_window (c_object)
+					if a_window /= default_pointer then
+						{GTK}.gdk_window_set_cursor (a_window, a_cursor_ptr)
+						{GTK2}.g_object_unref (a_cursor_ptr)
+						previously_set_pointer_style := a_cursor
+					end
 				end
-				previously_set_pointer_style := a_cursor
 			end
 		end
 

@@ -81,7 +81,7 @@ compile_result 	 ok
 
 delete		$CLUSTER finite.e
 compile_melted
-compile_result 	 validity_error BOUNDED VTCT; CONTAINER VTCT; SEQUENCE VTCT; UNBOUNDED VTCT
+compile_result 	 validity_error BOUNDED VTCT; CONTAINER VTCT; HASH_TABLE VTCT; SEQUENCE VTCT; UNBOUNDED VTCT
 
 copy_file	$STORAGE/finite.e $CLUSTER finite.e 
 resume_compile

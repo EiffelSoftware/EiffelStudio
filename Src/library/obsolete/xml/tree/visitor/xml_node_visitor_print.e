@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "[
 			Visitor pattern for XML node objects. Inherit and 
 			redefine to make use of this pattern
@@ -22,7 +22,7 @@ feature -- Processing
 			across
 				nodes as c
 			loop
-				c.item.process (Current)
+				c.process (Current)
 			end
 		end
 
@@ -139,7 +139,7 @@ feature {NONE} -- Formatter
 		end
 
 note
-	copyright: "Copyright (c) 1984-2011, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2021, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

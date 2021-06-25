@@ -1364,8 +1364,7 @@ feature {AST_FACTORY} -- Error handling
 				end
 				report_one_warning
 					(create {SYNTAX_WARNING}.make (l, c, filename,
-						{UTF_CONVERTER}.string_32_to_utf_8_string_8
-							(locale.translation_in_context (once "Deprecated use of keyword `is`.", once "parser.eiffel.warning"))))
+						locale.translation_in_context (once "Deprecated use of keyword `is`.", once "parser.eiffel.warning")))
 			end
 		end
 

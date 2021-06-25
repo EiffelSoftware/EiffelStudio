@@ -1,18 +1,21 @@
-<?xml version="1.0" encoding="ISO-8859-1"?><system xmlns="http://www.eiffel.com/developers/xml/configuration-1-15-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-15-0 http://www.eiffel.com/developers/xml/configuration-1-15-0.xsd" name="test" uuid="82bf339d-b5b8-48b5-b6a0-731d66b0240a">
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-22-0" name="test">
 	<target name="test">
-		<description>--| Copyright (c) 1993-2020 University of Southern California and contributors.
+		<description>--| Copyright (c) 1993-2021 University of Southern California and contributors.
 --| All rights reserved.
 --| Your use of this work is governed under the terms of the GNU General
 --| Public License version 2.
 </description>
-		<root class="test" feature="make"/>
-		<option warning="true" full_class_checking="false" is_attached_by_default="false" void_safety="none" syntax="transitional">
-			<assertions precondition="true" postcondition="false" check="false" invariant="false" loop="false"/>
-			<warning name="vjrv" enabled="false"/>
+		<root class="TEST" feature="make"/>
+		<option>
+			<assertions precondition="true"/>
 			<warning name="syntax" enabled="false"/>
+			<warning name="vjrv" enabled="false"/>
 		</option>
 		<setting name="console_application" value="true"/>
-		<setting name="total_order_on_reals" value="true"/>
+		<capability>
+			<void_safety support="none" use="none"/>
+		</capability>
 		$EWEASEL_DOTNET_SETTING
 		<mapping old_name="IMMUTABLE_STRING" new_name="IMMUTABLE_STRING_8"/>
 		<mapping old_name="READABLE_STRING" new_name="READABLE_STRING_8"/>
@@ -28,6 +31,9 @@
 		<mapping old_name="WIDE_CHARACTER_REF" new_name="CHARACTER_32_REF" />
 		<mapping old_name="REAL_REF" new_name="REAL_32_REF" />
 		<mapping old_name="DOUBLE_REF" new_name="REAL_64_REF" />
+		<assembly name="eiffelsoftware_runtime" location="$ISE_EIFFEL\studio\spec\$ISE_PLATFORM\lib\EiffelSoftware.Runtime.dll"/>
+		<assembly name="mscorlib" location="$ISE_DOTNET_FRAMEWORK\mscorlib.dll"/>
+		<assembly name="system_" location="$ISE_DOTNET_FRAMEWORK\System.dll" prefix="SYSTEM_DLL_"/>
 		<cluster name="access" location="$ACCESS\"/>
 		<cluster name="base" location="${ISE_LIBRARY}\library\base\">
 			$KERNEL_CLASSIC
@@ -50,9 +56,5 @@
 		<cluster name="table" location="$TABLE\"/>
 		<cluster name="traversing" location="$TRAVERSING\"/>
 		<cluster name="tree" location="$TREE\"/>
-
-		<assembly name="mscorlib" location="$ISE_DOTNET_FRAMEWORK\mscorlib.dll"/>
-		<assembly name="system_" location="$ISE_DOTNET_FRAMEWORK\System.dll" prefix="SYSTEM_DLL_"/>
-		<assembly name="eiffelsoftware_runtime" location="$ISE_EIFFEL\studio\spec\$ISE_PLATFORM\lib\EiffelSoftware.Runtime.dll"/>
 	</target>
 </system>

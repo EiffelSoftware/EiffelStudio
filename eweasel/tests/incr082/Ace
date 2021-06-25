@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
-<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-15-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-15-0 http://www.eiffel.com/developers/xml/configuration-1-15-0.xsd" name="test" uuid="5742443C-BBFA-47B7-9A0D-CF58A9E9AF9E">
+<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-22-0" name="test">
 	<target name="test">
 		<description>FreeELKS: Library of reusable components for Eiffel.
       Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt).</description>
@@ -7,11 +7,13 @@
 		<file_rule>
 			<exclude>/\.svn$</exclude>
 		</file_rule>
-		<option full_class_checking="false" is_attached_by_default="false" void_safety="none" syntax="transitional" namespace="EiffelSoftware.Library">
+		<option namespace="EiffelSoftware.Library">
 		</option>
-		<setting name="dotnet_naming_convention" value="true"/>
 		<setting name="console_application" value="true"/>
-		<setting name="total_order_on_reals" value="true"/>
+		<setting name="dotnet_naming_convention" value="true"/>
+		<capability>
+			<void_safety support="none" use="none"/>
+		</capability>
 		$EWEASEL_DOTNET_SETTING
 		<mapping old_name="REAL" new_name="REAL_32"/>
 		<mapping old_name="IMMUTABLE_STRING" new_name="IMMUTABLE_STRING_8"/>

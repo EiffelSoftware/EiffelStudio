@@ -1762,18 +1762,17 @@ feature {AST_VISITOR} -- Expressions
 			safe_process (l_as.rbracket_symbol (match_list))
 		end
 
-	process_unary_as (l_as: UNARY_AS)
-			-- Process unary expression `l_as'.
+	process_unary_as (a: UNARY_AS)
+			-- <Precursor>
 		do
-			safe_process_and_print (l_as.operator (match_list), "", " ")
-			safe_process (l_as.expr)
+			print_inline (a.operator (match_list))
+			print_inline_indented (a.expr)
 		end
 
-	process_un_free_as (l_as: UN_FREE_AS)
-			-- Process free unary expression `l_as'.
+	process_un_free_as (a: UN_FREE_AS)
+			-- <Precursor>
 		do
-			safe_process_and_print (l_as.op_name, "", " ")
-			safe_process (l_as.expr)
+			process_unary_as (a)
 		end
 
 	process_un_strip_as (l_as: UN_STRIP_AS)

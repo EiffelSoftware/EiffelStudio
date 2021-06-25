@@ -73,17 +73,17 @@ feature -- Access
 		do
 			if attached window as l_old_win then
 				across
-					accelerators as ic
+					accelerators as l_acc
 				loop
-					l_old_win.accelerators.prune_all (ic.item)
+					l_old_win.accelerators.prune_all (l_acc)
 				end
 			end
 			window := win
 
 			across
-				accelerators as ic
+				accelerators as l_acc
 			loop
-				win.accelerators.extend (ic.item)
+				win.accelerators.extend (l_acc)
 			end
 		end
 
@@ -138,14 +138,11 @@ feature {NONE} -- Agents
 		end
 
 	widget_at_position_from (a_container: detachable EV_CONTAINER; a_position: EV_COORDINATE): detachable EV_ANY
-		local
-			l_any: EV_ANY
 		do
 			if a_container /= Void and then is_position_over_item (a_position, a_container) then
 				across
-					a_container as ic
+					a_container as l_any
 				loop
-					l_any := ic.item
 					if attached {EV_CONTAINER} l_any as l_cont then
 						Result := widget_at_position_from (l_cont, a_position)
 					end

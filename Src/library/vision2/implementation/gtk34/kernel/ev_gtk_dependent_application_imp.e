@@ -41,7 +41,6 @@ feature -- Initialize
 			l_display, l_screen: POINTER
 			dlg: POINTER
 			l_color: STRING
-			n: STRING
 		do
 				-- Initialize custom styles for gtk.
 			l_style := "[
@@ -102,9 +101,8 @@ feature -- Initialize
 
 			dlg := {GTK2}.gtk_dialog_new
 			l_style_ctx := {GTK}.gtk_widget_get_style_context (dlg)
-			across {GTK}.gnome_color_names as ic loop
-				n := ic.item
-				l_color := {GTK}.rgba_string_style_color (l_style_ctx, ic.item)
+			across {GTK}.gnome_color_names as n loop
+				l_color := {GTK}.rgba_string_style_color (l_style_ctx, n)
 				if l_color /= Void then
 					l_style.replace_substring_all ("@" + n, l_color)
 					if n.starts_with ("theme_") then

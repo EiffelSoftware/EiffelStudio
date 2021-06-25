@@ -143,18 +143,18 @@ feature {NONE} -- Initialization
 							inspect k.code
 							when {EV_KEY_CONSTANTS}.key_left then
 								across
-									ig.selected_rows as ic
+									ig.selected_rows as r
 								loop
-									ic.item.collapse
+									r.collapse
 								end
 							when {EV_KEY_CONSTANTS}.key_right then
 								across
-									ig.selected_rows as ic
+									ig.selected_rows as r
 								loop
-									if ic.item.is_expanded and then ic.item.subrow_count > 0 then
-										ic.item.subrow (1).enable_select
-									elseif ic.item.is_expandable then
-										ic.item.expand
+									if r.is_expanded and then r.subrow_count > 0 then
+										r.subrow (1).enable_select
+									elseif r.is_expandable then
+										r.expand
 									end
 								end
 							else
@@ -369,12 +369,12 @@ feature -- Events
 				attached g.selected_rows as l_rows
 			then
 				across
-					l_rows as ic
+					l_rows as r
 				until
 					Result /= Void
 				loop
-					if attached {EV_ANY} ic.item.data as l_id then
-						Result := l_id
+					if attached {EV_ANY} r.data as l_any then
+						Result := l_any
 					end
 				end
 			end
@@ -683,14 +683,14 @@ feature -- Events
 			a_row.expand_actions.block
 			if a_row.subrow_count = 0 then
 				across
-					a_iterable as ic
+					a_iterable as l_item
 				loop
 					a_row.insert_subrow (a_row.subrow_count + 1)
 					ssr := a_row.subrow (a_row.subrow_count)
 					if fr = Void then
 						fr := ssr
 					end
-					attach_to_row (ic.item, ssr, a_grid, l_auto_select)
+					attach_to_row (l_item, ssr, a_grid, l_auto_select)
 				end
 			end
 			if l_auto_select and fr /= Void then

@@ -80,7 +80,7 @@ feature {EV_ANY_I} -- Access
 				if not c_object.is_default_pointer then
 					if attached interface as l_interface then
 						if attached {EV_IDENTIFIABLE} l_interface as l_id and then l_id.has_identifier_name_set  then
-							create s.make_from_string_general (l_id.full_identifier_path)
+							create s.make_from_string_general (l_id.identifier_name)
 							s.prepend_character ('%"')
 							s.append_character ('%"')
 						else

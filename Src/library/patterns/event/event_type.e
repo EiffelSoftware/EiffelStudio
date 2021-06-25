@@ -1,10 +1,8 @@
 ﻿note
-	description: "[
-		Represents a notion of an event, supplying means to subscribe and unsubscribe to the event.
-	]"
+	description: "Represents a notion of an event, supplying means to subscribe and unsubscribe to the event."
 	legal: "See notice at end of class."
-	status: "See notice at end of class.";
-	date: "$Date$";
+	status: "See notice at end of class."
+	date: "$Date$"
 	revision: "$Revision$"
 
 frozen class
@@ -128,7 +126,7 @@ feature -- Subscription
 			l_actions: LIST [PROCEDURE [EVENT_DATA]]
 		do
 				-- Remove subscriber
-			l_subscribers :=  subscribers
+			l_subscribers := subscribers
 			l_subscribers.start
 			l_subscribers.search (a_action)
 			if not l_subscribers.after then
@@ -178,7 +176,6 @@ feature {NONE} -- Publication
 			not_is_publishing: not is_publishing
 		local
 			l_actions: like suicide_actions
-			l_action: PROCEDURE [EVENT_DATA]
 			l_subscribers: like subscribers
 			l_suspended: BOOLEAN
 		do
@@ -194,34 +191,20 @@ feature {NONE} -- Publication
 						-- though they have not been called.
 					l_subscribers := l_subscribers.twin
 
-					if a_predicate = Void then
-						from l_subscribers.start until l_subscribers.after loop
-							l_subscribers.item.call (a_args)
-							l_subscribers.forth
-						end
+					if attached a_predicate then
+						⟳ s: l_subscribers ¦ if a_predicate (a_args) then s.call (a_args) end ⟲
 					else
-						from l_subscribers.start until l_subscribers.after loop
-							if a_predicate = Void or else a_predicate.item (a_args) then
-								l_subscribers.item.call (a_args)
-							end
-							l_subscribers.forth
-						end
+						⟳ s: l_subscribers ¦ s.call (a_args) ⟲
 					end
 
 						-- Unsubscribe those marked as a suicide action.
 					l_actions := suicide_actions
 					if not l_actions.is_empty then
+						check is_subscribed: ∀ a: suicide_actions ¦ is_subscribed (a) end
 							-- A twin of the suicide actions is performed to prevent issues related to extension during
 							-- publication. The issue could cause newly subscribed suicide actions to be removed even
 							-- though they have not been called.
-						l_actions := suicide_actions.twin
-
-						from l_actions.start until l_actions.after loop
-							l_action := l_actions.item
-							check is_subscribed: is_subscribed (l_action) end
-							unsubscribe (l_action)
-							l_actions.forth
-						end
+						⟳ a: suicide_actions.twin ¦ unsubscribe (a) ⟲
 					end
 				end
 
@@ -239,19 +222,19 @@ feature {NONE} -- Publication
 		end
 
 invariant
-	subscribers_attached: subscribers /= Void
+	subscribers_attached: attached subscribers
 	subscribers_compares_object: subscribers.object_comparison
-	suicide_actions_attached: suicide_actions /= Void
+	suicide_actions_attached: attached suicide_actions
 	suicide_actions_compares_object: suicide_actions.object_comparison
-	subscribers_contains_attached_items: across subscribers as c all c.item /= Void end
-	suicide_actions_contains_attached_items: across suicide_actions as c all c.item /= Void end
+	subscribers_contains_attached_items: ∀ c: subscribers ¦ attached c
+	suicide_actions_contains_attached_items: ∀ c: suicide_actions ¦ attached c
 	subscribers_contains_suicide_actions: suicide_actions.is_subset (subscribers)
 	is_suspended_implies_has_suspensions: is_suspended implies suspension_count > 0
 	not_is_suspended_implies_has_no_suspensions: not is_suspended implies suspension_count = 0
 
-;note
-	copyright: "Copyright (c) 1984-2016, Eiffel Software"
-	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
+note
+	copyright: "Copyright (c) 1984-2021, Eiffel Software"
+	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[
 			This file is part of Eiffel Software's Eiffel Development Environment.

@@ -3,19 +3,19 @@
 			Preferences. This class should be used for creating a preference system for an application.
 			Briefly, preferences and their related attributes and values are stored at run-time in an
 			appropriate PREFERENCE object. They must be created through the helper class PREFERENCE_MANAGER.
-
+			
 			In between sessions the preference will be saved in an underlying data store. To such data
 			store implementation are provided by default, one for saving to the Windows Registry and
 			one for saving to an XML file on disk. To use a different store, such as a database one
 			must create a new class which implements the methods in PREFERENCES_STORAGE_I.
-
+			
 			Regardless of the underlying data store used the preferences are managed in the same way.
 			There are 5 levels of control provided for such management:
 			
 			1. Storage specified. Use `make_with_storage'. A storage for the underlying data store
 			   is provided. Values are retrieved from this storage between sessions. You can specify
 			   the location for this storage, when you create it. This storage's location must exist.
-
+			
 			2. Storage and defaults specified. The same as in option 1, but a location of one or more default
 			   files is provided in addition to the data store location. Those files are XML files which
 			   contain the default values to use in a preference if it is not already defined in the data
@@ -24,24 +24,24 @@
 			   additional attributes for preference configuration such a more detailed description of the
 			   preference, or whether it should be hidden by default. If two files list the same preference,
 			   the last one to mention it takes precedence.
-
+			
 			3. Development use. Use `make' to create preferences. No underlying datastore location is
 			   provided. No default preference values are provided. A data store location is created
 			   automatically and modified preference values are tranparently retrieved between sessions.
-
+			
 			4. Location specified. Use `make_with_location'. A location for the underlying data store
 			   is provided. Values are retrieved from this location between sessions. This location must
 			   exist.
-
+			
 			5. Location and defaults specified. The same as in option 2, but using a storage with specified
 			   location.
-
+			
 			We recommend using 1. or 2.  since 3,4,5 might become obsolete in the future.
-
+			
 			Once preferences they may be modified programmatically or through an user interface conforming
 			to PREFERENCE_VIEW. A default interface is provided in PREFERENCES_WINDOW. You may implement
 			your own style interface by implementing PREFERENCE_VIEW.
-
+			
 			You may also add your own application specific preferences by implementing PREFERENCE, and may
 			provide a graphical widget to view or edit this preference by implementing PREFERENCE_WIDGET
 			and then registering this widget to the PREFERENCES through the
@@ -115,7 +115,7 @@ feature {NONE} -- Initialization
 		end
 
 	make
-			-- This creation routine creates a location to store and retrieve preferences			
+			-- This creation routine creates a location to store and retrieve preferences
 			-- between sessions.  The location will be either a registry location of an XML file (depending
 			-- on the implementation chosen) and will be named based upon the name of the application.
 			-- You should use this to create preferences during the development phase, or when you do not
@@ -200,7 +200,7 @@ feature {NONE} -- Initialization
 			across
 				a_defaults as c
 			loop
-				if attached c.item as def and then not def.is_empty then
+				if attached c as def and then not def.is_empty then
 					extract_default_values (def)
 				end
 			end
@@ -209,8 +209,8 @@ feature {NONE} -- Initialization
 feature -- Importation
 
 	import_from_storage_with_callback_and_exclusion (a_storage: PREFERENCES_STORAGE_I; a_ignore_hidden_preference: BOOLEAN;
-				a_callback: detachable PROCEDURE [TUPLE [ith: INTEGER; total: INTEGER; name: READABLE_STRING_GENERAL; value: READABLE_STRING_GENERAL]];
-				a_exclude_function: detachable FUNCTION [TUPLE [ith: INTEGER; total: INTEGER; name: READABLE_STRING_GENERAL; value: READABLE_STRING_GENERAL], BOOLEAN])
+			a_callback: detachable PROCEDURE [TUPLE [ith: INTEGER; total: INTEGER; name: READABLE_STRING_GENERAL; value: READABLE_STRING_GENERAL]];
+			a_exclude_function: detachable FUNCTION [TUPLE [ith: INTEGER; total: INTEGER; name: READABLE_STRING_GENERAL; value: READABLE_STRING_GENERAL], BOOLEAN])
 			-- Import preferences values from `a_storage', on import call `a_callback` if any.
 			-- If `a_exclude_function` is set, import related preference only if return is False.
 		require
@@ -231,8 +231,8 @@ feature -- Importation
 				n := vals.count
 			loop
 				i := i + 1
-				k := vs.key
-				v := vs.item
+				k := @ vs.key
+				v := vs
 				p := preferences.item (k)
 				if a_ignore_hidden_preference and (p = Void or else p.is_hidden) then
 						-- Ignored
@@ -291,7 +291,7 @@ feature -- Status report
 feature -- Access
 
 	error_message_32: detachable STRING_32
-			-- Message explaining why `Current' could not be initialized.	
+			-- Message explaining why `Current' could not be initialized.
 
 	save_defaults_to_store: BOOLEAN
 			-- Should preferences with default values be saved to the underlying data store when saving?
@@ -462,7 +462,7 @@ feature -- Preference
 			across
 				preferences as ps
 			loop
-				p := ps.item
+				p := ps
 				if p.has_default_value and then not p.is_default_value then
 					p.reset
 				end
@@ -495,7 +495,7 @@ feature {PREFERENCE_EXPORTER} -- Implementation
 feature {NONE} -- Implementation
 
 	managers: HASH_TABLE [PREFERENCE_MANAGER, STRING]
-			-- Managers.		
+			-- Managers.
 
 	preferences_storage: PREFERENCES_STORAGE_I
 			-- Underlying preference storage.
@@ -524,22 +524,22 @@ feature {NONE} -- Implementation
 				if l_file.is_open_read then
 					parser.parse_from_file (l_file)
 					l_file.close
-			  	else
-			  		has_error := True
+				else
+					has_error := True
 				end
 			else
 				has_error := True
 			end
 
-    		if has_error then
-    			report_error ({STRING_32} "%"" + a_default_file_name.to_string_32 + {STRING_32} "%" does not exist.")
-    		elseif parser.error_occurred then
-    			report_error ({STRING_32} "%"" + a_default_file_name.to_string_32 + {STRING_32} "%" is not a valid preference file.")
-    		else
-    			l_document := l_tree.document
-    			check l_document /= Void end -- implied by `not parser.error_occurred'
-    			load_default_attributes (l_document.root_element)
-    		end
+			if has_error then
+				report_error ({STRING_32} "%"" + a_default_file_name.to_string_32 + {STRING_32} "%" does not exist.")
+			elseif parser.error_occurred then
+				report_error ({STRING_32} "%"" + a_default_file_name.to_string_32 + {STRING_32} "%" is not a valid preference file.")
+			else
+				l_document := l_tree.document
+				check l_document /= Void end -- implied by `not parser.error_occurred'
+				load_default_attributes (l_document.root_element)
+			end
 		end
 
 	load_default_attributes (xml_elem: XML_ELEMENT)
@@ -562,7 +562,7 @@ feature {NONE} -- Implementation
 					xml_elem as es
 				loop
 					if
-						attached {XML_ELEMENT} es.item as node and then
+						attached {XML_ELEMENT} es as node and then
 						node.has_same_name (once "PREF")
 					then
 						if attached node.elements as elts and then not elts.is_empty then
@@ -623,7 +623,7 @@ feature {NONE} -- Implementation
 
 										l_attribute := sub_node.attribute_by_name (once "Shift")
 										if l_attribute /= Void then
-											att_pref_value.append (l_attribute.value.as_lower  + "+")
+											att_pref_value.append (l_attribute.value.as_lower + "+")
 										else
 											att_pref_value.append_string_general ("false+")
 										end

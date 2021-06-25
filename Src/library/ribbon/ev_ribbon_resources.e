@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "Ribbon resources such as instances, window lists."
 	date: "$Date$"
 	revision: "$Revision$"
@@ -50,7 +50,7 @@ feature -- Query
 				-- List of ribbons belonging to windows that haven't been destroyed yet.
 			create Result.make (internal_ribbon_window_list.count)
 			across internal_ribbon_window_list as l_list loop
-				if attached l_list.item.item as l_window and then not l_window.is_destroyed then
+				if attached l_list.item as l_window and then not l_window.is_destroyed then
 					if attached l_window.ribbon as l_ribbon then
 						Result.extend (l_ribbon)
 					end
@@ -66,7 +66,7 @@ feature -- Query
 				-- List of windows that haven't been destroyed yet containing a ribbon.
 			create Result.make (internal_ribbon_window_list.count)
 			across internal_ribbon_window_list as l_list loop
-				if attached l_list.item.item as l_window and then not l_window.is_destroyed then
+				if attached l_list.item as l_window and then not l_window.is_destroyed then
 					if attached l_window.ribbon then
 						Result.extend (l_window)
 					end
@@ -79,7 +79,7 @@ feature -- Query
 		do
 				-- Go through the list of windows to find the window that has `a_ribbon'.
 			across internal_ribbon_window_list as l_list until Result /= Void loop
-				if attached l_list.item.item as l_window and then not l_window.is_destroyed then
+				if attached l_list.item as l_window and then not l_window.is_destroyed then
 					if l_window.ribbon = a_ribbon then
 						Result := l_window
 					end
@@ -96,9 +96,9 @@ feature -- Helper
 		do
 			across ribbon_list as l_list until Result /= Void loop
 					-- Search tabs in `l_ribbon'
-				l_ribbon := l_list.item
+				l_ribbon := l_list
 				across l_ribbon.tabs as l_tabs until Result /= Void loop
-					if l_tabs.item = a_tab then
+					if l_tabs = a_tab then
 						Result := l_ribbon
 					end
 				end
@@ -112,10 +112,10 @@ feature -- Helper
 		do
 			across ribbon_list as l_list until Result /= Void loop
 					-- Search tabs in `l_ribbon'
-				l_ribbon := l_list.item
+				l_ribbon := l_list
 				across l_ribbon.tabs as l_tabs until Result /= Void loop
-					across l_tabs.item.groups as l_groups until Result /= Void loop
-						if l_groups.item = a_group then
+					across l_tabs.groups as l_groups until Result /= Void loop
+						if l_groups = a_group then
 							Result := l_ribbon
 						end
 					end
@@ -129,8 +129,8 @@ feature -- Helper
 			not_void: a_item /= Void
 		do
 			across ribbon_list as l_list until Result /= Void loop
-				if attached find_item_in_tabs (a_item, l_list.item.tabs) then
-					Result := l_list.item
+				if attached find_item_in_tabs (a_item, l_list.tabs) then
+					Result := l_list
 				end
 			end
 		end
@@ -145,18 +145,18 @@ feature -- Helper
 		do
 				-- Search tabs in `l_ribbon'.
 			across a_tabs as l_tabs until Result /= Void loop
-				l_tab := l_tabs.item
+				l_tab := l_tabs
 					-- Search groups of `l_tabs.item'.
 				across l_tab.groups as l_groups until Result /= Void loop
 						-- Search buttons of `l_groups.item'.
-					across l_groups.item.buttons as l_buttons until Result /= Void loop
-						if l_buttons.item = a_item then
+					across l_groups.buttons as l_buttons until Result /= Void loop
+						if l_buttons = a_item then
 							Result := l_tab
 						end
 						if Result = Void then
-							if attached {EV_RIBBON_SPLIT_BUTTON} l_buttons.item as l_split_button then
+							if attached {EV_RIBBON_SPLIT_BUTTON} l_buttons as l_split_button then
 								across l_split_button.buttons as l_split_buttons until Result /= Void loop
-									if l_split_buttons.item = a_item then
+									if l_split_buttons = a_item then
 										Result := l_tab
 									end
 								end
@@ -171,7 +171,7 @@ feature -- Helper
 			-- Find parent ribbon for contextual tabs
 		do
 			across internal_ribbon_window_list as l_list until Result /= Void loop
-				if attached l_list.item.item as l_ribbon_window and then not l_ribbon_window.is_destroyed then
+				if attached l_list.item as l_ribbon_window and then not l_ribbon_window.is_destroyed then
 					if l_ribbon_window.contextual_tabs.has (a_item) then
 						Result := l_ribbon_window.ribbon
 					end
@@ -183,7 +183,7 @@ feature -- Helper
 			-- Find parent ribbon for menu groups
 		do
 			across internal_ribbon_window_list as l_list until Result /= Void loop
-				if attached l_list.item.item as l_ribbon_window and then not l_ribbon_window.is_destroyed then
+				if attached l_list.item as l_ribbon_window and then not l_ribbon_window.is_destroyed then
 					if attached l_ribbon_window.application_menu as l_app_menu then
 						if l_app_menu.groups.has (a_item) then
 							Result := l_ribbon_window.ribbon
@@ -199,9 +199,9 @@ feature -- Helper
 			not_void: a_item /= Void
 		do
 			across internal_ribbon_window_list as l_list until Result /= Void loop
-				if attached l_list.item.item as l_ribbon_window and then not l_ribbon_window.is_destroyed then
+				if attached l_list.item as l_ribbon_window and then not l_ribbon_window.is_destroyed then
 					across l_ribbon_window.contextual_tabs as l_tabs until Result /= Void loop
-						if attached find_item_in_tabs (a_item, l_tabs.item.tabs) then
+						if attached find_item_in_tabs (a_item, l_tabs.tabs) then
 							Result := l_ribbon_window.ribbon
 						end
 					end
@@ -213,7 +213,7 @@ feature -- Helper
 			-- Find parent ribbon for application menu
 		do
 			across internal_ribbon_window_list as l_list until Result /= Void loop
-				if attached l_list.item.item as l_ribbon_window and then not l_ribbon_window.is_destroyed then
+				if attached l_list.item as l_ribbon_window and then not l_ribbon_window.is_destroyed then
 					if attached l_ribbon_window.application_menu as l_menu then
 						if l_menu = a_item then
 							Result := l_ribbon_window.ribbon
@@ -227,7 +227,7 @@ feature -- Helper
 			-- Find parent ribbon for application menu recent items
 		do
 			across internal_ribbon_window_list as l_list until Result /= Void loop
-				if attached l_list.item.item as l_ribbon_window and then not l_ribbon_window.is_destroyed then
+				if attached l_list.item as l_ribbon_window and then not l_ribbon_window.is_destroyed then
 					if attached l_ribbon_window.application_menu as l_menu then
 						if l_menu.recent_items = a_item then
 							Result := l_ribbon_window.ribbon
@@ -241,7 +241,7 @@ feature -- Helper
 			-- Find parent ribbon for help button
 		do
 			across internal_ribbon_window_list as l_list until Result /= Void loop
-				if attached l_list.item.item as l_ribbon_window and then not l_ribbon_window.is_destroyed then
+				if attached l_list.item as l_ribbon_window and then not l_ribbon_window.is_destroyed then
 					if l_ribbon_window.help_button = a_help_button then
 						Result := l_ribbon_window.ribbon
 					end
@@ -253,7 +253,7 @@ feature -- Helper
 			-- Find parent ribbon for quick access toolbar
 		do
 			across internal_ribbon_window_list as l_list until Result /= Void loop
-				if attached l_list.item.item as l_ribbon_window and then not l_ribbon_window.is_destroyed then
+				if attached l_list.item as l_ribbon_window and then not l_ribbon_window.is_destroyed then
 					if l_ribbon_window.quick_access_toolbar = a_qat then
 						Result := l_ribbon_window.ribbon
 					end
@@ -265,7 +265,7 @@ feature -- Helper
 			-- Find parent ribbon for mini toolbar
 		do
 			across internal_ribbon_window_list as l_list until Result /= Void loop
-				if attached l_list.item.item as l_ribbon_window and then not l_ribbon_window.is_destroyed then
+				if attached l_list.item as l_ribbon_window and then not l_ribbon_window.is_destroyed then
 					if l_ribbon_window.mini_toolbars.has (a_mini_toolbar) then
 						Result := l_ribbon_window.ribbon
 					end
@@ -277,7 +277,7 @@ feature -- Helper
 			-- Find parent ribbon for context menu
 		do
 			across internal_ribbon_window_list as l_list until Result /= Void loop
-				if attached l_list.item.item as l_ribbon_window and then not l_ribbon_window.is_destroyed then
+				if attached l_list.item as l_ribbon_window and then not l_ribbon_window.is_destroyed then
 					if l_ribbon_window.context_menus.has (a_context_menu) then
 						Result := l_ribbon_window.ribbon
 					end
@@ -289,10 +289,10 @@ feature -- Helper
 			-- Find parent ribbon for quick access tool bar items
 		do
 			across internal_ribbon_window_list as l_list until Result /= Void loop
-				if attached l_list.item.item as l_ribbon_window and then not l_ribbon_window.is_destroyed then
+				if attached l_list.item as l_ribbon_window and then not l_ribbon_window.is_destroyed then
 					if attached l_ribbon_window.quick_access_toolbar as l_qat then
 						across l_qat.default_buttons as l_qats until Result /= Void loop
-							if l_qats.item = a_item then
+							if l_qats = a_item then
 								Result := l_ribbon_window.ribbon
 							end
 						end
@@ -305,20 +305,20 @@ feature -- Helper
 			-- Find parent ribbon for application menu items
 		do
 			across internal_ribbon_window_list as l_list until Result /= Void loop
-				if attached l_list.item.item as l_ribbon_window and then not l_ribbon_window.is_destroyed then
+				if attached l_list.item as l_ribbon_window and then not l_ribbon_window.is_destroyed then
 					if attached l_ribbon_window.application_menu as l_menu then
 						across l_menu.groups as l_groups until Result /= Void loop
-							across l_groups.item.buttons as l_buttons until Result /= Void loop
-								if l_buttons.item = a_item then
+							across l_groups.buttons as l_buttons until Result /= Void loop
+								if l_buttons = a_item then
 									Result := l_ribbon_window.ribbon
 								end
 
 									-- Find Dropdown button and splitbutton child items
 								if
-									attached {EV_RIBBON_SPLIT_BUTTON} l_buttons.item or else
-									attached {EV_RIBBON_DROP_DOWN_BUTTON} l_buttons.item
+									attached {EV_RIBBON_SPLIT_BUTTON} l_buttons or else
+									attached {EV_RIBBON_DROP_DOWN_BUTTON} l_buttons
 								then
-									if find_in_split_or_drop_button_child_items (l_buttons.item, a_item) then
+									if find_in_split_or_drop_button_child_items (l_buttons, a_item) then
 										Result := l_ribbon_window.ribbon
 									end
 								end
@@ -347,7 +347,7 @@ feature -- Helper
 			end
 
 			across l_children as l_child until Result loop
-				if l_child.item = a_item_to_compare then
+				if l_child = a_item_to_compare then
 					Result := True
 				end
 			end
@@ -381,9 +381,9 @@ feature {NONE} -- Implementation
 					-- and this would invalidate a traditional traversal using `start'/`after'/`forth'.
 				create l_new_list.make (internal_ribbon_window_list.count)
 				across internal_ribbon_window_list as l_list loop
-					if attached l_list.item.item as l_window and then not l_window.is_destroyed then
+					if attached l_list.item as l_window and then not l_window.is_destroyed then
 						if attached l_window.ribbon as l_ribbon then
-							l_new_list.extend (l_list.item)
+							l_new_list.extend (l_list)
 						end
 					end
 				end
@@ -394,7 +394,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright: "Copyright (c) 1984-2012, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2021, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software
@@ -403,4 +403,5 @@ note
 			Website http://www.eiffel.com
 			Customer support http://support.eiffel.com
 		]"
+
 end

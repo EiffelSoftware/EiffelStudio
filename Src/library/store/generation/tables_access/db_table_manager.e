@@ -317,7 +317,7 @@ feature -- Basic operations
 					end
 					q.append (Space)
 				end
-						-- Gives a valid SQL string representation to `val'.
+					-- Gives a valid SQL string representation to `val'.
 				if
 					like_type (type)
 					or else coltype = l_select_table_descr.string_type
@@ -510,7 +510,7 @@ feature -- Update
 					end
 				else
 					has_error := True
-					error_message_32 :=  update_failed + "No session created"
+					error_message_32 := update_failed + "No session created"
 				end
 			else
 				has_error := True
@@ -820,11 +820,7 @@ feature {NONE} -- Deletion implementation
 				not database_manager.has_error and then
 				attached result_list as l_result_list
 			then
-				across
-					l_result_list as r
-				loop
-					delete_tablerow (r.item)
-				end
+				⟳ r: l_result_list ¦ delete_tablerow (r) ⟲
 			end
 		end
 
@@ -944,7 +940,7 @@ feature {NONE} -- Error messages
 			query_not_void: query /= Void
 		do
 			Result := {STRING_32} "Database selection failed:%NSQL query was: "
-					+ query.as_string_32 + {STRING_32} "%NDatabase message is: "
+				+ query.as_string_32 + {STRING_32} "%NDatabase message is: "
 		end
 
 	Command_failed: STRING_32
@@ -1002,8 +998,8 @@ feature {NONE} -- Error messages
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2020, Eiffel Software and others"
-	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
+	copyright: "Copyright (c) 1984-2021, Eiffel Software and others"
+	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software
 			5949 Hollister Ave., Goleta, CA 93117 USA

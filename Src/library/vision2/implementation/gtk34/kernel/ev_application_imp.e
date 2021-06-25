@@ -267,7 +267,7 @@ feature {EV_ANY_I} -- Implementation
 			until
 				Result /= Void
 			loop
-				current_window := ic.item
+				current_window := ic
 				if current_window.has_focus then
 					if current_window.full then
 						if attached {EV_WINDOW_IMP} current_window.implementation as l_window_imp then

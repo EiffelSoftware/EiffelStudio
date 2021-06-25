@@ -1,20 +1,20 @@
 ﻿note
 	description: "[
-		Interface of a multi-platform process launcher(on Win32, .Net and Unix/Linux)
-		Instance of this class is not guaranteed to be thread safe.
-		Usage:
-			1. Use {BASE_PROCESS_FACTORY} to get new {BASE_PROCESS} object.
-			2. Invoke IO redirection features to redirect io to certain devices. By default,
-			   IO of launched process is not redirected.
-			3. Invoke `launch' to launch process.
-			4. You can use `has_exited' to check the status of launched process or use `wait_for_exit'
-			   to wait for launched process.
-			5. To release allocated resources promptly, call `wait_for_exit` (or a version with timeout),
-			   `terminate` (possibly for the whole tree) or `close`.
-		Note: Make sure that launched process has exited before you exit you application.
+			Interface of a multi-platform process launcher(on Win32, .Net and Unix/Linux)
+			Instance of this class is not guaranteed to be thread safe.
+			Usage:
+				1. Use {BASE_PROCESS_FACTORY} to get new {BASE_PROCESS} object.
+				2. Invoke IO redirection features to redirect io to certain devices. By default,
+				   IO of launched process is not redirected.
+				3. Invoke `launch' to launch process.
+				4. You can use `has_exited' to check the status of launched process or use `wait_for_exit'
+				   to wait for launched process.
+				5. To release allocated resources promptly, call `wait_for_exit` (or a version with timeout),
+				   `terminate` (possibly for the whole tree) or `close`.
+			Note: Make sure that launched process has exited before you exit you application.
 		]"
 	performance: "[
-			On windows a pair of calls to `launch` and `wait_for_exit` runs 4.5 times faster
+			On Windows the pair of calls to `launch` and `wait_for_exit` runs 4.5 times faster
 			than a call to `{EXECUTION_ENVIRONMENT}.system.
 		]"
 	status: "See notice at end of class."
@@ -38,7 +38,7 @@ feature {NONE} -- Creation
 		require
 			executable_name_attached: attached executable_name
 			executable_name_not_empty: not executable_name.is_empty
-			arguments_attached: attached argument_list as args implies across args as a all attached a.item end
+			arguments_attached: attached argument_list as args implies ∀ a: args ¦ attached a
 		deferred
 		ensure
 			command_line_not_empty: command_line /= Void and then not command_line.is_empty
@@ -51,7 +51,7 @@ feature {NONE} -- Creation
 	make_with_command_line (cmd_line: READABLE_STRING_GENERAL; a_working_directory: detachable READABLE_STRING_GENERAL)
 			-- Create process object with `cmd_line' as command line in which executable and
 			-- arguments are included and with `a_working_directory' as its working directory.
-			-- Apply Void to `a_working_directory' if no working directory is specified.		
+			-- Apply Void to `a_working_directory' if no working directory is specified.
 		require
 			command_line_not_void: cmd_line /= Void
 			command_line_not_empty: not cmd_line.is_empty
@@ -543,7 +543,7 @@ feature -- Status setting
 			across
 				a_table as t
 			loop
-				if attached t.key as k and then attached t.item as i then
+				if attached @ t.key as k and then attached t as i then
 					l_tbl.force (i.string, k)
 				end
 			end
@@ -573,7 +573,7 @@ feature -- Actions setting
 
 	set_on_exit_handler (handler: like on_exit_handler)
 			-- Set a `handler' which will be called when process exits.
-			-- Set with Void to disable exit handler.			
+			-- Set with Void to disable exit handler.
 		require
 			process_not_running: not is_running
 		do
@@ -595,7 +595,7 @@ feature -- Actions setting
 
 	set_on_fail_launch_handler (handler: like on_fail_launch_handler)
 			-- Set a `handler' which will be called when process launch failed.
-			-- Set with Void to disable fail launch handler.			
+			-- Set with Void to disable fail launch handler.
 		require
 			process_not_running: not is_running
 		do
@@ -620,7 +620,7 @@ feature -- Actions setting
 			-- Only has effect on Windows.
 			-- Note: If process is launched in new process group, then `terminate_tree' can terminate
 			-- whole process tree (including all children processes),
-			-- otherwise, it can only terminate the new process itself.			
+			-- otherwise, it can only terminate the new process itself.
 		require
 			process_not_running: not is_running
 		do
@@ -642,7 +642,7 @@ feature -- Actions setting
 feature {NONE} -- Actions
 
 	on_start
-		-- Agent called when process launched
+			-- Agent called when process launched
 		do
 			if attached on_start_handler as l_handler then
 				l_handler.call
@@ -883,7 +883,7 @@ feature {NONE} -- Initialization
 			-- Are parameters initialized successfully?
 		do
 			Result :=
-			    input_direction = {BASE_REDIRECTION}.no_redirection and
+				input_direction = {BASE_REDIRECTION}.no_redirection and
 				output_direction = {BASE_REDIRECTION}.no_redirection and
 				error_direction = {BASE_REDIRECTION}.no_redirection and
 				attached input_file_name as l_ifn and then l_ifn.is_empty and
@@ -1029,8 +1029,8 @@ feature {NONE} -- Initialization
 		end
 
 note
-	copyright: "Copyright (c) 1984-2017, Eiffel Software and others"
-	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
+	copyright: "Copyright (c) 1984-2021, Eiffel Software and others"
+	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software
 			5949 Hollister Ave., Goleta, CA 93117 USA
@@ -1038,4 +1038,5 @@ note
 			Website http://www.eiffel.com
 			Customer support http://support.eiffel.com
 		]"
+
 end

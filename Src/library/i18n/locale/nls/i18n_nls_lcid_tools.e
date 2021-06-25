@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "Constants and conversion functions for NLS LCIDS"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -16,13 +16,13 @@ create
 
 feature --Access
 
-	is_supported_locale(lcid:INTEGER):BOOLEAN
+	is_supported_locale (lcid: INTEGER): BOOLEAN
 			-- Is the given LCID supported _and_ installed?
 		do
 				-- Possible flags, from winnls.h :
 				--#define LCID_INSTALLED            0x00000001  // installed locale ids
 				--#define LCID_SUPPORTED            0x00000002  // supported locale ids
-			Result := is_valid_locale(lcid, 2)
+			Result := is_valid_locale (lcid, 2)
 		end
 
 	supported_locales: ARRAYED_LIST [I18N_LOCALE_ID]
@@ -30,13 +30,13 @@ feature --Access
 		do
 			create Result.make (locales.count)
 			across locales as l_locale loop
-				if is_supported_locale (l_locale.item.lcid) then
-					Result.extend (lcid_to_locale_id (l_locale.item.lcid))
+				if is_supported_locale (l_locale.lcid) then
+					Result.extend (lcid_to_locale_id (l_locale.lcid))
 				end
 			end
 		end
 
-	lcid_to_locale_id(lcid: INTEGER): I18N_LOCALE_ID
+	lcid_to_locale_id (lcid: INTEGER): I18N_LOCALE_ID
 			-- Only Windows Vista can manage to give you the correct identifier in one query.
 			-- Everyone else needs to take a crash course on how these identifiers are composed:
 			-- Typically we have: ll-RR where ll is a lowercase language code from ISO 639-1 (or 639-2/T)
@@ -88,7 +88,7 @@ feature --Access
 			end
 		end
 
-feature {NONE}  -- LCIDS
+feature {NONE} -- LCIDS
 
 -- Explanation: Windows identifies each locale with a number called an LCID
 -- (actually they designate locale+sort order, but that's what things use in windows-land)
@@ -100,12 +100,12 @@ feature {NONE}  -- LCIDS
 	locales: STRING_TABLE [TUPLE [full_name: STRING_8; lcid: INTEGER]]
 			-- Table indexed by ISO code giving the full name and the Windows LCID.
 
-	scripts: ARRAY[TUPLE[script: STRING_8; lcid:INTEGER]]
+	scripts: ARRAY [TUPLE [script: STRING_8; lcid: INTEGER]]
 
-feature -- Initialisation
+feature {NONE} -- Initialization
 
 	initialize_locales
-			-- populate locales array and scripts array
+			-- Populate locales array and scripts array.
 		do
 			create locales.make_caseless (250)
 			locales.put (["Afrikaans (South Africa)", 0x0436], "af-ZA")
@@ -244,8 +244,8 @@ feature -- Initialisation
 			locales.put (["Malay (Brunei Darussalam)", 0x083e], "ms-BN")
 			locales.put (["Malay (Malaysia)", 0x043e], "ms-MY")
 			locales.put (["Maltese (Malta)", 0x043a], "mt-MT")
-			locales.put (["Norwegian (Bokm�l, Norway)", 0x0414], "nb-NO")
-			locales.put (["Nepali (India)", 0x0000], "ne-IN") --also missing	
+			locales.put (["Norwegian (Bokmål, Norway)", 0x0414], "nb-NO")
+			locales.put (["Nepali (India)", 0x0000], "ne-IN") --also missing
 			locales.put (["Nepali (Nepal)", 0x0461], "ne-NP")
 			locales.put (["Dutch (Belgium)", 0x0813], "nl-BE")
 			locales.put (["Dutch (Netherlands)", 0x0413], "nl-NL")
@@ -317,30 +317,29 @@ feature -- Initialisation
 			locales.put (["Zulu/isiZulu (South Africa)", 0x0435], "zu-ZA")
 
 			scripts := <<
-				["Cyrl", 0x0428],
-				["Latn", 0x042c],
-				["Latn", 0x0443],
-				["Cyrl", 0x0450],
-				["Cans", 0x045d],
-				["Latn", 0x0468],
-				["Latn", 0x081a],
-				["Cyrl", 0x082c],
-				["Cyrl", 0x0843],
-				["Mong", 0x0850],
-				["Latn", 0x085d],
-				["Latn", 0x085f],
-				["Cyrl", 0x0c1a],
-				["Latn", 0x141a],
-				["Latn", 0x181a],
-				["Cyrl", 0x1c1a],
-				["Cyrl", 0x201a]
-				 >>
+					["Cyrl", 0x0428],
+					["Latn", 0x042c],
+					["Latn", 0x0443],
+					["Cyrl", 0x0450],
+					["Cans", 0x045d],
+					["Latn", 0x0468],
+					["Latn", 0x081a],
+					["Cyrl", 0x082c],
+					["Cyrl", 0x0843],
+					["Mong", 0x0850],
+					["Latn", 0x085d],
+					["Latn", 0x085f],
+					["Cyrl", 0x0c1a],
+					["Latn", 0x141a],
+					["Latn", 0x181a],
+					["Cyrl", 0x1c1a],
+					["Cyrl", 0x201a]
+				>>
 		end
 
 feature {NONE} -- C functions
 
-
-	is_valid_locale(lcid:INTEGER; flags:INTEGER):BOOLEAN
+	is_valid_locale (lcid: INTEGER; flags: INTEGER): BOOLEAN
 			-- encapsulation of IsValidLocaleName
 		external
 			"C signature (LCID, DWORD): BOOL use <windows.h>"
@@ -349,12 +348,13 @@ feature {NONE} -- C functions
 		end
 
 invariant
-	locales /= Void
+	attached locales
 
 note
-	library:   "Internationalization library"
-	copyright: "Copyright (c) 1984-2009, Eiffel Software and others"
-	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
+	ca_ignore: "CA032", "CA032: too long feature"
+	library: "Internationalization library"
+	copyright: "Copyright (c) 1984-2021, Eiffel Software and others"
+	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software
 			5949 Hollister Ave., Goleta, CA 93117 USA

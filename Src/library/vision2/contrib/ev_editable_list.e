@@ -1,7 +1,10 @@
 ﻿note
-	description: "[Multi-column lists that allow in-place editing of list row items.  By default ALL%
-		%columns are editable.  Only one single column item is editable at any time and the widget type%
-		%which can be edited must conform to EV_TEXTABLE."
+	description: "[
+			Multi-column lists that allow in-place editing of list row items. 
+			By default ALLcolumns are editable.
+			Only one single column item is editable at any time and 
+			the widget typewhich can be edited must conform to EV_TEXTABLE.
+		]"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 	date: "$Date$"
@@ -33,10 +36,9 @@ feature {NONE} -- Initialization
 			relative_window := a_window
 			default_create
 
-
 			resize_actions.extend (agent resized)
 			column_resized_actions.extend (agent resized (?, 0, 0, 0))
-			pointer_double_press_actions.extend (agent edit_row (?, ?, ?, ?, ?, ?, ?, ?) )
+			pointer_double_press_actions.extend (agent edit_row (?, ?, ?, ?, ?, ?, ?, ?))
 			end_edit_actions.extend (agent on_change_widget_deselected)
 			set_non_empty_column_values (True)
 			set_all_rows_editable
@@ -71,7 +73,7 @@ feature -- Element Change
 			set_row_editable (True, count)
 		end
 
-feature -- Status setting		
+feature -- Status setting
 
 	set_field
 			-- Set field at row index 'widget_row' and column index 'widget_column' with
@@ -210,7 +212,7 @@ feature -- Removal
 			list_item: detachable EV_MULTI_COLUMN_LIST_ROW
 		do
 			list_item := selected_item
-			if list_item /= Void  then
+			if list_item /= Void then
 				prune (list_item)
 			end
 		end
@@ -252,7 +254,7 @@ feature -- Editing
 feature {NONE} -- Status report
 
 	unique_column_values: BOOLEAN
-			-- Should column values be unique for each row?	No by default.	
+			-- Should column values be unique for each row?	No by default.
 
 	empty_column_values: BOOLEAN
 			-- Are edited column values allowed to empty?  No by default.
@@ -295,7 +297,7 @@ feature {NONE} -- Actions
 		do
 			create hide_timer.make_with_interval (25)
 			hide_timer.actions.extend (agent hide_window_on_timer)
-			--internal_dialog.hide
+				--internal_dialog.hide
 		end
 
 	hide_window_on_timer
@@ -360,14 +362,14 @@ feature {NONE} -- Actions
 			across
 				a_container_arg.linear_representation as ic
 			loop
-				button_press_actions := ic.item.pointer_button_press_actions
+				button_press_actions := ic.pointer_button_press_actions
 				if adding then
 					button_press_actions.extend (agent hide_window)
 				else
 					button_press_actions.go_i_th (button_press_actions.count)
 					button_press_actions.remove
 				end
-				if attached {EV_CONTAINER} ic.item as con then
+				if attached {EV_CONTAINER} ic as con then
 					update_agents (con, adding)
 				end
 			end
@@ -384,7 +386,7 @@ feature {NONE} -- Commands
 		do
 			if column_editable (widget_column) and row_editable (widget_row) then
 
-						-- Destroy previous editing dialog
+					-- Destroy previous editing dialog
 				l_internal_dialog := internal_dialog
 				if l_internal_dialog /= Void then
 					l_internal_dialog.destroy
@@ -399,7 +401,7 @@ feature {NONE} -- Commands
 					change_widgets.put (w, widget_column)
 				end
 				widget := w
-						-- Create the parent dialog.
+					-- Create the parent dialog.
 				if attached w then
 					create l_internal_dialog
 					internal_dialog := l_internal_dialog
@@ -410,7 +412,7 @@ feature {NONE} -- Commands
 					l_internal_dialog.set_position (x_offset, y_offset)
 					initialize_observers
 
-							-- Setup the editable widget			
+						-- Setup the editable widget
 					w.key_release_actions.extend (agent on_key_release (?, l_internal_dialog))
 
 					l_saved_text := saved_text
@@ -454,7 +456,7 @@ feature {NONE} -- Commands
 			-- Hide
 		do
 			update_actions
-		--	update_agents (relative_window, False)
+				--	update_agents (relative_window, False)
 		end
 
 feature {NONE} -- Widget
@@ -525,7 +527,7 @@ feature {NONE} -- Access
 			-- Indices of all editable columns in row.
 
 	editable_rows: ARRAYED_LIST [INTEGER]
-			-- Indices of all editable rows in list.			
+			-- Indices of all editable rows in list.
 
 	change_widgets: HASH_TABLE [EV_TEXTABLE, INTEGER]
 			-- List of textable widgets associated by column.  Used to determine
@@ -536,7 +538,7 @@ feature {NONE} -- Implementation
 	initialize_observers
 			--
 		do
-			--update_agents (relative_window, True)
+				--update_agents (relative_window, True)
 		end
 
 	is_valid_text (a_string: READABLE_STRING_GENERAL; c, r: INTEGER): BOOLEAN
@@ -614,8 +616,8 @@ invariant
 	editable_columns_not_void: editable_columns /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2018, Eiffel Software and others"
-	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
+	copyright: "Copyright (c) 1984-2021, Eiffel Software and others"
+	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software
 			5949 Hollister Ave., Goleta, CA 93117 USA

@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
-<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-21-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-21-0 http://www.eiffel.com/developers/xml/configuration-1-21-0.xsd" name="lex" uuid="854682EB-91BD-4DBD-9224-358B3122FBE0" library_target="lex">
+<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-22-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-22-0 http://www.eiffel.com/developers/xml/configuration-1-22-0.xsd" name="lex" uuid="854682EB-91BD-4DBD-9224-358B3122FBE0" library_target="lex">
 	<target name="lex">
 		<note>
 			<eis name="EiffelLex online documentation" protocol="URI" src="$(ISE_DOC_REF)/EiffelLex" tag="parsing, lexical analysis, text"/>
 		</note>
 		<description>Lex library: Lexical analyzer.
-			Copyright (c) 1984-2019, Eiffel Software and others.
+			Copyright (c) 1984-2021, Eiffel Software and others.
 			Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt).</description>
 		<root all_classes="true"/>
 		<file_rule>

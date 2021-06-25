@@ -2,13 +2,13 @@
 	description:
 		"[
 			EV_GRID Text label whose content may be interactively chosen by the user via a list.
-
+			
 			`set_item_strings' may be used to set the list items used in the choice list before the item
 			is activated.
-
+			
 			By default a list containing the strings set from `set_item_strings' is displayed, allowing
 			the user to change the text of `Current' by selecting an item within that list.
-				
+			
 			The default behavior of the activation may be overriden using `activate_actions' or
 			`item_activate_actions' (from EV_GRID).
 		]"
@@ -66,7 +66,7 @@ feature -- Element change
 feature -- Access
 
 	item_strings: detachable INDEXABLE [READABLE_STRING_GENERAL, INTEGER]
-		-- Item strings used to make up combo box list.
+			-- Item strings used to make up combo box list.
 
 	required_width: INTEGER
 			-- Width in pixels required to fully display contents, based
@@ -148,7 +148,7 @@ feature {NONE} -- Implementation
 					j := 1
 					l_selected_text := text
 				loop
-					l_text := c.item
+					l_text := c
 					create l_item.make_with_text (l_text)
 					l_choice_list.set_item (1, j, l_item)
 					j := j + 1
@@ -208,7 +208,7 @@ feature {NONE} -- Implementation
 		end
 
 	has_user_selected_item: BOOLEAN
-		-- Did the user select an entry in the list?
+			-- Did the user select an entry in the list?
 
 	activate_action (a_popup: EV_POPUP_WINDOW)
 			-- `Current' has been requested to be updated via `a_popup'.
@@ -292,7 +292,7 @@ feature {NONE} -- Implementation
 				-- 2) If the top hand side is offscreen on the top, calculate how many pixels we need to
 				--    shift to the bottom to show the content without cropping the content of `choice_list'.
 			l_y_offset := (l_rect.y - l_y_coord).max (0)
-				-- 3) Adjust `l_y_coord' to take into account the potential cropping.			
+				-- 3) Adjust `l_y_coord' to take into account the potential cropping.
 			l_y_coord := l_y_coord + l_y_offset
 
 				-- Initially the width and height of `choice_list' match the size of the item in the grid
@@ -429,7 +429,7 @@ feature {NONE} -- Implementation
 					initial_position := Void
 
 					l_item := l_choice_list.item_at_virtual_position (l_choice_list.virtual_x_position + a_x,
-						l_choice_list.virtual_y_position + a_y)
+							l_choice_list.virtual_y_position + a_y)
 					if l_item /= Void then
 						l_list := l_choice_list.selected_items
 						if not l_list.is_empty and then l_list.first /= l_item then
@@ -453,7 +453,7 @@ feature {NONE} -- Implementation
 			if a_button = 1 then
 				if attached choice_list as l_choice_list then
 					l_item := l_choice_list.item_at_virtual_position (l_choice_list.virtual_x_position + a_x,
-						l_choice_list.virtual_y_position + a_y)
+							l_choice_list.virtual_y_position + a_y)
 					if l_item /= Void then
 						l_list := l_choice_list.selected_items
 						if not l_list.is_empty and then l_list.first /= l_item then
@@ -491,7 +491,7 @@ feature {NONE} -- Implementation
 			when {EV_KEY_CONSTANTS}.key_escape then
 				l_deactivate := True
 			else
-				-- Do nothing
+					-- Do nothing
 			end
 			if l_deactivate and then attached parent as l_parent then
 				if l_propagate_tab_key then
@@ -550,8 +550,8 @@ invariant
 	choice_list_parented_during_activation: attached choice_list as l_choice_list implies l_choice_list.parent /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2016, Eiffel Software and others"
-	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
+	copyright: "Copyright (c) 1984-2021, Eiffel Software and others"
+	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software
 			5949 Hollister Ave., Goleta, CA 93117 USA
@@ -559,4 +559,5 @@ note
 			Website http://www.eiffel.com
 			Customer support http://support.eiffel.com
 		]"
+
 end

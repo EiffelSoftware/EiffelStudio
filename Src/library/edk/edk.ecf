@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
-<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-21-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-21-0 http://www.eiffel.com/developers/xml/configuration-1-21-0.xsd" name="edk" uuid="B92E14E2-C92D-43FE-998E-33EF854677E1" library_target="edk">
+<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-22-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-22-0 http://www.eiffel.com/developers/xml/configuration-1-22-0.xsd" name="edk" uuid="B92E14E2-C92D-43FE-998E-33EF854677E1" library_target="edk">
 	<target name="edk">
 		<description>Eiffel Drawing Kit (EDK): Multiplatform drawing kit.
-		      Copyright (c) 1984-2019, Eiffel Software and others.
+		      Copyright (c) 1984-2021, Eiffel Software and others.
 		      Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt).</description>
 		<root all_classes="true"/>
 		<file_rule>

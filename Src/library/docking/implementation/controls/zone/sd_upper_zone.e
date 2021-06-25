@@ -70,22 +70,22 @@ feature -- Command
 			docking_manager.command.lock_update (Current, True)
 			if is_minimized then
 				if attached {SD_MIDDLE_CONTAINER} parent as l_parent then
-					-- If l_parent is not a EV_BOX here (is a split area), that means
-					-- , SD_MUTLI_DOCK_AREA.update_middle_container have not been call when it should been called before.
+						-- If l_parent is not a EV_BOX here (is a split area), that means
+						-- , SD_MUTLI_DOCK_AREA.update_middle_container have not been call when it should been called before.
 					if attached {EV_BOX} l_parent as l_box then
 						if
 							(attached l_parent.first as l_parent_first and attached l_parent.second as l_parent_second) and then
 							(not l_box.is_item_expanded (l_parent_first) and not l_box.is_item_expanded (l_parent_second))
 						then
-							-- We only need to expand ourself
+								-- We only need to expand ourself
 							l_box.enable_item_expand (Current)
 						else
-							-- Only Current is minimized, we need to change parent
+								-- Only Current is minimized, we need to change parent
 							l_parent_parent := l_parent.parent
 							if l_parent_parent = Void then
 								check l_parent_parent_attached: False end
 							else
-								-- Implied by `l_parent' is existing in main development
+									-- Implied by `l_parent' is existing in main development
 								save_parent_split_position (l_parent_parent)
 								if l_parent.first /= Current then
 									l_other := l_parent.first
@@ -171,24 +171,24 @@ feature -- Command
 						l_upper_spliter.first = Current
 						or (attached {EV_CONTAINER} l_upper_spliter.first as l_container and then l_container.has_recursive (Current))
 					then
-						-- Current from first, we expand
+							-- Current from first, we expand
 						if l_upper_spliter.split_position + a_size_to_expand <= l_upper_spliter.maximum_split_position then
 							l_upper_spliter.set_split_position (l_upper_spliter.split_position + a_size_to_expand)
 						else
 							l_expanded := l_upper_spliter.maximum_split_position - l_upper_spliter.split_position
 							l_upper_spliter.set_split_position (l_upper_spliter.maximum_split_position)
-							-- Go on recursion
+								-- Go on recursion
 							expand_parent_spliter (l_upper_spliter, a_size_to_expand - l_expanded)
 							l_expand_stack.extend ([a_spliter, True])
 						end
 					else
-						-- Current from second, we shrink, as a result actually we expand for Current
+							-- Current from second, we shrink, as a result actually we expand for Current
 						if l_upper_spliter.split_position - a_size_to_expand >= l_upper_spliter.minimum_split_position then
 							l_upper_spliter.set_split_position (l_upper_spliter.split_position - a_size_to_expand)
 						else
 							l_expanded := l_upper_spliter.split_position - l_upper_spliter.minimum_split_position
 							l_upper_spliter.set_split_position (l_upper_spliter.minimum_split_position)
-							-- Go on recursion
+								-- Go on recursion
 							expand_parent_spliter (l_upper_spliter, a_size_to_expand - l_expanded)
 							l_expand_stack.extend ([a_spliter, False])
 						end
@@ -257,7 +257,7 @@ feature -- Command
 					if l_parent_parent = Void then
 						check l_parent_parent_attached: False end
 					else
-						-- Implied by Current is displaying in main window
+							-- Implied by Current is displaying in main window
 						save_parent_split_position (l_parent_parent)
 						l_last_normal_size := l_parent.split_position
 						l_parent_parent.prune (l_parent)
@@ -308,7 +308,7 @@ feature -- Command
 				show_notebook_contents (False)
 				l_notebook := internal_notebook
 				if l_notebook /= Void then
-					-- Implied by precondition `set'
+						-- Implied by precondition `set'
 					l_notebook.set_show_minimized (is_minimized)
 				else
 					check internal_notebook_attached: False end
@@ -319,7 +319,7 @@ feature -- Command
 					check not_possible: False end
 				end
 			else
-				-- Current is in top level
+					-- Current is in top level
 			end
 			docking_manager.command.resize (True)
 			if l_other /= Void then
@@ -431,9 +431,9 @@ feature {NONE} -- Implementation
 					l_notebook.contents as c
 				loop
 					if a_is_show then
-						c.item.user_widget.show
+						c.user_widget.show
 					else
-						c.item.user_widget.hide
+						c.user_widget.hide
 					end
 				end
 			else
@@ -510,10 +510,10 @@ feature {NONE} -- Implementation
 			end
 		end
 
-;note
-	library:	"SmartDocking: Library of reusable components for Eiffel."
-	copyright:	"Copyright (c) 1984-2017, Eiffel Software and others"
-	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
+note
+	library: "SmartDocking: Library of reusable components for Eiffel."
+	copyright: "Copyright (c) 1984-2021, Eiffel Software and others"
+	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software
 			5949 Hollister Ave., Goleta, CA 93117 USA

@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
-<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-21-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-21-0 http://www.eiffel.com/developers/xml/configuration-1-21-0.xsd" name="mysql" uuid="42078327-FFEB-4A2A-94C6-05166F2DDFCD" library_target="mysql">
+<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-22-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-22-0 http://www.eiffel.com/developers/xml/configuration-1-22-0.xsd" name="mysql" uuid="42078327-FFEB-4A2A-94C6-05166F2DDFCD" library_target="mysql">
 	<description>MySQL access library for EiffelStore.</description>
 	<target name="mysql">
 		<description>MySQL access library for EiffelStore.
-			Copyright (c) 2008-2019, ITPassion Ltd, EiffelSoftware and others
+			Copyright (c) 2008-2021, ITPassion Ltd, EiffelSoftware and others
 			GNU Public License v3 (see http://www.gnu.org/licenses/licenses.html#GPL).
 
 			Notes:

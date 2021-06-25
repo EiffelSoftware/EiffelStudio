@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
-<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-21-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-21-0 http://www.eiffel.com/developers/xml/configuration-1-21-0.xsd" name="patterns-tests" uuid="5C2D2C7D-6D3E-4812-8A56-78AF97C5AF25" library_target="patterns-tests">
+<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-22-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-22-0 http://www.eiffel.com/developers/xml/configuration-1-22-0.xsd" name="patterns-tests" uuid="5C2D2C7D-6D3E-4812-8A56-78AF97C5AF25" library_target="patterns-tests">
 	<target name="patterns-tests">
 		<root class="BRIDGE_TEST"/>
 		<file_rule>

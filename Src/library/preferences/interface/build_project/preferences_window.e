@@ -141,7 +141,7 @@ feature {NONE} -- Events
 					grid.selected_rows.first.set_height (l_font_pref.value.height.max (default_row_height))
 				end
 
-				if attached  {EV_GRID_LABEL_ITEM} grid.selected_rows.first.item (3) as l_default_item then
+				if attached {EV_GRID_LABEL_ITEM} grid.selected_rows.first.item (3) as l_default_item then
 					if a_pref.is_default_value then
 						l_default_item.set_text (p_default_value)
 						l_default_item.set_font (default_font)
@@ -260,9 +260,7 @@ feature {NONE} -- Events
 			then
 				if attached {EV_GRID_CHOICE_ITEM} a_item.row.item (4) as l_combo_widget then
 					check
-						a_item.column.index = 1 or
-						a_item.column.index = 2 or
-						a_item.column.index = 3
+						(<<1, 2, 3>>).has (a_item.column.index)
 					end
 					l_combo_widget.set_text ((not l_bool_preference.value).out)
 					l_combo_widget.deactivate_actions.call
@@ -339,8 +337,8 @@ feature {NONE} -- Implementation
 	fill_list
 			-- Fill left tree.
 		local
- 			it,
- 			l_parent: EV_TREE_ITEM
+			it,
+			l_parent: EV_TREE_ITEM
 			l_pref_hash: STRING_TABLE [EV_TREE_ITEM]
 			l_known_pref_hash: STRING_TABLE [PREFERENCE]
 			l_pref_name,
@@ -385,7 +383,7 @@ feature {NONE} -- Implementation
 					l_pref_name := l_sorted_preferences.item
 					l_pref_hash.put (it, l_pref_name)
 					if l_pref_name.has ('.') then
-						  -- Build parent nodes	as this preference is of the form 'a.b.c' so we must build 'a' and 'b'.
+							-- Build parent nodes	as this preference is of the form 'a.b.c' so we must build 'a' and 'b'.
 						l_pref_parent_full_name := l_pref_name.substring (1, l_pref_name.last_index_of ('.', l_pref_name.count) - 1)
 						if l_pref_parent_full_name.has ('.') then
 							from
@@ -489,7 +487,7 @@ feature {NONE} -- Implementation
 				description_text.set_text ("")
 				curr_row := 1
 			loop
-				l_pref_name := name_cursor.item
+				l_pref_name := name_cursor
 				if should_display_preference (l_pref_name, a_pref_name) and l_pref_name.count > a_pref_name.count then
 					l_preference := preferences.preferences.item (l_pref_name)
 
@@ -570,7 +568,7 @@ feature {NONE} -- Implementation
 			from
 				curr_row := 1
 			loop
-				l_preference := p.item
+				l_preference := p
 				if attached {EV_GRID_LABEL_ITEM} grid.row (curr_row).item (3) as l_grid_default_item then
 					if l_preference.is_default_value then
 						l_grid_default_item.set_text (p_default_value)
@@ -817,16 +815,16 @@ feature {NONE} -- Private attributes
 		end
 
 	grid: EV_GRID
-		-- Grid	
+			-- Grid
 
 	column_border_space: INTEGER = 3
-		-- Padding space for column content
+			-- Padding space for column content
 
 	default_row_height: INTEGER
-		-- Default row height
+			-- Default row height
 
 	display_update_agent: PROCEDURE [PREFERENCE]
-			-- Agent to be called when preference is changed outside	
+			-- Agent to be called when preference is changed outside
 
 	resized_columns_list: ARRAY [BOOLEAN]
 			-- List of boolean s for each column indicating if it has been user resizedat all.
@@ -845,8 +843,8 @@ invariant
 
 note
 	ca_ignore: "CA011", "CA011: too many arguments"
-	copyright:	"Copyright (c) 1984-2020, Eiffel Software and others"
-	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
+	copyright: "Copyright (c) 1984-2021, Eiffel Software and others"
+	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software
 			5949 Hollister Ave., Goleta, CA 93117 USA

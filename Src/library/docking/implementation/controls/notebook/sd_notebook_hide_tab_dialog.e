@@ -17,7 +17,7 @@ inherit
 create
 	make
 
-feature {NONE}  -- Initlization
+feature {NONE} -- Initlization
 
 	make (a_note_book: SD_NOTEBOOK)
 			-- Creation method
@@ -133,7 +133,7 @@ feature {NONE} -- Implementation agents
 				internal_tool_bar.items as c
 			loop
 				if
-					attached {SD_TOOL_BAR_FONT_BUTTON} c.item as l_toggle_button and then
+					attached {SD_TOOL_BAR_FONT_BUTTON} c as l_toggle_button and then
 					l_toggle_button.is_selected
 				then
 					Result := l_toggle_button
@@ -170,7 +170,7 @@ feature {NONE} -- Implementation agents
 			select_content (l_content)
 			if not is_destroyed then
 				hide
-				-- It will be destroyed by focus out actions.
+					-- It will be destroyed by focus out actions.
 			end
 		ensure
 			not_displayed: not is_displayed
@@ -186,8 +186,8 @@ feature {NONE} -- Implementation agents
 			if attached text_finder as l_text_finder then
 				internal_tool_bar.wipe_out
 
-				-- For Windows, if `internal_tool_bar' items changed, drawing will not be cleared by {EV_DRAWING_AREA}, so clear it here
-				-- For GTK platforms, it works fine without following clearing codes. Vision2 EV_DRAWING_AREA Windows implementation bug ?
+					-- For Windows, if `internal_tool_bar' items changed, drawing will not be cleared by {EV_DRAWING_AREA}, so clear it here
+					-- For GTK platforms, it works fine without following clearing codes. Vision2 EV_DRAWING_AREA Windows implementation bug ?
 				internal_tool_bar.clear_rectangle (0, 0, internal_tool_bar.width, internal_tool_bar.height)
 
 				if internal_text_box.text.is_equal ("") then
@@ -331,7 +331,7 @@ feature {NONE} -- Implementation agents
 				if a_key.is_alpha or a_key.is_number or a_key.is_numpad then
 					l_text := a_key.text
 					if a_key.is_numpad then
-						-- Remomve "NumPad " from string
+							-- Remomve "NumPad " from string
 						l_text.remove_substring (1, 7)
 					end
 					disable_select_all_item
@@ -371,22 +371,22 @@ feature {NONE} -- Implementation functions
 			l_max_height := ((create {EV_SCREEN}).height * max_screen_height_proportion).ceiling
 			internal_tool_bar.compute_minimum_size
 			internal_scroll_area.set_item_height (internal_tool_bar.minimum_height)
-			if minimum_height + internal_tool_bar.minimum_height  <= l_max_height then
+			if minimum_height + internal_tool_bar.minimum_height <= l_max_height then
 				set_height (minimum_height + internal_tool_bar.minimum_height)
 				internal_scroll_area.hide_vertical_scroll_bar
 			else
 				l_items := internal_tool_bar.items
 				check at_least_one: not l_items.is_empty end
 				l_item_height := l_items.first.height
-				-- We should calculate a precise maximum height for the last item showing.
-				-- See bug#12618
+					-- We should calculate a precise maximum height for the last item showing.
+					-- See bug#12618
 				l_item_count := (l_max_height - minimum_height) // l_item_height
 				set_height (l_item_count * l_item_height + minimum_height)
 
 				internal_scroll_area.show_vertical_scroll_bar
 			end
 
-			-- FIXIT: How to get border width of a window? Why uncommnet follow 3 line, exceptions happen?
+				-- FIXIT: How to get border width of a window? Why uncommnet follow 3 line, exceptions happen?
 --			create l_popup_window
 --			l_popup_window.enable_border
 			if not is_destroyed then
@@ -431,9 +431,9 @@ feature {NONE} -- Implementation functions
 
 			items_and_tabs.extend ([l_tab_indicator, a_tab])
 			l_tab_indicator.pointer_button_press_actions.extend
-					(agent (a_x, a_y, a_button: INTEGER_32; a_x_tilt, a_y_tilt, a_pressure: REAL_64; a_screen_x, a_screen_y: INTEGER_32; a_count: INTEGER_32)
-						do on_label_selected (a_count) end
-						(?, ?, ?, ?, ?, ?, ?, ?, items_and_tabs.count))
+				(agent (a_x, a_y, a_button: INTEGER_32; a_x_tilt, a_y_tilt, a_pressure: REAL_64; a_screen_x, a_screen_y: INTEGER_32; a_count: INTEGER_32)
+					do on_label_selected (a_count) end
+					(?, ?, ?, ?, ?, ?, ?, ?, items_and_tabs.count))
 		ensure
 --			extended: old internal_label_box.count = internal_label_box.count - 1
 		end
@@ -448,8 +448,8 @@ feature {NONE} -- Implementation functions
 			until
 				attached Result
 			loop
-				if c.item.tool_bar_item = a_label then
-					Result := c.item.notebook_tab
+				if c.tool_bar_item = a_label then
+					Result := c.notebook_tab
 				end
 			end
 		end
@@ -497,7 +497,7 @@ feature {NONE} -- Implementation functions
 			created: text_finder /= Void
 		end
 
-	widget_has_x_y (a_widget: EV_WIDGET;  a_screen_x, a_screen_y: INTEGER): BOOLEAN
+	widget_has_x_y (a_widget: EV_WIDGET; a_screen_x, a_screen_y: INTEGER): BOOLEAN
 			-- If `a_widget' has `a_screen_x', `a_screen_y'?
 		require
 			a_widget_not_void: a_widget /= Void
@@ -514,10 +514,10 @@ feature {NONE} -- Implementation functions
 			internal_notebook.on_content_selected (a_content)
 		end
 
-feature {NONE}  --Implementation attributes.
+feature {NONE} --Implementation attributes.
 
 	top_box: EV_BOX
-		-- Top level box
+			-- Top level box
 
 	internal_scroll_area: EV_SCROLLABLE_AREA
 			-- Scrollable area which contain `internal_vertical_box'
@@ -553,12 +553,12 @@ invariant
 	internal_text_box_not_void: internal_text_box /= Void
 	internal_label_box_not_void: internal_tool_bar /= Void
 	items_and_tabs_not_void: items_and_tabs /= Void
-	tool_bar_font_buttons: across internal_tool_bar.items as l_item all attached {SD_TOOL_BAR_FONT_BUTTON} l_item.item end
+	tool_bar_font_buttons: ∀ i: internal_tool_bar.items ¦ attached {SD_TOOL_BAR_FONT_BUTTON} i
 
 note
-	library:	"SmartDocking: Library of reusable components for Eiffel."
-	copyright:	"Copyright (c) 1984-2017, Eiffel Software and others"
-	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
+	library: "SmartDocking: Library of reusable components for Eiffel."
+	copyright: "Copyright (c) 1984-2021, Eiffel Software and others"
+	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software
 			5949 Hollister Ave., Goleta, CA 93117 USA

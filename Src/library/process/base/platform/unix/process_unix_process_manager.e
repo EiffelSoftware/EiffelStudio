@@ -127,7 +127,7 @@ feature -- Status report
 		end
 
 	is_status_available: BOOLEAN
-			-- Is process status available when `wait_for_process' is called last time?	
+			-- Is process status available when `wait_for_process' is called last time?
 
 	is_terminated_by_signal: BOOLEAN
 			-- Is process terminated by a signal?
@@ -147,7 +147,7 @@ feature -- Setting
 				across
 					argument_list as argument
 				loop
-					l_arguments.extend (argument.item.twin)
+					l_arguments.extend (argument.twin)
 				end
 			end
 			arguments := l_arguments
@@ -224,8 +224,8 @@ feature {BASE_PROCESS_IMP} -- Process management
 				status := l_status
 				if
 					is_status_available and then
-				  	(terminate_flag_from_status (status) or signaled_flag_from_status (status))
-				 then
+					(terminate_flag_from_status (status) or signaled_flag_from_status (status))
+				then
 					set_is_executing (False)
 				else
 					set_is_executing (True)
@@ -257,58 +257,58 @@ feature {BASE_PROCESS_IMP} -- Process management
 			-- new process will inherit all environment variables from its parent process.
 			-- If `a_new_process_group' is True, launch process in a new process group.
 			-- Check `is_last_process_spawn_successful' after to make sure process has been spawned successfully.
-        local
-            ee: EXECUTION_ENVIRONMENT
-            cur_dir: detachable PATH
-            l_debug_state: like debug_state
-            l_working_directory: like working_directory
-            l_arguments: like arguments_for_exec
-        do
-            l_arguments := built_argument_list
-            arguments_for_exec := l_arguments
-            open_files_and_pipes
-            create ee
-            l_working_directory := working_directory
-            if l_working_directory /= Void then
-                cur_dir := ee.current_working_path
-                ee.change_working_path (l_working_directory)
-            end
-            l_debug_state := debug_state
-            disable_debug
+		local
+			ee: EXECUTION_ENVIRONMENT
+			cur_dir: detachable PATH
+			l_debug_state: like debug_state
+			l_working_directory: like working_directory
+			l_arguments: like arguments_for_exec
+		do
+			l_arguments := built_argument_list
+			arguments_for_exec := l_arguments
+			open_files_and_pipes
+			create ee
+			l_working_directory := working_directory
+			if l_working_directory /= Void then
+				cur_dir := ee.current_working_path
+				ee.change_working_path (l_working_directory)
+			end
+			l_debug_state := debug_state
+			disable_debug
 
-            process_id := fork_process
-            inspect process_id
-            when -1 then --| Error
-                set_debug_state (l_debug_state)
-                -- Error ... no fork allowed
-                if cur_dir /= Void then
-                    ee.change_working_path (cur_dir)
-                end
-            when 0 then --| Child process
-                collection_off
-                if a_new_process_group then
-                    new_process_group
-                    if is_control_terminal_enabled then
-                        attach_terminals (process_id)
-                    end
-                end
-                setup_child_process_files
-                exec_process (program_file_name, l_arguments, close_nonstandard_files, environment_table_as_pointer (envs))
-            else --| Parent process
+			process_id := fork_process
+			inspect process_id
+			when -1 then --| Error
 				set_debug_state (l_debug_state)
-                setup_parent_process_files
-                arguments_for_exec := Void
-                set_is_executing (True)
-                if cur_dir /= Void then
-                    ee.change_working_path (cur_dir)
-                end
-            end
-        rescue
-            if process_id = 0 then
-                ;(create {EXCEPTIONS}).die (1)
-            end
+					-- Error ... no fork allowed
+				if cur_dir /= Void then
+					ee.change_working_path (cur_dir)
+				end
+			when 0 then --| Child process
+				collection_off
+				if a_new_process_group then
+					new_process_group
+					if is_control_terminal_enabled then
+						attach_terminals (process_id)
+					end
+				end
+				setup_child_process_files
+				exec_process (program_file_name, l_arguments, close_nonstandard_files, environment_table_as_pointer (envs))
+			else --| Parent process
+				set_debug_state (l_debug_state)
+				setup_parent_process_files
+				arguments_for_exec := Void
+				set_is_executing (True)
+				if cur_dir /= Void then
+					ee.change_working_path (cur_dir)
+				end
+			end
+		rescue
+			if process_id = 0 then
+				; (create {EXCEPTIONS}).die (1)
+			end
 			set_debug_state (l_debug_state)
-        end
+		end
 
 	terminate_hard (is_tree: BOOLEAN)
 			-- Send a kill signal (SIGKILL) to process(es).
@@ -316,7 +316,7 @@ feature {BASE_PROCESS_IMP} -- Process management
 			-- otherwise only send signal to current launched process.
 		do
 			if is_tree then
-				unix_terminate_hard (-process_id)
+				unix_terminate_hard (- process_id)
 			else
 				unix_terminate_hard (process_id)
 			end
@@ -416,61 +416,61 @@ feature {BASE_PROCESS_IMP} -- Process management
 
 feature {NONE} -- Properties
 
-	program_file_name: READABLE_STRING_GENERAL;
+	program_file_name: READABLE_STRING_GENERAL
 			-- Name of file containing program which will be
 			-- executed when process is spawned
 
-	arguments: detachable ARRAYED_LIST [READABLE_STRING_GENERAL];
+	arguments: detachable ARRAYED_LIST [READABLE_STRING_GENERAL]
 			-- Arguments to passed to process when it is spawned,
 			-- not including argument 0 (which is conventionally
 			-- the name of the program).  If Void or if count
 			-- is zero, then no arguments are passed
 
-	close_nonstandard_files: BOOLEAN;
+	close_nonstandard_files: BOOLEAN
 			-- Should nonstandard files (files other than
 			-- standard input, standard output and standard
 			-- error) be closed in the spawned process?
 
-	input_file_name: detachable READABLE_STRING_GENERAL;
+	input_file_name: detachable READABLE_STRING_GENERAL
 			-- Name of file to be used as standard input in
 			-- spawned process if `input_descriptor' is not a
 			-- valid descriptor and `input_piped' is false.
 			-- A Void value leaves standard input same as
 			-- parent's and an empty string closes standard input
 
-	output_file_name: detachable READABLE_STRING_GENERAL;
+	output_file_name: detachable READABLE_STRING_GENERAL
 			-- Name of file to be used as standard output in
 			-- spawned process if `output_descriptor' is not a
 			-- valid descriptor and `output_piped' is false.
 			-- A Void value leaves standard output same as
 			-- parent's and an empty string closes standard output
 
-	error_file_name: detachable READABLE_STRING_GENERAL;
+	error_file_name: detachable READABLE_STRING_GENERAL
 			-- Name of file to be used as standard error in
 			-- spawned process if `error_descriptor' is not a
 			-- valid descriptor and `error_piped' is false.
 			-- A Void value leaves standard error same as
 			-- parent's and an empty string closes standard error
 
-	input_piped: BOOLEAN;
+	input_piped: BOOLEAN
 			-- Should standard input for spawned process
 			-- come from a pipe connected to parent,
 			-- instead of from a file descriptor or named file?
 
-	output_piped: BOOLEAN;
+	output_piped: BOOLEAN
 			-- Should standard output for spawned process go to a
 			-- pipe connected to parent, instead of to a
 			-- file descriptor or named file?
 
-	error_piped: BOOLEAN;
+	error_piped: BOOLEAN
 			-- Should standard error for spawned process go to a
 			-- pipe connected to parent, instead of to a
 			-- file descriptor or named file?
 
-	error_same_as_output: BOOLEAN;
+	error_same_as_output: BOOLEAN
 			-- Should standard error for spawned process be
 			-- the same as standard output (i.e., identical
-			-- file descriptor)?		
+			-- file descriptor)?
 
 feature {NONE} -- Implementation
 
@@ -489,7 +489,7 @@ feature {NONE} -- Implementation
 				from
 					k := 2
 				loop
-					Result.put (argument.item, k)
+					Result.put (argument, k)
 					k := k + 1
 				end
 			else
@@ -646,7 +646,7 @@ feature {NONE} -- Access
 				across
 					a_envs as c
 				loop
-					if attached c.key and then attached c.item then
+					if attached @ c.key and then attached c then
 						nb := nb + 1
 					end
 				end
@@ -657,8 +657,8 @@ feature {NONE} -- Access
 					a_envs as c
 				loop
 					if
-						attached c.key as l_key and then
-						attached c.item as l_value
+						attached @ c.key as l_key and then
+						attached c as l_value
 					then
 						create l_str.make (l_key.count + l_value.count + 1)
 						l_str.append_string_general (l_key)
@@ -750,8 +750,8 @@ invariant
 	valid_stderr_descriptor: valid_file_descriptor (Stderr_descriptor)
 
 note
-	copyright: "Copyright (c) 1984-2019, Eiffel Software and others"
-	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
+	copyright: "Copyright (c) 1984-2021, Eiffel Software and others"
+	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software
 			5949 Hollister Ave., Goleta, CA 93117 USA

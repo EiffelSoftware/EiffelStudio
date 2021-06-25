@@ -1,7 +1,5 @@
-note
-	description: "[
-			Iterator pattern for XML node objects.
-		]"
+﻿note
+	description: "Iterator pattern for XML node objects."
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -16,11 +14,7 @@ feature {NONE} -- Processing
 	process_nodes (a_nodes: ITERABLE [XML_NODE])
 			-- Process list of nodes `a_nodes'.
 		do
-			across
-				a_nodes as c
-			loop
-				c.item.process (Current)
-			end
+			⟳ n: a_nodes ¦ n.process (Current) ⟲
 		end
 
 	process_attribute_nodes (a_nodes: ITERABLE [XML_NODE])
@@ -29,7 +23,7 @@ feature {NONE} -- Processing
 			across
 				a_nodes as c
 			loop
-				if attached {XML_ATTRIBUTE} c.item as att then
+				if attached {XML_ATTRIBUTE} c as att then
 					att.process (Current)
 				end
 			end
@@ -41,8 +35,8 @@ feature {NONE} -- Processing
 			across
 				a_nodes as c
 			loop
-				if not attached {XML_ATTRIBUTE} c.item then
-					c.item.process (Current)
+				if not attached {XML_ATTRIBUTE} c then
+					c.process (Current)
 				end
 			end
 		end
@@ -64,7 +58,7 @@ feature -- Processing
 			-- Process xml declaration `a_decl'
 		do
 		end
-		
+
 	process_processing_instruction (a_pi: XML_PROCESSING_INSTRUCTION)
 			-- Process processing instruction `a_pi'.
 		do
@@ -93,8 +87,8 @@ feature -- Processing
 		end
 
 note
-	copyright: "Copyright (c) 1984-2012, Eiffel Software and others"
-	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
+	copyright: "Copyright (c) 1984-2021, Eiffel Software and others"
+	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software
 			5949 Hollister Ave., Goleta, CA 93117 USA
@@ -102,4 +96,5 @@ note
 			Website http://www.eiffel.com
 			Customer support http://support.eiffel.com
 		]"
+
 end

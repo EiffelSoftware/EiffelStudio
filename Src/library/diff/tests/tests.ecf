@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
-<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-21-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-21-0 http://www.eiffel.com/developers/xml/configuration-1-21-0.xsd" name="diff-tests" uuid="1CD283F9-DEC1-43BB-BCFD-03B200B254AB" library_target="diff-tests">
+<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-22-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-22-0 http://www.eiffel.com/developers/xml/configuration-1-22-0.xsd" name="diff-tests" uuid="1CD283F9-DEC1-43BB-BCFD-03B200B254AB" library_target="diff-tests">
 	<description>Unit-tests for the Diff library.</description>
 	<target name="diff-tests">
 		<root class="ANY" feature="default_create"/>

@@ -15,7 +15,7 @@ feature -- Status report
 			Result implies value_as_list_of_text.has (s)
 		end
 
-feature -- Access	
+feature -- Access
 
 	selected_value_as_text: detachable STRING_32
 		deferred
@@ -61,8 +61,8 @@ feature -- Modification
 			across
 				value_as_list_of_text as v
 			loop
-				if v.item.same_string (s) then
-					set_selected_index (v.target_index)
+				if v.same_string (s) then
+					set_selected_index (@ v.target_index)
 				end
 			end
 		ensure then
@@ -72,7 +72,7 @@ feature -- Modification
 note
 	date: "$Date$"
 	revision: "$Revision$"
-	copyright: "Copyright (c) 1984-2019, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2021, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software
@@ -81,4 +81,5 @@ note
 			Website http://www.eiffel.com
 			Customer support http://support.eiffel.com
 		]"
+
 end

@@ -1,6 +1,7 @@
 ﻿note
 	description: "Tests for bitmaps"
 	author: "Daniel Furrer <daniel.furrer@gmail.com>"
+	revised_by: "Alexander Kogtenkov"
 	date: "$Date$"
 	revision: "$Revision$"
 	testing: "type/manual"
@@ -18,9 +19,7 @@ feature -- Test routines
 		note
 			testing: "execution/isolated"
 		do
-			across bitmaps as l_bitmap loop
-				save_one_bitmap (l_bitmap.item)
-			end
+			⟳ b: bitmaps ¦ save_one_bitmap (b) ⟲
 		end
 
 feature {NONE} -- Implementation
@@ -105,7 +104,7 @@ feature {NONE} -- Constants
 		end
 
 note
-	copyright: "Copyright (c) 1984-2018, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2021, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software
@@ -114,4 +113,5 @@ note
 			Website http://www.eiffel.com
 			Customer support http://support.eiffel.com
 		]"
+
 end

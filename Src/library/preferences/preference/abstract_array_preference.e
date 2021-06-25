@@ -13,7 +13,7 @@ inherit
 feature {PREFERENCE_EXPORTER} -- Access
 
 	text_value: STRING_32
-			-- String representation of `value'.				
+			-- String representation of `value'.
 		local
 			index: INTEGER
 		do
@@ -44,7 +44,7 @@ feature {PREFERENCE_EXPORTER} -- Access
 			end
 		end
 
-feature -- Access		
+feature -- Access
 
 	string_type: STRING
 			-- String description of this preference type.
@@ -53,16 +53,12 @@ feature -- Access
 
 	value_as_list_of_text: LIST [STRING_32]
 		local
-			l_value: like value
+			v: like value
 		do
-			l_value := value
-			create {ARRAYED_LIST [STRING_32]} Result.make (l_value.count)
+			v := value
+			create {ARRAYED_LIST [STRING_32]} Result.make (v.count)
 			Result.compare_objects
-			across
-				l_value as c
-			loop
-				Result.force (c.item.to_string_32)
-			end
+			⟳ s: v ¦ Result.force (s.to_string_32) ⟲
 		end
 
 	selected_value: detachable G
@@ -110,7 +106,7 @@ feature -- Status report
 			-- Is this preference a single choice or the full list?
 
 	valid_value_string (a_string: READABLE_STRING_GENERAL): BOOLEAN
-			-- Is `a_string' valid for this preference type to convert into a value?		
+			-- Is `a_string' valid for this preference type to convert into a value?
 		do
 			Result := True
 		end
@@ -137,7 +133,7 @@ feature -- Formatting
 	escaped_string (s: STRING_32): STRING_32
 			-- Escaped string `s' to avoid issue with `item_separator' (i.e  ';')
 		local
-			i,n: INTEGER
+			i, n: INTEGER
 			c: CHARACTER_32
 			l_escaped_characters: like escaped_characters
 		do
@@ -160,7 +156,7 @@ feature -- Formatting
 
 	unescaped_string (s: STRING_32): STRING_32
 		local
-			i,n: INTEGER
+			i, n: INTEGER
 			c: CHARACTER_32
 		do
 			from
@@ -212,7 +208,7 @@ feature {NONE} -- Implementation
 			until
 				i > n
 			loop
-				c := s[i]
+				c := s [i]
 				if c = escape_character then -- escape character
 					i := i + 1
 				elseif c = item_separator then
@@ -229,7 +225,7 @@ feature {NONE} -- Implementation
 note
 	date: "$Date$"
 	revision: "$Revision$"
-	copyright: "Copyright (c) 1984-2019, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2021, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software
@@ -238,4 +234,5 @@ note
 			Website http://www.eiffel.com
 			Customer support http://support.eiffel.com
 		]"
+
 end

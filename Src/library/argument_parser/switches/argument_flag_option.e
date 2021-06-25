@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "Represents a user passed argument option for flag arguments."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -24,8 +24,7 @@ feature {NONE} -- Initialization
 		require
 			a_value_attached: a_value /= Void
 			a_flags_attached: a_flags /= Void
-			a_flags_contains_printable_items:
-				across a_flags as c all c.item.is_printable end
+			a_flags_contains_printable_items: ∀ c: a_flags ¦ c.is_printable
 			a_switch_attached: a_switch /= Void
 		do
 			make_with_value (a_value, a_switch)
@@ -52,27 +51,16 @@ feature -- Query
 
 	has_flag (a_flag: CHARACTER): BOOLEAN
 			-- Determines if `a_flag' was set
-		local
-			c: CHARACTER
 		do
 			if has_value then
-				c := a_flag
 				Result := flags.has (a_flag)
-				if not Result and then not is_case_sensitive then
-					c := a_flag
-					if c.is_alpha then
-						if c.is_lower then
-							c := c.as_upper
-						else
-							c := c.as_lower
-						end
-						Result := flags.has (c)
-					end
+				if not Result and then not is_case_sensitive and then a_flag.is_alpha then
+					Result := flags.has (if a_flag.is_lower then a_flag.as_upper else a_flag.as_lower end)
 				end
 			end
 		ensure
-			has_flag: (is_case_sensitive and (Result = flags.has (a_flag))) or else
-				(not is_case_sensitive and (Result = (flags.has (a_flag.as_lower) or flags.has (a_flag.as_upper))))
+			has_flag: is_case_sensitive and Result = flags.has (a_flag) or
+				not is_case_sensitive and Result = (flags.has (a_flag.as_lower) or flags.has (a_flag.as_upper))
 		end
 
 invariant
@@ -82,8 +70,8 @@ invariant
 		flags.for_all (agent (ia_item: CHARACTER): BOOLEAN do Result := ia_item.is_printable end)
 
 note
-	copyright: "Copyright (c) 1984-2012, Eiffel Software and others"
-	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
+	copyright: "Copyright (c) 1984-2021, Eiffel Software and others"
+	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[
 			This file is part of Eiffel Software's Eiffel Development Environment.
@@ -113,4 +101,4 @@ note
 			Customer support http://support.eiffel.com
 		]"
 
-end -- class {ARGUMENT_FLAG_OPTION}
+end

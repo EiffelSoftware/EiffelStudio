@@ -1,8 +1,8 @@
-note
+﻿note
 	description: "[
 			Visitor pattern for XML node objects. Inherit and 
 			redefine to make use of this pattern
-
+			
 			Main purpose=debugging
 		]"
 	date: "$Date$"
@@ -23,11 +23,7 @@ feature -- Processing
 	process_nodes (nodes: ITERABLE [XML_NODE])
 			-- Process list of nodes `nodes'.
 		do
-			across
-				nodes as c
-			loop
-				c.item.process (Current)
-			end
+			⟳ n: nodes ¦ n.process (Current) ⟲
 		end
 
 	process_element (e: XML_ELEMENT)
@@ -100,7 +96,7 @@ feature -- Processing
 	process_comment (com: XML_COMMENT)
 			-- Process comment `com'.
 		do
-			-- FIXME: use localized console
+				-- FIXME: use localized console
 			print (offset (com.level) + "comment: ")
 			localized_print (single_line (com.data))
 			print ("%N")
@@ -129,7 +125,7 @@ feature -- Processing
 				s.append_string (ns.uri)
 				s.append_character (')')
 			end
-			-- FIXME: use localized console
+				-- FIXME: use localized console
 			print (offset (att.level) + "+ attribute: ")
 			localized_print (s)
 			print ("=%"")
@@ -144,7 +140,7 @@ feature {NONE} -- Formatter
 		require
 			s_attached: s /= Void
 		local
-			i,n: INTEGER
+			i, n: INTEGER
 		do
 			Result := True
 
@@ -185,8 +181,8 @@ feature {NONE} -- Formatter
 		end
 
 note
-	copyright: "Copyright (c) 1984-2012, Eiffel Software and others"
-	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
+	copyright: "Copyright (c) 1984-2021, Eiffel Software and others"
+	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software
 			5949 Hollister Ave., Goleta, CA 93117 USA
@@ -194,4 +190,5 @@ note
 			Website http://www.eiffel.com
 			Customer support http://support.eiffel.com
 		]"
+
 end

@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
-<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-21-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-21-0 http://www.eiffel.com/developers/xml/configuration-1-21-0.xsd" name="docking" uuid="7CD5D682-0880-46FA-85C3-7AADFF14DA11" library_target="docking">
+<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-22-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-22-0 http://www.eiffel.com/developers/xml/configuration-1-22-0.xsd" name="docking" uuid="7CD5D682-0880-46FA-85C3-7AADFF14DA11" library_target="docking">
 	<description>
 		Docking: Multiplatform docking library of reusable components for Eiffel.
-		Copyright (c) 1984-2019, Eiffel Software and others.
+		Copyright (c) 1984-2021, Eiffel Software and others.
 		Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt).
 	</description>
 	<target name="docking">
@@ -68,14 +68,14 @@
 					<exclude>/v2$</exclude>
 					<exclude>/v34$</exclude>
 				</file_rule>
-				<cluster name="gtk2" location="$|gtk\v2" recursive="true">
+				<cluster name="gtk2" location="$|gtk\v2\" recursive="true">
 					<condition>
 						<platform excluded_value="windows"/>
 						<custom name="vision_implementation" excluded_value="gtk34"/>
 						<custom name="vision_implementation" excluded_value="cocoa"/>
 					</condition>
 				</cluster>
-				<cluster name="gtk34" location="$|gtk\v34" recursive="true">
+				<cluster name="gtk34" location="$|gtk\v34\" recursive="true">
 					<condition>
 						<platform excluded_value="windows"/>
 						<custom name="vision_implementation" value="gtk34"/>

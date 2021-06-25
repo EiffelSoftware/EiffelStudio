@@ -1,13 +1,12 @@
-note
+﻿note
 	description: "[
-						A EV_FIGURE_GROUP is an ARRAYED_LIST of EV_FIGURE.
-						Since EV_FIGURE_GROUP is also an EV_FIGURE (composite pattern) you
-						can rotate, scale and change the position of an EV_FIGURE_GROUP.
-						All elements in the group are rotated around the center
-						of the EV_FIGURE_GROUP. A EV_FIGURE can only be grouped
-						in one group at the same time.
-
-					]"
+			A EV_FIGURE_GROUP is an ARRAYED_LIST of EV_FIGURE.
+			Since EV_FIGURE_GROUP is also an EV_FIGURE (composite pattern) you
+			can rotate, scale and change the position of an EV_FIGURE_GROUP.
+			All elements in the group are rotated around the center
+			of the EV_FIGURE_GROUP. A EV_FIGURE can only be grouped
+			in one group at the same time.
+		]"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 	date: "$Date$"
@@ -338,8 +337,8 @@ feature -- Visitor
 			-- <Precursor>
 		do
 			across Current as ic_models loop
-				if ic_models.item.is_show_requested then
-					ic_models.item.project (a_projector)
+				if ic_models.is_show_requested then
+					ic_models.project (a_projector)
 				end
 			end
 		end
@@ -932,7 +931,7 @@ feature {NONE} -- Implementation
 		do
 			if is_grouped then
 				l_bbox := bounding_box
-				center.set_precise (l_bbox.left + l_bbox.width /2, l_bbox.top + l_bbox.height / 2)
+				center.set_precise (l_bbox.left + l_bbox.width / 2, l_bbox.top + l_bbox.height / 2)
 			else
 				center.set (0, 0)
 			end
@@ -992,8 +991,8 @@ invariant
 	not_is_grouped_implies_angel_equals_zero: not is_grouped implies (angle = 0)
 
 note
-	copyright:	"Copyright (c) 1984-2015, Eiffel Software and others"
-	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
+	copyright: "Copyright (c) 1984-2021, Eiffel Software and others"
+	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software
 			5949 Hollister Ave., Goleta, CA 93117 USA
@@ -1002,13 +1001,4 @@ note
 			Customer support http://support.eiffel.com
 		]"
 
-
-
-
-end -- class EV_MODEL_GROUP
-
-
-
-
-
-
+end

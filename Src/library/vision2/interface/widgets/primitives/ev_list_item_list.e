@@ -1,6 +1,5 @@
 ﻿note
-	description:
-		"Common ancestor for EV_LIST and EV_COMBO_BOX."
+	description: "Common ancestor for EV_LIST and EV_COMBO_BOX."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 	keywords: "list, list_item"
@@ -128,7 +127,7 @@ feature -- Status setting
 			across
 				a_string_array as c
 			loop
-				extend (create {EV_LIST_ITEM}.make_with_text (c.item))
+				extend (create {EV_LIST_ITEM}.make_with_text (c))
 			end
 		ensure
 			items_created: count = strings.count
@@ -154,12 +153,13 @@ feature -- Contract support
 
 feature {EV_ANY, EV_ANY_I} -- Implementation
 
-	implementation: EV_LIST_ITEM_LIST_I;
+	implementation: EV_LIST_ITEM_LIST_I
 			-- Responsible for interaction with native graphics toolkit.
+		attribute end
 
 note
-	copyright:	"Copyright (c) 1984-2016, Eiffel Software and others"
-	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
+	copyright: "Copyright (c) 1984-2021, Eiffel Software and others"
+	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software
 			5949 Hollister Ave., Goleta, CA 93117 USA

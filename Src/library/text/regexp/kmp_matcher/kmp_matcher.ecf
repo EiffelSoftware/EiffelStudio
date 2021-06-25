@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
-<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-21-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-21-0 http://www.eiffel.com/developers/xml/configuration-1-21-0.xsd" name="kmp_matcher" uuid="4B3EFD00-0893-4784-A912-D506D6CFD430" library_target="kmp_matcher">
+<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-22-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-22-0 http://www.eiffel.com/developers/xml/configuration-1-22-0.xsd" name="kmp_matcher" uuid="4B3EFD00-0893-4784-A912-D506D6CFD430" library_target="kmp_matcher">
 	<target name="kmp_matcher">
 		<root all_classes="true"/>
 		<file_rule>

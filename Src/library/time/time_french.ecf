@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
-<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-21-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-21-0 http://www.eiffel.com/developers/xml/configuration-1-21-0.xsd" name="time_french" uuid="FCF0935B-50DE-4DE0-B620-4B66AA72FD67" library_target="time_french">
+<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-22-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-22-0 http://www.eiffel.com/developers/xml/configuration-1-22-0.xsd" name="time_french" uuid="FCF0935B-50DE-4DE0-B620-4B66AA72FD67" library_target="time_french">
 	<target name="time_french">
 		<note>
 			<eis auto="true" src="$(ISE_DOC_REF)/$(unique_id)"/>
 			<eis src="$(ISE_DOC_UUID)/3d96626f-11f3-67a2-dec6-69f7faf4a8d6" tag="EiffelTime" protocol="" name="EiffelTime"/>
 		</note>
 		<description>EiffelTime: Date/Time abstractions and computations.
-			Copyright (c) 1984-2019, Eiffel Software and others.
+			Copyright (c) 1984-2021, Eiffel Software and others.
 			Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt).</description>
 		<root all_classes="true"/>
 		<file_rule>

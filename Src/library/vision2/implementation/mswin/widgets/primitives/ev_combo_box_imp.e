@@ -171,22 +171,22 @@ feature {NONE} -- Initialization
 			-- Initialize `Current'.
 		do
 			create ev_children.make (2)
- 			id := 0
-  			internal_window_make (default_parent, Void, default_style +
+			id := 0
+			internal_window_make (default_parent, Void, default_style +
 				Cbs_dropdown, 0, 0, 0, 50, -1, default_pointer)
 			set_default_font
 
 			Precursor {EV_LIST_ITEM_LIST_IMP}
 			set_is_initialized (False)
 			initialize_pixmaps
- 			text_alignment := {EV_TEXT_ALIGNMENT_CONSTANTS}.ev_text_alignment_left
+			text_alignment := {EV_TEXT_ALIGNMENT_CONSTANTS}.ev_text_alignment_left
 
 			create child_cell
 			create combo.make_with_combo (Current)
 			create text_field.make_with_combo (Current)
 			Precursor {EV_TEXT_COMPONENT_IMP}
 			initialize_hints
- 		end
+		end
 
 	initialize_hints
 			-- <Precursor>
@@ -286,7 +286,7 @@ feature -- Status report
 			-- Is item addressed by the one-based index `an_id' selected?
 		do
 			if selected then
-				Result := ( (an_id - 1) = wel_selected_item )
+				Result := ((an_id - 1) = wel_selected_item)
 			end
 		end
 
@@ -307,8 +307,8 @@ feature -- Status report
 		local
 			wel_sel: POINTER
 			start_pos, end_pos: INTEGER
-				-- starting and ending character positions of the
-				-- current selection in the edit control
+			-- starting and ending character positions of the
+			-- current selection in the edit control
 		do
 			wel_sel := {WEL_API}.send_message_result (edit_item, Em_getsel, to_wparam (0), to_lparam (0))
 			start_pos := cwin_hi_word (wel_sel)
@@ -316,7 +316,7 @@ feature -- Status report
 
 				-- There is a current selection if the positions
 				-- are different.
-			Result :=  start_pos /= end_pos
+			Result := start_pos /= end_pos
 		end
 
 	has_focus: BOOLEAN
@@ -473,7 +473,7 @@ feature {EV_LIST_ITEM_IMP} -- Pixmap handling
 			create image_list.make_with_size (pixmaps_width, pixmaps_height)
 
 				-- Associate the image list with the multicolumn list.
-			set_image_list(image_list)
+			set_image_list (image_list)
 		end
 
 	remove_image_list
@@ -546,29 +546,29 @@ feature {EV_LIST_ITEM_IMP} -- Implementation
 			Result := ev_children.index_of (item_imp, 1)
 		end
 
-   	get_item_position (an_index: INTEGER): WEL_POINT
-   			-- Retrieves the position of the zero-based `index'-th item.
-   			-- in the drop-down list.
-   		local
-   			item_imp: EV_LIST_ITEM_IMP
-   		do
-   			create Result.make (0, 0)
-   			item_imp := ev_children @ (an_index + 1)
+	get_item_position (an_index: INTEGER): WEL_POINT
+			-- Retrieves the position of the zero-based `index'-th item.
+			-- in the drop-down list.
+		local
+			item_imp: EV_LIST_ITEM_IMP
+		do
+			create Result.make (0, 0)
+			item_imp := ev_children @ (an_index + 1)
 
-   			if item_imp.is_displayed then
-   				Result.set_y ((an_index - top_index) * item_height)
-   			end
-   		end
+			if item_imp.is_displayed then
+				Result.set_y ((an_index - top_index) * item_height)
+			end
+		end
 
 	visible_count: INTEGER
-   			-- Number of items that can be displayed in the list.
-   		local
-   			l_wel_rect: WEL_RECT
-   			list_height: INTEGER
-   		do
-   			l_wel_rect := dropped_rect
-   			list_height := l_wel_rect.bottom - l_wel_rect.top
-   			Result := list_height // list_item_height
+			-- Number of items that can be displayed in the list.
+		local
+			l_wel_rect: WEL_RECT
+			list_height: INTEGER
+		do
+			l_wel_rect := dropped_rect
+			list_height := l_wel_rect.bottom - l_wel_rect.top
+			Result := list_height // list_item_height
 		end
 
 feature {EV_INTERNAL_COMBO_FIELD_IMP, EV_INTERNAL_COMBO_BOX_IMP}
@@ -636,13 +636,13 @@ feature {NONE} -- Implementation
 		local
 			pt: WEL_POINT
 		do
-			--|FIXME Implement
-			--| Event propagation to children is not completed.
+				--|FIXME Implement
+				--| Event propagation to children is not completed.
 			pt := client_to_screen (x_pos, y_pos)
 			pnd_press (x_pos, y_pos, button, pt.x, pt.y)
 			if button /= 3 then
-				-- If left button pressed the bring `Current'
-				-- to foreground.
+					-- If left button pressed the bring `Current'
+					-- to foreground.
 				if attached top_level_window_imp as l_top_level_window_imp then
 					l_top_level_window_imp.move_to_foreground
 				end
@@ -650,29 +650,29 @@ feature {NONE} -- Implementation
 		end
 
 	internal_propagate_pointer_double_press
-		(keys, x_pos, y_pos, button: INTEGER)
+			(keys, x_pos, y_pos, button: INTEGER)
 			-- Propagate `keys', `x_pos' and `y_pos' to the appropriate
 			-- item event. Called on a pointer double press.
 		do
-			--| Currently not implemented. This means that any items in the
-			--| combo box will not receive double click events.
+				--| Currently not implemented. This means that any items in the
+				--| combo box will not receive double click events.
 		end
 
 	find_item_at_position (x_pos, y_pos: INTEGER): detachable EV_LIST_ITEM_IMP
 			-- `Result' is item at pixel position `x_pos', `y_pos'.
 		do
-			--| FIXME to be implemented for pick-and-dropable.	
+				--| FIXME to be implemented for pick-and-dropable.
 		end
 
 	recreate_combo_box (creation_flag: INTEGER)
 			-- Destroy the existing combo box and recreate
 			-- a new one with `creation_flag' in the style
 		local
-			par_imp		: detachable WEL_WINDOW
-			cur_x		: INTEGER
-			cur_y		: INTEGER
-			cur_width	: INTEGER
-			cur_height	: INTEGER
+			par_imp: detachable WEL_WINDOW
+			cur_x: INTEGER
+			cur_y: INTEGER
+			cur_width: INTEGER
+			cur_height: INTEGER
 		do
 				-- We keep some useful informations that will be
 				-- destroyed when calling `wel_destroy'
@@ -687,22 +687,21 @@ feature {NONE} -- Implementation
 			cur_width := ev_width
 			cur_height := ev_height
 
-					-- We destroy the old combo
+				-- We destroy the old combo
 			wel_destroy
 
 				-- We create the new combo.
-			internal_window_make (
-				par_imp,
-				Void,
-				default_style | creation_flag,
-				cur_x,
-				cur_y,
-				cur_width,
-				cur_height,
-				0,
-				default_pointer
+			internal_window_make (par_imp,
+					Void,
+					default_style | creation_flag,
+					cur_x,
+					cur_y,
+					cur_width,
+					cur_height,
+					0,
+					default_pointer
 				)
- 			id := 0
+			id := 0
 			internal_copy_list
 		end
 
@@ -835,12 +834,12 @@ feature {NONE} -- Implementation
 	insert_item (item_imp: EV_LIST_ITEM_IMP; an_index: INTEGER)
 			-- Insert `item_imp' at the one-based index `an_index'.
 		do
-			--FIXME must set the index as in LIST.
+				--FIXME must set the index as in LIST.
 			insert_string_at (item_imp.wel_text, an_index - 1)
 		end
 
 	on_cben_insert_item (an_item: WEL_COMBO_BOX_EX_ITEM)
- 			-- An item has been inserted in the control.
+			-- An item has been inserted in the control.
 		do
 				-- If this is the first item inserted in `Current' then
 				-- we select it.
@@ -849,8 +848,8 @@ feature {NONE} -- Implementation
 			end
 				-- Reset our width computation for the dropdown list due to the new item
 				-- being inserted.
-			internal_list_minimum_width := - 1
- 		end
+			internal_list_minimum_width := -1
+		end
 
 	refresh_item (item_imp: EV_LIST_ITEM_IMP)
 			-- Refresh current so that it take into account
@@ -918,7 +917,7 @@ feature {EV_INTERNAL_COMBO_FIELD_IMP, EV_INTERNAL_COMBO_BOX_IMP}
 			process_navigation_key (virtual_key)
 			Precursor {EV_TEXT_COMPONENT_IMP} (virtual_key, key_data)
 			if virtual_key = Vk_return then
-				-- If return pressed, select item with matching text.
+					-- If return pressed, select item with matching text.
 				list := ev_children
 				from
 					list.start
@@ -966,9 +965,9 @@ feature {NONE} -- WEL Implementation
 			-- Default windows style used to create `Current'.
 		do
 			Result := Ws_child | Ws_visible | Ws_group
-						| Ws_tabstop | Ws_vscroll
-						| Cbs_autohscroll | Ws_clipchildren
-						| Ws_clipsiblings
+				| Ws_tabstop | Ws_vscroll
+				| Cbs_autohscroll | Ws_clipchildren
+				| Ws_clipsiblings
 		end
 
 	old_selected_item: detachable EV_LIST_ITEM_IMP
@@ -988,7 +987,7 @@ feature {NONE} -- WEL Implementation
 			l_new_selected_item: detachable EV_LIST_ITEM_IMP
 			l_acts: detachable EV_NOTIFY_ACTION_SEQUENCE
 		do
-					-- Retrieve the new selected item.
+				-- Retrieve the new selected item.
 			if selected then
 				l_new_selected_item := ev_children.i_th (wel_selected_item + 1)
 			else
@@ -1036,7 +1035,7 @@ feature {NONE} -- WEL Implementation
 					change_actions_internal.call (Void)
 				end
 					-- Reset our width computation for the dropdown list
-				internal_list_minimum_width := - 1
+				internal_list_minimum_width := -1
 			end
 			last_edit_change := text
 		end
@@ -1082,12 +1081,12 @@ feature {NONE} -- WEL Implementation
 				if l_list_width = -1 then
 					l_font := wel_font
 					across ev_children as l_item loop
-						if attached l_item.item.pixmap as l_pixmap then
+						if attached l_item.pixmap as l_pixmap then
 								-- The 10 value is the hard coded value of the border around the pixmap and the gap between
 								-- the pixmap and the text.
-							l_list_width := l_list_width.max (l_pixmap.width + 10 + l_font.string_width (l_item.item.text))
+							l_list_width := l_list_width.max (l_pixmap.width + 10 + l_font.string_width (l_item.text))
 						else
-							l_list_width := l_list_width.max (l_font.string_width (l_item.item.text))
+							l_list_width := l_list_width.max (l_font.string_width (l_item.text))
 						end
 					end
 						-- Save computed value to avoid expensive recomputation.
@@ -1102,7 +1101,7 @@ feature {NONE} -- WEL Implementation
 				-- We resize the height of the list.
 			l_combo.resize (l_combo.width, l_list_height)
 				-- We resize the width of the list.
-			{WEL_API}.send_message (l_combo.item, {WEL_COMBO_BOX_CONSTANTS}.cb_setdroppedwidth, to_wparam(l_list_width), to_lparam (0))
+			{WEL_API}.send_message (l_combo.item, {WEL_COMBO_BOX_CONSTANTS}.cb_setdroppedwidth, to_wparam (l_list_width), to_lparam (0))
 		end
 
 	on_cbn_closeup
@@ -1126,14 +1125,14 @@ feature {NONE} -- WEL Implementation
 			-- Zero based index of the first character selected.
 		do
 			Result := cwin_lo_word ({WEL_API}.send_message_result (edit_item,
-				Em_getsel, to_wparam (0), to_lparam (0)))
+						Em_getsel, to_wparam (0), to_lparam (0)))
 		end
 
 	wel_selection_end: INTEGER
 			-- Zero based index of the last character selected.
 		do
 			Result := cwin_hi_word ({WEL_API}.send_message_result (edit_item,
-				Em_getsel, to_wparam (0), to_lparam (0)))
+						Em_getsel, to_wparam (0), to_lparam (0)))
 		end
 
 	destroy
@@ -1160,7 +1159,7 @@ invariant
 	text_field_not_void: text_field /= Void implies is_editable
 
 note
-	copyright: "Copyright (c) 1984-2018, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2021, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

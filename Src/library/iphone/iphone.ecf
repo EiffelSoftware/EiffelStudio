@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
-<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-21-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-21-0 http://www.eiffel.com/developers/xml/configuration-1-21-0.xsd" name="iphone" uuid="2D42321E-3B8B-4F5D-90A2-5D8D1E753C4B" readonly="false" library_target="iphone">
+<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-22-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-22-0 http://www.eiffel.com/developers/xml/configuration-1-22-0.xsd" name="iphone" uuid="2D42321E-3B8B-4F5D-90A2-5D8D1E753C4B" readonly="false" library_target="iphone">
 	<target name="iphone">
 		<description>Eiffel Library for iPhone development.Copyright (c), Eiffel Software.</description>
 		<root all_classes="true"/>

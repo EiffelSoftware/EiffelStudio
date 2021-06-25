@@ -1,7 +1,5 @@
-note
-	description: "[
-		Eiffel tests that can be executed by testing tool.
-	]"
+﻿note
+	description: "Eiffel tests that can be executed by testing tool."
 	author: "EiffelStudio test wizard"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -144,25 +142,25 @@ feature -- Test routines
 			t: STRING_8
 		do
 			Result := "[
-<?xml version="1.0" encoding="ISO-8859-1"?>
-<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-8-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-8-0 http://www.eiffel.com/developers/xml/configuration-1-8-0.xsd" name="tests" uuid="8E006284-3BDE-4DB9-9F1B-ED1322ABD360">
-	<target name="tests">
-		<root class="ANY" feature="default_create"/>
-		<file_rule>
-			<exclude>/.git$</exclude>
-			<exclude>/EIFGENs$</exclude>
-			<exclude>/.svn$</exclude>
-		</file_rule>
-		<option warning="true" full_class_checking="true" is_attached_by_default="true" void_safety="all" syntax="standard">
-			<assertions precondition="true" postcondition="true" supplier_precondition="true"/>
-		</option>
-		<setting name="concurrency" value="none"/>
-		<library name="base" location="$ISE_LIBRARY\library\base\base-safe.ecf"/>
-		<library name="testing" location="$ISE_LIBRARY\library\testing\testing-safe.ecf" readonly="false"/>
-		<tests name="src" location="." recursive="true"/>
-	</target>
-</system>
-]"
+					<?xml version="1.0" encoding="ISO-8859-1"?>
+					<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-8-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-8-0 http://www.eiffel.com/developers/xml/configuration-1-8-0.xsd" name="tests" uuid="8E006284-3BDE-4DB9-9F1B-ED1322ABD360">
+						<target name="tests">
+							<root class="ANY" feature="default_create"/>
+							<file_rule>
+								<exclude>/.git$</exclude>
+								<exclude>/EIFGENs$</exclude>
+								<exclude>/.svn$</exclude>
+							</file_rule>
+							<option warning="true" full_class_checking="true" is_attached_by_default="true" void_safety="all" syntax="standard">
+								<assertions precondition="true" postcondition="true" supplier_precondition="true"/>
+							</option>
+							<setting name="concurrency" value="none"/>
+							<library name="base" location="$ISE_LIBRARY\library\base\base-safe.ecf"/>
+							<library name="testing" location="$ISE_LIBRARY\library\testing\testing-safe.ecf" readonly="false"/>
+							<tests name="src" location="." recursive="true"/>
+						</target>
+					</system>
+				]"
 			check Result.count = 1070 end
 			if a_size > 0 then
 				if Result.count < a_size then
@@ -406,7 +404,7 @@ feature -- Test routines
 			across
 				(1 |..| (2 * n)) as ic
 			loop
-				l_chunk_size := ic.item
+				l_chunk_size := ic
 				print ("Chunk size=" + l_chunk_size.out + "%N")
 				create l_input.make_with_path (xml_file_name ("truncated_at_various_chunk_size-ecf.xml"))
 				l_input.set_chunk_size (l_chunk_size)
@@ -456,12 +454,10 @@ feature -- Test routines
 			vis_uc.reset
 			vis_uc.process_document (doc_cb.document)
 
-
 			create doc_cb.make_null
 			create l_end_checker.make_null
 			l_end_checker.set_associated_parser (p)
 			p.set_callbacks (new_callbacks_pipe (s, <<l_end_checker>>, doc_cb))
-
 
 				-- checking end tags
 			create l_input.make_with_path (xml_file_name ("truncated_at_chunk-ecf.xml"))
@@ -498,7 +494,6 @@ feature -- Test routines
 			vis_uc.reset
 			vis_uc.process_document (doc_cb.document)
 		end
-
 
 	test_xml_parser_with_unicode_tag_and_utf8
 			-- New test routine
@@ -654,7 +649,7 @@ feature -- ASCII
 			test_xml_content ("case_invalid_007", False, False, "<doc>aa<//doc>")
 			test_xml_content ("case_invalid_008", False, False, "<doc>aa</doc><//")
 
-				 -- valid but truncated
+				-- valid but truncated
 			test_xml_content ("case_truncated_001", True, True, "<doc")
 			test_xml_content ("case_truncated_002", True, True, "<doc ")
 			test_xml_content ("case_truncated_003", True, True, "<doc  %T")
@@ -803,83 +798,82 @@ feature {NONE} -- XML content
 	valid_xml_01: STRING
 		do
 			Result :=
-"[
-<DOCUMENT><section name="TEST_XML"><description>&#20320;&#22909;&#21527;</description></section><fo:root xmlns:fo="http://www.w3.org/1999/XSL/Format"><fo:test></fo:test></fo:root></DOCUMENT>
-]"
+				"[
+					<DOCUMENT><section name="TEST_XML"><description>&#20320;&#22909;&#21527;</description></section><fo:root xmlns:fo="http://www.w3.org/1999/XSL/Format"><fo:test></fo:test></fo:root></DOCUMENT>
+				]"
 		end
 
 	bad_xml_01: STRING
 		do
 			Result := -- see name=!TE...
-"[
-<DOCUMENT><section name=!TEST_XML"><description>&#20320;&#22909;&#21527;</description></section><fo:root xmlns:fo="http://www.w3.org/1999/XSL/Format"><fo:test></fo:test></fo:root></DOCUMENT>
-]"
+				"[
+					<DOCUMENT><section name=!TEST_XML"><description>&#20320;&#22909;&#21527;</description></section><fo:root xmlns:fo="http://www.w3.org/1999/XSL/Format"><fo:test></fo:test></fo:root></DOCUMENT>
+				]"
 		end
 
 	bad_xml_02: STRING
 		do
 			Result := -- see <<desc
-"[
-<DOCUMENT><section name="TEST_XML"><<description>&#20320;&#22909;&#21527;</description></section><fo:root xmlns:fo="http://www.w3.org/1999/XSL/Format"><fo:test></fo:test></fo:root></DOCUMENT>
-]"
+				"[
+					<DOCUMENT><section name="TEST_XML"><<description>&#20320;&#22909;&#21527;</description></section><fo:root xmlns:fo="http://www.w3.org/1999/XSL/Format"><fo:test></fo:test></fo:root></DOCUMENT>
+				]"
 		end
 
 	bad_xml_03: STRING
 		do
 			Result := -- see description//>
-"[
-<DOCUMENT><section name="TEST_XML"><description//>&#20320;&#22909;&#21527;</description></section><fo:root xmlns:fo="http://www.w3.org/1999/XSL/Format"><fo:test></fo:test></fo:root></DOCUMENT>
-]"
+				"[
+					<DOCUMENT><section name="TEST_XML"><description//>&#20320;&#22909;&#21527;</description></section><fo:root xmlns:fo="http://www.w3.org/1999/XSL/Format"><fo:test></fo:test></fo:root></DOCUMENT>
+				]"
 		end
 
 	bad_xml_04: STRING
 		do
 			Result := -- see name@foo=
-"[
-<DOCUMENT><section name@foo="TEST_XML"><description>&#20320;&#22909;&#21527;</description></section><fo:root xmlns:fo="http://www.w3.org/1999/XSL/Format"><fo:test></fo:test></fo:root></DOCUMENT>
-]"
+				"[
+					<DOCUMENT><section name@foo="TEST_XML"><description>&#20320;&#22909;&#21527;</description></section><fo:root xmlns:fo="http://www.w3.org/1999/XSL/Format"><fo:test></fo:test></fo:root></DOCUMENT>
+				]"
 		end
 
 	bad_xml_05: STRING
 		do
 			Result := -- see name+foo+bar=
-"[
-<DOCUMENT><section name+foo+bar="TEST_XML"><description>&#20320;&#22909;&#21527;</description></section><fo:root xmlns:fo="http://www.w3.org/1999/XSL/Format"><fo:test></fo:test></fo:root></DOCUMENT>
-]"
+				"[
+					<DOCUMENT><section name+foo+bar="TEST_XML"><description>&#20320;&#22909;&#21527;</description></section><fo:root xmlns:fo="http://www.w3.org/1999/XSL/Format"><fo:test></fo:test></fo:root></DOCUMENT>
+				]"
 		end
 
 	bad_xml_06: STRING
 		do
 			Result := -- see <foo&#20320;>
-"[
-<DOCUMENT><section name="TEST_XML"><foo&#20320;>&#20320;&#22909;&#21527;</description></section><fo:root xmlns:fo="http://www.w3.org/1999/XSL/Format"><fo:test></fo:test></fo:root></DOCUMENT>
-]"
+				"[
+					<DOCUMENT><section name="TEST_XML"><foo&#20320;>&#20320;&#22909;&#21527;</description></section><fo:root xmlns:fo="http://www.w3.org/1999/XSL/Format"><fo:test></fo:test></fo:root></DOCUMENT>
+				]"
 		end
 
 	bad_xml_07: STRING
 		do
 			Result := -- see bad-attrib
-"[
-<DOCUMENT><section bad-attrib name="TEST_XML"><description>&#20320;&#22909;&#21527;</description></section><fo:root xmlns:fo="http://www.w3.org/1999/XSL/Format"><fo:test></fo:test></fo:root></DOCUMENT>
-]"
+				"[
+					<DOCUMENT><section bad-attrib name="TEST_XML"><description>&#20320;&#22909;&#21527;</description></section><fo:root xmlns:fo="http://www.w3.org/1999/XSL/Format"><fo:test></fo:test></fo:root></DOCUMENT>
+				]"
 		end
 
 	bad_xml_08: STRING
 		do
 			Result := -- see bad-attrib
-"[
-<DOCUMENT><section name="TEST_XML"?/></DOCUMENT>
-]"
+				"[
+					<DOCUMENT><section name="TEST_XML"?/></DOCUMENT>
+				]"
 		end
 
 	bad_xml_09: STRING
 		do
 			Result := -- see bad-attrib
-"[
-<DOCUMENT><section name="TEST_XML"/></DOCUMENT>>
-]"
+				"[
+					<DOCUMENT><section name="TEST_XML"/></DOCUMENT>>
+				]"
 		end
 
 end
-
 

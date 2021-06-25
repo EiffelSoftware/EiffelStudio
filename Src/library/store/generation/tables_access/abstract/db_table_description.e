@@ -92,7 +92,7 @@ feature -- Access (table description)
 		end
 
 	id_name_32: STRING_32
-			-- Table ID attribute name.	
+			-- Table ID attribute name.
 		do
 			Result := description_list.i_th (Id_code)
 		end
@@ -169,11 +169,7 @@ feature -- Access (table row values)
 			-- Table row attribute values.
 		do
 			create Result.make (Attribute_number)
-			across
-				attribute_code_list as a
-			loop
-				Result.extend (attribute_value (a.item))
-			end
+			⟳ a: attribute_code_list ¦ Result.extend (attribute_value (a)) ⟲
 		ensure
 			not_void: Result /= Void
 		end
@@ -182,11 +178,7 @@ feature -- Access (table row values)
 			-- Table row attribute string values.
 		do
 			create Result.make (Attribute_number)
-			across
-				attribute_code_list as a
-			loop
-				Result.extend (printable_attribute (a.item))
-			end
+			⟳ a: attribute_code_list ¦ Result.extend (printable_attribute (a)) ⟲
 		ensure
 			not_void: Result /= Void
 		end
@@ -197,11 +189,7 @@ feature -- Access (table row values)
 			not_void: list /= Void
 		do
 			create Result.make (list.count)
-			across
-				list as l
-			loop
-				Result.extend (attribute_value (l.item))
-			end
+			⟳ l: list ¦ Result.extend (attribute_value (l)) ⟲
 		ensure
 			not_void: Result /= Void
 		end
@@ -212,11 +200,7 @@ feature -- Access (table row values)
 			not_void: list /= Void
 		do
 			create Result.make (list.count)
-			across
-				list as l
-			loop
-				Result.extend (printable_attribute (l.item))
-			end
+			⟳ l: list ¦ Result.extend (printable_attribute (l)) ⟲
 		ensure
 			not_void: Result /= Void
 		end
@@ -228,11 +212,7 @@ feature -- Access (table row values)
 			action_not_void: action /= Void
 		do
 			create Result.make (Attribute_number)
-			across
-				description_list as d
-			loop
-				Result.extend (action (d.item.twin))
-			end
+			⟳ d: description_list ¦ Result.extend (action (d.twin)) ⟲
 		end
 
 feature -- Status report
@@ -264,8 +244,8 @@ feature -- Basic operations
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2019, Eiffel Software and others"
-	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
+	copyright: "Copyright (c) 1984-2021, Eiffel Software and others"
+	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software
 			5949 Hollister Ave., Goleta, CA 93117 USA

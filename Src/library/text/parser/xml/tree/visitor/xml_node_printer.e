@@ -1,6 +1,4 @@
-note
-	description: "Summary description for {XML_NODE_PRINTER}."
-	author: ""
+﻿note
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -81,8 +79,8 @@ feature -- Processing
 			-- Process character data `c'.
 		local
 			l_content: READABLE_STRING_32
-			lst: ARRAYED_LIST [TUPLE [a,b: INTEGER]]
-			i,j: INTEGER
+			lst: ARRAYED_LIST [TUPLE [a, b: INTEGER]]
+			i, j: INTEGER
 			s: STRING_8
 		do
 			l_content := c.content
@@ -108,7 +106,7 @@ feature -- Processing
 			loop
 				output.put_string_8 ("<![CDATA[")
 					-- FIXME: implement smart xml escaping, depending on the usage!
-				s := xml_utilities.escaped_xml (l_content.substring (ic.item.a, ic.item.b))
+				s := xml_utilities.escaped_xml (l_content.substring (ic.a, ic.b))
 					-- note: unescape &lt; &gt; and &amp;  (i.e  < > and & ) since they are allowed in CDATA sections
 				s.replace_substring_all ("&lt;", "<")
 				s.replace_substring_all ("&gt;", ">")
@@ -173,7 +171,7 @@ invariant
 	output_not_void: output /= Void
 
 note
-	copyright: "Copyright (c) 1984-2015, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2021, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software
@@ -182,4 +180,5 @@ note
 			Website http://www.eiffel.com
 			Customer support http://support.eiffel.com
 		]"
+
 end

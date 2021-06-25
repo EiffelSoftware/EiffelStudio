@@ -42,7 +42,7 @@ feature {NONE} -- Initialization
 			not_a_arg_desc_is_empty: not a_arg_desc.is_empty
 			not_a_flags_is_empty: not a_flags.is_empty
 			a_flags_contains_attached_items: ∀ c: a_flags ¦ not c.is_empty
-			a_flags_contains_printable_items: across a_flags as c all is_character_printable (c.key) end
+			a_flags_contains_printable_items: ∀ c: a_flags ¦ is_character_printable (@ c.key)
 		do
 			make_value_base (a_id, a_desc, a_optional, a_allow_mutliple, a_arg_name, full_arg_description (a_arg_desc, a_flags), a_val_optional)
 			flag_descriptions := a_flags
@@ -72,7 +72,7 @@ feature {NONE} -- Initialization
 			not_a_arg_name_is_empty: not a_arg_name.is_empty
 			not_a_flags_is_empty: not a_flags.is_empty
 			a_flags_contains_attached_items: ∀ c: a_flags ¦ not c.is_empty
-			a_flags_contains_printable_items: across a_flags as c all is_character_printable (c.key) end
+			a_flags_contains_printable_items: ∀ c: a_flags ¦ is_character_printable (@ c.key)
 		do
 			make (a_id, internal_switch_description, a_optional, a_allow_mutliple, a_arg_name, internal_argument_description, a_val_optional, a_flags, a_cs_flags)
 			is_hidden := True
@@ -188,7 +188,7 @@ feature {NONE} -- Usage
 			across
 				l_list as i
 			loop
-				c := i.item
+				c := i
 				Result.append (once "   ")
 				Result.append_character (c)
 				Result.append (once ": ")
@@ -213,32 +213,32 @@ invariant
 	flag_descriptions_attached: flag_descriptions /= Void
 	not_flag_description_is_empty: not flag_descriptions.is_empty
 	flag_descriptions_contains_attached_items: ∀ l_desc: flag_descriptions ¦ not l_desc.is_empty
-	flag_descriptions_contains_printable_items: across flag_descriptions as l_desc all is_character_printable (l_desc.key) end
+	flag_descriptions_contains_printable_items: ∀ l_desc: flag_descriptions ¦ is_character_printable (@ l_desc.key)
 
 note
-	copyright: "Copyright (c) 1984-2020, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2021, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[
-		This file is part of Eiffel Software's Eiffel Development Environment.
-		
-		Eiffel Software's Eiffel Development Environment is free
-		software; you can redistribute it and/or modify it under
-		the terms of the GNU General Public License as published
-		by the Free Software Foundation, version 2 of the License
-		(available at the URL listed under "license" above).
-		
-		Eiffel Software's Eiffel Development Environment is
-		distributed in the hope that it will be useful, but
-		WITHOUT ANY WARRANTY; without even the implied warranty
-		of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
-		See the GNU General Public License for more details.
-		
-		You should have received a copy of the GNU General Public
-		License along with Eiffel Software's Eiffel Development
-		Environment; if not, write to the Free Software Foundation,
-		Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
-	]"
+			This file is part of Eiffel Software's Eiffel Development Environment.
+			
+			Eiffel Software's Eiffel Development Environment is free
+			software; you can redistribute it and/or modify it under
+			the terms of the GNU General Public License as published
+			by the Free Software Foundation, version 2 of the License
+			(available at the URL listed under "license" above).
+			
+			Eiffel Software's Eiffel Development Environment is
+			distributed in the hope that it will be useful, but
+			WITHOUT ANY WARRANTY; without even the implied warranty
+			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+			See the GNU General Public License for more details.
+			
+			You should have received a copy of the GNU General Public
+			License along with Eiffel Software's Eiffel Development
+			Environment; if not, write to the Free Software Foundation,
+			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
+		]"
 	source: "[
 			Eiffel Software
 			5949 Hollister Ave., Goleta, CA 93117 USA

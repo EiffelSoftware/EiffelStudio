@@ -128,7 +128,7 @@ feature -- Command
 					if l_map /= Void then
 						add_to_reference_table (l_new_table.key_for_iteration, l_map)
 					else
-						check has_l_map: False end  -- Implied by `finding_route_to_once' and code in this "from" part.
+						check has_l_map: False end -- Implied by `finding_route_to_once' and code in this "from" part.
 					end
 				end
 
@@ -190,7 +190,7 @@ feature {NONE} -- Implementation
 			valid: a_item.column.index = 1
 		do
 			if a_item /= Void and then a_item.column.index = 1 then
-				-- If is an item represent a object. Only an item represent an object has been setted the data.
+					-- If is an item represent a object. Only an item represent an object has been setted the data.
 				if attached a_item.data as l_data then
 					create {MA_OBJECT_STONE} Result.make (l_data)
 					object_grid.set_accept_cursor (accept_node)
@@ -248,14 +248,14 @@ feature {NONE} -- Implementation
 			if l_grid_data /= Void then
 				inspect
 					sorted_column
-					when 1 then create l_agent_sorter.make (agent sort_on_type_name)
-					when 2 then create l_agent_sorter.make (agent sort_on_count)
-					when 3 then create l_agent_sorter.make (agent sort_on_delta)
-					when 4, 5 then
+				when 1 then create l_agent_sorter.make (agent sort_on_type_name)
+				when 2 then create l_agent_sorter.make (agent sort_on_count)
+				when 3 then create l_agent_sorter.make (agent sort_on_delta)
+				when 4, 5 then
 						-- No sorting can be performed on sizes as it will slow down the grid usage.
 				end
 				if l_agent_sorter /= Void then
-					;(create {QUICK_SORTER [like row_data]}.make (l_agent_sorter)).sort (l_grid_data)
+					; (create {QUICK_SORTER [like row_data]}.make (l_agent_sorter)).sort (l_grid_data)
 						-- Perform update action.
 					a_update_action.call
 				end
@@ -366,7 +366,7 @@ feature {NONE} -- Implementation
 					debug ("larry")
 						io.put_string ("%Nin MA_OBJECT_SNAPSHOT_MEDIATOR: void object? " + l_data.count.out + " orignal object is: " + internal.type_name_of_type (a_dynamic_type))
 					end
-					--| FIXIT: Why get void object here? There sometime a void object...?
+						-- FIXIT: Why get void object here? There sometime a void object...?
 					object_grid.insert_new_rows_parented (l_data.count, a_parent_row.index + 1, a_parent_row)
 					from
 						i := 0
@@ -401,14 +401,14 @@ feature {NONE} -- Implementation
 							create l_item.make_with_text ("Click to compute deep physical size")
 							l_item.set_data (l_any)
 							l_item.pointer_button_press_actions.extend (agent (a1, a2, a3: INTEGER_32; a4, a5, a6: REAL_64; a7, a8: INTEGER_32; a_item: EV_GRID_LABEL_ITEM)
-								do
-									if attached a_item.data as d then
-										a_item.set_text (formatted_size (internal.deep_physical_size_64 (d)))
-									else
-										a_item.set_text ("0 B")
-									end
-									a_item.pointer_button_press_actions.wipe_out
-								end (?, ?, ?, ?, ?, ?, ?, ?, l_item))
+									do
+										if attached a_item.data as d then
+											a_item.set_text (formatted_size (internal.deep_physical_size_64 (d)))
+										else
+											a_item.set_text ("0 B")
+										end
+										a_item.pointer_button_press_actions.wipe_out
+									end (?, ?, ?, ?, ?, ?, ?, ?, l_item))
 							object_grid.set_item (5, j, l_item)
 
 							l_row := object_grid.row (j)
@@ -670,7 +670,7 @@ feature -- Status report
 				Result :=
 					a_str.same_string_general (once "MA_GRID_LABEL_ITEM") or else
 					a_str.same_string_general (once "TUPLE [MA_OBJECT_SNAPSHOT_MEDIATOR, ANY, EV_GRID_ROW]") or else
-					--a_str.is_equal (once "MA_OBJECT_SNAPSHOT_MEDIATOR") or else
+						--a_str.is_equal (once "MA_OBJECT_SNAPSHOT_MEDIATOR") or else
 					a_str.same_string_general (once "TUPLE [MA_OBJECT_SNAPSHOT_MEDIATOR, ANY]") or else
 					a_str.has_substring ("MA_OBJECT_SNAPSHOT")
 			end
@@ -700,7 +700,7 @@ feature {NONE} -- Fields
 			-- the main grid to show object snapshot datas
 
 	sorted_column: INTEGER
-			-- Column on which sorting is done.	
+			-- Column on which sorting is done.
 
 	sorting_order: BOOLEAN
 			-- If True, sorted from the smaller to the bigger.
@@ -734,7 +734,7 @@ feature {NONE} -- Route building.
 			-- A selected object.
 
 	selected_item: detachable MA_GRID_CHECK_BOX_ITEM
-			-- All selected items.		
+			-- All selected items.
 
 feature {NONE} -- Sorting Implemention
 
@@ -745,14 +745,11 @@ feature {NONE} -- Sorting Implemention
 			l_physical_size: NATURAL_64
 			l_spec: SPECIAL [ANY]
 		do
-			l_physical_size := 0
+				-- l_physical_size := 0
 			l_spec := memory.objects_instance_of_type (a_type)
-			across l_spec as l_items loop
-				l_physical_size := l_physical_size + internal.physical_size_64 (l_items.item)
-			end
+			⟳ i: l_spec ¦ l_physical_size := l_physical_size + internal.physical_size_64 (i) ⟲
 			a_item.set_text (formatted_size (l_physical_size))
 			a_average_item.set_text (formatted_size (l_physical_size // l_spec.count.as_natural_64))
-
 				-- Prevents recomputation
 			a_item.pointer_button_press_actions.wipe_out
 			a_average_item.pointer_button_press_actions.wipe_out
@@ -822,8 +819,8 @@ invariant
 	object_grid_not_void: object_grid /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2019, Eiffel Software and others"
-	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
+	copyright: "Copyright (c) 1984-2021, Eiffel Software and others"
+	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software
 			5949 Hollister Ave., Goleta, CA 93117 USA

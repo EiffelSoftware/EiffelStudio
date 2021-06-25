@@ -58,11 +58,7 @@ feature -- Status Setting
 				value_mapping := vmap
 			else
 				create value_mapping.make (a_mapping.count)
-				across
-					a_mapping as c
-				loop
-					value_mapping.force (c.item, c.key)
-				end
+				⟳ m: a_mapping ¦ value_mapping.force (m, @ m.key) ⟲
 			end
 			change_item_widget.set_item_strings (displayed_values)
 			change_item_widget.set_text (displayed_selected_value)
@@ -75,7 +71,7 @@ feature {NONE} -- Command
 		local
 			l_value,
 			l_displayed_value: detachable STRING_32
-			i,sel_index: INTEGER
+			i, sel_index: INTEGER
 			l_value_mapping: like value_mapping
 			s32: STRING_32
 		do
@@ -93,7 +89,7 @@ feature {NONE} -- Command
 					if not l_value.is_empty then
 						l_value.append_character (';')
 					end
-					s32 := c.item
+					s32 := c
 					if
 						l_value_mapping /= Void and then
 						not s32.is_empty and then
@@ -186,7 +182,7 @@ feature {NONE} -- Implementation
 			across
 				lst as c
 			loop
-				s32 := c.item
+				s32 := c
 				if
 					vmap /= Void and then
 					vmap.has_key (s32) and then attached vmap.found_item as l_item
@@ -224,8 +220,8 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2018, Eiffel Software and others"
-	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
+	copyright: "Copyright (c) 1984-2021, Eiffel Software and others"
+	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software
 			5949 Hollister Ave., Goleta, CA 93117 USA

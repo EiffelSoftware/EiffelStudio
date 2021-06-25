@@ -35,12 +35,12 @@ feature {NONE} -- Initialization
 feature -- Access
 
 	entries: ARRAYED_LIST [READABLE_STRING_8]
-		-- Multiple entries.
+			-- Multiple entries.
 
 feature -- Status report
 
 	multiple_entries: BOOLEAN
-		-- Has the header multiple entries.
+			-- Has the header multiple entries.
 
 	unique_entry: READABLE_STRING_8
 			-- Entry,
@@ -48,7 +48,7 @@ feature -- Status report
 		require
 			has_unique_entry: not multiple_entries
 		do
-			Result:= entries.first
+			Result := entries.first
 		end
 
 feature -- Status setting
@@ -56,7 +56,7 @@ feature -- Status setting
 	enable_multiple_entries
 			-- Enable multiple entries.
 		do
-			multiple_entries:= True
+			multiple_entries := True
 		end
 
 feature -- Basic operations
@@ -78,11 +78,7 @@ feature -- Basic operations
 		require
 			entries_exist: entries /= Void
 		do
-			across
-				list as ic
-			loop
-				entries.force (ic.item)
-			end
+			⟳ e: list ¦ entries.force (e) ⟲
 			if entries.count > 1 then
 				enable_multiple_entries
 			end
@@ -101,7 +97,7 @@ feature -- Basic operations
 		require
 			valid_index: entries.valid_cursor_index (i)
 		do
-			entries.prune (entries.i_th (i))
+			entries.prune (entries [i])
 		end
 
 feature {NONE} -- Implementation
@@ -111,16 +107,12 @@ feature {NONE} -- Implementation
 		require
 			entries_exists: entries /= Void
 		do
-			across
-				src as e
-			loop
-				entries.extend (e.item)
-			end
+			⟳ e: src ¦ entries.extend (e) ⟲
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2020, Eiffel Software and others"
-	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
+	copyright: "Copyright (c) 1984-2021, Eiffel Software and others"
+	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software
 			5949 Hollister Ave., Goleta, CA 93117 USA

@@ -63,7 +63,7 @@ feature {NONE} -- Initialization
 
 	argument_line_from_arguments (argument_list: detachable ITERABLE [READABLE_STRING_GENERAL]): STRING_32
 		require
-			arguments_attached: attached argument_list as args implies across args as a all attached a.item end
+			arguments_attached: attached argument_list as args implies ∀ a: args ¦ attached a
 		local
 			is_next: BOOLEAN
 		do
@@ -72,7 +72,7 @@ feature {NONE} -- Initialization
 				across
 					argument_list as args
 				loop
-					if attached args.item as a then
+					if attached args as a then
 						if is_next then
 							Result.append_character (' ')
 						else
@@ -331,12 +331,12 @@ feature {NONE} -- Implementation
 				Result.set_redirect_standard_error (error_direction /= {BASE_REDIRECTION}.no_redirection)
 			end
 			if l_environ_tbl /= Void and then not l_environ_tbl.is_empty and then attached Result.environment_variables as l_environ_dic then
-				-- Clear previous environment table to replace with new one.
+					-- Clear previous environment table to replace with new one.
 				l_environ_dic.clear
 				across
 					l_environ_tbl as e
 				loop
-					if attached e.key as k and then attached e.item as i then
+					if attached @ e.key as k and then attached e as i then
 						l_key := k.to_cil
 						l_value := i.to_cil
 						if l_environ_dic.contains_key (l_key) then
@@ -458,13 +458,13 @@ feature {NONE} -- Termination
 	direct_subprocess_list (parent_id: INTEGER): LIST [INTEGER]
 			-- List of direct subprocess ids of process indicated by id `parent_id'.
 		do
-			create {LINKED_LIST [INTEGER]}Result.make
+			create {LINKED_LIST [INTEGER]} Result.make
 			if attached process_id_pair_list as p_tbl then
 				across
 					p_tbl as p
 				loop
-					if p.item.parent_id = parent_id then
-						Result.extend (p.item.pid)
+					if p.parent_id = parent_id then
+						Result.extend (p.pid)
 					end
 				end
 			end
@@ -504,7 +504,7 @@ feature {NONE} -- Termination
 				across
 					l_prc_name_id_tbl as p
 				loop
-					Result.extend ([parent_process_id (p.key), p.item])
+					Result.extend ([parent_process_id (@ p.key), p])
 				end
 			end
 		end
@@ -539,9 +539,10 @@ feature {NONE} -- Access
 
 	argument_line: STRING_32
 			-- Argument list of `executable'
+		attribute end
 
-;note
-	copyright: "Copyright (c) 1984-2017, Eiffel Software and others"
+note
+	copyright: "Copyright (c) 1984-2021, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

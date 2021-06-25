@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
-<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-21-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-21-0 http://www.eiffel.com/developers/xml/configuration-1-21-0.xsd" name="encoding-tests" uuid="4ADBFCB6-7E4E-42AD-92CD-55A8418B7EE8" library_target="encoding-tests">
+<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-22-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-22-0 http://www.eiffel.com/developers/xml/configuration-1-22-0.xsd" name="encoding-tests" uuid="4ADBFCB6-7E4E-42AD-92CD-55A8418B7EE8" library_target="encoding-tests">
 	<description>Unit-tests for the Encoding library.</description>
 	<target name="encoding-tests">
 		<root class="ANY" feature="default_create"/>

@@ -1,6 +1,4 @@
-note
-	description: "Summary description for {XML_NODE_TESTER}."
-	author: ""
+﻿note
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -20,7 +18,6 @@ feature -- Visitor
 		do
 			Result := error_count > 0
 		end
-
 
 	error_count: INTEGER
 	errors: detachable ARRAYED_LIST [READABLE_STRING_GENERAL]
@@ -78,7 +75,7 @@ feature -- Visitor
 						end
 						if attached {XML_ELEMENT} p as pe then
 							if attached pe.elements_by_qualified_name (e.ns_uri, e.name) as lst then
-								if across lst as c some c.item = e end then
+								if ∃ c: lst ¦ c = e then
 								else
 									report_error (pe.generator + ".elements_by_name (..)")
 								end
@@ -96,7 +93,7 @@ feature -- Visitor
 						end
 						if attached {XML_ELEMENT} p as pe then
 							if attached pe.elements_by_name (e.name) as lst then
-								if across lst as c some c.item = e end then
+								if ∃ c: lst ¦ c = e then
 								else
 									report_error (pe.generator + ".elements_by_name (..)")
 								end
@@ -106,7 +103,7 @@ feature -- Visitor
 						end
 					end
 				end
-				if across p.elements as c some c.item = e end then
+				if ∃ c: p.elements ¦ c = e then
 				else
 					report_error (p.generator + ".elements")
 				end
@@ -128,7 +125,7 @@ feature -- Visitor
 				if e.attribute_by_name (att.name) = Void then
 					report_error (e.generator + ".attribute_by_name (..)")
 				end
-				if across e.attributes as c some c.item = att end then
+				if ∃ c: e.attributes ¦ c = att then
 				else
 					report_error (e.generator + ".attributes")
 				end
@@ -139,6 +136,5 @@ feature -- Visitor
 feature {NONE} -- Implementation
 
 	last_element: detachable XML_ELEMENT
-
 
 end

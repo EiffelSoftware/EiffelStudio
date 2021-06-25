@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
-<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-21-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-21-0 http://www.eiffel.com/developers/xml/configuration-1-21-0.xsd" name="parse" uuid="6E3E2790-880E-4193-ABE6-27D129A0E48D" library_target="parse">
+<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-22-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-22-0 http://www.eiffel.com/developers/xml/configuration-1-22-0.xsd" name="parse" uuid="6E3E2790-880E-4193-ABE6-27D129A0E48D" library_target="parse">
 	<target name="parse">
 		<description>Parse library: Parsing facilities.
-		      Copyright (c) 1984-2019, Eiffel Software and others.
+		      Copyright (c) 1984-2021, Eiffel Software and others.
 		      Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt).</description>
 		<root all_classes="true"/>
 		<file_rule>

@@ -52,7 +52,6 @@ feature -- Initialization
 			create pnd_targets.make (8)
 			create dockable_targets.make (8)
 
-
 				-- Initialize contextual help.
 			create {EV_SIMPLE_HELP_ENGINE} help_engine
 			create f1_key.make_with_code ({EV_KEY_CONSTANTS}.Key_f1)
@@ -82,14 +81,14 @@ feature -- Initialization
 feature {EV_ANY_I} -- Implementation
 
 	cpu_relinquishment_time: INTEGER = 20
-		-- Number of milliseconds to relinquish CPU when idling.
+			-- Number of milliseconds to relinquish CPU when idling.
 
 	idle_iteration_count: NATURAL_32
-		-- Number of iterations that the application has been idle.
+			-- Number of iterations that the application has been idle.
 
 	idle_iteration_boundary: NATURAL_32 = 1500
-		-- Number of iterations before forcing Garbage Collector to kick in.
-		-- 30 Seconds = 30 * 1000 / sleep time
+			-- Number of iterations before forcing Garbage Collector to kick in.
+			-- 30 Seconds = 30 * 1000 / sleep time
 
 	idle_actions_snapshot: detachable SPECIAL [PROCEDURE]
 			-- Idle actions snapshot used for temporarily storing a copy of `idle_actions' during its iteration.
@@ -193,7 +192,6 @@ feature {EV_APPLICATION, EV_ANY_HANDLER, EV_ANY_I} -- Implementation
 						l_idle_is_locked := False
 					end
 
-
 						-- Set `idle_actions_executing' flag to avoid recursive idle actions execution.
 					idle_actions_executing := True
 					if l_kamikaze_idle_actions_snapshot /= Void then
@@ -254,8 +252,8 @@ feature {EV_APPLICATION, EV_ANY_HANDLER, EV_ANY_I} -- Implementation
 		end
 
 	idle_actions_executing: BOOLEAN
-		-- Are the idle actions currently being executed?
-		-- We need this flag to prevent recursive calls to idle actions from the GUI thread.
+			-- Are the idle actions currently being executed?
+			-- We need this flag to prevent recursive calls to idle actions from the GUI thread.
 
 	call_separate_action (a_action: separate PROCEDURE)
 			-- Execute `call' on 'a_action'.
@@ -272,10 +270,10 @@ feature {NONE} -- Implementation
 		end
 
 	events_processed_from_underlying_toolkit: BOOLEAN
-		-- Were any events processed in previous call to `process_underlying_toolkit_event_queue'?
+			-- Were any events processed in previous call to `process_underlying_toolkit_event_queue'?
 
 	user_events_processed_from_underlying_toolkit: BOOLEAN
-		-- Were user generated events processed in previous call to `process_underlying_toolkit_event_queue'?
+			-- Were user generated events processed in previous call to `process_underlying_toolkit_event_queue'?
 
 feature {EV_DOCKABLE_SOURCE_I, EV_DOCKABLE_TARGET_I, EV_SHARED_TRANSPORT_I} -- Access
 
@@ -284,7 +282,7 @@ feature {EV_DOCKABLE_SOURCE_I, EV_DOCKABLE_TARGET_I, EV_SHARED_TRANSPORT_I} -- A
 feature -- Access
 
 	invoke_garbage_collection_when_inactive: BOOLEAN
-		-- Should garbage collection be invoked when application is inactive.
+			-- Should garbage collection be invoked when application is inactive.
 
 	pnd_targets: HASH_TABLE [INTEGER, INTEGER]
 			-- Global list of pick and drop target object ids.
@@ -402,7 +400,7 @@ feature -- Element Change
 			contextual_help_accelerator_complete: attached contextual_help_handler_procedure and then contextual_help_accelerator.actions.has (contextual_help_handler_procedure)
 		end
 
-	set_help_engine (an_engine:  EV_HELP_ENGINE)
+	set_help_engine (an_engine: EV_HELP_ENGINE)
 			-- Assign `an_engine' to `help_engine'
 		require
 			an_engine_not_void: an_engine /= Void
@@ -681,7 +679,7 @@ feature -- Status setting
 feature -- Implementation
 
 	interface: detachable EV_APPLICATION note option: stable attribute end
-            -- Provides a common user interface to platform dependent
+			-- Provides a common user interface to platform dependent
 			-- functionality implemented by `Current'
 
 feature {EV_APPLICATION, EV_PICK_AND_DROPABLE_I} -- Pick and drop
@@ -704,7 +702,7 @@ feature {EV_APPLICATION, EV_PICK_AND_DROPABLE_I} -- Pick and drop
 feature {EV_PICK_AND_DROPABLE_I} -- Pick and drop
 
 	x_origin, y_origin: INTEGER
-		-- Temp coordinate values for origin of Pick and Drop.
+			-- Temp coordinate values for origin of Pick and Drop.
 
 	set_x_y_origin (a_x_origin, a_y_origin: INTEGER)
 			-- Set `x_origin' and `y_origin' to `a_x_origin' and `a_y_origin' respectively.
@@ -714,7 +712,7 @@ feature {EV_PICK_AND_DROPABLE_I} -- Pick and drop
 		end
 
 	rubber_band_is_drawn: BOOLEAN
-		-- Is the PnD rubber band drawn on screen?
+			-- Is the PnD rubber band drawn on screen?
 
 	draw_rubber_band
 			-- Draw a segment between initial pick point and `destination'.
@@ -734,7 +732,7 @@ feature {EV_PICK_AND_DROPABLE_I} -- Pick and drop
 
 	pnd_pointer_x,
 	pnd_pointer_y: INTEGER
-		-- Position of pointer on previous PND draw.
+			-- Position of pointer on previous PND draw.
 
 	set_pnd_pointer_coords (a_pnd_pointer_x, a_pnd_pointer_y: INTEGER)
 			-- Set PND pointer origins to `a_pnd_pointer_x' and `a_pnd_pointer_y'.
@@ -754,7 +752,7 @@ feature {EV_PICK_AND_DROPABLE_I} -- Pick and drop
 			l_object_comparable: PROXY_COMPARABLE [EV_PND_TARGET_DATA]
 			l_comparator_agent: PREDICATE [EV_PND_TARGET_DATA, EV_PND_TARGET_DATA]
 			l_arrayed_list: ARRAYED_LIST [EV_PND_TARGET_DATA]
-			l_alphabetical_sort_agent: PROCEDURE [PROCEDURE, detachable BINARY_SEARCH_TREE [PROXY_COMPARABLE [EV_PND_TARGET_DATA]],  ARRAYED_LIST [EV_PND_TARGET_DATA]]
+			l_alphabetical_sort_agent: PROCEDURE [PROCEDURE, detachable BINARY_SEARCH_TREE [PROXY_COMPARABLE [EV_PND_TARGET_DATA]], ARRAYED_LIST [EV_PND_TARGET_DATA]]
 			l_configurable_item_added: BOOLEAN
 			l_menu: EV_MENU
 			l_menu_count: INTEGER
@@ -788,7 +786,7 @@ feature {EV_PICK_AND_DROPABLE_I} -- Pick and drop
 						if not (attached {EV_SENSITIVE} trg as sensitive and then
 								(not sensitive.is_destroyed and then
 									not sensitive.is_sensitive)
-								)
+							)
 						then
 							l_has_targets := True
 							if not l_configurable_item_added and then a_configure_agent /= Void then
@@ -820,13 +818,13 @@ feature {EV_PICK_AND_DROPABLE_I} -- Pick and drop
 				if l_search_tree /= Void then
 						-- Sort items alphabetically using recursive inline agent
 					l_alphabetical_sort_agent := agent (l_sort_agent: PROCEDURE; a_node: detachable BINARY_SEARCH_TREE [PROXY_COMPARABLE [EV_PND_TARGET_DATA]]; a_list: ARRAYED_LIST [EV_PND_TARGET_DATA])
-						do
-							if a_node /= Void then
-								l_sort_agent.call ([l_sort_agent, a_node.left_child, a_list])
-								a_list.extend (a_node.item.item)
-								l_sort_agent.call ([l_sort_agent, a_node.right_child, a_list])
+							do
+								if a_node /= Void then
+									l_sort_agent.call ([l_sort_agent, a_node.left_child, a_list])
+									a_list.extend (a_node.item.item)
+									l_sort_agent.call ([l_sort_agent, a_node.right_child, a_list])
+								end
 							end
-						end
 						-- Call the recursive agent by passing itself in as the first parameter.
 					l_alphabetical_sort_agent.call ([l_alphabetical_sort_agent, l_search_tree, l_arrayed_list])
 				end
@@ -844,7 +842,7 @@ feature {EV_PICK_AND_DROPABLE_I} -- Pick and drop
 					until
 						l_arrayed_list.after
 					loop
-						if attached l_arrayed_list.item.target as l_target  then
+						if attached l_arrayed_list.item.target as l_target then
 							l_pebble := a_pebble
 								-- Implied by l_has_targets.
 							check l_pebble /= Void then
@@ -875,12 +873,12 @@ feature {EV_PICK_AND_DROPABLE_I} -- Pick and drop
 		end
 
 	menu_placement_offset: INTEGER = 3
-		-- Offset for both X and Y dimensions to which to move the menu so its placement is directly underneath the mouse pointer.
+			-- Offset for both X and Y dimensions to which to move the menu so its placement is directly underneath the mouse pointer.
 
 feature {EV_ANY_I} -- Tab Navigation
 
 	tab_navigation_state: NATURAL_8
-		-- Current tab navigation state.
+			-- Current tab navigation state.
 
 	set_tab_navigation_state (a_state: like tab_navigation_state)
 			-- Set `tab_navigation_state' to `a_state'.
@@ -893,7 +891,7 @@ feature {EV_ANY_I} -- Tab Navigation
 	tab_state_none: NATURAL_8 = 0
 	tab_state_from_previous: NATURAL_8 = 1
 	tab_state_from_next: NATURAL_8 = 2
-		-- Tab navigation states.
+			-- Tab navigation states.
 
 feature {NONE} -- Debug
 
@@ -1019,7 +1017,6 @@ feature -- Implementation
 			l_vbox.extend (l_error_box)
 			l_vbox.disable_item_expand (l_error_box)
 
-
 			create l_frame
 			create l_label_box
 			l_frame.extend (l_label_box)
@@ -1060,10 +1057,10 @@ feature -- Implementation
 		end
 
 	exception_dialog: detachable EV_DIALOG
-		-- Dialog used for showing uncaught exceptions.
+			-- Dialog used for showing uncaught exceptions.
 
 	show_exception_dialog: BOOLEAN = True
-		-- Should the exception dialog be shown by default?
+			-- Should the exception dialog be shown by default?
 
 	uncaught_exception_actions_called: BOOLEAN
 			-- Are the `uncaught_exceptions_actions' currently being called?
@@ -1086,7 +1083,7 @@ feature {NONE} -- Implementation
 	wake_up_gui_thread
 			-- Wake up the GUI thread if sleeping.
 		do
-			-- By default do nothing, redefined in descendents.
+				-- By default do nothing, redefined in descendents.
 		end
 
 	is_gui_thread: BOOLEAN
@@ -1110,7 +1107,7 @@ feature {NONE} -- Implementation
 	old_pointer_style: detachable EV_POINTER_STYLE
 			-- Pointer style of window being used while contextual help is enabled
 
- 	old_pointer_button_press_actions: detachable EV_POINTER_BUTTON_ACTION_SEQUENCE
+	old_pointer_button_press_actions: detachable EV_POINTER_BUTTON_ACTION_SEQUENCE
 			-- Button press actions of window being used whie contextual help is enabled
 
 	help_handler_procedure: detachable PROCEDURE note option: stable attribute end
@@ -1127,7 +1124,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	contextual_help_handler_procedure: detachable PROCEDURE  note option: stable attribute end
+	contextual_help_handler_procedure: detachable PROCEDURE note option: stable attribute end
 			-- Help handler procedure associated with context help accelerator
 
 	contextual_help_procedure: PROCEDURE [INTEGER, INTEGER, INTEGER, DOUBLE, DOUBLE, DOUBLE, INTEGER, INTEGER]
@@ -1180,7 +1177,7 @@ feature {NONE} -- Implementation
 					until
 						Result /= Void
 					loop
-						Result := focused_widget_from_container (ic.item)
+						Result := focused_widget_from_container (ic)
 					end
 				end
 			end
@@ -1196,8 +1193,8 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2021, Eiffel Software and others"
-	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
+	copyright: "Copyright (c) 1984-2021, Eiffel Software and others"
+	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software
 			5949 Hollister Ave., Goleta, CA 93117 USA

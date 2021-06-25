@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
-<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-21-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-21-0 http://www.eiffel.com/developers/xml/configuration-1-21-0.xsd" name="arg_parser" uuid="3BA55A43-C81F-48E9-86EC-9E53B212716A" library_target="arg_parser">
+<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-22-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-22-0 http://www.eiffel.com/developers/xml/configuration-1-22-0.xsd" name="arg_parser" uuid="3BA55A43-C81F-48E9-86EC-9E53B212716A" library_target="arg_parser">
 	<description>An argument parser library for parsing and validating command line arguments.</description>
 	<target name="arg_parser">
 		<root all_classes="true"/>

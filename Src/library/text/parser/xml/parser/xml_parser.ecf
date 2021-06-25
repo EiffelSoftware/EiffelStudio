@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
-<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-21-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-21-0 http://www.eiffel.com/developers/xml/configuration-1-21-0.xsd" name="xml_parser" uuid="F12ACE7B-3459-46F3-BCEA-A71F3952ED61" library_target="xml_parser">
+<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-22-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-22-0 http://www.eiffel.com/developers/xml/configuration-1-22-0.xsd" name="xml_parser" uuid="F12ACE7B-3459-46F3-BCEA-A71F3952ED61" library_target="xml_parser">
 	<description>XML Parse library.</description>
 	<target name="xml_parser">
 		<root all_classes="true"/>

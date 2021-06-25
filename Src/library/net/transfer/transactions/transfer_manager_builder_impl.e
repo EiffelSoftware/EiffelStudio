@@ -5,7 +5,9 @@
 	date: "$Date$"
 	revision: "$Revision$"
 
-class TRANSFER_MANAGER_BUILDER_IMPL inherit
+class TRANSFER_MANAGER_BUILDER_IMPL
+
+inherit
 
 	DATA_RESOURCE_FACTORY
 		export
@@ -300,8 +302,7 @@ feature -- Element change
 			end
 		ensure
 			one_more_transaction_if_correct:
-				(last_added_source_correct and
-				last_added_target_correct) implies count = old count + 1
+				(last_added_source_correct and last_added_target_correct) implies count = old count + 1
 		end
 
 feature -- Removal
@@ -327,10 +328,10 @@ feature -- Removal
 			transactions.go_i_th (idx)
 		ensure
 			one_less_item: count = count - 1
-			index_unchanged: (old transactions.index < old count)
-				implies (transactions.index = old transactions.index)
-			index_adapted: (old transactions.index = old count)
-				implies (transactions.index = old transactions.index - 1)
+			index_unchanged: old transactions.index < old count
+				implies transactions.index = old transactions.index
+			index_adapted: old transactions.index = old count
+				implies transactions.index = old transactions.index - 1
 		end
 
 	wipe_out
@@ -431,12 +432,12 @@ feature {NONE} -- Implementation
 		do
 			create hash.make (count)
 			across transactions as t loop
-				addr := t.item.source.address
+				addr := t.source.address
 				if attached hash.item (addr) as lst then
-					lst.extend (t.target_index)
+					lst.extend (@ t.target_index)
 				else
 					create l_list.make
-					l_list.extend (t.target_index)
+					l_list.extend (@ t.target_index)
 					hash.put (l_list, addr)
 				end
 			end
@@ -445,27 +446,27 @@ feature {NONE} -- Implementation
 			optimized_transactions := l_optimized_transactions
 
 			across transactions as t loop
-				if attached hash.item (t.item.source.address) as lst then
+				if attached hash.item (t.source.address) as lst then
 					if not transactions [lst.first].source.supports_multiple_transactions or lst.count = 1 then
 						across lst as c loop
-							l_optimized_transactions.extend (transactions [c.item])
+							l_optimized_transactions.extend (transactions [c])
 						end
 					else
 						create multitrans.make
 						across
 							lst as c
 						loop
-							multitrans.add_transaction (transactions [c.item])
+							multitrans.add_transaction (transactions [c])
 						end
 						l_optimized_transactions.extend (multitrans)
 					end
-					hash.remove (t.item.source.address)
+					hash.remove (t.source.address)
 				end
 			end
 		ensure
 			optimized:
 				attached optimized_transactions as l_optimized_transactions_var and then
-					l_optimized_transactions_var.is_empty
+				l_optimized_transactions_var.is_empty
 		end
 
 	setup_manager
@@ -480,18 +481,14 @@ feature {NONE} -- Implementation
 			transfer_manager := l_manager
 			if attached optimized_transactions as l_optimized_transactions then
 				l_manager.stop_on_error
-				across
-					l_optimized_transactions as t
-				loop
-					l_manager.add_transaction (t.item)
-				end
+				⟳ t: l_optimized_transactions ¦ l_manager.add_transaction (t) ⟲
 			end
 		ensure
 			manager_set_up: manager_built
 		end
 
 	add_reference (s: SET [STRING]; r: DATA_RESOURCE;
-				f: FUNCTION [BOOLEAN]): BOOLEAN
+			f: FUNCTION [BOOLEAN]): BOOLEAN
 			-- Add `r' into `s' if `f' is true.
 		require
 			set_exists: s /= Void
@@ -499,7 +496,7 @@ feature {NONE} -- Implementation
 			function_exists: f /= Void
 		do
 			if not s.has (r.location) then
-				Result := f.item (Void)
+				Result := f.item
 				if Result then s.extend (r.location) end
 			else
 				Result := True
@@ -524,15 +521,15 @@ feature {NONE} -- Implementation
 
 invariant
 
-	readable_set_exists: readable_set /= Void
-	writable_set_exists: writable_set /= Void
-	resource_hash: resource_hash /= Void
+	readable_set_exists: attached readable_set
+	writable_set_exists: attached writable_set
+	resource_hash: attached resource_hash
 	success_constraint: transfer_succeeded implies transfer_finished
-	count_equality: (optimized_count > 0) implies (count = optimized_count)
+	count_equality: optimized_count > 0 implies count = optimized_count
 
 note
-	copyright:	"Copyright (c) 1984-2021, Eiffel Software and others"
-	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
+	copyright: "Copyright (c) 1984-2021, Eiffel Software and others"
+	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software
 			5949 Hollister Ave., Goleta, CA 93117 USA

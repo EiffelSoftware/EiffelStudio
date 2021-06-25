@@ -60,7 +60,7 @@ feature {NONE} -- Initialization
 			across
 				panel_manager.panels as ic
 			loop
-				if attached ic.item as l_panel then
+				if attached ic as l_panel then
 					l_panel.on_font_changed
 				end
 			end
@@ -297,7 +297,7 @@ feature -- Value
 		end
 
 	operator_background_color: EV_COLOR
-			-- Background color used to display operator	
+			-- Background color used to display operator
 		do
 			Result := operator_background_color_preference.value
 		end
@@ -451,7 +451,7 @@ feature {ANY} -- Preferences
 			-- Color used to display quoted feature in comments
 
 	quoted_feature_background_color_preference: COLOR_PREFERENCE
-			-- Background color used to display quoted feature in comments			
+			-- Background color used to display quoted feature in comments
 
 	number_text_color_preference: COLOR_PREFERENCE
 			-- Color used to display numbers
@@ -465,10 +465,10 @@ feature {ANY} -- Preferences
 	operator_background_color_preference: COLOR_PREFERENCE
 			-- Background color used to display operator
 
-	highlight_color_preference : COLOR_PREFERENCE
+	highlight_color_preference: COLOR_PREFERENCE
 			-- Highlight color
 
-	cursor_line_highlight_color_preference : COLOR_PREFERENCE
+	cursor_line_highlight_color_preference: COLOR_PREFERENCE
 			-- Cursor line highlight color
 
 	link_color_preference: COLOR_PREFERENCE
@@ -484,7 +484,7 @@ feature {ANY} -- Preferences
 			-- Mouse over background color for links
 
 	smart_indentation_preference: BOOLEAN_PREFERENCE
-			-- Is smart indentation enabled?	
+			-- Is smart indentation enabled?
 
 	quadruple_click_enabled_preference: BOOLEAN_PREFERENCE
 			-- is quadruple click (select all) enabled ?
@@ -492,7 +492,7 @@ feature {ANY} -- Preferences
 	use_buffered_line_preference: BOOLEAN_PREFERENCE
 			-- Use buffered line when drawing?
 
-feature -- Misc	
+feature -- Misc
 
 	plain_white: EV_COLOR
 		once
@@ -609,7 +609,7 @@ feature {NONE} -- Preference Strings
 			-- Quoted feature in comment link color
 
 	quoted_feature_background_color_string: STRING = "editor.general.colors.quoted_feature_background_color"
-			-- Quoted feature background color for links			
+			-- Quoted feature background color for links
 
 	smart_indentation_string: STRING = "editor.general.smart_indentation"
 			-- Is smart indentation enabled?
@@ -618,7 +618,6 @@ feature {NONE} -- Preference Strings
 			-- is quadruple click (select all) enabled ?
 
 	use_buffered_line_string: STRING = "editor.general.use_buffered_line"
-
 
 feature {NONE} -- Implementation
 
@@ -804,12 +803,13 @@ feature {NONE} -- Implementation
 			mouse_over_link_background_color_preference.change_actions.extend (agent update)
 		end
 
-	preferences: PREFERENCES;
+	preferences: PREFERENCES
 			-- Preferences
+		attribute end
 
 note
-	copyright:	"Copyright (c) 1984-2020, Eiffel Software and others"
-	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
+	copyright: "Copyright (c) 1984-2021, Eiffel Software and others"
+	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software
 			5949 Hollister Ave., Goleta, CA 93117 USA

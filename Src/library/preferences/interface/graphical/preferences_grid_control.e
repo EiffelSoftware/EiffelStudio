@@ -343,7 +343,7 @@ feature -- Events
 			end
 		end
 
-feature {NONE} -- Events		
+feature {NONE} -- Events
 
 	on_preference_changed (a_pref: PREFERENCE; a_pref_widget: PREFERENCE_WIDGET)
 			-- Set the preference value to the newly entered value in the edit item.
@@ -358,7 +358,7 @@ feature {NONE} -- Events
 				end
 			end
 			if l_row = Void then
-				l_row := preference_row	(a_pref)
+				l_row := preference_row (a_pref)
 			end
 			if l_row /= Void then
 				preference_changed_on_row (a_pref, l_row, True)
@@ -493,7 +493,7 @@ feature {NONE} -- Events
 			stor: PREFERENCES_STORAGE_XML
 			p: detachable EV_WINDOW
 			popup: detachable EV_POPUP_WINDOW
-			bb,vb: EV_VERTICAL_BOX
+			bb, vb: EV_VERTICAL_BOX
 			lab: EV_LABEL
 			l_style: detachable EV_POINTER_STYLE
 		do
@@ -649,7 +649,7 @@ feature {NONE} -- Events
 				end
 			when {EV_KEY_CONSTANTS}.key_space then
 				if grid.has_selected_row then
-					l_row :=  grid.selected_rows.first
+					l_row := grid.selected_rows.first
 					if
 						l_row.count >= col_value_index and then
 						attached {EV_GRID_CHECKABLE_LABEL_ITEM} l_row.item (col_value_index) as l_boolean_widget
@@ -708,7 +708,7 @@ feature {NONE} -- Events
 			end
 		end
 
-	on_header_item_single_clicked (hi: detachable EV_HEADER_ITEM; ax,ay, a_but: INTEGER)
+	on_header_item_single_clicked (hi: detachable EV_HEADER_ITEM; ax, ay, a_but: INTEGER)
 		local
 			col_index: INTEGER
 		do
@@ -781,7 +781,7 @@ feature {NONE} -- Implementation
 			status_label.refresh_now
 
 				-- Alphabetically sort the known preferences
-			l_sorted_preferences := sorted_known_preferences_by (-Name_sorting_mode, show_hidden_preferences, preferences.preferences)
+			l_sorted_preferences := sorted_known_preferences_by (- Name_sorting_mode, show_hidden_preferences, preferences.preferences)
 
 			if l_sorted_preferences /= Void and then not l_sorted_preferences.is_empty then
 				create l_pref_hash.make (l_sorted_preferences.count)
@@ -796,7 +796,7 @@ feature {NONE} -- Implementation
 					if l_pref /= Void then
 						l_pref_name := l_pref.name
 						if l_pref_name.has ('.') then
-							  -- Build parent nodes	as this preference is of the form 'a.b.c' so we must build 'a' and 'b'.
+								-- Build parent nodes	as this preference is of the form 'a.b.c' so we must build 'a' and 'b'.
 							l_pref_parent_full_name := parent_preference_name (l_pref_name)
 							if not l_pref_hash.has (l_pref_parent_full_name) then
 								add_parent_structure_preference_row (l_pref_parent_full_name, l_pref_hash)
@@ -861,7 +861,7 @@ feature {NONE} -- Implementation
 			a_grid_structure.put (l_row, a_pref_parent_full_name)
 		ensure
 			pref_parent_inserted: a_grid_structure.has (a_pref_parent_full_name)
-							and then a_grid_structure.item (a_pref_parent_full_name) /= Void
+				and then a_grid_structure.item (a_pref_parent_full_name) /= Void
 		end
 
 	build_flat
@@ -891,11 +891,7 @@ feature {NONE} -- Implementation
 
 			if l_sorted_preferences /= Void and then not l_sorted_preferences.is_empty then
 					-- Traverse the preferences in the system and add to grid list
-				across
-					l_sorted_preferences as p
-				loop
-					add_short_preference_row (Void, p.item)
-				end
+				⟳ p: l_sorted_preferences ¦ add_short_preference_row (Void, p) ⟲
 				update_grid_columns
 			end
 		end
@@ -928,7 +924,7 @@ feature {NONE} -- Implementation
 			across
 				a_prefs_to_sort as p
 			loop
-				l_pref := p.item
+				l_pref := p
 				l_pref_name := l_pref.name
 				l_display_name := build_full_name_to_display (l_pref_name)
 				inspect l_sorting_criteria
@@ -1011,7 +1007,7 @@ feature {NONE} -- Implementation
 --			grid.disable_row_height_fixed
 --			selected_preference_name := a_pref_name
 --			wipe_out_visible_preference_change_action
---			visible_preferences.wipe_out	
+--			visible_preferences.wipe_out
 
 				-- Create row
 			if a_row = Void then
@@ -1516,9 +1512,9 @@ feature {NONE} -- Filtering
 					l_filter_engine.set_pattern (l_match_text)
 					l_filter_engine.disable_case_sensitive
 					across
-						l_prefs  as p
+						l_prefs as p
 					loop
-						l_preference := p.item
+						l_preference := p
 						s := build_preference_name_to_display (l_preference)
 						l_matched := False
 						if not s.is_empty then
@@ -1591,8 +1587,8 @@ feature {NONE} -- Filtering
 				l_preference := p
 			else
 				if attached matches as l_matches and then l_matches.valid_index (r) then
-					--| grid indexes start at 1
-					--| list start at 1
+						--| grid indexes start at 1
+						--| list start at 1
 					l_preference := l_matches.i_th (r)
 					initialize_row_for_preference (grid.row (r), l_preference)
 				end
@@ -1609,7 +1605,7 @@ feature {NONE} -- Filtering
 				when col_value_index then
 					l_item := preference_value_column (l_preference)
 				else
-					-- Should not get here.
+						-- Should not get here.
 				end
 			end
 			if l_item = Void then
@@ -1649,8 +1645,7 @@ feature {NONE} -- Private attributes
 		end
 
 	grid: EV_GRID
-		-- Grid
-
+			-- Grid
 
 	icon_up: EV_PIXMAP
 
@@ -1658,7 +1653,7 @@ feature {NONE} -- Private attributes
 
 	build_filter_icons
 		local
-			w,h: INTEGER
+			w, h: INTEGER
 			bc: EV_COLOR
 		do
 			w := 16
@@ -1670,18 +1665,18 @@ feature {NONE} -- Private attributes
 			icon_up.set_background_color (bc)
 			icon_up.clear
 			icon_up.fill_polygon (<<
-						create {EV_COORDINATE}.make_precise (0.2 * w, 0.2 * h),
-						create {EV_COORDINATE}.make_precise (0.8 * w, 0.2 * h),
-						create {EV_COORDINATE}.make_precise (0.5 * w, 0.6 * h)
-					>>)
+					create {EV_COORDINATE}.make_precise (0.2 * w, 0.2 * h),
+					create {EV_COORDINATE}.make_precise (0.8 * w, 0.2 * h),
+					create {EV_COORDINATE}.make_precise (0.5 * w, 0.6 * h)
+				>>)
 			create icon_down.make_with_size (w, h)
 			icon_down.set_background_color (bc)
 			icon_down.clear
 			icon_down.fill_polygon (<<
-				create {EV_COORDINATE}.make_precise (0.2 * w, 0.6 * h),
-				create {EV_COORDINATE}.make_precise (0.8 * w, 0.6 * h),
-				create {EV_COORDINATE}.make_precise (0.5 * w, 0.2 * h)
-					>>)
+					create {EV_COORDINATE}.make_precise (0.2 * w, 0.6 * h),
+					create {EV_COORDINATE}.make_precise (0.8 * w, 0.6 * h),
+					create {EV_COORDINATE}.make_precise (0.5 * w, 0.2 * h)
+				>>)
 		ensure
 			icon_up /= Void
 			icon_down /= Void
@@ -1694,7 +1689,7 @@ feature {NONE} -- Private attributes
 			-- Default row height
 
 	display_update_agent: PROCEDURE [PREFERENCE]
-			-- Agent to be called when preference is changed outside	
+			-- Agent to be called when preference is changed outside
 
 	col_name_index: INTEGER = 1
 			-- column index for name.
@@ -1721,8 +1716,8 @@ note
 	ca_ignore:
 		"CA011", "CA011: too many arguments",
 		"CA033", "CA033: very large class"
-	copyright:	"Copyright (c) 1984-2020, Eiffel Software and others"
-	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
+	copyright: "Copyright (c) 1984-2021, Eiffel Software and others"
+	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software
 			5949 Hollister Ave., Goleta, CA 93117 USA

@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
-<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-21-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-21-0 http://www.eiffel.com/developers/xml/configuration-1-21-0.xsd" name="vision2_extension" uuid="72EB29A8-4A3D-4B17-B2F6-365F388D2282" library_target="vision2_extension">
+<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-22-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-22-0 http://www.eiffel.com/developers/xml/configuration-1-22-0.xsd" name="vision2_extension" uuid="72EB29A8-4A3D-4B17-B2F6-365F388D2282" library_target="vision2_extension">
 	<target name="vision2_extension">
 		<description>Extensions to the EiffelVision2 library.
-		      Copyright (c) 1984-2019, Eiffel Software and others.
+		      Copyright (c) 1984-2021, Eiffel Software and others.
 		      Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt).</description>
 		<root all_classes="true"/>
 		<file_rule>

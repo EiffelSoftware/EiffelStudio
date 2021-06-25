@@ -109,7 +109,7 @@ feature -- Access
 			until
 				Result
 			loop
-				if attached {EV_CONTAINER} ic.item as ct then
+				if attached {EV_CONTAINER} ic as ct then
 					Result := ct.has_recursive (an_item)
 				end
 
@@ -161,7 +161,7 @@ feature -- Status setting
 				first_radio_button_selected
 			other_original_radio_button_still_selected: old other.has_selected_radio_button implies
 				other.has_selected_radio_button
-			-- old merged_radio_button_groups.count > 1 implies original selection from that group still selected.
+				-- old merged_radio_button_groups.count > 1 implies original selection from that group still selected.
 		end
 
 feature -- Status report
@@ -177,7 +177,6 @@ feature -- Status report
 		ensure
 			not_is_empty: Result /= Void implies not Result.is_empty
 		end
-
 
 	writable: BOOLEAN
 			-- Is there a current item that may be modified?
@@ -355,7 +354,6 @@ feature {EV_CONTAINER, EV_CONTAINER_I} -- Contract support
 			Result := implementation.has_radio_button
 		end
 
-
 feature {NONE} -- Contract support
 
 	is_in_default_state: BOOLEAN
@@ -422,8 +420,8 @@ invariant
 	items_unique: is_usable implies items_unique
 
 note
-	copyright:	"Copyright (c) 1984-2018, Eiffel Software and others"
-	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
+	copyright: "Copyright (c) 1984-2021, Eiffel Software and others"
+	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software
 			5949 Hollister Ave., Goleta, CA 93117 USA

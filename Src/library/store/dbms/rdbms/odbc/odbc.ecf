@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
-<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-21-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-21-0 http://www.eiffel.com/developers/xml/configuration-1-21-0.xsd" name="odbc" uuid="D6944D5E-28BF-4C19-820B-183F5DA1FF76" library_target="odbc">
+<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-22-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-22-0 http://www.eiffel.com/developers/xml/configuration-1-22-0.xsd" name="odbc" uuid="D6944D5E-28BF-4C19-820B-183F5DA1FF76" library_target="odbc">
 	<target name="odbc">
 		<description>ODBC access library for EiffelStore.
-			Copyright (c) 1984-2019, Eiffel Software and others.
+			Copyright (c) 1984-2021, Eiffel Software and others.
 			Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt).</description>
 		<root all_classes="true"/>
 		<file_rule>

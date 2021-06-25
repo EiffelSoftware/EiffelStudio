@@ -1,8 +1,8 @@
 ﻿note
 	description: "[
-		Panels that are hold SD_ZONE which are hidden at four 
-		side of main window area.
-	]"
+			Panels that are hold SD_ZONE which are hidden at four 
+			side of main window area.
+		]"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 	date: "$Date$"
@@ -142,8 +142,8 @@ feature -- Query
 			until
 				attached Result
 			loop
-				if c.item.content = a_content then
-					Result := c.item
+				if c.content = a_content then
+					Result := c
 				end
 			end
 		ensure
@@ -162,8 +162,8 @@ feature -- Query
 				until
 					attached Result
 				loop
-					if c.item = a_tab.content then
-						Result := c.item
+					if c = a_tab.content then
+						Result := c
 					end
 				end
 			end
@@ -253,8 +253,8 @@ feature -- Command
 			until
 				attached Result
 			loop
-				if c.item.has (a_tab) then
-					Result := c.item.twin
+				if c.has (a_tab) then
+					Result := c.twin
 				end
 			end
 		ensure
@@ -309,7 +309,7 @@ feature -- Command
 			until
 				l_tab_groups.after
 			loop
-				-- Remove stub separator by group
+					-- Remove stub separator by group
 				update_one_tab_group (l_tab_groups.item)
 				l_tab_groups_max_size.extend (tab_group_max_size (l_tab_groups.item))
 				l_tab_groups.forth
@@ -330,7 +330,7 @@ feature -- Command
 				end
 				forth
 			end
-			Precursor {SD_HOR_VER_BOX}(a_color)
+			Precursor {SD_HOR_VER_BOX} (a_color)
 		end
 
 	update_size
@@ -429,7 +429,7 @@ feature {NONE} -- Implementation functions
 				search (a_tab_group.item)
 				check found: not after end
 				if a_tab_group.index /= a_tab_group.count then
-					-- Remove separator
+						-- Remove separator
 					forth
 					if attached {SD_AUTO_HIDE_SEPARATOR} item as l_separator then
 						prune_all (l_separator)
@@ -522,7 +522,7 @@ feature {NONE} -- Implementation functions
 				l_tab_group.extend (a_stub)
 				tab_groups.extend (l_tab_group)
 
-				-- Add spacer
+					-- Add spacer
 				create l_spacer
 				l_spacer.set_minimum_size (spacer_size, spacer_size)
 				l_spacer.set_background_color (background_color)
@@ -558,7 +558,7 @@ feature {NONE} -- Implementation functions
 				start
 				search (a_stub)
 				check not off end
-				-- Remove spacer
+					-- Remove spacer
 				if not off then
 					remove
 				end
@@ -589,8 +589,8 @@ feature {NONE} -- Implementation functions
 			until
 				attached Result
 			loop
-				if c.item.has (a_tab) then
-					Result := c.item
+				if c.has (a_tab) then
+					Result := c
 				end
 			end
 		ensure
@@ -635,9 +635,9 @@ invariant
 	tab_groups_not_void: tab_groups /= Void
 
 note
-	library:	"SmartDocking: Library of reusable components for Eiffel."
-	copyright:	"Copyright (c) 1984-2017, Eiffel Software and others"
-	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
+	library: "SmartDocking: Library of reusable components for Eiffel."
+	copyright: "Copyright (c) 1984-2021, Eiffel Software and others"
+	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software
 			5949 Hollister Ave., Goleta, CA 93117 USA

@@ -1,10 +1,10 @@
-note
+﻿note
 
 	description: "[
 			XML Context for namespace resolver
-
+			
 			Note: the original code is from Gobo's XM library (http://www.gobosoft.com/)
-			]"
+		]"
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -78,7 +78,7 @@ feature -- Status report
 			p: like to_context_key
 		do
 			p := to_context_key (a_prefix)
-			Result := across context as c some c.item.has (p) end
+			Result := ∃ c: context ¦ c.has (p)
 		end
 
 feature -- Access
@@ -107,7 +107,7 @@ feature -- Access
 			until
 				result_found
 			loop
-				i := c.item
+				i := c
 				if
 					i.has (p) and then
 					attached i.item (p) as v
@@ -166,8 +166,8 @@ invariant
 	context_not_void: context /= Void
 
 note
-	copyright: "Copyright (c) 1984-2012, Eiffel Software and others"
-	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
+	copyright: "Copyright (c) 1984-2021, Eiffel Software and others"
+	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software
 			5949 Hollister Ave., Goleta, CA 93117 USA
@@ -175,4 +175,5 @@ note
 			Website http://www.eiffel.com
 			Customer support http://support.eiffel.com
 		]"
+
 end

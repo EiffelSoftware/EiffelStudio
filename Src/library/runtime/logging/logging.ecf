@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
-<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-21-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-21-0 http://www.eiffel.com/developers/xml/configuration-1-21-0.xsd" name="logging" uuid="42078327-FFEB-4A2A-94C6-05166F2DDFCE" library_target="logging">
+<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-22-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-22-0 http://www.eiffel.com/developers/xml/configuration-1-22-0.xsd" name="logging" uuid="42078327-FFEB-4A2A-94C6-05166F2DDFCE" library_target="logging">
 	<target name="logging">
 		<description>
 			Logging Cluster - Provide 1 interface to various logging mechanisms
-			Copyright (c) 2010-2019, ITPassion Ltd, Eiffel Software and others
+			Copyright (c) 2010-2021, ITPassion Ltd, Eiffel Software and others
 			Eiffel Forum License v2
 		</description>
 		<root all_classes="true"/>

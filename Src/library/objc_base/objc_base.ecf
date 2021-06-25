@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
-<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-21-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-21-0 http://www.eiffel.com/developers/xml/configuration-1-21-0.xsd" name="objective_c" uuid="876E123E-1EED-4F7B-9C7D-4762358A62D7" readonly="false" library_target="objective_c">
+<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-22-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-22-0 http://www.eiffel.com/developers/xml/configuration-1-22-0.xsd" name="objective_c" uuid="876E123E-1EED-4F7B-9C7D-4762358A62D7" readonly="false" library_target="objective_c">
 	<target name="objective_c">
 		<description>Objective-C Base Library. Wrapper classes for Objective C .
-			Copyright (c) 2009-2019, Daniel Furrer and others.</description>
+			Copyright (c) 2009-2021, Daniel Furrer and others.</description>
 		<root all_classes="true"/>
 		<file_rule>
 			<exclude>/EIFGEN.{0,1}$</exclude>

@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
-<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-21-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-21-0 http://www.eiffel.com/developers/xml/configuration-1-21-0.xsd" name="process-tests" uuid="BF1948E7-224A-4354-BB2E-4337222B7670" library_target="process-tests">
+<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-22-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-22-0 http://www.eiffel.com/developers/xml/configuration-1-22-0.xsd" name="process-tests" uuid="BF1948E7-224A-4354-BB2E-4337222B7670" library_target="process-tests">
 	<description>Unit-tests for the Process library.</description>
 	<target name="process-tests">
 		<root class="ANY" feature="default_create"/>

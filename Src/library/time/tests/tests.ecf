@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
-<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-21-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-21-0 http://www.eiffel.com/developers/xml/configuration-1-21-0.xsd" name="time-tests" uuid="46437688-F511-4CBD-BC75-B40D80189CF9" library_target="time-tests">
+<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-22-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-22-0 http://www.eiffel.com/developers/xml/configuration-1-22-0.xsd" name="time-tests" uuid="46437688-F511-4CBD-BC75-B40D80189CF9" library_target="time-tests">
 	<description>Unit-tests for the EiffelTime library.</description>
 	<target name="time-tests">
 		<root class="TEST_ACCURACY" feature="default_create"/>

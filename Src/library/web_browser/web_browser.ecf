@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
-<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-21-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-21-0 http://www.eiffel.com/developers/xml/configuration-1-21-0.xsd" name="web_browser" uuid="60E0F1EB-8BCD-4EF1-B0EE-0174435F6D7F" library_target="web_browser">
+<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-22-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-22-0 http://www.eiffel.com/developers/xml/configuration-1-22-0.xsd" name="web_browser" uuid="60E0F1EB-8BCD-4EF1-B0EE-0174435F6D7F" library_target="web_browser">
 	<target name="web_browser">
 		<description>Web Browser: Multiplatform web browser extension of Vision2 library for Eiffel. Based on Webkit-1.0 on Linux; IE core on Windows.
-		      Copyright (c) 1984-2019, Eiffel Software and others.
+		      Copyright (c) 1984-2021, Eiffel Software and others.
 		      Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt).</description>
 		<root all_classes="true"/>
 		<file_rule>

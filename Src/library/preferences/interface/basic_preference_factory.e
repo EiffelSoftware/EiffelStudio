@@ -1,18 +1,18 @@
 ﻿note
 	description: "[
-		This is a helper class used to initialize preferences.  To initialize a preference
-		use the `new_*_preference_value' functions.  In doing so the following rules apply:
-
-			1.  The preference name must be unique to the manager.  Note: it is possible to have a preference with
-				the same name in a different manager.  For example you may have two preferences name `editor.width'
-				and `application.width' in the same system, but not `editor.width' and `editor.width'.
-
-			2.  If the preference is found in the underlying data store (registry or XML) from a previous session this
-				saved value shall be used when the preference is initialized.  If there is no value in the underlying data store
-				the value specified in a default file will be used.  If there is no default file or the preference does appear in the
-				specified default file the value passed to the `new_*_preference_value' will be used.
-
-		To add custom preferences inherit this class and implement a creation of custom preferences.
+			This is a helper class used to initialize preferences.  To initialize a preference
+			use the `new_*_preference_value' functions.  In doing so the following rules apply:
+			
+				1.  The preference name must be unique to the manager.  Note: it is possible to have a preference with
+					the same name in a different manager.  For example you may have two preferences name `editor.width'
+					and `application.width' in the same system, but not `editor.width' and `editor.width'.
+			
+				2.  If the preference is found in the underlying data store (registry or XML) from a previous session this
+					saved value shall be used when the preference is initialized.  If there is no value in the underlying data store
+					the value specified in a default file will be used.  If there is no default file or the preference does appear in the
+					specified default file the value passed to the `new_*_preference_value' will be used.
+			
+			To add custom preferences inherit this class and implement a creation of custom preferences.
 		]"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -127,11 +127,7 @@ feature -- Access: Lists
 				lst := l_fb
 			else
 				create {ARRAYED_LIST [STRING_32]} lst.make (0)
-				across
-					a_fallback_value as c
-				loop
-					lst.extend (c.item.to_string_32)
-				end
+				⟳ s: a_fallback_value ¦ lst.extend (s.to_string_32) ⟲
 			end
 			Result := (create {PREFERENCE_FACTORY [like {STRING_LIST_PREFERENCE}.value, STRING_LIST_PREFERENCE]}).
 				new_preference (a_manager.preferences, a_manager, a_name, lst)
@@ -182,11 +178,7 @@ feature -- Access: Choices
 				lst := l_fb
 			else
 				create {ARRAYED_LIST [STRING_32]} lst.make (0)
-				across
-					a_fallback_value as c
-				loop
-					lst.extend (c.item.to_string_32)
-				end
+				⟳ s: a_fallback_value ¦ lst.extend (s.to_string_32) ⟲
 			end
 			Result := (create {PREFERENCE_FACTORY [like {STRING_CHOICE_PREFERENCE}.value, STRING_CHOICE_PREFERENCE]}).
 				new_preference (a_manager.preferences, a_manager, a_name, lst)
@@ -257,8 +249,8 @@ feature -- Access: Arrays
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2020, Eiffel Software and others"
-	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
+	copyright: "Copyright (c) 1984-2021, Eiffel Software and others"
+	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software
 			5949 Hollister Ave., Goleta, CA 93117 USA

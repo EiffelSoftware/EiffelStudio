@@ -244,7 +244,7 @@ feature {EV_ANY, EV_ANY_I, EV_RICH_TEXT_BUFFERING_STRUCTURES_I} -- Status settin
 				old start_selection = start_selection and old end_selection = end_selection
 		end
 
-	modify_region (start_position, end_position: INTEGER; format: EV_CHARACTER_FORMAT; applicable_attributes:EV_CHARACTER_FORMAT_RANGE_INFORMATION)
+	modify_region (start_position, end_position: INTEGER; format: EV_CHARACTER_FORMAT; applicable_attributes: EV_CHARACTER_FORMAT_RANGE_INFORMATION)
 			-- Modify formatting from `start_position' to `end_position' applying all attributes of `format' that are set to
 			-- `True' within `applicable_attributes', ignoring others.
 		require
@@ -459,19 +459,19 @@ feature {EV_ANY, EV_ANY_I, EV_RICH_TEXT_BUFFERING_STRUCTURES_I} -- Status settin
 			complete_saving
 			create text_file.make_with_path (a_filename)
 			text_file.open_write
-			if across buffer.internal_text as c all c.item.natural_32_code <= 0x7f end then
+			if ∀ c: buffer.internal_text ¦ c.natural_32_code <= 0x7f then
 				text_file.put_string (buffer.internal_text.to_string_8)
 			else
 					-- TODO: improve performance.
 				across
 					buffer.internal_text as c
 				loop
-					if c.item.natural_32_code <= 0x7f then
-						text_file.put_character (c.item.to_character_8)
+					if c.natural_32_code <= 0x7f then
+						text_file.put_character (c.to_character_8)
 					else
 						text_file.put_character ('\')
 						text_file.put_character ('u')
-						text_file.put_integer_16 (c.item.code.as_integer_16)
+						text_file.put_integer_16 (c.code.as_integer_16)
 						text_file.put_character ('?')
 					end
 				end
@@ -511,7 +511,7 @@ feature {EV_ANY, EV_ANY_I, EV_RICH_TEXT_BUFFERING_STRUCTURES_I} -- Status settin
 			text_not_changed_if_failed: not last_load_successful implies old text.is_equal (text)
 			caret_not_moved_if_failed: not last_load_successful implies caret_position = old caret_position
 			selection_not_changed_if_failed: not last_load_successful implies (old has_selection = has_selection and has_selection implies
-				old start_selection = start_selection and old end_selection = end_selection)
+					old start_selection = start_selection and old end_selection = end_selection)
 		end
 
 	last_load_successful: BOOLEAN
@@ -562,7 +562,7 @@ feature {EV_ANY, EV_ANY_I, EV_RICH_TEXT_BUFFERING_STRUCTURES_I} -- Status settin
 		end
 
 	default_step: INTEGER = 8
-		-- Default step used when buffering into RTF.
+			-- Default step used when buffering into RTF.
 
 	internal_character_format_contiguous (start_index, end_index: INTEGER): BOOLEAN
 			-- Is formatting from caret position `start_index' to `end_index' contiguous?
@@ -642,14 +642,13 @@ feature {NONE} -- Implementation
 		deferred
 		end
 
-
 feature {EV_ANY, EV_ANY_I} -- Implementation
 
-	interface: detachable EV_RICH_TEXT note option: stable attribute end;
+	interface: detachable EV_RICH_TEXT note option: stable attribute end
 
 note
-	copyright:	"Copyright (c) 1984-2019, Eiffel Software and others"
-	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
+	copyright: "Copyright (c) 1984-2021, Eiffel Software and others"
+	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software
 			5949 Hollister Ave., Goleta, CA 93117 USA

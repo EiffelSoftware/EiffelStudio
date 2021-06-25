@@ -43,7 +43,7 @@ feature {NONE} -- Initialization
 	command_line_from_arguments (executable_name: READABLE_STRING_GENERAL; argument_list: detachable ITERABLE [READABLE_STRING_GENERAL]): STRING_32
 		require
 			executable_name_attached: attached executable_name
-			arguments_attached: attached argument_list as args implies across args as a all attached a.item end
+			arguments_attached: attached argument_list as args implies ∀ a: args ¦ attached a
 		do
 			create Result.make (executable_name.count)
 			Result.append_string_general (executable_name)
@@ -51,7 +51,7 @@ feature {NONE} -- Initialization
 				across
 					argument_list as args
 				loop
-					if attached args.item as a then
+					if attached args as a then
 						Result.append_character (' ')
 						if a.is_empty or else separated_words (a).count > 1 then
 							Result.append_character ('"')
@@ -195,17 +195,23 @@ feature -- Interprocess data transmission
 			end
 		end
 
+--	output_reader: separate BASE_PROCESS_READER
+--		do
+--			create Result.make ()
+--		end
+
 	read_output_to_special (buffer: SPECIAL [NATURAL_8])
 			-- <Precursor>
 		local
 			number_of_bytes_read: NATURAL_32
+			last_error: NATURAL_32
 		do
-			if {WEL_API}.cwin_read_file (child_process.std_output, $buffer, buffer.count.as_natural_32, $number_of_bytes_read, default_pointer) then
+			if {WEL_API}.cwin_read_file_with_error (child_process.std_output, $buffer, buffer.count.as_natural_32, $number_of_bytes_read, default_pointer, $last_error) then
 					-- There was no error.
 				has_output_stream_error := False
 					-- Update `buffer.count` with actual bytes read.
 				buffer.keep_head (number_of_bytes_read.as_integer_32)
-			elseif {WEL_API}.get_last_error = {WEL_WINDOWS_ERROR_MESSAGES}.error_broken_pipe_value then
+			elseif last_error = {WEL_WINDOWS_ERROR_MESSAGES}.error_broken_pipe_value.as_natural_32 then
 					-- The other end of the pipe has been closed.
 				has_output_stream_closed := True
 				has_output_stream_error := False
@@ -225,13 +231,14 @@ feature -- Interprocess data transmission
 			-- <Precursor>
 		local
 			number_of_bytes_read: NATURAL_32
+			last_error: NATURAL_32
 		do
-			if {WEL_API}.cwin_read_file (child_process.std_error, $buffer, buffer.count.as_natural_32, $number_of_bytes_read, default_pointer) then
+			if {WEL_API}.cwin_read_file_with_error (child_process.std_error, $buffer, buffer.count.as_natural_32, $number_of_bytes_read, default_pointer, $last_error) then
 					-- There was no error.
 				has_error_stream_error := False
 					-- Update `buffer.count` with actual bytes read.
 				buffer.keep_head (number_of_bytes_read.as_integer_32)
-			elseif {WEL_API}.get_last_error = {WEL_WINDOWS_ERROR_MESSAGES}.error_broken_pipe_value then
+			elseif last_error = {WEL_WINDOWS_ERROR_MESSAGES}.error_broken_pipe_value.as_natural_32 then
 					-- The other end of the pipe has been closed.
 				has_error_stream_closed := True
 				has_error_stream_error := False
@@ -354,13 +361,13 @@ feature {NONE} -- Termination
 	direct_subprocess_list (parent_id: INTEGER): LIST [INTEGER]
 			-- List of direct subprocess ids of process indicated by id `parent_id'.
 		do
-			create {ARRAYED_LIST [INTEGER]}Result.make (0)
+			create {ARRAYED_LIST [INTEGER]} Result.make (0)
 			if attached process_id_pair_list as p_tbl then
 				across
 					p_tbl as p
 				loop
-					if p.item.parent_id = parent_id then
-						Result.extend (p.item.process_id)
+					if p.parent_id = parent_id then
+						Result.extend (p.process_id)
 					end
 				end
 			end
@@ -446,7 +453,7 @@ feature {NONE} -- Termination
 					TOKEN_PRIVILEGES tkp, ptkp;
 					DWORD dwResult;
 					DWORD bsize;
-
+					
 					if (0 == OpenProcessToken(GetCurrentProcess(),
 					   TOKEN_ADJUST_PRIVILEGES | TOKEN_QUERY, &hToken)) {
 					   *$a_success=FALSE;
@@ -465,7 +472,7 @@ feature {NONE} -- Termination
 					      sizeof(TOKEN_PRIVILEGES),
 					      &ptkp,
 					      &bsize);
-
+					
 					dwResult = GetLastError();
 					if (dwResult != ERROR_SUCCESS) {
 					    *$a_success=FALSE;
@@ -493,9 +500,10 @@ feature {NONE} -- Access
 
 	child_process: WEL_PROCESS
 			-- Child process.
+		attribute end
 
-;note
-	copyright: "Copyright (c) 1984-2017, Eiffel Software and others"
+note
+	copyright: "Copyright (c) 1984-2021, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

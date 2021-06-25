@@ -62,7 +62,7 @@ feature -- Open inner container data
 			l_reader: SED_MEDIUM_READER_WRITER
 			l_place_holder_content: SD_CONTENT
 		do
-			-- We have to set all zones to normal state, otherwise we can't find the editor parent.
+				-- We have to set all zones to normal state, otherwise we can't find the editor parent.
 			internal_docking_manager.command.recover_normal_state
 
 			internal_docking_manager.command.resize (True)
@@ -97,22 +97,22 @@ feature -- Open inner container data
 					l_place_holder_content := internal_docking_manager.zones.place_holder_content
 					if editor_helper.has_editor_or_place_holder (l_top_parent) then
 						if attached {EV_WIDGET} l_place_holder_content.state.zone as lt_widget then
-							-- If this time we only restore a editor place holder zone? No real editors restored.
+								-- If this time we only restore a editor place holder zone? No real editors restored.
 							if not internal_docking_manager.main_container.has_recursive (lt_widget) then
-								-- We should close place holder content if exist. Because there is(are) already normal editor zone(s).				
+									-- We should close place holder content if exist. Because there is(are) already normal editor zone(s).
 								l_place_holder_content.close
 							end
 						else
 							check l_place_holder_content.state.zone = Void end -- When the state is {STATE_VOID}, {SD_STATE}.zone query return void
 						end
 					else
-						-- Maybe nothing restored, we should restore place holder zone
-						-- Otherwise, editor will missing, see bug#15253
+							-- Maybe nothing restored, we should restore place holder zone
+							-- Otherwise, editor will missing, see bug#15253
 
-						-- `l_top_parent' is not full before `open_inner_container_data',
-						-- `open_inner_container_data' restored nothing, so it should not full here
-						-- However, if `l_top_parent' has restored somethings (such as EV_SPLIT_AREA), we
-						-- can wipe out it, since `editor_top_parent_for_restore' guranntee not has tools' widgets
+							-- `l_top_parent' is not full before `open_inner_container_data',
+							-- `open_inner_container_data' restored nothing, so it should not full here
+							-- However, if `l_top_parent' has restored somethings (such as EV_SPLIT_AREA), we
+							-- can wipe out it, since `editor_top_parent_for_restore' guranntee not has tools' widgets
 						if l_top_parent.full then
 							l_top_parent.wipe_out
 						end
@@ -123,7 +123,7 @@ feature -- Open inner container data
 					end
 
 					internal_docking_manager.property.set_is_opening_config (False)
-					-- We have to call `remove_empty_split_area' first to make sure no void widget when update_middle_container.
+						-- We have to call `remove_empty_split_area' first to make sure no void widget when update_middle_container.
 					internal_docking_manager.query.inner_container_main.remove_empty_split_area
 					internal_docking_manager.query.inner_container_main.update_middle_container
 
@@ -248,7 +248,7 @@ feature -- Query
 							Result := l_result
 						end
 					else
-							-- May be empty..						
+							-- May be empty..
 					end
 				end
 			end
@@ -295,7 +295,7 @@ feature {NONE} -- Implementation
 					internal_docking_manager.command.lock_update (Void, True)
 					l_called := True
 
-					-- First we clear all areas.
+						-- First we clear all areas.
 					cleaner.clean_up_for_open_all_config (editor_helper.is_top_container_recorded)
 
 					set_all_visible
@@ -329,7 +329,7 @@ feature {NONE} -- Implementation
 						open_all_inner_containers_data (l_config_data)
 					end
 
-					-- Restore auto hide zone.
+						-- Restore auto hide zone.
 					open_auto_hide_panel_data (l_config_data.auto_hide_panels_data)
 
 					l_cmd := internal_docking_manager.command
@@ -378,7 +378,7 @@ feature {NONE} -- Implementation
 		ensure
 			cleared: not editor_helper.is_top_container_recorded
 		rescue
-			-- If something bad happen, we restore all to default
+				-- If something bad happen, we restore all to default
 			if not l_retried then
 				l_retried := True
 				cleaner.reset_all_to_default (editor_helper.is_top_container_recorded)
@@ -395,11 +395,11 @@ feature {NONE} -- Implementation
 			l_old_split_position: INTEGER
 			l_result: like editor_top_parent_for_restore
 		do
-			-- There are 3 cases we need to handle
+				-- There are 3 cases we need to handle
 			Result := internal_docking_manager.query.inner_container_main.editor_parent
 
 			if Result /= Void then
-				-- Sometime `editor_parent' feature give us a zone as top parent.
+					-- Sometime `editor_parent' feature give us a zone as top parent.
 				if attached {SD_ZONE} Result as l_zone then
 					if attached {EV_WIDGET} l_zone as lt_widget then
 						Result := lt_widget.parent
@@ -430,10 +430,10 @@ feature {NONE} -- Implementation
 					if is_all_tools (l_left_zones) or is_all_tools (l_right_zones) then
 						create l_temp_split_area
 						if is_all_tools (l_left_zones) then
-							-- If the top parent only right side have editors zones
+								-- If the top parent only right side have editors zones
 							l_temp_item := l_top_split_area.second
 						else
-							-- If the top parent only left side have editors zones	
+								-- If the top parent only left side have editors zones
 							l_temp_item := l_top_split_area.first
 						end
 						l_old_split_position := l_top_split_area.split_position
@@ -446,7 +446,7 @@ feature {NONE} -- Implementation
 						end
 						Result := l_temp_split_area
 					else
-					-- If top parent both side only have editors zones
+							-- If top parent both side only have editors zones
 						check only_editors_zone: not is_all_tools (internal_docking_manager.query.all_zones_in_widget (l_top_split_area)) end
 						Result.wipe_out
 					end
@@ -461,7 +461,7 @@ feature {NONE} -- Implementation
 	is_all_tools (a_zones: detachable ARRAYED_LIST [SD_ZONE]): BOOLEAN
 			-- Does `a_zones' contain only tools?
 		do
-			Result := attached a_zones implies across a_zones as z all z.item.type = {SD_ENUMERATION}.tool end
+			Result := attached a_zones implies ∀ z: a_zones ¦ z.type = {SD_ENUMERATION}.tool
 		end
 
 	open_all_inner_containers_data (a_config_data: SD_CONFIG_DATA)
@@ -521,9 +521,9 @@ feature {NONE} -- Implementation
 			across
 				internal_docking_manager.contents as ic
 			loop
-				l_content := ic.item
+				l_content := ic
 				if editor_helper.is_top_container_recorded then
-					-- We are restoring tools config
+						-- We are restoring tools config
 					if l_content.type /= {SD_ENUMERATION}.editor then
 						l_content.set_visible (False)
 					end
@@ -549,8 +549,7 @@ feature {NONE} -- Implementation
 				debug ("fixme")
 						-- TODO: Replace indirect object creation with the direct one.
 					(create {REFACTORING_HELPER}).fixme
-						("Creation of SD_STATE_WITH_CONTENT objects shouold be done directly %
-						%to avoid potential void-safety violations if not all attached attributes are properly set.")
+						("Creation of SD_STATE_WITH_CONTENT objects shouold be done directly to avoid potential void-safety violations if not all attached attributes are properly set.")
 				end
 				create l_internal
 				if attached a_config_data.state as l_state then
@@ -563,9 +562,9 @@ feature {NONE} -- Implementation
 
 					if attached a_config_data.titles as l_titles and then not l_titles.is_empty
 						and then l_titles.first.same_string (internal_shared.editor_place_holder_content_name) then
-						-- We do something special for place holder zone.
-						-- Ignore duplicated place holder zones
-						-- Because, sometimes the docking data saved is strange such as the docking data in bug#14698
+							-- We do something special for place holder zone.
+							-- Ignore duplicated place holder zones
+							-- Because, sometimes the docking data saved is strange such as the docking data in bug#14698
 						if not found_place_holder_already then
 							found_place_holder_already := True
 							l_state.restore (a_config_data, a_container)
@@ -581,11 +580,11 @@ feature {NONE} -- Implementation
 						l_state.content.hide
 					end
 					if a_config_data.is_minimized then
-						-- l_state.zone will be void. We should query zone indirectly.
+							-- l_state.zone will be void. We should query zone indirectly.
 						if attached {EV_WIDGET} l_state.content.state.zone as lt_widget then
 							if attached {SD_MIDDLE_CONTAINER} lt_widget.parent as l_parent and then l_parent.is_minimized then
-								-- Maybe parent not full now, Current is the first child of parent, parent will fill another child immediately.
-								-- check full: l_parent.full end
+									-- Maybe parent not full now, Current is the first child of parent, parent will fill another child immediately.
+									-- check full: l_parent.full end
 								if attached {EV_WIDGET} l_state.content.state.zone as lt_widget_2 then
 									l_parent.disable_item_expand (lt_widget_2)
 								else
@@ -597,10 +596,10 @@ feature {NONE} -- Implementation
 						end
 					end
 				end
-			else	-- If it's a split_area
+			else -- If it's a split_area
 				l_temp_spliter := new_middle_container (a_config_data)
 				a_container.extend (l_temp_spliter)
-				-- Go on recurisve
+					-- Go on recurisve
 				if attached a_config_data.children_left as l_left_data then
 					check not l_temp_spliter.full end
 					if not l_temp_spliter.full then
@@ -616,7 +615,7 @@ feature {NONE} -- Implementation
 						open_inner_container_data (l_right_data, l_temp_spliter)
 					end
 				else
-					check a_config_data.children_right /= Void  end
+					check a_config_data.children_right /= Void end
 				end
 			end
 		end
@@ -654,7 +653,7 @@ feature {NONE} -- Implementation
 				if
 						-- `a_split` may be not full, because when restore client programer may not
 						-- supply SD_CONTENT which existed when last saving config.
-					 a_split.full and then
+					a_split.full and then
 					0 <= a_config_data.split_proportion and a_config_data.split_proportion <= 1
 				then
 					a_split.set_proportion (a_config_data.split_proportion)
@@ -699,7 +698,7 @@ feature {NONE} -- Implementation
 			l_content: detachable SD_CONTENT
 			l_panel: SD_AUTO_HIDE_PANEL
 			l_list: ARRAYED_LIST [TUPLE [READABLE_STRING_GENERAL, INTEGER, INTEGER, INTEGER]]
-			l_list_item: TUPLE [title: READABLE_STRING_GENERAL; wh: INTEGER; w: INTEGER; h:INTEGER]
+			l_list_item: TUPLE [title: READABLE_STRING_GENERAL; wh: INTEGER; w: INTEGER; h: INTEGER]
 			l_list_for_state: ARRAYED_LIST [READABLE_STRING_GENERAL]
 			l_tab_group: ARRAYED_LIST [SD_CONTENT]
 			l_temp_data: SD_INNER_CONTAINER_DATA
@@ -734,7 +733,7 @@ feature {NONE} -- Implementation
 					l_string := l_list_item.title
 					check not_void: l_string /= Void end
 					l_content := l_docking_manager_query.content_by_title_for_restore (l_string)
-					-- If we don't find SD_CONTENT last saved, ignore it.
+						-- If we don't find SD_CONTENT last saved, ignore it.
 					if l_content /= Void then
 						l_content.set_visible (True)
 						create l_auto_hide_state.make (l_content, a_direction)
@@ -771,24 +770,23 @@ feature {NONE} -- Implementation
 			l_internal_docking_manager: like internal_docking_manager
 			l_tool_bar_manager: like internal_docking_manager.tool_bar_manager
 		do
-			-- Top
+				-- Top
 			a_tool_bar_data.start
 			open_one_tool_bar_data ({SD_ENUMERATION}.top, a_tool_bar_data.item)
-			-- Bottom
+				-- Bottom
 			a_tool_bar_data.forth
 			open_one_tool_bar_data ({SD_ENUMERATION}.bottom, a_tool_bar_data.item)
-			-- Left
+				-- Left
 			a_tool_bar_data.forth
 			open_one_tool_bar_data ({SD_ENUMERATION}.left, a_tool_bar_data.item)
-			-- Right
+				-- Right
 			a_tool_bar_data.forth
 			open_one_tool_bar_data ({SD_ENUMERATION}.right, a_tool_bar_data.item)
-
 
 			l_internal_docking_manager := internal_docking_manager
 			l_tool_bar_manager := l_internal_docking_manager.tool_bar_manager
 
-			-- Floating tool_bars
+				-- Floating tool_bars
 			from
 				a_tool_bar_data.forth
 			until
@@ -799,7 +797,7 @@ feature {NONE} -- Implementation
 				if attached l_data.title as l_title then
 					l_content := l_tool_bar_manager.content_by_title (l_title)
 
-					-- Reset texts if original docking vertically
+						-- Reset texts if original docking vertically
 					if attached l_content.zone as l_zone then
 						l_zone.change_direction (True)
 					end
@@ -827,7 +825,7 @@ feature {NONE} -- Implementation
 				a_tool_bar_data.forth
 			end
 
-			-- Hidden docking tool bars
+				-- Hidden docking tool bars
 			from
 			until
 				a_tool_bar_data.after
@@ -842,7 +840,7 @@ feature {NONE} -- Implementation
 				then
 					l_content := l_tool_bar_manager.content_by_title (l_title_2)
 
-					-- Reset texts if original docking vertically
+						-- Reset texts if original docking vertically
 					if attached l_content.zone as l_zone then
 						l_zone.change_direction (True)
 					end
@@ -873,7 +871,7 @@ feature {NONE} -- Implementation
 		local
 			l_tool_bar_container: EV_CONTAINER
 			l_rows: ARRAYED_LIST [ARRAYED_LIST [TUPLE [READABLE_STRING_GENERAL, INTEGER, SD_TOOL_BAR_ZONE_STATE]]]
-			l_row: ARRAYED_LIST [TUPLE [READABLE_STRING_GENERAL,INTEGER, SD_TOOL_BAR_ZONE_STATE]]
+			l_row: ARRAYED_LIST [TUPLE [READABLE_STRING_GENERAL, INTEGER, SD_TOOL_BAR_ZONE_STATE]]
 			l_row_item: TUPLE [title: READABLE_STRING_GENERAL; pos: INTEGER; state: SD_TOOL_BAR_ZONE_STATE]
 			l_content: SD_TOOL_BAR_CONTENT
 			l_tool_bar_row: SD_TOOL_BAR_ROW
@@ -918,7 +916,7 @@ feature {NONE} -- Implementation
 						l_tool_bar_zone.assistant.open_items_layout
 					end
 
-					-- Use this function to set all SD_TOOL_BAR_ITEM wrap states.
+						-- Use this function to set all SD_TOOL_BAR_ITEM wrap states.
 					l_tool_bar_zone.change_direction (True)
 
 					l_tool_bar_row.extend (l_tool_bar_zone)
@@ -1002,7 +1000,7 @@ feature {SD_EDITOR_CONFIG_HELPER} -- Internals
 					l_maximized_tools.after
 				loop
 					if
-						attached  internal_docking_manager.query.content_by_title (l_maximized_tools.item) as l_content and then
+						attached internal_docking_manager.query.content_by_title (l_maximized_tools.item) as l_content and then
 						attached l_content.state.zone as z and then
 						not z.is_maximized
 					then
@@ -1049,9 +1047,9 @@ invariant
 	editor_helper_not_void: editor_helper /= Void
 
 note
-	library:	"SmartDocking: Library of reusable components for Eiffel."
-	copyright:	"Copyright (c) 1984-2018, Eiffel Software and others"
-	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
+	library: "SmartDocking: Library of reusable components for Eiffel."
+	copyright: "Copyright (c) 1984-2021, Eiffel Software and others"
+	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software
 			5949 Hollister Ave., Goleta, CA 93117 USA

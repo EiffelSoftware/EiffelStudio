@@ -169,30 +169,21 @@ feature -- Hanlde pointer events
 		end
 
 	end_tracing_pointer (a_screen_x, a_screen_y: INTEGER)
-			-- Stop tracing mouse positions
-		local
-			changed: BOOLEAN
+			-- Stop tracing mouse positions.
 		do
 			debug ("docking")
 				print ("%NSD_DOCKER_MEDIATOR end_tracing_pointer a_screen_x, a_screen_y: " + a_screen_x.out + " " + a_screen_y.out)
 			end
 			clear_up
-
-			across
-				hot_zones as c
-			until
-				changed
-			loop
-				changed := c.item.apply_change (a_screen_x, a_screen_y)
-			end
-
-			if not changed and attached {SD_FLOATING_ZONE} caller as l_floating_zone then
+			if
+				not (∃ c: hot_zones ¦ c.apply_change (a_screen_x, a_screen_y)) and
+				attached {SD_FLOATING_ZONE} caller as l_floating_zone
+			then
 				l_floating_zone.set_position (a_screen_x - offset_x, a_screen_y - offset_y)
 				debug ("docking")
 					io.put_string ("%N SD_DOCKER_MEDIATOR not changed and set floating position")
 				end
 			end
-
 		ensure
 			not_tracing: not is_tracing
 		end
@@ -204,11 +195,9 @@ feature -- Hanlde pointer events
 		end
 
 	on_pointer_motion (a_screen_x, a_screen_y: INTEGER)
-			-- When user dragging something for docking, show hot zone which allow to dock
+			-- When user dragging something for docking, show hot zone which allow to dock.
 		require
 			is_tracing: is_tracing
-		local
-			l_drawed: BOOLEAN
 		do
 			debug ("docking")
 				print ("%N SD_DOCKER_MEDIATOR on_pointer_motion screen_x, screen_y: " + a_screen_x.out + " " + a_screen_y.out)
@@ -217,13 +206,7 @@ feature -- Hanlde pointer events
 			if screen_x /= a_screen_x or screen_y /= a_screen_y then
 				screen_x := a_screen_x
 				screen_y := a_screen_y
-				across
-					hot_zones as c
-				until
-					l_drawed
-				loop
-					l_drawed := c.item.update_for_feedback (a_screen_x, a_screen_y, is_dockable)
-				end
+				; (∃ c: hot_zones ¦ c.update_for_feedback (a_screen_x, a_screen_y, is_dockable)).do_nothing
 				if is_dockable then
 					on_pointer_motion_for_indicator (a_screen_x, a_screen_y)
 					if not internal_shared.show_all_feedback_indicator then
@@ -370,21 +353,13 @@ feature {NONE} -- Implementation functions
 	clear_all_indicator
 			-- Clear all indicators
 		do
-			across
-				hot_zones as c
-			loop
-				c.item.clear_indicator
-			end
+			⟳ c: hot_zones ¦ c.clear_indicator ⟲
 		end
 
 	build_all_indicator
 			-- Build all indicators.
 		do
-			across
-				hot_zones as c
-			loop
-				c.item.build_indicator
-			end
+			⟳ c: hot_zones ¦ c.build_indicator ⟲
 		end
 
 	generate_hot_zones
@@ -418,16 +393,13 @@ feature {NONE} -- Implementation functions
 		do
 			l_zones_filted := a_list.twin
 			if attached {SD_FLOATING_ZONE} caller as l_floating_zone then
-				from
-					a_list.start
-				until
-					a_list.after
+				across
+					a_list as i
 				loop
-					if l_floating_zone.inner_container.has_zone (a_list.item) then
+					if l_floating_zone.inner_container.has_zone (i) then
 						l_zones_filted.start
-						l_zones_filted.prune (a_list.item)
+						l_zones_filted.prune (i)
 					end
-					a_list.forth
 				end
 			end
 
@@ -441,29 +413,23 @@ feature {NONE} -- Implementation functions
 		local
 			l_zone: SD_ZONE
 		do
-			from
-				a_list.start
-			until
-				a_list.after
+			across
+				a_list as i
 			loop
-				l_zone := a_list.item
-					-- Ingore the classes we don't care
+				l_zone := i
+					-- Ingore the classes we don't care.
 				if attached {EV_WIDGET} l_zone as lt_widget then
 					if
 						attached {SD_DOCKER_SOURCE} l_zone as l_hot_zone_source and
-						lt_widget.is_displayed
+						lt_widget.is_displayed and then
+						(attached {SD_TAB_ZONE} l_zone as l_mutli_zone and then not l_mutli_zone.is_drag_title_bar or else
+							l_zone /= caller)
 					then
-						if attached {SD_TAB_ZONE} l_zone as l_mutli_zone and then not l_mutli_zone.is_drag_title_bar then
-							add_hot_zone_on_type (l_zone, l_hot_zone_source)
-						elseif l_zone /= caller then
-							add_hot_zone_on_type (l_zone, l_hot_zone_source)
-						end
+						add_hot_zone_on_type (l_zone, l_hot_zone_source)
 					end
 				else
 					check not_possible: False end
 				end
-
-				a_list.forth
 			end
 		end
 
@@ -490,9 +456,9 @@ feature {NONE} -- Implementation functions
 			until
 				l_drawed
 			loop
-				if c.item.update_for_indicator (a_screen_x, a_screen_y) then
+				if c.update_for_indicator (a_screen_x, a_screen_y) then
 					l_drawed := True
-					if not c.is_last then
+					if not @ c.is_last then
 						hot_zones.last.update_for_indicator (a_screen_x, a_screen_y).do_nothing
 					end
 				end
@@ -504,11 +470,7 @@ feature {NONE} -- Implementation functions
 		require
 			is_tracing: is_tracing
 		do
-			across
-				hot_zones as c
-			loop
-				c.item.update_for_indicator_clear (a_screen_x, a_screen_y)
-			end
+			⟳ c: hot_zones ¦ c.update_for_indicator_clear (a_screen_x, a_screen_y) ⟲
 		end
 
 	widget_top_level_window (a_widget: EV_WIDGET; a_main: BOOLEAN): detachable EV_WINDOW
@@ -570,9 +532,9 @@ invariant
 	cancel_actions_not_void: cancel_actions /= Void
 
 note
-	library:	"SmartDocking: Library of reusable components for Eiffel."
-	copyright:	"Copyright (c) 1984-2017, Eiffel Software and others"
-	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
+	library: "SmartDocking: Library of reusable components for Eiffel."
+	copyright: "Copyright (c) 1984-2021, Eiffel Software and others"
+	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software
 			5949 Hollister Ave., Goleta, CA 93117 USA

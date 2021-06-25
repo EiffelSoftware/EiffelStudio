@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "A command line switch that accepts a value in the form of single character flags."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -41,10 +41,8 @@ feature {NONE} -- Initialization
 			a_arg_desc_attached: a_arg_desc /= Void
 			not_a_arg_desc_is_empty: not a_arg_desc.is_empty
 			not_a_flags_is_empty: not a_flags.is_empty
-			a_flags_contains_attached_items:
-				across a_flags as c all not c.item.is_empty end
-			a_flags_contains_printable_items:
-				across a_flags.current_keys as c all c.item.is_printable end
+			a_flags_contains_attached_items: ∀ c: a_flags ¦ not c.is_empty
+			a_flags_contains_printable_items: ∀ c: a_flags.current_keys ¦ c.is_printable
 		do
 			make_value_base (a_id, a_desc, a_optional, a_allow_mutliple, a_arg_name, full_arg_description (a_arg_desc, a_flags), a_val_optional)
 			flag_descriptions := a_flags
@@ -73,10 +71,8 @@ feature {NONE} -- Initialization
 			a_arg_name_attached: a_arg_name /= Void
 			not_a_arg_name_is_empty: not a_arg_name.is_empty
 			not_a_flags_is_empty: not a_flags.is_empty
-			a_flags_contains_attached_items:
-				across a_flags as c all not c.item.is_empty end
-			a_flags_contains_printable_items:
-				across a_flags.current_keys as c all c.item.is_printable end
+			a_flags_contains_attached_items: ∀ c: a_flags ¦ not c.is_empty
+			a_flags_contains_printable_items: ∀ c: a_flags.current_keys ¦ c.is_printable
 		do
 			make (a_id, internal_switch_description, a_optional, a_allow_mutliple, a_arg_name, internal_argument_description, a_val_optional, a_flags, a_cs_flags)
 			is_hidden := True
@@ -109,8 +105,7 @@ feature -- Access
 			result_attached: Result /= Void
 			result_consistent: Result ~ flags
 			not_result_is_empty: not Result.is_empty
-			result_contains_printable_characters: Result.for_all (
-				agent (ia_item: CHARACTER): BOOLEAN do Result := ia_item.is_printable end)
+			result_contains_printable_characters: Result.for_all (agent (ia_item: CHARACTER): BOOLEAN do Result := ia_item.is_printable end)
 		end
 
 	flag_descriptions: HASH_TABLE [STRING, CHARACTER]
@@ -175,10 +170,8 @@ feature {NONE} -- Usage
 			a_flags_attached: a_flags /= Void
 			not_a_flags_is_empty: not a_flags.is_empty
 		local
-			l_flag: detachable STRING
 			l_list: SORTED_TWO_WAY_LIST [CHARACTER]
 			l_keys: ARRAY [CHARACTER]
-			c: CHARACTER
 		do
 			create Result.make (120)
 			Result.append (a_desc)
@@ -190,17 +183,14 @@ feature {NONE} -- Usage
 			l_list.sort
 
 			Result.append (once "Use one or more of the following flags:%N")
-			from l_list.start until l_list.after loop
-				c := l_list.item
+			across l_list as c loop
 				Result.append (once "   ")
 				Result.append_character (c)
 				Result.append (once ": ")
-				l_flag := a_flags [c]
-				if l_flag /= Void then
-					Result.append_string (l_flag)
+				if attached a_flags [c] as f then
+					Result.append_string (f)
 				end
 				Result.append_character ('%N')
-				l_list.forth
 			end
 		ensure
 			result_attached: Result /= Void
@@ -218,20 +208,22 @@ invariant
 	not_flag_description_is_empty: not flag_descriptions.is_empty
 	flag_descriptions_contains_attached_items:
 		flag_descriptions.linear_representation.for_all (agent (ia_item: STRING): BOOLEAN
-			local
-				l_item: detachable STRING
-			do
-				l_item := ia_item
-				Result := l_item /= Void and then not l_item.is_empty
-			end)
+				local
+					l_item: detachable STRING
+				do
+					l_item := ia_item
+					Result := l_item /= Void and then not l_item.is_empty
+				end)
 	flag_descriptions_contains_printable_items:
 		flag_descriptions.current_keys.for_all (agent (ia_item: CHARACTER): BOOLEAN
-			do
-				Result := ia_item.is_printable
-			end)
+				do
+					Result := ia_item.is_printable
+				end)
+
 note
-	copyright: "Copyright (c) 1984-2012, Eiffel Software and others"
-	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
+	ca_ignore: "CA011", "CA011: too many arguments"
+	copyright: "Copyright (c) 1984-2021, Eiffel Software and others"
+	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[
 			This file is part of Eiffel Software's Eiffel Development Environment.

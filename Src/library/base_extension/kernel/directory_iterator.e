@@ -1,15 +1,15 @@
 ﻿note
 	description: "[
-				Iterator on DIRECTORY
-				
-				This can be used to scan a directory recursively.
-				For a directory, files are processed first, then folders.
-				
-				It is possible to exclude a path, a directory name, or a file name thanks to
-					path_excluded, 
-					directory_excluded, 
-					and file_excluded
-			]"
+			Iterator on DIRECTORY
+			
+			This can be used to scan a directory recursively.
+			For a directory, files are processed first, then folders.
+			
+			It is possible to exclude a path, a directory name, or a file name thanks to
+				path_excluded, 
+				directory_excluded, 
+				and file_excluded
+		]"
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -39,7 +39,7 @@ feature -- Visitor
 				across
 					l_entries as c
 				loop
-					p := c.item
+					p := c
 					if not path_excluded (p) then
 						if not directory_excluded (p) then
 							fp := d.path.extended_path (p)
@@ -59,8 +59,8 @@ feature -- Visitor
 				across
 					l_dirs as c
 				loop
-					check not_excluded: not directory_excluded (c.item) end
-					process_directory (d.path.extended_path (c.item))
+					check not_excluded: not directory_excluded (c) end
+					process_directory (d.path.extended_path (c))
 				end
 			end
 		end
@@ -100,7 +100,7 @@ feature -- Status
 		end
 
 note
-	copyright: "Copyright (c) 1984-2017, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2021, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software
@@ -109,4 +109,5 @@ note
 			Website http://www.eiffel.com
 			Customer support http://support.eiffel.com
 		]"
+
 end

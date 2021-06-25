@@ -1,7 +1,7 @@
-note
+﻿note
 	description: "[
-		Eiffel tests that can be executed by testing tool.
-	]"
+			Eiffel tests that can be executed by testing tool.
+		]"
 	author: "EiffelStudio test wizard"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -18,7 +18,7 @@ feature -- Test routines
 	test_quick_sort
 			-- Test quick sort.
 		note
-			testing:  "sort"
+			testing: "sort"
 		do
 			test_sort_type (quick_type)
 		end
@@ -26,7 +26,7 @@ feature -- Test routines
 	test_shell_sort
 			-- Test shell sort.
 		note
-			testing:  "sort"
+			testing: "sort"
 		do
 			test_sort_type (shell_type)
 		end
@@ -34,7 +34,7 @@ feature -- Test routines
 	test_bubble_sort
 			-- Test bubble sort.
 		note
-			testing:  "sort"
+			testing: "sort"
 		do
 			test_sort_type (bubble_type)
 		end
@@ -100,7 +100,7 @@ feature {NONE} -- Implementation
 			across
 				v as c
 			loop
-				s.append_string_general (c.item)
+				s.append_string_general (c)
 				s.append_character ('%N')
 			end
 			Result := s.same_string (a_expected)
@@ -238,7 +238,7 @@ feature {NONE} -- Implementation
 	quick_type: INTEGER = 3
 
 note
-	copyright: "Copyright (c) 1984-2013, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2021, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software
@@ -247,6 +247,6 @@ note
 			Website http://www.eiffel.com
 			Customer support http://support.eiffel.com
 		]"
-end
 
+end
 

@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "Represent a memory state, it contain the informations of all type names and the count of them."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -67,7 +67,6 @@ feature -- Measurrment
 			Result := memory_c_used
 		end
 
-
 feature -- Status report
 
 	found_type (a_type_name: STRING): BOOLEAN
@@ -114,7 +113,7 @@ feature -- Compare
 			across
 				objects_states as ic
 			loop
-				if attached ic.item as l_item then
+				if attached ic as l_item then
 					if a_state.found_type (l_item.type_name) then
 						l_count_change := a_state.item_found_count - l_item.count_in_system
 						if l_count_change /= 0 then
@@ -136,14 +135,7 @@ feature {NONE} -- Implementation
 		require
 			a_table_not_void: a_table /= Void
 		do
-			from
-				a_table.start
-			until
-				a_table.after
-			loop
-				Result := Result + a_table.item_for_iteration
-				a_table.forth
-			end
+			⟳ i: a_table ¦ Result := Result + i ⟲
 		end
 
 	objects_count_number: INTEGER
@@ -168,11 +160,11 @@ feature {NONE} -- Implementation
 		end
 
 	objects_states: ARRAYED_LIST [like state];
-			-- the count the objects, first argument is type name, second argument is the object instances count
+	-- The count the objects, first argument is type name, second argument is the object instances count
 
 note
-	copyright:	"Copyright (c) 1984-2017, Eiffel Software and others"
-	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
+	copyright: "Copyright (c) 1984-2021, Eiffel Software and others"
+	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software
 			5949 Hollister Ave., Goleta, CA 93117 USA
@@ -180,8 +172,5 @@ note
 			Website http://www.eiffel.com
 			Customer support http://support.eiffel.com
 		]"
-
-
-
 
 end

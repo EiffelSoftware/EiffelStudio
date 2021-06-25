@@ -1,11 +1,10 @@
-note
-	description : "[
-				Object that represents an IRI Scheme
-				
-				See http://en.wikipedia.org/wiki/Internationalized_Resource_Identifier
-				See http://tools.ietf.org/html/rfc3987 (IRI)
-
-			]"
+ï»¿note
+	description: "[
+			Object that represents an IRI Scheme
+			
+			See http://en.wikipedia.org/wiki/Internationalized_Resource_Identifier
+			See http://tools.ietf.org/html/rfc3987 (IRI)
+		]"
 	author: "$Author$"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -31,8 +30,8 @@ inherit
 			append_to_string as append_uri_to_string,
 			string as uri_string
 		redefine
-			 path_segment_count,
-			 make_from_uri
+			path_segment_count,
+			make_from_uri
 		end
 
 create
@@ -108,7 +107,7 @@ feature -- Access
 			l_path := path
 			if l_path.is_empty then
 				create {ARRAYED_LIST [READABLE_STRING_32]} Result.make (0)
-			elseif l_path.count = 1 and then l_path[1] = '/' then
+			elseif l_path.count = 1 and then l_path [1] = '/' then
 				create {ARRAYED_LIST [READABLE_STRING_32]} Result.make (1)
 				Result.force ({STRING_32} "")
 			else
@@ -123,10 +122,10 @@ feature -- Access
 		do
 			l_path := path
 			if l_path.is_empty then
-			elseif l_path.count = 1 and then l_path[1] = '/' then
+			elseif l_path.count = 1 and then l_path [1] = '/' then
 				Result := 1
 			else
-				Result := path.occurrences ('/')+ 1
+				Result := path.occurrences ('/') + 1
 			end
 		end
 
@@ -136,7 +135,7 @@ feature -- Access
 		require
 			valid_index: i >= 0 and i < path_segment_count
 		local
-			p,q,n: INTEGER
+			p, q, n: INTEGER
 			l_path: like path
 		do
 			l_path := path
@@ -166,7 +165,7 @@ feature -- Access
 						check valid_index: False end
 					end
 				end
-				Result := l_path.substring (q+1, p-1)
+				Result := l_path.substring (q + 1, p - 1)
 			end
 		end
 
@@ -191,11 +190,11 @@ feature -- Access
 				across
 					lst as e
 				loop
-					i := e.item.index_of ('=', 1)
+					i := e.index_of ('=', 1)
 					if i > 0 then
-						Result.force ([e.item.substring (1, i - 1), e.item.substring (i + 1, e.item.count)])
+						Result.force ([e.substring (1, i - 1), e.substring (i + 1, e.count)])
 					else
-						Result.force ([e.item, Void])
+						Result.force ([e, Void])
 					end
 				end
 			end
@@ -206,9 +205,9 @@ feature -- Query
 	hier: READABLE_STRING_32
 			-- Hier part.
 			-- hier-part   = "//" authority path-abempty
-            --      / path-absolute
-            --      / path-rootless
-            --      / path-empty
+			--      / path-absolute
+			--      / path-rootless
+			--      / path-empty
 		local
 			s: STRING_32
 		do
@@ -227,7 +226,7 @@ feature -- Query
 			--| userinfo = username:password
 		local
 			i: INTEGER
-			u,p: detachable READABLE_STRING_32
+			u, p: detachable READABLE_STRING_32
 		do
 			if attached userinfo as t then
 				i := t.index_of (':', 1)
@@ -283,7 +282,7 @@ feature -- Query
 			end
 		end
 
-feature -- Conversion	
+feature -- Conversion
 
 	append_to_string (s: STRING_32)
 			-- Append string representation of Current into `s'.
@@ -325,7 +324,7 @@ feature {NONE} -- Implementation: Internationalization
 		require
 			is_valid_iri: True
 		local
-			i,n: INTEGER
+			i, n: INTEGER
 			c: NATURAL_32
 		do
 			from
@@ -336,7 +335,7 @@ feature {NONE} -- Implementation: Internationalization
 			loop
 				c := a_string.code (i)
 				if c > 0x7F then
-					-- extended ASCII and/or Unicode
+						-- extended ASCII and/or Unicode
 					append_percent_encoded_character_code_to (c, a_result)
 --				elseif c = 37 then -- '%'
 --						-- Check for %u + code
@@ -345,11 +344,11 @@ feature {NONE} -- Implementation: Internationalization
 --						if c = 85 or c = 117 then -- 85 'U' 117 'u'
 --							TODO: Convert it to standard percent-encoding without %U...
 --						end
---					else						
+--					else
 --						a_result.append_code (c)
 --					end
 				else
-					-- keep as it is
+						-- keep as it is
 					a_result.append_code (c)
 				end
 				i := i + 1
@@ -375,9 +374,9 @@ feature {NONE} -- Implementation: Internationalization
 	append_percent_encoded_string_into_internationalized_percent_encoded_string (v: READABLE_STRING_GENERAL; a_result: STRING_32)
 			-- Append to `a_result' the Internationalized URL-decoded equivalent of the given percent-encoded string `v'
 			-- It simply decode any percent-encoded Unicode character and kept the rest untouched
-			-- "http://example.com/summer/%C3%A9t%C3%A9" will be converted to IRI "http://example.com/summer/été"
+			-- "http://example.com/summer/%C3%A9t%C3%A9" will be converted to IRI "http://example.com/summer/Ã©tÃ©"
 		local
-			i,n: INTEGER
+			i, n: INTEGER
 			c1,
 			c: NATURAL_32
 			pr: CELL [INTEGER]
@@ -427,9 +426,8 @@ feature {NONE} -- Implementation: Internationalization
 			end
 		end
 
-
-;note
-	copyright: "Copyright (c) 1984-2019, Eiffel Software and others"
+note
+	copyright: "Copyright (c) 1984-2021, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software
@@ -438,4 +436,5 @@ feature {NONE} -- Implementation: Internationalization
 			Website http://www.eiffel.com
 			Customer support http://support.eiffel.com
 		]"
+
 end

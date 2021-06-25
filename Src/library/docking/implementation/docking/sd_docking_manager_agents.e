@@ -9,8 +9,6 @@ class
 	SD_DOCKING_MANAGER_AGENTS
 
 inherit
-	ANY
-
 	EV_SHARED_APPLICATION
 		export
 			{NONE} all
@@ -23,7 +21,7 @@ inherit
 create
 	make
 
-feature {NONE}  -- Initlization
+feature {NONE} -- Initlization
 
 	make (a_docking_manager: SD_DOCKING_MANAGER)
 			-- Associate new object with `a_docking_manager'.
@@ -80,7 +78,7 @@ feature -- Command
 			l_docking_manager.main_window.focus_in_actions.extend (top_level_window_focus_in)
 		end
 
-feature  -- Agents
+feature -- Agents
 
 	on_widget_pointer_press (a_widget: EV_WIDGET; a_button, a_x, a_y: INTEGER)
 			-- Handle EV_APPLICATION's pointer button press actions
@@ -99,7 +97,7 @@ feature  -- Agents
 					l_docking_manager.zones.zones.twin as ic
 				loop
 					if
-						attached ic.item as l_zone and then
+						attached ic as l_zone and then
 						attached {EV_CONTAINER} l_zone as lt_container then
 						if
 							not lt_container.is_destroyed and then
@@ -142,8 +140,8 @@ feature  -- Agents
 			across
 				docking_manager.zones.zones.twin as ic
 			loop
-				if attached {SD_UPPER_ZONE} ic.item as l_upper_zone then
-					if attached {EV_CONTAINER} ic.item as lt_container then
+				if attached {SD_UPPER_ZONE} ic as l_upper_zone then
+					if attached {EV_CONTAINER} ic as lt_container then
 						if
 							is_parent_recursive (lt_container, a_widget) and then
 							not attached {EV_TOOL_BAR} a_widget and then -- We ignore click on tool bar.
@@ -174,7 +172,7 @@ feature  -- Agents
 			l_docking_manager := docking_manager
 			l_docking_manager.command.remove_auto_hide_zones (False)
 
-			-- This is to make sure item in `fixed_area' is resized, otherwise zone's size is incorrect when maximize a zone
+				-- This is to make sure item in `fixed_area' is resized, otherwise zone's size is incorrect when maximize a zone
 			l_docking_manager.fixed_area.set_minimum_size (0, 0)
 
 			if a_width > 0 then
@@ -183,9 +181,9 @@ feature  -- Agents
 					l_docking_manager.internal_viewport.set_item_width (l_width)
 				end
 
-				-- We have to make sure `l_width' not smaller than the minimum width of `l_main_container''s item
-				-- Otherwise, it will cause bug#12065. This bug ONLY happens on Solaris (both CDE and JDS), not happens on Windows, Ubuntu
-				-- And we don't need to care about the height of `l_main_container''s item since it works fine
+					-- We have to make sure `l_width' not smaller than the minimum width of `l_main_container''s item
+					-- Otherwise, it will cause bug#12065. This bug ONLY happens on Solaris (both CDE and JDS), not happens on Windows, Ubuntu
+					-- And we don't need to care about the height of `l_main_container''s item since it works fine
 				l_main_container := l_docking_manager.query.inner_container_main
 				l_width := l_docking_manager.fixed_area.width
 				if l_main_container.readable and then l_main_container.item /= Void and then l_width < l_main_container.item.minimum_width then
@@ -193,7 +191,7 @@ feature  -- Agents
 				end
 
 				if l_width > 0 then
-					l_docking_manager.fixed_area.set_item_width (l_main_container , l_width)
+					l_docking_manager.fixed_area.set_item_width (l_main_container, l_width)
 				end
 			end
 			if a_height > 0 then
@@ -213,7 +211,6 @@ feature  -- Agents
 				-- FIXME: check why code above in `on_resize (..)` is not enought.
 			l_docking_manager.internal_viewport.set_item_size (a_width, a_height)
 		end
-
 
 	on_dpi_change_resize (a_dpi: NATURAL_32; a_x: INTEGER; a_y: INTEGER; a_width: INTEGER; a_height: INTEGER; a_force: BOOLEAN)
 			-- Handle dpi change zone event. Resize all the widgets in fixed_area (EV_FIXED)
@@ -323,12 +320,12 @@ feature  -- Agents
 				not docking_manager.main_window.is_destroyed and
 				not docking_manager.property.is_opening_config and then
 				not docking_manager.main_window.has_focus and then
-				not across docking_manager.query.floating_zones as ic some ic.item.has_focus end
+				not ∃ ic: docking_manager.query.floating_zones ¦ ic.has_focus
 			then
 					-- TODO: Currently we disable this feature
 					-- Because when show a dialog, it'll get focus, make main window lost focus
 					-- We should make a window can never get focus first
-				-- docking_manager.tool_bar_manager.hide_all_floating
+					-- docking_manager.tool_bar_manager.hide_all_floating
 			end
 		end
 
@@ -441,7 +438,7 @@ feature  -- Agents
 					pointer_in_tab := False
 				end
 				if attached {SD_AUTO_HIDE_STATE} l_stubs.item.content.state as l_state then
-					-- a_target not correct?
+						-- a_target not correct?
 					l_state.animation.on_pointer_motion (a_target, a_screen_x, a_screen_y)
 				else
 					check must_be_auto_hide_state: False end
@@ -498,14 +495,11 @@ feature -- Contract support
 		require
 			not_destroyed: not is_destroyed
 		do
-			Result := not across
-				docking_manager.contents as ic
-			some
-				ic.item /= a_content and then
-				(attached {EV_CONTAINER} ic.item.user_widget as l_container and then
-				l_container.has_recursive (a_content.user_widget) or else
-				ic.item.user_widget = a_content.user_widget)
-			end
+			Result := not ∃ ic: docking_manager.contents ¦
+					ic /= a_content and then
+					(attached {EV_CONTAINER} ic.user_widget as l_container and then
+						l_container.has_recursive (a_content.user_widget) or else
+						ic.user_widget = a_content.user_widget)
 		end
 
 	title_unique (a_content: SD_CONTENT): BOOLEAN
@@ -515,17 +509,14 @@ feature -- Contract support
 			a_content_not_void: a_content /= Void
 		do
 			Result :=
-				across
-					docking_manager.contents as ic
-				all
-					ic.item = a_content or else not ic.item.unique_title.same_string (a_content.unique_title)
-				end
+				∀ ic: docking_manager.contents ¦
+					ic = a_content or else not ic.unique_title.same_string (a_content.unique_title)
 		end
 
 	is_destroyed: BOOLEAN
 			-- If Current destroyed?
 
-feature {NONE}  -- Implementation
+feature {NONE} -- Implementation
 
 	is_parent_recursive (a_parent: EV_CONTAINER; a_child: EV_WIDGET): BOOLEAN
 			-- If `a_parent' is parent of `a_child' ?
@@ -575,9 +566,9 @@ invariant
 	internal_shared_not_void: internal_shared /= Void
 
 note
-	library:	"SmartDocking: Library of reusable components for Eiffel."
-	copyright:	"Copyright (c) 1984-2021, Eiffel Software and others"
-	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
+	library: "SmartDocking: Library of reusable components for Eiffel."
+	copyright: "Copyright (c) 1984-2021, Eiffel Software and others"
+	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software
 			5949 Hollister Ave., Goleta, CA 93117 USA

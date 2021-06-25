@@ -39,7 +39,7 @@ feature {NONE} -- Initialization
 				across
 					argument_list as argument
 				loop
-					a.extend (argument.item)
+					a.extend (argument)
 				end
 			end
 			setup_command (executable_name, a, work_directory)
@@ -222,7 +222,7 @@ feature {NONE} -- Implementation
 			if attached a_args then
 				across a_args as l_args loop
 					l_cmd_line.append_character (' ')
-					l_cmd_line.append_string_general (l_args.item)
+					l_cmd_line.append_string_general (l_args)
 				end
 			end
 			command_line := l_cmd_line
@@ -230,8 +230,8 @@ feature {NONE} -- Implementation
 			command_line_attached: attached command_line
 			command_line_not_empty: not command_line.is_empty
 			arguments_set:
-					(attached a_args implies (attached arguments as l_args and then l_args.count = a_args.count)) and
-					(a_args = Void implies arguments = Void)
+				(attached a_args implies (attached arguments as l_args and then l_args.count = a_args.count)) and
+				(a_args = Void implies arguments = Void)
 		end
 
 	create_child_process_manager (executable_name: READABLE_STRING_GENERAL; argument_list: ARRAYED_LIST [READABLE_STRING_GENERAL]; work_directory: detachable READABLE_STRING_GENERAL)
@@ -260,9 +260,10 @@ feature {NONE} -- Access
 
 	child_process: PROCESS_UNIX_PROCESS_MANAGER
 			-- Child process.
+		attribute end
 
-;note
-	copyright: "Copyright (c) 1984-2020, Eiffel Software and others"
+note
+	copyright: "Copyright (c) 1984-2021, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

@@ -129,7 +129,7 @@ feature {NONE} -- Access
 				across
 					l_args as a
 				loop
-					l_arg := a.item
+					l_arg := a
 					if l_arg.count > 2 then
 						if l_prefixes.has (l_arg.item (1)) and not l_prefixes.has (l_arg.item (2)) then
 								-- This means the argument is a single prefix switched (Unix style uses two (--) for full
@@ -463,7 +463,7 @@ feature {NONE} -- Query
 			across
 				option_values as o
 			loop
-				l_opt := o.item
+				l_opt := o
 				if
 					if l_cs then
 						l_opt.switch.id.same_string_general (a_name)
@@ -495,8 +495,8 @@ feature {NONE} -- Query
 				create Result.make (l_options.count)
 				Result.compare_objects
 				across l_options as l_option loop
-					if l_option.item.has_value then
-						Result.extend (l_option.item.value)
+					if l_option.has_value then
+						Result.extend (l_option.value)
 					end
 				end
 			else
@@ -532,7 +532,7 @@ feature {NONE} -- Query
 			across
 				l_options as o
 			loop
-				l_option := o.item
+				l_option := o
 				if l_option.has_value then
 					l_value := l_option.value
 					if a_ignore_case then
@@ -571,12 +571,12 @@ feature {NONE} -- Query
 			loop
 				if
 					if l_cs then
-						s.item.id.same_string_general (a_name)
+						s.id.same_string_general (a_name)
 					else
-						s.item.id.is_case_insensitive_equal_general (a_name)
+						s.id.is_case_insensitive_equal_general (a_name)
 					end
 				then
-					Result := s.item
+					Result := s
 				end
 			end
 			check
@@ -705,7 +705,7 @@ feature {NONE} -- Parsing
 				check
 					l_last_switch_unattached: not l_use_separated implies l_last_switch = Void
 				end
-				l_arg := a.item
+				l_arg := a
 				if not l_stop_processing and then not l_arg.is_empty and then l_arg.count > 1 and then l_prefixes.has (l_arg.item (1)) then
 					if l_arg.count > 2 and then l_prefixes.has (l_arg.item (2)) then
 						l_option := l_arg.shared_substring (3, l_arg.count)
@@ -754,7 +754,7 @@ feature {NONE} -- Parsing
 								until
 									l_match
 								loop
-									l_switch := s.item
+									l_switch := s
 									if l_use_long_name then
 										if l_cs then
 											l_match := l_switch.long_name.same_string (l_option)
@@ -787,7 +787,7 @@ feature {NONE} -- Parsing
 										until
 											l_match
 										loop
-											l_switch := s.item
+											l_switch := s
 											if l_switch.has_short_name then
 												if l_cs then
 													l_match := l_switch.short_name = l_option [k]
@@ -918,7 +918,7 @@ feature {NONE} -- Validation
 				available_switches as s
 			loop
 				l_succ := True
-				l_switch := s.item
+				l_switch := s
 				if has_option (l_switch.id) then
 					l_options := options_of_name (l_switch.id)
 				else
@@ -938,7 +938,7 @@ feature {NONE} -- Validation
 						across
 							l_options as o
 						loop
-							if o.item.has_value then
+							if o.has_value then
 								add_template_error (e_non_value_switch, [l_switch.name])
 							end
 						end
@@ -947,7 +947,7 @@ feature {NONE} -- Validation
 						across
 							l_options as o
 						loop
-							if not o.item.has_value then
+							if not o.has_value then
 								add_template_error (e_require_switch_value, [l_val_switch.name, l_val_switch.arg_name])
 								l_succ := False
 							end
@@ -958,7 +958,7 @@ feature {NONE} -- Validation
 							across
 								l_options as o
 							loop
-								l_value := o.item.value
+								l_value := o.value
 								l_validator.validate (l_value)
 								if not l_validator.is_option_valid then
 									add_template_error (e_invalid_switch_value_with_reason, [ellipse_text (l_value), l_switch.name, l_validator.reason])
@@ -992,9 +992,9 @@ feature {NONE} -- Validation
 					across
 						l_values as v
 					loop
-						l_validator.validate (v.item)
+						l_validator.validate (v)
 						if not l_validator.is_option_valid then
-							add_template_error (e_invalid_non_switched_value_with_reason, [v.item, l_validator.reason])
+							add_template_error (e_invalid_non_switched_value_with_reason, [v, l_validator.reason])
 						end
 					end
 				else
@@ -1020,7 +1020,7 @@ feature {NONE} -- Validation
 			across
 				option_values as o
 			loop
-				l_option := o.item.switch
+				l_option := o.switch
 				if l_dependencies.has (l_option) then
 					if attached l_dependencies [l_option] as l_switches then
 						from
@@ -1064,7 +1064,7 @@ feature {NONE} -- Validation
 			across
 				option_values as o
 			loop
-				l_switch := o.item.switch
+				l_switch := o.switch
 				from Result.start until Result.is_empty or Result.after loop
 					if not l_switch.is_special and then not Result.item.switches.has (l_switch) then
 						Result.remove
@@ -1099,7 +1099,7 @@ feature {NONE} -- Validation
 			across
 				l_groups as g
 			loop
-				Result.extend (expand_switch_group (g.item))
+				Result.extend (expand_switch_group (g))
 			end
 			check
 				matching_counts: Result.count = l_groups.count
@@ -1131,7 +1131,7 @@ feature {NONE} -- Validation
 						across
 							l_appurtenances as a
 						loop
-							l_switch := a.item
+							l_switch := a
 							if not l_group_switches.has (l_switch) then
 								l_group_switches.extend (l_switch)
 								check
@@ -1214,10 +1214,10 @@ feature {NONE} -- Output
 					io.put_string_32 (tab_string)
 					io.put_string_32 (l_name)
 					io.put_string_32 (" ")
-					create l_cfg.make_from_string (c.item)
+					create l_cfg.make_from_string (c)
 					l_cfg.replace_substring_all ({STRING_32} "%N", {STRING_32} "%N" + create {STRING_32}.make_filled (' ', l_name.count + 1))
 					io.put_string_32 (l_cfg)
-					if not c.is_last then
+					if not @ c.is_last then
 						io.new_line
 					end
 				end
@@ -1282,7 +1282,7 @@ feature {NONE} -- Output
 			loop
 				io.error.put_string_32 (tab_string)
 				io.error.put_string_32 ("> ")
-				io.error.put_string_32 (format_terminal_text (e.item, tab_string.count.as_natural_8 + 2))
+				io.error.put_string_32 (format_terminal_text (e, tab_string.count.as_natural_8 + 2))
 				io.error.new_line
 			end
 			io.error.new_line
@@ -1357,7 +1357,7 @@ feature {NONE} -- Output
 			across
 				l_switches as s
 			loop
-				l_switch := s.item
+				l_switch := s
 				if not l_switch.is_hidden then
 					if is_using_unix_switch_style or else l_switch.has_short_name then
 						l_max_len := l_max_len.max (l_switch.long_name.count + 5)
@@ -1374,7 +1374,7 @@ feature {NONE} -- Output
 			across
 				l_switches as s
 			loop
-				l_switch := s.item
+				l_switch := s
 				if attached {ARGUMENT_VALUE_SWITCH} l_switch as l_value_switch_1 then
 					l_value_switches.extend (l_value_switch_1)
 				end
@@ -1439,13 +1439,13 @@ feature {NONE} -- Output
 				across
 					l_value_switches as s
 				loop
-					l_max_len := l_max_len.max (s.item.arg_name.count)
+					l_max_len := l_max_len.max (s.arg_name.count)
 				end
 
 				across
 					l_value_switches as s
 				loop
-					l_value_switch := s.item
+					l_value_switch := s
 
 					l_immutable := l_value_switch.arg_name
 					if not l_added_args.has (l_immutable) then
@@ -1526,7 +1526,7 @@ feature {NONE} -- Usage
 				across
 					l_groups as g
 				loop
-					l_group := g.item
+					l_group := g
 					if not l_group.is_hidden then
 						l_switches := l_group.switches
 							-- Add nologo switch, if not already added
@@ -1585,7 +1585,7 @@ feature {NONE} -- Usage
 				across
 					a_group as g
 				loop
-					l_switch := g.item
+					l_switch := g
 					l_opt := l_switch.optional
 					if not l_switch.id.same_string (help_switch) and not l_switch.is_hidden then
 						l_add_switch := not a_add_appurtenances implies (not a_src_group.has (l_switch) or l_switch.optional)
@@ -1662,7 +1662,7 @@ feature {NONE} -- Usage
 							if l_opt then
 								Result.append_character (']')
 							end
-							if not g.is_last then
+							if not @ g.is_last then
 								Result.append_character (' ')
 							end
 						end
@@ -1837,7 +1837,7 @@ feature {NONE} -- Switches
 			across
 				l_switches as s
 			loop
-				l_switch := s.item
+				l_switch := s
 				if not l_switch.is_hidden then
 					Result.extend (l_switch)
 				end
@@ -2035,7 +2035,7 @@ feature {NONE} -- Implementation: Query
 			across
 				option_values as o
 			loop
-				l_opt := o.item
+				l_opt := o
 				if
 					if l_cs then
 						a_name.same_string (l_opt.switch.id)
@@ -2065,29 +2065,29 @@ invariant
 	is_successful_means_has_parsed: is_successful implies has_parsed
 
 note
-	copyright: "Copyright (c) 1984-2020, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2021, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[
-		This file is part of Eiffel Software's Eiffel Development Environment.
-		
-		Eiffel Software's Eiffel Development Environment is free
-		software; you can redistribute it and/or modify it under
-		the terms of the GNU General Public License as published
-		by the Free Software Foundation, version 2 of the License
-		(available at the URL listed under "license" above).
-		
-		Eiffel Software's Eiffel Development Environment is
-		distributed in the hope that it will be useful, but
-		WITHOUT ANY WARRANTY; without even the implied warranty
-		of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
-		See the GNU General Public License for more details.
-		
-		You should have received a copy of the GNU General Public
-		License along with Eiffel Software's Eiffel Development
-		Environment; if not, write to the Free Software Foundation,
-		Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
-	]"
+			This file is part of Eiffel Software's Eiffel Development Environment.
+			
+			Eiffel Software's Eiffel Development Environment is free
+			software; you can redistribute it and/or modify it under
+			the terms of the GNU General Public License as published
+			by the Free Software Foundation, version 2 of the License
+			(available at the URL listed under "license" above).
+			
+			Eiffel Software's Eiffel Development Environment is
+			distributed in the hope that it will be useful, but
+			WITHOUT ANY WARRANTY; without even the implied warranty
+			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+			See the GNU General Public License for more details.
+			
+			You should have received a copy of the GNU General Public
+			License along with Eiffel Software's Eiffel Development
+			Environment; if not, write to the Free Software Foundation,
+			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
+		]"
 	source: "[
 			Eiffel Software
 			5949 Hollister Ave., Goleta, CA 93117 USA

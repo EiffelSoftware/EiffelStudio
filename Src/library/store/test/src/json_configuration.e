@@ -1,4 +1,4 @@
-class JSON_CONFIGURATION
+﻿class JSON_CONFIGURATION
 
 create
 	make,
@@ -73,7 +73,7 @@ feature -- Basic operation
 		local
 			p: JSON_PARSER
 			f: PLAIN_TEXT_FILE
-			s,t: detachable STRING_8
+			s, t: detachable STRING_8
 			i: INTEGER
 			u: UTF_CONVERTER
 		do
@@ -108,7 +108,7 @@ feature -- Basic operation
 				from
 					i := 1
 				until
-					s[i] = '{'
+					s [i] = '{'
 				loop
 					i := i + 1
 				end
@@ -127,11 +127,7 @@ feature -- Basic operation
 				has_error := p.errors.count > 0
 				debug
 					if has_error then
-						across
-							p.errors as c
-						loop
-							print (c.item + "%N")
-						end
+						⟳ e: p.errors ¦ print (e + "%N") ⟲
 					end
 				end
 			end
@@ -183,8 +179,8 @@ feature -- Access
 				across
 					l_map as c
 				loop
-					if attached {JSON_STRING} c.item as v then
-						Result.force (v.unescaped_string_8, c.key.unescaped_string_8)
+					if attached {JSON_STRING} c as v then
+						Result.force (v.unescaped_string_8, @ c.key.unescaped_string_8)
 					end
 				end
 			end

@@ -21,7 +21,7 @@ inherit
 create
 	make
 
-feature {NONE}  -- Initlization
+feature {NONE} -- Initlization
 
 	make (a_docking_manager: SD_DOCKING_MANAGER)
 			-- Associate new object with `a_docking_manager'.
@@ -125,11 +125,7 @@ feature -- Commands
 	remove_empty_split_area
 			-- Remove empty split area in SD_MULTI_DOCK_AREA
 		do
-			across
-				docking_manager.inner_containers as ic
-			loop
-				ic.item.remove_empty_split_area
-			end
+			⟳ c: docking_manager.inner_containers ¦ c.remove_empty_split_area ⟲
 		end
 
 	remove_auto_hide_zones (a_animation: BOOLEAN)
@@ -139,7 +135,7 @@ feature -- Commands
 				docking_manager.zones.zones.twin as ic
 			loop
 				if
-					attached {SD_AUTO_HIDE_ZONE} ic.item as l_auto_hide_zone and then
+					attached {SD_AUTO_HIDE_ZONE} ic as l_auto_hide_zone and then
 					l_auto_hide_zone.has_content
 				then
 					if not a_animation then
@@ -164,11 +160,7 @@ feature -- Commands
 		do
 			restore_editor_area
 			restore_editor_area_for_minimized
-			across
-				docking_manager.zones.zones.twin as ic
-			loop
-				ic.item.recover_to_normal_state
-			end
+			⟳ z: docking_manager.zones.zones.twin ¦ z.recover_to_normal_state ⟲
 		end
 
 	recover_normal_state_in (a_dock_area: SD_MULTI_DOCK_AREA)
@@ -184,9 +176,9 @@ feature -- Commands
 			end
 
 			across
-				docking_manager.zones.zones.twin as ic
+				docking_manager.zones.zones.twin as z
 			loop
-				l_zone := ic.item
+				l_zone := z
 				if attached {EV_WIDGET} l_zone as lt_widget then
 					if a_dock_area.has_recursive (lt_widget) then
 						l_zone.recover_to_normal_state
@@ -213,24 +205,16 @@ feature -- Commands
 			-- Update all title bar
 			-- Also prune and destroy floating zones which are not used anymore
 		do
-			across
-				docking_manager.inner_containers.twin as ic
-			loop
-				ic.item.update_title_bar
-			end
+			⟳ c: docking_manager.inner_containers.twin ¦ c.update_title_bar ⟲
 		end
 
 	update_mini_tool_bar_size (a_content: SD_CONTENT)
 			-- Update all zones' title bar size for mini tool bar widgets new size
 		do
-			if a_content /= Void then
+			if attached a_content then
 				a_content.update_mini_tool_bar_size
 			else
-				across
-					docking_manager.zones.zones.twin as ic
-				loop
-					ic.item.update_mini_tool_bar_size
-				end
+				⟳ c: docking_manager.zones.zones.twin ¦ c.update_mini_tool_bar_size ⟲
 			end
 		end
 
@@ -256,11 +240,11 @@ feature -- Commands
 		do
 			l_global_accelerators := docking_manager.query.golbal_accelerators
 			across
-				docking_manager.query.floating_zones as ic
+				docking_manager.query.floating_zones as z
 			loop
-				ic.item.accelerators.wipe_out
-				if l_global_accelerators /= Void then
-					ic.item.accelerators.append (l_global_accelerators)
+				z.accelerators.wipe_out
+				if attached l_global_accelerators then
+					z.accelerators.append (l_global_accelerators)
 				end
 			end
 		end
@@ -277,12 +261,12 @@ feature -- Commands
 
 				l_main_area := docking_manager.query.inner_container_main
 
-				if attached {SD_PLACE_HOLDER_ZONE} l_minimized_editor_area as lt_upper_zone  then
+				if attached {SD_PLACE_HOLDER_ZONE} l_minimized_editor_area as lt_upper_zone then
 
 					if not is_minimize_orignally then
 						lt_upper_zone.recover_normal_size_from_minimize
 					end
-					-- If codes above executed, parent will change
+						-- If codes above executed, parent will change
 					l_parent := lt_upper_zone.parent
 
 					lt_upper_zone.clear_for_minimized_area
@@ -342,11 +326,7 @@ feature -- Commands
 
 						l_editor_area.save_spliter_position (l_parent_parent, generating_type.name_32 + {STRING_32} ".minimized")
 
-						if attached {EV_BOX} l_parent_parent as lt_parent_parent then
-							is_minimize_orignally := True
-						else
-							is_minimize_orignally := False
-						end
+						is_minimize_orignally := attached {EV_BOX} l_parent_parent
 
 						l_parent_parent.prune (l_editor_parent)
 
@@ -356,10 +336,10 @@ feature -- Commands
 						end
 						minimized_editor_area := l_minimized_editor_area
 						l_parent_parent.extend (l_minimized_editor_area)
-						if attached {SD_PLACE_HOLDER_ZONE} l_minimized_editor_area as lt_upper_zone  then
+						if attached {SD_PLACE_HOLDER_ZONE} l_minimized_editor_area as lt_upper_zone then
 							lt_upper_zone.prepare_for_minimized_editor_area (docking_manager)
 
-							-- Minimize this place holder zone, so it can replace surrounded spliter bar with FAKE spliter bar
+								-- Minimize this place holder zone, so it can replace surrounded spliter bar with FAKE spliter bar
 							lt_upper_zone.minimize
 						end
 
@@ -411,9 +391,9 @@ feature -- Commands
 
 				docking_manager.command.resize (True)
 				if attached {SD_UPPER_ZONE} l_editor_parent as l_only_one_editor_zone then
-					-- Only one editor zone in whole editor area, disable maximize/minimize icon in the tab bar
-					-- Otherwise, end user would be confused
-					-- See bug#16834
+						-- Only one editor zone in whole editor area, disable maximize/minimize icon in the tab bar
+						-- Otherwise, end user would be confused
+						-- See bug#16834
 					l_only_one_editor_zone.disable_maximize_minimize_buttons
 				end
 			end
@@ -442,9 +422,9 @@ feature -- Commands
 
 				docking_manager.command.resize (True)
 				if attached {SD_UPPER_ZONE} l_orignal_editor_parent.item as l_only_one_editor_zone then
-					-- Only one editor zone in whole editor area, disable maximize/minimize icon in the tab bar
-					-- Otherwise, end user would be confused
-					-- See bug#16834
+						-- Only one editor zone in whole editor area, disable maximize/minimize icon in the tab bar
+						-- Otherwise, end user would be confused
+						-- See bug#16834
 					l_only_one_editor_zone.enable_maximize_minimize_buttons
 				end
 
@@ -472,8 +452,8 @@ feature -- Commands
 				across
 					docking_manager.zones.upper_zones as z
 				loop
-					if not z.item.is_minimized then
-						z.item.on_minimize
+					if not z.is_minimized then
+						z.on_minimize
 					end
 				end
 			end
@@ -481,32 +461,29 @@ feature -- Commands
 
 	restore_minimized_editors
 			-- Restore all minimized editors
-			local
-				l_upper_zones: ARRAYED_LIST [SD_UPPER_ZONE]
-			do
-				if not docking_manager.is_editor_area_maximized and then
-					not docking_manager.is_editor_area_minimized then
-					from
-						l_upper_zones := docking_manager.zones.upper_zones
-						l_upper_zones.finish
-					until
-						l_upper_zones.before
-					loop
-						if l_upper_zones.item.is_minimized then
-							l_upper_zones.item.on_minimize
-						end
-						l_upper_zones.back
+		local
+			l_upper_zones: ARRAYED_LIST [SD_UPPER_ZONE]
+		do
+			if not docking_manager.is_editor_area_maximized and then
+				not docking_manager.is_editor_area_minimized then
+				from
+					l_upper_zones := docking_manager.zones.upper_zones
+					l_upper_zones.finish
+				until
+					l_upper_zones.before
+				loop
+					if l_upper_zones.item.is_minimized then
+						l_upper_zones.item.on_minimize
 					end
+					l_upper_zones.back
 				end
 			end
+		end
 
 	restore_maximized_editor
 			-- Restore maximized editor in main window if possible
-		local
-			l_zone: detachable SD_ZONE
 		do
-			l_zone := docking_manager.zones.maximized_zone_in_main_window
-			if l_zone /= Void then
+			if attached docking_manager.zones.maximized_zone_in_main_window as l_zone then
 				check maximized: l_zone.is_maximized end
 				if attached {SD_UPPER_ZONE} l_zone as l_upper_zone then
 					l_upper_zone.restore_from_maximized
@@ -551,32 +528,32 @@ feature -- Contract Support
 	lock_call_time: INTEGER
 			-- Used for remember how many times client call `lock_update'
 
-feature {NONE}  -- Implementation
+feature {NONE} -- Implementation
 
 	restore_minimized_editors_for_maximize_editor_area
 			-- Restore all minimized editors if all editors minimized
-			local
-				l_upper_zones: ARRAYED_LIST [SD_UPPER_ZONE]
-				l_all_editors_minimized: BOOLEAN
-			do
-				if not docking_manager.is_editor_area_maximized then
-					from
-						l_all_editors_minimized := True
-						l_upper_zones := docking_manager.zones.upper_zones
-						l_upper_zones.finish
-					until
-						l_upper_zones.before or not l_all_editors_minimized
-					loop
-						if not l_upper_zones.item.is_minimized then
-							l_all_editors_minimized := False
-						end
-						l_upper_zones.back
+		local
+			l_upper_zones: ARRAYED_LIST [SD_UPPER_ZONE]
+			l_all_editors_minimized: BOOLEAN
+		do
+			if not docking_manager.is_editor_area_maximized then
+				from
+					l_all_editors_minimized := True
+					l_upper_zones := docking_manager.zones.upper_zones
+					l_upper_zones.finish
+				until
+					l_upper_zones.before or not l_all_editors_minimized
+				loop
+					if not l_upper_zones.item.is_minimized then
+						l_all_editors_minimized := False
 					end
-				end
-				if l_all_editors_minimized then
-					restore_minimized_editors
+					l_upper_zones.back
 				end
 			end
+			if l_all_editors_minimized then
+				restore_minimized_editors
+			end
+		end
 
 	internal_shared: SD_SHARED
 			-- All Singletons
@@ -681,7 +658,7 @@ feature {NONE}  -- Implementation
 				across
 					docking_manager.query.floating_zones as z
 				loop
-					l_item := z.item
+					l_item := z
 					if not l_item.is_destroyed and then l_item.is_displayed then
 						l_width := l_item.width
 						l_height := l_item.height
@@ -706,9 +683,9 @@ invariant
 	locked_windows_not_void: locked_windows /= Void
 
 note
-	library:	"SmartDocking: Library of reusable components for Eiffel."
-	copyright:	"Copyright (c) 1984-2018, Eiffel Software and others"
-	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
+	library: "SmartDocking: Library of reusable components for Eiffel."
+	copyright: "Copyright (c) 1984-2021, Eiffel Software and others"
+	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software
 			5949 Hollister Ave., Goleta, CA 93117 USA

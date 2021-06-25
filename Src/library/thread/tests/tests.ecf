@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
-<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-21-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-21-0 http://www.eiffel.com/developers/xml/configuration-1-21-0.xsd" name="thread-tests" uuid="C3EF7604-D463-4BAF-9F60-A161A6411023" library_target="thread-tests">
+<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-22-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-22-0 http://www.eiffel.com/developers/xml/configuration-1-22-0.xsd" name="thread-tests" uuid="C3EF7604-D463-4BAF-9F60-A161A6411023" library_target="thread-tests">
 	<description>Unit-tests for the Thread library.</description>
 	<target name="thread-tests">
 		<root class="ANY" feature="default_create"/>

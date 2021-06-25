@@ -149,7 +149,7 @@ feature -- Command
 				if attached {SD_TOOL_BAR_BUTTON} l_items.item as l_button then
 					if not a_horizontal then
 						check l_text /= Void then -- Implied by `l_text' created in previous if clause if not `is_horizontal'
-							-- We may record Void text here
+								-- We may record Void text here
 							l_text.extend (l_button.text)
 						end
 						l_button.set_text ("")
@@ -163,7 +163,7 @@ feature -- Command
 
 				if not a_horizontal and then attached {SD_TOOL_BAR_WIDGET_ITEM} l_items.item as l_widget_button then
 					check l_hidden_items /= Void then
-						-- Implied by the first if clause in this feature
+							-- Implied by the first if clause in this feature
 						l_hidden_items.extend (l_widget_button, l_items.index)
 					end
 					tool_bar.prune (l_widget_button)
@@ -260,7 +260,7 @@ feature -- Command
 
 			prune (tail_indicator)
 
-			-- We have to compute minimum width, because the tail tool bar option button is removed
+				-- We have to compute minimum width, because the tail tool bar option button is removed
 			compute_minmum_size
 
 			l_floating_tool_bar.set_position (a_screen_x, a_screen_y)
@@ -271,9 +271,9 @@ feature -- Command
 				l_floating_tool_bar.show
 			end
 
-			-- We have to set position again after showing on Solaris. Otherwise it will cause bug#12873
-			-- The vertical position problem only happens on Solaris JDS. Not happens on Windows, Ubuntu (both GNome and KDE) and
-			-- Solaris CDE. Maybe it's a bug of JDS
+				-- We have to set position again after showing on Solaris. Otherwise it will cause bug#12873
+				-- The vertical position problem only happens on Solaris JDS. Not happens on Windows, Ubuntu (both GNome and KDE) and
+				-- Solaris CDE. Maybe it's a bug of JDS
 			create l_platform
 			if l_platform.is_unix then
 				l_floating_tool_bar.set_position (a_screen_x, a_screen_y)
@@ -330,7 +330,7 @@ feature -- Command
 			extend_one_item (tail_indicator)
 			compute_minmum_size
 		ensure
-			pruned: floating_tool_bar =  Void
+			pruned: floating_tool_bar = Void
 		end
 
 	replace (a_content: SD_TOOL_BAR_CONTENT)
@@ -378,7 +378,7 @@ feature -- Command
 			end
 		ensure
 			set: (create {PLATFORM}).is_windows implies (attached floating_tool_bar as le_tool_bar and then
-				(le_tool_bar.screen_x = a_screen_x and le_tool_bar.screen_y = a_screen_y))
+					(le_tool_bar.screen_x = a_screen_x and le_tool_bar.screen_y = a_screen_y))
 		end
 
 	compute_minmum_size
@@ -536,10 +536,10 @@ feature -- Query
 			if is_vertical then
 				Result := tool_bar.minimum_height
 			else
-				-- On GTK, SD_TOOL_BAR `minimum_width' is not always equal `width' here
-				-- On Windows, SD_TOOL_BAR `minimum_width' is always equal `width' here
-				-- See bug#12651, so we use `minimum_width' for it
-				-- Same for `minimum_height' and `height'
+					-- On GTK, SD_TOOL_BAR `minimum_width' is not always equal `width' here
+					-- On Windows, SD_TOOL_BAR `minimum_width' is always equal `width' here
+					-- See bug#12651, so we use `minimum_width' for it
+					-- Same for `minimum_height' and `height'
 				Result := tool_bar.minimum_width
 			end
 		ensure
@@ -607,7 +607,7 @@ feature -- Query
 					Result
 				loop
 					if
-						attached {SD_TOOL_BAR_BUTTON} c.item as l_button and then
+						attached {SD_TOOL_BAR_BUTTON} c as l_button and then
 						l_button.rectangle.has_x_y (a_screen_x - tool_bar.screen_x, a_screen_y - tool_bar.screen_y)
 					then
 						Result := l_button.pointer_button_press_actions.count > 0
@@ -667,7 +667,7 @@ feature {NONE} -- Agents
 		require
 			not_destroyed: not is_destroyed
 		local
-			i, l_interval : INTEGER
+			i, l_interval: INTEGER
 		do
 			if drag_area_rectangle.has_x_y (a_x, a_y) or drag_area_rectangle.has_x_y (a_x + a_width, a_y + a_height) then
 				if not is_vertical then
@@ -723,17 +723,17 @@ feature {NONE} -- Implmentation
 			l_row_height: INTEGER
 		do
 			l_row_height := tool_bar.row_height
-			-- Maybe the row height not setted at the moment, we use `standard_height' as default
+				-- Maybe the row height not setted at the moment, we use `standard_height' as default
 			if l_row_height <= 0 then
 				l_row_height := tool_bar.standard_height
 			end
 			if a_is_for_horizontal then
-				-- Change to horizontal drag area
+					-- Change to horizontal drag area
 				tool_bar.set_start_x (internal_drag_area_size)
 				tool_bar.set_start_y (0)
 				create drag_area_rectangle.make (0, 0, internal_drag_area_size, l_row_height)
 			else
-				-- Change to vertical drag area
+					-- Change to vertical drag area
 				tool_bar.set_start_x (0)
 				tool_bar.set_start_y (internal_drag_area_size)
 				create drag_area_rectangle.make (0, 0, l_row_height, internal_drag_area_size)
@@ -760,11 +760,11 @@ feature {NONE} -- Implmentation
 			then
 				l_hidden_items.start
 				l_item := l_hidden_items.item_for_iteration
-				if not tool_bar.has (l_item)  then
+				if not tool_bar.has (l_item) then
 						-- There are items that need to be restored.
 					from
-						-- The next instruction has been done above.
-						-- l_hidden_items.start
+							-- The next instruction has been done above.
+							-- l_hidden_items.start
 					until
 						l_hidden_items.after
 					loop
@@ -836,9 +836,9 @@ invariant
 	not_void: assistant /= Void
 
 note
-	library:	"SmartDocking: Library of reusable components for Eiffel."
-	copyright:	"Copyright (c) 1984-2017, Eiffel Software and others"
-	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
+	library: "SmartDocking: Library of reusable components for Eiffel."
+	copyright: "Copyright (c) 1984-2021, Eiffel Software and others"
+	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software
 			5949 Hollister Ave., Goleta, CA 93117 USA

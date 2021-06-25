@@ -42,17 +42,17 @@ feature {NONE} -- Initialization
 feature -- Access
 
 	smtp_reply: detachable STRING
-		-- Replied message from SMTP protocol
+			-- Replied message from SMTP protocol
 
 	pipelining: BOOLEAN
-		-- Does the connection use pipeline?
+			-- Does the connection use pipeline?
 
 feature -- Setting
 
 	enable_pipelining
 			-- Set pipelining.
 		do
-			pipelining:= True
+			pipelining := True
 		ensure
 			pipelining_set: pipelining
 		end
@@ -60,7 +60,7 @@ feature -- Setting
 	disable_pipelining
 			-- Unset pipelining.
 		do
-			pipelining:= False
+			pipelining := False
 		ensure
 			pipelining_set: not pipelining
 		end
@@ -68,7 +68,7 @@ feature -- Setting
 feature -- Access EMAIL_PROTOCOL
 
 	default_port: INTEGER = 25
-		-- Smtp default port
+			-- Smtp default port
 
 feature -- Implementation (EMAIL_RESOURCE).
 
@@ -89,11 +89,7 @@ feature -- Basic operations.
 			-- It can be a helo or a ehlo connection.
 		do
 			connect
-			if pipelining then
-				send_command (ehlo + username, Ok)
-			else
-				send_command (helo + username, Ok)
-			end
+			send_command (if pipelining then ehlo else helo end + username, Ok)
 			if not error then
 				enable_initiated
 			end
@@ -117,7 +113,7 @@ feature -- Basic operations.
 feature -- Implementation (EMAIL_RESOURCE)
 
 	can_receive: BOOLEAN = False
-		-- Can the Smtp protocolreceive?
+			-- Can the Smtp protocolreceive?
 
 	initialize
 			-- Initialize the protocol to send a new email.
@@ -127,7 +123,7 @@ feature -- Implementation (EMAIL_RESOURCE)
 feature {NONE} -- Connection
 
 	username: READABLE_STRING_8
-		-- Smtp user name (Needed to initiate the connection).
+			-- Smtp user name (Needed to initiate the connection).
 
 feature {NONE} -- Basic operations
 
@@ -138,7 +134,7 @@ feature {NONE} -- Basic operations
 		do
 			from
 				a_socket.read_line
-				response:= a_socket.last_string
+				response := a_socket.last_string
 			until
 				response.count < 4 or else response.item (4) /= '-'
 			loop
@@ -197,7 +193,7 @@ feature {NONE} -- Basic operations
 				build_sub_header
 				send_all (l_header_from)
 			else
-				-- Implied by precondition.
+					-- Implied by precondition.
 				check has_from_header: False end
 			end
 		end
@@ -213,37 +209,28 @@ feature {NONE} -- Basic operations
 			create l_recipients.make (5)
 			recipients := l_recipients
 			if attached memory_resource.header (H_to) as l_header then
-				across l_header.entries as ic loop
-					l_recipients.extend (extracted_email (ic.item))
-				end
+				⟳ e: l_header.entries ¦ l_recipients.extend (extracted_email (e)) ⟲
 			else
-				-- Per precondition of `set_recipients'
+					-- Per precondition of `set_recipients'
 				check has_recipients: False end
 			end
 				-- CC
 			if attached memory_resource.header (H_cc) as l_header then
-				across l_header.entries as ic loop
-					l_recipients.extend (extracted_email (ic.item))
-				end
+				⟳ e: l_header.entries ¦ l_recipients.extend (extracted_email (e)) ⟲
 			end
 				-- BCC
 			if attached memory_resource.header (H_bcc) as l_header then
-				across l_header.entries as ic loop
-					l_recipients.extend (extracted_email (ic.item))
-				end
+				⟳ e: l_header.entries ¦ l_recipients.extend (extracted_email (e)) ⟲
 			end
 		end
 
 	build_sub_header
 			-- Build the header of the message in 'sub_header'.
 		do
-			from
-				memory_resource.headers.start
-			until
-				memory_resource.headers.after
+			across
+				memory_resource.headers as h
 			loop
-				add_sub_header (memory_resource.headers.key_for_iteration)
-				memory_resource.headers.forth
+				add_sub_header (@ h.key)
 			end
 			sub_header.append ("%R%N")
 		end
@@ -257,7 +244,6 @@ feature {NONE} -- Basic operations
 			sub_header_key_not_void: sub_header_key /= Void
 			key_exists: memory_resource.headers.has (sub_header_key)
 		local
-			l_entries: like {HEADER}.entries
 			l_entry: STRING_8
 		do
 				-- BCC email addresses must be listed in the RCPT TO command list,
@@ -268,16 +254,12 @@ feature {NONE} -- Basic operations
 				not sub_header_key.is_case_insensitive_equal_general (h_bcc) and then
 				attached memory_resource.header (sub_header_key) as l_header
 			then
-				from
-					l_entries := l_header.entries
-					l_entries.start
-					create l_entry.make_empty
-				until
-					l_entries.after
+				create l_entry.make_empty
+				across
+					l_header.entries as e
 				loop
-					l_entry.append (l_entries.item)
-					l_entries.forth
-					if not l_entries.after then
+					l_entry.append (e)
+					if not @ e.is_last then
 						l_entry.append_character (',')
 					end
 				end
@@ -302,13 +284,11 @@ feature {NONE} -- Basic operations
 			if not error then
 					-- TO
 				if attached recipients as l_recipients then
-					across l_recipients as ic loop
-						if not error then
-							send_command (Mail_to + "<" + ic.item + ">", Ok)
-						end
+					across l_recipients as r until error loop
+						send_command (Mail_to + "<" + r + ">", Ok)
 					end
 				else
-					-- Per precondition `recipients_attached`
+						-- Per precondition `recipients_attached`
 					check has_recipients: False end
 				end
 
@@ -328,14 +308,13 @@ feature {NONE} -- Basic operations
 			end
 		end
 
-
 feature {NONE} -- Access
 
 	recipients: detachable ARRAYED_LIST [READABLE_STRING_8]
-		-- Header to use with the command 'Mail_to', it contains the "TO", "CC" and "BCC" fields.
+			-- Header to use with the command 'Mail_to', it contains the "TO", "CC" and "BCC" fields.
 
 	sub_header: STRING_8
-		-- Sub_header: data before the message.
+			-- Sub_header: data before the message.
 
 feature {NONE} -- Implementation
 
@@ -352,14 +331,14 @@ feature {NONE} -- Implementation
 			if l_pos1 > 1 then
 				l_pos2 := a_text.index_of ('>', l_pos1)
 				if l_pos2 > l_pos1 then
-					Result := a_text.substring (l_pos1 + 1,  l_pos2 - 1)
+					Result := a_text.substring (l_pos1 + 1, l_pos2 - 1)
 				end
 			end
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2020, Eiffel Software and others"
-	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
+	copyright: "Copyright (c) 1984-2021, Eiffel Software and others"
+	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software
 			5949 Hollister Ave., Goleta, CA 93117 USA

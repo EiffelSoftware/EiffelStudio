@@ -155,7 +155,7 @@ feature -- Access and queries
 		end
 
 	key_tester: detachable EQUALITY_TESTER [H]
-			-- Tester used for comparing keys.	
+			-- Tester used for comparing keys.
 
 	new_cursor: SEARCH_TABLE_ITERATION_CURSOR [H]
 			-- <Precursor>
@@ -195,8 +195,7 @@ feature -- Comparison
 			-- Is `Current' and `other' disjoint on their keys?
 			-- Use `same_keys' for comparison.
 		do
-			Result := is_empty or else other.is_empty or else
-				not across other as o some has (o.item) end
+			Result := is_empty or else other.is_empty or else not ∃ o: other ¦ has (o)
 		end
 
 	same_keys (a_search_key, a_key: H): BOOLEAN
@@ -322,13 +321,13 @@ feature -- Insertion, deletion
 				local_current := content
 				other_size := local_other.count
 				my_size := local_current.count
-				if (my_size + other_size) * Size_threshold <= 100*count then
+				if (my_size + other_size) * Size_threshold <= 100 * count then
 					from
 						new := empty_duplicate (3 * (capacity + other_size) // 2)
 					until
 						i >= my_size
 					loop
-						current_key := local_current.item(i)
+						current_key := local_current.item (i)
 						if current_key /= Void and then valid_key (current_key) then
 							new.put (current_key)
 						end
@@ -343,7 +342,7 @@ feature -- Insertion, deletion
 				until
 					i >= other_size
 				loop
-					current_key := local_other.item(i)
+					current_key := local_other.item (i)
 					if current_key /= Void and then valid_key (current_key) then
 						put (current_key)
 					end
@@ -466,7 +465,7 @@ feature {NONE} -- Internal features
 				first_deleted_position := -1
 				table_size := capacity
 				hash_code := search_key.hash_code
-				-- Increment computed for no cycle: `table_size' is prime
+					-- Increment computed for no cycle: `table_size' is prime
 				increment := 1 + hash_code \\ (table_size - 1)
 				pos := (hash_code \\ table_size) - increment
 			until
@@ -648,8 +647,8 @@ invariant
 	count_big_enough: 0 <= count
 
 note
-	copyright:	"Copyright (c) 1984-2017, Eiffel Software and others"
-	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
+	copyright: "Copyright (c) 1984-2021, Eiffel Software and others"
+	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software
 			5949 Hollister Ave., Goleta, CA 93117 USA

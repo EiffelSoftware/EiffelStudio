@@ -26,7 +26,7 @@ feature {NONE} -- Initlization
 			a_items_not_void: a_items /= Void
 		do
 			unique_title := a_unique_title.as_string_32
-			-- We set display title same as unique title by default
+				-- We set display title same as unique title by default
 			title := unique_title.twin
 			items := a_items
 		ensure
@@ -44,19 +44,15 @@ feature {NONE} -- Initlization
 			l_item: EV_TOOL_BAR_ITEM
 			l_temp_items: like items
 		do
-			from
-				a_tool_bar.start
-				create l_temp_items.make (0)
-			until
-				a_tool_bar.after
+			create l_temp_items.make (0)
+			across
+				a_tool_bar as i
 			loop
-				l_item := a_tool_bar.item
-				if attached a_tool_bar.item.parent as l_parent then
-					l_parent.prune (a_tool_bar.item)
+				l_item := i
+				if attached l_item.parent as p then
+					p.prune (l_item)
 				end
-
-				l_temp_items.extend (convert_to_sd_item (l_item, a_tool_bar.index.out))
-				a_tool_bar.forth
+				l_temp_items.extend (convert_to_sd_item (l_item, @ i.target_index.out))
 			end
 			make_with_items (a_unique_title, l_temp_items)
 		ensure
@@ -78,7 +74,7 @@ feature {NONE} -- Initlization
 				else
 					create l_sd_button.make
 				end
-				if l_tool_bar_button.text /= Void  then
+				if l_tool_bar_button.text /= Void then
 					l_sd_button.set_text (l_tool_bar_button.text)
 				end
 				if attached l_tool_bar_button.pixmap as l_pixmap then
@@ -137,7 +133,7 @@ feature -- Command
 						if l_row /= Void then
 							l_zone.assistant.record_docking_state
 							l_row.prune (l_zone)
-							if l_row.count = 0 then
+							if l_row.is_empty then
 								l_row.destroy
 							end
 						end
@@ -182,7 +178,7 @@ feature -- Command
 			added: is_added
 		do
 			if attached zone as l_zone then
-				-- Use this function to set all SD_TOOL_BAR_ITEM wrap states
+					-- Use this function to set all SD_TOOL_BAR_ITEM wrap states
 				l_zone.change_direction (True)
 			end
 			destroy_container
@@ -209,7 +205,7 @@ feature -- Command
 			target_docking: a_target_content.is_docking
 		do
 			if attached zone as l_zone then
-				-- Use this function to set all SD_TOOL_BAR_ITEM wrap states
+					-- Use this function to set all SD_TOOL_BAR_ITEM wrap states
 				l_zone.change_direction (True)
 			end
 			destroy_container
@@ -264,16 +260,13 @@ feature -- Query
 	items_visible: LIST [SD_TOOL_BAR_ITEM]
 			-- All displayed items
 		do
-			from
-				create {ARRAYED_LIST [SD_TOOL_BAR_ITEM]} Result.make (1)
-				items.start
-			until
-				items.after
+			create {ARRAYED_LIST [SD_TOOL_BAR_ITEM]} Result.make (1)
+			across
+				items as i
 			loop
-				if items.item.is_displayed then
-					Result.extend (items.item)
+				if i.is_displayed then
+					Result.extend (i)
 				end
-				items.forth
 			end
 		ensure
 			not_void: Result /= Void
@@ -291,17 +284,13 @@ feature -- Query
 				Result := items_visible
 				l_snap_shot := items_visible
 			end
-
-			from
-				l_snap_shot.start
-			until
-				l_snap_shot.after
+			across
+				l_snap_shot as i
 			loop
-				if attached {SD_TOOL_BAR_SEPARATOR} l_snap_shot.item as l_separator then
+				if attached {SD_TOOL_BAR_SEPARATOR} i as l_separator then
 					Result.start
 					Result.prune (l_separator)
 				end
-				l_snap_shot.forth
 			end
 		ensure
 			not_void: Result /= Void
@@ -314,40 +303,31 @@ feature -- Query
 			l_items: like items_visible
 		do
 			Result := 1
-			from
-				-- If first one is separator, we ignore it
-				l_last_is_separator := True
-				if a_include_invisible then
-					l_items := items
-				else
-					l_items := items_visible
-				end
-				l_items.start
-			until
-				l_items.after
+				-- Ignore the first separator.
+			l_last_is_separator := True
+			l_items := if a_include_invisible then items else items_visible end
+			across
+				l_items as i
 			loop
-				if l_items.item.is_displayed then
-					if attached {SD_TOOL_BAR_SEPARATOR} l_items.item as l_separator then
-						if l_last_is_separator	and l_items.index /= l_items.count then
-							-- We ignore last separator
-							Result := Result + 1
-							l_last_is_separator := True
-						end
-					else
+				if i.is_displayed then
+					if not attached {SD_TOOL_BAR_SEPARATOR} i then
 						l_last_is_separator := False
+					elseif l_last_is_separator and @ i.target_index /= l_items.count then
+							-- We ignore last separator
+						Result := Result + 1
+						l_last_is_separator := True
 					end
 				end
-				l_items.forth
 			end
 			if items.valid_index (l_items.count - 1) then
 				if l_last_is_separator and attached {SD_TOOL_BAR_SEPARATOR} l_items.i_th (l_items.count - 1) then
-					-- At least two sepators at the end.
+						-- At least two sepators at the end.
 					Result := Result - 1
 				end
 			elseif l_last_is_separator and l_items.count = 1 then
-				-- Only one separator
+					-- Only one separator
 				Result := 0
-			elseif l_items.count = 0 then
+			elseif l_items.is_empty then
 				Result := 0
 			end
 		end
@@ -363,7 +343,7 @@ feature -- Query
 			l_last_is_separator: BOOLEAN
 		do
 			from
-				-- If first item is separator, we ingore it
+					-- If first item is separator, we ingore it
 				l_last_is_separator := True
 				if a_include_invisible then
 					l_items := items
@@ -394,7 +374,7 @@ feature -- Query
 			end
 		ensure
 			not_void: Result /= Void
-			not_contain_separator: across Result as c all not attached {SD_TOOL_BAR_SEPARATOR} c.item end
+			not_contain_separator: ∀ c: Result ¦ not attached {SD_TOOL_BAR_SEPARATOR} c
 		end
 
 	show_request_actions: EV_NOTIFY_ACTION_SEQUENCE
@@ -419,45 +399,26 @@ feature -- Query
 
 	item_count_except_sep (a_include_invisible: BOOLEAN): INTEGER
 			-- Item count except SD_TOOL_BAR_SEPARATOR
-		local
-			l_items: like items
 		do
-			from
-				l_items := items
-				l_items.start
-			until
-				l_items.after
+			across
+				items as i
 			loop
-				if attached {SD_TOOL_BAR_SEPARATOR} l_items.item as l_separator then
-					if not a_include_invisible then
-						if l_items.item.is_displayed then
-							Result := Result + 1
-						end
-					else
-						Result := Result + 1
-					end
+				if attached {SD_TOOL_BAR_SEPARATOR} i then
+					Result := Result + (a_include_invisible or i.is_displayed).to_integer
 				end
-				l_items.forth
 			end
 		end
 
 	is_contain_widget_item: BOOLEAN
 			-- If Current contain normal widget items?
 		do
-			from
-				items.start
-			until
-				items.after or Result
-			loop
-				Result := attached {SD_TOOL_BAR_WIDGET_ITEM} items.item
-				items.forth
-			end
+			Result := ∃ i: items ¦ attached {SD_TOOL_BAR_WIDGET_ITEM} i
 		end
 
 	is_added: BOOLEAN
 			-- If Current added to a tool bar manager?
 		do
-			Result := manager /= Void
+			Result := attached manager
 		end
 
 	is_destroyed: BOOLEAN
@@ -481,21 +442,9 @@ feature -- Query
 		end
 
 	is_menu_bar: BOOLEAN
-			-- If Current is a menu bar which only contain SD_TOOL_BAR_MENU_ITEM
+			-- If Current is a menu bar which only contain SD_TOOL_BAR_MENU_ITEM.
 		do
-			if not items.is_empty then
-				from
-					items.start
-					Result := True
-				until
-					items.after or not Result
-				loop
-					if not attached {SD_TOOL_BAR_MENU_ITEM} items.item  then
-						Result := False
-					end
-					items.forth
-				end
-			end
+			Result := ∀ i: items ¦ attached {SD_TOOL_BAR_MENU_ITEM} i
 		end
 
 	hash_code: INTEGER
@@ -538,7 +487,7 @@ feature -- Obsolete
 			Result := items_except_sep (True)
 		end
 
-feature {SD_ACCESS}  -- Internal issues
+feature {SD_ACCESS} -- Internal issues
 
 	wipe_out
 			-- Remove all items
@@ -548,23 +497,17 @@ feature {SD_ACCESS}  -- Internal issues
 
 	clear
 			-- Clear widget items' parents and reset state flags
-		local
-			l_items: like items
 		do
-			l_items := items.twin
-			from
-				l_items.start
-			until
-				l_items.after
+			across
+				items.twin as i
 			loop
-				if attached {SD_TOOL_BAR_WIDGET_ITEM} l_items.item as l_widget_item then
-					if attached {EV_CONTAINER} l_widget_item.widget.parent as l_parent then
-						l_parent.prune (l_widget_item.widget)
-					end
+				if
+					attached {SD_TOOL_BAR_WIDGET_ITEM} i as l_widget_item and then
+					attached {EV_CONTAINER} l_widget_item.widget.parent as l_parent
+				then
+					l_parent.prune (l_widget_item.widget)
 				end
-				l_items.forth
 			end
-
 			if attached zone as l_zone and then attached l_zone.customize_dialog as l_dialog then
 				l_dialog.destroy
 				l_zone.set_customize_dialog (Void)
@@ -575,23 +518,15 @@ feature {SD_ACCESS}  -- Internal issues
 			-- Index of `a_item'
 		require
 			has: items.has (a_item)
-		local
-			l_items: LIST [SD_TOOL_BAR_ITEM]
 		do
-			from
-				if a_include_invisible then
-					l_items := items
-				else
-					l_items := items_visible
-				end
-				l_items.start
+			across
+				if a_include_invisible then items else items_visible end as i
 			until
-				l_items.after or Result /= 0
+				Result /= 0
 			loop
-				if l_items.item = a_item then
-					Result := l_items.index
+				if i = a_item then
+					Result := @ i.target_index
 				end
-				l_items.forth
 			end
 		ensure
 			valid: Result /= 0
@@ -608,10 +543,11 @@ feature {SD_ACCESS}  -- Internal issues
 			l_items_visible.go_i_th (l_items_visible.index_of (a_item, 1))
 			if not l_items_visible.after then
 				l_items_visible.forth
-				if not l_items_visible.after then
-					if attached {SD_TOOL_BAR_SEPARATOR} l_items_visible.item as sep then
-						Result := sep
-					end
+				if
+					not l_items_visible.after and then
+					attached {SD_TOOL_BAR_SEPARATOR} l_items_visible.item as sep
+				then
+					Result := sep
 				end
 			end
 		end
@@ -633,10 +569,11 @@ feature {SD_ACCESS}  -- Internal issues
 			l_items_visible.go_i_th (l_index)
 			if not l_items_visible.before then
 				l_items_visible.go_i_th (l_index - 1)
-				if not l_items_visible.before then
-					if attached {SD_TOOL_BAR_SEPARATOR} l_items_visible.item as sep then
-						Result := sep
-					end
+				if
+					not l_items_visible.before and then
+					attached {SD_TOOL_BAR_SEPARATOR} l_items_visible.item as sep
+				then
+					Result := sep
 				end
 			end
 		end
@@ -647,24 +584,17 @@ feature {SD_ACCESS}  -- Internal issues
 			valid: a_group_index > 0 and a_group_index <= groups_count (False)
 		local
 			l_group_count: INTEGER
-			l_items: like items_visible
 			l_last_is_separator: BOOLEAN
 		do
-			from
-				l_last_is_separator := True
-				if a_inclue_invisible then
-					l_items := items
-				else
-					l_items := items_visible
-				end
-
-				Result := 1
-				l_group_count := 1
-				l_items.start
+			l_last_is_separator := True
+			Result := 1
+			l_group_count := 1
+			across
+				if a_inclue_invisible then items else items_visible end as i
 			until
-				l_items.after or l_group_count = a_group_index
+				l_group_count = a_group_index
 			loop
-				if attached {SD_TOOL_BAR_SEPARATOR} l_items.item as l_separator then
+				if attached {SD_TOOL_BAR_SEPARATOR} i as l_separator then
 					if not l_last_is_separator then
 						l_group_count := l_group_count + 1
 					end
@@ -673,8 +603,6 @@ feature {SD_ACCESS}  -- Internal issues
 					l_last_is_separator := False
 				end
 				Result := Result + 1
-
-				l_items.forth
 			end
 		ensure
 			valid: Result > 0 and Result <= items.count
@@ -685,10 +613,10 @@ feature {SD_ACCESS}  -- Internal issues
 		require
 			valid: a_group_index > 0 and a_group_index <= groups_count (False)
 		do
-			if a_group_index /= groups_count (False) then
-				Result := item_start_index (a_group_index + 1, False) - 2
-			else
+			if a_group_index = groups_count (False) then
 				Result := items.count
+			else
+				Result := item_start_index (a_group_index + 1, False) - 2
 			end
 		ensure
 			valid: Result > 0 and Result <= items.count
@@ -752,10 +680,10 @@ feature {NONE} -- Implementation
 invariant
 	items_not_void: items /= Void
 
-;note
-	library:	"SmartDocking: Library of reusable components for Eiffel."
-	copyright:	"Copyright (c) 1984-2017, Eiffel Software and others"
-	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
+note
+	library: "SmartDocking: Library of reusable components for Eiffel."
+	copyright: "Copyright (c) 1984-2021, Eiffel Software and others"
+	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software
 			5949 Hollister Ave., Goleta, CA 93117 USA

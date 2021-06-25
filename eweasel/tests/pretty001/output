@@ -1,7 +1,7 @@
 note
 	description: "[
-		Test of prettify command
-	]"
+			Test of prettify command
+		]"
 
 class
 	TEST

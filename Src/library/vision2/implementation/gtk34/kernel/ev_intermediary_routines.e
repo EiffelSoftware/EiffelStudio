@@ -130,7 +130,7 @@ feature {EV_ANY_IMP} -- Gauge intermediary agent routines
 
 feature -- Widget intermediary agent routines
 
-	on_size_allocate_intermediate (a_object_id, a_x, a_y, a_width, a_height: INTEGER): BOOLEAN
+	on_size_allocate_intermediate (a_object_id, a_x, a_y, a_width, a_height: INTEGER)
 			-- Size allocate happened on widget.
 			-- Result:
 			-- 		False: execute remaining processing (including default)
@@ -140,7 +140,7 @@ feature -- Widget intermediary agent routines
 				attached {EV_WIDGET_IMP} eif_id_object (a_object_id) as a_widget and then
 				not a_widget.is_destroyed
 			then
-				Result := a_widget.on_size_allocate (a_x, a_y, a_width, a_height)
+				a_widget.on_size_allocate (a_x, a_y, a_width, a_height)
 			end
 		end
 

@@ -179,8 +179,9 @@ feature {EV_WINDOW_IMP, EV_INTERMEDIARY_ROUTINES, EV_ANY_I, EV_APPLICATION_IMP} 
 			end
 		end
 
-	on_size_allocate (a_x, a_y, a_width, a_height: INTEGER): BOOLEAN
+	on_size_allocate (a_x, a_y, a_width, a_height: INTEGER)
 			-- Gtk_Widget."size-allocate" happened.
+			-- See https://developer.gnome.org/gtk3/stable/GtkWidget.html#GtkWidget-size-allocate
 		local
 			l_x_y_offset: INTEGER
 			l_x, l_y: INTEGER
@@ -207,9 +208,6 @@ feature {EV_WINDOW_IMP, EV_INTERMEDIARY_ROUTINES, EV_ANY_I, EV_APPLICATION_IMP} 
 					l_parent_imp.child_has_resized (Current)
 				end
 			end
-			Result := False
-			-- 		False: execute remaining processing (including default)
-			--		True: stop all processing
 		end
 
 	on_focus_changed (a_has_focus: BOOLEAN)

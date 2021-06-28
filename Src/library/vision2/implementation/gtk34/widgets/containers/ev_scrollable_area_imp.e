@@ -224,10 +224,10 @@ feature {NONE} -- Implementation
 
 	scrolled_window: POINTER
 
-	on_size_allocate (a_x: INTEGER; a_y: INTEGER; a_width: INTEGER; a_height: INTEGER): BOOLEAN
+	on_size_allocate (a_x: INTEGER; a_y: INTEGER; a_width: INTEGER; a_height: INTEGER)
 			-- Set item in center of `Current' if smaller.
 		do
-			Result := Precursor {EV_VIEWPORT_IMP} (a_x, a_y, a_width, a_height)
+			Precursor {EV_VIEWPORT_IMP} (a_x, a_y, a_width, a_height)
 			if attached item as l_item then
 				if attached {EV_WIDGET_IMP} l_item.implementation as item_imp then
 					check container_widget /= default_pointer end

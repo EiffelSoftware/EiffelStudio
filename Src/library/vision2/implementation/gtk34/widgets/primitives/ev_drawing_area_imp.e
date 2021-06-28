@@ -407,10 +407,10 @@ feature {EV_APPLICATION_IMP} -- Implementation
 
 feature {NONE} -- Implementation
 
-	on_size_allocate (a_x, a_y, a_width, a_height: INTEGER): BOOLEAN
+	on_size_allocate (a_x, a_y, a_width, a_height: INTEGER)
 			-- Gtk_Widget."size-allocate" happened.
 		do
-			Result := Precursor (a_x, a_y, a_width, a_height)
+			Precursor (a_x, a_y, a_width, a_height)
 		end
 
 	redraw

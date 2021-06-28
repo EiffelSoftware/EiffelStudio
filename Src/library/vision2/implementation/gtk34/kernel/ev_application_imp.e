@@ -336,7 +336,6 @@ feature {EV_ANY_I} -- Implementation
 			l_event_string: detachable STRING
 			l_call_theme_events: BOOLEAN
 			l_any_event, l_user_event, l_gdk_event_is_sent: BOOLEAN
-			l_any: detachable ANY
 		do
 			from
 				l_motion_tuple := motion_tuple
@@ -532,7 +531,7 @@ feature {EV_ANY_I} -- Implementation
 							l_call_event := False
 								-- Make sure internal gtk structures are updated before firing resize event(s)
 							{GTK}.gtk_main_do_event (gdk_event)
-							l_any := l_gtk_win_imp.on_size_allocate (
+							l_gtk_win_imp.on_size_allocate (
 								{GTK}.gdk_event_configure_struct_x (gdk_event),
 								{GTK}.gdk_event_configure_struct_y (gdk_event),
 								{GTK}.gdk_event_configure_struct_width (gdk_event),

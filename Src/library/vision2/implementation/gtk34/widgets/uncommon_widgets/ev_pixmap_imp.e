@@ -299,7 +299,7 @@ feature {EV_INTERMEDIARY_ROUTINES} -- Implementation
 	in_expose_actions: BOOLEAN
 			-- Is `Current' in an expose action?
 
-	process_draw_event (a_cairo_context: POINTER)
+	process_draw_event (a_cairo_context: POINTER): BOOLEAN
 			-- Call the expose actions for the drawing area.
 		local
 			l_width, l_height: INTEGER

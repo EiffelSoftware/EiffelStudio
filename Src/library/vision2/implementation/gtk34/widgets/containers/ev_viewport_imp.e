@@ -52,6 +52,9 @@ feature {NONE} -- Initialization
 	needs_event_box: BOOLEAN do end
 			-- Does `a_widget' need an event box?
 
+	needs_child_event_box: BOOLEAN = True
+			-- Wrap child item into an event box?
+
 feature -- Access
 
 	x_offset: INTEGER
@@ -137,7 +140,7 @@ feature -- Element change
 			-- Set `a_widget.width' to `a_width'.
 			-- Set `a_widget.height' to `a_height'.
 		local
-			l_parent_box: POINTER
+			l_child_item: POINTER
 			l_c_object: POINTER
 			l_alloc: POINTER
 		do
@@ -149,14 +152,19 @@ feature -- Element change
 				attached {EV_WIDGET_IMP} l_item.implementation as w_imp
 			then
 				l_c_object := w_imp.c_object
-				l_parent_box := {GTK}.gtk_widget_get_parent (l_c_object)
+				if needs_child_event_box then
+					l_child_item := {GTK}.gtk_widget_get_parent (l_c_object)
+				else
+					l_child_item := l_c_object
+				end
 				l_alloc := l_alloc.memory_alloc ({GTK}.c_gtk_allocation_struct_size)
-				{GTK}.gtk_widget_get_allocation (l_parent_box, l_alloc)
+				{GTK}.gtk_widget_get_allocation (l_child_item, l_alloc)
 				{GTK}.set_gtk_allocation_struct_width (l_alloc, a_width)
 				{GTK}.set_gtk_allocation_struct_height (l_alloc, a_height)
-				{GTK2}.gtk_widget_set_minimum_size (l_parent_box, a_width, a_height)
-				{GTK2}.gtk_widget_size_allocate (l_parent_box, l_alloc)
+				{GTK2}.gtk_widget_size_allocate (l_child_item, l_alloc)
 				l_alloc.memory_free
+
+				{GTK2}.gtk_widget_set_minimum_size (l_child_item, a_width, a_height)
 			end
 		end
 
@@ -170,14 +178,19 @@ feature {NONE} -- Implementation
 		local
 			l_parent_box: POINTER
 		do
-				-- We add a parent box to `a_child' and control its size via this as
-				-- GtkViewport updates the childs requisition upon allocation which
-				-- affects the minimum size of the `a_child'.
-			l_parent_box := {GTK}.gtk_event_box_new
-			{GTK2}.gtk_event_box_set_visible_window (l_parent_box, False)
-			{GTK}.gtk_widget_show (l_parent_box)
-			{GTK}.gtk_container_add (l_parent_box, a_child)
-			{GTK2}.gtk_layout_put (a_container, l_parent_box, internal_x_y_offset, internal_x_y_offset)
+			if needs_child_event_box then
+					-- We add a parent box to `a_child' and control its size via this as
+					-- GtkViewport updates the childs requisition upon allocation which
+					-- affects the minimum size of the `a_child'.
+				l_parent_box := {GTK}.gtk_event_box_new
+				{GTK2}.gtk_event_box_set_visible_window (l_parent_box, False)
+				{GTK}.gtk_widget_show (l_parent_box)
+				{GTK}.gtk_container_add (l_parent_box, a_child)
+				{GTK2}.gtk_layout_put (a_container, l_parent_box, internal_x_y_offset, internal_x_y_offset)
+				{GTK}.gtk_widget_set_name (l_parent_box, {GTK}.gtk_widget_get_name (a_child))
+			else
+				{GTK2}.gtk_layout_put (a_container, a_child, internal_x_y_offset, internal_x_y_offset)
+			end
 
 			reset_offset_to_origin
 		end
@@ -187,9 +200,13 @@ feature {NONE} -- Implementation
 		local
 			l_parent_box: POINTER
 		do
-			l_parent_box := {GTK}.gtk_widget_get_parent (a_child)
-			{GTK}.gtk_container_remove (l_parent_box, a_child)
-			{GTK}.gtk_container_remove (a_container, l_parent_box)
+			if needs_child_event_box then
+				l_parent_box := {GTK}.gtk_widget_get_parent (a_child)
+				{GTK}.gtk_container_remove (l_parent_box, a_child)
+				{GTK}.gtk_container_remove (a_container, l_parent_box)
+			else
+				{GTK}.gtk_container_remove (a_container, a_child)
+			end
 
 			reset_offset_to_origin
 		end

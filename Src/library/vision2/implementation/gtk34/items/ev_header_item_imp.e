@@ -295,10 +295,11 @@ feature -- Measurement
 
 feature {EV_GTK_DEPENDENT_INTERMEDIARY_ROUTINES} -- Event handling
 
-	process_draw_event (a_cairo_context: POINTER)
+	process_draw_event (a_cairo_context: POINTER): BOOLEAN
 			-- <Precursor>
 		do
 			handle_resize
+			Result := False --execute remaining processing (including default)
 		end
 
 	process_gdk_event (n_args: INTEGER; args: POINTER)

@@ -51,15 +51,19 @@ feature {NONE} -- Initialization
 feature {EV_ANY_IMP} -- Access
 
 	translate_and_call (
-		an_agent: PROCEDURE;
+		an_agent: ROUTINE;
 		translate: FUNCTION [INTEGER, POINTER, TUPLE];
-	)
+	): detachable ANY
 			-- Call `an_agent' using `translate' to convert `args' and `n_args'
 		require
 			an_agent_not_void: an_agent /= Void
 			translate_not_void: translate /= Void
 		do
-			an_agent.call (translate.item (integer_pointer_tuple))
+			if attached {FUNCTION [TUPLE, detachable ANY]} an_agent as fct then
+				Result := fct.item (translate.item (integer_pointer_tuple))
+			else
+				an_agent.call (translate.item (integer_pointer_tuple))
+			end
 		end
 
 	dimension_tuple (a_x, a_y, a_width, a_height: INTEGER): like internal_dimension_tuple
@@ -86,13 +90,13 @@ feature -- Implementation
 	signal_connect (
 					a_c_object: POINTER;
 					a_signal_name: EV_GTK_C_STRING;
-					an_agent: PROCEDURE;
+					an_agent: ROUTINE;
 					translate: detachable FUNCTION [INTEGER, POINTER, TUPLE];
 					invoke_after_handler: BOOLEAN
 				)
 			-- Signal connect, depending on `invoke_after_handler` invoked before or after default handler.
 		local
-			l_agent: PROCEDURE
+			l_agent: ROUTINE
 		do
 			if translate = Void then
 					-- If we have no translate agent then we call the agent directly.
@@ -120,7 +124,7 @@ feature -- Implementation
 	signal_connect_before (
 					a_c_object: POINTER;
 					a_signal_name: EV_GTK_C_STRING;
-					an_agent: PROCEDURE;
+					an_agent: ROUTINE;
 					translate: detachable FUNCTION [INTEGER, POINTER, TUPLE]
 				)
 			-- Signal connect, invoke after default handler.
@@ -131,7 +135,7 @@ feature -- Implementation
 	signal_connect_after (
 					a_c_object: POINTER;
 					a_signal_name: EV_GTK_C_STRING;
-					an_agent: PROCEDURE;
+					an_agent: ROUTINE;
 					translate: detachable FUNCTION [INTEGER, POINTER, TUPLE]
 				)
 			-- Signal connect, invoke after default handler.
@@ -267,7 +271,7 @@ feature {EV_APPLICATION_IMP} -- Destruction
 
 feature {NONE} -- Implementation
 
-	marshal (action: PROCEDURE; n_args: INTEGER; args: POINTER; a_return_value: POINTER)
+	marshal (action: ROUTINE; n_args: INTEGER; args: POINTER; a_return_value: POINTER)
 			-- Call `action' with GTK+ event data from `args'.
 			-- There are `n_args' GtkArg*s in `args'.
 			-- Called by C function `c_ev_gtk_callback_marshal'.
@@ -278,6 +282,8 @@ feature {NONE} -- Implementation
 		local
 			retry_count: INTEGER
 			l_integer_pointer_tuple: detachable like integer_pointer_tuple
+			l_any: detachable ANY
+			b: BOOLEAN
 		do
 			if retry_count = 0 then
 				if n_args > 0 then
@@ -285,10 +291,18 @@ feature {NONE} -- Implementation
 					l_integer_pointer_tuple.integer := n_args
 					l_integer_pointer_tuple.pointer := args
 				end
-				action.call (l_integer_pointer_tuple)
+				b := False
+				if attached {FUNCTION [TUPLE, detachable ANY]} action as fct then
+					l_any := fct.item (l_integer_pointer_tuple)
+					if attached {BOOLEAN} l_any as l_bool then
+						b := l_bool
+					end
+				else
+					action.call (l_integer_pointer_tuple)
+				end
 
 				if a_return_value /= default_pointer then
-					{GTK2}.g_value_set_boolean (a_return_value, False) -- TODO: #gtk check if this is ok to return FALSE?
+					{GTK2}.g_value_set_boolean (a_return_value, b) -- TODO: #gtk check if this is ok to return FALSE?
 				end
 
 			elseif retry_count = 1 then
@@ -389,7 +403,7 @@ feature {EV_ANY_IMP, EV_GTK_CALLBACK_MARSHAL} -- Externals
 		end
 
 	frozen c_signal_connect (a_c_object: POINTER; a_signal_name: POINTER;
-		an_agent: PROCEDURE; invoke_after_handler: BOOLEAN): INTEGER
+		an_agent: ROUTINE; invoke_after_handler: BOOLEAN): INTEGER
 			-- Connect `an_agent' to 'a_signal_name' on `a_c_object'.
 		external
 			"C (gpointer, gchar*, EIF_OBJECT, gboolean): guint | %"ev_gtk_callback_marshal.h%""

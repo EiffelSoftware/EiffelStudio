@@ -474,7 +474,7 @@ feature {EV_INTERMEDIARY_ROUTINES, EV_APPLICATION_IMP}
 
 feature {EV_ANY_I} -- Implementation
 
-	on_size_allocate (a_x, a_y, a_width, a_height: INTEGER_32)
+	on_size_allocate (a_x, a_y, a_width, a_height: INTEGER_32): BOOLEAN
 			-- GdkEventConfigure event occurred.
 		do
 			configure_event_pending := False

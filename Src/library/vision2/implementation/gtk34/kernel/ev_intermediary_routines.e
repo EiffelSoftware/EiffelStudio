@@ -78,19 +78,25 @@ feature -- map,unmap event
 
 feature -- Draw signal intermediary.
 
-	draw_actions_intermediary (a_c_object: POINTER; a_cairo_context: POINTER)
+	draw_actions_intermediary (a_c_object: POINTER; a_cairo_context: POINTER): BOOLEAN
 			-- "draw" signal has been emitted.
+			-- Result:
+			-- 		False: execute remaining processing (including default)
+			--		True: stop all processing
 		do
 			if attached {EV_ANY_IMP} c_get_eif_reference_from_object_id (a_c_object) as l_any_imp then
-				l_any_imp.process_draw_event (a_cairo_context)
+				Result := l_any_imp.process_draw_event (a_cairo_context)
 			end
 		end
 
-	configure_event_intermediary (a_c_object: POINTER; a_x, a_y, a_width, a_height: INTEGER)
+	configure_event_intermediary (a_c_object: POINTER; a_x, a_y, a_width, a_height: INTEGER): BOOLEAN
 			-- "configure-event" signal has been emitted.
+			-- Result:
+			-- 		False: execute remaining processing (including default)
+			--		True: stop all processing
 		do
 			if attached {EV_ANY_IMP} c_get_eif_reference_from_object_id (a_c_object) as l_any_imp then
-				l_any_imp.process_configure_event (a_x, a_y, a_width, a_height)
+				Result := l_any_imp.process_configure_event (a_x, a_y, a_width, a_height)
 			end
 		end
 
@@ -124,14 +130,17 @@ feature {EV_ANY_IMP} -- Gauge intermediary agent routines
 
 feature -- Widget intermediary agent routines
 
-	on_size_allocate_intermediate (a_object_id, a_x, a_y, a_width, a_height: INTEGER)
+	on_size_allocate_intermediate (a_object_id, a_x, a_y, a_width, a_height: INTEGER): BOOLEAN
 			-- Size allocate happened on widget.
+			-- Result:
+			-- 		False: execute remaining processing (including default)
+			--		True: stop all processing
 		do
 			if
 				attached {EV_WIDGET_IMP} eif_id_object (a_object_id) as a_widget and then
 				not a_widget.is_destroyed
 			then
-				a_widget.on_size_allocate (a_x, a_y, a_width, a_height)
+				Result := a_widget.on_size_allocate (a_x, a_y, a_width, a_height)
 			end
 		end
 
@@ -205,7 +214,7 @@ feature {EV_ANY_IMP} -- Menu intermediary agent routines
 
 feature {EV_ANY_IMP} -- Dialog intermediary agent routines
 
-	gtk_dialog_response_intermediary (a_c_object: POINTER; a_response_id: INTEGER)
+	gtk_dialog_response_intermediary (a_c_object: POINTER; a_response_id: INTEGER): POINTER
 			-- Dialog "response" signal intermediary.
 		do
 			check attached {EV_STANDARD_DIALOG_IMP} c_get_eif_reference_from_object_id (a_c_object) as l_sd then

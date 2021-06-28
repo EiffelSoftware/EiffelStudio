@@ -179,7 +179,7 @@ feature {EV_WINDOW_IMP, EV_INTERMEDIARY_ROUTINES, EV_ANY_I, EV_APPLICATION_IMP} 
 			end
 		end
 
-	on_size_allocate (a_x, a_y, a_width, a_height: INTEGER)
+	on_size_allocate (a_x, a_y, a_width, a_height: INTEGER): BOOLEAN
 			-- Gtk_Widget."size-allocate" happened.
 		local
 			l_x_y_offset: INTEGER
@@ -203,10 +203,13 @@ feature {EV_WINDOW_IMP, EV_INTERMEDIARY_ROUTINES, EV_ANY_I, EV_APPLICATION_IMP} 
 				then
 					l_resize_actions.call (app_implementation.gtk_marshal.dimension_tuple (l_x, l_y, a_width, a_height))
 				end
+				if attached parent_imp as l_parent_imp then
+					l_parent_imp.child_has_resized (Current)
+				end
 			end
-			if attached parent_imp as l_parent_imp then
-				l_parent_imp.child_has_resized (Current)
-			end
+			Result := False
+			-- 		False: execute remaining processing (including default)
+			--		True: stop all processing
 		end
 
 	on_focus_changed (a_has_focus: BOOLEAN)
@@ -233,6 +236,9 @@ feature {EV_WINDOW_IMP, EV_INTERMEDIARY_ROUTINES, EV_ANY_I, EV_APPLICATION_IMP} 
 	on_pointer_enter_leave (a_pointer_enter: BOOLEAN)
 			-- Called from pointer enter leave intermediary agents when the mouse pointer either enters or leaves `Current'.
 		do
+			debug ("gtk_name")
+				update_gtk_name
+			end
 			if a_pointer_enter then
 					-- The mouse pointer has entered `Current'.
 				if attached pointer_enter_actions_internal as l_pointer_enter_actions_internal then

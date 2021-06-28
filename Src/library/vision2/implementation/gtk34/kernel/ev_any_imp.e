@@ -123,7 +123,7 @@ feature {EV_ANY_I, EV_APPLICATION_IMP} -- Event handling
 	real_signal_connect (
 		a_c_object: like c_object;
 		a_signal_name: STRING_8;
-		an_agent: PROCEDURE;
+		an_agent: ROUTINE;
 		translate: detachable FUNCTION [INTEGER, POINTER, TUPLE];
 		)
 				-- Connect `an_agent' to `a_signal_name' of `a_c_object'.
@@ -145,7 +145,7 @@ feature {EV_ANY_I, EV_APPLICATION_IMP} -- Event handling
 	real_signal_connect_after (
 		a_c_object: like c_object;
 		a_signal_name: STRING_8;
-		an_agent: PROCEDURE;
+		an_agent: ROUTINE;
 		translate: detachable FUNCTION [INTEGER, POINTER, TUPLE];
 		)
 				-- Connect `an_agent' to `a_signal_name' of `a_c_object'.
@@ -231,10 +231,14 @@ feature {NONE} -- Implementation
 
 feature {EV_GTK_DEPENDENT_INTERMEDIARY_ROUTINES, EV_APPLICATION_I} -- Implementation
 
-	process_draw_event (a_cairo_context: POINTER)
+	process_draw_event (a_cairo_context: POINTER): BOOLEAN
 			-- A "draw" signal has occurred
+			-- Result:
+			-- 		False: execute remaining processing (including default)
+			--		True: stop all processing
 		do
 			-- Redefined by descendents.
+
 		ensure
 			same_ref_count: {CAIRO}.get_reference_count (a_cairo_context) = old ({CAIRO}.get_reference_count (a_cairo_context))
 		end
@@ -245,8 +249,11 @@ feature {EV_GTK_DEPENDENT_INTERMEDIARY_ROUTINES, EV_APPLICATION_I} -- Implementa
 			-- Redefined by descendents.
 		end
 
-	process_configure_event (a_x, a_y, a_width, a_height: INTEGER)
+	process_configure_event (a_x, a_y, a_width, a_height: INTEGER): BOOLEAN
 			-- "configure-event" signal occurred
+			-- Result:
+			-- 		False: execute remaining processing (including default)
+			--		True: stop all processing
 		do
 			-- Redefined by descendents.
 		end

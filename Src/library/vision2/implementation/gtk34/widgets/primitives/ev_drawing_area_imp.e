@@ -295,7 +295,7 @@ feature {EV_INTERMEDIARY_ROUTINES} -- Implementation
 	in_expose_actions: BOOLEAN
 			-- Is `Current' in an expose action?
 
-	process_draw_event (a_cairo_context: POINTER)
+	process_draw_event (a_cairo_context: POINTER): BOOLEAN
 			-- Call the expose actions for the drawing area.
 		local
 			l_x, l_y, l_width, l_height: REAL_64
@@ -330,9 +330,10 @@ feature {EV_INTERMEDIARY_ROUTINES} -- Implementation
 			end
 
 			{CAIRO}.paint (a_cairo_context)
+			Result := False
 		end
 
-	process_configure_event (a_x, a_y, a_width, a_height: INTEGER)
+	process_configure_event (a_x, a_y, a_width, a_height: INTEGER): BOOLEAN
 			-- A "configure-event" signal has occurred
 		local
 			l_old_surface, l_new_surface, cr: POINTER
@@ -359,6 +360,7 @@ feature {EV_INTERMEDIARY_ROUTINES} -- Implementation
 			if cairo_surface.is_default_pointer then
 				get_new_cairo_surface (a_width, a_height)
 			end
+			Result := False
 		end
 
 	process_enter_event (a_x, a_y, a_screen_x, a_screen_y: INTEGER)
@@ -405,10 +407,10 @@ feature {EV_APPLICATION_IMP} -- Implementation
 
 feature {NONE} -- Implementation
 
-	on_size_allocate (a_x, a_y, a_width, a_height: INTEGER)
+	on_size_allocate (a_x, a_y, a_width, a_height: INTEGER): BOOLEAN
 			-- Gtk_Widget."size-allocate" happened.
 		do
-			Precursor (a_x, a_y, a_width, a_height)
+			Result := Precursor (a_x, a_y, a_width, a_height)
 		end
 
 	redraw

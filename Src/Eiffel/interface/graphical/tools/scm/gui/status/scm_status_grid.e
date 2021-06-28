@@ -58,19 +58,34 @@ feature {NONE} -- Initialization
 			set_auto_resizing_column (parent_column, True)
 			set_auto_resizing_column (scm_column, True)
 
+			enable_multiple_row_selection
+
 			row_select_actions.extend (agent on_row_selected)
 			row_deselect_actions.extend (agent on_row_deselected)
 
 			enable_default_tree_navigation_behavior (True, True, True, True)
 			key_press_actions.extend (agent  (k: EV_KEY)
+				local
+					l_checked: BOOLEAN
 				do
 					if k.code = {EV_KEY_CONSTANTS}.key_space then
 						if attached selected_rows_in_grid as lst then
+							l_checked := True
+							across
+								lst as ic
+							until
+								not l_checked
+							loop
+								if attached {EV_GRID_CHECKABLE_LABEL_ITEM} ic.item.item (checkbox_column) as cb then
+									l_checked := l_checked and cb.is_checked
+								end
+							end
 							across
 								lst as ic
 							loop
 								if attached {EV_GRID_CHECKABLE_LABEL_ITEM} ic.item.item (checkbox_column) as cb then
-									cb.toggle_is_checked
+--									cb.toggle_is_checked
+									cb.set_is_checked (not l_checked)
 								end
 							end
 						end

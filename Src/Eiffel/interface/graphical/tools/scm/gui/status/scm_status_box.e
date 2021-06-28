@@ -453,10 +453,7 @@ feature -- Changelist
 					changelists.remove (lst.name)
 				end
 				active_changelist_name := Void
-				lst := active_changelist
-				if lst /= Void then
-					on_changelist_selected (lst)
-				end
+				on_changelist_combo_changed
 			end
 		end
 
@@ -478,14 +475,23 @@ feature -- Changelist
 	on_changelist_combo_changed
 		local
 			l_new: SCM_CHANGELIST_COLLECTION
+			l_coll_name: READABLE_STRING_GENERAL
 		do
 			if attached changelist_combo as l_combo then
-				if attached {READABLE_STRING_GENERAL} l_combo.selected_item.data as l_name then
-					if not changelists.has (l_name) then
-						create l_new.make (l_name, 10)
+				if
+					attached l_combo.selected_item as l_selection and then
+					attached {READABLE_STRING_GENERAL} l_selection.data as l_name
+				then
+					l_coll_name := l_name
+				else
+					l_coll_name := l_combo.text
+				end
+				if l_coll_name /= Void then
+					if not changelists.has (l_coll_name) then
+						create l_new.make (l_coll_name, 10)
 						changelists [l_new.name] := l_new
 					end
-					if attached changelists [l_name] as sel then
+					if attached changelists [l_coll_name] as sel then
 						on_changelist_selected (sel)
 					end
 				end

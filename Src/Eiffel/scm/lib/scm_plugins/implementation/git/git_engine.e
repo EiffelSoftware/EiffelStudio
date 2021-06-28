@@ -221,10 +221,7 @@ feature -- Execution
 			cmd.append_string (option_to_command_line_flags ("commit", a_options))
 			cmd.append_string_general (" --message ")
 			cmd.append_character ('"')
-			l_log := a_log_message
-			l_log.replace_substring_all ("%N", "\n")
-			l_log.replace_substring_all ("%"", "\%"")
-			cmd.append_string_general (l_log)
+			append_escaped_string_to (a_log_message, cmd)
 			cmd.append_character ('"')
 
 			debug ("GIT_ENGINE")
@@ -249,6 +246,45 @@ feature -- Execution
 		end
 
 feature {NONE} -- Implementation
+
+	append_escaped_string_to (a_string: READABLE_STRING_GENERAL; a_output: STRING_32)
+		local
+			i,n: INTEGER
+			ch: CHARACTER_32
+		do
+			if a_string.has ('%"') then
+				from
+					i := 1
+					n := a_string.count
+				until
+					i > n
+				loop
+					ch := a_string [i]
+					inspect ch
+					when '%"' then
+						a_output.extend ('\')
+						a_output.extend (ch)
+					when '%R' then
+						-- Ignore
+					when '%N' then
+						a_output.extend ('\')
+						a_output.extend ('n')
+					when '\' then
+						a_output.extend (ch)
+						if i < n then
+							ch := a_string [i]
+							a_output.extend (ch)
+							i := i + 1
+						end
+					else
+						a_output.extend (ch)
+					end
+					i := i + 1
+				end
+			else
+				a_output.append_string_general (a_string)
+			end
+		end
 
 	status_from_porcelain_output (a_path: PATH; s: READABLE_STRING_32): SCM_STATUS_LIST
 		local

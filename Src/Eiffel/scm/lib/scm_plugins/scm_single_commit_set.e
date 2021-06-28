@@ -41,6 +41,7 @@ feature -- Conversion
 		do
 			create Result.make_empty
 			rt := changelist.root.location.name
+			Result.append_string ({STRING_32} "# [" + changelist.root.nature.to_string_32 + {STRING_32} "] " + rt + "%N")
 			across
 				changelist as ic
 			loop

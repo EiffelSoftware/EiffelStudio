@@ -1728,15 +1728,6 @@ feature -- Object, Data
               ]"
 		end
 
-feature -- GTK
-
-	frozen null_pointer: POINTER
-		external
-			"C macro use <glib.h>"
-		alias
-			"NULL"
-		end
-
 feature -- Color Helper
 
 	rgba_struct_to_style_color_string (a_c_rgba: POINTER): STRING

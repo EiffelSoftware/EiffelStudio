@@ -272,7 +272,7 @@ feature {EV_ANY_I} -- Implementation
 					if current_window.full then
 						if attached {EV_WINDOW_IMP} current_window.implementation as l_window_imp then
 							l_widget_ptr := {GTK}.gtk_window_get_focus (l_window_imp.c_object)
-							if l_widget_ptr /= {GTK}.null_pointer then
+							if not l_widget_ptr.is_default_pointer then
 								if attached {EV_WIDGET_IMP} eif_object_from_gtk_object (l_widget_ptr) as l_widget_imp then
 									Result := l_widget_imp.interface
 								end
@@ -345,7 +345,7 @@ feature {EV_ANY_I} -- Implementation
 				l_no_more_events or else is_destroyed
 			loop
 				gdk_event := {GTK}.gdk_event_get
-				if gdk_event /= {GTK}.null_pointer then
+				if not gdk_event.is_default_pointer then
 						-- GDK events are always handled before gtk events.
 					event_widget := {GTK}.gtk_get_event_widget (gdk_event)
 
@@ -357,7 +357,7 @@ feature {EV_ANY_I} -- Implementation
 					l_propagate_event := False
 
 					l_grab_widget := {GTK}.gtk_grab_get_current
-					if l_grab_widget = {GTK}.null_pointer then
+					if l_grab_widget.is_default_pointer then
 						l_has_grab_widget := False
 						l_grab_widget := event_widget
 					else
@@ -621,13 +621,13 @@ feature {EV_ANY_I} -- Implementation
 						l_gdk_window := {GTK}.gdk_event_any_struct_window (gdk_event)
 						l_call_event := False
 						if
-							l_gdk_window /= {GTK}.null_pointer
-							--and then {GTK}.gdk_event_any_struct_send_event (gdk_event) = 0
-							and then {GTK}.gdk_event_crossing_struct_mode (gdk_event) = 0
+							not l_gdk_window.is_default_pointer and then
+--							{GTK}.gdk_event_any_struct_send_event (gdk_event) = 0 and then
+							{GTK}.gdk_event_crossing_struct_mode (gdk_event) = 0
 						then
 							{GTK}.gdk_window_get_user_data (l_gdk_window, $l_gtk_widget_ptr)
 
-							if l_gtk_widget_ptr /= {GTK}.null_pointer then
+							if not l_gtk_widget_ptr.is_default_pointer then
 								if not is_in_transport then
 									l_pnd_imp ?= eif_object_from_gtk_object (l_gtk_widget_ptr)
 									if l_pnd_imp /= Void and then l_pnd_imp.c_object = l_gtk_widget_ptr then
@@ -644,7 +644,7 @@ feature {EV_ANY_I} -- Implementation
 										l_pnd_imp := Void
 										l_gtk_widget_imp := Void
 										l_top_level_window_imp := Void
-										l_gtk_widget_ptr := {GTK}.null_pointer
+										l_gtk_widget_ptr := default_pointer
 									else
 											-- This code is needed for standard dialogs where we do not have a handle to all
 											-- gtk widgets.
@@ -654,7 +654,7 @@ feature {EV_ANY_I} -- Implementation
 								end
 							end
 						end
-						l_gdk_window := {GTK}.null_pointer
+						l_gdk_window := default_pointer
 					when GDK_KEY_PRESS, GDK_KEY_RELEASE then
 						debug ("gdk_event")
 							if l_event_type = GDK_KEY_PRESS then
@@ -695,10 +695,10 @@ feature {EV_ANY_I} -- Implementation
 								l_top_level_window_imp := Void
 							end
 						end
-						if l_gdk_window /= {GTK}.null_pointer then
+						if not l_gdk_window.is_default_pointer then
 								-- Restore remapped event.
 							{GTK}.set_gdk_event_any_struct_window (gdk_event, l_gdk_window)
-							l_gdk_window := {GTK}.null_pointer
+							l_gdk_window := default_pointer
 						end
 					when GDK_DELETE then
 						debug ("gdk_event")
@@ -838,7 +838,7 @@ feature {EV_ANY_I} -- Implementation
 						if l_propagate_event then
 							{GTK}.gtk_propagate_event (l_grab_widget, gdk_event)
 						else
-							if event_widget /= {GTK}.null_pointer then
+							if not event_widget.is_default_pointer then
 								l_event_handled := {GTK}.gtk_widget_event (event_widget, gdk_event)
 							else
 								{GTK}.gtk_main_do_event (gdk_event)
@@ -1038,7 +1038,7 @@ feature -- Basic operation
 	process_button_event (a_gdk_event: POINTER; a_recursive: BOOLEAN)
 			-- Process button event `a_gdk_event'.
 		require
-			a_gdkevent_not_null: a_gdk_event /= {GTK}.null_pointer
+			a_gdkevent_not_null: not a_gdk_event.is_default_pointer
 		local
 			l_pnd_item: detachable EV_PICK_AND_DROPABLE_IMP
 			l_gdk_window: POINTER
@@ -1068,7 +1068,7 @@ feature -- Basic operation
 				l_pnd_item := pick_and_drop_source
 			else
 				l_gdk_window := l_stored_display_data.window
-				if l_gdk_window /= {GTK}.null_pointer then
+				if not l_gdk_window.is_default_pointer then
 					l_pnd_item ?= gtk_widget_from_gdk_window (l_gdk_window)
 				end
 			end
@@ -1166,14 +1166,14 @@ feature -- Basic operation
 				l_string := "STRING"
 				l_file :=  "file://"
 			until
-				a_target_list = {GTK}.null_pointer
+				a_target_list.is_default_pointer
 			loop
 				a_target := {GTK}.glist_struct_data (a_target_list)
-				if a_target /= {GTK}.null_pointer then
+				if not a_target.is_default_pointer then
 						-- This is a target atom indicating the type of the drop.
 					{GTK}.gdk_selection_convert (src_window, a_selection, a_target, a_time)
 					prop_length := {GTK}.gdk_selection_property_get (src_window, $prop_data, $prop_type, $prop_format)
-					if prop_data /= {GTK}.null_pointer then
+					if not prop_data.is_default_pointer then
 						create a_string.make_from_c ({GTK}.gdk_atom_name (a_target))
 						if a_string.is_equal (l_string) then
 							create a_string.make_from_c (prop_data)
@@ -1198,9 +1198,9 @@ feature -- Basic operation
 			end
 			if l_success and then attached l_file_list then
 				dest_window := {GTK}.gdk_drag_context_get_dest_window (a_context)
-				if dest_window /= {GTK}.null_pointer then
+				if not dest_window.is_default_pointer then
 					{GTK}.gdk_window_get_user_data (dest_window, $gtkwid)
-					if gtkwid /= {GTK}.null_pointer then
+					if not gtkwid.is_default_pointer then
 						l_widget_imp ?= eif_object_from_gtk_object (gtkwid)
 						if
 							l_widget_imp /= Void and then
@@ -1468,12 +1468,12 @@ feature {EV_ANY_I, EV_FONT_IMP, EV_STOCK_PIXMAPS_IMP, EV_INTERMEDIARY_ROUTINES} 
 	eif_object_from_gtk_object (a_gtk_object: POINTER): detachable EV_ANY_IMP
 			-- Return the EV_ANY_IMP object from `a_gtk_object' if any.
 		local
-			gtkwid, l_null: POINTER
+			gtkwid: POINTER
 		do
 			from
 				gtkwid := a_gtk_object
 			until
-				Result /= Void or else gtkwid = l_null
+				Result /= Void or else gtkwid.is_default_pointer
 			loop
 				Result := {EV_ANY_IMP}.eif_object_from_c (gtkwid)
 				gtkwid := {GTK}.gtk_widget_get_parent (gtkwid)
@@ -1487,10 +1487,10 @@ feature {EV_ANY_I, EV_FONT_IMP, EV_STOCK_PIXMAPS_IMP, EV_INTERMEDIARY_ROUTINES} 
 			-- Gtk Widget implementation at current mouse pointer position (if any)
 		local
 			temp_x, temp_y: INTEGER
-			gdkwin, l_null: POINTER
+			gdkwin: POINTER
 		do
 			gdkwin := {GDK}.gdk_device_get_window_at_position ({GDK_HELPERS}.default_device, $temp_x, $temp_y)
-			if gdkwin /= l_null then
+			if not gdkwin.is_default_pointer then
 				Result := gtk_widget_from_gdk_window (gdkwin)
 			end
 		end
@@ -1498,10 +1498,10 @@ feature {EV_ANY_I, EV_FONT_IMP, EV_STOCK_PIXMAPS_IMP, EV_INTERMEDIARY_ROUTINES} 
 	gtk_widget_from_gdk_window (a_gdk_window: POINTER): detachable EV_GTK_WIDGET_IMP
 			-- Gtk Widget implementation from GdkWindow.
 		local
-			gtkwid, l_null: POINTER
+			gtkwid: POINTER
 		do
 			{GTK}.gdk_window_get_user_data (a_gdk_window, $gtkwid)
-			if gtkwid /= l_null then
+			if not gtkwid.is_default_pointer then
 				Result ?= eif_object_from_gtk_object (gtkwid)
 			end
 		end
@@ -1525,12 +1525,10 @@ feature {EV_ANY_I, EV_FONT_IMP, EV_STOCK_PIXMAPS_IMP, EV_INTERMEDIARY_ROUTINES} 
 
 	default_widget: EV_WIDGET
 			-- Default widget used for creation of tuples.
-		local
-			l_widget: detachable EV_WIDGET
 		once
-			l_widget ?= default_window
-			check l_widget /= Void then end
-			Result := l_widget
+			check attached {EV_WIDGET} default_window as l_widget then
+				Result := l_widget
+			end
 		end
 
 	default_window: EV_WINDOW
@@ -1541,12 +1539,10 @@ feature {EV_ANY_I, EV_FONT_IMP, EV_STOCK_PIXMAPS_IMP, EV_INTERMEDIARY_ROUTINES} 
 
 	default_window_imp: EV_WINDOW_IMP
 			-- Default window implementation.
-		local
-			l_result: detachable EV_WINDOW_IMP
 		once
-			l_result ?= default_window.implementation
-			check l_result /= Void then end
-			Result := l_result
+			check attached {EV_WINDOW_IMP} default_window.implementation as win then
+				Result := win
+			end
 		end
 
 	reusable_rectangle_struct: POINTER
@@ -1656,11 +1652,6 @@ feature {NONE} -- External implementation
 		end
 
 
-
-
-
-
-
 feature {NONE} -- Externals
 
 	static_mutex: POINTER;
@@ -1677,12 +1668,4 @@ note
 			Customer support http://support.eiffel.com
 		]"
 
-
-
-
 end -- class EV_APPLICATION_IMP
-
-
-
-
-

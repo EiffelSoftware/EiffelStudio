@@ -40,7 +40,7 @@ feature {NONE} -- Initialization
 		do
 			if c_object = default_pointer then
 					-- Only set c_object if not already set by a descendent.
-				viewport := {GTK}.gtk_layout_new ({GTK}.null_pointer, {GTK}.null_pointer)
+				viewport := {GTK}.gtk_layout_new (default_pointer, default_pointer)
 				set_c_object (viewport)
 				{GTK2}.gtk_layout_set_size (viewport, internal_x_y_offset * 2, internal_x_y_offset * 2)
 				container_widget := viewport

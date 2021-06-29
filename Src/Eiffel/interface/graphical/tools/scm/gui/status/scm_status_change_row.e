@@ -121,25 +121,31 @@ feature -- Execution
 			end
 			lab := wc_row.new_label_item (rel_loc)
 			lab.set_data (st)
-			lab.set_tooltip (scm_names.double_click_show_diff_tooltip)
 			if attached status_pixmap (st) as pix then
 				lab.set_pixmap (pix)
 			end
 
-			lab.pointer_double_press_actions.extend (agent (a_root: SCM_LOCATION; i_status: SCM_STATUS; i_x, i_y, i_button: INTEGER; i_x_tilt, i_y_tilt, i_pressure: DOUBLE; i_screen_x, i_screen_y: INTEGER)
-					do
-						if attached parent_grid as pg then
-							if
-								attached scm_s.service as scm and then
-								not (ev_application.ctrl_pressed or ev_application.shift_pressed or ev_application.alt_pressed)
-							then
-								pg.status_box.show_status_diff (a_root, i_status)
-							else
-								pg.open_file_location (i_status.location)
+			if
+				attached {SCM_STATUS_UNVERSIONED} st
+				or attached {SCM_STATUS_UNKNOWN} st
+			then
+			else
+				lab.set_tooltip (scm_names.double_click_show_diff_tooltip)
+				lab.pointer_double_press_actions.extend (agent (a_root: SCM_LOCATION; i_status: SCM_STATUS; i_x, i_y, i_button: INTEGER; i_x_tilt, i_y_tilt, i_pressure: DOUBLE; i_screen_x, i_screen_y: INTEGER)
+						do
+							if attached parent_grid as pg then
+								if
+									attached scm_s.service as scm and then
+									not (ev_application.ctrl_pressed or ev_application.shift_pressed or ev_application.alt_pressed)
+								then
+									pg.status_box.show_status_diff (a_root, i_status)
+								else
+									pg.open_file_location (i_status.location)
+								end
 							end
-						end
-					end(root_location, st, ?,?,?,?,?,?,?,?)
-				)
+						end(root_location, st, ?,?,?,?,?,?,?,?)
+					)
+			end
 			sr.set_item (parent_grid.filename_column, lab)
 
 			l_parent_lab := wc_row.new_label_item (l_scm_root.relative_location (st.location.parent))

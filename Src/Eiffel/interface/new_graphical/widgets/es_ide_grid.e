@@ -14,6 +14,11 @@ inherit
 			initialize
 		end
 
+	EB_SHARED_WRITER
+		undefine
+			default_create, is_equal, copy
+		end
+
 	IDE_OBSERVER
 		undefine
 			default_create, is_equal, copy
@@ -74,8 +79,16 @@ feature {NONE} -- Implementation
 feature -- IDE Events
 
 	on_zoom (a_zoom_factor: INTEGER)
+		local
+			h: INTEGER
 		do
 			grid_preferences.set_zoom_factor (a_zoom_factor)
+			h := grid_preferences.font_with_zoom_factor.height
+			across
+				label_font_table as ic
+			loop
+				ic.item.set_height (h)
+			end
 		end
 
 feature -- IDE properties

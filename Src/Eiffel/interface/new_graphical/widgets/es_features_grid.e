@@ -1051,7 +1051,7 @@ feature {NONE} -- Tree item factory
 
 				i := gf
 			else
-				create lab.make_with_text (l_text)
+				lab := new_grid_label_item (l_text)
 				lab.set_pixmap (pix)
 				lab.set_data (ef)
 				i := lab

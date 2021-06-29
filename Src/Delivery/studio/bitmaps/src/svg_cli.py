@@ -52,26 +52,26 @@ def svg_update_ids(x, ids, local_ids):
 				local_ids[l_id] = l_new_id 
 				e.set('id', l_new_id)
 				ids.append(l_new_id)
-				if dbg: print "Id: %s -> %s"% (l_id, l_new_id)
+				if dbg: print ("Id: %s -> %s"% (l_id, l_new_id))
 			else:
-				if dbg: print "Id: %s -> %s"% (l_id, l_id)
+				if dbg: print ("Id: %s -> %s"% (l_id, l_id))
 				local_ids[l_id] = l_id 
 				ids.append(l_id)
 	for e in x.iter('*'):
 		for k in e.attrib:
 			v = e.attrib[k]
-			if dbg: print "(%s => %s)"%(k, v)
+			if dbg: print ("(%s => %s)"%(k, v))
 			if svg_attribname (k) == "href":
 				l_ref_id = v[1:]
 				l_new_ref_id = local_ids[l_ref_id]
-				if dbg: print "Found HREF %s -> %s"% (l_ref_id, l_new_ref_id)
+				if dbg: print ("Found HREF %s -> %s"% (l_ref_id, l_new_ref_id))
 				if l_new_ref_id:
 					e.set(k,"#%s"%(l_new_ref_id))
 			elif v[0:5] == 'url(#':
 				l_ref_id = v[5:-1]
 				if l_ref_id:
 					l_new_ref_id = local_ids[l_ref_id]
-					if dbg: print "Found URL %s -> %s"% (l_ref_id, l_new_ref_id)
+					if dbg: print ("Found URL %s -> %s"% (l_ref_id, l_new_ref_id))
 					if l_new_ref_id:
 						e.set(k,"url(#%s)"%(l_new_ref_id))
 
@@ -113,7 +113,7 @@ if nb > 1:
 	if nb > 3 and command == "add":
 		base=sys.argv[2]
 		output=sys.argv[nb - 1]
-		if dbg: print "ADD -> %s"% (output)
+		if dbg: print ("ADD -> %s"% (output))
 		r=3
 
 		x_base = ElementTree.parse(base).getroot()
@@ -127,7 +127,7 @@ if nb > 1:
 
 		#ElementTree.dump(x_base)
 		ElementTree.ElementTree(x_base).write(output)
-		print "Add: output saved into %s"% (output)
+		print ("Add: output saved into %s"% (output))
 	elif nb > 4 and command == "overlay":
 		reg=sys.argv[2]
 		if nb > 5:
@@ -138,7 +138,7 @@ if nb > 1:
 			base=sys.argv[3]
 		output=sys.argv[nb - 1]
 		# check nb == 4
-		if dbg: print "Overlay(%s)+Scale(%s) -> %s"% (reg, l_scale, output)
+		if dbg: print ("Overlay(%s)+Scale(%s) -> %s"% (reg, l_scale, output))
 		l_page_size=100
 		if reg == 'nw':
 			x=0
@@ -195,7 +195,7 @@ if nb > 1:
 		l_use = "<use xlink-href=\"#%s\" x=\"%s\" y=\"%s\" transform=\"scale(%s)\"/>" % (l_group_id, x, y, l_scale)
 		x_use = ElementTree.fromstring(l_use)
 		x_base.append (x_use)
-		svg = ElementTree.tostring(x_base)
+		svg = ElementTree.tostring(x_base, encoding="unicode")
 		svg = svg.replace("xlink-href", "xlink:href")
 
 #		svg="""<svg height="100" viewBox="0 0 100 100" width="100" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"><image x="%s" y="%s" width="%s" height="%s" xlink:href="%s"/></svg>""" % (x, y, l_size, l_size, base)
@@ -203,12 +203,12 @@ if nb > 1:
 		f.write (svg)
 		f.close ()
 
-		print "%s(%s)+scale(%s): output saved into %s"% (command, reg, l_scale, output)
+		print ("%s(%s)+scale(%s): output saved into %s"% (command, reg, l_scale, output))
 	elif nb > 4 and command == "rotate":
 		deg=sys.argv[2]
 		base=sys.argv[3]
 		output=sys.argv[nb - 1]
-		if dbg: print "Rotate(%s) -> %s"% (deg, output)
+		if dbg: print ("Rotate(%s) -> %s"% (deg, output))
 		l_group_id = "src"
 		x_base = ElementTree.parse(base).getroot()
 		x_base.set("xmlns:xlink", "http://www.w3.org/1999/xlink")
@@ -231,17 +231,17 @@ if nb > 1:
 		l_use = "<use xlink-href=\"#%s\" transform=\"rotate(%s %s,%s)\"/>" % (l_group_id, deg, l_page_size / 2, l_page_size /2)
 		x_use = ElementTree.fromstring(l_use)
 		x_base.append (x_use)
-		svg = ElementTree.tostring(x_base)
+		svg = ElementTree.tostring(x_base, encoding="unicode")
 		svg = svg.replace("xlink-href", "xlink:href")
 		f=open(output, 'w')
 		f.write (svg)
 		f.close ()
-		print "%s(%s): output saved into %s"% (command, deg, output)
+		print ("%s(%s): output saved into %s"% (command, deg, output))
 	elif nb > 3 and command == "filter":
 		l_filter_name=sys.argv[2]
 		base=sys.argv[3]
 		output=sys.argv[nb - 1]
-		if dbg: print "ADD -> %s"% (output)
+		if dbg: print ("ADD -> %s"% (output))
 
 		x_base = ElementTree.parse(base).getroot()
 		base_ids = []
@@ -276,7 +276,7 @@ if nb > 1:
 		for e in x_base:
 			l_tag = svg_tagname (e)
 			if l_tag == 'g' or l_tag == 'path':
-				if not e.attrib.has_key("filter") or e.attrib["filter"] == "none":
+				if not "filter" in e.attrib or e.attrib["filter"] == "none":
 					e.set("filter", "url(#%s)" % (l_filter_id));
 				else:
 					ef = ElementTree.fromstring("<g filter=\"url(#%s)\"></g>" % (l_filter_id))
@@ -291,9 +291,9 @@ if nb > 1:
 
 		#ElementTree.dump(x_base)
 		ElementTree.ElementTree(x_base).write(output)
-		print "%s %s: output saved into %s"% (command, l_filter_name, output)
+		print ("%s %s: output saved into %s"% (command, l_filter_name, output))
 	else:
-		print "Invalid command!"
+		print ("Invalid command!")
 
 else:
 	sys.exit()

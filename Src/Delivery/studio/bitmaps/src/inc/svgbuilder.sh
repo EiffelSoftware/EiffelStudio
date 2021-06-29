@@ -13,7 +13,7 @@ SVGclean()
 SVGcli()
 {
 	echo $*
-	python $svgbin/svg_cli.py $*
+	$svgbin/svg_cli.py $*
 	l_out=${@: -1} 
 	#l_out=${!#}
 	SVGclean $l_out

@@ -419,7 +419,7 @@ feature -- Element change
 			if attached {EV_VIEWPORT_IMP} parent_imp as l_viewport_parent then
 				l_viewport_parent.set_item_width (a_minimum_width.max (width))
 			elseif attached {EV_FIXED_IMP} parent_imp as l_fixed_parent then
-				l_fixed_parent.set_item_width (attached_interface, a_minimum_width.max (width))
+				l_fixed_parent.set_item_width (attached_interface, a_minimum_width)
 			end
 		end
 
@@ -436,7 +436,7 @@ feature -- Element change
 			if attached {EV_VIEWPORT_IMP} parent_imp as l_viewport_parent then
 				l_viewport_parent.set_item_height (a_minimum_height.max (height))
 			elseif attached {EV_FIXED_IMP} parent_imp as l_fixed_parent then
-				l_fixed_parent.set_item_height (attached_interface, a_minimum_height.max (height))
+				l_fixed_parent.set_item_height (attached_interface, a_minimum_height)
 			end
 		end
 
@@ -453,7 +453,7 @@ feature -- Element change
 			if attached {EV_VIEWPORT_IMP} parent_imp as l_viewport_parent then
 				l_viewport_parent.set_item_size (a_minimum_width.max (width), a_minimum_height.max (height))
 			elseif attached {EV_FIXED_IMP} parent_imp as l_fixed_parent then
-				l_fixed_parent.set_item_size (attached_interface, a_minimum_width.max (width), a_minimum_height.max (height))
+				l_fixed_parent.set_item_size (attached_interface, a_minimum_width, a_minimum_height)
 			end
 		end
 

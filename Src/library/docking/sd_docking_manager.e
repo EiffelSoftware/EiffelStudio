@@ -155,6 +155,11 @@ feature {NONE} -- Initialization
 			create l_inner_container.make (Current)
 			a_list.extend (l_inner_container)
 			fixed_area.extend (l_inner_container)
+			fixed_area.resize_actions.extend (agent (i_widget: EV_WIDGET; i_x, i_y: INTEGER_32; i_w, i_h: INTEGER_32)
+					do
+						i_widget.set_minimum_size (i_w, i_h)
+					end (l_inner_container, ?,?,?,?)
+				)
 			l_inner_container.set_minimum_size (0, 0)
 			inner_containers.extend (l_inner_container)
 		end
@@ -923,7 +928,7 @@ invariant
 
 note
 	library:	"SmartDocking: Library of reusable components for Eiffel."
-	copyright:	"Copyright (c) 1984-2017, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2021, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

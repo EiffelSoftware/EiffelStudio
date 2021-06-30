@@ -153,9 +153,7 @@ feature -- Element change
 			a_width_positive: a_width >= 0
 			a_height_positive: a_height >= 0
 		do
-			implementation.set_item_size (a_widget,
-				a_width.max (a_widget.minimum_width),
-				a_height.max (a_widget.minimum_height))
+			implementation.set_item_size (a_widget, a_width.max (a_widget.minimum_width), a_height.max (a_widget.minimum_height))
 		ensure
 			an_item_width_assigned: a_width > 0 implies a_widget.width = a_width.max (a_widget.minimum_width)
 			an_item_height_assigned: a_height > 0 implies a_widget.height = a_height.max (a_widget.minimum_height)
@@ -175,7 +173,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright: "Copyright (c) 1984-2018, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2021, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

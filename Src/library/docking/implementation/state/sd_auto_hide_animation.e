@@ -81,6 +81,7 @@ feature {SD_AUTO_HIDE_STATE} -- Command
 			l_zone: SD_AUTO_HIDE_ZONE
 			l_moving_timer: like internal_moving_timer
 			l_closing_timer: like internal_closing_timer
+			l_fixed_area: EV_FIXED
 		do
 			if not internal_docking_manager.zones.has_zone_by_content (state.content) then
 				state.set_width_height (state.max_size_by_zone (state.width_height))
@@ -95,11 +96,16 @@ feature {SD_AUTO_HIDE_STATE} -- Command
 
 				if attached state.zone as z then
 					internal_docking_manager.zones.add_zone (z)
-					create l_rect.make (internal_docking_manager.fixed_area.x_position, internal_docking_manager.fixed_area.y_position,
-					internal_docking_manager.fixed_area.width, internal_docking_manager.fixed_area.height)
+					l_fixed_area := internal_docking_manager.fixed_area
+					create l_rect.make (
+							l_fixed_area.x_position,
+							l_fixed_area.y_position,
+							l_fixed_area.width,
+							l_fixed_area.height
+						)
 
 						-- Set current position and caculate final position.
-					internal_docking_manager.fixed_area.extend (z)
+					l_fixed_area.extend (z)
 						-- Set size.
 					internal_set_size (l_rect)
 					internal_set_position_and_final_position (l_rect)
@@ -385,7 +391,7 @@ invariant
 
 note
 	library:	"SmartDocking: Library of reusable components for Eiffel."
-	copyright:	"Copyright (c) 1984-2016, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2021, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

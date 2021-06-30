@@ -49,7 +49,10 @@ feature {NONE} -- Initialization
 		end
 
 	needs_event_box: BOOLEAN = True
-		-- <Precursor>
+			-- <Precursor>
+
+	needs_child_event_box: BOOLEAN = False
+			-- Wrap child item into an event box?
 
 feature -- Status setting
 
@@ -64,7 +67,7 @@ feature -- Status setting
 			-- Assign `a_widget' with a position of `a_x' and a_y', and a dimension of `a_width' and `a_height'.
 		local
 			l_item_c_object,
-			l_parent_container: POINTER
+			l_child_container: POINTER
 			l_alloc: POINTER
 			w,h: INTEGER
 			l_size_smaller: BOOLEAN
@@ -72,23 +75,36 @@ feature -- Status setting
 			debug ("gtk_sizing")
 				print (attached_interface.debug_output + {STRING_32} ".set_item_position_and_size (" + a_widget.debug_output + ",x=" + a_x.out + ",y=" + a_y.out + ",w=" + a_width.out + ",h=" + a_height.out + ")%N")
 			end
-
 			check attached {EV_WIDGET_IMP} a_widget.implementation as w_imp then
 				l_item_c_object := w_imp.c_object
 				if not l_item_c_object.is_default_pointer then
-					l_parent_container := {GTK}.gtk_widget_get_parent (l_item_c_object)
-					{GTK2}.gtk_layout_move (container_widget, l_parent_container, a_x, a_y)
+					if needs_child_event_box then
+						l_child_container := {GTK}.gtk_widget_get_parent (l_item_c_object) -- The parent event box
+					else
+						l_child_container := l_item_c_object
+					end
+
+					{GTK2}.gtk_layout_move (container_widget, l_child_container, a_x, a_y)
 
 					l_alloc := l_alloc.memory_alloc ({GTK}.c_gtk_allocation_struct_size)
-					{GTK}.gtk_widget_get_allocation (l_parent_container, l_alloc)
+					{GTK}.gtk_widget_get_allocation (l_child_container, l_alloc)
 					{GTK}.set_gtk_allocation_struct_x (l_alloc, a_x + internal_x_y_offset)
 					{GTK}.set_gtk_allocation_struct_y (l_alloc, a_y + internal_x_y_offset)
 					{GTK}.set_gtk_allocation_struct_width (l_alloc, a_width)
 					{GTK}.set_gtk_allocation_struct_height (l_alloc, a_height)
-					{GTK2}.gtk_widget_set_minimum_size (l_parent_container, a_width, a_height)
-					{GTK2}.gtk_widget_size_allocate (l_parent_container, l_alloc)
+		 			{GTK2}.gtk_widget_set_minimum_size (l_child_container, a_width, a_height) -- unfortunately it seems to be REQUIRED
+					{GTK2}.gtk_widget_size_allocate (l_child_container, l_alloc)
 					l_alloc.memory_free
 
+					if needs_child_event_box then
+						l_alloc := l_alloc.memory_alloc ({GTK}.c_gtk_allocation_struct_size)
+						{GTK}.gtk_widget_get_allocation (l_item_c_object, l_alloc)
+						{GTK}.set_gtk_allocation_struct_width (l_alloc, a_width)
+						{GTK}.set_gtk_allocation_struct_height (l_alloc, a_height)
+						{GTK2}.gtk_widget_set_minimum_size (l_item_c_object, a_width, a_height) -- unfortunately it seems to be REQUIRED
+						{GTK2}.gtk_widget_size_allocate (l_item_c_object, l_alloc)
+						l_alloc.memory_free
+					end
 				end
 			end
 			w := a_widget.x_position + a_widget.width
@@ -103,8 +119,20 @@ feature -- Status setting
 			else
 				l_size_smaller := h < minimum_height
 			end
+			if l_size_smaller then
+				update_minimum_size
+			end
+--			if not l_child_container.is_default_pointer then
+--				{GTK}.gtk_container_check_resize (l_child_container)
+--			end
+		end
+
+	update_minimum_size
+			-- Update minimum size by looking at all existing childs.
+		local
+			w,h: INTEGER
+		do
 			if
-				l_size_smaller and then
 				attached cursor as l_cursor
 			then
 					-- Update the minimum size by checking position and size of all childs.
@@ -114,17 +142,16 @@ feature -- Status setting
 					off
 				loop
 					if attached {EV_WIDGET} item as l_widget then
-						w := (l_widget.x_position + l_widget.width).max (w)
-						h := (l_widget.y_position + l_widget.height).max (h)
+						w := (l_widget.x_position + (l_widget.width).max (l_widget.minimum_width)).max (w)
+						h := (l_widget.y_position + (l_widget.height).max (l_widget.minimum_height)).max (h)
 					end
 					forth
 				end
 				go_to (l_cursor)
-				set_minimum_size (w, h)
+				if w /= minimum_width or h /= minimum_height then
+					set_minimum_size (w, h)
+				end
 			end
---			if not l_parent_container.is_default_pointer then
---				{GTK}.gtk_container_check_resize (l_parent_container)
---			end
 		end
 
 	set_item_position (a_widget: EV_WIDGET; a_x, a_y: INTEGER)
@@ -208,15 +235,21 @@ feature {EV_ANY_I} -- Implementation
 		local
 			l_parent_box: POINTER
 		do
-				-- We add a parent box to `a_child' and control its size via this as
-				-- GtkFixed updates the childs requisition upon allocation which
-				-- affects the minimum size of the `a_child'.
+			if needs_child_event_box then
+					-- We add a parent box to `a_child' and control its size via this as
+					-- GtkFixed updates the childs requisition upon allocation which
+					-- affects the minimum size of the `a_child'.
 
-			l_parent_box := {GTK}.gtk_event_box_new
-			{GTK2}.gtk_event_box_set_visible_window (l_parent_box, False)
-			{GTK}.gtk_widget_show (l_parent_box)
-			{GTK}.gtk_container_add (l_parent_box, a_child)
-			{GTK}.gtk_layout_put (a_container, l_parent_box, internal_x_y_offset, internal_x_y_offset)
+				l_parent_box := {GTK}.gtk_event_box_new
+				{GTK2}.gtk_event_box_set_visible_window (l_parent_box, False)
+				{GTK}.gtk_widget_show (l_parent_box)
+				{GTK}.gtk_container_add (l_parent_box, a_child)
+				{GTK}.gtk_layout_put (a_container, l_parent_box, internal_x_y_offset, internal_x_y_offset)
+				{GTK}.gtk_widget_set_name (l_parent_box, {GTK}.gtk_widget_get_name (a_child))
+			else
+				{GTK}.gtk_layout_put (a_container, a_child, internal_x_y_offset, internal_x_y_offset)
+			end
+
 			{GTK}.gtk_container_check_resize (container_widget)
 		end
 
@@ -225,9 +258,13 @@ feature {EV_ANY_I} -- Implementation
 		local
 			l_parent_box: POINTER
 		do
-			l_parent_box := {GTK}.gtk_widget_get_parent (a_child)
-			{GTK}.gtk_container_remove (l_parent_box, a_child)
-			{GTK}.gtk_container_remove (a_container, l_parent_box)
+			if needs_child_event_box then
+				l_parent_box := {GTK}.gtk_widget_get_parent (a_child)
+				{GTK}.gtk_container_remove (l_parent_box, a_child)
+				{GTK}.gtk_container_remove (a_container, l_parent_box)
+			else
+				{GTK}.gtk_container_remove (a_container, a_child)
+			end
 		end
 
 feature {EV_ANY, EV_ANY_I} -- Implementation

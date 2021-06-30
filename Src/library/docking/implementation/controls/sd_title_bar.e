@@ -463,6 +463,7 @@ feature {NONE} -- Agents
 							if internal_title.minimum_height < a_height then
 								internal_title.set_minimum_height (a_height)
 							end
+							internal_title.set_minimum_size (a_width - tool_bar_width - l_custom_widget.minimum_width, a_height)
 							fixed.set_item_x_position (l_custom_widget, a_width - tool_bar_width - l_custom_widget.minimum_width)
 							fixed.set_item_size (internal_title, a_width - tool_bar_width - l_custom_widget.minimum_width, a_height)
 						else
@@ -479,6 +480,7 @@ feature {NONE} -- Agents
 								if internal_title.minimum_height < a_height then
 									internal_title.set_minimum_height (a_height)
 								end
+								internal_title.set_minimum_size (a_width - tool_bar_width, a_height)
 								fixed.set_item_size (internal_title, a_width - tool_bar_width, a_height)
 							end
 						end
@@ -488,6 +490,7 @@ feature {NONE} -- Agents
 						if internal_title.minimum_height < a_height then
 							internal_title.set_minimum_height (a_height)
 						end
+						internal_title.set_minimum_size (a_width - tool_bar_width, a_height)
 						fixed.set_item_size (internal_title, a_width - tool_bar_width, a_height)
 						if internal_tool_bar.has (mini_tool_bar_indicator) then
 							internal_tool_bar.prune (mini_tool_bar_indicator)

@@ -88,7 +88,7 @@ feature {NONE} -- Initialization
 			{GTK3}.gtk_widget_set_valign(hbox, {GTK_ALIGN}.gtk_align_start)
 			{GTK}.gtk_widget_set_hexpand(hbox, False)
 			{GTK}.gtk_widget_set_vexpand(hbox, False)
-			{GTK}.gtk_widget_show (hbox)
+--			{GTK}.gtk_widget_show (hbox)
 			{GTK}.gtk_container_add (hbox, pixmap_box)
  			{GTK3}.gtk_widget_set_halign (text_label, {GTK_ALIGN}.gtk_align_start)
  			{GTK3}.gtk_widget_set_margin_start (text_label, 4)

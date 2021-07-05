@@ -1391,7 +1391,6 @@ feature -- Implementation
 			l_window: POINTER
 			temp_mask: NATURAL_32
 			temp_x, temp_y: INTEGER
-			l_screen: POINTER
 			l_stored_display_data: like stored_display_data
 			l_device: POINTER
 		do
@@ -1400,7 +1399,7 @@ feature -- Implementation
 
 			l_device := {GDK_HELPERS}.default_device
 			l_window := {GDK}.gdk_device_get_window_at_position (l_device, $temp_x, $temp_y)
-			{GDK}.gdk_device_get_position (l_device, $l_screen, $temp_x, $temp_y)
+			l_window := {GDK}.gdk_window_get_device_position (l_window, l_device, $temp_x, $temp_y, $temp_mask)
 			l_stored_display_data.window := l_window
 			l_stored_display_data.x := temp_x + screen_virtual_x
 			l_stored_display_data.y := temp_y + screen_virtual_y

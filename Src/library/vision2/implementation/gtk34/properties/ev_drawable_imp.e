@@ -272,6 +272,7 @@ feature -- Element change
 				-- {EV_DRAWABLE_CONSTANTS}.drawing_mode_copy and
 				-- {EV_DRAWABLE_CONSTANTS}.drawing_mode_and. All the other
 				-- modes are approximation.
+				-- See https://developer.gnome.org/cairo/stable/cairo-cairo-t.html
 			inspect
 				a_drawing_mode
 			when {EV_DRAWABLE_CONSTANTS}.drawing_mode_copy then
@@ -279,7 +280,7 @@ feature -- Element change
 			when {EV_DRAWABLE_CONSTANTS}.drawing_mode_and then
 				Result := {CAIRO}.operator_multiply
 			when {EV_DRAWABLE_CONSTANTS}.drawing_mode_xor then
-				Result := {CAIRO}.operator_xor
+				Result := {CAIRO}.operator_difference
 			when {EV_DRAWABLE_CONSTANTS}.drawing_mode_invert then
 				Result := {CAIRO}.operator_exclusion
 			when {EV_DRAWABLE_CONSTANTS}.drawing_mode_or then

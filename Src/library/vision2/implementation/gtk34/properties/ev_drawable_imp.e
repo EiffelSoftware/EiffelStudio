@@ -273,6 +273,7 @@ feature -- Element change
 				-- {EV_DRAWABLE_CONSTANTS}.drawing_mode_and. All the other
 				-- modes are approximation.
 				-- See https://developer.gnome.org/cairo/stable/cairo-cairo-t.html
+				-- https://www.cairographics.org/operators/
 			inspect
 				a_drawing_mode
 			when {EV_DRAWABLE_CONSTANTS}.drawing_mode_copy then

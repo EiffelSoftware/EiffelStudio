@@ -372,6 +372,13 @@ feature -- GdkWindow
 		end
 
 
+	frozen gdk_window_get_clip_region  (a_window: POINTER): POINTER
+		external
+			"C inline use <ev_gtk.h>"
+		alias
+			"return gdk_window_get_clip_region ((GdkWindow *)$a_window);"
+		end
+
 feature -- GdkDrawing		
 
 	frozen gdk_drawing_context_is_valid (a_context: POINTER): BOOLEAN
@@ -1283,6 +1290,20 @@ feature -- GdkScreen
 			"return gdk_screen_get_root_window ((GdkScreen *)$a_screen);;"
 		end
 
+	frozen	gdk_get_default_root_window: POINTER
+			-- Obtains the root window (parent all other windows are inside) for the default display and screen.
+		external
+			"C inline use <ev_gtk.h>"
+		alias
+			"return gdk_get_default_root_window();"
+		end
+
+	frozen gdk_window_destroy (a_window: POINTER)
+		external "C inline use <ev_gtk.h>"
+		alias
+			"gdk_window_destroy ((GdkWindow *)$a_window);"
+		end
+
 feature -- Geometry		
 
 	frozen c_gdk_geometry_struct_allocate: POINTER
@@ -2007,6 +2028,109 @@ feature -- XWindows
 			]"
 		end
 
+
+feature -- Gdk11
+
+	gdk_x11_window_get_xid (window: POINTER): POINTER
+	 	external
+	 		"C inline use <ev_gtk.h>"
+	 	alias
+	 		"[
+	 			 #ifdef GDK_WINDOWING_X11 
+		 			return gdk_x11_window_get_xid ((GdkWindow *)$window);
+		 		  #endif
+	 		]"
+	 	end
+
+	create_gc (window: POINTER): POINTER
+	 	external
+	 		"C inline use <ev_gtk.h>"
+	 	alias
+	 		"[
+	 		    #ifdef GDK_WINDOWING_X11 
+		 			Window win =  gdk_x11_window_get_xid ((GdkWindow *)$window);
+		 			Display* display = GDK_SCREEN_XDISPLAY(gdk_window_get_screen ((GdkWindow *)$window));
+		 			                                     
+					GC gc;									/* handle of newly created GC.  */
+	  				unsigned long valuemask = 0;			/* which values in 'values' to  */
+
+						/* check when creating the GC.  */
+	  				XGCValues values;						/* initial values for the GC.   */
+	  				unsigned int line_width = 2;			/* line width for the GC.       */
+	  				int line_style = LineSolid;				/* style for lines drawing and  */
+	  				int cap_style = CapButt;				/* style of the line's edje and */
+					int join_style = JoinBevel;				/* joined lines.		*/
+
+					values.function = GXor;                 /* Operation src Or dst */
+					values.subwindow_mode = IncludeInferiors;
+					//values.subwindow_mode = GCSubwindowMode;
+					values.line_width = 1;
+
+					values.function = GXcopy;
+	 				values.fill_style = FillSolid;
+			 		values.arc_mode = ArcPieSlice;
+	  				values.graphics_exposures = False;
+	  				valuemask = GCFunction | GCFillStyle | GCArcMode | GCSubwindowMode | GCGraphicsExposures;
+
+
+
+	  				gc = XCreateGC(display, win, valuemask, &values);
+					if (gc < 0) {
+						fprintf(stderr, "XCreateGC: \n");
+					 }
+
+					/* define the style of lines that will be drawn using this GC. */
+					XSetLineAttributes(display, gc, line_width, line_style, cap_style, join_style);
+
+					/* define the fill style for the GC. to be 'solid filling'. */
+					XSetFillStyle(display, gc, FillSolid);
+
+					int mem = 771;
+					XSetDashes (display, gc, 0, (char *)&mem, 2);
+					
+				  	return gc;
+				 #endif
+	 		]"
+	 	end
+
+
+	draw_line (window: POINTER; gc: POINTER; x1, y1, x2, y2: INTEGER)
+	 	external
+	 		"C inline use <ev_gtk.h>"
+	 	alias
+	 		"[
+		 		#ifdef GDK_WINDOWING_X11 
+		 			Window win =  gdk_x11_window_get_xid ((GdkWindow *)$window);
+		 			
+		 			// TODO check Gdkgc-x11 _gdk_x11_gc_flush implementation 
+		 			// that's used before
+		 			// for example gdk_x11_draw_segments the usage of
+		 			// GDK_GC_GET_XGC (gc),
+		 			// https://github.com/coapp-packages/gtk/blob/master/gdk/x11/gdkdrawable-x11.c
+		 			
+		 			Display* display = GDK_SCREEN_XDISPLAY(gdk_window_get_screen ((GdkWindow *)$window));
+		 			
+		 			XClearWindow(display, win);
+					
+	 				
+	 				XDrawLine(display, win, $gc, $x1, $y1, $x2, $y2);
+	 				XFlush(display);
+	 				
+				#endif
+			]"
+		end
+
+
+feature -- Window
+
+	gdk_window_show (window: POINTER)
+		external
+			"C inline use <ev_gtk.h>"
+		alias
+			"[
+				gdk_window_show ((GdkWindow *)$window);
+			]"
+		end
 
 
 note

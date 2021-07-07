@@ -184,6 +184,15 @@ feature -- GtkWidget Externals
 			"gtk_widget_set_margin_bottom ((GtkWidget *)$a_widget, (gint)$margin)"
 		end
 
+	frozen gtk_widget_set_visual (widget: POINTER; visual: POINTER)
+		external
+			"C inline use <ev_gtk.h>"
+		alias
+			"gtk_widget_set_visual ((GtkWidget *)$widget, (GdkVisual *)$visual)"
+		end
+
+
+
 feature -- Box		
 
 	frozen gtk_box_new (orientation: NATURAL_8; spacing: INTEGER): POINTER
@@ -316,7 +325,7 @@ feature -- GTK Layout
 		alias
 			"GTK_IS_LAYOUT"
 		end
-		
+
 note
 	copyright: "Copyright (c) 1984-2021, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"

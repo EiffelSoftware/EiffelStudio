@@ -712,9 +712,14 @@ feature -- Drawing operations
 						{CAIRO}.line_to (l_drawable, points [i].x_precise + 0.5, points [i].y_precise + 0.5)
 						i := i + 1
 					end
+					if is_filled then
+						{CAIRO}.stroke_preserve (l_drawable)
+						{CAIRO}.fill (l_drawable)
+					end
 					if is_closed then
 						{CAIRO}.close_path (l_drawable)
 					end
+
 					{CAIRO}.stroke (l_drawable)
 
 				end

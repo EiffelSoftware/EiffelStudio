@@ -37,18 +37,13 @@ inherit
 			set_drawing_mode,
 			set_line_width,
 			enable_dashed_line_style,
-			disable_dashed_line_style
+			disable_dashed_line_style,
+			init_default_values,
+			clear_rectangle,
+			fill_rectangle
 		end
 
 	EV_GTK_DEPENDENT_ROUTINES
-
-	EV_ANY_IMP
-		redefine
-			interface,
-			app_implementation,
-			destroy
-		end
-
 
 create
 	make
@@ -68,9 +63,11 @@ feature {NONE} -- Initialization
 
 			drawable := {GTK2}.gdk_screen_get_root_window ({GTK2}.gdk_screen_get_default)
 
+			-- TODO update this code to support different environments like (Wayland)
+			{REFACTORING_HELPER}.to_implement ("update this code to support different environments like (Wayland)")
 			gc := {GDK_X11}.create_gc (drawable)
---			{GTK}.gdk_gc_set_subwindow (gc, {GTK}.gdk_include_inferiors_enum)
---			init_default_values
+			{GDK_X11}.x_set_subwindow_mode (drawable, gc, {GDK_X11}.x_subwindow_mode_include_inferiors)
+			init_default_values
 
 				-- Set offset values to match Win32 implementation.
 			device_x_offset := -app_implementation.screen_virtual_x.as_integer_16
@@ -80,6 +77,13 @@ feature {NONE} -- Initialization
 			-- Set up action sequence connections and create graphics context.
 		end
 
+	init_default_values
+			-- Set default values. Call during initialization.
+		do
+			enable_dashed_line_style
+			set_drawing_mode (drawing_mode_copy)
+			set_line_width (1)
+		end
 
 feature -- Access
 
@@ -100,11 +104,43 @@ feature -- Access
 			Result := gdk_x_display
 		end
 
+feature -- Clear Operations
+
+	clear_rectangle (x, y, a_width, a_height: INTEGER)
+			-- Erase rectangle specified with `background_color'.
+		local
+			tmp_fg_color, tmp_bg_color: detachable EV_COLOR
+		do
+			pre_drawing
+			{GTK2}.gdk_window_invalidate_rect (cairo_context, default_pointer, True)
+			if not drawable.is_default_pointer then
+				tmp_fg_color := internal_foreground_color
+				if tmp_fg_color = Void then
+					tmp_fg_color := foreground_color
+				end
+				tmp_bg_color := internal_background_color
+				if tmp_bg_color = Void then
+					tmp_bg_color := background_color
+				end
+				internal_set_color (True, tmp_bg_color.red_16_bit, tmp_bg_color.green_16_bit, tmp_bg_color.blue_16_bit)
+				{GDK_X11}.draw_rectangle (drawable, gc, True,
+					(x + device_x_offset).max ({INTEGER_16}.min_value).min ({INTEGER_16}.max_value),
+					(y + device_y_offset).max ({INTEGER_16}.min_value).min ({INTEGER_16}.max_value),
+					a_width,
+					a_height)
+				internal_set_color (True, tmp_fg_color.red_16_bit, tmp_fg_color.green_16_bit, tmp_fg_color.blue_16_bit)
+				update_if_needed
+			end
+			post_drawing
+		end
 feature -- Drawing
 
 	draw_segment (x1, y1, x2, y2: INTEGER)
 			-- Draw line segment from (`x1', 'y1') to (`x2', 'y2').
 		do
+			debug ("refactor_fixme")
+				{REFACTORING_HELPER}.to_implement ("update this code to support different environments like (Wayland)")
+			end
 			pre_drawing
 			{GTK2}.gdk_window_invalidate_rect (cairo_context, default_pointer, True)
 			if not drawable.is_default_pointer then
@@ -122,6 +158,32 @@ feature -- Drawing
 			post_drawing
 		end
 
+feature -- Fill Operations
+
+	fill_rectangle (x, y, a_width, a_height: INTEGER)
+			-- Draw rectangle with upper-left corner on (`x', `y')
+			-- with size `a_width' and `a_height'. Fill with `background_color'.
+		do
+			pre_drawing
+			{GTK2}.gdk_window_invalidate_rect (cairo_context, default_pointer, True)
+			if not drawable.is_default_pointer then
+				if tile /= Void then
+					{GDK_X11}.x_set_fill_style (drawable, gc, {GDK_X11}.x_fill_tiled)
+				end
+				{GDK_X11}.draw_rectangle (
+					drawable,
+					gc,
+					True,
+					(x + device_x_offset).max ({INTEGER_16}.min_value).min ({INTEGER_16}.max_value),
+					(y + device_y_offset).max ({INTEGER_16}.min_value).min ({INTEGER_16}.max_value),
+					a_width,
+					a_height
+				)
+				{GDK_X11}.x_set_fill_style (drawable, gc, {GDK_X11}.x_fill_solid)
+				update_if_needed
+			end
+			post_drawing
+		end
 feature {EV_ANY_I} -- Drawing wrapper
 
 	pre_drawing
@@ -712,6 +774,15 @@ feature {NONE} -- Implementation
 	destroy
 		do
 			set_is_destroyed (True)
+		end
+
+	dispose
+			-- Cleanup
+		do
+			if gc /= default_pointer then
+				{GDK_X11}.x_free_gc (drawable, gc)
+				gc := default_pointer
+			end
 		end
 
 feature {EV_ANY, EV_ANY_I} -- Implementation

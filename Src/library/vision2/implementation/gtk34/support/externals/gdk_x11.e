@@ -55,8 +55,8 @@ feature -- Gdk11
 	  				int line_style = LineSolid;				/* style for lines drawing and  */
 	  				int cap_style = CapButt;				/* style of the line's edje and */
 					int join_style = JoinBevel;				/* joined lines.		*/
-					values.function = GXcopy;               /* Operation src Or dst */
-					values.subwindow_mode = IncludeInferiors; /* GCSubwindowMode */
+					values.function = GXcopy;               /* src */
+					values.subwindow_mode = ClipByChildren; /* GCSubwindowMode */
 					values.line_width = line_width;
 	 				values.fill_style = FillSolid;
 			 		values.arc_mode = ArcPieSlice;
@@ -67,12 +67,6 @@ feature -- Gdk11
 					if (gc < 0) {
 						fprintf(stderr, "XCreateGC: \n");
 					}
-						/* define the style of lines that will be drawn using this GC. */
-					XSetLineAttributes(display, gc, line_width, line_style, cap_style, join_style);
-						/* define the fill style for the GC. to be 'solid filling'. */
-					XSetFillStyle(display, gc, FillSolid);
-					int mem = 771;
-					XSetDashes (display, gc, 0, (char *)&mem, 2);				
 				  	return gc;
 				 #endif
 	 		]"
@@ -85,6 +79,20 @@ feature -- Gdk11
 	 		"[
 		 		#ifdef GDK_WINDOWING_X11 
 		 		XSetFunction((Display*) $a_display, (GC) $gc, (int) $a_fct);
+		 		#endif
+			]"
+		end
+
+	x_set_subwindow_mode (a_display: POINTER; gc: POINTER; a_mode: INTEGER)
+			-- display	Specifies the connection to the X server.
+			-- gc	Specifies the GC.
+			-- subwindow_mode	Specifies the subwindow mode. You can pass ClipByChildren or IncludeInferiors.
+	 	external
+	 		"C inline use <ev_gtk.h>"
+	 	alias
+	 		"[
+		 		#ifdef GDK_WINDOWING_X11 
+		 		XSetSubwindowMode((Display *)$a_display, (GC)$gc, (int)$a_mode);
 		 		#endif
 			]"
 		end
@@ -154,42 +162,160 @@ feature -- Gdk11
 			]"
 		end
 
+	 x_set_fill_style (a_display: POINTER; gc: POINTER; a_fill_style: INTEGER)
+			-- display		Specifies the connection to the X server.
+			-- gc			Specifies the GC.
+			-- fill_style	Specifies the fill-style you want to set for the specified GC. You can pass FillSolid, FillTiled, FillStippled, or FillOpaqueStippled.
+
+	 	external
+	 		"C inline use <ev_gtk.h>"
+	 	alias
+	 		"[
+		 		#ifdef GDK_WINDOWING_X11 
+		 		XSetFillStyle((Display*)$a_display, (GC) $gc, (int)$a_fill_style);	
+		 		#endif
+			]"
+		end
+
+	 x_free_gc (a_display: POINTER; gc: POINTER)
+		external
+	 		"C inline use <ev_gtk.h>"
+	 	alias
+	 		"[
+		 		#ifdef GDK_WINDOWING_X11 
+		 		XFreeGC((Display*)$a_display, (GC)$gc);
+				#endif
+			]"
+		end
+
+feature -- X fill style
+
+	x_fill_solid: INTEGER
+		external
+			"C inline use <ev_gtk.h>"
+		alias
+			"[
+			#ifdef GDK_WINDOWING_X11
+			return FillSolid;
+			#endif
+			]"
+		end
+
+	x_fill_tiled: INTEGER
+		external
+			"C inline use <ev_gtk.h>"
+		alias
+			"[
+			#ifdef GDK_WINDOWING_X11
+			return FillTiled;
+			#endif
+			]"
+		end
+
+	x_fill_stippled: INTEGER
+		external
+			"C inline use <ev_gtk.h>"
+		alias
+			"[
+			#ifdef GDK_WINDOWING_X11
+			return FillStippled;
+			#endif
+			]"
+		end
+
+	x_fill_opaque_stippled: INTEGER
+		external
+			"C inline use <ev_gtk.h>"
+		alias
+			"[
+			#ifdef GDK_WINDOWING_X11
+			return FillOpaqueStippled;
+			#endif
+			]"
+		end
+
 feature -- X style
 
 	x_style_line_double_dash: INTEGER
 		external
 			"C inline use <ev_gtk.h>"
 		alias
-			"LineDoubleDash"
+			"[
+			#ifdef GDK_WINDOWING_X11
+			return LineDoubleDash;
+			#endif
+			]"
+
 		end
 
 	x_style_line_on_off_dash: INTEGER
 		external
 			"C inline use <ev_gtk.h>"
 		alias
-			"LineOnOffDash"
+			"[
+			#ifdef GDK_WINDOWING_X11
+			return LineOnOffDash;
+			#endif
+			]"
 		end
 
 	x_style_line_solid: INTEGER
 		external
 			"C inline use <ev_gtk.h>"
 		alias
-			"LineSolid"
+			"[
+			#ifdef GDK_WINDOWING_X11
+			return LineSolid;
+			#endif
+			]"
 		end
 
 	x_style_cap_butt: INTEGER
 		external
 			"C inline use <ev_gtk.h>"
 		alias
-			"CapButt"
+			"[
+			#ifdef GDK_WINDOWING_X11
+			return CapButt;
+			#endif
+			]"
 		end
 
 	x_style_join_bevel: INTEGER
 		external
 			"C inline use <ev_gtk.h>"
 		alias
-			"JoinBevel"
+			"[
+			#ifdef GDK_WINDOWING_X11
+			return JoinBevel;
+			#endif
+			]"
 		end
+
+feature -- X subwindow modes
+
+	x_subwindow_mode_clip_by_children: INTEGER
+		external
+			"C inline use <ev_gtk.h>"
+		alias
+			"[
+			#ifdef GDK_WINDOWING_X11 
+			return ClipByChildren;
+			#endif
+			]"
+		end
+
+	x_subwindow_mode_include_inferiors: INTEGER
+		external
+			"C inline use <ev_gtk.h>"
+		alias
+			"[
+			#ifdef GDK_WINDOWING_X11 
+			return IncludeInferiors;
+			#endif
+			]"
+		end
+
 
 feature -- X functions
 
@@ -197,112 +323,176 @@ feature -- X functions
 		external
 			"C inline use <ev_gtk.h>"
 		alias
-			"GXclear"
+			"[
+			#ifdef GDK_WINDOWING_X11
+			return GXclear;
+			#endif
+			]"
 		end
 
 	x_function_GXand: INTEGER
 		external
 			"C inline use <ev_gtk.h>"
 		alias
-			"GXand"
+			"[
+			#ifdef GDK_WINDOWING_X11
+			return GXand;
+			#endif
+			]"
 		end
 
 	x_function_GXandReverse: INTEGER
 		external
 			"C inline use <ev_gtk.h>"
 		alias
-			"GXandReverse"
+			"[
+			#ifdef GDK_WINDOWING_X11
+			return GXandReverse;
+			#endif
+			]"
 		end
 
 	x_function_GXcopy: INTEGER
 		external
 			"C inline use <ev_gtk.h>"
 		alias
-			"GXcopy"
+			"[
+			#ifdef GDK_WINDOWING_X11
+			return GXcopy;
+			#endif
+			]"
 		end
 
 	x_function_GXandInverted: INTEGER
 		external
 			"C inline use <ev_gtk.h>"
 		alias
-			"GXandInverted"
+			"[
+			#ifdef GDK_WINDOWING_X11
+			return GXandInverted;
+			#endif
+			]"
 		end
 
 	x_function_GXnoop: INTEGER
 		external
 			"C inline use <ev_gtk.h>"
 		alias
-			"GXnoop"
+			"[
+			#ifdef GDK_WINDOWING_X11
+			return GXnoop;
+			#endif
+			]"
 		end
 
 	x_function_GXxor: INTEGER
 		external
 			"C inline use <ev_gtk.h>"
 		alias
-			"GXxor"
+			"[
+			#ifdef GDK_WINDOWING_X11
+			return GXxor;
+			#endif
+			]"
 		end
 
 	x_function_GXor: INTEGER
 		external
 			"C inline use <ev_gtk.h>"
 		alias
-			"GXor"
+			"[
+			#ifdef GDK_WINDOWING_X11
+			return GXor;
+			#endif
+			]"
 		end
 
 	x_function_GXnor: INTEGER
 		external
 			"C inline use <ev_gtk.h>"
 		alias
-			"GXnor"
+			"[
+			#ifdef GDK_WINDOWING_X11
+			return GXnor;
+			#endif
+			]"
 		end
 
 	x_function_GXequiv: INTEGER
 		external
 			"C inline use <ev_gtk.h>"
 		alias
-			"GXequiv"
+			"[
+			#ifdef GDK_WINDOWING_X11
+			return GXequiv;
+			#endif
+			]"
 		end
 
 	x_function_GXinvert: INTEGER
 		external
 			"C inline use <ev_gtk.h>"
 		alias
-			"GXinvert"
+			"[
+			#ifdef GDK_WINDOWING_X11
+			return GXinvert;
+			#endif
+			]"
 		end
 
 	x_function_GXorReverse: INTEGER
 		external
 			"C inline use <ev_gtk.h>"
 		alias
-			"GXorReverse"
+			"[
+			#ifdef GDK_WINDOWING_X11
+			return GXorReverse;
+			#endif
+			]"
 		end
 
 	x_function_GXcopyInverted: INTEGER
 		external
 			"C inline use <ev_gtk.h>"
 		alias
-			"GXcopyInverted"
+			"[
+			#ifdef GDK_WINDOWING_X11
+			return GXcopyInverted;
+			#endif
+			]"
 		end
 
 	x_function_GXorInverted: INTEGER
 		external
 			"C inline use <ev_gtk.h>"
 		alias
-			"GXorInverted"
+			"[
+			#ifdef GDK_WINDOWING_X11
+			return GXorInverted;
+			#endif
+			]"
 		end
 
 	x_function_GXnand: INTEGER
 		external
 			"C inline use <ev_gtk.h>"
 		alias
-			"GXnand"
+			"[
+			#ifdef GDK_WINDOWING_X11
+			return GXnand;
+			#endif
+			]"
 		end
 
 	x_function_GXset: INTEGER
 		external
 			"C inline use <ev_gtk.h>"
 		alias
-			"GXset"
+			"[
+			#ifdef GDK_WINDOWING_X11
+			return GXset;
+			#endif
+			]"
 		end
 
 feature -- Drawing operation
@@ -333,6 +523,96 @@ feature -- Drawing operation
 				#endif
 			]"
 		end
+
+	draw_point (window: POINTER; gc: POINTER; x, y: INTEGER)
+	 	external
+	 		"C inline use <ev_gtk.h>"
+	 	alias
+	 		"[
+		 		#ifdef GDK_WINDOWING_X11 
+		 			Window win = gdk_x11_window_get_xid ((GdkWindow *) $window);
+		 			
+		 			Display* display = GDK_SCREEN_XDISPLAY(gdk_window_get_screen ((GdkWindow *)$window));
+		 			
+		 			XClearWindow(display, win);
+	 				XDrawPoint (display, win, $gc, $x, $y);
+	 				XFlush(display);
+				#endif
+			]"
+		end
+
+
+	draw_arc (window: POINTER; gc: POINTER; filled: BOOLEAN; x, y, width, height, angle1, angle2: INTEGER)
+	 	external
+	 		"C inline use <ev_gtk.h>"
+	 	alias
+	 		"[
+		 		#ifdef GDK_WINDOWING_X11 
+		 			Window win = gdk_x11_window_get_xid ((GdkWindow *) $window);
+		 			
+		 			Display* display = GDK_SCREEN_XDISPLAY(gdk_window_get_screen ((GdkWindow *)$window));
+		 			
+		 			XClearWindow(display, win);
+		 			
+					if ($width < 0 || $height < 0)
+					{
+						gint real_width;
+						gint real_height;
+					    real_width = gdk_window_get_width ($window); 
+					    real_height = gdk_window_get_height ($window);
+
+						if ($width < 0)
+							$width = real_width;
+						if ($height < 0)
+							$height = real_height;
+					}
+
+					if ($filled)
+					    XFillArc (display, win, $gc, $x, $y, $width, $height, $angle1, $angle2);
+					else
+					    XDrawArc (display, win, $gc, $x, $y, $width, $height, $angle1, $angle2);	
+	
+	 				XFlush(display);
+				#endif
+			]"
+		end
+
+
+	draw_rectangle (window: POINTER; gc: POINTER; filled: BOOLEAN; x, y, width, height: INTEGER)
+	 	external
+	 		"C inline use <ev_gtk.h>"
+	 	alias
+	 		"[
+		 		#ifdef GDK_WINDOWING_X11 
+		 			Window win = gdk_x11_window_get_xid ((GdkWindow *) $window);
+		 			
+		 			Display* display = GDK_SCREEN_XDISPLAY(gdk_window_get_screen ((GdkWindow *)$window));
+		 			
+		 			XClearWindow(display, win);
+		 			
+					if ($width < 0 || $height < 0)
+					{
+						gint real_width;
+						gint real_height;
+					    real_width = gdk_window_get_width ($window); 
+					    real_height = gdk_window_get_height ($window);
+
+						if ($width < 0)
+							$width = real_width;
+						if ($height < 0)
+							$height = real_height;
+					}
+
+					if ($filled)
+					    XFillRectangle (display, win, $gc, $x, $y, $width, $height);
+					else
+					    XDrawRectangle (display, win, $gc, $x, $y, $width, $height);
+
+	 				XFlush(display);
+				#endif
+			]"
+		end
+
 
 note
 	copyright: "Copyright (c) 1984-2021, Eiffel Software and others"

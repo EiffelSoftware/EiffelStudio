@@ -146,23 +146,25 @@ feature {NONE} -- Implementation
 			create s.make_empty
 
 				-- Prettify code.
-			create l_show_pretty.make_string (a_editor.file_path.name, s)
+			if attached a_editor.file_path as fp then
+				create l_show_pretty.make_string (fp.name, s)
+				
+					-- Relicense prettify code.
+				s := relicense (s, a_editor)
 
-				-- Relicense prettify code.
-			s := relicense (s, a_editor)
-
-				-- Check if formatting is successful.
-			if not l_show_pretty.error then
-				create l_diff
-				src.replace_substring_all ("%R%N", "%N")
-				s.replace_substring_all ("%R%N", "%N")
-				l_diff.set_text ({UTF_CONVERTER}.utf_32_string_to_utf_8_string_8 (src), {UTF_CONVERTER}.utf_32_string_to_utf_8_string_8 (s))
-				l_diff.compute_diff
-				if
-					attached l_diff.hunks as l_hunks and then
-					l_hunks.count >= preferences.development_window_data.pretty_printer_messindex.to_integer_32
-				then
-					Result := True
+					-- Check if formatting is successful.
+				if not l_show_pretty.error then
+					create l_diff
+					src.replace_substring_all ("%R%N", "%N")
+					s.replace_substring_all ("%R%N", "%N")
+					l_diff.set_text ({UTF_CONVERTER}.utf_32_string_to_utf_8_string_8 (src), {UTF_CONVERTER}.utf_32_string_to_utf_8_string_8 (s))
+					l_diff.compute_diff
+					if
+						attached l_diff.hunks as l_hunks and then
+						l_hunks.count >= preferences.development_window_data.pretty_printer_messindex.to_integer_32
+					then
+						Result := True
+					end
 				end
 			end
 		end

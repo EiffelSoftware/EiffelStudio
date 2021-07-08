@@ -67,7 +67,7 @@ feature -- Access
 		deferred
 		end
 
-	diff (a_location: READABLE_STRING_GENERAL; a_start, a_end: detachable SVN_RANGE_INDEX; a_options: detachable SVN_OPTIONS): detachable STRING
+	diff (a_location: READABLE_STRING_GENERAL; a_start, a_end: detachable SVN_RANGE_INDEX; a_options: detachable SVN_OPTIONS): detachable SVN_RESULT
 			-- Difference for `a_location', between `a_start' and `a_end' if provided.
 		deferred
 		end

@@ -141,8 +141,7 @@ feature -- Access: working copy
 				debug ("SVN_ENGINE")
 					print ("-> terminated : None .%N")
 				end
-				create Result.make_failure
-				Result.set_command (cmd)
+				create Result.make_failure (cmd)
 				if res /= Void then
 					Result.set_message ("Exit code: " + res.exit_code.out + "%N" + res.error_output)
 				end
@@ -152,7 +151,7 @@ feature -- Access: working copy
 					print ("-> terminated : count=" + s.count.out + " .%N")
 					print (s)
 				end
-				create Result.make_success
+				create Result.make_success (cmd)
 			end
 		end
 
@@ -183,8 +182,7 @@ feature -- Access: working copy
 				debug ("SVN_ENGINE")
 					print ("-> terminated : None .%N")
 				end
-				create Result.make_failure
-				Result.set_command (cmd)
+				create Result.make_failure (cmd)
 				if res /= Void then
 					Result.set_message ("Exit code: " + res.exit_code.out + "%N" + res.error_output)
 				end
@@ -194,7 +192,7 @@ feature -- Access: working copy
 					print ("-> terminated : count=" + s.count.out + " .%N")
 					print (s)
 				end
-				create Result.make_success
+				create Result.make_success (cmd)
 			end
 		end
 
@@ -233,8 +231,7 @@ feature -- Access: working copy
 				debug ("SVN_ENGINE")
 					print ("-> terminated : None .%N")
 				end
-				create Result.make_failure
-				Result.set_command (cmd)
+				create Result.make_failure (cmd)
 				if res /= Void then
 					Result.set_message ("Exit code: " + res.exit_code.out + "%N" + res.error_output)
 				end
@@ -244,7 +241,7 @@ feature -- Access: working copy
 					print ("-> terminated : count=" + s.count.out + " .%N")
 					print (s)
 				end
-				create Result.make_success
+				create Result.make_success (cmd)
 			end
 		end
 
@@ -275,8 +272,7 @@ feature -- Access: working copy
 				debug ("SVN_ENGINE")
 					print ("-> terminated : None .%N")
 				end
-				create Result.make_failure
-				Result.set_command (cmd)
+				create Result.make_failure (cmd)
 				if res /= Void then
 					Result.set_message ("Exit code: " + res.exit_code.out + "%N" + res.error_output)
 				end
@@ -286,7 +282,7 @@ feature -- Access: working copy
 					print ("-> terminated : count=" + s.count.out + " .%N")
 					print (s)
 				end
-				create Result.make_success
+				create Result.make_success (cmd)
 			end
 		end
 
@@ -325,8 +321,7 @@ feature -- Access: working copy
 				debug ("SVN_ENGINE")
 					print ("-> terminated : None .%N")
 				end
-				create Result.make_failure
-				Result.set_command (cmd)
+				create Result.make_failure (cmd)
 				if res /= Void then
 					Result.set_message ("Exit code: " + res.exit_code.out + "%N" + res.error_output + "%N" + res.error_output)
 				end
@@ -336,7 +331,7 @@ feature -- Access: working copy
 					print ("-> terminated : count=" + s.count.out + " .%N")
 					print (s)
 				end
-				create Result.make_success
+				create Result.make_success (cmd)
 			end
 		end
 
@@ -370,8 +365,7 @@ feature -- Access: working copy
 				debug ("SVN_ENGINE")
 					print ("-> terminated : None .%N")
 				end
-				create Result.make_failure
-				Result.set_command (cmd)
+				create Result.make_failure (cmd)
 				if res /= Void then
 					Result.set_message ("Exit code: " + res.exit_code.out + "%N" + res.error_output)
 				end
@@ -381,7 +375,7 @@ feature -- Access: working copy
 					print ("-> terminated : count=" + s.count.out + " .%N")
 					print (s)
 				end
-				create Result.make_success
+				create Result.make_success (cmd)
 			end
 		end
 
@@ -419,30 +413,30 @@ feature -- Access: working copy
 			debug ("SVN_ENGINE")
 				print ("-> terminated %N")
 			end
+				-- Compute pseudo command line for info.
+			create cmd.make_from_string (svn_executable_path)
+			cmd.append_string (option_to_command_line_flags (a_options))
+			cmd.append_string (" commit ")
+			a_changelist.append_as_command_line_arguments_to (cmd)
+			if a_log_message /= Void then
+				if a_log_message.has ('%N') then
+					create msg.make_from_string_general (a_log_message)
+					msg.replace_substring_all ("%N", "\n")
+					cmd.append (" --message %"")
+					cmd.append_string_general (msg)
+					cmd.append ("%"")
+				else
+					cmd.append (" --message %"")
+					cmd.append_string_general (a_log_message)
+					cmd.append ("%"")
+				end
+			end
+
 			if res = Void or else res.exit_code /= 0 then
 				debug ("SVN_ENGINE")
 					print ("-> terminated : None .%N")
 				end
-				create Result.make_failure
-					-- Compute pseudo command line for info.
-				create cmd.make_from_string (svn_executable_path)
-				cmd.append_string (option_to_command_line_flags (a_options))
-				cmd.append_string (" commit ")
-				a_changelist.append_as_command_line_arguments_to (cmd)
-				if a_log_message /= Void then
-					if a_log_message.has ('%N') then
-						create msg.make_from_string_general (a_log_message)
-						msg.replace_substring_all ("%N", "\n")
-						cmd.append (" --message %"")
-						cmd.append_string_general (msg)
-						cmd.append ("%"")
-					else
-						cmd.append (" --message %"")
-						cmd.append_string_general (a_log_message)
-						cmd.append ("%"")
-					end
-				end
-				Result.set_command (cmd)
+				create Result.make_failure (cmd)
 				if res /= Void then
 					Result.set_message ("Exit code: " + res.exit_code.out + "%N" + res.error_output)
 				end
@@ -452,7 +446,7 @@ feature -- Access: working copy
 					print ("-> terminated : count=" + s.count.out + " .%N")
 					print (s)
 				end
-				create Result.make_success
+				create Result.make_success (cmd)
 				Result.set_message (s)
 			end
 		end
@@ -503,7 +497,7 @@ feature -- Access: svn
 			end
 		end
 
-	diff (a_location: READABLE_STRING_GENERAL; a_start, a_end: detachable SVN_RANGE_INDEX; a_options: detachable SVN_OPTIONS): detachable STRING
+	diff (a_location: READABLE_STRING_GENERAL; a_start, a_end: detachable SVN_RANGE_INDEX; a_options: detachable SVN_OPTIONS): detachable SVN_RESULT
 		local
 			res: detachable PROCESS_COMMAND_RESULT
 			s: detachable STRING
@@ -544,10 +538,11 @@ feature -- Access: svn
 			debug ("SVN_ENGINE")
 				print ("-> terminated %N")
 			end
-			if res = Void then
+			if res = Void or else res.exit_code /= 0 then
 				debug ("SVN_ENGINE")
 					print ("-> terminated : None .%N")
 				end
+				create Result.make_failure (cmd)
 			else
 				s := res.output
 				debug ("SVN_ENGINE")
@@ -555,7 +550,8 @@ feature -- Access: svn
 					print (s)
 				end
 
-				Result := s
+				create Result.make_success (cmd)
+				Result.set_message (s)
 			end
 		end
 

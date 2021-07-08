@@ -13,14 +13,16 @@ create
 
 feature {NONE} -- Initialization
 
-	make_success
+	make_success (cmd: READABLE_STRING_GENERAL)
 		do
+			command := cmd
 			failed := False
 			message := Void
 		end
 
-	make_failure
+	make_failure (cmd: READABLE_STRING_GENERAL)
 		do
+			command := cmd
 			failed := True
 			message := Void
 		end
@@ -36,7 +38,7 @@ feature -- Status report
 	failed: BOOLEAN
 			-- Svn command failed?
 
-	command: detachable READABLE_STRING_32
+	command: READABLE_STRING_32
 			-- Optional command information.
 
 	message: detachable IMMUTABLE_STRING_32
@@ -46,11 +48,24 @@ feature -- Element change
 
 	set_message (msg: detachable READABLE_STRING_GENERAL)
 			-- Set `message' to `msg'.
+		local
+			utf: UTF_CONVERTER
+		do
+			if msg = Void then
+				message := Void
+			elseif attached {READABLE_STRING_8} msg as s then
+				message := utf.utf_8_string_8_to_string_32 (s)
+			else
+				create message.make_from_string_general (msg)
+			end
+		end
+
+	set_unicode_message (msg: detachable READABLE_STRING_32)
 		do
 			if msg = Void then
 				message := Void
 			else
-				create message.make_from_string_general (msg)
+				create message.make_from_string (msg)
 			end
 		end
 

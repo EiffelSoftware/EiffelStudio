@@ -33,7 +33,11 @@ inherit
 			supports_pixbuf_alpha,
 			device_x_offset,
 			device_y_offset,
-			draw_segment
+			draw_segment,
+			set_drawing_mode,
+			set_line_width,
+			enable_dashed_line_style,
+			disable_dashed_line_style
 		end
 
 	EV_GTK_DEPENDENT_ROUTINES
@@ -64,7 +68,7 @@ feature {NONE} -- Initialization
 
 			drawable := {GTK2}.gdk_screen_get_root_window ({GTK2}.gdk_screen_get_default)
 
-			gc := {GDK}.create_gc (drawable)
+			gc := {GDK_X11}.create_gc (drawable)
 --			{GTK}.gdk_gc_set_subwindow (gc, {GTK}.gdk_include_inferiors_enum)
 --			init_default_values
 
@@ -96,15 +100,15 @@ feature -- Access
 			Result := gdk_x_display
 		end
 
-
 feature -- Drawing
 
 	draw_segment (x1, y1, x2, y2: INTEGER)
 			-- Draw line segment from (`x1', 'y1') to (`x2', 'y2').
 		do
+			pre_drawing
 			{GTK2}.gdk_window_invalidate_rect (cairo_context, default_pointer, True)
-			if drawable /= default_pointer then
-				{GDK}.draw_line (
+			if not drawable.is_default_pointer then
+				{GDK_X11}.draw_line (
 					drawable,
 					gc,
 					(x1 + device_x_offset).max ({INTEGER_16}.min_value).min ({INTEGER_16}.max_value),
@@ -115,6 +119,7 @@ feature -- Drawing
 				update_if_needed
 				redraw
 			end
+			post_drawing
 		end
 
 feature {EV_ANY_I} -- Drawing wrapper
@@ -128,7 +133,6 @@ feature {EV_ANY_I} -- Drawing wrapper
 			-- <Precursor>
 		do
 		end
-
 
 feature -- Status report
 
@@ -270,6 +274,82 @@ feature -- Status setting
 			create a_default_colors
 			set_background_color (a_default_colors.default_background_color)
 			set_foreground_color (a_default_colors.default_foreground_color)
+		end
+
+feature -- Element change
+
+	set_drawing_mode (a_drawing_mode: INTEGER)
+			-- Set drawing mode to `a_drawing_mode'.
+		local
+			l_gc: like gc
+			l_drawable: like drawable
+		do
+			Precursor (a_drawing_mode)
+			l_gc := gc
+			l_drawable := drawable
+			if
+				not l_gc.is_default_pointer and then
+				not l_drawable.is_default_pointer
+			then
+				inspect
+					a_drawing_mode
+				when {EV_DRAWABLE_CONSTANTS}.drawing_mode_copy then
+					{GDK_X11}.x_set_function (l_drawable, l_gc, {GDK_X11}.x_function_GXcopy)
+				when {EV_DRAWABLE_CONSTANTS}.drawing_mode_and then
+					{GDK_X11}.x_set_function (l_drawable, l_gc, {GDK_X11}.x_function_GXand)
+				when {EV_DRAWABLE_CONSTANTS}.drawing_mode_xor then
+					{GDK_X11}.x_set_function (l_drawable, l_gc, {GDK_X11}.x_function_GXxor)
+				when {EV_DRAWABLE_CONSTANTS}.drawing_mode_invert then
+					{GDK_X11}.x_set_function (l_drawable, l_gc, {GDK_X11}.x_function_GXinvert)
+				when {EV_DRAWABLE_CONSTANTS}.drawing_mode_or then
+					{GDK_X11}.x_set_function (l_drawable, l_gc, {GDK_X11}.x_function_GXor)
+				else
+					check
+						drawing_mode_exists: False
+					end
+					{GDK_X11}.x_set_function (l_drawable, l_gc, {GDK_X11}.x_function_GXcopy)
+				end
+			end
+		end
+
+	set_line_width (a_width: INTEGER)
+			-- Assign `a_width' to `line_width'.
+		do
+			Precursor (a_width)
+			if
+				not gc.is_default_pointer and then
+				not drawable.is_default_pointer
+			then
+				if dashed_line_style then
+					{GDK_X11}.set_line_attributes_to_dashed_style (drawable, gc, a_width)
+				else
+					{GDK_X11}.set_line_attributes_to_solid_style (drawable, gc, a_width)
+				end
+			end
+		end
+
+	enable_dashed_line_style
+			-- Draw lines dashed.
+		do
+			Precursor {EV_DRAWABLE_IMP}
+			if
+				not gc.is_default_pointer and then
+				not drawable.is_default_pointer
+			then
+				{GDK_X11}.set_line_attributes_to_dashed_style (drawable, gc, line_width)
+			end
+		end
+
+	disable_dashed_line_style
+			-- Draw lines solid.
+		do
+			Precursor {EV_DRAWABLE_IMP}
+			if
+				not gc.is_default_pointer and then
+				not drawable.is_default_pointer
+			then
+				{GDK_X11}.set_line_attributes_to_solid_style (drawable, gc, line_width)
+			end
 		end
 
 feature -- Basic operation

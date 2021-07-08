@@ -31,6 +31,15 @@ feature -- Operation
 			put_string_diff (a_location, utf.utf_8_string_8_to_string_32 (s))
 		end
 
+	append_diff (d: SCM_DIFF)
+		do
+			across
+				d.unified_diffs as ic
+			loop
+				put_string_diff (ic.key, ic.item)
+			end
+		end
+
 feature -- Access: error
 
 	has_error: BOOLEAN
@@ -54,11 +63,22 @@ feature -- Access
 	unified_diffs: STRING_TABLE [IMMUTABLE_STRING_32]
 
 	full_text: STRING_32
+		local
+			nb: INTEGER
+			l_unified_diffs: like unified_diffs
 		do
+			l_unified_diffs := unified_diffs
 			create Result.make_empty
+			nb := l_unified_diffs.count
 			across
-				unified_diffs as ic
+				l_unified_diffs as ic
 			loop
+				if nb > 1 then
+					Result.append_string ("[Location: ")
+					Result.append_string (ic.key)
+					Result.append_character (']')
+					Result.append_character ('%N')
+				end
 				Result.append_string (ic.item)
 				Result.append_character ('%N')
 			end

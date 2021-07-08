@@ -30,6 +30,8 @@ feature -- Access
 
 	name: IMMUTABLE_STRING_32
 
+	description: detachable IMMUTABLE_STRING_32
+
 	changelist_count: INTEGER
 		do
 			Result := changelists.count
@@ -122,6 +124,15 @@ feature -- Element change
 	wipe_out
 		do
 			changelists.wipe_out
+		end
+
+	set_description (d: detachable READABLE_STRING_GENERAL)
+		do
+			if d = Void then
+				description := Void
+			else
+				create description.make_from_string_general (d)
+			end
 		end
 
 feature -- Cursor

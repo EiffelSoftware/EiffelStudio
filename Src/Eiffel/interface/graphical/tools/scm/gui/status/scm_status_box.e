@@ -258,18 +258,29 @@ feature -- Basic operation
 				lst.remove_empty_changelists
 				if lst.changelist_count = 1 and then attached lst.first_changelist as l_changelist then
 					create {SCM_SINGLE_COMMIT_SET} l_commit.make_with_changelist (Void, l_changelist)
+					if attached lst.description as desc then
+						l_commit.set_message (desc)
+					end
 					open_save_dialog (l_commit)
 				else
 					create {SCM_MULTI_COMMIT_SET} l_commit.make_with_changelists (Void, lst)
+					if attached lst.description as desc then
+						l_commit.set_message (desc)
+					end
 					open_save_dialog (l_commit)
 				end
-				if l_commit /= Void and then l_commit.is_processed then
-					if not l_commit.has_error then
-						across
-							lst as ic
-						loop
-							ic.item.wipe_out
+				if l_commit /= Void then
+					if l_commit.is_processed then
+						if not l_commit.has_error then
+							across
+								lst as ic
+							loop
+								ic.item.wipe_out
+							end
+							lst.wipe_out
 						end
+					else
+						lst.set_description (l_commit.message)
 					end
 				end
 			end

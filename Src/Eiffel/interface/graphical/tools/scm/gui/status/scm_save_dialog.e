@@ -74,7 +74,6 @@ feature -- Widgets
 
 	commit_log_text: EV_TEXT
 
-
 feature {NONE} -- User interface initialization
 
 	build_dialog_interface (a_container: EV_VERTICAL_BOX)
@@ -125,6 +124,7 @@ feature {NONE} -- User interface initialization
 			txt := progress_log_text
 			txt.disable_edit
 			b.extend (txt)
+
 			b.hide
 
 				-- Commit log box
@@ -146,9 +146,9 @@ feature {NONE} -- User interface initialization
 			b.extend (txt)
 
 			show_actions.extend_kamikaze (agent (i_sp: EV_VERTICAL_SPLIT_AREA)
-					do
-						i_sp.set_proportion (0.75)
-					end(sp)
+						do
+							i_sp.set_proportion (0.75)
+						end (sp)
 				)
 
 			if attached dialog_window_buttons [dialog_buttons.reset_button] as but then
@@ -171,6 +171,8 @@ feature {NONE} -- User interface initialization
 			set_button_action_before_close (dialog_buttons.cancel_button, agent on_cancel)
 			set_button_action_before_close (dialog_buttons.reset_button, agent on_close)
 			set_button_action_before_close (dialog_buttons.open_button, agent on_open_diff)
+
+			progress_log_box.hide
 		end
 
 feature -- Access: Help
@@ -179,7 +181,7 @@ feature -- Access: Help
 			-- <Precursor>
 		once
 			Result := {STRING_32} "6109AFC3-43A4-4524-9ED8-C02B486CABAF"
-			-- Same as {ES_SCM_TOOL_PANEL}.help_context_id
+				-- Same as {ES_SCM_TOOL_PANEL}.help_context_id
 		end
 
 feature {NONE} -- Helpers
@@ -187,7 +189,7 @@ feature {NONE} -- Helpers
 	register_input_widget (aw: EV_WIDGET)
 			-- Register `aw' as an input widget
 		do
-			suppress_confirmation_key_close  (aw)
+			suppress_confirmation_key_close (aw)
 		end
 
 	extend_non_expandable_to (b: EV_BOX; w: EV_WIDGET)
@@ -213,7 +215,7 @@ feature {NONE} -- Helpers
 
 feature -- Action
 
-	set_size (w,h: INTEGER)
+	set_size (w, h: INTEGER)
 		do
 			dialog.set_size (w, h)
 		end
@@ -231,9 +233,9 @@ feature -- Action
 			col := a_tf.background_color
 			a_tf.set_background_color (error_background_color)
 			a_tf.key_press_actions.extend_kamikaze (agent (atf: EV_TEXT_FIELD; acol: EV_COLOR; akey: EV_KEY)
-					do
-						atf.set_background_color (acol)
-					end(a_tf, col, ?)
+						do
+							atf.set_background_color (acol)
+						end (a_tf, col, ?)
 				)
 		end
 
@@ -242,14 +244,20 @@ feature -- Action
 			d: SCM_DIFF
 		do
 			if attached {SCM_MULTI_COMMIT_SET} commit as l_multi_commit_set then
-				-- TODO: improve this non user friendly behavior.
+					-- TODO: improve this non user friendly behavior.
 				across
 					l_multi_commit_set.changelists as ic
 				loop
-					d := scm_service.diff (ic.item)
-					if d /= Void then
-						parent_box.show_diff (d)
+					if attached scm_service.diff (ic.item) as l_diff then
+						if d = Void then
+							d := l_diff
+						else
+							d.append_diff (l_diff)
+						end
 					end
+				end
+				if d /= Void then
+					parent_box.show_diff (d)
 				end
 			elseif attached {SCM_SINGLE_COMMIT_SET} commit as l_single_commit_set then
 				d := scm_service.diff (l_single_commit_set.changelist)
@@ -322,12 +330,14 @@ feature -- Action
 
 	on_close
 		do
-			-- Bye
+				-- Bye
+			commit.set_message (commit_log_text.text)
 		end
 
 	on_cancel
 		do
 			commit.reset
+			commit.set_message (commit_log_text.text)
 		end
 
 feature -- Access
@@ -349,10 +359,10 @@ feature -- Access
 			-- Note: Use {ES_DIALOG_BUTTONS} or `dialog_buttons' to determine the id's correspondance.
 		once
 			create Result.make (4)
-			Result.put_last (dialog_buttons.reset_button)
-			Result.put_last (dialog_buttons.ok_button)
-			Result.put_last (dialog_buttons.cancel_button)
-			Result.put_last (dialog_buttons.open_button)
+			Result.put_last (dialog_buttons.open_button) -- Diff
+			Result.put_last (dialog_buttons.ok_button) -- Apply/Commit/...
+			Result.put_last (dialog_buttons.reset_button) -- Close
+			Result.put_last (dialog_buttons.cancel_button) -- Cancel		
 		end
 
 	default_button: INTEGER
@@ -374,11 +384,12 @@ feature -- Access
 		end
 
 	is_size_and_position_remembered: BOOLEAN = False
-			-- Indicates if the size and position information is remembered for the dialog	
+			-- Indicates if the size and position information is remembered for the dialog
+;
 
-;note
+note
 	copyright: "Copyright (c) 1984-2021, Eiffel Software"
-	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
+	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[
 			This file is part of Eiffel Software's Eiffel Development Environment.

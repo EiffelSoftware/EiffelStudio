@@ -116,6 +116,7 @@ feature {NONE} -- Implementation
 		local
 			l_start_x, l_start_y: INTEGER
 			l_old_lw, lw: INTEGER
+			l_size: INTEGER
 			l_check_figure_size: INTEGER
 		do
 				-- Calculate when the checkbox should be drawn.
@@ -131,10 +132,16 @@ feature {NONE} -- Implementation
 				if l_interface.is_checked then
 					l_start_x := l_start_x + 2 * lw
 					l_start_y := l_start_y + 2 * lw
+					l_size := l_check_figure_size - 5 * lw
+					if l_size > 12 then
+						l_size := l_size - 2
+						l_start_x := l_start_x + 1
+						l_start_y := l_start_y + 1
+					end
 					if l_interface.is_indeterminate then
-						draw_indeterminate_sign_at (a_drawable, l_check_figure_size - 5 * lw, l_start_x, l_start_y)
+						draw_indeterminate_sign_at (a_drawable, l_size, l_start_x, l_start_y)
 					else
-						draw_check_sign_at (a_drawable, l_check_figure_size - 5 * lw, l_start_x, l_start_y)
+						draw_check_sign_at (a_drawable, l_size, l_start_x, l_start_y)
 					end
 				end
 			end
@@ -147,21 +154,49 @@ feature {NONE} -- Implementation
 		local
 			l_check_figure: ARRAY [EV_COORDINATE]
 			x1,x2,x3,y1,y2,y3,y4: INTEGER
+			st: INTEGER
 		do
-			x1 := 1
-			x2 := (a_size * 0.4).rounded
+
+			st := a_size // 3
+			x1 := 0
+			x2 := x1 + st
 			x3 := a_size
-			y1 := 1
-			y2 := (a_size * 0.33).rounded
-			y3 := (a_size * 0.66).rounded
+
+			y1 := 0
+			y2 := y1 + st
+			y3 := y2 + st
 			y4 := a_size
 
+--			x1 := 1
+--			x2 := (a_size * 0.4).rounded
+--			x3 := a_size - 1
+--			y1 := 1
+--			y2 := (a_size * 0.4).rounded
+--			y3 := (a_size * 0.8).rounded
+--			y4 := a_size - 1
+
 			create l_check_figure.make_filled (create {EV_COORDINATE}.make (a_start_x + x1, a_start_y + y2), 1, 6)
-			l_check_figure[2] := create {EV_COORDINATE}.make (a_start_x + x2, a_start_y + y3)
-			l_check_figure[3] := create {EV_COORDINATE}.make (a_start_x + x3, a_start_y + y1)
-			l_check_figure[4] := create {EV_COORDINATE}.make (a_start_x + x3, a_start_y + y2)
-			l_check_figure[5] := create {EV_COORDINATE}.make (a_start_x + x2, a_start_y + y4)
-			l_check_figure[6] := create {EV_COORDINATE}.make (a_start_x + x1, a_start_y + y3)
+--			l_check_figure[1] := create {EV_COORDINATE}.make (a_start_x + x1, a_start_y + y2)  -- 0    , 1/3
+			l_check_figure[2] := create {EV_COORDINATE}.make (a_start_x + x2, a_start_y + y3)  -- 4/10 , 2/3
+			l_check_figure[3] := create {EV_COORDINATE}.make (a_start_x + x3, a_start_y + y1)  -- width, 0
+			l_check_figure[4] := create {EV_COORDINATE}.make (a_start_x + x3, a_start_y + y2)  -- width, 1/3
+			l_check_figure[5] := create {EV_COORDINATE}.make (a_start_x + x2, a_start_y + y4)  -- 4/10 , height
+			l_check_figure[6] := create {EV_COORDINATE}.make (a_start_x + x1, a_start_y + y3)  -- 0    , 2/3
+
+				--_________________________
+				--| _ _ _ _ _ _ _ _ _ 3 | 1  y1
+				--| _ _ _ _ _ _ _ _ # # | 2
+				--| _ _ _ _ _ _ _ # # # | 3
+				--| 1 _ _ _ _ _ # # # 4 | 4  y2
+				--| # # _ _ _ # # # # _ | 5
+				--| # # # _ # # # # _ _ | 6
+				--| 6 # # 2 # # # _ _ _ | 7  y3
+				--| _ # # # # # _ _ _ _ | 8
+				--| _ _ # # # _ _ _ _ _ | 9
+				--| _ _ _ 5 _ _ _ _ _ _ | 0  y4
+				--|---------------------|
+				--| 1 2 3 4 5 6 7 8 9 0
+				--|x2    x2          x3
 
 			a_drawable.fill_polygon (l_check_figure)
 		end

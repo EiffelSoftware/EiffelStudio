@@ -18,13 +18,13 @@ feature -- Access
 
 feature -- Execution	
 
-	changes (loc: PATH; cfg: SCM_CONFIG): detachable SCM_STATUS_LIST
+	changes (a_root_loc, loc: PATH; cfg: SCM_CONFIG): detachable SCM_STATUS_LIST
 		local
 			scm: SCM_SVN
 		do
 			reset_error
 			create scm.make (cfg)
-			Result := scm.statuses (loc, True, Void)
+			Result := scm.statuses (a_root_loc, loc, True, Void)
 		end
 
 	revert (a_changelist: SCM_CHANGELIST; cfg: SCM_CONFIG): detachable STRING_32
@@ -77,17 +77,17 @@ feature -- Execution
 
 	diff (a_changelist: SCM_CHANGELIST; cfg: SCM_CONFIG): detachable SCM_DIFF
 		local
-			scm: SCM_SVN
+			scm: SCM
 		do
 			reset_error
-			create scm.make (cfg)
+			create {SCM_SVN} scm.make (cfg)
 			create Result.make (a_changelist.count)
 			Result.set_changelist (a_changelist)
 			across
 				a_changelist as ic
 			loop
 				if attached scm.diff (ic.item.location.name, Void) as d then
-					Result.put_string_diff (ic.item.location.name, d)
+					Result.put_string_diff (ic.item.location.name, d.to_string_32)
 				end
 			end
 		end

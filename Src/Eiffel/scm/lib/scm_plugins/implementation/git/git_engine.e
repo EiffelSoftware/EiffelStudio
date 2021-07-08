@@ -64,7 +64,7 @@ feature -- Access tool info
 
 feature -- Execution
 
-	statuses (a_path: PATH; is_recursive: BOOLEAN; a_options: detachable SCM_OPTIONS): detachable SCM_STATUS_LIST
+	statuses (a_root_location, a_path: PATH; is_recursive: BOOLEAN; a_options: detachable SCM_OPTIONS): detachable SCM_STATUS_LIST
 		local
 			res: detachable PROCESS_COMMAND_RESULT
 			s: detachable READABLE_STRING_8
@@ -91,7 +91,7 @@ feature -- Execution
 				end
 			else
 				s := res.output
-				Result := status_from_porcelain_output (a_path, {UTF_CONVERTER}.utf_8_string_8_to_string_32 (s))
+				Result := status_from_porcelain_output (a_root_location, {UTF_CONVERTER}.utf_8_string_8_to_string_32 (s))
 				debug ("GIT_ENGINE")
 					print ("-> terminated : count=" + s.count.out + " .%N")
 					print (s)
@@ -99,7 +99,7 @@ feature -- Execution
 			end
 		end
 
-	diff (a_path: PATH; a_options: detachable SCM_OPTIONS): detachable STRING_32
+	diff (a_path: PATH; a_options: detachable SCM_OPTIONS): detachable SCM_RESULT
 		local
 			res: detachable PROCESS_COMMAND_RESULT
 			s: detachable READABLE_STRING_8
@@ -131,7 +131,8 @@ feature -- Execution
 				end
 			else
 				s := res.output
-				Result := {UTF_CONVERTER}.utf_8_string_8_to_string_32 (s)
+				create Result.make_with_command (cmd)
+				Result.set_message ({UTF_CONVERTER}.utf_8_string_8_to_string_32 (s))
 				debug ("GIT_ENGINE")
 					print ("-> terminated : count=" + s.count.out + " .%N")
 					print (s)
@@ -166,20 +167,19 @@ feature -- Execution
 			end
 			if attached output_of_command (cmd, a_changelist.root.location) as res_revert then
 				if res_revert.exit_code = 0 then
-					create Result.make_success
+					create Result.make_success (cmd)
 					Result.set_message (res_revert.output)
 				else
-					create Result.make_failure
+					create Result.make_failure (cmd)
 					Result.set_message (res_revert.error_output)
 				end
 			else
-				create Result.make_failure
+				create Result.make_failure (cmd)
 				Result.set_message ("Error: can not launch git [" + process_misc.last_error.out + "]")
 			end
 			debug ("GIT_ENGINE")
 				print ("-> terminated %N")
 			end
-			Result.set_command (cmd)
 		end
 
 	commit (a_changelist: SCM_CHANGELIST; a_log_message: READABLE_STRING_GENERAL; a_options: SCM_OPTIONS): SCM_RESULT
@@ -229,20 +229,19 @@ feature -- Execution
 			end
 			if attached output_of_command (cmd, a_changelist.root.location) as res_commit then
 				if res_commit.exit_code = 0 then
-					create Result.make_success
+					create Result.make_success (cmd)
 					Result.set_message (res_commit.output)
 				else
-					create Result.make_failure
+					create Result.make_failure (cmd)
 					Result.set_message (res_commit.error_output)
 				end
 			else
-				create Result.make_failure
+				create Result.make_failure (cmd)
 				Result.set_message ("Error: can not launch git [" + process_misc.last_error.out + "]")
 			end
 			debug ("GIT_ENGINE")
 				print ("-> terminated %N")
 			end
-			Result.set_command (cmd)
 		end
 
 feature {NONE} -- Implementation

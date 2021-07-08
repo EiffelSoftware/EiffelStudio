@@ -31,7 +31,7 @@ feature -- Status report
 
 feature -- Access: working copy
 
-	statuses (a_path: PATH; is_recursive: BOOLEAN; a_options: detachable SCM_OPTIONS): detachable SCM_STATUS_LIST
+	statuses (a_root_location, a_path: PATH; is_recursive: BOOLEAN; a_options: detachable SCM_OPTIONS): detachable SCM_STATUS_LIST
 			-- Statuses of nodes under `a_path'.	
 			-- Also process subfolders is `is_recursive' is True.
 		deferred
@@ -84,7 +84,7 @@ feature -- Access
 		deferred
 		end
 
-	diff (a_location: READABLE_STRING_GENERAL; a_options: detachable SCM_OPTIONS): detachable READABLE_STRING_32
+	diff (a_location: READABLE_STRING_GENERAL; a_options: detachable SCM_OPTIONS): detachable SCM_RESULT
 			-- Difference for `a_location', between `a_start' and `a_end' if provided.
 		deferred
 		end

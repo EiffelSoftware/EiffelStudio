@@ -70,7 +70,7 @@ feature -- Operations
 
 	statuses (a_root: SCM_LOCATION; a_location: PATH): detachable SCM_STATUS_LIST
 		do
-			Result := a_root.changes (a_location, config)
+			Result := a_root.changes (a_root.location, a_location, config)
 		end
 
 	commit (a_commit: SCM_COMMIT_SET)

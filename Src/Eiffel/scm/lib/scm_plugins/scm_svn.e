@@ -39,7 +39,7 @@ feature -- Factory
 
 feature -- Access: working copy
 
-	statuses (a_path: PATH; is_recursive: BOOLEAN; a_options: detachable SCM_OPTIONS): detachable SCM_STATUS_LIST
+	statuses (a_root_location, a_path: PATH; is_recursive: BOOLEAN; a_options: detachable SCM_OPTIONS): detachable SCM_STATUS_LIST
 			-- Statuses of nodes under `a_path'.	
 			-- Also process subfolders is `is_recursive' is True.
 		local
@@ -106,15 +106,14 @@ feature -- Operations: working copy
 			end
 			if attached {SVN_RESULT} svn.update (l_changelist, Void, opts) as res then
 				if res.succeed then
-					create Result.make_success
+					create Result.make_success (res.command)
 					Result.set_message (res.message)
 				else
-					create Result.make_failure
+					create Result.make_failure (res.command)
 					Result.set_message (res.message)
 				end
-				Result.set_command (res.command)
 			else
-				create Result.make_failure
+				create Result.make_failure (Void)
 				Result.set_message ("Error: can not launch svn to process the update")
 			end
 		end
@@ -157,15 +156,14 @@ feature -- Operations: working copy
 			end
 			if attached {SVN_RESULT} svn.add (l_changelist, opts) as res then
 				if res.succeed then
-					create Result.make_success
+					create Result.make_success (res.command)
 					Result.set_message (res.message)
 				else
-					create Result.make_failure
+					create Result.make_failure (res.command)
 					Result.set_message (res.message)
 				end
-				Result.set_command (res.command)
 			else
-				create Result.make_failure
+				create Result.make_failure (Void)
 				Result.set_message ("Error: can not launch svn to process the add operation")
 			end
 		end
@@ -208,15 +206,14 @@ feature -- Operations: working copy
 			end
 			if attached {SVN_RESULT} svn.delete (l_changelist, opts) as res then
 				if res.succeed then
-					create Result.make_success
+					create Result.make_success (res.command)
 					Result.set_message (res.message)
 				else
-					create Result.make_failure
+					create Result.make_failure (res.command)
 					Result.set_message (res.message)
 				end
-				Result.set_command (res.command)
 			else
-				create Result.make_failure
+				create Result.make_failure (Void)
 				Result.set_message ("Error: can not launch svn to process the delete operation")
 			end
 		end
@@ -224,7 +221,7 @@ feature -- Operations: working copy
 	move (a_location, a_new_location: READABLE_STRING_GENERAL; a_options: detachable SCM_OPTIONS): SCM_RESULT
 			-- Move from `a_location' to `a_new_location', and return information about command execution.
 		do
-			create Result.make_failure
+			create Result.make_failure (Void)
 			Result.set_message ("Error: not yet implemented")
 		end
 
@@ -261,15 +258,14 @@ feature -- Operations: working copy
 			end
 			if attached {SVN_RESULT} svn.commit (l_changelist, a_log_message, opts) as res then
 				if res.succeed then
-					create Result.make_success
+					create Result.make_success (res.command)
 					Result.set_message (res.message)
 				else
-					create Result.make_failure
+					create Result.make_failure (res.command)
 					Result.set_message (res.message)
 				end
-				Result.set_command (res.command)
 			else
-				create Result.make_failure
+				create Result.make_failure (Void)
 				Result.set_message ("Error: can not launch svn to process the commit")
 			end
 		end
@@ -314,29 +310,32 @@ feature -- Access
 			end
 			if attached {SVN_RESULT} svn.revert (l_changelist, opts) as res then
 				if res.succeed then
-					create Result.make_success
+					create Result.make_success (res.command)
 					Result.set_message (res.message)
 				else
-					create Result.make_failure
+					create Result.make_failure (res.command)
 					Result.set_message (res.message)
 				end
-				Result.set_command (res.command)
 			else
-				create Result.make_failure
+				create Result.make_failure (Void)
 				Result.set_message ("Error: can not launch svn to process the commit")
 			end
 		end
 
-	diff (a_location: READABLE_STRING_GENERAL; a_options: detachable SCM_OPTIONS): detachable STRING_32
+	diff (a_location: READABLE_STRING_GENERAL; a_options: detachable SCM_OPTIONS): detachable SCM_RESULT
 			-- Difference for `a_location', between `a_start' and `a_end' if provided.
 		local
 			svn: like new_scm_engine
 			opts: detachable SVN_OPTIONS
-			utf: UTF_CONVERTER
 		do
 			svn := new_scm_engine
-			if attached svn.diff (a_location, Void, Void, opts) as l_diff then
-				Result := utf.utf_8_string_8_to_string_32 (l_diff)
+			if attached svn.diff (a_location, Void, Void, opts) as l_diff_result then
+				if l_diff_result.succeed then
+					create Result.make_success (l_diff_result.command)
+				else
+					create Result.make_failure (l_diff_result.command)
+				end
+				Result.set_message (l_diff_result.message)
 			end
 		end
 

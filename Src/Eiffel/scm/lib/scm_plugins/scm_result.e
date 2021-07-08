@@ -8,19 +8,30 @@ class
 	SCM_RESULT
 
 create
+	make_with_command,
 	make_success,
 	make_failure
 
+convert
+	to_string_32: {STRING_32}
+
 feature {NONE} -- Initialization
 
-	make_success
+	make_with_command (cmd: detachable READABLE_STRING_GENERAL)
 		do
+			command := cmd
+		end
+
+	make_success (cmd: detachable READABLE_STRING_GENERAL)
+		do
+			make_with_command (cmd)
 			failed := False
 			message := Void
 		end
 
-	make_failure
+	make_failure (cmd: detachable READABLE_STRING_GENERAL)
 		do
+			make_with_command (cmd)
 			failed := True
 			message := Void
 		end
@@ -41,6 +52,25 @@ feature -- Status report
 
 	message: detachable IMMUTABLE_STRING_32
 			-- Potential message.
+
+feature -- Conversion
+
+	to_string_32: STRING_32
+		do
+			if attached message as msg then
+				Result := msg
+			else
+				if succeed then
+					Result := {STRING_32} "Succeed"
+				elseif failed then
+					Result := "Failed"
+				end
+				if attached command as cmd then
+					Result.append_string ({STRING_32} ": ")
+					Result.append_string (cmd)
+				end
+			end
+		end
 
 feature -- Element change
 

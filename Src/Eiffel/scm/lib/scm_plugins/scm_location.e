@@ -70,7 +70,7 @@ feature -- Status report
 
 feature -- Execution
 
-	changes (loc: PATH; cfg: SCM_CONFIG): detachable SCM_STATUS_LIST
+	changes (a_root_loc, loc: PATH; cfg: SCM_CONFIG): detachable SCM_STATUS_LIST
 			-- Related path of changed nodes.
 		deferred
 		ensure

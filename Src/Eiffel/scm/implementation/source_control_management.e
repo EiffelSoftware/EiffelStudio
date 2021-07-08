@@ -119,7 +119,7 @@ feature -- Async Operations
 
 	async_update_statuses (a_data: SCM_ASYNC_STATUSES_DATA; a_mutex: MUTEX)
 		do
-			if attached a_data.root.changes (a_data.path, a_data.config) as sts then
+			if attached a_data.root.changes (a_data.root.location, a_data.path, a_data.config) as sts then
 				a_mutex.lock
 				a_data.statuses := sts
 				a_mutex.unlock
@@ -286,8 +286,6 @@ feature -- Operations
 		end
 
 	post_commit_operations (a_commit: SCM_COMMIT_SET): detachable LIST [SCM_POST_COMMIT_OPERATION]
-		local
-			l_git_count: INTEGER
 		do
 			create {ARRAYED_LIST [SCM_POST_COMMIT_OPERATION]} Result.make (1)
 			if attached {SCM_MULTI_COMMIT_SET} a_commit as l_multi then
@@ -356,7 +354,7 @@ feature -- Element change
 
 	set_workspace (ws: like workspace)
 		do
-			reset_statuses_cache
+--			reset_statuses_cache
 			internal_workspace := ws
 			on_workspace_updated (ws)
 		end

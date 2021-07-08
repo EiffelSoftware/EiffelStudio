@@ -125,6 +125,16 @@ feature -- Basic operations
 			end
 		end
 
+	request_update_statuses
+		do
+			if
+				attached scm_s.service as scm and then
+				scm.is_available
+			then
+				scm.update_statuses
+			end
+		end
+
 	refresh
 		do
 			refresh_items
@@ -270,7 +280,7 @@ feature -- Drop down menu
 					create l_item
 					l_item.set_text (scm_names.menu_status)
 					l_item.enable_sensitive
-					l_item.select_actions.extend (agent scm.update_statuses)
+					l_item.select_actions.extend (agent request_update_statuses)
 					Result.extend (l_item)
 
 					create l_item

@@ -317,6 +317,60 @@ feature -- X subwindow modes
 		end
 
 
+
+feature -- X Background Foreground Color
+
+	x_set_background (window: POINTER; gc: POINTER; red, green, blue: INTEGER)
+	 	external
+	 		"C inline use <ev_gtk.h>"
+	 	alias
+	 		"[
+		 		#ifdef GDK_WINDOWING_X11 
+		 		XColor color;
+		 		
+		 		Display* display = GDK_SCREEN_XDISPLAY(gdk_window_get_screen ((GdkWindow *)$window));
+		 		
+		 		Colormap cmap =  DefaultColormap(display, DefaultScreen( display) );
+		 		
+		 		color.red =   $red;
+				color.green = $green;
+				color.blue =  $blue;
+				
+				color.flags = DoRed | DoGreen | DoBlue;
+				//XAllocColor(display, cmap, &color);
+				
+				XSetBackground(display, (GC)$gc, (unsigned long)color.pixel);
+		 		XFlush (display);
+		 		#endif
+			]"
+		end
+
+	x_set_foreground (window: POINTER; gc: POINTER; red, green, blue: INTEGER)
+	 	external
+	 		"C inline use <ev_gtk.h>"
+	 	alias
+	 		"[
+		 		#ifdef GDK_WINDOWING_X11 
+		 		XColor color;
+		 		
+		 		Display* display = GDK_SCREEN_XDISPLAY(gdk_window_get_screen ((GdkWindow *)$window));
+		 		
+		 		Colormap cmap =  DefaultColormap( display, DefaultScreen( display ) );
+		 		
+		 		color.red =   $red;
+				color.green = $green;
+				color.blue =  $blue;
+
+				color.flags = DoRed | DoGreen | DoBlue;
+				//XAllocColor(display, cmap, &color);
+				
+		 		XSetForeground(display, (GC)$gc, (unsigned long)color.pixel);
+		 		XFlush (display);
+		 		#endif
+			]"
+		end
+
+
 feature -- X functions
 
 	x_function_GXclear: INTEGER
@@ -515,10 +569,8 @@ feature -- Drawing operation
 		 			
 		 			Display* display = GDK_SCREEN_XDISPLAY(gdk_window_get_screen ((GdkWindow *)$window));
 		 			
-		 			XClearWindow(display, win);
 						 				
 	 				XDrawLine(display, win, $gc, $x1, $y1, $x2, $y2);
-	 				XFlush(display);
 	 				
 				#endif
 			]"
@@ -534,9 +586,7 @@ feature -- Drawing operation
 		 			
 		 			Display* display = GDK_SCREEN_XDISPLAY(gdk_window_get_screen ((GdkWindow *)$window));
 		 			
-		 			XClearWindow(display, win);
-	 				XDrawPoint (display, win, $gc, $x, $y);
-	 				XFlush(display);
+		 			XDrawPoint (display, win, $gc, $x, $y);
 				#endif
 			]"
 		end
@@ -552,7 +602,6 @@ feature -- Drawing operation
 		 			
 		 			Display* display = GDK_SCREEN_XDISPLAY(gdk_window_get_screen ((GdkWindow *)$window));
 		 			
-		 			XClearWindow(display, win);
 		 			
 					if ($width < 0 || $height < 0)
 					{
@@ -572,7 +621,6 @@ feature -- Drawing operation
 					else
 					    XDrawArc (display, win, $gc, $x, $y, $width, $height, $angle1, $angle2);	
 	
-	 				XFlush(display);
 				#endif
 			]"
 		end
@@ -588,7 +636,6 @@ feature -- Drawing operation
 		 			
 		 			Display* display = GDK_SCREEN_XDISPLAY(gdk_window_get_screen ((GdkWindow *)$window));
 		 			
-		 			XClearWindow(display, win);
 		 			
 					if ($width < 0 || $height < 0)
 					{
@@ -608,11 +655,79 @@ feature -- Drawing operation
 					else
 					    XDrawRectangle (display, win, $gc, $x, $y, $width, $height);
 
-	 				XFlush(display);
 				#endif
 			]"
 		end
 
+	draw_lines (window: POINTER; gc: POINTER; points: POINTER; npoints: INTEGER)
+	 	external
+	 		"C inline use <ev_gtk.h>"
+	 	alias
+	 		"[
+		 		#ifdef GDK_WINDOWING_X11 
+		 			Window win = gdk_x11_window_get_xid ((GdkWindow *) $window);
+		 			
+		 			Display* display = GDK_SCREEN_XDISPLAY(gdk_window_get_screen ((GdkWindow *)$window));
+		 			
+					gint i;
+					XPoint *tmp_points = g_new (XPoint, $npoints);
+
+					for (i=0; i<$npoints; i++)
+				    {
+				      tmp_points[i].x = ((GdkPoint *)$points)[i].x;
+				      tmp_points[i].y = ((GdkPoint *)$points)[i].y;
+				    }
+				    		 			
+					XDrawLines (display, win, $gc, tmp_points, $npoints, CoordModeOrigin);
+					g_free (tmp_points);
+				#endif
+			]"
+		end
+
+	draw_polygon (window: POINTER; gc: POINTER; filled: BOOLEAN; points: POINTER; npoints: INTEGER)
+	 	external
+	 		"C inline use <ev_gtk.h>"
+	 	alias
+	 		"[
+		 		#ifdef GDK_WINDOWING_X11 
+		 			Window win = gdk_x11_window_get_xid ((GdkWindow *) $window);
+		 			
+		 			Display* display = GDK_SCREEN_XDISPLAY(gdk_window_get_screen ((GdkWindow *)$window));
+		 			
+					XPoint *tmp_points;
+ 					gint tmp_npoints, i;
+
+
+					if (!($filled) &&
+				      ( ((GdkPoint *)$points)[0].x != ((GdkPoint *)$points)[$npoints-1].x || ((GdkPoint *)$points)[0].y != ((GdkPoint *)$points)[$npoints-1].y))
+				    {
+				      tmp_npoints = $npoints + 1;
+				      tmp_points = g_new (XPoint, tmp_npoints);
+				      tmp_points[$npoints].x = ((GdkPoint *)$points)[0].x;
+				      tmp_points[$npoints].y = ((GdkPoint *)$points)[0].y;
+				    }
+				  	else
+				    {
+				      tmp_npoints = $npoints;
+				      tmp_points = g_new (XPoint, tmp_npoints);
+				    }
+
+				  	for (i=0; i<$npoints; i++)
+				    {
+				      tmp_points[i].x = ((GdkPoint *)$points)[i].x;
+				      tmp_points[i].y = ((GdkPoint *)$points)[i].y;
+				    }
+
+
+				    if ($filled)
+						XFillPolygon (display, win, $gc, tmp_points, tmp_npoints, Complex, CoordModeOrigin);					
+					else	
+						XDrawLines (display, win, $gc, tmp_points, tmp_npoints, CoordModeOrigin);
+						
+					g_free (tmp_points);
+				#endif
+			]"
+		end
 
 note
 	copyright: "Copyright (c) 1984-2021, Eiffel Software and others"

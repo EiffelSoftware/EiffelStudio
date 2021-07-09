@@ -40,7 +40,16 @@ inherit
 			disable_dashed_line_style,
 			init_default_values,
 			clear_rectangle,
-			fill_rectangle
+			fill_rectangle,
+			internal_set_color,
+			draw_ellipse,
+			draw_point,
+			draw_arc,
+			draw_rectangle,
+			draw_polyline,
+			fill_ellipse,
+			fill_polygon,
+			fill_pie_slice
 		end
 
 	EV_GTK_DEPENDENT_ROUTINES
@@ -158,6 +167,137 @@ feature -- Drawing
 			post_drawing
 		end
 
+	draw_ellipse (x, y, a_width, a_height: INTEGER)
+			-- Draw an ellipse bounded by top left (`x', `y') with
+			-- size `a_width' and `a_height'.
+		do
+			debug ("refactor_fixme")
+				{REFACTORING_HELPER}.to_implement ("update this code to support different environments like (Wayland)")
+			end
+			pre_drawing
+			{GTK2}.gdk_window_invalidate_rect (cairo_context, default_pointer, True)
+			if not drawable.is_default_pointer and then
+				a_width > 0 and a_height > 0
+			then
+				{GDK_X11}.draw_arc (
+					drawable,
+					gc,
+					False,
+					(x + device_x_offset).max ({INTEGER_16}.min_value).min ({INTEGER_16}.max_value),
+					(y + device_y_offset).max ({INTEGER_16}.min_value).min ({INTEGER_16}.max_value),
+					a_width - 1,
+					a_height - 1,
+					0,
+					whole_circle
+				)
+				update_if_needed
+			end
+			post_drawing
+		end
+
+	draw_point (x, y: INTEGER)
+			-- Draw point at (`x', `y').
+		do
+			debug ("refactor_fixme")
+				{REFACTORING_HELPER}.to_implement ("update this code to support different environments like (Wayland)")
+			end
+			pre_drawing
+			{GTK2}.gdk_window_invalidate_rect (cairo_context, default_pointer, True)
+			if not drawable.is_default_pointer then
+	 			{GDK_X11}.draw_point (
+	 				drawable,
+	 				gc,
+	 				(x + device_x_offset).max ({INTEGER_16}.min_value).min ({INTEGER_16}.max_value),
+	 				(y + device_y_offset).max ({INTEGER_16}.min_value).min ({INTEGER_16}.max_value)
+	 			)
+	 			update_if_needed
+			end
+			post_drawing
+		end
+
+	draw_arc (x, y, a_width, a_height: INTEGER; a_start_angle, an_aperture: REAL)
+			-- Draw a part of an ellipse bounded by top left (`x', `y') with
+			-- size `a_width' and `a_height'.
+			-- Start at `a_start_angle' and stop at `a_start_angle' + `an_aperture'.
+			-- Angles are measured in radians.
+		local
+			a_radians: INTEGER
+		do
+			debug ("refactor_fixme")
+				{REFACTORING_HELPER}.to_implement ("update this code to support different environments like (Wayland)")
+			end
+			pre_drawing
+			{GTK2}.gdk_window_invalidate_rect (cairo_context, default_pointer, True)
+			if not drawable.is_default_pointer then
+				a_radians := radians_to_gdk_angle
+				{GDK_X11}.draw_arc (
+					drawable,
+					gc,
+					False,
+					(x + device_x_offset).max ({INTEGER_16}.min_value).min ({INTEGER_16}.max_value),
+					(y + device_y_offset).max ({INTEGER_16}.min_value).min ({INTEGER_16}.max_value),
+					a_width,
+					a_height,
+					(a_start_angle * a_radians + 0.5).truncated_to_integer,
+					(an_aperture * a_radians + 0.5).truncated_to_integer
+				)
+				update_if_needed
+			end
+			post_drawing
+		end
+
+	draw_rectangle (x, y, a_width, a_height: INTEGER)
+			-- Draw rectangle with upper-left corner on (`x', `y')
+			-- with size `a_width' and `a_height'.
+		do
+			debug ("refactor_fixme")
+					{REFACTORING_HELPER}.to_implement ("update this code to support different environments like (Wayland)")
+			end
+			pre_drawing
+			{GTK2}.gdk_window_invalidate_rect (cairo_context, default_pointer, True)
+			if not drawable.is_default_pointer  and then
+				a_width > 0 and then a_height > 0
+			then
+					-- If width or height are zero then nothing will be rendered.
+				{GDK_X11}.draw_rectangle (
+					drawable,
+					gc,
+					False,
+					(x + device_x_offset).max ({INTEGER_16}.min_value).min ({INTEGER_16}.max_value),
+					(y + device_y_offset).max ({INTEGER_16}.min_value).min ({INTEGER_16}.max_value),
+					a_width - 1,
+					a_height - 1
+				)
+				update_if_needed
+			end
+			post_drawing
+		end
+
+
+	draw_polyline (points: ARRAY [EV_COORDINATE]; is_closed: BOOLEAN)
+			-- Draw line segments between subsequent points in
+			-- `points'. If `is_closed' draw line segment between first
+			-- and last point in `points'.
+		local
+			tmp: SPECIAL [INTEGER]
+		do
+			debug ("refactor_fixme")
+					{REFACTORING_HELPER}.to_implement ("update this code to support different environments like (Wayland)")
+			end
+			pre_drawing
+			{GTK2}.gdk_window_invalidate_rect (cairo_context, default_pointer, True)
+			if not drawable.is_default_pointer then
+				tmp := coord_array_to_gdkpoint_array (points).area
+				if is_closed then
+					{GDK_X11}.draw_polygon (drawable, gc, False, $tmp, points.count)
+					update_if_needed
+				else
+					{GDK_X11}.draw_lines (drawable, gc, $tmp, points.count)
+					update_if_needed
+				end
+			end
+		end
+
 feature -- Fill Operations
 
 	fill_rectangle (x, y, a_width, a_height: INTEGER)
@@ -184,6 +324,77 @@ feature -- Fill Operations
 			end
 			post_drawing
 		end
+
+	fill_ellipse (x, y, a_width, a_height: INTEGER)
+			-- Draw an ellipse bounded by top left (`x', `y') with
+			-- size `a_width' and `a_height'.
+			-- Fill with `background_color'.
+		do
+			pre_drawing
+			{GTK2}.gdk_window_invalidate_rect (cairo_context, default_pointer, True)
+			if not drawable.is_default_pointer then
+				if tile /= Void then
+					{GDK_X11}.x_set_fill_style (drawable, gc, {GDK_X11}.x_fill_tiled)
+				end
+				{GDK_X11}.draw_arc (drawable, gc, True, (x + device_x_offset).max ({INTEGER_16}.min_value).min ({INTEGER_16}.max_value),
+					(y + device_y_offset).max ({INTEGER_16}.min_value).min ({INTEGER_16}.max_value), a_width,
+					a_height, 0, whole_circle)
+				update_if_needed
+				{GDK_X11}.x_set_fill_style (drawable, gc, {GDK_X11}.x_fill_solid)
+			end
+			post_drawing
+		end
+
+	fill_polygon (points: ARRAY [EV_COORDINATE])
+			-- Draw line segments between subsequent points in `points'.
+			-- Fill all enclosed area's with `background_color'.
+		local
+			tmp: SPECIAL [INTEGER]
+		do
+			pre_drawing
+			{GTK2}.gdk_window_invalidate_rect (cairo_context, default_pointer, True)
+			if not drawable.is_default_pointer then
+				tmp := coord_array_to_gdkpoint_array (points).area
+				if tile /= Void then
+					{GDK_X11}.x_set_fill_style (drawable, gc, {GDK_X11}.x_fill_tiled)
+				end
+				{GDK_X11}.draw_polygon (drawable, gc, True, $tmp, points.count)
+				{GDK_X11}.x_set_fill_style (drawable, gc, {GDK_X11}.x_fill_solid)
+				update_if_needed
+			end
+			post_drawing
+		end
+
+	fill_pie_slice (x, y, a_width, a_height: INTEGER; a_start_angle, an_aperture: REAL)
+			-- Draw a part of an ellipse bounded by top left (`x', `y') with
+			-- size `a_width' and `a_height'.
+			-- Start at `a_start_angle' and stop at `a_start_angle' + `an_aperture'.
+			-- The arc is then closed by two segments through (`x', `y').
+			-- Angles are measured in radians.
+		do
+			pre_drawing
+			{GTK2}.gdk_window_invalidate_rect (cairo_context, default_pointer, True)
+			if not drawable.is_default_pointer then
+				if tile /= Void then
+					{GDK_X11}.x_set_fill_style (drawable, gc, {GDK_X11}.x_fill_tiled)
+				end
+				{GDK_X11}.draw_arc (
+					drawable,
+					gc,
+					False,
+					(x + device_x_offset).max ({INTEGER_16}.min_value).min ({INTEGER_16}.max_value),
+					(y + device_y_offset).max ({INTEGER_16}.min_value).min ({INTEGER_16}.max_value),
+					a_width,
+					a_height,
+					(a_start_angle * radians_to_gdk_angle).truncated_to_integer,
+					(an_aperture * radians_to_gdk_angle).truncated_to_integer
+				)
+				{GDK_X11}.x_set_fill_style (drawable, gc, {GDK_X11}.x_fill_solid)
+				update_if_needed
+			end
+			post_drawing
+		end
+
 feature {EV_ANY_I} -- Drawing wrapper
 
 	pre_drawing
@@ -784,6 +995,17 @@ feature {NONE} -- Implementation
 				gc := default_pointer
 			end
 		end
+
+	internal_set_color (a_foreground: BOOLEAN; a_red, a_green, a_blue: REAL_64)
+		do
+			{REFACTORING_HELPER}.fixme ("The current Xlib code does not set the bg and fg correcty")
+			if a_foreground then
+				{GDK_X11}.x_set_foreground (drawable, gc, a_red.ceiling, a_green.ceiling, a_blue.ceiling)
+			else
+				{GDK_X11}.x_set_background (drawable, gc, a_red.ceiling, a_green.ceiling, a_blue.ceiling)
+			end
+		end
+
 
 feature {EV_ANY, EV_ANY_I} -- Implementation
 

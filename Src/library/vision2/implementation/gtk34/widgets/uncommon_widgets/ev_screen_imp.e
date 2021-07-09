@@ -125,7 +125,10 @@ feature -- Clear Operations
 		do
 			pre_drawing
 			{GTK2}.gdk_window_invalidate_rect (cairo_context, default_pointer, True)
-			if not drawable.is_default_pointer then
+			if
+				not drawable_x_window.is_default_pointer and then
+				not drawable_x_display.is_default_pointer
+			then
 				tmp_fg_color := internal_foreground_color
 				if tmp_fg_color = Void then
 					tmp_fg_color := foreground_color
@@ -135,7 +138,7 @@ feature -- Clear Operations
 					tmp_bg_color := background_color
 				end
 				internal_set_color (True, tmp_bg_color.red, tmp_bg_color.green, tmp_bg_color.blue)
-				{GDK_X11}.draw_rectangle (drawable, drawable_x_display, gc, True,
+				{GDK_X11}.draw_rectangle (drawable_x_window, drawable_x_display, gc, True,
 					(x + device_x_offset).max ({INTEGER_16}.min_value).min ({INTEGER_16}.max_value),
 					(y + device_y_offset).max ({INTEGER_16}.min_value).min ({INTEGER_16}.max_value),
 					a_width,
@@ -155,12 +158,12 @@ feature -- Drawing
 			end
 			pre_drawing
 			if
-				not drawable.is_default_pointer and then
+				not drawable_x_window.is_default_pointer and then
 				not drawable_x_display.is_default_pointer
 			then
 				{GTK2}.gdk_window_invalidate_rect (cairo_context, default_pointer, True)
 				{GDK_X11}.draw_line (
-					drawable, drawable_x_display,
+					drawable_x_window, drawable_x_display,
 					gc,
 					(x1 + device_x_offset).max ({INTEGER_16}.min_value).min ({INTEGER_16}.max_value),
 					(y1 + device_y_offset).max ({INTEGER_16}.min_value).min ({INTEGER_16}.max_value),
@@ -182,13 +185,13 @@ feature -- Drawing
 			end
 			pre_drawing
 			if
-				not drawable.is_default_pointer and then
+				not drawable_x_window.is_default_pointer and then
 				not drawable_x_display.is_default_pointer and then
 				a_width > 0 and a_height > 0
 			then
 				{GTK2}.gdk_window_invalidate_rect (cairo_context, default_pointer, True)
 				{GDK_X11}.draw_arc (
-					drawable, drawable_x_display,
+					drawable_x_window, drawable_x_display,
 					gc,
 					False,
 					(x + device_x_offset).max ({INTEGER_16}.min_value).min ({INTEGER_16}.max_value),
@@ -211,12 +214,12 @@ feature -- Drawing
 			end
 			pre_drawing
 			if
-				not drawable.is_default_pointer and then
+				not drawable_x_window.is_default_pointer and then
 				not drawable_x_display.is_default_pointer
 			then
 				{GTK2}.gdk_window_invalidate_rect (cairo_context, default_pointer, True)
 	 			{GDK_X11}.draw_point (
-	 				drawable, drawable_x_display,
+	 				drawable_x_window, drawable_x_display,
 	 				gc,
 	 				(x + device_x_offset).max ({INTEGER_16}.min_value).min ({INTEGER_16}.max_value),
 	 				(y + device_y_offset).max ({INTEGER_16}.min_value).min ({INTEGER_16}.max_value)

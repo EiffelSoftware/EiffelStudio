@@ -1724,7 +1724,9 @@ feature -- Status setting
 			if virtual_x_changed then
 				if is_horizontal_scrolling_per_item then
 						-- TODO: Provide implementation.
-					fixme (Once "Implement")
+					debug ("refactor_fixme")
+						fixme (Once "Implement")
+					end
 				else
 					internal_horizontal_scroll_bar.change_actions.block
 					internal_horizontal_scroll_bar.set_value (virtual_x)
@@ -6675,7 +6677,9 @@ feature {EV_GRID_ROW_I, EV_GRID_COLUMN_I, EV_GRID_ITEM_I, EV_GRID_DRAWER_I} -- I
 				a_grid_row_i.update_for_item_removal (a_column)
 			end
 
-			fixme (Once "EV_GRID_I.internal_set_item Adding or removing items may require the complete row to be redrawn if the row is a subrow.")
+			debug ("refactor_fixme")
+				fixme (Once "EV_GRID_I.internal_set_item Adding or removing items may require the complete row to be redrawn if the row is a subrow.")
+			end
 		end
 
 	item_counter: INTEGER

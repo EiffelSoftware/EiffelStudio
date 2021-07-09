@@ -990,7 +990,9 @@ feature -- Basic operations
 														l_pixmap := expand_pixmap
 													end
 														-- Now check if we must clip the pixmap vertically
-													fixme (Once "Add horizontal clipping for pixmaps.")
+													debug ("refactor_fixme")
+														fixme (Once "Add horizontal clipping for pixmaps.")
+													end
 													if horizontal_node_pixmap_left_offset < current_column_width then
 														if node_pixmap_height > current_row_height then
 																-- In this situation, the height of the expand image is greater than the current row height,

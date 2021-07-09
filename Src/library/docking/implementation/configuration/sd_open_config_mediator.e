@@ -546,7 +546,7 @@ feature {NONE} -- Implementation
 		do
 			if not a_config_data.is_split_area then
 					-- If it's a zone.
-				debug ("fixme")
+				debug ("refactor_fixme")
 						-- TODO: Replace indirect object creation with the direct one.
 					(create {REFACTORING_HELPER}).fixme
 						("Creation of SD_STATE_WITH_CONTENT objects shouold be done directly to avoid potential void-safety violations if not all attached attributes are properly set.")

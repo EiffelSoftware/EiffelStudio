@@ -72,6 +72,61 @@ feature -- Gdk11
 	 		]"
 	 	end
 
+	 set_line_attributes_to_solid_style (a_drawable: POINTER; gc: POINTER; a_line_width: INTEGER)
+	 	do
+	 		x_set_line_attributes (x_display (a_drawable), gc, a_line_width, x_style_line_solid, x_style_cap_butt, x_style_join_bevel)
+	 	ensure
+	 		instance_free: class
+	 	end
+
+	set_line_attributes_to_dashed_style (a_drawable: POINTER; gc: POINTER; a_line_width: INTEGER)
+		local
+			l_display: POINTER
+			mem: INTEGER_16
+	 	do
+	 		l_display := x_display (a_drawable)
+
+			mem := {INTEGER_16} 3 | ({INTEGER_16} 3 |<< {PLATFORM}.integer_8_bits)
+	 		x_set_dashes (l_display, gc, 0, $mem, 2)
+	 		x_set_line_attributes (l_display, gc, a_line_width, x_style_line_on_off_dash, x_style_cap_butt, x_style_join_bevel)
+	 	ensure
+	 		instance_free: class
+	 	end
+
+	 flush_drawable (a_drawable: POINTER)
+	 	local
+	 		d: like x_display
+	 	do
+	 		d := x_display (a_drawable)
+	 		x_flush (d)
+	 	ensure
+	 		instance_free: class
+	 	end
+
+feature -- X primitives
+
+	 x_display (a_drawable: POINTER): POINTER
+		external
+	 		"C inline use <ev_gtk.h>"
+	 	alias
+	 		"[
+		 		#ifdef GDK_WINDOWING_X11 
+		 			return (EIF_POINTER) GDK_SCREEN_XDISPLAY(gdk_window_get_screen ((GdkWindow *)$a_drawable));
+				#endif
+			]"
+		end
+
+	 x_window (a_drawable: POINTER): POINTER
+		external
+	 		"C inline use <ev_gtk.h>"
+	 	alias
+	 		"[
+		 		#ifdef GDK_WINDOWING_X11 
+		 			return (EIF_POINTER) gdk_x11_window_get_xid ((GdkWindow *) $a_drawable);
+				#endif
+			]"
+		end
+
 	 x_set_function (a_display: POINTER; gc: POINTER; a_fct: INTEGER)
 	 	external
 	 		"C inline use <ev_gtk.h>"
@@ -130,38 +185,6 @@ feature -- Gdk11
 			]"
 		end
 
-	 set_line_attributes_to_solid_style (a_drawable: POINTER; gc: POINTER; a_line_width: INTEGER)
-	 	do
-	 		x_set_line_attributes (x_display (a_drawable), gc, a_line_width, x_style_line_solid, x_style_cap_butt, x_style_join_bevel)
-	 	ensure
-	 		instance_free: class
-	 	end
-
-	set_line_attributes_to_dashed_style (a_drawable: POINTER; gc: POINTER; a_line_width: INTEGER)
-		local
-			l_display: POINTER
-			mem: INTEGER_16
-	 	do
-	 		l_display := x_display (a_drawable)
-
-			mem := {INTEGER_16} 3 | ({INTEGER_16} 3 |<< {PLATFORM}.integer_8_bits)
-	 		x_set_dashes (l_display, gc, 0, $mem, 2)
-	 		x_set_line_attributes (l_display, gc, a_line_width, x_style_line_on_off_dash, x_style_cap_butt, x_style_join_bevel)
-	 	ensure
-	 		instance_free: class
-	 	end
-
-	 x_display (a_drawable: POINTER): POINTER
-		external
-	 		"C inline use <ev_gtk.h>"
-	 	alias
-	 		"[
-		 		#ifdef GDK_WINDOWING_X11 
-		 			return (EIF_POINTER) GDK_SCREEN_XDISPLAY(gdk_window_get_screen ((GdkWindow *)$a_drawable));
-				#endif
-			]"
-		end
-
 	 x_set_fill_style (a_display: POINTER; gc: POINTER; a_fill_style: INTEGER)
 			-- display		Specifies the connection to the X server.
 			-- gc			Specifies the GC.
@@ -184,6 +207,17 @@ feature -- Gdk11
 	 		"[
 		 		#ifdef GDK_WINDOWING_X11 
 		 		XFreeGC((Display*)$a_display, (GC)$gc);
+				#endif
+			]"
+		end
+
+	 x_flush (a_display: POINTER)
+		external
+	 		"C inline use <ev_gtk.h>"
+	 	alias
+	 		"[
+		 		#ifdef GDK_WINDOWING_X11 
+		 			XFlush((Display*) $a_display);
 				#endif
 			]"
 		end
@@ -316,60 +350,65 @@ feature -- X subwindow modes
 			]"
 		end
 
-
-
 feature -- X Background Foreground Color
 
-	x_set_background (window: POINTER; gc: POINTER; red, green, blue: INTEGER)
+	set_drawable_background (a_drawable: POINTER; gc: POINTER; red, green, blue: INTEGER)
+		local
+			d: like x_display
+		do
+			d := x_display (a_drawable)
+			x_set_background (d, gc, red, green, blue)
+		ensure
+			instance_free: class
+		end
+
+	set_drawable_foreground (a_drawable: POINTER; gc: POINTER; red, green, blue: INTEGER)
+		local
+			d: like x_display
+		do
+			d := x_display (a_drawable)
+			x_set_foreground (d, gc, red, green, blue)
+		ensure
+			instance_free: class
+		end
+
+	x_set_background (a_display: POINTER; gc: POINTER; red, green, blue: INTEGER)
 	 	external
 	 		"C inline use <ev_gtk.h>"
 	 	alias
 	 		"[
 		 		#ifdef GDK_WINDOWING_X11 
 		 		XColor color;
-		 		
-		 		Display* display = GDK_SCREEN_XDISPLAY(gdk_window_get_screen ((GdkWindow *)$window));
-		 		
-		 		Colormap cmap =  DefaultColormap(display, DefaultScreen( display) );
-		 		
+		 		/* */
+		 		Colormap cmap =  DefaultColormap((Display*) $a_display, DefaultScreen((Display*) $a_display) );
 		 		color.red =   $red;
 				color.green = $green;
 				color.blue =  $blue;
-				
 				color.flags = DoRed | DoGreen | DoBlue;
-				//XAllocColor(display, cmap, &color);
-				
-				XSetBackground(display, (GC)$gc, (unsigned long)color.pixel);
-		 		XFlush (display);
+				/* */
+				XAllocColor((Display*) $a_display, cmap, &color);
+				XSetBackground((Display*) $a_display, (GC) $gc, (unsigned long) color.pixel);
 		 		#endif
 			]"
 		end
 
-	x_set_foreground (window: POINTER; gc: POINTER; red, green, blue: INTEGER)
+	x_set_foreground (a_display: POINTER; gc: POINTER; red, green, blue: INTEGER)
 	 	external
 	 		"C inline use <ev_gtk.h>"
 	 	alias
 	 		"[
 		 		#ifdef GDK_WINDOWING_X11 
 		 		XColor color;
-		 		
-		 		Display* display = GDK_SCREEN_XDISPLAY(gdk_window_get_screen ((GdkWindow *)$window));
-		 		
-		 		Colormap cmap =  DefaultColormap( display, DefaultScreen( display ) );
-		 		
+		 		Colormap cmap = DefaultColormap((Display*) $a_display, DefaultScreen((Display*) $a_display));
 		 		color.red =   $red;
 				color.green = $green;
 				color.blue =  $blue;
-
 				color.flags = DoRed | DoGreen | DoBlue;
-				//XAllocColor(display, cmap, &color);
-				
-		 		XSetForeground(display, (GC)$gc, (unsigned long)color.pixel);
-		 		XFlush (display);
+				XAllocColor((Display*) $a_display, cmap, &color);
+		 		XSetForeground((Display*) $a_display, (GC) $gc, (unsigned long) color.pixel);
 		 		#endif
 			]"
 		end
-
 
 feature -- X functions
 
@@ -551,14 +590,13 @@ feature -- X functions
 
 feature -- Drawing operation
 
-	draw_line (window: POINTER; gc: POINTER; x1, y1, x2, y2: INTEGER)
+	draw_line (a_x_window, a_display: POINTER; gc: POINTER; x1, y1, x2, y2: INTEGER)
 	 	external
 	 		"C inline use <ev_gtk.h>"
 	 	alias
 	 		"[
 		 		#ifdef GDK_WINDOWING_X11 
-		 			Window win = gdk_x11_window_get_xid ((GdkWindow *) $window);
-		 			
+		 			Window win = (Window) $a_x_window;
 		 			/*
 		 			 * TODO check Gdkgc-x11 _gdk_x11_gc_flush implementation 
 		 			 * that's used before
@@ -566,49 +604,37 @@ feature -- Drawing operation
 		 			 * GDK_GC_GET_XGC (gc),
 		 			 * https://github.com/coapp-packages/gtk/blob/master/gdk/x11/gdkdrawable-x11.c
 		 			 */
-		 			
-		 			Display* display = GDK_SCREEN_XDISPLAY(gdk_window_get_screen ((GdkWindow *)$window));
-		 			
 						 				
-	 				XDrawLine(display, win, $gc, $x1, $y1, $x2, $y2);
+	 				XDrawLine((Display*) $a_display, win, $gc, $x1, $y1, $x2, $y2);
 	 				
 				#endif
 			]"
 		end
 
-	draw_point (window: POINTER; gc: POINTER; x, y: INTEGER)
+	draw_point (a_drawable, a_display: POINTER; gc: POINTER; x, y: INTEGER)
 	 	external
 	 		"C inline use <ev_gtk.h>"
 	 	alias
 	 		"[
 		 		#ifdef GDK_WINDOWING_X11 
-		 			Window win = gdk_x11_window_get_xid ((GdkWindow *) $window);
-		 			
-		 			Display* display = GDK_SCREEN_XDISPLAY(gdk_window_get_screen ((GdkWindow *)$window));
-		 			
-		 			XDrawPoint (display, win, $gc, $x, $y);
+		 			XDrawPoint ((Display*) $a_display, (Drawable) $a_drawable, $gc, $x, $y);
 				#endif
 			]"
 		end
 
-
-	draw_arc (window: POINTER; gc: POINTER; filled: BOOLEAN; x, y, width, height, angle1, angle2: INTEGER)
+	draw_arc (a_x_window, a_display: POINTER; gc: POINTER; filled: BOOLEAN; x, y, width, height, angle1, angle2: INTEGER)
 	 	external
 	 		"C inline use <ev_gtk.h>"
 	 	alias
 	 		"[
 		 		#ifdef GDK_WINDOWING_X11 
-		 			Window win = gdk_x11_window_get_xid ((GdkWindow *) $window);
-		 			
-		 			Display* display = GDK_SCREEN_XDISPLAY(gdk_window_get_screen ((GdkWindow *)$window));
-		 			
-		 			
+		 			Window win = (Window) $a_x_window;
 					if ($width < 0 || $height < 0)
 					{
 						gint real_width;
 						gint real_height;
-					    real_width = gdk_window_get_width ($window); 
-					    real_height = gdk_window_get_height ($window);
+					    real_width = gdk_window_get_width (win); 
+					    real_height = gdk_window_get_height (win);
 
 						if ($width < 0)
 							$width = real_width;
@@ -617,32 +643,28 @@ feature -- Drawing operation
 					}
 
 					if ($filled)
-					    XFillArc (display, win, $gc, $x, $y, $width, $height, $angle1, $angle2);
+					    XFillArc ((Display*) $a_display, win, $gc, $x, $y, $width, $height, $angle1, $angle2);
 					else
-					    XDrawArc (display, win, $gc, $x, $y, $width, $height, $angle1, $angle2);	
+					    XDrawArc ((Display*) $a_display, win, $gc, $x, $y, $width, $height, $angle1, $angle2);	
 	
 				#endif
 			]"
 		end
 
 
-	draw_rectangle (window: POINTER; gc: POINTER; filled: BOOLEAN; x, y, width, height: INTEGER)
+	draw_rectangle (a_x_window, a_display: POINTER; gc: POINTER; filled: BOOLEAN; x, y, width, height: INTEGER)
 	 	external
 	 		"C inline use <ev_gtk.h>"
 	 	alias
 	 		"[
 		 		#ifdef GDK_WINDOWING_X11 
-		 			Window win = gdk_x11_window_get_xid ((GdkWindow *) $window);
-		 			
-		 			Display* display = GDK_SCREEN_XDISPLAY(gdk_window_get_screen ((GdkWindow *)$window));
-		 			
-		 			
+		 			Window win = (Window) $a_x_window;
 					if ($width < 0 || $height < 0)
 					{
 						gint real_width;
 						gint real_height;
-					    real_width = gdk_window_get_width ($window); 
-					    real_height = gdk_window_get_height ($window);
+					    real_width = gdk_window_get_width (win); 
+					    real_height = gdk_window_get_height (win);
 
 						if ($width < 0)
 							$width = real_width;
@@ -651,24 +673,21 @@ feature -- Drawing operation
 					}
 
 					if ($filled)
-					    XFillRectangle (display, win, $gc, $x, $y, $width, $height);
+					    XFillRectangle ((Display*) $a_display, win, $gc, $x, $y, $width, $height);
 					else
-					    XDrawRectangle (display, win, $gc, $x, $y, $width, $height);
+					    XDrawRectangle ((Display*) $a_display, win, $gc, $x, $y, $width, $height);
 
 				#endif
 			]"
 		end
 
-	draw_lines (window: POINTER; gc: POINTER; points: POINTER; npoints: INTEGER)
+	draw_lines (a_x_window, a_display: POINTER; gc: POINTER; points: POINTER; npoints: INTEGER)
 	 	external
 	 		"C inline use <ev_gtk.h>"
 	 	alias
 	 		"[
 		 		#ifdef GDK_WINDOWING_X11 
-		 			Window win = gdk_x11_window_get_xid ((GdkWindow *) $window);
-		 			
-		 			Display* display = GDK_SCREEN_XDISPLAY(gdk_window_get_screen ((GdkWindow *)$window));
-		 			
+					Window win = (Window) $a_x_window;
 					gint i;
 					XPoint *tmp_points = g_new (XPoint, $npoints);
 
@@ -678,22 +697,19 @@ feature -- Drawing operation
 				      tmp_points[i].y = ((GdkPoint *)$points)[i].y;
 				    }
 				    		 			
-					XDrawLines (display, win, $gc, tmp_points, $npoints, CoordModeOrigin);
+					XDrawLines ((Display*) $a_display, win, $gc, tmp_points, $npoints, CoordModeOrigin);
 					g_free (tmp_points);
 				#endif
 			]"
 		end
 
-	draw_polygon (window: POINTER; gc: POINTER; filled: BOOLEAN; points: POINTER; npoints: INTEGER)
+	draw_polygon (a_x_window, a_display: POINTER; gc: POINTER; filled: BOOLEAN; points: POINTER; npoints: INTEGER)
 	 	external
 	 		"C inline use <ev_gtk.h>"
 	 	alias
 	 		"[
 		 		#ifdef GDK_WINDOWING_X11 
-		 			Window win = gdk_x11_window_get_xid ((GdkWindow *) $window);
-		 			
-		 			Display* display = GDK_SCREEN_XDISPLAY(gdk_window_get_screen ((GdkWindow *)$window));
-		 			
+		 			Window win = (Window) $a_x_window;
 					XPoint *tmp_points;
  					gint tmp_npoints, i;
 
@@ -720,9 +736,9 @@ feature -- Drawing operation
 
 
 				    if ($filled)
-						XFillPolygon (display, win, $gc, tmp_points, tmp_npoints, Complex, CoordModeOrigin);					
+						XFillPolygon ((Display*) $a_display, win, $gc, tmp_points, tmp_npoints, Complex, CoordModeOrigin);					
 					else	
-						XDrawLines (display, win, $gc, tmp_points, tmp_npoints, CoordModeOrigin);
+						XDrawLines ((Display*) $a_display, win, $gc, tmp_points, tmp_npoints, CoordModeOrigin);
 						
 					g_free (tmp_points);
 				#endif

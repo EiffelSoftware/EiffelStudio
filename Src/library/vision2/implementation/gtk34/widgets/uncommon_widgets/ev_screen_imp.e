@@ -24,7 +24,8 @@ inherit
 			monitor_area_from_position,
 			monitor_area_from_window,
 			working_area_from_position,
-			working_area_from_window
+			working_area_from_window,
+			start_drawing_session, end_drawing_session
 		end
 
 	EV_DRAWABLE_IMP
@@ -39,6 +40,8 @@ inherit
 			enable_dashed_line_style,
 			disable_dashed_line_style,
 			init_default_values,
+			start_drawing_session,
+			end_drawing_session,
 			clear_rectangle,
 			fill_rectangle,
 			internal_set_color,
@@ -131,13 +134,13 @@ feature -- Clear Operations
 				if tmp_bg_color = Void then
 					tmp_bg_color := background_color
 				end
-				internal_set_color (True, tmp_bg_color.red_16_bit, tmp_bg_color.green_16_bit, tmp_bg_color.blue_16_bit)
-				{GDK_X11}.draw_rectangle (drawable, gc, True,
+				internal_set_color (True, tmp_bg_color.red, tmp_bg_color.green, tmp_bg_color.blue)
+				{GDK_X11}.draw_rectangle (drawable, drawable_x_display, gc, True,
 					(x + device_x_offset).max ({INTEGER_16}.min_value).min ({INTEGER_16}.max_value),
 					(y + device_y_offset).max ({INTEGER_16}.min_value).min ({INTEGER_16}.max_value),
 					a_width,
 					a_height)
-				internal_set_color (True, tmp_fg_color.red_16_bit, tmp_fg_color.green_16_bit, tmp_fg_color.blue_16_bit)
+				internal_set_color (True, tmp_fg_color.red, tmp_fg_color.green, tmp_fg_color.blue)
 				update_if_needed
 			end
 			post_drawing
@@ -151,10 +154,13 @@ feature -- Drawing
 				{REFACTORING_HELPER}.to_implement ("update this code to support different environments like (Wayland)")
 			end
 			pre_drawing
-			{GTK2}.gdk_window_invalidate_rect (cairo_context, default_pointer, True)
-			if not drawable.is_default_pointer then
+			if
+				not drawable.is_default_pointer and then
+				not drawable_x_display.is_default_pointer
+			then
+				{GTK2}.gdk_window_invalidate_rect (cairo_context, default_pointer, True)
 				{GDK_X11}.draw_line (
-					drawable,
+					drawable, drawable_x_display,
 					gc,
 					(x1 + device_x_offset).max ({INTEGER_16}.min_value).min ({INTEGER_16}.max_value),
 					(y1 + device_y_offset).max ({INTEGER_16}.min_value).min ({INTEGER_16}.max_value),
@@ -175,12 +181,14 @@ feature -- Drawing
 				{REFACTORING_HELPER}.to_implement ("update this code to support different environments like (Wayland)")
 			end
 			pre_drawing
-			{GTK2}.gdk_window_invalidate_rect (cairo_context, default_pointer, True)
-			if not drawable.is_default_pointer and then
+			if
+				not drawable.is_default_pointer and then
+				not drawable_x_display.is_default_pointer and then
 				a_width > 0 and a_height > 0
 			then
+				{GTK2}.gdk_window_invalidate_rect (cairo_context, default_pointer, True)
 				{GDK_X11}.draw_arc (
-					drawable,
+					drawable, drawable_x_display,
 					gc,
 					False,
 					(x + device_x_offset).max ({INTEGER_16}.min_value).min ({INTEGER_16}.max_value),
@@ -202,10 +210,13 @@ feature -- Drawing
 				{REFACTORING_HELPER}.to_implement ("update this code to support different environments like (Wayland)")
 			end
 			pre_drawing
-			{GTK2}.gdk_window_invalidate_rect (cairo_context, default_pointer, True)
-			if not drawable.is_default_pointer then
+			if
+				not drawable.is_default_pointer and then
+				not drawable_x_display.is_default_pointer
+			then
+				{GTK2}.gdk_window_invalidate_rect (cairo_context, default_pointer, True)
 	 			{GDK_X11}.draw_point (
-	 				drawable,
+	 				drawable, drawable_x_display,
 	 				gc,
 	 				(x + device_x_offset).max ({INTEGER_16}.min_value).min ({INTEGER_16}.max_value),
 	 				(y + device_y_offset).max ({INTEGER_16}.min_value).min ({INTEGER_16}.max_value)
@@ -227,11 +238,14 @@ feature -- Drawing
 				{REFACTORING_HELPER}.to_implement ("update this code to support different environments like (Wayland)")
 			end
 			pre_drawing
-			{GTK2}.gdk_window_invalidate_rect (cairo_context, default_pointer, True)
-			if not drawable.is_default_pointer then
+			if
+				not drawable_x_window.is_default_pointer and then
+				not drawable_x_display.is_default_pointer
+			then
+				{GTK2}.gdk_window_invalidate_rect (cairo_context, default_pointer, True)
 				a_radians := radians_to_gdk_angle
 				{GDK_X11}.draw_arc (
-					drawable,
+					drawable_x_window, drawable_x_display,
 					gc,
 					False,
 					(x + device_x_offset).max ({INTEGER_16}.min_value).min ({INTEGER_16}.max_value),
@@ -254,13 +268,15 @@ feature -- Drawing
 					{REFACTORING_HELPER}.to_implement ("update this code to support different environments like (Wayland)")
 			end
 			pre_drawing
-			{GTK2}.gdk_window_invalidate_rect (cairo_context, default_pointer, True)
-			if not drawable.is_default_pointer  and then
+			if
+				not drawable_x_window.is_default_pointer and then
+				not drawable_x_display.is_default_pointer and then
 				a_width > 0 and then a_height > 0
 			then
+				{GTK2}.gdk_window_invalidate_rect (cairo_context, default_pointer, True)
 					-- If width or height are zero then nothing will be rendered.
 				{GDK_X11}.draw_rectangle (
-					drawable,
+					drawable_x_window, drawable_x_display,
 					gc,
 					False,
 					(x + device_x_offset).max ({INTEGER_16}.min_value).min ({INTEGER_16}.max_value),
@@ -285,14 +301,17 @@ feature -- Drawing
 					{REFACTORING_HELPER}.to_implement ("update this code to support different environments like (Wayland)")
 			end
 			pre_drawing
-			{GTK2}.gdk_window_invalidate_rect (cairo_context, default_pointer, True)
-			if not drawable.is_default_pointer then
+			if
+				not drawable_x_window.is_default_pointer and then
+				not drawable_x_display.is_default_pointer
+			then
+				{GTK2}.gdk_window_invalidate_rect (cairo_context, default_pointer, True)
 				tmp := coord_array_to_gdkpoint_array (points).area
 				if is_closed then
-					{GDK_X11}.draw_polygon (drawable, gc, False, $tmp, points.count)
+					{GDK_X11}.draw_polygon (drawable_x_window, drawable_x_display, gc, False, $tmp, points.count)
 					update_if_needed
 				else
-					{GDK_X11}.draw_lines (drawable, gc, $tmp, points.count)
+					{GDK_X11}.draw_lines (drawable_x_window, drawable_x_display, gc, $tmp, points.count)
 					update_if_needed
 				end
 			end
@@ -305,13 +324,16 @@ feature -- Fill Operations
 			-- with size `a_width' and `a_height'. Fill with `background_color'.
 		do
 			pre_drawing
-			{GTK2}.gdk_window_invalidate_rect (cairo_context, default_pointer, True)
-			if not drawable.is_default_pointer then
+			if
+				not drawable_x_window.is_default_pointer and then
+				not drawable_x_display.is_default_pointer
+			then
+				{GTK2}.gdk_window_invalidate_rect (cairo_context, default_pointer, True)
 				if tile /= Void then
-					{GDK_X11}.x_set_fill_style (drawable, gc, {GDK_X11}.x_fill_tiled)
+					{GDK_X11}.x_set_fill_style (drawable_x_display, gc, {GDK_X11}.x_fill_tiled)
 				end
 				{GDK_X11}.draw_rectangle (
-					drawable,
+					drawable_x_window, drawable_x_display,
 					gc,
 					True,
 					(x + device_x_offset).max ({INTEGER_16}.min_value).min ({INTEGER_16}.max_value),
@@ -319,7 +341,7 @@ feature -- Fill Operations
 					a_width,
 					a_height
 				)
-				{GDK_X11}.x_set_fill_style (drawable, gc, {GDK_X11}.x_fill_solid)
+				{GDK_X11}.x_set_fill_style (drawable_x_display, gc, {GDK_X11}.x_fill_solid)
 				update_if_needed
 			end
 			post_drawing
@@ -331,16 +353,19 @@ feature -- Fill Operations
 			-- Fill with `background_color'.
 		do
 			pre_drawing
-			{GTK2}.gdk_window_invalidate_rect (cairo_context, default_pointer, True)
-			if not drawable.is_default_pointer then
+			if
+				not drawable_x_window.is_default_pointer and then
+				not drawable_x_display.is_default_pointer
+			then
+				{GTK2}.gdk_window_invalidate_rect (cairo_context, default_pointer, True)
 				if tile /= Void then
-					{GDK_X11}.x_set_fill_style (drawable, gc, {GDK_X11}.x_fill_tiled)
+					{GDK_X11}.x_set_fill_style (drawable_x_display, gc, {GDK_X11}.x_fill_tiled)
 				end
-				{GDK_X11}.draw_arc (drawable, gc, True, (x + device_x_offset).max ({INTEGER_16}.min_value).min ({INTEGER_16}.max_value),
+				{GDK_X11}.draw_arc (drawable_x_window, drawable_x_display, gc, True, (x + device_x_offset).max ({INTEGER_16}.min_value).min ({INTEGER_16}.max_value),
 					(y + device_y_offset).max ({INTEGER_16}.min_value).min ({INTEGER_16}.max_value), a_width,
 					a_height, 0, whole_circle)
+				{GDK_X11}.x_set_fill_style (drawable_x_display, gc, {GDK_X11}.x_fill_solid)
 				update_if_needed
-				{GDK_X11}.x_set_fill_style (drawable, gc, {GDK_X11}.x_fill_solid)
 			end
 			post_drawing
 		end
@@ -352,14 +377,17 @@ feature -- Fill Operations
 			tmp: SPECIAL [INTEGER]
 		do
 			pre_drawing
-			{GTK2}.gdk_window_invalidate_rect (cairo_context, default_pointer, True)
-			if not drawable.is_default_pointer then
+			if
+				not drawable_x_window.is_default_pointer and then
+				not drawable_x_display.is_default_pointer
+			then
+				{GTK2}.gdk_window_invalidate_rect (cairo_context, default_pointer, True)
 				tmp := coord_array_to_gdkpoint_array (points).area
 				if tile /= Void then
-					{GDK_X11}.x_set_fill_style (drawable, gc, {GDK_X11}.x_fill_tiled)
+					{GDK_X11}.x_set_fill_style (drawable_x_display, gc, {GDK_X11}.x_fill_tiled)
 				end
-				{GDK_X11}.draw_polygon (drawable, gc, True, $tmp, points.count)
-				{GDK_X11}.x_set_fill_style (drawable, gc, {GDK_X11}.x_fill_solid)
+				{GDK_X11}.draw_polygon (drawable_x_window, drawable_x_display, gc, True, $tmp, points.count)
+				{GDK_X11}.x_set_fill_style (drawable_x_display, gc, {GDK_X11}.x_fill_solid)
 				update_if_needed
 			end
 			post_drawing
@@ -373,13 +401,16 @@ feature -- Fill Operations
 			-- Angles are measured in radians.
 		do
 			pre_drawing
-			{GTK2}.gdk_window_invalidate_rect (cairo_context, default_pointer, True)
-			if not drawable.is_default_pointer then
+			if
+				not drawable_x_window.is_default_pointer and then
+				not drawable_x_display.is_default_pointer
+			then
+				{GTK2}.gdk_window_invalidate_rect (cairo_context, default_pointer, True)
 				if tile /= Void then
-					{GDK_X11}.x_set_fill_style (drawable, gc, {GDK_X11}.x_fill_tiled)
+					{GDK_X11}.x_set_fill_style (drawable_x_display, gc, {GDK_X11}.x_fill_tiled)
 				end
 				{GDK_X11}.draw_arc (
-					drawable,
+					drawable_x_window, drawable_x_display,
 					gc,
 					False,
 					(x + device_x_offset).max ({INTEGER_16}.min_value).min ({INTEGER_16}.max_value),
@@ -389,17 +420,54 @@ feature -- Fill Operations
 					(a_start_angle * radians_to_gdk_angle).truncated_to_integer,
 					(an_aperture * radians_to_gdk_angle).truncated_to_integer
 				)
-				{GDK_X11}.x_set_fill_style (drawable, gc, {GDK_X11}.x_fill_solid)
+				{GDK_X11}.x_set_fill_style (drawable_x_display, gc, {GDK_X11}.x_fill_solid)
 				update_if_needed
 			end
 			post_drawing
 		end
+
+feature -- Session		
+
+	start_drawing_session
+		do
+			Precursor
+			drawable_x_window := default_pointer
+			drawable_x_display := default_pointer
+			get_drawable_x_display_and_window
+		end
+
+	end_drawing_session
+		do
+			if not drawable_x_display.is_default_pointer then
+				{GDK_X11}.x_flush (drawable_x_display)
+			end
+			drawable_x_window := default_pointer
+			drawable_x_display := default_pointer
+			Precursor
+		end
+
+	get_drawable_x_display_and_window
+		do
+
+			if
+				not drawable.is_default_pointer and then
+				(drawable_x_window.is_default_pointer
+				or drawable_x_display.is_default_pointer)
+			then
+				drawable_x_window := {GDK_X11}.x_window (drawable)
+				drawable_x_display := {GDK_X11}.x_display (drawable)
+			end
+		end
+
+	drawable_x_window: POINTER
+	drawable_x_display: POINTER
 
 feature {EV_ANY_I} -- Drawing wrapper
 
 	pre_drawing
 			-- <Precursor>
 		do
+			get_drawable_x_display_and_window
 		end
 
 	post_drawing
@@ -973,6 +1041,9 @@ feature {NONE} -- Implementation
 			-- Force all queued draw to be called.
 		do
 			-- By default do nothing
+			if not drawable.is_default_pointer then
+				{GDK_X11}.flush_drawable (drawable)
+			end
 		end
 
 	update_if_needed
@@ -997,15 +1068,19 @@ feature {NONE} -- Implementation
 		end
 
 	internal_set_color (a_foreground: BOOLEAN; a_red, a_green, a_blue: REAL_64)
+		local
+			col: EV_COLOR
 		do
-			{REFACTORING_HELPER}.fixme ("The current Xlib code does not set the bg and fg correcty")
+			debug ("refactor_fixme")
+				{REFACTORING_HELPER}.fixme ("The current Xlib code does not set the bg and fg correcty")
+			end
+			create col.make_with_rgb (a_red.truncated_to_real, a_green.truncated_to_real, a_blue.truncated_to_real)
 			if a_foreground then
-				{GDK_X11}.x_set_foreground (drawable, gc, a_red.ceiling, a_green.ceiling, a_blue.ceiling)
+				{GDK_X11}.set_drawable_foreground (drawable, gc, col.red_16_bit, col.green_16_bit, col.blue_16_bit)
 			else
-				{GDK_X11}.x_set_background (drawable, gc, a_red.ceiling, a_green.ceiling, a_blue.ceiling)
+				{GDK_X11}.set_drawable_background (drawable, gc, col.red_16_bit, col.green_16_bit, col.blue_16_bit)
 			end
 		end
-
 
 feature {EV_ANY, EV_ANY_I} -- Implementation
 

@@ -1072,16 +1072,18 @@ feature {NONE} -- Implementation
 
 	internal_set_color (a_foreground: BOOLEAN; a_red, a_green, a_blue: REAL_64)
 		local
-			col: EV_COLOR
+			r,g,b: INTEGER
 		do
 			debug ("refactor_fixme")
 				{REFACTORING_HELPER}.fixme ("The current Xlib code does not set the bg and fg correcty")
 			end
-			create col.make_with_rgb (a_red.truncated_to_real, a_green.truncated_to_real, a_blue.truncated_to_real)
+			r := (a_red * 0xFFFF).rounded
+			g := (a_green * 0xFFFF).rounded
+			b := (a_blue * 0xFFFF).rounded
 			if a_foreground then
-				{GDK_X11}.set_drawable_foreground (drawable, gc, col.red_16_bit, col.green_16_bit, col.blue_16_bit)
+				{GDK_X11}.set_drawable_foreground (drawable, gc, r, g, b)
 			else
-				{GDK_X11}.set_drawable_background (drawable, gc, col.red_16_bit, col.green_16_bit, col.blue_16_bit)
+				{GDK_X11}.set_drawable_background (drawable, gc, r, g, b)
 			end
 		end
 

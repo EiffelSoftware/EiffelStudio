@@ -124,7 +124,7 @@ feature -- Clear Operations
 			tmp_fg_color, tmp_bg_color: detachable EV_COLOR
 		do
 			pre_drawing
-			{GTK2}.gdk_window_invalidate_rect (cairo_context, default_pointer, True)
+			{GTK2}.gdk_window_invalidate_rect (drawable, default_pointer, True)
 			if
 				not drawable_x_window.is_default_pointer and then
 				not drawable_x_display.is_default_pointer
@@ -161,7 +161,7 @@ feature -- Drawing
 				not drawable_x_window.is_default_pointer and then
 				not drawable_x_display.is_default_pointer
 			then
-				{GTK2}.gdk_window_invalidate_rect (cairo_context, default_pointer, True)
+				{GTK2}.gdk_window_invalidate_rect (drawable, default_pointer, True)
 				{GDK_X11}.draw_line (
 					drawable_x_window, drawable_x_display,
 					gc,
@@ -171,7 +171,6 @@ feature -- Drawing
 					(y2 + device_y_offset).max ({INTEGER_16}.min_value).min ({INTEGER_16}.max_value)
 				)
 				update_if_needed
-				redraw
 			end
 			post_drawing
 		end
@@ -189,7 +188,7 @@ feature -- Drawing
 				not drawable_x_display.is_default_pointer and then
 				a_width > 0 and a_height > 0
 			then
-				{GTK2}.gdk_window_invalidate_rect (cairo_context, default_pointer, True)
+				{GTK2}.gdk_window_invalidate_rect (drawable, default_pointer, True)
 				{GDK_X11}.draw_arc (
 					drawable_x_window, drawable_x_display,
 					gc,
@@ -217,7 +216,7 @@ feature -- Drawing
 				not drawable_x_window.is_default_pointer and then
 				not drawable_x_display.is_default_pointer
 			then
-				{GTK2}.gdk_window_invalidate_rect (cairo_context, default_pointer, True)
+				{GTK2}.gdk_window_invalidate_rect (drawable, default_pointer, True)
 	 			{GDK_X11}.draw_point (
 	 				drawable_x_window, drawable_x_display,
 	 				gc,
@@ -245,7 +244,7 @@ feature -- Drawing
 				not drawable_x_window.is_default_pointer and then
 				not drawable_x_display.is_default_pointer
 			then
-				{GTK2}.gdk_window_invalidate_rect (cairo_context, default_pointer, True)
+				{GTK2}.gdk_window_invalidate_rect (drawable, default_pointer, True)
 				a_radians := radians_to_gdk_angle
 				{GDK_X11}.draw_arc (
 					drawable_x_window, drawable_x_display,
@@ -276,7 +275,7 @@ feature -- Drawing
 				not drawable_x_display.is_default_pointer and then
 				a_width > 0 and then a_height > 0
 			then
-				{GTK2}.gdk_window_invalidate_rect (cairo_context, default_pointer, True)
+				{GTK2}.gdk_window_invalidate_rect (drawable, default_pointer, True)
 					-- If width or height are zero then nothing will be rendered.
 				{GDK_X11}.draw_rectangle (
 					drawable_x_window, drawable_x_display,
@@ -308,7 +307,7 @@ feature -- Drawing
 				not drawable_x_window.is_default_pointer and then
 				not drawable_x_display.is_default_pointer
 			then
-				{GTK2}.gdk_window_invalidate_rect (cairo_context, default_pointer, True)
+				{GTK2}.gdk_window_invalidate_rect (drawable, default_pointer, True)
 				tmp := coord_array_to_gdkpoint_array (points).area
 				if is_closed then
 					{GDK_X11}.draw_polygon (drawable_x_window, drawable_x_display, gc, False, $tmp, points.count)
@@ -331,7 +330,7 @@ feature -- Fill Operations
 				not drawable_x_window.is_default_pointer and then
 				not drawable_x_display.is_default_pointer
 			then
-				{GTK2}.gdk_window_invalidate_rect (cairo_context, default_pointer, True)
+				{GTK2}.gdk_window_invalidate_rect (drawable, default_pointer, True)
 				if tile /= Void then
 					{GDK_X11}.x_set_fill_style (drawable_x_display, gc, {GDK_X11}.x_fill_tiled)
 				end
@@ -360,7 +359,7 @@ feature -- Fill Operations
 				not drawable_x_window.is_default_pointer and then
 				not drawable_x_display.is_default_pointer
 			then
-				{GTK2}.gdk_window_invalidate_rect (cairo_context, default_pointer, True)
+				{GTK2}.gdk_window_invalidate_rect (drawable, default_pointer, True)
 				if tile /= Void then
 					{GDK_X11}.x_set_fill_style (drawable_x_display, gc, {GDK_X11}.x_fill_tiled)
 				end
@@ -384,7 +383,7 @@ feature -- Fill Operations
 				not drawable_x_window.is_default_pointer and then
 				not drawable_x_display.is_default_pointer
 			then
-				{GTK2}.gdk_window_invalidate_rect (cairo_context, default_pointer, True)
+				{GTK2}.gdk_window_invalidate_rect (drawable, default_pointer, True)
 				tmp := coord_array_to_gdkpoint_array (points).area
 				if tile /= Void then
 					{GDK_X11}.x_set_fill_style (drawable_x_display, gc, {GDK_X11}.x_fill_tiled)
@@ -408,7 +407,7 @@ feature -- Fill Operations
 				not drawable_x_window.is_default_pointer and then
 				not drawable_x_display.is_default_pointer
 			then
-				{GTK2}.gdk_window_invalidate_rect (cairo_context, default_pointer, True)
+				{GTK2}.gdk_window_invalidate_rect (drawable, default_pointer, True)
 				if tile /= Void then
 					{GDK_X11}.x_set_fill_style (drawable_x_display, gc, {GDK_X11}.x_fill_tiled)
 				end

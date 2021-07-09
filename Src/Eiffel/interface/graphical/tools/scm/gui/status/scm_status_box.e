@@ -220,6 +220,7 @@ feature -- Basic operation
 			if attached development_window as devwin then
 				l_save_dialog.set_size (devwin.dpi_scaler.scaled_size (800).min (devwin.window.width), devwin.dpi_scaler.scaled_size (600).min (devwin.window.height))
 			end
+			l_save_dialog.set_is_modal (False)
 			l_save_dialog.show_on_active_window
 			if a_commit.is_processed then
 				if attached {SCM_SINGLE_COMMIT_SET} a_commit as l_single then
@@ -311,6 +312,7 @@ feature -- Basic operation
 			if attached development_window as devwin then
 				d.set_size (devwin.dpi_scaler.scaled_size (700).min (devwin.window.width), devwin.dpi_scaler.scaled_size (500).min (devwin.window.height))
 			end
+			d.set_is_modal (False)
 			d.show_on_active_window
 		end
 

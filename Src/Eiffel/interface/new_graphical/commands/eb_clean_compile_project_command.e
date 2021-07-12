@@ -94,8 +94,6 @@ feature -- Execution
 				{COMMAND_EXECUTOR}.execute (cmd)
 				if l_old_ec_name /= Void then
 					execution_environment.put (l_old_ec_name, "EC_NAME")
-				else
-					execution_environment.put ("", "EC_NAME")
 				end
 			end
 		end

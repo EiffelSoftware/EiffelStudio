@@ -93,7 +93,15 @@ feature -- Basic operations
 	execute_from_accelerator
 			-- Execute from accelerator
 		do
-			execute
+			if is_sensitive then
+				if
+					attached window_manager.last_focused_development_window as win and then
+					attached win.tools.scm_tool as l_tool and then
+					l_tool.is_interface_usable
+				then
+					l_tool.show (True)
+				end
+			end
 		end
 
 	execute
@@ -106,7 +114,7 @@ feature -- Basic operations
 				then
 					if l_tool.is_shown then
 						updated_drop_down_menu.show
-					else
+					elseif l_tool.is_interface_usable then
 						l_tool.show (True)
 					end
 				end

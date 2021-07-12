@@ -33,6 +33,8 @@ inherit
 
 	EB_SHARED_DEBUGGER_MANAGER
 
+	SHARED_EXECUTION_ENVIRONMENT
+
 create
 	make
 
@@ -78,13 +80,23 @@ feature -- Execution
 			p_ecf: PATH
 			cmd: READABLE_STRING_GENERAL
 			exit: EB_EXIT_APPLICATION_COMMAND
+			l_old_ec_name: detachable READABLE_STRING_GENERAL
 		do
 			if attached workbench as wb then
 				create p_ecf.make_from_string (wb.lace.file_name)
+				if attached execution_environment.arguments.command_name as cln then
+					l_old_ec_name := execution_environment.item ("EC_NAME")
+					execution_environment.put (cln, "EC_NAME")
+				end
 				cmd := eiffel_layout.studio_command_line (p_ecf, wb.lace.target_name, wb.lace.project_path, True, True) + " -melt"
 				create exit
 				exit.execute_with_confirmation (False)
 				{COMMAND_EXECUTOR}.execute (cmd)
+				if l_old_ec_name /= Void then
+					execution_environment.put (l_old_ec_name, "EC_NAME")
+				else
+					execution_environment.put ("", "EC_NAME")
+				end
 			end
 		end
 
@@ -152,7 +164,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2019, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2021, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

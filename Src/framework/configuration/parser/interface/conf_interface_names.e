@@ -1197,7 +1197,7 @@ feature -- String parse errors
 		end
 
 	e_parse_string_unknown_name (option_name: READABLE_STRING_GENERAL; a_available_options: detachable ITERABLE [READABLE_STRING_GENERAL]): READABLE_STRING_32
-			-- An error for a unknown configuration name.
+			-- An error for an unknown configuration name.
 		local
 			s: STRING_32
 		do
@@ -1266,7 +1266,7 @@ feature -- Capability errors
 		do
 			Result := locale.formatted_string (locale.translation_in_context
 				("[
-					Group option "$1" has value "$2" insufficient for value "$4" of a target containing this group.
+					Group option "$1" has value "$2" insufficient for value "$4" of the target containing this group.
 						Group: $3
 						Target: $5
 						System: $6
@@ -1363,7 +1363,7 @@ feature -- Boolean values
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2019, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2021, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

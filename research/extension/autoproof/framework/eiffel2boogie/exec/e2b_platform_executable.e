@@ -236,23 +236,44 @@ feature {NONE} -- Implementation
 		local
 			l_input_file: PLAIN_TEXT_FILE
 			l_count: INTEGER
+			has_error: BOOLEAN
 		do
-			create l_input_file.make_with_path (a_file_name)
-			l_count := l_input_file.count
-			l_input_file.open_read
-			if l_input_file.is_open_read then
-				l_input_file.read_stream (l_count)
-				a_file.put_string ("// File: ")
-				a_file.put_string ({UTF_CONVERTER}.string_32_to_utf_8_string_8 (a_file_name.name))
-				a_file.put_new_line
-				a_file.put_new_line
-				a_file.put_string (l_input_file.last_string)
-				a_file.put_new_line
+			if has_error then
+				if attached l_input_file then
+					if l_input_file.is_open_read then
+						l_input_file.close
+						a_file.put_string ("// Error: unable to read file ")
+					else
+						a_file.put_string ("// Error: unable to open file ")
+					end
+					a_file.put_string ({UTF_CONVERTER}.string_32_to_utf_8_string_8 (a_file_name.name))
+					a_file.put_new_line
+					a_file.put_new_line
+				end
 			else
-				a_file.put_string ("// Error: unable to open file ")
-				a_file.put_string ({UTF_CONVERTER}.string_32_to_utf_8_string_8 (a_file_name.name))
-				a_file.put_new_line
-				a_file.put_new_line
+				create l_input_file.make_with_path (a_file_name)
+				l_count := l_input_file.count
+				l_input_file.open_read
+				if l_input_file.is_open_read then
+					l_input_file.read_stream (l_count)
+					a_file.put_string ("// File: ")
+					a_file.put_string ({UTF_CONVERTER}.string_32_to_utf_8_string_8 (a_file_name.name))
+					a_file.put_new_line
+					a_file.put_new_line
+					a_file.put_string (l_input_file.last_string)
+					l_input_file.close
+					a_file.put_new_line
+				else
+					a_file.put_string ("// Error: unable to open file ")
+					a_file.put_string ({UTF_CONVERTER}.string_32_to_utf_8_string_8 (a_file_name.name))
+					a_file.put_new_line
+					a_file.put_new_line
+				end
+			end
+		rescue
+			if not has_error then
+				has_error := True
+				retry
 			end
 		end
 

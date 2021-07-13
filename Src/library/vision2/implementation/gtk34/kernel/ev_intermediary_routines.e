@@ -116,6 +116,14 @@ feature -- Draw signal intermediary.
 			end
 		end
 
+	scroll_event_intermediary (a_c_object: POINTER; a_gdk_event: POINTER): BOOLEAN
+			-- "leave-notify-event" signal has been emitted.
+		do
+			if attached {EV_ANY_IMP} c_get_eif_reference_from_object_id (a_c_object) as l_any_imp then
+				Result := l_any_imp.process_scroll_event (a_gdk_event)
+			end
+		end
+
 feature {EV_ANY_IMP} -- Gauge intermediary agent routines
 
 	on_gauge_value_changed_intermediary (a_c_object: POINTER)

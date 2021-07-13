@@ -282,6 +282,15 @@ feature {EV_GTK_DEPENDENT_INTERMEDIARY_ROUTINES, EV_APPLICATION_I} -- Implementa
 			-- Redefined by descendents.
 		end
 
+	process_scroll_event (a_gdk_event: POINTER): BOOLEAN
+			-- "scroll-event" signal occurred
+			-- Result
+			--       TRUE to stop other handlers from being invoked for the event.
+			--		 FALSE to propagate the event further.
+		do
+			-- Redefined by descendents.
+		end
+
 feature {EV_ANY_I, EV_INTERMEDIARY_ROUTINES} -- Access
 
 	visual_widget: POINTER

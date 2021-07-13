@@ -41,7 +41,8 @@ inherit
 			button_actions_handled_by_signals,
 			destroy,
 			dispose,
-			c_object_dispose
+			c_object_dispose,
+			process_scroll_event
 		end
 
 create
@@ -89,6 +90,13 @@ feature {NONE} -- Initialization
 					agent (l_app_imp.gtk_marshal).configure_event_intermediary (l_drawing_area, ?, ?, ?, ?),
 					l_app_imp.gtk_marshal.configure_translate_agent
 				)
+
+			real_signal_connect (l_c_object,
+					{EV_GTK_EVENT_STRINGS}.scroll_event_name,
+					agent (l_app_imp.gtk_marshal).scroll_event_intermediary (l_drawing_area, ?),
+					l_app_imp.gtk_marshal.scroll_event_translate_agent
+				)
+
 			real_signal_connect_after (l_drawing_area,
 					{EV_GTK_EVENT_STRINGS}.draw_event_name,
 					agent (l_app_imp.gtk_marshal).draw_actions_intermediary (l_drawing_area, ?),
@@ -360,7 +368,7 @@ feature {EV_INTERMEDIARY_ROUTINES} -- Implementation
 			if cairo_surface.is_default_pointer then
 				get_new_cairo_surface (a_width, a_height)
 			end
-			Result := False
+			Result := True
 		end
 
 	process_enter_event (a_x, a_y, a_screen_x, a_screen_y: INTEGER)
@@ -395,6 +403,20 @@ feature {EV_INTERMEDIARY_ROUTINES} -- Implementation
 						l_screen_y
 					)
 			end
+		end
+
+	process_scroll_event (a_gdk_event: POINTER): BOOLEAN
+			-- "scroll-event" signal occurred
+		local
+			l_button_number: INTEGER
+		do
+			if {GTK2}.gdk_event_scroll_struct_scroll_direction (a_gdk_event) = {GTK2}.gdk_scroll_up_enum then
+				l_button_number := 4
+			else
+				l_button_number := 5
+			end
+			call_button_event_actions ({GTK}.gdk_button_press_enum, 0, 0, l_button_number, 0.5, 0.5, 0.5, 0, 0)
+			Result := True
 		end
 
 feature {EV_APPLICATION_IMP} -- Implementation

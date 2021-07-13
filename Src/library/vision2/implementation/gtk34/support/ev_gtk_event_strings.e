@@ -97,6 +97,8 @@ feature -- Event names
 
 	notify_width_event_name: STRING = "notify::width"
 
+	scroll_event_name: STRING = "scroll-event"
+
 feature -- Event names
 
 	accel_activate_string: EV_GTK_C_STRING

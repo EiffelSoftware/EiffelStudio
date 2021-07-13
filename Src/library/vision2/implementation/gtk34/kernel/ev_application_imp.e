@@ -473,6 +473,9 @@ feature {EV_ANY_I} -- Implementation
 									{GTK}.gdk_event_scroll_struct_y_root (gdk_event).truncated_to_integer + screen_virtual_y
 									)
 							end
+							debug ("refactor_fixme")
+								{REFACTORING_HELPER}.fixme ("Double check if we really need to handle the scroll-event in the global event")
+							end
 							if retrieve_display_data.window /= default_pointer then
 								l_widget_imp ?= gtk_widget_from_gdk_window (stored_display_data.window)
 							else

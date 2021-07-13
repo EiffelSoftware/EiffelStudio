@@ -24,7 +24,7 @@ feature {NONE} -- Creation
 
 feature -- Basic operations
 
-	extend (name: READABLE_STRING_32; icon: READABLE_STRING_GENERAL; is_sensitive: BOOLEAN; action: PROCEDURE; menu: EV_MENU)
+	extend (name: READABLE_STRING_32; icon: READABLE_STRING_8; is_sensitive: BOOLEAN; action: PROCEDURE; menu: EV_MENU)
 			-- Extend `menu` with an entry `name` with an icon `icon` that is enabled if `is_sensitive` and disabled otherwise, using `action` on select.
 		local
 			i: EV_MENU_ITEM

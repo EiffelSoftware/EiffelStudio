@@ -72,7 +72,7 @@ feature -- Comparison
 			consistent: standard_is_equal (other) implies Result
 		end
 
-	frozen standard_is_equal (other: like Current): BOOLEAN
+	frozen standard_is_equal alias "≜" (other: like Current): BOOLEAN
 			-- Is `other' attached to an object of the same type
 			-- as current object, and field-by-field identical to it?
 		require
@@ -119,7 +119,7 @@ feature -- Comparison
 						a.standard_is_equal (b))
 		end
 
-	frozen is_deep_equal (other: like Current): BOOLEAN
+	frozen is_deep_equal alias "≡≡≡" (other: like Current): BOOLEAN
 			-- Are `Current' and `other' attached to isomorphic object structures?
 		require
 			other_not_void: other /= Void
@@ -266,7 +266,7 @@ feature {NONE} -- Retrieval
 			-- Called from runtime to perform a proper dynamic dispatch on `correct_mismatch'
 			-- from MISMATCH_CORRECTOR.
 		local
-			l_msg: STRING
+			l_msg: STRING_32
 			l_exc: EXCEPTIONS
 		do
 			if attached {MISMATCH_CORRECTOR} Current as l_corrector then
@@ -274,7 +274,7 @@ feature {NONE} -- Retrieval
 			else
 				create l_msg.make_from_string ("Mismatch: ")
 				create l_exc
-				l_msg.append (generating_type.name)
+				l_msg.append (generating_type.name_32)
 				l_exc.raise_retrieval_exception (l_msg)
 			end
 		end
@@ -319,9 +319,18 @@ feature -- Output
 			-- on standard output.
 		note
 			explicit: contracts
+		local
+			s: READABLE_STRING
 		do
-			if o /= Void then
-				io.put_string (o.out)
+			if attached o then
+				s := o.out
+				if attached {READABLE_STRING_32} s as s32 then
+					io.put_string_32 (s32)
+				elseif attached {READABLE_STRING_8} s as s8 then
+					io.put_string (s8)
+				else
+					io.put_string_32 (s.as_string_32)
+				end
 			end
 		ensure
 			instance_free: class
@@ -412,8 +421,8 @@ feature -- Comparison (verified)
 		require
 			x_void_or_closed: attached x implies x.closed
 			y_void_or_closed: attached y implies y.closed
-			x_subjects_closed: attached x implies across x.subjects as s all s.item.closed end
-			y_subjects_closed: attached y implies across y.subjects as s all s.item.closed end
+			x_subjects_closed: attached x implies across x.subjects as s all s.closed end
+			y_subjects_closed: attached y implies across y.subjects as s all s.closed end
 		do
 			if x = Void then
 				Result := y = Void
@@ -686,7 +695,7 @@ feature -- Verification: ownership fields
 			check is_executable: False then end
 		end
 
-	frozen set_observers (a: like observers)
+	frozen set_observers (a: MML_SET [ANY])
 			-- Set observers set of this object.
 		note
 			status: ghost
@@ -708,7 +717,7 @@ feature -- Verification: ownership fields
 		note
 			status: functional, ghost, inv_unfriendly
 		do
-			Result := closed and across subjects as s all s.item.closed end
+			Result := closed and across subjects as s all s.closed end
 		end
 
 feature -- Verification: auxiliary
@@ -739,8 +748,8 @@ feature -- Verification: auxiliary
 			ys_exist: ys.non_void
 		do
 		ensure
-			x_in_ys_iff_current_in_ys: across ys as y some is_model_equal (y.item) end =
-				across ys as y some x.is_model_equal (y.item) end
+			x_in_ys_iff_current_in_ys: across ys as y some is_model_equal (y) end =
+				across ys as y some x.is_model_equal (y) end
 		end
 
 	frozen model_equals (x, y: ANY): BOOLEAN
@@ -771,7 +780,7 @@ invariant
 	reflexive_conformance: conforms_to (Current)
 
 note
-	copyright: "Copyright (c) 1984-2018, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2020, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

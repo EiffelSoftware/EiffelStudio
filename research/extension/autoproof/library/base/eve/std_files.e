@@ -147,7 +147,7 @@ feature -- Status report
 			instance_free: class
 		end
 
-	last_real, lastreal: REAL_32
+	last_real, lastreal, last_real_32: REAL_32
 			-- Last real read by `read_real'
 		do
 			Result := input.last_real
@@ -164,8 +164,8 @@ feature -- Status report
 			instance_free: class
 		end
 
-	last_double, lastdouble: REAL_64
-			-- Last double read by `read_double'
+	last_double, lastdouble, last_real_64: REAL_64
+			-- Last double read by `read_double'.
 		do
 			Result := input.last_double
 		ensure
@@ -195,13 +195,13 @@ feature -- Element change
 			default_output := output
 		end
 
-	put_character, putchar (c: CHARACTER)
+	put_character, putchar (c: CHARACTER_8)
 			-- Write `c' at end of default output.
 		do
 			standard_default.put_character (c)
 		end
 
-	put_string, putstring (s: STRING)
+	put_string, putstring (s: READABLE_STRING_8)
 			-- Write `s' at end of default output.
 		require
 			string_not_void: s /= Void
@@ -211,13 +211,21 @@ feature -- Element change
 			modify (Current)
 		end
 
-	put_real, putreal (r: REAL_32)
+	put_string_32 (s: READABLE_STRING_32)
+			-- Write `s' at end of default output.
+		require
+			string_not_void: s /= Void
+		do
+			standard_default.put_string_32 (s)
+		end
+
+	put_real, putreal, put_real_32 (r: REAL_32)
 			-- Write `r' at end of default output.
 		do
 			standard_default.put_real (r)
 		end
 
-	put_double, putdouble (d: REAL_64)
+	put_double, putdouble, put_real_64 (d: REAL_64)
 			-- Write `d' at end of default output.
 		do
 			standard_default.put_double (d)
@@ -455,7 +463,7 @@ feature -- EVE
 		end
 
 note
-	copyright: "Copyright (c) 1984-2018, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2020, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
-<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-21-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-21-0 http://www.eiffel.com/developers/xml/configuration-1-21-0.xsd" name="base-safe-scoop" uuid="811FCDBD-E4AF-463C-A79F-FF77B8BD5E0C" library_target="base-safe-scoop">
+<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-22-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-22-0 http://www.eiffel.com/developers/xml/configuration-1-22-0.xsd" name="base-safe-scoop" uuid="811FCDBD-E4AF-463C-A79F-FF77B8BD5E0C" library_target="base-safe-scoop">
 	<description>Eiffel Base</description>
 	<target name="base-safe-scoop">
 		<description>FreeELKS: Library of reusable components for Eiffel.
@@ -8,10 +8,13 @@
 		<file_rule>
 			<exclude>/\.svn$</exclude>
 		</file_rule>
-		<option namespace="EiffelSoftware.Library">
+		<option warning="warning" namespace="EiffelSoftware.Library">
+			<warning name="obsolete_feature" value="all"/>
 		</option>
 		<setting name="dotnet_naming_convention" value="true"/>
 		<mapping old_name="REAL" new_name="REAL_32"/>
+		<mapping old_name="IMMUTABLE_STRING" new_name="IMMUTABLE_STRING_8"/>
+		<mapping old_name="READABLE_STRING" new_name="READABLE_STRING_8"/>
 		<mapping old_name="STRING" new_name="STRING_8"/>
 		<mapping old_name="REAL_REF" new_name="REAL_32_REF"/>
 		<mapping old_name="INTEGER_REF" new_name="INTEGER_32_REF"/>
@@ -23,6 +26,21 @@
 		<mapping old_name="CHARACTER" new_name="CHARACTER_8"/>
 		<mapping old_name="CHARACTER_REF" new_name="CHARACTER_8_REF"/>
 		<mapping old_name="DOUBLE" new_name="REAL_64"/>
+		<external_include location="$(ISE_LIBRARY)/library/base/elks/encoding/implementation/include">
+			<condition>
+				<platform excluded_value="windows"/>
+			</condition>
+		</external_include>
+		<external_cflag value="`$ISE_LIBRARY/library/base/elks/encoding/implementation/unix/Clib/iconv-config --include_path`">
+			<condition>
+				<platform excluded_value="windows"/>
+			</condition>
+		</external_cflag>
+		<external_linker_flag value="`$(ISE_LIBRARY)/library/base/elks/encoding/implementation/unix/Clib/iconv-config --library`">
+			<condition>
+				<platform excluded_value="windows"/>
+			</condition>
+		</external_linker_flag>
 		<assembly name="eiffelsoftware_runtime" location="$ISE_EIFFEL\studio\spec\$ISE_PLATFORM\lib\EiffelSoftware.Runtime.dll"/>
 		<assembly name="mscorlib" location="$ISE_DOTNET_FRAMEWORK\mscorlib.dll">
 			<renaming old_name="INTERFACE_TYPE_ATTRIBUTE" new_name="SYSTEM_INTERFACE_TYPE_ATTRIBUTE"/>
@@ -121,6 +139,29 @@
 					<dotnet value="true"/>
 				</condition>
 			</file_rule>
+			<file_rule>
+				<exclude>/encoding$</exclude>
+			</file_rule>
+			<cluster name="encoding" location="$|encoding\">
+				<option namespace="Encoding">
+				</option>
+				<cluster name="implementation" location="$|implementation\" hidden="true">
+					<option namespace="Implementation">
+					</option>
+					<cluster name="windows" location="$|windows\" hidden="true">
+						<condition>
+							<platform value="windows"/>
+						</condition>
+						<option namespace="Windows">
+						</option>
+					</cluster>
+					<cluster name="unix" location="$|unix\" hidden="true">
+						<condition>
+							<platform excluded_value="windows"/>
+						</condition>
+					</cluster>
+				</cluster>
+			</cluster>
 		</cluster>
 		<cluster name="eve" location="eve\" recursive="true"/>
 		<cluster name="ise" location="$ISE_LIBRARY\library\base\ise\" recursive="true">

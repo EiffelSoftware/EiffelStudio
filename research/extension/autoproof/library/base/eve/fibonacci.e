@@ -143,6 +143,8 @@ feature -- Iteration
 
 	new_cursor: FIBONACCI
 			-- <Precursor>
+		note
+			status: impure
 		do
 			create Result
 			Result.start

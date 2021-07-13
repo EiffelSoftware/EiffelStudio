@@ -80,6 +80,8 @@ feature -- Access: Cursor
 
 	new_cursor: ITERATION_CURSOR [IMMUTABLE_STRING_32]
 			-- <Precursor>
+		note
+			status: impure
 		do
 			Result := internal_argument_array.new_cursor
 

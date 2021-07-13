@@ -184,6 +184,8 @@ feature -- Iteration
 
 	new_cursor: PRIMES
 			-- <Precursor>
+		note
+			status: impure
 		do
 			create Result
 			Result.start

@@ -34,7 +34,7 @@ feature -- Cursor movement
 			-- Move to next position.
 		require
 			valid_position: not after
-			subjects_closed: across subjects as s all s.item.closed end
+			subjects_closed: across subjects as s all s.closed end
 		deferred
 		end
 

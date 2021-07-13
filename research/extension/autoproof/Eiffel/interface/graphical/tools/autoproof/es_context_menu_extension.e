@@ -44,7 +44,7 @@ feature -- Modification
 	extend_class (c: CLASS_C; extender:
 		PROCEDURE [
 			READABLE_STRING_32, -- name
-			STRING, -- icon
+			READABLE_STRING_8, -- icon
 			BOOLEAN, -- is_sensitive
 			PROCEDURE -- action
 		])

@@ -37,11 +37,13 @@ feature {NONE} -- Initialization
 		do
 			lock := l
 			set_subjects (create {MML_SET [ANY]}.singleton (l))
-			lock.add_client (Current)
+			l.add_client (Current)
 			make_empty_buckets (default_capacity)
 		ensure then
 			map_empty: map.is_empty
 			lock_set: lock = l
+			lock_observers_effect: l.observers = old l.observers & Current
+			is_empty
 			observers_empty: observers.is_empty
 			modify (Current)
 			modify_model ("observers", l)
@@ -74,10 +76,10 @@ feature -- Initialization
 					lock.inv_only ("locked_non_void", "owns_definition", "equivalence_definition")
 					inv_only ("locked_non_void", "locked_definition")
 					1 <= it.index_ and it.index_ <= it.sequence.count + 1
-					across 1 |..| it.sequence.count as i all map.domain [it.sequence [i.item]] = (i.item < it.index_) end
+					across 1 |..| it.sequence.count as i all map.domain [it.sequence [i]] = (i < it.index_) end
 					map.domain <= other.map.domain
 					map = other.map | map.domain
-					across other.map.domain - map.domain as x all not domain_has (x.item) end
+					across other.map.domain - map.domain as x all not domain_has (x) end
 
 					modify_model ("map", Current)
 					modify_model ("index_", it)
@@ -186,13 +188,13 @@ feature -- Comparison
 					inv
 					1 <= i and i <= lists.count + 1
 					Result implies across 1 |..| (i - 1) as j all
-						across 1 |..| lists [j.item].sequence.count as k all
-							other.map.domain [(lists [j.item].sequence) [k.item].left] and then
-							other.map [(lists [j.item].sequence) [k.item].left] = (lists [j.item].sequence) [k.item].right end end
+						across 1 |..| lists [j].sequence.count as k all
+							other.map.domain [(lists [j].sequence) [k].left] and then
+							other.map [(lists [j].sequence) [k].left] = (lists [j].sequence) [k].right end end
 					not Result implies i > 1 and then not
 						(across 1 |..| lists [i - 1].sequence.count as k all
-							other.map.domain [(lists [i - 1].sequence) [k.item].left] and then
-							other.map [(lists [i - 1].sequence) [k.item].left] = (lists [i - 1].sequence) [k.item].right end)
+							other.map.domain [(lists [i - 1].sequence) [k].left] and then
+							other.map [(lists [i - 1].sequence) [k].left] = (lists [i - 1].sequence) [k].right end)
 				until
 					i > buckets.count or not Result
 				loop
@@ -325,7 +327,7 @@ feature {V_CONTAINER, V_ITERATOR, V_LOCK} -- Implementation
 				"items_locked", "no_duplicates", "valid_buckets") end
 			check lock.inv_only ("owns_definition", "equivalence_definition", "hash_domain_definition", "hash_definition") end
 			Result := cell_equal (buckets [index (k)], k)
-			check across 1 |..| buckets_ [index (k)].count as j all (buckets_ [index (k)]) [j.item] = lists [index (k)].sequence [j.item].left end end
+			check across 1 |..| buckets_ [index (k)].count as j all (buckets_ [index (k)]) [j] = lists [index (k)].sequence [j].left end end
 			if domain_has (k) and then attached Result then
 				k.lemma_transitive (Result.item.left, create {MML_SET [K]}.singleton (domain_item (k)))
 			end
@@ -341,7 +343,7 @@ feature {V_CONTAINER, V_ITERATOR, V_LOCK} -- Implementation
 		require
 			list_closed: list.closed
 			k_closed_with_subjects: k.is_closed_with_subjects
-			list_keys_closed_with_subjects: across 1 |..| list.sequence.count as i all list.sequence [i.item].left.is_closed_with_subjects end
+			list_keys_closed_with_subjects: across 1 |..| list.sequence.count as i all list.sequence [i].left.is_closed_with_subjects end
 		do
 			check list.inv_only ("cells_domain", "cells_exist", "cells_linked", "cells_first", "first_cell_empty", "sequence_implementation") end
 			if not list.is_empty then
@@ -354,7 +356,7 @@ feature {V_CONTAINER, V_ITERATOR, V_LOCK} -- Implementation
 			end
 		ensure
 			definition_not_found: Result = Void implies
-				across 1 |..| list.sequence.count as i all not k.is_model_equal (list.sequence [i.item].left) end
+				across 1 |..| list.sequence.count as i all not k.is_model_equal (list.sequence [i].left) end
 			definition_found: Result /= Void implies list.cells.has (Result) and list.sequence.has (Result.item) and k.is_model_equal (Result.item.left)
 		end
 
@@ -365,7 +367,7 @@ feature {V_CONTAINER, V_ITERATOR, V_LOCK} -- Implementation
 			list_closed: list.closed
 			not_empty: not list.sequence.is_empty
 			k_closed_with_subjects: k.is_closed_with_subjects
-			list_keys_closed_with_subjects: across 1 |..| list.sequence.count as i all list.sequence [i.item].left.is_closed_with_subjects end
+			list_keys_closed_with_subjects: across 1 |..| list.sequence.count as i all list.sequence [i].left.is_closed_with_subjects end
 		local
 			j_: INTEGER
 		do
@@ -380,7 +382,7 @@ feature {V_CONTAINER, V_ITERATOR, V_LOCK} -- Implementation
 						1 <= j_ and j_ <= list.sequence.count
 						Result = list.cells [j_]
 						list.sequence.domain [j_ + 1] implies Result.right = list.cells [j_ + 1]
-						across 1 |..| j_ as l all not k.is_model_equal (list.sequence [l.item].left) end
+						across 1 |..| j_ as l all not k.is_model_equal (list.sequence [l].left) end
 					until
 						attached Result.right as r implies k.is_equal_ (r.item.left)
 					loop
@@ -395,7 +397,7 @@ feature {V_CONTAINER, V_ITERATOR, V_LOCK} -- Implementation
 			end
 		ensure
 			definition_not_found: Result /= Void and then Result.right = Void implies
-				across 1 |..| list.sequence.count as i all not k.is_model_equal (list.sequence [i.item].left) end
+				across 1 |..| list.sequence.count as i all not k.is_model_equal (list.sequence [i].left) end
 			definition_found_first: Result = Void implies k.is_model_equal (list.sequence.first.left)
 			definition_found_later: Result /= Void and then attached Result.right as r implies
 				list.cells.has (Result) and list.cells.has (r) and k.is_model_equal (r.item.left)
@@ -420,13 +422,13 @@ feature {V_CONTAINER, V_ITERATOR, V_LOCK} -- Implementation
 				buckets.is_wrapped
 				buckets.sequence.count = n
 				across 1 |..| (i - 1) as j all
-					buckets.sequence [j.item].is_wrapped and
-					buckets.sequence [j.item].is_fresh and
-					buckets.sequence [j.item].sequence.is_empty and
-					buckets.sequence [j.item].observers.is_empty
+					buckets.sequence [j].is_wrapped and
+					buckets.sequence [j].is_fresh and
+					buckets.sequence [j].sequence.is_empty and
+					buckets.sequence [j].observers.is_empty
 				end
 				across 1 |..| (i - 1) as k all across 1 |..| (i - 1) as l all
-					k.item /= l.item implies buckets.sequence [k.item] /= buckets.sequence [l.item] end end
+					k /= l implies buckets.sequence [k] /= buckets.sequence [l] end end
 				modify_model ("sequence", buckets)
 			until
 				i > n
@@ -494,8 +496,8 @@ feature {V_CONTAINER, V_ITERATOR, V_LOCK} -- Implementation
 			not_empty: not list.sequence.is_empty
 			lock_wrapped: lock.is_wrapped
 			key_locked: lock.locked [k]
-			list_keys_owned: across 1 |..| list.sequence.count as i all lock.locked [list.sequence [i.item].left] end
-			has_equal: across 1 |..| list.sequence.count as i some k.is_model_equal (list.sequence [i.item].left) end
+			list_keys_owned: across 1 |..| list.sequence.count as i all lock.locked [list.sequence [i].left] end
+			has_equal: across 1 |..| list.sequence.count as i some k.is_model_equal (list.sequence [i].left) end
 			no_observers: list.observers.is_empty
 		local
 			c: V_LINKABLE [MML_PAIR [K, V]]
@@ -624,13 +626,13 @@ feature {V_CONTAINER, V_ITERATOR, V_LOCK} -- Implementation
 				i := 1
 			invariant
 				is_wrapped
-				across 1 |..| b.sequence.count as j all b.sequence [j.item].is_wrapped end
+				across 1 |..| b.sequence.count as j all b.sequence [j].is_wrapped end
 				lists.count = c
 				inv_only ("locked_definition")
 				locked <= locked.old_
-				across locked as x all map [x.item] = map.old_ [x.item] end
-				across 1 |..| buckets_.old_.count as k all across 1 |..| buckets_.old_ [k.item].count as l all
-					map.domain [(buckets_.old_ [k.item])[l.item]] = (k.item < i) end end
+				across locked as x all map [x] = map.old_ [x] end
+				across 1 |..| buckets_.old_.count as k all across 1 |..| buckets_.old_ [k].count as l all
+					map.domain [(buckets_.old_ [k])[l]] = (k < i) end end
 				modify_model ("map", Current)
 				modify_field (["observers", "closed"], lists.old_.range)
 			until
@@ -644,10 +646,10 @@ feature {V_CONTAINER, V_ITERATOR, V_LOCK} -- Implementation
 					inv_only ("locked_definition")
 					1 <= it.index_ and it.index_ <= b.sequence [i].count + 1
 					lists.count = c
-					across 1 |..| buckets_.old_.count as k all across 1 |..| buckets_.old_ [k.item].count as l all
-						map.domain [(buckets_.old_ [k.item])[l.item]] = (k.item < i or (k.item = i and l.item < it.index_)) end end
+					across 1 |..| buckets_.old_.count as k all across 1 |..| buckets_.old_ [k].count as l all
+						map.domain [(buckets_.old_ [k])[l]] = (k < i or (k = i and l < it.index_)) end end
 					locked <= locked.old_
-					across locked as x all map [x.item] = map.old_ [x.item] end
+					across locked as x all map [x] = map.old_ [x] end
 					modify_model ("map", Current)
 					modify_model ("index_", it)
 				until
@@ -677,7 +679,7 @@ feature {V_CONTAINER, V_ITERATOR, V_LOCK} -- Implementation
 			other_closed: other.closed
 			lock_closed: lock.closed
 			other_lock_closed: other.lock.closed
-			list_items_locked: across 1 |..| list.sequence.count as j all lock.locked [list.sequence [j.item].left] end
+			list_items_locked: across 1 |..| list.sequence.count as j all lock.locked [list.sequence [j].left] end
 		local
 			c: V_LINKABLE [MML_PAIR [K, V]]
 			i_: INTEGER
@@ -695,7 +697,7 @@ feature {V_CONTAINER, V_ITERATOR, V_LOCK} -- Implementation
 				i_ <= list.sequence.count implies c = list.cells [i_]
 				i_ = list.sequence.count + 1 implies c = Void
 				Result implies across 1 |..| (i_ - 1) as j all
-					other.map.domain [list.sequence [j.item].left] and then other.map [list.sequence [j.item].left] = list.sequence [j.item].right end
+					other.map.domain [list.sequence [j].left] and then other.map [list.sequence [j].left] = list.sequence [j].right end
 				not Result implies i_ > 1 and then
 					(not other.map.domain [list.sequence [i_ - 1].left] or else other.map [list.sequence [i_ - 1].left] /= list.sequence [i_ - 1].right)
 			until
@@ -715,7 +717,7 @@ feature {V_CONTAINER, V_ITERATOR, V_LOCK} -- Implementation
 			end
 		ensure
 			definition: Result = across 1 |..| list.sequence.count as j all
-				other.map.domain [list.sequence [j.item].left] and then other.map [list.sequence [j.item].left] = list.sequence [j.item].right end
+				other.map.domain [list.sequence [j].left] and then other.map [list.sequence [j].left] = list.sequence [j].right end
 		end
 
 feature -- Specification
@@ -773,10 +775,10 @@ feature -- Specification
 				invariant
 					1 <= j and j <= lists.count + 1
 					htit.list_iterator.is_open
-					across 1 |..| lists.count as k all lists [k.item].is_wrapped and then
-						lists [k.item].observers = if k.item >= j and k.item /= i
-							then lists [k.item].observers.old_
-							else lists [k.item].observers.old_ / htit.list_iterator end end
+					across 1 |..| lists.count as k all lists [k].is_wrapped and then
+						lists [k].observers = if k >= j and k /= i
+							then lists [k].observers.old_
+							else lists [k].observers.old_ / htit.list_iterator end end
 					inv_only ("A2", "items_locked", "no_duplicates", "valid_buckets")
 					modify_field (["observers", "closed"], lists.range)
 				until
@@ -812,7 +814,7 @@ feature {V_CONTAINER, V_ITERATOR, V_LOCK} -- Specification
 			lists [i].closed
 		do
 			check lists [i].inv_only ("owns_definition") end
-			check across 1 |..| lists [i].cells.count as j all lists [i].cells [j.item].inv_only ("default_owns") end end
+			check across 1 |..| lists [i].cells.count as j all lists [i].cells [j].inv_only ("default_owns") end end
 			check not lists [i].transitive_owns [lock] end
 		ensure
 			not lists [i].ownership_domain [lock]
@@ -828,9 +830,9 @@ feature {V_CONTAINER, V_ITERATOR, V_LOCK} -- Specification
 			check inv_only ("owns_definition") end
 			check buckets.inv_only ("owns_definition"); buckets.area.inv_only ("default_owns") end
 
-			check across 1 |..| lists.count as i all lists [i.item].inv_only ("owns_definition") end end
-			check across 1 |..| lists.count as i all across 1 |..| lists [i.item].cells.count as j all lists [i.item].cells [j.item].inv_only ("default_owns") end end end
-			check across 1 |..| lists.count as i all not lists [i.item].transitive_owns [lock] end end
+			check across 1 |..| lists.count as i all lists [i].inv_only ("owns_definition") end end
+			check across 1 |..| lists.count as i all across 1 |..| lists [i].cells.count as j all lists [i].cells [j].inv_only ("default_owns") end end end
+			check across 1 |..| lists.count as i all not lists [i].transitive_owns [lock] end end
 			check not transitive_owns [lock] end
 		ensure
 			not ownership_domain [lock]
@@ -839,15 +841,15 @@ feature {V_CONTAINER, V_ITERATOR, V_LOCK} -- Specification
 invariant
 		-- Abstract state:
 	buckets_non_empty: not buckets_.is_empty
-	valid_buckets: across map.domain as x all lock.hash.domain [x.item] and then lock.hash [x.item] >= 0 and then
-		buckets_ [bucket_index (lock.hash [x.item], buckets_.count)].has (x.item) end
+	valid_buckets: across map.domain as x all lock.hash.domain [x] and then lock.hash [x] >= 0 and then
+		buckets_ [bucket_index (lock.hash [x], buckets_.count)].has (x) end
 	domain_not_too_small: across 1 |..| buckets_.count as i all
-		across 1 |..| buckets_ [i.item].count as j all map.domain [(buckets_ [i.item])[j.item]] end end
+		across 1 |..| buckets_ [i].count as j all map.domain [(buckets_ [i])[j]] end end
 	no_precise_duplicates: across 1 |..| buckets_.count as i all -- ToDo: within is enough?
 		across 1 |..| buckets_.count as j all
-			across 1 |..| buckets_ [i.item].count as k all
-				across 1 |..| buckets_ [j.item].count as l all
-					i.item /= j.item or k.item /= l.item implies (buckets_ [i.item])[k.item] /= (buckets_ [j.item])[l.item] end end end end
+			across 1 |..| buckets_ [i].count as k all
+				across 1 |..| buckets_ [j].count as l all
+					i /= j or k /= l implies (buckets_ [i])[k] /= (buckets_ [j])[l] end end end end
 		-- Concrete state:
 	count_definition: count_ = map.count
 	buckets_exist: buckets /= Void
@@ -858,17 +860,17 @@ invariant
 	owns_definition: owns = create {MML_SET [ANY]}.singleton (buckets) + lists.range
 	buckets_count: buckets_.count = lists.count
 	lists_distinct: lists.no_duplicates
-	lists_counts: across 1 |..| buckets_.count as i all lists [i.item].sequence.count = buckets_ [i.item].count end
-	buckets_content: across 1 |..| buckets_.count as i all across 1 |..| buckets_ [i.item].count as j all
-		(buckets_ [i.item]) [j.item] = lists [i.item].sequence [j.item].left end end
-	map_implementation: across 1 |..| buckets_.count as i all across 1 |..| buckets_ [i.item].count as j all
-		map [(buckets_ [i.item]) [j.item]] = lists [i.item].sequence [j.item].right end end
+	lists_counts: across 1 |..| buckets_.count as i all lists [i].sequence.count = buckets_ [i].count end
+	buckets_content: across 1 |..| buckets_.count as i all across 1 |..| buckets_ [i].count as j all
+		(buckets_ [i]) [j] = lists [i].sequence [j].left end end
+	map_implementation: across 1 |..| buckets_.count as i all across 1 |..| buckets_ [i].count as j all
+		map [(buckets_ [i]) [j]] = lists [i].sequence [j].right end end
 		-- Iterators:
 	array_observers: buckets.observers.is_empty
-	iterators_type: across observers as o all attached {V_HASH_TABLE_ITERATOR [K, V]} o.item end
+	iterators_type: across observers as o all attached {V_HASH_TABLE_ITERATOR [K, V]} o end
 	list_observers_same: across 1 |..| lists.count as i all
-		across 1 |..| lists.count as j all lists [i.item].observers = lists [j.item].observers end end
-	list_observers_count: across 1 |..| lists.count as i all lists [i.item].observers.count <= observers.count end
+		across 1 |..| lists.count as j all lists [i].observers = lists [j].observers end end
+	list_observers_count: across 1 |..| lists.count as i all lists [i].observers.count <= observers.count end
 
 note
 	copyright: "Copyright (c) 1984-2018, Eiffel Software and others"

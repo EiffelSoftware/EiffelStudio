@@ -229,7 +229,7 @@ feature -- Cursor movement
 				invariant
 					1 <= index_ and index_ < index_.old_
 					inv_only ("cell_not_off", "after_definition", "default_owns")
-					across 1 |..| index_ as i all target.cells [i.item] /= old_active end
+					across 1 |..| index_ as i all target.cells [i] /= old_active end
 					is_wrapped
 				until
 					attached active as a implies a.right = old_active
@@ -354,7 +354,7 @@ feature -- Extension
 				other.is_wrapped
 				target.is_wrapped
 				target /= Current
-				across target.observers as o all o.item /= Current implies o.item.is_open end
+				across target.observers as o all o /= Current implies o.is_open end
 				s = other.sequence.old_.interval (other.index_.old_, other.index_ - 1)
 				target.sequence ~ (target.sequence.front (index_.old_).old_ +
 					s + target.sequence.tail (index_.old_ + 1).old_)
@@ -383,8 +383,8 @@ feature -- Extension
 			other_wrapped: other.is_wrapped
 			other_not_target: other /= target
 			not_after: index_ <= sequence.count
-			observers_open: across target.observers as o all o.item /= Current implies o.item.is_open end
-			other_observers_open: across other.observers as o all o.item.is_open end
+			observers_open: across target.observers as o all o /= Current implies o.is_open end
+			other_observers_open: across other.observers as o all o.is_open end
 		do
 			target.merge_after (other, active, index_)
 			check target.inv_only ("cells_domain", "bag_definition") end

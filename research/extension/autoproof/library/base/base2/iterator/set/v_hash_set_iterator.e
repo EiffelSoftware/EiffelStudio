@@ -40,7 +40,7 @@ feature {NONE} -- Initialization
 
 			iterator.lemma_sequence_no_duplicates
 			iterator.sequence.lemma_no_duplicates
-			check across t.bag.domain as x all t.bag [x.item] = iterator.sequence.to_bag [x.item] end end
+			check across t.bag.domain as x all t.bag [x] = iterator.sequence.to_bag [x] end end
 
 			wrap
 		ensure
@@ -233,7 +233,7 @@ feature -- Removal
 
 			check iterator.inv_only ("target_domain_constraint") end
 			iterator.sequence.to_bag.lemma_domain_count
-			check across target.bag.domain as x all target.bag [x.item] = iterator.sequence.to_bag [x.item] end end
+			check across target.bag.domain as x all target.bag [x] = iterator.sequence.to_bag [x] end end
 		end
 
 feature {V_CONTAINER, V_ITERATOR, V_LOCK} -- Implementation

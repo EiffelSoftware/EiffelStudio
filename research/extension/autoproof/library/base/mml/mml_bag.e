@@ -206,7 +206,7 @@ feature -- Lemmas
 		require
 			n >= 0
 		do
-			check across domain as x all removed_multiple (v, n).removed (v) [x.item] = removed_multiple (v, n + 1) [x.item] end end
+			check across domain as x all removed_multiple (v, n).removed (v) [x] = removed_multiple (v, n + 1) [x] end end
 		ensure
 			removed_multiple (v, n).removed (v) = removed_multiple (v, n + 1)
 		end
@@ -216,7 +216,7 @@ feature -- Lemmas
 		note
 			status: lemma
 		do
-			check across domain as x all removed_multiple (v, Current [v]) [x.item] = removed_all (v) [x.item] end end
+			check across domain as x all removed_multiple (v, Current [v]) [x] = removed_all (v) [x] end end
 		ensure
 			removed_multiple (v, Current [v]) = removed_all (v)
 		end

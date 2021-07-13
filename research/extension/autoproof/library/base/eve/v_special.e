@@ -40,7 +40,7 @@ feature {NONE} -- Initialization
 			fill_with (v, 0, n - 1)
 		ensure
 			sequence_domain_effect: sequence.count = n
-			sequence_effect: across 1 |..| sequence.count as i all sequence [i.item] = v end
+			sequence_effect: across 1 |..| sequence.count as i all sequence [i] = v end
 			capacity_effect: capacity = n
 		end
 
@@ -105,7 +105,7 @@ feature -- Status report
 					source_index <= i and i <= source_index + n
 					destination_index <= j and j <= destination_index + n
 					i - source_index = j - destination_index
-					Result implies (across (source_index + 1) |..| i as k all other.sequence [k.item] = sequence [destination_index - source_index + k.item] end)
+					Result implies (across (source_index + 1) |..| i as k all other.sequence [k] = sequence [destination_index - source_index + k] end)
 					not Result implies source_index + 1 <= i and other.sequence [i] /= sequence [j]
 				until
 					i = nb or not Result
@@ -121,7 +121,7 @@ feature -- Status report
 			end
 		ensure
 			definition: Result =
-				across (source_index + 1) |..| (source_index + n) as k all other.sequence [k.item] = sequence [destination_index - source_index + k.item] end
+				across (source_index + 1) |..| (source_index + n) as k all other.sequence [k] = sequence [destination_index - source_index + k] end
 		end
 
 feature -- Element change
@@ -173,9 +173,9 @@ feature -- Element change
 				sequence.count = sequence.count.old_
 				nb = l_count
 				start_index <= i and i <= nb
-				across (start_index + 1) |..| i as k all sequence [k.item] = v end
-				across 1 |..| start_index as k all sequence [k.item] = sequence.old_ [k.item] end
-				across (end_index + 2) |..| sequence.count as k all sequence [k.item] = sequence.old_ [k.item] end
+				across (start_index + 1) |..| i as k all sequence [k] = v end
+				across 1 |..| start_index as k all sequence [k] = sequence.old_ [k] end
+				across (end_index + 2) |..| sequence.count as k all sequence [k] = sequence.old_ [k] end
 			until
 				i = nb
 			loop
@@ -190,9 +190,9 @@ feature -- Element change
 				nb = end_index + 1
 				l_count <= i and i <= nb
 				sequence.count = if sequence.count.old_ < end_index + 1 then i else sequence.count.old_ end
-				across (start_index + 1) |..| i as k all sequence [k.item] = v end
-				across 1 |..| start_index as k all sequence [k.item] = sequence.old_ [k.item] end
-				across (end_index + 2) |..| sequence.count as k all sequence [k.item] = sequence.old_ [k.item] end
+				across (start_index + 1) |..| i as k all sequence [k] = v end
+				across 1 |..| start_index as k all sequence [k] = sequence.old_ [k] end
+				across (end_index + 2) |..| sequence.count as k all sequence [k] = sequence.old_ [k] end
 			until
 				i = nb
 			loop
@@ -201,9 +201,9 @@ feature -- Element change
 			end
 		ensure
 			sequence_domain_effect: sequence.count = (old sequence.count).max (end_index + 1)
-			sequence_effect: across (start_index + 1) |..| (end_index + 1) as k all sequence [k.item] = v end
-			sequence_front_unchanged: across 1 |..| start_index as k all sequence [k.item] = (old sequence) [k.item] end
-			sequence_tail_unchanged: across (end_index + 2) |..| sequence.count as k all sequence [k.item] = (old sequence) [k.item] end
+			sequence_effect: across (start_index + 1) |..| (end_index + 1) as k all sequence [k] = v end
+			sequence_front_unchanged: across 1 |..| start_index as k all sequence [k] = (old sequence) [k] end
+			sequence_tail_unchanged: across (end_index + 2) |..| sequence.count as k all sequence [k] = (old sequence) [k] end
 			modify_model ("sequence", Current)
 		end
 
@@ -221,9 +221,9 @@ feature -- Element change
 			fill_with (({T}).default, start_index, end_index)
 		ensure
 			sequence_domain_effect: sequence.count = old sequence.count
-			sequence_effect: across (start_index + 1) |..| (end_index + 1) as k all sequence [k.item] = ({T}).default end
-			sequence_front_unchanged: across 1 |..| start_index as k all sequence [k.item] = (old sequence) [k.item] end
-			sequence_tail_unchanged: across (end_index + 2) |..| sequence.count as k all sequence [k.item] = (old sequence) [k.item] end
+			sequence_effect: across (start_index + 1) |..| (end_index + 1) as k all sequence [k] = ({T}).default end
+			sequence_front_unchanged: across 1 |..| start_index as k all sequence [k] = (old sequence) [k] end
+			sequence_tail_unchanged: across (end_index + 2) |..| sequence.count as k all sequence [k] = (old sequence) [k] end
 			modify_model ("sequence", Current)
 		end
 
@@ -275,9 +275,9 @@ feature -- Element change
 			sequence_domain_effect: sequence.count = (old sequence.count).max (destination_index + n)
 			sequence_effect_data: across (destination_index + 1) |..| (destination_index + n) as i all
 				across 1 |..| (old sequence.count) as j all
-					j.item = i.item - destination_index + source_index implies sequence [i.item] = (old sequence) [j.item] end end
+					j = i - destination_index + source_index implies sequence [i] = (old sequence) [j] end end
 			sequence_effect_old: across 1 |..| (old sequence.count) as i all
-				i.item <= destination_index or destination_index + n < i.item implies sequence [i.item] = (old sequence) [i.item] end
+				i <= destination_index or destination_index + n < i implies sequence [i] = (old sequence) [i] end
 			modify_model ("sequence", Current)
 		end
 
@@ -332,7 +332,7 @@ feature -- Resizing
 			Result := aliased_resized_area (n)
 			check Result.inv end
 			check Result.sequence ~ sequence.old_.front (n) end
-			check across 1 |..| (sequence.old_.count.min (n)) as i all Result.sequence [i.item] = sequence.old_ [i.item] end end
+			check across 1 |..| (sequence.old_.count.min (n)) as i all Result.sequence [i] = sequence.old_ [i] end end
 
 			Result.fill_with (a_default_value, Result.count, n - 1)
 		ensure
@@ -340,8 +340,8 @@ feature -- Resizing
 			current_or_fresh: Result = Current or Result.is_fresh
 			capacity_definition: Result.capacity = n
 			sequence_domain_definition: Result.sequence.count = n
-			sequence_definition_old: across 1 |..| (sequence.old_.count.min (n)) as i all Result.sequence [i.item] = sequence.old_ [i.item] end
-			sequence_definition_new: across (sequence.count.old_ + 1) |..| n as i all Result.sequence [i.item] = a_default_value end
+			sequence_definition_old: across 1 |..| (sequence.old_.count.min (n)) as i all Result.sequence [i] = sequence.old_ [i] end
+			sequence_definition_new: across (sequence.count.old_ + 1) |..| n as i all Result.sequence [i] = a_default_value end
 			modify (Current)
 		end
 

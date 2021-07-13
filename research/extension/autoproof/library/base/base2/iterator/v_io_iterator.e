@@ -28,7 +28,7 @@ feature -- Replacement
 		require
 			not_off: not off
 			target_wrapped: target.is_wrapped
-			target_observers_open: across target.observers as o all o.item /= Current implies o.item.is_open end
+			target_observers_open: across target.observers as o all o /= Current implies o.is_open end
 		deferred
 		ensure
 			sequence_effect: sequence ~ old sequence.replaced_at (index_, v)

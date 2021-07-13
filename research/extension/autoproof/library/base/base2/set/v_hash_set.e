@@ -38,6 +38,9 @@ feature {NONE} -- Initialization
 		ensure then
 			set_empty: set.is_empty
 			lock_set: lock = l
+			lock_observers_effect: l.observers = old l.observers & table & Current
+			table.is_empty
+			is_empty
 			observers_empty: observers.is_empty
 			modify (Current)
 			modify_model ("observers", l)
@@ -186,9 +189,9 @@ invariant
 	table_exists: table /= Void
 	owns_definition: owns ~ create {MML_SET [ANY]}.singleton (table)
 	set_implementation: set = table.map.domain
-	table_values_definition: across set as x all table.map [x.item] = Void end
+	table_values_definition: across set as x all table.map [x] = Void end
 	same_lock: lock = table.lock
-	observers_type: across observers as o all attached {V_HASH_SET_ITERATOR [G]} o.item end
+	observers_type: across observers as o all attached {V_HASH_SET_ITERATOR [G]} o end
 	observers_correspond: table.observers.count <= observers.count
 
 note

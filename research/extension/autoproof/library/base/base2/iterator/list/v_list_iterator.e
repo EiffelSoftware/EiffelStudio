@@ -28,7 +28,7 @@ feature -- Extension
 		require
 			not_off: not off
 			target_wrapped: target.is_wrapped
-			target_observers_open: across target.observers as o all o.item /= Current implies o.item.is_open end
+			target_observers_open: across target.observers as o all o /= Current implies o.is_open end
 		deferred
 		ensure
 			target_sequence_effect: target.sequence ~ old target.sequence.extended_at (index_, v)
@@ -44,7 +44,7 @@ feature -- Extension
 		require
 			not_off: not off
 			target_wrapped: target.is_wrapped
-			target_observers_open: across target.observers as o all o.item /= Current implies o.item.is_open end
+			target_observers_open: across target.observers as o all o /= Current implies o.is_open end
 		deferred
 		ensure
 			target_sequence_effect: target.sequence ~ old target.sequence.extended_at (index_ + 1, v)
@@ -61,7 +61,7 @@ feature -- Extension
 			other_not_before: not other.before
 			target_wrapped: target.is_wrapped
 			other_target_wrapped: other.target.is_wrapped
-			observers_open: across target.observers as o all o.item /= Current implies o.item.is_open end
+			observers_open: across target.observers as o all o /= Current implies o.is_open end
 			different_target: target /= other.target
 		deferred
 		ensure
@@ -83,7 +83,7 @@ feature -- Extension
 			other_not_before: not other.before
 			target_wrapped: target.is_wrapped
 			other_target_wrapped: other.target.is_wrapped
-			observers_open: across target.observers as o all o.item /= Current implies o.item.is_open end
+			observers_open: across target.observers as o all o /= Current implies o.is_open end
 			different_target: target /= other.target
 		deferred
 		ensure
@@ -104,7 +104,7 @@ feature -- Removal
 		require
 			not_off: not off
 			target_wrapped: target.is_wrapped
-			target_observers_open: across target.observers as o all o.item /= Current implies o.item.is_open end
+			target_observers_open: across target.observers as o all o /= Current implies o.is_open end
 		deferred
 		ensure
 			target_sequence_effect: target.sequence ~ old target.sequence.removed_at (index_)
@@ -120,7 +120,7 @@ feature -- Removal
 			not_off: not off
 			not_first: not is_first
 			target_wrapped: target.is_wrapped
-			target_observers_open: across target.observers as o all o.item /= Current implies o.item.is_open end
+			target_observers_open: across target.observers as o all o /= Current implies o.is_open end
 		deferred
 		ensure
 			target_sequence_effect: target.sequence ~ old target.sequence.removed_at (index_ - 1)
@@ -136,7 +136,7 @@ feature -- Removal
 			not_off: not off
 			not_last: not is_last
 			target_wrapped: target.is_wrapped
-			target_observers_open: across target.observers as o all o.item /= Current implies o.item.is_open end
+			target_observers_open: across target.observers as o all o /= Current implies o.is_open end
 		deferred
 		ensure
 			sequence_effect: sequence ~ old sequence.removed_at (index_ + 1)

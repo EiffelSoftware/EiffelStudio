@@ -136,7 +136,7 @@ invariant
 	list_exists: list /= Void
 	owns_definition: owns ~ create {MML_SET [ANY]}.singleton (list)
 	sequence_implementation: sequence ~ list.sequence
-	observers_type: across observers as o all attached {V_LINKED_STACK_ITERATOR [G]} o.item end
+	observers_type: across observers as o all attached {V_LINKED_STACK_ITERATOR [G]} o end
 	observers_correspond: list.observers.count <= observers.count
 
 note

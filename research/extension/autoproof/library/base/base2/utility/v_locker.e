@@ -40,7 +40,7 @@ feature -- Specification
 			reads_field ("lock", Current)
 			reads_field ("equivalence", lock)
 		do
-			Result := across s as x all across s as y all x.item /= y.item implies not lock.equivalence [x.item, y.item] end end
+			Result := across s as x all across s as y all x /= y implies not lock.equivalence [x, y] end end
 		end
 
 invariant

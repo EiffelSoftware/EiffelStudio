@@ -228,7 +228,7 @@ feature -- Cursor movement
 				target.is_wrapped
 				index_.old_ <= index_ and index_ <= sequence.count + 1
 				not before
-				across index_.old_.max (1) |..| (index_ - 1) as i all sequence [i.item] /= v end
+				across index_.old_.max (1) |..| (index_ - 1) as i all sequence [i] /= v end
 			until
 				after or else item = v
 			loop
@@ -262,7 +262,7 @@ feature -- Cursor movement
 				0 <= index_
 				index_ <= index_.old_
 				index_ <= sequence.count
-				across (index_ + 1) |..| index_.old_.min (sequence.count) as i all sequence [i.item] /= v end
+				across (index_ + 1) |..| index_.old_.min (sequence.count) as i all sequence [i] /= v end
 			until
 				before or else item = v
 			loop

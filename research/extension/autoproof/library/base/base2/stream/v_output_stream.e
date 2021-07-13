@@ -25,14 +25,14 @@ feature -- Replacement
 		require
 			not_off: not off
 			subjects_wrapped: across subjects as s all
-					s.item.is_wrapped and
-					across s.item.observers as o all o.item /= Current implies o.item.is_open end
+					s.is_wrapped and
+					across s.observers as o all o /= Current implies o.is_open end
 				end
 		deferred
 		ensure
 			subjects_wrapped: across subjects as s all
-					s.item.is_wrapped and
-					across s.item.observers as o all o.item /= Current implies o.item.is_open end
+					s.is_wrapped and
+					across s.observers as o all o /= Current implies o.is_open end
 				end
 			modify_model ("off_", Current)
 			modify (subjects)
@@ -46,10 +46,10 @@ feature -- Replacement
 			input_wrapped: input.is_wrapped
 			input_not_current: input /= Current
 			subjects_wrapped: across subjects as s all
-					s.item.is_wrapped and
-					across s.item.observers as o all o.item /= Current implies o.item.is_open end
+					s.is_wrapped and
+					across s.observers as o all o /= Current implies o.is_open end
 				end
-			input_subjects_wrapped: across input.subjects as s all s.item.is_wrapped end
+			input_subjects_wrapped: across input.subjects as s all s.is_wrapped end
 		do
 			from
 			invariant
@@ -57,8 +57,8 @@ feature -- Replacement
 				inv and input.inv
 				subjects ~ subjects.old_
 				subjects_wrapped: across subjects as s all
-					s.item.is_wrapped and
-					across s.item.observers as o all o.item /= Current implies o.item.is_open end
+					s.is_wrapped and
+					across s.observers as o all o /= Current implies o.is_open end
 				end
 				decreases ([])
 			until
@@ -82,10 +82,10 @@ feature -- Replacement
 			input_not_current: input /= Current
 			n_non_negative: n >= 0
 			subjects_wrapped: across subjects as s all
-					s.item.is_wrapped and
-					across s.item.observers as o all o.item /= Current implies o.item.is_open end
+					s.is_wrapped and
+					across s.observers as o all o /= Current implies o.is_open end
 				end
-			input_subjects_wrapped: across input.subjects as s all s.item.is_wrapped end
+			input_subjects_wrapped: across input.subjects as s all s.is_wrapped end
 		local
 			i: INTEGER
 		do
@@ -96,8 +96,8 @@ feature -- Replacement
 				inv and input.inv
 				subjects ~ subjects.old_
 				subjects_wrapped: across subjects as s all
-					s.item.is_wrapped and
-					across s.item.observers as o all o.item /= Current implies o.item.is_open end
+					s.is_wrapped and
+					across s.observers as o all o /= Current implies o.is_open end
 				end
 			until
 				i > n or off or input.off

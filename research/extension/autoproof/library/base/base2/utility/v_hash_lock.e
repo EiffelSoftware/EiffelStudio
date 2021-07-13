@@ -53,12 +53,12 @@ feature -- Specification
 			status: functional, nonvariant
 		do
 			Result := (locked <= hash.domain and locked <= new_hash.domain) and then
-				across locked as x all new_hash [x.item] = hash [x.item] end
+				across locked as x all new_hash [x] = hash [x] end
 		end
 
 invariant
 	hash_domain_definition: locked <= hash.domain
-	hash_definition: across locked as x all hash [x.item] = x.item.hash_code_ end
+	hash_definition: across locked as x all hash [x] = x.hash_code_ end
 
 note
 	copyright: "Copyright (c) 1984-2018, Eiffel Software and others"

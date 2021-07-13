@@ -43,9 +43,9 @@ feature {NONE} -- Initialization
 				i_ := 2
 			invariant
 				2 <= i_ and i_ <= t.lists.count + 1
-				across 1 |..| t.lists.count as j all t.lists [j.item].is_wrapped end
-				across 1 |..| (i_ - 1) as j all t.lists [j.item].observers = t.lists [j.item].observers.old_ & list_iterator end
-				across i_ |..| t.lists.count as j all t.lists [j.item].observers = t.lists [j.item].observers.old_ end
+				across 1 |..| t.lists.count as j all t.lists [j].is_wrapped end
+				across 1 |..| (i_ - 1) as j all t.lists [j].observers = t.lists [j].observers.old_ & list_iterator end
+				across i_ |..| t.lists.count as j all t.lists [j].observers = t.lists [j].observers.old_ end
 				t.inv_only ("A2", "items_locked", "no_duplicates", "valid_buckets")
 				modify_field (["observers", "closed"], t.lists.range)
 			until
@@ -214,8 +214,8 @@ feature -- Cursor movement
 			check target.lock.inv end
 			bucket_index := target.index (k)
 			c := target.cell_equal (target.buckets [bucket_index], k)
-			check across 1 |..| target.buckets_ [bucket_index].count as j all (target.buckets_ [bucket_index]) [j.item] =
-				target.lists [bucket_index].sequence [j.item].left end end
+			check across 1 |..| target.buckets_ [bucket_index].count as j all (target.buckets_ [bucket_index]) [j] =
+				target.lists [bucket_index].sequence [j].left end end
 			if c = Void then
 				bucket_index := target.capacity + 1
 				index_ := concat (target.buckets_).count + 1
@@ -239,7 +239,7 @@ feature -- Cursor movement
 				bucket_index := 1
 			invariant
 				1 <= bucket_index and bucket_index <= target.lists.count + 1
-				across 1 |..| (bucket_index - 1) as j all target.buckets_ [j.item].is_empty end
+				across 1 |..| (bucket_index - 1) as j all target.buckets_ [j].is_empty end
 				modify_field ("bucket_index", Current)
 			until
 				bucket_index > target.capacity or else not target.buckets [bucket_index].is_empty
@@ -267,7 +267,7 @@ feature -- Cursor movement
 				bucket_index := target.capacity
 			invariant
 				0 <= bucket_index and bucket_index <= target.lists.count
-				across (bucket_index + 1) |..| target.lists.count as j all target.buckets_ [j.item].is_empty end
+				across (bucket_index + 1) |..| target.lists.count as j all target.buckets_ [j].is_empty end
 				modify_field ("bucket_index", Current)
 			until
 				bucket_index < 1 or else not target.buckets [bucket_index].is_empty
@@ -479,7 +479,7 @@ feature {NONE} -- Implementation
 				bucket_index := bucket_index + 1
 			invariant
 				bucket_index.old_ < bucket_index and bucket_index <= target.buckets.sequence.count + 1
-				across (bucket_index.old_ + 1) |..| (bucket_index - 1) as i all target.buckets_ [i.item].is_empty end
+				across (bucket_index.old_ + 1) |..| (bucket_index - 1) as i all target.buckets_ [i].is_empty end
 				modify_field ("bucket_index", Current)
 			until
 				bucket_index > target.capacity or else not target.buckets [bucket_index].is_empty
@@ -526,7 +526,7 @@ feature {NONE} -- Implementation
 				bucket_index := bucket_index - 1
 			invariant
 				0 <= bucket_index and bucket_index < bucket_index.old_
-				across (bucket_index + 1) |..| (bucket_index.old_ - 1) as i all target.buckets_ [i.item].is_empty end
+				across (bucket_index + 1) |..| (bucket_index.old_ - 1) as i all target.buckets_ [i].is_empty end
 				modify_field ("bucket_index", Current)
 			until
 				bucket_index < 1 or else not target.buckets [bucket_index].is_empty
@@ -602,7 +602,7 @@ feature {V_CONTAINER, V_ITERATOR} -- Specification
 		note
 			status: lemma, static
 		require
-			all_empty: across 1 |..| seqs.count as i all seqs [i.item].is_empty end
+			all_empty: across 1 |..| seqs.count as i all seqs [i].is_empty end
 		do
 			use_definition (concat (seqs))
 			if seqs.count > 0 then
@@ -620,17 +620,17 @@ feature {V_CONTAINER, V_ITERATOR} -- Specification
 		require
 			target /= Void
 			domain_non_void: m.domain.non_void
-			domain_not_too_small: across 1 |..| bs.count as i all across 1 |..| bs [i.item].count as j all m.domain [(bs [i.item])[j.item]] end end
-			domain_not_too_large: across m.domain as x all across 1 |..| bs.count as i some bs [i.item].has (x.item) end end
+			domain_not_too_small: across 1 |..| bs.count as i all across 1 |..| bs [i].count as j all m.domain [(bs [i])[j]] end end
+			domain_not_too_large: across m.domain as x all across 1 |..| bs.count as i some bs [i].has (x) end end
 			no_precise_duplicates: across 1 |..| bs.count as i all across 1 |..| bs.count as j all
-					across 1 |..| bs [i.item].count as k all across 1 |..| bs [j.item].count as l all
-							i.item /= j.item or k.item /= l.item implies (bs [i.item])[k.item] /= (bs [j.item])[l.item] end end end end
+					across 1 |..| bs [i].count as k all across 1 |..| bs [j].count as l all
+							i /= j or k /= l implies (bs [i])[k] /= (bs [j])[l] end end end end
 		do
 			use_definition (concat (bs))
 			use_definition (value_sequence_from (concat (bs), m))
 			use_definition (target.bag_from (m))
 			if not bs.is_empty then
-				check across 1 |..| (bs.count - 1) as i all bs [i.item] = bs.but_last [i.item] end end
+				check across 1 |..| (bs.count - 1) as i all bs [i] = bs.but_last [i] end end
 				check  (m | (m.domain - bs.last.range)).domain = m.domain - bs.last.range end
 				lemma_content (bs.but_last, m | (m.domain - bs.last.range))
 				bs.last.lemma_no_duplicates

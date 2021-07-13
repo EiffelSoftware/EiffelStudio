@@ -42,7 +42,7 @@ feature -- Basic operations
 		require
 			wrapped: is_wrapped
 			item_wrapped: item.is_wrapped
-			subjects_wrapped: across item.subjects as s all s.item.is_wrapped end
+			subjects_wrapped: across item.subjects as s all s.is_wrapped end
 			not_current: item /= Current and not item.subjects [Current]
 		do
 			unwrap
@@ -66,8 +66,8 @@ feature -- Basic operations
 		require
 			wrapped: is_wrapped
 			item_locked: locked [item]
-			not_in_use: across observers as o all attached {V_LOCKER [G]} o.item as c and then not c.locked [item] end
-			not_subject: across locked as o all not o.item.subjects [item] and o.item.subjects.is_disjoint (item.subjects) end
+			not_in_use: across observers as o all attached {V_LOCKER [G]} o as c and then not c.locked [item] end
+			not_subject: across locked as o all not o.subjects [item] and o.subjects.is_disjoint (item.subjects) end
 		do
 			unwrap
 			locked := locked / item
@@ -105,7 +105,7 @@ feature -- Specification
 			status: functional, nonvariant
 		do
 			Result := attached {V_LOCKER [G]} o as l and then
-				across locked - new_locked as x all not l.locked [x.item] end
+				across locked - new_locked as x all not l.locked [x] end
 		end
 
 	no_new_pairs (new_eq: like equivalence; o: ANY): BOOLEAN
@@ -114,7 +114,7 @@ feature -- Specification
 			status: functional, nonvariant
 		do
 			Result := across locked as x all across locked as y all
-				not equivalence [x.item, y.item] implies not new_eq [x.item, y.item] end end
+				not equivalence [x, y] implies not new_eq [x, y] end end
 		end
 
 	set_has (s: MML_SET [G]; v: G): BOOLEAN
@@ -126,7 +126,7 @@ feature -- Specification
 			set_non_void: s.non_void
 			reads (s, v)
 		do
-			Result := across s as x some v.is_model_equal (x.item) end
+			Result := across s as x some v.is_model_equal (x) end
 		end
 
 	set_item (s: MML_SET [G]; v: G): G
@@ -147,14 +147,14 @@ feature -- Specification
 				Result := s1.any_item
 			invariant
 				s1 [Result]
-				across s1 as x some v.is_model_equal (x.item) end
+				across s1 as x some v.is_model_equal (x) end
 				s1 <= s
 				decreases (s1)
 			until
 				Result.is_model_equal (v)
 			loop
 				s1 := s1 / Result
-				check across s1 as x some v.is_model_equal (x.item) end end
+				check across s1 as x some v.is_model_equal (x) end end
 				Result := s1.any_item
 			end
 		ensure
@@ -171,7 +171,7 @@ feature {NONE} -- Implementation
 		require
 			open: is_open
 			x_wrapped: x.is_wrapped
-			locked_wrapped: across locked as a all a.item.is_wrapped end
+			locked_wrapped: across locked as a all a.is_wrapped end
 			inv_holds: inv
 			new_item: not locked [x]
 		local
@@ -184,7 +184,7 @@ feature {NONE} -- Implementation
 			invariant
 				s <= locked
 				equivalence [x, x]
-				across (locked - s) as a all equivalence [x, a.item] = x.is_model_equal (a.item) and equivalence [a.item, x] = x.is_model_equal (a.item) end
+				across (locked - s) as a all equivalence [x, a] = x.is_model_equal (a) and equivalence [a, x] = x.is_model_equal (a) end
 				inv
 				decreases (s)
 			until
@@ -202,16 +202,16 @@ feature {NONE} -- Implementation
 			end
 		ensure
 			still_holds: inv
-			equivalences_added: across locked & x as a all equivalence [x, a.item] = x.is_model_equal (a.item) and equivalence [a.item, x] = x.is_model_equal (a.item) end
+			equivalences_added: across locked & x as a all equivalence [x, a] = x.is_model_equal (a) and equivalence [a, x] = x.is_model_equal (a) end
 			modify_field ("equivalence", Current)
 		end
 
 invariant
 	locked_non_void: locked.non_void
-	owns_definition: across locked as x all owns [x.item] and x.item.subjects <= owns end
-	equivalence_definition: across locked as x all across locked as y all equivalence [x.item, y.item] = x.item.is_model_equal (y.item) end end
+	owns_definition: across locked as x all owns [x] and x.subjects <= owns end
+	equivalence_definition: across locked as x all across locked as y all equivalence [x, y] = x.is_model_equal (y) end end
 	default_subjects: subjects ~ create {MML_SET [ANY]}
-	observrs_are_lockers: across observers as o all attached {V_LOCKER [G]} o.item end
+	observrs_are_lockers: across observers as o all attached {V_LOCKER [G]} o end
 
 note
 	copyright: "Copyright (c) 1984-2018, Eiffel Software and others"

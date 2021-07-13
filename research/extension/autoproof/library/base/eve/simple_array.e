@@ -34,7 +34,7 @@ feature {NONE} -- Initialization
 			create sequence.constant (({G}).default, n)
 		ensure
 			count_set: count = n
-			all_default: across sequence.domain as i all sequence [i.item] = ({G}).default end
+			all_default: across sequence.domain as i all sequence [i] = ({G}).default end
 		end
 
 	make_from_array (a: SIMPLE_ARRAY [G])

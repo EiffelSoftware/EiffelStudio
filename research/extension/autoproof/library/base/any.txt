@@ -291,13 +291,15 @@ feature -- Verification: ownership fields
 			guard: in_observers
 		do
 			check is_executable: False then end
-		ensure
-			instance_free: class
 		end
 
 	frozen set_observers (a: MML_SET [ANY])
 			-- Set observers set of this object.
+		note
+			status: ghost
 		do
+		ensure
+			observers = a
 		end
 
 	in_observers (new_observers: like observers; o: ANY): BOOLEAN
@@ -305,7 +307,7 @@ feature -- Verification: ownership fields
 		note
 			status: functional, ghost
 		do
-			Result := new_observers [o]
+			Result := attached {like observers.any_item} o as x and then new_observers [x]
 		end
 
 	is_closed_with_subjects: BOOLEAN

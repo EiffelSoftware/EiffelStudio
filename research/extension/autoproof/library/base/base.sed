@@ -1,4 +1,5 @@
 s/6D7FF712-BBA5-4AC0-AABF-2D9880493A01/671C2BBD-94C8-4F69-A171-E00B512CA01D/
+s/<option warning="error"/<option warning="warning"/
 /dotnet_naming_convention/{
 	a\	\	<capability>
 	a\	\	\	<concurrency support="none"/>

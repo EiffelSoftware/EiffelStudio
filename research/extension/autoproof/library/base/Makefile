@@ -50,7 +50,7 @@ $(ISE_WIN_CR)\n\
 
 all:
 	echo Available targets:
-	echo 	
+	echo.
 	echo 	update	- Update source code from the library pointed by ISE_LIBRARY
 	echo 	clean 	- Remove generated files
 
@@ -76,20 +76,21 @@ eve/arguments.e: $(ARGUMENTS_SRC) arguments.sed Makefile
 	echo Updating $@
 	sed -f arguments.sed $(ARGUMENTS_SRC) > $@
 
-eve/arguments_32.e: $(ARGUMENTS_32_SRC) arguments.sed Makefile
+eve/arguments_32.e: $(ARGUMENTS_32_SRC) primes.sed Makefile
 	echo Updating $@
-	sed -f arguments.sed $(ARGUMENTS_32_SRC) > $@
+	sed -f primes.sed $(ARGUMENTS_32_SRC) > $@
 
-eve/array.e: $(ARRAY_SRC) Makefile
+eve/array.e: $(ARRAY_SRC) primes.sed Makefile
 	echo Updating $@
 	sed \
 		-e "s/\(make_from_cil ({NATIVE_ARRAY \[G\]})\)/\1$(ARRAY_CONVERSION)/" \
 		-e "/^invariant/i$(ARRAY_SPECIFICATION)" \
+		-f primes.sed \
 		$(ARRAY_SRC) > $@
 
-eve/fibonacci.e: $(FIBONACCI_SRC) arguments.sed Makefile
+eve/fibonacci.e: $(FIBONACCI_SRC) primes.sed Makefile
 	echo Updating $@
-	sed -f arguments.sed $(FIBONACCI_SRC) > $@
+	sed -f primes.sed $(FIBONACCI_SRC) > $@
 
 eve/iterable.e: $(ITERABLE_SRC) iterable.sed Makefile
 	echo Updating $@
@@ -99,9 +100,9 @@ eve/iteration_cursor.e: $(ITERATION_CURSOR_SRC) iteration_cursor.sed Makefile
 	echo Updating $@
 	sed -f iteration_cursor.sed $(ITERATION_CURSOR_SRC) > $@
 
-eve/primes.e: $(PRIMES_SRC) arguments.sed Makefile
+eve/primes.e: $(PRIMES_SRC) primes.sed Makefile
 	echo Updating $@
-	sed -f arguments.sed $(PRIMES_SRC) > $@
+	sed -f primes.sed $(PRIMES_SRC) > $@
 
 eve/std_files.e: $(STD_FILES_SRC) std_files.sed Makefile
 	echo Updating $@

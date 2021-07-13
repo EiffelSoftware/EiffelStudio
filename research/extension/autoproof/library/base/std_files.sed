@@ -17,7 +17,7 @@ n
 	a\	\	\	create internal_last_string_.make_from_string ("")
 	a\	\	end
 }
-/put_string/{
+/put_string.*STRING/{
 	N
 	N
 	N

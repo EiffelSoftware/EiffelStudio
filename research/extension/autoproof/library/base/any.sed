@@ -6,7 +6,16 @@
 	N
 	N
 	N
-	s/\(\t\tdo\)/\	\	note\n\t\t\texplicit\:\ contracts\n\1/
+	s/\(\t\tlocal\)/\	\	note\n\t\t\texplicit\:\ contracts\n\1/
+	N
+	N
+	N
+	N
+	N
+	N
+	N
+	N
+	N
 	N
 	N
 	N

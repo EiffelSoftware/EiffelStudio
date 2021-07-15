@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "Streams where values can be output one by one."
 	author: "Nadia Polikarpova"
 	revised_by: "Alexander Kogtenkov"
@@ -24,16 +24,14 @@ feature -- Replacement
 			-- Put `v' into the stream and move to the next position.
 		require
 			not_off: not off
-			subjects_wrapped: across subjects as s all
+			subjects_wrapped: ∀ s: subjects ¦
 					s.is_wrapped and
-					across s.observers as o all o /= Current implies o.is_open end
-				end
+					∀ o: s.observers ¦ o /= Current implies o.is_open
 		deferred
 		ensure
-			subjects_wrapped: across subjects as s all
+			subjects_wrapped: ∀ s: subjects ¦
 					s.is_wrapped and
-					across s.observers as o all o /= Current implies o.is_open end
-				end
+					∀ o: s.observers ¦ o /= Current implies o.is_open
 			modify_model ("off_", Current)
 			modify (subjects)
 		end
@@ -45,21 +43,19 @@ feature -- Replacement
 		require
 			input_wrapped: input.is_wrapped
 			input_not_current: input /= Current
-			subjects_wrapped: across subjects as s all
+			subjects_wrapped: ∀ s: subjects ¦
 					s.is_wrapped and
-					across s.observers as o all o /= Current implies o.is_open end
-				end
-			input_subjects_wrapped: across input.subjects as s all s.is_wrapped end
+					∀ o: s.observers ¦ o /= Current implies o.is_open
+			input_subjects_wrapped: ∀ s: input.subjects ¦ s.is_wrapped
 		do
 			from
 			invariant
 				is_wrapped and input.is_wrapped
 				inv and input.inv
 				subjects ~ subjects.old_
-				subjects_wrapped: across subjects as s all
-					s.is_wrapped and
-					across s.observers as o all o /= Current implies o.is_open end
-				end
+				subjects_wrapped: ∀ s: subjects ¦
+						s.is_wrapped and
+						∀ o: s.observers ¦ o /= Current implies o.is_open
 				decreases ([])
 			until
 				off or input.off
@@ -81,11 +77,10 @@ feature -- Replacement
 			input_exists: input.is_wrapped
 			input_not_current: input /= Current
 			n_non_negative: n >= 0
-			subjects_wrapped: across subjects as s all
+			subjects_wrapped: ∀ s: subjects ¦
 					s.is_wrapped and
-					across s.observers as o all o /= Current implies o.is_open end
-				end
-			input_subjects_wrapped: across input.subjects as s all s.is_wrapped end
+					∀ o: s.observers ¦ o /= Current implies o.is_open
+			input_subjects_wrapped: ∀ s: input.subjects ¦ s.is_wrapped
 		local
 			i: INTEGER
 		do
@@ -95,10 +90,9 @@ feature -- Replacement
 				is_wrapped and input.is_wrapped
 				inv and input.inv
 				subjects ~ subjects.old_
-				subjects_wrapped: across subjects as s all
-					s.is_wrapped and
-					across s.observers as o all o /= Current implies o.is_open end
-				end
+				subjects_wrapped: ∀ s: subjects ¦
+						s.is_wrapped and
+						∀ o: s.observers ¦ o /= Current implies o.is_open
 			until
 				i > n or off or input.off
 			loop
@@ -126,7 +120,7 @@ invariant
 	no_observers: observers ~ create {MML_SET [ANY]}
 
 note
-	copyright: "Copyright (c) 1984-2018, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2021, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software
@@ -135,4 +129,5 @@ note
 			Website http://www.eiffel.com
 			Customer support http://support.eiffel.com
 		]"
+
 end

@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "Iterators over hash tables."
 	author: "Nadia Polikarpova"
 	revised_by: "Alexander Kogtenkov"
@@ -43,9 +43,9 @@ feature {NONE} -- Initialization
 				i_ := 2
 			invariant
 				2 <= i_ and i_ <= t.lists.count + 1
-				across 1 |..| t.lists.count as j all t.lists [j].is_wrapped end
-				across 1 |..| (i_ - 1) as j all t.lists [j].observers = t.lists [j].observers.old_ & list_iterator end
-				across i_ |..| t.lists.count as j all t.lists [j].observers = t.lists [j].observers.old_ end
+				∀ j: 1 |..| t.lists.count ¦ t.lists [j].is_wrapped
+				∀ j: 1 |..| (i_ - 1) ¦ t.lists [j].observers = t.lists [j].observers.old_ & list_iterator
+				∀ j: i_ |..| t.lists.count ¦ t.lists [j].observers = t.lists [j].observers.old_
 				t.inv_only ("A2", "items_locked", "no_duplicates", "valid_buckets")
 				modify_field (["observers", "closed"], t.lists.range)
 			until
@@ -126,7 +126,7 @@ feature -- Access
 			use_definition (value_sequence_from (sequence, target.map))
 		end
 
-feature -- Measurement		
+feature -- Measurement
 
 	index: INTEGER
 			-- Current position.
@@ -210,12 +210,12 @@ feature -- Cursor movement
 			c: V_LINKABLE [MML_PAIR [K, V]]
 		do
 			check target.inv_only ("items_locked", "locked_non_void", "locked_definition", "buckets_non_empty", "buckets_lower", "buckets_count", "lists_definition",
-				"owns_definition", "list_observers_same", "domain_not_too_small", "lists_counts", "buckets_content", "no_duplicates", "valid_buckets") end
+						"owns_definition", "list_observers_same", "domain_not_too_small", "lists_counts", "buckets_content", "no_duplicates", "valid_buckets") end
 			check target.lock.inv end
 			bucket_index := target.index (k)
 			c := target.cell_equal (target.buckets [bucket_index], k)
-			check across 1 |..| target.buckets_ [bucket_index].count as j all (target.buckets_ [bucket_index]) [j] =
-				target.lists [bucket_index].sequence [j].left end end
+			check ∀ j: 1 |..| target.buckets_ [bucket_index].count ¦ (target.buckets_ [bucket_index]) [j] =
+							target.lists [bucket_index].sequence [j].left end
 			if c = Void then
 				bucket_index := target.capacity + 1
 				index_ := concat (target.buckets_).count + 1
@@ -239,7 +239,7 @@ feature -- Cursor movement
 				bucket_index := 1
 			invariant
 				1 <= bucket_index and bucket_index <= target.lists.count + 1
-				across 1 |..| (bucket_index - 1) as j all target.buckets_ [j].is_empty end
+				∀ j: 1 |..| (bucket_index - 1) ¦ target.buckets_ [j].is_empty
 				modify_field ("bucket_index", Current)
 			until
 				bucket_index > target.capacity or else not target.buckets [bucket_index].is_empty
@@ -267,7 +267,7 @@ feature -- Cursor movement
 				bucket_index := target.capacity
 			invariant
 				0 <= bucket_index and bucket_index <= target.lists.count
-				across (bucket_index + 1) |..| target.lists.count as j all target.buckets_ [j].is_empty end
+				∀ j: (bucket_index + 1) |..| target.lists.count ¦ target.buckets_ [j].is_empty
 				modify_field ("bucket_index", Current)
 			until
 				bucket_index < 1 or else not target.buckets [bucket_index].is_empty
@@ -479,7 +479,7 @@ feature {NONE} -- Implementation
 				bucket_index := bucket_index + 1
 			invariant
 				bucket_index.old_ < bucket_index and bucket_index <= target.buckets.sequence.count + 1
-				across (bucket_index.old_ + 1) |..| (bucket_index - 1) as i all target.buckets_ [i].is_empty end
+				∀ i: (bucket_index.old_ + 1) |..| (bucket_index - 1) ¦ target.buckets_ [i].is_empty
 				modify_field ("bucket_index", Current)
 			until
 				bucket_index > target.capacity or else not target.buckets [bucket_index].is_empty
@@ -503,7 +503,7 @@ feature {NONE} -- Implementation
 			end
 			check list_iterator.inv_only ("sequence_definition") end
 			wrap
- 		ensure
+		ensure
 			wrapped: is_wrapped
 			modify_field (["bucket_index", "closed", "box"], Current)
 			modify (list_iterator)
@@ -526,7 +526,7 @@ feature {NONE} -- Implementation
 				bucket_index := bucket_index - 1
 			invariant
 				0 <= bucket_index and bucket_index < bucket_index.old_
-				across (bucket_index + 1) |..| (bucket_index.old_ - 1) as i all target.buckets_ [i].is_empty end
+				∀ i: (bucket_index + 1) |..| (bucket_index.old_ - 1) ¦ target.buckets_ [i].is_empty
 				modify_field ("bucket_index", Current)
 			until
 				bucket_index < 1 or else not target.buckets [bucket_index].is_empty
@@ -547,7 +547,7 @@ feature {NONE} -- Implementation
 				check target.buckets_.front (bucket_index.old_ - 1).front (bucket_index - 1) = target.buckets_.front (bucket_index - 1) end
 			end
 			wrap
- 		ensure
+		ensure
 			wrapped: is_wrapped
 			modify_field (["bucket_index", "closed", "box"], Current)
 			modify (list_iterator)
@@ -602,7 +602,7 @@ feature {V_CONTAINER, V_ITERATOR} -- Specification
 		note
 			status: lemma, static
 		require
-			all_empty: across 1 |..| seqs.count as i all seqs [i].is_empty end
+			all_empty: ∀ i: 1 |..| seqs.count ¦ seqs [i].is_empty
 		do
 			use_definition (concat (seqs))
 			if seqs.count > 0 then
@@ -620,18 +620,18 @@ feature {V_CONTAINER, V_ITERATOR} -- Specification
 		require
 			target /= Void
 			domain_non_void: m.domain.non_void
-			domain_not_too_small: across 1 |..| bs.count as i all across 1 |..| bs [i].count as j all m.domain [(bs [i])[j]] end end
-			domain_not_too_large: across m.domain as x all across 1 |..| bs.count as i some bs [i].has (x) end end
-			no_precise_duplicates: across 1 |..| bs.count as i all across 1 |..| bs.count as j all
-					across 1 |..| bs [i].count as k all across 1 |..| bs [j].count as l all
-							i /= j or k /= l implies (bs [i])[k] /= (bs [j])[l] end end end end
+			domain_not_too_small: ∀ i: 1 |..| bs.count ¦ ∀ j: 1 |..| bs [i].count ¦ m.domain [(bs [i]) [j]]
+			domain_not_too_large: ∀ x: m.domain ¦ ∃ i: 1 |..| bs.count ¦ bs [i].has (x)
+			no_precise_duplicates: ∀ i: 1 |..| bs.count ¦ ∀ j: 1 |..| bs.count ¦
+						∀ k: 1 |..| bs [i].count ¦ ∀ l: 1 |..| bs [j].count ¦
+								i /= j or k /= l implies (bs [i]) [k] /= (bs [j]) [l]
 		do
 			use_definition (concat (bs))
 			use_definition (value_sequence_from (concat (bs), m))
 			use_definition (target.bag_from (m))
 			if not bs.is_empty then
-				check across 1 |..| (bs.count - 1) as i all bs [i] = bs.but_last [i] end end
-				check  (m | (m.domain - bs.last.range)).domain = m.domain - bs.last.range end
+				check ∀ i: 1 |..| (bs.count - 1) ¦ bs [i] = bs.but_last [i] end
+				check (m | (m.domain - bs.last.range)).domain = m.domain - bs.last.range end
 				lemma_content (bs.but_last, m | (m.domain - bs.last.range))
 				bs.last.lemma_no_duplicates
 
@@ -661,9 +661,8 @@ invariant
 	index_after: bucket_index > target.lists.count implies index_ = concat (target.buckets_).count + 1
 	index_not_off: target.lists.domain [bucket_index] implies index_ = concat (target.buckets_.front (bucket_index - 1)).count + list_iterator.index_
 
-
 note
-	copyright: "Copyright (c) 1984-2018, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2021, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software
@@ -672,4 +671,5 @@ note
 			Website http://www.eiffel.com
 			Customer support http://support.eiffel.com
 		]"
+
 end

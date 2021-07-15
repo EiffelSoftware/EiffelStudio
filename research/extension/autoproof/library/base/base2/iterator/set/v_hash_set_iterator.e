@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "Iterators over hash sets."
 	author: "Nadia Polikarpova"
 	revised_by: "Alexander Kogtenkov"
@@ -40,7 +40,7 @@ feature {NONE} -- Initialization
 
 			iterator.lemma_sequence_no_duplicates
 			iterator.sequence.lemma_no_duplicates
-			check across t.bag.domain as x all t.bag [x] = iterator.sequence.to_bag [x] end end
+			check ∀ x: t.bag.domain ¦ t.bag [x] = iterator.sequence.to_bag [x] end
 
 			wrap
 		ensure
@@ -103,7 +103,7 @@ feature -- Access
 			Result := iterator.key
 		end
 
-feature -- Measurement		
+feature -- Measurement
 
 	index: INTEGER
 			-- Current position.
@@ -233,13 +233,13 @@ feature -- Removal
 
 			check iterator.inv_only ("target_domain_constraint") end
 			iterator.sequence.to_bag.lemma_domain_count
-			check across target.bag.domain as x all target.bag [x] = iterator.sequence.to_bag [x] end end
+			check ∀ x: target.bag.domain ¦ target.bag [x] = iterator.sequence.to_bag [x] end
 		end
 
 feature {V_CONTAINER, V_ITERATOR, V_LOCK} -- Implementation
 
 	iterator: V_HASH_TABLE_ITERATOR [G, detachable ANY]
-			-- Iterator over the storage.		
+			-- Iterator over the storage.
 
 invariant
 	iterator_exists: iterator /= Void
@@ -249,7 +249,7 @@ invariant
 	same_index: index_ = iterator.index_
 
 note
-	copyright: "Copyright (c) 1984-2018, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2021, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software
@@ -258,4 +258,5 @@ note
 			Website http://www.eiffel.com
 			Customer support http://support.eiffel.com
 		]"
+
 end

@@ -31,7 +31,7 @@ feature -- Initialization
 		note
 			explicit: wrapping
 		require
-			observers_open: across observers as o all o.is_open end
+			observers_open: ∀ o: observers ¦ o.is_open
 		local
 			i: V_LIST_ITERATOR [G]
 		do
@@ -43,7 +43,7 @@ feature -- Initialization
 			end
 		ensure
 			sequence_effect: sequence ~ old other.sequence
-			observers_open: across observers as o all o.is_open end
+			observers_open: ∀ o: observers ¦ o.is_open
 			observers_preserved: other.observers ~ old other.observers
 			modify_model ("sequence", Current)
 			modify_field (["observers", "closed"], other)
@@ -149,7 +149,7 @@ feature -- Comparison
 						i_ <= sequence.count implies c1 = cells [i_] and c2 = other.cells [i_]
 						i_ = sequence.count + 1 implies c1 = Void and c2 = Void
 						if Result
-							then across 1 |..| (i_ - 1) as k all sequence [k] = other.sequence [k] end
+							then ∀ k: 1 |..| (i_ - 1) ¦ sequence [k] = other.sequence [k]
 							else sequence [i_ - 1] /= other.sequence [i_ - 1] end
 					until
 						c1 = Void or not Result
@@ -197,7 +197,7 @@ feature -- Replacement
 				create cells
 				create sequence
 			invariant
-				across 1 |..| count_ as i all cells.old_ [i].is_wrapped end
+				∀ i: 1 |..| count_ ¦ cells.old_ [i].is_wrapped
 				rest_cells.count = count_ - cells.count
 				inv_only ("cells_domain", "first_cell_empty", "cells_exist", "sequence_implementation", "cells_linked", "cells_first", "cells_last")
 
@@ -207,7 +207,7 @@ feature -- Replacement
 				rest_cells.is_empty = (rest = Void)
 
 				cells.old_.tail (cells.count + 1) = rest_cells
-				across 1 |..| cells.count as i all cells [i] = cells.old_ [cells.count - i + 1] end
+				∀ i: 1 |..| cells.count ¦ cells [i] = cells.old_ [cells.count - i + 1]
 				cells.range = cells.old_.front (cells.count).range
 
 				modify_field (["first_cell", "cells", "sequence"], Current)
@@ -314,7 +314,7 @@ feature -- Extension
 					it.is_wrapped
 					it.target = Current
 					observers = observers.old_ & it
-					across observers.old_ as o all o.is_open end
+					∀ o: observers.old_ ¦ o.is_open
 					cells.old_ ~ cells.tail (it.index_ + 1)
 				until
 					input.after
@@ -361,7 +361,7 @@ feature -- Extension
 					it.is_wrapped
 					it.target = Current
 					observers = observers.old_ & it
-					across observers.old_ as o all o.is_open end
+					∀ o: observers.old_ ¦ o.is_open
 				until
 					input.after
 				loop
@@ -417,7 +417,7 @@ feature -- Removal
 			cells_preserved: cells ~ old cells.but_last
 		end
 
-	remove_at  (i: INTEGER)
+	remove_at (i: INTEGER)
 			-- Remove element at position `i'.
 		note
 			explicit: wrapping
@@ -441,10 +441,10 @@ feature -- Removal
 			create cells
 			create sequence
 		ensure then
-			old_cells_wrapped: across old owns as c all c.is_wrapped end
+			old_cells_wrapped: ∀ c: old owns ¦ c.is_wrapped
 			cells_exist: (old cells).non_void
 			cells_linked: is_linked (old cells)
-			items_unchanged: across 1 |..| old sequence.count as i all (old sequence) [i] = (old cells) [i].item end
+			items_unchanged: ∀ i: 1 |..| old sequence.count ¦ (old sequence) [i] = (old cells) [i].item
 			cells_last: old cells.count > 0 implies (attached old last_cell as c and then not attached c.right)
 		end
 
@@ -492,7 +492,7 @@ feature {V_CONTAINER, V_ITERATOR} -- Implementation
 			index_in_domain: cells.domain [index_]
 			c_in_list: cells [index_] = c
 			wrapped: is_wrapped
-			observers_open: across observers as o all o.is_open end
+			observers_open: ∀ o: observers ¦ o.is_open
 		do
 			lemma_cells_distinct
 			unwrap
@@ -510,7 +510,7 @@ feature {V_CONTAINER, V_ITERATOR} -- Implementation
 			-- Add a new cell with value `v' after `c'.
 		require
 			wrapped: is_wrapped
-			observers_open: across observers as o all o.is_open end
+			observers_open: ∀ o: observers ¦ o.is_open
 			new_is_wrapped: new.is_wrapped
 
 			new_not_current: new /= Current
@@ -548,7 +548,7 @@ feature {V_CONTAINER, V_ITERATOR} -- Implementation
 			valid_index: 1 <= index_ and index_ <= sequence.count - 1
 			c_in_list: cells [index_] = c
 			wrapped: is_wrapped
-			observers_open: across observers as o all o.is_open end
+			observers_open: ∀ o: observers ¦ o.is_open
 		do
 			lemma_cells_distinct
 			unwrap
@@ -583,8 +583,8 @@ feature {V_CONTAINER, V_ITERATOR} -- Implementation
 			other_not_current: other /= Current
 			wrapped: is_wrapped
 			other_wrapped: other.is_wrapped
-			observers_open: across observers as o all o.is_open end
-			other_observers_open: across other.observers as o all o.is_open end
+			observers_open: ∀ o: observers ¦ o.is_open
+			other_observers_open: ∀ o: other.observers ¦ o.is_open
 		local
 			other_first, other_last: V_LINKABLE [G]
 			other_count: INTEGER
@@ -643,10 +643,10 @@ feature -- Specificaton
 		note
 			status: ghost
 		attribute
- 			check is_executable: False then end
+			check is_executable: False then end
 		end
 
-feature {V_CONTAINER, V_ITERATOR} -- Specificaton	
+feature {V_CONTAINER, V_ITERATOR} -- Specificaton
 
 	lemma_cells_distinct
 			-- All cells in `cells' are distinct.
@@ -675,14 +675,12 @@ feature {V_CONTAINER, V_ITERATOR} -- Specificaton
 			if i /= cells.count then
 				lemma_cells_distinct_from (i + 1)
 				check cells [i].right = cells [i + 1] end
-				check across (i + 1) |..| (cells.count - 1) as j all cells [j].right = cells [j + 1] end end
+				check ∀ j: (i + 1) |..| (cells.count - 1) ¦ cells [j].right = cells [j + 1] end
 			end
 		ensure
-			cells_distinct: across i |..| cells.count as j all
-				across i |..| cells.count as k all
-					j < k implies cells [j] /= cells [k]
-				end
-			end
+			cells_distinct: ∀ j: i |..| cells.count ¦
+					∀ k: i |..| cells.count ¦
+						j < k implies cells [j] /= cells [k]
 		end
 
 	is_linked (cs: like cells): BOOLEAN
@@ -693,9 +691,9 @@ feature {V_CONTAINER, V_ITERATOR} -- Specificaton
 			cs.non_void
 			reads_field ("right", cs)
 		do
-			Result := across 1 |..| cs.count as i all
-				across 1 |..| cs.count as j all
-					i + 1 = j implies cs [i].right = cs [j] end end
+			Result := ∀ i: 1 |..| cs.count ¦
+					∀ j: 1 |..| cs.count ¦
+						i + 1 = j implies cs [i].right = cs [j]
 		end
 
 invariant
@@ -704,7 +702,7 @@ invariant
 	last_cell_empty: cells.is_empty = (last_cell = Void)
 	owns_definition: owns = cells.range
 	cells_exist: cells.non_void
-	sequence_implementation: across 1 |..| cells.count as i all sequence [i] = cells [i].item end
+	sequence_implementation: ∀ i: 1 |..| cells.count ¦ sequence [i] = cells [i].item
 	cells_linked: is_linked (cells)
 	cells_first: cells.count > 0 implies first_cell = cells.first
 	cells_last: cells.count > 0 implies attached last_cell as l and then l = cells.last and then l.right = Void
@@ -713,7 +711,7 @@ note
 	explicit: observers
 	date: "$Date$"
 	revision: "$Revision$"
-	copyright: "Copyright (c) 1984-2018, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2021, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software
@@ -722,4 +720,5 @@ note
 			Website http://www.eiffel.com
 			Customer support http://support.eiffel.com
 		]"
+
 end

@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "Iterators over lists."
 	author: "Nadia Polikarpova"
 	revised_by: "Alexander Kogtenkov"
@@ -28,7 +28,7 @@ feature -- Extension
 		require
 			not_off: not off
 			target_wrapped: target.is_wrapped
-			target_observers_open: across target.observers as o all o /= Current implies o.is_open end
+			target_observers_open: ∀ o: target.observers ¦ o /= Current implies o.is_open
 		deferred
 		ensure
 			target_sequence_effect: target.sequence ~ old target.sequence.extended_at (index_, v)
@@ -44,7 +44,7 @@ feature -- Extension
 		require
 			not_off: not off
 			target_wrapped: target.is_wrapped
-			target_observers_open: across target.observers as o all o /= Current implies o.is_open end
+			target_observers_open: ∀ o: target.observers ¦ o /= Current implies o.is_open
 		deferred
 		ensure
 			target_sequence_effect: target.sequence ~ old target.sequence.extended_at (index_ + 1, v)
@@ -61,7 +61,7 @@ feature -- Extension
 			other_not_before: not other.before
 			target_wrapped: target.is_wrapped
 			other_target_wrapped: other.target.is_wrapped
-			observers_open: across target.observers as o all o /= Current implies o.is_open end
+			observers_open: ∀ o: target.observers ¦ o /= Current implies o.is_open
 			different_target: target /= other.target
 		deferred
 		ensure
@@ -83,7 +83,7 @@ feature -- Extension
 			other_not_before: not other.before
 			target_wrapped: target.is_wrapped
 			other_target_wrapped: other.target.is_wrapped
-			observers_open: across target.observers as o all o /= Current implies o.is_open end
+			observers_open: ∀ o: target.observers ¦ o /= Current implies o.is_open
 			different_target: target /= other.target
 		deferred
 		ensure
@@ -104,7 +104,7 @@ feature -- Removal
 		require
 			not_off: not off
 			target_wrapped: target.is_wrapped
-			target_observers_open: across target.observers as o all o /= Current implies o.is_open end
+			target_observers_open: ∀ o: target.observers ¦ o /= Current implies o.is_open
 		deferred
 		ensure
 			target_sequence_effect: target.sequence ~ old target.sequence.removed_at (index_)
@@ -120,7 +120,7 @@ feature -- Removal
 			not_off: not off
 			not_first: not is_first
 			target_wrapped: target.is_wrapped
-			target_observers_open: across target.observers as o all o /= Current implies o.is_open end
+			target_observers_open: ∀ o: target.observers ¦ o /= Current implies o.is_open
 		deferred
 		ensure
 			target_sequence_effect: target.sequence ~ old target.sequence.removed_at (index_ - 1)
@@ -136,7 +136,7 @@ feature -- Removal
 			not_off: not off
 			not_last: not is_last
 			target_wrapped: target.is_wrapped
-			target_observers_open: across target.observers as o all o /= Current implies o.is_open end
+			target_observers_open: ∀ o: target.observers ¦ o /= Current implies o.is_open
 		deferred
 		ensure
 			sequence_effect: sequence ~ old sequence.removed_at (index_ + 1)
@@ -146,7 +146,7 @@ feature -- Removal
 		end
 
 note
-	copyright: "Copyright (c) 1984-2018, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2021, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software
@@ -155,4 +155,5 @@ note
 			Website http://www.eiffel.com
 			Customer support http://support.eiffel.com
 		]"
+
 end

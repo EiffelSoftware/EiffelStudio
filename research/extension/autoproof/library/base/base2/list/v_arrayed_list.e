@@ -39,7 +39,7 @@ feature -- Initialization
 	copy_ (other: like Current)
 			-- Initialize by copying all the items of `other'.
 		require
-			observers_open: across observers as o all o.is_open end
+			observers_open: ∀ o: observers ¦ o.is_open
 		do
 			if other /= Current then
 				other.unwrap
@@ -95,7 +95,7 @@ feature -- Comparison
 					inv
 					other.inv
 					if Result
-						then across 1 |..| (i - 1) as k all sequence [k] = other.sequence [k] end
+						then ∀ k: 1 |..| (i - 1) ¦ sequence [k] = other.sequence [k]
 						else sequence [i - 1] /= other.sequence [i - 1] end
 				until
 					i > count_ or not Result
@@ -207,8 +207,8 @@ feature -- Extension
 				array.is_wrapped
 				input.is_wrapped
 				array.sequence.count = new_capacity
-				across 1 |..| sequence.count as k all
-					k <= i - 1 + j or i + ic <= k implies sequence [k] = array.sequence [array_seq_index (k)] end
+				∀ k: 1 |..| sequence.count ¦
+						k <= i - 1 + j or i + ic <= k implies sequence [k] = array.sequence [array_seq_index (k)]
 				modify_model ("sequence", array)
 				modify_model ("index_", input)
 			until
@@ -342,16 +342,16 @@ feature {NONE} -- Implementation
 					array_wrapped: array.is_wrapped
 					inv_only ("array_non_empty", "first_index_in_bounds", "array_no_observers", "array_starts_from_zero")
 					array.sequence.count = array.sequence.count.old_
-					across (array_index_set (dest + i, dest + n - 1)) as k all
-						array.sequence [k] = array.sequence.old_ [array_seq_index (list_index (k) - dest + src)] end
-					across 1 |..| array.sequence.count as k all not array_index_set (dest + i, dest + n - 1) [k] implies array.sequence [k] = array.sequence.old_ [k] end
+					∀ k: (array_index_set (dest + i, dest + n - 1)) ¦
+							array.sequence [k] = array.sequence.old_ [array_seq_index (list_index (k) - dest + src)]
+					∀ k: 1 |..| array.sequence.count ¦ not array_index_set (dest + i, dest + n - 1) [k] implies array.sequence [k] = array.sequence.old_ [k]
 				until
 					i < 1
 				loop
 					array [array_index (dest + i - 1)] := array [array_index (src + i - 1)]
 					i := i - 1
 				end
-				check across (array_index_set (dest, dest + n - 1)) as k all array.sequence [k] = array.sequence.old_ [array_seq_index (list_index (k) - dest + src)] end end
+				check ∀ k: (array_index_set (dest, dest + n - 1)) ¦ array.sequence [k] = array.sequence.old_ [array_seq_index (list_index (k) - dest + src)] end
 			elseif src > dest then
 				from
 					i := 1
@@ -360,26 +360,25 @@ feature {NONE} -- Implementation
 					array_wrapped: array.is_wrapped
 					inv_only ("array_non_empty", "first_index_in_bounds", "array_no_observers", "array_starts_from_zero")
 					array.sequence.count = array.sequence.count.old_
-					across (array_index_set (dest, dest + i - 2)) as k all
-						array.sequence [k] = array.sequence.old_ [array_seq_index (list_index (k) - dest + src)] end
-					across 1 |..| array.sequence.count as k all not array_index_set (dest, dest + i - 2) [k] implies array.sequence [k] = array.sequence.old_ [k] end
+					∀ k: (array_index_set (dest, dest + i - 2)) ¦
+							array.sequence [k] = array.sequence.old_ [array_seq_index (list_index (k) - dest + src)]
+					∀ k: 1 |..| array.sequence.count ¦ not array_index_set (dest, dest + i - 2) [k] implies array.sequence [k] = array.sequence.old_ [k]
 				until
 					i > n
 				loop
 					array [array_index (dest + i - 1)] := array [array_index (src + i - 1)]
 					i := i + 1
 				end
-				check across (array_index_set (dest, dest + n - 1)) as k all array.sequence [k] = array.sequence.old_ [array_seq_index (list_index (k) - dest + src)] end end
+				check ∀ k: (array_index_set (dest, dest + n - 1)) ¦ array.sequence [k] = array.sequence.old_ [array_seq_index (list_index (k) - dest + src)] end
 			end
 		ensure
 			array_wrapped: array.is_wrapped
 			inv_only ("array_non_empty", "first_index_in_bounds", "array_no_observers", "array_starts_from_zero")
 			sequence_domain_effect: array.sequence.count = old array.sequence.count
-			sequence_effect_new: across (array_index_set (dest, dest + n - 1)) as k all
-					across 1 |..| array.sequence.count as l all
+			sequence_effect_new: ∀ k: (array_index_set (dest, dest + n - 1)) ¦
+					∀ l: 1 |..| array.sequence.count ¦
 						l = array_seq_index (list_index (k) - dest + src) implies array.sequence [k] = (old array.sequence) [l]
-					end end
-			sequence_effect_old: across 1 |..| array.sequence.count as k all not array_index_set (dest, dest + n - 1) [k] implies array.sequence [k] = array.sequence.old_ [k] end
+			sequence_effect_old: ∀ k: 1 |..| array.sequence.count ¦ not array_index_set (dest, dest + n - 1) [k] implies array.sequence [k] = array.sequence.old_ [k]
 			modify_model ("sequence", array)
 		end
 
@@ -390,7 +389,7 @@ feature {NONE} -- Implementation
 			explicit: contracts
 		require
 			wrapped: is_wrapped
-			observers_open: across observers as o all o.is_open end
+			observers_open: ∀ o: observers ¦ o.is_open
 		local
 			old_size, new_size: INTEGER
 		do
@@ -472,14 +471,14 @@ invariant
 	array_starts_from_zero: array.lower_ = 0
 	first_index_in_bounds: 0 <= first_index and first_index < array.sequence.count
 	sequence_count_constraint: sequence.count <= array.sequence.count
-	sequence_implementation: across 1 |..| sequence.count as i all sequence [i] = array.sequence [array_seq_index (i)] end
+	sequence_implementation: ∀ i: 1 |..| sequence.count ¦ sequence [i] = array.sequence [array_seq_index (i)]
 	array_no_observers: array.observers.is_empty
 
 note
 	explicit: observers
 	date: "$Date$"
 	revision: "$Revision$"
-	copyright: "Copyright (c) 1984-2018, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2021, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software
@@ -488,4 +487,5 @@ note
 			Website http://www.eiffel.com
 			Customer support http://support.eiffel.com
 		]"
+
 end

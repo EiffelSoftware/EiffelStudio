@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "[
 			Hash sets with hash function provided by HASHABLE and object equality.
 			Implementation uses hash tables.
@@ -189,13 +189,13 @@ invariant
 	table_exists: table /= Void
 	owns_definition: owns ~ create {MML_SET [ANY]}.singleton (table)
 	set_implementation: set = table.map.domain
-	table_values_definition: across set as x all table.map [x] = Void end
+	table_values_definition: ∀ x: set ¦ table.map [x] = Void
 	same_lock: lock = table.lock
-	observers_type: across observers as o all attached {V_HASH_SET_ITERATOR [G]} o end
+	observers_type: ∀ o: observers ¦ attached {V_HASH_SET_ITERATOR [G]} o
 	observers_correspond: table.observers.count <= observers.count
 
 note
-	copyright: "Copyright (c) 1984-2018, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2021, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software
@@ -204,4 +204,5 @@ note
 			Website http://www.eiffel.com
 			Customer support http://support.eiffel.com
 		]"
+
 end

@@ -71,7 +71,7 @@ feature -- Initialization
 	copy_ (other: like Current)
 			-- Initialize by copying all the items of `other'.
 		require
-			observers_open: across observers as o all o.is_open end
+			observers_open: ∀ o: observers ¦ o.is_open
 		do
 			if other /= Current then
 				row_count := other.row_count
@@ -84,7 +84,7 @@ feature -- Initialization
 		ensure then
 			sequence_effect: sequence ~ other.sequence
 			column_count_effect: column_count = other.column_count
-			observers_open: across observers as o all o.is_open end
+			observers_open: ∀ o: observers ¦ o.is_open
 			modify_model (["sequence", "column_count"], Current)
 			modify_field ("closed", other)
 		end
@@ -218,7 +218,7 @@ feature -- Replacement
 		require
 			valid_row: has_row (i)
 			valid_column: has_column (j)
-			observers_open: across observers as o all o.is_open end
+			observers_open: ∀ o: observers ¦ o.is_open
 		do
 			check inv end
 			flat_put (v, flat_index (i, j))
@@ -263,7 +263,7 @@ invariant
 note
 	date: "$Date$"
 	revision: "$Revision$"
-	copyright: "Copyright (c) 1984-2018, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2021, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software
@@ -272,4 +272,5 @@ note
 			Website http://www.eiffel.com
 			Customer support http://support.eiffel.com
 		]"
+
 end

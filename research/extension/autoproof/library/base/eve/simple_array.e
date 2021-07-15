@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "Array with specification usable in AutoProof."
 	status: skip
 
@@ -34,7 +34,7 @@ feature {NONE} -- Initialization
 			create sequence.constant (({G}).default, n)
 		ensure
 			count_set: count = n
-			all_default: across sequence.domain as i all sequence [i] = ({G}).default end
+			all_default: ∀ i: sequence.domain ¦ sequence [i] = ({G}).default
 		end
 
 	make_from_array (a: SIMPLE_ARRAY [G])
@@ -84,7 +84,7 @@ feature -- Access
 			valid_index: valid_index (i)
 			reads (Current)
 		do
-			Result := sequence[i]
+			Result := sequence [i]
 		ensure
 			definition: Result = sequence [i]
 		end

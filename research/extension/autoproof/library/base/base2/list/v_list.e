@@ -1,7 +1,7 @@
-note
+﻿note
 	description: "[
-		Indexable containers, where elements can be inserted and removed at any position. 
-		Indexing starts from 1.
+			Indexable containers, where elements can be inserted and removed at any position. 
+			Indexing starts from 1.
 		]"
 	author: "Nadia Polikarpova"
 	revised_by: "Alexander Kogtenkov"
@@ -66,7 +66,7 @@ feature -- Extension
 	extend_front (v: G)
 			-- Insert `v' at the front.
 		require
-			observers_open: across observers as o all o.is_open end
+			observers_open: ∀ o: observers ¦ o.is_open
 		deferred
 		ensure
 			sequence_effect: sequence ~ old sequence.prepended (v)
@@ -76,7 +76,7 @@ feature -- Extension
 	extend_back (v: G)
 			-- Insert `v' at the back.
 		require
-			observers_open: across observers as o all o.is_open end
+			observers_open: ∀ o: observers ¦ o.is_open
 		deferred
 		ensure
 			sequence_effect: sequence ~ old (sequence & v)
@@ -87,7 +87,7 @@ feature -- Extension
 			-- Insert `v' at position `i'.
 		require
 			valid_index: 1 <= i and i <= sequence.count + 1
-			observers_open: across observers as o all o.is_open end
+			observers_open: ∀ o: observers ¦ o.is_open
 		deferred
 		ensure
 			sequence_effect: sequence ~ old sequence.extended_at (i, v)
@@ -103,7 +103,7 @@ feature -- Extension
 			different_target: input.target /= Current
 			input_target_wrapped: input.target.is_wrapped
 			not_before: not input.before
-			observers_open: across observers as o all o.is_open end
+			observers_open: ∀ o: observers ¦ o.is_open
 		do
 			from
 			invariant
@@ -134,7 +134,7 @@ feature -- Extension
 			different_target: input.target /= Current
 			input_target_wrapped: input.target.is_wrapped
 			not_before: not input.before
-			observers_open: across observers as o all o.is_open end
+			observers_open: ∀ o: observers ¦ o.is_open
 		deferred
 		ensure
 			sequence_effect: sequence ~ old (input.sequence.tail (input.index_) + sequence)
@@ -152,7 +152,7 @@ feature -- Extension
 			different_target: input.target /= Current
 			input_target_wrapped: input.target.is_wrapped
 			not_before: not input.before
-			observers_open: across observers as o all o.is_open end
+			observers_open: ∀ o: observers ¦ o.is_open
 		deferred
 		ensure
 			sequence_effect: sequence ~ old (sequence.front (i - 1) + input.sequence.tail (input.index_) + sequence.tail (i))
@@ -168,7 +168,7 @@ feature -- Removal
 			-- Remove first element.
 		require
 			not_empty: not is_empty
-			observers_open: across observers as o all o.is_open end
+			observers_open: ∀ o: observers ¦ o.is_open
 		deferred
 		ensure
 			sequence_effect: sequence ~ old sequence.but_first
@@ -179,7 +179,7 @@ feature -- Removal
 			-- Remove last element.
 		require
 			not_empty: not is_empty
-			observers_open: across observers as o all o.is_open end
+			observers_open: ∀ o: observers ¦ o.is_open
 		deferred
 		ensure
 			sequence_effect: sequence ~ old sequence.but_last
@@ -190,7 +190,7 @@ feature -- Removal
 			-- Remove element at position `i'.
 		require
 			has_index: 1 <= i and i <= sequence.count
-			observers_open: across observers as o all o.is_open end
+			observers_open: ∀ o: observers ¦ o.is_open
 		deferred
 		ensure
 			sequence_effect: sequence ~ old sequence.removed_at (i)
@@ -203,7 +203,7 @@ feature -- Removal
 			status: nonvariant
 		require
 			has: sequence.has (v)
-			observers_open: across observers as o all o.is_open end
+			observers_open: ∀ o: observers ¦ o.is_open
 		local
 			i: V_LIST_ITERATOR [G]
 		do
@@ -213,10 +213,10 @@ feature -- Removal
 			check i.inv_only ("target_bag_constraint", "sequence_definition") end
 			forget_iterator (i)
 		ensure
-			sequence_effect: across 1 |..| sequence.count.old_ as j some
+			sequence_effect: ∃ j: 1 |..| sequence.count.old_ ¦
 					sequence.old_ [j] = v and
 					not sequence.old_.front (j - 1).has (v) and
-					sequence ~ sequence.old_.removed_at (j) end
+					sequence ~ sequence.old_.removed_at (j)
 			observers_restored: observers ~ old observers
 			modify_model (["sequence", "observers"], Current)
 		end
@@ -226,7 +226,7 @@ feature -- Removal
 		note
 			status: nonvariant
 		require
-			observers_open: across observers as o all o.is_open end
+			observers_open: ∀ o: observers ¦ o.is_open
 		local
 			i: V_LIST_ITERATOR [G]
 			n_, j_: INTEGER
@@ -242,7 +242,7 @@ feature -- Removal
 				not sequence.front (i.index_ - 1).has (v)
 				sequence.count + n_ = sequence.old_.count
 				sequence.front (i.index_ - 1) = removed_all (sequence.old_.front (i.index_ + n_ - 1), v)
-				across i.index_ |..| sequence.count as j all sequence [j] = sequence.old_[j + n_] end
+				∀ j: i.index_ |..| sequence.count ¦ sequence [j] = sequence.old_ [j + n_]
 				n_ >= 0
 				modify_model ("sequence", Current)
 				modify_model (["index_", "sequence"], i)
@@ -275,7 +275,7 @@ feature -- Removal
 	wipe_out
 			-- Remove all elements.
 		require
-			observers_open: across observers as o all o.is_open end
+			observers_open: ∀ o: observers ¦ o.is_open
 		deferred
 		ensure
 			sequence_effect: sequence.is_empty
@@ -285,7 +285,7 @@ feature -- Removal
 feature {V_LIST, V_LIST_ITERATOR} -- Implementation
 
 	count_: INTEGER
-			-- Number of elements.		
+			-- Number of elements.
 
 feature -- Specification
 
@@ -305,7 +305,7 @@ feature -- Specification
 			reads ([])
 		do
 			Result := if s.is_empty then s else
-				if s.last = x then removed_all (s.but_last, x) else removed_all (s.but_last, x) & s.last end end
+					if s.last = x then removed_all (s.but_last, x) else removed_all (s.but_last, x) & s.last end end
 		ensure
 			not Result.has (x)
 			not s.has (x) implies Result = s
@@ -333,7 +333,7 @@ invariant
 	count_definition: count_ = sequence.count
 
 note
-	copyright: "Copyright (c) 1984-2018, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2021, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software
@@ -342,4 +342,5 @@ note
 			Website http://www.eiffel.com
 			Customer support http://support.eiffel.com
 		]"
+
 end

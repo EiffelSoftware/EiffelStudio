@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "Linked implementation of queues."
 	author: "Nadia Polikarpova"
 	revised_by: "Alexander Kogtenkov"
@@ -136,12 +136,12 @@ invariant
 	list_exists: list /= Void
 	owns_definition: owns ~ create {MML_SET [ANY]}.singleton (list)
 	sequence_implementation: sequence ~ list.sequence
-	observers_type: across observers as o all attached {V_LINKED_QUEUE_ITERATOR [G]} o end
+	observers_type: ∀ o: observers ¦ attached {V_LINKED_QUEUE_ITERATOR [G]} o
 	observers_correspond: list.observers.count <= observers.count
 
 note
 	explicit: observers
-	copyright: "Copyright (c) 1984-2018, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2021, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software
@@ -150,4 +150,5 @@ note
 			Website http://www.eiffel.com
 			Customer support http://support.eiffel.com
 		]"
+
 end

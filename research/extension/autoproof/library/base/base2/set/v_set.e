@@ -1,7 +1,7 @@
-note
+﻿note
 	description: "[
-		Container where all elements are unique with respect to object equality. 
-		Elements can be added and removed.
+			Container where all elements are unique with respect to object equality. 
+			Elements can be added and removed.
 		]"
 	author: "Nadia Polikarpova"
 	revised_by: "Alexander Kogtenkov"
@@ -10,7 +10,7 @@ note
 	false_guards: true
 
 deferred class
-	V_SET [G-> ANY]
+	V_SET [G -> ANY]
 
 inherit
 	V_CONTAINER [G]
@@ -141,7 +141,7 @@ feature -- Comparison
 					other.inv_only ("items_locked")
 					lock.inv_only ("owns_definition")
 					1 <= it.index_ and it.index_ <= it.sequence.count + 1
-					Result implies across 1 |..| (it.index_ - 1) as i all other.set_has (it.sequence [i]) end
+					Result implies ∀ i: 1 |..| (it.index_ - 1) ¦ other.set_has (it.sequence [i])
 					not Result implies not other.set_has (it.sequence [it.index_ - 1])
 					modify_model ("index_", it)
 				until
@@ -160,7 +160,7 @@ feature -- Comparison
 			end
 			check inv_only ("locked_non_void") end
 		ensure
-			definition: Result = across set as x all other.set_has (x) end
+			definition: Result = ∀ x: set ¦ other.set_has (x)
 			observers_restored: observers ~ old observers
 			other_observers_restored: other.observers ~ old other.observers
 			modify_model ("observers", [Current, other])
@@ -177,7 +177,7 @@ feature -- Comparison
 		do
 			Result := other.is_subset_of (Current)
 		ensure
-			definition: Result = across other.set as x all set_has (x) end
+			definition: Result = ∀ x: other.set ¦ set_has (x)
 			observers_restored: observers ~ old observers
 			other_observers_restored: other.observers ~ old other.observers
 			modify_model ("observers", [Current, other])
@@ -208,7 +208,7 @@ feature -- Comparison
 					other.inv_only ("items_locked")
 					lock.inv_only ("owns_definition")
 					1 <= it.index_ and it.index_ <= it.sequence.count + 1
-					Result implies across 1 |..| (it.index_ - 1) as i all not other.set_has (it.sequence [i]) end
+					Result implies ∀ i: 1 |..| (it.index_ - 1) ¦ not other.set_has (it.sequence [i])
 					not Result implies other.set_has (it.sequence [it.index_ - 1])
 					modify_model ("index_", it)
 				until
@@ -227,7 +227,7 @@ feature -- Comparison
 			end
 			check inv_only ("locked_non_void") end
 		ensure
-			definition: Result = across set as x all not other.set_has (x) end
+			definition: Result = ∀ x: set ¦ not other.set_has (x)
 			observers_restored: observers ~ old observers
 			other_observers_restored: other.observers ~ old other.observers
 			modify_model ("observers", [Current, other])
@@ -273,8 +273,8 @@ feature -- Extension
 					lock.inv_only ("owns_definition")
 					1 <= it.index_ and it.index_ <= it.sequence.count + 1
 					set.old_ <= set
-					across 1 |..| (it.index_ - 1) as i all set_has (it.sequence [i]) end
-					across set as x all set.old_ [x] or other.set.old_ [x] end
+					∀ i: 1 |..| (it.index_ - 1) ¦ set_has (it.sequence [i])
+					∀ x: set ¦ set.old_ [x] or other.set.old_ [x]
 					modify_model ("set", Current)
 					modify_model ("index_", it)
 				until
@@ -289,8 +289,8 @@ feature -- Extension
 			end
 		ensure
 			has_old: old set <= set
-			has_other: across old other.set as y all set_has (y) end
-			no_extra: across set as x all set.old_ [x] or other.set.old_ [x] end
+			has_other: ∀ y: old other.set ¦ set_has (y)
+			no_extra: ∀ x: set ¦ set.old_ [x] or other.set.old_ [x]
 			observers_restored: observers ~ old observers
 			other_observers_restored: other.observers ~ old other.observers
 			modify_model ("set", Current)
@@ -301,7 +301,7 @@ feature -- Removal
 
 	remove (v: G)
 			-- Remove `v' from the set, if contained.
-			-- Otherwise do nothing.		
+			-- Otherwise do nothing.
 		note
 			status: nonvariant
 		require
@@ -353,8 +353,8 @@ feature -- Removal
 					lock.inv_only ("owns_definition", "equivalence_definition")
 					1 <= it.index_ and it.index_ <= it.sequence.count + 1
 					set <= set.old_
-					across 1 |..| (it.index_ - 1) as i all attached it.sequence [i] as x and then other.set_has (x) end
-					across set.old_ as y all other.set_has (y) implies set [y] end
+					∀ i: 1 |..| (it.index_ - 1) ¦ attached it.sequence [i] as x and then other.set_has (x)
+					∀ y: set.old_ ¦ other.set_has (y) implies set [y]
 					modify_model ("set", Current)
 					modify_model (["sequence", "index_"], it)
 				until
@@ -372,7 +372,7 @@ feature -- Removal
 			end
 		ensure
 			only_old: set <= old set
-			not_too_few: across old set as y all other.set_has (y).old_ = set_has (y) end
+			not_too_few: ∀ y: old set ¦ other.set_has (y).old_ = set_has (y)
 			observers_restored: observers ~ old observers
 			other_observers_restored: other.observers ~ old other.observers
 			modify_model ("set", Current)
@@ -403,8 +403,8 @@ feature -- Removal
 					lock.inv_only ("owns_definition", "equivalence_definition")
 					1 <= it.index_ and it.index_ <= it.sequence.count + 1
 					set <= set.old_
-					across 1 |..| (it.index_ - 1) as i all attached it.sequence [i] as x implies not set_has (x) end
-					across set.old_ as y all not other.set_has (y) implies set [y] end
+					∀ i: 1 |..| (it.index_ - 1) ¦ attached it.sequence [i] as x implies not set_has (x)
+					∀ y: set.old_ ¦ not other.set_has (y) implies set [y]
 					observers ~ observers.old_
 					modify_model (["set", "observers"], Current)
 					modify_model ("index_", it)
@@ -422,7 +422,7 @@ feature -- Removal
 			end
 		ensure
 			only_old: set <= old set
-			not_too_few: across old set as y all other.set_has (y).old_ /= set_has (y) end
+			not_too_few: ∀ y: old set ¦ other.set_has (y).old_ /= set_has (y)
 			observers_restored: observers ~ old observers
 			other_observers_restored: other.observers ~ old other.observers
 			modify_model ("set", Current)
@@ -454,9 +454,9 @@ feature -- Removal
 					other.inv_only ("items_locked")
 					lock.inv_only ("owns_definition")
 					1 <= it.index_ and it.index_ <= seq.count + 1
-					across set.old_ as x all other.set_has (x).old_ or set [x]  end
-					across 1 |..| (it.index_ - 1) as j all lock.set_has (set.old_, seq [j]) or set [seq [j]] end
-					across set as x all set.old_ [x] or across 1 |..| (it.index_ - 1) as j some x = seq [j] end end
+					∀ x: set.old_ ¦ other.set_has (x).old_ or set [x]
+					∀ j: 1 |..| (it.index_ - 1) ¦ lock.set_has (set.old_, seq [j]) or set [seq [j]]
+					∀ x: set ¦ set.old_ [x] or ∃ j: 1 |..| (it.index_ - 1) ¦ x = seq [j]
 					observers ~ observers.old_
 					modify_model (["set", "observers"], Current)
 					modify_model ("index_", it)
@@ -486,9 +486,9 @@ feature -- Removal
 				wipe_out
 			end
 		ensure
-			set_effect_old: across old set as x all other.set_has (x).old_ or set [x]  end
-			set_effect_other: across other.set.old_ as x all set_has (x).old_ or set [x] end
-			set_effect_new: across set as x all set.old_ [x] or other.set.old_ [x] end
+			set_effect_old: ∀ x: old set ¦ other.set_has (x).old_ or set [x]
+			set_effect_other: ∀ x: other.set.old_ ¦ set_has (x).old_ or set [x]
+			set_effect_new: ∀ x: set ¦ set.old_ [x] or other.set.old_ [x]
 			observers_restored: observers ~ old observers
 			other_observers_restored: other.observers ~ old other.observers
 			modify_model ("set", Current)
@@ -590,7 +590,7 @@ invariant
 	bag_definition: bag = bag_from (set)
 
 note
-	copyright: "Copyright (c) 1984-2018, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2021, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software
@@ -599,4 +599,5 @@ note
 			Website http://www.eiffel.com
 			Customer support http://support.eiffel.com
 		]"
+
 end

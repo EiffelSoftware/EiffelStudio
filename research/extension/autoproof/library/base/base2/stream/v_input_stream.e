@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "Streams that provide values one by one."
 	author: "Nadia Polikarpova"
 	revised_by: "Alexander Kogtenkov"
@@ -15,7 +15,7 @@ feature -- Access
 			-- Item at current position.
 		require
 			not_off: not off
-			subjects_closed: across subjects as s all s.closed end
+			subjects_closed: ∀ s: subjects ¦ s.closed
 		deferred
 		ensure
 			definition: Result = box.any_item
@@ -26,7 +26,7 @@ feature -- Status report
 	off: BOOLEAN
 			-- Is current position off scope?
 		require
-			subjects_closed: across subjects as s all s.closed end
+			subjects_closed: ∀ s: subjects ¦ s.closed
 		deferred
 		ensure
 			definition: Result = box.is_empty
@@ -37,7 +37,7 @@ feature -- Cursor movement
 	forth
 			-- Move one position forward.
 		require
-			subjects_closed: across subjects as s all s.closed end
+			subjects_closed: ∀ s: subjects ¦ s.closed
 			not_off: not off
 		deferred
 		ensure
@@ -51,13 +51,13 @@ feature -- Cursor movement
 		note
 			status: nonvariant
 		require
-			subjects_closed: across subjects as s all s.is_wrapped end
+			subjects_closed: ∀ s: subjects ¦ s.is_wrapped
 		do
 			from
 			invariant
 				decreases ([])
 				is_wrapped
-				across subjects as s all s.is_wrapped end
+				∀ s: subjects ¦ s.is_wrapped
 			until
 				off or else item = v
 			loop
@@ -83,7 +83,7 @@ invariant
 	no_observers: observers ~ create {MML_SET [ANY]}
 
 note
-	copyright: "Copyright (c) 1984-2018, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2021, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software
@@ -92,4 +92,5 @@ note
 			Website http://www.eiffel.com
 			Customer support http://support.eiffel.com
 		]"
+
 end

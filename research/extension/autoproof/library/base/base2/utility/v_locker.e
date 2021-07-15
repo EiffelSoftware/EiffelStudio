@@ -1,6 +1,6 @@
-note
+﻿note
 	description: "[
-		Containers that use a lock to protect their items.
+			Containers that use a lock to protect their items.
 		]"
 	author: "Nadia Polikarpova"
 	revised_by: "Alexander Kogtenkov"
@@ -40,7 +40,7 @@ feature -- Specification
 			reads_field ("lock", Current)
 			reads_field ("equivalence", lock)
 		do
-			Result := across s as x all across s as y all x /= y implies not lock.equivalence [x, y] end end
+			Result := ∀ x: s ¦ ∀ y: s ¦ x /= y implies not lock.equivalence [x, y]
 		end
 
 invariant
@@ -52,7 +52,7 @@ invariant
 	no_duplicates: no_duplicates (locked)
 
 note
-	copyright: "Copyright (c) 1984-2018, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2021, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software
@@ -61,4 +61,5 @@ note
 			Website http://www.eiffel.com
 			Customer support http://support.eiffel.com
 		]"
+
 end

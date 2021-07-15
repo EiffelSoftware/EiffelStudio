@@ -1,8 +1,8 @@
-note
+﻿note
 	description: "[
-		Iterators to read from a container in linear order.
-		Indexing starts from 1.
-	]"
+			Iterators to read from a container in linear order.
+			Indexing starts from 1.
+		]"
 	author: "Nadia Polikarpova"
 	revised_by: "Alexander Kogtenkov"
 	model: target, sequence, index_
@@ -228,7 +228,7 @@ feature -- Cursor movement
 				target.is_wrapped
 				index_.old_ <= index_ and index_ <= sequence.count + 1
 				not before
-				across index_.old_.max (1) |..| (index_ - 1) as i all sequence [i] /= v end
+				∀ i: index_.old_.max (1) |..| (index_ - 1) ¦ sequence [i] /= v
 			until
 				after or else item = v
 			loop
@@ -262,7 +262,7 @@ feature -- Cursor movement
 				0 <= index_
 				index_ <= index_.old_
 				index_ <= sequence.count
-				across (index_ + 1) |..| index_.old_.min (sequence.count) as i all sequence [i] /= v end
+				∀ i: (index_ + 1) |..| index_.old_.min (sequence.count) ¦ sequence [i] /= v
 			until
 				before or else item = v
 			loop
@@ -303,7 +303,7 @@ invariant
 	box_definition: box ~ if sequence.domain [index_] then create {MML_SET [G]}.singleton (sequence [index_]) else {MML_SET [G]}.empty_set end
 
 note
-	copyright: "Copyright (c) 1984-2018, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2021, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software
@@ -312,4 +312,5 @@ note
 			Website http://www.eiffel.com
 			Customer support http://support.eiffel.com
 		]"
+
 end

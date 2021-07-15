@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "Finite sequence."
 	author: "Nadia Polikarpova"
 	revised_by: "Alexander Kogtenkov"
@@ -291,12 +291,11 @@ feature -- Lemmas
 			if not is_empty then
 				but_last.lemma_no_duplicates
 				check Current = but_last & last end
-				check across 1 |..| (count - 1) as i all item (i) /= last end implies but_last.to_bag [last] = 0 end
-				check but_last.to_bag [last] = 0 implies across 1 |..| (count - 1) as i all item (i) /= last end end
+				check (∀ i: 1 |..| (count - 1) ¦ item (i) /= last) implies but_last.to_bag [last] = 0 end
+				check but_last.to_bag [last] = 0 implies ∀ i: 1 |..| (count - 1) ¦ item (i) /= last end
 			end
 		ensure
 			no_duplicates = to_bag.is_constant (1)
 		end
 
 end
-

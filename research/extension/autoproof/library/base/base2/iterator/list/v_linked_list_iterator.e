@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "Iterators over linked lists."
 	author: "Nadia Polikarpova"
 	revised_by: "Alexander Kogtenkov"
@@ -172,7 +172,7 @@ feature -- Status report
 feature -- Comparison
 
 	is_equal_ (other: like Current): BOOLEAN
-			-- Is iterator traversing the same container and is at the same position at `other'?		
+			-- Is iterator traversing the same container and is at the same position at `other'?
 		do
 			check inv; other.inv end
 			Result := target = other.target and active = other.active and after_ = other.after_
@@ -199,7 +199,7 @@ feature -- Cursor movement
 		end
 
 	forth
-			-- Move one position forward.		
+			-- Move one position forward.
 		do
 			check target.inv end
 			if attached active as a then
@@ -229,7 +229,7 @@ feature -- Cursor movement
 				invariant
 					1 <= index_ and index_ < index_.old_
 					inv_only ("cell_not_off", "after_definition", "default_owns")
-					across 1 |..| index_ as i all target.cells [i] /= old_active end
+					∀ i: 1 |..| index_ ¦ target.cells [i] /= old_active
 					is_wrapped
 				until
 					attached active as a implies a.right = old_active
@@ -354,10 +354,10 @@ feature -- Extension
 				other.is_wrapped
 				target.is_wrapped
 				target /= Current
-				across target.observers as o all o /= Current implies o.is_open end
+				∀ o: target.observers ¦ o /= Current implies o.is_open
 				s = other.sequence.old_.interval (other.index_.old_, other.index_ - 1)
 				target.sequence ~ (target.sequence.front (index_.old_).old_ +
-					s + target.sequence.tail (index_.old_ + 1).old_)
+							s + target.sequence.tail (index_.old_ + 1).old_)
 				target.observers ~ target.observers.old_
 				other.sequence ~ other.sequence.old_
 			until
@@ -383,8 +383,8 @@ feature -- Extension
 			other_wrapped: other.is_wrapped
 			other_not_target: other /= target
 			not_after: index_ <= sequence.count
-			observers_open: across target.observers as o all o /= Current implies o.is_open end
-			other_observers_open: across other.observers as o all o.is_open end
+			observers_open: ∀ o: target.observers ¦ o /= Current implies o.is_open
+			other_observers_open: ∀ o: other.observers ¦ o.is_open
 		do
 			target.merge_after (other, active, index_)
 			check target.inv_only ("cells_domain", "bag_definition") end
@@ -447,7 +447,7 @@ feature {V_ITERATOR} -- Implementation
 			-- Cell at current position.
 
 	after_: BOOLEAN
-			-- Is current position after the last container position?			
+			-- Is current position after the last container position?
 
 	active_index: INTEGER
 			-- Distance from `target.first_cell' to `active'.
@@ -509,7 +509,7 @@ invariant
 	target_cells_distinct: target.cells.no_duplicates
 
 note
-	copyright: "Copyright (c) 1984-2018, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2021, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software
@@ -518,4 +518,5 @@ note
 			Website http://www.eiffel.com
 			Customer support http://support.eiffel.com
 		]"
+
 end

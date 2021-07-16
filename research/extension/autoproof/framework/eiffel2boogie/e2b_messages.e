@@ -60,8 +60,11 @@ feature -- Validity error messages
 	invalid_tag (a_tag, a_class_name: READABLE_STRING_32): STRING_32
 		do Result := locale.formatted_string ("Filtered invariant of class '$2' lists invalid tag: $1", a_tag, a_class_name) end
 
-	invalid_context_for_special_predicate (a_kind: STRING): STRING_32
+	predicate_outside_of_precondition_and_loop_invariant (a_kind: STRING): STRING_32
 		do Result := locale.formatted_string ("$1 clauses are only allowed in preconditions and loop invariants (will be ignored)", a_kind) end
+
+	predicate_outside_of_postcondition_and_loop_invariant (a_kind: STRING): STRING_32
+		do Result := locale.formatted_string ("$1 clauses are only allowed in postconditions and loop invariants (will be ignored)", a_kind) end
 
 	invalid_context_for_read_predicate: STRING_32
 		do Result := locale.translation_in_context ("Read sets are only allowed for functions (will be ignored)", "autoproof") end
@@ -236,6 +239,5 @@ feature -- GUI
 
 	status_boogie_finished (a_milliseconds: INTEGER): STRING_32
 		do Result := locale.formatted_string ("Boogie finished: $1 s", a_milliseconds // 1000) end
-
 
 end

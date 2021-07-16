@@ -161,7 +161,7 @@ feature -- Helper functions: contracts
 					l_reads.extend (l_pre.item)
 					l_pre.remove
 				elseif helper.is_clause_modify (a) then
-					helper.add_semantic_warning (a_feature, messages.invalid_context_for_special_predicate ("Modify"), a.line_number)
+					helper.add_semantic_warning (a_feature, messages.predicate_outside_of_postcondition_and_loop_invariant ("Modify"), a.line_number)
 					l_modifies.extend (l_pre.item)
 					l_pre.remove
 				elseif helper.is_clause_decreases (a) then
@@ -178,13 +178,13 @@ feature -- Helper functions: contracts
 			loop
 				a := l_post.item.clause
 				if helper.is_clause_reads (a) then
-					helper.add_semantic_warning (a_feature, messages.invalid_context_for_special_predicate ("Read"), a.line_number)
+					helper.add_semantic_warning (a_feature, messages.predicate_outside_of_precondition_and_loop_invariant ("Read"), a.line_number)
 					l_post.remove
 				elseif helper.is_clause_modify (a) then
 					l_modifies.extend (l_post.item)
 					l_post.remove
 				elseif helper.is_clause_decreases (a) then
-					helper.add_semantic_warning (a_feature, messages.invalid_context_for_special_predicate ("Decrease"), a.line_number)
+					helper.add_semantic_warning (a_feature, messages.predicate_outside_of_precondition_and_loop_invariant ("Decrease"), a.line_number)
 					l_post.remove
 				else
 					l_post.forth

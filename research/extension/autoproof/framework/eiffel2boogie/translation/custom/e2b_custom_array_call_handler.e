@@ -1,7 +1,4 @@
 note
-	description: "[
-		TODO
-	]"
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -17,7 +14,9 @@ feature -- Status report
 	is_handling_call (a_target_type: TYPE_A; a_feature: FEATURE_I): BOOLEAN
 			-- <Precursor>
 		do
-			Result := a_target_type.base_class.name_in_upper ~ "ARRAY"
+			Result :=
+				a_target_type.base_class.name.is_case_insensitive_equal ("ARRAY") and then
+				(array_functions.has (a_feature.feature_name) or else array_procedures.has (a_feature.feature_name))
 		end
 
 feature -- Basic operations

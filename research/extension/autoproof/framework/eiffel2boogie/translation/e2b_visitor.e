@@ -1,6 +1,4 @@
-note
-	description: "Summary description for {E2B_VISITOR}."
-	author: ""
+﻿note
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -232,6 +230,13 @@ feature {BYTE_NODE} -- Visitors
 			safe_process (a_node.interval)
 		end
 
+	process_case_expression_b (b: CASE_EXPRESSION_B)
+			-- <Precursor>
+		do
+			safe_process (b.interval)
+			safe_process (b.content)
+		end
+
 	process_char_const_b (a_node: CHAR_CONST_B)
 			-- Process `a_node'.
 		do
@@ -360,6 +365,14 @@ feature {BYTE_NODE} -- Visitors
 			safe_process (a_node.switch)
 			safe_process (a_node.case_list)
 			safe_process (a_node.else_part)
+		end
+
+	process_inspect_expression_b (b: INSPECT_EXPRESSION_B)
+			-- <Precursor>
+		do
+			safe_process (b.switch)
+			safe_process (b.case_list)
+			safe_process (b.else_part)
 		end
 
 	process_instr_call_b (a_node: INSTR_CALL_B)
@@ -524,7 +537,7 @@ feature {BYTE_NODE} -- Visitors
 		do
 			check not_implemented: False end
 		end
-		
+
 	process_string_b (a_node: STRING_B)
 			-- Process `a_node'.
 		do

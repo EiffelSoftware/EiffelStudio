@@ -39,14 +39,10 @@ feature -- Element change
 			-- Set context of current translation.
 		do
 			current_feature := a_feature
-			if a_type.is_attached then
-				current_type := a_type
-			else
-				current_type := a_type.as_attached_type
-			end
+			current_type := if a_type.is_attached then a_type else a_type.as_attached_type end
 		ensure
 			current_feature_set: current_feature = a_feature
-			current_type_set: current_type.same_as (a_type.as_attached_type)
+			current_type_set: current_type.same_as (if a_type.is_attached then a_type else a_type.as_attached_type end)
 		end
-			
+
 end

@@ -444,9 +444,11 @@ feature {NONE} -- Implementation
 			l_clause: IV_ASSERT
 			l_translator: E2B_CONTRACT_EXPRESSION_TRANSLATOR
 			l_found: BOOLEAN
+			t: CL_TYPE_A
 		do
 			if inv_byte_server.has (a_class.class_id) then
-				helper.switch_byte_context (a_class.invariant_feature, helper.class_type_in_context (a_class.actual_type, a_class, a_class.invariant_feature, type), a_class.actual_type)
+				t := helper.class_type_in_context (a_class.actual_type, a_class, a_class.invariant_feature, type)
+				helper.switch_byte_context (a_class.invariant_feature, t, t)
 				across
 					inv_byte_server.item (a_class.class_id).byte_list as b
 				loop

@@ -49,6 +49,8 @@ feature -- Basic operations
 			end
 			if a_feature.feature_name ~ "call" then
 				a_translator.process_builtin_routine_call (a_feature, l_new_args, "routine.call_" + l_new_args.count.out)
+			elseif a_feature.feature_name ~ "item" then
+				a_translator.process_builtin_routine_call (a_feature, l_new_args, "routine.item_" + l_new_args.count.out)
 			else
 				a_translator.set_last_expression (factory.function_call ("unsupported", << >>, types.ref))
 			end

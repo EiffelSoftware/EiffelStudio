@@ -153,7 +153,7 @@ feature -- Convenience
 			context_type_attached: attached context_type
 			context_feature_attached: attached context_feature
 		do
-			Result := helper.class_type_in_context (a_type, context_type.base_class, context_feature, context_type)
+			Result := helper.class_type_in_context (a_type, context_feature.written_class, context_feature, context_type)
 		end
 
 	feature_class_type (a_feature: FEATURE_I): CL_TYPE_A

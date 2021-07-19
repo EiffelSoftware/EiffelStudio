@@ -65,8 +65,8 @@ void c_ev_gtk_callback_marshal (
 }
 
 int c_ev_gtk_callback_marshal_true_callback (EIF_OBJECT agent)
-                // GtkFunction that passes `agent' to ev_gtk_callback_marshal
-                // and returns TRUE
+		// GtkFunction that passes `agent' to ev_gtk_callback_marshal
+		// and returns TRUE
 {
       if (c_ev_gtk_callback_marshal_is_enabled)
                 ev_gtk_callback_marshal (
@@ -86,6 +86,12 @@ void dummy_callback (void)
 	printf ("This should not be called\n");
 }
 
+void gclosure_notify_eif_wean (gpointer data, GClosure *closure) 
+{
+	/* destroy notify to be called when user `data` is no longer used */
+	eif_wean ((EIF_OBJECT) data);
+}
+
 guint c_ev_gtk_callback_marshal_signal_connect (
     gpointer c_object,
     const gchar* signal,
@@ -97,8 +103,7 @@ guint c_ev_gtk_callback_marshal_signal_connect (
 {
 	guint connection_id;
 	GClosure *closure;
-	closure = g_cclosure_new (dummy_callback, eif_adopt (agent), (GClosureNotify)eif_wean);
-
+	closure = g_cclosure_new (dummy_callback, eif_adopt (agent), (GClosureNotify)gclosure_notify_eif_wean);
 	g_closure_set_marshal (closure, c_ev_gtk_callback_marshal);
 
 	connection_id = g_signal_connect_closure (c_object, signal, closure, invoke_after_handler);

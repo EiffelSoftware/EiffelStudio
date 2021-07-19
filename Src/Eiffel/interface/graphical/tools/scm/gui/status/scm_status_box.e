@@ -95,6 +95,7 @@ feature {NONE} -- Initialization
 			bar.extend (create {EV_CELL})
 
 			create but.make_with_text (scm_names.button_save_changelist)
+			set_default_size_for_button (but)
 			but.set_tooltip (scm_names.button_save_changelist_tooltip)
 			save_all_repo_button := but
 			but.disable_sensitive
@@ -212,6 +213,36 @@ feature -- Basic operation
 			end
 		end
 
+	open_save_changelist_dialog (a_changelist: SCM_CHANGELIST_COLLECTION)
+		local
+			l_save_dialog: SCM_SAVE_DIALOG
+		do
+			create l_save_dialog.make_with_changelist (scm_service, a_changelist, Current)
+			if attached development_window as devwin then
+				l_save_dialog.set_size (devwin.dpi_scaler.scaled_size (800).min (devwin.window.width), devwin.dpi_scaler.scaled_size (600).min (devwin.window.height))
+			end
+			l_save_dialog.show_on_active_window
+			if
+				attached l_save_dialog.commit as l_commit
+			then
+				if l_commit.is_processed then
+					if attached {SCM_SINGLE_COMMIT_SET} l_commit as l_single then
+						update_statuses (l_single.changelist.root)
+					elseif attached {SCM_MULTI_COMMIT_SET} l_commit as l_multi then
+						across
+							l_multi.changelists as ic
+						loop
+							update_statuses (ic.item.root)
+						end
+					end
+					a_changelist.wipe_out
+				else
+					a_changelist.set_description (l_commit.message)
+				end
+			end
+			on_changelist_updated (a_changelist)
+		end
+
 	open_save_dialog (a_commit: SCM_COMMIT_SET)
 		local
 			l_save_dialog: SCM_SAVE_DIALOG
@@ -252,38 +283,10 @@ feature -- Basic operation
 		end
 
 	on_save
-		local
-			l_commit: SCM_COMMIT_SET
 		do
 			if attached active_changelist as lst then
 				lst.remove_empty_changelists
-				if lst.changelist_count = 1 and then attached lst.first_changelist as l_changelist then
-					create {SCM_SINGLE_COMMIT_SET} l_commit.make_with_changelist (Void, l_changelist)
-					if attached lst.description as desc then
-						l_commit.set_message (desc)
-					end
-					open_save_dialog (l_commit)
-				else
-					create {SCM_MULTI_COMMIT_SET} l_commit.make_with_changelists (Void, lst)
-					if attached lst.description as desc then
-						l_commit.set_message (desc)
-					end
-					open_save_dialog (l_commit)
-				end
-				if l_commit /= Void then
-					if l_commit.is_processed then
-						if not l_commit.has_error then
-							across
-								lst as ic
-							loop
-								ic.item.wipe_out
-							end
-							lst.wipe_out
-						end
-					else
-						lst.set_description (l_commit.message)
-					end
-				end
+				open_save_changelist_dialog (lst)
 			end
 		end
 
@@ -509,6 +512,18 @@ feature -- Changelist
 					end
 				end
 				update_changelist_combo (l_combo)
+			end
+		end
+
+	on_changelist_updated (a_collection: SCM_CHANGELIST_COLLECTION)
+		do
+			if attached changelist_combo as l_combo then
+				update_changelist_combo (l_combo)
+				if active_changelist = a_collection then
+					if attached grid as g then
+						g.apply_changelist_collection (a_collection)
+					end
+				end
 			end
 		end
 

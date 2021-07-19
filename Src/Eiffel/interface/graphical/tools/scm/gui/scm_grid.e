@@ -190,6 +190,50 @@ feature -- Factory
 			set_label_item (Result)
 		end
 
+	set_row_style_properties (a_row: EV_GRID_ROW; a_font: detachable EV_FONT; a_foreground_color, a_background_color: detachable EV_COLOR)
+		do
+			across
+				1 |..| a_row.count as idx
+			loop
+				if a_background_color /= Void then
+					a_row.set_background_color (a_background_color)
+				end
+				if a_foreground_color /= Void then
+					a_row.set_foreground_color (a_foreground_color)
+				end
+				set_item_style_properties (a_row.item (idx.item), a_font, a_foreground_color, a_background_color)
+			end
+		end
+
+	set_item_style_properties (a_item: EV_GRID_ITEM; a_font: detachable EV_FONT; a_foreground_color, a_background_color: detachable EV_COLOR)
+		do
+			if
+				attached {EV_GRID_LABEL_ITEM} a_item as l_label
+			then
+				if a_font /= Void then
+					l_label.set_font (a_font)
+				end
+				if a_foreground_color /= Void then
+					l_label.set_foreground_color (a_foreground_color)
+				end
+				if a_background_color /= Void then
+					l_label.set_background_color (a_background_color)
+				end
+			elseif
+				attached {EV_GRID_SPAN_LABEL_ITEM} a_item as l_span_label
+			then
+				if a_font /= Void then
+					l_span_label.set_font (a_font)
+				end
+				if a_foreground_color /= Void then
+					l_span_label.set_foreground_color (a_foreground_color)
+				end
+				if a_background_color /= Void then
+					l_span_label.set_background_color (a_background_color)
+				end
+			end
+		end
+
 feature {NONE} -- Grid preferences
 
 	grid_preferences: EB_GRID_PREFERENCES
@@ -230,7 +274,7 @@ feature {NONE} -- Grid preferences
 feature -- Access
 
 	grid_font: EV_FONT
-	
+
 	bold_font: EV_FONT
 
 	selected_row: detachable EV_GRID_ROW

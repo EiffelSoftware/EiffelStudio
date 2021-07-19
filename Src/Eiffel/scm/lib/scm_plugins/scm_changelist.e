@@ -112,6 +112,13 @@ feature -- Element change
 --			has (a_name)
 --		end
 
+	remove_status (a_status: SCM_STATUS)
+		require
+			has_status (a_status)
+		do
+			remove_path (a_status.location)
+		end
+
 	remove_path (p: PATH)
 		do
 			remove (p.name)

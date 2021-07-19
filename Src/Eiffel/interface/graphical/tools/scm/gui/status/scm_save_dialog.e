@@ -29,7 +29,8 @@ inherit
 	EV_LAYOUT_CONSTANTS
 
 create
-	make
+	make,
+	make_with_changelist
 
 convert
 	dialog: {EV_DIALOG}
@@ -52,6 +53,32 @@ feature {NONE} -- Initialization
 			make_dialog
 		end
 
+	make_with_changelist (a_service: SOURCE_CONTROL_MANAGEMENT_S; a_changelist: SCM_CHANGELIST_COLLECTION; a_parent_box: SCM_STATUS_BOX)
+		do
+			parent_box := a_parent_box
+			scm_service := a_service
+
+			a_changelist.remove_empty_changelists
+
+			changelist := a_changelist
+			if a_changelist.changelist_count = 1 and then attached a_changelist.first_changelist as l_changelist then
+				create {SCM_SINGLE_COMMIT_SET} commit.make_with_changelist (Void, l_changelist)
+			else
+				create {SCM_MULTI_COMMIT_SET} commit.make_with_changelists (Void, a_changelist)
+			end
+			commit.set_message (a_changelist.description)
+
+			create commit_log_box
+			create commit_log_text
+
+			create progress_log_box
+			create progress_log_text
+
+			create status_box
+			create status_text
+			make_dialog
+		end
+
 feature -- Access
 
 	scm_service: SOURCE_CONTROL_MANAGEMENT_S
@@ -59,6 +86,10 @@ feature -- Access
 	parent_box: SCM_STATUS_BOX
 
 	commit: SCM_COMMIT_SET
+
+	changelist: detachable SCM_CHANGELIST_COLLECTION
+
+	grid: detachable SCM_CHANGELIST_GRID
 
 feature -- Widgets
 
@@ -86,6 +117,7 @@ feature {NONE} -- User interface initialization
 			sp: EV_VERTICAL_SPLIT_AREA
 			txt: EV_TEXT
 			lab: EV_LABEL
+			g: like grid
 		do
 			create sp
 			a_container.extend (sp)
@@ -106,10 +138,16 @@ feature {NONE} -- User interface initialization
 			b.extend (lab)
 			b.disable_item_expand (lab)
 
-			txt := status_text
-			txt.set_text (commit.changes_description)
-			txt.disable_edit
-			b.extend (txt)
+			if attached changelist as l_changelist then
+				create g.make_with_workspace (l_changelist, parent_box)
+				grid := g
+				b.extend (g)
+			else
+				txt := status_text
+				txt.set_text (commit.changes_description)
+				txt.disable_edit
+				b.extend (txt)
+			end
 
 			b := progress_log_box
 			fb.extend (b)
@@ -154,13 +192,13 @@ feature {NONE} -- User interface initialization
 			if attached dialog_window_buttons [dialog_buttons.reset_button] as but then
 				but.hide
 			end
-			if attached dialog_window_buttons [dialog_buttons.open_button] as but then
-				if attached {SCM_SINGLE_COMMIT_SET} commit as l_single_commit_set then
-					but.show
-				else
-					but.hide
-				end
-			end
+--			if attached dialog_window_buttons [dialog_buttons.open_button] as but then
+--				if attached {SCM_SINGLE_COMMIT_SET} commit as l_single_commit_set then
+--					but.show
+--				else
+--					but.hide
+--				end
+--			end
 
 			set_button_text (dialog_buttons.ok_button, interface_names.b_save)
 			set_button_text (dialog_buttons.cancel_button, interface_names.b_cancel)

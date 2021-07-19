@@ -158,7 +158,9 @@ feature {SCM_STATUS_CHANGE_ROW, SCM_STATUS_WC_LOCATION_ROW} -- Internal
 					across
 						a_changes as ic
 					loop
-						lst.extend_status (ic.item)
+						if not lst.has_status (ic.item) then
+							lst.extend_status (ic.item)
+						end
 					end
 				end
 			end

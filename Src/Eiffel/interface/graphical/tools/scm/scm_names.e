@@ -11,6 +11,8 @@ inherit
 
 feature -- Header
 
+	header_status: STRING_32 do Result := locale.translation_in_context ("Status", "scm") end
+
 	header_name: STRING_32 do Result := locale.translation_in_context ("Name", "scm") end
 
 	header_folder: STRING_32 do Result := locale.translation_in_context ("Folder", "scm") end
@@ -156,7 +158,7 @@ feature -- Tools
 
 	desc_scm_tool: STRING_32 do Result := locale.translation_in_context ("Source Control Management", "scm") end
 
-	double_click_show_diff_tooltip: STRING_32 do Result := locale.translation_in_context ("Double-clicked to show the differences", "scm") end
+	double_click_show_diff_tooltip: STRING_32 do Result := locale.translation_in_context ("Double-clicked to show the differences%N(when Shift is pressed, open the location)", "scm") end
 
 feature -- General
 

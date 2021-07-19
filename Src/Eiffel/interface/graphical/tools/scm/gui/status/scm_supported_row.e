@@ -82,31 +82,12 @@ feature -- Operation
 
 
 --			glab.pointer_button_press_actions.extend (agent on_options)
-
-			across
-				1 |..| a_row.count as idx
-			loop
-				if
-					attached {EV_GRID_LABEL_ITEM} a_row.item (idx.item) as l_label
-				then
-					l_label.set_font (a_grid.bold_font)
-					if l_is_supported then
-						l_label.set_foreground_color (a_grid.stock_colors.blue)
-					else
-						l_label.set_foreground_color (a_grid.stock_colors.grey)
-					end
-				elseif
-					attached {EV_GRID_SPAN_LABEL_ITEM} a_row.item (idx.item) as l_span_label
-				then
-					l_span_label.set_font (a_grid.bold_font)
-
-					if l_is_supported then
-						l_span_label.set_foreground_color (a_grid.stock_colors.blue)
-					else
-						l_span_label.set_foreground_color (a_grid.stock_colors.grey)
-					end
-				end
+			if l_is_supported then
+				a_grid.set_row_style_properties (a_row, a_grid.bold_font, a_grid.stock_colors.blue, Void)
+			else
+				a_grid.set_row_style_properties (a_row, a_grid.bold_font, a_grid.stock_colors.grey, Void)
 			end
+
 			a_grid.fill_empty_grid_items (a_row)
 			if all_content_included then
 				create l_groups.make (1)

@@ -92,6 +92,16 @@ feature -- Element change
 			end
 		end
 
+	remove_status (a_root: SCM_LOCATION; a_status: SCM_STATUS)
+		local
+			lst: like changelist
+		do
+			lst := changelist (a_root)
+			if lst /= Void and then lst.has_status (a_status) then
+				lst.remove_status (a_status)
+			end
+		end
+
 --	extend_path (a_root: SCM_LOCATION; a_location: PATH)
 --		local
 --			lst: like changelist

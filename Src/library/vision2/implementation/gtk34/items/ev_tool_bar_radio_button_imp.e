@@ -38,7 +38,7 @@ feature {NONE} -- Initialization
 
 	new_tool_bar_button: POINTER
 		do
-			Result := {GTK2}.gtk_radio_tool_button_new (NULL)
+			Result := {GTK2}.gtk_radio_tool_button_new (default_pointer)
 		end
 
 feature -- Status setting
@@ -79,7 +79,7 @@ feature {NONE} -- Implementation
 			Precursor {EV_TOOL_BAR_BUTTON_IMP} (a_container_imp)
 			if a_container_imp = Void then
 				-- `Current' is being unparented so we unset the radio group
-				{GTK2}.gtk_radio_tool_button_set_group (visual_widget, NULL)
+				{GTK2}.gtk_radio_tool_button_set_group (visual_widget, default_pointer)
 			end
 		end
 

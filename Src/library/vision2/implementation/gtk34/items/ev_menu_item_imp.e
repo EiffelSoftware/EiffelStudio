@@ -38,38 +38,11 @@ create
 
 feature {NONE} -- Initialization
 
-	needs_event_box: BOOLEAN = False
-			-- Does `a_widget' need an event box?
-
-	is_dockable: BOOLEAN = False
-
 	old_make (an_interface: attached like interface)
 			-- Create a menu.
 		do
 			assign_interface (an_interface)
 		end
-
-	initialize_menu_item
-			-- Create and initialize gtk menu object.
-		do
-			 -- How to avoid GtkImageMenuItem and keep icons on menu items
-			 -- https://gist.github.com/andreldm/62ecee0d87cde8ec5f3d0e36e404511c
-			 -- https://stackoverflow.com/questions/48452717/how-to-replace-the-deprecated-gtk3-gtkimagemenuitem
-			set_c_object ({GTK}.gtk_menu_item_new)
-
-
-			 pixmapable_imp_initialize
-				-- TODO refactor deprecated in GTK 3.10.
-				-- {GTK2}.gtk_image_menu_item_set_image (menu_item, pixmap_box)
-			image_menu_item_new
-		end
-
-	image_menu_item_new
-		do
-				-- Code based on https://github.com/mate-desktop/pluma/pull/311/commits/7c692bd51aa1b5cf670625936c28fed187184c4c
-			{GTK}.gtk_widget_show (menu_item)
-		end
-
 
 	make
 			-- Initialize `Current'
@@ -85,7 +58,7 @@ feature {NONE} -- Initialization
 			{GTK}.gtk_container_add (menu_item, box)
 			{GTK}.gtk_widget_show (box)
 
-			if pixmap_box = default_pointer then
+			if pixmap_box.is_default_pointer then
 				pixmapable_imp_initialize
 				{GTK}.gtk_box_pack_start (box, pixmap_box, False, True, 0)
 			end
@@ -101,7 +74,30 @@ feature {NONE} -- Initialization
 			{GTK2}.g_object_set_menu_icons ({GTK}.gtk_settings_get_default, {GTK_PROPERTIES}.gtk_menu_icons, True)
 		end
 
-		accel_label: POINTER
+	initialize_menu_item
+			-- Create and initialize gtk menu object.
+		do
+			 -- How to avoid GtkImageMenuItem and keep icons on menu items
+			 -- https://gist.github.com/andreldm/62ecee0d87cde8ec5f3d0e36e404511c
+			 -- https://stackoverflow.com/questions/48452717/how-to-replace-the-deprecated-gtk3-gtkimagemenuitem
+			set_c_object ({GTK}.gtk_menu_item_new)
+
+			pixmapable_imp_initialize
+				-- TODO refactor deprecated in GTK 3.10.
+				-- {GTK2}.gtk_image_menu_item_set_image (menu_item, pixmap_box)
+			image_menu_item_new
+		end
+
+feature {NONE} -- Settings
+
+	needs_event_box: BOOLEAN = False
+			-- Does `a_widget' need an event box?
+
+	is_dockable: BOOLEAN = False
+
+feature {NONE} -- Access
+
+	accel_label: POINTER
 
 feature -- Element change
 
@@ -140,6 +136,12 @@ feature {EV_MENU_ITEM_LIST_IMP} -- Implementation
 			-- Pointer to the GtkMenuItem widget.
 		do
 			Result := c_object
+		end
+
+	image_menu_item_new
+		do
+				-- Code based on https://github.com/mate-desktop/pluma/pull/311/commits/7c692bd51aa1b5cf670625936c28fed187184c4c
+			{GTK}.gtk_widget_show (menu_item)
 		end
 
 feature {EV_ANY_I, EV_INTERMEDIARY_ROUTINES} -- Implementation

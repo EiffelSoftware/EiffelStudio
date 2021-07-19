@@ -165,6 +165,7 @@ feature {NONE} -- Implementation
 			i: INTEGER
 			l_display: POINTER
 			l_seat: POINTER
+			dft: POINTER
 		do
 				-- We have to disable the debugger before grabing any inputs
 				-- as otherwise if we stop the session it will deadlock. Ideally
@@ -178,7 +179,7 @@ feature {NONE} -- Implementation
 				l_seat,
 				{GTK}.gtk_widget_get_window (event_widget),
 				{GDK_ENUMS}.seat_capability_all,
-				True, null, null, null, null)
+				True, dft, dft, dft, dft)
 		end
 
 	release_keyboard_and_mouse
@@ -482,7 +483,7 @@ feature -- Implementation
 					if a_pnd_deferred_item_parent /= Void then
 							-- We need to explicitly search for PND deferred items
 							-- A server roundtrip is needed to get the coordinates relative to the PND target parent..
-						gdkwin := {GDK}.gdk_window_get_device_position ({GTK}.gtk_widget_get_window (a_wid_imp.c_object), {GDK_HELPERS}.default_device, $a_x, $a_y, null)
+						gdkwin := {GDK}.gdk_window_get_device_position ({GTK}.gtk_widget_get_window (a_wid_imp.c_object), {GDK_HELPERS}.default_device, $a_x, $a_y, default_pointer)
 						a_pnd_item := a_pnd_deferred_item_parent.item_from_coords (a_x, a_y)
 						if a_pnd_item /= Void and then l_app_imp.pnd_targets.has (a_pnd_item.attached_interface.object_id) then
 							Result := a_pnd_item.interface

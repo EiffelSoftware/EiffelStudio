@@ -505,7 +505,7 @@ feature {EV_STOCK_PIXMAPS_IMP, EV_PIXMAPABLE_IMP, EV_PIXEL_BUFFER_IMP} -- Implem
 	set_from_xpm_data (a_xpm_data: POINTER)
 			-- Pixmap symbolizing a piece of information.
 		require
-			xpm_data_not_null: a_xpm_data /= NULL
+			xpm_data_not_null: a_xpm_data /= default_pointer
 		local
 			xpmpixbuf: POINTER
 		do
@@ -521,7 +521,7 @@ feature {EV_STOCK_PIXMAPS_IMP, EV_PIXMAPABLE_IMP, EV_PIXEL_BUFFER_IMP} -- Implem
 	set_from_stock_id (a_stock_id: POINTER)
 			-- Pixmap symbolizing a piece of information
 		require
-			a_stock_id_not_null: a_stock_id /= NULL
+			a_stock_id_not_null: a_stock_id /= default_pointer
 		local
 			stock_pixbuf: POINTER
 			l_error: POINTER
@@ -538,7 +538,7 @@ feature {EV_STOCK_PIXMAPS_IMP, EV_PIXMAPABLE_IMP, EV_PIXEL_BUFFER_IMP} -- Implem
 				l_screen:= {GDK}.gdk_screen_get_default
 			end
 			stock_pixbuf := {GTK2}.gtk_icon_theme_load_icon ({GTK2}.gtk_icon_theme_get_for_screen(l_screen), a_stock_id, 48, 0, $l_error)
-			if stock_pixbuf /= NULL then
+			if stock_pixbuf /= default_pointer then
 					-- If a stock pixmap can be found then set it, else do nothing.
 				set_pixmap_from_pixbuf (stock_pixbuf)
 				{GTK2}.g_object_unref (stock_pixbuf)

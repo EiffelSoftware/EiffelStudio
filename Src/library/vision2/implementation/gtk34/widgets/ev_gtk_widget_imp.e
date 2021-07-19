@@ -380,25 +380,22 @@ feature {EV_ANY_I} -- Implementation
 			wind_ptr: POINTER
 		do
 			wind_ptr := {GTK}.gtk_widget_get_toplevel (c_object)
-			if wind_ptr /= NULL then
-				Result ?= eif_object_from_c (wind_ptr)
+			if not wind_ptr.is_default_pointer then
+				Result := {EV_GTK_WINDOW_IMP} / eif_object_from_c (wind_ptr)
 			end
 		end
 
 	top_level_window_imp: detachable EV_WINDOW_IMP
 			-- Window implementation that `Current' is contained within (if any)
 		do
-			Result ?= top_level_gtk_window_imp
+			Result := {EV_WINDOW_IMP} / top_level_gtk_window_imp
 		end
 
 	top_level_window: detachable EV_WINDOW
 			-- Window the current is contained within (if any)
-		local
-			a_window_imp: detachable EV_WINDOW_IMP
 		do
-			a_window_imp ?= top_level_gtk_window_imp
-			if a_window_imp /= Void then
-				Result := a_window_imp.interface
+			if attached {EV_WINDOW_IMP} top_level_gtk_window_imp as w then
+				Result := w.interface
 			end
 		end
 

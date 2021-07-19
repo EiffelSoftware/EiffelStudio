@@ -882,7 +882,6 @@ feature -- Enum
 			"C signature (GtkEntry*, gfloat) use <ev_gtk.h>"
 		end
 
-
 	frozen gtk_get_current_event_time: NATURAL_32
 		external
 			"C signature (): guint32 use <ev_gtk.h>"
@@ -969,9 +968,9 @@ feature -- Enum
 			"C signature (GtkWidget*): gchar* use <ev_gtk.h>"
 		end
 
-	frozen gtk_widget_set_minimum_size (a_widget: POINTER; a_width, a_height: INTEGER_32)
+	frozen gtk_widget_set_minimum_size (a_c_widget: POINTER; a_width, a_height: INTEGER_32)
 		do
-			gtk_widget_set_size_request (a_widget, a_width, a_height)
+			gtk_widget_set_size_request (a_c_widget, a_width, a_height)
 		ensure
 			instance_free: class
 		end
@@ -2168,7 +2167,41 @@ feature -- Object
 			"g_object_set((gpointer) $a_object, (gchar*) $a_property, $bool_arg ? TRUE : FALSE, NULL)"
 		end
 
-feature -- Signal		
+feature -- Signal
+
+	frozen signal_list_ids (a_object: POINTER): LIST [NATURAL_32]
+		local
+			i, nb: INTEGER
+			unb: NATURAL_32
+			p: POINTER
+			mp: MANAGED_POINTER
+		do
+			p := g_signal_list_ids (a_object, $unb)
+			nb := unb.to_integer_32
+			if nb > 0 and not p.is_default_pointer then
+				create {ARRAYED_LIST [NATURAL_32]} Result.make (nb)
+				create mp.share_from_pointer (p, nb * {MANAGED_POINTER}.natural_32_bytes)
+				from
+					i := 1
+				until
+					i > nb
+				loop
+					Result.extend (mp.read_natural_32 ((i - 1) * {MANAGED_POINTER}.natural_32_bytes))
+					i := i + 1
+				end
+			else
+				create {ARRAYED_LIST [NATURAL_32]} Result.make (0)
+			end
+		ensure
+			instance_free: class
+		end
+
+	frozen g_signal_list_ids (a_object: POINTER; a_count: TYPED_POINTER [NATURAL_32]): POINTER
+		external
+			"C inline use <ev_gtk.h>"
+		alias
+			"g_signal_list_ids (G_OBJECT_TYPE($a_object), (guint *) $a_count)"
+		end
 
 	frozen signal_disconnect (a_object: POINTER; a_handler_id: INTEGER_32)
 		do
@@ -2187,7 +2220,7 @@ feature -- Signal
 			"g_signal_handler_disconnect ((gpointer) $a_object, (gulong) $a_handler_id)"
 		end
 
-	frozen signal_disconnect_by_data (a_c_object: POINTER; data: INTEGER_32)
+	frozen signal_disconnect_by_data (a_c_object: POINTER; data: INTEGER_32): NATURAL_32
 		external
 			"C inline use <ev_gtk.h>"
 		alias

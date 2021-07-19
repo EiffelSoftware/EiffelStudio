@@ -233,7 +233,7 @@ feature {NONE} -- implementation
 			l_app_imp: EV_APPLICATION_IMP
 		do
 			l_app_imp := app_implementation
-			real_signal_connect (visual_widget,
+			real_signal_connect (visual_widget, -- Note: this is really visual_widget, and not just c_object!
 					{EV_GTK_EVENT_STRINGS}.clicked_event_name,
 				 	agent (l_app_imp.gtk_marshal).button_select_intermediary (c_object),
 				 	Void
@@ -247,7 +247,7 @@ feature {EV_ANY, EV_ANY_I} -- implementation
 			-- functionality implemented by `Current'
 
 invariant
-	button_box_not_null: is_usable implies button_box /= NULL
+	button_box_not_null: is_usable implies button_box /= default_pointer
 
 note
 	copyright:	"Copyright (c) 1984-2021, Eiffel Software and others"

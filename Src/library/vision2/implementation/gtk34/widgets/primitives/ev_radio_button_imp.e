@@ -50,7 +50,7 @@ feature {NONE} -- Initialization
 
 	new_gtk_button: POINTER
 		do
-			Result := {GTK}.gtk_radio_button_new (NULL)
+			Result := {GTK}.gtk_radio_button_new (default_pointer)
 		end
 
 	make
@@ -98,7 +98,7 @@ feature {EV_ANY, EV_ANY_I} -- Implementation
 	interface: detachable EV_RADIO_BUTTON note option: stable attribute end;
 
 note
-	copyright:	"Copyright (c) 1984-2014, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2021, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

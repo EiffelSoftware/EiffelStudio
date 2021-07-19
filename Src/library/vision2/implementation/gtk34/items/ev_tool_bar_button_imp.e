@@ -76,7 +76,7 @@ feature {NONE} -- Initialization
 	new_tool_bar_button: POINTER
 			-- Create a new gtk tool bar button item.
 		do
-			Result := {GTK2}.gtk_tool_button_new (NULL, NULL)
+			Result := {GTK2}.gtk_tool_button_new (default_pointer, default_pointer)
 		end
 
 	make

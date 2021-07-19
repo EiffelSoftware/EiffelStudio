@@ -354,6 +354,11 @@ feature -- Widgets
 			"C signature (GtkWidget*): GdkWindow* use <ev_gtk.h>"
 		end
 
+	frozen gtk_widget_get_parent_window (a_c_struct: POINTER): POINTER
+		external
+			"C signature (GtkWidget*): GdkWindow* use <ev_gtk.h>"
+		end
+
 	frozen gtk_widget_show_all (widget: POINTER)
 		note
 			eis:"name=gtk_widget_show_all","src=https://developer.gnome.org/gtk3/stable/GtkWidget.html#gtk-widget-show-all"
@@ -1369,13 +1374,6 @@ feature -- Label
 			"C inline use <ev_gtk.h>"
 		alias
 			"gtk_label_set_attributes ((GtkLabel *)$label, (PangoAttrList *)$attrs);"
-		end
-
-feature -- Object		
-
-	frozen g_object_ref_sink (a_object: POINTER): POINTER
-		external
-			"C (gpointer): gpointer | <ev_gtk.h>"
 		end
 
 feature -- Radio		

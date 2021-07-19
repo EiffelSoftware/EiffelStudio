@@ -632,19 +632,18 @@ feature {EV_ANY_I} -- Implementation
 
 							if not l_gtk_widget_ptr.is_default_pointer then
 								if not is_in_transport then
-									l_pnd_imp ?= eif_object_from_gtk_object (l_gtk_widget_ptr)
-									if l_pnd_imp /= Void and then l_pnd_imp.c_object = l_gtk_widget_ptr then
+									if
+										attached {EV_PICK_AND_DROPABLE_IMP} eif_object_from_gtk_object (l_gtk_widget_ptr) as i_pnd and then
+										i_pnd.c_object = l_gtk_widget_ptr
+									then
 											-- We only want the pointer events for the backing widget.
-										l_top_level_window_imp := l_pnd_imp.top_level_window_imp
+										l_top_level_window_imp := i_pnd.top_level_window_imp
 										if l_top_level_window_imp = Void or else not l_top_level_window_imp.has_modal_window then
-											l_widget_imp ?= l_pnd_imp
-											if l_widget_imp /= Void then
-												l_widget_imp.on_pointer_enter_leave ({GTK}.gdk_event_any_struct_type (gdk_event) = GDK_ENTER_NOTIFY)
+											if attached {EV_WIDGET_IMP} i_pnd as w then
+												w.on_pointer_enter_leave ({GTK}.gdk_event_any_struct_type (gdk_event) = GDK_ENTER_NOTIFY)
 											end
 											l_call_event := True
-											l_widget_imp := Void
 										end
-										l_pnd_imp := Void
 										l_gtk_widget_imp := Void
 										l_top_level_window_imp := Void
 										l_gtk_widget_ptr := default_pointer

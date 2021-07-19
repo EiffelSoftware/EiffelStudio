@@ -40,7 +40,7 @@ feature {NONE} -- Initialization
 		do
 			a_cs := "Select file"
 			set_c_object
-				({GTK2}.gtk_file_chooser_dialog_new (a_cs.item, NULL, file_chooser_action))
+				({GTK2}.gtk_file_chooser_dialog_new (a_cs.item, default_pointer, file_chooser_action))
 			l_but := {GTK2}.gtk_dialog_add_button (c_object, {GTK2}.gtk_ok_enum_label, {GTK2}.gtk_response_ok_enum)
 			l_but := {GTK2}.gtk_dialog_add_button (c_object, {GTK2}.gtk_cancel_enum_label, {GTK2}.gtk_response_cancel_enum)
 			create filters.make (0)
@@ -91,7 +91,9 @@ feature -- Access
 		do
 			a_current_filter := {GTK2}.gtk_file_chooser_get_filter (c_object)
 			a_filter_list := {GTK2}.gtk_file_chooser_list_filters (c_object)
-			if a_current_filter /= NULL and then a_filter_list /= NULL then
+			if
+				not a_current_filter.is_default_pointer and then
+				not a_filter_list.is_default_pointer then
 				from
 					i := 0
 				until
@@ -188,7 +190,7 @@ feature {EV_INTERMEDIARY_ROUTINES} -- Implementation
 			a_filename: POINTER
 		do
 			a_filename := {GTK2}.gtk_file_chooser_get_filename (c_object)
-			if a_filename /= NULL then
+			if not a_filename.is_default_pointer then
 				create temp_filename.make_from_pointer (a_filename)
 				create temp_file.make_with_path (temp_filename)
 				if (not temp_file.exists or else not temp_file.is_directory) then
@@ -208,11 +210,11 @@ feature {NONE} -- Implementation
 			i: INTEGER
 		do
 			a_filter_list := {GTK2}.gtk_file_chooser_list_filters (c_object)
-			if a_filter_list /= NULL then
+			if not a_filter_list.is_default_pointer then
 				from
 					a_filter := {GTK}.g_slist_nth_data (a_filter_list, i)
 				until
-					a_filter = NULL
+					a_filter.is_default_pointer
 				loop
 					{GTK2}.gtk_file_chooser_remove_filter (c_object, a_filter)
 					i := i + 1

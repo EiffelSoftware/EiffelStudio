@@ -27,6 +27,9 @@ feature -- Gobject
 			"C inline use <ev_gtk.h>"
 		alias
 			"g_object_ref((gpointer) $a_c_object)"
+		ensure
+			same_object: Result = a_c_object
+			instance_free: class
 		end
 
 	frozen g_object_unref (a_c_object: POINTER)
@@ -34,6 +37,16 @@ feature -- Gobject
 			"C inline use <ev_gtk.h>"
 		alias
 			"g_object_unref((gpointer) $a_c_object)"
+		end
+
+	frozen g_object_ref_sink (a_c_object: POINTER): POINTER
+		external
+			"C inline use <ev_gtk.h>"
+		alias
+			"g_object_ref_sink((gpointer) $a_c_object)"
+		ensure
+			same_object: Result = a_c_object
+			instance_free: class
 		end
 
 feature -- GdkDisplay
@@ -1521,7 +1534,7 @@ feature -- Keyval
 			"C (guint): guint | <ev_gtk.h>"
 		end
 
-	frozen gdk_keyval_from_name (a_keyval_name: POINTER): INTEGER_32
+	frozen gdk_keyval_from_name (a_keyval_name: POINTER): NATURAL_32
 		external
 			"C (gchar*): guint | <ev_gtk.h>"
 		end

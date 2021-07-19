@@ -143,7 +143,7 @@ feature  -- Access
 			a_cs: EV_GTK_C_STRING
 		do
 			p := {GTK}.gtk_window_get_title (c_object)
-			if p /= NULL then
+			if not p.is_default_pointer then
 				create a_cs.share_from_pointer (p)
 				Result := a_cs.string
 				if Result.same_string_general ("%T") then
@@ -233,7 +233,7 @@ feature -- Status setting
 			{GTK}.set_gdk_geometry_struct_max_height (l_geometry, maximum_height)
 			{GTK}.set_gdk_geometry_struct_min_width (l_geometry, minimum_width)
 			{GTK}.set_gdk_geometry_struct_min_height (l_geometry, minimum_height)
-			{GTK}.gtk_window_set_geometry_hints (c_object, NULL, l_geometry, {GTK}.Gdk_hint_max_size_enum | {GTK}.gdk_hint_min_size_enum)
+			{GTK}.gtk_window_set_geometry_hints (c_object, default_pointer, l_geometry, {GTK}.Gdk_hint_max_size_enum | {GTK}.gdk_hint_min_size_enum)
 			l_geometry.memory_free
 			internal_enable_border
 		end
@@ -413,7 +413,7 @@ feature {NONE} -- Implementation
 			l_geometry := {GTK}.c_gdk_geometry_struct_allocate
 			{GTK}.set_gdk_geometry_struct_max_width (l_geometry, a_max_width)
 			{GTK}.set_gdk_geometry_struct_max_height (l_geometry, a_max_height)
-			{GTK}.gtk_window_set_geometry_hints (c_object, NULL, l_geometry, {GTK}.Gdk_hint_max_size_enum)
+			{GTK}.gtk_window_set_geometry_hints (c_object, default_pointer, l_geometry, {GTK}.Gdk_hint_max_size_enum)
 			l_geometry.memory_free
 			maximum_width := a_max_width
 			maximum_height := a_max_height

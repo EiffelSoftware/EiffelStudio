@@ -54,7 +54,7 @@ feature -- Initialize
 			a_gtk_c_str: EV_GTK_C_STRING
 			a_selection: POINTER
 		do
-			scrollable_area := {GTK}.gtk_scrolled_window_new (NULL, NULL)
+			scrollable_area := {GTK}.gtk_scrolled_window_new (default_pointer, default_pointer)
 			{GTK2}.gtk_scrolled_window_set_shadow_type (scrollable_area, {GTK}.gtk_shadow_in_enum)
 			set_c_object (scrollable_area)
 
@@ -119,7 +119,7 @@ feature -- Access
 			a_selection := {GTK2}.gtk_tree_view_get_selection (tree_view)
 			a_tree_path_list := {GTK2}.gtk_tree_selection_get_selected_rows (a_selection, $a_model)
 
-			if a_tree_path_list /= NULL then
+			if a_tree_path_list /= default_pointer then
 					a_tree_path := {GTK}.glist_struct_data (a_tree_path_list)
 					a_int_ptr := {GTK2}.gtk_tree_path_get_indices (a_tree_path)
 					create mp.share_from_pointer (a_int_ptr, {PLATFORM}.integer_32_bytes)
@@ -146,10 +146,10 @@ feature -- Access
 			create Result.make (0)
 			a_selection := {GTK2}.gtk_tree_view_get_selection (tree_view)
 			a_tree_path_list := {GTK2}.gtk_tree_selection_get_selected_rows (a_selection, $a_model)
-			if a_tree_path_list /= NULL then
+			if a_tree_path_list /= default_pointer then
 				from
 				until
-					a_tree_path_list = NULL
+					a_tree_path_list = default_pointer
 				loop
 					a_tree_path := {GTK}.glist_struct_data (a_tree_path_list)
 					a_int_ptr := {GTK2}.gtk_tree_path_get_indices (a_tree_path)
@@ -188,7 +188,7 @@ feature -- Status setting
 			l_list_iter := list_item_imp.list_iter
 			check l_list_iter /= Void then end
 			a_path := {GTK2}.gtk_tree_model_get_path (list_store, l_list_iter.item)
-			{GTK2}.gtk_tree_view_scroll_to_cell (tree_view, a_path, NULL, False, 0, 0)
+			{GTK2}.gtk_tree_view_scroll_to_cell (tree_view, a_path, default_pointer, False, 0, 0)
 			{GTK2}.gtk_tree_path_free (a_path)
 		end
 
@@ -261,7 +261,7 @@ feature -- PND
 			a_int_ptr: POINTER
 			mp: MANAGED_POINTER
 		do
-			a_success := {GTK2}.gtk_tree_view_get_path_at_pos (tree_view, 1, a_y, $a_tree_path, $a_tree_column, NULL, NULL)
+			a_success := {GTK2}.gtk_tree_view_get_path_at_pos (tree_view, 1, a_y, $a_tree_path, $a_tree_column, default_pointer, default_pointer)
 			if a_success then
 				a_int_ptr := {GTK2}.gtk_tree_path_get_indices (a_tree_path)
 				create mp.share_from_pointer (a_int_ptr, {PLATFORM}.integer_32_bytes)
@@ -309,7 +309,7 @@ feature -- PND
 			a_column_ptr := {GTK2}.gtk_tree_view_get_column (tree_view, 0)
 			a_cell_rend_list := {GTK}.gtk_cell_layout_get_cells (a_column_ptr)
 			a_cell_rend := {GTK}.g_list_nth_data (a_cell_rend_list, 0)
-			{GTK2}.gtk_cell_renderer_get_fixed_size (a_cell_rend, null, $Result)
+			{GTK2}.gtk_cell_renderer_get_fixed_size (a_cell_rend, default_pointer, $Result)
 			a_gtk_c_str := once "vertical-separator"
 			{GTK2}.gtk_widget_style_get_integer (tree_view, a_gtk_c_str.item, $a_vert_sep)
 			Result := Result + a_vert_sep

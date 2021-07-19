@@ -95,7 +95,7 @@ feature {EV_RADIO_BUTTON_IMP, EV_CONTAINER_IMP} -- Access
 	shared_pointer: POINTER_REF
 			-- Reference to `radio_group'. Used to share the
 			-- pointer `radio_group' with merged containers even when
-			-- its value is still `NULL'.
+			-- its value is still `default_pointer'.
 
 	set_shared_pointer (p: POINTER_REF)
 			-- Assign `p' to `shared_pointer'.
@@ -174,15 +174,15 @@ feature -- Status setting
 					if l /= Void then
 						from
 							l.start
-							if l.first /= NULL then
+							if not l.first.is_default_pointer then
 								rad_but_imp ?= eif_object_from_c (l.first)
 							end
-							peer.set_shared_pointer (NULL)
-							peer.set_radio_group (NULL)
+							peer.set_shared_pointer (default_pointer)
+							peer.set_radio_group (default_pointer)
 						until
 							l.off
 						loop
-							if l.item /= NULL then
+							if l.item /= default_pointer then
 								rad_but_imp ?= eif_object_from_c (l.item)
 									-- The c_object of the radio button is its parent (event box)
 								if rad_but_imp /= Void then
@@ -193,7 +193,7 @@ feature -- Status setting
 							l.forth
 						end
 					end
-					if a_child_list /= NULL then
+					if a_child_list /= default_pointer then
 						{GTK}.g_list_free (a_child_list)
 					end
 					a_child_list := {GTK}.gtk_container_get_children (container_widget)
@@ -205,7 +205,7 @@ feature -- Status setting
 					until
 						l.off
 					loop
-							if l.item /= NULL then
+							if l.item /= default_pointer then
 								rad_but_imp ?= eif_object_from_c (l.item)
 								if rad_but_imp /= Void then
 									set_radio_group (rad_but_imp.radio_group)
@@ -222,7 +222,7 @@ feature -- Status setting
 							rad_but_imp.enable_select
 						end
 					end
-					if a_child_list /= NULL then
+					if a_child_list /= default_pointer then
 						{GTK}.g_list_free (a_child_list)
 					end
 				end
@@ -238,7 +238,7 @@ feature -- Status setting
 		do
 			r ?= a_widget_imp
 			if r /= Void then
-				if radio_group /= NULL then
+				if radio_group /= default_pointer then
 					{GTK}.gtk_radio_button_set_group (r.visual_widget, radio_group)
 				else
 					{GTK}.gtk_toggle_button_set_active (r.visual_widget, False)
@@ -275,20 +275,20 @@ feature -- Status setting
 							)
 				end
 
-				{GTK}.gtk_radio_button_set_group (r.visual_widget, NULL)
+				{GTK}.gtk_radio_button_set_group (r.visual_widget, default_pointer)
 
-				if a_item_pointer /= NULL then
+				if not a_item_pointer.is_default_pointer then
 					an_item_imp ?= eif_object_from_c (
 						{GTK}.gtk_widget_get_parent (a_item_pointer)
 					)
 					check an_item_imp_not_void: an_item_imp /= Void then end
 					set_radio_group (an_item_imp.radio_group)
 				else
-					set_radio_group (NULL)
+					set_radio_group (default_pointer)
 				end
 
 				if r.is_selected then
-					if radio_group /= NULL then
+					if not radio_group.is_default_pointer then
 						{GTK}.gtk_toggle_button_set_active (
 							{GTK}.gslist_struct_data (radio_group),
 							True
@@ -473,7 +473,7 @@ feature {NONE} -- Externals
 			from
 				cur := gslist
 			until
-				cur = NULL
+				cur.is_default_pointer
 			loop
 				Result.extend ({GTK}.gslist_struct_data (cur))
 				cur := {GTK}.gslist_struct_next (cur)
@@ -491,7 +491,7 @@ feature {NONE} -- Externals
 			from
 				cur := gslist
 			until
-				cur = NULL
+				cur.is_default_pointer
 			loop
 				Result.extend ({GTK}.glist_struct_data (cur))
 				cur := {GTK}.glist_struct_next (cur)

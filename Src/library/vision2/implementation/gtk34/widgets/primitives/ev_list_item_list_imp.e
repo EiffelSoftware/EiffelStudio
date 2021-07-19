@@ -326,7 +326,7 @@ feature -- Insertion
 			check a_list_item_imp /= Void then end
 			l_list_iter := a_list_item_imp.list_iter
 			check l_list_iter /= Void then end
-			{GTK2}.gtk_list_store_set_pixbuf (list_store, l_list_iter.item, 0, NULL)
+			{GTK2}.gtk_list_store_set_pixbuf (list_store, l_list_iter.item, 0, default_pointer)
 		end
 
 	insert_i_th (v: attached like item; i: INTEGER)

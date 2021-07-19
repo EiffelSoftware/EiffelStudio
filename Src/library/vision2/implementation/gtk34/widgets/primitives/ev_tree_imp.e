@@ -122,7 +122,7 @@ feature {NONE} -- Initialization
 			a_selection: POINTER
 
 		do
-			scrollable_area := {GTK}.gtk_scrolled_window_new (NULL, NULL)
+			scrollable_area := {GTK}.gtk_scrolled_window_new (default_pointer, default_pointer)
 			{GTK2}.gtk_scrolled_window_set_shadow_type (scrollable_area, {GTK}.gtk_shadow_in_enum)
 			set_c_object (scrollable_area)
 			tree_view := {GTK2}.gtk_tree_view_new
@@ -206,7 +206,7 @@ feature {NONE} -- Initialization
 					a_property := once "horizontal-separator"
 					{GTK2}.gtk_widget_style_get_integer (tree_view, a_property.item, $a_horizontal_separator)
 
-					a_success := {GTK2}.gtk_tree_view_get_path_at_pos (tree_view, a_x, a_y, $a_tree_path, $a_tree_column, NULL, NULL)
+					a_success := {GTK2}.gtk_tree_view_get_path_at_pos (tree_view, a_x, a_y, $a_tree_path, $a_tree_column, default_pointer, default_pointer)
 					if a_success then
 						a_depth := {GTK2}.gtk_tree_path_get_depth (a_tree_path)
 						if a_x <= (a_horizontal_separator + a_expander_size + a_horizontal_separator) * a_depth and then a_x >= (a_horizontal_separator + a_expander_size + a_horizontal_separator) * (a_depth - 1) then
@@ -265,7 +265,7 @@ feature -- Status report
 			a_selection := {GTK2}.gtk_tree_view_get_selection (tree_view)
 			a_tree_path_list := {GTK2}.gtk_tree_selection_get_selected_rows (a_selection, $a_model)
 
-			if a_tree_path_list /= NULL then
+			if not a_tree_path_list.is_default_pointer then
 					a_tree_path := {GTK}.glist_struct_data (a_tree_path_list)
 					a_tree_node_imp := node_from_tree_path (a_tree_path)
 					{GTK2}.gtk_tree_path_list_free_contents (a_tree_path_list)
@@ -334,7 +334,7 @@ feature -- Implementation
 			l_list_iter := tree_item_imp.list_iter
 			check l_list_iter /= Void then end
 			a_path := {GTK2}.gtk_tree_model_get_path (tree_store, l_list_iter.item)
-			{GTK2}.gtk_tree_view_scroll_to_cell (tree_view, a_path, NULL, False, 0, 0)
+			{GTK2}.gtk_tree_view_scroll_to_cell (tree_view, a_path, default_pointer, False, 0, 0)
 			{GTK2}.gtk_tree_path_free (a_path)
 		end
 
@@ -565,7 +565,7 @@ feature {EV_TREE_NODE_IMP}
 			i: INTEGER
 			current_depth_index: INTEGER
 		do
-			a_success := {GTK2}.gtk_tree_view_get_path_at_pos (tree_view, 1, a_y, $a_tree_path, $a_tree_column, NULL, NULL)
+			a_success := {GTK2}.gtk_tree_view_get_path_at_pos (tree_view, 1, a_y, $a_tree_path, $a_tree_column, default_pointer, default_pointer)
 			if a_success then
 				a_int_ptr := {GTK2}.gtk_tree_path_get_indices (a_tree_path)
 				a_depth := {GTK2}.gtk_tree_path_get_depth (a_tree_path)
@@ -735,7 +735,7 @@ feature {EV_TREE_NODE_IMP} -- Implementation
 			a_x, a_y, a_width, a_height: INTEGER
 		do
 			a_column_ptr := {GTK2}.gtk_tree_view_get_column (tree_view, 0)
-			{GTK2}.gtk_tree_view_column_cell_get_size (a_column_ptr, NULL, $a_x, $a_y, $a_width, $a_height)
+			{GTK2}.gtk_tree_view_column_cell_get_size (a_column_ptr, default_pointer, $a_x, $a_y, $a_width, $a_height)
 			Result := a_height
 		end
 

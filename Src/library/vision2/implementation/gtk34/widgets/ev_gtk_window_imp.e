@@ -493,7 +493,7 @@ feature {EV_ANY_I} -- Implementation
 			{GTK}.set_gdk_geometry_struct_max_height (l_geometry, l_height)
 			{GTK}.set_gdk_geometry_struct_min_width (l_geometry, l_width)
 			{GTK}.set_gdk_geometry_struct_min_height (l_geometry, l_height)
-			{GTK}.gtk_window_set_geometry_hints (c_object, NULL, l_geometry, {GTK}.Gdk_hint_max_size_enum | {GTK}.gdk_hint_min_size_enum)
+			{GTK}.gtk_window_set_geometry_hints (c_object, default_pointer, l_geometry, {GTK}.Gdk_hint_max_size_enum | {GTK}.gdk_hint_min_size_enum)
 			l_geometry.memory_free
 		end
 

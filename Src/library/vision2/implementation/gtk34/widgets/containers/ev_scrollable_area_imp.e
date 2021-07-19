@@ -52,13 +52,13 @@ feature {NONE} -- Initialization
 	make
 			-- Create and initialize `Current'.
 		do
-			scrolled_window := {GTK}.gtk_scrolled_window_new (NULL, NULL)
+			scrolled_window := {GTK}.gtk_scrolled_window_new (default_pointer, default_pointer)
 
 				-- Remove shadow so that the scrollable area looks like any other container.
 			{GTK2}.gtk_scrolled_window_set_shadow_type (scrolled_window, {GTK}.gtk_shadow_none_enum)
 			set_c_object (scrolled_window)
 			set_scrolling_policy ({GTK}.gTK_POLICY_AUTOMATIC_ENUM, {GTK}.gTK_POLICY_AUTOMATIC_ENUM)
-			viewport := {GTK}.gtk_viewport_new (NULL, NULL)
+			viewport := {GTK}.gtk_viewport_new (default_pointer, default_pointer)
 			{GTK}.gtk_widget_show (viewport)
 			{GTK}.gtk_container_add (scrolled_window, viewport)
 			set_horizontal_step (10)

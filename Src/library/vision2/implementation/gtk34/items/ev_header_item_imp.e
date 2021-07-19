@@ -173,11 +173,11 @@ feature -- Status setting
 			-- As size of `text' is dependent on `font' of `parent', `Current'
 			-- must be parented.
 		local
-			a_req_struct, l_null: POINTER
+			a_req_struct: POINTER
 			a_width, a_height: INTEGER
 		do
 			a_req_struct := a_req_struct.memory_alloc ({GTK}.c_gtk_requisition_struct_size)
-			{GTK}.gtk_widget_get_preferred_size (box, a_req_struct, l_null)
+			{GTK}.gtk_widget_get_preferred_size (box, a_req_struct, default_pointer)
 			a_height := {GTK}.gtk_requisition_struct_height (a_req_struct)
 			a_width := {GTK}.gtk_requisition_struct_width (a_req_struct)
 			set_width (a_width)
@@ -323,7 +323,7 @@ feature {EV_GTK_DEPENDENT_INTERMEDIARY_ROUTINES} -- Event handling
 				l_screen_virtual_x := app_implementation.screen_virtual_x
 				l_screen_virtual_y := app_implementation.screen_virtual_y
 				gdk_event := {GTK2}.gtk_value_pointer (args)
-				if gdk_event /= NULL then
+				if gdk_event /= default_pointer then
 					event_type := {GTK}.gdk_event_any_struct_type (gdk_event)
 					if event_type = {EV_GTK_ENUMS}.gdk_motion_notify_enum then
 						if pointer_motion_actions_internal /= Void then
@@ -416,9 +416,9 @@ feature {EV_HEADER_IMP} -- Implementation
 			else
 				if item_event_id /= 0 then
 					a_button := {GTK2}.gtk_tree_view_column_get_button (c_object)
-					{GTK2}.signal_disconnect (a_button, item_event_id)
+					real_signal_disconnect (a_button, item_event_id)
 						-- Disconnect draw signal which is `item_id' + 1.
-					{GTK2}.signal_disconnect (a_button, item_event_id + 1)
+					real_signal_disconnect (a_button, item_event_id + 1)
 					item_event_id := 0
 				end
 				box := {GTK2}.g_object_ref (box)

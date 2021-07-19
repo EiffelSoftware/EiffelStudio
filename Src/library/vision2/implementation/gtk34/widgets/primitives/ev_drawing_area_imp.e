@@ -36,7 +36,6 @@ inherit
 			on_size_allocate,
 			process_draw_event,
 			process_configure_event,
-			process_enter_event, process_leave_event,
 			process_button_event,
 			button_actions_handled_by_signals,
 			destroy,
@@ -76,20 +75,9 @@ feature {NONE} -- Initialization
 			l_app_imp := App_implementation
 
 			real_signal_connect (l_c_object,
-					{EV_GTK_EVENT_STRINGS}.button_press_event_name,
-					agent (l_app_imp.gtk_marshal).on_button_widget_event (l_drawing_area, ?),
-					l_app_imp.gtk_marshal.button_event_translate_agent
-				)
-			real_signal_connect (l_c_object,
-					{EV_GTK_EVENT_STRINGS}.button_release_event_name,
-					agent (l_app_imp.gtk_marshal).on_button_widget_event (l_drawing_area, ?),
-					l_app_imp.gtk_marshal.button_event_translate_agent
-				)
-			real_signal_connect (l_drawing_area,
 					{EV_GTK_EVENT_STRINGS}.configure_event_name,
-					agent (l_app_imp.gtk_marshal).configure_event_intermediary (l_drawing_area, ?, ?, ?, ?),
-					l_app_imp.gtk_marshal.configure_translate_agent
-				)
+					agent (l_app_imp.gtk_marshal).configure_event_intermediary (l_c_object, ?, ?, ?, ?),
+					l_app_imp.gtk_marshal.configure_translate_agent)
 
 			real_signal_connect (l_c_object,
 					{EV_GTK_EVENT_STRINGS}.scroll_event_name,
@@ -97,22 +85,11 @@ feature {NONE} -- Initialization
 					l_app_imp.gtk_marshal.scroll_event_translate_agent
 				)
 
-			real_signal_connect_after (l_drawing_area,
+			real_signal_connect_after (l_c_object,
 					{EV_GTK_EVENT_STRINGS}.draw_event_name,
-					agent (l_app_imp.gtk_marshal).draw_actions_intermediary (l_drawing_area, ?),
-					l_app_imp.gtk_marshal.draw_translate_agent
-				)
+					agent (l_app_imp.gtk_marshal).draw_actions_intermediary (l_c_object, ?),
+					l_app_imp.gtk_marshal.draw_translate_agent)
 
-			real_signal_connect_after (l_drawing_area,
-					{EV_GTK_EVENT_STRINGS}.enter_notify_event_name,
-					agent (l_app_imp.gtk_marshal).enter_event_intermediary (l_drawing_area, ?, ?, ?, ?),
-					l_app_imp.gtk_marshal.enter_leave_translate_agent
-				)
-			real_signal_connect_after (l_drawing_area,
-					{EV_GTK_EVENT_STRINGS}.leave_notify_event_name,
-					agent (l_app_imp.gtk_marshal).leave_event_intermediary (l_drawing_area, ?, ?, ?, ?),
-					l_app_imp.gtk_marshal.enter_leave_translate_agent
-				)
 
 			check cairo_surface.is_default_pointer end
 
@@ -165,7 +142,6 @@ feature {NONE} -- Dispose
 				{CAIRO}.surface_destroy (cairo_surface)
 				cairo_surface := default_pointer
 			end
-
 			Precursor
 		end
 
@@ -369,18 +345,6 @@ feature {EV_INTERMEDIARY_ROUTINES} -- Implementation
 				get_new_cairo_surface (a_width, a_height)
 			end
 			Result := True
-		end
-
-	process_enter_event (a_x, a_y, a_screen_x, a_screen_y: INTEGER)
-			-- "enter-notify-event" signal occurred
-		do
-			redraw
-		end
-
-	process_leave_event (a_x, a_y, a_screen_x, a_screen_y: INTEGER)
-			-- "leave-notify-event" signal occurred
-		do
-			redraw
 		end
 
 	process_button_event (a_gdk_event: POINTER; a_recursive: BOOLEAN)

@@ -72,7 +72,7 @@ feature {NONE} -- Initialization
 		local
 			l_release_actions: EV_POINTER_BUTTON_ACTION_SEQUENCE
 		do
-			scrollable_area := {GTK}.gtk_scrolled_window_new (NULL, NULL)
+			scrollable_area := {GTK}.gtk_scrolled_window_new (default_pointer, default_pointer)
 			{GTK2}.gtk_scrolled_window_set_shadow_type (scrollable_area, {GTK}.gtk_shadow_in_enum)
 			set_c_object (scrollable_area)
 			{GTK}.gtk_scrolled_window_set_policy (
@@ -129,7 +129,8 @@ feature {EV_GTK_DEPENDENT_INTERMEDIARY_ROUTINES} -- Implementation
 		do
 			if selection_signal_id /= 0 then
 				a_selection := {GTK2}.gtk_tree_view_get_selection (tree_view)
-				{GTK2}.signal_disconnect (a_selection, selection_signal_id)
+				real_signal_disconnect (a_selection, selection_signal_id)
+--				{GTK2}.signal_disconnect (a_selection, selection_signal_id)
 				selection_signal_id := 0
 			end
 		end
@@ -440,7 +441,7 @@ feature -- Access
 			col_list: POINTER
 		do
 			col_list := {GTK2}.gtk_tree_view_get_columns (tree_view)
-			if col_list /= NULL then
+			if col_list /= default_pointer then
 				Result := {GTK}.g_list_length (col_list)
 				{GTK}.g_list_free (col_list)
 			end
@@ -449,7 +450,7 @@ feature -- Access
 	model_column_count: INTEGER
 			-- Number of columns in GtkTreeModel
 		do
-			if list_store /= NULL then
+			if list_store /= default_pointer then
 				Result := {GTK2}.gtk_tree_model_get_n_columns (list_store)
 			end
 		end
@@ -479,7 +480,7 @@ feature -- Access
 			a_selection := {GTK2}.gtk_tree_view_get_selection (tree_view)
 			a_tree_path_list := {GTK2}.gtk_tree_selection_get_selected_rows (a_selection, $a_model)
 
-			if a_tree_path_list /= NULL then
+			if a_tree_path_list /= default_pointer then
 					a_tree_path := {GTK}.glist_struct_data (a_tree_path_list)
 					a_int_ptr := {GTK2}.gtk_tree_path_get_indices (a_tree_path)
 					create mp.share_from_pointer (a_int_ptr, {PLATFORM}.integer_32_bytes)
@@ -506,10 +507,10 @@ feature -- Access
 			create Result.make (0)
 			a_selection := {GTK2}.gtk_tree_view_get_selection (tree_view)
 			a_tree_path_list := {GTK2}.gtk_tree_selection_get_selected_rows (a_selection, $a_model)
-			if a_tree_path_list /= NULL then
+			if a_tree_path_list /= default_pointer then
 				from
 				until
-					a_tree_path_list = NULL
+					a_tree_path_list = default_pointer
 				loop
 					a_tree_path := {GTK}.glist_struct_data (a_tree_path_list)
 					a_int_ptr := {GTK2}.gtk_tree_path_get_indices (a_tree_path)
@@ -989,7 +990,7 @@ feature {EV_MULTI_COLUMN_LIST_ROW_IMP} -- Implementation
 			a_int_ptr: POINTER
 			mp: MANAGED_POINTER
 		do
-			a_success := {GTK2}.gtk_tree_view_get_path_at_pos (tree_view, 1, a_y, $a_tree_path, $a_tree_column, NULL, NULL)
+			a_success := {GTK2}.gtk_tree_view_get_path_at_pos (tree_view, 1, a_y, $a_tree_path, $a_tree_column, default_pointer, default_pointer)
 			if a_success then
 				a_int_ptr := {GTK2}.gtk_tree_path_get_indices (a_tree_path)
 				create mp.share_from_pointer (a_int_ptr, {PLATFORM}.integer_32_bytes)
@@ -1061,7 +1062,7 @@ feature {EV_MULTI_COLUMN_LIST_ROW_IMP}
 		do
 			a_list_iter := ev_children.i_th (a_row).list_iter
 			check a_list_iter /= Void then end
-			{GTK2}.gtk_list_store_set_pixbuf (list_store, a_list_iter.item, 0, NULL)
+			{GTK2}.gtk_list_store_set_pixbuf (list_store, a_list_iter.item, 0, default_pointer)
 		end
 
 feature {NONE} -- Implementation
@@ -1121,7 +1122,7 @@ feature {NONE} -- Implementation
 			l_list_iter := list_item_imp.list_iter
 			check l_list_iter /= Void then end
 			a_path := {GTK2}.gtk_tree_model_get_path (list_store, l_list_iter.item)
-			{GTK2}.gtk_tree_view_scroll_to_cell (tree_view, a_path, NULL, False, 0, 0)
+			{GTK2}.gtk_tree_view_scroll_to_cell (tree_view, a_path, default_pointer, False, 0, 0)
 			{GTK2}.gtk_tree_path_free (a_path)
 		end
 
@@ -1191,7 +1192,7 @@ feature -- Access
 			a_x, a_y, a_width, a_height: INTEGER
 		do
 			a_column_ptr := {GTK2}.gtk_tree_view_get_column (tree_view, 0)
-			{GTK2}.gtk_tree_view_column_cell_get_size (a_column_ptr, NULL, $a_x, $a_y, $a_width, $a_height)
+			{GTK2}.gtk_tree_view_column_cell_get_size (a_column_ptr, default_pointer, $a_x, $a_y, $a_width, $a_height)
 			Result := a_height
 		end
 

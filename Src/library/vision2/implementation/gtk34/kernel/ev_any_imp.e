@@ -128,7 +128,7 @@ feature {EV_ANY_I, EV_APPLICATION_IMP} -- Event handling
 		)
 				-- Connect `an_agent' to `a_signal_name' of `a_c_object'.
 		require
-			a_c_object_not_void: a_c_object /= default_pointer
+			a_c_object_not_void: not a_c_object.is_default_pointer
 			a_signal_name_not_void: a_signal_name /= Void
 			a_signal_name_not_empty: not a_signal_name.is_empty
 			an_agent_not_void: an_agent /= Void
@@ -140,6 +140,7 @@ feature {EV_ANY_I, EV_APPLICATION_IMP} -- Event handling
 			end
 			l_app_imp := app_implementation
 			l_app_imp.gtk_marshal.signal_connect (a_c_object, a_signal_name, an_agent, translate, False)
+			record_signal_connection (a_c_object, a_signal_name, l_app_imp.gtk_marshal.last_signal_connection_id)
 		end
 
 	real_signal_connect_after (
@@ -151,7 +152,7 @@ feature {EV_ANY_I, EV_APPLICATION_IMP} -- Event handling
 				-- Connect `an_agent' to `a_signal_name' of `a_c_object'.
 				-- 'an_agent' called after default gtk signal handler for `a_signal_name'
 		require
-			a_c_object_not_void: a_c_object /= default_pointer
+			a_c_object_not_void: not a_c_object.is_default_pointer
 			a_signal_name_not_void: a_signal_name /= Void
 			a_signal_name_not_empty: not a_signal_name.is_empty
 			an_agent_not_void: an_agent /= Void
@@ -161,9 +162,41 @@ feature {EV_ANY_I, EV_APPLICATION_IMP} -- Event handling
 			debug ("gtk_signal")
 				print (generator + ": calling signal_connect ( .. ) AFTER%N")
 			end
-
 			l_app_imp := app_implementation
 			l_app_imp.gtk_marshal.signal_connect (a_c_object, l_app_imp.c_string_from_eiffel_string (a_signal_name), an_agent, translate, True)
+			record_signal_connection (a_c_object, a_signal_name, l_app_imp.gtk_marshal.last_signal_connection_id)
+		end
+
+	real_signal_disconnect (a_c_object: like c_object; a_conn_id: INTEGER)
+		require
+			a_c_object_not_void: not a_c_object.is_default_pointer
+			a_conn_id > 0
+		local
+			l_app_imp: EV_APPLICATION_IMP
+			conn: like signal_connections.item
+		do
+			debug ("gtk_signal")
+				print (generator + ": calling signal_disconnect (" + a_c_object.out + ", " + a_conn_id.out + ")%N")
+			end
+			l_app_imp := app_implementation
+			l_app_imp.gtk_marshal.signal_disconnect (a_c_object, a_conn_id)
+			if attached signal_connections as conn_lst then
+				from
+					conn_lst.start
+				until
+					conn_lst.off
+				loop
+					conn := conn_lst.item
+					if
+						conn.c_object = a_c_object and
+						conn.connection_id = a_conn_id
+					then
+						conn_lst.remove
+					else
+						conn_lst.forth
+					end
+				end
+			end
 		end
 
 	last_signal_connection_id: INTEGER
@@ -171,6 +204,58 @@ feature {EV_ANY_I, EV_APPLICATION_IMP} -- Event handling
 		do
 			Result := app_implementation.gtk_marshal.last_signal_connection_id
 		end
+
+	record_signal_connection (a_c_object: POINTER; a_signal_name: READABLE_STRING_8; a_connection_id: like last_signal_connection_id)
+		local
+			lst: like signal_connections
+		do
+			if a_connection_id > 0 then
+				lst := signal_connections
+				if lst = Void then
+					create {ARRAYED_LIST [like signal_connections.item]} lst.make (1)
+					signal_connections := lst
+				end
+				lst.force ([a_c_object, a_signal_name, a_connection_id])
+			end
+		end
+
+	disconnect_all_recorded_connections (a_c_object: POINTER)
+		do
+			if attached signal_connections as l_connections then
+				print (generator + ".disconnect_all_recorded_connections (...) -> count = " + l_connections.count.out + "%N")
+				from
+					l_connections.start
+				until
+					l_connections.off
+				loop
+					if
+						attached l_connections.item as conn and then
+						conn.connection_id > 0
+					then
+						if
+							a_c_object.is_default_pointer -- Any target C object
+							or else conn.c_object = a_c_object -- Matched the `a_c_object` argument.
+						then
+							{GTK2}.signal_disconnect (conn.c_object, conn.connection_id)
+							conn.connection_id := 0
+							l_connections.remove
+						else
+							l_connections.forth
+						end
+					else
+						l_connections.remove
+					end
+				end
+				if l_connections.is_empty then
+					signal_connections := Void
+				else
+					do_nothing
+				end
+			end
+		end
+
+	signal_connections: detachable LIST [TUPLE [c_object: POINTER; signal: READABLE_STRING_8; connection_id: like last_signal_connection_id]]
+			-- Signal name and Connection id indexed by c_object pointer.
 
 feature {NONE} -- Implementation
 
@@ -185,14 +270,18 @@ feature {NONE} -- Implementation
 			-- Destroy `c_object'.
 		local
 			l_c_object: POINTER
+			nb: NATURAL_32
 		do
 				-- Disable the marshaller so we do not get C to Eiffel calls
 				-- during GC cycle otherwise bad things may happen.
 			{EV_GTK_CALLBACK_MARSHAL}.c_ev_gtk_callback_marshal_set_is_enabled (False)
+
+			disconnect_all_recorded_connections (default_pointer)
+
 			l_c_object := c_object
 			if not l_c_object.is_default_pointer then
 					-- Disconnect dispose signal for `c_object'.
-				{GTK2}.signal_disconnect_by_data (l_c_object, internal_id)
+				nb := {GTK2}.signal_disconnect_by_data (l_c_object, internal_id)
 					-- Unref `c_object' so that is may get collected by gtk.
 				if {GTK}.gtk_is_window (l_c_object) then
 						-- Windows need to be explicitly destroyed.
@@ -218,7 +307,9 @@ feature {NONE} -- Implementation
 				-- The object has been marked for destruction from its parent so we unref
 				-- so that gtk will reap back the memory.
 			if not c_object.is_default_pointer then
+				disconnect_all_recorded_connections (c_object)
 				{GTK2}.g_object_unref (c_object)
+				c_object := default_pointer
 			end
 			set_is_destroyed (True)
 
@@ -314,17 +405,6 @@ feature {EV_INTERMEDIARY_ROUTINES, EV_ANY_I, EV_STOCK_PIXMAPS_IMP} -- Implementa
 			check attached {EV_APPLICATION_IMP} env.implementation.application_i as l_app_imp then
 				Result := l_app_imp
 			end
-		end
-
-feature -- Measurement
-
-	NULL: POINTER
-		external
-			"C [macro <stdio.h>]"
-		alias
-			"NULL"
-		ensure
-			is_class: class
 		end
 
 note

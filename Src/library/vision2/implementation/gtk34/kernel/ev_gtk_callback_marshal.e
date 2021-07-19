@@ -95,6 +95,10 @@ feature -- Implementation
 					invoke_after_handler: BOOLEAN
 				)
 			-- Signal connect, depending on `invoke_after_handler` invoked before or after default handler.
+			-- Notes:
+			--		- on connect the agent `an_agent` is eif_adopt-ed by the run-time
+			--		- on disconnect the eif_adopt-ed agent `an_agent` is eif_wean-ed by the run-time
+			--			and thus can be collected by the GC
 		local
 			l_agent: ROUTINE
 		do
@@ -141,6 +145,13 @@ feature -- Implementation
 			-- Signal connect, invoke after default handler.
 		do
 			signal_connect (a_c_object, a_signal_name, an_agent, translate, True)
+		end
+
+	signal_disconnect (a_c_object: POINTER; a_conn_id: INTEGER)
+			-- Close connection `a_conn_id` for object `a_c_object`.
+			-- Note: the associated Eiffel agent will be "wean" by the run-time
+		do
+			{GTK2}.signal_disconnect (a_c_object, a_conn_id)
 		end
 
 	last_signal_connection_id: INTEGER

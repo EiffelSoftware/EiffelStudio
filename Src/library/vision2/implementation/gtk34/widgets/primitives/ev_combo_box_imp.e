@@ -316,7 +316,7 @@ feature {EV_GTK_DEPENDENT_INTERMEDIARY_ROUTINES} -- Event handling
 						agent (app_implementation.gtk_marshal).on_combo_box_toggle_button_event (internal_id, 2),
 						Void
 					)
-				{GTK2}.signal_disconnect (container_widget, retrieve_toggle_button_signal_connection_id)
+ 				real_signal_disconnect (container_widget, retrieve_toggle_button_signal_connection_id) -- disconnect previous connection.
 				retrieve_toggle_button_signal_connection_id := 0
 			end
 		end

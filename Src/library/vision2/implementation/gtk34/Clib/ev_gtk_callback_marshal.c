@@ -88,8 +88,18 @@ void dummy_callback (void)
 
 void gclosure_notify_eif_wean (gpointer data, GClosure *closure) 
 {
+	/* closure notify to be called when user `data` is no longer used */
+	if (data) {
+		eif_wean ((EIF_OBJECT) data);
+	}
+}
+
+void gdestroy_notify_eif_wean (gpointer data)
+{
 	/* destroy notify to be called when user `data` is no longer used */
-	eif_wean ((EIF_OBJECT) data);
+	if (data) {
+		eif_wean ((EIF_OBJECT) data);
+	}
 }
 
 guint c_ev_gtk_callback_marshal_signal_connect (
@@ -121,7 +131,7 @@ guint c_ev_gtk_callback_marshal_timeout_connect (
 				delay,
 				(GSourceFunc) c_ev_gtk_callback_marshal_true_callback,
 				eif_adopt (agent),          // User data for function.
-				(GDestroyNotify) eif_wean // To call on hook disconnect.
+				(GDestroyNotify) gdestroy_notify_eif_wean // To call on hook disconnect.
 			);
 	return (connection_id);
 }

@@ -272,7 +272,6 @@ feature {NONE} -- Implementation
 			-- Destroy `c_object'.
 		local
 			l_c_object: POINTER
-			nb: NATURAL_32
 		do
 				-- Disable the marshaller so we do not get C to Eiffel calls
 				-- during GC cycle otherwise bad things may happen.
@@ -282,8 +281,6 @@ feature {NONE} -- Implementation
 
 			l_c_object := c_object
 			if not l_c_object.is_default_pointer then
-					-- Disconnect dispose signal for `c_object'.
-				nb := {GTK2}.signal_disconnect_by_data (l_c_object, internal_id)
 					-- Unref `c_object' so that is may get collected by gtk.
 				if {GTK}.gtk_is_window (l_c_object) then
 						-- Windows need to be explicitly destroyed.

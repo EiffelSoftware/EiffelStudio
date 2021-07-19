@@ -222,7 +222,9 @@ feature {EV_ANY_I, EV_APPLICATION_IMP} -- Event handling
 	disconnect_all_recorded_connections (a_c_object: POINTER)
 		do
 			if attached signal_connections as l_connections then
-				print (generator + ".disconnect_all_recorded_connections (...) -> count = " + l_connections.count.out + "%N")
+				debug ("gtk_signal")
+					print (generator + ".disconnect_all_recorded_connections (...) -> count = " + l_connections.count.out + "%N")
+				end
 				from
 					l_connections.start
 				until

@@ -150,11 +150,11 @@ feature -- Implementation
 
 	on_combo_box_toggle_button_event (a_object_id: INTEGER; a_event_id: INTEGER)
 			-- A combo box toggle button has been toggled.
-		local
-			a_combo: detachable EV_COMBO_BOX_IMP
 		do
-			a_combo ?= eif_id_object (a_object_id)
-			if a_combo /= Void and then a_combo.parent_imp /= Void and then not a_combo.is_destroyed then
+			if
+				attached {EV_COMBO_BOX_IMP} eif_id_object (a_object_id) as a_combo and then
+			 	a_combo.parent_imp /= Void and then not a_combo.is_destroyed
+			 then
 				inspect
 					a_event_id
 				when 1 then

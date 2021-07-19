@@ -41,7 +41,7 @@ feature {NONE} -- Initialization
 		do
 			a_cs := "Select directory"
 			set_c_object
-				({GTK2}.gtk_file_chooser_dialog_new (a_cs.item, NULL, {GTK2}.gtk_file_chooser_action_select_folder_enum))
+				({GTK2}.gtk_file_chooser_dialog_new (a_cs.item, default_pointer, {GTK2}.gtk_file_chooser_action_select_folder_enum))
 
 			l_but := {GTK2}.gtk_dialog_add_button (c_object, {GTK2}.gtk_ok_enum_label, {GTK2}.gtk_response_ok_enum)
 			l_but := {GTK2}.gtk_dialog_add_button (c_object, {GTK2}.gtk_cancel_enum_label, {GTK2}.gtk_response_cancel_enum)
@@ -49,7 +49,7 @@ feature {NONE} -- Initialization
 			Precursor {EV_STANDARD_DIALOG_IMP}
 			set_is_initialized (False)
 
-			{GTK2}.gtk_dialog_set_default_response (c_object, {GTK2}.gtk_response_accept_enum)				
+			{GTK2}.gtk_dialog_set_default_response (c_object, {GTK2}.gtk_response_accept_enum)
 			enable_closeable
 			set_start_path (App_implementation.current_working_path)
 			set_is_initialized (True)
@@ -66,7 +66,7 @@ feature -- Access
 				user_clicked_ok
 			then
 				a_filename := {GTK2}.gtk_file_chooser_get_filename (c_object)
-				if a_filename /= NULL then
+				if not a_filename.is_default_pointer then
 					create Result.make_from_pointer (a_filename)
 					{GTK}.g_free (a_filename)
 				else

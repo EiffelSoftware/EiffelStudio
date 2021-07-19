@@ -54,7 +54,7 @@ feature {NONE} -- Initialization
 	make
 		do
 			--| Hack to prevent invariant violation
-			set_c_object ({GTK}.gtk_label_new (NULL))
+			set_c_object ({GTK}.gtk_label_new (default_pointer))
 
 				-- World needs resetting on project
 			set_is_initialized (True)
@@ -113,7 +113,7 @@ feature {EV_ANY, EV_ANY_I} -- Implementation
 	interface: detachable EV_MODEL_PRINT_PROJECTOR note option: stable attribute end;
 
 note
-	copyright:	"Copyright (c) 1984-2012, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2021, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

@@ -48,7 +48,7 @@ feature {NONE} -- Initialization
 		local
 			l_filename: like filename
 		do
-			set_c_object ({GTK}.gtk_label_new (NULL))
+			set_c_object ({GTK}.gtk_label_new (default_pointer))
 
 			if a_context.output_to_file then
 				l_filename := a_context.file_path
@@ -153,7 +153,7 @@ feature {EV_ANY, EV_ANY_I} -- Implementation
 	interface: detachable EV_PRINT_PROJECTOR note option: stable attribute end;
 
 note
-	copyright:	"Copyright (c) 1984-2013, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2021, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

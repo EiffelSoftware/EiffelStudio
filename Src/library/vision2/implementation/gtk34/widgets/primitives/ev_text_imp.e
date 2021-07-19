@@ -49,7 +49,7 @@ feature {NONE} -- Initialization
 			-- Create and initialize `Current'.
 		do
 			set_c_object ({GTK}.gtk_event_box_new)
-			scrolled_window := {GTK}.gtk_scrolled_window_new (NULL, NULL)
+			scrolled_window := {GTK}.gtk_scrolled_window_new (default_pointer, default_pointer)
 			{GTK2}.gtk_scrolled_window_set_shadow_type (scrolled_window, {GTK}.gtk_shadow_in_enum)
 			{GTK}.gtk_widget_show (scrolled_window)
 			{GTK}.gtk_container_add (c_object, scrolled_window)
@@ -134,7 +134,7 @@ feature -- Status report
 	has_selection: BOOLEAN
 			-- Does `Current' have a selection?
 		do
-			Result := {GTK2}.gtk_text_buffer_get_selection_bounds (text_buffer, NULL, NULL)
+			Result := {GTK2}.gtk_text_buffer_get_selection_bounds (text_buffer, default_pointer, default_pointer)
 		end
 
 	start_selection: INTEGER

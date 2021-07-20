@@ -1146,6 +1146,13 @@ feature -- Menu
 			"C (GtkMenuShell*, GtkWidget*, gint) | <ev_gtk.h>"
 		end
 
+	frozen gtk_separator_menu_item_new: POINTER
+	 	external
+			"C inline use <ev_gtk.h>"
+		alias
+			"return gtk_separator_menu_item_new ();"
+		end
+
 feature -- Editable
 
 	frozen gtk_editable_copy_clipboard (a_editable: POINTER)

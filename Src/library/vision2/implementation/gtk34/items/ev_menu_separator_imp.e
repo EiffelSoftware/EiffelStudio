@@ -38,10 +38,10 @@ feature {NONE} -- Initialization
 	make
 			-- Do nothing because an empty GtkMenuItem is a separator.
 		do
-			set_c_object ({GTK}.gtk_menu_item_new)
+			set_c_object({GTK}.gtk_separator_menu_item_new)
 			{GTK}.gtk_widget_show (c_object)
 			{GTK}.gtk_widget_set_sensitive (c_object, False)
-			{GTK}.gtk_widget_set_size_request (c_object, -1, 8)
+			{GTK}.gtk_widget_set_size_request (c_object, -1, 2)
 			pixmapable_imp_initialize
 			textable_imp_initialize
 			initialize_menu_sep_box

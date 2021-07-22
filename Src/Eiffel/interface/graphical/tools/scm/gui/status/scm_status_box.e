@@ -492,6 +492,8 @@ feature -- Changelist
 		local
 			l_new: SCM_CHANGELIST_COLLECTION
 			l_coll_name: READABLE_STRING_GENERAL
+			s: STRING_32
+			i: INTEGER
 		do
 			if attached changelist_combo as l_combo then
 				if
@@ -503,6 +505,12 @@ feature -- Changelist
 					l_coll_name := l_combo.text
 				end
 				if l_coll_name /= Void then
+					i := l_coll_name.index_of ('(', 1)
+					if i > 0 then
+						s := l_coll_name.head (i - 1)
+						s.right_adjust
+						l_coll_name := s
+					end
 					if not changelists.has (l_coll_name) then
 						create l_new.make (l_coll_name, 10)
 						changelists [l_new.name] := l_new

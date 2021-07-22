@@ -55,7 +55,6 @@ feature {NONE} -- Initialization
 			--| This is just to satisfy pixmapable and textable contracts.
 		do
 			box := {GTK}.gtk_box_new ({GTK_ORIENTATION}.gtk_orientation_horizontal, 0)
-			box := {GTK2}.g_object_ref (box)
 			box := {GTK}.g_object_ref_sink (box)
 			{GTK}.gtk_box_pack_start (box, text_label, True, True, 0)
 			{GTK}.gtk_box_pack_start (box, pixmap_box, True, True, 0)
@@ -82,7 +81,10 @@ feature {EV_MENU_ITEM_LIST_IMP} -- Implementation
 	dispose
 			-- Unreference unwanted gtk widgets.
 		do
-			{GTK2}.g_object_unref (box)
+			if not box.is_default_pointer then
+				{GTK2}.g_object_unref (box)
+				box := default_pointer
+			end
 			Precursor
 		end
 

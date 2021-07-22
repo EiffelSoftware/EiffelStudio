@@ -26,7 +26,10 @@ void c_ev_gtk_callback_marshal_init
 
 void c_ev_gtk_callback_marshal_destroy ();
 
+int c_ev_gtk_callback_marshal_is_enabled;
 void c_ev_gtk_callback_marshal_set_is_enabled (int);
+
+guint c_ev_gtk_disconnect_all_signals (gpointer);
 
 guint c_ev_gtk_callback_marshal_signal_connect
 	(gpointer, const gchar*, EIF_OBJECT, gboolean);

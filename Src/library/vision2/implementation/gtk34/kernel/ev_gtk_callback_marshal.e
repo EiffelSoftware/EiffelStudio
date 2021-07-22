@@ -101,6 +101,7 @@ feature -- Implementation
 			--			and thus can be collected by the GC
 		local
 			l_agent: ROUTINE
+			l_conn_id: like last_signal_connection_id
 		do
 			if translate = Void then
 					-- If we have no translate agent then we call the agent directly.
@@ -109,12 +110,13 @@ feature -- Implementation
 				l_agent := agent translate_and_call (an_agent, translate)
 			end
 
-			last_signal_connection_id := {EV_GTK_CALLBACK_MARSHAL}.c_signal_connect (
+			l_conn_id := {EV_GTK_CALLBACK_MARSHAL}.c_signal_connect (
 				a_c_object,
 				a_signal_name.item,
 				l_agent,
 				invoke_after_handler
 			)
+			last_signal_connection_id := l_conn_id
 			debug("gtk_signal")
 				print (generator + ".signal_connect ("
 							+ a_c_object.out +", "
@@ -122,18 +124,6 @@ feature -- Implementation
 							+ if attached an_agent.target as tgt then tgt.generator else "NoTarget" end
 							+ " ...,"+ invoke_after_handler.out +") -> "+ last_signal_connection_id.out +"%N")
 			end
-
-		end
-
-	signal_connect_before (
-					a_c_object: POINTER;
-					a_signal_name: EV_GTK_C_STRING;
-					an_agent: ROUTINE;
-					translate: detachable FUNCTION [INTEGER, POINTER, TUPLE]
-				)
-			-- Signal connect, invoke after default handler.
-		do
-			signal_connect (a_c_object, a_signal_name, an_agent, translate, False)
 		end
 
 	signal_connect_after (
@@ -155,7 +145,7 @@ feature -- Implementation
 		end
 
 	last_signal_connection_id: INTEGER
-		-- Last signal connection id.
+			-- Last signal connection id.
 
 feature -- Agent functions.
 
@@ -388,7 +378,6 @@ feature {EV_GTK_CALLBACK_MARSHAL} -- Externals
 		end
 
 	frozen c_ev_gtk_callback_marshal_destroy
-
 			-- See ev_gtk_callback_marshal.c
 		external
 			"C | %"ev_gtk_callback_marshal.h%""
@@ -397,6 +386,16 @@ feature {EV_GTK_CALLBACK_MARSHAL} -- Externals
 		end
 
 feature -- Implementation
+
+	frozen c_ev_gtk_callback_marshal_is_enabled: BOOLEAN
+			-- See ev_gtk_callback_marshal.c
+		external
+			"C inline use %"ev_gtk_callback_marshal.h%""
+		alias
+			"(EIF_BOOLEAN) c_ev_gtk_callback_marshal_is_enabled"
+		ensure
+			is_class: class
+		end
 
 	frozen c_ev_gtk_callback_marshal_set_is_enabled (a_enabled_state: BOOLEAN)
 			-- See ev_gtk_callback_marshal.c

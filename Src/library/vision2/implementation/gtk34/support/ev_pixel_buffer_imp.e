@@ -462,19 +462,19 @@ feature {EV_STOCK_PIXMAPS_IMP} -- Implementation
 			l_error: POINTER
 			l_screen: POINTER
 		do
-			l_label := {GTK}.gtk_label_new (default_pointer)
-			l_label := {GTK2}.g_object_ref (l_label)
+			l_label := {GTK}.gtk_label_new (default_pointer) -- Floating ref
+			l_label := {GTK2}.g_object_ref_sink (l_label) -- adopt floating ref
 
-
-			if {GTK2}.gtk_widget_has_screen(l_label) then
-				l_screen:= {GTK2}.gtk_widget_get_screen(l_label)
+			if {GTK2}.gtk_widget_has_screen (l_label) then
+				l_screen:= {GTK2}.gtk_widget_get_screen (l_label)
 			else
 				l_screen:= {GDK}.gdk_screen_get_default
 			end
 
-			stock_pixbuf := {GTK2}.gtk_icon_theme_load_icon ({GTK2}.gtk_icon_theme_get_for_screen(l_screen), a_stock_id, 48, 0, $l_error)
-			{GTK2}.g_object_unref (l_label)
+			stock_pixbuf := {GTK2}.gtk_icon_theme_load_icon ({GTK2}.gtk_icon_theme_get_for_screen (l_screen), a_stock_id, 48, 0, $l_error)
+			{GTK2}.g_object_force_floating (l_label)
 			l_label := default_pointer
+
 			if stock_pixbuf /= default_pointer then
 					-- If a stock pixmap can be found then set it, else do nothing.
 				if not {GDK}.gdk_is_pixbuf (stock_pixbuf) then
@@ -497,16 +497,20 @@ feature {EV_PIXEL_BUFFER_IMP, EV_POINTER_STYLE_IMP, EV_DRAWABLE_IMP} -- Implemen
 
 	set_gdkpixbuf (a_pixbuf: POINTER)
 			-- Set `gdk_pixbuf' to `a_pixbuf'.
+		local
+			l_pixbuf: POINTER
 		do
 			if gdk_pixbuf /= default_pointer then
 					-- Unref previous gdkpixbuf
 				{GTK2}.g_object_unref (gdk_pixbuf)
 			end
 			if a_pixbuf /= default_pointer then
+				l_pixbuf := {GTK2}.g_object_ref (a_pixbuf) -- incr ref (GdkPixbuf is not a GInitiallyUnowned)
 				if not {GTK2}.gdk_pixbuf_get_has_alpha (a_pixbuf) then
 						-- Make sure that the pixel data is internally stored as R G B A
-					gdk_pixbuf := {GTK2}.gdk_pixbuf_add_alpha (a_pixbuf, False, 0, 0, 0)
-					{GTK2}.g_object_unref (a_pixbuf)
+					gdk_pixbuf := {GTK2}.gdk_pixbuf_add_alpha (l_pixbuf, False, 0, 0, 0)
+					{GTK2}.g_object_unref (a_pixbuf) -- gdk_pixbuf_add_alpha is creating a newly pixbuf, so unref previous one.
+					gdk_pixbuf := {GTK2}.g_object_ref (gdk_pixbuf) -- incr ref for this newly pixbuf
 				else
 					gdk_pixbuf := a_pixbuf
 				end
@@ -539,7 +543,7 @@ feature {NONE} -- Dispose
 	dispose
 			-- Dispose current.
 		do
-			set_gdkpixbuf (default_pointer)
+			set_gdkpixbuf (default_pointer) -- indirectly call g_object_unref on gdkpixbuf is any.
 		end
 
 feature -- Obsolete

@@ -96,7 +96,6 @@ void gclosure_notify_eif_wean (gpointer data, GClosure *closure)
 
 void gdestroy_notify_eif_wean (gpointer data)
 {
-	/* destroy notify to be called when user `data` is no longer used */
 	if (data) {
 		eif_wean ((EIF_OBJECT) data);
 	}
@@ -113,7 +112,16 @@ guint c_ev_gtk_callback_marshal_signal_connect (
 {
 	guint connection_id;
 	GClosure *closure;
-	closure = g_cclosure_new (dummy_callback, eif_adopt (agent), (GClosureNotify)gclosure_notify_eif_wean);
+	EIF_OBJECT adopted_agent;
+
+	//closure = g_cclosure_new (dummy_callback, eif_adopt (agent), (GClosureNotify)gclosure_notify_eif_wean);
+	//g_closure_set_marshal (closure, c_ev_gtk_callback_marshal);
+	
+	adopted_agent = eif_adopt (agent);
+
+	closure = g_closure_new_simple (sizeof(GClosure), adopted_agent);
+    g_closure_add_invalidate_notifier(closure, (gpointer) adopted_agent, (GClosureNotify)gclosure_notify_eif_wean);
+    //g_closure_add_finalize_notifier (closure, adopted_agent, (GClosureNotify)gclosure_notify_eif_wean);
 	g_closure_set_marshal (closure, c_ev_gtk_callback_marshal);
 
 	connection_id = g_signal_connect_closure (c_object, signal, closure, invoke_after_handler);

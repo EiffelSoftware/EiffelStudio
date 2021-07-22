@@ -150,7 +150,7 @@ feature {NONE} -- Initialization
 			 			agent (app_implementation.gtk_marshal).on_combo_box_toggle_button_event (internal_id, 1),
 			 			Void
 			 		)
-			retrieve_toggle_button_signal_connection_id := last_signal_connection_id
+			retrieve_realize_button_signal_connection := last_signal_connection
 
 			Precursor {EV_LIST_ITEM_LIST_IMP}
 			align_text_left
@@ -292,7 +292,8 @@ feature {NONE} -- Implementation
 	is_list_shown: BOOLEAN
 		-- Is combo list current shown?
 
-	retrieve_toggle_button_signal_connection_id: INTEGER
+	retrieve_realize_button_signal_connection,
+	retrieve_toggle_button_signal_connection: detachable GTK_SIGNAL_MARSHAL_CONNECTION
 		-- Signal connection id used when finding the toggle button of `Current'.
 
 feature {EV_GTK_DEPENDENT_INTERMEDIARY_ROUTINES} -- Event handling
@@ -311,13 +312,19 @@ feature {EV_GTK_DEPENDENT_INTERMEDIARY_ROUTINES} -- Event handling
 				{GTK}.gtk_widget_set_size_request (a_toggle, -1, 1)
 				{GTK}.gtk_widget_set_can_focus (a_toggle, False)
 
-				real_signal_connect (a_toggle,
-						{EV_GTK_EVENT_STRINGS}.toggled_event_name,
-						agent (app_implementation.gtk_marshal).on_combo_box_toggle_button_event (internal_id, 2),
-						Void
-					)
- 				real_signal_disconnect (container_widget, retrieve_toggle_button_signal_connection_id) -- disconnect previous connection.
-				retrieve_toggle_button_signal_connection_id := 0
+				if attached retrieve_realize_button_signal_connection as r_conn and then r_conn.is_connected then
+				 		-- disconnect previous connection using "realize_event_name".
+					r_conn.close
+					retrieve_realize_button_signal_connection := Void
+				end
+				if not attached retrieve_toggle_button_signal_connection as conn or else not conn.is_connected then
+					real_signal_connect (a_toggle,
+							{EV_GTK_EVENT_STRINGS}.toggled_event_name,
+							agent (app_implementation.gtk_marshal).on_combo_box_toggle_button_event (internal_id, 2),
+							Void
+						)
+					retrieve_toggle_button_signal_connection := last_signal_connection
+				end
 			end
 		end
 

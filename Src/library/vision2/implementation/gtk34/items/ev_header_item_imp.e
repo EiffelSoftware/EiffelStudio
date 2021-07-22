@@ -69,6 +69,7 @@ feature -- Initialization
 				{GTK2}.gtk_label_set_ellipsize (text_label, 3)
 			end
 			box := {GTK}.gtk_box_new ({GTK_ORIENTATION}.gtk_orientation_horizontal, 0)
+			box := {GDK}.g_object_ref_sink (box)
 			{GTK}.gtk_widget_show (box)
 			{GTK}.gtk_box_pack_start (box, pixmap_box, False, False, 0)
 			{GTK}.gtk_box_pack_end (box, text_label, True, True, 0)
@@ -408,26 +409,43 @@ feature {EV_HEADER_IMP} -- Implementation
 
 				l_app_imp := app_implementation
 
-				real_signal_connect (a_button, once "event", agent (l_app_imp.gtk_marshal).gdk_event_dispatcher (internal_id, ? , ?), Void)
-				item_event_id := last_signal_connection_id
+				real_signal_connect (
+						a_button,
+						once "event",
+						agent (l_app_imp.gtk_marshal).gdk_event_dispatcher (internal_id, ? , ?),
+						Void
+					)
+				item_event_connection := last_signal_connection
 
 					-- Hook up to "draw" signal so that we can check if we need to resize `Current'.
-				l_app_imp.gtk_marshal.signal_connect (a_button, {EV_GTK_EVENT_STRINGS}.draw_event_name, agent (l_app_imp.gtk_marshal).draw_actions_intermediary (c_object, ?), l_app_imp.gtk_marshal.draw_translate_agent, False)
+				real_signal_connect (
+						a_button,
+						{EV_GTK_EVENT_STRINGS}.draw_event_name,
+						agent (l_app_imp.gtk_marshal).draw_actions_intermediary (c_object, ?),
+						l_app_imp.gtk_marshal.draw_translate_agent
+					)
+				item_draw_event_connection := last_signal_connection
 			else
-				if item_event_id /= 0 then
+				if attached item_event_connection as conn then
 					a_button := {GTK2}.gtk_tree_view_column_get_button (c_object)
-					real_signal_disconnect (a_button, item_event_id)
-						-- Disconnect draw signal which is `item_id' + 1.
-					real_signal_disconnect (a_button, item_event_id + 1)
-					item_event_id := 0
+
+					conn.close
+					item_event_connection := Void
 				end
-				box := {GTK2}.g_object_ref (box)
+				if attached item_draw_event_connection as conn then
+						-- Disconnect draw signal .
+					conn.close
+					item_draw_event_connection := Void
+				end
 				{GTK2}.gtk_tree_view_column_set_widget (c_object, {GTK}.gtk_label_new (default_pointer))
 			end
 		end
 
-	item_event_id: INTEGER
-		-- Item event id of `Current'
+	item_event_connection: detachable GTK_SIGNAL_MARSHAL_CONNECTION
+			-- Item event id of `Current`
+
+	item_draw_event_connection: detachable GTK_SIGNAL_MARSHAL_CONNECTION
+			-- Draw event signal connection if `Current`
 
 	parent_imp: detachable EV_HEADER_IMP
 		-- Parent of `Current'
@@ -456,8 +474,14 @@ feature {NONE} -- Implementation
 	destroy
 			-- Destroy `c_object'.
 		do
-			{GTK2}.g_object_unref (c_object)
-			c_object := default_pointer
+			if not box.is_default_pointer then
+				{GDK}.g_object_unref (box)
+				box := default_pointer
+			end
+			if not box.is_default_pointer then
+				{GTK2}.g_object_unref (c_object)
+				c_object := default_pointer
+			end
 			set_is_destroyed (True)
 		end
 

@@ -193,7 +193,7 @@ feature -- Implementation
 	gdk_cursor_from_pointer_style: POINTER
 			-- Return a GdkCursor constructed from `a_cursor'
 		local
-			a_image: POINTER
+			l_image: POINTER
 			l_display: POINTER
 		do
 			l_display:= {GDK}.gdk_display_get_default
@@ -219,33 +219,33 @@ feature -- Implementation
 			when {EV_POINTER_STYLE_CONSTANTS}.hyperlink_cursor then
 				Result := {GTK}.gdk_cursor_new_for_display (l_display, {EV_GTK_ENUMS}.gdk_hand2_enum)
 			when {EV_POINTER_STYLE_CONSTANTS}.no_cursor then
-				a_image := image_from_xpm_data ({EV_STOCK_PIXMAPS_IMP}.no_cursor_xpm)
+				l_image := image_from_xpm_data ({EV_STOCK_PIXMAPS_IMP}.no_cursor_xpm)
 			when {EV_POINTER_STYLE_CONSTANTS}.sizenwse_cursor then
-				a_image := image_from_xpm_data ({EV_STOCK_PIXMAPS_IMP}.sizenwse_cursor_xpm)
+				l_image := image_from_xpm_data ({EV_STOCK_PIXMAPS_IMP}.sizenwse_cursor_xpm)
 			when {EV_POINTER_STYLE_CONSTANTS}.sizenesw_cursor then
-				a_image := image_from_xpm_data ({EV_STOCK_PIXMAPS_IMP}.sizenesw_cursor_xpm)
+				l_image := image_from_xpm_data ({EV_STOCK_PIXMAPS_IMP}.sizenesw_cursor_xpm)
 			when {EV_POINTER_STYLE_CONSTANTS}.sizewe_cursor then
-				a_image := image_from_xpm_data ({EV_STOCK_PIXMAPS_IMP}.sizewe_cursor_xpm)
+				l_image := image_from_xpm_data ({EV_STOCK_PIXMAPS_IMP}.sizewe_cursor_xpm)
 			when {EV_POINTER_STYLE_CONSTANTS}.uparrow_cursor then
-				a_image := image_from_xpm_data ({EV_STOCK_PIXMAPS_IMP}.uparrow_cursor_xpm)
+				l_image := image_from_xpm_data ({EV_STOCK_PIXMAPS_IMP}.uparrow_cursor_xpm)
 			when {EV_POINTER_STYLE_CONSTANTS}.header_sizewe_cursor then
-				a_image := image_from_xpm_data ({EV_STOCK_PIXMAPS_IMP}.sizewe_cursor_xpm)
+				l_image := image_from_xpm_data ({EV_STOCK_PIXMAPS_IMP}.sizewe_cursor_xpm)
 			else
-				a_image := gdk_pixbuf
-				a_image := {GTK2}.g_object_ref (a_image)
+				l_image := gdk_pixbuf
+				l_image := {GTK2}.g_object_ref (l_image)
 			end
 
 			if Result = default_pointer and then predefined_cursor_code /= {EV_POINTER_STYLE_CONSTANTS}.standard_cursor then
 				check
-					a_image_not_null: a_image /= default_pointer
+					l_image_not_null: l_image /= default_pointer
 				end
 				Result := {GTK2}.gdk_cursor_new_from_pixbuf (
 					{GDK}.gdk_display_get_default,
-					a_image,
+					l_image,
 					attached_interface.x_hotspot,
 					attached_interface.y_hotspot
 				)
-				{GTK2}.g_object_unref (a_image)
+				{GTK2}.g_object_unref (l_image)
 			end
 		end
 
@@ -254,7 +254,7 @@ feature -- Implementation
 		require
 			a_xpm_not_null: a_xpm_data /= default_pointer
 		do
-			Result := {GTK}.gdk_pixbuf_new_from_xpm_data (a_xpm_data)
+			Result := {GTK}.gdk_pixbuf_new_from_xpm_data (a_xpm_data) -- Incr full reference
 		end
 
 	set_gdkpixbuf (a_pixbuf: POINTER)

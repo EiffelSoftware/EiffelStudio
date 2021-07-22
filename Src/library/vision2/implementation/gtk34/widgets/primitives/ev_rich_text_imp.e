@@ -24,7 +24,8 @@ inherit
 			interface,
 			make,
 			on_key_event,
-			initialize_buffer_events
+			initialize_buffer_events,
+			dispose
 		end
 
 create
@@ -559,32 +560,27 @@ feature -- Status setting
 	format_region (start_position, end_position: INTEGER; format: EV_CHARACTER_FORMAT)
 			-- Apply `format' to all characters between the caret positions `start_position' and `end_position'.
 			-- Formatting is applied immediately. May or may not change the cursor position.
-		local
-			a_format_imp: detachable EV_CHARACTER_FORMAT_IMP
 		do
 			if not is_destroyed then
-				a_format_imp ?= format.implementation
-				check a_format_imp /= Void then end
-				modify_region_internal (text_buffer, start_position, end_position, a_format_imp, a_format_imp.dummy_character_format_range_information)
+				check attached {EV_CHARACTER_FORMAT_IMP} format.implementation as a_format_imp then
+					modify_region_internal (text_buffer, start_position, end_position, a_format_imp, a_format_imp.dummy_character_format_range_information)
+				end
 			end
 		end
 
 	buffered_format (start_position, end_position: INTEGER; format: EV_CHARACTER_FORMAT)
 			-- Apply a character format `format' from caret positions `start_position' to `end_position' to
 			-- format buffer. Call `flush_format_buffer' to apply buffered contents to `Current'.
-		local
-			a_format_imp: detachable EV_CHARACTER_FORMAT_IMP
 		do
 			if not buffer_locked_in_format_mode then
 				buffer_locked_in_format_mode := True
 					-- Temporarily remove text buffer to avoid redraw and event firing
-				append_buffer := text_buffer
-				append_buffer := {GTK2}.g_object_ref (append_buffer)
+				append_buffer := {GTK2}.g_object_ref (text_buffer) -- Increase ref count on `text_buffer`
 				{GTK2}.gtk_text_view_set_buffer (text_view, {GTK2}.gtk_text_buffer_new (default_pointer))
 			end
-			a_format_imp ?= format.implementation
-			check a_format_imp /= Void then end
-			modify_region_internal (append_buffer, start_position, end_position, a_format_imp, a_format_imp.dummy_character_format_range_information)
+			check attached {EV_CHARACTER_FORMAT_IMP} format.implementation as a_format_imp then
+				modify_region_internal (append_buffer, start_position, end_position, a_format_imp, a_format_imp.dummy_character_format_range_information)
+			end
 		end
 
 	buffered_append (a_text: READABLE_STRING_GENERAL; format: EV_CHARACTER_FORMAT)
@@ -594,15 +590,18 @@ feature -- Status setting
 		local
 			text_tag_table: POINTER
 			buffer_length: INTEGER
-			a_format_imp: detachable EV_CHARACTER_FORMAT_IMP
 			l_count: INTEGER
 			l_char_code: NATURAL_32
 		do
 			l_count := a_text.count
 			if l_count >= 1 then
 				if not buffer_locked_in_append_mode then
+					if not append_buffer.is_default_pointer then
+						{GDK}.g_object_unref (append_buffer)
+					end
 					text_tag_table := {GTK2}.gtk_text_buffer_get_tag_table (text_buffer)
-					append_buffer := {GTK2}.gtk_text_buffer_new (text_tag_table)
+					append_buffer := {GTK2}.gtk_text_buffer_new (text_tag_table) -- floating ref
+					append_buffer := {GDK}.g_object_ref_sink (append_buffer) -- adopt floating ref
 					buffer_locked_in_append_mode := True
 				end
 				l_char_code := a_text.code (1)
@@ -611,11 +610,11 @@ feature -- Status setting
 				else
 					buffer_length := {GTK2}.gtk_text_buffer_get_char_count (append_buffer) + 1
 					append_text_internal (append_buffer, a_text)
-					a_format_imp ?= format.implementation
-					check a_format_imp /= Void then end
-					{GTK2}.gtk_text_buffer_get_iter_at_offset (append_buffer, temp_start_iter.item, buffer_length - 1)
-					{GTK2}.gtk_text_buffer_get_iter_at_offset (append_buffer, temp_end_iter.item, {GTK2}.gtk_text_buffer_get_char_count (append_buffer))
-					a_format_imp.apply_character_format_to_text_buffer (a_format_imp.dummy_character_format_range_information, append_buffer, temp_start_iter.item, temp_end_iter.item)
+					check attached {EV_CHARACTER_FORMAT_IMP} format.implementation as a_format_imp then
+						{GTK2}.gtk_text_buffer_get_iter_at_offset (append_buffer, temp_start_iter.item, buffer_length - 1)
+						{GTK2}.gtk_text_buffer_get_iter_at_offset (append_buffer, temp_end_iter.item, {GTK2}.gtk_text_buffer_get_char_count (append_buffer))
+						a_format_imp.apply_character_format_to_text_buffer (a_format_imp.dummy_character_format_range_information, append_buffer, temp_start_iter.item, temp_end_iter.item)
+					end
 				end
 			end
 		end
@@ -629,14 +628,15 @@ feature -- Status setting
 			-- If `buffer_locked_for_format' then apply buffered formatting to contents of `Current'.
 		do
 			if buffer_locked_in_format_mode then
-				{GTK2}.gtk_text_view_set_buffer (text_view, append_buffer)
+				{GTK2}.gtk_text_view_set_buffer (text_view, append_buffer) -- Incr ref to `append_buffer`
 				text_buffer := append_buffer
 				initialize_buffer_events
 				{GTK2}.g_object_unref (append_buffer)
 				append_buffer := default_pointer
 				buffer_locked_in_format_mode := False
 			elseif buffer_locked_in_append_mode then
-				{GTK2}.gtk_text_view_set_buffer (text_view, append_buffer)
+				check not append_buffer.is_default_pointer end
+				{GTK2}.gtk_text_view_set_buffer (text_view, append_buffer) -- Incr ref to `append_buffer`
 				text_buffer := append_buffer
 				initialize_buffer_events
 				{GTK2}.g_object_unref (append_buffer)
@@ -939,12 +939,26 @@ feature {NONE} -- Implementation
 	dispose_append_buffer
 			-- Clean up `append_buffer'.
 		do
-			{GTK2}.g_object_unref (append_buffer)
-			append_buffer := default_pointer
+			if not append_buffer.is_default_pointer then
+				{GTK2}.g_object_unref (append_buffer)
+				append_buffer := default_pointer
+			end
 		end
 
 	append_buffer: POINTER
 		-- Pointer to the GtkTextBuffer used for append buffering.
+
+feature {NONE} -- Implementation
+
+	dispose
+		do
+			if not append_buffer.is_default_pointer then
+				{GDK}.g_object_unref (append_buffer)
+					-- Do not reset to default_pointer, as `append_buffer` may be the same as `text_buffer`
+					-- and `text_buffer` will be used in `Precursor`
+			end
+			Precursor
+		end
 
 feature {EV_ANY, EV_ANY_I} -- Implementation
 

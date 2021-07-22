@@ -111,14 +111,14 @@ feature {EV_GTK_DEPENDENT_INTERMEDIARY_ROUTINES} -- Implementation
 		local
 			a_selection: POINTER
 		do
-			if selection_signal_id = 0 then
+			if not attached selection_signal_connection as conn or else not conn.is_connected then
 				a_selection := {GTK2}.gtk_tree_view_get_selection (tree_view)
 				real_signal_connect (a_selection,
 						{EV_GTK_EVENT_STRINGS}.changed_event_name,
 						agent (app_implementation.gtk_marshal).on_pnd_deferred_item_parent_selection_change (internal_id),
 						Void
 					)
-				selection_signal_id := last_signal_connection_id
+				selection_signal_connection := last_signal_connection
 			end
 		end
 
@@ -127,15 +127,14 @@ feature {EV_GTK_DEPENDENT_INTERMEDIARY_ROUTINES} -- Implementation
 		local
 			a_selection: POINTER
 		do
-			if selection_signal_id /= 0 then
+			if attached selection_signal_connection as conn then
 				a_selection := {GTK2}.gtk_tree_view_get_selection (tree_view)
-				real_signal_disconnect (a_selection, selection_signal_id)
---				{GTK2}.signal_disconnect (a_selection, selection_signal_id)
-				selection_signal_id := 0
+				conn.close
+				selection_signal_connection := Void
 			end
 		end
 
-	selection_signal_id: INTEGER
+	selection_signal_connection: detachable GTK_SIGNAL_MARSHAL_CONNECTION
 		-- Signal id used for the selection changed event
 
 feature {NONE} -- Implementation
@@ -606,7 +605,7 @@ feature -- Status setting
 			l_list_iter := (ev_children @ an_index).list_iter
 			check l_list_iter /= Void then end
 			{GTK2}.gtk_tree_selection_select_iter (a_selection, l_list_iter.item)
-			if selection_signal_id = 0 then
+			if not attached selection_signal_connection as conn or else not conn.is_connected then
 				a_row_imp := ev_children.i_th (an_index)
 				call_selection_actions (a_row_imp)
 			end
@@ -623,7 +622,7 @@ feature -- Status setting
 			l_list_iter := (ev_children @ an_index).list_iter
 			check l_list_iter /= Void then end
 			{GTK2}.gtk_tree_selection_unselect_iter (a_selection, l_list_iter.item)
-			if selection_signal_id = 0 then
+			if not attached selection_signal_connection as conn or else not conn.is_connected then
 				a_row_imp := ev_children.i_th (an_index)
 				call_deselect_actions (a_row_imp)
 			end

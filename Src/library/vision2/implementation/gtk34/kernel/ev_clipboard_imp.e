@@ -51,12 +51,15 @@ feature -- Access
 
 	has_text: BOOLEAN
 			-- Does the clipboard currently contain text?
+		local
+			b: BOOLEAN
 		do
 				-- The query may trigger pending signals which may cause side-effects so
 				-- we disable the marshaller.
+			b := {EV_GTK_CALLBACK_MARSHAL}.c_ev_gtk_callback_marshal_is_enabled
 			{EV_GTK_CALLBACK_MARSHAL}.c_ev_gtk_callback_marshal_set_is_enabled (False)
 			Result := {GTK2}.gtk_clipboard_wait_is_text_available (clipboard)
-			{EV_GTK_CALLBACK_MARSHAL}.c_ev_gtk_callback_marshal_set_is_enabled (True)
+			{EV_GTK_CALLBACK_MARSHAL}.c_ev_gtk_callback_marshal_set_is_enabled (b)
 		end
 
 	text: STRING_32
@@ -64,12 +67,14 @@ feature -- Access
 		local
 			utf8_string: EV_GTK_C_STRING
 			text_ptr: POINTER
+			b: BOOLEAN
 		do
 				-- The query may trigger pending signals which may cause side-effects so
 				-- we disable the marshaller.
+			b := {EV_GTK_CALLBACK_MARSHAL}.c_ev_gtk_callback_marshal_is_enabled
 			{EV_GTK_CALLBACK_MARSHAL}.c_ev_gtk_callback_marshal_set_is_enabled (False)
 			text_ptr := {GTK2}.gtk_clipboard_wait_for_text (clipboard)
-			{EV_GTK_CALLBACK_MARSHAL}.c_ev_gtk_callback_marshal_set_is_enabled (True)
+			{EV_GTK_CALLBACK_MARSHAL}.c_ev_gtk_callback_marshal_set_is_enabled (b)
 			if text_ptr /= Default_pointer then
 				create utf8_string.make_from_pointer (text_ptr)
 				Result := utf8_string.string
@@ -121,7 +126,7 @@ feature {EV_ANY, EV_ANY_I} -- Implementation
 		-- Interface of `Current'
 
 note
-	copyright:	"Copyright (c) 1984-2013, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2021, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

@@ -33,6 +33,8 @@ feature {EV_ANY_I} -- Access
 	c_object: POINTER
 			-- C pointer to an object conforming to GtkWidget.
 
+	c_object_was_floating: BOOLEAN
+
 feature {EV_ANY_I} -- Access
 
 	set_c_object (a_c_object: POINTER)
@@ -45,16 +47,21 @@ feature {EV_ANY_I} -- Access
 			l_c_object: POINTER
 		do
 			if needs_event_box then
-				l_c_object := {GTK}.gtk_event_box_new
-				{GTK}.gtk_container_add (l_c_object, a_c_object)
+				l_c_object := {GTK}.gtk_event_box_new -- Floating ref
+				l_c_object := {GTK}.g_object_ref_sink (l_c_object) -- Adopt floating ref count
+
+				{GTK}.gtk_container_add (l_c_object, a_c_object) -- Adopt `a_c_object` floating ref, or add ref if a_c_object was not floating.
 				{GTK}.gtk_widget_show (a_c_object)
 			else
-				l_c_object := a_c_object
+				if {GDK}.g_object_is_floating (a_c_object) then
+					c_object_was_floating := True
+						-- Adopt floating ref count, or increase ref count
+					l_c_object := {GTK}.g_object_ref_sink (a_c_object)
+				else
+					check is_gtk_top_window: {GTK}.gtk_is_window (a_c_object) end
+					l_c_object := a_c_object -- Already has a ref
+				end
 			end
-
-				-- Remove floating state.
-			l_c_object := {GTK2}.g_object_ref (l_c_object)
-			l_c_object := {GTK}.g_object_ref_sink (l_c_object)
 
 			debug ("EV_GTK_CREATION")
 				print (generator + " created%N")
@@ -62,10 +69,9 @@ feature {EV_ANY_I} -- Access
 			if internal_id = 0 then
 				internal_id := eif_current_object_id
 			end
---			if needs_event_box then
---				{EV_GTK_CALLBACK_MARSHAL}.set_eif_oid_in_c_object (a_c_object, internal_id, $c_object_dispose)
---			end
-			{EV_GTK_CALLBACK_MARSHAL}.set_eif_oid_in_c_object (l_c_object, internal_id, $c_object_dispose)
+			l_c_object := {GTK}.g_object_ref (l_c_object) -- Increase ref count to protect the marshal callback
+			{EV_GTK_CALLBACK_MARSHAL}.set_eif_oid_in_c_object (l_c_object, internal_id, $c_object_dispose) -- No ref count increase from the C code, handled by the previous line
+
 			c_object := l_c_object
 			debug ("gtk_name")
 				update_gtk_name
@@ -113,6 +119,7 @@ feature {EV_ANY, EV_ANY_IMP} -- Implementation
 			-- Destroy `c_object'.
 			-- Render `Current' unusable.
 		do
+			disconnect_all_recorded_connections (default_pointer)
 			set_is_destroyed (True)
 				-- Gtk representation of `Current' may only be cleaned up on dispose to prevent crashes where `Current' is
 				-- destroyed as a result of `Current's event handler being called, this causes instability within gtk
@@ -205,6 +212,13 @@ feature {EV_ANY_I, EV_APPLICATION_IMP} -- Event handling
 			Result := app_implementation.gtk_marshal.last_signal_connection_id
 		end
 
+	last_signal_connection: detachable GTK_SIGNAL_MARSHAL_CONNECTION
+		do
+			if attached signal_connections as l_connections then
+				Result := l_connections.last
+			end
+		end
+
 	record_signal_connection (a_c_object: POINTER; a_signal_name: READABLE_STRING_8; a_connection_id: like last_signal_connection_id)
 		local
 			lst: like signal_connections
@@ -215,7 +229,7 @@ feature {EV_ANY_I, EV_APPLICATION_IMP} -- Event handling
 					create {ARRAYED_LIST [like signal_connections.item]} lst.make (1)
 					signal_connections := lst
 				end
-				lst.force ([a_c_object, a_signal_name, a_connection_id])
+				lst.force (create {GTK_SIGNAL_MARSHAL_CONNECTION}.make (a_c_object, a_connection_id))
 			end
 		end
 
@@ -232,14 +246,13 @@ feature {EV_ANY_I, EV_APPLICATION_IMP} -- Event handling
 				loop
 					if
 						attached l_connections.item as conn and then
-						conn.connection_id > 0
+						conn.is_connected
 					then
 						if
 							a_c_object.is_default_pointer -- Any target C object
 							or else conn.c_object = a_c_object -- Matched the `a_c_object` argument.
 						then
-							{GTK2}.signal_disconnect (conn.c_object, conn.connection_id)
-							conn.connection_id := 0
+							conn.close
 							l_connections.remove
 						else
 							l_connections.forth
@@ -256,7 +269,7 @@ feature {EV_ANY_I, EV_APPLICATION_IMP} -- Event handling
 			end
 		end
 
-	signal_connections: detachable LIST [TUPLE [c_object: POINTER; signal: READABLE_STRING_8; connection_id: like last_signal_connection_id]]
+	signal_connections: detachable LIST [GTK_SIGNAL_MARSHAL_CONNECTION]
 			-- Signal name and Connection id indexed by c_object pointer.
 
 feature {NONE} -- Implementation
@@ -267,56 +280,74 @@ feature {NONE} -- Implementation
 			Result := False
 		end
 
+	c_object_dispose_called: BOOLEAN
+
 	dispose
 			-- Called by the Eiffel GC when `Current' is destroyed.
 			-- Destroy `c_object'.
-		local
-			l_c_object: POINTER
 		do
-				-- Disable the marshaller so we do not get C to Eiffel calls
-				-- during GC cycle otherwise bad things may happen.
-			{EV_GTK_CALLBACK_MARSHAL}.c_ev_gtk_callback_marshal_set_is_enabled (False)
-
-			disconnect_all_recorded_connections (default_pointer)
-
-			l_c_object := c_object
-			if not l_c_object.is_default_pointer then
-					-- Unref `c_object' so that is may get collected by gtk.
-				if {GTK}.gtk_is_window (l_c_object) then
-						-- Windows need to be explicitly destroyed.
-					{GTK2}.gtk_widget_destroy (l_c_object)
-				end
-				{GTK2}.g_object_unref (l_c_object)
+			if not c_object_dispose_called then
+				c_object_dispose
 			end
 			Precursor {IDENTIFIED}
-
-				-- Renable marshaller.
-			{EV_GTK_CALLBACK_MARSHAL}.c_ev_gtk_callback_marshal_set_is_enabled (True)
 		end
 
 	c_object_dispose
 			-- Called when `c_object' is destroyed.
 			-- Only called if `Current' is referenced from `c_object'.
 			-- Render `Current' unusable.
+		local
+			l_c_object: POINTER
+			l_c_ev_gtk_callback_marshal_is_enabled: BOOLEAN
 		do
-				-- Disable the marshaller so we do not get C to Eiffel calls
-				-- during GC cycle otherwise bad things may happen.
-			{EV_GTK_CALLBACK_MARSHAL}.c_ev_gtk_callback_marshal_set_is_enabled (False)
+			if not c_object_dispose_called then
+				c_object_dispose_called := True
+					-- Disable the marshaller so we do not get C to Eiffel calls
+					-- during GC cycle otherwise bad things may happen.
+				l_c_ev_gtk_callback_marshal_is_enabled := {EV_GTK_CALLBACK_MARSHAL}.c_ev_gtk_callback_marshal_is_enabled
+				{EV_GTK_CALLBACK_MARSHAL}.c_ev_gtk_callback_marshal_set_is_enabled (False)
 
-				-- The object has been marked for destruction from its parent so we unref
-				-- so that gtk will reap back the memory.
-			if not c_object.is_default_pointer then
-				disconnect_all_recorded_connections (c_object)
-				{GTK2}.g_object_unref (c_object)
-				c_object := default_pointer
+					-- Note: in the case of `needs_event_box`, no need to unref the `visual_widget`
+					--		  as its floating ref was adopted by the EventBox container
+
+					-- The object has been marked for destruction from its parent so we unref
+					-- so that gtk will reap back the memory.
+				l_c_object := c_object
+				if not l_c_object.is_default_pointer then
+						-- disconnect_all_signals (l_c_object)
+					if {GTK}.gtk_is_window (l_c_object) then
+							-- Windows need to be explicitly destroyed.
+						{GTK2}.gtk_widget_destroy (l_c_object)
+					else
+							-- Do it anyway, it destroys reference on other resources
+						{GTK2}.gtk_widget_destroy (l_c_object)
+					end
+
+						-- Unref (added by set_eif_oid_in_c_object)
+					{GDK}.g_object_unref (l_c_object)
+
+						-- Unref `c_object' so that is may get collected by gtk.
+					if c_object_was_floating then
+							-- Unref adopted floating ref from `set_c_object`
+						{GDK}.g_object_force_floating (l_c_object)
+					else
+						{GDK}.g_object_unref (l_c_object)
+					end
+
+					-- Remove any reference l_c_object may have on other Gtk objects.
+--					{GDK}.g_object_run_dispose (l_c_object)
+
+					c_object := default_pointer
+				end
+				set_is_destroyed (True)
+
+					-- Restore marshaller.
+				{EV_GTK_CALLBACK_MARSHAL}.c_ev_gtk_callback_marshal_set_is_enabled (l_c_ev_gtk_callback_marshal_is_enabled)
 			end
-			set_is_destroyed (True)
-
-				-- Renable marshaller.
-			{EV_GTK_CALLBACK_MARSHAL}.c_ev_gtk_callback_marshal_set_is_enabled (True)
 		ensure
 			is_destroyed_set: is_destroyed
 			c_object_detached: c_object = default_pointer
+			c_object_dispose_called: c_object_dispose_called
 		end
 
 feature {EV_GTK_DEPENDENT_INTERMEDIARY_ROUTINES, EV_APPLICATION_I} -- Implementation
@@ -328,7 +359,6 @@ feature {EV_GTK_DEPENDENT_INTERMEDIARY_ROUTINES, EV_APPLICATION_I} -- Implementa
 			--		True: stop all processing
 		do
 			-- Redefined by descendents.
-
 		ensure
 			same_ref_count: {CAIRO}.get_reference_count (a_cairo_context) = old ({CAIRO}.get_reference_count (a_cairo_context))
 		end

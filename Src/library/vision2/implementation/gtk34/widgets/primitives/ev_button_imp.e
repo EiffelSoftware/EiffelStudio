@@ -62,7 +62,7 @@ feature {NONE} -- Initialization
 
 	new_gtk_button: POINTER
 		do
-			Result := {GTK}.gtk_button_new
+			Result := {GTK}.gtk_button_new -- Float ref
 		end
 
 	make

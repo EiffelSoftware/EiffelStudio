@@ -22,7 +22,26 @@ feature -- GdkPixBuf
 
 feature -- Gobject
 
+	g_object_is_floating (obj: POINTER): BOOLEAN
+		external
+			"C inline use <ev_gtk.h>"
+		alias
+			"g_object_is_floating((gpointer) $obj)"
+		end
+
+	frozen g_object_ref_sink (a_c_object: POINTER): POINTER
+			-- Increase the reference count of object , and possibly remove the floating reference, if object has a floating reference.
+		external
+			"C inline use <ev_gtk.h>"
+		alias
+			"g_object_ref_sink((gpointer) $a_c_object)"
+		ensure
+			same_object: Result = a_c_object
+			instance_free: class
+		end
+
 	frozen g_object_ref (a_c_object: POINTER): POINTER
+			-- Increases the reference count of object .
 		external
 			"C inline use <ev_gtk.h>"
 		alias
@@ -33,20 +52,38 @@ feature -- Gobject
 		end
 
 	frozen g_object_unref (a_c_object: POINTER)
+			-- Decreases the reference count of object . When its reference count drops to 0, the object is finalized (i.e. its memory is freed).
 		external
 			"C inline use <ev_gtk.h>"
 		alias
 			"g_object_unref((gpointer) $a_c_object)"
 		end
 
-	frozen g_object_ref_sink (a_c_object: POINTER): POINTER
+	frozen g_object_force_floating (a_c_object: POINTER)
+			-- This function is intended for GObject implementations to re-enforce a floating object reference.
+			-- Doing this is seldom required:
+			--		all GInitiallyUnowneds are created with a floating reference
+			--		which usually just needs to be sunken by calling g_object_ref_sink().
 		external
 			"C inline use <ev_gtk.h>"
 		alias
-			"g_object_ref_sink((gpointer) $a_c_object)"
-		ensure
-			same_object: Result = a_c_object
-			instance_free: class
+			"g_object_force_floating((GObject *) $a_c_object)"
+		end
+
+	frozen g_clear_object (a_c_object_pointer: POINTER)
+			-- Clears a reference to a GObject.
+		external
+			"C inline use <ev_gtk.h>"
+		alias
+			"g_clear_object((GObject **) $a_c_object_pointer)"
+		end
+
+	frozen g_object_run_dispose (a_c_object: POINTER)
+			-- Releases all references to other objects. This can be used to break reference cycles.
+		external
+			"C inline use <ev_gtk.h>"
+		alias
+			"g_object_run_dispose((GObject *) $a_c_object)"
 		end
 
 feature -- GdkDisplay

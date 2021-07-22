@@ -51,6 +51,8 @@ feature -- Disposal
 
 	dispose
 		do
+				--FIXME: disconnecting from the dispose is not a good idea
+				--		the c_object does not seem to be a valid GtkObject instance.
 --			close
 			if not c_object.is_default_pointer then
 				{GDK}.g_object_unref (c_object)

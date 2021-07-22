@@ -91,7 +91,7 @@ feature {NONE} -- AST Visits
 				and then a_ot.type = Void
 					-- Now we have to check whether the tested expression is a local,
 					-- an argument, or an object test local.
-				and then (l_access.is_local or l_access.is_argument or l_access.is_object_test_local)
+				and then (l_access.is_local or l_access.is_readonly)
 			then
 				create l_violation.make_with_rule (Current)
 				l_violation.set_location (a_ot.start_location)

@@ -14,7 +14,7 @@ inherit
 			make as make_assertion
 		redefine
 			add_access_scope,
-			add_argument_scope,
+			add_readonly_scope,
 			add_local_scope,
 			add_object_test_scope,
 			add_result_scope,
@@ -118,7 +118,7 @@ feature {NONE} -- Creation
 						i <= 0
 					loop
 						if arguments.keeper.is_attached (i) then
-							c.add_argument_instruction_scope (f.arguments.argument_names [i - 1])
+							c.add_readonly_instruction_scope (f.arguments.argument_names [i - 1])
 						end
 						i := i - 1
 					end
@@ -213,7 +213,7 @@ feature {NONE} -- Context
 			if a.is_argument then
 					-- The entity is known to be an argument
 				arguments.start_argument_scope (a.argument_position)
-			elseif not (a.is_local or else a.is_object_test_local or else a.is_qualified or else a.is_tuple_access) then
+			elseif a.is_feature and then not a.is_qualified then
 					-- Look for a feature with the given name.
 				if attached attributes as s then
 					f := written_class.feature_of_name_id (a.feature_name.name_id)
@@ -230,12 +230,12 @@ feature {NONE} -- Context
 				end
 				if f = Void then
 						-- It can still be an argument if not processed yet.
-					add_argument_scope (a.feature_name.name_id)
+					add_readonly_scope (a.feature_name.name_id)
 				end
 			end
 		end
 
-	add_argument_scope (id: INTEGER_32)
+	add_readonly_scope (id: INTEGER_32)
 			-- Add scope of a non-void argument.
 		local
 			l: IDENTIFIER_LIST
@@ -289,7 +289,7 @@ feature {NONE} -- Context
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2017, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2021, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

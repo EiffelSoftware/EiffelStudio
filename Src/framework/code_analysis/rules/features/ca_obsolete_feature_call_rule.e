@@ -121,13 +121,7 @@ feature {NONE} -- Rule Checking
 	process_access (a: ACCESS_FEAT_AS)
 			-- Check if `a` is an obsolete call and report violation accordingly.
 		do
-			if
-				not checker.is_assign and then
-				not a.is_tuple_access and then
-				not a.is_argument and then
-				not a.is_local and then
-				not a.is_object_test_local
-			then
+			if not checker.is_assign and then a.is_feature then
 				process_call (a.routine_ids.first, a.class_id, a)
 			end
 		end
@@ -307,7 +301,7 @@ feature {NONE} -- Reporting
 
 note
 	ca_ignore: "CA011", "CA011: too many arguments"
-	copyright:	"Copyright (c) 2017-2020, Eiffel Software"
+	copyright:	"Copyright (c) 2017-2021, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

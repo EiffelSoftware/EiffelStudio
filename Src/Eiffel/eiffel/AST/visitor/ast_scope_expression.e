@@ -10,7 +10,7 @@ deferred class AST_SCOPE_EXPRESSION
 inherit
 	AST_SCOPE_MATCHER
 		redefine
-			add_argument_scope,
+			add_readonly_scope,
 			add_attribute_scope,
 			add_local_scope,
 			add_object_test_scope,
@@ -29,10 +29,10 @@ feature {NONE} -- Initialization
 
 feature {NONE} -- Context
 
-	add_argument_scope (id: INTEGER_32)
+	add_readonly_scope (id: INTEGER_32)
 			-- Add scope of a non-void argument.
 		do
-			context.add_argument_expression_scope (id)
+			context.add_readonly_expression_scope (id)
 		end
 
 	add_attribute_scope (id: INTEGER_32)
@@ -60,7 +60,7 @@ feature {NONE} -- Context
 		end
 
 note
-	copyright:	"Copyright (c) 2008-2009, Eiffel Software"
+	copyright:	"Copyright (c) 2008-2021, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

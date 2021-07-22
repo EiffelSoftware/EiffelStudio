@@ -317,7 +317,7 @@ feature {NONE} -- Implementation: byte node
 						end
 					else
 						l_names.force (tu.id.name, l_name_id)
-						ctx.add_object_test_local (tu.li, tu.id)
+						ctx.add_inline_local (tu.li, tu.id)
 						ctx.add_object_test_expression_scope (tu.id)
 					end
 
@@ -647,7 +647,7 @@ feature {INSPECT_CONTROL} -- AST modification
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2020, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2021, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

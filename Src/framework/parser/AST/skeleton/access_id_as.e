@@ -26,7 +26,7 @@ feature {NONE} -- Creation
 			-- Create a node representing an inline local (such as object-test local, separate instruction local, iteration cursor).
 		do
 			initialize (n, Void)
-			enable_object_test_local
+			enable_inline_local
 		end
 
 feature -- Visitor
@@ -38,7 +38,7 @@ feature -- Visitor
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2020, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2021, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

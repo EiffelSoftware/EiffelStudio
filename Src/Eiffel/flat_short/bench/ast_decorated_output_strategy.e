@@ -849,11 +849,7 @@ feature {NONE} -- Implementation
 				if not expr_type_visiting then
 					format_local_with_as (create {ID_AS}.initialize_from_id (current_feature.arguments.item_id (l_as.argument_position)))
 				end
-			elseif l_as.is_local then
-				if not expr_type_visiting then
-					format_local_with_as (l_as.feature_name)
-				end
-			elseif l_as.is_object_test_local then
+			elseif l_as.is_local or l_as.is_inline_local then
 				if not expr_type_visiting then
 					format_local_with_as (l_as.feature_name)
 				end
@@ -992,7 +988,7 @@ feature {NONE} -- Implementation
 				if last_type = Void and then locals_for_current_feature.has_key (l_as.access_name_32) then
 					last_type := locals_for_current_feature.found_item
 				end
-			elseif l_as.is_object_test_local then
+			elseif l_as.is_inline_local then
 				if object_test_locals_for_current_feature.has_key (l_as.access_name_32) then
 					last_type := object_test_locals_for_current_feature.found_item
 				elseif attached separate_argument_locals_for_current_scope.item (l_as.access_name_32) as l_separate_type then

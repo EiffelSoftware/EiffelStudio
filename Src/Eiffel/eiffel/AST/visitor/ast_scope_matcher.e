@@ -384,20 +384,20 @@ feature {NONE} -- Context
 		require
 			a_attached: a /= Void
 		do
-			if a.is_argument then
-				add_argument_scope (a.feature_name.name_id)
+			if a.is_readonly then
+				add_readonly_scope (a.feature_name.name_id)
 			elseif a.is_local then
 				add_local_scope (a.feature_name.name_id)
-			elseif not a.is_object_test_local and then not a.is_tuple_access then
-					-- It must be a feature
+			elseif not a.is_tuple_access then
+					-- It must be a feature.
 				add_attribute_scope (a.feature_name.name_id)
 			end
 		end
 
-	add_argument_scope (id: INTEGER_32)
+	add_readonly_scope (id: INTEGER_32)
 			-- Add scope of a non-void argument.
 		do
-			context.add_argument_instruction_scope (id)
+			context.add_readonly_instruction_scope (id)
 		end
 
 	add_attribute_scope (id: INTEGER_32)
@@ -445,7 +445,7 @@ invariant
 	context_attached: context /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2020, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2021, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

@@ -3199,8 +3199,8 @@ feature {NONE} -- Visitor
 				not_formal: not l_type.is_formal
 			end
 			l_class_id := l_type.base_class.class_id
-			if attached context.object_test_local (l_as.feature_name.name_id) as i then
-				process_object_test_local (i, l_as, False)
+			if attached context.inline_local (l_as.feature_name.name_id) as i then
+				process_inline_local (i, l_as, False)
 			else
 				if is_inherited then
 					l_feature := l_type.base_class.feature_of_rout_id (l_as.routine_ids.first)
@@ -3270,7 +3270,7 @@ feature {NONE} -- Visitor
 					l_argument.set_position (l_arg_pos)
 					last_byte_node := l_argument
 				end
-				if context.is_argument_attached (l_as.feature_name.name_id) then
+				if context.is_readonly_attached (l_as.feature_name.name_id) then
 					l_type := l_type.as_attached_in (l_context_current_class)
 				end
 					-- Set some type attributes of the node.
@@ -3334,8 +3334,8 @@ feature {NONE} -- Visitor
 						set_local (l_as)
 						l_as.set_class_id (class_id_of (l_type))
 					end
-				elseif attached context.object_test_local (l_as.feature_name.name_id) as i then
-					process_object_test_local (i, l_as, False)
+				elseif attached context.inline_local (l_as.feature_name.name_id) as i then
+					process_inline_local (i, l_as, False)
 					is_type_set := True
 				else
 						-- Look for a feature
@@ -3383,7 +3383,7 @@ feature {NONE} -- Visitor
 			end
 		end
 
-	process_object_test_local (l_local_info: LOCAL_INFO; a: ACCESS_INV_AS; is_predecessor: BOOLEAN)
+	process_inline_local (l_local_info: LOCAL_INFO; a: ACCESS_INV_AS; is_predecessor: BOOLEAN)
 			-- Process object test local identified by `i` in access node `a` (interpreted as a predecessor call
 			-- when `is_predecessor` is set) including an optional call to a parenthesis alias and set `last_type` accordingly.
 		local
@@ -3414,6 +3414,9 @@ feature {NONE} -- Visitor
 				last_access_writable := False
 				is_controlled := l_local_info.is_controlled
 				l_type := l_local_info.type.instantiation_in (last_type.as_implicitly_detachable.as_variant_free, last_type.base_class.class_id)
+				if context.is_readonly_attached (a.feature_name.name_id) then
+					l_type := l_type.as_attached_in (context.current_class)
+				end
 				if not is_inherited then
 					set_inline_local (a)
 					a.set_class_id (class_id_of (l_type))
@@ -3473,7 +3476,7 @@ feature {NONE} -- Visitor
 				l_arg_type := l_feature.arguments.i_th (l_arg_pos)
 
 				l_arg_type := l_arg_type.instantiation_in (last_type.as_implicitly_detachable.as_variant_free, l_last_id)
-				if context.is_argument_attached (l_as.feature_name.name_id) then
+				if context.is_readonly_attached (l_as.feature_name.name_id) then
 					l_arg_type := l_arg_type.as_attached_in (context.current_class)
 				end
 				if is_byte_node_enabled then
@@ -3510,8 +3513,8 @@ feature {NONE} -- Visitor
 					l_veen2b.set_identifier (l_as.feature_name.name)
 					l_veen2b.set_location (l_as.feature_name)
 					error_handler.insert_error (l_veen2b)
-				elseif attached context.object_test_local (l_as.feature_name.name_id) as i then
-					process_object_test_local (i, l_as, False)
+				elseif attached context.inline_local (l_as.feature_name.name_id) as i then
+					process_inline_local (i, l_as, False)
 				else
 						-- Look for a feature
 					l_feature := Void
@@ -3823,7 +3826,7 @@ feature {NONE} -- Visitor
 			l_list: BYTE_LIST [BYTE_NODE]
 			l_assertion_byte_code: ASSERTION_BYTE_CODE
 			l_needs_byte_node: BOOLEAN
-			s: INTEGER
+			s: like {AST_CONTEXT}.scope
 			l_error_level: NATURAL_32
 			l_has_invalid_locals: BOOLEAN
 			l_feat_type: TYPE_A
@@ -4093,7 +4096,7 @@ feature {NONE} -- Visitor
 	process_compound (compound: EIFFEL_LIST [INSTRUCTION_AS])
 			-- Process instruction list keeping track of local scopes.
 		local
-			s: INTEGER
+			s: like {AST_CONTEXT}.scope
 		do
 			s := context.scope
 			compound.process (Current)
@@ -4552,7 +4555,7 @@ feature {NONE} -- Visitor
 						l_as.enable_local
 					end
 				else
-					l_local_info := context.object_test_local (l_as.feature_name.internal_name.name_id)
+					l_local_info := context.inline_local (l_as.feature_name.internal_name.name_id)
 					if l_local_info /= Void then
 						if l_local_info.is_cursor then
 							error_handler.insert_error (create {NOT_SUPPORTED}.make
@@ -4567,6 +4570,9 @@ feature {NONE} -- Visitor
 							last_access_writable := False
 							is_controlled := l_local_info.is_controlled
 							l_type := l_local_info.type.instantiation_in (last_type.as_implicitly_detachable.as_variant_free, l_last_id)
+							if context.is_readonly_attached (l_as.feature_name.internal_name.name_id) then
+								l_type := l_type.as_attached_in (context.current_class)
+							end
 							create l_typed_pointer.make_typed (l_type)
 							set_type (l_typed_pointer, l_as)
 							if not is_inherited then
@@ -4653,10 +4659,10 @@ feature {NONE} -- Visitor
 		do
 			reset_for_unqualified_call_checking
 			if
-				attached context.object_test_local (a.name.name_id) as i and then
+				attached context.inline_local (a.name.name_id) as i and then
 				i.is_cursor
 			then
-				process_object_test_local (i, create {ACCESS_INV_AS}.make (a.name, Void, Void), True)
+				process_inline_local (i, create {ACCESS_INV_AS}.make (a.name, Void, Void), True)
 			else
 					-- Report an unknown entity name.
 				create e
@@ -5171,7 +5177,7 @@ feature {NONE} -- Visitor
 			l_saved_vaol_check: BOOLEAN
 			l_expr: EXPR_B
 			l_un_old: UN_OLD_B
-			s: INTEGER
+			s: like {AST_CONTEXT}.scope
 		do
 			if not is_checking_postcondition then
 					-- Old expression found somewhere else that in a
@@ -5193,9 +5199,11 @@ feature {NONE} -- Visitor
 				s := context.scope
 					-- Mark the beginning of the old expression
 					-- (to prevent OT locals declared outside the old expression from being used inside it).
-				context.add_old_expression_scope
+				context.enter_old_expression
 					-- Expression type check
 				l_as.expr.process (Current)
+					-- Mark the end of the old expression so that outer object test locals can be used again.
+				context.leave_old_expression
 					-- Restore scope information.
 				context.set_scope (s)
 				if attached last_type as t then
@@ -5255,7 +5263,7 @@ feature {NONE} -- Visitor
 			l_is_left_multi_constrained: BOOLEAN
 			l_class: CLASS_C
 			l_context_current_class: CLASS_C
-			s: INTEGER
+			s: like {AST_CONTEXT}.scope
 			l_error_level: NATURAL_32
 			l_arg_types: ARRAYED_LIST [TYPE_A]
 			l_parameters: EIFFEL_LIST [EXPR_AS]
@@ -5992,13 +6000,13 @@ feature {NONE} -- Visitor
 				if local_id /= Void or l_as.type /= Void then
 						-- Avoid generating new object test local record when processing loop body multiple times.
 					if local_id /= Void then
-						local_info := context.unchecked_object_test_local (local_id)
+						local_info := context.unchecked_inline_local (local_id)
 					end
 					if local_info = Void and then (local_id /= Void or else l_needs_byte_node) then
-						create local_info.make (local_type, context.next_object_test_local_position)
+						create local_info.make (local_type, context.next_inline_local_position)
 						local_info.set_is_controlled (is_controlled)
 						local_info.enable_is_used
-						context.add_object_test_local (local_info, if attached local_id then local_id else create {ID_AS}.initialize ("dummy_" + context.hidden_local_counter.next.out) end)
+						context.add_inline_local (local_info, if attached local_id then local_id else create {ID_AS}.initialize ("dummy_" + context.hidden_local_counter.next.out) end)
 					end
 
 					if l_needs_byte_node then
@@ -6441,7 +6449,7 @@ feature {NONE} -- Visitor
 		local
 			l_check: CHECK_B
 			l_list: BYTE_LIST [BYTE_NODE]
-			s: INTEGER
+			s: like {AST_CONTEXT}.scope
 		do
 			if l_as.check_list /= Void then
 					-- Attachment properties are not propagated outside the check instruction.
@@ -6996,7 +7004,7 @@ feature {NONE} -- Visitor
 			a: BYTE_LIST [BYTE_NODE]
 			c: BYTE_LIST [BYTE_NODE]
 			g: GUARD_B
-			s: INTEGER
+			s: like {AST_CONTEXT}.scope
 			l_needs_byte_node: BOOLEAN
 		do
 			l_needs_byte_node := is_byte_node_enabled
@@ -7047,7 +7055,7 @@ feature {NONE} -- Visitor
 			l_if: IF_B
 			l_expr: EXPR_B
 			l_list: BYTE_LIST [BYTE_NODE]
-			s: INTEGER
+			s: like {AST_CONTEXT}.scope
 			scope_matcher: AST_SCOPE_MATCHER
 		do
 			l_needs_byte_node := is_byte_node_enabled
@@ -7139,7 +7147,7 @@ feature {NONE} -- Visitor
 			l_then_expression: detachable EXPR_B
 			l_else_expression: detachable EXPR_B
 			l_list: BYTE_LIST [ELSIF_EXPRESSION_B]
-			s: INTEGER
+			s: like {AST_CONTEXT}.scope
 			scope_matcher: AST_SCOPE_MATCHER
 			l_expression_type: detachable TYPE_A
 			l_error_level: like error_level
@@ -7256,9 +7264,9 @@ feature {NONE} -- Visitor
 						attached t.base_class as b and then
 						attached b.feature_of_name_id (names_heap.inspect_attribute_name_id) as i
 					then
-						create local_info.make (t, context.next_object_test_local_position)
+						create local_info.make (t, context.next_inline_local_position)
 						local_info.enable_is_used
-						context.add_object_test_local (local_info, create {ID_AS}.initialize ("dummy_" + context.hidden_local_counter.next.out))
+						context.add_inline_local (local_info, create {ID_AS}.initialize ("dummy_" + context.hidden_local_counter.next.out))
 						create o.make (local_info.position, current_feature.body_index, t)
 						create nested_b
 						nested_b.set_target (o)
@@ -7423,8 +7431,8 @@ feature {NONE} -- Visitor
 			l_list: BYTE_LIST [BYTE_NODE]
 			l_loop: LOOP_B
 			l_variant: VARIANT_B
-			s, q: INTEGER
-			iteration_cursor_scope: INTEGER
+			s, q: like {AST_CONTEXT}.scope
+			iteration_cursor_scope: like {AST_CONTEXT}.scope
 			scope_matcher: AST_SCOPE_MATCHER
 			e: like error_level
 			invariant_as: like {LOOP_AS}.invariant_part
@@ -7456,7 +7464,7 @@ feature {NONE} -- Visitor
 					-- Record the type of the cursor that is used to drive the loop.
 				iteration_cursor_type := last_type
 				if iteration_cursor_type /= Void then
-					local_info := context.object_test_local (l_as.iteration.identifier.name_id)
+					local_info := context.inline_local (l_as.iteration.identifier.name_id)
 				end
 				if local_info /= Void then
 						-- Record original type of the cursor that is visible to the user.
@@ -7679,7 +7687,7 @@ feature {NONE} -- Visitor
 			local_type: TYPE_A
 			iteration_cursor_type: TYPE_A
 			exit_as: EXPR_AS
-			iteration_cursor_scope: INTEGER
+			iteration_cursor_scope: like {AST_CONTEXT}.scope
 			iteration_code: detachable BYTE_LIST [BYTE_NODE]
 			invariant_code: detachable BYTE_LIST [BYTE_NODE]
 			variant_code: detachable VARIANT_B
@@ -7687,7 +7695,7 @@ feature {NONE} -- Visitor
 			exit_condition_code: detachable EXPR_B
 			expression_code: detachable EXPR_B
 			advance_code: detachable BYTE_NODE
-			s: INTEGER
+			s: like {AST_CONTEXT}.scope
 			l_vwbe4: VWBE4
 			old_is_byte_node_enabled: BOOLEAN
 		do
@@ -7703,7 +7711,7 @@ feature {NONE} -- Visitor
 				-- Record the type of the cursor that is used to drive the loop.
 			iteration_cursor_type := last_type
 			if iteration_cursor_type /= Void then
-				local_info := context.object_test_local (l_as.iteration.identifier.name_id)
+				local_info := context.inline_local (l_as.iteration.identifier.name_id)
 			end
 			if local_info /= Void then
 					-- Record original type of the cursor that is visible to the user.
@@ -8041,10 +8049,10 @@ feature {NONE} -- Visitor
 							end
 						end
 							-- Avoid generating new object test local record when processing a loop body multiple times.
-						local_info := context.unchecked_object_test_local (local_id)
+						local_info := context.unchecked_inline_local (local_id)
 						if local_info = Void then
-							create local_info.make (local_type, context.next_object_test_local_position)
-							context.add_object_test_local (local_info, local_id)
+							create local_info.make (local_type, context.next_inline_local_position)
+							context.add_inline_local (local_info, local_id)
 							local_info.enable_is_used
 							local_info.set_is_controlled (is_controlled)
 							if attached l_as.item as cursor then
@@ -8133,7 +8141,7 @@ feature {NONE} -- Visitor
 			local_name_id: INTEGER
 			location: LOCATION_AS
 			e: EXPR_AS
-			s: INTEGER
+			s: like {AST_CONTEXT}.scope
 			local_info: LOCAL_INFO
 			local_type: TYPE_A
 			arguments: ARRAYED_LIST [ID_AS]
@@ -8182,13 +8190,13 @@ feature {NONE} -- Visitor
 					error_handler.insert_error (create {FRESH_IDENTIFIER_ERROR}.make_from_context (context, local_id))
 				end
 					-- A name clash with object test locals, iteration cursors and separate instruction arguments will be reported when checking for their scopes.
-				local_info := context.unchecked_object_test_local (local_id)
+				local_info := context.unchecked_inline_local (local_id)
 				if not attached local_info then
-					create local_info.make (local_type, context.next_object_test_local_position)
+					create local_info.make (local_type, context.next_inline_local_position)
 					local_info.enable_is_used
 						-- Mark this variable as controlled.
 					local_info.enable_is_controlled
-					context.add_object_test_local (local_info, local_id)
+					context.add_inline_local (local_info, local_id)
 				end
 				if attached argument_code and then attached {EXPR_B} last_byte_node as b then
 					create assign_b.make (create {OBJECT_TEST_LOCAL_B}.make (local_info.position, current_feature.body_index, local_type), b)
@@ -8197,7 +8205,7 @@ feature {NONE} -- Visitor
 				end
 					-- Record local to activate its scope for compound.
 				arguments.extend (local_id)
-					-- Reset scopes to original level to before computing next argument.
+					-- Reset scopes to original level to before computing a next argument.
 				context.set_scope (s)
 			end
 				-- Activate scopes of argument names.
@@ -8424,7 +8432,7 @@ feature {NONE} -- Visitor
 
 	process_invariant_as (l_as: INVARIANT_AS)
 		local
-			s: INTEGER
+			s: like {AST_CONTEXT}.scope
 		do
 			break_point_slot_count := 0
 			if attached l_as.assertion_list as l then
@@ -8473,7 +8481,7 @@ feature {NONE} -- Visitor
 			l_list: BYTE_LIST [BYTE_NODE]
 			l_elsif: ELSIF_B
 			l_has_error: BOOLEAN
-			s: INTEGER
+			s: like {AST_CONTEXT}.scope
 			scope_matcher: AST_SCOPE_MATCHER
 		do
 			break_point_slot_count := break_point_slot_count + 1
@@ -8535,7 +8543,7 @@ feature {NONE} -- Visitor
 			l_condition: EXPR_B
 			l_expression: EXPR_B
 			l_elsif: ELSIF_EXPRESSION_B
-			s: INTEGER
+			s: like {AST_CONTEXT}.scope
 			scope_matcher: AST_SCOPE_MATCHER
 			l_expression_type: TYPE_A
 		do
@@ -8713,13 +8721,13 @@ feature {NONE} -- Visitor
 			a: EIFFEL_LIST [TAGGED_AS]
 			b: ASSERTION_BYTE_CODE
 			i: INTEGER
-			s: INTEGER
+			s: like {AST_CONTEXT}.scope
 		do
 			a := l_as.assertions
 			if a /= Void then
 				if is_byte_node_enabled then
 					create b.make (a.count)
-					i := context.next_object_test_local_position
+					i := context.next_inline_local_position
 				end
 				context.enter_realm
 				s := context.scope
@@ -8742,13 +8750,13 @@ feature {NONE} -- Visitor
 			a: EIFFEL_LIST [TAGGED_AS]
 			b: ASSERTION_BYTE_CODE
 			i: INTEGER
-			s: INTEGER
+			s: like {AST_CONTEXT}.scope
 		do
 			a := l_as.assertions
 			if a /= Void then
 				if is_byte_node_enabled then
 					create b.make (a.count)
-					i := context.next_object_test_local_position
+					i := context.next_inline_local_position
 				end
 				context.enter_realm
 				s := context.scope
@@ -8771,13 +8779,13 @@ feature {NONE} -- Visitor
 			a: EIFFEL_LIST [TAGGED_AS]
 			b: ASSERTION_BYTE_CODE
 			i: INTEGER
-			s: INTEGER
+			s: like {AST_CONTEXT}.scope
 		do
 			a := l_as.assertions
 			if a /= Void then
 				if is_byte_node_enabled then
 					create b.make (a.count)
-					i := context.next_object_test_local_position
+					i := context.next_inline_local_position
 				end
 				s := context.scope
 				if is_void_safe_construct then
@@ -8807,13 +8815,13 @@ feature {NONE} -- Visitor
 			a: EIFFEL_LIST [TAGGED_AS]
 			b: ASSERTION_BYTE_CODE
 			i: INTEGER
-			s: INTEGER
+			s: like {AST_CONTEXT}.scope
 		do
 			a := l_as.assertions
 			if a /= Void then
 				if is_byte_node_enabled then
 					create b.make (a.count)
-					i := context.next_object_test_local_position
+					i := context.next_inline_local_position
 				end
 				context.enter_realm
 				s := context.scope
@@ -11586,7 +11594,7 @@ feature {NONE} -- Implementation: checking locals
 			end
 				-- Remove all information about object test locals.
 				-- It will be recomputed again.
-			context.clear_object_test_locals
+			context.clear_inline_locals
 		end
 
 	check_unused_locals (a_locals: HASH_TABLE [LOCAL_INFO, INTEGER])
@@ -12114,8 +12122,8 @@ feature {INSPECT_CONTROL} -- AST modification
 	set_inline_local (a: ACCESS_INV_AS)
 			-- Mark `a` as an inline local variable.
 		do
-			if not a.is_object_test_local then
-				a.enable_object_test_local
+			if not a.is_inline_local then
+				a.enable_inline_local
 					-- Record that AST node is modified.
 				tmp_ast_server.touch (context.current_class.class_id)
 				is_ast_modified := True

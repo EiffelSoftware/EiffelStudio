@@ -236,9 +236,9 @@ feature -- Report
 								l_solved_type_a := eiffel_project.workbench.system.any_type
 							end
 							l_id := l_ot_loc.name_id
-							create li.make (l_solved_type_a, l_ast_context.next_object_test_local_position)
+							create li.make (l_solved_type_a, l_ast_context.next_inline_local_position)
 							l_object_test_locals_resolved.force ([l_id, li])
-							l_ast_context.add_object_test_local (li, l_id)
+							l_ast_context.add_inline_local (li, l_id)
 							l_ast_context.add_object_test_expression_scope (l_id)
 						else
 							check should_not_occur: False end
@@ -331,7 +331,7 @@ feature {NONE} -- Implementation
 ;note
 	date: "$Date$"
 	revision: "$Revision$"
-	copyright: "Copyright (c) 1984-2018, Eiffel Software"
+	copyright: "Copyright (c) 1984-2021, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

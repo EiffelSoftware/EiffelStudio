@@ -52,8 +52,8 @@ feature {NONE} -- Initialization
 			create locals.make (10)
 			create supplier_ids.make
 			create scopes.make (0)
-			create object_test_scopes.make (0)
-			create {HASH_TABLE_EX [LOCAL_INFO, ID_AS]} object_test_locals.make_with_key_tester (0, create {REFERENCE_EQUALITY_TESTER [ID_AS]})
+			create inline_scopes.make (0)
+			create {HASH_TABLE_EX [LOCAL_INFO, ID_AS]} inline_locals.make_with_key_tester (0, create {REFERENCE_EQUALITY_TESTER [ID_AS]})
 		end
 
 feature -- Access
@@ -193,85 +193,66 @@ feature -- Modification
 
 feature {NONE} -- Local scopes
 
-	object_test_locals: HASH_TABLE [LOCAL_INFO, ID_AS]
+	inline_locals: HASH_TABLE [LOCAL_INFO, ID_AS]
 			-- Types of object-test locals indexes by their name id.
 
 	result_id: INTEGER_32 = 0x7fffffff
 			-- Name ID that is used for the special entity "Result".
 
-	old_id: INTEGER_32 = 0x7ffffffe
-			-- Name ID that is used to mark the scope of an old expression.
-
 feature {AST_FEATURE_CHECKER_GENERATOR, SHARED_AST_CONTEXT} -- Local scopes
 
-	next_object_test_local_position: INTEGER
-			-- Position of a next object test local.
+	next_inline_local_position: INTEGER
+			-- Position of a next inline local.
 		do
-			Result := object_test_locals.count + 1
+			Result := inline_locals.count + 1
 		end
 
-	add_object_test_local (l: LOCAL_INFO; id: ID_AS)
-			-- Add a new object test local of type `t' with name `id' specified in the object test.
+	add_inline_local (l: LOCAL_INFO; id: ID_AS)
+			-- Add a new inline local with type information `l` for a name `id`.
 		require
 			l_attached: l /= Void
 			id_attached: id /= Void
 		do
-			object_test_locals.force (l, id)
+			inline_locals.force (l, id)
 		end
 
-	object_test_local (id: INTEGER_32): detachable LOCAL_INFO
-			-- Information about object-test local of name `id' if such
-			-- a local is currently in scope or `Void' otherwise.
+	inline_local (id: INTEGER_32): detachable LOCAL_INFO
+			-- Information about an inline (object-test, cursor, separate) local of name `id'
+			-- if such a local is currently in scope or `Void' otherwise.
 		local
-			i: INTEGER
-			l: INTEGER
-			n: ID_AS
+			i: like inline_scopes_bound
+			m: like inline_scopes_bound
 		do
+				-- Look for an entry with name ID `id` in currently valid `inline_locals`.
 			from
-				i := scopes.count
+				i := inline_scopes.count
+				m := inline_scopes_bound
 			until
-				i <= 0
+				i <= m or else inline_scopes [i].name_id = id
 			loop
-				l := scopes [i]
-				if l = id then
-						-- The current evaluation position is in the scope of the name `id'.
-						-- Find the associated object test local information (if any).
-					from
-						i := object_test_scopes.count
-					until
-						i <= 0
-					loop
-						n := object_test_scopes [i]
-						if n.name_id = id and then object_test_locals.has (n) then
-							Result := object_test_locals.item (n)
-						end
-						i := i - 1
-					end
-				elseif l = old_id then
-						-- Object test local declared outside an old expression cannot be used inside it.
-					i := 0
-				else
-					i := i - 1
-				end
+				i := i - 1
 			variant
 				i
 			end
+				-- Test if the entry is found.
+			if i > m then
+					-- Retrieve information about found inline local.
+				Result := inline_locals.item (inline_scopes [i])
+			end
 		end
 
-	unchecked_object_test_local (id: ID_AS): detachable LOCAL_INFO
-			-- Information about object-test local of name `id' (if any) regardless of current scope.
+	unchecked_inline_local (id: ID_AS): detachable LOCAL_INFO
+			-- Information about inline local of name `id' (if any) regardless of current scope.
 		require
 			id_attached: id /= Void
 		do
-			if object_test_locals.has (id) then
-				Result := object_test_locals.item (id)
-			end
+			Result := inline_locals.item (id)
 		end
 
 feature {AST_FEATURE_CHECKER_GENERATOR, AST_CONTEXT} -- Local scopes: status report
 
-	is_argument_attached (id: INTEGER_32): BOOLEAN
-			-- Is argument `id' in the scope where it is considered attached?
+	is_readonly_attached (id: INTEGER_32): BOOLEAN
+			-- Is a read-only entity `id` in the scope where it is considered attached?
 		do
 			Result := scopes.has (id)
 		end
@@ -316,15 +297,23 @@ feature {AST_CONTEXT} -- Local scopes
 
 	scopes: ARRAYED_LIST [INTEGER_32]
 			-- Currently active scopes identified by entity name ID.
+			-- If an entity is registered, it is known to be attached.
+			-- The scopes do not reflect the validity of the entity, only its attachment status.
+			-- See also: `inline_scopes`.
 
 	scope_count: INTEGER
-			-- Number of active scopes.
+			-- Number of active `scopes`.
 		do
 			Result := scopes.count
 		end
 
-	object_test_scopes: ARRAYED_LIST [ID_AS]
-			-- Currently active scopes of object test locals.
+	inline_scopes: ARRAYED_LIST [ID_AS]
+			-- Current potentially valid scopes of inline locals.
+			-- The valid entries have indexes in the set (`inline_scopes_bound` .. `inline_scopes.upper`],
+			-- i.e. `inline_scopes_bound` is excluded.
+
+	inline_scopes_bound: like inline_scopes.lower
+			-- The index above which elements of `inline_scopes` are considered valid.
 
 feature {AST_CREATION_PROCEDURE_CHECKER, AST_FEATURE_CHECKER_GENERATOR, AST_CONTEXT, AST_SCOPE_COMBINED_PRECONDITION} -- Attribute positions
 
@@ -334,35 +323,48 @@ feature {AST_CREATION_PROCEDURE_CHECKER, AST_FEATURE_CHECKER_GENERATOR, AST_CONT
 	attribute_initialization: AST_ATTRIBUTE_INITIALIZATION_TRACKER
 			-- Tracker of initialized stable attributes.
 
+feature {NONE} -- Scope components
+
+	object_test_count_shift: INTEGER_32 = 32
+			-- Number of bits to shift `inline_scopes.count` in `scope`.
+
+	scope_count_mask: NATURAL_64 = 0xFFFF_FFFF
+			-- Mask for `scope_count` in `scope`.
+
 feature {AST_FEATURE_CHECKER_GENERATOR, AST_CONTEXT} -- Scope state
 
-	scope: INTEGER
+	scope: NATURAL_64
 			-- Current scope ID.
 		do
-				-- For simplicity the current number of local scopes is used.
-			Result := scope_count
+				-- For simplicity the current number of local scopes and object test scopes is used.
+			Result := scope_count.as_natural_64 ⦶ (inline_scopes.count.as_natural_64 ⧀ object_test_count_shift)
 		end
 
 	set_scope (s: like scope)
-			-- Reset `scope' to the previously recorded scope ID `s'.
+			-- Reset `scope` to the previously recorded scope ID `s`.
 		require
 			valid_s: s <= scope
 		local
 			i: like scope_count
 		do
 			from
-				object_test_scopes.finish
-				i := scope_count - s
+				i := scopes.count - (s ⊗ scope_count_mask).as_integer_32
+				scopes.finish
 			until
 				i <= 0
 			loop
-				scopes.finish
-				if not object_test_scopes.before and then object_test_scopes.item_for_iteration.name_id = scopes.item_for_iteration then
-						-- Remove object test scope.
-					object_test_scopes.remove
-					object_test_scopes.finish
-				end
 				scopes.remove
+				scopes.back
+				i := i - 1
+			end
+			from
+				i := inline_scopes.count - (s ⧁ object_test_count_shift).as_integer_32
+				inline_scopes.finish
+			until
+				i <= 0
+			loop
+				inline_scopes.remove
+				inline_scopes.back
 				i := i - 1
 			end
 		ensure
@@ -422,19 +424,30 @@ feature {AST_FEATURE_CHECKER_GENERATOR, AST_CONTEXT} -- Scope state
 
 feature {AST_SCOPE_MATCHER, AST_FEATURE_CHECKER_GENERATOR} -- Local scopes: modification
 
-	add_old_expression_scope
-			-- Add a scope of an old expression.
+	enter_old_expression
+			-- Enter a scope of an old expression.
+			-- It should be paired with `leave_old_expression`.
 		do
-			scopes.extend (old_id)
+			inline_scopes_bound := inline_scopes.upper
+		ensure
+			inline_scopes_bound = inline_scopes.upper
 		end
 
-	add_argument_expression_scope (id: INTEGER_32)
+	leave_old_expression
+			-- Leave a scope of an old expression previously entered by `enter_old_expression`.
+		do
+			inline_scopes_bound := 0
+		ensure
+			inline_scopes_bound = 0
+		end
+
+	add_readonly_expression_scope (id: INTEGER_32)
 			-- Add a scope for an argument identified by `id'.
 		do
 			scopes.extend (id)
 		ensure
 			scope_count_inremented: scope_count = old scope_count + 1
-			is_argument_attached: is_argument_attached (id)
+			is_readonly_attached (id)
 		end
 
 	add_local_expression_scope (id: INTEGER_32)
@@ -464,12 +477,12 @@ feature {AST_SCOPE_MATCHER, AST_FEATURE_CHECKER_GENERATOR} -- Local scopes: modi
 			is_attribute_attached: is_attribute_attached (id)
 		end
 
-	add_argument_instruction_scope (id: INTEGER_32)
+	add_readonly_instruction_scope (id: INTEGER_32)
 			-- Add a scope for an argument identified by `id'.
 		do
 			scopes.extend (id)
 		ensure
-			is_argument_attached: is_argument_attached (id)
+			is_readonly_attached (id)
 		end
 
 	add_local_instruction_scope (id: INTEGER_32)
@@ -549,10 +562,10 @@ feature {AST_SCOPE_MATCHER, SHARED_AST_CONTEXT, AST_FEATURE_CHECKER_GENERATOR} -
 			id_attached: id /= Void
 		do
 			scopes.extend (id.name_id)
-			object_test_scopes.extend (id)
+			inline_scopes.extend (id)
 		ensure
 			scope_count_inremented: scope_count = old scope_count +1
-			object_test_scopes_count_incremented: object_test_scopes.count = old object_test_scopes.count + 1
+			object_test_scopes_count_incremented: inline_scopes.count = old inline_scopes.count + 1
 		end
 
 	add_object_test_instruction_scope (id: ID_AS)
@@ -563,7 +576,7 @@ feature {AST_SCOPE_MATCHER, SHARED_AST_CONTEXT, AST_FEATURE_CHECKER_GENERATOR} -
 			add_object_test_expression_scope (id)
 		ensure
 			scope_count_inremented: scope_count = old scope_count +1
-			object_test_scopes_count_incremented: object_test_scopes.count = old object_test_scopes.count + 1
+			object_test_scopes_count_incremented: inline_scopes.count = old inline_scopes.count + 1
 		end
 
 feature {AST_FEATURE_CHECKER_GENERATOR, AST_CONTEXT} -- Local scopes: removal
@@ -573,22 +586,36 @@ feature {AST_FEATURE_CHECKER_GENERATOR, AST_CONTEXT} -- Local scopes: removal
 		local
 			i: INTEGER
 			j: INTEGER
+			scope_limit: INTEGER
+			object_test_limit: INTEGER
+			name_id: like inline_scopes.item.name_id
 		do
+			scope_limit := (s ⊗ scope_count_mask).as_integer_32
+			object_test_limit := (s ⧁ object_test_count_shift).as_integer_32
 			from
-				i := scopes.count
-				j := object_test_scopes.count
+				j := inline_scopes.count
 			until
-				i <= s or else j <= 0
+				j ≤ object_test_limit
 			loop
-				if scopes [i] = object_test_scopes [j].name_id then
-						-- The `i'-th item corresponds to an object test local, let's remove it.
-					scopes.remove_i_th (i)
-					object_test_scopes.remove_i_th (j)
-					j := j - 1
+					-- Pick the inline local name.
+				name_id := inline_scopes [j].name_id
+				from
+					i := scopes.count
+				until
+					i ≤ scope_limit
+				loop
+					if scopes [i] = name_id then
+							-- Remove the `i`-th item corresponding to the inline local.
+						scopes.remove_i_th (i)
+					end
+					i := i - 1
+				variant
+					i
 				end
-				i := i - 1
+				inline_scopes.remove_i_th (j)
+				j := j - 1
 			variant
-				i
+				j
 			end
 		end
 
@@ -804,7 +831,7 @@ feature -- Setting
 				-- Local variable declarations.
 			local_dec := Void
 			local_count := locals.count
-			test_count := object_test_locals.count
+			test_count := inline_locals.count
 			total_count := local_count + test_count
 			if local_count > 0 then
 				across
@@ -820,7 +847,7 @@ feature -- Setting
 			end
 			if test_count > 0 then
 				across
-					object_test_locals as o
+					inline_locals as o
 				from
 					if not attached local_dec then
 						create local_dec.make_filled (o.item.type, 1, total_count)
@@ -859,9 +886,9 @@ feature -- Setting
 			i: LOCAL_INFO
 			l: ARRAY [TYPE_A]
 		do
-			if not object_test_locals.is_empty then
+			if not inline_locals.is_empty then
 				across
-					object_test_locals as o
+					inline_locals as o
 				loop
 					i := o.item
 					if i.position >= first_object_test_local_position then
@@ -885,11 +912,11 @@ feature -- Setting
 			i: LOCAL_INFO
 			l: ARRAY [TYPE_A]
 		do
-			if not object_test_locals.is_empty then
+			if not inline_locals.is_empty then
 				across
-					object_test_locals as o
+					inline_locals as o
 				from
-					create l.make_filled (o.item.type, 1, object_test_locals.count)
+					create l.make_filled (o.item.type, 1, inline_locals.count)
 				loop
 					i := o.item
 					l.force (i.type, i.position)
@@ -979,11 +1006,12 @@ feature -- Managing the type stack
 			clear_local_context
 		end
 
-	clear_object_test_locals
-			-- Clear context specific to object test declarations.
+	clear_inline_locals
+			-- Clear context specific to inline local declarations.
 		do
-			object_test_locals.wipe_out
-			object_test_scopes.wipe_out
+			inline_locals.wipe_out
+			inline_scopes.wipe_out
+			inline_scopes_bound := 0
 		end
 
 	clear_local_context
@@ -991,7 +1019,7 @@ feature -- Managing the type stack
 		do
 			locals.wipe_out
 			scopes.wipe_out
-			clear_object_test_locals
+			clear_inline_locals
 		end
 
 feature	-- Saving contexts
@@ -1006,7 +1034,7 @@ feature	-- Saving contexts
 			used_argument_names := Void
 			used_local_names := Void
 			scopes.copy (Result.scopes)
-			object_test_scopes.copy (Result.object_test_scopes)
+			inline_scopes.copy (Result.inline_scopes)
 			local_scope := Void
 			local_initialization := Void
 			attribute_initialization := Void
@@ -1025,10 +1053,10 @@ feature {NONE} -- Internals
 
 invariant
 	locals_attached: locals /= Void
-	object_test_locals_attached: object_test_locals /= Void
+	object_test_locals_attached: inline_locals /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2019, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2021, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

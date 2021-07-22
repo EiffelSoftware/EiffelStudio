@@ -187,7 +187,6 @@ feature -- Execution
 		local
 			cmd: STRING_32
 			fn: READABLE_STRING_32
-			l_log: STRING_32
 		do
 			create cmd.make_from_string (git_executable_location.name)
 			cmd.append_string_general (" add")
@@ -353,8 +352,8 @@ invariant
 --	invariant_clause: True
 
 note
-	copyright: "Copyright (c) 1984-2021, Eiffel Software"
-	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
+	copyright: "Copyright (c) 1984-2021, Eiffel Software and others"
+	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software
 			5949 Hollister Ave., Goleta, CA 93117 USA

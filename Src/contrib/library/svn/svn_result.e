@@ -38,7 +38,7 @@ feature -- Status report
 	failed: BOOLEAN
 			-- Svn command failed?
 
-	command: READABLE_STRING_32
+	command: detachable READABLE_STRING_32
 			-- Optional command information.
 
 	message: detachable IMMUTABLE_STRING_32
@@ -80,7 +80,7 @@ feature -- Element change
 		end
 
 ;note
-	copyright: "Copyright (c) 2003-2015, Jocelyn Fiat"
+	copyright: "Copyright (c) 2003-2021, Jocelyn Fiat"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			 Jocelyn Fiat

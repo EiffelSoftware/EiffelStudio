@@ -17,21 +17,25 @@ convert
 
 feature {NONE} -- Initialization
 
-	make_with_command (cmd: detachable READABLE_STRING_GENERAL)
+	make_with_command (cmd: READABLE_STRING_GENERAL)
 		do
 			command := cmd
 		end
 
 	make_success (cmd: detachable READABLE_STRING_GENERAL)
 		do
-			make_with_command (cmd)
+			if cmd /= Void then
+				make_with_command (cmd)
+			end
 			failed := False
 			message := Void
 		end
 
 	make_failure (cmd: detachable READABLE_STRING_GENERAL)
 		do
-			make_with_command (cmd)
+			if cmd /= Void then
+				make_with_command (cmd)
+			end
 			failed := True
 			message := Void
 		end
@@ -62,7 +66,8 @@ feature -- Conversion
 			else
 				if succeed then
 					Result := {STRING_32} "Succeed"
-				elseif failed then
+				else
+					check failed end
 					Result := "Failed"
 				end
 				if attached command as cmd then
@@ -95,8 +100,8 @@ feature -- Element change
 		end
 
 ;note
-	copyright: "Copyright (c) 1984-2021, Eiffel Software"
-	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
+	copyright: "Copyright (c) 1984-2021, Eiffel Software and others"
+	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software
 			5949 Hollister Ave., Goleta, CA 93117 USA

@@ -25,7 +25,9 @@ inherit
 			y_position,
 			width, height,
 			real_minimum_width,
-			real_minimum_height
+			real_minimum_height,
+			minimum_width,
+			minimum_height
 		end
 
 	EV_SENSITIVE_IMP
@@ -371,6 +373,8 @@ feature -- Status setting
 		do
 			Result := Precursor
 			if not is_show_requested then
+					-- With gtk3/4, when a widget is hidden, the width is 0
+					-- while previously (gtk2) it was keeping the previous value
 				if Result <= 0 and hidden_width > 0 then
 					Result := hidden_width
 				end
@@ -381,6 +385,8 @@ feature -- Status setting
 		do
 			Result := Precursor
 			if not is_show_requested then
+					-- With gtk3/4, when a widget is hidden, the height is 0
+					-- while previously (gtk2) it was keeping the previous value
 				if Result <= 0 and hidden_height > 0 then
 					Result := hidden_height
 				end
@@ -391,6 +397,8 @@ feature -- Status setting
 		do
 			Result := Precursor
 			if not is_show_requested then
+					-- With gtk3/4, when a widget is hidden, the minimum width is 0
+					-- while previously (gtk2) it was keeping the previous value
 				if Result <= 0 and hidden_minimum_width > 0 then
 					Result := hidden_minimum_width
 				end
@@ -401,9 +409,35 @@ feature -- Status setting
 		do
 			Result := Precursor
 			if not is_show_requested then
+					-- With gtk3/4, when a widget is hidden, the minimum height is 0
+					-- while previously (gtk2) it was keeping the previous value				
 				if Result <= 0 and hidden_minimum_height > 0 then
 					Result := hidden_minimum_height
 				end
+			end
+		end
+
+	minimum_width: INTEGER
+		do
+				-- With gtk3/4, the notion of minimum width is associated with GTK width-request propery
+				-- On the Eiffel side, consider only if set by the user (i.e on the interface side)
+			if
+				attached interface as l_interface and then
+				l_interface.minimum_width_set_by_user
+			then
+				Result := Precursor
+			end
+		end
+
+	minimum_height: INTEGER
+		do
+				-- With gtk3/4, the notion of minimum height is associated with GTK height-request propery
+				-- On the Eiffel side, consider only if set by the user (i.e on the interface side)
+			if
+				attached interface as l_interface and then
+				l_interface.minimum_height_set_by_user
+			then
+				Result := Precursor
 			end
 		end
 
@@ -460,7 +494,9 @@ feature -- Element change
 			end
 		end
 
-	set_widget_size (a_width, a_height: INTEGER)
+	set_widget_size_allocation (a_width, a_height: INTEGER)
+			-- Set widget size at the GTK level using size allocate
+			-- not the "minimize size" related to "width-request"  and " height-request".
 		local
 			l_c_object: POINTER
 			l_alloc: POINTER

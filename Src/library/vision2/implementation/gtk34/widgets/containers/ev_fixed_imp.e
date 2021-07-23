@@ -131,6 +131,7 @@ feature -- Status setting
 			-- Update minimum size by looking at all existing childs.
 		local
 			w,h: INTEGER
+			l_widget_width, l_widget_height: INTEGER
 		do
 			if
 				attached cursor as l_cursor
@@ -142,14 +143,26 @@ feature -- Status setting
 					off
 				loop
 					if attached {EV_WIDGET} item as l_widget then
-						w := (l_widget.x_position + (l_widget.width).max (l_widget.minimum_width)).max (w)
-						h := (l_widget.y_position + (l_widget.height).max (l_widget.minimum_height)).max (h)
+						l_widget_width := l_widget.width
+						if l_widget.minimum_width_set_by_user then
+							l_widget_width := l_widget_width.max (l_widget.minimum_width)
+						end
+						l_widget_height := l_widget.height
+						if l_widget.minimum_height_set_by_user then
+							l_widget_height := l_widget_height.max (l_widget.minimum_height)
+						end
+						w := (l_widget.x_position + l_widget_width).max (w)
+						h := (l_widget.y_position + l_widget_height).max (h)
 					end
 					forth
 				end
 				go_to (l_cursor)
-				if w /= minimum_width or h /= minimum_height then
+				if w /= minimum_width and h /= minimum_height then
 					set_minimum_size (w, h)
+				elseif w /= minimum_width then
+					set_minimum_width (w)
+				elseif h /= minimum_height then
+					set_minimum_height (h)
 				end
 			end
 		end

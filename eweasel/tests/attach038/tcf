@@ -6,7 +6,7 @@ copy_sub Ace $TEST Ace
 copy_raw test.e $CLUSTER test.e
 
 compile_melted
-compile_result validity_error TEST VEEN VUOT(1)
+compile_result validity_error TEST VUOT(1)
 
 copy_raw test_rev1.e $CLUSTER test.e
 

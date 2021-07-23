@@ -76,7 +76,12 @@ feature -- Access
 
 	revision_diff (a_rev: SVN_REVISION_INFO): detachable STRING
 		do
-			Result := engine.diff (location, a_rev.revision, (a_rev.revision - 1).max (0), options)
+			if
+				attached engine.diff (location, a_rev.revision, (a_rev.revision - 1).max (0), options) as res and then
+				attached res.message as msg
+			then
+				Result := {UTF_CONVERTER}.utf_32_string_to_utf_8_string_8 (msg)
+			end
 		end
 
 	revision_path_content (a_path: STRING; a_rev: SVN_REVISION_INFO): detachable STRING

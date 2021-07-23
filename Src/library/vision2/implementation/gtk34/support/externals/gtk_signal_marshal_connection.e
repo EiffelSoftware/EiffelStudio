@@ -17,8 +17,7 @@ feature {NONE} -- Intialization
 
 	make (a_c_object: POINTER; a_conn_id: like connection_id)
 		do
---			c_object := a_c_object
-			c_object := {GDK}.g_object_ref (a_c_object)
+			c_object := a_c_object
 			connection_id := a_conn_id
 			is_connected := a_conn_id /= 0
 		end
@@ -54,10 +53,6 @@ feature -- Disposal
 				--FIXME: disconnecting from the dispose is not a good idea
 				--		the c_object does not seem to be a valid GtkObject instance.
 --			close
-			if not c_object.is_default_pointer then
-				{GDK}.g_object_unref (c_object)
-				c_object := default_pointer
-			end
 		end
 
 note

@@ -1810,6 +1810,7 @@ feature -- Color Helper
 			create l_gtk_c_string.set_with_eiffel_string (a_name)
 			{GTK2}.gtk_style_context_lookup_color (a_style_ctx, l_gtk_c_string.item, c_rgba)
 			Result := rgba_struct_to_style_color_string (c_rgba)
+			c_rgba.memory_free
 		ensure
 			instance_free: class
 		end

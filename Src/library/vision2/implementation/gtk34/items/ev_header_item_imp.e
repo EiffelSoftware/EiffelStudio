@@ -478,7 +478,7 @@ feature {NONE} -- Implementation
 				{GDK}.g_object_unref (box)
 				box := default_pointer
 			end
-			if not box.is_default_pointer then
+			if not c_object.is_default_pointer then
 				{GTK2}.g_object_unref (c_object)
 				c_object := default_pointer
 			end

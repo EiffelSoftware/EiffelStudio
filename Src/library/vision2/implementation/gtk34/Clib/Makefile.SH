@@ -19,7 +19,7 @@ AR = ar rc
 CC = $cc
 CTAGS = ctags
 INCLUDE = -I$rt_include
-CFLAGS = $optimize $ccflags $large -DGDK_DISABLE_DEPRECATED -DGTK_DISABLE_DEPRECATED -DGSEAL_ENABLE `./vision2-gtk-config --include_path` \$(INCLUDE) -I .
+CFLAGS = -g -fsanitize=leak $optimize $ccflags $large -DGDK_DISABLE_DEPRECATED -DGTK_DISABLE_DEPRECATED -DGSEAL_ENABLE `./vision2-gtk-config --include_path` \$(INCLUDE) -I .
 SHAREDLINK = $sharedlink
 LDSHAREDFLAGS = $ldsharedflags
 LDFLAGS = $ldflags

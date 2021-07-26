@@ -333,6 +333,7 @@ feature {NONE} -- Implementation
 			b := ({GDK}.rgba_struct_blue (c_rgba) * {EV_COLOR}.max_8_bit).truncated_to_integer
 			a := {GDK}.rgba_struct_alpha (c_rgba).truncated_to_real
 			Result := "rgb(" + r.out + "," + g.out + "," + b.out + ")"
+			c_rgba.memory_free
 		end
 
 	visual_widget: POINTER

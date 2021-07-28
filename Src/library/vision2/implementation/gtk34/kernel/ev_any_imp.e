@@ -60,7 +60,6 @@ feature {EV_ANY_I} -- Access
 				else
 					check is_gtk_top_window: {GTK}.gtk_is_window (a_c_object) end
 					l_c_object := a_c_object -- Already has a ref
-					l_c_object := {GTK}.g_object_ref (l_c_object)  -- Increase ref count.
 				end
 			end
 
@@ -327,12 +326,13 @@ feature {NONE} -- Implementation
 						-- Unref (added by set_eif_oid_in_c_object)
 					{GDK}.g_object_unref (l_c_object)
 
-						-- Unref `c_object' so that is may get collected by gtk.
+						-- Unref `c_object' so that is may get collected by gtk
 					if c_object_was_floating then
 							-- Unref adopted floating ref from `set_c_object`
 						{GDK}.g_object_force_floating (l_c_object)
+					else
+						--{GDK}.g_object_unref (l_c_object)
 					end
-					{GDK}.g_object_unref (l_c_object)
 
 					-- Remove any reference l_c_object may have on other Gtk objects.
 --					{GDK}.g_object_run_dispose (l_c_object)

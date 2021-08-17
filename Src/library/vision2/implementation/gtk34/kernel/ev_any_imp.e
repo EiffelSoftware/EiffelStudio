@@ -318,9 +318,11 @@ feature {NONE} -- Implementation
 					if {GTK}.gtk_is_window (l_c_object) then
 							-- Windows need to be explicitly destroyed.
 						{GTK2}.gtk_widget_destroy (l_c_object)
-					else
+					elseif {GTK}.gtk_is_widget (l_c_object)  then
 							-- Do it anyway, it destroys reference on other resources
 						{GTK2}.gtk_widget_destroy (l_c_object)
+					else
+							-- Do nothing.
 					end
 
 						-- Unref (added by set_eif_oid_in_c_object)

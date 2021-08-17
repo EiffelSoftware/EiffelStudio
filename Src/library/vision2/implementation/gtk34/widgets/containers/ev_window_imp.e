@@ -104,9 +104,10 @@ feature {NONE} -- Initialization
 
 			real_signal_connect_after (l_c_object,
 					{EV_GTK_EVENT_STRINGS}.set_focus_event_name,
-					agent (l_gtk_marshal).on_set_focus_event_intermediary (internal_id, ?),
-					l_gtk_marshal.set_focus_event_translate_agent
+					agent (l_gtk_marshal).on_set_focus_event (internal_id, ?),
+					Void
 				)
+
 				-- Used to propagate focus events between internal gtk widgets.
 
 			{GTK}.gtk_window_set_default_size (l_c_object, 1, 1)

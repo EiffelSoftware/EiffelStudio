@@ -76,20 +76,19 @@ feature {NONE} -- Initialization
 
 			real_signal_connect (l_c_object,
 					{EV_GTK_EVENT_STRINGS}.configure_event_name,
-					agent (l_app_imp.gtk_marshal).configure_event_intermediary (l_c_object, ?, ?, ?, ?),
-					l_app_imp.gtk_marshal.configure_translate_agent)
+					agent (l_app_imp.gtk_marshal).configure_event (l_c_object, ?),
+					Void)
 
 			real_signal_connect (l_c_object,
 					{EV_GTK_EVENT_STRINGS}.scroll_event_name,
-					agent (l_app_imp.gtk_marshal).scroll_event_intermediary (l_drawing_area, ?),
-					l_app_imp.gtk_marshal.scroll_event_translate_agent
+					agent (l_app_imp.gtk_marshal).scroll_event (l_drawing_area, ?),
+					Void
 				)
 
 			real_signal_connect_after (l_c_object,
 					{EV_GTK_EVENT_STRINGS}.draw_event_name,
-					agent (l_app_imp.gtk_marshal).draw_actions_intermediary (l_c_object, ?),
-					l_app_imp.gtk_marshal.draw_translate_agent)
-
+					agent (l_app_imp.gtk_marshal).draw_actions_event (l_c_object, ?),
+					Void)
 
 			check cairo_surface.is_default_pointer end
 

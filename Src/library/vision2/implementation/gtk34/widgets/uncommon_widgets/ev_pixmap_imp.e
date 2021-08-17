@@ -66,8 +66,8 @@ feature {NONE} -- Initialization
 				-- Connect Draw event (replacing previous expose-event)
 			real_signal_connect_after (visual_widget,
 					{EV_GTK_EVENT_STRINGS}.draw_event_name,
-					agent (l_app_imp.gtk_marshal).draw_actions_intermediary (c_object, ?),
-					l_app_imp.gtk_marshal.draw_translate_agent
+					agent (l_app_imp.gtk_marshal).draw_actions_event (c_object, ?),
+					Void
 				)
 
 			set_size (1, 1)

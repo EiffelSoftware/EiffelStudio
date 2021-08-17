@@ -132,8 +132,8 @@ feature {EV_WINDOW_IMP, EV_INTERMEDIARY_ROUTINES, EV_ANY_I, EV_APPLICATION_IMP} 
 				l_app_imp := app_implementation
 				real_signal_connect (a_c_object,
 						{EV_GTK_EVENT_STRINGS}.size_allocate_event_name,
-						agent (l_app_imp.gtk_marshal).on_size_allocate_intermediate (internal_id, ?, ?, ?, ?),
-						l_app_imp.gtk_marshal.size_allocate_translate_agent
+						agent (l_app_imp.gtk_marshal).on_size_allocate_event (internal_id, ?),
+						Void
 					)
 			end
 		end
@@ -509,6 +509,10 @@ feature -- Element change
 			{GTK}.gtk_widget_get_allocation (l_c_object, l_alloc)
 			{GTK}.set_gtk_allocation_struct_width (l_alloc, a_width)
 			{GTK}.set_gtk_allocation_struct_height (l_alloc, a_height)
+
+			check positive_width: a_width >= 0 end
+			check positive_height: a_height >= 0 end
+
 			{GTK2}.gtk_widget_size_allocate (l_c_object, l_alloc)
 			l_alloc.memory_free
 			{GTK}.gtk_container_check_resize (l_c_object)

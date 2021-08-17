@@ -421,8 +421,8 @@ feature {EV_HEADER_IMP} -- Implementation
 				real_signal_connect (
 						a_button,
 						{EV_GTK_EVENT_STRINGS}.draw_event_name,
-						agent (l_app_imp.gtk_marshal).draw_actions_intermediary (c_object, ?),
-						l_app_imp.gtk_marshal.draw_translate_agent
+						agent (l_app_imp.gtk_marshal).draw_actions_event (c_object, ?),
+						Void
 					)
 				item_draw_event_connection := last_signal_connection
 			else

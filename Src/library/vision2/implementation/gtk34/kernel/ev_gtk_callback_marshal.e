@@ -288,23 +288,64 @@ feature {NONE} -- Implementation
 		local
 			retry_count: INTEGER
 			l_integer_pointer_tuple: detachable like integer_pointer_tuple
+			l_pointer_tuple: detachable like pointer_tuple
 			l_any: detachable ANY
 			b: BOOLEAN
 		do
 			if retry_count = 0 then
-				if n_args > 0 then
-					l_integer_pointer_tuple := integer_pointer_tuple
-					l_integer_pointer_tuple.integer := n_args
-					l_integer_pointer_tuple.pointer := args
-				end
-				b := False
-				if attached {FUNCTION [TUPLE, detachable ANY]} action as fct then
-					l_any := fct.item (l_integer_pointer_tuple)
+				if attached {PROCEDURE [detachable TUPLE [POINTER]]} action then
+					if n_args > 0 then
+						l_pointer_tuple := pointer_tuple
+						l_pointer_tuple.pointer := args
+					end
+					b := False
+					action.call (l_pointer_tuple)
+				elseif attached {FUNCTION [TUPLE, POINTER]} action as fct then
+					if n_args > 0 then
+						l_pointer_tuple := pointer_tuple
+						l_pointer_tuple.pointer := args
+					end
+					b := False
+					l_any := fct.item (l_pointer_tuple)
+					if attached {BOOLEAN} l_any as l_bool then
+						b := l_bool
+					end
+				elseif attached {PREDICATE [TUPLE [POINTER]]} action as fct then
+					if n_args > 0 then
+						l_pointer_tuple := pointer_tuple
+						l_pointer_tuple.pointer := args
+					end
+					b := False
+					l_any := fct.item (l_pointer_tuple)
+					if attached {BOOLEAN} l_any as l_bool then
+						b := l_bool
+					end
+				elseif attached {FUNCTION [TUPLE, detachable ANY]} action as fct then
+					if n_args > 0 then
+						l_integer_pointer_tuple := Integer_pointer_tuple
+						l_integer_pointer_tuple.integer := n_args
+						l_integer_pointer_tuple.pointer := args
+					end
+					b := False
+					l_any := fct.item (Integer_pointer_tuple)
 					if attached {BOOLEAN} l_any as l_bool then
 						b := l_bool
 					end
 				else
-					action.call (l_integer_pointer_tuple)
+					if n_args > 0 then
+						l_integer_pointer_tuple := integer_pointer_tuple
+						l_integer_pointer_tuple.integer := n_args
+						l_integer_pointer_tuple.pointer := args
+					end
+					b := False
+					if attached {FUNCTION [TUPLE, detachable ANY]} action as fct then
+						l_any := fct.item (l_integer_pointer_tuple)
+						if attached {BOOLEAN} l_any as l_bool then
+							b := l_bool
+						end
+					else
+						action.call (l_integer_pointer_tuple)
+					end
 				end
 
 				if a_return_value /= default_pointer then

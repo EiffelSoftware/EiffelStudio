@@ -41,6 +41,7 @@ feature {NONE} -- Initialization
 			if c_object = default_pointer then
 					-- Only set c_object if not already set by a descendent.
 				viewport := {GTK}.gtk_layout_new (default_pointer, default_pointer)
+
 				set_c_object (viewport)
 				{GTK2}.gtk_layout_set_size (viewport, internal_x_y_offset * 2, internal_x_y_offset * 2)
 				container_widget := viewport
@@ -159,6 +160,10 @@ feature -- Element change
 				end
 				l_alloc := l_alloc.memory_alloc ({GTK}.c_gtk_allocation_struct_size)
 				{GTK}.gtk_widget_get_allocation (l_child_item, l_alloc)
+
+				check positive_width: a_width >= 0 end
+				check positive_height: a_height >= 0 end
+
 				{GTK}.set_gtk_allocation_struct_width (l_alloc, a_width)
 				{GTK}.set_gtk_allocation_struct_height (l_alloc, a_height)
 				{GTK2}.gtk_widget_size_allocate (l_child_item, l_alloc)

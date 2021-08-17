@@ -244,7 +244,9 @@ feature {NONE} -- Implementation
 	child_has_resized (item_imp: EV_WIDGET_IMP)
 			-- If child has resized and smaller than parent then set position in center of `Current'.
 		do
-			{GTK_WINDOW}.move (container_widget, ((fixed_width - item_imp.width) // 2).max (0), ((fixed_height - item_imp.height) // 2).max (0))
+			if {GTK}.gtk_is_window (container_widget)  then
+				{GTK_WINDOW}.move (container_widget, ((fixed_width - item_imp.width) // 2).max (0), ((fixed_height - item_imp.height) // 2).max (0))
+			end
 		end
 
 	horizontal_adjustment: POINTER

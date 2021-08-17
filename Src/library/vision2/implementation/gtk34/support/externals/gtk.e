@@ -523,6 +523,21 @@ feature -- Widgets
              ]"
 		end
 
+
+frozen gtk_widget_get_preferred_height  ( widget: POINTER; minimum_height, natural_height: POINTER)
+		external
+			"C inline use <ev_gtk.h>"
+		alias
+			"[
+				gtk_widget_get_preferred_height 
+                               ((GtkWidget *)$widget,
+                                (gint *)$minimum_height,
+                                (gint *)$natural_height);
+
+             ]"
+		end
+
+
 feature -- Widget Style		
 
 	frozen gtk_style_context_get_color (a_context: POINTER; a_state: INTEGER; a_color: POINTER)

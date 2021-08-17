@@ -30,8 +30,8 @@ feature {NONE} -- Initialization
 		do
 			real_signal_connect (c_object,
 					{EV_GTK_EVENT_STRINGS}.response_event_name,
-					agent (App_implementation.gtk_marshal).gtk_dialog_response_intermediary (c_object, ?),
-					agent (app_implementation.gtk_marshal).gtk_value_int_to_tuple
+					agent (App_implementation.gtk_marshal).gtk_dialog_response_event (c_object, ?),
+					Void
 				)
 			Precursor
 		end

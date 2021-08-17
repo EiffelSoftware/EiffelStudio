@@ -180,10 +180,15 @@ feature -- Hooks configuration
 						end
 						a_form.extend (fset)
 					end
---				elseif l_form_id.same_string ("edit-user") then
---					if
---						a_response.has_permission ("admin es licenses")
---					then
+				elseif l_form_id.same_string ("edit-user") then
+					if
+						a_response.has_permission ("admin es licenses") and then
+						attached cloud_user_from_form (a_form, a_response) as l_user
+					then
+						create fset.make
+						fset.set_legend ("Associated cloud account")
+						fset.extend_html_text ("<p><a href=%"" + l_cloud_api.account_administration_url (l_user) + "%">View account</a></p>")
+						a_form.extend (fset)
 --						if
 --							attached cloud_user_from_form (a_form, a_response) as l_user and then
 --							a_form_data = Void
@@ -200,7 +205,7 @@ feature -- Hooks configuration
 --							add_license_form_part_to (Void, fset, l_cloud_api)
 --							a_form.validation_actions.extend (agent license_form_validation_action (?, l_user, l_license, l_cloud_api))
 --						end
---					end
+					end
 				end
 			end
 		end

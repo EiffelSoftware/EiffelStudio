@@ -16,9 +16,6 @@ class
 
 inherit
 	TEXT_PANEL_IMP
-		rename
-			file_name as const_file_name,
-			initialized_cell as constants_initialized_cell
 		redefine
 			default_create
 		end
@@ -86,11 +83,20 @@ feature -- Initialization
 			-- Default creation
 		do
 			create widget
+
 				-- Initialize with unexecutable agent.
 			update_scroll_agent := agent do check False end end
 			refresh_line_number_agent := agent do check False end end
+
 			initialize
 			is_initialized := True
+		end
+
+	initialize_buffer_settings
+		do
+				-- Buffer settings
+			buffered_drawable_width := default_buffered_drawable_width
+			buffered_drawable_height := default_buffered_drawable_height
 		end
 
 feature {NONE} -- Initialization
@@ -104,6 +110,8 @@ feature {NONE} -- Initialization
 		local
 			l_margin: like margin
 		do
+			initialize_buffer_settings
+
 				-- Create the buffered line.
 			create buffered_line.make_with_size (buffered_drawable_width, line_height)
 
@@ -1752,12 +1760,12 @@ feature -- Implementation
 	buffered_line: EV_PIXMAP
 			-- Buffer large enough to hold line information.
 
-	buffered_drawable_width: INTEGER = 15000
-
-	buffered_drawable_height: INTEGER = 15000
+	buffered_drawable_width: INTEGER
 		-- Default size of `drawable' used for scrolling purposes.
-		--| This value used to be 32000 but on gtk post 2.10.6 there seems to be some sort of 'fix' that gives odd results
-		--| with the line number code that means that they do not get displayed correctly
+
+	buffered_drawable_height: INTEGER
+		-- Default size of `drawable' used for scrolling purposes.
+
 
 	last_vertical_scroll_bar_value: INTEGER
 		-- Last value of `vertical_scroll_bar' used within `vertical_scroll_bar_changed'. See

@@ -327,7 +327,7 @@ feature {NONE} -- Implementation
 						l_integer_pointer_tuple.pointer := args
 					end
 					b := False
-					l_any := fct.item (Integer_pointer_tuple)
+					l_any := fct.item (l_integer_pointer_tuple)
 					if attached {BOOLEAN} l_any as l_bool then
 						b := l_bool
 					end
@@ -338,14 +338,8 @@ feature {NONE} -- Implementation
 						l_integer_pointer_tuple.pointer := args
 					end
 					b := False
-					if attached {FUNCTION [TUPLE, detachable ANY]} action as fct then
-						l_any := fct.item (l_integer_pointer_tuple)
-						if attached {BOOLEAN} l_any as l_bool then
-							b := l_bool
-						end
-					else
-						action.call (l_integer_pointer_tuple)
-					end
+					check not attached {FUNCTION [TUPLE, detachable ANY]} action end
+					action.call (l_integer_pointer_tuple)
 				end
 
 				if a_return_value /= default_pointer then

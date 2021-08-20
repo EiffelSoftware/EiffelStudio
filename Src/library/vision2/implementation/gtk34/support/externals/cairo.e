@@ -164,115 +164,7 @@ feature -- Constants
 			is_class: class
 		end
 
-feature -- Externals
-
-	clip (cr: POINTER)
-		external
-			"C signature (cairo_t*) use <cairo.h>"
-		alias
-			"cairo_clip"
-		ensure
-			is_class: class
-		end
-
-	reset_clip (cr: POINTER)
-		external
-			"C signature (cairo_t*) use <cairo.h>"
-		alias
-			"cairo_reset_clip"
-		ensure
-			is_class: class
-		end
-
-	clip_extents (cr: POINTER; a_x1, a_y1, a_x2, a_y2: TYPED_POINTER [REAL_64])
-		external
-			"C signature (cairo_t*, double*, double*, double*, double*) use <cairo.h>"
-		alias
-			"cairo_clip_extents"
-		ensure
-			is_class: class
-		end
-
-	copy_clip_rectangle_list (cr: POINTER): POINTER
-		external
-			"C signature (cairo_t*): cairo_rectangle_list_t* use <cairo.h>"
-		alias
-			"cairo_copy_clip_rectangle_list"
-		ensure
-			is_class: class
-		end
-
-	region_get_extents (a_region: POINTER; a_rectangle: POINTER)
-		external
-			"C signature (cairo_region_t*, cairo_rectangle_int_t*) use <cairo.h>"
-		alias
-			"cairo_region_get_extents"
-		ensure
-			is_class: class
-		end
-
-	rectangle_int_struct_size: INTEGER
-		external
-			"C macro use <cairo.h>"
-		alias
-			"sizeof(cairo_rectangle_int_t)"
-		ensure
-			is_class: class
-		end
-
-	rectangle_struct_size: INTEGER
-		external
-			"C macro use <cairo.h>"
-		alias
-			"sizeof(cairo_rectangle_t)"
-		ensure
-			is_class: class
-		end
-
-	set_source (cr: POINTER; source: POINTER)
-		external
-			"C signature (cairo_t*, cairo_pattern_t*) use <cairo.h>"
-		alias
-			"cairo_set_source"
-		ensure
-			is_class: class
-		end
-
-	paint_with_alpha (cr: POINTER; alpha: REAL_64)
-		external
-			"C signature (cairo_t*, double) use <cairo.h>"
-		alias
-			"cairo_paint_with_alpha"
-		ensure
-			is_class: class
-		end
-
-	mask (cr: POINTER; pattern: POINTER)
-		external
-			"C signature (cairo_t*, cairo_pattern_t*) use <cairo.h>"
-		alias
-			"cairo_mask"
-		ensure
-			is_class: class
-		end
-
-	mask_surface (cr: POINTER; surface: POINTER; surface_x: REAL_64; surface_y: REAL_64)
-		external
-			"C signature (cairo_t*, cairo_surface_t*, double, double) use <cairo.h>"
-		alias
-			"cairo_mask_surface"
-		ensure
-			is_class: class
-		end
-
-	set_source_surface (cr: POINTER; surface: POINTER; x: REAL_64; y: REAL_64)
-		external
-			"C signature (cairo_t*, cairo_surface_t*, double, double) use <cairo.h>"
-		alias
-			"cairo_set_source_surface"
-		ensure
-			is_class: class
-		end
+feature -- Cairo context
 
 	create_context (target: POINTER): POINTER
 		external
@@ -290,6 +182,16 @@ feature -- Externals
 			"cairo_reference"
 		ensure
 			is_class: class
+		end
+
+	get_reference_count (cr: POINTER): NATURAL_32
+		external
+			"C inline use <cairo.h>"
+		alias
+			"cairo_get_reference_count((cairo_t*) $cr)"
+		ensure
+			is_class: class
+			valid_count: Result < 100_000
 		end
 
 	destroy (cr: POINTER)
@@ -310,22 +212,44 @@ feature -- Externals
 			is_class: class
 		end
 
-	surface_destroy (cr: POINTER)
+feature -- Cairo surface
+
+	set_source_surface (cr: POINTER; surface: POINTER; x: REAL_64; y: REAL_64)
 		external
-			"C inline use <cairo.h>"
+			"C signature (cairo_t*, cairo_surface_t*, double, double) use <cairo.h>"
 		alias
-			"cairo_surface_destroy((cairo_surface_t*) $cr)"
+			"cairo_set_source_surface"
 		ensure
 			is_class: class
 		end
 
-	get_reference_count (cr: POINTER): NATURAL_32
+	surface_destroy (a_surface: POINTER)
 		external
 			"C inline use <cairo.h>"
 		alias
-			"cairo_get_reference_count((cairo_t*) $cr)"
+			"cairo_surface_destroy((cairo_surface_t*) $a_surface)"
 		ensure
 			is_class: class
+			{CAIRO}.surface_get_reference_count (a_surface) = 0
+		end
+
+	surface_finish (a_surface: POINTER)
+		external
+			"C inline use <cairo.h>"
+		alias
+			"cairo_surface_finish((cairo_surface_t*) $a_surface)"
+		ensure
+			is_class: class
+		end
+
+	surface_get_reference_count (a_surface: POINTER): NATURAL_32
+		external
+			"C inline use <cairo.h>"
+		alias
+			"cairo_surface_get_reference_count((cairo_surface_t *) $a_surface)"
+		ensure
+			is_class: class
+			valid_count: Result < 100_000
 		end
 
 	surface_flush (surface: POINTER)
@@ -351,6 +275,15 @@ feature -- Externals
 			"C signature (cairo_surface_t*, int, int, int, int) use <cairo.h>"
 		alias
 			"cairo_surface_mark_dirty_rectangle"
+		ensure
+			is_class: class
+		end
+
+	mask_surface (cr: POINTER; surface: POINTER; surface_x: REAL_64; surface_y: REAL_64)
+		external
+			"C signature (cairo_t*, cairo_surface_t*, double, double) use <cairo.h>"
+		alias
+			"cairo_mask_surface"
 		ensure
 			is_class: class
 		end
@@ -454,15 +387,6 @@ feature -- Externals
 			is_class: class
 		end
 
-	format_stride_for_width (format: INTEGER_8; width: INTEGER_32): INTEGER_32
-		external
-			"C signature (cairo_format_t, int): int use <cairo.h>"
-		alias
-			"cairo_format_stride_for_width"
-		ensure
-			is_class: class
-		end
-
 	image_surface_create_for_data (data: TYPED_POINTER [NATURAL_8]; format: INTEGER_8; width: INTEGER_32; height: INTEGER_32; stride: INTEGER_32): POINTER
 		external
 			"C signature (unsigned char*, cairo_format_t, int, int, int): cairo_surface_t* use <cairo.h>"
@@ -504,6 +428,107 @@ feature -- Externals
 			"C signature (cairo_surface_t*): int use <cairo.h>"
 		alias
 			"cairo_image_surface_get_height"
+		ensure
+			is_class: class
+		end
+
+feature -- Externals
+
+	clip (cr: POINTER)
+		external
+			"C signature (cairo_t*) use <cairo.h>"
+		alias
+			"cairo_clip"
+		ensure
+			is_class: class
+		end
+
+	reset_clip (cr: POINTER)
+		external
+			"C signature (cairo_t*) use <cairo.h>"
+		alias
+			"cairo_reset_clip"
+		ensure
+			is_class: class
+		end
+
+	clip_extents (cr: POINTER; a_x1, a_y1, a_x2, a_y2: TYPED_POINTER [REAL_64])
+		external
+			"C signature (cairo_t*, double*, double*, double*, double*) use <cairo.h>"
+		alias
+			"cairo_clip_extents"
+		ensure
+			is_class: class
+		end
+
+	copy_clip_rectangle_list (cr: POINTER): POINTER
+		external
+			"C signature (cairo_t*): cairo_rectangle_list_t* use <cairo.h>"
+		alias
+			"cairo_copy_clip_rectangle_list"
+		ensure
+			is_class: class
+		end
+
+	region_get_extents (a_region: POINTER; a_rectangle: POINTER)
+		external
+			"C signature (cairo_region_t*, cairo_rectangle_int_t*) use <cairo.h>"
+		alias
+			"cairo_region_get_extents"
+		ensure
+			is_class: class
+		end
+
+	rectangle_int_struct_size: INTEGER
+		external
+			"C macro use <cairo.h>"
+		alias
+			"sizeof(cairo_rectangle_int_t)"
+		ensure
+			is_class: class
+		end
+
+	rectangle_struct_size: INTEGER
+		external
+			"C macro use <cairo.h>"
+		alias
+			"sizeof(cairo_rectangle_t)"
+		ensure
+			is_class: class
+		end
+
+	set_source (cr: POINTER; source: POINTER)
+		external
+			"C signature (cairo_t*, cairo_pattern_t*) use <cairo.h>"
+		alias
+			"cairo_set_source"
+		ensure
+			is_class: class
+		end
+
+	paint_with_alpha (cr: POINTER; alpha: REAL_64)
+		external
+			"C signature (cairo_t*, double) use <cairo.h>"
+		alias
+			"cairo_paint_with_alpha"
+		ensure
+			is_class: class
+		end
+
+	mask (cr: POINTER; pattern: POINTER)
+		external
+			"C signature (cairo_t*, cairo_pattern_t*) use <cairo.h>"
+		alias
+			"cairo_mask"
+		ensure
+			is_class: class
+		end
+
+	format_stride_for_width (format: INTEGER_8; width: INTEGER_32): INTEGER_32
+		external
+			"C signature (cairo_format_t, int): int use <cairo.h>"
+		alias
+			"cairo_format_stride_for_width"
 		ensure
 			is_class: class
 		end
@@ -624,6 +649,13 @@ feature -- Externals
 		end
 
 	fill (cr: POINTER)
+		do
+			cairo_fill (cr)
+		ensure
+			is_class: class
+		end
+
+	cairo_fill (cr: POINTER)
 		external
 			"C signature (cairo_t*) use <cairo.h>"
 		alias

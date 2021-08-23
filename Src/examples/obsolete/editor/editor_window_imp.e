@@ -15,7 +15,7 @@ inherit
 			initialize, is_in_default_state
 		end
 
-	CONSTANTS
+	TEXT_PANEL_CONSTANTS
 		undefine
 			is_equal, default_create, copy
 		end
@@ -39,7 +39,7 @@ feature {NONE}-- Initialization
 				l_path := "."
 			end
 			Precursor {EV_TITLED_WINDOW}
-			initialize_constants
+--			initialize_constants
 
 				-- Create all widgets.
 			create l_ev_menu_bar_1

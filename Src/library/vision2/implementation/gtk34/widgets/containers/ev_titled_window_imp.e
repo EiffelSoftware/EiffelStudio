@@ -46,7 +46,7 @@ feature {EV_GTK_DEPENDENT_INTERMEDIARY_ROUTINES, EV_APPLICATION_IMP} -- Implemen
 	on_size_allocate (a_x, a_y, a_width, a_height: INTEGER)
 			-- <Precursor>
 		do
-			Precursor {EV_WINDOW_IMP} (a_x, a_x, a_width, a_height)
+			Precursor {EV_WINDOW_IMP} (a_x, a_y, a_width, a_height)
 			if is_maximized_pending then
 					-- Call pending maximize actions.
 					-- This is done here as currently the window is maximized before a resize

@@ -475,7 +475,6 @@ feature -- Command
 			l_go_to_next_warning_cmd: ES_NEXT_WARNING_COMMAND
 			l_go_to_previous_warning_cmd: ES_PREVIOUS_WARNING_COMMAND
 			l_apply_fix_cmd: ES_FIX_COMMAND
-			l_ear_commander: ES_ERROR_LIST_COMMANDER_I
 			l_maximize_editor_area_command: EB_MAXIMIZE_EDITOR_AREA_COMMAND
 			l_minimize_editor_area_command: EB_MINIMIZE_EDITOR_AREA_COMMAND
 			l_restore_editor_area_command: EB_RESTORE_EDITOR_AREA_COMMAND
@@ -483,11 +482,7 @@ feature -- Command
 			l_dev_commands: EB_DEVELOPMENT_WINDOW_COMMANDS
 		do
 				-- Error navigation
-			l_ear_commander ?= develop_window.shell_tools.tool ({ES_ERROR_LIST_TOOL})
-			check
-				l_ear_commander_attached: l_ear_commander /= Void
-			end
-			if l_ear_commander /= Void then
+			if attached {ES_ERROR_LIST_COMMANDER_I} develop_window.shell_tools.tool ({ES_ERROR_LIST_TOOL}) as l_ear_commander then
 				l_dev_commands := develop_window.commands
 				create l_go_to_previous_error_cmd.make (l_ear_commander)
 				l_dev_commands.set_go_to_previous_error_command (l_go_to_previous_error_cmd)
@@ -517,6 +512,10 @@ feature -- Command
 
 				create l_restore_editor_area_command.make (develop_window)
 				l_dev_commands.set_restore_editor_area_command (l_restore_editor_area_command)
+			else
+				check
+					is_es_error_list_commander_i: False
+				end
 			end
 		end
 
@@ -694,7 +693,7 @@ feature -- Command
 				l_managed_dependency_formatters.forth
 			end
 
-			(l_managed_main_formatters @ 1).enable_select;
+			(l_managed_main_formatters [1]).enable_select;
 
 				-- We now select the correct class formatter.
 			l_f_ind := develop_window.preferences.context_tool_data.default_class_formatter_index
@@ -708,7 +707,7 @@ feature -- Command
 			if l_f_ind < 1 or l_f_ind > develop_window.managed_class_formatters.count then
 				l_f_ind := 6
 			end
-			(develop_window.managed_class_formatters @ l_f_ind).enable_select;
+			(develop_window.managed_class_formatters [l_f_ind]).enable_select;
 				-- We now select the correct feature formatter.
 			l_f_ind := develop_window.preferences.context_tool_data.default_feature_formatter_index
 			if l_f_ind > 2 then
@@ -729,8 +728,6 @@ feature -- Command
 	build_tools
 			-- Build all tools that can take place in this window and attach them with docking manager.
 		local
-			l_undo_redo_observer: UNDO_REDO_OBSERVER
-
 			l_docking_manager: SD_DOCKING_MANAGER
 			l_editors_manager: EB_EDITORS_MANAGER
 			l_names: EB_DOCKING_NAMES
@@ -770,17 +767,17 @@ feature -- Command
 			l_editors_manager.add_edition_observer (develop_window.tools.search_tool)
 			l_editors_manager.add_cursor_observer (develop_window.agents)
 
-			l_undo_redo_observer ?= l_dev_commands.undo_cmd
-			check
-				l_undo_redo_observer /= Void
+			if attached {UNDO_REDO_OBSERVER} l_dev_commands.undo_cmd as l_undo_observer then
+				develop_window.editors_manager.editor_switched_actions.extend (agent (a_editor: EB_SMART_EDITOR; a_observer: UNDO_REDO_OBSERVER) do a_observer.on_changed end (?, l_undo_observer))
+			else
+				check is_undo_redo_observer: False end
 			end
-			develop_window.editors_manager.editor_switched_actions.extend (agent (a_editor: EB_SMART_EDITOR; a_observer: UNDO_REDO_OBSERVER) do a_observer.on_changed end (?, l_undo_redo_observer))
 
-			l_undo_redo_observer ?= l_dev_commands.redo_cmd
-			check
-				l_undo_redo_observer /= Void
+			if attached {UNDO_REDO_OBSERVER} l_dev_commands.redo_cmd as l_redo_observer then
+				develop_window.editors_manager.editor_switched_actions.extend (agent (a_editor: EB_SMART_EDITOR; a_observer: UNDO_REDO_OBSERVER) do a_observer.on_changed end (?, l_redo_observer))
+			else
+				check is_undo_redo_observer: False end
 			end
-			develop_window.editors_manager.editor_switched_actions.extend (agent (a_editor: EB_SMART_EDITOR; a_observer: UNDO_REDO_OBSERVER) do a_observer.on_changed end (?, l_undo_redo_observer))
 
 				-- Refresh cursor position.
 			develop_window.editors_manager.editor_switched_actions.extend (agent (a_editor: EB_SMART_EDITOR) do develop_window.refresh_cursor_position end)
@@ -970,13 +967,13 @@ feature {NONE} -- Docking
 		local
 			l_tool: ES_TOOL [EB_TOOL]
 			l_info: TUPLE [type: TYPE [ES_TOOL [EB_TOOL]]; edition: NATURAL_8]
-			l_eb_debugger_manager: EB_DEBUGGER_MANAGER
 			l_ignore: BOOLEAN
 			l_internal: INTERNAL
 		do
-			l_eb_debugger_manager ?= develop_window.debugger_manager
-			check not_void: l_eb_debugger_manager /= Void end
-			if not l_eb_debugger_manager.raised then
+			if
+				attached {EB_DEBUGGER_MANAGER} develop_window.debugger_manager as l_eb_debugger_manager and then
+				l_eb_debugger_manager.raised
+			then
 				-- We don't restore debug related tools for non-debug mode except breakpoint tool.
 				create l_internal
 				check exists: l_internal.dynamic_type_from_string ("ES_CALL_STACK_TOOL") /= -1 end

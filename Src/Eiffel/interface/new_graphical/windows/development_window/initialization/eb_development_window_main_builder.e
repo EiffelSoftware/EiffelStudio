@@ -45,7 +45,7 @@ feature -- Command
 			-- Initialize window size.
 		local
 			l_screen: EV_SCREEN
-			l_x, l_y: INTEGER
+			l_x, l_y, l_width, l_height: INTEGER
 			l_data: EB_DEVELOPMENT_WINDOW_DATA
 			l_border_width: INTEGER
 		do
@@ -68,9 +68,12 @@ feature -- Command
 			l_border_width := (develop_window.window.width - develop_window.window.client_width) // 2
 
 				-- When window is maximized, then the border might be slightly off screen.
-			develop_window.window.set_size (
-				l_data.width.min (l_screen.width + l_border_width * 2),
-				l_data.height.min (l_screen.height + l_border_width * 2))
+
+			l_width := l_data.width.min (l_screen.width + l_border_width * 2)
+			l_height := l_data.height.min (l_screen.height + l_border_width * 2)
+			develop_window.window.set_size (l_width, l_height)
+				-- TODO: set_size on first show event was added for gtk3, check how to avoid this workaround [2021-08-24]
+			develop_window.window.show_actions.extend_kamikaze (agent (develop_window.window).set_size (l_width, l_height))
 
 			l_x := l_data.x_position
 			if (l_x + l_border_width) < l_screen.virtual_left or (l_x + l_border_width) > l_screen.virtual_right then

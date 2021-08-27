@@ -191,7 +191,7 @@ feature -- Cairo context
 			"cairo_get_reference_count((cairo_t*) $cr)"
 		ensure
 			is_class: class
-			valid_count: Result < 100_000
+			--valid_count: Result < 100_000
 		end
 
 	destroy (cr: POINTER)
@@ -230,7 +230,7 @@ feature -- Cairo surface
 			"cairo_surface_destroy((cairo_surface_t*) $a_surface)"
 		ensure
 			is_class: class
-			{CAIRO}.surface_get_reference_count (a_surface) = 0
+			--{CAIRO}.surface_get_reference_count (a_surface) = 0
 		end
 
 	surface_finish (a_surface: POINTER)

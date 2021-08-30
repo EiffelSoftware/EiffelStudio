@@ -98,7 +98,7 @@ CREATE TABLE es_licenses_orgs(
 );
 
 CREATE TABLE es_redeems(
-  `name` 	TEXT NOT NULL,
+  `name` 	VARCHAR(256) NOT NULL,
   `plan` 	TEXT NOT NULL, /* plan.name */
   `version`	TEXT,
   `origin`	TEXT, /* seller ? */

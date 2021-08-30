@@ -314,6 +314,11 @@ feature {NONE} -- Implementation
 					-- so that gtk will reap back the memory.
 				l_c_object := c_object
 				if not l_c_object.is_default_pointer then
+
+						-- TODO Review
+						-- Remove any reference l_c_object may have on other Gtk objects.
+				    {GDK}.g_object_run_dispose (l_c_object)
+
 						-- disconnect_all_signals (l_c_object)
 					if {GTK}.gtk_is_window (l_c_object) then
 							-- Windows need to be explicitly destroyed.

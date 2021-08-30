@@ -1063,6 +1063,24 @@ feature {NONE} -- Block views
 			end
 		end
 
+feature -- WebUI helpers
+
+	append_login_or_register_box_to_html (api: CMS_API; a_destination: detachable READABLE_STRING_8; a_html: STRING_8)
+		local
+			d: STRING
+		do
+			if a_destination = Void then
+				d := ""
+			else
+				d := "?destination=" + url_encoded (a_destination)
+			end
+			a_html.append ("<div class=%"login_box%">")
+			a_html.append ("<a href=%"" + api.location_absolute_url (roc_login_location, Void) + d +"%">Login</a>")
+			a_html.append (" / ")
+			a_html.append ("<a href=%"" + api.location_absolute_url (roc_register_location, Void) + d +"%">Register</a>")
+			a_html.append ("</div>")
+		end
+
 feature -- Access: configuration
 
 	form_registration_application_description (api: CMS_API): detachable READABLE_STRING_8

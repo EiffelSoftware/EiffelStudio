@@ -117,7 +117,11 @@ feature -- Execution
 				end
 			else
 				s.append ("<h2>To redeem a purchase token, you need to have an account and be signed-in.</h2>")
-				s.append ("<p>Please Login or Register...</p>")
+				if attached {CMS_AUTHENTICATION_MODULE} api.module ({CMS_AUTHENTICATION_MODULE}) as l_auth_mod then
+					l_auth_mod.append_login_or_register_box_to_html (api, req.path_info, s)
+				else
+					s.append ("<p>Please Login or Register...</p>")
+				end
 			end
 			r.set_main_content (s)
 			r.execute

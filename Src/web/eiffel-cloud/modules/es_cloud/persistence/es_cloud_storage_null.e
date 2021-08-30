@@ -28,6 +28,41 @@ feature -- Access: plan
 		do
 		end
 
+feature -- Change
+
+	save_plan (a_plan: ES_CLOUD_PLAN)
+		do
+		end
+
+	delete_plan (a_plan: ES_CLOUD_PLAN)
+		do
+		end
+
+feature -- Access: redeem tokens
+
+	redeem_tokens (a_plan: ES_CLOUD_PLAN; a_version: detachable READABLE_STRING_GENERAL): LIST [ES_CLOUD_REDEEM_TOKEN]
+		do
+			create {ARRAYED_LIST [ES_CLOUD_REDEEM_TOKEN]} Result.make (0)
+		end
+
+	unused_redeem_tokens_count (a_plan: ES_CLOUD_PLAN): INTEGER
+		do
+		end
+
+	redeem_token (a_token_name: READABLE_STRING_GENERAL): detachable ES_CLOUD_REDEEM_TOKEN
+		do
+		end
+
+feature -- Change: redeem tokens
+
+	create_redeem_token (a_token: ES_CLOUD_REDEEM_TOKEN)
+		do
+		end
+
+	save_redeem_token (a_token: ES_CLOUD_REDEEM_TOKEN)
+		do
+		end
+
 feature -- Licenses
 
 	licenses: LIST [TUPLE [ES_CLOUD_LICENSE, detachable ES_CLOUD_USER, detachable READABLE_STRING_8, detachable ES_CLOUD_ORGANIZATION]]
@@ -208,14 +243,6 @@ feature -- Access: sessions
 		end
 
 feature -- Change
-
-	save_plan (a_plan: ES_CLOUD_PLAN)
-		do
-		end
-
-	delete_plan (a_plan: ES_CLOUD_PLAN)
-		do
-		end
 
 	save_user_subscription (sub: ES_CLOUD_PLAN_USER_SUBSCRIPTION)
 		do

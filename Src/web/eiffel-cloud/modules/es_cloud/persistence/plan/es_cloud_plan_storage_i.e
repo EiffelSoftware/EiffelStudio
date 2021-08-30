@@ -43,6 +43,30 @@ feature -- Change
 		deferred
 		end
 
+feature -- Access: redeem tokens
+
+	redeem_tokens (a_plan: ES_CLOUD_PLAN; a_version: detachable READABLE_STRING_GENERAL): LIST [ES_CLOUD_REDEEM_TOKEN]
+		deferred
+		end
+
+	unused_redeem_tokens_count (a_plan: ES_CLOUD_PLAN): INTEGER
+		deferred
+		end
+
+	redeem_token (a_token_name: READABLE_STRING_GENERAL): detachable ES_CLOUD_REDEEM_TOKEN
+		deferred
+		end
+
+feature -- Change: redeem tokens
+
+	create_redeem_token (a_token: ES_CLOUD_REDEEM_TOKEN)
+		deferred
+		end
+
+	save_redeem_token (a_token: ES_CLOUD_REDEEM_TOKEN)
+		deferred
+		end
+
 feature -- Access: License
 
 	licenses: LIST [TUPLE [ES_CLOUD_LICENSE, detachable ES_CLOUD_USER, detachable READABLE_STRING_8, detachable ES_CLOUD_ORGANIZATION]]
@@ -113,6 +137,7 @@ feature -- Element change: license
 	assign_license_to_user (a_license: ES_CLOUD_LICENSE; a_user: ES_CLOUD_USER)
 		require
 			a_user.has_id
+			a_license_with_id: a_license.has_id
 			user_id_for_license (a_license) = 0
 		deferred
 		ensure
@@ -122,6 +147,7 @@ feature -- Element change: license
 	assign_license_to_email (a_license: ES_CLOUD_LICENSE; a_email: READABLE_STRING_8)
 		require
 			user_id_for_license (a_license) = 0
+			a_license_with_id: a_license.has_id
 			not a_email.is_whitespace
 		deferred
 		end
@@ -129,6 +155,7 @@ feature -- Element change: license
 	move_email_license_to_user (a_email_license: ES_CLOUD_EMAIL_LICENSE; a_user: ES_CLOUD_USER)
 		require
 			a_user.has_id
+			a_email_license_with_id: a_email_license.license.has_id
 		deferred
 		ensure
 			user_id_for_license (a_email_license.license) = a_user.id

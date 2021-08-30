@@ -176,6 +176,91 @@ feature -- Access: plans
 			end
 		end
 
+feature -- Access: tokens
+
+	redeem_tokens (a_plan: ES_CLOUD_PLAN; a_version: detachable READABLE_STRING_GENERAL): LIST [ES_CLOUD_REDEEM_TOKEN]
+		do
+			create {ARRAYED_LIST [ES_CLOUD_REDEEM_TOKEN]} Result.make (0)
+			Result := es_cloud_storage.redeem_tokens (a_plan, a_version)
+		end
+
+	unused_redeem_tokens_count (a_plan: ES_CLOUD_PLAN): INTEGER
+		do
+			Result := es_cloud_storage.unused_redeem_tokens_count (a_plan)
+		end
+
+	redeem_token (a_token_name: READABLE_STRING_GENERAL): detachable ES_CLOUD_REDEEM_TOKEN
+		do
+			-- TODO
+			Result := es_cloud_storage.redeem_token (a_token_name)
+		end
+
+	create_redeem_tokens (nb: INTEGER; a_plan: ES_CLOUD_PLAN; a_opt_version, a_origin, a_token_prefix, a_notes: detachable READABLE_STRING_GENERAL; a_new_tokens: detachable LIST [ES_CLOUD_REDEEM_TOKEN])
+			-- Create `nb` new redeem tokens for plan `a_plan`, limited to `a_opt_version` (or not).
+			-- The tokens are generated for seller `origin`, and prefixed (or not) by `a_token_prefix`.
+			-- `a_notes` can be used for internal purpose.
+			-- If `a_new_tokens` is set, it will contain the newly created tokens
+		local
+			i: INTEGER
+			k: STRING_32
+			tok: ES_CLOUD_REDEEM_TOKEN
+		do
+			from
+				i := 1
+			until
+				i > nb
+			loop
+				k := cms_api.new_random_identifier (24, once "ABCDEFGHJKMNPQRSTUVW23456789") -- Without I O L 0 1 , which are sometime hard to distinguish!
+				if a_token_prefix /= Void then
+					k.prepend_string (a_token_prefix)
+				end
+				create tok.make (k, a_plan.name, a_opt_version)
+				tok.set_origin (a_origin)
+				tok.set_notes (a_notes)
+				save_new_redeem_token (tok)
+				if a_new_tokens /= Void then
+					a_new_tokens.force (tok)
+				end
+				i := i + 1
+			end
+			if a_origin /= Void then
+				cms_api.log ({ES_CLOUD_MODULE}.name, "Created " + nb.out + " tokens on plan " + utf_8_encoded (a_plan.title_or_name) + " for [" + utf_8_encoded (a_origin), {CMS_LOG}.level_notice, Void)
+			else
+				cms_api.log ({ES_CLOUD_MODULE}.name, "Created " + nb.out + " tokens on plan " + utf_8_encoded (a_plan.title_or_name), {CMS_LOG}.level_notice, Void)
+			end
+		end
+
+	save_new_redeem_token (a_token: ES_CLOUD_REDEEM_TOKEN)
+		do
+			es_cloud_storage.create_redeem_token (a_token)
+		end
+
+	save_redeem_token (a_token: ES_CLOUD_REDEEM_TOKEN)
+		do
+			es_cloud_storage.save_redeem_token (a_token)
+		end
+
+	redeem (a_redeem_token: ES_CLOUD_REDEEM_TOKEN; a_user: ES_CLOUD_USER)
+		require
+			not a_redeem_token.is_redeemed
+			a_redeem_token.license_key = Void
+		do
+			if
+				attached plan_by_name (a_redeem_token.plan_name) as pl and then
+				attached new_license_for_plan (pl) as l_new_lic
+			then
+				if attached a_redeem_token.version as v then
+					l_new_lic.set_version (v)
+				end
+				extend_license_with_duration (l_new_lic, 1, 0, 0)
+				save_new_license (l_new_lic, a_user)
+				a_redeem_token.assign_license (l_new_lic)
+				save_redeem_token (a_redeem_token)
+				cms_api.log ({ES_CLOUD_MODULE}.name, "Redeem token " + utf_8_encoded (a_redeem_token.name) + " for user " + a_user.id.out, {CMS_LOG}.level_notice, Void)
+				notify_redeemed_license (a_user, Void, l_new_lic, a_redeem_token)
+			end
+		end
+
 feature -- Access: licenses
 
 	licenses: LIST [TUPLE [license: ES_CLOUD_LICENSE; user: detachable ES_CLOUD_USER; email: detachable READABLE_STRING_8; org: detachable ES_CLOUD_ORGANIZATION]]
@@ -439,16 +524,22 @@ feature -- Element change license
 		end
 
 	assign_license_to_user (a_license: ES_CLOUD_LICENSE; a_user: ES_CLOUD_USER)
+		require
+			a_license.has_id
 		do
 			es_cloud_storage.assign_license_to_user (a_license, a_user)
 		end
 
 	move_email_license_to_user (a_email_license: ES_CLOUD_EMAIL_LICENSE; a_user: ES_CLOUD_USER)
+		require
+			a_email_license.license.has_id
 		do
 			es_cloud_storage.move_email_license_to_user (a_email_license, a_user)
 		end
 
 	assign_license_to_email (a_license: ES_CLOUD_LICENSE; a_email: READABLE_STRING_8)
+		require
+			a_license.has_id
 		do
 			es_cloud_storage.assign_license_to_email (a_license, a_email)
 		end
@@ -1608,6 +1699,66 @@ feature -- Email processing
 			cms_api.process_email (e)
 			if attached config.additional_notification_email as l_addr then
 				e := cms_api.new_html_email (l_addr, "[NOTIF] Extended EiffelStudio license " + utf_8_encoded (a_license.key), msg)
+				cms_api.process_email (e)
+			end
+		end
+
+	notify_redeemed_license (a_user: detachable CMS_USER; a_email_addr: detachable READABLE_STRING_8; a_license: ES_CLOUD_LICENSE; a_redeem_token: ES_CLOUD_REDEEM_TOKEN)
+		local
+			e: CMS_EMAIL
+			res: PATH
+			s: STRING_8
+			msg: READABLE_STRING_8
+		do
+			create res.make_from_string ("templates")
+			if attached cms_api.module_theme_resource_location (module, res.extended ("notify_redeemed_license_email.tpl")) as loc and then attached cms_api.resolved_smarty_template (loc) as tpl then
+				tpl.set_value (a_license, "license")
+				tpl.set_value (a_redeem_token, "redeem_token")
+				tpl.set_value (a_license.expiration_date, "expiration_date")
+				tpl.set_value (a_license.key, "license_key")
+				tpl.set_value (module.license_location (a_license) , "license_key_url")
+				if a_user /= Void then
+					tpl.set_value (a_user, "user")
+					tpl.set_value (a_user.email, "user_email")
+					tpl.set_value (a_user.name, "user_name")
+					tpl.set_value (cms_api.user_display_name (a_user), "profile_name")
+				else
+					tpl.set_value (a_email_addr, "user_email")
+				end
+				msg := tpl.string
+			else
+				create s.make_empty;
+				s.append ("EiffelStudio license " + utf_8_encoded (a_license.key) + ".%N")
+				s.append ("Redeem token: " + html_encoded (a_redeem_token.name))
+				if attached a_redeem_token.origin as l_orig then
+					s.append (" from [" + html_encoded (l_orig) + "]")
+				end
+				s.append (".%N")
+				if attached a_license.expiration_date as dt then
+					s.append ("Expiration date: " + cms_api.date_time_to_iso8601_string (dt) + " .%N")
+				end
+
+				if a_user = Void then
+					if a_email_addr /= Void then
+						s.append ("The license is associated with email %"" + a_email_addr + "%" .%N")
+					else
+						check should_not_occur: False end
+						s.append ("The license is associated with no email and no user!%N")
+					end
+				else
+					s.append ("The license is associated with account %"" + utf_8_encoded (cms_api.user_display_name (a_user)) + " %"")
+					if a_email_addr /= Void then
+						s.append ("(email %"" + a_email_addr + "%")")
+					end
+					s.append (" .%N")
+				end
+				s.append ("Notification from site " + cms_api.site_url + " .%N")
+				msg := s
+			end
+			e := cms_api.new_html_email (cms_api.setup.site_notification_email, "[NOTIF] Redeemed EiffelStudio license " + utf_8_encoded (a_license.key), msg)
+			cms_api.process_email (e)
+			if attached config.additional_notification_email as l_addr then
+				e := cms_api.new_html_email (l_addr, "[NOTIF] Redeemed EiffelStudio license " + utf_8_encoded (a_license.key), msg)
 				cms_api.process_email (e)
 			end
 		end

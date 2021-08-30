@@ -44,6 +44,8 @@ feature {NONE} -- Router/administration
 			-- <Precursor>
 		local
 			org_hlr: ES_CLOUD_ORGANIZATIONS_ADMIN_HANDLER
+			plan_hlr: ES_CLOUD_PLANS_ADMIN_HANDLER
+			redeem_hlr: ES_CLOUD_REDEEM_TOKENS_ADMIN_HANDLER
 		do
 			if attached module.es_cloud_api as l_es_cloud_api then
 				create org_hlr.make (l_es_cloud_api)
@@ -53,8 +55,13 @@ feature {NONE} -- Router/administration
 				a_router.handle (admin_licenses_location + "{license}", create {ES_CLOUD_LICENSES_ADMIN_HANDLER}.make (l_es_cloud_api, Current), a_router.methods_get_post)
 				a_router.handle ("/cloud/account/{user}", create {ES_CLOUD_ACCOUNTS_ADMIN_HANDLER}.make (l_es_cloud_api, Current), a_router.methods_get_post)
 				a_router.handle ("/cloud/installations/", create {ES_CLOUD_INSTALLATIONS_ADMIN_HANDLER}.make (l_es_cloud_api), a_router.methods_get_post)
-				a_router.handle ("/cloud/plans/", create {ES_CLOUD_PLANS_ADMIN_HANDLER}.make (l_es_cloud_api), a_router.methods_get_post)
-				a_router.handle ("/cloud/plans/{pid}", create {ES_CLOUD_PLANS_ADMIN_HANDLER}.make (l_es_cloud_api), a_router.methods_get_post)
+				create plan_hlr.make (l_es_cloud_api)
+				a_router.handle ("/cloud/plans/", plan_hlr, a_router.methods_get_post)
+				a_router.handle ("/cloud/plans/{pid}", plan_hlr, a_router.methods_get_post)
+				create redeem_hlr.make (l_es_cloud_api, Current)
+				a_router.handle ("/cloud/redeem/", redeem_hlr, a_router.methods_get_post)
+				a_router.handle ("/cloud/redeem/plans/{pid}", redeem_hlr, a_router.methods_get_post)
+--				a_router.handle ("/cloud/redeem/token/{token_id}", redeem_hlr, a_router.methods_get_post)
 				a_router.handle ("/cloud/store/", create {ES_CLOUD_STORE_ADMIN_HANDLER}.make (l_es_cloud_api), a_router.methods_get_post)
 				a_router.handle ("/cloud/store/{currency}", create {ES_CLOUD_STORE_ADMIN_HANDLER}.make (l_es_cloud_api), a_router.methods_get_post)
 			end
@@ -97,6 +104,9 @@ feature -- Hooks configuration
 				l_parent := a_menu_system.management_menu.new_composite_item ("EiffelStudio", a_response.api.administration_path_location ("cloud/"))
 
 				lnk := a_response.api.administration_link ("Plans", "cloud/plans/")
+				l_parent.extend (lnk)
+
+				lnk := a_response.api.administration_link ("Redeem", "cloud/redeem/")
 				l_parent.extend (lnk)
 
 				lnk := a_response.api.administration_link ("Licenses", "cloud/licenses/")

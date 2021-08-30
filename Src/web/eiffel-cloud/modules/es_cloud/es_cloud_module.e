@@ -50,7 +50,7 @@ feature {NONE} -- Initialization
 
 	make
 		do
-			version := "1.4"
+			version := "1.5"
 			description := "ES Cloud"
 			package := "EiffelStudio"
 			add_optional_dependency ({SHOP_MODULE})
@@ -160,6 +160,7 @@ feature -- Access: router
 			h_stats: ES_CLOUD_STATISTICS_HANDLER
 			h_act: ES_CLOUD_ACTIVITIES_HANDLER
 			h_lic: ES_CLOUD_LICENSES_HANDLER
+			h_redeem: ES_CLOUD_REDEEM_TOKEN_HANDLER
 		do
 			if attached es_cloud_api as l_mod_api then
 				create h.make (l_mod_api)
@@ -184,6 +185,10 @@ feature -- Access: router
 				a_router.handle ("/" + licenses_location + "{license_key}/billing/", h_lic, a_router.methods_get)
 				a_router.handle ("/" + licenses_location + "_/{action}", h_lic, a_router.methods_get_post)
 				a_router.handle ("/" + licenses_location + "_/{action}/", h_lic, a_router.methods_get_post)
+
+				create h_redeem.make (Current, l_mod_api)
+				a_router.handle ("/" + redeem_location, h_redeem, a_router.methods_get_post)
+				a_router.handle ("/" + redeem_location + "{redeem}", h_redeem, a_router.methods_get_post)
 			end
 		end
 
@@ -198,6 +203,8 @@ feature -- Access: router
 	statistics_location: STRING = "statistics/"
 
 	licenses_location: STRING = "licenses/"
+
+	redeem_location: STRING = "redeem/"
 
 	license_activities_location (lic: ES_CLOUD_LICENSE): STRING
 		do

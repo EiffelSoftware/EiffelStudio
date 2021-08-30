@@ -97,3 +97,13 @@ CREATE TABLE es_licenses_orgs(
   CONSTRAINT PK_lid_oid_key PRIMARY KEY (lid,oid)
 );
 
+CREATE TABLE es_redeems(
+  `name` 	TEXT NOT NULL,
+  `plan` 	TEXT NOT NULL, /* plan.name */
+  `version`	TEXT,
+  `origin`	TEXT, /* seller ? */
+  `license`	TEXT, /*license.key */
+  `redeem_date`	DATETIME, 
+  `notes`	TEXT,
+	CONSTRAINT PK_name PRIMARY KEY(name)
+);

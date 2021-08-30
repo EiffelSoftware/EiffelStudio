@@ -54,6 +54,112 @@ feature -- Access: plan
 			sql_finalize_query (sql_select_plan_by_id)
 		end
 
+feature -- Access: redeem tokens
+
+	redeem_tokens (a_plan: ES_CLOUD_PLAN; a_version: detachable READABLE_STRING_GENERAL): LIST [ES_CLOUD_REDEEM_TOKEN]
+		local
+			l_params: STRING_TABLE [detachable ANY]
+		do
+			reset_error
+			create l_params.make (1)
+			l_params.force (a_plan.name, "plan")
+
+			create {ARRAYED_LIST [ES_CLOUD_REDEEM_TOKEN]} Result.make (0)
+			sql_query (sql_select_redeem_tokens, l_params)
+			sql_start
+			if not has_error then
+				from
+					sql_start
+				until
+					sql_after or has_error
+				loop
+					if attached fetch_redeem_token as tok then
+						if a_version = Void then
+							Result.force (tok)
+						elseif attached tok.version as v and then a_version.is_case_insensitive_equal (v) then
+							Result.force (tok)
+						end
+					else
+						check valid_record: False end
+					end
+					sql_forth
+				end
+			end
+			sql_finalize_query (sql_select_redeem_tokens)
+		end
+
+	unused_redeem_tokens_count (a_plan: ES_CLOUD_PLAN): INTEGER
+			-- Count of unused redeem tokens.
+		local
+			l_params: STRING_TABLE [detachable ANY]
+		do
+			error_handler.reset
+
+			create l_params.make (1)
+			l_params.force (a_plan.name, "plan")
+			sql_query (sql_select_unused_redeem_tokens_count, l_params)
+			sql_start
+			if not has_error and not sql_after then
+				Result := sql_read_integer_32 (1)
+			end
+			sql_finalize_query (sql_select_unused_redeem_tokens_count)
+		end
+
+	redeem_token (a_token_name: READABLE_STRING_GENERAL): detachable ES_CLOUD_REDEEM_TOKEN
+		local
+			l_params: STRING_TABLE [detachable ANY]
+		do
+			reset_error
+			create l_params.make (1)
+			l_params.force (a_token_name.as_lower, "lowername")
+			sql_query (sql_select_redeem_token_by_name, l_params)
+			sql_start
+			if not has_error and not sql_after then
+				Result := fetch_redeem_token
+				check valid_record: Result /= Void end
+			end
+			sql_finalize_query (sql_select_redeem_token_by_name)
+		end
+
+feature -- Change: redeem tokens
+
+	create_redeem_token (a_token: ES_CLOUD_REDEEM_TOKEN)
+		local
+			l_params: STRING_TABLE [detachable ANY]
+		do
+			reset_error
+			create l_params.make (7)
+			l_params.force (a_token.name, "name")
+			l_params.force (a_token.plan_name, "plan")
+			l_params.force (a_token.version, "version")
+			l_params.force (a_token.origin, "origin")
+			l_params.force (a_token.license_key, "license")
+			l_params.force (a_token.redeem_date, "redeem_date")
+			l_params.force (a_token.notes, "notes")
+
+			sql_insert (sql_insert_redeem_token, l_params)
+			sql_finalize_insert (sql_insert_redeem_token)
+		end
+
+	save_redeem_token (a_token: ES_CLOUD_REDEEM_TOKEN)
+		local
+			l_params: STRING_TABLE [detachable ANY]
+		do
+			reset_error
+			create l_params.make (8)
+			l_params.force (a_token.name.as_lower, "lowername")
+			l_params.force (a_token.name, "name")
+			l_params.force (a_token.plan_name, "plan")
+			l_params.force (a_token.version, "version")
+			l_params.force (a_token.origin, "origin")
+			l_params.force (a_token.license_key, "license")
+			l_params.force (a_token.redeem_date, "redeem_date")
+			l_params.force (a_token.notes, "notes")
+
+			sql_modify (sql_update_redeem_token, l_params)
+			sql_finalize_modify (sql_update_redeem_token)
+		end
+
 feature -- Access: License
 
 	licenses: ARRAYED_LIST [TUPLE [license: ES_CLOUD_LICENSE; user: detachable ES_CLOUD_USER; email: detachable READABLE_STRING_8; org: detachable ES_CLOUD_ORGANIZATION]]
@@ -523,6 +629,7 @@ feature -- Element change: license
 
 	unassign_license_from_user (a_license: ES_CLOUD_LICENSE; a_user: ES_CLOUD_USER)
 		require
+			a_license.has_id
 			user_has_license (a_user, a_license.id)
 		local
 			l_params: STRING_TABLE [detachable ANY]
@@ -549,7 +656,7 @@ feature -- Element change: license
 
 	unassign_license_from_email (a_license: ES_CLOUD_LICENSE; a_email: READABLE_STRING_8)
 		require
---			email_has_license
+			a_license.has_id
 		local
 			l_params: STRING_TABLE [detachable ANY]
 		do
@@ -647,6 +754,23 @@ feature {NONE} -- Fetcher
 			Result.set_usage_limitations_data (sql_read_string_8 (6))
 		end
 
+	fetch_redeem_token: detachable ES_CLOUD_REDEEM_TOKEN
+		local
+			l_name: READABLE_STRING_8
+			l_plan: READABLE_STRING_8
+			l_version: READABLE_STRING_32
+		do
+			l_name := sql_read_string_8 (1)
+			l_plan := sql_read_string_8 (2)
+			l_version := sql_read_string_32 (3)
+			if l_name /= Void and l_plan /= Void then
+				create Result.make (l_name, l_plan, l_version)
+				Result.set_origin (sql_read_string_32 (4))
+				Result.set_license_key (sql_read_string_32 (5), sql_read_date_time (6))
+				Result.set_notes (sql_read_string_32 (7))
+			end
+		end
+
 	fetch_license (a_plan: detachable ES_CLOUD_PLAN): detachable ES_CLOUD_LICENSE
 		local
 			lid: INTEGER_64
@@ -715,6 +839,20 @@ feature {NONE} -- Queries: plans
 	sql_update_plan: STRING = "UPDATE es_plans SET name=:name, title=:title, description=:description, data=:data, limitations=:limitations WHERE pid=:pid;"
 
 	sql_delete_plan: STRING = "DELETE FROM es_plans WHERE pid=:pid;"
+
+feature {NONE} -- Queries: redeem token
+
+	sql_select_redeem_tokens: STRING = "SELECT name, plan, version, origin, license, redeem_date, notes FROM es_redeems WHERE plan = :plan;"
+
+	sql_select_redeem_token_by_name: STRING = "SELECT name, plan, version, origin, license, redeem_date, notes FROM es_redeems WHERE lower(name) = :lowername;"
+
+	sql_select_unused_redeem_tokens_count: STRING = "SELECT count(*) FROM es_redeems WHERE plan=:plan AND (license is null OR license = '');"
+
+	sql_insert_redeem_token: STRING = "INSERT INTO es_redeems (name, plan, version,  origin, license, redeem_date, notes) VALUES (:name, :plan, :version, :origin, :license, :redeem_date, :notes);"
+
+	sql_update_redeem_token: STRING = "UPDATE es_redeems SET name=:name, plan=:plan, version=:version, origin=:origin, license=:license, redeem_date=:redeem_date, notes=:notes  WHERE lower(name)=:lowername;"
+
+--	sql_delete_plan: STRING = "DELETE FROM es_redeems WHERE lower(name)=:lowername;"
 
 feature {NONE} -- Queries: licenses
 

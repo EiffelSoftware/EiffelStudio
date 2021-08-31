@@ -154,7 +154,7 @@ feature -- Execution
 						end
 					else
 						s.append ("<h3>Unused redeem tokens</h3>%N")
-						s.append ("<table><tr><th>Token</th><th>Origin</th><th>Status</th><th>Limitation</th><th>notes</th>%N")
+						s.append ("<table class=%"with_border%" ><tr><th>Token</th><th>Origin</th><th>Status</th><th>Limitation</th><th>notes</th>%N")
 						across
 							lst as ic
 						loop
@@ -166,7 +166,7 @@ feature -- Execution
 						s.append ("<div><a href=%""+ req.percent_encoded_path_info + "?export%">Export unused tokens by origin</a></div>%N")
 
 						s.append ("<h3>Used redeem tokens</h3>%N")
-						s.append ("<table><tr><th>Token</th><th>Origin</th><th>Status</th><th>Limitation</th><th>notes</th>%N")
+						s.append ("<table class=%"with_border%"><tr><th>Token</th><th>Origin</th><th>Status</th><th>Limitation</th><th>notes</th>%N")
 						across
 							lst as ic
 						loop

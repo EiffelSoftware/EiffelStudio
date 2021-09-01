@@ -60,6 +60,7 @@ feature {EV_ANY_I} -- Access
 				else
 					check is_gtk_top_window: {GTK}.gtk_is_window (a_c_object) end
 					l_c_object := a_c_object -- Already has a ref
+					l_c_object := {GTK}.g_object_ref (l_c_object) -- Increase ref count to protect the marshal callback
 				end
 			end
 
@@ -69,7 +70,7 @@ feature {EV_ANY_I} -- Access
 			if internal_id = 0 then
 				internal_id := eif_current_object_id
 			end
-			l_c_object := {GTK}.g_object_ref (l_c_object) -- Increase ref count to protect the marshal callback
+--			l_c_object := {GTK}.g_object_ref (l_c_object) -- Increase ref count to protect the marshal callback
 			{EV_GTK_CALLBACK_MARSHAL}.set_eif_oid_in_c_object (l_c_object, internal_id, $c_object_dispose) -- No ref count increase from the C code, handled by the previous line
 
 			c_object := l_c_object
@@ -123,6 +124,7 @@ feature {EV_ANY, EV_ANY_IMP} -- Implementation
 			set_is_destroyed (True)
 				-- Gtk representation of `Current' may only be cleaned up on dispose to prevent crashes where `Current' is
 				-- destroyed as a result of `Current's event handler being called, this causes instability within gtk
+			{GTK}.gtk_widget_destroy (c_object)
 		end
 
 feature {EV_ANY_I, EV_APPLICATION_IMP} -- Event handling
@@ -287,7 +289,7 @@ feature {NONE} -- Implementation
 			-- Destroy `c_object'.
 		do
 			if not c_object_dispose_called then
-				c_object_dispose
+--				c_object_dispose
 			end
 			Precursor {IDENTIFIED}
 		end
@@ -302,6 +304,7 @@ feature {NONE} -- Implementation
 		do
 			if not c_object_dispose_called then
 				c_object_dispose_called := True
+
 					-- Disable the marshaller so we do not get C to Eiffel calls
 					-- during GC cycle otherwise bad things may happen.
 				l_c_ev_gtk_callback_marshal_is_enabled := {EV_GTK_CALLBACK_MARSHAL}.c_ev_gtk_callback_marshal_is_enabled
@@ -329,17 +332,10 @@ feature {NONE} -- Implementation
 					else
 							-- Do nothing.
 					end
-
-						-- Unref (added by set_eif_oid_in_c_object)
+						-- TODO review	
+						-- unref for all windows.
 					{GDK}.g_object_unref (l_c_object)
 
-						-- Unref `c_object' so that is may get collected by gtk
-					if c_object_was_floating then
-							-- Unref adopted floating ref from `set_c_object`
-						{GDK}.g_object_force_floating (l_c_object)
-					else
-						--{GDK}.g_object_unref (l_c_object)
-					end
 
 					-- Remove any reference l_c_object may have on other Gtk objects.
 --					{GDK}.g_object_run_dispose (l_c_object)

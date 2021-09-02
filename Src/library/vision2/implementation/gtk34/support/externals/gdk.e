@@ -20,6 +20,20 @@ feature -- GdkPixBuf
 			"GDK_IS_PIXBUF($obj)"
 		end
 
+feature -- Gobject / debugging purpose
+
+	frozen internal_g_object_ref_count (a_c_object: POINTER): NATURAL_32
+			-- reference count associated with non null pointer `a_c_object`.
+			-- note: this feature is mostly for debugging/logging
+			-- do not rely on it for more advanced usageas it is not mentioned in Glib documentation.
+		require
+			not a_c_object.is_default_pointer
+		external
+			"C inline use <ev_gtk.h>"
+		alias
+			"((GObject*)$a_c_object)->ref_count"
+		end
+
 feature -- Gobject
 
 	g_object_is_floating (obj: POINTER): BOOLEAN

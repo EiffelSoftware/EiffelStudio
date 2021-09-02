@@ -332,8 +332,18 @@ feature {NONE} -- Implementation
 					else
 							-- Do nothing.
 					end
-						-- TODO review	
-						-- unref for all windows.
+
+						-- Decrement the reference count for `l_c_object` (should correspond to the reference used to protect the marshal callback  see `set_c_object`)
+        			if {GTK}.gtk_widget_is_toplevel (l_c_object) then
+						if {GDK}.internal_g_object_ref_count (l_c_object) > 2 then
+							-- TODO : check ... as gtk_widget_destroy should be done.
+	        				{GDK}.printf (generator + ".c_object_dispose before final unref " + l_c_object.out + " #" + {GDK}.internal_g_object_ref_count (l_c_object).out + " .%N")
+	        			end
+        			else
+        				if {GDK}.internal_g_object_ref_count (l_c_object) > 1 then
+							{GDK}.printf (generator + ".c_object_dispose before final unref " + l_c_object.out + " #" + {GDK}.internal_g_object_ref_count (l_c_object).out + " .%N")
+	        			end
+					end
 					{GDK}.g_object_unref (l_c_object)
 
 

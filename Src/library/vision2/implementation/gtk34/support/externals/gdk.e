@@ -20,6 +20,29 @@ feature -- GdkPixBuf
 			"GDK_IS_PIXBUF($obj)"
 		end
 
+feature -- Debugging purpose
+
+	printf (s: STRING_8)
+			-- Use "printf" C function to output `s` to the console.
+			-- Note: should be used only for debugging purpose and removed soon.
+		local
+			l_area: like {STRING_8}.area
+		do
+			l_area := s.area
+			c_printf ($l_area)
+		ensure
+			instance_free: class
+		end
+
+	c_printf (p: POINTER)
+		external
+			"C inline"
+		alias
+			"printf((char*) $p)"
+		ensure
+			instance_free: class
+		end
+
 feature -- Gobject / debugging purpose
 
 	frozen internal_g_object_ref_count (a_c_object: POINTER): NATURAL_32

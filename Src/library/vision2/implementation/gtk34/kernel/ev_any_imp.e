@@ -58,7 +58,7 @@ feature {EV_ANY_I} -- Access
 						-- Adopt floating ref count, or increase ref count
 					l_c_object := {GTK}.g_object_ref_sink (a_c_object)
 				else
-					check is_gtk_top_window: {GTK}.gtk_is_window (a_c_object) end
+					check is_gtk_top_window: {GTK}.gtk_widget_is_toplevel (a_c_object) end
 					l_c_object := a_c_object -- Already has a ref
 					l_c_object := {GTK}.g_object_ref (l_c_object) -- Increase ref count to protect the marshal callback
 				end
@@ -70,10 +70,19 @@ feature {EV_ANY_I} -- Access
 			if internal_id = 0 then
 				internal_id := eif_current_object_id
 			end
---			l_c_object := {GTK}.g_object_ref (l_c_object) -- Increase ref count to protect the marshal callback
 			{EV_GTK_CALLBACK_MARSHAL}.set_eif_oid_in_c_object (l_c_object, internal_id, $c_object_dispose) -- No ref count increase from the C code, handled by the previous line
 
 			c_object := l_c_object
+			if {GTK}.gtk_widget_is_toplevel (l_c_object) then
+				if {GDK}.internal_g_object_ref_count (l_c_object) /= 2 then
+					check unexpected_ref_count: False end
+					{GDK}.printf (generator + ".set_c_object: unexpected ref count for c_object=" + l_c_object.out + " #" + {GDK}.internal_g_object_ref_count (l_c_object).out + " /= 2 !%N")
+				end
+			elseif {GDK}.internal_g_object_ref_count (l_c_object) /= 1 then
+				check unexpected_ref_count: False end
+				{GDK}.printf (generator + ".set_c_object: unexpected ref count for c_object=" + l_c_object.out + " #" + {GDK}.internal_g_object_ref_count (l_c_object).out + " /= 1 !%N")
+			end
+
 			debug ("gtk_name")
 				update_gtk_name
 			end
@@ -119,12 +128,25 @@ feature {EV_ANY, EV_ANY_IMP} -- Implementation
 	destroy
 			-- Destroy `c_object'.
 			-- Render `Current' unusable.
+		local
+			l_c_object: like c_object
 		do
 			disconnect_all_recorded_connections (default_pointer)
+
+			-- Gtk representation of `Current' may only be cleaned up on dispose to prevent crashes where `Current' is
+			-- destroyed as a result of `Current's event handler being called, this causes instability within gtk
+			-- TODO: check the previous comment
+
+			l_c_object := c_object
+			if not l_c_object.is_default_pointer then
+				if not {GTK}.gtk_widget_is_toplevel (l_c_object) then
+						-- The next call should trigger the `c_object_dispose`
+						-- See the `set_c_object` code, and the related C code (in ev_any_imp.c) .
+					{GTK}.gtk_widget_destroy (l_c_object)
+				end
+			end
+
 			set_is_destroyed (True)
-				-- Gtk representation of `Current' may only be cleaned up on dispose to prevent crashes where `Current' is
-				-- destroyed as a result of `Current's event handler being called, this causes instability within gtk
-			{GTK}.gtk_widget_destroy (c_object)
 		end
 
 feature {EV_ANY_I, EV_APPLICATION_IMP} -- Event handling
@@ -287,9 +309,14 @@ feature {NONE} -- Implementation
 	dispose
 			-- Called by the Eiffel GC when `Current' is destroyed.
 			-- Destroy `c_object'.
+		local
+			l_c_object: like c_object
 		do
-			if not c_object_dispose_called then
---				c_object_dispose
+			l_c_object := c_object
+			if not l_c_object.is_default_pointer then
+					-- The next call should trigger the `c_object_dispose`
+					-- See the `set_c_object` code, and the related C code (in ev_any_imp.c) .
+				{GTK}.gtk_widget_destroy (l_c_object)
 			end
 			Precursor {IDENTIFIED}
 		end
@@ -320,35 +347,24 @@ feature {NONE} -- Implementation
 
 						-- TODO Review
 						-- Remove any reference l_c_object may have on other Gtk objects.
-				    {GDK}.g_object_run_dispose (l_c_object)
 
 						-- disconnect_all_signals (l_c_object)
 					if {GTK}.gtk_is_window (l_c_object) then
 							-- Windows need to be explicitly destroyed.
 						{GTK2}.gtk_widget_destroy (l_c_object)
 					elseif {GTK}.gtk_is_widget (l_c_object)  then
-							-- Do it anyway, it destroys reference on other resources
+							-- Should not be needed, but do it anyway, it destroys reference on other resources
 						{GTK2}.gtk_widget_destroy (l_c_object)
 					else
-							-- Do nothing.
+							-- the run dispose is usually called by gtk_widget_destroy.
+						{GDK}.g_object_run_dispose (l_c_object)
 					end
 
 						-- Decrement the reference count for `l_c_object` (should correspond to the reference used to protect the marshal callback  see `set_c_object`)
-        			if {GTK}.gtk_widget_is_toplevel (l_c_object) then
-						if {GDK}.internal_g_object_ref_count (l_c_object) > 2 then
-							-- TODO : check ... as gtk_widget_destroy should be done.
-	        				{GDK}.printf (generator + ".c_object_dispose before final unref " + l_c_object.out + " #" + {GDK}.internal_g_object_ref_count (l_c_object).out + " .%N")
-	        			end
-        			else
-        				if {GDK}.internal_g_object_ref_count (l_c_object) > 1 then
-							{GDK}.printf (generator + ".c_object_dispose before final unref " + l_c_object.out + " #" + {GDK}.internal_g_object_ref_count (l_c_object).out + " .%N")
-	        			end
+					debug ("gtk_memory")
+						{GDK}.printf (generator + ".c_object_dispose before final unref " + l_c_object.out + " #" + {GDK}.internal_g_object_ref_count (l_c_object).out + " .%N")
 					end
 					{GDK}.g_object_unref (l_c_object)
-
-
-					-- Remove any reference l_c_object may have on other Gtk objects.
---					{GDK}.g_object_run_dispose (l_c_object)
 
 					c_object := default_pointer
 				end

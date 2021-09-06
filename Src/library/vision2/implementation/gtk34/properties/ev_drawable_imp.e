@@ -45,7 +45,10 @@ feature {EV_ANY_I} -- Implementation
 		do
 			Result := cairo_context
 			if Result.is_default_pointer then
-				check has_cairo_context: False end
+				check
+						-- get drawable should not be called directly anymore to get a new context!
+					has_cairo_context: False
+				end
 				get_cairo_context
 -- FIXME: uncomment those lines, once the FIXME in release_drawable is fixed (2021-06-07).
 --				Result := {CAIRO}.add_reference (cairo_context)

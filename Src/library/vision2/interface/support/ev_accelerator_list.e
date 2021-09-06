@@ -38,25 +38,21 @@ feature {NONE} -- Status Setting
 		require
 			key_combination_unique: an_item /= Void implies
 				(occurrences (an_item) = 1 and not key_combination_exists (an_item))
-		local
-			accelerator_imp: detachable EV_ACCELERATOR_IMP
 		do
 			if an_item /= Void then
-				accelerator_imp ?= an_item.implementation
-				check accelerator_imp /= Void then end
-				accelerator_imp.enable_parented
+				check attached {EV_ACCELERATOR_IMP} an_item.implementation as accelerator_imp then
+					accelerator_imp.enable_parented
+				end
 			end
 		end
 
 	disable_item_parented (an_item: like item)
 			-- Assign False to `parented' for `an_item'.
-		local
-			accelerator_imp: detachable EV_ACCELERATOR_IMP
 		do
 			if an_item /= Void then
-				accelerator_imp ?= an_item.implementation
-				check accelerator_imp /= Void then end
-				accelerator_imp.disable_parented
+				check attached {EV_ACCELERATOR_IMP} an_item.implementation as accelerator_imp then
+					accelerator_imp.disable_parented
+				end
 			end
 		end
 
@@ -81,7 +77,7 @@ feature {NONE} -- Contract support
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2013, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2021, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

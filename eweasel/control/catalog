@@ -2684,7 +2684,7 @@ test	generic-expanded-client		fixed113 tcf pass fixed
 test	lace-opt-cluster-mark		fixed114 tcf pass fixed
 test	lace-assertion-option		fixed118 tcf pass fixed
 test	lace-remove-cluster2		fixed119 tcf pass fixed
-test	whip-that-ace			fixed120 tcf pass fixed
+test	whip-that-ace				fixed120 tcf failed used_to_pass fixed
 test	creation-generic-types-in-onces	fixed124 tcf pass fixed
 test	reference-assign-tuple-fail-gc	fixed125 tcf pass fixed tuple
 test	infix-inherited-assertions	fixed126 tcf pass fixed

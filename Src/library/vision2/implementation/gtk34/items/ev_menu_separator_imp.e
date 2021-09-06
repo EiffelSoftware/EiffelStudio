@@ -24,10 +24,10 @@ inherit
 			is_sensitive,
 			interface,
 			make,
-			dispose,
 			pointer_motion_actions_internal,
 			pointer_button_press_actions_internal,
-			pointer_double_press_actions_internal
+			pointer_double_press_actions_internal,
+			c_object_dispose
 		end
 
 create
@@ -78,16 +78,11 @@ feature {NONE} -- Implementation
 
 feature {EV_MENU_ITEM_LIST_IMP} -- Implementation
 
-	dispose
-			-- Unreference unwanted gtk widgets.
+	c_object_dispose
 		do
 			if not box.is_default_pointer then
 				{GTK2}.g_object_unref (box)
 				box := default_pointer
-			end
-			if not c_object.is_default_pointer then
-				{GTK2}.g_object_unref (c_object)
-				c_object := default_pointer
 			end
 			Precursor
 		end

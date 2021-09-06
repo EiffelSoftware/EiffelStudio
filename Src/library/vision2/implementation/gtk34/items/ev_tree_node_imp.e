@@ -335,7 +335,6 @@ feature -- PND
 			-- Has 'Current' or a child of 'Current' pnd transport enabled?
 		local
 			a_cursor: CURSOR
-			a_tree_node_imp: detachable EV_TREE_NODE_IMP
 			i: INTEGER
 		do
 			if is_transport_enabled then
@@ -347,10 +346,10 @@ feature -- PND
 				until
 					i > child_array.count or else Result
 				loop
-					if child_array.i_th (i) /= Void then
-						a_tree_node_imp ?= child_array.i_th (i).implementation
-						check a_tree_node_imp /= Void then end
-						Result := a_tree_node_imp.is_transport_enabled_iterator
+					if attached child_array [i] as ch then
+						check attached {EV_TREE_NODE_IMP} ch.implementation as a_tree_node_imp then
+							Result := a_tree_node_imp.is_transport_enabled_iterator
+						end
 					end
 					i := i + 1
 				end
@@ -405,12 +404,9 @@ feature {EV_ANY_I} -- Implementation
 	parent_imp: detachable EV_ITEM_LIST_IMP [EV_TREE_NODE]
 
 	parent_tree_imp: detachable EV_TREE_IMP
-		local
-			l_par_tree: like parent_tree_i
 		do
-			l_par_tree := parent_tree_i
-			if l_par_tree /= Void then
-				Result ?= l_par_tree
+			if attached {like parent_tree_imp} parent_tree_i as l_par_tree then
+				Result := l_par_tree
 			end
 		end
 
@@ -421,7 +417,6 @@ feature {EV_TREE_IMP, EV_TREE_NODE_IMP} -- Implementation
 		local
 			a_tree_iter: EV_GTK_TREE_ITER_STRUCT
 			i: INTEGER
-			item_imp: detachable EV_TREE_NODE_IMP
 			a_parent_iter: POINTER
 		do
 			if a_parent_node /= Void and then attached a_parent_node.list_iter as l_list_iter then
@@ -437,9 +432,7 @@ feature {EV_TREE_IMP, EV_TREE_NODE_IMP} -- Implementation
 			until
 				i > child_array.count
 			loop
-				item_imp ?= (child_array @ i).implementation
-				check item_imp /= Void end
-				if item_imp /= Void then
+				check attached {EV_TREE_NODE_IMP} (child_array [i]).implementation as item_imp then
 					item_imp.add_item_and_children_to_parent_tree (a_parent_tree, Current, i)
 				end
 				i := i + 1
@@ -466,11 +459,8 @@ feature {EV_TREE_IMP, EV_TREE_NODE_IMP} -- Implementation
 
 	remove_expandable
 			-- Ensure `Current' is no longer displayed as expandable.
-		local
-			l_parent_tree: detachable EV_TREE_IMP
 		do
-			l_parent_tree ?= parent_imp
-			if l_parent_tree /= Void then
+			if attached {EV_TREE_IMP} parent_imp then
 				-- Check if 'child_array' count is less than actual count, if so remove last item
 			else
 				-- Nothing needs to be done if parent tree is Void
@@ -530,14 +520,16 @@ feature {EV_TREE_IMP, EV_TREE_NODE_IMP} -- Implementation
 	set_pixmap (a_pixmap: EV_PIXMAP)
 			-- Set the pixmap for 'Current'.
 		local
-			a_pix_imp: detachable EV_PIXMAP_IMP
 			par_tree: detachable EV_TREE_IMP
 		do
 				-- Clean up previous pixmap if any
-			dispose
-			a_pix_imp ?= a_pixmap.implementation
-			check a_pix_imp /= Void then end
-			gdk_pixbuf := a_pix_imp.pixbuf_from_drawable
+			if gdk_pixbuf /= default_pointer then
+				{GTK2}.g_object_unref (gdk_pixbuf)
+				gdk_pixbuf := default_pointer
+			end
+			check attached {EV_PIXMAP_IMP} a_pixmap.implementation as a_pix_imp then
+				gdk_pixbuf := a_pix_imp.pixbuf_from_drawable
+			end
 			par_tree := parent_tree_imp
 			if par_tree /= Void then
 				par_tree.update_row_pixmap (Current)
@@ -564,14 +556,12 @@ feature {EV_TREE_IMP, EV_TREE_NODE_IMP} -- Implementation
 
 	pixmap: detachable EV_PIXMAP
 			-- Pixmap displayed in 'Current' if any.
-		local
-			pix_imp: detachable EV_PIXMAP_IMP
 		do
 			if gdk_pixbuf /= default_pointer then
 				create Result
-				pix_imp ?= Result.implementation
-				check pix_imp /= Void then end
-				pix_imp.set_pixmap_from_pixbuf (gdk_pixbuf)
+				check attached {EV_PIXMAP_IMP} Result.implementation as pix_imp then
+					pix_imp.set_pixmap_from_pixbuf (gdk_pixbuf)
+				end
 			end
 		end
 
@@ -581,31 +571,31 @@ feature {EV_TREE_IMP, EV_TREE_NODE_IMP} -- Implementation
 	insert_i_th (v: attached like item; i: INTEGER)
 			-- Insert `v' at position `i'.
 		local
-			item_imp: detachable EV_TREE_NODE_IMP
 			par_t_imp: detachable EV_TREE_IMP
 		do
-			item_imp ?= v.implementation
-			check item_imp /= Void then end
-			item_imp.set_parent_imp (Current)
-			child_array.go_i_th (i)
-			child_array.put_left (v)
+			check attached {EV_TREE_NODE_IMP} v.implementation as item_imp then
+				item_imp.set_parent_imp (Current)
 
-				-- Using a local prevents recalculation
-			par_t_imp := parent_tree_imp
-			if par_t_imp /= Void then
-				item_imp.add_item_and_children_to_parent_tree (par_t_imp, Current, i)
-				if item_imp.is_transport_enabled_iterator then
-					par_t_imp.update_pnd_connection (True)
+				child_array.go_i_th (i)
+				child_array.put_left (v)
+
+					-- Using a local prevents recalculation
+				par_t_imp := parent_tree_imp
+				if par_t_imp /= Void then
+					item_imp.add_item_and_children_to_parent_tree (par_t_imp, Current, i)
+					if item_imp.is_transport_enabled_iterator then
+						par_t_imp.update_pnd_connection (True)
+					end
 				end
-			end
-				-- Resume expansion status from last node removal
-			if count = 1 and then par_t_imp /= Void then
-				if expand_actions_internal /= Void then
-					expand_actions_internal.block
-				end
-				set_expand (expanded_on_last_item_removal)
-				if expand_actions_internal /= Void then
-					expand_actions_internal.resume
+					-- Resume expansion status from last node removal
+				if count = 1 and then par_t_imp /= Void then
+					if expand_actions_internal /= Void then
+						expand_actions_internal.block
+					end
+					set_expand (expanded_on_last_item_removal)
+					if expand_actions_internal /= Void then
+						expand_actions_internal.resume
+					end
 				end
 			end
 		end
@@ -613,7 +603,6 @@ feature {EV_TREE_IMP, EV_TREE_NODE_IMP} -- Implementation
 	remove_i_th (a_position: INTEGER)
 			-- Remove item at `a_position'
 		local
-			item_imp: detachable EV_TREE_NODE_IMP
 			par_tree_imp: detachable EV_TREE_IMP
 			l_list_iter: detachable EV_GTK_TREE_ITER_STRUCT
 		do
@@ -624,21 +613,24 @@ feature {EV_TREE_IMP, EV_TREE_NODE_IMP} -- Implementation
 					expanded_on_last_item_removal := False
 				end
 			end
-			item_imp ?= (child_array @ (a_position)).implementation
-			check item_imp /= Void then end
-				-- Remove from tree if present
-			par_tree_imp := parent_tree_imp
-			if par_tree_imp /= Void then
-				l_list_iter := item_imp.list_iter
-				check l_list_iter /= Void then end
-				{GTK2}.gtk_tree_store_remove (par_tree_imp.tree_store, l_list_iter.item)
-			end
-			item_imp.set_parent_imp (Void)
-			child_array.go_i_th (a_position)
-			child_array.remove
+			check
+				attached {EV_TREE_NODE_IMP} (child_array [a_position]).implementation as item_imp
+			then
+					-- Remove from tree if present
+				par_tree_imp := parent_tree_imp
+				if par_tree_imp /= Void then
+					l_list_iter := item_imp.list_iter
+					check l_list_iter /= Void then
+						{GTK2}.gtk_tree_store_remove (par_tree_imp.tree_store, l_list_iter.item)
+					end
+				end
+				item_imp.set_parent_imp (Void)
+				child_array.go_i_th (a_position)
+				child_array.remove
 
-			if par_tree_imp /= Void then
-				par_tree_imp.update_pnd_status
+				if par_tree_imp /= Void then
+					par_tree_imp.update_pnd_status
+				end
 			end
 		end
 
@@ -657,9 +649,12 @@ feature {NONE} -- Implementation
 	dispose
 			-- Clean up
 		do
-			if not is_in_final_collect and then gdk_pixbuf /= default_pointer then
-					{GTK2}.g_object_unref (gdk_pixbuf)
-					gdk_pixbuf := default_pointer
+			if
+				not is_in_final_collect and then
+				not gdk_pixbuf.is_default_pointer
+			then
+				{GTK2}.g_object_unref (gdk_pixbuf)
+				gdk_pixbuf := default_pointer
 			end
 		end
 

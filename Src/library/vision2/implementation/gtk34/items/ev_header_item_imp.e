@@ -31,7 +31,7 @@ inherit
 			needs_event_box,
 			process_gdk_event,
 			process_draw_event,
-			destroy
+			c_object_dispose
 		end
 
 create
@@ -471,18 +471,13 @@ feature {NONE} -- Redundant implementation
 
 feature {NONE} -- Implementation
 
-	destroy
-			-- Destroy `c_object'.
+	c_object_dispose
 		do
 			if not box.is_default_pointer then
 				{GDK}.g_object_unref (box)
 				box := default_pointer
 			end
-			if not c_object.is_default_pointer then
-				{GTK2}.g_object_unref (c_object)
-				c_object := default_pointer
-			end
-			set_is_destroyed (True)
+			Precursor
 		end
 
 feature {EV_ANY, EV_ANY_I} -- Implementation

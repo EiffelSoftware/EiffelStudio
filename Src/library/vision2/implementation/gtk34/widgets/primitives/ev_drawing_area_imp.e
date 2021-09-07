@@ -211,19 +211,19 @@ feature {EV_ANY_I} -- cairo object access
 					print (generator + ".get_new_cairo_surface -> "+ l_window.out + ", .., w=" + w.out + ", h=" + h.out +"%N")
 				end
 
--- Use gdk_window_create_similar_image_surface , as it seems to use much lower amount of memory.
---				l_surface := {GDK}.gdk_window_create_similar_surface (
---						l_window,
---						{CAIRO}.cairo_content_color_alpha,
---						w, h
---					)
-				l_surface := {GDK}.gdk_window_create_similar_image_surface (
+				l_surface := {GDK}.gdk_window_create_similar_surface (
 						l_window,
-						{CAIRO}.FORMAT_ARGB32,
-						w,
-						h,
-						0 -- 0: use window´s scale
+						{CAIRO}.cairo_content_color_alpha,
+						w, h
 					)
+-- An alternative, but it seems a bit less performant.
+--				l_surface := {GDK}.gdk_window_create_similar_image_surface (
+--						l_window,
+--						{CAIRO}.FORMAT_ARGB32,
+--						w,
+--						h,
+--						0 -- 0: use window´s scale
+--					)
 				cairo_surface := l_surface
 			else
 				debug ("gtk3_redraw")

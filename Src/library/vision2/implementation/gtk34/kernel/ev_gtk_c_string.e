@@ -1,8 +1,7 @@
-note
-	description: "A low-level string class to solve some garbage collector problems (mainly objects moving around) when interfacing with C APIs"
+﻿note
+	description: "A low-level string class to solve some garbage collector problems (mainly objects moving around) when interfacing with C APIs."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
-	author: ""
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -35,14 +34,18 @@ feature {NONE} -- Initialization
 	make_from_path (a_path: PATH)
 			-- Set `item' to the content of `a_path'.
 		require
-			a_path_not_void: a_path /= Void
+			attached a_path
 		local
-			l_ptr: MANAGED_POINTER
+			s: STRING_8
+			n: like {STRING_8}.count
+			a: ANY
 		do
-			l_ptr := a_path.to_pointer
- 			string_length := l_ptr.count - 1
- 			item := {GTK}.g_malloc (l_ptr.count)
-			item.memory_copy (l_ptr.item, l_ptr.count)
+			s := a_path.utf_8_name
+			n := s.count
+			item := {GTK}.g_malloc (n + 1)
+			a := s.to_c
+			item.memory_copy ($a, n + 1)
+			string_length := n
 			is_shared := False
 		end
 
@@ -62,6 +65,7 @@ feature -- Access
 			l_code: NATURAL_32
 			i, nb, cnt: INTEGER
 		do
+				-- TODO: Use `{UTF_CONVERTER}`.
 			from
 				i := 0
 				cnt := 0
@@ -219,6 +223,7 @@ feature {NONE} -- Implementation
 				l_ptr := shared_pointer_helper
 				l_ptr.set_from_pointer (utf8_ptr, bytes_written + 1)
 				bytes_written := 0
+					-- TODO: Use `{UTF_CONVERTER}`.
 			until
 				i > l_string_length
 			loop
@@ -304,18 +309,4 @@ note
 			Customer support http://support.eiffel.com
 		]"
 
-
-
-
-end -- class EV_GTK_C_STRING
-
-
-
-
-
-
-
-
-
-
-
+end

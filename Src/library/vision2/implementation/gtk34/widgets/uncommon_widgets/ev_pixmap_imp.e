@@ -130,7 +130,7 @@ feature {NONE} -- Initialization
 					end
 				else
 					l_pixbuf := a_pointer_style_imp.gdk_pixbuf
-					if l_pixbuf /= default_pointer then
+					if not l_pixbuf.is_default_pointer then
 						set_pixmap_from_pixbuf (a_pointer_style_imp.gdk_pixbuf)
 					else
 						set_size (a_pointer_style.width, a_pointer_style.height)
@@ -216,12 +216,17 @@ feature -- Element change
 			a_cs: EV_GTK_C_STRING
 			g_error: POINTER
 			filepixbuf: POINTER
+			e: EV_GLIB_ERROR
+			m: READABLE_STRING_32
 		do
 			create a_cs.make_from_path (file_path)
 			filepixbuf := {GTK}.gdk_pixbuf_new_from_file (a_cs.item, $g_error)
 			if g_error /= default_pointer then
-				-- We could not load the image so raise an exception
-				(create {EXCEPTIONS}).raise ("Could not load image file.")
+					-- GDK cannot not load the image. Raise an exception.
+				create e.make_from_pointer (g_error)
+				m := e.message
+				e.free
+				{EXCEPTIONS}.raise (m)
 			end
 			set_pixmap_from_pixbuf (filepixbuf)
 				-- Unreference pixbuf so that it may be collected.
@@ -368,7 +373,6 @@ feature -- Access
 --			{GTK}.gdk_image_destroy (a_gdkimage)
 		end
 
-
 feature -- Duplication
 
 	copy_pixmap (other: EV_PIXMAP)
@@ -467,11 +471,9 @@ feature {EV_ANY_I} -- cairo object access
 
 	get_cairo_context
 		local
-			cr: like cairo_context
 			l_surface: like cairo_surface
 		do
-			cr := cairo_context
-			if cr.is_default_pointer then
+			if cairo_context.is_default_pointer then
 				l_surface := cairo_surface
 				if not l_surface.is_default_pointer then
 					cairo_context := {CAIRO}.create_context (l_surface)
@@ -551,8 +553,10 @@ feature {NONE} -- Implementation
 			-- Save `Current' in `a_format' to `a_file_path'
 		local
 			a_gdkpixbuf, stretched_pixbuf: POINTER
-			a_gerror: POINTER
 			a_handle, a_filetype: EV_GTK_C_STRING
+			gerror: POINTER
+			e: EV_GLIB_ERROR
+			m: READABLE_STRING_32
 		do
 			if app_implementation.writeable_pixbuf_formats.has (a_format.file_extension.as_upper) then
 					-- Perform custom saving with GdkPixbuf
@@ -566,14 +570,17 @@ feature {NONE} -- Implementation
 						-- Set our scaled pixbuf to be the one that is saved
 					a_gdkpixbuf := stretched_pixbuf
 				end
-				{GTK2}.gdk_pixbuf_save (a_gdkpixbuf, a_handle.item, a_filetype.item, $a_gerror)
-				if a_gerror /= default_pointer then
-					-- We could not save the image so raise an exception
-					(create {EXCEPTIONS}).raise ("Could not save image file.")
-				end
+				{GTK2}.gdk_pixbuf_save (a_gdkpixbuf, a_handle.item, a_filetype.item, $gerror)
 				{GTK2}.g_object_unref (a_gdkpixbuf)
+				if not gerror.is_default_pointer then
+						-- GDK cannot save the image. Raise an exception.
+					create e.make_from_pointer (gerror)
+					m := e.message
+					e.free
+					{EXCEPTIONS}.raise (m)
+				end
 			else
-				-- If Gtk cannot save the file then the default is called
+					-- If Gtk cannot save the file then the default is called.
 				Precursor {EV_PIXMAP_I} (a_format, a_file_path)
 			end
 		end
@@ -634,9 +641,10 @@ feature {NONE} -- Constants
 
 feature {EV_ANY, EV_ANY_I} -- Implementation
 
-	interface: detachable EV_PIXMAP note option: stable attribute end;
+	interface: detachable EV_PIXMAP note option: stable attribute end
 
 note
+	ca_ignore: "CA011", "CA011: too many arguments"
 	copyright:	"Copyright (c) 1984-2021, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
@@ -647,4 +655,4 @@ note
 			Customer support http://support.eiffel.com
 		]"
 
-end -- EV_PIXMAP_IMP
+end

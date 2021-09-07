@@ -1,7 +1,5 @@
-note
-	description:
-		" EiffelVision tool-bar radio button. implementation%
-		% interface."
+﻿note
+	description: "EiffelVision tool-bar radio button. Implementation interface."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 	date: "$Date$"
@@ -66,9 +64,7 @@ feature {EV_ANY_I, EV_GTK_CALLBACK_MARSHAL} -- Implementation
 		do
 			real_signal_connect (visual_widget,
 					{EV_GTK_EVENT_STRINGS}.clicked_event_name,
-					agent (App_implementation.gtk_marshal).toolbar_item_select_actions_intermediary (internal_id),
-					Void
-				)
+					agent (App_implementation.gtk_marshal).toolbar_item_select_actions_intermediary (internal_id))
 		end
 
 feature {NONE} -- Implementation

@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "EiffelVision drawing area. GTK implementation."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -76,19 +76,15 @@ feature {NONE} -- Initialization
 
 			real_signal_connect (l_c_object,
 					{EV_GTK_EVENT_STRINGS}.configure_event_name,
-					agent (l_app_imp.gtk_marshal).configure_event (l_c_object, ?),
-					Void)
+					agent (l_app_imp.gtk_marshal).configure_event (l_c_object, ?))
 
 			real_signal_connect (l_c_object,
 					{EV_GTK_EVENT_STRINGS}.scroll_event_name,
-					agent (l_app_imp.gtk_marshal).scroll_event (l_drawing_area, ?),
-					Void
-				)
+					agent (l_app_imp.gtk_marshal).scroll_event (l_drawing_area, ?))
 
 			real_signal_connect_after (l_c_object,
 					{EV_GTK_EVENT_STRINGS}.draw_event_name,
-					agent (l_app_imp.gtk_marshal).draw_actions_event (l_c_object, ?),
-					Void)
+					agent (l_app_imp.gtk_marshal).draw_actions_event (l_c_object, ?))
 
 			check cairo_surface.is_default_pointer end
 
@@ -226,7 +222,7 @@ feature {EV_ANY_I} -- cairo object access
 						{CAIRO}.FORMAT_ARGB32,
 						w,
 						h,
-						0 -- 0: use window�s scale
+						0 -- 0: use window´s scale
 					)
 				cairo_surface := l_surface
 			else

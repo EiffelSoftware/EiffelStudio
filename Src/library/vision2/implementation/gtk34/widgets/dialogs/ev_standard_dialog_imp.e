@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "Eiffel Vision standard dialog. GTK+ implementation."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -30,9 +30,7 @@ feature {NONE} -- Initialization
 		do
 			real_signal_connect (c_object,
 					{EV_GTK_EVENT_STRINGS}.response_event_name,
-					agent (App_implementation.gtk_marshal).gtk_dialog_response_event (c_object, ?),
-					Void
-				)
+					agent (App_implementation.gtk_marshal).gtk_dialog_response_event (c_object, ?))
 			Precursor
 		end
 

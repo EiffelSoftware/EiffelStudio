@@ -1,4 +1,4 @@
-note
+﻿note
 	description:
 		"EiffelVision Tree, gtk implementation"
 	legal: "See notice at end of class."
@@ -160,11 +160,11 @@ feature {NONE} -- Initialization
 
 			{GTK2}.gtk_tree_view_insert_column (tree_view, a_column, 1)
 
-			real_signal_connect (tree_view, {EV_GTK_EVENT_STRINGS}.row_collapsed_event_name, agent (app_implementation.gtk_marshal).tree_row_expansion_change_intermediary (internal_id, False, ?, ?), Void)
-			real_signal_connect (tree_view, {EV_GTK_EVENT_STRINGS}.row_expanded_event_name, agent (app_implementation.gtk_marshal).tree_row_expansion_change_intermediary (internal_id, True, ?, ?), Void)
+			real_signal_connect (tree_view, {EV_GTK_EVENT_STRINGS}.row_collapsed_event_name, agent (app_implementation.gtk_marshal).tree_row_expansion_change_intermediary (internal_id, False, ?, ?))
+			real_signal_connect (tree_view, {EV_GTK_EVENT_STRINGS}.row_expanded_event_name, agent (app_implementation.gtk_marshal).tree_row_expansion_change_intermediary (internal_id, True, ?, ?))
 
 			a_selection := {GTK2}.gtk_tree_view_get_selection (tree_view)
-			real_signal_connect (a_selection, {EV_GTK_EVENT_STRINGS}.changed_event_name, agent (app_implementation.gtk_marshal).on_pnd_deferred_item_parent_selection_change (internal_id), Void)
+			real_signal_connect (a_selection, {EV_GTK_EVENT_STRINGS}.changed_event_name, agent (app_implementation.gtk_marshal).on_pnd_deferred_item_parent_selection_change (internal_id))
 
 			{GTK2}.gtk_tree_selection_set_mode (a_selection, {GTK}.gtk_selection_browse_enum)
 

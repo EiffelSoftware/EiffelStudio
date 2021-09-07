@@ -1,4 +1,4 @@
-note
+﻿note
 	description:
 		"EiffelVision2 Toolbar button,%
 		%a specific button that goes in a tool-bar."
@@ -272,9 +272,7 @@ feature {EV_ANY_I, EV_GTK_CALLBACK_MARSHAL} -- Implementation
 		do
 			real_signal_connect (c_object,
 					{EV_GTK_EVENT_STRINGS}.clicked_event_name,
-					agent (App_implementation.gtk_marshal).new_toolbar_item_select_actions_intermediary (internal_id),
-					Void
-				)
+					agent (App_implementation.gtk_marshal).new_toolbar_item_select_actions_intermediary (internal_id))
 		end
 
 feature {EV_ANY, EV_ANY_I} -- Implementation

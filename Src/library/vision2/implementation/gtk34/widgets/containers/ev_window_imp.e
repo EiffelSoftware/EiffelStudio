@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "Eiffel Vision window. GTK+ implementation."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -104,9 +104,7 @@ feature {NONE} -- Initialization
 
 			real_signal_connect_after (l_c_object,
 					{EV_GTK_EVENT_STRINGS}.set_focus_event_name,
-					agent (l_gtk_marshal).on_set_focus_event (internal_id, ?),
-					Void
-				)
+					agent (l_gtk_marshal).on_set_focus_event (internal_id, ?))
 
 				-- Used to propagate focus events between internal gtk widgets.
 

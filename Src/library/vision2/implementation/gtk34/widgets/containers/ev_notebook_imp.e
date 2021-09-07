@@ -1,4 +1,4 @@
-note
+﻿note
 	description:
 		"Eiffel Vision notebook. GTK implementation."
 	legal: "See notice at end of class."
@@ -57,9 +57,7 @@ feature {NONE} -- Initialization
 			{GTK}.gtk_notebook_set_show_border (visual_widget, True)
 			{GTK}.gtk_notebook_set_scrollable (visual_widget, True)
 			real_signal_connect (visual_widget, {EV_GTK_EVENT_STRINGS}.switch_page_event_name,
-						agent (App_implementation.gtk_marshal).on_notebook_page_switch_event (c_object, ?),
-						Void
-					)
+						agent (App_implementation.gtk_marshal).on_notebook_page_switch_event (c_object, ?))
 			Precursor {EV_WIDGET_LIST_IMP}
 			selected_item_index_internal := 0
 			initialize_pixmaps

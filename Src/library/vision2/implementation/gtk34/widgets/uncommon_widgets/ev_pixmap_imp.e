@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "EiffelVision pixmap, GTK implementation."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -66,9 +66,7 @@ feature {NONE} -- Initialization
 				-- Connect Draw event (replacing previous expose-event)
 			real_signal_connect_after (visual_widget,
 					{EV_GTK_EVENT_STRINGS}.draw_event_name,
-					agent (l_app_imp.gtk_marshal).draw_actions_event (c_object, ?),
-					Void
-				)
+					agent (l_app_imp.gtk_marshal).draw_actions_event (c_object, ?))
 
 			set_size (1, 1)
 

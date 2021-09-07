@@ -1,4 +1,4 @@
-note
+﻿note
 	description:
 		"Eiffel Vision button. GTK implementation."
 	legal: "See notice at end of class."
@@ -235,9 +235,7 @@ feature {NONE} -- implementation
 			l_app_imp := app_implementation
 			real_signal_connect (visual_widget, -- Note: this is really visual_widget, and not just c_object!
 					{EV_GTK_EVENT_STRINGS}.clicked_event_name,
-				 	agent (l_app_imp.gtk_marshal).button_select_intermediary (c_object),
-				 	Void
-				 )
+				 	agent (l_app_imp.gtk_marshal).button_select_intermediary (c_object))
 		end
 
 feature {EV_ANY, EV_ANY_I} -- implementation

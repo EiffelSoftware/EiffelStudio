@@ -1,4 +1,4 @@
-note
+﻿note
 
 	description:
 		"EiffelVision text area, gtk implementation."
@@ -73,9 +73,7 @@ feature {NONE} -- Initialization
 		do
 			real_signal_connect (text_buffer,
 					{EV_GTK_EVENT_STRINGS}.changed_event_name,
-					agent (App_implementation.gtk_marshal).text_component_change_intermediary (c_object),
-					Void
-				)
+					agent (App_implementation.gtk_marshal).text_component_change_intermediary (c_object))
 		end
 
 feature -- Access

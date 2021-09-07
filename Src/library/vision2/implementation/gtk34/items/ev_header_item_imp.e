@@ -1,8 +1,6 @@
-note
-	description: "Objects that ..."
+﻿note
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
-	author: ""
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -412,18 +410,14 @@ feature {EV_HEADER_IMP} -- Implementation
 				real_signal_connect (
 						a_button,
 						once "event",
-						agent (l_app_imp.gtk_marshal).gdk_event_dispatcher (internal_id, ? , ?),
-						Void
-					)
+						agent (l_app_imp.gtk_marshal).gdk_event_dispatcher (internal_id, ? , ?))
 				item_event_connection := last_signal_connection
 
 					-- Hook up to "draw" signal so that we can check if we need to resize `Current'.
 				real_signal_connect (
 						a_button,
 						{EV_GTK_EVENT_STRINGS}.draw_event_name,
-						agent (l_app_imp.gtk_marshal).draw_actions_event (c_object, ?),
-						Void
-					)
+						agent (l_app_imp.gtk_marshal).draw_actions_event (c_object, ?))
 				item_draw_event_connection := last_signal_connection
 			else
 				if attached item_event_connection as conn then

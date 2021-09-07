@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "EiffelVision text field. GTK+ implementation."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -186,7 +186,7 @@ feature {EV_ANY_I, EV_INTERMEDIARY_ROUTINES} -- Implementation
 				Result := l_result
 			else
 				create Result
-				real_signal_connect_after (entry_widget, once "activate", agent (App_implementation.gtk_marshal).text_field_return_intermediary (c_object), Void)
+				real_signal_connect_after (entry_widget, once "activate", agent (App_implementation.gtk_marshal).text_field_return_intermediary (c_object))
 				return_actions_internal := Result
 			end
 		end

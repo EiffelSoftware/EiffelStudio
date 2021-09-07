@@ -1,8 +1,6 @@
-note
-	description: "Objects that ..."
+﻿note
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
-	author: ""
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -55,9 +53,7 @@ feature {NONE} -- Initialization
 			Precursor {EV_TEXT_IMP}
 			real_signal_connect (text_buffer,
 					{EV_GTK_EVENT_STRINGS}.mark_set_event_name,
-					agent (app_implementation.gtk_marshal).text_buffer_mark_set_intermediary (object_id, ?, ?),
-					Void
-				)
+					agent (app_implementation.gtk_marshal).text_buffer_mark_set_intermediary (object_id, ?, ?))
 		end
 
 feature {NONE} -- Implementation

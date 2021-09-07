@@ -1,4 +1,4 @@
-note
+﻿note
 
 	description:
 		"EiffelVision combo box, gtk implementation."
@@ -147,9 +147,7 @@ feature {NONE} -- Initialization
 				-- This is a hack, remove when the toggle button can be retrieved via the API.
 			real_signal_connect (container_widget,
 						{EV_GTK_EVENT_STRINGS}.realize_event_name,
-			 			agent (app_implementation.gtk_marshal).on_combo_box_toggle_button_event (internal_id, 1),
-			 			Void
-			 		)
+			 			agent (app_implementation.gtk_marshal).on_combo_box_toggle_button_event (internal_id, 1))
 			retrieve_realize_button_signal_connection := last_signal_connection
 
 			Precursor {EV_LIST_ITEM_LIST_IMP}
@@ -181,9 +179,7 @@ feature {NONE} -- Initialization
 
 			real_signal_connect (container_widget,
 					{EV_GTK_EVENT_STRINGS}.changed_event_name,
-					agent (app_implementation.gtk_marshal).on_pnd_deferred_item_parent_selection_change (internal_id),
-					Void
-				)
+					agent (app_implementation.gtk_marshal).on_pnd_deferred_item_parent_selection_change (internal_id))
 			initialize_tab_behavior
 			initialize_hints
 		end
@@ -320,9 +316,7 @@ feature {EV_GTK_DEPENDENT_INTERMEDIARY_ROUTINES} -- Event handling
 				if not attached retrieve_toggle_button_signal_connection as conn or else not conn.is_connected then
 					real_signal_connect (a_toggle,
 							{EV_GTK_EVENT_STRINGS}.toggled_event_name,
-							agent (app_implementation.gtk_marshal).on_combo_box_toggle_button_event (internal_id, 2),
-							Void
-						)
+							agent (app_implementation.gtk_marshal).on_combo_box_toggle_button_event (internal_id, 2))
 					retrieve_toggle_button_signal_connection := last_signal_connection
 				end
 			end

@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "Eiffel Vision menu item. GTK+ implementation."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -51,7 +51,7 @@ feature {NONE} -- Initialization
 		do
 			initialize_menu_item
 			Precursor {EV_ITEM_IMP}
-			real_signal_connect_after (menu_item, once "activate", agent (App_implementation.gtk_marshal).menu_item_activate_intermediary (c_object), Void)
+			real_signal_connect_after (menu_item, once "activate", agent (App_implementation.gtk_marshal).menu_item_activate_intermediary (c_object))
 			textable_imp_initialize
 
 			box := {GTK}.gtk_box_new ({GTK_ORIENTATION}.gtk_orientation_horizontal, 0)

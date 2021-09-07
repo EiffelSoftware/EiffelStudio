@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "Eiffel Vision gauge. GTK+ implementation."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -46,9 +46,7 @@ feature {NONE} -- Initialization
 			real_signal_connect (
 				adjustment,
 				{EV_GTK_EVENT_STRINGS}.value_changed_event_name,
-				agent (App_implementation.gtk_marshal).on_gauge_value_changed_intermediary (c_object),
-				Void
-			)
+				agent (App_implementation.gtk_marshal).on_gauge_value_changed_intermediary (c_object))
 			set_range
 		end
 

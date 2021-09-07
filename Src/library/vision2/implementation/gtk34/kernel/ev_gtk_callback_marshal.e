@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "Callback Marshal to deal with gtk signal emissions"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -52,7 +52,7 @@ feature {EV_ANY_IMP} -- Access
 
 	translate_and_call (
 		an_agent: ROUTINE;
-		translate: FUNCTION [INTEGER, POINTER, TUPLE];
+		translate: FUNCTION [INTEGER, POINTER, TUPLE]
 	): detachable ANY
 			-- Call `an_agent' using `translate' to convert `args' and `n_args'
 		require
@@ -76,15 +76,6 @@ feature {EV_ANY_IMP} -- Access
 			Result.height := a_height
 		end
 
-	key_tuple (a_key: EV_KEY; a_key_string: STRING_32; a_key_press: BOOLEAN): like internal_key_tuple
-			-- Return a key tuple from given arguments.
-		do
-			Result := internal_key_tuple
-			Result.key := a_key
-			Result.string := a_key_string
-			Result.key_press := a_key_press
-		end
-
 feature -- Implementation
 
 	signal_connect (
@@ -101,7 +92,6 @@ feature -- Implementation
 			--			and thus can be collected by the GC
 		local
 			l_agent: ROUTINE
-			l_conn_id: like last_signal_connection_id
 		do
 			if translate = Void then
 					-- If we have no translate agent then we call the agent directly.
@@ -110,13 +100,12 @@ feature -- Implementation
 				l_agent := agent translate_and_call (an_agent, translate)
 			end
 
-			l_conn_id := {EV_GTK_CALLBACK_MARSHAL}.c_signal_connect (
+			last_signal_connection_id := {EV_GTK_CALLBACK_MARSHAL}.c_signal_connect (
 				a_c_object,
 				a_signal_name.item,
 				l_agent,
 				invoke_after_handler
 			)
-			last_signal_connection_id := l_conn_id
 			debug("gtk_signal")
 				print (generator + ".signal_connect ("
 							+ a_c_object.out +", "
@@ -147,121 +136,7 @@ feature -- Implementation
 	last_signal_connection_id: INTEGER
 			-- Last signal connection id.
 
-feature -- Agent functions.
-
-	set_focus_event_translate_agent: FUNCTION [INTEGER, POINTER, TUPLE]
-			-- Translation agent used for set-focus events
-		once
-			Result :=
-			agent (n: INTEGER; p: POINTER): TUPLE
-					-- Converted GtkWidget* to tuple.
-				do
-					Result := [{GTK2}.gtk_value_pointer (p)]
-				end
-		end
-
-	size_allocate_translate_agent: FUNCTION [INTEGER, POINTER, TUPLE]
-			-- Translation agent used for size allocation events
-		once
-			Result :=
-			agent (n: INTEGER; p: POINTER): TUPLE
-				local
-					gtk_alloc: POINTER
-				do
-					gtk_alloc := {GTK2}.gtk_value_pointer (p)
-					Result := dimension_tuple (
-						{GTK}.gtk_allocation_struct_x (gtk_alloc),
-						{GTK}.gtk_allocation_struct_y (gtk_alloc),
-						{GTK}.gtk_allocation_struct_width (gtk_alloc),
-						{GTK}.gtk_allocation_struct_height (gtk_alloc)
-					)
-				end
-		end
-
-	configure_translate_agent: FUNCTION [INTEGER, POINTER, TUPLE]
-			-- Translation agent used for size allocation events
-			-- see https://developer.gnome.org/gdk3/unstable/gdk3-Event-Structures.html#GdkEventConfigure
-		once
-			Result :=
-			agent (n: INTEGER; p: POINTER): TUPLE
-				local
-					gdk_configure: POINTER
-				do
-					gdk_configure := {GTK2}.gtk_value_pointer (p)
-					Result := dimension_tuple (
-						{GTK}.gdk_event_configure_struct_x (gdk_configure),
-						{GTK}.gdk_event_configure_struct_y (gdk_configure),
-						{GTK}.gdk_event_configure_struct_width (gdk_configure),
-						{GTK}.gdk_event_configure_struct_height (gdk_configure)
-					)
-			end
-		end
-
-	draw_translate_agent: FUNCTION [INTEGER, POINTER, TUPLE]
-			-- Translation agent used for draw events
-		once
-			Result := agent gtk_value_pointer_to_tuple (?, ?)
-		end
-
-	enter_leave_translate_agent: FUNCTION [INTEGER, POINTER, TUPLE]
-			-- Translation agent used for enter|leave notify events
-			-- see : https://developer.gnome.org/gdk3/unstable/gdk3-Event-Structures.html#GdkEventCrossing
-		once
-			Result :=
-			agent (n: INTEGER; p: POINTER): TUPLE
-				local
-					gdk_event_crossing: POINTER
-				do
-					gdk_event_crossing := {GTK2}.gtk_value_pointer (p)
-					Result := dimension_tuple (
-						{GTK}.gdk_event_crossing_struct_x (gdk_event_crossing).truncated_to_integer,
-						{GTK}.gdk_event_crossing_struct_y (gdk_event_crossing).truncated_to_integer,
-						{GTK}.gdk_event_crossing_struct_x_root (gdk_event_crossing).truncated_to_integer,
-						{GTK}.gdk_event_crossing_struct_y_root (gdk_event_crossing).truncated_to_integer
-					)
-			end
-		end
-
-	response_translate_agent: FUNCTION [INTEGER, POINTER, TUPLE]
-			-- Translation agent used for dialog response events
-		once
-			Result := agent gtk_value_int_to_tuple (?, ?)
-		end
-
-	button_event_translate_agent: FUNCTION [INTEGER, POINTER, TUPLE]
-			-- Translation agent used for button events
-		once
-			Result := agent gtk_value_pointer_to_tuple (?, ?)
-		end
-
-	motion_notify_event_translate_agent: FUNCTION [INTEGER, POINTER, TUPLE]
-		once
-			Result := agent gtk_value_pointer_to_tuple (?, ?)
-		end
-
-	scroll_event_translate_agent: FUNCTION [INTEGER, POINTER, TUPLE]
-		once
-			Result := agent gtk_value_pointer_to_tuple (?, ?)
-		end
-
 feature {EV_ANY_IMP} -- Agent implementation routines
-
-	gtk_value_int_to_tuple (n_args: INTEGER; args: POINTER): TUPLE [INTEGER]
-			-- Tuple containing integer value from first of `args'.
-		do
-			Result := integer_tuple
-			Result.put_integer ({GTK2}.gtk_value_int (args), 1)
-		end
-
-	column_resize_callback_translate (n: INTEGER; args: POINTER): TUPLE [INTEGER, INTEGER]
-			-- Translate function for MCL
-		local
-			gtkarg2: POINTER
-		do
-			gtkarg2 := {GTK2}.gtk_args_array_i_th (args, 1)
-			Result := [{GTK2}.gtk_value_int (args) + 1, {GTK2}.gtk_value_int (gtkarg2)]
-			-- Column is zero based in gtk.
-		end
 
 	is_destroyed: BOOLEAN
 		-- Has `destroy' been called?
@@ -389,13 +264,6 @@ feature {NONE} -- Tuple optimizations.
 	integer_pointer_tuple: TUPLE [integer: INTEGER; pointer: POINTER]
 		once
 			create Result
-		end
-
-	gtk_value_pointer_to_tuple (n_args: INTEGER; args: POINTER): TUPLE [pointer: POINTER]
-			-- Tuple containing pointer value from first of `args'.
-		do
-			Result := pointer_tuple
-			Result.pointer := {GTK2}.gtk_value_pointer (args)
 		end
 
 feature {EV_GTK_CALLBACK_MARSHAL} -- Externals

@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "Eiffel Vision checkable list. Gtk implementation."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -49,7 +49,7 @@ feature -- Initialization
 			a_gtk_c_str :=  "active"
 			{GTK2}.gtk_tree_view_column_add_attribute (a_column, a_cell_renderer, a_gtk_c_str.item, boolean_tree_model_column)
 
-			real_signal_connect (a_cell_renderer, "toggled", agent (app_implementation.gtk_marshal).boolean_cell_renderer_toggle_intermediary (internal_id, ?, ?), Void)
+			real_signal_connect (a_cell_renderer, "toggled", agent (app_implementation.gtk_marshal).boolean_cell_renderer_toggle_intermediary (internal_id, ?, ?))
 		end
 
 	boolean_tree_model_column: INTEGER = 2
@@ -177,7 +177,7 @@ feature {EV_ANY, EV_ANY_I} -- Implementation
 	interface: detachable EV_CHECKABLE_LIST note option: stable attribute end;
 
 note
-	copyright:	"Copyright (c) 1984-2014, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2021, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

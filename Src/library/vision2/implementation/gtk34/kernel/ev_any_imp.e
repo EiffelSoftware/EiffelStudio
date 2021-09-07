@@ -154,9 +154,7 @@ feature {EV_ANY_I, EV_APPLICATION_IMP} -- Event handling
 	real_signal_connect (
 		a_c_object: like c_object;
 		a_signal_name: STRING_8;
-		an_agent: ROUTINE;
-		translate: detachable FUNCTION [INTEGER, POINTER, TUPLE];
-		)
+		an_agent: ROUTINE)
 				-- Connect `an_agent' to `a_signal_name' of `a_c_object'.
 		require
 			a_c_object_not_void: not a_c_object.is_default_pointer
@@ -170,16 +168,14 @@ feature {EV_ANY_I, EV_APPLICATION_IMP} -- Event handling
 				print (generator + ": calling signal_connect ( .. )%N")
 			end
 			l_app_imp := app_implementation
-			l_app_imp.gtk_marshal.signal_connect (a_c_object, a_signal_name, an_agent, translate, False)
+			l_app_imp.gtk_marshal.signal_connect (a_c_object, a_signal_name, an_agent, Void, False)
 			record_signal_connection (a_c_object, a_signal_name, l_app_imp.gtk_marshal.last_signal_connection_id)
 		end
 
 	real_signal_connect_after (
 		a_c_object: like c_object;
 		a_signal_name: STRING_8;
-		an_agent: ROUTINE;
-		translate: detachable FUNCTION [INTEGER, POINTER, TUPLE];
-		)
+		an_agent: ROUTINE)
 				-- Connect `an_agent' to `a_signal_name' of `a_c_object'.
 				-- 'an_agent' called after default gtk signal handler for `a_signal_name'
 		require
@@ -194,7 +190,7 @@ feature {EV_ANY_I, EV_APPLICATION_IMP} -- Event handling
 				print (generator + ": calling signal_connect ( .. ) AFTER%N")
 			end
 			l_app_imp := app_implementation
-			l_app_imp.gtk_marshal.signal_connect (a_c_object, l_app_imp.c_string_from_eiffel_string (a_signal_name), an_agent, translate, True)
+			l_app_imp.gtk_marshal.signal_connect (a_c_object, l_app_imp.c_string_from_eiffel_string (a_signal_name), an_agent, Void, True)
 			record_signal_connection (a_c_object, a_signal_name, l_app_imp.gtk_marshal.last_signal_connection_id)
 		end
 

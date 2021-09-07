@@ -1,4 +1,4 @@
-note
+﻿note
 	description:
 		"EiffelVision multi-column-list, implementation interface."
 	legal: "See notice at end of class."
@@ -115,9 +115,7 @@ feature {EV_GTK_DEPENDENT_INTERMEDIARY_ROUTINES} -- Implementation
 				a_selection := {GTK2}.gtk_tree_view_get_selection (tree_view)
 				real_signal_connect (a_selection,
 						{EV_GTK_EVENT_STRINGS}.changed_event_name,
-						agent (app_implementation.gtk_marshal).on_pnd_deferred_item_parent_selection_change (internal_id),
-						Void
-					)
+						agent (app_implementation.gtk_marshal).on_pnd_deferred_item_parent_selection_change (internal_id))
 				selection_signal_connection := last_signal_connection
 			end
 		end
@@ -397,8 +395,8 @@ feature {NONE} -- Implementation
 					column_alignment_changed (temp_alignment, i)
 				end
 
-				real_signal_connect (a_column, {EV_GTK_EVENT_STRINGS}.notify_width_event_name, agent (app_implementation.gtk_marshal).mcl_column_resize_callback (object_id, i), Void)
-				real_signal_connect (a_column, {EV_GTK_EVENT_STRINGS}.clicked_event_name, agent (app_implementation.gtk_marshal).mcl_column_click_callback (object_id, i), Void)
+				real_signal_connect (a_column, {EV_GTK_EVENT_STRINGS}.notify_width_event_name, agent (app_implementation.gtk_marshal).mcl_column_resize_callback (object_id, i))
+				real_signal_connect (a_column, {EV_GTK_EVENT_STRINGS}.clicked_event_name, agent (app_implementation.gtk_marshal).mcl_column_click_callback (object_id, i))
 				i := i + 1
 			end
 		end

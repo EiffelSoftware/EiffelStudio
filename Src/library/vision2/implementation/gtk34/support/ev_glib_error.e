@@ -50,8 +50,11 @@ feature -- Access
 			m: POINTER
 		do
 			m := c_message (item)
-			if not m.is_default_pointer then
-				Result := (create {EV_GTK_C_STRING}.share_from_pointer (m)).string
+			Result :=
+			if m.is_default_pointer then
+				{STRING_32} ""
+			else
+				(create {EV_GTK_C_STRING}.share_from_pointer (m)).string
 			end
 		end
 

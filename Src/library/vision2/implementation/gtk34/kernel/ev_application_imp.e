@@ -119,9 +119,10 @@ feature {NONE} -- Initialization
 				default_input_context := {GTK2}.gtk_im_context_simple_new
 				gtk_marshal.signal_connect_after (default_input_context,
 						{EV_GTK_EVENT_STRINGS}.commit_event_string,
-						agent on_char,
-						im_context_commit_translate_agent
+						agent on_char_event (?),
+						Void
 					)
+
 			else
 				-- We are unable to launch the gtk toolkit, probably due to a DISPLAY issue.
 				print ("EiffelVision application could not launch, check DISPLAY environment variable%N")
@@ -134,6 +135,24 @@ feature {NONE} -- Initialization
 		do
 			character_string_buffer.wipe_out
 			character_string_buffer.append (a_gtk_c_string.string)
+			{GTK2}.gtk_im_context_reset (default_input_context)
+		end
+
+
+	on_char_event (a_arguments: POINTER): POINTER
+			-- Update `character_string_buffer' Unicode key string.
+		local
+			l_gchar: POINTER
+		do
+			l_gchar := {GTK2}.gtk_value_pointer (a_arguments)
+			if l_gchar /= default_pointer then
+				reusable_gtk_c_string.share_from_pointer (l_gchar)
+			else
+				reusable_gtk_c_string.set_with_eiffel_string ("")
+			end
+
+			character_string_buffer.wipe_out
+			character_string_buffer.append (reusable_gtk_c_string.string)
 			{GTK2}.gtk_im_context_reset (default_input_context)
 		end
 

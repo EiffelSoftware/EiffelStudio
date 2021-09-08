@@ -214,6 +214,28 @@ feature -- Cairo context
 
 feature -- Cairo surface
 
+	cairo_recording_surface_create_with_size (content, width, height: INTEGER): POINTER
+		external
+			"C inline use <ev_gtk.h>"
+		alias
+			"[
+				cairo_recording_surface_create ((cairo_content_t) $content, &(cairo_rectangle_t) {0, 0, $width, $height })
+			]"
+		ensure
+			is_class: class
+		end
+
+	cairo_image_surface_create (format, width, height: INTEGER): POINTER
+		external
+			"C inline use <ev_gtk.h>"
+		alias
+			"[
+				cairo_image_surface_create ((cairo_format_t ) $format, (int) $width, (int) $height)
+			]"
+		ensure
+			is_class: class
+		end
+
 	set_source_surface (cr: POINTER; surface: POINTER; x: REAL_64; y: REAL_64)
 		external
 			"C signature (cairo_t*, cairo_surface_t*, double, double) use <cairo.h>"

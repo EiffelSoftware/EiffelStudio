@@ -45,9 +45,9 @@
       <?endif?>
       <?define UpgradeGuid = "5940F956-CAD9-47B8-AAF4-DC435ADAED23" ?>
       <?define Product = "EiffelStudio" ?>
-      <?define ProductVersion = "21.08" ?>
-      <?define ProductDescription = "EiffelStudio 21.08" Integrated Development Environment (IDE) Installer" ?>
-      <?define ProductKey = "Eiffel_21.08" ?>
+      <?define ProductVersion = "21.09" ?>
+      <?define ProductDescription = "EiffelStudio 21.09" Integrated Development Environment (IDE) Installer" ?>
+      <?define ProductKey = "Eiffel_21.09" ?>
     <?else?>
       <?ifdef EiffelEnvision?>
         <?ifdef Enterprise?>
@@ -66,7 +66,7 @@
         <?define Product = "EiffelEnvision" ?>
         <?define ProductVersion = "2.8" ?>
         <?define ProductDescription = "EiffelEnvision 2.8 The Eiffel for .NET Language Package for Visual Studio .NET 2005" ?>
-        <?define ProductKey = "Eiffel_21.08" ?>
+        <?define ProductKey = "Eiffel_21.09" ?>
       <?else?>
         <?define Edition = "Test"?>
         <?define LicenseFile = "license.rtf"?>
@@ -75,7 +75,7 @@
         <?define Product = "EiffelStudio" ?>
         <?define ProductVersion = "2.8" ?>
         <?define ProductDescription = "Test" ?>
-        <?define ProductKey = "Eiffel_21.08" ?>
+        <?define ProductKey = "Eiffel_21.09" ?>
       <?endif?>
     <?endif?>
     <?define ProductName = "$(var.Product) $(var.ProductVersion) ($(var.Platform)) $(var.Edition)" ?>

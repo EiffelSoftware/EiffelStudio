@@ -50,22 +50,6 @@ feature {NONE} -- Initialization
 
 feature {EV_ANY_IMP} -- Access
 
-	translate_and_call (
-		an_agent: ROUTINE;
-		translate: FUNCTION [INTEGER, POINTER, TUPLE]
-	): detachable ANY
-			-- Call `an_agent' using `translate' to convert `args' and `n_args'
-		require
-			an_agent_not_void: an_agent /= Void
-			translate_not_void: translate /= Void
-		do
-			if attached {FUNCTION [TUPLE, detachable ANY]} an_agent as fct then
-				Result := fct.item (translate.item (integer_pointer_tuple))
-			else
-				an_agent.call (translate.item (integer_pointer_tuple))
-			end
-		end
-
 	dimension_tuple (a_x, a_y, a_width, a_height: INTEGER): like internal_dimension_tuple
 			-- Return a dimension tuple from given arguments.
 		do
@@ -82,7 +66,6 @@ feature -- Implementation
 					a_c_object: POINTER;
 					a_signal_name: EV_GTK_C_STRING;
 					an_agent: ROUTINE;
-					translate: detachable FUNCTION [INTEGER, POINTER, TUPLE];
 					invoke_after_handler: BOOLEAN
 				)
 			-- Signal connect, depending on `invoke_after_handler` invoked before or after default handler.
@@ -90,20 +73,11 @@ feature -- Implementation
 			--		- on connect the agent `an_agent` is eif_adopt-ed by the run-time
 			--		- on disconnect the eif_adopt-ed agent `an_agent` is eif_wean-ed by the run-time
 			--			and thus can be collected by the GC
-		local
-			l_agent: ROUTINE
 		do
-			if translate = Void then
-					-- If we have no translate agent then we call the agent directly.
-				l_agent := an_agent
-			else
-				l_agent := agent translate_and_call (an_agent, translate)
-			end
-
 			last_signal_connection_id := {EV_GTK_CALLBACK_MARSHAL}.c_signal_connect (
 				a_c_object,
 				a_signal_name.item,
-				l_agent,
+				an_agent,
 				invoke_after_handler
 			)
 			debug("gtk_signal")
@@ -118,12 +92,11 @@ feature -- Implementation
 	signal_connect_after (
 					a_c_object: POINTER;
 					a_signal_name: EV_GTK_C_STRING;
-					an_agent: ROUTINE;
-					translate: detachable FUNCTION [INTEGER, POINTER, TUPLE]
+					an_agent: ROUTINE
 				)
 			-- Signal connect, invoke after default handler.
 		do
-			signal_connect (a_c_object, a_signal_name, an_agent, translate, True)
+			signal_connect (a_c_object, a_signal_name, an_agent, True)
 		end
 
 	signal_disconnect (a_c_object: POINTER; a_conn_id: INTEGER)

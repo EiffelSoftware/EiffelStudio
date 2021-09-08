@@ -168,7 +168,7 @@ feature {EV_ANY_I, EV_APPLICATION_IMP} -- Event handling
 				print (generator + ": calling signal_connect ( .. )%N")
 			end
 			l_app_imp := app_implementation
-			l_app_imp.gtk_marshal.signal_connect (a_c_object, a_signal_name, an_agent, Void, False)
+			l_app_imp.gtk_marshal.signal_connect (a_c_object, a_signal_name, an_agent, False)
 			record_signal_connection (a_c_object, a_signal_name, l_app_imp.gtk_marshal.last_signal_connection_id)
 		end
 
@@ -190,7 +190,7 @@ feature {EV_ANY_I, EV_APPLICATION_IMP} -- Event handling
 				print (generator + ": calling signal_connect ( .. ) AFTER%N")
 			end
 			l_app_imp := app_implementation
-			l_app_imp.gtk_marshal.signal_connect (a_c_object, l_app_imp.c_string_from_eiffel_string (a_signal_name), an_agent, Void, True)
+			l_app_imp.gtk_marshal.signal_connect (a_c_object, l_app_imp.c_string_from_eiffel_string (a_signal_name), an_agent, True)
 			record_signal_connection (a_c_object, a_signal_name, l_app_imp.gtk_marshal.last_signal_connection_id)
 		end
 

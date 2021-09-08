@@ -1,6 +1,5 @@
-note
-	description:
-		"EiffelVision application, GTK+ implementation."
+﻿note
+	description: "EiffelVision application, GTK+ implementation."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 	keywords: "application"
@@ -89,7 +88,6 @@ feature {NONE} -- Initialization
 					{GTK}.gdk_set_show_events (True)
 				end
 
-
 				best_available_color_depth := {GDK}.gdk_visual_get_depth (
 												{GDK}.gdk_screen_get_system_visual (
 													{GDK}.gdk_display_get_default_screen (
@@ -119,9 +117,7 @@ feature {NONE} -- Initialization
 				default_input_context := {GTK2}.gtk_im_context_simple_new
 				gtk_marshal.signal_connect_after (default_input_context,
 						{EV_GTK_EVENT_STRINGS}.commit_event_string,
-						agent on_char_event (?),
-						Void
-					)
+						agent on_char_event (?))
 
 			else
 				-- We are unable to launch the gtk toolkit, probably due to a DISPLAY issue.
@@ -129,15 +125,6 @@ feature {NONE} -- Initialization
 				die (0)
 			end
 		end
-
-	on_char (a_gtk_c_string: EV_GTK_C_STRING): POINTER
-			-- Update `character_string_buffer' Unicode key string.
-		do
-			character_string_buffer.wipe_out
-			character_string_buffer.append (a_gtk_c_string.string)
-			{GTK2}.gtk_im_context_reset (default_input_context)
-		end
-
 
 	on_char_event (a_arguments: POINTER): POINTER
 			-- Update `character_string_buffer' Unicode key string.
@@ -1429,24 +1416,6 @@ feature -- Implementation
 			end
 		end
 
-	im_context_commit_translate_agent: FUNCTION [INTEGER, POINTER, TUPLE]
-			-- Translation agent used input method context commits.
-		once
-			Result :=
-			agent (n: INTEGER; p: POINTER): TUPLE
-				local
-					l_gchar: POINTER
-				do
-					l_gchar := {GTK2}.gtk_value_pointer (p)
-					if l_gchar /= default_pointer then
-						reusable_gtk_c_string.share_from_pointer (l_gchar)
-					else
-						reusable_gtk_c_string.set_with_eiffel_string ("")
-					end
-					Result := [reusable_gtk_c_string]
-				end
-		end
-
 	character_string_buffer: STRING_32
 		-- Character buffer used for storing converted user keyboard character input.
 
@@ -1690,4 +1659,4 @@ note
 			Customer support http://support.eiffel.com
 		]"
 
-end -- class EV_APPLICATION_IMP
+end

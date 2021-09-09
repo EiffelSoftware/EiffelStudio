@@ -596,8 +596,8 @@ feature -- Status setting
 						{GDK}.g_object_unref (append_buffer)
 					end
 					text_tag_table := {GTK2}.gtk_text_buffer_get_tag_table (text_buffer)
-					append_buffer := {GTK2}.gtk_text_buffer_new (text_tag_table) -- floating ref
-					append_buffer := {GDK}.g_object_ref_sink (append_buffer) -- adopt floating ref
+					append_buffer := {GTK2}.gtk_text_buffer_new (text_tag_table) -- Normal ref
+					 --TODO double check if we need to call g_ojbect_ref, by default append_buffer has ref count = 1.
 					buffer_locked_in_append_mode := True
 				end
 				l_char_code := a_text.code (1)

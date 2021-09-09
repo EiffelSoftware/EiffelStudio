@@ -472,7 +472,7 @@ feature {EV_STOCK_PIXMAPS_IMP} -- Implementation
 			end
 
 			stock_pixbuf := {GTK2}.gtk_icon_theme_load_icon ({GTK2}.gtk_icon_theme_get_for_screen (l_screen), a_stock_id, 48, 0, $l_error)
-			{GTK2}.g_object_force_floating (l_label)
+			{GTK2}.g_object_unref (l_label)
 			l_label := default_pointer
 
 			if stock_pixbuf /= default_pointer then

@@ -603,15 +603,14 @@ feature -- Drawing operations
 	sub_pixmap (area: EV_RECTANGLE): EV_PIXMAP
 			-- Pixmap region of `Current' represented by rectangle `area'
 		local
-			pix_imp: detachable EV_PIXMAP_IMP
 			a_pix: POINTER
 		do
 			create Result
-			pix_imp ?= Result.implementation
-			check pix_imp /= Void then end
-			a_pix := pixbuf_from_drawable_at_position (area.x, area.y, 0, 0, area.width, area.height)
-			pix_imp.set_pixmap_from_pixbuf (a_pix)
-			{GTK2}.g_object_unref (a_pix)
+			check attached {EV_PIXMAP_IMP} Result.implementation as pix_imp then
+				a_pix := pixbuf_from_drawable_at_position (area.x, area.y, 0, 0, area.width, area.height)
+				pix_imp.set_pixmap_from_pixbuf (a_pix)
+				{GTK2}.g_object_unref (a_pix)
+			end
 		end
 
 	draw_sub_pixmap (x, y: INTEGER; a_pixmap: EV_PIXMAP; area: EV_RECTANGLE)

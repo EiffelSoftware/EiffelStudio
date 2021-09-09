@@ -1039,17 +1039,15 @@ feature {EV_MULTI_COLUMN_LIST_ROW_IMP}
 	set_row_pixmap (a_row: INTEGER; a_pixmap: EV_PIXMAP)
 			-- Set row `a_row' pixmap to `a_pixmap'.
 		local
-			pixmap_imp: detachable EV_PIXMAP_IMP
-			a_list_iter: detachable EV_GTK_TREE_ITER_STRUCT
 			a_pixbuf: POINTER
 		do
-			pixmap_imp ?= a_pixmap.implementation
-			check pixmap_imp /= Void then end
-			a_pixbuf := pixmap_imp.pixbuf_from_drawable_with_size (pixmaps_width, pixmaps_height)
-			a_list_iter := ev_children.i_th (a_row).list_iter
-			check a_list_iter /= Void then end
-			{GTK2}.gtk_list_store_set_pixbuf (list_store, a_list_iter.item, 0, a_pixbuf)
-			{GTK2}.g_object_unref (a_pixbuf)
+			check attached {EV_PIXMAP_IMP} a_pixmap.implementation as pixmap_imp then
+				a_pixbuf := pixmap_imp.pixbuf_from_drawable_with_size (pixmaps_width, pixmaps_height)
+				check attached {EV_GTK_TREE_ITER_STRUCT} ev_children.i_th (a_row).list_iter as  a_list_iter then
+					{GTK2}.gtk_list_store_set_pixbuf (list_store, a_list_iter.item, 0, a_pixbuf)
+					{GTK2}.g_object_unref (a_pixbuf)
+				end
+			end
 		end
 
 	remove_row_pixmap (a_row: INTEGER)

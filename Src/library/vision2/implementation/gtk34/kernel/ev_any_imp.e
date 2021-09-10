@@ -461,6 +461,10 @@ feature {EV_INTERMEDIARY_ROUTINES, EV_ANY_I, EV_STOCK_PIXMAPS_IMP} -- Implementa
 			end
 		end
 
+invariant
+
+	has_c_object: not is_destroyed implies not c_object.is_default_pointer
+
 note
 	copyright:	"Copyright (c) 1984-2021, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"

@@ -23,7 +23,7 @@ inherit
 			make,
 			on_key_event,
 			initialize_buffer_events,
-			dispose
+			c_object_dispose
 		end
 
 create
@@ -946,12 +946,11 @@ feature {NONE} -- Implementation
 
 feature {NONE} -- Implementation
 
-	dispose
+	c_object_dispose
 		do
 			if not append_buffer.is_default_pointer then
 				{GDK}.g_object_unref (append_buffer)
-					-- Do not reset to default_pointer, as `append_buffer` may be the same as `text_buffer`
-					-- and `text_buffer` will be used in `Precursor`
+				append_buffer := default_pointer
 			end
 			Precursor
 		end
@@ -960,6 +959,9 @@ feature {EV_ANY, EV_ANY_I} -- Implementation
 
 	interface: detachable EV_RICH_TEXT note option: stable attribute end;
 
+invariant
+	has_c_object_implies_has_append_buffer: not c_object.is_default_pointer implies not append_buffer.is_default_pointer
+	
 note
 	copyright:	"Copyright (c) 1984-2021, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"

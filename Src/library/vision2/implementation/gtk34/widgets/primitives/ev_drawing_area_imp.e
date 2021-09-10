@@ -39,7 +39,6 @@ inherit
 			process_button_event,
 			button_actions_handled_by_signals,
 			destroy,
-			dispose,
 			c_object_dispose,
 			process_scroll_event
 		end
@@ -109,19 +108,6 @@ feature {NONE} -- Dispose
 				cairo_surface := default_pointer
 			end
 			Precursor {EV_PRIMITIVE_IMP}
-		end
-
-	dispose
-		do
-			Precursor
-			if not cairo_context.is_default_pointer then
-				{CAIRO}.destroy (cairo_context)
-				cairo_context := default_pointer
-			end
-			if not cairo_surface.is_default_pointer then
-				{CAIRO}.surface_destroy (cairo_surface)
-				cairo_surface := default_pointer
-			end
 		end
 
 	c_object_dispose

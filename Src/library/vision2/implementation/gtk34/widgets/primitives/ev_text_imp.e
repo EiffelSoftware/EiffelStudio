@@ -23,7 +23,7 @@ inherit
 		redefine
 			interface,
 			make,
-			dispose,
+			c_object_dispose,
 			text_length,
 			visual_widget,
 			selected_text
@@ -614,7 +614,7 @@ feature {NONE} -- Implementation
 			Result := text_view
 		end
 
-	dispose
+	c_object_dispose
 			-- Clean up `Current'
 		do
 			if not text_buffer.is_default_pointer then
@@ -623,6 +623,7 @@ feature {NONE} -- Implementation
 			end
 			Precursor {EV_TEXT_COMPONENT_IMP}
 		end
+
 
 	on_change_actions
 			-- The text within the widget has changed.
@@ -670,6 +671,12 @@ feature {NONE} -- Implementation
 feature {EV_ANY, EV_ANY_I} -- Implementation
 
 	interface: detachable EV_TEXT note option: stable attribute end;
+
+invariant
+
+	has_c_object_implies_has_text_buffer: not c_object.is_default_pointer implies not text_buffer.is_default_pointer
+
+
 
 note
 	copyright:	"Copyright (c) 1984-2021, Eiffel Software and others"

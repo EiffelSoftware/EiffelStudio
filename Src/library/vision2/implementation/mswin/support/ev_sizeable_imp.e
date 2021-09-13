@@ -1,4 +1,4 @@
-note
+﻿note
 	description:
 		"Eiffel Vision sizeable. Mswindows implementation of ancestor%N%
 		%for EV_SIZEABLE_PRIMITIVE_IMP and EV_SIZEABLE_CONTAINER_IMP."
@@ -263,9 +263,7 @@ feature {EV_ANY_I} -- deferred feature
 			not_is_destroyed: not is_destroyed
 		do
 			child_cell.move (a_x_position, a_y_position)
-			if is_show_requested then
-				wel_move (a_x_position, a_y_position)
-			end
+			wel_move (a_x_position, a_y_position)
 		end
 
 	ev_apply_new_size, frozen ev_move_and_resize (a_x_position, a_y_position,
@@ -396,28 +394,14 @@ feature -- Obsolete
 			-- and height of `Current' widget have changed.
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2021, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
-
-
-
-end -- EV_SIZEABLE_IMP
-
-
-
-
-
-
-
-
-
-
-
+end

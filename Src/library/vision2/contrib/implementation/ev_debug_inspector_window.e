@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "EiffelVision2 inspector window."
 	date: "$Date$"
 	revision: "$Revision$"
@@ -778,9 +778,10 @@ feature -- Events
 						end
 						if sr /= Void then
 							if sr.data /= a_widget then
-								check a_parents.is_empty end
 --								ev_application.add_idle_action_kamikaze (agent expand_parents_until (sr, a_parents, a_widget, a_grid))
-								expand_parents_until (sr, a_parents, a_widget, a_grid)
+								if not a_parents.is_empty then
+									expand_parents_until (sr, a_parents, a_widget, a_grid)
+								end
 							else
 --								if sr.is_expandable and then not sr.is_expanded then
 --									sr.expand

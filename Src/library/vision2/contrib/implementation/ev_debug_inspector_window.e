@@ -723,8 +723,6 @@ feature -- Events
 		end
 
 	expand_parents_until (a_row: EV_GRID_ROW; a_parents: ARRAYED_STACK [EV_WIDGET]; a_widget: EV_ANY; a_grid: EV_GRID)
-		require
-			not a_parents.is_empty
 		local
 			l_items_row, sr: EV_GRID_ROW
 			nxt: EV_WIDGET
@@ -778,14 +776,14 @@ feature -- Events
 						end
 						if sr /= Void then
 							if sr.data /= a_widget then
-								if not a_parents.is_empty then
-									expand_parents_until (sr, a_parents, a_widget, a_grid)
-								end
+								expand_parents_until (sr, a_parents, a_widget, a_grid)
 							else
 --								if sr.is_expandable and then not sr.is_expanded then
 --									sr.expand
 --								end
-								sr.ensure_visible
+								if sr.is_displayed then
+									sr.ensure_visible
+								end
 								sr.enable_select
 --								ev_application.add_idle_action_kamikaze (agent sr.ensure_visible)
 --								ev_application.add_idle_action_kamikaze (agent sr.enable_select)

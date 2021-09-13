@@ -127,7 +127,7 @@ feature -- Status setting
 			l_bg_name: STRING
 		do
 			if a_color /= Void then
-				l_context := {GTK}.gtk_widget_get_style_context (visual_widget)
+				l_context := {GTK}.gtk_widget_get_style_context (a_c_object)
 
 				create l_css.make (1024)
 

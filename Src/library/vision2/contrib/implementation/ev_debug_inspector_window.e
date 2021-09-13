@@ -778,7 +778,6 @@ feature -- Events
 						end
 						if sr /= Void then
 							if sr.data /= a_widget then
---								ev_application.add_idle_action_kamikaze (agent expand_parents_until (sr, a_parents, a_widget, a_grid))
 								if not a_parents.is_empty then
 									expand_parents_until (sr, a_parents, a_widget, a_grid)
 								end
@@ -938,27 +937,35 @@ feature -- Events
 		end
 
 	show_widget (w: detachable EV_ANY)
+		local
+			s: STRING_32
+		do
+			create s.make (1024)
+			append_widget_to_string (w, s)
+			info_output.append_text (s)
+			info_output.flush_buffer
+		end
+
+	append_widget_to_string (w: detachable EV_ANY; a_output: STRING_32)
 		do
 			if w /= Void then
-				info_output.append_text (offset)
-				info_output.append_text (w.generating_type.name)
-				info_output.append_text ("%N")
-				info_output.append_text (w.out)
-				info_output.append_text ("%N")
-
+				a_output.append (offset)
+				a_output.append (w.generating_type.name_32)
+				a_output.append ("%N")
+				a_output.append (w.out)
+				a_output.append ("%N")
 				if
 					attached parent_of (w) as p and then
 					p /= w
 				then
-					info_output.append_text ("Parents...%N")
+					a_output.append ("Parents...%N")
 					indent
-					show_widget (p)
+					append_widget_to_string (p, a_output)
 					exdent
 				end
 			else
-				info_output.append_text (offset)
-				info_output.append_text ("None")
-				info_output.append_text ("%N")
+				a_output.append (offset)
+				a_output.append ("None%N")
 			end
 		end
 

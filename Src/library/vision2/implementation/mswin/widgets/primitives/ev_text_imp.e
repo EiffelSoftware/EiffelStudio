@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "EiffelVision text area. Mswindows implementation."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -368,7 +368,7 @@ feature -- Status Settings
 			l_wel_string: WEL_STRING
 		do
 			previous_caret_position := internal_wel_caret_position
-			wel_set_caret_position (wel_text_length)
+			wel_set_caret_position (text_length)
 			create l_wel_string.make_with_newline_conversion (txt)
 			{WEL_API}.send_message (wel_item, Em_replacesel, to_wparam (0), l_wel_string.item)
 			wel_set_caret_position (previous_caret_position)
@@ -557,7 +557,7 @@ feature {EV_ANY, EV_ANY_I} -- Implementation
 	interface: detachable EV_TEXT note option: stable attribute end;
 
 note
-	copyright:	"Copyright (c) 1984-2017, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2021, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software
@@ -567,4 +567,4 @@ note
 			Customer support http://support.eiffel.com
 		]"
 
-end -- class EV_TEXT_IMP
+end

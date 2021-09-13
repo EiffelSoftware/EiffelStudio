@@ -300,7 +300,7 @@ feature -- Status setting
 			header_item.resize_to_content
 			set_width (required_width_of_item_span (1, l_parent.row_count).max (header_item.width))
 		ensure
-			width_set: attached parent as l_par and then width = required_width_of_item_span (1, l_par.row_count)
+			width_set: attached parent as l_par and then width = required_width_of_item_span (1, l_par.row_count).max (header_item.width)
 		end
 
 feature -- Status report
@@ -514,7 +514,7 @@ invariant
 	virtual_position_and_virtual_position_unlocked_equal_when_not_locked: not is_locked implies virtual_x_position = virtual_x_position_unlocked
 
 note
-	copyright: "Copyright (c) 1984-2018, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2021, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

@@ -104,8 +104,8 @@ feature {NONE} -- Implementation
 				-- Set constraints so that resize does not break existing minimum sizing.
 			l_width := a_width.max (minimum_width)
 			l_height := a_height.max (minimum_height)
-			{GTK2}.gtk_window_resize (c_object, l_width, l_height)
 			{GTK}.gtk_window_set_default_size (c_object, l_width, l_height)
+			{GTK2}.gtk_window_resize (c_object, l_width, l_height)
 
 				-- Set configure_event_pending to True so that dimensions are updated immediately.
 			configure_event_pending := True
@@ -448,7 +448,10 @@ feature {EV_INTERMEDIARY_ROUTINES, EV_APPLICATION_IMP}
 							-- we don't call top level window events.
 						on_key_event (a_key, l_key_string, a_key_press)
 					end
-					if a_focus_widget /= l_any then
+					if
+						a_focus_widget /= l_any and then
+						not a_focus_widget.is_destroyed
+					then
 							-- If the focus widget is `Current' then do not call 'on_key_event' twice.
 						a_focus_widget.on_key_event (a_key, l_key_string, a_key_press)
 					end

@@ -59,7 +59,7 @@ feature {NONE} -- Initialization
 			set_c_object (a_vbox)
 			entry_widget := new_entry_widget
 			{GTK}.gtk_widget_show (entry_widget)
-			{GTK}.gtk_box_pack_start (a_vbox, entry_widget, False, False, 0)
+			{GTK}.gtk_box_pack_start (a_vbox, entry_widget, True, True, 0)
 			align_text_left
 			Precursor
 		end
@@ -174,7 +174,10 @@ feature {EV_ANY_I, EV_INTERMEDIARY_ROUTINES} -- Implementation
 	on_key_event (a_key: detachable EV_KEY; a_key_string: detachable STRING_32; a_key_press: BOOLEAN)
 		do
 			Precursor (a_key, a_key_string, a_key_press)
-			if a_key_press then
+			if
+				not is_destroyed and
+				a_key_press
+			then
 				on_change_actions
 			end
 		end
@@ -356,18 +359,23 @@ feature {EV_ANY_I, EV_INTERMEDIARY_ROUTINES} -- Implementation
 		local
 			new_text: STRING_32
 		do
-			new_text := text
-			if --not in_change_action and then
-			(attached stored_text as l_stored_text and then not new_text.is_equal (l_stored_text)) or else stored_text = Void then
-					-- The text has actually changed
-				in_change_action := True
-				if attached change_actions_internal as l_change_actions_internal then
+			if
+				attached change_actions_internal as l_change_actions_internal and then
+				not l_change_actions_internal.is_empty and then
+				not is_destroyed
+			then
+				new_text := text
+				if
+					(attached stored_text as l_stored_text and then not new_text.is_equal (l_stored_text))
+					or else stored_text = Void
+				then
+						-- The text has actually changed
+					in_change_action := True
 					l_change_actions_internal.call (Void)
+					in_change_action := False
+					stored_text := text
 				end
-				in_change_action := False
-				stored_text := text
 			end
-
 		end
 
 	in_change_action: BOOLEAN

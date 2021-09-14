@@ -197,6 +197,9 @@ feature {NONE} -- Implementation
 				-- This may trigger a minimum size calculation so it is performed after the contents have been updated.
 			l_text_field.implementation.hide_border
 
+				-- Let's set the text field min height, to match the cell's height
+			l_text_field.set_minimum_height (height)
+
 			l_bg_color := implementation.displayed_background_color
 			l_text_field.set_background_color (l_bg_color)
 			popup_window.set_background_color (l_bg_color)
@@ -225,7 +228,7 @@ invariant
 	text_field_parented_during_activation: attached text_field as l_field implies l_field.has_parent
 
 note
-	copyright:	"Copyright (c) 1984-2015, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2021, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

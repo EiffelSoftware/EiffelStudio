@@ -223,8 +223,8 @@ feature {NONE} -- Implementation
 					ev_children.after
 				loop
 					v_imp := ev_children.item
-					new_min_width := new_min_width.max (v_imp.x_position + v_imp.minimum_width)
-					new_min_height := new_min_height.max (v_imp.y_position + v_imp.minimum_height)
+					new_min_width := new_min_width.max (v_imp.x_position + v_imp.width)
+					new_min_height := new_min_height.max (v_imp.y_position + v_imp.height)
 					ev_children.forth
 				end
 				ev_children.go_i_th (cur)
@@ -400,7 +400,7 @@ feature {NONE} -- WEL Implementation
 		end
 
 note
-	copyright: "Copyright (c) 1984-2021, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2018, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

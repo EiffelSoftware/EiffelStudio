@@ -37,7 +37,66 @@ feature -- GTK version
 		external
 			"C inline use <ev_gtk.h>"
 		alias
-			"gtk_check_version((guint*) $a_required_major, (guint*) $a_required_minor, (guint*) $a_required_micro)"
+			"gtk_check_version((guint) $a_required_major, (guint) $a_required_minor, (guint) $a_required_micro)"
+		end
+
+feature -- gtkWidget sizing
+
+	frozen gtk_widget_get_preferred_size (a_widget: POINTER; a_minimum_size, a_preferred_size: POINTER)
+		external
+			"C (GtkWidget*, GtkRequisition*, GtkRequisition*) | <ev_gtk.h>"
+		end
+
+	frozen gtk_widget_get_preferred_height_for_width ( widget: POINTER; width: INTEGER; minimum_height, natural_height: POINTER)
+		external
+			"C inline use <ev_gtk.h>"
+		alias
+			"[
+				gtk_widget_get_preferred_height_for_width  ((GtkWidget *)$widget,
+                                (gint)$width,
+                                (gint *)$minimum_height,
+                                (gint *)$natural_height)
+             ]"
+		end
+
+	frozen gtk_widget_get_preferred_width_for_height ( widget: POINTER; height: INTEGER; minimum_width, natural_width: POINTER)
+		external
+			"C inline use <ev_gtk.h>"
+		alias
+			"[
+				gtk_widget_get_preferred_width_for_height
+                               ((GtkWidget *)$widget,
+                                (gint)$height,
+                                (gint *)$minimum_width,
+                                (gint *)$natural_width);
+
+             ]"
+		end
+
+	frozen gtk_widget_get_preferred_width ( widget: POINTER; minimum_width, natural_width: POINTER)
+		external
+			"C inline use <ev_gtk.h>"
+		alias
+			"[
+				gtk_widget_get_preferred_width
+                               ((GtkWidget *)$widget,
+                                (gint *)$minimum_width,
+                                (gint *)$natural_width);
+
+             ]"
+		end
+
+	frozen gtk_widget_get_preferred_height  ( widget: POINTER; minimum_height, natural_height: POINTER)
+		external
+			"C inline use <ev_gtk.h>"
+		alias
+			"[
+				gtk_widget_get_preferred_height 
+                               ((GtkWidget *)$widget,
+                                (gint *)$minimum_height,
+                                (gint *)$natural_height);
+
+             ]"
 		end
 
 feature -- GtkWidget Externals

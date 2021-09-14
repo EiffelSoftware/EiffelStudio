@@ -975,6 +975,29 @@ feature -- Enum
 			instance_free: class
 		end
 
+	frozen gtk_widget_minimum_width (a_c_widget: POINTER): INTEGER_32
+		do
+			gtk_widget_get_size_request (a_c_widget, $Result, default_pointer)
+		ensure then
+			instance_free: class
+		end
+
+	frozen gtk_widget_minimum_height (a_c_widget: POINTER): INTEGER_32
+		do
+			gtk_widget_get_size_request (a_c_widget, default_pointer, $Result)
+		ensure then
+			instance_free: class
+		end
+
+	frozen gtk_widget_get_size_request (a_widget: POINTER; w, h: POINTER)
+		external
+			"C inline use <ev_gtk.h>"
+		alias
+			"gtk_widget_get_size_request ((GtkWidget*) $a_widget, (gint*) $w, (gint*) $h)"
+		ensure
+			instance_free: class
+		end
+
 	frozen gtk_widget_set_size_request (a_widget: POINTER; a_width, a_height: INTEGER_32)
 		external
 			"C inline use <ev_gtk.h>"

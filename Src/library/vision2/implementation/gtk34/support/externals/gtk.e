@@ -477,67 +477,6 @@ feature -- Widgets
 			"C (GtkWidget*) | <ev_gtk.h>"
 		end
 
-	frozen gtk_widget_get_preferred_size (a_widget: POINTER; a_minimum_size, a_preferred_size: POINTER)
-		external
-			"C (GtkWidget*, GtkRequisition*, GtkRequisition*) | <ev_gtk.h>"
-		end
-
-	frozen gtk_widget_get_preferred_height_for_width ( widget: POINTER; width: INTEGER; minimum_height, natural_height: POINTER)
-		external
-			"C inline use <ev_gtk.h>"
-		alias
-			"[
-				gtk_widget_get_preferred_height_for_width  ((GtkWidget *)$widget,
-                                (gint)$width,
-                                (gint *)$minimum_height,
-                                (gint *)$natural_height)
-             ]"
-		end
-
-
-	frozen gtk_widget_get_preferred_width_for_height ( widget: POINTER; height: INTEGER; minimum_width, natural_width: POINTER)
-		external
-			"C inline use <ev_gtk.h>"
-		alias
-			"[
-				gtk_widget_get_preferred_width_for_height
-                               ((GtkWidget *)$widget,
-                                (gint)$height,
-                                (gint *)$minimum_width,
-                                (gint *)$natural_width);
-
-             ]"
-		end
-
-
-	frozen gtk_widget_get_preferred_width ( widget: POINTER; minimum_width, natural_width: POINTER)
-		external
-			"C inline use <ev_gtk.h>"
-		alias
-			"[
-				gtk_widget_get_preferred_width
-                               ((GtkWidget *)$widget,
-                                (gint *)$minimum_width,
-                                (gint *)$natural_width);
-
-             ]"
-		end
-
-
-frozen gtk_widget_get_preferred_height  ( widget: POINTER; minimum_height, natural_height: POINTER)
-		external
-			"C inline use <ev_gtk.h>"
-		alias
-			"[
-				gtk_widget_get_preferred_height 
-                               ((GtkWidget *)$widget,
-                                (gint *)$minimum_height,
-                                (gint *)$natural_height);
-
-             ]"
-		end
-
-
 feature -- Widget Style		
 
 	frozen gtk_style_context_get_color (a_context: POINTER; a_state: INTEGER; a_color: POINTER)
@@ -784,12 +723,18 @@ feature -- MASK, enum
 			"GTK_SHADOW_OUT"
 		end
 
-
 	frozen gtk_window_toplevel_enum: INTEGER_32
 		external
 			"C macro use <ev_gtk.h>"
 		alias
 			"GTK_WINDOW_TOPLEVEL"
+		end
+
+	frozen gtk_window_popup_enum: INTEGER_32
+		external
+			"C macro use <ev_gtk.h>"
+		alias
+			"GTK_WINDOW_POPUP"
 		end
 
 	frozen gtk_win_pos_center_enum: INTEGER_32
@@ -1941,11 +1886,11 @@ feature -- Color Helper
 
 feature -- Gobject Type
 
-	g_type_name (a_type:  POINTER): POINTER
+	g_type_name (a_type: POINTER): POINTER
 		external
 			"C inline use <ev_gtk.h>"
 		alias
-			"return g_type_name ((GType)$a_type);"
+			"g_type_name (G_TYPE_FROM_INSTANCE($a_type))"
 		end
 
 note

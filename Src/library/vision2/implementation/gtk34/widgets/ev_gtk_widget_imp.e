@@ -121,42 +121,11 @@ feature {EV_ANY_I, EV_INTERMEDIARY_ROUTINES} -- Implementation
 			Result ?= app_implementation.gtk_widget_imp_at_pointer_position
 		end
 
+feature {EV_ANY_I, EV_INTERMEDIARY_ROUTINES} -- Implementation: size		
+
 	minimum_width: INTEGER
 		do
 			Result := real_minimum_width
-		end
-
-	real_minimum_width: INTEGER
-			-- Minimum width that the widget may occupy.
-		do
-			if not is_destroyed then
-				Result := width_request
-				if Result = -1 then
-					Result := preferred_width
-				end
-			end
-		end
-
-	width_request: INTEGER
-			-- Requested width of `Current' from gtk.
-		do
-			Result := {GTK2}.g_object_get_integer (c_object, {GTK_PROPERTIES}.width_request)
-		end
-
-	preferred_width: INTEGER
-			-- Preferred width of `Current' from gtk.
-		local
-			gr,pgr: POINTER
-		do
-			gr := reusable_requisition_struct.item
-			{GTK}.gtk_widget_get_preferred_size (c_object, gr, pgr)
-			Result := {GTK}.gtk_requisition_struct_width (gr)
-		end
-
-	reusable_requisition_struct: MANAGED_POINTER
-			-- Reusable GtkRequisition struct.
-		once
-			create Result.make ({GTK}.c_gtk_requisition_struct_size)
 		end
 
 	minimum_height: INTEGER
@@ -164,32 +133,107 @@ feature {EV_ANY_I, EV_INTERMEDIARY_ROUTINES} -- Implementation
 			Result := real_minimum_height
 		end
 
-	real_minimum_height: INTEGER
+feature {EV_ANY_I, EV_INTERMEDIARY_ROUTINES} -- Implementation: size				
+
+	real_minimum_width: INTEGER
 			-- Minimum width that the widget may occupy.
+		local
+			pw: INTEGER
+		do
+			if not is_destroyed then
+				Result := width_request
+				pw := preferred_minimum_width
+				if pw > Result then
+					Result := pw
+				end
+				if Result < 0 then
+					Result := 0
+				end
+			end
+		end
+
+	real_minimum_height: INTEGER
+			-- Minimum height that the widget may occupy.
+		local
+			ph: INTEGER
 		do
 			if not is_destroyed then
 				Result := height_request
-				if Result = -1 then
-					Result := preferred_height
+				ph := preferred_minimum_height
+				if ph > Result then
+					Result := ph
+				end
+				if Result < 0 then
+					Result := 0
 				end
 			end
+		end
+
+	width_request: INTEGER
+			-- Requested width of `Current' from gtk.
+		do
+			{GTK2}.gtk_widget_get_size_request (c_object, $Result, default_pointer)
 		end
 
 	height_request: INTEGER
 			-- Requested height of `Current' from gtk.
 		do
-			Result := {GTK2}.g_object_get_integer (c_object, {GTK_PROPERTIES}.height_request)
+			{GTK2}.gtk_widget_get_size_request (c_object, default_pointer, $Result)
 		end
 
-	preferred_height: INTEGER
+	preferred_minimum_width: INTEGER
+			-- Preferred width of `Current' from gtk.
+		local
+			p_min_width, p_natural_width: POINTER
+		do
+			p_min_width := reusable_requisition_struct.item
+--			p_natural_width := reusable_requisition_struct.item
+			{GTK}.gtk_widget_get_preferred_size (c_object, p_min_width, p_natural_width)
+			Result := {GTK}.gtk_requisition_struct_width (p_min_width)
+		end
+
+	preferred_minimum_height: INTEGER
 			-- Preferred height of `Current' from gtk.
 		local
-			gr: POINTER
+			p_min_height, p_natural_height: POINTER
 		do
-			gr := reusable_requisition_struct.item
-			{GTK}.gtk_widget_get_preferred_size (c_object, gr, default_pointer)
-			Result := {GTK}.gtk_requisition_struct_height (gr)
+			p_min_height := reusable_requisition_struct.item
+--			p_natural_height := reusable_requisition_struct.item
+			{GTK}.gtk_widget_get_preferred_size (c_object, p_min_height, p_natural_height)
+			Result := {GTK}.gtk_requisition_struct_height (p_min_height)
 		end
+
+	preferred_natural_width: INTEGER
+			-- Preferred width of `Current' from gtk.
+		local
+			p_min_width, p_natural_width: POINTER
+		do
+--			p_min_width := reusable_requisition_struct.item
+			p_natural_width := reusable_requisition_struct.item
+			{GTK}.gtk_widget_get_preferred_size (c_object, p_min_width, p_natural_width)
+			Result := {GTK}.gtk_requisition_struct_width (p_natural_width)
+		end
+
+	preferred_natural_height: INTEGER
+			-- Preferred height of `Current' from gtk.
+		local
+			p_min_height, p_natural_height: POINTER
+		do
+--			p_min_height := reusable_requisition_struct.item
+			p_natural_height := reusable_requisition_struct.item
+			{GTK}.gtk_widget_get_preferred_size (c_object, p_min_height, p_natural_height)
+			Result := {GTK}.gtk_requisition_struct_height (p_natural_height)
+		end
+
+feature {NONE} -- Implementation: size
+
+	reusable_requisition_struct: MANAGED_POINTER
+			-- Reusable GtkRequisition struct.
+		once
+			create Result.make ({GTK}.c_gtk_requisition_struct_size)
+		end
+
+feature {EV_ANY_I, EV_INTERMEDIARY_ROUTINES} -- Implementation
 
 	event_widget: POINTER
 			-- Pointer to the widget handling the widget events

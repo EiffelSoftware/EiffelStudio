@@ -103,11 +103,11 @@ feature {EV_ANY_I} -- Access
 							create s.make_empty
 						end
 						s.append (l_interface.generating_type.name_32)
-						s.append_string_general (" (" + generator + ")")
+						s.append_string_general ("--" + generator + "--")
 					else
 						create s.make_from_string_general (generating_type.name_32)
 					end
-					s.append_string_general (" #" + internal_id.out)
+					s.append_string_general ("-" + internal_id.out)
 					{GTK}.gtk_widget_set_name (c_object, (create {EV_GTK_C_STRING}.set_with_eiffel_string (s)).item)
 				end
 			end

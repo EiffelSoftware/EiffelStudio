@@ -72,13 +72,15 @@ feature {NONE} -- Initialization
 		do
 				-- In order to access the screen, the EV_APPLICATION needs to be created
 			app_implementation.do_nothing
-
-			drawable := {GTK2}.gdk_screen_get_root_window ({GTK2}.gdk_screen_get_default)
+			has_x11_support := {GTK}.is_x11_session
 
 			-- TODO update this code to support different environments like (Wayland)
-			{REFACTORING_HELPER}.to_implement ("update this code to support different environments like (Wayland)")
-			gc := {GDK_X11}.create_gc (drawable)
-			{GDK_X11}.x_set_subwindow_mode (drawable, gc, {GDK_X11}.x_subwindow_mode_include_inferiors)
+			if has_x11_support then
+				drawable := {GTK2}.gdk_screen_get_root_window ({GTK2}.gdk_screen_get_default)
+				{REFACTORING_HELPER}.to_implement ("update this code to support different environments like (Wayland)")
+				gc := {GDK_X11}.create_gc (drawable)
+				{GDK_X11}.x_set_subwindow_mode (drawable, gc, {GDK_X11}.x_subwindow_mode_include_inferiors)
+			end
 			init_default_values
 
 				-- Set offset values to match Win32 implementation.
@@ -99,8 +101,11 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
+	has_x11_support: BOOLEAN
+
 	gc: POINTER
-		--
+			-- X11 graphics context.
+			-- available only for X11 session.
 
 	drawable: POINTER
 			-- Pointer to the screen (root window)
@@ -108,12 +113,6 @@ feature -- Access
 	get_cairo_context
 		do
 			cairo_context := drawable
-		end
-
-	xdisplay: POINTER
-			-- Pointer X display of a GdkDisplay.
-		once
-			Result := gdk_x_display
 		end
 
 feature -- Clear Operations
@@ -124,11 +123,13 @@ feature -- Clear Operations
 			tmp_fg_color, tmp_bg_color: detachable EV_COLOR
 		do
 			pre_drawing
-			{GTK2}.gdk_window_invalidate_rect (drawable, default_pointer, True)
 			if
+				has_x11_support and then
 				not drawable_x_window.is_default_pointer and then
 				not drawable_x_display.is_default_pointer
 			then
+				{GTK2}.gdk_window_invalidate_rect (drawable, default_pointer, True)
+
 				tmp_fg_color := internal_foreground_color
 				if tmp_fg_color = Void then
 					tmp_fg_color := foreground_color
@@ -158,6 +159,7 @@ feature -- Drawing
 			end
 			pre_drawing
 			if
+				has_x11_support and then
 				not drawable_x_window.is_default_pointer and then
 				not drawable_x_display.is_default_pointer
 			then
@@ -184,6 +186,7 @@ feature -- Drawing
 			end
 			pre_drawing
 			if
+				has_x11_support and then
 				not drawable_x_window.is_default_pointer and then
 				not drawable_x_display.is_default_pointer and then
 				a_width > 0 and a_height > 0
@@ -213,6 +216,7 @@ feature -- Drawing
 			end
 			pre_drawing
 			if
+				has_x11_support and then
 				not drawable_x_window.is_default_pointer and then
 				not drawable_x_display.is_default_pointer
 			then
@@ -241,6 +245,7 @@ feature -- Drawing
 			end
 			pre_drawing
 			if
+				has_x11_support and then
 				not drawable_x_window.is_default_pointer and then
 				not drawable_x_display.is_default_pointer
 			then
@@ -271,6 +276,7 @@ feature -- Drawing
 			end
 			pre_drawing
 			if
+				has_x11_support and then
 				not drawable_x_window.is_default_pointer and then
 				not drawable_x_display.is_default_pointer and then
 				a_width > 0 and then a_height > 0
@@ -304,6 +310,7 @@ feature -- Drawing
 			end
 			pre_drawing
 			if
+				has_x11_support and then
 				not drawable_x_window.is_default_pointer and then
 				not drawable_x_display.is_default_pointer
 			then
@@ -327,6 +334,7 @@ feature -- Fill Operations
 		do
 			pre_drawing
 			if
+				has_x11_support and then
 				not drawable_x_window.is_default_pointer and then
 				not drawable_x_display.is_default_pointer
 			then
@@ -356,6 +364,7 @@ feature -- Fill Operations
 		do
 			pre_drawing
 			if
+				has_x11_support and then
 				not drawable_x_window.is_default_pointer and then
 				not drawable_x_display.is_default_pointer
 			then
@@ -380,6 +389,7 @@ feature -- Fill Operations
 		do
 			pre_drawing
 			if
+				has_x11_support and then
 				not drawable_x_window.is_default_pointer and then
 				not drawable_x_display.is_default_pointer
 			then
@@ -404,6 +414,7 @@ feature -- Fill Operations
 		do
 			pre_drawing
 			if
+				has_x11_support and then
 				not drawable_x_window.is_default_pointer and then
 				not drawable_x_display.is_default_pointer
 			then
@@ -452,6 +463,7 @@ feature -- Session
 		do
 
 			if
+				has_x11_support and then -- TODO: find a workaroung for Wayland.
 				not drawable.is_default_pointer and then
 				(drawable_x_window.is_default_pointer
 				or drawable_x_display.is_default_pointer)
@@ -628,29 +640,31 @@ feature -- Element change
 			l_drawable: like drawable
 		do
 			Precursor (a_drawing_mode)
-			l_gc := gc
-			l_drawable := drawable
-			if
-				not l_gc.is_default_pointer and then
-				not l_drawable.is_default_pointer
-			then
-				inspect
-					a_drawing_mode
-				when {EV_DRAWABLE_CONSTANTS}.drawing_mode_copy then
-					{GDK_X11}.x_set_function (l_drawable, l_gc, {GDK_X11}.x_function_GXcopy)
-				when {EV_DRAWABLE_CONSTANTS}.drawing_mode_and then
-					{GDK_X11}.x_set_function (l_drawable, l_gc, {GDK_X11}.x_function_GXand)
-				when {EV_DRAWABLE_CONSTANTS}.drawing_mode_xor then
-					{GDK_X11}.x_set_function (l_drawable, l_gc, {GDK_X11}.x_function_GXxor)
-				when {EV_DRAWABLE_CONSTANTS}.drawing_mode_invert then
-					{GDK_X11}.x_set_function (l_drawable, l_gc, {GDK_X11}.x_function_GXinvert)
-				when {EV_DRAWABLE_CONSTANTS}.drawing_mode_or then
-					{GDK_X11}.x_set_function (l_drawable, l_gc, {GDK_X11}.x_function_GXor)
-				else
-					check
-						drawing_mode_exists: False
+			if has_x11_support then
+				l_gc := gc
+				l_drawable := drawable
+				if
+					not l_gc.is_default_pointer and then
+					not l_drawable.is_default_pointer
+				then
+					inspect
+						a_drawing_mode
+					when {EV_DRAWABLE_CONSTANTS}.drawing_mode_copy then
+						{GDK_X11}.x_set_function (l_drawable, l_gc, {GDK_X11}.x_function_GXcopy)
+					when {EV_DRAWABLE_CONSTANTS}.drawing_mode_and then
+						{GDK_X11}.x_set_function (l_drawable, l_gc, {GDK_X11}.x_function_GXand)
+					when {EV_DRAWABLE_CONSTANTS}.drawing_mode_xor then
+						{GDK_X11}.x_set_function (l_drawable, l_gc, {GDK_X11}.x_function_GXxor)
+					when {EV_DRAWABLE_CONSTANTS}.drawing_mode_invert then
+						{GDK_X11}.x_set_function (l_drawable, l_gc, {GDK_X11}.x_function_GXinvert)
+					when {EV_DRAWABLE_CONSTANTS}.drawing_mode_or then
+						{GDK_X11}.x_set_function (l_drawable, l_gc, {GDK_X11}.x_function_GXor)
+					else
+						check
+							drawing_mode_exists: False
+						end
+						{GDK_X11}.x_set_function (l_drawable, l_gc, {GDK_X11}.x_function_GXcopy)
 					end
-					{GDK_X11}.x_set_function (l_drawable, l_gc, {GDK_X11}.x_function_GXcopy)
 				end
 			end
 		end
@@ -660,6 +674,7 @@ feature -- Element change
 		do
 			Precursor (a_width)
 			if
+				has_x11_support and then
 				not gc.is_default_pointer and then
 				not drawable.is_default_pointer
 			then
@@ -676,6 +691,7 @@ feature -- Element change
 		do
 			Precursor {EV_DRAWABLE_IMP}
 			if
+				has_x11_support and then
 				not gc.is_default_pointer and then
 				not drawable.is_default_pointer
 			then
@@ -688,6 +704,7 @@ feature -- Element change
 		do
 			Precursor {EV_DRAWABLE_IMP}
 			if
+				has_x11_support and then
 				not gc.is_default_pointer and then
 				not drawable.is_default_pointer
 			then
@@ -1031,19 +1048,20 @@ feature {NONE} -- Implementation
 
 	app_implementation: EV_APPLICATION_IMP
 			-- Return the instance of EV_APPLICATION_IMP.
-		local
-			l_result: detachable EV_APPLICATION_IMP
 		once
-			l_result ?= (create {EV_ENVIRONMENT}).implementation.application_i
-			check l_result /= Void then end
-			Result := l_result
+			check attached {EV_APPLICATION_IMP} (create {EV_ENVIRONMENT}).implementation.application_i as l_result then
+				Result := l_result
+			end
 		end
 
 	flush
 			-- Force all queued draw to be called.
 		do
 			-- By default do nothing
-			if not drawable.is_default_pointer then
+			if
+				has_x11_support and then
+				not drawable.is_default_pointer
+			then
 				{GDK_X11}.flush_drawable (drawable)
 			end
 		end
@@ -1063,7 +1081,10 @@ feature {NONE} -- Implementation
 	dispose
 			-- Cleanup
 		do
-			if gc /= default_pointer then
+			if
+				has_x11_support and then
+				gc /= default_pointer
+			then
 				{GDK_X11}.x_free_gc (drawable, gc)
 				gc := default_pointer
 			end
@@ -1076,13 +1097,15 @@ feature {NONE} -- Implementation
 			debug ("refactor_fixme")
 				{REFACTORING_HELPER}.fixme ("The current Xlib code does not set the bg and fg correcty")
 			end
-			r := (a_red * 0xFFFF).rounded
-			g := (a_green * 0xFFFF).rounded
-			b := (a_blue * 0xFFFF).rounded
-			if a_foreground then
-				{GDK_X11}.set_drawable_foreground (drawable, gc, r, g, b)
-			else
-				{GDK_X11}.set_drawable_background (drawable, gc, r, g, b)
+			if has_x11_support then
+				r := (a_red * 0xFFFF).rounded
+				g := (a_green * 0xFFFF).rounded
+				b := (a_blue * 0xFFFF).rounded
+				if a_foreground then
+					{GDK_X11}.set_drawable_foreground (drawable, gc, r, g, b)
+				else
+					{GDK_X11}.set_drawable_background (drawable, gc, r, g, b)
+				end
 			end
 		end
 

@@ -109,7 +109,9 @@ feature {NONE} -- Initialization
 
 
 					-- We do not want X Errors to exit the system so we ignore them indefinitely.
-				{GDK}.gdk_x11_display_error_trap_push ({GDK}.gdk_display_get_default)
+				if {GTK}.is_x11_session then
+					{GDK}.gdk_x11_display_error_trap_push ({GDK}.gdk_display_get_default)
+				end
 
 				update_screen_meta_data
 

@@ -10,6 +10,16 @@ inherit
 
 	GTK_DEPRECATED
 
+feature -- Session type
+
+	is_x11_session: BOOLEAN
+		once
+			Result := attached {EXECUTION_ENVIRONMENT}.item ("XDG_SESSION_TYPE") as l_session_type and then
+					l_session_type.is_case_insensitive_equal_general ("x11")
+		ensure
+			instance_free: class
+		end
+
 feature -- GTK version	
 
 	frozen gtk_maj_ver: INTEGER_32

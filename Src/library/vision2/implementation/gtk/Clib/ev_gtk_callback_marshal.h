@@ -19,28 +19,28 @@ indexing
 
 #include <ev_gtk.h>
 
-void c_ev_gtk_callback_marshal_init
+extern void c_ev_gtk_callback_marshal_init
 	(EIF_REFERENCE, void (*) (
 		EIF_REFERENCE, EIF_REFERENCE, EIF_INTEGER, EIF_POINTER)
 	);
 
-void c_ev_gtk_callback_marshal_destroy ();
+extern void c_ev_gtk_callback_marshal_destroy ();
 
-void c_ev_gtk_callback_marshal_set_is_enabled (int);
+extern void c_ev_gtk_callback_marshal_set_is_enabled (int);
 
-guint c_ev_gtk_callback_marshal_signal_connect
+extern guint c_ev_gtk_callback_marshal_signal_connect
 	(GtkObject*, const gchar*, EIF_OBJECT, gboolean);
 
-guint c_ev_gtk_callback_marshal_signal_connect_true
+extern guint c_ev_gtk_callback_marshal_signal_connect_true
 	(GtkObject*, const gchar*, EIF_OBJECT);
 
-int c_ev_gtk_callback_marshal_true_callback (EIF_OBJECT agent);
+extern int c_ev_gtk_callback_marshal_true_callback (EIF_OBJECT agent);
 
-int c_ev_gtk_callback_marshal_true_event_callback (GtkWidget*, GdkEvent*, EIF_OBJECT);
+extern int c_ev_gtk_callback_marshal_true_event_callback (GtkWidget*, GdkEvent*, EIF_OBJECT);
 
-guint c_ev_gtk_callback_marshal_timeout_connect (gint, EIF_OBJECT);
+extern guint c_ev_gtk_callback_marshal_timeout_connect (gint, EIF_OBJECT);
 
-guint c_ev_gtk_callback_marshal_delete_connect (GtkObject*, EIF_OBJECT);
+extern guint c_ev_gtk_callback_marshal_delete_connect (GtkObject*, EIF_OBJECT);
 
 
 #endif

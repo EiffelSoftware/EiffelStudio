@@ -19,21 +19,19 @@ indexing
 
 #include <ev_gtk.h>
 
-void c_ev_gtk_callback_marshal_init
+extern void c_ev_gtk_callback_marshal_init
 	(EIF_REFERENCE, void (*) (
 		EIF_REFERENCE, EIF_REFERENCE, EIF_INTEGER, EIF_POINTER, EIF_POINTER)
 	);
 
-void c_ev_gtk_callback_marshal_destroy ();
+extern void c_ev_gtk_callback_marshal_destroy ();
 
-int c_ev_gtk_callback_marshal_is_enabled;
-void c_ev_gtk_callback_marshal_set_is_enabled (int);
+extern int c_ev_gtk_callback_marshal_is_enabled;
+extern void c_ev_gtk_callback_marshal_set_is_enabled (int);
 
-guint c_ev_gtk_disconnect_all_signals (gpointer);
-
-guint c_ev_gtk_callback_marshal_signal_connect
+extern guint c_ev_gtk_callback_marshal_signal_connect
 	(gpointer, const gchar*, EIF_OBJECT, gboolean);
 
-guint c_ev_gtk_callback_marshal_timeout_connect (gint, EIF_OBJECT);
+extern guint c_ev_gtk_callback_marshal_timeout_connect (gint, EIF_OBJECT);
 
 #endif

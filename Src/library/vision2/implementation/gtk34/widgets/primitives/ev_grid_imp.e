@@ -18,7 +18,12 @@ inherit
 			propagate_foreground_color
 		redefine
 			interface,
-			set_default_size_values
+			set_default_size_values,
+			viewport_resized,
+			static_fixed_x_offset,
+			static_fixed_y_offset,
+			static_fixed_minimum_width,
+			static_fixed_minimum_height
 		end
 
 	EV_CELL_IMP
@@ -86,7 +91,7 @@ feature {NONE} -- Initialization
 
 			create_implementation_objects
 
-			Precursor {EV_CELL_IMP}
+			Precursor {EV_CELL_IMP} -- note: the {EV_CELL_IMP}.make precursor, will not create a new event box, as it is already done here.
 
 			initialize_grid
 				-- Force a resize of all internal items to make sure everything is updated correctly.
@@ -101,8 +106,9 @@ feature {NONE} -- Initialization
 				-- For gtk3, as it is using cairo_surface, using 30_000 is not possible
 				-- due to (huge) memory usage
 			Precursor
-			buffered_drawable_size := 4_000
-			maximum_header_width := 4_000
+			buffered_drawable_width := 100
+			buffered_drawable_height := 100
+			maximum_header_width := buffered_drawable_width
 		end
 
 feature {NONE} -- Dispose
@@ -130,6 +136,48 @@ feature -- Element change
 		do
 			Precursor {EV_CELL_IMP} (a_color)
 			redraw_client_area
+		end
+
+feature {EV_GRID_LOCKED_I} -- Drawing implementation
+
+	viewport_resized (an_x, a_y, a_width, a_height: INTEGER)
+			-- <Precursor>
+		do
+			buffered_drawable_width := a_width
+			buffered_drawable_height := a_height
+
+			drawable.set_minimum_size (buffered_drawable_width, buffered_drawable_height)
+
+			maximum_header_width := buffered_drawable_width
+-- TODO: check if header needs to be updated.			
+--			header.set_minimum_width (maximum_header_width)
+--			if not header_viewport.is_empty then
+--				header_viewport.set_item_size (maximum_header_width, header.height)
+--			end
+
+			Precursor (an_x, a_y, a_width, a_height)
+		end
+
+	static_fixed_x_offset: INTEGER
+			-- Default X offset of viewport contained within static fixed.
+		do
+			Result := 0 --buffered_drawable_width // 2
+		end
+
+	static_fixed_y_offset: INTEGER
+			-- Default Y offset of viewport container within static fixed.
+		do
+			Result := 0 --buffered_drawable_height // 2
+		end
+
+	static_fixed_minimum_width: INTEGER
+		do
+			Result := buffered_drawable_width
+		end
+
+	static_fixed_minimum_height: INTEGER
+		do
+			Result := buffered_drawable_height
 		end
 
 feature {EV_GRID_ITEM_I} -- Implementation

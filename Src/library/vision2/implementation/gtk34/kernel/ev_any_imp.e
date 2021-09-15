@@ -116,7 +116,7 @@ feature {EV_ANY_I} -- Access
 	frozen eif_object_from_c (a_c_object: POINTER): detachable EV_ANY_IMP
 			-- Retrieve the EV_ANY_IMP stored in `a_c_object'.
 		external
-			"C inline use %"ev_any_imp.h%""
+			"C inline use <ev_any_imp.h>"
 		alias
 			"c_ev_any_imp_get_eif_reference_from_object_id ($a_c_object)"
 		ensure

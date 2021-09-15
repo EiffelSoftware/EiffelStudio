@@ -246,7 +246,7 @@ feature {EV_GTK_CALLBACK_MARSHAL} -- Externals
 		)
 			-- See ev_gtk_callback_marshal.c
 		external
-			"C inline use %"ev_gtk_callback_marshal.h%""
+			"C inline use <ev_gtk_callback_marshal.h>"
 		alias
 			"c_ev_gtk_callback_marshal_init ((EIF_REFERENCE) $object, (void (*) (EIF_REFERENCE, EIF_REFERENCE, EIF_INTEGER, EIF_POINTER, EIF_POINTER)) $a_marshal);"
 		ensure
@@ -256,7 +256,9 @@ feature {EV_GTK_CALLBACK_MARSHAL} -- Externals
 	frozen c_ev_gtk_callback_marshal_destroy
 			-- See ev_gtk_callback_marshal.c
 		external
-			"C | %"ev_gtk_callback_marshal.h%""
+			"C inline use <ev_gtk_callback_marshal.h>"
+		alias
+			"c_ev_gtk_callback_marshal_destroy()"
 		ensure
 			is_class: class
 		end
@@ -266,7 +268,7 @@ feature -- Implementation
 	frozen c_ev_gtk_callback_marshal_is_enabled: BOOLEAN
 			-- See ev_gtk_callback_marshal.c
 		external
-			"C inline use %"ev_gtk_callback_marshal.h%""
+			"C inline use <ev_gtk_callback_marshal.h>"
 		alias
 			"(EIF_BOOLEAN) c_ev_gtk_callback_marshal_is_enabled"
 		ensure
@@ -276,7 +278,9 @@ feature -- Implementation
 	frozen c_ev_gtk_callback_marshal_set_is_enabled (a_enabled_state: BOOLEAN)
 			-- See ev_gtk_callback_marshal.c
 		external
-			"C signature (int) use %"ev_gtk_callback_marshal.h%""
+			"C inline use <ev_gtk_callback_marshal.h>"
+		alias
+			"c_ev_gtk_callback_marshal_set_is_enabled((int)$a_enabled_state)"
 		ensure
 			is_class: class
 		end
@@ -288,7 +292,7 @@ feature {EV_ANY_IMP, EV_GTK_CALLBACK_MARSHAL} -- Externals
 				-- Store Eiffel object_id in `gtk_object'.
 				-- Set up signal handlers.
 		external
-			"C macro use %"ev_any_imp.h%""
+			"C macro use <ev_any_imp.h>"
 		ensure
 			is_class: class
 		end
@@ -297,9 +301,9 @@ feature {EV_ANY_IMP, EV_GTK_CALLBACK_MARSHAL} -- Externals
 		an_agent: ROUTINE; invoke_after_handler: BOOLEAN): INTEGER
 			-- Connect `an_agent' to 'a_signal_name' on `a_c_object'.
 		external
-			"C (gpointer, gchar*, EIF_OBJECT, gboolean): guint | %"ev_gtk_callback_marshal.h%""
+			"C inline use <ev_gtk_callback_marshal.h>"
 		alias
-			"c_ev_gtk_callback_marshal_signal_connect"
+			"c_ev_gtk_callback_marshal_signal_connect((gpointer) $a_c_object, (gchar*) $a_signal_name, (EIF_OBJECT) $an_agent, (gboolean) $invoke_after_handler)"
 		ensure
 			is_class: class
 		end
@@ -310,7 +314,9 @@ feature {EV_APPLICATION_IMP, EV_TIMEOUT_IMP} -- Externals
 		(a_delay: INTEGER; an_agent: PROCEDURE): NATURAL_32
 			-- Call `an_agent' after `a_delay'.
 		external
-			"C (gint, EIF_OBJECT): EIF_INTEGER | %"ev_gtk_callback_marshal.h%""
+			"C inline use <ev_gtk_callback_marshal.h>"
+		alias
+			"c_ev_gtk_callback_marshal_timeout_connect((gint) $a_delay, (EIF_OBJECT) $an_agent)"
 		ensure
 			is_class: class
 		end

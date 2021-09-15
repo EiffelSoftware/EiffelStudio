@@ -64,14 +64,14 @@ void c_ev_gtk_callback_marshal (
        	 	);
 }
 
-int c_ev_gtk_callback_marshal_true_callback (EIF_OBJECT agent)
+int c_ev_gtk_callback_marshal_true_callback (EIF_OBJECT adopted_agent)
 		// GtkFunction that passes `agent' to ev_gtk_callback_marshal
 		// and returns TRUE
 {
       if (c_ev_gtk_callback_marshal_is_enabled)
                 ev_gtk_callback_marshal (
                         eif_access (ev_gtk_callback_marshal_object),
-                        eif_access (agent),
+                        eif_access (adopted_agent),
                         0,
                         (EIF_POINTER) NULL,
 			NULL
@@ -133,12 +133,16 @@ guint c_ev_gtk_callback_marshal_timeout_connect (
 )
         // Call an `agent' every `delay' milliseconds.
 {
+	EIF_OBJECT adopted_agent;
 	guint connection_id;
+
+	adopted_agent = eif_adopt (agent);
+
 	connection_id = g_timeout_add_full (
 				G_PRIORITY_DEFAULT,
 				delay,
 				(GSourceFunc) c_ev_gtk_callback_marshal_true_callback,
-				eif_adopt (agent),          // User data for function.
+				adopted_agent,          // User data for function.
 				(GDestroyNotify) gdestroy_notify_eif_wean // To call on hook disconnect.
 			);
 	return (connection_id);

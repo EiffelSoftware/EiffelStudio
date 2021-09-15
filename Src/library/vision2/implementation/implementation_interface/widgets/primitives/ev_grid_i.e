@@ -4479,16 +4479,15 @@ feature {EV_GRID_LOCKED_I} -- Drawing implementation
 			-- Resize `viewport' within `static_fixed' as the viewable
 			-- area of `Current' has changed.
 		do
-			print ("resize_viewport_in_static_fixed -> (" + an_x.out + "," + a_y.out + ") " + a_width.out + " x " + a_height.out + "%N")
 			static_fixed.set_item_size (viewport, a_width, a_height)
 		end
 
 	static_fixed_viewport: EV_VIEWPORT
-		-- A viewport within `static_fixed'.
+			-- A viewport within `static_fixed'.
 
 	static_fixed: EV_FIXED
-		-- A static fixed, which is used to hold widgets that are contained in locked rows or columns.
-		-- The contents are not moved relative to the viewable area as the virtual position of `Current' changed.
+			-- A static fixed, which is used to hold widgets that are contained in locked rows or columns.
+			-- The contents are not moved relative to the viewable area as the virtual position of `Current' changed.
 
 	static_fixed_x_offset: INTEGER
 			-- Default X offset of viewport contained within static fixed.

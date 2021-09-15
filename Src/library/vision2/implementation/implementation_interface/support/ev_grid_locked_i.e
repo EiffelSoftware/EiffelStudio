@@ -21,7 +21,7 @@ feature {NONE} -- Initialization
 			create window
 			create fixed
 			create drawing_area
-			drawing_area.set_minimum_size (grid.buffered_drawable_size, grid.buffered_drawable_size)
+			drawing_area.set_minimum_size (grid.buffered_drawable_width, grid.buffered_drawable_height)
 			create viewport
 			create fixed
 			viewport.extend (fixed)
@@ -185,7 +185,7 @@ feature {EV_GRID_I, EV_GRID_DRAWER_I, EV_GRID_ROW_I, EV_GRID_COLUMN_I} -- Implem
 			internal_client_y := a_y_position
 				-- Store the virtual client y position internally.
 
-			buffer_space := (grid.buffered_drawable_size - grid.viewable_height)
+			buffer_space := (grid.buffered_drawable_height - grid.viewable_height)
 			current_buffer_position := viewport_y_offset
 
 				-- Calculate if the buffer must be flipped. If so, redraw the complete client area,
@@ -223,7 +223,7 @@ feature {EV_GRID_I, EV_GRID_DRAWER_I, EV_GRID_ROW_I, EV_GRID_COLUMN_I} -- Implem
 			internal_client_x := a_x_position
 				-- Store the virtual client x position internally.
 
-			buffer_space := (grid.buffered_drawable_size - grid.viewable_width)
+			buffer_space := (grid.buffered_drawable_width - grid.viewable_width)
 			current_buffer_position := viewport_x_offset
 
 				-- Calculate if the buffer must be flipped. If so, redraw the complete client area,
@@ -270,14 +270,14 @@ feature {EV_GRID_I, EV_GRID_DRAWER_I, EV_GRID_ROW_I, EV_GRID_COLUMN_I} -- Implem
 	last_horizontal_scroll_bar_value, last_vertical_scroll_bar_value: INTEGER;
 
 note
-	copyright: "Copyright (c) 1984-2006, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2021, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
-		Eiffel Software
-		356 Storke Road, Goleta, CA 93117 USA
-		Telephone 805-685-1006, Fax 805-685-6869
-		Website http://www.eiffel.com
-		Customer support http://support.eiffel.com
-	]"
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
+		]"
 
 end

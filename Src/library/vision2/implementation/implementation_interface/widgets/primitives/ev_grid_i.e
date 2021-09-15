@@ -198,7 +198,7 @@ feature -- Access
 			until
 				i > temp_columns.count
 			loop
-				a_column := temp_columns @ i
+				a_column := temp_columns [i]
 				check a_column /= Void then end
 				if a_column.is_selected then
 					Result.extend (a_column.attached_interface)
@@ -226,7 +226,7 @@ feature -- Access
 				until
 					i > a_count
 				loop
-					a_row := rows @ i
+					a_row := rows [i]
 					if a_row /= Void and then a_row.is_selected then
 						Result.extend (a_row.attached_interface)
 					end
@@ -571,29 +571,28 @@ feature -- Access
 	unlock_column (a_column: EV_GRID_COLUMN_I)
 			-- Ensure column `a_column' is unlocked.
 		local
-			l_locked_column: detachable EV_GRID_LOCKED_COLUMN_I
 			l_locked_indexes: like locked_indexes
 			l_cursor: CURSOR
 		do
-			l_locked_column ?= a_column.locked_column
-			check l_locked_column /= Void then end
-			static_fixed.prune (l_locked_column.widget)
-			l_locked_indexes := locked_indexes
-			l_cursor := l_locked_indexes.cursor
-			l_locked_indexes.go_i_th (l_locked_column.locked_index)
-			l_locked_indexes.remove
-			if not l_locked_indexes.off then
-				from
-				until
-					l_locked_indexes.off
-				loop
-					l_locked_indexes.item.set_locked_index (l_locked_indexes.item.locked_index - 1)
-					l_locked_indexes.forth
+			check attached {EV_GRID_LOCKED_COLUMN_I} a_column.locked_column as l_locked_column then
+				static_fixed.prune (l_locked_column.widget)
+				l_locked_indexes := locked_indexes
+				l_cursor := l_locked_indexes.cursor
+				l_locked_indexes.go_i_th (l_locked_column.locked_index)
+				l_locked_indexes.remove
+				if not l_locked_indexes.off then
+					from
+					until
+						l_locked_indexes.off
+					loop
+						l_locked_indexes.item.set_locked_index (l_locked_indexes.item.locked_index - 1)
+						l_locked_indexes.forth
+					end
 				end
-			end
-			redraw_column (a_column)
-			if l_locked_indexes.valid_cursor (l_cursor) then
-				l_locked_indexes.go_to (l_cursor)
+				redraw_column (a_column)
+				if l_locked_indexes.valid_cursor (l_cursor) then
+					l_locked_indexes.go_to (l_cursor)
+				end
 			end
 		ensure
 			column_not_locked: not a_column.is_locked
@@ -602,29 +601,28 @@ feature -- Access
 	unlock_row (a_row: EV_GRID_ROW_I)
 			-- Ensure row `a_row' is unlocked.
 		local
-			l_locked_row: detachable EV_GRID_LOCKED_ROW_I
 			l_locked_indexes: like locked_indexes
 			l_cursor: CURSOR
 		do
-			l_locked_row ?= a_row.locked_row
-			check l_locked_row /= Void then end
-			static_fixed.prune (l_locked_row.widget)
-			l_locked_indexes := locked_indexes
-			l_cursor := l_locked_indexes.cursor
-			l_locked_indexes.go_i_th (l_locked_row.locked_index)
-			l_locked_indexes.remove
-			if not l_locked_indexes.off then
-				from
-				until
-					l_locked_indexes.off
-				loop
-					l_locked_indexes.item.set_locked_index (l_locked_indexes.item.locked_index - 1)
-					l_locked_indexes.forth
+			check attached {EV_GRID_LOCKED_ROW_I} a_row.locked_row as l_locked_row then
+				static_fixed.prune (l_locked_row.widget)
+				l_locked_indexes := locked_indexes
+				l_cursor := l_locked_indexes.cursor
+				l_locked_indexes.go_i_th (l_locked_row.locked_index)
+				l_locked_indexes.remove
+				if not l_locked_indexes.off then
+					from
+					until
+						l_locked_indexes.off
+					loop
+						l_locked_indexes.item.set_locked_index (l_locked_indexes.item.locked_index - 1)
+						l_locked_indexes.forth
+					end
 				end
-			end
-			redraw_row (a_row)
-			if l_locked_indexes.valid_cursor (l_cursor) then
-				l_locked_indexes.go_to (l_cursor)
+				redraw_row (a_row)
+				if l_locked_indexes.valid_cursor (l_cursor) then
+					l_locked_indexes.go_to (l_cursor)
+				end
 			end
 		ensure
 			a_row_not_locked: not a_row.is_locked
@@ -1704,7 +1702,7 @@ feature -- Status setting
 					if items.count > 0 then
 						row_index := items.first
 						if uses_row_offsets and then attached row_indexes_to_visible_indexes as l_row_indexes_to_visible_indexes then
-							visible_row_index := l_row_indexes_to_visible_indexes @ row_index
+							visible_row_index := l_row_indexes_to_visible_indexes [row_index]
 						else
 							visible_row_index := row_index - 1
 						end
@@ -2119,7 +2117,7 @@ feature -- Status report
 			l_visible_column_indexes: ARRAYED_LIST [INTEGER]
 		do
 			l_visible_column_indexes := visible_column_indexes
-			if l_visible_column_indexes /= Void and then l_visible_column_indexes.count > 0 and then attached (columns @ (visible_column_indexes.first)) as l_column_imp then
+			if l_visible_column_indexes /= Void and then l_visible_column_indexes.count > 0 and then attached (columns [visible_column_indexes.first]) as l_column_imp then
 				Result := l_column_imp.interface
 			end
 		ensure
@@ -2153,7 +2151,7 @@ feature -- Status report
 			l_visible_column_indexes: ARRAYED_LIST [INTEGER]
 		do
 			l_visible_column_indexes := visible_column_indexes
-			if l_visible_column_indexes /= Void and then l_visible_column_indexes.count > 0 and then attached (columns @ (visible_column_indexes.last)) as l_column_i then
+			if l_visible_column_indexes /= Void and then l_visible_column_indexes.count > 0 and then attached (columns [visible_column_indexes.last]) as l_column_i then
 				Result := l_column_i.interface
 			end
 		ensure
@@ -2367,7 +2365,7 @@ feature -- Status report
 				until
 					i > l_count or else Result
 				loop
-					l_row := rows @ i
+					l_row := rows [i]
 					if l_row /= Void and then l_row.is_selected then
 						Result := True
 					end
@@ -2389,7 +2387,7 @@ feature -- Status report
 			until
 				i > temp_columns.count
 			loop
-				a_column := temp_columns @ i
+				a_column := temp_columns [i]
 				check a_column /= Void end
 				if a_column /= Void and then a_column.is_selected then
 					Result := True
@@ -2690,7 +2688,7 @@ feature -- Removal
 			a_col_i: detachable EV_GRID_COLUMN_I
 		do
 			hide_column (a_column)
-			a_col_i := columns @ a_column
+			a_col_i := columns [a_column]
 			check a_col_i /= Void then end
 
 				-- Remove association of column with `Current'
@@ -2989,9 +2987,9 @@ feature {EV_GRID_DRAWER_I, EV_GRID_ROW_I, EV_GRID_COLUMN_I} -- Implementation
 
 	internal_row_data: EV_GRID_ARRAYED_LIST [detachable SPECIAL [detachable EV_GRID_ITEM_I]]
 		-- Array of individual row's data, row by row
-		-- The row data returned from `row_list' @ i may be Void for optimization purposes
+		-- The row data returned from `row_list' [i] may be Void for optimization purposes
 		-- If the row data returned is not Void, some of the contents of this returned row data may be Void
-		-- The row data stored in `row_list' @ i may not necessarily be in the order of logical columns
+		-- The row data stored in `row_list' [i] may not necessarily be in the order of logical columns
 		-- The actual ordering is queried from `visible_physical_column_indexes'.
 		-- IMPORTANT: When an individual row's data is resized, the SPECIAL object corresponding to the data may be changed
 		-- and so locals to the special should always reset themselves to the new object should any operations be
@@ -3004,8 +3002,8 @@ feature {EV_GRID_COLUMN_I, EV_GRID_I, EV_GRID_DRAWER_I, EV_GRID_ROW_I, EV_GRID_I
 			-- A call to insert_new_column (2) on an empty grid will result in a `physical_index' of 0 as this is the first column added (zero-based indexing for `row_list')
 			-- A following call to `insert_new_column (1) will result in a `physical_index' of 1 as this is the second column added
 			-- If both columns were visible this query returns <<0, 1>>, so to draw the data for the appropriate columns to the screen, the indexes 0 and 1 need to be
-			-- used to query the value returned from `row_list' @ i
-			-- (`row_list' @ (i - 1)) @ (physical_column_indexes @ (j - 1)) returns the 'j'-th column value for the `i'-th row in the grid.
+			-- used to query the value returned from `row_list' [i]
+			-- (`row_list' [i - 1]) [physical_column_indexes [j - 1]] returns the 'j'-th column value for the `i'-th row in the grid.
 		local
 			a_col: detachable EV_GRID_COLUMN_I
 			i, col_count: INTEGER
@@ -3022,7 +3020,7 @@ feature {EV_GRID_COLUMN_I, EV_GRID_I, EV_GRID_DRAWER_I, EV_GRID_ROW_I, EV_GRID_I
 				until
 					i > col_count
 				loop
-					a_col := l_columns @ i
+					a_col := l_columns [i]
 					if a_col /= Void then
 						Result.extend (a_col.physical_index)
 					end
@@ -3894,7 +3892,6 @@ feature {EV_GRID_ITEM_I, EV_GRID, EV_GRID_DRAWER_I, EV_GRID_LOCKED_I} -- Impleme
 			-- All rows locked within `Current' in order of locking.
 		local
 			l_cursor: CURSOR
-			l_locked_row: detachable EV_GRID_LOCKED_ROW_I
 			l_locked_indexes: like locked_indexes
 		do
 			create Result.make (4)
@@ -3905,8 +3902,10 @@ feature {EV_GRID_ITEM_I, EV_GRID, EV_GRID_DRAWER_I, EV_GRID_LOCKED_I} -- Impleme
 			until
 				l_locked_indexes.off
 			loop
-				l_locked_row ?= l_locked_indexes.item
-				if l_locked_row /= Void and then attached l_locked_row.row_i as l_locked_row_i then
+				if
+					attached {EV_GRID_LOCKED_ROW_I} l_locked_indexes.item as l_locked_row and then
+					attached l_locked_row.row_i as l_locked_row_i
+				then
 					Result.extend (l_locked_row_i.attached_interface)
 				end
 				l_locked_indexes.forth
@@ -3920,7 +3919,6 @@ feature {EV_GRID_ITEM_I, EV_GRID, EV_GRID_DRAWER_I, EV_GRID_LOCKED_I} -- Impleme
 			-- All columns locked within `Current' in order of locking.
 		local
 			l_cursor: CURSOR
-			l_locked_column: detachable EV_GRID_LOCKED_COLUMN_I
 			l_locked_indexes: like locked_indexes
 		do
 			create Result.make (4)
@@ -3931,8 +3929,10 @@ feature {EV_GRID_ITEM_I, EV_GRID, EV_GRID_DRAWER_I, EV_GRID_LOCKED_I} -- Impleme
 			until
 				l_locked_indexes.off
 			loop
-				l_locked_column ?= l_locked_indexes.item
-				if l_locked_column /= Void and then attached l_locked_column.column_i as l_locked_column_i then
+				if
+					attached {EV_GRID_LOCKED_COLUMN_I} l_locked_indexes.item as l_locked_column and then
+					attached l_locked_column.column_i as l_locked_column_i
+				then
 					Result.extend (l_locked_column_i.attached_interface)
 				end
 				l_locked_indexes.forth
@@ -4013,7 +4013,7 @@ feature {EV_GRID_ROW_I, EV_GRID_COLUMN_I, EV_GRID_ITEM_I} -- Implementation
 							-- scrolling, we can set the position of the scroll bar exactly to match it's
 							-- previous position.
 						if uses_row_offsets and then attached row_offsets as l_row_offsets then
-							internal_vertical_scroll_bar.set_value ((l_row_offsets @ (previous_scroll_bar_value + 1)).min (internal_vertical_scroll_bar.value_range.upper))
+							internal_vertical_scroll_bar.set_value ((l_row_offsets [previous_scroll_bar_value + 1]).min (internal_vertical_scroll_bar.value_range.upper))
 						else
 								-- Must restrict to the maximum permitted value, as the virtual area
 								-- is smaller when per pixel scrolling is set as you cannot scroll past the final item.
@@ -4265,8 +4265,9 @@ feature {EV_GRID_LOCKED_I} -- Drawing implementation
 			-- note: depending on the platform, and implementation
 			-- this can be redefined to have smaller values.
 		do
-			buffered_drawable_size := 30_000
-			maximum_header_width := 30_000
+			buffered_drawable_width := 30_000
+			buffered_drawable_height := 30_000
+			maximum_header_width := buffered_drawable_width
 		end
 
 	initialize_grid
@@ -4303,7 +4304,7 @@ feature {EV_GRID_LOCKED_I} -- Drawing implementation
 				-- Flag `physical_column_indexes' for recalculation
 			physical_column_indexes_dirty := True
 
-			drawable.set_minimum_size (buffered_drawable_size, buffered_drawable_size)
+			drawable.set_minimum_size (buffered_drawable_width, buffered_drawable_height)
 			drawable.enable_tabable_to
 
 			internal_vertical_scroll_bar.hide
@@ -4330,7 +4331,7 @@ feature {EV_GRID_LOCKED_I} -- Drawing implementation
 			viewport.resize_actions.extend (agent viewport_resized)
 			viewport.dpi_changed_actions.extend (agent viewport_dpi_change_resized)
 
-			static_fixed.set_minimum_size (static_fixed_x_offset * 2, static_fixed_y_offset * 2)
+			static_fixed.set_minimum_size (static_fixed_minimum_width, static_fixed_minimum_height)
 
 			static_fixed_viewport.resize_actions.extend (agent resize_viewport_in_static_fixed)
 			vertical_box.extend (static_fixed_viewport)
@@ -4350,8 +4351,9 @@ feature {EV_GRID_LOCKED_I} -- Drawing implementation
 			header_viewport.set_item_size (maximum_header_width, header.height)
 
 			if {PLATFORM}.is_windows then
-					-- Needed for custom widget insertion implementation.				
-				fixed.set_minimum_size (buffered_drawable_size, buffered_drawable_size)
+					-- Needed for custom widget insertion implementation.	
+					-- TODO: check max/min sizes ...			
+				fixed.set_minimum_size (buffered_drawable_width, buffered_drawable_height)
 				viewport.extend (fixed)
 				fixed.extend (drawable)
 			else
@@ -4477,6 +4479,7 @@ feature {EV_GRID_LOCKED_I} -- Drawing implementation
 			-- Resize `viewport' within `static_fixed' as the viewable
 			-- area of `Current' has changed.
 		do
+			print ("resize_viewport_in_static_fixed -> (" + an_x.out + "," + a_y.out + ") " + a_width.out + " x " + a_height.out + "%N")
 			static_fixed.set_item_size (viewport, a_width, a_height)
 		end
 
@@ -4490,13 +4493,23 @@ feature {EV_GRID_LOCKED_I} -- Drawing implementation
 	static_fixed_x_offset: INTEGER
 			-- Default X offset of viewport contained within static fixed.
 		do
-			Result := buffered_drawable_size // 2
+			Result := buffered_drawable_width // 2
 		end
 
 	static_fixed_y_offset: INTEGER
 			-- Default Y offset of viewport container within static fixed.
 		do
-			Result := buffered_drawable_size // 2
+			Result := buffered_drawable_height // 2
+		end
+
+	static_fixed_minimum_width: INTEGER
+		do
+			Result := static_fixed_x_offset * 2
+		end
+
+	static_fixed_minimum_height: INTEGER
+		do
+			Result := static_fixed_y_offset * 2
 		end
 
 	header_item_resizing (header_item: EV_HEADER_ITEM)
@@ -4528,7 +4541,7 @@ feature {EV_GRID_LOCKED_I} -- Drawing implementation
 						from
 							header_index := header_index - 1
 						until
-							header_index = 1 or else attached (l_columns @ (header_index)) as l_col_i and then l_col_i.width > 0
+							header_index = 1 or else attached (l_columns [header_index]) as l_col_i and then l_col_i.width > 0
 						loop
 							header_index := header_index - 1
 						end
@@ -4590,13 +4603,13 @@ feature {EV_GRID_LOCKED_I} -- Drawing implementation
 				if is_resizing_divider_enabled then
 					remove_resizing_line
 				end
-				l_column_i := columns @ header_index
+				l_column_i := columns [header_index]
 				check l_column_i /= Void then end
 				if l_column_i.is_locked then
 					reposition_locked_column (l_column_i)
 				end
 				set_horizontal_computation_required (header_index)
-				l_column_i := columns @ header_index
+				l_column_i := columns [header_index]
 				check l_column_i /= Void then end
 				redraw_from_column_to_end (l_column_i)
 			end
@@ -4658,7 +4671,7 @@ feature {EV_GRID_LOCKED_I} -- Drawing implementation
 					l_y_position := row_height * a_value
 				elseif attached row_offsets as l_row_offsets and then attached visible_indexes_to_row_indexes as l_visible_indexes_to_row_indexes then
 
-					l_y_position := l_row_offsets.i_th (l_visible_indexes_to_row_indexes @ (a_value + 1))
+					l_y_position := l_row_offsets.i_th (l_visible_indexes_to_row_indexes [a_value + 1])
 				end
 			else
 				l_y_position := a_value
@@ -4694,7 +4707,6 @@ feature {EV_GRID_LOCKED_I} -- Drawing implementation
 		local
 			buffer_space: INTEGER
 			current_buffer_position: INTEGER
-			locked_column: detachable EV_GRID_LOCKED_COLUMN_I
 			l_locked_indexes: like locked_indexes
 			l_cursor: CURSOR
 		do
@@ -4704,7 +4716,7 @@ feature {EV_GRID_LOCKED_I} -- Drawing implementation
 			internal_client_y := a_y_position
 				-- Store the virtual client y position internally.
 
-			buffer_space := buffered_drawable_size - viewable_height
+			buffer_space := buffered_drawable_height - viewable_height
 			current_buffer_position := viewport_y_offset
 
 				-- Calculate if the buffer must be flipped. If so, redraw the complete client area,
@@ -4733,8 +4745,7 @@ feature {EV_GRID_LOCKED_I} -- Drawing implementation
 			until
 				l_locked_indexes.off
 			loop
-				locked_column ?= l_locked_indexes.item
-				if locked_column /= Void then
+				if attached {EV_GRID_LOCKED_COLUMN_I} l_locked_indexes.item as locked_column then
 					locked_column.internal_set_virtual_y_position (a_y_position)
 				end
 				l_locked_indexes.forth
@@ -4751,7 +4762,6 @@ feature {EV_GRID_LOCKED_I} -- Drawing implementation
 		local
 			buffer_space: INTEGER
 			current_buffer_position: INTEGER
-			locked_row: detachable EV_GRID_LOCKED_ROW_I
 			l_locked_indexes: like locked_indexes
 			l_cursor: CURSOR
 		do
@@ -4761,7 +4771,7 @@ feature {EV_GRID_LOCKED_I} -- Drawing implementation
 			internal_client_x := a_x_position
 				-- Store the virtual client x position internally.
 
-			buffer_space := buffered_drawable_size - viewable_width
+			buffer_space := buffered_drawable_width - viewable_width
 			current_buffer_position := viewport_x_offset
 
 				-- Calculate if the buffer must be flipped. If so, redraw the complete client area,
@@ -4791,8 +4801,7 @@ feature {EV_GRID_LOCKED_I} -- Drawing implementation
 			until
 				l_locked_indexes.off
 			loop
-				locked_row ?= l_locked_indexes.item
-				if locked_row /= Void then
+				if attached {EV_GRID_LOCKED_ROW_I} l_locked_indexes.item as locked_row then
 					locked_row.internal_set_virtual_x_position (a_x_position)
 				end
 				l_locked_indexes.forth
@@ -4839,7 +4848,6 @@ feature {EV_GRID_LOCKED_I} -- Drawing implementation
 			viewable_width := a_width
 			viewable_height := a_height
 
-
 				-- We set the computation required to the final column and row as this
 				-- triggers re-computation of the scroll bars, with the minimal recompute performed.
 					-- Update horizontal scroll bar size and position.
@@ -4877,8 +4885,6 @@ feature {EV_GRID_LOCKED_I} -- Drawing implementation
 			-- Reposition all items locked within `Current'.
 		local
 			cursor: CURSOR
-			locked_row: detachable EV_GRID_LOCKED_ROW_I
-			locked_column: detachable EV_GRID_LOCKED_COLUMN_I
 			l_locked_indexes: like locked_indexes
 		do
 			from
@@ -4888,13 +4894,12 @@ feature {EV_GRID_LOCKED_I} -- Drawing implementation
 			until
 				l_locked_indexes.off
 			loop
-				locked_column ?= l_locked_indexes.item
-				if locked_column /= Void then
+				if attached {EV_GRID_LOCKED_COLUMN_I} l_locked_indexes.item as locked_column then
 					reposition_locked_column (locked_column.column_i)
 				else
-					locked_row ?= l_locked_indexes.item
-					check locked_row /= Void then end
-					reposition_locked_row (locked_row.row_i)
+					check attached {EV_GRID_LOCKED_ROW_I} l_locked_indexes.item as locked_row then
+						reposition_locked_row (locked_row.row_i)
+					end
 				end
 				l_locked_indexes.forth
 			end
@@ -4922,7 +4927,8 @@ feature {EV_GRID_LOCKED_I} -- Drawing implementation
 	maximum_header_width: INTEGER
 		-- Maximium width of `header'.
 
-	buffered_drawable_size: INTEGER
+	buffered_drawable_width,
+	buffered_drawable_height: INTEGER
 			-- Default size of `drawable' used for scrolling purposes.
 			-- Warning: the value may be different between Windows, Linux (gtk, gtk34)
 
@@ -6106,7 +6112,7 @@ feature -- Implementation
 								end
 							elseif l_make_item_visible then
 								items_spanning_horz := drawer.items_spanning_horizontal_span (virtual_x_position + width, 0)
-								if not items_spanning_horz.is_empty and then attached (columns @ (items_spanning_horz @ 1)) as l_column_i then
+								if not items_spanning_horz.is_empty and then attached (columns [items_spanning_horz [1]]) as l_column_i then
 									l_column_i.ensure_visible
 								end
 							end
@@ -6154,7 +6160,7 @@ feature -- Implementation
 									-- If the row has children then
 								if virtual_x_position > 0 then
 									items_spanning_vert := drawer.items_spanning_horizontal_span (virtual_x_position - 1, 0)
-									if not items_spanning_vert.is_empty and then attached (columns @ (items_spanning_vert @ 1)) as l_column_i then
+									if not items_spanning_vert.is_empty and then attached (columns [items_spanning_vert [1]]) as l_column_i then
 										l_column_i.ensure_visible
 									end
 								end
@@ -6358,7 +6364,7 @@ feature {NONE} -- Implementation
 			until
 				i > a_row_count
 			loop
-				row_i := rows @ i
+				row_i := rows [i]
 				if row_i /= Void then
 					row_i.flag_index_of_first_item_dirty_if_needed (a_index)
 				end
@@ -6383,7 +6389,7 @@ feature {NONE} -- Implementation
 			until
 				i > a_row_count
 			loop
-				row_i := temp_rows @ i
+				row_i := temp_rows [i]
 				if row_i /= Void then
 					row_i.set_index (i)
 				end
@@ -6408,7 +6414,7 @@ feature {NONE} -- Implementation
 			until
 				i > a_column_count
 			loop
-				column_i := temp_columns @ i
+				column_i := temp_columns [i]
 				if column_i /= Void then
 					column_i.set_index (i)
 				end
@@ -6436,12 +6442,12 @@ feature {NONE} -- Implementation
 	enlarge_row (a_index, new_count: INTEGER)
 			-- Enlarge the row at index `a_index' to `new_count'.
 		require
-			row_exists: attached (internal_row_data @ (a_index)) as l_row
+			row_exists: attached (internal_row_data [a_index]) as l_row
 			row_can_expand: l_row.count < new_count
 		local
 			a_row: detachable SPECIAL [detachable EV_GRID_ITEM_I]
 		do
-			a_row := internal_row_data @ a_index
+			a_row := internal_row_data [a_index]
 			check a_row /= Void then end
 			a_row := a_row.aliased_resized_area_with_default (Void, new_count)
 			internal_row_data.put_i_th (a_row, a_index)

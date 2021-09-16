@@ -58,7 +58,10 @@ feature {EV_ANY_I} -- Access
 						-- Adopt floating ref count, or increase ref count
 					l_c_object := {GTK}.g_object_ref_sink (a_c_object)
 				else
-					check is_gtk_top_window: {GTK}.gtk_widget_is_toplevel (a_c_object) end
+					check
+						is_gtk_top_window: {GTK}.gtk_is_widget (a_c_object) and then
+											{GTK}.gtk_widget_is_toplevel (a_c_object)
+					end
 					l_c_object := a_c_object -- Already has a ref
 					l_c_object := {GTK}.g_object_ref (l_c_object) -- Increase ref count to protect the marshal callback
 				end
@@ -73,7 +76,10 @@ feature {EV_ANY_I} -- Access
 			{EV_GTK_CALLBACK_MARSHAL}.set_eif_oid_in_c_object (l_c_object, internal_id, $c_object_dispose) -- No ref count increase from the C code, handled by the previous line
 
 			c_object := l_c_object
-			if {GTK}.gtk_widget_is_toplevel (l_c_object) then
+			if
+				{GTK}.gtk_is_widget (l_c_object) and then
+				{GTK}.gtk_widget_is_toplevel (l_c_object)
+			then
 				if {GDK}.internal_g_object_ref_count (l_c_object) /= 2 then
 					check unexpected_ref_count: False end
 					{GDK}.printf (generator + ".set_c_object: unexpected ref count for c_object=" + l_c_object.out + " #" + {GDK}.internal_g_object_ref_count (l_c_object).out + " /= 2 !%N")
@@ -93,7 +99,10 @@ feature {EV_ANY_I} -- Access
 			s: STRING_32
 		do
 			debug ("gtk_name")
-				if not c_object.is_default_pointer then
+				if
+					not c_object.is_default_pointer and then
+					{GTK}.gtk_is_widget (c_object) -- gtk_widget_set_name requires a GtkWidget
+				then
 					if attached interface as l_interface then
 						if attached {EV_IDENTIFIABLE} l_interface as l_id and then l_id.has_identifier_name_set  then
 							create s.make_from_string_general (l_id.identifier_name)
@@ -138,14 +147,19 @@ feature {EV_ANY, EV_ANY_IMP} -- Implementation
 			-- TODO: check the previous comment
 
 			l_c_object := c_object
-			if not l_c_object.is_default_pointer then
-				if not {GTK}.gtk_widget_is_toplevel (l_c_object) then
-						-- The next call should trigger the `c_object_dispose`
-						-- See the `set_c_object` code, and the related C code (in ev_any_imp.c) .
+			if
+				not l_c_object.is_default_pointer and then
+				{GTK}.gtk_is_widget (l_c_object) -- gtk_widget_* requires a GtkWidget
+			then
+					-- The call to `gtk_widget_destroy` should trigger the `c_object_dispose`
+					-- See the `set_c_object` code, and the related C code (in ev_any_imp.c) .
+				if {GTK}.gtk_widget_is_toplevel (l_c_object) then
+						-- TODO: check if the following line could cause trouble
+--					{GTK}.gtk_widget_destroy (l_c_object)
+				else
 					{GTK}.gtk_widget_destroy (l_c_object)
 				end
 			end
-
 			set_is_destroyed (True)
 		end
 
@@ -309,10 +323,18 @@ feature {NONE} -- Implementation
 			l_c_object: like c_object
 		do
 			l_c_object := c_object
-			if not l_c_object.is_default_pointer then
+			if
+				not l_c_object.is_default_pointer and then
+				{GTK}.gtk_is_widget (l_c_object) -- note: gtk_widget_* requires a GtkWidget
+			then
 					-- The next call should trigger the `c_object_dispose`
 					-- See the `set_c_object` code, and the related C code (in ev_any_imp.c) .
-				{GTK}.gtk_widget_destroy (l_c_object)
+				if {GTK}.gtk_widget_is_toplevel (l_c_object) then
+						-- TODO: check if this is fully safe.
+					{GTK}.gtk_widget_destroy (l_c_object)
+				else
+					{GTK}.gtk_widget_destroy (l_c_object)
+				end
 			end
 			Precursor {IDENTIFIED}
 		end

@@ -40,7 +40,7 @@ feature -- Initialization
 	needs_event_box: BOOLEAN
 			-- Does `a_widget' need an event box?
 		do
-			Result := False
+			Result := False -- the GtkTreeViewColumn is not a GtkWidget!
 		end
 
 	old_make (an_interface: attached like interface)

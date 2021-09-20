@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "Gtk Version Dependent Externals"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -2791,5 +2791,4 @@ note
 			Customer support http://support.eiffel.com
 		]"
 
-end -- class GTK2
-
+end

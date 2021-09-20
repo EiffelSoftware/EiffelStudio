@@ -19,6 +19,8 @@ inherit
 
 	EV_CELL_IMP
 		undefine
+			client_width,
+			client_height,
 			x_position,
 			y_position,
 			screen_x,
@@ -472,16 +474,19 @@ feature {EV_INTERMEDIARY_ROUTINES, EV_APPLICATION_IMP} -- Implementation
 			-- GdkEventConfigure event occurred.
 		local
 			l_x_pos, l_y_pos: INTEGER
+			w, h: INTEGER
 		do
+			w := client_width
+			h := client_height
 			l_x_pos := x_position
 			l_y_pos := y_position
-			Precursor {EV_GTK_WINDOW_IMP} (l_x_pos, l_y_pos, a_width, a_height)
-			Precursor {EV_CELL_IMP} (l_x_pos, l_y_pos, a_width, a_height)
+			Precursor {EV_GTK_WINDOW_IMP} (l_x_pos, l_y_pos, w, h)
+			Precursor {EV_CELL_IMP} (l_x_pos, l_y_pos, w, h)
 			if l_x_pos  /= previous_x_position or else l_y_pos /= previous_y_position then
 				previous_x_position := l_x_pos
 				previous_y_position := l_y_pos
 				if move_actions_internal /= Void then
-					move_actions_internal.call (app_implementation.gtk_marshal.dimension_tuple (l_x_pos, l_y_pos, a_width, a_height))
+					move_actions_internal.call (app_implementation.gtk_marshal.dimension_tuple (l_x_pos, l_y_pos, w, h))
 				end
 			end
 		end

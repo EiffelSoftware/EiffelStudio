@@ -160,6 +160,22 @@ feature {NONE} -- Implementation
 	configure_event_pending: BOOLEAN
 		-- Has `Current' experienced a configure event?
 
+	client_width: INTEGER
+			-- Width of the client area.
+		local
+			h: INTEGER
+		do
+			{GTK2}.gtk_window_get_size (c_object, $Result, $h)
+		end
+
+	client_height: INTEGER
+			-- Height of the client area.
+		local
+			w: INTEGER
+		do
+			{GTK2}.gtk_window_get_size (c_object, $w, $Result)
+		end
+
 	x_position, screen_x: INTEGER
 			-- Horizontal position of the window on screen,
 		local

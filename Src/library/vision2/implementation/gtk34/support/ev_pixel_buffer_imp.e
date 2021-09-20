@@ -1,8 +1,8 @@
-note
+﻿note
 	description: "Gtk implementation for EV_PIXEL_BUFFER_I."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
-	keywords: "drawable, primitives, figures, buffer, bitmap, picture"
+	keywords: drawable, primitives, figures, buffer, bitmap, picture
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -41,7 +41,7 @@ feature -- Initialization
 	make_with_pixmap (a_pixmap: EV_PIXMAP)
 			-- Create with `a_pixmap''s image data.
 		local
-			l_pixbuf: POINTER
+			-- l_pixbuf: POINTER
 			-- l_window: POINTER
 		do
 			if attached {EV_PIXMAP_IMP} a_pixmap.implementation as l_pixmap_imp  then
@@ -52,8 +52,7 @@ feature -- Initialization
 				--l_window := {GDK}.gdk_screen_get_root_window ({GDK}.gdk_screen_get_default)
 				--l_pixbuf := {GTK}.gdk_pixbuf_new (0, False, 8, l_pixmap_imp.width, l_pixmap_imp.height)
 				--l_pixbuf := {GTK}.gdk_pixbuf_get_from_window (l_window, 0, 0, l_pixmap_imp.width, l_pixmap_imp.height)
-				l_pixbuf := l_pixmap_imp.pixbuf
-				set_gdkpixbuf (l_pixbuf)
+				set_gdkpixbuf (l_pixmap_imp.pixbuf)
 			end
 		end
 
@@ -71,15 +70,20 @@ feature -- Command
 			-- Load pixel data file `a_file_name'.
 		local
 			l_cs: EV_GTK_C_STRING
-			g_error: POINTER
+			ge: POINTER
 			filepixbuf: POINTER
+			e: EV_GLIB_ERROR
+			m: like {EV_GLIB_ERROR}.message
 		do
 			if {GTK}.gtk_maj_ver >= 2 then
 				create l_cs.make_from_path (a_file_name)
-				filepixbuf := {GTK}.gdk_pixbuf_new_from_file (l_cs.item, $g_error)
-				if g_error /= default_pointer then
-						-- GdkPixbuf could not load the image so we raise an exception.
-					(create {EXCEPTIONS}).raise ("Could not load image file.")
+				filepixbuf := {GTK}.gdk_pixbuf_new_from_file (l_cs.item, $ge)
+				if not ge.is_default_pointer then
+						-- The image cannot be loaded, raise an exception.
+					create e.make_from_pointer (ge)
+					m := e.message
+					e.free
+					{EXCEPTIONS}.raise (m)
 				else
 					set_gdkpixbuf (filepixbuf)
 				end
@@ -93,14 +97,19 @@ feature -- Command
 			-- `a_size' size in bytes
 		local
 			l_pixel_buf: POINTER
-			l_error: POINTER
+			ge: POINTER
 			l_stream: EV_G_INPUT_STREAM
+			e: EV_GLIB_ERROR
+			m: like {EV_GLIB_ERROR}.message
 		do
 			create l_stream.new_from_data (a_pointer, a_size)
-			l_pixel_buf := {GTK}.gdk_pixbuf_new_from_stream (l_stream.item, default_pointer, $l_error)
-			if l_error /= default_pointer then
-					-- GdkPixbuf could not load the image so we raise an exception.
-				(create {EXCEPTIONS}).raise ("Could not load image from stream.")
+			l_pixel_buf := {GTK}.gdk_pixbuf_new_from_stream (l_stream.item, default_pointer, $ge)
+			if not ge.is_default_pointer then
+					-- The image cannot be loaded, raise an exception.
+				create e.make_from_pointer (ge)
+				m := e.message
+				e.free
+				{EXCEPTIONS}.raise (m)
 			else
 				set_gdkpixbuf (l_pixel_buf)
 			end
@@ -110,12 +119,14 @@ feature -- Command
 			-- Save pixel data to file `a_file_name'.
 		local
 			l_cs, l_file_type: EV_GTK_C_STRING
-			g_error: POINTER
+			ge: POINTER
 			l_writeable_formats: ARRAYED_LIST [STRING_32]
 			l_extension: READABLE_STRING_32
 			l_format: detachable READABLE_STRING_32
 			l_dep: EV_GTK_ENVIRONMENT
 			i: INTEGER
+			e: EV_GLIB_ERROR
+			m: like {EV_GLIB_ERROR}.message
 		do
 			create l_dep
 			l_writeable_formats := l_dep.writeable_pixbuf_formats
@@ -143,10 +154,13 @@ feature -- Command
 				if {GTK}.gtk_maj_ver >= 2 then
 					create l_cs.make_from_path (a_file_name)
 					create l_file_type.set_with_eiffel_string (l_format)
-					{GTK2}.gdk_pixbuf_save (gdk_pixbuf, l_cs.item, l_file_type.item, $g_error)
-					if g_error /= default_pointer then
-							-- GdkPixbuf could not save the image so we raise an exception.
-						(create {EXCEPTIONS}).raise ("Could not save image file.")
+					{GTK2}.gdk_pixbuf_save (gdk_pixbuf, l_cs.item, l_file_type.item, $ge)
+					if not ge.is_default_pointer then
+							-- The image cannot be saved, raise an exception.
+						create e.make_from_pointer (ge)
+						m := e.message
+						e.free
+						{EXCEPTIONS}.raise (m)
 					end
 				else
 					if l_format.is_case_insensitive_equal ({STRING_32} "jpg") and then attached internal_pixmap as l_internal_pixmap then
@@ -166,16 +180,20 @@ feature -- Command
 			l_result: INTEGER
 			l_file_type: EV_GTK_C_STRING
 			l_buffer_size: INTEGER
-			l_error: POINTER
+			ge: POINTER
 			l_pointer: POINTER
+			e: EV_GLIB_ERROR
+			m: like {EV_GLIB_ERROR}.message
 		do
 				-- Same as Windows {EV_PIXEL_BUFFER_IMP} implementation, using PNG format as default
 			create l_file_type.set_with_eiffel_string ("png")
-			l_result := {GTK}.gdk_pixbuf_save_to_buffer (gdk_pixbuf, $l_pointer, $l_buffer_size, l_file_type.item, $l_error)
-			check
-				success: l_result /= 0
-			end
-			if l_result /= 0 then
+			l_result := {GTK}.gdk_pixbuf_save_to_buffer (gdk_pixbuf, $l_pointer, $l_buffer_size, l_file_type.item, $ge)
+			if not ge.is_default_pointer then
+					-- The image cannot be saved, raise an exception.
+				create e.make_from_pointer (ge)
+				m := e.message
+				e.free
+			elseif l_result /= 0 then
 				create Result.own_from_pointer (l_pointer, l_buffer_size)
 			end
 		end
@@ -459,7 +477,7 @@ feature {EV_STOCK_PIXMAPS_IMP} -- Implementation
 		local
 			stock_pixbuf: POINTER
 			l_label: POINTER
-			l_error: POINTER
+			ge: POINTER
 			l_screen: POINTER
 			e: EV_GLIB_ERROR
 		do
@@ -472,9 +490,9 @@ feature {EV_STOCK_PIXMAPS_IMP} -- Implementation
 				l_screen:= {GDK}.gdk_screen_get_default
 			end
 
-			stock_pixbuf := {GTK2}.gtk_icon_theme_load_icon ({GTK2}.gtk_icon_theme_get_for_screen (l_screen), a_stock_id, 48, 0, $l_error)
-			if not l_error.is_default_pointer then
-				create e.make_from_pointer (l_error)
+			stock_pixbuf := {GTK2}.gtk_icon_theme_load_icon ({GTK2}.gtk_icon_theme_get_for_screen (l_screen), a_stock_id, 48, 0, $ge)
+			if not ge.is_default_pointer then
+				create e.make_from_pointer (ge)
 				e.free
 			end
 			{GTK2}.g_object_unref (l_label)

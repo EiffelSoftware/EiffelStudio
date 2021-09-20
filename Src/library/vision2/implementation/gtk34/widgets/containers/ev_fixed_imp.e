@@ -75,6 +75,21 @@ feature -- Status setting
 			debug ("gtk_sizing")
 				print (attached_interface.debug_output + {STRING_32} ".set_item_position_and_size (" + a_widget.debug_output + ",x=" + a_x.out + ",y=" + a_y.out + ",w=" + a_width.out + ",h=" + a_height.out + ")%N")
 			end
+			w := a_widget.x_position + a_width
+			h := a_widget.y_position + a_height
+			if w > minimum_width then
+				set_minimum_width (w)
+			else
+				l_size_smaller := w < minimum_width
+			end
+			if h > minimum_height then
+				set_minimum_height (h)
+			else
+				l_size_smaller := h < minimum_height
+			end
+			if l_size_smaller then
+				update_minimum_size
+			end
 			check attached {EV_WIDGET_IMP} a_widget.implementation as w_imp then
 				l_item_c_object := w_imp.c_object
 				if not l_item_c_object.is_default_pointer then
@@ -107,24 +122,6 @@ feature -- Status setting
 					end
 				end
 			end
-			w := a_widget.x_position + a_widget.width
-			h := a_widget.y_position + a_widget.height
-			if w > minimum_width then
-				set_minimum_width (w)
-			else
-				l_size_smaller := w < minimum_width
-			end
-			if h > minimum_height then
-				set_minimum_height (h)
-			else
-				l_size_smaller := h < minimum_height
-			end
-			if l_size_smaller then
-				update_minimum_size
-			end
---			if not l_child_container.is_default_pointer then
---				{GTK}.gtk_container_check_resize (l_child_container)
---			end
 		end
 
 	update_minimum_size

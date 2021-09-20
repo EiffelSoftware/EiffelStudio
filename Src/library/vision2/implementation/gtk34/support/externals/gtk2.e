@@ -319,6 +319,11 @@ feature -- Window
 			"C signature (GtkWindow*, gint*, gint*) use <ev_gtk.h>"
 		end
 
+	frozen gtk_window_get_size (a_window: POINTER; a_width, a_height: TYPED_POINTER [INTEGER_32])
+		external
+			"C signature (GtkWindow*, gint*, gint*) use <ev_gtk.h>"
+		end
+
 	frozen gtk_window_set_decorated (a_window: POINTER; a_decor: BOOLEAN)
 		external
 			"C signature (GtkWindow*, gboolean) use <ev_gtk.h>"
@@ -395,7 +400,6 @@ feature -- Window
 		alias
 			"gtk_window_set_icon ((GtkWindow*) $a_window, (GdkPixbuf*) $a_icon)"
 		end
-
 
 feature -- Window, Enum		
 
@@ -515,6 +519,10 @@ feature -- Icon
 		     ]"
 		end
 
+	frozen gtk_image_new_from_icon_name (icon_name: POINTER; size: INTEGER): POINTER
+		external
+			"C signature (const gchar *, GtkIconSize): GtkWidget* use <ev_gtk.h>"
+		end
 
 feature -- Render		
 

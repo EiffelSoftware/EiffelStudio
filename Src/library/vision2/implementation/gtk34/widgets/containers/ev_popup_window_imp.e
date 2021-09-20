@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "EiffelVision popup window, GTK+ implementation"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -31,6 +31,7 @@ inherit
 			internal_enable_border,
 			internal_disable_border,
 			grab_keyboard_and_mouse,
+			new_gtk_window,
 			release_keyboard_and_mouse,
 			allow_resize,
 			forbid_resize,
@@ -70,6 +71,12 @@ feature {NONE} -- Initialization
 			disable_user_resize
 			set_background_color ((create {EV_STOCK_COLORS}).black)
 			set_is_initialized (True)
+		end
+
+	new_gtk_window: POINTER
+			-- Return a new gtk window object for `Current`.
+		do
+			Result := {GTK}.gtk_window_new ({GTK}.gtk_window_popup_enum)
 		end
 
 feature {EV_ANY_I} -- Implementation
@@ -206,7 +213,7 @@ feature {EV_ANY, EV_ANY_I} -- Implementation
 			-- functionality implemented by `Current'.
 
 note
-	copyright:	"Copyright (c) 1984-2012, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2021, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software
@@ -216,4 +223,4 @@ note
 			Customer support http://support.eiffel.com
 		]"
 
-end -- class EV_POPUP_WINDOW_IMP
+end

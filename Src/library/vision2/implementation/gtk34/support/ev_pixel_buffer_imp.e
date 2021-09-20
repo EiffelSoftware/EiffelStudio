@@ -461,6 +461,7 @@ feature {EV_STOCK_PIXMAPS_IMP} -- Implementation
 			l_label: POINTER
 			l_error: POINTER
 			l_screen: POINTER
+			e: EV_GLIB_ERROR
 		do
 			l_label := {GTK}.gtk_label_new (default_pointer) -- Floating ref
 			l_label := {GTK2}.g_object_ref_sink (l_label) -- adopt floating ref
@@ -472,6 +473,10 @@ feature {EV_STOCK_PIXMAPS_IMP} -- Implementation
 			end
 
 			stock_pixbuf := {GTK2}.gtk_icon_theme_load_icon ({GTK2}.gtk_icon_theme_get_for_screen (l_screen), a_stock_id, 48, 0, $l_error)
+			if not l_error.is_default_pointer then
+				create e.make_from_pointer (l_error)
+				e.free
+			end
 			{GTK2}.g_object_unref (l_label)
 			l_label := default_pointer
 

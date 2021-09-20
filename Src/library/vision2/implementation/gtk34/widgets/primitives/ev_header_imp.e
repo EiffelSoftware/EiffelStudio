@@ -201,10 +201,15 @@ feature {NONE} -- Implementation
 			-- 0 if none.
 		local
 			gdkwin, gtkwid: POINTER
-			i, l_count, l_x, l_y, l_button_x, l_pointer_x, l_pointer_y: INTEGER
+			i, l_count, l_x, l_y, l_button_x: INTEGER --l_pointer_x, l_pointer_y: INTEGER
 			a_item_imp: detachable EV_HEADER_ITEM_IMP
 		do
-			gdkwin := {GDK_HELPERS}.window_at ($l_pointer_x, $l_pointer_y)
+			-- TODO double check	
+			-- With GTK3 the call to the feature `{GDK_HELPERS}.window_at ($a_pointer_x, $a_pointer_y)`
+			-- Returns default_pointer, -1, -1
+			-- gdkwin := {GDK_HELPERS}.window_at ($a_pointer_x, $a_pointer_y)
+
+			gdkwin := {GTK}.gtk_widget_get_window (c_object)
 			if gdkwin /= default_pointer then
 
 				{GTK2}.gdk_window_get_position (gdkwin, $l_x, $l_y)
@@ -238,7 +243,7 @@ feature {NONE} -- Implementation
 			-- depending on event type in first position of `event_data'.
 		local
 			a_pointed_divider_index: INTEGER
-			a_pointer_x, a_pointer_y: INTEGER
+			--a_pointer_x, a_pointer_y: INTEGER
 			gdkwin: POINTER
 			l_widget: POINTER
 			l_last_column: POINTER
@@ -252,7 +257,13 @@ feature {NONE} -- Implementation
 
 				-- If we are clicking on the Void area then we the item events passing Void items.
 			if a_type = {GTK}.gdk_button_press_enum or a_type = {GTK}.gdk_2button_press_enum then
-				gdkwin := {GDK_HELPERS}.window_at ($a_pointer_x, $a_pointer_y)
+
+				-- TODO double check	
+				-- With GTK3 the call to the feature `{GDK_HELPERS}.window_at ($a_pointer_x, $a_pointer_y)`
+				-- Returns default_pointer, -1, -1
+				-- gdkwin := {GDK_HELPERS}.window_at ($a_pointer_x, $a_pointer_y)
+
+				gdkwin := {GTK}.gtk_widget_get_window (c_object)
 				if gdkwin /= default_pointer then
 					{GTK}.gdk_window_get_user_data (gdkwin, $l_widget)
 					l_last_column := {GTK2}.gtk_tree_view_get_column (c_object, count)
@@ -289,7 +300,7 @@ feature {EV_ANY, EV_ANY_I} -- Implementation
 	interface: detachable EV_HEADER note option: stable attribute end;
 
 note
-	copyright:	"Copyright (c) 1984-2019, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2021, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

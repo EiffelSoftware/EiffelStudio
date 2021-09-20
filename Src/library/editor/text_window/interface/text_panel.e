@@ -95,8 +95,7 @@ feature -- Initialization
 	initialize_buffer_settings
 		do
 				-- Buffer settings
-			buffered_drawable_width := default_buffered_drawable_width
-			buffered_drawable_height := default_buffered_drawable_height
+			set_buffered_drawable_size (default_buffered_drawable_width, default_buffered_drawable_height)
 		end
 
 feature {NONE} -- Initialization
@@ -805,7 +804,7 @@ feature -- Basic Operations
 			l_text_displayed: like text_displayed
 			n: INTEGER
 		do
-				-- Recompute token information for for loaded text.
+				-- Recompute token information for loaded text.
 			from
 				l_text_displayed := text_displayed
 				n := l_text_displayed.number_of_lines
@@ -1317,7 +1316,6 @@ feature {NONE} -- Display functions
 			on_size (a_x, a_y, a_width, a_height)
 		end
 
-
 	on_viewport_size (a_x, a_y: INTEGER; a_width, a_height: INTEGER)
 			-- Viewport was resized.
 		local
@@ -1330,6 +1328,11 @@ feature {NONE} -- Display functions
 				end
 				update_vertical_scrollbar
 				update_horizontal_scrollbar
+
+					-- Note: this call is to process the platform dependent
+					-- operations.
+				on_visible_area_resized (a_width, a_height)
+
 				update_viewport_after_resize
 				last_viewport_height := a_height
 				l_int_v := vertical_scrollbar.value
@@ -1350,7 +1353,6 @@ feature {NONE} -- Display functions
 		do
 			on_viewport_size (a_x, a_y, a_width, a_height)
 		end
-
 
 	last_viewport_height: INTEGER
 
@@ -1766,6 +1768,12 @@ feature -- Implementation
 	buffered_drawable_height: INTEGER
 		-- Default size of `drawable' used for scrolling purposes.
 
+	set_buffered_drawable_size (a_width, a_height: INTEGER)
+			-- Set `buffered_drawable_width` and `buffered_drawable_height` to `a_width` and `a_height`.
+		do
+			buffered_drawable_width := a_width
+			buffered_drawable_height := a_height
+		end
 
 	last_vertical_scroll_bar_value: INTEGER
 		-- Last value of `vertical_scroll_bar' used within `vertical_scroll_bar_changed'. See

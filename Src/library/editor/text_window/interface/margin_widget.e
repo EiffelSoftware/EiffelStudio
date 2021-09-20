@@ -126,10 +126,17 @@ feature -- Status setting
 		end
 
 	synch_with_panel
-			--
+			-- Sync the offset of Current margin with the one from the text_panel.
 		do
  			margin_viewport.set_y_offset (text_panel.editor_viewport.y_offset)
  			flip_count := text_panel.flip_count
+		end
+
+	update_size_with_panel
+			-- Update the size of Current margin using buffer sizes from the text_panel.
+			-- especially the height as the width is fixed.
+		do
+			margin_area.set_minimum_size (buffered_drawable_width, buffered_drawable_height)
 		end
 
 feature -- Graphical Interface
@@ -251,7 +258,7 @@ feature {NONE} -- Implementation
 
 	buffered_drawable_height: INTEGER
 			-- Default size of `drawable' used for scrolling purposes.
-		once
+		do
 			Result := text_panel.buffered_drawable_height
 		end
 
@@ -450,14 +457,14 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2021, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 

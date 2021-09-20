@@ -11,6 +11,8 @@ deferred class
 	TEXT_PANEL_IMP
 
 inherit
+	TEXT_PANEL_I
+	
 	TEXT_PANEL_CONSTANTS
 
 feature -- Access

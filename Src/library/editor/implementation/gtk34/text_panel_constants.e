@@ -14,9 +14,9 @@ class
 
 feature -- Buffer size
 
-	default_buffered_drawable_width: INTEGER = 8_000
+	default_buffered_drawable_width: INTEGER = 300
 
-	default_buffered_drawable_height: INTEGER = 8_000
+	default_buffered_drawable_height: INTEGER = 400
 		-- Default size of `drawable' used for scrolling purposes.
 		--| This value used to be 32000 but on gtk post 2.10.6 there seems to be some sort of 'fix' that gives odd results
 		--| with the line number code that means that they do not get displayed correctly

@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "Facilities for accessing default pixmaps."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -17,49 +17,49 @@ feature -- Access
 	Information_pixel_buffer: EV_PIXEL_BUFFER
 			-- Pixel buffer symbolizing a piece of information.
 		do
-			Result := pixmap_from_stock_id ("gtk-dialog-info")
+			Result := information_pixmap
 		end
 
 	Error_pixel_buffer: EV_PIXEL_BUFFER
 			-- Pixel buffer symbolizing an error.
 		do
-			Result := pixmap_from_stock_id ("gtk-dialog-error")
+			Result := error_pixmap
 		end
 
 	Warning_pixel_buffer: EV_PIXEL_BUFFER
 			-- Pixel buffer symbolizing a warning.
 		do
-			Result := pixmap_from_stock_id ("gtk-dialog-warning")
+			Result := warning_pixmap
 		end
 
 	Question_pixel_buffer: EV_PIXEL_BUFFER
 			-- Pixel buffer symbolizing a question.
 		do
-			Result := pixmap_from_stock_id ("gtk-dialog-question")
+			Result := question_pixmap
 		end
 
 	Information_pixmap: EV_PIXMAP
 			-- Pixmap symbolizing a piece of information.
 		do
-			Result := pixmap_from_stock_id ("gtk-dialog-info")
+			Result := pixmap_from_stock_id ("dialog-information")
 		end
 
 	Error_pixmap: EV_PIXMAP
 			-- Pixmap symbolizing an error.
 		do
-			Result := pixmap_from_stock_id ("gtk-dialog-error")
+			Result := pixmap_from_stock_id ("dialog-error")
 		end
 
 	Warning_pixmap: EV_PIXMAP
 			-- Pixmap symbolizing a warning.
 		do
-			Result := pixmap_from_stock_id ("gtk-dialog-warning")
+			Result := pixmap_from_stock_id ("dialog-warning")
 		end
 
 	Question_pixmap: EV_PIXMAP
 			-- Pixmap symbolizing a question.
 		do
-			Result := pixmap_from_stock_id ("gtk-dialog-question")
+			Result := pixmap_from_stock_id ("dialog-question")
 		end
 
 	Collate_pixmap: EV_PIXMAP
@@ -108,14 +108,11 @@ feature -- Access
 
 	Default_window_icon: EV_PIXMAP
 			-- Pixmap used as default icon for new windows.
-		local
-			pixmap_imp: EV_PIXMAP_I
 		do
-				-- Create a default pixmap
+				-- Create a default pixmap.
 			create Result
-				-- Initialize the pixmap with the icon
-			pixmap_imp := Result.implementation
-			pixmap_imp.set_with_default
+				-- Initialize the pixmap with the icon.
+			Result.implementation.set_with_default
 		end
 
 feature {NONE} -- Implementation
@@ -333,7 +330,7 @@ feature {EV_ANY_HANDLER, EV_ANY_I} -- Externals
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2013, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2021, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software
@@ -343,18 +340,4 @@ note
 			Customer support http://support.eiffel.com
 		]"
 
-
-
-
-end -- class EV_STOCK_PIXMAPS_IMP
-
-
-
-
-
-
-
-
-
-
-
+end

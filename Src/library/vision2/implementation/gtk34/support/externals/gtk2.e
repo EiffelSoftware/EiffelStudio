@@ -1577,6 +1577,13 @@ feature -- Enum
 			"gtk_tree_view_column_set_visible ((GtkTreeViewColumn*) $a_tree_view_column, (gboolean) $a_visible)"
 		end
 
+	frozen gtk_tree_view_column_get_min_width (a_tree_view_column: POINTER): INTEGER_32
+		external
+			"C inline use <ev_gtk.h>"
+		alias
+			"gtk_tree_view_column_get_min_width ((GtkTreeViewColumn*) $a_tree_view_column)"
+		end
+
 	frozen gtk_tree_view_column_set_min_width (a_tree_view_column: POINTER; a_width: INTEGER_32)
 		external
 			"C inline use <ev_gtk.h>"

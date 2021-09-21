@@ -28,7 +28,7 @@ inherit
 			interface,
 			needs_event_box,
 			process_gdk_event,
-			--process_draw_event,
+			process_draw_event,
 			c_object_dispose
 		end
 
@@ -99,18 +99,35 @@ feature -- Initialization
 	handle_resize
 			-- Call the appropriate actions for the header item resize
 		local
-			a_width: INTEGER
+			a_width, l_inner_width: INTEGER
+			p_but, p: POINTER
 		do
 			a_width := tree_view_column_width
+			l_inner_width := a_width
+				-- Find better value for the inner width
+				--| the structure of the header item is:
+				--| GtkButton
+				--|	+---inner GtkBox > GtkAlignment
+				--|		+---box: GtkBox
+				--|			+---pixmap_box: GtkBox
+				--|			+---text_label_box: GtkLabel				
+
+			p_but := {GTK}.gtk_tree_view_column_get_button (c_object)
+			if not p_but.is_default_pointer then
+				p := {GTK}.gtk_bin_get_child (p_but) -- Get the GtkButton inner GtkBox
+				if not p.is_default_pointer then
+					l_inner_width := {GTK}.gtk_widget_get_allocated_width (p)
+				end
+			end
 			if a_width /= width then
 				width := a_width
 				if attached parent_imp as l_parent_imp and then (l_parent_imp.call_item_resize_start_actions or else l_parent_imp.item_resize_tuple /= Void) then
 						-- Always make sure that the event box is the same size as the header item.
-					{GTK2}.gtk_widget_set_minimum_size (box, a_width, -1)
+					{GTK2}.gtk_widget_set_minimum_size (box, l_inner_width, -1)
 					l_parent_imp.on_resize (attached_interface)
 				end
 			end
-		end
+		end		
 
 feature -- Access
 
@@ -118,14 +135,13 @@ feature -- Access
 			-- Width of `Current' in pixels.
 
 	minimum_width: INTEGER
-		-- Lower bound on `width' in pixels.
+			-- Lower bound on `width' in pixels.
 
 	maximum_width: INTEGER
-		-- Upper bound on `width' in pixels.
+			-- Upper bound on `width' in pixels.
 
 	user_can_resize: BOOLEAN
-		-- Can a user resize `Current'?
-
+			-- Can a user resize `Current'?
 
 	disable_user_resize
 			-- Prevent `Current' from being resized by users.
@@ -155,8 +171,13 @@ feature -- Status setting
 			-- Assign `a_minimum_width' in pixels to `minimum_width'.
 			-- If `width' is less than `a_minimum_width', resize.
 		do
-			minimum_width := a_width
-			{GTK2}.gtk_tree_view_column_set_min_width (c_object, a_width)
+			if a_width > 0 then
+				minimum_width := a_width
+				{GTK2}.gtk_tree_view_column_set_min_width (c_object, a_width)
+			else
+				minimum_width := 0
+				{GTK2}.gtk_tree_view_column_set_min_width (c_object, -1)
+			end			
 		end
 
 	set_width (a_width: INTEGER)
@@ -294,12 +315,12 @@ feature -- Measurement
 
 feature {EV_GTK_DEPENDENT_INTERMEDIARY_ROUTINES} -- Event handling
 
---	process_draw_event (a_cairo_context: POINTER): BOOLEAN
---			-- <Precursor>
---		do
---			handle_resize
---			Result := False --execute remaining processing (including default)
---		end
+	process_draw_event (a_cairo_context: POINTER): BOOLEAN
+			-- <Precursor>
+		do
+			handle_resize
+			Result := False --execute remaining processing (including default)
+		end
 
 	process_gdk_event (n_args: INTEGER; args: POINTER)
 			-- Process gtk events using raw marshal data.
@@ -377,7 +398,7 @@ feature {EV_GTK_DEPENDENT_INTERMEDIARY_ROUTINES} -- Event handling
 						end
 					elseif
 						event_type = {EV_GTK_ENUMS}.gdk_expose_enum
-					 then
+					then
 								-- Handle any potential resize.
 						handle_resize
 					end

@@ -76,7 +76,12 @@ feature {NONE} -- Initialization
 	new_gtk_window: POINTER
 			-- Return a new gtk window object for `Current`.
 		do
-			Result := {GTK}.gtk_window_new ({GTK}.gtk_window_popup_enum)
+			Result := {GTK}.gtk_window_new (
+				{GTK}.gtk_window_toplevel_enum
+--				{GTK}.gtk_window_popup_enum
+				)
+				-- Read: https://docs.gtk.org/gtk3/method.Window.set_decorated.html
+			{GTK}.gtk_window_set_decorated (Result, False)
 		end
 
 feature {EV_ANY_I} -- Implementation

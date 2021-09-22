@@ -125,6 +125,15 @@ feature {NONE} -- Implementation
 			wel_icon.decrement_reference
 		end
 
+feature -- Icon names
+
+	icons_names: detachable LIST [READABLE_STRING_32]
+			-- Platform dependent icons names
+			-- may not be implemented on all platforms.
+		do
+			-- TODO: not yet implemented.
+		end
+
 note
 	copyright:	"Copyright (c) 1984-2013, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"

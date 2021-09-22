@@ -138,6 +138,15 @@ feature {NONE} -- Implementation
 			retry
 		end
 
+feature -- Icon names
+
+	icons_names: detachable LIST [READABLE_STRING_32]
+			-- Platform dependent icons names
+			-- may not be implemented on all platforms.
+		do
+			Result := {GTK2}.icon_theme_list_icon_names ({GTK2}.gtk_icon_theme_get_default, default_pointer)
+		end
+
 feature {EV_ANY_HANDLER, EV_ANY_I} -- Externals
 
 	frozen information_pixmap_xpm: POINTER

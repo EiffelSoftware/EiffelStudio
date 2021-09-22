@@ -104,4 +104,13 @@ feature -- Access
 			Result.set_with_named_file ("/System/Library/Frameworks/AppKit.framework/Resources/NSDefaultApplicationIcon.tiff")
 		end
 
+feature -- Icon names
+
+	icons_names: detachable LIST [READABLE_STRING_32]
+			-- Platform dependent icons names
+			-- may not be implemented on all platforms.
+		do
+			-- TODO: not yet implemented.
+		end
+
 end -- class EV_STOCK_PIXMAPS_IMP

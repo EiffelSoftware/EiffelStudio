@@ -481,6 +481,42 @@ feature -- Layout
 
 feature -- Icon
 
+	icon_theme_list_icon_names (icon_theme: POINTER; a_context: POINTER): detachable ARRAYED_LIST [STRING_32]
+		local
+			glist, p: POINTER
+			i, n: INTEGER
+			str: EV_GTK_C_STRING
+		do
+			glist := gtk_icon_theme_list_icons (icon_theme, a_context)
+			if not glist.is_default_pointer then
+				n := g_list_length (glist)
+				create Result.make (n)
+				from
+					i := 1
+				until
+					i > n
+				loop
+					p := g_list_nth_data (glist, i - 1)
+					if not p.is_default_pointer then
+						create str.make_from_pointer (p)
+						Result.extend (str.string)
+						{GTK}.g_free (p)
+					end
+					i := i + 1
+				end
+			end
+			{GTK}.g_list_free (glist)
+		ensure
+			instance_free: class
+		end
+
+	gtk_icon_theme_list_icons (icon_theme: POINTER; a_context: POINTER): POINTER
+		external
+			"C inline use <ev_gtk.h>"
+		alias
+			"return (GList*)gtk_icon_theme_list_icons ((GtkIconTheme *)$icon_theme, (const gchar *)$a_context);"
+		end
+
 	gtk_icon_theme_load_icon (icon_theme: POINTER; icon_name: POINTER; size: INTEGER_8; flags: INTEGER_8; error: POINTER ) : POINTER
 		note
 			eis: "name=gtk_icon_theme_load_icon", "src=https://developer.gnome.org/gtk3/stable/GtkIconTheme.html#gtk-icon-theme-load-icon"
@@ -501,6 +537,13 @@ feature -- Icon
 			"C inline use <ev_gtk.h>"
 		alias
 			"gtk_icon_theme_get_for_screen ((GdkScreen*) $a_screen)"
+		end
+
+	gtk_icon_theme_get_default: POINTER
+		external
+			"C inline use <ev_gtk.h>"
+		alias
+			"return gtk_icon_theme_get_default ();"
 		end
 
 	gtk_icon_theme_lookup_icon (icon_theme: POINTER; icon_name: POINTER; size: INTEGER; flags: INTEGER): POINTER

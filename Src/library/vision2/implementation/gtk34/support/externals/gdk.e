@@ -7,8 +7,6 @@ class
 	GDK
 
 inherit
-	GDK_DEPRECATED
-
 	GDK_X11
 
 feature -- GdkPixBuf

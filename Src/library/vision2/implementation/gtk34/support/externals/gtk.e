@@ -8,8 +8,6 @@ class
 inherit
 	GTK3
 
-	GTK_DEPRECATED
-
 feature -- Session type
 
 	is_x11_session: BOOLEAN

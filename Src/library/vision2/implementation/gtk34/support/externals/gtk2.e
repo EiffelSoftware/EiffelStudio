@@ -11,8 +11,6 @@ class
 inherit
 	GDK
 
-	GTK2_DEPRECATED
-
 feature -- Style constants
 
 --GTK_TYPE_STYLE_CONTEXT

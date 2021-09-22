@@ -26,7 +26,8 @@ inherit
 			interface,
 			make,
 			needs_event_box,
-			call_button_event_actions
+			call_button_event_actions,
+			minimum_width
 		end
 
 	EV_FONTABLE_IMP
@@ -72,7 +73,7 @@ feature -- Initialization
 			dummy_imp ?= dummy_item.implementation
 			check dummy_imp /= Void then end
 			{GTK2}.gtk_tree_view_column_set_min_width (dummy_imp.c_object, 0)
-			dummy_imp.set_width (1)
+			dummy_imp.set_width (dummy_imp.minimum_width)
 			{GTK2}.gtk_tree_view_column_set_clickable (dummy_imp.c_object, False)
 
 			resize_model (100)
@@ -294,6 +295,19 @@ feature {NONE} -- Implementation
 			-- changed.
 		do
 		end
+
+feature -- Access size
+
+	minimum_width: INTEGER_32
+			-- Minimum horizontal size in pixels.
+		do
+			Result := Precursor
+			if Result <= 0 then
+				Result := real_minimum_width
+			end
+		end
+
+
 
 feature {EV_ANY, EV_ANY_I} -- Implementation
 

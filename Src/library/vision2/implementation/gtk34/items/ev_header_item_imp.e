@@ -53,6 +53,7 @@ feature -- Initialization
 			-- Initialize the header item.
 		local
 			l_label_ellipsize_symbol: POINTER
+			l_min: INTEGER
 		do
 			set_c_object  ({GTK2}.gtk_tree_view_column_new)
 			{GTK2}.gtk_tree_view_column_set_resizable (c_object, True)
@@ -73,13 +74,14 @@ feature -- Initialization
 			{GTK}.gtk_box_pack_end (box, text_label, True, True, 0)
 			{GTK2}.gtk_tree_view_column_set_widget (c_object, box)
 
-			set_minimum_width (0)
+			{GTK}.gtk_widget_get_preferred_width (box, $l_min, default_pointer)
+			set_minimum_width ({GTK2}.gtk_tree_view_column_get_min_width (c_object).max (l_min).max (0))
 			maximum_width := 32000
 			align_text_left
 			enable_user_resize
 
 				-- Set the default width to 80 pixels wide
-			set_width (80)
+			set_width (minimum_width.max (80))
 			set_is_initialized (True)
 		end
 
@@ -102,6 +104,7 @@ feature -- Initialization
 			a_width, l_inner_width: INTEGER
 			p_but, p: POINTER
 		do
+			a_width := {GTK}.gtk_box_get_spacing (box)
 			a_width := tree_view_column_width
 			l_inner_width := a_width
 				-- Find better value for the inner width
@@ -127,7 +130,7 @@ feature -- Initialization
 					l_parent_imp.on_resize (attached_interface)
 				end
 			end
-		end		
+		end
 
 feature -- Access
 
@@ -135,6 +138,15 @@ feature -- Access
 			-- Width of `Current' in pixels.
 
 	minimum_width: INTEGER
+			-- Lower bound on `width' in pixels.
+		do
+			if not box.is_default_pointer then
+				{GTK}.gtk_widget_get_preferred_width (box, $Result, default_pointer)
+			end
+			Result := internal_minimum_width.max ({GTK}.gtk_tree_view_column_get_min_width (visual_widget)).max (Result)
+		end
+
+	internal_minimum_width: INTEGER
 			-- Lower bound on `width' in pixels.
 
 	maximum_width: INTEGER
@@ -172,20 +184,23 @@ feature -- Status setting
 			-- If `width' is less than `a_minimum_width', resize.
 		do
 			if a_width > 0 then
-				minimum_width := a_width
+				internal_minimum_width := a_width
 				{GTK2}.gtk_tree_view_column_set_min_width (c_object, a_width)
 			else
-				minimum_width := 0
+				internal_minimum_width := 0
 				{GTK2}.gtk_tree_view_column_set_min_width (c_object, -1)
-			end			
+			end
 		end
 
 	set_width (a_width: INTEGER)
 			-- Assign `a_width' to `width'.
+		local
+			l_minimum_height: INTEGER
 		do
 			width := a_width
 			{GTK2}.gtk_tree_view_column_set_fixed_width (c_object, a_width.max (1))
-			{GTK2}.gtk_widget_set_minimum_size (box, a_width, -1)
+			{GTK}.gtk_widget_get_preferred_height_for_width (box, a_width, $l_minimum_height, default_pointer)
+			{GTK2}.gtk_widget_set_minimum_size (box, a_width, l_minimum_height)
 		end
 
 	resize_to_content
@@ -200,7 +215,7 @@ feature -- Status setting
 			{GTK}.gtk_widget_get_preferred_size (box, a_req_struct, default_pointer)
 			a_height := {GTK}.gtk_requisition_struct_height (a_req_struct)
 			a_width := {GTK}.gtk_requisition_struct_width (a_req_struct)
-			set_width (a_width)
+			set_width (a_width.max (minimum_width))
 			a_req_struct.memory_free
 		end
 
@@ -401,10 +416,19 @@ feature {EV_GTK_DEPENDENT_INTERMEDIARY_ROUTINES} -- Event handling
 					then
 								-- Handle any potential resize.
 						handle_resize
+						redraw
 					end
 				end
 			end
 		end
+
+	redraw
+			-- Redraw the entire area.
+		do
+			{GTK}.gtk_widget_queue_draw (visual_widget)
+			app_implementation.process_pending_events_on_default_context
+		end
+
 
 feature {EV_HEADER_IMP} -- Implementation
 

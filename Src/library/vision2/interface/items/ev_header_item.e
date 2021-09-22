@@ -126,7 +126,7 @@ feature {NONE} -- Contract support
 			-- Is `Current' in its default state?
 		do
 			Result := Precursor {EV_ITEM} and precursor {EV_TEXT_ALIGNABLE} and user_can_resize
-			and minimum_width = 0 and maximum_width = 32000
+			and minimum_width >= 0 and maximum_width = 32000
 		end
 
 feature {EV_ANY, EV_ANY_I} -- Implementation
@@ -148,14 +148,14 @@ invariant
 	minimum_width_less_than_or_equal_to_maximum_width: minimum_width <= maximum_width
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2021, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 

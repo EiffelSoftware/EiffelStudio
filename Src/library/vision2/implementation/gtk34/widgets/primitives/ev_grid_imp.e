@@ -108,7 +108,7 @@ feature {NONE} -- Initialization
 			Precursor
 			buffered_drawable_width := 100
 			buffered_drawable_height := 100
-			maximum_header_width := buffered_drawable_width
+			maximum_header_width := buffered_drawable_width -- -- TODO: set a default hardcoded value ?
 		end
 
 feature {NONE} -- Dispose

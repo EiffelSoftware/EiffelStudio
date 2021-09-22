@@ -4347,8 +4347,9 @@ feature {EV_GRID_LOCKED_I} -- Drawing implementation
 				-- Current in response to their re-sizing.
 			header_viewport.extend (header)
 			header_viewport.set_minimum_height (header.height)
-			header.set_minimum_width (maximum_header_width)
-			header_viewport.set_item_size (maximum_header_width, header.height)
+			header.set_minimum_width (maximum_header_width.max (header.minimum_width))
+			header_viewport.set_item_size (maximum_header_width.max (header.minimum_width), header.height)
+
 
 			if {PLATFORM}.is_windows then
 					-- Needed for custom widget insertion implementation.	

@@ -507,6 +507,10 @@ feature {EV_STOCK_PIXMAPS_IMP} -- Implementation
 				end
 				set_gdkpixbuf ({GTK}.gdk_pixbuf_copy (stock_pixbuf))
 				{GTK2}.g_object_unref (stock_pixbuf)
+			else
+				check has_associated_stock_pixbuf: False end
+					-- If no stock pixbuf is found, default to empty 1x1 pixbuf.
+				make_with_size (1, 1)
 			end
 		end
 

@@ -477,6 +477,7 @@ feature {EV_STOCK_PIXMAPS_IMP} -- Implementation
 		local
 			stock_pixbuf: POINTER
 			l_label: POINTER
+			l_theme: POINTER
 			ge: POINTER
 			l_screen: POINTER
 			e: EV_GLIB_ERROR
@@ -486,13 +487,17 @@ feature {EV_STOCK_PIXMAPS_IMP} -- Implementation
 
 			if {GTK2}.gtk_widget_has_screen (l_label) then
 				l_screen:= {GTK2}.gtk_widget_get_screen (l_label)
+				l_theme := {GTK2}.gtk_icon_theme_get_for_screen (l_screen)
 			else
-				l_screen:= {GDK}.gdk_screen_get_default
+				l_theme := {GTK2}.gtk_icon_theme_get_default
 			end
 
-			stock_pixbuf := {GTK2}.gtk_icon_theme_load_icon ({GTK2}.gtk_icon_theme_get_for_screen (l_screen), a_stock_id, 48, 0, $ge)
+			stock_pixbuf := {GTK2}.gtk_icon_theme_load_icon (l_theme, a_stock_id, 48, 0, $ge)
 			if not ge.is_default_pointer then
 				create e.make_from_pointer (ge)
+				debug ("gtk_log")
+					print ({STRING_32} "Could not load icon: " + e.message)
+				end
 				e.free
 			end
 			{GTK2}.g_object_unref (l_label)
@@ -509,8 +514,8 @@ feature {EV_STOCK_PIXMAPS_IMP} -- Implementation
 				{GTK2}.g_object_unref (stock_pixbuf)
 			else
 				check has_associated_stock_pixbuf: False end
-					-- If no stock pixbuf is found, default to empty 1x1 pixbuf.
-				make_with_size (1, 1)
+					-- If no stock pixbuf is found, default to empty 48x48 pixbuf.
+				make_with_size (48, 48)
 			end
 		end
 

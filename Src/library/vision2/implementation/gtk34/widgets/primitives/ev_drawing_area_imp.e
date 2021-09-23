@@ -202,14 +202,6 @@ feature {EV_ANY_I} -- cairo object access
 						{CAIRO}.cairo_content_color_alpha,
 						w, h
 					)
--- An alternative, but it seems a bit less performant.
---				l_surface := {GDK}.gdk_window_create_similar_image_surface (
---						l_window,
---						{CAIRO}.FORMAT_ARGB32,
---						w,
---						h,
---						0 -- 0: use window´s scale
---					)
 				cairo_surface := l_surface
 			else
 				debug ("gtk3_redraw")
@@ -278,31 +270,36 @@ feature {EV_INTERMEDIARY_ROUTINES} -- Implementation
 				outside_drawing_session: not is_in_drawing_session
 			end
 			l_surface := cairo_surface
-			debug ("gtk3_redraw")
-				print (($Current).out + "::" + generator + ".process_draw_event ("+ a_cairo_context.out +")  surface=" + l_surface.out + " ref_count="+ {CAIRO}.get_reference_count (a_cairo_context).out +"%N")
+			if l_surface.is_default_pointer then
+				check has_surface: False end
+				debug ("gtk3_redraw")
+					print (($Current).out + "::" + generator + ".process_draw_event ("+ a_cairo_context.out +")  NO SURFACE !!! ref_count="+ {CAIRO}.get_reference_count (a_cairo_context).out +"%N")
+				end
+			else
+				debug ("gtk3_redraw")
+					print (($Current).out + "::" + generator + ".process_draw_event ("+ a_cairo_context.out +")  surface=" + l_surface.out + " ref_count="+ {CAIRO}.get_reference_count (a_cairo_context).out +"%N")
+				end
+
+				{CAIRO}.set_source_surface (a_cairo_context, l_surface, 0, 0)
+				if
+					attached expose_actions_internal as l_expose_actions and then
+					not l_expose_actions.is_empty
+				then
+					in_expose_actions := True
+
+					{CAIRO}.clip_extents (a_cairo_context, $l_x, $l_y, $l_width, $l_height)
+
+						-- Even if the callback on "draw" event provides a cairo_context, the implementation
+						-- will use a new one using the expected cairo_surface.
+					start_drawing_session
+					l_expose_actions.call (l_x.truncated_to_integer, l_y.truncated_to_integer, l_width.truncated_to_integer, l_height.truncated_to_integer)
+					end_drawing_session
+					in_expose_actions := False
+				end
+
+				{CAIRO}.paint (a_cairo_context)
 			end
 
-			check has_surface: not l_surface.is_default_pointer end
-
-			{CAIRO}.set_source_surface (a_cairo_context, l_surface, 0, 0)
-
-			if
-				attached expose_actions_internal as l_expose_actions and then
-				not l_expose_actions.is_empty
-			then
-				in_expose_actions := True
-
-				{CAIRO}.clip_extents (a_cairo_context, $l_x, $l_y, $l_width, $l_height)
-
-					-- Even if the callback on "draw" event provides a cairo_context, the implementation
-					-- will use a new one using the expected cairo_surface.
-				start_drawing_session
-				l_expose_actions.call (l_x.truncated_to_integer, l_y.truncated_to_integer, l_width.truncated_to_integer, l_height.truncated_to_integer)
-				end_drawing_session
-				in_expose_actions := False
-			end
-
-			{CAIRO}.paint (a_cairo_context)
 			Result := False
 		end
 

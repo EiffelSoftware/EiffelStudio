@@ -810,7 +810,13 @@ feature {EV_ANY_I} -- Implementation
 			then
 				ref_count := {CAIRO}.get_reference_count (cr)
 				if ref_count > 0 then
-					check valid_count: ref_count < 10_000 end
+					if ref_count > 10_000 then
+							-- probably a memory corruption to have such high value.
+						debug ("gtk_memory")
+							print (generator + ".release_cairo_context (cr:" + cr.out + "): unexpected high valut for ref_count=" + ref_count.out + "%N")
+						end
+						check valid_count: False end
+					end
 					{CAIRO}.destroy (cr)
 				else
 					debug ("gtk_memory")
@@ -818,9 +824,6 @@ feature {EV_ANY_I} -- Implementation
 					end
 				end
 			end
-		ensure
-			not cr.is_default_pointer implies {CAIRO}.get_reference_count (cr) = 0 or
-				{CAIRO}.get_reference_count (cr) < old ({CAIRO}.get_reference_count (cr))
 		rescue
 			retried := True
 			retry
@@ -835,18 +838,16 @@ feature {EV_ANY_I} -- Implementation
 		do
 			cr := cairo_context
 			if not cr.is_default_pointer then
-				release_cairo_context (cr)
 				ref_count := {CAIRO}.get_reference_count (cr)
+				release_cairo_context (cr)
 				cairo_context := default_pointer
-				if ref_count > 0 then
+				if ref_count > 1 then
 					debug ("gtk_memory")
-						print (generator + ".clear_cairo_context: ctx=" + cr.out + " ref_count=" + ref_count.out + "%N")
+						print (generator + ".clear_cairo_context: ctx=" + cr.out + " before cairo_destroy ref_count=" + ref_count.out + "%N")
 					end
 					check no_more_reference: False end
 				end
 			end
-		ensure
-			no_more_ref: {CAIRO}.get_reference_count (old (cairo_context)) = 0
 		end
 
 feature {NONE} -- Implemention

@@ -25,9 +25,7 @@ inherit
 			y_position,
 			width, height,
 			real_minimum_width,
-			real_minimum_height,
-			minimum_width,
-			minimum_height
+			real_minimum_height
 		end
 
 	EV_SENSITIVE_IMP
@@ -411,30 +409,6 @@ feature -- Status setting
 			end
 		end
 
-	minimum_width: INTEGER
-		do
-				-- With gtk3/4, the notion of minimum width is associated with GTK width-request propery
-				-- On the Eiffel side, consider only if set by the user (i.e on the interface side)
-			if
-				attached interface as l_interface and then
-				l_interface.minimum_width_set_by_user
-			then
-				Result := Precursor
-			end
-		end
-
-	minimum_height: INTEGER
-		do
-				-- With gtk3/4, the notion of minimum height is associated with GTK height-request propery
-				-- On the Eiffel side, consider only if set by the user (i.e on the interface side)
-			if
-				attached interface as l_interface and then
-				l_interface.minimum_height_set_by_user
-			then
-				Result := Precursor
-			end
-		end
-
 feature -- Element change
 
 	set_minimum_width (a_minimum_width: INTEGER)
@@ -448,9 +422,9 @@ feature -- Element change
 
 				-- If the parent is a fixed or scrollable area we need to update the item size.
 			if attached {EV_VIEWPORT_IMP} parent_imp as l_viewport_parent then
-				l_viewport_parent.set_item_width (a_minimum_width.max (width))
+				l_viewport_parent.set_item_width (a_minimum_width.max (minimum_width))
 			elseif attached {EV_FIXED_IMP} parent_imp as l_fixed_parent then
-				l_fixed_parent.set_item_width (attached_interface, a_minimum_width)
+				l_fixed_parent.set_item_width (attached_interface, a_minimum_width.max (minimum_width))
 			end
 		end
 
@@ -465,15 +439,14 @@ feature -- Element change
 
 				-- If the parent is a fixed or scrollable area we need to update the item size.
 			if attached {EV_VIEWPORT_IMP} parent_imp as l_viewport_parent then
-				l_viewport_parent.set_item_height (a_minimum_height.max (height))
+				l_viewport_parent.set_item_height (a_minimum_height.max (minimum_height))
 			elseif attached {EV_FIXED_IMP} parent_imp as l_fixed_parent then
-				l_fixed_parent.set_item_height (attached_interface, a_minimum_height)
+				l_fixed_parent.set_item_height (attached_interface, a_minimum_height.max (minimum_height))
 			end
 		end
 
 	set_minimum_size (a_minimum_width, a_minimum_height: INTEGER)
-			-- Set the minimum horizontal size to `a_minimum_width'.
-			-- Set the minimum vertical size to `a_minimum_height'.
+			-- Set the minimum size to `a_minimum_width` x `a_minimum_height`.
 		do
 			debug ("gtk_sizing")
 				print (generating_type.name_32 + {STRING_32} ".set_minimum_size (w=" + a_minimum_width.out + ",h=" + a_minimum_height.out + ")%N")
@@ -482,9 +455,9 @@ feature -- Element change
 
 				-- If the parent is a fixed or scrollable area we need to update the item size.
 			if attached {EV_VIEWPORT_IMP} parent_imp as l_viewport_parent then
-				l_viewport_parent.set_item_size (a_minimum_width.max (width), a_minimum_height.max (height))
+				l_viewport_parent.set_item_size (a_minimum_width.max (minimum_width), a_minimum_height.max (minimum_height))
 			elseif attached {EV_FIXED_IMP} parent_imp as l_fixed_parent then
-				l_fixed_parent.set_item_size (attached_interface, a_minimum_width, a_minimum_height)
+				l_fixed_parent.set_item_size (attached_interface, a_minimum_width.max (minimum_width), a_minimum_height.max (minimum_height))
 			end
 		end
 

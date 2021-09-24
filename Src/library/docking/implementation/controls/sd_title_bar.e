@@ -480,8 +480,9 @@ feature {NONE} -- Agents
 								if internal_title.minimum_height < a_height then
 									internal_title.set_minimum_height (a_height)
 								end
+
 								internal_title.set_minimum_size (a_width - tool_bar_width, a_height)
-								fixed.set_item_size (internal_title, a_width - tool_bar_width, a_height)
+								fixed.set_item_size (internal_title, (a_width - tool_bar_width).max (1), a_height)
 							end
 						end
 					end

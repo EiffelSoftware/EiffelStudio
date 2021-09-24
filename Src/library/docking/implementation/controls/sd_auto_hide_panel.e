@@ -57,7 +57,7 @@ feature {NONE} -- Initlization
 				init (False)
 			end
 			internal_direction := a_direction
-			set_minimum_size (0, 0)
+			set_minimum_size (1, 1)
 			internal_tab_stubs.add_actions.extend (agent on_add_tab_stub)
 			internal_tab_stubs.remove_actions.extend (agent on_pruned_tab_stub)
 

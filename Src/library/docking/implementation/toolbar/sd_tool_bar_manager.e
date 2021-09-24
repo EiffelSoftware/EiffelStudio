@@ -65,22 +65,18 @@ feature -- Query
 			not_destroyed: not is_destroyed
 			a_title_not_void: a_title /= Void
 			has: has (a_title)
-		local
-			l_content: like contents
 		do
-			from
-				l_content := contents
-				l_content.start
+			across
+				contents as l_content
 			until
 				attached Result
 			loop
-				check
-					from_precondition_has: not l_content.after
+				if a_title.same_string (l_content.unique_title) then
+					Result := l_content
 				end
-				if a_title.same_string (l_content.item.unique_title) then
-					Result := l_content.item
-				end
-				l_content.forth
+			end
+			check has: Result /= Void then
+				-- See the precondition  `has: has (a_title)`
 			end
 		end
 
@@ -88,17 +84,13 @@ feature -- Query
 			-- If `content' has item which unique title is `a_unique_title'?
 		require
 			a_unique_title_not_void: a_unique_title /= Void
-		local
-			l_contents: like contents
 		do
-			from
-				l_contents := contents
-				l_contents.start
+			across
+				contents as l_content
 			until
-				l_contents.after or Result
+				Result
 			loop
-				Result := a_unique_title.same_string (l_contents.item.unique_title)
-				l_contents.forth
+				Result := a_unique_title.same_string (l_content.unique_title)
 			end
 		end
 
@@ -115,21 +107,13 @@ feature -- Command
 			-- Disable dock for floating tool bars.
 		require
 			not_destroyed: not is_destroyed
-		local
-			l_zone: detachable SD_TOOL_BAR_ZONE
-			l_contents: like contents
 		do
-			from
-				l_contents := contents
-				l_contents.start
-			until
-				l_contents.after
+			across
+				contents as l_content
 			loop
-				l_zone := l_contents.item.zone
-				if l_zone /= Void then
+				if attached l_content.zone as l_zone then
 					l_zone.disable_drag_area
 				end
-				l_contents.forth
 			end
 			docking_manager.command.resize (True)
 			is_locked := True
@@ -142,21 +126,13 @@ feature -- Command
 			-- Enable dock for floating tool bars.
 		require
 			not_destroyed: not is_destroyed
-		local
-			l_zone: detachable SD_TOOL_BAR_ZONE
-			l_contents: like contents
 		do
-			from
-				l_contents := contents
-				l_contents.start
-			until
-				l_contents.after
+			across
+				contents as l_content
 			loop
-				l_zone := l_contents.item.zone
-				if l_zone /= Void then
+				if attached l_content.zone as l_zone then
 					l_zone.enable_drag_area
 				end
-				l_contents.forth
 			end
 			docking_manager.command.resize (True)
 			is_locked := False
@@ -370,21 +346,16 @@ feature {SD_DOCKING_MANAGER_AGENTS, SD_OPEN_CONFIG_MEDIATOR, SD_SAVE_CONFIG_MEDI
 			-- Hidden docking contents.
 		require
 			not_destroyed: not is_destroyed
-		local
-			l_floating_bars: like floating_tool_bars
 		do
-			from
-				l_floating_bars := floating_tool_bars.twin
-				l_floating_bars.start
-				create Result.make (contents.count)
-				Result.append (contents)
-			until
-				l_floating_bars.after
+			create Result.make (contents.count)
+			Result.append (contents)
+
+			across
+				floating_tool_bars.twin as l_item
 			loop
 				-- FIXIT: There is a bug in prune_all of ACTIVE_LIST
 				Result.start
-				Result.prune (l_floating_bars.item.content)
-				l_floating_bars.forth
+				Result.prune (l_item.content)
 			end
 		end
 
@@ -392,19 +363,15 @@ feature {SD_DOCKING_MANAGER_AGENTS, SD_OPEN_CONFIG_MEDIATOR, SD_SAVE_CONFIG_MEDI
 			-- Content of `a_tool_bar'
 		require
 			not_destroyed: not is_destroyed
-		local
-			l_contents: ARRAYED_LIST [SD_TOOL_BAR_CONTENT]
 		do
-			from
-				l_contents := contents
-				l_contents.start
+			across
+				contents as l_content
 			until
-				l_contents.after or Result /= Void
+				Result /= Void
 			loop
-				if attached l_contents.item.zone as l_zone and then l_zone.tool_bar = a_tool_bar then
-					Result := l_contents.item
+				if attached l_content.zone as l_zone and then l_zone.tool_bar = a_tool_bar then
+					Result := l_content
 				end
-				l_contents.forth
 			end
 		end
 
@@ -437,11 +404,14 @@ feature {NONE} -- Agents
 		do
 			-- End user not dragging a tool bar.
 			if internal_shared.tool_bar_docker_mediator_cell.item = Void then
-				if is_at_menu_area (a_widget) and a_button = {EV_POINTER_CONSTANTS}.right
-					and then not has_pointer_actions (a_screen_x, a_screen_y)
-					and then not has_pebble_function (a_screen_x, a_screen_y)
-					and then not has_drop_function (a_screen_x, a_screen_y)
-					and then not (attached {EV_COMBO_BOX} a_widget) then
+				if
+					a_button = {EV_POINTER_CONSTANTS}.right and then
+					is_at_menu_area (a_widget) and then
+					not has_pointer_actions (a_screen_x, a_screen_y) and then
+					not has_pebble_function (a_screen_x, a_screen_y) and then
+					not has_drop_function (a_screen_x, a_screen_y) and then
+					not (attached {EV_COMBO_BOX} a_widget)
+				then
 					-- We query if a button `has_drop_function' before showing the menu, because if a
 					-- pick action starts from a widget which is same as the widget receive the drop
 					-- action, then there will be an additional pointer click actions called after drop
@@ -489,22 +459,15 @@ feature {NONE} -- Implementation
 			not_destroyed: not is_destroyed
 			not_void: a_tool_bar_container /= Void
 			valid: a_size >= 0
-		local
-			l_rows: LINEAR [EV_WIDGET]
 		do
-			from
-				l_rows := a_tool_bar_container.linear_representation
-				l_rows.start
-			until
-				l_rows.after
+			across
+				a_tool_bar_container as l_item
 			loop
-				if attached {SD_TOOL_BAR_ROW} l_rows.item as l_row then
+				if attached {SD_TOOL_BAR_ROW} l_item as l_row then
 					l_row.on_resize (a_size)
 				else
 					check not_void: False end -- Implied by design of tool bar container
 				end
-
-				l_rows.forth
 			end
 		end
 
@@ -512,20 +475,22 @@ feature {NONE} -- Implementation
 			-- If `a_widget' in menus area?
 		require
 			not_destroyed: not is_destroyed
+		local
+			tbc: SD_TOOL_BAR_CONTAINER
 		do
-			Result := docking_manager.tool_bar_container.top.has_recursive (a_widget)
-				or docking_manager.tool_bar_container.bottom.has_recursive (a_widget)
-				or docking_manager.tool_bar_container.left.has_recursive (a_widget)
-				or docking_manager.tool_bar_container.right.has_recursive (a_widget)
+			tbc := docking_manager.tool_bar_container
+			Result := tbc.top.has_recursive (a_widget)
+					or tbc.bottom.has_recursive (a_widget)
+					or tbc.left.has_recursive (a_widget)
+					or tbc.right.has_recursive (a_widget)
 
 			if not Result then
-				from
-					floating_tool_bars.start
+				across
+					floating_tool_bars as l_item
 				until
-					floating_tool_bars.after or Result
+					Result
 				loop
-					Result := floating_tool_bars.item.has_recursive (a_widget)
-					floating_tool_bars.forth
+					Result := l_item.has_recursive (a_widget)
 				end
 			end
 		end
@@ -534,19 +499,15 @@ feature {NONE} -- Implementation
 			-- If SD_TOOL_BAR_BUTTON at `a_screen_x', `a_screen_y' has pointer button actions?
 		require
 			not_destroyed: not is_destroyed
-		local
-			l_contents: like contents
 		do
-			from
-				l_contents := contents
-				l_contents.start
+			across
+				contents as l_content
 			until
-				l_contents.after or Result
+				Result
 			loop
-				if attached l_contents.item.zone as l_zone then
+				if attached l_content.zone as l_zone then
 					Result := l_zone.has_right_click_action (a_screen_x, a_screen_y)
 				end
-				l_contents.forth
 			end
 		end
 
@@ -554,19 +515,15 @@ feature {NONE} -- Implementation
 			-- If SD_TOOL_BAR_ITEM at `a_screen_x', `a_screen_y' had pebble function?
 		require
 			not_destroyed: not is_destroyed
-		local
-			l_contents: like contents
 		do
-			from
-				l_contents := contents
-				l_contents.start
+			across
+				contents as l_content
 			until
-				l_contents.after or Result
+				Result
 			loop
-				if attached l_contents.item.zone as l_zone then
+				if attached l_content.zone as l_zone then
 					Result := l_zone.has_pebble_function (a_screen_x, a_screen_y)
 				end
-				l_contents.forth
 			end
 		end
 
@@ -574,19 +531,15 @@ feature {NONE} -- Implementation
 			-- If SD_TOOL_BAR_ITEM at `a_screen_x', `a_screen_y' had pebble function?
 		require
 			not_destroyed: not is_destroyed
-		local
-			l_contents: like contents
 		do
-			from
-				l_contents := contents
-				l_contents.start
+			across
+				contents as l_content
 			until
-				l_contents.after or Result
+				Result
 			loop
-				if attached l_contents.item.zone as l_zone then
+				if attached l_content.zone as l_zone then
 					Result := l_zone.has_drop_function (a_screen_x, a_screen_y)
 				end
-				l_contents.forth
 			end
 		end
 
@@ -598,24 +551,20 @@ feature {NONE} -- Implementation
 			l_menu_item: EV_CHECK_MENU_ITEM
 			l_custom_dialog: SD_TOOL_BAR_HIDDEN_ITEM_DIALOG
 			l_string: READABLE_STRING_GENERAL
-			l_contents: like contents
 		do
 			create Result
-			from
-				l_contents := contents
-				l_contents.start
-			until
-				l_contents.after
+			across
+				contents as l_content
 			loop
-				create l_menu_item.make_with_text (l_contents.item.title)
-				if l_contents.item.is_visible then
+				create l_menu_item.make_with_text (l_content.title)
+				if l_content.is_visible then
 					l_menu_item.enable_select
 					l_menu_item.select_actions.extend (agent (ia_content: SD_TOOL_BAR_CONTENT)
 															require
 																not_void: ia_content /= Void
 															do
 																ia_content.close_request_actions.call ([])
-															end (l_contents.item))
+															end (l_content))
 				else
 					l_menu_item.disable_select
 					l_menu_item.select_actions.extend (agent (ia_content: SD_TOOL_BAR_CONTENT)
@@ -623,30 +572,24 @@ feature {NONE} -- Implementation
 																not_void: ia_content /= Void
 															do
 																ia_content.show_request_actions.call ([])
-															end (l_contents.item))
+															end (l_content))
 				end
-
 				Result.extend (l_menu_item)
-				l_contents.forth
 			end
 
 			Result.extend (create {EV_MENU_SEPARATOR})
 			-- Customize menu items
 
-			from
-				l_contents.start
-			until
-				l_contents.after
+			across
+				contents as l_content
 			loop
-				if attached l_contents.item.zone as l_zone then
+				if attached l_content.zone as l_zone then
 					create l_custom_dialog.make_for_menu (l_zone)
-					l_string := internal_shared.interface_names.tool_bar_right_click_customize (l_contents.item.title)
+					l_string := internal_shared.interface_names.tool_bar_right_click_customize (l_content.title)
 					create l_menu_item.make_with_text_and_action (l_string, agent l_custom_dialog.on_customize)
 					Result.extend (l_menu_item)
 				end
-				l_contents.forth
 			end
-
 		end
 
 	set_top_imp (a_content: SD_TOOL_BAR_CONTENT; a_row: SD_TOOL_BAR_ROW)
@@ -686,7 +629,7 @@ invariant
 
 note
 	library:	"SmartDocking: Library of reusable components for Eiffel."
-	copyright:	"Copyright (c) 1984-2017, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2021, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

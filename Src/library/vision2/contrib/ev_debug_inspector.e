@@ -106,13 +106,13 @@ feature {NONE} -- Agents
 
 	on_new_window_inspection
 		local
-			l_new: EV_DEBUG_INSPECTOR_WINDOW
+			l_inspector: EV_DEBUG_INSPECTOR_WINDOW
 		do
 			if attached window as l_obswin then
-				create l_new.make (l_obswin)
-				inspector := l_new
-				l_new.drop_widget (l_obswin)
-				l_new.show_relative_to_window (l_obswin)
+				create l_inspector.make (l_obswin)
+				inspector := l_inspector
+				l_inspector.drop_widget (l_obswin)
+				l_inspector.show_relative_to_window (l_obswin)
 			else
 					--Ignore
 				check has_window: False end
@@ -121,19 +121,40 @@ feature {NONE} -- Agents
 
 	on_new_widget_inspection
 		local
-			w: EV_ANY
+			l_inspector: EV_DEBUG_INSPECTOR_WINDOW
+			w: like widget_to_inspect
+		do
+			if attached window as win then
+				win.set_focus
+			end
+			l_inspector := inspector
+			w := widget_to_inspect (window)
+			if l_inspector = Void then
+				if attached window as l_obswin then
+					create l_inspector.make (l_obswin)
+					inspector := l_inspector
+					if w = Void then
+						w := l_obswin
+					end
+					l_inspector.drop_widget (w)
+					l_inspector.show_relative_to_window (l_obswin)
+				end
+			else
+				l_inspector.drop_widget (w)
+			end
+		end
+
+	widget_to_inspect (a_window: detachable EV_WINDOW): detachable EV_ANY
+		local
 			sc: EV_SCREEN
 		do
 			create sc
-			w := sc.widget_at_mouse_pointer
-			if w = Void then
-				w := widget_at_position_from (window, sc.pointer_position)
+			Result := sc.widget_at_mouse_pointer
+			if Result = Void and a_window /= Void then
+				Result := widget_at_position_from (a_window, sc.pointer_position)
 			end
-			if w = Void then
-				w := ev_application.focused_widget
-			end
-			if attached inspector as insp then
-				insp.drop_widget (w)
+			if Result = Void then
+				Result := ev_application.focused_widget
 			end
 		end
 

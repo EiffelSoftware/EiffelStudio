@@ -13,6 +13,8 @@ inherit
 			initialize
 		end
 
+	EV_BUILDER -- to access specific protected features
+
 	EV_SHARED_APPLICATION
 		undefine
 			default_create,
@@ -67,6 +69,14 @@ feature {NONE} -- Initialization
 			create hb
 			vb.extend (hb)
 			vb.disable_item_expand (hb)
+
+			cbut := details_checkbox
+			cbut.set_text ("Details?")
+			cbut.select_actions.extend (agent update)
+			hb.extend (cbut)
+			hb.disable_item_expand (cbut)
+
+
 			hb.extend (create {EV_CELL})
 
 			create but.make_with_text_and_action ("Open selection", agent use_selection)
@@ -96,12 +106,6 @@ feature {NONE} -- Initialization
 			create but.make_with_text_and_action ("Clear", agent drop_widget (Void))
 			hb.extend (but)
 			hb.disable_item_expand (but)
-
-			cbut := details_checkbox
-			cbut.set_text ("Details?")
-			cbut.select_actions.extend (agent update)
-			hb.extend (cbut)
-			hb.disable_item_expand (cbut)
 
 			create nb
 			vb.extend (nb)
@@ -618,47 +622,89 @@ feature -- Events
 			show_tree (w)
 		end
 
-	show_info (a_any: detachable EV_ANY)
+	object_info (a_any: detachable EV_ANY; a_is_inline: BOOLEAN): STRING_32
 		local
 			w: EV_ANY
-			dlg: EV_INFORMATION_DIALOG
-			s, txt: STRING_32
 		do
 			if a_any /= Void then
 				w := a_any
 			else
 				w := selected_entry
 			end
+			create Result.make_empty
 			if w /= Void then
-				create dlg
-				create txt.make_empty
-				txt.append ("Type: ")
-				txt.append (w.generating_type.name_32)
-				txt.append ("%N")
-				txt.append (" - address: 0x")
-				txt.append (($w).out)
-				txt.append ("%N")
-				if attached {EV_POSITIONED} w as l_pos then
-					txt.append (" - position=(")
-					txt.append_integer (l_pos.x_position)
-					txt.append (",")
-					txt.append_integer (l_pos.y_position)
-					txt.append (") screen=(")
-					txt.append_integer (l_pos.screen_x)
-					txt.append (",")
-					txt.append_integer (l_pos.screen_y)
-					txt.append (")%N")
-					txt.append (" - size=")
-					txt.append_integer (l_pos.width)
-					txt.append (" x ")
-					txt.append_integer (l_pos.height)
-
-					txt.append (" - min=")
-					txt.append_integer (l_pos.minimum_width)
-					txt.append (" x ")
-					txt.append_integer (l_pos.minimum_height)
-					txt.append ("%N")
+				if not a_is_inline then
+					Result.append ("Type: ")
+					Result.append (w.generating_type.name_32)
+					Result.append ("%N")
+					Result.append (" - address: ")
+					Result.append (($w).out)
+					Result.append ("%N")
 				end
+				if attached {EV_POSITIONED} w as l_pos then
+					if a_is_inline then
+						Result.append (" pos(")
+					else
+						Result.append (" - position=(")
+					end
+					Result.append_integer (l_pos.x_position)
+					Result.append (",")
+					Result.append_integer (l_pos.y_position)
+					if a_is_inline then
+						Result.append (") @(")
+					else
+						Result.append (") screen=(")
+					end
+					Result.append_integer (l_pos.screen_x)
+					Result.append (",")
+					Result.append_integer (l_pos.screen_y)
+					Result.append (")")
+					if a_is_inline then
+						Result.append (" size(")
+					else
+						Result.append ("%N - size=")
+					end
+					Result.append_integer (l_pos.width)
+					Result.append (" x ")
+					Result.append_integer (l_pos.height)
+
+					if a_is_inline then
+						Result.append (") min (")
+					else
+						Result.append (" - min=")
+					end
+					if attached {EV_WIDGET} w as l_widget then
+						if l_widget.minimum_width_set_by_user then
+							Result.append ("!")
+						end
+						Result.append_integer (l_pos.minimum_width)
+						Result.append (" x ")
+						if l_widget.minimum_height_set_by_user then
+							Result.append ("!")
+						end
+						Result.append_integer (l_pos.minimum_height)
+					else
+						Result.append_integer (l_pos.minimum_width)
+						Result.append (" x ")
+						Result.append_integer (l_pos.minimum_height)
+					end
+					if a_is_inline then
+						Result.append (")")
+					else
+						Result.append ("%N")
+					end
+				end
+			end
+		end
+
+	show_info (a_any: detachable EV_ANY)
+		local
+			w: EV_ANY
+			dlg: EV_INFORMATION_DIALOG
+			s, txt: STRING_32
+		do
+			txt := object_info (a_any, False)
+			if not txt.is_whitespace then
 				if
 					attached {EV_TEXTABLE} w as l_text
 				then
@@ -677,8 +723,16 @@ feature -- Events
 					end
 					txt.append ("%N")
 				end
+				create dlg
 				dlg.set_text (txt)
-				dlg.set_title ({STRING_32} "Info {" + w.generating_type.name_32 + {STRING_32} "}")
+				if a_any /= Void then
+					w := a_any
+				else
+					w := selected_entry
+				end
+				if w /= Void then
+					dlg.set_title ({STRING_32} "Info {" + w.generating_type.name_32 + {STRING_32} "}")
+				end
 				dlg.show_relative_to_window (Current)
 			end
 		end
@@ -833,24 +887,8 @@ feature -- Events
 				end
 				if has_details then
 					r.set_item (6, create {EV_GRID_ITEM})
-					if attached {EV_POSITIONED} w as l_pos then
-						create s.make_empty
-						s.append ("(" + l_pos.x_position.out)
-						s.append ("," + l_pos.y_position.out)
-						s.append (")")
-
-						s.append (" @(" + l_pos.screen_x.out)
-						s.append ("," + l_pos.screen_y.out)
-						s.append (")")
-
-						s.append (" " + l_pos.width.out)
-						s.append (" x " + l_pos.height.out)
-						s.append (" (min: ")
-						s.append (l_pos.minimum_width.out)
-						s.append (" x " + l_pos.minimum_height.out)
-						s.append (")")
-						r.set_item (6, new_label (s))
-					end
+					s := object_info (w, True)
+					r.set_item (6, new_label (s))
 				end
 				lab.set_foreground_color (colors.blue)
 				if

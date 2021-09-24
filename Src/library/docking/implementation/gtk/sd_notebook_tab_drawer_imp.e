@@ -98,15 +98,16 @@ feature -- Command
 				if tab.is_pointer_in_close_area then
 					if attached tab.parent as l_parent then
 						if attached {EV_DRAWING_AREA_IMP} l_parent.implementation as l_imp then
+							l_imp.start_drawing_session
 							l_drawable := l_imp.get_drawable
-							if l_drawable /= default_pointer then
+							if not l_drawable.is_default_pointer then
 								if tab.is_pointer_pressed then
 									tool_bar_drawer.draw_button_background (l_drawable, l_vision_rect, {SD_TOOL_BAR_ITEM_STATE}.pressed)
 								else
 									tool_bar_drawer.draw_button_background (l_drawable, l_vision_rect, {SD_TOOL_BAR_ITEM_STATE}.hot)
 								end
-								l_imp.release_drawable (l_drawable)
 							end
+							l_imp.end_drawing_session
 						end
 					else
 						check False end -- Implied by `tab' is displaying on screen
@@ -192,11 +193,12 @@ feature -- Command
 		do
 			if attached tab.parent as l_parent then
 				if attached {SD_DRAWING_AREA_IMP} l_parent.implementation as l_imp then
+					l_imp.start_drawing_session
 					l_drawable := l_imp.get_drawable
 					if not l_drawable.is_default_pointer then
 						c_gtk_paint_focus (l_drawable, {GTK}.gtk_widget_get_style_context (l_imp.c_object), a_rect.x, a_rect.y, a_rect.width, a_rect.height)
-						l_imp.release_drawable (l_drawable)
 					end
+					l_imp.end_drawing_session
 				end
 			else
 				check False end -- Implied by `tab' is displaying on screen
@@ -263,6 +265,7 @@ feature {NONE} -- Implementation
 					attached {SD_DRAWING_AREA_IMP} l_parent.implementation as l_imp and then
 					{GTK}.gtk_widget_get_window (l_imp.c_object) /= default_pointer
 				then
+					l_imp.start_drawing_session
 					l_drawable := l_imp.get_drawable
 					c_gtk_paint_extension (l_drawable, notebook_style, a_is_selected,
 											 a_x, 0 ,a_width, tab.height, is_top_side_tab)
@@ -271,7 +274,7 @@ feature {NONE} -- Implementation
 					else
 						draw_pixmap_text_unselected (l_parent, tab.x, a_width)
 					end
-					l_imp.release_drawable (l_drawable)
+					l_imp.end_drawing_session
 				end
 			else
 				check False end -- Implied by `tab' is displaying on screen

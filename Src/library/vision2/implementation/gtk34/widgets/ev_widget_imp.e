@@ -485,6 +485,13 @@ feature -- Element change
 			{GTK}.gtk_container_check_resize (l_c_object)
 		end
 
+	set_real_minimum_size (a_width, a_height: INTEGER)
+			-- Set the gtk minimum size to  `a_width` and `a_height`
+			-- a value of -1 means reset the minimum value.
+		do
+			{GTK2}.gtk_widget_set_minimum_size (c_object, a_width, a_height)
+		end
+
 feature -- Measurement
 
 	x_position: INTEGER

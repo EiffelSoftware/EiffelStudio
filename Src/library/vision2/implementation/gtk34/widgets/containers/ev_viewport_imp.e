@@ -170,6 +170,8 @@ feature -- Element change
 				l_alloc.memory_free
 
 				{GTK2}.gtk_widget_set_minimum_size (l_child_item, a_width, a_height)
+			else
+				check has_item_and_implementation: False end
 			end
 		end
 
@@ -185,13 +187,14 @@ feature {NONE} -- Implementation
 		do
 			if needs_child_event_box then
 					-- We add a parent box to `a_child' and control its size via this as
-					-- GtkViewport updates the childs requisition upon allocation which
+					-- GtkLayout updates the childs requisition upon allocation which
 					-- affects the minimum size of the `a_child'.
 				l_parent_box := {GTK}.gtk_event_box_new
+				{GTK2}.gtk_layout_put (a_container, l_parent_box, internal_x_y_offset, internal_x_y_offset) -- Adopt floating reference
+
 				{GTK2}.gtk_event_box_set_visible_window (l_parent_box, False)
 				{GTK}.gtk_widget_show (l_parent_box)
 				{GTK}.gtk_container_add (l_parent_box, a_child)
-				{GTK2}.gtk_layout_put (a_container, l_parent_box, internal_x_y_offset, internal_x_y_offset)
 				{GTK}.gtk_widget_set_name (l_parent_box, {GTK}.gtk_widget_get_name (a_child))
 			else
 				{GTK2}.gtk_layout_put (a_container, a_child, internal_x_y_offset, internal_x_y_offset)
@@ -207,10 +210,10 @@ feature {NONE} -- Implementation
 		do
 			if needs_child_event_box then
 				l_parent_box := {GTK}.gtk_widget_get_parent (a_child)
-				{GTK}.gtk_container_remove (l_parent_box, a_child)
-				{GTK}.gtk_container_remove (a_container, l_parent_box)
+				{GTK}.gtk_container_remove (l_parent_box, a_child) -- decr ref count
+				{GTK}.gtk_container_remove (a_container, l_parent_box)  -- decr ref count
 			else
-				{GTK}.gtk_container_remove (a_container, a_child)
+				{GTK}.gtk_container_remove (a_container, a_child) -- decr ref count
 			end
 
 			reset_offset_to_origin
@@ -227,7 +230,7 @@ feature {NONE} -- Implementation
 			-- Pointer to the event box
 
 	visual_widget: POINTER
-			-- Pointer to the GtkViewport widget.
+			-- Pointer to the GtkLayout or GtkViewport widget (depending on the implementation).
 		do
 			Result := viewport
 		end
@@ -246,7 +249,7 @@ feature {NONE} -- Implementation
 		end
 
 	viewport: POINTER
-			-- Pointer to viewport, used for reuse of adjustment functions from descendants.
+			-- Pointer to GtkLayout, used for reuse of adjustment functions from descendants.
 
 feature {EV_ANY, EV_ANY_I} -- Implementation
 

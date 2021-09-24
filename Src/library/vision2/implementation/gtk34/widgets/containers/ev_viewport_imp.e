@@ -27,7 +27,8 @@ inherit
 			gtk_insert_i_th,
 			gtk_container_remove,
 			make,
-			internal_x_y_offset
+			internal_x_y_offset,
+			on_size_allocate
 		end
 
 create
@@ -72,24 +73,26 @@ feature -- Access
 
 feature -- Element change
 
-	block_resize_actions
+	block_item_resize_actions
 			-- Block any resize actions that may occur.
 		do
-			if attached item as l_item then
+			if
+				attached item as l_item and then
+				l_item.implementation.resize_actions_internal /= Void
+			then
 				-- The blocking of resize actions is due to set uposition causing temporary resizing.
-				if l_item.implementation.resize_actions_internal /= Void then
-					l_item.implementation.resize_actions.block
-				end
+				l_item.implementation.resize_actions.block
 			end
 		end
 
-	unblock_resize_actions
+	unblock_item_resize_actions
 			-- Unblock all resize actions.
 		do
-			if attached item as l_item then
-				if l_item.implementation.resize_actions_internal /= Void then
-					l_item.implementation.resize_actions.resume
-				end
+			if
+				attached item as l_item and then
+				l_item.implementation.resize_actions_internal /= Void
+			then
+				l_item.implementation.resize_actions.resume
 			end
 		end
 
@@ -107,7 +110,8 @@ feature -- Element change
 			l_x_offset_changed := a_x /= internal_x_offset
 			l_y_offset_changed := a_y /= internal_y_offset
 			if l_x_offset_changed or else l_y_offset_changed then
-				block_resize_actions
+					-- TODO: check if next line is needed
+--				block_item_resize_actions
 				if l_x_offset_changed then
 					internal_x_offset := a_x
 					{GTK}.gtk_adjustment_set_value (horizontal_adjustment, a_x + internal_x_y_offset)
@@ -116,18 +120,11 @@ feature -- Element change
 					internal_y_offset := a_y
 					{GTK}.gtk_adjustment_set_value (vertical_adjustment, a_y + internal_x_y_offset)
 				end
-				--if l_x_offset_changed then
-					-- GTK+ emits `value-changed` itself whenever the value changes.
-					-- {GTK}.gtk_adjustment_value_changed (horizontal_adjustment)
-				--end
-				--if l_y_offset_changed then
-					-- {GTK}.gtk_adjustment_value_changed (vertical_adjustment)
-					-- GTK+ emits `value-changed` itself whenever the value changes.
-					-- ie GTK do something like this g_signal_emit_by_name(container_widget, "value-changed")
-					--|TODO double check in other case implement it in Eiffel like this.
-					--|real_signal_connect (container_widget, once "value-changed", agent (app_implementation.gtk_marshal).y_offset_changed (internal_id), Void)
-				--end
-				unblock_resize_actions
+					--| note: GTK3 now emits `value-changed` event itself whenever value changes.
+					--|       then no need to call the deprecated "gtk_adjustment_value_changed" Gtk C function anymore.
+
+					-- TODO: check if next line is needed
+--				unblock_item_resize_actions
 			end
 		end
 
@@ -142,7 +139,7 @@ feature -- Element change
 			-- Set `a_widget.height' to `a_height'.
 		local
 			l_child_item: POINTER
-			l_c_object: POINTER
+			l_item_c_object: POINTER
 			l_alloc: POINTER
 		do
 			debug ("gtk_sizing")
@@ -152,11 +149,11 @@ feature -- Element change
 				attached item as l_item and then
 				attached {EV_WIDGET_IMP} l_item.implementation as w_imp
 			then
-				l_c_object := w_imp.c_object
+				l_item_c_object := w_imp.c_object
 				if needs_child_event_box then
-					l_child_item := {GTK}.gtk_widget_get_parent (l_c_object)
+					l_child_item := {GTK}.gtk_widget_get_parent (l_item_c_object)
 				else
-					l_child_item := l_c_object
+					l_child_item := l_item_c_object
 				end
 				l_alloc := l_alloc.memory_alloc ({GTK}.c_gtk_allocation_struct_size)
 				{GTK}.gtk_widget_get_allocation (l_child_item, l_alloc)
@@ -170,6 +167,8 @@ feature -- Element change
 				l_alloc.memory_free
 
 				{GTK2}.gtk_widget_set_minimum_size (l_child_item, a_width, a_height)
+
+				{GTK}.gtk_container_check_resize (viewport)
 			else
 				check has_item_and_implementation: False end
 			end
@@ -177,8 +176,29 @@ feature -- Element change
 
 feature {NONE} -- Implementation
 
+	on_size_allocate (a_x, a_y, a_width, a_height: INTEGER)
+		local
+			w,h: INTEGER
+		do
+			if attached item as l_item then
+				w := a_width
+				h := a_height
+				l_item.reset_minimum_height
+				l_item.reset_minimum_width
+				if attached {EV_WIDGET_IMP} l_item.implementation as l_item_imp then
+					l_item_imp.set_real_minimum_size (-1, -1)
+					set_item_size (w.max (l_item_imp.minimum_width), h.max (l_item_imp.minimum_height))
+				else
+					check has_widget_implementation: False end
+					l_item.set_minimum_size (w, h)
+					set_item_size (w, h)
+				end
+			end
+			Precursor (a_x, a_y, a_width, a_height)
+		end
+
 	internal_x_y_offset: INTEGER = 16384
-		-- <Precursor>
+			-- <Precursor>
 
 	gtk_insert_i_th (a_container, a_child: POINTER; a_position: INTEGER)
 			-- Move `a_child' to `a_position' in `a_container'.
@@ -236,7 +256,7 @@ feature {NONE} -- Implementation
 		end
 
 	internal_x_offset, internal_y_offset: INTEGER
-		-- X and Y offset values for viewport.
+			-- X and Y offset values for viewport.
 
 	horizontal_adjustment: POINTER
 		do

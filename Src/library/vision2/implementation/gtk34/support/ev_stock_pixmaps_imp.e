@@ -121,15 +121,14 @@ feature {NONE} -- Implementation
 			-- Retrieve pixmap from gtk stock id
 		local
 			a_cs: EV_GTK_C_STRING
-			pixbuf_imp: detachable EV_PIXEL_BUFFER_IMP
 			retried: BOOLEAN
 		do
 			if not retried then
 				a_cs := a_stock_id
 				create Result
-				pixbuf_imp ?= Result.implementation
-				check pixbuf_imp /= Void then end
-				pixbuf_imp.set_from_stock_id (a_cs.item)
+				check attached {EV_PIXEL_BUFFER_IMP} Result.implementation as pixbuf_imp then
+					pixbuf_imp.set_from_stock (a_cs)
+				end
 			else
 				create Result
 			end

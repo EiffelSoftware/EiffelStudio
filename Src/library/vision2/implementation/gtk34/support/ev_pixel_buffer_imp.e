@@ -470,6 +470,33 @@ feature -- Query
 
 feature {EV_STOCK_PIXMAPS_IMP} -- Implementation
 
+	set_from_stock (a_stock_id: EV_GTK_C_STRING)
+			-- Pixmap symbolizing a piece of information.
+		local
+			a_cs: EV_GTK_C_STRING
+		do
+			a_cs := a_stock_id
+			set_from_stock_id (a_cs.item)
+
+			if gdk_pixbuf.is_default_pointer then
+				if a_cs.string.is_case_insensitive_equal_general ("Information") or else
+					a_cs.string.is_case_insensitive_equal_general ("dialog-information")
+				then
+					set_gdkpixbuf ({GDK}.gdk_pixbuf_new_from_xpm_data ({EV_STOCK_PIXMAPS_IMP}.information_pixmap_xpm))
+				elseif a_cs.string.is_case_insensitive_equal_general ("dialog-error") then
+					set_gdkpixbuf ({GDK}.gdk_pixbuf_new_from_xpm_data ({EV_STOCK_PIXMAPS_IMP}.error_pixmap_xpm))
+				elseif a_cs.string.is_case_insensitive_equal_general ("dialog-question") then
+					set_gdkpixbuf ({GDK}.gdk_pixbuf_new_from_xpm_data ({EV_STOCK_PIXMAPS_IMP}.question_pixmap_xpm))
+				elseif a_cs.string.is_case_insensitive_equal_general ("dialog-warning") then
+					set_gdkpixbuf ({GDK}.gdk_pixbuf_new_from_xpm_data ({EV_STOCK_PIXMAPS_IMP}.warning_pixmap_xpm))
+				else
+					-- If no stock pixbuf is found, default to empty 48x48 pixbuf.
+					make_with_size (48, 48)
+				end
+			end
+		end
+
+
 	set_from_stock_id (a_stock_id: POINTER)
 			-- Pixmap symbolizing a piece of information
 		require
@@ -512,9 +539,6 @@ feature {EV_STOCK_PIXMAPS_IMP} -- Implementation
 				end
 				set_gdkpixbuf ({GTK}.gdk_pixbuf_copy (stock_pixbuf))
 				{GTK2}.g_object_unref (stock_pixbuf)
-			else
-					-- If no stock pixbuf is found, default to empty 48x48 pixbuf.
-				make_with_size (48, 48)
 			end
 		end
 

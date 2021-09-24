@@ -57,7 +57,7 @@ feature {NONE} -- Initialization
 				-- Remove shadow so that the scrollable area looks like any other container.
 			{GTK2}.gtk_scrolled_window_set_shadow_type (scrolled_window, {GTK}.gtk_shadow_none_enum)
 			set_c_object (scrolled_window)
-			set_scrolling_policy ({GTK}.gTK_POLICY_AUTOMATIC_ENUM, {GTK}.gTK_POLICY_AUTOMATIC_ENUM)
+			set_scrolling_policy ({GTK}.GTK_POLICY_AUTOMATIC_ENUM, {GTK}.GTK_POLICY_AUTOMATIC_ENUM)
 			viewport := {GTK}.gtk_viewport_new (default_pointer, default_pointer)
 			{GTK}.gtk_widget_show (viewport)
 			{GTK}.gtk_container_add (scrolled_window, viewport)
@@ -95,13 +95,13 @@ feature -- Access
 	is_horizontal_scroll_bar_visible: BOOLEAN
 			-- Should horizontal scroll bar be displayed?
 		do
-			Result := horizontal_policy = {GTK}.gTK_POLICY_ALWAYS_ENUM
+			Result := horizontal_policy = {GTK}.GTK_POLICY_ALWAYS_ENUM
 		end
 
 	is_vertical_scroll_bar_visible: BOOLEAN
 			-- Should vertical scroll bar be displayed?
 		do
-			Result := vertical_policy = {GTK}.gTK_POLICY_ALWAYS_ENUM
+			Result := vertical_policy = {GTK}.GTK_POLICY_ALWAYS_ENUM
 		end
 
 	x_offset: INTEGER

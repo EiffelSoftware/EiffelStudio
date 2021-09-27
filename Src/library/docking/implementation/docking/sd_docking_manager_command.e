@@ -36,24 +36,26 @@ feature {SD_DOCKING_MANAGER} -- Initialization
 	add_actions
 			-- Register required actions.
 		local
-			l_acc: EV_ACCELERATOR
+			l_acc1, l_acc2: EV_ACCELERATOR
 			l_key: EV_KEY
 		do
 				-- Initialize zone navigation accelerator key.
 			create l_key.make_with_code (internal_shared.zone_navigation_accelerator_key)
 
-			create l_acc.make_with_key_combination (l_key, internal_shared.zone_navigation_accelerator_ctrl, internal_shared.zone_navigation_accelerator_alt, internal_shared.zone_navigation_accelerator_shift)
-			l_acc.actions.extend (agent on_zone_navigation (False))
-
-			if attached {EV_TITLED_WINDOW} docking_manager.main_window as l_window then
-				l_window.accelerators.extend (l_acc)
-			end
+			create l_acc1.make_with_key_combination (l_key, internal_shared.zone_navigation_accelerator_ctrl, internal_shared.zone_navigation_accelerator_alt, internal_shared.zone_navigation_accelerator_shift)
+			l_acc1.actions.extend (agent on_zone_navigation (False))
 
 				-- We must set another accelerator, otherwise shift+ctrl+tab will not invoke actions
-			create l_acc.make_with_key_combination (l_key, True, False, True)
-			l_acc.actions.extend (agent on_zone_navigation (True))
-			if attached {EV_TITLED_WINDOW} docking_manager.main_window as l_window_2 then
-				l_window_2.accelerators.extend (l_acc)
+			create l_acc2.make_with_key_combination (l_key, True, False, True)
+			l_acc2.actions.extend (agent on_zone_navigation (True))
+
+			if attached {EV_TITLED_WINDOW} docking_manager.main_window as l_window then
+				if not l_window.accelerators.has (l_acc1) then
+					l_window.accelerators.extend (l_acc1)
+				end
+				if not l_window.accelerators.has (l_acc2) then
+					l_window.accelerators.extend (l_acc2)
+				end
 			end
 		end
 

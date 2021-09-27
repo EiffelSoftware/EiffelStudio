@@ -111,8 +111,7 @@ feature {EV_ANY_I} -- Access
 						else
 							create s.make_empty
 						end
-						s.append (l_interface.generating_type.name_32)
-						s.append_string_general ("--" + generator + "--")
+						s.append_string_general (l_interface.generator)
 					else
 						create s.make_from_string_general (generating_type.name_32)
 					end
@@ -178,9 +177,6 @@ feature {EV_ANY_I, EV_APPLICATION_IMP} -- Event handling
 		local
 			l_app_imp: EV_APPLICATION_IMP
 		do
-			debug ("gtk_signal")
-				print (generator + ": calling signal_connect ( .. )%N")
-			end
 			l_app_imp := app_implementation
 			l_app_imp.gtk_marshal.signal_connect (a_c_object, a_signal_name, an_agent, False)
 			record_signal_connection (a_c_object, a_signal_name, l_app_imp.gtk_marshal.last_signal_connection_id)
@@ -200,9 +196,6 @@ feature {EV_ANY_I, EV_APPLICATION_IMP} -- Event handling
 		local
 			l_app_imp: EV_APPLICATION_IMP
 		do
-			debug ("gtk_signal")
-				print (generator + ": calling signal_connect ( .. ) AFTER%N")
-			end
 			l_app_imp := app_implementation
 			l_app_imp.gtk_marshal.signal_connect (a_c_object, l_app_imp.c_string_from_eiffel_string (a_signal_name), an_agent, True)
 			record_signal_connection (a_c_object, a_signal_name, l_app_imp.gtk_marshal.last_signal_connection_id)

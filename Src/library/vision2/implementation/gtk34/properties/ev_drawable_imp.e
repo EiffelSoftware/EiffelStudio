@@ -631,6 +631,7 @@ feature -- Drawing operations
 			-- size `a_width' and `a_height'.
 		do
 			draw_ellipse_internal (x, y, a_width, a_height, 0, 2 * {DOUBLE_MATH}.pi, True, False)
+--			draw_ellipse_internal_2 (x, y, a_width, a_height, 0, 2 * {DOUBLE_MATH}.pi, True, False)
 		end
 
 	draw_ellipse_internal (x, y, a_width, a_height: INTEGER; a_start_angle, an_aperture: REAL_64; a_close, a_fill: BOOLEAN)
@@ -665,7 +666,7 @@ feature -- Drawing operations
 						{CAIRO}.move_to (l_drawable, l_xc, l_yc)
 					end
 
-					{CAIRO}.arc_negative (l_drawable, l_xc, l_yc, a_height / 2, -a_start_angle, - (a_start_angle + an_aperture))
+					{CAIRO}.arc_negative (l_drawable, l_xc, l_yc, l_radius , -a_start_angle, - (a_start_angle + an_aperture))
 					if a_fill then
 						{CAIRO}.stroke_preserve (l_drawable)
 						{CAIRO}.fill (l_drawable)

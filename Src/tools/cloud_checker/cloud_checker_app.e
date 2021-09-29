@@ -157,31 +157,30 @@ feature {NONE} -- Initialization
 					print ({STRING_32} "  ! ERROR: no account for username ["+ u +"] or wrong password !%N")
 				end
 				if acc /= Void then
+					if attached cl.installation as l_curr_installation then
+						print ("- Local installation:%N")
+						print ("  id=" + l_curr_installation.id + "%N")
+						if attached l_curr_installation.info as l_info then
+							print ("  info=" + l_info + "%N")
+						end
+						if attached l_curr_installation.associated_plan as pl then
+							print ("  plan=" + pl.name + "%N")
+						end
+						if attached l_curr_installation.associated_license as lic then
+							print ("  license=")
+							print_license (lic)
+							print ("%N")
+						end
+					end
+
 					print ("- checking licenses ... %N")
 					if attached cl.account_licenses (acc) as lst then
 						print ("  : SUCCESS: " + lst.count.out + " license(s):%N")
 						across
 							lst as lic
 						loop
-							print ("  |  " + lic.key + ": ")
-							if attached lic.plan_name as pl then
-								print (" plan=" + pl)
-							end
-							if lic.is_active then
-								print (" ACTIVE")
-								if attached lic.expiration_date as dt then
-									print (" days_remaining=" + lic.days_remaining.out)
-									print (" expiration_date=[" + (create {HTTP_DATE}.make_from_date_time (dt)).iso8601_string + "]")
-								else
-									print (" never-expires")
-								end
-							else
-								print (" INACTIVE")
-							end
-							if lic.is_fallback then
-								print (" FALLBACK")
-							end
-
+							print ("  |  ")
+							print_license (lic)
 							print ("%N")
 						end
 --						print ("  > SUCCESS: active license: "+ lic.key +"%N")
@@ -301,6 +300,28 @@ feature -- Access
 feature -- Change
 
 feature {NONE} -- Implementation
+
+	print_license (lic: ES_ACCOUNT_LICENSE)
+		do
+			print (lic.key + ": ")
+			if attached lic.plan_name as pl then
+				print (" plan=" + pl)
+			end
+			if lic.is_active then
+				print (" ACTIVE")
+				if attached lic.expiration_date as dt then
+					print (" days_remaining=" + lic.days_remaining.out)
+					print (" expiration_date=[" + (create {HTTP_DATE}.make_from_date_time (dt)).iso8601_string + "]")
+				else
+					print (" never-expires")
+				end
+			else
+				print (" INACTIVE")
+			end
+			if lic.is_fallback then
+				print (" FALLBACK")
+			end
+		end
 
 	print_error (cl: ES_CLOUD_S)
 		require

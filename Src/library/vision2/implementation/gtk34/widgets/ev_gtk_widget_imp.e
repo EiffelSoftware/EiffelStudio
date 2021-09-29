@@ -30,6 +30,7 @@ feature {EV_INTERMEDIARY_ROUTINES} -- Implementation
 				| {GDK}.GDK_VISIBILITY_NOTIFY_MASK_ENUM
 				| {GDK}.GDK_POINTER_MOTION_HINT_MASK_ENUM
 				| {GDK}.GDK_SCROLL_MASK_ENUM
+				| {GDK}.GDK_STRUCTURE_MASK_ENUM
 		end
 
 feature {NONE} -- Implementation

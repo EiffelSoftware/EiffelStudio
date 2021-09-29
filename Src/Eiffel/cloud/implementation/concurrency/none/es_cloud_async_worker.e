@@ -13,7 +13,6 @@ feature {NONE} -- Initialization
 
 	make
 		do
-			create jobs.make (10)
 		end
 
 feature -- Access

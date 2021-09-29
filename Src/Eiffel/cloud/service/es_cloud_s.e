@@ -258,6 +258,16 @@ feature -- Registration
 		deferred
 		end
 
+feature -- Settings
+
+	set_connection_timeout (a_secs: INTEGER)
+		deferred
+		end
+
+	set_timeout (a_secs: INTEGER)
+		deferred
+		end
+
 feature -- Connection checking
 
 	check_cloud_availability

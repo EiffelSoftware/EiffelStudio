@@ -25,55 +25,75 @@ feature {NONE} -- Initialization
 			u,p: STRING_32
 			tok: STRING_8
 			i,n: INTEGER
+			l_conn_timeout, l_timeout: INTEGER
 			v: READABLE_STRING_32
 			acc: ES_ACCOUNT
 		do
+			from
+				i := 1
+				n := argument_count
+			until
+				i > n
+			loop
+				if attached argument (i) as arg then
+					if arg.same_string ("--token")  and i < n then
+						i := i + 1
+						v := argument (i)
+						if v /= Void then
+							tok := {UTF_CONVERTER}.string_32_to_utf_8_string_8 (v)
+							tok.left_adjust; tok.right_adjust
+							if tok.is_empty then
+								tok := Void
+							end
+						end
+					elseif arg.same_string ("--username")  and i < n then
+						i := i + 1
+						u := argument (i)
+						if u /= Void then
+							u.left_adjust; u.right_adjust
+							if u.is_empty then
+								u := Void
+							end
+						end
+					elseif arg.same_string ("--password")  and i < n then
+						i := i + 1
+						p := argument (i)
+						if p /= Void then
+							p.left_adjust; p.right_adjust
+							if p.is_empty then
+								p := Void
+							end
+						end
+					elseif arg.same_string ("--connection_timeout")  and i < n then
+						i := i + 1
+						v := argument (i)
+						if v /= Void and then v.is_integer  then
+							l_conn_timeout := v.to_integer
+						end
+					elseif arg.same_string ("--timeout")  and i < n then
+						i := i + 1
+						v := argument (i)
+						if v /= Void and then v.is_integer  then
+							l_timeout := v.to_integer
+						end
+					end
+				end
+				i := i + 1
+			end
+
 			create cloud_factory
 			cl := cloud_factory.new_es_cloud
+			if l_conn_timeout > 0 then
+				cl.set_connection_timeout (l_conn_timeout)
+			end
+			if l_timeout > 0 then
+				cl.set_timeout (l_timeout)
+			end
+
 			print ("Checking cloud service at " + cl.server_url + " ...%N")
 
 			if cl.is_available then
 				print ("- cloud service: available %N")
-				from
-					i := 1
-					n := argument_count
-				until
-					i > n
-				loop
-					if attached argument (i) as arg then
-						if arg.same_string ("--token")  and i < n then
-							i := i + 1
-							v := argument (i)
-							if v /= Void then
-								tok := {UTF_CONVERTER}.string_32_to_utf_8_string_8 (v)
-								tok.left_adjust; tok.right_adjust
-								if tok.is_empty then
-									tok := Void
-								end
-							end
-						elseif arg.same_string ("--username")  and i < n then
-							i := i + 1
-							u := argument (i)
-							if u /= Void then
-								u.left_adjust; u.right_adjust
-								if u.is_empty then
-									u := Void
-								end
-							end
-						elseif arg.same_string ("--password")  and i < n then
-							i := i + 1
-							p := argument (i)
-							if p /= Void then
-								p.left_adjust; p.right_adjust
-								if p.is_empty then
-									p := Void
-								end
-							end
-
-						end
-					end
-					i := i + 1
-				end
 				if u = Void then
 					io.put_string ("> Enter your username: ")
 					io.read_line
@@ -102,7 +122,7 @@ feature {NONE} -- Initialization
 					print_error (cl)
 				elseif acc /= Void then
 					print ({STRING_32} "  > SUCCESS: signed in with username ["+ u +"]%N")
-					tok := acc.access_token.token
+					tok := acc.access_token.token.to_string_8
 					print ("  > - access token: ["+ tok +"]%N")
 				else
 					print ({STRING_32} "  > ERROR: no account for username ["+ u +"]%N")

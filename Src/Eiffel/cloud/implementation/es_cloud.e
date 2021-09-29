@@ -405,7 +405,19 @@ feature -- Access
 			-- Remaining days for guest mode.
 
 	session_heartbeat: NATURAL
-			-- <Precursor>		
+			-- <Precursor>	
+
+feature -- Settings
+
+	set_connection_timeout (a_secs: INTEGER)
+		do
+			config.set_connection_timeout (a_secs)
+		end
+
+	set_timeout (a_secs: INTEGER)
+		do
+			config.set_timeout (a_secs)
+		end
 
 feature {NONE} -- API
 

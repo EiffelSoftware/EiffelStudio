@@ -91,7 +91,7 @@ feature {NONE} -- Initialization
 						print ("  --timeout nb_secs            %N")
 						print ("  --check_http_clients        : check the http clients first%N")
 						print ("  --help                      : show this help%N")
-
+						(create {EXCEPTIONS}).die (0)
 					end
 				end
 				i := i + 1

@@ -108,7 +108,7 @@ feature {NONE} -- Initialization
 					cl.sign_in_with_access_token (u, tok)
 				else
 					print (" , signing with credential ... %N")
-					if p /= Void then
+					if p = Void then
 						io.put_string ("  > Enter your password: ")
 						io.read_line
 						p := {UTF_CONVERTER}.utf_8_string_8_to_string_32 (io.last_string)

@@ -28,6 +28,7 @@ feature {NONE} -- Initialization
 			tok: STRING_8
 			i,n: INTEGER
 			l_conn_timeout, l_timeout: INTEGER
+			l_check_connection: BOOLEAN
 			v: READABLE_STRING_32
 			acc: ES_ACCOUNT
 		do
@@ -79,6 +80,18 @@ feature {NONE} -- Initialization
 						if v /= Void and then v.is_integer  then
 							l_timeout := v.to_integer
 						end
+					elseif arg.same_string ("--check_http_clients") then
+						l_check_connection := True
+					elseif arg.same_string ("--help") then
+						print ("Usage:%N")
+						print ("  --username a_username        %N")
+						print ("  --password pwd               %N")
+						print ("  --token access_token         %N")
+						print ("  --connection_timeout nb_secs %N")
+						print ("  --timeout nb_secs            %N")
+						print ("  --check_http_clients        : check the http clients first%N")
+						print ("  --help                      : show this help%N")
+
 					end
 				end
 				i := i + 1

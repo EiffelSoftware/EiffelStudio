@@ -1018,6 +1018,8 @@ feature -- Enum
 		end
 
 	frozen gtk_widget_set_minimum_size (a_c_widget: POINTER; a_width, a_height: INTEGER_32)
+			-- Set the gtk minimum size (i.e size request), to  `a_width` x `a_height`.
+			-- if a value is -1, it unsets the minimum size for the related property (width or height).
 		do
 			gtk_widget_set_size_request (a_c_widget, a_width, a_height)
 		ensure

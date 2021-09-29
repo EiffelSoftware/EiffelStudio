@@ -1,8 +1,9 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
 <system xmlns="http://www.eiffel.com/developers/xml/configuration-1-22-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-22-0 http://www.eiffel.com/developers/xml/configuration-1-22-0.xsd" name="cloud_checker_app" uuid="D46EB454-1648-4215-B733-27A8CEBCF40C">
-	<target name="cloud_checker_app">
+	<target name="cloud_checker">
 		<root class="CLOUD_CHECKER_APP" feature="make"/>
 		<setting name="console_application" value="true"/>
+		<setting name="executable_name" value="cloud_checker"/>
 		<capability>
 			<concurrency use="none"/>
 			<void_safety use="none"/>
@@ -16,7 +17,8 @@
 		<library name="jwt" location="$ISE_LIBRARY\contrib\library\web\authentication\jwt\jwt.ecf"/>
 		<cluster name="cloud_checker_app" location=".\"/>
 	</target>
-	<target name="cloud_checker_app_ssl" extends="cloud_checker_app">
+	<target name="cloud_checker_ssl" extends="cloud_checker">
+		<setting name="executable_name" value="cloud_checker_ssl"/>
 		<variable name="ssl_enabled" value="true"/>
 	</target>
 </system>

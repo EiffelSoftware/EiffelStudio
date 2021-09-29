@@ -97,6 +97,10 @@ feature {NONE} -- Initialization
 				i := i + 1
 			end
 
+			if l_check_connection then
+				check_http_connection
+			end
+
 			create cloud_factory
 			cl := cloud_factory.new_es_cloud
 			if l_conn_timeout > 0 then

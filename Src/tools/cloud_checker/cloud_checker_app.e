@@ -104,12 +104,12 @@ feature {NONE} -- Initialization
 				print (u)
 
 				if tok /= Void and then not tok.is_whitespace then
-					print (" , signing with given access token [" + tok + "] %N")
+					print ("] , signing with given access token [" + tok + "] %N")
 					cl.sign_in_with_access_token (u, tok)
 				else
-					print (" , signing with credential ... %N")
+					print ("] , signing with credential ... %N")
 					if p = Void then
-						io.put_string ("  > Enter your password: ")
+						io.put_string ("> Enter your password: ")
 						io.read_line
 						p := {UTF_CONVERTER}.utf_8_string_8_to_string_32 (io.last_string)
 						p.left_adjust; p.right_adjust
@@ -118,19 +118,19 @@ feature {NONE} -- Initialization
 				end
 				acc := cl.active_account
 				if cl.has_error then
-					print ({STRING_32} "  > ERROR occurred while trying to sign with username ["+ u +"]%N")
+					print ({STRING_32} "  ! ERROR occurred while trying to sign with username ["+ u +"]%N")
 					print_error (cl)
 				elseif acc /= Void then
-					print ({STRING_32} "  > SUCCESS: signed in with username ["+ u +"]%N")
+					print ({STRING_32} "  : SUCCESS: signed in with username ["+ u +"]%N")
 					tok := acc.access_token.token.to_string_8
 					print ("  > - access token: ["+ tok +"]%N")
 				else
-					print ({STRING_32} "  > ERROR: no account for username ["+ u +"]%N")
+					print ({STRING_32} "  ! ERROR: no account for username ["+ u +"]%N")
 				end
 				if acc /= Void then
 					print ("- checking licenses ... %N")
 					if attached cl.account_licenses (acc) as lst then
-						print ("  > SUCCESS: " + lst.count.out + " license(s):%N")
+						print ("  : SUCCESS: " + lst.count.out + " license(s):%N")
 						across
 							lst as lic
 						loop
@@ -157,7 +157,7 @@ feature {NONE} -- Initialization
 						end
 --						print ("  > SUCCESS: active license: "+ lic.key +"%N")
 					else
-						print ("  > ERROR: no license found.%N")
+						print ("  ! ERROR: no license found.%N")
 						if cl.has_error then
 							print_error (cl)
 						end

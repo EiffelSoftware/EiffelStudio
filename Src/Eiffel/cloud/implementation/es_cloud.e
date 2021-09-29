@@ -863,6 +863,16 @@ feature -- Updating
 			end
 		end
 
+	account_licenses (acc: ES_ACCOUNT): LIST [ES_ACCOUNT_LICENSE]
+		do
+			Result := web_api.account_licenses (acc.access_token.token)
+		end
+
+	account_installations (acc: ES_ACCOUNT): LIST [ES_ACCOUNT_INSTALLATION]
+		do
+			Result := web_api.account_installations (acc.access_token.token)
+		end
+
 feature -- Events
 
 	on_account_signed_in (acc: ES_ACCOUNT)

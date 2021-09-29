@@ -340,6 +340,54 @@ feature -- Plan
 			end
 		end
 
+	account_licenses (a_token: READABLE_STRING_8): detachable LIST [ES_ACCOUNT_LICENSE]
+		local
+			ctx: HTTP_CLIENT_REQUEST_CONTEXT
+			resp: like response
+			l_account_href: detachable READABLE_STRING_8
+		do
+			reset_api_call
+			if attached new_http_client_session as sess then
+				l_account_href := es_account_endpoint_for_token (a_token, sess)
+				if l_account_href /= Void then
+					ctx := new_jwt_auth_context (a_token)
+
+						-- Get new JWT access token, using Basic authorization.
+					resp := response_get (sess, l_account_href, ctx)
+					if
+						not has_error and then
+						attached account_licenses_from_response (resp) as lics
+					then
+						Result := lics
+					end
+				end
+			end
+		end
+
+	account_installations (a_token: READABLE_STRING_8): detachable LIST [ES_ACCOUNT_INSTALLATION]
+		local
+			ctx: HTTP_CLIENT_REQUEST_CONTEXT
+			resp: like response
+			l_installations_href: detachable READABLE_STRING_8
+		do
+			reset_api_call
+			if attached new_http_client_session as sess then
+				l_installations_href := es_account_installations_endpoint_for_token (a_token, sess)
+				if l_installations_href /= Void then
+					ctx := new_jwt_auth_context (a_token)
+
+						-- Get new JWT access token, using Basic authorization.
+					resp := response_get (sess, l_installations_href, ctx)
+					if
+						not has_error and then
+						attached account_installations_from_response (resp) as inst_lst
+					then
+						Result := inst_lst
+					end
+				end
+			end
+		end
+
 feature -- Installation
 
 	register_installation (a_token: READABLE_STRING_8; a_installation: ES_ACCOUNT_INSTALLATION): detachable ES_ACCOUNT_INSTALLATION
@@ -857,6 +905,15 @@ feature {NONE} -- Endpoints for token
 			end
 		end
 
+--	es_account_licenses_endpoint_for_token (a_token: READABLE_STRING_8; sess: HTTP_CLIENT_SESSION): detachable IMMUTABLE_STRING_8
+--		do
+--			Result := endpoint_for_token (a_token, "_links|es:licenses|href")
+--			if Result = Void then
+--				get_es_account_endpoints_for_token (a_token, sess)
+--				Result := endpoint_for_token (a_token, "_links|es:licenses|href")
+--			end
+--		end
+
 feature {NONE} -- Implementation
 
 	response (a_resp: HTTP_CLIENT_RESPONSE): ES_CLOUD_API_RESPONSE
@@ -947,6 +1004,43 @@ feature {NONE} -- Json handling
 --				then
 --					Result.set_plan (l_plan)
 --				end
+			end
+		end
+
+	account_licenses_from_response (r: ES_CLOUD_API_RESPONSE): LIST [ES_ACCOUNT_LICENSE]
+		do
+			if
+				attached r.table_item ("es:licenses") as r_licenses
+			then
+				create {ARRAYED_LIST [ES_ACCOUNT_LICENSE]} Result.make (r_licenses.count)
+				across
+					r_licenses as r_lic
+				loop
+					if attached license_from_response (r_lic.item) as lic then
+						Result.force (lic)
+					end
+				end
+			else
+				create {ARRAYED_LIST [ES_ACCOUNT_LICENSE]} Result.make (0)
+			end
+		end
+
+	account_installations_from_response (r: ES_CLOUD_API_RESPONSE): LIST [ES_ACCOUNT_INSTALLATION]
+		local
+			inst: ES_ACCOUNT_INSTALLATION
+		do
+			if
+				attached r.table_item ("es:installations") as r_installations
+			then
+				create {ARRAYED_LIST [ES_ACCOUNT_INSTALLATION]} Result.make (r_installations.count)
+				across
+					r_installations as ic
+				loop
+					create inst.make_with_id ({UTF_CONVERTER}.string_32_to_utf_8_string_8 (ic.key))
+					Result.force (inst)
+				end
+			else
+				create {ARRAYED_LIST [ES_ACCOUNT_INSTALLATION]} Result.make (0)
 			end
 		end
 

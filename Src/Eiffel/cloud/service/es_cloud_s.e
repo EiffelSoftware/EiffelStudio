@@ -107,6 +107,18 @@ feature -- Access
 			end
 		end
 
+	account_licenses (acc: ES_ACCOUNT): LIST [ES_ACCOUNT_LICENSE]
+		require
+			acc /= Void and then not acc.access_token.is_expired
+		deferred
+		end
+
+	account_installations (acc: ES_ACCOUNT): LIST [ES_ACCOUNT_INSTALLATION]
+		require
+			acc /= Void and then not acc.access_token.is_expired
+		deferred
+		end
+
 	active_session: detachable ES_ACCOUNT_SESSION
 			-- Active session, if signed in, otherwise Void.
 		deferred
@@ -407,7 +419,7 @@ feature {NONE} -- Implementation
 invariant
 
 note
-	copyright: "Copyright (c) 1984-2020, Eiffel Software"
+	copyright: "Copyright (c) 1984-2021, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

@@ -8,11 +8,15 @@
 			<void_safety use="none"/>
 		</capability>
 		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf"/>
+		<library name="environment" location="$EIFFEL_SRC\framework\environment\environment.ecf" readonly="false" use_application_options="true"/>
 		<library name="es_cloud" location="$EIFFEL_SRC\Eiffel\cloud\cloud.ecf" readonly="false" use_application_options="true"/>
 		<library name="http" location="$ISE_LIBRARY\contrib\library\network\protocol\http\http.ecf"/>
 		<library name="http_authorization" location="$ISE_LIBRARY\contrib\library\web\authentication\http_authorization\http_authorization.ecf"/>
 		<library name="http_client" location="$ISE_LIBRARY\contrib\library\network\http_client\http_client.ecf"/>
 		<library name="jwt" location="$ISE_LIBRARY\contrib\library\web\authentication\jwt\jwt.ecf"/>
 		<cluster name="cloud_checker_app" location=".\"/>
+	</target>
+	<target name="cloud_checker_app_ssl" extends="cloud_checker_app">
+		<variable name="ssl_enabled" value="true"/>
 	</target>
 </system>

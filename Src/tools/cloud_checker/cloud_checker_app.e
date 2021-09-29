@@ -12,6 +12,8 @@ class
 inherit
 	ARGUMENTS_32
 
+	EIFFEL_LAYOUT
+
 create
 	make
 
@@ -29,6 +31,7 @@ feature {NONE} -- Initialization
 			v: READABLE_STRING_32
 			acc: ES_ACCOUNT
 		do
+			set_eiffel_layout (create {EC_EIFFEL_LAYOUT})
 			from
 				i := 1
 				n := argument_count
@@ -95,26 +98,35 @@ feature {NONE} -- Initialization
 			if cl.is_available then
 				print ("- cloud service: available %N")
 				if u = Void then
-					io.put_string ("> Enter your username: ")
-					io.read_line
-					u := {UTF_CONVERTER}.utf_8_string_8_to_string_32 (io.last_string)
-					u.left_adjust; u.right_adjust
-				end
-				print ("- checking account [")
-				print (u)
-
-				if tok /= Void and then not tok.is_whitespace then
-					print ("] , signing with given access token [" + tok + "] %N")
-					cl.sign_in_with_access_token (u, tok)
-				else
-					print ("] , signing with credential ... %N")
-					if p = Void then
-						io.put_string ("> Enter your password: ")
+					from
+					until
+						u /= Void and then not u.is_whitespace
+					loop
+						io.put_string ("> Enter your username: ")
 						io.read_line
-						p := {UTF_CONVERTER}.utf_8_string_8_to_string_32 (io.last_string)
-						p.left_adjust; p.right_adjust
+						u := {UTF_CONVERTER}.utf_8_string_8_to_string_32 (io.last_string)
+						u.left_adjust; u.right_adjust
+						if u.is_whitespace then
+							u := Void
+						end
 					end
-					cl.sign_in_with_credential (u, p)
+				end
+				if u /= Void then
+					print ("- checking account [")
+					print (u)
+					if tok /= Void and then not tok.is_whitespace then
+						print ("] , signing with given access token [" + tok + "] %N")
+						cl.sign_in_with_access_token (u, tok)
+					else
+						print ("] , signing with credential ... %N")
+						if p = Void then
+							io.put_string ("> Enter your password: ")
+							io.read_line
+							p := {UTF_CONVERTER}.utf_8_string_8_to_string_32 (io.last_string)
+							p.left_adjust; p.right_adjust
+						end
+						cl.sign_in_with_credential (u, p)
+					end
 				end
 				acc := cl.active_account
 				if cl.has_error then
@@ -125,7 +137,7 @@ feature {NONE} -- Initialization
 					tok := acc.access_token.token.to_string_8
 					print ("  > - access token: ["+ tok +"]%N")
 				else
-					print ({STRING_32} "  ! ERROR: no account for username ["+ u +"]%N")
+					print ({STRING_32} "  ! ERROR: no account for username ["+ u +"] or wrong password !%N")
 				end
 				if acc /= Void then
 					print ("- checking licenses ... %N")
@@ -178,7 +190,91 @@ feature {NONE} -- Initialization
 			else
 				print ("- cloud service: NOT available %N")
 				print_error (cl)
+
+				check_http_connection
 			end
+		end
+
+	check_http_connection
+		local
+			client: HTTP_CLIENT
+			cl_err: CELL [BOOLEAN]
+			b: BOOLEAN
+			l_dft_is_libcurl: BOOLEAN
+		do
+			l_dft_is_libcurl := (create {DEFAULT_HTTP_CLIENT}).new_session ("http://www.eiffel.com").generating_type = {LIBCURL_HTTP_CLIENT_SESSION}
+			if not l_dft_is_libcurl then
+				print ("WARNING: this app may not be compiled with SSL support, so any https:// will return bad request or not available!%N")
+			end
+			create {DEFAULT_HTTP_CLIENT} client
+			create cl_err.put (False)
+			check_http_client (client, "account.eiffel.com", "/api", cl_err); b := b or cl_err.item
+
+			if l_dft_is_libcurl then
+				print ("WARNING: this app may not be compiled with SSL support, so any https:// will return bad request or not available!%N")
+				create {NET_HTTP_CLIENT} client
+			else
+				create {LIBCURL_HTTP_CLIENT} client
+			end
+			cl_err.replace (False)
+			check_http_client (client, "account.eiffel.com", "/api", cl_err); b := b or cl_err.item
+		end
+
+	check_http_client (client: HTTP_CLIENT; a_domain: READABLE_STRING_8; a_path: READABLE_STRING_8; cl_err: detachable CELL [BOOLEAN])
+		local
+			sess: HTTP_CLIENT_SESSION
+			b: BOOLEAN
+		do
+			b := cl_err.item
+			sess := client.new_session ("http://" + a_domain)
+			if sess.is_available then
+				check_http_url (sess, a_path, cl_err); b := b or cl_err.item
+			else
+				print ("- Unable to check connection to " + sess.url (a_path, Void) + " (using " + sess.generator + ") -> CLIENT NOT AVAILABLE%N")
+				print ("%N")
+				print ("%N")
+
+				b := True
+			end
+			sess := client.new_session ("https://" + a_domain)
+			if sess.is_available then
+				check_http_url (sess, a_path, cl_err); b := b or cl_err.item
+			else
+				print ("- Unable to check connection to " + sess.url (a_path, Void) + " (using " + sess.generator + ") -> CLIENT NOT AVAILABLE%N")
+				print ("%N")
+				print ("%N")
+
+				b := True
+			end
+			cl_err.replace (b)
+		end
+
+	check_http_url (sess: HTTP_CLIENT_SESSION; a_path: READABLE_STRING_8; cl_err: detachable CELL [BOOLEAN])
+		local
+			resp: HTTP_CLIENT_RESPONSE
+		do
+			sess.set_connect_timeout (300)
+			sess.set_timeout (300)
+			print ("- check connection to " + sess.url (a_path, Void) + " (using " + sess.generator + ")%N")
+			resp := sess.get (a_path, Void)
+			if resp.error_occurred then
+				cl_err.put (True)
+				print ("  ! ERROR: ")
+				print (resp.error_message)
+				print ("%N")
+			else
+				cl_err.put (False)
+				print ("  | Success: ")
+				print (resp.status_line)
+				print ("%N")
+			end
+			if attached resp.body as l_body then
+				print_indented_text (l_body, "  : ")
+				print ("%N")
+			end
+
+			print ("%N")
+			print ("%N")
 		end
 
 feature -- Status
@@ -198,6 +294,16 @@ feature {NONE} -- Implementation
 				print (err)
 				print ("%N")
 			end
+		end
+
+	print_indented_text (a_text: READABLE_STRING_8; a_indentation: READABLE_STRING_8)
+		local
+			s: STRING
+		do
+			create s.make_from_string (a_text)
+			s.prepend (a_indentation)
+			s.replace_substring_all ("%N", "%N" + a_indentation)
+			print (s)
 		end
 
 invariant

@@ -65,6 +65,15 @@ feature {NONE} -- Creation
 						cfg.set_connection_timeout (i)
 					end
 				end
+				if
+					attached env.application_item ("verbose", "es_cloud", eiffel_layout.version_name) as v and then
+					v.is_integer
+				then
+					i := v.to_integer
+					if i >= 0 then
+						cfg.set_verbose_level (i)
+					end
+				end
 			end
 
 			if is_eiffel_layout_defined then

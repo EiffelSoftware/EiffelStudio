@@ -104,7 +104,7 @@ feature -- Element change
 		do
 			implementation.set_item_width (a_width)
 		ensure
-			an_item_width_assigned: a_width > 0 implies item.width = a_width
+			an_item_width_assigned: a_width > 0 implies item.width = a_width.max (item.minimum_width)
 		end
 
 	set_item_height (a_height: INTEGER)
@@ -118,7 +118,7 @@ feature -- Element change
 		do
 			implementation.set_item_height ( a_height)
 		ensure
-			an_item_height_assigned: a_height > 0 implies item.height = a_height
+			an_item_height_assigned: a_height > 0 implies item.height = a_height.max (item.minimum_height)
 		end
 
 	set_item_size (a_width, a_height: INTEGER)
@@ -168,7 +168,7 @@ invariant
 		(not readable implies x_offset = 0 and y_offset = 0)
 
 note
-	copyright:	"Copyright (c) 1984-2013, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2021, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

@@ -187,6 +187,7 @@ feature {NONE} -- Implementation
 			w,h: INTEGER
 		do
 			if attached item as l_item then
+				block_item_resize_actions
 				w := a_viewport_width
 				h := a_viewport_height
 				l_item.reset_minimum_height
@@ -199,6 +200,7 @@ feature {NONE} -- Implementation
 					l_item.set_minimum_size (w, h)
 					set_item_size (w, h)
 				end
+				unblock_item_resize_actions
 			end
 		end
 

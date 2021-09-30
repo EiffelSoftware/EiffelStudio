@@ -185,8 +185,10 @@ feature -- Execution
 	commit (a_changelist: SCM_CHANGELIST; a_log_message: READABLE_STRING_GENERAL; a_options: SCM_OPTIONS): SCM_RESULT
 			-- Commit changes for locations `a_changelist`, and return information about command execution.
 		local
-			cmd: STRING_32
+			cmd, msg: STRING_32
 			fn: READABLE_STRING_32
+			tmpfile: PLAIN_TEXT_FILE
+			tmp: PATH
 		do
 			create cmd.make_from_string (git_executable_location.name)
 			cmd.append_string_general (" add")
@@ -218,10 +220,40 @@ feature -- Execution
 			create cmd.make_from_string (git_executable_location.name)
 			cmd.append_string_general (" commit")
 			cmd.append_string (option_to_command_line_flags ("commit", a_options))
-			cmd.append_string_general (" --message ")
-			cmd.append_character ('"')
-			append_escaped_string_to (a_log_message, cmd)
-			cmd.append_character ('"')
+
+			create msg.make_from_string_general (a_log_message)
+			msg.prune_all ('%R')
+			if msg.has ('%N') then
+				msg.left_adjust
+				msg.right_adjust
+			end
+			if msg.occurrences ('%N') = 1 then
+				across
+					msg.split ('%N') as ic
+				loop
+					cmd.append_string_general (" --message ")
+					cmd.append_character ('"')
+					append_escaped_string_to (ic.item, cmd)
+					cmd.append_character ('"')
+				end
+			elseif msg.has ('%N') then
+				tmp := {EXECUTION_ENVIRONMENT}.temporary_directory_path
+				if tmp = Void then
+					tmp := {EXECUTION_ENVIRONMENT}.current_working_path
+				end
+				create tmpfile.make_open_temporary_with_prefix (tmp.extended ("tmp-eif-git-log_").name)
+				tmpfile.put_string ({UTF_CONVERTER}.utf_32_string_to_utf_8_string_8 (a_log_message))
+				tmpfile.flush
+				cmd.append_string_general (" --file ")
+				cmd.append_character ('"')
+				cmd.append_string_general (tmpfile.path.name)
+				cmd.append_character ('"')
+			else
+				cmd.append_string_general (" --message ")
+				cmd.append_character ('"')
+				append_escaped_string_to (a_log_message, cmd)
+				cmd.append_character ('"')
+			end
 
 			debug ("GIT_ENGINE")
 				print ({STRING_32} "Command: [" + cmd + "]%N")
@@ -243,6 +275,85 @@ feature -- Execution
 			end
 		end
 
+feature -- Git specific
+
+	remotes (a_root_location: PATH; a_options: detachable SCM_OPTIONS): detachable LIST [GIT_REMOTE]
+		local
+			res: detachable PROCESS_COMMAND_RESULT
+			s, l_line: detachable READABLE_STRING_8
+			cmd: STRING_32
+			i,j,k,n: INTEGER
+			l_url,l_type: STRING_8
+			r: GIT_REMOTE
+		do
+			create cmd.make_from_string (git_executable_location.name)
+			cmd.append_string_general (" remote -v")
+			cmd.append_string (option_to_command_line_flags ("remote", a_options))
+			cmd.append_string_general (" .")
+
+			debug ("GIT_ENGINE")
+				print ({STRING_32} "Command: [" + cmd + "]%N")
+			end
+			res := output_of_command (cmd, a_root_location)
+			debug ("GIT_ENGINE")
+				print ("-> terminated %N")
+			end
+			if res = Void then
+				debug ("GIT_ENGINE")
+					print ("-> terminated : None .%N")
+				end
+			else
+				s := res.output
+				from
+					i := 1
+					n := s.count
+				until
+					i > n
+				loop
+					j := s.index_of ('%N', i)
+					if j > i then
+						j := s.count
+					end
+						-- Next space or tab
+					from until k > j or else s [k].is_space loop
+						k := k + 1
+					end
+					if k < j then
+						create r.make (s.substring (i, k - 1))
+							-- Next space or tab
+						from until k > j or else s [k].is_space loop
+							k := k + 1
+						end
+						if k < j then
+							l_url := s.substring (i, k - 1)
+							l_url.left_adjust
+							i := k + 1
+							if s[i] = '(' then
+								l_type := s.substring (i + 1, j - 2)
+							else
+								l_type := s.substring (i, j - 1)
+							end
+							l_type.left_adjust
+							l_type.right_adjust
+							if l_type.is_case_insensitive_equal_general ("push") then
+								r.set_push_location (l_url)
+							elseif l_type.is_case_insensitive_equal_general ("fetch") then
+								r.set_fetch_location (l_url)
+							else
+								check push_or_fetch: False end
+							end
+						end
+					end
+					i := j + 1
+				end
+
+				debug ("GIT_ENGINE")
+					print ("-> terminated : count=" + s.count.out + " .%N")
+					print (s)
+				end
+			end
+		end
+
 feature {NONE} -- Implementation
 
 	append_escaped_string_to (a_string: READABLE_STRING_GENERAL; a_output: STRING_32)
@@ -260,6 +371,9 @@ feature {NONE} -- Implementation
 					ch := a_string [i]
 					inspect ch
 					when '%"' then
+						a_output.extend ('\')
+						a_output.extend (ch)
+					when '`' then
 						a_output.extend ('\')
 						a_output.extend (ch)
 					when '%R' then
@@ -352,8 +466,8 @@ invariant
 --	invariant_clause: True
 
 note
-	copyright: "Copyright (c) 1984-2021, Eiffel Software and others"
-	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
+	copyright: "Copyright (c) 1984-2021, Eiffel Software"
+	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	source: "[
 			Eiffel Software
 			5949 Hollister Ave., Goleta, CA 93117 USA

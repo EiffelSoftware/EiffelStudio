@@ -28,6 +28,7 @@ feature {NONE} -- Initialization
 			tok: STRING_8
 			i,n: INTEGER
 			l_conn_timeout, l_timeout: INTEGER
+			l_verbose: INTEGER
 			l_check_connection: BOOLEAN
 			v: READABLE_STRING_32
 			acc: ES_ACCOUNT
@@ -82,7 +83,9 @@ feature {NONE} -- Initialization
 						end
 					elseif arg.same_string ("--check_http_clients") then
 						l_check_connection := True
-					elseif arg.same_string ("--help") then
+					elseif arg.same_string ("--verbose") or arg.same_string ("-v") then
+						l_verbose := l_verbose + 1
+					elseif arg.same_string ("--help") or arg.same_string ("-h") then
 						print ("Usage:%N")
 						print ("  --username a_username        %N")
 						print ("  --password pwd               %N")
@@ -90,7 +93,8 @@ feature {NONE} -- Initialization
 						print ("  --connection_timeout nb_secs %N")
 						print ("  --timeout nb_secs            %N")
 						print ("  --check_http_clients        : check the http clients first%N")
-						print ("  --help                      : show this help%N")
+						print ("  --verbose|-v                : verbose output%N")
+						print ("  --help|-h                   : show this help%N")
 						(create {EXCEPTIONS}).die (0)
 					end
 				end
@@ -108,6 +112,9 @@ feature {NONE} -- Initialization
 			end
 			if l_timeout > 0 then
 				cl.set_timeout (l_timeout)
+			end
+			if l_verbose > 0 then
+				cl.set_verbose_level (l_verbose)
 			end
 
 			print ("Checking cloud service at " + cl.server_url + " ...%N")

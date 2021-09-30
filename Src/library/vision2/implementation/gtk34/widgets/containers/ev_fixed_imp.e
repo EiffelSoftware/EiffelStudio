@@ -75,8 +75,44 @@ feature -- Status setting
 			debug ("gtk_sizing")
 				print (attached_interface.debug_output + {STRING_32} ".set_item_position_and_size (" + a_widget.debug_output + ",x=" + a_x.out + ",y=" + a_y.out + ",w=" + a_width.out + ",h=" + a_height.out + ")%N")
 			end
-			w := a_widget.x_position + a_width
-			h := a_widget.y_position + a_height
+
+			check attached {EV_WIDGET_IMP} a_widget.implementation as w_imp then
+				l_item_c_object := w_imp.c_object
+			end
+			if not l_item_c_object.is_default_pointer then
+				if needs_child_event_box then
+					l_child_container := {GTK}.gtk_widget_get_parent (l_item_c_object) -- The parent event box
+				else
+					l_child_container := l_item_c_object
+				end
+			end
+
+			if not l_child_container.is_default_pointer then
+				{GTK2}.gtk_layout_move (container_widget, l_child_container, a_x, a_y)
+
+				{GTK2}.gtk_widget_set_minimum_size (l_child_container, a_width, a_height) -- unfortunately it seems to be REQUIRED
+
+				l_alloc := l_alloc.memory_alloc ({GTK}.c_gtk_allocation_struct_size)
+				{GTK}.gtk_widget_get_allocation (l_child_container, l_alloc)
+				{GTK}.set_gtk_allocation_struct_x (l_alloc, a_x + internal_x_y_offset)
+				{GTK}.set_gtk_allocation_struct_y (l_alloc, a_y + internal_x_y_offset)
+				{GTK}.set_gtk_allocation_struct_width (l_alloc, {GTK}.gtk_widget_minimum_width (l_child_container))
+				{GTK}.set_gtk_allocation_struct_height (l_alloc, {GTK}.gtk_widget_minimum_height (l_child_container))
+				{GTK2}.gtk_widget_size_allocate (l_child_container, l_alloc)
+				l_alloc.memory_free
+			end
+			if needs_child_event_box and not l_item_c_object.is_default_pointer then
+				l_alloc := l_alloc.memory_alloc ({GTK}.c_gtk_allocation_struct_size)
+				{GTK}.gtk_widget_get_allocation (l_item_c_object, l_alloc)
+				{GTK}.set_gtk_allocation_struct_width (l_alloc, a_width)
+				{GTK}.set_gtk_allocation_struct_height (l_alloc, a_height)
+				{GTK2}.gtk_widget_set_minimum_size (l_item_c_object, a_width, a_height) -- unfortunately it seems to be REQUIRED
+				{GTK2}.gtk_widget_size_allocate (l_item_c_object, l_alloc)
+				l_alloc.memory_free
+			end
+
+			w := a_widget.x_position + a_widget.width
+			h := a_widget.y_position + a_widget.height
 			if w > minimum_width then
 				set_minimum_width (w)
 			else
@@ -89,38 +125,6 @@ feature -- Status setting
 			end
 			if l_size_smaller then
 				update_minimum_size
-			end
-			check attached {EV_WIDGET_IMP} a_widget.implementation as w_imp then
-				l_item_c_object := w_imp.c_object
-				if not l_item_c_object.is_default_pointer then
-					if needs_child_event_box then
-						l_child_container := {GTK}.gtk_widget_get_parent (l_item_c_object) -- The parent event box
-					else
-						l_child_container := l_item_c_object
-					end
-
-					{GTK2}.gtk_layout_move (container_widget, l_child_container, a_x, a_y)
-
-					l_alloc := l_alloc.memory_alloc ({GTK}.c_gtk_allocation_struct_size)
-					{GTK}.gtk_widget_get_allocation (l_child_container, l_alloc)
-					{GTK}.set_gtk_allocation_struct_x (l_alloc, a_x + internal_x_y_offset)
-					{GTK}.set_gtk_allocation_struct_y (l_alloc, a_y + internal_x_y_offset)
-					{GTK}.set_gtk_allocation_struct_width (l_alloc, a_width)
-					{GTK}.set_gtk_allocation_struct_height (l_alloc, a_height)
-		 			{GTK2}.gtk_widget_set_minimum_size (l_child_container, a_width, a_height) -- unfortunately it seems to be REQUIRED
-					{GTK2}.gtk_widget_size_allocate (l_child_container, l_alloc)
-					l_alloc.memory_free
-
-					if needs_child_event_box then
-						l_alloc := l_alloc.memory_alloc ({GTK}.c_gtk_allocation_struct_size)
-						{GTK}.gtk_widget_get_allocation (l_item_c_object, l_alloc)
-						{GTK}.set_gtk_allocation_struct_width (l_alloc, a_width)
-						{GTK}.set_gtk_allocation_struct_height (l_alloc, a_height)
-						{GTK2}.gtk_widget_set_minimum_size (l_item_c_object, a_width, a_height) -- unfortunately it seems to be REQUIRED
-						{GTK2}.gtk_widget_size_allocate (l_item_c_object, l_alloc)
-						l_alloc.memory_free
-					end
-				end
 			end
 		end
 
@@ -154,12 +158,13 @@ feature -- Status setting
 					forth
 				end
 				go_to (l_cursor)
+					-- Set "real"_minimum size, instead of vision2 minimum size.
 				if w /= minimum_width and h /= minimum_height then
-					set_minimum_size (w, h)
+					set_real_minimum_size (w, h)
 				elseif w /= minimum_width then
-					set_minimum_width (w)
+					set_real_minimum_size (w, h)
 				elseif h /= minimum_height then
-					set_minimum_height (h)
+					set_real_minimum_size (w, h)
 				end
 			end
 		end

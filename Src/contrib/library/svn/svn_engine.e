@@ -386,6 +386,8 @@ feature -- Access: working copy
 			s: detachable STRING
 			cmd,msg: STRING_32
 			args: ARRAYED_LIST [READABLE_STRING_GENERAL]
+			tmpfile: PLAIN_TEXT_FILE
+			tmp: PATH
 		do
 			debug ("SVN_ENGINE")
 				print ({STRING_32} "svn commit " + a_changelist.as_command_line_arguments + "%N")
@@ -400,16 +402,38 @@ feature -- Access: working copy
 				args.force (ic.item)
 			end
 			if a_log_message /= Void then
-				args.force ("--message")
 				create msg.make_from_string_general (a_log_message)
 				msg.prune_all ('%R')
-				args.force (msg)
+				if msg.has ('%N') then
+					msg.left_adjust
+					msg.right_adjust
+				end
+				if msg.has ('%N') then
+					args.force ("--file")
+					tmp := {EXECUTION_ENVIRONMENT}.temporary_directory_path
+					if tmp = Void then
+						tmp := {EXECUTION_ENVIRONMENT}.current_working_path
+					end
+					create tmpfile.make_open_temporary_with_prefix (tmp.extended ("tsvn-eif-svn-log_").name)
+					tmpfile.put_string ({UTF_CONVERTER}.utf_32_string_to_utf_8_string_8 (a_log_message))
+					tmpfile.flush
+					args.force (tmpfile.path.name)
+				else
+					args.force ("--message")
+					args.force (msg)
+				end
 			end
 
 			debug ("SVN_ENGINE")
 				print ("Command: svn commit ...%N")
 			end
 			res := output (svn_executable_path, args, Void)
+
+			if tmpfile /= Void and then tmpfile.exists then
+				tmpfile.delete
+				tmpfile := Void
+			end
+
 			debug ("SVN_ENGINE")
 				print ("-> terminated %N")
 			end
@@ -421,7 +445,7 @@ feature -- Access: working copy
 			if a_log_message /= Void then
 				if a_log_message.has ('%N') then
 					create msg.make_from_string_general (a_log_message)
-					msg.replace_substring_all ("%N", "\n")
+					msg.replace_substring_all ("%N", "\n") -- Note: this is only for info, this is not the real command!
 					cmd.append (" --message %"")
 					cmd.append_string_general (msg)
 					cmd.append ("%"")

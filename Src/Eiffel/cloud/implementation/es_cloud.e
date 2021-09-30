@@ -407,6 +407,13 @@ feature -- Access
 	session_heartbeat: NATURAL
 			-- <Precursor>	
 
+	is_verbose (a_level: INTEGER): BOOLEAN
+			-- has Verbose output for level `a_level` ?
+			-- (mostly for debugging).
+		do
+			Result := config.is_verbose (a_level)
+		end
+
 feature -- Settings
 
 	set_connection_timeout (a_secs: INTEGER)
@@ -417,6 +424,11 @@ feature -- Settings
 	set_timeout (a_secs: INTEGER)
 		do
 			config.set_timeout (a_secs)
+		end
+
+	set_verbose_level (a_level: INTEGER)
+		do
+			config.set_verbose_level (a_level)
 		end
 
 feature {NONE} -- API

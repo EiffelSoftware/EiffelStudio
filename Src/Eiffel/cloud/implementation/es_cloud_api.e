@@ -926,24 +926,42 @@ feature {NONE} -- Implementation
 		end
 
 	response_get (sess: like new_http_client_session; a_path: READABLE_STRING_8; ctx: detachable HTTP_CLIENT_REQUEST_CONTEXT): ES_CLOUD_API_RESPONSE
+		local
+			r: HTTP_CLIENT_RESPONSE
 		do
 			debug ("es_cloud")
 				print (generator + " -> GET "+ sess.url (a_path, ctx) + "%N")
 			end
 			if is_available then
-				Result := response (sess.get (a_path, ctx))
+				if config.is_verbose (1) then
+					log_get_query (sess.url (a_path, ctx))
+				end
+				r := sess.get (a_path, ctx)
+				Result := response (r)
+				if config.is_verbose (1) then
+					log_response (r)
+				end
 			else
 				Result := response (Void)
 			end
 		end
 
 	response_post (sess: like new_http_client_session; a_path: READABLE_STRING_8; ctx: detachable HTTP_CLIENT_REQUEST_CONTEXT; data: detachable READABLE_STRING_8): ES_CLOUD_API_RESPONSE
+		local
+			r: HTTP_CLIENT_RESPONSE
 		do
 			debug ("es_cloud")
 				print (generator + " -> POST "+ sess.url (a_path, ctx) + "%N")
 			end
 			if is_available then
-				Result := response (sess.post (a_path, ctx, data))
+				if config.is_verbose (1) then
+					log_post_query (sess.url (a_path, ctx), data)
+				end
+				r := sess.post (a_path, ctx, data)
+				Result := response (r)
+				if config.is_verbose (2) then
+					log_response (r)
+				end
 			else
 				Result := response (Void)
 			end
@@ -1161,6 +1179,75 @@ feature {NONE} -- Json handling
 --					Result.set_first_date (dt)
 --				end
 			end
+		end
+
+feature {NONE} -- Implementation
+
+	log_prefix: IMMUTABLE_STRING_8 = "[LOG] "
+
+	log_get_query (a_url: READABLE_STRING_8)
+		do
+			print (log_prefix)
+			print ("GET "+ a_url + "%N")
+		end
+
+	log_post_query (a_url: READABLE_STRING_8; a_data: detachable READABLE_STRING_8)
+		local
+			s: STRING
+		do
+			io.error.put_string (log_prefix)
+			io.error.put_string ("POST "+ a_url)
+			if a_data = Void then
+				io.error.put_string (" -- no data")
+			else
+				if config.is_verbose (2) then
+					create s.make_from_string (a_data)
+					io.error.put_string (log_prefix)
+					io.error.put_string ("----DATA---%N")
+					s.prepend (log_prefix)
+					s.replace_substring_all ("%N", "%N" + log_prefix)
+					io.error.put_string (s)
+					io.error.put_new_line
+					io.error.put_string (log_prefix)
+					io.error.put_string ("----------")
+				else
+					io.error.put_string (" -- data (size=" + a_data.count.out + ")")
+				end
+			end
+			io.error.put_new_line
+		end
+
+	log_response (r: HTTP_CLIENT_RESPONSE)
+		local
+			s: STRING
+			pref: STRING
+		do
+			pref := log_prefix
+			io.error.put_string (pref)
+			if attached r.status_line as l_status_line then
+				io.error.put_string (l_status_line)
+			else
+				io.error.put_string ("status:")
+				io.error.put_string (r.status.out)
+			end
+			if attached r.body as l_body then
+				if config.is_verbose (2) then
+					io.error.put_string (pref)
+					io.error.put_string ("----BODY---%N")
+					create s.make_from_string (l_body)
+					s.prepend (pref)
+					s.replace_substring_all ("%N", "%N" + pref)
+					io.error.put_string (s)
+					io.error.put_new_line
+					io.error.put_string (pref)
+					io.error.put_string ("----------")
+				else
+					io.error.put_string (" -- body (size=" + l_body.count.out + ")")
+				end
+			else
+				io.error.put_string (" -- no body")
+			end
+			io.error.put_new_line
 		end
 
 note

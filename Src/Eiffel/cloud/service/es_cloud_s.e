@@ -32,6 +32,12 @@ feature -- Debug purpose
 		deferred
 		end
 
+	is_verbose (a_level: INTEGER): BOOLEAN
+			-- has Verbose output for level `a_level` ?
+			-- (mostly for debugging).
+		deferred
+		end
+
 feature -- Access: edition
 
 	eiffel_edition: detachable EIFFEL_EDITION
@@ -255,6 +261,10 @@ feature -- Registration
 
 	set_eiffel_edition (ed: EIFFEL_EDITION)
 			--Set the `eiffel_edition` to `ed`.
+		deferred
+		end
+
+	set_verbose_level (a_level: INTEGER)
 		deferred
 		end
 

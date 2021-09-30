@@ -60,7 +60,18 @@ feature -- Settings
 			-- Connection timeout in seconds.
 
 	timeout: INTEGER
-			-- Timeout in seconds.			
+			-- Timeout in seconds.
+
+	verbose_level: INTEGER
+			-- Has verbose output?
+			-- (for debugging purpose)
+
+	is_verbose (a_level: INTEGER): BOOLEAN
+			-- has Verbose output for level `a_level` ?
+			-- (mostly for debugging).
+		do
+			Result := verbose_level >= a_level
+		end
 
 feature -- Conversion
 
@@ -68,6 +79,7 @@ feature -- Conversion
 		do
 			connection_timeout := cfg.connection_timeout
 			timeout := cfg.timeout
+			set_verbose_level (cfg.verbose_level)
 		end
 
 feature -- Element change
@@ -85,6 +97,11 @@ feature -- Element change
 	set_timeout (a_secs: like timeout)
 		do
 			timeout := a_secs
+		end
+
+	set_verbose_level (a_level: INTEGER)
+		do
+			verbose_level := a_level
 		end
 
 ;note

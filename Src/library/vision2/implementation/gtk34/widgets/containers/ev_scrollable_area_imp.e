@@ -28,6 +28,7 @@ inherit
 			interface,
 			old_make,
 			on_size_allocate,
+			update_viewport_item_size,
 			x_offset,
 			y_offset,
 			set_x_offset,
@@ -239,6 +240,11 @@ feature {NONE} -- Implementation
 					check is_widget_imp: False end
 				end
 			end
+		end
+
+	update_viewport_item_size (a_viewport_width, a_viewport_height: INTEGER)
+		do
+			-- Do not resize the item for scrollable area, only for pure instance of EV_VIEWPORT_IMP.
 		end
 
 	child_has_resized (item_imp: EV_WIDGET_IMP)

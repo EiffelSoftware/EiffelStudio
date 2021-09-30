@@ -177,12 +177,18 @@ feature -- Element change
 feature {NONE} -- Implementation
 
 	on_size_allocate (a_x, a_y, a_width, a_height: INTEGER)
+		do
+			update_viewport_item_size (a_width, a_height)
+			Precursor (a_x, a_y, a_width, a_height)
+		end
+
+	update_viewport_item_size (a_viewport_width, a_viewport_height: INTEGER)
 		local
 			w,h: INTEGER
 		do
 			if attached item as l_item then
-				w := a_width
-				h := a_height
+				w := a_viewport_width
+				h := a_viewport_height
 				l_item.reset_minimum_height
 				l_item.reset_minimum_width
 				if attached {EV_WIDGET_IMP} l_item.implementation as l_item_imp then
@@ -194,7 +200,6 @@ feature {NONE} -- Implementation
 					set_item_size (w, h)
 				end
 			end
-			Precursor (a_x, a_y, a_width, a_height)
 		end
 
 	internal_x_y_offset: INTEGER = 16384

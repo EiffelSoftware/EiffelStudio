@@ -107,7 +107,7 @@ feature -- Execution
 					if l_license /= Void then
 						s.append ("<p>EiffelStudio license " + html_encoded (l_license.key) + " is installed on " + l_installations.count.out + " devices: ")
 					else
-						s.append ("<p>EiffelStudio is installed on " + l_installations.count.out + " devices: ")
+						s.append ("<p>EiffelStudio : installed " + l_installations.count.out + " time(s) ")
 					end
 					if l_display_all then
 						s.append ("<a class=%"note%" href=%"" + req.percent_encoded_path_info + "%">only active sessions</a>")
@@ -116,7 +116,7 @@ feature -- Execution
 					end
 					s.append ("<ul>")
 					across
-						l_installations as ic
+						l_installations.new_cursor.reversed as ic
 					loop
 						inst := ic.item
 						l_session := Void

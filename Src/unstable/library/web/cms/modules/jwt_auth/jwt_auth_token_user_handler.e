@@ -73,15 +73,15 @@ feature -- Request execution
 			lst: LIST [JWT_AUTH_TOKEN]
 		do
 			if attached user_by_uid (a_uid) as l_user then
-				if attached api.user as u then
-					if u.same_as (l_user) or api.user_api.is_admin_user (u) then
+				if attached api.user as api_u then
+					if api_u.same_as (l_user) or api.user_api.is_admin_user (api_u) then
 						rep := new_generic_response (req, res)
 						rep.set_title ("JWT tokens")
 						create s.make_empty
 
 						create l_now.make_now_utc
 
-						lst := jwt_auth_api.user_tokens (u, Void)
+						lst := jwt_auth_api.user_tokens (l_user, Void)
 						if lst /= Void and then not lst.is_empty then
 							from
 								lst.start
@@ -90,7 +90,7 @@ feature -- Request execution
 							loop
 								inf := lst.item
 								if inf.is_expired (l_now) then
-									jwt_auth_api.discard_user_token (u, lst.item.token)
+									jwt_auth_api.discard_user_token (l_user, lst.item.token)
 									lst.remove
 								else
 									lst.forth
@@ -106,7 +106,7 @@ feature -- Request execution
 							fset.extend (sub)
 
 
-							fset.extend_html_text ("<p>Revoke all " + lst.count.out + " token(s) for user " +  html_encoded (api.user_display_name (u)) + " .</p>")
+							fset.extend_html_text ("<p>Revoke all " + lst.count.out + " token(s) for user " +  html_encoded (api.user_display_name (l_user)) + " .</p>")
 							l_form.append_to_html (rep.wsf_theme, s)
 							l_form.append_html_attributes_to ("<br/>")
 

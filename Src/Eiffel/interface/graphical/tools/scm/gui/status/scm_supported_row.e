@@ -42,6 +42,13 @@ feature -- Operation
 							end
 						end(root_location.location, ?,?,?,?,?,?,?,?)
 					)
+				gi.pointer_button_press_actions.extend (agent (i_item: EV_GRID_ITEM; i_x, i_y, i_button: INTEGER; i_x_tilt, i_y_tilt, i_pressure: DOUBLE; i_screen_x, i_screen_y: INTEGER)
+						do
+							if i_button = {EV_POINTER_CONSTANTS}.right then
+								on_options (i_item)
+							end
+						end (glab, ?,?,?,?,?,?,?,?)
+					)
 			end
 
 			cblab := new_checkable_label_item ("")
@@ -126,7 +133,6 @@ feature -- Operation
 				end
 				if a_row.subrow_count = 0 then
 					a_row.collapse
-					a_row.hide
 				else
 					a_row.expand
 					a_row.show

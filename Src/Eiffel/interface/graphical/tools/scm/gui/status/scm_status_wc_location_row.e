@@ -146,6 +146,14 @@ feature -- Initialization
 			row.set_item (g.parent_column, create {EV_GRID_ITEM})
 
 			if parent_row.is_supported then
+				glab.pointer_button_press_actions.extend (agent (i_item: EV_GRID_ITEM; i_x, i_y, i_button: INTEGER; i_x_tilt, i_y_tilt, i_pressure: DOUBLE; i_screen_x, i_screen_y: INTEGER)
+							do
+								if i_button = {EV_POINTER_CONSTANTS}.right then
+									on_options (i_item)
+								end
+							end (glab, ?,?,?,?,?,?,?,?)
+						)
+
 				eglab := new_label_ellipsis_item ("")
 				eglab.ellipsis_actions.extend (agent on_options (eglab))
 				eglab.pointer_button_press_actions.extend (agent (i_item: EV_GRID_ITEM; i_x, i_y, i_button: INTEGER; i_x_tilt, i_y_tilt, i_pressure: DOUBLE; i_screen_x, i_screen_y: INTEGER)
@@ -193,11 +201,13 @@ feature -- Operations
 				nb := l_chgs.changes_count
 				changes_count := nb
 				unb := l_chgs.unversioned_count
+				row.set_foreground_color (Void)
 				if nb = 0 then
 					if parent_row.unversioned_files_included (g, l_scm_location) and unb > 0 then
 						row.show
 					else
-						row.hide
+						-- TODO: check if this is better to hide, or grey the line.
+						row.set_foreground_color (colors.disabled_foreground_color)
 					end
 				elseif nb = 1 then
 					row.show

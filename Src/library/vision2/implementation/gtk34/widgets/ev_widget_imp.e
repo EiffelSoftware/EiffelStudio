@@ -185,7 +185,11 @@ feature {EV_WINDOW_IMP, EV_INTERMEDIARY_ROUTINES, EV_ANY_I, EV_APPLICATION_IMP} 
 		do
 			if a_width /= previous_width or else a_height /= previous_height then
 				debug ("gtk_sizing")
-					print (attached_interface.debug_output + {STRING_32} ".on_size_allocate (x=" + a_x.out + ",y=" + a_y.out + ",w=" + a_width.out + ",h=" + a_height.out + ")%N")
+					if attached interface as l_interface then
+						print (attached_interface.debug_output + {STRING_32} ".on_size_allocate (x=" + a_x.out + ",y=" + a_y.out + ",w=" + a_width.out + ",h=" + a_height.out + ")%N")
+					else
+						print (generating_type.name_32 + {STRING_32} ".on_size_allocate (x=" + a_x.out + ",y=" + a_y.out + ",w=" + a_width.out + ",h=" + a_height.out + ")%N")
+					end
 				end
 				if attached parent_imp as l_parent_imp then
 					l_x_y_offset := l_parent_imp.internal_x_y_offset
@@ -469,7 +473,11 @@ feature -- Element change
 			l_alloc: POINTER
 		do
 			debug ("gtk_sizing")
-				print (attached_interface.debug_output + {STRING_32} ".set_widget_size (w=" + a_width.out + ",h=" + a_height.out + ")%N")
+				if attached interface as l_interface then
+					print (l_interface.debug_output + {STRING_32} ".set_widget_size (w=" + a_width.out + ",h=" + a_height.out + ")%N")
+				else
+					print (generating_type.name_32 + {STRING_32} ".set_widget_size (w=" + a_width.out + ",h=" + a_height.out + ")%N")
+				end
 			end
 			l_c_object := c_object
 			l_alloc := l_alloc.memory_alloc ({GTK}.c_gtk_allocation_struct_size)
@@ -601,6 +609,8 @@ feature {NONE} -- Implementation
 
 	propagate_foreground_color_internal (a_color: EV_COLOR; a_c_object: POINTER)
 			-- Propagate `a_color' to the foreground color of `a_c_object's children.
+		require
+			a_c_object.is_default_pointer
 		local
 			l: POINTER
 			child: POINTER
@@ -630,6 +640,8 @@ feature {NONE} -- Implementation
 
 	propagate_background_color_internal (a_color: EV_COLOR; a_c_object: POINTER)
 			-- Propagate `a_color' to the background color of `a_c_object's children.
+		require
+			a_c_object.is_default_pointer
 		local
 			l: POINTER
 			child: POINTER

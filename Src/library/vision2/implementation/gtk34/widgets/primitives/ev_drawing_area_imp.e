@@ -91,6 +91,13 @@ feature {NONE} -- Initialization
 --			disable_double_buffering -- deprecated!
 
 			real_set_background_color (l_c_object, background_color)
+			if
+				attached visual_widget as vw and then
+				not vw.is_default_pointer and then
+			 	vw /= l_c_object
+			then
+				real_set_background_color (vw, background_color)
+			end
 
 			Precursor {EV_PRIMITIVE_IMP}
 

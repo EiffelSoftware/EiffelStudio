@@ -79,8 +79,12 @@ feature -- Status setting
 					end
 					background_color_imp := l_col_imp
 					real_set_background_color (c_object, a_color)
-					if visual_widget /= c_object then
-						real_set_background_color (visual_widget, a_color)
+					if
+						attached visual_widget as vw and then
+						not vw.is_default_pointer and then
+					 	vw /= c_object
+					then
+						real_set_background_color (vw, a_color)
 					end
 				end
 			end
@@ -121,19 +125,6 @@ feature -- Status setting
 			--| (See gtk/docs/styles.txt)
 		local
 			l_context: POINTER
-		do
-			if a_color /= Void then
-				l_context := {GTK}.gtk_widget_get_style_context (visual_widget)
-				real_set_background_color_internal (l_context, a_color)
-				--l_context := {GTK}.gtk_widget_get_style_context (a_c_object)
-				--real_set_background_color_internal (l_context, a_color)
-			end
-		end
-
-	real_set_background_color_internal (a_context: POINTER; a_color: EV_COLOR)
-			-- Implementation of `set_background_color'
-			--
-		local
 			r, g, b, m, mx: INTEGER
 			l_provider: POINTER
 			l_css: STRING
@@ -141,82 +132,89 @@ feature -- Status setting
 			l_error: POINTER
 			l_bg_name: STRING
 		do
-			create l_css.make (1024)
+			if
+				not a_c_object.is_default_pointer and
+				a_color /= Void
+			then
+				l_context := {GTK}.gtk_widget_get_style_context (a_c_object)
 
-				-- TODO check the old implementation used 16 bits.
-			r := a_color.red_16_bit
-			g := a_color.green_16_bit
-			b := a_color.blue_16_bit
-			m := a_color.max_16_bit
+				create l_css.make (1024)
 
-				-- TODO support for background-pixmap ???
-				-- for instance EV_CONTAINER.background_pixmap
-				-- do not use background, but background-color otherwise the pixmap will be removed.
-				-- instead of background, it could also be background-image: none; background-color: ...
-			l_bg_name := "background"
-			l_css.append ("* {"
-					+ new_css_color_style_string (l_bg_name,
-											r / m,
-											g / m,
-											b / m)
-					+ "}%N"
-				)
+					-- TODO check the old implementation used 16 bits.
+				r := a_color.red_16_bit
+				g := a_color.green_16_bit
+				b := a_color.blue_16_bit
+				m := a_color.max_16_bit
 
-				--| Set active state color.
-			l_css.append ("*:active {"
-					+ new_css_color_style_string (l_bg_name,
-											(r * Highlight_scale).rounded.max (0) / m,
-											(g * Highlight_scale).rounded.max (0) / m,
-											(b * Highlight_scale).rounded.max (0) / m)
-					+ "}%N"
-				)
+					-- TODO support for background-pixmap ???
+					-- for instance EV_CONTAINER.background_pixmap
+					-- do not use background, but background-color otherwise the pixmap will be removed.
+					-- instead of background, it could also be background-image: none; background-color: ...
+				l_bg_name := "background"
+				l_css.append ("* {"
+						+ new_css_color_style_string (l_bg_name,
+												r / m,
+												g / m,
+												b / m)
+						+ "}%N"
+					)
 
-				--| Set prelight state color.
-			l_css.append ("*:hover {"
-					+ new_css_color_style_string (l_bg_name,
-											(r * Prelight_scale).rounded.min (m) / m,
-											(g * Prelight_scale).rounded.min (m) / m,
-											(b * Prelight_scale).rounded.min (m) / m)
-					+ "}%N"
-				)
+					--| Set active state color.
+				l_css.append ("*:active {"
+						+ new_css_color_style_string (l_bg_name,
+												(r * Highlight_scale).rounded.max (0) / m,
+												(g * Highlight_scale).rounded.max (0) / m,
+												(b * Highlight_scale).rounded.max (0) / m)
+						+ "}%N"
+					)
 
-				--| Set selected state color to reverse.
-			l_css.append ("*:selected {"
-					+ new_css_color_style_string (l_bg_name,
-											(m - r) / m,
-											(m - g) / m,
-											(m - b // 2) / m)
-					+ ";}%N"
-				)
+					--| Set prelight state color.
+				l_css.append ("*:hover {"
+						+ new_css_color_style_string (l_bg_name,
+												(r * Prelight_scale).rounded.min (m) / m,
+												(g * Prelight_scale).rounded.min (m) / m,
+												(b * Prelight_scale).rounded.min (m) / m)
+						+ "}%N"
+					)
 
-				--| Set the insensitive state color.
-			mx := r.max (g).max (b)
-			l_css.append ("*:disabled {"
-					+ new_css_color_style_string (l_bg_name,
-											(mx + ((r - mx) // 4)) / m,
-											(mx + ((g - mx) // 4)) / m,
-											(mx + ((b - mx) // 4)) / m )
-					+ ";}%N"
-				)
+					--| Set selected state color to reverse.
+				l_css.append ("*:selected {"
+						+ new_css_color_style_string (l_bg_name,
+												(m - r) / m,
+												(m - g) / m,
+												(m - b // 2) / m)
+						+ ";}%N"
+					)
 
-				--| Set the text selection background and color.
-				--| FIXME: this is probably not the good location
-				--| move to EV_TEXT_IMP ?
-			l_css.append (".view text selection {" + l_bg_name + ": "
-							+ {GTK}.rgba_string_style_color (a_context, "theme_selected_bg_color")
-							+ "; color: "
-							+ {GTK}.rgba_string_style_color (a_context, "theme_selected_fg_color")
-							+ "; }%N")
+					--| Set the insensitive state color.
+				mx := r.max (g).max (b)
+				l_css.append ("*:disabled {"
+						+ new_css_color_style_string (l_bg_name,
+												(mx + ((r - mx) // 4)) / m,
+												(mx + ((g - mx) // 4)) / m,
+												(mx + ((b - mx) // 4)) / m )
+						+ ";}%N"
+					)
 
-			create l_css_data.make (l_css)
-			l_provider := {GTK_CSS}.gtk_css_provider_new
-			{GTK2}.gtk_style_context_add_provider (a_context, l_provider, {EV_GTK_ENUMS}.gtk_style_provider_priority_application)
-			if not {GTK_CSS}.gtk_css_provider_load_from_data (l_provider, l_css_data.item, -1, $l_error) then
-				-- TODO Handle error
-			end
+					--| Set the text selection background and color.
+					--| FIXME: this is probably not the good location
+					--| move to EV_TEXT_IMP ?
+				l_css.append (".view text selection {" + l_bg_name + ": "
+								+ {GTK}.rgba_string_style_color (l_context, "theme_selected_bg_color")
+								+ "; color: "
+								+ {GTK}.rgba_string_style_color (l_context, "theme_selected_fg_color")
+								+ "; }%N")
 
-			if not l_provider.is_default_pointer then
-				{GTK2}.g_object_unref (l_provider)
+				create l_css_data.make (l_css)
+				l_provider := {GTK_CSS}.gtk_css_provider_new
+				{GTK2}.gtk_style_context_add_provider (l_context, l_provider, {EV_GTK_ENUMS}.gtk_style_provider_priority_application)
+				if not {GTK_CSS}.gtk_css_provider_load_from_data (l_provider, l_css_data.item, -1, $l_error) then
+					-- TODO Handle error
+				end
+
+				if not l_provider.is_default_pointer then
+					{GTK2}.g_object_unref (l_provider)
+				end
 			end
 		end
 
@@ -227,8 +225,12 @@ feature -- Status setting
 				if foreground_color_imp /= l_col_imp then
 					foreground_color_imp := l_col_imp
 					real_set_foreground_color (c_object, a_color)
-					if visual_widget /= c_object then
-						real_set_foreground_color (visual_widget, a_color)
+					if
+						attached visual_widget as vw and then
+						not vw.is_default_pointer and then
+					 	vw /= c_object
+					then
+						real_set_foreground_color (vw, a_color)
 					end
 				end
 			end
@@ -245,7 +247,10 @@ feature -- Status setting
 			l_color_string: STRING
 			l_foreground_color_imp: like foreground_color_imp
 		do
-			if a_color /= Void then
+			if
+				not a_c_object.is_default_pointer and
+				a_color /= Void
+			then
 				l_foreground_color_imp := foreground_color_imp
 				check l_foreground_color_imp /= Void then end
 				r := l_foreground_color_imp.red_16_bit
@@ -269,8 +274,16 @@ feature -- Status setting
 		do
 			background_color_imp := Void
 			foreground_color_imp := Void
-			real_set_foreground_color (visual_widget, Void)
-			real_set_background_color (visual_widget, Void)
+			real_set_foreground_color (c_object, Void)
+			real_set_background_color (c_object, Void)
+			if
+				attached visual_widget as vw and then
+				not vw.is_default_pointer and then
+			 	vw /= c_object
+			then
+				real_set_foreground_color (vw, Void)
+				real_set_background_color (vw, Void)
+			end
 		end
 
 feature {NONE} -- Implementation

@@ -313,6 +313,14 @@ feature -- Status setting
 			end
 
 			real_set_background_color (c_object, (create {EV_STOCK_COLORS}).gray)
+			if
+				attached visual_widget as vw and then
+				not vw.is_default_pointer and then
+			 	vw /= c_object
+			then
+				real_set_background_color (vw, (create {EV_STOCK_COLORS}).gray)
+			end
+
 			if attached background_pixmap as l_background_pixmap then
 				pix_imp ?= l_background_pixmap.implementation
 			end
@@ -365,6 +373,14 @@ feature -- Status setting
 			i: INTEGER
 		do
 			real_set_background_color (c_object, Void)
+			if
+				attached visual_widget as vw and then
+				not vw.is_default_pointer and then
+			 	vw /= c_object
+			then
+				real_set_background_color (vw, Void)
+			end
+
 --			a_style := {GTK}.gtk_style_copy ({GTK}.gtk_widget_struct_style (visual_widget))
 			from
 				i := 0
@@ -389,6 +405,13 @@ feature -- Basic operations
 		do
 			Precursor {EV_CONTAINER_I}
 			propagate_foreground_color_internal (foreground_color, c_object)
+			if
+				attached visual_widget as vw and then
+				not vw.is_default_pointer and then
+			 	vw /= c_object
+			then
+				propagate_foreground_color_internal (foreground_color, vw)
+			end
 		end
 
 	propagate_background_color

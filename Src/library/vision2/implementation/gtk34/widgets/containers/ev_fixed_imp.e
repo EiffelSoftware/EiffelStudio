@@ -114,12 +114,12 @@ feature -- Status setting
 			w := a_widget.x_position + a_widget.width
 			h := a_widget.y_position + a_widget.height
 			if w > minimum_width then
-				set_minimum_width (w)
+				set_real_minimum_size (w, real_minimum_height)
 			else
 				l_size_smaller := w < minimum_width
 			end
 			if h > minimum_height then
-				set_minimum_height (h)
+				set_real_minimum_size (real_minimum_width, h)
 			else
 				l_size_smaller := h < minimum_height
 			end
@@ -159,11 +159,7 @@ feature -- Status setting
 				end
 				go_to (l_cursor)
 					-- Set "real"_minimum size, instead of vision2 minimum size.
-				if w /= minimum_width and h /= minimum_height then
-					set_real_minimum_size (w, h)
-				elseif w /= minimum_width then
-					set_real_minimum_size (w, h)
-				elseif h /= minimum_height then
+				if w /= minimum_width or h /= minimum_height then
 					set_real_minimum_size (w, h)
 				end
 			end

@@ -14,14 +14,21 @@ create
 
 feature {NONE} -- Initialization
 
-	make_with_location (a_root_location: SCM_LOCATION)
+	make_with_location (a_root_location: SCM_GIT_LOCATION)
 		do
 			root_location := a_root_location
 		end
 
 feature -- Access
 
-	root_location: SCM_LOCATION
+	root_location: SCM_GIT_LOCATION
+
+feature -- Query
+
+	description: STRING_32
+		do
+			create Result.make_from_string_general ("%"git push%" needed from directory " + root_location.location_path_name)
+		end
 
 invariant
 note

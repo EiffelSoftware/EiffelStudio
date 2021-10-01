@@ -292,13 +292,13 @@ feature -- Operations
 				across
 					l_multi.changelists as ic
 				loop
-					if attached {SCM_GIT_LOCATION} ic.item.root then
-						Result.extend (create {SCM_POST_COMMIT_GIT_PUSH_OPERATION}.make_with_location (ic.item.root))
+					if attached {SCM_GIT_LOCATION} ic.item.root as l_gitloc then
+						Result.extend (create {SCM_POST_COMMIT_GIT_PUSH_OPERATION}.make_with_location (l_gitloc))
 					end
 				end
 			elseif attached {SCM_SINGLE_COMMIT_SET} a_commit as l_single then
-				if attached {SCM_GIT_LOCATION} l_single.changelist.root then
-					Result.extend (create {SCM_POST_COMMIT_GIT_PUSH_OPERATION}.make_with_location (l_single.changelist.root))
+				if attached {SCM_GIT_LOCATION} l_single.changelist.root as l_gitloc then
+					Result.extend (create {SCM_POST_COMMIT_GIT_PUSH_OPERATION}.make_with_location (l_gitloc))
 				end
 			end
 			if Result.is_empty then

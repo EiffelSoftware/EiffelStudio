@@ -170,6 +170,9 @@ feature -- General
 	button_diff: STRING_32 do Result := locale.translation_in_context ("Diff", "scm") end
 	tooltip_button_diff: STRING_32 do Result := locale.translation_in_context ("Show the differences", "scm") end
 
+	button_process_post_commit_operations: STRING_32 do Result := locale.translation_in_context ("Next", "scm") end
+	tooltip_button_process_post_commit_operations: STRING_32 do Result := locale.translation_in_context ("Continue with post-commit operation(s)...", "scm") end
+
 	button_external_diff: STRING_32 do Result := locale.translation_in_context ("External diff", "scm") end
 
 	button_config: STRING_32 do Result := locale.translation_in_context ("Config", "scm") end
@@ -183,9 +186,11 @@ feature -- General
 
 feature -- Messages
 
-	message_git_push (a_root: SCM_LOCATION): STRING_32
+	message_for_post_commit_operations (nb: INTEGER): STRING_32
+		require
+			nb > 0
 		do
-			Result := locale.formatted_string (locale.translation_in_context ("git push (GIT repository %"$1%")", "scm"), [a_root.location_path_name])
+			Result := locale.formatted_string (locale.plural_translation_in_context ("You may need to do the following manual operation:", "You may need to do the following $1 manual operations:", "scm", nb), [nb])
 		end
 
 

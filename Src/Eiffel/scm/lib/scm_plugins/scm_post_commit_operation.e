@@ -6,6 +6,12 @@ note
 deferred class
 	SCM_POST_COMMIT_OPERATION
 
+feature -- Query
+
+	description: STRING_32
+		deferred
+		end
+
 note
 	copyright: "Copyright (c) 1984-2021, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"

@@ -189,26 +189,28 @@ feature {NONE} -- User interface initialization
 						end (sp)
 				)
 
-			if attached dialog_window_buttons [dialog_buttons.reset_button] as but then
+			if attached button_close as but then
 				but.hide
 			end
---			if attached dialog_window_buttons [dialog_buttons.open_button] as but then
---				if attached {SCM_SINGLE_COMMIT_SET} commit as l_single_commit_set then
---					but.show
---				else
---					but.hide
---				end
---			end
+			if attached button_next as but then
+				but.hide
+			end
 
 			set_button_text (dialog_buttons.ok_button, interface_names.b_save)
 			set_button_text (dialog_buttons.cancel_button, interface_names.b_cancel)
 			set_button_text (dialog_buttons.reset_button, interface_names.b_close)
+
 			set_button_text (dialog_buttons.open_button, scm_names.button_diff)
+			set_button_tooltip (dialog_buttons.open_button, scm_names.tooltip_button_diff)
+
+			set_button_text (dialog_buttons.apply_button, scm_names.button_process_post_commit_operations)
+			set_button_tooltip (dialog_buttons.apply_button, scm_names.tooltip_button_process_post_commit_operations)
 
 			set_button_action_before_close (dialog_buttons.ok_button, agent on_ok)
 			set_button_action_before_close (dialog_buttons.cancel_button, agent on_cancel)
 			set_button_action_before_close (dialog_buttons.reset_button, agent on_close)
 			set_button_action_before_close (dialog_buttons.open_button, agent on_open_diff)
+			set_button_action_before_close (dialog_buttons.apply_button, agent on_process_post_commit_operations)
 
 			progress_log_box.hide
 		end
@@ -307,16 +309,32 @@ feature -- Action
 			veto_close
 		end
 
+	on_process_post_commit_operations
+		do
+			if attached scm_service.post_commit_operations (commit) as l_ops and then not l_ops.is_empty then
+				across
+					l_ops as ic
+				loop
+					progress_log_text.append_text ("%N - processing: ")
+					progress_log_text.append_text (ic.item.description)
+					progress_log_text.append_text ("%N")
+				end
+			end
+		end
+
 	on_ok
 		local
 			err: BOOLEAN
 			l_pointer_style: detachable EV_POINTER_STYLE
 		do
-			if attached dialog_window_buttons [dialog_buttons.ok_button] as but then
+			if attached button_save as but then
 				but.hide
 			end
-			if attached dialog_window_buttons [dialog_buttons.reset_button] as but then
+			if attached button_close as but then
 				but.show
+			end
+			if attached button_next as but then
+				but.hide
 			end
 
 			l_pointer_style := dialog.pointer_style
@@ -338,12 +356,21 @@ feature -- Action
 			end
 
 			if attached scm_service.post_commit_operations (commit) as l_ops and then not l_ops.is_empty then
-				progress_log_text.append_text ("%NYou may need to do the following manual operation(s):%N")
+				if attached button_next as but then
+					but.show
+						-- FIXME: for now, hide as it is not yet implemented:
+					but.hide
+				end
+				progress_log_text.append_text ("%N")
+				progress_log_text.append_text (scm_names.message_for_post_commit_operations (l_ops.count))
+				progress_log_text.append_text ("%N")
 				across
 					l_ops as ic
 				loop
 					if attached {SCM_POST_COMMIT_GIT_PUSH_OPERATION} ic.item as l_git_push then
-						progress_log_text.append_text ({STRING_32} " - " + scm_names.message_git_push (l_git_push.root_location) + "%N")
+						progress_log_text.append_text ({STRING_32} " - ")
+						progress_log_text.append_text (l_git_push.description)
+						progress_log_text.append_text ("%N")
 					end
 				end
 			end
@@ -351,14 +378,23 @@ feature -- Action
 			err := commit.has_error
 
 			if err then
-				if attached dialog_window_buttons [dialog_buttons.ok_button] as but then
+				if attached button_save as but then
 					but.show
 				end
-				if attached dialog_window_buttons [dialog_buttons.reset_button] as but then
+				if attached button_close as but then
 					but.hide
 				end
+				if attached button_diff as but then
+					but.show
+				end
+				if attached button_cancel as but then
+					but.show
+				end
 			else
-				if attached dialog_window_buttons [dialog_buttons.cancel_button] as but then
+				if attached button_diff as but then
+					but.hide
+				end
+				if attached button_cancel as but then
 					but.hide
 				end
 			end
@@ -392,15 +428,37 @@ feature -- Access
 			Result := scm_names.title_scm_save
 		end
 
+	button_diff: detachable EV_BUTTON
+		do
+			Result := dialog_window_buttons [dialog_buttons.open_button]
+		end
+	button_next: detachable EV_BUTTON
+		do
+			Result := dialog_window_buttons [dialog_buttons.apply_button]
+		end
+	button_save: detachable EV_BUTTON
+		do
+			Result := dialog_window_buttons [dialog_buttons.ok_button]
+		end
+	button_close: detachable EV_BUTTON
+		do
+			Result := dialog_window_buttons [dialog_buttons.reset_button]
+		end
+	button_cancel: detachable EV_BUTTON
+		do
+			Result := dialog_window_buttons [dialog_buttons.cancel_button]
+		end
+
 	buttons: DS_HASH_SET [INTEGER]
 			-- Set of button id's for dialog
 			-- Note: Use {ES_DIALOG_BUTTONS} or `dialog_buttons' to determine the id's correspondance.
 		once
-			create Result.make (4)
+			create Result.make (5)
 			Result.put_last (dialog_buttons.open_button) -- Diff
+			Result.put_last (dialog_buttons.apply_button) -- Apply post commit operations
 			Result.put_last (dialog_buttons.ok_button) -- Apply/Commit/...
 			Result.put_last (dialog_buttons.reset_button) -- Close
-			Result.put_last (dialog_buttons.cancel_button) -- Cancel		
+			Result.put_last (dialog_buttons.cancel_button) -- Cancel
 		end
 
 	default_button: INTEGER

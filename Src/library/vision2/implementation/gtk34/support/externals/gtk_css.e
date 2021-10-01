@@ -6,9 +6,6 @@ note
 class
 	GTK_CSS
 
-inherit
-	GTK_CSS_DEPRECATED
-
 feature -- GtkCsProvider
 
 	frozen gtk_css_provider_new: POINTER

@@ -641,7 +641,7 @@ feature {NONE} -- Implementation
 	propagate_background_color_internal (a_color: EV_COLOR; a_c_object: POINTER)
 			-- Propagate `a_color' to the background color of `a_c_object's children.
 		require
-			a_c_object.is_default_pointer
+			not a_c_object.is_default_pointer
 		local
 			l: POINTER
 			child: POINTER

@@ -154,7 +154,7 @@ feature {EV_ANY, EV_ANY_IMP} -- Implementation
 					-- See the `set_c_object` code, and the related C code (in ev_any_imp.c) .
 				if {GTK}.gtk_widget_is_toplevel (l_c_object) then
 						-- TODO: check if the following line could cause trouble
---					{GTK}.gtk_widget_destroy (l_c_object)
+					{GTK}.gtk_widget_destroy (l_c_object)
 				else
 					{GTK}.gtk_widget_destroy (l_c_object)
 				end

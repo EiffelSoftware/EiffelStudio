@@ -184,9 +184,7 @@ feature {NONE} -- Implementation
 
 	on_size_allocate (a_x, a_y, a_width, a_height: INTEGER)
 		do
-			if previous_width /= a_width or previous_height /= a_height then
-				update_viewport_item_size (a_width, a_height)
-			end
+			update_viewport_item_size (a_width, a_height)
 			Precursor (a_x, a_y, a_width, a_height)
 		end
 
@@ -198,7 +196,6 @@ feature {NONE} -- Implementation
 			if attached item as l_item then
 				prev_w := l_item.width
 				prev_h := l_item.height
-
 
 				w := a_viewport_width.max (1)
 				h := a_viewport_height.max (1)

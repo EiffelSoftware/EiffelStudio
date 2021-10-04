@@ -128,8 +128,9 @@ feature {NONE} -- Implementation
 				-- If figures are registered via `register_figure' we proceed the old fashion way.
 			if draw_routines.valid_index (f.draw_id) and then attached draw_routines.item (f.draw_id) as l_draw_routine then
 				l_tuple := [f]
-				check valid_entry: l_draw_routine.valid_operands (l_tuple) end
-				l_draw_routine.flexible_call (l_tuple)
+				if l_draw_routine.valid_operands (l_tuple) then
+					l_draw_routine.flexible_call (l_tuple)
+				end
 			else
 					-- New way of projecting via double-dispatch.
 				f.project (Current)
@@ -161,7 +162,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2017, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2021, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

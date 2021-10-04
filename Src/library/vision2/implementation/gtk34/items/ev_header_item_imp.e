@@ -75,7 +75,7 @@ feature -- Initialization
 			{GTK2}.gtk_tree_view_column_set_widget (c_object, box)
 
 			{GTK}.gtk_widget_get_preferred_width (box, $l_min, default_pointer)
-			set_minimum_width ({GTK2}.gtk_tree_view_column_get_min_width (c_object).max (l_min).max (0))
+			set_minimum_width ({GTK2}.gtk_tree_view_column_get_min_width (c_object).max (l_min).max (1))
 			maximum_width := 32000
 			align_text_left
 			enable_user_resize
@@ -138,11 +138,31 @@ feature -- Access
 
 	minimum_width: INTEGER
 			-- Lower bound on `width' in pixels.
+		local
+			p_but, p: POINTER
+			w: INTEGER
 		do
 			if not box.is_default_pointer then
 				{GTK}.gtk_widget_get_preferred_width (box, $Result, default_pointer)
 			end
-			Result := internal_minimum_width.max ({GTK}.gtk_tree_view_column_get_min_width (visual_widget)).max (Result)
+				-- Find better value for the inner width
+				--| the structure of the header item is:
+				--| GtkButton
+				--|	+---inner GtkBox > GtkAlignment
+				--|		+---box: GtkBox
+				--|			+---pixmap_box: GtkBox
+				--|			+---text_label_box: GtkLabel				
+
+			p_but := {GTK}.gtk_tree_view_column_get_button (c_object)
+			if not p_but.is_default_pointer then
+				p := {GTK}.gtk_bin_get_child (p_but) -- Get the GtkButton inner GtkBox
+				if not p.is_default_pointer then
+					w := {GTK}.gtk_widget_get_allocated_width (p)
+					Result := Result.max (w)
+				end
+			end
+			Result := Result.max ({GTK}.gtk_tree_view_column_get_min_width (visual_widget))
+			Result := internal_minimum_width.max (Result)
 		end
 
 	internal_minimum_width: INTEGER

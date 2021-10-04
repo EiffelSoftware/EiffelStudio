@@ -205,9 +205,9 @@ feature {EV_WINDOW_IMP, EV_INTERMEDIARY_ROUTINES, EV_ANY_I, EV_APPLICATION_IMP} 
 				then
 					l_resize_actions.call (app_implementation.gtk_marshal.dimension_tuple (l_x, l_y, a_width, a_height))
 				end
-			end
-			if attached parent_imp as l_parent_imp then
-				l_parent_imp.child_has_resized (Current)
+				if attached parent_imp as l_parent_imp then
+					l_parent_imp.child_has_resized (Current)
+				end
 			end
 		end
 
@@ -422,7 +422,7 @@ feature -- Element change
 				print (generating_type.name_32 + {STRING_32} ".set_minimum_width (w=" + a_minimum_width.out + ")%N")
 			end
 
-			{GTK2}.gtk_widget_set_minimum_size (c_object, a_minimum_width, height_request)
+			{GTK2}.gtk_widget_set_minimum_size (c_object, a_minimum_width, real_minimum_height)
 
 				-- If the parent is a fixed or scrollable area we need to update the item size.
 			if attached {EV_VIEWPORT_IMP} parent_imp as l_viewport_parent then
@@ -439,7 +439,7 @@ feature -- Element change
 				print (generating_type.name_32 + {STRING_32} ".set_minimum_height (h=" + a_minimum_height.out + ")%N")
 			end
 
-			{GTK2}.gtk_widget_set_minimum_size (c_object, width_request, a_minimum_height)
+			{GTK2}.gtk_widget_set_minimum_size (c_object, real_minimum_width, a_minimum_height)
 
 				-- If the parent is a fixed or scrollable area we need to update the item size.
 			if attached {EV_VIEWPORT_IMP} parent_imp as l_viewport_parent then

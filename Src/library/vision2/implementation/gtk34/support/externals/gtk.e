@@ -18,6 +18,14 @@ feature -- Session type
 			instance_free: class
 		end
 
+	is_wayland_session: BOOLEAN
+		once
+			Result := attached {EXECUTION_ENVIRONMENT}.item ("XDG_SESSION_TYPE") as l_session_type and then
+					l_session_type.is_case_insensitive_equal_general ("wayland")
+		ensure
+			instance_free: class
+		end
+
 feature -- GTK version	
 
 	frozen gtk_maj_ver: INTEGER_32

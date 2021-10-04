@@ -383,8 +383,14 @@ feature -- Implementation
 		local
 			l_wm_name: POINTER
 		do
-			l_wm_name := gdk_x11_screen_get_window_manager_name ({GDK_HELPERS}.default_screen)
-			create Result.make_from_c (l_wm_name)
+			if {GTK}.is_x11_session then
+				l_wm_name := gdk_x11_screen_get_window_manager_name ({GDK_HELPERS}.default_screen)
+				create Result.make_from_c (l_wm_name)
+			elseif {GTK}.is_wayland_session then
+				Result := once "wayland"
+			else
+				Result := once "unknown"
+			end
 		end
 
 feature {NONE} -- Externals

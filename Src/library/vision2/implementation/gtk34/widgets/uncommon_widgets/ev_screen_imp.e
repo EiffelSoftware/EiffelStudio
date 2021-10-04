@@ -77,7 +77,9 @@ feature {NONE} -- Initialization
 			-- TODO update this code to support different environments like (Wayland)
 			if has_x11_support then
 				drawable := {GTK2}.gdk_screen_get_root_window ({GTK2}.gdk_screen_get_default)
-				{REFACTORING_HELPER}.to_implement ("update this code to support different environments like (Wayland)")
+				debug ("refactor_fixme")
+					{REFACTORING_HELPER}.to_implement ("update this code to support different environments like (Wayland)")
+				end
 				gc := {GDK_X11}.create_gc (drawable)
 				{GDK_X11}.x_set_subwindow_mode (drawable, gc, {GDK_X11}.x_subwindow_mode_include_inferiors)
 			end

@@ -110,8 +110,7 @@ feature -- Element change
 			l_x_offset_changed := a_x /= internal_x_offset
 			l_y_offset_changed := a_y /= internal_y_offset
 			if l_x_offset_changed or else l_y_offset_changed then
-					-- TODO: check if next line is needed
---				block_item_resize_actions
+				block_item_resize_actions
 				if l_x_offset_changed then
 					internal_x_offset := a_x
 					{GTK}.gtk_adjustment_set_value (horizontal_adjustment, a_x + internal_x_y_offset)
@@ -123,8 +122,7 @@ feature -- Element change
 					--| note: GTK3 now emits `value-changed` event itself whenever value changes.
 					--|       then no need to call the deprecated "gtk_adjustment_value_changed" Gtk C function anymore.
 
-					-- TODO: check if next line is needed
---				unblock_item_resize_actions
+				unblock_item_resize_actions
 			end
 		end
 
@@ -141,6 +139,7 @@ feature -- Element change
 			l_child_item: POINTER
 			l_item_c_object: POINTER
 			l_alloc: POINTER
+			w,h: INTEGER
 		do
 			debug ("gtk_sizing")
 				print (attached_interface.debug_output + {STRING_32} ".set_item_size (w=" + a_width.out + ",h=" + a_height.out + ")%N")
@@ -161,12 +160,19 @@ feature -- Element change
 				check positive_width: a_width >= 0 end
 				check positive_height: a_height >= 0 end
 
-				{GTK}.set_gtk_allocation_struct_width (l_alloc, a_width)
-				{GTK}.set_gtk_allocation_struct_height (l_alloc, a_height)
-				{GTK2}.gtk_widget_size_allocate (l_child_item, l_alloc)
-				l_alloc.memory_free
+					-- FIXME: should we center the item in the viewport ? (cf Windows behavior) [2021-10-01]
+				w := a_width.max (w_imp.preferred_minimum_width)
+				h := a_height.max (w_imp.preferred_minimum_height)
+				debug ("gtk_sizing")
+					print (attached_interface.debug_output + {STRING_32} ".set_item_size -> IMP w=" + w.out + ",h=" + h.out + ")%N")
+				end
+				{GTK}.set_gtk_allocation_struct_width (l_alloc, w)
+				{GTK}.set_gtk_allocation_struct_height (l_alloc, h)
 
-				{GTK2}.gtk_widget_set_minimum_size (l_child_item, a_width, a_height)
+				{GTK2}.gtk_widget_set_minimum_size (l_child_item, w, h)
+				{GTK2}.gtk_widget_size_allocate (l_child_item, l_alloc)
+
+				l_alloc.memory_free
 
 				{GTK}.gtk_container_check_resize (viewport)
 			else
@@ -178,18 +184,24 @@ feature {NONE} -- Implementation
 
 	on_size_allocate (a_x, a_y, a_width, a_height: INTEGER)
 		do
-			update_viewport_item_size (a_width, a_height)
+			if previous_width /= a_width or previous_height /= a_height then
+				update_viewport_item_size (a_width, a_height)
+			end
 			Precursor (a_x, a_y, a_width, a_height)
 		end
 
 	update_viewport_item_size (a_viewport_width, a_viewport_height: INTEGER)
 		local
+			prev_w, prev_h,
 			w,h: INTEGER
 		do
 			if attached item as l_item then
-				block_item_resize_actions
-				w := a_viewport_width
-				h := a_viewport_height
+				prev_w := l_item.width
+				prev_h := l_item.height
+
+
+				w := a_viewport_width.max (1)
+				h := a_viewport_height.max (1)
 				l_item.reset_minimum_height
 				l_item.reset_minimum_width
 				if attached {EV_WIDGET_IMP} l_item.implementation as l_item_imp then
@@ -200,7 +212,6 @@ feature {NONE} -- Implementation
 					l_item.set_minimum_size (w, h)
 					set_item_size (w, h)
 				end
-				unblock_item_resize_actions
 			end
 		end
 

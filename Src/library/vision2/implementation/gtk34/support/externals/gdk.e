@@ -9,6 +9,15 @@ class
 inherit
 	GDK_X11
 
+feature -- Backends	
+
+	gdk_set_allowed_backends (a_backends: POINTER)
+		external
+			"C inline use <ev_gtk.h>"
+		alias
+			"return gdk_set_allowed_backends ( (const gchar*) $a_backends);"
+		end
+
 feature -- Memory
 
 	frozen g_free (a_mem: POINTER)

@@ -78,6 +78,8 @@ feature -- Status setting
 
 			check attached {EV_WIDGET_IMP} a_widget.implementation as w_imp then
 				l_item_c_object := w_imp.c_object
+				w := w_imp.preferred_minimum_width
+				h := w_imp.preferred_minimum_height
 			end
 			if not l_item_c_object.is_default_pointer then
 				if needs_child_event_box then
@@ -92,12 +94,15 @@ feature -- Status setting
 
 				{GTK2}.gtk_widget_set_minimum_size (l_child_container, a_width, a_height) -- unfortunately it seems to be REQUIRED
 
+				w := w.max ({GTK}.gtk_widget_minimum_width (l_child_container))
+				h := h.max ({GTK}.gtk_widget_minimum_height (l_child_container))
+
 				l_alloc := l_alloc.memory_alloc ({GTK}.c_gtk_allocation_struct_size)
 				{GTK}.gtk_widget_get_allocation (l_child_container, l_alloc)
 				{GTK}.set_gtk_allocation_struct_x (l_alloc, a_x + internal_x_y_offset)
 				{GTK}.set_gtk_allocation_struct_y (l_alloc, a_y + internal_x_y_offset)
-				{GTK}.set_gtk_allocation_struct_width (l_alloc, {GTK}.gtk_widget_minimum_width (l_child_container))
-				{GTK}.set_gtk_allocation_struct_height (l_alloc, {GTK}.gtk_widget_minimum_height (l_child_container))
+				{GTK}.set_gtk_allocation_struct_width (l_alloc, w)
+				{GTK}.set_gtk_allocation_struct_height (l_alloc, h)
 				{GTK2}.gtk_widget_size_allocate (l_child_container, l_alloc)
 				l_alloc.memory_free
 			end

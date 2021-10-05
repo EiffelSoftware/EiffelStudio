@@ -22,6 +22,7 @@ feature {NONE} -- Initialization
 	make
 			-- Creation method
 		do
+
 				-- Create all widgets
 			create l_ev_horizontal_box_1
 			create left_top
@@ -42,13 +43,30 @@ feature {NONE} -- Initialization
 			create {EV_HORIZONTAL_BOX} gap_area_right
 
 				-- Build_widget_structure
-
 			create gap_area_holder
 			create internal_shared
 
 			default_create
 
 			custom_initialize
+
+			debug ("ev_identifier")
+				set_identifier_name ("SD:main")
+				left_top.set_identifier_name ("SD:main:left_top")
+				top_bar.set_identifier_name ("SD:main:top_bar")
+				right_top.set_identifier_name ("SD:main:right_top")
+				left_bar.set_identifier_name ("SD:main:left_bar")
+				center_area.set_identifier_name ("SD:main:center_area")
+				right_bar.set_identifier_name ("SD:main:right_bar")
+				left_bottom.set_identifier_name ("SD:main:left_bottom")
+				bottom_bar.set_identifier_name ("SD:main:bottom_bar")
+				right_bottom.set_identifier_name ("SD:main:right_bottom")
+
+				gap_area_top.set_identifier_name ("SD:gap:area_top")
+				gap_area_bottom.set_identifier_name ("SD:gap:area_bottom")
+				gap_area_left.set_identifier_name ("SD:gap:area_left")
+				gap_area_right.set_identifier_name ("SD:gap:area_right")
+			end
 		end
 
 	user_initialization
@@ -129,7 +147,7 @@ feature {NONE} -- Implementation
 
 note
 	library:	"SmartDocking: Library of reusable components for Eiffel."
-	copyright:	"Copyright (c) 1984-2017, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2021, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

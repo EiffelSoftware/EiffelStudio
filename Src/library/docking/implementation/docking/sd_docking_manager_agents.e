@@ -18,6 +18,8 @@ inherit
 
 	SD_DOCKING_MANAGER_HOLDER
 
+	EV_BUILDER
+
 create
 	make
 
@@ -167,18 +169,24 @@ feature -- Agents
 			l_docking_manager: like docking_manager
 		do
 			debug ("docking")
-				io.put_string ("%N SD_DOCKING_MANAGER on_resize ~~~~~~~~~~~~~~~~~~~~")
+				io.put_string ("%N SD_DOCKING_MANAGER on_resize ~~~~~~~~~~~~~~~~~~~~%N")
 			end
 			l_docking_manager := docking_manager
 			l_docking_manager.command.remove_auto_hide_zones (False)
 
 				-- This is to make sure item in `fixed_area' is resized, otherwise zone's size is incorrect when maximize a zone
-			l_docking_manager.fixed_area.set_minimum_size (0, 0)
+			l_docking_manager.fixed_area.set_minimum_size (1, 1)
 
 			if a_width > 0 then
 				l_width := l_docking_manager.internal_viewport.width
 				if l_width > 0 then
-					l_docking_manager.internal_viewport.set_item_width (l_width)
+					if attached l_docking_manager.internal_viewport.item as l_viewport_item then
+						l_viewport_item.reset_minimum_width
+						l_docking_manager.internal_viewport.set_item_width (l_width.max (l_viewport_item.minimum_width))
+					else
+						check False end
+						l_docking_manager.internal_viewport.set_item_width (l_width)
+					end
 				end
 
 					-- We have to make sure `l_width' not smaller than the minimum width of `l_main_container''s item
@@ -191,25 +199,29 @@ feature -- Agents
 				end
 
 				if l_width > 0 then
+					l_main_container.reset_minimum_width
 					l_docking_manager.fixed_area.set_item_width (l_main_container, l_width)
 				end
 			end
 			if a_height > 0 then
 				l_height := l_docking_manager.internal_viewport.height
 				if l_height > 0 then
-					l_docking_manager.internal_viewport.set_item_height (l_height)
+					if attached l_docking_manager.internal_viewport.item as l_viewport_item then
+						l_viewport_item.reset_minimum_height
+						l_docking_manager.internal_viewport.set_item_height (l_height.max (l_viewport_item.minimum_height))
+					else
+						check False end
+						l_docking_manager.internal_viewport.set_item_height (l_height)
+					end
 				end
 				l_height := l_docking_manager.fixed_area.height
 				l_main_container := l_docking_manager.query.inner_container_main
 				if l_height > 0 then
+					l_main_container.reset_minimum_height
 					l_docking_manager.fixed_area.set_item_height (l_main_container, l_height)
 				end
 			end
 			l_docking_manager.tool_bar_manager.on_resize (a_x, a_y, l_docking_manager.internal_viewport.width, l_docking_manager.internal_viewport.height, a_force)
-
-				-- Make sure the viewport item is also resized when the viewport is resized.
-				-- FIXME: check why code above in `on_resize (..)` is not enought.
-			l_docking_manager.internal_viewport.set_item_size (a_width, a_height)
 		end
 
 	on_dpi_change_resize (a_dpi: NATURAL_32; a_x: INTEGER; a_y: INTEGER; a_width: INTEGER; a_height: INTEGER; a_force: BOOLEAN)

@@ -500,7 +500,8 @@ feature -- Icon
 					if not p.is_default_pointer then
 						create str.make_from_pointer (p)
 						Result.extend (str.string)
-						{GTK}.g_free (p)
+						str.dispose
+						str := Void
 					end
 					i := i + 1
 				end

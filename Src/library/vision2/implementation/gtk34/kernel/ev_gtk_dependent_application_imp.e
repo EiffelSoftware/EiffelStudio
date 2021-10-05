@@ -32,8 +32,18 @@ feature -- Initialize
 
 	gtk_dependent_initialize
 			-- Gtk dependent code for `initialize'
-		do
-		end
+		local
+			dlg: POINTER
+ 		do
+ 				-- The following call seems to be needed for any Xlib function.
+			dlg := {GTK2}.gtk_dialog_new
+				-- take ownership
+			dlg := {GTK}.g_object_ref_sink (dlg)
+				-- unref the dialog, as we do nothing with it
+			{GTK}.g_object_unref (dlg)
+				-- destroy dlg
+			{GTK}.gtk_widget_destroy (dlg)
+ 		end
 
 	gtk_dependent_launch_initialize
 			-- Gtk dependent code for `launch'

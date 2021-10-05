@@ -84,6 +84,10 @@ feature	{NONE} -- Initlization
 			-- The minimum width is the width of two buttons on the title bar.
 			check has_content: has_content end
 			content.user_widget.set_minimum_size (internal_shared.icons.stick.width * 3, internal_shared.icons.stick.height)
+
+			debug ("ev_identifier")
+				set_identifier_name ("SD:auto_hide_zone")
+			end
 		ensure
 			set: docking_manager = a_content.docking_manager
 		end
@@ -281,7 +285,7 @@ invariant
 
 note
 	library:	"SmartDocking: Library of reusable components for Eiffel."
-	copyright:	"Copyright (c) 1984-2017, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2021, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

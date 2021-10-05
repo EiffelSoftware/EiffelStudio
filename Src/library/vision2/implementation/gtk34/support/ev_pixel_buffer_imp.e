@@ -478,19 +478,19 @@ feature {EV_STOCK_PIXMAPS_IMP} -- Implementation
 		do
 			a_cs := a_stock_id
 			set_from_stock_id (a_cs.item)
-
 			if gdk_pixbuf.is_default_pointer then
 				l_string := a_cs.string
 				l_string.to_lower
-				if l_string.same_string ("information") or else
-					l_string.same_string ("dialog-information")
+				if
+					l_string.same_string ({STRING_32} "information") or else
+					l_string.same_string ({STRING_32} "dialog-information")
 				then
 					set_gdkpixbuf ({GDK}.gdk_pixbuf_new_from_xpm_data ({EV_STOCK_PIXMAPS_IMP}.information_pixmap_xpm))
-				elseif l_string.same_string ("dialog-error") then
+				elseif l_string.same_string ({STRING_32} "dialog-error") then
 					set_gdkpixbuf ({GDK}.gdk_pixbuf_new_from_xpm_data ({EV_STOCK_PIXMAPS_IMP}.error_pixmap_xpm))
-				elseif l_string.same_string ("dialog-question") then
+				elseif l_string.same_string ({STRING_32} "dialog-question") then
 					set_gdkpixbuf ({GDK}.gdk_pixbuf_new_from_xpm_data ({EV_STOCK_PIXMAPS_IMP}.question_pixmap_xpm))
-				elseif l_string.same_string ("dialog-warning") then
+				elseif l_string.same_string ({STRING_32} "dialog-warning") then
 					set_gdkpixbuf ({GDK}.gdk_pixbuf_new_from_xpm_data ({EV_STOCK_PIXMAPS_IMP}.warning_pixmap_xpm))
 				else
 					-- If no stock pixbuf is found, default to empty 48x48 pixbuf.

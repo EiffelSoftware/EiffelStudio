@@ -117,18 +117,19 @@ feature -- Access
 
 feature {NONE} -- Implementation
 
-	pixmap_from_stock_id (a_stock_id: EV_GTK_C_STRING): EV_PIXEL_BUFFER
+	pixmap_from_stock_id (a_stock_id: READABLE_STRING_GENERAL): EV_PIXEL_BUFFER
 			-- Retrieve pixmap from gtk stock id
 		local
-			a_cs: EV_GTK_C_STRING
+			cs: EV_GTK_C_STRING
 			retried: BOOLEAN
 		do
 			if not retried then
-				a_cs := a_stock_id
+				create cs.set_with_eiffel_string (a_stock_id)
 				create Result
 				check attached {EV_PIXEL_BUFFER_IMP} Result.implementation as pixbuf_imp then
-					pixbuf_imp.set_from_stock (a_cs)
+					pixbuf_imp.set_from_stock (cs)
 				end
+				cs.dispose
 			else
 				create Result
 			end

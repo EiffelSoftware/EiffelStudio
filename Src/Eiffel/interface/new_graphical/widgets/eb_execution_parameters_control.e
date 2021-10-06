@@ -344,7 +344,7 @@ feature {NONE} -- Display profiles impl
 			hb.disable_item_expand (dup_button)
 			hb.extend (remove_button)
 			hb.disable_item_expand (remove_button)
-			hb.extend (create {EV_HORIZONTAL_SEPARATOR})
+			hb.extend (create {EV_CELL})
 			if apply_button /= Void then
 				hb.extend (apply_button)
 				hb.disable_item_expand (apply_button)
@@ -1862,7 +1862,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2018, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2021, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

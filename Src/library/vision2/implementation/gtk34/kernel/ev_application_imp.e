@@ -56,8 +56,19 @@ feature {NONE} -- Initialization
 				put ("8080", "BROADWAY_DISPLAY")
 				put ("", "UBUNTU_MENUPROXY")
 			end
+
+			-- The possible backend names are x11, win32, quartz, broadway, wayland.
+			-- This call must happen prior to gdk_display_open(), gtk_init(), gtk_init_with_args() or gtk_init_check() in order to take effect.
+			if {GTK}.is_wayland_session then
+					-- To be able to use Xorg code under Wayland session via XWayland.
+				{GDK}.gdk_set_allowed_backends ((create {EV_GTK_C_STRING}.set_with_eiffel_string ("x11")).item)
+			end
+
 				--Disable overlay scrollbar as this causes problems for web backend.
 			put ("0", "LIBOVERLAY_SCROLLBAR")
+
+
+
 
 			create character_string_buffer.make (4)
 

@@ -55,7 +55,6 @@ feature {NONE} -- Initialization
 				put ("broadway", "GDK_BACKEND")
 				put ("8080", "BROADWAY_DISPLAY")
 				put ("", "UBUNTU_MENUPROXY")
-
 			end
 				--Disable overlay scrollbar as this causes problems for web backend.
 			put ("0", "LIBOVERLAY_SCROLLBAR")
@@ -1462,18 +1461,29 @@ feature {EV_ANY_I, EV_FONT_IMP, EV_STOCK_PIXMAPS_IMP, EV_INTERMEDIARY_ROUTINES} 
 			-- Return the EV_ANY_IMP object from `a_gtk_object' if any.
 		local
 			gtkwid: POINTER
+			retried: BOOLEAN
 		do
-			from
-				gtkwid := a_gtk_object
-			until
-				Result /= Void or else gtkwid.is_default_pointer
-			loop
-				Result := {EV_ANY_IMP}.eif_object_from_c (gtkwid)
-				gtkwid := {GTK}.gtk_widget_get_parent (gtkwid)
+			if not retried then
+				from
+					gtkwid := a_gtk_object
+				until
+					Result /= Void or else gtkwid.is_default_pointer
+				loop
+					Result := {EV_ANY_IMP}.eif_object_from_c (gtkwid)
+					gtkwid := {GTK}.gtk_widget_get_parent (gtkwid)
+				end
+				if Result /= Void and then Result.is_destroyed then
+					Result := Void
+				end
+			else
+				check
+					no_exception: False
+				end
 			end
-			if Result /= Void and then Result.is_destroyed then
-				Result := Void
-			end
+		rescue
+			Result := Void
+			retried := True
+			retry
 		end
 
 	gtk_widget_imp_at_pointer_position: detachable EV_GTK_WIDGET_IMP

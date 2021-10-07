@@ -576,6 +576,7 @@ feature -- Access: global variables
 								end
 								if q = a_name.count then
 									Result := v
+									done := True
 								elseif attached {WSF_TABLE} v as v_table then
 									p := q + 1
 									if a_name[p] = '[' then

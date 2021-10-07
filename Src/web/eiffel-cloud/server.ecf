@@ -27,6 +27,7 @@
 		<library name="cms_custom_block_module" location="$ISE_LIBRARY\unstable\library\web\cms\modules\custom_block\custom_block.ecf" readonly="false"/>
 		<library name="cms_embedded_video_module" location="$ISE_LIBRARY\unstable\library\web\cms\modules\embedded_video\embedded_video.ecf"/>
 		<library name="cms_environment" location="$ISE_LIBRARY\unstable\library\web\cms\library\app_env\app_env.ecf" readonly="false"/>
+		<library name="cms_files_module" location="$ISE_LIBRARY\unstable\library\web\cms\modules\files\files.ecf" readonly="false"/>
 		<library name="cms_messaging_module" location="$ISE_LIBRARY\unstable\library\web\cms\modules\messaging\messaging.ecf" readonly="false"/>
 		<library name="cms_node_module" location="$ISE_LIBRARY\unstable\library\web\cms\modules\node\node.ecf" readonly="false"/>
 		<library name="cms_persistence_sqlite3" location="$ISE_LIBRARY\unstable\library\web\cms\library\persistence\sqlite3\sqlite3.ecf" readonly="false"/>

@@ -972,7 +972,7 @@ feature {NONE} -- Docking
 		do
 			if
 				attached {EB_DEBUGGER_MANAGER} develop_window.debugger_manager as l_eb_debugger_manager and then
-				l_eb_debugger_manager.raised
+				not l_eb_debugger_manager.raised
 			then
 				-- We don't restore debug related tools for non-debug mode except breakpoint tool.
 				create l_internal

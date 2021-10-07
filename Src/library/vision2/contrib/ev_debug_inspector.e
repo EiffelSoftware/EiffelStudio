@@ -67,6 +67,11 @@ feature -- Element change
 			accelerators.put_i_th (acc, 2)
 		end
 
+	open_window_inspection
+		do
+			on_new_window_inspection
+		end
+
 feature -- Access
 
 	register_for_window (win: EV_WINDOW)
@@ -107,11 +112,18 @@ feature {NONE} -- Agents
 	on_new_window_inspection
 		local
 			l_inspector: EV_DEBUG_INSPECTOR_WINDOW
+			w: like widget_to_inspect
 		do
 			if attached window as l_obswin then
+				l_obswin.set_focus
+				w := widget_to_inspect (window)
+
 				create l_inspector.make (l_obswin)
 				inspector := l_inspector
-				l_inspector.drop_widget (l_obswin)
+				if w = Void then
+					w := l_obswin
+				end
+				l_inspector.drop_widget (w)
 				l_inspector.show_relative_to_window (l_obswin)
 			else
 					--Ignore

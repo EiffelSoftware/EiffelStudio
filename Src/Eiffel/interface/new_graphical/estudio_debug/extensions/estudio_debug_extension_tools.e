@@ -43,6 +43,10 @@ feature -- Execution
 			create l_menu_item.make_with_text_and_action ("Memory Analyzer", agent on_launch_memory_analyzer)
 			a_menu.extend (l_menu_item)
 
+				--| GUI debug inspector tool
+			create l_menu_item.make_with_text_and_action ("GUI Inspector", agent on_setup_gui_inspector)
+			a_menu.extend (l_menu_item)
+
 			a_menu.extend (create {EV_MENU_SEPARATOR})
 
 				--| Show memory tool
@@ -69,13 +73,28 @@ feature {NONE} -- Actions
 
 	on_launch_memory_analyzer
 			-- Launch Memory Analyzer.
+		local
+			w: like ma_window
 		do
-			if ma_window = Void or ma_window.is_destroyed then
-				create ma_window.make (eiffel_layout.library_path.extended ("memory_analyzer").name)
-				ma_window.close_request_actions.extend (agent ma_window.hide)
-				ma_window.show
+			w := ma_window
+			if w = Void or else w.is_destroyed then
+				create w.make (eiffel_layout.library_path.extended ("memory_analyzer").name)
+				ma_window := w
+				w.close_request_actions.extend (agent w.hide)
+				w.show
 			else
-				ma_window.show
+				w.show
+			end
+		end
+
+	on_setup_gui_inspector
+		local
+			l_inspector: EV_DEBUG_INSPECTOR
+		do
+			if attached estudio_debug_menu.window_manager.last_focused_development_window as devwin then
+				create l_inspector.make
+				l_inspector.register_for_window (devwin.window)
+				l_inspector.open_window_inspection
 			end
 		end
 
@@ -204,7 +223,7 @@ feature {NONE} -- Basic operations
 
 feature {NONE} -- Access
 
-	ma_window: MA_WINDOW;
+	ma_window: detachable MA_WINDOW;
 			-- Memory analyzer window.
 
 feature -- Access
@@ -223,7 +242,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright: "Copyright (c) 1984-2012, Eiffel Software"
+	copyright: "Copyright (c) 1984-2021, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

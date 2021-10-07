@@ -46,6 +46,10 @@ feature {NONE} -- Initialization
 	create_interface_objects
 		do
 			Precursor
+
+			create target_background_color.make_with_rgb (1, 0.7, 0.7)
+			create target_minimum_size_color.make_with_rgb (1, 0, 0)
+
 			create offset.make_empty
 			create info_output
 			create grid
@@ -161,6 +165,8 @@ feature {NONE} -- Initialization
 										r.expand
 									end
 								end
+							when {EV_KEY_CONSTANTS}.key_f5 then
+								update
 							else
 							end
 						end (?, g)
@@ -500,30 +506,65 @@ feature {NONE} -- Initialization
 	on_item_left_double_pressed (a_item: detachable EV_GRID_ITEM)
 		local
 			pop: EV_POPUP_WINDOW
+--			d: EV_DRAWING_AREA
+			w,h,mw,mh: INTEGER
+			fx: EV_FIXED
+			cl: EV_CELL
 		do
 			if a_item /= Void and then attached a_item.row as l_row then
-				if attached {EV_WIDGET} l_row.data as w and then w.is_show_requested then
-					create pop
-					pop.set_background_color (colors.red)
-					pop.set_size (w.width, w.height)
-					pop.set_position (w.screen_x, w.screen_y)
-					pop.pointer_enter_actions.extend (agent pop.destroy)
-					pop.show
+				if attached {EV_WIDGET} l_row.data as l_widget and then l_widget.is_show_requested then
+
+					pop := popup
+					if pop = Void then
+						create pop
+						popup := pop
+						pop.set_background_color (target_background_color)
+						pop.pointer_enter_actions.extend (agent pop.hide)
+					else
+						pop.hide
+						pop.wipe_out
+					end
 					pop.show_actions.extend_kamikaze (agent (i_pop: EV_POPUP_WINDOW)
 							local
 								t: EV_TIMEOUT
 							do
 								create t
-								t.actions.extend (agent i_pop.destroy)
+								t.actions.extend (agent i_pop.hide)
+								t.actions.extend (agent i_pop.wipe_out)
 								t.actions.extend (agent t.destroy)
 								t.set_interval (300)
 							end(pop)
 						)
+					w := l_widget.width
+					h := l_widget.height
+					pop.set_size (w, h)
+					pop.set_position (l_widget.screen_x, l_widget.screen_y)
+
+					pop.show
+
+					if l_widget.minimum_width_set_by_user then
+						mw := l_widget.minimum_width
+					end
+					if l_widget.minimum_height_set_by_user then
+						mh := l_widget.minimum_height
+					end
+					if mw + mh > 0 then
+						create fx
+						fx.set_minimum_size (w, h)
+						create cl
+						fx.extend (cl)
+						cl.set_background_color (target_minimum_size_color)
+						fx.set_item_position_and_size (cl, 1, 1, mw.max (1), mh.max (1))
+
+						pop.extend (fx)
+					end
 				end
 			end
 		end
 
 feature -- Access
+
+	popup: detachable EV_POPUP_WINDOW
 
 	dropped_widget: detachable EV_ANY
 
@@ -544,6 +585,10 @@ feature -- Access
 		once
 			create Result
 		end
+
+	target_background_color: EV_COLOR
+
+	target_minimum_size_color: EV_COLOR
 
 	normal_font: EV_FONT
 		once
@@ -853,7 +898,7 @@ feature -- Events
 --			pr,
 --			sr: EV_GRID_ROW
 			n: INTEGER
-			lab: EV_GRID_LABEL_ITEM
+			lab, dlab: EV_GRID_LABEL_ITEM
 			s: STRING_32
 		do
 			r.set_data (w)
@@ -888,7 +933,11 @@ feature -- Events
 				if has_details then
 					r.set_item (6, create {EV_GRID_ITEM})
 					s := object_info (w, True)
-					r.set_item (6, new_label (s))
+					dlab := new_label (s)
+					r.set_item (6, dlab)
+					if attached {EV_WIDGET} w as l_widget and then (l_widget.minimum_width_set_by_user or l_widget.minimum_height_set_by_user) then
+						dlab.set_foreground_color (colors.red)
+					end
 				end
 				lab.set_foreground_color (colors.blue)
 				if

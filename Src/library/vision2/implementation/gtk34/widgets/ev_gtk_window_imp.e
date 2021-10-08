@@ -243,8 +243,16 @@ feature {NONE} -- Implementation
 			end
 		end
 
+	close
+			-- Hide `Current'.
+		do
+			hide
+				-- Force an immediate close so that the event loop is not relied upon to unmap `Current'.
+			{GTK}.gtk_window_close (c_object)
+		end
+
 	is_modal: BOOLEAN
-		-- Is `Current' modal?
+			-- Is `Current' modal?
 
 	show_modal_to_window (a_window: EV_WINDOW)
 			-- Show `Current' modal with respect to `a_window'.

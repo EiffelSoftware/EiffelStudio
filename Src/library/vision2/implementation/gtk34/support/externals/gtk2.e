@@ -332,6 +332,11 @@ feature -- Window
 			"C signature (GtkWindow*, gint, gint) use <ev_gtk.h>"
 		end
 
+	frozen gtk_window_close (a_window: POINTER)
+		external
+			"C signature (GtkWindow*) use <ev_gtk.h>"
+		end
+
 	frozen gtk_window_has_toplevel_focus (a_window: POINTER): BOOLEAN
 		external
 			"C signature (GtkWindow*): gboolean use <ev_gtk.h>"

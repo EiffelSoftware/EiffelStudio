@@ -234,7 +234,11 @@ feature {NONE} -- Implementation
 					check container_widget /= default_pointer end
 						-- Move if and only if container widget is a Window.
 					if {GTK}.gtk_is_window (container_widget) then
-						{GTK_WINDOW}.move (container_widget, ((fixed_width - item_imp.width) // 2).max (0), ((fixed_height - item_imp.height) // 2).max (0))
+						{GTK}.gtk_window_move (
+								container_widget,
+								((fixed_width - item_imp.width) // 2).max (0),
+								((fixed_height - item_imp.height) // 2).max (0)
+							)
 					end
 				else
 					check is_widget_imp: False end
@@ -251,7 +255,11 @@ feature {NONE} -- Implementation
 			-- If child has resized and smaller than parent then set position in center of `Current'.
 		do
 			if {GTK}.gtk_is_window (container_widget)  then
-				{GTK_WINDOW}.move (container_widget, ((fixed_width - item_imp.width) // 2).max (0), ((fixed_height - item_imp.height) // 2).max (0))
+				{GTK}.gtk_window_move (
+						container_widget,
+						((fixed_width - item_imp.width) // 2).max (0),
+						((fixed_height - item_imp.height) // 2).max (0)
+					)
 			end
 		end
 

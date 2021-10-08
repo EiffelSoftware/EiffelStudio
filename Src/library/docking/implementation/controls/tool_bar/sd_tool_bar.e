@@ -295,6 +295,8 @@ feature {SD_TOOL_BAR_TITLE_BAR, SD_TITLE_BAR} -- Special setting
 						l_height := l_pixmap.height + 2 * padding_width
 					elseif attached l_item.pixel_buffer as l_pixel_buffer then
 						l_height := l_pixel_buffer.height + 2 * padding_width
+					elseif attached {SD_TOOL_BAR_WIDGET_ITEM} l_item as l_widget_item then
+						l_height := l_widget_item.widget.minimum_height
 					end
 
 					if Result < l_height then

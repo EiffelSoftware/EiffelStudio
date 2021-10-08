@@ -155,14 +155,16 @@ feature -- Helpers
 				loop
 					ch := a_string [i]
 					inspect ch
-					when '%"' then
+					when '`' then
 						a_output.extend ('\')
+						a_output.extend ('\')
+						a_output.extend ('\')
+						a_output.extend (ch)
+					when '%"', '%'' then
+						a_output.extend ('\') -- escape the character
 						a_output.extend (ch)
 					when '%R' then
 						-- Ignore
-					when '%N' then
-						a_output.extend ('\')
-						a_output.extend ('n')
 					when '\' then
 						a_output.extend (ch)
 						if i < n then

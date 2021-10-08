@@ -256,7 +256,7 @@ feature -- Operations: working copy
 				end
 				opts.set_parameters (s)
 			end
-			if attached {SVN_RESULT} svn.commit (l_changelist, a_log_message, opts) as res then
+			if attached {SVN_RESULT} svn.commit_from_location (l_changelist, a_log_message, opts, a_changelist.root.location) as res then
 				if res.succeed then
 					create Result.make_success (res.command)
 					Result.set_message (res.message)

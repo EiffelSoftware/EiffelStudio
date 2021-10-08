@@ -380,6 +380,11 @@ feature -- Access: working copy
 		end
 
 	commit (a_changelist: SVN_CHANGELIST; a_log_message: detachable READABLE_STRING_GENERAL; a_options: detachable SVN_OPTIONS): SVN_RESULT
+		do
+			Result := commit_from_location (a_changelist, a_log_message, a_options, {EXECUTION_ENVIRONMENT}.current_working_path)
+		end
+
+	commit_from_location (a_changelist: SVN_CHANGELIST; a_log_message: detachable READABLE_STRING_GENERAL; a_options: detachable SVN_OPTIONS; a_location: PATH): SVN_RESULT
 			-- <Precursor>
 		local
 			res: detachable PROCESS_COMMAND_RESULT
@@ -427,7 +432,7 @@ feature -- Access: working copy
 			debug ("SVN_ENGINE")
 				print ("Command: svn commit ...%N")
 			end
-			res := output (svn_executable_path, args, Void)
+			res := output (svn_executable_path, args, a_location)
 
 			if tmpfile /= Void and then tmpfile.exists then
 				tmpfile.delete

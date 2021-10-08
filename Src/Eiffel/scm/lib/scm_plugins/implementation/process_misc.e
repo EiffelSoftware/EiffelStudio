@@ -154,10 +154,18 @@ feature -- Helpers
 					i > n
 				loop
 					ch := a_string [i]
-					if ch = '%"' then
+					inspect ch
+					when '`' then
+						a_output.extend ('\')
+						a_output.extend ('\')
 						a_output.extend ('\')
 						a_output.extend (ch)
-					elseif ch = '\' then
+					when '%"', '%'' then
+						a_output.extend ('\')
+						a_output.extend (ch)
+					when '%R' then
+							-- Ignore						
+					when '\' then
 						a_output.extend (ch)
 						if i < n then
 							ch := a_string [i]

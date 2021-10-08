@@ -54,6 +54,11 @@ feature -- Operations: working copy
 		deferred
 		end
 
+	commit_from_location (a_changelist: SVN_CHANGELIST; a_log_message: detachable READABLE_STRING_GENERAL; a_options: detachable SVN_OPTIONS; a_location: PATH): SVN_RESULT
+			-- Commit changes for locations `a_changelist', and return information about command execution.
+		deferred
+		end
+
 feature -- Access
 
 	repository_info (a_location: READABLE_STRING_GENERAL; a_options: detachable SVN_OPTIONS): detachable SVN_REPOSITORY_INFO

@@ -69,8 +69,9 @@ feature -- Status setting
 			l_item_c_object,
 			l_child_container: POINTER
 			l_alloc: POINTER
-			w,h: INTEGER
+			w,h, w_min, h_min: INTEGER
 			l_size_smaller: BOOLEAN
+			l_check_minimum_size: BOOLEAN
 		do
 			debug ("gtk_sizing")
 				if attached interface as l_interface then
@@ -80,6 +81,13 @@ feature -- Status setting
 				end
 				print ({STRING_32} ".set_item_position_and_size (" + a_widget.debug_output + ", x=" + a_x.out + ", y=" + a_y.out + ", w=" + a_width.out + ", h=" + a_height.out + ")%N")
 			end
+			w := a_widget.x_position + a_widget.width
+			h := a_widget.y_position + a_widget.height
+			w_min := minimum_width
+			h_min := minimum_height
+				-- if  `a_widget` is currently on the max border, resizing and moving it, may impact of the global FIXED size.
+				-- see at the end of this feature.
+			l_check_minimum_size := w >= w_min or h >= h_min
 
 			check attached {EV_WIDGET_IMP} a_widget.implementation as w_imp then
 				l_item_c_object := w_imp.c_object
@@ -111,7 +119,11 @@ feature -- Status setting
 				{GTK2}.gtk_widget_size_allocate (l_child_container, l_alloc)
 				l_alloc.memory_free
 			end
-			if needs_child_event_box and not l_item_c_object.is_default_pointer then
+			if
+				needs_child_event_box and then
+				not l_item_c_object.is_default_pointer and then
+				l_item_c_object /= l_child_container
+			then
 				l_alloc := l_alloc.memory_alloc ({GTK}.c_gtk_allocation_struct_size)
 				{GTK}.gtk_widget_get_allocation (l_item_c_object, l_alloc)
 				{GTK}.set_gtk_allocation_struct_width (l_alloc, a_width)
@@ -121,20 +133,17 @@ feature -- Status setting
 				l_alloc.memory_free
 			end
 
-			w := a_widget.x_position + a_widget.width
-			h := a_widget.y_position + a_widget.height
-			if w > minimum_width then
-				set_real_minimum_size (w, real_minimum_height)
-			else
-				l_size_smaller := w < minimum_width
-			end
-			if h > minimum_height then
-				set_real_minimum_size (real_minimum_width, h)
-			else
-				l_size_smaller := h < minimum_height
-			end
-			if l_size_smaller then
-				update_minimum_size
+			if l_check_minimum_size then
+				w := a_widget.x_position + a_widget.width
+				h := a_widget.y_position + a_widget.height
+				l_size_smaller := w < w_min or h < h_min
+				if l_size_smaller then
+					update_minimum_size
+				elseif w > w_min then
+					if w > w_min or h > h_min then
+						set_real_minimum_size (w, h)
+					end
+				end
 			end
 		end
 
@@ -153,14 +162,21 @@ feature -- Status setting
 				until
 					off
 				loop
-					if attached {EV_WIDGET} item as l_widget then
+					if
+						attached {EV_WIDGET} item as l_widget and then
+						attached {EV_WIDGET_IMP} l_widget as l_widget_imp
+					then
 						l_widget_width := l_widget.width
 						if l_widget.minimum_width_set_by_user then
 							l_widget_width := l_widget_width.max (l_widget.minimum_width)
+						else
+							l_widget_width := l_widget_width.max (l_widget_imp.real_minimum_width)
 						end
 						l_widget_height := l_widget.height
 						if l_widget.minimum_height_set_by_user then
 							l_widget_height := l_widget_height.max (l_widget.minimum_height)
+						else
+							l_widget_height := l_widget_height.max (l_widget_imp.real_minimum_height)
 						end
 						w := (l_widget.x_position + l_widget_width).max (w)
 						h := (l_widget.y_position + l_widget_height).max (h)

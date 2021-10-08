@@ -61,11 +61,9 @@ feature {NONE} -- Initlization
 
 			default_create
 
-			tool_bar.expose_actions.extend (agent on_expose)
 
 			extend_fixed (tool_bar)
-
-			tool_bar.expose_actions.extend (agent on_tool_bar_expose_actions)
+			tool_bar.expose_actions.extend (agent on_expose)
 
 			internal_shared.widgets.add_tool_bar (Current)
 		ensure
@@ -332,15 +330,10 @@ feature -- Query
 
 	has (a_item: SD_TOOL_BAR_ITEM): BOOLEAN
 			-- If Current has `a_item'?
-		local
-			l_tool_bar: like tool_bar
 		do
-			-- When exiting Eiffel Studio, everything is recycling, `tool_bar' maybe void
-			-- See bug#14060
-			l_tool_bar := tool_bar
-			if l_tool_bar /= Void then
-				Result := l_tool_bar.has (a_item)
-			end
+				-- When exiting Eiffel Studio, everything is recycling, `tool_bar' maybe void
+				-- See bug#14060
+			Result := attached tool_bar as l_tool_bar and then l_tool_bar.has (a_item)
 		end
 
 	pointer_motion_actions: EV_POINTER_MOTION_ACTION_SEQUENCE
@@ -576,12 +569,14 @@ feature {NONE} -- Implementation
 		do
 		end
 
-	on_expose (a_x, a_y, a_width, a_height: INTEGER_32)
-			-- <Precursor>
+	on_expose (a_x: INTEGER; a_y: INTEGER; a_width: INTEGER; a_height: INTEGER)
+			-- Handle tool bar expose actions
 		local
-			l_items: like items
+			l_items: ARRAYED_LIST [SD_TOOL_BAR_ITEM]
+			l_item_x, l_item_y: INTEGER
 			l_rect: EV_RECTANGLE
 			l_widget: EV_WIDGET
+			w: INTEGER
 		do
 			create l_rect.make (a_x, a_y, a_width, a_height)
 			from
@@ -590,40 +585,27 @@ feature {NONE} -- Implementation
 			until
 				l_items.after
 			loop
-				if l_items.item.has_rectangle (l_rect) then
-					if attached {SD_TOOL_BAR_WIDGET_ITEM} l_items.item as l_widget_item then
-						l_widget := l_widget_item.widget
-						if has_fixed (l_widget) then
-							set_item_width (l_widget, l_widget.minimum_width.max (1))
-						end
-					end
-				end
-				l_items.forth
-			end
-		end
-
-	on_tool_bar_expose_actions (a_x: INTEGER; a_y: INTEGER; a_width: INTEGER; a_height: INTEGER)
-			-- Handle tool bar expose actions
-		local
-			l_items: ARRAYED_LIST [SD_TOOL_BAR_ITEM]
-			l_item_x, l_item_y: INTEGER
-		do
-			from
-				l_items := items
-				l_items.start
-			until
-				l_items.after
-			loop
 				if
-					attached {SD_TOOL_BAR_WIDGET_ITEM} l_items.item as l_item and then
-					-- There are maybe expose actions have been called delayed, so we should check if has `l_item'.
-					(l_item.has_rectangle (create {EV_RECTANGLE}.make (a_x, a_y, a_width, a_height)) and
-					has (l_item))
+					attached {SD_TOOL_BAR_WIDGET_ITEM} l_items.item as l_widget_item and then
+					-- There are maybe expose actions have been called delayed, so we should check if has `l_widget_item'.
+					(l_widget_item.has_rectangle (l_rect) and then
+					has (l_widget_item))
 				then
-					l_item_x := item_x (l_item)
-					l_item_y := item_y (l_item)
-					if (l_item_x /= l_item.widget.x_position or else l_item_y /= l_item.widget.y_position) and then has_fixed (l_item.widget) then
-						set_item_position (l_item.widget, l_item_x, l_item_y)
+					l_widget := l_widget_item.widget
+					if has_fixed (l_widget) then
+						l_item_x := item_x (l_widget_item)
+						l_item_y := item_y (l_widget_item)
+						w := l_widget.minimum_width.max (1)
+						if
+							l_item_x /= l_widget.x_position
+							or else l_item_y /= l_widget.y_position
+						then
+							set_item_position_and_size (l_widget, l_item_x, l_item_y, w, l_widget.height)
+						else
+							if l_widget.width /= w then
+								set_item_width (l_widget, w)
+							end
+						end
 					end
 				end
 				l_items.forth
@@ -638,7 +620,10 @@ feature {NONE} -- Implementation
 
 note
 	library:	"SmartDocking: Library of reusable components for Eiffel."
-	copyright:	"Copyright (c) 1984-2017, Eiffel Software and others"
+
+
+
+	copyright:	"Copyright (c) 1984-2021, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

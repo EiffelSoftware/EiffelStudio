@@ -73,7 +73,12 @@ feature -- Status setting
 			l_size_smaller: BOOLEAN
 		do
 			debug ("gtk_sizing")
-				print (attached_interface.debug_output + {STRING_32} ".set_item_position_and_size (" + a_widget.debug_output + ",x=" + a_x.out + ",y=" + a_y.out + ",w=" + a_width.out + ",h=" + a_height.out + ")%N")
+				if attached interface as l_interface then
+					print (l_interface.debug_output)
+				else
+					print (generating_type.name_32)
+				end
+				print ({STRING_32} ".set_item_position_and_size (" + a_widget.debug_output + ", x=" + a_x.out + ", y=" + a_y.out + ", w=" + a_width.out + ", h=" + a_height.out + ")%N")
 			end
 
 			check attached {EV_WIDGET_IMP} a_widget.implementation as w_imp then
@@ -181,9 +186,6 @@ feature -- Status setting
 			-- Set `a_widget.width' to `a_width'.
 			-- Set `a_widget.height' to `a_height'.
 		do
-			debug ("gtk_sizing")
-				print (generating_type.name_32 + {STRING_32} ".set_item_size ("+ a_widget.debug_output +",w=" + a_width.out + ",h=" + a_height.out + ")%N")
-			end
 			check attached {EV_WIDGET_IMP} a_widget.implementation as w_imp then
 				set_item_position_and_size (a_widget, x_position_of_child (w_imp), y_position_of_child (w_imp), a_width, a_height)
 			end

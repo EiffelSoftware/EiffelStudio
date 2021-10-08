@@ -186,11 +186,13 @@ feature {EV_WINDOW_IMP, EV_INTERMEDIARY_ROUTINES, EV_ANY_I, EV_APPLICATION_IMP} 
 			if a_width /= previous_width or else a_height /= previous_height then
 				debug ("gtk_sizing")
 					if attached interface as l_interface then
-						print (attached_interface.debug_output + {STRING_32} ".on_size_allocate (x=" + a_x.out + ",y=" + a_y.out + ",w=" + a_width.out + ",h=" + a_height.out + ")%N")
+						print (l_interface.debug_output)
 					else
-						print (generating_type.name_32 + {STRING_32} ".on_size_allocate (x=" + a_x.out + ",y=" + a_y.out + ",w=" + a_width.out + ",h=" + a_height.out + ")%N")
+						print (generating_type.name_32)
 					end
+					print ({STRING_32} ".on_size_allocate (x=" + a_x.out + ", y=" + a_y.out + ", w=" + a_width.out + ", h=" + a_height.out + ")%N")
 				end
+
 				if attached parent_imp as l_parent_imp then
 					l_x_y_offset := l_parent_imp.internal_x_y_offset
 				end

@@ -142,7 +142,12 @@ feature -- Element change
 			w,h: INTEGER
 		do
 			debug ("gtk_sizing")
-				print (attached_interface.debug_output + {STRING_32} ".set_item_size (w=" + a_width.out + ",h=" + a_height.out + ")%N")
+				if attached interface as l_interface then
+					print (l_interface.debug_output)
+				else
+					print (generating_type.name_32)
+				end
+				print ({STRING_32} ".set_item_size (w=" + a_width.out + ",h=" + a_height.out + ")%N")
 			end
 			if
 				attached item as l_item and then

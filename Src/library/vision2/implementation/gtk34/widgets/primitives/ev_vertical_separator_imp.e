@@ -37,12 +37,10 @@ feature {NONE} -- Initialization
 			p: POINTER
 		do
 			set_c_object ({GTK}.gtk_event_box_new)
-			p := {GTK}.gtk_separator_new (1)
+			p := {GTK}.gtk_separator_new ({GTK_ORIENTATION}.gtk_orientation_vertical)
 			{GTK}.gtk_widget_show (p)
 			{GTK}.gtk_container_add (c_object, p)
-			--{GTK2}.gtk_widget_set_minimum_size (c_object, 1, -1)
 			{GTK}.gtk_widget_set_size_request (c_object, 1, -1)
-				-- Check difference with gtk_widget_set_size_request
 			Precursor
 		end
 

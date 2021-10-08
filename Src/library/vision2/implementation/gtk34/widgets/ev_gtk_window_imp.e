@@ -205,8 +205,8 @@ feature {NONE} -- Implementation
 		do
 			if not is_show_requested then
 				{GTK}.gtk_window_set_position (c_object, window_position_enum)
---				{GTK}.gtk_widget_show (c_object)
-				{GTK}.gtk_widget_show_all (c_object)
+				{GTK}.gtk_widget_show (c_object)
+--				{GTK}.gtk_widget_show_all (c_object)
 			end
 		end
 

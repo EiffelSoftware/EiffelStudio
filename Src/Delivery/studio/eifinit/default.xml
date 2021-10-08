@@ -833,6 +833,7 @@
 	
 	<PREF NAME="shortcuts.view.tools.show_search_tool" DESCRIPTION="Shortcut to display Search tool."><SHORTCUT Ctrl="True" Alt="True">F</SHORTCUT></PREF>
 	<PREF NAME="shortcuts.view.tools.show_search_report_tool" DESCRIPTION="Shortcut to display Search Report tool."><SHORTCUT Ctrl="True" Alt="True">R</SHORTCUT></PREF>
+	<PREF NAME="shortcuts.view.tools.show_source_control_tool" DESCRIPTION="Shortcut to display the Source Control tool."><SHORTCUT Shift="True" Alt="True">S</SHORTCUT></PREF>
 	<PREF NAME="shortcuts.view.tools.show_outputs_tool" DESCRIPTION="Shortcut to display Outputs tool."><SHORTCUT Ctrl="True" Alt="True">O</SHORTCUT></PREF>
 	<PREF NAME="shortcuts.view.tools.show_external_output_tool" DESCRIPTION="Shortcut to display External output tool."><SHORTCUT Ctrl="True" Alt="True">X</SHORTCUT></PREF>
 	<PREF NAME="shortcuts.view.tools.show_errors_and_warnings_tool" DESCRIPTION="Shortcut to display Error and Warnings tool."><SHORTCUT Ctrl="True" Alt="True">E</SHORTCUT></PREF>

@@ -377,6 +377,7 @@ feature {EV_ANY_IMP} -- Implementation
 		do
 			disable_capture
 			hide
+			close
 			Precursor {EV_CELL_IMP}
 		end
 

@@ -219,52 +219,37 @@ feature {NONE} -- Basic operations
 	proof_tool: detachable ES_AUTOPROOF_TOOL
 			-- Proof tool (if applicable).
 		local
-			l_tool: ES_TOOL [EB_TOOL]
 			l_window: EB_DEVELOPMENT_WINDOW
 		do
 			l_window := window_manager.last_focused_development_window
 			if not l_window.is_recycled and then l_window.is_visible and then l_window = window_manager.last_focused_development_window then
-				l_tool := l_window.shell_tools.tool ({ES_AUTOPROOF_TOOL})
-				if attached {ES_AUTOPROOF_TOOL} l_tool as l_autoproof_tool then
-					Result := l_autoproof_tool
-				else
-					check False end
-				end
+				Result := {ES_AUTOPROOF_TOOL} / l_window.shell_tools.tool ({ES_AUTOPROOF_TOOL})
 			end
 		end
 
 	show_proof_tool
 			-- Shows the proof tool
-		local
-			l_tool: ES_AUTOPROOF_TOOL
 		do
-			l_tool := proof_tool
-			if l_tool /= Void and then not l_tool.is_recycled then
-				l_tool.show (True)
+			if attached proof_tool as t and then not t.is_recycled then
+				t.show (True)
 			end
 		end
 
 	disable_tool_button
 			-- Disable proof button on tool.
-		local
-			l_tool: ES_AUTOPROOF_TOOL
 		do
-			l_tool := proof_tool
-			if l_tool /= Void and then l_tool.is_tool_instantiated then
-				proof_tool.panel.proof_button.disable_sensitive
-				proof_tool.panel.stop_button.enable_sensitive
+			if attached proof_tool as t and then t.is_tool_instantiated then
+				t.panel.proof_button.disable_sensitive
+				t.panel.stop_button.enable_sensitive
 			end
 		end
 
 	enable_tool_button
 			-- Enable proof button on tool.
-		local
-			l_tool: ES_AUTOPROOF_TOOL
 		do
-			l_tool := proof_tool
-			if l_tool /= Void and then l_tool.is_tool_instantiated then
-				proof_tool.panel.proof_button.enable_sensitive
-				proof_tool.panel.stop_button.disable_sensitive
+			if attached proof_tool as t and then t.is_tool_instantiated then
+				t.panel.proof_button.enable_sensitive
+				t.panel.stop_button.disable_sensitive
 			end
 		end
 

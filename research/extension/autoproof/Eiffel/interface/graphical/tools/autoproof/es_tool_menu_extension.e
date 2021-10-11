@@ -28,11 +28,12 @@ feature -- Modification
 				True,
 				agent
 					local
-						t: ES_TOOL [EB_TOOL]
 						c: ES_SHOW_TOOL_COMMAND
 					do
-						if attached window_manager.last_focused_development_window as w then
-							t := w.shell_tools.tool ({ES_AUTOPROOF_TOOL})
+						if
+							attached window_manager.last_focused_development_window as w and then
+							attached w.shell_tools.tool ({ES_AUTOPROOF_TOOL}) as t
+						then
 							c := w.commands.show_shell_tool_commands.item (t)
 							if c = Void then
 								create c.make (t)
@@ -54,7 +55,7 @@ feature {NONE} -- Clean up
 note
 	date: "$Date$"
 	revision: "$Revision$"
-	copyright: "Copyright (c) 2018, Eiffel Software"
+	copyright: "Copyright (c) 2018-2021, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

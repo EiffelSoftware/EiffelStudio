@@ -10,6 +10,7 @@
 			</option>
 		</library>
 		<cluster name="autoproof_extension" location="$EIFFEL_SRC\..\research\extension\autoproof\Eiffel\" recursive="true">
+			<visible class="ES_AUTOPROOF_TOOL" feature="default_create"/>
 			<visible class="ES_SERVICE_INITIALIZER_EXTENSION"/>
 		</cluster>
 	</target>

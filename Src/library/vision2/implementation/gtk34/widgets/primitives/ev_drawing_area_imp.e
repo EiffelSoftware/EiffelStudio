@@ -293,7 +293,6 @@ feature {EV_INTERMEDIARY_ROUTINES} -- Implementation
 					not l_expose_actions.is_empty
 				then
 					in_expose_actions := True
-
 					{CAIRO}.clip_extents (a_cairo_context, $l_x, $l_y, $l_width, $l_height)
 
 						-- Even if the callback on "draw" event provides a cairo_context, the implementation
@@ -318,24 +317,29 @@ feature {EV_INTERMEDIARY_ROUTINES} -- Implementation
 			debug ("gtk3_redraw")
 				print (($Current).out + "::" + generator + ".process_configure_event ("+ a_x.out + ", " + a_y.out + ", " + a_width.out + ", " + a_height.out + ")%N")
 			end
+			if
+				cairo_surface.is_default_pointer
+				or a_width /= previous_width
+				or a_height /= previous_height
+			then
+				clear_cairo_context
+				l_old_surface := cairo_surface
+				if not l_old_surface.is_default_pointer then
+					{CAIRO}.surface_flush (l_old_surface)
+					cairo_surface := default_pointer
 
-			clear_cairo_context
-			l_old_surface := cairo_surface
-			if not l_old_surface.is_default_pointer then
-				{CAIRO}.surface_flush (l_old_surface)
-				cairo_surface := default_pointer
-
-				get_new_cairo_surface (a_width, a_height)
-				l_new_surface := cairo_surface
-				cr := {CAIRO}.create_context (l_new_surface)
-				{CAIRO}.set_source_surface (cr, l_old_surface, 0, 0)
-				{CAIRO}.set_operator (cr, {CAIRO}.OPERATOR_SOURCE)
-				{CAIRO}.paint (cr)
-				release_cairo_context (cr)
-				release_cairo_surface (l_old_surface)
-			end
-			if cairo_surface.is_default_pointer then
-				get_new_cairo_surface (a_width, a_height)
+					get_new_cairo_surface (a_width, a_height)
+					l_new_surface := cairo_surface
+					cr := {CAIRO}.create_context (l_new_surface)
+					{CAIRO}.set_source_surface (cr, l_old_surface, 0, 0)
+					{CAIRO}.set_operator (cr, {CAIRO}.OPERATOR_SOURCE)
+					{CAIRO}.paint (cr)
+					release_cairo_context (cr)
+					release_cairo_surface (l_old_surface)
+				end
+				if cairo_surface.is_default_pointer then
+					get_new_cairo_surface (a_width, a_height)
+				end
 			end
 			Result := True
 		end

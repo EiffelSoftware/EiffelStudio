@@ -115,7 +115,7 @@ feature -- Queries Class
 		do
 			l_class_type_id := list_class_type_id.item (a_class_token)
 			if l_class_type_id /= 0 then
-				Result := Il_debug_info.class_types @ l_class_type_id
+				Result := Il_debug_info.class_types [l_class_type_id]
 			end
 		ensure
 			Result /= Void implies list_class_type_id.has (a_class_token)
@@ -284,7 +284,7 @@ feature
 			loop
 				io.put_string (" - 0x" + c.key.to_hex_string)
 				io.put_string (" => " +	c.item.out)
-				io.put_string (" :: " + (Il_debug_info.class_types @ c.item).associated_class.name_in_upper)
+				io.put_string (" :: " + (Il_debug_info.class_types [c.item]).associated_class.name_in_upper)
 				io.put_new_line
 			end
 		end
@@ -294,7 +294,7 @@ invariant
 	module_filename_not_void: module_filename /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2020, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2021, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

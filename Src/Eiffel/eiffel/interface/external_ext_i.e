@@ -1,9 +1,9 @@
-note
+﻿note
 
 	description: "Encapsulation of an external extension."
 	legal: "See notice at end of class."
-	status: "See notice at end of class.";
-	date: "$Date$";
+	status: "See notice at end of class."
+	date: "$Date$"
 	revision: "$Revision$"
 
 deferred class EXTERNAL_EXT_I
@@ -191,12 +191,12 @@ feature -- Comparison
 			-- Is Current the same as `other'?
 		do
 			Result := (return_type = other.return_type and
-				array_is_equal (argument_types, other.argument_types) and
-				array_is_equal (header_files, other.header_files) and
-				is_blocking_call = other.is_blocking_call and
-				alias_name_id = other.alias_name_id and
-				is_static = other.is_static and
-				is_cpp = other.is_cpp)
+					array_is_equal (argument_types, other.argument_types) and
+					array_is_equal (header_files, other.header_files) and
+					is_blocking_call = other.is_blocking_call and
+					alias_name_id = other.alias_name_id and
+					is_static = other.is_static and
+					is_cpp = other.is_cpp)
 		end
 
 feature {NONE} -- Comparison
@@ -217,7 +217,7 @@ feature {NONE} -- Comparison
 					until
 						not Result or else i > nb
 					loop
-						Result := a.item (i) =  o_a.item (i)
+						Result := a.item (i) = o_a.item (i)
 						i := i + 1
 					end
 				end
@@ -240,7 +240,7 @@ feature {NONE} -- Comparison
 					until
 						not Result or else i >= nb
 					loop
-						Result := a.item (i) =  o_a.item (i)
+						Result := a.item (i) = o_a.item (i)
 						i := i + 1
 					end
 				end
@@ -263,7 +263,7 @@ feature -- Code generation
 				until
 					i > nb
 				loop
-					l_list.extend (header_files @ i)
+					l_list.extend (header_files [i])
 					i := i + 1
 				end
 				shared_include_queue.put (l_list)
@@ -346,9 +346,9 @@ feature -- Code generation
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
-	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
-	licensing_options:	"http://www.eiffel.com/licensing"
+	copyright: "Copyright (c) 1984-2021, Eiffel Software"
+	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
+	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[
 			This file is part of Eiffel Software's Eiffel Development Environment.
 			
@@ -377,4 +377,4 @@ note
 			Customer support http://support.eiffel.com
 		]"
 
-end -- class EXTERNAL_EXT_I
+end

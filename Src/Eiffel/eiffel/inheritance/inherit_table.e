@@ -137,25 +137,25 @@ feature
 	default_size: INTEGER
 			-- Default size for `inherited_features'.
 
-	inherited_features: FEATURE_TABLE;
+	inherited_features: FEATURE_TABLE
 			-- Table of inherited features.
 			-- It is calculated by feature `analyse'.
 
-	a_class: CLASS_C;
+	a_class: CLASS_C
 			-- Current class to analyze
 
-	feature_table: FEATURE_TABLE;
+	feature_table: FEATURE_TABLE
 			-- Previous feature table of the class `a_class': processed
 			-- by feature `analyze_declarations'; if the class has never
 			-- been compiled before, this attribute will be created
 			-- and empty before the analysis of the local declarations
 
-	previous_feature_table: FEATURE_TABLE;
+	previous_feature_table: FEATURE_TABLE
 			-- Previous feature table processed during a second pass,
 			-- and put in the temporary server only.
 			--| Useful for the processing of feature ids
 
-	class_info: CLASS_INFO;
+	class_info: CLASS_INFO
 			-- Information about current class analyzed: it contains
 			-- a compild form of parents, a reference on the feature
 			-- list produced by the first pass and indexes left by
@@ -165,32 +165,32 @@ feature
 			-- (actually we have here the offsets in the (future) file
 			-- ".AST" of the abstract represention of the features).
 
-	parents: PARENT_LIST;
+	parents: PARENT_LIST
 			-- Compiled form of the parents of the current analyzed class
 
-	changed_features: ARRAYED_LIST [INTEGER];
+	changed_features: ARRAYED_LIST [INTEGER]
 			-- Changed features of `a_class'.
 
-	invariant_changed: BOOLEAN;
+	invariant_changed: BOOLEAN
 			-- Did the invariant clause changed ?
 
-	invariant_removed: BOOLEAN;
+	invariant_removed: BOOLEAN
 			-- Is the invariant clause removed ?
 
-	origins: ARRAYED_LIST [INTEGER];
+	origins: ARRAYED_LIST [INTEGER]
 			-- Origin features name list for pattern processing
 
-	supplier_status_modified: BOOLEAN;
+	supplier_status_modified: BOOLEAN
 			-- The status (expanded, deferred) of a supplier has changed
 
-	assert_prop_list: LINKED_LIST [INTEGER];
+	assert_prop_list: LINKED_LIST [INTEGER]
 			-- List of routine ids for assertion modifications
 
 	adaptations: LINKED_LIST [FEATURE_ADAPTATION]
 			-- List of redefinitions and joins
 		once
 			create Result.make
-		end;
+		end
 
 	pass2_control: PASS2_CONTROL
 			-- Second pass controler, needs to be an attribute since
@@ -253,7 +253,7 @@ feature
 			parents := a_class.computed_parents
 
 				-- Compute attribute `feature_table'.
-			assign_feature_table;
+			assign_feature_table
 
 				-- Check generic parents of the class
 			a_class.check_parents
@@ -292,7 +292,7 @@ feature
 				-- f back to Body1, the compiler will not detect the change and will not recompute
 				-- the bytecode which is necessary since we do not want Body2.
 				-- This fixes eweasel test#incr228 and test#incr399.
-			-- a_class.changed_features.clear_all;
+				-- a_class.changed_features.clear_all;
 
 				-- Analyze features written directly in `a_class'.
 			if a_class.changed then
@@ -362,7 +362,7 @@ feature
 			parents.check_validity4
 
 				-- Creators processing
-		   	a_class.set_creators (class_info.creation_table (resulting_table))
+			a_class.set_creators (class_info.creation_table (resulting_table))
 				-- No update of `Instantiator' if there is an error
 			if error_handler.error_level /= l_error_level then
 				error_handler.raise_error
@@ -388,7 +388,7 @@ feature
 				-- features of a changed class
 			if a_class.changed then
 					-- Generic types tracking
-				--resulting_table.update_instantiator2
+					--resulting_table.update_instantiator2
 				Origin_table.update_instantiator2 (resulting_table)
 
 					-- Compute invariant clause
@@ -453,7 +453,7 @@ feature
 					old_creators.forth
 				end
 				if a_class.is_used_as_expanded and then
-					(new_creators  = Void or else new_creators.count > 1)
+					(new_creators = Void or else new_creators.count > 1)
 				then
 					create depend_unit.make_expanded_unit (class_id)
 					pass2_control.propagators.extend (depend_unit)
@@ -478,7 +478,7 @@ feature
 				-- Process patterns of origin features
 			process_pattern (resulting_table)
 
-					-- Propagation
+				-- Propagation
 			Degree_4.process_and_propagate
 				(pass_c, resulting_table,
 				resulting_table.equiv
@@ -563,7 +563,6 @@ feature
 			end
 		end
 
-
 	assign_feature_table
 			-- Assign attribute `feature_table'. Look for a previous
 			-- feature table.
@@ -644,14 +643,14 @@ feature
 					-- Look for the parent table on the disk
 				parent_table := parent_c.parent.feature_table.features.area
 				check
-					parent_table_exists: parent_table /= Void;
-						-- Because of topological sort, the parents are
-						-- necessary analyzed (if needed) before class
-						-- `a_class'. Redefinition of feature `item' in
-						-- class FEAT_TBL_SERVER will look for the table
-						-- in the file `Tmp_feat_tbl_file' and then
-						-- in the file `Feat_tbl_file'.
-				end;
+					parent_table_exists: parent_table /= Void
+					-- Because of topological sort, the parents are
+					-- necessary analyzed (if needed) before class
+					-- `a_class'. Redefinition of feature `item' in
+					-- class FEAT_TBL_SERVER will look for the table
+					-- in the file `Tmp_feat_tbl_file' and then
+					-- in the file `Feat_tbl_file'.
+				end
 
 					-- Iteration on the parent feature table
 				i := 0
@@ -665,7 +664,7 @@ feature
 				search (l_feature_name_id)
 					-- If an INHERIT_FEAT object corresponding to feature_name_id is not present then add one.
 				if found_item = Void then
-							-- Add new feature to the inheritance table.
+						-- Add new feature to the inheritance table.
 					put (l_inherit_feat_cache.new_inherit_feat, l_feature_name_id)
 				end
 				found_item.insert (l_inherit_info_cache.new_inherited_info (parent_table [i], parent_c, parent_type))
@@ -707,7 +706,7 @@ feature
 						if found then
 							l_inherit_info := Void
 								-- We have retrieved the appropriate inherit feat object
-								-- Now we retrieve the unprocessed inherit info for the parent_c corresponding to `l_old_feature_name_id'.	
+								-- Now we retrieve the unprocessed inherit info for the parent_c corresponding to `l_old_feature_name_id'.
 							from
 								i := 1
 								l_count := found_item.features.count
@@ -779,12 +778,12 @@ feature
 								if attached new_alias_name_id then
 										-- Update information for aliases.
 									across
-										new_alias_name_id is a
+										new_alias_name_id as a
 									loop
-										if a = {PREDEFINED_NAMES}.bracket_symbol_id then
+										if a.item = {PREDEFINED_NAMES}.bracket_symbol_id then
 												-- Bracket alias.
 											l_inherit_info.a_feature.set_is_bracket (True)
-										elseif a = {PREDEFINED_NAMES}.parentheses_symbol_id then
+										elseif a.item = {PREDEFINED_NAMES}.parentheses_symbol_id then
 												-- Parenthesis alias.
 											l_inherit_info.a_feature.set_is_parentheses (True)
 										elseif l_inherit_info.a_feature.argument_count = 0 then
@@ -832,7 +831,7 @@ feature
 			create Result.make (35)
 		end
 
-	used_feature_ids:  SEARCH_TABLE [INTEGER]
+	used_feature_ids: SEARCH_TABLE [INTEGER]
 			-- Search table for used feature id's
 		once
 			create Result.make (35)
@@ -891,7 +890,7 @@ feature
 					-- Determining whether to check features for undefinition and redefinition
 				l_check_undefinition := parents.are_features_undefined
 				l_check_redefinition := parents.are_features_redefined
-					-- Iteration on the structure.				
+					-- Iteration on the structure.
 				start
 			until
 				after
@@ -1042,11 +1041,11 @@ feature
 								if property_name = Void or else property_name.is_empty then
 										-- Use implicit property name.
 									property_name := il_casing.pascal_casing
-										(system.dotnet_naming_convention, feature_i.feature_name, {IL_CASING_CONVERSION}.lower_case)
+											(system.dotnet_naming_convention, feature_i.feature_name, {IL_CASING_CONVERSION}.lower_case)
 								end
 								if property_names.has (property_name) then
 									error_handler.insert_error (create {VIPM}.make
-										(a_class, feature_i, property_names.item (property_name), property_name))
+											(a_class, feature_i, property_names.item (property_name), property_name))
 								else
 									property_names.put (feature_i, property_name)
 								end
@@ -1055,7 +1054,7 @@ feature
 									-- different in Eiffel and IL.
 								if feature_i.has_property_setter and then
 									(feature_i.type.is_void and then feature_i.argument_count /= 1 or else
-									not feature_i.type.is_void and then feature_i.argument_count > 0)
+										not feature_i.type.is_void and then feature_i.argument_count > 0)
 								then
 									error_handler.insert_error (create {VIPS}.make (a_class, feature_i))
 								end
@@ -1071,25 +1070,25 @@ feature
 				n := class_info.creators.count
 				create {FEAT_NAME_ID_AS} creation_index_name.initialize (create {ID_AS}.initialize_from_id (names_heap.inspect_attribute_name_id))
 				feature_i := feature_i_from_feature_as
-					(create {FEATURE_AS}.initialize
-						(create {EIFFEL_LIST [FEATURE_NAME]}.make_from_iterable (<<creation_index_name>>),
-						create {BODY_AS}.initialize
-							(Void,
-							create {CLASS_TYPE_AS}.initialize (create {ID_AS}.initialize
-									-- TODO: Replace manifest type names with computed names to take possible renaming into account.
-								(if n <= 0xFF then
-									"NATURAL_8"
-								elseif n <= 0xFFFF then
-									"NATURAL_16"
-								elseif n <= 0xFFFF_FFFF then
-									"NATURAL_32"
-								else
-									"NATURAL_64"
-								end)),
-							Void, Void, Void, Void, Void, Void),
-						Void,
-						0,
-						a_class.ast.end_position),
+						(create {FEATURE_AS}.initialize
+							(create {EIFFEL_LIST [FEATURE_NAME]}.make_from_iterable (<<creation_index_name>>),
+							create {BODY_AS}.initialize
+								(Void,
+								create {CLASS_TYPE_AS}.initialize (create {ID_AS}.initialize
+											-- TODO: Replace manifest type names with computed names to take possible renaming into account.
+										(if n <= 0xFF then
+											"NATURAL_8"
+										elseif n <= 0xFFFF then
+											"NATURAL_16"
+										elseif n <= 0xFFFF_FFFF then
+											"NATURAL_32"
+										else
+											"NATURAL_64"
+										end)),
+								Void, Void, Void, Void, Void, Void),
+							Void,
+							0,
+							a_class.ast.end_position),
 						creation_index_name,
 						Void)
 				feature_i.set_is_hidden (True)
@@ -1144,7 +1143,7 @@ feature
 			export_status: EXPORT_I
 		do
 			export_status := immediate_export_status
-				-- Now, compute the routine id set of the feature.	
+				-- Now, compute the routine id set of the feature.
 			inherit_feat := item (feature_name_id)
 				-- Check if it is not by any chance the case where `feature_i' is an infix/prefix
 				-- routine and the inherited member is using the new `alias' form. Note that we only
@@ -1236,8 +1235,8 @@ feature
 					end
 						-- Routine id set for the redefinition
 					if
-						 attached feature_i.rout_id_set as l_id_set and then
-						 not l_id_set.same_as (new_rout_id_set)
+						attached feature_i.rout_id_set as l_id_set and then
+						not l_id_set.same_as (new_rout_id_set)
 					then
 							-- The routine is not exactly the same even if it has kept
 							-- its original implementation. Most likely new routines
@@ -1285,8 +1284,8 @@ feature
 					if
 						old_feature.written_in = a_class.class_id and then
 						((feature_i.is_attribute and not old_feature.is_attribute) or else
-						(feature_i.is_deferred and then not old_feature.is_deferred) or else
-						(feature_i.is_attribute and old_feature.is_attribute and feature_i.is_origin /= old_feature.is_origin))
+							(feature_i.is_deferred and then not old_feature.is_deferred) or else
+							(feature_i.is_attribute and old_feature.is_attribute and feature_i.is_origin /= old_feature.is_origin))
 					then
 						System.execution_table.add_dead_function (old_feature.body_index)
 					end
@@ -1334,11 +1333,11 @@ feature
 			vffd4: VFFD4
 		do
 			feature_name_id := feat.internal_name.name_id
-debug ("ACTIVITY")
-	io.error.put_string ("FEATURE_UNIT on ");
-	io.error.put_string (feat.internal_name.name);
-	io.error.put_new_line;
-end;
+			debug ("ACTIVITY")
+				io.error.put_string ("FEATURE_UNIT on ");
+				io.error.put_string (feat.internal_name.name);
+				io.error.put_new_line;
+			end;
 
 			Result := feature_i_generator.new_feature (yacc_feature, feature_name_id, a_class)
 			if attached {FEATURE_NAME_ALIAS_AS} feat as l_alias_feat and then l_alias_feat.has_alias then
@@ -1476,19 +1475,19 @@ end;
 				if
 					not is_the_same or else
 					(supplier_status_modified and then
-					not Degree_4.changed_status.disjoint (old_feature_i.suppliers))
-							-- The status of one of the suppliers of the feature has changed
+						not Degree_4.changed_status.disjoint (old_feature_i.suppliers))
+					-- The status of one of the suppliers of the feature has changed
 				then
-debug ("ACTIVITY")
-	io.error.put_string ("Is the same ");
-	io.error.put_boolean (is_the_same);
-	io.error.put_string ("%Nsupplier_status_modified ");
-	io.error.put_boolean (supplier_status_modified);
-	io.error.put_string ("%Nchanged status ");
-	io.error.put_boolean (not Degree_4.changed_status.disjoint (old_feature_i.suppliers));
-	io.error.put_string ("%Nold_feature_in_class ");
-	io.error.put_new_line;
-end;
+					debug ("ACTIVITY")
+						io.error.put_string ("Is the same ");
+						io.error.put_boolean (is_the_same);
+						io.error.put_string ("%Nsupplier_status_modified ");
+						io.error.put_boolean (supplier_status_modified);
+						io.error.put_string ("%Nchanged status ");
+						io.error.put_boolean (not Degree_4.changed_status.disjoint (old_feature_i.suppliers));
+						io.error.put_string ("%Nold_feature_in_class ");
+						io.error.put_new_line;
+					end;
 
 						-- Update `read_info' in BODY_SERVER
 					if body_index > 0 then
@@ -1575,7 +1574,7 @@ end;
 			-- Update assert_id_set for redefined or merged routines
 			-- in adaptations.
 		do
-			;(create {REDEF_FEAT}).process (adaptations)
+			; (create {REDEF_FEAT}).process (adaptations)
 		end
 
 	update_changed_features
@@ -1701,7 +1700,7 @@ end;
 								if
 									p.is_redefining (f.item.internal_a_feature.feature_name_id) and then
 										-- Report the error only if all features inherited from this parent are deferred.
-									across inherit_feat.features as e all e.item.parent /= p end
+									∀ e: inherit_feat.features ¦ e.parent /= p
 								then
 									Error_handler.insert_error (create {VDRS4_EFFECTING}.make (f.item.internal_a_feature.feature_name_id, p, a_class))
 								end
@@ -1753,9 +1752,9 @@ end;
 			end
 
 			if inherit_info.a_feature.is_origin then
-				-- It is no more an origin
-				--| FIXME IEK: This needs to be rewritten as a feature is still an origin if inherited.
-				--| This also means that features directly inherited from ANY are not aliased.
+					-- It is no more an origin
+					--| FIXME IEK: This needs to be rewritten as a feature is still an origin if inherited.
+					--| This also means that features directly inherited from ANY are not aliased.
 				inherit_info.copy_a_feature_for_feature_table
 				inherit_info.a_feature.set_is_origin (False)
 			end
@@ -1767,7 +1766,7 @@ end;
 			end
 
 			if inherit_info.a_feature.has_property then
-				-- We need to aliasing if not already done
+					-- We need to aliasing if not already done
 				inherit_info.copy_a_feature_for_feature_table
 				inherit_info.a_feature.set_has_property (False)
 				if
@@ -1869,7 +1868,7 @@ end;
 				old_feature := previous_feature_table.item_id (f.feature_name_id);
 				if old_feature /= Void then
 						-- Keep the feature id, because byte code for client
-						-- features using this new feature name could have been	
+						-- features using this new feature name could have been
 						-- already computed.
 					Result := old_feature.feature_id
 				else
@@ -2049,7 +2048,7 @@ feature {NONE} -- Temporary body index
 		end
 
 note
-	copyright: "Copyright (c) 1984-2020, Eiffel Software"
+	copyright: "Copyright (c) 1984-2021, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "Encapsulation of an external extension."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -229,11 +229,11 @@ feature {NONE} -- Implementation
 				end
 			end
 			if include_files /= Void then
-debug
-	io.error.put_string ("Processing include files: ")
-	io.error.put_string (include_files)
-	io.error.put_new_line
-end
+				debug
+					io.error.put_string ("Processing include files: ")
+					io.error.put_string (include_files)
+					io.error.put_new_line
+				end
 
 				create unprocessed.make_from_string (include_files)
 					-- Compute maximum number of include files
@@ -258,7 +258,7 @@ end
 						unprocessed.left_adjust
 						if not unprocessed.is_empty then
 								-- Must have a comma separator
-							if unprocessed @ 1 = ',' then
+							if unprocessed [1] = ',' then
 									-- Remove comman and white space
 								unprocessed.remove_head (1)
 								unprocessed.left_adjust
@@ -278,13 +278,13 @@ end
 		require
 			string_non_void: s /= Void and then s.count > 0
 		do
-debug
-	io.error.put_string ("Parsing file name from ")
-	io.error.put_string (s.substring (start, s.count))
-	io.error.put_new_line
-end
+			debug
+				io.error.put_string ("Parsing file name from ")
+				io.error.put_string (s.substring (start, s.count))
+				io.error.put_new_line
+			end
 			inspect
-				s @ start
+				s [start]
 			when '<' then
 				Result := s.index_of ('>', start)
 			when '%"' then
@@ -294,14 +294,14 @@ end
 			else
 				Result := 0
 			end
-debug
-	io.error.put_integer (start)
-	io.error.put_new_line
-	io.error.put_integer (s.count)
-	io.error.put_new_line
-	io.error.put_integer (Result)
-	io.error.put_new_line
-end
+			debug
+				io.error.put_integer (start)
+				io.error.put_new_line
+				io.error.put_integer (s.count)
+				io.error.put_new_line
+				io.error.put_integer (Result)
+				io.error.put_new_line
+			end
 		end
 
 	insert_error (msg: STRING)
@@ -322,9 +322,9 @@ feature {NONE} -- Implementation
 			-- Special part
 
 note
-	copyright:	"Copyright (c) 1984-2021, Eiffel Software"
-	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
-	licensing_options:	"http://www.eiffel.com/licensing"
+	copyright: "Copyright (c) 1984-2021, Eiffel Software"
+	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
+	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[
 			This file is part of Eiffel Software's Eiffel Development Environment.
 			
@@ -353,4 +353,4 @@ note
 			Customer support http://support.eiffel.com
 		]"
 
-end -- class EXTERNAL_EXTENSION_AS
+end

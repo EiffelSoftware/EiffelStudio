@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "Objects representing a class format for documentation."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -46,9 +46,9 @@ feature -- Access
 feature -- Status report
 
 	is_generated: BOOLEAN
-			-- Should format `type' be generated?.
+			-- Should format `type' be generated?
 		do
-			Result := generated_list @ type
+			Result := generated_list [type]
 		end
 
 	file_extension: STRING_32
@@ -126,9 +126,9 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2012, Eiffel Software"
-	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
-	licensing_options:	"http://www.eiffel.com/licensing"
+	copyright: "Copyright (c) 1984-2021, Eiffel Software"
+	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
+	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[
 			This file is part of Eiffel Software's Eiffel Development Environment.
 			
@@ -157,4 +157,4 @@ note
 			Customer support http://support.eiffel.com
 		]"
 
-end -- class CLASS_FORMAT
+end

@@ -1,10 +1,9 @@
-note
+﻿note
 
-	description:
-		"Parse a query text"
+	description: "Parse a query text"
 	legal: "See notice at end of class."
-	status: "See notice at end of class.";
-	date: "$Date$";
+	status: "See notice at end of class."
+	date: "$Date$"
 	revision: "$Revision$"
 
 class QUERY_PARSER
@@ -51,7 +50,7 @@ feature {NONE} -- Implementation
 					end_of_query := True
 				else
 					index := index + col_name.count;
-					-- index := index + 1; --| Guillaume - 09/17/97
+						-- index := index + 1; --| Guillaume - 09/17/97
 					index := index + white_space_length (str, index);
 					operator := operator_str (str, index);
 					if operator = Void then
@@ -59,8 +58,8 @@ feature {NONE} -- Implementation
 					else
 						index := index + operator.count;
 						index := index + white_space_length (str, index);
-						--!! index_ref;
-						--index_ref.set_item (index);
+							--!! index_ref;
+							--index_ref.set_item (index);
 						if index <= str.count then
 							end_index := stricly_positive_min (str.substring_index (" and ", index), str.substring_index (" or ", index), str.count);
 							value := value_str (str, index, end_index);
@@ -110,24 +109,24 @@ feature {NONE} -- Implementation
 			-- Get the column name in `str' at position `idx'
 		do
 			if idx < str.count then
-				if str.substring(idx, idx + ("featurename").count - 1).is_equal("featurename") then
+				if str.substring (idx, idx + ("featurename").count - 1).is_equal ("featurename") then
 					Result := "featurename";
 					expects_real := false;
 					expects_int := false;
 					expects_bounded := false; --| Guillaume - 09/18/97
-				elseif str.substring(idx, idx + ("calls").count - 1).is_equal("calls") then
+				elseif str.substring (idx, idx + ("calls").count - 1).is_equal ("calls") then
 					Result := "calls";
 					expects_string := false; --| Guillaume - 09/18/97
-				elseif str.substring(idx, idx + ("total").count - 1).is_equal("total") then
+				elseif str.substring (idx, idx + ("total").count - 1).is_equal ("total") then
 					Result := "total";
 					expects_string := false; --| Guillaume - 09/18/97
-				elseif str.substring(idx, idx + ("self").count - 1).is_equal("self") then
+				elseif str.substring (idx, idx + ("self").count - 1).is_equal ("self") then
 					Result := "self";
 					expects_string := false; --| Guillaume - 09/18/97
-				elseif str.substring(idx, idx + ("percentage").count - 1).is_equal("percentage") then
+				elseif str.substring (idx, idx + ("percentage").count - 1).is_equal ("percentage") then
 					Result := "percentage";
 					expects_string := false; --| Guillaume - 09/18/97
-				elseif str.substring(idx, idx + ("descendants").count - 1).is_equal("descendants") then
+				elseif str.substring (idx, idx + ("descendants").count - 1).is_equal ("descendants") then
 					Result := "descendants";
 					expects_string := false; --| Guillaume - 09/18/97
 				else
@@ -143,21 +142,21 @@ feature {NONE} -- Implementation
 		local
 			operator: STRING
 		do
-			create Result.make(0)
+			create Result.make (0)
 			operator := str.substring (idx, idx + 1)
 
-			if operator.is_equal("<=")
-			   or else operator.is_equal(">=")
-			   or else operator.is_equal("/=")
+			if operator.is_equal ("<=")
+				or else operator.is_equal (">=")
+				or else operator.is_equal ("/=")
 			then
 				Result := operator
 				expects_bounded := false;
 
 			elseif operator.item (1) = '>' or else operator.item (1) = '<' or else operator.item (1) = '=' then
-				Result.extend ( operator.item(1) )
+				Result.extend (operator.item (1))
 				expects_bounded := false
 
-			elseif operator.is_equal("in") then
+			elseif operator.is_equal ("in") then
 				Result := operator
 				expects_real := false
 				expects_int := false
@@ -175,36 +174,36 @@ feature {NONE} -- Implementation
 			Result.left_adjust;
 			Result.right_adjust;
 			if is_expected_value (Result) then
-				Result.prune_all(' ');
+				Result.prune_all (' ');
 			else
 				Result := void;
 			end
 		end;
 
-	is_expected_value ( value: STRING ) : BOOLEAN
+	is_expected_value (value: STRING): BOOLEAN
 			-- Is the 'value' string an expected value
 		do
-			Result := (expects_int and value.is_integer) or else (expects_int and is_computed_value(value))
-					or else (expects_real and value.is_real) or else (expects_real and is_computed_value(value))
-					or else (expects_string and not value.has (' ')) or else (expects_bounded and is_bounded(value))
+			Result := (expects_int and value.is_integer) or else (expects_int and is_computed_value (value))
+				or else (expects_real and value.is_real) or else (expects_real and is_computed_value (value))
+				or else (expects_string and not value.has (' ')) or else (expects_bounded and is_bounded (value))
 		end
 
-	is_computed_value ( value: STRING ) : BOOLEAN
+	is_computed_value (value: STRING): BOOLEAN
 		do
-			Result := value.is_equal("max") or else value.is_equal("min") or else value.is_equal("avg")
+			Result := value.is_equal ("max") or else value.is_equal ("min") or else value.is_equal ("avg")
 		end
 
-	is_bounded ( value: STRING ) : BOOLEAN
+	is_bounded (value: STRING): BOOLEAN
 		local
-			range_position : INTEGER;
+			range_position: INTEGER;
 			lower_value, upper_value: STRING
 		do
 			range_position := value.index_of ('-', 1);
 			if range_position = 0 then
 				Result := false
 			else
-				lower_value := value.substring ( 1, range_position-1 );
-				upper_value := value.substring (range_position+1, value.count);
+				lower_value := value.substring (1, range_position - 1);
+				upper_value := value.substring (range_position + 1, value.count);
 				lower_value.right_adjust;
 				lower_value.left_adjust;
 				upper_value.right_adjust;
@@ -217,7 +216,7 @@ feature {NONE} -- Implementation
 					Result := false
 				end
 			end
-		end  --| Guillaume - 09/18/97
+		end --| Guillaume - 09/18/97
 
 	boolean_operator (str: STRING; idx: INTEGER): STRING
 			-- Get boolean operator in `str' at `idx'.
@@ -225,16 +224,16 @@ feature {NONE} -- Implementation
 			if
 				idx > str.count
 			then
-			 	Result := "EOQ"
+				Result := "EOQ"
 			elseif
-				str @ idx = 'o' and then
-				str @ (idx + 1) = 'r'
+				str [idx] = 'o' and then
+				str [idx + 1] = 'r'
 			then
 				Result := "or"
 			elseif
-				str @ idx = 'a' and then
-				str @ (idx + 1) = 'n' and then
-				str @ (idx + 2) = 'd'
+				str [idx] = 'a' and then
+				str [idx + 1] = 'n' and then
+				str [idx + 2] = 'd'
 			then
 				Result := "and"
 			else
@@ -248,7 +247,7 @@ feature {NONE} -- Implementation
 			from
 				Result := 0
 			until
-				idx + Result > str.count or else not chis_space ( str.item( idx + Result ) )
+				idx + Result > str.count or else not chis_space (str.item (idx + Result))
 			loop
 				Result := Result + 1;
 			end
@@ -257,10 +256,10 @@ feature {NONE} -- Implementation
 	has_range_operator (str: STRING; idx: INTEGER): BOOLEAN
 			-- Is there a '-' at or after `idx' in `str'?
 		do
-			Result := str @ idx = '-'
+			Result := str [idx] = '-'
 		end
 
-	stricly_positive_min (a, b, c : INTEGER): INTEGER
+	stricly_positive_min (a, b, c: INTEGER): INTEGER
 			-- The min of a, b and c that is not zero
 			-- a < c and b < c
 		do
@@ -304,11 +303,12 @@ feature {NONE} -- Attributes
 		-- The expected type of the subquery 'value' is a string
 
 	expects_bounded: BOOLEAN;
-		-- The expected type of the subquery 'value' is a bounded value
+	-- The expected type of the subquery 'value' is a bounded value
+
 note
-	copyright:	"Copyright (c) 1984-2014, Eiffel Software"
-	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
-	licensing_options:	"http://www.eiffel.com/licensing"
+	copyright: "Copyright (c) 1984-2021, Eiffel Software"
+	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
+	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[
 			This file is part of Eiffel Software's Eiffel Development Environment.
 			
@@ -337,4 +337,4 @@ note
 			Customer support http://support.eiffel.com
 		]"
 
-end -- class QUERY_PARSER
+end

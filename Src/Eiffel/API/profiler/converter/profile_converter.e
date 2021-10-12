@@ -1,7 +1,6 @@
 ﻿note
 
-	description:
-		"Converts ASCII output of profiler into the internal representation."
+	description: "Converts ASCII output of profiler into the internal representation."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 	date: "$Date$"
@@ -144,7 +143,7 @@ feature {PROFILE_CONVERTER} -- analyzing
 				from
 					string_idx := string_idx + 1
 				until
-					profile_string.item(string_idx) /= ' ' and then profile_string.item(string_idx) /= '%T'
+					profile_string.item (string_idx) /= ' ' and then profile_string.item (string_idx) /= '%T'
 				loop
 					string_idx := string_idx + 1
 				end
@@ -232,14 +231,14 @@ feature {PROFILE_CONVERTER} -- analyzing
 						is_cycle := False
 					elseif function_name.substring_index (" from ", 1) > 0 then
 						feature_n := function_name.substring (1, function_name.substring_index (" from ", 1) - 1)
-debug("PROFILE_CONVERT")
-	io.error.put_string ("Total token: ")
-	io.error.put_string (function_name)
-	io.error.put_new_line
-	io.error.put_string ("dtype representation is: ")
-	io.error.put_string (function_name.substring (function_name.substring_index (" from ", 1) + 6, function_name.count))
-	io.error.put_new_line
-end
+						debug ("PROFILE_CONVERT")
+							io.error.put_string ("Total token: ")
+							io.error.put_string (function_name)
+							io.error.put_new_line
+							io.error.put_string ("dtype representation is: ")
+							io.error.put_string (function_name.substring (function_name.substring_index (" from ", 1) + 6, function_name.count))
+							io.error.put_new_line
+						end
 						dtype := function_name.substring (function_name.substring_index (" from ", 1) + 6, function_name.count).to_integer + 1
 						if
 							Eiffel_project.initialized and then
@@ -405,7 +404,7 @@ end
 				char := profile_string.item (string_idx)
 			until
 				char.is_digit or else char.is_alpha or else
-				char ='[' or else char = ']' or else
+				char = '[' or else char = ']' or else
 				char = '.' or else char = '_' or else
 				char = ' ' or else char = '%T' or else char = '%N'
 			loop
@@ -453,23 +452,23 @@ end
 
 					-- Eiffel generates ` from ABC' as well...
 
-debug("PROFILE_CONVERT")
-	io.error.put_string ("Substring (string_idx, string_idx + 4) is: ")
-	io.error.put_string (profile_string.substring (string_idx, string_idx + 4))
-	io.error.put_new_line
-end
+				debug ("PROFILE_CONVERT")
+					io.error.put_string ("Substring (string_idx, string_idx + 4) is: ")
+					io.error.put_string (profile_string.substring (string_idx, string_idx + 4))
+					io.error.put_new_line
+				end
 
 				if profile_string.substring (string_idx, string_idx + 4).is_equal (" from") then
 					token_string.append (" from ")
 					string_idx := string_idx + 6
 
-debug("PROFILE_CONVERT")
-	io.error.put_string ("Detecting Eiffel feature name...")
-	io.error.put_new_line
-	io.error.put_string ("Character at string_idx is ")
-	io.error.put_character (profile_string @ string_idx)
-	io.error.put_new_line
-end
+					debug ("PROFILE_CONVERT")
+						io.error.put_string ("Detecting Eiffel feature name...")
+						io.error.put_new_line
+						io.error.put_string ("Character at string_idx is ")
+						io.error.put_character (profile_string [string_idx])
+						io.error.put_new_line
+					end
 
 						-- Reading class name...
 					from
@@ -488,7 +487,7 @@ end
 					-- Remove the leading underscore if necessary.
 				if
 					config.leading_underscore and then
-					token_string.item(1) = '_'
+					token_string.item (1) = '_'
 				then
 					token_string := token_string.substring (2, token_string.count)
 				end
@@ -523,7 +522,7 @@ end
 					next_char := profile_string.item (string_idx)
 				end
 
-				-- GPROF's output __CAN__ have x+y for call-cycles.
+					-- GPROF's output __CAN__ have x+y for call-cycles.
 				if next_char = '+' then
 					from
 						temp_noc := token_string.to_integer
@@ -585,7 +584,7 @@ feature {NONE} -- Commands
 	read_profile_file
 			-- reads the profile listing into memory
 		local
-			file : PLAIN_TEXT_FILE
+			file: PLAIN_TEXT_FILE
 		do
 			create file.make_with_path (profilename)
 			file.open_read
@@ -605,12 +604,12 @@ feature {NONE} -- Commands
 		do
 			if not config.configuration_name.is_equal ("eiffel") then
 
-						-- Other profile tools use C names, so we need
-						-- Valid translation.
-						-- TRANSLAT should be there, but it might not when
-						-- using precompiled stuff. This desperately needs
-						-- a FIX.
-						-- ***** FIXME *****
+					-- Other profile tools use C names, so we need
+					-- Valid translation.
+					-- TRANSLAT should be there, but it might not when
+					-- using precompiled stuff. This desperately needs
+					-- a FIX.
+					-- ***** FIXME *****
 
 				create file.make_with_path (filename)
 				create table_name.make_from_string (filename.name + "." + Table_extension)
@@ -710,12 +709,12 @@ feature {NONE} -- Commands
 			object_file.close
 		end
 
-	get_translat_line : STRING
+	get_translat_line: STRING
 		local
-			new_line_index : INTEGER
+			new_line_index: INTEGER
 		do
 			create Result.make (0)
-			new_line_index := translat_string.index_of ('%N',1)
+			new_line_index := translat_string.index_of ('%N', 1)
 			Result.append_string (translat_string.substring (1, new_line_index))
 			translat_string.remove_head (new_line_index)
 		end
@@ -723,7 +722,7 @@ feature {NONE} -- Commands
 feature -- Access
 
 	is_conversion_ok: BOOLEAN
-		-- Has the conversion worked properly?
+			-- Has the conversion worked properly?
 
 feature {NONE} -- Attributes
 
@@ -733,7 +732,7 @@ feature {NONE} -- Attributes
 	profilename: PATH
 
 	profile_information: PROFILE_INFORMATION
-		-- Information about the profiled application
+			-- Information about the profiled application
 
 	functions: HASH_TABLE [EIFFEL_FUNCTION, STRING]
 
@@ -758,29 +757,29 @@ feature {NONE} -- Attributes
 	cyclics: TWO_WAY_LIST [LANGUAGE_FUNCTION]
 
 	Table_extension: STRING = "ftt"
-		-- Extension used to distinguish between compiler
-		-- created TRANSLAT file and function table
+			-- Extension used to distinguish between compiler
+			-- created TRANSLAT file and function table
 
 	config: SHARED_PROF_CONFIG
-		-- Values as retrieved from the resource file for the
-		-- specific profiler-tool
+			-- Values as retrieved from the resource file for the
+			-- specific profiler-tool
 
 	string_idx: INTEGER
 
 	column_nr: INTEGER
-		-- At which column are we currently looking?
+			-- At which column are we currently looking?
 
 	token_type: INTEGER
-		-- Type of last token seen. Is one out of the Constants.
+			-- Type of last token seen. Is one out of the Constants.
 
 	token_string: STRING
-		-- Lexeme for `token_type'.
+			-- Lexeme for `token_type'.
 
 	columns_seen: INTEGER
-		-- How many columns of interest did we see so far?
+			-- How many columns of interest did we see so far?
 
 	columns_of_interest: INTEGER
-		-- Columns of interest as specified by `config'
+			-- Columns of interest as specified by `config'
 
 	function_time: REAL_64
 
@@ -803,9 +802,9 @@ feature {NONE} -- Constants
 	Error_token: INTEGER = 7;
 
 note
-	copyright:	"Copyright (c) 1984-2018, Eiffel Software"
-	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
-	licensing_options:	"http://www.eiffel.com/licensing"
+	copyright: "Copyright (c) 1984-2021, Eiffel Software"
+	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
+	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[
 			This file is part of Eiffel Software's Eiffel Development Environment.
 			

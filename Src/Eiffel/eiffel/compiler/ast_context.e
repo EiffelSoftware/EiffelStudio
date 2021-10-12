@@ -260,31 +260,27 @@ feature {AST_FEATURE_CHECKER_GENERATOR, AST_CONTEXT} -- Local scopes: status rep
 	is_local_attached (id: INTEGER_32): BOOLEAN
 			-- Is local `id' in the scope where it is considered attached?
 		do
-			Result := local_scope.is_local_attached (locals.item (id).position)
-			if not Result then
-				Result := scopes.has (id)
-			end
+			Result :=
+				local_scope.is_local_attached (locals.item (id).position) or else
+				scopes.has (id)
 		end
 
 	is_result_attached: BOOLEAN
 			-- Is special entity "Result" in the scope where it is considered attached?
 		do
-			Result := local_scope.is_result_attached
-			if not Result then
-				Result := scopes.has (result_id)
-			end
+			Result :=
+				local_scope.is_result_attached or else
+				scopes.has (result_id)
 		end
 
 	is_attribute_attached (id: INTEGER_32): BOOLEAN
 			-- Is attribute `id' in the scope where it is considered attached?
 		local
-			f: FEATURE_I
 			p: INTEGER_32
 		do
 			Result := scopes.has (id)
 			if not Result then
-				f := current_class.feature_of_name_id (id)
-				if f /= Void then
+				if attached current_class.feature_of_name_id (id) as f then
 					p := attributes.item (f.feature_id)
 					if p > 0 then
 						Result := attribute_initialization.is_attribute_set (p)
@@ -511,11 +507,9 @@ feature {AST_SCOPE_MATCHER, AST_FEATURE_CHECKER_GENERATOR} -- Local scopes: modi
 	add_attribute_instruction_scope (id: INTEGER_32)
 			-- Add a scope for a local identified by `id'.
 		local
-			f: FEATURE_I
 			p: INTEGER_32
 		do
-			f := current_class.feature_of_name_id (id)
-			if f /= Void then
+			if attached current_class.feature_of_name_id (id) as f then
 				p := attributes.item (f.feature_id)
 				if p > 0 then
 					attribute_initialization.set_attribute (p)

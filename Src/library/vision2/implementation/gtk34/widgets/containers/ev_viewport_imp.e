@@ -222,6 +222,7 @@ feature {NONE} -- Implementation
 					l_item.set_minimum_size (w, h)
 					set_item_size (w, h)
 				end
+				in_update_viewport_item_size := False
 			end
 		end
 

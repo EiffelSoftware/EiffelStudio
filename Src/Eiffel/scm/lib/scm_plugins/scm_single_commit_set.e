@@ -1,5 +1,4 @@
-note
-	description: "Summary description for {SCM_SINGLE_COMMIT_SET}."
+﻿note
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -36,7 +35,6 @@ feature -- Conversion
 
 	changes_description: STRING_32
 		local
-			ch: SCM_CHANGELIST
 			rt,rel: READABLE_STRING_32
 		do
 			create Result.make_empty

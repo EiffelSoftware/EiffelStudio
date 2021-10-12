@@ -1,7 +1,4 @@
-note
-	description: "[
-			Objects that ...
-		]"
+﻿note
 	author: "$Author$"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -280,7 +277,7 @@ feature -- Git specific
 	remotes (a_root_location: PATH; a_options: detachable SCM_OPTIONS): detachable LIST [GIT_REMOTE]
 		local
 			res: detachable PROCESS_COMMAND_RESULT
-			s, l_line: detachable READABLE_STRING_8
+			s: detachable READABLE_STRING_8
 			cmd: STRING_32
 			i,j,k,n: INTEGER
 			l_url,l_type: STRING_8
@@ -462,19 +459,9 @@ feature {NONE} -- Implementation
 			end
 		end
 
-invariant
---	invariant_clause: True
-
 note
 	copyright: "Copyright (c) 1984-2021, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
-	source: "[
-			Eiffel Software
-			5949 Hollister Ave., Goleta, CA 93117 USA
-			Telephone 805-685-1006, Fax 805-685-6869
-			Website http://www.eiffel.com
-			Customer support http://support.eiffel.com
-		]"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[
 			This file is part of Eiffel Software's Eiffel Development Environment.
@@ -495,5 +482,12 @@ note
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,
 			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
+		]"
+	source: "[
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 end

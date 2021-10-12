@@ -78,7 +78,7 @@ feature {NONE} -- Modification: language properties
 			if
 				attached last_added_choice_property as l_prop and then
 				a_check_non_client_option and then
-				is_non_client_option (at_void_safety)
+				is_supplier_option (at_void_safety)
 			then
 				l_prop.enable_readonly
 			end
@@ -100,7 +100,7 @@ feature {NONE} -- Modification: language properties
 				an_options.catcall_detection,
 				c
 			)
-			if attached last_added_choice_property as l_prop and then a_check_non_client_option and then is_non_client_option (at_catcall_detection) then
+			if attached last_added_choice_property as l_prop and then a_check_non_client_option and then is_supplier_option (at_catcall_detection) then
 				l_prop.enable_readonly
 			end
 		end
@@ -127,7 +127,7 @@ feature {NONE} -- Modification: language properties
 				an_options.syntax,
 				c
 			)
-			if attached last_added_choice_property as l_prop and then a_check_non_client_option and then is_non_client_option (at_syntax_level) then
+			if attached last_added_choice_property as l_prop and then a_check_non_client_option and then is_supplier_option (at_syntax_level) then
 				l_prop.enable_readonly
 			end
 		end
@@ -184,7 +184,7 @@ feature {NONE} -- Modification: language properties
 				an_options.array,
 				c
 			)
-			if attached last_added_choice_property as l_prop and then a_check_non_client_option and then is_non_client_option (at_manifest_array_type) then
+			if attached last_added_choice_property as l_prop and then a_check_non_client_option and then is_supplier_option (at_manifest_array_type) then
 				l_prop.enable_readonly
 			end
 		end
@@ -252,7 +252,7 @@ feature {NONE} -- Modification: property addition
 					l_bool_prop.enable_inherited
 				end
 			end
-			if a_check_non_client_option and then is_non_client_option (option_id) then
+			if a_check_non_client_option and then is_supplier_option (option_id) then
 				l_bool_prop.enable_readonly
 			end
 			properties.add_property (l_bool_prop)
@@ -283,7 +283,7 @@ feature {NONE} -- Modification: execution properties
 					l_bool_prop.enable_inherited
 				end
 			end
-			if a_check_non_client_option and then is_non_client_option (at_profile) then
+			if a_check_non_client_option and then is_supplier_option (at_profile) then
 				l_bool_prop.enable_readonly
 			end
 			properties.add_property (l_bool_prop)
@@ -312,7 +312,7 @@ feature {NONE} -- Modification: execution properties
 					l_bool_prop.enable_inherited
 				end
 			end
-			if a_check_non_client_option and then is_non_client_option (at_trace) then
+			if a_check_non_client_option and then is_supplier_option (at_trace) then
 				l_bool_prop.enable_readonly
 			end
 			properties.add_property (l_bool_prop)
@@ -336,7 +336,7 @@ feature {NONE} -- Modification: optimization properties
 			if not a_il_generation then
 				l_string_prop.enable_readonly
 			end
-			if a_check_non_client_option and then is_non_client_option (at_namespace) then
+			if a_check_non_client_option and then is_supplier_option (at_namespace) then
 				l_string_prop.enable_readonly
 			end
 			properties.add_property (l_string_prop)
@@ -365,7 +365,7 @@ feature {NONE} -- Modification: optimization properties
 					l_bool_prop.enable_inherited
 				end
 			end
-			if a_check_non_client_option and then is_non_client_option (at_msil_application_optimize) then
+			if a_check_non_client_option and then is_supplier_option (at_msil_application_optimize) then
 				l_bool_prop.enable_readonly
 			end
 			properties.add_property (l_bool_prop)
@@ -431,7 +431,7 @@ feature {NONE} -- Modification
 			l_require.set_refresh_action (agent l_inh_assertions.is_precondition)
 			l_require.change_value_actions.extend (agent update_assertion (an_options, an_inherited_options, conf_interface_names.option_require_name, ?))
 			l_require.change_value_actions.extend (agent change_no_argument_boolean_wrapper (?, agent handle_value_changes (False)))
-			if a_check_non_client_option and then is_non_client_option (at_precondition) then
+			if a_check_non_client_option and then is_supplier_option (at_precondition) then
 				l_require.enable_readonly
 			end
 			properties.add_property (l_require)
@@ -441,7 +441,7 @@ feature {NONE} -- Modification
 			l_ensure.set_refresh_action (agent l_inh_assertions.is_postcondition)
 			l_ensure.change_value_actions.extend (agent update_assertion (an_options, an_inherited_options, conf_interface_names.option_ensure_name, ?))
 			l_ensure.change_value_actions.extend (agent change_no_argument_boolean_wrapper (?, agent handle_value_changes (False)))
-			if a_check_non_client_option and then is_non_client_option (at_postcondition) then
+			if a_check_non_client_option and then is_supplier_option (at_postcondition) then
 				l_ensure.enable_readonly
 			end
 			properties.add_property (l_ensure)
@@ -451,7 +451,7 @@ feature {NONE} -- Modification
 			l_check.set_refresh_action (agent l_inh_assertions.is_check)
 			l_check.change_value_actions.extend (agent update_assertion (an_options, an_inherited_options, conf_interface_names.option_check_name, ?))
 			l_check.change_value_actions.extend (agent change_no_argument_boolean_wrapper (?, agent handle_value_changes (False)))
-			if a_check_non_client_option and then is_non_client_option (at_check) then
+			if a_check_non_client_option and then is_supplier_option (at_check) then
 				l_check.enable_readonly
 			end
 			properties.add_property (l_check)
@@ -461,7 +461,7 @@ feature {NONE} -- Modification
 			l_invariant.set_refresh_action (agent l_inh_assertions.is_invariant)
 			l_invariant.change_value_actions.extend (agent update_assertion (an_options, an_inherited_options, conf_interface_names.option_invariant_name, ?))
 			l_invariant.change_value_actions.extend (agent change_no_argument_boolean_wrapper (?, agent handle_value_changes (False)))
-			if a_check_non_client_option and then is_non_client_option (at_invariant) then
+			if a_check_non_client_option and then is_supplier_option (at_invariant) then
 				l_invariant.enable_readonly
 			end
 			properties.add_property (l_invariant)
@@ -471,7 +471,7 @@ feature {NONE} -- Modification
 			l_loop.set_refresh_action (agent l_inh_assertions.is_loop)
 			l_loop.change_value_actions.extend (agent update_assertion (an_options, an_inherited_options, conf_interface_names.option_loop_name, ?))
 			l_loop.change_value_actions.extend (agent change_no_argument_boolean_wrapper (?, agent handle_value_changes (False)))
-			if a_check_non_client_option and then is_non_client_option (at_loop) then
+			if a_check_non_client_option and then is_supplier_option (at_loop) then
 				l_loop.enable_readonly
 			end
 			properties.add_property (l_loop)
@@ -481,7 +481,7 @@ feature {NONE} -- Modification
 			l_sup_require.set_refresh_action (agent l_inh_assertions.is_supplier_precondition)
 			l_sup_require.change_value_actions.extend (agent update_assertion (an_options, an_inherited_options, conf_interface_names.option_sup_require_name, ?))
 			l_sup_require.change_value_actions.extend (agent change_no_argument_boolean_wrapper (?, agent handle_value_changes (False)))
-			if a_check_non_client_option and then is_non_client_option (at_supplier_precondition) then
+			if a_check_non_client_option and then is_supplier_option (at_supplier_precondition) then
 				l_sup_require.enable_readonly
 			end
 			properties.add_property (l_sup_require)
@@ -561,7 +561,7 @@ feature {NONE} -- Modification
 					l_prop.use_inherited_actions.extend (agent refresh)
 					l_prop.use_inherited_actions.extend (agent handle_value_changes (False))
 				end
-				if a_check_non_client_option and then is_non_client_option (at_warning) then
+				if a_check_non_client_option and then is_supplier_option (at_warning) then
 					l_prop.enable_readonly
 				end
 			end
@@ -649,7 +649,7 @@ feature {NONE} -- Modification
 					l_bool_prop.enable_inherited
 				end
 			end
-			if a_check_non_client_option and then is_non_client_option (at_debug) then
+			if a_check_non_client_option and then is_supplier_option (at_debug) then
 				l_bool_prop.enable_readonly
 			end
 			properties.add_property (l_bool_prop)

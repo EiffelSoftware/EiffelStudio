@@ -2479,13 +2479,13 @@ feature {NONE} -- Processing of options
 	non_client_options: ARRAY [TUPLE [name: READABLE_STRING_GENERAL; id: INTEGER]]
 			-- Non-client option names with their IDs
 		local
-			ids: like non_client_option_ids
+			ids: like supplier_option_ids
 			i: INTEGER
 			o: like at_syntax
 		once
 			create Result.make_empty
 			if attached tag_attributes.item (t_option) as a then
-				ids := non_client_option_ids
+				ids := supplier_option_ids
 				from
 					i := 1
 				until
@@ -3229,6 +3229,8 @@ feature {NONE} -- Implementation state transitions
 			l_attr.force (at_new_name, "new_name")
 			Result.force (l_attr, t_mapping)
 			Result.force (l_attr, t_renaming)
+		ensure
+			class
 		end
 
 	tag_with_undefined_attributes: SEARCH_TABLE [INTEGER]

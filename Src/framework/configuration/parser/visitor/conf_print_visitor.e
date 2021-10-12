@@ -27,6 +27,8 @@ inherit
 
 	CONF_ACCESS
 
+	CONF_LOAD_PARSE_CALLBACKS_CONSTANTS
+
 create
 	make,
 	make_namespace_and_schema
@@ -373,7 +375,7 @@ feature -- Visit nodes
 					append_text_attribute ("assembly_key", l_str)
 				end
 			end
-			append_val_group (an_assembly)
+			append_val_group (an_assembly, False, False)
 			append_post_group ({STRING_32} "assembly")
 		ensure then
 			indent_back: indent = old indent
@@ -386,7 +388,7 @@ feature -- Visit nodes
 			if namespace /= namespace_1_0_0 and then a_library.use_application_options then
 				append_boolean_attribute ("use_application_options", True)
 			end
-			append_val_group (a_library)
+			append_val_group (a_library, False, False)
 			if attached a_library.visible as l_visible then
 				append_visible (l_visible)
 			end
@@ -402,7 +404,7 @@ feature -- Visit nodes
 			if attached a_precompile.eifgens_location as l_loc then
 				append_text_attribute ("eifgens_location", l_loc.original_path)
 			end
-			append_val_group (a_precompile)
+			append_val_group (a_precompile, False, False)
 			append_post_group ({STRING_32} "precompile")
 		ensure then
 			indent_back: indent = old indent
@@ -419,7 +421,7 @@ feature -- Visit nodes
 				g := if a_cluster.is_test_cluster then {STRING_32} "tests" else {STRING_32} "cluster" end
 				append_pre_group (g, a_cluster)
 				append_attr_cluster (a_cluster)
-				append_val_group (a_cluster)
+				append_val_group (a_cluster, True, True)
 				append_val_cluster (a_cluster)
 				append_post_group (g)
 			end
@@ -435,7 +437,7 @@ feature -- Visit nodes
 				current_is_subcluster := False
 				append_pre_group ({STRING_32} "override", an_override)
 				append_attr_cluster (an_override)
-				append_val_group (an_override)
+				append_val_group (an_override, True, False)
 				append_val_cluster (an_override)
 				if attached an_override.override as os then
 					across
@@ -941,32 +943,41 @@ feature {NONE} -- Implementation
 	append_target_options (o: detachable CONF_TARGET_OPTION)
 			-- Append target options `o' (if any).
 		do
-			append_group_options (o)
+			append_group_options (o, True, True)
 		end
 
-	append_class_options (o: detachable CONF_OPTION; c: READABLE_STRING_GENERAL)
+	append_class_options (o: detachable CONF_OPTION; c: READABLE_STRING_GENERAL; is_own_source, is_own_capability: BOOLEAN)
 			-- Append class options `o' (if any) for a calss `c'.
+			--
+			-- • `is_own_source` tells whether the options control the source code (i.e. not a library, a precompile, etc.)
+			-- • `is_own_capability` tells whether the options control the capabilities (i.e. not an override, a library, etc.)
 		do
 			if attached o and then not o.is_empty_for (namespace) then
 				append_tag_open ({STRING_32} "class_option")
 				append_text_attribute ("class", c)
-				append_general_options (o)
+				append_general_options (o, is_own_source, is_own_capability)
 				append_end_tag ({STRING_32} "class_option")
 			end
 		end
 
-	append_group_options (o: detachable CONF_OPTION)
+	append_group_options (o: detachable CONF_OPTION; is_own_source, is_own_capability: BOOLEAN)
 			-- Append group options `o' (if any).
+			--
+			-- • `is_own_source` tells whether the options control the source code (i.e. not a library, a precompile, etc.)
+			-- • `is_own_capability` tells whether the options control the capabilities (i.e. not an override, a library, etc.)
 		do
 			if attached o and then not o.is_empty_for (namespace) then
 				append_tag_open ({STRING_32} "option")
-				append_general_options (o)
+				append_general_options (o, is_own_source, is_own_capability)
 				append_end_tag ({STRING_32} "option")
 			end
 		end
 
-	append_general_options (an_options: CONF_OPTION)
+	append_general_options (an_options: CONF_OPTION; is_own_source, is_own_capability: BOOLEAN)
 			-- Append `an_options' in an already open option element.
+			--
+			-- • `is_own_source` tells whether the options control the source code (i.e. not a library, a precompile, etc.)
+			-- • `is_own_capability` tells whether the options control the capabilities (i.e. not an override, a library, etc.)
 		local
 			l_str: detachable READABLE_STRING_32
 			l_debugs, l_warnings: detachable STRING_TABLE [BOOLEAN]
@@ -974,18 +985,23 @@ feature {NONE} -- Implementation
 			w: READABLE_STRING_GENERAL
 		do
 			if an_options.is_trace_configured then
+				check not is_supplier_option (at_trace) end
 				append_boolean_attribute (o_is_trace, an_options.is_trace)
 			end
 			if an_options.is_profile_configured then
+				check not is_supplier_option (at_profile) end
 				append_boolean_attribute (o_is_profile, an_options.is_profile)
 			end
 			if an_options.is_optimize_configured then
+				check not is_supplier_option (at_optimize) end
 				append_boolean_attribute (o_is_optimize, an_options.is_optimize)
 			end
 			if an_options.is_debug_configured then
+				check not is_supplier_option (at_debug) end
 				append_boolean_attribute (o_is_debug, an_options.is_debug)
 			end
 			if an_options.warning.is_set then
+				check not is_supplier_option (at_warning) end
 				if is_after_or_equal (namespace, namespace_1_21_0) then
 						-- The option is an enumeration starting from `namespace_1_21_0`.
 					append_text_attribute (o_warning, an_options.warning.item)
@@ -995,37 +1011,49 @@ feature {NONE} -- Implementation
 				end
 			end
 			if an_options.is_msil_application_optimize_configured then
+				check not is_supplier_option (at_msil_application_optimize) end
 				append_boolean_attribute (o_is_msil_application_optimize, an_options.is_msil_application_optimize)
 			end
-			if an_options.is_full_class_checking_configured then
+			if is_own_source and an_options.is_full_class_checking_configured then
+				check is_supplier_option (at_full_class_checking) end
 				append_boolean_attribute (o_is_full_class_checking, an_options.is_full_class_checking)
 			end
 			if
-				is_before_or_equal (namespace, namespace_1_15_0) and then
-				an_options.catcall_detection.is_set
+				is_own_capability and
+				an_options.catcall_detection.is_set and then
+				is_before_or_equal (namespace, namespace_1_15_0)
 			then
+				check is_supplier_option (at_catcall_detection) end
 					-- Starting from `namespace_1_16_0` the option is treated as capability.
 				append_text_attribute (o_catcall_detection, an_options.catcall_detection.item)
 			end
-			if an_options.is_attached_by_default_configured then
+			if is_own_source and an_options.is_attached_by_default_configured then
+				check is_supplier_option (at_is_attached_by_default) end
 				append_boolean_attribute (o_is_attached_by_default, an_options.is_attached_by_default)
 			end
 			if
-				(an_options.is_obsolete_iteration_configured or else an_options.is_obsolete_iteration) and then
+				is_own_source and
+				(an_options.is_obsolete_iteration_configured or an_options.is_obsolete_iteration) and then
 				is_after_or_equal (namespace, namespace_1_22_0)
 			then
+				check is_supplier_option (at_is_obsolete_iteration) end
 				append_boolean_attribute (o_is_obsolete_iteration, an_options.is_obsolete_iteration)
 			end
 			if
+				is_own_source and then
 				(an_options.is_obsolete_routine_type_configured or else an_options.is_obsolete_routine_type) and then
 				is_after_or_equal (namespace, namespace_1_15_0)
 			then
+				check is_supplier_option (at_is_obsolete_routine_type) end
 				append_boolean_attribute (o_is_obsolete_routine_type, an_options.is_obsolete_routine_type)
 			end
 			if
+				is_own_capability and then
 				is_before_or_equal (namespace, namespace_1_15_0) and then
 				an_options.void_safety.is_set
 			then
+				check is_supplier_option (at_is_void_safe) end
+				check is_supplier_option (at_void_safety) end
 					-- Starting from `namespace_1_16_0` the option is treated as capability.
 				if is_after_or_equal (namespace, namespace_1_11_0) then
 						-- Current namespace.
@@ -1051,13 +1079,16 @@ feature {NONE} -- Implementation
 				end
 				append_text_attribute (o_void_safety, l_str)
 			end
-			if an_options.syntax.is_set then
+			if is_own_source and an_options.syntax.is_set then
+				check is_supplier_option (at_syntax) end
 				append_text_attribute (o_syntax, an_options.syntax.item)
 			end
 			if
-				is_after_or_equal (namespace, namespace_1_18_0) and then
-				an_options.array.is_set
+				is_own_source and
+				an_options.array.is_set and then
+				is_after_or_equal (namespace, namespace_1_18_0)
 			then
+				check is_supplier_option (at_manifest_array_type) end
 					-- The option is available only starting from `namespace_1_18_0`.
 				append_text_attribute (o_manifest_array_type, an_options.array.item)
 			end
@@ -1233,8 +1264,11 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	append_val_group (a_group: CONF_GROUP)
+	append_val_group (a_group: CONF_GROUP; is_own_source, is_own_capability: BOOLEAN)
 			-- Append the things that come in the value part of `a_group'.
+			--
+			-- • `is_own_source` tells whether the options control the source code (i.e. not a library, a precompile, etc.)
+			-- • `is_own_capability` tells whether the options control the capabilities (i.e. not an override, a library, etc.)
 		require
 			a_group_not_void: a_group /= Void
 		do
@@ -1243,7 +1277,7 @@ feature {NONE} -- Implementation
 			append_note_tag (a_group)
 			append_description_tag (a_group.description)
 			append_conditionals (a_group.internal_conditions, a_group.is_assembly)
-			append_group_options (a_group.internal_options)
+			append_group_options (a_group.internal_options, is_own_source, is_own_capability)
 			if
 				attached {CONF_VIRTUAL_GROUP} a_group as l_vg and then
 				attached l_vg.renaming as l_renaming
@@ -1261,7 +1295,7 @@ feature {NONE} -- Implementation
 				across
 					l_c_opt as o
 				loop
-					append_class_options (o.item, o.key)
+					append_class_options (o.item, o.key, is_own_source, is_own_capability)
 				end
 			end
 		end

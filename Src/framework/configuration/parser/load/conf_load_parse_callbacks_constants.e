@@ -8,10 +8,10 @@ class
 
 feature {NONE} -- Access
 
-	non_client_option_ids: ARRAY [INTEGER]
-			-- Non client options ids
-			-- It should be made a hashtable if the number of values grows too large.
+	supplier_option_ids: ARRAY [INTEGER]
+			-- Supplier option ids, i.e. IDs of the options that cannot be changed by the client.
 		once
+				-- It should be made a hashtable if the number of values grows too large.
 			Result :=
 				<<
 					at_catcall_detection,
@@ -25,14 +25,18 @@ feature {NONE} -- Access
 					at_syntax_level,
 					at_void_safety
 				>>
+		ensure
+			class
 		end
 
 feature {NONE} -- Helper
 
-	is_non_client_option (an_option: INTEGER): BOOLEAN
-			-- Is `an_option' non client option?
+	is_supplier_option (an_option: INTEGER): BOOLEAN
+			-- Is `an_option' controlled by a supplier rather than by a client?
 		do
-			Result := non_client_option_ids.has (an_option)
+			Result := supplier_option_ids.has (an_option)
+		ensure
+			class
 		end
 
 feature {NONE} -- Implementation constants

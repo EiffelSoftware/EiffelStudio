@@ -193,19 +193,25 @@ feature {NONE} -- Implementation
 			Precursor (a_x, a_y, a_width, a_height)
 		end
 
+	in_update_viewport_item_size: BOOLEAN
+			-- Is currently executing `update_viewport_item_size` ?
+
 	update_viewport_item_size (a_viewport_width, a_viewport_height: INTEGER)
 		local
 			prev_w, prev_h,
 			w,h: INTEGER
 		do
-			if attached item as l_item then
+			if
+				not in_update_viewport_item_size and
+				attached item as l_item
+			then
+				in_update_viewport_item_size := True
 				prev_w := l_item.width
 				prev_h := l_item.height
 
 				w := a_viewport_width.max (1)
 				h := a_viewport_height.max (1)
 					-- TODO: find better solution that does not block item resize actions!
-				block_item_resize_actions
 				l_item.reset_minimum_height
 				l_item.reset_minimum_width
 				if attached {EV_WIDGET_IMP} l_item.implementation as l_item_imp then
@@ -216,7 +222,6 @@ feature {NONE} -- Implementation
 					l_item.set_minimum_size (w, h)
 					set_item_size (w, h)
 				end
-				unblock_item_resize_actions
 			end
 		end
 

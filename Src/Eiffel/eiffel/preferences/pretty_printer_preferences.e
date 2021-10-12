@@ -30,7 +30,7 @@ feature {NONE} -- Initialization
 
 				-- Loop expression style.
 			preference_value_loop_expression_style := f.new_string_choice_preference_value
-				(m, preference_name_loop_expression_style, preference_string_loop_expression_style)
+					(m, preference_name_loop_expression_style, preference_string_loop_expression_style)
 			if not preference_result_loop_expression_style.valid_index (preference_value_loop_expression_style.selected_index) then
 				preference_value_loop_expression_style.set_selected_index (preference_default_loop_expression_style)
 			end
@@ -42,7 +42,7 @@ feature {NONE} -- Initialization
 
 				-- Line processing.
 			preference_value_line_processing := f.new_string_choice_preference_value
-				(m, preference_name_line_processing, preference_string_line_processing)
+					(m, preference_name_line_processing, preference_string_line_processing)
 			if not preference_result_line_processing.valid_index (preference_value_line_processing.selected_index) then
 				preference_value_line_processing.set_selected_index (preference_default_line_processing)
 			end
@@ -54,7 +54,7 @@ feature {NONE} -- Initialization
 
 				-- Unindented comments.
 			preference_value_keep_unindented_comments := f.new_boolean_preference_value
-				(m, preference_name_keep_unindented_comments, True)
+					(m, preference_name_keep_unindented_comments, True)
 		end
 
 feature -- Access
@@ -66,7 +66,7 @@ feature -- Access
 		do
 			i := preference_value_loop_expression_style.selected_index
 			Result := preference_result_loop_expression_style
-				[if preference_result_loop_expression_style.valid_index (i) then i else preference_default_loop_expression_style end]
+					[if preference_result_loop_expression_style.valid_index (i) then i else preference_default_loop_expression_style end]
 		ensure
 			{PRETTY_PRINTER}.is_loop_expression_style (Result)
 		end
@@ -78,7 +78,7 @@ feature -- Access
 		do
 			i := preference_value_line_processing.selected_index
 			Result := preference_result_line_processing
-				[if preference_result_line_processing.valid_index (i) then i else preference_default_line_processing end]
+					[if preference_result_line_processing.valid_index (i) then i else preference_default_line_processing end]
 		ensure
 			{PRETTY_PRINTER}.is_line_processing (Result)
 		end
@@ -121,12 +121,12 @@ feature {NONE} -- Settings: loop expression style
 			-- Values of loop expression styles with indexes corresponding to `preference_string_loop_expression_style`.
 		once
 			create Result.make_from_array (<<
-				{PRETTY_PRINTER}.loop_expression_keep,
-				{PRETTY_PRINTER}.loop_expression_keyword,
-				{PRETTY_PRINTER}.loop_expression_symbol
-			>>)
+					{PRETTY_PRINTER}.loop_expression_keep,
+					{PRETTY_PRINTER}.loop_expression_keyword,
+					{PRETTY_PRINTER}.loop_expression_symbol
+				>>)
 		ensure
-			across Result is s all {PRETTY_PRINTER}.is_loop_expression_style (s) end
+			∀ s: Result ¦ {PRETTY_PRINTER}.is_loop_expression_style (s)
 		end
 
 	preference_default_loop_expression_style: like {STRING_CHOICE_PREFERENCE}.selected_index
@@ -158,12 +158,12 @@ feature {NONE} -- Settings: new line style
 			-- Values of new lines styles with indexes corresponding to `preference_string_line_processing`.
 		once
 			create Result.make_from_array (<<
-				{PRETTY_PRINTER}.line_keep,
-				{PRETTY_PRINTER}.line_wrap,
-				{PRETTY_PRINTER}.line_inline
-			>>)
+					{PRETTY_PRINTER}.line_keep,
+					{PRETTY_PRINTER}.line_wrap,
+					{PRETTY_PRINTER}.line_inline
+				>>)
 		ensure
-			across Result is s all {PRETTY_PRINTER}.is_line_processing (s) end
+			∀ s: Result ¦ {PRETTY_PRINTER}.is_line_processing (s)
 		end
 
 	preference_default_line_processing: like {STRING_CHOICE_PREFERENCE}.selected_index
@@ -223,4 +223,5 @@ note
 			Website http://www.eiffel.com
 			Customer support http://support.eiffel.com
 		]"
+
 end

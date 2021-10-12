@@ -126,9 +126,7 @@ feature -- C code generation
 			buf.put_three_character (')', ' ', '{')
 			buf.indent
 			if attached case_list as when_parts then
-				across
-					when_parts is w
-				loop
+				⟳ w: when_parts ¦
 					w.generate_line_info
 					⟳ i: w.interval ¦ i.generate ⟲
 					buf.indent
@@ -136,7 +134,7 @@ feature -- C code generation
 					buf.put_new_line
 					buf.put_string ("break;")
 					buf.exdent
-				end
+				⟲
 			end
 			p := else_part
 			if attached p implies has_else_code then
@@ -241,9 +239,9 @@ note
 	date: "$Date$"
 	revision: "$Revision$"
 	author: "Alexander Kogtenkov"
-	copyright:	"Copyright (c) 1984-2020, Eiffel Software"
-	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
-	licensing_options:	"http://www.eiffel.com/licensing"
+	copyright: "Copyright (c) 1984-2021, Eiffel Software"
+	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
+	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[
 			This file is part of Eiffel Software's Eiffel Development Environment.
 			

@@ -688,7 +688,7 @@ feature {NONE} -- List processing
 				until
 					i >= index
 				loop
-					safe_process (match_list.i_th (i))
+					safe_process (match_list [i])
 					i := i + 1
 				end
 			end
@@ -1294,13 +1294,20 @@ feature {CLASS_AS} -- Routine
 
 	process_tagged_as (l_as: TAGGED_AS)
 			-- Process tagged `l_as'.
+		local
+			t: like {TAGGED_AS}.tag
 		do
-			print_inline (l_as.tag)
-			print_inline (l_as.colon_symbol (match_list))
-			increase_indent
+			t := l_as.tag
+			if attached t then
+				print_inline (t)
+				print_inline (l_as.colon_symbol (match_list))
+				increase_indent
+			end
 			print_inline_unindented (l_as.class_keyword (match_list))
 			print_inline_unindented (l_as.expr)
-			decrease_indent
+			if attached t then
+				decrease_indent
+			end
 		end
 
 	process_local_dec_list_as (l_as: LOCAL_DEC_LIST_AS)

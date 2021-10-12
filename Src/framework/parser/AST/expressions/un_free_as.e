@@ -1,5 +1,5 @@
-note
-	description: "Free unary expression description. Version for Bench."
+﻿note
+	description: "Free unary expression description."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 	date: "$Date$"
@@ -28,13 +28,13 @@ feature {NONE} -- Initialization
 			op_not_void: op /= Void
 			e_not_void: e /= Void
 		do
-			make_id_set
 			op_name := op
-			expr := e
+			initialize_unary_as (e, op)
 		ensure
 			op_name_set: op_name = op
 			expr_set: expr = e
 			no_routine_id: routine_ids.is_empty
+			operator_set: operator_index = op.index
 		end
 
 feature -- Attributes
@@ -68,7 +68,8 @@ feature -- Comparison
 	is_equivalent (other: like Current): BOOLEAN
 			-- Is `other' equivalent to the current object ?
 		do
-			Result := equivalent (op_name, other.op_name) and then
+			Result :=
+				equivalent (op_name, other.op_name) and then
 				equivalent (expr, other.expr)
 		end
 
@@ -80,7 +81,7 @@ feature {UNARY_AS}	-- Replication
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2015, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2021, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
@@ -111,4 +112,4 @@ note
 			Customer support http://support.eiffel.com
 		]"
 
-end -- class UN_FREE_AS
+end

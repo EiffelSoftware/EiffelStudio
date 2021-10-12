@@ -169,12 +169,12 @@ feature {NONE} -- Implementation
 		do
 			if attached a_group.classes as l_classes then
 				is_read_only := a_group.is_readonly
-				from
-					l_classes.start
+				across
+					l_classes as c
 				until
-					is_force_rebuild or l_classes.after
+					is_force_rebuild
 				loop
-					l_class := l_classes.item_for_iteration
+					l_class := c.item
 						-- Check for changes.
 					if is_read_only then
 							-- Do not look into source code changes for read-only group.
@@ -196,24 +196,18 @@ feature {NONE} -- Implementation
 							overrides.do_if (agent modified_classes.extend, agent {CONF_CLASS}.is_compiled)
 						end
 					end
-					l_classes.forth
 				end
 			end
 		end
 
-	handle_class (a_file, a_path: READABLE_STRING_32; a_cluster: CONF_CLUSTER)
-			-- Handle class in `a_file' with `a_path' in `a_cluster'
-		local
-			l_path: PATH
+	handle_class (f, d: READABLE_STRING_32; c: CONF_CLUSTER)
+			-- Handle class in source file `f` in directory `d` in cluster `c`.
 		do
-			if not is_force_rebuild then
-				is_force_rebuild := valid_eiffel_extension (a_file)
-				if is_force_rebuild then
-					create l_path.make_from_string (a_path)
-					l_path := l_path.extended (a_file)
-					is_force_rebuild := attached a_cluster.classes_by_filename as classes_by_filename implies not classes_by_filename.has (l_path)
-				end
-			end
+			is_force_rebuild :=
+				not is_force_rebuild and then
+				valid_eiffel_extension (f) and then
+				(attached c.classes_by_filename as t ⇒
+				not t.has ((create {PATH}.make_from_string (d)).extended (f)))
 		end
 
 invariant
@@ -221,7 +215,7 @@ invariant
 	process_group_observer_not_void: process_group_observer /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2018, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2021, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

@@ -180,6 +180,17 @@ feature -- Access
 			Result_non_negative: Result >= 0
 		end
 
+	minimum_width: INTEGER
+			-- Minimum width of current column.
+		do
+			if
+				attached parent_i as l_parent and then
+				l_parent.is_header_displayed
+			then
+				Result := header_item.minimum_width
+			end
+		end
+
 	virtual_x_position: INTEGER
 			-- Horizontal offset of `Current' in relation to the
 			-- the virtual area of `parent' grid in pixels.
@@ -556,6 +567,7 @@ feature -- Element change
 			-- Assign `a_width' to `width'.
 		require
 			width_non_negative: a_width >= 0
+			a_width_greater_or_equal_minimum: a_width >= minimum_width
 			is_parented: parent /= Void
 		local
 			l_width: INTEGER
@@ -801,7 +813,7 @@ invariant
 	physical_index_set: parent /= Void implies physical_index >= 0
 
 note
-	copyright: "Copyright (c) 1984-2018, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2021, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

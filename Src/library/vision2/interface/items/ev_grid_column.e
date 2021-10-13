@@ -111,6 +111,12 @@ feature -- Access
 			Result_non_negative: Result >= 0
 		end
 
+	minimum_width: INTEGER
+			-- Minimum width of current column.
+		do
+			Result := implementation.minimum_width
+		end
+
 	virtual_x_position: INTEGER
 			-- Horizontal offset of `Current' in relation to the
 			-- the virtual area of `parent' grid in pixels.
@@ -384,6 +390,7 @@ feature -- Element change
 		require
 			not_destroyed: not is_destroyed
 			width_non_negative: a_width >= 0
+			a_width_greater_or_equal_minimum: a_width >= minimum_width
 			is_parented: parent /= Void
 		do
 			implementation.set_width (a_width)

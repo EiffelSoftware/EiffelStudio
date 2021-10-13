@@ -27,7 +27,9 @@ feature -- Query
 
 	description: STRING_32
 		do
-			create Result.make_from_string_general ("%"git push%" needed from directory " + root_location.location_path_name)
+			create Result.make_from_string_general ("%"git push%" needed from directory %"")
+			Result.append (root_location.location_path_name)
+			Result.append ("%"")
 		end
 
 invariant

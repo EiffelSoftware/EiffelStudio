@@ -49,6 +49,25 @@ feature -- Access: working copy
 			Result := git.statuses (a_root_location, a_path, is_recursive, a_options)
 		end
 
+	remotes (a_root_location: PATH; a_options: detachable SCM_OPTIONS): detachable STRING_TABLE [GIT_REMOTE]
+			-- Remotes repository for `a_root_location'.	
+		local
+			git: like new_scm_engine
+		do
+			git := new_scm_engine
+			Result := git.remotes (a_root_location, a_options)
+		end
+
+	branches (a_root_location: PATH; a_show_all: BOOLEAN; a_options: detachable SCM_OPTIONS): detachable STRING_TABLE [GIT_BRANCH]
+			-- Branches for `a_root_location'.
+			-- if `a_show_all` is True, include remote branches.
+		local
+			git: like new_scm_engine
+		do
+			git := new_scm_engine
+			Result := git.branches (a_root_location, a_show_all, a_options)
+		end
+
 feature -- Operations: working copy
 
 	revert (a_changelist: SCM_CHANGELIST; a_options: detachable SCM_OPTIONS): SCM_RESULT

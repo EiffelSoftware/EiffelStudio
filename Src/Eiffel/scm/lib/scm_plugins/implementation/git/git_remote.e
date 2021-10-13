@@ -21,6 +21,21 @@ feature -- Access
 
 	name: IMMUTABLE_STRING_32
 
+	location: detachable IMMUTABLE_STRING_8
+		local
+			s: like fetch_location
+		do
+			Result := push_location
+			s := fetch_location
+			if Result /= Void then
+				if s /= Void and then not Result.same_string (s) then
+					Result := Void
+				end
+			else
+				Result := s
+			end
+		end
+
 	push_location: detachable IMMUTABLE_STRING_8
 
 	fetch_location: detachable IMMUTABLE_STRING_8

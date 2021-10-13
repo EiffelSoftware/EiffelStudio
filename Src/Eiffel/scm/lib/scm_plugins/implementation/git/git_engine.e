@@ -274,11 +274,13 @@ feature -- Execution
 
 feature -- Git specific
 
-	remotes (a_root_location: PATH; a_options: detachable SCM_OPTIONS): detachable LIST [GIT_REMOTE]
+	remotes (a_root_location: PATH; a_options: detachable SCM_OPTIONS): detachable STRING_TABLE [GIT_REMOTE]
+			-- Remote indexed by name.
 		local
 			res: detachable PROCESS_COMMAND_RESULT
 			s: detachable READABLE_STRING_8
 			cmd: STRING_32
+			l_name: READABLE_STRING_8
 			i,j,k,n: INTEGER
 			l_url,l_type: STRING_8
 			r: GIT_REMOTE
@@ -286,7 +288,6 @@ feature -- Git specific
 			create cmd.make_from_string (git_executable_location.name)
 			cmd.append_string_general (" remote -v")
 			cmd.append_string (option_to_command_line_flags ("remote", a_options))
-			cmd.append_string_general (" .")
 
 			debug ("GIT_ENGINE")
 				print ({STRING_32} "Command: [" + cmd + "]%N")
@@ -301,6 +302,7 @@ feature -- Git specific
 				end
 			else
 				s := res.output
+				create Result.make (s.occurrences ('%N') + 1)
 				from
 					i := 1
 					n := s.count
@@ -308,27 +310,32 @@ feature -- Git specific
 					i > n
 				loop
 					j := s.index_of ('%N', i)
-					if j > i then
+					if j < i then
 						j := s.count
 					end
 						-- Next space or tab
-					from until k > j or else s [k].is_space loop
+					from k := i until k > j or else s [k].is_space loop
 						k := k + 1
 					end
 					if k < j then
-						create r.make (s.substring (i, k - 1))
+						l_name := s.substring (i, k - 1)
+						r := Result [l_name]
+						if r = Void then
+							create r.make (l_name)
+						end
+						i := k + 1
 							-- Next space or tab
-						from until k > j or else s [k].is_space loop
+						from k := k + 1 until k > j or else s [k].is_space loop
 							k := k + 1
 						end
 						if k < j then
-							l_url := s.substring (i, k - 1)
+							l_url := s.substring (i, k - 1).to_string_8 -- READABLE_STRING_8 to STRING_8
 							l_url.left_adjust
 							i := k + 1
 							if s[i] = '(' then
-								l_type := s.substring (i + 1, j - 2)
+								l_type := s.substring (i + 1, j - 2).to_string_8 -- READABLE_STRING_8 to STRING_8
 							else
-								l_type := s.substring (i, j - 1)
+								l_type := s.substring (i, j - 1).to_string_8 -- READABLE_STRING_8 to STRING_8
 							end
 							l_type.left_adjust
 							l_type.right_adjust
@@ -339,6 +346,7 @@ feature -- Git specific
 							else
 								check push_or_fetch: False end
 							end
+							Result [r.name] := r
 						end
 					end
 					i := j + 1
@@ -350,6 +358,83 @@ feature -- Git specific
 				end
 			end
 		end
+
+	branches (a_root_location: PATH; a_show_all: BOOLEAN; a_options: detachable SCM_OPTIONS): detachable STRING_TABLE [GIT_BRANCH]
+			-- Branches for `a_root_location'.
+			-- if `a_show_all` is True, include remote branches.
+		local
+			res: detachable PROCESS_COMMAND_RESULT
+			s: detachable READABLE_STRING_8
+			cmd: STRING_32
+			i,j,k,n: INTEGER
+			l_name: READABLE_STRING_8
+			l_is_active: BOOLEAN
+			br: GIT_BRANCH
+		do
+			create cmd.make_from_string (git_executable_location.name)
+			cmd.append_string_general (" branch")
+			if a_show_all then
+				cmd.append_string_general (" -a")
+			end
+			cmd.append_string (option_to_command_line_flags ("branch", a_options))
+
+			debug ("GIT_ENGINE")
+				print ({STRING_32} "Command: [" + cmd + "]%N")
+			end
+			res := output_of_command (cmd, a_root_location)
+			debug ("GIT_ENGINE")
+				print ("-> terminated %N")
+			end
+			if res = Void then
+				debug ("GIT_ENGINE")
+					print ("-> terminated : None .%N")
+				end
+			else
+				s := res.output
+				create Result.make (s.occurrences ('%N') + 1)
+				from
+					i := 1
+					n := s.count
+				until
+					i > n
+				loop
+					j := s.index_of ('%N', i)
+					if j < i then
+						j := s.count
+					end
+					l_is_active := s [i] = '*'
+						-- Next non space
+					from k := i + 1 until k > j or else not s [k].is_space loop
+						k := k + 1
+					end
+					i := k
+
+						-- Next space or tab
+					from k := i + 1 until k > j or else s [k].is_space loop
+						k := k + 1
+					end
+					if k > j then
+						k := j
+					else
+						k := k - 1
+					end
+					l_name := s.substring (i, k)
+					br := Result [l_name]
+					if br = Void then
+						create br.make (s.substring (i, k))
+					end
+					br.set_is_active (l_is_active)
+					Result [br.name] := br
+					i := j + 1
+				end
+
+				debug ("GIT_ENGINE")
+					print ("-> terminated : count=" + s.count.out + " .%N")
+					print (s)
+				end
+			end
+		end
+
 
 feature {NONE} -- Implementation
 

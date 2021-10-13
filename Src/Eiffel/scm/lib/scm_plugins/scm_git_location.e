@@ -126,6 +126,33 @@ feature -- Execution
 			end
 		end
 
+	remotes (cfg: SCM_CONFIG): detachable STRING_TABLE [GIT_REMOTE]
+		local
+			scm: SCM_GIT
+		do
+			reset_error
+			create scm.make (cfg)
+			Result := scm.remotes (location, Void)
+		end
+
+	branches (cfg: SCM_CONFIG): detachable STRING_TABLE [GIT_BRANCH]
+		local
+			scm: SCM_GIT
+		do
+			reset_error
+			create scm.make (cfg)
+			Result := scm.branches (location, False, Void)
+		end
+
+	all_branches (cfg: SCM_CONFIG): detachable STRING_TABLE [GIT_BRANCH]
+		local
+			scm: SCM_GIT
+		do
+			reset_error
+			create scm.make (cfg)
+			Result := scm.branches (location, True, Void)
+		end
+
 note
 	copyright: "Copyright (c) 1984-2021, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"

@@ -33,6 +33,8 @@ feature {NONE} -- Initialization
 		do
 			status_box := box
 			default_create
+			unversioned_files_included := box.unversioned_files_included
+			location_with_no_change_hidden := box.location_with_no_change_hidden
 			set_workspace (ws)
 		end
 
@@ -301,6 +303,8 @@ feature -- Access
 
 	unversioned_files_included: BOOLEAN
 
+	location_with_no_change_hidden: BOOLEAN
+
 feature -- Query
 
 	changes_for	(loc: SCM_LOCATION): detachable SCM_CHANGELIST
@@ -445,6 +449,14 @@ feature -- Basic operation
 		do
 			if unversioned_files_included /= b then
 				unversioned_files_included := b
+				update_statuses (Void)
+			end
+		end
+
+	hide_location_with_no_change (b: BOOLEAN)
+		do
+			if location_with_no_change_hidden /= b then
+				location_with_no_change_hidden := b
 				update_statuses (Void)
 			end
 		end

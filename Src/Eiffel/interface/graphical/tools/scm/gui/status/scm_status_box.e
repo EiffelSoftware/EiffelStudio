@@ -69,7 +69,7 @@ feature {NONE} -- Initialization
 		local
 			bar: EV_HORIZONTAL_BOX
 			but: EV_BUTTON
-			unver_cb: EV_CHECK_BUTTON
+			unver_cb, hide_cb: EV_CHECK_BUTTON
 			l_combo: EV_COMBO_BOX
 			pix: EV_PIXMAP
 			pix_cell: EV_CELL
@@ -139,6 +139,18 @@ feature {NONE} -- Initialization
 						include_unversioned_files (a_cb.is_selected)
 					end(unver_cb))
 
+			include_unversioned_files_checkbox := unver_cb
+
+			create hide_cb.make_with_text (scm_names.question_hide_location_with_no_change)
+			hide_cb.set_tooltip (scm_names.tooltip_question_hide_location_with_no_change)
+			bar.extend (hide_cb); bar.disable_item_expand (hide_cb)
+			hide_cb.select_actions.extend (agent (a_cb: EV_CHECK_BUTTON)
+					do
+						hide_location_with_no_change (a_cb.is_selected)
+					end(hide_cb))
+
+			hide_location_with_no_change_checkbox := hide_cb
+
 --			bar.extend (create {EV_CELL})
 
 		end
@@ -151,6 +163,10 @@ feature -- Access
 
 	check_all_repo_button,
 	save_all_repo_button: EV_BUTTON
+
+	include_unversioned_files_checkbox,
+	hide_location_with_no_change_checkbox: detachable EV_CHECK_BUTTON
+
 
 feature -- Basic operation
 
@@ -172,10 +188,59 @@ feature -- Basic operation
 --			g.set_workspace (ws)
 		end
 
-	include_unversioned_files (b: BOOLEAN)
+	unversioned_files_included: BOOLEAN
 		do
 			if attached grid as g then
+				Result := g.unversioned_files_included
+			else
+				Result := attached include_unversioned_files_checkbox as cb and then cb.is_selected
+			end
+		end
+
+	include_unversioned_files (b: BOOLEAN)
+		do
+			if
+				attached include_unversioned_files_checkbox as cb and then
+				cb.is_selected /= b
+			then
+				cb.select_actions.block
+				if b then
+					cb.enable_select
+				else
+					cb.disable_select
+				end
+				cb.select_actions.resume
+			end
+			if attached grid as g then
 				g.include_unversioned_files (b)
+			end
+		end
+
+	location_with_no_change_hidden: BOOLEAN
+		do
+			if attached grid as g then
+				Result := g.location_with_no_change_hidden
+			else
+				Result := attached hide_location_with_no_change_checkbox as cb and then cb.is_selected
+			end
+		end
+
+	hide_location_with_no_change (b: BOOLEAN)
+		do
+			if
+				attached hide_location_with_no_change_checkbox as cb and then
+				cb.is_selected /= b
+			then
+				cb.select_actions.block
+				if b then
+					cb.enable_select
+				else
+					cb.disable_select
+				end
+				cb.select_actions.resume
+			end
+			if attached grid as g then
+				g.hide_location_with_no_change (b)
 			end
 		end
 

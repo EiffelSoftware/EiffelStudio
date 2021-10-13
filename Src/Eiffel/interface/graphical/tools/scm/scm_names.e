@@ -88,6 +88,9 @@ feature -- Dialogs
 
 	question_show_unversioned_files: STRING_32 do Result := locale.translation_in_context ("Show unversioned files", "scm") end
 
+	question_hide_location_with_no_change: STRING_32 do Result := locale.translation_in_context ("Hide location with no change", "scm") end
+	tooltip_question_hide_location_with_no_change: STRING_32 do Result := locale.translation_in_context ("Hide location that has no change", "scm") end
+
 	question_include_all_content: STRING_32 do Result := locale.translation_in_context ("Include all content", "scm") end
 
 	label_set_svn_commands: STRING_32 do Result := locale.translation_in_context ("Set the Subversion commands", "scm") end

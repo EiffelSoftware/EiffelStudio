@@ -207,7 +207,12 @@ feature -- Operations
 						row.show
 					else
 						-- TODO: check if this is better to hide, or grey the line.
-						row.set_foreground_color (colors.disabled_foreground_color)
+						if g.location_with_no_change_hidden then
+							row.hide
+						else
+							row.show
+							row.set_foreground_color (colors.disabled_foreground_color)
+						end
 					end
 				elseif nb = 1 then
 					row.show

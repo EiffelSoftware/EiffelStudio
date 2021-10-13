@@ -145,6 +145,15 @@ feature -- Change
 			is_setup_mode := False
 		end
 
+	record_status_box_settings
+		do
+			if attached status_box as box then
+				recorded_status_box_settings := [box.unversioned_files_included, box.location_with_no_change_hidden]
+			end
+		end
+
+	recorded_status_box_settings: detachable TUPLE [unversioned_files_included, location_with_no_change_hidden: BOOLEAN]
+
 feature {NONE} -- Action handlers
 
 	on_workspace_updated (ws: detachable SCM_WORKSPACE)
@@ -222,17 +231,24 @@ feature {NONE} -- Action handlers
 					setup_box := l_setup
 					l_setup.set_workspace (ws)
 					b.extend (l_setup)
+					record_status_box_settings
 					status_box := Void
 				else
 					set_status_mode
 					create l_status.make (scm, develop_window)
 					status_box := l_status
+					if attached recorded_status_box_settings as l_recorded_status_box_settings then
+						l_status.include_unversioned_files (l_recorded_status_box_settings.unversioned_files_included)
+						l_status.hide_location_with_no_change (l_recorded_status_box_settings.location_with_no_change_hidden)
+					end
 					l_status.set_workspace (ws)
 					b.extend (l_status)
 					setup_box := Void
+					record_status_box_settings
 				end
 			else
 				set_status_mode
+				record_status_box_settings
 				setup_box := Void
 				status_box := Void
 			end
@@ -282,6 +298,7 @@ feature {NONE} -- Action handlers
 							status_box := l_status
 						end
 						l_status.set_workspace (ws)
+						record_status_box_settings
 						b.extend (l_status)
 					else
 						l_setup := setup_box

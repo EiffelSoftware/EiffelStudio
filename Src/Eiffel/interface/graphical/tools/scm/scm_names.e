@@ -75,7 +75,7 @@ feature -- Menu
 	menu_revert: STRING_32 do Result := locale.translation_in_context ("Revert ...", "scm") end
 	menu_update: STRING_32 do Result := locale.translation_in_context ("Update ...", "scm") end
 
-	menu_save: STRING_32 do Result := locale.translation_in_context ("Save ...", "scm") end
+	menu_save: STRING_32 do Result := locale.translation_in_context ("Commit ...", "scm") end
 	menu_configuration: STRING_32 do Result := locale.translation_in_context ("Configuration ...", "scm") end
 
 	menu_go_to_tool: STRING_32 do Result := locale.translation_in_context ("Go to the tool", "scm") end
@@ -139,7 +139,7 @@ feature -- Dialogs
 		do
 			Result := locale.formatted_string (locale.translation_in_context ("Source Control / $1", "scm"), [a_title])
 		end
-	title_scm_save: STRING_32 do Result := locale.translation_in_context ("Source Control / Save", "scm") end
+	title_scm_save: STRING_32 do Result := locale.translation_in_context ("Source Control / Commit", "scm") end
 	title_scm_config: STRING_32 do Result := locale.translation_in_context ("Source Control / Configuration", "scm") end
 
 	label_resetting: STRING_32 do Result := locale.translation_in_context ("Resetting ...", "scm") end
@@ -182,8 +182,8 @@ feature -- General
 	tooltip_button_config: STRING_32 do Result := locale.translation_in_context ("Open the configuration dialog", "scm") end
 
 	button_check_all: STRING_32 do Result := locale.translation_in_context ("Status", "scm") end
-	button_save_changelist: STRING_32 do Result := locale.translation_in_context ("Save", "scm") end
-	button_save_changelist_tooltip: STRING_32 do Result := locale.translation_in_context ("Save active changelist", "scm") end
+	button_save_changelist: STRING_32 do Result := locale.translation_in_context ("Commit", "scm") end
+	button_save_changelist_tooltip: STRING_32 do Result := locale.translation_in_context ("Commit active changelist", "scm") end
 	button_clear_changelist: STRING_32 do Result := locale.translation_in_context ("Clear", "scm") end
 	button_clear_changelist_tooltip: STRING_32 do Result := locale.translation_in_context ("Clear the active changelist", "scm") end
 

@@ -371,6 +371,33 @@ feature -- Action
 						progress_log_text.append_text ({STRING_32} " - ")
 						progress_log_text.append_text (l_git_push.description)
 						progress_log_text.append_text ("%N")
+						debug ("scm")
+							if attached l_git_push.root_location.remotes (scm_service.config) as lst then
+								progress_log_text.append_text ("   Remotes:")
+								across
+									lst as ic_remote
+								loop
+									progress_log_text.append_text (" ")
+									progress_log_text.append_text (ic_remote.item.name)
+									if attached ic_remote.item.location as loc then
+										progress_log_text.append_text ("(")
+										progress_log_text.append_text (loc)
+										progress_log_text.append_text (")")
+									end
+								end
+								progress_log_text.append_text ("%N")
+							end
+							if attached l_git_push.root_location.branches (scm_service.config) as lst then
+								progress_log_text.append_text ("   Branches:")
+								across
+									lst as ic_branch
+								loop
+									progress_log_text.append_text (" ")
+									progress_log_text.append_text (ic_branch.item.name)
+								end
+								progress_log_text.append_text ("%N")
+							end
+						end
 					end
 				end
 			end

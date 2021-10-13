@@ -164,12 +164,13 @@ feature -- Agents
 		require
 			not_destroyed: not is_destroyed
 		local
-			l_width, l_height: INTEGER
+			l_viewport_width, l_viewport_height: INTEGER
+			l_fixed_area_width, l_fixed_area_height: INTEGER
 			l_main_container: SD_MULTI_DOCK_AREA
 			l_docking_manager: like docking_manager
 		do
 			debug ("docking")
-				io.put_string ("%N SD_DOCKING_MANAGER on_resize ~~~~~~~~~~~~~~~~~~~~%N")
+				io.put_string ("%N SD_DOCKING_MANAGER {" + generator + "}.on_resize ~~~~~~~~~~~~~~~~~~~~%N")
 			end
 			l_docking_manager := docking_manager
 			l_docking_manager.command.remove_auto_hide_zones (False)
@@ -177,48 +178,79 @@ feature -- Agents
 				-- This is to make sure item in `fixed_area' is resized, otherwise zone's size is incorrect when maximize a zone
 			l_docking_manager.fixed_area.set_minimum_size (1, 1)
 
-			if a_width > 0 then
-				l_width := l_docking_manager.internal_viewport.width
-				if l_width > 0 then
+			l_viewport_width := l_docking_manager.internal_viewport.width
+			l_viewport_height := l_docking_manager.internal_viewport.height
+
+			l_main_container := l_docking_manager.query.inner_container_main
+
+			if a_width > 0 and a_height > 0 then
+				if l_viewport_width > 0 or l_viewport_height > 0 then
 					if attached l_docking_manager.internal_viewport.item as l_viewport_item then
-						l_viewport_item.reset_minimum_width
-						l_docking_manager.internal_viewport.set_item_width (l_width.max (l_viewport_item.minimum_width))
+						l_viewport_item.reset_minimum_size
+						l_docking_manager.internal_viewport.set_item_size (l_viewport_width.max (l_viewport_item.minimum_width), l_viewport_height.max (l_viewport_item.minimum_height))
 					else
 						check False end
-						l_docking_manager.internal_viewport.set_item_width (l_width)
+						l_docking_manager.internal_viewport.set_item_size (l_viewport_width, l_viewport_height)
 					end
 				end
 
 					-- We have to make sure `l_width' not smaller than the minimum width of `l_main_container''s item
 					-- Otherwise, it will cause bug#12065. This bug ONLY happens on Solaris (both CDE and JDS), not happens on Windows, Ubuntu
 					-- And we don't need to care about the height of `l_main_container''s item since it works fine
-				l_main_container := l_docking_manager.query.inner_container_main
-				l_width := l_docking_manager.fixed_area.width
-				if l_main_container.readable and then l_main_container.item /= Void and then l_width < l_main_container.item.minimum_width then
-					l_width := l_main_container.item.minimum_width
+				l_fixed_area_width := l_docking_manager.fixed_area.width
+				l_fixed_area_height :=  l_docking_manager.fixed_area.height
+				if
+					l_main_container.readable and then
+					attached l_main_container.item as l_main_container_item
+				then
+					l_fixed_area_width := l_fixed_area_width.max (l_main_container_item.minimum_width)
+					l_fixed_area_height := l_fixed_area_height.max (l_main_container_item.minimum_height)
 				end
-
-				if l_width > 0 then
-					l_main_container.reset_minimum_width
-					l_docking_manager.fixed_area.set_item_width (l_main_container, l_width)
+				if l_fixed_area_width > 0 or l_fixed_area_height > 0 then
+					l_main_container.reset_minimum_size
+					l_docking_manager.fixed_area.set_item_size (l_main_container, l_fixed_area_width, l_fixed_area_height)
 				end
-			end
-			if a_height > 0 then
-				l_height := l_docking_manager.internal_viewport.height
-				if l_height > 0 then
+			elseif a_width > 0 then
+				if l_viewport_width > 0 then
 					if attached l_docking_manager.internal_viewport.item as l_viewport_item then
-						l_viewport_item.reset_minimum_height
-						l_docking_manager.internal_viewport.set_item_height (l_height.max (l_viewport_item.minimum_height))
+						l_viewport_item.reset_minimum_width
+						l_docking_manager.internal_viewport.set_item_width (l_viewport_width.max (l_viewport_item.minimum_width))
 					else
 						check False end
-						l_docking_manager.internal_viewport.set_item_height (l_height)
+						l_docking_manager.internal_viewport.set_item_width (l_viewport_width)
 					end
 				end
-				l_height := l_docking_manager.fixed_area.height
+
+					-- We have to make sure `l_width' not smaller than the minimum width of `l_main_container''s item
+					-- Otherwise, it will cause bug#12065. This bug ONLY happens on Solaris (both CDE and JDS), not happens on Windows, Ubuntu
+					-- And we don't need to care about the height of `l_main_container''s item since it works fine
+				l_fixed_area_width := l_docking_manager.fixed_area.width
 				l_main_container := l_docking_manager.query.inner_container_main
-				if l_height > 0 then
+				if
+					l_main_container.readable and then
+					attached l_main_container.item as l_main_container_item
+				then
+					l_fixed_area_width := l_fixed_area_width.max (l_main_container_item.minimum_width)
+				end
+				if l_fixed_area_width > 0 then
+					l_main_container.reset_minimum_width
+					l_docking_manager.fixed_area.set_item_width (l_main_container, l_fixed_area_width)
+				end
+			elseif a_height > 0 then
+				if l_viewport_height > 0 then
+					if attached l_docking_manager.internal_viewport.item as l_viewport_item then
+						l_viewport_item.reset_minimum_height
+						l_docking_manager.internal_viewport.set_item_height (l_viewport_height.max (l_viewport_item.minimum_height))
+					else
+						check False end
+						l_docking_manager.internal_viewport.set_item_height (l_viewport_height)
+					end
+				end
+				l_fixed_area_height := l_docking_manager.fixed_area.height
+				l_main_container := l_docking_manager.query.inner_container_main
+				if l_fixed_area_height > 0 then
 					l_main_container.reset_minimum_height
-					l_docking_manager.fixed_area.set_item_height (l_main_container, l_height)
+					l_docking_manager.fixed_area.set_item_height (l_main_container, l_fixed_area_height)
 				end
 			end
 			l_docking_manager.tool_bar_manager.on_resize (a_x, a_y, l_docking_manager.internal_viewport.width, l_docking_manager.internal_viewport.height, a_force)

@@ -202,6 +202,21 @@ feature -- Status setting
 
 feature -- Element change
 
+	reset_minimum_width
+			-- Reset the minimum width.
+		deferred
+		end
+
+	reset_minimum_height
+			-- Reset the minimum height.
+		deferred
+		end
+
+	reset_minimum_size
+			-- Reset the minimum size (width and height).
+		deferred
+		end
+
 	set_minimum_width (a_minimum_width: INTEGER)
 			-- Set the minimum horizontal size to `a_minimum_width' in pixels.
 		require
@@ -319,14 +334,14 @@ invariant
 		--|is_usable and parent /= Void implies parent.has (interface)
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2021, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 

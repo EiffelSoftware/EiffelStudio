@@ -502,6 +502,24 @@ feature -- Element change
 			{GTK2}.gtk_widget_set_minimum_size (c_object, a_width, a_height)
 		end
 
+	reset_minimum_width
+			-- Reset the minimum width.
+		do
+			set_real_minimum_size (-1, height_request)
+		end
+
+	reset_minimum_height
+			-- Reset the minimum height.
+		do
+			set_real_minimum_size (width_request, -1)
+		end
+
+	reset_minimum_size
+			-- Reset the minimum size (width and height).
+		do
+			set_real_minimum_size (-1, -1)
+		end
+
 feature -- Measurement
 
 	x_position: INTEGER

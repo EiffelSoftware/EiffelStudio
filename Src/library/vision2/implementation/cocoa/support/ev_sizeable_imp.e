@@ -56,6 +56,25 @@ feature -- Resizing
 			is_user_min_width_set := True
 		end
 
+	reset_minimum_width
+			-- Reset the minimum width.
+		do
+			is_user_min_width_set := False
+		end
+
+	reset_minimum_height
+			-- Reset the minimum height.
+		do
+			is_user_min_height_set := False
+		end
+
+	reset_minimum_size
+			-- Reset the minimum size (width and height).
+		do
+			is_user_min_width_set := False
+			is_user_min_height_set := False
+		end
+
 feature -- Basic operation
 
 	set_move_and_size

@@ -357,6 +357,30 @@ feature -- Element change
 			end
 		end
 
+	reset_minimum_width
+			-- Reset the minimum width.
+		local
+			v: INTEGER
+		do
+			{GTK2}.g_object_get_integer (c_object, height_request_string.item, $v)
+			{GTK2}.gtk_widget_set_minimum_size (c_object, -1, v)
+		end
+
+	reset_minimum_height
+			-- Reset the minimum height.
+		local
+			v: INTEGER
+		do
+			{GTK2}.g_object_get_integer (c_object, height_request_string.item, $v)
+			{GTK2}.gtk_widget_set_minimum_size (c_object, v, -1)
+		end
+
+	reset_minimum_size
+			-- Reset the minimum size (width and height).
+		do
+			{GTK2}.gtk_widget_set_minimum_size (c_object, -1, -1)
+		end
+
 feature -- Measurement
 
 	x_position: INTEGER
@@ -546,7 +570,7 @@ feature {EV_ANY, EV_ANY_I, EV_INTERMEDIARY_ROUTINES} -- Implementation
 	interface: detachable EV_WIDGET note option: stable attribute end;
 
 note
-	copyright:	"Copyright (c) 1984-2019, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2021, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

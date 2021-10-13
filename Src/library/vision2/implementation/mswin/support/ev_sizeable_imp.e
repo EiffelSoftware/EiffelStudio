@@ -127,6 +127,25 @@ feature -- Resizing
 		deferred
 		end
 
+	reset_minimum_width
+			-- Reset the minimum width.
+		do
+			child_cell.disable_user_min_width_set
+		end
+
+	reset_minimum_height
+			-- Reset the minimum height.
+		do
+			child_cell.disable_user_min_height_set
+		end
+
+	reset_minimum_size
+			-- Reset the minimum size (width and height).
+		do
+			child_cell.disable_user_min_width_set
+			child_cell.disable_user_min_height_set
+		end
+
 feature -- Position
 
 	set_position (new_x_position: INTEGER; new_y_position: INTEGER)

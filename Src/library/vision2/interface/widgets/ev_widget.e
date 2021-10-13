@@ -361,10 +361,22 @@ feature -- Element change
 
 feature {EV_BUILDER} -- Element change
 
+	reset_minimum_size
+			-- Reset `minimum_width_set_by_user' and `minimum_height_set_by_user'.
+		do
+			minimum_width_set_by_user := False
+			minimum_height_set_by_user := False
+			implementation.reset_minimum_size
+		ensure
+			minimum_width_set_by_user_reset: not minimum_width_set_by_user
+			minimum_height_set_by_user_reset: not minimum_height_set_by_user
+		end
+
 	reset_minimum_width
 			-- Reset `minimum_width_set_by_user'.
 		do
 			minimum_width_set_by_user := False
+			implementation.reset_minimum_width
 		ensure
 			minimum_width_set_by_user_reset: not minimum_width_set_by_user
 		end
@@ -373,6 +385,7 @@ feature {EV_BUILDER} -- Element change
 			-- Reset `minimum_height_set_by_user'.
 		do
 			minimum_height_set_by_user := False
+			implementation.reset_minimum_height
 		ensure
 			minimum_height_set_by_user_reset: not minimum_height_set_by_user
 		end
@@ -400,7 +413,7 @@ invariant
 		is_usable and then attached parent as l_parent implies l_parent.has (Current)
 
 note
-	copyright:	"Copyright (c) 1984-2014, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2021, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

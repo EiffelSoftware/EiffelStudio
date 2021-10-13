@@ -28,6 +28,12 @@ inherit
 			implementation
 		end
 
+	EV_SHARED_APPLICATION
+		undefine
+			default_create,
+			copy
+		end
+
 feature {NONE} -- Implementation
 
 	initialize
@@ -46,7 +52,12 @@ feature {NONE} -- Implementation
 
 			pointer_button_release_actions.extend
 				(agent (a_x, a_y, a_button: INTEGER_32; a_x_tilt, a_y_tilt, a_pressure: REAL_64; a_screen_x, a_screen_y: INTEGER_32)
-					do update_proportion end)
+					do
+						update_proportion
+						if attached shared_environment.is_gtk3_implementation then
+							set_proportion (proportion)
+						end
+					end)
 			resize_actions.extend
 				(agent (a_x, a_y, a_width, a_height: INTEGER_32)
 					do remember_top_resize_split_area (Current) end)
@@ -85,7 +96,7 @@ invariant
 
 note
 	library:	"SmartDocking: Library of reusable components for Eiffel."
-	copyright:	"Copyright (c) 1984-2020, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2021, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

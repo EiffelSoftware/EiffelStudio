@@ -14,6 +14,8 @@ inherit
 	EV_ENVIRONMENT_I
 		export
 			{ANY} is_destroyed
+		redefine
+			is_gtk3_implementation
 		end
 
 	EXECUTION_ENVIRONMENT
@@ -88,8 +90,13 @@ feature -- Access
 			Result.compare_objects
 		end
 
+feature {EV_ANY, EV_ANY_I} -- Implementation		
+
+	is_gtk3_implementation: BOOLEAN = True
+			-- Is vision implementation gtk3 ?
+
 note
-	copyright:	"Copyright (c) 1984-2016, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2021, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

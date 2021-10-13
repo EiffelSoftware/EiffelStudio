@@ -138,6 +138,13 @@ feature {EV_ANY, EV_ANY_I, EV_SHARED_TRANSPORT_I, EV_ANY_HANDLER, EV_ABSTRACT_PI
 	implementation: EV_ENVIRONMENT_I
 			-- Responsible for interaction with native graphics toolkit.
 
+	is_gtk3_implementation: BOOLEAN
+			-- Is vision implementation gtk3 ?
+			-- warning: this function is likely to be removed in the future.
+		do
+			Result := implementation.is_gtk3_implementation
+		end
+
 feature {NONE} -- Implementation
 
 	create_interface_objects
@@ -158,7 +165,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2015, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2021, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

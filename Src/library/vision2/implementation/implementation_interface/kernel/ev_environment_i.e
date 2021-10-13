@@ -108,6 +108,12 @@ feature {EV_ANY, EV_ANY_I} -- Implementation
 			-- Provides a common user interface to platform dependent
 			-- functionality implemented by `Current'
 
+	is_gtk3_implementation: BOOLEAN
+			-- Is vision implementation gtk3 ?
+		do
+			Result := False
+		end
+
 feature {NONE} -- Implementation
 
 	application_cell: separate CELL [detachable separate EV_APPLICATION_I]
@@ -166,7 +172,7 @@ feature -- Command
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2016, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2021, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

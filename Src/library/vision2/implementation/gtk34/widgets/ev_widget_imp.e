@@ -421,16 +421,17 @@ feature -- Element change
 			-- Set the minimum horizontal size to `a_minimum_width'.
 		do
 			debug ("gtk_sizing")
-				print (generating_type.name_32 + {STRING_32} ".set_minimum_width (w=" + a_minimum_width.out + ")%N")
+				print (if attached interface as l_interface then l_interface.debug_output else generating_type.name_32 end)
+				print ({STRING_32} ".set_minimum_width (w=" + a_minimum_width.out + ")%N")
 			end
 
 			{GTK2}.gtk_widget_set_minimum_size (c_object, a_minimum_width, real_minimum_height)
 
 				-- If the parent is a fixed or scrollable area we need to update the item size.
 			if attached {EV_VIEWPORT_IMP} parent_imp as l_viewport_parent then
-				l_viewport_parent.set_item_width (a_minimum_width.max (minimum_width))
+				l_viewport_parent.set_item_width (a_minimum_width.max (preferred_minimum_width))
 			elseif attached {EV_FIXED_IMP} parent_imp as l_fixed_parent then
-				l_fixed_parent.set_item_width (attached_interface, a_minimum_width.max (minimum_width))
+				l_fixed_parent.set_item_width (attached_interface, a_minimum_width.max (preferred_minimum_width))
 			end
 		end
 
@@ -438,16 +439,17 @@ feature -- Element change
 			-- Set the minimum vertical size to `a_minimum_height'.
 		do
 			debug ("gtk_sizing")
-				print (generating_type.name_32 + {STRING_32} ".set_minimum_height (h=" + a_minimum_height.out + ")%N")
+				print (if attached interface as l_interface then l_interface.debug_output else generating_type.name_32 end)
+				print ({STRING_32} ".set_minimum_height (h=" + a_minimum_height.out + ")%N")
 			end
 
 			{GTK2}.gtk_widget_set_minimum_size (c_object, real_minimum_width, a_minimum_height)
 
 				-- If the parent is a fixed or scrollable area we need to update the item size.
 			if attached {EV_VIEWPORT_IMP} parent_imp as l_viewport_parent then
-				l_viewport_parent.set_item_height (a_minimum_height.max (minimum_height))
+				l_viewport_parent.set_item_height (a_minimum_height.max (preferred_minimum_height))
 			elseif attached {EV_FIXED_IMP} parent_imp as l_fixed_parent then
-				l_fixed_parent.set_item_height (attached_interface, a_minimum_height.max (minimum_height))
+				l_fixed_parent.set_item_height (attached_interface, a_minimum_height.max (preferred_minimum_height))
 			end
 		end
 
@@ -455,15 +457,16 @@ feature -- Element change
 			-- Set the minimum size to `a_minimum_width` x `a_minimum_height`.
 		do
 			debug ("gtk_sizing")
-				print (generating_type.name_32 + {STRING_32} ".set_minimum_size (w=" + a_minimum_width.out + ",h=" + a_minimum_height.out + ")%N")
+				print (if attached interface as l_interface then l_interface.debug_output else generating_type.name_32 end)
+				print ({STRING_32} ".set_minimum_size (w=" + a_minimum_width.out + ",h=" + a_minimum_height.out + ")%N")
 			end
 			{GTK2}.gtk_widget_set_minimum_size (c_object, a_minimum_width, a_minimum_height)
 
 				-- If the parent is a fixed or scrollable area we need to update the item size.
 			if attached {EV_VIEWPORT_IMP} parent_imp as l_viewport_parent then
-				l_viewport_parent.set_item_size (a_minimum_width.max (minimum_width), a_minimum_height.max (minimum_height))
+				l_viewport_parent.set_item_size (a_minimum_width.max (preferred_minimum_width), a_minimum_height.max (preferred_minimum_height))
 			elseif attached {EV_FIXED_IMP} parent_imp as l_fixed_parent then
-				l_fixed_parent.set_item_size (attached_interface, a_minimum_width.max (minimum_width), a_minimum_height.max (minimum_height))
+				l_fixed_parent.set_item_size (attached_interface, a_minimum_width.max (preferred_minimum_width), a_minimum_height.max (preferred_minimum_height))
 			end
 		end
 
@@ -475,11 +478,8 @@ feature -- Element change
 			l_alloc: POINTER
 		do
 			debug ("gtk_sizing")
-				if attached interface as l_interface then
-					print (l_interface.debug_output + {STRING_32} ".set_widget_size (w=" + a_width.out + ",h=" + a_height.out + ")%N")
-				else
-					print (generating_type.name_32 + {STRING_32} ".set_widget_size (w=" + a_width.out + ",h=" + a_height.out + ")%N")
-				end
+				print (if attached interface as l_interface then l_interface.debug_output else generating_type.name_32 end)
+				print ({STRING_32} ".set_widget_size (w=" + a_width.out + ",h=" + a_height.out + ")%N")
 			end
 			l_c_object := c_object
 			l_alloc := l_alloc.memory_alloc ({GTK}.c_gtk_allocation_struct_size)

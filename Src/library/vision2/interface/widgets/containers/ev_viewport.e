@@ -136,8 +136,8 @@ feature -- Element change
 		do
 			implementation.set_item_size (a_width, a_height)
 		ensure
-			an_item_width_assigned: a_width > 0 implies item.width = a_width
-			an_item_height_assigned: a_height > 0 implies item.height = a_height
+			an_item_width_assigned: a_width > 0 implies item.width >= a_width
+			an_item_height_assigned: a_height > 0 implies item.height >= a_height
 		end
 
 feature {NONE} -- Contract support

@@ -212,11 +212,11 @@ feature {NONE} -- Implementation
 				w := a_viewport_width.max (1)
 				h := a_viewport_height.max (1)
 					-- TODO: find better solution that does not block item resize actions!
-				l_item.reset_minimum_height
 				l_item.reset_minimum_width
+				l_item.reset_minimum_height
 				if attached {EV_WIDGET_IMP} l_item.implementation as l_item_imp then
 					l_item_imp.set_real_minimum_size (-1, -1)
-					set_item_size (w.max (l_item_imp.minimum_width), h.max (l_item_imp.minimum_height))
+					set_item_size (w.max (l_item_imp.preferred_minimum_width), h.max (l_item_imp.preferred_minimum_height))
 				else
 					check has_widget_implementation: False end
 					l_item.set_minimum_size (w, h)

@@ -49,8 +49,10 @@ feature -- Status
 feature -- Access
 
 	locations: STRING_TABLE [SCM_GROUP]
+			-- Location groups indexed by group's name
 
 	locations_by_root: HASH_TABLE [TUPLE [root: SCM_LOCATION; groups: STRING_TABLE [SCM_GROUP]], PATH]
+		-- List of location groups indexed by root location path.
 
 	sorted_locations: ARRAYED_LIST [TUPLE [name: READABLE_STRING_GENERAL; group: SCM_GROUP]]
 		local
@@ -146,6 +148,27 @@ feature -- Element change
 			limit_to_inside_directory (target.system.directory)
 		end
 
+	restore (a_other: SCM_WORKSPACE)
+		local
+			grp: SCM_GROUP
+		do
+			across
+				locations as ic
+			loop
+				grp := ic.item
+				if
+				 	attached a_other.locations [grp.name] as l_other_group and then
+				 	not l_other_group.is_default_state
+				then
+					if l_other_group.is_included then
+						grp.include
+					else
+						grp.exclude
+					end
+				end
+			end
+		end
+
 feature -- Analyze
 
 	analyze
@@ -218,6 +241,7 @@ feature {NONE} -- Implementation
 				tb := l_data.groups
 			end
 			tb [g.name] := g
+			g.record_default_state
 		end
 
 feature -- Visitor

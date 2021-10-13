@@ -41,7 +41,6 @@ feature -- Access
 			Result := gn.count > n.count and then gn.starts_with (n)
 		end
 
-
 feature -- Status report
 
 	debug_output: STRING_32
@@ -74,6 +73,25 @@ feature -- Element change
 	include_unversioned_files (b: BOOLEAN)
 		do
 			unversioned_files_included := b
+		end
+
+feature -- Default state
+
+	is_default_state: BOOLEAN
+		do
+			Result := attached default_state as st and then st.is_included = is_included
+		end
+
+	default_state: detachable TUPLE [is_included: BOOLEAN]
+
+	record_default_state
+		do
+			default_state := [is_included]
+		end
+
+	forget_default_state
+		do
+			default_state := Void
 		end
 
 note

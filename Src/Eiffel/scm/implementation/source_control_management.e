@@ -409,12 +409,16 @@ feature -- Events
 
 	on_project_recompiled
 		local
-			ws: like workspace
+			prev_ws, ws: like workspace
 		do
 			if attached eiffel_project.workbench.lace.target as tgt then
+				prev_ws := workspace
 				create ws.make_with_target (tgt)
 			end
 			set_workspace (ws)
+			if prev_ws /= Void and then prev_ws /= ws then
+				ws.restore (prev_ws)
+			end
 		end
 
 feature -- Events: Connection point

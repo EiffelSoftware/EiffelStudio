@@ -140,7 +140,7 @@ feature -- Access
 			-- Lower bound on `width' in pixels.
 		local
 			p_but, p: POINTER
-			w: INTEGER
+			w, pref_min: INTEGER
 		do
 			if not box.is_default_pointer then
 				{GTK}.gtk_widget_get_preferred_width (box, $Result, default_pointer)
@@ -157,6 +157,9 @@ feature -- Access
 			if not p_but.is_default_pointer then
 				p := {GTK}.gtk_bin_get_child (p_but) -- Get the GtkButton inner GtkBox
 				if not p.is_default_pointer then
+					{GTK}.gtk_widget_get_preferred_width (p, $pref_min, default_pointer)
+					Result := Result.max (pref_min)
+
 					w := {GTK}.gtk_widget_get_allocated_width (p)
 					Result := Result.max (w)
 				end

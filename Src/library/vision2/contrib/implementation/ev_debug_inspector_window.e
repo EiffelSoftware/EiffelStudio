@@ -827,11 +827,6 @@ feature -- Events
 			nxt: EV_WIDGET
 			i, n: INTEGER
 		do
-			if attached a_row.data as l_data then
-				print ("expand_parents_until (" + l_data.generator + ", a_parent.count=" + a_parents.count.out + " ...%N")
-			else
-				print ("expand_parents_until (No row data !!!, a_parent.count=" + a_parents.count.out + " ...%N")
-			end
 			if a_row.is_expandable then
 				if not a_row.is_expanded then
 					a_row.expand

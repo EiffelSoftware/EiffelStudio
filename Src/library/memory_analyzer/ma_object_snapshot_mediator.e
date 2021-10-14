@@ -20,6 +20,8 @@ feature {NONE} -- Initialization
 			-- Creation method
 		require
 			a_grid_not_void: a_grid /= Void
+		local
+			col: EV_GRID_COLUMN
 		do
 			object_grid := a_grid
 
@@ -31,31 +33,39 @@ feature {NONE} -- Initialization
 			object_grid.insert_new_column (3)
 			object_grid.insert_new_column (4)
 			object_grid.insert_new_column (5)
-			object_grid.column (1).set_title ("Object Type")
-			object_grid.column (2).set_title ("Count/Address")
-			object_grid.column (3).set_title ("Delta/Start Object")
-			object_grid.column (4).set_title ("Phyiscal Size")
-			object_grid.column (5).set_title ("Average/Deep Physical Size")
-			object_grid.column (1).header_item.pointer_button_press_actions.extend (agent on_grid_header_click (1, ?, ?, ?, ?, ?, ?, ?, ?))
-			object_grid.column (2).header_item.pointer_button_press_actions.extend (agent on_grid_header_click (2, ?, ?, ?, ?, ?, ?, ?, ?))
-			object_grid.column (3).header_item.pointer_button_press_actions.extend (agent on_grid_header_click (3, ?, ?, ?, ?, ?, ?, ?, ?))
-			object_grid.column (4).header_item.pointer_button_press_actions.extend (agent on_grid_header_click (4, ?, ?, ?, ?, ?, ?, ?, ?))
-			object_grid.column (5).header_item.pointer_button_press_actions.extend (agent on_grid_header_click (5, ?, ?, ?, ?, ?, ?, ?, ?))
 
-			object_grid.column (1).header_item.pointer_double_press_actions.extend (agent adjust_column_width (1, ?, ?, ?, ?, ?, ?, ?, ?))
-			object_grid.column (2).header_item.pointer_double_press_actions.extend (agent adjust_column_width (2, ?, ?, ?, ?, ?, ?, ?, ?))
-			object_grid.column (3).header_item.pointer_double_press_actions.extend (agent adjust_column_width (3, ?, ?, ?, ?, ?, ?, ?, ?))
-			object_grid.column (4).header_item.pointer_double_press_actions.extend (agent adjust_column_width (4, ?, ?, ?, ?, ?, ?, ?, ?))
-			object_grid.column (5).header_item.pointer_double_press_actions.extend (agent adjust_column_width (5, ?, ?, ?, ?, ?, ?, ?, ?))
+			col := object_grid.column (1)
+			col.set_title ("Object Type")
+			col.header_item.pointer_button_press_actions.extend (agent on_grid_header_click (1, ?, ?, ?, ?, ?, ?, ?, ?))
+			col.header_item.pointer_double_press_actions.extend (agent adjust_column_width (1, ?, ?, ?, ?, ?, ?, ?, ?))
+			col.set_width (col.minimum_width.max (500))
+
+			col := object_grid.column (2)
+			col.set_title ("Count/Address")
+			col.header_item.pointer_button_press_actions.extend (agent on_grid_header_click (2, ?, ?, ?, ?, ?, ?, ?, ?))
+			col.header_item.pointer_double_press_actions.extend (agent adjust_column_width (2, ?, ?, ?, ?, ?, ?, ?, ?))
+			col.set_width (col.minimum_width.max (100))
+
+			col := object_grid.column (3)
+			col.set_title ("Delta/Start Object")
+			col.header_item.pointer_button_press_actions.extend (agent on_grid_header_click (3, ?, ?, ?, ?, ?, ?, ?, ?))
+			col.header_item.pointer_double_press_actions.extend (agent adjust_column_width (3, ?, ?, ?, ?, ?, ?, ?, ?))
+			col.set_width (col.minimum_width.max (100))
+
+			col := object_grid.column (4)
+			col.set_title ("Physical Size")
+			col.header_item.pointer_button_press_actions.extend (agent on_grid_header_click (4, ?, ?, ?, ?, ?, ?, ?, ?))
+			col.header_item.pointer_double_press_actions.extend (agent adjust_column_width (4, ?, ?, ?, ?, ?, ?, ?, ?))
+			col.set_width (col.minimum_width.max (100))
+
+			col := object_grid.column (5)
+			col.set_title ("Average/Deep Physical Size")
+			col.header_item.pointer_button_press_actions.extend (agent on_grid_header_click (5, ?, ?, ?, ?, ?, ?, ?, ?))
+			col.header_item.pointer_double_press_actions.extend (agent adjust_column_width (5, ?, ?, ?, ?, ?, ?, ?, ?))
+			col.set_width (col.minimum_width.max (100))
 
 			object_grid.set_pick_and_drop_mode
 			object_grid.set_item_pebble_function (agent pick_item)
-
-			object_grid.column (1).set_width (500)
-			object_grid.column (2).set_width (100)
-			object_grid.column (3).set_width (100)
-			object_grid.column (4).set_width (100)
-			object_grid.column (5).set_width (100)
 
 			show_memory_map
 		ensure
@@ -69,8 +79,11 @@ feature {NONE} -- Initialization
 		require
 			a_column_index_valid: column_index_valid (a_column_index)
 		do
-			if object_grid.row_count > 0 then
-				object_grid.column (a_column_index).set_width (object_grid.column (a_column_index).required_width_of_item_span (1, object_grid.row_count))
+			if 
+				object_grid.row_count > 0 and then
+				attached object_grid.column (a_column_index) as col
+			then
+				col.set_width (col.required_width_of_item_span (1, object_grid.row_count).max (col.minimum_width))
 			end
 		end
 

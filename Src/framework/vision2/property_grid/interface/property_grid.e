@@ -87,9 +87,9 @@ feature -- Update
 				l_column_width3 := column (value_column).width
 				wipe_out
 				set_column_count_to (3)
-				column (1).set_width (l_column_width1)
-				column (name_column).set_width (l_column_width2)
-				column (value_column).set_width (l_column_width3)
+				column (1).set_width (l_column_width1.max (column (1).minimum_width))
+				column (name_column).set_width (l_column_width2.max (column (name_column).minimum_width))
+				column (value_column).set_width (l_column_width3.max (column (value_column).minimum_width))
 			else
 				wipe_out
 				set_column_count_to (3)
@@ -257,10 +257,15 @@ feature -- Update
 
 	recompute_column_width
 			-- Update widths of columns.
+		local
+			col: EV_GRID_COLUMN
 		do
 			if parent /= Void and then not is_destroyed and then row_count > 0 then
-				column (1).set_width (20)
-				column (name_column).set_width (column (name_column).required_width_of_item_span (1, row_count) + 6)
+				col := column (1)
+				col.set_width (col.minimum_width.max (20))
+
+				col := column (name_column)
+				col.set_width ((col.required_width_of_item_span (1, row_count) + 6).max (col.minimum_width))
 			end
 		end
 

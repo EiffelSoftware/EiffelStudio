@@ -421,7 +421,7 @@ feature -- Resizing
 				if w < col.width and col.index = column_count then
 					--| Do not resize smaller if it is last column
 				else
-					col.set_width (w)
+					col.set_width (w.max (col.minimum_width))
 				end
 			end
 		end
@@ -699,7 +699,7 @@ feature {NONE} -- column resizing impl
 										if manually_resized_columns.has (l_index) implies l_col.required_width_of_item_span (1, row_count) < l_new_width then
 											resize_actions.block
 											virtual_size_changed_actions.block
-											l_col.set_width (l_new_width)
+											l_col.set_width (l_new_width.max (l_col.minimum_width))
 											virtual_size_changed_actions.resume
 											resize_actions.resume
 										end
@@ -843,7 +843,7 @@ feature {NONE} -- column resizing impl
 								if w < col.width and col.index = column_count then
 									--| Do not resize smaller if it is last column
 								else
-									col.set_width (w)
+									col.set_width (w.max (col.minimum_width))
 								end
 							end
 						end
@@ -1399,7 +1399,7 @@ invariant
 	selected_rows_agent_attached: selected_rows_function /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2020, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2021, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

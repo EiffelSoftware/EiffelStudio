@@ -202,8 +202,8 @@ feature {NONE} -- Actions
 						l_new_width := l_x_pos - l_resize.virtual_x_position
 						l_new_neighbor := l_neighbor.virtual_x_position + l_neighbor.width - l_x_pos
 						if l_new_width > edge_size and l_new_neighbor > edge_size then
-							l_resize.set_width (l_new_width)
-							l_neighbor.set_width (l_new_neighbor)
+							l_resize.set_width (l_new_width.max (l_resize.minimum_width))
+							l_neighbor.set_width (l_new_neighbor.max (l_neighbor.minimum_width))
 						end
 					end
 				else
@@ -330,7 +330,7 @@ invariant
 	header_resize_end_actions_attached: header_resize_end_actions /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2012, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2021, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

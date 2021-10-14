@@ -285,9 +285,14 @@ feature {NONE} -- Implementation
 			-- adjust a column width to fix the max width of the item its contain
 		require
 			column_index_valid: grid.column_count >= a_column_index and a_column_index > 0
+		local
+			col: EV_GRID_COLUMN
+			w: INTEGER
 		do
 			if grid.row_count > 0 then
-				grid.column (a_column_index).set_width (grid.column (a_column_index).required_width_of_item_span (1, grid.row_count))
+				col := grid.column (a_column_index)
+				w := col.required_width_of_item_span (1, grid.row_count)
+				col.set_width (w.max (col.minimum_width))
 			end
 		end
 

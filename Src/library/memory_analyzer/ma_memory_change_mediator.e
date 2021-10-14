@@ -106,8 +106,11 @@ feature -- Command
 	adjust_column_width (a_column_index: INTEGER; a_grid: EV_GRID; x, y, b: INTEGER_32; x_tilt, y_tilt, p: REAL_64; screen_x, screen_y: INTEGER_32)
 			-- Adjust a column width to fix the max width of the item its contain.
 		do
-			if a_grid.row_count > 0 then
-				a_grid.column (a_column_index).set_width (a_grid.column (a_column_index).required_width_of_item_span (1, a_grid.row_count))
+			if 
+				a_grid.row_count > 0 and then
+				attached a_grid.column (a_column_index) as col
+			then
+				col.set_width (col.required_width_of_item_span (1, a_grid.row_count).max (col.minimum_width))
 			end
 		end
 

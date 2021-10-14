@@ -165,7 +165,7 @@ feature {NONE} -- Agents
 				else
 					l_combo_popup.set_height (10 * (l_combo_grid.row_height) + 4)
 				end
-				l_combo_grid.column (1).set_width (w.width)
+				l_combo_grid.column (1).set_width (w.width.max (l_combo_grid.column (1).minimum_width))
 				l_combo_grid.hide_horizontal_scroll_bar
 				l_combo_grid.set_minimum_height (0)
 				l_combo_grid.set_minimum_width (0)
@@ -301,7 +301,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright: "Copyright (c) 1984-2018, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2021, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

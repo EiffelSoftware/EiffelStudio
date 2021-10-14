@@ -15,10 +15,12 @@ inherit
 			has_focus, is_sensitive, is_displayed, set_focus, x_position,
 			y_position, on_parented, on_orphaned, disable_sensitive,
 			enable_sensitive, show, pointed_target,
-			set_minimum_width, set_tooltip, screen_x, screen_y, set_size,
+			reset_minimum_width, reset_minimum_height, reset_minimum_size,
+			set_minimum_width, set_minimum_height, set_minimum_size,
+			set_tooltip, screen_x, screen_y, set_size,
 			parent, is_show_requested, minimum_width, draw_rubber_band,
 			set_pointer_style, erase_rubber_band, disable_transport,
-			destroy, set_minimum_height, set_minimum_size,
+			destroy,
 			disable_capture, pointer_position, start_transport,
 			enable_transport, pointer_style, tooltip, has_capture,
 			end_transport, enable_capture, minimum_height,
@@ -683,7 +685,7 @@ feature {EV_ANY, EV_ANY_I} -- Implementation
 			-- Interface for the bridge pattern.
 
 note
-	copyright: "Copyright (c) 1984-2019, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2021, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

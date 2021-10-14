@@ -1068,6 +1068,27 @@ feature -- Delegated features
 			attached_interface.implementation.set_focus
 		end
 
+	reset_minimum_width
+			-- Reset the minimum width.
+		do
+			promote_to_widget
+			attached_interface.implementation.reset_minimum_width
+		end
+
+	reset_minimum_height
+			-- Reset the minimum height.
+		do
+			promote_to_widget
+			attached_interface.implementation.reset_minimum_height
+		end
+
+	reset_minimum_size
+			-- Reset the minimum size (width and height).
+		do
+			promote_to_widget
+			attached_interface.implementation.reset_minimum_size
+		end
+
 	set_minimum_height (a_minimum_height: INTEGER)
 			-- Set the minimum vertical size to `a_minimum_height' in pixels.
 		do
@@ -1159,7 +1180,7 @@ invariant
 		attached mask_dc as l_mask_dc implies l_mask_dc.reference_tracked;
 
 note
-	copyright: "Copyright (c) 1984-2019, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2021, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

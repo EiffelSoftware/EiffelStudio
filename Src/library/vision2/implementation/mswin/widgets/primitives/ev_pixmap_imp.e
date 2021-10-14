@@ -1177,6 +1177,27 @@ feature {EV_ANY_I} -- Delegated features
 			attached_interface.implementation.set_foreground_color(a_color)
 		end
 
+	reset_minimum_width
+			-- Reset the minimum width.
+		do
+			promote_to_widget
+			attached_interface.implementation.reset_minimum_width
+		end
+
+	reset_minimum_height
+			-- Reset the minimum height.
+		do
+			promote_to_widget
+			attached_interface.implementation.reset_minimum_height
+		end
+
+	reset_minimum_size
+			-- Reset the minimum size (width and height).
+		do
+			promote_to_widget
+			attached_interface.implementation.reset_minimum_size
+		end
+
 	set_minimum_height (a_minimum_height: INTEGER)
 			-- Set the minimum vertical size to `a_minimum_height' in pixels.
 		do

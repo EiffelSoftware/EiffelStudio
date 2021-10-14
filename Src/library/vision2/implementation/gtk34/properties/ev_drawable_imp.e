@@ -411,6 +411,8 @@ feature -- Clearing operations
 					if fg /= Void then
 						{CAIRO}.set_source_rgb (l_drawable, fg.red, fg.green, fg.blue)
 					end
+						-- The cairo context should remain the same.
+					check same_context: l_drawable = cairo_context end
 				end
 				post_drawing
 			end

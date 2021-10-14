@@ -136,20 +136,32 @@ feature {NONE} -- Dispose
 feature {EV_ANY_I} -- Drawing wrapper
 
 	pre_drawing
+		local
+			cr: like cairo_context
 		do
 				-- If inside drawing session
 				-- the cairo context is already created in `start_drawing_session`
 			if not is_in_drawing_session then
-				get_new_cairo_context
+					-- Reuse or get once a new cairo_context
+				get_cairo_context
+				cr := cairo_context
+				if not cr.is_default_pointer then
+					{CAIRO}.save (cr)
+				end
 			end
 		end
 
 	post_drawing
+		local
+			cr: like cairo_context
 		do
 				-- If inside drawing session
 				-- keep the cairo context for the next draw operation, it will be releazed by `end_drawing_session`
 			if not is_in_drawing_session then
-				clear_cairo_context
+				cr := cairo_context
+				if not cr.is_default_pointer then
+					{CAIRO}.restore (cr)
+				end
 				update_if_needed
 			end
 		end

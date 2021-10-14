@@ -13,6 +13,8 @@ inherit
 
 	SD_DOCKING_MANAGER_HOLDER
 
+	EV_BUILDER
+
 create
 	make
 
@@ -262,12 +264,21 @@ feature -- Zones managements
 			l_width := a_width
 			l_height := a_height
 			if attached {SD_AUTO_HIDE_ZONE} a_zone as l_auto_hide_zone then
-				if l_width < l_auto_hide_zone.minimum_width then
-					l_width := l_auto_hide_zone.minimum_width
+				if l_auto_hide_zone.minimum_height_set_by_user then
+					if l_height < l_auto_hide_zone.minimum_height then
+						l_height := l_auto_hide_zone.minimum_height
+					end
+				else
+					l_auto_hide_zone.reset_minimum_height
 				end
-				if l_height < l_auto_hide_zone.minimum_height then
-					l_height := l_auto_hide_zone.minimum_height
+				if l_auto_hide_zone.minimum_width_set_by_user then
+					if l_width < l_auto_hide_zone.minimum_width then
+						l_width := l_auto_hide_zone.minimum_width
+					end
+				else
+					l_auto_hide_zone.reset_minimum_width
 				end
+				l_auto_hide_zone.reset_minimum_size
 				docking_manager.fixed_area.set_item_size (l_auto_hide_zone, l_width, l_height)
 			end
 		ensure
@@ -312,7 +323,7 @@ invariant
 
 note
 	library:	"SmartDocking: Library of reusable components for Eiffel."
-	copyright:	"Copyright (c) 1984-2017, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2021, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

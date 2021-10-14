@@ -11,6 +11,8 @@ class
 inherit
 	EV_DRAWING_AREA
 
+	EV_BUILDER
+
 create
 	make
 
@@ -76,12 +78,14 @@ feature {NONE} -- Agents
 			if a_button = {EV_POINTER_CONSTANTS}.left then
 				if not resizing then
 					resizing := True
+
 					create l_screen_boundary
 					screen_boundary := l_screen_boundary
 					if attached resize_source as s then
 						s.start_resize_operation (Current, l_screen_boundary)
 					end
 					debug ("docking")
+						io.put_string ("%N screen_boundary " + l_screen_boundary.out + "%N")
 						io.put_string ("%N start position: " + a_screen_x.out + ", " + a_screen_y.out)
 					end
 					internal_shared.feedback.draw_line_area (screen_x, screen_y, width, height)
@@ -127,8 +131,7 @@ feature {NONE} -- Agents
 			l_left, l_right, l_top, l_bottom: INTEGER
 		do
 			if resizing and then attached screen_boundary as l_scr_boundary then
-				-- Clear the graph last drawn
-
+					-- Clear the graph last drawn
 				clear_graph_last_drawn
 
 				if direction = {SD_ENUMERATION}.left or direction = {SD_ENUMERATION}.right then

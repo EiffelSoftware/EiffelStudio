@@ -110,23 +110,27 @@ feature {NONE} -- Implementation
 
 	start_resize_operation (a_bar: SD_RESIZE_BAR; a_screen_boundary: EV_RECTANGLE)
 			-- <Precursor>
+		local
+			l_panel: like window
 		do
-			-- Set the area which allow user to resize the window.
+			l_panel := window
+
+				-- Set the area which allow user to resize the panel.
 			if internal_direction = {SD_ENUMERATION}.left then
 				a_screen_boundary.set_right (docking_manager.query.container_rectangle_screen.right)
-				a_screen_boundary.set_left (window.screen_x + minimum_width)
+				a_screen_boundary.set_left (l_panel.screen_x + l_panel.minimum_width)
 			elseif internal_direction = {SD_ENUMERATION}.right then
-				a_screen_boundary.set_right (window.screen_x + window.width - minimum_width)
+				a_screen_boundary.set_right (l_panel.screen_x + l_panel.width - l_panel.minimum_width)
 				a_screen_boundary.set_left (docking_manager.query.container_rectangle_screen.left)
 			elseif internal_direction = {SD_ENUMERATION}.top then
 				a_screen_boundary.set_bottom (docking_manager.query.container_rectangle_screen.bottom)
-				a_screen_boundary.set_top (window.screen_y + minimum_height)
+				a_screen_boundary.set_top (l_panel.screen_y + l_panel.minimum_height)
 			elseif internal_direction = {SD_ENUMERATION}.bottom then
-				a_screen_boundary.set_bottom ((window.screen_y + window.height) - minimum_height)
+				a_screen_boundary.set_bottom ((l_panel.screen_y + l_panel.height) - l_panel.minimum_height)
 				a_screen_boundary.set_top (docking_manager.query.container_rectangle_screen.top)
 			end
 			debug ("docking")
-				io.put_string ("%N allow resize area is: " + a_screen_boundary.out)
+				io.put_string ("%N (dir=" + internal_direction.out + ") allow resize area is: " + a_screen_boundary.out)
 			end
 		end
 

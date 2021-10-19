@@ -325,43 +325,51 @@ feature -- Emails
 			vis: JSON_PRETTY_STRING_VISITOR
 			s: STRING
 			l_parameters: STRING_TABLE [detachable ANY]
+			l_retried: BOOLEAN
 		do
-			error_handler.reset
+			if not l_retried then
+				error_handler.reset
 
-			create l_parameters.make (8)
-			l_parameters.put (a_mail.id, "mid")
-			l_parameters.put (a_mail.date, "date")
-			l_parameters.put ("email", "type")
-			if a_mail.is_sent then
-				l_parameters.put ("sent", "status")
-			else
-				l_parameters.put ("waiting", "status")
-			end
-			if attached a_mail.to_user as l_to_user then
-				l_parameters.put (l_to_user.id, "user_to")
-			else
-				l_parameters.put (0, "user_to")
-			end
-			if attached a_mail.from_user as l_from_user then
-				l_parameters.put (l_from_user.id, "user_from")
-			else
-				l_parameters.put (0, "user_from")
-			end
-			l_parameters.put (a_mail.subject, "subject")
+				create l_parameters.make (8)
+				l_parameters.put (a_mail.id, "mid")
+				l_parameters.put (a_mail.date, "date")
+				l_parameters.put ("email", "type")
+				if a_mail.is_sent then
+					l_parameters.put ("sent", "status")
+				else
+					l_parameters.put ("waiting", "status")
+				end
+				if attached a_mail.to_user as l_to_user then
+					l_parameters.put (l_to_user.id, "user_to")
+				else
+					l_parameters.put (0, "user_to")
+				end
+				if attached a_mail.from_user as l_from_user then
+					l_parameters.put (l_from_user.id, "user_from")
+				else
+					l_parameters.put (0, "user_from")
+				end
+				l_parameters.put (a_mail.subject, "subject")
 
-			create s.make_empty
-			create vis.make_custom (s, 3, 3)
-			vis.visit_json_object (mail_to_json (a_mail))
-			l_parameters.put (s, "data")
+				create s.make_empty
+				create vis.make_custom (s, 3, 3)
+				vis.visit_json_object (mail_to_json (a_mail))
+				l_parameters.put (s, "data")
 
-			sql_begin_transaction
-			sql_insert (sql_insert_message, l_parameters)
-			sql_finalize_insert (sql_insert_message)
-			if has_error then
-				sql_rollback_transaction
+				sql_begin_transaction
+				sql_insert (sql_insert_message, l_parameters)
+				sql_finalize_insert (sql_insert_message)
+				if has_error then
+					sql_rollback_transaction
+				else
+					sql_commit_transaction
+				end
 			else
-				sql_commit_transaction
+				-- TODO: better error handling
 			end
+		rescue
+			l_retried := True
+			retry
 		end
 
 	mails_to (a_user: detachable CMS_USER; a_offset: INTEGER; a_count: INTEGER): detachable LIST [CMS_EMAIL]

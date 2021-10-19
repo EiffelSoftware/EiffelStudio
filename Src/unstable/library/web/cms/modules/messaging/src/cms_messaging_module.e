@@ -97,9 +97,13 @@ feature -- Hooks
 	menu_system_alter (a_menu_system: CMS_MENU_SYSTEM; a_response: CMS_RESPONSE)
 			-- Hook execution on collection of menu contained by `a_menu_system'
 			-- for related response `a_response'.
+		local
+			lnk: CMS_LOCAL_LINK
 		do
-			debug ("refactor_fixme")
-				fixme ("add messaging to menu")
+				 -- Add the link to the taxonomy to the main menu
+			if a_response.has_permission ("use messaging") then
+				lnk := a_response.api.local_link ("Messaging", "messaging")
+				a_menu_system.navigation_menu.extend (lnk)
 			end
 		end
 
@@ -285,6 +289,8 @@ $(document).ready(function() {
 									l_email_messg := resolved_template_text (api, l_message, l_user)
 
 									e := api.new_html_email (l_user_email, l_email_title, l_email_messg)
+									e.set_to_user (l_user)
+									e.set_from_user (api.user)
 
 									s.append (" <pre>")
 									s.append (e.message)

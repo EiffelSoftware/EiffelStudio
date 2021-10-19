@@ -82,7 +82,7 @@ feature {CMS_API} -- Module management
 				v_to.replace_substring_all (".", "_")
 				create p.make_from_string ("scripts")
 				p := p.extended ("update")
-				if fut.directory_path_exists (p) then
+				if fut.directory_path_exists (api.module_resource_location (Current, p)) then
 					p := p.extended (name).appended ("-")
 				else
 					p := p.appended ("-")

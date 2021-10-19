@@ -1160,8 +1160,10 @@ feature -- Emails
 			setup.mailer.safe_process_email (e)
 			if setup.mailer.has_error then
 				error_handler.add_custom_error (0, "Mailer error", "Error occurred while processing email.")
+				storage.save_mail (e)
 			else
 				e.set_is_sent (True)
+				storage.save_mail (e)
 			end
 		end
 
@@ -1182,6 +1184,9 @@ feature {NONE} -- Emails implementation
 		local
 			l_sender, l_from: READABLE_STRING_8
 		do
+			if not e.has_id then
+				e.set_id (new_random_identifier (16, Void))
+			end
 			l_sender := setup.site_email
 			l_from := e.from_address
 			if not l_sender.is_case_insensitive_equal_general (l_from) then

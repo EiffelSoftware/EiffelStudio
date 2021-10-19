@@ -7,10 +7,10 @@ class
 	CMS_CORE_MODULE
 
 inherit
-	CMS_MODULE
+	CMS_MODULE_WITH_SQL_STORAGE
 		redefine
-			initialize,
 			setup_hooks,
+			initialize,
 			install,
 			permissions
 		end
@@ -28,7 +28,7 @@ feature {NONE} -- Initialization
 
 	make
 		do
-			version := "1.0.0.1"
+			version := "1.1.0.1"
 			description := "Core"
 			package := "core"
 		end
@@ -65,7 +65,7 @@ feature {CMS_API} -- Module management
 				if l_sql_storage.has_error then
 					a_api.report_error ("[" + name + "]: installation failed!", l_sql_storage.error_handler.as_string_representation)
 				else
-					Precursor {CMS_MODULE} (a_api)
+					Precursor (a_api)
 				end
 			end
 

@@ -318,6 +318,303 @@ feature -- Logs
 
 	sql_select_level_logs: STRING = "SELECT id, category, level, uid, message, info, link, date FROM logs WHERE level=:level ORDER by date DESC, id DESC;"
 
+feature -- Emails
+
+	save_mail (a_mail: CMS_EMAIL)
+		local
+			vis: JSON_PRETTY_STRING_VISITOR
+			s: STRING
+			l_parameters: STRING_TABLE [detachable ANY]
+		do
+			error_handler.reset
+
+			create l_parameters.make (8)
+			l_parameters.put (a_mail.id, "mid")
+			l_parameters.put (a_mail.date, "date")
+			l_parameters.put ("email", "type")
+			if a_mail.is_sent then
+				l_parameters.put ("sent", "status")
+			else
+				l_parameters.put ("waiting", "status")
+			end
+			if attached a_mail.to_user as l_to_user then
+				l_parameters.put (l_to_user.id, "user_to")
+			else
+				l_parameters.put (0, "user_to")
+			end
+			if attached a_mail.from_user as l_from_user then
+				l_parameters.put (l_from_user.id, "user_from")
+			else
+				l_parameters.put (0, "user_from")
+			end
+			l_parameters.put (a_mail.subject, "subject")
+
+			create s.make_empty
+			create vis.make_custom (s, 3, 3)
+			vis.visit_json_object (mail_to_json (a_mail))
+			l_parameters.put (s, "data")
+
+			sql_begin_transaction
+			sql_insert (sql_insert_message, l_parameters)
+			sql_finalize_insert (sql_insert_message)
+			if has_error then
+				sql_rollback_transaction
+			else
+				sql_commit_transaction
+			end
+		end
+
+	mails_to (a_user: detachable CMS_USER; a_offset: INTEGER; a_count: INTEGER): detachable LIST [CMS_EMAIL]
+			-- <Precursor>.
+		local
+			l_parameters: detachable STRING_TABLE [detachable ANY]
+			l_sql: READABLE_STRING_8
+		do
+			error_handler.reset
+			create l_parameters.make (2)
+
+			l_parameters.put ("email", "type")
+
+			if a_user /= Void then
+				l_parameters.put (a_user.id, "user_to")
+				l_sql := sql_select_messages_by_user_to
+			else
+				l_sql := sql_select_messages
+			end
+
+			if a_count > 0 then
+				check l_sql.ends_with_general (";") end
+				l_sql := l_sql.substring (1, l_sql.count - 1) -- Remove ';'
+				l_sql := l_sql + " LIMIT " + a_count.out
+				l_sql := l_sql + " OFFSET " + a_offset.out
+				l_sql := l_sql + " ;"
+			end
+
+			from
+				if a_count > 0 then
+					create {ARRAYED_LIST [CMS_EMAIL]} Result.make (a_count)
+				else
+					create {ARRAYED_LIST [CMS_EMAIL]} Result.make (10)
+				end
+				if l_parameters.is_empty then
+					l_parameters := Void
+				end
+				sql_query (l_sql, l_parameters)
+				sql_start
+			until
+				sql_after or has_error
+			loop
+				if attached fetch_mail as l_msg then
+					Result.force (l_msg)
+				end
+				sql_forth
+			end
+			sql_finalize_query (l_sql)
+		end
+
+	mail_to_json (m: CMS_EMAIL): JSON_OBJECT
+		local
+			arr: JSON_ARRAY
+			obj: JSON_OBJECT
+			lst: LIST [READABLE_STRING_8]
+		do
+			create Result.make_with_capacity (5)
+			create obj.make_with_capacity (2)
+			if m.is_sent then
+				obj.put_string ("sent", "status")
+			else
+				obj.put_string ("waiting", "status")
+			end
+			if attached m.to_user as u then
+				obj.put_string (u.id.out, "to_user.id")
+				obj.put_string (u.name, "to_user.name")
+			end
+			if attached m.from_user as u then
+				obj.put_string (u.id.out, "from_user.id")
+				obj.put_string (u.name, "from_user.name")
+			end
+
+			Result.put (obj, "info")
+
+			Result.put_string ({CMS_API}.date_time_to_iso8601_string (m.date), "date")
+			Result.put_string (m.subject, "subject")
+			Result.put_string (m.from_address, "from_address")
+			if attached m.reply_to_address as l_reply_to_address then
+				Result.put_string (l_reply_to_address, "reply_to_address")
+			end
+			lst := m.to_addresses
+			if lst /= Void and then not lst.is_empty then
+				create arr.make (lst.count)
+				across lst as ic loop
+					arr.extend (create {JSON_STRING}.make_from_string_general (ic.item))
+				end
+				Result.put (arr, "to_addresses")
+			end
+			lst := m.cc_addresses
+			if lst /= Void and then not lst.is_empty then
+				create arr.make (lst.count)
+				across lst as ic loop
+					arr.extend (create {JSON_STRING}.make_from_string_general (ic.item))
+				end
+				Result.put (arr, "cc_addresses")
+			end
+			lst := m.bcc_addresses
+			if lst /= Void and then not lst.is_empty then
+				create arr.make (lst.count)
+				across lst as ic loop
+					arr.extend (create {JSON_STRING}.make_from_string_general (ic.item))
+				end
+				Result.put (arr, "bcc_addresses")
+			end
+			Result.put_string (m.content, "content")
+			lst := m.additional_header_lines
+			if lst /= Void and then not lst.is_empty then
+				create arr.make (lst.count)
+				across lst as ic loop
+					arr.extend (create {JSON_STRING}.make_from_string_general (ic.item))
+				end
+				Result.put (arr, "additional_header_lines")
+			end
+		end
+
+	mail_from_json_string (a_json: READABLE_STRING_8): detachable CMS_EMAIL
+		local
+			jp: JSON_PARSER
+			l_date: DATE_TIME
+			js: JSON_STRING
+			jarr: JSON_ARRAY
+			htdate: HTTP_DATE
+			l_from: READABLE_STRING_8
+			l_to_address: READABLE_STRING_8
+			l_subject: READABLE_STRING_8
+			l_content: READABLE_STRING_8
+		do
+			create jp.make
+			jp.parse_string (a_json)
+			if
+				jp.is_parsed and then
+				jp.is_valid and then
+				attached jp.parsed_json_object as jo
+			then
+				if attached jo.item ("info") as j_info then
+				end
+				js := jo.string_item ("subject")
+				if js /= Void then
+					l_subject := {UTF_CONVERTER}.utf_32_string_to_utf_8_string_8 (js.unescaped_string_32)
+				end
+
+				js := jo.string_item ("from_address")
+				if js /= Void then
+					l_from := js.unescaped_string_8
+				end
+
+				js := jo.string_item ("content")
+				if js /= Void then
+					l_content := {UTF_CONVERTER}.utf_32_string_to_utf_8_string_8 (js.unescaped_string_32)
+				end
+
+				if l_from /= Void and l_to_address /= Void and l_subject /= Void and l_content /= Void then
+					create Result.make (l_from, l_to_address, l_subject, l_content)
+					js := jo.string_item ("date")
+					if js /= Void then
+						create htdate.make_from_rfc3339_string (js.unescaped_string_32)
+						Result.set_date (htdate.date_time)
+					end
+
+					js := jo.string_item ("reply_to_address")
+					if js /= Void then
+						Result.set_reply_to_address ({UTF_CONVERTER}.utf_32_string_to_utf_8_string_8 (js.unescaped_string_32))
+					end
+
+					jarr := jo.array_item ("cc_addresses")
+					if jarr /= Void then
+						across jarr as ic loop
+							if attached {JSON_STRING} ic.item as l_js_addr then
+								Result.add_cc_address ({UTF_CONVERTER}.utf_32_string_to_utf_8_string_8 (l_js_addr.unescaped_string_32))
+							end
+						end
+					end
+					jarr := jo.array_item ("bcc_addresses")
+					if jarr /= Void then
+						across jarr as ic loop
+							if attached {JSON_STRING} ic.item as l_js_addr then
+								Result.add_bcc_address ({UTF_CONVERTER}.utf_32_string_to_utf_8_string_8 (l_js_addr.unescaped_string_32))
+							end
+						end
+					end
+
+					jarr := jo.array_item ("additional_header_lines")
+					if jarr /= Void then
+						across jarr as ic loop
+							if attached {JSON_STRING} ic.item as l_js_line then
+								Result.add_header_line ({UTF_CONVERTER}.utf_32_string_to_utf_8_string_8 (l_js_line.unescaped_string_32))
+							end
+						end
+					end
+				end
+			end
+		end
+
+	fetch_mail: detachable CMS_EMAIL
+			-- SQL: 1:mid, 2:date, 3:type, 4:status, 5:user_from, 6:user_to, 7:subject, 8:data
+		local
+			i: INTEGER
+			l_date: detachable DATE_TIME
+			l_data: detachable READABLE_STRING_8
+			l_uid: READABLE_STRING_GENERAL
+			i64: INTEGER_64
+		do
+			l_date := sql_read_date_time (2)
+			if attached sql_read_string_8 (3) as s and then s.same_string ("email") then
+				l_data := sql_read_string_8 (8)
+				if
+					l_data /= Void and then
+					attached mail_from_json_string (l_data) as l_email
+				then
+					Result := l_email
+					if attached sql_read_string_8 (1) as l_mid then
+						Result.set_id (l_mid)
+					end
+					if l_date /= Void then
+						Result.set_date (l_date)
+					end
+
+-- from_user is not yet implemented nor used.					
+--					i64 := sql_read_integer_64 (5)
+--					if i64 > 0 then
+--						Result.set_from_user (create {CMS_PARTIAL_USER}.make_with_id (i64))
+--					end
+
+
+					l_uid := sql_read_string_32 (6)
+					if l_uid /= Void then
+						if l_uid.is_integer_64  then
+							i64 := l_uid.to_integer_64
+							if i64 > 0 then
+								Result.set_to_user (create {CMS_PARTIAL_USER}.make_with_id (i64))
+							end
+						else
+								-- Unicode username ?
+						end
+					end
+
+
+--					l_subject := sql_read_string_8 (7)
+
+					if attached sql_read_string_8 (4) as l_status then
+						if l_status.is_case_insensitive_equal ("sent") then
+							Result.set_is_sent (True)
+						end
+					end
+				end
+			end
+		end
+
+	sql_insert_message: STRING = "INSERT INTO messages (mid, date, type, status, user_from, user_to, subject, data) VALUES (:mid, :date, :type, :status, :user_from, :user_to, :subject, :data);"
+
+	sql_select_messages_by_user_to: STRING = "SELECT mid, date, type, status, user_from, user_to, subject, data FROM messages WHERE user_to=:user_to ORDER by date DESC, mid DESC;"
+
+	sql_select_messages: STRING = "SELECT mid, date, type, status, user_from, user_to, subject, data FROM messages ORDER by date DESC, mid DESC;"
 
 feature -- Misc
 
@@ -430,6 +727,6 @@ feature -- Misc
 
 
 note
-	copyright: "2011-2020, Jocelyn Fiat, Javier Velilla, Eiffel Software and others"
+	copyright: "2011-2021, Jocelyn Fiat, Javier Velilla, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 end

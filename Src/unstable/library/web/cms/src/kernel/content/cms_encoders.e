@@ -120,6 +120,8 @@ feature -- Helper conversions to and from string
 		do
 			create hd.make_from_date_time (dt)
 			Result := hd.iso8601_string
+		ensure
+			instance_free: class
 		end
 
 	date_time_to_timestamp_string (dt: DATE_TIME): STRING_8
@@ -213,6 +215,6 @@ feature -- Helper conversions to and from string
 		end
 
 note
-	copyright: "2011-2020, Jocelyn Fiat, Javier Velilla, Eiffel Software and others"
+	copyright: "2011-2021, Jocelyn Fiat, Javier Velilla, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 end

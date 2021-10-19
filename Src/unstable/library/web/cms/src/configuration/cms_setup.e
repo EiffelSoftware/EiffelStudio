@@ -162,11 +162,6 @@ feature {CMS_API} -- API Access
 		do
 			l_enabled_modules := api.enabled_modules
 
-				-- Include required CORE module
-			create l_core.make
-			l_core.enable
-			l_enabled_modules.extend (l_core)
-
 				-- Includes other modules.
 			across
 				modules as ic
@@ -640,6 +635,6 @@ feature -- Element change
 		end
 
 note
-	copyright: "2011-2020, Jocelyn Fiat, Javier Velilla, Eiffel Software and others"
+	copyright: "2011-2021, Jocelyn Fiat, Javier Velilla, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 end

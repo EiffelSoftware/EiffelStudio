@@ -31,6 +31,8 @@ feature {NONE} -- Initialization
 
 	initialize
 			-- Initialize various cms components.
+		local
+			l_core: CMS_CORE_MODULE
 		do
 			Precursor
 			create modules.make (3)
@@ -38,6 +40,8 @@ feature {NONE} -- Initialization
 
 			build_mailer
 			initialize_storages
+
+			initialize_required_modules
 			initialize_modules
 		end
 
@@ -45,6 +49,16 @@ feature {NONE} -- Initialization
 			-- Initialize storages
 		do
 			storage_drivers.force (create {CMS_STORAGE_NULL_BUILDER}, "null")
+		end
+
+	initialize_required_modules
+				-- Include required CORE module
+		local
+			l_core: CMS_CORE_MODULE
+		do
+			create l_core.make
+			l_core.enable
+			register_module (l_core)
 		end
 
 	initialize_modules
@@ -189,6 +203,6 @@ feature -- Element change
 
 
 note
-	copyright: "2011-2018, Jocelyn Fiat, Javier Velilla, Eiffel Software and others"
+	copyright: "2011-2021, Jocelyn Fiat, Javier Velilla, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 end

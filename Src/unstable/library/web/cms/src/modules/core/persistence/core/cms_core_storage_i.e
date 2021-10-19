@@ -67,6 +67,18 @@ feature -- Logs
 		deferred
 		end
 
+feature -- Emails
+
+	save_mail (a_mail: CMS_EMAIL)
+		require
+			not a_mail.has_id
+		deferred
+		end
+
+	mails_to (a_user: detachable CMS_USER; a_offset: INTEGER; a_count: INTEGER): detachable LIST [CMS_EMAIL]
+		deferred
+		end
+
 feature -- Misc
 
 	set_custom_value (a_name: READABLE_STRING_8; a_value: attached like custom_value; a_type: READABLE_STRING_8)
@@ -90,6 +102,6 @@ feature -- Misc
 		end
 
 note
-	copyright: "2011-2020, Jocelyn Fiat, Javier Velilla, Eiffel Software and others"
+	copyright: "2011-2021, Jocelyn Fiat, Javier Velilla, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 end

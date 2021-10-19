@@ -236,6 +236,7 @@ feature -- Execution
 		local
 			r: like new_generic_response
 			s: STRING
+			l_tok_prefix: READABLE_STRING_8
 			f: CMS_FORM
 			tf: WSF_FORM_TEXT_INPUT
 			numtf: WSF_FORM_NUMBER_INPUT
@@ -295,22 +296,36 @@ feature -- Execution
 				end
 				if
 					attached {WSF_FORM_DATA} f.last_data as fd and then
+					not fd.has_error and then
 					attached fd.string_item ("op") as l_op and then l_op.same_string (form_generate_text)
 				then
 					nb := fd.integer_item ("token_count")
 					s.append ("<h2>Generating " + nb.out + " new redeem tokens for plan " + html_encoded (pl.title_or_name) + "</h2>")
 					create l_news.make (nb)
-					es_cloud_api.create_redeem_tokens (nb, pl, fd.string_item ("version_limitation"), fd.string_item ("origin"), fd.string_item ("token_prefix"), fd.string_item ("token_notes"), l_news)
-					s.append ("<h3>" + l_news.count.out + " new tokens created:</h3>")
-					create toks.make_empty
-					across
-						l_news as ic
-					loop
-						toks.append_string_general (ic.item.name)
-						toks.extend ('%N')
-						s.append ("<li>" + html_encoded (ic.item.name) + "</li>")
+					if attached fd.string_item ("token_prefix") as tp then
+						if tp.is_valid_as_string_8 then
+							l_tok_prefix := tp.to_string_8
+						else
+							fd.report_invalid_field ("token_prefix", "token prefix should not contain any Unicode characters.")
+						end
 					end
-					s.append ("<textarea cols=%"40%" rows=%"10%">" + html_encoded (toks) + "</textarea>")
+					if fd.has_error then
+						r.report_form_errors (fd)
+						s.append ("<h2>Generate new redeem tokens for plan " + html_encoded (pl.title_or_name) + "</h2>")
+						f.append_to_html (r.wsf_theme, s)
+					else
+						es_cloud_api.create_redeem_tokens (nb, pl, fd.string_item ("version_limitation"), fd.string_item ("origin"), l_tok_prefix, fd.string_item ("token_notes"), l_news)
+						s.append ("<h3>" + l_news.count.out + " new tokens created:</h3>")
+						create toks.make_empty
+						across
+							l_news as ic
+						loop
+							toks.append_string_general (ic.item.name)
+							toks.extend ('%N')
+							s.append ("<li>" + html_encoded (ic.item.name) + "</li>")
+						end
+						s.append ("<textarea cols=%"40%" rows=%"10%">" + html_encoded (toks) + "</textarea>")
+					end
 				else
 					s.append ("<h2>Generate new redeem tokens for plan " + html_encoded (pl.title_or_name) + "</h2>")
 					f.append_to_html (r.wsf_theme, s)

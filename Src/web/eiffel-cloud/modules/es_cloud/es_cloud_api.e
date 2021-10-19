@@ -195,14 +195,14 @@ feature -- Access: tokens
 			Result := es_cloud_storage.redeem_token (a_token_name)
 		end
 
-	create_redeem_tokens (nb: INTEGER; a_plan: ES_CLOUD_PLAN; a_opt_version, a_origin, a_token_prefix, a_notes: detachable READABLE_STRING_GENERAL; a_new_tokens: detachable LIST [ES_CLOUD_REDEEM_TOKEN])
+	create_redeem_tokens (nb: INTEGER; a_plan: ES_CLOUD_PLAN; a_opt_version, a_origin: detachable READABLE_STRING_GENERAL; a_token_prefix: detachable READABLE_STRING_8; a_notes: detachable READABLE_STRING_GENERAL; a_new_tokens: detachable LIST [ES_CLOUD_REDEEM_TOKEN])
 			-- Create `nb` new redeem tokens for plan `a_plan`, limited to `a_opt_version` (or not).
 			-- The tokens are generated for seller `origin`, and prefixed (or not) by `a_token_prefix`.
 			-- `a_notes` can be used for internal purpose.
 			-- If `a_new_tokens` is set, it will contain the newly created tokens
 		local
 			i: INTEGER
-			k: STRING_32
+			k: STRING_8
 			tok: ES_CLOUD_REDEEM_TOKEN
 		do
 			from

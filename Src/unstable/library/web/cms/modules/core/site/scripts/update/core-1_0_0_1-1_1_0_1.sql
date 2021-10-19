@@ -1,5 +1,5 @@
 CREATE TABLE `messages` (
-  	`mid` TEXT UNIQUE,
+  	`mid` TEXT,
   	`date` DATETIME NOT NULL,
 	`type`	TEXT NOT NULL,
 	`status`	TEXT NOT NULL,

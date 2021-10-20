@@ -214,7 +214,11 @@ feature -- Access: tokens
 				if a_token_prefix /= Void then
 					k.prepend_string (a_token_prefix)
 				end
-				create tok.make (k, a_plan.name, a_opt_version)
+				if a_opt_version /= Void and then a_opt_version.is_valid_as_string_8 then
+					create tok.make (k, a_plan.name, a_opt_version.to_string_8)
+				else
+					create tok.make (k, a_plan.name, Void)
+				end
 				tok.set_origin (a_origin)
 				tok.set_notes (a_notes)
 				save_new_redeem_token (tok)

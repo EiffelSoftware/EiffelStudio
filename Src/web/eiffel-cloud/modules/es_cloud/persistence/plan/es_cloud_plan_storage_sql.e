@@ -758,11 +758,11 @@ feature {NONE} -- Fetcher
 		local
 			l_name: READABLE_STRING_8
 			l_plan: READABLE_STRING_8
-			l_version: READABLE_STRING_32
+			l_version: READABLE_STRING_8
 		do
 			l_name := sql_read_string_8 (1)
 			l_plan := sql_read_string_8 (2)
-			l_version := sql_read_string_32 (3)
+			l_version := sql_read_string_8 (3)
 			if l_name /= Void and l_plan /= Void then
 				create Result.make (l_name, l_plan, l_version)
 				Result.set_origin (sql_read_string_32 (4))

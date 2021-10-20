@@ -11,15 +11,11 @@ create
 
 feature {NONE} -- Creation
 
-	make (a_name: READABLE_STRING_8; a_plan_name: READABLE_STRING_8; a_version: detachable READABLE_STRING_GENERAL)
+	make (a_name: READABLE_STRING_8; a_plan_name: READABLE_STRING_8; a_version: detachable READABLE_STRING_8)
 		do
 			create name.make_from_string (a_name)
 			plan_name := a_plan_name
-			if a_version /= Void then
-				create version.make_from_string_general (a_version)
-			else
-				version := Void
-			end
+			set_version (a_version)
 		end
 
 feature -- Access
@@ -88,9 +84,9 @@ feature -- Element change
 			redeem_date := Void
 		end
 
-	set_version (s: READABLE_STRING_8)
+	set_version (s: detachable READABLE_STRING_8)
 		do
-			if s.is_whitespace then
+			if s = Void or else s.is_whitespace then
 				version := Void
 			else
 				create version.make_from_string (s)

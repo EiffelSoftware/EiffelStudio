@@ -1829,7 +1829,7 @@ feature {NONE} -- Implementation
 						l_name := l_as.operator_name_32
 						if in_bench_mode then
 							l_text_formatter_decorator.process_operator_text (l_name, l_feat)
-						elseif (l_name [1]).is_character_8 and then (l_name [1]).to_character_8.is_alpha then
+						elseif l_name [1].is_character_8 and then l_name [1].to_character_8.is_alpha then
 							l_text_formatter_decorator.process_keyword_text (l_name, Void)
 						else
 							l_text_formatter_decorator.process_symbol_text (l_name)
@@ -1977,7 +1977,7 @@ feature {NONE} -- Implementation
 						l_text_formatter_decorator.put_space
 						if in_bench_mode then
 							l_text_formatter_decorator.process_operator_text (l_name, l_feat)
-						elseif (l_name [1]).is_character_8 and then (l_name [1]).to_character_8.is_alpha then
+						elseif l_name [1].is_character_8 and then l_name [1].to_character_8.is_alpha then
 							l_text_formatter_decorator.process_keyword_text (l_name, Void)
 						else
 							l_text_formatter_decorator.process_symbol_text (l_name)
@@ -2770,13 +2770,12 @@ feature {NONE} -- Implementation
 		(a: INSPECT_ABSTRACTION_AS [CASE_ABSTRACTION_AS [detachable AST_EIFFEL], detachable AST_EIFFEL];
 			a_is_expression: BOOLEAN;
 			format_else_part_content: PROCEDURE)
+		require
+			not expr_type_visiting
 		local
 			l_text_formatter_decorator: like text_formatter_decorator
 		do
 			l_text_formatter_decorator := text_formatter_decorator
-			check
-				not_expr_type_visiting: not expr_type_visiting
-			end
 			if not a_is_expression then
 				put_breakable
 			end
@@ -2816,14 +2815,24 @@ feature {NONE} -- Implementation
 
 	process_inspect_expression_as (a: INSPECT_EXPRESSION_AS)
 		do
-			process_inspect_abstraction (a, True, agent (e: detachable EXPR_AS)
-				do
-					if attached e then
-						put_breakable
-						e.process (Current)
-						text_formatter_decorator.put_new_line
-					end
-				end (a.else_part))
+			if expr_type_visiting then
+				if attached a.case_list as l then
+						-- Bypass "when" parts and process only expressions.
+					⟳ c: l ¦ c.content.process (Current) ⟲
+				end
+				if attached a.else_part as e then
+					e.process (Current)
+				end
+			else
+				process_inspect_abstraction (a, True, agent (e: detachable EXPR_AS)
+					do
+						if attached e then
+							put_breakable
+							e.process (Current)
+							text_formatter_decorator.put_new_line
+						end
+					end (a.else_part))
+			end
 		end
 
 	process_instr_call_as (l_as: INSTR_CALL_AS)

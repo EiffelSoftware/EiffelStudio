@@ -38,7 +38,15 @@ feature -- Execution
 				if req.is_get_request_method then
 					if attached {WSF_STRING} req.path_parameter ("pid") as p_pid then
 						if attached es_cloud_api.plan_by_name (p_pid.value) as p then
-							display_redeem_for_plan (p, req, res)
+							if
+								attached {WSF_STRING} req.path_parameter ("source") as p_src and then
+								attached {WSF_STRING} req.path_parameter ("name") as p_name and then
+								attached {WSF_STRING} req.path_parameter ("ext") as p_ext
+							then
+								export_unused_redeem (p, p_src.value, p_name.value, p_ext.value, req, res)
+							else
+								display_redeem_for_plan (p, req, res)
+							end
 						else
 							send_bad_request (req, res)
 						end
@@ -105,6 +113,69 @@ feature -- Execution
 			r.execute
 		end
 
+	export_unused_redeem (a_plan: ES_CLOUD_PLAN; a_src, a_name, a_ext: READABLE_STRING_GENERAL; req: WSF_REQUEST; res: WSF_RESPONSE)
+		local
+			r: WSF_PAGE_RESPONSE
+			fn: STRING_32
+			l_src: READABLE_STRING_GENERAL
+			tks: ARRAYED_LIST [ES_CLOUD_REDEEM_TOKEN]
+			b: STRING_8
+		do
+			if api.has_permission ("admin es licenses") then
+				if attached es_cloud_api.redeem_tokens (a_plan, Void) as lst then
+					create tks.make (10)
+					across
+						lst as ic
+					loop
+						if not ic.item.is_redeemed then
+							l_src := ic.item.origin
+							if l_src = Void then
+								l_src := "?"
+							end
+							if l_src.is_case_insensitive_equal (a_src) then
+								tks.force (ic.item)
+							end
+						end
+					end
+				end
+				if tks /= Void and then not tks.is_empty then
+					if a_ext.is_case_insensitive_equal ("txt") then
+						create b.make_empty
+						b.append ("# product.name=" + a_plan.name + "%N")
+						b.append ("# product.title=" + a_plan.title_or_name + "%N")
+						b.append ("# " + tks.count.out + " redeem token(s) [" + api.utf_8_encoded (a_src) + "]%N%N")
+						create r.make_with_body (b)
+						r.header.put_content_type_text_plain
+						across
+							tks as ic
+						loop
+							b.append (ic.item.name)
+							if attached ic.item.version as v then
+								b.append_character (' ')
+								b.append ("# version=")
+								b.append (api.utf_8_encoded (v))
+							end
+							b.append_character ('%N')
+						end
+						create fn.make_from_string_general (a_src)
+						fn.append_character ('-')
+						fn.append_character ('-')
+						fn.append_string_general (a_name)
+						fn.append_character ('.')
+						fn.append_string_general (a_ext)
+						r.header.put_content_disposition ("attachment", "filename=%""+ fn +"%"")
+						res.send (r)
+					else
+						send_bad_request (req, res)
+					end
+				else
+					send_not_found (req, res)
+				end
+			else
+				send_access_denied (req, res)
+			end
+		end
+
 	display_redeem_for_plan (a_plan: ES_CLOUD_PLAN; req: WSF_REQUEST; res: WSF_RESPONSE)
 		local
 			r: like new_generic_response
@@ -114,35 +185,36 @@ feature -- Execution
 			tks_by_src: STRING_TABLE [ARRAYED_LIST [ES_CLOUD_REDEEM_TOKEN]]
 			tks: ARRAYED_LIST [ES_CLOUD_REDEEM_TOKEN]
 			l_src: detachable READABLE_STRING_GENERAL
+			fn: READABLE_STRING_32
 		do
 			r := new_generic_response (req, res)
 			add_primary_tabs (r)
 			if api.has_permission ("admin es licenses") then
 				create s.make_from_string ("<h1>Redeem tokens for plan "+ html_encoded (a_plan.name) +"</h1>")
 				if attached es_cloud_api.redeem_tokens (a_plan, Void) as lst then
-					if attached req.query_parameter ("export") as p_export then
-						create tks_by_src.make_caseless (1)
-						across
-							lst as ic
-						loop
-							if not ic.item.is_redeemed then
-								l_src := ic.item.origin
-								if l_src = Void then
-									l_src := "?"
-								end
-								tks := tks_by_src [l_src]
-								if tks = Void then
-									create tks.make (10)
-									tks_by_src [l_src] := tks
-								end
-								tks.force (ic.item)
+					create tks_by_src.make_caseless (1)
+					across
+						lst as ic
+					loop
+						if not ic.item.is_redeemed then
+							l_src := ic.item.origin
+							if l_src = Void then
+								l_src := "?"
 							end
+							tks := tks_by_src [l_src]
+							if tks = Void then
+								create tks.make (10)
+								tks_by_src [l_src] := tks
+							end
+							tks.force (ic.item)
 						end
+					end
+					if attached req.query_parameter ("export") as p_export then
 						across
 							tks_by_src as g_ic
 						loop
 							tks := g_ic.item
-							s.append ("<h3>"+ tks.count.out +" (unused) redeem tokens for %"" + html_encoded (g_ic.key) + "%"</h3>%N")
+							s.append ("<h3>"+ tks.count.out +" (unused) redeem token(s) for %"" + html_encoded (g_ic.key) + "%"</h3>%N")
 							s.append ("<textarea cols=%"40%" rows=%""+ tks.count.min (25).max (5).out +"%">")
 							across
 								tks as ic
@@ -153,17 +225,34 @@ feature -- Execution
 							s.append ("</textarea>")
 						end
 					else
-						s.append ("<h3>Unused redeem tokens</h3>%N")
-						s.append ("<table class=%"with_border%" ><tr><th>Token</th><th>Origin</th><th>Status</th><th>Limitation</th><th>notes</th>%N")
+						s.append ("<div>")
+						s.append ("<a href=%""+ req.percent_encoded_path_info + "?export%">Export unused tokens by origin</a>: ")
 						across
-							lst as ic
+							tks_by_src as g_ic
 						loop
-							if not ic.item.is_redeemed then
-								append_redeem_token (ic.item, s)
+							tks := g_ic.item
+							if tks.count > 0 then
+								s.append (" <a href=%""+ req.percent_encoded_path_info + "unused/" + url_encoded (g_ic.key) + "--" + url_encoded (a_plan.name)  + ".txt%">" + html_encoded (g_ic.key) + "--" + html_encoded (a_plan.name)+".txt</a> ")
 							end
 						end
-						s.append ("</table>%N")
-						s.append ("<div><a href=%""+ req.percent_encoded_path_info + "?export%">Export unused tokens by origin</a></div>%N")
+						s.append ("</div>%N")
+
+						s.append ("<h3>Unused redeem tokens</h3>%N")
+						across
+							tks_by_src as g_ic
+						loop
+							tks := g_ic.item
+							s.append ("<h4>"+ tks.count.out +" (unused) redeem token(s) for %"" + html_encoded (g_ic.key) + "%"</h4>%N")
+							s.append ("<table class=%"with_border%" ><tr><th>Token</th><th>Origin</th><th>Status</th><th>Limitation</th><th>notes</th>%N")
+							across
+								tks as ic
+							loop
+								if not ic.item.is_redeemed then
+									append_redeem_token (ic.item, s)
+								end
+							end
+							s.append ("</table>%N")
+						end
 
 						s.append ("<h3>Used redeem tokens</h3>%N")
 						s.append ("<table class=%"with_border%"><tr><th>Token</th><th>Origin</th><th>Status</th><th>Limitation</th><th>notes</th>%N")

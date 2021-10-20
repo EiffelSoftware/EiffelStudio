@@ -61,6 +61,7 @@ feature {NONE} -- Router/administration
 				create redeem_hlr.make (l_es_cloud_api, Current)
 				a_router.handle ("/cloud/redeem/", redeem_hlr, a_router.methods_get_post)
 				a_router.handle ("/cloud/redeem/plans/{pid}", redeem_hlr, a_router.methods_get_post)
+				a_router.handle ("/cloud/redeem/plans/{pid}/unused/{source}--{name}.{ext}", redeem_hlr, a_router.methods_get)
 --				a_router.handle ("/cloud/redeem/token/{token_id}", redeem_hlr, a_router.methods_get_post)
 				a_router.handle ("/cloud/store/", create {ES_CLOUD_STORE_ADMIN_HANDLER}.make (l_es_cloud_api), a_router.methods_get_post)
 				a_router.handle ("/cloud/store/{currency}", create {ES_CLOUD_STORE_ADMIN_HANDLER}.make (l_es_cloud_api), a_router.methods_get_post)

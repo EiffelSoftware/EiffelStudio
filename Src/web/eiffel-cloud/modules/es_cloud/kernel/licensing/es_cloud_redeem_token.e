@@ -93,7 +93,7 @@ feature -- Element change
 			if s.is_whitespace then
 				version := Void
 			else
-				create name.make_from_string (s)
+				create version.make_from_string (s)
 			end
 		end
 

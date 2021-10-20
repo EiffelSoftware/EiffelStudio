@@ -150,7 +150,7 @@ feature -- Execution
 							tks as ic
 						loop
 							b.append (ic.item.name)
-							if attached ic.item.version as v then
+							if attached ic.item.version as v and then not v.is_whitespace then
 								b.append_character (' ')
 								b.append ("# version=")
 								b.append (api.utf_8_encoded (v))

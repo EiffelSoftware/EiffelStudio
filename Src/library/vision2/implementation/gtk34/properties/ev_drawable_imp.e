@@ -383,6 +383,21 @@ feature -- Element change
 
 feature -- Clearing operations
 
+	set_background_transparency (alpha: REAL_64)
+		do
+			background_transparency_set := True
+			background_transparency_alpha := alpha
+		end
+
+	unset_background_transparency
+		do
+			background_transparency_set := False
+			background_transparency_alpha := 1.0
+		end
+
+	background_transparency_set: BOOLEAN
+	background_transparency_alpha: REAL_64
+
 	clear
 			-- Erase `Current' with `background_color'.
 		do
@@ -401,10 +416,19 @@ feature -- Clearing operations
 				if l_drawable /= default_pointer then
 					fg := foreground_color
 					if attached internal_background_color as l_bg_color then
-						{CAIRO}.set_source_rgb (l_drawable, l_bg_color.red, l_bg_color.green, l_bg_color.blue)
+						if background_transparency_set then
+							{CAIRO}.set_source_rgba (l_drawable, l_bg_color.red, l_bg_color.green, l_bg_color.blue, background_transparency_alpha)
+						else
+							{CAIRO}.set_source_rgb (l_drawable, l_bg_color.red, l_bg_color.green, l_bg_color.blue)
+						end
 					else
 							-- White
-						{CAIRO}.set_source_rgb (l_drawable, 1.0, 1.0, 1.0)
+						if background_transparency_set then
+							{CAIRO}.set_source_rgba (l_drawable, 1.0, 1.0, 1.0, background_transparency_alpha)
+						else
+							{CAIRO}.set_source_rgb (l_drawable, 1.0, 1.0, 1.0)
+						end
+
 					end
 					fill_rectangle (x, y, a_width, a_height)
 						-- Restore previous source rgb color

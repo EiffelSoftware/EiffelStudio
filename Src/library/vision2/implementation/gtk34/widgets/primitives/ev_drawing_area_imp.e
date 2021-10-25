@@ -133,6 +133,30 @@ feature {NONE} -- Dispose
 			Precursor
 		end
 
+feature {EV_ANY, EV_ANY_I} -- Transparency
+
+	start_transparency (alpha: REAL_64)
+		local
+			cr: like cairo_context
+		do
+			cr := cairo_context
+			if not cr.is_default_pointer then
+				set_background_transparency (alpha)
+				{CAIRO}.set_source_rgba (cr, 1, 1, 1, alpha)
+				{CAIRO}.set_operator (cr, {CAIRO}.operator_source)
+			end
+		end
+
+	stop_transparency
+		local
+			cr: like cairo_context
+		do
+			cr := cairo_context
+			if not cr.is_default_pointer then
+				{CAIRO}.set_operator (cr, {CAIRO}.operator_over)
+			end
+		end
+
 feature {EV_ANY_I} -- Drawing wrapper
 
 	pre_drawing
@@ -421,11 +445,7 @@ feature {NONE} -- Implementation
 				-- TODO JV review
 				-- Workaround, sometimes we got a negative value for width `a_width`.
 				-- For example from EV_GRID_I
-			if a_width < 0 then
-				{GTK}.gtk_widget_queue_draw_area (visual_widget, a_x, a_y, 0, a_height)
-			else
-				{GTK}.gtk_widget_queue_draw_area (visual_widget, a_x, a_y, a_width, a_height)
-			end
+			{GTK}.gtk_widget_queue_draw_area (visual_widget, a_x, a_y, a_width.max (0), a_height)
 			process_pending_events
 		end
 

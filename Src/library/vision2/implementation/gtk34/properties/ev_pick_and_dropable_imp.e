@@ -197,6 +197,25 @@ feature {NONE} -- Implementation
 
 feature -- Implementation
 
+	pnd_source_hint: EV_DOCKABLE_SOURCE_HINT
+		once
+			create Result
+		end
+
+	activate_docking_source_hint (a_screen_x, a_screen_y: INTEGER)
+		do
+			if not {GTK}.is_x11_session then
+				pnd_source_hint.activate (a_screen_x, a_screen_y, 50, 50)
+			end
+		end
+
+	deactivate_docking_source_hint
+		do
+			if not {GTK}.is_x11_session then
+				pnd_source_hint.deactivate
+			end
+		end
+
 	draw_rubber_band
 			-- Erase previously drawn rubber band.
 			-- Draw a rubber band between initial pick point and cursor.
@@ -324,7 +343,6 @@ feature -- Implementation
 			end
 		end
 
-
 	start_transport (
 			a_x, a_y, a_button: INTEGER; a_press: BOOLEAN
 			a_x_tilt, a_y_tilt, a_pressure: DOUBLE;
@@ -363,7 +381,7 @@ feature -- Implementation
 							end
 						end
 					end
-
+					activate_docking_source_hint (a_start_screen_x, a_start_screen_y)
 				end (l_pebble, a_x, a_y, a_screen_x, a_screen_y)
 			end
 
@@ -396,6 +414,7 @@ feature -- Implementation
 			l_pebble: like pebble
 			l_window: POINTER
 		do
+			deactivate_docking_source_hint
 			disable_capture
 			app_imp := app_implementation
 			erase_rubber_band

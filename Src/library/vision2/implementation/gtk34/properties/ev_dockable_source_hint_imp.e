@@ -41,6 +41,7 @@ feature {NONE} -- Initialization
 			l_app_imp: like app_implementation
 			d: EV_DRAWING_AREA
 		do
+			set_is_initialized (False)
 			c_win := {GTK}.gtk_window_new ({GTK}.gtk_window_popup_enum)
 			set_c_object (c_win)
 
@@ -67,6 +68,8 @@ feature {NONE} -- Initialization
 			end
 
 			{GTK}.gtk_widget_show_all (c_win)
+
+			set_is_initialized (True)
 		end
 
 	initialize_defaults

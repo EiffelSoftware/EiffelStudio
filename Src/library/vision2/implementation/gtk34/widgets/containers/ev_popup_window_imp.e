@@ -84,6 +84,20 @@ feature {NONE} -- Initialization
 			{GTK}.gtk_window_set_decorated (Result, False)
 		end
 
+feature {EV_ANY} -- Transparency
+
+	enable_transparency
+		local
+			c_screen, c_visual: POINTER
+		do
+			c_screen := {GTK2}.gdk_screen_get_default
+			c_visual := {GDK}.gdk_screen_get_rgba_visual (c_screen)
+			if not c_visual.is_default_pointer and {GTK}.gdk_screen_is_composited (c_screen) then
+				{GTK}.gtk_widget_set_visual (c_object, c_visual)
+			end
+			{GTK}.gtk_widget_set_app_paintable (c_object, True)
+		end
+
 feature {EV_ANY_I} -- Implementation
 
 	override_redirect: BOOLEAN = False

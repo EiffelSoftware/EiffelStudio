@@ -15,8 +15,7 @@ inherit
 	EV_DRAWING_AREA_IMP
 		redefine
 			update_for_pick_and_drop,
-			interface,
-			make
+			interface
 		end
 
 	EV_SHARED_APPLICATION
@@ -26,19 +25,6 @@ inherit
 
 create
 	make
-
-feature {NONE} -- Initialize
-
-	make
-			-- Initialize `Current'
-		do
-			Precursor {EV_DRAWING_AREA_IMP}
-			-- Commenting next line, as it is not a deprecated feature, and it should not be used anymore.
---			enable_double_buffering
-
-			-- Commenting next line as it is already set this way in parent EV_DRAWING_AREA_IMP!
---			{GTK2}.gtk_widget_set_redraw_on_allocate (c_object, False)
-		end
 
 feature {NONE} -- Implementation
 

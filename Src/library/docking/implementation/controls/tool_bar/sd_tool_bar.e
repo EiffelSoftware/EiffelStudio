@@ -148,6 +148,7 @@ feature -- Command
 			l_minimum_width: INTEGER
 			l_minimum_height: INTEGER
 			l_item: like item_type
+			l_item_rect: EV_RECTANGLE
 			l_items: like internal_items
 			l_item_before: detachable like item_type
 		do
@@ -161,6 +162,7 @@ feature -- Command
 				l_items.after
 			loop
 				l_item := l_items.item
+				l_item_rect := l_item.rectangle
 				if l_items.index = l_items.count or l_item.is_wrap then
 					-- Minimum width only make sence in this case.
 					if
@@ -170,12 +172,12 @@ feature -- Command
 					then
 						l_item := l_item_before
 					end
-					if l_minimum_width < l_item.rectangle.right then
-						l_minimum_width := l_item.rectangle.right
+					if l_minimum_width < l_item_rect.right then
+						l_minimum_width := l_item_rect.right
 					end
 				end
 				if l_items.index = l_items.count then
-					l_minimum_height := l_item.rectangle.bottom
+					l_minimum_height := l_item_rect.bottom
 				end
 
 				l_item_before := l_items.item
@@ -187,8 +189,7 @@ feature -- Command
 				print ("%N             items.count: " + l_items.count.out)
 			end
 
-			set_minimum_width (l_minimum_width)
-			set_minimum_height (l_minimum_height)
+			set_minimum_size (l_minimum_width, l_minimum_height)
 		end
 
 	update_size

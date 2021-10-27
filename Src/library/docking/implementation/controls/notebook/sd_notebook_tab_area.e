@@ -49,7 +49,6 @@ feature {NONE}  -- Initlization
 					do on_tab_box_right_side_double_click end)
 
 			extend_horizontal_box (internal_tool_bar)
-			disable_item_expand (internal_tool_bar)
 			internal_tool_bar.hide
 			internal_tool_bar.extend (internal_auto_hide_indicator)
 			internal_tool_bar.compute_minimum_size
@@ -132,6 +131,7 @@ feature -- Command
 				l_all_tabs := all_tabs
 
 				updates_tabs_not_shown (a_width)
+
 				l_tabs := internal_tabs_not_shown.twin
 				from
 					l_tabs.start
@@ -201,8 +201,8 @@ feature -- Command
 				l_all_tabs.prune (l_tabs_not_shown.item)
 				l_tabs_not_shown.forth
 			end
-			if l_all_tabs.count > 0 then
-				tab_box.set_minimum_width (l_all_tabs.last.x + l_all_tabs.last.width)
+			if l_all_tabs.count > 0 and then attached l_all_tabs.last as l_last_tab then
+				tab_box.set_minimum_width (l_last_tab.x + l_last_tab.width)
 			end
 		end
 
@@ -212,11 +212,11 @@ feature -- Command
 		do
 			if is_displayed then
 				if not ignore_resize and a_width /= last_resize_width then
+					debug ("docking")
+						print ("%N SD_NOTEBOOK_TAB_AREA on_resize ("+ a_x.out +","+ a_y.out +","+ a_width.out +","+ a_height.out +")%N")
+					end
 					resize_tabs (a_width)
 					last_resize_width := a_width
-					debug ("docking")
-						print ("%N SD_NOTEBOOK_TAB_AREA on_resize")
-					end
 				end
 			end
 		ensure
@@ -279,7 +279,7 @@ feature -- Query
 	tab_box_predered_width: INTEGER
 			-- tool bar preferred width
 		do
-			Result := width - internal_tool_bar.width
+			Result := width - internal_tool_bar.minimum_width
 			if Result < 0 then
 				Result := 0
 			end
@@ -387,13 +387,21 @@ feature {NONE}  -- Implementation functions
 			l_tabs: like all_tabs
 			l_tab: SD_NOTEBOOK_TAB
 			l_tabs_invisible: like internal_tabs_not_shown
+			l_available_width: INTEGER
 		do
 			internal_tabs_not_shown.wipe_out
 			l_tabs_invisible := internal_tabs_not_shown
 			if not is_empty then
 				l_total_width := total_preferred_width
-				if l_total_width > a_width then
-					l_total_width := l_total_width + internal_tool_bar.minimum_width
+				l_total_width := l_total_width
+					-- Note: solution to be able to resize down (with gtk34).
+					--| the minimum width of the full tab area need to take have a flexible part
+					--| when the `internal_tool_bar` is hidden, the tabs box could use the full width
+					--| and the implementatio set this width as the minimum width for the tabs box.
+					--| So a flexible space (no minimum width) should be there to allow vision2 to resize down the notebook.
+					--| The following line keeps at least  `internal_tool_bar.minimum_width + 2` for this purpose.
+				l_available_width := a_width - internal_tool_bar.minimum_width - 2
+				if l_total_width > l_available_width then
 					l_tabs := all_tabs
 					from
 						l_tabs.finish
@@ -402,7 +410,7 @@ feature {NONE}  -- Implementation functions
 					loop
 						l_tab := l_tabs.item
 						if not l_tab.is_selected then
-							if l_total_width > a_width then
+							if l_total_width > l_available_width then
 								l_tabs_invisible.extend (l_tab)
 								l_total_width := l_total_width - l_tab.preferred_size
 							else
@@ -571,7 +579,7 @@ invariant
 
 note
 	library:	"SmartDocking: Library of reusable components for Eiffel."
-	copyright:	"Copyright (c) 1984-2017, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2021, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

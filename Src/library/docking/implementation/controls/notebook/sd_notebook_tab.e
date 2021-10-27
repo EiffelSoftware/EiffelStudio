@@ -162,16 +162,6 @@ feature -- Query
 	internal_draw_pixmap: BOOLEAN
 			-- If draw `pixmap'?
 
-	prefered_size: INTEGER
-			-- If current is displayed, size should take
-		obsolete
-			"Use `preferred_size' instead. [2017-05-31]"
-		require
-			not_destroyed: not is_destroyed
-		do
-			Result := preferred_size
-		end
-
 	preferred_size: INTEGER
 			-- If current is displayed, size should take
 		require
@@ -730,7 +720,7 @@ invariant
 
 note
 	library:	"SmartDocking: Library of reusable components for Eiffel."
-	copyright:	"Copyright (c) 1984-2017, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2021, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

@@ -356,16 +356,16 @@ feature -- Status setting
 			hidden_width := width
 			hidden_height := height
 
-			hidden_minimum_width := minimum_width
-			hidden_minimum_height := minimum_height
+			hidden_real_minimum_width := real_minimum_width
+			hidden_real_minimum_height := real_minimum_height
 			{GTK}.gtk_widget_hide (c_object)
 		end
 
 	hidden_width,
 	hidden_height: INTEGER
 
-	hidden_minimum_width,
-	hidden_minimum_height: INTEGER
+	hidden_real_minimum_width,
+	hidden_real_minimum_height: INTEGER
 
 	width: INTEGER
 		do
@@ -397,8 +397,8 @@ feature -- Status setting
 			if not is_show_requested then
 					-- With gtk3/4, when a widget is hidden, the minimum width is 0
 					-- while previously (gtk2) it was keeping the previous value
-				if Result <= 0 and hidden_minimum_width > 0 then
-					Result := hidden_minimum_width
+				if Result <= 0 and hidden_real_minimum_width > 0 then
+					Result := hidden_real_minimum_width
 				end
 			end
 		end
@@ -409,8 +409,8 @@ feature -- Status setting
 			if not is_show_requested then
 					-- With gtk3/4, when a widget is hidden, the minimum height is 0
 					-- while previously (gtk2) it was keeping the previous value				
-				if Result <= 0 and hidden_minimum_height > 0 then
-					Result := hidden_minimum_height
+				if Result <= 0 and hidden_real_minimum_height > 0 then
+					Result := hidden_real_minimum_height
 				end
 			end
 		end
@@ -422,7 +422,7 @@ feature -- Element change
 		do
 			debug ("gtk_sizing")
 				print (if attached interface as l_interface then l_interface.debug_output else generating_type.name_32 end)
-				print ({STRING_32} ".set_minimum_width (w=" + a_minimum_width.out + ")%N")
+				print ({STRING_32} ".set_minimum_width (w=" + a_minimum_width.out + ") min_height="+ real_minimum_height.out +"%N")
 			end
 
 			{GTK2}.gtk_widget_set_minimum_size (c_object, a_minimum_width, real_minimum_height)
@@ -440,7 +440,7 @@ feature -- Element change
 		do
 			debug ("gtk_sizing")
 				print (if attached interface as l_interface then l_interface.debug_output else generating_type.name_32 end)
-				print ({STRING_32} ".set_minimum_height (h=" + a_minimum_height.out + ")%N")
+				print ({STRING_32} ".set_minimum_height (h=" + a_minimum_height.out + ") min_width="+ real_minimum_width.out +"%N")
 			end
 
 			{GTK2}.gtk_widget_set_minimum_size (c_object, real_minimum_width, a_minimum_height)

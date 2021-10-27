@@ -53,11 +53,8 @@ feature {EV_ANY, EV_ANY_I} -- Status report
 		local
 			fill: INTEGER
 			expand, pad, pack_type: INTEGER
-			wid_imp: detachable EV_WIDGET_IMP
 		do
-			wid_imp ?= child.implementation
-			check wid_imp /= Void end
-			if wid_imp /= Void then
+			if attached {EV_WIDGET_IMP} child.implementation as wid_imp then
 				{GTK}.gtk_box_query_child_packing (
 					container_widget,
 					wid_imp.c_object,
@@ -66,6 +63,8 @@ feature {EV_ANY, EV_ANY_I} -- Status report
 					$pad,
 					$pack_type
 				)
+			else
+				check is_widget_imp: False end
 			end
 			Result := expand.to_boolean
 		end
@@ -92,16 +91,14 @@ feature {EV_ANY, EV_ANY_I} -- Status settings
 
 	set_child_expandable (child: EV_WIDGET; flag: BOOLEAN)
 			-- Set whether `child' expands to fill available spare space.
-		local
-			wid_imp: detachable EV_WIDGET_IMP
 		do
-			wid_imp ?= child.implementation
-			check wid_imp /= Void then end
-			set_child_expandable_internal (container_widget, wid_imp.c_object, flag)
-			if attached {EV_VERTICAL_BOX_IMP} Current then
-				{GTK}.gtk_widget_set_vexpand(wid_imp.c_object, flag)
-			else
-				{GTK}.gtk_widget_set_hexpand (wid_imp.c_object, flag)
+			check attached {EV_WIDGET_IMP} child.implementation as wid_imp then
+				set_child_expandable_internal (container_widget, wid_imp.c_object, flag)
+				if attached {EV_VERTICAL_BOX_IMP} Current then
+					{GTK}.gtk_widget_set_vexpand(wid_imp.c_object, flag)
+				else
+					{GTK}.gtk_widget_set_hexpand (wid_imp.c_object, flag)
+				end
 			end
 		end
 
@@ -160,7 +157,7 @@ feature {EV_ANY_I, EV_ANY} -- Implementation
 			-- functionality implemented by `Current'
 
 note
-	copyright:	"Copyright (c) 1984-2013, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2021, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

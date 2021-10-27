@@ -197,23 +197,14 @@ feature {NONE} -- Implementation
 
 feature -- Implementation
 
-	pnd_source_hint: EV_DOCKABLE_SOURCE_HINT
-		once
-			create Result
-		end
-
 	activate_docking_source_hint (a_screen_x, a_screen_y: INTEGER)
 		do
-			if not {GTK}.is_x11_session then
-				pnd_source_hint.activate (a_screen_x, a_screen_y, 50, 50)
-			end
+			app_implementation.activate_docking_source_hint (a_screen_x, a_screen_y)
 		end
 
 	deactivate_docking_source_hint
 		do
-			if not {GTK}.is_x11_session then
-				pnd_source_hint.deactivate
-			end
+			app_implementation.deactivate_docking_source_hint
 		end
 
 	draw_rubber_band
@@ -414,9 +405,9 @@ feature -- Implementation
 			l_pebble: like pebble
 			l_window: POINTER
 		do
-			deactivate_docking_source_hint
 			disable_capture
 			app_imp := app_implementation
+			deactivate_docking_source_hint
 			erase_rubber_band
 			modify_widget_appearance (False)
 			if not is_destroyed then

@@ -455,7 +455,7 @@ invariant
 		attached pebble_function as l_pebble_function implies l_pebble_function.valid_operands ([1,1])
 
 note
-	copyright:	"Copyright (c) 1984-2015, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2021, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

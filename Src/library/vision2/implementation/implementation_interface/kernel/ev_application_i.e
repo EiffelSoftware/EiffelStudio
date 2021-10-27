@@ -711,6 +711,16 @@ feature {EV_PICK_AND_DROPABLE_I, EV_POSITIONED_I} -- Pick and drop
 			y_origin := a_y_origin
 		end
 
+	activate_docking_source_hint (a_screen_x, a_screen_y: INTEGER)
+			-- Activate docking source visual hint.
+		do
+		end
+
+	deactivate_docking_source_hint
+			-- Deactivate docking source visual hint.
+		do
+		end
+
 	rubber_band_is_drawn: BOOLEAN
 			-- Is the PnD rubber band drawn on screen?
 

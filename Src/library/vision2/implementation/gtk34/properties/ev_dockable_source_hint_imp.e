@@ -57,7 +57,7 @@ feature {NONE} -- Initialization
 			{GTK}.gtk_widget_set_app_paintable (c_win, True)
 			{GTK}.gtk_window_set_skip_taskbar_hint (c_win, True)
 			{GTK}.gtk_box_set_homogeneous (c_win, True)
-			{GTK}.gtk_container_set_border_width (c_win, 10)
+			{GTK}.gtk_container_set_border_width (c_win, 0)
 
 			l_app_imp.window_oids.extend (internal_id)
 
@@ -113,8 +113,12 @@ feature {NONE} -- Implementation
 			l_angle: REAL_64
 			nb: INTEGER
 			cr: POINTER
+			l_app_implementation: like app_implementation
 		do
-			set_position (source_position_x - width // 2, source_position_y - height // 2)
+			l_app_implementation := app_implementation
+--			{GTK}.gtk_window_present (c_object)
+
+			set_position (l_app_implementation.x_origin - width // 2, l_app_implementation.y_origin - height // 2)
 
 			nb := animation_steps
 			counter := (counter \\ nb) + 1
@@ -124,7 +128,7 @@ feature {NONE} -- Implementation
 				cr := dw_imp.cairo_context
 			end
 			a_drawing.clear
-			l_alpha := 0.5 - (0.4 * counter / nb)
+			l_alpha := 0.7 - (0.4 * counter / nb)
 
 
 				-- Outer circle
@@ -156,8 +160,8 @@ feature {NONE} -- Implementation
 			l_x := 1 + (a_width - w) // 2
 			l_y := 1 + (a_height - h) // 2
 
-			l_pnd_x := app_implementation.pnd_pointer_x
-			l_pnd_y := app_implementation.pnd_pointer_y
+			l_pnd_x := l_app_implementation.pnd_pointer_x
+			l_pnd_y := l_app_implementation.pnd_pointer_y
 
 				-- move the inner cirle showing the direction...
 			l_angle := {DOUBLE_MATH}.arc_tangent ((l_pnd_x - source_position_x) / (l_pnd_y - source_position_y))
@@ -195,7 +199,9 @@ feature {NONE} -- Implementation
 			a_drawing.fill_ellipse (l_x, l_y, w, h)
 
 			if attached {EV_DRAWING_AREA_IMP} a_drawing.implementation as dw_imp then
-				dw_imp.stop_transparency
+				if dw_imp.background_transparency_set then
+					dw_imp.stop_transparency
+				end
 			end
 			a_drawing.end_drawing_session
 		end
@@ -242,15 +248,16 @@ feature {EV_ANY} -- Execution
 			t: like timeout
 		do
 			is_activated := True
+			counter := 0
 			set_size (a_width, a_height)
 			source_position_x := a_x
 			source_position_y := a_y
 			set_position ((a_x - a_width * 0.75).truncated_to_integer, (a_y - a_height * 0.75).truncated_to_integer)
 			show
 			create t
+			timeout := t
 			t.actions.extend (agent on_timeout)
 			t.set_interval (animation_delay)
-			timeout := t
 		end
 
 	deactivate

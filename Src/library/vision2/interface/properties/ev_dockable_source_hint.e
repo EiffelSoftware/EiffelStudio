@@ -12,11 +12,6 @@ inherit
 			implementation
 		end
 
-	EV_POSITIONABLE
-		redefine
-			implementation
-		end
-
 create
 	default_create
 

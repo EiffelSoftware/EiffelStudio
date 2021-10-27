@@ -699,7 +699,7 @@ feature {EV_APPLICATION, EV_PICK_AND_DROPABLE_I} -- Pick and drop
 			create Result
 		end
 
-feature {EV_PICK_AND_DROPABLE_I, EV_POSITIONED_I} -- Pick and drop
+feature {EV_PICK_AND_DROPABLE_I, EV_ANY_I} -- Pick and drop
 
 	x_origin, y_origin: INTEGER
 			-- Temp coordinate values for origin of Pick and Drop.

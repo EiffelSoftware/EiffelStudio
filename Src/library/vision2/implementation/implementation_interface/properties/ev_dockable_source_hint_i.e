@@ -12,11 +12,6 @@ inherit
 			interface
 		end
 
-	EV_POSITIONABLE_I
-		redefine
-			interface
-		end
-
 feature {EV_ANY}
 
 	activate (a_x, a_y: INTEGER; a_width, a_height: INTEGER)

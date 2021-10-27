@@ -1361,12 +1361,17 @@ feature {EV_ANY_I} -- Docking implementation
 
 	activate_docking_source_hint (a_screen_x, a_screen_y: INTEGER)
 		do
-			pnd_source_hint.activate (a_screen_x, a_screen_y, 50, 50)
+			if not {GTK}.is_x11_session then
+				pnd_source_hint.activate (a_screen_x, a_screen_y, 50, 50)
+			end
 		end
 
 	deactivate_docking_source_hint
 		do
-			if pnd_source_hint.is_activated then
+			if
+				not {GTK}.is_x11_session and then
+				pnd_source_hint.is_activated
+			then
 				pnd_source_hint.deactivate
 			end
 		end

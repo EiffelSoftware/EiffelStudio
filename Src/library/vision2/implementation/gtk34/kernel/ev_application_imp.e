@@ -21,6 +21,7 @@ inherit
 		undefine
 			dispose
 		redefine
+			activate_docking_source_hint, deactivate_docking_source_hint,
 			call_post_launch_actions, focused_widget, make
 		end
 
@@ -1349,6 +1350,25 @@ feature {EV_PICK_AND_DROPABLE_IMP, EV_DOCKABLE_SOURCE_IMP} -- Pick and drop
 			-- Called by EV_PICK_AND_DROPABLE_IMP.end_transport
 		do
 			internal_pick_and_drop_source := Void
+		end
+
+feature {EV_ANY_I} -- Docking implementation
+
+	pnd_source_hint: EV_DOCKABLE_SOURCE_HINT
+		once
+			create Result
+		end
+
+	activate_docking_source_hint (a_screen_x, a_screen_y: INTEGER)
+		do
+			pnd_source_hint.activate (a_screen_x, a_screen_y, 50, 50)
+		end
+
+	deactivate_docking_source_hint
+		do
+			if pnd_source_hint.is_activated then
+				pnd_source_hint.deactivate
+			end
 		end
 
 feature {EV_ANY_I} -- Implementation

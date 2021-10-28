@@ -164,13 +164,6 @@ feature {NONE} -- Initialization
 			create l_inner_container.make (Current)
 			a_list.extend (l_inner_container)
 			fixed_area.extend (l_inner_container)
-				-- For gtk34 implementation, for now, it is needed to resize the inner container,
-				-- using the fixed area resize actions mechanism.
-			fixed_area.resize_actions.extend (agent (i_inner: EV_WIDGET; i_x, i_y: INTEGER_32; i_w, i_h: INTEGER_32)
-					do
-						i_inner.set_minimum_size (i_w, i_h)
-					end (l_inner_container, ?,?,?,?)
-				)
 			l_inner_container.set_minimum_size (1, 1)
 			inner_containers.extend (l_inner_container)
 		end

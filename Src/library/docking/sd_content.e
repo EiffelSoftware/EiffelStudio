@@ -94,15 +94,12 @@ feature {NONE} -- Initialization
 			-- `a_unique_title' is the unique title for Current	
 		require
 			a_widget_not_void: a_widget /= Void
-		-- local
-			-- TODO: l_stock: EV_STOCK_PIXMAPS
 		do
 			create internal_shared
-			-- TODO: create l_stock
+
 			make_tool_with_original_widget_title_pixmap (a_widget,
-			create {EV_PIXMAP},
-			--TODO			l_stock.default_window_icon,
-			a_unique_title, a_docking_manager)
+			create {EV_PIXMAP}	--TODO (create {EV_STOCK_PIXMAPS}).default_window_icon
+			,a_unique_title, a_docking_manager)
 		ensure
 			internal_type = {SD_ENUMERATION}.tool
 		end
@@ -1002,7 +999,7 @@ invariant
 
 note
 	library:	"SmartDocking: Library of reusable components for Eiffel."
-	copyright:	"Copyright (c) 1984-2017, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2021, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

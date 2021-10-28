@@ -54,9 +54,6 @@ feature {NONE} -- Implementation
 				(agent (a_x, a_y, a_button: INTEGER_32; a_x_tilt, a_y_tilt, a_pressure: REAL_64; a_screen_x, a_screen_y: INTEGER_32)
 					do
 						update_proportion
-						if attached shared_environment.is_gtk3_implementation then
-							set_proportion (proportion)
-						end
 					end)
 			resize_actions.extend
 				(agent (a_x, a_y, a_width, a_height: INTEGER_32)

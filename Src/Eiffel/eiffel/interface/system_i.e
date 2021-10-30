@@ -730,7 +730,6 @@ end
 			locations: ARRAYED_LIST [TUPLE [c: CLASS_C; l: LOCATION_AS]]
 			location: TUPLE [c: CLASS_C; l: LOCATION_AS]
 			l_has_error: BOOLEAN
-			l_agent_sorter: AGENT_EQUALITY_TESTER [VTCT]
 			l_sorter: QUICK_SORTER [VTCT]
 			l_list: ARRAYED_LIST [VTCT]
 		do
@@ -780,8 +779,7 @@ end
 				missing_classes := Void
 
 				if l_has_error then
-					create l_agent_sorter.make (agent {VTCT}.less_than)
-					create l_sorter.make (l_agent_sorter)
+					create l_sorter.make (create {AGENT_EQUALITY_TESTER [VTCT]}.make (agent {VTCT}.less_than))
 					l_sorter.sort (l_list)
 					from
 						l_list.start

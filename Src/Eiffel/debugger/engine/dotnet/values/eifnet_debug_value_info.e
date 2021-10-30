@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "Object used to get information on ICOR_DEBUG_VALUE"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -283,8 +283,8 @@ feature -- Queries
 			value_class_token_valid: value_class_token > 0
 		local
 			ct: CLASS_TYPE
-			an: STRING -- assembly name
-			cn: STRING  -- class name
+			an: READABLE_STRING_32 -- assembly name
+			cn: READABLE_STRING_32  -- class name
 		do
 			ct := value_class_type
 			if ct /= Void then
@@ -330,7 +330,7 @@ feature -- Queries
 			result_not_void: Result /= Void
 		end
 
-	only_file_name_without_extension (f: STRING): STRING
+	only_file_name_without_extension (f: READABLE_STRING_32): READABLE_STRING_32
 			-- Return only the filename part of the absolute filename `f'
 			-- Not very nice, but how could we do otherwise ?
 		local
@@ -362,7 +362,7 @@ feature -- Queries on ICOR_DEBUG_OBJECT_VALUE
 			end
 		end
 
-	value_class_name: STRING
+	value_class_name: STRING_32
 			-- class name for this ICorDebugObjectValue value
 		require
 			has_object_interface: has_object_interface
@@ -379,7 +379,7 @@ feature -- Queries on ICOR_DEBUG_OBJECT_VALUE
 			end
 		end
 
-	value_module_file_name: STRING
+	value_module_file_name: STRING_32
 			-- module filename for this ICorDebugObjectValue value
 		require
 			has_object_interface
@@ -545,7 +545,7 @@ invariant
 	icd_referenced_and_prepared_value_not_void : icd_referenced_value = Void implies icd_prepared_value = Void
 
 note
-	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2021, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
@@ -576,4 +576,4 @@ note
 			Customer support http://support.eiffel.com
 		]"
 
-end -- class EIFNET_DEBUG_VALUE_INFO
+end

@@ -1,9 +1,9 @@
-note
+﻿note
 	description	: "Controls execution of classic debugged application."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
-	date		: "$Date$"
-	revision	: "$Revision $"
+	date: "$Date$"
+	revision: "$Revision$"
 
 class
 	APPLICATION_EXECUTION_CLASSIC
@@ -377,7 +377,7 @@ feature {NONE} -- Breakpoints implementation
 				loc := bps.item_for_iteration.location
 				if loc.is_set_for_application then
 					debug ("debugger_trace_breakpoint")
-						print ("REMOVE APPLICATION BP :: " + loc.debug_output + "%N")
+						io.put_string_32 ({STRING_32} "REMOVE APPLICATION BP :: " + loc.debug_output + "%N")
 					end
 					loc.set_application_not_set
 					-- then next time we go with StopPoint enable ... we'll add them again
@@ -745,7 +745,7 @@ invariant
 	ipc_engine_not_void: ipc_engine /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2019, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2021, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

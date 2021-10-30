@@ -557,7 +557,7 @@ feature {NONE} -- retrieving information from cache
 				until
 					attached Result
 				loop
-					l_as := a.item
+					l_as := a
 					if l_as.has_same_path (l_formated_location) then
 						Result := l_as
 					end
@@ -589,7 +589,7 @@ feature {NONE} -- retrieving information from cache
 					until
 						attached Result
 					loop
-						l_as := cache_assemblies.item
+						l_as := cache_assemblies
 						if l_as.has_same_gac_information (l_name, l_version, l_culture, l_key) then
 							Result := l_as
 						end
@@ -622,7 +622,7 @@ feature {NONE} -- Consuming
 			if attached il_emitter as l_emitter then
 				create l_paths.make_empty
 				across an_assemblies as l_assembly loop
-					l_a := l_assembly.item
+					l_a := l_assembly
 					if l_a.is_non_local_assembly then
 						if
 							attached l_a.assembly_name as l_assembly_name and
@@ -671,7 +671,7 @@ feature {NONE} -- Consuming
 			on_consume_assemblies
 			create l_paths.make_empty
 			across an_assemblies as l_assembly loop
-				l_a := l_assembly.item
+				l_a := l_assembly
 				if not l_a.is_non_local_assembly then
 					l_path := l_a.location.evaluated_path.name
 					if not l_unique_paths.has (l_path) then
@@ -810,7 +810,7 @@ feature {NONE} -- helpers
 				from
 					create l_guids.make (cache_assemblies.count)
 				loop
-					l_guids.force (a.item.unique_id)
+					l_guids.force (a.unique_id)
 				end
 			else
 				create l_guids.make (0)
@@ -820,7 +820,7 @@ feature {NONE} -- helpers
 				across
 					a as ic
 				loop
-					if not l_guids.has (ic.item.guid) then
+					if not l_guids.has (ic.guid) then
 						add_error (create {CONF_METADATA_CORRUPT})
 					end
 				end
@@ -863,7 +863,7 @@ feature {NONE} -- Contract
 					across
 						linear_assemblies as l
 					all
-						l.item.is_valid and l.item.classes_set and a.item (l.item.guid) = l.item
+						l.is_valid and l.classes_set and a.item (l.guid) = l
 					end
 			end
 		end

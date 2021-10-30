@@ -1,5 +1,4 @@
-note
-	description: "Summary description for {LIBRARY_INDEXER}."
+﻿note
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -72,15 +71,15 @@ feature -- Change
 			across
 				a_locations as ic
 			loop
-				on_folder_enter (ic.item)
-				l_scanner.process_directory (ic.item)
-				on_folder_leave (ic.item)
+				on_folder_enter (ic)
+				l_scanner.process_directory (ic)
+				on_folder_leave (ic)
 			end
 
 			across
 				l_scanner.items as ic
 			loop
-				add_file (ic.item)
+				add_file (ic)
 			end
 		end
 
@@ -105,15 +104,14 @@ feature -- Execution
 			across
 				files as ic
 			loop
-				p := ic.item
-				if p.is_empty then
-				else
+				p := ic
+				if not p.is_empty then
 					create f.make_with_path (p)
 					if f.exists and then f.is_access_readable then
 						visit_ecf_file (p)
 					else
 						debug
-							print ("Invalid file ["+ p.utf_8_name +"]!%N")
+							print ("Invalid file [" + p.utf_8_name + "]!%N")
 						end
 					end
 				end
@@ -153,12 +151,12 @@ feature -- Execution
 			if a_target = a_target.system.library_target then
 				Precursor (a_target)
 			else
-				-- Only library target is relevant
+					-- Only library target is relevant
 			end
 		end
 
 note
-	copyright: "Copyright (c) 1984-2013, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2021, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software
@@ -167,4 +165,5 @@ note
 			Website http://www.eiffel.com
 			Customer support http://support.eiffel.com
 		]"
+
 end

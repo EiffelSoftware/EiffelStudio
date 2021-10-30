@@ -141,7 +141,7 @@ feature -- Queries
 				until
 					not Result
 				loop
-					Result := custom_satisfied (a_state, ic.key, ic.item)
+					Result := custom_satisfied (a_state, @ ic.key, ic)
 				end
 			end
 		end
@@ -542,33 +542,33 @@ feature -- Output
 
 			across custom as custom_ic loop
 				across
-					custom_ic.item as l_c
+					custom_ic as l_c
 				loop
 						-- FIXME: jfiat
-					Result.append_string_general (custom_ic.key)
-					if l_c.item.inverted then
-						if l_c.item.is_case_insensitive then
+					Result.append_string_general (@ custom_ic.key)
+					if l_c.inverted then
+						if l_c.is_case_insensitive then
 							Result.append_string_general (" /<caseless>= ")
-						elseif l_c.item.is_wildcard then
+						elseif l_c.is_wildcard then
 							Result.append_string_general (" /<wildcard>= ")
-						elseif l_c.item.is_regular_expression then
+						elseif l_c.is_regular_expression then
 							Result.append_string_general (" /<regexp>= ")
 						else
 							Result.append_string_general (" /= ")
 						end
 
 					else
-						if l_c.item.is_case_insensitive then
+						if l_c.is_case_insensitive then
 							Result.append_string_general (" =<caseless>= ")
-						elseif l_c.item.is_wildcard then
+						elseif l_c.is_wildcard then
 							Result.append_string_general (" =<wildcard>= ")
-						elseif l_c.item.is_regular_expression then
+						elseif l_c.is_regular_expression then
 							Result.append_string_general (" =<regexp>= ")
 						else
 							Result.append_string_general (" = ")
 						end
 					end
-					Result.append_string_general (l_c.key)
+					Result.append_string_general (@ l_c.key)
 					Result.append_string_general (" and ")
 				end
 			end
@@ -631,7 +631,7 @@ invariant
 	custom_not_void: custom /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2020, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2021, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

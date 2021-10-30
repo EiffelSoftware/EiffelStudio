@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "TTY menu."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -34,16 +34,16 @@ feature -- Properties
 	show_menu_after_n_empty_reply: INTEGER
 			-- Show menu after `show_menu_after_n_empty_reply' empty replies.
 
-	line_prefix: STRING
+	line_prefix: IMMUTABLE_STRING_32
 			-- Line prefix
 
 	console: STD_FILES
 			-- Console for output
 
-	title: STRING_GENERAL
+	title: IMMUTABLE_STRING_32
 			-- Title of Current menu.
 
-	entry_disabled_message: detachable STRING_GENERAL
+	entry_disabled_message: detachable IMMUTABLE_STRING_32
 			-- Message to display when an entry is disabled.
 
 	enter_actions: ACTION_SEQUENCE [TUPLE]
@@ -54,15 +54,15 @@ feature -- Properties
 
 feature -- Change
 
-	set_line_prefix (s: STRING_GENERAL)
-			-- Set menu's line_prefix
+	set_line_prefix (s: READABLE_STRING_32)
+			-- Set menu's line_prefix.
 		require
 			s /= Void
 		do
-			line_prefix := s.as_string_8.twin
+			line_prefix := s
 		end
 
-	set_title (s: STRING_GENERAL)
+	set_title (s: READABLE_STRING_32)
 			-- Set menu's title
 		require
 			s /= Void
@@ -70,12 +70,12 @@ feature -- Change
 			title := s.twin
 		end
 
-	set_entry_disabled_message (s: STRING_GENERAL)
+	set_entry_disabled_message (s: READABLE_STRING_32)
 			-- Set entry_disabled_message
 		require
 			s /= Void
 		do
-			entry_disabled_message := s.twin
+			entry_disabled_message := s
 		end
 
 	add_entry (a_abr: STRING; a_text: STRING_GENERAL; a_action: like action_from)
@@ -135,12 +135,13 @@ feature -- Access
 					menu_shown_requested := False
 				end
 				if menu_asked then
-					if menu_shown = False then
+					if not menu_shown then
 						empty_reply_count := 0
 						display_menu
 						menu_shown := True
 					end
-					console.put_string (line_prefix + "-> ")
+					console.put_string_32 (line_prefix)
+					console.put_string ("-> ")
 				end
 				e := get_entry
 				if e /= Void then
@@ -176,7 +177,13 @@ feature -- Access
 	console_print (m: READABLE_STRING_GENERAL)
 			-- console.put_string ...
 		do
-			console.put_string (m.as_string_8)
+			if attached {READABLE_STRING_32} m as s then
+				console.put_string_32 (s)
+			elseif attached {READABLE_STRING_8} m as s then
+				console.put_string (s)
+			else
+				console.put_string_32 (m.as_string_32)
+			end
 		end
 
 	console_print_entry_disabled
@@ -199,16 +206,12 @@ feature {NONE} -- Implementation
 
 	action_from (t: attached like entry): detachable PROCEDURE
 			-- Menu action for entry `t'.
-		require
-			t /= Void
 		do
 			Result := t.action
 		end
 
 	entry_enabled (a_entry: attached like entry): BOOLEAN
 			-- Is `a_entry' enabled (depending of the condition) ?
-		require
-			a_entry_attached: a_entry /= Void
 		do
 			if attached a_entry.cond as l_cond then
 				Result := l_cond.item (Void)
@@ -217,7 +220,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	entry (a_index: INTEGER; a_abr: detachable STRING): detachable TUPLE [index:INTEGER; abrev: detachable STRING; text: STRING_GENERAL; action: detachable PROCEDURE; cond: detachable FUNCTION [BOOLEAN]]
+	entry (a_index: INTEGER; a_abr: detachable STRING): detachable TUPLE [index: INTEGER; abrev: detachable STRING; text: STRING_GENERAL; action: detachable PROCEDURE; cond: detachable FUNCTION [BOOLEAN]]
 			-- Entry indexed by `a_index'.
 		local
 			lst: like entries
@@ -259,13 +262,11 @@ feature {NONE} -- Answers implementation
 			-- return entry according to user answer.
 		local
 			s: STRING
-			i: INTEGER
 		do
 			console.read_line
 			s := console.last_string
 			if s.is_integer then
-				i := s.to_integer
-				Result := entry (i, Void)
+				Result := entry (s.to_integer, Void)
 			elseif s.is_empty then
 				Result := Void
 			else
@@ -279,7 +280,7 @@ feature {NONE} -- Answers implementation
 		require
 			s /= Void
 		local
-			i,j: INTEGER
+			i, j: INTEGER
 		do
 			if a_prefix /= Void and then s.count >= a_prefix.count then
 				from
@@ -321,7 +322,7 @@ feature {NONE} -- Answers implementation
 				if entry_enabled (item) then
 					l_title := item.text
 					if l_title /= Void and then not l_title.is_empty then
-						console.put_string (line_prefix)
+						console.put_string_32 (line_prefix)
 						if item.abrev = Void and item.action = Void then
 
 							console.put_string ("    ")
@@ -344,9 +345,9 @@ feature {NONE} -- Answers implementation
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
-	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
-	licensing_options:	"http://www.eiffel.com/licensing"
+	copyright: "Copyright (c) 1984-2021, Eiffel Software"
+	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
+	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[
 			This file is part of Eiffel Software's Eiffel Development Environment.
 			
@@ -368,11 +369,11 @@ note
 			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
 		]"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			356 Storke Road, Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 end

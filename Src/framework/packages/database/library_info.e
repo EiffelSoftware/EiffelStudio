@@ -1,5 +1,4 @@
 ﻿note
-	description: "Summary description for {LIBRARY_INFO}."
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -55,7 +54,7 @@ feature -- Access
 
 	dependencies: ARRAYED_LIST [TUPLE [name: READABLE_STRING_GENERAL; location: READABLE_STRING_32; evaluated_location: PATH]]
 
-	classes: ARRAYED_LIST [READABLE_STRING_8]
+	classes: ARRAYED_LIST [READABLE_STRING_32]
 
 	hash_code: INTEGER
 			-- Hash code value
@@ -69,11 +68,8 @@ feature -- Status report
 
 	is_testing_project: BOOLEAN
 		do
-			Result := 	across
-							dependencies as ic
-						some
-							ic.item.location.starts_with ({STRING_32} "$ISE_LIBRARY\library\testing\testing")
-						end
+			Result := ∃ ic: dependencies ¦
+					ic.location.starts_with ({STRING_32} "$ISE_LIBRARY\library\testing\testing")
 		end
 
 feature -- Change
@@ -88,7 +84,7 @@ feature -- Change
 			if v = Void then
 				void_safety_option := Void
 			elseif v.is_valid_as_string_8 then
-				void_safety_option := v.as_string_8
+				void_safety_option := v.to_string_8
 			else
 				void_safety_option := Void
 			end
@@ -114,7 +110,7 @@ feature {NONE} -- Output
 		end
 
 note
-	copyright: "Copyright (c) 1984-2018, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2021, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software
@@ -123,4 +119,5 @@ note
 			Website http://www.eiffel.com
 			Customer support http://support.eiffel.com
 		]"
+
 end

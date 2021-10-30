@@ -14,7 +14,6 @@ feature -- Conversion
 		local
 			l_filter_engine: detachable KMP_WILD
 			f: STRING_32
-			l_package: IRON_PACKAGE
 		do
 			if a_packages.is_empty then
 				create {ARRAYED_LIST [SCORED_VALUE [IRON_PACKAGE]]} Result.make (0)
@@ -37,19 +36,15 @@ feature -- Conversion
 				create l_filter_engine.make_empty
 				l_filter_engine.set_pattern (f)
 				l_filter_engine.disable_case_sensitive
-				from
-					a_packages.start
-				until
-					a_packages.after
+				across
+					a_packages as p
 				loop
-					l_package := a_packages.item_for_iteration
-					l_filter_engine.set_text (l_package.identifier)
+					l_filter_engine.set_text (p.identifier)
 					if l_filter_engine.pattern_matches then
-						Result.force (create {SCORED_VALUE [IRON_PACKAGE]}.make (l_package, 1.0))
+						Result.force (create {SCORED_VALUE [IRON_PACKAGE]}.make (p, 1.0))
 					elseif a_keep_all then
-						Result.force (create {SCORED_VALUE [IRON_PACKAGE]}.make (l_package, 0.0))
+						Result.force (create {SCORED_VALUE [IRON_PACKAGE]}.make (p, 0.0))
 					end
-					a_packages.forth
 				end
 			end
 		end
@@ -66,39 +61,39 @@ feature -- Conversion
 	scores_factory: SCORER_CRITERIA_FACTORY [IRON_PACKAGE]
 		once
 			create Result.make
-			Result.register_builder ("name", agent (n,v: READABLE_STRING_GENERAL): detachable SCORER_CRITERIA [IRON_PACKAGE]
-					do
-						create {SCORER_CRITERIA_AGENT [IRON_PACKAGE]} Result.make (n + ":" + v, name_weight, agent score_name (?, v))
-					end
+			Result.register_builder ("name", agent (n, v: READABLE_STRING_32): detachable SCORER_CRITERIA [IRON_PACKAGE]
+						do
+							create {SCORER_CRITERIA_AGENT [IRON_PACKAGE]} Result.make (n + ":" + v, name_weight, agent score_name (?, v))
+						end
 				)
-			Result.register_builder ("title", agent (n,v: READABLE_STRING_GENERAL): detachable SCORER_CRITERIA [IRON_PACKAGE]
-					do
-						create {SCORER_CRITERIA_AGENT [IRON_PACKAGE]} Result.make (n + ":" + v, title_weight, agent score_title (?, v))
-					end
+			Result.register_builder ("title", agent (n, v: READABLE_STRING_32): detachable SCORER_CRITERIA [IRON_PACKAGE]
+						do
+							create {SCORER_CRITERIA_AGENT [IRON_PACKAGE]} Result.make (n + ":" + v, title_weight, agent score_title (?, v))
+						end
 				)
-			Result.register_builder ("description", agent (n,v: READABLE_STRING_GENERAL): detachable SCORER_CRITERIA [IRON_PACKAGE]
-					do
-						create {SCORER_CRITERIA_AGENT [IRON_PACKAGE]} Result.make (n + ":" + v, description_weight, agent score_description (?, v))
-					end
+			Result.register_builder ("description", agent (n, v: READABLE_STRING_32): detachable SCORER_CRITERIA [IRON_PACKAGE]
+						do
+							create {SCORER_CRITERIA_AGENT [IRON_PACKAGE]} Result.make (n + ":" + v, description_weight, agent score_description (?, v))
+						end
 				)
-			Result.register_builder ("tag", agent (n,v: READABLE_STRING_GENERAL): detachable SCORER_CRITERIA [IRON_PACKAGE]
-					do
-						create {SCORER_CRITERIA_AGENT [IRON_PACKAGE]} Result.make (n + ":" + v, tag_weight, agent score_tag (?, v))
-					end
+			Result.register_builder ("tag", agent (n, v: READABLE_STRING_32): detachable SCORER_CRITERIA [IRON_PACKAGE]
+						do
+							create {SCORER_CRITERIA_AGENT [IRON_PACKAGE]} Result.make (n + ":" + v, tag_weight, agent score_tag (?, v))
+						end
 				)
-			Result.register_builder ("any", agent (n,v: READABLE_STRING_GENERAL): detachable SCORER_CRITERIA [IRON_PACKAGE]
-					do
-						create {SCORER_CRITERIA_AGENT [IRON_PACKAGE]} Result.make (n + ":" + v, any_weight, agent score_any (?, v))
-					end
+			Result.register_builder ("any", agent (n, v: READABLE_STRING_32): detachable SCORER_CRITERIA [IRON_PACKAGE]
+						do
+							create {SCORER_CRITERIA_AGENT [IRON_PACKAGE]} Result.make (n + ":" + v, any_weight, agent score_any (?, v))
+						end
 				)
 			Result.register_default_builder ("any")
 		end
 
 	meet_any (obj: IRON_PACKAGE; s: READABLE_STRING_GENERAL): BOOLEAN
 		do
-			Result :=  meet_name (obj, s)
-					or meet_title (obj, s)
-					or meet_tag (obj, s)
+			Result := meet_name (obj, s)
+				or meet_title (obj, s)
+				or meet_tag (obj, s)
 		end
 
 	meet_name (obj: IRON_PACKAGE; s: READABLE_STRING_GENERAL): BOOLEAN
@@ -118,7 +113,7 @@ feature -- Conversion
 
 	meet_tag (obj: IRON_PACKAGE; s: READABLE_STRING_GENERAL): BOOLEAN
 		do
-			Result := across obj.tags as ic some meet_text (ic.item, s) end
+			Result := ∃ ic: obj.tags ¦ meet_text (ic, s)
 		end
 
 	meet_text (a_text: detachable READABLE_STRING_GENERAL; s: READABLE_STRING_GENERAL): BOOLEAN
@@ -172,10 +167,10 @@ feature -- Conversion
 
 	score_any (obj: IRON_PACKAGE; s: READABLE_STRING_GENERAL): REAL
 		do
-			Result :=  score_name (obj, s) * name_weight
-					+ score_title (obj, s) * title_weight
-					+ score_tag (obj, s) * tag_weight
-					+ score_description (obj, s) * description_weight
+			Result := score_name (obj, s) * name_weight
+				+ score_title (obj, s) * title_weight
+				+ score_tag (obj, s) * tag_weight
+				+ score_description (obj, s) * description_weight
 		end
 
 	score_name (obj: IRON_PACKAGE; s: READABLE_STRING_GENERAL): REAL
@@ -199,7 +194,7 @@ feature -- Conversion
 		end
 
 note
-	copyright: "Copyright (c) 1984-2018, Eiffel Software"
+	copyright: "Copyright (c) 1984-2021, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[
@@ -229,4 +224,5 @@ note
 			Website http://www.eiffel.com
 			Customer support http://support.eiffel.com
 		]"
+
 end

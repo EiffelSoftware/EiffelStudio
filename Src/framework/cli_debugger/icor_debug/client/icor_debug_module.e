@@ -93,13 +93,13 @@ feature {ICOR_EXPORTER} -- Meta Data queries
 			Result := interface_md_import.find_method (a_class_token, a_name)
 		end
 
-	md_type_name (a_class_token: NATURAL_32): detachable STRING
+	md_type_name (a_class_token: NATURAL_32): detachable STRING_32
 			-- Type (Class) name for `a_class_token'.
 		do
 			Result := interface_md_import.get_typedef_props (a_class_token)
 		end
 
-	md_member_name (a_feat_token: NATURAL_32): detachable STRING
+	md_member_name (a_feat_token: NATURAL_32): detachable STRING_32
 			-- (Feature) name for `a_feat_token'.
 		do
 			if attached interface_md_import.get_member_props (a_feat_token) as t then
@@ -145,16 +145,12 @@ feature {ICOR_EXPORTER} -- Access
 			-- Is Current's short name `n' ?
 			-- i.e: is `get_name' ends with `n.dll' or `n.exe' ?
 		local
-			en: STRING_32
 			mn: STRING_32
-			i,j: INTEGER
+			i, j: INTEGER
 		do
-			create en.make_from_string_general (n)
-			en.append (".dll")
-
 			mn := name
 			from
-				Result := mn.count >= n.count + 4 -- i.e: (n + ".dll").count				
+				Result := mn.count >= n.count + 4 -- i.e: (n + ".dll").count
 				i := mn.count - 4
 				j := n.count
 			until
@@ -171,7 +167,7 @@ feature {NONE} -- Access
 	private_name: like name
 			-- Module's name
 
-feature {ICOR_DEBUG_MODULE} -- Restricted Access	
+feature {ICOR_DEBUG_MODULE} -- Restricted Access
 
 	get_md_import_interface: MD_IMPORT
 			-- Return a meta data interface pointer that can be used to examine the
@@ -183,7 +179,7 @@ feature {ICOR_DEBUG_MODULE} -- Restricted Access
 			if p /= default_pointer then
 				debug ("debugger_icor_data")
 					io.put_string ("ICOR_DEBUG_MODULE.get_md_import_interface : called %N")
-					io.put_string ("     for [" + module_name + "] %N")
+					io.put_string_32 ({STRING_32} "     for [" + module_name + "] %N")
 				end
 				create Result.make_by_pointer (p)
 			end
@@ -226,24 +222,24 @@ feature {ICOR_EXPORTER} -- Access
 
 	enable_jit_debugging (a_trackjitinfo, a_allowjitopts: BOOLEAN)
 			-- EnableJITDebugging controls whether the jitter preserves
-            --   debugging information for methods within this module.
-            --   If bTrackJITInfo is true, then the jitter preserves
-            --   mapping information between the IL version of a function and
-            --   the jitted version for functions in the module.  If bAllowJitOpts
-            --   is true, then the jitter will generate code with certain (JIT-specific)
-            --   optimizations.
-            --
-            --   JITDebug is enabled by default for all modules loaded when the
-            --   debugger is active.  Programmatically enabling/disabling these
-            --   settings will override global settings.
+			--   debugging information for methods within this module.
+			--   If bTrackJITInfo is true, then the jitter preserves
+			--   mapping information between the IL version of a function and
+			--   the jitted version for functions in the module.  If bAllowJitOpts
+			--   is true, then the jitter will generate code with certain (JIT-specific)
+			--   optimizations.
+			--
+			--   JITDebug is enabled by default for all modules loaded when the
+			--   debugger is active.  Programmatically enabling/disabling these
+			--   settings will override global settings.
 		do
 			last_call_success := cpp_enable_jit_debugging (item, a_trackjitinfo.to_integer, a_allowjitopts.to_integer)
 		end
 
 	enable_class_load_callbacks (a_value: BOOLEAN)
 			-- EnableClassLoadCallbacks controls whether on not ClassLoad
-	 		-- callbacks are called for the particular module.  ClassLoad
-	 		-- callbacks are off by default
+			-- callbacks are called for the particular module.  ClassLoad
+			-- callbacks are off by default
 		do
 			last_call_success := cpp_enable_class_load_callbacks (item, a_value.to_integer)
 		ensure
@@ -260,7 +256,7 @@ feature {ICOR_EXPORTER} -- Access
 			end
 			debug ("DBG")
 				if not last_call_succeed then
-					io.put_string ("ERROR [" + last_error_code_id + "] : while ICorDebugModule::GetFunctionFromToken ("+a_token.out+")")
+					io.put_string ("ERROR [" + last_error_code_id + "] : while ICorDebugModule::GetFunctionFromToken (" + a_token.out + ")")
 				end
 			end
 --		ensure
@@ -277,7 +273,7 @@ feature {ICOR_EXPORTER} -- Access
 			end
 			debug ("DBG")
 				if not last_call_succeed then
-					io.put_string ("ERROR [" + last_error_code_id + "] : while ICorDebugModule::GetClassFromToken ("+a_token.out+")")
+					io.put_string ("ERROR [" + last_error_code_id + "] : while ICorDebugModule::GetClassFromToken (" + a_token.out + ")")
 				end
 			end
 --		ensure
@@ -335,7 +331,7 @@ feature {ICOR_EXPORTER} -- Access
 
 	is_in_memory: BOOLEAN
 			-- If this is a module that exists only in the debuggee's memory,
-	 		-- then `is_in_memory' will be set to TRUE
+			-- then `is_in_memory' will be set to TRUE
 		local
 			r: INTEGER
 		do
@@ -559,8 +555,8 @@ feature {NONE} -- IID ...
 			]"
 		alias
 			"[
-   				((ICorDebugModule*)$a_obj)->GetMetaDataInterface(IID_IMetaDataImport,
-                                           (IUnknown**)$a_ptr)
+								((ICorDebugModule*)$a_obj)->GetMetaDataInterface(IID_IMetaDataImport,
+				                                        (IUnknown**)$a_ptr)
 			]"
 		ensure
 			is_class: class
@@ -571,9 +567,9 @@ feature {NONE} -- Internal data
 	internal_md_import: detachable MD_IMPORT;
 
 note
-	copyright:	"Copyright (c) 1984-2018, Eiffel Software"
-	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
-	licensing_options:	"http://www.eiffel.com/licensing"
+	copyright: "Copyright (c) 1984-2021, Eiffel Software"
+	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
+	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[
 			This file is part of Eiffel Software's Eiffel Development Environment.
 			

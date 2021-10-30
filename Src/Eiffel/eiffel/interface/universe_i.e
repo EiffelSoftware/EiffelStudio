@@ -515,7 +515,7 @@ feature -- Access
 			Result_not_void: Result /= Void
 		end
 
-	class_from_assembly (an_assembly: READABLE_STRING_32; a_dotnet_name: STRING): detachable EXTERNAL_CLASS_I
+	class_from_assembly (an_assembly: READABLE_STRING_32; a_dotnet_name: READABLE_STRING_32): detachable EXTERNAL_CLASS_I
 			-- Associated EXTERNAL_CLASS_I instance for `a_dotnet_name' external class name
 			-- from given assembly `an_assembly'. If more than one assembly with
 			-- `an_assembly' as name, look only in first found item.

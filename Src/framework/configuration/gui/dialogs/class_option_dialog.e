@@ -246,7 +246,7 @@ feature {NONE} -- Implementation
 				across
 					l_value as ic
 				loop
-					l_sorted_list.extend (ic.key)
+					l_sorted_list.extend (@ ic.key)
 				end
 				create l_sorter.make (create {COMPARABLE_COMPARATOR [READABLE_STRING_GENERAL]})
 				l_sorter.sort (l_sorted_list)

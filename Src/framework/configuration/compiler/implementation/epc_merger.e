@@ -339,7 +339,7 @@ feature {NONE} -- Implementation
 								across
 									l_new_list as n
 								loop
-									l_mod.append (n.item.text (a_new_match_list))
+									l_mod.append (n.text (a_new_match_list))
 								end
 							end
 							l_mod.apply

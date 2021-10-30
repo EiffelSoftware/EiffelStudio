@@ -32,7 +32,7 @@ feature -- Access
 			across
 				mappings as c
 			loop
-				if attached c.item.mapped_location (loc) as s then
+				if attached c.mapped_location (loc) as s then
 					loc := s
 				end
 			end
@@ -51,7 +51,7 @@ feature -- Access
 			until
 				Result /= Void
 			loop
-				if attached c.item.expected_action_parameters (a_location) as l_action then
+				if attached c.expected_action_parameters (a_location) as l_action then
 					Result := l_action
 				end
 			end
@@ -68,7 +68,7 @@ feature -- Change
 			across
 				mappings as c
 			loop
-				c.item.refresh
+				c.refresh
 			end
 		end
 
@@ -85,7 +85,7 @@ feature -- Change
 		end
 
 note
-	copyright: "Copyright (c) 1984-2014, Eiffel Software"
+	copyright: "Copyright (c) 1984-2021, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

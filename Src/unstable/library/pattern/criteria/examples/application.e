@@ -58,7 +58,7 @@ feature {NONE} -- Initialization
 				across
 					crit.list (articles) as ic
 				loop
-					a := ic.item
+					a := ic
 					print ("  Article %"" + a.title + "%" ")
 					print (a.page_count.out + " pages ")
 					if not a.published then
@@ -86,9 +86,9 @@ feature {NONE} -- Initialization
 				across
 					crit.scores (articles, articles.count) as ic
 				loop
-					a := ic.item.value
+					a := ic.value
 					print ("[")
-					print (ic.item.score.out)
+					print (ic.score.out)
 					print ("] ")
 					print ("Article %"" + a.title + "%" ")
 					print (a.page_count.out + " pages ")

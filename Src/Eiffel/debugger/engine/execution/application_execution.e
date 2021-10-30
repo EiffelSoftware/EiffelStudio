@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "Controls execution of debugged application."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -955,7 +955,7 @@ feature {NONE} -- Breakpoints implementation
 				loc := bps.item_for_iteration.location
 				if loc.is_set_for_application then
 					debug ("debugger_trace_breakpoint")
-						print ("REMOVE APPLICATION BP :: " + loc.debug_output + "%N")
+						io.put_string_32 ({STRING_32} "REMOVE APPLICATION BP :: " + loc.debug_output + "%N")
 					end
 					unset_application_breakpoint (loc)
 					-- then next time we go with StopPoint enable ... we'll add them again
@@ -972,14 +972,14 @@ feature {NONE} -- Breakpoints implementation
 				bp_mode
 			when {BREAKPOINT}.breakpoint_to_add then
 				debug("debugger_trace_breakpoint")
-					print ("ADD BP :: " + loc.debug_output + "%N")
+					io.put_string_32 ({STRING_32} "ADD BP :: " + loc.debug_output + "%N")
 				end
 				if loc.is_valid then
 					set_application_breakpoint (loc)
 				end
 			when {BREAKPOINT}.Breakpoint_to_remove then
 				debug ("debugger_trace_breakpoint")
-					print ("DEL BP :: " + loc.debug_output + "%N")
+					io.put_string_32 ({STRING_32} "DEL BP :: " + loc.debug_output + "%N")
 				end
 				unset_application_breakpoint (loc)
 			else
@@ -1368,7 +1368,7 @@ feature {NONE} -- fake
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2020, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2021, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

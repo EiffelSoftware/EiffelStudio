@@ -33,7 +33,7 @@ feature -- Access
 				across
 					l_libs as ic
 				loop
-					if attached conf_system_from (a_target, ic.item, True) as cfg then
+					if attached conf_system_from (a_target, ic, True) as cfg then
 						Result.force (cfg)
 					end
 				end
@@ -63,7 +63,7 @@ feature {NONE} -- Access
 			l_dirs := lookup_directories
 			create Result.make (l_dirs.count)
 			across l_dirs as ic loop
-				scan_library_location_to (a_target, ic.item.path, ic.item.depth, Result)
+				scan_library_location_to (a_target, ic.path, ic.depth, Result)
 			end
 		ensure
 			result_attached: Result /= Void
@@ -89,7 +89,7 @@ feature {NONE} -- Access
 						-- If the config file was using some environment variable, we just
 						-- replace the computed path with what was specified in the config file
 						-- for the current entry of `ic'.
-					l_lib_path := ic_libs.key.as_string_32.twin
+					l_lib_path := @ ic_libs.key.as_string_32.twin
 					l_lib_path.replace_substring (a_path, 1, l_real_path_count)
 					a_table.put (l_lib_path)
 				end
@@ -143,7 +143,7 @@ feature {NONE} -- Access
 			l_entry: PATH
 		do
 			across a_dir.entries as l_entries loop
-				l_entry := l_entries.item
+				l_entry := l_entries
 				if l_entry.is_current_symbol or l_entry.is_parent_symbol then
 					 -- Nothing to do
 				else
@@ -220,9 +220,8 @@ feature {NONE} -- Access
 			end
 		end
 
-
 note
-	copyright: "Copyright (c) 1984-2018, Eiffel Software"
+	copyright: "Copyright (c) 1984-2021, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

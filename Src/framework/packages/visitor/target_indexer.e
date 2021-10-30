@@ -1,4 +1,4 @@
-note
+﻿note
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -79,7 +79,7 @@ feature -- Execution
 				if is_stopping_at_library then
 				elseif a_library.is_readonly and is_stopping_at_readonly_library then
 				else
-					Precursor {PACKAGE_CONF_VISITOR}(a_library)
+					Precursor {PACKAGE_CONF_VISITOR} (a_library)
 				end
 			end
 		end
@@ -89,7 +89,6 @@ feature -- Execution
 			p: PATH
 			dir_name, l_name: STRING_32
 			fac: LIBRARY_INDEXER_CONF_FACTORY
-			cl: CONF_CLASS
 			l_scan: LIBRARY_EIFFEL_CLASS_SCANNER
 		do
 			check not is_stopping_at_library end
@@ -113,19 +112,18 @@ feature -- Execution
 						across
 							l_scan.items as ic
 						loop
-							p := ic.item
+							p := ic
 							if attached p.entry as l_eiffel_file_name then
 								l_name := p.parent.name
 								if l_name.starts_with_general (dir_name) then
 									l_name.remove_head (dir_name.count + 1)
 								end
-								cl := fac.new_class (l_eiffel_file_name.name, a_cluster, l_name, Void)
-								visit_class (cl)
+								visit_class (fac.new_class (l_eiffel_file_name.name, a_cluster, l_name, Void))
 							end
 						end
 					end
 				else
-					Precursor {PACKAGE_CONF_VISITOR}(a_cluster)
+					Precursor {PACKAGE_CONF_VISITOR} (a_cluster)
 				end
 			end
 		end
@@ -146,7 +144,7 @@ feature -- Execution
 				across
 					lst as ic
 				loop
-					update_condition_to_any_setting (ic.item)
+					update_condition_to_any_setting (ic)
 				end
 			end
 		end
@@ -156,11 +154,11 @@ feature -- Execution
 			check not is_stopping_at_library end
 			check is_indexing_class end
 			on_class (a_class)
-			Precursor {PACKAGE_CONF_VISITOR}(a_class)
+			Precursor {PACKAGE_CONF_VISITOR} (a_class)
 		end
 
 note
-	copyright: "Copyright (c) 1984-2018, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2021, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software
@@ -169,4 +167,5 @@ note
 			Website http://www.eiffel.com
 			Customer support http://support.eiffel.com
 		]"
+
 end

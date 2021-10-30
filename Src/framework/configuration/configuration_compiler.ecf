@@ -1,11 +1,12 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
-<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-20-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-20-0 http://www.eiffel.com/developers/xml/configuration-1-20-0.xsd" name="configuration_compiler" uuid="D99D877F-0F37-4B82-8FB6-EE98AF7B13D7" library_target="configuration_compiler">
+<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-22-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-22-0 http://www.eiffel.com/developers/xml/configuration-1-22-0.xsd" name="configuration_compiler" uuid="D99D877F-0F37-4B82-8FB6-EE98AF7B13D7" library_target="configuration_compiler">
 	<target name="configuration_compiler">
 		<root all_classes="true"/>
 		<file_rule>
 			<exclude>/\.svn$</exclude>
 		</file_rule>
-		<option warning="true" namespace="EiffelSoftware.Framework.Ecf">
+		<option warning="error" namespace="EiffelSoftware.Framework.Ecf">
+			<warning name="obsolete_feature" value="all"/>
 		</option>
 		<capability>
 			<concurrency support="none"/>

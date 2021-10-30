@@ -174,7 +174,7 @@ feature {NONE} -- Implementation
 				until
 					is_force_rebuild
 				loop
-					l_class := c.item
+					l_class := c
 						-- Check for changes.
 					if is_read_only then
 							-- Do not look into source code changes for read-only group.

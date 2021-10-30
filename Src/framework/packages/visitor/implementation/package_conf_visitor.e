@@ -1,5 +1,4 @@
-note
-	description: "Summary description for {PACKAGE_CONF_VISITOR}."
+﻿note
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -110,7 +109,7 @@ feature -- Settings
 	is_indexing_class: BOOLEAN
 
 	is_ignoring_redirection: BOOLEAN
-	
+
 	is_visiting_same_ecf_library_once: BOOLEAN
 
 feature -- Settings change
@@ -149,37 +148,27 @@ feature -- Change
 		end
 
 	set_platform (a_platform: detachable READABLE_STRING_GENERAL)
-		local
-			p: READABLE_STRING_8
 		do
-			is_platform_set := True
-			if a_platform = Void then
-				is_platform_set := False
-				platform := {CONF_CONSTANTS}.pf_unix
-			else
+				-- Default to Unix.
+			is_platform_set := False
+			platform := {CONF_CONSTANTS}.pf_unix
+			if attached a_platform then
+				is_platform_set := True
 				is_il_generation := False
-				if a_platform.is_valid_as_string_8 then
-					p := a_platform.as_string_8
-					if p.is_case_insensitive_equal ("dotnet") then
-						platform := {CONF_CONSTANTS}.pf_windows
-						is_il_generation := True
-					elseif p.is_case_insensitive_equal ({CONF_CONSTANTS}.pf_windows_name) then
-						platform := {CONF_CONSTANTS}.pf_windows
-					elseif
-						p.is_case_insensitive_equal ({CONF_CONSTANTS}.pf_unix_name)
-						or p.as_lower.starts_with ("linux")
-					then
-						platform := {CONF_CONSTANTS}.pf_unix
-					elseif p.is_case_insensitive_equal ({CONF_CONSTANTS}.pf_macintosh_name) then
-						platform := {CONF_CONSTANTS}.pf_mac
-					else
-						is_platform_set := False
-						platform := {CONF_CONSTANTS}.pf_unix
-					end
-				else
-						-- Defaulted to unix.
-					is_platform_set := False
+				if a_platform.is_case_insensitive_equal ("dotnet") then
+					platform := {CONF_CONSTANTS}.pf_windows
+					is_il_generation := True
+				elseif a_platform.is_case_insensitive_equal ({CONF_CONSTANTS}.pf_windows_name) then
+					platform := {CONF_CONSTANTS}.pf_windows
+				elseif
+					a_platform.is_case_insensitive_equal ({CONF_CONSTANTS}.pf_unix_name) or else
+					a_platform.same_caseless_characters ("linux", 1, 5, 1)
+				then
 					platform := {CONF_CONSTANTS}.pf_unix
+				elseif a_platform.is_case_insensitive_equal ({CONF_CONSTANTS}.pf_macintosh_name) then
+					platform := {CONF_CONSTANTS}.pf_mac
+				else
+					is_platform_set := False
 				end
 			end
 		end
@@ -258,10 +247,8 @@ feature -- Visitor
 		local
 			f: RAW_FILE
 			libs: like visited_library_locations
-			l_lib_location: PATH
 		do
 			if is_visiting_same_ecf_library_once then
-				l_lib_location := p
 				libs := visited_library_locations
 				if libs = Void then
 					create libs.make (10)
@@ -291,7 +278,7 @@ feature -- Visitor
 			across
 				a_system.targets as ic
 			loop
-				visit_target (ic.item)
+				visit_target (ic)
 			end
 			Precursor (a_system)
 		end
@@ -309,27 +296,27 @@ feature -- Visitor
 				last_target := a_target
 
 				if is_any_setting then
-					if 
+					if
 						is_first_visited_target
-						or is_indexing_class 
+						or is_indexing_class
 						or not (is_stopping_at_library or is_stopping_at_readonly_library)
 					then
 						across
 							a_target.clusters as ic
 						loop
-							visit_cluster (ic.item)
+							visit_cluster (ic)
 						end
 						across
 							a_target.overrides as ic
 						loop
-							visit_cluster (ic.item)
+							visit_cluster (ic)
 						end
 					end
 					is_first_visited_target := False
 					across
 						a_target.libraries as ic
 					loop
-						visit_library (ic.item)
+						visit_library (ic)
 					end
 				else
 					l_state := conf_state_from_target (a_target)
@@ -343,24 +330,24 @@ feature -- Visitor
 							across
 								l_last_errors as ic
 							loop
-								print_conf_error (ic.item, "  ")
+								print_conf_error (ic, "  ")
 							end
 						end
 					else
-						if 
+						if
 							is_first_visited_target
-							or is_indexing_class 
+							or is_indexing_class
 							or not (is_stopping_at_library or is_stopping_at_readonly_library)
 						then
 							across
 								a_target.clusters as ic
 							loop
-								visit_cluster (ic.item)
+								visit_cluster (ic)
 							end
 							across
 								a_target.overrides as ic
 							loop
-								visit_cluster (ic.item)
+								visit_cluster (ic)
 							end
 						end
 
@@ -370,7 +357,7 @@ feature -- Visitor
 						across
 							a_target.libraries as ic
 						loop
-							visit_library (ic.item)
+							visit_library (ic)
 						end
 						Precursor (a_target)
 					end
@@ -406,7 +393,7 @@ feature -- Visitor
 				across
 					l_classes as ic
 				loop
-					visit_class (ic.item)
+					visit_class (ic)
 				end
 			end
 			Precursor (a_cluster)
@@ -462,7 +449,7 @@ feature {NONE} -- Helper
 			l_text: READABLE_STRING_32
 			s: STRING_32
 			c: CHARACTER_32
-			i,n: INTEGER
+			i, n: INTEGER
 		do
 			l_text := err.text
 			create s.make (l_text.count + 2)
@@ -473,7 +460,7 @@ feature {NONE} -- Helper
 			until
 				i > n
 			loop
-				c := l_text[i]
+				c := l_text [i]
 				s.append_character (c)
 				if c = '%N' and then i < n then
 					s.append_string_general (a_prefix)
@@ -610,7 +597,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright: "Copyright (c) 1984-2013, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2021, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software
@@ -619,4 +606,5 @@ note
 			Website http://www.eiffel.com
 			Customer support http://support.eiffel.com
 		]"
+
 end

@@ -83,7 +83,7 @@ feature -- Application status
 			params: detachable DEBUGGER_EXECUTION_RESOLVED_PROFILE
 			ctlr: DEBUGGER_CONTROLLER
 			app: APPLICATION_EXECUTION
-			s: STRING
+			s: READABLE_STRING_32
 			s32: STRING_32
 		do
 			ctlr := dbg.controller
@@ -645,7 +645,6 @@ feature {NONE} -- append_type_and_value implementation
 			v_set: v /= Void
 		local
 			ec: CLASS_C
-			s: STRING_32
 			add: DBG_ADDRESS
 		do
 			if v.is_null then
@@ -662,13 +661,12 @@ feature {NONE} -- append_type_and_value implementation
 						st.add_string (add.as_string)
 					end;
 					st.add_string (Right_address_delim);
-					s := v.string_value
-					if s /= Void then
-						st.add_string (Equal_sign_str);
-						st.add_string (s.as_string_8)
+					if attached v.string_value as s then
+						st.add_string (Equal_sign_str)
+						st.add_string (s)
 					end
 				else
-					Any_class.append_name (st);
+					Any_class.append_name (st)
 					st.add_string (" = Unknown")
 				end
 			end
@@ -737,12 +735,9 @@ feature {NONE} -- append_type_and_value implementation
 	dummy_message_debug_value_append_type_and_value (v: DUMMY_MESSAGE_DEBUG_VALUE; st: TEXT_FORMATTER)
 		require
 			v_set: v /= Void
-		local
-			s: STRING_GENERAL
 		do
-			s := v.display_message
-			if s /= Void then
-				st.add_string (s.as_string_8)
+			if attached v.display_message as s then
+				st.add_string (s)
 			end
 		end
 
@@ -891,7 +886,7 @@ feature {NONE} -- Constants
 note
 	date: "$Date$"
 	revision: "$Revision$"
-	copyright:	"Copyright (c) 1984-2019, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2021, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

@@ -63,7 +63,7 @@ feature -- Access: Configuration location mapper
 			until
 				Result /= Void
 			loop
-				if attached {like iron_mapping} ic.item as res then
+				if attached {like iron_mapping} ic as res then
 					Result := res
 				end
 			end
@@ -103,7 +103,7 @@ feature -- Initialization: Iron
 		end
 
 note
-	copyright: "Copyright (c) 1984-2014, Eiffel Software"
+	copyright: "Copyright (c) 1984-2021, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

@@ -348,7 +348,7 @@ end
 
 feature {NONE} -- Logging
 
-	debugger_message (m: STRING)
+	debugger_message (m: READABLE_STRING_GENERAL)
 			-- Put message on context tool's output
 		do
 			Debugger_manager.debugger_message (m)
@@ -634,7 +634,7 @@ feature {EIFNET_DEBUGGER} -- Callback notification about synchro
 				debug ("debugger_trace_callback_data")
 					p := dbg_cb_info_pointer_item (2) -- p_app_class
 					if p /= Default_pointer then
-						debugger_message ("Class loaded :%"" + Icor_objects_manager.icd_class (p).get_module.md_type_name (Icor_objects_manager.icd_class (p).token) + "%"")
+						debugger_message ({STRING_32} "Class loaded :%"" + Icor_objects_manager.icd_class (p).get_module.md_type_name (Icor_objects_manager.icd_class (p).token) + "%"")
 					end
 				end
 			when Cst_managed_cb_load_module then
@@ -645,10 +645,10 @@ feature {EIFNET_DEBUGGER} -- Callback notification about synchro
 				if p /= Default_pointer then
 					l_module := Icor_objects_manager.icd_module (p)
 					debug ("debugger_trace_callback_data")
-						io.error.put_string ("Module loaded : %"" + l_module.name + "%" %N")
+						io.error.put_string_32 ({STRING_32} "Module loaded : %"" + l_module.name + "%" %N")
 					end
 					info.register_new_module (l_module)
-					debugger_message ("Module loaded : %"" + l_module.module_name + "%"")
+					debugger_message ({STRING_32} "Module loaded : %"" + l_module.module_name + "%"")
 				end
 
 			when Cst_managed_cb_log_message then
@@ -865,7 +865,7 @@ feature {NONE} -- Callback actions
 			l_class_token: NATURAL_32
 			l_feat_token: NATURAL_32
 
-			l_module_name: STRING
+			l_module_name: READABLE_STRING_32
 			l_current_il_offset: INTEGER
 			l_feat: FEATURE_I
 			l_class_type: CLASS_TYPE
@@ -921,7 +921,7 @@ feature {NONE} -- Callback actions
 					debug ("debugger_trace_stepping")
 						print ("[!] Unknown Eiffel info: %N")
 						if l_module_name /= Void then
-							print ("[!]    module=" + l_module_name + "%N")
+							io.put_string_32 ({STRING_32} "[!]    module=" + l_module_name + "%N")
 						end
 						print ("[!]    class = 0x" + l_class_token.to_hex_string + " %N")
 					end
@@ -947,7 +947,7 @@ feature {NONE} -- Callback actions
 									+ "::" + l_feat.feature_name
 									+ "] => IP=0x"+l_current_il_offset.to_hex_string
 									+" %N")
-							print ("[!] module = " + l_module_name + "%N")
+							io.put_string_32 ({STRING_32} "[!] module = " + l_module_name + "%N")
 						end
 
 						if l_current_il_offset = 0 then
@@ -980,9 +980,9 @@ feature {NONE} -- Callback actions
 							print ("[!] InValid or Unknown feature [0x"
 									+ l_class_token.to_hex_string
 									+ "::0x" + l_feat_token.to_hex_string + "].%N")
-							print ("[!] class = " + l_il_debug_info.class_name_for_class_token_and_module ( l_class_token, l_module_name)
+							io.put_string_32 ({STRING_32} "[!] class = " + l_il_debug_info.class_name_for_class_token_and_module ( l_class_token, l_module_name)
 									+ "%N")
-							print ("[!] module = " + l_module_name + "%N")
+							io.put_string_32 ({STRING_32} "[!] module = " + l_module_name + "%N")
 						end
 							--| We'll continue the stepping in the same mode
 
@@ -1298,7 +1298,7 @@ feature -- Stepping Access
 			until
 				i > tids.upper
 			loop
-				st.set_current_thread_id (tids @ i)
+				st.set_current_thread_id (tids [i])
 				do_step (cst_control_step_into, False)
 				i := i + 1
 			end
@@ -1469,7 +1469,7 @@ feature -- Exception
 			end
 		end
 
-	exception_class_name (v: ABSTRACT_REFERENCE_VALUE): STRING
+	exception_class_name (v: ABSTRACT_REFERENCE_VALUE): READABLE_STRING_32
 			-- Exception's class name.
 		local
 			l_exception_info: EIFNET_DEBUG_VALUE_INFO
@@ -1501,7 +1501,7 @@ feature -- Exception
 			retried: BOOLEAN
 			icdv: ICOR_DEBUG_VALUE
 			l_icdov: ICOR_DEBUG_OBJECT_VALUE
-			l_class_name, l_module_name: STRING
+			l_class_name, l_module_name: READABLE_STRING_32
 			l_to_string, l_message: STRING_32
 		do
 			if
@@ -1917,7 +1917,6 @@ feature -- Specific function evaluation
 			l_icdov: ICOR_DEBUG_OBJECT_VALUE
 			l_icd_class: ICOR_DEBUG_CLASS
 			l_icd_module: ICOR_DEBUG_MODULE
-			l_module_name: STRING
 			l_feature_token: NATURAL_32
 
 			l_class_type: CLASS_TYPE
@@ -1967,11 +1966,9 @@ feature -- Specific function evaluation
 				end
 			else
 				debug ("DEBUGGER_TRACE_EVAL")
-					l_module_name := l_icd_module.name
-
 					print ("EIFNET_DEBUGGER.generating_type_.. :: Unable to retrieve ICorDebugFunction %N")
 					print ("                                :: class name    = [" + l_class_type.full_il_type_name + "]%N")
-					print ("                                :: module_name   = %"" + l_module_name + "%"%N")
+					io.put_string_32 ({STRING_32} "                                :: module_name   = %"" + l_icd_module.name + "%"%N")
 					print ("                                :: feature_token = 0x" + l_feature_token.to_hex_string + " %N")
 				end
 			end
@@ -2032,7 +2029,7 @@ feature -- Specific function evaluation
 							debug ("DEBUGGER_TRACE_EVAL")
 								print ("EIFNET_DEBUGGER.debug_output_.. :: Unable to retrieve ICorDebugFunction %N")
 								print ("                                :: class name    = [" + l_class_type.full_il_type_name + "]%N")
-								print ("                                :: module_name   = %"" + l_icd_module.name + "%"%N")
+								io.put_string_32 ({STRING_32} "                                :: module_name   = %"" + l_icd_module.name + "%"%N")
 								print ("                                :: feature_token = 0x" + l_feature_token.to_hex_string + " %N")
 							end
 						end
@@ -2074,7 +2071,7 @@ feature -- Specific function evaluation
 			l_icdov: ICOR_DEBUG_OBJECT_VALUE
 			l_icd_class: ICOR_DEBUG_CLASS
 			l_icd_module: ICOR_DEBUG_MODULE
-			l_module_name: STRING
+			l_module_name: STRING_32
 			l_feature_token: NATURAL_32
 			l_func: ICOR_DEBUG_FUNCTION
 			l_debug_info : EIFNET_DEBUG_VALUE_INFO
@@ -2510,7 +2507,7 @@ feature {NONE} -- External
 			-- Value for C externals to have an infinite wait
 
 note
-	copyright:	"Copyright (c) 1984-2020, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2021, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

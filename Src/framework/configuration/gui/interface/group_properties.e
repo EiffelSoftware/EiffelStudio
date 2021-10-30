@@ -493,9 +493,9 @@ feature {NONE} -- Output generation
 				across
 					a_table as t
 				loop
-					Result.append_string_general (t.key)
+					Result.append_string_general (@ t.key)
 					Result.append ("=>")
-					Result.append (t.item)
+					Result.append (t)
 					Result.append_character (';')
 				end
 				Result.remove_tail (1)
@@ -512,8 +512,8 @@ feature {NONE} -- Output generation
 				across
 					a_table as t
 				loop
-					if not t.item.is_empty then
-						Result.append_string_general (t.key)
+					if not t.is_empty then
+						Result.append_string_general (@ t.key)
 						Result.append_character (';')
 					end
 				end

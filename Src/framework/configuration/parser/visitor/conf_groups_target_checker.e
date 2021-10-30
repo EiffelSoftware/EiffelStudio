@@ -55,7 +55,7 @@ feature -- Basic operation
 			until
 				has_error
 			loop
-				check_target (ic.item)
+				check_target (ic)
 			end
 		end
 
@@ -87,14 +87,14 @@ feature {NONE} -- Implementation
 				across
 					l_overrides_list as ic
 				loop
-					l_override := ic.item
+					l_override := ic
 					if attached l_override.override_group_names as l_grp_names then
 						across
 							l_grp_names as g_ic
 						until
 							has_error
 						loop
-							if attached group_list.item (g_ic.item) as g then
+							if attached group_list.item (g_ic) as g then
 								if g.is_override then
 									create l_e_ov
 									l_e_ov.set_group (g.name)
@@ -103,7 +103,7 @@ feature {NONE} -- Implementation
 								end
 							else
 								create l_grundef_error
-								l_grundef_error.set_group (g_ic.item)
+								l_grundef_error.set_group (g_ic)
 								report_conf_error (l_grundef_error)
 							end
 						end
@@ -122,18 +122,18 @@ feature {NONE} -- Implementation
 				across
 					l_dependency_list as ic
 				loop
-					l_cluster := ic.item
+					l_cluster := ic
 					if attached l_cluster.dependency_names as l_dep_names then
 						across
 							l_dep_names as d_ic
 						until
 							has_error
 						loop
-							if attached group_list.item (d_ic.item) as g then
+							if attached group_list.item (d_ic) as g then
 								l_cluster.add_dependency (g)
 							else
 								create l_grundef_error
-								l_grundef_error.set_group (d_ic.item)
+								l_grundef_error.set_group (d_ic)
 								report_conf_error (l_grundef_error)
 							end
 						end
@@ -182,22 +182,22 @@ feature -- Visit nodes
 					across
 						a_target.internal_libraries as i
 					loop
-						i.item.process (Current)
+						i.process (Current)
 					end
 					across
 						a_target.internal_assemblies as i
 					loop
-						i.item.process (Current)
+						i.process (Current)
 					end
 					across
 						a_target.internal_clusters as i
 					loop
-						i.item.process (Current)
+						i.process (Current)
 					end
 					across
 						a_target.internal_overrides as i
 					loop
-						i.item.process (Current)
+						i.process (Current)
 					end
 				end
 				current_target := a_target
@@ -359,7 +359,7 @@ feature {NONE} -- Execution
 		end
 
 note
-	copyright: "Copyright (c) 1984-2019, Eiffel Software"
+	copyright: "Copyright (c) 1984-2021, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

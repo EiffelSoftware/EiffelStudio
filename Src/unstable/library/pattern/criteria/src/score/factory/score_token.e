@@ -24,7 +24,7 @@ feature {NONE} -- Initialization
 			set_group ([a_left, a_op, a_right])
 		end
 
-	make_embedded (v: READABLE_STRING_GENERAL)
+	make_embedded (v: READABLE_STRING_32)
 		do
 			make_name_value (silent_embedded_name, v)
 		end
@@ -39,15 +39,15 @@ feature {NONE} -- Initialization
 			make_operator (silent_or_operator)
 		end
 
-	make_operator (n: READABLE_STRING_GENERAL)
+	make_operator (n: READABLE_STRING_32)
 		do
-			create name.make_from_string_general (n)
+			create name.make_from_string (n)
 		end
 
-	make_name_value (n: READABLE_STRING_GENERAL; v: READABLE_STRING_GENERAL)
+	make_name_value (n: READABLE_STRING_32; v: READABLE_STRING_32)
 		do
-			create name.make_from_string_general (n)
-			create value.make_from_string_general (v)
+			create name.make_from_string (n)
+			create value.make_from_string (v)
 		end
 
 feature -- Access
@@ -130,12 +130,9 @@ feature {NONE} -- Implementation
 	silent_and_operator: STRING_32 = " "
 	silent_or_operator: STRING_32 = "+"
 	silent_embedded_name: STRING_32 = "()"
-	silent_group_name: IMMUTABLE_STRING_32
-		once
-			create Result.make_from_string_general ({STRING_32} "{group}")
-		end
+	silent_group_name: IMMUTABLE_STRING_32 = "{group}"
 
-feature -- Status report
+feature -- Output
 
 	debug_output: STRING_32
 			-- String that should be displayed in debugger to represent `Current'.
@@ -155,7 +152,7 @@ feature -- Status report
 		end
 
 note
-	copyright: "Copyright (c) 1984-2017, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2021, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

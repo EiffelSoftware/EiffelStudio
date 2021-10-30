@@ -1,6 +1,4 @@
-note
-	description: "Summary description for {LIBRARY_DATABASE}."
-	author: ""
+﻿note
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -37,8 +35,8 @@ feature -- Access
 			until
 				Result /= Void
 			loop
-				if ic.item.location.is_same_file_as (a_ecf) then
-					Result := ic.item
+				if ic.location.is_same_file_as (a_ecf) then
+					Result := ic
 				end
 			end
 		end
@@ -65,10 +63,10 @@ feature -- Status report
 
 	has_ecf_file (p: PATH): BOOLEAN
 		do
-			Result := across ecf_files as ic some p.same_as (ic.item) end
+			Result := ∃ ic: ecf_files ¦ p.same_as (ic)
 		end
 
-feature -- Change
+feature -- Modification
 
 	put (i: LIBRARY_INFO)
 		do
@@ -94,7 +92,7 @@ feature {NONE} -- Key
 		end
 
 note
-	copyright: "Copyright (c) 1984-2013, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2021, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software
@@ -103,4 +101,5 @@ note
 			Website http://www.eiffel.com
 			Customer support http://support.eiffel.com
 		]"
+
 end

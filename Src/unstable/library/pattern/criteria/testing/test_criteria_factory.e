@@ -72,7 +72,7 @@ feature -- Test routines
 			lst: ARRAYED_LIST [like new_entry]
 		do
 			create ff.make
-			ff.register_builder ("state", agent (n,s: READABLE_STRING_GENERAL): detachable CRITERIA [like new_entry]
+			ff.register_builder ("state", agent (n,s: READABLE_STRING_32): detachable CRITERIA [like new_entry]
 					local
 						f_agent: CRITERIA_AGENT [like new_entry]
 					do
@@ -84,7 +84,7 @@ feature -- Test routines
 						Result := f_agent
 					end
 				)
-			ff.register_builder ("is", agent (n,s: READABLE_STRING_GENERAL): detachable CRITERIA [like new_entry]
+			ff.register_builder ("is", agent (n,s: READABLE_STRING_32): detachable CRITERIA [like new_entry]
 					local
 						f_agent: CRITERIA_AGENT [like new_entry]
 					do
@@ -97,7 +97,7 @@ feature -- Test routines
 					end
 				)
 
-			ff.register_builder ("gt", agent (n,s: READABLE_STRING_GENERAL): detachable CRITERIA [like new_entry]
+			ff.register_builder ("gt", agent (n,s: READABLE_STRING_32): detachable CRITERIA [like new_entry]
 					local
 						f_agent: CRITERIA_AGENT [like new_entry]
 						i: INTEGER
@@ -156,7 +156,7 @@ feature -- Test routines
 			lst: ARRAYED_LIST [FOO]
 		do
 			create ff.make
-			ff.register_builder ("foo", agent (n,s: READABLE_STRING_GENERAL): detachable CRITERIA [FOO]
+			ff.register_builder ("foo", agent (n,s: READABLE_STRING_32): detachable CRITERIA [FOO]
 					do
 						create {FOO_CRITERIA} Result.make (create {BAR}.make (s))
 					end
@@ -198,7 +198,7 @@ feature -- Test routines
 			across
 				lst as c
 			loop
-				Result.append_string_general (c.item.bar.value)
+				Result.append_string_general (c.bar.value)
 			end
 		end
 
@@ -209,8 +209,8 @@ feature -- Test routines
 				across
 					lst as c
 				loop
-					if f.meet (c.item) then
-						Result.extend (c.item)
+					if f.meet (c) then
+						Result.extend (c)
 					end
 				end
 			else
@@ -226,7 +226,7 @@ feature -- Implementation
 			across
 				lst as c
 			loop
-				Result.append_string_general (c.item.key)
+				Result.append_string_general (c.key)
 			end
 		end
 
@@ -237,8 +237,8 @@ feature -- Implementation
 				across
 					lst as c
 				loop
-					if f.meet (c.item) then
-						Result.extend (c.item)
+					if f.meet (c) then
+						Result.extend (c)
 					end
 				end
 			else

@@ -1,6 +1,4 @@
-note
-	description: "Summary description for {LIBRARY_DATABASE_QUERY}."
-	author: ""
+﻿note
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -8,22 +6,22 @@ deferred class
 	LIBRARY_DATABASE_QUERY
 
 inherit
-	TABLE_ITERABLE [ITERABLE [READABLE_STRING_8], LIBRARY_INFO]
+	TABLE_ITERABLE [ITERABLE [READABLE_STRING_32], LIBRARY_INFO]
 
 feature {NONE} -- Initialization
 
 	database: LIBRARY_DATABASE
 
-	pattern: READABLE_STRING_8
+	pattern: READABLE_STRING_32
 
 feature -- Access
 
 	pattern_has_wildchar: BOOLEAN
 
-	items: HASH_TABLE [ITERABLE [READABLE_STRING_8], LIBRARY_INFO]
+	items: HASH_TABLE [ITERABLE [READABLE_STRING_32], LIBRARY_INFO]
 			-- Class names indexed by library information object.
 
-	new_cursor: TABLE_ITERATION_CURSOR [ITERABLE [READABLE_STRING_8], LIBRARY_INFO]
+	new_cursor: TABLE_ITERATION_CURSOR [ITERABLE [READABLE_STRING_32], LIBRARY_INFO]
 			-- Fresh cursor associated with current structure
 		do
 			Result := items.new_cursor
@@ -36,7 +34,7 @@ feature -- Execution
 		end
 
 note
-	copyright: "Copyright (c) 1984-2013, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2021, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software
@@ -45,4 +43,5 @@ note
 			Website http://www.eiffel.com
 			Customer support http://support.eiffel.com
 		]"
+
 end

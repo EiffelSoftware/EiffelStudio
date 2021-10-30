@@ -172,7 +172,7 @@ feature -- Basic Operations
 			retry
 		end
 
-	path_to_assembly_doc (an_assembly_name: STRING): PATH
+	path_to_assembly_doc (an_assembly_name: READABLE_STRING_32): PATH
 			-- Path to assembly XML file
 		require
 			non_void_an_assembly_name: an_assembly_name /= Void
@@ -323,7 +323,7 @@ invariant
 	non_void_xml_file_path: xml_file_path /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2020, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2021, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

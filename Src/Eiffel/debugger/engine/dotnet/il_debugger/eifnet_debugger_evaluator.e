@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "Objects used to evaluate features in dotnet system"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -72,7 +72,7 @@ feature {EIFNET_EXPORTER} -- Evaluation primitives
 		do
 			debug ("debugger_trace_eval")
 				print ("Start : " + generator + ".function_evaluation ... %N")
-				print (" -----> " + a_func.to_function_name + "%N")
+				io.put_string_32 ({STRING_32} " -----> " + a_func.to_function_name + "%N")
 			end
 			prepare_evaluation (a_frame, True)
 
@@ -1240,7 +1240,7 @@ feature {NONE} -- Helper Impl
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2012, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2021, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

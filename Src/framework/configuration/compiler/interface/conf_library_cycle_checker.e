@@ -54,7 +54,7 @@ feature -- Access
 			across
 				l_libraries as l_c
 			loop
-				if attached l_c.item.library_target as l_target then
+				if attached l_c.library_target as l_target then
 					l_targets.extend (l_target)
 				end
 			end
@@ -64,7 +64,7 @@ feature -- Access
 feature {NONE} -- Implementation
 
 note
-	copyright: "Copyright (c) 1984-2013, Eiffel Software"
+	copyright: "Copyright (c) 1984-2021, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

@@ -39,7 +39,9 @@ feature {NONE} -- Initialize
 					l_dir.prune_all_trailing ('\')
 					l_dir.prune_all_trailing ('/')
 					if (create {DIRECTORY}.make (l_dir)).exists then
-						l_dir.append ("\" + a_runtime_version + "\")
+						l_dir.append ("\")
+						l_dir.append (a_runtime_version)
+						l_dir.append ("\")
 						add_runtime_path (l_dir)
 							-- Check DLL exists.
 						strong_name_retriveable := (create {WEL_DLL}.make ("mscorsn.dll")).exists
@@ -407,7 +409,7 @@ feature {NONE} -- Externals
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2020, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2021, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

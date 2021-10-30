@@ -1,6 +1,4 @@
-note
-	description: "Summary description for {LIBRARY_DATABASE_LIB_QUERY}."
-	author: ""
+﻿note
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -15,7 +13,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (db: LIBRARY_DATABASE; a_lib_pattern: READABLE_STRING_8)
+	make (db: LIBRARY_DATABASE; a_lib_pattern: READABLE_STRING_32)
 		do
 			database := db
 			create items.make (0)
@@ -26,11 +24,11 @@ feature -- Execution
 
 	execute
 		local
-			l_pattern: READABLE_STRING_8
+			l_pattern: READABLE_STRING_32
 			l_info: detachable LIBRARY_INFO
 			l_items: like items
 			k: KMP_WILD
-			l_empty: ARRAY [READABLE_STRING_8]
+			l_empty: ARRAY [READABLE_STRING_32]
 		do
 			l_pattern := pattern
 			l_items := items
@@ -45,7 +43,7 @@ feature -- Execution
 				across
 					database.items as ic
 				loop
-					l_info := ic.item
+					l_info := ic
 					k.set_text (l_info.name)
 					if k.pattern_matches then
 						l_items.force (l_empty, l_info)
@@ -55,8 +53,8 @@ feature -- Execution
 				across
 					database.items as ic
 				loop
-					l_info := ic.item
-					if l_pattern.is_case_insensitive_equal_general (l_info.name) then
+					l_info := ic
+					if l_pattern.is_case_insensitive_equal (l_info.name) then
 						l_items.force (l_empty, l_info)
 					end
 				end
@@ -64,7 +62,7 @@ feature -- Execution
 		end
 
 note
-	copyright: "Copyright (c) 1984-2013, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2021, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software
@@ -73,4 +71,5 @@ note
 			Website http://www.eiffel.com
 			Customer support http://support.eiffel.com
 		]"
+
 end

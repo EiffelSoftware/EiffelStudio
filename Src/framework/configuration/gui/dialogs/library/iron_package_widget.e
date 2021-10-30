@@ -240,7 +240,7 @@ feature -- Element change
 						p_tags as ic
 					loop
 						txt.append_text (" ")
-						txt.append_text (ic.item)
+						txt.append_text (ic)
 					end
 					j := txt.text_length + 1
 					txt.format_region (i, j, tags_text_format)
@@ -252,17 +252,17 @@ feature -- Element change
 					across
 						p_items as ic
 					loop
-						if ic.key.same_string ("description") then
+						if @ ic.key.same_string ("description") then
 								-- Already processed.
 						else
 							i := txt.text_length + 1
-							txt.append_text (ic.key)
+							txt.append_text (@ ic.key)
 							j := txt.text_length + 1
 							txt.format_region (i, j, keyword_text_format)
 
 							txt.append_text (":")
 							i := txt.text_length + 1
-							if attached ic.item as s then
+							if attached ic as s then
 								txt.append_text (s)
 							end
 							txt.append_text ("%N")
@@ -383,10 +383,8 @@ feature -- Element change
 			create Result.make_with_8_bit_rgb (0, 0, 210)
 		end
 
-invariant
-
 note
-	copyright: "Copyright (c) 1984-2020, Eiffel Software"
+	copyright: "Copyright (c) 1984-2021, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

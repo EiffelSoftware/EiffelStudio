@@ -213,7 +213,7 @@ feature -- user change
 			user_meaning := Void
 		end
 
-	set_user_meaning (a_meaning: STRING_GENERAL)
+	set_user_meaning (a_meaning: READABLE_STRING_GENERAL)
 			-- Set `user_meaning' to `a_meaning'	
 		do
 			if a_meaning /= Void then
@@ -474,7 +474,7 @@ feature {APPLICATION_EXECUTION} -- Implementation Change
 		end
 
 ;note
-	copyright:	"Copyright (c) 1984-2018, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2021, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

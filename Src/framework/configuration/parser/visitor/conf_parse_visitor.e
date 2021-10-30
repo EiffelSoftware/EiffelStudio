@@ -70,8 +70,8 @@ feature -- Visit nodes
 				across
 					a_target.libraries as ic
 				loop
-					if ic.item.is_enabled (state) then
-						ic.item.process (Current)
+					if ic.is_enabled (state) then
+						ic.process (Current)
 					end
 				end
 
@@ -79,7 +79,7 @@ feature -- Visit nodes
 					-- parent information which is only used internally to report nice errors.
 				create l_libs.make (libraries.count)
 				across libraries as l_library loop
-					l_libs.put (l_library.item.base, l_library.key)
+					l_libs.put (l_library.base, @ l_library.key)
 				end
 				a_target.system.set_all_libraries (l_libs)
 
@@ -233,9 +233,9 @@ feature -- Visit nodes
 				across
 					l_libs as l
 				loop
-					l.item.system.set_application_target (application_target)
-					libraries.force ([application_target, l.item], l.key)
-					processed_targets.force (l.item)
+					l.system.set_application_target (application_target)
+					libraries.force ([application_target, l], @ l.key)
+					processed_targets.force (l)
 				end
 			end
 			process_library (a_precompile)
@@ -266,7 +266,7 @@ invariant
 	factory_not_void: factory /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2018, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2021, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

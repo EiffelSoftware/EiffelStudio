@@ -180,7 +180,7 @@ feature -- Queries : eStudio data
 
 feature -- Queries : eStudio data from debugger data
 
-	has_info_about_module (a_module_filename: STRING): BOOLEAN
+	has_info_about_module (a_module_filename: READABLE_STRING_32): BOOLEAN
 			-- Do we have information for Module identified by `a_module_filename' ?
 		require
 			module_filename_valid: a_module_filename /= Void
@@ -189,7 +189,7 @@ feature -- Queries : eStudio data from debugger data
 			Result := info_from_module_if_exists (a_module_filename) /= Void
 		end
 
-	has_class_info_about_module_class_token (a_module_filename: STRING; a_class_token: NATURAL_32): BOOLEAN
+	has_class_info_about_module_class_token (a_module_filename: READABLE_STRING_32; a_class_token: NATURAL_32): BOOLEAN
 			-- Do we have information for Class identified by `a_module_filename' and `a_class_token' ?
 		require
 			module_filename_valid: a_module_filename /= Void
@@ -204,7 +204,7 @@ feature -- Queries : eStudio data from debugger data
 			end
 		end
 
-	has_feature_info_about_module_class_token (a_module_filename: STRING; a_class_token: NATURAL_32; a_feature_token: NATURAL_32): BOOLEAN
+	has_feature_info_about_module_class_token (a_module_filename: READABLE_STRING_32; a_class_token: NATURAL_32; a_feature_token: NATURAL_32): BOOLEAN
 			-- Do we have information for feature identified by `a_module_filename' , `a_class_token', and `a_feature_token' ?
 		require
 			module_filename_valid: a_module_filename /= Void and then not a_module_filename.is_empty
@@ -219,7 +219,7 @@ feature -- Queries : eStudio data from debugger data
 			end
 		end
 
-	class_type_for_module_class_token (a_module_filename: STRING; a_class_token: NATURAL_32): detachable CLASS_TYPE
+	class_type_for_module_class_token (a_module_filename: READABLE_STRING_32; a_class_token: NATURAL_32): detachable CLASS_TYPE
 			-- CLASS_TYPE identified by `a_module_filename' and `a_class_token'
 		require
 			module_filename_valid: a_module_filename /= Void
@@ -234,7 +234,7 @@ feature -- Queries : eStudio data from debugger data
 			end
 		end
 
-	compiled_class_for_class_token_and_module (a_class_token: NATURAL_32; a_module_filename: STRING): CLASS_C
+	compiled_class_for_class_token_and_module (a_class_token: NATURAL_32; a_module_filename: READABLE_STRING_32): CLASS_C
 			-- Compiled CLASS_C identified by `class_token' and `a_module_filename'
 		require
 			class_token_valid: a_class_token > 0
@@ -248,7 +248,7 @@ feature -- Queries : eStudio data from debugger data
 			end
 		end
 
-	class_name_for_class_token_and_module (a_class_token: NATURAL_32; a_module_filename: STRING): STRING
+	class_name_for_class_token_and_module (a_class_token: NATURAL_32; a_module_filename: READABLE_STRING_32): STRING
 			-- Class name for CLASS_C identified by `class_token' and `a_module_filename'
 		require
 			class_token_positive: a_class_token > 0
@@ -266,7 +266,7 @@ feature -- Queries : eStudio data from debugger data
 			class_name_ok: Result /= Void and then not Result.is_empty
 		end
 
-	feature_i_by_module_feature_token (a_module_filename: STRING; a_feature_token: NATURAL_32): FEATURE_I
+	feature_i_by_module_feature_token (a_module_filename: READABLE_STRING_32; a_feature_token: NATURAL_32): FEATURE_I
 			-- Feature_i identified by `a_module_filename'  and `a_feature_token'
 			--| Nota: class token is useless
 			--| since in a ICorDebugModule feature_token are unique
@@ -1064,7 +1064,7 @@ feature {NONE} -- Debugger Info List Access
 			result_not_void: Result /= Void
 		end
 
-	info_from_module_if_exists (a_module_filename: STRING_32): IL_DEBUG_INFO_FROM_MODULE
+	info_from_module_if_exists (a_module_filename: READABLE_STRING_32): IL_DEBUG_INFO_FROM_MODULE
 			-- Info from Module_filename
 		require
 			module_filename_not_empty: a_module_filename /= Void and then not a_module_filename.is_empty
@@ -1072,14 +1072,14 @@ feature {NONE} -- Debugger Info List Access
 			Result := info_from_module (a_module_filename, False)
 		end
 
-	info_from_module (a_module_filename: STRING_32; a_create_if_not_found: BOOLEAN): IL_DEBUG_INFO_FROM_MODULE
+	info_from_module (a_module_filename: READABLE_STRING_32; a_create_if_not_found: BOOLEAN): IL_DEBUG_INFO_FROM_MODULE
 			-- Info from Module_filename
 			--| Should not be called directly anymore,
 			--| use `info_from_module_or_create' or `info_from_module_if_exists'
 		require
 			module_filename_not_empty: a_module_filename /= Void and then not a_module_filename.is_empty
 		local
-			l_module_key: STRING_32
+			l_module_key: READABLE_STRING_32
 		do
 			if a_create_if_not_found then
 					--| This means we are recording, so we need to record
@@ -1415,7 +1415,7 @@ feature {NONE}-- Implementation for save and load task
 
 feature {SHARED_IL_DEBUG_INFO_RECORDER} -- Module indexer implementation
 
-	resolved_module_key (a_mod_filename: STRING_32): STRING_32
+	resolved_module_key (a_mod_filename: READABLE_STRING_32): READABLE_STRING_32
 			-- Lowered and resolved Module key for `a_mod_filename' used for indexation
 		require
 			mod_name_valid: a_mod_filename /= Void and then not a_mod_filename.is_empty
@@ -1429,7 +1429,7 @@ feature {SHARED_IL_DEBUG_INFO_RECORDER} -- Module indexer implementation
 
 feature {NONE} -- Module indexer implementation
 
-	direct_module_key (a_mod_filename: STRING_32): STRING_32
+	direct_module_key (a_mod_filename: READABLE_STRING_32): READABLE_STRING_32
 			-- Module key for `a_mod_filename' used for indexation
 			-- Nota: Only for recording session features
 		require
@@ -1441,7 +1441,7 @@ feature {NONE} -- Module indexer implementation
 			Result_is_lower_case: Result.as_lower.is_equal (Result)
 		end
 
-	internal_module_key (a_mod_key: like internal_module_key): STRING_32
+	internal_module_key (a_mod_key: like internal_module_key): READABLE_STRING_32
 			-- Module key used in the internal structure.
 			-- as opposed to external module key
 			-- which comes from dotnet debugger
@@ -1508,7 +1508,7 @@ feature {NONE} -- Module indexer implementation
 			-- and internal key for module
 
 note
-	copyright:	"Copyright (c) 1984-2020, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2021, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

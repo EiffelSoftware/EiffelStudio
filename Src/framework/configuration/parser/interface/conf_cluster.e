@@ -317,7 +317,7 @@ feature -- Access queries
 					-- search in dependencies
 				if a_dependencies then
 					across accessible_groups as g loop
-						l_grp := g.item
+						l_grp := g
 						if l_grp.classes_set then
 							Result.append (l_grp.class_by_name (l_name, False))
 						end
@@ -341,7 +341,7 @@ feature -- Access queries
 					-- Search in dependencies.
 				if a_dependencies then
 					across accessible_groups as g loop
-						l_grp := g.item
+						l_grp := g
 						if l_grp.classes_set then
 							Result.append (l_grp.name_by_class (a_class, False))
 						end

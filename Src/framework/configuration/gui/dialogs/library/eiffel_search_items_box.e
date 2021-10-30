@@ -406,7 +406,7 @@ feature -- Event
 						s.append_character (',')
 						s.append_character (' ')
 					end
-					s.append (ic.item)
+					s.append (ic)
 				end
 				create l_tags_text.make (30)
 				l_tags_text.append (conf_interface_names.iron_box_tags_label)
@@ -476,7 +476,7 @@ feature -- Event
 						s.append_character (',')
 						s.append_character (' ')
 					end
-					s.append_string_general (ic.item)
+					s.append_string_general (ic)
 				end
 				create l_classes_txt.make_from_string (conf_interface_names.dialog_search_classes)
 				l_classes_txt.append_character (':')
@@ -536,9 +536,8 @@ feature {NONE} -- Constants
 
 	last_column: INTEGER = 3
 
-
 ;note
-	copyright: "Copyright (c) 1984-2020, Eiffel Software"
+	copyright: "Copyright (c) 1984-2021, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

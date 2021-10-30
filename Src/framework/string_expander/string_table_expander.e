@@ -1,10 +1,10 @@
-note
+﻿note
 	description: "[
-		A string expander utilizing a custom table of variables as its source of variable values.
-		Environment variables can also be used, if a variable is not found in the custom table.
-		
-		See {STRING_EXPANDER} for details on variable styles and expansion.
-	]"
+			A string expander utilizing a custom table of variables as its source of variable values.
+			Environment variables can also be used, if a variable is not found in the custom table.
+			
+			See {STRING_EXPANDER} for details on variable styles and expansion.
+		]"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 	date: "$Date$"
@@ -29,10 +29,10 @@ inherit
 
 feature {NONE} -- Access
 
-	table_8: detachable HASH_TABLE [READABLE_STRING_8, STRING_8]
+	table_8: detachable HASH_TABLE [READABLE_STRING_8, READABLE_STRING_8]
 			-- Table of variable names to value mappings for `expand_string'.
 
-	table_32: detachable HASH_TABLE [READABLE_STRING_32, STRING_32]
+	table_32: detachable HASH_TABLE [READABLE_STRING_32, READABLE_STRING_32]
 			-- Table of variable names to value mappings for `expand_string_32'.
 
 feature {NONE} -- Status report
@@ -42,7 +42,7 @@ feature {NONE} -- Status report
 
 feature -- Query
 
-	expand_string (a_string: READABLE_STRING_8; a_table: HASH_TABLE [READABLE_STRING_8, STRING_8]; a_use_env: BOOLEAN; a_keep: BOOLEAN): STRING
+	expand_string (a_string: READABLE_STRING_8; a_table: HASH_TABLE [READABLE_STRING_8, READABLE_STRING_8]; a_use_env: BOOLEAN; a_keep: BOOLEAN): STRING
 			-- Expands a 8-bit string and replaces any variable values.
 			--
 			-- `a_string' : The string to expand.
@@ -72,7 +72,7 @@ feature -- Query
 			table_detached: table_8 = Void
 		end
 
-	expand_string_32 (a_string: READABLE_STRING_32; a_table: HASH_TABLE [READABLE_STRING_32, STRING_32]; a_use_env: BOOLEAN; a_keep: BOOLEAN): STRING_32
+	expand_string_32 (a_string: READABLE_STRING_32; a_table: HASH_TABLE [READABLE_STRING_32, READABLE_STRING_32]; a_use_env: BOOLEAN; a_keep: BOOLEAN): STRING_32
 			-- Expands a 32-bit string and replaces any variable values.
 			--
 			-- `a_string' : The string to expand.
@@ -143,10 +143,10 @@ invariant
 	table_8_compares_objects: (attached table_8 as l_table_8) implies l_table_8.object_comparison
 	table_32_compares_objects: (attached table_32 as l_table_32) implies l_table_32.object_comparison
 
-;note
-	copyright:	"Copyright (c) 1984-2012, Eiffel Software"
-	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
-	licensing_options:	"http://www.eiffel.com/licensing"
+note
+	copyright: "Copyright (c) 1984-2021, Eiffel Software"
+	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
+	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[
 			This file is part of Eiffel Software's Eiffel Development Environment.
 			

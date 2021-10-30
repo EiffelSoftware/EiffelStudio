@@ -133,7 +133,7 @@ feature -- Access
 			from
 				Result := 1
 			invariant
-				has_value: across Result.as_integer_32 |..| count as i some content [i.item].same_string (value) end
+				has_value: across Result.as_integer_32 |..| count as i some content [i].same_string (value) end
 			until
 				content [Result].same_string (value)
 			loop

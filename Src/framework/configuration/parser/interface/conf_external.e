@@ -140,7 +140,7 @@ feature {CONF_ACCESS} -- Status update
 				across
 					a_conditions as ic
 				loop
-					ic.item.set_target (tgt)
+					ic.set_target (tgt)
 				end
 			end
 		end

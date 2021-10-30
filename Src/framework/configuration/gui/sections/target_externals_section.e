@@ -1,5 +1,4 @@
 ﻿note
-	description: "Objects that ..."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 	date: "$Date$"
@@ -230,7 +229,7 @@ feature -- Element update
 				internal_cflag := l_internal_cflag
 				across e as c loop
 					l_internal_cflag.extend
-						(create {EXTERNAL_CFLAG_SECTION}.make (c.item, target, configuration_window))
+						(create {EXTERNAL_CFLAG_SECTION}.make (c, target, configuration_window))
 				end
 				order_headers
 			end
@@ -312,7 +311,7 @@ feature -- Element update
 				internal_linker_flag := l_internal_linker_flag
 				across e as c loop
 					l_internal_linker_flag.extend
-						(create {EXTERNAL_LINKER_FLAG_SECTION}.make (c.item, target, configuration_window))
+						(create {EXTERNAL_LINKER_FLAG_SECTION}.make (c, target, configuration_window))
 				end
 				order_headers
 			end
@@ -500,9 +499,9 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2020, Eiffel Software"
+	copyright: "Copyright (c) 1984-2021, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
-	licensing_options:	"http://www.eiffel.com/licensing"
+	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[
 			This file is part of Eiffel Software's Eiffel Development Environment.
 			

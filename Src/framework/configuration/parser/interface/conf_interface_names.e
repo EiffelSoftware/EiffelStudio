@@ -718,7 +718,7 @@ feature -- Iron packages box
 				s.append_character (' ')
 				s.append_character ('-')
 				s.append_character (' ')
-				s.append (a_folder.extended_path (ic.item).name)
+				s.append (a_folder.extended_path (ic).name)
 				s.append_character ('%N')
 			end
 			Result := locale.formatted_string (locale.translation ("[
@@ -1209,7 +1209,7 @@ feature -- String parse errors
 					if not s.is_empty then
 						s.append ({STRING_32} ", ")
 					end
-					s.append_string_general (ic.item)
+					s.append_string_general (ic)
 				end
 				Result := locale.formatted_string (locale.translation ("Unknown configuration option %"$1%" (Available options: $2)"), [option_name, s])
 			else
@@ -1231,7 +1231,7 @@ feature -- String parse errors
 					if not e.is_empty then
 						e.append ({STRING_32} ", ")
 					end
-					e.append_string_general (c.item)
+					e.append_string_general (c)
 				end
 				Result := locale.formatted_string (locale.translation ("Invalid value for configuration option %"$1%": %"$2%" (Expected values: $3)"), [option_name, option_value, e])
 			else

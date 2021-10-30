@@ -1,6 +1,5 @@
-note
-	description:
-		"Parse a query text"
+﻿note
+	description: "Parse a query text."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 	date: "$Date$"
@@ -237,14 +236,14 @@ feature {NONE} -- Implementation
 			then
 			 	Result := profiler_end_of_query
 			elseif
-				str @ idx = 'o' and then
-				str @ (idx + 1) = 'r'
+				str [idx] = 'o' and then
+				str [idx + 1] = 'r'
 			then
 				Result := profiler_or
 			elseif
-				str @ idx = 'a' and then
-				str @ (idx + 1) = 'n' and then
-				str @ (idx + 2) = 'd'
+				str [idx] = 'a' and then
+				str [idx + 1] = 'n' and then
+				str [idx + 2] = 'd'
 			then
 				Result := profiler_and
 			else
@@ -267,7 +266,7 @@ feature {NONE} -- Implementation
 	has_range_operator (str: STRING; idx: INTEGER): BOOLEAN
 			-- Is there a '-' at or after `idx' in `str'?
 		do
-			Result := str @ idx = '-'
+			Result := str [idx] = '-'
 		end
 
 	stricly_positive_min (a, b, c : INTEGER): INTEGER
@@ -316,7 +315,7 @@ feature {NONE} -- Attributes
 	expects_bounded: BOOLEAN;
 		-- The expected type of the subquery 'value' is a bounded value
 note
-	copyright:	"Copyright (c) 1984-2014, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2021, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
@@ -347,4 +346,4 @@ note
 			Customer support http://support.eiffel.com
 		]"
 
-end -- EB_QUERY_PARSER
+end

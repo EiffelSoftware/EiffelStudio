@@ -1,6 +1,4 @@
-note
-	description: "Summary description for {LIBRARY_INDEXER_OBSERVER_FORWARD}."
-	author: ""
+﻿note
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -39,84 +37,84 @@ feature -- Visit
 	frozen on_ecf_file_found (p: PATH)
 		do
 			across observers as o loop
-				o.item.on_ecf_file_found (p)
+				o.on_ecf_file_found (p)
 			end
 		end
 
 	frozen on_folder_enter (p: PATH)
 		do
 			across observers as o loop
-				o.item.on_folder_enter (p)
+				o.on_folder_enter (p)
 			end
 		end
 
 	frozen on_folder_leave (p: PATH)
 		do
 			across observers as o loop
-				o.item.on_folder_leave (p)
+				o.on_folder_leave (p)
 			end
 		end
 
 	frozen on_ecf_file_enter (p: PATH)
 		do
 			across observers as o loop
-				o.item.on_ecf_file_enter (p)
+				o.on_ecf_file_enter (p)
 			end
 		end
 
 	frozen on_ecf_file_leave (p: PATH)
 		do
 			across observers as o loop
-				o.item.on_ecf_file_leave (p)
+				o.on_ecf_file_leave (p)
 			end
 		end
 
 	frozen on_system_enter (a_cfg: CONF_SYSTEM)
 		do
 			across observers as o loop
-				o.item.on_system_enter (a_cfg)
+				o.on_system_enter (a_cfg)
 			end
 		end
 
 	frozen on_system_leave (a_cfg: CONF_SYSTEM)
 		do
 			across observers as o loop
-				o.item.on_system_leave (a_cfg)
+				o.on_system_leave (a_cfg)
 			end
 		end
 
 	frozen on_application_system (a_cfg: CONF_SYSTEM)
 		do
 			across observers as o loop
-				o.item.on_application_system (a_cfg)
+				o.on_application_system (a_cfg)
 			end
 		end
 
 	frozen on_target (a_target: CONF_TARGET)
 		do
 			across observers as o loop
-				o.item.on_target (a_target)
+				o.on_target (a_target)
 			end
 		end
 
 	frozen on_library (a_lib: CONF_LIBRARY)
 		do
 			across observers as o loop
-				o.item.on_library (a_lib)
+				o.on_library (a_lib)
 			end
 		end
 
 	frozen on_cluster (a_cluster: CONF_CLUSTER)
 		do
 			across observers as o loop
-				o.item.on_cluster (a_cluster)
+				o.on_cluster (a_cluster)
 			end
 		end
 
 	frozen on_class (a_class: CONF_CLASS)
 		do
 			across observers as o loop
-				o.item.on_class (a_class)
+				o.on_class (a_class)
 			end
 		end
 
@@ -132,13 +130,13 @@ feature -- Observers
 			observers.prune_all (obs)
 		end
 
-feature {NONE} -- Observers	
+feature {NONE} -- Observers
 
 	Observers: ARRAYED_LIST [LIBRARY_INDEXER_OBSERVER]
-			-- Associated observers		
+			-- Associated observers
 
 ;note
-	copyright: "Copyright (c) 1984-2013, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2021, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software
@@ -147,4 +145,5 @@ feature {NONE} -- Observers
 			Website http://www.eiffel.com
 			Customer support http://support.eiffel.com
 		]"
+
 end

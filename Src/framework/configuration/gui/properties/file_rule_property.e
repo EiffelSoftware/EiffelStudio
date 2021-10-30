@@ -36,7 +36,7 @@ feature -- Display
 				across
 					l_value as ic
 				loop
-					l_fr.merge (ic.item)
+					l_fr.merge (ic)
 				end
 				if not l_fr.is_empty then
 					if attached l_fr.ordered_exclude as p and then not p.is_empty then
@@ -44,7 +44,7 @@ feature -- Display
 						across
 							p as pc
 						loop
-							Result.append (pc.item)
+							Result.append (pc)
 							Result.append_character (';')
 						end
 						Result.remove_tail (1)
@@ -57,7 +57,7 @@ feature -- Display
 						across
 							p as pc
 						loop
-							Result.append (pc.item)
+							Result.append (pc)
 							Result.append_character (';')
 						end
 						Result.remove_tail (1)
@@ -72,9 +72,9 @@ feature {NONE} -- Dialog
 			-- Dialog to edit the value.
 
 ;note
-	copyright:	"Copyright (c) 1984-2020, Eiffel Software"
+	copyright: "Copyright (c) 1984-2021, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
-	licensing_options:	"http://www.eiffel.com/licensing"
+	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[
 			This file is part of Eiffel Software's Eiffel Development Environment.
 			

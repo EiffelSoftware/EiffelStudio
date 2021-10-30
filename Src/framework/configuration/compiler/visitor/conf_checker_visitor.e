@@ -45,10 +45,10 @@ feature -- Visit nodes
 					across
 						l_ren as r
 					loop
-						l_name := r.key
+						l_name := @ r.key
 							-- do not use mapping because renaming already deals with changing names in the system,
 							-- also applying mapping would make things too confusing
-						if not attached l_classes.item (r.item) as l_found_ren_item or else not l_found_ren_item.name.same_string_general (l_name) then
+						if not attached l_classes.item (r) as l_found_ren_item or else not l_found_ren_item.name.same_string_general (l_name) then
 							add_error (create {CONF_ERROR_RENAM}.make (l_name, a_group.target.system.file_name))
 						end
 					end
@@ -61,11 +61,11 @@ feature -- Visit nodes
 					across
 						l_c_opt as o
 					loop
-						l_name := o.key
+						l_name := @ o.key
 						if attached l_map.item (l_name) as l_found_name then
 							l_name := l_found_name
 						end
-						if not o.item.is_empty and then not l_classes.has (l_name) then
+						if not o.is_empty and then not l_classes.has (l_name) then
 							add_error (create {CONF_ERROR_CLOPT}.make (l_name, a_group.target.system.file_name))
 						end
 					end
@@ -79,7 +79,7 @@ feature -- Visit nodes
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2020, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2021, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

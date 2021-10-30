@@ -1,6 +1,4 @@
-note
-	description: "Summary description for {LIBRARY_DATABASE_READER}."
-	author: ""
+﻿note
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -26,8 +24,8 @@ feature -- Access
 	resolved_location (p: PATH): PATH
 			-- Location `p' resolved with `variables'.
 		local
-			s,k: STRING_32
-			i,j,n: INTEGER
+			s, k: STRING_32
+			i, j, n: INTEGER
 		do
 			Result := p
 			if attached variables as vars then
@@ -43,7 +41,7 @@ feature -- Access
 						j := j + 1
 					end
 					if j > i then
-						k := s.substring (i + 1 , j - 1)
+						k := s.substring (i + 1, j - 1)
 						if attached vars.item (k) as l_new then
 							s.replace_substring (l_new, i, j - 1)
 							create Result.make_from_string (s)
@@ -131,10 +129,11 @@ feature -- Store
 
 	read_context (f: FILE)
 		local
-			l_line,k,v: STRING
-			done,err: BOOLEAN
+			l_line: STRING
+			k, v: READABLE_STRING_8
+			done, err: BOOLEAN
 			ctx: LIBRARY_DATABASE_CONTEXT
-			vars: HASH_TABLE [STRING, STRING]
+			vars: HASH_TABLE [READABLE_STRING_8, READABLE_STRING_8]
 		do
 			last_context := Void
 			from
@@ -181,8 +180,8 @@ feature -- Store
 				across
 					vars as ic
 				loop
-					k := ic.key
-					v := ic.item
+					k := @ ic.key
+					v := ic
 					if k.is_case_insensitive_equal_general ("any_settings") then
 						ctx.use_any_settings (v.is_case_insensitive_equal ("true"))
 					elseif k.is_case_insensitive_equal_general ("platform") then
@@ -224,9 +223,10 @@ feature -- Store
 	read_info_into (f: FILE; db: LIBRARY_DATABASE)
 			-- [item:$key]
 		local
-			i,j: INTEGER
-			l_line,inf_key,k,v,s: STRING
-			done,err: BOOLEAN
+			i, j: INTEGER
+			l_line, inf_key, s: STRING
+			k, v: READABLE_STRING_8
+			done, err: BOOLEAN
 			inf: detachable LIBRARY_INFO
 			l_name, l_uuid, l_location: detachable STRING
 			utf: UTF_CONVERTER
@@ -292,22 +292,21 @@ feature -- Store
 								loop
 									i := v.index_of (',', j)
 									if i = 0 then
-										s := v.substring (j, v.count)
+										s := v.substring (j, v.count).to_string_8
 										i := v.count
 									else
-										s := v.substring (j, i - 1)
+										s := v.substring (j, i - 1).to_string_8
 									end
 									s.adjust
 									inf.classes.force (s)
 									j := i + 1
 								end
 							elseif k.is_case_insensitive_equal ("dependencies") then
-								if v.is_whitespace then
-								else
+								if not v.is_whitespace then
 									across
 										dependencies_from_string (v) as ic
 									loop
-										inf.dependencies.force (ic.item)
+										inf.dependencies.force (ic)
 									end
 								end
 							elseif k.starts_with ("[") then
@@ -327,11 +326,11 @@ feature -- Store
 			end
 		end
 
-	dependencies_from_string (v: STRING): ARRAYED_LIST [attached like dependency_from_string]
+	dependencies_from_string (v: READABLE_STRING_8): ARRAYED_LIST [attached like dependency_from_string]
 		local
-			i,j,k,n: INTEGER
+			i, j, k, n: INTEGER
 			err: BOOLEAN
-			s: STRING
+			s: READABLE_STRING_8
 		do
 			create Result.make (v.occurrences ('{'))
 			from
@@ -362,7 +361,7 @@ feature -- Store
 			end
 		end
 
-	dependency_from_string (s: STRING): detachable TUPLE [name: READABLE_STRING_GENERAL; location: READABLE_STRING_32; evaluated_location: PATH]
+	dependency_from_string (s: READABLE_STRING_8): detachable TUPLE [name: READABLE_STRING_GENERAL; location: READABLE_STRING_32; evaluated_location: PATH]
 		local
 			l_name,
 			l_location,
@@ -374,7 +373,7 @@ feature -- Store
 			until
 				err
 			loop
-				if attached unicode_name_value_from_utf_8_string (ic.item, '=') as d then
+				if attached unicode_name_value_from_utf_8_string (ic, '=') as d then
 					if d.name.is_case_insensitive_equal_general ("name") then
 						l_name := d.value
 					elseif d.name.is_case_insensitive_equal_general ("location") then
@@ -391,30 +390,31 @@ feature -- Store
 			end
 		end
 
-	name_value_from_string (s: STRING; sep: CHARACTER): detachable TUPLE [name: READABLE_STRING_8; value: READABLE_STRING_8]
+	name_value_from_string (s: READABLE_STRING_8; sep: CHARACTER): detachable TUPLE [name: READABLE_STRING_8; value: READABLE_STRING_8]
 		local
 			i: INTEGER
-			k,v: STRING
+			k, v: STRING
 		do
 			i := s.index_of (sep, 1)
 			if i > 0 then
-				k := s.head (i - 1)
+				k := s.head (i - 1).to_string_8
 				k.adjust
-				v := s.substring (i + 1, s.count)
+				v := s.substring (i + 1, s.count).to_string_8
 				v.adjust
-				if not v.is_empty then
-					if v[1] = '%"' then
-						v.adjust
-						if v[v.count] = '%"' then
-							v := v.substring (2, v.count - 1)
-						end
+				if
+					not v.is_empty and then
+					v [1] = '%"'
+				then
+					v.adjust
+					if v [v.count] = '%"' then
+						v := v.substring (2, v.count - 1)
 					end
 				end
 				Result := [k, v]
 			end
 		end
 
-	unicode_name_value_from_utf_8_string (s: STRING; sep: CHARACTER): detachable TUPLE [name: READABLE_STRING_32; value: READABLE_STRING_32]
+	unicode_name_value_from_utf_8_string (s: READABLE_STRING_8; sep: CHARACTER): detachable TUPLE [name: READABLE_STRING_32; value: READABLE_STRING_32]
 		local
 			utf: UTF_CONVERTER
 		do

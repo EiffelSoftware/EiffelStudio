@@ -113,7 +113,7 @@ feature {NONE} -- Traversal
 				across
 					os as option
 				loop
-					o := option.item
+					o := option
 						-- Update class options to use the root setting.
 					if
 						o.catcall_detection.index /= root_catcall_detection_index or else
@@ -125,7 +125,7 @@ feature {NONE} -- Traversal
 						if not attached f then
 							create f.make_caseless (os.count)
 						end
-						f [option.key] := o
+						f [@ option.key] := o
 					end
 				end
 				if attached f then

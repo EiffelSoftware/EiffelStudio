@@ -314,7 +314,7 @@ feature -- Access queries
 			across
 				system.targets as t
 			loop
-				l_target := t.item
+				l_target := t
 				if l_target.extends = Current then
 					Result.force (l_target)
 				end

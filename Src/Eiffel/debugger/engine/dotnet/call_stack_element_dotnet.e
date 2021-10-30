@@ -279,7 +279,7 @@ feature -- Dotnet Properties
 			Result := private_dotnet_feature_token
 		end
 
-	dotnet_module_name: STRING
+	dotnet_module_name: STRING_32
 			--
 		do
 			if not dotnet_initialized then
@@ -288,7 +288,7 @@ feature -- Dotnet Properties
 			Result := private_dotnet_module_name
 		end
 
-	dotnet_module_filename: STRING
+	dotnet_module_filename: STRING_32
 			--
 		do
 			if not dotnet_initialized then
@@ -321,9 +321,9 @@ feature {NONE} -- Implementation Dotnet Properties
 
 	private_dotnet_feature_token: NATURAL_32
 
-	private_dotnet_module_name: STRING
+	private_dotnet_module_name: STRING_32
 
-	private_dotnet_module_filename: STRING
+	private_dotnet_module_filename: STRING_32
 
 feature {NONE} -- Implementation Properties
 
@@ -830,8 +830,8 @@ invariant
 --	valid_level: level_in_stack >= 1
 
 note
-	date		: "$Date$"
-	revision	: "$Revision $"
+	date: "$Date$"
+	revision: "$Revision$"
 	copyright:	"Copyright (c) 1984-2021, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

@@ -37,19 +37,16 @@ feature -- Conversion
 				create l_filter_engine.make_empty
 				l_filter_engine.set_pattern (f)
 				l_filter_engine.disable_case_sensitive
-				from
-					a_libs.start
-				until
-					a_libs.after
+				across
+					a_libs as l
 				loop
-					cfg := a_libs.item_for_iteration
+					cfg := l
 					l_filter_engine.set_text (cfg.library_target_name)
 					if l_filter_engine.pattern_matches then
 						Result.force (create {SCORED_VALUE [CONF_SYSTEM_VIEW]}.make (cfg, 1.0))
 					elseif a_keep_all then
 						Result.force (create {SCORED_VALUE [CONF_SYSTEM_VIEW]}.make (cfg, 0.0))
 					end
-					a_libs.forth
 				end
 			end
 		end
@@ -69,7 +66,7 @@ feature -- Conversion
 					across
 						l_scores as ic
 					loop
-						Result.force (ic.item.value)
+						Result.force (ic.value)
 					end
 				else
 					create f.make_from_string_general (a_query)
@@ -83,17 +80,14 @@ feature -- Conversion
 					create l_filter_engine.make_empty
 					l_filter_engine.set_pattern (f)
 					l_filter_engine.disable_case_sensitive
-					from
-						a_libs.start
-					until
-						a_libs.after
+					across
+						a_libs as l
 					loop
-						cfg := a_libs.item_for_iteration
+						cfg := l
 						l_filter_engine.set_text (cfg.library_target_name)
 						if l_filter_engine.pattern_matches then
 							Result.force (cfg)
 						end
-						a_libs.forth
 					end
 				end
 			end
@@ -115,14 +109,14 @@ feature -- Conversion
 						l_scores as ic
 					loop
 						k := Void
-						cfg := ic.item.value
+						cfg := ic.value
 						across
 							a_libs as libs_ic
 						until
 							k /= Void
 						loop
-							if libs_ic.item = cfg then
-								k := libs_ic.key
+							if libs_ic = cfg then
+								k := @ libs_ic.key
 							end
 						end
 						if k /= Void then
@@ -143,17 +137,14 @@ feature -- Conversion
 					create l_filter_engine.make_empty
 					l_filter_engine.set_pattern (f)
 					l_filter_engine.disable_case_sensitive
-					from
-						a_libs.start
-					until
-						a_libs.after
+					across
+						a_libs as l
 					loop
-						cfg := a_libs.item_for_iteration
+						cfg := l
 						l_filter_engine.set_text (cfg.library_target_name)
 						if l_filter_engine.pattern_matches then
-							Result.put (cfg, a_libs.key_for_iteration)
+							Result.put (cfg, @ l.key)
 						end
-						a_libs.forth
 					end
 				end
 			end
@@ -171,39 +162,39 @@ feature -- Conversion
 	scores_factory: SCORER_CRITERIA_FACTORY [CONF_SYSTEM_VIEW]
 		once
 			create Result.make
-			Result.register_builder ("name", agent (n,v: READABLE_STRING_GENERAL): detachable SCORER_CRITERIA [CONF_SYSTEM_VIEW]
-					do
-						create {SCORER_CRITERIA_AGENT [CONF_SYSTEM_VIEW]} Result.make (n + ":" + v, name_weight, agent score_name (?, v))
-					end
+			Result.register_builder ("name", agent (n, v: READABLE_STRING_32): detachable SCORER_CRITERIA [CONF_SYSTEM_VIEW]
+						do
+							create {SCORER_CRITERIA_AGENT [CONF_SYSTEM_VIEW]} Result.make (n + ":" + v, name_weight, agent score_name (?, v))
+						end
 				)
-			Result.register_builder ("title", agent (n,v: READABLE_STRING_GENERAL): detachable SCORER_CRITERIA [CONF_SYSTEM_VIEW]
-					do
-						create {SCORER_CRITERIA_AGENT [CONF_SYSTEM_VIEW]} Result.make (n + ":" + v, title_weight, agent score_title (?, v))
-					end
+			Result.register_builder ("title", agent (n, v: READABLE_STRING_32): detachable SCORER_CRITERIA [CONF_SYSTEM_VIEW]
+						do
+							create {SCORER_CRITERIA_AGENT [CONF_SYSTEM_VIEW]} Result.make (n + ":" + v, title_weight, agent score_title (?, v))
+						end
 				)
-			Result.register_builder ("description", agent (n,v: READABLE_STRING_GENERAL): detachable SCORER_CRITERIA [CONF_SYSTEM_VIEW]
-					do
-						create {SCORER_CRITERIA_AGENT [CONF_SYSTEM_VIEW]} Result.make (n + ":" + v, description_weight, agent score_description (?, v))
-					end
+			Result.register_builder ("description", agent (n, v: READABLE_STRING_32): detachable SCORER_CRITERIA [CONF_SYSTEM_VIEW]
+						do
+							create {SCORER_CRITERIA_AGENT [CONF_SYSTEM_VIEW]} Result.make (n + ":" + v, description_weight, agent score_description (?, v))
+						end
 				)
-			Result.register_builder ("tag", agent (n,v: READABLE_STRING_GENERAL): detachable SCORER_CRITERIA [CONF_SYSTEM_VIEW]
-					do
-						create {SCORER_CRITERIA_AGENT [CONF_SYSTEM_VIEW]} Result.make (n + ":" + v, tag_weight, agent score_tag (?, v))
-					end
+			Result.register_builder ("tag", agent (n, v: READABLE_STRING_32): detachable SCORER_CRITERIA [CONF_SYSTEM_VIEW]
+						do
+							create {SCORER_CRITERIA_AGENT [CONF_SYSTEM_VIEW]} Result.make (n + ":" + v, tag_weight, agent score_tag (?, v))
+						end
 				)
-			Result.register_builder ("any", agent (n,v: READABLE_STRING_GENERAL): detachable SCORER_CRITERIA [CONF_SYSTEM_VIEW]
-					do
-						create {SCORER_CRITERIA_AGENT [CONF_SYSTEM_VIEW]} Result.make (n + ":" + v, any_weight, agent score_any (?, v))
-					end
+			Result.register_builder ("any", agent (n, v: READABLE_STRING_32): detachable SCORER_CRITERIA [CONF_SYSTEM_VIEW]
+						do
+							create {SCORER_CRITERIA_AGENT [CONF_SYSTEM_VIEW]} Result.make (n + ":" + v, any_weight, agent score_any (?, v))
+						end
 				)
 			Result.register_default_builder ("any")
 		end
 
 	meet_any (obj: CONF_SYSTEM_VIEW; s: READABLE_STRING_GENERAL): BOOLEAN
 		do
-			Result :=  meet_name (obj, s)
-					or meet_title (obj, s)
-					or meet_tag (obj, s)
+			Result := meet_name (obj, s)
+				or meet_title (obj, s)
+				or meet_tag (obj, s)
 		end
 
 	meet_name (obj: CONF_SYSTEM_VIEW; s: READABLE_STRING_GENERAL): BOOLEAN
@@ -277,10 +268,10 @@ feature -- Conversion
 
 	score_any (obj: CONF_SYSTEM_VIEW; s: READABLE_STRING_GENERAL): REAL
 		do
-			Result :=  score_name (obj, s) * name_weight
-					+ score_title (obj, s) * title_weight
-					+ score_tag (obj, s) * tag_weight
-					+ score_description (obj, s) * description_weight
+			Result := score_name (obj, s) * name_weight
+				+ score_title (obj, s) * title_weight
+				+ score_tag (obj, s) * tag_weight
+				+ score_description (obj, s) * description_weight
 		end
 
 	score_name (obj: CONF_SYSTEM_VIEW; s: READABLE_STRING_GENERAL): REAL
@@ -304,7 +295,7 @@ feature -- Conversion
 		end
 
 note
-	copyright: "Copyright (c) 1984-2018, Eiffel Software"
+	copyright: "Copyright (c) 1984-2021, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[
@@ -334,4 +325,5 @@ note
 			Website http://www.eiffel.com
 			Customer support http://support.eiffel.com
 		]"
+
 end

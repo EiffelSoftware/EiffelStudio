@@ -1,6 +1,4 @@
-note
-	description: "Summary description for {CRITERIA_AGENT}."
-	author: ""
+﻿note
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -15,11 +13,11 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_string: READABLE_STRING_GENERAL; fct: like meet_function)
+	make (a_string: READABLE_STRING_32; fct: like meet_function)
 		do
 			weight := 1
 			meet_function := fct
-			create string.make_from_string_general (a_string)
+			create string.make_from_string (a_string)
 		end
 
 	meet_function: FUNCTION [G, BOOLEAN]
@@ -47,7 +45,7 @@ invariant
 	string /= Void
 
 note
-	copyright: "Copyright (c) 1984-2016, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2021, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software
@@ -56,4 +54,5 @@ note
 			Website http://www.eiffel.com
 			Customer support http://support.eiffel.com
 		]"
+
 end

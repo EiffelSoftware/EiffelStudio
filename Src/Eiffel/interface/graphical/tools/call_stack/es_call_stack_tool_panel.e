@@ -1700,10 +1700,10 @@ feature {NONE} -- Stack grid implementation
 					end
 
 					if
-						attached {CALL_STACK_ELEMENT_DOTNET} e_cse as dotnet_cse
-						and then dotnet_cse.dotnet_module_name /= Void
+						attached {CALL_STACK_ELEMENT_DOTNET} e_cse as dotnet_cse and then
+						attached dotnet_cse.dotnet_module_name as m
 					then
-						l_tooltip.append_string (interface_names.l_module_is (dotnet_cse.dotnet_module_name))
+						l_tooltip.append_string (interface_names.l_module_is (m))
 					end
 				else --| It means, this is an EXTERNAL_CALL_STACK_ELEMENT
 					l_orig_class_info := ""

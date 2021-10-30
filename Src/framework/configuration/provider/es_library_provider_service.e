@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "[
 			Service providing library information.
 			Could be local eiffel libraries, iron packages, available packages, web search results.
@@ -23,7 +23,7 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	libraries (a_query: detachable READABLE_STRING_GENERAL; a_target: CONF_TARGET; a_provider_ids: detachable LIST [READABLE_STRING_GENERAL]): LIST [ES_LIBRARY_PROVIDER_ITEM]
+	libraries (a_query: detachable READABLE_STRING_32; a_target: CONF_TARGET; a_provider_ids: detachable LIST [READABLE_STRING_GENERAL]): LIST [ES_LIBRARY_PROVIDER_ITEM]
 			-- Available libraries in the context of target `a_target'.
 			-- If `a_provider_ids' is set and not empty, return only the libraries from the associated providers.
 		local
@@ -34,7 +34,7 @@ feature -- Access
 				across
 					a_provider_ids as ic
 				loop
-					if attached provider (ic.item) as prov then
+					if attached provider (ic) as prov then
 						libs := provider_libraries (prov, a_query, a_target)
 						Result.append (libs)
 					end
@@ -43,13 +43,13 @@ feature -- Access
 				across
 					providers as ic
 				loop
-					libs := provider_libraries (ic.item, a_query, a_target)
+					libs := provider_libraries (ic, a_query, a_target)
 					Result.append (libs)
 				end
 			end
 		end
 
-	sorted_libraries (a_query: detachable READABLE_STRING_GENERAL; a_target: CONF_TARGET; a_provider_ids: detachable LIST [READABLE_STRING_GENERAL]): LIST [ES_LIBRARY_PROVIDER_ITEM]
+	sorted_libraries (a_query: detachable READABLE_STRING_32; a_target: CONF_TARGET; a_provider_ids: detachable LIST [READABLE_STRING_GENERAL]): LIST [ES_LIBRARY_PROVIDER_ITEM]
 		do
 			Result := libraries (a_query, a_target, a_provider_ids)
 			sort_list (Result)
@@ -66,17 +66,24 @@ feature -- Access
 			create Result.make (create {ES_LIBRARY_PROVIDER_ITEM_COMPARATOR})
 		end
 
+	providers: STRING_TABLE [ES_LIBRARY_PROVIDER]
+
+	provider (a_id: READABLE_STRING_GENERAL): detachable ES_LIBRARY_PROVIDER
+		do
+			Result := providers.item (a_id)
+		end
+
 feature -- Actions
 
 	on_provider_execution_begin_actions: ACTION_SEQUENCE [TUPLE [ES_LIBRARY_PROVIDER]]
 			-- Actions triggered when entering `libraries' function from the given provider.
 
 	on_provider_execution_end_actions: ACTION_SEQUENCE [TUPLE [ES_LIBRARY_PROVIDER]]
-			-- Actions triggered when exiting `libraries' function from the given provider.	
+			-- Actions triggered when exiting `libraries' function from the given provider.
 
 feature {NONE} -- Implementation
 
-	provider_libraries (a_provider: ES_LIBRARY_PROVIDER; a_query: detachable READABLE_STRING_GENERAL; a_target: CONF_TARGET): LIST [ES_LIBRARY_PROVIDER_ITEM]
+	provider_libraries (a_provider: ES_LIBRARY_PROVIDER; a_query: detachable READABLE_STRING_32; a_target: CONF_TARGET): LIST [ES_LIBRARY_PROVIDER_ITEM]
 			-- Libraries from `a_provider'.
 		do
 			on_provider_execution_begin (a_provider)
@@ -94,15 +101,6 @@ feature {NONE} -- Implementation
 			on_provider_execution_end_actions.call ([a_provider])
 		end
 
-feature -- Access
-
-	providers: STRING_TABLE [ES_LIBRARY_PROVIDER]
-
-	provider (a_id: READABLE_STRING_GENERAL): detachable ES_LIBRARY_PROVIDER
-		do
-			Result := providers.item (a_id)
-		end
-
 feature -- Element change
 
 	reset_all (a_target: CONF_TARGET)
@@ -111,7 +109,7 @@ feature -- Element change
 			across
 				providers as ic
 			loop
-				ic.item.reset (a_target)
+				ic.reset (a_target)
 			end
 		end
 
@@ -128,8 +126,8 @@ feature -- Element change
 			providers.put (a_prov, a_prov.identifier)
 		end
 
-;note
-	copyright: "Copyright (c) 1984-2016, Eiffel Software"
+note
+	copyright: "Copyright (c) 1984-2021, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[
@@ -159,4 +157,5 @@ feature -- Element change
 			Website http://www.eiffel.com
 			Customer support http://support.eiffel.com
 		]"
+
 end

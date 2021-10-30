@@ -7,8 +7,8 @@
 	]"
 	doc: "wiki://Code Templates"
 	legal: "See notice at end of class."
-	status: "See notice at end of class.";
-	date: "$Date$";
+	status: "See notice at end of class."
+	date: "$Date$"
 	revision: "$Revision$"
 
 class
@@ -107,11 +107,11 @@ feature -- Formatting
 			l_count := a_template.count
 
 			l_delimiter := {CODE_TEMPLATE_ENTITY_NAMES}.template_start_delimiter
-			l_start := a_template.index_of (l_delimiter @ 1, 1)
+			l_start := a_template.index_of (l_delimiter [1], 1)
 			if l_start > 0 and l_start < l_count and then l_delimiter.is_equal (a_template.substring (l_start, l_start + (l_delimiter.count - 1))) then
 				l_start := l_start + l_delimiter.count
 				l_delimiter := {CODE_TEMPLATE_ENTITY_NAMES}.template_end_delimiter
-				l_end := a_template.last_index_of (l_delimiter @ l_delimiter.count, a_template.count)
+				l_end := a_template.last_index_of (l_delimiter [l_delimiter.count], a_template.count)
 				if l_end > l_start and then l_delimiter.is_equal (a_template.substring (l_end - (l_delimiter.count - 1), l_end)) then
 					l_end := l_end - l_delimiter.count
 					from until not a_template.item (l_start).is_space or l_stop loop
@@ -632,7 +632,7 @@ invariant
 	last_code_template_definition_attached: attached last_declaration implies attached last_code_template_definition
 
 ;note
-	copyright: "Copyright (c) 1984-2016, Eiffel Software"
+	copyright: "Copyright (c) 1984-2021, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

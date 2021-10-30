@@ -49,7 +49,7 @@ feature -- Processing
 				across
 					l_files as f
 				loop
-					l_name := f.item
+					l_name := f
 					if l_name.count >= 2 and then a_file_rule.is_included (a_path, l_name) then
 						handle_class (l_name, a_path, a_cluster)
 					end
@@ -60,14 +60,14 @@ feature -- Processing
 					across
 						l_subdirs as d
 					loop
-						if a_file_rule.is_included (a_path, d.item) then
+						if a_file_rule.is_included (a_path, d) then
 								-- Reuse `l_full_path' string buffer.
-							create l_full_path.make (a_path.count + d.item.count + 1)
+							create l_full_path.make (a_path.count + d.count + 1)
 							if not a_path.is_empty then
 								l_full_path.append (a_path)
 								l_full_path.append (l_cluster_separator)
 							end
-							l_full_path.append (d.item)
+							l_full_path.append (d)
 								-- We need a copy of the string as it is stored as a reference indirectly from this routine.
 							process_cluster_recursive (l_full_path, a_cluster, a_file_rule)
 						end
@@ -87,7 +87,7 @@ feature -- Processing
 		end
 
 note
-	copyright: "Copyright (c) 1984-2014, Eiffel Software"
+	copyright: "Copyright (c) 1984-2021, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

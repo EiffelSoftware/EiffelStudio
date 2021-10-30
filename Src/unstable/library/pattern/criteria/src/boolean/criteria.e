@@ -1,5 +1,4 @@
-note
-	description: "Summary description for {CRITERIA}."
+﻿note
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -45,18 +44,18 @@ feature -- Factory
 			across
 				lst as c
 			loop
-				if meet (c.item) then
-					Result.extend (c.item)
+				if meet (c) then
+					Result.extend (c)
 				end
 			end
 		ensure
 			result_attached: Result /= Void
 			new_object: Result /= lst
-			coherent_result: Result.count <= lst.count and then across Result as r all lst.has (r.item) end
+			coherent_result: Result.count <= lst.count and then ∀ r: Result ¦ lst.has (r)
 		end
 
 	apply_to_list (lst: LIST [G])
-			-- Apply current criterai to `lst'
+			-- Apply current criterai to `lst`.
 		do
 			from
 				lst.start
@@ -70,7 +69,7 @@ feature -- Factory
 				end
 			end
 		ensure
-			coherent_count: lst.count <= old lst.count and then across lst as r all (old lst).has (r.item)  end
+			coherent_count: lst.count <= old lst.count and then ∀ r: lst ¦ (old lst).has (r)
 		end
 
 feature -- Visitor
@@ -81,7 +80,7 @@ feature -- Visitor
 		deferred
 		end
 
-feature -- Status report
+feature -- Output
 
 	debug_output: STRING_32
 			-- String that should be displayed in debugger to represent `Current'.
@@ -94,7 +93,7 @@ feature -- Status report
 		end
 
 note
-	copyright: "Copyright (c) 1984-2016, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2021, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software
@@ -103,4 +102,5 @@ note
 			Website http://www.eiffel.com
 			Customer support http://support.eiffel.com
 		]"
+
 end

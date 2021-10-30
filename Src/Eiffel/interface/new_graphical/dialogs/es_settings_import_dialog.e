@@ -1,8 +1,5 @@
-note
-	description:
-		"[
-			Popup dialog to import settings from previous installations.
-		]"
+﻿note
+	description: "Popup dialog to import settings from previous installations."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 	date: "$Date$"
@@ -525,7 +522,7 @@ feature -- Event
 			end
 		end
 
-	current_version_name: READABLE_STRING_GENERAL
+	current_version_name: READABLE_STRING_32
 		do
 			Result := eiffel_layout.version_name
 			if eiffel_layout.is_workbench then
@@ -798,7 +795,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2020, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2021, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
@@ -829,4 +826,4 @@ note
 			Customer support http://support.eiffel.com
 		]"
 
-end -- class EB_ARGUMENT_DIALOG
+end

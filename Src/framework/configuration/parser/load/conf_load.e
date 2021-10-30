@@ -65,7 +65,7 @@ feature -- Status
 				across
 					l_last_warnings as ic
 				loop
-					Result.append (ic.item.text)
+					Result.append (ic.text)
 					Result.append_character ('%N')
 				end
 			end
@@ -473,7 +473,7 @@ feature {NONE} -- Redirection
 				-- (see `{CONF_LOCATION}.update_path_to_unix')
 			p := conf_redirection_location_for_file (a_new_location, a_file)
 
-			if across ctx.redirections as c some p.is_same_file_as (c.item) end then
+			if across ctx.redirections as c some p.is_same_file_as (c) end then
 					--| `a_new_location' already appears in the redirection chain
 					--| this is a cycle in redirection which not allowed.
 				report_error (create {CONF_ERROR_CYCLE_IN_REDIRECTION}.make (p.name, ctx.redirections))
@@ -499,7 +499,7 @@ feature {NONE} -- Redirection
 				-- otherwise compute the absolute path with a_new_location as relative to parent folder of `a_file'
 			p := (create {PATH}.make_from_string (a_new_location)).absolute_path_in ((create {PATH}.make_from_string (a_file)).parent)
 
-			if across a_redirections as c some p.is_same_file_as (c.item) end then
+			if across a_redirections as c some p.is_same_file_as (c) end then
 					--| `a_new_location' already appears in the redirection chain
 					--| this is a cycle in redirection which not allowed.				
 				report_error (create {CONF_ERROR_CYCLE_IN_REDIRECTION}.make (p.name, a_redirections))
@@ -623,7 +623,7 @@ invariant
 	factory_not_void: factory /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2019, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2021, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

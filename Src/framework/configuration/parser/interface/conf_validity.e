@@ -400,14 +400,14 @@ feature {NONE} -- Onces
 				attached Result
 			loop
 				if
-					c.item.count = n and then
-					c.item.same_caseless_characters (string, start_index, end_index, 1)
+					c.count = n and then
+					c.same_caseless_characters (string, start_index, end_index, 1)
 				then
-					Result := c.item
+					Result := c
 				end
 			end
 		ensure
-			valid_value: attached Result implies across msil_generation_type_values as c some c.item.same_caseless_characters (Result, 1, Result.count, 1)  end
+			valid_value: attached Result implies across msil_generation_type_values as c some c.same_caseless_characters (Result, 1, Result.count, 1)  end
 		end
 
 	msil_classes_per_module_value (string: READABLE_STRING_32; start_index, end_index: INTEGER): detachable READABLE_STRING_32
@@ -517,10 +517,10 @@ feature {NONE} -- Implementation
 			Result := valid_settings_1_17_0.twin
 			Result.merge (valid_settings_1_18_0)
 		ensure
-			known_settings_old: across valid_settings as s all Result.has (s.item) end
-			known_settings_1_17_0: across valid_settings_1_17_0 as s all Result.has (s.item) end
-			known_settings_1_18_0: across valid_settings_1_18_0 as s all Result.has (s.item) end
-			known_settings_valid: across Result as s all valid_settings.has (s.item) or else valid_settings_1_17_0.has (s.item) or else valid_settings_1_18_0.has (s.item) end
+			known_settings_old: across valid_settings as s all Result.has (s) end
+			known_settings_1_17_0: across valid_settings_1_17_0 as s all Result.has (s) end
+			known_settings_1_18_0: across valid_settings_1_18_0 as s all Result.has (s) end
+			known_settings_valid: across Result as s all valid_settings.has (s) or else valid_settings_1_17_0.has (s) or else valid_settings_1_18_0.has (s) end
 		end
 
 	valid_settings: SEARCH_TABLE [STRING]
@@ -578,7 +578,7 @@ feature {NONE} -- Implementation
 			Result := valid_settings.twin
 			Result.force (s_absent_explicit_assertion)
 		ensure
-			valid_settings_1_17_0_includes_valid_settings: across valid_settings as s all Result.has (s.item) end
+			valid_settings_1_17_0_includes_valid_settings: across valid_settings as s all Result.has (s) end
 		end
 
 	valid_settings_1_18_0: SEARCH_TABLE [STRING]
@@ -710,14 +710,14 @@ feature {NONE} -- Implementation
 				attached Result
 			loop
 				if
-					c.item.count = n and then
-					c.item.same_characters (string, start_index, end_index, 1)
+					c.count = n and then
+					c.same_characters (string, start_index, end_index, 1)
 				then
-					Result := c.item.as_string_32
+					Result := c.as_string_32
 				end
 			end
 		ensure
-			valid_key: attached Result implies across keys as c some c.item.same_string (Result)  end
+			valid_key: attached Result implies across keys as c some c.same_string (Result)  end
 		end
 
 	boolean_setting_name (string: READABLE_STRING_32; start_index, end_index: INTEGER): detachable READABLE_STRING_32
@@ -736,10 +736,10 @@ feature {NONE} -- Implementation
 				attached Result
 			loop
 				if
-					c.key.count = n and then
-					c.key.same_characters (string, start_index, end_index, 1)
+					@ c.key.count = n and then
+					@ c.key.same_characters (string, start_index, end_index, 1)
 				then
-					Result := c.key.as_string_32
+					Result := @ c.key.as_string_32
 				end
 			end
 		ensure

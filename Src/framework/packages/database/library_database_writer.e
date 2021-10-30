@@ -1,6 +1,4 @@
-note
-	description: "Summary description for {LIBRARY_DATABASE_WRITER}."
-	author: ""
+﻿note
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -37,10 +35,10 @@ feature -- Access
 				until
 					l_done
 				loop
-					if s.starts_with (ic.item) then
+					if s.starts_with (ic) then
 						l_done := True
-						create Result.make_from_string ({STRING_32} "$" + ic.key)
-						Result := Result.extended (s.tail (s.count - ic.item.count))
+						create Result.make_from_string ({STRING_32} "$" + @ ic.key)
+						Result := Result.extended (s.tail (s.count - ic.count))
 					end
 				end
 			end
@@ -103,7 +101,7 @@ feature -- Store
 			across
 				db.ecf_files as ic
 			loop
-				f.put_string (adapted_location (ic.item).utf_8_name)
+				f.put_string (adapted_location (ic).utf_8_name)
 				f.put_new_line
 			end
 
@@ -111,13 +109,13 @@ feature -- Store
 			across
 				db.items as ic
 			loop
-				l_info := ic.item
+				l_info := ic
 				f.put_string ("[item:")
-				f.put_string (utf.utf_32_string_to_utf_8_string_8 (ic.key))
+				f.put_string (utf.utf_32_string_to_utf_8_string_8 (@ ic.key))
 				f.put_string ("]")
 				f.put_new_line
 				f.put_string ("name:")
-				f.put_string (l_info.name)
+				f.put_string (utf.utf_32_string_to_utf_8_string_8 (l_info.name))
 				f.put_new_line
 				f.put_string ("uuid:")
 				f.put_string (l_info.uuid.out)
@@ -147,7 +145,7 @@ feature -- Store
 					else
 						f.put_string (",")
 					end
-					f.put_string (class_ic.item)
+					f.put_string (utf.utf_32_string_to_utf_8_string_8 (class_ic))
 				end
 				f.put_new_line
 
@@ -163,11 +161,11 @@ feature -- Store
 							f.put_string (",")
 						end
 						f.put_string ("{name=%"")
-						f.put_string (utf.utf_32_string_to_utf_8_string_8 (dep_ic.item.name))
+						f.put_string (utf.utf_32_string_to_utf_8_string_8 (dep_ic.name))
 						f.put_string ("%",location=%"")
-						f.put_string (utf.utf_32_string_to_utf_8_string_8 (dep_ic.item.location))
+						f.put_string (utf.utf_32_string_to_utf_8_string_8 (dep_ic.location))
 						f.put_string ("%",evaluated_location=%"")
-						f.put_string (dep_ic.item.evaluated_location.utf_8_name)
+						f.put_string (dep_ic.evaluated_location.utf_8_name)
 						f.put_string ("%"}")
 					end
 					f.put_new_line
@@ -175,5 +173,8 @@ feature -- Store
 			end
 			f.close
 		end
+
+note
+	ca_ignore: "CA032", "CA032: too long routine body"
 
 end

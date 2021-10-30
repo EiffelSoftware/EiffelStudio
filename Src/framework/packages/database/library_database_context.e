@@ -1,5 +1,4 @@
-note
-	description: "Summary description for {LIBRARY_DATABASE_CONTEXT}."
+﻿note
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -152,7 +151,7 @@ feature -- Conversion
 
 feature -- Status report
 
-	debug_output: STRING_8
+	debug_output: READABLE_STRING_8
 			-- String that should be displayed in debugger to represent `Current'.
 		do
 			Result := platform + " - " + concurrency
@@ -163,7 +162,8 @@ feature -- Status report
 			-- equal to current object?
 		do
 			Result := platform.is_case_insensitive_equal (other.platform) and
-					concurrency.is_case_insensitive_equal (other.concurrency) and
-					is_il_generation = other.is_il_generation
+				concurrency.is_case_insensitive_equal (other.concurrency) and
+				is_il_generation = other.is_il_generation
 		end
+
 end

@@ -1,8 +1,9 @@
-note
+﻿note
 	description: "Objects that analyze search the editor content for clickable position"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 	author: "Etienne AMODEO"
+	revised_by: "Alexander Kogtenkov"
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -158,7 +159,7 @@ feature -- Analysis preparation
 								-- string tokens (those like % .... % )
 							if split_string then
 								split_string := False
-							elseif token.wide_image @ token.wide_image.count /= ('%"').to_character_32 then
+							elseif token.wide_image [token.wide_image.count] /= {CHARACTER_32} '%"' then
 								split_string := True
 							else
 									-- It might be an operator name
@@ -570,7 +571,7 @@ feature -- Click list update
 								-- it will be made of several token, some of which may not be
 								-- string tokens (those like % .... % )
 							l_image := token.wide_image
-							if not l_image.is_empty and then l_image @ l_image.count /= ('%"').to_character_32 then
+							if not l_image.is_empty and then l_image [l_image.count] /= {CHARACTER_32} '%"' then
 								from
 									if token.next /= Void then
 										pos_in_file := token.character_length + pos_in_file
@@ -857,7 +858,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright: "Copyright (c) 1984-2019, Eiffel Software"
+	copyright: "Copyright (c) 1984-2021, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[
@@ -888,4 +889,4 @@ note
 			Customer support http://support.eiffel.com
 		]"
 
-end -- class EB_CLICK_AND_COMPLETE_TOOL
+end

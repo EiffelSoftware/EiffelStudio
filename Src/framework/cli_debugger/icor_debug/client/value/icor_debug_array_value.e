@@ -41,7 +41,7 @@ feature {ICOR_EXPORTER} -- Access
 
 	get_count: NATURAL_32
 			-- GetCount returns the number of elements in all dimensions of
-     		-- the array.
+			-- the array.
 		do
 			last_call_success := cpp_get_count (item, $Result)
 		ensure
@@ -57,7 +57,6 @@ feature {ICOR_EXPORTER} -- Access
 			mp_tab: MANAGED_POINTER
 			l_elt_size: INTEGER
 			i: INTEGER
-			l_element: NATURAL_32
 		do
 			l_elt_size := {PLATFORM}.Natural_32_bytes
 			create mp_tab.make (a_indicies_count * l_elt_size)
@@ -69,27 +68,26 @@ feature {ICOR_EXPORTER} -- Access
 			until
 				i > a_indicies_count
 			loop
-				l_element := mp_tab.read_natural_32 ((i - 1) * l_elt_size)
-				Result.put (l_element, i)
+				Result.put (mp_tab.read_natural_32 ((i - 1) * l_elt_size), i)
 				i := i + 1
 			end
 		end
 
 	has_base_indicies: BOOLEAN
 			-- HasBaseIndicies returns whether or not the array has base indicies.
-     		-- If the answer is no, then all dimensions have a base index of 0.
+			-- If the answer is no, then all dimensions have a base index of 0.
 		local
 			r: INTEGER
 		do
 			last_call_success := cpp_has_base_indicies (item, $r)
-			Result := r /= 0 --| TRUE = 1 , FALSE = 0			
+			Result := r /= 0 --| TRUE = 1 , FALSE = 0
 		ensure
 			success: last_call_succeed or error_code_is_object_neutered (last_call_success)
 		end
 
 	get_base_indicies (a_indicies_count: INTEGER): ARRAY [NATURAL_32]
 			-- GetBaseIndicies returns the base index of each dimension in
-	 		-- the array
+			-- the array
 			-- FIXME jfiat [2008/11/07] : a_indicies_count could be NATURAL_32
 		require
 			a_indicies_count > 0
@@ -97,7 +95,6 @@ feature {ICOR_EXPORTER} -- Access
 			mp_tab: MANAGED_POINTER
 			l_elt_size: INTEGER
 			i: INTEGER
-			l_element: NATURAL_32
 		do
 			l_elt_size := {PLATFORM}.Natural_32_bytes
 			create mp_tab.make (a_indicies_count * l_elt_size)
@@ -109,8 +106,7 @@ feature {ICOR_EXPORTER} -- Access
 			until
 				i > a_indicies_count
 			loop
-				l_element := mp_tab.read_natural_32 ((i - 1) * l_elt_size)
-				Result.put (l_element, i)
+				Result.put (mp_tab.read_natural_32 ((i - 1) * l_elt_size), i)
 				i := i + 1
 			end
 		end
@@ -123,7 +119,7 @@ feature {ICOR_EXPORTER} -- Access
 			l_elt_size: INTEGER
 			i: INTEGER
 		do
-			--| create table of 'a_ranges.count' struct COR_DEBUG_STEP_RANGE |--
+				--| create table of 'a_ranges.count' struct COR_DEBUG_STEP_RANGE |--
 
 			l_elt_size := {PLATFORM}.Natural_32_bytes
 			create l_mp_indexes.make (a_indexes.count * l_elt_size)
@@ -132,7 +128,7 @@ feature {ICOR_EXPORTER} -- Access
 			until
 				i > a_indexes.upper
 			loop
-				l_mp_indexes.put_natural_32 (a_indexes @ i, i * l_elt_size)
+				l_mp_indexes.put_natural_32 (a_indexes [i], i * l_elt_size)
 				i := i + 1
 			end
 			last_call_success := cpp_get_element (item, a_indexes.count.as_natural_32, l_mp_indexes.item, $l_p)
@@ -248,9 +244,9 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2018, Eiffel Software"
-	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
-	licensing_options:	"http://www.eiffel.com/licensing"
+	copyright: "Copyright (c) 1984-2021, Eiffel Software"
+	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
+	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[
 			This file is part of Eiffel Software's Eiffel Development Environment.
 			

@@ -20,7 +20,7 @@ feature -- Formatting
 
 	format (a_str: READABLE_STRING_GENERAL; a_args: TUPLE): STRING_8
 			-- Replaces each format item in `a_str' with the text equivalent of a corresponding to
-			-- and object's value at `a_args' @ i.
+			-- and object's value at `a_args [i]`.
 			--
 			-- Example:
 			--     format ("Hello there {1}", ["Mr. Dobbs"])
@@ -48,7 +48,7 @@ feature -- Formatting
 
 	format_unicode (a_str: READABLE_STRING_GENERAL; a_args: TUPLE): STRING_32
 			-- Replaces each format item in `a_str' with the text equivalent of a corresponding to
-			-- and object's value at `a_args' @ i.
+			-- and object's value at `a_args [i]`.
 			--
 			-- Example:
 			--     format ("Hello there {1}", ["Mr. Dobbs"])
@@ -93,9 +93,9 @@ feature -- Formatting
 			until
 				i > l_count
 			loop
-				c := l_str @ i
+				c := l_str [i]
 				if i < l_count then
-					n := l_str @ (i + 1)
+					n := l_str [i + 1]
 				end
 				if c = o then
 					if i < l_count then
@@ -276,7 +276,7 @@ feature {NONE} -- Symbols
 			-- Index close character
 
 ;note
-	copyright: "Copyright (c) 1984-2017, Eiffel Software"
+	copyright: "Copyright (c) 1984-2021, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

@@ -44,14 +44,14 @@ feature -- Access
 			Result.register (create {ES_PRECOMPILE_LIBRARY_IRON_PROVIDER})
 		end
 
-	search_by_class_manager:  ES_LIBRARY_PROVIDER_SERVICE
+	search_by_class_manager: ES_LIBRARY_PROVIDER_SERVICE
 		once
 			create Result.make (0)
 		end
 
 feature {NONE} -- Basic operation
 
-	all_search_results (a_filter: detachable READABLE_STRING_GENERAL; a_provider_ids: detachable LIST [READABLE_STRING_GENERAL]): LIST [ES_LIBRARY_PROVIDER_ITEM]
+	all_search_results (a_filter: detachable READABLE_STRING_32; a_provider_ids: detachable LIST [READABLE_STRING_GENERAL]): LIST [ES_LIBRARY_PROVIDER_ITEM]
 		local
 			libs: like all_search_results
 			l_precompilation: detachable STRING_32
@@ -67,8 +67,8 @@ feature {NONE} -- Basic operation
 			across
 				libs as ic
 			loop
-				if attached {CONF_SYSTEM_VIEW} ic.item.value as cfg and then cfg.system_name.starts_with ("precomp_") then
-					Result.force (ic.item)
+				if attached {CONF_SYSTEM_VIEW} ic.value as cfg and then cfg.system_name.starts_with ("precomp_") then
+					Result.force (ic)
 				end
 			end
 
@@ -111,9 +111,9 @@ feature {NONE} -- Action handlers
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2020, Eiffel Software"
-	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
-	licensing_options:	"http://www.eiffel.com/licensing"
+	copyright: "Copyright (c) 1984-2021, Eiffel Software"
+	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
+	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[
 			This file is part of Eiffel Software's Eiffel Development Environment.
 			
@@ -141,4 +141,5 @@ note
 			Website http://www.eiffel.com
 			Customer support http://support.eiffel.com
 		]"
+
 end

@@ -1,11 +1,10 @@
-note
+﻿note
 
-	description:
-		"Command to run an eiffel application."
+	description: "Command to run an eiffel application."
 	legal: "See notice at end of class."
-	status: "See notice at end of class.";
-	date: "$Date$";
-	revision: "$Revision $"
+	status: "See notice at end of class."
+	date: "$Date$"
+	revision: "$Revision$"
 
 class EWB_DEBUG
 
@@ -62,7 +61,6 @@ feature {NONE} -- Implementation
 	execute
 			-- This command is available only for the `loop' mode
 		local
-			shared_eiffel: SHARED_EIFFEL_PROJECT
 			dbg: TTY_DEBUGGER_MANAGER
 		do
 			localized_print (debugger_names.m_experimental_warning)
@@ -75,7 +73,6 @@ feature {NONE} -- Implementation
 				dbg.load_all_debugger_data
 
 				if not attached param_working_path as wp or else wp.is_empty then
-					create shared_eiffel
 					param_working_path := Execution_environment.current_working_path
 				end
 			end
@@ -95,16 +92,13 @@ feature {NONE} -- Implementation
 			io.put_new_line
 			localized_print (debugger_names.m_environment_variables);
 			if attached param_env_variables as l_param_env_variables then
-				from
-					l_param_env_variables.start
-				until
-					l_param_env_variables.after
+				across
+					l_param_env_variables as v
 				loop
 					io.put_string ("%N%T")
-					localized_print (l_param_env_variables.key_for_iteration)
+					localized_print (v.key)
 					io.put_string ("=")
-					localized_print (l_param_env_variables.item_for_iteration)
-					l_param_env_variables.forth
+					localized_print (v.item)
 				end
 			else
 				localized_print (debugger_names.m_none)
@@ -142,8 +136,8 @@ feature {NONE} -- Implementation
 
 	get_environment_variables
 		local
-			vn: STRING
-			vv: STRING
+			vn: STRING_32
+			vv: STRING_32
 		do
 			localized_print (debugger_names.m_environment_variables)
 			io.put_new_line
@@ -178,7 +172,7 @@ feature {NONE} -- Implementation
 					create param_env_variables.make (5)
 				end
 				param_env_variables.force (vv, vn)
-				localized_print (" -> " + vn + "=" + vv + "%N")
+				localized_print ({STRING_32} " -> " + vn + "=" + vv + "%N")
 			end
 		end
 
@@ -241,7 +235,6 @@ feature {NONE} -- Implementation
 			ctlr: DEBUGGER_CONTROLLER
 			wdir: PATH
 			prof: DEBUGGER_EXECUTION_PROFILE
-			param: DEBUGGER_EXECUTION_RESOLVED_PROFILE
 		do
 			wdir := param_working_path
 			if wdir = Void or else wdir.is_empty then
@@ -258,12 +251,12 @@ feature {NONE} -- Implementation
 			prof.set_working_directory (wdir)
 			prof.set_environment_variables (param_env_variables)
 			debugger_manager.set_execution_ignoring_breakpoints (ign_bp)
-			create param.make_from_profile (prof)
-			ctlr.debug_application (param, a_exec_mode)
+			ctlr.debug_application
+				(create {DEBUGGER_EXECUTION_RESOLVED_PROFILE}.make_from_profile (prof), a_exec_mode)
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2014, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2021, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
@@ -294,4 +287,4 @@ note
 			Customer support http://support.eiffel.com
 		]"
 
-end -- class EWB_RUN
+end

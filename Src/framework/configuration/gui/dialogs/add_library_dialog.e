@@ -114,22 +114,21 @@ feature {NONE} -- Initialization
 
 				-- Initial Event
 			show_actions.extend_kamikaze (agent (a_split: EV_VERTICAL_SPLIT_AREA)
-				do
-					a_split.set_proportion (0.9)
-					populate
-					search_results_box.set_focus
-				end (hsp))
+					do
+						a_split.set_proportion (0.9)
+						populate
+						search_results_box.set_focus
+					end (hsp))
 
 			resize_actions.extend (agent (ia_x, ia_y, ia_width, ia_height: INTEGER; a_split: EV_VERTICAL_SPLIT_AREA)
-				do
-					a_split.set_proportion (0.9)
-				end (?, ?, ?, ?, hsp))
+					do
+						a_split.set_proportion (0.9)
+					end (?, ?, ?, ?, hsp))
 
 			dpi_changed_actions.extend (agent (a_dpi: NATURAL_32; ia_x, ia_y, ia_width, ia_height: INTEGER; a_split: EV_VERTICAL_SPLIT_AREA)
-				do
-					a_split.set_proportion (0.9)
-				end (?, ?, ?, ?, ?, hsp))
-
+					do
+						a_split.set_proportion (0.9)
+					end (?, ?, ?, ?, ?, hsp))
 
 			l_service.set_associated_widget (Current)
 		end
@@ -173,7 +172,6 @@ feature {NONE} -- Initialization
 
 				-- Search container
 			build_search_options_bar (vb2)
-
 
 				-- Create grid
 --			create search_results_box.make (target)
@@ -220,7 +218,6 @@ feature {NONE} -- Initialization
 			hb1.extend (l_btn)
 			hb1.disable_item_expand (l_btn)
 
-
 			create l_btn.make_with_text_and_action (conf_interface_names.dialog_search_library_iron_package_manage_button_label, agent launch_iron_tool)
 			l_btn.set_pixmap (conf_pixmaps.library_iron_package_icon)
 			l_btn.set_tooltip (conf_interface_names.dialog_search_library_iron_package_manage_button_tooltip)
@@ -236,7 +233,7 @@ feature {NONE} -- Initialization
 
 		local
 			l_opts_vb, vbf: EV_VERTICAL_BOX
-			l_search_hb, hbf, hb1,hb2,hb1cb,hb2cb: EV_HORIZONTAL_BOX
+			l_search_hb, hbf, hb1, hb2, hb1cb, hb2cb: EV_HORIZONTAL_BOX
 			l_radio1, l_radio2: EV_RADIO_BUTTON
 			l_filter: like filter
 			l_clear_filter_button: EV_BUTTON
@@ -264,7 +261,6 @@ feature {NONE} -- Initialization
 			l_clear_filter_button.set_tooltip (names.b_reset)
 			hbf.extend (l_clear_filter_button)
 			hbf.disable_item_expand (l_clear_filter_button)
-
 
 				-- Vertical: filter text field + reset button
 			create vbf
@@ -301,14 +297,14 @@ feature {NONE} -- Initialization
 				across
 					search_in_manager.providers as ic
 				loop
-					create cb.make_with_text (ic.key)
+					create cb.make_with_text (@ ic.key)
 					cb.enable_select
-					if attached ic.item.description as d then
+					if attached ic.description as d then
 						cb.set_tooltip (d)
 					end
 					hb1cb.extend (cb)
 					hb1cb.disable_item_expand (cb)
-					l_checkboxes.put (cb, ic.key)
+					l_checkboxes.put (cb, @ ic.key)
 					cb.select_actions.extend (agent request_update_filter)
 				end
 				hb1.extend (hb1cb)
@@ -328,14 +324,14 @@ feature {NONE} -- Initialization
 				across
 					search_by_class_manager.providers as ic
 				loop
-					create cb.make_with_text (ic.key)
+					create cb.make_with_text (@ ic.key)
 					cb.enable_select
-					if attached ic.item.description as d then
+					if attached ic.description as d then
 						cb.set_tooltip (d)
 					end
 					hb2cb.extend (cb)
 					hb2cb.disable_item_expand (cb)
-					l_checkboxes.put (cb, ic.key)
+					l_checkboxes.put (cb, @ ic.key)
 					cb.select_actions.extend (agent request_update_filter)
 				end
 				hb2.extend (hb2cb)
@@ -395,14 +391,14 @@ feature {NONE} -- Initialization
 			iron_package_box := vb
 
 			w.on_install_actions.extend (agent (p: IRON_PACKAGE)
-					do
-						iron_service.install_package (p, agent on_iron_package_installed (p, ?))
-					end
+						do
+							iron_service.install_package (p, agent on_iron_package_installed (p, ?))
+						end
 				)
 			w.on_uninstall_actions.extend (agent (p: IRON_PACKAGE)
-					do
-						iron_service.uninstall_package (p, agent on_iron_package_uninstalled (p, ?))
-					end
+						do
+							iron_service.uninstall_package (p, agent on_iron_package_uninstalled (p, ?))
+						end
 				)
 		end
 
@@ -516,8 +512,8 @@ feature {NONE} -- GUI elements
 				across
 					tb as ic
 				loop
-					if ic.item.is_sensitive and then ic.item.is_selected then
-						Result.extend (ic.key)
+					if ic.is_sensitive and then ic.is_selected then
+						Result.extend (@ ic.key)
 					end
 				end
 				if Result.is_empty then
@@ -572,8 +568,8 @@ feature {NONE} -- Libraries cache.
 					across
 						l_provider_checkboxes as ic
 					loop
-						if ic.item.is_sensitive and then ic.item.is_selected then
-							m.reset_provider (ic.key, target)
+						if ic.is_sensitive and then ic.is_selected then
+							m.reset_provider (@ ic.key, target)
 							nb := nb + 1
 						end
 					end
@@ -613,7 +609,7 @@ feature {NONE} -- Configuration settings for libraries
 			vb.set_border_width (Layout_constants.Default_border_size)
 			vb.set_padding (Layout_constants.Default_padding_size)
 
-			create t.make_with_text (conf_interface_names.dialog_display_configuration_text (p1.name, us1, p2.name, us2 , eiffel_layout.is_user_files_supported))
+			create t.make_with_text (conf_interface_names.dialog_display_configuration_text (p1.name, us1, p2.name, us2, eiffel_layout.is_user_files_supported))
 			t.disable_edit
 			t.set_background_color ((create {EV_STOCK_COLORS}).white)
 			t.set_minimum_size (500, 200)
@@ -769,7 +765,7 @@ feature {NONE} -- Action handlers
 
 feature {NONE} -- Basic operation
 
-	all_search_results (a_filter: detachable READABLE_STRING_GENERAL; a_provider_ids: detachable LIST [READABLE_STRING_GENERAL]): LIST [ES_LIBRARY_PROVIDER_ITEM]
+	all_search_results (a_filter: detachable READABLE_STRING_32; a_provider_ids: detachable LIST [READABLE_STRING_GENERAL]): LIST [ES_LIBRARY_PROVIDER_ITEM]
 		require
 			provider_ids_void_or_not_empty: a_provider_ids /= Void implies not a_provider_ids.is_empty
 		local
@@ -783,7 +779,7 @@ feature {NONE} -- Basic operation
 				across
 					libs as ic
 				loop
-					Result.force (ic.item)
+					Result.force (ic)
 				end
 				sort_search_items (Result)
 			else
@@ -798,7 +794,7 @@ feature {NONE} -- Basic operation
 			l_box: like search_results_box
 			retried: BOOLEAN
 			popup: detachable EV_POPUP_WINDOW
-			bb,vb: EV_VERTICAL_BOX
+			bb, vb: EV_VERTICAL_BOX
 			lab: EV_LABEL
 		do
 			repopulate_requested := False
@@ -824,18 +820,17 @@ feature {NONE} -- Basic operation
 				popup.show_relative_to_window (Current)
 				popup.refresh_now
 
-
 				l_lib_manager.on_provider_execution_begin_actions.extend (agent (ia_prov: ES_LIBRARY_PROVIDER; ia_lab: EV_LABEL)
-						do
-							ia_lab.set_text ("Process " + ia_prov.identifier + " ...")
-							ia_lab.refresh_now
-						end(?, lab)
+							do
+								ia_lab.set_text ("Process " + ia_prov.identifier + " ...")
+								ia_lab.refresh_now
+							end (?, lab)
 					)
 				l_lib_manager.on_provider_execution_end_actions.extend (agent (ia_prov: ES_LIBRARY_PROVIDER; ia_lab: EV_LABEL)
-						do
-							ia_lab.set_text ("...")
-							ia_lab.refresh_now
-						end(?, lab)
+							do
+								ia_lab.set_text ("...")
+								ia_lab.refresh_now
+							end (?, lab)
 					)
 
 				l_box := search_results_box
@@ -873,9 +868,9 @@ feature {NONE} -- Implementation
 invariant
 	target_set_in_boxes: search_results_box.target = target
 
-;note
-	copyright: "Copyright (c) 1984-2020, Eiffel Software"
-	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
+note
+	copyright: "Copyright (c) 1984-2021, Eiffel Software"
+	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[
 			This file is part of Eiffel Software's Eiffel Development Environment.
@@ -904,4 +899,5 @@ invariant
 			Website http://www.eiffel.com
 			Customer support http://support.eiffel.com
 		]"
+
 end

@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "[
 		Handles icon resource managment, preventing duplication of loaded resources.
 	]"
@@ -56,8 +56,10 @@ feature -- Query
 		require
 			not_a_name_is_empty: a_name /= Void and then not a_name.is_empty
 		do
-			Result := eiffel_layout.bitmaps_path.extended (pixmap_file_extension)
-			Result := Result.extended (a_name + "." + pixmap_file_extension)
+			Result := eiffel_layout.bitmaps_path.
+				extended (pixmap_file_extension).
+				extended (a_name).
+				appended_with_extension (pixmap_file_extension)
 		ensure
 			not_result_is_empty: Result /= Void and then not Result.is_empty
 		end
@@ -136,7 +138,7 @@ invariant
 	matrices_attached: attached matrices
 
 ;note
-	copyright:	"Copyright (c) 1984-2019, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2021, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

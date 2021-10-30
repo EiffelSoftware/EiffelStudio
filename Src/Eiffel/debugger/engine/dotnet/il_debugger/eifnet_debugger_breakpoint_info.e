@@ -1,4 +1,4 @@
-note
+﻿note
 	description: ".NET breakpoint management"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -14,7 +14,7 @@ inherit
 
 feature {EIFNET_DEBUGGER_INFO_ACCESSOR} -- Access
 
-	eifnet_breakpoint (a_module_name: STRING; a_class_token, a_feature_token: NATURAL_32 a_line: INTEGER): EIFNET_BREAKPOINT
+	eifnet_breakpoint (a_module_name: READABLE_STRING_32; a_class_token, a_feature_token: NATURAL_32 a_line: INTEGER): EIFNET_BREAKPOINT
 			-- EIFNET_BREAKPOINT corresponding to module,class,feature and line parameters
 		local
 			l_bp: EIFNET_BREAKPOINT
@@ -191,7 +191,7 @@ feature {NONE} -- List operation
 
 feature {NONE} -- Notification
 
-	notify_new_module (a_mod_key: STRING)
+	notify_new_module (a_mod_key: READABLE_STRING_GENERAL)
 			-- Notify system a new module is loaded
 		require
 			a_mod_key /= Void
@@ -230,7 +230,7 @@ feature {NONE} -- Notification
 			end
 		end
 
-	refresh_module_for_breakpoints (a_module: ICOR_DEBUG_MODULE; a_mod_key: STRING)
+	refresh_module_for_breakpoints (a_module: ICOR_DEBUG_MODULE; a_mod_key: STRING_32)
 			--
 		local
 			l_bp: EIFNET_BREAKPOINT
@@ -255,7 +255,7 @@ feature {NONE} -- Notification
 
 feature -- module utils
 
-	resolved_module_key (a_module_name: STRING_32): STRING_32
+	resolved_module_key (a_module_name: READABLE_STRING_32): STRING_32
 			-- Key for module_name
 		deferred
 		ensure
@@ -282,7 +282,7 @@ feature {NONE} -- Implementation
 					debug ("debugger_trace_breakpoint")
 						io.error.put_string ("[ERROR] During Breakpoint addition, eStudio got confused with Module ...%N")
 						io.error.put_string ("        class_token 0x" + a_bp.class_token.to_hex_string + " is not inside module %N")
-						io.error.put_string ("        " + l_icd_module.module_name + "%N")
+						io.error.put_string_32 ({STRING_32} "        " + l_icd_module.module_name + "%N")
 					end
 					l_icd_module := Void
 				end
@@ -421,7 +421,7 @@ feature -- debug purpose only
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2020, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2021, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
@@ -452,4 +452,4 @@ note
 			Customer support http://support.eiffel.com
 		]"
 
-end -- class EIFNET_DEBUGGER_BREAKPOINT_INFO
+end

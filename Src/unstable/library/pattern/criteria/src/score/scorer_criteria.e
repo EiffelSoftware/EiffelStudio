@@ -51,21 +51,21 @@ feature -- Factory
 			across
 				lst as c
 			loop
-				s := score (c.item)
+				s := score (c)
 				if not score_is_zero (s) then
-					Result.extend (create {SCORED_VALUE [G]}.make (c.item, s))
+					Result.extend (create {SCORED_VALUE [G]}.make (c, s))
 				end
 			end
 		ensure
 			result_attached: Result /= Void
-			coherent_result: Result.count <= a_capacity and then across Result as r all across lst as ic some ic.item = r.item.value end end
+			coherent_result: Result.count <= a_capacity and then ∀ r: Result ¦ ∃ ic: lst ¦ ic = r.value
 		end
 
 	sorted_scores (lst: ITERABLE [G]; a_capacity: INTEGER): LIST [SCORED_VALUE [G]]
 			-- Apply criteria on `lst' and return scored values sorted by score.
 		do
 			Result := scores (lst, a_capacity)
-			;(create {QUICK_SORTER [SCORED_VALUE [G]]}.make (create {COMPARABLE_COMPARATOR [SCORED_VALUE [G]]})).sort (Result)
+			; (create {QUICK_SORTER [SCORED_VALUE [G]]}.make (create {COMPARABLE_COMPARATOR [SCORED_VALUE [G]]})).sort (Result)
 		end
 
 	list (lst: LIST [G]): LIST [G]
@@ -78,27 +78,20 @@ feature -- Factory
 			across
 				lst as c
 			loop
-				s := score (c.item)
+				s := score (c)
 				if not score_is_zero (s) then
-					l_values.extend (create {SCORED_VALUE [G]}.make (c.item, s))
+					l_values.extend (create {SCORED_VALUE [G]}.make (c, s))
 				end
 			end
 
-			;(create {QUICK_SORTER [SCORED_VALUE [G]]}.make (create {COMPARABLE_COMPARATOR [SCORED_VALUE [G]]})).sort (l_values)
+			; (create {QUICK_SORTER [SCORED_VALUE [G]]}.make (create {COMPARABLE_COMPARATOR [SCORED_VALUE [G]]})).sort (l_values)
 
 			create {ARRAYED_LIST [G]} Result.make (l_values.count)
-			from
-				l_values.start
-			until
-				l_values.after
-			loop
-				Result.extend (l_values.item.value)
-				l_values.forth
-			end
+			⟳ v: l_values ¦ Result.extend (v.value) ⟲
 		ensure
 			result_attached: Result /= Void
 			new_object: Result /= lst
-			coherent_result: Result.count <= lst.count and then across Result as r all lst.has (r.item) end
+			coherent_result: Result.count <= lst.count and then ∀ r: Result ¦ lst.has (r)
 		end
 
 	apply_to_list (lst: LIST [G])
@@ -111,23 +104,16 @@ feature -- Factory
 			across
 				lst as ic
 			loop
-				s := score (ic.item)
+				s := score (ic)
 				if not score_is_zero (s) then
-					l_values.extend (create {SCORED_VALUE [G]}.make (ic.item, s))
+					l_values.extend (create {SCORED_VALUE [G]}.make (ic, s))
 				end
 			end
-			;(create {QUICK_SORTER [SCORED_VALUE [G]]}.make (create {COMPARABLE_COMPARATOR [SCORED_VALUE [G]]})).sort (l_values)
-			from
-				lst.wipe_out
-				l_values.start
-			until
-				l_values.after
-			loop
-				lst.extend (l_values.item.value)
-				l_values.forth
-			end
+			; (create {QUICK_SORTER [SCORED_VALUE [G]]}.make (create {COMPARABLE_COMPARATOR [SCORED_VALUE [G]]})).sort (l_values)
+			lst.wipe_out
+			⟳ v: l_values ¦ lst.extend (v.value) ⟲
 		ensure
-			coherent_count: lst.count <= old lst.count and then across lst as r all (old lst).has (r.item)  end
+			coherent_count: lst.count <= old lst.count and then ∀ r: lst ¦ (old lst).has (r)
 		end
 
 feature -- Visitor
@@ -138,7 +124,7 @@ feature -- Visitor
 		deferred
 		end
 
-feature -- Status report
+feature -- Output
 
 	debug_output: STRING_32
 			-- String that should be displayed in debugger to represent `Current'.
@@ -158,7 +144,7 @@ feature {NONE} -- Helpers
 		end
 
 note
-	copyright: "Copyright (c) 1984-2017, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2021, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software
@@ -167,4 +153,5 @@ note
 			Website http://www.eiffel.com
 			Customer support http://support.eiffel.com
 		]"
+
 end

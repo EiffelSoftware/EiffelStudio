@@ -1,5 +1,4 @@
-note
-	description: "Summary description for {ES_LIBRARY_IRON_PROVIDER}."
+﻿note
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -22,7 +21,7 @@ feature -- Access
 			Result := {STRING_32} "Libraries available from installed IRON packages."
 		end
 
-	no_cached_libraries (a_query: detachable READABLE_STRING_GENERAL; a_target: CONF_TARGET): LIST [CONF_SYSTEM_VIEW]
+	no_cached_libraries (a_query: detachable READABLE_STRING_32; a_target: CONF_TARGET): LIST [CONF_SYSTEM_VIEW]
 		local
 			l_installation_api: IRON_INSTALLATION_API
 			loc: STRING_32
@@ -36,12 +35,12 @@ feature -- Access
 				across
 					l_packages as ic
 				loop
-					pk := ic.item
+					pk := ic
 					if attached l_installation_api.projects_from_installed_package (pk) as l_projects then
 						across
 							l_projects as proj_ic
 						loop
-							loc := {STRING} "iron:" + ic.item.identifier + {STRING_32} ":" + proj_ic.item.name
+							loc := {STRING_32} "iron:" + ic.identifier + {STRING_32} ":" + proj_ic.name
 							if attached conf_system_from (a_target, loc, False) as cfg then
 								Result.force (cfg)
 								if attached pk.title as pk_title then
@@ -58,7 +57,7 @@ feature -- Access
 										if not s.is_empty then
 											s.append_string (", ")
 										end
-										s.append_string (tags_ic.item)
+										s.append_string (tags_ic)
 									end
 									cfg.set_info (s, "tags")
 								end
@@ -66,15 +65,15 @@ feature -- Access
 									across
 										l_pk_items as pk_items_ic
 									loop
-										k := pk_items_ic.key
-										if 
-											k.is_case_insensitive_equal ("title")
-											or k.is_case_insensitive_equal ("description")
-											or k.is_case_insensitive_equal ("tags")
+										k := @ pk_items_ic.key
+										if
+											k.is_case_insensitive_equal ("title") or else
+											k.is_case_insensitive_equal ("description") or else
+											k.is_case_insensitive_equal ("tags")
 										then
 												-- Already set
-										elseif attached pk_items_ic.item as l_text then
-											cfg.set_info (l_text, pk_items_ic.key)
+										elseif attached pk_items_ic as l_text then
+											cfg.set_info (l_text, k)
 										end
 									end
 								end
@@ -102,31 +101,28 @@ feature -- Access
 	iron_installation_api: IRON_INSTALLATION_API
 		local
 			l_iron_installation_api_factory: CONF_IRON_INSTALLATION_API_FACTORY
-			l_api: detachable IRON_INSTALLATION_API
 		do
-			l_api := internal_iron_installation_api
-			if l_api /= Void and then not l_api.is_up_to_date then
-				l_api := Void
+			Result := internal_iron_installation_api
+			if attached Result and then not Result.is_up_to_date then
+				Result := Void
 			end
-			if l_api = Void then
+			if not attached Result then
 				create l_iron_installation_api_factory
 					--| TODO: improve performance, by caching iron_installation_api in the whole system.
 					--| idea: l_iron_installation_api_factory.enable_caching
-
-				l_api := l_iron_installation_api_factory.iron_installation_api (create {IRON_LAYOUT}.make_with_path (eiffel_layout.iron_path, eiffel_layout.installation_iron_path), create {IRON_URL_BUILDER})
-				internal_iron_installation_api := l_api
+				Result := l_iron_installation_api_factory.iron_installation_api (create {IRON_LAYOUT}.make_with_path (eiffel_layout.iron_path, eiffel_layout.installation_iron_path), create {IRON_URL_BUILDER})
+				internal_iron_installation_api := Result
 			end
-			Result := l_api
 		end
 
-feature {NONE} -- Implementation		
+feature {NONE} -- Implementation
 
 	internal_iron_installation_api: detachable IRON_INSTALLATION_API
 
 invariant
 
 note
-	copyright: "Copyright (c) 1984-2016, Eiffel Software"
+	copyright: "Copyright (c) 1984-2021, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[
@@ -156,4 +152,5 @@ note
 			Website http://www.eiffel.com
 			Customer support http://support.eiffel.com
 		]"
+
 end

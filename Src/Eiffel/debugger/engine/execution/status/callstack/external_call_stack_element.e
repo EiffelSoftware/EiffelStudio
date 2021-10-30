@@ -1,10 +1,9 @@
 note
-	description : "Objects that ..."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
-	author      : "$Author$"
-	date        : "$Date$"
-	revision    : "$Revision$"
+	author: "$Author$"
+	date: "$Date$"
+	revision: "$Revision$"
 
 class
 	EXTERNAL_CALL_STACK_ELEMENT
@@ -19,16 +18,16 @@ create
 
 feature -- Change
 
-	set_info (a_oa: DBG_ADDRESS; tid: POINTER; a_cn, a_fn: STRING; a_bp, a_bp_nested: INTEGER; a_info: STRING)
+	set_info (a_oa: DBG_ADDRESS; tid: POINTER; a_cn, a_fn: STRING_32; a_bp, a_bp_nested: INTEGER; a_info: READABLE_STRING_32)
 		require
 			object_address_not_void: a_oa /= Void
 			class_name_not_void: a_cn /= Void
 			routine_name_not_void: a_fn /= Void
 			break_index_positive: a_bp >= 0
 		do
-			class_name := a_cn
-			routine_name := a_fn
-			routine_name_for_display := encoding_converter.utf8_to_utf32 (a_fn)
+			class_name := {UTF_CONVERTER}.string_32_to_utf_8_string_8 (a_cn)
+			routine_name := {UTF_CONVERTER}.string_32_to_utf_8_string_8 (a_fn)
+			routine_name_for_display := a_fn
 			break_index := a_bp
 			break_nested_index := a_bp_nested
 			thread_id := tid
@@ -38,10 +37,10 @@ feature -- Change
 
 feature -- Properties
 
-	info: STRING
+	info: READABLE_STRING_32
 
 	is_eiffel_call_stack_element: BOOLEAN = False
-		-- Is Current an Eiffel Call Stack Element ?
+			-- Is Current an Eiffel Call Stack Element ?
 
 	is_hidden: BOOLEAN = True
 			-- Is hidden for debugger?
@@ -58,9 +57,9 @@ feature -- Output
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2015, Eiffel Software"
-	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
-	licensing_options:	"http://www.eiffel.com/licensing"
+	copyright: "Copyright (c) 1984-2021, Eiffel Software"
+	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
+	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[
 			This file is part of Eiffel Software's Eiffel Development Environment.
 			
@@ -89,4 +88,4 @@ note
 			Customer support http://support.eiffel.com
 		]"
 
-end -- class EIFFEL_CALL_STACK_ELEMENT
+end

@@ -1,6 +1,4 @@
-note
-	description: "Summary description for {ES_TEST_CALL_STACK_WIZARD_PAGE_PANEL}."
-	author: ""
+﻿note
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -211,7 +209,7 @@ feature {NONE} -- Basic operations
 			l_same_name: BOOLEAN
 			l_breakindex_info: STRING
 			l_obj_address_info: STRING
-			l_extra_info: STRING
+			l_extra_info: READABLE_STRING_32
 			gclab: EV_GRID_CHECKABLE_LABEL_ITEM
 			glab: EV_GRID_LABEL_ITEM
 			l_sensitive: BOOLEAN
@@ -272,10 +270,10 @@ feature {NONE} -- Basic operations
 				end
 
 				if
-					attached {CALL_STACK_ELEMENT_DOTNET} e_cse as dotnet_cse
-					and then dotnet_cse.dotnet_module_name /= Void
+					attached {CALL_STACK_ELEMENT_DOTNET} e_cse as dotnet_cse and then
+					attached dotnet_cse.dotnet_module_name as m
 				then
-					l_tooltip.append_string (interface_names.l_module_is (dotnet_cse.dotnet_module_name))
+					l_tooltip.append_string (interface_names.l_module_is (m))
 				end
 			else --| It means, this is an EXTERNAL_CALL_STACK_ELEMENT
 				l_orig_class_info := ""
@@ -289,8 +287,9 @@ feature {NONE} -- Basic operations
 			l_tooltip.prepend ((a_cse.level_in_stack).out + "/" + l_nb_stack.out + ": ")
 			l_tooltip.append (interface_names.l_break_index_is (l_breakindex_info))
 			l_tooltip.append (interface_names.l_address_is (l_obj_address_info))
-			if l_extra_info /= Void then
-				l_tooltip.append ("%N    + " + l_extra_info)
+			if attached l_extra_info then
+				l_tooltip.append_string_general ("%N    + ")
+				l_tooltip.append (l_extra_info)
 			end
 
 				--| Fill columns
@@ -356,7 +355,7 @@ feature {NONE} -- Constants
 		end
 
 note
-	copyright: "Copyright (c) 1984-2010, Eiffel Software"
+	copyright: "Copyright (c) 1984-2021, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

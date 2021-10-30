@@ -1,7 +1,5 @@
-note
-	description: "[
-				Manager to build {LIBRARY_DATABASE}
-			]"
+﻿note
+	description: "Manager to build {LIBRARY_DATABASE}"
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -66,6 +64,11 @@ feature -- Access
 
 	database: LIBRARY_DATABASE
 
+	last_indexed_data: detachable LIBRARY_INFO
+
+	is_updating: BOOLEAN
+			-- Is updating `database' ?
+
 feature -- Settings
 
 	is_stopping_at_library: BOOLEAN
@@ -123,7 +126,7 @@ feature -- Change
 			across
 				a_files as ic
 			loop
-				l_lib_indexer.add_file (ic.item)
+				l_lib_indexer.add_file (ic)
 			end
 			l_lib_indexer.execute
 		end
@@ -148,13 +151,6 @@ feature -- Change
 feature -- Indexer
 
 	library_indexer: LIBRARY_INDEXER
-
-feature -- Access
-
-	last_indexed_data: detachable LIBRARY_INFO
-
-	is_updating: BOOLEAN
-			-- Is updating `database' ?
 
 feature -- Visit
 
@@ -218,7 +214,7 @@ feature -- Visit
 			no_last_indexed_data: last_indexed_data = Void
 		end
 
-	on_application_system  (a_cfg: CONF_SYSTEM)
+	on_application_system (a_cfg: CONF_SYSTEM)
 		local
 			t: CONF_TARGET
 		do
@@ -229,12 +225,12 @@ feature -- Visit
 				across
 					a_cfg.targets as ic
 				loop
-					t := ic.item
+					t := ic
 					on_target (t)
 					across
 						t.libraries as lib_ic
 					loop
-						on_library (lib_ic.item)
+						on_library (lib_ic)
 					end
 
 				end
@@ -301,7 +297,7 @@ feature -- Visit
 		end
 
 note
-	copyright: "Copyright (c) 1984-2013, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2021, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software
@@ -310,4 +306,5 @@ note
 			Website http://www.eiffel.com
 			Customer support http://support.eiffel.com
 		]"
+
 end

@@ -1,6 +1,4 @@
 note
-	description: "Summary description for {ES_GUI_IRON_SERVICE}."
-	author: ""
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -42,7 +40,7 @@ feature {NONE} -- Package management
 			across
 				a_args as ic
 			loop
-				args.force (ic.item)
+				args.force (ic)
 			end
 			create l_prc_factory
 
@@ -82,7 +80,7 @@ feature {NONE} -- Package management
 		end
 
 note
-	copyright: "Copyright (c) 1984-2016, Eiffel Software"
+	copyright: "Copyright (c) 1984-2021, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

@@ -569,7 +569,7 @@ feature {NONE} -- Modification
 			across
 				known_warnings as w
 			loop
-				l_warning := w.key.as_string_32
+				l_warning := @ w.key.as_string_32
 					-- Search if it is a warning that we show in the UI.
 					-- (we hide the obsolete warnings in the UI).
 				conf_interface_names.warning_names.search (l_warning)
@@ -851,7 +851,7 @@ feature {NONE} -- Modification
 					do
 						Result :=
 							attached value and then
-							across content as c some c.item.same_string (value) and then o.is_capable (c.target_index.to_natural_8) end
+							across content as c some c.same_string (value) and then o.is_capable (@ c.target_index.to_natural_8) end
 					end (capability, items, ?))
 			properties.add_property (l_choice_prop)
 			last_added_choice_property := l_choice_prop

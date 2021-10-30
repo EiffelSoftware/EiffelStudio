@@ -236,8 +236,8 @@ feature {NONE} -- Implementation
 	compile
 			-- (Re)compile the regexp patterns.
 		require
-			valid_exclude: attached exclude as xs implies across xs as x all valid_regexp (x.item) end
-			valid_include: attached include as xs implies across xs as x all valid_regexp (x.item) end
+			valid_exclude: attached exclude as xs implies across xs as x all valid_regexp (x) end
+			valid_include: attached include as xs implies across xs as x all valid_regexp (x) end
 		local
 			e: like error
 		do
@@ -260,7 +260,7 @@ feature {NONE} -- Implementation
 	compile_list (a_list: like include): detachable REGULAR_EXPRESSION
 			-- Compile `a_list' into a regular expression.
 		require
-			valid_a_list: attached a_list as xs implies across xs as x all valid_regexp (x.item) end
+			valid_a_list: attached a_list as xs implies across xs as x all valid_regexp (x) end
 		local
 			l_regexp_str: STRING
 			l_left_paren, l_right_paren_and_bar: STRING
@@ -351,9 +351,9 @@ invariant
 			compiled_include_regexp: attached include_regexp as r implies r.is_compiled
 
 note
-	copyright:	"Copyright (c) 1984-2015, Eiffel Software"
+	copyright: "Copyright (c) 1984-2021, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
-	licensing_options:	"http://www.eiffel.com/licensing"
+	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[
 			This file is part of Eiffel Software's Eiffel Development Environment.
 			

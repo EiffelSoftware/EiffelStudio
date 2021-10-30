@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "[
 			interface ICorDebugEval : IUnknown
 				CallFunction
@@ -37,9 +37,9 @@ create
 feature {ICOR_EXPORTER} -- Access
 
 	call_function (a_func: ICOR_DEBUG_FUNCTION; a_args: ARRAY [ICOR_DEBUG_VALUE])
-			 -- CallFunction sets up a function call.  Note that the given function
-			 -- is called directly; there is no virtual dispatch.
-			 -- (Use ICorDebugObjectValue::GetVirtualMethod to do virtual dispatch.)
+			-- CallFunction sets up a function call.  Note that the given function
+			-- is called directly; there is no virtual dispatch.
+			-- (Use ICorDebugObjectValue::GetVirtualMethod to do virtual dispatch.)
 		require
 			func_not_void: a_func /= Void
 		local
@@ -49,7 +49,6 @@ feature {ICOR_EXPORTER} -- Access
 			l_pointer_size: INTEGER
 			i: INTEGER
 			l_arg: ICOR_DEBUG_VALUE
-			l_arg_pointer: POINTER
 		do
 			if a_args /= Void and then a_args.count > 0 then
 				l_pointer_size := {PLATFORM}.Pointer_bytes
@@ -63,16 +62,14 @@ feature {ICOR_EXPORTER} -- Access
 					if l_arg = Void then
 						l_arg := create_void_reference
 					end
-					l_arg_pointer := l_arg.item
-
-					l_mp_args.put_pointer (l_arg_pointer, (i - a_args.lower) * l_pointer_size)
+					l_mp_args.put_pointer (l_arg.item, (i - a_args.lower) * l_pointer_size)
 					i := i + 1
 				end
 				l_args_pointer := l_mp_args.item
 				l_args_count := a_args.count
 			else
-				--| l_args_pointer is Null (Default_pointer)
-				--| l_args_count is 0
+					--| l_args_pointer is Null (Default_pointer)
+					--| l_args_count is 0
 			end
 
 			last_call_success := cpp_call_function (item, a_func.item, l_args_count.to_natural_32, l_args_pointer)
@@ -97,7 +94,7 @@ feature {ICOR_EXPORTER} -- Access
 
 	abort
 			-- Abort aborts the current computation.  Note that in the case of nested
-	 		-- Evals, this may fail unless it is the most recent Eval.
+			-- Evals, this may fail unless it is the most recent Eval.
 
 		do
 			last_call_success := cpp_abort (item)
@@ -147,7 +144,7 @@ feature {ICOR_EXPORTER} -- Access
 			if a_class /= Void then
 				l_class_p := a_class.item
 			end
-			last_call_success := cpp_create_value (item, a_cor_element_type, l_class_p , $p)
+			last_call_success := cpp_create_value (item, a_cor_element_type, l_class_p, $p)
 			if p /= default_pointer then
 				create Result.make_value_by_pointer (p)
 			end
@@ -163,7 +160,7 @@ feature {ICOR_EXPORTER} -- Access
 		end
 
 	new_object (a_func: ICOR_DEBUG_FUNCTION; a_args: ARRAY [ICOR_DEBUG_VALUE])
-			 -- NewObject allocates and calls the constructor for an object.
+			-- NewObject allocates and calls the constructor for an object.
 		local
 			l_mp_args: MANAGED_POINTER
 			i: INTEGER
@@ -177,19 +174,19 @@ feature {ICOR_EXPORTER} -- Access
 			until
 				i > a_args.upper
 			loop
-				l_item := a_args @ i
+				l_item := a_args [i]
 				if l_item = Void then
 					l_item := create_void_reference
 				end
-				l_mp_args.put_pointer (l_item.item, (i - a_args.lower)*l_size)
+				l_mp_args.put_pointer (l_item.item, (i - a_args.lower) * l_size)
 				i := i + 1
 			end
 			last_call_success := cpp_new_object (item, a_func.item, a_args.count.to_natural_32, l_mp_args.item)
 		end
 
 	new_object_no_constructor (a_icd_class: ICOR_DEBUG_CLASS)
-     		-- NewObjectNoConstructor allocates a new object without
-	 		-- attempting to call any constructor on the object.
+			-- NewObjectNoConstructor allocates a new object without
+			-- attempting to call any constructor on the object.
 		do
 			last_call_success := cpp_new_object_no_constructor (item, a_icd_class.item)
 		end
@@ -284,9 +281,9 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
-	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
-	licensing_options:	"http://www.eiffel.com/licensing"
+	copyright: "Copyright (c) 1984-2021, Eiffel Software"
+	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
+	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[
 			This file is part of Eiffel Software's Eiffel Development Environment.
 			
@@ -297,23 +294,22 @@ note
 			(available at the URL listed under "license" above).
 			
 			Eiffel Software's Eiffel Development Environment is
-			distributed in the hope that it will be useful,	but
+			distributed in the hope that it will be useful, but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
-			See the	GNU General Public License for more details.
+			See the GNU General Public License for more details.
 			
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,
-			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
+			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 		]"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
-end -- class ICOR_DEBUG_EVAL
-
+end

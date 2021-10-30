@@ -25,7 +25,7 @@ feature {NONE} -- Initialization
 			across
 				a_targets as ic
 			loop
-				targets.force (ic.item)
+				targets.force (ic)
 			end
 		end
 
@@ -45,12 +45,12 @@ feature -- Access
 			across
 				targets as ic
 			loop
-				n := n.max (ic.item.name.count)
+				n := n.max (ic.name.count)
 			end
 			across
 				targets as ic
 			loop
-				t := ic.item
+				t := ic
 				if t.same_as (target) then
 					Result.append_character ('!')
 				else
@@ -89,7 +89,7 @@ invariant
 	target_attached: target /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2018, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2021, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

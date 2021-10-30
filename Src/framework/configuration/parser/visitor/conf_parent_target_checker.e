@@ -125,7 +125,7 @@ feature -- Basic operation
 						l_last_error := last_error
 					end
 					last_error := Void
-					process_target (ic.item)
+					process_target (ic)
 					if last_error = Void then
 							-- Restore eventual error.
 						last_error := l_last_error
@@ -226,7 +226,7 @@ feature {NONE} -- Access: parent target
 			until
 				Result
 			loop
-				if tgt.same_as (ic.item) then
+				if tgt.same_as (ic) then
 					Result := True
 				end
 			end
@@ -255,7 +255,7 @@ feature {NONE} -- Events
 		end
 
 note
-	copyright: "Copyright (c) 1984-2019, Eiffel Software"
+	copyright: "Copyright (c) 1984-2021, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

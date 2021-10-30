@@ -127,7 +127,7 @@ feature -- Access queries
 			Result := Precursor (a_class, a_dependencies)
 			if a_dependencies then
 				across accessible_groups as g loop
-					l_dep := g.item
+					l_dep := g
 					if l_dep.classes_set then
 						Result.append (l_dep.class_by_name (a_class, False))
 					end

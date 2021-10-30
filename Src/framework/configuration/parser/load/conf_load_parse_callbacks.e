@@ -369,7 +369,7 @@ feature -- Callbacks
 						across
 							syst.targets as ic
 						loop
-							l_target := ic.item
+							l_target := ic
 							if attached l_target.parent_reference as p_ref then
 								if
 									not attached {CONF_LOCAL_TARGET_REFERENCE} p_ref as p_remote or else
@@ -558,7 +558,7 @@ feature {NONE} -- Conversion from earlier version
 						n := p.count
 					invariant
 						no_spaces:
-							across p.substring (1, i - 1) as t all not t.item.is_space end
+							across p.substring (1, i - 1) as t all not t.is_space end
 					until
 						i > n or else p [i].is_space
 					loop
@@ -2386,7 +2386,7 @@ feature {NONE} -- Custom conditions
 			Result.extend ({CONF_CONDITION_CUSTOM_ATTRIBUTES}.wildcard_matching, val_match_wildcard)
 		ensure
 			known_count: Result.count = 4
-			known_kinds: across Result as c all {CONF_CONDITION_CUSTOM_ATTRIBUTES}.is_known_match_kind (c.item) end
+			known_kinds: across Result as c all {CONF_CONDITION_CUSTOM_ATTRIBUTES}.is_known_match_kind (c) end
 			known_keys:
 				Result.has (val_match_case_sensitive) and
 				Result.has (val_match_case_insensitive) and

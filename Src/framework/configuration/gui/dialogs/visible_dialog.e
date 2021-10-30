@@ -271,13 +271,13 @@ feature {NONE} -- Implementation
 	refresh
 			-- Refresh the displayed values.
 		local
-			l_sorted_list: ARRAYED_LIST [READABLE_STRING_GENERAL]
+			l_sorted_list: ARRAYED_LIST [READABLE_STRING_32]
 			l_class_item, l_feat_item: EV_TREE_ITEM
-			l_class: READABLE_STRING_GENERAL
+			l_class: READABLE_STRING_32
 			l_vis_name: READABLE_STRING_32
-			l_feat_name: READABLE_STRING_GENERAL
+			l_feat_name: READABLE_STRING_32
 			l_cur_class: BOOLEAN
-			l_sorter: QUICK_SORTER [READABLE_STRING_GENERAL]
+			l_sorter: QUICK_SORTER [READABLE_STRING_32]
 		do
 			tree.wipe_out
 			if attached value as l_value then
@@ -291,7 +291,7 @@ feature {NONE} -- Implementation
 					l_sorted_list.extend (l_value.key_for_iteration)
 					l_value.forth
 				end
-				create l_sorter.make (create {COMPARABLE_COMPARATOR [READABLE_STRING_GENERAL]})
+				create l_sorter.make (create {COMPARABLE_COMPARATOR [READABLE_STRING_32]})
 				l_sorter.sort (l_sorted_list)
 
 				from
@@ -364,7 +364,7 @@ invariant
 	elements: is_initialized implies tree /= Void and original_name /= Void and renamed_name /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2020, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2021, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

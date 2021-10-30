@@ -1,6 +1,4 @@
-note
-	description: "Summary description for {PACKAGE_SCAN_VISITOR}."
-	author: ""
+﻿note
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -37,7 +35,7 @@ feature -- Visitor
 			create l_scanner.make
 			l_scanner.process_directory (p)
 			across l_scanner.items as ic loop
-				visit_ecf_file (ic.item)
+				visit_ecf_file (ic)
 			end
 		end
 
@@ -48,12 +46,12 @@ feature -- Visitor
 			create l_scanner.make_with_depth (a_max_depth)
 			l_scanner.process_directory (p)
 			across l_scanner.items as ic loop
-				visit_ecf_file (ic.item)
+				visit_ecf_file (ic)
 			end
 		end
 
 note
-	copyright: "Copyright (c) 1984-2013, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2021, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software
@@ -62,4 +60,5 @@ note
 			Website http://www.eiffel.com
 			Customer support http://support.eiffel.com
 		]"
+
 end

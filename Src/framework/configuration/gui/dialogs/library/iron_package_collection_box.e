@@ -298,7 +298,7 @@ feature -- Basic operations
 						api.repositories as ic
 					loop
 						i := i + 1
-						repos.set_item (1, i, create {EV_GRID_LABEL_ITEM}.make_with_text (ic.item.location_string))
+						repos.set_item (1, i, create {EV_GRID_LABEL_ITEM}.make_with_text (ic.location_string))
 					end
 				end
 				repos.set_minimum_height (i.min (5).max (1) *  repos.row_height)
@@ -311,7 +311,7 @@ feature -- Basic operations
 					create l_names.make_caseless (l_packages.count)
 					i := 0
 					across l_packages as ic loop
-						l_package := ic.item.value
+						l_package := ic.value
 						i := i + 1
 						l_row := g.row (i)
 						l_row.set_data (l_package)
@@ -321,7 +321,7 @@ feature -- Basic operations
 							l_names.put (l_package, l_package.identifier)
 							build_row (l_row, Void)
 						end
-						if ic.item.score_is_zero then
+						if ic.score_is_zero then
 							l_row.hide
 						else
 							l_row.show
@@ -352,7 +352,7 @@ feature -- Basic operations
 				across
 					lst as ic
 				loop
-					Result.force (create {SCORED_VALUE [IRON_PACKAGE]}.make (ic.item, 1.0))
+					Result.force (create {SCORED_VALUE [IRON_PACKAGE]}.make (ic, 1.0))
 				end
 			end
 		end
@@ -455,7 +455,7 @@ feature -- Basic operations
 						if not t.is_empty then
 							t.append_character (',')
 						end
-						t.append (tags_ic.item)
+						t.append (tags_ic)
 					end
 					s.append (t)
 					s.append_character (' ')
@@ -591,7 +591,7 @@ feature -- Events
 		end
 
 note
-	copyright: "Copyright (c) 1984-2020, Eiffel Software"
+	copyright: "Copyright (c) 1984-2021, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

@@ -192,7 +192,7 @@ feature {NONE} -- Implementation
 				across
 					l_targets as ic
 				loop
-					ic.item.remove_parent
+					ic.remove_parent
 				end
 			end
 			l_parent_tree := parent_tree
@@ -203,7 +203,7 @@ feature {NONE} -- Implementation
 					across
 						l_targets as ic
 					loop
-						configuration_window.add_target_sections (ic.item, l_parent)
+						configuration_window.add_target_sections (ic, l_parent)
 					end
 				end
 			end
@@ -254,7 +254,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2020, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2021, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

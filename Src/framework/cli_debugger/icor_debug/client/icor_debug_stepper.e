@@ -1,10 +1,10 @@
-note
+﻿note
 	description: "[
-		NOTA:
-			typedef struct
-			{
-			   ULONG32 startOffset, endOffset;
-			} COR_DEBUG_STEP_RANGE;
+			NOTA:
+				typedef struct
+				{
+				   ULONG32 startOffset, endOffset;
+				} COR_DEBUG_STEP_RANGE;
 		]"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -63,7 +63,7 @@ feature {ICOR_EXPORTER} -- Access
 			--|          INTERCEPT_INTERCEPTION        = 0x10,
 			--|          INTERCEPT_ALL                 = 0xffff
 			--|    } CorDebugIntercept;
-     	do
+		do
 			last_call_success := cpp_set_intercept_mask (item, a_mask)
 		end
 
@@ -83,14 +83,14 @@ feature {ICOR_EXPORTER} -- Access
 			--|
 			--| STOP_UNMANAGED is only valid w/ interop debugging.
 			--|
-     	do
+		do
 			last_call_success := cpp_set_unmapped_stop_mask (item, a_mask)
 		end
 
 	step (a_b_step_in: BOOLEAN)
 		do
 			debug ("debugger_eifnet_data")
-				io.error.put_string ("[enter] ICOR_DEBUG_STEPPER.Step ("+a_b_step_in.out+") %N")
+				io.error.put_string ("[enter] ICOR_DEBUG_STEPPER.Step (" + a_b_step_in.out + ") %N")
 			end
 			last_call_success := cpp_step (item, a_b_step_in.to_integer)
 		ensure
@@ -121,10 +121,10 @@ feature {ICOR_EXPORTER} -- Access
 			l_size: INTEGER
 		do
 			debug ("debugger_eifnet_data")
-				io.error.put_string ("[enter] ICOR_DEBUG_STEPPER.StepRange ("+a_b_step_in.out+") %N")
+				io.error.put_string ("[enter] ICOR_DEBUG_STEPPER.StepRange (" + a_b_step_in.out + ") %N")
 			end
 
-			--| create table of 'a_ranges.count' struct COR_DEBUG_STEP_RANGE |--
+				--| create table of 'a_ranges.count' struct COR_DEBUG_STEP_RANGE |--
 			l_size := sizeof_COR_DEBUG_STEP_RANGE
 			create l_mp_ranges.make (a_ranges.count * l_size)
 			from
@@ -132,14 +132,14 @@ feature {ICOR_EXPORTER} -- Access
 			until
 				i > a_ranges.upper
 			loop
-				l_item := a_ranges @ i
+				l_item := a_ranges [i]
 
-				--| Get address of the struct COR_DEBUG_STEP_RANGE |--
+					--| Get address of the struct COR_DEBUG_STEP_RANGE |--
 				l_struct_ptr := l_mp_ranges.item + ((i - a_ranges.lower) * l_size)
 
-				--| Set value of Struct |--
+					--| Set value of Struct |--
 				set_struct_start_offset (l_struct_ptr, l_item.left.as_natural_32)
-				set_struct_end_offset   (l_struct_ptr, l_item.right.as_natural_32)
+				set_struct_end_offset (l_struct_ptr, l_item.right.as_natural_32)
 
 				i := i + 1
 			end
@@ -290,18 +290,18 @@ feature -- enum CorDebugIntercept
 
 feature -- enum CorDebugUnmappedStop
 
-	--|    typedef enum CorDebugUnmappedStop
-	--|    {
-	--|        STOP_NONE               = 0x0,
-	--|        STOP_PROLOG             = 0x01,
-	--|        STOP_EPILOG             = 0x02,
-	--|        STOP_NO_MAPPING_INFO    = 0x04,
-	--|        STOP_OTHER_UNMAPPED     = 0x08,
-	--|        STOP_UNMANAGED          = 0x10,
-	--|
-	--|        STOP_ALL                = 0xffff,
-	--|
-	--|    } CorDebugUnmappedStop;
+		--|    typedef enum CorDebugUnmappedStop
+		--|    {
+		--|        STOP_NONE               = 0x0,
+		--|        STOP_PROLOG             = 0x01,
+		--|        STOP_EPILOG             = 0x02,
+		--|        STOP_NO_MAPPING_INFO    = 0x04,
+		--|        STOP_OTHER_UNMAPPED     = 0x08,
+		--|        STOP_UNMANAGED          = 0x10,
+		--|
+		--|        STOP_ALL                = 0xffff,
+		--|
+		--|    } CorDebugUnmappedStop;
 
 	frozen enum_cor_debug_unmapped_stop__stop_none: INTEGER
 		external
@@ -389,9 +389,9 @@ feature {NONE} -- External Struct implementation
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
-	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
-	licensing_options:	"http://www.eiffel.com/licensing"
+	copyright: "Copyright (c) 1984-2021, Eiffel Software"
+	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
+	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[
 			This file is part of Eiffel Software's Eiffel Development Environment.
 			
@@ -402,23 +402,22 @@ note
 			(available at the URL listed under "license" above).
 			
 			Eiffel Software's Eiffel Development Environment is
-			distributed in the hope that it will be useful,	but
+			distributed in the hope that it will be useful, but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
-			See the	GNU General Public License for more details.
+			See the GNU General Public License for more details.
 			
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,
-			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
+			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 		]"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
-end -- class ICOR_DEBUG_STEPPER
-
+end

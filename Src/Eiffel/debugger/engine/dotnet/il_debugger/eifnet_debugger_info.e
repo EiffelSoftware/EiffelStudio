@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "Objects that represents the dotnet debugger information"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -98,21 +98,21 @@ feature -- Current CallStack
 			--
 		local
 			l_mod: ICOR_DEBUG_MODULE
-			l_cn: STRING
-			l_fn: STRING
+			l_cn: STRING_32
+			l_fn: STRING_32
 		do
 			debug ("debugger_trace_callstack")
-				if current_stack_info.current_module_name = Void then
+				if not attached current_stack_info.current_module_name as m then
 					print ("Callback: current stack stack info : EMPTY%N")
 				else
 					print ("Callback: current stack stack info :%N")
-					l_mod := icor_debug_module (current_stack_info.current_module_name)
+					l_mod := icor_debug_module (m)
 					l_cn := l_mod.md_type_name (current_stack_info.current_class_token)
 					l_fn := l_mod.md_member_name (current_stack_info.current_feature_token)
 					print ("   ~ Depth = " + current_stack_info.current_stack_pseudo_depth.out + "%N")
-					print ("   Module  = " + current_stack_info.current_module_name + "%N")
-					print ("   Class   = " + l_cn + " : " + current_stack_info.current_class_token.to_hex_string + "%N")
-					print ("   Feature = " + l_fn + " : " + current_stack_info.current_feature_token.to_hex_string + "%N")
+					io.put_string_32 ({STRING_32} "   Module  = " + m + "%N")
+					io.put_string_32 ({STRING_32} "   Class   = " + l_cn + " : " + current_stack_info.current_class_token.to_hex_string + "%N")
+					io.put_string_32 ({STRING_32} "   Feature = " + l_fn + " : " + current_stack_info.current_feature_token.to_hex_string + "%N")
 					print ("   Offset  = 0x" + current_stack_info.current_il_offset.to_hex_string + "%N")
 				end
 			end
@@ -199,7 +199,7 @@ feature -- Current CallStack
 							l_curr_stk_info.set_current_stack_address      (create {DBG_ADDRESS}.make_from_natural_64 (l_code.get_address))
 
 							debug("debugger_trace_callback")
-								io.error.put_string (generator + ".init_current_callstack: "
+								io.error.put_string_32 (generator.as_string_32 + ".init_current_callstack: "
 									+ " chain: " + l_chain.get_reason_to_string
 									+ " frame: " + l_il_frame.last_cordebugmapping_result_to_string
 									+ "%N  ->"
@@ -702,13 +702,13 @@ feature {NONE} -- COM Object
 
 feature -- JIT notification
 
-	notify_new_module (a_mod_key: STRING)
+	notify_new_module (a_mod_key: READABLE_STRING_GENERAL)
 			-- Notify new module loading.
 		do
 			notify_new_module_for_breakpoints (a_mod_key)
 		end
 
-	refresh_breakpoints_on_module (a_module: ICOR_DEBUG_MODULE; a_mod_key: STRING)
+	refresh_breakpoints_on_module (a_module: ICOR_DEBUG_MODULE; a_mod_key: STRING_32)
 		do
 			refresh_module_for_breakpoints (a_module, a_mod_key)
 		end
@@ -983,7 +983,7 @@ feature -- JIT Module
 			debug ("debugger_trace_eifnet")
 				l_module_key_name_tail := l_module_key_name.twin
 				l_module_key_name_tail.keep_tail (30)
-				io.error.put_string ("Load module [.. " + l_module_key_name_tail + "]%N")
+				io.error.put_string_32 ({STRING_32} "Load module [.. " + l_module_key_name_tail + "]%N")
 			end
 
 			if not il_debug_info_recorder.has_info_about_module (l_module_key_name) then
@@ -1004,7 +1004,7 @@ feature -- JIT Module
 
 feature {EIFNET_DEBUGGER_INFO_ACCESSOR} -- JIT info implementation
 
-	resolved_module_key (a_module_name: STRING_32): STRING_32
+	resolved_module_key (a_module_name: READABLE_STRING_32): STRING_32
 			-- module name formatted to be a key
 		do
 --| NOTA JFIAT: in case module comes from the GAC, we need to identify it
@@ -1012,7 +1012,7 @@ feature {EIFNET_DEBUGGER_INFO_ACCESSOR} -- JIT info implementation
 --| and used only for Breakpoint in class contained inside the module from GAC
 			Result := il_debug_info_recorder.resolved_module_key (a_module_name)
 			debug ("debugger_trace_eifnet")
-				io.error.put_string ("Module name key (internal table building):%N (1) " + {UTF_CONVERTER}.utf_32_string_to_utf_8_string_8 (a_module_name) + "%N (2) " + Result + "%N")
+				io.error.put_string_32 ({STRING_32} "Module name key (internal table building):%N (1) " + a_module_name + "%N (2) " + Result + "%N")
 			end
 		end
 
@@ -1138,7 +1138,7 @@ invariant
 	loaded_managed_threads_not_void: loaded_managed_threads /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2020, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2021, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
@@ -1169,5 +1169,4 @@ note
 			Customer support http://support.eiffel.com
 		]"
 
-end -- class EIFNET_DEBUGGER_INFO
-
+end

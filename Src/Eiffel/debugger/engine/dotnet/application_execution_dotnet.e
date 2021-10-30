@@ -1,9 +1,9 @@
-note
-	description	: "Controls execution of dotnet debugged application."
+﻿note
+	description: "Controls execution of dotnet debugged application."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
-	date		: "$Date$"
-	revision	: "$Revision $"
+	date: "$Date$"
+	revision: "$Revision $"
 
 class
 	APPLICATION_EXECUTION_DOTNET
@@ -77,7 +77,7 @@ feature {APPLICATION_EXECUTION} -- Initialization
 			Eifnet_debugger.init
 			update_keep_stepping_into_dotnet_feature
 
-			agent_update_notify_on_after_stopped :=	agent real_update_notify_on_after_stopped
+			agent_update_notify_on_after_stopped := agent real_update_notify_on_after_stopped
 		end
 
 	update_keep_stepping_into_dotnet_feature
@@ -127,7 +127,7 @@ feature {EIFNET_DEBUGGER, EIFNET_EXPORTER} -- Trigger eStudio done
 					then
 						on_application_paused
 
-						if Eifnet_debugger.managed_callback_is_exit_process (cb_id) then --| Exit Process |--	
+						if Eifnet_debugger.managed_callback_is_exit_process (cb_id) then --| Exit Process |--
 							notify_execution_on_exit_process
 						elseif Eifnet_debugger.info.debugger_error_occurred then
 							notify_execution_on_debugger_error
@@ -140,7 +140,7 @@ feature {EIFNET_DEBUGGER, EIFNET_EXPORTER} -- Trigger eStudio done
 					then
 						notify_evaluation_done
 					else
-						--| do_nothing
+							--| do_nothing
 					end
 				end
 				Eifnet_debugger.set_callback_notification_processing (False)
@@ -157,7 +157,7 @@ feature {EIFNET_DEBUGGER, EIFNET_EXPORTER} -- Trigger eStudio done
 			retry
 		end
 
-feature {DEBUGGER_EXPORTER, EIFNET_EXPORTER}  -- Trigger eStudio status
+feature {DEBUGGER_EXPORTER, EIFNET_EXPORTER} -- Trigger eStudio status
 
 	callback_notification_processing: BOOLEAN
 			-- Is inside callback notification processing ?
@@ -247,7 +247,7 @@ feature -- Execution
 		do
 			reload_dotnet_debug_info_if_needed
 			if il_debug_info_recorder.entry_point_feature_i = Void then
-				--| No entry point .. this is not an executable system
+					--| No entry point .. this is not an executable system
 			else
 				Eifnet_debugger.initialize_debugger_session (debugger_manager.windows_handle)
 				if Eifnet_debugger.is_debugging then
@@ -316,7 +316,7 @@ feature -- Execution
 					print ("IsRunning :: " + Eifnet_debugger.icor_debug_controller.is_running.out + "%N")
 				end
 
-				--| Here debugger may not be synchronized |--
+					--| Here debugger may not be synchronized |--
 				Eifnet_debugger.reset_current_callstack
 				Eifnet_debugger.init_current_callstack
 				debug ("debugger_eifnet_data_extra")
@@ -408,7 +408,7 @@ feature -- Remote access to RT_
 			-- Return the remote rt_object
 		do
 			if
-			 	attached system.rt_extension_class as cl and then
+				attached system.rt_extension_class as cl and then
 				attached remote_rt_object_icd_value as icdv and then
 				attached {EIFNET_DEBUG_REFERENCE_VALUE} debug_value_from_icdv (icdv, cl.compiled_class) as ref
 			then
@@ -425,8 +425,8 @@ feature -- Remote access to RT_
 			args: ARRAY [ICOR_DEBUG_VALUE]
 			i_ref, i_fn: ICOR_DEBUG_VALUE
 		do
-			--| This is optimization for dotnet
-			--| do not call Precursor
+				--| This is optimization for dotnet
+				--| do not call Precursor
 			if attached {EIFNET_ABSTRACT_DEBUG_VALUE} kept_object_item (oa) as dv then
 				if attached {EIFNET_ABSTRACT_DEBUG_VALUE} remote_rt_object as rto then
 					icdf := rto.icd_value_info.value_icd_function ("saved_object_to")
@@ -454,8 +454,8 @@ feature -- Remote access to RT_
 			args: ARRAY [ICOR_DEBUG_VALUE]
 			i_ref, i_fn: ICOR_DEBUG_VALUE
 		do
-			--| This is optimization for dotnet
-			--| do not call Precursor
+				--| This is optimization for dotnet
+				--| do not call Precursor
 			if attached {EIFNET_ABSTRACT_DEBUG_VALUE} remote_rt_object as rto then
 				icdv := rto.icd_referenced_value
 				icdf := rto.icd_value_info.value_icd_function ("object_loaded_from")
@@ -542,22 +542,22 @@ feature -- Remote access to Exceptions
 					if attached {ABSTRACT_REFERENCE_VALUE} eiffel_wrapper_exception (icdv) as wrap then
 						create Result.make_with_value (wrap)
 					else
-						--| should not occur but:
-						--| Met this case on dotnet 2.0 when there is a missing dll
-						--| cf. bug#14258
+							--| should not occur but:
+							--| Met this case on dotnet 2.0 when there is a missing dll
+							--| cf. bug#14258
 						create Result.make_without_any_value
 					end
 					if attached {ABSTRACT_REFERENCE_VALUE} debug_value_from_icdv (icdv, Void) as val then
 						check Result_not_void: Result /= Void end
-						if attached eifnet_debugger.exception_class_name (val) as s8 then
-							Result.set_exception_others (s8, {APPLICATION_STATUS_DOTNET}.exception_il_type_name_key)
+						if attached eifnet_debugger.exception_class_name (val) as s then
+							Result.set_exception_others (s, {APPLICATION_STATUS_DOTNET}.exception_il_type_name_key)
 							if not Result.has_value then
-								--| Let's use the il type name as meaning
-								Result.set_user_meaning (s8)
+									--| Let's use the il type name as meaning
+								Result.set_user_meaning (s)
 							end
 						end
 						if not Result.has_value and then attached eifnet_debugger.exception_text (val) as s32 then
-							--| Let's use the il exception text
+								--| Let's use the il exception text
 							Result.set_user_text (s32)
 						end
 					end
@@ -621,7 +621,7 @@ feature {NONE} -- Assertion change Implementation
 			Result := eifnet_debugger.check_assert_on_debuggee (b)
 		end
 
-feature {NONE} -- Assertion violation processing		
+feature {NONE} -- Assertion violation processing
 
 	impl_ignore_current_assertion_violation (b: BOOLEAN)
 			-- <Precursor/>
@@ -651,7 +651,6 @@ feature {NONE} -- Assertion violation processing
 				end
 			end
 		end
-
 
 feature {APPLICATION_EXECUTION} -- Launching status
 
@@ -731,7 +730,7 @@ feature -- Query
 							--| then the once is Called
 							--| but the once's data are not yet initialized and set
 							--| then the once' value is not yet available
-						create err_dv.make_with_name  (l_feat.feature_name)
+						create err_dv.make_with_name (l_feat.feature_name)
 						err_dv.set_message ("Could not retrieve information (once is being called)")
 						err_dv.set_display_kind (Void_value)
 						if l_feat.is_function then
@@ -742,7 +741,7 @@ feature -- Query
 						odv := err_dv
 					end
 				else
-					create err_dv.make_with_name  (l_feat.feature_name)
+					create err_dv.make_with_name (l_feat.feature_name)
 					err_dv.set_message ("Once feature " + l_feat.feature_name + ": Could not get information")
 					if l_feat.is_function then
 						err_dv.set_display_kind (Void_value)
@@ -805,7 +804,7 @@ feature -- Query
 						--| then the once is Called
 						--| but the once's data are not yet initialized and set
 						--| then the once' value is not yet available
-					create err_dv.make_with_name  (a_feat.feature_name)
+					create err_dv.make_with_name (a_feat.feature_name)
 					err_dv.set_message ("Could not retrieve information (once is being called)")
 					err_dv.set_display_kind (Void_value)
 					if a_feat.is_function then
@@ -836,7 +835,7 @@ feature -- Query
 			end
 		end
 
-	get_exception_value_details	(e: EXCEPTION_DEBUG_VALUE; a_details_level: INTEGER)
+	get_exception_value_details (e: EXCEPTION_DEBUG_VALUE; a_details_level: INTEGER)
 			-- Get Exception details
 		local
 			tn: STRING_32
@@ -870,7 +869,7 @@ feature -- Query
 							e.set_exception_others (tn, k)
 						end
 					end
-						--| Eiffel Type name			
+						--| Eiffel Type name
 					if e.exception_type_name = Void then
 						e.set_exception_type_name (cl.name_in_upper)
 						if tn /= Void and e.exception_type_name = Void then
@@ -893,7 +892,7 @@ feature -- Query
 						if e.exception_meaning = Void then
 							s32 := string_field_evaluation_on (val, edv, cl, "meaning")
 							if (s32 = Void or else s32.is_empty) and tn /= Void then
-								e.set_exception_meaning (e.exception_type_name)  --| IL Type name							
+								e.set_exception_meaning (e.exception_type_name) --| IL Type name
 							else
 								e.set_exception_meaning (s32) --| s32 can be Void
 							end
@@ -1033,8 +1032,8 @@ feature {NONE} -- Stepping
 				(l_status.e_feature /= Void)
 				and then (l_status.break_index = l_status.e_feature.number_of_breakpoint_slots)
 			then
-				--| This is an optimisation when we are at the end of a routine
-				--| End of feature, go out ...
+					--| This is an optimisation when we are at the end of a routine
+					--| End of feature, go out ...
 				raw_step_out
 			else
 				Eifnet_debugger.set_last_control_mode_is_next
@@ -1063,7 +1062,7 @@ feature {NONE} -- Stepping
 			curr_il_offset: INTEGER
 			csed: CALL_STACK_ELEMENT_DOTNET
 			do_not_use_range: BOOLEAN
-			l_ranges:  ARRAY [TUPLE [INTEGER, INTEGER]]
+			l_ranges: ARRAY [TUPLE [INTEGER, INTEGER]]
 			l_origin_cc: CLASS_C
 			l_impl_ct: CLASS_TYPE
 		do
@@ -1081,7 +1080,7 @@ feature {NONE} -- Stepping
 					if csed /= Void then
 						curr_il_offset := csed.il_offset
 						debug ("debugger_trace_stepping")
-							print (" ### Current IL OffSet = 0x"+curr_il_offset.to_hex_string+" ~ "+curr_il_offset.out+" %N")
+							print (" ### Current IL OffSet = 0x" + curr_il_offset.to_hex_string + " ~ " + curr_il_offset.out + " %N")
 						end
 						l_impl_ct := csed.dynamic_type
 						l_origin_cc := csed.written_class
@@ -1090,10 +1089,10 @@ feature {NONE} -- Stepping
 						end
 
 						l_ranges := Il_debug_info_recorder.next_feature_breakable_il_range_for (
-										l_impl_ct,
-										csed.routine.associated_feature_i,
-										curr_il_offset
-										)
+									l_impl_ct,
+									csed.routine.associated_feature_i,
+									curr_il_offset
+								)
 					end
 					if l_ranges /= Void then
 						debug ("debugger_trace_stepping")
@@ -1102,7 +1101,7 @@ feature {NONE} -- Stepping
 						Eifnet_debugger.do_step_range (a_bstep_in, l_ranges)
 					else
 						debug ("debugger_trace_stepping")
-							print ("[>] Go out of routine (from "+curr_il_offset.to_hex_string+")%N")
+							print ("[>] Go out of routine (from " + curr_il_offset.to_hex_string + ")%N")
 						end
 						Eifnet_debugger.do_step_out
 --						Eifnet_debugger.do_step_range (a_bstep_in, <<[0 , curr_il_offset]>>)
@@ -1130,7 +1129,7 @@ feature -- Breakpoints controller
 				end
 				inspect a_execution_mode
 				when {EXEC_MODES}.Run then
-					-- do nothing
+						-- do nothing
 					Precursor (a_execution_mode, ign_bp)
 				else
 					l_entry_fi := Il_debug_info_recorder.entry_point_feature_i
@@ -1254,8 +1253,8 @@ feature {NONE} -- Implementation
 
 			l_class_c := f.written_class
 
-			l_str.append_string ("%N%T Associated class="+ f.associated_class.name_in_upper + "%T")
-			l_str.append_string ("%N%T Written class="+ f.written_class.name_in_upper )
+			l_str.append_string ("%N%T Associated class=" + f.associated_class.name_in_upper + "%T")
+			l_str.append_string ("%N%T Written class=" + f.written_class.name_in_upper)
 
 			if l_class_c /= Void then
 				l_str.append_string ("%N%T class id=" + l_class_c.class_id.out + " [" + l_class_c.name_in_upper)
@@ -1288,7 +1287,7 @@ feature {NONE} -- Implementation
 				l_str.append_string ("]")
 				l_str.append_string ("%N")
 
-				l_str.append_string ("%T module_name="+ {UTF_CONVERTER}.utf_32_string_to_utf_8_string_8 (Il_debug_info_recorder.module_file_name_for_class (l_class_c).name))
+				l_str.append_string ("%T module_name=" + {UTF_CONVERTER}.utf_32_string_to_utf_8_string_8 (Il_debug_info_recorder.module_file_name_for_class (l_class_c).name))
 			end
 
 			print (l_str)
@@ -1310,8 +1309,8 @@ feature {NONE} -- Events on notification
 	notify_execution_on_exit_process
 			-- Notify the system is exiting
 		do
-			--| We need to stop
-			--| Already "stopped" but let's be sure ..
+				--| We need to stop
+				--| Already "stopped" but let's be sure ..
 
 			status.set_is_stopped (True)
 			Eifnet_debugger.on_exit_process
@@ -1324,12 +1323,12 @@ feature {NONE} -- Events on notification
 			l_err_msg: STRING
 			dbg_info: EIFNET_DEBUGGER_INFO
 		do
-			--| We need to stop
-			--| Already "stopped" but let's be sure ..
+				--| We need to stop
+				--| Already "stopped" but let's be sure ..
 			dbg_info := Eifnet_debugger.info
 			l_err_msg := "The dotnet debugger has encountered a fatal error.%N"
-						+ " - error_hr   = 0x" + dbg_info.debugger_error_hr.to_hex_string + "%N"
-						+ " - error_code = 0x" + dbg_info.debugger_error_code.to_hex_string + "%N"
+				+ " - error_hr   = 0x" + dbg_info.debugger_error_hr.to_hex_string + "%N"
+				+ " - error_code = 0x" + dbg_info.debugger_error_code.to_hex_string + "%N"
 
 			debugger_manager.debugger_warning_message (l_err_msg)
 
@@ -1346,7 +1345,7 @@ feature {NONE} -- Events on notification
 		do
 			debug ("debugger_trace")
 				print ("%N*** REASON TO STOP *** %N")
-				print ("%T Callback = " + Eifnet_debugger.managed_callback_name (cb_id) +"%N")
+				print ("%T Callback = " + Eifnet_debugger.managed_callback_name (cb_id) + "%N")
 			end -- debug
 			dbg_info := Eifnet_debugger.info
 
@@ -1355,7 +1354,7 @@ feature {NONE} -- Events on notification
 
 				--| on top of the stack = current stack/feature
 			set_current_execution_stack_number (1)
-			-- FIXME jfiat: we should point to the first Eiffel Call Stack ...
+				-- FIXME jfiat: we should point to the first Eiffel Call Stack ...
 
 				--| We need to stop
 				--| Already "stopped" but let's be sure ..
@@ -1467,7 +1466,7 @@ feature {NONE} -- Events on notification
 			if l_icd_func_bp /= Void then
 				print ("%T   - Offset = " + l_icd_func_bp.get_offset.out + "%N")
 				l_function := l_icd_func_bp.get_function
-				print ("%T   - Function = " + l_function.to_string + "%N")
+				io.put_string_32 ({STRING_32} "%T   - Function = " + l_function.to_string + "%N")
 			end
 		end
 
@@ -1535,7 +1534,7 @@ feature -- Call stack related
 
 			l_class_type: CLASS_TYPE
 			l_class_name: STRING
-			l_feature_i : FEATURE_I
+			l_feature_i: FEATURE_I
 			l_feature_name: STRING
 
 			l_eiffel_bp_slot: INTEGER
@@ -1544,7 +1543,7 @@ feature -- Call stack related
 		do
 			create l_output.make (100)
 			if a_frame = Void then
-				--| FIXME: JFIAT
+					--| FIXME: JFIAT
 				l_output := "Debugger not synchronized => no information available%N"
 			else
 				l_frame_il := a_frame.query_interface_icor_debug_il_frame
@@ -1567,32 +1566,32 @@ feature -- Call stack related
 					if l_class_type /= Void then
 						l_class_name := l_class_type.associated_class.name_in_upper
 					else
-						l_class_name := "<?"+ l_class_token.out + "?>"
+						l_class_name := "<?" + l_class_token.out + "?>"
 					end
 					if l_feature_i /= Void then
 						l_feature_name := Il_debug_info_recorder.feature_i_by_module_feature_token (l_module_name, l_feature_token).feature_name
 					else
-						l_feature_name := "<?"+ l_feature_token.out + "?>"
+						l_feature_name := "<?" + l_feature_token.out + "?>"
 					end
 
 					if l_class_type /= Void and then l_feature_i /= Void then
 						l_il_offset := l_frame_il.get_ip_as_integer_32
 						l_mapping := l_frame_il.last_cordebugmapping_result_to_string
-						l_eiffel_bp_slot := Il_debug_info_recorder.feature_eiffel_breakable_line_for_il_offset(l_class_type, l_feature_i, l_il_offset)
+						l_eiffel_bp_slot := Il_debug_info_recorder.feature_eiffel_breakable_line_for_il_offset (l_class_type, l_feature_i, l_il_offset)
 						l_output.append_string ("  + <"
-							+ l_eiffel_bp_slot.out
-							+ " | "
-							+ l_il_offset.out + ":0x" + l_il_offset.to_hex_string + "> "
-							+ "(mapping=" + l_mapping + ")"
-							+ l_class_name + "." + l_feature_name + "%N"
-							+ "%T0x"+l_class_token.to_hex_string
-							+ " :: 0x"+ l_feature_token.to_hex_string
-							+ "%N%T Module=" + l_module_display
+								+ l_eiffel_bp_slot.out
+								+ " | "
+								+ l_il_offset.out + ":0x" + l_il_offset.to_hex_string + "> "
+								+ "(mapping=" + l_mapping + ")"
+								+ l_class_name + "." + l_feature_name + "%N"
+								+ "%T0x" + l_class_token.to_hex_string
+								+ " :: 0x" + l_feature_token.to_hex_string
+								+ "%N%T Module=" + l_module_display
 							)
 
 						l_output.append_string ("%N")
 					else
-						l_output.append_string ("  - <"+ l_frame_il.get_ip.out + ":0x" + l_frame_il.get_ip.to_hex_string + "> ")
+						l_output.append_string ("  - <" + l_frame_il.get_ip.out + ":0x" + l_frame_il.get_ip.to_hex_string + "> ")
 						l_output.append_string (" [???] ")
 						if l_class_type /= Void then
 							l_output.append_string ("%T " + l_class_name)
@@ -1602,7 +1601,7 @@ feature -- Call stack related
 						end
 
 						l_output.append_string ("%N")
-						l_output.append_string ("%T0x" + l_class_token.to_hex_string )
+						l_output.append_string ("%T0x" + l_class_token.to_hex_string)
 						l_output.append_string (" :: 0x" + l_feature_token.to_hex_string)
 						l_output.append_string (" module=" + l_module_display + "%N")
 					end
@@ -1703,9 +1702,9 @@ feature {NONE} -- Constants for dotnet interactions
 			-- {EXCEPTION_MANAGER}.wrapped_exception feature name (for dotnet)
 
 ;note
-	copyright:	"Copyright (c) 1984-2021, Eiffel Software"
-	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
-	licensing_options:	"http://www.eiffel.com/licensing"
+	copyright: "Copyright (c) 1984-2021, Eiffel Software"
+	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
+	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[
 			This file is part of Eiffel Software's Eiffel Development Environment.
 			

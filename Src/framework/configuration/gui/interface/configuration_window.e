@@ -678,7 +678,7 @@ feature {NONE} -- Element initialization
 			across
 				top_targets (True) as ic
 			loop
-				add_target_sections (ic.item, section_tree)
+				add_target_sections (ic, section_tree)
 			end
 		ensure
 			section_tree_not_void: section_tree /= Void
@@ -689,7 +689,7 @@ feature -- Access / targets
 	container_has_target (a_container: ITERABLE [CONF_TARGET]; a_target: CONF_TARGET): BOOLEAN
 			-- Is `a_target` in `a_container`?
 		do
-			Result := across a_container as ic some a_target.same_as (ic.item) end
+			Result := across a_container as ic some a_target.same_as (ic) end
 		end
 
 	top_targets (a_remotes_targets_included: BOOLEAN): ARRAYED_LIST [CONF_TARGET]
@@ -702,7 +702,7 @@ feature -- Access / targets
 			across
 				conf_system.target_order as ic
 			loop
-				t := top_parent (ic.item)
+				t := top_parent (ic)
 				if container_has_target (Result, t) then
 						-- Skip
 				else
@@ -710,7 +710,7 @@ feature -- Access / targets
 				end
 			end
 		ensure
-			across Result as ic all (ic.item.extends = Void or is_remote_target (ic.item)) end
+			across Result as ic all (ic.extends = Void or is_remote_target (ic)) end
 		end
 
 	top_parent (a_target: CONF_TARGET): CONF_TARGET
@@ -757,7 +757,7 @@ feature -- Access / targets
 				across
 					conf_system.target_order as ic
 				loop
-					t := ic.item
+					t := ic
 					if a_target.same_as (t.extends) then
 						Result.force (t)
 					elseif attached ordered_parents_until (t, a_target) as lst then
@@ -773,7 +773,7 @@ feature -- Access / targets
 				Result := a_target.child_targets
 			end
 		ensure
-			all_child_of_target: across Result as ic all a_target.same_as (ic.item.extends) end
+			all_child_of_target: across Result as ic all a_target.same_as (ic.extends) end
 		end
 
 	is_remote_target (a_target: CONF_TARGET): BOOLEAN
@@ -799,7 +799,7 @@ feature -- Access / targets
 				Result /= Void
 			loop
 				if
-					attached {REMOTE_TARGET_SECTION} ic.item as l_remote and then
+					attached {REMOTE_TARGET_SECTION} ic as l_remote and then
 					l_remote.target.same_as (a_target)
 				then
 					Result := l_remote
@@ -915,13 +915,13 @@ feature {NONE} -- Choice options
 						-- Erase preference mark.
 					is_default_preference := False
 				elseif attached inherited_option then
-					is_default_capability := inherited_option.index = i.target_index
+					is_default_capability := inherited_option.index = @ i.target_index
 					is_default_preference := is_default_capability
 				else
-					is_default_capability := option.default_index = i.target_index
+					is_default_capability := option.default_index = @ i.target_index
 					is_default_preference := is_default_capability
 				end
-				create check_button.make_with_text (i.item)
+				create check_button.make_with_text (i)
 				property_group.put_at_position (check_button, 2, row, 1, 1)
 					-- Mark current item as enabled default if needed.
 					-- TODO: replace pixmap with pixel buffer and use drawable to avoid cloning.
@@ -934,19 +934,19 @@ feature {NONE} -- Choice options
 						default_capability)
 				end
 					-- Indicate whether an value is checked.
-				if capability.is_capable (i.target_index.as_natural_8) then
+				if capability.is_capable (@ i.target_index.as_natural_8) then
 					check_button.enable_select
 				end
 					-- Last item is always checked.
-				if i.is_last then
+				if @ i.is_last then
 					check_button.disable_sensitive
 				else
 						-- Enable or disable current button depending on the state of a default button.
 					on_toggle (agent check_button.disable_sensitive, agent check_button.enable_sensitive, default_capability)
 						-- Enable or disable other capabilities and preferred buttons depending on the state of the current button.
 					on_toggle
-						(agent select_smaller_capabilities (option, i.target_index.as_natural_8, row, property_group, update_preferred_buttons),
-						agent unselect_larger_capabilities (option, i.target_index.as_natural_8, row, property_group, update_preferred_buttons),
+						(agent select_smaller_capabilities (option, @ i.target_index.as_natural_8, row, property_group, update_preferred_buttons),
+						agent unselect_larger_capabilities (option, @ i.target_index.as_natural_8, row, property_group, update_preferred_buttons),
 						check_button)
 				end
 				check_button.focus_in_actions.extend (update_description)
@@ -954,7 +954,7 @@ feature {NONE} -- Choice options
 				create radio_button -- .make_with_text (i.item)
 				property_group.put_at_position (radio_button, 4, row, 1, 1)
 				radio_button.focus_in_actions.extend (update_description)
-				radio_button.select_actions.extend (agent capability.put_root_index (i.target_index.as_natural_8))
+				radio_button.select_actions.extend (agent capability.put_root_index (@ i.target_index.as_natural_8))
 				row := row + 1
 			end
 				-- Update with current state.
@@ -1238,7 +1238,7 @@ feature {REMOTE_TARGET_SECTION, TARGET_SECTION, SYSTEM_SECTION} -- Target creati
 			across
 				child_targets_of (a_target) as ic
 			loop
-				add_target_sections (ic.item, l_parent)
+				add_target_sections (ic, l_parent)
 			end
 		end
 

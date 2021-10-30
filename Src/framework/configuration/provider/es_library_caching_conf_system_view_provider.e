@@ -1,5 +1,4 @@
 note
-	description: "Summary description for {ES_LIBRARY_CACHING_CONF_SYSTEM_VIEW_PROVIDER}."
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -13,7 +12,7 @@ inherit
 
 feature -- Access
 
-	libraries (a_query: detachable READABLE_STRING_GENERAL; a_target: CONF_TARGET): ARRAYED_LIST [ES_LIBRARY_PROVIDER_ITEM]
+	libraries (a_query: detachable READABLE_STRING_32; a_target: CONF_TARGET): ARRAYED_LIST [ES_LIBRARY_PROVIDER_ITEM]
 			-- Configuration system view objects indexed by location.
 		local
 			l_cache_id: READABLE_STRING_8
@@ -37,7 +36,7 @@ feature -- Access
 				across
 					scorer.scored_list (a_query, libs, False) as ic
 				loop
-					create i.make (ic.item.score, ic.item.value, ic.item.value.library_target_name)
+					create i.make (ic.score, ic.value, ic.value.library_target_name)
 					Result.extend (i)
 				end
 			else
@@ -45,7 +44,7 @@ feature -- Access
 				across
 					libs as ic
 				loop
-					create i.make (1.0, ic.item, ic.item.library_target_name)
+					create i.make (1.0, ic, ic.library_target_name)
 					Result.extend (i)
 				end
 			end
@@ -88,7 +87,7 @@ feature {NONE} -- Cache: implementation
 		end
 
 note
-	copyright: "Copyright (c) 1984-2016, Eiffel Software"
+	copyright: "Copyright (c) 1984-2021, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[
@@ -118,4 +117,5 @@ note
 			Website http://www.eiffel.com
 			Customer support http://support.eiffel.com
 		]"
+
 end

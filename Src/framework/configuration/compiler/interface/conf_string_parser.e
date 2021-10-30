@@ -148,20 +148,20 @@ feature {NONE} -- Search
 			across
 				boolean_options as ic
 			loop
-				Result.force (ic.item)
+				Result.force (ic)
 			end
 			across
 				known_settings as s
 			loop
-				if not Result.has (s.item) then
-					Result.force (s.item)
+				if not Result.has (s) then
+					Result.force (s)
 				end
 			end
 			across
 				known_capabilities as s
 			loop
-				if not Result.has (s.item) then
-					Result.force (s.item)
+				if not Result.has (s) then
+					Result.force (s)
 				end
 			end
 			;(create {QUICK_SORTER [like available_configuration_option_names.item]}.make
@@ -185,21 +185,21 @@ feature {NONE} -- Search
 			until
 				Result /= Void
 			loop
-				if c.item.count = l_name_count then
+				if c.count = l_name_count then
 					if is_value_case_sensitive then
-						l_found := c.item.same_characters (input, delimiter_index + 1, l_input_count, 1)
+						l_found := c.same_characters (input, delimiter_index + 1, l_input_count, 1)
 					else
-						l_found := c.item.same_caseless_characters (input, delimiter_index + 1, l_input_count, 1)
+						l_found := c.same_caseless_characters (input, delimiter_index + 1, l_input_count, 1)
 					end
 					if l_found then
-						Result := c.item.as_string_32
+						Result := c.as_string_32
 					end
 				end
 			end
 		end
 
 ;note
-	copyright:	"Copyright (c) 1984-2019, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2021, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

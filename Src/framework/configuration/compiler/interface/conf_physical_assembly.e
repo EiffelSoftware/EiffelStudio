@@ -341,8 +341,8 @@ feature -- Access queries
 				until
 					attached Result
 				loop
-					if d.item.name.same_string_general (a_name) then
-						Result := d.item
+					if d.name.same_string_general (a_name) then
+						Result := d
 					end
 				end
 			end

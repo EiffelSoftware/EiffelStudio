@@ -1,8 +1,6 @@
-note
-	description: "Objects that ..."
+﻿note
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
-	author: ""
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -35,7 +33,7 @@ feature {APPLICATION_STATUS_EXPORTER} -- Initialization
 			-- Set the various attributes identifying current
 			-- position in source code.
 		local
-			curr_mod_name: STRING
+			curr_mod_name: READABLE_STRING_32
 			curr_ctok, curr_ftok: NATURAL_32
 			curr_il_offset: INTEGER
 			dyn_ctype: CLASS_TYPE
@@ -311,4 +309,4 @@ feature {APPLICATION_EXECUTION_DOTNET} -- Constants
 			Customer support http://support.eiffel.com
 		]"
 
-end -- class APPLICATION_STATUS_DOTNET
+end

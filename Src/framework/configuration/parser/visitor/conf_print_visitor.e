@@ -233,19 +233,19 @@ feature -- Visit nodes
 			across
 				l_sorted_list as s
 			loop
-				if valid_setting (s.item, namespace) then
-					setting_value := l_settings.item (s.item)
+				if valid_setting (s, namespace) then
+					setting_value := l_settings.item (s)
 					if
 						not attached setting_value and then
-						boolean_settings.has (s.item) and then
-						is_boolean_setting_true (s.item, if attached namespace as n then n else latest_namespace end) /= is_boolean_setting_true (s.item, a_target.system.namespace)
+						boolean_settings.has (s) and then
+						is_boolean_setting_true (s, if attached namespace as n then n else latest_namespace end) /= is_boolean_setting_true (s, a_target.system.namespace)
 					then
 							-- The setting has a different default value in the current namespace.
-						setting_value := configuration_boolean_value (is_boolean_setting_true (s.item, a_target.system.namespace))
+						setting_value := configuration_boolean_value (is_boolean_setting_true (s, a_target.system.namespace))
 					end
 					if attached setting_value then
 						append_tag_open ({STRING_32} "setting")
-						append_text_attribute ("name", s.item)
+						append_text_attribute ("name", s)
 						append_text_attribute ("value", setting_value)
 						append_tag_close_empty
 					end
@@ -332,8 +332,8 @@ feature -- Visit nodes
 				a_target.internal_variables as v
 			loop
 				append_tag_open ({STRING_32} "variable")
-				append_text_attribute ("name", v.key)
-				append_text_attribute ("value", v.item)
+				append_text_attribute ("name", @ v.key)
+				append_text_attribute ("value", v)
 				append_tag_close_empty
 			end
 
@@ -444,7 +444,7 @@ feature -- Visit nodes
 						os as o
 					loop
 						append_tag_open ({STRING_32} "overrides")
-						append_text_attribute ("group", o.item.name)
+						append_text_attribute ("group", o.name)
 						append_tag_close_empty
 					end
 				end
@@ -480,7 +480,7 @@ feature {NONE} -- Implementation
 			across
 				l_sorted_list as i
 			loop
-				if attached a_groups.item (i.item) as l_grp then
+				if attached a_groups.item (i) as l_grp then
 					l_grp.process (Current)
 				end
 			end
@@ -724,12 +724,12 @@ feature {NONE} -- Implementation
 				across
 					v as i
 				loop
-					if not i.is_first then
+					if not @ i.is_first then
 							-- The first item is not preceded with any delimiter.
 							-- The second and next ones are preceded with a space.
 						append_text (once " ")
 					end
-					append_text_escaped (get_name.item ([i.item]).as_lower, False)
+					append_text_escaped (get_name.item ([i]).as_lower, False)
 				end
 				append_text ("%"")
 				append_tag_close_empty
@@ -764,7 +764,7 @@ feature {NONE} -- Implementation
 						append_tag_open ({STRING_32} "condition")
 						append_tag_close
 
-						l_condition := c.item
+						l_condition := c
 						if attached l_condition.platform as p then
 							append_condition_list (p, agent get_platform_name, {STRING_32} "platform")
 						end
@@ -803,9 +803,9 @@ feature {NONE} -- Implementation
 						across
 							l_condition.version as ic_versons
 						loop
-							l_ver := ic_versons.item
+							l_ver := ic_versons
 							append_tag_open ({STRING_32} "version")
-							append_text_attribute ("type", ic_versons.key)
+							append_text_attribute ("type", @ ic_versons.key)
 							if attached l_ver.min as l_ver_min then
 								append_text_attribute ("min", l_ver_min.version)
 							end
@@ -819,12 +819,12 @@ feature {NONE} -- Implementation
 							l_condition.custom as cc
 						loop
 							across
-								cc.item as value
+								cc as value
 							loop
 								append_tag_open (tag_custom)
-								append_text_attribute (att_name, cc.key)
-								flag := value.item
-								append_text_attribute (if flag.inverted then att_excluded_value else att_value end, value.key)
+								append_text_attribute (att_name, @ cc.key)
+								flag := value
+								append_text_attribute (if flag.inverted then att_excluded_value else att_value end, @ value.key)
 								if flag.is_match_set and then includes_this_or_after (namespace_1_18_0) then
 									append_text_attribute (att_match, match_value (flag.match_kind))
 								end
@@ -848,8 +848,8 @@ feature {NONE} -- Implementation
 					a_mapping as m
 				loop
 					append_tag_open ({STRING_32} "mapping")
-					append_text_attribute ("old_name", m.key)
-					append_text_attribute ("new_name", m.item)
+					append_text_attribute ("old_name", @ m.key)
+					append_text_attribute ("new_name", m)
 					append_tag_close_empty
 				end
 			end
@@ -868,7 +868,7 @@ feature {NONE} -- Implementation
 				across
 					an_externals as e
 				loop
-					l_ext := e.item
+					l_ext := e
 					append_tag_open (a_name)
 					append_text_attribute (a_value, l_ext.internal_location)
 					append_tag_close
@@ -898,7 +898,7 @@ feature {NONE} -- Implementation
 			across
 				an_actions as a
 			loop
-				l_action := a.item
+				l_action := a
 				append_tag_open (a_name)
 				if attached l_action.working_directory as l_wdir then
 					append_text_attribute ("working_directory", l_wdir.original_path)
@@ -922,7 +922,7 @@ feature {NONE} -- Implementation
 			across
 				a_file_rules as r
 			loop
-				l_rule := r.item
+				l_rule := r
 				if not l_rule.is_empty then
 					append_tag_open ({STRING_32} "file_rule")
 					append_tag_close
@@ -1109,8 +1109,8 @@ feature {NONE} -- Implementation
 					l_sorted_list as d
 				loop
 					append_tag_open ({STRING_32} "debug")
-					append_text_attribute ("name", d.item)
-					append_boolean_attribute ("enabled", l_debugs.item (d.item))
+					append_text_attribute ("name", d)
+					append_boolean_attribute ("enabled", l_debugs.item (d))
 					append_tag_close_empty
 				end
 			end
@@ -1151,7 +1151,7 @@ feature {NONE} -- Implementation
 			across
 				l_sorted_list as i
 			loop
-				w := i.item
+				w := i
 				if is_after_or_equal (namespace, namespace_1_21_0) and then w.same_string (w_obsolete_feature) then
 					append_tag_open ({STRING_32} "warning")
 					append_text_attribute (wa_name, w)
@@ -1198,14 +1198,14 @@ feature {NONE} -- Implementation
 			across
 				a_visible as v
 			loop
-				l_class := v.key
-				l_class_rename := v.item.class_renamed
-				if attached v.item.features as l_vis_feat then
+				l_class := @ v.key
+				l_class_rename := v.class_renamed
+				if attached v.features as l_vis_feat then
 					across
 						l_vis_feat as f
 					loop
-						l_feat := f.key
-						l_feat_rename := f.item
+						l_feat := @ f.key
+						l_feat_rename := f
 						if l_feat.same_string ("*") then
 							l_feat := Void
 						end
@@ -1286,8 +1286,8 @@ feature {NONE} -- Implementation
 					l_renaming as r
 				loop
 					append_tag_open ({STRING_32} "renaming")
-					append_text_attribute ("old_name", r.key)
-					append_text_attribute ("new_name", r.item)
+					append_text_attribute ("old_name", @ r.key)
+					append_text_attribute ("new_name", r)
 					append_tag_close_empty
 				end
 			end
@@ -1295,7 +1295,7 @@ feature {NONE} -- Implementation
 				across
 					l_c_opt as o
 				loop
-					append_class_options (o.item, o.key, is_own_source, is_own_capability)
+					append_class_options (o, @ o.key, is_own_source, is_own_capability)
 				end
 			end
 		end
@@ -1346,7 +1346,7 @@ feature {NONE} -- Implementation
 					g as gc
 				loop
 					append_tag_open ({STRING_32} "uses")
-					append_text_attribute ("group", gc.item.name)
+					append_text_attribute ("group", gc.name)
 					append_tag_close_empty
 				end
 			end
@@ -1360,7 +1360,7 @@ feature {NONE} -- Implementation
 					l_clusters as c
 				loop
 					current_is_subcluster := True
-					c.item.process (Current)
+					c.process (Current)
 				end
 			end
 		end
@@ -1388,8 +1388,8 @@ feature {NONE} -- Implementation
 				across
 					a_note.attributes as a
 				loop
-					if attached a.key as n and then not n.is_empty then
-						append_text_attribute (n, if attached a.item as v then v else once {STRING_32} "" end)
+					if attached @ a.key as n and then not n.is_empty then
+						append_text_attribute (n, if attached a as v then v else once {STRING_32} "" end)
 					end
 				end
 				if a_note.is_empty then

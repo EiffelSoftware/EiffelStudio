@@ -258,19 +258,19 @@ feature -- Element change
 					across
 						l_items as ic
 					loop
-						if ic.key.starts_with ("_") then
+						if @ ic.key.starts_with ("_") then
 								-- Ignore.
-						elseif ic.key.same_string ("description") then
+						elseif @ ic.key.same_string ("description") then
 								-- Already processed.
-						elseif not ic.key.is_empty then
+						elseif not @ ic.key.is_empty then
 							i := txt.text_length
-							txt.append_text (ic.key)
+							txt.append_text (@ ic.key)
 							j := txt.text_length + 1
 							txt.format_region (i + 1, j, keyword_text_format)
 
 							txt.append_text (":")
 							i := txt.text_length
-							txt.append_text (ic.item)
+							txt.append_text (ic)
 							txt.append_text ("%N")
 							j := txt.text_length + 1
 							txt.format_region (i + 1, j, description_text_format)
@@ -404,10 +404,8 @@ feature {NONE} -- Actions
 			end
 		end
 
-invariant
-
 note
-	copyright: "Copyright (c) 1984-2020, Eiffel Software"
+	copyright: "Copyright (c) 1984-2021, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

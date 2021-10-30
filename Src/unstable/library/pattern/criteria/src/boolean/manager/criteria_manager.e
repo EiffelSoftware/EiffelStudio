@@ -1,6 +1,4 @@
-note
-	description: "Summary description for {CRITERIA_MANAGER}."
-	author: ""
+﻿note
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -32,14 +30,14 @@ feature -- Access
 			until
 				Result /= Void
 			loop
-				if attached f.item.name as n and then n.same_string (a_name) then
-					Result := f.item.criteria
+				if attached f.name as n and then n.same_string (a_name) then
+					Result := f.criteria
 				end
 			end
 		end
 
 note
-	copyright: "Copyright (c) 1984-2013, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2021, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software
@@ -48,4 +46,5 @@ note
 			Website http://www.eiffel.com
 			Customer support http://support.eiffel.com
 		]"
+
 end

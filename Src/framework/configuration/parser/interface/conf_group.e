@@ -272,7 +272,7 @@ feature -- Access queries
 					across
 						l_classes as ic
 					loop
-						l_reverse_classes_cache.force (ic.key, ic.item)
+						l_reverse_classes_cache.force (@ ic.key, ic)
 					end
 				end
 				if attached l_reverse_classes_cache.item (a_class) as l_found_item then
@@ -305,7 +305,7 @@ feature -- Access queries
 			if attached classes as l_classes then
 				Result := l_classes.twin
 				across accessible_groups as g loop
-					l_grp := g.item
+					l_grp := g
 					if attached l_grp.classes as l_grp_classes then
 						Result.merge (l_grp_classes)
 					end
@@ -495,7 +495,7 @@ feature {CONF_ACCESS} -- Status update
 				across
 					a_conditions as ic
 				loop
-					ic.item.set_target (tgt)
+					ic.set_target (tgt)
 				end
 			end
 		end
@@ -555,7 +555,7 @@ feature {CONF_ACCESS} -- Update, in compiled only, not stored to configuration f
 					across
 						cs as c
 					loop
-						l_overrider := c.item
+						l_overrider := c
 						l_ovs := class_by_name (l_overrider.name, False)
 						if not l_ovs.is_empty then
 							l_overridee := l_ovs.first
@@ -682,8 +682,8 @@ feature {CONF_VISITOR} -- Modification
 		require
 			internal_class_options_attached: attached internal_class_options as i
 			is_caseless: o.is_case_insensitive
-			internal_includes_forced: across o as oc all i.has (oc.key) end
-			forced_includes_internal: across i as ic all o.has (ic.key) end
+			internal_includes_forced: across o as oc all i.has (@ oc.key) end
+			forced_includes_internal: across i as ic all o.has (@ ic.key) end
 		do
 			forced_class_options := o
 		ensure

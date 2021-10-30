@@ -1,5 +1,4 @@
 note
-	description: "Summary description for {ES_LIBRARY_IRON_PACKAGE_PROVIDER}."
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -47,8 +46,8 @@ feature -- Access
 					across
 						scorer.scored_list (a_query, l_iron_packages, False) as ic
 					loop
-						p := ic.item.value
-						create i.make (ic.item.score, p, p.identifier)
+						p := ic.value
+						create i.make (ic.score, p, p.identifier)
 						i.set_info (l_api.is_package_installed (p), "is_installed")
 						Result.extend (i)
 					end
@@ -57,8 +56,8 @@ feature -- Access
 					across
 						l_iron_packages as ic
 					loop
-						p := ic.item
-						create i.make (1.0, ic.item, ic.item.identifier)
+						p := ic
+						create i.make (1.0, ic, ic.identifier)
 						i.set_info (l_api.is_package_installed (p), "is_installed")
 						Result.force (i)
 					end
@@ -100,7 +99,7 @@ invariant
 	iron_service /= Void
 
 note
-	copyright: "Copyright (c) 1984-2016, Eiffel Software"
+	copyright: "Copyright (c) 1984-2021, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

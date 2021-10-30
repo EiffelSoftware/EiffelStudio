@@ -1,5 +1,4 @@
-note
-	description: "Summary description for {ES_LIBRARY_INDEX_PROVIDER}."
+﻿note
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -28,7 +27,7 @@ feature -- Access
 			Result := {STRING_32} "Search in library indexed information (including by class name)."
 		end
 
-	libraries (a_query: detachable READABLE_STRING_GENERAL; a_target: CONF_TARGET): ARRAYED_LIST [ES_LIBRARY_PROVIDER_ITEM]
+	libraries (a_query: detachable READABLE_STRING_32; a_target: CONF_TARGET): ARRAYED_LIST [ES_LIBRARY_PROVIDER_ITEM]
 		local
 			q: LIBRARY_DATABASE_CLASS_QUERY
 			elt: ES_LIBRARY_PROVIDER_ITEM
@@ -44,9 +43,9 @@ feature -- Access
 				across
 					q.items as ic
 				loop
-					l_info := ic.key
+					l_info := @ ic.key
 					create elt.make (1.0, l_info, l_info.name + " (" + l_info.uuid.out + ")")
-					elt.set_info (ic.item, "classes")
+					elt.set_info (ic, "classes")
 					Result.force (elt)
 				end
 			else
@@ -54,10 +53,10 @@ feature -- Access
 			end
 		end
 
-	class_query_from (q: detachable READABLE_STRING_GENERAL): detachable STRING
+	class_query_from (q: detachable READABLE_STRING_32): detachable STRING_32
 		do
-			if q /= Void and then q.is_valid_as_string_8 then
-				Result := q.as_string_8
+			if attached q then
+				create Result.make_from_string (q)
 				Result.adjust
 				if Result.is_empty then
 					Result := Void
@@ -102,7 +101,7 @@ feature -- Access
 					create dbm.make_with_database (Result)
 						-- Per library, we want only system classes (not all subclasses).
 					dbm.set_is_stopping_at_library (True)
-					dbm.set_is_indexing_class (True) 
+					dbm.set_is_indexing_class (True)
 
 					dbm.import_folders (<<
 								eiffel_layout.library_path,
@@ -142,7 +141,7 @@ feature -- Reset
 		end
 
 note
-	copyright: "Copyright (c) 1984-2016, Eiffel Software"
+	copyright: "Copyright (c) 1984-2021, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[
@@ -172,4 +171,5 @@ note
 			Website http://www.eiffel.com
 			Customer support http://support.eiffel.com
 		]"
+
 end

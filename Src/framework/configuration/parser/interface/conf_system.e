@@ -71,7 +71,7 @@ feature -- Status
 			-- Did the date on any configuration file used in this system change?
 		require
 			fully_parsed: is_fully_parsed
-			filenames_set: across all_libraries as l_libs all attached l_libs.item.system.file_name as l_fn and then not l_fn.is_empty end
+			filenames_set: across all_libraries as l_libs all attached l_libs.system.file_name as l_fn and then not l_fn.is_empty end
 		do
 			from
 				all_libraries.start
@@ -221,7 +221,7 @@ feature -- Access queries
 			-- Compilable targets.
 			--| note: in order to satisfy precondition, see {CONF_PARENT_TARGET_CHECKER}.resolve_system to resolve the eventual parent.
 		require
-			no_unresolved_parents: across targets as ic all not ic.item.has_unresolved_parent end
+			no_unresolved_parents: across targets as ic all not ic.has_unresolved_parent end
 		local
 			l_target: CONF_TARGET
 		do
@@ -250,7 +250,7 @@ feature -- Access queries
 			across
 				all_libraries as ic
 			loop
-				Result.append (ic.item.external_include)
+				Result.append (ic.external_include)
 			end
 		ensure
 			Result_not_void: Result /= Void
@@ -263,7 +263,7 @@ feature -- Access queries
 		do
 			create Result.make (10)
 			across all_libraries as ic loop
-				Result.append (ic.item.external_cflag)
+				Result.append (ic.external_cflag)
 			end
 		ensure
 			Result_not_void: Result /= Void
@@ -276,7 +276,7 @@ feature -- Access queries
 		do
 			create Result.make (all_libraries.count)
 			across all_libraries as ic loop
-				Result.append (ic.item.external_object)
+				Result.append (ic.external_object)
 			end
 		ensure
 			Result_not_void: Result /= Void
@@ -289,7 +289,7 @@ feature -- Access queries
 		do
 			create Result.make (all_libraries.count)
 			across all_libraries as ic loop
-				Result.append (ic.item.external_library)
+				Result.append (ic.external_library)
 			end
 		ensure
 			Result_not_void: Result /= Void
@@ -302,7 +302,7 @@ feature -- Access queries
 		do
 			create Result.make (all_libraries.count)
 			across all_libraries as ic loop
-				Result.append (ic.item.external_resource)
+				Result.append (ic.external_resource)
 			end
 		ensure
 			Result_not_void: Result /= Void
@@ -315,7 +315,7 @@ feature -- Access queries
 		do
 			create Result.make (all_libraries.count)
 			across all_libraries as ic loop
-				Result.append (ic.item.external_linker_flag)
+				Result.append (ic.external_linker_flag)
 			end
 		ensure
 			Result_not_void: Result /= Void
@@ -328,7 +328,7 @@ feature -- Access queries
 		do
 			create Result.make (all_libraries.count)
 			across all_libraries as ic loop
-				Result.append (ic.item.external_make)
+				Result.append (ic.external_make)
 			end
 		ensure
 			Result_not_void: Result /= Void
@@ -341,7 +341,7 @@ feature -- Access queries
 		do
 			create Result.make (all_libraries.count)
 			across all_libraries as ic loop
-				Result.append (ic.item.pre_compile_action)
+				Result.append (ic.pre_compile_action)
 			end
 		ensure
 			Result_not_void: Result /= Void
@@ -354,7 +354,7 @@ feature -- Access queries
 		do
 			create Result.make (all_libraries.count)
 			across all_libraries as ic loop
-				Result.append (ic.item.post_compile_action)
+				Result.append (ic.post_compile_action)
 			end
 		ensure
 			Result_not_void: Result /= Void
@@ -539,9 +539,9 @@ invariant
 	valid_level: valid_level
 
 note
-	copyright:	"Copyright (c) 1984-2019, Eiffel Software"
+	copyright: "Copyright (c) 1984-2021, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
-	licensing_options:	"http://www.eiffel.com/licensing"
+	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[
 			This file is part of Eiffel Software's Eiffel Development Environment.
 			

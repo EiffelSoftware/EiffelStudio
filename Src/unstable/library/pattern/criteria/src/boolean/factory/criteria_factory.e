@@ -17,17 +17,17 @@ feature {NONE} -- Initialization
 
 feature -- Factory
 
-	criteria_from_string (s: READABLE_STRING_GENERAL): like criteria
+	criteria_from_string (s: READABLE_STRING_32): like criteria
 		do
 			Result := criteria_from_token_list (criteria_tokens (s))
 		end
 
-	criteria (a_name: READABLE_STRING_GENERAL; a_value: READABLE_STRING_GENERAL): detachable CRITERIA [G]
+	criteria (a_name: READABLE_STRING_32; a_value: READABLE_STRING_32): detachable CRITERIA [G]
 		local
 			l_is_not: BOOLEAN
-			k: READABLE_STRING_GENERAL
+			k: READABLE_STRING_32
 		do
-			if a_name.count >= 2 and then a_name[1] = '-' then
+			if a_name.count >= 2 and then a_name [1] = '-' then
 				l_is_not := True
 				k := a_name.substring (2, a_name.count)
 			else
@@ -44,7 +44,7 @@ feature -- Factory
 			end
 		end
 
-	default_criteria (a_value: READABLE_STRING_GENERAL): detachable CRITERIA [G]
+	default_criteria (a_value: READABLE_STRING_32): detachable CRITERIA [G]
 		do
 			if
 				attached default_builder_name as n and then
@@ -54,7 +54,7 @@ feature -- Factory
 			end
 		end
 
-	has_criteria (a_name: READABLE_STRING_GENERAL): BOOLEAN
+	has_criteria (a_name: READABLE_STRING_32): BOOLEAN
 			-- Has criteria for name `a_name'?
 		do
 			Result := builders.has (a_name)
@@ -82,7 +82,7 @@ feature {NONE} -- Parse
 					exps as c
 				loop
 					f := Void
-					tok := c.item
+					tok := c
 					if tok.is_known_operator then
 						f := fake
 						if tok.is_operator_and and Result /= Void then
@@ -170,15 +170,15 @@ feature {NONE} -- Parse
 			end
 		end
 
-	criteria_tokens (s: READABLE_STRING_GENERAL): detachable ARRAYED_LIST [CRITERIA_TOKEN]
+	criteria_tokens (s: READABLE_STRING_32): detachable ARRAYED_LIST [CRITERIA_TOKEN]
 		local
 			c: CHARACTER_32
-			p,i,n: INTEGER
-			l_value, l_name: detachable READABLE_STRING_GENERAL
+			p, i, n: INTEGER
+			l_value, l_name: READABLE_STRING_32
 			in_dble_quote: BOOLEAN
 			in_paren: INTEGER
 			in_exp: BOOLEAN
-			l_parts: ARRAYED_LIST [READABLE_STRING_GENERAL]
+			l_parts: ARRAYED_LIST [READABLE_STRING_32]
 			prev_is_op: BOOLEAN
 			tok: CRITERIA_TOKEN
 			prev_tok, group_tok, next_tok: detachable CRITERIA_TOKEN
@@ -190,11 +190,11 @@ feature {NONE} -- Parse
 			until
 				i > n
 			loop
-				c := s[i]
+				c := s [i]
 				if in_dble_quote then
 					if c = '%"' then
 						in_dble_quote := False
-						l_parts.extend (s.substring (p, i).as_string_32)
+						l_parts.extend (s.substring (p, i))
 						in_exp := False
 					end
 				elseif in_paren > 0 then
@@ -203,13 +203,13 @@ feature {NONE} -- Parse
 					elseif c = ')' then
 						in_paren := in_paren - 1
 						if in_paren = 0 then
-							l_parts.extend (s.substring (p, i).as_string_32)
+							l_parts.extend (s.substring (p, i))
 							in_exp := False
 						end
 					end
 				elseif c.is_space then
 					if in_exp then
-						l_parts.extend (s.substring (p, i - 1).as_string_32)
+						l_parts.extend (s.substring (p, i - 1))
 						in_exp := False
 					end
 				else
@@ -226,7 +226,7 @@ feature {NONE} -- Parse
 				i := i + 1
 			end
 			if i = n + 1 and in_exp then
-				l_parts.force (s.substring (p, n).as_string_32)
+				l_parts.force (s.substring (p, n))
 			end
 
 			create Result.make (l_parts.count)
@@ -235,8 +235,8 @@ feature {NONE} -- Parse
 			loop
 				prev_is_op := prev_tok = Void or else prev_tok.is_known_operator
 
-				l_name := cur.item
-				if l_name.count > 1 and then l_name[1] = '(' then
+				l_name := cur
+				if l_name.count > 1 and then l_name [1] = '(' then
 					if not prev_is_op then
 						create tok.make_silent_and_operator
 						Result.force (tok)
@@ -282,8 +282,8 @@ feature {NONE} -- Parse
 								Result.force (tok)
 							end
 						end
-						if l_value.count > 1 and l_value[1] = '%"' then
-							check l_value[l_value.count] = '%"' end
+						if l_value.count > 1 and l_value [1] = '%"' then
+							check l_value [l_value.count] = '%"' end
 							l_value := l_value.substring (2, l_value.count - 1)
 						end
 						create tok.make_name_value (l_name, l_value)
@@ -378,7 +378,7 @@ feature -- Access
 
 	short_description: STRING_32
 		local
-			k: READABLE_STRING_GENERAL
+			k: READABLE_STRING_32
 			len: INTEGER
 		do
 			create Result.make_empty
@@ -386,13 +386,13 @@ feature -- Access
 			across
 				builders as c
 			loop
-				len := len.max (c.key.count)
+				len := len.max (@ c.key.count)
 			end
 
 			across
 				builders as c
 			loop
-				k := c.key
+				k := @ c.key
 				Result.append_character (' ')
 				Result.append_character (' ')
 				Result.append_character ('[')
@@ -401,7 +401,7 @@ feature -- Access
 				if k.count < len then
 					Result.append (create {STRING_32}.make_filled (' ', len - k.count))
 				end
-				if attached c.item.description as d then
+				if attached c.description as d then
 					Result.append_character (' ')
 					Result.append_string_general (d)
 				end
@@ -426,32 +426,26 @@ feature -- Access
 			Result.append ("Criteria can be combined with %"and%" (the default), %"or%" (aliased with prefix %"+%"), %"not%" (aliased with prefix %"-%").%N")
 		end
 
-feature -- Change		
+feature -- Change
 
-	register_builder (a_name: READABLE_STRING_GENERAL; bld: attached like builder)
-		local
-			t: like builders.item
+	register_builder (a_name: READABLE_STRING_32; bld: attached like builder)
 		do
-			t := [bld, Void]
-			builders.force (t, a_name)
+			builders.force ([bld, Void], a_name)
 		end
 
-	register_builder_with_description (a_name: READABLE_STRING_GENERAL; bld: attached like builder; a_desc: READABLE_STRING_GENERAL)
-		local
-			t: like builders.item
+	register_builder_with_description (a_name: READABLE_STRING_32; bld: attached like builder; a_desc: READABLE_STRING_32)
 		do
-			t := [bld, a_desc]
-			builders.force (t, a_name)
+			builders.force ([bld, a_desc], a_name)
 		end
 
-	register_default_builder (a_name: detachable READABLE_STRING_GENERAL)
+	register_default_builder (a_name: detachable READABLE_STRING_32)
 		require
 			a_name /= Void implies has_criteria (a_name)
 		do
 			default_builder_name := a_name
 		end
 
-	set_builder_description (a_name: READABLE_STRING_GENERAL; a_desc: detachable READABLE_STRING_GENERAL)
+	set_builder_description (a_name: READABLE_STRING_32; a_desc: detachable READABLE_STRING_32)
 		require
 			has_criteria (a_name)
 		do
@@ -460,25 +454,26 @@ feature -- Change
 			end
 		end
 
-feature {NONE} -- Implementation		
+feature {NONE} -- Implementation
 
-	builder (a_name: READABLE_STRING_GENERAL): detachable FUNCTION [TUPLE [name: READABLE_STRING_GENERAL; value: READABLE_STRING_GENERAL], like criteria]
+	builder (a_name: READABLE_STRING_32): detachable FUNCTION [TUPLE [name: READABLE_STRING_32; value: READABLE_STRING_32], like criteria]
 		do
 			if attached builders.item (a_name) as b then
 				Result := b.builder
 			end
 		end
 
-	builders: STRING_TABLE [TUPLE [builder: detachable like builder; description: detachable READABLE_STRING_GENERAL]]
+	builders: STRING_TABLE [TUPLE [builder: detachable like builder; description: detachable READABLE_STRING_32]]
 
-	default_builder_name: detachable READABLE_STRING_GENERAL
+	default_builder_name: detachable READABLE_STRING_32
 			-- Optional default builder, to handle single token filter.
 
 invariant
 	builders /= Void
 
 note
-	copyright: "Copyright (c) 1984-2020, Eiffel Software and others"
+	ca_ignore: "CA032", "CA032: too long routine body"
+	copyright: "Copyright (c) 1984-2021, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software
@@ -487,4 +482,5 @@ note
 			Website http://www.eiffel.com
 			Customer support http://support.eiffel.com
 		]"
+
 end

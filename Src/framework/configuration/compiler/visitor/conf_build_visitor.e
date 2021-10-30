@@ -260,7 +260,7 @@ feature -- Visit nodes
 								across
 									l_old_assemblies as a
 								loop
-									l_old_group := a.item
+									l_old_group := a
 									l_old_group.invalidate
 									process_removed_classes (l_old_group.classes)
 								end
@@ -334,7 +334,7 @@ feature -- Visit nodes
 					across
 						l_classes as c
 					loop
-						l_cl := c.item
+						l_cl := c
 						if l_cl.is_compiled then
 							partly_removed_classes.force ([l_cl, l_current_system])
 						end
@@ -407,7 +407,7 @@ feature -- Visit nodes
 					across
 						l_current_classes as c
 					loop
-						l_cl := c.item
+						l_cl := c
 						if l_cl.is_compiled then
 							l_partly_removed_classes.force ([l_cl, l_current_system])
 						end
@@ -419,7 +419,7 @@ feature -- Visit nodes
 					across
 						l_ren as r
 					loop
-						l_current_classes.replace_key (r.item, r.key)
+						l_current_classes.replace_key (r, @ r.key)
 					end
 				end
 				if attached a_library.name_prefix as l_pre and then not l_pre.is_empty then
@@ -427,7 +427,7 @@ feature -- Visit nodes
 					across
 						l_current_classes as c
 					loop
-						l_prefixed_classes.put (c.item, l_pre + c.key)
+						l_prefixed_classes.put (c, l_pre + @ c.key)
 					end
 					a_library.set_classes (l_prefixed_classes)
 				else
@@ -495,7 +495,7 @@ feature -- Visit nodes
 				across
 					l_current_classes as c
 				loop
-					l_class := c.item
+					l_class := c
 					if l_class.is_compiled then
 						l_modified_classes.force (l_class)
 					end
@@ -844,7 +844,7 @@ feature {NONE} -- Implementation
 					a_groups as g
 				loop
 					l_done := False
-					if attached g.item as l_group then
+					if attached g as l_group then
 						check
 							not_assembly: not l_group.is_assembly
 						end
@@ -874,8 +874,8 @@ feature {NONE} -- Implementation
 								across
 									l_classes as c
 								loop
-									if c.item.is_compiled then
-										partly_removed_classes.force ([c.item, current_system])
+									if c.is_compiled then
+										partly_removed_classes.force ([c, current_system])
 									end
 								end
 							end
@@ -900,7 +900,7 @@ feature {NONE} -- Implementation
 				across
 					a_classes as c
 				loop
-					l_cl := c.item
+					l_cl := c
 						-- only if the class realy has been removed
 					if not reused_classes.has (l_cl) then
 							-- remove partial class files
@@ -916,7 +916,7 @@ feature {NONE} -- Implementation
 							across
 								l_overrides as o
 							loop
-								l_cl_over := o.item
+								l_cl_over := o
 								if l_cl_over.is_compiled and then l_cl_over.is_valid then
 									modified_classes.force (l_cl_over)
 								end
@@ -943,7 +943,7 @@ feature {NONE} -- Implementation
 			across
 				a_new_groups as g
 			loop
-				l_group := g.item
+				l_group := g
 				if l_group.is_enabled (state) then
 						-- Look for a group in old groups with the same name
 						-- this should work in most situations, in the rest of
@@ -994,7 +994,7 @@ feature {NONE} -- Implementation
 					l_partial_classes as ic
 				loop
 					l_class := Void
-					l_name := ic.key
+					l_name := @ ic.key
 						-- try to get it from the old cluster
 					if attached old_group as l_old_group then
 						l_old_group_classes := l_old_group.classes
@@ -1009,7 +1009,7 @@ feature {NONE} -- Implementation
 						end
 					end
 					if l_class /= Void then
-						l_class.rebuild_partial (ic.item, l_current_cluster, partial_location)
+						l_class.rebuild_partial (ic, l_current_cluster, partial_location)
 						if attached l_class.last_error as l_class_error then
 							add_and_raise_error (l_class_error)
 						else
@@ -1021,7 +1021,7 @@ feature {NONE} -- Implementation
 							added_classes.force (l_class)
 						end
 					else
-						l_class := factory.new_class_partial (ic.item, l_current_cluster, partial_location)
+						l_class := factory.new_class_partial (ic, l_current_cluster, partial_location)
 						if attached l_class.last_error as l_class_error then
 							add_and_raise_error (l_class_error)
 						else
@@ -1108,7 +1108,7 @@ invariant
 	last_warnings_not_void: last_warnings /= Void
 
 note
-	copyright: "Copyright (c) 1984-2019, Eiffel Software"
+	copyright: "Copyright (c) 1984-2021, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

@@ -219,20 +219,20 @@ feature {NONE} -- Traversal
 					os as option
 				loop
 						-- Check rule 1.
-					if option.item.void_safety.index < cluster.options.void_safety.index then
+					if option.void_safety.index < cluster.options.void_safety.index then
 						observer.report_error (create {CONF_ERROR_CLASS_CAPABILITY}.make
-							(option.key,
+							(@ option.key,
 							cluster,
-							conf_interface_names.option_void_safety_value [option.item.void_safety.index],
+							conf_interface_names.option_void_safety_value [option.void_safety.index],
 							conf_interface_names.option_void_safety_value [cluster.options.void_safety.index],
 							conf_interface_names.option_void_safety_name))
 					end
 						-- Check rule 2.
-					if option.item.catcall_detection.index < cluster.options.catcall_detection.index then
+					if option.catcall_detection.index < cluster.options.catcall_detection.index then
 						observer.report_error (create {CONF_ERROR_CLASS_CAPABILITY}.make
-							(option.key,
+							(@ option.key,
 							cluster,
-							conf_interface_names.option_catcall_detection_value [option.item.catcall_detection.index],
+							conf_interface_names.option_catcall_detection_value [option.catcall_detection.index],
 							conf_interface_names.option_catcall_detection_value [cluster.options.catcall_detection.index],
 							conf_interface_names.option_catcall_detection_name))
 					end
@@ -334,7 +334,7 @@ feature {NONE} -- Traversal
 					value := {CONF_TARGET_OPTION}.concurrency_mode_from_index (index)
 				until
 					Result = {CONF_TARGET_OPTION}.concurrency_index_thread or else
-					across cs as ic some attached ic.item.concurrency as s implies (s.value.has (value) xor s.invert) end
+					across cs as ic some attached ic.concurrency as s implies (s.value.has (value) xor s.invert) end
 				loop
 						-- Move to the smaller capability.
 					inspect Result
@@ -364,7 +364,7 @@ feature {NONE} -- Traversal
 					value := {CONF_TARGET_OPTION}.void_safety_mode_from_index (index)
 				until
 					Result = {CONF_TARGET_OPTION}.void_safety_index_none or else
-					across cs as ic some attached ic.item.void_safety as s implies (s.value.has (value) xor s.invert) end
+					across cs as ic some attached ic.void_safety as s implies (s.value.has (value) xor s.invert) end
 				loop
 						-- Move to the smaller capability.
 					inspect Result

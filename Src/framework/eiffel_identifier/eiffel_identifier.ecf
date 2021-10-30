@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
-<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-18-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-18-0 http://www.eiffel.com/developers/xml/configuration-1-18-0.xsd" name="eiffel_identifier" uuid="C1948BE8-3CAE-4A59-B87F-046173C99950" library_target="eiffel_identifier">
+<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-22-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-22-0 http://www.eiffel.com/developers/xml/configuration-1-22-0.xsd" name="eiffel_identifier" uuid="C1948BE8-3CAE-4A59-B87F-046173C99950" library_target="eiffel_identifier">
 	<target name="eiffel_identifier">
 		<root all_classes="true"/>
 		<file_rule>
 			<exclude>/\.svn$</exclude>
 		</file_rule>
-		<option is_obsolete_routine_type="true">
+		<option>
 			<assertions/>
 		</option>
 		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf"/>

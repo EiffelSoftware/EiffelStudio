@@ -30,10 +30,10 @@ feature -- Properties
 			-- Return type
 
 	value_32: STRING_32
-			-- String representation of the constant
+			-- String representation of the constant.
 		do
 			if attached value as l_v then
-				Result := encoding_converter.utf8_to_utf32 (l_v)
+				Result := {UTF_CONVERTER}.utf_8_string_8_to_string_32 (l_v)
 			end
 		end
 
@@ -72,7 +72,7 @@ feature {INTERNAL_COMPILER_STRING_EXPORTER} -- Setting
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2019, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2021, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

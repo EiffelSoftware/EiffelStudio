@@ -128,10 +128,10 @@ feature -- Properties
 			-- Name id in the names heap.
 
 	name_32: STRING_32
-			-- Final name of the feature
-			-- UTF-32 encoding
+			-- Final name of the feature.
+			-- UTF-32 encoding.
 		do
-			Result := encoding_converter.utf8_to_utf32 (names_heap.item (name_id))
+			Result := {UTF_CONVERTER}.utf_8_string_8_to_string_32 (names_heap.item (name_id))
 		end
 
 	name_8: STRING_8
@@ -167,11 +167,11 @@ feature -- Properties
 			end
 		end
 
-	assigner_name_32: STRING_32
+	assigner_name_32: detachable STRING_32
 			-- Name of the assigner procedure (if any)
 		do
 			if attached assigner_name as l_name then
-				Result := encoding_converter.utf8_to_utf32 (l_name)
+				Result := {UTF_CONVERTER}.utf_8_string_8_to_string_32 (l_name)
 			end
 		end
 
@@ -210,12 +210,12 @@ feature -- Properties
 	is_prefix: BOOLEAN
 			-- Is feature a prefixed one ?
 
-	obsolete_message_32: STRING_32
+	obsolete_message_32: detachable STRING_32
 			-- Obsolete message
 			-- (Void if Current is not obsolete)
 		do
 			if attached obsolete_message as l_m then
-				Result := encoding_converter.utf8_to_utf32 (l_m)
+				Result := {UTF_CONVERTER}.utf_8_string_8_to_string_32 (l_m)
 			end
 		end
 
@@ -411,7 +411,7 @@ feature -- Element change
 				create lst.make (1)
 				aliases := lst
 			end
-			lst.force ([a, encoding_converter.utf8_to_utf32 (a)])
+			lst.force ([a, {UTF_CONVERTER}.utf_8_string_8_to_string_32 (a)])
 		end
 
 feature {INTERNAL_COMPILER_STRING_EXPORTER} -- Properties
@@ -547,13 +547,13 @@ feature -- Access
 			-- Process text of the feature.
 			-- True if successfully proceed.
 		local
-			class_text: STRING;
-			start_position, end_position: INTEGER;
-			body_as: FEATURE_AS;
-			c: like written_class;
+			class_text: STRING
+			start_position, end_position: INTEGER
+			body_as: FEATURE_AS
+			c: like written_class
 		do
-			c := written_class;
-			class_text := c.text;
+			c := written_class
+			class_text := c.text
 			if class_text /= Void then
 				if attached name as l_name then
 						-- Attempt to locate a feature using the same name as Current
@@ -576,26 +576,25 @@ feature -- Access
 
 				if c /= associated_class then
 						-- From a different class
-					a_text_formatter.add ("-- Version inherited from class: ");
-					a_text_formatter.add_classi (c.lace_class, c.name_in_upper);
-					a_text_formatter.add_new_line;
+					a_text_formatter.add ("-- Version inherited from class: ")
+					a_text_formatter.add_classi (c.lace_class, c.name_in_upper)
+					a_text_formatter.add_new_line
 				end
-				a_text_formatter.add_new_line;
+				a_text_formatter.add_new_line
 
-				a_text_formatter.add_indent;
+				a_text_formatter.add_indent
 				if
 					class_text.count >= end_position and
 					start_position < end_position
 				then
-					class_text := class_text.substring
-								(start_position, end_position);
-					a_text_formatter.add_feature (Current, encoding_converter.utf8_to_utf32 (class_text))
-				end;
-				a_text_formatter.add_new_line;
+					class_text := class_text.substring (start_position, end_position)
+					a_text_formatter.add_feature (Current, {UTF_CONVERTER}.utf_8_string_8_to_string_32 (class_text))
+				end
+				a_text_formatter.add_new_line
 			else
 				Result := true
 			end
-		end;
+		end
 
 	associated_class: CLASS_C
 			-- Class where the feature was evaluated in
@@ -1062,10 +1061,10 @@ feature -- Output
 feature -- Output: signature
 
 	feature_signature_32: STRING_32
-			-- Signature of Current feature
+			-- Signature of Current feature.
 		do
 			if attached feature_signature as l_s then
-				Result := encoding_converter.utf8_to_utf32 (l_s)
+				Result := {UTF_CONVERTER}.utf_8_string_8_to_string_32 (l_s)
 			end
 		end
 

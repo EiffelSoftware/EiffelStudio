@@ -1,7 +1,5 @@
-note
-	description: "[
-		Eiffel tests that can be executed by testing tool.
-	]"
+﻿note
+	description: "Eiffel tests that can be executed by testing tool."
 	author: "EiffelStudio test wizard"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -13,7 +11,7 @@ class
 create
 	make
 
-feature -- Test routines
+feature {NONE} -- Test routines
 
 	make
 			-- New test routine
@@ -87,13 +85,13 @@ feature -- Test routines
 			end
 
 			across l_graph.path as ic loop
-				if attached ic.item as l_item then
+				if attached ic as l_item then
 					print (l_item.out)
 				end
 			end
 
 			across l_graph as ic loop
-				print ("%NCurrent item: " + ic.item)
+				print ("%NCurrent item: " + ic)
 				print ("%NNumber of edges attached to item: " + l_graph.degree.out)
 			end
 
@@ -102,7 +100,7 @@ feature -- Test routines
 			l_graph.iterate_breadth_first
 			across l_graph as ic
 			loop
-				print ("%NCurrent item: " + ic.item)
+				print ("%NCurrent item: " + ic)
 				print ("%NNumber of edges attached to item: " + l_graph.degree.out)
 			end
 			io.put_new_line
@@ -117,7 +115,7 @@ feature -- Test routines
 			l_graph.iterate_depth_first
 			across l_graph as ic
 			loop
-				print ("%NCurrent item: " + ic.item)
+				print ("%NCurrent item: " + ic)
 				print ("%NNumber of edges attached to item: " + l_graph.degree.out)
 			end
 			print ("%N=============================%N")
@@ -176,7 +174,7 @@ feature -- Test routines
 			end
 
 			across l_graph.path as ic loop
-				if attached ic.item as l_item then
+				if attached ic as l_item then
 					print (l_item.out)
 				end
 			end
@@ -185,7 +183,7 @@ feature -- Test routines
 			print ("%NBFS walker")
 			l_graph.iterate_breadth_first
 			across l_graph as ic loop
-				print ("%NCurrent item: " + ic.item)
+				print ("%NCurrent item: " + ic)
 				print ("%NNumber of edges attached to item: " + l_graph.degree.out)
 			end
 			io.put_new_line
@@ -200,7 +198,7 @@ feature -- Test routines
 			l_graph.iterate_depth_first
 			across l_graph as ic
 			loop
-				print ("%NCurrent item: " + ic.item)
+				print ("%NCurrent item: " + ic)
 				print ("%NNumber of edges attached to item: " + l_graph.degree.out)
 			end
 			print ("%N=============================%N")
@@ -259,7 +257,7 @@ feature -- Test routines
 			end
 
 			across l_graph.path as ic loop
-				if attached ic.item as l_item then
+				if attached ic as l_item then
 					print (l_item.out)
 				end
 			end
@@ -268,7 +266,7 @@ feature -- Test routines
 			print ("%NBFS walker")
 			l_graph.iterate_breadth_first
 			across l_graph as ic loop
-				print ("%NCurrent item: " + ic.item)
+				print ("%NCurrent item: " + ic)
 				print ("%NNumber of in degree edges attached to item: " + l_graph.in_degree.out)
 				print ("%NNumber of out degree edges attached to item: " + l_graph.out_degree.out)
 			end
@@ -284,7 +282,7 @@ feature -- Test routines
 			l_graph.iterate_depth_first
 			across l_graph as ic
 			loop
-				print ("%NCurrent item: " + ic.item)
+				print ("%NCurrent item: " + ic)
 				print ("%NNumber of in degree edges attached to item: " + l_graph.in_degree.out)
 				print ("%NNumber of out degree edges attached to item: " + l_graph.out_degree.out)
 			end
@@ -345,7 +343,7 @@ feature -- Test routines
 			end
 
 			across l_graph.path as ic loop
-				if attached ic.item as l_item then
+				if attached ic as l_item then
 					print (l_item.out)
 				end
 			end
@@ -354,7 +352,7 @@ feature -- Test routines
 			print ("%NBFS walker")
 			l_graph.iterate_breadth_first
 			across l_graph as  ic loop
-				print ("%NCurrent item: " + ic.item)
+				print ("%NCurrent item: " + ic)
 				print ("%NNumber of edges attached to item: " + l_graph.degree.out)
 			end
 			io.put_new_line
@@ -369,7 +367,7 @@ feature -- Test routines
 			l_graph.iterate_depth_first
 			across l_graph as ic
 			loop
-				print ("%NCurrent item: " + ic.item)
+				print ("%NCurrent item: " + ic)
 				print ("%NNumber of edges attached to item: " + l_graph.degree.out)
 			end
 			print ("%N=============================%N")
@@ -378,7 +376,6 @@ feature -- Test routines
 	test_build_undirected_graph_string
 		local
 			l_graph: LINKED_UNDIRECTED_GRAPH [STRING, NONE]
-			it2: GRAPH_ITERATION_CURSOR [STRING, NONE]
 		do
 				-- Create the graph
 			create l_graph.make_simple_graph
@@ -399,14 +396,14 @@ feature -- Test routines
 			print ("%NIterator DFS%N")
 			l_graph.search ("a")
 			across l_graph as ic loop
-				print (ic.item)
+				print (ic)
 			end
 			check Expected_item_a: l_graph.item.is_equal ("a") end
 
 			print ("%NIterator BFS%N")
 			l_graph.iterate_breadth_first
 			across l_graph as ic loop
-				print (ic.item)
+				print (ic)
 			end
 			check Expected_item_a: l_graph.item.is_equal ("a") end
 			io.put_new_line
@@ -439,7 +436,7 @@ feature -- Test routines
 			end
 
 			across l_graph.path as ic loop
-				if attached ic.item as l_item then
+				if attached ic as l_item then
 					print (l_item.out)
 				end
 			end
@@ -449,7 +446,7 @@ feature -- Test routines
 			l_graph.search ("a")
 			l_graph.iterate_breadth_first
 			across l_graph as ic  loop
-				print ("%NCurrent item: " + ic.item)
+				print ("%NCurrent item: " + ic)
 				print ("%NNumber of edges attached to item: " + l_graph.degree.out)
 			end
 			io.put_new_line
@@ -464,7 +461,7 @@ feature -- Test routines
 			print ("%NDFS Iterator")
 			l_graph.iterate_depth_first
 			across l_graph as ic loop
-				print ("%NCurrent item: " + ic.item)
+				print ("%NCurrent item: " + ic)
 				print ("%NNumber of edges attached to item: " + l_graph.degree.out)
 			end
 			print ("%N=============================")
@@ -509,7 +506,7 @@ feature -- Test routines
 
 				-- DFS by default
 			across l_graph as ic loop
-				print (ic.item)
+				print (ic)
 			end
 
 		end
@@ -552,13 +549,13 @@ feature -- Test routines
 
 			l_graph.iterate_breadth_first
 			across l_graph as ic loop
-				print (ic.item)
+				print (ic)
 			end
 
 		end
 
 note
-	copyright: "Copyright (c) 1984-2020, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2021, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "Set of test cases for GRAPH_ITERATION_CURSOR"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -56,7 +56,7 @@ feature -- Tests
 
 				-- DFS by default
 			across l_graph as ic loop
-				dfs_result.force (ic.item)
+				dfs_result.force (ic)
 			end
 
 			assert ("Same List", expected_result.is_equal (dfs_result))
@@ -109,7 +109,7 @@ feature -- Tests
 				-- Set bdf iteration
 			l_graph.iterate_breadth_first
 			across l_graph as ic loop
-				bfs_result.force (ic.item)
+				bfs_result.force (ic)
 			end
 
 			assert ("Same List", expected_result.is_equal (bfs_result))
@@ -161,7 +161,7 @@ feature -- Tests
 
 				-- DFS by default
 			across l_graph as ic loop
-				dfs_result.force (ic.item)
+				dfs_result.force (ic)
 			end
 
 			assert ("Same List", expected_result.is_equal (dfs_result))
@@ -214,11 +214,21 @@ feature -- Tests
 				-- Set bdf iteration
 			l_graph.iterate_breadth_first
 			across l_graph as ic loop
-				bfs_result.force (ic.item)
+				bfs_result.force (ic)
 			end
 
 			assert ("Same List", expected_result.is_equal (bfs_result))
 
 		end
 
+note
+	copyright: "Copyright (c) 1984-2021, Eiffel Software and others"
+	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
+	source: "[
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
+		]"
 end

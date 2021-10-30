@@ -85,7 +85,7 @@ feature -- Test routines
 			create l_dfs.make (4)
 			l_dfs.compare_objects
 			across l_graph as ic loop
-				l_dfs.force (ic.item)
+				l_dfs.force (ic)
 			end
 			create l_dfs_result.make_from_array (<<"a", "c", "d", "b">>)
 			l_dfs_result.compare_objects
@@ -96,7 +96,7 @@ feature -- Test routines
 			create l_bfs.make (4)
 			l_bfs.compare_objects
 			across l_graph as ic loop
-				l_bfs.force (ic.item)
+				l_bfs.force (ic)
 			end
 
 			create l_bfs_result.make_from_array (<<"a", "b", "c", "d">>)
@@ -104,7 +104,6 @@ feature -- Test routines
 			assert ("Expected same list bfs", l_bfs_result.is_equal (l_bfs))
 
 			create l_dfs.make (4)
-			create l_bfs.make (4)
 			l_dfs.compare_objects
 
 			l_graph.iterate_depth_first
@@ -114,10 +113,10 @@ feature -- Test routines
 				create l_bfs.make (4)
 				l_bfs.compare_objects
 				across l_graph as ic2 loop
-					l_bfs.force (ic2.item)
+					l_bfs.force (ic2)
 				end
 				assert ("Expected same list bfs", l_bfs_result.is_equal (l_bfs))
-				l_dfs.force (ic.item)
+				l_dfs.force (ic)
 			end
 
 			assert ("Expected same list dfs", l_dfs_result.is_equal (l_dfs))
@@ -142,5 +141,15 @@ feature -- Test routines
 			assert ("has edge a-b", not l_graph.has_edge_between ("b", "a"))
 		end
 
+note
+	copyright: "Copyright (c) 1984-2021, Eiffel Software and others"
+	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
+	source: "[
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
+		]"
 end
 

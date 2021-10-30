@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "Tarjan's strongly connected components algorithm"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -40,9 +40,9 @@ feature -- Access
 			across
 				graph.vertices as l_c
 			loop
-				l_info := fetch_vertex_info (l_c.item)
+				l_info := fetch_vertex_info (l_c)
 				if not l_info.is_index_defined then
-					strong_connect (graph, l_c.item, l_stack, l_index)
+					strong_connect (graph, l_c, l_stack, l_index)
 				end
 			end
 		end
@@ -81,7 +81,7 @@ feature {NONE} -- Implementation
 			across
 				a_graph.out_bound_vertices (a_vertex) as l_c
 			loop
-				l_v := l_c.item
+				l_v := l_c
 				l_adjacent_info := fetch_vertex_info (l_v)
 				if not l_adjacent_info.is_index_defined then
 					strong_connect (graph, l_v, a_stack, a_index + 1)
@@ -135,7 +135,7 @@ feature {NONE} -- Implementation
 				-- Strongly connected components
 
 note
-	copyright: "Copyright (c) 1984-2013, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2021, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

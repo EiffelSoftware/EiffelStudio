@@ -1,10 +1,11 @@
-note
+﻿note
 	description: "[
 		Directed graphs, implemented on the basis
 		of an adjacency matrix.
 		Simple and symmetric graphs are supported.
 	]"
 	author: "Olivier Jeger"
+	revised_by: "Alexander Kogtenkov"
 	license: "Eiffel Forum License v2 (see forum.txt)"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -37,7 +38,7 @@ feature {NONE} -- Initialization
 			-- Make an empty adjacency matrix graph.
 		do
 				-- Make empty node array and edge set.
-			create node_array.make (1, 0)
+			create node_array.make_empty
 			create {ARRAYED_LIST [like edge_item]} internal_edges.make (0)
 				-- Make an empty adjacency matrix.
 				--			create adjacency_matrix.make (1,1)
@@ -51,11 +52,11 @@ feature {NONE} -- Initialization
 			invalidate_cursor
 		ensure then
 			node_array_not_void: node_array /= Void
-			no_nodes: node_array.count = 0
+			no_nodes: node_array.is_empty
 			edges_not_void: edges /= Void
-			no_edges: edges.count = 0
+			no_edges: edges.is_empty
 			inactive_nodes_not_void: inactive_nodes /= Void
-			no_inactive_nodes: inactive_nodes.count = 0
+			no_inactive_nodes: inactive_nodes.is_empty
 			adjacency_matrix_not_void: adjacency_matrix /= Void
 		end
 
@@ -100,10 +101,10 @@ feature -- Access
 	edge_item: detachable EDGE [like item, L]
 			-- Current edge
 		do
-			if current_target_node_index /= -1 then
-				Result := adjacency_matrix.item (current_node_index, current_target_node_index)
-			else
+			if current_target_node_index = -1 then
 				Result := Void
+			else
+				Result := adjacency_matrix.item (current_node_index, current_target_node_index)
 			end
 		end
 
@@ -173,14 +174,13 @@ feature -- Access
 			-- Result is Void if there is no match.
 			-- The cursor is not moved.
 		local
-			start_index, end_index: INTEGER
+			start_index: INTEGER
 			edge: like edge_item
 		do
 			if has_node (a_start_node) and has_node (a_end_node) then
 				start_index := index_of_element.item (a_start_node)
-				end_index := index_of_element.item (a_end_node)
-				edge := adjacency_matrix.item (start_index, end_index)
-				if edge /= Void and then equal (attached {ANY} edge.label as l_label, attached {ANY} a_label as la_label) then
+				edge := adjacency_matrix.item (start_index, index_of_element.item (a_end_node))
+				if edge /= Void and then (attached {ANY} edge.label = attached {ANY} a_label) then
 					Result := edge
 				else
 					Result := Void
@@ -512,7 +512,7 @@ feature -- Element change
 				else
 						-- Item index is `count'+1.
 					item_index := node_array.count + 1
-					adjacency_matrix.resize (item_index, item_index)
+					adjacency_matrix.resize_with_default (Void, item_index, item_index)
 				end
 
 					-- Put node into array and hash table.
@@ -587,8 +587,8 @@ feature -- Removal
 
 				if item_index = node_array.count then
 						-- Shrink the adjacency matrix if possible.
-					node_array.conservative_resize (1, item_index - 1)
-					adjacency_matrix.resize (item_index - 1, item_index - 1)
+					node_array.remove_tail (1)
+					adjacency_matrix.resize_with_default (Void, item_index - 1, item_index - 1)
 				else
 						-- Otherwise remove `item' and all incident edges.
 					inactive_nodes.put (item_index)
@@ -639,11 +639,12 @@ feature -- Removal
 
 			adjacency_matrix.put (Void, start_index, end_index)
 				-- Perform symmetric operation graph is symmetric.
-			if is_symmetric_graph then
-				if attached adjacency_matrix.item (end_index, start_index) as l_item then
-					internal_edges.prune (l_item)
-					adjacency_matrix.put (Void, end_index, start_index)
-				end
+			if
+				is_symmetric_graph and then
+				attached adjacency_matrix.item (end_index, start_index) as l_item
+			then
+				internal_edges.prune (l_item)
+				adjacency_matrix.put (Void, end_index, start_index)
 			end
 
 				-- Adjust node indices if necessary.
@@ -656,14 +657,6 @@ feature -- Removal
 			end
 		end
 
-feature -- Resizing
-
-feature -- Transformation
-
-feature -- Conversion
-
-feature -- Duplication
-
 feature -- Miscellaneous
 
 	compact_adjacency_matrix
@@ -673,12 +666,10 @@ feature -- Miscellaneous
 		local
 			i, j, new_i, new_j: INTEGER
 			new_matrix: like adjacency_matrix
-			new_node_array: like node_array
 		do
 			if not inactive_nodes.is_empty then
 					-- Make new adjacency matrix and node array.
 				create new_matrix.make_filled (Void, node_count, node_count)
-				create new_node_array.make (1, node_count)
 
 				from
 					i := 1
@@ -706,8 +697,6 @@ feature -- Miscellaneous
 				end
 			end
 		end
-
-feature -- Basic operations
 
 feature -- Output
 
@@ -745,11 +734,13 @@ feature -- Output
 							Result.append ("%"")
 
 							label := if attached adjacency_matrix.item (i, j) as l_item then l_item.label else label end
-							separate label as s_label do
-								if attached s_label as ls_label and then not ls_label.out.is_equal ("") then
-									Result.append (" [label=%"")
-									Result.append (create {STRING}.make_from_separate (ls_label.out))
-									Result.append ("%"]")
+							if attached label then
+								separate label as s_label do
+									if not s_label.out.is_empty then
+										Result.append (" [label=%"")
+										Result.append (create {STRING}.make_from_separate (s_label.out))
+										Result.append ("%"]")
+									end
 								end
 							end
 							Result.append (";%N")
@@ -906,4 +897,14 @@ invariant
 
 	node_sum: nodes.count = node_array.count - inactive_nodes.count
 
-end -- class ADJACENCY_MATRIX_GRAPH
+note
+	copyright: "Copyright (c) 1984-2021, Eiffel Software and others"
+	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
+	source: "[
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
+		]"
+end

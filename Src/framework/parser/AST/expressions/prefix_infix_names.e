@@ -13,12 +13,6 @@ inherit
 			{NONE} frozen_str, infix_str, prefix_str, quote_str
 		end
 
-	SHARED_ENCODING_CONVERTER
-		export
-			{INTERNAL_COMPILER_STRING_EXPORTER} encoding_converter
-			{NONE} all
-		end
-
 feature {INTERNAL_COMPILER_STRING_EXPORTER} -- Queries
 
 	is_mangled_name (name: READABLE_STRING_8): BOOLEAN
@@ -39,9 +33,11 @@ feature {INTERNAL_COMPILER_STRING_EXPORTER} -- Queries
 			Result := not alias_name.is_empty and then
 				(syntax_checker.is_bracket_alias_name (alias_name) or
 				syntax_checker.is_parentheses_alias_name (alias_name) or
-				(alias_name.item (alias_name.count) = '"') and then
-				(is_mangled_infix (alias_name) and then syntax_checker.is_valid_binary_operator (extract_symbol_from_infix (alias_name))) or
-				(is_mangled_prefix (alias_name) and then syntax_checker.is_valid_unary_operator (extract_symbol_from_prefix (alias_name))))
+				alias_name.item (alias_name.count) = '"' and then
+					(is_mangled_infix (alias_name) and then syntax_checker.is_valid_binary_operator (extract_symbol_from_infix (alias_name))) or
+					(is_mangled_prefix (alias_name) and then syntax_checker.is_valid_unary_operator (extract_symbol_from_prefix (alias_name))))
+		ensure
+			class
 		end
 
 	is_mangled_infix (name: READABLE_STRING_8): BOOLEAN
@@ -50,6 +46,8 @@ feature {INTERNAL_COMPILER_STRING_EXPORTER} -- Queries
 			name_not_void: name /= Void
 		do
 			Result := name.starts_with (Infix_str)
+		ensure
+			class
 		end
 
 	is_mangled_prefix (name: READABLE_STRING_8): BOOLEAN
@@ -58,6 +56,8 @@ feature {INTERNAL_COMPILER_STRING_EXPORTER} -- Queries
 			name_not_void: name /= Void
 		do
 			Result := name.starts_with (Prefix_str)
+		ensure
+			class
 		end
 
 	is_mangled_alias_name_32 (alias_name: READABLE_STRING_32): BOOLEAN
@@ -66,7 +66,9 @@ feature {INTERNAL_COMPILER_STRING_EXPORTER} -- Queries
 		require
 			alias_name_not_void: alias_name /= Void
 		do
-			Result := is_mangled_alias_name (encoding_converter.utf32_to_utf8 (alias_name))
+			Result := is_mangled_alias_name ({UTF_CONVERTER}.utf_32_string_to_utf_8_string_8 (alias_name))
+		ensure
+			class
 		end
 
 feature -- Basic operations
@@ -79,6 +81,7 @@ feature -- Basic operations
 			create Result.make (op.count - infix_str.count - quote_str.count)
 			Result.append_substring (op, infix_str.count + 1, op.count - quote_str.count)
 		ensure
+			class
 			result_not_void: Result /= Void
 		end
 
@@ -90,6 +93,7 @@ feature -- Basic operations
 			create Result.make (op.count - prefix_str.count - quote_str.count)
 			Result.append_substring (op, prefix_str.count + 1, op.count - quote_str.count)
 		ensure
+			class
 			result_not_void: Result /= Void
 			instance_free: class
 		end
@@ -107,6 +111,7 @@ feature -- Basic operations
 			Result.append_string_general (symbol)
 			Result.append_string_general (Quote_str)
 		ensure
+			class
 			Result_not_void: Result /= Void
 		end
 
@@ -123,6 +128,7 @@ feature -- Basic operations
 			Result.append_string_general (symbol)
 			Result.append_string_general (Quote_str)
 		ensure
+			class
 			Result_not_void: Result /= Void
 		end
 
@@ -141,6 +147,7 @@ feature {INTERNAL_COMPILER_STRING_EXPORTER} -- Basic operations
 			Result.append (symbol)
 			Result.append (Quote_str)
 		ensure
+			class
 			Result_not_void: Result /= Void
 		end
 
@@ -157,6 +164,7 @@ feature {INTERNAL_COMPILER_STRING_EXPORTER} -- Basic operations
 			Result.append (symbol)
 			Result.append (Quote_str)
 		ensure
+			class
 			Result_not_void: Result /= Void
 		end
 
@@ -168,6 +176,7 @@ feature {INTERNAL_COMPILER_STRING_EXPORTER} -- Basic operations
 			create Result.make (op.count - infix_str.count - quote_str.count)
 			Result.append_substring (op, infix_str.count + 1, op.count - quote_str.count)
 		ensure
+			class
 			result_not_void: Result /= Void
 		end
 
@@ -179,6 +188,7 @@ feature {INTERNAL_COMPILER_STRING_EXPORTER} -- Basic operations
 			create Result.make (op.count - prefix_str.count - quote_str.count)
 			Result.append_substring (op, prefix_str.count + 1, op.count - quote_str.count)
 		ensure
+			class
 			result_not_void: Result /= Void
 		end
 
@@ -207,6 +217,7 @@ feature {INTERNAL_COMPILER_STRING_EXPORTER} -- Basic operations
 				Result := op
 			end
 		ensure
+			class
 			result_not_void: Result /= Void
 		end
 
@@ -235,6 +246,7 @@ feature {INTERNAL_COMPILER_STRING_EXPORTER} -- Basic operations
 				Result := op
 			end
 		ensure
+			class
 			result_not_void: Result /= Void
 		end
 
@@ -244,12 +256,14 @@ feature {NONE} -- Implementation
 			-- Checker for feature alias names
 		once
 			create Result
+		ensure
+			class
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2020, Eiffel Software"
-	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
-	licensing_options:	"http://www.eiffel.com/licensing"
+	copyright: "Copyright (c) 1984-2021, Eiffel Software"
+	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
+	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[
 			This file is part of Eiffel Software's Eiffel Development Environment.
 			

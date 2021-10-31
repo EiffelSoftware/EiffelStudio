@@ -1,6 +1,4 @@
 note
-	description: "Summary description for {IRON_NODE_HANDLER}."
-	author: ""
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -126,7 +124,7 @@ feature -- Permission core.
 			if a_user.is_administrator then
 				Result := True
 			elseif attached a_user.roles as l_roles then
-				Result := across l_roles as ic some user_role_has_permission (ic.item, a_permission) end
+				Result := across l_roles as ic some user_role_has_permission (ic, a_permission) end
 			end
 		end
 
@@ -393,7 +391,7 @@ feature -- Package form
 						if not s.is_empty then
 							s.append_character (',')
 						end
-						s.append (ic.item)
+						s.append (ic)
 					end
 					f_tags.set_text_value (s)
 				end
@@ -422,7 +420,7 @@ feature -- Package form
 						errs as e
 					loop
 						t := "<strong>[Error]</strong> "
-						if attached e.item.message as err_msg then
+						if attached e.message as err_msg then
 							t.append (err_msg)
 						end
 						m.add_error_message (t)
@@ -522,7 +520,7 @@ feature -- Package form
 						across
 							l_tags.split (',') as tic
 						loop
-							p.add_tag (tic.item)
+							p.add_tag (tic)
 						end
 					end
 --					if attached fd.table_item ("links") as l_links then
@@ -634,7 +632,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright: "Copyright (c) 1984-2016, Eiffel Software"
+	copyright: "Copyright (c) 1984-2021, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

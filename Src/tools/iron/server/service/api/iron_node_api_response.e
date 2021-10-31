@@ -1,5 +1,4 @@
 note
-	description: "Summary description for {IRON_NODE_HTML_RESPONSE}."
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -145,8 +144,8 @@ feature -- Messages
 				across
 					msg as ic
 				loop
-					if ic.item.kind = a_kind then
-						Result.force (ic.item.message)
+					if ic.kind = a_kind then
+						Result.force (ic.message)
 					end
 				end
 				if Result.is_empty then
@@ -157,7 +156,7 @@ feature -- Messages
 
 	get_has_error: BOOLEAN
 		do
-			has_error := attached messages as lst and then across lst as ic some ic.item.kind = message_type_error end
+			has_error := attached messages as lst and then across lst as ic some ic.kind = message_type_error end
 		end
 
 	encoded_string (s: READABLE_STRING_32): READABLE_STRING_8
@@ -195,11 +194,11 @@ feature {WSF_RESPONSE} -- Output
 							["messages", message_type_normal]
 							>>
 				across l_data as ic_kinds loop
-					if attached messages_of_kind (ic_kinds.item.kind) as lst and then not lst.is_empty then
+					if attached messages_of_kind (ic_kinds.kind) as lst and then not lst.is_empty then
 						if not s.is_empty then
 							s.append_character (',')
 						end
-						s.append ("%""+ ic_kinds.item.title +"%": [")
+						s.append ("%""+ ic_kinds.title +"%": [")
 						b := True
 						across lst as ic loop
 							if b then
@@ -207,7 +206,7 @@ feature {WSF_RESPONSE} -- Output
 							else
 								s.append_character (',')
 							end
-							s.append ("%"" + ic.item + "%"")
+							s.append ("%"" + ic + "%"")
 						end
 					end
 				end
@@ -236,7 +235,7 @@ feature {WSF_RESPONSE} -- Output
 		end
 
 note
-	copyright: "Copyright (c) 1984-2015, Eiffel Software"
+	copyright: "Copyright (c) 1984-2021, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

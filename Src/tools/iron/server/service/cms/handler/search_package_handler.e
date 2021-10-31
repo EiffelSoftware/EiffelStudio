@@ -1,6 +1,4 @@
 note
-	description: "Summary description for {SEARCH_PACKAGE_HANDLER}."
-	author: ""
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -95,7 +93,7 @@ feature -- Execution
 					l_sorter_factory as ic
 				loop
 					create l_link_attribs.make (0)
-					l_desc := l_sorter_factory.sorter_description (ic.key)
+					l_desc := l_sorter_factory.sorter_description (@ ic.key)
 					if l_desc /= Void then
 						l_desc_html := html_encoder.general_encoded_string (l_desc)
 						l_desc_html.replace_substring_all ("%N", "<br/>")
@@ -104,7 +102,7 @@ feature -- Execution
 							l_link_attribs.append (" class=%"iron-tooltip%"")
 						end
 					end
-					k := url_encoder.general_encoded_string (ic.key)
+					k := url_encoder.general_encoded_string (@ ic.key)
 					create l_sort_uri.make_from_uri (l_uri)
 					-- FIXME jfiat [2015/12/29] : remove dependency on bootstrap theme!
 					if l_sort_by = Void then
@@ -115,14 +113,14 @@ feature -- Execution
 						s.append ("<a href=%"" + l_sort_uri.string + "%"")
 						s.append (l_link_attribs)
 						s.append (">")
-					elseif l_sort_by.is_case_insensitive_equal_general (ic.key) then
+					elseif l_sort_by.is_case_insensitive_equal_general (@ ic.key) then
 						s.append ("<li class=%"active%">")
 						l_sort_uri.add_query_parameter ("sort-by", {STRING_32} "-" + k)
 						s.append ("<a href=%"" + l_sort_uri.string + "%"")
 						s.append (l_link_attribs)
 						s.append (">")
 						s.append ("<span class=%"glyphicon glyphicon-chevron-up%"></span> ")
-					elseif l_sort_by.is_case_insensitive_equal_general ({STRING_32} "-" + ic.key) then
+					elseif l_sort_by.is_case_insensitive_equal_general ({STRING_32} "-" + @ ic.key) then
 						s.append ("<li class=%"active%">")
 						l_sort_uri.add_query_parameter ("sort-by", k)
 						s.append ("<a href=%"" + l_sort_uri.string + "%"")
@@ -211,7 +209,7 @@ feature -- Documentation
 		end
 
 note
-	copyright: "Copyright (c) 1984-2016, Eiffel Software"
+	copyright: "Copyright (c) 1984-2021, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

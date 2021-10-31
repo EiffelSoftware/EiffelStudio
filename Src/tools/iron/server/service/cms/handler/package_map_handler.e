@@ -1,6 +1,4 @@
 note
-	description: "Summary description for {PACKAGE_MAP_HANDLER}."
-	author: ""
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -60,16 +58,16 @@ feature -- Execution
 							lst as c
 						loop
 							s.append ("<li>")
-							i := c.item.last_index_of ('/', c.item.count)
+							i := c.last_index_of ('/', c.count)
 							s.append ("<a href=%"" + "/" + v + "%">/" + v + "</a> ")
 							if i > 0 then
-								l_parent := c.item.substring (1, i)
+								l_parent := c.substring (1, i)
 								s.append ("<a href=%"" + "/" + v + l_parent + "%">" + l_parent + "</a>")
-								s.append ("<a href=%"" + "/" + v + c.item + "%">" + c.item.substring ( i+1, c.item.count) + "</a>")
+								s.append ("<a href=%"" + "/" + v + c + "%">" + c.substring ( i+1, c.count) + "</a>")
 							else
-								s.append ("<a href=%"" + "/" + v + c.item + "%"> " + c.item + " </a>")
+								s.append ("<a href=%"" + "/" + v + c + "%"> " + c + " </a>")
 							end
-							s.append (" <a style=%"color: red;%" href=%"" + iron.package_version_map_web_page (l_package, c.item) + "?" + Method_query_parameter + "=DELETE%">DEL</a>")
+							s.append (" <a style=%"color: red;%" href=%"" + iron.package_version_map_web_page (l_package, c) + "?" + Method_query_parameter + "=DELETE%">DEL</a>")
 							s.append ("</li>%N")
 						end
 						s.append ("</ul>")
@@ -122,7 +120,7 @@ feature -- Execution
 								if not l_path.is_empty then
 									l_path.append_character ('/')
 								end
-								l_path.append (c.item.string_representation)
+								l_path.append (c.string_representation)
 							end
 						end
 					end
@@ -193,7 +191,7 @@ feature -- Execution
 							if not l_path.is_empty then
 								l_path.append_character ('/')
 							end
-							l_path.append (c.item.string_representation)
+							l_path.append (c.string_representation)
 						end
 						if iron.database.package_by_path (iron_version (req), l_path) ~ l_package then
 							iron.database.unassociate_package_with_path (l_package, l_path)
@@ -235,7 +233,7 @@ feature -- Documentation
 		end
 
 note
-	copyright: "Copyright (c) 1984-2016, Eiffel Software"
+	copyright: "Copyright (c) 1984-2021, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

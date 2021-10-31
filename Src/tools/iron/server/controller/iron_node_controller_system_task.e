@@ -1,5 +1,4 @@
-note
-	description: "Objects that ..."
+﻿note
 	author: "$Author$"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -94,14 +93,14 @@ feature -- Execution
 			across
 				l_statuses as ic
 			loop
-				l_title_len := l_title_len.max (ic.item.title.count)
+				l_title_len := l_title_len.max (ic.title.count)
 			end
 
 			create s.make_empty
 			across
 				l_statuses as ic
 			loop
-				if attached ic.item as e then
+				if attached ic as e then
 					io.put_string (e.title)
 					s.wipe_out
 					s.make_filled (' ', l_title_len - e.title.count)
@@ -133,7 +132,7 @@ feature -- Execution
 			else
 				if is_required_flag then
 					v.append ("ERROR ")
-					create err.make_from_string ({STRING_32} "Path %""+ p.name + {STRING_32} "%" is missing")
+					create err.make_from_string ({STRING_32} "Path %"" + p.name + {STRING_32} "%" is missing")
 				end
 				v.append ("missing")
 			end
@@ -209,32 +208,32 @@ feature -- Execution
 				css_style.put_text_decoration_underline
 				css.add_selector_style ("a:hover", css_style)
 				create css_style.make_with_string ("[
-					-webkit-border-radius: 20px;
-					-webkit-border-top-left-radius: 0;
-					-webkit-border-bottom-right-radius: 0;
-					-moz-border-radius: 20px;
-					-moz-border-radius-topleft: 0;
-					-moz-border-radius-bottomright: 0;
-					border-radius: 20px;
-					border-top-left-radius: 0;
-					border-bottom-right-radius: 0;
-				]")
+							-webkit-border-radius: 20px;
+							-webkit-border-top-left-radius: 0;
+							-webkit-border-bottom-right-radius: 0;
+							-moz-border-radius: 20px;
+							-moz-border-radius-topleft: 0;
+							-moz-border-radius-bottomright: 0;
+							border-radius: 20px;
+							border-top-left-radius: 0;
+							border-bottom-right-radius: 0;
+						]")
 				css_style.append ("margin-bottom: 20px; padding: 20px; font-size: 140%%; border: solid 1px #00f; color: #fff; background-color: #009; text-align: center;")
 				css_style.put_key_value ("position", "relative")
 				css_style.put_margin_top ("30px")
 				css_style.put_key_value ("top", "-20px")
 				css.add_selector_style ("div#header", css_style)
 				create css_style.make_with_string ("[
-					-webkit-border-radius: 20px;
-					-webkit-border-top-left-radius: 0;
-					-webkit-border-top-right-radius: 0;
-					-moz-border-radius: 20px;
-					-moz-border-radius-topleft: 0;
-					-moz-border-radius-topright: 0;
-					border-radius: 20px;
-					border-top-left-radius: 0;
-					border-top-right-radius: 0;
-				]")
+							-webkit-border-radius: 20px;
+							-webkit-border-top-left-radius: 0;
+							-webkit-border-top-right-radius: 0;
+							-moz-border-radius: 20px;
+							-moz-border-radius-topleft: 0;
+							-moz-border-radius-topright: 0;
+							border-radius: 20px;
+							border-top-left-radius: 0;
+							border-top-right-radius: 0;
+						]")
 				css_style.append ("border-top: dotted 1px #00f; background-color: #cfcfdf; text-align: center; min-height: 40px; padding: 5px;")
 				css_style.put_key_value ("position", "relative")
 					--					css_style.put_margin_top ("30px")
@@ -298,14 +297,14 @@ feature -- Execution
 			if not f.exists then
 				f.open_write
 				f.put_string ("[
-						/* IRON javascript */
-					]")
+							/* IRON javascript */
+						]")
 				f.close
 			end
 		end
 
 note
-	copyright: "Copyright (c) 1984-2020, Eiffel Software"
+	copyright: "Copyright (c) 1984-2021, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

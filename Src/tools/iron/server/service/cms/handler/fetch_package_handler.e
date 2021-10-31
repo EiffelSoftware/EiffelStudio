@@ -1,6 +1,4 @@
 note
-	description: "Summary description for {FETCH_PACKAGE_HANDLER}."
-	author: ""
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -46,7 +44,7 @@ feature -- Execution
 				across
 					l_vars as c
 				loop
-					if attached {WSF_STRING} c.item as v_string and then not v_string.is_empty then
+					if attached {WSF_STRING} c as v_string and then not v_string.is_empty then
 						v.append_character ('/')
 						v.append (v_string.value)
 					end
@@ -76,11 +74,11 @@ feature -- Execution
 						across
 							lst as e
 						loop
-							if attached iron.database.package_by_path (iron_version (req), v + "/" + e.item) as l_package then
+							if attached iron.database.package_by_path (iron_version (req), v + "/" + e) as l_package then
 								s.append ("<li class=%"package-inline%">")
 								s.append ("<a href=%""+ iron.package_version_view_web_page (l_package) +"%"> ")
-								s.append (m.html_encoded_string (e.item))
-								if attached l_package.name as l_name and then not l_package.is_named (e.item) then
+								s.append (m.html_encoded_string (e))
+								if attached l_package.name as l_name and then not l_package.is_named (e) then
 									s.append (" -&gt; package %"")
 									s.append (m.html_encoded_string (l_name))
 									s.append_character ('%"')
@@ -90,19 +88,19 @@ feature -- Execution
 								s.append (l_package.id)
 								s.append ("</span>")
 								s.append ("</li>")
-							elseif attached {ITERABLE [READABLE_STRING_32]} iron.database.path_browse_index (iron_version (req), v + "/" + e.item) then
+							elseif attached {ITERABLE [READABLE_STRING_32]} iron.database.path_browse_index (iron_version (req), v + "/" + e) then
 								s.append ("<li class=%"package-folder-inline%">")
 								s.append ("<a href=%""+ req.script_url (req.path_info))
 								if s.item (s.count) /= '/' then
 									s.append_character ('/')
 								end
-								s.append (url_encoder.encoded_string (e.item) +"%">")
-								s.append (m.html_encoded_string (e.item))
+								s.append (url_encoder.encoded_string (e) +"%">")
+								s.append (m.html_encoded_string (e))
 								s.append ("/</a>")
 								s.append ("</li>")
 							else
 								s.append ("<li class=%"package-inline-unknown%">? ")
-								s.append (m.html_encoded_string (e.item))
+								s.append (m.html_encoded_string (e))
 								s.append (" ?</a>")
 								s.append ("</li>")
 
@@ -129,7 +127,7 @@ feature -- Documentation
 		end
 
 note
-	copyright: "Copyright (c) 1984-2014, Eiffel Software"
+	copyright: "Copyright (c) 1984-2021, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

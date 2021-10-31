@@ -1,6 +1,4 @@
-note
-	description: "Summary description for {IRON_NODE_FS_DATABASE}."
-	author: ""
+﻿note
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -147,7 +145,7 @@ feature -- User
 							across
 								l_roles as c
 							loop
-								Result.add_role (create {IRON_NODE_USER_ROLE}.make (c.item))
+								Result.add_role (create {IRON_NODE_USER_ROLE}.make (c))
 							end
 						end
 					end
@@ -158,13 +156,13 @@ feature -- User
 						inf as c
 					loop
 						if
-							c.key.same_string ("name")
-							or c.key.same_string ("roles")
-							or c.key.same_string ("email")
+							@ c.key.same_string ("name")
+							or @ c.key.same_string ("roles")
+							or @ c.key.same_string ("email")
 						then
 							-- Already stored in attribute
 						else
-							Result.set_data_item (c.key, c.item)
+							Result.set_data_item (@ c.key, c)
 						end
 					end
 				end
@@ -182,7 +180,7 @@ feature -- User
 				until
 					Result /= Void
 				loop
-					Result := user (c.item.name)
+					Result := user (c.name)
 					if
 						Result /= Void and then
 						attached Result.email as l_email and then
@@ -225,7 +223,7 @@ feature -- User
 					if not s.is_empty then
 						s.append_character (',')
 					end
-					s.append (utf.utf_32_string_to_utf_8_string_8 (c.item.name))
+					s.append (utf.utf_32_string_to_utf_8_string_8 (c.name))
 				end
 				inf.put (s, "roles")
 			end
@@ -237,8 +235,8 @@ feature -- User
 				across
 					l_u_data as c
 				loop
-					if attached {READABLE_STRING_GENERAL} c.item as l_text then
-						inf.put (l_text, c.key)
+					if attached {READABLE_STRING_GENERAL} c as l_text then
+						inf.put (l_text, @ c.key)
 					end
 				end
 			end
@@ -246,7 +244,7 @@ feature -- User
 				across
 					l_u_data as c
 				loop
-					inf.remove (c.item)
+					inf.remove (c)
 				end
 			end
 
@@ -287,7 +285,7 @@ feature -- Version
 				across
 					d.entries as c
 				loop
-					if attached {PATH} c.item as p and then not (p.is_current_symbol or p.is_parent_symbol) then
+					if attached {PATH} c as p and then not (p.is_current_symbol or p.is_parent_symbol) then
 						if u.directory_path_exists (d.path.extended_path (p)) then
 							Result.force (create {IRON_NODE_VERSION}.make (p.utf_8_name))
 						end
@@ -342,17 +340,17 @@ feature -- Package
 					across
 						s_tags.split (',') as tags_ic
 					loop
-						Result.add_tag (tags_ic.item)
+						Result.add_tag (tags_ic)
 					end
 				end
 				if attached inf.table_item ("links") as s_links then
 					across
 						s_links as links_ic
 					loop
-						create s.make_from_string (links_ic.item)
+						create s.make_from_string (links_ic)
 						s.left_adjust
 						s.right_adjust
-						create l_title.make_from_string_general (links_ic.key)
+						create l_title.make_from_string_general (@ links_ic.key)
 						if not s.is_empty then
 							if s.item (1) = '"' then
 								i := s.index_of ('"', 2)
@@ -363,7 +361,7 @@ feature -- Package
 								end
 							end
 							if s.is_valid_as_string_8 then
-								Result.add_link (links_ic.key, create {IRON_NODE_LINK}.make (s.to_string_8, l_title))
+								Result.add_link (@ links_ic.key, create {IRON_NODE_LINK}.make (s.to_string_8, l_title))
 							end
 						end
 					end
@@ -378,20 +376,20 @@ feature -- Package
 					inf as c
 				loop
 					if
-						c.key.same_string ("id")
-						or c.key.same_string ("name")
-						or c.key.same_string ("title")
-						or c.key.same_string ("description")
-						or c.key.same_string ("tags")
-						or c.key.same_string ("owner")
-						or c.key.same_string ("last-modified")
-						or c.key.same_string ("last-archive-revision")
-						or c.key.same_string ("links")
-						or c.key.starts_with ("links[")
+						@ c.key.same_string ("id")
+						or @ c.key.same_string ("name")
+						or @ c.key.same_string ("title")
+						or @ c.key.same_string ("description")
+						or @ c.key.same_string ("tags")
+						or @ c.key.same_string ("owner")
+						or @ c.key.same_string ("last-modified")
+						or @ c.key.same_string ("last-archive-revision")
+						or @ c.key.same_string ("links")
+						or @ c.key.starts_with ("links[")
 					then
 							-- no way
 					else
-						Result.put (c.item, c.key)
+						Result.put (c, @ c.key)
 					end
 				end
 --				z := package_archive_path (v, a_id)
@@ -418,7 +416,7 @@ feature -- Package
 				across
 					d.entries as c
 				loop
-					l_path := c.item
+					l_path := c
 					if
 						not l_path.is_current_symbol and then
 						not l_path.is_parent_symbol
@@ -446,7 +444,7 @@ feature -- Package
 				loop
 					i := i + 1
 					if i <= l_upper then
-						l_path := ic.item
+						l_path := ic
 						if attached package (l_path.name) as l_pack then
 							check attached l_path.entry as e and then e.name.same_string_general (l_pack.id) end
 							Result.force (l_pack)
@@ -541,7 +539,7 @@ feature -- Package: change
 				across
 					tb as c
 				loop
-					inf.put (c.item, c.key)
+					inf.put (c, @ c.key)
 				end
 			end
 
@@ -561,7 +559,7 @@ feature -- Package: change
 					if not s.is_empty then
 						s.append_character (',')
 					end
-					s.append (tags_ic.item)
+					s.append (tags_ic)
 				end
 			end
 			if not s.is_empty then
@@ -573,14 +571,14 @@ feature -- Package: change
 					l_links as link_ic
 				loop
 					create s.make_empty
-					if attached link_ic.item.title as lnk_title then
+					if attached link_ic.title as lnk_title then
 						s.append_character ('%"')
 						s.append (lnk_title)
 						s.append_character ('%"')
 						s.append_character (' ')
 					end
-					s.append_string_general (link_ic.item.url)
-					inf.put (s, {STRING_32} "links["+ link_ic.key + {STRING_32} "]")
+					s.append_string_general (link_ic.url)
+					inf.put (s, {STRING_32} "links["+ @ link_ic.key + {STRING_32} "]")
 				end
 			end
 
@@ -627,12 +625,12 @@ feature -- Version package
 						inf as c
 					loop
 						if
-							c.key.same_string ("id")
-							or c.key.same_string ("archive_revision")
+							@ c.key.same_string ("id")
+							or @ c.key.same_string ("archive_revision")
 						then
 								-- no way
 						else
-							Result.put (c.item, c.key)
+							Result.put (c, @ c.key)
 						end
 					end
 					Result.set_archive_revision (rev)
@@ -668,7 +666,7 @@ feature -- Version package
 				across
 					d.entries as c
 				loop
-					l_path := c.item
+					l_path := c
 					if
 						not l_path.is_current_symbol and then
 						not l_path.is_parent_symbol
@@ -701,7 +699,7 @@ feature -- Version package
 				across
 					d.entries as c
 				loop
-					l_path := c.item
+					l_path := c
 					if
 						not l_path.is_current_symbol and then
 						not l_path.is_parent_symbol
@@ -729,7 +727,7 @@ feature -- Version package
 				loop
 					i := i + 1
 					if i <= l_upper then
-						l_path := ic.item
+						l_path := ic
 						if attached version_package (v, l_path.name) as l_pack then
 							check attached l_path.entry as e and then e.name.same_string_general (l_pack.id) end
 							Result.force (l_pack)
@@ -752,8 +750,8 @@ feature -- Version package
 			until
 				Result /= Void or err
 			loop
-				if not c.item.is_empty then
-					p := p.extended (c.item)
+				if not c.is_empty then
+					p := p.extended (c)
 					if u.file_path_exists (p) then
 						if
 							attached id_from_file (p) as l_uuid and then
@@ -802,8 +800,8 @@ feature -- Version package
 				until
 					d /= Void or err
 				loop
-					if not c.item.is_empty then
-						p := p.extended (c.item)
+					if not c.is_empty then
+						p := p.extended (c)
 						if u.directory_path_exists (p) then
 							-- skip
 						elseif u.file_path_exists (p) then
@@ -826,9 +824,9 @@ feature -- Version package
 				across
 					d.entries as e
 				loop
-					if e.item.is_current_symbol or e.item.is_parent_symbol then
+					if e.is_current_symbol or e.is_parent_symbol then
 					else
-						Result.force (e.item.name)
+						Result.force (e.name)
 					end
 				end
 			end
@@ -929,7 +927,7 @@ feature -- Version Package: change
 				across
 					tb as c
 				loop
-					inf.put (c.item, c.key)
+					inf.put (c, @ c.key)
 				end
 			end
 
@@ -1269,14 +1267,14 @@ feature {NONE} -- Implementation: maps
 			across
 				m.maps as ic
 			loop
-				l_id := ic.key -- By design, it is valid STRING_8
+				l_id := @ ic.key -- By design, it is valid STRING_8
 				f.put_string (utf.utf_32_string_to_utf_8_string_8 (l_id))
 				f.put_new_line
 				across
-					ic.item as ic_path
+					ic as ic_path
 				loop
 					f.put_character ('%T')
-					f.put_string (utf.escaped_utf_32_string_to_utf_8_string_8 (ic_path.item))
+					f.put_string (utf.escaped_utf_32_string_to_utf_8_string_8 (ic_path))
 					f.put_new_line
 				end
 			end
@@ -1451,7 +1449,7 @@ feature {NONE} -- Initialization
 		end
 
 note
-	copyright: "Copyright (c) 1984-2018, Eiffel Software"
+	copyright: "Copyright (c) 1984-2021, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

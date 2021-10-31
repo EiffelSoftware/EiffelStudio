@@ -1,6 +1,4 @@
-note
-	description: "Summary description for {TEMPLATE_IRON_NODE_VERSION_PACKAGE_INSPECTOR}."
-	author: ""
+﻿note
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -68,13 +66,12 @@ feature -- Internal data
 					else
 						Result := cell_of ("")
 					end
-				else
 				end
 			end
 		end
 
 note
-	copyright: "Copyright (c) 1984-2019, Eiffel Software"
+	copyright: "Copyright (c) 1984-2021, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

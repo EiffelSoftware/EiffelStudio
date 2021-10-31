@@ -1,6 +1,4 @@
 note
-	description: "Summary description for {ACCOUNT_HANDLER}."
-	author: ""
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -237,7 +235,7 @@ feature -- Users
 					across
 						errs as c
 					loop
-						if attached c.item.message as msg then
+						if attached c.message as msg then
 							s.append ("<li>")
 							s.append (msg)
 							s.append ("</li>")
@@ -406,7 +404,7 @@ feature -- Documentation
 		end
 
 note
-	copyright: "Copyright (c) 1984-2014, Eiffel Software"
+	copyright: "Copyright (c) 1984-2021, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

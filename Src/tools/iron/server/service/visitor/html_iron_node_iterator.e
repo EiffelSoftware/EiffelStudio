@@ -1,5 +1,4 @@
 note
-	description : "Objects that ..."
 	author      : "$Author$"
 	date        : "$Date$"
 	revision    : "$Revision$"
@@ -78,7 +77,7 @@ feature -- Visit
 					across
 						l_tags as ic_tags
 					loop
-						s.append (html_encoder.encoded_string (ic_tags.item))
+						s.append (html_encoder.encoded_string (ic_tags))
 						s.append_character (',')
 					end
 					if s.ends_with (",") then
@@ -161,7 +160,7 @@ feature -- Visit
 					across
 						lst as c
 					loop
-						l_uris.force (request.script_url (p.version.value + c.item), c.item)
+						l_uris.force (request.script_url (p.version.value + c), c)
 					end
 					tpl.add_value (l_uris, "uris")
 				end
@@ -218,7 +217,7 @@ feature -- Visit
 						across
 							l_tags as ic_tags
 						loop
-							s.append (html_encoder.encoded_string (ic_tags.item))
+							s.append (html_encoder.encoded_string (ic_tags))
 							s.append_character (',')
 						end
 						if s.ends_with (",") then
@@ -247,7 +246,7 @@ feature -- Visit
 								lst as c
 							loop
 								s.append ("<li class=%"uri%">")
-								l_path := c.item
+								l_path := c
 								i := l_path.last_index_of ('/', l_path.count)
 								if i > 0 then
 									s.append ("<a href=%"" + "/" + v + l_path.substring (1, i) + "%">/" + v + l_path.substring (1, i) + "</a> ")
@@ -281,9 +280,9 @@ feature -- Visit
 						across
 							l_notes as ic_notes
 						loop
-							if attached ic_notes.item as l_note then
+							if attached ic_notes as l_note then
 								s.append ("<li>")
-								s.append (html_encoder.encoded_string (ic_notes.key.as_string_32))
+								s.append (html_encoder.encoded_string (@ ic_notes.key.as_string_32))
 								s.append_character (':')
 								s.append (html_encoder.encoded_string (l_note))
 								s.append ("</li>")
@@ -312,7 +311,7 @@ feature -- Visit
 			across
 				it as c
 			loop
-				visit_package (c.item)
+				visit_package (c)
 				buffer.append_character ('%N')
 			end
 			buffer.append ("</ul>%N")
@@ -324,7 +323,7 @@ feature -- Visit
 			across
 				it as c
 			loop
-				visit_package_version (c.item)
+				visit_package_version (c)
 				buffer.append_character ('%N')
 			end
 			buffer.append ("</ul>%N")
@@ -361,7 +360,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright: "Copyright (c) 1984-2018, Eiffel Software"
+	copyright: "Copyright (c) 1984-2021, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

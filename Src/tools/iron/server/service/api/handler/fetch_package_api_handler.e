@@ -1,6 +1,4 @@
 note
-	description: "Summary description for {FETCH_PACKAGE_API_HANDLER}."
-	author: ""
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -42,7 +40,7 @@ feature -- Execution
 				across
 					l_vars as c
 				loop
-					if attached {WSF_STRING} c.item as v_string and then not v_string.is_empty then
+					if attached {WSF_STRING} c as v_string and then not v_string.is_empty then
 						v.append_character ('/')
 						v.append (v_string.value)
 					end
@@ -75,7 +73,7 @@ feature -- Documentation
 		end
 
 note
-	copyright: "Copyright (c) 1984-2013, Eiffel Software"
+	copyright: "Copyright (c) 1984-2021, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

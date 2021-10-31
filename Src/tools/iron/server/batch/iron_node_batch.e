@@ -1,7 +1,4 @@
 note
-	description: "[
-		Objects that ...
-	]"
 	author: "$Author$"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -55,7 +52,7 @@ feature -- Execution
 				Operations as ic
 			loop
 				print (" - ")
-				print (ic.key)
+				print (@ ic.key)
 				print ("%N")
 			end
 		end
@@ -68,16 +65,16 @@ feature -- Execution
 			across
 				db.versions as ic
 			loop
-				print (ic.item.debug_output)
+				print (ic.debug_output)
 				print ("%N")
-				if attached db.version_packages (ic.item, 1, 0) as lst then
+				if attached db.version_packages (ic, 1, 0) as lst then
 					across
 						lst as ic_package
 					loop
 						print ("%T")
-						print (ic_package.item.name)
+						print (ic_package.name)
 						print (" ")
-						print (ic_package.item.id)
+						print (ic_package.id)
 						print ("%N")
 					end
 				end
@@ -102,17 +99,17 @@ feature -- Execution
 			across
 				db.versions as ic
 			loop
-				print (ic.item.debug_output)
+				print (ic.debug_output)
 				print ("%N")
 				i := 1
-				if attached db.version_packages (ic.item, i, 5) as lst then
+				if attached db.version_packages (ic, i, 5) as lst then
 					create l_analyzer.make
 					print (lst.count.out + " items.%N")
 					create ut
 					across
 						lst as ic_package
 					loop
-						l_package := ic_package.item
+						l_package := ic_package
 						debug
 							print (i)
 						end
@@ -131,7 +128,7 @@ feature -- Execution
 								across
 									l_analyzer.ecfs as ic_ecfs
 								loop
-									l_ecf_path := ic_ecfs.item.name
+									l_ecf_path := ic_ecfs.name
 									print (" - ")
 									print_unicode (path_name_to_uri_path (l_ecf_path.substring (l_root.count + 1, l_ecf_path.count)))
 									print ("%N")
@@ -175,7 +172,7 @@ feature -- Execution
 					across
 						l_repo.available_packages as ic
 					loop
-						p := ic.item
+						p := ic
 						if iron.database.version_package (l_repo_version, p.id) /= Void then
 							print ("Importing ")
 							print_unicode (p.human_identifier)
@@ -187,7 +184,7 @@ feature -- Execution
 							across
 								p.tags as ic_tags
 							loop
-								np.add_tag (ic_tags.item)
+								np.add_tag (ic_tags)
 							end
 							create nvp.make (np, l_repo_version)
 							iron.database.force_version_package (nvp)
@@ -206,7 +203,7 @@ feature -- Execution
 							across
 								p.associated_paths as ic_path
 							loop
-								iron.database.associate_package_with_path (nvp, ic_path.item)
+								iron.database.associate_package_with_path (nvp, ic_path)
 							end
 						end
 					end
@@ -277,7 +274,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright: "Copyright (c) 1984-2014, Eiffel Software"
+	copyright: "Copyright (c) 1984-2021, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[
@@ -308,6 +305,4 @@ note
 			Customer support http://support.eiffel.com
 		]"
 
-end -- class IRON_NODE_BATCH
-
-
+end

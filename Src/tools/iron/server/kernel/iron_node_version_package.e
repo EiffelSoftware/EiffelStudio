@@ -226,7 +226,7 @@ feature -- Access: items
 				across
 					p_items as ic
 				loop
-					Result.force (ic.item, ic.key)
+					Result.force (ic, @ ic.key)
 				end
 			end
 			if attached version_items as v_items and then not v_items.is_empty then
@@ -236,7 +236,7 @@ feature -- Access: items
 				across
 					v_items as ic
 				loop
-					Result.force (ic.item, ic.key)
+					Result.force (ic, @ ic.key)
 				end
 			end
 		end
@@ -301,7 +301,7 @@ feature -- Visitor
 		end
 
 note
-	copyright: "Copyright (c) 1984-2015, Eiffel Software"
+	copyright: "Copyright (c) 1984-2021, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

@@ -1,6 +1,4 @@
 note
-	description: "Summary description for {IRON_NODE_API_HANDLER}."
-	author: ""
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -374,7 +372,7 @@ feature -- Package form
 						errs as e
 					loop
 						t := "<strong>[Error]</strong> "
-						if attached e.item.message as err_msg then
+						if attached e.message as err_msg then
 							m.add_error_message (err_msg)
 						end
 					end
@@ -477,14 +475,14 @@ feature -- Package form
 							across
 								l_tags as ic
 							loop
-								p.add_tag (ic.item)
+								p.add_tag (ic)
 							end
 						end
 							-- Links
 						across
 							pif.notes as ic
 						loop
-							k := ic.key
+							k := @ ic.key
 							if
 								k.is_case_insensitive_equal ("title") or
 								k.is_case_insensitive_equal ("description") or
@@ -493,16 +491,16 @@ feature -- Package form
 									-- Already handled
 							elseif
 								k.starts_with ("link[") and then
-								ic.item.is_valid_as_string_8
+								ic.is_valid_as_string_8
 							then
-								p.add_link (k.substring (6, k.count - 1), create {IRON_NODE_LINK}.make (ic.item.to_string_8, Void))
+								p.add_link (k.substring (6, k.count - 1), create {IRON_NODE_LINK}.make (ic.to_string_8, Void))
 							elseif
 								k.starts_with ("links[") and then
-								ic.item.is_valid_as_string_8
+								ic.is_valid_as_string_8
 							then
-								p.add_link (k.substring (7, k.count - 1), create {IRON_NODE_LINK}.make (ic.item.to_string_8, Void))
+								p.add_link (k.substring (7, k.count - 1), create {IRON_NODE_LINK}.make (ic.to_string_8, Void))
 							else
-								p.put (ic.item, k)
+								p.put (ic, k)
 							end
 						end
 					end
@@ -514,7 +512,7 @@ feature -- Package form
 								errs as e
 							loop
 								t := "<strong>[Error]</strong> "
-								if attached e.item.message as err_msg then
+								if attached e.message as err_msg then
 									m.add_error_message (err_msg)
 								end
 							end
@@ -587,7 +585,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright: "Copyright (c) 1984-2016, Eiffel Software"
+	copyright: "Copyright (c) 1984-2021, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

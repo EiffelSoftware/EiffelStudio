@@ -1,8 +1,7 @@
-note
-	description : "Objects that ..."
-	author      : "$Author$"
-	date        : "$Date$"
-	revision    : "$Revision$"
+﻿note
+	author: "$Author$"
+	date: "$Date$"
+	revision: "$Revision$"
 
 class
 	IRON_NODE_CONTROLLER_USER_TASK
@@ -31,22 +30,22 @@ feature -- Execution
 		local
 		do
 			if attached arguments as args and then args.valid_index (1) then
-				if args[1].is_case_insensitive_equal ("list") then
+				if args [1].is_case_insensitive_equal ("list") then
 					display_list (iron)
-				elseif args[1].is_case_insensitive_equal ("create") then
+				elseif args [1].is_case_insensitive_equal ("create") then
 					if args.valid_index (4) then
-						create_user (iron, args[2], args[3], args[4])
+						create_user (iron, args [2], args [3], args [4])
 					elseif args.valid_index (3) then
-						create_user (iron, args[2], args[3], Void)
+						create_user (iron, args [2], args [3], Void)
 					else
 						io.error.put_string ("Error: 'create' is missing argument%N")
 					end
-				elseif args[1].is_case_insensitive_equal ("update") then
+				elseif args [1].is_case_insensitive_equal ("update") then
 					if args.valid_index (3) then
-						update_user (iron, args[2], args.subarray (3, args.upper))
+						update_user (iron, args [2], args.subarray (3, args.upper))
 					end
 				else
-					io.error.put_string_32 ({STRING_32} "Error: '" + args[1]  + "' is not supported%N")
+					io.error.put_string_32 ({STRING_32} "Error: '" + args [1] + "' is not supported%N")
 					display_help (iron)
 				end
 			else
@@ -96,27 +95,27 @@ feature -- Execution
 				until
 					i > args.upper
 				loop
-					if args[i].same_string_general ("--add-role") then
+					if args [i].same_string_general ("--add-role") then
 						i := i + 1
 						if args.valid_index (i) then
-							create r.make (args[i].as_lower)
+							create r.make (args [i].as_lower)
 							u.add_role (r)
 						end
-					elseif args[i].same_string_general ("--remove-role") then
+					elseif args [i].same_string_general ("--remove-role") then
 						i := i + 1
 						if args.valid_index (i) then
-							create r.make (args[i].as_lower)
+							create r.make (args [i].as_lower)
 							u.remove_role (r)
 						end
-					elseif args[i].same_string_general ("--password") then
+					elseif args [i].same_string_general ("--password") then
 						i := i + 1
 						if args.valid_index (i) then
-							u.set_password (args[i])
+							u.set_password (args [i])
 						end
-					elseif args[i].same_string_general ("--email") then
+					elseif args [i].same_string_general ("--email") then
 						i := i + 1
 						if args.valid_index (i) then
-							u.set_email (args[i])
+							u.set_email (args [i])
 						end
 					end
 					i := i + 1
@@ -133,9 +132,8 @@ feature -- Execution
 			end
 		end
 
-
 note
-	copyright: "Copyright (c) 1984-2020, Eiffel Software"
+	copyright: "Copyright (c) 1984-2021, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

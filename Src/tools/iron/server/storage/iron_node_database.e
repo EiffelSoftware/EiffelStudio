@@ -1,6 +1,4 @@
-note
-	description: "Summary description for {IRON_NODE_DATABASE}."
-	author: ""
+﻿note
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -78,8 +76,8 @@ feature -- Package
 				until
 					Result /= Void
 				loop
-					if ic.item.is_named (a_name) then
-						Result := ic.item
+					if ic.is_named (a_name) then
+						Result := ic
 					end
 				end
 			end
@@ -194,7 +192,7 @@ feature -- Version Package: Access
 					across
 						lst as ic
 					loop
-						Result.force (ic.item)
+						Result.force (ic)
 					end
 				end
 			end
@@ -354,7 +352,7 @@ feature -- Version Package: Criteria
 	score_for_tag (obj: IRON_NODE_VERSION_PACKAGE; s: READABLE_STRING_GENERAL): REAL
 		do
 			if attached obj.tags as l_tags then
-				if across l_tags as ic some meet_text (ic.item, s) end then
+				if across l_tags as ic some meet_text (ic, s) end then
 					Result := 1.0
 				end
 			end
@@ -400,7 +398,7 @@ feature -- Version Package: Criteria
 		once
 			create Result.make
 
-			Result.register_builder ("name", agent (n,v: READABLE_STRING_GENERAL): detachable SCORER_CRITERIA [IRON_NODE_VERSION_PACKAGE]
+			Result.register_builder ("name", agent (n,v: READABLE_STRING_32): detachable SCORER_CRITERIA [IRON_NODE_VERSION_PACKAGE]
 					local
 						s: STRING_32
 					do
@@ -410,7 +408,7 @@ feature -- Version Package: Criteria
 						create {SCORER_CRITERIA_AGENT [IRON_NODE_VERSION_PACKAGE]} Result.make (s, score_weight_for_name, agent score_for_name (?, v))
 					end
 				)
-			Result.register_builder ("title", agent (n,v: READABLE_STRING_GENERAL): detachable SCORER_CRITERIA [IRON_NODE_VERSION_PACKAGE]
+			Result.register_builder ("title", agent (n,v: READABLE_STRING_32): detachable SCORER_CRITERIA [IRON_NODE_VERSION_PACKAGE]
 					local
 						s: STRING_32
 					do
@@ -420,7 +418,7 @@ feature -- Version Package: Criteria
 						create {SCORER_CRITERIA_AGENT [IRON_NODE_VERSION_PACKAGE]} Result.make (s, score_weight_for_title, agent score_for_title (?, v))
 					end
 				)
-			Result.register_builder ("tag", agent (n,v: READABLE_STRING_GENERAL): detachable SCORER_CRITERIA [IRON_NODE_VERSION_PACKAGE]
+			Result.register_builder ("tag", agent (n,v: READABLE_STRING_32): detachable SCORER_CRITERIA [IRON_NODE_VERSION_PACKAGE]
 					local
 						s: STRING_32
 					do
@@ -430,7 +428,7 @@ feature -- Version Package: Criteria
 						create {SCORER_CRITERIA_AGENT [IRON_NODE_VERSION_PACKAGE]} Result.make (s, score_weight_for_tag, agent score_for_tag (?, v))
 					end
 				)
-			Result.register_builder ("description", agent (n,v: READABLE_STRING_GENERAL): detachable SCORER_CRITERIA [IRON_NODE_VERSION_PACKAGE]
+			Result.register_builder ("description", agent (n,v: READABLE_STRING_32): detachable SCORER_CRITERIA [IRON_NODE_VERSION_PACKAGE]
 					local
 						s: STRING_32
 					do
@@ -440,7 +438,7 @@ feature -- Version Package: Criteria
 						create {SCORER_CRITERIA_AGENT [IRON_NODE_VERSION_PACKAGE]} Result.make (s, score_weight_for_description, agent score_for_description (?, v))
 					end
 				)
-			Result.register_builder ("owner", agent (n,v: READABLE_STRING_GENERAL): detachable SCORER_CRITERIA [IRON_NODE_VERSION_PACKAGE]
+			Result.register_builder ("owner", agent (n,v: READABLE_STRING_32): detachable SCORER_CRITERIA [IRON_NODE_VERSION_PACKAGE]
 					local
 						s: STRING_32
 					do
@@ -450,7 +448,7 @@ feature -- Version Package: Criteria
 						create {SCORER_CRITERIA_AGENT [IRON_NODE_VERSION_PACKAGE]} Result.make (s, score_weight_for_owner, agent score_for_owner (?, v))
 					end
 				)
-			Result.register_builder ("downloads", agent (n,v: READABLE_STRING_GENERAL): detachable SCORER_CRITERIA [IRON_NODE_VERSION_PACKAGE]
+			Result.register_builder ("downloads", agent (n,v: READABLE_STRING_32): detachable SCORER_CRITERIA [IRON_NODE_VERSION_PACKAGE]
 					local
 						s: STRING_32
 					do
@@ -460,7 +458,7 @@ feature -- Version Package: Criteria
 						create {SCORER_CRITERIA_AGENT [IRON_NODE_VERSION_PACKAGE]} Result.make (s, score_weight_for_downloads, agent score_for_downloads (?, v))
 					end
 				)
-			Result.register_builder ("text", agent (n,v: READABLE_STRING_GENERAL): detachable SCORER_CRITERIA [IRON_NODE_VERSION_PACKAGE]
+			Result.register_builder ("text", agent (n,v: READABLE_STRING_32): detachable SCORER_CRITERIA [IRON_NODE_VERSION_PACKAGE]
 					local
 						s: STRING_32
 					do

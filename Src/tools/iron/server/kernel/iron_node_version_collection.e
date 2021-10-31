@@ -47,7 +47,7 @@ feature -- Status report
 	has (a_version_id: READABLE_STRING_GENERAL): BOOLEAN
 			-- Has version `a_version_id' ?
 		do
-			Result := across items as ic some a_version_id.is_case_insensitive_equal (ic.item.value) end
+			Result := across items as ic some a_version_id.is_case_insensitive_equal (ic.value) end
 		end
 
 feature -- Sorting
@@ -71,7 +71,7 @@ feature -- Sorting
 		end
 
 ;note
-	copyright: "Copyright (c) 1984-2015, Eiffel Software"
+	copyright: "Copyright (c) 1984-2021, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

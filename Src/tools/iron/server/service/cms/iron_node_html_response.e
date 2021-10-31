@@ -1,6 +1,4 @@
 note
-	description: "Summary description for {IRON_NODE_HTML_RESPONSE}."
-	author: ""
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -202,7 +200,7 @@ feature {WSF_RESPONSE} -- Output
 					across
 						l_parameters as ic
 					loop
-						tpl.add_value (ic.item, utf.escaped_utf_32_string_to_utf_8_string_8 (ic.key)) -- Conversion to STRING_8 !!
+						tpl.add_value (ic, utf.escaped_utf_32_string_to_utf_8_string_8 (@ ic.key)) -- Conversion to STRING_8 !!
 					end
 				end
 
@@ -219,7 +217,7 @@ feature {WSF_RESPONSE} -- Output
 				create s.make_empty
 				if attached head_lines as l_lines and then not l_lines.is_empty then
 					across l_lines as ic loop
-						s.append (ic.item)
+						s.append (ic)
 						s.append_character ('%N')
 					end
 				end
@@ -246,12 +244,12 @@ feature {WSF_RESPONSE} -- Output
 					loop
 						if l_version /= Void then
 							create l_new_url.make_from_string (l_url)
-							l_new_url.replace_substring_all ("/" + l_version.value + "/", "/" + c.item.value + "/")
+							l_new_url.replace_substring_all ("/" + l_version.value + "/", "/" + c.value + "/")
 						else
-							create l_new_url.make_from_string (iron.page (c.item, "/"))
+							create l_new_url.make_from_string (iron.page (c, "/"))
 						end
-						create lnk.make (l_new_url, c.item.value)
-						lnk.set_is_active (l_version ~ c.item)
+						create lnk.make (l_new_url, c.value)
+						lnk.set_is_active (l_version ~ c)
 						l_versions_alternatives.force (lnk)
 					end
 					tpl.add_value (l_versions_alternatives, "iron_version_switch_urls")
@@ -326,12 +324,12 @@ feature {NONE} -- HTML Generation
 				loop
 					if l_version /= Void then
 						create l_new_url.make_from_string (l_url)
-						l_new_url.replace_substring_all ("/" + l_version.value + "/", "/" + c.item.value + "/")
+						l_new_url.replace_substring_all ("/" + l_version.value + "/", "/" + c.value + "/")
 					else
-						create l_new_url.make_from_string (iron.page (c.item, "/"))
+						create l_new_url.make_from_string (iron.page (c, "/"))
 					end
-					create l_combo_item.make (l_new_url, c.item.value)
-					l_combo_item.set_is_selected (l_version ~ c.item)
+					create l_combo_item.make (l_new_url, c.value)
+					l_combo_item.set_is_selected (l_version ~ c)
 					l_combo.add_option (l_combo_item)
 				end
 				l_form.extend (l_combo)
@@ -347,11 +345,11 @@ feature {NONE} -- HTML Generation
 				across
 					lst as c
 				loop
-					s.append ("<li><a href=%"" + c.item.url + "%">" + html_encoder.general_encoded_string (c.item.title) + "</a>")
-					if attached c.item.sub_links as sublst then
+					s.append ("<li><a href=%"" + c.url + "%">" + html_encoder.general_encoded_string (c.title) + "</a>")
+					if attached c.sub_links as sublst then
 						s.append ("<ul>")
 						across sublst as ic_sub loop
-							s.append ("<li><a href=%"" + ic_sub.item.url + "%">" + html_encoder.general_encoded_string (ic_sub.item.title) + "</a>")
+							s.append ("<li><a href=%"" + ic_sub.url + "%">" + html_encoder.general_encoded_string (ic_sub.title) + "</a>")
 						end
 						s.append ("</ul>%N")
 					end
@@ -369,7 +367,7 @@ feature {NONE} -- HTML Generation
 					lst as c
 				loop
 					s.append ("<li>")
-					s.append (c.item.message)
+					s.append (c.message)
 					s.append ("</li>")
 				end
 				s.append ("</ul></div>")
@@ -427,7 +425,7 @@ feature {NONE} -- HTML Generation
 		end
 
 note
-	copyright: "Copyright (c) 1984-2018, Eiffel Software"
+	copyright: "Copyright (c) 1984-2021, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

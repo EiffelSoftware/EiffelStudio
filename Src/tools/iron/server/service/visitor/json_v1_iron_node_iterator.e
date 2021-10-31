@@ -1,5 +1,4 @@
 note
-	description : "Objects that ..."
 	author      : "$Author$"
 	date        : "$Date$"
 	revision    : "$Revision$"
@@ -185,7 +184,7 @@ feature -- Visit
 				across
 					l_tags as ic_tags
 				loop
-					j_array.extend (create {JSON_STRING}.make_from_string_32 (ic_tags.item))
+					j_array.extend (create {JSON_STRING}.make_from_string_32 (ic_tags))
 				end
 				j_object.put (j_array, "tags")
 			end
@@ -194,8 +193,8 @@ feature -- Visit
 				across
 					l_notes as ic_notes
 				loop
-					if attached ic_notes.item as l_note_text then
-						j_notes.put_string (l_note_text, ic_notes.key)
+					if attached ic_notes as l_note_text then
+						j_notes.put_string (l_note_text, @ ic_notes.key)
 					end
 				end
 				j_object.put (j_notes, "notes")
@@ -206,7 +205,7 @@ feature -- Visit
 					l_links as ic_links
 				loop
 						-- Ignore the link title for now.
-					j_links.put_string (ic_links.item.url, ic_links.key)
+					j_links.put_string (ic_links.url, @ ic_links.key)
 				end
 				j_object.put (j_links, "links")
 			end
@@ -265,7 +264,7 @@ feature -- Visit
 				across
 					l_tags as ic_tags
 				loop
-					j_array.extend (create {JSON_STRING}.make_from_string_32 (ic_tags.item))
+					j_array.extend (create {JSON_STRING}.make_from_string_32 (ic_tags))
 				end
 				j_object.put (j_array, "tags")
 			end
@@ -274,7 +273,7 @@ feature -- Visit
 				across
 					l_paths as c
 				loop
-					js := c.item
+					js := c
 					j_array.add (js)
 				end
 				j_object.put (j_array, "paths")
@@ -284,8 +283,8 @@ feature -- Visit
 				across
 					l_notes as ic_notes
 				loop
-					if attached ic_notes.item as l_note_text then
-						j_notes.put_string (l_note_text, ic_notes.key)
+					if attached ic_notes as l_note_text then
+						j_notes.put_string (l_note_text, @ ic_notes.key)
 					end
 				end
 				j_object.put (j_notes, "notes")
@@ -296,7 +295,7 @@ feature -- Visit
 					l_links as ic_links
 				loop
 						-- Ignore the link title for now.
-					j_links.put_string (ic_links.item.url, ic_links.key)
+					j_links.put_string (ic_links.url, @ ic_links.key)
 				end
 				j_object.put (j_links, "links")
 			end
@@ -312,7 +311,7 @@ feature -- Visit
 				it as c
 			loop
 				last_json_value := Void
-				visit_package (c.item)
+				visit_package (c)
 				if attached last_json_value as v then
 					j_array.add (v)
 				end
@@ -329,7 +328,7 @@ feature -- Visit
 				it as c
 			loop
 				last_json_value := Void
-				visit_package_version (c.item)
+				visit_package_version (c)
 				if attached last_json_value as v then
 					j_array.add (v)
 				end
@@ -355,7 +354,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright: "Copyright (c) 1984-2016, Eiffel Software"
+	copyright: "Copyright (c) 1984-2021, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

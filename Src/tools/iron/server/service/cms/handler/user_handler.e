@@ -1,5 +1,4 @@
 note
-	description: "Summary description for {USER_HANDLER}."
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -78,7 +77,7 @@ feature -- Execution
 								l_roles as c
 							loop
 								s.append (" ")
-								s.append (m.html_encoded_string (c.item.name))
+								s.append (m.html_encoded_string (c.name))
 							end
 							s.append ("</span>")
 							s.append ("</div>")
@@ -113,7 +112,7 @@ feature -- Documentation
 		end
 
 note
-	copyright: "Copyright (c) 1984-2013, Eiffel Software"
+	copyright: "Copyright (c) 1984-2021, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

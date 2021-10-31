@@ -1,6 +1,4 @@
 note
-	description: "Summary description for {PACKAGE_MAP_API_HANDLER}."
-	author: ""
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -111,7 +109,7 @@ feature -- Execution
 								if not l_path.is_empty then
 									l_path.append_character ('/')
 								end
-								l_path.append (c.item.string_representation)
+								l_path.append (c.string_representation)
 							end
 						end
 					end
@@ -173,7 +171,7 @@ feature -- Execution
 							if not l_path.is_empty then
 								l_path.append_character ('/')
 							end
-							l_path.append (c.item.string_representation)
+							l_path.append (c.string_representation)
 						end
 						if iron.database.package_by_path (iron_version (req), l_path) ~ l_package then
 							iron.database.unassociate_package_with_path (l_package, l_path)
@@ -210,7 +208,7 @@ feature -- Documentation
 		end
 
 note
-	copyright: "Copyright (c) 1984-2013, Eiffel Software"
+	copyright: "Copyright (c) 1984-2021, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

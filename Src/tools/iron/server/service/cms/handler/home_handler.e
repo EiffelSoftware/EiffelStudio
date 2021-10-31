@@ -1,5 +1,4 @@
 note
-	description: "Summary description for {HOME_HANDLER}."
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -61,7 +60,7 @@ feature -- Execution
 					across
 						l_versions as c
 					loop
-						s.append ("<li><a href=%"" + req.script_url (iron.page (c.item, "/")) + "%">Version "+ c.item.value +"</a></li>")
+						s.append ("<li><a href=%"" + req.script_url (iron.page (c, "/")) + "%">Version "+ c.value +"</a></li>")
 
 					end
 					s.append ("</ul>")
@@ -153,7 +152,7 @@ feature -- Documentation
 		end
 
 note
-	copyright: "Copyright (c) 1984-2016, Eiffel Software"
+	copyright: "Copyright (c) 1984-2021, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

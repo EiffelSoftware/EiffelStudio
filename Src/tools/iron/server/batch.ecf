@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
-<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-20-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-20-0 http://www.eiffel.com/developers/xml/configuration-1-20-0.xsd" name="batch" uuid="94C52C65-3AA6-41EF-A819-7B9CDA40D216" library_target="batch">
+<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-22-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-22-0 http://www.eiffel.com/developers/xml/configuration-1-22-0.xsd" name="batch" uuid="94C52C65-3AA6-41EF-A819-7B9CDA40D216" library_target="batch">
 	<target name="batch">
 		<root class="IRON_NODE_BATCH" feature="make"/>
 		<file_rule>
@@ -7,9 +7,10 @@
 			<exclude>/.svn$</exclude>
 			<exclude>/EIFGENs$</exclude>
 		</file_rule>
-		<option debug="true" warning="true">
+		<option debug="true" warning="error">
 			<debug name="iron" enabled="true"/>
 			<assertions precondition="true" postcondition="true" supplier_precondition="true"/>
+			<warning name="obsolete_feature" value="all"/>
 		</option>
 		<setting name="console_application" value="true"/>
 		<setting name="executable_name" value="ironctl"/>

@@ -2,8 +2,10 @@
 <system xmlns="http://www.eiffel.com/developers/xml/configuration-1-22-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-22-0 http://www.eiffel.com/developers/xml/configuration-1-22-0.xsd" name="simple" uuid="03B6A4DA-1090-43BE-A63B-F5750A67B7B3">
 	<target name="simple">
 		<root class="APPLICATION" feature="make"/>
+		<option warning="error">
+			<warning name="obsolete_feature" value="all"/>
+		</option>
 		<setting name="console_application" value="false"/>
-		<setting name="total_order_on_reals" value="false"/>
 		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf"/>
 		<library name="criteria" location="..\criteria.ecf" readonly="false"/>
 		<cluster name="src" location=".\" recursive="true"/>

@@ -69,7 +69,7 @@ feature {NONE} -- Initialization
 				print ("%N")
 			else
 				io.error.put_string ("Expression has syntax error!%N")
-				io.error.put_string (fac.description)
+				io.error.put_string_32 (fac.description)
 				io.error.put_new_line
 			end
 		end
@@ -100,7 +100,7 @@ feature {NONE} -- Initialization
 				print ("%N")
 			else
 				io.error.put_string ("Expression has syntax error!%N")
-				io.error.put_string (fac.description)
+				io.error.put_string_32 (fac.description)
 				io.error.put_new_line
 			end
 		end
@@ -108,7 +108,7 @@ feature {NONE} -- Initialization
 	criteria_factory: CRITERIA_FACTORY [ARTICLE]
 		once
 			create Result.make
-			Result.register_builder ("title", agent  (n, v: READABLE_STRING_GENERAL): detachable CRITERIA [ARTICLE]
+			Result.register_builder ("title", agent  (n, v: READABLE_STRING_32): detachable CRITERIA [ARTICLE]
 				do
 					create {CRITERIA_AGENT [ARTICLE]} Result.make (n + ":" + v, agent  (e: ARTICLE; a_title: READABLE_STRING_GENERAL): BOOLEAN
 						do
@@ -117,7 +117,7 @@ feature {NONE} -- Initialization
 				end)
 			Result.set_builder_description ("title", "Title contains value?")
 
-			Result.register_builder ("description", agent  (n, v: READABLE_STRING_GENERAL): detachable CRITERIA [ARTICLE]
+			Result.register_builder ("description", agent  (n, v: READABLE_STRING_32): detachable CRITERIA [ARTICLE]
 				do
 					create {CRITERIA_AGENT [ARTICLE]} Result.make (n + ":" + v, agent  (e: ARTICLE; a_description: READABLE_STRING_GENERAL): BOOLEAN
 						local
@@ -129,7 +129,7 @@ feature {NONE} -- Initialization
 				end)
 			Result.set_builder_description ("description", "Description contains value?")
 
-			Result.register_builder ("content", agent  (n, v: READABLE_STRING_GENERAL): detachable CRITERIA [ARTICLE]
+			Result.register_builder ("content", agent  (n, v: READABLE_STRING_32): detachable CRITERIA [ARTICLE]
 				do
 					create {CRITERIA_AGENT [ARTICLE]} Result.make (n + ":" + v, agent  (e: ARTICLE; a_text: READABLE_STRING_GENERAL): BOOLEAN
 						local
@@ -141,7 +141,7 @@ feature {NONE} -- Initialization
 				end)
 			Result.set_builder_description ("content", "Content contains value?")
 
-			Result.register_builder ("pages", agent  (n, v: READABLE_STRING_GENERAL): detachable CRITERIA [ARTICLE]
+			Result.register_builder ("pages", agent  (n, v: READABLE_STRING_32): detachable CRITERIA [ARTICLE]
 				do
 					create {CRITERIA_AGENT [ARTICLE]} Result.make (n + ":" + v, agent  (e: ARTICLE; a_count: INTEGER): BOOLEAN
 						do
@@ -150,7 +150,7 @@ feature {NONE} -- Initialization
 				end)
 			Result.set_builder_description ("pages", "At least N pages?")
 
-			Result.register_builder ("published", agent  (n, v: READABLE_STRING_GENERAL): detachable CRITERIA [ARTICLE]
+			Result.register_builder ("published", agent  (n, v: READABLE_STRING_32): detachable CRITERIA [ARTICLE]
 				do
 					create {CRITERIA_AGENT [ARTICLE]} Result.make (n + ":" + v, agent  (e: ARTICLE; b: BOOLEAN): BOOLEAN
 						do
@@ -165,7 +165,7 @@ feature {NONE} -- Initialization
 	score_factory: SCORER_CRITERIA_FACTORY [ARTICLE]
 		once
 			create Result.make
-			Result.register_builder ("title", agent (n, v: READABLE_STRING_GENERAL): detachable SCORER_CRITERIA [ARTICLE]
+			Result.register_builder ("title", agent (n, v: READABLE_STRING_32): detachable SCORER_CRITERIA [ARTICLE]
 				do
 					create {SCORER_CRITERIA_AGENT [ARTICLE]} Result.make (n + ":" + v, 0.5, agent  (e: ARTICLE; a_title: READABLE_STRING_GENERAL): REAL
 						do
@@ -174,7 +174,7 @@ feature {NONE} -- Initialization
 				end)
 			Result.set_builder_description ("title", "Title contains value?")
 
-			Result.register_builder ("description", agent (n, v: READABLE_STRING_GENERAL): detachable SCORER_CRITERIA [ARTICLE]
+			Result.register_builder ("description", agent (n, v: READABLE_STRING_32): detachable SCORER_CRITERIA [ARTICLE]
 				do
 					create {SCORER_CRITERIA_AGENT [ARTICLE]} Result.make (n + ":" + v, 0.3, agent (e: ARTICLE; a_description: READABLE_STRING_GENERAL): REAL
 						do
@@ -185,7 +185,7 @@ feature {NONE} -- Initialization
 				end)
 			Result.set_builder_description ("description", "Description contains value?")
 
-			Result.register_builder ("content", agent (n, v: READABLE_STRING_GENERAL): detachable SCORER_CRITERIA [ARTICLE]
+			Result.register_builder ("content", agent (n, v: READABLE_STRING_32): detachable SCORER_CRITERIA [ARTICLE]
 				do
 					create {SCORER_CRITERIA_AGENT [ARTICLE]} Result.make (n + ":" + v, 0.05, agent (e: ARTICLE; a_text: READABLE_STRING_GENERAL): REAL
 						do
@@ -196,7 +196,7 @@ feature {NONE} -- Initialization
 				end)
 			Result.set_builder_description ("content", "Content contains value?")
 
-			Result.register_builder ("pages", agent (n, v: READABLE_STRING_GENERAL): detachable SCORER_CRITERIA [ARTICLE]
+			Result.register_builder ("pages", agent (n, v: READABLE_STRING_32): detachable SCORER_CRITERIA [ARTICLE]
 				do
 					create {SCORER_CRITERIA_AGENT [ARTICLE]} Result.make (n + ":" + v, 0.05, agent (e: ARTICLE; a_count: INTEGER): REAL
 						do
@@ -205,7 +205,7 @@ feature {NONE} -- Initialization
 				end)
 			Result.set_builder_description ("pages", "At least N pages?")
 
-			Result.register_builder ("published", agent (n, v: READABLE_STRING_GENERAL): detachable SCORER_CRITERIA [ARTICLE]
+			Result.register_builder ("published", agent (n, v: READABLE_STRING_32): detachable SCORER_CRITERIA [ARTICLE]
 				do
 					create {SCORER_CRITERIA_AGENT [ARTICLE]} Result.make (n + ":" + v, 0.1, agent (e: ARTICLE; b: BOOLEAN): REAL
 						do
@@ -214,7 +214,7 @@ feature {NONE} -- Initialization
 				end)
 			Result.set_builder_description ("published", "Is published (yes|no)?")
 
-			Result.register_builder ("default", agent (n, v: READABLE_STRING_GENERAL): detachable SCORER_CRITERIA [ARTICLE]
+			Result.register_builder ("default", agent (n, v: READABLE_STRING_32): detachable SCORER_CRITERIA [ARTICLE]
 				do
 					create {SCORER_CRITERIA_AGENT [ARTICLE]} Result.make (n + ":" + v, 0.9, agent (e: ARTICLE; a_text: READABLE_STRING_GENERAL): REAL
 						local

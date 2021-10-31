@@ -1,6 +1,4 @@
-note
-	description: "Summary description for WSF_STARTS_WITH_CONTEXT_MAPPING."
-	author: ""
+﻿note
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -36,23 +34,20 @@ feature {NONE} -- Execution
 
 	execute_handler (h: like handler; a_start_path: like uri; req: WSF_REQUEST; res: WSF_RESPONSE)
 			-- Execute handler `h' with `req' and `res' for Current mapping
-		local
-			ctx: C
 		do
-			create ctx.make (req, Current)
-			h.execute (a_start_path, ctx, req, res)
+			h.execute (a_start_path, create {C}.make (req, Current), req, res)
 		end
 
 feature -- Status report
 
-	debug_output: READABLE_STRING_GENERAL
+	debug_output: READABLE_STRING_32
 			-- String that should be displayed in debugger to represent `Current'.
 		do
-			Result := Precursor + " {" + ({C}).name + "}"
+			Result := Precursor + " {" + ({C}).name_32 + "}"
 		end
 
 note
-	copyright: "2011-2014, Jocelyn Fiat, Javier Velilla, Olivier Ligot, Colin Adams, Eiffel Software and others"
+	copyright: "2011-2021, Jocelyn Fiat, Javier Velilla, Olivier Ligot, Colin Adams, Alexander Kogtenkov, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

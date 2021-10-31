@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "[
 				Describes a route or mapping for the WSF_ROUTER
 			]"
@@ -38,7 +38,7 @@ feature -- Documentation
 
 feature -- Status report
 
-	debug_output: READABLE_STRING_GENERAL
+	debug_output: READABLE_STRING_32
 			-- String that should be displayed in debugger to represent `Current'.
 		local
 			s: STRING_32
@@ -74,7 +74,7 @@ feature -- Status
 		end
 
 note
-	copyright: "2011-2017, Jocelyn Fiat, Javier Velilla, Olivier Ligot, Colin Adams, Eiffel Software and others"
+	copyright: "2011-2021, Jocelyn Fiat, Javier Velilla, Olivier Ligot, Colin Adams, Alexander Kogtenkov, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

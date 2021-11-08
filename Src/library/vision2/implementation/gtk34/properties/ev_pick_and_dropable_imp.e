@@ -197,9 +197,9 @@ feature {NONE} -- Implementation
 
 feature -- Implementation
 
-	activate_docking_source_hint (a_screen_x, a_screen_y: INTEGER)
+	activate_docking_source_hint (a_screen_x, a_screen_y: INTEGER; a_pebble_src: EV_PICK_AND_DROPABLE)
 		do
-			app_implementation.activate_docking_source_hint (a_screen_x, a_screen_y)
+			app_implementation.activate_docking_source_hint (a_screen_x, a_screen_y, a_pebble_src)
 		end
 
 	deactivate_docking_source_hint
@@ -372,7 +372,7 @@ feature -- Implementation
 							end
 						end
 					end
-					activate_docking_source_hint (a_start_screen_x, a_start_screen_y)
+					activate_docking_source_hint (a_start_screen_x, a_start_screen_y, pebble_source)
 				end (l_pebble, a_x, a_y, a_screen_x, a_screen_y)
 			end
 

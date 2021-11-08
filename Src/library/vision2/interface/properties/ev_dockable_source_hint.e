@@ -24,11 +24,11 @@ feature -- Status
 
 feature -- Execution		
 
-	activate (a_x, a_y: INTEGER; a_width, a_height: INTEGER)
+	activate (a_x, a_y: INTEGER; a_width, a_height: INTEGER; a_pebble_src: EV_PICK_AND_DROPABLE)
 		require
 			not is_activated
 		do
-			implementation.activate (a_x, a_y, a_width, a_height)
+			implementation.activate (a_x, a_y, a_width, a_height, a_pebble_src)
 		ensure
 			is_activated
 		end

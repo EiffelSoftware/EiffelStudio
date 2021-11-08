@@ -30,7 +30,7 @@ feature {EV_ANY}
 
 	is_activated: BOOLEAN = False
 
-	activate (a_x, a_y: INTEGER; a_width, a_height: INTEGER)
+	activate (a_x, a_y: INTEGER; a_width, a_height: INTEGER; a_pebble_src: EV_PICK_AND_DROPABLE)
 		do
 		end
 

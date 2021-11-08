@@ -1359,10 +1359,10 @@ feature {EV_ANY_I} -- Docking implementation
 			create Result
 		end
 
-	activate_docking_source_hint (a_screen_x, a_screen_y: INTEGER)
+	activate_docking_source_hint (a_screen_x, a_screen_y: INTEGER; a_pebble_src: EV_PICK_AND_DROPABLE)
 		do
 			if not {GTK}.is_x11_session then
-				pnd_source_hint.activate (a_screen_x, a_screen_y, 50, 50)
+				pnd_source_hint.activate (a_screen_x, a_screen_y, 50, 50, a_pebble_src)
 			end
 		end
 

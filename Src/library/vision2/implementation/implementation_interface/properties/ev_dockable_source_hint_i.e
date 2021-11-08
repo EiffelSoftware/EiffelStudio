@@ -14,7 +14,7 @@ inherit
 
 feature {EV_ANY}
 
-	activate (a_x, a_y: INTEGER; a_width, a_height: INTEGER)
+	activate (a_x, a_y: INTEGER; a_width, a_height: INTEGER; a_pebble_src: EV_PICK_AND_DROPABLE)
 		deferred
 		end
 

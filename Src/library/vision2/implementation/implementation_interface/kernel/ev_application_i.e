@@ -711,7 +711,7 @@ feature {EV_PICK_AND_DROPABLE_I, EV_ANY_I} -- Pick and drop
 			y_origin := a_y_origin
 		end
 
-	activate_docking_source_hint (a_screen_x, a_screen_y: INTEGER)
+	activate_docking_source_hint (a_screen_x, a_screen_y: INTEGER; a_pebble_src: EV_PICK_AND_DROPABLE)
 			-- Activate docking source visual hint.
 		do
 		end

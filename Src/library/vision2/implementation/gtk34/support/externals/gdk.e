@@ -609,6 +609,13 @@ feature -- GdkDrawing
 			"return gdk_drawing_context_get_cairo_context ((GdkDrawingContext *) $a_context);"
 		end
 
+	frozen gdk_cairo_set_source_pixbuf (a_context: POINTER; a_pixbuf: POINTER; a_pixbuf_x, a_pixbuf_y: REAL_64)
+		external
+			"C inline use <ev_gtk.h>"
+		alias
+			"return gdk_cairo_set_source_pixbuf ((cairo_t *) $a_context, (const GdkPixbuf *) $a_pixbuf, (gdouble) $a_pixbuf_x, (gdouble) $a_pixbuf_y);"
+		end
+
 feature -- GdkSeat
 
 	frozen gdk_seat_get_pointer (a_seat: POINTER): POINTER
@@ -1504,12 +1511,20 @@ feature -- GdkScreen
 			"return gdk_screen_get_root_window ((GdkScreen *)$a_screen);;"
 		end
 
-	frozen	gdk_get_default_root_window: POINTER
+	frozen gdk_get_default_root_window: POINTER
 			-- Obtains the root window (parent all other windows are inside) for the default display and screen.
 		external
 			"C inline use <ev_gtk.h>"
 		alias
 			"return gdk_get_default_root_window();"
+		end
+
+	frozen gdk_window_get_geometry (p_win: POINTER; p_x, p_y, p_width, p_height: POINTER)
+			-- Obtains the root window (parent all other windows are inside) for the default display and screen.
+		external
+			"C inline use <ev_gtk.h>"
+		alias
+			"return gdk_window_get_geometry ((GdkWindow*) $p_win, (gint*) $p_x, (gint*) $p_y, (gint*) $p_width, (gint*) $p_height);"
 		end
 
 	frozen gdk_window_destroy (a_window: POINTER)

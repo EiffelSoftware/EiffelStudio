@@ -20,7 +20,8 @@ inherit
 	EV_PRIMITIVE_IMP
 		redefine
 			interface,
-			make
+			make,
+			apply_background_color_to_style_context
 		end
 
 feature -- Initialization
@@ -60,12 +61,27 @@ feature -- Resizing
 		deferred
 		end
 
+feature {NONE} -- Implementation
+
+	apply_background_color_to_style_context (a_style_context: POINTER; a_color: detachable EV_COLOR; a_css: READABLE_STRING_8)
+		local
+			l_css: READABLE_STRING_8
+		do
+					--| Set the text selection background and color.
+			l_css := a_css + " selection { background: "
+								+ {GTK}.rgba_string_style_color (a_style_context, "theme_selected_bg_color")
+								+ "; color: "
+								+ {GTK}.rgba_string_style_color (a_style_context, "theme_selected_fg_color")
+								+ "; }%N"
+			Precursor (a_style_context, a_color, l_css)
+		end
+
 feature {EV_ANY, EV_ANY_I} -- Implementation		
 
 	interface: detachable EV_TEXT_COMPONENT note option: stable attribute end;
 
 note
-	copyright:	"Copyright (c) 1984-2014, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2021, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

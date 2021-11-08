@@ -51,7 +51,8 @@ inherit
 			has_focus,
 			set_focus,
 			background_color_style_context,
-			foreground_color_style_context
+			foreground_color_style_context,
+			apply_background_color_to_style_context
 		redefine
 			make,
 			needs_event_box,

@@ -126,10 +126,7 @@ feature -- Status setting
 		local
 			l_context: POINTER
 			r, g, b, m, mx: INTEGER
-			l_provider: POINTER
 			l_css: STRING
-			l_css_data: C_STRING
-			l_error: POINTER
 			l_bg_name: STRING
 		do
 			if
@@ -196,25 +193,7 @@ feature -- Status setting
 						+ ";}%N"
 					)
 
-					--| Set the text selection background and color.
-					--| FIXME: this is probably not the good location
-					--| move to EV_TEXT_IMP ?
-				l_css.append (".view text selection {" + l_bg_name + ": "
-								+ {GTK}.rgba_string_style_color (l_context, "theme_selected_bg_color")
-								+ "; color: "
-								+ {GTK}.rgba_string_style_color (l_context, "theme_selected_fg_color")
-								+ "; }%N")
-
-				create l_css_data.make (l_css)
-				l_provider := {GTK_CSS}.gtk_css_provider_new
-				{GTK2}.gtk_style_context_add_provider (l_context, l_provider, {EV_GTK_ENUMS}.gtk_style_provider_priority_application)
-				if not {GTK_CSS}.gtk_css_provider_load_from_data (l_provider, l_css_data.item, -1, $l_error) then
-					-- TODO Handle error
-				end
-
-				if not l_provider.is_default_pointer then
-					{GTK2}.g_object_unref (l_provider)
-				end
+				apply_background_color_to_style_context (l_context, a_color, l_css)
 			end
 		end
 
@@ -241,9 +220,6 @@ feature -- Status setting
 		local
 			r,g,b,m: INTEGER
 			l_context: POINTER
-			l_provider: POINTER
-			l_css_data: C_STRING
-			l_error: POINTER
 			l_color_string: STRING
 			l_foreground_color_imp: like foreground_color_imp
 		do
@@ -251,6 +227,8 @@ feature -- Status setting
 				not a_c_object.is_default_pointer and
 				a_color /= Void
 			then
+				l_context := {GTK}.gtk_widget_get_style_context (a_c_object)
+
 				l_foreground_color_imp := foreground_color_imp
 				check l_foreground_color_imp /= Void then end
 				r := l_foreground_color_imp.red_16_bit
@@ -258,14 +236,8 @@ feature -- Status setting
 				b := l_foreground_color_imp.blue_16_bit
 				m := {EV_COLOR}.max_16_bit
 
-				l_context := {GTK}.gtk_widget_get_style_context (a_c_object)
-				l_provider := {GTK_CSS}.gtk_css_provider_new
-				{GTK2}.gtk_style_context_add_provider (l_context, l_provider, {EV_GTK_ENUMS}.gtk_style_provider_priority_application)
 				l_color_string := new_rgb_color_string (r / m, g / m, b / m)
-				create l_css_data.make ("*, *:active, *:hover { color:"+ l_color_string + "; }%N")
-				if not {GTK_CSS}.gtk_css_provider_load_from_data (l_provider, l_css_data.item, -1, $l_error) then
-					-- TODO Handle error
-				end
+				apply_foreground_color_to_style_context (l_context, a_color, "*, *:active, *:hover { color:"+ l_color_string + "; }%N")
 			end
 		end
 
@@ -287,6 +259,41 @@ feature -- Status setting
 		end
 
 feature {NONE} -- Implementation
+
+	apply_background_color_to_style_context (a_style_context: POINTER; a_color: detachable EV_COLOR; a_css: READABLE_STRING_8)
+		local
+			l_provider: POINTER
+			l_css_data: C_STRING
+			l_error: POINTER
+		do
+			create l_css_data.make (a_css)
+			l_provider := {GTK_CSS}.gtk_css_provider_new
+			{GTK2}.gtk_style_context_add_provider (a_style_context, l_provider, {EV_GTK_ENUMS}.gtk_style_provider_priority_application)
+			if not {GTK_CSS}.gtk_css_provider_load_from_data (l_provider, l_css_data.item, -1, $l_error) then
+				-- TODO Handle error
+			end
+
+			if not l_provider.is_default_pointer then
+				{GTK2}.g_object_unref (l_provider)
+			end
+		end
+
+	apply_foreground_color_to_style_context (a_style_context: POINTER; a_color: detachable EV_COLOR; a_css: READABLE_STRING_8)
+		local
+			l_provider: POINTER
+			l_css_data: C_STRING
+			l_error: POINTER
+		do
+			create l_css_data.make (a_css)
+			l_provider := {GTK_CSS}.gtk_css_provider_new
+			{GTK2}.gtk_style_context_add_provider (a_style_context, l_provider, {EV_GTK_ENUMS}.gtk_style_provider_priority_application)
+			if not {GTK_CSS}.gtk_css_provider_load_from_data (l_provider, l_css_data.item, -1, $l_error) then
+				-- TODO Handle error
+			end
+			if not l_provider.is_default_pointer then
+				{GTK2}.g_object_unref (l_provider)
+			end
+		end
 
 	new_css_color_style_string (a_name: READABLE_STRING_8; r,g,b: REAL_64): STRING
 		do

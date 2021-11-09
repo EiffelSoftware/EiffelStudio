@@ -11,10 +11,10 @@
 		<capability>
 			<concurrency support="thread" use="thread"/>
 		</capability>
-		<precompile name="vision2-pre" location="$ISE_PRECOMP\vision2-mt-safe.ecf"/>
+		<!--precompile name="vision2-pre" location="$ISE_PRECOMP\vision2-mt-safe.ecf"/>-->
 		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf"/>
 		<library name="vision2" location="$ISE_LIBRARY\library\vision2\vision2.ecf"/>
-		<library name="web_browser" location="$ISE_LIBRARY\library\web_browser\web_browser.ecf"/>
+		<library name="web_browser" location="$ISE_LIBRARY\library\web_browser\web_browser.ecf" readonly="False"/>
 		<cluster name="root_cluster" location=".\" recursive="true">
 			<file_rule>
 				<exclude>/.svn$</exclude>

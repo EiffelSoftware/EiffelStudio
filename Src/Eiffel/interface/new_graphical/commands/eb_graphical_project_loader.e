@@ -565,6 +565,7 @@ feature {NONE} -- User interaction
 				l_vbox.set_padding (small_padding_size)
 
 				l_vbox.extend (l_label)
+				l_vbox.disable_item_expand (l_label)
 				l_vbox.extend (l_grid)
 
 				create l_hbox
@@ -781,7 +782,7 @@ invariant
 	parent_window_not_destroyed: not parent_window.is_destroyed
 
 note
-	copyright:	"Copyright (c) 1984-2020, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2021, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

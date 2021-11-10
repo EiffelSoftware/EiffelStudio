@@ -24,11 +24,19 @@
 				<platform excluded_value="windows"/>
 			</condition>
 		</external_include>
+		<external_include location="$(ISE_LIBRARY)/library/web_browser/spec/include/webkit2">
+			<condition>
+				<platform excluded_value="windows"/>
+				<custom name="vision_implementation" value="gtk34"/>
+			</condition>
+		</external_include>
+
 		<external_include location="$(ISE_LIBRARY)/library/web_browser/spec/include">
 			<condition>
 				<platform excluded_value="windows"/>
 			</condition>
 		</external_include>
+		
 		<external_library location="$(ISE_LIBRARY)\library\web_browser\spec\$(ISE_C_COMPILER)\$(ISE_PLATFORM)\lib\ole_ie.lib">
 			<condition>
 				<platform value="windows"/>
@@ -52,8 +60,17 @@
 			<condition>
 				<platform excluded_value="windows"/>
 				<custom name="vision_implementation" excluded_value="cocoa"/>
+				<custom name="vision_implementation" excluded_value="gtk34"/>
 			</condition>
 		</cluster>
+		<cluster name="implementation_gtk3" location="implementation\gtk3" recursive="true">
+			<condition>
+				<platform excluded_value="windows"/>
+				<custom name="vision_implementation" excluded_value="cocoa"/>
+				<custom name="vision_implementation" value="gtk34"/>
+			</condition>
+		</cluster>
+
 		<cluster name="implementation_interface" location="implementation\implementation_interface\" recursive="true">
 			<option namespace="Vision2.$$Implementation.Interface">
 			</option>

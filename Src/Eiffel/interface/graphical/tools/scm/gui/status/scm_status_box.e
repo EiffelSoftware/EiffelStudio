@@ -94,9 +94,9 @@ feature {NONE} -- Initialization
 
 			bar.extend (create {EV_CELL})
 
-			create but.make_with_text (scm_names.button_save_changelist)
+			create but.make_with_text (scm_names.button_commit_changelist)
 			set_default_size_for_button (but)
-			but.set_tooltip (scm_names.button_save_changelist_tooltip)
+			but.set_tooltip (scm_names.button_commit_changelist_tooltip)
 			save_all_repo_button := but
 			but.disable_sensitive
 			but.select_actions.extend (agent on_save)

@@ -468,7 +468,7 @@ feature -- Operation
 			if l_is_supported then
 				update_changes_count
 				create m
-				create mi.make_with_text_and_action (scm_names.menu_save, agent
+				create mi.make_with_text_and_action (scm_names.menu_commit, agent
 						do
 							parent_grid.status_box.save_location (parent_row.root_location)
 						end)

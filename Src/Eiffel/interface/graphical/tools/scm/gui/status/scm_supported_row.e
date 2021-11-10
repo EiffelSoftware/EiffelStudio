@@ -194,7 +194,7 @@ feature -- Operation
 					m.extend (mi)
 			end
 
-			create mi.make_with_text_and_action (scm_names.menu_save, agent
+			create mi.make_with_text_and_action (scm_names.menu_commit, agent
 					do
 						parent_grid.status_box.save_location (root_location)
 					end)

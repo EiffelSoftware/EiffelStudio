@@ -28,6 +28,7 @@ feature -- Execution
 				p := pf.process_launcher (a_file_name, args, a_working_directory)
 				p.set_hidden (True)
 				p.set_separate_console (False)
+				p.set_detached_console (True)
 				p.redirect_output_to_stream
 				p.redirect_error_to_stream
 
@@ -81,6 +82,7 @@ feature -- Execution
 				p := pf.process_launcher_with_command_line (a_cmd, a_working_directory)
 				p.set_hidden (True)
 				p.set_separate_console (False)
+				p.set_detached_console (True)
 				p.redirect_output_to_stream
 				p.redirect_error_to_stream
 
@@ -118,6 +120,63 @@ feature -- Execution
 			retry
 		end
 
+	command_execution (a_cmd: READABLE_STRING_GENERAL; a_working_directory: detachable READABLE_STRING_GENERAL; a_record_output: BOOLEAN): detachable PROCESS_COMMAND_RESULT
+		local
+			pf: BASE_PROCESS_FACTORY
+			p: BASE_PROCESS
+			retried: BOOLEAN
+			err,res: STRING
+			err_spec, res_spec: SPECIAL [NATURAL_8]
+		do
+			if not retried then
+				last_error := 0
+				create res.make (0)
+				create err.make (0)
+				create pf
+				p := pf.process_launcher_with_command_line (a_cmd, a_working_directory)
+				p.set_hidden (True)
+				p.set_separate_console (False)
+				p.set_detached_console (True)
+				if a_record_output then
+					p.redirect_output_to_stream
+					p.redirect_error_to_stream
+				end
+
+				p.launch
+				if p.launched then
+					if a_record_output then
+						from
+							create res_spec.make_filled (0, 1024)
+						until
+							p.has_output_stream_closed or p.has_output_stream_error
+						loop
+							p.read_output_to_special (res_spec)
+							append_special_of_natural_8_to_string_8 (res_spec, res)
+						end
+
+						from
+							create err_spec.make_filled (0, 1024)
+						until
+							p.has_error_stream_closed or p.has_error_stream_error
+						loop
+							p.read_error_to_special (err_spec)
+							append_special_of_natural_8_to_string_8 (err_spec, err)
+						end
+					end
+
+					p.wait_for_exit
+					create Result.make (p.exit_code, res, err)
+				else
+					last_error := 1
+				end
+			else
+				last_error := 1
+			end
+		rescue
+			retried := True
+			retry
+		end
+
 	launch_no_wait_command (a_cmd: READABLE_STRING_GENERAL; a_working_directory: PATH; is_hidden: BOOLEAN)
 		local
 			pf: BASE_PROCESS_FACTORY
@@ -130,6 +189,7 @@ feature -- Execution
 				p := pf.process_launcher_with_command_line (a_cmd, a_working_directory.name)
 				p.set_hidden (True)
 				p.set_separate_console (False)
+				p.set_detached_console (True)
 				p.launch
 			else
 				last_error := 1
@@ -161,10 +221,10 @@ feature -- Helpers
 						a_output.extend ('\')
 						a_output.extend (ch)
 					when '%"', '%'' then
-						a_output.extend ('\')
+						a_output.extend ('\') -- escape the character
 						a_output.extend (ch)
 					when '%R' then
-							-- Ignore						
+						-- Ignore
 					when '\' then
 						a_output.extend (ch)
 						if i < n then
@@ -205,7 +265,7 @@ feature -- Helpers
 						append_escaped_string_to (arg, Result)
 						Result.append_character ('%"')
 					else
-						Result.append_string_general (arg)
+						append_escaped_string_to (arg, Result)
 					end
 				end
 			end

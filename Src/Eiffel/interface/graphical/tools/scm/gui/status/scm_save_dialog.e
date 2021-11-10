@@ -196,7 +196,7 @@ feature {NONE} -- User interface initialization
 				but.hide
 			end
 
-			set_button_text (dialog_buttons.ok_button, interface_names.b_save)
+			set_button_text (dialog_buttons.ok_button, scm_names.button_commit_changelist)
 			set_button_text (dialog_buttons.cancel_button, interface_names.b_cancel)
 			set_button_text (dialog_buttons.reset_button, interface_names.b_close)
 
@@ -326,8 +326,9 @@ feature -- Action
 		local
 			err: BOOLEAN
 			l_pointer_style: detachable EV_POINTER_STYLE
+			txt: STRING_32
 		do
-			if attached button_save as but then
+			if attached button_commit as but then
 				but.hide
 			end
 			if attached button_close as but then
@@ -361,51 +362,53 @@ feature -- Action
 						-- FIXME: for now, hide as it is not yet implemented:
 					but.hide
 				end
-				progress_log_text.append_text ("%N")
-				progress_log_text.append_text (scm_names.message_for_post_commit_operations (l_ops.count))
-				progress_log_text.append_text ("%N")
+				txt := progress_log_text.text
+				txt.append_character ('%N')
+				txt.append (scm_names.message_for_post_commit_operations (l_ops.count))
+				txt.append_character ('%N')
 				across
 					l_ops as ic
 				loop
 					if attached {SCM_POST_COMMIT_GIT_PUSH_OPERATION} ic.item as l_git_push then
-						progress_log_text.append_text ({STRING_32} " - ")
-						progress_log_text.append_text (l_git_push.description)
-						progress_log_text.append_text ("%N")
+						txt.append ({STRING_32} " - ")
+						txt.append (l_git_push.description)
+						txt.append_character ('%N')
 						debug ("scm")
 							if attached l_git_push.root_location.remotes (scm_service.config) as lst then
-								progress_log_text.append_text ("   Remotes:")
+								txt.append ("   Remotes:")
 								across
 									lst as ic_remote
 								loop
-									progress_log_text.append_text (" ")
-									progress_log_text.append_text (ic_remote.item.name)
+									txt.append (" ")
+									txt.append (ic_remote.item.name)
 									if attached ic_remote.item.location as loc then
-										progress_log_text.append_text ("(")
-										progress_log_text.append_text (loc)
-										progress_log_text.append_text (")")
+										txt.append_character ('(')
+										txt.append (loc)
+										txt.append_character (')')
 									end
 								end
-								progress_log_text.append_text ("%N")
+								txt.append_character ('%N')
 							end
 							if attached l_git_push.root_location.branches (scm_service.config) as lst then
-								progress_log_text.append_text ("   Branches:")
+								txt.append ("   Branches:")
 								across
 									lst as ic_branch
 								loop
-									progress_log_text.append_text (" ")
-									progress_log_text.append_text (ic_branch.item.name)
+									txt.append_character (' ')
+									txt.append (ic_branch.item.name)
 								end
-								progress_log_text.append_text ("%N")
+								txt.append_character ('%N')
 							end
 						end
 					end
 				end
+				progress_log_text.set_text (txt)
 			end
 
 			err := commit.has_error
 
 			if err then
-				if attached button_save as but then
+				if attached button_commit as but then
 					but.show
 				end
 				if attached button_close as but then
@@ -452,7 +455,7 @@ feature -- Access
 	title: STRING_32
 			-- <Precursor>
 		do
-			Result := scm_names.title_scm_save
+			Result := scm_names.title_scm_commit
 		end
 
 	button_diff: detachable EV_BUTTON
@@ -463,7 +466,7 @@ feature -- Access
 		do
 			Result := dialog_window_buttons [dialog_buttons.apply_button]
 		end
-	button_save: detachable EV_BUTTON
+	button_commit: detachable EV_BUTTON
 		do
 			Result := dialog_window_buttons [dialog_buttons.ok_button]
 		end

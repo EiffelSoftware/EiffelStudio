@@ -188,7 +188,7 @@ feature -- Execution
 			tmp: PATH
 		do
 			create cmd.make_from_string (git_executable_location.name)
-			cmd.append_string_general (" add")
+			cmd.append_string_general (" add --verbose")
 			cmd.append_string (option_to_command_line_flags ("add", a_options))
 			across
 				a_changelist as ic
@@ -207,7 +207,7 @@ feature -- Execution
 			debug ("GIT_ENGINE")
 				print ({STRING_32} "Command: [" + cmd + "]%N")
 			end
-			if attached output_of_command (cmd, a_changelist.root.location) as res_add then
+			if attached command_execution (cmd, a_changelist.root.location, False) as res_add then
 					-- Todo
 			end
 			debug ("GIT_ENGINE")

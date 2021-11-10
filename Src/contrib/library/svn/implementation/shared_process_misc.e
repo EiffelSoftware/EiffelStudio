@@ -32,6 +32,23 @@ feature -- Helpers/bridge
 			Result := process_misc.output_of_command (cmd, if a_working_directory /= Void then a_working_directory.name else Void end)
 		end
 
+	command_execution (a_cmd: READABLE_STRING_GENERAL; a_working_directory: detachable PATH; a_record_output: BOOLEAN): detachable PROCESS_COMMAND_RESULT
+		local
+			cmd: READABLE_STRING_GENERAL
+			s: STRING_32
+		do
+			if {PLATFORM}.is_unix then
+				s := {STRING_32} "/bin/sh -c %""
+				process_misc.append_escaped_string_to (a_cmd, s)
+				s.append_character ('%"')
+				cmd := s
+			else
+				cmd := a_cmd
+			end
+
+			Result := process_misc.command_execution (cmd, if a_working_directory /= Void then a_working_directory.name else Void end, a_record_output)
+		end
+
 	output (a_file_name: READABLE_STRING_GENERAL; args: detachable ITERABLE [READABLE_STRING_GENERAL]; a_working_directory: detachable PATH): detachable PROCESS_COMMAND_RESULT
 		local
 			cmd: STRING_32

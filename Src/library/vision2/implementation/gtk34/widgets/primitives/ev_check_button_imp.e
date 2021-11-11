@@ -46,9 +46,15 @@ feature {NONE} -- Initialization
 
 	make
 			-- Initialize 'Current'
+		local
+			l_colors: expanded EV_STOCK_COLORS
 		do
 			Precursor {EV_TOGGLE_BUTTON_IMP}
 			align_text_left
+				-- FIXME: following code is a hack to avoid invisible check mark [2021-11-11]
+				-- maybe relate to gtk-contained.css ?
+			set_background_color (l_colors.default_background_color)
+			set_foreground_color (l_colors.default_foreground_color)
 		end
 
 feature -- Element change

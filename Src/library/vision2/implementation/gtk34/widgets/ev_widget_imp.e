@@ -554,7 +554,6 @@ feature {EV_ANY_I} -- Implementation
 				--		{GTK2}.gdk_window_process_updates ({GTK}.gtk_widget_get_window (c_object), False)
 				-- 		https://stackoverflow.com/questions/34912757/how-do-you-force-a-screen-refresh-in-gtk-3-8
 				{GTK}.gtk_widget_queue_draw (c_object)
-				process_pending_events
 			end
 		end
 

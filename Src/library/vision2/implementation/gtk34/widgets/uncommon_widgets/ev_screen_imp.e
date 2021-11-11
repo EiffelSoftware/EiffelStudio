@@ -726,7 +726,7 @@ feature -- Basic operation
 			--{GTK}.gtk_widget_queue_draw (drawable)
 			-- https://stackoverflow.com/questions/34912757/how-do-you-force-a-screen-refresh-in-gtk-3-8
 			{GTK}.gtk_widget_queue_draw (cairo_context)
-			app_implementation.process_pending_events_on_default_context
+--			app_implementation.process_pending_events_on_default_context
 		end
 
 	set_pointer_position (a_x, a_y: INTEGER)

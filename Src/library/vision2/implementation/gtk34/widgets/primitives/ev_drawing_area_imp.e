@@ -436,7 +436,6 @@ feature {NONE} -- Implementation
 			-- Redraw the entire area.
 		do
 			{GTK}.gtk_widget_queue_draw (visual_widget)
-			process_pending_events
 		end
 
 	redraw_rectangle (a_x, a_y, a_width, a_height: INTEGER)
@@ -446,7 +445,6 @@ feature {NONE} -- Implementation
 				-- Workaround, sometimes we got a negative value for width `a_width`.
 				-- For example from EV_GRID_I
 			{GTK}.gtk_widget_queue_draw_area (visual_widget, a_x, a_y, a_width.max (0), a_height)
-			process_pending_events
 		end
 
 	clear_and_redraw

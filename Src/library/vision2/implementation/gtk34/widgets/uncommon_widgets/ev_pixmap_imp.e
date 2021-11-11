@@ -160,7 +160,6 @@ feature -- Drawing operations
 		do
 			if is_displayed then
 				{GTK}.gtk_widget_queue_draw (visual_widget)
-				process_pending_events
 			end
 		end
 

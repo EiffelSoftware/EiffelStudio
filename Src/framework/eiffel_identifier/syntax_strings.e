@@ -1,8 +1,9 @@
-note
+﻿note
 	description: "Strings used in the Eiffel syntax"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 	author: "Xavier Rousselot"
+	revised_by: "Alexander Kogtenkov"
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -14,7 +15,7 @@ feature -- Sets
 	keywords: STRING_TABLE [BOOLEAN]
 			-- List of Eiffel keywords in lowercase.
 		once
-			create Result.make (55)
+			create Result.make_caseless (55)
 			Result.put (True, "across")
 			Result.put (True, "agent")
 			Result.put (True, "alias")
@@ -74,13 +75,17 @@ feature -- Sets
 			Result.put (True, "when")
 			Result.put (True, "xor")
 		ensure
+			class
 			Result_not_void: Result /= Void
+			Result.is_case_insensitive
 		end
 
 	basic_operators: STRING_TABLE [BOOLEAN]
 			-- List of basic Eiffel operators (lower-case).
+		obsolete
+			"Remove use of this function in favor of using Eiffel scanner/parser. [2021-11-30]"
 		once
-			create Result.make (20)
+			create Result.make_caseless (20)
 			Result.put (True, "not")
 			Result.put (True, "+")
 			Result.put (True, "-")
@@ -99,12 +104,17 @@ feature -- Sets
 			Result.put (True, "and then")
 			Result.put (True, "or else")
 			Result.put (True, "implies")
+		ensure
+			class
+			Result.is_case_insensitive
 		end
 
 	binary_operators: STRING_TABLE [BOOLEAN]
 			-- List of basic binary Eiffel operators (lower-case).
+		obsolete
+			"Remove use of this function in favor of using Eiffel scanner/parser. [2021-11-30]"
 		once
-			create Result.make (18)
+			create Result.make_caseless (18)
 			Result.put (True, "+")
 			Result.put (True, "-")
 			Result.put (True, "*")
@@ -123,29 +133,43 @@ feature -- Sets
 			Result.put (True, "and then")
 			Result.put (True, "or else")
 			Result.put (True, "implies")
+		ensure
+			class
+			Result.is_case_insensitive
 		end
 
 	unary_operators: STRING_TABLE [BOOLEAN]
 			-- List of basic unary Eiffel operators (lower-case)
+		obsolete
+			"Remove use of this function in favor of using Eiffel scanner/parser. [2021-11-30]"
 		once
-			create Result.make (3)
+			create Result.make_caseless (3)
 			Result.put (True, "not")
 			Result.put (True, "+")
 			Result.put (True, "-")
+		ensure
+			class
+			Result.is_case_insensitive
 		end
 
 	free_operators_start: SEARCH_TABLE [CHARACTER_32]
 			-- List of characters that can start a free operator name.
+		obsolete
+			"Remove use of this function in favor of using Eiffel scanner/parser. [2021-11-30]"
 		once
 			create Result.make (4)
 			Result.force ('@')
 			Result.force ('#')
 			Result.force ('|')
 			Result.force ('&')
+		ensure
+			class
 		end
 
 	free_operators_characters: SEARCH_TABLE [CHARACTER_32]
 			-- List of characters that can start a free operator name.
+		obsolete
+			"Remove use of this function in favor of using Eiffel scanner/parser. [2021-11-30]"
 		once
 			create Result.make (30)
 			Result.force ('@')
@@ -178,6 +202,8 @@ feature -- Sets
 			Result.force ('{')
 			Result.force ('}')
 			Result.force ('~')
+		ensure
+			class
 		end
 
 feature -- Constants
@@ -190,7 +216,7 @@ feature -- Constants
 	parentheses_str: STRING = "()"
 
 ;note
-	copyright:	"Copyright (c) 1984-2013, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2021, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
@@ -221,4 +247,4 @@ feature -- Constants
 			Customer support http://support.eiffel.com
 		]"
 
-end -- class SYNTAX_STRINGS
+end

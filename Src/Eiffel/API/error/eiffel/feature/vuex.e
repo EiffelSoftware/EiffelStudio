@@ -1,11 +1,9 @@
-note
-
-	description:
-		"Error for export validity violation."
+﻿note
+	description: "Error for export validity violation."
 	legal: "See notice at end of class."
 	status: "See notice at end of class.";
 	date: "$Date$";
-	revision: "$Revision $"
+	revision: "$Revision$"
 
 class VUEX
 
@@ -77,7 +75,7 @@ feature -- Output
 				a_text_formatter.add (" Version from: ");
 				w_class.append_name (a_text_formatter);
 			else
-				a_text_formatter.add (feature_name)
+				a_text_formatter.add ({UTF_CONVERTER}.utf_8_string_8_to_string_32 (feature_name))
 			end
 			a_text_formatter.add_new_line;
 			a_text_formatter.add ("Not exported to class ");
@@ -109,10 +107,10 @@ feature {NONE} -- Implementation: Access
 			-- Is target of current feature call of type NONE?
 
 invariant
-	feature_name_set: is_target_none implies feature_name /= Void
+	feature_name_set: is_target_none ⇒ attached feature_name
 
 note
-	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2021, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
@@ -143,4 +141,4 @@ note
 			Customer support http://support.eiffel.com
 		]"
 
-end -- class VUEX
+end

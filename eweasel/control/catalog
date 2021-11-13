@@ -2972,6 +2972,7 @@ test	targeted-assigner-command		attach128 tcf fail void_safe targeted validity a
 test	attribute-body-void-result		attach129 tcf pass attached_types void_safe creation attribute validity
 test	multi-branch-expression-attachment	attach130 tcf pass attached_types void_safe inspect once_creation
 test	attached-separate-local			attach131 tcf pass attached_types void_safe scoop separate validity
+test	attached-detachable-attribute		attach132 tcf fail attached_types void_safe scoop multithreaded attribute scope conditional expression object_test validity
 
 -- Tests for conformance in general
 test	basic-conformance		conform001 tcf pass conformance

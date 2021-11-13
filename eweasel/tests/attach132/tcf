@@ -1,0 +1,33 @@
+test_name 	 attached-detachable-attribute
+test_description An attribute can be safely considered attached in mono-threaded and SCOOP mode unless there is a call between the places where it is attached and where it is used.
+
+copy_raw	test.e $CLUSTER test.e
+
+define		PRECOMPILE	<precompile name="precompile" location="$PRECOMPILED_BASE_SAFE"/>
+define		CONCURRENCY	none
+copy_sub	Ace $TEST Ace
+
+compile_melted
+compile_result 	validity_error TEST VUTA(2):25 VUTA(2):30 VUTA(2):35 VUTA(2):41 VUTA(2):46 VUTA(2):51 VUTA(2):57 VUTA(2):62 VUTA(2):67 VUTA(2):73 VUTA(2):78 VUTA(2):83 VUTA(2):96 VUTA(2):101 VUTA(2):106 VUTA(2):112 VUTA(2):117 VUTA(2):122 VUTA(2):126 VUTA(2):129 VUTA(2):132 VUTA(2):136 VUTA(2):139 VUTA(2):142 VUTA(2):150 VUTA(2):157 VUTA(2):164 VUTA(2):172 VUTA(2):179 VUTA(2):186 VUTA(2):194 VUTA(2):201 VUTA(2):208
+
+cleanup_compile
+
+define		PRECOMPILE	""
+define		CONCURRENCY	thread
+copy_sub	Ace $TEST Ace
+
+compile_melted
+compile_result 	validity_error TEST VUTA(2):23 VUTA(2):24 VUTA(2):25 VUTA(2):28 VUTA(2):29 VUTA(2):30 VUTA(2):33 VUTA(2):34 VUTA(2):35 VUTA(2):39 VUTA(2):40 VUTA(2):41 VUTA(2):44 VUTA(2):45 VUTA(2):46 VUTA(2):49 VUTA(2):50 VUTA(2):51 VUTA(2):55 VUTA(2):56 VUTA(2):57 VUTA(2):60 VUTA(2):61 VUTA(2):62 VUTA(2):65 VUTA(2):66 VUTA(2):67 VUTA(2):71 VUTA(2):72 VUTA(2):73 VUTA(2):76 VUTA(2):77 VUTA(2):78 VUTA(2):81 VUTA(2):82 VUTA(2):83 VUTA(2):94 VUTA(2):95 VUTA(2):96 VUTA(2):99 VUTA(2):100 VUTA(2):101 VUTA(2):104 VUTA(2):105 VUTA(2):106 VUTA(2):110 VUTA(2):111 VUTA(2):112 VUTA(2):115 VUTA(2):116 VUTA(2):117 VUTA(2):120 VUTA(2):121 VUTA(2):122 VUTA(2):126 VUTA(2):129 VUTA(2):132 VUTA(2):136 VUTA(2):139 VUTA(2):142 VUTA(2):148 VUTA(2):149 VUTA(2):150 VUTA(2):155 VUTA(2):156 VUTA(2):157 VUTA(2):162 VUTA(2):163 VUTA(2):164 VUTA(2):170 VUTA(2):171 VUTA(2):172 VUTA(2):177 VUTA(2):178 VUTA(2):179 VUTA(2):184 VUTA(2):185 VUTA(2):186 VUTA(2):192 VUTA(2):193 VUTA(2):194 VUTA(2):199 VUTA(2):200 VUTA(2):201 VUTA(2):206 VUTA(2):207 VUTA(2):208
+
+cleanup_compile
+
+if DOTNET test_end
+
+define		PRECOMPILE	<precompile name="precompile" location="$PRECOMPILED_BASE_SCOOP_SAFE"/>
+define		CONCURRENCY	scoop
+copy_sub	Ace $TEST Ace
+
+compile_melted
+compile_result 	validity_error TEST VUTA(2):25 VUTA(2):30 VUTA(2):35 VUTA(2):41 VUTA(2):46 VUTA(2):51 VUTA(2):57 VUTA(2):62 VUTA(2):67 VUTA(2):73 VUTA(2):78 VUTA(2):83 VUTA(2):96 VUTA(2):101 VUTA(2):106 VUTA(2):112 VUTA(2):117 VUTA(2):122 VUTA(2):126 VUTA(2):129 VUTA(2):132 VUTA(2):136 VUTA(2):139 VUTA(2):142 VUTA(2):150 VUTA(2):157 VUTA(2):164 VUTA(2):172 VUTA(2):179 VUTA(2):186 VUTA(2):194 VUTA(2):201 VUTA(2):208
+
+test_end

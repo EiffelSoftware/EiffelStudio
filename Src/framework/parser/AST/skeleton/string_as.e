@@ -62,7 +62,7 @@ feature -- Properties
 	value_32: STRING_32
 			-- Real string value in UTF-32.
 		do
-			Result := encoding_converter.utf8_to_utf32 (value)
+			Result := {UTF_CONVERTER}.utf_8_string_8_to_string_32 (value)
 		ensure
 			Result_set: Result /= Void
 		end
@@ -91,7 +91,7 @@ feature {INTERNAL_COMPILER_STRING_EXPORTER} -- Properties
 	value_as_lower: STRING
 			-- UTF-8 encoded value of lower case `value_32`.
 		do
-			Result := encoding_converter.utf32_to_utf8 (value_32.as_lower)
+			Result := {UTF_CONVERTER}.utf_32_string_to_utf_8_string_8 (value_32.as_lower)
 		end
 
 	value_to_lower
@@ -99,7 +99,7 @@ feature {INTERNAL_COMPILER_STRING_EXPORTER} -- Properties
 		local
 			s: STRING_8
 		do
-			s := encoding_converter.utf32_to_utf8 (value_32.as_lower)
+			s := {UTF_CONVERTER}.utf_32_string_to_utf_8_string_8 (value_32.as_lower)
 			value.wipe_out
 			value.append (s)
 		end
@@ -130,7 +130,9 @@ feature -- Comparison
 			-- Is `other' equivalent to the current object?
 		do
 				-- `value' cannot be Void
-			Result := is_once_string = other.is_once_string and then value.is_equal (other.value) and then
+			Result :=
+				is_once_string = other.is_once_string and then
+				value.is_equal (other.value) and then
 				equivalent (type, other.type)
 		end
 

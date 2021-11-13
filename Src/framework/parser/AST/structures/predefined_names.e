@@ -257,28 +257,27 @@ feature -- Constants
 	disjuncted_name_id: INTEGER = 244
 	disjuncted_exclusive_name_id: INTEGER = 245
 	inspect_attribute_name_id: INTEGER = 246
-
-feature -- Classification
-
-	is_semi_strict_id (name_id: INTEGER): BOOLEAN
-			-- Does `name_id' denote a semistrict operator?
-		do
-			inspect name_id
-			when
-				conjuncted_semistrict_name_id, disjuncted_semistrict_name_id, implication_name_id,
-				infix_and_then_name_id, infix_or_else_name_id, infix_implies_name_id
-			then
-				Result := True
-			else
-					-- False by default
-			end
-		ensure
-			definition: Result = (name_id = conjuncted_semistrict_name_id or name_id = disjuncted_semistrict_name_id or name_id = implication_name_id) or
-				(name_id = infix_and_then_name_id or name_id = infix_or_else_name_id or name_id = infix_implies_name_id)
-		end
+	minus_operator_name_id: INTEGER = 247
+	not_operator_name_id: INTEGER = 248
+	plus_operator_name_id: INTEGER = 249
+	slash_operator_name_id: INTEGER = 250
+	slash_slash_operator_name_id: INTEGER = 251
+	back_back_operator_name_id: INTEGER = 252
+	circumflex_accent_operator_name_id: INTEGER = 253
+	asterisk_operator_name_id: INTEGER = 254
+	and_operator_name_id: INTEGER = 255
+	and_then_operator_name_id: INTEGER = 256
+	implies_operator_name_id: INTEGER = 257
+	or_operator_name_id: INTEGER = 258
+	or_else_operator_name_id: INTEGER = 259
+	xor_operator_name_id: INTEGER = 260
+	greater_operator_name_id: INTEGER = 261
+	greater_equal_operator_name_id: INTEGER = 262
+	less_operator_name_id: INTEGER = 263
+	less_equal_operator_name_id: INTEGER = 264
 
 note
-	copyright: "Copyright (c) 1984-2020, Eiffel Software"
+	copyright: "Copyright (c) 1984-2021, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

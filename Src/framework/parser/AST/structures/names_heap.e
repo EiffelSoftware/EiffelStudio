@@ -458,6 +458,24 @@ feature {NONE} -- Implementation: access
 			put ("disjuncted") check found_item = disjuncted_name_id end
 			put ("disjuncted_exclusive") check found_item = disjuncted_exclusive_name_id end
 			put ("inspect") check found_item = inspect_attribute_name_id end
+			put ("-") check found_item = minus_operator_name_id end
+			put ("not") check found_item = not_operator_name_id end
+			put ("+") check found_item = plus_operator_name_id end
+			put ("/") check found_item = slash_operator_name_id end
+			put ("//") check found_item = slash_slash_operator_name_id end
+			put ("\\") check found_item = back_back_operator_name_id end
+			put ("^") check found_item = circumflex_accent_operator_name_id end
+			put ("*") check found_item = asterisk_operator_name_id end
+			put ("and") check found_item = and_operator_name_id end
+			put ("and then") check found_item = and_then_operator_name_id end
+			put ("implies") check found_item = implies_operator_name_id end
+			put ("or") check found_item = or_operator_name_id end
+			put ("or else") check found_item = or_else_operator_name_id end
+			put ("xor") check found_item = xor_operator_name_id end
+			put (">") check found_item = greater_operator_name_id end
+			put (">=") check found_item = greater_equal_operator_name_id end
+			put ("<") check found_item = less_operator_name_id end
+			put ("<=") check found_item = less_equal_operator_name_id end
 		end
 
 invariant
@@ -466,7 +484,7 @@ invariant
 	found_item_positive: found_item >= 0
 
 note
-	copyright:	"Copyright (c) 1984-2020, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2021, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

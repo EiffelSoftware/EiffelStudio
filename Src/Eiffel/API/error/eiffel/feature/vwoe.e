@@ -1,4 +1,4 @@
-note
+﻿note
 
 	description:
 		"Error when a prefix/infix operator doesn't %
@@ -6,7 +6,7 @@ note
 	legal: "See notice at end of class."
 	status: "See notice at end of class.";
 	date: "$Date$";
-	revision: "$Revision $"
+	revision: "$Revision$"
 
 class VWOE
 
@@ -53,8 +53,8 @@ feature -- Output
 						class_or_type_set: other_class /= Void or other_type_set /= Void
 			end
 			a_text_formatter.add_indent;
-			a_text_formatter.add ("There is no feature ");
-			a_text_formatter.add (encoding_converter.utf8_to_utf32 (op_name));
+			a_text_formatter.add ("There is no feature ")
+			a_text_formatter.add ({UTF_CONVERTER}.utf_8_string_8_to_string_32 (op_name))
 			if other_class /= Void  then
 				a_text_formatter.add (" in class ");
 				other_class.append_name (a_text_formatter);
@@ -90,7 +90,7 @@ feature {INTERNAL_COMPILER_STRING_EXPORTER} -- Setting
 		end;
 
 note
-	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2021, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
@@ -121,4 +121,4 @@ note
 			Customer support http://support.eiffel.com
 		]"
 
-end -- class VWOE
+end

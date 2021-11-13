@@ -1,4 +1,4 @@
-note
+﻿note
 
 	description:
 		"Error when bad conformance on first argument of an infix function."
@@ -52,7 +52,7 @@ feature -- Output
 			-- in `a_text_formatter'.
 		do
 			a_text_formatter.add ("Operator: ")
-			a_text_formatter.add (encoding_converter.utf8_to_utf32 (op_name))
+			a_text_formatter.add ({UTF_CONVERTER}.utf_8_string_8_to_string_32 (op_name))
 			a_text_formatter.add_new_line
 			a_text_formatter.add ("Operator feature: ")
 			operator_feature.append_name (a_text_formatter)

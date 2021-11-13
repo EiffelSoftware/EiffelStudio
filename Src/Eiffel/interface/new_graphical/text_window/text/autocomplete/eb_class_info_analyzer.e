@@ -666,7 +666,7 @@ feature {NONE} -- Implementation (`type_from')
 									end
 									written_class := l_precursor_from.base_class
 									if l_precursor_from.base_class.has_feature_table then
-										feat := l_precursor_from.base_class.feature_with_name_id (current_feature_as.name.internal_name.name_id)
+										feat := l_precursor_from.base_class.feature_with_name_id (current_feature_as.name.feature_name.name_id)
 									end
 								end
 							end
@@ -684,7 +684,7 @@ feature {NONE} -- Implementation (`type_from')
 										type_as_associated_class: type.has_associated_class
 									end
 									if type.base_class.has_feature_table then
-										feat := l_precursor_from.base_class.feature_with_name_id (current_feature_as.name.internal_name.name_id)
+										feat := l_precursor_from.base_class.feature_with_name_id (current_feature_as.name.feature_name.name_id)
 										written_class := l_precursor_from.base_class
 									end
 									l_current_class_c_parents.forth
@@ -1007,7 +1007,7 @@ feature {NONE} -- Implementation (`type_from')
 				loop
 					l_class := l_list.item
 					if l_class.has_feature_table then
-						l_feature := l_class.feature_table.alias_item_32 (bracket_str)
+						l_feature := l_class.feature_table.item_alias_id ({PREDEFINED_NAMES}.bracket_symbol_id)
 						written_class := l_class
 					end
 					l_list.forth
@@ -1017,7 +1017,7 @@ feature {NONE} -- Implementation (`type_from')
 					has_associated_class: last_target_type.has_associated_class
 				end
 				if last_target_type.base_class.has_feature_table then
-					l_feature := last_target_type.base_class.feature_table.alias_item_32 (bracket_str)
+					l_feature := last_target_type.base_class.feature_table.item_alias_id ({PREDEFINED_NAMES}.bracket_symbol_id)
 					written_class := last_target_type.base_class
 				end
 			end
@@ -1772,9 +1772,8 @@ feature {NONE}-- Implementation
 			a_name_not_void: a_name /= Void
 			current_class_c_not_void: current_class_c /= Void
 		local
-			feat: E_FEATURE
 			cls_c: CLASS_C
-			l_name: STRING_32
+			i: like names_heap.id_of_32
 		do
 			if a_name.is_case_insensitive_equal (equal_sign) or a_name.is_case_insensitive_equal (different_sign) then
 				Result := boolean_type
@@ -1782,10 +1781,15 @@ feature {NONE}-- Implementation
 				cls_c := a_type.base_class
 				if cls_c /= Void and then cls_c.has_feature_table then
 					written_class := cls_c
-					l_name := string_32_to_lower_copy_optimized (a_name)
-					feat := cls_c.feature_with_name_32 (infix_feature_name_with_symbol_32 (l_name))
-					if feat /= Void and then feat.type /= Void then
-						Result := feat.type
+					i := names_heap.id_of_32 (string_32_to_lower_copy_optimized (a_name))
+					if
+						i > 0 and then
+						cls_c.has_feature_table and then
+						attached cls_c.feature_table.item_alias_id
+							({OPERATOR_KIND}.alias_id (i, {OPERATOR_KIND}.is_valid_binary_kind_mask ⦶ {OPERATOR_KIND}.is_binary_kind_mask)) as f and then
+						attached f.type as t
+					then
+						Result := t
 						if
 							Result.is_formal and then
 							attached {FORMAL_A} Result as formal and then
@@ -1863,7 +1867,7 @@ feature {NONE}-- Implementation
 					if Result = Void then
 							-- Used the compiled information
 						current_feature := l_current_class_c.feature_with_name_id (
-								current_feature_as.name.internal_name.name_id
+								current_feature_as.name.feature_name.name_id
 							)
 						if current_feature /= Void then
 							Result := current_feature.type
@@ -2265,7 +2269,7 @@ feature {NONE} -- Implementation
 					l_current_class_c.has_feature_table and then
 					attached current_feature_as as a
 				then
-					Result := l_current_class_c.feature_of_name_id (a.name.internal_name.name_id)
+					Result := l_current_class_c.feature_of_name_id (a.name.feature_name.name_id)
 				end
 					-- We hack here to avoid current feature void.
 					-- type_a_checker only need a feature for like_argument checking.

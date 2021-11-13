@@ -95,8 +95,8 @@ create
 
 %type <detachable SYMBOL_AS>ASemi
 %type <detachable KEYWORD_AS> Alias_mark Is_keyword
-%type <detachable ALIAS_NAME_INFO>Alias
-%type <detachable CONSTRUCT_LIST [ALIAS_NAME_INFO]> Alias_list
+%type <detachable FEATURE_ALIAS_NAME>Alias
+%type <detachable CONSTRUCT_LIST [FEATURE_ALIAS_NAME]> Alias_list
 %type <detachable PAIR[KEYWORD_AS, EIFFEL_LIST [INSTRUCTION_AS]]> Rescue
 
 %type <detachable PAIR[KEYWORD_AS, ID_AS]> Assigner_mark_opt
@@ -169,7 +169,7 @@ create
 %type <detachable ROUT_BODY_AS>		Routine_body
 %type <detachable ROUTINE_AS>			Routine
 %type <detachable ROUTINE_CREATION_AS>	Agent
-%type <detachable STRING_AS>			Manifest_string Non_empty_string Default_manifest_string Typed_manifest_string Infix_operator Alias_name
+%type <detachable STRING_AS>			Manifest_string Non_empty_string Default_manifest_string Typed_manifest_string Binary_unary_operator Binary_operator
 %type <detachable SEPARATE_INSTRUCTION_AS>	Separate_instruction
 %type <detachable TAGGED_AS>			Assertion_clause
 %type <detachable TUPLE_AS>			Manifest_tuple
@@ -195,8 +195,7 @@ create
 %type <detachable PARAMETER_LIST_AS> 	Parameters
 %type <detachable EIFFEL_LIST [FEATURE_AS]>		Feature_declaration_list
 %type <detachable EIFFEL_LIST [FEATURE_CLAUSE_AS]>	Features Feature_clause_list
-%type <detachable EIFFEL_LIST [FEATURE_NAME]>		Feature_list Feature_list_impl New_feature_list
-%type <detachable EIFFEL_LIST [FEAT_NAME_ID_AS]>		Creation_list Creation_list_impl
+%type <detachable EIFFEL_LIST [FEATURE_NAME]>		Creation_list Creation_list_impl Feature_list Feature_list_impl New_feature_list
 %type <detachable EIFFEL_LIST [NAMED_EXPRESSION_AS]>	Separate_argument_list
 %type <detachable CREATION_CONSTRAIN_TRIPLE>	Creation_constraint
 %type <detachable UNDEFINE_CLAUSE_AS>	Undefine Undefine_opt
@@ -846,20 +845,109 @@ Alias_list: Alias
 			}
 	;
 
-Alias: TE_ALIAS Alias_name
+Alias: TE_ALIAS Binary_operator
 			{
-				$$ := ast_factory.new_alias_name_info ($1, $2)
+				$$ := ast_factory.new_alias_name ($1, $2, {OPERATOR_KIND}.is_valid_binary_kind_mask)
+			}
+	|	TE_ALIAS Binary_unary_operator
+			{
+				$$ := ast_factory.new_alias_name ($1, $2, {OPERATOR_KIND}.is_valid_binary_kind_mask + {OPERATOR_KIND}.is_valid_unary_kind_mask)
+			}
+	|	TE_ALIAS TE_STR_BRACKET
+			{
+				$$ := ast_factory.new_alias_name ($1, $2, {OPERATOR_KIND}.is_bracket_kind_mask)
+			}
+	|	TE_ALIAS TE_STR_PARENTHESES
+			{
+				$$ := ast_factory.new_alias_name ($1, $2, {OPERATOR_KIND}.is_parentheses_kind_mask)
+			}
+	|	TE_ALIAS TE_STR_NOT
+			{
+				$$ := ast_factory.new_alias_name ($1, $2, {OPERATOR_KIND}.is_valid_unary_kind_mask)
 			}
 	;
 
-Alias_name: Infix_operator
+Binary_unary_operator:
+	|	TE_STR_MINUS
 			{ $$ := $1 }
-	|	TE_STR_NOT
+	|	TE_STR_PLUS
 			{ $$ := $1 }
-	|	TE_STR_BRACKET
+	|	TE_STR_FREE
+			{
+					-- Alias names should always be taken in their lower case version
+				if attached $1 as l_str_free then
+					l_str_free.value_to_lower
+					$$ := l_str_free
+				end
+			}
+	;
+
+Binary_operator: TE_STR_LT
 			{ $$ := $1 }
-	|	TE_STR_PARENTHESES
+	|	TE_STR_LE
 			{ $$ := $1 }
+	|	TE_STR_GT
+			{ $$ := $1 }
+	|	TE_STR_GE
+			{ $$ := $1 }
+	|	TE_STR_STAR
+			{ $$ := $1 }
+	|	TE_STR_SLASH
+			{ $$ := $1 }
+	|	TE_STR_MOD
+			{ $$ := $1 }
+	|	TE_STR_DIV
+			{ $$ := $1 }
+	|	TE_STR_POWER
+			{ $$ := $1 }
+	|	TE_STR_AND
+			{
+					-- Alias names should always be taken in their lower case version
+				if attached $1 as l_str_and then
+					l_str_and.value_to_lower
+					$$ := l_str_and
+				end
+			}
+	|	TE_STR_AND_THEN
+			{
+					-- Alias names should always be taken in their lower case version
+				if attached $1 as l_str_and_then then
+					l_str_and_then.value_to_lower
+					$$ := l_str_and_then
+				end
+			}
+	|	TE_STR_IMPLIES
+			{
+					-- Alias names should always be taken in their lower case version
+				if attached $1 as l_str_implies then 
+					l_str_implies.value_to_lower
+					$$ := l_str_implies
+				end
+			}
+	|	TE_STR_OR
+			{
+					-- Alias names should always be taken in their lower case version
+				if attached $1 as l_str_or then
+					l_str_or.value_to_lower
+					$$ := l_str_or
+				end
+			}
+	|	TE_STR_OR_ELSE
+			{
+					-- Alias names should always be taken in their lower case version
+				if attached $1 as l_str_or_else then
+					l_str_or_else.value_to_lower
+					$$ := l_str_or_else
+				end
+			}
+	|	TE_STR_XOR
+			{
+					-- Alias names should always be taken in their lower case version
+				if attached $1 as l_str_xor then
+					l_str_xor.value_to_lower
+					$$ := l_str_xor
+				end
+			}
 	;
 
 Alias_mark: -- Empty
@@ -4004,86 +4092,6 @@ Non_empty_string: TE_STRING
 			{ $$ := $1 }
 	;
 
-
-Infix_operator: TE_STR_LT
-			{ $$ := $1 }
-	|	TE_STR_LE
-			{ $$ := $1 }
-	|	TE_STR_GT
-			{ $$ := $1 }
-	|	TE_STR_GE
-			{ $$ := $1 }
-	|	TE_STR_MINUS
-			{ $$ := $1 }
-	|	TE_STR_PLUS
-			{ $$ := $1 }
-	|	TE_STR_STAR
-			{ $$ := $1 }
-	|	TE_STR_SLASH
-			{ $$ := $1 }
-	|	TE_STR_MOD
-			{ $$ := $1 }
-	|	TE_STR_DIV
-			{ $$ := $1 }
-	|	TE_STR_POWER
-			{ $$ := $1 }
-	|	TE_STR_AND
-			{
-					-- Alias names should always be taken in their lower case version
-				if attached $1 as l_str_and then
-					l_str_and.value_to_lower
-					$$ := l_str_and
-				end
-			}
-	|	TE_STR_AND_THEN
-			{
-					-- Alias names should always be taken in their lower case version
-				if attached $1 as l_str_and_then then
-					l_str_and_then.value_to_lower
-					$$ := l_str_and_then
-				end
-			}
-	|	TE_STR_IMPLIES
-			{
-					-- Alias names should always be taken in their lower case version
-				if attached $1 as l_str_implies then 
-					l_str_implies.value_to_lower
-					$$ := l_str_implies
-				end
-			}
-	|	TE_STR_OR
-			{
-					-- Alias names should always be taken in their lower case version
-				if attached $1 as l_str_or then
-					l_str_or.value_to_lower
-					$$ := l_str_or
-				end
-			}
-	|	TE_STR_OR_ELSE
-			{
-					-- Alias names should always be taken in their lower case version
-				if attached $1 as l_str_or_else then
-					l_str_or_else.value_to_lower
-					$$ := l_str_or_else
-				end
-			}
-	|	TE_STR_XOR
-			{
-					-- Alias names should always be taken in their lower case version
-				if attached $1 as l_str_xor then
-					l_str_xor.value_to_lower
-					$$ := l_str_xor
-				end
-			}
-	|	TE_STR_FREE
-			{
-					-- Alias names should always be taken in their lower case version
-				if attached $1 as l_str_free then
-					l_str_free.value_to_lower
-					$$ := l_str_free
-				end
-			}
-	;
 
 Manifest_array:
 	TE_LARRAY TE_RARRAY

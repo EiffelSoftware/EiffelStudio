@@ -147,8 +147,8 @@ feature -- Attributes
 	constraints: CONSTRAINT_LIST_AS
 			-- Constraints of the formal generic
 
-	creation_feature_list: detachable EIFFEL_LIST [FEAT_NAME_ID_AS]
-			-- Constraint on the creation routines of the constraint
+	creation_feature_list: detachable EIFFEL_LIST [FEATURE_NAME]
+			-- Constraint on the creation routines of the constraint.
 
 feature -- Roundtrip/Token
 
@@ -429,8 +429,8 @@ invariant
 	formal_not_void: formal /= Void
 
 note
-	ca_ignore: "CA011", "CA011 — too many arguments"
-	copyright:	"Copyright (c) 1984-2018, Eiffel Software"
+	ca_ignore: "CA011", "CA011: too many arguments"
+	copyright:	"Copyright (c) 1984-2021, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

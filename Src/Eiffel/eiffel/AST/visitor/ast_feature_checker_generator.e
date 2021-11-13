@@ -896,7 +896,7 @@ feature {NONE} -- Roundtrip
 					-- This is the first place, where inline agents are looked at as features.
 					-- They are ignored by degree 2. So a new FEATURE_I has to be created
 				create l_feature_names.make (1)
-				l_feature_names.extend (create {FEAT_NAME_ID_AS}.initialize (create {ID_AS}.initialize ("inline_agent")))
+				l_feature_names.extend (create {FEATURE_NAME}.initialize (create {ID_AS}.initialize ("inline_agent")))
 				create l_feature_as.initialize (l_feature_names, l_as.body, Void, 0, 0)
 
 				l_cur_feature := context.current_feature
@@ -1567,8 +1567,8 @@ feature {NONE} -- Implementation
 						l_result_tuple := l_last_type_set.feature_i_state_by_name_id (l_feature_name.name_id)
 							-- If there we did not found a feature it could still be a tuple item.
 						if l_result_tuple.features_found_count > 1  then
-							error_handler.insert_error (
-								new_vtmc_error (l_feature_name, l_formal.position, l_context_current_class, False))
+							error_handler.insert_error (new_vtmc_error
+								(l_feature_name.name_id, l_formal.position, l_context_current_class, False, l_feature_name))
 						else
 							l_feature := l_result_tuple.feature_item
 							l_last_constrained := l_result_tuple.class_type_of_feature
@@ -4491,7 +4491,7 @@ feature {NONE} -- Visitor
 						l_arg_pos := l_as.argument_position
 					end
 				else
-					l_arg_pos := l_feature.argument_position (l_as.feature_name.internal_name.name_id)
+					l_arg_pos := l_feature.argument_position (l_as.feature_name.feature_name.name_id)
 				end
 			end
 
@@ -4515,7 +4515,7 @@ feature {NONE} -- Visitor
 			else
 					-- Look for a local if not in a pre- or postcondition
 				if not is_inherited or else l_as.is_local then
-					l_local_info := context.locals.item (l_as.feature_name.internal_name.name_id)
+					l_local_info := context.locals.item (l_as.feature_name.feature_name.name_id)
 				end
 				if l_local_info /= Void then
 						-- Local found
@@ -4546,7 +4546,7 @@ feature {NONE} -- Visitor
 							--|(Fred)
 						create l_veen2b
 						context.init_error (l_veen2b)
-						l_veen2b.set_identifier (l_as.feature_name.internal_name.name)
+						l_veen2b.set_identifier (l_as.feature_name.feature_name.name)
 						l_veen2b.set_location (l_as.feature_name.start_location)
 						error_handler.insert_error (l_veen2b)
 					end
@@ -4555,7 +4555,7 @@ feature {NONE} -- Visitor
 						l_as.enable_local
 					end
 				else
-					l_local_info := context.inline_local (l_as.feature_name.internal_name.name_id)
+					l_local_info := context.inline_local (l_as.feature_name.feature_name.name_id)
 					if l_local_info /= Void then
 						if l_local_info.is_cursor then
 							error_handler.insert_error (create {NOT_SUPPORTED}.make
@@ -4564,13 +4564,13 @@ feature {NONE} -- Visitor
 									locale.translation_in_context ("Address of a cursor variable of {1} form of a loop is not supported.", "compiler.error"),
 									<<agent {TEXT_FORMATTER}.process_keyword_text ({TEXT_FORMATTER}.ti_is_keyword, Void)>>),
 								context,
-								l_as.feature_name.internal_name))
+								l_as.feature_name.feature_name))
 						else
 							l_local_info.enable_is_used
 							last_access_writable := False
 							is_controlled := l_local_info.is_controlled
 							l_type := l_local_info.type.instantiation_in (last_type.as_implicitly_detachable.as_variant_free, l_last_id)
-							if context.is_readonly_attached (l_as.feature_name.internal_name.name_id) then
+							if context.is_readonly_attached (l_as.feature_name.feature_name.name_id) then
 								l_type := l_type.as_attached_in (context.current_class)
 							end
 							create l_typed_pointer.make_typed (l_type)
@@ -4588,19 +4588,19 @@ feature {NONE} -- Visitor
 						if is_inherited then
 							l_feature := context.current_class.feature_of_rout_id (l_as.routine_ids.first)
 						else
-							l_feature := context.current_class.feature_table.item_id (l_as.feature_name.internal_name.name_id)
+							l_feature := context.current_class.feature_table.item_id (l_as.feature_name.feature_name.name_id)
 						end
 						if l_feature = Void then
 							create l_veen
 							context.init_error (l_veen)
-							l_veen.set_identifier (l_as.feature_name.internal_name.name)
+							l_veen.set_identifier (l_as.feature_name.feature_name.name)
 							l_veen.set_location (l_as.feature_name.start_location)
 							error_handler.insert_error (l_veen)
 						else
 							if l_feature.is_constant then
 								create l_vzaa1
 								context.init_error (l_vzaa1)
-								l_vzaa1.set_address_name (l_as.feature_name.internal_name.name)
+								l_vzaa1.set_address_name (l_as.feature_name.feature_name.name)
 								l_vzaa1.set_location (l_as.feature_name.start_location)
 								error_handler.insert_error (l_vzaa1)
 							elseif l_feature.is_external then
@@ -4613,7 +4613,7 @@ feature {NONE} -- Visitor
 								create l_typed_pointer.make_typed (l_type)
 								set_type (l_typed_pointer, l_as)
 								if current_feature.is_class then
-									report_vucr (create {VUCR_BODY}.make_attribute (l_feature, current_feature, context.current_class, context.written_class, l_as.feature_name.internal_name))
+									report_vucr (create {VUCR_BODY}.make_attribute (l_feature, current_feature, context.current_class, context.written_class, l_as.feature_name.feature_name))
 								end
 							else
 								set_type (Pointer_type, l_as)
@@ -4917,7 +4917,6 @@ feature {NONE} -- Visitor
 			l_result_tuple: TUPLE[feature_item: FEATURE_I; class_type_of_feature: CL_TYPE_A; features_found_count: INTEGER]
 			l_context_current_class: CLASS_C
 			l_error_level: NATURAL_32
-			l_vtmc_error: VTMC
 			l_vtmc4: VTMC4
 			l_is_controlled: BOOLEAN
 			l_target_type: TYPE_A
@@ -4961,7 +4960,7 @@ feature {NONE} -- Visitor
 					check has_constrained: l_last_constrained /= Void end
 						-- Check if target is not of type NONE
 					if l_last_constrained.is_none then
-						create l_vuex.make_for_none (l_as.prefix_feature_name)
+						create l_vuex.make_for_none (l_as.operator_name)
 						context.init_error (l_vuex)
 						l_vuex.set_location (l_as.expr.end_location)
 						error_handler.insert_error (l_vuex)
@@ -5022,12 +5021,10 @@ feature {NONE} -- Visitor
 					else
 						if l_is_multi_constrained then
 							l_type_set := last_type.actual_type.to_type_set.constraining_types (l_context_current_class)
-							l_result_tuple := l_type_set.feature_i_state_by_alias_name (l_as.prefix_feature_name)
+							l_result_tuple := l_type_set.feature_i_state_by_alias_name_id (l_as.operator_id)
 							if l_result_tuple.features_found_count > 1 then
-								l_vtmc_error := new_vtmc_error (create {ID_AS}.initialize (l_as.prefix_feature_name),
-										l_formal.position, l_context_current_class, True)
-								l_vtmc_error.set_location (l_as.operator_location)
-								error_handler.insert_error (l_vtmc_error)
+								error_handler.insert_error (new_vtmc_error
+									(l_as.operator_id, l_formal.position, l_context_current_class, True, l_as.operator_location))
 							elseif l_result_tuple.features_found_count = 1 then
 								l_prefix_feature := l_result_tuple.feature_item
 								l_last_constrained := l_result_tuple.class_type_of_feature
@@ -5036,10 +5033,10 @@ feature {NONE} -- Visitor
 							end
 						elseif l_last_constrained.has_associated_class then
 							l_last_class := l_last_constrained.base_class
-							l_prefix_feature := l_last_class.feature_table.alias_item (l_as.prefix_feature_name)
+							l_prefix_feature := l_last_class.feature_table.item_alias_id (l_as.operator_id)
 						elseif
 							attached {LOCAL_TYPE_A} l_last_constrained as t and then
-							attached t.operator_call (names_heap.id_of (l_as.prefix_feature_name), l_context_current_class) as f
+							attached t.operator_call (l_as.operator_id, l_context_current_class) as f
 						then
 							l_prefix_feature := f.descriptor
 							l_last_constrained := f.site
@@ -5064,7 +5061,7 @@ feature {NONE} -- Visitor
 						else
 							l_vwoe.set_other_type_set (l_type_set)
 						end
-						l_vwoe.set_op_name (l_as.prefix_feature_name)
+						l_vwoe.set_op_name (l_as.operator_name)
 						l_vwoe.set_location (l_as.operator_location)
 						error_handler.insert_error (l_vwoe)
 					else
@@ -5311,7 +5308,7 @@ feature {NONE} -- Visitor
 					check l_left_constrained_attached: l_left_constrained /= Void end
 						-- Check if target is not of type NONE
 					if l_left_constrained.is_none then
-						create l_vuex.make_for_none (l_as.infix_function_name)
+						create l_vuex.make_for_none (l_as.operator_name)
 						context.init_error (l_vuex)
 						l_vuex.set_location (l_as.operator_location)
 						error_handler.insert_error (l_vuex)
@@ -5329,7 +5326,7 @@ feature {NONE} -- Visitor
 								l_target_type.base_class.feature_of_rout_id (l_as.routine_ids.first)
 							else
 									-- Lookup for an associated feature.
-								l_target_type.base_class.feature_of_alias_id (names_heap.id_of (l_as.infix_function_name))
+								l_target_type.base_class.feature_table.item_alias_id (l_as.operator_id)
 							end
 						as f
 					then
@@ -5389,7 +5386,7 @@ feature {NONE} -- Visitor
 									last_alias_feature := l_result_item.feature_i
 									l_left_constrained := l_result_item.cl_type.type
 									l_class := l_left_constrained.base_class
-									check_infix_feature (last_alias_feature, l_class, l_as.infix_function_name, l_left_type, l_left_constrained, l_right_type)
+									check_infix_feature (last_alias_feature, l_class, l_as, l_left_type, l_left_constrained, l_right_type)
 									l_error := last_alias_error
 									l_result.forth
 										-- We inherited this feature.
@@ -5426,13 +5423,13 @@ feature {NONE} -- Visitor
 							else
 								l_class := l_left_constrained.base_class
 								last_alias_feature := l_class.feature_of_rout_id (l_as.routine_ids.first)
-								check_infix_feature (last_alias_feature, l_class, l_as.infix_function_name, l_left_type, l_left_constrained, l_right_type)
+								check_infix_feature (last_alias_feature, l_class, l_as, l_left_type, l_left_constrained, l_right_type)
 								l_error := last_alias_error
 							end
 						else
 							if
 								attached {LOCAL_TYPE_A} l_left_type as t and then
-								attached t.operator_call (names_heap.id_of (l_as.infix_function_name), l_context_current_class) as f
+								attached t.operator_call (l_as.operator_id, l_context_current_class) as f
 							then
 								l_left_constrained := f.site
 								l_class := l_left_constrained.base_class
@@ -5440,7 +5437,7 @@ feature {NONE} -- Visitor
 								l_target_type := l_left_type
 							end
 							if l_left_type.is_known then
-								if is_infix_valid (l_left_type, l_right_type, l_as.infix_function_name, l_as.operator_location) then
+								if is_infix_valid (l_left_type, l_right_type, l_as) then
 									check last_calls_target_type /= Void end
 									if l_left_constrained = Void then
 										l_left_constrained := last_calls_target_type
@@ -5449,7 +5446,7 @@ feature {NONE} -- Visitor
 									l_error := last_alias_error
 									if not is_inherited and then l_left_type.convert_to (context.current_class, l_right_type.deep_actual_type) then
 										l_target_conv_info := context.last_conversion_info
-										if is_infix_valid (l_right_type, l_right_type, l_as.infix_function_name, l_as.operator_location) then
+										if is_infix_valid (l_right_type, l_right_type, l_as) then
 											l_right_constrained := last_calls_target_type
 											l_left_constrained := l_right_constrained
 											l_error := Void
@@ -5869,7 +5866,7 @@ feature {NONE} -- Visitor
 					target_expr ?= last_byte_node
 				end
 				l_is_multi_constraint := attached {FORMAL_A} last_type.actual_type as p and then not p.is_single_constraint_without_renaming (context.current_class)
-				lookup_feature_alias (bracket_str, l_as, l_as.left_bracket_location, l_target_type)
+				lookup_feature_alias ({PREDEFINED_NAMES}.bracket_symbol_id, l_as, l_as.left_bracket_location, l_target_type)
 
 				if attached last_alias_error as e then
 					error_handler.insert_error (e)
@@ -6121,7 +6118,7 @@ feature {NONE} -- Visitor
 			end
 		end
 
-	process_feat_name_id_as (l_as: FEAT_NAME_ID_AS)
+	process_feature_name (l_as: FEATURE_NAME)
 		do
 			-- Nothing to be done
 		end
@@ -8975,10 +8972,13 @@ feature {NONE} -- Visitor
 
 feature {NONE} -- Feature lookup
 
-	lookup_feature_alias (n: STRING; a: ID_SET_ACCESSOR; l: LOCATION_AS; t: TYPE_A)
+	lookup_feature_alias (n: like {OPERATOR_KIND}.alias_id; a: ID_SET_ACCESSOR; l: LOCATION_AS; t: TYPE_A)
 			-- Look for a feature alias `n' called on a target of type `t' for AST node `a' at location `l'
 			-- and make it available in `last_alias_feature' if found without an error,
 			-- or set `last_alias_error' otherwise.
+		require
+			{OPERATOR_KIND}.is_alias_id (n)
+			{OPERATOR_KIND}.is_fixed_alias_id (n)
 		local
 			c: CLASS_C
 			target_type: TYPE_A
@@ -9018,13 +9018,13 @@ feature {NONE} -- Feature lookup
 					f := base_target_type.base_class.feature_of_rout_id (a.routine_ids.first)
 				elseif base_target_type.is_none then
 						-- Check if target is not of type NONE
-					create vuex.make_for_none (n)
+					create vuex.make_for_none (names_heap.item (n))
 					context.init_error (vuex)
 					vuex.set_location (l)
 					last_alias_error := vuex
 				elseif
 					attached {LOCAL_TYPE_A} base_target_type as x and then
-					attached x.operator_call (names_heap.id_of (n), c) as q
+					attached x.operator_call (n, c) as q
 				then
 					base_target_type := q.site
 					target_class := base_target_type.base_class
@@ -9034,16 +9034,16 @@ feature {NONE} -- Feature lookup
 				elseif base_target_type.is_known then
 						-- Check if bracket feature exists.
 					target_class := base_target_type.base_class
-					f := target_class.feature_table.alias_item (n)
+					f := target_class.feature_table.item_alias_id (n)
 				end
 			elseif is_inherited then
 					-- We need to iterate through the type set to find the routine of ID.
 				f := c.constraints (formal_generic.position).constraining_types
 					(c).feature_i_list_by_rout_id (a.routine_ids.first).first.feature_item
 			else
-				found_features := formal_generic.constraints (c).feature_i_state_by_alias_name (n)
+				found_features := formal_generic.constraints (c).feature_i_state_by_alias_name_id (n)
 				if found_features.features_found_count > 1 then
-					last_alias_error := new_vtmc_error (create {ID_AS}.initialize (n), formal_generic.position, c, True)
+					last_alias_error := new_vtmc_error (n, formal_generic.position, c, True, l)
 				elseif found_features.features_found_count = 1 then
 					base_target_type := found_features.class_type_of_feature
 					target_class := base_target_type.base_class
@@ -9165,7 +9165,7 @@ feature {NONE} -- Parenthesis alias
 					end
 				end
 				l_is_multi_constraint := attached {FORMAL_A} t.actual_type as g and then not g.is_single_constraint_without_renaming (context.current_class)
-				lookup_feature_alias (parentheses_str, p, p.first_token (void), l_target_type)
+				lookup_feature_alias ({PREDEFINED_NAMES}.parentheses_symbol_id, p, p.first_token (void), l_target_type)
 					-- Report original error if alias feature is not found.
 				l_report_error := attached {VWBR} last_alias_error or else attached {VKCN3} last_alias_error
 				if not l_report_error and then l_target_type.is_separate then
@@ -9669,16 +9669,14 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	is_infix_valid (a_left_type, a_right_type: TYPE_A; a_name: STRING; location: LOCATION_AS): BOOLEAN
+	is_infix_valid (a_left_type, a_right_type: TYPE_A; expression: BINARY_AS): BOOLEAN
 			-- Does infix routine `a_name' exists in `a_left_type' and if so is
 			-- it valid for `a_right_type'?
 		require
 			a_left_type_not_void: a_left_type /= Void
 			a_left_type_known: a_left_type.is_known
 			a_right_type_not_void: a_right_type /= Void
-			a_name_not_void: a_name /= Void
 		local
-			l_name: ID_AS
 			l_type_set: TYPE_SET_A
 			l_last_constrained: TYPE_A
 			l_infix: FEATURE_I
@@ -9693,7 +9691,6 @@ feature {NONE} -- Implementation
 				-- Reset
 			last_calls_target_type := Void
 			l_context_current_class := context.current_class
-			create l_name.initialize (a_name)
 				-- No need for `a_left_type.actual_type' since it is done in callers of
 				-- `is_infix_valid'.
 			if a_left_type.is_formal  then
@@ -9703,11 +9700,11 @@ feature {NONE} -- Implementation
 							-- this is the multi constraint case
 						l_type_set := a_left_type.to_type_set.constraining_types (l_context_current_class)
 						check l_type_set /= Void end
-						l_result_tuple := l_type_set.feature_i_state_by_alias_name_id (l_name.name_id)
+						l_result_tuple := l_type_set.feature_i_state_by_alias_name_id (expression.operator_id)
 							-- We raise an error if there are multiple infix features found
 						l_feature_found_count := l_result_tuple.features_found_count
 						if	l_feature_found_count > 1 then
-							l_vtmc_error := new_vtmc_error (l_name, l_formal.position, l_context_current_class, True)
+							l_vtmc_error := new_vtmc_error (expression.operator_id, l_formal.position, l_context_current_class, True, expression.operator_location)
 						elseif l_feature_found_count = 1 then
 							l_infix :=  l_result_tuple.feature_item
 							l_last_constrained := l_result_tuple.class_type_of_feature
@@ -9735,7 +9732,7 @@ feature {NONE} -- Implementation
 					feature_table_not_void: l_last_constrained.base_class.feature_table /= Void
 				end
 				l_class := l_last_constrained.base_class
-				l_infix := l_class.feature_table.alias_item (a_name)
+				l_infix := l_class.feature_table.item_alias_id (expression.operator_id)
 				last_calls_target_type := l_class.actual_type
 			end
 
@@ -9749,13 +9746,12 @@ feature {NONE} -- Implementation
 					else
 						l_vwoe.set_other_type_set (l_type_set)
 					end
-
-					l_vwoe.set_op_name (a_name)
+					l_vwoe.set_op_name (expression.operator_name)
 					last_alias_error := l_vwoe
 				else
 						-- Export validity
 					last_alias_feature := l_infix
-					check_infix_feature (l_infix, l_class, a_name, a_left_type, l_last_constrained, a_right_type)
+					check_infix_feature (l_infix, l_class, expression, a_left_type, l_last_constrained, a_right_type)
 				end
 			else
 				last_alias_error := l_vtmc_error
@@ -9764,10 +9760,10 @@ feature {NONE} -- Implementation
 					-- Left operand is of a separate type, so the right operand is subject to SCOOP argument rules.
 				if a_right_type.is_reference and then not l_infix.arguments.i_th (1).is_separate then
 						-- If the right operand is of a reference type then formal feature argument must be separate.
-					create {VUAR3} last_alias_error.make (context, l_infix, Void, l_class, 1, l_infix.arguments.i_th (1).actual_type, a_left_type, location)
+					create {VUAR3} last_alias_error.make (context, l_infix, Void, l_class, 1, l_infix.arguments.i_th (1).actual_type, a_left_type, expression.operator_location)
 				elseif a_right_type.is_expanded and then not a_right_type.is_processor_attachable_to (a_left_type) then
 						-- If the right operand is of an expanded type then it should not have non-separate reference fields.
-					create {VUAR4} last_alias_error.make (context, l_infix, Void, l_class, 1, l_infix.arguments.i_th (1).actual_type, a_left_type, location)
+					create {VUAR4} last_alias_error.make (context, l_infix, Void, l_class, 1, l_infix.arguments.i_th (1).actual_type, a_left_type, expression.operator_location)
 				end
 			end
 			if last_alias_error /= Void then
@@ -9781,12 +9777,12 @@ feature {NONE} -- Implementation
 			last_calls_target_type_computed: last_alias_error = Void implies last_calls_target_type /= Void
 		end
 
-	check_infix_feature (a_feature: FEATURE_I; a_context_class: CLASS_C; a_name: STRING; a_left_type, a_left_constrained, a_right_type: TYPE_A)
+	check_infix_feature (a_feature: FEATURE_I; a_context_class: CLASS_C; expression: BINARY_AS; a_left_type, a_left_constrained, a_right_type: TYPE_A)
 				-- Check validity of `a_feature'.
 		require
 			a_feature_attached: a_feature /= Void
 			a_context_class_attached: a_context_class /= Void
-			a_name_attached: a_name /= Void
+			attached expression
 			a_left_type_attached: a_left_type /= Void
 			a_left_constrained_attached: a_left_constrained /= Void
 			a_right_type_attached: a_right_type /= Void
@@ -9829,7 +9825,7 @@ feature {NONE} -- Implementation
 							create l_vwoe1
 							context.init_error (l_vwoe1)
 							l_vwoe1.set_other_class (a_context_class)
-							l_vwoe1.set_op_name (a_name)
+							l_vwoe1.set_op_name (expression.operator_name)
 							l_vwoe1.set_operator_feature (a_feature)
 							l_vwoe1.set_formal_type (l_arg_type)
 							l_vwoe1.set_actual_type (a_right_type)
@@ -11654,18 +11650,20 @@ feature {NONE} -- Variable initialization
 
 feature {NONE} -- Implementation: Error handling
 
-	new_vtmc_error (a_problematic_feature: ID_AS; a_formal_position: INTEGER; a_context_class: CLASS_C; is_alias: BOOLEAN): VTMC
+	new_vtmc_error (name_id: like {NAMES_HEAP}.id_of; a_formal_position: INTEGER; a_context_class: CLASS_C; is_alias: BOOLEAN; location: LOCATION_AS): VTMC
 			-- Computes everything needed to report a proper VTMC error, inserts and raises an error.
 			--
 			-- `a_type_set' for which we produce the error.
-			-- `a_problematic_feature' is the feature which is not unique in the type set.
+			-- `name_id` is the feature name ID or the alias ID which is not unique in the type set.
 			-- If you don't have formals inside your type set you don't need to provide a context class.
 		require
+			not is_alias implies names_heap.has (name_id)
+			is_alias implies {OPERATOR_KIND}.is_alias_id (name_id)
+			is_alias implies {OPERATOR_KIND}.is_fixed_alias_id (name_id)
 			is_really_a_problematic_feature: not is_alias implies
-				a_context_class.constraints (a_formal_position).constraining_types (a_context_class).feature_i_state_by_name_id (a_problematic_feature.name_id).features_found_count /= 1
+				a_context_class.constraints (a_formal_position).constraining_types (a_context_class).feature_i_state_by_name_id (name_id).features_found_count /= 1
 			is_really_a_problematic_alias_feature: is_alias implies
-				a_context_class.constraints (a_formal_position).constraining_types (a_context_class).feature_i_state_by_alias_name_id (a_problematic_feature.name_id).features_found_count /= 1
-
+				a_context_class.constraints (a_formal_position).constraining_types (a_context_class).feature_i_state_by_alias_name_id (name_id).features_found_count /= 1
 		local
 			l_error_report: MC_FEATURE_INFO
 			l_vtmc1: VTMC1
@@ -11674,24 +11672,23 @@ feature {NONE} -- Implementation: Error handling
 		do
 			l_constraints := a_context_class.constraints (a_formal_position)
 			if is_alias then
-				l_error_report := l_constraints.info_about_feature_by_alias_name_id (a_problematic_feature.name_id, a_formal_position, a_context_class)
+				l_error_report := l_constraints.info_about_feature_by_alias_name_id (name_id, a_formal_position, a_context_class)
 			else
-				l_error_report := l_constraints.info_about_feature_by_name_id (a_problematic_feature.name_id, a_formal_position, a_context_class)
+				l_error_report := l_constraints.info_about_feature_by_name_id (name_id, a_formal_position, a_context_class)
 			end
 
 			if l_error_report.count < 1 then
 				create l_vtmc1
 				context.init_error (l_vtmc1)
-				l_vtmc1.set_location (a_problematic_feature)
-				l_vtmc1.set_feature_call_name (a_problematic_feature.name)
+				l_vtmc1.set_location (location)
+				l_vtmc1.set_feature_call_name (names_heap.item (if is_alias then {OPERATOR_KIND}.name_id_of_alias_id (name_id) else name_id end))
 				l_vtmc1.set_type_set (l_constraints.constraining_types (a_context_class))
 				Result := l_vtmc1
 			else
 				check l_error_report.count > 1 end
-
 				create l_vtmc2
 				context.init_error (l_vtmc2)
-				l_vtmc2.set_location (a_problematic_feature)
+				l_vtmc2.set_location (location)
 				l_vtmc2.set_error_report (l_error_report)
 				Result := l_vtmc2
 			end

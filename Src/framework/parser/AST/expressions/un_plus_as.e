@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "AST represenation of a unary `+' operation."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -13,6 +13,16 @@ inherit
 create
 	initialize
 
+feature -- Access
+
+	operator_id: like alias_id
+			-- <Precursor>
+		do
+			Result := alias_id ({PREDEFINED_NAMES}.plus_operator_name_id, is_valid_binary_kind_mask ⦶ is_valid_unary_kind_mask ⦶ is_unary_kind_mask)
+		ensure then
+			is_valid_binary_alias_id (Result)
+		end
+
 feature {INTERNAL_COMPILER_STRING_EXPORTER} -- Properties
 
 	operator_name: STRING = "+"
@@ -26,7 +36,7 @@ feature -- Visitor
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2021, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
@@ -57,4 +67,4 @@ note
 			Customer support http://support.eiffel.com
 		]"
 
-end -- class UN_PLUS_AS
+end

@@ -236,6 +236,12 @@ feature -- Status report
 			Result := True
 		end
 
+feature -- Access
+
+	expression_parser_prefix: STRING_32 = "check "
+			-- A prefix of the string for parsing with `expression_parser`.
+			-- The expression text should be placed after the prefix.
+
 feature -- Parsing (Unknown encoding)
 
 	parse (a_file: KL_BINARY_INPUT_FILE)

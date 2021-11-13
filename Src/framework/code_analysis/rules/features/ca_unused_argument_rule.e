@@ -160,11 +160,8 @@ feature {NONE} -- Rule Checking
 			-- Checks if `a_conv' is an argument used in the
 			-- form `$arg'.
 		do
-			if
-				attached {ADDRESS_AS} a_conv.expr as l_address
-				and then attached {FEAT_NAME_ID_AS} l_address.feature_name as l_id
-			then
-				check_arguments (l_id.feature_name.name_32)
+			if attached {ADDRESS_AS} a_conv.expr as l_address then
+				check_arguments (l_address.feature_name.feature_name.name_32)
 			end
 		end
 

@@ -147,10 +147,7 @@ feature -- Access
 					f.after
 				loop
 					feature_name := f.item
-					if
-						attached {FEATURE_NAME_ALIAS_AS} feature_name as l_feat_name_alias_as and then
-						l_feat_name_alias_as.has_alias
-					then
+					if attached {FEATURE_NAME_ALIAS_AS} feature_name as l_feat_name_alias_as then
 							-- TODO This code occurs in almost the same fashion in `{RENAMING_A}.adapt_alias_feature_name_properties'
 						vfav := Void
 						arguments := b.arguments
@@ -237,7 +234,7 @@ feature -- Access
 							-- We have an associating built in class.
 							-- If we find a feature with the name matching the built in then we set this
 							-- replacement feature as an attribute of the dummy built in.
-						l_built_in_feature_node := l_built_in_class_as.feature_with_name (f.first.internal_name.name_id)
+						l_built_in_feature_node := l_built_in_class_as.feature_with_name (f.first.feature_name.name_id)
 						if l_built_in_feature_node /= Void then
 							l_routine_as ?= b.content
 							l_built_in_as ?= l_routine_as.routine_body
@@ -259,13 +256,13 @@ feature -- Access
 			end
 		end
 
-	new_feature_name_alias_as (feature_name: detachable ID_AS; alias_names: detachable LIST [ALIAS_NAME_INFO]; convert_keyword: detachable KEYWORD_AS): detachable FEATURE_NAME_ALIAS_AS
+	new_feature_name_alias_as (feature_name: detachable ID_AS; aliases: detachable LIST [FEATURE_ALIAS_NAME]; convert_keyword: detachable KEYWORD_AS): detachable FEATURE_NAME_ALIAS_AS
 			-- <Precursor>
 		local
 			first_operator, second_operator:  STRING_AS
 			has_error: BOOLEAN
 		do
-			if attached feature_name and then attached alias_names as aliases then
+			if attached feature_name and then attached aliases then
 				across
 					aliases as a
 				loop
@@ -286,12 +283,12 @@ feature -- Access
 					end
 				end
 				if not has_error then
-					Result := Precursor (feature_name, alias_names, convert_keyword)
+					Result := Precursor (feature_name, aliases, convert_keyword)
 				end
 			end
 		end
 
-	new_formal_dec_as (f: detachable FORMAL_AS; c: detachable CONSTRAINT_LIST_AS; cf: detachable EIFFEL_LIST [FEAT_NAME_ID_AS]; c_as: detachable SYMBOL_AS; ck_as, ek_as: detachable KEYWORD_AS): detachable FORMAL_CONSTRAINT_AS
+	new_formal_dec_as (f: detachable FORMAL_AS; c: detachable CONSTRAINT_LIST_AS; cf: detachable EIFFEL_LIST [FEATURE_NAME]; c_as: detachable SYMBOL_AS; ck_as, ek_as: detachable KEYWORD_AS): detachable FORMAL_CONSTRAINT_AS
 			-- New FORMAL_DECLARATION AST node
 		do
 			if f /= Void then
@@ -419,7 +416,7 @@ note
 	ca_ignore:
 		"CA011", "CA011: too many arguments",
 		"CA033", "CA033: very long class"
-	copyright:	"Copyright (c) 1984-2020, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2021, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

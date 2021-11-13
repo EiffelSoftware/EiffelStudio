@@ -240,7 +240,7 @@ feature {NONE} -- Implementation
 			adapter: like Current
 			l_match_list: LEAF_AS_LIST
 		do
-			s_feat := format_reg.current_feature_table.item_id (old_name.internal_name.name_id)
+			s_feat := format_reg.current_feature_table.item_id (old_name.feature_name.name_id)
 			if s_feat /= Void then
 				rout_id := s_feat.rout_id_set.first
 				t_feat := format_reg.target_feature_table.feature_of_rout_id (rout_id)
@@ -286,7 +286,7 @@ feature {NONE} -- Implementation
 		local
 			feat: FEATURE_I
 		do
-			feat := format_reg.target_feature_table.item_id (name.internal_name.name_id)
+			feat := format_reg.target_feature_table.item_id (name.feature_name.name_id)
 			if feat = Void then
 					-- Newly added feature which hasn't been compiled
 				register_uncompiled_feature (format_reg)

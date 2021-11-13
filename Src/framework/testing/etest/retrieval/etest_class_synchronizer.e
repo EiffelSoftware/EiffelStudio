@@ -15,7 +15,7 @@ inherit
 			process_class_as,
 			process_feature_as,
 			process_feature_clause_as,
-			process_feat_name_id_as,
+			process_feature_name,
 			process_id_as,
 			process_index_as,
 			process_string_as,
@@ -535,7 +535,7 @@ feature {NONE} -- Implementation: AST
 			end
 		end
 
-	process_feat_name_id_as (l_as: FEAT_NAME_ID_AS)
+	process_feature_name (l_as: FEATURE_NAME)
 			-- <Precursor>
 		do
 				-- We found a test routine!
@@ -637,7 +637,7 @@ invariant
 		attached old_test_map implies attached test_class
 
 note
-	copyright: "Copyright (c) 1984-2018, Eiffel Software"
+	copyright: "Copyright (c) 1984-2021, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

@@ -10,6 +10,9 @@ class
 
 inherit
 	BINARY_AS
+		redefine
+			is_binary
+		end
 
 	PREFIX_INFIX_NAMES
 
@@ -24,6 +27,19 @@ feature -- Visitor
 			v.process_bin_eq_as (Current)
 		end
 
+feature -- Status report
+
+	is_binary: BOOLEAN = False
+			-- <Precursor>
+
+feature -- Access
+
+	operator_id: like alias_id
+			-- <Precursor>
+		do
+			check from_precondition: False then end
+		end
+
 feature -- Type check, byte code and dead code removal
 
 	op_name: ID_AS
@@ -32,16 +48,8 @@ feature -- Type check, byte code and dead code removal
 			create Result.initialize ("=")
 		end
 
-feature {INTERNAL_COMPILER_STRING_EXPORTER} -- Properties
-
-	infix_function_name: STRING
-			-- Qualified name with the infix keyword.
-		once
-			Result := infix_feature_name_with_symbol (op_name.name)
-		end
-
 note
-	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2021, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

@@ -316,7 +316,6 @@ feature {DBG_EXPRESSION, DBG_EXPRESSION_EVALUATION, DBG_EXPRESSION_EVALUATOR, AS
 			valid_expression: valid_expression (text)
 		local
 			sp: SHARED_EIFFEL_PARSER
-			s32: STRING_32
 			p: EIFFEL_PARSER
 			retried: BOOLEAN
 			en: EXPR_AS
@@ -334,10 +333,7 @@ feature {DBG_EXPRESSION, DBG_EXPRESSION_EVALUATION, DBG_EXPRESSION_EVALUATOR, AS
 					p := sp.expression_parser
 					p.set_syntax_version (p.transitional_syntax)
 					check expression_not_void: text /= Void end
-					create s32.make (text.count + 10)
-					s32.append_string_general ("check ")
-					s32.append (text)
-					p.parse_from_string_32 (s32, context.associated_class)
+					p.parse_from_string_32 ({EIFFEL_PARSER_SKELETON}.expression_parser_prefix + text, context.associated_class)
 					has_syntax_error := p.syntax_error
 					if not has_syntax_error then
 						en := p.expression_node
@@ -420,7 +416,7 @@ invariant
 	valid_context: context.is_coherent
 
 note
-	copyright:	"Copyright (c) 1984-2015, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2021, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

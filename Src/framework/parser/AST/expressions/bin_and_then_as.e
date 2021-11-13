@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "AST representation of binary `and then' operation."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -39,20 +39,18 @@ feature -- Initialization
 			then_keyword_set: s_as /= Void implies then_keyword_index = s_as.index
 		end
 
-feature -- Properties
+feature -- Access
 
 	op_name: ID_AS
 			-- Name without the infix keyword.
 		once
-			create Result.initialize ("and then")
+			create Result.initialize_from_id ({PREDEFINED_NAMES}.and_then_operator_name_id)
 		end
 
-feature {INTERNAL_COMPILER_STRING_EXPORTER} -- Properties
-
-	infix_function_name: STRING
-			-- Qualified name with the infix keyword.
-		once
-			Result := infix_feature_name_with_symbol (op_name.name)
+	operator_id: like alias_id
+			-- <Precursor>
+		do
+			Result := alias_id ({PREDEFINED_NAMES}.and_then_operator_name_id, is_valid_binary_kind_mask ⦶ is_binary_kind_mask)
 		end
 
 feature -- Visitor
@@ -82,7 +80,7 @@ feature -- Roundtrip
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2014, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2021, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
@@ -113,4 +111,4 @@ note
 			Customer support http://support.eiffel.com
 		]"
 
-end -- class BIN_AND_THEN_AS
+end

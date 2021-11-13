@@ -9,21 +9,16 @@ class
 	FEATURE_NAME_ALIAS_AS
 
 inherit
-	FEAT_NAME_ID_AS
+	FEATURE_NAME
 		rename
 			initialize as initialize_id
 		redefine
-			has_alias,
 			is_binary,
 			has_bracket_alias,
 			is_equivalent,
 			has_parentheses_alias,
 			is_unary,
 			process,
-			set_is_binary,
-			set_is_unary,
-			is_valid_binary,
-			is_valid_unary,
 			first_token,
 			last_token
 		end
@@ -33,38 +28,23 @@ create
 
 feature {NONE} -- Creation
 
-	initialize_with_list (feature_id: like feature_name; alias_names: LIST [ALIAS_NAME_INFO]; a_convert_keyword: detachable KEYWORD_AS)
+	initialize_with_list (feature_id: like feature_name; alias_names: LIST [FEATURE_ALIAS_NAME]; a_convert_keyword: detachable KEYWORD_AS)
 		require
 			feature_id_not_void: feature_id /= Void
 			alias_list_not_empty: not alias_names.is_empty
-			has_alias_name: across alias_names as a all not a.item.alias_name.value.is_empty end
-			no_alias_duplicates:
-				across alias_names as x all across alias_names as y all
-					x.item.alias_name.value.same_string (y.item.alias_name.value) implies x.target_index = y.target_index
-				end end
-		local
-			l_alias: FEATURE_ALIAS_NAME
-			l_alias_name: STRING_AS
+			has_alias_name: ∀ a: alias_names ¦ not a.alias_name.value.is_empty
+			no_alias_duplicates: ∀ x: alias_names ¦ ∀ y: alias_names ¦
+						x.alias_name.value.same_string (y.alias_name.value) implies @ x.target_index = @ y.target_index
 		do
 			initialize_id (feature_id)
-			if a_convert_keyword /= Void then
+			if attached a_convert_keyword then
 				convert_keyword_index := a_convert_keyword.index
 				has_convert_mark := True
 			end
-			create aliases.make (alias_names.count)
-			across
-				alias_names as ic
-			loop
-				l_alias_name := ic.item.alias_name
-				if l_alias_name /= Void then
-					create l_alias.make (l_alias_name, ic.item.alias_keyword)
-					aliases.force (l_alias)
-					if l_alias.is_unary then
-						internal_is_binary := False
-					elseif l_alias.is_binary then
-						internal_is_binary := True
-					end
-				end
+			if attached {like aliases} alias_names as l then
+				aliases := l
+			else
+				create aliases.make_from_iterable (alias_names)
 			end
 		end
 
@@ -77,11 +57,6 @@ feature -- Visitor
 		end
 
 feature -- Access: aliases
-
-	has_alias: BOOLEAN
-		do
-			Result := attached aliases as lst and then not lst.is_empty
-		end
 
 	aliases: ARRAYED_LIST [FEATURE_ALIAS_NAME]
 
@@ -118,25 +93,13 @@ feature -- Status report
 	has_bracket_alias: BOOLEAN
 			-- Is feature alias (if any) bracket?
 		do
-			across
-				aliases as ic
-			until
-				Result
-			loop
-				Result := ic.item.is_bracket_alias
-			end
+			Result := ∃ a: aliases ¦ a.is_bracket
 		end
 
 	has_parentheses_alias: BOOLEAN
 			-- <Precursor>
 		do
-			across
-				aliases as ic
-			until
-				Result
-			loop
-				Result := ic.item.is_parentheses_alias
-			end
+			Result := ∃ a: aliases ¦ a.is_parentheses
 		end
 
 	bracket_alias_as: detachable STRING_AS
@@ -148,7 +111,7 @@ feature -- Status report
 			until
 				Result /= Void
 			loop
-				if ic.item.is_bracket_alias then
+				if ic.item.is_bracket then
 					Result := ic.item.alias_name
 				end
 			end
@@ -163,38 +126,28 @@ feature -- Status report
 			until
 				Result /= Void
 			loop
-				if ic.item.is_parentheses_alias then
+				if ic.item.is_parentheses then
 					Result := ic.item.alias_name
 				end
 			end
 		end
 
 	is_binary: BOOLEAN
-			-- Is feature alias (if any) a binary operator?
-		do
-			Result := not has_bracket_alias and then internal_is_binary
-		end
+			-- Is feature alias (if any) a binary operator unless it is a circumfix operator?
 
 	is_unary: BOOLEAN
-			-- Is feature alias (if any) an unary operator?
+			-- Is feature alias (if any) an unary operator unless it is a circumfix operator?
+
+	is_valid_binary: BOOLEAN
+			-- Are all non-circumfix aliases valid as binary operators?
 		do
-			Result := not has_bracket_alias and then not has_parentheses_alias and then not internal_is_binary
+			Result := ∀ a: aliases ¦ (¬ a.is_circumfix ⇒ a.is_valid_binary)
 		end
 
 	is_valid_unary: BOOLEAN
-			-- Is the value of the feature name valid unary operator?
+			-- Are all non-circumfix aliases valid as unary operators?
 		do
-			if attached aliases as l_aliases then
-				Result := across l_aliases as ic all ic.item.is_valid_unary end
-			end
-		end
-
-	is_valid_binary: BOOLEAN
-			-- Is the value of the feature name valid unary operator?
-		do
-			if attached aliases as l_aliases then
-				Result := across l_aliases as ic all ic.item.is_valid_binary end
-			end
+			Result := ∀ a: aliases ¦ (¬ a.is_circumfix ⇒ a.is_valid_unary)
 		end
 
 feature -- Status setting
@@ -206,28 +159,50 @@ feature -- Status setting
 
 	set_is_binary
 			-- Mark operator as binary.
+		require
+			is_valid_binary
+			not is_unary
+		local
+			a: like aliases.item
 		do
-			internal_is_binary := True
+			is_binary := True
 			if attached aliases as l_aliases then
 				across
 					l_aliases as ic
 				loop
-					ic.item.set_is_binary
+					a := ic.item
+					if not a.is_circumfix then
+						a.set_is_binary
+					end
 				end
 			end
+		ensure
+			is_binary
+			∀ o: aliases ¦ (¬ o.is_circumfix ⇒ o.is_binary)
 		end
 
 	set_is_unary
 			-- Mark operator as unary.
+		require
+			is_valid_unary
+			not is_binary
+		local
+			a: like aliases.item
 		do
-			internal_is_binary := False
+			is_unary := True
 			if attached aliases as l_aliases then
 				across
 					l_aliases as ic
 				loop
-					ic.item.set_is_unary
+					a := ic.item
+					if not a.is_circumfix then
+						a.set_is_unary
+					end
 				end
 			end
+		ensure
+			is_unary
+			∀ o: aliases ¦ (¬ o.is_circumfix ⇒ o.is_unary)
 		end
 
 feature -- Roundtrip/Token
@@ -279,7 +254,7 @@ feature -- Comparison
 	is_equivalent (other: like Current): BOOLEAN
 			-- Is `other' equivalent to the current object?
 		local
-			c1,c2: CURSOR
+			c1, c2: CURSOR
 			l_aliases, l_other_aliases: like aliases
 		do
 				-- There is no need to check whether both alias names are Bracket,
@@ -322,23 +297,17 @@ feature -- Comparison
 			end
 		end
 
-feature {NONE} -- Status
-
-	internal_is_binary: BOOLEAN
-			-- Is operator binary (unless it is bracket)?
-
 invariant
 
-	has_alias: has_alias
-	has_alias_name_not_empty: attached aliases as lst and then
-		not lst.is_empty and then
-		attached lst.first.alias_name as inv_alias_name and then
-		not inv_alias_name.value.is_empty
+	has_alias: not aliases.is_empty
+	has_alias_name: ∀ a: aliases ¦ not a.alias_name.value.is_empty
+	no_alias_duplicates: ∀ x: aliases ¦ ∀ y: aliases ¦
+		x.alias_name.value.same_string (y.alias_name.value) ⇒ @ x.target_index = @ y.target_index
 
 note
-	copyright:	"Copyright (c) 1984-2019, Eiffel Software"
-	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
-	licensing_options:	"http://www.eiffel.com/licensing"
+	copyright: "Copyright (c) 1984-2021, Eiffel Software"
+	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
+	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[
 			This file is part of Eiffel Software's Eiffel Development Environment.
 			

@@ -238,8 +238,8 @@ feature -- Access
 			attached Result ⇒ Result.is_empty
 		end
 
-	new_alias_list (n: INTEGER): CONSTRUCT_LIST [ALIAS_NAME_INFO]
-			-- New empty list of ALIAS_TRIPLE
+	new_alias_list (n: INTEGER): CONSTRUCT_LIST [FEATURE_ALIAS_NAME]
+			-- New empty list of FEATURE_ALIAS_NAME
 		require
 			n_non_negative: n >= 0
 		do
@@ -248,13 +248,13 @@ feature -- Access
 			list_full: Result /= Void implies Result.capacity = n and Result.is_empty
 		end
 
-	new_alias_name_info (k_as: detachable KEYWORD_AS; n_as: detachable STRING_AS): detachable ALIAS_NAME_INFO
-			-- New ALIAS_TRIPLE.
+	new_alias_name (a: detachable KEYWORD_AS; s: detachable STRING_AS; k: like {OPERATOR_KIND}.kind_anchor): detachable FEATURE_ALIAS_NAME
+			-- New FEATURE_ALIAS_NAME.
 		require
-			attached n_as implies not n_as.value_32.is_empty
+			attached s implies not s.value_32.is_empty
 		do
-			if n_as /= Void then
-				create Result.make (k_as, n_as)
+			if attached s then
+				create Result.make (s, a, k)
 			end
 		end
 
@@ -1252,7 +1252,7 @@ feature -- Access
 			attached Result ⇒ Result.occurrences (a) = n
 		end
 
-	new_eiffel_list_feature_name_id (a: FEAT_NAME_ID_AS; n: INTEGER): detachable EIFFEL_LIST [FEAT_NAME_ID_AS]
+	new_eiffel_list_feature_name_id (a: FEATURE_NAME; n: INTEGER): detachable EIFFEL_LIST [FEATURE_NAME]
 			-- New list with `n` elements `a`.
 		require
 			n >= 0
@@ -1535,7 +1535,7 @@ feature -- Access
 			end
 		end
 
-	new_feature_name_alias_as (feature_name: detachable ID_AS; a_alias_list: detachable LIST [ALIAS_NAME_INFO]; c_as: detachable KEYWORD_AS): detachable FEATURE_NAME_ALIAS_AS
+	new_feature_name_alias_as (feature_name: detachable ID_AS; a_alias_list: detachable LIST [FEATURE_ALIAS_NAME]; c_as: detachable KEYWORD_AS): detachable FEATURE_NAME_ALIAS_AS
 			-- New FEATURE_NAME_ALIAS AST node
 		require
 			alias_list_not_empty: attached a_alias_list implies not a_alias_list.is_empty
@@ -1553,7 +1553,7 @@ feature -- Access
 			end
 		end
 
-	new_feature_name_id_as (f: detachable ID_AS): detachable FEAT_NAME_ID_AS
+	new_feature_name_id_as (f: detachable ID_AS): detachable FEATURE_NAME
 			-- New FEAT_NAME_ID AST node
 		do
 			if f /= Void then
@@ -1569,7 +1569,7 @@ feature -- Access
 			end
 		end
 
-	new_formal_dec_as (f: detachable FORMAL_AS; c: detachable CONSTRAINT_LIST_AS; cf: detachable EIFFEL_LIST [FEAT_NAME_ID_AS]; c_as: detachable SYMBOL_AS; ck_as, ek_as: detachable KEYWORD_AS): detachable FORMAL_DEC_AS
+	new_formal_dec_as (f: detachable FORMAL_AS; c: detachable CONSTRAINT_LIST_AS; cf: detachable EIFFEL_LIST [FEATURE_NAME]; c_as: detachable SYMBOL_AS; ck_as, ek_as: detachable KEYWORD_AS): detachable FORMAL_DEC_AS
 			-- New FORMAL_DECLARATION AST node
 		do
 			if f /= Void then
@@ -2211,7 +2211,7 @@ feature -- Access
 			end
 		end
 
-	new_creation_constrain_triple (fl: detachable EIFFEL_LIST [FEAT_NAME_ID_AS]; c_as, e_as: detachable KEYWORD_AS): detachable CREATION_CONSTRAIN_TRIPLE
+	new_creation_constrain_triple (fl: detachable EIFFEL_LIST [FEATURE_NAME]; c_as, e_as: detachable KEYWORD_AS): detachable CREATION_CONSTRAIN_TRIPLE
 			-- New CREATION_CONSTRAIN_TRIPLE object
 		do
 			create Result.make (fl, c_as, e_as)

@@ -369,7 +369,7 @@ feature -- Implementation
 		do
 		end
 
-	process_feat_name_id_as (l_as: FEAT_NAME_ID_AS)
+	process_feature_name (l_as: FEATURE_NAME)
 		do
 		end
 

@@ -170,8 +170,8 @@ feature{NONE} -- Modification computation
 				loop
 					if not destination_contain_renamming (l_rename_list.item) then
 						last_computed_modifier.extend ({ERT_PARENT_AS_MODIFIER}.rename_clause,
-									  l_rename_list.item.old_name.internal_name.name + " as " +
-									  l_rename_list.item.new_name.internal_name.name
+									  l_rename_list.item.old_name.feature_name.name + " as " +
+									  l_rename_list.item.new_name.feature_name.name
 									  )
 					end
 					l_rename_list.forth
@@ -241,7 +241,7 @@ feature{NONE} -- Modification computation
 				until
 					l_dest_list.after
 				loop
-					l_name := l_dest_list.item.internal_name.name.as_lower
+					l_name := l_dest_list.item.feature_name.name.as_lower
 					if attached final_names.item (l_name) as l_found_name then
 						l_name := l_found_name
 						last_computed_modifier.replace (a_clause, l_dest_list.index, l_name)
@@ -259,7 +259,7 @@ feature{NONE} -- Modification computation
 				until
 					l_sour_list.after
 				loop
-					if not l_name_list.has (l_sour_list.item.internal_name.name.as_lower) then
+					if not l_name_list.has (l_sour_list.item.feature_name.name.as_lower) then
 						last_computed_modifier.extend (a_clause, l_sour_list.item.text (source_match_list))
 					end
 					l_sour_list.forth
@@ -285,8 +285,8 @@ feature{NONE} -- Modification computation
 				loop
 					l_rename := l_rename_list.item
 					Result :=
-						l_rename.old_name.internal_name.name.is_case_insensitive_equal (rename_item.old_name.internal_name.name) and
-						l_rename.new_name.internal_name.name.is_case_insensitive_equal (rename_item.new_name.internal_name.name)
+						l_rename.old_name.feature_name.name.is_case_insensitive_equal (rename_item.old_name.feature_name.name) and
+						l_rename.new_name.feature_name.name.is_case_insensitive_equal (rename_item.new_name.feature_name.name)
 					l_rename_list.forth
 				end
 				l_rename_list.go_i_th (l_index)
@@ -388,8 +388,8 @@ feature{NONE} -- Modification computation
 				until
 					a_rename_clause.content.after
 				loop
-					old_name := a_rename_clause.content.item.old_name.internal_name.name.as_lower
-					new_name := a_rename_clause.content.item.new_name.internal_name.name.as_lower
+					old_name := a_rename_clause.content.item.old_name.feature_name.name.as_lower
+					new_name := a_rename_clause.content.item.new_name.feature_name.name.as_lower
 					a_name_table.force (new_name, old_name)
 					a_rename_clause.content.forth
 				end

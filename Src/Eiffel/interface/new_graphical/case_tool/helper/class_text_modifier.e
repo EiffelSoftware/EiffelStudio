@@ -471,7 +471,7 @@ feature -- Modification (Add/Remove feature)
 							until
 								f_name /= Void or else names.after
 							loop
-								if names.item.internal_name.is_equal (l_item.feature_name) then
+								if names.item.feature_name.is_equal (l_item.feature_name) then
 									f_name := names.item
 								else
 									name_index := name_index + 1

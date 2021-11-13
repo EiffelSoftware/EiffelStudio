@@ -653,8 +653,8 @@ feature -- Access
 					-- In this case we must certainly be handling a dotnet feature or the AST cannot be loaded due to corruption
 					-- and we need to create an empty AST otherwise we cannot pick and drop it.
 				create l_feature_names.make (1)
-				l_feature_names.extend (create {FEAT_NAME_ID_AS}.initialize (
-					create {ID_AS}.initialize (name)))
+				l_feature_names.extend (create {FEATURE_NAME}.initialize
+					(create {ID_AS}.initialize (name)))
 				if is_frozen then
 					l_feature_names.last.set_frozen_keyword (create {KEYWORD_AS}.make_null)
 				end

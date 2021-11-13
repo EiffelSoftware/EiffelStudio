@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "AST represenation of a unary `old' operation."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -10,7 +10,7 @@ class UN_OLD_AS
 inherit
 	UNARY_AS
 		redefine
-			prefix_feature_name
+			is_unary
 		end
 
 create
@@ -26,6 +26,19 @@ feature {INTERNAL_COMPILER_STRING_EXPORTER} -- Properties
 
 	operator_name: STRING = "old"
 
+feature -- Status report
+
+	is_unary: BOOLEAN = False
+			-- <Precursor>
+
+feature -- Access
+
+	operator_id: like alias_id
+			-- <Precursor>
+		do
+			check from_precondition: False then end
+		end
+
 feature -- Visitor
 
 	process (v: AST_VISITOR)
@@ -35,7 +48,7 @@ feature -- Visitor
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2014, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2021, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
@@ -66,4 +79,4 @@ note
 			Customer support http://support.eiffel.com
 		]"
 
-end -- class UN_OLD_AS
+end

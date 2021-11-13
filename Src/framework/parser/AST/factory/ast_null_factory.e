@@ -56,7 +56,7 @@ inherit
 			create_match_list,
 			reverse_extend_separator, reverse_extend_identifier, reverse_extend_identifier_separator,
 			new_agent_routine_creation_as,
-			new_constraint_triple, new_alias_name_info, new_agent_target_triple,
+			new_constraint_triple, new_alias_name, new_agent_target_triple,
 			new_keyword_instruction_list_pair, new_keyword_string_pair, new_invariant_pair,
 			new_keyword_as, new_keyword_id_as, new_creation_keyword_as, new_end_keyword_as, new_frozen_keyword_as,
 			new_precursor_keyword_as, new_once_string_keyword_as,
@@ -167,8 +167,8 @@ feature -- Roundtrip: New AST node
 		do
 		end
 
-	new_alias_name_info (k_as: detachable KEYWORD_AS; n_as: detachable STRING_AS): detachable ALIAS_NAME_INFO
-			-- New ALIAST_NAME_INFO.
+	new_alias_name (a: detachable KEYWORD_AS; s: detachable STRING_AS; k: like {OPERATOR_KIND}.kind_anchor): detachable FEATURE_ALIAS_NAME
+			-- <Precursor>
 		do
 		end
 
@@ -647,7 +647,7 @@ feature -- Access
 		do
 		end
 
-	new_eiffel_list_feature_name_id (a: FEAT_NAME_ID_AS; n: INTEGER): detachable EIFFEL_LIST [FEAT_NAME_ID_AS]
+	new_eiffel_list_feature_name_id (a: FEATURE_NAME; n: INTEGER): detachable EIFFEL_LIST [FEATURE_NAME]
 			-- <Precursor>
 		do
 		end
@@ -772,12 +772,12 @@ feature -- Access
 		do
 		end
 
-	new_feature_name_alias_as (feature_name: detachable ID_AS; a_alias_list: detachable LIST [ALIAS_NAME_INFO]; c_as: detachable KEYWORD_AS): detachable FEATURE_NAME_ALIAS_AS
+	new_feature_name_alias_as (feature_name: detachable ID_AS; a_alias_list: detachable LIST [FEATURE_ALIAS_NAME]; c_as: detachable KEYWORD_AS): detachable FEATURE_NAME_ALIAS_AS
 			-- New FEATURE_NAME_ALIAS AST node
 		do
 		end
 
-	new_feature_name_id_as (f: detachable ID_AS): detachable FEAT_NAME_ID_AS
+	new_feature_name_id_as (f: detachable ID_AS): detachable FEATURE_NAME
 			-- New FEAT_NAME_ID AST node
 		do
 		end
@@ -787,7 +787,7 @@ feature -- Access
 		do
 		end
 
-	new_formal_dec_as (f: detachable FORMAL_AS; c: detachable CONSTRAINT_LIST_AS; cf: detachable EIFFEL_LIST [FEAT_NAME_ID_AS]; c_as: detachable SYMBOL_AS; ck_as, ek_as: detachable KEYWORD_AS): detachable FORMAL_DEC_AS
+	new_formal_dec_as (f: detachable FORMAL_AS; c: detachable CONSTRAINT_LIST_AS; cf: detachable EIFFEL_LIST [FEATURE_NAME]; c_as: detachable SYMBOL_AS; ck_as, ek_as: detachable KEYWORD_AS): detachable FORMAL_DEC_AS
 			-- New FORMAL_DECLARATION AST node
 		do
 		end
@@ -1164,7 +1164,7 @@ feature -- Access
 		do
 		end
 
-	new_creation_constrain_triple (fl: detachable EIFFEL_LIST [FEAT_NAME_ID_AS]; c_as, e_as: detachable KEYWORD_AS): detachable CREATION_CONSTRAIN_TRIPLE
+	new_creation_constrain_triple (fl: detachable EIFFEL_LIST [FEATURE_NAME]; c_as, e_as: detachable KEYWORD_AS): detachable CREATION_CONSTRAIN_TRIPLE
 			-- New CREATION_CONSTRAIN_TRIPLE object
 		do
 		end

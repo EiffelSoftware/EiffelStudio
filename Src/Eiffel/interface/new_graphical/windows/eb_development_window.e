@@ -2127,13 +2127,13 @@ feature {EB_DEVELOPMENT_WINDOW_MENU_BUILDER, EB_DEVELOPMENT_WINDOW_PART,
 			l_classc: CLASS_C
 		do
 			if a_feature_name /= Void then
-				address_manager.set_feature_text_simply (a_feature_name.internal_name.name_32)
+				address_manager.set_feature_text_simply (a_feature_name.feature_name.name_32)
 				if class_name /= Void and group /= Void then
 					l_class_i := eiffel_universe.safe_class_named (class_name, group)
 					if l_class_i /= Void and then l_class_i.is_compiled then
 						l_classc := l_class_i.compiled_class
 						if l_classc.has_feature_table then
-							l_efeature := l_classc.feature_with_name_id (a_feature_name.internal_name.name_id)
+							l_efeature := l_classc.feature_with_name_id (a_feature_name.feature_name.name_id)
 							if l_efeature /= Void and then l_efeature.written_in /= l_classc.class_id then
 								l_efeature := Void
 							end
@@ -2144,7 +2144,7 @@ feature {EB_DEVELOPMENT_WINDOW_MENU_BUILDER, EB_DEVELOPMENT_WINDOW_PART,
 					seek_item_in_feature_tool (l_efeature)
 				else
 					if attached {ES_FEATURES_TOOL_COMMANDER_I} shell_tools.tool ({ES_FEATURES_TOOL}) as l_commander then
-						if attached a_feature_name.internal_name.name_32 as l_name then
+						if attached a_feature_name.feature_name.name_32 as l_name then
 							l_commander.select_feature_item_by_name (l_name)
 						end
 					else

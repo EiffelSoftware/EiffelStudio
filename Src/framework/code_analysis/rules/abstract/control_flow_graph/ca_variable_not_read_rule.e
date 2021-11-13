@@ -294,11 +294,8 @@ feature {NONE} -- Extracting Used Variables
 			-- `a_conv', if available.
 		do
 			Precursor (a_conv)
-			if
-				attached {ADDRESS_AS} a_conv.expr as l_address
-				and then attached {FEAT_NAME_ID_AS} l_address.feature_name as l_id
-			then
-				generated.extend (l_id.feature_name.name_id)
+			if attached {ADDRESS_AS} a_conv.expr as l_address then
+				generated.extend (l_address.feature_name.feature_name.name_id)
 			end
 		end
 

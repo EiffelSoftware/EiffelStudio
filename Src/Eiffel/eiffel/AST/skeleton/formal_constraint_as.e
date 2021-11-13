@@ -578,8 +578,8 @@ feature {NONE} -- Implementation
 				until
 					l_content.after
 				loop
-					l_old_name := l_content.item.old_name.internal_name
-					l_new_name := l_content.item.new_name.internal_name
+					l_old_name := l_content.item.old_name.feature_name
+					l_new_name := l_content.item.new_name.feature_name
 					if a_constraint_class /= Void and then a_constraint_class.has_feature_table then
 						l_e_feature := a_constraint_class.feature_with_id (l_old_name)
 					end
@@ -593,10 +593,7 @@ feature {NONE} -- Implementation
 					a_text_formatter.process_keyword_text (ti_as_keyword, Void)
 					a_text_formatter.add_space
 					a_text_formatter.add (l_new_name.name_32)
-					if
-						attached {FEATURE_NAME_ALIAS_AS} l_content.item.new_name as l_feat_name_alias and then
-						l_feat_name_alias.has_alias
-					then
+					if attached {FEATURE_NAME_ALIAS_AS} l_content.item.new_name as l_feat_name_alias then
 						across
 							l_feat_name_alias.aliases as ic
 						loop
@@ -663,7 +660,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2019, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2021, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

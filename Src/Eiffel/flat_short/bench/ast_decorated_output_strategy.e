@@ -1668,11 +1668,11 @@ feature {NONE} -- Implementation
 				if l_as.is_argument then
 					create {TYPED_POINTER_A} last_type.make_typed (current_feature.arguments.i_th (l_as.argument_position))
 				elseif l_as.is_local then
-					if locals_for_current_feature.has_key (l_as.feature_name.internal_name.name_32) then
+					if locals_for_current_feature.has_key (l_as.feature_name.feature_name.name_32) then
 						create {TYPED_POINTER_A} last_type.make_typed (locals_for_current_feature.found_item)
 					end
 				elseif l_as.is_object_test_local then
-					if object_test_locals_for_current_feature.has_key (l_as.feature_name.internal_name.name_32) then
+					if object_test_locals_for_current_feature.has_key (l_as.feature_name.feature_name.name_32) then
 						create {TYPED_POINTER_A} last_type.make_typed (object_test_locals_for_current_feature.found_item)
 					end
 				else
@@ -1689,9 +1689,9 @@ feature {NONE} -- Implementation
 					l_text_formatter_decorator.set_without_tabs
 					l_text_formatter_decorator.process_symbol_text (ti_dollar)
 					if l_feat /= Void then
-						format_feature_name (l_as.feature_name.internal_name.name_32, l_feat, False)
+						format_feature_name (l_as.feature_name.feature_name.name_32, l_feat, False)
 					else
-						format_local_with_as (l_as.feature_name.internal_name)
+						format_local_with_as (l_as.feature_name.feature_name)
 					end
 					l_text_formatter_decorator.commit
 				end
@@ -2296,13 +2296,13 @@ feature {NONE} -- Implementation
 			l_text_formatter_decorator.begin
 			l_text_formatter_decorator.set_separator (ti_comma)
 			l_text_formatter_decorator.set_space_between_tokens
-			l_text_formatter_decorator.process_feature_dec_item (l_as.feature_names.first.internal_name.name_32, True)
+			l_text_formatter_decorator.process_feature_dec_item (l_as.feature_names.first.feature_name.name_32, True)
 			l_text_formatter_decorator.set_separator (ti_comma)
 			l_text_formatter_decorator.set_space_between_tokens
 			l_as.feature_names.process (Current)
 			l_as.body.process (Current)
 			l_text_formatter_decorator.set_without_tabs
-			l_text_formatter_decorator.process_feature_dec_item (l_as.feature_names.first.internal_name.name_32, False)
+			l_text_formatter_decorator.process_feature_dec_item (l_as.feature_names.first.feature_name.name_32, False)
 			if not l_text_formatter_decorator.is_feature_short then
 				l_text_formatter_decorator.put_new_line
 			end
@@ -2326,7 +2326,7 @@ feature {NONE} -- Implementation
 			l_text_formatter_decorator.commit
 		end
 
-	process_feat_name_id_as (l_as: FEAT_NAME_ID_AS)
+	process_feature_name (l_as: FEATURE_NAME)
 		local
 			l_feat: E_FEATURE
 			l_new_name: BOOLEAN
@@ -3302,7 +3302,7 @@ feature {NONE} -- Implementation
 				if l_feat /= Void then
 					create l_creators.make (1)
 					create l_features.make (1)
-					l_features.extend (create {FEAT_NAME_ID_AS}.initialize (create {ID_AS}.initialize_from_id (l_feat.feature_name_id)))
+					l_features.extend (create {FEATURE_NAME}.initialize (create {ID_AS}.initialize_from_id (l_feat.feature_name_id)))
 					l_creators.extend (create {CREATE_AS}.initialize (Void, l_features, Void))
 				end
 			end
@@ -3517,7 +3517,7 @@ feature {NONE} -- Implementation
 
 	process_formal_dec_as (l_as: FORMAL_DEC_AS)
 		local
-			feature_name: FEAT_NAME_ID_AS
+			feature_name: FEATURE_NAME
 			l_constrained_type: TYPE_A
 			l_constrained_type_set: TYPE_SET_A
 			l_is_multi_constrained: BOOLEAN
@@ -4218,7 +4218,7 @@ feature {NONE} -- Expression visitor
 
 feature {NONE} -- Implementation: helpers
 
-	append_feature_by_id (a_feature_name: FEAT_NAME_ID_AS; a_type: TYPE_A; a_type_set: TYPE_SET_A)
+	append_feature_by_id (a_feature_name: FEATURE_NAME; a_type: TYPE_A; a_type_set: TYPE_SET_A)
 			-- Append feature.
 			--
 			-- `a_feature_name_id' is the `NAMES_HEAP' ID of the feature name.
@@ -4465,21 +4465,23 @@ feature {NONE} -- Implementation: helpers
 			if not hide_breakable_marks then
 				put_breakable
 			end
-			if l_as.tag /= Void then
+			if attached l_as.tag then
 				l_text_formatter_decorator.process_assertion_tag_text (l_as.tag.name_32)
 				l_text_formatter_decorator.set_without_tabs
 				l_text_formatter_decorator.process_symbol_text (ti_colon)
 				l_text_formatter_decorator.put_space
+				l_text_formatter_decorator.indent
 			end
 			l_text_formatter_decorator.new_expression
-			l_text_formatter_decorator.indent
 			if attached l_as.expr as e then
 				e.process (Current)
 			elseif l_as.is_class then
 				l_text_formatter_decorator.process_keyword_text (ti_class_keyword, Void)
 			end
-			l_text_formatter_decorator.exdent
 			l_text_formatter_decorator.commit
+			if attached l_as.tag then
+				l_text_formatter_decorator.exdent
+			end
 		end
 
 	invariant_format_assertions (l_as: EIFFEL_LIST [TAGGED_AS])
@@ -4664,7 +4666,7 @@ feature {NONE} -- Implementation: helpers
 			until
 				i > l_count
 			loop
-				feat_adapter := creators.item (a_list [i].internal_name.name_32)
+				feat_adapter := creators.item (a_list [i].feature_name.name_32)
 				if feat_adapter /= Void then
 					feat_adapter.format (l_text_formatter_decorator)
 					l_text_formatter_decorator.put_new_line

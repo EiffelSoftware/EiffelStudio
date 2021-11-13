@@ -165,7 +165,7 @@ feature {INTERNAL_COMPILER_STRING_EXPORTER} -- Access
 						across
 							feature_list as f
 						loop
-							feature_name := f.item.internal_name
+							feature_name := f.item.feature_name
 							a_feature := feat_table.item_id (feature_name.name_id)
 							if a_feature = Void then
 								create vgcp2

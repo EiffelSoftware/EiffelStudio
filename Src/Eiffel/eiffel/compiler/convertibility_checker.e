@@ -86,7 +86,7 @@ feature -- Initialization/Checking
 					a_convertors.after or has_error
 				loop
 					l_feat := a_convertors.item
-					l_name_id := l_feat.feature_name.internal_name.name_id
+					l_name_id := l_feat.feature_name.feature_name.name_id
 					if l_processed.has (l_name_id) then
 							-- Routine specified twice in Convert_clause.
 						create l_vncp.make ("Routine specified twice in Convert_clause.")
@@ -164,7 +164,7 @@ feature -- Initialization/Checking
 											else
 													-- Check that specified routine argument or return
 													-- type matches conversion type `l_named_type'.
-												if attached a_feat_tbl.item_id (l_feat.feature_name.internal_name.name_id) as f then
+												if attached a_feat_tbl.item_id (l_feat.feature_name.feature_name.name_id) as f then
 													delayed_check_conversion_type (a_class, f, l_feat, l_named_type)
 												end
 											end
@@ -576,7 +576,7 @@ feature {NONE} -- Implementation: checking
 			l_feat: FEATURE_I
 			l_vncp: VNCP
 		do
-			a_feat_tbl.search_id (a_convert_feat.feature_name.internal_name.name_id)
+			a_feat_tbl.search_id (a_convert_feat.feature_name.feature_name.name_id)
 			if a_feat_tbl.found then
 				l_feat := a_feat_tbl.found_item
 				if not l_feat.is_once or not l_feat.is_external then
@@ -584,7 +584,7 @@ feature {NONE} -- Implementation: checking
 							-- Check it is listed as part of creation procedures of current class.
 						if
 							attached a_class.creators as cs implies
-							not cs.has (a_convert_feat.feature_name.internal_name.name_id)
+							not cs.has (a_convert_feat.feature_name.feature_name.name_id)
 						then
 								-- Not a creation procedure.
 							create l_vncp.make ("Not a creation procedure.")
@@ -624,7 +624,7 @@ feature {NONE} -- Implementation: checking
 				end
 			else
 				create l_vncp.make ("Routine not found: " +
-					a_convert_feat.feature_name.internal_name.name)
+					a_convert_feat.feature_name.feature_name.name)
 				l_vncp.set_class (a_class)
 				l_vncp.set_location (a_convert_feat.feature_name.start_location)
 				Error_handler.insert_error (l_vncp)

@@ -200,7 +200,8 @@ feature -- Search
 			-- Find feature of alias name ID `n' called on type `t' and make it available in `found_feature'
 			-- assuming that the code is written in `c'.
 		require
-			valid_n: names_heap.has (n)
+			{OPERATOR_KIND}.is_alias_id (n)
+			{OPERATOR_KIND}.is_fixed_alias_id (n)
 			attached_t: attached t
 			attached_c: attached c
 			valid_t: is_type_valid_for_class (t, c)
@@ -211,9 +212,10 @@ feature -- Search
 			feature_in_class := agent (name: INTEGER; lookup: CLASS_C): detachable FEATURE_I
 				do
 					if lookup.has_feature_table then
-						Result := lookup.feature_of_alias_id (name)
+						Result := lookup.feature_table.item_alias_id (name)
 					end
 				end (n, ?)
+					-- TODO: add a feature to find by alias ID.
 			find_in_renamed_type_a := agent find_in_renamed_type_a_by_name (n, ?)
 			t.process (Current)
 		ensure
@@ -466,7 +468,7 @@ feature {TYPE_A} -- Visitor
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2019, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2021, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

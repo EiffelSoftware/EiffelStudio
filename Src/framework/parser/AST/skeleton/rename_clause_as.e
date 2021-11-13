@@ -38,7 +38,7 @@ feature {INTERNAL_COMPILER_STRING_EXPORTER} -- Output
 			until
 				content.after
 			loop
-				Result.append (content.item.old_name.internal_name.name + " as " + content.item.new_name.internal_name.name)
+				Result.append (content.item.old_name.feature_name.name + " as " + content.item.new_name.feature_name.name)
 				content.forth
 				if not content.after then
 					Result.append (", ")
@@ -64,9 +64,9 @@ feature {INTERNAL_COMPILER_STRING_EXPORTER} -- Access
 					content.after
 				loop
 					if
-						content.item.old_name.internal_name.name.is_equal (a_original_name)
+						content.item.old_name.feature_name.name.is_equal (a_original_name)
 					then
-						Result.extend (content.item.new_name.internal_name.name)
+						Result.extend (content.item.new_name.feature_name.name)
 					end
 					content.forth
 				end
@@ -93,9 +93,9 @@ feature {INTERNAL_COMPILER_STRING_EXPORTER} -- Access
 					content.after
 				loop
 					if
-						content.item.new_name.internal_name.name.is_equal (a_new_name)
+						content.item.new_name.feature_name.name.is_equal (a_new_name)
 					then
-						Result.extend (content.item.old_name.internal_name.name)
+						Result.extend (content.item.old_name.feature_name.name)
 					end
 					content.forth
 				end

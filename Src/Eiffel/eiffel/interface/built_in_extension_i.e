@@ -92,7 +92,6 @@ feature {NONE} -- Implementation
 			l_buffer: GENERATION_BUFFER
 			l_class: CLASS_C
 			l_name: STRING_8
-			mutable_name: STRING_8
 		do
 			l_buffer := context.buffer
 
@@ -102,16 +101,6 @@ feature {NONE} -- Implementation
 				-- Special processing of operators that have a name not suitable
 				-- for C code generation.
 			l_name := external_name
-			if is_mangled_alias_name (l_name) then
-				l_name := extract_alias_name (l_name)
-				if attached operator_table [l_name] as n then
-					l_name := n
-				else
-					create mutable_name.make_from_string (l_name)
-					mutable_name.replace_substring_all (" ", "_")
-					l_name := mutable_name
-				end
-			end
 			l_buffer.put_string ("eif_builtin_")
 				-- Append class name.
 			l_buffer.put_string (l_class.name)
@@ -201,27 +190,6 @@ feature {SPECIAL_FEATURES} -- Generation: signature
 
 feature {NONE} -- Name translation
 
-	operator_table: HASH_TABLE [STRING_8, READABLE_STRING_8]
-			-- Mapping between standard operator and their C generated names
-		once
-			create Result.make_equal (20)
-			Result.put ("or_else", "or else")
-			Result.put ("and_then", "and then")
-			Result.put ("slash", "/")
-			Result.put ("div", "//")
-			Result.put ("backslash", "\")
-			Result.put ("mod", "\\")
-			Result.put ("bitwise_and", "&")
-			Result.put ("binary_and", "&&")
-			Result.put ("minus", "-")
-			Result.put ("plus", "+")
-			Result.put ("star", "*")
-			Result.put ("power", "^")
-			Result.put ("le", "<")
-		ensure
-			operator_table_not_void: Result /= Void
-		end
-
 	class_name_abbreviation: STRING_TABLE [READABLE_STRING_8]
 			-- Abbreviations to be used for know class names.
 		once
@@ -258,7 +226,7 @@ feature {NONE} -- Name translation
 
 note
 	ca_ignore: "CA011", "CA011: too many arguments"
-	copyright:	"Copyright (c) 1984-2020, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2021, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

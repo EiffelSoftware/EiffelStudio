@@ -96,7 +96,7 @@ feature {NONE} -- AST Visitor
 			if attached creation_procedures as ps then
 				across ps as p loop
 					if
-						attached a_clause.feature_with_name(p.item.internal_name.name_id) as l_feature and then
+						attached a_clause.feature_with_name(p.item.feature_name.name_id) as l_feature and then
 						l_feature.body.is_empty
 					then
 						create l_violation.make_with_rule (Current)

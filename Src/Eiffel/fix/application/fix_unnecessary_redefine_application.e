@@ -54,7 +54,7 @@ feature {AST_EIFFEL} -- Visitor
 					i > n
 				loop
 						-- Check if the current identifier shoud be removed.
-					if identifiers [i].internal_name.name_id = feature_name_id then
+					if identifiers [i].feature_name.name_id = feature_name_id then
 							-- Update identifier count.
 						n := n - 1
 						if n = 0 then

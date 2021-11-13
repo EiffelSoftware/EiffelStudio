@@ -850,12 +850,12 @@ feature {NONE} -- Event handler
 					until
 						f_names.after
 					loop
-						f_item_name := f_names.item.internal_name.name_32
+						f_item_name := f_names.item.feature_name.name_32
 						if l_first_item_name = Void then
 							l_first_item_name := f_item_name
 						end
 						if a_class.has_feature_table then
-							ef := a_class.feature_with_name_id (f_names.item.internal_name.name_id)
+							ef := a_class.feature_with_name_id (f_names.item.feature_name.name_id)
 							if ef /= Void and then ef.written_in /= a_class.class_id then
 								ef := Void
 							end

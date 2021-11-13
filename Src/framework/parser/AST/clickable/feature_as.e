@@ -301,7 +301,7 @@ feature -- Access
 	feature_name: ID_AS
 			-- Feature name representing AST
 		do
-			Result := feature_names.first.internal_name
+			Result := feature_names.first.feature_name
 		end
 
 	feature_with_name (n: INTEGER): detachable FEATURE_AS
@@ -316,7 +316,7 @@ feature -- Access
 			until
 				i = l_count
 			loop
-				if n = l_area [i].internal_name.name_id then
+				if n = l_area [i].feature_name.name_id then
 					Result := Current
 						-- Jump out of loop
 					i := l_count - 1

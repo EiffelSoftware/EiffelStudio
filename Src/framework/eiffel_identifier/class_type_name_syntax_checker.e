@@ -1,6 +1,5 @@
-note
+﻿note
 	description: "Checks whether a string contains a valid Eiffel type."
-	author: ""
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -189,8 +188,8 @@ feature {NONE} -- Implementation of is_valid_class_type
 								l_consumed_token.append_character (current_character)
 								consume_current_character
 							end
-								-- Error when get a keyword tokan.
-							if keywords.has (l_consumed_token.as_lower) then
+								-- Error when get a keyword token.
+							if keywords.has (l_consumed_token) then
 								current_token := tkn_error
 							end
 						else
@@ -204,7 +203,7 @@ feature {NONE} -- Implementation of is_valid_class_type
 		end
 
 note
-	copyright: "Copyright (c) 1984-2012, Eiffel Software"
+	copyright: "Copyright (c) 1984-2021, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[
@@ -234,4 +233,4 @@ note
 			Website http://www.eiffel.com
 			Customer support http://support.eiffel.com
 		]"
-end -- class TEST
+end

@@ -50,7 +50,7 @@ feature{NONE} -- Implementation
 					until
 						l_feature_list.features.after
 					loop
-						l_old_name := l_feature_list.features.item.internal_name.name.as_lower
+						l_old_name := l_feature_list.features.item.feature_name.name.as_lower
 						l_new_name := final_name_table.item (l_old_name)
 						if l_new_name = Void then
 							l_new_name := l_old_name

@@ -47,9 +47,9 @@ feature {NONE} -- Creation
 							across
 								rs as r
 							loop
-								if r.item.internal_name.name_id = f then
+								if r.item.feature_name.name_id = f then
 										-- The feature name is found, use its location.
-									l := r.item.internal_name
+									l := r.item.feature_name
 								end
 							end
 						end

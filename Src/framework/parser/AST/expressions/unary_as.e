@@ -13,12 +13,21 @@ inherit
 			is_detachable_expression
 		end
 
+	ID_SET_ACCESSOR
+
+inherit {NONE}
+
 	SYNTAX_STRINGS
 		export
 			{NONE} all
 		end
 
-	ID_SET_ACCESSOR
+	OPERATOR_KIND
+		export
+			{NONE} all
+			{INTERNAL_COMPILER_STRING_EXPORTER}
+				is_alias_id
+		end
 
 feature {NONE} -- Initialization
 
@@ -36,6 +45,29 @@ feature {NONE} -- Initialization
 			expr_set: expr = e
 			operator_set: o /= Void implies operator_index = o.index
 			no_routine_id: routine_ids.is_empty
+		end
+
+feature -- Status report
+
+	is_unary: BOOLEAN
+			-- Does the node represent an unary expression?
+			-- (And not, for example, an old expression.)
+		do
+			Result := True
+		end
+
+feature -- Access
+
+	operator_id: like alias_id
+			-- The alias ID of the associated unary operator.
+		require
+			is_unary
+		deferred
+		ensure
+			is_alias_id (Result)
+			is_fixed_alias_id (Result)
+			is_valid_unary_alias_id (Result)
+			is_unary_alias_id (Result)
 		end
 
 feature -- Roundtrip
@@ -135,12 +167,6 @@ feature -- Properties
 
 feature {INTERNAL_COMPILER_STRING_EXPORTER} -- Properties
 
-	prefix_feature_name: STRING
-			-- Internal name of the prefixed feature
-		do
-			Result := Prefix_str + operator_name + Quote_str
-		end
-
 	operator_name: STRING
 		deferred
 		end
@@ -169,7 +195,7 @@ invariant
 	expr_not_void: expr /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2019, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2021, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

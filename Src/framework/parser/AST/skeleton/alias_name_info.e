@@ -1,8 +1,7 @@
-note
-	description: "Object that stores 3 AST nodes for alias"
+﻿note
+	description: "Alias name with the keyword information."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
-	author: ""
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -12,29 +11,32 @@ class
 create
 	make
 
-feature{NONE} -- Initialization
+feature {NONE} -- Initialization
 
-	make (k_as: like alias_keyword; n_as: like alias_name)
+	make (k_as: detachable KEYWORD_AS; n_as: like alias_name)
 			-- Create new structure for `alias "op"` syntax.
 		do
-			alias_keyword := k_as
+			if attached k_as then
+				alias_keyword_index := k_as.index
+			end
 			alias_name := n_as
 		ensure
-			alias_keyword_set: alias_keyword = k_as
+			alias_keyword_set: alias_keyword_index = if attached k_as then k_as.index else 0 end
 			alias_name_set: alias_name = n_as
 		end
 
 feature -- Access
 
-	alias_keyword: detachable KEYWORD_AS
-			-- Keyword "alias"
+	alias_keyword_index: like {KEYWORD_AS}.index
+			-- The index if the keyword "alias" if available, `0` otherwise.
 
-	alias_name: STRING_AS;
+	alias_name: STRING_AS
+			-- The alias operator string.
 
-note
-	copyright:	"Copyright (c) 1984-2019, Eiffel Software"
-	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
-	licensing_options:	"http://www.eiffel.com/licensing"
+;note
+	copyright: "Copyright (c) 1984-2021, Eiffel Software"
+	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
+	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[
 			This file is part of Eiffel Software's Eiffel Development Environment.
 			

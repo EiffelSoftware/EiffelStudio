@@ -77,7 +77,7 @@ feature {NONE} -- Initialization
 				a_renamings.after
 			loop
 				l_rename := a_renamings.item
-				l_old_name_id := l_rename.old_name.internal_name.name_id
+				l_old_name_id := l_rename.old_name.feature_name.name_id
 				l_old_feature := l_feature_table.item_id (l_old_name_id)
 				if l_old_feature = Void then
 						-- Old name does not even exist, don't bother checking the new name.
@@ -88,7 +88,7 @@ feature {NONE} -- Initialization
 				else
 					l_new_name := l_rename.new_name
 						-- Add new name to the list.
-					put (l_old_name_id, l_new_name.internal_name.name_id)
+					put (l_old_name_id, l_new_name.feature_name.name_id)
 
 					if attached {FEATURE_NAME_ALIAS_AS} l_new_name as l_feat_name_alias then
 							-- Check validity of alias for that particular routine.
@@ -98,7 +98,7 @@ feature {NONE} -- Initialization
 						across
 							l_feat_name_alias.aliases as ic
 						loop
-							internal_put (l_old_name_id, ic.item.internal_alias_name_id)
+							internal_put (l_old_name_id, ic.item.id)
 						end
 					end
 
@@ -313,10 +313,7 @@ feature {NONE} -- Implementation
 				-- TODO: This code should be refactored as it occurs almost the same way in
 				-- `{AST_COMPILER_FACTORY}.new_feature_as'
 			l_argument_count := a_old_feature.argument_count
-			if
-				attached {FEATURE_NAME_ALIAS_AS} a_name as l_feat_name_alias_as and then
-				l_feat_name_alias_as.has_alias
-			then
+			if attached {FEATURE_NAME_ALIAS_AS} a_name as l_feat_name_alias_as then
 				if l_feat_name_alias_as.has_bracket_alias then
 					if not a_old_feature.has_return_value or else l_argument_count < 1 then
 							-- Invalid bracket alias
@@ -334,35 +331,33 @@ feature {NONE} -- Implementation
 						create {VFAV5_SYNTAX} l_vfav.make (l_feat_name_alias_as, l_feat_name_alias_as.parenthesis_alias_as)
 					end
 				elseif a_old_feature.has_return_value then
-					if l_feat_name_alias_as.has_alias then
-						across
-							l_feat_name_alias_as.aliases as ic
-						until
-							l_vfav /= Void
-						loop
-							if
-								(l_argument_count = 0 and then ic.item.is_valid_unary) or else
-								(l_argument_count = 1 and then ic.item.is_valid_binary)
-							then
-								if l_argument_count = 0 and then l_feat_name_alias_as.has_convert_mark then
-										-- Invalid convert mark
-									create {VFAV5_SYNTAX} l_vfav.make (l_feat_name_alias_as, ic.item.alias_name)
-								end
-							else
-									-- Invalid operator alias
-								create {VFAV1_SYNTAX} l_vfav.make (l_feat_name_alias_as, ic.item.alias_name)
+					across
+						l_feat_name_alias_as.aliases as ic
+					until
+						l_vfav /= Void
+					loop
+						if
+							(l_argument_count = 0 and then ic.item.is_valid_unary) or else
+							(l_argument_count = 1 and then ic.item.is_valid_binary)
+						then
+							if l_argument_count = 0 and then l_feat_name_alias_as.has_convert_mark then
+									-- Invalid convert mark
+								create {VFAV5_SYNTAX} l_vfav.make (l_feat_name_alias_as, ic.item.alias_name)
 							end
-						end
-						if l_vfav /= Void then
-								-- error already detected.
-						elseif l_argument_count = 1 then
-							l_feat_name_alias_as.set_is_binary
-						elseif l_feat_name_alias_as.has_convert_mark then
-								-- Invalid convert mark
-							create {VFAV5_SYNTAX} l_vfav.make (l_feat_name_alias_as, Void)
 						else
-							l_feat_name_alias_as.set_is_unary
+								-- Invalid operator alias
+							create {VFAV1_SYNTAX} l_vfav.make (l_feat_name_alias_as, ic.item.alias_name)
 						end
+					end
+					if l_vfav /= Void then
+							-- error already detected.
+					elseif l_argument_count = 1 then
+						l_feat_name_alias_as.set_is_binary
+					elseif l_feat_name_alias_as.has_convert_mark then
+							-- Invalid convert mark
+						create {VFAV5_SYNTAX} l_vfav.make (l_feat_name_alias_as, Void)
+					else
+						l_feat_name_alias_as.set_is_unary
 					end
 				end
 			end
@@ -426,7 +421,7 @@ feature {NONE} -- Implementation
 			result_not_void: Result /= Void
 		end
 note
-	copyright: "Copyright (c) 1984-2020, Eiffel Software"
+	copyright: "Copyright (c) 1984-2021, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

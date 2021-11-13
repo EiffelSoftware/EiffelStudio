@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "[
 					 Set of types. This class encapsulates features to handle conformance and feature lookup on a set of types .
 					 Refactoring:
@@ -237,15 +237,17 @@ feature -- Access
 			Result_not_void: Result /= Void
 		end
 
-	feature_i_state_by_alias_name_id (an_alias_name_id: INTEGER): like feature_i_state_by_alias_name
+	feature_i_state_by_alias_name_id (an_alias_name_id: INTEGER): TUPLE [feature_item: FEATURE_I; class_type_of_feature: CL_TYPE_A; features_found_count: INTEGER;  constraint_position: INTEGER]
 			-- Compute feature state.
 			--
-			-- `an_alias' is a feature alias for which the state is computed.
+			-- `an_alias' is a feature alias ID for which the state is computed.
 			-- Returns `feature_item' void if the feature cannot be found in the type set.
 			-- If there are multiple features found use `features_found_count' from the result tuple to find out how many.
 			-- Use features from the family `info_about_feature*' to get detailed information.
 		require
-			not_has_formal: not has_formal
+			not has_formal
+			{OPERATOR_KIND}.is_alias_id (an_alias_name_id)
+			{OPERATOR_KIND}.is_fixed_alias_id (an_alias_name_id)
 		local
 			l_last_feature, l_feature: FEATURE_I
 			l_class_c: CLASS_C
@@ -459,27 +461,6 @@ feature -- Access
 			end
 		end
 
-feature {INTERNAL_COMPILER_STRING_EXPORTER} -- Access
-
-	feature_i_state_by_alias_name (an_alias_name: STRING): TUPLE [feature_item: FEATURE_I; class_type_of_feature: CL_TYPE_A; features_found_count: INTEGER;  constraint_position: INTEGER]
-			-- Compute feature state.
-			--
-			-- `an_alias_name': A feature alias for which the state is computed.
-			-- Returns `feature_item' void if the feature cannot be found in the type set.
-			-- If there are multiple features found use `features_found_count' from the result tuple to find out how many.
-			-- Use features from the family `info_about_feature*' to get detailed information.
-		require
-			an_alias_name_not_void: an_alias_name /= Void
-			not_has_formal: not has_formal
-		do
-			Result := feature_i_state_by_alias_name_id (names_heap.id_of (an_alias_name))
-		ensure
-				-- It basically states that if there is exactly one feature you get the result, otherwise feature_item and class_of_feature are void.
-			result_not_void: Result /= Void
-			result_semantic_correct: Result.feature_item = Void implies (Result.class_type_of_feature = Void and Result.features_found_count /= 1)
-			result_semantic_correct: Result.features_found_count > 1  implies (Result.feature_item = Void and Result.class_type_of_feature = Void)
-		end
-
 feature -- Access for Error handling
 
 	info_about_feature_by_name_id (a_name_id: INTEGER; a_formal_position: INTEGER; a_context_class: CLASS_C): MC_FEATURE_INFO
@@ -524,11 +505,12 @@ feature -- Access for Error handling
 	info_about_feature_by_alias_name_id (a_name_id: INTEGER; a_formal_position: INTEGER; a_context_class: CLASS_C): MC_FEATURE_INFO
 			-- Gathers information  about a feature.
 			--
-			-- `a_name_id' is the name ID of the feature for which information is gatherd.
+			-- `a_name_id' is the alias ID of the feature for which information is gatherd.
 			-- `a_formal_position' position of the formal to which this typeset belongs.
 			-- `a_context_class' is the class where the formal (denoted by `a_formal_position') has been defined.
 		require
-			a_name_id_valid: a_name_id > 0
+			{OPERATOR_KIND}.is_alias_id (a_name_id)
+			{OPERATOR_KIND}.is_fixed_alias_id (a_name_id)
 			a_context_class_not_void_if_needed: has_formal implies a_context_class /= Void
 		local
 			l_feature_agent: FUNCTION [RENAMED_TYPE_A, TUPLE [e_feature: E_FEATURE; feature_i: FEATURE_I]]
@@ -562,7 +544,7 @@ feature -- Access for Error handling
 						end
 					end (a_name_id, ?)
 			Result := info_about_feature_by_agent (l_feature_agent, a_formal_position, a_context_class, create {SEARCH_TABLE [INTEGER]}.make (3))
-			Result.set_data (names_heap.item (a_name_id), a_formal_position, a_context_class)
+			Result.set_data (names_heap.item ({OPERATOR_KIND}.name_id_of_alias_id (a_name_id)), a_formal_position, a_context_class)
 		ensure
 			Result_not_void: Result /= Void
 		end
@@ -1167,8 +1149,9 @@ feature -- Convenience to be removed later
 		do
 			types.remove
 		end
+
 note
-	copyright: "Copyright (c) 1984-2014, Eiffel Software"
+	copyright: "Copyright (c) 1984-2021, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

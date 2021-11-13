@@ -229,6 +229,9 @@ feature -- Type inference
 			-- descriptor: feature descriptor
 			-- site: class type with the  feature
 			-- target: target type (may be different from "site" if it is a formal generic, acnhored type, etc.)
+		require
+			{OPERATOR_KIND}.is_alias_id (name_id)
+			{OPERATOR_KIND}.is_fixed_alias_id (name_id)
 		do
 			if attached lower_approximation as t then
 				feature_finder.find_by_alias (name_id, t, context_class)
@@ -536,7 +539,7 @@ feature {NONE} -- Helper
 note
 	date: "$Date$"
 	revision: "$Revision$"
-	copyright:	"Copyright (c) 1984-2019, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2021, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

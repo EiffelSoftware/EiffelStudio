@@ -1585,7 +1585,7 @@ feature {NONE} -- Class initialization
 			i, j, nb: INTEGER
 			duplicate_name: SEARCH_TABLE [like {ID_AS}.name_id]
 			name_id: like {ID_AS}.name_id
-			f_list: EIFFEL_LIST [FEAT_NAME_ID_AS]
+			f_list: EIFFEL_LIST [FEATURE_NAME]
 		do
 			from
 				l_area := generics.area

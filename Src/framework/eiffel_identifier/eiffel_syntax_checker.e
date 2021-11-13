@@ -3,6 +3,7 @@
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 	author: "Xavier Rousselot"
+	revised_by: "Alexander Kogtenkov"
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -26,7 +27,7 @@ feature -- Status report
 	is_valid_class_name (cn: READABLE_STRING_GENERAL): BOOLEAN
 			-- Is `cn' a valid class name?
 		do
-			Result := is_valid_identifier (cn) and then not keywords.has (cn.as_lower)
+			Result := is_valid_identifier (cn) and then not keywords.has (cn)
 		end
 
 	is_valid_group_name (gn: READABLE_STRING_GENERAL): BOOLEAN
@@ -93,18 +94,24 @@ feature -- Status report
 
 	is_valid_operator (op: READABLE_STRING_GENERAL): BOOLEAN
 			-- Is `op' a valid operator name?
+		obsolete
+			"Use OPERATOR_SYNTAX_CHECKER from the parser library instead. [2021-11-30]"
 		do
 			Result := op /= Void and then (basic_operators.has (op.as_lower) or else is_valid_free_operator (op))
 		end
 
 	is_valid_binary_operator (op: READABLE_STRING_GENERAL): BOOLEAN
 			-- Is `op' a valid binary operator?
+		obsolete
+			"Use OPERATOR_SYNTAX_CHECKER from the parser library instead. [2021-11-30]"
 		do
 			Result := op /= Void and then (binary_operators.has (op.as_lower) or else is_valid_free_operator (op))
 		end
 
 	is_valid_unary_operator (op: READABLE_STRING_GENERAL): BOOLEAN
 			-- Is `op' a valid unary operator?
+		obsolete
+			"Use OPERATOR_SYNTAX_CHECKER from the parser library instead. [2021-11-30]"
 		do
 			Result := op /= Void and then (unary_operators.has (op.as_lower) or else is_valid_free_operator (op))
 		end
@@ -112,6 +119,8 @@ feature -- Status report
 	is_valid_free_operator (op: READABLE_STRING_GENERAL): BOOLEAN
 			-- Is `op' a valid free operator name?
 			-- If `op' is a READABLE_STRING_8 instance, we treat it as UTF-8 encoded.
+		obsolete
+			"Use OPERATOR_SYNTAX_CHECKER from the parser library instead. [2021-11-30]"
 		local
 			i: INTEGER
 			cc: CHARACTER_32
@@ -138,17 +147,21 @@ feature -- Status report
 				end
 			end
 		ensure then
-			Result implies not basic_operators.has (op);
+			Result implies not basic_operators.has (op)
 		end
 
 	is_bracket_alias_name (s: READABLE_STRING_GENERAL): BOOLEAN
 			-- Is `s' a bracket alias name?
+		obsolete
+			"Use OPERATOR_SYNTAX_CHECKER from the parser library instead. [2021-11-30]"
 		do
 			Result := s /= Void and then s.same_string (bracket_str)
 		end
 
 	is_parentheses_alias_name (s: READABLE_STRING_GENERAL): BOOLEAN
 			-- Is `s' a parentheses  alias name?
+		obsolete
+			"Use OPERATOR_SYNTAX_CHECKER from the parser library instead. [2021-11-30]"
 		do
 			Result := s /= Void and then s.same_string (parentheses_str)
 		end
@@ -156,10 +169,11 @@ feature -- Status report
 	is_constant (s: READABLE_STRING_GENERAL): BOOLEAN
 			-- Is `s' a valid Eiffel constant?
 		do
-			Result := 	is_integer_constant (s) or
-						is_double_constant (s) or
-						is_string_constant (s) or
-						is_boolean_constant (s)
+			Result :=
+				is_integer_constant (s) or
+				is_double_constant (s) or
+				is_string_constant (s) or
+				is_boolean_constant (s)
 		end
 
 	is_integer_constant (s: READABLE_STRING_GENERAL): BOOLEAN
@@ -191,33 +205,27 @@ feature {NONE} -- Status report
 	is_valid_feature_name (fn: READABLE_STRING_GENERAL): BOOLEAN
 			-- Is `fn' a valid feature name?
 		do
-			Result := fn /= Void and then not keywords.has (fn) and (is_valid_identifier (fn) or
-					-- Is `fn' a prefix operator?
-				((fn.count > Prefix_str.count + 1) and then
-				 ((fn.substring_index_in_bounds (Prefix_str, 1, Prefix_str.count) = 1) and
-				  (fn.item (fn.count) = '%"') and
-				  (is_valid_operator (fn.substring (Prefix_str.count + 1, fn.count - Quote_str.count))))) or
-				  	-- Is `fn' an infix operator?
-				((fn.count > Infix_str.count + 1) and then
-				 ((fn.substring_index_in_bounds (Infix_str, 1, Infix_str.count) = 1) and
-				  (fn.item (fn.count) = '%"') and
-				  (is_valid_operator (fn.substring (Infix_str.count + 1, fn.count - Quote_str.count))))))
+			Result := fn /= Void and then not keywords.has (fn) and is_valid_identifier (fn)
 		end
 
 	is_alpha (a_char: CHARACTER_32): BOOLEAN
 			-- Is `a_char' an extended ASCII character that is alphabetic.
 		do
 			Result := a_char.is_character_8 and then a_char.to_character_8.is_alpha
+		ensure
+			class
 		end
 
 	is_digit (a_char: CHARACTER_32): BOOLEAN
 			-- Is `a_char' an extended ASCII character that is a digit.
 		do
 			Result := a_char.is_character_8 and then a_char.to_character_8.is_digit
+		ensure
+			class
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2017, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2021, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

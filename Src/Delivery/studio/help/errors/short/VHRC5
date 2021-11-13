@@ -1,3 +1,0 @@
-Error: invalid renaming into Infix
-What to do: use a non-Infix new name, or make sure renamed feature is
-  a function with exactly one argument.

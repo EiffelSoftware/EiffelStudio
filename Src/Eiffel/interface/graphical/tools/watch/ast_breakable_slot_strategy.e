@@ -994,7 +994,7 @@ feature {NONE} -- Implementation
 				if l_as.is_argument then
 					create {TYPED_POINTER_A} last_type.make_typed (current_feature.arguments.i_th (l_as.argument_position))
 				elseif l_as.is_local then
-					if locals_for_current_feature.has_key (l_as.feature_name.internal_name.name) then
+					if locals_for_current_feature.has_key (l_as.feature_name.feature_name.name) then
 						create {TYPED_POINTER_A} last_type.make_typed (locals_for_current_feature.found_item)
 					end
 						-- TODO: handle object test locals, loop cursors, etc.
@@ -1722,7 +1722,7 @@ feature {NONE} -- Implementation
 				if l_feat /= Void then
 					create l_creators.make (1)
 					create l_features.make (1)
-					l_features.extend (create {FEAT_NAME_ID_AS}.initialize (create {ID_AS}.initialize_from_id (l_feat.feature_name_id)))
+					l_features.extend (create {FEATURE_NAME}.initialize (create {ID_AS}.initialize_from_id (l_feat.feature_name_id)))
 					l_creators.extend (create {CREATE_AS}.initialize (Void, l_features, Void))
 				end
 			end

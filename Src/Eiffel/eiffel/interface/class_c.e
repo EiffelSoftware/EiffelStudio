@@ -4017,6 +4017,8 @@ feature -- Access
 		require
 			a_alias_name_id: a_alias_name_id > 0
 			has_feature_table: has_feature_table
+			{OPERATOR_KIND}.is_alias_id (a_alias_name_id)
+			{OPERATOR_KIND}.is_fixed_alias_id (a_alias_name_id)
 		do
 			Result := feature_table.item_alias_id (a_alias_name_id)
 		end

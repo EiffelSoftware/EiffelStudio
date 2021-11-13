@@ -480,7 +480,7 @@ feature {NONE} -- Implementation
 			safe_process (l_as.indexes)
 		end
 
-	process_feat_name_id_as (l_as: FEAT_NAME_ID_AS)
+	process_feature_name (l_as: FEATURE_NAME)
 		do
 				-- Nothing to be done
 		end

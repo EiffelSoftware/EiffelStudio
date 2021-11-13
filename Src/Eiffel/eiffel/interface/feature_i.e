@@ -549,18 +549,14 @@ feature {INTERNAL_COMPILER_STRING_EXPORTER} -- Access
 			feature_name_not_empty: not Result.is_empty
 		end
 
-	alias_names: detachable LIST [detachable STRING]
+	alias_names: detachable LIST [STRING]
 		do
 			if attached alias_name_ids as lst then
 				create {ARRAYED_LIST [STRING]} Result.make (lst.count)
 				across
 					lst as ic
 				loop
-					if ic.item > 0 then
-						Result.force (Names_heap.item (ic.item))
-					else
-						Result.force (Void)
-					end
+					Result.force (names_heap.item ({OPERATOR_KIND}.name_id_of_alias_id (ic.item)))
 				end
 			end
 		end
@@ -766,7 +762,7 @@ feature -- Setting
 			-- Assign `a_id` to `feature_name_id` and set `alias_name_ids` according to `a_alias_id`.
 		require
 			valid_id: Names_heap.valid_index (a_id)
-			valid_alias_id: attached a_alias_ids implies ∀ i: a_alias_ids ¦ names_heap.valid_index (i)
+			valid_alias_id: attached a_alias_ids implies ∀ i: a_alias_ids ¦ {OPERATOR_KIND}.is_alias_id (i)
 		do
 			feature_name_id := a_id
 			alias_name_ids := a_alias_ids
@@ -779,7 +775,7 @@ feature -- Setting
 			-- Same as `set_feature_name_id` but redefined in `{EXTERNAL_I}`.
 		require
 			valid_id: Names_heap.valid_index (a_id)
-			valid_alias_id: attached a_alias_id implies ∀ i: a_alias_id ¦ names_heap.valid_index (i)
+			valid_alias_id: attached a_alias_id implies ∀ i: a_alias_id ¦ {OPERATOR_KIND}.is_alias_id (i)
 		do
 			set_feature_name_id (a_id, a_alias_id)
 		ensure
@@ -3836,6 +3832,7 @@ feature {NONE} -- Debug output
 invariant
 	valid_enclosing_feature: is_inline_agent implies enclosing_body_id_or_creator_position > 0
 	valid_inline_agent_nr: is_inline_agent implies inline_agent_nr > 0 or is_fake_inline_agent
+	valid_alias_ids: attached alias_name_ids as ids implies ∀ i: ids ¦ {OPERATOR_KIND}.is_alias_id (i)
 
 note
 	ca_ignore:

@@ -143,7 +143,7 @@ feature -- Analysis preparation
 				if feature_name.is_frozen then
 					feature_name_image := "frozen"
 				else
-					feature_name_image := feature_name.internal_name.name_32
+					feature_name_image := feature_name.feature_name.name_32
 				end
 			else
 				feature_name_image := current_feature_name

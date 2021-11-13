@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "Free binary expression description. Version for Bench"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -39,7 +39,7 @@ feature {NONE} -- Initialization
 			no_routine_id: routine_ids.is_empty
 		end
 
-feature -- Attributes
+feature -- Access
 
 	op_name: ID_AS
 			-- Free operator name
@@ -52,13 +52,12 @@ feature -- Attributes
 			operator_not_void: Result /= Void
 		end
 
-feature {INTERNAL_COMPILER_STRING_EXPORTER} -- Properties
-
-	infix_function_name: STRING
-			-- Internal name of the infixed feature associated to the
-			-- binary expression
+	operator_id: like alias_id
+			-- <Precursor>
 		do
-			Result := infix_feature_name_with_symbol (op_name.name)
+			Result := alias_id (op_name.name_id, is_valid_binary_kind_mask ⦶ is_valid_unary_kind_mask ⦶ is_binary_kind_mask)
+		ensure then
+			is_valid_unary_alias_id (Result)
 		end
 
 feature -- Comparison
@@ -79,18 +78,11 @@ feature -- Visitor
 			v.process_bin_free_as (Current)
 		end
 
-feature {BINARY_AS}
-
-	set_infix_function_name (name: ID_AS)
-		do
-			create op_name.initialize (extract_symbol_from_infix (name.name))
-		end
-
 invariant
 	op_name_not_void: op_name /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2015, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2021, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
@@ -121,4 +113,4 @@ note
 			Customer support http://support.eiffel.com
 		]"
 
-end -- class BIN_FREE_AS
+end

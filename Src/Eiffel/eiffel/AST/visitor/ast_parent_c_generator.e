@@ -115,29 +115,26 @@ feature {NONE} -- Implementation
 					loop
 						l_rename_pair := l_renaming.item
 						l_old_name := l_rename_pair.old_name
-						old_name_id := l_old_name.internal_name.name_id
+						old_name_id := l_old_name.feature_name.name_id
 						if l_renaming_c.has (old_name_id) then
 							create l_vhrc2
 							l_vhrc2.set_class (current_class)
 							l_vhrc2.set_parent (last_parent_c.parent)
-							l_vhrc2.set_feature_name (l_old_name.internal_name.name)
+							l_vhrc2.set_feature_name (l_old_name.feature_name.name)
 							l_vhrc2.set_location (l_old_name.start_location)
 							Error_handler.insert_error (l_vhrc2)
 						else
 							l_new_name := l_rename_pair.new_name
-							if
-								attached {FEATURE_NAME_ALIAS_AS} l_new_name as l_new_feat_name and then
-								l_new_feat_name.has_alias
-							then
+							if attached {FEATURE_NAME_ALIAS_AS} l_new_name as l_new_feat_name then
 								create alias_name_ids.make_empty (l_new_feat_name.aliases.count)
 								across
 									l_new_feat_name.aliases as ic
 								loop
-									alias_name_ids.extend (ic.item.internal_alias_name_id)
+									alias_name_ids.extend (ic.item.id)
 								end
-								l_renaming_c.put (create {RENAMING}.make (l_new_name.internal_name.name_id, alias_name_ids, l_new_feat_name.has_convert_mark), old_name_id)
+								l_renaming_c.put (create {RENAMING}.make (l_new_name.feature_name.name_id, alias_name_ids, l_new_feat_name.has_convert_mark), old_name_id)
 							else
-								l_renaming_c.put (create {RENAMING}.make (l_new_name.internal_name.name_id, Void, False), old_name_id)
+								l_renaming_c.put (create {RENAMING}.make (l_new_name.feature_name.name_id, Void, False), old_name_id)
 							end
 						end
 
@@ -182,7 +179,7 @@ feature {NONE} -- Implementation
 			until
 				l_as.features.after
 			loop
-				l_feature_name_id := l_as.features.item.internal_name.name_id
+				l_feature_name_id := l_as.features.item.feature_name.name_id
 				if not l_export_adapt.has (l_feature_name_id) then
 					l_export_adapt.put (l_export_status, l_feature_name_id)
 				else
@@ -229,7 +226,7 @@ feature {NONE} -- Implementation
 			until
 				clause.after
 			loop
-				feature_name_id := clause.item.internal_name.name_id
+				feature_name_id := clause.item.feature_name.name_id
 				if Result.has (feature_name_id) then
 						-- Twice the same name in a parent clause
 					inspect
@@ -243,7 +240,7 @@ feature {NONE} -- Implementation
 					end
 					l_vdrs3.set_class (current_class)
 					l_vdrs3.set_parent_name (l_as.type.class_name.name)
-					l_vdrs3.set_feature_name (clause.item.internal_name.name)
+					l_vdrs3.set_feature_name (clause.item.feature_name.name)
 					l_vdrs3.set_location (clause.item.start_location)
 					Error_handler.insert_error (l_vdrs3)
 				else

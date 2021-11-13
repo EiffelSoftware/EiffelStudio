@@ -754,22 +754,10 @@ feature
 								l_inherit_info.a_feature.set_renamed_name_id (new_name_id, new_alias_name_id)
 								l_inherit_info.a_feature.set_has_convert_mark (l_parents.item.renaming.item_for_iteration.has_convert_mark)
 
-									-- Update feature flags
-								if is_mangled_name (names.item (new_name_id)) then
-									if l_inherit_info.a_feature.argument_count = 0 then
-											-- Prefix feature
-										l_inherit_info.a_feature.set_is_infix (False)
-										l_inherit_info.a_feature.set_is_prefix (True)
-									else
-											-- Infix feature
-										l_inherit_info.a_feature.set_is_infix (True)
-										l_inherit_info.a_feature.set_is_prefix (False)
-									end
-								else
-										-- Identifier feature
-									l_inherit_info.a_feature.set_is_infix (False)
-									l_inherit_info.a_feature.set_is_prefix (False)
-								end
+									-- Update feature flags.
+									-- Identifier feature.
+								l_inherit_info.a_feature.set_is_infix (False)
+								l_inherit_info.a_feature.set_is_prefix (False)
 									-- Assume a feature name without aliases.
 								l_inherit_info.a_feature.set_is_binary (False)
 								l_inherit_info.a_feature.set_is_bracket (False)
@@ -1068,7 +1056,7 @@ feature
 			if a_class.is_once then
 					-- Add an attribute to keep an index of a creation procedure.
 				n := class_info.creators.count
-				create {FEAT_NAME_ID_AS} creation_index_name.initialize (create {ID_AS}.initialize_from_id (names_heap.inspect_attribute_name_id))
+				create {FEATURE_NAME} creation_index_name.initialize (create {ID_AS}.initialize_from_id (names_heap.inspect_attribute_name_id))
 				feature_i := feature_i_from_feature_as
 						(create {FEATURE_AS}.initialize
 							(create {EIFFEL_LIST [FEATURE_NAME]}.make_from_iterable (<<creation_index_name>>),
@@ -1145,32 +1133,6 @@ feature
 			export_status := immediate_export_status
 				-- Now, compute the routine id set of the feature.
 			inherit_feat := item (feature_name_id)
-				-- Check if it is not by any chance the case where `feature_i' is an infix/prefix
-				-- routine and the inherited member is using the new `alias' form. Note that we only
-				-- look for deferred routines, since if we had a concrete inherited routine, we would
-				-- have something in the adaptation clause to either rename/redefine/undefine the inherited
-				-- routine with the same name.
-			if inherit_feat = Void and (feature_i.is_prefix or feature_i.is_infix) then
-				from
-					start
-				until
-					after or else inherit_feat /= Void
-				loop
-					if attached item_for_iteration.deferred_features as l_features then
-						from
-							l_features.start
-						until
-							l_features.after or else inherit_feat /= Void
-						loop
-							if l_features.item.feature_has_alias_name_id (feature_name_id) then
-								inherit_feat := item_for_iteration
-							end
-							l_features.forth
-						end
-					end
-					forth
-				end
-			end
 
 				-- Find out if there previously was a feature with name
 				-- `feature_name'
@@ -1332,20 +1294,21 @@ feature
 			integer_value: INTEGER_CONSTANT
 			vffd4: VFFD4
 		do
-			feature_name_id := feat.internal_name.name_id
+			feature_name_id := feat.feature_name.name_id
 			debug ("ACTIVITY")
 				io.error.put_string ("FEATURE_UNIT on ");
-				io.error.put_string (feat.internal_name.name);
+				io.error.put_string (feat.feature_name.name);
 				io.error.put_new_line;
 			end;
 
 			Result := feature_i_generator.new_feature (yacc_feature, feature_name_id, a_class)
-			if attached {FEATURE_NAME_ALIAS_AS} feat as l_alias_feat and then l_alias_feat.has_alias then
+			if attached {FEATURE_NAME_ALIAS_AS} feat as l_alias_feat then
 				create alias_name_ids.make_empty (l_alias_feat.aliases.count)
 				across
 					l_alias_feat.aliases as ic
 				loop
-					alias_name_ids.extend (ic.item.internal_alias_name_id)
+					check is_alias_id (ic.item.id) end
+					alias_name_ids.extend (ic.item.id)
 				end
 				Result.set_feature_name_id (feature_name_id, alias_name_ids)
 				Result.set_has_convert_mark (l_alias_feat.has_convert_mark)

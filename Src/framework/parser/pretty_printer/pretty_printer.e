@@ -52,7 +52,7 @@ inherit
 			process_undefine_clause_as,
 			process_redefine_clause_as,
 			process_select_clause_as,
-			process_feat_name_id_as,
+			process_feature_name,
 			process_feature_name_alias_as,
 
 				-- Generics
@@ -1104,7 +1104,7 @@ feature {CLASS_AS} -- Inheritance
 			process_inherit_clause_as (l_as)
 		end
 
-	process_feat_name_id_as (l_as: FEAT_NAME_ID_AS)
+	process_feature_name (l_as: FEATURE_NAME)
 		do
 			safe_process_and_print (l_as.frozen_keyword, "", " ")
 			safe_process (l_as.feature_name)

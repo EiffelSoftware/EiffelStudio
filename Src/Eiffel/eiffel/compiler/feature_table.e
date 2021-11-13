@@ -24,7 +24,7 @@ inherit
 	PREFIX_INFIX_NAMES
 		export
 			{NONE} all
-			{ANY} is_mangled_alias_name, is_mangled_alias_name_32
+			{ANY} is_mangled_alias_name
 		undefine
 			is_equal, copy
 		end
@@ -148,14 +148,15 @@ feature -- Access
 			Result := System.class_of_id (feat_tbl_id)
 		end
 
-	item_alias_id (alias_name_id: INTEGER): FEATURE_I
-			-- Feature with alias name id `alias_name_id', if present; Void otherwise
+	item_alias_id (i: like {OPERATOR_KIND}.alias_id): FEATURE_I
+			-- Feature with alias name id `i', if present; Void otherwise
 		require
-			valid_alias_name_id: alias_name_id > 0
+			{OPERATOR_KIND}.is_alias_id (i)
+			{OPERATOR_KIND}.is_fixed_alias_id (i)
 		local
 			l_id: INTEGER
 		do
-			l_id := alias_table.item (alias_name_id)
+			l_id := alias_table.item (lookup_alias_id (i))
 			if l_id > 0 then
 				Result := system.feature_server.item (l_id)
 			end
@@ -283,11 +284,13 @@ feature -- HASH_TABLE like feature
 					alias_table.conflict -- FIXME: check if there is any risk to stop at first conflict? [2019-09-25]
 				loop
 					alias_name_id := ic.item
-					if alias_name_id > 0 then
-						alias_table.put (new.id, alias_name_id)
-						if alias_table.conflict then
-							conflicting_alias := alias_name_id
-						end
+					check
+						is_alias_id (alias_name_id)
+						is_fixed_alias_id (alias_name_id)
+					end
+					alias_table.put (new.id, lookup_alias_id (alias_name_id))
+					if alias_table.conflict then
+						conflicting_alias := alias_name_id
 					end
 				end
 			end
@@ -374,9 +377,11 @@ feature {NONE} -- HASH_TABLE like features
 						lst as ic
 					loop
 						alias_name_id := ic.item
-						if alias_name_id > 0 then
-							alias_table.remove (alias_name_id)
+						check
+							is_alias_id (alias_name_id)
+							is_fixed_alias_id (alias_name_id)
 						end
+						alias_table.remove (lookup_alias_id (alias_name_id))
 					end
 				end
 			end
@@ -405,15 +410,6 @@ feature -- Access: compatibility
 			end
 		ensure
 			overloaded_items_not_void: Result /= Void
-		end
-
-	alias_item_32 (alias_name: STRING_32): FEATURE_I
-			-- Feature with given `alias_name' if any
-		require
-			alias_name_not_void: alias_name /= Void
-			is_mangled_alias_name: is_mangled_alias_name_32 (alias_name)
-		do
-			Result := alias_item (encoding_converter.utf32_to_utf8 (alias_name))
 		end
 
 feature {INTERNAL_COMPILER_STRING_EXPORTER} -- Access: compatibility
@@ -454,7 +450,6 @@ feature {INTERNAL_COMPILER_STRING_EXPORTER} -- Access: compatibility
 			-- Feature with given `alias_name' if any
 		require
 			alias_name_not_void: alias_name /= Void
-			is_mangled_alias_name: is_mangled_alias_name (alias_name)
 		local
 			id: INTEGER
 		do
@@ -1693,13 +1688,14 @@ feature -- Code generation
 
 invariant
 	alias_table_not_void: alias_table /= Void
+	valid_alias_table_keys: ∀ a: alias_table ¦ is_lookup_alias_id (@ a.key )
 	body_index_table_not_void: is_computed implies body_index_table /= Void
 	feature_id_table_not_void: is_computed implies feature_id_table /= Void
 	select_table_not_void: is_computed implies select_table /= Void
 	related_select_table: is_computed implies select_table.feature_table = Current
 
 note
-	copyright:	"Copyright (c) 1984-2019, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2021, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

@@ -175,7 +175,7 @@ feature {NONE} -- Visitor
 					do
 						if
 							attached loaded_class as c and then
-							attached c.feature_of_name_id (n.internal_name.name_id) as f
+							attached c.feature_of_name_id (n.feature_name.name_id) as f
 						then
 							body_force (c.class_id, t, f.body_index)
 						end

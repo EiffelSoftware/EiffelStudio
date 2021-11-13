@@ -13,7 +13,7 @@ inherit
 		redefine
 			process_address_as,
 			process_feature_as,
-			process_feat_name_id_as,
+			process_feature_name,
 			process_feature_name_alias_as,
 			process_class_as,
 			process_class_type_as,
@@ -95,7 +95,7 @@ feature {NONE} -- Implementation
 			safe_process (l_as.indexes)
 		end
 
-	process_feat_name_id_as (l_as: FEAT_NAME_ID_AS)
+	process_feature_name (l_as: FEATURE_NAME)
 		do
 			internal_click_list.extend (create {CLICK_AST}.initialize (l_as, l_as))
 		end

@@ -76,17 +76,10 @@ feature -- Basic operations
 			l_wrapper: EIFFEL_PARSER_WRAPPER
 			l_context: AST_CONTEXT
 			l_checker: ES_EXPRESSION_ANALYZER_FEATURE_CHECKER_GENERATOR
-			l_expression: STRING_32
 			l_saved: BOOLEAN
 			retried: BOOLEAN
 		do
 			if not retried then
-					-- Build the expression (prepend "check ")
-				create l_expression.make (a_expr.count + 6)
-				l_expression.append ({EIFFEL_KEYWORD_CONSTANTS}.check_keyword)
-				l_expression.append_character (' ')
-				l_expression.append (a_expr)
-
 				error_handler.save
 				l_saved := True
 
@@ -94,7 +87,7 @@ feature -- Basic operations
 				create l_wrapper
 				l_class := a_info.context_class
 				l_parser := expression_parser
-				l_wrapper.parse_with_option_32 (l_parser, l_expression, l_class.group.options, True, l_class)
+				l_wrapper.parse_with_option_32 (l_parser, {EIFFEL_PARSER_SKELETON}.expression_parser_prefix + a_expr, l_class.group.options, True, l_class)
 				if not l_wrapper.has_error and then attached {EXPR_AS} l_wrapper.ast_node as l_expr then
 					create l_context.make
 					l_context.initialize (l_class, l_class.actual_type) --, l_class.feature_table)

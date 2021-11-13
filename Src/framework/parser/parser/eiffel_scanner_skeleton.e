@@ -234,6 +234,7 @@ feature -- Status report
 					-- False otherwise.
 			end
 		ensure
+			class
 			definition: Result = (<<ecma_syntax, obsolete_syntax, transitional_syntax, provisional_syntax>>).has (v)
 		end
 

@@ -174,8 +174,9 @@ feature -- Element change
 				{GTK}.set_gtk_allocation_struct_width (l_alloc, w)
 				{GTK}.set_gtk_allocation_struct_height (l_alloc, h)
 
-				{GTK2}.gtk_widget_set_minimum_size (l_child_item, w, h)
 				{GTK2}.gtk_widget_size_allocate (l_child_item, l_alloc)
+
+				{GTK2}.gtk_widget_set_minimum_size (l_child_item, w, h)
 
 				l_alloc.memory_free
 
@@ -211,8 +212,9 @@ feature {NONE} -- Implementation
 
 				w := a_viewport_width.max (1)
 				h := a_viewport_height.max (1)
-
-				l_item.reset_minimum_size
+				if a_viewport_width < width or a_viewport_height < height then
+					l_item.reset_minimum_size
+				end
 				if attached {EV_WIDGET_IMP} l_item.implementation as l_item_imp then
 					set_item_size (w.max (l_item_imp.preferred_minimum_width), h.max (l_item_imp.preferred_minimum_height))
 				else

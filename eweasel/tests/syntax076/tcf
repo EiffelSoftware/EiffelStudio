@@ -1,0 +1,41 @@
+test_name operators-and-aliases-with-slashes
+test_description Non-predefined operators and aliases with slashes should be treated as free ones.
+
+copy_sub Ace $TEST Ace
+
+define	OPERATOR_b2	""
+define	OPERATOR_s1	""
+define	OPERATOR_s2	""
+define	ALIAS_b2	""
+define	ALIAS_s1	""
+define	ALIAS_s2	""
+copy_sub test.e $CLUSTER test.e
+compile_melted
+compile_result	syntax_error TEST 19
+
+define	OPERATOR_b2	"--"
+copy_sub test.e $CLUSTER test.e
+resume_compile
+compile_result	syntax_error TEST 21
+
+define	OPERATOR_s1	"--"
+copy_sub test.e $CLUSTER test.e
+resume_compile
+compile_result	syntax_error TEST 22
+
+define	OPERATOR_s2	"--"
+copy_sub test.e $CLUSTER test.e
+resume_compile
+compile_result	validity_error TEST VFAV(1):75 VFAV(1):78 VFAV(1):79
+
+define	ALIAS_b2	"--"
+define	ALIAS_s1	"--"
+define	ALIAS_s2	"--"
+copy_sub test.e $CLUSTER test.e
+resume_compile
+compile_result	ok
+execute_work	NONE exec_output_m
+execute_result	ok
+compare		exec_output_m output
+
+test_end

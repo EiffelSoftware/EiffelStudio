@@ -301,6 +301,7 @@ test	bracket-expression-as-bracket-target	syntax072 tcf pass syntax bracket_expr
 test	across-loop-unicode-syntax		syntax073 tcf pass syntax loop across iteration unicode pretty
 test	built-in-unicode-operators-syntax	syntax074 tcf pass syntax unicode expression execution
 test	renaming-to-multiple-aliases		syntax075 tcf pass syntax rename alias
+test	operators-and-aliases-with-slashes	syntax076 tcf pass syntax operator alias
 
 -- Validity tests
 

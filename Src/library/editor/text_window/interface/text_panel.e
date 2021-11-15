@@ -1009,6 +1009,7 @@ feature -- Status Setting
 			if horizontal_scrollbar.is_show_requested then
 				horizontal_scrollbar.set_value (offset.min (horizontal_scrollbar.value_range.upper))
 			end
+			on_offset_changed
 		end
 
 feature {NONE} -- Scroll bars Management

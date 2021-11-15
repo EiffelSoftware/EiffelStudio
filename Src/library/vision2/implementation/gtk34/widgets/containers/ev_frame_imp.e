@@ -24,7 +24,8 @@ inherit
 		redefine
 			interface,
 			needs_event_box,
-			make
+			make,
+			style_element_name
 		end
 
 	EV_FONTABLE_IMP
@@ -173,6 +174,14 @@ feature -- Element change
 		do
 			border_width := value
 			{GTK}.gtk_container_set_border_width (container_widget, value)
+		end
+
+feature {NONE} -- GTK3 css style
+
+	style_element_name: STRING
+			-- CSS style name for Current GTK3 widget.
+		do
+			Result := "frame"
 		end
 
 feature {NONE} -- Implementation

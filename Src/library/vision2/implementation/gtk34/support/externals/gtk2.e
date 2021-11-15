@@ -265,10 +265,13 @@ feature -- Style
 			"C signature (GtkStyleContext*): GtkJunctionSides use <ev_gtk.h>"
 		end
 
-	gtk_style_context_lookup_color (context: POINTER; color_name: POINTER; color: POINTER)
-			-- Lookup color named `color_name` for context `context`
+	gtk_style_context_lookup_color (context: POINTER; color_name: POINTER; color: POINTER): BOOLEAN
+			-- Lookup color named `color_name` for context `context`.
+			-- Return True if found, otherwise False.
 		external
-			"C signature (GtkStyleContext*, gchar*, GdkRGBA*) use <ev_gtk.h>"
+			"C inline use <ev_gtk.h>"
+		alias
+			"return gtk_style_context_lookup_color((GtkStyleContext*) $context, (gchar*) $color_name, (GdkRGBA*) $color);"
 		end
 
 	gtk_style_context_get (context: POINTER; state: INTEGER; property: POINTER; description: POINTER)

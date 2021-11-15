@@ -38,7 +38,8 @@ inherit
 			old_make,
 			interface,
 			has_focus,
-			on_focus_changed
+			on_focus_changed,
+			style_element_name
 		end
 
 	EV_LIST_ITEM_LIST_IMP
@@ -52,13 +53,15 @@ inherit
 			set_focus,
 			background_color_style_context,
 			foreground_color_style_context,
-			apply_background_color_to_style_context
+			apply_background_color_to_style_context,
+			apply_foreground_color_to_style_context
 		redefine
 			make,
 			needs_event_box,
 			interface,
 			insert_i_th,
-			call_selection_action_sequences
+			call_selection_action_sequences,
+			style_element_name
 		end
 
 	EV_KEY_CONSTANTS
@@ -361,6 +364,14 @@ feature {NONE} -- Externals
 				gtk_container_forall (GTK_CONTAINER ($a_combo), (GtkCallback) c_gtk_return_combo_toggle, (GtkWidget**) $a_toggle_button);
 				}
 			]"
+		end
+
+feature {NONE} -- GTK3 css style
+
+	style_element_name: STRING
+			-- CSS style name for Current GTK3 widget.
+		do
+			Result := "combobox > entry.combo"
 		end
 
 feature {EV_LIST_ITEM_IMP, EV_INTERMEDIARY_ROUTINES} -- Implementation

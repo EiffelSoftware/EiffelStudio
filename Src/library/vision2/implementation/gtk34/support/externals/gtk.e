@@ -1661,15 +1661,35 @@ feature -- Color Helper
 			instance_free: class
 		end
 
-	rgba_string_style_color (a_style_ctx: POINTER; a_name: READABLE_STRING_8): STRING
+	style_color (a_style_ctx: POINTER; a_name: READABLE_STRING_8): detachable EV_COLOR
 		local
 			l_gtk_c_string: EV_GTK_C_STRING
 			c_rgba: POINTER
+			l_found: BOOLEAN
 		do
 			c_rgba := {GTK}.c_gdk_rgba_struct_allocate
 			create l_gtk_c_string.set_with_eiffel_string (a_name)
-			{GTK2}.gtk_style_context_lookup_color (a_style_ctx, l_gtk_c_string.item, c_rgba)
-			Result := rgba_struct_to_style_color_string (c_rgba)
+			l_found := {GTK2}.gtk_style_context_lookup_color (a_style_ctx, l_gtk_c_string.item, c_rgba)
+			if l_found then
+				Result := rgba_struct_to_color (c_rgba)
+			end
+			c_rgba.memory_free
+		ensure
+			instance_free: class
+		end
+
+	rgba_string_style_color (a_style_ctx: POINTER; a_name: READABLE_STRING_8): detachable STRING
+		local
+			l_gtk_c_string: EV_GTK_C_STRING
+			c_rgba: POINTER
+			l_found: BOOLEAN
+		do
+			c_rgba := {GTK}.c_gdk_rgba_struct_allocate
+			create l_gtk_c_string.set_with_eiffel_string (a_name)
+			l_found := {GTK2}.gtk_style_context_lookup_color (a_style_ctx, l_gtk_c_string.item, c_rgba)
+			if l_found then
+				Result := rgba_struct_to_style_color_string (c_rgba)
+			end
 			c_rgba.memory_free
 		ensure
 			instance_free: class

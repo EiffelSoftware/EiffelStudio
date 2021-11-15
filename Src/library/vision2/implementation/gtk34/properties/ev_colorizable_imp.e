@@ -19,51 +19,58 @@ inherit
 feature -- Access
 
 	background_color_internal: EV_COLOR
-			-- Color of face.
+			-- Color of background features like text.
 		local
-			l_rgba_color, l_style_context: POINTER
-			--gtk_c_string: EV_GTK_C_STRING
+			l_style_context: like background_color_style_context
+			l_rgba_color: POINTER
 		do
 			if attached background_color_imp as l_background_color_imp then
 				Result := l_background_color_imp.attached_interface.twin
 			else
-				--l_rgba_color := {GTK}.c_gdk_rgba_struct_allocate
 				l_style_context := background_color_style_context
-				--gtk_c_string := "selected_bg_color"
-				--{GTK2}.gtk_style_context_lookup_color (l_style_context, gtk_c_string.item, l_rgba_color);
-				{GTK2}.gtk_style_context_get (l_style_context, {GTK}.gtk_style_context_get_state (l_style_context), {GTK2}.GTK_STYLE_PROPERTY_BACKGROUND_COLOR, $l_rgba_color )
-				create Result.make_with_rgb (
-					{GDK}.rgba_struct_red (l_rgba_color).truncated_to_real,
-					{GDK}.rgba_struct_green (l_rgba_color).truncated_to_real,
-					{GDK}.rgba_struct_blue (l_rgba_color).truncated_to_real
-				)
-				--l_rgba_color.memory_free
-				{GDK}.rgba_free (l_rgba_color)
+				Result := {GTK}.style_color (l_style_context, once "theme_bg_color")
+				if Result = Void then
+					l_rgba_color := {GTK}.c_gdk_rgba_struct_allocate
+					{GTK}.gtk_style_context_save (l_style_context)
+					{GTK}.gtk_style_context_set_state (l_style_context, {GTK}.gtk_state_flag_normal_enum)
+					--{GTK}.gtk_style_context_get_color (l_style_context, {GTK}.gtk_style_context_get_state (l_style_context), l_rgba_color)
+					{GTK2}.gtk_style_context_get (l_style_context, {GTK}.gtk_style_context_get_state (l_style_context), {GTK2}.GTK_STYLE_PROPERTY_BACKGROUND_COLOR, $l_rgba_color)
+					create Result.make_with_rgb (
+						{GDK}.rgba_struct_red (l_rgba_color).truncated_to_real,
+						{GDK}.rgba_struct_green (l_rgba_color).truncated_to_real,
+						{GDK}.rgba_struct_blue (l_rgba_color).truncated_to_real
+						)
+					{GDK}.rgba_free (l_rgba_color)
+					{GTK}.gtk_style_context_restore (l_style_context)
+				end
 			end
 		end
 
 	foreground_color_internal: EV_COLOR
 			-- Color of foreground features like text.
 		local
-			l_rgba_color, l_style_context: POINTER
+			l_style_context: like foreground_color_style_context
+			l_rgba_color: POINTER
 		do
 			if attached foreground_color_imp as l_foreground_color_imp then
 				Result := l_foreground_color_imp.attached_interface.twin
 			else
-
-				--l_rgba_color := {GTK}.c_gdk_rgba_struct_allocate
 				l_style_context := foreground_color_style_context
-				{GTK}.gtk_style_context_save (l_style_context)
-				{GTK}.gtk_style_context_set_state (l_style_context, {GTK}.gtk_state_flag_normal_enum)
-				--{GTK}.gtk_style_context_get_color (l_style_context, {GTK}.gtk_style_context_get_state (l_style_context), l_rgba_color)
-				{GTK2}.gtk_style_context_get (l_style_context, {GTK}.gtk_style_context_get_state (l_style_context), {GTK2}.GTK_STYLE_PROPERTY_COLOR, $l_rgba_color )
-				create Result.make_with_rgb (
-					{GDK}.rgba_struct_red (l_rgba_color).truncated_to_real,
-					{GDK}.rgba_struct_green (l_rgba_color).truncated_to_real,
-					{GDK}.rgba_struct_blue (l_rgba_color).truncated_to_real
-					)
-				--l_rgba_color.memory_free
-				{GDK}.rgba_free (l_rgba_color)
+				Result := {GTK}.style_color (l_style_context, once "theme_fg_color")
+				if Result = Void then
+					l_rgba_color := {GTK}.c_gdk_rgba_struct_allocate
+					{GTK}.gtk_style_context_save (l_style_context)
+					{GTK}.gtk_style_context_set_state (l_style_context, {GTK}.gtk_state_flag_normal_enum)
+					--{GTK}.gtk_style_context_get_color (l_style_context, {GTK}.gtk_style_context_get_state (l_style_context), l_rgba_color)
+					{GTK2}.gtk_style_context_get (l_style_context, {GTK}.gtk_style_context_get_state (l_style_context), {GTK2}.GTK_STYLE_PROPERTY_COLOR, $l_rgba_color)
+					create Result.make_with_rgb (
+						{GDK}.rgba_struct_red (l_rgba_color).truncated_to_real,
+						{GDK}.rgba_struct_green (l_rgba_color).truncated_to_real,
+						{GDK}.rgba_struct_blue (l_rgba_color).truncated_to_real
+						)
+					{GDK}.rgba_free (l_rgba_color)
+					{GTK}.gtk_style_context_restore (l_style_context)
+				end
 			end
 		end
 
@@ -103,7 +110,7 @@ feature -- Status setting
 				-- Using style context a_c_object
 			l_context := {GTK}.gtk_widget_get_style_context (a_c_object)
 
-			l_css := "* { background: " + {GTK}.rgba_string_default_background_color + ";}%N"
+			l_css := style_element_name + " { background: " + {GTK}.rgba_string_default_background_color + ";}%N"
 			create l_css_data.make (l_css)
 			l_provider := {GTK_CSS}.gtk_css_provider_new
 			{GTK2}.gtk_style_context_add_provider (l_context, l_provider, {EV_GTK_ENUMS}.gtk_style_provider_priority_application)
@@ -148,7 +155,7 @@ feature -- Status setting
 					-- do not use background, but background-color otherwise the pixmap will be removed.
 					-- instead of background, it could also be background-image: none; background-color: ...
 				l_bg_name := "background"
-				l_css.append ("* {"
+				l_css.append (style_element_name + " {"
 						+ new_css_color_style_string (l_bg_name,
 												r / m,
 												g / m,
@@ -157,7 +164,7 @@ feature -- Status setting
 					)
 
 					--| Set active state color.
-				l_css.append ("*:active {"
+				l_css.append (style_element_name + ":active {"
 						+ new_css_color_style_string (l_bg_name,
 												(r * Highlight_scale).rounded.max (0) / m,
 												(g * Highlight_scale).rounded.max (0) / m,
@@ -166,7 +173,7 @@ feature -- Status setting
 					)
 
 					--| Set prelight state color.
-				l_css.append ("*:hover {"
+				l_css.append (style_element_name + ":hover {"
 						+ new_css_color_style_string (l_bg_name,
 												(r * Prelight_scale).rounded.min (m) / m,
 												(g * Prelight_scale).rounded.min (m) / m,
@@ -175,7 +182,7 @@ feature -- Status setting
 					)
 
 					--| Set selected state color to reverse.
-				l_css.append ("*:selected {"
+				l_css.append (style_element_name + ":selected {"
 						+ new_css_color_style_string (l_bg_name,
 												(m - r) / m,
 												(m - g) / m,
@@ -185,7 +192,7 @@ feature -- Status setting
 
 					--| Set the insensitive state color.
 				mx := r.max (g).max (b)
-				l_css.append ("*:disabled {"
+				l_css.append (style_element_name + ":disabled {"
 						+ new_css_color_style_string (l_bg_name,
 												(mx + ((r - mx) // 4)) / m,
 												(mx + ((g - mx) // 4)) / m,
@@ -221,7 +228,6 @@ feature -- Status setting
 			r,g,b,m: INTEGER
 			l_context: POINTER
 			l_color_string: STRING
-			l_foreground_color_imp: like foreground_color_imp
 		do
 			if
 				not a_c_object.is_default_pointer and
@@ -229,15 +235,13 @@ feature -- Status setting
 			then
 				l_context := {GTK}.gtk_widget_get_style_context (a_c_object)
 
-				l_foreground_color_imp := foreground_color_imp
-				check l_foreground_color_imp /= Void then end
-				r := l_foreground_color_imp.red_16_bit
-				g := l_foreground_color_imp.green_16_bit
-				b := l_foreground_color_imp.blue_16_bit
+				r := a_color.red_16_bit
+				g := a_color.green_16_bit
+				b := a_color.blue_16_bit
 				m := {EV_COLOR}.max_16_bit
 
 				l_color_string := new_rgb_color_string (r / m, g / m, b / m)
-				apply_foreground_color_to_style_context (l_context, a_color, "*, *:active, *:hover { color:"+ l_color_string + "; }%N")
+				apply_foreground_color_to_style_context (l_context, a_color, style_element_name + ", " + style_element_name + ":active, " + style_element_name + ":hover { color:"+ l_color_string + "; }%N")
 			end
 		end
 
@@ -258,6 +262,14 @@ feature -- Status setting
 			end
 		end
 
+feature {NONE} -- GTK3 css style
+
+	style_element_name: STRING
+			-- CSS style name for Current GTK3 widget.
+		do
+			Result := "*" -- Default
+		end
+
 feature {NONE} -- Implementation
 
 	apply_background_color_to_style_context (a_style_context: POINTER; a_color: detachable EV_COLOR; a_css: READABLE_STRING_8)
@@ -265,14 +277,16 @@ feature {NONE} -- Implementation
 			l_provider: POINTER
 			l_css_data: C_STRING
 			l_error: POINTER
+			gerr: EV_GLIB_ERROR
 		do
 			create l_css_data.make (a_css)
 			l_provider := {GTK_CSS}.gtk_css_provider_new
-			{GTK2}.gtk_style_context_add_provider (a_style_context, l_provider, {EV_GTK_ENUMS}.gtk_style_provider_priority_application)
+			{GTK2}.gtk_style_context_add_provider (a_style_context, l_provider, {EV_GTK_ENUMS}.gtk_style_provider_priority_application) --gtk_style_provider_priority_fallback) --gtk_style_provider_priority_application) --GTK_STYLE_PROVIDER_PRIORITY_FALLBACK)
 			if not {GTK_CSS}.gtk_css_provider_load_from_data (l_provider, l_css_data.item, -1, $l_error) then
-				-- TODO Handle error
+				create gerr.make_from_pointer (l_error)
+				print (gerr.message)
+				gerr.free
 			end
-
 			if not l_provider.is_default_pointer then
 				{GTK2}.g_object_unref (l_provider)
 			end
@@ -283,12 +297,15 @@ feature {NONE} -- Implementation
 			l_provider: POINTER
 			l_css_data: C_STRING
 			l_error: POINTER
+			gerr: EV_GLIB_ERROR
 		do
 			create l_css_data.make (a_css)
 			l_provider := {GTK_CSS}.gtk_css_provider_new
 			{GTK2}.gtk_style_context_add_provider (a_style_context, l_provider, {EV_GTK_ENUMS}.gtk_style_provider_priority_application)
 			if not {GTK_CSS}.gtk_css_provider_load_from_data (l_provider, l_css_data.item, -1, $l_error) then
-				-- TODO Handle error
+				create gerr.make_from_pointer (l_error)
+				print (gerr.message)
+				gerr.free
 			end
 			if not l_provider.is_default_pointer then
 				{GTK2}.g_object_unref (l_provider)
@@ -348,22 +365,24 @@ feature {NONE} -- Implementation
 				-- Alpha is 1.0, then no need to specify it in CSS.
 		end
 
-	rgb_string_color (a_style_ctx: POINTER; a_name: READABLE_STRING_8): STRING
+	rgb_string_color (a_style_ctx: POINTER; a_name: READABLE_STRING_8): detachable STRING
 		local
 			l_gtk_c_string: EV_GTK_C_STRING
 			c_rgba: POINTER
 			r,g,b: INTEGER
 			a: REAL_64
+			l_found: BOOLEAN
 		do
 			c_rgba := {GTK}.c_gdk_rgba_struct_allocate
 			create l_gtk_c_string.set_with_eiffel_string (a_name)
-			{GTK2}.gtk_style_context_lookup_color (a_style_ctx, l_gtk_c_string.item, c_rgba)
-
-			r := ({GDK}.rgba_struct_red (c_rgba) * {EV_COLOR}.max_8_bit).truncated_to_integer
-			g := ({GDK}.rgba_struct_green (c_rgba) * {EV_COLOR}.max_8_bit).truncated_to_integer
-			b := ({GDK}.rgba_struct_blue (c_rgba) * {EV_COLOR}.max_8_bit).truncated_to_integer
-			a := {GDK}.rgba_struct_alpha (c_rgba).truncated_to_real
-			Result := "rgb(" + r.out + "," + g.out + "," + b.out + ")"
+			l_found := {GTK2}.gtk_style_context_lookup_color (a_style_ctx, l_gtk_c_string.item, c_rgba)
+			if l_found then
+				r := ({GDK}.rgba_struct_red (c_rgba) * {EV_COLOR}.max_8_bit).truncated_to_integer
+				g := ({GDK}.rgba_struct_green (c_rgba) * {EV_COLOR}.max_8_bit).truncated_to_integer
+				b := ({GDK}.rgba_struct_blue (c_rgba) * {EV_COLOR}.max_8_bit).truncated_to_integer
+				a := {GDK}.rgba_struct_alpha (c_rgba).truncated_to_real
+				Result := "rgb(" + r.out + "," + g.out + "," + b.out + ")"
+			end
 			c_rgba.memory_free
 		end
 

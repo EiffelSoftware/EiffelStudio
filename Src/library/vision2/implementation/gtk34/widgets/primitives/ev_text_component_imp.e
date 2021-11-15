@@ -21,7 +21,7 @@ inherit
 		redefine
 			interface,
 			make,
-			apply_background_color_to_style_context
+			apply_background_color_to_style_context, apply_foreground_color_to_style_context
 		end
 
 feature -- Initialization
@@ -63,17 +63,34 @@ feature -- Resizing
 
 feature {NONE} -- Implementation
 
-	apply_background_color_to_style_context (a_style_context: POINTER; a_color: detachable EV_COLOR; a_css: READABLE_STRING_8)
+	adapted_css (a_style_context: POINTER; a_color: detachable EV_COLOR; a_css: READABLE_STRING_8): READABLE_STRING_8
 		local
-			l_css: READABLE_STRING_8
+			l_css: STRING_8
 		do
-					--| Set the text selection background and color.
-			l_css := a_css + " selection { background: "
-								+ {GTK}.rgba_string_style_color (a_style_context, "theme_selected_bg_color")
-								+ "; color: "
-								+ {GTK}.rgba_string_style_color (a_style_context, "theme_selected_fg_color")
-								+ "; }%N"
-			Precursor (a_style_context, a_color, l_css)
+			create l_css.make_from_string (a_css)
+			l_css.append (style_element_name + " > selection {")
+			if attached {GTK}.rgba_string_style_color (a_style_context, "theme_selected_bg_color") as bg then
+				l_css.append (" background:")
+				l_css.append (bg)
+				l_css.append_character (';')
+			end
+			if attached {GTK}.rgba_string_style_color (a_style_context, "theme_selected_fg_color") as fg then
+				l_css.append (" color:")
+				l_css.append (fg)
+				l_css.append_character (';')
+			end
+			l_css.append ("}%N")
+			Result := l_css
+		end
+
+	apply_background_color_to_style_context (a_style_context: POINTER; a_color: detachable EV_COLOR; a_css: READABLE_STRING_8)
+		do
+			Precursor (a_style_context, a_color, adapted_css (a_style_context, a_color, a_css))
+		end
+
+	apply_foreground_color_to_style_context (a_style_context: POINTER; a_color: detachable EV_COLOR; a_css: READABLE_STRING_8)
+		do
+			Precursor (a_style_context, a_color, adapted_css (a_style_context, a_color, a_css))
 		end
 
 feature {EV_ANY, EV_ANY_I} -- Implementation		

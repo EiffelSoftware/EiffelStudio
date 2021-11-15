@@ -23,11 +23,13 @@ inherit
 			on_key_event,
 			on_focus_changed,
 			needs_event_box,
-			apply_background_color_to_style_context
+			apply_background_color_to_style_context,
+			apply_foreground_color_to_style_context
 		redefine
 			interface,
 			make,
-			old_make
+			old_make,
+			style_element_name
 		end
 
 	EV_TEXT_FIELD_IMP
@@ -39,7 +41,8 @@ inherit
 			interface,
 			make,
 			set_text,
-			new_entry_widget
+			new_entry_widget,
+			style_element_name
 		end
 
 create
@@ -74,6 +77,14 @@ feature {NONE} -- Implementation
 			-- <Precursor>
 		do
 			Result := {GTK}.gtk_spin_button_new (adjustment, 0, 0)
+		end
+
+feature {NONE} -- GTK3 css style
+
+	style_element_name: STRING
+			-- CSS style name for Current GTK3 widget.
+		do
+			Result := "spinbutton"
 		end
 
 feature {EV_ANY, EV_ANY_I} -- Implementation

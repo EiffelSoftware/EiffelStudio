@@ -25,7 +25,8 @@ inherit
 			needs_event_box,
 			on_key_event,
 			set_minimum_width_in_characters,
-			make
+			make,
+			style_element_name
 		end
 
 	EV_FONTABLE_IMP
@@ -380,6 +381,14 @@ feature {EV_ANY_I, EV_INTERMEDIARY_ROUTINES} -- Implementation
 
 	in_change_action: BOOLEAN
 		-- Is `Current' in the process of calling `on_change_actions'
+
+feature {NONE} -- GTK3 css style
+
+	style_element_name: STRING
+			-- CSS style name for Current GTK3 widget.
+		do
+			Result := "entry"
+		end
 
 feature {NONE} -- Implementation
 

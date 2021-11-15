@@ -21,7 +21,8 @@ inherit
 		redefine
 			interface,
 			needs_event_box,
-			make
+			make,
+			style_element_name
 		end
 
 	EV_TEXTABLE_IMP
@@ -91,6 +92,14 @@ feature -- Status Setting
 		do
 			{GTK}.gtk_label_set_xalign (text_label, 0.5)
 			{GTK}.gtk_label_set_yalign (text_label, 0.5)
+		end
+
+feature {NONE} -- GTK3 css style
+
+	style_element_name: STRING
+			-- CSS style name for Current GTK3 widget.
+		do
+			Result := "label"
 		end
 
 feature {NONE} -- Implementation

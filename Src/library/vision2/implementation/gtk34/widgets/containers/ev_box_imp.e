@@ -23,7 +23,8 @@ inherit
 		redefine
 			interface,
 			needs_event_box,
-			gtk_container_remove
+			gtk_container_remove,
+			style_element_name
 		end
 
 feature -- Access
@@ -123,6 +124,14 @@ feature {EV_ANY, EV_ANY_I} -- Status settings
 				pad,
 				pack_type
 			)
+		end
+
+feature {NONE} -- GTK3 css style
+
+	style_element_name: STRING
+			-- CSS style name for Current GTK3 widget.
+		do
+			Result := "box"
 		end
 
 feature {EV_ANY_I} -- Implementation

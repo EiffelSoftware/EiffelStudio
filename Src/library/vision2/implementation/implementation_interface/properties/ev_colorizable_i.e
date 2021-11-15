@@ -20,22 +20,18 @@ feature -- Access
 
 	frozen foreground_color: EV_COLOR
 			-- Color of foreground features like text.
-		local
-			l_result: detachable like foreground_color_internal
 		do
-			l_result := foreground_color_internal
-			check l_result /= Void then end
-			Result := l_result
+			check attached foreground_color_internal as l_result then
+				Result := l_result
+			end
 		end
 
 	frozen background_color: EV_COLOR
 			-- Color displayed behind foreground features.
-		local
-			l_result: detachable like background_color_internal
 		do
-			l_result := background_color_internal
-			check l_result /= Void then end
-			Result := l_result
+			check attached background_color_internal as l_result then
+				Result := l_result
+			end
 		end
 
 feature {NONE} -- Implementation
@@ -82,7 +78,7 @@ feature {EV_ANY, EV_ANY_I} -- Implementation
 	interface: detachable EV_COLORIZABLE note option: stable attribute end;
 
 note
-	copyright:	"Copyright (c) 1984-2013, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2021, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

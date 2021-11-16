@@ -186,6 +186,7 @@ feature {NONE} -- User interface initialization
 			show_actions.extend_kamikaze (agent (i_sp: EV_VERTICAL_SPLIT_AREA)
 						do
 							i_sp.set_proportion (0.75)
+							ev_application.add_idle_action_kamikaze (agent i_sp.set_proportion (0.75))
 						end (sp)
 				)
 
@@ -509,7 +510,7 @@ feature -- Access
 			Result := dialog_buttons.ok_button
 		end
 
-	is_size_and_position_remembered: BOOLEAN = False
+	is_size_and_position_remembered: BOOLEAN = True
 			-- Indicates if the size and position information is remembered for the dialog
 ;
 

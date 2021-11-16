@@ -24,29 +24,7 @@ feature -- Timeout intermediary agent routine
 			end
 		end
 
-feature {EV_ANY_IMP} -- Button intermediary agent routines
-
-	on_button_event (a_application_imp: EV_APPLICATION_IMP; a_gdk_event: POINTER)
-		do
-			a_application_imp.process_button_event (a_gdk_event, True)
-		end
-
-	on_button_widget_event (a_c_object: POINTER; a_gdk_event: POINTER)
-		do
-			if attached {EV_ANY_IMP} c_get_eif_reference_from_object_id (a_c_object) as l_any_imp then
-				l_any_imp.process_button_event (a_gdk_event, False)
-			end
-		end
-
-feature {EV_ANY_IMP} -- Notebook intermediary agent routines
-
-	on_notebook_page_switch_intermediary (a_c_object: POINTER; a_page: NATURAL_32)
-			-- Notebook page is switched
-		do
-			if attached {EV_NOTEBOOK_IMP} c_get_eif_reference_from_object_id (a_c_object) as l_notebook_imp then
-				l_notebook_imp.page_switch (a_page.to_integer_32)
-			end
-		end
+feature {EV_ANY_IMP} -- Notebook agent routines
 
 	on_notebook_page_switch_event (a_c_object: POINTER; arguments: POINTER)
 			-- Notebook page is switched
@@ -56,16 +34,6 @@ feature {EV_ANY_IMP} -- Notebook intermediary agent routines
 			if attached {EV_NOTEBOOK_IMP} c_get_eif_reference_from_object_id (a_c_object) as l_notebook_imp then
 				gtkarg2 := {GTK2}.gtk_args_array_i_th (arguments, 1)
 				l_notebook_imp.page_switch ({GTK2}.gtk_value_uint (gtkarg2).to_integer_32)
-			end
-		end
-
-feature -- Motion notification
-
-	on_motion_notify_event_intermediary (a_c_object: POINTER; a_gdk_event: POINTER)
-			-- Set motion notify handling intermediary.
-		do
-			if attached {EV_ANY_IMP} c_get_eif_reference_from_object_id (a_c_object) as l_any_imp then
-				l_any_imp.process_motion_notify_event (a_gdk_event)
 			end
 		end
 
@@ -87,18 +55,7 @@ feature -- map,unmap event
 			end
 		end
 
-feature -- Draw signal intermediary.
-
-	draw_actions_intermediary (a_c_object: POINTER; a_cairo_context: POINTER): BOOLEAN
-			-- "draw" signal has been emitted.
-			-- Result:
-			-- 		False: execute remaining processing (including default)
-			--		True: stop all processing
-		do
-			if attached {EV_ANY_IMP} c_get_eif_reference_from_object_id (a_c_object) as l_any_imp then
-				Result := l_any_imp.process_draw_event (a_cairo_context)
-			end
-		end
+feature -- Draw and configure signal
 
 	draw_actions_event (a_c_object: POINTER; arguments: POINTER): BOOLEAN
 			-- "draw" signal has been emitted.
@@ -108,17 +65,6 @@ feature -- Draw signal intermediary.
 		do
 			if attached {EV_ANY_IMP} c_get_eif_reference_from_object_id (a_c_object) as l_any_imp then
 				Result := l_any_imp.process_draw_event ({GTK2}.gtk_value_pointer (arguments))
-			end
-		end
-
-	configure_event_intermediary (a_c_object: POINTER; a_x, a_y, a_width, a_height: INTEGER): BOOLEAN
-			-- "configure-event" signal has been emitted.
-			-- Result:
-			-- 		False: execute remaining processing (including default)
-			--		True: stop all processing
-		do
-			if attached {EV_ANY_IMP} c_get_eif_reference_from_object_id (a_c_object) as l_any_imp then
-				Result := l_any_imp.process_configure_event (a_x, a_y, a_width, a_height)
 			end
 		end
 
@@ -136,29 +82,7 @@ feature -- Draw signal intermediary.
 			end
 		end
 
-	enter_event_intermediary (a_c_object: POINTER; a_x, a_y, a_screen_x, a_screen_y: INTEGER)
-			-- "enter-notify-event" signal has been emitted.
-		do
-			if attached {EV_ANY_IMP} c_get_eif_reference_from_object_id (a_c_object) as l_any_imp then
-				l_any_imp.process_enter_event (a_x, a_y, a_screen_x, a_screen_y)
-			end
-		end
-
-	leave_event_intermediary (a_c_object: POINTER; a_x, a_y, a_screen_x, a_screen_y: INTEGER)
-			-- "leave-notify-event" signal has been emitted.
-		do
-			if attached {EV_ANY_IMP} c_get_eif_reference_from_object_id (a_c_object) as l_any_imp then
-				l_any_imp.process_leave_event (a_x, a_y, a_screen_x, a_screen_y)
-			end
-		end
-
-	scroll_event_intermediary (a_c_object: POINTER; a_gdk_event: POINTER): BOOLEAN
-			-- "leave-notify-event" signal has been emitted.
-		do
-			if attached {EV_ANY_IMP} c_get_eif_reference_from_object_id (a_c_object) as l_any_imp then
-				Result := l_any_imp.process_scroll_event (a_gdk_event)
-			end
-		end
+feature {EV_ANY_IMP} -- Scrolling event
 
 	scroll_event (a_c_object: POINTER; arguments: POINTER): BOOLEAN
 			-- "leave-notify-event" signal has been emitted.
@@ -180,22 +104,7 @@ feature {EV_ANY_IMP} -- Gauge intermediary agent routines
 			end
 		end
 
-feature -- Widget intermediary agent routines
-
-	on_size_allocate_intermediate (a_object_id, a_x, a_y, a_width, a_height: INTEGER)
-			-- Size allocate happened on widget.
-			-- Result:
-			-- 		False: execute remaining processing (including default)
-			--		True: stop all processing
-		do
-			if
-				attached {EV_WIDGET_IMP} eif_id_object (a_object_id) as a_widget and then
-				not a_widget.is_destroyed
-			then
-				a_widget.on_size_allocate (a_x, a_y, a_width, a_height)
-			end
-		end
-
+feature -- Widget agent routines
 
 	on_size_allocate_event (a_object_id: INTEGER; arguments:POINTER)
 			-- Size allocate happened on widget.
@@ -214,16 +123,7 @@ feature -- Widget intermediary agent routines
 			end
 		end
 
-	on_set_focus_event_intermediary (a_object_id: INTEGER; a_widget_ptr: POINTER)
-			-- Set Focus handling intermediary.
-		do
-			if
-				attached {EV_WINDOW_IMP} eif_id_object (a_object_id) as a_window and then
-				not a_window.is_destroyed
-			then
-				a_window.on_set_focus_event (a_widget_ptr)
-			end
-		end
+feature -- Widget set_focus routines
 
 	on_set_focus_event (a_object_id: INTEGER; arguments: POINTER)
 			-- Set Focus handling intermediary.
@@ -236,7 +136,7 @@ feature -- Widget intermediary agent routines
 			end
 		end
 
-feature {EV_ANY_IMP} -- Text component intermediary agent routines
+feature {EV_ANY_IMP} -- Text component agent routines
 
 	text_component_change_intermediary (a_c_object: POINTER)
 			-- Changed
@@ -256,7 +156,7 @@ feature {EV_ANY_IMP} -- Text component intermediary agent routines
 			end
 		end
 
-feature -- Button intermediary agent routines	
+feature -- Button agent routines	
 
 	button_select_intermediary (a_c_object: POINTER)
 			-- Selected
@@ -278,7 +178,7 @@ feature -- Button intermediary agent routines
 			end
 		end
 
-feature {EV_ANY_IMP} -- Menu intermediary agent routines
+feature {EV_ANY_IMP} -- Menu agent routines
 
 	menu_item_activate_intermediary (a_c_object: POINTER)
 			-- Item activated
@@ -293,15 +193,7 @@ feature {EV_ANY_IMP} -- Menu intermediary agent routines
 			end
 		end
 
-feature {EV_ANY_IMP} -- Dialog intermediary agent routines
-
-	gtk_dialog_response_intermediary (a_c_object: POINTER; a_response_id: INTEGER): POINTER
-			-- Dialog "response" signal intermediary.
-		do
-			check attached {EV_STANDARD_DIALOG_IMP} c_get_eif_reference_from_object_id (a_c_object) as l_sd then
-				l_sd.on_response (a_response_id)
-			end
-		end
+feature {EV_ANY_IMP} -- Dialog agent routines
 
 	gtk_dialog_response_event (a_c_object: POINTER; arguments: POINTER): POINTER
 			-- Dialog "response" signal intermediary.

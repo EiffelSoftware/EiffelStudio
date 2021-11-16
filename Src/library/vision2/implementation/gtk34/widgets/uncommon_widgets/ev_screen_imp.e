@@ -74,16 +74,7 @@ feature {NONE} -- Initialization
 			app_implementation.do_nothing
 			has_x11_support := {GTK}.is_x11_session
 
-			-- TODO update this code to support different environments like (Wayland)
-			if has_x11_support then
-				drawable := {GTK2}.gdk_screen_get_root_window ({GTK2}.gdk_screen_get_default)
-				debug ("refactor_fixme")
-					{REFACTORING_HELPER}.to_implement ("update this code to support different environments like (Wayland)")
-				end
-				gc := {GDK_X11}.create_gc (drawable)
-				{GDK_X11}.x_set_subwindow_mode (drawable, gc, {GDK_X11}.x_subwindow_mode_include_inferiors)
-			end
-			init_default_values
+--			initialize_drawing
 
 				-- Set offset values to match Win32 implementation.
 			device_x_offset := -app_implementation.screen_virtual_x.as_integer_16
@@ -91,6 +82,42 @@ feature {NONE} -- Initialization
 
 			set_is_initialized (True)
 			-- Set up action sequence connections and create graphics context.
+		end
+
+feature -- Status report
+
+	has_x11_support: BOOLEAN
+
+feature {NONE} -- Drawing initialization	
+
+	prepare_drawing
+		do
+			-- This feature is used to delay the initialization of the drawable resources
+			-- (drawable, gc, ...) that are needed only when drawing.
+			if not drawing_initialized then
+				initialize_drawing
+			end
+		end
+
+	initialize_drawing
+		do
+			if not drawing_initialized then
+				drawing_initialized := True
+				-- TODO update this code to support different environments like (Wayland)
+				if has_x11_support then
+					drawable := {GTK2}.gdk_screen_get_root_window ({GTK2}.gdk_screen_get_default)
+					debug ("refactor_fixme")
+						{REFACTORING_HELPER}.to_implement ("update this code to support different environments like (Wayland)")
+					end
+					gc := {GDK_X11}.create_gc (drawable)
+					{GDK_X11}.x_set_subwindow_mode (drawable, gc, {GDK_X11}.x_subwindow_mode_include_inferiors)
+				end
+				init_default_values
+			end
+		rescue
+			drawing_initialized := True
+			has_x11_support := False
+			retry
 		end
 
 	init_default_values
@@ -101,9 +128,9 @@ feature {NONE} -- Initialization
 			set_line_width (1)
 		end
 
-feature -- Access
+feature -- Drawing / Access
 
-	has_x11_support: BOOLEAN
+	drawing_initialized: BOOLEAN
 
 	gc: POINTER
 			-- X11 graphics context.
@@ -115,380 +142,6 @@ feature -- Access
 	get_cairo_context
 		do
 			cairo_context := drawable
-		end
-
-feature -- Clear Operations
-
-	clear_rectangle (x, y, a_width, a_height: INTEGER)
-			-- Erase rectangle specified with `background_color'.
-		local
-			tmp_fg_color, tmp_bg_color: detachable EV_COLOR
-		do
-			pre_drawing
-			if
-				has_x11_support and then
-				not drawable_x_window.is_default_pointer and then
-				not drawable_x_display.is_default_pointer
-			then
-				{GTK2}.gdk_window_invalidate_rect (drawable, default_pointer, True)
-
-				tmp_fg_color := internal_foreground_color
-				if tmp_fg_color = Void then
-					tmp_fg_color := foreground_color
-				end
-				tmp_bg_color := internal_background_color
-				if tmp_bg_color = Void then
-					tmp_bg_color := background_color
-				end
-				internal_set_color (True, tmp_bg_color.red, tmp_bg_color.green, tmp_bg_color.blue)
-				{GDK_X11}.draw_rectangle (drawable_x_window, drawable_x_display, gc, True,
-					(x + device_x_offset).max ({INTEGER_16}.min_value).min ({INTEGER_16}.max_value),
-					(y + device_y_offset).max ({INTEGER_16}.min_value).min ({INTEGER_16}.max_value),
-					a_width,
-					a_height)
-				internal_set_color (True, tmp_fg_color.red, tmp_fg_color.green, tmp_fg_color.blue)
-				update_if_needed
-			end
-			post_drawing
-		end
-feature -- Drawing
-
-	draw_segment (x1, y1, x2, y2: INTEGER)
-			-- Draw line segment from (`x1', 'y1') to (`x2', 'y2').
-		do
-			debug ("refactor_fixme")
-				{REFACTORING_HELPER}.to_implement ("update this code to support different environments like (Wayland)")
-			end
-			pre_drawing
-			if
-				has_x11_support and then
-				not drawable_x_window.is_default_pointer and then
-				not drawable_x_display.is_default_pointer
-			then
-				{GTK2}.gdk_window_invalidate_rect (drawable, default_pointer, True)
-				{GDK_X11}.draw_line (
-					drawable_x_window, drawable_x_display,
-					gc,
-					(x1 + device_x_offset).max ({INTEGER_16}.min_value).min ({INTEGER_16}.max_value),
-					(y1 + device_y_offset).max ({INTEGER_16}.min_value).min ({INTEGER_16}.max_value),
-					(x2 + device_x_offset).max ({INTEGER_16}.min_value).min ({INTEGER_16}.max_value),
-					(y2 + device_y_offset).max ({INTEGER_16}.min_value).min ({INTEGER_16}.max_value)
-				)
-				update_if_needed
-			end
-			post_drawing
-		end
-
-	draw_ellipse (x, y, a_width, a_height: INTEGER)
-			-- Draw an ellipse bounded by top left (`x', `y') with
-			-- size `a_width' and `a_height'.
-		do
-			debug ("refactor_fixme")
-				{REFACTORING_HELPER}.to_implement ("update this code to support different environments like (Wayland)")
-			end
-			pre_drawing
-			if
-				has_x11_support and then
-				not drawable_x_window.is_default_pointer and then
-				not drawable_x_display.is_default_pointer and then
-				a_width > 0 and a_height > 0
-			then
-				{GTK2}.gdk_window_invalidate_rect (drawable, default_pointer, True)
-				{GDK_X11}.draw_arc (
-					drawable_x_window, drawable_x_display,
-					gc,
-					False,
-					(x + device_x_offset).max ({INTEGER_16}.min_value).min ({INTEGER_16}.max_value),
-					(y + device_y_offset).max ({INTEGER_16}.min_value).min ({INTEGER_16}.max_value),
-					a_width - 1,
-					a_height - 1,
-					0,
-					whole_circle
-				)
-				update_if_needed
-			end
-			post_drawing
-		end
-
-	draw_point (x, y: INTEGER)
-			-- Draw point at (`x', `y').
-		do
-			debug ("refactor_fixme")
-				{REFACTORING_HELPER}.to_implement ("update this code to support different environments like (Wayland)")
-			end
-			pre_drawing
-			if
-				has_x11_support and then
-				not drawable_x_window.is_default_pointer and then
-				not drawable_x_display.is_default_pointer
-			then
-				{GTK2}.gdk_window_invalidate_rect (drawable, default_pointer, True)
-	 			{GDK_X11}.draw_point (
-	 				drawable_x_window, drawable_x_display,
-	 				gc,
-	 				(x + device_x_offset).max ({INTEGER_16}.min_value).min ({INTEGER_16}.max_value),
-	 				(y + device_y_offset).max ({INTEGER_16}.min_value).min ({INTEGER_16}.max_value)
-	 			)
-	 			update_if_needed
-			end
-			post_drawing
-		end
-
-	draw_arc (x, y, a_width, a_height: INTEGER; a_start_angle, an_aperture: REAL)
-			-- Draw a part of an ellipse bounded by top left (`x', `y') with
-			-- size `a_width' and `a_height'.
-			-- Start at `a_start_angle' and stop at `a_start_angle' + `an_aperture'.
-			-- Angles are measured in radians.
-		local
-			a_radians: INTEGER
-		do
-			debug ("refactor_fixme")
-				{REFACTORING_HELPER}.to_implement ("update this code to support different environments like (Wayland)")
-			end
-			pre_drawing
-			if
-				has_x11_support and then
-				not drawable_x_window.is_default_pointer and then
-				not drawable_x_display.is_default_pointer
-			then
-				{GTK2}.gdk_window_invalidate_rect (drawable, default_pointer, True)
-				a_radians := radians_to_gdk_angle
-				{GDK_X11}.draw_arc (
-					drawable_x_window, drawable_x_display,
-					gc,
-					False,
-					(x + device_x_offset).max ({INTEGER_16}.min_value).min ({INTEGER_16}.max_value),
-					(y + device_y_offset).max ({INTEGER_16}.min_value).min ({INTEGER_16}.max_value),
-					a_width,
-					a_height,
-					(a_start_angle * a_radians + 0.5).truncated_to_integer,
-					(an_aperture * a_radians + 0.5).truncated_to_integer
-				)
-				update_if_needed
-			end
-			post_drawing
-		end
-
-	draw_rectangle (x, y, a_width, a_height: INTEGER)
-			-- Draw rectangle with upper-left corner on (`x', `y')
-			-- with size `a_width' and `a_height'.
-		do
-			debug ("refactor_fixme")
-					{REFACTORING_HELPER}.to_implement ("update this code to support different environments like (Wayland)")
-			end
-			pre_drawing
-			if
-				has_x11_support and then
-				not drawable_x_window.is_default_pointer and then
-				not drawable_x_display.is_default_pointer and then
-				a_width > 0 and then a_height > 0
-			then
-				{GTK2}.gdk_window_invalidate_rect (drawable, default_pointer, True)
-					-- If width or height are zero then nothing will be rendered.
-				{GDK_X11}.draw_rectangle (
-					drawable_x_window, drawable_x_display,
-					gc,
-					False,
-					(x + device_x_offset).max ({INTEGER_16}.min_value).min ({INTEGER_16}.max_value),
-					(y + device_y_offset).max ({INTEGER_16}.min_value).min ({INTEGER_16}.max_value),
-					a_width - 1,
-					a_height - 1
-				)
-				update_if_needed
-			end
-			post_drawing
-		end
-
-
-	draw_polyline (points: ARRAY [EV_COORDINATE]; is_closed: BOOLEAN)
-			-- Draw line segments between subsequent points in
-			-- `points'. If `is_closed' draw line segment between first
-			-- and last point in `points'.
-		local
-			tmp: SPECIAL [INTEGER]
-		do
-			debug ("refactor_fixme")
-					{REFACTORING_HELPER}.to_implement ("update this code to support different environments like (Wayland)")
-			end
-			pre_drawing
-			if
-				has_x11_support and then
-				not drawable_x_window.is_default_pointer and then
-				not drawable_x_display.is_default_pointer
-			then
-				{GTK2}.gdk_window_invalidate_rect (drawable, default_pointer, True)
-				tmp := coord_array_to_gdkpoint_array (points).area
-				if is_closed then
-					{GDK_X11}.draw_polygon (drawable_x_window, drawable_x_display, gc, False, $tmp, points.count)
-					update_if_needed
-				else
-					{GDK_X11}.draw_lines (drawable_x_window, drawable_x_display, gc, $tmp, points.count)
-					update_if_needed
-				end
-			end
-		end
-
-feature -- Fill Operations
-
-	fill_rectangle (x, y, a_width, a_height: INTEGER)
-			-- Draw rectangle with upper-left corner on (`x', `y')
-			-- with size `a_width' and `a_height'. Fill with `background_color'.
-		do
-			pre_drawing
-			if
-				has_x11_support and then
-				not drawable_x_window.is_default_pointer and then
-				not drawable_x_display.is_default_pointer
-			then
-				{GTK2}.gdk_window_invalidate_rect (drawable, default_pointer, True)
-				if tile /= Void then
-					{GDK_X11}.x_set_fill_style (drawable_x_display, gc, {GDK_X11}.x_fill_tiled)
-				end
-				{GDK_X11}.draw_rectangle (
-					drawable_x_window, drawable_x_display,
-					gc,
-					True,
-					(x + device_x_offset).max ({INTEGER_16}.min_value).min ({INTEGER_16}.max_value),
-					(y + device_y_offset).max ({INTEGER_16}.min_value).min ({INTEGER_16}.max_value),
-					a_width,
-					a_height
-				)
-				{GDK_X11}.x_set_fill_style (drawable_x_display, gc, {GDK_X11}.x_fill_solid)
-				update_if_needed
-			end
-			post_drawing
-		end
-
-	fill_ellipse (x, y, a_width, a_height: INTEGER)
-			-- Draw an ellipse bounded by top left (`x', `y') with
-			-- size `a_width' and `a_height'.
-			-- Fill with `background_color'.
-		do
-			pre_drawing
-			if
-				has_x11_support and then
-				not drawable_x_window.is_default_pointer and then
-				not drawable_x_display.is_default_pointer
-			then
-				{GTK2}.gdk_window_invalidate_rect (drawable, default_pointer, True)
-				if tile /= Void then
-					{GDK_X11}.x_set_fill_style (drawable_x_display, gc, {GDK_X11}.x_fill_tiled)
-				end
-				{GDK_X11}.draw_arc (drawable_x_window, drawable_x_display, gc, True, (x + device_x_offset).max ({INTEGER_16}.min_value).min ({INTEGER_16}.max_value),
-					(y + device_y_offset).max ({INTEGER_16}.min_value).min ({INTEGER_16}.max_value), a_width,
-					a_height, 0, whole_circle)
-				{GDK_X11}.x_set_fill_style (drawable_x_display, gc, {GDK_X11}.x_fill_solid)
-				update_if_needed
-			end
-			post_drawing
-		end
-
-	fill_polygon (points: ARRAY [EV_COORDINATE])
-			-- Draw line segments between subsequent points in `points'.
-			-- Fill all enclosed area's with `background_color'.
-		local
-			tmp: SPECIAL [INTEGER]
-		do
-			pre_drawing
-			if
-				has_x11_support and then
-				not drawable_x_window.is_default_pointer and then
-				not drawable_x_display.is_default_pointer
-			then
-				{GTK2}.gdk_window_invalidate_rect (drawable, default_pointer, True)
-				tmp := coord_array_to_gdkpoint_array (points).area
-				if tile /= Void then
-					{GDK_X11}.x_set_fill_style (drawable_x_display, gc, {GDK_X11}.x_fill_tiled)
-				end
-				{GDK_X11}.draw_polygon (drawable_x_window, drawable_x_display, gc, True, $tmp, points.count)
-				{GDK_X11}.x_set_fill_style (drawable_x_display, gc, {GDK_X11}.x_fill_solid)
-				update_if_needed
-			end
-			post_drawing
-		end
-
-	fill_pie_slice (x, y, a_width, a_height: INTEGER; a_start_angle, an_aperture: REAL)
-			-- Draw a part of an ellipse bounded by top left (`x', `y') with
-			-- size `a_width' and `a_height'.
-			-- Start at `a_start_angle' and stop at `a_start_angle' + `an_aperture'.
-			-- The arc is then closed by two segments through (`x', `y').
-			-- Angles are measured in radians.
-		do
-			pre_drawing
-			if
-				has_x11_support and then
-				not drawable_x_window.is_default_pointer and then
-				not drawable_x_display.is_default_pointer
-			then
-				{GTK2}.gdk_window_invalidate_rect (drawable, default_pointer, True)
-				if tile /= Void then
-					{GDK_X11}.x_set_fill_style (drawable_x_display, gc, {GDK_X11}.x_fill_tiled)
-				end
-				{GDK_X11}.draw_arc (
-					drawable_x_window, drawable_x_display,
-					gc,
-					False,
-					(x + device_x_offset).max ({INTEGER_16}.min_value).min ({INTEGER_16}.max_value),
-					(y + device_y_offset).max ({INTEGER_16}.min_value).min ({INTEGER_16}.max_value),
-					a_width,
-					a_height,
-					(a_start_angle * radians_to_gdk_angle).truncated_to_integer,
-					(an_aperture * radians_to_gdk_angle).truncated_to_integer
-				)
-				{GDK_X11}.x_set_fill_style (drawable_x_display, gc, {GDK_X11}.x_fill_solid)
-				update_if_needed
-			end
-			post_drawing
-		end
-
-feature -- Session		
-
-	start_drawing_session
-		do
-			Precursor
-			drawable_x_window := default_pointer
-			drawable_x_display := default_pointer
-			get_drawable_x_display_and_window
-		end
-
-	end_drawing_session
-		do
-			if not drawable_x_display.is_default_pointer then
-				{GDK_X11}.x_flush (drawable_x_display)
-			end
-			drawable_x_window := default_pointer
-			drawable_x_display := default_pointer
-			Precursor
-		end
-
-	get_drawable_x_display_and_window
-		do
-
-			if
-				has_x11_support and then -- TODO: find a workaroung for Wayland.
-				not drawable.is_default_pointer and then
-				(drawable_x_window.is_default_pointer
-				or drawable_x_display.is_default_pointer)
-			then
-				drawable_x_window := {GDK_X11}.x_window (drawable)
-				drawable_x_display := {GDK_X11}.x_display (drawable)
-			end
-		end
-
-	drawable_x_window: POINTER
-	drawable_x_display: POINTER
-
-feature {EV_ANY_I} -- Drawing wrapper
-
-	pre_drawing
-			-- <Precursor>
-		do
-			get_drawable_x_display_and_window
-		end
-
-	post_drawing
-			-- <Precursor>
-		do
 		end
 
 feature -- Status report
@@ -621,113 +274,7 @@ feature -- Status report
 			Result := monitor_area_from_window (a_window)
 		end
 
-feature -- Status setting
-
-	set_default_colors
-			-- Set foreground and background color to their default values.
-		local
-			a_default_colors: EV_STOCK_COLORS
-		do
-			create a_default_colors
-			set_background_color (a_default_colors.default_background_color)
-			set_foreground_color (a_default_colors.default_foreground_color)
-		end
-
-feature -- Element change
-
-	set_drawing_mode (a_drawing_mode: INTEGER)
-			-- Set drawing mode to `a_drawing_mode'.
-		local
-			l_gc: like gc
-			l_drawable: like drawable
-		do
-			Precursor (a_drawing_mode)
-			if has_x11_support then
-				l_gc := gc
-				l_drawable := drawable
-				if
-					not l_gc.is_default_pointer and then
-					not l_drawable.is_default_pointer
-				then
-					inspect
-						a_drawing_mode
-					when {EV_DRAWABLE_CONSTANTS}.drawing_mode_copy then
-						{GDK_X11}.x_set_function (l_drawable, l_gc, {GDK_X11}.x_function_GXcopy)
-					when {EV_DRAWABLE_CONSTANTS}.drawing_mode_and then
-						{GDK_X11}.x_set_function (l_drawable, l_gc, {GDK_X11}.x_function_GXand)
-					when {EV_DRAWABLE_CONSTANTS}.drawing_mode_xor then
-						{GDK_X11}.x_set_function (l_drawable, l_gc, {GDK_X11}.x_function_GXxor)
-					when {EV_DRAWABLE_CONSTANTS}.drawing_mode_invert then
-						{GDK_X11}.x_set_function (l_drawable, l_gc, {GDK_X11}.x_function_GXinvert)
-					when {EV_DRAWABLE_CONSTANTS}.drawing_mode_or then
-						{GDK_X11}.x_set_function (l_drawable, l_gc, {GDK_X11}.x_function_GXor)
-					else
-						check
-							drawing_mode_exists: False
-						end
-						{GDK_X11}.x_set_function (l_drawable, l_gc, {GDK_X11}.x_function_GXcopy)
-					end
-				end
-			end
-		end
-
-	set_line_width (a_width: INTEGER)
-			-- Assign `a_width' to `line_width'.
-		do
-			Precursor (a_width)
-			if
-				has_x11_support and then
-				not gc.is_default_pointer and then
-				not drawable.is_default_pointer
-			then
-				if dashed_line_style then
-					{GDK_X11}.set_line_attributes_to_dashed_style (drawable, gc, a_width)
-				else
-					{GDK_X11}.set_line_attributes_to_solid_style (drawable, gc, a_width)
-				end
-			end
-		end
-
-	enable_dashed_line_style
-			-- Draw lines dashed.
-		do
-			Precursor {EV_DRAWABLE_IMP}
-			if
-				has_x11_support and then
-				not gc.is_default_pointer and then
-				not drawable.is_default_pointer
-			then
-				{GDK_X11}.set_line_attributes_to_dashed_style (drawable, gc, line_width)
-			end
-		end
-
-	disable_dashed_line_style
-			-- Draw lines solid.
-		do
-			Precursor {EV_DRAWABLE_IMP}
-			if
-				has_x11_support and then
-				not gc.is_default_pointer and then
-				not drawable.is_default_pointer
-			then
-				{GDK_X11}.set_line_attributes_to_solid_style (drawable, gc, line_width)
-			end
-		end
-
-feature -- Basic operation
-
-	redraw
-			-- Redraw the entire area.
-		do
-
-			{GTK2}.gdk_window_invalidate_rect (cairo_context, default_pointer, True)
-			-- FIXME JV gdk_window_process_updates has been deprecated since version 3.22 and should not be used in newly-written code.
-			--{GTK2}.gdk_window_process_updates (drawable, True)
-			--{GTK}.gtk_widget_queue_draw (drawable)
-			-- https://stackoverflow.com/questions/34912757/how-do-you-force-a-screen-refresh-in-gtk-3-8
-			{GTK}.gtk_widget_queue_draw (cairo_context)
---			app_implementation.process_pending_events_on_default_context
-		end
+feature -- Basic operation		
 
 	set_pointer_position (a_x, a_y: INTEGER)
 			-- Set pointer position to (a_x, a_y).
@@ -871,7 +418,6 @@ feature -- Basic operation
 		once
 			create Result
 		end
-
 
 feature -- Measurement
 
@@ -1048,17 +594,513 @@ feature {NONE} -- Implementation
 			"return (FUNCTION_CAST(EIF_POINTER, (GdkDisplay*)) $a_function) ((GdkDisplay*) $a_display)"
 		end
 
-	app_implementation: EV_APPLICATION_IMP
-			-- Return the instance of EV_APPLICATION_IMP.
-		once
-			check attached {EV_APPLICATION_IMP} (create {EV_ENVIRONMENT}).implementation.application_i as l_result then
-				Result := l_result
+	update_if_needed
+			-- Update `Current' if needed
+		do
+			device_x_offset := -app_implementation.screen_virtual_x.as_integer_16
+			device_y_offset := -app_implementation.screen_virtual_y.as_integer_16
+		end
+
+feature -- Drawing / Clear Operations
+
+	clear_rectangle (x, y, a_width, a_height: INTEGER)
+			-- Erase rectangle specified with `background_color'.
+		local
+			tmp_fg_color, tmp_bg_color: detachable EV_COLOR
+		do
+			pre_drawing
+			if
+				has_x11_support and then
+				not drawable_x_window.is_default_pointer and then
+				not drawable_x_display.is_default_pointer
+			then
+				{GTK2}.gdk_window_invalidate_rect (drawable, default_pointer, True)
+
+				tmp_fg_color := internal_foreground_color
+				if tmp_fg_color = Void then
+					tmp_fg_color := foreground_color
+				end
+				tmp_bg_color := internal_background_color
+				if tmp_bg_color = Void then
+					tmp_bg_color := background_color
+				end
+				internal_set_color (True, tmp_bg_color.red, tmp_bg_color.green, tmp_bg_color.blue)
+				{GDK_X11}.draw_rectangle (drawable_x_window, drawable_x_display, gc, True,
+					(x + device_x_offset).max ({INTEGER_16}.min_value).min ({INTEGER_16}.max_value),
+					(y + device_y_offset).max ({INTEGER_16}.min_value).min ({INTEGER_16}.max_value),
+					a_width,
+					a_height)
+				internal_set_color (True, tmp_fg_color.red, tmp_fg_color.green, tmp_fg_color.blue)
+				update_if_needed
+			end
+			post_drawing
+		end
+
+feature -- Drawing
+
+	draw_segment (x1, y1, x2, y2: INTEGER)
+			-- Draw line segment from (`x1', 'y1') to (`x2', 'y2').
+		do
+			debug ("refactor_fixme")
+				{REFACTORING_HELPER}.to_implement ("update this code to support different environments like (Wayland)")
+			end
+			pre_drawing
+			if
+				has_x11_support and then
+				not drawable_x_window.is_default_pointer and then
+				not drawable_x_display.is_default_pointer
+			then
+				{GTK2}.gdk_window_invalidate_rect (drawable, default_pointer, True)
+				{GDK_X11}.draw_line (
+					drawable_x_window, drawable_x_display,
+					gc,
+					(x1 + device_x_offset).max ({INTEGER_16}.min_value).min ({INTEGER_16}.max_value),
+					(y1 + device_y_offset).max ({INTEGER_16}.min_value).min ({INTEGER_16}.max_value),
+					(x2 + device_x_offset).max ({INTEGER_16}.min_value).min ({INTEGER_16}.max_value),
+					(y2 + device_y_offset).max ({INTEGER_16}.min_value).min ({INTEGER_16}.max_value)
+				)
+				update_if_needed
+			end
+			post_drawing
+		end
+
+	draw_ellipse (x, y, a_width, a_height: INTEGER)
+			-- Draw an ellipse bounded by top left (`x', `y') with
+			-- size `a_width' and `a_height'.
+		do
+			debug ("refactor_fixme")
+				{REFACTORING_HELPER}.to_implement ("update this code to support different environments like (Wayland)")
+			end
+			pre_drawing
+			if
+				has_x11_support and then
+				not drawable_x_window.is_default_pointer and then
+				not drawable_x_display.is_default_pointer and then
+				a_width > 0 and a_height > 0
+			then
+				{GTK2}.gdk_window_invalidate_rect (drawable, default_pointer, True)
+				{GDK_X11}.draw_arc (
+					drawable_x_window, drawable_x_display,
+					gc,
+					False,
+					(x + device_x_offset).max ({INTEGER_16}.min_value).min ({INTEGER_16}.max_value),
+					(y + device_y_offset).max ({INTEGER_16}.min_value).min ({INTEGER_16}.max_value),
+					a_width - 1,
+					a_height - 1,
+					0,
+					whole_circle
+				)
+				update_if_needed
+			end
+			post_drawing
+		end
+
+	draw_point (x, y: INTEGER)
+			-- Draw point at (`x', `y').
+		do
+			debug ("refactor_fixme")
+				{REFACTORING_HELPER}.to_implement ("update this code to support different environments like (Wayland)")
+			end
+			pre_drawing
+			if
+				has_x11_support and then
+				not drawable_x_window.is_default_pointer and then
+				not drawable_x_display.is_default_pointer
+			then
+				{GTK2}.gdk_window_invalidate_rect (drawable, default_pointer, True)
+	 			{GDK_X11}.draw_point (
+	 				drawable_x_window, drawable_x_display,
+	 				gc,
+	 				(x + device_x_offset).max ({INTEGER_16}.min_value).min ({INTEGER_16}.max_value),
+	 				(y + device_y_offset).max ({INTEGER_16}.min_value).min ({INTEGER_16}.max_value)
+	 			)
+	 			update_if_needed
+			end
+			post_drawing
+		end
+
+	draw_arc (x, y, a_width, a_height: INTEGER; a_start_angle, an_aperture: REAL)
+			-- Draw a part of an ellipse bounded by top left (`x', `y') with
+			-- size `a_width' and `a_height'.
+			-- Start at `a_start_angle' and stop at `a_start_angle' + `an_aperture'.
+			-- Angles are measured in radians.
+		local
+			a_radians: INTEGER
+		do
+			debug ("refactor_fixme")
+				{REFACTORING_HELPER}.to_implement ("update this code to support different environments like (Wayland)")
+			end
+			pre_drawing
+			if
+				has_x11_support and then
+				not drawable_x_window.is_default_pointer and then
+				not drawable_x_display.is_default_pointer
+			then
+				{GTK2}.gdk_window_invalidate_rect (drawable, default_pointer, True)
+				a_radians := radians_to_gdk_angle
+				{GDK_X11}.draw_arc (
+					drawable_x_window, drawable_x_display,
+					gc,
+					False,
+					(x + device_x_offset).max ({INTEGER_16}.min_value).min ({INTEGER_16}.max_value),
+					(y + device_y_offset).max ({INTEGER_16}.min_value).min ({INTEGER_16}.max_value),
+					a_width,
+					a_height,
+					(a_start_angle * a_radians + 0.5).truncated_to_integer,
+					(an_aperture * a_radians + 0.5).truncated_to_integer
+				)
+				update_if_needed
+			end
+			post_drawing
+		end
+
+	draw_rectangle (x, y, a_width, a_height: INTEGER)
+			-- Draw rectangle with upper-left corner on (`x', `y')
+			-- with size `a_width' and `a_height'.
+		do
+			debug ("refactor_fixme")
+					{REFACTORING_HELPER}.to_implement ("update this code to support different environments like (Wayland)")
+			end
+			pre_drawing
+			if
+				has_x11_support and then
+				not drawable_x_window.is_default_pointer and then
+				not drawable_x_display.is_default_pointer and then
+				a_width > 0 and then a_height > 0
+			then
+				{GTK2}.gdk_window_invalidate_rect (drawable, default_pointer, True)
+					-- If width or height are zero then nothing will be rendered.
+				{GDK_X11}.draw_rectangle (
+					drawable_x_window, drawable_x_display,
+					gc,
+					False,
+					(x + device_x_offset).max ({INTEGER_16}.min_value).min ({INTEGER_16}.max_value),
+					(y + device_y_offset).max ({INTEGER_16}.min_value).min ({INTEGER_16}.max_value),
+					a_width - 1,
+					a_height - 1
+				)
+				update_if_needed
+			end
+			post_drawing
+		end
+
+	draw_polyline (points: ARRAY [EV_COORDINATE]; is_closed: BOOLEAN)
+			-- Draw line segments between subsequent points in
+			-- `points'. If `is_closed' draw line segment between first
+			-- and last point in `points'.
+		local
+			tmp: SPECIAL [INTEGER]
+		do
+			debug ("refactor_fixme")
+					{REFACTORING_HELPER}.to_implement ("update this code to support different environments like (Wayland)")
+			end
+			pre_drawing
+			if
+				has_x11_support and then
+				not drawable_x_window.is_default_pointer and then
+				not drawable_x_display.is_default_pointer
+			then
+				{GTK2}.gdk_window_invalidate_rect (drawable, default_pointer, True)
+				tmp := coord_array_to_gdkpoint_array (points).area
+				if is_closed then
+					{GDK_X11}.draw_polygon (drawable_x_window, drawable_x_display, gc, False, $tmp, points.count)
+					update_if_needed
+				else
+					{GDK_X11}.draw_lines (drawable_x_window, drawable_x_display, gc, $tmp, points.count)
+					update_if_needed
+				end
 			end
 		end
+
+feature -- Drawing / Fill Operations
+
+	fill_rectangle (x, y, a_width, a_height: INTEGER)
+			-- Draw rectangle with upper-left corner on (`x', `y')
+			-- with size `a_width' and `a_height'. Fill with `background_color'.
+		do
+			pre_drawing
+			if
+				has_x11_support and then
+				not drawable_x_window.is_default_pointer and then
+				not drawable_x_display.is_default_pointer
+			then
+				{GTK2}.gdk_window_invalidate_rect (drawable, default_pointer, True)
+				if tile /= Void then
+					{GDK_X11}.x_set_fill_style (drawable_x_display, gc, {GDK_X11}.x_fill_tiled)
+				end
+				{GDK_X11}.draw_rectangle (
+					drawable_x_window, drawable_x_display,
+					gc,
+					True,
+					(x + device_x_offset).max ({INTEGER_16}.min_value).min ({INTEGER_16}.max_value),
+					(y + device_y_offset).max ({INTEGER_16}.min_value).min ({INTEGER_16}.max_value),
+					a_width,
+					a_height
+				)
+				{GDK_X11}.x_set_fill_style (drawable_x_display, gc, {GDK_X11}.x_fill_solid)
+				update_if_needed
+			end
+			post_drawing
+		end
+
+	fill_ellipse (x, y, a_width, a_height: INTEGER)
+			-- Draw an ellipse bounded by top left (`x', `y') with
+			-- size `a_width' and `a_height'.
+			-- Fill with `background_color'.
+		do
+			pre_drawing
+			if
+				has_x11_support and then
+				not drawable_x_window.is_default_pointer and then
+				not drawable_x_display.is_default_pointer
+			then
+				{GTK2}.gdk_window_invalidate_rect (drawable, default_pointer, True)
+				if tile /= Void then
+					{GDK_X11}.x_set_fill_style (drawable_x_display, gc, {GDK_X11}.x_fill_tiled)
+				end
+				{GDK_X11}.draw_arc (drawable_x_window, drawable_x_display, gc, True, (x + device_x_offset).max ({INTEGER_16}.min_value).min ({INTEGER_16}.max_value),
+					(y + device_y_offset).max ({INTEGER_16}.min_value).min ({INTEGER_16}.max_value), a_width,
+					a_height, 0, whole_circle)
+				{GDK_X11}.x_set_fill_style (drawable_x_display, gc, {GDK_X11}.x_fill_solid)
+				update_if_needed
+			end
+			post_drawing
+		end
+
+	fill_polygon (points: ARRAY [EV_COORDINATE])
+			-- Draw line segments between subsequent points in `points'.
+			-- Fill all enclosed area's with `background_color'.
+		local
+			tmp: SPECIAL [INTEGER]
+		do
+			pre_drawing
+			if
+				has_x11_support and then
+				not drawable_x_window.is_default_pointer and then
+				not drawable_x_display.is_default_pointer
+			then
+				{GTK2}.gdk_window_invalidate_rect (drawable, default_pointer, True)
+				tmp := coord_array_to_gdkpoint_array (points).area
+				if tile /= Void then
+					{GDK_X11}.x_set_fill_style (drawable_x_display, gc, {GDK_X11}.x_fill_tiled)
+				end
+				{GDK_X11}.draw_polygon (drawable_x_window, drawable_x_display, gc, True, $tmp, points.count)
+				{GDK_X11}.x_set_fill_style (drawable_x_display, gc, {GDK_X11}.x_fill_solid)
+				update_if_needed
+			end
+			post_drawing
+		end
+
+	fill_pie_slice (x, y, a_width, a_height: INTEGER; a_start_angle, an_aperture: REAL)
+			-- Draw a part of an ellipse bounded by top left (`x', `y') with
+			-- size `a_width' and `a_height'.
+			-- Start at `a_start_angle' and stop at `a_start_angle' + `an_aperture'.
+			-- The arc is then closed by two segments through (`x', `y').
+			-- Angles are measured in radians.
+		do
+			pre_drawing
+			if
+				has_x11_support and then
+				not drawable_x_window.is_default_pointer and then
+				not drawable_x_display.is_default_pointer
+			then
+				{GTK2}.gdk_window_invalidate_rect (drawable, default_pointer, True)
+				if tile /= Void then
+					{GDK_X11}.x_set_fill_style (drawable_x_display, gc, {GDK_X11}.x_fill_tiled)
+				end
+				{GDK_X11}.draw_arc (
+					drawable_x_window, drawable_x_display,
+					gc,
+					False,
+					(x + device_x_offset).max ({INTEGER_16}.min_value).min ({INTEGER_16}.max_value),
+					(y + device_y_offset).max ({INTEGER_16}.min_value).min ({INTEGER_16}.max_value),
+					a_width,
+					a_height,
+					(a_start_angle * radians_to_gdk_angle).truncated_to_integer,
+					(an_aperture * radians_to_gdk_angle).truncated_to_integer
+				)
+				{GDK_X11}.x_set_fill_style (drawable_x_display, gc, {GDK_X11}.x_fill_solid)
+				update_if_needed
+			end
+			post_drawing
+		end
+
+feature -- Drawing / Session		
+
+	start_drawing_session
+		do
+			prepare_drawing
+			Precursor
+			drawable_x_window := default_pointer
+			drawable_x_display := default_pointer
+			get_drawable_x_display_and_window
+		end
+
+	end_drawing_session
+		do
+			check drawing_initialized end
+			prepare_drawing	-- Just in case start_drawing_session was never called (should not occur)!
+			if not drawable_x_display.is_default_pointer then
+				{GDK_X11}.x_flush (drawable_x_display)
+			end
+			drawable_x_window := default_pointer
+			drawable_x_display := default_pointer
+			Precursor
+		end
+
+	get_drawable_x_display_and_window
+		require
+			drawing_initialized
+		do
+			if
+				has_x11_support and then -- TODO: find a workaroung for Wayland.
+				not drawable.is_default_pointer and then
+				(drawable_x_window.is_default_pointer
+				or drawable_x_display.is_default_pointer)
+			then
+				drawable_x_window := {GDK_X11}.x_window (drawable)
+				drawable_x_display := {GDK_X11}.x_display (drawable)
+			end
+		end
+
+	drawable_x_window: POINTER
+	drawable_x_display: POINTER
+
+feature {EV_ANY_I} -- Drawing / wrapper
+
+	pre_drawing
+			-- <Precursor>
+		do
+			prepare_drawing
+			get_drawable_x_display_and_window
+		end
+
+	post_drawing
+			-- <Precursor>
+		do
+		end
+
+feature -- Drawing / Status setting
+
+	set_default_colors
+			-- Set foreground and background color to their default values.
+		local
+			a_default_colors: EV_STOCK_COLORS
+		do
+			prepare_drawing
+			create a_default_colors
+			set_background_color (a_default_colors.default_background_color)
+			set_foreground_color (a_default_colors.default_foreground_color)
+		end
+
+feature -- Drawing / Element change
+
+	set_drawing_mode (a_drawing_mode: INTEGER)
+			-- Set drawing mode to `a_drawing_mode'.
+		local
+			l_gc: like gc
+			l_drawable: like drawable
+		do
+			prepare_drawing
+			Precursor (a_drawing_mode)
+			if has_x11_support then
+				l_gc := gc
+				l_drawable := drawable
+				if
+					not l_gc.is_default_pointer and then
+					not l_drawable.is_default_pointer
+				then
+					inspect
+						a_drawing_mode
+					when {EV_DRAWABLE_CONSTANTS}.drawing_mode_copy then
+						{GDK_X11}.x_set_function (l_drawable, l_gc, {GDK_X11}.x_function_GXcopy)
+					when {EV_DRAWABLE_CONSTANTS}.drawing_mode_and then
+						{GDK_X11}.x_set_function (l_drawable, l_gc, {GDK_X11}.x_function_GXand)
+					when {EV_DRAWABLE_CONSTANTS}.drawing_mode_xor then
+						{GDK_X11}.x_set_function (l_drawable, l_gc, {GDK_X11}.x_function_GXxor)
+					when {EV_DRAWABLE_CONSTANTS}.drawing_mode_invert then
+						{GDK_X11}.x_set_function (l_drawable, l_gc, {GDK_X11}.x_function_GXinvert)
+					when {EV_DRAWABLE_CONSTANTS}.drawing_mode_or then
+						{GDK_X11}.x_set_function (l_drawable, l_gc, {GDK_X11}.x_function_GXor)
+					else
+						check
+							drawing_mode_exists: False
+						end
+						{GDK_X11}.x_set_function (l_drawable, l_gc, {GDK_X11}.x_function_GXcopy)
+					end
+				end
+			end
+		end
+
+	set_line_width (a_width: INTEGER)
+			-- Assign `a_width' to `line_width'.
+		do
+			prepare_drawing
+			Precursor (a_width)
+			if
+				has_x11_support and then
+				not gc.is_default_pointer and then
+				not drawable.is_default_pointer
+			then
+				if dashed_line_style then
+					{GDK_X11}.set_line_attributes_to_dashed_style (drawable, gc, a_width)
+				else
+					{GDK_X11}.set_line_attributes_to_solid_style (drawable, gc, a_width)
+				end
+			end
+		end
+
+	enable_dashed_line_style
+			-- Draw lines dashed.
+		do
+			prepare_drawing
+			Precursor {EV_DRAWABLE_IMP}
+			if
+				has_x11_support and then
+				not gc.is_default_pointer and then
+				not drawable.is_default_pointer
+			then
+				{GDK_X11}.set_line_attributes_to_dashed_style (drawable, gc, line_width)
+			end
+		end
+
+	disable_dashed_line_style
+			-- Draw lines solid.
+		do
+			prepare_drawing
+			Precursor {EV_DRAWABLE_IMP}
+			if
+				has_x11_support and then
+				not gc.is_default_pointer and then
+				not drawable.is_default_pointer
+			then
+				{GDK_X11}.set_line_attributes_to_solid_style (drawable, gc, line_width)
+			end
+		end
+
+feature -- Drawing / Basic operation
+
+	redraw
+			-- Redraw the entire area.
+		do
+			prepare_drawing
+			if not cairo_context.is_default_pointer then
+				{GTK2}.gdk_window_invalidate_rect (cairo_context, default_pointer, True)
+				-- FIXME JV gdk_window_process_updates has been deprecated since version 3.22 and should not be used in newly-written code.
+				--{GTK2}.gdk_window_process_updates (drawable, True)
+				--{GTK}.gtk_widget_queue_draw (drawable)
+				-- https://stackoverflow.com/questions/34912757/how-do-you-force-a-screen-refresh-in-gtk-3-8
+				{GTK}.gtk_widget_queue_draw (cairo_context)
+	--			app_implementation.process_pending_events_on_default_context				
+			end
+		end
+
+feature {NONE} -- Drawing / implementation
 
 	flush
 			-- Force all queued draw to be called.
 		do
+			prepare_drawing
 			-- By default do nothing
 			if
 				has_x11_support and then
@@ -1068,34 +1110,11 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	update_if_needed
-			-- Update `Current' if needed
-		do
-			device_x_offset := -app_implementation.screen_virtual_x.as_integer_16
-			device_y_offset := -app_implementation.screen_virtual_y.as_integer_16
-		end
-
-	destroy
-		do
-			set_is_destroyed (True)
-		end
-
-	dispose
-			-- Cleanup
-		do
-			if
-				has_x11_support and then
-				gc /= default_pointer
-			then
-				{GDK_X11}.x_free_gc (drawable, gc)
-				gc := default_pointer
-			end
-		end
-
 	internal_set_color (a_foreground: BOOLEAN; a_red, a_green, a_blue: REAL_64)
 		local
 			r,g,b: INTEGER
 		do
+			prepare_drawing
 			debug ("refactor_fixme")
 				{REFACTORING_HELPER}.fixme ("The current Xlib code does not set the bg and fg correcty")
 			end
@@ -1109,6 +1128,38 @@ feature {NONE} -- Implementation
 					{GDK_X11}.set_drawable_background (drawable, gc, r, g, b)
 				end
 			end
+		end
+
+feature {NONE} -- Implementation
+
+	app_implementation: EV_APPLICATION_IMP
+			-- Return the instance of EV_APPLICATION_IMP.
+		once
+			check attached {EV_APPLICATION_IMP} (create {EV_ENVIRONMENT}).implementation.application_i as l_result then
+				Result := l_result
+			end
+		end
+
+	destroy
+		do
+			set_is_destroyed (True)
+		end
+
+	dispose
+			-- Cleanup
+		do
+			if has_x11_support then
+				if
+					not gc.is_default_pointer and
+					not drawable.is_default_pointer
+				then
+					{GDK_X11}.x_free_gc (drawable, gc)
+				else
+					check should_not_occur: False end
+				end
+			end
+			drawable := default_pointer
+			gc := default_pointer
 		end
 
 feature {EV_ANY, EV_ANY_I} -- Implementation

@@ -231,11 +231,12 @@ feature {EV_ANY_I} -- Status report
 		once
 				--| note: related to drawing on screen (see EV_SCREEN) with gtk3 implementation
 			Result := is_x11_session
-			if
-				Result and then
-				attached {EXECUTION_ENVIRONMENT}.item (once "EV_HAS_X11_SUPPORT") as e
-			then
-				Result := not e.is_case_insensitive_equal_general ("no")
+			if Result then
+				if {PLATFORM}.is_mac then
+					Result := False
+				elseif attached {EXECUTION_ENVIRONMENT}.item (once "EV_HAS_X11_SUPPORT") as e then
+					Result := not e.is_case_insensitive_equal_general ("no")
+				end
 			end
 		end
 

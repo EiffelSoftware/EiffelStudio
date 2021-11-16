@@ -84,6 +84,16 @@ feature {NONE} -- Initialization
 				if l_ev_pnd_style.has_substring ("+blinking") then
 					enable_blinking
 				end
+				if {PLATFORM}.is_mac then
+						-- No transparency on Mac, but user can force the choice.
+						-- in case, gtk3 on macosx is improved for transparency...
+					if not l_ev_pnd_style.has_substring ("+transparent") then
+						disable_transparency
+					end
+				end
+			elseif {PLATFORM}.is_mac then
+					-- No transparency on Mac
+				disable_transparency
 			end
 		end
 

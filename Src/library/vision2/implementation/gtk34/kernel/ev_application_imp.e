@@ -120,7 +120,7 @@ feature {NONE} -- Initialization
 
 
 					-- We do not want X Errors to exit the system so we ignore them indefinitely.
-				if {GTK}.is_x11_session then
+				if is_x11_session then
 					{GDK}.gdk_x11_display_error_trap_push ({GDK}.gdk_display_get_default)
 				end
 
@@ -217,6 +217,26 @@ feature {NONE} -- Initialization
 			"C inline use <ev_gtk.h>"
 		alias
 			"return (FUNCTION_CAST(gboolean, (GdkScreen*)) $a_function)((GdkScreen*) $a_screen);"
+		end
+
+feature {EV_ANY_I} -- Status report
+
+	is_x11_session: BOOLEAN
+		once
+			Result := {GTK}.is_x11_session
+		end
+
+	has_x11_support: BOOLEAN
+			-- Has X11 support ?
+		once
+				--| note: related to drawing on screen (see EV_SCREEN) with gtk3 implementation
+			Result := is_x11_session
+			if
+				Result and then
+				attached {EXECUTION_ENVIRONMENT}.item (once "EV_HAS_X11_SUPPORT") as e
+			then
+				Result := not e.is_case_insensitive_equal_general ("no")
+			end
 		end
 
 feature -- Implementation
@@ -1361,7 +1381,7 @@ feature {EV_ANY_I} -- Docking implementation
 
 	activate_docking_source_hint (a_screen_x, a_screen_y: INTEGER; a_pebble_src: EV_PICK_AND_DROPABLE)
 		do
-			if not {GTK}.is_x11_session then
+			if not has_x11_support then
 				pnd_source_hint.activate (a_screen_x, a_screen_y, 50, 50, a_pebble_src)
 			end
 		end
@@ -1369,7 +1389,7 @@ feature {EV_ANY_I} -- Docking implementation
 	deactivate_docking_source_hint
 		do
 			if
-				not {GTK}.is_x11_session and then
+				not has_x11_support and then
 				pnd_source_hint.is_activated
 			then
 				pnd_source_hint.deactivate

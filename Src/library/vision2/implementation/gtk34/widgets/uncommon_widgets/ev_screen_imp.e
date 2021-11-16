@@ -72,7 +72,7 @@ feature {NONE} -- Initialization
 		do
 				-- In order to access the screen, the EV_APPLICATION needs to be created
 			app_implementation.do_nothing
-			has_x11_support := {GTK}.is_x11_session
+			has_x11_support := app_implementation.has_x11_support
 
 --			initialize_drawing
 

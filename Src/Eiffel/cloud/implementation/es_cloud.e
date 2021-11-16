@@ -574,7 +574,14 @@ feature -- Element change
 			set_config (cfg)
 		end
 
-feature -- Debug purpose
+feature -- Settings
+
+	is_offline_allowed: BOOLEAN
+		do
+			if attached eiffel_layout.get_environment_8 ("ES_CLOUD_OFFLINE_ALLOWED") as v then
+				Result := v.is_case_insensitive_equal_general ("yes")
+			end
+		end
 
 	is_debug_enabled: BOOLEAN
 		do

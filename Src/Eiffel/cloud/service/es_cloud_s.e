@@ -26,9 +26,13 @@ feature -- Status report
 		deferred
 		end
 
-feature -- Debug purpose
+feature -- Settings
 
 	is_debug_enabled: BOOLEAN
+		deferred
+		end
+
+	is_offline_allowed: BOOLEAN
 		deferred
 		end
 

@@ -447,7 +447,9 @@ feature -- Status report
 
 	is_offline_allowed: BOOLEAN
 		do
-			Result := False  -- FIXME: for now, let's disable offline access.
+			if attached es_cloud_s.service as cld then
+				Result := cld.is_offline_allowed
+			end
 		end
 
 	is_guest_signed_in: BOOLEAN
@@ -803,7 +805,7 @@ feature {NONE} -- Implementation
 		end
 
 ;note
-	copyright: "Copyright (c) 1984-2020, Eiffel Software"
+	copyright: "Copyright (c) 1984-2021, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

@@ -144,6 +144,10 @@ feature {NONE} -- Initialization
 
 			on_category_changed
 			symbols_grid.focus_in_actions.extend (agent on_symbols_grid_focused_in)
+			symbols_grid.resize_actions.extend (agent (ix, iy, iwidth, iheight: INTEGER)
+					do
+						on_resized
+					end)
 			show_actions.extend (agent categories_choice.set_focus)
 		end
 
@@ -214,6 +218,45 @@ feature -- Events
 				preview_label.set_text (cs.symbol)
 			else
 				preview_label.remove_text
+			end
+		end
+
+	on_resized
+		local
+			lst: ARRAYED_LIST [TUPLE [symbol: READABLE_STRING_32; description: READABLE_STRING_GENERAL]]
+			rnb, cnb, r,c: INTEGER
+		do
+			if attached symbols_grid as g then
+				rnb := g.row_count
+				create lst.make (rnb * 10)
+				from
+					r := 1
+				until
+					r > rnb
+				loop
+					if attached g.row (r) as l_row then
+						from
+							cnb := l_row.count
+							c := 1
+						until
+							c > cnb
+						loop
+							if
+								attached l_row.item (c) as i and then
+								attached {TUPLE [READABLE_STRING_32, READABLE_STRING_GENERAL]} i.data as d
+							then
+								lst.extend (d)
+							end
+							c := c + 1
+						end
+					end
+					r := r + 1
+				end
+			end
+			if lst /= Void and then not lst.is_empty then
+				fill_grid_with (lst)
+			else
+				on_category_changed
 			end
 		end
 

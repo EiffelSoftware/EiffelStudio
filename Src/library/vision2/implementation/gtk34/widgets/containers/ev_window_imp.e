@@ -257,6 +257,9 @@ feature -- Status setting
 			if blocking_window /= Void then
 				set_blocking_window (Void)
 			end
+			debug ("gtk_name")
+				update_gtk_name
+			end
 		end
 
 	call_show_actions: BOOLEAN

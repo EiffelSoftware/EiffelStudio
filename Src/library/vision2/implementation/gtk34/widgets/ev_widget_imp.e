@@ -554,6 +554,7 @@ feature {EV_ANY_I} -- Implementation
 				--		{GTK2}.gdk_window_process_updates ({GTK}.gtk_widget_get_window (c_object), False)
 				-- 		https://stackoverflow.com/questions/34912757/how-do-you-force-a-screen-refresh-in-gtk-3-8
 				{GTK}.gtk_widget_queue_draw (c_object)
+--TODO: check if removing this line causes trouble:				process_pending_events
 			end
 		end
 
@@ -629,7 +630,7 @@ feature {NONE} -- Implementation
 	propagate_foreground_color_internal (a_color: EV_COLOR; a_c_object: POINTER)
 			-- Propagate `a_color' to the foreground color of `a_c_object's children.
 		require
-			a_c_object.is_default_pointer
+			not a_c_object.is_default_pointer
 		local
 			l: POINTER
 			child: POINTER

@@ -238,7 +238,7 @@ safe_md $EXPORT_DIR/ecs
 if [ ! -z "$INCLUDE_GTK2" ]; then
 	remtrace Standard edition - gtk2
 	cd $EXPORT_DIR/bin
-	cp ec_gtk2_std.tar.bz2 ec_gtk2.tar.bz2
+	cp ec_gtk2_std.tar.bz2 ec.tar.bz2
 	untgz_ccode ec $should_cancel
 	if [ -f ec ]; then
 		bzip2 ec

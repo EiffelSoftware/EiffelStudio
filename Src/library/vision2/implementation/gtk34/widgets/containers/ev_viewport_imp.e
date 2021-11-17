@@ -173,10 +173,8 @@ feature -- Element change
 				end
 				{GTK}.set_gtk_allocation_struct_width (l_alloc, w)
 				{GTK}.set_gtk_allocation_struct_height (l_alloc, h)
-
-				{GTK2}.gtk_widget_size_allocate (l_child_item, l_alloc)
-
 				{GTK2}.gtk_widget_set_minimum_size (l_child_item, w, h)
+				{GTK2}.gtk_widget_size_allocate (l_child_item, l_alloc)
 
 				l_alloc.memory_free
 

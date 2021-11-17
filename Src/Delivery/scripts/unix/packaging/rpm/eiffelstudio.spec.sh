@@ -15,7 +15,7 @@ URL: $URL
 Vendor: $NAME
 Packager: $NAME
 BuildRoot: $RPM_DIR/eiffelstudio
-Requires: gcc, gtk2-devel, /usr/lib/libXtst.so
+Requires: gcc, gtk2-devel, gtk3-devel, /usr/lib/libXtst.so
 %description
 !GROK!THIS!
 

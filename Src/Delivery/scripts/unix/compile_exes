@@ -235,13 +235,15 @@ fi
 remtrace Recompile EiffelStudio
 safe_md $EXPORT_DIR/ecs
 
-remtrace Standard edition
-cd $EXPORT_DIR/bin
-cp ec_std.tar.bz2 ec.tar.bz2
-untgz_ccode ec $should_cancel
-if [ -f ec ]; then
-	bzip2 ec
-	move ec.bz2 $EXPORT_DIR/ecs/ec_std.bz2
+if [ ! -z "$INCLUDE_GTK2" ]; then
+	remtrace Standard edition - gtk2
+	cd $EXPORT_DIR/bin
+	cp ec_gtk2_std.tar.bz2 ec_gtk2.tar.bz2
+	untgz_ccode ec $should_cancel
+	if [ -f ec ]; then
+		bzip2 ec
+		move ec.bz2 $EXPORT_DIR/ecs/ec_gtk2_std.bz2
+	fi
 fi
 
 if [ ! -z "$INCLUDE_GTK3" ]; then
@@ -262,26 +264,28 @@ bzip2 ecb
 move ecb.bz2 $EXPORT_DIR/ecs/ecb_std.bz2
 
 if [ -z "$MULTIPLE_EDITIONS" ]; then
-	bunzip2 -c $EXPORT_DIR/ecs/ec_std.bz2 > $INSTALL_DIR/studio/spec/$ISE_PLATFORM/bin/ec
+	if [ ! -z "$INCLUDE_GTK2" ]; then
+		bunzip2 -c $EXPORT_DIR/ecs/ec_gtk2_std.bz2 > $INSTALL_DIR/studio/spec/$ISE_PLATFORM/bin/ec-gtk2
+		chmod a+rx $INSTALL_DIR/studio/spec/$ISE_PLATFORM/bin/ec-gtk2
+		chmod go-w $INSTALL_DIR/studio/spec/$ISE_PLATFORM/bin/ec-gtk2
+	fi
+
 	if [ ! -z "$INCLUDE_GTK3" ]; then
 		bunzip2 -c $EXPORT_DIR/ecs/ec_gtk34_std.bz2 > $INSTALL_DIR/studio/spec/$ISE_PLATFORM/bin/ec-gtk34
-	fi
-	bunzip2 -c $EXPORT_DIR/ecs/ecb_std.bz2 > $INSTALL_DIR/studio/spec/$ISE_PLATFORM/bin/ecb
-	chmod a+rx $INSTALL_DIR/studio/spec/$ISE_PLATFORM/bin/ec
-	chmod go-w $INSTALL_DIR/studio/spec/$ISE_PLATFORM/bin/ec 
-	if [ ! -z "$INCLUDE_GTK3" ]; then
 		chmod a+rx $INSTALL_DIR/studio/spec/$ISE_PLATFORM/bin/ec-gtk34
 		chmod go-w $INSTALL_DIR/studio/spec/$ISE_PLATFORM/bin/ec-gtk34
 	fi
 	chmod a+rx $INSTALL_DIR/studio/spec/$ISE_PLATFORM/bin/ecb
 	chmod go-w $INSTALL_DIR/studio/spec/$ISE_PLATFORM/bin/ecb
 else
-	remtrace Enterprise edition
-	cp ec_ent.tar.bz2 ec.tar.bz2
-	untgz_ccode ec $should_cancel
-	if [ -f ec ]; then
-		bzip2 ec
-		move ec.bz2 $EXPORT_DIR/ecs/ec_ent.bz2
+	if [ ! -z "$INCLUDE_GTK2" ]; then
+		remtrace Enterprise edition - gtk2
+		cp ec_gtk2_ent.tar.bz2 ec.tar.bz2
+		untgz_ccode ec $should_cancel
+		if [ -f ec ]; then
+			bzip2 ec
+			move ec.bz2 $EXPORT_DIR/ecs/ec_gtk2_ent.bz2
+		fi
 	fi
 
 	if [ ! -z "$INCLUDE_GTK3" ]; then
@@ -300,14 +304,15 @@ else
 	bzip2 ecb
 	move ecb.bz2 $EXPORT_DIR/ecs/ecb_ent.bz2
 
-	remtrace Branded edition
-	cp ec_branded.tar.bz2 ec.tar.bz2
-	untgz_ccode ec $should_cancel
-	if [ -f ec ]; then
-		bzip2 ec
-		move ec.bz2 $EXPORT_DIR/ecs/ec_branded.bz2
+	if [ ! -z "$INCLUDE_GTK2" ]; then
+		remtrace Branded edition - gtk2
+		cp ec_gtk2_branded.tar.bz2 ec.tar.bz2
+		untgz_ccode ec $should_cancel
+		if [ -f ec ]; then
+			bzip2 ec
+			move ec.bz2 $EXPORT_DIR/ecs/ec_gtk2_branded.bz2
+		fi
 	fi
-
 	if [ ! -z "$INCLUDE_GTK3" ]; then
 		remtrace Branded edition - gtk34
 		cp ec_gtk34_branded.tar.bz2 ec.tar.bz2

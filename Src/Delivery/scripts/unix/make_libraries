@@ -69,13 +69,6 @@ remtrace uuid
 exprt -r $ORIGO_SVN_REVISION $DEFAULT_ORIGO_SVN/Src/$2/uuid uuid 
 remtrace vision2
 exprt -r $ORIGO_SVN_REVISION $DEFAULT_ORIGO_SVN/Src/$2/vision2 vision2 
-if [ "$3" = "gtk" ]; then
-	# TODO
-	# Copy GTK 1.2 implementation over gtk directory
-	cd vision2/implementation
-	exprt -r $ORIGO_SVN_REVISION $DEFAULT_ORIGO_SVN/Src/$2/vision2_for_gtk12 gtk --force 
-	cd ../..
-fi
 remtrace vision2_extension
 exprt -r $ORIGO_SVN_REVISION $DEFAULT_ORIGO_SVN/Src/$2/vision2_extension vision2_extension
 remtrace web

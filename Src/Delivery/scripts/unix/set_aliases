@@ -37,9 +37,17 @@ fi
 
 # Used to create the revision on the package.
 FILE_SVN_REVISION=""
-# Version of GTK
-GTK_DIR=gtk2
+# Version of GTK to build "ec"
+#GTK_DIR=gtk2
+GTK_DIR=gtk34
 
+if [ ! "$INCLUDE_GTK2" ]; then
+	#By default include GTK2
+	INCLUDE_GTK2="True"
+fi
+if [ ! "$INCLUDE_GTK2" = "True" ]; then
+	unset INCLUDE_GTK2
+fi
 if [ ! "$INCLUDE_GTK3" ]; then
 	#By default include GTK3
 	INCLUDE_GTK3="True"

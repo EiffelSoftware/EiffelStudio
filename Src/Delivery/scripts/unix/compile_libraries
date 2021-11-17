@@ -25,14 +25,14 @@ cd $2/library/net/Clib
 default_make
 mac_ranlib $2/library/net/spec/$ISE_PLATFORM/lib/libnet.a
 remtrace vision2
-if [ "$3" = "gtk" ]; then
-	# Compile pixmap loading for GTK 1.2 implementation
-	cd $2/library/vision2/Clib
-	default_make
-fi
-cd $2/library/vision2/implementation/gtk/Clib
+# Compile GTK C implementation
+cd $2/library/vision2/Clib
 default_make
 
+if [ ! -z "$INCLUDE_GTK2" ]; then
+	cd $2/library/vision2/implementation/gtk/Clib
+	default_make
+fi
 if [ ! -z "$INCLUDE_GTK3" ]; then
 	cd $2/library/vision2/implementation/gtk34/Clib
 	default_make

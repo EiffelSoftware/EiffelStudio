@@ -3657,7 +3657,12 @@ feature {EV_GRID_COLUMN_I, EV_GRID_I, EV_GRID_DRAWER_I, EV_GRID_ROW_I, EV_GRID_I
 		do
 			if not is_locked and then is_displayed then
 				l_virtual_x_position := a_column.virtual_x_position
-				drawable.redraw_rectangle (l_virtual_x_position - (internal_client_x - viewport_x_offset), viewport_y_offset, viewable_width + internal_client_x - l_virtual_x_position, viewable_height)
+				drawable.redraw_rectangle (
+						l_virtual_x_position - (internal_client_x - viewport_x_offset),
+						viewport_y_offset,
+						(viewable_width + internal_client_x - l_virtual_x_position).max (0),
+						viewable_height
+					)
 				from
 					l_locked_indexes := locked_indexes
 					l_cursor := l_locked_indexes.cursor

@@ -35,6 +35,8 @@ feature -- Drawing operations
 
 	redraw_rectangle (a_x, a_y, a_width, a_height: INTEGER)
 			-- Redraw the rectangle described.
+		require
+			a_width >= 0 and a_height >= 0
 		deferred
 		end
 
@@ -45,6 +47,8 @@ feature -- Drawing operations
 
 	clear_and_redraw_rectangle (a_x, a_y, a_width, a_height: INTEGER)
 			-- Clear and Redraw the rectangle described.
+		require
+			a_width >= 0 and a_height >= 0
 		deferred
 		end
 
@@ -75,7 +79,7 @@ feature {EV_ANY, EV_ANY_I} -- Implementation
 			-- toolkit.
 
 note
-	copyright:	"Copyright (c) 1984-2014, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2021, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

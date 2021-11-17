@@ -346,7 +346,6 @@ feature {EV_ANY_I, EV_INTERMEDIARY_ROUTINES} -- Implementation
 				{GTK}.gtk_widget_get_allocation (c_object, l_alloc)
 				l_allocated_width := {GTK}.gtk_allocation_struct_width (l_alloc)
 				if {GTK}.gtk_widget_get_parent (c_object) /= default_pointer and then l_allocated_width < l_minimum_width then
-					{GTK}.gtk_container_check_resize ({GTK}.gtk_widget_get_parent (c_object))
 					{GTK}.gtk_widget_get_allocation (c_object, l_alloc)
 					l_allocated_width := {GTK}.gtk_allocation_struct_width (l_alloc)
 				end
@@ -369,7 +368,6 @@ feature {EV_ANY_I, EV_INTERMEDIARY_ROUTINES} -- Implementation
 				{GTK}.gtk_widget_get_allocation (c_object, l_alloc)
 				l_allocated_height := {GTK}.gtk_allocation_struct_height (l_alloc)
 				if {GTK}.gtk_widget_get_parent (c_object) /= default_pointer and then l_allocated_height < l_minimum_height then
-					{GTK}.gtk_container_check_resize ({GTK}.gtk_widget_get_parent (c_object))
 					{GTK}.gtk_widget_get_allocation (c_object, l_alloc)
 					l_allocated_height := {GTK}.gtk_allocation_struct_height (l_alloc)
 				end

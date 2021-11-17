@@ -161,6 +161,7 @@ feature {EV_GRID_DRAWER_I} -- Implementation
 				attached parent_i as l_parent_i and
 				attached column_i as l_column_i
 			then
+				drawable.start_drawing_session
 					-- Update the dimensions of the text if required.
 				recompute_text_dimensions
 
@@ -242,6 +243,8 @@ feature {EV_GRID_DRAWER_I} -- Implementation
 					drawable.remove_clip_area
 					drawable.set_copy_mode
 				end
+
+				drawable.end_drawing_session
 			end
 		end
 
@@ -275,7 +278,7 @@ feature {EV_ANY, EV_ANY_I} -- Implementation
 			-- functionality implemented by `Current'
 
 note
-	copyright:	"Copyright (c) 1984-2013, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2021, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

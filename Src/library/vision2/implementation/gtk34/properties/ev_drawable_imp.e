@@ -211,42 +211,32 @@ feature -- Element change
 
 	set_background_color (a_color: EV_COLOR)
 			-- Assign `a_color' to `background_color'.
-		local
-			l_internal_background_color: detachable like internal_background_color
 		do
-			l_internal_background_color := internal_background_color
-			if l_internal_background_color = Void then
-				create l_internal_background_color.make_with_8_bit_rgb (255, 255, 255)
-				internal_background_color := l_internal_background_color
+			if not attached internal_background_color as bg then
+				create internal_background_color.make_with_8_bit_rgb (a_color.red_8_bit, a_color.green_8_bit, a_color.blue_8_bit)
+			elseif not bg.is_equal (a_color) then
+				bg.set_red_with_8_bit (a_color.red_8_bit)
+				bg.set_green_with_8_bit (a_color.green_8_bit)
+				bg.set_blue_with_8_bit (a_color.blue_8_bit)
 			end
-			if not l_internal_background_color.is_equal (a_color) then
-				l_internal_background_color.set_red_with_8_bit (a_color.red_8_bit)
-				l_internal_background_color.set_green_with_8_bit (a_color.green_8_bit)
-				l_internal_background_color.set_blue_with_8_bit (a_color.blue_8_bit)
-				-- TODO check the following.
-				-- internal_set_color (False, a_color.red_16_bit, a_color.green_16_bit, a_color.blue_16_bit)
-				internal_set_color (False, a_color.red, a_color.green, a_color.blue)
-			end
+				-- Always set the internal background color (i.e call to cairo_set_source_rgb),
+				-- otherwise colors may not be set as expected
+			internal_set_color (False, a_color.red, a_color.green, a_color.blue)
 		end
 
 	set_foreground_color (a_color: EV_COLOR)
 			-- Assign `a_color' to `foreground_color'
-		local
-			l_internal_foreground_color: detachable like internal_foreground_color
 		do
-			l_internal_foreground_color := internal_foreground_color
-			if l_internal_foreground_color = Void then
-				create l_internal_foreground_color
-				internal_foreground_color := l_internal_foreground_color
+			if not attached internal_foreground_color as fg then
+				create internal_foreground_color.make_with_8_bit_rgb (a_color.red_8_bit, a_color.green_8_bit, a_color.blue_8_bit)
+			elseif not fg.is_equal (a_color) then
+				fg.set_red_with_8_bit (a_color.red_8_bit)
+				fg.set_green_with_8_bit (a_color.green_8_bit)
+				fg.set_blue_with_8_bit (a_color.blue_8_bit)
 			end
-			if not l_internal_foreground_color.is_equal (a_color) then
-				l_internal_foreground_color.set_red_with_8_bit (a_color.red_8_bit)
-				l_internal_foreground_color.set_green_with_8_bit (a_color.green_8_bit)
-				l_internal_foreground_color.set_blue_with_8_bit (a_color.blue_8_bit)
-				-- TODO check the following.
-				-- internal_set_color (True, a_color.red_16_bit, a_color.green_16_bit, a_color.blue_16_bit)
-				internal_set_color (True, a_color.red, a_color.green, a_color.blue)
-			end
+				-- Always set the internal foreground color (i.e call to cairo_set_source_rgb),
+				-- otherwise colors may not be set as expected (cf black grid item background)
+			internal_set_color (True, a_color.red, a_color.green, a_color.blue)
 		end
 
 	set_line_width (a_width: INTEGER)

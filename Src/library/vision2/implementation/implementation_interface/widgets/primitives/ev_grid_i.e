@@ -4935,7 +4935,7 @@ feature {EV_GRID_LOCKED_I} -- Drawing implementation
 	buffered_drawable_width,
 	buffered_drawable_height: INTEGER
 			-- Default size of `drawable' used for scrolling purposes.
-			-- Warning: the value may be different between Windows, Linux (gtk, gtk34)
+			-- Warning: the value may be different between Windows, Linux (gtk, gtk3)
 
 	horizontal_redraw_triggered_by_viewport_resize: BOOLEAN
 

@@ -190,34 +190,81 @@ feature -- Query
 
 feature -- Implementation
 
-	gdk_cursor_from_pointer_style: POINTER
-			-- Return a GdkCursor constructed from `a_cursor'
-		local
-			l_image: POINTER
-			l_display: POINTER
+	cursor_name: STRING
 		do
-			l_display:= {GDK}.gdk_display_get_default
 			inspect
 				predefined_cursor_code
 					-- Return a predefined cursor if available.
 			when {EV_POINTER_STYLE_CONSTANTS}.busy_cursor then
-				Result := {GTK}.gdk_cursor_new_for_display (l_display, {EV_GTK_ENUMS}.gdk_watch_enum)
+				Result := "busy_cursor"
 			when {EV_POINTER_STYLE_CONSTANTS}.standard_cursor then
-				Result := {GTK}.gdk_cursor_new_for_display (l_display, {EV_GTK_ENUMS}.gdk_left_ptr_enum)
+				Result := "standard_cursor"
 			when {EV_POINTER_STYLE_CONSTANTS}.crosshair_cursor then
-				Result := {GTK}.gdk_cursor_new_for_display (l_display, {EV_GTK_ENUMS}.gdk_crosshair_enum)
+				Result := "crosshair_cursor"
 			when {EV_POINTER_STYLE_CONSTANTS}.ibeam_cursor then
-				Result := {GTK}.gdk_cursor_new_for_display (l_display, {EV_GTK_ENUMS}.gdk_xterm_enum)
+				Result := "ibeam_cursor"
 			when {EV_POINTER_STYLE_CONSTANTS}.sizeall_cursor then
-				Result := {GTK}.gdk_cursor_new_for_display (l_display, {EV_GTK_ENUMS}.gdk_fleur_enum)
+				Result := "sizeall_cursor"
 			when {EV_POINTER_STYLE_CONSTANTS}.sizens_cursor then
-				Result := {GTK}.gdk_cursor_new_for_display (l_display, {EV_GTK_ENUMS}.Gdk_size_sb_v_double_arrow_enum)
+				Result := "sizens_cursor"
 			when {EV_POINTER_STYLE_CONSTANTS}.wait_cursor then
-				Result := {GTK}.gdk_cursor_new_for_display (l_display, {EV_GTK_ENUMS}.gdk_watch_enum)
+				Result := "wait_cursor"
 			when {EV_POINTER_STYLE_CONSTANTS}.help_cursor then
-				Result := {GTK}.gdk_cursor_new_for_display (l_display, {EV_GTK_ENUMS}.gdk_question_arrow_enum)
+				Result := "help_cursor"
 			when {EV_POINTER_STYLE_CONSTANTS}.hyperlink_cursor then
-				Result := {GTK}.gdk_cursor_new_for_display (l_display, {EV_GTK_ENUMS}.gdk_hand2_enum)
+				Result := "hyperlink_cursor"
+			when {EV_POINTER_STYLE_CONSTANTS}.no_cursor then
+				Result := "image:no_cursor"
+			when {EV_POINTER_STYLE_CONSTANTS}.sizenwse_cursor then
+				Result := "image:sizenwse_cursor"
+			when {EV_POINTER_STYLE_CONSTANTS}.sizenesw_cursor then
+				Result := "image:sizenesw_cursor"
+			when {EV_POINTER_STYLE_CONSTANTS}.sizewe_cursor then
+				Result := "image:sizewe_cursor"
+			when {EV_POINTER_STYLE_CONSTANTS}.uparrow_cursor then
+				Result := "image:uparrow_cursor"
+			when {EV_POINTER_STYLE_CONSTANTS}.header_sizewe_cursor then
+				Result := "image:header_sizewe_cursor"
+			else
+				Result := "???"
+			end
+		end
+
+	gdk_cursor_from_pointer_style: POINTER
+			-- Return a GdkCursor constructed from `a_cursor'
+		local
+			l_display: POINTER
+		do
+			l_display:= {GDK}.gdk_display_get_default
+			Result := gdk_cursor_from_pointer_style_for_display (l_display)
+		end
+
+	gdk_cursor_from_pointer_style_for_display (a_display: POINTER): POINTER
+			-- Return a GdkCursor constructed from `a_cursor'
+		local
+			l_image: POINTER
+		do
+			inspect
+				predefined_cursor_code
+					-- Return a predefined cursor if available.
+			when {EV_POINTER_STYLE_CONSTANTS}.busy_cursor then
+				Result := {GTK}.gdk_cursor_new_for_display (a_display, {EV_GTK_ENUMS}.gdk_watch_enum)
+			when {EV_POINTER_STYLE_CONSTANTS}.standard_cursor then
+				Result := {GTK}.gdk_cursor_new_for_display (a_display, {EV_GTK_ENUMS}.gdk_left_ptr_enum)
+			when {EV_POINTER_STYLE_CONSTANTS}.crosshair_cursor then
+				Result := {GTK}.gdk_cursor_new_for_display (a_display, {EV_GTK_ENUMS}.gdk_crosshair_enum)
+			when {EV_POINTER_STYLE_CONSTANTS}.ibeam_cursor then
+				Result := {GTK}.gdk_cursor_new_for_display (a_display, {EV_GTK_ENUMS}.gdk_xterm_enum)
+			when {EV_POINTER_STYLE_CONSTANTS}.sizeall_cursor then
+				Result := {GTK}.gdk_cursor_new_for_display (a_display, {EV_GTK_ENUMS}.gdk_fleur_enum)
+			when {EV_POINTER_STYLE_CONSTANTS}.sizens_cursor then
+				Result := {GTK}.gdk_cursor_new_for_display (a_display, {EV_GTK_ENUMS}.Gdk_size_sb_v_double_arrow_enum)
+			when {EV_POINTER_STYLE_CONSTANTS}.wait_cursor then
+				Result := {GTK}.gdk_cursor_new_for_display (a_display, {EV_GTK_ENUMS}.gdk_watch_enum)
+			when {EV_POINTER_STYLE_CONSTANTS}.help_cursor then
+				Result := {GTK}.gdk_cursor_new_for_display (a_display, {EV_GTK_ENUMS}.gdk_question_arrow_enum)
+			when {EV_POINTER_STYLE_CONSTANTS}.hyperlink_cursor then
+				Result := {GTK}.gdk_cursor_new_for_display (a_display, {EV_GTK_ENUMS}.gdk_hand2_enum)
 			when {EV_POINTER_STYLE_CONSTANTS}.no_cursor then
 				l_image := image_from_xpm_data ({EV_STOCK_PIXMAPS_IMP}.no_cursor_xpm)
 			when {EV_POINTER_STYLE_CONSTANTS}.sizenwse_cursor then

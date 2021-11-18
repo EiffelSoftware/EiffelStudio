@@ -252,13 +252,17 @@ feature {EV_ANY_I, EV_INTERMEDIARY_ROUTINES} -- Implementation
 	set_pointer_style (a_pointer: EV_POINTER_STYLE)
 			-- Assign `a_pointer' to `pointer_style'.
 		do
-			if a_pointer /= pointer_style then
+			print (generator + ".set_pointer_style(...)%N")
+--			if a_pointer /= pointer_style then
+				print (generator + ".set_pointer_style: is displayed="+ is_displayed.out +"%N")
 				if is_displayed then
 					internal_set_pointer_style (a_pointer)
 						-- `internal_set_pointer_style' will get called in `on_widget_mapped'				
 				end
 				pointer_style := a_pointer
-			end
+--			else
+--				print (generator + ".internal_set_pointer_style (...) SAME AS PREVIOUS %N")
+--			end
 		end
 
 	internal_set_pointer_style (a_cursor: EV_POINTER_STYLE)
@@ -267,17 +271,22 @@ feature {EV_ANY_I, EV_INTERMEDIARY_ROUTINES} -- Implementation
 			a_cursor_ptr: POINTER
 			a_window: POINTER
 		do
-			if a_cursor /= previously_set_pointer_style then
+			print (generator + ".internal_set_pointer_style (...)%N")
+--			if a_cursor /= previously_set_pointer_style then
 				check attached {EV_POINTER_STYLE_IMP} a_cursor.implementation as a_cursor_imp then
-					a_cursor_ptr := a_cursor_imp.gdk_cursor_from_pointer_style
 					a_window := {GTK}.gtk_widget_get_window (c_object)
-					if a_window /= default_pointer then
+					if not a_window.is_default_pointer then
+						a_cursor_ptr := a_cursor_imp.gdk_cursor_from_pointer_style_for_display ({GTK}.gtk_widget_get_display (c_object))
+						print (generator + ".internal_set_pointer_style (" + a_cursor_imp.cursor_name + ")-> gdk_window_set_cursor%N")
+--						{GTK}.gdk_window_set_cursor (a_window, default_pointer)
 						{GTK}.gdk_window_set_cursor (a_window, a_cursor_ptr)
-						{GTK2}.g_object_unref (a_cursor_ptr)
 						previously_set_pointer_style := a_cursor
+						{GTK}.g_object_unref (a_cursor_ptr)
 					end
 				end
-			end
+--			else
+--				print (generator + ".internal_set_pointer_style (...) SAME AS PREVIOUS %N")
+--			end
 		end
 
 	previously_set_pointer_style: detachable EV_POINTER_STYLE
@@ -346,6 +355,7 @@ feature {EV_ANY_I, EV_INTERMEDIARY_ROUTINES} -- Implementation
 				{GTK}.gtk_widget_get_allocation (c_object, l_alloc)
 				l_allocated_width := {GTK}.gtk_allocation_struct_width (l_alloc)
 				if {GTK}.gtk_widget_get_parent (c_object) /= default_pointer and then l_allocated_width < l_minimum_width then
+--REMOVED					{GTK}.gtk_container_check_resize ({GTK}.gtk_widget_get_parent (c_object))
 					{GTK}.gtk_widget_get_allocation (c_object, l_alloc)
 					l_allocated_width := {GTK}.gtk_allocation_struct_width (l_alloc)
 				end
@@ -368,6 +378,7 @@ feature {EV_ANY_I, EV_INTERMEDIARY_ROUTINES} -- Implementation
 				{GTK}.gtk_widget_get_allocation (c_object, l_alloc)
 				l_allocated_height := {GTK}.gtk_allocation_struct_height (l_alloc)
 				if {GTK}.gtk_widget_get_parent (c_object) /= default_pointer and then l_allocated_height < l_minimum_height then
+--REMOVED					{GTK}.gtk_container_check_resize ({GTK}.gtk_widget_get_parent (c_object))
 					{GTK}.gtk_widget_get_allocation (c_object, l_alloc)
 					l_allocated_height := {GTK}.gtk_allocation_struct_height (l_alloc)
 				end

@@ -1,8 +1,8 @@
 <?xml version="1.0"?>
-<project name="build_vision2_clib_gtk34" default="help">
+<project name="build_vision2_clib_gtk3" default="help">
 
 	<description>
-		description: "Vision2 gtk34 Clib library compilation"
+		description: "Vision2 gtk3 Clib library compilation"
 	</description>
 
 	<target name="help">
@@ -13,7 +13,7 @@
 	</target>
 	
 	<target name="compile" >
-		<echo message=" - Compile Vision2 implementation gtk34 C lib" />
+		<echo message=" - Compile Vision2 implementation gtk3 C lib" />
 		<exec executable="finish_freezing -library" accept_errors="true"/>
 	</target>
 	

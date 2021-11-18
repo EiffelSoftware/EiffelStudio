@@ -3,7 +3,7 @@ package vision2
 setup
 	compile_library = Clib
 	compile_library = implementation/gtk/Clib
-	compile_library = implementation/gtk34/Clib
+	compile_library = implementation/gtk3/Clib
 
 project
 	vision2 = "vision2.ecf"

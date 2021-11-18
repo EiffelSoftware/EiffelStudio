@@ -1,5 +1,5 @@
 note
-	description: "Helper class Monitor DPI gtk34 Implementation "
+	description: "Helper class Monitor DPI gtk3 Implementation "
 	date: "$Date$"
 	revision: "$Revision$"
 

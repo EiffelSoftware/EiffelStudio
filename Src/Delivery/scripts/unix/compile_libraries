@@ -34,7 +34,7 @@ if [ ! -z "$INCLUDE_GTK2" ]; then
 	default_make
 fi
 if [ ! -z "$INCLUDE_GTK3" ]; then
-	cd $2/library/vision2/implementation/gtk34/Clib
+	cd $2/library/vision2/implementation/gtk3/Clib
 	default_make
 fi
 

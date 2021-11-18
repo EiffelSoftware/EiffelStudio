@@ -39,7 +39,7 @@ fi
 FILE_SVN_REVISION=""
 # Version of GTK to build "ec"
 #GTK_DIR=gtk2
-GTK_DIR=gtk34
+GTK_DIR=gtk3
 
 if [ ! "$INCLUDE_GTK2" ]; then
 	#By default include GTK2

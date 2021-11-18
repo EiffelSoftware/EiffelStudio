@@ -247,13 +247,13 @@ if [ ! -z "$INCLUDE_GTK2" ]; then
 fi
 
 if [ ! -z "$INCLUDE_GTK3" ]; then
-	remtrace Standard edition - gtk34
+	remtrace Standard edition - gtk3
 	cd $EXPORT_DIR/bin
-	cp ec_gtk34_std.tar.bz2 ec.tar.bz2
+	cp ec_gtk3_std.tar.bz2 ec.tar.bz2
 	untgz_ccode ec $should_cancel
 	if [ -f ec ]; then
 		bzip2 ec
-		move ec.bz2 $EXPORT_DIR/ecs/ec_gtk34_std.bz2
+		move ec.bz2 $EXPORT_DIR/ecs/ec_gtk3_std.bz2
 	fi
 fi
 
@@ -271,9 +271,9 @@ if [ -z "$MULTIPLE_EDITIONS" ]; then
 	fi
 
 	if [ ! -z "$INCLUDE_GTK3" ]; then
-		bunzip2 -c $EXPORT_DIR/ecs/ec_gtk34_std.bz2 > $INSTALL_DIR/studio/spec/$ISE_PLATFORM/bin/ec-gtk34
-		chmod a+rx $INSTALL_DIR/studio/spec/$ISE_PLATFORM/bin/ec-gtk34
-		chmod go-w $INSTALL_DIR/studio/spec/$ISE_PLATFORM/bin/ec-gtk34
+		bunzip2 -c $EXPORT_DIR/ecs/ec_gtk3_std.bz2 > $INSTALL_DIR/studio/spec/$ISE_PLATFORM/bin/ec-gtk3
+		chmod a+rx $INSTALL_DIR/studio/spec/$ISE_PLATFORM/bin/ec-gtk3
+		chmod go-w $INSTALL_DIR/studio/spec/$ISE_PLATFORM/bin/ec-gtk3
 	fi
 	chmod a+rx $INSTALL_DIR/studio/spec/$ISE_PLATFORM/bin/ecb
 	chmod go-w $INSTALL_DIR/studio/spec/$ISE_PLATFORM/bin/ecb
@@ -289,12 +289,12 @@ else
 	fi
 
 	if [ ! -z "$INCLUDE_GTK3" ]; then
-		remtrace Enterprise edition - gtk34
-		cp ec_gtk34_ent.tar.bz2 ec.tar.bz2
+		remtrace Enterprise edition - gtk3
+		cp ec_gtk3_ent.tar.bz2 ec.tar.bz2
 		untgz_ccode ec $should_cancel
 		if [ -f ec ]; then
 			bzip2 ec
-			move ec.bz2 $EXPORT_DIR/ecs/ec_gtk34_ent.bz2
+			move ec.bz2 $EXPORT_DIR/ecs/ec_gtk3_ent.bz2
 		fi
 	fi
 
@@ -314,12 +314,12 @@ else
 		fi
 	fi
 	if [ ! -z "$INCLUDE_GTK3" ]; then
-		remtrace Branded edition - gtk34
-		cp ec_gtk34_branded.tar.bz2 ec.tar.bz2
+		remtrace Branded edition - gtk3
+		cp ec_gtk3_branded.tar.bz2 ec.tar.bz2
 		untgz_ccode ec $should_cancel
 		if [ -f ec ]; then
 			bzip2 ec
-			move ec.bz2 $EXPORT_DIR/ecs/ec_gtk34_branded.bz2
+			move ec.bz2 $EXPORT_DIR/ecs/ec_gtk3_branded.bz2
 		fi
 	fi
 

@@ -44,7 +44,7 @@ if [ ! -z "$INCLUDE_GTK2" ]; then
 	bunzip2 -c $EXPORT_DIR/ecs/ec_gtk2_std.bz2 > $INSTALL_DIR/studio/spec/$ISE_PLATFORM/bin/ec-gtk2
 fi
 if [ ! -z "$INCLUDE_GTK3" ]; then
-	bunzip2 -c $EXPORT_DIR/ecs/ec_gtk34_std.bz2 > $INSTALL_DIR/studio/spec/$ISE_PLATFORM/bin/ec-gtk34
+	bunzip2 -c $EXPORT_DIR/ecs/ec_gtk3_std.bz2 > $INSTALL_DIR/studio/spec/$ISE_PLATFORM/bin/ec-gtk3
 fi
 bunzip2 -c $EXPORT_DIR/ecs/ecb_std.bz2 > $INSTALL_DIR/studio/spec/$ISE_PLATFORM/bin/ecb
 
@@ -53,8 +53,8 @@ if [ ! -z "$INCLUDE_GTK2" ]; then
 	chmod go-w $INSTALL_DIR/studio/spec/$ISE_PLATFORM/bin/ec-gtk2
 fi
 if [ ! -z "$INCLUDE_GTK3" ]; then
-	chmod a+rx $INSTALL_DIR/studio/spec/$ISE_PLATFORM/bin/ec-gtk34
-	chmod go-w $INSTALL_DIR/studio/spec/$ISE_PLATFORM/bin/ec-gtk34
+	chmod a+rx $INSTALL_DIR/studio/spec/$ISE_PLATFORM/bin/ec-gtk3
+	chmod go-w $INSTALL_DIR/studio/spec/$ISE_PLATFORM/bin/ec-gtk3
 fi
 
 chmod a+rx $INSTALL_DIR/studio/spec/$ISE_PLATFORM/bin/ecb
@@ -76,7 +76,7 @@ if [ "$MULTIPLE_EDITIONS" ]; then
 		bunzip2 -c $EXPORT_DIR/ecs/ec_gtk2_ent.bz2 > $INSTALL_DIR/studio/spec/$ISE_PLATFORM/bin/ec-gtk2
 	fi
 	if [ ! -z "$INCLUDE_GTK3" ]; then
-		bunzip2 -c $EXPORT_DIR/ecs/ec_gtk34_ent.bz2 > $INSTALL_DIR/studio/spec/$ISE_PLATFORM/bin/ec-gtk34
+		bunzip2 -c $EXPORT_DIR/ecs/ec_gtk3_ent.bz2 > $INSTALL_DIR/studio/spec/$ISE_PLATFORM/bin/ec-gtk3
 	fi
 	bunzip2 -c $EXPORT_DIR/ecs/ecb_ent.bz2 > $INSTALL_DIR/studio/spec/$ISE_PLATFORM/bin/ecb
 
@@ -85,8 +85,8 @@ if [ "$MULTIPLE_EDITIONS" ]; then
 		chmod go-w $INSTALL_DIR/studio/spec/$ISE_PLATFORM/bin/ec-gtk2
 	fi
 	if [ ! -z "$INCLUDE_GTK3" ]; then
-		chmod a+rx $INSTALL_DIR/studio/spec/$ISE_PLATFORM/bin/ec-gtk34
-		chmod go-w $INSTALL_DIR/studio/spec/$ISE_PLATFORM/bin/ec-gtk34
+		chmod a+rx $INSTALL_DIR/studio/spec/$ISE_PLATFORM/bin/ec-gtk3
+		chmod go-w $INSTALL_DIR/studio/spec/$ISE_PLATFORM/bin/ec-gtk3
 	fi
 	chmod a+rx $INSTALL_DIR/studio/spec/$ISE_PLATFORM/bin/ecb
 	chmod go-w $INSTALL_DIR/studio/spec/$ISE_PLATFORM/bin/ecb
@@ -117,7 +117,7 @@ if [ "$MULTIPLE_EDITIONS" ]; then
 		bunzip2 -c $EXPORT_DIR/ecs/ec_gtk2_branded.bz2 > $INSTALL_DIR/studio/spec/$ISE_PLATFORM/bin/ec-gtk2
 	fi
 	if [ ! -z "$INCLUDE_GTK3" ]; then
-		bunzip2 -c $EXPORT_DIR/ecs/ec_gtk34_branded.bz2 > $INSTALL_DIR/studio/spec/$ISE_PLATFORM/bin/ec-gtk34
+		bunzip2 -c $EXPORT_DIR/ecs/ec_gtk3_branded.bz2 > $INSTALL_DIR/studio/spec/$ISE_PLATFORM/bin/ec-gtk3
 	fi
 	bunzip2 -c $EXPORT_DIR/ecs/ecb_branded.bz2 > $INSTALL_DIR/studio/spec/$ISE_PLATFORM/bin/ecb
 	if [ ! -z "$INCLUDE_GTK2" ]; then
@@ -125,8 +125,8 @@ if [ "$MULTIPLE_EDITIONS" ]; then
 		chmod go-w $INSTALL_DIR/studio/spec/$ISE_PLATFORM/bin/ec-gtk2
 	fi
 	if [ ! -z "$INCLUDE_GTK3" ]; then
-		chmod a+rx $INSTALL_DIR/studio/spec/$ISE_PLATFORM/bin/ec-gtk34
-		chmod go-w $INSTALL_DIR/studio/spec/$ISE_PLATFORM/bin/ec-gtk34
+		chmod a+rx $INSTALL_DIR/studio/spec/$ISE_PLATFORM/bin/ec-gtk3
+		chmod go-w $INSTALL_DIR/studio/spec/$ISE_PLATFORM/bin/ec-gtk3
 	fi
 	chmod a+rx $INSTALL_DIR/studio/spec/$ISE_PLATFORM/bin/ecb
 	chmod go-w $INSTALL_DIR/studio/spec/$ISE_PLATFORM/bin/ecb

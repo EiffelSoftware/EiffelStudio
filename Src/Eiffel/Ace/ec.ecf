@@ -333,9 +333,13 @@
 		<setting name="platform" value="macintosh"/>
 		<variable name="vision_implementation" value="cocoa"/>
 	</target>
-	<target name="bench_gtk34" extends="bench">
-		<description>Compile on linux OS using the GTK34</description>
-		<variable name="vision_implementation" value="gtk34"/>
+	<target name="bench_gtk2" extends="bench">
+		<description>Compile on linux OS using the GTK2</description>
+		<variable name="vision_implementation" value="gtk"/>
+	</target>
+	<target name="bench_gtk3" extends="bench">
+		<description>Compile on linux OS using the GTK3</description>
+		<variable name="vision_implementation" value="gtk3"/>
 	</target>
 	<target name="compile_all_bench" extends="bench">
 		<root all_classes="true"/>

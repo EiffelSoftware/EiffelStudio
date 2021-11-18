@@ -2,7 +2,7 @@ note
 	description: "[
 		Constants for the text panel widgets
 		
-		use smaller buffer sizes for gtk34 ... to lower memory usage.
+		use smaller buffer sizes for gtk3 ... to lower memory usage.
 		]"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."

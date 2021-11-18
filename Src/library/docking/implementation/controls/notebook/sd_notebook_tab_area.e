@@ -394,10 +394,10 @@ feature {NONE}  -- Implementation functions
 			if not is_empty then
 				l_total_width := total_preferred_width
 				l_total_width := l_total_width
-					-- Note: solution to be able to resize down (with gtk34).
+					-- Note: solution to be able to resize down (with gtk3).
 					--| the minimum width of the full tab area need to take have a flexible part
 					--| when the `internal_tool_bar` is hidden, the tabs box could use the full width
-					--| and the implementatio set this width as the minimum width for the tabs box.
+					--| and the implementation set this width as the minimum width for the tabs box.
 					--| So a flexible space (no minimum width) should be there to allow vision2 to resize down the notebook.
 					--| The following line keeps at least  `internal_tool_bar.minimum_width + 2` for this purpose.
 				l_available_width := a_width - internal_tool_bar.minimum_width - 2

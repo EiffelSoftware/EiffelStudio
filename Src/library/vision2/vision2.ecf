@@ -47,7 +47,7 @@
 			<condition>
 				<platform excluded_value="windows"/>
 				<custom name="vision_implementation" excluded_value="cocoa"/>
-				<custom name="vision_implementation" excluded_value="gtk2"/>
+				<custom name="vision_implementation" excluded_value="gtk"/>
 			</condition>
 		</external_cflag>
 		<external_object location="$(ISE_LIBRARY)\library\vision2\spec\$ISE_C_COMPILER\$ISE_PLATFORM\lib\vision2.lib">

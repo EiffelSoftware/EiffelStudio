@@ -77,7 +77,7 @@
 				<cluster name="gtk3" location="$|gtk\v3\" recursive="true">
 					<condition>
 						<platform excluded_value="windows"/>
-						<custom name="vision_implementation" excluded_value="gtk2"/>
+						<custom name="vision_implementation" excluded_value="gtk"/>
 						<custom name="vision_implementation" excluded_value="cocoa"/>
 					</condition>
 				</cluster>

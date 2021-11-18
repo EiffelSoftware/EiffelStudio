@@ -641,8 +641,10 @@ feature -- Drawing operation
 					{
 						gint real_width;
 						gint real_height;
-					    real_width = gdk_window_get_width (win); 
-					    real_height = gdk_window_get_height (win);
+						XWindowAttributes wa;
+						XGetWindowAttributes((Display*) $a_display, win, &wa);
+						real_width = wa.width;
+						real_height = wa.height;
 
 						if ($width < 0)
 							$width = real_width;
@@ -671,10 +673,13 @@ feature -- Drawing operation
 					{
 						gint real_width;
 						gint real_height;
-					    real_width = gdk_window_get_width (win); 
-					    real_height = gdk_window_get_height (win);
-
-						if ($width < 0)
+						
+						XWindowAttributes wa;
+						XGetWindowAttributes((Display*) $a_display, win, &wa);
+						real_width = wa.width;
+						real_height = wa.height;
+					   
+					   	if ($width < 0)
 							$width = real_width;
 						if ($height < 0)
 							$height = real_height;

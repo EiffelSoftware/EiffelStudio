@@ -41,19 +41,24 @@ FILE_SVN_REVISION=""
 #GTK_DIR=gtk2
 GTK_DIR=gtk3
 
-if [ ! "$INCLUDE_GTK2" ]; then
-	#By default include GTK2
-	INCLUDE_GTK2="True"
-fi
-if [ ! "$INCLUDE_GTK2" = "True" ]; then
-	unset INCLUDE_GTK2
-fi
 if [ ! "$INCLUDE_GTK3" ]; then
-	#By default include GTK3
-	INCLUDE_GTK3="True"
+	if [ "$GTK_DIR" = "gtk3" ]; then
+		#By default include GTK3
+		INCLUDE_GTK3="True"
+	fi
 fi
 if [ ! "$INCLUDE_GTK3" = "True" ]; then
 	unset INCLUDE_GTK3
+fi
+
+if [ ! "$INCLUDE_GTK2" ]; then
+	if [ "$GTK_DIR" = "gtk2" ]; then
+		#By default include GTK2
+		INCLUDE_GTK2="True"
+	fi
+fi
+if [ ! "$INCLUDE_GTK2" = "True" ]; then
+	unset INCLUDE_GTK2
 fi
 
 # Used only when making PorterPackage to checkout the sources

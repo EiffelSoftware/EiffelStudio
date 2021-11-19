@@ -83,7 +83,7 @@ if [ "$GTK_DIR" = "gtk3" ]; then
 	export vision_implementation=gtk3
 else
 	remtrace Use gtk2 to build EiffelBuild
-	export vision_implementation=gtk
+	export vision_implementation=gtk2
 fi
 finalize esbuilder.ecf esbuilder
 unset vision_implementation
@@ -112,7 +112,7 @@ if [ ! "$NO_NEW_EC" ]; then
 
 	if [ ! -z "$INCLUDE_GTK2" ]; then
 		remtrace Standard EiffelStudio edition - gtk2
-		export vision_implementation=gtk
+		export vision_implementation=gtk2
 		finalize ec.ecf bench
 		unset vision_implementation
 		tgz_ccode bench ec_gtk2.tar.bz2
@@ -163,7 +163,7 @@ if [ ! "$NO_NEW_EC" ]; then
 
 		if [ ! -z "$INCLUDE_GTK2" ]; then
 			remtrace Enterprise EiffelStudio edition - gtk2
-			export vision_implementation=gtk
+			export vision_implementation=gtk2
 			finalize ec.ecf bench
 			unset vision_implementation
 			tgz_ccode bench ec_gtk2.tar.bz2
@@ -214,7 +214,7 @@ if [ ! "$NO_NEW_EC" ]; then
 		clean_project
 		if [ ! -z "$INCLUDE_GTK2" ]; then
 			remtrace Branded EiffelStudio edition - gtk2
-			export vision_implementation=gtk
+			export vision_implementation=gtk2
 			finalize ec.ecf bench
 			unset vision_implementation
 			tgz_ccode bench ec_gtk2.tar.bz2

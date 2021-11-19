@@ -22,13 +22,13 @@
 		<external_include location="$(ISE_LIBRARY)/library/web_browser/spec/include/webkit">
 			<condition>
 				<platform excluded_value="windows"/>
-				<custom name="vision_implementation" value="gtk"/>
+				<custom name="vision_implementation" value="gtk2"/>
 			</condition>
 		</external_include>
 		<external_include location="$(ISE_LIBRARY)/library/web_browser/spec/include/webkit2">
 			<condition>
 				<platform excluded_value="windows"/>
-				<custom name="vision_implementation" excluded_value="gtk"/>
+				<custom name="vision_implementation" excluded_value="gtk2"/>
 			</condition>
 		</external_include>
 
@@ -57,17 +57,17 @@
 				<custom name="vision_implementation" value="cocoa"/>
 			</condition>
 		</cluster>
-		<cluster name="implementation_gtk" location="implementation\gtk\" recursive="true">
+		<cluster name="implementation_gtk2" location="implementation\gtk\" recursive="true">
 			<condition>
 				<platform excluded_value="windows"/>
-				<custom name="vision_implementation" value="gtk"/>
+				<custom name="vision_implementation" value="gtk2"/>
 			</condition>
 		</cluster>
 		<cluster name="implementation_gtk3" location="implementation\gtk3" recursive="true">
 			<condition>
 				<platform excluded_value="windows"/>
 				<custom name="vision_implementation" excluded_value="cocoa"/>
-				<custom name="vision_implementation" excluded_value="gtk"/>
+				<custom name="vision_implementation" excluded_value="gtk2"/>
 			</condition>
 		</cluster>
 

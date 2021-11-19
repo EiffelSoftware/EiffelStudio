@@ -28,26 +28,26 @@
 		<external_include location="$(ISE_LIBRARY)/library/vision2/implementation/gtk/Clib">
 			<condition>
 				<platform excluded_value="windows"/>
-				<custom name="vision_implementation" value="gtk"/>
+				<custom name="vision_implementation" value="gtk2"/>
 			</condition>
 		</external_include>
 		<external_include location="$(ISE_LIBRARY)/library/vision2/implementation/gtk3/Clib">
 			<condition>
 				<custom name="vision_implementation" excluded_value="cocoa"/>
-				<custom name="vision_implementation" excluded_value="gtk"/>
+				<custom name="vision_implementation" excluded_value="gtk2"/>
 			</condition>
 		</external_include>
 		<external_cflag value="`$ISE_LIBRARY/library/vision2/implementation/gtk/Clib/vision2-gtk-config --include_path`">
 			<condition>
 				<platform excluded_value="windows"/>
-				<custom name="vision_implementation" value="gtk"/>
+				<custom name="vision_implementation" value="gtk2"/>
 			</condition>
 		</external_cflag>
 		<external_cflag value="`$ISE_LIBRARY/library/vision2/implementation/gtk3/Clib/vision2-gtk-config --include_path`">
 			<condition>
 				<platform excluded_value="windows"/>
 				<custom name="vision_implementation" excluded_value="cocoa"/>
-				<custom name="vision_implementation" excluded_value="gtk"/>
+				<custom name="vision_implementation" excluded_value="gtk2"/>
 			</condition>
 		</external_cflag>
 		<external_object location="$(ISE_LIBRARY)\library\vision2\spec\$ISE_C_COMPILER\$ISE_PLATFORM\lib\vision2.lib">
@@ -74,28 +74,28 @@
 			<condition>
 				<platform excluded_value="windows"/>
 				<concurrency excluded_value="none"/>
-				<custom name="vision_implementation" value="gtk"/>
+				<custom name="vision_implementation" value="gtk2"/>
 			</condition>
 		</external_linker_flag>
 		<external_linker_flag value="`$(ISE_LIBRARY)/library/vision2/implementation/gtk/Clib/vision2-gtk-config --object`">
 			<condition>
 				<platform excluded_value="windows"/>
 				<concurrency value="none"/>
-				<custom name="vision_implementation" value="gtk"/>
+				<custom name="vision_implementation" value="gtk2"/>
 			</condition>
 		</external_linker_flag>
 		<external_linker_flag value="`$(ISE_LIBRARY)/library/vision2/implementation/gtk/Clib/vision2-gtk-config --threads --library`">
 			<condition>
 				<platform excluded_value="windows"/>
 				<concurrency excluded_value="none"/>
-				<custom name="vision_implementation" value="gtk"/>
+				<custom name="vision_implementation" value="gtk2"/>
 			</condition>
 		</external_linker_flag>
 		<external_linker_flag value="`$(ISE_LIBRARY)/library/vision2/implementation/gtk/Clib/vision2-gtk-config --library`">
 			<condition>
 				<platform excluded_value="windows"/>
 				<concurrency value="none"/>
-				<custom name="vision_implementation" value="gtk"/>
+				<custom name="vision_implementation" value="gtk2"/>
 			</condition>
 		</external_linker_flag>
 		<external_linker_flag value="`$(ISE_LIBRARY)/library/vision2/implementation/gtk3/Clib/vision2-gtk-config --threads --object`">
@@ -103,7 +103,7 @@
 				<platform excluded_value="windows"/>
 				<concurrency excluded_value="none"/>
 				<custom name="vision_implementation" excluded_value="cocoa"/>
-				<custom name="vision_implementation" excluded_value="gtk"/>
+				<custom name="vision_implementation" excluded_value="gtk2"/>
 			</condition>
 		</external_linker_flag>
 		<external_linker_flag value="`$(ISE_LIBRARY)/library/vision2/implementation/gtk3/Clib/vision2-gtk-config --object`">
@@ -111,7 +111,7 @@
 				<platform excluded_value="windows"/>
 				<concurrency value="none"/>
 				<custom name="vision_implementation" excluded_value="cocoa"/>
-				<custom name="vision_implementation" excluded_value="gtk"/>
+				<custom name="vision_implementation" excluded_value="gtk2"/>
 			</condition>
 		</external_linker_flag>
 		<external_linker_flag value="`$(ISE_LIBRARY)/library/vision2/implementation/gtk3/Clib/vision2-gtk-config --threads --library`">
@@ -119,7 +119,7 @@
 				<platform excluded_value="windows"/>
 				<concurrency excluded_value="none"/>
 				<custom name="vision_implementation" excluded_value="cocoa"/>
-				<custom name="vision_implementation" excluded_value="gtk"/>
+				<custom name="vision_implementation" excluded_value="gtk2"/>
 			</condition>
 		</external_linker_flag>
 		<external_linker_flag value="`$(ISE_LIBRARY)/library/vision2/implementation/gtk3/Clib/vision2-gtk-config --library`">
@@ -127,7 +127,7 @@
 				<platform excluded_value="windows"/>
 				<concurrency value="none"/>
 				<custom name="vision_implementation" excluded_value="cocoa"/>
-				<custom name="vision_implementation" excluded_value="gtk"/>
+				<custom name="vision_implementation" excluded_value="gtk2"/>
 			</condition>
 		</external_linker_flag>
 		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf"/>
@@ -174,7 +174,7 @@
 				<exclude>/mswin$</exclude>
 				<condition>
 					<platform excluded_value="windows"/>
-					<custom name="vision_implementation" excluded_value="gtk"/>
+					<custom name="vision_implementation" excluded_value="gtk2"/>
 					<custom name="vision_implementation" excluded_value="gtk3"/>
 					<custom name="vision_implementation" excluded_value="cocoa"/>
 				</condition>
@@ -192,17 +192,17 @@
 				<custom name="vision_implementation" value="cocoa"/>
 			</condition>
 		</cluster>
-		<cluster name="implementation_gtk" location="implementation\gtk\" recursive="true">
+		<cluster name="implementation_gtk2" location="implementation\gtk\" recursive="true">
 			<condition>
 				<platform excluded_value="windows"/>
-				<custom name="vision_implementation" value="gtk"/>
+				<custom name="vision_implementation" value="gtk2"/>
 			</condition>
 		</cluster>
 		<cluster name="implementation_gtk3" location="implementation\gtk3\" recursive="true">
 			<condition>
 				<platform excluded_value="windows"/>
 				<custom name="vision_implementation" excluded_value="cocoa"/>
-				<custom name="vision_implementation" excluded_value="gtk"/>
+				<custom name="vision_implementation" excluded_value="gtk2"/>
 			</condition>
 			<file_rule>
 				<exclude>/support/ev_gdk_keysyms_externals.e$</exclude>
@@ -254,7 +254,7 @@
 		<variable name="vision_implementation" value="cocoa"/>
 	</target>
 	<target name="vision2_gtk2" extends="vision2">
-		<variable name="vision_implementation" value="gtk"/>
+		<variable name="vision_implementation" value="gtk2"/>
 	</target>
 	<target name="vision2_gtk3" extends="vision2">
 		<variable name="vision_implementation" value="gtk3"/>

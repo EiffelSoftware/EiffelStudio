@@ -338,16 +338,11 @@ feature -- Widgets
 			"C signature (GtkWidget*, GtkAllocation*) use <ev_gtk.h>"
 		end
 
-	frozen  gtk_widget_get_allocated_size (a_widget: POINTER; allocation: POINTER; baseline: INTEGER)
+	frozen gtk_widget_get_allocated_size (a_widget: POINTER; allocation: POINTER; baseline: POINTER)
 		external
 			"C inline use <ev_gtk.h>"
 		alias
-			"[
-			gtk_widget_get_allocated_size ((GtkWidget *)$a_widget,
-                               (GtkAllocation *)$allocation,
-                               (int *)$baseline);
-
-			]"
+			"return gtk_widget_get_allocated_size ((GtkWidget *)$a_widget, (GtkAllocation *)$allocation, (int*) $baseline);"
 		end
 
 	frozen gtk_widget_get_allocated_width (a_c_struct: POINTER): INTEGER_32

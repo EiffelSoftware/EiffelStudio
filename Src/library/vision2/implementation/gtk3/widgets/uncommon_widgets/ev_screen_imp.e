@@ -110,7 +110,7 @@ feature {NONE} -- Drawing initialization
 						{REFACTORING_HELPER}.to_implement ("update this code to support different environments like (Wayland)")
 					end
 					gc := {GDK_X11}.create_gc (drawable)
-					{GDK_X11}.x_set_subwindow_mode (drawable, gc, {GDK_X11}.x_subwindow_mode_include_inferiors)
+					{GDK_X11}.x_set_subwindow_mode ({GDK_X11}.x_display (drawable), gc, {GDK_X11}.x_subwindow_mode_include_inferiors)
 				end
 				init_default_values
 			end
@@ -1000,33 +1000,36 @@ feature -- Drawing / Element change
 		local
 			l_gc: like gc
 			l_drawable: like drawable
+			l_display: POINTER
 		do
 			prepare_drawing
 			Precursor (a_drawing_mode)
 			if has_x11_support then
 				l_gc := gc
 				l_drawable := drawable
+
 				if
 					not l_gc.is_default_pointer and then
 					not l_drawable.is_default_pointer
 				then
+					l_display := {GDK_X11}.x_display (l_drawable)
 					inspect
 						a_drawing_mode
 					when {EV_DRAWABLE_CONSTANTS}.drawing_mode_copy then
-						{GDK_X11}.x_set_function (l_drawable, l_gc, {GDK_X11}.x_function_GXcopy)
+						{GDK_X11}.x_set_function (l_display, l_gc, {GDK_X11}.x_function_GXcopy)
 					when {EV_DRAWABLE_CONSTANTS}.drawing_mode_and then
-						{GDK_X11}.x_set_function (l_drawable, l_gc, {GDK_X11}.x_function_GXand)
+						{GDK_X11}.x_set_function (l_display, l_gc, {GDK_X11}.x_function_GXand)
 					when {EV_DRAWABLE_CONSTANTS}.drawing_mode_xor then
-						{GDK_X11}.x_set_function (l_drawable, l_gc, {GDK_X11}.x_function_GXxor)
+						{GDK_X11}.x_set_function (l_display, l_gc, {GDK_X11}.x_function_GXxor)
 					when {EV_DRAWABLE_CONSTANTS}.drawing_mode_invert then
-						{GDK_X11}.x_set_function (l_drawable, l_gc, {GDK_X11}.x_function_GXinvert)
+						{GDK_X11}.x_set_function (l_display, l_gc, {GDK_X11}.x_function_GXinvert)
 					when {EV_DRAWABLE_CONSTANTS}.drawing_mode_or then
-						{GDK_X11}.x_set_function (l_drawable, l_gc, {GDK_X11}.x_function_GXor)
+						{GDK_X11}.x_set_function (l_display, l_gc, {GDK_X11}.x_function_GXor)
 					else
 						check
 							drawing_mode_exists: False
 						end
-						{GDK_X11}.x_set_function (l_drawable, l_gc, {GDK_X11}.x_function_GXcopy)
+						{GDK_X11}.x_set_function (l_display, l_gc, {GDK_X11}.x_function_GXcopy)
 					end
 				end
 			end

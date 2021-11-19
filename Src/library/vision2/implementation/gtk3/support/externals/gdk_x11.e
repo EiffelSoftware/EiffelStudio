@@ -17,7 +17,7 @@ feature -- XWindows
 		alias
 			"[
 				#ifdef GDK_WINDOWING_X11
-					return gdk_x11_display_error_trap_pop ((GdkDisplay *)$display)
+					return gdk_x11_display_error_trap_pop ((GdkDisplay *)$display);
 				#endif
 			]"
 		end
@@ -28,7 +28,7 @@ feature -- XWindows
 		alias
 			"[
 				#ifdef GDK_WINDOWING_X11
-					return gdk_x11_display_error_trap_push ((GdkDisplay *)$display)
+					return gdk_x11_display_error_trap_push ((GdkDisplay *)$display);
 				#endif
 			]"
 		end

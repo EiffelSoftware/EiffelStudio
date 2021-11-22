@@ -130,16 +130,13 @@ feature -- Access
 	show
 			-- Display the splash box
 		local
-			cell: EV_CELL
 			pix: EV_PIXMAP
 		do
 			pix := splash_pixmap_with_text
 			if pix /= Void then
-				create cell
-				cell.set_background_pixmap (pix)
-				cell.set_minimum_size (pix.width , pix.height)
-				pixmap_box.extend (cell)
-				pixmap_box.disable_item_expand (cell)
+				pix.set_minimum_size (pix.width , pix.height)
+				pixmap_box.extend (pix)
+				pixmap_box.disable_item_expand (pix)
 				pixmap_box.extend (create {EV_CELL})
 
 				set_size (pix.width, pix.height)
@@ -254,7 +251,7 @@ feature {NONE} -- Properties
 	verbose_panel: EV_LABEL;
 
 note
-	copyright:	"Copyright (c) 1984-2012, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2021, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

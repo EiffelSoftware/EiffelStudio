@@ -59,6 +59,18 @@ feature {NONE} -- Initialization
 			vb.disable_item_expand (hb)
 			hb.extend (create {EV_CELL})
 			hb.set_padding_width (2)
+
+			debug ("es_notification")
+				create but.make_with_text_and_action ("Debug", agent
+						do
+							if attached manager.notification_s.service as notif then
+								notif.notify_message ("TEST Notif", "debug")
+							end
+						end)
+				hb.extend (but)
+				hb.disable_item_expand (but)
+			end
+
 			create but.make_with_text_and_action ("Clear", agent clear)
 			hb.extend (but)
 			hb.disable_item_expand (but)
@@ -212,7 +224,7 @@ feature -- Action
 invariant
 
 note
-	copyright: "Copyright (c) 1984-2020, Eiffel Software"
+	copyright: "Copyright (c) 1984-2021, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

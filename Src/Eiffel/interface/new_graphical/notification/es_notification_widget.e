@@ -112,10 +112,10 @@ feature -- Element change
 			fr.extend (l_main)
 
 
-			l_main.set_foreground_color (text_foreground_color)
-			l_main.set_background_color (text_background_color)
-			l_main.propagate_background_color
-			l_main.propagate_foreground_color
+			fr.set_foreground_color (text_foreground_color)
+			fr.set_background_color (text_background_color)
+			fr.propagate_background_color
+			fr.propagate_foreground_color
 
 			l_title_bar.set_foreground_color (title_foreground_color)
 			l_title_bar.set_background_color (title_background_color)
@@ -254,7 +254,7 @@ feature -- Element change
 invariant
 
 note
-	copyright: "Copyright (c) 1984-2020, Eiffel Software"
+	copyright: "Copyright (c) 1984-2021, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

@@ -303,10 +303,9 @@ feature -- Status setting
 	internal_set_background_pixmap (a_pixmap: EV_PIXMAP)
 			-- Set the container background pixmap to `pixmap'.
 		local
---			a_style: POINTER
 			pix_imp: detachable EV_PIXMAP_IMP
---			mem_ptr, pix_ptr: POINTER
-			i: INTEGER
+			l_image: POINTER
+			  -- Pointer to a GTK image.
 		do
 			debug ("refactor_fixme")
 				{REFACTORING_HELPER}.to_implement ("implement container background")
@@ -326,30 +325,9 @@ feature -- Status setting
 			end
 			check pix_imp /= Void end
 
---			a_style := {GTK}.gtk_style_copy ({GTK}.gtk_widget_struct_style (c_object))
---			pix_ptr := {GTK}.gdk_pixmap_ref (pix_imp.drawable)
-			from
-				i := 0
-			until
-				i = 12
-			loop
-				-- We need to ref the pixmap twice for each state to prevent GdkPixmap deletion.
---				pix_ptr := {GTK}.gdk_pixmap_ref (pix_imp.drawable)
-				i := i + 1
-			end
-			from
-				i := 0
-			until
-				i = 5
-			loop
-				-- 4 = size of pointer in bytes.
---				mem_ptr := bg_pixmap (a_style) + (i * pointer_bytes)
---				mem_ptr.memory_copy ($pix_ptr, pointer_bytes)
-				--| FIXME IEK bg_pixmap deprecated.
-				i := i + 1
-			end
---			{GTK}.gtk_widget_set_style (visual_widget, a_style)
---			{GTK}.gtk_style_unref (a_style)
+			l_image := {GTK2}.gtk_image_new_from_pixbuf (pix_imp.pixbuf)
+			{GTK}.gtk_widget_show (l_image)
+			{GTK}.gtk_container_add (visual_widget, l_image)
 		end
 
 	set_background_pixmap (a_pixmap: EV_PIXMAP)

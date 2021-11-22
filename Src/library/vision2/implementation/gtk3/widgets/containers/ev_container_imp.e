@@ -323,11 +323,13 @@ feature -- Status setting
 			if attached background_pixmap as l_background_pixmap then
 				pix_imp ?= l_background_pixmap.implementation
 			end
-			check pix_imp /= Void end
-
-			l_image := {GTK2}.gtk_image_new_from_pixbuf (pix_imp.pixbuf)
-			{GTK}.gtk_widget_show (l_image)
-			{GTK}.gtk_container_add (visual_widget, l_image)
+			if pix_imp /= Void then
+				l_image := {GTK2}.gtk_image_new_from_pixbuf (pix_imp.pixbuf)
+				{GTK}.gtk_widget_show (l_image)
+				{GTK}.gtk_container_add (visual_widget, l_image)
+			else
+				check has_implementation: False end
+			end
 		end
 
 	set_background_pixmap (a_pixmap: EV_PIXMAP)

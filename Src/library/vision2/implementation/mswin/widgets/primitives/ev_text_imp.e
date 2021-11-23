@@ -368,7 +368,7 @@ feature -- Status Settings
 			l_wel_string: WEL_STRING
 		do
 			previous_caret_position := internal_wel_caret_position
-			wel_set_caret_position (text_length)
+			wel_set_caret_position (wel_text_length)
 			create l_wel_string.make_with_newline_conversion (txt)
 			{WEL_API}.send_message (wel_item, Em_replacesel, to_wparam (0), l_wel_string.item)
 			wel_set_caret_position (previous_caret_position)

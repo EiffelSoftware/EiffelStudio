@@ -156,7 +156,6 @@ feature -- Execution
 		local
 			scm: SCM_GIT
 			opts: SCM_OPTIONS
-			res: SCM_RESULT
 		do
 			reset_error
 			create scm.make (cfg)

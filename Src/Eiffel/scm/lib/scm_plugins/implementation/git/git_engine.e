@@ -275,10 +275,7 @@ feature -- Execution
 	push (a_push_op: SCM_PUSH_OPERATION; a_options: detachable SCM_OPTIONS): SCM_RESULT
 			-- Push `a_push_op` and return execution result.
 		local
-			cmd, msg: STRING_32
-			fn: READABLE_STRING_32
-			tmpfile: PLAIN_TEXT_FILE
-			tmp: PATH
+			cmd: STRING_32
 		do
 			create cmd.make_from_string (git_executable_location.name)
 			cmd.append_string_general (" push ")
@@ -311,10 +308,7 @@ feature -- Execution
 	push_command_line (a_push_op: SCM_PUSH_OPERATION; a_options: detachable SCM_OPTIONS): detachable STRING_32
 			-- Command line for the `a_push_op` push operation.
 		local
-			cmd, msg: STRING_32
-			fn: READABLE_STRING_32
-			tmpfile: PLAIN_TEXT_FILE
-			tmp: PATH
+			cmd: STRING_32
 		do
 			create cmd.make_from_string (git_executable_location.name)
 			cmd.append_string_general (" push ")

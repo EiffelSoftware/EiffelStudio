@@ -358,13 +358,12 @@ feature -- Action
 		local
 			err: BOOLEAN
 			l_pointer_style: detachable EV_POINTER_STYLE
-			txt: STRING_32
 			l_remote, l_branch: READABLE_STRING_32
 			l_unsupported_remote: BOOLEAN
 			l_push: SCM_PUSH_OPERATION
-			l_remote_uri: URI
+--			l_remote_uri: URI
 			l_cmd: STRING_32
-			l_credentials: TUPLE [username, password: detachable READABLE_STRING_GENERAL]
+--			l_credentials: TUPLE [username, password: detachable READABLE_STRING_GENERAL]
 			l_use_external_terminal: like use_external_terminal
 		do
 			if attached button_push as but then

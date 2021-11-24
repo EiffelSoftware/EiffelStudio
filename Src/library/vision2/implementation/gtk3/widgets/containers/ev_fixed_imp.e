@@ -88,6 +88,9 @@ feature -- Status setting
 				-- if  `a_widget` is currently on the max border, resizing and moving it, may impact of the global FIXED size.
 				-- see at the end of this feature.
 			l_check_minimum_size := w >= w_min or h >= h_min
+			if not l_check_minimum_size then
+				l_check_minimum_size := w <= 5 or h <= 5 -- In this case, disable the optimization and always check min size.
+			end
 
 			check attached {EV_WIDGET_IMP} a_widget.implementation as w_imp then
 				l_item_c_object := w_imp.c_object
@@ -136,7 +139,7 @@ feature -- Status setting
 			if l_check_minimum_size then
 				w := a_widget.x_position + a_widget.width
 				h := a_widget.y_position + a_widget.height
-				l_size_smaller := w < w_min or h < h_min
+				l_size_smaller := w < w_min and h < h_min
 				if l_size_smaller then
 					update_minimum_size
 				elseif w > w_min then

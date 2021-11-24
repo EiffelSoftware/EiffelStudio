@@ -139,7 +139,7 @@ feature -- Status setting
 			if l_check_minimum_size then
 				w := a_widget.x_position + a_widget.width
 				h := a_widget.y_position + a_widget.height
-				l_size_smaller := w < w_min and h < h_min
+				l_size_smaller := w < w_min or h < h_min
 				if l_size_smaller then
 					update_minimum_size
 				elseif w > w_min then

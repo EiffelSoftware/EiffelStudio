@@ -144,6 +144,13 @@ feature -- Value
 			Result := console_shell_command_preference.value
 		end
 
+	execute_in_console_shell_command (a_command_line: STRING_32): STRING_32
+			-- Execute `a_command_line` in a console shell.
+		do
+			create Result.make_from_string (execute_in_console_shell_command_preference.value)
+			Result.replace_substring_all ("$command", a_command_line)
+		end
+
 	file_browser_command: STRING_32
 			-- Command to open a target in file browser
 		do
@@ -207,6 +214,7 @@ feature -- Preference
 	preference_window_height_preference: INTEGER_PREFERENCE
 	show_hidden_preferences_preference: BOOLEAN_PREFERENCE
 	console_shell_command_preference: STRING_PREFERENCE
+	execute_in_console_shell_command_preference: STRING_PREFERENCE
 	file_browser_command_preference: STRING_32_PREFERENCE
 	locale_id_preference: ARRAY_32_PREFERENCE
 	pnd_preference: BOOLEAN_PREFERENCE
@@ -227,6 +235,7 @@ feature {NONE} -- Preference Strings
 	preference_window_height_string: STRING = "general.preference_window_height"
 	show_hidden_preferences_string: STRING = "general.show_hidden_preferences"
 	console_shell_command_string: STRING = "general.console_shell_command"
+	execute_in_console_shell_command_string: STRING = "general.execute_in_console_shell_command"
 	file_browser_command_string: STRING = "general.file_browser_command"
 	locale_id_preference_string: STRING = "general.locale"
 	pnd_preference_string: STRING = "general.pick_and_drop_(pnd)_mode"
@@ -255,12 +264,14 @@ feature {NONE} -- Implementation
 			show_hidden_preferences_preference := l_manager.new_boolean_preference_value (l_manager, show_hidden_preferences_string, False)
 			if {PLATFORM}.is_windows then
 				console_shell_command_preference := l_manager.new_string_preference_value (l_manager, console_shell_command_string, "cmd")
+				execute_in_console_shell_command_preference := l_manager.new_string_preference_value (l_manager, execute_in_console_shell_command_string, "cmd /C %"$command%"")
 				external_editor_command_preference := l_manager.new_string_preference_value (l_manager, external_editor_command_string, "notepad $target")
 				file_browser_command_preference := l_manager.new_string_32_preference_value (l_manager, file_browser_command_string, {STRING_32} "explorer $target")
 			else
-				console_shell_command_preference := l_manager.new_string_preference_value (l_manager, console_shell_command_string, "xterm -geometry 80x40")
-				file_browser_command_preference := l_manager.new_string_32_preference_value (l_manager, file_browser_command_string, {STRING_32} "xterm -geometry 80x40")
-				external_editor_command_preference := l_manager.new_string_preference_value (l_manager, external_editor_command_string, "xterm -geometry 80x40 -e vi +$line $target")
+				console_shell_command_preference := l_manager.new_string_preference_value (l_manager, console_shell_command_string, "x-terminal-emulator -geometry 80x40")
+				execute_in_console_shell_command_preference := l_manager.new_string_preference_value (l_manager, execute_in_console_shell_command_string, "x-terminal-emulator -geometry 80x40 -e %"$command%"")
+				file_browser_command_preference := l_manager.new_string_32_preference_value (l_manager, file_browser_command_string, {STRING_32} "x-terminal-emulator -geometry 80x40")
+				external_editor_command_preference := l_manager.new_string_preference_value (l_manager, external_editor_command_string, "x-terminal-emulator -geometry 80x40 -e vi +$line $target")
 			end
 
 			locale_id_preference := l_manager.new_array_32_preference_value (l_manager, locale_id_preference_string, <<"Unselected">>)
@@ -406,6 +417,7 @@ invariant
 	preference_window_width_preference_not_void: preference_window_width_preference /= Void
 	preference_window_height_preference_not_void: preference_window_height_preference /= Void
 	console_shell_command_preference_not_void: console_shell_command_preference /= Void
+	execute_in_console_shell_command_preference_not_void: execute_in_console_shell_command_preference /= Void
 	locale_id_preference_not_void: locale_id_preference /= Void
 	pnd_preference_not_void: pnd_preference /= Void
 	update_channel_preference_not_void: update_channel_preference /= Void

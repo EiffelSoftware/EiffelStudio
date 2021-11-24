@@ -351,7 +351,7 @@ feature -- Unmanaged process launch
 			if console_shell /= Void then
 				cl.append (console_shell)
 			end
-			if console_shell.is_empty then
+			if cl.is_empty then
 				if {PLATFORM}.is_windows then
 					cmdexe := Execution_environment.item ("COMSPEC")
 					if cmdexe /= Void then
@@ -557,7 +557,7 @@ invariant
 	data_storage_not_void: data_storage /= Void
 
 note
-	copyright: "Copyright (c) 1984-2017, Eiffel Software"
+	copyright: "Copyright (c) 1984-2021, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

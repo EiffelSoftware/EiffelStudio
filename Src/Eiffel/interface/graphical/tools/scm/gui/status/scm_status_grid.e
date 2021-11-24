@@ -421,6 +421,17 @@ feature -- Operations
 			end
 		end
 
+	update_status (a_status: SCM_STATUS)
+		do
+			if
+				attached status_box as l_status_box and then
+				attached l_status_box.scm_service as scm and then
+				attached scm.scm_root_location (a_status.location) as loc
+			then
+				update_statuses (loc)
+			end
+		end
+
 	on_statuses_updated (a_root: detachable SCM_LOCATION; a_location: PATH; a_statuses: detachable SCM_STATUS_LIST)
 		do
 			if attached scm_rows as lst then

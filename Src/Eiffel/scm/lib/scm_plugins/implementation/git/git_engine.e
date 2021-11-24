@@ -272,6 +272,61 @@ feature -- Execution
 			end
 		end
 
+	push (a_push_op: SCM_PUSH_OPERATION; a_options: detachable SCM_OPTIONS): SCM_RESULT
+			-- Push `a_push_op` and return execution result.
+		local
+			cmd, msg: STRING_32
+			fn: READABLE_STRING_32
+			tmpfile: PLAIN_TEXT_FILE
+			tmp: PATH
+		do
+			create cmd.make_from_string (git_executable_location.name)
+			cmd.append_string_general (" push ")
+			cmd.append_string (option_to_command_line_flags ("push", a_options))
+			cmd.append_string_general (" ")
+			cmd.append_string_general (a_push_op.remote)
+			cmd.append_string_general (" ")
+			cmd.append_string_general (a_push_op.remote_branch)
+
+			debug ("GIT_ENGINE")
+				print ({STRING_32} "Command: [" + cmd + "]%N")
+			end
+			if attached output_of_command (cmd, a_push_op.root_location.location) as res_push then
+				if res_push.exit_code = 0 then
+					create Result.make_success (cmd)
+					Result.set_message (res_push.output)
+				else
+					create Result.make_failure (cmd)
+					Result.set_message (res_push.error_output)
+				end
+			else
+				create Result.make_failure (cmd)
+				Result.set_message ("Error: can not launch git [" + process_misc.last_error.out + "]")
+			end
+			debug ("GIT_ENGINE")
+				print ("-> terminated %N")
+			end
+		end
+
+	push_command_line (a_push_op: SCM_PUSH_OPERATION; a_options: detachable SCM_OPTIONS): detachable STRING_32
+			-- Command line for the `a_push_op` push operation.
+		local
+			cmd, msg: STRING_32
+			fn: READABLE_STRING_32
+			tmpfile: PLAIN_TEXT_FILE
+			tmp: PATH
+		do
+			create cmd.make_from_string (git_executable_location.name)
+			cmd.append_string_general (" push ")
+			cmd.append_string (option_to_command_line_flags ("push", a_options))
+			cmd.append_string_general (" ")
+			cmd.append_string_general (a_push_op.remote)
+			cmd.append_string_general (" ")
+			cmd.append_string_general (a_push_op.remote_branch)
+
+			Result := cmd
+		end
+
 feature -- Git specific
 
 	remotes (a_root_location: PATH; a_options: detachable SCM_OPTIONS): detachable STRING_TABLE [GIT_REMOTE]
@@ -366,13 +421,14 @@ feature -- Git specific
 			res: detachable PROCESS_COMMAND_RESULT
 			s: detachable READABLE_STRING_8
 			cmd: STRING_32
-			i,j,k,n: INTEGER
+			i,j,k,m,n: INTEGER
 			l_name: READABLE_STRING_8
+			l_sha1_id: READABLE_STRING_8
 			l_is_active: BOOLEAN
 			br: GIT_BRANCH
 		do
 			create cmd.make_from_string (git_executable_location.name)
-			cmd.append_string_general (" branch")
+			cmd.append_string_general (" branch -vv") -- "-vv": is to be verbose, and display the default upstream repository.
 			if a_show_all then
 				cmd.append_string_general (" -a")
 			end
@@ -398,6 +454,7 @@ feature -- Git specific
 				until
 					i > n
 				loop
+						-- ex: "* develop 1d8e2f7 [origin/develop: ahead 1] comment ..."
 					j := s.index_of ('%N', i)
 					if j < i then
 						j := s.count
@@ -414,16 +471,47 @@ feature -- Git specific
 						k := k + 1
 					end
 					if k > j then
-						k := j
+						k := j -- end of line
 					else
 						k := k - 1
 					end
 					l_name := s.substring (i, k)
 					br := Result [l_name]
 					if br = Void then
-						create br.make (s.substring (i, k))
+						create br.make (l_name)
 					end
 					br.set_is_active (l_is_active)
+
+						-- Next space or tab
+					i := k + 1
+					from k := i + 1 until k > j or else s [k].is_space loop
+						k := k + 1
+					end
+					if k > j then
+						k := j -- end of line
+					else
+						k := k - 1
+					end
+					l_sha1_id := s.substring (i, k)
+
+						-- Next space or tab
+						-- detect: [origin/develop: ahead 1]
+					if i < j then
+						i := k + 2
+						if s [i] = '[' then
+							k := s.index_of (']', i + 1)
+							if k > 0 then
+								m := s.index_of (':', i + 1)
+								if m > 0 then
+									-- Ignore after ":"
+									br.set_upstream_remote (s.substring (i + 1, m - 1))
+								else
+									br.set_upstream_remote (s.substring (i + 1, k - 1))
+								end
+							end
+						end
+					end
+
 					Result [br.name] := br
 					i := j + 1
 				end
@@ -434,7 +522,6 @@ feature -- Git specific
 				end
 			end
 		end
-
 
 feature {NONE} -- Implementation
 

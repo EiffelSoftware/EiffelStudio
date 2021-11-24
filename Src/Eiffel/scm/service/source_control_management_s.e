@@ -79,6 +79,15 @@ feature -- Operations
 		deferred
 		end
 
+	push (a_push: SCM_PUSH_OPERATION)
+		deferred
+		end
+
+	push_command_line (a_push: SCM_PUSH_OPERATION): STRING_32
+			-- Command line to execute the push operation `a_push`.
+		deferred
+		end
+
 	post_commit_operations (a_commit: SCM_COMMIT_SET): detachable LIST [SCM_POST_COMMIT_OPERATION]
 		require
 			is_processed: a_commit.is_processed

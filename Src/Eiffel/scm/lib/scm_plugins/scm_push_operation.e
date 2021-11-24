@@ -1,54 +1,69 @@
 note
-	description: "Summary description for {GIT_BRANCH}."
+	description: "Summary description for {SCM_PUSH_OPERATION}."
+	author: ""
 	date: "$Date$"
 	revision: "$Revision$"
 
 class
-	GIT_BRANCH
+	SCM_PUSH_OPERATION
 
 create
 	make
 
 feature {NONE} -- Initialization
 
-	make (a_name: READABLE_STRING_GENERAL)
+	make (a_loc: SCM_DISTRIBUTED_LOCATION; a_remote, a_remote_branch: READABLE_STRING_GENERAL)
 		do
-			create name.make_from_string_general (a_name)
+			root_location := a_loc
+			remote := a_remote
+			remote_branch := a_remote_branch
 		end
 
 feature -- Access
 
-	name: IMMUTABLE_STRING_32
+	root_location: SCM_DISTRIBUTED_LOCATION
 
-	is_active: BOOLEAN
+	remote: IMMUTABLE_STRING_32
 
-	upstream_remote: detachable TUPLE [repository: READABLE_STRING_8; branch: detachable READABLE_STRING_8]
+	remote_branch: IMMUTABLE_STRING_32
+
+	is_processed: BOOLEAN
+	has_error: BOOLEAN
+	execution_message: detachable READABLE_STRING_32
 
 feature -- Element change
 
-	set_is_active (b: BOOLEAN)
+	reset
 		do
-			is_active := b
+			is_processed := False
+			has_error := False
+			execution_message := Void
 		end
 
-	set_upstream_remote (a_remote: detachable READABLE_STRING_8)
-		local
-			i: INTEGER
+	report_error (m: READABLE_STRING_GENERAL)
 		do
-			if a_remote = Void or else a_remote.is_whitespace then
-				upstream_remote := Void
+			is_processed := True
+			has_error := True
+			if attached execution_message as msg then
+				execution_message := msg + "%N" + m
 			else
-				i := a_remote.index_of ('/', 1)
-				if i > 0 then
-					upstream_remote := [a_remote.substring (1, i - 1), a_remote.substring (i + 1, a_remote.count)]
-				else
-					upstream_remote := [a_remote, Void]
-				end
+				execution_message := m
 			end
 		end
 
+	report_success (m: READABLE_STRING_GENERAL)
+		do
+			is_processed := True
+			if attached execution_message as msg then
+					-- Keep previous `has_error` as there was already an execution message.
+				execution_message := msg + "%N" + m
+			else
+				has_error := False
+				execution_message := m
+			end
+		end
 
-;note
+note
 	copyright: "Copyright (c) 1984-2021, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"

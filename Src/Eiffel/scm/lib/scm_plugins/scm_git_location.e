@@ -7,7 +7,7 @@ class
 	SCM_GIT_LOCATION
 
 inherit
-	SCM_LOCATION
+	SCM_DISTRIBUTED_LOCATION
 
 create
 	make
@@ -124,6 +124,44 @@ feature -- Execution
 				check is_ready: False end
 				a_commit_set.report_error ("commit is not ready, message is missing")
 			end
+		end
+
+	push (a_push: SCM_PUSH_OPERATION; cfg: SCM_CONFIG)
+		local
+			scm: SCM_GIT
+			opts: SCM_OPTIONS
+			res: SCM_RESULT
+		do
+			reset_error
+			create scm.make (cfg)
+			create opts
+			res := scm.push (a_push, opts)
+			if res.succeed then
+				if attached res.message as msg then
+					a_push.report_success (msg)
+				else
+					a_push.report_success ("git operation completed")
+				end
+			else
+				if attached res.message as msg then
+					a_push.report_error (msg)
+				else
+					a_push.report_error ("git operation failed")
+				end
+				has_error := True
+			end
+		end
+
+	push_command_line (a_push: SCM_PUSH_OPERATION; cfg: SCM_CONFIG): detachable STRING_32
+		local
+			scm: SCM_GIT
+			opts: SCM_OPTIONS
+			res: SCM_RESULT
+		do
+			reset_error
+			create scm.make (cfg)
+			create opts
+			Result := scm.push_command_line (a_push, opts)
 		end
 
 	remotes (cfg: SCM_CONFIG): detachable STRING_TABLE [GIT_REMOTE]

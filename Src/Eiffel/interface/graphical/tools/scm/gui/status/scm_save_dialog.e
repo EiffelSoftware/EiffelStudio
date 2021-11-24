@@ -374,33 +374,6 @@ feature -- Action
 						txt.append ({STRING_32} " - ")
 						txt.append (l_git_push.description)
 						txt.append_character ('%N')
-						debug ("scm")
-							if attached l_git_push.root_location.remotes (scm_service.config) as lst then
-								txt.append ("   Remotes:")
-								across
-									lst as ic_remote
-								loop
-									txt.append (" ")
-									txt.append (ic_remote.item.name)
-									if attached ic_remote.item.location as loc then
-										txt.append_character ('(')
-										txt.append (loc)
-										txt.append_character (')')
-									end
-								end
-								txt.append_character ('%N')
-							end
-							if attached l_git_push.root_location.branches (scm_service.config) as lst then
-								txt.append ("   Branches:")
-								across
-									lst as ic_branch
-								loop
-									txt.append_character (' ')
-									txt.append (ic_branch.item.name)
-								end
-								txt.append_character ('%N')
-							end
-						end
 					end
 				end
 				progress_log_text.set_text (txt)

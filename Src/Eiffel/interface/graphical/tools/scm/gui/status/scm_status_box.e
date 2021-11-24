@@ -271,6 +271,13 @@ feature -- Basic operation
 			end
 		end
 
+	update_status (a_status: SCM_STATUS)
+		do
+			if attached grid as g then
+				g.update_status (a_status)
+			end
+		end
+
 	reset
 		do
 			if attached grid as g then
@@ -331,6 +338,19 @@ feature -- Basic operation
 			end
 		end
 
+	open_git_push_dialog (a_git_loc: SCM_GIT_LOCATION)
+		local
+			l_dlg: SCM_PUSH_DIALOG
+		do
+			create l_dlg.make (scm_service, a_git_loc, Current)
+			if attached development_window as devwin then
+				l_dlg.set_size (devwin.dpi_scaler.scaled_size (800).min (devwin.window.width), devwin.dpi_scaler.scaled_size (600).min (devwin.window.height))
+			end
+			l_dlg.set_is_modal (False)
+			l_dlg.show_on_active_window
+			update_statuses (a_git_loc)
+		end
+
 	save_location (loc: SCM_LOCATION)
 		local
 			l_commit: SCM_SINGLE_COMMIT_SET
@@ -342,9 +362,13 @@ feature -- Basic operation
 					if not l_commit.has_error then
 						l_changelist.wipe_out
 					end
-					update_statuses (loc)
 				end
 			end
+		end
+
+	git_push_location (a_git_loc: SCM_GIT_LOCATION)
+		do
+			open_git_push_dialog (a_git_loc)
 		end
 
 	on_save
@@ -470,6 +494,7 @@ feature -- Basic operation
 				ch_list.extend_status (a_status)
 				if attached scm_service.revert (ch_list) as l_output then
 					show_command_execution ("Revert", l_output)
+					update_status (a_status)
 				end
 			end
 		end

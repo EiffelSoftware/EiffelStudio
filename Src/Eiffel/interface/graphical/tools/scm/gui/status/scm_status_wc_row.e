@@ -325,7 +325,7 @@ feature -- Execution
 						glab.set_font (g.bold_font)
 					else
 						if attached {SCM_STATUS_UNVERSIONED} st then
-							glab.set_foreground_color (colors.disabled_foreground_color)
+							glab.set_foreground_color (colors.stock_colors.color_read_only)
 						end
 						glab.set_font (g.grid_font)
 					end

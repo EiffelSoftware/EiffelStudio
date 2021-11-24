@@ -1,54 +1,21 @@
 note
-	description: "Summary description for {GIT_BRANCH}."
+	description: "location for distributed scm (like git)."
 	date: "$Date$"
 	revision: "$Revision$"
 
-class
-	GIT_BRANCH
+deferred class
+	SCM_DISTRIBUTED_LOCATION
 
-create
-	make
+inherit
+	SCM_LOCATION
 
-feature {NONE} -- Initialization
+feature -- Execution
 
-	make (a_name: READABLE_STRING_GENERAL)
-		do
-			create name.make_from_string_general (a_name)
+	push (a_push: SCM_PUSH_OPERATION; cfg: SCM_CONFIG)
+		deferred
 		end
 
-feature -- Access
-
-	name: IMMUTABLE_STRING_32
-
-	is_active: BOOLEAN
-
-	upstream_remote: detachable TUPLE [repository: READABLE_STRING_8; branch: detachable READABLE_STRING_8]
-
-feature -- Element change
-
-	set_is_active (b: BOOLEAN)
-		do
-			is_active := b
-		end
-
-	set_upstream_remote (a_remote: detachable READABLE_STRING_8)
-		local
-			i: INTEGER
-		do
-			if a_remote = Void or else a_remote.is_whitespace then
-				upstream_remote := Void
-			else
-				i := a_remote.index_of ('/', 1)
-				if i > 0 then
-					upstream_remote := [a_remote.substring (1, i - 1), a_remote.substring (i + 1, a_remote.count)]
-				else
-					upstream_remote := [a_remote, Void]
-				end
-			end
-		end
-
-
-;note
+note
 	copyright: "Copyright (c) 1984-2021, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"

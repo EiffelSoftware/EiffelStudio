@@ -92,7 +92,7 @@ feature -- Operation
 			if l_is_supported then
 				a_grid.set_row_style_properties (a_row, a_grid.bold_font, a_grid.stock_colors.blue, Void)
 			else
-				a_grid.set_row_style_properties (a_row, a_grid.bold_font, a_grid.stock_colors.grey, Void)
+				a_grid.set_row_style_properties (a_row, a_grid.bold_font, a_grid.stock_colors.dark_grey, Void)
 			end
 
 			a_grid.fill_empty_grid_items (a_row)
@@ -204,6 +204,14 @@ feature -- Operation
 			end
 			if not l_is_supported then
 				mi.disable_sensitive
+			end
+
+			if attached {SCM_GIT_LOCATION} root_location as l_git_root_location then
+				create mi.make_with_text_and_action (scm_names.menu_git_push, agent (i_git_loc: SCM_GIT_LOCATION)
+						do
+							parent_grid.status_box.git_push_location (i_git_loc)
+						end(l_git_root_location))
+				m.extend (mi)
 			end
 
 			create mi.make_with_text_and_action (scm_names.menu_check, agent update_statuses)

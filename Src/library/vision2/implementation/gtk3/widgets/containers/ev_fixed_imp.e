@@ -167,7 +167,7 @@ feature -- Status setting
 				loop
 					if
 						attached {EV_WIDGET} item as l_widget and then
-						attached {EV_WIDGET_IMP} l_widget as l_widget_imp
+						attached {EV_WIDGET_IMP} l_widget.implementation as l_widget_imp
 					then
 						l_widget_width := l_widget.width
 						if l_widget.minimum_width_set_by_user then

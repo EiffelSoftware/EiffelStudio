@@ -290,10 +290,17 @@ feature -- Debug mode command
 			l_tool.content.set_top ({SD_ENUMERATION}.right)
 			l_last_tool := l_tool
 
-				--| Testing tool to the right (which will be the actual position of the call stack tool)
+				--| Testing tool to the right (which will be the actual position of the previous tool)
 			l_tool := l_shell_tools.tool ({ES_TESTING_TOOL})
 			l_tool.content.set_tab_with (l_last_tool.content, False)
 			l_last_tool := l_tool
+
+				--| Source control tool to the right (which will be the actual position of the previous tool)
+			l_tool := l_shell_tools.tool ({ES_SCM_TOOL})
+			if l_tool /= Void then
+				l_tool.content.set_tab_with (l_last_tool.content, False)
+				l_last_tool := l_tool
+			end
 
 				--| Adding favourites tool to the right of the testing tool (hidden)
 			l_tool := l_shell_tools.tool ({ES_FAVORITES_TOOL})
@@ -461,6 +468,12 @@ feature {NONE} -- Implementation
 			l_tool.content.set_tab_with (l_last_tool.content, True)
 			l_last_tool := l_tool
 
+			l_tool := l_shell_tools.tool ({ES_SCM_TOOL})
+			if l_tool /= Void then
+				l_tool.content.set_tab_with (l_last_tool.content, True)
+				l_last_tool := l_tool
+			end
+
 			l_tool := l_shell_tools.tool ({ES_FEATURES_TOOL})
 			l_tool.content.set_tab_with (l_last_tool.content, True)
 			l_last_tool := l_tool
@@ -546,7 +559,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright: "Copyright (c) 1984-2018, Eiffel Software"
+	copyright: "Copyright (c) 1984-2021, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

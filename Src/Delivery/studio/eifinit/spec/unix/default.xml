@@ -1,6 +1,7 @@
 <EIFFEL_DOCUMENT>		
 	<PREF NAME="editor.eiffel.text_mode_is_windows" DESCRIPTION="Format to use when saving class text. True means using Windows text format, False means using Unix text format."><BOOLEAN>False</BOOLEAN></PREF>	
 	<PREF NAME="general.console_shell_command" DESCRIPTION="Command used to launch a console."><STRING>$ISE_EIFFEL/tools/spec/$ISE_PLATFORM/bin/estudio-terminal</STRING></PREF>
+	<PREF NAME="general.execute_in_console_shell_command" DESCRIPTION="Execute command in terminal/console."><STRING>$ISE_EIFFEL/tools/spec/$ISE_PLATFORM/bin/estudio-terminal-execution</STRING></PREF>
 	<PREF NAME="general.external_editor_command" DESCRIPTION="Command used to launch  an external editor."><STRING>$ISE_EIFFEL/tools/spec/$ISE_PLATFORM/bin/estudio-open-file $target $line</STRING></PREF>
 	<PREF NAME="general.acrobat_reader" DESCRIPTION="Command to read Adobe Acrobat files."><STRING>acroread</STRING></PREF>	
 	<PREF NAME="general.internet_browser" DESCRIPTION="Internet browser."><STRING>$ISE_EIFFEL/tools/spec/$ISE_PLATFORM/bin/estudio-open-url $url</STRING></PREF>

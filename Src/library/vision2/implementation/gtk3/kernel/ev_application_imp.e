@@ -1459,14 +1459,23 @@ feature -- Implementation
 			temp_x, temp_y: INTEGER
 			l_stored_display_data: like stored_display_data
 			l_device: POINTER
+			l_screen: POINTER
 		do
 				-- Update coords for physical to logical.
 			l_stored_display_data := stored_display_data
 
 			l_device := {GDK_HELPERS}.default_device
-			l_window := {GDK}.gdk_device_get_window_at_position (l_device, $temp_x, $temp_y)
+			l_screen := {GDK_HELPERS}.default_screen
+				-- Replace the call to l_window := {GDK}.gdk_device_get_window_at_position (l_device, $temp_x, $temp_y)
+				-- which always return a default_pointer and -1,-1 with a call to device_get_position and then
+				-- we retrieve the active window of the screen.
+			{GDK_HELPERS}.device_get_position (l_device, $temp_x, $temp_y)
+			l_window := {GDK}.gdk_screen_get_active_window (l_screen)
+
 			if not l_window.is_default_pointer then
-				l_window := {GDK}.gdk_window_get_device_position (l_window, l_device, $temp_x, $temp_y, $temp_mask)
+				--| TODO double check
+				--| the original code compute l_window := {GDK}.gdk_window_get_device_position (l_window, l_device, $temp_x, $temp_y, $temp_mask)
+				--| it does not work, and it seems no needed to compute it again.
 				l_stored_display_data.window := l_window
 				l_stored_display_data.x := temp_x + screen_virtual_x
 				l_stored_display_data.y := temp_y + screen_virtual_y

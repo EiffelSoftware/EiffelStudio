@@ -16,6 +16,13 @@ feature -- Window
 			"return gdk_device_get_window_at_position(gdk_seat_get_pointer(gdk_display_get_default_seat (gdk_display_get_default())), $a_x, $a_y);"
 		end
 
+	device_get_position (device: POINTER; a_x, a_y: TYPED_POINTER [INTEGER_32])
+		external
+			"C inline use <ev_gtk.h>"
+		alias
+			"gdk_device_get_position ($device, NULL, $a_x, $a_y);"
+		end
+
 feature -- Quik access
 
 	default_display: POINTER
@@ -42,6 +49,7 @@ feature -- Quik access
 			"return gdk_seat_get_pointer(gdk_display_get_default_seat (gdk_display_get_default()));"
 		end
 
+
 	default_screen: POINTER
 			-- Screen associated to the `default_display'.
 		external
@@ -59,7 +67,7 @@ feature -- Quik access
 		end
 
 note
-	copyright: "Copyright (c) 1984-2016, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2021, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

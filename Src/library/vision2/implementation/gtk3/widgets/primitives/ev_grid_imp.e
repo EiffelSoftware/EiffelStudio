@@ -20,6 +20,7 @@ inherit
 			interface,
 			set_default_size_values,
 			viewport_resized,
+			resize_viewport_in_static_fixed,
 			static_fixed_x_offset,
 			static_fixed_y_offset,
 			static_fixed_minimum_width,
@@ -139,6 +140,16 @@ feature -- Element change
 		end
 
 feature {EV_GRID_LOCKED_I} -- Drawing implementation
+
+	resize_viewport_in_static_fixed (an_x, a_y, a_width, a_height: INTEGER)
+			-- Resize `viewport' within `static_fixed' as the viewable
+			-- area of `Current' has changed.
+		do
+				-- TODO: find better solution  (this hack is only for GTK3)
+			static_fixed.reset_minimum_size
+			viewport.reset_minimum_size
+			Precursor (an_x, a_y, a_width, a_height)
+		end
 
 	viewport_resized (an_x, a_y, a_width, a_height: INTEGER)
 			-- <Precursor>

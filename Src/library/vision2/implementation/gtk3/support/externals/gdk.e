@@ -593,14 +593,6 @@ feature -- GdkWindow
 			"return gdk_window_get_clip_region ((GdkWindow *)$a_window);"
 		end
 
-	frozen gdk_screen_get_active_window (a_screen: POINTER): POINTER
-		external
-			"C inline use <ev_gtk.h>"
-		alias
-			"return gdk_screen_get_active_window  ((GdkScreen *)$a_screen);"
-		end
-
-
 feature -- GdkDrawing		
 
 	frozen gdk_drawing_context_is_valid (a_context: POINTER): BOOLEAN
@@ -652,12 +644,6 @@ feature -- GdkDevice
 		external
 			"C signature (GdkDevice *,gint *, gint *): GdkWindow * use <ev_gtk.h>"
 		end
-
-	frozen gdk_device_get_window_at_position_double (a_device: POINTER; a_win_x, a_win_y: TYPED_POINTER [REAL_64]): POINTER
-		external
-			"C signature (GdkDevice *,gdouble *, gdouble *): GdkWindow * use <ev_gtk.h>"
-		end
-
 
 feature -- GdkVisual
 

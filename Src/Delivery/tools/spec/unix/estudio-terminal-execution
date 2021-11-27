@@ -1,10 +1,9 @@
 #!/bin/sh
 
 if [ -x "$(command -v "x-terminal-emulator")" ]; then
-	x-terminal-emulator -e "$*"
+	x-terminal-emulator -e "$*; echo Press enter to continue; read dummy;"
 elif [ -x "$(command -v "xterm")" ]; then
-	xterm -geometry 100x40 -e "$*"
+	xterm -geometry 100x40 -e "$*;  echo Press enter to continue; read dummy;"
 else
 	$*
 fi
-echo Press enter to continue; read dummy;

@@ -403,7 +403,7 @@ feature -- Basic operations
 			Result := item_at_position (an_x, a_y)
 			if Result /= Void then
 				item_indent := grid.item_indent (Result)
-				if an_x - Result.virtual_x_position < 0 then
+				if drawable_x_to_virtual_x (an_x) - Result.virtual_x_position < 0 then
 					Result := Void
 				end
 			end

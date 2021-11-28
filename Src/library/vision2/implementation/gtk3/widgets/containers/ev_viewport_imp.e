@@ -171,14 +171,27 @@ feature -- Element change
 				debug ("gtk_sizing")
 					print (attached_interface.debug_output + {STRING_32} ".set_item_size -> IMP w=" + w.out + ",h=" + h.out + ")%N")
 				end
-				{GTK}.set_gtk_allocation_struct_width (l_alloc, w)
-				{GTK}.set_gtk_allocation_struct_height (l_alloc, h)
+
 				{GTK2}.gtk_widget_set_minimum_size (l_child_item, w, h)
-				{GTK2}.gtk_widget_size_allocate (l_child_item, l_alloc)
+
+				if
+					{GTK}.gtk_allocation_struct_width (l_alloc) /= w
+					or {GTK}.gtk_allocation_struct_height (l_alloc) /= h
+				then
+					{GTK}.set_gtk_allocation_struct_width (l_alloc, w)
+					{GTK}.set_gtk_allocation_struct_height (l_alloc, h)
+					{GTK2}.gtk_widget_size_allocate (l_child_item, l_alloc)
+				else
+						-- Same allocation !
+					debug ("gtk_sizing")
+						print (attached_interface.debug_output + {STRING_32} ".set_item_size -> SAME SIZE ALLOCATION.%N")
+					end
+				end
 
 				l_alloc.memory_free
-
-				{GTK}.gtk_container_check_resize (viewport)
+				if not in_update_viewport_item_size then
+					{GTK}.gtk_container_check_resize (viewport)
+				end
 			else
 				check has_item_and_implementation: False end
 			end
@@ -210,7 +223,12 @@ feature {NONE} -- Implementation
 
 				w := a_viewport_width.max (1)
 				h := a_viewport_height.max (1)
-				if a_viewport_width < width or a_viewport_height < height then
+				if
+					a_viewport_width < width or
+					a_viewport_height < height or
+					a_viewport_width < prev_w or
+					a_viewport_height < prev_h
+				then
 					l_item.reset_minimum_size
 				end
 				if attached {EV_WIDGET_IMP} l_item.implementation as l_item_imp then

@@ -92,6 +92,13 @@ feature -- Status setting
 				l_check_minimum_size := w <= 5 or h <= 5 -- In this case, disable the optimization and always check min size.
 			end
 
+			if not a_widget.minimum_width_set_by_user then
+				a_widget.reset_minimum_width
+			end
+			if not a_widget.minimum_height_set_by_user then
+				a_widget.reset_minimum_height
+			end
+
 			check attached {EV_WIDGET_IMP} a_widget.implementation as w_imp then
 				l_item_c_object := w_imp.c_object
 				w := w_imp.preferred_minimum_width
@@ -115,11 +122,28 @@ feature -- Status setting
 
 				l_alloc := l_alloc.memory_alloc ({GTK}.c_gtk_allocation_struct_size)
 				{GTK}.gtk_widget_get_allocation (l_child_container, l_alloc)
-				{GTK}.set_gtk_allocation_struct_x (l_alloc, a_x + internal_x_y_offset)
-				{GTK}.set_gtk_allocation_struct_y (l_alloc, a_y + internal_x_y_offset)
-				{GTK}.set_gtk_allocation_struct_width (l_alloc, w)
-				{GTK}.set_gtk_allocation_struct_height (l_alloc, h)
-				{GTK2}.gtk_widget_size_allocate (l_child_container, l_alloc)
+
+				if
+					{GTK}.gtk_allocation_struct_width (l_alloc) /= w
+					or {GTK}.gtk_allocation_struct_height (l_alloc) /= h
+					or {GTK}.gtk_allocation_struct_x (l_alloc) /= a_x + internal_x_y_offset
+					or {GTK}.gtk_allocation_struct_y (l_alloc) /= a_y + internal_x_y_offset
+				then
+					{GTK}.set_gtk_allocation_struct_x (l_alloc, a_x + internal_x_y_offset)
+					{GTK}.set_gtk_allocation_struct_y (l_alloc, a_y + internal_x_y_offset)
+					{GTK}.set_gtk_allocation_struct_width (l_alloc, w)
+					{GTK}.set_gtk_allocation_struct_height (l_alloc, h)
+					{GTK2}.gtk_widget_size_allocate (l_child_container, l_alloc)
+				else
+					debug ("gtk_sizing")
+						if attached interface as l_interface then
+							print (l_interface.debug_output)
+						else
+							print (generating_type.name_32)
+						end
+						print ({STRING_32} ".set_item_position_and_size: SAME position and size ALLOCATION.%N")
+					end
+				end
 				l_alloc.memory_free
 			end
 			if

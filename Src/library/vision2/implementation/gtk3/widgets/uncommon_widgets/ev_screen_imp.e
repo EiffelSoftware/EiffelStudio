@@ -193,18 +193,21 @@ feature -- Status report
 			-- Widget implementation at current mouse pointer position (if any)
 		local
 			gdkwin, gtkwid: POINTER
-			l_display_data: TUPLE [a_window: POINTER; a_x: INTEGER; a_y: INTEGER; a_mask: NATURAL_32]
+			l_display_data: TUPLE [window: POINTER; a_x: INTEGER; a_y: INTEGER; a_mask: NATURAL_32]
 		do
 			l_display_data := app_implementation.retrieve_display_data
-			gdkwin := l_display_data.a_window
-			if gdkwin /= default_pointer then
+			gdkwin := l_display_data.window
+			if not gdkwin.is_default_pointer then
 				from
 					{GTK}.gdk_window_get_user_data (gdkwin, $gtkwid)
 				until
-					Result /= Void or else gtkwid = default_pointer
+					Result /= Void or else gtkwid.is_default_pointer
 				loop
-					Result ?= {EV_GTK_CALLBACK_MARSHAL}.c_get_eif_reference_from_object_id (gtkwid)
-					gtkwid := {GTK}.gtk_widget_get_parent (gtkwid)
+					if attached {EV_WIDGET_IMP} ({EV_GTK_CALLBACK_MARSHAL}.c_get_eif_reference_from_object_id (gtkwid)) as w_imp then
+						Result := w_imp
+					else
+						gtkwid := {GTK}.gtk_widget_get_parent (gtkwid)
+					end
 				end
 			end
 		end

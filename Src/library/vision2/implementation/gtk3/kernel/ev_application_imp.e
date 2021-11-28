@@ -186,7 +186,7 @@ feature {NONE} -- Initialization
 			c_get_screen_geometry (l_workarea)
 			screen_virtual_width := {GTK}.gdk_rectangle_struct_width (l_workarea)
 			screen_virtual_height := {GTK}.gdk_rectangle_struct_height (l_workarea)
-
+			l_workarea.memory_free
 		end
 
 	gdk_display_supports_composite_symbol: POINTER

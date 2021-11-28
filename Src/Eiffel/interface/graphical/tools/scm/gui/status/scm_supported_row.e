@@ -194,6 +194,12 @@ feature -- Operation
 					m.extend (mi)
 			end
 
+			create mi.make_with_text_and_action (scm_names.menu_check, agent update_statuses)
+			m.extend (mi)
+			if not l_is_supported then
+				mi.disable_sensitive
+			end
+
 			create mi.make_with_text_and_action (scm_names.menu_commit, agent
 					do
 						parent_grid.status_box.save_location (root_location)
@@ -212,18 +218,17 @@ feature -- Operation
 							parent_grid.status_box.git_push_location (i_git_loc)
 						end(l_git_root_location))
 				m.extend (mi)
-			end
-
-			create mi.make_with_text_and_action (scm_names.menu_check, agent update_statuses)
-			m.extend (mi)
-			if not l_is_supported then
-				mi.disable_sensitive
-			end
-
-			create mi.make_with_text_and_action (scm_names.menu_update, agent show_location_update)
-			m.extend (mi)
-			if not l_is_supported then
-				mi.disable_sensitive
+				create mi.make_with_text_and_action (scm_names.menu_git_pull, agent (i_git_loc: SCM_GIT_LOCATION)
+						do
+							parent_grid.status_box.git_pull_location (i_git_loc)
+						end(l_git_root_location))
+				m.extend (mi)
+			else
+				create mi.make_with_text_and_action (scm_names.menu_update, agent show_location_update)
+				m.extend (mi)
+				if not l_is_supported then
+					mi.disable_sensitive
+				end
 			end
 
 			create mi.make_with_text_and_action (scm_names.menu_diff, agent show_location_diff)

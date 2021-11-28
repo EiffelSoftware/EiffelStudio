@@ -285,7 +285,6 @@ feature -- Operations
 			retry
 		end
 
-
 	push (a_push: SCM_PUSH_OPERATION)
 		local
 			retried: BOOLEAN
@@ -312,6 +311,35 @@ feature -- Operations
 				Result := l_git_loc.push_command_line (a_push, config)
 			else
 				a_push.report_error (a_push.root_location.generator + ": push not supported%N") -- FIXME
+			end
+		end
+
+	pull (a_pull: SCM_PULL_OPERATION)
+		local
+			retried: BOOLEAN
+		do
+			if retried then
+				a_pull.report_error ("Exception raised ...") -- FIXME: provide more informations.
+			else
+				a_pull.reset
+				if attached {SCM_GIT_LOCATION} a_pull.root_location as l_git_loc then
+					l_git_loc.pull (a_pull, config)
+				else
+					a_pull.report_error (a_pull.root_location.generator + ": pull not supported%N") -- FIXME
+				end
+			end
+		rescue
+			retried := True
+			retry
+		end
+
+	pull_command_line (a_pull: SCM_PULL_OPERATION): detachable STRING_32
+		do
+			a_pull.reset
+			if attached {SCM_GIT_LOCATION} a_pull.root_location as l_git_loc then
+				Result := l_git_loc.pull_command_line (a_pull, config)
+			else
+				a_pull.report_error (a_pull.root_location.generator + ": pull not supported%N") -- FIXME
 			end
 		end
 

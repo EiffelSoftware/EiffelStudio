@@ -163,6 +163,43 @@ feature -- Execution
 			Result := scm.push_command_line (a_push, opts)
 		end
 
+	pull (a_pull: SCM_PULL_OPERATION; cfg: SCM_CONFIG)
+		local
+			scm: SCM_GIT
+			opts: SCM_OPTIONS
+			res: SCM_RESULT
+		do
+			reset_error
+			create scm.make (cfg)
+			create opts
+			res := scm.pull (a_pull, opts)
+			if res.succeed then
+				if attached res.message as msg then
+					a_pull.report_success (msg)
+				else
+					a_pull.report_success ("git operation completed")
+				end
+			else
+				if attached res.message as msg then
+					a_pull.report_error (msg)
+				else
+					a_pull.report_error ("git operation failed")
+				end
+				has_error := True
+			end
+		end
+
+	pull_command_line (a_pull: SCM_PULL_OPERATION; cfg: SCM_CONFIG): detachable STRING_32
+		local
+			scm: SCM_GIT
+			opts: SCM_OPTIONS
+		do
+			reset_error
+			create scm.make (cfg)
+			create opts
+			Result := scm.pull_command_line (a_pull, opts)
+		end
+
 	remotes (cfg: SCM_CONFIG): detachable STRING_TABLE [GIT_REMOTE]
 		local
 			scm: SCM_GIT

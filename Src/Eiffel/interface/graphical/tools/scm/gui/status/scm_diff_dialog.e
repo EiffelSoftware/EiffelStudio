@@ -80,7 +80,8 @@ feature -- Access: Help
 	help_context_id: STRING_32
 			-- <Precursor>
 		once
-			Result := {STRING_32} "FIXME..." -- FIXME
+			Result := {STRING_32} "6109AFC3-43A4-4524-9ED8-C02B486CABAF"
+				-- Same as {ES_SCM_TOOL_PANEL}.help_context_id
 		end
 
 feature {NONE} -- Helpers

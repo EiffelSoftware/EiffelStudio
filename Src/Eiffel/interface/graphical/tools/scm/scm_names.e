@@ -77,6 +77,8 @@ feature -- Menu
 
 	menu_commit: STRING_32 do Result := locale.translation_in_context ("Commit ...", "scm") end
 	menu_git_push: STRING_32 do Result := locale.translation_in_context ("Push ...", "scm") end
+	menu_git_pull: STRING_32 do Result := locale.translation_in_context ("Pull ...", "scm") end
+
 	menu_configuration: STRING_32 do Result := locale.translation_in_context ("Configuration ...", "scm") end
 
 	menu_go_to_tool: STRING_32 do Result := locale.translation_in_context ("Go to the tool", "scm") end
@@ -143,6 +145,7 @@ feature -- Dialogs
 	title_scm_commit: STRING_32 do Result := locale.translation_in_context ("Source Control / Commit", "scm") end
 	title_scm_config: STRING_32 do Result := locale.translation_in_context ("Source Control / Configuration", "scm") end
 	title_scm_push: STRING_32 do Result := locale.translation_in_context ("Source Control / Push", "scm") end
+	title_scm_pull: STRING_32 do Result := locale.translation_in_context ("Source Control / Pull", "scm") end
 
 	label_resetting: STRING_32 do Result := locale.translation_in_context ("Resetting ...", "scm") end
 
@@ -181,6 +184,7 @@ feature -- General
 	tooltip_button_diff: STRING_32 do Result := locale.translation_in_context ("Show the differences", "scm") end
 
 	button_push: STRING_32 do Result := locale.translation_in_context ("Push", "scm") end
+	button_pull: STRING_32 do Result := locale.translation_in_context ("Pull", "scm") end
 
 	button_process_post_commit_operations: STRING_32 do Result := locale.translation_in_context ("Next", "scm") end
 	tooltip_button_process_post_commit_operations: STRING_32 do Result := locale.translation_in_context ("Continue with post-commit operation(s)...", "scm") end

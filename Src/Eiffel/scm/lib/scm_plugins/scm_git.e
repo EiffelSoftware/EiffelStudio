@@ -112,6 +112,23 @@ feature -- Operations: working copy
 			Result := git.push_command_line (a_push_op, a_options)
 		end
 
+	pull (a_pull_op: SCM_PULL_OPERATION; a_options: detachable SCM_OPTIONS): SCM_RESULT
+			-- Pull working copy using info from `a_pull_op', and return information about command execution.
+		local
+			git: like new_scm_engine
+		do
+			git := new_scm_engine
+			Result := git.pull (a_pull_op, a_options)
+		end
+
+	pull_command_line (a_pull_op: SCM_PULL_OPERATION; a_options: detachable SCM_OPTIONS): detachable STRING_32
+		local
+			git: like new_scm_engine
+		do
+			git := new_scm_engine
+			Result := git.pull_command_line (a_pull_op, a_options)
+		end
+
 feature {NONE} -- Operations: not fully implemented by all descendants		
 
 	add (a_changelist: SCM_CHANGELIST; a_options: detachable SCM_OPTIONS): SCM_RESULT

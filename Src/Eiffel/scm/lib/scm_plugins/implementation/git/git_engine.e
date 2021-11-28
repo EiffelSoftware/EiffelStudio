@@ -321,6 +321,55 @@ feature -- Execution
 			Result := cmd
 		end
 
+	pull (a_pull_op: SCM_PULL_OPERATION; a_options: detachable SCM_OPTIONS): SCM_RESULT
+			-- Push `a_pull_op` and return execution result.
+		local
+			cmd: STRING_32
+		do
+			create cmd.make_from_string (git_executable_location.name)
+			cmd.append_string_general (" pull ")
+			cmd.append_string (option_to_command_line_flags ("pull", a_options))
+			cmd.append_string_general (" ")
+			cmd.append_string_general (a_pull_op.remote)
+			cmd.append_string_general (" ")
+			cmd.append_string_general (a_pull_op.remote_branch)
+
+			debug ("GIT_ENGINE")
+				print ({STRING_32} "Command: [" + cmd + "]%N")
+			end
+			if attached output_of_command (cmd, a_pull_op.root_location.location) as res_pull then
+				if res_pull.exit_code = 0 then
+					create Result.make_success (cmd)
+					Result.set_message (res_pull.output)
+				else
+					create Result.make_failure (cmd)
+					Result.set_message (res_pull.error_output)
+				end
+			else
+				create Result.make_failure (cmd)
+				Result.set_message ("Error: can not launch git [" + process_misc.last_error.out + "]")
+			end
+			debug ("GIT_ENGINE")
+				print ("-> terminated %N")
+			end
+		end
+
+	pull_command_line (a_pull_op: SCM_PULL_OPERATION; a_options: detachable SCM_OPTIONS): detachable STRING_32
+			-- Command line for the `a_pull_op` pull operation.
+		local
+			cmd: STRING_32
+		do
+			create cmd.make_from_string (git_executable_location.name)
+			cmd.append_string_general (" pull ")
+			cmd.append_string (option_to_command_line_flags ("pull", a_options))
+			cmd.append_string_general (" ")
+			cmd.append_string_general (a_pull_op.remote)
+			cmd.append_string_general (" ")
+			cmd.append_string_general (a_pull_op.remote_branch)
+
+			Result := cmd
+		end
+
 feature -- Git specific
 
 	remotes (a_root_location: PATH; a_options: detachable SCM_OPTIONS): detachable STRING_TABLE [GIT_REMOTE]

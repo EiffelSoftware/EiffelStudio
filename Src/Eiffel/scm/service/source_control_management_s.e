@@ -88,6 +88,16 @@ feature -- Operations
 		deferred
 		end
 
+	pull (a_pull: SCM_PULL_OPERATION)
+		deferred
+		end
+
+	pull_command_line (a_pull: SCM_PULL_OPERATION): STRING_32
+			-- Command line to execute the pull operation `a_pull`.
+		deferred
+		end
+
+
 	post_commit_operations (a_commit: SCM_COMMIT_SET): detachable LIST [SCM_POST_COMMIT_OPERATION]
 		require
 			is_processed: a_commit.is_processed

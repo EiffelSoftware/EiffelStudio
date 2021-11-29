@@ -189,9 +189,7 @@ feature -- Element change
 				end
 
 				l_alloc.memory_free
-				if not in_update_viewport_item_size then
-					{GTK}.gtk_container_check_resize (viewport)
-				end
+				{GTK}.gtk_container_check_resize (viewport)
 			else
 				check has_item_and_implementation: False end
 			end

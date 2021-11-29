@@ -34,7 +34,7 @@ if [ ! -d $EXPORT_DIR/bin ]; then
 	remtrace Couldnt find the bin directory with the compressed files.
 	CANCEL
 fi
-if [ -f bin/ec_ent.tar.bz2 ]; then
+if [ -f bin/ecb_ent.tar.bz2 ]; then
 	MULTIPLE_EDITIONS="True"
 else
 	MULTIPLE_EDITIONS=""

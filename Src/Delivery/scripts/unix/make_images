@@ -28,7 +28,7 @@ if [ ! -d $EXPORT_DIR ]; then
 	CANCEL
 fi
 
-if [ -f bin/ec_ent.tar.bz2 ]; then
+if [ -f bin/ecb_ent.tar.bz2 ]; then
 	MULTIPLE_EDITIONS="True"
 else
 	MULTIPLE_EDITIONS=""

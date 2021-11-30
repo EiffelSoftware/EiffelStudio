@@ -20,7 +20,7 @@ feature -- Window
 		external
 			"C inline use <ev_gtk.h>"
 		alias
-			"gdk_device_get_position ($device, NULL, $a_x, $a_y);"
+			"return gdk_device_get_position ($device, NULL, $a_x, $a_y);"
 		end
 
 feature -- Quik access

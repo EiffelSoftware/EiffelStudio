@@ -60,13 +60,16 @@ feature {NONE} -- Implementation
 		do
 			if is_initialized then
 				w := editor_viewport.width + editor_viewport.x_offset
-				h := editor_viewport.height --+ editor_viewport.y_offset
+				h := editor_viewport.height -- + editor_viewport.y_offset
 				mw := editor_drawing_area.minimum_width
 				mh := editor_drawing_area.minimum_height
-				if w > mw or h > mh then
-					w := w + w // 4 -- add 25% to avoid resizing all the time when scrolling right.
-					editor_drawing_area.set_minimum_size (w, h)
+				if w /= mw or h /= mh then
 					set_buffered_drawable_size (w, h)
+					if attached editor_viewport.item as l_item then
+						check l_item = editor_drawing_area  end
+						l_item.set_minimum_size (w, h)
+						editor_viewport.set_item_size (w, h)
+					end
 				end
 			end
 		end

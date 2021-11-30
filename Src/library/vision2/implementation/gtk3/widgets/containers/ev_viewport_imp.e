@@ -140,6 +140,7 @@ feature -- Element change
 			l_item_c_object: POINTER
 			l_alloc: POINTER
 			w,h: INTEGER
+			l_old_in_update_viewport_item_size: like in_update_viewport_item_size
 		do
 			debug ("gtk_sizing")
 				if attached interface as l_interface then
@@ -174,6 +175,9 @@ feature -- Element change
 
 				{GTK2}.gtk_widget_set_minimum_size (l_child_item, w, h)
 
+				l_old_in_update_viewport_item_size := in_update_viewport_item_size
+				in_update_viewport_item_size := True
+				
 				if
 					{GTK}.gtk_allocation_struct_width (l_alloc) /= w
 					or {GTK}.gtk_allocation_struct_height (l_alloc) /= h
@@ -190,6 +194,8 @@ feature -- Element change
 
 				l_alloc.memory_free
 				{GTK}.gtk_container_check_resize (viewport)
+
+				in_update_viewport_item_size := l_old_in_update_viewport_item_size
 			else
 				check has_item_and_implementation: False end
 			end

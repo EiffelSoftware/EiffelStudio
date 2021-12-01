@@ -80,7 +80,7 @@ feature {NONE} -- Initialization
 			b.extend (bar)
 			b.disable_item_expand (bar)
 
-			bar.extend (create {EV_CELL})
+--			bar.extend (create {EV_CELL})
 
 			create but.make_with_text (scm_names.button_check_all)
 			but.set_pixmap (icon_pixmaps.general_refresh_icon)
@@ -552,7 +552,7 @@ feature -- Basic operation
 			end
 			d.show_on_active_window
 		end
-		
+
 	last_scm_dialog: detachable ES_DIALOG
 			-- keep reference on last scm dialog (push, pull, save, ...)
 

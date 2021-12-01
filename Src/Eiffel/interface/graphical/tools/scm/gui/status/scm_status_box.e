@@ -293,6 +293,7 @@ feature -- Basic operation
 			if attached development_window as devwin then
 				l_save_dialog.set_size (devwin.dpi_scaler.scaled_size (800).min (devwin.window.width), devwin.dpi_scaler.scaled_size (600).min (devwin.window.height))
 			end
+			last_scm_dialog := l_save_dialog
 			l_save_dialog.show_on_active_window
 			if
 				attached l_save_dialog.commit as l_commit
@@ -324,6 +325,7 @@ feature -- Basic operation
 				l_save_dialog.set_size (devwin.dpi_scaler.scaled_size (800).min (devwin.window.width), devwin.dpi_scaler.scaled_size (600).min (devwin.window.height))
 			end
 			l_save_dialog.set_is_modal (False)
+			last_scm_dialog := l_save_dialog
 			l_save_dialog.show_on_active_window
 			if a_commit.is_processed then
 				if attached {SCM_SINGLE_COMMIT_SET} a_commit as l_single then
@@ -347,6 +349,7 @@ feature -- Basic operation
 				l_dlg.set_size (devwin.dpi_scaler.scaled_size (800).min (devwin.window.width), devwin.dpi_scaler.scaled_size (600).min (devwin.window.height))
 			end
 			l_dlg.set_is_modal (False)
+			last_scm_dialog := l_dlg
 			l_dlg.show_on_active_window
 			update_statuses (a_git_loc)
 		end
@@ -360,6 +363,7 @@ feature -- Basic operation
 				l_dlg.set_size (devwin.dpi_scaler.scaled_size (800).min (devwin.window.width), devwin.dpi_scaler.scaled_size (600).min (devwin.window.height))
 			end
 			l_dlg.set_is_modal (False)
+			last_scm_dialog := l_dlg
 			l_dlg.show_on_active_window
 			update_statuses (a_git_loc)
 		end
@@ -423,6 +427,7 @@ feature -- Basic operation
 				d.set_size (devwin.dpi_scaler.scaled_size (700).min (devwin.window.width), devwin.dpi_scaler.scaled_size (500).min (devwin.window.height))
 			end
 			d.set_is_modal (False)
+			last_scm_dialog := d
 			d.show_on_active_window
 		end
 
@@ -541,11 +546,15 @@ feature -- Basic operation
 		do
 			create d.make (scm_service, a_op, a_output)
 			d.set_is_modal (False)
+			last_scm_dialog := d
 			if attached development_window as devwin then
 				d.set_size (devwin.dpi_scaler.scaled_size (700).min (devwin.window.width), devwin.dpi_scaler.scaled_size (500).min (devwin.window.height))
 			end
 			d.show_on_active_window
 		end
+		
+	last_scm_dialog: detachable ES_DIALOG
+			-- keep reference on last scm dialog (push, pull, save, ...)
 
 feature -- Access
 

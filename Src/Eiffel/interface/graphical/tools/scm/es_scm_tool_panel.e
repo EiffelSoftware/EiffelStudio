@@ -259,10 +259,16 @@ feature {NONE} -- Action handlers
 			dlg: SCM_CONFIG_DIALOG
 		do
 			if attached scm_s.service as scm then
-				create dlg.make (scm)
+				dlg := last_config_dialog
+				if dlg = Void or else dlg.is_recycled then
+					create dlg.make (scm)
+					last_config_dialog := dlg
+				end
 				dlg.show_on_active_window
 			end
 		end
+
+	last_config_dialog: detachable SCM_CONFIG_DIALOG
 
 	on_show
 			-- Performs actions when the user widget is displayed.

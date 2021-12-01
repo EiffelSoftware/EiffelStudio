@@ -50,6 +50,10 @@ feature -- Event names
 			-- map_event_name constant.
 			--| The ::unmap-event signal will be emitted when the widget 's window is unmapped. A window is unmapped when it becomes invisible on the screen.			
 
+	hide_signal_name: STRING = "hide"
+			-- hide constant.
+			-- The ::hide signal is emitted when widget is hidden, for example with gtk_widget_hide().
+
 	enter_notify_event_name: STRING = "enter-notify-event"
 			-- enter_notify_event_name constant.
 

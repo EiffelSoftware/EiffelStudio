@@ -55,6 +55,14 @@ feature -- map,unmap event
 			end
 		end
 
+	on_widget_hide_signal_intermediary (a_c_object: POINTER)
+			-- Set ::hide handling intermediary.
+		do
+			if attached {EV_WIDGET_IMP} c_get_eif_reference_from_object_id (a_c_object) as l_widget_imp then
+				l_widget_imp.on_widget_hidden
+			end
+		end
+
 feature -- Draw and configure signal
 
 	draw_actions_event (a_c_object: POINTER; arguments: POINTER): BOOLEAN

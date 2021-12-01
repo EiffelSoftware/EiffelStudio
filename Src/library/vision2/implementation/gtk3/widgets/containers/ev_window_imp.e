@@ -40,7 +40,7 @@ inherit
 			on_size_allocate,
 			hide,
 			on_widget_mapped,
-			on_widget_unmapped,
+			on_widget_hidden,
 			destroy,
 			has_focus,
 			on_focus_changed,
@@ -396,8 +396,8 @@ feature {EV_APPLICATION_IMP} -- Implementation
 			call_show_actions := False
 		end
 
-	on_widget_unmapped
-			-- `Current' has been unmapped from the screen.
+	on_widget_hidden
+			-- `Current' has been hidden from the screen.
 		do
 			Precursor
 			if hide_actions_internal /= Void then

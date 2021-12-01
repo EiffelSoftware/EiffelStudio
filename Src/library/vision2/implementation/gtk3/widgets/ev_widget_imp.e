@@ -148,6 +148,10 @@ feature {EV_WINDOW_IMP, EV_INTERMEDIARY_ROUTINES, EV_ANY_I, EV_APPLICATION_IMP} 
 			real_signal_connect_after (a_c_object,
 					{EV_GTK_EVENT_STRINGS}.unmap_event_name,
 					agent (l_app_imp.gtk_marshal).on_widget_unmapped_signal_intermediary (a_c_object))
+			real_signal_connect_after (a_c_object,
+					{EV_GTK_EVENT_STRINGS}.hide_signal_name,
+					agent (l_app_imp.gtk_marshal).on_widget_hide_signal_intermediary (a_c_object))
+
 		end
 
 	on_key_event (a_key: detachable EV_KEY; a_key_string: detachable STRING_32; a_key_press: BOOLEAN)
@@ -190,9 +194,8 @@ feature {EV_WINDOW_IMP, EV_INTERMEDIARY_ROUTINES, EV_ANY_I, EV_APPLICATION_IMP} 
 					else
 						print (generating_type.name_32)
 					end
-					print ({STRING_32} ".on_size_allocate (x=" + a_x.out + ", y=" + a_y.out + ", w=" + a_width.out + ", h=" + a_height.out + ")%N")
+					print ({STRING_32} ".on_size_allocate (x=" + a_x.out + ", y=" + a_y.out + ", w=" + a_width.out + ", h=" + a_height.out + ") PREVIOUS ("+ previous_width.out + "x" + previous_height.out +")%N")
 				end
-
 				if attached parent_imp as l_parent_imp then
 					l_x_y_offset := l_parent_imp.internal_x_y_offset
 				end
@@ -209,6 +212,15 @@ feature {EV_WINDOW_IMP, EV_INTERMEDIARY_ROUTINES, EV_ANY_I, EV_APPLICATION_IMP} 
 				end
 				if attached parent_imp as l_parent_imp then
 					l_parent_imp.child_has_resized (Current)
+				end
+			else
+				debug ("gtk_sizing")
+					if attached interface as l_interface then
+						print (l_interface.debug_output)
+					else
+						print (generating_type.name_32)
+					end
+					print ({STRING_32} ".on_size_allocate (x=" + a_x.out + ", y=" + a_y.out + ", w=" + a_width.out + ", h=" + a_height.out + ") SAME AS PREVIOUS%N")
 				end
 			end
 		end
@@ -611,6 +623,12 @@ feature {EV_INTERMEDIARY_ROUTINES, EV_APPLICATION_IMP} -- Implementation
 		end
 
 	on_widget_unmapped
+			-- `Current' has been unmapped from the screen
+		do
+			previously_set_pointer_style := Void
+		end
+
+	on_widget_hidden
 			-- `Current' has been unmapped from the screen
 		do
 			previously_set_pointer_style := Void

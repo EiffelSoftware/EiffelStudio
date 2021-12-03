@@ -179,6 +179,7 @@ feature -- Visit nodes
 			l_settings: like {CONF_TARGET}.settings
 			l_sorted_list: ARRAYED_LIST [attached like known_settings.item]
 			setting_value: like {CONF_TARGET}.settings.item
+			o: CONF_TARGET_OPTION
 		do
 			current_target := a_target
 			append_tag_open ({STRING_32} "target")
@@ -225,7 +226,8 @@ feature -- Visit nodes
 				append_tag_close_empty
 			end
 			append_file_rule (a_target.internal_file_rule)
-			append_target_options (a_target.internal_options)
+			o := persistent_target_options (a_target)
+			append_target_options (o)
 
 			l_settings := a_target.internal_settings
 			create l_sorted_list.make_from_iterable (known_settings)
@@ -253,7 +255,7 @@ feature -- Visit nodes
 			end
 				-- Add a dead code removal setting.
 			if
-				attached a_target.internal_options as o and then
+				attached o and then
 				attached o.dead_code as dead_code and then
 				dead_code.is_set
 			then
@@ -271,7 +273,7 @@ feature -- Visit nodes
 			end
 				-- Add a manifest array type setting.
 			if
-				attached a_target.internal_options as o and then
+				attached o and then
 				attached o.array_override as array_override and then
 				array_override.is_set and then
 				includes_this_or_after (namespace_1_18_0)
@@ -282,7 +284,7 @@ feature -- Visit nodes
 				append_tag_close_empty
 			end
 			if
-				attached a_target.internal_options as o and then
+				attached o and then
 				attached o.concurrency_capability as concurrency_capability and then
 				concurrency_capability.is_root_set and then
 				includes_this_or_before (namespace_1_15_0)
@@ -304,9 +306,9 @@ feature -- Visit nodes
 				append_tag_close_empty
 			end
 			if
-				includes_this_or_after (namespace_1_16_0) and then
-				attached a_target.internal_options as o and then
-				o.has_capability
+				attached o and then
+				o.has_capability and then
+				includes_this_or_after (namespace_1_16_0)
 			then
 				append_start_tag (tag_capability)
 					-- Add capabilities in alphabetical order as specified in ECF schema.
@@ -452,6 +454,45 @@ feature -- Visit nodes
 			end
 		ensure then
 			indent_back: indent = old indent
+		end
+
+feature {NONE}
+
+	options: CONF_OPTION
+			-- A new instance of options corresponding to the specified `namespace`.
+		do
+			Result := {CONF_OPTION}.create_from_namespace_or_latest (if attached namespace as n then n else latest_namespace end)
+		end
+
+	persistent_target_options (t: CONF_TARGET): CONF_TARGET_OPTION
+			-- Options of the target `t` that can be saved with the specified `namespace`.
+		do
+				-- Pick the default options for the specified `namespace`.
+			Result := {CONF_TARGET_OPTION}.create_from_namespace_or_latest (if attached namespace as n then n else latest_namespace end)
+				-- Project explicitly set options to the namespace.
+			if attached t.internal_options as o then
+				Result.merge (o)
+			end
+				-- Project default options to the namespace.
+			Result.merge (t.default_options)
+		end
+
+	persistent_options (o: detachable CONF_OPTION; d: CONF_OPTION): CONF_OPTION
+			-- Options `o` adapted for saving with the specified `namespace`.
+			-- `d` is the default options of the item where `o` is defined.
+		do
+				-- Pick the default options for the specified `namespace`.
+			Result := options
+				-- Project explicitly set options to the namespace.
+			if attached o then
+				Result.merge (o)
+			end
+				-- Project default options to the namespace.
+			Result.merge (d)
+		ensure
+			idempotent_for_default: Result ~ persistent_options (Result, d)
+			idempotent_for_current: Result ~ persistent_options (Result, options)
+			idempotent_for_explicit: attached o implies Result ~ persistent_options (Result, o)
 		end
 
 feature {NONE} -- Implementation
@@ -940,19 +981,19 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	append_target_options (o: detachable CONF_TARGET_OPTION)
+	append_target_options (o: CONF_TARGET_OPTION)
 			-- Append target options `o' (if any).
 		do
 			append_group_options (o, True, True)
 		end
 
-	append_class_options (o: detachable CONF_OPTION; c: READABLE_STRING_GENERAL; is_own_source, is_own_capability: BOOLEAN)
+	append_class_options (o: CONF_OPTION; c: READABLE_STRING_GENERAL; is_own_source, is_own_capability: BOOLEAN)
 			-- Append class options `o' (if any) for a calss `c'.
 			--
 			-- • `is_own_source` tells whether the options control the source code (i.e. not a library, a precompile, etc.)
 			-- • `is_own_capability` tells whether the options control the capabilities (i.e. not an override, a library, etc.)
 		do
-			if attached o and then not o.is_empty_for (namespace) then
+			if not o.is_empty_for (namespace) then
 				append_tag_open ({STRING_32} "class_option")
 				append_text_attribute ("class", c)
 				append_general_options (o, is_own_source, is_own_capability)
@@ -960,13 +1001,13 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	append_group_options (o: detachable CONF_OPTION; is_own_source, is_own_capability: BOOLEAN)
+	append_group_options (o: CONF_OPTION; is_own_source, is_own_capability: BOOLEAN)
 			-- Append group options `o' (if any).
 			--
 			-- • `is_own_source` tells whether the options control the source code (i.e. not a library, a precompile, etc.)
 			-- • `is_own_capability` tells whether the options control the capabilities (i.e. not an override, a library, etc.)
 		do
-			if attached o and then not o.is_empty_for (namespace) then
+			if not o.is_empty_for (namespace) then
 				append_tag_open ({STRING_32} "option")
 				append_general_options (o, is_own_source, is_own_capability)
 				append_end_tag ({STRING_32} "option")
@@ -1271,13 +1312,19 @@ feature {NONE} -- Implementation
 			-- • `is_own_capability` tells whether the options control the capabilities (i.e. not an override, a library, etc.)
 		require
 			a_group_not_void: a_group /= Void
+		local
+			default_options: CONF_OPTION
 		do
 			append_tag_close
 			last_count := text.count
 			append_note_tag (a_group)
 			append_description_tag (a_group.description)
 			append_conditionals (a_group.internal_conditions, a_group.is_assembly)
-			append_group_options (a_group.internal_options, is_own_source, is_own_capability)
+				-- Skip writing options for assemblies.
+			if not a_group.is_assembly then
+				default_options := a_group.default_options
+				append_group_options (persistent_options (a_group.internal_options, default_options), is_own_source, is_own_capability)
+			end
 			if
 				attached {CONF_VIRTUAL_GROUP} a_group as l_vg and then
 				attached l_vg.renaming as l_renaming
@@ -1291,11 +1338,14 @@ feature {NONE} -- Implementation
 					append_tag_close_empty
 				end
 			end
-			if attached a_group.internal_class_options as l_c_opt then
+			if
+				attached default_options and then
+				attached a_group.internal_class_options as l_c_opt
+			then
 				across
 					l_c_opt as o
 				loop
-					append_class_options (o, @ o.key, is_own_source, is_own_capability)
+					append_class_options (persistent_options (o, default_options), @ o.key, is_own_source, is_own_capability)
 				end
 			end
 		end

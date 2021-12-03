@@ -235,6 +235,12 @@ feature -- Access queries
 			Result_not_void: Result /= Void
 		end
 
+	default_options: CONF_OPTION
+			-- Default options of the group in `namespace`.
+		do
+			Result := {CONF_OPTION}.create_from_namespace_or_latest (namespace)
+		end
+
 	class_by_name (a_class: READABLE_STRING_GENERAL; a_dependencies: BOOLEAN): LINKED_SET [CONF_CLASS]
 			-- Get the class with the final (after renaming/prefix) name `a_class'
 			-- (if `a_dependencies' then we check dependencies)

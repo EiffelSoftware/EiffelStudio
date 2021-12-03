@@ -332,6 +332,12 @@ feature {CONF_VISITOR, CONF_ACCESS} -- Implementation, attributes that are store
 			Result_not_void: Result /= Void
 		end
 
+	default_options: like options
+			-- Default options associated with `namespace`.
+		do
+			Result := {like options}.create_from_namespace_or_latest (namespace)
+		end
+
 	forced_options: like internal_options
 			-- Same as `internal_options`, but forced by a third-party (client, precompile, etc.) project,
 			-- not by the original one.

@@ -18,6 +18,7 @@ feature {NONE} -- Access
 					at_full_class_checking,
 					at_is_attached_by_default,
 					at_is_obsolete_iteration,
+					at_is_obsolete_routine_type,
 					at_is_void_safe,
 					at_manifest_array_type,
 					at_namespace,

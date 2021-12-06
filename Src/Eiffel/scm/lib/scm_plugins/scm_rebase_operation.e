@@ -1,10 +1,10 @@
 note
-	description: "Summary description for {SCM_PULL_OPERATION}."
+	description: "Summary description for {SCM_REBASE_OPERATION}."
 	date: "$Date$"
 	revision: "$Revision$"
 
 class
-	SCM_PULL_OPERATION
+	SCM_REBASE_OPERATION
 
 inherit
 	SCM_OPERATION
@@ -14,18 +14,15 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_loc: SCM_DISTRIBUTED_LOCATION; a_remote, a_remote_branch: READABLE_STRING_GENERAL)
+	make (a_loc: SCM_DISTRIBUTED_LOCATION; a_branch: READABLE_STRING_GENERAL)
 		do
 			root_location := a_loc
-			remote := a_remote
-			remote_branch := a_remote_branch
+			branch := a_branch
 		end
 
 feature -- Access
 
-	remote: IMMUTABLE_STRING_32
-
-	remote_branch: IMMUTABLE_STRING_32
+	branch: IMMUTABLE_STRING_32
 
 invariant
 

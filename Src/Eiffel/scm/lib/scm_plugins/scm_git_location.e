@@ -200,6 +200,43 @@ feature -- Execution
 			Result := scm.pull_command_line (a_pull, opts)
 		end
 
+	rebase (a_op: SCM_REBASE_OPERATION; cfg: SCM_CONFIG)
+		local
+			scm: SCM_GIT
+			opts: SCM_OPTIONS
+			res: SCM_RESULT
+		do
+			reset_error
+			create scm.make (cfg)
+			create opts
+			res := scm.rebase (a_op, opts)
+			if res.succeed then
+				if attached res.message as msg then
+					a_op.report_success (msg)
+				else
+					a_op.report_success ("git operation completed")
+				end
+			else
+				if attached res.message as msg then
+					a_op.report_error (msg)
+				else
+					a_op.report_error ("git operation failed")
+				end
+				has_error := True
+			end
+		end
+
+	rebase_command_line (a_op: SCM_REBASE_OPERATION; cfg: SCM_CONFIG): detachable STRING_32
+		local
+			scm: SCM_GIT
+			opts: SCM_OPTIONS
+		do
+			reset_error
+			create scm.make (cfg)
+			create opts
+			Result := scm.rebase_command_line (a_op, opts)
+		end
+
 	remotes (cfg: SCM_CONFIG): detachable STRING_TABLE [GIT_REMOTE]
 		local
 			scm: SCM_GIT

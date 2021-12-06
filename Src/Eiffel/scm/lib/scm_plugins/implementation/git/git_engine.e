@@ -322,7 +322,7 @@ feature -- Execution
 		end
 
 	pull (a_pull_op: SCM_PULL_OPERATION; a_options: detachable SCM_OPTIONS): SCM_RESULT
-			-- Push `a_pull_op` and return execution result.
+			-- Pull `a_pull_op` and return execution result.
 		local
 			cmd: STRING_32
 		do
@@ -366,6 +366,51 @@ feature -- Execution
 			cmd.append_string_general (a_pull_op.remote)
 			cmd.append_string_general (" ")
 			cmd.append_string_general (a_pull_op.remote_branch)
+
+			Result := cmd
+		end
+
+	rebase (a_op: SCM_REBASE_OPERATION; a_options: detachable SCM_OPTIONS): SCM_RESULT
+			-- Rebase `a_op` and return execution result.
+		local
+			cmd: STRING_32
+		do
+			create cmd.make_from_string (git_executable_location.name)
+			cmd.append_string_general (" rebase ")
+			cmd.append_string (option_to_command_line_flags ("rebase", a_options))
+			cmd.append_string_general (" ")
+			cmd.append_string_general (a_op.branch)
+
+			debug ("GIT_ENGINE")
+				print ({STRING_32} "Command: [" + cmd + "]%N")
+			end
+			if attached output_of_command (cmd, a_op.root_location.location) as res then
+				if res.exit_code = 0 then
+					create Result.make_success (cmd)
+					Result.set_message (res.output)
+				else
+					create Result.make_failure (cmd)
+					Result.set_message (res.error_output)
+				end
+			else
+				create Result.make_failure (cmd)
+				Result.set_message ("Error: can not launch git [" + process_misc.last_error.out + "]")
+			end
+			debug ("GIT_ENGINE")
+				print ("-> terminated %N")
+			end
+		end
+
+	rebase_command_line (a_op: SCM_REBASE_OPERATION; a_options: detachable SCM_OPTIONS): detachable STRING_32
+			-- Command line for the `a_op` rebase operation.
+		local
+			cmd: STRING_32
+		do
+			create cmd.make_from_string (git_executable_location.name)
+			cmd.append_string_general (" rebase ")
+			cmd.append_string (option_to_command_line_flags ("rebase", a_options))
+			cmd.append_string_general (" ")
+			cmd.append_string_general (a_op.branch)
 
 			Result := cmd
 		end

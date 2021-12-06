@@ -343,6 +343,35 @@ feature -- Operations
 			end
 		end
 
+	rebase (a_op: SCM_REBASE_OPERATION)
+		local
+			retried: BOOLEAN
+		do
+			if retried then
+				a_op.report_error ("Exception raised ...") -- FIXME: provide more informations.
+			else
+				a_op.reset
+				if attached {SCM_GIT_LOCATION} a_op.root_location as l_git_loc then
+					l_git_loc.rebase (a_op, config)
+				else
+					a_op.report_error (a_op.root_location.generator + ": rebase not supported%N") -- FIXME
+				end
+			end
+		rescue
+			retried := True
+			retry
+		end
+
+	rebase_command_line (a_op: SCM_REBASE_OPERATION): detachable STRING_32
+		do
+			a_op.reset
+			if attached {SCM_GIT_LOCATION} a_op.root_location as l_git_loc then
+				Result := l_git_loc.rebase_command_line (a_op, config)
+			else
+				a_op.report_error (a_op.root_location.generator + ": rebase not supported%N") -- FIXME
+			end
+		end
+
 	post_commit_operations (a_commit: SCM_COMMIT_SET): detachable LIST [SCM_POST_COMMIT_OPERATION]
 		do
 			create {ARRAYED_LIST [SCM_POST_COMMIT_OPERATION]} Result.make (1)

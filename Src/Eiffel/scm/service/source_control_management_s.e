@@ -97,6 +97,14 @@ feature -- Operations
 		deferred
 		end
 
+	rebase (a_op: SCM_REBASE_OPERATION)
+		deferred
+		end
+
+	rebase_command_line (a_op: SCM_REBASE_OPERATION): STRING_32
+			-- Command line to execute the rebase operation `a_op`.
+		deferred
+		end
 
 	post_commit_operations (a_commit: SCM_COMMIT_SET): detachable LIST [SCM_POST_COMMIT_OPERATION]
 		require

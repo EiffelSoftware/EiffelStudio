@@ -7,6 +7,9 @@ note
 class
 	SCM_PUSH_OPERATION
 
+inherit
+	SCM_OPERATION
+
 create
 	make
 
@@ -21,47 +24,11 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	root_location: SCM_DISTRIBUTED_LOCATION
-
 	remote: IMMUTABLE_STRING_32
 
 	remote_branch: IMMUTABLE_STRING_32
 
-	is_processed: BOOLEAN
-	has_error: BOOLEAN
-	execution_message: detachable READABLE_STRING_32
-
-feature -- Element change
-
-	reset
-		do
-			is_processed := False
-			has_error := False
-			execution_message := Void
-		end
-
-	report_error (m: READABLE_STRING_GENERAL)
-		do
-			is_processed := True
-			has_error := True
-			if attached execution_message as msg then
-				execution_message := msg + "%N" + m
-			else
-				execution_message := m
-			end
-		end
-
-	report_success (m: READABLE_STRING_GENERAL)
-		do
-			is_processed := True
-			if attached execution_message as msg then
-					-- Keep previous `has_error` as there was already an execution message.
-				execution_message := msg + "%N" + m
-			else
-				has_error := False
-				execution_message := m
-			end
-		end
+invariant
 
 note
 	copyright: "Copyright (c) 1984-2021, Eiffel Software"

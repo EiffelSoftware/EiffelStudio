@@ -1,12 +1,12 @@
 note
 	description: "[
-		PULL dialog, for now, only git, but in the future, it could be used for any distributed SCM.
+		REBASE dialog, for now, only git, but in the future, it could be used for any distributed SCM.
 	]"
 	date: "$Date$"
 	revision: "$Revision$"
 
 class
-	SCM_PULL_DIALOG
+	SCM_REBASE_DIALOG
 
 inherit
 	ES_DIALOG
@@ -49,14 +49,11 @@ feature {NONE} -- Initialization
 			create use_external_terminal_checkbutton.make_with_text (scm_names.checkbutton_use_external_terminal)
 
 			create branches_combo
-
-			create remotes_combo
-			create remote_custom
+			create branches_box
 
 			create progress_log_box
 			create progress_log_text
 
-			create remotes_box
 			make_dialog
 		end
 
@@ -69,16 +66,6 @@ feature -- Access
 	distributed_location: SCM_GIT_LOCATION
 
 feature -- Widgets
-
-	remotes_box: EV_VERTICAL_BOX
-
-	remotes_combo: EV_COMBO_BOX
-
-	remote_custom: EV_TEXT_FIELD
-
-	is_custom_remote: BOOLEAN
-
-	branches_text: EV_TEXT
 
 	branches_box: EV_VERTICAL_BOX
 
@@ -95,20 +82,6 @@ feature -- Widgets
 			Result := use_external_terminal_checkbutton.is_selected
 		end
 
-feature -- Element change
-
-	set_is_custom_remote (b: BOOLEAN)
-		do
-			is_custom_remote := b
-			if b then
-				remotes_combo.hide
-				remote_custom.show
-			else
-				remote_custom.hide
-				remotes_combo.show
-			end
-		end
-
 feature {NONE} -- User interface initialization
 
 	build_dialog_interface (a_container: EV_VERTICAL_BOX)
@@ -116,8 +89,7 @@ feature {NONE} -- User interface initialization
 			--
 			-- `a_container': The dialog's container where the user interface elements should be extended
 		local
-			br_cbox, rem_cbox: like remotes_combo
-			l_remote_name: READABLE_STRING_GENERAL
+			br_cbox: like branches_combo
 			radio, radio_custom: EV_RADIO_BUTTON
 			fb, b: EV_VERTICAL_BOX
 			hb: EV_HORIZONTAL_BOX
@@ -128,9 +100,6 @@ feature {NONE} -- User interface initialization
 			s: STRING_32
 			lab: EV_LABEL
 			li: EV_LIST_ITEM
-			l_curr_branch: detachable READABLE_STRING_32
-			l_up_branch: detachable READABLE_STRING_8
-			l_up_repo: detachable READABLE_STRING_8
 			cb: like use_external_terminal_checkbutton
 		do
 			create sp
@@ -142,7 +111,7 @@ feature {NONE} -- User interface initialization
 			fb.set_padding_width (default_padding_size)
 			fb.set_border_width (default_border_size)
 
-			b := remotes_box
+			b := branches_box
 			fb.extend (b)
 			b.set_padding_width (small_padding_size)
 			b.set_border_width (small_border_size)
@@ -163,86 +132,17 @@ feature {NONE} -- User interface initialization
 						create li.make_with_text (br.name)
 						br_cbox.extend (li)
 						if br.is_active then
-							l_curr_branch := br.name
-							if attached br.upstream_remote as upr then
-								l_up_repo := upr.repository
-								l_up_branch := upr.branch
-							end
 							li.enable_select
 						end
 					end
 				end
 			end
-				-- Known remote
+
 			create hb
 			extend_non_expandable_to (b, hb)
 			create radio.make_with_text (scm_names.label_branches)
 			br_cbox.set_minimum_width_in_characters (20)
 			extend_expandable_to (hb, br_cbox)
-
-				-- Remotes info
-			create lab.make_with_text (scm_names.label_remote_repositories)
-			lab.align_text_left
-			b.extend (lab)
-			b.disable_item_expand (lab)
-
-			rem_cbox := remotes_combo
-
-			if attached distributed_location.remotes (scm_service.config) as lst then
-				across
-					lst as ic_remote
-				loop
-					l_remote_name := ic_remote.item.name
-					create s.make_from_string_general (l_remote_name)
-					if attached ic_remote.item.location as loc then
-						s.append_character (' ')
-						s.append_character ('(')
-						s.append_string_general (loc)
-						s.append_character (')')
-					end
-
-					create li.make_with_text (s)
-					li.set_data ([l_remote_name, ic_remote.item.location])
-					rem_cbox.extend (li)
-					if l_up_repo /= Void and then l_up_repo.is_case_insensitive_equal_general (l_remote_name) then
-						li.enable_select
-					end
-				end
-			end
-
-			create hb
-				-- Remotes
-			extend_non_expandable_to (b, hb)
-
-			rem_cbox.set_minimum_width_in_characters (20)
-			extend_expandable_to (hb, rem_cbox)
-
-			tf := remote_custom
-			tf.set_minimum_width_in_characters (20)
-			extend_expandable_to (hb, tf)
-
-			rem_cbox.show
-			tf.hide
-
-			create hb
-				-- Remote kinds
-			extend_non_expandable_to (b, hb)
-
-
-			create radio.make_with_text (scm_names.label_remote)
-			radio.select_actions.extend (agent (i_radio: EV_RADIO_BUTTON)
-					do
-						set_is_custom_remote (not i_radio.is_selected)
-					end(radio))
-			extend_non_expandable_to (hb, radio)
-
-			create radio_custom.make_with_text (scm_names.label_remote_custom_location)
-			radio_custom.select_actions.extend (agent (i_radio: EV_RADIO_BUTTON)
-					do
-						set_is_custom_remote (i_radio.is_selected)
-					end(radio_custom))
-			extend_non_expandable_to (hb, radio_custom)
-
 
 			extend_non_expandable_to (hb, create {EV_HORIZONTAL_SEPARATOR})
 			cb := use_external_terminal_checkbutton
@@ -279,7 +179,7 @@ feature {NONE} -- User interface initialization
 				but.hide
 			end
 
-			set_button_text (dialog_buttons.ok_button, scm_names.button_pull)
+			set_button_text (dialog_buttons.ok_button, scm_names.button_rebase)
 			set_button_text (dialog_buttons.close_button, interface_names.b_close)
 			set_button_text (dialog_buttons.cancel_button, interface_names.b_cancel)
 
@@ -358,15 +258,13 @@ feature -- Action
 		local
 			err: BOOLEAN
 			l_pointer_style: detachable EV_POINTER_STYLE
-			l_remote, l_branch: READABLE_STRING_32
+			l_branch: READABLE_STRING_32
 			l_unsupported_remote: BOOLEAN
-			l_pull: SCM_PULL_OPERATION
---			l_remote_uri: URI
+			l_rebase: SCM_REBASE_OPERATION
 			l_cmd: STRING_32
---			l_credentials: TUPLE [username, password: detachable READABLE_STRING_GENERAL]
 			l_use_external_terminal: like use_external_terminal
 		do
-			if attached button_pull as but then
+			if attached button_rebase as but then
 				but.show
 			end
 			if attached button_close as but then
@@ -376,67 +274,25 @@ feature -- Action
 			l_pointer_style := dialog.pointer_style
 			dialog.set_pointer_style ((create {EV_STOCK_PIXMAPS}).busy_cursor)
 
-			if is_custom_remote then
-				l_remote := remote_custom.text
-			else
-				if
-					attached remotes_combo.selected_item as li and then
-					attached {TUPLE [name: READABLE_STRING_GENERAL; location: detachable READABLE_STRING_GENERAL]} li.data as rem
-				then
-					if attached rem.location as remloc then
---						l_remote := remloc
-						l_remote := rem.name
-					else
-						l_remote := rem.name
-					end
-				else
-					l_remote := remotes_combo.text
-				end
-			end
-
 			l_use_external_terminal := use_external_terminal
-
---			if l_remote.starts_with_general ("http://") or l_remote.starts_with_general ("https://") then
---				create l_remote_uri.make_from_string (l_remote)
---				if l_remote_uri.is_valid and then l_remote.same_string (l_remote_uri.string) then
---					if not attached l_remote_uri.username_password then
---						create l_credentials
---						ask_for_credential (l_credentials)
---						if
---							attached l_credentials.username as u and
---							attached l_credentials.password as p
---						then
---							l_remote_uri.set_username_password (u, p)
---						end
---					end
---					l_remote := l_remote_uri.string
---				else
---					l_remote_uri := Void
---					l_unsupported_remote := True
---				end
---			end
 
 			l_branch := branches_combo.text
 
-			if l_unsupported_remote then
-				l_pull.report_error ({STRING_32} "Unsupported remote location: " + l_remote)
+			create l_rebase.make (distributed_location, l_branch)
+			if l_use_external_terminal then
+				l_cmd := scm_service.rebase_command_line (l_rebase)
+				process_external_command (l_cmd, l_rebase.root_location.location)
+				l_rebase.report_success ("Check the terminal for more information.")
 			else
-				create l_pull.make (distributed_location, l_remote, l_branch)
-				if l_use_external_terminal then
-					l_cmd := scm_service.pull_command_line (l_pull)
-					process_external_command (l_cmd, l_pull.root_location.location)
-					l_pull.report_success ("Check the terminal for more information.")
-				else
-					scm_service.pull (l_pull)
-				end
+				scm_service.rebase (l_rebase)
 			end
 
 			dialog.set_pointer_style (l_pointer_style)
 
-			remotes_box.hide
+			branches_box.hide
 			progress_log_box.show
 
-			if attached l_pull.execution_message as m then
+			if attached l_rebase.execution_message as m then
 				progress_log_text.set_text (m)
 			else
 				progress_log_text.set_text (scm_names.text_no_output)
@@ -450,7 +306,7 @@ feature -- Action
 					but.show
 				end
 			else
-				if attached button_pull as but then
+				if attached button_rebase as but then
 					but.hide
 				end
 				if attached button_cancel as but then
@@ -460,11 +316,6 @@ feature -- Action
 
 			veto_close
 		end
-
---	ask_for_credential (a_credentials: TUPLE [username, password: detachable READABLE_STRING_GENERAL])
---		do
-
---		end
 
 	process_external_command (a_command_line: READABLE_STRING_GENERAL; a_working_dir: PATH)
 		local
@@ -501,10 +352,10 @@ feature -- Access
 	title: STRING_32
 			-- <Precursor>
 		do
-			Result := scm_names.title_scm_pull
+			Result := scm_names.title_scm_rebase
 		end
 
-	button_pull: detachable EV_BUTTON
+	button_rebase: detachable EV_BUTTON
 		do
 			Result := dialog_window_buttons [dialog_buttons.ok_button]
 		end
@@ -522,7 +373,7 @@ feature -- Access
 			-- Note: Use {ES_DIALOG_BUTTONS} or `dialog_buttons' to determine the id's correspondance.
 		once
 			create Result.make (3)
-			Result.put_last (dialog_buttons.ok_button) -- Pull
+			Result.put_last (dialog_buttons.ok_button) -- Rebase
 			Result.put_last (dialog_buttons.close_button) -- Close
 			Result.put_last (dialog_buttons.cancel_button) -- Cancel
 		end

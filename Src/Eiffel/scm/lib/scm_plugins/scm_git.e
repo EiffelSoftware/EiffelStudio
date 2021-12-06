@@ -129,6 +129,23 @@ feature -- Operations: working copy
 			Result := git.pull_command_line (a_pull_op, a_options)
 		end
 
+	rebase (a_op: SCM_REBASE_OPERATION; a_options: detachable SCM_OPTIONS): SCM_RESULT
+			-- Rebase working copy using info from `a_op', and return information about command execution.
+		local
+			git: like new_scm_engine
+		do
+			git := new_scm_engine
+			Result := git.rebase (a_op, a_options)
+		end
+
+	rebase_command_line (a_op: SCM_REBASE_OPERATION; a_options: detachable SCM_OPTIONS): detachable STRING_32
+		local
+			git: like new_scm_engine
+		do
+			git := new_scm_engine
+			Result := git.rebase_command_line (a_op, a_options)
+		end
+
 feature {NONE} -- Operations: not fully implemented by all descendants		
 
 	add (a_changelist: SCM_CHANGELIST; a_options: detachable SCM_OPTIONS): SCM_RESULT

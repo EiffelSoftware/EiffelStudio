@@ -390,6 +390,11 @@ feature {EV_APPLICATION_IMP} -- Implementation
 			-- `Current' has been mapped to the screen.
 		do
 			Precursor
+			process_show_actions
+		end
+
+	process_show_actions
+		do
 			if show_actions_internal /= Void and call_show_actions then
 				show_actions_internal.call (Void)
 			end

@@ -12,6 +12,8 @@ deferred class
 inherit
 	ANY
 
+	EV_ANY_HANDLER
+
 	EV_SHARED_APPLICATION
 		export
 			{NONE} all
@@ -303,6 +305,12 @@ feature -- Basic operation
 
 			choices.set_size (l_width, l_height)
 			choices.set_position (l_x, l_y)
+			if shared_environment.is_gtk3_implementation then
+					-- FIXME: hack to get the completion window well positioned [2021-12-06]
+					-- with GTK3, for an unknown reason, often the window manager changes the position of the completion window
+					-- to something different from the given l_x and l_y positions.
+				ev_application.add_idle_action_kamikaze (agent choices.set_position (l_x, l_y))
+			end
 		end
 
 	exit_complete_mode
@@ -597,7 +605,7 @@ feature {NONE} -- Timer
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2018, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2021, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

@@ -43,13 +43,25 @@ feature -- Initialize
 			{GTK}.g_object_unref (dlg)
 				-- destroy dlg
 			{GTK}.gtk_widget_destroy (dlg)
+			initialize_gtk_theme_properties
  		end
 
-	gtk_dependent_launch_initialize
-			-- Gtk dependent code for `launch'
+	initialize_gtk_theme_properties
+			-- Description string of the current font used
+		local
+			str_ptr: POINTER
+			l_cs: EV_GTK_C_STRING
 		do
-			if {GTK}.gtk_maj_ver = 1 and then {GTK}.gtk_min_ver <= 2 and then {GTK}.gtk_mic_ver < 8 then
-				print ("This application is designed for Gtk 1.2.8 and above, your current version is 1.2." + {GTK}.gtk_mic_ver.out + " and may cause some unexpected behavior%N")
+				-- On macos, the cursor theme name is not set by default.
+			create l_cs.set_with_eiffel_string ("gtk-cursor-theme-name")
+			{GTK2}.g_object_get_string (default_gtk_settings, l_cs.item, $str_ptr)
+			if str_ptr.is_default_pointer then
+				l_cs.set_with_eiffel_string ("gtk-theme-name")
+				{GTK2}.g_object_get_string (default_gtk_settings, l_cs.item, $str_ptr)
+				if not str_ptr.is_default_pointer then
+					l_cs.set_with_eiffel_string ("gtk-cursor-theme-name")
+					{GTK2}.g_object_set_string (default_gtk_settings, l_cs.item, str_ptr)
+				end
 			end
 		end
 

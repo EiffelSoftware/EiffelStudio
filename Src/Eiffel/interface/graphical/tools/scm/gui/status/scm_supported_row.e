@@ -223,6 +223,11 @@ feature -- Operation
 							parent_grid.status_box.git_pull_location (i_git_loc)
 						end(l_git_root_location))
 				m.extend (mi)
+				create mi.make_with_text_and_action (scm_names.menu_git_rebase, agent (i_git_loc: SCM_GIT_LOCATION)
+						do
+							parent_grid.status_box.git_rebase_location (i_git_loc)
+						end(l_git_root_location))
+				m.extend (mi)
 			else
 				create mi.make_with_text_and_action (scm_names.menu_update, agent show_location_update)
 				m.extend (mi)

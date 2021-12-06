@@ -368,6 +368,20 @@ feature -- Basic operation
 			update_statuses (a_git_loc)
 		end
 
+	open_git_rebase_dialog (a_git_loc: SCM_GIT_LOCATION)
+		local
+			l_dlg: SCM_REBASE_DIALOG
+		do
+			create l_dlg.make (scm_service, a_git_loc, Current)
+			if attached development_window as devwin then
+				l_dlg.set_size (devwin.dpi_scaler.scaled_size (800).min (devwin.window.width), devwin.dpi_scaler.scaled_size (600).min (devwin.window.height))
+			end
+			l_dlg.set_is_modal (False)
+			last_scm_dialog := l_dlg
+			l_dlg.show_on_active_window
+			update_statuses (a_git_loc)
+		end
+
 	save_location (loc: SCM_LOCATION)
 		local
 			l_commit: SCM_SINGLE_COMMIT_SET
@@ -391,6 +405,11 @@ feature -- Basic operation
 	git_pull_location (a_git_loc: SCM_GIT_LOCATION)
 		do
 			open_git_pull_dialog (a_git_loc)
+		end
+
+	git_rebase_location (a_git_loc: SCM_GIT_LOCATION)
+		do
+			open_git_rebase_dialog (a_git_loc)
 		end
 
 	on_save

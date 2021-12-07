@@ -9,6 +9,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends --no-install-su
         libxtst-dev \
         libgtk2.0-dev \
         libgtk-3-dev \
+        libgdk-pixbuf2.0-dev \
         libssl-dev \
 		pax \
 		dos2unix \

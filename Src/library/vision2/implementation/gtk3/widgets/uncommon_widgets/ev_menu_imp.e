@@ -140,8 +140,8 @@ feature {NONE} -- Externals
 					((GdkEventButton*)event)->type = GDK_BUTTON_PRESS;
 					((GdkEventButton*)event)->button = (guint) $a_button;
 					gtk_widget_realize ($a_menu);
-					((GdkEventButton*)event)->window = g_object_ref(gtk_widget_get_window ($a_menu));
-					((GdkEventButton*)event)->device = gdk_seat_get_pointer (gdk_display_get_default_seat (gdk_display_get_default ()));
+					((GdkEventButton*)event)->window = g_object_ref((GdkWindow*) gtk_widget_get_window ((GtkMenu*) $a_menu));
+					((GdkEventButton*)event)->device = (GdkDevice*) gdk_seat_get_pointer ((GdkSeat*) gdk_display_get_default_seat ((GdkDisplay*) gdk_display_get_default ()));
 					gtk_menu_popup_at_pointer ((GtkMenu*) $a_menu, event);
 					gdk_event_free (event);
 				} else {

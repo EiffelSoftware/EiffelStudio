@@ -13,14 +13,14 @@ feature -- Window
 		external
 			"C inline use <ev_gtk.h>"
 		alias
-			"return gdk_device_get_window_at_position(gdk_seat_get_pointer(gdk_display_get_default_seat (gdk_display_get_default())), $a_x, $a_y);"
+			"return (GdkWindow*) gdk_device_get_window_at_position((GdkDevice*) gdk_seat_get_pointer((GdkSeat*) gdk_display_get_default_seat ((GdkDisplay*) gdk_display_get_default())), (gint*) $a_x, (gint*) $a_y);"
 		end
 
 	device_get_position (device: POINTER; a_x, a_y: TYPED_POINTER [INTEGER_32])
 		external
 			"C inline use <ev_gtk.h>"
 		alias
-			"return gdk_device_get_position ($device, NULL, $a_x, $a_y);"
+			"return gdk_device_get_position ((GdkDevice*) $device, NULL, (gint*) $a_x, (gint*) $a_y);"
 		end
 
 feature -- Quik access
@@ -30,7 +30,7 @@ feature -- Quik access
 		external
 			"C inline use <ev_gtk.h>"
 		alias
-			"return gdk_display_get_default();"
+			"return (GdkDisplay*) gdk_display_get_default();"
 		end
 
 	default_seat: POINTER
@@ -38,7 +38,7 @@ feature -- Quik access
 		external
 			"C inline use <ev_gtk.h>"
 		alias
-			"return gdk_display_get_default_seat (gdk_display_get_default());"
+			"return (GdkSeat*) gdk_display_get_default_seat ((GdkDisplay*) gdk_display_get_default());"
 		end
 
 	default_device: POINTER
@@ -46,16 +46,15 @@ feature -- Quik access
 		external
 			"C inline use <ev_gtk.h>"
 		alias
-			"return gdk_seat_get_pointer(gdk_display_get_default_seat (gdk_display_get_default()));"
+			"return (GdkDevice*) gdk_seat_get_pointer((GdkSeat*) gdk_display_get_default_seat ((GdkDisplay*) gdk_display_get_default()));"
 		end
-
 
 	default_screen: POINTER
 			-- Screen associated to the `default_display'.
 		external
 			"C inline use <ev_gtk.h>"
 		alias
-			"return gdk_display_get_default_screen (gdk_display_get_default());"
+			"return (GdkScreen*) gdk_display_get_default_screen ((GdkDisplay*) gdk_display_get_default());"
 		end
 
 	default_cursor_size: INTEGER_32
@@ -63,7 +62,7 @@ feature -- Quik access
 		external
 			"C inline use <ev_gtk.h>"
 		alias
-			"return gdk_display_get_default_cursor_size (gdk_display_get_default());"
+			"return gdk_display_get_default_cursor_size ((GdkDisplay*) gdk_display_get_default());"
 		end
 
 note

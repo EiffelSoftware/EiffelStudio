@@ -2193,29 +2193,25 @@ feature -- Object
 		external
 			"C inline use <ev_gtk.h>"
 		alias
-			"g_object_set ((gpointer) $a_object, (gchar*) $a_property, (gchar*) $string_arg, NULL)"
+			"return g_object_set ((gpointer) $a_object, (gchar*) $a_property, (gchar*) $string_arg, NULL);"
 		ensure
 			is_class: class
 		end
-
 
 	frozen g_object_get_string (a_object: POINTER; a_property: POINTER; string_arg: TYPED_POINTER [POINTER])
 		external
 			"C inline use <ev_gtk.h>"
 		alias
-			"g_object_get ((gpointer) $a_object, (gchar*) $a_property, (gchar**) $string_arg, NULL)"
+			"return g_object_get ((gpointer) $a_object, (gchar*) $a_property, (gchar**) $string_arg, NULL);"
 		ensure
 			is_class: class
 		end
-
 
 	frozen g_object_get_object_property (a_object: POINTER; a_property: POINTER; obj: POINTER)
 		external
 			"C inline use <ev_gtk.h>"
 		alias
-			"[
-				g_object_get ($a_object, $a_property, $obj, NULL);
-              ]"
+			"return g_object_get ($a_object, $a_property, $obj, NULL);"
 		end
 
 	frozen g_object_get_integer (a_object: POINTER; a_property: POINTER): INTEGER

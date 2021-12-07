@@ -307,14 +307,14 @@ feature -- GdkDisplay
 		external
 			"C inline use <ev_gtk.h>"
 		alias
-			"gdk_display_get_monitor_at_point ((GdkDisplay*) $a_display, (int) $a_x, (int) $a_y)"
+			"return (GdkMonitor*) gdk_display_get_monitor_at_point ((GdkDisplay*) $a_display, (int) $a_x, (int) $a_y);"
 		end
 
 	frozen gdk_display_get_monitor_at_window (a_display: POINTER; a_window: POINTER): POINTER
 		external
 			"C inline use <ev_gtk.h>"
 		alias
-			"gdk_display_get_monitor_at_window ((GdkDisplay*) $a_display, (GdkWindow*) $a_window)"
+			"return (GdkMonitor*) gdk_display_get_monitor_at_window ((GdkDisplay*) $a_display, (GdkWindow*) $a_window);"
 		end
 
 	frozen gdk_display_supports_cursor_alpha (a_display: POINTER): BOOLEAN
@@ -2081,6 +2081,20 @@ feature -- MASK, enum
 			"C macro use <ev_gtk.h>"
 		alias
 			"GDK_DECOR_BORDER"
+		end
+
+	frozen gdk_hint_pos_enum: INTEGER_32
+		external
+			"C macro use <ev_gtk.h>"
+		alias
+			"GDK_HINT_POS"
+		end
+
+	frozen gdk_hint_user_pos_enum: INTEGER_32
+		external
+			"C macro use <ev_gtk.h>"
+		alias
+			"GDK_HINT_USER_POS"
 		end
 
 	frozen gdk_hint_max_size_enum: INTEGER_32

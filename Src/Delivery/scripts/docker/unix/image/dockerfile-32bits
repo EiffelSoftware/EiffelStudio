@@ -1,4 +1,4 @@
-FROM 32bit/ubuntu:16.04
+FROM daald/ubuntu32:xenial
 
 LABEL maintainer="Jocelyn Fiat <jfiat@eiffel.com>"
 

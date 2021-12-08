@@ -30,6 +30,13 @@ RUN mkdir -p /home/eiffel/deliv/image && mkdir /home/eiffel/workspace
 COPY ./src/build.sh /home/eiffel/build.sh
 RUN dos2unix /home/eiffel/build.sh
 
+
+RUN apt update && apt install -y software-properties-common
+RUN add-apt-repository ppa:gnome3-team/gnome3-staging
+RUN add-apt-repository ppa:gnome3-team/gnome3
+RUN apt update
+RUN apt dist-upgrade -y
+
 VOLUME /home/eiffel/deliv/image
 
 # now creating user

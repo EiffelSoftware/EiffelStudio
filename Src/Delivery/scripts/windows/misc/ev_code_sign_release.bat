@@ -1,7 +1,7 @@
 echo off
 setlocal
-:: Usage: prog 21.11 106026 win64
-:: Usage: prog 21.11 106026 windows
+:: Usage: prog 21.11 106046 win64
+:: Usage: prog 21.11 106046 windows
 set CWD=%cd%
 
 set version=%1
@@ -15,15 +15,16 @@ goto T_START
 
 :T_USAGE
 echo Usage: prog major.min revision
-echo   for instance prog  21.11 106026 win64
+echo   for instance prog  21.11 106046 win64
 echo   platform: win64 or windows
 goto EXIT
 
 :T_START
-echo Code signing the delivery %version% %revision%
+if EXIST %~dp0\local.bat call %~dp0\local.bat
+if "%CMD_7Z%" EQU "" set CMD_7Z="C:\Program Files\7-Zip\7z.exe"
+if "%CMD_SIGN%" EQU "" set CMD_SIGN=signtool.exe sign /fd sha256 /tr http://ts.ssl.com /td sha256 /a /sm
 
-set CMD_7Z="C:\Program Files\7-Zip\7z.exe"
-set CMD_SIGN=signtool.exe sign /fd sha256 /tr http://ts.ssl.com /td sha256 /a
+echo Code signing the delivery %version% %revision%
 
 :: DO NOT MODIFY BELOW ::
 

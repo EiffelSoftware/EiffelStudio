@@ -1,0 +1,7 @@
+echo Set local settings
+
+rem Standard location for 7zip app
+CMD_7Z="C:\Program Files\7-Zip\7z.exe"
+
+rem Use scsigntool from https://www.mgtek.com/smartcard to avoid the PIN for each signature
+CMD_SIGN=\apps\signing\scsigntool.exe -pin ENTERPIN sign /fd sha256 /tr http://ts.ssl.com /td sha256 /sm /a

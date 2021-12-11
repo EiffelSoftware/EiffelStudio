@@ -21,7 +21,8 @@
 				<em>Note:</em> the evaluation CD key can not be used to activate the product, the activation requires a valid customer CD key.
 			</p>
 			<p>
-				<a href="{$host/}/confirm_download?token={$token/}">Click here to download EiffelStudio.</a>
+				<a href="{$host/}/confirm_download?token={$token/}">Click here to download EiffelStudio: {$number/}
+				<br/>{$host/}/confirm_download?token={$token/}</a>
 			</p>
 			<p>	Details: </p>
 			<ul>	

@@ -1,5 +1,5 @@
 <div class="codeboard-demo">
-<div class="btn-holder"><a class="btn-play" href="{$site_url/}codeboard">Play with Eiffel</a></div>
+<div class="btn-holder"><a class="btn-play" href="{$site_url/}codeboard">Try Eiffel online</a></div>
 <div class="codeboard-player">
 <link rel="stylesheet" property="stylesheet" href="{$site_url/}/module/codeboard/files/css/codeboard_static_demo.css"/>
 <div class="slider-wrapper">

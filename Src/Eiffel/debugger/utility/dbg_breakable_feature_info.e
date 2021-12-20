@@ -7,6 +7,8 @@ class
 inherit
 	DEBUG_OUTPUT
 
+	INTERNAL_COMPILER_STRING_EXPORTER
+
 create
 	make
 
@@ -174,13 +176,18 @@ feature -- Element change
 			internal_add_point_info (a_class, a_line, a_text)
 		end
 
-	add_object_test_local (a_name: ID_AS; a_type: detachable TYPE_AS; a_exp: detachable EXPR_AS)
+	add_object_test_local (a_name: detachable ID_AS; a_type: detachable TYPE_AS; a_exp: detachable EXPR_AS)
 			-- Add object test local info.
 		local
 			t: DBG_BREAKABLE_OBJECT_TEST_LOCAL_INFO
+			l_name: detachable ID_AS
 		do
 			create t.make (breakable_count, breakable_nested_count)
-			t.name_id := a_name
+			l_name := a_name
+			if l_name = Void then
+				create l_name.initialize ("~unamed #" + (object_test_locals.count + 1).out)
+			end
+			t.name_id := l_name
 			t.type := a_type
 			t.expression := a_exp
 			object_test_locals.force (t)
@@ -224,7 +231,7 @@ feature -- Status report
 note
 	date: "$Date$"
 	revision: "$Revision$"
-	copyright: "Copyright (c) 1984-2013, Eiffel Software"
+	copyright: "Copyright (c) 1984-2021, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

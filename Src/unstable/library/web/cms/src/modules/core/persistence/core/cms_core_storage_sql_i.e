@@ -672,9 +672,9 @@ feature -- Emails
 
 	sql_insert_message: STRING = "INSERT INTO messages (mid, date, msgtype, status, user_from, user_to, subject, data) VALUES (:mid, :date, :msgtype, :status, :user_from, :user_to, :subject, :data);"
 
-	sql_select_messages_by_user_to: STRING = "SELECT mid, date, msgtype, status, user_from, user_to, subject, data FROM messages WHERE user_to=:user_to ORDER by date DESC, mid DESC;"
+	sql_select_messages_by_user_to: STRING = "SELECT mid, date, msgtype, status, user_from, user_to, subject, data FROM messages WHERE msgtype=:msgtype AND user_to=:user_to ORDER by date DESC, mid DESC;"
 
-	sql_select_messages: STRING = "SELECT mid, date, msgtype, status, user_from, user_to, subject, data FROM messages ORDER by date DESC, mid DESC;"
+	sql_select_messages: STRING = "SELECT mid, date, msgtype, status, user_from, user_to, subject, data FROM messages WHERE msgtype=:msgtype ORDER by date DESC, mid DESC;"
 
 feature -- Misc
 

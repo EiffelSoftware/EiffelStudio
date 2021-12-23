@@ -1485,7 +1485,7 @@ feature -- Conversion
 		end
 
 	left_justify
-			-- Left justify Current using `count' as witdth.
+			-- Left justify Current using `count' as width.
 		local
 			i, nb: INTEGER
 			l_area: like area
@@ -1808,7 +1808,7 @@ invariant
 	compare_character: not object_comparison
 
 note
-	copyright: "Copyright (c) 1984-2020, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2021, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

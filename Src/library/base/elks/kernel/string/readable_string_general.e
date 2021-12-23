@@ -856,7 +856,7 @@ feature -- Conversion
 				For 32-bit strings:
 					- use explicit conversion `to_string_8` with a test that the string is made of ASCII characters only.
 				For 8-bit strings:
-					- consider changing the type of reattachmanet target to READABLE_STRING_8 or
+					- consider changing the type of reattachment target to READABLE_STRING_8 or
 					- use explicit conversion `to_string_8` to avoid implicit performance penalty.
 				[2019-11-30]
 			]"

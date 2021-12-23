@@ -38,6 +38,8 @@ feature -- Security
 			Result.force ("admin export")
 			Result.force ("admin import")
 			Result.force ("admin formats")
+			Result.force (perm_view_logs)
+			Result.force (perm_view_mails)
 		end
 
 	perm_view_system_info: STRING = "view system info"
@@ -47,6 +49,7 @@ feature -- Security
 	perm_admin_roles: STRING = "admin roles"
 	perm_access_admin: STRING = "access admin"
 	perm_view_logs: STRING = "view logs"
+	perm_view_mails: STRING = "view mails"
 
 feature {NONE} -- Router/administration
 
@@ -65,6 +68,7 @@ feature {NONE} -- Router/administration
 			l_user_handler: CMS_ADMIN_USER_HANDLER
 			l_role_handler:	CMS_ROLE_HANDLER
 			l_admin_logs_handler: CMS_LOGS_HANDLER
+			l_admin_mails_handler: CMS_ADMIN_MAILS_HANDLER
 
 			l_admin_cache_handler: CMS_ADMIN_CACHE_HANDLER
 			l_admin_export_handler: CMS_ADMIN_EXPORT_HANDLER
@@ -109,6 +113,9 @@ feature {NONE} -- Router/administration
 			create l_uri_mapping.make_trailing_slash_ignored ("/path_alias", l_admin_path_alias_handler)
 			a_router.map (l_uri_mapping, a_router.methods_get_post)
 
+			create l_admin_mails_handler.make (a_api)
+			a_router.handle ("/mails/{uid}", l_admin_mails_handler, a_router.methods_get)
+			a_router.handle ("/mails", l_admin_mails_handler, a_router.methods_get)
 
 			create l_admin_cache_handler.make (a_api)
 			create l_uri_mapping.make_trailing_slash_ignored ("/cache", l_admin_cache_handler)
@@ -194,6 +201,12 @@ feature -- Hooks
 					create lnk.make ("Logs", l_api.administration_path_location ("logs"))
 					lnk.set_permission_arguments (<<perm_view_logs>>)
 					lnk.set_help ("View logs")
+					lnk.set_weight (2)
+					core_lnk.extend (lnk)
+
+					create lnk.make ("Mails", l_api.administration_path_location ("mails"))
+					lnk.set_permission_arguments (<<perm_view_mails>>)
+					lnk.set_help ("View mails")
 					lnk.set_weight (2)
 					core_lnk.extend (lnk)
 

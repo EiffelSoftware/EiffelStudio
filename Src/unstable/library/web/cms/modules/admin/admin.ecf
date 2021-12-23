@@ -18,6 +18,7 @@
 		<library name="error" location="$ISE_LIBRARY\contrib\library\utility\general\error\error.ecf"/>
 		<library name="http" location="$ISE_LIBRARY\contrib\library\network\protocol\http\http.ecf"/>
 		<library name="http_authorization" location="$ISE_LIBRARY\contrib\library\web\authentication\http_authorization\http_authorization.ecf" readonly="false"/>
+		<library name="notification_email" location="$ISE_LIBRARY\contrib\library\runtime\process\notification_email\notification_email.ecf"/>
 		<library name="text_filter" location="$ISE_LIBRARY\unstable\library\text\text_filter\text_filter.ecf"/>
 		<library name="time" location="$ISE_LIBRARY\library\time\time.ecf"/>
 		<library name="wsf" location="$ISE_LIBRARY\contrib\library\web\framework\ewf\wsf\wsf.ecf"/>

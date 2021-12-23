@@ -488,14 +488,15 @@ feature -- Emails
 	mail_from_json_string (a_json: READABLE_STRING_8): detachable CMS_EMAIL
 		local
 			jp: JSON_PARSER
-			l_date: DATE_TIME
 			js: JSON_STRING
 			jarr: JSON_ARRAY
 			htdate: HTTP_DATE
 			l_from: READABLE_STRING_8
 			l_to_address: READABLE_STRING_8
+			l_addresses: ARRAYED_LIST [READABLE_STRING_8]
 			l_subject: READABLE_STRING_8
 			l_content: READABLE_STRING_8
+			l_partial_user: CMS_PARTIAL_USER
 		do
 			create jp.make
 			jp.parse_string (a_json)
@@ -504,8 +505,6 @@ feature -- Emails
 				jp.is_valid and then
 				attached jp.parsed_json_object as jo
 			then
-				if attached jo.item ("info") as j_info then
-				end
 				js := jo.string_item ("subject")
 				if js /= Void then
 					l_subject := {UTF_CONVERTER}.utf_32_string_to_utf_8_string_8 (js.unescaped_string_32)
@@ -521,8 +520,30 @@ feature -- Emails
 					l_content := {UTF_CONVERTER}.utf_32_string_to_utf_8_string_8 (js.unescaped_string_32)
 				end
 
+				jarr := jo.array_item ("to_addresses")
+				if jarr /= Void then
+					create l_addresses.make (jarr.count)
+					across jarr as ic loop
+						if attached {JSON_STRING} ic.item as l_js_addr then
+							l_to_address := {UTF_CONVERTER}.utf_32_string_to_utf_8_string_8 (l_js_addr.unescaped_string_32)
+							l_addresses.force (l_to_address)
+						end
+					end
+					l_to_address := l_addresses.first
+				end
+
 				if l_from /= Void and l_to_address /= Void and l_subject /= Void and l_content /= Void then
 					create Result.make (l_from, l_to_address, l_subject, l_content)
+					if l_addresses /= Void then
+						across
+							l_addresses as ic
+						loop
+							if not Result.to_addresses.has (ic.item) then
+								Result.to_addresses.force (ic.item)
+							end
+						end
+					end
+
 					js := jo.string_item ("date")
 					if js /= Void then
 						create htdate.make_from_rfc3339_string (js.unescaped_string_32)
@@ -559,6 +580,38 @@ feature -- Emails
 							end
 						end
 					end
+
+					if attached {JSON_OBJECT} jo.item ("info") as j_info then
+						if attached j_info.string_item ("status") as st and then st.same_string ("sent") then
+							Result.set_is_sent (True)
+						end
+						if
+							attached j_info.string_item ("to_user.id") as j_uid and then
+							attached j_uid.unescaped_string_32 as l_uid and then
+							l_uid.is_integer_64
+						then
+							create l_partial_user.make_with_id (l_uid.to_integer_64)
+						elseif attached j_info.string_item ("to_user.name") as l_uname then
+							create l_partial_user.make (l_uname.unescaped_string_32)
+						end
+						if l_partial_user /= Void then
+							Result.set_to_user (l_partial_user)
+							l_partial_user := Void
+						end
+						if
+							attached j_info.string_item ("from_user.id") as j_uid and then
+							attached j_uid.unescaped_string_32 as l_uid and then
+							l_uid.is_integer_64
+						then
+							create l_partial_user.make_with_id (l_uid.to_integer_64)
+						elseif attached j_info.string_item ("from_user.name") as l_uname then
+							create l_partial_user.make (l_uname.unescaped_string_32)
+						end
+						if l_partial_user /= Void then
+							Result.set_from_user (l_partial_user)
+							l_partial_user := Void
+						end
+					end
 				end
 			end
 		end
@@ -566,7 +619,6 @@ feature -- Emails
 	fetch_mail: detachable CMS_EMAIL
 			-- SQL: 1:mid, 2:date, 3:type, 4:status, 5:user_from, 6:user_to, 7:subject, 8:data
 		local
-			i: INTEGER
 			l_date: detachable DATE_TIME
 			l_data: detachable READABLE_STRING_8
 			l_uid: READABLE_STRING_GENERAL

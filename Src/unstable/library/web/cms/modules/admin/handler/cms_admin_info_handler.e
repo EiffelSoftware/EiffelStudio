@@ -39,6 +39,8 @@ feature -- Execution
 		end
 
 	append_system_info_to (s: STRING)
+		local
+			l_mailer, l_previous_mailer: NOTIFICATION_MAILER
 		do
 			s.append ("<ul>")
 			across
@@ -51,6 +53,21 @@ feature -- Execution
 			s.append ("<li><strong>Storage:</strong> ")
 			s.append (" -&gt; ")
 			s.append (api.storage.generator)
+			s.append ("</li>")
+
+			s.append ("<li><strong>Mailer:</strong> ")
+			l_mailer := api.setup.mailer
+			from until l_mailer = Void loop
+				s.append (" -&gt; ")
+				s.append (l_mailer.generator)
+				if attached {NOTIFICATION_CHAIN_MAILER} l_mailer as l_chain_mailer then
+					l_previous_mailer := l_mailer
+					l_mailer := l_chain_mailer.next
+				else
+					l_mailer := l_previous_mailer
+					l_previous_mailer := Void
+				end
+			end
 			s.append ("</li>")
 			s.append ("</ul>")
 		end

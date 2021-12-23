@@ -157,9 +157,8 @@ feature {NONE} -- Implementation
 				process := l_process_factory.process_launcher (boogie_executable, l_arguments, l_ee.current_working_path.name)
 				process.set_on_fail_launch_handler (agent handle_launch_failed (boogie_executable, l_arguments))
 			elseif {PLATFORM}.is_unix then
-				l_arguments.put_front (boogie_executable)
-				process := l_process_factory.process_launcher ({STRING_32} "/usr/bin/mono", l_arguments, l_ee.current_working_path.name)
-				process.set_on_fail_launch_handler (agent handle_launch_failed ({STRING_32} "/usr/bin/mono " + boogie_executable, l_arguments))
+				process := l_process_factory.process_launcher (boogie_executable, l_arguments, l_ee.current_working_path.name)
+				process.set_on_fail_launch_handler (agent handle_launch_failed (boogie_executable, l_arguments))
 			else
 				check False end
 			end

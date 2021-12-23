@@ -11,18 +11,18 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_error_code: STRING)
-			-- Make error with `a_error_code'.
+	make (a_error_message: STRING)
+			-- Make error with `a_error_message'.
 		do
-			error_code := a_error_code.twin
+			error_message := a_error_message.twin
 		ensure
-			error_code_set: error_code ~ a_error_code
+			error_message_set: error_message ~ a_error_message
 		end
 
 feature -- Access
 
-	error_code: STRING
-			-- Boogie error code
+	error_message: STRING
+			-- Boogie error message
 
 	line: INTEGER
 			-- Line where error occured.
@@ -47,31 +47,31 @@ feature -- Status report
 	is_assert_error: BOOLEAN
 			-- Is this an assertion error?
 		do
-			Result := error_code ~ "BP5001"
+			Result := error_message.has_substring ("assertion")
 		end
 
 	is_precondition_violation: BOOLEAN
 			-- Is this a precondition violation?
 		do
-			Result := error_code ~ "BP5002"
+			Result := error_message.has_substring ("precondition")
 		end
 
 	is_postcondition_violation: BOOLEAN
 			-- Is this a postcondition violation?
 		do
-			Result := error_code ~ "BP5003"
+			Result := error_message.has_substring ("postcondition");
 		end
 
 	is_loop_inv_violated_on_entry: BOOLEAN
 			-- Is this a loop invariant failed on entry error?
 		do
-			Result := error_code ~ "BP5004"
+			Result := error_message.has_substring ("entry")
 		end
 
 	is_loop_inv_not_maintained: BOOLEAN
 			-- Is this a loop invariant not maintained error?
 		do
-			Result := error_code ~ "BP5005"
+			Result := error_message.has_substring ("maintained")
 		end
 
 	has_related_location: BOOLEAN

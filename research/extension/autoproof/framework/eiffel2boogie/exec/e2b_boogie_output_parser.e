@@ -114,19 +114,27 @@ feature {NONE} -- Implementation
 				-- file: boogie_error_regexp.captured_substring (1)
 				-- line: boogie_error_regexp.captured_substring (2).to_integer
 				-- column: boogie_error_regexp.captured_substring (3).to_integer
-				-- message: boogie_error_regexp.captured_substring (4)
-				last_result.boogie_errors.extend (boogie_error_regexp.captured_substring (4))
+				-- error message: boogie_error_regexp.captured_substring (4)
+				check current_procedure_error = Void end
+				check current_procedure_result /= Void end
+				l_line := boogie_error_regexp.captured_substring (2).to_integer
+				create current_procedure_error.make (boogie_error_regexp.captured_substring (4))
+				current_procedure_error.set_line (l_line, input_lines.i_th (l_line))
+				current_procedure_result.errors.extend (current_procedure_error)
+				if not current_procedure_error.has_related_location then
+					current_procedure_error := Void
+				end
 
 			elseif error_regexp.matches (a_line) then
 				-- file: error_regexp.captured_substring (1)
 				-- line: error_regexp.captured_substring (2).to_integer
 				-- column: error_regexp.captured_substring (3).to_integer
 				-- error code: error_regexp.captured_substring (4)
-				-- error message: error_regexp.captured_substring (5)
+				-- error message: error_regexp.captured_substring (5)				
 				check current_procedure_error = Void end
 				check current_procedure_result /= Void end
 				l_line := error_regexp.captured_substring (2).to_integer
-				create current_procedure_error.make (error_regexp.captured_substring (4))
+				create current_procedure_error.make (error_regexp.captured_substring (5))
 				current_procedure_error.set_line (l_line, input_lines.i_th (l_line))
 				current_procedure_result.errors.extend (current_procedure_error)
 				if not current_procedure_error.has_related_location then

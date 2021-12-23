@@ -207,6 +207,8 @@ feature -- Conversion
 		end
 
 	header: STRING_8
+		local
+			l_is_first: BOOLEAN
 		do
 			create Result.make (20)
 			if attached reply_to_address as l_reply_to then
@@ -218,11 +220,17 @@ feature -- Conversion
 			Result.append (from_address)
 			Result.append_character ('%N')
 			Result.append ("To: ")
+			l_is_first := True
 			across
 				to_addresses as c
 			loop
+				if l_is_first then
+					l_is_first := False
+				else
+					Result.append_character (',')
+					Result.append_character (' ')
+				end
 				Result.append (c.item)
-				Result.append_character (';')
 			end
 			Result.append_character ('%N')
 			if
@@ -230,11 +238,17 @@ feature -- Conversion
 				not l_cc.is_empty
 			then
 				Result.append ("Cc: ")
+				l_is_first := True
 				across
 					l_cc as c
 				loop
+					if l_is_first then
+						l_is_first := False
+					else
+						Result.append_character (',')
+						Result.append_character (' ')
+					end
 					Result.append (c.item)
-					Result.append_character (';')
 				end
 				Result.append_character ('%N')
 			end
@@ -243,11 +257,17 @@ feature -- Conversion
 				not l_bcc.is_empty
 			then
 				Result.append ("Bcc: ")
+				l_is_first := True
 				across
 					l_bcc as c
 				loop
+					if l_is_first then
+						l_is_first := False
+					else
+						Result.append_character (',')
+						Result.append_character (' ')
+					end
 					Result.append (c.item)
-					Result.append_character (';')
 				end
 				Result.append_character ('%N')
 			end

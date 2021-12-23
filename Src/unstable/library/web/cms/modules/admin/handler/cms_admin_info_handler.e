@@ -61,11 +61,9 @@ feature -- Execution
 				s.append (" -&gt; ")
 				s.append (l_mailer.generator)
 				if attached {NOTIFICATION_CHAIN_MAILER} l_mailer as l_chain_mailer then
-					l_previous_mailer := l_mailer
 					l_mailer := l_chain_mailer.next
 				else
-					l_mailer := l_previous_mailer
-					l_previous_mailer := Void
+					l_mailer := Void
 				end
 			end
 			s.append ("</li>")

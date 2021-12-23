@@ -1,6 +1,5 @@
 note
 	description: "Summary description for {ES_CLOUD_PLANS_TOKENS_ADMIN_HANDLER}."
-	author: ""
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -142,7 +141,7 @@ feature -- Execution
 					if a_ext.is_case_insensitive_equal ("txt") then
 						create b.make_empty
 						b.append ("# product.name=" + a_plan.name + "%N")
-						b.append ("# product.title=" + a_plan.title_or_name + "%N")
+						b.append ("# product.title=" + api.utf_8_encoded (a_plan.title_or_name) + "%N")
 						b.append ("# " + tks.count.out + " redeem token(s) [" + api.utf_8_encoded (a_src) + "]%N%N")
 						create r.make_with_body (b)
 						r.header.put_content_type_text_plain
@@ -163,7 +162,7 @@ feature -- Execution
 						fn.append_string_general (a_name)
 						fn.append_character ('.')
 						fn.append_string_general (a_ext)
-						r.header.put_content_disposition ("attachment", "filename=%""+ fn +"%"")
+						r.header.put_content_disposition ("attachment", "filename=%""+ api.utf_8_encoded (fn) + "%"")
 						res.send (r)
 					else
 						send_bad_request (req, res)
@@ -185,7 +184,6 @@ feature -- Execution
 			tks_by_src: STRING_TABLE [ARRAYED_LIST [ES_CLOUD_REDEEM_TOKEN]]
 			tks: ARRAYED_LIST [ES_CLOUD_REDEEM_TOKEN]
 			l_src: detachable READABLE_STRING_GENERAL
-			fn: READABLE_STRING_32
 		do
 			r := new_generic_response (req, res)
 			add_primary_tabs (r)

@@ -882,7 +882,9 @@ feature {NONE} -- Internal memory management
 			Preferences.debug_tool_data.unsensitive_foreground_color_preference.change_actions.prune_all (set_unsensitive_fg_color_agent)
 			Preferences.debug_tool_data.internal_background_color_preference.change_actions.prune_all (set_row_internal_bg_color_agent)
 
-			has_internal_callstack_hidden_notification.wipe_out
+			if attached has_internal_callstack_hidden_notification as notif then
+				notif.wipe_out
+			end
 			Precursor {ES_DEBUGGER_DOCKABLE_STONABLE_TOOL_PANEL}
 		end
 

@@ -333,7 +333,7 @@ feature -- Emails
 				create l_parameters.make (8)
 				l_parameters.put (a_mail.id, "mid")
 				l_parameters.put (a_mail.date, "date")
-				l_parameters.put ("email", "type")
+				l_parameters.put ("email", "msgtype")
 				if a_mail.is_sent then
 					l_parameters.put ("sent", "status")
 				else
@@ -381,7 +381,7 @@ feature -- Emails
 			error_handler.reset
 			create l_parameters.make (2)
 
-			l_parameters.put ("email", "type")
+			l_parameters.put ("email", "msgtype")
 
 			if a_user /= Void then
 				l_parameters.put (a_user.id, "user_to")
@@ -617,7 +617,7 @@ feature -- Emails
 		end
 
 	fetch_mail: detachable CMS_EMAIL
-			-- SQL: 1:mid, 2:date, 3:type, 4:status, 5:user_from, 6:user_to, 7:subject, 8:data
+			-- SQL: 1:mid, 2:date, 3:msgtype, 4:status, 5:user_from, 6:user_to, 7:subject, 8:data
 		local
 			l_date: detachable DATE_TIME
 			l_data: detachable READABLE_STRING_8
@@ -670,11 +670,11 @@ feature -- Emails
 			end
 		end
 
-	sql_insert_message: STRING = "INSERT INTO messages (mid, date, type, status, user_from, user_to, subject, data) VALUES (:mid, :date, :type, :status, :user_from, :user_to, :subject, :data);"
+	sql_insert_message: STRING = "INSERT INTO messages (mid, date, msgtype, status, user_from, user_to, subject, data) VALUES (:mid, :date, :msgtype, :status, :user_from, :user_to, :subject, :data);"
 
-	sql_select_messages_by_user_to: STRING = "SELECT mid, date, type, status, user_from, user_to, subject, data FROM messages WHERE user_to=:user_to ORDER by date DESC, mid DESC;"
+	sql_select_messages_by_user_to: STRING = "SELECT mid, date, msgtype, status, user_from, user_to, subject, data FROM messages WHERE user_to=:user_to ORDER by date DESC, mid DESC;"
 
-	sql_select_messages: STRING = "SELECT mid, date, type, status, user_from, user_to, subject, data FROM messages ORDER by date DESC, mid DESC;"
+	sql_select_messages: STRING = "SELECT mid, date, msgtype, status, user_from, user_to, subject, data FROM messages ORDER by date DESC, mid DESC;"
 
 feature -- Misc
 

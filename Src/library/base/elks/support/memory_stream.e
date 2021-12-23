@@ -13,7 +13,7 @@ obsolete
 	"Use MANAGED_POINTER instead."
 
 inherit
-	DISPOSABLE
+	ANY
 		redefine
 			copy, is_equal
 		end
@@ -165,12 +165,6 @@ feature -- Duplication
 
 feature {NONE} -- Disposal
 
-	dispose
-			-- Release `area'.
-		do
-			area.item.memory_free
-		end
-
 	internal_area: MANAGED_POINTER
 
 invariant
@@ -178,7 +172,7 @@ invariant
 	area_not_null: area /= default_pointer
 
 note
-	copyright: "Copyright (c) 1984-2012, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2021, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

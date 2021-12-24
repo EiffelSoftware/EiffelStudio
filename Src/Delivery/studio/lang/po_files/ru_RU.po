@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: EiffelStudio $Revision$\n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2021-12-24 15:54+0300\n"
+"PO-Revision-Date: 2021-12-24 23:06+0300\n"
 "Last-Translator: Alexander Kogtenkov <kwaxer@mail.ru>\n"
 "Language-Team: Eiffel Software and others <support@eiffel.com>\n"
 "Language: ru\n"
@@ -541,7 +541,7 @@ msgstr ""
 #: scm_names.e:53
 msgctxt "scm"
 msgid "$1"
-msgstr ""
+msgstr "$1"
 
 #. Source code: do Result := locale.formatted_string (locale.translation ("$1%N$2"), [cst_error_during_context_preparation, s]) end
 #: debugger_names.e:380
@@ -4984,6 +4984,9 @@ msgid ""
 "Assignment attempt symbol \"?=\" is not part of ECMA/ISO Eiffel and will not "
 "be supported in the future. Use object test instead."
 msgstr ""
+"Символ попытки присваивания \"?=\" не является частью стандарта Эйфеля ECMA/"
+"ISO и не будет поддерживаться в будущем. Вместо него используйте проверку "
+"объекта."
 
 #. Source code: Result.force (locale.translation ("Incompatible Types Equality"), w_vweq)
 #: conf_interface_names.e:479
@@ -9054,7 +9057,7 @@ msgstr "Очистить текстовый фильтр"
 #: scm_names.e:204
 msgctxt "scm"
 msgid "Clear the active changelist"
-msgstr ""
+msgstr "Очистить активный список изменений"
 
 #. Source code: m_Showclients: STRING_32				do Result := locale.translation("Cli&ents")	end
 #: interface_names.e:758
@@ -9826,7 +9829,7 @@ msgstr "Цвет разделителей сетки."
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:294
 msgctxt "preference"
 msgid "Color of the grid tree node connector lines."
-msgstr ""
+msgstr "Цвет соединителя узлов дерева сетки."
 
 #. <PREF NAME="debugger.colors.expanded_display_background_color" DESCRIPTION="Background color for expanded display view (default is white, change it to better see white space at end of lines in displayed text)."><COLOR>255;255;255</COLOR></PREF>
 #. <PREF NAME="debugger.colors.row_highlight_background_color" DESCRIPTION="Highlight background color"><COLOR>255;255;170</COLOR></PREF>
@@ -10170,7 +10173,7 @@ msgstr "Фиксировать…"
 #: scm_names.e:202
 msgctxt "scm"
 msgid "Commit active changelist"
-msgstr ""
+msgstr "Зафиксировать активный список изменений"
 
 #. Source code: label_commit_message: STRING_32 do Result := locale.translation_in_context ("Commit message", "scm") end
 #: scm_names.e:130
@@ -10567,7 +10570,7 @@ msgstr "Условия, которые должны исполняться дл�
 #: scm_names.e:197
 msgctxt "scm"
 msgid "Config"
-msgstr ""
+msgstr "Конфигурация"
 
 #. Source code: system_help: STRING_GENERAL do Result := locale.translation ("Config and cluster details") end
 #: shared_ewb_help.e:209
@@ -10847,6 +10850,8 @@ msgid ""
 "Conforming inheritance clause must come before non conforming inheritance "
 "clause"
 msgstr ""
+"Предложение согласованного наследования должно быть перед предложением "
+"несогласованного наследования"
 
 #. Source code: locale.translation_in_context ("Conforming inheritance clause must come before non conforming inheritance clause.", once "parser.eiffel.error")))
 #: eiffel_parser.e:6704
@@ -10855,6 +10860,8 @@ msgid ""
 "Conforming inheritance clause must come before non conforming inheritance "
 "clause."
 msgstr ""
+"Предложение согласованного наследования должно быть перед предложением "
+"несогласованного наследования."
 
 #. Source code: prompt_connected_your_account: STRING_32 do Result := locale.translation_in_context ("Connect your account to use EiffelStudio.", "cloud.info") end
 #: es_cloud_names.e:65
@@ -11004,7 +11011,7 @@ msgstr "Продолжать при попадании на точку оста�
 #: scm_names.e:193
 msgctxt "scm"
 msgid "Continue with post-commit operation(s)..."
-msgstr ""
+msgstr "Продолжить с операциями пост-фиксации…"
 
 #. Source code: l_contract: STRING_32				do Result := locale.translation("Contract")	end
 #: ewb_names.e:188
@@ -14632,13 +14639,13 @@ msgstr "Диалоги"
 #: scm_names.e:185
 msgctxt "scm"
 msgid "Diff"
-msgstr ""
+msgstr "Сравнить"
 
 #. Source code: menu_diff: STRING_32 do Result := locale.translation_in_context ("Diff ...", "scm") end
 #: scm_names.e:73
 msgctxt "scm"
 msgid "Diff ..."
-msgstr ""
+msgstr "Сравнить…"
 
 #. Source code: label_diff_command: STRING_32 do Result := locale.translation_in_context ("Diff command ", "scm") end
 #: scm_names.e:103
@@ -15677,6 +15684,8 @@ msgid ""
 "Double-clicked to show the differences\n"
 "(when Shift is pressed, open the location)"
 msgstr ""
+"Двойной щелчок, чтобы показать различия\n"
+"(открыть расположение при нажатии Shift)"
 
 #. Source code: Result := locale.translation ("Down")
 #: docking_names.e:153
@@ -17681,7 +17690,7 @@ msgstr "Пустое предложение 'rescue'"
 #: eiffel_parser.e:5133
 msgctxt "parser.eiffel.warning"
 msgid "Empty Client_list is not allowed and will be assumed to be {NONE}."
-msgstr ""
+msgstr "Пустой список клиентов недопустим и будет считаться {NONE}."
 
 #. Source code: t_Empty_creation_routine_external_name_error: STRING_GENERAL do Result := locale.translation ("Empty Creation Routine .NET Name Error") end
 #: interface_names.e:146
@@ -17697,13 +17706,13 @@ msgstr "Пустое окно разработки"
 #: eiffel_parser.e:7410
 msgctxt "parser.eiffel.warning"
 msgid "Empty Feature_set is not allowed and will be discarded."
-msgstr ""
+msgstr "Пустое множество компонентов не допустимо и будет отброшено."
 
 #. Source code: locale.translation_in_context (once "Empty Formal_generic_list is not allowed and will be discarded.", once "parser.eiffel.warning")))
 #: eiffel_parser.e:11798
 msgctxt "parser.eiffel.warning"
 msgid "Empty Formal_generic_list is not allowed and will be discarded."
-msgstr ""
+msgstr "Пустой список формальных параметров недопустим и будет отброшен."
 
 #. Source code: t_Empty_root_class_external_name_error: STRING_GENERAL do Result := locale.translation ("Empty Root Class .NET Name Error") end
 #: interface_names.e:147
@@ -17714,13 +17723,13 @@ msgstr "Ошибка пустого имени корневого класса .
 #: eiffel_parser.e:11335
 msgctxt "parser.eiffel.warning"
 msgid "Empty Type_list is not allowed and will be discarded."
-msgstr ""
+msgstr "Пустой список типов недопустим и будет отброшен."
 
 #. Source code: locale.translation_in_context (once "Empty agent actual list is not allowed", once "parser.eiffel.warning")))
 #: eiffel_parser.e:15309
 msgctxt "parser.eiffel.warning"
 msgid "Empty agent actual list is not allowed"
-msgstr ""
+msgstr "Пустой список фактических аргументов агента недопустим"
 
 #. Source code: do Result := locale.translation ("Empty and uncommented routine") end
 #: ca_names.e:687
@@ -17775,13 +17784,13 @@ msgstr "Пустой компонент"
 #: eiffel_parser.e:8130
 msgctxt "parser.eiffel.warning"
 msgid "Empty formal argument list is not allowed"
-msgstr ""
+msgstr "Пустой список формальных аргументов недопустим"
 
 #. Source code: locale.translation_in_context (once "Empty key list is not allowed", once "parser.eiffel.warning")))
 #: eiffel_parser.e:14268
 msgctxt "parser.eiffel.warning"
 msgid "Empty key list is not allowed"
-msgstr ""
+msgstr "Пустой список ключей недопустим"
 
 #. <PREF NAME="rule.empty_loop.enable" DESCRIPTION="Enable rule."><BOOLEAN>False</BOOLEAN></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/code_analysis.xml:36
@@ -19192,7 +19201,7 @@ msgstr "Выполнить $1 тестов"
 #: $EIFFEL_SRC/Delivery/studio/eifinit/spec/unix/default.xml:4
 msgctxt "preference"
 msgid "Execute command in terminal/console."
-msgstr ""
+msgstr "Выполнить команду в терминале/консоли."
 
 #. Source code: e_Exec_step: STRING_32				do Result := locale.translation("Execute execution one step at a time")	end
 #: interface_names.e:2859
@@ -19590,7 +19599,7 @@ msgstr "Вычисление выражения"
 #: eiffel_parser_skeleton.e:1265
 msgctxt "parser.eiffel.error"
 msgid "Expression used in object test should be \"Detachable_expression\"."
-msgstr ""
+msgstr "Выражение в проверке объекта должно быть \"Detachable_expression\"."
 
 #. Source code: t_expression: STRING_32 do Result := locale.translation ("Expression:") end
 #: eb_metric_names.e:32
@@ -19661,6 +19670,8 @@ msgstr ""
 msgctxt "preference"
 msgid "External Subversion diff command (use $location as placeholder)."
 msgstr ""
+"Внешняя команда сравнение subversion (используйте $location для подстановки "
+"пути файла)."
 
 #. Source code: err_external_command_empty: STRING_32 do Result := locale.translation ("External command is not specified.") end
 #: eb_metric_names.e:1154
@@ -20901,7 +20912,7 @@ msgstr "Цвет текста папки"
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:286
 msgctxt "preference"
 msgid "Font"
-msgstr ""
+msgstr "Шрифт"
 
 #. <PREF NAME="tools.diagram_tool.uml.uml_class_feature_section_font" DESCRIPTION="Font for class feature sections in UML class figures."><FONT>Arial-r-bold-10-sans</FONT></PREF>
 #. <PREF NAME="tools.diagram_tool.uml.uml_class_feature_section_font" DESCRIPTION="Font for class feature sections in UML class figures."><FONT>sans-r-bold-9-sans</FONT></PREF>
@@ -20999,7 +21010,7 @@ msgstr "Шрифт заголовка виджета уведомления."
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:286
 msgctxt "preference"
 msgid "Font of the IDE grids."
-msgstr ""
+msgstr "Шрифт сетки ИСP."
 
 #. <PREF NAME="editor.general.font_zoom_factor" DESCRIPTION="Zoom factor of editor font, set by ctrl + mouse wheel."><INTEGER>0</INTEGER></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:671
@@ -21485,7 +21496,7 @@ msgstr "Функциональный компонент должен быть ф
 #: $EIFFEL_SRC/Delivery/studio/eifinit/spec/unix/default.xml:26
 msgctxt "preference"
 msgid "GIT command (the binary is required to support GIT)."
-msgstr ""
+msgstr "Команда git (исполняемый файл клиента git)."
 
 #. Source code: Result := locale.translation_in_context ("GIT support: not available", "scm")
 #: scm_names.e:113
@@ -21497,7 +21508,7 @@ msgstr "git недоступен"
 #: scm_names.e:111
 msgctxt "scm"
 msgid "GIT support: yes"
-msgstr ""
+msgstr "Поддержка git: да"
 
 #. Source code: Result.force (locale.translation ("Galician"), "gl")
 #: locale_names.e:53
@@ -22459,13 +22470,13 @@ msgstr "Скрыть ярлыки"
 #: scm_names.e:96
 msgctxt "scm"
 msgid "Hide location that has no change"
-msgstr ""
+msgstr "Скрыть пути без изменений"
 
 #. Source code: question_hide_location_with_no_change: STRING_32 do Result := locale.translation_in_context ("Hide location with no change", "scm") end
 #: scm_names.e:95
 msgctxt "scm"
 msgid "Hide location with no change"
-msgstr ""
+msgstr "Скрыть пути без изменений"
 
 #. <PREF NAME="tools.metric_tool.hide_old_archive" DESCRIPTION="Should old archive items be hidden?"><BOOLEAN>True</BOOLEAN></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:121
@@ -24629,6 +24640,17 @@ msgid ""
 "\t\tacross foo as x loop ... x.item ... x.key ... end\n"
 "\t\tacross foo is x loop ... x ... @x.key ... end"
 msgstr ""
+"Использовать устаревший синтаксис повторения?\n"
+"\n"
+"Современный синтаксис повторения предоставляет прямой доступ к\n"
+"текущему элементу и использует ключевое слово `as`:\n"
+"\t\tacross foo as x loop … x … @x.key … end\n"
+"\n"
+"Устаревший синтаксис повторения предоставляет прямой доступ к\n"
+"текущему элементу (при использовании `is`) или курсору (при использовании "
+"`as`):\n"
+"\t\tacross foo as x loop … x.item … x.key … end\n"
+"\t\tacross foo is x loop … x … @x.key … end"
 
 #. <PREF NAME="tools.metric_tool.display_percentage_for_ratio" HIDDEN="true" DESCRIPTION="Is percentage for ratio metric displayed?"><BOOLEAN>True</BOOLEAN></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:119
@@ -24959,7 +24981,7 @@ msgstr "Сохранить комментарии без отступов"
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:729
 msgctxt "preference"
 msgid "Keep unindented comments unindented?"
-msgstr ""
+msgstr "Сохранить отсутствие отступа комментариев без отступов"
 
 #. Source code: keep_failing_text: STRING = "Keep working directory of failing tests"
 #: es_test_execution_wizard_page_panel.e:154
@@ -26066,6 +26088,8 @@ msgstr "Инвариант цикла (без тега) может не подд
 msgctxt "parser.eiffel.warning"
 msgid "Loop variant should appear just before the end keyword of the loop."
 msgstr ""
+"Изменяемое предложение цикла должно быть сразу перед ключевым словом "
+"окончания цикла."
 
 #. Source code: Result.force (locale.translation ("Lower Sorbian"), "dsb")
 #: locale_names.e:38
@@ -26116,7 +26140,7 @@ msgstr "Главные виды редактора"
 #: eiffel_parser.e:11245
 msgctxt "parser.eiffel.warning"
 msgid "Make an expanded version of the base class associated with this type."
-msgstr ""
+msgstr "Создайте расширенную версию базового класса, связанного с этим типом."
 
 #. Source code: do Result := translation_in_context ("Make attribute constant", once "code_analyzer") end
 #: ca_names.e:138
@@ -27110,13 +27134,13 @@ msgstr "Экспорт отсутствующего класса"
 #: eiffel_parser.e:4179
 msgctxt "parser.eiffel.warning"
 msgid "Missing Index part of Index_clause."
-msgstr ""
+msgstr "Отсутствует индекс-часть в предложении индексирования."
 
 #. Source code: locale.translation_in_context (once "Missing `attribute` keyword before `end` keyword.", once "parser.eiffel.warning")))
 #: eiffel_parser.e:3942
 msgctxt "parser.eiffel.warning"
 msgid "Missing `attribute` keyword before `end` keyword."
-msgstr ""
+msgstr "Отсутствует ключевое слово `attribute` перед ключевым словом `end`."
 
 #. <PREF NAME="rule.missing_argument_semicolon.enable" DESCRIPTION="Enable rule."><BOOLEAN>False</BOOLEAN></PREF>
 #. <PREF NAME="rule.missing_argument_semicolon.severity" DESCRIPTION="Severity score."><INTEGER>40</INTEGER></PREF>
@@ -28244,7 +28268,7 @@ msgstr "Нет объекта"
 #: scm_names.e:139
 msgctxt "scm"
 msgid "No output ..."
-msgstr ""
+msgstr "Нет вывода…"
 
 #. Source code: t_contract_no_postcondtions: STRING_32 			do Result := locale.translation ("No postconditions added yet") end
 #: interface_names.e:2726
@@ -29099,6 +29123,8 @@ msgid ""
 "Obsolete operator notation `$1` is used. Replace it with a contemporary "
 "operator (if available) or an unfolded feature call."
 msgstr ""
+"Использован устаревший оператор `$1`. Замените его современным оператором "
+"(если доступен) или развёрнутым вызовом компонента."
 
 #. Source code: locale.translation_in_context (once "Obsolete operator notation `@` is used. Replace it with a contemporary operator (if available) or an unfolded form of feature call.", once "parser.eiffel.warning")))
 #: eiffel_parser.e:15870
@@ -29107,6 +29133,8 @@ msgid ""
 "Obsolete operator notation `@` is used. Replace it with a contemporary "
 "operator (if available) or an unfolded form of feature call."
 msgstr ""
+"Использован устаревший оператор `@`. Замените его современным оператором "
+"(если доступен) или развёрнутым вызовом компонента."
 
 #. Source code: option_syntax_obsolete_name: STRING_32 do Result := locale.translation ("Obsolete syntax") end
 #: conf_interface_names.e:451
@@ -29341,19 +29369,19 @@ msgstr "Только текущая версия"
 #: eiffel_parser.e:6750
 msgctxt "parser.eiffel.error"
 msgid "Only one conforming inheritance clause allowed per class"
-msgstr ""
+msgstr "В классе допустимо только одно согласованное наследование"
 
 #. Source code: locale.translation_in_context ("Only one conforming inheritance clause allowed per class.", once "parser.eiffel.error")))
 #: eiffel_parser.e:6707
 msgctxt "parser.eiffel.error"
 msgid "Only one conforming inheritance clause allowed per class."
-msgstr ""
+msgstr "В классе допустимо только одно согласованное наследование."
 
 #. Source code: locale.translation_in_context ("Only one non-conforming inheritance clause allowed per class", once "parser.eiffel.error")))
 #: eiffel_parser.e:6810
 msgctxt "parser.eiffel.error"
 msgid "Only one non-conforming inheritance clause allowed per class"
-msgstr ""
+msgstr "В классе допустимо только одно несогласованное наследование"
 
 #. Source code: m_Open_new: STRING_32				do Result := locale.translation("Op&en...")	end
 #: interface_names.e:674
@@ -29765,7 +29793,7 @@ msgstr "Вне EiffelStudio"
 #: scm_names.e:41
 msgctxt "scm"
 msgid "Outside any repository."
-msgstr ""
+msgstr "Вне любого хранилища."
 
 #. Source code: m_Set_critical_stack_depth: STRING_32 do Result := locale.translation("Overflow &Prevention...")	end
 #: interface_names.e:1049
@@ -29921,7 +29949,7 @@ msgstr "Принято"
 #: eiffel_parser.e:15626
 msgctxt "parser.eiffel.error"
 msgid "Passive regions should use type specifier \"NONE\"."
-msgstr ""
+msgstr "Пассивные регионы должны использовать спецификатор \"NONE\"."
 
 #. Source code: label_password: STRING_32 do Result := locale.translation ("Password") end
 #: es_cloud_names.e:54
@@ -31168,13 +31196,13 @@ msgstr "Купить лицензию"
 #: scm_names.e:188
 msgctxt "scm"
 msgid "Push"
-msgstr ""
+msgstr "Протолкнуть"
 
 #. Source code: menu_git_push: STRING_32 do Result := locale.translation_in_context ("Push ...", "scm") end
 #: scm_names.e:79
 msgctxt "scm"
 msgid "Push ..."
-msgstr ""
+msgstr "Протолкнуть…"
 
 #. Source code: t_Diagram_put_one_handle_left_cmd: STRING_32	do Result := locale.translation("Put Handle Left")	end
 #: interface_names.e:2611
@@ -31409,6 +31437,8 @@ msgid ""
 "Reason: the creation procedure in a once class should be immediate (not "
 "inherited)."
 msgstr ""
+"Причина: процедура создания в однократном классе должна быть "
+"непосредственной (не унаследованной)."
 
 #. Source code: locale.translation_in_context ("Reason: the creation procedure in a once class should not be object-relative (should not have an %"OBJECT%" once key).", "compiler.error")
 #: once_creation_error.e:76
@@ -31417,12 +31447,14 @@ msgid ""
 "Reason: the creation procedure in a once class should not be object-relative "
 "(should not have an \"OBJECT\" once key)."
 msgstr ""
+"Причина: процедура создания в однократном классе не должна быть объектно-"
+"относительной (не должна иметь однократный ключ \"OBJECT\")."
 
 #. Source code: button_rebase: STRING_32 do Result := locale.translation_in_context ("Rebase", "scm") end
 #: scm_names.e:190
 msgctxt "scm"
 msgid "Rebase"
-msgstr ""
+msgstr "Перебазировать"
 
 #. Source code: menu_git_rebase: STRING_32 do Result := locale.translation_in_context ("Rebase ...", "scm") end
 #: scm_names.e:81
@@ -32724,7 +32756,7 @@ msgstr "Обратная компиляция проекта"
 #: scm_names.e:75
 msgctxt "scm"
 msgid "Revert ..."
-msgstr ""
+msgstr "Вернуть…"
 
 #. <PREF NAME="debugger.right_debug_layout" HIDDEN="true" DESCRIPTION="Items/tools shown on editor side when in debug mode."><LIST>Search;closed;0;0;0;0;Editor;minimized;0;0;0;0;Context;visible;0;0;0;171;Debugging;visible;0;0;0;218</LIST></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:43
@@ -36916,13 +36948,13 @@ msgstr "Контроль версий"
 #: scm_names.e:144
 msgctxt "scm"
 msgid "Source Control / $1"
-msgstr ""
+msgstr "Контроль версий / $1"
 
 #. Source code: title_scm_commit: STRING_32 do Result := locale.translation_in_context ("Source Control / Commit", "scm") end
 #: scm_names.e:146
 msgctxt "scm"
 msgid "Source Control / Commit"
-msgstr ""
+msgstr "Контроль версий / фиксировать"
 
 #. Source code: title_scm_config: STRING_32 do Result := locale.translation_in_context ("Source Control / Configuration", "scm") end
 #: scm_names.e:147
@@ -36934,25 +36966,25 @@ msgstr "Контроль версий / конфигурация"
 #: scm_names.e:141
 msgctxt "scm"
 msgid "Source Control / Diff"
-msgstr ""
+msgstr "Контроль версий / сравнить"
 
 #. Source code: title_scm_pull: STRING_32 do Result := locale.translation_in_context ("Source Control / Pull", "scm") end
 #: scm_names.e:149
 msgctxt "scm"
 msgid "Source Control / Pull"
-msgstr ""
+msgstr "Контроль версий / вытащить"
 
 #. Source code: title_scm_push: STRING_32 do Result := locale.translation_in_context ("Source Control / Push", "scm") end
 #: scm_names.e:148
 msgctxt "scm"
 msgid "Source Control / Push"
-msgstr ""
+msgstr "Контроль версий / протолкнуть"
 
 #. Source code: title_scm_rebase: STRING_32 do Result := locale.translation_in_context ("Source Control / Rebase", "scm") end
 #: scm_names.e:150
 msgctxt "scm"
 msgid "Source Control / Rebase"
-msgstr ""
+msgstr "Контроль версий / перебазировать"
 
 #. Source code: desc_scm_tool: STRING_32 do Result := locale.translation_in_context ("Source Control Management", "scm") end
 #: scm_names.e:174
@@ -37262,6 +37294,8 @@ msgid ""
 "Specifying once_status in indexing note is Obsolete, please use once "
 "(\"PROCESS\")."
 msgstr ""
+"Указание `once_status` в предложении заметки устарело, используйте `once "
+"(\"PROCESS\")`."
 
 #. <PREF NAME="tools.diagram_tool.autoscroll_speed" DESCRIPTION="Speed for scrolling when dragging figures from diagram near the edge of the diagram tool (a valid value is between 0 and 100)."><INTEGER>50</INTEGER></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:100
@@ -37638,7 +37672,7 @@ msgstr "Отправка сообщения об ошибке, пожалуйс�
 #: $EIFFEL_SRC/Delivery/studio/eifinit/spec/unix/default.xml:27
 msgctxt "preference"
 msgid "Subversion command (the binary is required to support Subversion)."
-msgstr ""
+msgstr "Команда subversion (исполняемый файл клиента subversion)."
 
 #. Source code: Result := locale.translation_in_context ("Subversion support: not available", "scm")
 #: scm_names.e:122
@@ -37650,7 +37684,7 @@ msgstr "subversion недоступен"
 #: scm_names.e:120
 msgctxt "scm"
 msgid "Subversion support: yes"
-msgstr ""
+msgstr "Поддержка subversion: да"
 
 #. <PREF NAME="tools.error_list.color.success_background" DESCRIPTION="Background color for hints."><COLOR>230;255;230</COLOR></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:158
@@ -38418,13 +38452,13 @@ msgstr "Текстовые генераторы"
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:289
 msgctxt "preference"
 msgid "Text color for the focused grid selection."
-msgstr ""
+msgstr "Цвет выделенного текста сетки с фокусом."
 
 #. <PREF NAME="interface.development_window.grid.non_focused_selection_text_color" DESCRIPTION="Text color for the non focused grid selection."></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:291
 msgctxt "preference"
 msgid "Text color for the non focused grid selection."
-msgstr ""
+msgstr "Цвет выделенного текста сетки без фокуса."
 
 #. Source code: l_Text_loaded: STRING_32				do Result := locale.translation("Text finished loading")	end
 #: interface_names.e:1773
@@ -39921,6 +39955,10 @@ msgid ""
 "Use the [Config] button to check or update the expected locations.\n"
 "Use the [Project] button to (de)select the groups of the project."
 msgstr ""
+"Эта панель поддерживает git и subversion.\n"
+"Используйте кнопку [Конфигурация], чтобы проверить или обновить известные "
+"пути.\n"
+"Используйте кнопку [Проект], чтобы выбрать группы проекта."
 
 #. Source code: l_domain_displayer_help: STRING_32 do Result := locale.translation ("This view can be used to display result of all formatters%Nthus it is used as a default view for formatters") end
 #: interface_names.e:927
@@ -40787,7 +40825,7 @@ msgstr "В виде дерева"
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:294
 msgctxt "preference"
 msgid "Tree node connector color"
-msgstr ""
+msgstr "Цвет соединителя узлов дерева"
 
 #. <PREF NAME="tools.metric_tool.tree_view_for_metric_history" DESCRIPTION="Is tree view used to display metric history?"><BOOLEAN>False</BOOLEAN></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:124
@@ -42216,7 +42254,7 @@ msgstr "Урду (Пакистан)"
 #: eiffel_scanner.e:1420
 msgctxt "parser.eiffel.warning"
 msgid "Usage of `indexing` has been replaced by `note`."
-msgstr ""
+msgstr "Ключевое слово `indexing` было заменено на `note`."
 
 #. Source code: usage: STRING_32										do Result := locale.translation ("Usage:%N%T") end
 #: ewb_names.e:43
@@ -42264,6 +42302,7 @@ msgstr "Использовать рекурсивное имя кластера 
 msgctxt "parser.eiffel.warning"
 msgid "Use `inherit ANY` or do not specify an empty inherit clause"
 msgstr ""
+"Используйте `inherit ANY` или не указывайте пустое предложение наследования."
 
 #. Source code: target_msil_use_optimized_precompile_description: STRING_32 do Result := locale.translation ("Use an optimized version of a precompile?")	end
 #: conf_interface_names.e:162
@@ -42719,7 +42758,7 @@ msgstr "Использовать входную область как облас
 #: eiffel_parser.e:14731
 msgctxt "parser.eiffel.warning"
 msgid "Use keyword `create` instead."
-msgstr ""
+msgstr "Используйте ключевое слово `create`."
 
 #. Source code: l_clr_most_recent_version: STRING_GENERAL 	do Result := locale.translation ("Use most recent CLR Version:") end
 #: interface_names.e:28
@@ -42730,7 +42769,7 @@ msgstr "Использовать наиболее позднюю версию CL
 #: eiffel_scanner.e:1623
 msgctxt "parser.eiffel.warning"
 msgid "Use of `only`, possibly a new keyword in the future standard of Eiffel."
-msgstr ""
+msgstr "Использовано `only`, возможное будущее ключевое слово Eiffel."
 
 #. <PREF NAME="general.use_postscript" DESCRIPTION="Generate postscript (rather than RTF) when printing."><BOOLEAN>False</BOOLEAN></PREF>
 #. <PREF NAME="general.use_postscript" DESCRIPTION="Generate postscript (rather than RTF) when printing."><BOOLEAN>True</BOOLEAN></PREF>
@@ -42773,6 +42812,8 @@ msgstr "Использовать табуляцию для отступа"
 msgctxt "parser.eiffel.warning"
 msgid "Use the following syntax for object test: `attached {T} exp as x`."
 msgstr ""
+"Используйте следующий синтаксис проверки объекта: `attached {ТИП} выражение "
+"as переменная`."
 
 #. Source code: target_old_verbatim_strings_description: STRING_32 do Result := locale.translation ("Use the old format for verbatim strings?")	end
 #: conf_interface_names.e:164
@@ -45724,1327 +45765,3 @@ msgstr "Сравнение с {REAL}.nan"
 #: debugger_names.e:501
 msgid "{SPECIAL} is not yet supported"
 msgstr "{SPECIAL} ещё не поддерживается"
-
-#~ msgctxt "preference"
-#~ msgid ""
-#~ "Background color for the grids of the debugger's tools (default is white)."
-#~ msgstr "Цвет фона сеток инструментов отладчика (белый по умолчанию)."
-
-#~ msgctxt "preference"
-#~ msgid ""
-#~ "Foreground color (i.e: text color) for the grids of the debugger's tools "
-#~ "(default is black)."
-#~ msgstr "Цвет текста сеток инструментов отладчика (чёрный по умолчанию)."
-
-#~ msgctxt "cloud.info"
-#~ msgid "Days remaining: "
-#~ msgstr "Осталось дней: "
-
-#~ msgid "Purchase Enterprise edition"
-#~ msgstr "Купить Enterprise edition"
-
-#~ msgid "Sign in with credentials"
-#~ msgstr "Войти с учётными данными"
-
-#~ msgid "Skip"
-#~ msgstr "Пропустить"
-
-#~ msgid "I agree and continue with GPL Edition"
-#~ msgstr "Я согласен и продолжаю с GPL Edition"
-
-#~ msgctxt "compiler.command-line.option"
-#~ msgid "Error in command-line option \"$1\": $2"
-#~ msgstr "Ошибка в опции командной строки «$1»: $2"
-
-#~ msgid "&Remove This Breakpoint"
-#~ msgstr "&Удалить эту точку останова"
-
-#~ msgid "Show Features (Ctrl+Space)"
-#~ msgstr "Показать компоненты (Ctrl+Space)"
-
-#~ msgid "Show Templates (Ctrl+Space)"
-#~ msgstr "Показать шаблоны (Ctrl+Space)"
-
-#~ msgctxt "code_analysis.preference"
-#~ msgid "Eiffel Inspector Preferences"
-#~ msgstr "Параметры инспектора"
-
-#~ msgctxt "code_analyzer.toolbar.item.tooltip"
-#~ msgid "Eiffel Inspector options"
-#~ msgstr "Настройки инспектора"
-
-#~ msgid "Switch to Flat View"
-#~ msgstr "Переключиться в плоский формат"
-
-#~ msgid "Void-safety"
-#~ msgstr "Ссылочная безопасность"
-
-#~ msgctxt "code_analyzer.violation"
-#~ msgid "' is not read / used before it gets reassigned or out of scope."
-#~ msgstr ""
-#~ "' не используется перед тем, как присваивается заново или покидает "
-#~ "область действия."
-
-#~ msgctxt "compiler"
-#~ msgid "Error in command-line option \"-config_option\": $1"
-#~ msgstr "Ошибка в параметре командной строки «-config_option»: $1"
-
-#~ msgctxt "code_analyzer.violation"
-#~ msgid ""
-#~ " Here, since it is the loop stop condition the loop will not terminate."
-#~ msgstr "Поскольку это условие выхода из цикла, цикл никогда не завершится."
-
-#~ msgctxt "eiffel.error"
-#~ msgid ""
-#~ "A class feature {1} from class {3} is joined with a feature {2} from "
-#~ "class {4} that is not instance-free.\n"
-#~ "\n"
-#~ "What to do:\n"
-#~ "\t• make sure that if one of joined features has a class postcondition, "
-#~ "the other one is instance-free or\n"
-#~ "\t• avoid joining them."
-#~ msgstr ""
-#~ "Класс-компонент {1} из класса {3} объединяется с объектным компонентом "
-#~ "{2} из класса {4}.\n"
-#~ "\n"
-#~ "Как исправить:\n"
-#~ "\t• удостоверьтесь, что если один компонент имеет постусловие класса, "
-#~ "другой является безэкземплярным или\n"
-#~ "\t• избегайте их объединения."
-
-#~ msgctxt "eiffel.error"
-#~ msgid ""
-#~ "Class feature {1} from {3} is joined with a non-instance-free feature {2} "
-#~ "from {4}."
-#~ msgstr ""
-#~ "Класс-компонент {1} из {3} объединяется с объектным компонентом {2} из "
-#~ "{4}."
-
-#~ msgctxt "eiffel.error"
-#~ msgid ""
-#~ "Class routine {1} has precursor {2} from class {4} that is not instance-"
-#~ "free.\n"
-#~ "\n"
-#~ "What to do:\n"
-#~ "\t• make sure the precursor is instance-free or\n"
-#~ "\t• make sure the redeclaration is not a class routine or\n"
-#~ "\t• remove the redeclaration."
-#~ msgstr ""
-#~ "Класс-компонент {1} имеет предшественника {2} из класса {4}, который не "
-#~ "является безэкземплярным.\n"
-#~ "\n"
-#~ "Как исправить:\n"
-#~ "\t• удостоверьтесь, что предшественник является безэкземплярным или\n"
-#~ "\t• удостоверьтесь, что переопределение не является класс-компонентом "
-#~ "или\n"
-#~ "\t• удалите переопределение."
-
-#~ msgctxt "compiler.error"
-#~ msgid ""
-#~ "Error: The instance-free feature {1} calls the non-instance free feature "
-#~ "{2}.\n"
-#~ "What to do:\n"
-#~ "\t- remove the call to the non-instance-free feature {2} from the code "
-#~ "or\n"
-#~ "\t- remove the instance-free mark from the feature declaration of {1} or\n"
-#~ "\t- mark the feature {2} as instance-free."
-#~ msgstr ""
-#~ "Ошибка: Безэкземплярный компонент {1} вызывает объектный компонент {2}.\n"
-#~ "Как исправить:\n"
-#~ "\t- удалить из кода вызов к объектному компоненту {2} или\n"
-#~ "\t- удалить постусловие класса из объявления компонента {1} или\n"
-#~ "\t- отметить компонент {2} как безэкземплярный."
-
-#~ msgid "Export to .."
-#~ msgstr "Экспорт в .."
-
-#~ msgid "Import from .."
-#~ msgstr "Импортировать из .."
-
-#~ msgctxt "compiler.error"
-#~ msgid ""
-#~ "Non-instance-free feature {1} cannot be used in a non-object call.\n"
-#~ "\n"
-#~ "What to do: Make sure the feature used the non-object call is instance-"
-#~ "free."
-#~ msgstr ""
-#~ "Объектный компонент {1} нельзя использовать в безобъектном вызове.\n"
-#~ "\n"
-#~ "Как исправить: Используйте безэкземплярный компонент или объектный вызов."
-
-#~ msgctxt "eiffel.error"
-#~ msgid ""
-#~ "Precursor {2} from class {4} of class routine {1} is not instance-free."
-#~ msgstr ""
-#~ "Предшественник {2} из класса {4} класс-компонента {1} является объектным."
-
-#~ msgctxt "eiffel.error"
-#~ msgid "{1} from class {2} is not an instance-free feature."
-#~ msgstr "{1} из класса {2} не является безэкземплярным компонентом."
-
-#~ msgctxt "code_analyzer.toolbar.item"
-#~ msgid "(Eiffel Inspector has not run yet.)"
-#~ msgstr "(Инспектор ещё не запускался.)"
-
-#~ msgctxt "code_analyzer.tooltip"
-#~ msgid "Analyze current item"
-#~ msgstr "Анализировать текущий элемент"
-
-#~ msgctxt "code_analysis.preference"
-#~ msgid "Background color for errors."
-#~ msgstr "Цвет фона ошибки."
-
-#~ msgctxt "code_analysis.preference"
-#~ msgid "Background color for fixed violations."
-#~ msgstr "Цвет фона исправленного нарушения."
-
-#~ msgctxt "code_analysis.preference"
-#~ msgid "Background color for hints."
-#~ msgstr "Цвет фона подсказки."
-
-#~ msgctxt "code_analysis.preference"
-#~ msgid "Background color for suggestions."
-#~ msgstr "Цвет фона предложения."
-
-#~ msgctxt "code_analysis.preference"
-#~ msgid "Background color for warnings."
-#~ msgstr "Цвет фона предупреждения."
-
-#~ msgctxt "code_analysis.preference"
-#~ msgid "Color"
-#~ msgstr "Цвет"
-
-#~ msgid "Eiffel Inspector (experimental)"
-#~ msgstr "Инспектор (экспериментально)"
-
-#~ msgctxt "code_analyzer"
-#~ msgid "Eiffel Inspector Preferences..."
-#~ msgstr "Параметры инспектора..."
-
-#~ msgctxt "code_analyzer"
-#~ msgid "Eiffel Inspector has terminated."
-#~ msgstr "Инспектор закончил."
-
-#~ msgctxt "code_analyzer"
-#~ msgid "Eiffel Inspector running..."
-#~ msgstr "Инспектор работает..."
-
-#~ msgctxt "code_analysis.preference"
-#~ msgid "Enable suggestions"
-#~ msgstr "Разрешить предложения"
-
-#~ msgctxt "code_analysis.preference"
-#~ msgid "Error background"
-#~ msgstr "Фон ошибки"
-
-#~ msgctxt "code_analysis.preference"
-#~ msgid "Fixed violation background"
-#~ msgstr "Фон исправления"
-
-#~ msgctxt "code_analysis.preference"
-#~ msgid "Hint background"
-#~ msgstr "Фон подсказки"
-
-#~ msgctxt "code_analyzer"
-#~ msgid "Run Eiffel Inspector"
-#~ msgstr "Запустить инспектор"
-
-#~ msgctxt "code_analyzer"
-#~ msgid "Run Eiffel Inspector on Class '$1'"
-#~ msgstr "Запустить инспектор для класса '$1'"
-
-#~ msgctxt "code_analyzer"
-#~ msgid "Run Eiffel Inspector on cluster"
-#~ msgstr "Запустить инспетор для кластера"
-
-#~ msgctxt "code_analysis.preference"
-#~ msgid "Suggestion background"
-#~ msgstr "Фон предложения"
-
-#~ msgctxt "code_analysis.preference"
-#~ msgid "Warning background"
-#~ msgstr "Фон предупреждения"
-
-# This is a tag used to describe current system state in the output window.
-#~ msgid "tag_concurrency"
-#~ msgstr "параллелизм"
-
-#~ msgid "Apply Application Optimizations"
-#~ msgstr "Применить оптимизации приложения"
-
-#~ msgid "Are types attached by default?"
-#~ msgstr "Типы прикреплены по умолчанию?"
-
-#~ msgid "Are types without explicit attachment mark considered attached?"
-#~ msgstr "Считаются ли привязанными все типы без явной отметки привязки?"
-
-#~ msgid ""
-#~ "Catcall detection level the source code provides:\n"
-#~ "No - Catcall detection is disabled, frozen and variant annotations are "
-#~ "not taken into account for conformance.\n"
-#~ "Conformance - Catcall detection is disabled but frozen and variant "
-#~ "annotations are respected in type conformance checks.\n"
-#~ "Complete - Catcall detection is enabled and frozen and variant "
-#~ "annotations are respected in type conformance checks."
-#~ msgstr ""
-#~ "Уровень обнаружения CAT-вызовов для исходного кода:\n"
-#~ "No - обнаружение CAT-вызовов запрещено, frozen и variant аннотации не "
-#~ "принимаются во внимание при проверке согласованности.\n"
-#~ "Conformance - обнаружение CAT-вызовов запрещено, но frozen и variant "
-#~ "аннотации учитываются при проверке согласованности.\n"
-#~ "Complete - обнаружение CAT-вызовов разрешено, и frozen и variant "
-#~ "аннотации учитываются при проверке согласованности."
-
-#~ msgid "Complete"
-#~ msgstr "Полная"
-
-#~ msgid ""
-#~ "Concurrency mode of the target application: No concurrency - mono-"
-#~ "threaded; EiffelThread - based on EiffelThread library; SCOOP - "
-#~ "controlled by SCOOP rules."
-#~ msgstr ""
-#~ "Параллелизм создаваемого приложения: Отсутствует - однопоточное; "
-#~ "Библиотека EiffelThread - на основе библиотеки EiffelThread; SCOOP - "
-#~ "контролируемое правилами SCOOP."
-
-#~ msgid "Conformance"
-#~ msgstr "Согласованность"
-
-#~ msgid "EiffelThread"
-#~ msgstr "Библиотека EiffelThread"
-
-#~ msgid "Initialization"
-#~ msgstr "Инициализация"
-
-#~ msgid "No concurrency"
-#~ msgstr "Отсутствует"
-
-#~ msgid "SCOOP"
-#~ msgstr "SCOOP"
-
-#~ msgid ""
-#~ "Specifies if any applicable application-orientated optimizations should "
-#~ "be applied to a finalized compilation."
-#~ msgstr ""
-#~ "Указывает, следует ли применять любые подходящие задаче-ориентированные "
-#~ "оптимизации при окончательной компиляции."
-
-#~ msgid "Transitional"
-#~ msgstr "Переходная"
-
-#~ msgid "Variant of syntax used in source code"
-#~ msgstr "Вариант синтаксиса, используемый в исходном коде."
-
-#~ msgid "Void safety level the source code provides."
-#~ msgstr "Уровень ссылочной безопасности исходного кода."
-
-# This is a tag used to describe current system state in the output window.
-#~ msgid "tag_concurrency_none"
-#~ msgstr "отсутствует"
-
-# This is a tag used to describe current system state in the output window.
-#~ msgid "tag_concurrency_scoop"
-#~ msgstr "SCOOP"
-
-# This is a tag used to describe current system state in the output window.
-#~ msgid "tag_concurrency_thread"
-#~ msgstr "EiffelThread"
-
-#~ msgid "Parse error ($2) at regular expression \"$1\"."
-#~ msgstr "Синтаксическая ошибка ($2) в регулярном выражении «$1»."
-
-#~ msgid "Parse error ($3) in \"$2\" at regular expression \"$1\"."
-#~ msgstr "Синтаксическая ошибка ($3) в «$2» в регулярном выражении «$1»."
-
-#~ msgid "Parse error in \"$2\": Invalid regular expression: \"$1\"."
-#~ msgstr ""
-#~ "Синтаксическая ошибка в «$2»: Недопустимое регулярное выражение: «$1»."
-
-#~ msgid "Parse error: Invalid regular expression: \"$1\"."
-#~ msgstr "Синтаксическая ошибка: Недопустимое регулярное выражение: «$1»."
-
-#~ msgid "The submitted report is now available at http://support.eiffel.com."
-#~ msgstr ""
-#~ "Отправленное сообщение теперь доступно на http://support.eiffel.com."
-
-#~ msgid ""
-#~ "There was a problem submitting the problem report. Please retry or submit "
-#~ "it manually at http://support.eiffel.com."
-#~ msgstr ""
-#~ "Возникла проблема отправки сообщения об ошибке. Пожалуйста, попробуйте "
-#~ "ещё раз или отправьте его вручную на http://support.eiffel.com."
-
-#~ msgctxt "code_analysis.preference"
-#~ msgid "Argument name threshold"
-#~ msgstr "Порог длины имени аргумента"
-
-#~ msgctxt "code_analysis.preference"
-#~ msgid "Assignment to itself"
-#~ msgstr "Присваивание себе"
-
-#~ msgctxt "code_analysis.preference"
-#~ msgid "Boolean conditional"
-#~ msgstr "Условная инструкция, вычисляющая булевское значение"
-
-#~ msgctxt "code_analysis.preference"
-#~ msgid "Command-query separation"
-#~ msgstr "Разделения команд-запросов"
-
-#~ msgctxt "code_analysis.preference"
-#~ msgid "Empty feature in deferred class"
-#~ msgstr "Пустая подпрограмма в отложенном классе"
-
-#~ msgctxt "code_analysis.preference"
-#~ msgid "Feature name threshold"
-#~ msgstr "Порог длины имени компонента"
-
-#~ msgctxt "code_analysis.preference"
-#~ msgid "Features threshold"
-#~ msgstr "Порог компонентов"
-
-#~ msgctxt "code_analysis.preference"
-#~ msgid "Instructions threshold"
-#~ msgstr "Порог числа инструкций"
-
-#~ msgctxt "code_analysis.preference"
-#~ msgid "Iteration-ready general loop"
-#~ msgstr "Готовая к итеративной общая форма цикла"
-
-#~ msgctxt "code_analysis.preference"
-#~ msgid "Local name threshold"
-#~ msgstr "Порог длины имени локальной переменной"
-
-#~ msgctxt "code_analysis.preference"
-#~ msgid "Long inspect instruction"
-#~ msgstr "Длинная ветвь инструкции inspect"
-
-#~ msgctxt "code_analysis.preference"
-#~ msgid "Maximum argument name length that triggers rule violation."
-#~ msgstr ""
-#~ "Максимальная длина имени аргумента, которая вызывает нарушение правила."
-
-#~ msgctxt "code_analysis.preference"
-#~ msgid "Maximum feature name length that triggers rule violation."
-#~ msgstr ""
-#~ "Максимальная длина имени компонента, которая вызывает нарушение правила."
-
-#~ msgctxt "code_analysis.preference"
-#~ msgid "Maximum length of argument name that triggers rule violation."
-#~ msgstr ""
-#~ "Максимальная длина имени аргумента, которая вызывает нарушение правила."
-
-#~ msgctxt "code_analysis.preference"
-#~ msgid "Maximum length of feature name that triggers rule violation."
-#~ msgstr ""
-#~ "Максимальная длина имени компонента, которая вызывает нарушение правила."
-
-#~ msgctxt "code_analysis.preference"
-#~ msgid "Maximum length of local name that triggers rule violation."
-#~ msgstr ""
-#~ "Максимальная длина имени локальной переменной, которая вызывает нарушение "
-#~ "правила."
-
-#~ msgctxt "code_analysis.preference"
-#~ msgid "Maximum line length."
-#~ msgstr "Максимальная длина строки."
-
-#~ msgctxt "code_analysis.preference"
-#~ msgid "Maximum local name length that triggers rule violation."
-#~ msgstr ""
-#~ "Максимальная длина имени локальной переменной, которая вызывает нарушение "
-#~ "правила."
-
-#~ msgctxt "code_analysis.preference"
-#~ msgid "Minimum depth of nested conditionals that triggers rule violation."
-#~ msgstr ""
-#~ "Минимальная глубина вложенных условных инструкций, которая вызывает "
-#~ "нарушение правила."
-
-#~ msgctxt "code_analysis.preference"
-#~ msgid "Minimum feature count that triggers rule violation."
-#~ msgstr "Минимальное число компонентов, которое вызывает нарушение правила."
-
-#~ msgctxt "code_analysis.preference"
-#~ msgid "Minimum instruction count that triggers rule violation."
-#~ msgstr "Минимальное число инструкций, которое вызывает нарушение правила."
-
-#~ msgctxt "code_analysis.preference"
-#~ msgid ""
-#~ "Minimum number of acyclic execution paths through a routine that triggers "
-#~ "rule violation."
-#~ msgstr ""
-#~ "Минимальное число ациклических путей выполнения в подпрограмме, которое "
-#~ "вызывает нарушение правила."
-
-#~ msgctxt "code_analysis.preference"
-#~ msgid "Minimum number of arguments that triggers rule violation."
-#~ msgstr "Минимальное число аргументов, которое вызывает нарушение правила."
-
-#~ msgctxt "code_analysis.preference"
-#~ msgid "Minimum number of branches and loops that triggers rule violation."
-#~ msgstr ""
-#~ "Минимальное число ветвлений и циклов, которое вызывает нарушение правила."
-
-#~ msgctxt "code_analysis.preference"
-#~ msgid ""
-#~ "Minimum number of instructions in a When_part that triggers rule "
-#~ "violation."
-#~ msgstr ""
-#~ "Минимальное число инструкций в When_path, которое вызывает нарушение "
-#~ "правила."
-
-#~ msgctxt "code_analysis.preference"
-#~ msgid "NPath complexity"
-#~ msgstr "Сложность NPath"
-
-#~ msgctxt "code_analysis.preference"
-#~ msgid "New `hash_code' without `is_equal'"
-#~ msgstr "Новый `hash_code' без `is_equal'"
-
-#~ msgctxt "code_analysis.preference"
-#~ msgid "Redundant object-test variable"
-#~ msgstr "Лишняя переменная проверки объекта"
-
-#~ msgctxt "code_analysis.preference"
-#~ msgid "Single-use variable"
-#~ msgstr "Однократно использованная переменная"
-
-#~ msgctxt "code_analysis.preference"
-#~ msgid "TODO comment"
-#~ msgstr "TODO комментарий"
-
-#~ msgctxt "code_analysis.preference"
-#~ msgid "Unneeded parentheses"
-#~ msgstr "Ненужные скобки"
-
-#~ msgctxt "code_analysis.preference"
-#~ msgid "NPATH complexity"
-#~ msgstr "Сложность NPath"
-
-#~ msgctxt "code_analyzer"
-#~ msgid "High NPATH"
-#~ msgstr "Высокое значение NPath"
-
-#~ msgctxt "code_analyzer"
-#~ msgid "Minimum NPATH threshold"
-#~ msgstr "Минимальный порог NPath"
-
-#~ msgctxt "code_analysis.preference"
-#~ msgid "Minimum number of branches and loop that triggers rule violation."
-#~ msgstr ""
-#~ "Минимальное число ветвлений и циклов, которое вызывает нарушение правила."
-
-#~ msgctxt "code_analysis.preference"
-#~ msgid ""
-#~ "Minimum number of instruction in a When_part that triggers rule violation."
-#~ msgstr ""
-#~ "Минимальное число инструкций в When_path, которое вызывает нарушение "
-#~ "правила."
-
-#~ msgctxt "code_analyzer"
-#~ msgid ""
-#~ "NPATH is the number of acyclic execution paths through a routine. A "
-#~ "routine's NPATH complexity should not be too high. In order to reduce the "
-#~ "NPATH complexity one can move some functionality to separate routines."
-#~ msgstr ""
-#~ "NPath - число ациклических путей выполнения в подпрограмме. Величина "
-#~ "NPath не должна быть слишком высокой. Чтобы уменьшить сложность NPath, "
-#~ "можно перенести какую-то функциональность в отдельные подпрограммы."
-
-#~ msgctxt "code_analysis.preference"
-#~ msgid "Are errors reported?"
-#~ msgstr "Ошибки сообщаются?"
-
-#~ msgctxt "code_analysis.preference"
-#~ msgid "Are hins reported?"
-#~ msgstr "Подсказки сообщаются?"
-
-#~ msgctxt "code_analysis.preference"
-#~ msgid "Are suggestions reported?"
-#~ msgstr "Предложения сообщаются?"
-
-#~ msgctxt "code_analysis.preference"
-#~ msgid "Are warnings reported?"
-#~ msgstr "Предупреждения сообщаются?"
-
-#~ msgctxt "code_analysis.preference"
-#~ msgid "Colors"
-#~ msgstr "Цвет"
-
-#~ msgctxt "code_analysis.preference"
-#~ msgid "Enable rule"
-#~ msgstr "Разрешить правило"
-
-#~ msgctxt "code_analysis.preference"
-#~ msgid "Error background color"
-#~ msgstr "Цвет фона ошибки"
-
-#~ msgctxt "code_analysis.preference"
-#~ msgid "Fixed violation background color"
-#~ msgstr "Цвет фона исправленного нарушения"
-
-#~ msgctxt "code_analysis.preference"
-#~ msgid "Hint background color"
-#~ msgstr "Цвет фона подсказки"
-
-#~ msgctxt "code_analysis.preference"
-#~ msgid "Importance score"
-#~ msgstr "Важность"
-
-#~ msgctxt "code_analysis.preference"
-#~ msgid "Rules"
-#~ msgstr "Правила"
-
-#~ msgctxt "code_analysis.preference"
-#~ msgid "Suggestion background color"
-#~ msgstr "Цвет фона предложения"
-
-#~ msgctxt "code_analysis.preference"
-#~ msgid "Warning background color"
-#~ msgstr "Цвет фона предупреждения"
-
-#~ msgctxt "code_analysis.preference"
-#~ msgid "Preference"
-#~ msgstr "Настройки"
-
-#~ msgctxt "code_analysis.preference"
-#~ msgid "Tools"
-#~ msgstr "Инструменты"
-
-#~ msgctxt "preference"
-#~ msgid "Background color for suggestions."
-#~ msgstr "Цвет фона предложений."
-
-#~ msgctxt "preference"
-#~ msgid "Code analysis"
-#~ msgstr "Анализ кода"
-
-#~ msgctxt "code_analyzer"
-#~ msgid "Colors"
-#~ msgstr "Цвет"
-
-#~ msgctxt "code_analyzer"
-#~ msgid "Eiffel Inspector Preferences"
-#~ msgstr "Параметры инспектора"
-
-#~ msgctxt "code_analyzer"
-#~ msgid "Enable errors"
-#~ msgstr "Разрешить ошибки"
-
-#~ msgctxt "preference"
-#~ msgid "Enable errors"
-#~ msgstr "Разрешить ошибки"
-
-#~ msgctxt "code_analyzer"
-#~ msgid "Enable hints"
-#~ msgstr "Разрешить подсказки"
-
-#~ msgctxt "preference"
-#~ msgid "Enable hints"
-#~ msgstr "Разрешить подсказки"
-
-#~ msgctxt "code_analyzer"
-#~ msgid "Enable rule"
-#~ msgstr "Разрешить правило"
-
-#~ msgctxt "code_analyzer"
-#~ msgid "Enable suggestions"
-#~ msgstr "Разрешить предложения"
-
-#~ msgctxt "preference"
-#~ msgid "Enable suggestions"
-#~ msgstr "Разрешить предложение"
-
-#~ msgctxt "code_analyzer"
-#~ msgid "Enable warnings"
-#~ msgstr "Разрешить предупреждения"
-
-#~ msgctxt "code_analyzer"
-#~ msgid "Error background color"
-#~ msgstr "Цвет фона ошибки"
-
-#~ msgctxt "preference"
-#~ msgid "Fixed violation background"
-#~ msgstr "Фон испревления"
-
-#~ msgctxt "code_analyzer"
-#~ msgid "Fixed violation background color"
-#~ msgstr "Цвет фона исправленного нарушения"
-
-#~ msgctxt "code_analyzer"
-#~ msgid "General"
-#~ msgstr "Общие"
-
-#~ msgctxt "code_analyzer"
-#~ msgid "Hint background color"
-#~ msgstr "Цвет фона подсказки"
-
-#~ msgctxt "code_analyzer"
-#~ msgid "Importance score"
-#~ msgstr "Важность"
-
-#~ msgctxt "preference"
-#~ msgid "Report errors."
-#~ msgstr "Сообщать ошибки."
-
-#~ msgctxt "preference"
-#~ msgid "Report hints."
-#~ msgstr "Сообщать подсказки."
-
-#~ msgctxt "preference"
-#~ msgid "Report suggestions."
-#~ msgstr "Сообщать предложения."
-
-#~ msgctxt "preference"
-#~ msgid "Report warnings."
-#~ msgstr "Сообщать предупреждения."
-
-#~ msgctxt "code_analyzer"
-#~ msgid "Rules"
-#~ msgstr "Правила"
-
-#~ msgctxt "code_analyzer"
-#~ msgid "Suggestion background color"
-#~ msgstr "Цвет фона предложения"
-
-#~ msgctxt "code_analyzer"
-#~ msgid "Warning background color"
-#~ msgstr "Цвет фона предупреждения"
-
-#~ msgid "$1(not an Eiffel class file)   located in $2"
-#~ msgstr "$1 (не файл класса Эйфеля), находящийся в $2"
-
-#~ msgid "Are all feature calls checked if they are a potential cat-call?"
-#~ msgstr ""
-#~ "Проверять, являются ли вызовы компонентов потенциальными CAT-вызовами?"
-
-#~ msgid "Cat call detection (experimental)"
-#~ msgstr "Определение CAT-вызовов (экспериментальное)"
-
-#~ msgctxt "preference"
-#~ msgid "Hide from callstack enabled"
-#~ msgstr "Скрытие в стеке разрешено"
-
-#~ msgid ""
-#~ "Ace file: '$1'\n"
-#~ "referenced from configuration file: '$2' cannot be read.\n"
-#~ "Select a 5.6 or older version of an Eiffel project."
-#~ msgstr ""
-#~ "Файл Ace: '$1'\n"
-#~ "упоминаемый в файле конфигурации '$2' не может быть прочитан.\n"
-#~ "Выберите версию проекта Эйфеля 5.6 или старше."
-
-#~ msgid ""
-#~ "Cannot read Ace file from configuration file '$1'.\n"
-#~ "Select a 5.6 or older version of an Eiffel project."
-#~ msgstr ""
-#~ "Невозможно прочитать Ace файл из файла конфигурации '$1'.\n"
-#~ "Выберите версию проекта 5.6 или более старую."
-
-#~ msgid "Could not convert file '$1' into new configuration format."
-#~ msgstr "Не удалось преобразовать файл '$1' в новый формат конфигурации."
-
-#~ msgid "Use EIFGENs cluster"
-#~ msgstr "Использовать каталог EIFGENs"
-
-#~ msgid "&Open...\tCtrl+O"
-#~ msgstr "&Открыть\tCtrl+O"
-
-#~ msgid "Complete void safety"
-#~ msgstr "Полная ссылочная безопасность"
-
-#~ msgid "No void safety"
-#~ msgstr "Никакой ссылочной безопасности"
-
-#~ msgid "On demand void safety"
-#~ msgstr "Ссылочная безопасность по требованию"
-
-#~ msgid "Testing Results"
-#~ msgstr "Результаты тестирования"
-
-#~ msgid ""
-#~ "Void safety level the source code should provide: None - void safety is "
-#~ "not checked at all; On demand - entities of attached type are ensured to "
-#~ "be properly initialized; Complete - all void safety validity rules are "
-#~ "checked"
-#~ msgstr ""
-#~ "Уровень ссылочной безопасности, обеспечиваемый исходным кодом: Нет - "
-#~ "ссылочная безопасность совсем не проверяется; По требованию - переменные "
-#~ "прикреплённого типа гарантировано инициализируются; Полная - проверяются "
-#~ "все правила ссылочной безопасности"
-
-#~ msgid "Class name already exits. Please choose other names."
-#~ msgstr "Имя класса уже существует. Пожалуйста, выберите другое."
-
-#~ msgid "The file '$1' does not exist."
-#~ msgstr "Файл '$1' не существует."
-
-#~ msgid ""
-#~ "The following resource is not found:\n"
-#~ "$1"
-#~ msgstr ""
-#~ "Следующий ресурс не найден:\n"
-#~ "$1"
-
-#~ msgid "Autocomplete indexing"
-#~ msgstr "Завершать indexing"
-
-#~ msgid "Autocomplete indexing?"
-#~ msgstr "Завершать indexing?"
-
-#~ msgid "Custom indexing return"
-#~ msgstr "Автопродолжение indexing<Enter>"
-
-#~ msgid "Custom indexing return later"
-#~ msgstr "Автопродолжение indexing...<Enter>"
-
-#~ msgid "Custom indexing space"
-#~ msgstr "Автопродолжение indexing<Пробел>"
-
-#~ msgid "Custom indexing space later"
-#~ msgstr "Автопродолжение indexing...<Пробел>"
-
-#~ msgid "Indexing"
-#~ msgstr "indexing"
-
-#~ msgid "Indexing tag background color"
-#~ msgstr "Цвет фона тэга индексирования"
-
-#~ msgid "Indexing tag text color"
-#~ msgstr "Цвет текста тэга индексирования"
-
-#~ msgid "Use default indexing"
-#~ msgstr "Использовать стандартное автопродолжение indexing"
-
-#~ msgid "SCOOP (not supported yet)"
-#~ msgstr "SCOOP (пока не поддерживается)"
-
-#~ msgid "Backup"
-#~ msgstr "Резервное копирование"
-
-#~ msgid "Multithreaded"
-#~ msgstr "Многопоточный"
-
-#~ msgid "Edit Execution Parameters"
-#~ msgstr "Редактировать параметры выполнения"
-
-#~ msgid "Generate a multithreaded application?"
-#~ msgstr "Генерировать многопоточное приложение?"
-
-#~ msgid "Refresh after compilation"
-#~ msgstr "Обновлять после компиляции"
-
-#~ msgid "Refresh test suite"
-#~ msgstr "Обновить набор тестов"
-
-#~ msgid "multithreaded"
-#~ msgstr "многопоточный"
-
-#~ msgid "&Enable All Breakpoints"
-#~ msgstr "&Разрешить все точки останова"
-
-#~ msgid "Add class/feature under test tag"
-#~ msgstr "Добавить класс/компонент с тегом теста"
-
-#~ msgid "Add isolated execution tag"
-#~ msgstr "Добавить отдельный тег выполнения"
-
-#~ msgid "Add to end of existing feature clause:"
-#~ msgstr "Добавить к концу существующего раздела компонентов:"
-
-#~ msgid "Chose features on call stack for which test should be created"
-#~ msgstr ""
-#~ "Выберите компоненты из стека вызовов, для которых должен быть создан тест"
-
-#~ msgid "Class file $1 already exists"
-#~ msgstr "Файл класса $1 уже существует"
-
-#~ msgid "Class name prefix: "
-#~ msgstr "Префикс имени класса:"
-
-#~ msgid "Cluster is read only."
-#~ msgstr "Кластер доступен только для чтения."
-
-#~ msgid "Create HTML output"
-#~ msgstr "Создать HTML вывод"
-
-#~ msgid "Create a new class"
-#~ msgstr "Создать новый класс"
-
-#~ msgid "Create a new feature"
-#~ msgstr "Создать новый компонент"
-
-#~ msgid "Create new aggregate client-supplier links"
-#~ msgstr "Создать новые группирующие ссылки клиент-поставщик"
-
-#~ msgid "Create new client-supplier links"
-#~ msgstr "Создать новые связи клиент-поставщик"
-
-#~ msgid "Create new cluster"
-#~ msgstr "Создать новый кластер"
-
-#~ msgid "Create new inheritance links"
-#~ msgstr "Создать новые связи наследовани"
-
-#~ msgid "Define commands to run auto test"
-#~ msgstr "Определить команды для запуска автоматического теста"
-
-#~ msgid "Define properties of new test class"
-#~ msgstr "Определить свойства нового класса теста"
-
-#~ msgid "Define properties of new test routine"
-#~ msgstr "Определить свойства новой подпрограммы теста"
-
-#~ msgid "Define where new test routine will be created"
-#~ msgstr "Определить, где будет создан новый тест."
-
-#~ msgid "Directory $1 does not exists"
-#~ msgstr "Каталог $1 не существует"
-
-#~ msgid "Directory $1 is not writable"
-#~ msgstr "Каталог $1 не является записываемым"
-
-#~ msgid "Eighth external command."
-#~ msgstr "Восьмая внешняя команда."
-
-#~ msgid "External command 0"
-#~ msgstr "Внешняя команда 0"
-
-#~ msgid "External command 1"
-#~ msgstr "Внешняя команда 1"
-
-#~ msgid "External command 2"
-#~ msgstr "Внешняя команда 2"
-
-#~ msgid "External command 3"
-#~ msgstr "Внешняя команда 3"
-
-#~ msgid "External command 4"
-#~ msgstr "Внешняя команда 4"
-
-#~ msgid "External command 5"
-#~ msgstr "Внешняя команда 5"
-
-#~ msgid "External command 6"
-#~ msgstr "Внешняя команда 6"
-
-#~ msgid "External command 7"
-#~ msgstr "Внешняя команда 7"
-
-#~ msgid "External command 8"
-#~ msgstr "Внешняя команда 8"
-
-#~ msgid "External command 9"
-#~ msgstr "Внешняя команда 9"
-
-#~ msgid "Extract"
-#~ msgstr "Извлечь"
-
-#~ msgid "Extract application state"
-#~ msgstr "Получить сведения о состоянии приложения"
-
-#~ msgid "Feature clause name can not be empty."
-#~ msgstr "Имя раздела компонентов не может быть пустым."
-
-#~ msgid "Fifth external command."
-#~ msgstr "Пятая внешняя команда."
-
-#~ msgid "Forth external command."
-#~ msgstr "Четвёртая внешняя команда."
-
-#~ msgid "Generate set procedure"
-#~ msgstr "Генерировать процедуру set"
-
-#~ msgid "New Eiffel Test wizard"
-#~ msgstr "Мастер нового теста"
-
-#~ msgid "New test class"
-#~ msgstr "Новый тестовый класс"
-
-#~ msgid "Ninth external command."
-#~ msgstr "Девятая внешняя команда."
-
-#~ msgid "Random number generation seed"
-#~ msgstr "Начальное значение генератора случайных чисел"
-
-#~ msgid "Row unsensitive foreground color"
-#~ msgstr "Цвет заблокированной строки"
-
-#~ msgid "Second external command."
-#~ msgstr "Вторая внешняя команда."
-
-#~ msgid "Select class in which new test routine will be created"
-#~ msgstr "Выберите класс, в котором будет создана новая подпрограмма теста"
-
-#~ msgid "Select cluster:"
-#~ msgstr "Выбрать кластер:"
-
-#~ msgid "Select type of test you would like to create:"
-#~ msgstr "Выбрать тип теста, который хотелось бы создать:"
-
-#~ msgid "Sixth external command."
-#~ msgstr "Шестая внешняя команда."
-
-#~ msgid "Tenth external command."
-#~ msgstr "Десятая внешняя команда."
-
-#~ msgid "Test class properties"
-#~ msgstr "Свойства тестового класса"
-
-#~ msgid "Test routine"
-#~ msgstr "Подпрограмма теста"
-
-#~ msgid "Third external command."
-#~ msgstr "Третья внешняя команда."
-
-#~ msgid "What are tags?"
-#~ msgstr "Какие теги?"
-
-#~ msgid "interface view"
-#~ msgstr "интерфейс"
-
-#~ msgid "-outcome/passes"
-#~ msgstr "-исход/проходы"
-
-#~ msgid ""
-#~ "AutoTest is finished!\n"
-#~ "\n"
-#~ "Results can be found in: $1"
-#~ msgstr ""
-#~ "AutoTest завершил работу!\n"
-#~ "\n"
-#~ "Результаты находятся в: $1"
-
-#~ msgid "C output panel prompted"
-#~ msgstr "Показывать вывод C при запуске C компиляции"
-
-#~ msgid "Click here to view"
-#~ msgstr "Нажмите сюда для просмотра"
-
-#~ msgid "Close tab"
-#~ msgstr "Закрыть закладку"
-
-#~ msgid "Debugging"
-#~ msgstr "Отладка"
-
-#~ msgid "Enter new filter expression (leave blank to remove current): "
-#~ msgstr ""
-#~ "Введите новое выражение отбора (оставьте пустым для удаления текущего): "
-
-#~ msgid "Enter new tag prefix: "
-#~ msgstr "Введите новый префикс тега: "
-
-#~ msgid "Extract tests from running application"
-#~ msgstr "Извлечь тесты из работающего приложения."
-
-#~ msgid "Generating and executing routine invocations"
-#~ msgstr "Генерация и выполнение вызовов подпрограмм"
-
-#~ msgid "Generation"
-#~ msgstr "Генерация"
-
-#~ msgid "New manual tests"
-#~ msgstr "Новые ручные тесты"
-
-#~ msgid ""
-#~ "Please be patient while AutoTest generates results.\n"
-#~ "(The window might become unresponsive during that time)"
-#~ msgstr ""
-#~ "Пожалуйста, подождите, пока AutoTest генерирует результаты.\n"
-#~ "(Окно может стать невосприимчивым в это время.)"
-
-#~ msgid "Relaunch previous execution"
-#~ msgstr "Перезапустить предыдущее выполнение"
-
-#~ msgid "Replaying log"
-#~ msgstr "Журнал воспроизведения"
-
-#~ msgid "Select a class which is fully compiled to have information about it."
-#~ msgstr ""
-#~ "Выберите полностью скомпилированный класс для получения информации о нём."
-
-#~ msgid "Set expression for filtering tests"
-#~ msgstr "Задать выражение для отбора тестов"
-
-#~ msgid "Set tag prefix for tree view and execution order"
-#~ msgstr "Установить префикс тега для дерева и порядка выполнения"
-
-#~ msgid "Shortcut to display C Output tool."
-#~ msgstr "Клавиша показа вывода C."
-
-#~ msgid "Stop all execution"
-#~ msgstr "Остановить всё выполнение"
-
-#~ msgid "Stop current execution"
-#~ msgstr "Остановить текущее выполнение"
-
-#~ msgid ""
-#~ "Synthesized tests using AutoTest\n"
-#~ "(experimental)"
-#~ msgstr ""
-#~ "Тесты, синтезированные AutoTest\n"
-#~ "(экспериментальное)"
-
-#~ msgid "System has not yet compiled."
-#~ msgstr "Система ещё не скомпилирована."
-
-#~ msgid "Test suite has not been initialized yet. Please compile project."
-#~ msgstr ""
-#~ "Набор тестов ещё не инициализирован. Пожалуйста, скомпилируйте проект."
-
-#~ msgid "Testing Output"
-#~ msgstr "Вывод тестирования"
-
-#~ msgid "Use existing test class"
-#~ msgstr "Использовать существующий класс теста"
-
-#~ msgid "outcome"
-#~ msgstr "исход"
-
-#~ msgid ""
-#~ "\n"
-#~ "\n"
-#~ "where tokens can contain letters, numbers or any of "
-#~ msgstr ""
-#~ "\n"
-#~ "\n"
-#~ "где знаки могут содержать буквы, цифры и любые из "
-
-#~ msgid ""
-#~ " is not a valid tag\n"
-#~ "\n"
-#~ msgstr ""
-#~ " не является допустимым тэгом\n"
-#~ "\n"
-
-#~ msgid "Additional tags for test routine (comma separated)"
-#~ msgstr ""
-#~ "Дополнительные тэги для тестовой подпрограммы (разделённые запятыми)"
-
-#~ msgid "Create new test class"
-#~ msgstr "Создать новый тестовый класс"
-
-#~ msgid "Create test using current application status"
-#~ msgstr "Создать тест, используя текущее состояние приложения"
-
-#~ msgid "Eiffel test factory currently not available"
-#~ msgstr "Фабрика тестов в настоящий момент недоступна"
-
-#~ msgid "Factory is already creating tests"
-#~ msgstr "Фабрика уже создаёт тесты"
-
-#~ msgid "Force Debug Mode"
-#~ msgstr "Установить режим отладки"
-
-#~ msgid "General toolbar layout"
-#~ msgstr "Компоновка общей панели"
-
-#~ msgid "Height"
-#~ msgstr "Высота"
-
-#~ msgid "Height of development window."
-#~ msgstr "Высота окна разработки."
-
-#~ msgid "Information (EIS)"
-#~ msgstr "Информация (ИСЭ)"
-
-#~ msgid "Is source code void safe?"
-#~ msgstr "Исходный код ссылочно-безопасен?"
-
-#~ msgid "Items shown in general toolbar."
-#~ msgstr "Элементы, показываемые в общей панели инструментов."
-
-#~ msgid "Items shown in refactoring toolbar."
-#~ msgstr "Элементы, показываемые в панели рефакторинга."
-
-#~ msgid "Maximized height"
-#~ msgstr "Максимизированная высота"
-
-#~ msgid "Maximized width"
-#~ msgstr "Максимизированная ширина"
-
-#~ msgid "Maximized x position"
-#~ msgstr "Максимизированная координата X"
-
-#~ msgid "Maximized y position"
-#~ msgstr "Максимизированная координата Y"
-
-#~ msgid "Outcomes"
-#~ msgstr "Исходы"
-
-#~ msgid "Prefix for new class names"
-#~ msgstr "Префикс для имён новых классов"
-
-#~ msgid "Project toolbar items and layout information."
-#~ msgstr "Информация об элементах и компоновке панели проекта."
-
-#~ msgid "Project toolbar layout"
-#~ msgstr "Компоновка панели проекта"
-
-#~ msgid "Refactoring toolbar layout"
-#~ msgstr "Компоновка панели рефакторинга"
-
-#~ msgid "Screen x position of development window when maximized."
-#~ msgstr "X-координата окна разработки, когда оно максимизировано."
-
-#~ msgid "Screen x position of development window."
-#~ msgstr "x-координата окна разработки."
-
-#~ msgid "Screen y position of development window when maximized."
-#~ msgstr "Y-координата окна разработки, когда оно максимизировано."
-
-#~ msgid "Screen y position of development window."
-#~ msgstr "y-координата окна разработки."
-
-#~ msgid ""
-#~ "Selected tests can not be executed. Make sure none of the selected tests "
-#~ "are currently being tested."
-#~ msgstr ""
-#~ "Выделенные тесты не могут быть выполнены. Удостоверьтесь, что никакой из "
-#~ "выделенных тестов не выполняется в данный момент."
-
-#~ msgid ""
-#~ "Shall feature calls on targets of detachable types be reported as errors?"
-#~ msgstr "Считать вызовы компонентов на непривязанных целях ошибками?"
-
-#~ msgid "Switching to debug mode..."
-#~ msgstr "Переключение в режим отладки..."
-
-#~ msgid "Syntax level"
-#~ msgstr "Синтаксис"
-
-#~ msgid ""
-#~ "Tags must have the form\n"
-#~ "\n"
-#~ msgstr ""
-#~ "Тэги должны иметь вид\n"
-#~ "\n"
-
-#~ msgid "The provided settings can not be used to create new tests"
-#~ msgstr ""
-#~ "Заданные установки не могут быть использованы, чтобы создать новые тесты"
-
-#~ msgid "This will create a new eiffel test"
-#~ msgstr "Это создаст новый тест"
-
-#~ msgid "Typename"
-#~ msgstr "Имя типа"
-
-#~ msgid "Width"
-#~ msgstr "Ширина"
-
-#~ msgid "Width of development window."
-#~ msgstr "Ширина окна разработки."
-
-#~ msgid "X position"
-#~ msgstr "Координата X"
-
-#~ msgid "Y position"
-#~ msgstr "Координата Y"
-
-#~ msgid "`setup' or `tear_down' can not be used as test routine names."
-#~ msgstr ""
-#~ "`setup' и `tear_down' нельзя использовать в качестве имён подпрограмм "
-#~ "тестирования."
-
-#~ msgid "Pnd mode"
-#~ msgstr "Режим \"взять - отпустить\""
-
-#~ msgid "Onces in Generics"
-#~ msgstr "Одногратные подпрограммы в параметризованных классах"
-
-#~ msgid "Warn about usage of old verbatim strings?"
-#~ msgstr "Предупреждать об использовании старых дословных строк?"
-
-#~ msgid "Warn about usage of onces in generics?"
-#~ msgstr ""
-#~ "Предупреждать об использовании однократных подпрограмм в "
-#~ "параметризованных классах?"
-
-#~ msgid " (located in $1)"
-#~ msgstr " (находящийся в $1)"
-
-#~ msgid "$1  in cluster $2  (not in system)  located in $3"
-#~ msgstr "$1 в кластере $2  (не в системе), находящемся в $3"
-
-#~ msgid "$1  in cluster $2  located in $3"
-#~ msgstr "$1 в кластере $2, находящемся в $3"
-
-#~ msgid "Evaluation failed due to auto expression limitation."
-#~ msgstr "Вычисление не удалось из-за ограничений автоматических выражений."
-
-#~ msgid "Is text of toolbar items displayed?"
-#~ msgstr "Показывать текст элементов панели инструментов?"
-
-#~ msgid "Should address toolbar be shown?"
-#~ msgstr "Следует показывать адресную панель?"
-
-#~ msgid "Should general toolbar be shown?"
-#~ msgstr "Следует показывать общую панель?"
-
-#~ msgid "Should project toolbar be shown?"
-#~ msgstr "Следует показывать панель проекта?"
-
-#~ msgid "Should refactoring toolbar be shown?"
-#~ msgstr "Следует показывать панеьл рефакторинга?"
-
-#~ msgid "Should selective text of toolbar items in general toolbar?"
-#~ msgstr ""
-#~ "Следует показывать текст избранных элементов в общей панели инструментов?"
-
-#~ msgid "Should text be shown alongside preselected toolbar items?"
-#~ msgstr ""
-#~ "Следует показывать текст рядом с предустановленными элементами панели "
-#~ "инструментов?"
-
-#~ msgid "Show address toolbar"
-#~ msgstr "Показывать панель адреса"
-
-#~ msgid "Show all text in general toolbar"
-#~ msgstr "Показывать все тексты в общей панели"
-
-#~ msgid "Show all text in project toolbar"
-#~ msgstr "Показыват все тексты в панели проекта"
-
-#~ msgid "Show all text in refactoring toolbar"
-#~ msgstr "Показывать все тексты в панели рефакторинга"
-
-#~ msgid "Show general toolbar"
-#~ msgstr "Показывать общую панель"
-
-#~ msgid "Show project toolbar"
-#~ msgstr "Показывать панель проекта"
-
-#~ msgid "Show refactoring toolbar"
-#~ msgstr "Показать панель рефакторинга"
-
-#~ msgid "Show text in general toolbar"
-#~ msgstr "Показывать текст в общей панели"
-
-#~ msgid "Show text in project toolbar"
-#~ msgstr "Показывать текст в панели проекта"
-
-#~ msgid "Show text in refactoring toolbar"
-#~ msgstr "Показывать текст в панели рефакторинга"
-
-#~ msgid "&Run\tCtrl+R"
-#~ msgstr "&Выполнять\tCtrl+R"
-
-#~ msgid "--( condition: \"$1\")--"
-#~ msgstr "--( условие: \"$1\")--"
-
-#~ msgid "--( message: \"$1\")--"
-#~ msgstr "--( сообщение: \"$1\")--"
-
-#~ msgid "Exception's details ..."
-#~ msgstr "Подробности исключения..."
-
-#~ msgid "Ignore breakpoint (Do not stop at any breakpoint)."
-#~ msgstr ""
-#~ "Игнорировать точки останова (не останавливаться на точках останова)."
-
-#~ msgid "Launch Without Stopping"
-#~ msgstr "Запустить без остановки"
-
-#~ msgid "Start execution without stopping at breakpoints"
-#~ msgstr "Начать выполнение без остановок на точках останова"

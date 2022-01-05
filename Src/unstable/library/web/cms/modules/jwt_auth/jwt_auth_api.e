@@ -119,6 +119,13 @@ feature -- Factory
 			end
 		end
 
+	new_magic_login_link (a_user: CMS_USER; a_expiration_in_seconds: NATURAL_32): detachable STRING_8
+		do
+			if attached {JWT_AUTH_TOKEN} new_token_with_expiration (a_user, <<"magic-login">>, a_expiration_in_seconds) as l_magic_token then
+				Result := cms_api.absolute_url ("/user/" + a_user.id.out + "/magic-login/" + url_encoded (l_magic_token.token), Void)
+			end
+		end
+
 feature -- Access
 
 	user_for_token (a_token: READABLE_STRING_GENERAL): detachable CMS_USER

@@ -66,6 +66,7 @@ feature -- Request execution
 			rep: CMS_RESPONSE
 			fset: WSF_FORM_FIELD_SET
 			tf: WSF_FORM_TEXT_INPUT
+			tnum: WSF_FORM_NUMBER_INPUT
 			sub: WSF_FORM_SUBMIT_INPUT
 			l_form: CMS_FORM
 			s: STRING
@@ -120,12 +121,10 @@ feature -- Request execution
 									create l_form.make (req.percent_encoded_path_info, "user-jwt-tokens")
 									l_form.set_method_post
 									create fset.make
+									fset.set_legend ("Token")
 									l_form.extend (fset)
 
-
-
 									create tf.make_with_text ("token", inf.token)
-									tf.set_label ("Token")
 									tf.set_size (60)
 									fset.extend (tf)
 									if attached inf.jwt as jwt then
@@ -154,7 +153,35 @@ feature -- Request execution
 								end
 							end
 						end
+
+							-- Create new token
+						create l_form.make (req.percent_encoded_path_info, "user-jwt-tokens")
+						l_form.set_method_post
+						create fset.make
+						fset.set_legend ("Operations")
+						fset.add_css_style ("background-color: #ff830038")
+						l_form.extend (fset)
+						create sub.make_with_text ("op", but_create_new_token_text)
+						fset.extend (sub)
+
+						fset.extend_html_text ("<p>Create a new token for user " +  html_encoded (api.user_display_name (l_user)) + " .</p>")
+						if api.has_permission ({JWT_AUTH_MODULE}.perm_use_magic_login) then
+								-- Create new magic link
+							create sub.make_with_text ("op", but_create_new_magic_link_text)
+							fset.extend (sub)
+							create tnum.make_with_text ("magin_link_expiration", "1800") -- 30min -> 1800 seconds
+							tnum.set_max (48 * 60 * 60)
+							tnum.set_min (30)
+							tnum.set_description ("Expiration in seconds (default: 30 minutes = 1 800 seconds; between 30s and 48h)")
+							fset.extend (tnum)
+
+							fset.extend_html_text ("<p>Create a magic link to sign is as user " +  html_encoded (api.user_display_name (l_user)) + ".</p>")
+						end
+						s.append ("<br/>")
+						l_form.append_to_html (rep.wsf_theme, s)
+
 						rep.set_main_content (s)
+						rep.add_to_primary_tabs (api.local_link ("JWT Tokens", req.percent_encoded_path_info))
 						rep.execute
 					else
 							-- Only admin, or current user can see its access_token!
@@ -170,12 +197,15 @@ feature -- Request execution
 
 	but_revoke_text: STRING = "Revoke"
 	but_revoke_all_text: STRING = "Revoke All"
+	but_create_new_token_text: STRING = "New Token"
+	but_create_new_magic_link_text: STRING = "New Magic Link"
 
 	post_jwt_token (a_uid: READABLE_STRING_GENERAL; req: WSF_REQUEST; res: WSF_RESPONSE)
 			-- Execute handler for `req' and respond in `res'.
 		local
-
+			tok: JWT_AUTH_TOKEN
 			rep: CMS_RESPONSE
+			l_expiration: NATURAL_32
 			s: STRING
 		do
 			if attached user_by_uid (a_uid) as l_user then
@@ -196,6 +226,7 @@ feature -- Request execution
 								rep.add_success_message ("Token discarded.")
 								rep.set_redirection (req.percent_encoded_path_info)
 							end
+							rep.add_to_primary_tabs (api.local_link ("JWT Tokens", req.percent_encoded_path_info))
 							rep.execute
 						elseif attached req.form_parameter ("op") as p_op and then p_op.same_string (but_revoke_all_text) then
 							rep := new_generic_response (req, res)
@@ -209,7 +240,46 @@ feature -- Request execution
 								rep.add_success_message ("All Tokens discarded.")
 								rep.set_redirection (req.percent_encoded_path_info)
 							end
+							rep.add_to_primary_tabs (api.local_link ("JWT Tokens", req.percent_encoded_path_info))
 							rep.execute
+						elseif attached req.form_parameter ("op") as p_op and then p_op.same_string (but_create_new_token_text) then
+							rep := new_generic_response (req, res)
+
+							create s.make_empty
+
+							tok := jwt_auth_api.new_token (l_user, Void)
+							if jwt_auth_api.has_error then
+								rep.add_error_message ("Error when trying to create a new token !")
+							else
+								rep.add_success_message ("New token created.")
+								rep.set_redirection (req.percent_encoded_path_info)
+							end
+							rep.add_to_primary_tabs (api.local_link ("JWT Tokens", req.percent_encoded_path_info))
+							rep.execute
+						elseif attached req.form_parameter ("op") as p_op and then p_op.same_string (but_create_new_magic_link_text) then
+							if api.user_has_permission (l_user, {JWT_AUTH_MODULE}.perm_use_magic_login) then
+								rep := new_generic_response (req, res)
+								create s.make_empty
+								l_expiration := {NATURAL_32} 5 *60
+								if
+									attached {WSF_STRING} req.form_parameter ("magin_link_expiration") as p_expiration and then
+									p_expiration.is_integer
+								then
+									l_expiration := p_expiration.integer_value.to_natural_32
+								end
+								l_expiration := l_expiration.max ({NATURAL_32} 30).min ({NATURAL_32} 48 * 60 * 60) -- Max 48H
+								if attached jwt_auth_api.new_magic_login_link (l_user, l_expiration) as l_link then
+									rep.add_success_message ("New magic link: <a href=%"" + l_link + "%">"+ html_encoded (l_link) +"</a>")
+									s.append ("To sign-in, use the following magic link: <a href=%"" + l_link + "%">"+ html_encoded (l_link) +"</a>")
+									rep.set_main_content (s)
+								else
+									rep.add_error_message ("Error when trying to create a new magic link !")
+								end
+								rep.add_to_primary_tabs (api.local_link ("JWT Tokens", req.percent_encoded_path_info))
+								rep.execute
+							else
+								send_access_denied (req, res)
+							end
 						else
 							send_bad_request (req, res)
 						end

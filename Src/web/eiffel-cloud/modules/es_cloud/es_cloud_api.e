@@ -1427,6 +1427,12 @@ feature -- HTML factory
 				else
 					s.append (html_encoded (api.real_user_display_name (a_user)))
 				end
+				if attached a_user.cms_user.profile_name as pf and then not pf.same_string (a_user.cms_user.name) then
+					s.append (" <span class=%"username%">@" + html_encoded (a_user.cms_user.name) + "</span>")
+				end
+				if attached a_user.cms_user.email as l_user_email then
+					s.append (" <span class=%"email%">(" + html_encoded (l_user_email) + ")</span>")
+				end
 				s.append ("</li>")
 			end
 			s.append ("<li class=%"creation%"><span class=%"title%">Started</span> ")

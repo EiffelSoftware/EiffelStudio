@@ -42,7 +42,7 @@ feature -- Execution
 						l_to_user := api.user_api.user_by_id_or_name (l_to_user_id.value)
 					end
 					if l_to_user /= Void then
-						r.set_title ("Mails sent to user " + api.real_user_display_name (l_to_user))
+						r.set_title ({STRING_32} "Mails sent to user " + api.real_user_display_name (l_to_user))
 					else
 						r.set_title ("Mails ...")
 					end

@@ -61,6 +61,9 @@ feature -- Access
 	state: INTEGER
 			-- State of the session.
 
+	data: detachable READABLE_STRING_32
+			-- Optional data (could be JSON content), mostly for debugging.
+
 feature -- Element change
 
 	set_last_date (dt: detachable like last_date)
@@ -85,6 +88,11 @@ feature -- Element change
 			valid_state: is_valid_state (a_state)
 		do
 			state := a_state
+		end
+
+	set_data (a_data: detachable READABLE_STRING_32)
+		do
+			data := a_data
 		end
 
 	pause

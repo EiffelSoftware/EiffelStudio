@@ -281,6 +281,7 @@ feature -- Access: sessions
 				Result.set_state (sql_read_integer_32 (4))
 				Result.set_last_date (sql_read_date_time (6))
 				Result.set_title (sql_read_string_32 (7))
+				Result.set_data (sql_read_string_32 (8))
 			end
 		end
 
@@ -348,7 +349,7 @@ feature -- Change
 			l_is_new := user_session (a_session.user, a_session.installation_id, a_session.id) = Void
 
 			reset_error
-			create l_params.make (7)
+			create l_params.make (8)
 			l_params.force (a_session.id, "sid")
 			l_params.force (a_session.installation_id, "iid")
 			l_params.force (a_session.user.id, "uid")
@@ -356,6 +357,7 @@ feature -- Change
 			l_params.force (a_session.first_date, "first")
 			l_params.force (a_session.last_date, "last")
 			l_params.force (a_session.title, "title")
+			l_params.force (a_session.data, "data")
 
 			if l_is_new then
 				sql_insert (sql_insert_session, l_params)
@@ -411,14 +413,14 @@ feature {NONE} -- Sessions
 
 	sql_delete_installation_sessions: STRING = "DELETE FROM es_sessions WHERE iid=:iid;"
 
-	sql_select_last_user_session: STRING = "SELECT sid, iid, uid, state, first, last, title FROM es_sessions WHERE uid=:uid ORDER BY last DESC LIMIT 1;"
+	sql_select_last_user_session: STRING = "SELECT sid, iid, uid, state, first, last, title, data FROM es_sessions WHERE uid=:uid ORDER BY last DESC LIMIT 1;"
 
-	sql_select_last_user_session_for_installation: STRING = "SELECT sid, iid, uid, state, first, last, title FROM es_sessions WHERE iid=:iid AND uid=:uid ORDER BY last DESC LIMIT 1;"
+	sql_select_last_user_session_for_installation: STRING = "SELECT sid, iid, uid, state, first, last, title, data FROM es_sessions WHERE iid=:iid AND uid=:uid ORDER BY last DESC LIMIT 1;"
 
 	sql_select_last_user_session_by_license: STRING = "[
 	
 			SELECT 
-				s.sid, s.iid, s.uid, s.state, s.first, s.last, s.title
+				s.sid, s.iid, s.uid, s.state, s.first, s.last, s.title, s.data
 			FROM es_sessions as s
 			INNER JOIN es_installations ON es_installations.iid = s.iid
 			WHERE es_installations.lid=:lid
@@ -426,31 +428,31 @@ feature {NONE} -- Sessions
 			;
 		]"
 
-	sql_select_user_session: STRING = "SELECT sid, iid, uid, state, first, last, title FROM es_sessions WHERE sid=:sid AND iid=:iid AND uid=:uid;"
+	sql_select_user_session: STRING = "SELECT sid, iid, uid, state, first, last, title, data FROM es_sessions WHERE sid=:sid AND iid=:iid AND uid=:uid;"
 
-	sql_select_user_sessions: STRING = "SELECT sid, iid, uid, state, first, last, title FROM es_sessions WHERE uid=:uid;"
+	sql_select_user_sessions: STRING = "SELECT sid, iid, uid, state, first, last, title, data FROM es_sessions WHERE uid=:uid;"
 
 	sql_select_user_active_sessions: STRING
 		once
-			Result := "SELECT sid, iid, uid, state, first, last, title FROM es_sessions WHERE uid=:uid AND state!=" + {ES_CLOUD_SESSION}.state_ended_id.out + ";"
+			Result := "SELECT sid, iid, uid, state, first, last, title, data FROM es_sessions WHERE uid=:uid AND state!=" + {ES_CLOUD_SESSION}.state_ended_id.out + ";"
 		end
 
-	sql_select_user_installation_sessions: STRING = "SELECT sid, iid, uid, state, first, last, title FROM es_sessions WHERE iid=:iid AND uid=:uid;"
+	sql_select_user_installation_sessions: STRING = "SELECT sid, iid, uid, state, first, last, title, data FROM es_sessions WHERE iid=:iid AND uid=:uid;"
 
 	sql_select_user_active_installation_sessions: STRING
 		once
-			Result := "SELECT sid, iid, uid, state, first, last, title FROM es_sessions WHERE iid=:iid AND uid=:uid AND state!=" + {ES_CLOUD_SESSION}.state_ended_id.out + ";"
+			Result := "SELECT sid, iid, uid, state, first, last, title, data FROM es_sessions WHERE iid=:iid AND uid=:uid AND state!=" + {ES_CLOUD_SESSION}.state_ended_id.out + ";"
 		end
 
-	sql_select_installation_sessions: STRING = "SELECT sid, iid, uid, state, first, last, title FROM es_sessions WHERE iid=:iid;"
+	sql_select_installation_sessions: STRING = "SELECT sid, iid, uid, state, first, last, title, data FROM es_sessions WHERE iid=:iid;"
 	sql_select_active_installation_sessions: STRING
 		once
-			Result := "SELECT sid, iid, uid, state, first, last, title FROM es_sessions WHERE iid=:iid AND state!=" + {ES_CLOUD_SESSION}.state_ended_id.out + ";"
+			Result := "SELECT sid, iid, uid, state, first, last, title, data FROM es_sessions WHERE iid=:iid AND state!=" + {ES_CLOUD_SESSION}.state_ended_id.out + ";"
 		end
 
-	sql_insert_session: STRING = "INSERT INTO es_sessions (sid, iid, uid, state, first, last, title) VALUES (:sid, :iid, :uid, :state, :first, :last, :title);"
+	sql_insert_session: STRING = "INSERT INTO es_sessions (sid, iid, uid, state, first, last, title, data) VALUES (:sid, :iid, :uid, :state, :first, :last, :title, :data);"
 
-	sql_update_session: STRING = "UPDATE es_sessions SET state=:state, first=:first, last=:last, title=:title WHERE sid=:sid AND iid=:iid AND uid=:uid;"
+	sql_update_session: STRING = "UPDATE es_sessions SET state=:state, first=:first, last=:last, title=:title, data=:data WHERE sid=:sid AND iid=:iid AND uid=:uid;"
 
 note
 	copyright: "2011-2019, Jocelyn Fiat, Javier Velilla, Eiffel Software and others"

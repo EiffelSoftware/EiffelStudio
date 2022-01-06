@@ -57,7 +57,8 @@ CREATE TABLE es_sessions(
   `state` INTEGER NOT NULL,
   `first` DATETIME NOT NULL,
   `last` DATETIME NOT NULL,
-  `title` TEXT
+  `title` TEXT,
+  `data` TEXT
 );
 
 CREATE TABLE es_licenses(

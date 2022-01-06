@@ -50,7 +50,7 @@ feature {NONE} -- Initialization
 
 	make
 		do
-			version := "1.5"
+			version := "1.6"
 			description := "ES Cloud"
 			package := "EiffelStudio"
 			add_optional_dependency ({SHOP_MODULE})

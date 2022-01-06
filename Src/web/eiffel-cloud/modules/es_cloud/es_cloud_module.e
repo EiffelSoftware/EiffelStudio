@@ -56,6 +56,7 @@ feature {NONE} -- Initialization
 			add_optional_dependency ({SHOP_MODULE})
 --			add_optional_dependency ({STRIPE_MODULE})
 			add_optional_dependency ({CMS_AUTHENTICATION_MODULE})
+			add_optional_dependency ({CMS_ADMIN_MODULE})
 		end
 
 feature -- Access

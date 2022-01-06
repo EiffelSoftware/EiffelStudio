@@ -1,6 +1,5 @@
 note
 	description: "Summary description for {CMS_ADMIN_MAILS_HANDLER}."
-	author: ""
 	date: "$Date$"
 	revision: "$Revision$"
 

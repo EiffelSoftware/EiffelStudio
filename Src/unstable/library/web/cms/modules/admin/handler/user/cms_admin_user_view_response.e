@@ -122,7 +122,7 @@ feature -- Execution
 				s.append ("</ul>%N")
 			end
 			s.append ("</div>")
-			create f.make (a_response.request.percent_encoded_path_info, "admin-view-user")
+			create f.make (a_response.request.percent_encoded_path_info, {CMS_ADMIN_MODULE_ADMINISTRATION}.form_admin_user_view_id)
 			f.extend (create {WSF_FORM_HIDDEN_INPUT}.make_with_text ("user-id", a_user.id.out))
 			api.hooks.invoke_form_alter (f, Void, Current)
 			f.append_to_html (wsf_theme, s)

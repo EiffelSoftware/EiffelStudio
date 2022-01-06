@@ -13,6 +13,7 @@
 		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf"/>
 		<library name="base_extension" location="$ISE_LIBRARY\library\base_extension\base_extension.ecf"/>
 		<library name="cms" location="$ISE_LIBRARY\unstable\library\web\cms\cms.ecf" readonly="false"/>
+		<library name="cms_admin" location="$ISE_LIBRARY\unstable\library\web\cms\modules\admin\admin.ecf" readonly="false"/>
 		<library name="cms_app_env" location="$ISE_LIBRARY\unstable\library\web\cms\library\app_env\app_env.ecf" readonly="false"/>
 		<library name="cms_config" location="$ISE_LIBRARY\unstable\library\web\cms\library\configuration\config.ecf"/>
 		<library name="cms_model" location="$ISE_LIBRARY\unstable\library\web\cms\library\model\cms_model.ecf"/>

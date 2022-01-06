@@ -18,6 +18,8 @@ inherit
 
 	CMS_HOOK_RESPONSE_ALTER
 
+	CMS_HOOK_FORM_ALTER
+
 create
 	make
 
@@ -50,6 +52,10 @@ feature -- Security
 	perm_access_admin: STRING = "access admin"
 	perm_view_logs: STRING = "view logs"
 	perm_view_mails: STRING = "view mails"
+
+feature -- Form identifiers
+
+	form_admin_user_view_id: STRING = "admin-view-user"
 
 feature {NONE} -- Router/administration
 
@@ -150,6 +156,7 @@ feature -- Hooks
 		do
 			a_hooks.subscribe_to_menu_system_alter_hook (Current)
 			a_hooks.subscribe_to_response_alter_hook (Current)
+			a_hooks.subscribe_to_form_alter_hook (Current)
 		end
 
 	response_alter (a_response: CMS_RESPONSE)
@@ -255,5 +262,25 @@ feature -- Hooks
 			end
 		end
 
+	form_alter (a_form: CMS_FORM; a_form_data: detachable WSF_FORM_DATA; a_response: CMS_RESPONSE)
+			-- Hook execution on form `a_form' and its associated data `a_form_data',
+			-- for related response `a_response'.
+		local
+			fset: WSF_FORM_FIELD_SET
+		do
+			if
+				attached a_form.id as fid and then
+				fid.same_string ({CMS_ADMIN_MODULE_ADMINISTRATION}.form_admin_user_view_id)
+			then
+				if attached a_response.user as u then
+					if a_response.has_permission (perm_view_mails) then
+						create fset.make
+						fset.set_legend ("Messages")
+						fset.extend_html_text ("<a href=%"" + a_response.api.administration_location_url ("mails/" + u.id.out, Void) + "%">See all mails</a>")
+						a_form.prepend (fset)
+					end
+				end
+			end
+		end
 
 end

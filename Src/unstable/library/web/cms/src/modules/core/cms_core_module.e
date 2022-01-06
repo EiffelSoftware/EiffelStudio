@@ -183,32 +183,33 @@ feature -- Hook
 				attached a_form.id as fid and then
 				fid.same_string ("roccms-user-view") -- Check {CMS_AUTHENTICATION_MODULE}.view_account_form_id
 			then
-				if
-					attached a_response.user as u and then
-					attached a_response.api.user_api as l_user_profile_api and then
-					attached l_user_profile_api.user_profile (u) as l_profile and then
-					l_profile.has_visible_items
-				then
-					create fset.make
-					fset.set_legend ("User-Profile")
-					across
-						l_profile as ic
-					loop
-						if not ic.key.starts_with (".") then
-							create tf.make_with_text (ic.key.to_string_8, ic.item) -- TODO: the key should be basic string 8, check if this is true.
-							tf.set_label (html_encoded (ic.key.to_string_32))
-							a_form.extend (tf)
+				if attached a_response.user as u then
+					if
+						attached a_response.api.user_api as l_user_profile_api and then
+						attached l_user_profile_api.user_profile (u) as l_profile and then
+						l_profile.has_visible_items
+					then
+						create fset.make
+						fset.set_legend ("User-Profile")
+						across
+							l_profile as ic
+						loop
+							if not ic.key.starts_with (".") then
+								create tf.make_with_text (ic.key.to_string_8, ic.item) -- TODO: the key should be basic string 8, check if this is true.
+								tf.set_label (html_encoded (ic.key.to_string_32))
+								a_form.extend (tf)
+							end
 						end
-					end
-					if not fset.is_empty then
-						a_form.extend (fset)
+						if not fset.is_empty then
+							a_form.extend (fset)
+						end
 					end
 				end
 			end
 		end
 
 note
-	copyright: "2011-2021, Jocelyn Fiat, Javier Velilla, Eiffel Software and others"
+	copyright: "2011-2022, Jocelyn Fiat, Javier Velilla, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

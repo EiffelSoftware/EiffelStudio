@@ -136,7 +136,7 @@ feature -- Hooks configuration
 				attached module.es_cloud_api as l_cloud_api and then
 				attached a_form.id as l_form_id
 			then
-				if l_form_id.same_string ("admin-view-user") then
+				if l_form_id.same_string ({CMS_ADMIN_MODULE_ADMINISTRATION}.form_admin_user_view_id) then
 					if
 						attached cloud_user_from_form (a_form, a_response) as l_user
 					then

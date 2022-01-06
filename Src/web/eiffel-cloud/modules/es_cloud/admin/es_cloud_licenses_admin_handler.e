@@ -391,13 +391,13 @@ feature -- Execution
 										d2 := sess.last_date
 									end
 									if d1 = Void and d2 = Void then
-										Result := lic1.creation_date < lic2.creation_date
+										Result := lic1.creation_date > lic2.creation_date
 									elseif d1 = Void then
-										Result := True
-									elseif d2 = Void then
 										Result := False
+									elseif d2 = Void then
+										Result := True
 									else
-										Result := d1 < d2
+										Result := d1 > d2
 									end
 								end (lics_last_sessions, ?, ?)
 								)

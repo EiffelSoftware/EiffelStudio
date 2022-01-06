@@ -45,3 +45,14 @@ ul.es-sessions {
 table td.warning {
 	background-color: #ffd8bc;
 }
+
+form#edit-license div.horizontal {
+	display: flex;
+	flex-wrap: wrap;
+	justify-content: left;
+	align-items: normal;
+	& > div {
+		margin-top: 1em;
+		margin-right: 1em;
+	}
+}

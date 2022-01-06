@@ -33,7 +33,6 @@ feature -- Access
 feature -- Execution
 
 	execute (req: WSF_REQUEST; res: WSF_RESPONSE)
-		local
 		do
 			if attached {WSF_STRING} req.path_parameter ("license") as p_license then
 				handle_license (p_license.value, req, res)

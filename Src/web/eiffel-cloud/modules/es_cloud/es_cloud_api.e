@@ -527,6 +527,14 @@ feature -- Element change license
 			es_cloud_storage.save_license (a_license)
 		end
 
+	remove_expiration_date (a_license: ES_CLOUD_LICENSE)
+		require
+			existing_license: license (a_license.id) /= Void
+		do
+			a_license.set_expiration_date (Void)
+			es_cloud_storage.save_license (a_license)
+		end
+
 	assign_license_to_user (a_license: ES_CLOUD_LICENSE; a_user: ES_CLOUD_USER)
 		require
 			a_license.has_id

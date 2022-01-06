@@ -247,6 +247,15 @@ feature -- Execution
 			ago.append_date_to ("", a_session.last_date, a_html)
 --									a_html.append (date_time_to_string (a_session.last_date))
 			a_html.append ("</span>")
+			if
+				api.has_permission ({ES_CLOUD_MODULE}.perm_view_any_es_activities)
+			then
+				if attached a_session.data as sess_data then
+					a_html.append ("<div class=%"internal-data%">")
+					a_html.append (html_encoded (sess_data))
+					a_html.append ("</div>%N")
+				end
+			end
 			a_html.append ("</li>")
 		end
 

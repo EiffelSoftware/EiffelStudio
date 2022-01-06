@@ -318,6 +318,8 @@ feature -- Hooks configuration
 						a_cloud_api.resume_license (l_lic)
 					elseif attached fd.string_item ("es-lic-op-discard") then
 						a_cloud_api.discard_license (l_lic)
+					elseif attached fd.string_item ("es-lic-op-no-exp-date") then
+						a_cloud_api.remove_expiration_date (l_lic)
 					end
 				end
 			end
@@ -452,6 +454,9 @@ feature -- Hooks configuration
 				exp.set_description ("Current expiration date: " + l_exp_date.out + "%N")
 			end
 			lic_fset.extend (exp)
+
+			lic_fset.extend_html_text ("<br/>")
+
 			create h.make
 			h.add_css_class ("horizontal")
 			lic_fset.extend (h)
@@ -463,6 +468,11 @@ feature -- Hooks configuration
 				else
 					create l_submit.make_with_text ("es-lic-op", "Save License #" + a_license.id.out)
 					h.extend (l_submit)
+
+					if a_license.expiration_date /= Void then
+						create l_submit.make_with_text ("es-lic-op-no-exp-date", "Remove Expiration Date")
+						h.extend (l_submit)
+					end
 
 					create l_submit.make_with_text ("es-lic-op-suspend", "Suspend License")
 					h.extend (l_submit)

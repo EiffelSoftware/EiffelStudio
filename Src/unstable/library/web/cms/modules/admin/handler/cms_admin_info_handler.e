@@ -40,7 +40,8 @@ feature -- Execution
 
 	append_system_info_to (s: STRING)
 		local
-			l_mailer, l_previous_mailer: NOTIFICATION_MAILER
+			l_mailer: NOTIFICATION_MAILER
+--			l_previous_mailer: NOTIFICATION_MAILER
 		do
 			s.append ("<ul>")
 			across

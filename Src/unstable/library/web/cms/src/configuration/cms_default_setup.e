@@ -31,8 +31,6 @@ feature {NONE} -- Initialization
 
 	initialize
 			-- Initialize various cms components.
-		local
-			l_core: CMS_CORE_MODULE
 		do
 			Precursor
 			create modules.make (3)
@@ -203,6 +201,6 @@ feature -- Element change
 
 
 note
-	copyright: "2011-2021, Jocelyn Fiat, Javier Velilla, Eiffel Software and others"
+	copyright: "2011-2022, Jocelyn Fiat, Javier Velilla, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 end

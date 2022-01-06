@@ -118,6 +118,8 @@ feature -- Execution
 			lic: detachable ES_CLOUD_LICENSE
 			s: STRING
 			l_user: ES_CLOUD_USER
+			l_order_by: detachable READABLE_STRING_32
+			l_order_by_reversed: BOOLEAN
 			l_plan_filter: detachable READABLE_STRING_GENERAL
 			l_expiring_before_n_days_filter: INTEGER
 			l_inc_expired, l_only_expired: BOOLEAN
@@ -125,6 +127,8 @@ feature -- Execution
 			l_email, l_user_email: READABLE_STRING_8
 --			orgs: detachable LIST [ES_CLOUD_ORGANIZATION]
 			lics: LIST [TUPLE [license: ES_CLOUD_LICENSE; user: detachable ES_CLOUD_USER; email: detachable READABLE_STRING_8; org: detachable ES_CLOUD_ORGANIZATION]]
+			lics_last_sessions: STRING_TABLE [ES_CLOUD_SESSION] -- indexed by license key.
+			lics_sorter: QUICK_SORTER [TUPLE [license: ES_CLOUD_LICENSE]]
 			f: CMS_FORM
 			f_select: WSF_FORM_SELECT
 			f_opt: WSF_FORM_SELECT_OPTION
@@ -134,6 +138,13 @@ feature -- Execution
 			if api.has_permissions (<< {ES_CLOUD_MODULE}.perm_manage_es_accounts, {ES_CLOUD_MODULE}.perm_manage_es_licenses >>) then
 				r := new_generic_response (req, res)
 				add_primary_tabs (r)
+
+				if attached {WSF_STRING} req.query_parameter ("order-by") as p_order_by then
+					l_order_by := p_order_by.value
+					if l_order_by.is_whitespace then
+						l_order_by := Void
+					end
+				end
 
 				if attached {WSF_STRING} req.query_parameter ("plan") as p_plan then
 					l_plan_filter := p_plan.value
@@ -175,7 +186,9 @@ feature -- Execution
 				create f.make (req.percent_encoded_path_info, "licenses-filter")
 				f.set_method_get
 				f.add_css_style ("display: inline-block")
-
+				if l_order_by /= Void then
+					f.extend_hidden_input ("order-by", l_order_by)
+				end
 				if attached es_cloud_api.sorted_plans as l_sorted_plans then
 					create f_div.make
 					f.extend (f_div)
@@ -341,7 +354,109 @@ feature -- Execution
 						s.append ("<input type=%"hidden%" name=%"" + q.url_encoded_name + "%" value =%"" + q.url_encoded_value + "%" />%N")
 					end
 				end
-				s.append ("<table class=%"with_border%" style=%"border: solid 1px black%"><tr><th>Entity</th><th>Owner</th><th>Plan</th><th>Conditions</th><th>Until</th><th>Last</th><th>organization(s)</th>")
+
+					-- Compute last sessions
+				create lics_last_sessions.make_equal_caseless (lics.count)
+				across
+					lics as ic
+				loop
+					lic := ic.item.license
+					if
+						attached {ES_CLOUD_SESSION} es_cloud_api.last_license_session (lic) as l_last
+					then
+						lics_last_sessions [lic.key] := l_last
+					end
+				end
+
+				-- Support for Order-by
+				if l_order_by /= Void then
+					if l_order_by.starts_with_general ("-") then
+						l_order_by_reversed := True
+						l_order_by := l_order_by.substring (2, l_order_by.count)
+					end
+					if l_order_by.is_case_insensitive_equal_general ("last") then
+						create lics_sorter.make (create {AGENT_EQUALITY_TESTER [TUPLE [license: ES_CLOUD_LICENSE]]}.make (agent (i_sessions: STRING_TABLE [ES_CLOUD_SESSION]; l1,l2: TUPLE [license: ES_CLOUD_LICENSE]): BOOLEAN
+								local
+									lic1,lic2: ES_CLOUD_LICENSE
+									d1, d2: detachable DATE_TIME
+									sess: ES_CLOUD_SESSION
+								do
+									lic1 := l1.license
+									lic2 := l2.license
+									sess := i_sessions [lic1.key]
+									if sess /= Void then
+										d1 := sess.last_date
+									end
+									sess := i_sessions [lic2.key]
+									if sess /= Void then
+										d2 := sess.last_date
+									end
+									if d1 = Void and d2 = Void then
+										Result := lic1.creation_date < lic2.creation_date
+									elseif d1 = Void then
+										Result := True
+									elseif d2 = Void then
+										Result := False
+									else
+										Result := d1 < d2
+									end
+								end (lics_last_sessions, ?, ?)
+								)
+							)
+					elseif l_order_by.is_case_insensitive_equal_general ("creation") then
+							-- Default
+					elseif l_order_by.is_case_insensitive_equal_general ("until") then
+						create lics_sorter.make (create {AGENT_EQUALITY_TESTER [TUPLE [license: ES_CLOUD_LICENSE]]}.make (agent (l1,l2: TUPLE [license: ES_CLOUD_LICENSE]): BOOLEAN
+								local
+									lic1,lic2: ES_CLOUD_LICENSE
+									d1, d2: detachable DATE_TIME
+								do
+									lic1 := l1.license
+									lic2 := l2.license
+									d1 := lic1.expiration_date
+									d2 := lic2.expiration_date
+									if d1 = Void and d2 = Void then
+										Result := lic1.creation_date < lic2.creation_date
+									elseif d1 = Void then
+										Result := False
+									elseif d2 = Void then
+										Result := True
+									else
+										Result := d1 < d2
+									end
+								end
+								)
+							)
+						lics_sorter.sort (lics)
+					else
+					end
+					if lics_sorter /= Void then
+						if l_order_by_reversed then
+							lics_sorter.reverse_sort (lics)
+						else
+							lics_sorter.sort (lics)
+						end
+					end
+				end
+
+				s.append ("<table class=%"with_border%" style=%"border: solid 1px black%"><tr><th>Entity</th><th>Owner</th><th>Plan</th><th>Conditions</th>")
+				s.append ("<th><a href=%"" + req.percent_encoded_path_info + "?order-by=")
+				if l_order_by /= Void and then l_order_by.is_case_insensitive_equal_general ("until") then
+					if not l_order_by_reversed then
+						s.append ("-")
+					end
+				end
+				s.append ("until%">Until</a></th>")
+
+				s.append ("<th><a href=%"" + req.percent_encoded_path_info + "?order-by=")
+				if l_order_by /= Void and then l_order_by.is_case_insensitive_equal_general ("last") then
+					if not l_order_by_reversed then
+						s.append ("-")
+					end
+				end
+				s.append ("last%">Last</a></th>")
+
+				s.append ("<th>organization(s)</th>")
 				s.append ("</tr>")
 				across
 					lics as ic
@@ -442,7 +557,7 @@ feature -- Execution
 							s.append ("</td>")
 							s.append ("<td>") -- Last
 							if
-								attached {ES_CLOUD_SESSION} es_cloud_api.last_license_session (lic) as l_last and then
+								attached lics_last_sessions [lic.key] as l_last and then
 								attached l_last.last_date as dt
 							then
 								s.append ("<time class=%"timeago%" datetime=%"" + date_time_to_timestamp_string (dt) + "%">")

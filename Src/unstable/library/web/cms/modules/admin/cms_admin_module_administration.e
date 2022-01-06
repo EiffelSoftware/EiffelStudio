@@ -267,6 +267,7 @@ feature -- Hooks
 			-- for related response `a_response'.
 		local
 			fset: WSF_FORM_FIELD_SET
+			l_uid: like {CMS_USER}.id
 		do
 			if
 				attached a_form.id as fid and then
@@ -274,9 +275,23 @@ feature -- Hooks
 			then
 				if attached a_response.user as u then
 					if a_response.has_permission (perm_view_mails) then
+						if attached a_form.fields_by_name ("user-id") as l_uid_fields then
+							across
+								l_uid_fields as ic
+							until
+								l_uid /= 0
+							loop
+								if
+									attached {WSF_FORM_INPUT} ic.item as f and then
+									attached f.default_value as v
+								then
+									l_uid := v.to_integer_64
+								end
+							end
+						end
 						create fset.make
 						fset.set_legend ("Messages")
-						fset.extend_html_text ("<a href=%"" + a_response.api.administration_location_url ("mails/" + u.id.out, Void) + "%">See all mails</a>")
+						fset.extend_html_text ("<a href=%"" + a_response.api.administration_location_url ("mails/" + l_uid.out, Void) + "%">See all mails</a>")
 						a_form.prepend (fset)
 					end
 				end

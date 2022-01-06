@@ -123,7 +123,7 @@ feature -- Execution
 				end
 
 				if attached {CMS_AUTHENTICATION_MODULE} api.module ({CMS_AUTHENTICATION_MODULE}) as l_auth_mod then
-					l_auth_mod.append_login_or_register_box_to_html (api, req.path_info, s)
+					l_auth_mod.append_login_or_register_box_to_html (api, req.percent_encoded_path_info, s)
 				else
 					s.append ("<p>Please Login or Register...</p>")
 				end

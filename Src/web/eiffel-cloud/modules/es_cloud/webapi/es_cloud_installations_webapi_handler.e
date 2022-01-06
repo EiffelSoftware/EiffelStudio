@@ -444,6 +444,7 @@ feature {NONE} -- User installation post handling
 						if a_op.is_case_insensitive_equal ("ping") then
 							if l_session = Void then
 								create l_session.make (a_user, a_installation.id, l_session_id, Void)
+								update_session_data (req, l_session)
 							end
 							if
 								l_sess_limit > 0 and then
@@ -467,13 +468,16 @@ feature {NONE} -- User installation post handling
 									n := n - 1
 								end
 								if n > 0 then
+									update_session_data (req, l_session)
 									es_cloud_api.pause_session (a_user, l_session)
 								end
 							else
 								l_session.set_title (a_form_data.string_item ("session_title"))
+								update_session_data (req, l_session)
 								es_cloud_api.ping_installation (a_user, l_session)
 							end
 						elseif l_session /= Void then
+							update_session_data (req, l_session)
 							if a_op.is_case_insensitive_equal ("end_session") then
 								es_cloud_api.end_session (a_user, l_session)
 							elseif a_op.is_case_insensitive_equal ("pause_session") then
@@ -541,6 +545,32 @@ feature {NONE} -- User installation post handling
 				r := new_access_denied_error_response (Void, req, res)
 			end
 			r.execute
+		end
+
+	update_session_data (req: WSF_REQUEST; a_session: ES_CLOUD_SESSION)
+		local
+			j: JSON_OBJECT
+			vis: JSON_SERIALIZATION_VISITOR
+			s: STRING_32
+		do
+			create j.make_empty
+			j.put_string (req.remote_addr, "remote_addr")
+			if attached req.remote_host as rhost then
+				j.put_string (rhost, "remote_host")
+			end
+			if attached req.remote_ident as rident then
+				j.put_string (rident, "remote_ident")
+			end
+			if attached req.remote_user as ruser then
+				j.put_string (ruser, "remote_user")
+			end
+			if attached req.request_time as rtime then
+				j.put_string (date_time_to_iso8601_string (rtime), "request_time")
+			end
+			create s.make (512)
+			create vis.make (s)
+			vis.visit_json_object (j)
+			a_session.set_data (s)
 		end
 
 	handle_new_installation (a_version: READABLE_STRING_GENERAL; a_user: ES_CLOUD_USER; a_install_id: READABLE_STRING_GENERAL; a_info: detachable READABLE_STRING_GENERAL; req: WSF_REQUEST; res: WSF_RESPONSE)

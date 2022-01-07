@@ -1185,58 +1185,52 @@ feature -- Parse errors
 feature -- String parse errors
 
 	e_parse_string_missing_name (option: READABLE_STRING_GENERAL): READABLE_STRING_32
-			-- An error for a missing configuration name.
+			-- An error for a missing setting name.
 		do
-			Result := locale.formatted_string (locale.translation ("Missing name for configuration option %"$1%""), [option])
+			Result := locale.formatted_string (locale.translation ("Missing name in the setting %"$1%""), [option])
 		end
 
 	e_parse_string_missing_value (option: READABLE_STRING_GENERAL): READABLE_STRING_32
-			-- An error for a missing configuration value.
+			-- An error for a missing setting value.
 		do
-			Result := locale.formatted_string (locale.translation ("Missing value for configuration option %"$1%""), [option])
+			Result := locale.formatted_string (locale.translation ("Missing value in the setting %"$1%""), [option])
 		end
 
-	e_parse_string_unknown_name (option_name: READABLE_STRING_GENERAL; a_available_options: detachable ITERABLE [READABLE_STRING_GENERAL]): READABLE_STRING_32
-			-- An error for an unknown configuration name.
+	e_parse_string_unknown_name (option_name: READABLE_STRING_GENERAL; known_names: ITERABLE [READABLE_STRING_GENERAL]): READABLE_STRING_32
+			-- An error for an unknown setting name.
 		local
+			d: STRING_32
 			s: STRING_32
 		do
-			if a_available_options /= Void then
-				create s.make_empty
-				across
-					a_available_options as ic
-				loop
-					if not s.is_empty then
-						s.append ({STRING_32} ", ")
-					end
-					s.append_string_general (ic)
-				end
-				Result := locale.formatted_string (locale.translation ("Unknown configuration option %"$1%" (Available options: $2)"), [option_name, s])
-			else
-				Result := locale.formatted_string (locale.translation ("Unknown configuration option %"$1%""), [option_name])
+			create s.make_empty
+			d := s
+			across
+				known_names as ic
+			loop
+				s.append (d)
+				d := once {STRING_32} ", "
+				s.append_string_general (ic)
 			end
+			Result := locale.formatted_string (locale.translation ("Unknown setting %"$1%" (Available settings: $2)"), [option_name, s])
 		end
 
 	e_parse_string_invalid_value (option_name, option_value: READABLE_STRING_GENERAL;
-		expected_values: detachable ITERABLE [READABLE_STRING_GENERAL]): READABLE_STRING_32
+		expected_values: ITERABLE [READABLE_STRING_GENERAL]): READABLE_STRING_32
 			-- An error for an invalid option value `option_value' of an option `option_name'.
 		local
+			d: STRING_32
 			e: STRING_32
 		do
-			if attached expected_values then
-				create e.make_empty
-				across
-					expected_values as c
-				loop
-					if not e.is_empty then
-						e.append ({STRING_32} ", ")
-					end
-					e.append_string_general (c)
-				end
-				Result := locale.formatted_string (locale.translation ("Invalid value for configuration option %"$1%": %"$2%" (Expected values: $3)"), [option_name, option_value, e])
-			else
-				Result := locale.formatted_string (locale.translation ("Invalid value for configuration option %"$1%": %"$2%""), [option_name, option_value])
+			create e.make_empty
+			d := e
+			across
+				expected_values as c
+			loop
+				e.append (d)
+				d := once {STRING_32} ", "
+				e.append_string_general (c)
 			end
+			Result := locale.formatted_string (locale.translation ("Invalid value for setting %"$1%": %"$2%" (Expected values: $3)"), [option_name, option_value, e])
 		end
 
 feature -- Capability errors
@@ -1363,7 +1357,7 @@ feature -- Boolean values
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2021, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2022, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

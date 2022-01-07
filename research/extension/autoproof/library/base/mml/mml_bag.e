@@ -222,10 +222,12 @@ feature -- Lemmas
 		end
 
 	lemma_domain_count
-			-- `domain' has no more elements thatn the bag,
+			-- `domain' has no more elements than the bag,
 			-- and they have equal number of elements iff every element occurs exactly once.
 		note
 			status: lemma
+		require
+			decreases (count)
 		local
 			x: G
 		do

@@ -1550,7 +1550,7 @@ feature {NONE} -- Update
 			end
 		end
 
-feature {E_CMD} -- Onces
+feature -- Command-line input/output
 
 	command_line_io: COMMAND_LINE_IO
 		once

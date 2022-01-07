@@ -116,7 +116,7 @@ feature {NONE} -- Initialization
 				create l_window.make (io.standard_default)
 
 				l_command := command_for_parser_state (a_parser)
-				l_command.set_output_window (l_window)
+				{ES}.command_line_io.set_output_window (l_window)
 
 					-- Initialization of the display	
 				l_name := a_parser.project_alias

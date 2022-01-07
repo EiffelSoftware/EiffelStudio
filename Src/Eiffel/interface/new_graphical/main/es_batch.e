@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "Main class for Batch mode in EiffelStudio."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -55,12 +55,23 @@ feature {NONE} -- Access
 
 	service_initializer: attached SERVICE_INITIALIZER
 			-- Initializer used to register all services.
+		local
+			t: like {REFLECTOR}.dynamic_type_from_string
 		once
-			create Result
+			t := {REFLECTOR}.dynamic_type_from_string ("SERVICE_INITIALIZER_EXTENSION")
+			if
+				t >= 0 and then
+				not {REFLECTOR}.type_of_type (t).is_deferred and then
+				attached {SERVICE_INITIALIZER} {REFLECTOR}.new_instance_of (t) as e
+			then
+				Result := e
+			else
+				create {SERVICE_INITIALIZER} Result
+			end
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2021, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

@@ -15,6 +15,7 @@ inherit
 		end
 
 	CONF_FILE_CONSTANTS
+	CONF_UTILITY
 
 feature -- Basic validity queries
 
@@ -694,32 +695,6 @@ feature {NONE} -- Implementation
 			valid_setting: attached Result implies (is_setting_known (Result) or is_capability_known (Result))
 		end
 
-	key_name (string: READABLE_STRING_32; start_index, end_index: INTEGER; keys: ITERABLE [READABLE_STRING_GENERAL]): detachable READABLE_STRING_32
-			-- A key from `keys' (if any) starting at `start_index' and ending at `end_index' of a string `string'.
-		require
-			valid_start_index: string.valid_index (start_index)
-			valid_end_index: string.valid_index (end_index)
-			valid_start_index_end_index: start_index <= end_index
-		local
-			n: INTEGER
-		do
-			n := end_index + 1 - start_index
-			across
-				keys as c
-			until
-				attached Result
-			loop
-				if
-					c.count = n and then
-					c.same_characters (string, start_index, end_index, 1)
-				then
-					Result := c.as_string_32
-				end
-			end
-		ensure
-			valid_key: attached Result implies across keys as c some c.same_string (Result)  end
-		end
-
 	boolean_setting_name (string: READABLE_STRING_32; start_index, end_index: INTEGER): detachable READABLE_STRING_32
 			-- A name of a valid boolean setting (if any) starting at `start_index' and ending at `end_index' of a string `string'.
 		require
@@ -828,7 +803,7 @@ feature {NONE} -- Option names
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2021, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2022, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

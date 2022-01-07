@@ -80,7 +80,7 @@ feature {NONE} -- Initialization
 					do
 							-- agent eiffel_layout.default_il_environment.installed_runtimes
 							-- would work, but it would cause computation of CLR run-times
-							-- immediately though it might never required.
+							-- immediately though it might be never required.
 							-- Therefore we are using the inline agent instead.
 						Result := eiffel_layout.default_il_environment.installed_runtimes
 					end)
@@ -160,9 +160,9 @@ feature {NONE} -- Initialization
 					elseif not file_error then
 						print_option_warnings
 						if output_window = Void then
-							command.set_output_window (Error_window)
+							command_line_io.set_output_window (error_window)
 						else
-							command.set_output_window (output_window)
+							command_line_io.set_output_window (output_window)
 						end
 
 							--| Initialization of the display
@@ -299,7 +299,7 @@ feature -- Properties
 	no_project_needed: BOOLEAN
 			-- Is a project needed to perform `command'?
 
-	command: EWB_CMD
+	command: detachable E_CMD
 			-- Command to be executed corresponding to
 			-- command line options
 
@@ -319,7 +319,7 @@ feature -- Properties
 			Result := option_error_message /= Void
 		end
 
-	option_error_message: detachable STRING_32
+	option_error_message: detachable READABLE_STRING_32
 			-- Error message when an error occurred.
 
 	option_warning_messages: detachable ARRAYED_LIST [READABLE_STRING_32]
@@ -384,7 +384,7 @@ feature -- Properties
 	is_experimental_flag_set, is_compatible_flag_set: BOOLEAN
 			-- Did use specify one of `-experiment' or `-compat' argument?
 
-	help_messages: HASH_TABLE [READABLE_STRING_GENERAL, STRING]
+	help_messages: STRING_TABLE [READABLE_STRING_32]
 			-- Help message table.
 		once
 			create Result.make (48)
@@ -547,33 +547,39 @@ feature {NONE} -- Output
 	print_help
 			-- Print the help.
 		local
-			command_list: SORTED_TWO_WAY_LIST [STRING]
-			cmd_name: STRING
+			command_list: SORTED_TWO_WAY_LIST [READABLE_STRING_32]
+			cmd_name: READABLE_STRING_32
+			more_help: like extension.service.help
 		do
 			print_usage
 			localized_print (ewb_names.options)
 			localized_print (ewb_names.default_quick_melt_the_system)
 
 			create command_list.make
-			across
-				help_messages.current_keys as k
-			loop
-				command_list.extend (k.item)
+			⟳ h: help_messages ¦ command_list.extend (@ h.key) ⟲
+			if attached extension.service as s then
+				more_help := s.help
+				⟳ h: more_help ¦ command_list.extend (@ h.key) ⟲
 			end
 			across
 				command_list as c
 			loop
 				cmd_name := c.item
-				print_one_help (cmd_name, help_messages.item (cmd_name))
+				print_one_help (cmd_name,
+					if attached more_help and then more_help.has (cmd_name) then
+						more_help [cmd_name]
+					else
+						help_messages [cmd_name]
+					end)
 			end
 		end
 
-	print_one_help (opt: STRING; txt: READABLE_STRING_GENERAL)
+	print_one_help (opt: READABLE_STRING_32; txt: READABLE_STRING_32)
 		do
 			io.put_string ("%T-")
-			io.put_string (opt)
+			io.put_string_32 (opt)
 			io.put_string (": ")
-			localized_print (txt)
+			io.put_string_32 (txt)
 			io.put_string (".%N")
 		end
 
@@ -683,7 +689,7 @@ feature {NONE} -- Update
 	configuration_settings: detachable CONF_TARGET_SETTINGS
 			-- Configuration settings (if any) specified in the command-line.
 
-	configuration_option_parser: CONF_STRING_PARSER
+	configuration_option_parser: CONF_TARGET_SETTINGS_PARSER
 			-- A parser of configuration options.
 
 	analyze_one_option (preferences: PREFERENCES)
@@ -699,6 +705,7 @@ feature {NONE} -- Update
 			l_arg: READABLE_STRING_32
 			in_filename, out_filename: STRING_32
 			l_configuration_settings: like configuration_settings
+			option_arguments: ARRAYED_LIST [READABLE_STRING_32]
 		do
 			filter_name := ""
 			option := argument (current_option)
@@ -1139,7 +1146,7 @@ feature {NONE} -- Update
 					current_option := current_option + 1
 					create config_file_name.make_from_string (argument (current_option))
 				else
-					option_error_message := locale.translation ("Missing config name for option -config.")
+					option_error_message := locale.translation ("Missing configuration file name for option -config.")
 				end
 			elseif option.same_string_general ("-config_option") then
 				if current_option < argument_count then
@@ -1159,7 +1166,7 @@ feature {NONE} -- Update
 					end
 				else
 					option_error_message := locale.formatted_string (locale.translation_in_context
-						("Missing configuration option for option %"$1%".", once "compiler.command-line.option"), option)
+						("Missing configuration setting for option %"$1%".", once "compiler.command-line.option"), option)
 				end
 			elseif option.same_string_general ("-preference") then
 					-- Set specified preference to the given value.
@@ -1451,6 +1458,42 @@ feature {NONE} -- Update
 				create {EWB_TEST_EXECUTION} command
 				command_option := option
 
+			elseif
+				attached extension.service as s and then
+				option.count > 1 and then
+				option [1] = (create {ES_ARGUMENTS}).option_sign.item and then
+				attached option.tail (option.count - 1) as o and then
+				attached s.argument_count (o) as n and then
+				n /= s.unknown_option
+			then
+					-- This is a known service-provided option.
+					-- Check if there are sufficient option arguments.
+				if current_option + n > argument_count then
+					option_error_message := locale.formatted_string
+						(locale.plural_translation_in_context
+							({STRING_32} "Insufficient arguments for option `$1` that expects $2 argument.",
+							{STRING_32} "Insufficient arguments for option `$1` that expects $2 arguments.",
+							"compiler.option",
+							n),
+						option,
+						n)
+				else
+						-- Collect option arguments.
+					create option_arguments.make (n)
+					⟳ i: (current_option + 1) |..| (current_option + n) ¦ option_arguments.extend (argument (i)) ⟲
+						-- Current option will be added at the end of the routine.
+					current_option := current_option + n
+						-- Retrieve the associated command.
+					if not attached s.command (o, option_arguments) as c then
+						option_error_message := s.error
+					elseif attached command and then c /= command then
+						option_error_message := locale.formatted_string ({STRING_32} "Option `$1` conflicts with `$2`.", option, command_option)
+					else
+						command := c
+						command_option := option
+					end
+				end
+
 			elseif is_eiffel_class_file_name (create {PATH}.make_from_string (option)) then
 					-- This option is only valid if no other config options are set
 				if config_file_name = Void and target_name = Void and old_ace_file = Void and old_project_file = Void then
@@ -1507,11 +1550,13 @@ feature {NONE} -- Update
 			end
 		end
 
-feature {NONE} -- Onces
+feature {E_CMD} -- Onces
 
 	command_line_io: COMMAND_LINE_IO
 		once
 			create Result
+		ensure
+			class
 		end
 
 feature {NONE} -- Implementation
@@ -1584,6 +1629,14 @@ feature {NONE} -- Implementation
 				Result.force (argument (i))
 				i := i + 1
 			end
+		end
+
+feature {NONE} -- Option extension
+
+	extension: SERVICE_CONSUMER [COMMAND_LINE_OPTION_EXTENSION_S]
+			-- A command-line option extension service.
+		once
+			create Result
 		end
 
 note

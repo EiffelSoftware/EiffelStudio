@@ -1,9 +1,9 @@
-note
+﻿note
 	description: "Melt eiffel system."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 	date: "$Date$"
-	revision: "$Revision $"
+	revision: "$Revision$"
 
 class
 	EWB_COMP
@@ -15,6 +15,7 @@ inherit
 
 	EWB_CMD
 		redefine
+			executable,
 			loop_action
 		end
 
@@ -67,11 +68,18 @@ feature -- Properties
 	is_finish_freezing_called: BOOLEAN
 			-- Should `finish_freezing' be called if needed after Eiffel compilation?
 
+feature -- Status report
+
+	executable: BOOLEAN
+			-- <Precursor>
+		do
+				-- A system can be always compiled.
+			Result := True
+		end
+
 feature -- Actions
 
 	execute
-		require else
-			can_always_be_compiled: True
 		do
 			if Eiffel_project.is_read_only then
 				localized_print_error (ewb_names.read_only_project_cannot_compile)
@@ -287,7 +295,7 @@ feature {NONE} -- Compilation
 		end;
 
 note
-	copyright:	"Copyright (c) 1984-2013, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2021, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
@@ -318,4 +326,4 @@ note
 			Customer support http://support.eiffel.com
 		]"
 
-end -- class EWB_COMP
+end

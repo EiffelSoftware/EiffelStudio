@@ -1,9 +1,9 @@
-note
+﻿note
 	description: "Displays pretty formatted class in output_window."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 	date: "$Date$"
-	revision: "$Revision $"
+	revision: "$Revision$"
 
 class
 	EWB_PRETTY
@@ -14,6 +14,8 @@ inherit
 			name as pretty_cmd_name,
 			help_message as pretty_help,
 			abbreviation as pretty_abb
+		redefine
+			executable
 		end
 
 	SHARED_ERROR_HANDLER
@@ -44,12 +46,19 @@ feature -- Properties
 	out_filename: STRING_32
 			-- Output filename
 
+feature -- Status report
+
+	executable: BOOLEAN
+			-- <Precursor>
+		do
+				-- A project is not needed.
+			Result := True
+		end
+
 feature {NONE} -- Execution
 
 	execute
 			-- Execute Current batch command.
-		require else
-			True -- We don't need a compiled workbench!
 		local
 			show_pretty: E_SHOW_PRETTY
 			e: ERROR
@@ -70,7 +79,7 @@ feature {NONE} -- Execution
 		end
 
 note
-	copyright: "Copyright (c) 1984-2012, Eiffel Software"
+	copyright: "Copyright (c) 1984-2021, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[
@@ -101,4 +110,4 @@ note
 			Customer support http://support.eiffel.com
 		]"
 
-end -- class EWB_PRETTY
+end

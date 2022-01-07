@@ -6,7 +6,7 @@
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 	date: "$Date$"
-	revision: "$Revision $"
+	revision: "$Revision$"
 
 class EWB_LOOP
 
@@ -16,6 +16,8 @@ inherit
 			name as loop_cmd_name,
 			help_message as loop_help,
 			abbreviation as loop_abb
+		redefine
+			executable
 		end
 
 	SYSTEM_CONSTANTS
@@ -230,12 +232,19 @@ feature -- Initialization
 			queries_menu_not_void: Result /= Void
 		end
 
+feature -- Status report
+
+	executable: BOOLEAN
+			-- <Precursor>
+		do
+				-- No need for a compiled project.
+			Result := True
+		end
+
 feature -- Execution
 
 	execute
 			-- Execute current menu option.
-		require else
-			no_need_for_compiled_project: True
 		do
 			ewb_iterate
 		end
@@ -428,7 +437,7 @@ feature -- Command loop
 			done: BOOLEAN
 		do
 				-- Set the output window to yank_window
-			set_output_window (yank_window)
+			command_line_io.set_output_window (yank_window)
 			from
 				menu_command_list := menu_commands.first
 				display_header
@@ -447,7 +456,7 @@ feature -- Command loop
 		end
 
 note
-	copyright: "Copyright (c) 1984-2018, Eiffel Software"
+	copyright: "Copyright (c) 1984-2021, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

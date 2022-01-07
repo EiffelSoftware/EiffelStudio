@@ -1,16 +1,22 @@
-note
+﻿note
 
-	description:
-		"General notion of command line command%
-		%corresponding to an option of `ec'."
+	description: "[
+			General notion of command line command
+			corresponding to an option of `ec'.
+		]"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 	date: "$Date$"
-	revision: "$Revision $"
+	revision: "$Revision$"
 
 deferred class EWB_CMD
 
 inherit
+	E_CMD
+		redefine
+			executable
+		end
+
 	SHARED_EIFFEL_PROJECT
 
 	SHARED_EWB_HELP
@@ -75,24 +81,12 @@ feature -- Comparison
 			Result := name < other.name
 		end
 
-feature -- Setting
+feature -- Status report
 
-	set_output_window (display: OUTPUT_WINDOW)
-			-- Set the output window to `display'
+	executable: BOOLEAN
+			-- <Precursor>
 		do
-			command_line_io.set_output_window (display)
-		ensure
-			command_line_io.output_window = display
-		end
-
-feature -- Execution
-
-	execute
-			-- Action performed when invoked from the
-			-- command line.
-		require
-			system_compiled: Workbench.is_already_compiled
-		deferred
+			Result := workbench.is_already_compiled
 		end
 
 feature {EWB_LOOP} -- Execution
@@ -108,7 +102,7 @@ feature {NONE} -- Implementation
 
 	command_line_io: COMMAND_LINE_IO
 		once
-			create Result
+			Result := {ES}.command_line_io
 		end
 
 	arguments: STRING
@@ -137,7 +131,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright: "Copyright (c) 1984-2008, Eiffel Software"
+	copyright: "Copyright (c) 1984-2021, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[
@@ -168,4 +162,4 @@ note
 			 Customer support http://support.eiffel.com
 		]"
 
-end -- class EWB_CMD
+end

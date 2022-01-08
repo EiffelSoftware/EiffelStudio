@@ -37,7 +37,7 @@ feature -- Execution
 
 					create s.make_empty
 					if
-						attached {WSF_STRING} req.path_parameter ("user") as l_to_user_id
+						attached {WSF_STRING} req.path_parameter ("uid") as l_to_user_id
 					then
 						l_to_user := api.user_api.user_by_id_or_name (l_to_user_id.value)
 					end

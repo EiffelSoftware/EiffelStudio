@@ -666,6 +666,7 @@ feature -- Emailing
 					end
 
 					e := cms_api.new_html_email (l_user_email, sub, msg)
+					e.set_to_user (l_user)
 					cms_api.process_email (e)
 				end
 			end
@@ -749,6 +750,7 @@ feature -- Emailing
 					end
 
 					e := cms_api.new_html_email (l_user_email, sub, msg)
+					e.set_to_user (l_user)
 					cms_api.process_email (e)
 				end
 			end
@@ -1603,6 +1605,7 @@ feature -- Email processing
 			end
 
 			e := cms_api.new_html_email (a_email_addr, sub, msg)
+			e.set_to_user (a_user)
 			cms_api.process_email (e)
 		end
 

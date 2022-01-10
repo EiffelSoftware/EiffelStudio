@@ -74,7 +74,7 @@ feature -- HTTP Methods
 			l_rhf: ESA_REPRESENTATION_HANDLER_FACTORY
 			l_email: READABLE_STRING_8
 			l_error: detachable STRING_32
-			l_token: READABLE_STRING_8
+			l_token: STRING_8
 		do
 			create l_rhf
 			if attached current_media_type (req) as l_type then
@@ -95,8 +95,12 @@ feature -- HTTP Methods
 					then
 							-- Email address exist send email with a link
 							-- to reactivate his password.
-						l_token := (create {SECURITY_PROVIDER}).token
 
+							-- Replace + and / with B and z to avoid
+							-- issues when we url_encode the token.
+						l_token := (create {SECURITY_PROVIDER}).token
+						l_token.replace_substring_all ("+", "B")
+						l_token.replace_substring_all ("/", "z")
 						api_service.change_password (l_user.user_name, l_email, l_token)
 								--  detachable TUPLE [first_name: STRING; last_name: STRING; user_name: STRING] then
 						email_notification_service.send_password_reset (l_email, message_change_password (l_token, l_user, req))

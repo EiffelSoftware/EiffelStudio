@@ -11,7 +11,7 @@ inherit
 
 feature -- Test
 
-	test_parser_reuse
+	test_json_writer
 		local
 			w: JSON_STREAM_WRITER
 			js, s: STRING_8
@@ -19,10 +19,10 @@ feature -- Test
 			js := "{%"num%": 123, %"text%": %"abc%", %"true%": True, %"null%": null, %"empty-obj%": { }, %"arr%": [ 123, %"abc%", True, null] }"
 
 			create s.make (256)
-			create {JSON_STREAM_TEXT_WRITER} w.make_with_text (s)
 --			create {JSON_STREAM_FILE_WRITER} w.make_with_file (io.output)
-			create {JSON_STREAM_TEXT_EXPANDED_WRITER} w.make_with_text (s)
+--			create {JSON_STREAM_TEXT_WRITER} w.make_with_text (s)
 --			create {JSON_STREAM_FILE_EXPANDED_WRITER} w.make_with_file (io.output)
+			create {JSON_STREAM_TEXT_EXPANDED_WRITER} w.make_with_text (s)
 
 			w.reset -- Just in case
 			w.put_object_start
@@ -55,7 +55,7 @@ feature -- Test
 			print (s)
 
 			assert ("valid json", is_valid (s))
-			assert ("expected string", same_json (s, js))
+			assert ("expected string", {JSON_EQUALITY_TESTER}.same_json (s, js))
 		end
 
 feature -- Comparison
@@ -68,30 +68,6 @@ feature -- Comparison
 			jp.parse_string (j)
 			if jp.is_parsed and jp.is_valid then
 				Result := True
-			end
-		end
-
-	same_json (j1, j2: STRING_8): BOOLEAN
-		local
-			jp: JSON_PARSER
-			jv1, jv2: detachable JSON_VALUE
-		do
-			create jp.make
-
-			jp.parse_string (j1)
-			if jp.is_parsed and jp.is_valid then
-				jv1 := jp.parsed_json_value
-			end
-			jp.parse_string (j2)
-			if jp.is_parsed and jp.is_valid then
-				jv2 := jp.parsed_json_value
-			end
-			if jv1 = Void then
-				Result := jv2 = Void
-			elseif jv2 = Void then
-				Result := False
-			else
-				Result := jv1.representation.is_equal (jv2.representation)
 			end
 		end
 

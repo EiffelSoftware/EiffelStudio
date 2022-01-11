@@ -50,7 +50,7 @@ feature {NONE} -- Execution
 					end
 				end
 				io.put_new_line
-				io.put_string ("IDE layout was reseted.%N")
+				io.put_string ("IDE layout was reset.%N")
 			else
 				io.error.put_string ("Issue raised while resetting IDE layout!%N")
 			end

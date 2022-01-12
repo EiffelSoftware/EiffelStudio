@@ -58,6 +58,8 @@ feature -- Access (public)
 			-- Shared translation options.
 		once
 			create Result.make
+		ensure
+			class
 		end
 
 	helper: E2B_HELPER

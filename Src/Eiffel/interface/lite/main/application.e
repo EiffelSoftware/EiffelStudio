@@ -55,9 +55,7 @@ feature {NONE} -- Initialization
 			l_eifgen_init: INIT_SERVERS
 			l_preference_access: PREFERENCES
 			l_parser: ARGUMENT_PARSER
-			new_resources: TTY_RESOURCES
 			l_ec_preferences: EC_PREFERENCES
-			l_compiler_setting: SETTABLE_COMPILER_OBJECTS
 		do
 				-- Check that environment variables
 				-- are properly set.
@@ -75,14 +73,13 @@ feature {NONE} -- Initialization
 			create l_eifgen_init.make
 
 				-- Initialization of compiler resources
-			create new_resources.initialize
+			;(create {TTY_RESOURCES}.initialize).do_nothing
 
 				-- Initialization of compiler resources.
 			create l_preference_access.make_with_defaults_and_location (
 				<<eiffel_layout.general_preferences.name, eiffel_layout.platform_preferences.name>>, eiffel_layout.eiffel_preferences)
 			create l_ec_preferences.make (l_preference_access)
-			create l_compiler_setting
-			l_compiler_setting.set_preferences (l_ec_preferences)
+			;(create {SETTABLE_COMPILER_OBJECTS}).set_preferences (l_ec_preferences)
 
 				-- We are always in batch mode
 			set_stop_on_error (True)
@@ -103,7 +100,6 @@ feature {NONE} -- Initialization
 			l_command: like command_for_parser_state
 			l_displayer: ECL_ERROR_DISPLAYER
 			l_loader: PROJECT_LOADER
-			l_resources: TTY_RESOURCES
 			l_window: OUTPUT_WINDOW_STREAM
 			l_err_window: OUTPUT_WINDOW_STREAM
 			l_degree_out: ECL_DEGREE_OUTPUT
@@ -111,7 +107,7 @@ feature {NONE} -- Initialization
 			retried: BOOLEAN
 		do
 			if not retried then
-				create l_resources.initialize
+				;(create {TTY_RESOURCES}.initialize).do_nothing
 
 				create l_window.make (io.standard_default)
 
@@ -234,12 +230,7 @@ feature {NONE} -- Query
 
 							if l_target /= Void then
 									-- Add settings to configuration.
-								l_cursor := l_settings.cursor
-								from l_settings.start until l_settings.after loop
-									l_target.add_setting (l_settings.key_for_iteration, l_settings.item_for_iteration)
-									l_settings.forth
-								end
-								l_settings.go_to (l_cursor)
+								⟳ s: l_settings ¦ l_target.add_setting (@ s.key, s) ⟲
 							end
 
 								-- Write configuration text.
@@ -248,7 +239,7 @@ feature {NONE} -- Query
 							l_visitor.process_system (l_system)
 
 								-- Reset file so we can rewrite from the beginning
-							l_file.reset (l_file.name)
+							l_file.reset (l_file.path.name)
 							l_file.open_write
 							l_file.put_string (l_visitor.text)
 							l_file.flush
@@ -345,7 +336,7 @@ feature {NONE} -- Query
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2013, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2022, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
@@ -376,4 +367,4 @@ note
 			Customer support http://support.eiffel.com
 		]"
 
-end -- class {APPLICATION}
+end

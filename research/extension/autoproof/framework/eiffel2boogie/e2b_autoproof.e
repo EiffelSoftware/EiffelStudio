@@ -1,10 +1,11 @@
 ﻿note
 	description: "Interface to launch AutoProof."
-	date: "$Date$"
-	revision: "$Revision$"
 
 class
 	E2B_AUTOPROOF
+
+inherit
+	SHARED_WORKBENCH
 
 create
 	make
@@ -43,6 +44,17 @@ feature -- Element change
 		do
 			across a_input.class_list as c loop add_class (c.item) end
 			across a_input.feature_list as c loop add_feature (c.item) end
+		end
+
+	add_group (g: CONF_GROUP)
+			-- Add all compiled classes of group `g`to the set of classes to verify.
+		do
+			if attached workbench.universe as u then
+				⟳ i: g.classes ¦ if attached u.class_named (i.name, g).compiled_class as c then add_class (c) end ⟲
+				if attached {CONF_CLUSTER} g as i and then attached i.children as s then
+					⟳ c: s ¦ add_group (c) ⟲
+				end
+			end
 		end
 
 	add_class (a_class: CLASS_C)
@@ -144,5 +156,29 @@ feature {NONE} -- Implementation
 				Result := Void
 			end
 		end
+
+note
+	date: "$Date$"
+	revision: "$Revision$"
+	copyright:
+		"Copyright (c) 2012-2014 ETH Zurich",
+		"Copyright (c) 2018-2019 Politecnico di Milano",
+		"Copyright (c) 2021-2022 Schaffhausen Institute of Technology"
+	author: "Julian Tschannen", "Alexander Kogtenkov"
+	license: "GNU General Public License"
+	license_name: "GPL"
+	EIS: "name=GPL", "src=https://www.gnu.org/licenses/gpl.html", "tag=license"
+	copying: "[
+		This program is free software; you can redistribute it and/or modify it under the terms of
+		the GNU General Public License as published by the Free Software Foundation; either version 1,
+		or (at your option) any later version.
+
+		This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
+		without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+		See the GNU General Public License for more details.
+
+		You should have received a copy of the GNU General Public License along with this program.
+		If not, see <https://www.gnu.org/licenses/>.
+	]"
 
 end

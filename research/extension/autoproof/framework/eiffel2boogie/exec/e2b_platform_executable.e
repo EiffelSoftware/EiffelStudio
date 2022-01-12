@@ -1,7 +1,5 @@
 ﻿note
 	description: "Boogie executable running as a separate process."
-	date: "$Date$"
-	revision: "$Revision$"
 
 deferred class
 	E2B_PLATFORM_EXECUTABLE
@@ -30,8 +28,12 @@ feature -- Status report
 	is_running: BOOLEAN
 			-- <Precursor>
 		do
-			if attached process as l_process then
-				Result := l_process.is_running
+			if
+				attached process as p and then
+				p.is_running
+			then
+				p.wait_for_exit_with_timeout (1)
+				Result := p.is_running
 			end
 		end
 
@@ -95,7 +97,7 @@ feature {NONE} -- Implementation
 			not Result.is_empty
 		end
 
-	process: detachable PROCESS
+	process: detachable BASE_PROCESS
 			-- Process running Boogie.
 
 	generate_boogie_file
@@ -134,7 +136,7 @@ feature {NONE} -- Implementation
 		local
 			l_ee: EXECUTION_ENVIRONMENT
 			l_arguments: LINKED_LIST [READABLE_STRING_32]
-			l_process_factory: PROCESS_FACTORY
+			l_process_factory: BASE_PROCESS_FACTORY
 			l_context: E2B_SHARED_CONTEXT
 			l_plain_text_file: PLAIN_TEXT_FILE
 		do
@@ -308,4 +310,27 @@ feature {NONE} -- Output capture
 			l_file.close
 		end
 
+note
+	date: "$Date$"
+	revision: "$Revision$"
+	copyright:
+		"Copyright (c) 2010-2015 ETH Zurich",
+		"Copyright (c) 2018-2019 Politecnico di Milano",
+		"Copyright (c) 2021-2022 Schaffhausen Institute of Technology"
+	author: "Julian Tschannen", "Nadia Polikarpova", "Alexander Kogtenkov"
+	license: "GNU General Public License"
+	license_name: "GPL"
+	EIS: "name=GPL", "src=https://www.gnu.org/licenses/gpl.html", "tag=license"
+	copying: "[
+		This program is free software; you can redistribute it and/or modify it under the terms of
+		the GNU General Public License as published by the Free Software Foundation; either version 1,
+		or (at your option) any later version.
+
+		This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
+		without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+		See the GNU General Public License for more details.
+
+		You should have received a copy of the GNU General Public License along with this program.
+		If not, see <https://www.gnu.org/licenses/>.
+	]"
 end

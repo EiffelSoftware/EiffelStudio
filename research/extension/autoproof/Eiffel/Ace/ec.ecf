@@ -1,5 +1,35 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
 <system xmlns="http://www.eiffel.com/developers/xml/configuration-1-21-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-21-0 http://www.eiffel.com/developers/xml/configuration-1-21-0.xsd" name="ec" uuid="4852CF34-4AE6-495F-9613-6D9297C0EF5D" readonly="false">
+	<note>
+		<eis src="http://www.gnu.org/licenses/gpl.html" tag="license" protocol="" name="GPL"/>
+	</note>
+	<description>
+		EiffelStudio with AutoProof.
+
+		Copyright (c) 2018-2019 Politecnico di Milano
+		Copyright (c) 2021-2022 Schaffhausen Institute of Technology
+
+		Author: Alexander Kogtenkov
+
+		GNU General Public License (see https://www.gnu.org/licenses/)
+	</description>
+	<target name="batch" extends="batch" extends_location="$EIFFEL_SRC\Eiffel\Ace\ec.ecf" abstract="true">
+		<option is_obsolete_iteration="true">
+		</option>
+		<capability>
+			<concurrency support="none"/>
+		</capability>
+		<library name="eiffel2boogie" location="$EIFFEL_SRC\..\research\extension\autoproof\framework\eiffel2boogie\eiffel2boogie.ecf">
+			<option>
+				<assertions precondition="true" postcondition="true" check="true" supplier_precondition="true"/>
+			</option>
+		</library>
+		<cluster name="autoproof_extension" location="$EIFFEL_SRC\..\research\extension\autoproof\Eiffel\" recursive="true">
+			<option is_obsolete_iteration="true">
+			</option>
+			<visible class="SERVICE_INITIALIZER_EXTENSION" feature="default_create"/>
+		</cluster>
+	</target>
 	<target name="bench" extends="bench" extends_location="$EIFFEL_SRC\Eiffel\Ace\ec.ecf">
 		<capability>
 			<concurrency support="thread"/>
@@ -11,7 +41,8 @@
 		</library>
 		<cluster name="autoproof_extension" location="$EIFFEL_SRC\..\research\extension\autoproof\Eiffel\" recursive="true">
 			<visible class="ES_AUTOPROOF_TOOL" feature="default_create"/>
-			<visible class="ES_SERVICE_INITIALIZER_EXTENSION"/>
+			<visible class="ES_SERVICE_INITIALIZER_EXTENSION" feature="default_create"/>
+			<visible class="SERVICE_INITIALIZER_EXTENSION" feature="default_create"/>
 		</cluster>
 	</target>
 </system>

@@ -119,7 +119,7 @@ feature {NONE} -- Validations
 			-- feature, if there is an error, add it to errors.
 		do
 			if
-				a_current_keys.has ("responsible") and then
+				a_current_keys.has ({STRING_32}"responsible") and then
 				attached {WSF_STRING} a_table_request.at ("responsible") as l_responsible
 			then
 				if
@@ -140,7 +140,7 @@ feature {NONE} -- Validations
 		do
 				-- Validate priority, should be a number between 0 and 3
 			if
-				a_current_keys.has ("priority") and then
+				a_current_keys.has ({STRING_32} "priority") and then
 				attached {WSF_STRING} a_table_request.at ("priority") as l_priority
 			then
 				if not l_priority.is_integer then
@@ -160,7 +160,7 @@ feature {NONE} -- Validations
 			-- feature..
 		do
 			if
-				a_current_keys.has ("submitter") and then
+				a_current_keys.has ({STRING_32} "submitter") and then
 				attached {WSF_STRING} a_table_request.at ("submitter") as l_submitter
 			then
 				set_submitter (l_submitter.value)
@@ -172,7 +172,7 @@ feature {NONE} -- Validations
 			-- feature, if there is an error, add it to errors.
 		do
 			if
-				a_current_keys.has ("severity") and then
+				a_current_keys.has ({STRING_32} "severity") and then
 				attached {WSF_STRING} a_table_request.at ("severity") as l_severity
 			then
 				if not l_severity.is_integer then

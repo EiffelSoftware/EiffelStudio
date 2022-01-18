@@ -14,8 +14,8 @@
 		GNU General Public License (see https://www.gnu.org/licenses/)
 	</description>
 	<target name="batch" extends="batch" extends_location="$EIFFEL_SRC\Eiffel\Ace\ec.ecf" abstract="true">
-		<option is_obsolete_iteration="true">
-		</option>
+		<!--option is_obsolete_iteration="true">
+		</option-->
 		<capability>
 			<concurrency support="none"/>
 		</capability>
@@ -25,8 +25,8 @@
 			</option>
 		</library>
 		<cluster name="autoproof_extension" location="$EIFFEL_SRC\..\research\extension\autoproof\Eiffel\" recursive="true">
-			<option is_obsolete_iteration="true">
-			</option>
+			<!--option is_obsolete_iteration="true">
+			</option-->
 			<visible class="SERVICE_INITIALIZER_EXTENSION" feature="default_create"/>
 		</cluster>
 	</target>

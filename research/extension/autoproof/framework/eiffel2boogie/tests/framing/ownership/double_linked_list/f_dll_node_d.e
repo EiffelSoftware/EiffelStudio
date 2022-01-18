@@ -51,7 +51,7 @@ feature -- Modification
 			n_singleton: n.left = n
 			default_wrapped: is_wrapped
 			default_arg_wrapped: n.is_wrapped
-			default_observers_wrapped: across observers as o all o.item.is_wrapped end
+			default_observers_wrapped: across observers as o all o.is_wrapped end
 			modify (Current, right, n)
 		local
 			r: F_DLL_NODE_D
@@ -77,14 +77,14 @@ feature -- Modification
 			n_right_set: n.right = old right
 			default_wrapped: is_wrapped
 			default_arg_wrapped: n.is_wrapped
-			default_observers_wrapped: across observers as o all o.item.is_wrapped  end
+			default_observers_wrapped: across observers as o all o.is_wrapped  end
 		end
 
 	remove
 			-- Remove the current node from the list.
 		require
 			default_wrapped: is_wrapped
-			default_observers_wrapped: across observers as o all o.item.is_wrapped  end
+			default_observers_wrapped: across observers as o all o.is_wrapped  end
 			modify (Current, left, right)
 		local
 			l, r: F_DLL_NODE_D
@@ -112,7 +112,7 @@ feature -- Modification
 			old_right_wrapped: (old right).is_wrapped
 			neighbors_connected: (old left).right = old right
 			default_wrapped: is_wrapped
-			default_observers_wrapped: across observers as o all o.item.is_wrapped  end
+			default_observers_wrapped: across observers as o all o.is_wrapped  end
 		end
 
 feature {F_DLL_NODE_D} -- Implementation
@@ -168,5 +168,29 @@ invariant
 	right_consistent: right.left = Current
 	subjects_aware: left.observers [Current] and right.observers [Current]
 	default_owns: owns = []
+
+note
+	date: "$Date$"
+	revision: "$Revision$"
+	copyright:
+		"Copyright (c) 2013-2014 ETH Zurich",
+		"Copyright (c) 2018 Politecnico di Milano",
+		"Copyright (c) 2022 Schaffhausen Institute of Technology"
+	author: "Julian Tschannen", "Nadia Polikarpova", "Alexander Kogtenkov"
+	license: "GNU General Public License"
+	license_name: "GPL"
+	EIS: "name=GPL", "src=https://www.gnu.org/licenses/gpl.html", "tag=license"
+	copying: "[
+		This program is free software; you can redistribute it and/or modify it under the terms of
+		the GNU General Public License as published by the Free Software Foundation; either version 1,
+		or (at your option) any later version.
+
+		This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
+		without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+		See the GNU General Public License for more details.
+
+		You should have received a copy of the GNU General Public License along with this program.
+		If not, see <https://www.gnu.org/licenses/>.
+	]"
 
 end

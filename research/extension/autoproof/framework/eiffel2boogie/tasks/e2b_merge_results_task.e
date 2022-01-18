@@ -1,7 +1,5 @@
-note
+﻿note
 	description: "Task to merge results from two-step verification."
-	date: "$Date$"
-	revision: "$Revision$"
 
 class
 	E2B_MERGE_RESULTS_TASK
@@ -53,14 +51,14 @@ feature {ROTA_S, ROTA_TASK_I} -- Basic operations
 						l_primary_result := initial_result.verification_results.item
 						if
 							l_primary_result.context_feature /= Void and then
-							l_primary_result.context_class.class_id = l_second_success.item.context_class.class_id and then
-							l_primary_result.context_feature.body_index = l_second_success.item.context_feature.body_index
+							l_primary_result.context_class.class_id = l_second_success.context_class.class_id and then
+							l_primary_result.context_feature.body_index = l_second_success.context_feature.body_index
 						then
 							if attached {E2B_SUCCESSFUL_VERIFICATION} l_primary_result then
 								l_new_success := False
 							elseif attached {E2B_FAILED_VERIFICATION} l_primary_result as l_primary_failed then
 								across l_primary_failed.errors as l_errors loop
-									l_second_success.item.add_original_error (l_errors.item)
+									l_second_success.add_original_error (l_errors)
 								end
 								initial_result.verification_results.remove
 							elseif attached {E2B_INCONCLUSIVE_RESULT} l_primary_result then
@@ -73,7 +71,7 @@ feature {ROTA_S, ROTA_TASK_I} -- Basic operations
 						end
 					end
 					if l_new_success then
-						initial_result.verification_results.extend (l_second_success.item)
+						initial_result.verification_results.extend (l_second_success)
 					end
 				end
 
@@ -94,5 +92,29 @@ feature {NONE} -- Implementation
 
 	secondary_result_generator: attached E2B_RESULT_GENERATOR
 			-- Boogie result generator.
+
+;note
+	date: "$Date$"
+	revision: "$Revision$"
+	copyright:
+		"Copyright (c) 2012-2014 ETH Zurich",
+		"Copyright (c) 2018 Politecnico di Milano",
+		"Copyright (c) 2022 Schaffhausen Institute of Technology"
+	author: "Julian Tschannen", "Alexander Kogtenkov"
+	license: "GNU General Public License"
+	license_name: "GPL"
+	EIS: "name=GPL", "src=https://www.gnu.org/licenses/gpl.html", "tag=license"
+	copying: "[
+		This program is free software; you can redistribute it and/or modify it under the terms of
+		the GNU General Public License as published by the Free Software Foundation; either version 1,
+		or (at your option) any later version.
+
+		This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
+		without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+		See the GNU General Public License for more details.
+
+		You should have received a copy of the GNU General Public License along with this program.
+		If not, see <https://www.gnu.org/licenses/>.
+	]"
 
 end

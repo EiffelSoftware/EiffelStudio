@@ -1,7 +1,5 @@
 ﻿note
 	description: "Individual error of verifying a Boogie procedure."
-	date: "$Date$"
-	revision: "$Revision$"
 
 class
 	E2B_BOOGIE_PROCEDURE_ERROR
@@ -119,7 +117,7 @@ feature {NONE} -- Implementation
 			if l_index > 0 then
 				l_parts := a_line.substring (l_index + 2, a_line.count).split (' ')
 				across l_parts as i loop
-					l_part := i.item
+					l_part := i
 					l_part.left_adjust
 					l_part.right_adjust
 					if not l_part.is_empty then
@@ -136,5 +134,29 @@ feature {NONE} -- Implementation
 				end
 			end
 		end
+
+note
+	date: "$Date$"
+	revision: "$Revision$"
+	copyright:
+		"Copyright (c) 2013-2014 ETH Zurich",
+		"Copyright (c) 2018 Politecnico di Milano",
+		"Copyright (c) 2021-2022 Schaffhausen Institute of Technology"
+	author: "Julian Tschannen", "Alexander Kogtenkov"
+	license: "GNU General Public License"
+	license_name: "GPL"
+	EIS: "name=GPL", "src=https://www.gnu.org/licenses/gpl.html", "tag=license"
+	copying: "[
+		This program is free software; you can redistribute it and/or modify it under the terms of
+		the GNU General Public License as published by the Free Software Foundation; either version 1,
+		or (at your option) any later version.
+
+		This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
+		without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+		See the GNU General Public License for more details.
+
+		You should have received a copy of the GNU General Public License along with this program.
+		If not, see <https://www.gnu.org/licenses/>.
+	]"
 
 end

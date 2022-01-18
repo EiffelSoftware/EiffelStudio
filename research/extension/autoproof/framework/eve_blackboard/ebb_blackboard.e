@@ -1,7 +1,5 @@
 ﻿note
 	description: "Default implementation of the blackboard service."
-	date: "$Date$"
-	revision: "$Revision$"
 
 class
 	EBB_BLACKBOARD
@@ -55,8 +53,8 @@ feature -- Access
 			-- Default tool of type `a_type'.
 		do
 			across tools as c loop
-				if c.item.category = a_type then
-					Result := c.item
+				if c.category = a_type then
+					Result := c
 				end
 			end
 		end
@@ -112,8 +110,8 @@ feature -- Basic operations
 			recording_results: is_recording_results
 		do
 			across verification_results as l_cursor loop
-				if data.has_feature (l_cursor.item.associated_feature) then
-					data.feature_data (l_cursor.item.associated_feature).add_tool_result (l_cursor.item)
+				if data.has_feature (l_cursor.associated_feature) then
+					data.feature_data (l_cursor.associated_feature).add_tool_result (l_cursor)
 				end
 			end
 			verification_results.wipe_out
@@ -149,8 +147,8 @@ feature -- Basic operations
 		do
 			if data.has_class (a_class) then
 				across data.class_data (a_class).children as c loop
-					if is_feature_data_verified (c.item) then
-						c.item.set_stale
+					if is_feature_data_verified (c) then
+						c.set_stale
 					end
 				end
 			end
@@ -192,5 +190,29 @@ feature {NONE} -- Implementation
 			-- <Precursor>
 		do
 		end
+
+note
+	date: "$Date$"
+	revision: "$Revision$"
+	copyright:
+		"Copyright (c) 2010 ETH Zurich",
+		"Copyright (c) 2018-2019 Politecnico di Milano",
+		"Copyright (c) 2022 Schaffhausen Institute of Technology"
+	author: "Julian Tschannen", "Alexander Kogtenkov"
+	license: "GNU General Public License"
+	license_name: "GPL"
+	EIS: "name=GPL", "src=https://www.gnu.org/licenses/gpl.html", "tag=license"
+	copying: "[
+		This program is free software; you can redistribute it and/or modify it under the terms of
+		the GNU General Public License as published by the Free Software Foundation; either version 1,
+		or (at your option) any later version.
+
+		This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
+		without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+		See the GNU General Public License for more details.
+
+		You should have received a copy of the GNU General Public License along with this program.
+		If not, see <https://www.gnu.org/licenses/>.
+	]"
 
 end

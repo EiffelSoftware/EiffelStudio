@@ -1,7 +1,5 @@
 ﻿note
 	description: "Helper class to create IV-nodes."
-	date: "$Date$"
-	revision: "$Revision$"
 
 frozen class
 	IV_FACTORY
@@ -206,7 +204,7 @@ feature -- Boolean operators
 			across
 				a_conjuncts as i
 			loop
-				Result := and_clean (Result, i.item.expression)
+				Result := and_clean (Result, i.expression)
 			end
 		end
 
@@ -290,7 +288,7 @@ feature -- Functions
 			create Result.make (a_function_name, a_result_type)
 			if attached a_arguments then
 				across a_arguments as i loop
-					Result.add_argument (i.item)
+					Result.add_argument (i)
 				end
 			end
 		end
@@ -343,7 +341,7 @@ feature -- Statements
 			create Result.make (a_proc_name)
 			if attached a_arguments then
 				across a_arguments as i loop
-					Result.add_argument (i.item)
+					Result.add_argument (i)
 				end
 			end
 		end
@@ -396,7 +394,7 @@ feature -- Framing
 			create l_fcall.make (name_translator.boogie_function_for_write_frame (a_feature, a_type), types.set (types.ref))
 			l_fcall.add_argument (l_old_heap)
 			across a_boogie_procedure.arguments as i loop
-				l_fcall.add_argument (i.item.entity)
+				l_fcall.add_argument (i.entity)
 			end
 			if helper.is_setter (a_feature) then
 				Result := function_call ("flat_same_outside", <<l_old_heap, global_heap, l_fcall>>, types.bool)
@@ -424,7 +422,7 @@ feature -- Axioms
 			l_forall.add_bound_variable (a_heap)
 			l_forall.add_bound_variable (a_current)
 			across a_extra_vars as v loop
-				l_forall.add_bound_variable (v.item)
+				l_forall.add_bound_variable (v)
 			end
 			l_forall.add_trigger (a_call)
 
@@ -440,7 +438,7 @@ feature -- Axioms
 				l_forall.add_bound_variable (a_heap)
 				l_forall.add_bound_variable (a_current)
 				across a_extra_vars as v loop
-					l_forall.add_bound_variable (v.item)
+					l_forall.add_bound_variable (v)
 				end
 				l_forall.add_trigger (a_call)
 
@@ -459,5 +457,29 @@ feature -- Miscellaneous
 			l_assume.set_attribute_string (":captureState %"" + a_text + "%"")
 			Result := l_assume
 		end
+
+note
+	date: "$Date$"
+	revision: "$Revision$"
+	copyright:
+		"Copyright (c) 2012-2014 ETH Zurich",
+		"Copyright (c) 2018-2019 Politecnico di Milano",
+		"Copyright (c) 2022 Schaffhausen Institute of Technology"
+	author: "Julian Tschannen", "Nadia Polikarpova", "Alexander Kogtenkov"
+	license: "GNU General Public License"
+	license_name: "GPL"
+	EIS: "name=GPL", "src=https://www.gnu.org/licenses/gpl.html", "tag=license"
+	copying: "[
+		This program is free software; you can redistribute it and/or modify it under the terms of
+		the GNU General Public License as published by the Free Software Foundation; either version 1,
+		or (at your option) any later version.
+
+		This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
+		without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+		See the GNU General Public License for more details.
+
+		You should have received a copy of the GNU General Public License along with this program.
+		If not, see <https://www.gnu.org/licenses/>.
+	]"
 
 end

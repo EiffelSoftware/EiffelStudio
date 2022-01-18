@@ -1,7 +1,5 @@
-note
+﻿note
 	description: "attach invariant in form of IV_EXPRESSION to the head of a loop"
-	date: "$Date$"
-	revision: "$Revision$"
 
 class
 	IV_ATTACH_INVARIANT
@@ -42,7 +40,7 @@ feature -- universe visitor
 		do
 			is_attached := False
 			across a_implementation.body.statements as st loop
-				st.item.process (Current)
+				st.process (Current)
 			end
 			if is_attached then
 				attached_to_procedure := a_implementation.procedure
@@ -156,10 +154,10 @@ feature -- Statement Visitor
 			-- Process `a_conditional'.
 		do
 			across a_conditional.then_block.statements as blocks loop
-				blocks.item.process (Current)
+				blocks.process (Current)
 			end
 			across a_conditional.else_block.statements as blocks loop
-				blocks.item.process (Current)
+				blocks.process (Current)
 			end
 		end
 
@@ -208,5 +206,28 @@ feature {NONE} --implementation
 	is_attached: BOOLEAN
 		-- set to true as soon as the invariant has been attached.
 
+;note
+	date: "$Date$"
+	revision: "$Revision$"
+	copyright:
+		"Copyright (c) 2013-2014 ETH Zurich",
+		"Copyright (c) 2018 Politecnico di Milano",
+		"Copyright (c) 2022 Schaffhausen Institute of Technology"
+	author: "Julian Tschannen", "Nadia Polikarpova", "Alexander Kogtenkov"
+	license: "GNU General Public License"
+	license_name: "GPL"
+	EIS: "name=GPL", "src=https://www.gnu.org/licenses/gpl.html", "tag=license"
+	copying: "[
+		This program is free software; you can redistribute it and/or modify it under the terms of
+		the GNU General Public License as published by the Free Software Foundation; either version 1,
+		or (at your option) any later version.
+
+		This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
+		without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+		See the GNU General Public License for more details.
+
+		You should have received a copy of the GNU General Public License along with this program.
+		If not, see <https://www.gnu.org/licenses/>.
+	]"
 
 end

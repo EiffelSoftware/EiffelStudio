@@ -1,7 +1,5 @@
 ﻿note
 	description: "Visitor to process the iv universe and perform postcondition mutation of loops to create invariants"
-	date: "$Date$"
-	revision: "$Revision$"
 
 class
 	E2B_POSTCONDITION_MUTATION_VISITOR
@@ -93,7 +91,7 @@ feature -- Universe Visitor: needed processors
 			body := a_implementation.body
 			across body.statements as st loop
 				--go through all statements, find all outer loops.
-				st.item.process (Current)
+				st.process (Current)
 			end
 		end
 
@@ -205,6 +203,28 @@ feature {NONE}
 
 	is_debugging_enabled: BOOLEAN = False
 
+note
+	date: "$Date$"
+	revision: "$Revision$"
+	copyright:
+		"Copyright (c) 2013-2014 ETH Zurich",
+		"Copyright (c) 2018-2019 Politecnico di Milano",
+		"Copyright (c) 2022 Schaffhausen Institute of Technology"
+	author: "Julian Tschannen", "Nadia Polikarpova", "Alexander Kogtenkov"
+	license: "GNU General Public License"
+	license_name: "GPL"
+	EIS: "name=GPL", "src=https://www.gnu.org/licenses/gpl.html", "tag=license"
+	copying: "[
+		This program is free software; you can redistribute it and/or modify it under the terms of
+		the GNU General Public License as published by the Free Software Foundation; either version 1,
+		or (at your option) any later version.
+
+		This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
+		without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+		See the GNU General Public License for more details.
+
+		You should have received a copy of the GNU General Public License along with this program.
+		If not, see <https://www.gnu.org/licenses/>.
+	]"
+
 end
-
-

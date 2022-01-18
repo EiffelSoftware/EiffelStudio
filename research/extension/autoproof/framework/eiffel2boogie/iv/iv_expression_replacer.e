@@ -1,7 +1,5 @@
-note
+﻿note
 	description: "Replaces the nth occurence (or all occurences, if nth<=0) of a_old with a_new in a_post. It DOES NOT change a_post.expression. it stores the result in output."
-	date: "$Date$"
-	revision: "$Revision$"
 
 class
 	IV_EXPRESSION_REPLACER
@@ -213,7 +211,7 @@ feature --VISITOR
 										create new_forall.make (new_bin)
 										across a_forall.bound_variables as bvs loop  --assumes bound variables weren't replaced.
 					--						new_forall.add_bound_variable (a_forall.bound_variables.item.name, bvs.item.type)
-											new_forall.bound_variables.force (bvs.item)
+											new_forall.bound_variables.force (bvs)
 										end
 										output := new_forall.twin
 									end
@@ -224,7 +222,7 @@ feature --VISITOR
 
 									across a_forall.bound_variables as bvs loop  --assumes bound variables weren't replaced.
 				--						new_forall.add_bound_variable (a_forall.bound_variables.item.name, bvs.item.type)
-										new_forall.bound_variables.force (bvs.item)
+										new_forall.bound_variables.force (bvs)
 									end
 									output := new_forall.twin;
 								end
@@ -236,7 +234,7 @@ feature --VISITOR
 
 								across a_forall.bound_variables as bvs loop  --assumes bound variables weren't replaced.
 			--						new_forall.add_bound_variable (a_forall.bound_variables.item.name, bvs.item.type)
-									new_forall.bound_variables.force (bvs.item)
+									new_forall.bound_variables.force (bvs)
 								end
 								output := new_forall.twin;
 						end
@@ -248,7 +246,7 @@ feature --VISITOR
 
 						across a_forall.bound_variables as bvs loop  --assumes bound variables weren't replaced.
 	--						new_forall.add_bound_variable (a_forall.bound_variables.item.name, bvs.item.type)
-							new_forall.bound_variables.force (bvs.item)
+							new_forall.bound_variables.force (bvs)
 						end
 						output := new_forall.twin;
 					end
@@ -268,8 +266,8 @@ feature --VISITOR
 					set_i_th (rep.i_th)
 					create new_forall.make (rep.output)
 					across a_forall.bound_variables as bvs loop
-						new_forall.add_bound_variable (bvs.item.name, bvs.item.type)
-						new_forall.bound_variables.last.set_property (bvs.item.property) --assumes bound variables are always added to the end of the list.
+						new_forall.add_bound_variable (bvs.name, bvs.type)
+						new_forall.bound_variables.last.set_property (bvs.property) --assumes bound variables are always added to the end of the list.
 					end
 					output := new_forall.twin
 				else --a_forall is NOT equal to old_expression
@@ -279,8 +277,8 @@ feature --VISITOR
 					set_i_th (rep.i_th)
 					create new_forall.make (rep.output)
 					across a_forall.bound_variables as bvs loop
-						new_forall.add_bound_variable (bvs.item.name, bvs.item.type)
-						new_forall.bound_variables.last.set_property (bvs.item.property) --assumes bound variables are always added to the end of the list.
+						new_forall.add_bound_variable (bvs.name, bvs.type)
+						new_forall.bound_variables.last.set_property (bvs.property) --assumes bound variables are always added to the end of the list.
 					end
 					output := new_forall.twin
 				end
@@ -302,8 +300,8 @@ feature --VISITOR
 				else
 					create new_fun_call.make (a_call.name, a_call.type)
 					across a_call.arguments as args loop
-						create rep.make_nth (args.item, old_expression, new_expression, 0)
-						args.item.process (rep)
+						create rep.make_nth (args, old_expression, new_expression, 0)
+						args.process (rep)
 						new_fun_call.add_argument (rep.output)
 					end
 
@@ -321,9 +319,9 @@ feature --VISITOR
 					--not sure if it is necessary to process children in this case? can children be equal if this is equal?
 					create new_fun_call.make (a_call.name, a_call.type)
 					across a_call.arguments as args loop
-						create rep.make_nth (args.item, old_expression, new_expression, n_th)
+						create rep.make_nth (args, old_expression, new_expression, n_th)
 						rep.set_i_th (i_th)
-						args.item.process(rep)
+						args.process(rep)
 						set_i_th (rep.i_th)
 						new_fun_call.add_argument (rep.output)
 					end
@@ -331,9 +329,9 @@ feature --VISITOR
 				else --a_call is NOT equal to old_expression, check children
 					create new_fun_call.make (a_call.name, a_call.type)
 					across a_call.arguments as args loop
-						create rep.make_nth (args.item, old_expression, new_expression, n_th)
+						create rep.make_nth (args, old_expression, new_expression, n_th)
 						rep.set_i_th (i_th)
-						args.item.process(rep)
+						args.process(rep)
 						set_i_th (rep.i_th)
 						new_fun_call.add_argument (rep.output)
 					end
@@ -553,5 +551,29 @@ feature -- check for equality
 			e1.process (the_comparer)
 			Result := the_comparer.output
 		end
+
+note
+	date: "$Date$"
+	revision: "$Revision$"
+	copyright:
+		"Copyright (c) 2013-2014 ETH Zurich",
+		"Copyright (c) 2018 Politecnico di Milano",
+		"Copyright (c) 2022 Schaffhausen Institute of Technology"
+	author: "Julian Tschannen", "Nadia Polikarpova", "Alexander Kogtenkov"
+	license: "GNU General Public License"
+	license_name: "GPL"
+	EIS: "name=GPL", "src=https://www.gnu.org/licenses/gpl.html", "tag=license"
+	copying: "[
+		This program is free software; you can redistribute it and/or modify it under the terms of
+		the GNU General Public License as published by the Free Software Foundation; either version 1,
+		or (at your option) any later version.
+
+		This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
+		without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+		See the GNU General Public License for more details.
+
+		You should have received a copy of the GNU General Public License along with this program.
+		If not, see <https://www.gnu.org/licenses/>.
+	]"
 
 end

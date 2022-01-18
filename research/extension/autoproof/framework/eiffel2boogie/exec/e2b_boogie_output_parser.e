@@ -1,8 +1,4 @@
-﻿note
-	date: "$Date$"
-	revision: "$Revision$"
-
-class
+﻿class
 	E2B_BOOGIE_OUTPUT_PARSER
 
 create
@@ -35,7 +31,7 @@ feature -- Basic operations
 
 				-- Parse output
 			across a_boogie_output.split ('%N') as l loop
-				l_line := l.item
+				l_line := l
 				l_line.right_adjust
 				if not (l_line.is_empty or l_line.starts_with ("//")) then
 					parse_line (l_line)
@@ -184,12 +180,12 @@ feature {NONE} -- Implementation
 				from
 					j := 1
 				until
-					j > l_sorted_procs.count or else l_sorted_procs [j].time < i.item.time
+					j > l_sorted_procs.count or else l_sorted_procs [j].time < i.time
 				loop
 					j := j + 1
 				end
 				l_sorted_procs.go_i_th (j)
-				l_sorted_procs.put_left (i.item)
+				l_sorted_procs.put_left (i)
 			end
 				-- For each result in the list but last, subtract the time of the next procedure
 			from
@@ -259,5 +255,29 @@ feature {NONE} -- Regular expressions
 			create Result.make
 			Result.compile ("^(.*)\(([0-9]*),([0-9]*)\): Related location: (.*)$")
 		end
+
+note
+	date: "$Date$"
+	revision: "$Revision$"
+	copyright:
+		"Copyright (c) 2013-2014 ETH Zurich",
+		"Copyright (c) 2018-2019 Politecnico di Milano",
+		"Copyright (c) 2021-2022 Schaffhausen Institute of Technology"
+	author: "Julian Tschannen", "Nadia Polikarpova", "Alexander Kogtenkov"
+	license: "GNU General Public License"
+	license_name: "GPL"
+	EIS: "name=GPL", "src=https://www.gnu.org/licenses/gpl.html", "tag=license"
+	copying: "[
+		This program is free software; you can redistribute it and/or modify it under the terms of
+		the GNU General Public License as published by the Free Software Foundation; either version 1,
+		or (at your option) any later version.
+
+		This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
+		without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+		See the GNU General Public License for more details.
+
+		You should have received a copy of the GNU General Public License along with this program.
+		If not, see <https://www.gnu.org/licenses/>.
+	]"
 
 end

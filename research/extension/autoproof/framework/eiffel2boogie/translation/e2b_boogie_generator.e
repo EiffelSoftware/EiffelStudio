@@ -1,7 +1,5 @@
 ﻿note
 	description: "Generate Boogie code from IV universe."
-	date: "$Date$"
-	revision: "$Revision$"
 
 class
 	E2B_BOOGIE_GENERATOR
@@ -40,7 +38,7 @@ feature -- Basic operations
 			across
 				boogie_universe.dependencies as deps
 			loop
-				last_generated_verifier_input.add_boogie_file (deps.item)
+				last_generated_verifier_input.add_boogie_file (deps)
 			end
 
 				-- Add background theory
@@ -64,5 +62,29 @@ feature {E2B_CUSTOM_AGENT_CALL_HANDLER} -- Implementation
 		ensure
 			instance_free: class
 		end
+
+note
+	date: "$Date$"
+	revision: "$Revision$"
+	copyright:
+		"Copyright (c) 2012-2014 ETH Zurich",
+		"Copyright (c) 2018-2019 Politecnico di Milano",
+		"Copyright (c) 2022 Schaffhausen Institute of Technology"
+	author: "Julian Tschannen", "Nadia Polikarpova", "Alexander Kogtenkov"
+	license: "GNU General Public License"
+	license_name: "GPL"
+	EIS: "name=GPL", "src=https://www.gnu.org/licenses/gpl.html", "tag=license"
+	copying: "[
+		This program is free software; you can redistribute it and/or modify it under the terms of
+		the GNU General Public License as published by the Free Software Foundation; either version 1,
+		or (at your option) any later version.
+
+		This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
+		without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+		See the GNU General Public License for more details.
+
+		You should have received a copy of the GNU General Public License along with this program.
+		If not, see <https://www.gnu.org/licenses/>.
+	]"
 
 end

@@ -133,8 +133,8 @@ feature -- VSTTE2008: Binary search
 			invariant
 				low_and_up_range: 1 <= low and low <= up and up <= a.sequence.count + 1
 				result_range: Result = 0 or 1 <= Result and Result <= a.sequence.count
-				x_not_in_lower_part: across 1 |..| (low-1) as i all a.sequence[i.item] < x end
-				x_not_in_upper_part: across up |..| a.sequence.count as i all x < a.sequence[i.item] end
+				x_not_in_lower_part: across 1 |..| (low-1) as i all a.sequence[i] < x end
+				x_not_in_upper_part: across up |..| a.sequence.count as i all x < a.sequence[i] end
 				x_found: Result > 0 implies a.sequence[Result] = x
 			until
 				low >= up or Result > 0
@@ -165,7 +165,7 @@ feature -- VSTTE2008: Binary search
 		require
 			a /= Void
 		do
-			Result := across 1 |..| (a.sequence.count-1) as i all a.sequence[i.item] <= a.sequence[i.item+1] end
+			Result := across 1 |..| (a.sequence.count-1) as i all a.sequence[i] <= a.sequence[i+1] end
 		end
 
 	lemma_smaller_until_index (a: SIMPLE_ARRAY [INTEGER]; i, x: INTEGER)
@@ -181,7 +181,7 @@ feature -- VSTTE2008: Binary search
 				lemma_smaller_until_index (a, i-1, x)
 			end
 		ensure
-			 a_until_i_smaller: across 1 |..| i as ai all a.sequence[ai.item] < x end
+			 a_until_i_smaller: across 1 |..| i as ai all a.sequence[ai] < x end
 		end
 
 	lemma_larger_from_index (a: SIMPLE_ARRAY [INTEGER]; i, x: INTEGER)
@@ -199,7 +199,31 @@ feature -- VSTTE2008: Binary search
 				lemma_larger_from_index (a, i+1, x)
 			end
 		ensure
-			 a_from_i_larger: across i |..| a.sequence.count as ai all a.sequence[ai.item] > x end
+			 a_from_i_larger: across i |..| a.sequence.count as ai all a.sequence[ai] > x end
 		end
+
+note
+	date: "$Date$"
+	revision: "$Revision$"
+	copyright:
+		"Copyright (c) 2013-2014 ETH Zurich",
+		"Copyright (c) 2018 Politecnico di Milano",
+		"Copyright (c) 2022 Schaffhausen Institute of Technology"
+	author: "Julian Tschannen", "Alexander Kogtenkov"
+	license: "GNU General Public License"
+	license_name: "GPL"
+	EIS: "name=GPL", "src=https://www.gnu.org/licenses/gpl.html", "tag=license"
+	copying: "[
+		This program is free software; you can redistribute it and/or modify it under the terms of
+		the GNU General Public License as published by the Free Software Foundation; either version 1,
+		or (at your option) any later version.
+
+		This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
+		without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+		See the GNU General Public License for more details.
+
+		You should have received a copy of the GNU General Public License along with this program.
+		If not, see <https://www.gnu.org/licenses/>.
+	]"
 
 end

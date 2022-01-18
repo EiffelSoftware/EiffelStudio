@@ -1,7 +1,5 @@
 ﻿note
 	description: "Translates Eiffel to IV AST nodes."
-	date: "$Date$"
-	revision: "$Revision$"
 
 class
 	E2B_TRANSLATOR
@@ -41,16 +39,16 @@ feature -- Element change
 			-- Add all classes and featurse from `a_input' to be translated.
 		do
 			across a_input.class_list as i loop
-				add_class (i.item)
+				add_class (i)
 			end
 			across a_input.feature_list as i loop
-				add_feature (i.item)
+				add_feature (i)
 			end
 			across a_input.feature_of_type_list as i loop
-				add_feature_of_type (i.item.f, i.item.t)
+				add_feature_of_type (i.f, i.t)
 			end
 			across a_input.class_check_list as i loop
-				translation_pool.add_class_check (i.item)
+				translation_pool.add_class_check (i)
 			end
 		end
 
@@ -135,5 +133,29 @@ feature -- Basic operations
 			l_failed := True
 			retry
 		end
+
+note
+	date: "$Date$"
+	revision: "$Revision$"
+	copyright:
+		"Copyright (c) 2010-2015 ETH Zurich",
+		"Copyright (c) 2018-2019 Politecnico di Milano",
+		"Copyright (c) 2022 Schaffhausen Institute of Technology"
+	author: "Julian Tschannen", "Nadia Polikarpova", "Alexander Kogtenkov"
+	license: "GNU General Public License"
+	license_name: "GPL"
+	EIS: "name=GPL", "src=https://www.gnu.org/licenses/gpl.html", "tag=license"
+	copying: "[
+		This program is free software; you can redistribute it and/or modify it under the terms of
+		the GNU General Public License as published by the Free Software Foundation; either version 1,
+		or (at your option) any later version.
+
+		This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
+		without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+		See the GNU General Public License for more details.
+
+		You should have received a copy of the GNU General Public License along with this program.
+		If not, see <https://www.gnu.org/licenses/>.
+	]"
 
 end

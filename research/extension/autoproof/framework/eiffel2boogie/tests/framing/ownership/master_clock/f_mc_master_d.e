@@ -38,7 +38,7 @@ feature -- Update
 			-- Increment time.
 		require
 			default_wrapped: is_wrapped
-			default_observers_wrapped: across observers as o all o.item.is_wrapped end
+			default_observers_wrapped: across observers as o all o.is_wrapped end
 			modify_field (["time", "closed"], Current)
 		do
 			unwrap
@@ -54,7 +54,7 @@ feature -- Update
 			-- Reset time to zero.
 		require
 			wrapped: is_wrapped
-			observers_open: across observers as o all o.item.is_open end
+			observers_open: across observers as o all o.is_open end
 			modify_field (["time", "closed"], Current)
 		do
 			unwrap
@@ -81,5 +81,29 @@ invariant
 	time_non_negative: 0 <= time
 	default_owns: owns = []
 	default_subjects: subjects = []
+
+note
+	date: "$Date$"
+	revision: "$Revision$"
+	copyright:
+		"Copyright (c) 2013-2014 ETH Zurich",
+		"Copyright (c) 2018 Politecnico di Milano",
+		"Copyright (c) 2022 Schaffhausen Institute of Technology"
+	author: "Julian Tschannen", "Nadia Polikarpova", "Alexander Kogtenkov"
+	license: "GNU General Public License"
+	license_name: "GPL"
+	EIS: "name=GPL", "src=https://www.gnu.org/licenses/gpl.html", "tag=license"
+	copying: "[
+		This program is free software; you can redistribute it and/or modify it under the terms of
+		the GNU General Public License as published by the Free Software Foundation; either version 1,
+		or (at your option) any later version.
+
+		This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
+		without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+		See the GNU General Public License for more details.
+
+		You should have received a copy of the GNU General Public License along with this program.
+		If not, see <https://www.gnu.org/licenses/>.
+	]"
 
 end

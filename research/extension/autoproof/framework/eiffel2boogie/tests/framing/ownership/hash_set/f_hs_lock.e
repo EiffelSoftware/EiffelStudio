@@ -63,7 +63,7 @@ feature -- Basic operations
 		require
 			wrapped: is_wrapped
 			item_locked: owns [item]
-			not_in_set: across sets as s all not s.item.set [item] end
+			not_in_set: across sets as s all not s.set [item] end
 			modify_field (["owns", "closed"], Current)
 			modify_field ("owner", [item, owns])
 		do
@@ -78,20 +78,44 @@ feature -- Basic operations
 
 invariant
 	subjects_definition: subjects = sets
-	subjects_lock: across sets as s all s.item.lock = Current end
+	subjects_lock: across sets as s all s.lock = Current end
 	owns_items: across sets as s all
-		across s.item.set as x all owns [x.item] end end
+		across s.set as x all owns [x] end end
 	no_owned_sets: subjects.is_disjoint (owns)
 	valid_buckets: across sets as s all
-		across s.item.set as x all
-			s.item.buckets.count > 0 and then
-			s.item.buckets [s.item.bucket_index (x.item.hash_code_, s.item.buckets.count)].has (x.item)
+		across s.set as x all
+			s.buckets.count > 0 and then
+			s.buckets [s.bucket_index (x.hash_code_, s.buckets.count)].has (x)
 			end end
 	no_duplicates: across sets as s all
-		across s.item.set as x all
-			across s.item.set as y all
-				x.item /= Void and y.item /= Void and then (x.item /= y.item implies not x.item.is_model_equal (y.item)) end end end
-	adm2: across sets as s all s.item.observers [Current] end
+		across s.set as x all
+			across s.set as y all
+				x /= Void and y /= Void and then (x /= y implies not x.is_model_equal (y)) end end end
+	adm2: across sets as s all s.observers [Current] end
 	no_observers: observers.is_empty
+
+note
+	date: "$Date$"
+	revision: "$Revision$"
+	copyright:
+		"Copyright (c) 2014 ETH Zurich",
+		"Copyright (c) 2018 Politecnico di Milano",
+		"Copyright (c) 2022 Schaffhausen Institute of Technology"
+	author: "Nadia Polikarpova", "Alexander Kogtenkov"
+	license: "GNU General Public License"
+	license_name: "GPL"
+	EIS: "name=GPL", "src=https://www.gnu.org/licenses/gpl.html", "tag=license"
+	copying: "[
+		This program is free software; you can redistribute it and/or modify it under the terms of
+		the GNU General Public License as published by the Free Software Foundation; either version 1,
+		or (at your option) any later version.
+
+		This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
+		without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+		See the GNU General Public License for more details.
+
+		You should have received a copy of the GNU General Public License along with this program.
+		If not, see <https://www.gnu.org/licenses/>.
+	]"
 
 end

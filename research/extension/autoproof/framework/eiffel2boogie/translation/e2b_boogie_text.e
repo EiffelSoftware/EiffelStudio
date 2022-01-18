@@ -1,7 +1,5 @@
 ﻿note
 	description: "Helper class to create Boogie code."
-	date: "$Date$"
-	revision: "$Revision$"
 
 class
 	E2B_BOOGIE_TEXT
@@ -65,12 +63,12 @@ feature -- Basic operations
 				across
 					a_text.string.split ('%N') as l
 				loop
-					if l.item.ends_with (":") and indentation_level > 0 then
+					if l.ends_with (":") and indentation_level > 0 then
 						unindent
-						put_line ("  " + l.item)
+						put_line ("  " + l)
 						indent
 					else
-						put_line (l.item)
+						put_line (l)
 					end
 				end
 			end
@@ -90,7 +88,7 @@ feature -- Basic operations
 			-- Append string `s` making sure it can be read back.
 		require
 			s_attached: attached s
-			only_regular_spaces: across s as c all c.item.is_space implies c.item = ' ' end
+			only_regular_spaces: across s as c all c.is_space implies c = ' ' end
 		local
 			e: STRING
 		do
@@ -213,5 +211,29 @@ feature {NONE} -- Implementation
 
 	internal_string: attached STRING
 			-- String used internally.
+
+;note
+	date: "$Date$"
+	revision: "$Revision$"
+	copyright:
+		"Copyright (c) 2012 ETH Zurich",
+		"Copyright (c) 2018-2019 Politecnico di Milano",
+		"Copyright (c) 2022 Schaffhausen Institute of Technology"
+	author: "Julian Tschannen", "Alexander Kogtenkov"
+	license: "GNU General Public License"
+	license_name: "GPL"
+	EIS: "name=GPL", "src=https://www.gnu.org/licenses/gpl.html", "tag=license"
+	copying: "[
+		This program is free software; you can redistribute it and/or modify it under the terms of
+		the GNU General Public License as published by the Free Software Foundation; either version 1,
+		or (at your option) any later version.
+
+		This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
+		without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+		See the GNU General Public License for more details.
+
+		You should have received a copy of the GNU General Public License along with this program.
+		If not, see <https://www.gnu.org/licenses/>.
+	]"
 
 end

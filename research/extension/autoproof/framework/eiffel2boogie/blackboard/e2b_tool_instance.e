@@ -1,10 +1,4 @@
-note
-	description: "Summary description for {E2B_TOOL_INSTANCE}."
-	author: ""
-	date: "$Date$"
-	revision: "$Revision$"
-
-class
+﻿class
 	E2B_TOOL_INSTANCE
 
 inherit
@@ -30,8 +24,8 @@ feature {EBB_TOOL_EXECUTION} -- Basic operations
 			-- Start instance.
 		do
 			create autoproof.make
-			across input.individual_classes as c loop autoproof.add_class (c.item) end
-			across input.individual_features as c loop autoproof.add_feature (c.item) end
+			across input.individual_classes as c loop autoproof.add_class (c) end
+			across input.individual_features as c loop autoproof.add_feature (c) end
 
 			autoproof.add_notification (agent update_blackboard)
 			autoproof.verify
@@ -49,7 +43,7 @@ feature {EBB_TOOL_EXECUTION} -- Basic operations
 		do
 			blackboard.record_results
 			across a_result.verification_results as c loop
-				handle_verification_result (c.item)
+				handle_verification_result (c)
 			end
 			blackboard.commit_results
 		end
@@ -79,5 +73,29 @@ feature {NONE} -- Implementation
 
 	autoproof: E2B_AUTOPROOF
 			-- Verifier
+
+;note
+	date: "$Date$"
+	revision: "$Revision$"
+	copyright:
+		"Copyright (c) 2010-2014 ETH Zurich",
+		"Copyright (c) 2018 Politecnico di Milano",
+		"Copyright (c) 2022 Schaffhausen Institute of Technology"
+	author: "Julian Tschannen", "Alexander Kogtenkov"
+	license: "GNU General Public License"
+	license_name: "GPL"
+	EIS: "name=GPL", "src=https://www.gnu.org/licenses/gpl.html", "tag=license"
+	copying: "[
+		This program is free software; you can redistribute it and/or modify it under the terms of
+		the GNU General Public License as published by the Free Software Foundation; either version 1,
+		or (at your option) any later version.
+
+		This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
+		without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+		See the GNU General Public License for more details.
+
+		You should have received a copy of the GNU General Public License along with this program.
+		If not, see <https://www.gnu.org/licenses/>.
+	]"
 
 end

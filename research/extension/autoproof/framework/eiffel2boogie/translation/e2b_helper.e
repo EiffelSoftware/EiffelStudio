@@ -1,7 +1,5 @@
 ﻿note
 	description: "Helper functions for Eiffel to Boogie translation."
-	date: "$Date$"
-	revision: "$Revision$"
 
 frozen class
 	E2B_HELPER
@@ -88,11 +86,11 @@ feature -- General note helpers
 			across
 				a_indexing_clause as i
 			loop
-				if i.item.tag.name.same_string (a_tag) then
+				if i.tag.name.same_string (a_tag) then
 					across
-						i.item.index_list as v
+						i.index_list as v
 					loop
-						Result.extend (if attached {STRING_AS} v.item as s then s.value else v.item.string_value end)
+						Result.extend (if attached {STRING_AS} v as s then s.value else v.string_value end)
 					end
 				end
 			end
@@ -165,7 +163,7 @@ feature -- Class status helpers
 		do
 			l_values := class_note_values (a_class, "status")
 			if not l_values.is_empty then
-				Result := across l_values as i some i.item.same_string (a_value)  end
+				Result := across l_values as i some i.same_string (a_value)  end
 			end
 		end
 
@@ -190,7 +188,7 @@ feature -- Feature status helpers
 		do
 			l_values := feature_note_values (a_feature, "status")
 			if not l_values.is_empty then
-				Result := across l_values as i some i.item.same_string (a_value)  end
+				Result := across l_values as i some i.same_string (a_value)  end
 			end
 		end
 
@@ -384,13 +382,13 @@ feature -- Ownership helpers
 	is_class_explicit (a_class: CLASS_C; a_type: READABLE_STRING_8): BOOLEAN
 			-- Does `a_class' list `a_type' as explicit?
 		do
-			Result := across class_note_values (a_class, "explicit") as i some i.item.same_string (a_type) or i.item.same_string ("all") end
+			Result := across class_note_values (a_class, "explicit") as i some i.same_string (a_type) or i.same_string ("all") end
 		end
 
 	is_feature_explicit (a_feature: FEATURE_I; a_type: STRING): BOOLEAN
 			-- Does `a_feature' or list `a_type' as explicit?
 		do
-			Result := across feature_note_values (a_feature, "explicit") as i some i.item.same_string (a_type) or i.item.same_string ("all") end
+			Result := across feature_note_values (a_feature, "explicit") as i some i.same_string (a_type) or i.same_string ("all") end
 		end
 
 	is_explicit (a_feature: FEATURE_I; a_type: STRING): BOOLEAN
@@ -455,11 +453,11 @@ feature -- Ownership helpers
 			create Result.make
 			Result.compare_objects
 			across all_versions (a_feature) as ver loop
-				g := string_feature_note_value (ver.item, "guard")
-				c := ver.item.written_class
+				g := string_feature_note_value (ver, "guard")
+				c := ver.written_class
 				if g.is_empty then
 						-- No guard defined
-					if ver.item.assert_id_set = Void then
+					if ver.assert_id_set = Void then
 							-- This is the original version: apply default
 						if boolean_class_note_value (c, "false_guards") then
 							Result.extend (["false", c])
@@ -476,7 +474,7 @@ feature -- Ownership helpers
 			end
 		ensure
 			non_empty: not Result.is_empty
-			each_non_empty: across Result as s all not s.item.str.is_empty end
+			each_non_empty: across Result as s all not s.str.is_empty end
 		end
 
 	attribute_from_string (a_name: READABLE_STRING_8; a_type: CL_TYPE_A; a_origin_class: CLASS_C; a_context_feature: FEATURE_I; a_context_line_number: INTEGER): FEATURE_I
@@ -586,16 +584,16 @@ feature -- Model helpers
 					end
 				else
 					across model_queries (a_class) as m loop
-						l_f := a_class.feature_named (m.item)
+						l_f := a_class.feature_named (m)
 						if l_f /= Void then
 							Result.extend (l_f)
 						else
-							add_semantic_warning (a_class, messages.unknown_attribute ({UTF_CONVERTER}.utf_8_string_8_to_string_32 (m.item), a_class.name_in_upper), -1)
+							add_semantic_warning (a_class, messages.unknown_attribute ({UTF_CONVERTER}.utf_8_string_8_to_string_32 (m), a_class.name_in_upper), -1)
 						end
 					end
 					across a_class.parents_classes as c loop
-						across flat_model_queries (c.item) as q loop
-							l_new_version := a_class.feature_of_rout_id_set (q.item.rout_id_set)
+						across flat_model_queries (c) as q loop
+							l_new_version := a_class.feature_of_rout_id_set (q.rout_id_set)
 							if not Result.has (l_new_version) then
 								Result.extend (l_new_version)
 							end
@@ -609,7 +607,7 @@ feature -- Model helpers
 	is_model_query (a_class: CLASS_C; a_feature: FEATURE_I): BOOLEAN
 			-- Is `a_feature' an immediate or inherited model query of `a_class'?
 		do
-			Result := across flat_model_queries (a_class) as f some is_same_feature (f.item, a_feature)  end
+			Result := across flat_model_queries (a_class) as f some is_same_feature (f, a_feature)  end
 		end
 
 	replaced_model_queries (a_feature: FEATURE_I; a_descendant: CLASS_C): ARRAYED_LIST [FEATURE_I]
@@ -623,14 +621,14 @@ feature -- Model helpers
 		do
 			create Result.make (5)
 			across all_versions (a_feature) as vers loop
-				l_rep_clause := feature_note_values (vers.item, "replaces")
+				l_rep_clause := feature_note_values (vers, "replaces")
 				across l_rep_clause as f loop
-					l_rep_feature := vers.item.written_class.feature_named (f.item)
+					l_rep_feature := vers.written_class.feature_named (f)
 					if attached l_rep_feature then
 						Result.extend (a_descendant.feature_of_rout_id_set (l_rep_feature.rout_id_set))
 						across replaced_model_queries (l_rep_feature, a_descendant) as q loop
-							if not Result.has (q.item) then
-								Result.extend (q.item)
+							if not Result.has (q) then
+								Result.extend (q)
 							end
 						end
 					end
@@ -653,18 +651,18 @@ feature -- Model helpers
 			create Result.make (5)
 			Result.extend (a_descendant.feature_of_rout_id_set (a_feature.rout_id_set))
 			across a_class.direct_descendants as d loop
-				if a_descendant.inherits_from (d.item) then
-					l_new_version := d.item.feature_of_rout_id_set (a_feature.rout_id_set)
-					if model_queries (d.item).has (l_new_version.feature_name) then
+				if a_descendant.inherits_from (d) then
+					l_new_version := d.feature_of_rout_id_set (a_feature.rout_id_set)
+					if model_queries (d).has (l_new_version.feature_name) then
 						create l_rep_features.make
 						l_rep_features.extend (l_new_version)
 					else
-						l_rep_features := features_with_string_note_value (d.item, "replaces", l_new_version.feature_name)
+						l_rep_features := features_with_string_note_value (d, "replaces", l_new_version.feature_name)
 					end
 					across l_rep_features as rep_f loop
-						across replacing_model_queries (rep_f.item, d.item, a_descendant) as q loop
-							if not Result.has (q.item) then
-								Result.extend (q.item)
+						across replacing_model_queries (rep_f, d, a_descendant) as q loop
+							if not Result.has (q) then
+								Result.extend (q)
 							end
 						end
 					end
@@ -695,14 +693,14 @@ feature -- Eiffel helpers
 				across
 					old_generics as g
 				loop
-					if g.item.is_formal then
+					if g.is_formal then
 						if not attached new_generics then
 							new_generics := old_generics.twin
 							r := t.twin
 							r.set_generics (new_generics)
 							Result := r
 						end
-						new_generics [g.target_index] := t.base_class.single_constraint (g.target_index)
+						new_generics [@ g.target_index] := t.base_class.single_constraint (@ g.target_index)
 					end
 				end
 			end
@@ -922,7 +920,7 @@ feature -- Byte context helpers
 			end
 		ensure
 			context_stack_count: switch_count = old switch_count + 1
-			context_stack_unchanged: across old context_stack as i all context_stack [i.target_index] = i.item end
+			context_stack_unchanged: across old context_stack as i all context_stack [@ i.target_index] = i end
 		end
 
 	unswitch_byte_context
@@ -942,7 +940,7 @@ feature -- Byte context helpers
 			context.restore_class_type_context
 		ensure
 			context_stack_count: switch_count = old switch_count - 1
-			context_stack_unchanged: across context_stack as i all (old context_stack) [i.target_index] = i.item end
+			context_stack_unchanged: across context_stack as i all (old context_stack) [@ i.target_index] = i end
 		end
 
 	switch_count: NATURAL_32
@@ -1106,5 +1104,29 @@ feature {NONE} -- Implementation
 		once
 			create Result.make (50)
 		end
+
+note
+	date: "$Date$"
+	revision: "$Revision$"
+	copyright:
+		"Copyright (c) 2012-2015 ETH Zurich",
+		"Copyright (c) 2018-2019 Politecnico di Milano",
+		"Copyright (c) 2022 Schaffhausen Institute of Technology"
+	author: "Julian Tschannen", "Nadia Polikarpova", "Alexander Kogtenkov"
+	license: "GNU General Public License"
+	license_name: "GPL"
+	EIS: "name=GPL", "src=https://www.gnu.org/licenses/gpl.html", "tag=license"
+	copying: "[
+		This program is free software; you can redistribute it and/or modify it under the terms of
+		the GNU General Public License as published by the Free Software Foundation; either version 1,
+		or (at your option) any later version.
+
+		This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
+		without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+		See the GNU General Public License for more details.
+
+		You should have received a copy of the GNU General Public License along with this program.
+		If not, see <https://www.gnu.org/licenses/>.
+	]"
 
 end

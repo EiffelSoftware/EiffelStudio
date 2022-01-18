@@ -23,7 +23,7 @@ feature
 			check s2.count = 1 end
 			create s1.singleton (1)
 			check s1.count = 1 end
-			check across s1 as i all i.item = 1 end end
+			check across s1 as i all i = 1 end end
 
 			s1 := create {MML_SET[INTEGER]}.singleton (5)
 			check s1 ~ create {MML_SET[INTEGER]}.singleton (5) end
@@ -33,7 +33,7 @@ feature
 	good1 (s: MML_SET [A_SETS])
 		require
 			not s.is_empty
-			across s as x all x.item /= Void  end
+			across s as x all x /= Void  end
 		do
 			check attached {A_SETS} s.any_item end
 		end
@@ -77,5 +77,29 @@ feature
 
 invariant
 	subjects = []
+
+note
+	date: "$Date$"
+	revision: "$Revision$"
+	copyright:
+		"Copyright (c) 2013-2014 ETH Zurich",
+		"Copyright (c) 2018 Politecnico di Milano",
+		"Copyright (c) 2022 Schaffhausen Institute of Technology"
+	author: "Julian Tschannen", "Nadia Polikarpova", "Alexander Kogtenkov"
+	license: "GNU General Public License"
+	license_name: "GPL"
+	EIS: "name=GPL", "src=https://www.gnu.org/licenses/gpl.html", "tag=license"
+	copying: "[
+		This program is free software; you can redistribute it and/or modify it under the terms of
+		the GNU General Public License as published by the Free Software Foundation; either version 1,
+		or (at your option) any later version.
+
+		This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
+		without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+		See the GNU General Public License for more details.
+
+		You should have received a copy of the GNU General Public License along with this program.
+		If not, see <https://www.gnu.org/licenses/>.
+	]"
 
 end

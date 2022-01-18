@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
-<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-21-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-21-0 http://www.eiffel.com/developers/xml/configuration-1-21-0.xsd" name="eve_blackboard" uuid="369BA65F-45C4-4E90-9409-89CA61983B25" library_target="eve_blackboard">
+<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-22-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-22-0 http://www.eiffel.com/developers/xml/configuration-1-22-0.xsd" name="eve_blackboard" uuid="369BA65F-45C4-4E90-9409-89CA61983B25" library_target="eve_blackboard">
 	<target name="eve_blackboard">
 		<root all_classes="true"/>
 		<file_rule>

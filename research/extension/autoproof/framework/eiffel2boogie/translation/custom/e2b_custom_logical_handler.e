@@ -1,7 +1,5 @@
 ﻿note
 	description: "A handler for calls where target type is a logical class."
-	date: "$Date$"
-	revision: "$Revision$"
 
 class
 	E2B_CUSTOM_LOGICAL_HANDLER
@@ -107,7 +105,7 @@ feature {NONE} -- Implementation
 				across
 					a_translator.last_parameters as params
 				loop
-					l_args.extend (params.item)
+					l_args.extend (params)
 				end
 				a_translator.set_last_expression (factory.map_access (a_translator.current_target, l_args))
 			else
@@ -124,7 +122,7 @@ feature {NONE} -- Implementation
 				across
 					a_translator.last_parameters as params
 				loop
-					l_fcall.add_argument (params.item)
+					l_fcall.add_argument (params)
 				end
 				a_translator.set_last_expression (l_fcall)
 					-- Add precondition check				
@@ -145,13 +143,13 @@ feature {NONE} -- Implementation
 				l_elem_type := types.ref -- TODO: wrong elem type for empty tuples/arrays
 				if attached {TUPLE_CONST_B} x.expr as l_tuple then
 					across l_tuple.expressions as i loop
-						i.item.process (a_translator)
+						i.process (a_translator)
 						l_exprs.extend (a_translator.last_expression)
 						l_elem_type := a_translator.last_expression.type
 					end
 				elseif attached {ARRAY_CONST_B} x.expr as l_array then
 					across l_array.expressions as i loop
-						i.item.process (a_translator)
+						i.process (a_translator)
 						l_exprs.extend (a_translator.last_expression)
 						l_elem_type := a_translator.last_expression.type
 					end
@@ -188,5 +186,29 @@ feature {NONE} -- Implementation
 				end
 			end
 		end
+
+note
+	date: "$Date$"
+	revision: "$Revision$"
+	copyright:
+		"Copyright (c) 2013-2014 ETH Zurich",
+		"Copyright (c) 2018-2019 Politecnico di Milano",
+		"Copyright (c) 2022 Schaffhausen Institute of Technology"
+	author: "Julian Tschannen", "Nadia Polikarpova", "Alexander Kogtenkov"
+	license: "GNU General Public License"
+	license_name: "GPL"
+	EIS: "name=GPL", "src=https://www.gnu.org/licenses/gpl.html", "tag=license"
+	copying: "[
+		This program is free software; you can redistribute it and/or modify it under the terms of
+		the GNU General Public License as published by the Free Software Foundation; either version 1,
+		or (at your option) any later version.
+
+		This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
+		without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+		See the GNU General Public License for more details.
+
+		You should have received a copy of the GNU General Public License along with this program.
+		If not, see <https://www.gnu.org/licenses/>.
+	]"
 
 end

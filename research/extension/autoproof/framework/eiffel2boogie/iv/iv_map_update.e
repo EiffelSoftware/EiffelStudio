@@ -1,7 +1,5 @@
 ﻿note
 	description: "Map update expression."
-	date: "$Date$"
-	revision: "$Revision$"
 
 class
 	IV_MAP_UPDATE
@@ -23,7 +21,7 @@ feature {NONE} -- Implementation
 		require
 			a_target_attached: attached a_target
 			a_target_valid: attached {IV_MAP_TYPE} a_target.type as t and then t.domain_types.count = a_indexes.count
-			a_indexes_attached: attached a_indexes and then across a_indexes as i all attached i.item end
+			a_indexes_attached: attached a_indexes and then across a_indexes as i all attached i end
 			a_value_attached: attached a_value
 		do
 			target := a_target
@@ -57,11 +55,11 @@ feature -- Access
 			-- If one of the indexes/value is `a_bound_var', use the whole map update; other combine triggers for all indexes/value.
 		do
 			create Result.make (3)
-			if across indexes as i some i.item.same_expression (a_bound_var) end or value.same_expression (a_bound_var) then
+			if across indexes as i some i.same_expression (a_bound_var) end or value.same_expression (a_bound_var) then
 				Result.extend (Current)
 			else
 				across indexes as i loop
-					Result.append (i.item.triggers_for (a_bound_var))
+					Result.append (i.triggers_for (a_bound_var))
 				end
 				Result.append (value.triggers_for (a_bound_var))
 			end
@@ -81,9 +79,9 @@ feature -- Access
 			across
 				indexes as i
 			loop
-				l_res := i.item.with_simple_vars (a_bound_var)
+				l_res := i.with_simple_vars (a_bound_var)
 				l_subst.append (l_res.subst) -- Preserve substitution that happened in the argument
-				if i.item.is_arithmetic and i.item.has_free_var_named (a_bound_var.name) then
+				if i.is_arithmetic and i.has_free_var_named (a_bound_var.name) then
 					-- Argument is a nontrivial expression with a bound variable: replace with a fresh bound variable
 					l_fresh_var := factory.unique_entity (a_bound_var.name, l_res.expr.type)
 					l_indexes.extend (l_fresh_var)
@@ -106,7 +104,7 @@ feature -- Status report
 			-- Does this expression contain a free variable with name `a_name'?
 		do
 			Result := target.has_free_var_named (a_name) or
-				across indexes as i some i.item.has_free_var_named (a_name) end or
+				across indexes as i some i.has_free_var_named (a_name) end or
 				value.has_free_var_named (a_name)
 		end
 
@@ -118,7 +116,7 @@ feature -- Comparison
 			Result := attached {IV_MAP_UPDATE} a_other as m and then
 				(target.same_expression (m.target) and
 				indexes.count = m.indexes.count and
-				across 1 |..| indexes.count as i all indexes [i.item].same_expression (m.indexes [i.item]) end and
+				across 1 |..| indexes.count as i all indexes [i].same_expression (m.indexes [i]) end and
 				value.same_expression (m.value))
 		end
 
@@ -136,5 +134,29 @@ invariant
 	target_valid: attached {IV_MAP_TYPE} target.type as t and then t.domain_types.count = indexes.count
 	indexes_nonempty: not indexes.is_empty
 	value_attached: attached value
+
+note
+	date: "$Date$"
+	revision: "$Revision$"
+	copyright:
+		"Copyright (c) 2014 ETH Zurich",
+		"Copyright (c) 2018-2019 Politecnico di Milano",
+		"Copyright (c) 2022 Schaffhausen Institute of Technology"
+	author: "Nadia Polikarpova", "Alexander Kogtenkov"
+	license: "GNU General Public License"
+	license_name: "GPL"
+	EIS: "name=GPL", "src=https://www.gnu.org/licenses/gpl.html", "tag=license"
+	copying: "[
+		This program is free software; you can redistribute it and/or modify it under the terms of
+		the GNU General Public License as published by the Free Software Foundation; either version 1,
+		or (at your option) any later version.
+
+		This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
+		without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+		See the GNU General Public License for more details.
+
+		You should have received a copy of the GNU General Public License along with this program.
+		If not, see <https://www.gnu.org/licenses/>.
+	]"
 
 end

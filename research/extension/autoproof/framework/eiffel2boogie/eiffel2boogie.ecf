@@ -19,13 +19,14 @@
 			<exclude>/.svn$</exclude>
 			<exclude>EIFGENs</exclude>
 		</file_rule>
-		<option warning="error" is_obsolete_iteration="true">
+		<option warning="error">
 		</option>
 		<capability>
 			<concurrency support="none"/>
 			<void_safety support="none"/>
 		</capability>
 		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf"/>
+		<library name="base_process" location="$ISE_LIBRARY\library\process\base\base_process.ecf"/>
 		<library name="compiler" location="$EIFFEL_SRC\Eiffel\Ace\ec_kernel.ecf"/>
 		<library name="configuration" location="$EIFFEL_SRC\framework\configuration\configuration_parser.ecf"/>
 		<library name="ecosystem" location="$EIFFEL_SRC\Eiffel\ecosystem\ecosystem.ecf"/>
@@ -37,11 +38,8 @@
 		<library name="net" location="$ISE_LIBRARY\library\net\net.ecf"/>
 		<library name="parser" location="$ISE_LIBRARY\framework\parser\parser.ecf"/>
 		<library name="patterns" location="$ISE_LIBRARY\library\patterns\patterns.ecf"/>
-		<library name="base_process" location="$ISE_LIBRARY\library\process\base\base_process.ecf"/>
 		<library name="time" location="$EIFFEL_SRC\library\time\time.ecf"/>
 		<cluster name="eiffel2boogie" location=".\" recursive="true">
-			<option is_obsolete_iteration="true">
-			</option>
 			<file_rule>
 				<exclude>/tests$</exclude>
 				<exclude>remote</exclude>

@@ -1,7 +1,5 @@
 ﻿note
 	description: "Item associated to a feature."
-	date: "$Date$"
-	revision: "$Revision$"
 
 deferred class
 	EBB_FEATURE_ASSOCIATION
@@ -51,7 +49,7 @@ feature -- Access
 	qualified_feature_name: STRING_32
 			-- Name of feature associated with this data in the form {CLASS}.feature.
 		do
-			Result := "{" + class_name + "}." + feature_name
+			Result := {STRING_32} "{" + class_name + "}." + feature_name
 		end
 
 	associated_feature: FEATURE_I
@@ -64,5 +62,29 @@ invariant
 	feature_id_set: feature_id > 0
 	associated_feature_set: associated_feature /= Void
 	associated_feature_consistent: associated_feature.written_in = class_id and associated_feature.feature_id = feature_id
+
+note
+	date: "$Date$"
+	revision: "$Revision$"
+	copyright:
+		"Copyright (c) 2010-2011 ETH Zurich",
+		"Copyright (c) 2018-2019 Politecnico di Milano",
+		"Copyright (c) 2022 Schaffhausen Institute of Technology"
+	author: "Julian Tschannen", "Alexander Kogtenkov"
+	license: "GNU General Public License"
+	license_name: "GPL"
+	EIS: "name=GPL", "src=https://www.gnu.org/licenses/gpl.html", "tag=license"
+	copying: "[
+		This program is free software; you can redistribute it and/or modify it under the terms of
+		the GNU General Public License as published by the Free Software Foundation; either version 1,
+		or (at your option) any later version.
+
+		This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
+		without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+		See the GNU General Public License for more details.
+
+		You should have received a copy of the GNU General Public License along with this program.
+		If not, see <https://www.gnu.org/licenses/>.
+	]"
 
 end

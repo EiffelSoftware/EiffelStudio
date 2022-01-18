@@ -1,9 +1,7 @@
-note
+﻿note
 	description: "[
 		Translation unit for a (possibly partial) class invariant of an Eiffel class.
 	]"
-	date: "$Date$"
-	revision: "$Revision$"
 
 class
 	E2B_TU_INVARIANT
@@ -41,12 +39,12 @@ feature {NONE} -- Implementation
 			included := a_included
 			if included /= Void then
 				included.compare_objects
-				across included as i loop id.append ("+" + i.item) end
+				across included as i loop id.append ("+" + i) end
 			end
 			excluded := a_excluded
 			if excluded /= Void then
 				excluded.compare_objects
-				across excluded as i loop id.append ("-" + i.item) end
+				across excluded as i loop id.append ("-" + i) end
 			end
 			if a_ancestor /= Void then
 				ancestor := a_ancestor
@@ -90,5 +88,29 @@ feature -- Basic operations
 invariant
 	ancestor_exists: not (included = Void and excluded = Void) implies ancestor /= Void
 	not_both: included = Void or excluded = Void
+
+note
+	date: "$Date$"
+	revision: "$Revision$"
+	copyright:
+		"Copyright (c) 2013-2014 ETH Zurich",
+		"Copyright (c) 2018 Politecnico di Milano",
+		"Copyright (c) 2022 Schaffhausen Institute of Technology"
+	author: "Julian Tschannen", "Nadia Polikarpova", "Alexander Kogtenkov"
+	license: "GNU General Public License"
+	license_name: "GPL"
+	EIS: "name=GPL", "src=https://www.gnu.org/licenses/gpl.html", "tag=license"
+	copying: "[
+		This program is free software; you can redistribute it and/or modify it under the terms of
+		the GNU General Public License as published by the Free Software Foundation; either version 1,
+		or (at your option) any later version.
+
+		This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
+		without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+		See the GNU General Public License for more details.
+
+		You should have received a copy of the GNU General Public License along with this program.
+		If not, see <https://www.gnu.org/licenses/>.
+	]"
 
 end

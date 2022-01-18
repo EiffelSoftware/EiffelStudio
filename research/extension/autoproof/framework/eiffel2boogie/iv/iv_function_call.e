@@ -1,11 +1,4 @@
-note
-	description: "[
-		TODO
-	]"
-	date: "$Date$"
-	revision: "$Revision$"
-
-class
+﻿class
 	IV_FUNCTION_CALL
 
 inherit
@@ -50,11 +43,11 @@ feature -- Access
 			-- If one of the arguments is `a_bound_var', use the function call; other combine triggers for all arguments.
 		do
 			create Result.make (3)
-			if across arguments as i some i.item.same_expression (a_bound_var) end then
+			if across arguments as i some i.same_expression (a_bound_var) end then
 				Result.extend (Current)
 			else
 				across arguments as i loop
-					Result.append (i.item.triggers_for (a_bound_var))
+					Result.append (i.triggers_for (a_bound_var))
 				end
 			end
 		end
@@ -73,9 +66,9 @@ feature -- Access
 			across
 				arguments as i
 			loop
-				l_res_arg := i.item.with_simple_vars (a_bound_var)
+				l_res_arg := i.with_simple_vars (a_bound_var)
 				l_subst.append (l_res_arg.subst) -- Preserve substitution that happened in the argument
-				if i.item.is_arithmetic and i.item.has_free_var_named (a_bound_var.name) then
+				if i.is_arithmetic and i.has_free_var_named (a_bound_var.name) then
 					-- Argument is an arithmetic expression with a bound variable: replace with a fresh bound variable
 					l_fresh_var := factory.unique_entity (a_bound_var.name, l_res_arg.expr.type)
 					l_fcall.arguments.extend (l_fresh_var)
@@ -93,7 +86,7 @@ feature -- Status report
 	has_free_var_named (a_name: READABLE_STRING_8): BOOLEAN
 			-- Does this expression contain a free variable with name `a_name'?
 		do
-			Result := across arguments as i some i.item.has_free_var_named (a_name) end
+			Result := across arguments as i some i.has_free_var_named (a_name) end
 		end
 
 feature -- Comparison
@@ -103,7 +96,7 @@ feature -- Comparison
 		do
 			Result := attached {IV_FUNCTION_CALL} a_other as c and then
 				(name ~ c.name and arguments.count = c.arguments.count and
-				across 1 |..| arguments.count as i all arguments [i.item].same_expression (c.arguments [i.item]) end)
+				across 1 |..| arguments.count as i all arguments [i].same_expression (c.arguments [i]) end)
 		end
 
 feature -- Element change
@@ -128,5 +121,29 @@ invariant
 	name_valid: is_valid_name (name)
 	arguments_attached: attached arguments
 	arguments_valid: not arguments.has (Void)
+
+note
+	date: "$Date$"
+	revision: "$Revision$"
+	copyright:
+		"Copyright (c) 2012-2014 ETH Zurich",
+		"Copyright (c) 2018-2019 Politecnico di Milano",
+		"Copyright (c) 2022 Schaffhausen Institute of Technology"
+	author: "Julian Tschannen", "Nadia Polikarpova", "Alexander Kogtenkov"
+	license: "GNU General Public License"
+	license_name: "GPL"
+	EIS: "name=GPL", "src=https://www.gnu.org/licenses/gpl.html", "tag=license"
+	copying: "[
+		This program is free software; you can redistribute it and/or modify it under the terms of
+		the GNU General Public License as published by the Free Software Foundation; either version 1,
+		or (at your option) any later version.
+
+		This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
+		without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+		See the GNU General Public License for more details.
+
+		You should have received a copy of the GNU General Public License along with this program.
+		If not, see <https://www.gnu.org/licenses/>.
+	]"
 
 end

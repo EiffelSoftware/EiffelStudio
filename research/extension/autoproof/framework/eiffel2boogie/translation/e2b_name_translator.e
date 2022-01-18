@@ -1,7 +1,5 @@
 ﻿note
 	description: "Translator to map Eiffel names to Boogie names."
-	date: "$Date$"
-	revision: "$Revision$"
 
 class
 	E2B_NAME_TRANSLATOR
@@ -199,11 +197,11 @@ feature -- Access
 			l_filter_string := ""
 			if a_included /= Void then
 				l_filter_string.append ("#I")
-				across a_included as i loop l_filter_string.append ("#" + i.item) end
+				across a_included as i loop l_filter_string.append ("#" + i) end
 			end
 			if a_excluded /= Void then
 				l_filter_string.append ("#E")
-				across a_excluded as i loop l_filter_string.append ("#" + i.item) end
+				across a_excluded as i loop l_filter_string.append ("#" + i) end
 			end
 			if a_ancestor.class_id /= a_type.base_class.class_id then
 				l_filter_string.append ("#A#" + a_ancestor.name_in_upper)
@@ -415,5 +413,29 @@ feature -- Name adaptation
 		do
 			Result := f.feature_name
 		end
+
+note
+	date: "$Date$"
+	revision: "$Revision$"
+	copyright:
+		"Copyright (c) 2012-2014 ETH Zurich",
+		"Copyright (c) 2018-2019 Politecnico di Milano",
+		"Copyright (c) 2022 Schaffhausen Institute of Technology"
+	author: "Julian Tschannen", "Nadia Polikarpova", "Alexander Kogtenkov"
+	license: "GNU General Public License"
+	license_name: "GPL"
+	EIS: "name=GPL", "src=https://www.gnu.org/licenses/gpl.html", "tag=license"
+	copying: "[
+		This program is free software; you can redistribute it and/or modify it under the terms of
+		the GNU General Public License as published by the Free Software Foundation; either version 1,
+		or (at your option) any later version.
+
+		This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
+		without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+		See the GNU General Public License for more details.
+
+		You should have received a copy of the GNU General Public License along with this program.
+		If not, see <https://www.gnu.org/licenses/>.
+	]"
 
 end

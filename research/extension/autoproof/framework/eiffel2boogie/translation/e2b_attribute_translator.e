@@ -1,7 +1,5 @@
 ﻿note
 	description: "Translator for Eiffel attributes."
-	date: "$Date$"
-	revision: "$Revision$"
 
 class
 	E2B_ATTRIBUTE_TRANSLATOR
@@ -109,7 +107,7 @@ feature -- Basic operations
 			l_fcall := factory.function_call ("guard", << l_h, l_cur, l_f, l_v, l_o >>, types.bool)
 			l_def := factory.true_
 			across helper.guards_for_attribute (current_feature) as g loop
-				l_def := factory.and_clean (l_def, guard_from_string (g.item.str, g.item.origin, a_type, l_h, l_cur, l_f, l_v, l_o))
+				l_def := factory.and_clean (l_def, guard_from_string (g.str, g.origin, a_type, l_h, l_cur, l_f, l_v, l_o))
 			end
 
 			factory.add_dynamic_predicate_definition (l_fcall, l_def, current_type, l_h, l_cur, <<l_v, l_o>>)
@@ -184,14 +182,14 @@ feature {NONE} -- Implementation
 			across
 				a_class.parents_classes as c
 			loop
-				l_feature := c.item.feature_of_rout_id_set (current_feature.rout_id_set)
+				l_feature := c.feature_of_rout_id_set (current_feature.rout_id_set)
 				if attached l_feature and then l_feature.is_attribute then
 						-- Check that properties match
 					if helper.is_ghost (l_feature) /= helper.is_ghost (current_feature) then
 						helper.add_semantic_error (current_feature, messages.invalid_ghost_status (l_feature.feature_name_32, l_feature.written_class.name_in_upper), -1)
 					end
 
-					l_parent_type := helper.class_type_from_class (c.item, current_type)
+					l_parent_type := helper.class_type_from_class (c, current_type)
 					l_old_name := name_translator.boogie_procedure_for_feature (l_feature, l_parent_type)
 					translation_pool.add_parent_type (l_parent_type)
 					if boogie_universe.constant_named (l_old_name) = Void then
@@ -199,7 +197,7 @@ feature {NONE} -- Implementation
 					end
 					boogie_universe.add_declaration (create {IV_AXIOM}.make (factory.equal (l_f, create {IV_ENTITY}.make (l_old_name, l_f.type))))
 
-					generate_equivalences_for_class (c.item)
+					generate_equivalences_for_class (c)
 				end
 			end
 		end
@@ -281,23 +279,47 @@ feature {NONE} -- Implementation
 		do
 			if current_feature.written_in = current_type.base_class.class_id then
 				across helper.feature_note_values (current_feature, "replaces") as f loop
-					l_replaced := current_type.base_class.feature_named (f.item)
+					l_replaced := current_type.base_class.feature_named (f)
 					if attached l_replaced then
 						across current_type.base_class.parents_classes as c until found loop
-							l_old_version := c.item.feature_of_rout_id_set (current_feature.rout_id_set)
+							l_old_version := c.feature_of_rout_id_set (current_feature.rout_id_set)
 								-- If both `current_feature' and `l_replaced' are model queries of `c.item',
 								-- this will cause child's model frames to be bigger than parent's
 							if attached l_old_version and then
-									(helper.is_model_query (c.item, l_old_version) and helper.is_model_query (c.item, l_replaced)) then
-								helper.add_semantic_error (current_feature, messages.invalid_model_replacement (current_feature.feature_name_32, c.item.name_in_upper), -1)
+									(helper.is_model_query (c, l_old_version) and helper.is_model_query (c, l_replaced)) then
+								helper.add_semantic_error (current_feature, messages.invalid_model_replacement (current_feature.feature_name_32, c.name_in_upper), -1)
 								found := True
 							end
 						end
 					else
-						helper.add_semantic_error (current_feature, messages.unknown_model ({UTF_CONVERTER}.utf_8_string_8_to_string_32 (f.item), current_type.base_class.name_in_upper), -1)
+						helper.add_semantic_error (current_feature, messages.unknown_model ({UTF_CONVERTER}.utf_8_string_8_to_string_32 (f), current_type.base_class.name_in_upper), -1)
 					end
 				end
 			end
 		end
+
+note
+	date: "$Date$"
+	revision: "$Revision$"
+	copyright:
+		"Copyright (c) 2012-2014 ETH Zurich",
+		"Copyright (c) 2018-2019 Politecnico di Milano",
+		"Copyright (c) 2022 Schaffhausen Institute of Technology"
+	author: "Julian Tschannen", "Nadia Polikarpova", "Alexander Kogtenkov"
+	license: "GNU General Public License"
+	license_name: "GPL"
+	EIS: "name=GPL", "src=https://www.gnu.org/licenses/gpl.html", "tag=license"
+	copying: "[
+		This program is free software; you can redistribute it and/or modify it under the terms of
+		the GNU General Public License as published by the Free Software Foundation; either version 1,
+		or (at your option) any later version.
+
+		This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
+		without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+		See the GNU General Public License for more details.
+
+		You should have received a copy of the GNU General Public License along with this program.
+		If not, see <https://www.gnu.org/licenses/>.
+	]"
 
 end

@@ -1,7 +1,5 @@
 ﻿note
 	description: "User-defined Boogie types; consist of a type constructor with zero or more parameters."
-	date: "$Date$"
-	revision: "$Revision$"
 
 class
 	IV_USER_TYPE
@@ -26,7 +24,7 @@ feature {NONE} -- Initialization
 		require
 			a_constructor_exists: a_constructor /= Void
 			a_params_exists: a_params /= Void
-			all_params_exist: across a_params as p all p.item /= Void end
+			all_params_exist: across a_params as p all p /= Void end
 		do
 			constructor := a_constructor
 			parameters := a_params
@@ -119,5 +117,30 @@ feature {NONE} -- Implementation
 invariant
 	constructor_exists: constructor /= Void
 	params_exists: parameters /= Void
-	all_params_exist: across parameters as p all p.item /= Void end
+	all_params_exist: across parameters as p all p /= Void end
+
+note
+	date: "$Date$"
+	revision: "$Revision$"
+	copyright:
+		"Copyright (c) 2014 ETH Zurich",
+		"Copyright (c) 2018-2019 Politecnico di Milano",
+		"Copyright (c) 2022 Schaffhausen Institute of Technology"
+	author: "Nadia Polikarpova", "Alexander Kogtenkov"
+	license: "GNU General Public License"
+	license_name: "GPL"
+	EIS: "name=GPL", "src=https://www.gnu.org/licenses/gpl.html", "tag=license"
+	copying: "[
+		This program is free software; you can redistribute it and/or modify it under the terms of
+		the GNU General Public License as published by the Free Software Foundation; either version 1,
+		or (at your option) any later version.
+
+		This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
+		without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+		See the GNU General Public License for more details.
+
+		You should have received a copy of the GNU General Public License along with this program.
+		If not, see <https://www.gnu.org/licenses/>.
+	]"
+
 end

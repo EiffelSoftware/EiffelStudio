@@ -1,8 +1,4 @@
-﻿note
-	date: "$Date$"
-	revision: "$Revision$"
-
-class
+﻿class
 	E2B_BODY_EXPRESSION_TRANSLATOR
 
 inherit
@@ -218,7 +214,7 @@ feature -- Visitors
 			create l_proc_call.make (name_translator.boogie_procedure_for_tuple_creation (l_type))
 			l_proc_call.add_argument (l_local)
 			across a_node.expressions as i loop
-				l_proc_call.add_argument (process_argument_expression (i.item))
+				l_proc_call.add_argument (process_argument_expression (i))
 			end
 			l_block.add_statement (l_proc_call)
 
@@ -453,7 +449,7 @@ feature -- Translation
 			l_entity_mapping.set_current (current_target)
 				-- Map arguments
 			across last_parameters as l_args loop
-				l_entity_mapping.set_argument (l_args.cursor_index, l_args.item)
+				l_entity_mapping.set_argument (@ l_args.cursor_index, l_args)
 			end
 				-- Map `Result'
 			if a_feature.has_return_value then
@@ -507,5 +503,29 @@ feature -- Translation
 			l_if.then_block.add_statement (create {IV_ASSERT}.make_assume (factory.false_))
 			side_effect.extend (l_if)
 		end
+
+note
+	date: "$Date$"
+	revision: "$Revision$"
+	copyright:
+		"Copyright (c) 2012-2015 ETH Zurich",
+		"Copyright (c) 2018-2019 Politecnico di Milano",
+		"Copyright (c) 2022 Schaffhausen Institute of Technology"
+	author: "Julian Tschannen", "Nadia Polikarpova", "Alexander Kogtenkov"
+	license: "GNU General Public License"
+	license_name: "GPL"
+	EIS: "name=GPL", "src=https://www.gnu.org/licenses/gpl.html", "tag=license"
+	copying: "[
+		This program is free software; you can redistribute it and/or modify it under the terms of
+		the GNU General Public License as published by the Free Software Foundation; either version 1,
+		or (at your option) any later version.
+
+		This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
+		without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+		See the GNU General Public License for more details.
+
+		You should have received a copy of the GNU General Public License along with this program.
+		If not, see <https://www.gnu.org/licenses/>.
+	]"
 
 end

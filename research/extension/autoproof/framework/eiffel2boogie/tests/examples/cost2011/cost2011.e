@@ -16,8 +16,8 @@ feature -- COST 2011: Maximum in an array
 			invariant
 				1 <= x and y <= a.count
 				y >= x
-				across 1 |..| x as i all a.sequence[i.item] <= a.sequence[x] or a.sequence[i.item] <= a.sequence[y] end
-				across y |..| a.count as i all a.sequence[i.item] <= a[x] or a.sequence[i.item] <= a.sequence[y] end
+				across 1 |..| x as i all a.sequence[i] <= a.sequence[x] or a.sequence[i] <= a.sequence[y] end
+				across y |..| a.count as i all a.sequence[i] <= a[x] or a.sequence[i] <= a.sequence[y] end
 			until
 				x = y
 			loop
@@ -32,8 +32,32 @@ feature -- COST 2011: Maximum in an array
 			Result := x
 		ensure
 			result_in_range: 1 <= Result and Result <= a.count
-			result_is_max1: across 1 |..| a.count as i all a[i.item] <= a[Result] end
-			result_is_max2: across a as i all i.item <= a[Result] end
+			result_is_max1: across 1 |..| a.count as i all a[i] <= a[Result] end
+			result_is_max2: across a as i all i <= a[Result] end
 		end
+
+note
+	date: "$Date$"
+	revision: "$Revision$"
+	copyright:
+		"Copyright (c) 2013-2014 ETH Zurich",
+		"Copyright (c) 2018 Politecnico di Milano",
+		"Copyright (c) 2022 Schaffhausen Institute of Technology"
+	author: "Julian Tschannen", "Alexander Kogtenkov"
+	license: "GNU General Public License"
+	license_name: "GPL"
+	EIS: "name=GPL", "src=https://www.gnu.org/licenses/gpl.html", "tag=license"
+	copying: "[
+		This program is free software; you can redistribute it and/or modify it under the terms of
+		the GNU General Public License as published by the Free Software Foundation; either version 1,
+		or (at your option) any later version.
+
+		This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
+		without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+		See the GNU General Public License for more details.
+
+		You should have received a copy of the GNU General Public License along with this program.
+		If not, see <https://www.gnu.org/licenses/>.
+	]"
 
 end

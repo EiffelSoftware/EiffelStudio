@@ -1,7 +1,5 @@
-note
+﻿note
 	description: "Blackboard data for the system."
-	date: "$Date$"
-	revision: "$Revision$"
 
 class
 	EBB_SYSTEM_DATA
@@ -148,7 +146,7 @@ feature -- Update
 			l_class := class_data (a_class)
 			if l_class /= Void then
 				across l_class.children as l_children loop
-					remove_feature (l_children.item.associated_feature)
+					remove_feature (l_children.associated_feature)
 				end
 			end
 			class_data_table.remove (a_class.name)
@@ -220,7 +218,7 @@ feature {NONE} -- Implementation
 				-- Update classes of this cluster
 			if attached a_cluster.classes then
 				across a_cluster.classes as c loop
-					add_class (universe.classes_with_name (c.item.name).first)
+					add_class (universe.classes_with_name (c.name).first)
 				end
 			end
 		end
@@ -269,5 +267,29 @@ feature {NONE} -- Implementation
 				l_feature_data.set_stale
 			end
 		end
+
+note
+	date: "$Date$"
+	revision: "$Revision$"
+	copyright:
+		"Copyright (c) 2010-2014 ETH Zurich",
+		"Copyright (c) 2018-2019 Politecnico di Milano",
+		"Copyright (c) 2022 Schaffhausen Institute of Technology"
+	author: "Julian Tschannen", "Alexander Kogtenkov"
+	license: "GNU General Public License"
+	license_name: "GPL"
+	EIS: "name=GPL", "src=https://www.gnu.org/licenses/gpl.html", "tag=license"
+	copying: "[
+		This program is free software; you can redistribute it and/or modify it under the terms of
+		the GNU General Public License as published by the Free Software Foundation; either version 1,
+		or (at your option) any later version.
+
+		This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
+		without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+		See the GNU General Public License for more details.
+
+		You should have received a copy of the GNU General Public License along with this program.
+		If not, see <https://www.gnu.org/licenses/>.
+	]"
 
 end

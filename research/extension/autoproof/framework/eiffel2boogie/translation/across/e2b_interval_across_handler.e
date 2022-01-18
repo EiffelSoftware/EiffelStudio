@@ -1,11 +1,4 @@
-note
-	description: "[
-		TODO
-	]"
-	date: "$Date$"
-	revision: "$Revision$"
-
-class
+﻿class
 	E2B_INTERVAL_ACROSS_HANDLER
 
 inherit
@@ -88,7 +81,7 @@ feature {NONE} -- Implementation
 				l_guard := guard (a_bound_var)
 				l_res := a_expr.with_simple_vars (a_bound_var)
 				across l_res.subst as s loop
-					l_guard := factory.and_ (l_guard, factory.equal (s.item.var, s.item.val))
+					l_guard := factory.and_ (l_guard, factory.equal (s.var, s.val))
 				end
 
 				if a_is_all then
@@ -98,7 +91,7 @@ feature {NONE} -- Implementation
 				end
 				Result.add_bound_variable (a_bound_var)
 				across l_res.subst as s loop
-					Result.add_bound_variable (s.item.var)
+					Result.add_bound_variable (s.var)
 				end
 			else
 				Result := Precursor (a_bound_var, a_expr, a_is_all)
@@ -117,5 +110,29 @@ feature {NONE} -- Implementation
 		do
 			a_quantifier.add_restrictive_trigger
 		end
+
+note
+	date: "$Date$"
+	revision: "$Revision$"
+	copyright:
+		"Copyright (c) 2012-2014 ETH Zurich",
+		"Copyright (c) 2018 Politecnico di Milano",
+		"Copyright (c) 2022 Schaffhausen Institute of Technology"
+	author: "Julian Tschannen", "Nadia Polikarpova", "Alexander Kogtenkov"
+	license: "GNU General Public License"
+	license_name: "GPL"
+	EIS: "name=GPL", "src=https://www.gnu.org/licenses/gpl.html", "tag=license"
+	copying: "[
+		This program is free software; you can redistribute it and/or modify it under the terms of
+		the GNU General Public License as published by the Free Software Foundation; either version 1,
+		or (at your option) any later version.
+
+		This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
+		without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+		See the GNU General Public License for more details.
+
+		You should have received a copy of the GNU General Public License along with this program.
+		If not, see <https://www.gnu.org/licenses/>.
+	]"
 
 end

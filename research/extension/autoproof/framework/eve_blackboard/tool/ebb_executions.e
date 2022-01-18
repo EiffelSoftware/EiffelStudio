@@ -1,10 +1,4 @@
-note
-	description: "Summary description for {EBB_EXECUTIONS}."
-	author: ""
-	date: "$Date$"
-	revision: "$Revision$"
-
-class
+﻿class
 	EBB_EXECUTIONS
 
 inherit
@@ -108,10 +102,10 @@ feature -- Basic operations
 			l_class_overlap: BOOLEAN
 		do
 			across running_executions as l_cursor loop
-				l_execution := l_cursor.item
+				l_execution := l_cursor
 				if l_execution.is_running then
 					l_input := l_execution.input
-					l_class_overlap := across l_input.features as l_features some l_features.item.written_class.name.is_equal (a_class.name) end
+					l_class_overlap := across l_input.features as l_features some l_features.written_class.name.is_equal (a_class.name) end
 					if l_class_overlap then
 						l_execution.cancel
 					end
@@ -121,8 +115,32 @@ feature -- Basic operations
 
 invariant
 	max_number_of_running_executions: running_executions.count <= max_parallel_executions
-	consistent_waiting: across waiting_executions as c all not c.item.is_running and not c.item.is_finished end
-	consistent_running: across running_executions as c all c.item.is_running xor c.item.is_finished end
-	consistent_finished: across finished_executions as c all not c.item.is_running and c.item.is_finished end
+	consistent_waiting: across waiting_executions as c all not c.is_running and not c.is_finished end
+	consistent_running: across running_executions as c all c.is_running xor c.is_finished end
+	consistent_finished: across finished_executions as c all not c.is_running and c.is_finished end
+
+note
+	date: "$Date$"
+	revision: "$Revision$"
+	copyright:
+		"Copyright (c) 2010 ETH Zurich",
+		"Copyright (c) 2018 Politecnico di Milano",
+		"Copyright (c) 2022 Schaffhausen Institute of Technology"
+	author: "Julian Tschannen", "Alexander Kogtenkov"
+	license: "GNU General Public License"
+	license_name: "GPL"
+	EIS: "name=GPL", "src=https://www.gnu.org/licenses/gpl.html", "tag=license"
+	copying: "[
+		This program is free software; you can redistribute it and/or modify it under the terms of
+		the GNU General Public License as published by the Free Software Foundation; either version 1,
+		or (at your option) any later version.
+
+		This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
+		without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+		See the GNU General Public License for more details.
+
+		You should have received a copy of the GNU General Public License along with this program.
+		If not, see <https://www.gnu.org/licenses/>.
+	]"
 
 end

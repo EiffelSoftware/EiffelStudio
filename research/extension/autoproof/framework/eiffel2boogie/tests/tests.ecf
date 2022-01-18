@@ -1,17 +1,20 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
-<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-13-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-13-0 http://www.eiffel.com/developers/xml/configuration-1-13-0.xsd" name="autoproof-tests" uuid="B9FC6CC3-5F19-4CE1-9131-56A0455E9224">
+<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-22-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-22-0 http://www.eiffel.com/developers/xml/configuration-1-22-0.xsd" name="autoproof-tests" uuid="B9FC6CC3-5F19-4CE1-9131-56A0455E9224">
 	<target name="tests">
 		<root all_classes="true"/>
-		<option warning="true" full_class_checking="false" is_attached_by_default="false" void_safety="none" syntax="transitional">
+		<option warning="warning" full_class_checking="false" is_attached_by_default="false" is_obsolete_routine_type="true" syntax="transitional">
 			<assertions precondition="true" postcondition="true" check="true" invariant="true" loop="true" supplier_precondition="true"/>
 		</option>
 		<setting name="console_application" value="true"/>
+		<capability>
+			<void_safety support="none" use="none"/>
+		</capability>
 		<library name="base-eve" location="$ISE_LIBRARY\library\base\base-eve.ecf" readonly="false"/>
 		<cluster name="autoproof_tests" location=".\">
 			<file_rule>
-				<exclude>/EIFGENs$</exclude>
-				<exclude>/CVS$</exclude>
 				<exclude>/.svn$</exclude>
+				<exclude>/CVS$</exclude>
+				<exclude>/EIFGENs$</exclude>
 			</file_rule>
 			<cluster name="basic" location=".\basic\" recursive="true"/>
 			<cluster name="examples" location=".\examples\" recursive="true"/>

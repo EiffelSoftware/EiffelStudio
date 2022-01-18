@@ -1,7 +1,5 @@
 ﻿note
 	description: "Translation of Eiffel types to Boogie."
-	date: "$Date$"
-	revision: "$Revision$"
 
 class
 	E2B_TYPE_TRANSLATOR
@@ -59,10 +57,10 @@ feature -- Basic operations
 			across
 				helper.class_note_values (l_class, "theory") as deps
 			loop
-				create l_path.make_from_string (deps.item)
+				create l_path.make_from_string (deps)
 				boogie_universe.add_dependency
 					(if l_path.is_absolute then
-						create {PATH}.make_from_string (deps.item)
+						create {PATH}.make_from_string (deps)
 					else
 						l_path.absolute_path_in (l_class.lace_class.file_name.parent).canonical_path
 					end)
@@ -71,9 +69,9 @@ feature -- Basic operations
 				-- Add actual generic parameters
 			if a_type.has_generics then
 				across a_type.generics as params loop
-					if attached {CL_TYPE_A} params.item as t then
+					if attached {CL_TYPE_A} params as t then
 						translation_pool.add_parent_type (t)
-					elseif attached {CL_TYPE_A} a_type.base_class.single_constraint (params.target_index) as t then
+					elseif attached {CL_TYPE_A} a_type.base_class.single_constraint (@ params.target_index) as t then
 						translation_pool.add_parent_type (t)
 					else
 						check class_type_constraint: False then end
@@ -91,7 +89,7 @@ feature -- Basic operations
 						-- Translate fields
 					create l_attr_translator
 					across a_type.generics as params loop
-						l_attr_translator.translate_tuple_field (a_type, params.target_index)
+						l_attr_translator.translate_tuple_field (a_type, @ params.target_index)
 					end
 
 						-- Tranlsate creator
@@ -124,8 +122,8 @@ feature -- Basic operations
 				across
 					helper.model_queries (l_class) as m
 				loop
-					if a_type.base_class.feature_named (m.item) = Void then
-						helper.add_semantic_error (l_class, messages.unknown_attribute ({UTF_CONVERTER}.utf_8_string_8_to_string_32 (m.item), l_class.name_in_upper), -1)
+					if a_type.base_class.feature_named (m) = Void then
+						helper.add_semantic_error (l_class, messages.unknown_attribute ({UTF_CONVERTER}.utf_8_string_8_to_string_32 (m), l_class.name_in_upper), -1)
 					end
 				end
 				generate_model_axiom
@@ -261,12 +259,12 @@ feature {NONE} -- Implementation
 			create l_f.make ("$f", types.field (l_type_var))
 			l_def := factory.false_
 			across helper.flat_model_queries (type.base_class) as m loop
-				if m.item.written_in /= system.any_id then
-					translation_pool.add_referenced_feature (m.item, type)
+				if m.written_in /= system.any_id then
+					translation_pool.add_referenced_feature (m, type)
 				end
 				create l_m.make (
-					helper.boogie_name_for_attribute (m.item, type),
-					types.field (types.for_class_type (helper.class_type_in_context (m.item.type, type.base_class, m.item, type))))
+					helper.boogie_name_for_attribute (m, type),
+					types.field (types.for_class_type (helper.class_type_in_context (m.type, type.base_class, m, type))))
 				l_def := factory.or_clean (l_def, factory.equal (l_f, l_m))
 			end
 			l_fcall := factory.function_call ("IsModelField", << l_f, factory.type_value (type) >>, types.bool)
@@ -452,7 +450,7 @@ feature {NONE} -- Implementation
 				across
 					inv_byte_server.item (a_class.class_id).byte_list as b
 				loop
-					l_assert := b.item
+					l_assert := b
 					if is_tag_included (a_included, a_excluded, l_assert.tag) then
 						create l_translator.make
 						l_translator.set_context (a_class.invariant_feature, type)
@@ -483,8 +481,8 @@ feature {NONE} -- Implementation
 							until
 								l_found
 							loop
-								if not a.item.feature_name.same_string ("closed") and not a.item.feature_name.same_string ("owner") then
-									l_found := generate_ghost_definition (l_translator.last_expression, a.item)
+								if not a.feature_name.same_string ("closed") and not a.feature_name.same_string ("owner") then
+									l_found := generate_ghost_definition (l_translator.last_expression, a)
 								end
 							end
 						end
@@ -657,7 +655,7 @@ feature -- Invariant admissibility
 			builtin_collector.set_any_target
 			process_invariants (a_class_type.base_class, Void, Void, create {E2B_ENTITY_MAPPING}.make)
 			across last_safety_checks as i loop
-				l_block.add_statement (i.item)
+				l_block.add_statement (i)
 			end
 			l_block.add_statement (factory.return)
 
@@ -716,17 +714,17 @@ feature -- Invariant admissibility
 				l_failure.set_class (a_class)
 				l_failure.set_verification_context ("invariant admissibility")
 				across a_boogie_result.errors as i loop
-					check i.item.is_assert_error end
+					check i.is_assert_error end
 					create l_error.make (l_failure)
-					l_error.set_boogie_error (i.item)
-					if i.item.attributes["type"] ~ "A2" then
+					l_error.set_boogie_error (i)
+					if i.attributes["type"] ~ "A2" then
 						l_error.set_message ({STRING_32} "Some subjects might not have Current in their observers set.")
 						l_failure.errors.extend (l_error)
-					elseif i.item.attributes["type"] ~ "A3" then
+					elseif i.attributes["type"] ~ "A3" then
 						l_error.set_message ({STRING_32} "The invariant might be invalidated by a subject update that conforms to its guard.")
 						l_failure.errors.extend (l_error)
 					else
-						a_result_generator.process_individual_error (i.item, l_failure)
+						a_result_generator.process_individual_error (i, l_failure)
 					end
 				end
 
@@ -739,5 +737,29 @@ feature -- Invariant admissibility
 		once
 			create Result.make (5)
 		end
+
+note
+	date: "$Date$"
+	revision: "$Revision$"
+	copyright:
+		"Copyright (c) 2012-2014 ETH Zurich",
+		"Copyright (c) 2018-2019 Politecnico di Milano",
+		"Copyright (c) 2021-2022 Schaffhausen Institute of Technology"
+	author: "Julian Tschannen", "Nadia Polikarpova", "Alexander Kogtenkov"
+	license: "GNU General Public License"
+	license_name: "GPL"
+	EIS: "name=GPL", "src=https://www.gnu.org/licenses/gpl.html", "tag=license"
+	copying: "[
+		This program is free software; you can redistribute it and/or modify it under the terms of
+		the GNU General Public License as published by the Free Software Foundation; either version 1,
+		or (at your option) any later version.
+
+		This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
+		without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+		See the GNU General Public License for more details.
+
+		You should have received a copy of the GNU General Public License along with this program.
+		If not, see <https://www.gnu.org/licenses/>.
+	]"
 
 end

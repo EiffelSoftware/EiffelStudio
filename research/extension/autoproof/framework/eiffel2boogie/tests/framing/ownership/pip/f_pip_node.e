@@ -54,12 +54,12 @@ feature -- Access
 		note
 			status: functional, ghost
 		require
-			nodes_exist: across nodes as n all n.item /= Void end
+			nodes_exist: across nodes as n all n /= Void end
 			reads (nodes)
 		do
 			Result :=
 				v >= init_v and
-				across nodes as n all n.item.value <= v end and
+				across nodes as n all n.value <= v end and
 				((max_node = Void and v = init_v) or (nodes [max_node] and then max_node.value = v))
 		end
 
@@ -71,9 +71,9 @@ feature -- Access
 			n_exists: n /= Void
 			n_different: n /= Current
 			n_orphan: n.parent = Void
-			ancestors_wrapped: across ancestors as p all p.item.is_wrapped end
+			ancestors_wrapped: across ancestors as p all p.is_wrapped end
 			ancestors_has_current: ancestors [Current]
-			ancestors_closed: across ancestors as p all p.item.parent /= Void implies ancestors [p.item.parent] end
+			ancestors_closed: across ancestors as p all p.parent /= Void implies ancestors [p.parent] end
 
 			modify_field (["value", "max_child", "closed"], ancestors)
 			modify_field (["children", "subjects", "observers"], Current)
@@ -101,7 +101,7 @@ feature -- Access
 			n_value_unchanged: n.value = old n.value
 			children_set: children = old children & n
 			max_child_set: max_child = if old (value >= n.value) then old max_child else n end
-			ancestors_wrapped: across ancestors as p all p.item.is_wrapped end
+			ancestors_wrapped: across ancestors as p all p.is_wrapped end
 		end
 
 feature {F_PIP_NODE} -- Implementation
@@ -130,10 +130,10 @@ feature {F_PIP_NODE} -- Implementation
 			child_value: child.value = d.value
 			value_consistency_broken: child.value > value
 			c_is_new_max: is_max (child.value, init_value, children.range, child)
-			visited_fixed: across visited as o all o.item.is_wrapped and o.item.value = d.value end
-			direct_ancestors_wrapped: across ancestors as p all p.item /= Current implies p.item.is_wrapped end
+			visited_fixed: across visited as o all o.is_wrapped and o.value = d.value end
+			direct_ancestors_wrapped: across ancestors as p all p /= Current implies p.is_wrapped end
 			ancestors_has_current: ancestors [Current]
-			ancestors_closed: across ancestors as p all p.item.parent /= Void implies ancestors [p.item.parent] end
+			ancestors_closed: across ancestors as p all p.parent /= Void implies ancestors [p.parent] end
 
 			modify_field ("closed", ancestors)
 			modify_field (["value", "max_child"], (ancestors - visited) / d)
@@ -156,18 +156,40 @@ feature {F_PIP_NODE} -- Implementation
 			value_set: value = d.value
 			max_child_set: max_child = child
 			d_value_unchnaged: d.value = old d.value
-			ancestors_wrapped: across ancestors as p all p.item.is_wrapped end
+			ancestors_wrapped: across ancestors as p all p.is_wrapped end
 		end
 
 invariant
 	subjects_structure: subjects = if parent = Void then children.range else children.range & parent end
 	parent_consistent: parent /= Void implies parent.children.has (Current)
-	children_consistent: across children.domain as i all children [i.item] /= Void and then children [i.item].parent = Current end
+	children_consistent: across children.domain as i all children [i] /= Void and then children [i].parent = Current end
 	value_consistent: is_max (value, init_value, children.range, max_child)
 	no_direct_cycles: parent /= Current
 	observers_structure: observers = subjects
 
 note
 	explicit: subjects, observers
+	date: "$Date$"
+	revision: "$Revision$"
+	copyright:
+		"Copyright (c) 2014 ETH Zurich",
+		"Copyright (c) 2018 Politecnico di Milano",
+		"Copyright (c) 2022 Schaffhausen Institute of Technology"
+	author: "Julian Tschannen", "Nadia Polikarpova", "Alexander Kogtenkov"
+	license: "GNU General Public License"
+	license_name: "GPL"
+	EIS: "name=GPL", "src=https://www.gnu.org/licenses/gpl.html", "tag=license"
+	copying: "[
+		This program is free software; you can redistribute it and/or modify it under the terms of
+		the GNU General Public License as published by the Free Software Foundation; either version 1,
+		or (at your option) any later version.
+
+		This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
+		without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+		See the GNU General Public License for more details.
+
+		You should have received a copy of the GNU General Public License along with this program.
+		If not, see <https://www.gnu.org/licenses/>.
+	]"
 
 end

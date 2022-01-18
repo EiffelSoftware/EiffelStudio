@@ -42,8 +42,8 @@ feature -- Element change
 	add_input (a_input: E2B_TRANSLATOR_INPUT)
 			-- Add all classes and features from `a_input' to `input'.
 		do
-			across a_input.class_list as c loop add_class (c.item) end
-			across a_input.feature_list as c loop add_feature (c.item) end
+			across a_input.class_list as c loop add_class (c) end
+			across a_input.feature_list as c loop add_feature (c) end
 		end
 
 	add_group (g: CONF_GROUP)

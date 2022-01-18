@@ -1,7 +1,5 @@
 ﻿note
 	description: "Translates Eiffel instructions to Boogie."
-	date: "$Date$"
-	revision: "$Revision$"
 
 class
 	E2B_INSTRUCTION_TRANSLATOR
@@ -172,8 +170,8 @@ feature -- Basic operations
 					if l_byte_code.locals /= Void then
 						across l_byte_code.locals as i loop
 							l_name := helper.unique_identifier ("local")
-							l_type := helper.class_type_in_context (i.item, a_feature.written_class, a_feature, current_type)
-							entity_mapping.set_local (i.cursor_index, create {IV_ENTITY}.make (l_name, types.for_class_type (l_type)))
+							l_type := helper.class_type_in_context (i, a_feature.written_class, a_feature, current_type)
+							entity_mapping.set_local (@ i.cursor_index, create {IV_ENTITY}.make (l_name, types.for_class_type (l_type)))
 							current_implementation.add_local (l_name, types.for_class_type (l_type))
 						end
 					end
@@ -259,7 +257,7 @@ feature -- Processing
 					-- (otherwise hard to deal with preconditions)
 				process_contract_expression (a_node.source, False)
 				across last_safety_checks as i loop
-					add_statement (i.item)
+					add_statement (i)
 				end
 			else
 				process_expression (a_node.source)
@@ -311,7 +309,7 @@ feature -- Processing
 					ls as l
 				loop
 					check
-						attached {ASSERT_B} l.item as l_assert
+						attached {ASSERT_B} l as l_assert
 					then
 						process_single_check (l_assert)
 					end
@@ -346,15 +344,15 @@ feature -- Processing
 						-- This is an assume: translate as
 						--	assume checks; assume free_checks; assume last_expression
 					across last_safety_checks as i loop
-						i.item.set_free (True)
-						add_statement (i.item)
+						i.set_free (True)
+						add_statement (i)
 					end
 					create l_statement.make_assume (last_expression)
 				else
 						-- This is an assert: tranlsate as
 						--	assert checks; assume free_checks; assert last_expression												
 					across last_safety_checks as i loop
-						add_statement (i.item)
+						add_statement (i)
 					end
 					create l_statement.make (last_expression)
 					l_statement.node_info.set_type ("check")
@@ -385,13 +383,13 @@ feature -- Processing
 			add_statement (l_assert)
 				-- Check array contents
 			across a_array.expressions as i loop
-				process_contract_expression (i.item, False)
+				process_contract_expression (i, False)
 				l_content_type := types.for_class_type (helper.class_type_in_context (a_array.type.generics.first, current_feature.written_class, current_feature, current_type))
 				create l_assert.make (factory.equal (
-					factory.function_call ("fun.ARRAY.item", << entity_mapping.heap, l_array, factory.int_value (i.cursor_index) >>, l_content_type),
+					factory.function_call ("fun.ARRAY.item", << entity_mapping.heap, l_array, factory.int_value (@ i.cursor_index) >>, l_content_type),
 					last_expression))
 				l_assert.node_info.set_type ("check")
-				l_assert.node_info.set_tag ("array_item_" + i.cursor_index.out)
+				l_assert.node_info.set_tag ("array_item_" + @ i.cursor_index.out)
 				l_assert.node_info.set_line (a_assert.line_number)
 				add_statement (l_assert)
 			end
@@ -445,7 +443,7 @@ feature -- Processing
 					ls as l
 				loop
 					check
-						attached {ELSIF_B} l.item as l_elseif
+						attached {ELSIF_B} l as l_elseif
 					then
 						set_current_origin_information (l_elseif)
 							-- elseif condition
@@ -506,9 +504,9 @@ feature -- Processing
 				across
 					case_list as ls
 				loop
-					l_index := ls.target_index
+					l_index := @ ls.target_index
 					check
-						attached {CASE_B} ls.item as l_case
+						attached {CASE_B} ls as l_case
 					then
 						if l_case.interval /= Void and then not l_case.interval.is_empty then
 							from
@@ -558,7 +556,7 @@ feature -- Processing
 				-- Else part
 			set_current_block (l_else_block)
 			across l_case_conditions as i loop
-				create l_assume.make_assume (factory.not_ (i.item))
+				create l_assume.make_assume (factory.not_ (i))
 				add_statement (l_assume)
 			end
 			if a_node.else_part /= Void then
@@ -571,7 +569,7 @@ feature -- Processing
 			set_current_block (l_head_block)
 			create l_goto.make (l_else_block)
 			across l_case_blocks as i loop
-				l_goto.add_target (i.item)
+				l_goto.add_target (i)
 			end
 			add_statement (l_goto)
 
@@ -579,7 +577,7 @@ feature -- Processing
 			set_current_block (l_temp_block)
 			add_statement (l_head_block)
 			across l_case_blocks as i loop
-				add_statement (i.item)
+				add_statement (i)
 			end
 			add_statement (l_else_block)
 			add_statement (l_end_block)
@@ -657,7 +655,7 @@ feature -- Processing
 				across
 					i as node
 				loop
-					if not attached {ASSERT_B} node.item as l_invariant then
+					if not attached {ASSERT_B} node as l_invariant then
 							-- Unexpected byte node.
 					elseif helper.is_clause_modify (l_invariant) then
 						l_modifies.extend (create {E2B_ASSERT_ORIGIN}.make (l_invariant, current_feature.written_class))
@@ -685,7 +683,7 @@ feature -- Processing
 			set_current_origin_information (a_node.stop)
 			process_contract_expression (a_node.stop, False)
 			across last_safety_checks as i loop
-				add_statement (i.item)
+				add_statement (i)
 			end
 
 			l_condition := last_expression
@@ -797,11 +795,11 @@ feature -- Processing
 				across
 					i as node
 				loop
-					if attached {ASSERT_B} node.item as l_invariant then
+					if attached {ASSERT_B} node as l_invariant then
 						set_current_origin_information (l_invariant)
 						process_contract_expression (l_invariant.expr, False)
 						across last_safety_checks as c loop
-							add_statement (c.item)
+							add_statement (c)
 						end
 						create l_assert.make (last_expression)
 						l_assert.node_info.set_type ("loop_inv")
@@ -921,7 +919,7 @@ feature -- Processing
 					across
 						i as node
 					loop
-						if attached {ASSERT_B} node.item as l_invariant then
+						if attached {ASSERT_B} node as l_invariant then
 							set_current_origin_information (l_invariant)
 							process_contract_expression (l_invariant.expr, False)
 							create l_assert.make (last_expression)
@@ -990,7 +988,7 @@ feature -- Processing
 					across
 						i as node
 					loop
-						if attached {ASSERT_B} node.item as l_invariant then
+						if attached {ASSERT_B} node as l_invariant then
 							set_current_origin_information (l_invariant)
 							process_contract_expression (l_invariant.expr, False)
 							create l_assert.make (last_expression)
@@ -1071,7 +1069,7 @@ feature {NONE} -- Loop processing
 
 				process_modifies (a_modifies, l_frame)
 				across last_safety_checks as i loop
-					add_statement (i.item)
+					add_statement (i)
 				end
 				create l_assume.make_assume (last_frame)
 				add_statement (l_assume)
@@ -1110,7 +1108,7 @@ feature {NONE} -- Loop processing
 				loop
 						-- Ignore modifies and decreases clauses
 					if
-						attached {ASSERT_B} node.item as l_invariant and then
+						attached {ASSERT_B} node as l_invariant and then
 						not helper.is_clause_modify (l_invariant) and then not
 						helper.is_clause_decreases (l_invariant)
 					then
@@ -1120,15 +1118,15 @@ feature {NONE} -- Loop processing
 								-- Free invariant: translate as
 								--	assume checks; assume free_checks; assume last_expression
 							across last_safety_checks as i loop
-								i.item.set_free (True)
-								add_statement (i.item)
+								i.set_free (True)
+								add_statement (i)
 							end
 							create l_inv.make (last_expression)
 						else
 								-- Regular invariant: translate as
 								--	assert checks; assume free_checks; assert last_expression							
 							across last_safety_checks as i loop
-								add_statement (i.item)
+								add_statement (i)
 							end
 							create l_inv.make (last_expression)
 							l_inv.node_info.set_type ("loop_inv")
@@ -1207,15 +1205,15 @@ feature {NONE} -- Loop processing
 			across
 				a_variant_exprs as i
 			loop
-				if i.item.type.has_rank then
-					create l_variant.make (helper.unique_identifier ("variant"), i.item.type)
+				if i.type.has_rank then
+					create l_variant.make (helper.unique_identifier ("variant"), i.type)
 					current_implementation.add_local (l_variant.name, l_variant.type)
 					a_variant_locals.extend (l_variant)
 
-					create l_assignment.make (l_variant, i.item)
+					create l_assignment.make (l_variant, i)
 					add_statement (l_assignment)
 				else
-					helper.add_semantic_error (current_feature, messages.variant_bad_type (i.target_index), -1)
+					helper.add_semantic_error (current_feature, messages.variant_bad_type (@ i.target_index), -1)
 				end
 			end
 		end
@@ -1281,11 +1279,11 @@ feature {NONE} -- Implementation
 			across
 				l_translator.side_effect as stmts
 			loop
-				if stmts.is_first and attached current_origin_information as coi then
-					stmts.item.set_origin_information (coi)
+				if @ stmts.is_first and attached current_origin_information as coi then
+					stmts.set_origin_information (coi)
 					current_origin_information := Void
 				end
-				current_block.add_statement (stmts.item)
+				current_block.add_statement (stmts)
 			end
 			last_expression := l_translator.last_expression
 			if last_expression = Void then
@@ -1374,11 +1372,11 @@ feature {NONE} -- Implementation
 			across
 				l_translator.side_effect as stmts
 			loop
-				if stmts.is_first and attached current_origin_information as c then
-					stmts.item.set_origin_information (c)
+				if @ stmts.is_first and attached current_origin_information as c then
+					stmts.set_origin_information (c)
 					current_origin_information := Void
 				end
-				current_block.add_statement (stmts.item)
+				current_block.add_statement (stmts)
 			end
 			locals_map.merge (l_translator.locals_map)
 		end
@@ -1400,5 +1398,29 @@ feature {NONE} -- Implementation
 
 	local_writable: detachable IV_EXPRESSION
 			-- Writable frame of the current loop.			
+
+;note
+	date: "$Date$"
+	revision: "$Revision$"
+	copyright:
+		"Copyright (c) 2012-2015 ETH Zurich",
+		"Copyright (c) 2018-2019 Politecnico di Milano",
+		"Copyright (c) 2022 Schaffhausen Institute of Technology"
+	author: "Julian Tschannen", "Nadia Polikarpova", "Alexander Kogtenkov"
+	license: "GNU General Public License"
+	license_name: "GPL"
+	EIS: "name=GPL", "src=https://www.gnu.org/licenses/gpl.html", "tag=license"
+	copying: "[
+		This program is free software; you can redistribute it and/or modify it under the terms of
+		the GNU General Public License as published by the Free Software Foundation; either version 1,
+		or (at your option) any later version.
+
+		This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
+		without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+		See the GNU General Public License for more details.
+
+		You should have received a copy of the GNU General Public License along with this program.
+		If not, see <https://www.gnu.org/licenses/>.
+	]"
 
 end

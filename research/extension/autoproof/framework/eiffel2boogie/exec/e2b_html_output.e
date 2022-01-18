@@ -1,7 +1,5 @@
-note
+﻿note
 	description: "HTML output of verification."
-	date: "$Date$"
-	revision: "$Revision$"
 
 class
 	E2B_HTML_OUTPUT
@@ -49,20 +47,20 @@ feature
 			-- Print `r' in HTML format.
 		do
 			across r.verification_results as i loop
-				if attached {E2B_SUCCESSFUL_VERIFICATION} i.item as l_success then
+				if attached {E2B_SUCCESSFUL_VERIFICATION} i as l_success then
 					if l_success.original_errors /= Void and then not l_success.original_errors.is_empty then
 						open_style ("tr", tr_twostep_style)
 					else
 						open_style ("tr", tr_success_style)
 					end
 					print_successful_verification (l_success)
-				elseif attached {E2B_INCONCLUSIVE_RESULT} i.item as l_inconclusive then
+				elseif attached {E2B_INCONCLUSIVE_RESULT} i as l_inconclusive then
 					open_style ("tr", tr_failed_style)
 					print_inconclusive_result (l_inconclusive)
-				elseif attached {E2B_FAILED_VERIFICATION} i.item as l_failure then
+				elseif attached {E2B_FAILED_VERIFICATION} i as l_failure then
 					open_style ("tr", tr_failed_style)
 					print_failed_verification (l_failure)
-				elseif attached {E2B_AUTOPROOF_ERROR} i.item as l_error then
+				elseif attached {E2B_AUTOPROOF_ERROR} i as l_error then
 					open_style ("tr", tr_error_style)
 					print_autoproof_error (l_error)
 				else
@@ -93,13 +91,13 @@ feature
 				add ("Original errors:")
 				add_new_line
 				across a_success.original_errors as i loop
-					if i.cursor_index = 1 then
+					if @ i.cursor_index = 1 then
 						add_new_line
 					else
 						add ("--------------------------------------")
 						add_new_line
 					end
-					i.item.multi_line_message (Current)
+					i.multi_line_message (Current)
 					add_new_line
 				end
 			end
@@ -117,7 +115,7 @@ feature
 				close ("td")
 			else
 				across a_failure.errors as i loop
-					if i.cursor_index = 1 then
+					if @ i.cursor_index = 1 then
 						print_feature_information (a_failure)
 					else
 						close ("tr")
@@ -126,12 +124,12 @@ feature
 						close ("td")
 					end
 					open_style ("td", td_line_style)
-					if i.item.context_line_number > 0 then
-						add (i.item.context_line_number.out)
+					if i.context_line_number > 0 then
+						add (i.context_line_number.out)
 					end
 					close ("td")
 					open_style ("td", td_info_style)
-					i.item.single_line_message (Current)
+					i.single_line_message (Current)
 					close ("td")
 				end
 			end
@@ -265,5 +263,29 @@ feature -- Styles
 	td_name_style: STRING = "padding: 5px; padding-right:15px"
 	td_line_style: STRING = "padding: 5px"
 	td_info_style: STRING = "width: 100%%"
+
+note
+	date: "$Date$"
+	revision: "$Revision$"
+	copyright:
+		"Copyright (c) 2013-2014 ETH Zurich",
+		"Copyright (c) 2018 Politecnico di Milano",
+		"Copyright (c) 2022 Schaffhausen Institute of Technology"
+	author: "Julian Tschannen", "Alexander Kogtenkov"
+	license: "GNU General Public License"
+	license_name: "GPL"
+	EIS: "name=GPL", "src=https://www.gnu.org/licenses/gpl.html", "tag=license"
+	copying: "[
+		This program is free software; you can redistribute it and/or modify it under the terms of
+		the GNU General Public License as published by the Free Software Foundation; either version 1,
+		or (at your option) any later version.
+
+		This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
+		without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+		See the GNU General Public License for more details.
+
+		You should have received a copy of the GNU General Public License along with this program.
+		If not, see <https://www.gnu.org/licenses/>.
+	]"
 
 end

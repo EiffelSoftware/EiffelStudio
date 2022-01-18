@@ -1,7 +1,5 @@
 ﻿note
 	description: "Base class for routine translators."
-	date: "$Date$"
-	revision: "$Revision$"
 
 deferred class
 	E2B_ROUTINE_TRANSLATOR_BASE
@@ -48,10 +46,10 @@ feature -- Helper functions: arguments and result
 				across
 					arguments as a
 				loop
-					l_type := helper.class_type_in_context (a.item, a_context.base_class, a_feature, a_context)
+					l_type := helper.class_type_in_context (a, a_context.base_class, a_feature, a_context)
 					Result.extend
-						(arguments.item_name (a.target_index),
-						a.item,
+						(arguments.item_name (@ a.target_index),
+						a,
 						l_type,
 						types.for_class_type (l_type))
 				end
@@ -125,28 +123,28 @@ feature -- Helper functions: contracts
 				l_class := a_feature.written_class
 				if l_byte_code.precondition /= Void then
 					across l_byte_code.precondition as p loop
-						l_pre.extend (create {E2B_ASSERT_ORIGIN}.make (p.item, l_class))
+						l_pre.extend (create {E2B_ASSERT_ORIGIN}.make (p, l_class))
 					end
 				end
 				if l_byte_code.postcondition /= Void then
 					across l_byte_code.postcondition as p loop
-						l_post.extend (create {E2B_ASSERT_ORIGIN}.make (p.item, l_class))
+						l_post.extend (create {E2B_ASSERT_ORIGIN}.make (p, l_class))
 					end
 				end
 				if a_feature.assert_id_set /= Void and not a_type.is_basic then
 						-- Feature has inherited assertions
 					l_byte_code.formulate_inherited_assertions (a_feature.assert_id_set)
 					across Context.inherited_assertion.precondition_list as i loop
-						l_class := Context.inherited_assertion.precondition_types [i.target_index].type.base_class
-						across i.item as p loop
-							l_pre.extend (create {E2B_ASSERT_ORIGIN}.make (p.item, l_class))
+						l_class := Context.inherited_assertion.precondition_types [@ i.target_index].type.base_class
+						across i as p loop
+							l_pre.extend (create {E2B_ASSERT_ORIGIN}.make (p, l_class))
 						end
 					end
 
 					across Context.inherited_assertion.postcondition_list as i loop
-						l_class := Context.inherited_assertion.postcondition_types [i.target_index].type.base_class
-						across i.item as p loop
-							l_post.extend (create {E2B_ASSERT_ORIGIN}.make (p.item, l_class))
+						l_class := Context.inherited_assertion.postcondition_types [@ i.target_index].type.base_class
+						across i as p loop
+							l_post.extend (create {E2B_ASSERT_ORIGIN}.make (p, l_class))
 						end
 					end
 				end
@@ -215,18 +213,18 @@ feature -- Helper functions: contracts
 
 			l_pre := factory.true_
 			across l_contracts.pre as c loop
-				l_translator.set_origin_class (c.item.origin)
-				helper.set_up_byte_context (c.item.origin.feature_of_rout_id (a_feature.rout_id_set.first),
-					helper.class_type_in_context (c.item.origin.actual_type, c.item.origin, Void, current_type))
-				c.item.clause.process (l_translator)
+				l_translator.set_origin_class (c.origin)
+				helper.set_up_byte_context (c.origin.feature_of_rout_id (a_feature.rout_id_set.first),
+					helper.class_type_in_context (c.origin.actual_type, c.origin, Void, current_type))
+				c.clause.process (l_translator)
 				l_pre := factory.and_clean (l_pre, l_translator.last_expression)
 			end
 			l_post := factory.true_
 			across l_contracts.post as c loop
-				l_translator.set_origin_class (c.item.origin)
-				helper.set_up_byte_context (c.item.origin.feature_of_rout_id (a_feature.rout_id_set.first),
-					helper.class_type_in_context (c.item.origin.actual_type, c.item.origin, Void, current_type))
-				c.item.clause.process (l_translator)
+				l_translator.set_origin_class (c.origin)
+				helper.set_up_byte_context (c.origin.feature_of_rout_id (a_feature.rout_id_set.first),
+					helper.class_type_in_context (c.origin.actual_type, c.origin, Void, current_type))
+				c.clause.process (l_translator)
 				l_post := factory.and_clean (l_post, l_translator.last_expression)
 			end
 			helper.set_up_byte_context (a_feature, a_type)
@@ -264,7 +262,7 @@ feature -- Helper functions: contracts
 			across
 				a_clauses as i
 			loop
-				if attached {FEATURE_B} i.item.clause.expr as l_call then
+				if attached {FEATURE_B} i.clause.expr as l_call then
 					l_name := names_heap.item (l_call.feature_name_id)
 					if l_name.same_string (a_function) then
 --						a_translator.set_origin_class (i.item.origin)
@@ -292,68 +290,68 @@ feature -- Helper functions: contracts
 			across
 				a_clauses as i
 			loop
-				if attached {FEATURE_B} i.item.clause.expr as l_call then
+				if attached {FEATURE_B} i.clause.expr as l_call then
 					l_name := names_heap.item (l_call.feature_name_id)
 					if l_name.same_string (a_function) then
-						a_translator.set_origin_class (i.item.origin)
+						a_translator.set_origin_class (i.origin)
 						l_objects_type := translate_contained_expressions (l_call.parameters.i_th (2).expression, a_translator, True)
 						create l_fields.make
 
 						if l_objects_type.expressions.first /= Void then
-							l_type := helper.class_type_in_context (l_objects_type.type, i.item.origin, current_feature, current_type)
+							l_type := helper.class_type_in_context (l_objects_type.type, i.origin, current_feature, current_type)
 							create l_fieldnames.make
 							if attached {STRING_B} l_call.parameters.i_th (1).expression as l_string then
 								l_fieldnames.extend (l_string.value)
 							elseif attached {TUPLE_CONST_B} l_call.parameters.i_th (1).expression as l_tuple then
 								across l_tuple.expressions as j loop
-									if attached {STRING_B} j.item as l_string then
+									if attached {STRING_B} j as l_string then
 										l_fieldnames.extend (l_string.value)
 									else
-										helper.add_semantic_error (current_feature, messages.first_argument_string_or_tuple, i.item.clause.line_number)
+										helper.add_semantic_error (current_feature, messages.first_argument_string_or_tuple, i.clause.line_number)
 									end
 								end
 							else
-								helper.add_semantic_error (current_feature, messages.first_argument_string_or_tuple, i.item.clause.line_number)
+								helper.add_semantic_error (current_feature, messages.first_argument_string_or_tuple, i.clause.line_number)
 							end
 
 							l_origin := helper.class_type_in_context (
 								l_objects_type.type,
-								i.item.origin,
+								i.origin,
 								current_feature,
-								helper.class_type_from_class (i.item.origin, current_type)).base_class
+								helper.class_type_from_class (i.origin, current_type)).base_class
 							across l_fieldnames as f loop
 								if a_check_model then
-									l_attr := l_origin.feature_named (f.item)
+									l_attr := l_origin.feature_named (f)
 									if attached l_attr and then helper.is_model_query (l_origin, l_attr) then
 										l_new_version := l_type.base_class.feature_of_rout_id_set (l_attr.rout_id_set)
 										l_field := helper.field_from_attribute (l_new_version, l_type)
 										l_fields.extend (l_field)
 											-- Add replacing model queries
 										across helper.replacing_model_queries (l_attr, l_origin, l_type.base_class) as m loop
-											l_field := helper.field_from_attribute (m.item, l_type)
-											if across l_fields as fi all not fi.item.same_expression (l_field) end then
+											l_field := helper.field_from_attribute (m, l_type)
+											if across l_fields as fi all not fi.same_expression (l_field) end then
 												l_fields.extend (l_field)
 											end
 												-- Add replaced model queries
-											across helper.replaced_model_queries (m.item, l_type.base_class) as m1 loop
-												l_field := helper.field_from_attribute (m1.item, l_type)
-												if across l_fields as fi all not fi.item.same_expression (l_field) end then
+											across helper.replaced_model_queries (m, l_type.base_class) as m1 loop
+												l_field := helper.field_from_attribute (m1, l_type)
+												if across l_fields as fi all not fi.same_expression (l_field) end then
 													l_fields.extend (l_field)
 												end
 											end
 										end
 									else
-										helper.add_semantic_error (current_feature, messages.unknown_model ({UTF_CONVERTER}.utf_8_string_8_to_string_32 (f.item), l_origin.name_in_upper), i.item.clause.line_number)
+										helper.add_semantic_error (current_feature, messages.unknown_model ({UTF_CONVERTER}.utf_8_string_8_to_string_32 (f), l_origin.name_in_upper), i.clause.line_number)
 									end
 								else
-									l_attr := helper.attribute_from_string (f.item, l_type, l_origin, current_feature, i.item.clause.line_number)
+									l_attr := helper.attribute_from_string (f, l_type, l_origin, current_feature, i.clause.line_number)
 									if attached l_attr then
 										l_fields.extend (helper.field_from_attribute (l_attr, l_type))
 									end
 								end
 							end
 						end
-						Result.extend (create {E2B_FRAME_ELEMENT}.make (l_objects_type.expressions, l_fields, l_objects_type.type, i.item.origin))
+						Result.extend (create {E2B_FRAME_ELEMENT}.make (l_objects_type.expressions, l_fields, l_objects_type.type, i.origin))
 					end
 				else
 					check internal_error: False end
@@ -390,14 +388,14 @@ feature -- Helper functions: contracts
 				-- Go over partially modifiable objects
 			across a_mods.partial_objects as restriction loop
 				l_f_conjunct := factory.false_
-				across restriction.item.fields as f loop
-					l_f_conjunct := factory.or_clean (l_f_conjunct, factory.equal (l_f, f.item))
+				across restriction.fields as f loop
+					l_f_conjunct := factory.or_clean (l_f_conjunct, factory.equal (l_f, f))
 				end
-				l_expr := factory.or_clean (l_expr, factory.and_ (is_object_in_frame (l_o, restriction.item.objects), l_f_conjunct))
+				l_expr := factory.or_clean (l_expr, factory.and_ (is_object_in_frame (l_o, restriction.objects), l_f_conjunct))
 			end
 				-- Go over model-modifiable objects
 			across a_mods.model_objects as restriction loop
-				r := restriction.item
+				r := restriction
 					-- The type of the objects as seen where the frame clause was written
 				l_written_type := helper.class_type_in_context (r.type, r.origin, current_feature, helper.class_type_from_class (r.origin, current_type))
 					-- The type of the objects as seen in the `current_type'
@@ -406,7 +404,7 @@ feature -- Helper functions: contracts
 				l_f_conjunct := factory.not_ (factory.function_call ("IsModelField", << l_f, factory.type_value (l_type) >>, types.bool))
 					-- Or it is one of `r.fields'
 				across r.fields as f loop
-					l_f_conjunct := factory.or_ (l_f_conjunct,factory.equal (l_f, f.item))
+					l_f_conjunct := factory.or_ (l_f_conjunct,factory.equal (l_f, f))
 				end
 				l_expr := factory.or_clean (l_expr, factory.and_ (is_object_in_frame (l_o, r.objects), l_f_conjunct))
 			end
@@ -414,7 +412,7 @@ feature -- Helper functions: contracts
 				-- (and exclude `a_excluded_fields')
 			l_f_conjunct := factory.true_
 			across a_excluded_fields as f loop
-				l_f_conjunct := factory.and_clean (l_f_conjunct, factory.not_equal (l_f, f.item))
+				l_f_conjunct := factory.and_clean (l_f_conjunct, factory.not_equal (l_f, f))
 			end
 			l_expr := factory.or_clean (l_expr,
 				factory.and_clean (is_object_in_frame (l_o, a_mods.full_objects), l_f_conjunct))
@@ -434,13 +432,13 @@ feature -- Helper functions: contracts
 		do
 			Result := factory.false_
 			across a_objects as o loop
-				if o.item = Void then
+				if o = Void then
 					l_disjunct := factory.false_
-				elseif o.item.type ~ types.ref then
-					l_disjunct := factory.equal (a_var, o.item)
+				elseif o.type ~ types.ref then
+					l_disjunct := factory.equal (a_var, o)
 				else
-					check o.item.type ~ types.set (types.ref) end
-					l_disjunct := factory.map_access (o.item, create {ARRAYED_LIST [IV_EXPRESSION]}.make_from_array (<<a_var>>))
+					check o.type ~ types.set (types.ref) end
+					l_disjunct := factory.map_access (o, create {ARRAYED_LIST [IV_EXPRESSION]}.make_from_array (<<a_var>>))
 				end
 				Result := factory.or_clean (Result, l_disjunct)
 			end
@@ -453,8 +451,8 @@ feature -- Helper functions: contracts
 			across
 				a_clauses as i
 			loop
-				if attached {FEATURE_B} i.item.clause.expr as l_call then
-					a_translator.set_origin_class (i.item.origin)
+				if attached {FEATURE_B} i.clause.expr as l_call then
+					a_translator.set_origin_class (i.origin)
 					Result.append (translate_contained_expressions (l_call.parameters.i_th (1).expression, a_translator, False).expressions)
 				else
 					check internal_error: False end
@@ -474,7 +472,7 @@ feature -- Helper functions: contracts
 			create l_expr_list.make
 			if attached {TUPLE_CONST_B} a_expr as l_tuple then
 				across l_tuple.expressions as i loop
-					l_expr_list.extend (i.item)
+					l_expr_list.extend (i)
 				end
 				if l_tuple.expressions.is_empty then
 					l_expr_list.extend (Void)
@@ -484,16 +482,16 @@ feature -- Helper functions: contracts
 			end
 			create l_expressions.make
 			across l_expr_list as k loop
-				if k.item = Void then
+				if k = Void then
 					l_expressions.extend (Void)
-				elseif convert_to_set and helper.is_class_logical (a_translator.class_type_in_current_context (k.item.type).base_class) then
-					a_translator.process_as_set (k.item, types.ref)
+				elseif convert_to_set and helper.is_class_logical (a_translator.class_type_in_current_context (k.type).base_class) then
+					a_translator.process_as_set (k, types.ref)
 					l_expressions.extend (a_translator.last_expression)
 					l_type := a_translator.last_set_content_type
 				else
-					k.item.process (a_translator)
+					k.process (a_translator)
 					l_expressions.extend (a_translator.last_expression)
-					if attached {CALL_ACCESS_B} k.item as a then
+					if attached {CALL_ACCESS_B} k as a then
 --						l_feature := helper.feature_for_call_access (a, a_translator.current_target_type)
 --						l_type := l_feature.type
 						l_feature := helper.feature_for_call_access (a, a_translator.origin_class.actual_type)
@@ -501,11 +499,35 @@ feature -- Helper functions: contracts
 						l_like_type.set_actual_type (l_feature.type.actual_type)
 						l_type := l_like_type
 					else
-						l_type := k.item.type
+						l_type := k.type
 					end
 				end
 			end
 			Result := [l_expressions, l_type]
 		end
+
+note
+	date: "$Date$"
+	revision: "$Revision$"
+	copyright:
+		"Copyright (c) 2013-2014 ETH Zurich",
+		"Copyright (c) 2018-2019 Politecnico di Milano",
+		"Copyright (c) 2021-2022 Schaffhausen Institute of Technology"
+	author: "Julian Tschannen", "Nadia Polikarpova", "Alexander Kogtenkov"
+	license: "GNU General Public License"
+	license_name: "GPL"
+	EIS: "name=GPL", "src=https://www.gnu.org/licenses/gpl.html", "tag=license"
+	copying: "[
+		This program is free software; you can redistribute it and/or modify it under the terms of
+		the GNU General Public License as published by the Free Software Foundation; either version 1,
+		or (at your option) any later version.
+
+		This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
+		without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+		See the GNU General Public License for more details.
+
+		You should have received a copy of the GNU General Public License along with this program.
+		If not, see <https://www.gnu.org/licenses/>.
+	]"
 
 end

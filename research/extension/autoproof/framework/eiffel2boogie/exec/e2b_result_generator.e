@@ -1,11 +1,4 @@
-note
-	description: "[
-		TODO
-	]"
-	date: "$Date$"
-	revision: "$Revision$"
-
-class
+﻿class
 	E2B_RESULT_GENERATOR
 
 inherit
@@ -59,17 +52,17 @@ feature -- Basic operations
 			last_result.verification_results.append (local_autoproof_errors)
 
 				-- Add Boogie errors (if there were no validity errors)			
-			if across local_autoproof_errors as i all i.item.is_warning end then
+			if across local_autoproof_errors as i all i.is_warning end then
 				across a_boogie_result.boogie_errors as i loop
 					create l_ap_error
 					l_ap_error.set_type ("Boogie")
-					l_ap_error.set_message ({UTF_CONVERTER}.utf_8_string_8_to_string_32 (i.item))
+					l_ap_error.set_message ({UTF_CONVERTER}.utf_8_string_8_to_string_32 (i))
 					last_result.verification_results.extend (l_ap_error)
 				end
 			end
 				-- Call result handler for each Boogie procedure
 			across a_boogie_result.procedure_results as i loop
-				process_procedure_result (i.item)
+				process_procedure_result (i)
 			end
 		end
 
@@ -173,7 +166,7 @@ feature {NONE} -- Implementation
 				l_failure.set_verification_context (l_context)
 				l_failure.set_time (a_item.time)
 				across a_item.errors as i loop
-					process_individual_error (i.item, l_failure)
+					process_individual_error (i, l_failure)
 				end
 				last_result.add_result (l_failure)
 			end
@@ -350,5 +343,29 @@ feature {NONE} -- Implementation
 				end
 			end
 		end
+
+note
+	date: "$Date$"
+	revision: "$Revision$"
+	copyright:
+		"Copyright (c) 2013-2014 ETH Zurich",
+		"Copyright (c) 2018-2019 Politecnico di Milano",
+		"Copyright (c) 2022 Schaffhausen Institute of Technology"
+	author: "Julian Tschannen", "Nadia Polikarpova", "Alexander Kogtenkov"
+	license: "GNU General Public License"
+	license_name: "GPL"
+	EIS: "name=GPL", "src=https://www.gnu.org/licenses/gpl.html", "tag=license"
+	copying: "[
+		This program is free software; you can redistribute it and/or modify it under the terms of
+		the GNU General Public License as published by the Free Software Foundation; either version 1,
+		or (at your option) any later version.
+
+		This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
+		without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+		See the GNU General Public License for more details.
+
+		You should have received a copy of the GNU General Public License along with this program.
+		If not, see <https://www.gnu.org/licenses/>.
+	]"
 
 end

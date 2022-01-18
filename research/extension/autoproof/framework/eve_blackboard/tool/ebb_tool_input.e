@@ -1,7 +1,5 @@
-note
+﻿note
 	description: "Input for a tool execution."
-	date: "$Date$"
-	revision: "$Revision$"
 
 class
 	EBB_TOOL_INPUT
@@ -107,11 +105,35 @@ feature {NONE} -- Implementation
 		do
 			create {LINKED_SET [attached FEATURE_I]} internal_features_list.make
 			across classes as l_cursor loop
-				internal_features_list.append (features_written_in_class (l_cursor.item))
+				internal_features_list.append (features_written_in_class (l_cursor))
 			end
 			internal_features_list.append (individual_features)
 		ensure
 			internal_features_list_created: internal_features_list /= Void
 		end
+
+note
+	date: "$Date$"
+	revision: "$Revision$"
+	copyright:
+		"Copyright (c) 2010 ETH Zurich",
+		"Copyright (c) 2018 Politecnico di Milano",
+		"Copyright (c) 2022 Schaffhausen Institute of Technology"
+	author: "Julian Tschannen", "Alexander Kogtenkov"
+	license: "GNU General Public License"
+	license_name: "GPL"
+	EIS: "name=GPL", "src=https://www.gnu.org/licenses/gpl.html", "tag=license"
+	copying: "[
+		This program is free software; you can redistribute it and/or modify it under the terms of
+		the GNU General Public License as published by the Free Software Foundation; either version 1,
+		or (at your option) any later version.
+
+		This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
+		without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+		See the GNU General Public License for more details.
+
+		You should have received a copy of the GNU General Public License along with this program.
+		If not, see <https://www.gnu.org/licenses/>.
+	]"
 
 end

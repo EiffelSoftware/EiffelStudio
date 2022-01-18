@@ -1,7 +1,5 @@
 ﻿note
 	description: "Access to basic IV types and conversion facilities."
-	date: "$Date$"
-	revision: "$Revision$"
 
 class
 	IV_TYPES
@@ -127,9 +125,9 @@ feature -- Type translation
 					across
 						a_type.generics as g
 					loop
-						if attached {CL_TYPE_A} g.item as t then
+						if attached {CL_TYPE_A} g as t then
 							l_params.extend (for_class_type (t))
-						elseif attached {CL_TYPE_A} a_type.base_class.single_constraint (g.target_index) as t then
+						elseif attached {CL_TYPE_A} a_type.base_class.single_constraint (@ g.target_index) as t then
 							l_params.extend (for_class_type (t))
 						else
 							check class_type_constraint: False then end
@@ -148,7 +146,7 @@ feature -- Type translation
 					across
 						l_access_feature.arguments as args
 					loop
-						l_domain_types.extend (for_class_type (helper.class_type_in_context (args.item, l_access_feature.written_class, l_access_feature, a_type)))
+						l_domain_types.extend (for_class_type (helper.class_type_in_context (args, l_access_feature.written_class, l_access_feature, a_type)))
 					end
 					create {IV_MAP_SYNONYM_TYPE} l_user_type.make (<<>>,
 						l_domain_types,
@@ -234,15 +232,15 @@ feature -- Type translation
 						across
 							l_type_properties as prop
 						loop
-							if attached {CL_TYPE_A} a_type.generics [prop.target_index] as c then
+							if attached {CL_TYPE_A} a_type.generics [@ prop.target_index] as c then
 								t := c
-							elseif attached {CL_TYPE_A} a_type.base_class.single_constraint (prop.target_index) as c then
+							elseif attached {CL_TYPE_A} a_type.base_class.single_constraint (@ prop.target_index) as c then
 								t := c
 							else
 								check class_type_constraint: False then end
 							end
 							if for_class_type (t) ~ ref  then
-								Result := factory.and_clean (Result, factory.function_call (prop.item, << a_heap, a_expr, factory.type_value (t) >>, bool))
+								Result := factory.and_clean (Result, factory.function_call (prop, << a_heap, a_expr, factory.type_value (t) >>, bool))
 							end
 						end
 					end
@@ -277,5 +275,29 @@ feature -- Type translation
 			end
 			Result := factory.function_call (l_f_name, << a_expr >>, bool)
 		end
+
+note
+	date: "$Date$"
+	revision: "$Revision$"
+	copyright:
+		"Copyright (c) 2012-2014 ETH Zurich",
+		"Copyright (c) 2018-2019 Politecnico di Milano",
+		"Copyright (c) 2022 Schaffhausen Institute of Technology"
+	author: "Julian Tschannen", "Nadia Polikarpova", "Alexander Kogtenkov"
+	license: "GNU General Public License"
+	license_name: "GPL"
+	EIS: "name=GPL", "src=https://www.gnu.org/licenses/gpl.html", "tag=license"
+	copying: "[
+		This program is free software; you can redistribute it and/or modify it under the terms of
+		the GNU General Public License as published by the Free Software Foundation; either version 1,
+		or (at your option) any later version.
+
+		This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
+		without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+		See the GNU General Public License for more details.
+
+		You should have received a copy of the GNU General Public License along with this program.
+		If not, see <https://www.gnu.org/licenses/>.
+	]"
 
 end

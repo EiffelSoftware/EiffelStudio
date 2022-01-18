@@ -34,7 +34,7 @@ feature -- State update
 	update (v: INTEGER)
 			-- Update state to `v'.
 		require
-			observers_wrapped: across observers as o all o.item.is_wrapped end
+			observers_wrapped: across observers as o all o.is_wrapped end
 			modify_field (["value", "closed"], Current)
 			modify_field (["cache", "closed"], subscribers.sequence)
 		local
@@ -46,7 +46,7 @@ feature -- State update
 			from
 				i := 1
 			invariant
-				across 1 |..| (i - 1) as j all subscribers.sequence [j.item].inv end
+				across 1 |..| (i - 1) as j all subscribers.sequence [j].inv end
 				modify_field (["cache"], subscribers.sequence)
 			until
 				i > subscribers.count
@@ -57,7 +57,7 @@ feature -- State update
 
 			wrap_all (observers)
 		ensure
-			observers_wrapped: across observers as o all o.item.is_wrapped end
+			observers_wrapped: across observers as o all o.is_wrapped end
 			value_set: value = v
 		end
 
@@ -80,9 +80,32 @@ feature {F_OOM_OBSERVER} -- Internal communication
 invariant
 	subscribers_exists: subscribers /= Void
 	owns_structure: owns = [subscribers]
-	all_subscribers_exist: across subscribers.sequence.domain as i all attached subscribers.sequence [i.item] end
+	all_subscribers_exist: across subscribers.sequence.domain as i all attached subscribers.sequence [i] end
 	observers_structure: observers = subscribers.sequence.range
 
 note
 	explicit: owns
+	date: "$Date$"
+	revision: "$Revision$"
+	copyright:
+		"Copyright (c) 2013-2014 ETH Zurich",
+		"Copyright (c) 2018 Politecnico di Milano",
+		"Copyright (c) 2022 Schaffhausen Institute of Technology"
+	author: "Julian Tschannen", "Nadia Polikarpova", "Alexander Kogtenkov"
+	license: "GNU General Public License"
+	license_name: "GPL"
+	EIS: "name=GPL", "src=https://www.gnu.org/licenses/gpl.html", "tag=license"
+	copying: "[
+		This program is free software; you can redistribute it and/or modify it under the terms of
+		the GNU General Public License as published by the Free Software Foundation; either version 1,
+		or (at your option) any later version.
+
+		This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
+		without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+		See the GNU General Public License for more details.
+
+		You should have received a copy of the GNU General Public License along with this program.
+		If not, see <https://www.gnu.org/licenses/>.
+	]"
+
 end

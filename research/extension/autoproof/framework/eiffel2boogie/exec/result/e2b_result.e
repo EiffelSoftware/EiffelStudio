@@ -1,7 +1,5 @@
-note
+﻿note
 	description: "Result of an AutoProof run."
-	date: "$Date$"
-	revision: "$Revision$"
 
 class
 	E2B_RESULT
@@ -29,7 +27,7 @@ feature -- Access
 		do
 			create l_list.make
 			across verification_results as i loop
-				if attached {E2B_SUCCESSFUL_VERIFICATION} i.item as l_failed then
+				if attached {E2B_SUCCESSFUL_VERIFICATION} i as l_failed then
 					l_list.extend (l_failed)
 				end
 			end
@@ -43,7 +41,7 @@ feature -- Access
 		do
 			create l_list.make
 			across verification_results as i loop
-				if attached {E2B_FAILED_VERIFICATION} i.item as l_failed then
+				if attached {E2B_FAILED_VERIFICATION} i as l_failed then
 					l_list.extend (l_failed)
 				end
 			end
@@ -55,7 +53,7 @@ feature -- Access
 		do
 			create Result.make
 			across verification_results as i loop
-				if attached {E2B_AUTOPROOF_ERROR} i.item as l_failed then
+				if attached {E2B_AUTOPROOF_ERROR} i as l_failed then
 					Result.extend (l_failed)
 				end
 			end
@@ -95,5 +93,29 @@ feature -- Element change
 		do
 			verification_results.extend (a_verification_result)
 		end
+
+note
+	date: "$Date$"
+	revision: "$Revision$"
+	copyright:
+		"Copyright (c) 2010-2013 ETH Zurich",
+		"Copyright (c) 2018 Politecnico di Milano",
+		"Copyright (c) 2022 Schaffhausen Institute of Technology"
+	author: "Julian Tschannen", "Alexander Kogtenkov"
+	license: "GNU General Public License"
+	license_name: "GPL"
+	EIS: "name=GPL", "src=https://www.gnu.org/licenses/gpl.html", "tag=license"
+	copying: "[
+		This program is free software; you can redistribute it and/or modify it under the terms of
+		the GNU General Public License as published by the Free Software Foundation; either version 1,
+		or (at your option) any later version.
+
+		This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
+		without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+		See the GNU General Public License for more details.
+
+		You should have received a copy of the GNU General Public License along with this program.
+		If not, see <https://www.gnu.org/licenses/>.
+	]"
 
 end

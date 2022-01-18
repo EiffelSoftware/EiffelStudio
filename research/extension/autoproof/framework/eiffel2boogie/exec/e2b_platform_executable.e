@@ -114,7 +114,7 @@ feature {NONE} -- Implementation
 				across
 					input.boogie_files as b
 				loop
-					append_file_content (l_output_file, b.item)
+					append_file_content (l_output_file, b)
 				end
 				l_output_file.put_string ("// Custom content")
 				l_output_file.put_new_line
@@ -122,7 +122,7 @@ feature {NONE} -- Implementation
 				across
 					input.custom_content as c
 				loop
-					l_output_file.put_string (c.item)
+					l_output_file.put_string (c)
 				end
 				l_output_file.close
 			else
@@ -333,4 +333,5 @@ note
 		You should have received a copy of the GNU General Public License along with this program.
 		If not, see <https://www.gnu.org/licenses/>.
 	]"
+
 end

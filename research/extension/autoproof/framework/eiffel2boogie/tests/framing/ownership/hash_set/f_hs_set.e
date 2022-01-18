@@ -96,9 +96,9 @@ feature -- Modification
 					other.inv
 					1 <= i and i <= ss.count + 1
 					across 1 |..| (i - 1) as k all
-						across 1 |..| (ss [k.item].count) as l all set_has ((ss [k.item]) [l.item]) end end
+						across 1 |..| (ss [k].count) as l all set_has ((ss [k]) [l]) end end
 					set.old_ <= set
-					across set as x all x.item /= Void and then (set.old_ [x.item] or other.set_has (x.item).old_) end
+					across set as x all x /= Void and then (set.old_ [x] or other.set_has (x).old_) end
 				until
 					i > ss.count
 				loop
@@ -110,10 +110,10 @@ feature -- Modification
 						lock.inv_only ("owns_items")
 						1 <= j and j <= s.count + 1
 						set.old_ <= set
-						across 1 |..| (j - 1) as l all set_has (s [l.item]) end
+						across 1 |..| (j - 1) as l all set_has (s [l]) end
 						across 1 |..| (i - 1) as k all
-							across 1 |..| (ss [k.item].count) as l all set_has ((ss [k.item]) [l.item]) end end
-						across set as x all x.item /= Void and then (set.old_ [x.item] or other.set_has (x.item).old_) end
+							across 1 |..| (ss [k].count) as l all set_has ((ss [k]) [l]) end end
+						across set as x all x /= Void and then (set.old_ [x] or other.set_has (x).old_) end
 					until
 						j > s.count
 					loop
@@ -126,8 +126,8 @@ feature -- Modification
 			end
 		ensure
 			has_old: old set <= set
-			has_other: across old other.set as y all y.item /= Void and then set_has (y.item) end
-			no_extra: across set as x all set_has (x.item).old_ or other.set_has (x.item).old_ end
+			has_other: across old other.set as y all y /= Void and then set_has (y) end
+			no_extra: across set as x all set_has (x).old_ or other.set_has (x).old_ end
 		end
 
 	remove (v: G)
@@ -156,7 +156,7 @@ feature -- Modification
 			abstract_effect: not set_has (v)
 			precise_effect_not_found: not old set_has (v) implies set = old set
 			precise_effect_found: old set_has (v) implies
-				across old set as y some (set = old set / y.item) and v.is_model_equal (y.item) end
+				across old set as y some (set = old set / y) and v.is_model_equal (y) end
 		end
 
 	wipe_out
@@ -193,13 +193,13 @@ feature {F_HS_SET, F_HS_LOCK} -- Implementation
 			-- Index in `b' of an element that is equal to `v'.
 		require
 			v_closed: v.closed
-			items_closed: across 1 |..| b.count as j all b [j.item].closed end
+			items_closed: across 1 |..| b.count as j all b [j].closed end
 		do
 			from
 				Result := 1
 			invariant
 				1 <= Result and Result <= b.count + 1
-				across 1 |..| (Result - 1) as j all not v.is_model_equal (b [j.item]) end
+				across 1 |..| (Result - 1) as j all not v.is_model_equal (b [j]) end
 			until
 				Result > b.count or else v.is_model_equal (b [Result])
 			loop
@@ -209,7 +209,7 @@ feature {F_HS_SET, F_HS_LOCK} -- Implementation
 			end
 		ensure
 			definition_found: b.domain [Result] implies v.is_model_equal (b [Result])
-			definition_not_found: not b.domain [Result] implies across 1 |..| b.count as j all not v.is_model_equal (b [j.item]) end
+			definition_not_found: not b.domain [Result] implies across 1 |..| b.count as j all not v.is_model_equal (b [j]) end
 		end
 
 feature -- Specification
@@ -245,7 +245,7 @@ feature -- Specification
 			set_non_void: set.non_void
 			reads (Current, set, v)
 		do
-			Result := across set as x some v.is_model_equal (x.item) end
+			Result := across set as x some v.is_model_equal (x) end
 		end
 
 	no_duplicates (s: like set): BOOLEAN
@@ -256,7 +256,7 @@ feature -- Specification
 			non_void: s.non_void
 			reads (s)
 		do
-			Result := across s as x all across s as y all x.item /= y.item implies not x.item.is_model_equal (y.item) end end
+			Result := across s as x all across s as y all x /= y implies not x.is_model_equal (y) end end
 		end
 
 invariant
@@ -264,11 +264,35 @@ invariant
 	observers_definition: observers = [lock]
 	set_non_void: set.non_void
 	set_not_too_small: across 1 |..| buckets.count as i all
-		across 1 |..| buckets [i.item].count as j all set [(buckets [i.item])[j.item]] end end
+		across 1 |..| buckets [i].count as j all set [(buckets [i])[j]] end end
 	no_precise_duplicates: across 1 |..| buckets.count as i all
 		across 1 |..| buckets.count as j all
-			across 1 |..| buckets [i.item].count as k all
-				across 1 |..| buckets [j.item].count as l all
-					i.item /= j.item or k.item /= l.item implies (buckets [i.item])[k.item] /= (buckets [j.item])[l.item] end end end end
+			across 1 |..| buckets [i].count as k all
+				across 1 |..| buckets [j].count as l all
+					i /= j or k /= l implies (buckets [i])[k] /= (buckets [j])[l] end end end end
+
+note
+	date: "$Date$"
+	revision: "$Revision$"
+	copyright:
+		"Copyright (c) 2014 ETH Zurich",
+		"Copyright (c) 2018 Politecnico di Milano",
+		"Copyright (c) 2022 Schaffhausen Institute of Technology"
+	author: "Nadia Polikarpova", "Alexander Kogtenkov"
+	license: "GNU General Public License"
+	license_name: "GPL"
+	EIS: "name=GPL", "src=https://www.gnu.org/licenses/gpl.html", "tag=license"
+	copying: "[
+		This program is free software; you can redistribute it and/or modify it under the terms of
+		the GNU General Public License as published by the Free Software Foundation; either version 1,
+		or (at your option) any later version.
+
+		This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
+		without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+		See the GNU General Public License for more details.
+
+		You should have received a copy of the GNU General Public License along with this program.
+		If not, see <https://www.gnu.org/licenses/>.
+	]"
 
 end

@@ -69,12 +69,12 @@ feature -- Access
 		note
 			status: functional, ghost
 		require
-			nodes_exist: across nodes as n all n.item /= Void end
+			nodes_exist: across nodes as n all n /= Void end
 			reads (nodes)
 		do
 			Result :=
 				v >= init_v and
-				across nodes as n all n.item.value <= v end and
+				across nodes as n all n.value <= v end and
 				((max_node = Void and v = init_v) or (nodes [max_node] and then max_node.value = v))
 		end
 
@@ -88,8 +88,8 @@ feature -- Update
 			c_different: c /= Current
 			c_singleton_1: c.parent = Void
 			c_singleton_2: c.children.is_empty
-			ancestors_wrapped: across ancestors as p all p.item.is_wrapped end
-			observers_wrapped: across observers as o all o.item.is_wrapped end
+			ancestors_wrapped: across ancestors as p all p.is_wrapped end
+			observers_wrapped: across observers as o all o.is_wrapped end
 			modify (Current, c)
 			modify_field (["value", "max_child", "closed"], ancestors)
 		do
@@ -115,8 +115,8 @@ feature -- Update
 			c_value_unchanged: c.value = old c.value
 			c_children_unchanged: c.children_set = old c.children_set
 			ancestors_unchengd: ancestors = old ancestors
-			ancestors_wrapped: across ancestors as p all p.item.is_wrapped end
-			observers_wrapped: across observers as o all o.item.is_wrapped end
+			ancestors_wrapped: across ancestors as p all p.is_wrapped end
+			observers_wrapped: across observers as o all o.is_wrapped end
 		end
 
 feature {F_COM_COMPOSITE} -- Implementation
@@ -143,7 +143,7 @@ feature {F_COM_COMPOSITE} -- Implementation
 			c_is_child: children_set [c]
 			open: is_open
 			children_list_wrapped: children.is_wrapped
-			ancestors_wrapped: across ancestors as p all p.item.is_wrapped end
+			ancestors_wrapped: across ancestors as p all p.is_wrapped end
 			partially_holds: inv_without ("value_consistent")
 			almost_max: if value >= c.value
 				then is_max (value, init_value, children_set, max_child)
@@ -167,7 +167,7 @@ feature {F_COM_COMPOSITE} -- Implementation
 			end
 		ensure
 			wrapped: is_wrapped
-			ancestors_wrapped: across ancestors as p all p.item.is_wrapped end
+			ancestors_wrapped: across ancestors as p all p.is_wrapped end
 		end
 
 	lemma_ancestors_have_children (c: F_COM_COMPOSITE)
@@ -177,7 +177,7 @@ feature {F_COM_COMPOSITE} -- Implementation
 		require
 			c_exists: c /= Void
 			wrapped: is_wrapped
-			ancestors_wrapped: across ancestors as a all a.item.is_wrapped  end
+			ancestors_wrapped: across ancestors as a all a.is_wrapped  end
 			decreases (ancestors)
 		do
 			check inv end
@@ -196,12 +196,35 @@ invariant
 	owns_structure: owns = [children]
 	subjects_structure: subjects = if parent = Void then children_set else children_set & parent end
 	tree: not ancestors [Current]
-	children_consistent: across children.sequence.domain as i all children.sequence [i.item] /= Void and then children.sequence [i.item].parent = Current end
+	children_consistent: across children.sequence.domain as i all children.sequence [i] /= Void and then children.sequence [i].parent = Current end
 	ancestors_structure: ancestors = if parent = Void then {MML_SET [F_COM_COMPOSITE]}.empty_set else parent.ancestors & parent end
 	value_consistent: is_max (value, init_value, children_set, max_child)
 	observers_structure: observers = subjects
 
 note
 	explicit: subjects, observers
+	date: "$Date$"
+	revision: "$Revision$"
+	copyright:
+		"Copyright (c) 2013-2014 ETH Zurich",
+		"Copyright (c) 2018 Politecnico di Milano",
+		"Copyright (c) 2022 Schaffhausen Institute of Technology"
+	author: "Julian Tschannen", "Nadia Polikarpova", "Alexander Kogtenkov"
+	license: "GNU General Public License"
+	license_name: "GPL"
+	EIS: "name=GPL", "src=https://www.gnu.org/licenses/gpl.html", "tag=license"
+	copying: "[
+		This program is free software; you can redistribute it and/or modify it under the terms of
+		the GNU General Public License as published by the Free Software Foundation; either version 1,
+		or (at your option) any later version.
+
+		This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
+		without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+		See the GNU General Public License for more details.
+
+		You should have received a copy of the GNU General Public License along with this program.
+		If not, see <https://www.gnu.org/licenses/>.
+	]"
+
 
 end

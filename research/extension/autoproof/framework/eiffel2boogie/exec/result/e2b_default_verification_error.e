@@ -1,7 +1,5 @@
 ﻿note
 	description: "Default implementation for a verification error."
-	date: "$Date$"
-	revision: "$Revision$"
 
 class
 	E2B_DEFAULT_VERIFICATION_ERROR
@@ -50,10 +48,10 @@ feature -- Display
 			-- Single line description of this error.
 		do
 			across components as i loop
-				if i.item[1] = '$' then
-					process_placeholder (a_formatter, i.item.out)
+				if i[1] = '$' then
+					process_placeholder (a_formatter, i.out)
 				else
-					a_formatter.add (i.item)
+					a_formatter.add (i)
 				end
 			end
 		end
@@ -175,5 +173,29 @@ feature {NONE} -- Implementation
 				Result := "?" + a_key
 			end
 		end
+
+note
+	date: "$Date$"
+	revision: "$Revision$"
+	copyright:
+		"Copyright (c) 2013-2015 ETH Zurich",
+		"Copyright (c) 2018-2019 Politecnico di Milano",
+		"Copyright (c) 2022 Schaffhausen Institute of Technology"
+	author: "Julian Tschannen", "Nadia Polikarpova", "Alexander Kogtenkov"
+	license: "GNU General Public License"
+	license_name: "GPL"
+	EIS: "name=GPL", "src=https://www.gnu.org/licenses/gpl.html", "tag=license"
+	copying: "[
+		This program is free software; you can redistribute it and/or modify it under the terms of
+		the GNU General Public License as published by the Free Software Foundation; either version 1,
+		or (at your option) any later version.
+
+		This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
+		without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+		See the GNU General Public License for more details.
+
+		You should have received a copy of the GNU General Public License along with this program.
+		If not, see <https://www.gnu.org/licenses/>.
+	]"
 
 end

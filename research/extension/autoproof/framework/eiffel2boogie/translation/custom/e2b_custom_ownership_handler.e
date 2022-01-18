@@ -1,8 +1,4 @@
-﻿note
-	date: "$Date$"
-	revision: "$Revision$"
-
-class
+﻿class
 	E2B_CUSTOM_OWNERSHIP_HANDLER
 
 inherit
@@ -207,7 +203,7 @@ feature -- Basic operations
 				Result.extend (l_string.value)
 			elseif attached {TUPLE_CONST_B} a_parameters.first.expression as l_tuple then
 				across l_tuple.expressions as i loop
-					if attached {STRING_B} i.item as l_string then
+					if attached {STRING_B} i as l_string then
 						Result.extend (l_string.value)
 					else
 						check False end
@@ -230,14 +226,14 @@ feature -- Basic operations
 			l_tags_copy.compare_objects
 				-- Remove default tags
 			across translation_mapping.default_tags as t loop
-				l_tags_copy.prune_all (t.item)
+				l_tags_copy.prune_all (t)
 			end
 				-- Remove user-defined tags
 			check_flat_inv_tags (a_class, l_tags_copy)
 			if not l_tags_copy.is_empty then
 				l_string := {STRING_32} ""
 				across l_tags_copy as i loop
-					l_string.append ({UTF_CONVERTER}.utf_8_string_8_to_string_32 (i.item))
+					l_string.append ({UTF_CONVERTER}.utf_8_string_8_to_string_32 (i))
 					l_string.append ({STRING_32} ", ")
 				end
 				l_string.remove_tail (2)
@@ -254,7 +250,7 @@ feature -- Basic operations
 				across
 					inv_byte_server.item (a_class.class_id).byte_list as node
 				loop
-					if attached {ASSERT_B} node.item as a then
+					if attached {ASSERT_B} node as a then
 						a_tags.prune_all (a.tag)
 					end
 				end
@@ -287,17 +283,17 @@ feature -- Basic operations
 					l_type_translator.translate_inline_invariant_check (a_translator.current_target_type, a_translator.current_target)
 
 					across helper.ghost_attributes (a_translator.current_target_type.base_class) as a loop
-						set_implicit_ghost (a_translator, a.item)
+						set_implicit_ghost (a_translator, a)
 					end
 
 					across l_type_translator.last_clauses as c loop
-						c.item.node_info.set_line (a_translator.context_line_number)
-						c.item.node_info.set_attribute ("cid", a_feature.written_class.class_id.out)
-						c.item.node_info.set_attribute ("rid", a_feature.rout_id_set.first.out)
+						c.node_info.set_line (a_translator.context_line_number)
+						c.node_info.set_attribute ("cid", a_feature.written_class.class_id.out)
+						c.node_info.set_attribute ("rid", a_feature.rout_id_set.first.out)
 						if options.is_inv_check_independent then
-							a_translator.add_independent_check (c.item)
+							a_translator.add_independent_check (c)
 						else
-							a_translator.side_effect.extend (c.item)
+							a_translator.side_effect.extend (c)
 						end
 					end
 				else
@@ -381,7 +377,7 @@ feature -- Basic operations
 				create l_fcall.make (name_translator.boogie_function_for_write_frame (a_translator.context_feature, a_translator.context_type), types.frame)
 				l_fcall.add_argument (factory.global_heap)
 				across a_translator.context_implementation.procedure.arguments as i loop
-					l_fcall.add_argument (i.item.entity)
+					l_fcall.add_argument (i.entity)
 				end
 
 				create l_if.make_if_then (factory.frame_access (l_fcall, a_translator.current_target, l_field),
@@ -389,5 +385,29 @@ feature -- Basic operations
 				a_translator.side_effect.extend (l_if)
 			end
 		end
+
+note
+	date: "$Date$"
+	revision: "$Revision$"
+	copyright:
+		"Copyright (c) 2012-2014 ETH Zurich",
+		"Copyright (c) 2018-2019 Politecnico di Milano",
+		"Copyright (c) 2022 Schaffhausen Institute of Technology"
+	author: "Julian Tschannen", "Nadia Polikarpova", "Alexander Kogtenkov"
+	license: "GNU General Public License"
+	license_name: "GPL"
+	EIS: "name=GPL", "src=https://www.gnu.org/licenses/gpl.html", "tag=license"
+	copying: "[
+		This program is free software; you can redistribute it and/or modify it under the terms of
+		the GNU General Public License as published by the Free Software Foundation; either version 1,
+		or (at your option) any later version.
+
+		This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
+		without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+		See the GNU General Public License for more details.
+
+		You should have received a copy of the GNU General Public License along with this program.
+		If not, see <https://www.gnu.org/licenses/>.
+	]"
 
 end

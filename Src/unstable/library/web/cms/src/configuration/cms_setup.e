@@ -158,7 +158,6 @@ feature {CMS_API} -- API Access
 			l_enabled_modules: CMS_MODULE_COLLECTION
 			l_modules_to_remove: CMS_MODULE_COLLECTION
 			l_module: CMS_MODULE
-			l_core: CMS_CORE_MODULE
 		do
 			l_enabled_modules := api.enabled_modules
 
@@ -635,6 +634,6 @@ feature -- Element change
 		end
 
 note
-	copyright: "2011-2021, Jocelyn Fiat, Javier Velilla, Eiffel Software and others"
+	copyright: "2011-2022, Jocelyn Fiat, Javier Velilla, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 end

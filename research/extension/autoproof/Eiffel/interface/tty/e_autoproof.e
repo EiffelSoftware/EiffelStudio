@@ -239,11 +239,11 @@ feature {NONE} -- Output
 		do
 			across a_result.verification_results as i loop
 				output_window.add ("======================================%N")
-				if attached {E2B_SUCCESSFUL_VERIFICATION} i.item as l_success then
+				if attached {E2B_SUCCESSFUL_VERIFICATION} i as l_success then
 					print_successful_verification (l_success)
-				elseif attached {E2B_FAILED_VERIFICATION} i.item as l_failure then
+				elseif attached {E2B_FAILED_VERIFICATION} i as l_failure then
 					print_failed_verification (l_failure)
-				elseif attached {E2B_AUTOPROOF_ERROR} i.item as l_error then
+				elseif attached {E2B_AUTOPROOF_ERROR} i as l_error then
 					print_error (l_error)
 				else
 					check False end
@@ -269,12 +269,12 @@ feature {NONE} -- Output
 				output_window.add ("Successfully verified after inlining" + time_string + ".%N")
 				output_window.add ("Original errors:%N")
 				across a_success.original_errors as i loop
-					if i.cursor_index = 1 then
+					if @ i.cursor_index = 1 then
 						output_window.add_new_line
 					else
 						output_window.add ("--------------------------------------%N")
 					end
-					i.item.multi_line_message (output_window)
+					i.multi_line_message (output_window)
 					output_window.add_new_line
 				end
 			end
@@ -293,15 +293,15 @@ feature {NONE} -- Output
 			end
 			output_window.add ("Verification failed" + time_string + ".%N")
 			across a_failure.errors as i loop
-				if i.cursor_index = 1 then
+				if @ i.cursor_index = 1 then
 					output_window.add_new_line
 				else
 					output_window.add ("--------------------------------------%N")
 				end
-				if i.item.context_line_number > 0 then
-					output_window.add ("Line: " + i.item.context_line_number.out + ". ")
+				if i.context_line_number > 0 then
+					output_window.add ("Line: " + i.context_line_number.out + ". ")
 				end
-				i.item.single_line_message (output_window)
+				i.single_line_message (output_window)
 				output_window.add_new_line
 			end
 		end

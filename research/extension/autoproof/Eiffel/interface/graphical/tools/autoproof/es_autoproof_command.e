@@ -162,7 +162,7 @@ feature {NONE} -- Basic operations
 				across eiffel_universe.groups as g loop
 						-- Only load top-level clusters, as they are loaded recursively afterwards.
 					if
-						attached {CLUSTER_I} g.item as c and then
+						attached {CLUSTER_I} g as c and then
 						c.parent_cluster = Void
 					then
 						load_cluster (c)
@@ -189,7 +189,7 @@ feature {NONE} -- Basic operations
 		do
 			event_list.prune_event_items (event_context_cookie)
 			across a_result.verification_results as i loop
-				event_list.put_event_item (event_context_cookie, create {E2B_VERIFICATION_EVENT}.make (i.item))
+				event_list.put_event_item (event_context_cookie, create {E2B_VERIFICATION_EVENT}.make (i))
 			end
 			show_proof_tool
 			enable_tool_button
@@ -200,7 +200,7 @@ feature {NONE} -- Basic operations
 			-- Process verification result.
 		do
 			across a_result.verification_results as i loop
-				event_list.put_event_item (event_context_cookie, create {E2B_VERIFICATION_EVENT}.make (i.item))
+				event_list.put_event_item (event_context_cookie, create {E2B_VERIFICATION_EVENT}.make (i))
 			end
 			if autoproof.is_finished then
 				show_proof_tool

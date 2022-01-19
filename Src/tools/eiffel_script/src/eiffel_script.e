@@ -102,6 +102,9 @@ feature {NONE} -- Creation
 					display_usage
 				end
 			end
+			if has_error then
+				{EXCEPTIONS}.die (-1)
+			end
 		end
 
 feature {NONE} -- Constants	
@@ -153,6 +156,9 @@ feature {NONE} -- Initialization
 feature -- Access
 
 	is_verbose: BOOLEAN
+
+	has_error: BOOLEAN
+			-- Error occurred.
 
 	is_build_forced: BOOLEAN
 
@@ -212,8 +218,10 @@ feature -- Execution
 			is_ecf: a_ecf.ends_with (".ecf")
 		local
 			p_ecf, p: PATH
+			p_output_dir_location, p_output_file_location: PATH
 			s: STRING_32
 			err: STRING_32
+			ut: FILE_UTILITIES
 		do
 			if a_ecf.starts_with ("iron:") then
 				report_error ("iron locations are not yet supported!%N")
@@ -230,12 +238,19 @@ feature -- Execution
 				s.append_string_general (" and save generated executable")
 				if a_exec_output_path /= Void then
 						-- TODO: check if path is folder or executable name.
-					s.append_string_general (" as ")
-					s.append (a_exec_output_path.name)
+					if ut.directory_path_exists (a_exec_output_path) then
+						p_output_dir_location := a_exec_output_path
+						s.append_string_general (" in ")
+						s.append (p_output_dir_location.name)
+					else
+						p_output_file_location := a_exec_output_path
+						s.append_string_general (" as ")
+						s.append (p_output_file_location.name)
+					end
 				else
 					s.append_string_general (" in current folder")
 				end
-				s.append_string_general (".%N")
+				s.append_string_general (" .%N")
 				print (s)
 				if attached ecf_system (p_ecf) as sys then
 					if attached ecf_targets (sys, a_target_name) as tgts then
@@ -251,13 +266,18 @@ feature -- Execution
 							end
 							report_error ({STRING_32} "Multiple targets, select one: " + err + " ...%N")
 						elseif attached tgts.first as tgt then
-							if a_exec_output_path /= Void then
-								p := a_exec_output_path
+							if p_output_file_location /= Void then
+								p := p_output_file_location
 							else
 								p := executable_name (sys, tgt)
+								if p_output_dir_location /= Void then
+									p := p_output_dir_location.extended_path (p)
+								end
 							end
 							build_executable (sys, tgt, a_resources, p)
-							print ({STRING_32} "Executable generated as " + p.name + ".%N")
+							if not has_error then
+								print ({STRING_32} "Executable generated as " + p.name + " .%N")
+							end
 						else
 							report_error ("Missing target!%N")
 						end
@@ -293,6 +313,8 @@ feature {NONE} -- Execution
 		end
 
 	build_executable (a_system: CONF_SYSTEM; a_target: CONF_TARGET; a_resources: detachable ITERABLE [PATH]; a_executable_target_location: PATH)
+		require
+			target_location_not_a_directory: not (create {FILE_UTILITIES}).directory_path_exists (a_executable_target_location)
 		local
 			l_comp_loc: PATH
 			proc: BASE_PROCESS
@@ -301,6 +323,7 @@ feature {NONE} -- Execution
 			ecb_cmd: PATH
 			l_compiled_executable: PATH
 			t: CONF_TARGET
+			l_old_ise_ec_flags: detachable READABLE_STRING_GENERAL
 		do
 			l_comp_loc := compilation_location (a_system, a_target.name)
 			ut.create_directory_path (l_comp_loc)
@@ -336,6 +359,21 @@ feature {NONE} -- Execution
 				proc.redirect_output_to_file (l_comp_loc.extended ("build.log").name)
 				proc.redirect_error_to_same_as_output
 			end
+			l_old_ise_ec_flags := execution_environment.item ("ISE_EC_FLAGS")
+			if l_old_ise_ec_flags /= Void then
+					-- unset any ISE_EC_FLAGS as it may conflict with the current build process.
+				execution_environment.put ("", "ISE_EC_FLAGS")
+			end
+			if attached execution_environment.item ("EIFFEL_EC_FLAGS") as l_eiffel_ec_flags then
+				if is_verbose then
+					log ("Set the ISE_EC_FLAGS variable using EIFFEL_EC_FLAGS variable value.%N")
+					log ({STRING_32} " - ISE_EC_FLAGS=" + l_eiffel_ec_flags + "%N")
+				end
+				execution_environment.put (l_eiffel_ec_flags, "ISE_EC_FLAGS")
+			elseif l_old_ise_ec_flags/= Void and is_verbose then
+				log ("Unset existing ISE_EC_FLAGS to avoid conflict (use EIFFEL_EC_FLAGS if really needed).%N")
+			end
+
 			proc.launch
 			if proc.launched then
 				log ("Building executable...%N")
@@ -349,15 +387,18 @@ feature {NONE} -- Execution
 					ut.copy_file_path (l_compiled_executable, a_executable_target_location)
 					ensure_build_is_executable (a_executable_target_location)
 
-					log ("Build succeed!!!%N")
+					log ("Build succeed.%N")
 					rmdir (l_comp_loc)
 
 					build_compilation_index (a_system, a_target)
 				else
-					report_error ("Build failed!")
+					report_error ("Build failed! (user verbose option to get additional information)")
 				end
 			else
 				report_error ("Unable to start building the executable!")
+			end
+			if l_old_ise_ec_flags /= Void then
+				execution_environment.put (l_old_ise_ec_flags, "ISE_EC_FLAGS")
 			end
 		end
 
@@ -613,6 +654,7 @@ feature {NONE} -- Implementation
 
 	report_error (err: READABLE_STRING_GENERAL)
 		do
+			has_error := True
 			print_error (err)
 			print_error ("%N")
 		end

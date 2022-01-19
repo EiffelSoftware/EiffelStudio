@@ -144,6 +144,8 @@ feature -- Settings: router
 			l_api := api
 			l_router := router
 
+			l_router.set_base_url (l_api.base_url)
+
 				-- Configure root of api handler.
 			configure_api_root (l_router)
 
@@ -505,7 +507,7 @@ feature -- Execution
 		end
 
 note
-	copyright: "2011-2020, Jocelyn Fiat, Javier Velilla, Eiffel Software and others"
+	copyright: "2011-2022, Jocelyn Fiat, Javier Velilla, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

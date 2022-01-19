@@ -145,12 +145,20 @@ feature {NONE} -- Initialize
 			if i > 0 then
 				j := l_url.index_of ('/', i + 3)
 				if j > 0 then
-					l_base_url := l_url.substring (j, l_url.count)
+					if l_url [l_url.count] = '/' then
+						l_base_url := l_url.substring (j, l_url.count - 1)
+					else
+						l_base_url := l_url.substring (j, l_url.count)
+					end
+					if l_base_url.is_whitespace then
+						l_base_url := Void
+					end
 				end
 			end
 			if l_base_url /= Void then
 				base_url := l_base_url
 				if l_base_url.ends_with_general ("/") then
+					check base_url_no_ending_slash: False end
 					create base_path.make_from_string (l_base_url)
 				else
 					create base_path.make_from_string (l_base_url + "/")
@@ -418,7 +426,7 @@ feature -- Access: url
 	base_url: detachable IMMUTABLE_STRING_8
 			-- Base url if any.
 			--| Usually it is Void, but it could be
-			--|  /project/demo/
+			--|  /project/demo
 
 	base_path: IMMUTABLE_STRING_8
 			-- Base path, default to "/"
@@ -541,9 +549,9 @@ feature -- CMS links
 	user_local_link (u: CMS_USER; a_opt_title: detachable READABLE_STRING_GENERAL): CMS_LOCAL_LINK
 		do
 			if a_opt_title /= Void then
-				create Result.make (a_opt_title, user_url (u))
+				create Result.make (a_opt_title, user_location (u))
 			else
-				create Result.make (user_display_name (u), user_url (u))
+				create Result.make (user_display_name (u), user_location (u))
 			end
 		end
 
@@ -594,7 +602,14 @@ feature -- Helpers: URLs
 		require
 			u_with_id: u.has_id
 		do
-			Result := location_url ("user/" + u.id.out, Void)
+			Result := location_url (user_location (u), Void)
+		end
+
+	user_location (u: CMS_USER): READABLE_STRING_8
+		require
+			u_with_id: u.has_id
+		do
+			Result := "user/" + u.id.out
 		end
 
 	administration_location_absolute_url (a_relative_location: READABLE_STRING_8; opts: detachable CMS_API_OPTIONS): STRING
@@ -1924,8 +1939,11 @@ feature {NONE} -- Implementation: current user
 			Result := s32
 		end
 
+invariant
+	attached base_url as inv_base_url implies inv_base_url [inv_base_url.count] /= '/'
+
 note
-	copyright: "2011-2021, Jocelyn Fiat, Javier Velilla, Eiffel Software and others"
+	copyright: "2011-2022, Jocelyn Fiat, Javier Velilla, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 end
 

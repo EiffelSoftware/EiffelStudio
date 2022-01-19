@@ -734,7 +734,8 @@ OPTIONS:
 Note: you can overwrite default value, using
   EIFFEL_SCRIPT_DIR       : root directory for eiffel script app (default under Eiffel user files/.apps) 
   EIFFEL_SCRIPT_CACHE_DIR : directory caching the compiled executables ($EIFFEL_SCRIPT_DIR/cache) 
-  EIFFEL_SCRIPT_COMP_DIR : directory caching the EIFGENs compilation ($EIFFEL_SCRIPT_DIR/comp)
+  EIFFEL_SCRIPT_COMP_DIR  : directory caching the EIFGENs compilation ($EIFFEL_SCRIPT_DIR/comp)
+  EIFFEL_EC_FLAGS         : use that value to force ISE_EC_FLAGS value (see compiler documentation).
 
 ]")
 

@@ -172,7 +172,7 @@ feature -- Status change
 		do
 			has_error := True
 			if m /= Void and then is_verbose then
-				log (m.as_string_8, debug_level)
+				log ({UTF_CONVERTER}.utf_32_string_to_utf_8_string_8 (m), debug_level)
 			end
 		end
 
@@ -234,7 +234,7 @@ feature -- Execution
 			create l_remote_info
 			if attached l_socket.peer_address as l_addr then
 				l_remote_info.addr := l_addr.host_address.host_address
-				l_remote_info.hostname := l_addr.host_address.host_name
+				l_remote_info.hostname := {UTF_CONVERTER}.utf_32_string_to_utf_8_string_8 (l_addr.host_address.host_name) -- FIXME jfiat [2022/01/20] : check what should be done for hostname...
 				l_remote_info.port := l_addr.port
 			end
 			remote_info := l_remote_info

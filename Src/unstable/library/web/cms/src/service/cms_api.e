@@ -655,7 +655,7 @@ feature -- Helpers: URLs
 				if s.is_valid_as_string_8 then
 					Result := s.to_string_8
 				else
-					Result := p_destination.url_encoded_value
+					Result := p_destination.url_encoded_value.to_string_8
 				end
 			end
 			if

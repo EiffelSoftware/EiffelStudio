@@ -650,7 +650,7 @@ feature -- Helpers: URLs
 		do
 			if attached {WSF_STRING} req.item ("destination") as p_destination then
 --TODO: check why previous code sometimes used the url encoded value.
-				Result := p_destination.url_encoded_value
+--				Result := p_destination.url_encoded_value
 				s := p_destination.value
 				if s.is_valid_as_string_8 then
 					Result := s.to_string_8

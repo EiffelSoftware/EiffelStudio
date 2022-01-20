@@ -173,7 +173,8 @@ feature -- Settings: router
 			l_router := router
 
 				-- Configure root of api handler.
-			l_router.set_base_url (l_api.webapi_path (Void))
+--			l_router.set_base_url (l_api.webapi_path (Void))
+			l_router.set_base_url (l_api.webapi_base_url)
 
 				-- Find insertion location for new filter
 				-- i.e just before the CMS_EXECUTION filter.
@@ -226,7 +227,8 @@ feature -- Settings: router
 			l_router := router
 
 				-- Configure root of api handler.
-			l_router.set_base_url (l_api.administration_path (Void))
+--			l_router.set_base_url (l_api.administration_path (Void))
+			l_router.set_base_url (l_api.administration_base_url)
 
 				-- Apply normal filters
 			setup_filter

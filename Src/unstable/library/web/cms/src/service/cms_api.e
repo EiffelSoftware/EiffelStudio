@@ -156,20 +156,26 @@ feature {NONE} -- Initialize
 				end
 			end
 			if l_base_url /= Void then
-				base_url := l_base_url
 				if l_base_url.ends_with_general ("/") then
 					check base_url_no_ending_slash: False end
 					create base_path.make_from_string (l_base_url)
+					l_base_url := l_base_url.substring (1, l_base_url.count - 1)
 				else
 					create base_path.make_from_string (l_base_url + "/")
 				end
+				base_url := l_base_url
+				administration_base_url := l_base_url + setup.administration_base_path
+				webapi_base_url := l_base_url + setup.webapi_base_path
 			else
 				create base_path.make_from_string ("/")
+				administration_base_url := setup.administration_base_path
+				webapi_base_url := setup.webapi_base_path
 			end
 		ensure
 			site_url_set: site_url /= Void
 			site_url_ends_with_slash: site_url.ends_with_general ("/")
 			base_path_set: base_path /= Void and then base_path.ends_with_general ("/")
+			base_url_valid: attached base_url as e_base_url implies not e_base_url.ends_with_general ("/")
 		end
 
 	initialize_content_types
@@ -434,11 +440,15 @@ feature -- Access: url
 	site_url: IMMUTABLE_STRING_8
 			-- Site url
 
+	administration_base_url: IMMUTABLE_STRING_8
+
+	webapi_base_url: IMMUTABLE_STRING_8
+
 feature -- Access: WebAPI
 
 	is_webapi_request (req: WSF_REQUEST): BOOLEAN
 		do
-			Result := setup.webapi_enabled and then req.percent_encoded_path_info.starts_with_general (setup.webapi_base_path)
+			Result := setup.webapi_enabled and then req.percent_encoded_path_info.starts_with_general (webapi_base_url)
 		end
 
 	webapi_path (a_relative_path: detachable READABLE_STRING_8): STRING_8
@@ -485,7 +495,7 @@ feature -- Access: Administration
 
 	is_administration_request (req: WSF_REQUEST): BOOLEAN
 		do
-			Result := req.percent_encoded_path_info.starts_with_general (setup.administration_base_path)
+			Result := req.percent_encoded_path_info.starts_with_general (administration_base_url)
 		end
 
 	administration_path (a_relative_path: detachable READABLE_STRING_8): STRING_8
@@ -495,7 +505,7 @@ feature -- Access: Administration
 				if a_relative_path.is_empty then
 					Result.append_character ('/')
 				else
-					if a_relative_path[1] /= '/' then
+					if a_relative_path [1] /= '/' then
 						Result.append_character ('/')
 					end
 					Result.append (a_relative_path)

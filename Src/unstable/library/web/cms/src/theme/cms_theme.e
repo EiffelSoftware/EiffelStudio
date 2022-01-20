@@ -69,9 +69,16 @@ feature -- Element change
 			if i > 0 then
 				j := a_url.index_of ('/', i + 3)
 				if j > 0 then
-					create base_url.make_from_string (a_url.substring (j, a_url.count))
+					if a_url [a_url.count] = '/' then
+						create base_url.make_from_string (a_url.substring (j, a_url.count - 1))
+					else
+						create base_url.make_from_string (a_url.substring (j, a_url.count))
+					end
 				end
 			end
+		ensure
+			valid_site_url: site_url.ends_with ("/")
+			valid_base_url: attached base_url as e_base_url implies not e_base_url.ends_with ("/")
 		end
 
 feature -- Conversion
@@ -187,7 +194,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright: "2011-2020, Jocelyn Fiat, Javier Velilla, Eiffel Software and others"
+	copyright: "2011-2022, Jocelyn Fiat, Javier Velilla, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

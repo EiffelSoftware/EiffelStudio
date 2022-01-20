@@ -21,18 +21,17 @@ feature -- Core
 		deferred
 		end
 
-	based_path (p: READABLE_STRING_8): STRING
+	based_path (p: READABLE_STRING_8): STRING_8
 			-- Path `p' in the context of the `base_url'
 		do
 			if attached base_url as l_base_url then
 				create Result.make_from_string (l_base_url)
 				if p.is_empty then
 				else
-					if p[1] = '/' then
-						Result.append (p.substring (2, p.count))
-					else
-						Result.append (p)
+					if p[1] /= '/' then
+						Result.extend ('/')
 					end
+					Result.append (p)
 				end
 			else
 				Result := p.to_string_8
@@ -216,6 +215,6 @@ feature -- Url
 		end
 
 note
-	copyright: "2011-2021, Jocelyn Fiat, Javier Velilla, Eiffel Software and others"
+	copyright: "2011-2022, Jocelyn Fiat, Javier Velilla, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 end

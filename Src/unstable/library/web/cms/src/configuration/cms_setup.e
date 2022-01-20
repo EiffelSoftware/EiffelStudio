@@ -120,7 +120,6 @@ feature {NONE} -- Initialization
 				create webapi_base_path.make_from_string (default_webapi_base_path)
 			end
 
-
 				-- Administration
 			l_url := string_8_item ("administration.base_path")
 			if l_url /= Void and then not l_url.is_empty then
@@ -135,7 +134,6 @@ feature {NONE} -- Initialization
 				create administration_base_path.make_from_string (default_administration_base_path)
 			end
 			administration_theme_name := text_item_or_default ("administration.theme", theme_name) -- TODO: Default to builtin theme?
-
 		end
 
 feature -- Access
@@ -337,10 +335,10 @@ feature -- Access: Site
 			-- Is WebAPI enabled?
 
 	webapi_base_path: IMMUTABLE_STRING_8
-			-- Web API base url, default=`default_webapi_base_path`.
+			-- Web API base path, default=`default_webapi_base_path`.
 
 	administration_base_path: IMMUTABLE_STRING_8
-			-- Administration base url, default=`default_administration_base_path`.
+			-- Administration base path, default=`default_administration_base_path`.
 
 	site_auth_max_age (a_auth: READABLE_STRING_GENERAL): INTEGER
 			-- `Max-Age` for session based authentication.

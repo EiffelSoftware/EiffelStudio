@@ -15,7 +15,7 @@ feature {NONE} -- Initialization
 
 	initialize
 		local
-			l_url: like site_url
+			l_url: READABLE_STRING_8
 			s, l_email: detachable READABLE_STRING_8
 			utf: UTF_CONVERTER
 		do
@@ -33,8 +33,10 @@ feature {NONE} -- Initialization
 				if l_url [l_url.count] /= '/' then
 					l_url := l_url + "/"
 				end
+				site_url := l_url
+			else
+				site_url := Void
 			end
-			site_url := l_url
 
 				-- Site name
 			site_name := text_item_or_default ("site.name", "Your ROC CMS")
@@ -324,10 +326,10 @@ feature -- Access: Site
 	site_email_subject_prefix: detachable READABLE_STRING_8
 			-- Optional prefix for any email sent by Current site.
 
-	site_url: detachable READABLE_STRING_8
+	site_url: detachable IMMUTABLE_STRING_8
 			-- Optional url of current CMS site.
 
-	front_page_path: detachable READABLE_STRING_8
+	front_page_path: detachable IMMUTABLE_STRING_8
 			-- Optional path defining the front page.
 			-- By default "" or "/".
 

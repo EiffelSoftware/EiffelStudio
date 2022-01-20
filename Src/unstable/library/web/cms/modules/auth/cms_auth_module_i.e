@@ -76,8 +76,8 @@ feature -- Hooks
 			lnk: CMS_LOCAL_LINK
 			l_destination: READABLE_STRING_8
 		do
-			if attached {WSF_STRING} a_response.request.item ("destination") as p_destination then
-				l_destination := p_destination.url_encoded_value
+			if attached a_response.destination_location as v then
+				l_destination := v
 			else
 				l_destination := a_response.location
 			end
@@ -107,11 +107,7 @@ feature {NONE} -- Template
 		do
 			Result := smarty_template_block (a_module, a_block_id, a_cms_api)
 			if Result /= Void then
-				if attached {WSF_STRING} a_request.query_parameter ("destination") as p_destination then
-					l_destination := p_destination.value
-				elseif attached {WSF_STRING} a_request.form_parameter ("destination") as p_destination then
-					l_destination := p_destination.value
-				end
+				l_destination := a_cms_api.destination_location (a_request)
 				if
 					l_destination /= Void and then
 					(	l_destination.is_whitespace

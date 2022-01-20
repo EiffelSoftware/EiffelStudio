@@ -78,8 +78,8 @@ feature -- Request execution
 					jwt_auth_api.discard_user_token (l_user, p_token.value)
 					rep := new_generic_response (req, res)
 					rep.set_title ({STRING_32} "Magic login for user " + api.real_user_display_name (l_user))
-					if attached {WSF_STRING} req.query_parameter ("destination") as p_destination then
-						rep.set_redirection (p_destination.url_encoded_value)
+					if attached rep.destination_location as v then
+						rep.set_redirection (v)
 					else
 						rep.set_redirection (api.absolute_url ("/", Void))
 					end

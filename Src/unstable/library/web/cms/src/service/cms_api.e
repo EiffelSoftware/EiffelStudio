@@ -642,6 +642,31 @@ feature -- Helpers: URLs
 			Result := location_url (administration_path_location (a_relative_location), opts)
 		end
 
+	destination_location (req: WSF_REQUEST): detachable STRING
+			-- Destination value from `req`.
+			-- If the location includes the `base_url` part, remove it.
+		local
+			s: READABLE_STRING_32
+		do
+			if attached {WSF_STRING} req.item ("destination") as p_destination then
+--TODO: check why previous code sometimes used the url encoded value.
+				Result := p_destination.url_encoded_value
+				s := p_destination.value
+				if s.is_valid_as_string_8 then
+					Result := s.to_string_8
+				end
+			end
+			if
+				Result /= Void and then
+				attached base_url as l_base_url and then
+				Result.count >= l_base_url.count - 1
+			then
+				if l_base_url.same_characters (Result, 1, l_base_url.count - 1, 2) then
+					Result.remove_head (l_base_url.count) -- there must be a slash to remove
+				end
+			end
+		end
+
 feature -- Helpers: html links
 
 	user_display_name (u: CMS_USER): READABLE_STRING_32

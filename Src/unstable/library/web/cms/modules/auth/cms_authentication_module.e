@@ -197,8 +197,8 @@ feature -- Hooks configuration
 			l_url: STRING
 			l_url_name: READABLE_STRING_GENERAL
 		do
-			if attached {WSF_STRING} a_response.request.item ("destination") as p_destination then
-				l_destination := secured_url_content (p_destination.url_encoded_value)
+			if attached a_response.destination_location as v then
+				l_destination := secured_url_content (v)
 			else
 				l_destination := a_response.location
 			end
@@ -350,12 +350,8 @@ feature -- Handler
 			r.set_main_content (b)
 
 			if l_user = Void then
-				if
-					attached {WSF_STRING} req.item ("destination") as l_destination and then
-					attached l_destination.value as v and then
-					v.is_valid_as_string_8
-				then
-					r.set_redirection (roc_login_location + "?destination=" + secured_url_content (v.to_string_8))
+				if attached r.destination_location as v then
+					r.set_redirection (roc_login_location + "?destination=" + secured_url_content (v))
 				else
 					r.set_redirection (roc_login_location)
 				end
@@ -437,11 +433,7 @@ feature -- Handler
 				r.execute
 			else
 				create {GENERIC_VIEW_CMS_RESPONSE} r.make (req, res, a_auth_api.cms_api)
-				if
-					attached {WSF_STRING} req.item ("destination") as l_destination and then
-					attached l_destination.value as v and then
-					v.is_valid_as_string_8
-				then
+				if attached r.destination_location as v then
 					a_auth_api.invoke_get_login_redirection (r, v.to_string_8)
 				else
 					a_auth_api.invoke_get_login_redirection (r, Void)
@@ -462,8 +454,8 @@ feature -- Handler
 				loc := ""
 			end
 				-- Do not try to redirect to previous page or destination!
---			if attached {WSF_STRING} req.query_parameter ("destination") as l_destination then
---				loc.append ("?destination=" + secured_html_content (l_destination.url_encoded_value))
+--			if attached r.destination_location as l_destination then
+--				loc.append ("?destination=" + secured_html_content (l_destination))
 --			end
 			r.set_redirection (loc)
 			r.execute

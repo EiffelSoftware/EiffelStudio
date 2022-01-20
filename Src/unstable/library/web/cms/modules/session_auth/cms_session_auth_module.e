@@ -178,7 +178,7 @@ feature {NONE} -- Implementation: routes
 					create vals.make (1)
 						-- add the variable to the block
 					l_tpl_block.set_value (api.user, "user")
-					l_tpl_block.set_value (r.url ("", Void), "site_url")
+					l_tpl_block.set_value (api.site_url, "site_url")
 					api.hooks.invoke_value_table_alter (vals, r)
 					across
 						vals as ic
@@ -205,14 +205,10 @@ feature {NONE} -- Implementation: routes
 				create {GENERIC_VIEW_CMS_RESPONSE} r.make (req, res, api)
 				r.set_status_code ({HTTP_CONSTANTS}.found)
 			end
-			if
-				attached {WSF_STRING} req.item ("destination") as p_destination and then
-				attached p_destination.value as v and then
-				v.is_valid_as_string_8
-			then
-				r.set_redirection (secured_url_content (v.to_string_8))
+			if attached api.destination_location (req) as v then
+				r.set_redirection (secured_url_content (v))
 			else
-				r.set_redirection (req.absolute_script_url (""))
+				r.set_redirection (r.absolute_url ("", Void))
 			end
 
 			r.execute
@@ -242,12 +238,8 @@ feature {NONE} -- Implementation: routes
 					else
 						a_session_api.process_user_login (l_user, req, res)
 						create {GENERIC_VIEW_CMS_RESPONSE} r.make (req, res, api)
-						if
-							attached {WSF_STRING} req.item ("destination") as p_destination and then
-							attached p_destination.value as v and then
-							v.is_valid_as_string_8
-						then
-							r.set_redirection (secured_url_content (v.to_string_8))
+						if attached api.destination_location (req) as v then
+							r.set_redirection (secured_url_content (v))
 						else
 							r.set_redirection ("")
 						end

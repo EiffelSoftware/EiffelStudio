@@ -495,7 +495,7 @@ feature -- Execution
 					do
 						execute_default (ia_req, ia_res)
 					end)
-				fhdl.execute_starts_with ("/module/" + l_mod_name.url_encoded_value + "/files/", req, res)
+				fhdl.execute_starts_with (api.based_path ("/module/" + l_mod_name.url_encoded_value + "/files/"), req, res)
 			else
 				api.response_api.send_not_found (Void, req, res)
 			end

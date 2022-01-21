@@ -40,7 +40,7 @@
 		{/unless}
 
         <!-- Highlighted, Help, Content -->      
-        <div id='main' {unless isempty="$page.page_css"}class="{$page.page_css/}"{/unless}>
+        <div id='main' {unless isempty="$page.page_class_css"}class="{$page.page_class_css/}"{/unless}>
           <!-- Highlighted Section -->
           {unless isempty="$page.region_highlighted"}
 		  <div id="highlighted">{$page.region_highlighted/}</div>

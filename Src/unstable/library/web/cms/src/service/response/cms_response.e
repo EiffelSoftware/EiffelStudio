@@ -44,6 +44,10 @@ feature -- Access: metadata
 	page_title: detachable READABLE_STRING_32
 			-- Page title
 
+	page_css: detachable READABLE_STRING_8
+			-- Page class CSS applied to the main section.
+			-- note: depends on the theme code.
+
 	description: detachable READABLE_STRING_32
 
 	additional_page_head_lines: detachable LIST [READABLE_STRING_8]
@@ -159,6 +163,12 @@ feature -- Element change
 			else
 				page_title := t
 			end
+		end
+
+	set_page_css (a_css: like page_css)
+			-- Set theme page class css.
+		do
+			page_css := a_css
 		end
 
 	set_description (d: like description)
@@ -1044,6 +1054,9 @@ feature -- Generation
 			page.register_variable (horizontal_primary_tabs_html, "primary_tabs")
 
 				-- Page related
+			if attached page_css as l_page_css then
+				page.register_variable (l_page_css, "page_css")
+			end
 			if attached page_title as l_page_title then
 				page.register_variable (l_page_title, "page_title")
 			end

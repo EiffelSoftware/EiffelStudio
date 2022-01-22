@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-22-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-22-0 http://www.eiffel.com/developers/xml/configuration-1-22-0.xsd" name="ec">
+	<target name="bench" extends="bench" extends_location="$EIFFEL_SRC\Eiffel\Ace\ec.ecf">
+		<capability>
+			<concurrency support="thread"/>
+		</capability>
+		<cluster name="eiffel_converter" location=".">
+			<visible class="SERVICE_INITIALIZER_EXTENSION" feature="default_create"/>
+		</cluster>
+	</target>
+</system>

@@ -104,7 +104,7 @@ feature -- Type translation
 			l_constructor: READABLE_STRING_8
 			l_params: like {IV_USER_TYPE}.parameters
 			l_domain_types: like {IV_MAP_SYNONYM_TYPE}.domain_types
-			l_default_function, l_type_inv_function, l_leq_function: READABLE_STRING_8
+			l_default_function, l_type_inv_function: READABLE_STRING_8
 			l_access_feature: FEATURE_I
 		do
 			l_class := a_type.base_class
@@ -167,12 +167,17 @@ feature -- Type translation
 					l_user_type.set_type_inv_function (l_type_inv_function)
 				end
 
-					-- Check if the type has a rank function
-				l_leq_function := helper.function_for_logical (l_class.feature_named ("infix %"<=%""))
-				if attached l_leq_function then
+					-- Check if the type has a rank function.
+					-- TODO: check whether the class is a descendant of "PART_COMPARABLE" and
+					-- use a redeclaration of the comparison function instead of the hard-coded function.
+				if
+					attached helper.function_for_logical (l_class.feature_table.item_alias_id
+						({OPERATOR_KIND}.alias_id ({PREDEFINED_NAMES}.less_equal_operator_name_id,
+						{OPERATOR_KIND}.is_valid_binary_kind_mask ⦶ {OPERATOR_KIND}.is_binary_kind_mask))) as
+					l_leq_function
+				then
 					l_user_type.set_rank_function (l_leq_function)
 				end
-
 				Result := l_user_type
 			else
 				Result := ref

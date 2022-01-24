@@ -17,49 +17,51 @@ feature -- Reset
 		do
 		end
 
-feature -- Write
+feature -- Write: object, array
 
-	put_object_start
+	enter_object
 			-- Start a JSON Object.
 		deferred
 		ensure
 			active_is_object
 		end
 
-	put_object_end
+	leave_object
 			-- End a JSON Object.	
 		require
 			active_is_object
 		deferred
 		end
 
-	put_array_start
-			-- Start a JSON Object.	
+	enter_array
+			-- Start a JSON array.	
 		deferred
 		ensure
 			active_is_array
 		end
 
-	put_array_end
-			-- End a JSON Object.	
+	leave_array
+			-- End a JSON array.	
 		require
 			active_is_array
 		deferred
 		end
 
-	put_end
-			-- End a JSON item (object or array).
+	leave
+			-- End a JSON object or array.
 		require
 			 in_array_or_object: active_is_object or active_is_array
 		do
 			if active_is_object then
-				put_object_end
+				leave_object
 			elseif active_is_array then
-				put_array_end
+				leave_array
 			else
 				check in_array_or_object: False end
 			end
 		end
+
+feature -- Write: property, value
 
 	put_property_name (a_name: READABLE_STRING_GENERAL)
 			-- Put a JSON property name `a_name`.

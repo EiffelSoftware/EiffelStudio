@@ -23,33 +23,33 @@ feature -- Reset
 
 feature -- Writing
 
-	put_object_start
+	enter_object
 		do
-			enter_object
+			on_enter_object
 			output_character (object_start_character)
 		end
 
-	put_object_end
+	leave_object
 		do
 			output_character (object_end_character)
-			leave_object
+			on_leave_object
 		end
 
-	put_array_start
+	enter_array
 		do
-			enter_array
+			on_enter_array
 			output_character (array_start_character)
 		end
 
-	put_array_end
+	leave_array
 		do
 			output_character (array_end_character)
-			leave_array
+			on_leave_array
 		end
 
 	put_property_name (a_name: READABLE_STRING_GENERAL)
 		do
-			enter_property
+			on_enter_property
 			output_character ('%"')
 			output_string ((create {JSON_STRING}.make_from_string_general (a_name)).item)
 			output_character ('%"')
@@ -58,43 +58,43 @@ feature -- Writing
 
 	put_string_value (a_value: READABLE_STRING_GENERAL)
 		do
-			enter_value
+			on_enter_value
 			output_character ('%"')
 			output_string ((create {JSON_STRING}.make_from_string_general (a_value)).item)
 			output_character ('%"')
-			leave_value
+			on_leave_value
 		end
 
 	put_integer_64_value (a_value: INTEGER_64)
 		do
-			enter_value
+			on_enter_value
 			output_string ((create {JSON_NUMBER}.make_integer (a_value)).item)
-			leave_value
+			on_leave_value
 		end
 
 	put_real_64_value (a_value: REAL_64)
 		do
-			enter_value
+			on_enter_value
 			output_string ((create {JSON_NUMBER}.make_real (a_value)).item)
-			leave_value
+			on_leave_value
 		end
 
 	put_boolean_value (a_value: BOOLEAN)
 		do
-			enter_value
+			on_enter_value
 			if a_value then
 				output_string (boolean_true_string)
 			else
 				output_string (boolean_false_string)
 			end
-			leave_value
+			on_leave_value
 		end
 
 	put_null_value
 		do
-			enter_value
+			on_enter_value
 			output_string (null_string)
-			leave_value
+			on_leave_value
 		end
 
 feature -- Status report
@@ -141,7 +141,7 @@ feature {NONE} -- Implementation
 		deferred
 		end
 
-	enter_object
+	on_enter_object
 			-- Enter JSON object.
 		do
 			if not active_is_empty then
@@ -150,7 +150,7 @@ feature {NONE} -- Implementation
 			active_stack.extend ([object_start_character, 0])
 		end
 
-	leave_object
+	on_leave_object
 			-- Leave JSON object.	
 		require
 			active_is_object
@@ -158,11 +158,11 @@ feature {NONE} -- Implementation
 			active_stack.remove
 			increment_count
 			if active_is_property then
-				leave_value
+				on_leave_value
 			end
 		end
 
-	enter_array
+	on_enter_array
 			-- Enter JSON array.	
 		do
 			if not active_is_empty then
@@ -171,7 +171,7 @@ feature {NONE} -- Implementation
 			active_stack.extend ([array_start_character, 0])
 		end
 
-	leave_array
+	on_leave_array
 			-- Leave JSON array.	
 		require
 			active_is_array
@@ -179,11 +179,11 @@ feature {NONE} -- Implementation
 			active_stack.remove
 			increment_count
 			if active_is_property then
-				leave_value
+				on_leave_value
 			end
 		end
 
-	enter_value
+	on_enter_value
 			-- Enter JSON value.
 		do
 			if not active_is_property then
@@ -193,17 +193,17 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	leave_value
+	on_leave_value
 			-- Leave JSON value.
 		do
 			if active_is_property then
-				leave_property
+				on_leave_property
 			else
 				increment_count
 			end
 		end
 
-	enter_property
+	on_enter_property
 			-- Enter JSON property.
 		do
 			if not active_is_empty then
@@ -212,7 +212,7 @@ feature {NONE} -- Implementation
 			active_stack.extend ([property_delimiter, 0])
 		end
 
-	leave_property
+	on_leave_property
 			-- Leave JSON property.	
 		require
 			active_is_property

@@ -10,10 +10,10 @@ inherit
 	JSON_STREAM_WRITER_IMP
 		redefine
 			reset,
-			enter_object, put_object_end,
-			enter_array, put_array_end,
-			enter_property,
-			enter_value,
+			on_enter_object, leave_object,
+			on_enter_array, leave_array,
+			on_enter_property,
+			on_enter_value,
 			put_property_name,
 			output_separator
 		end
@@ -59,7 +59,7 @@ feature -- Layout
 			output_string (offset)
 		end
 
-	enter_object
+	on_enter_object
 		do
 			if
 				not active_is_property and
@@ -72,7 +72,7 @@ feature -- Layout
 			indent
 		end
 
-	put_object_end
+	leave_object
 		do
 			exdent
 			output_character ('%N')
@@ -80,7 +80,7 @@ feature -- Layout
 			Precursor
 		end
 
-	enter_array
+	on_enter_array
 		do
 			if
 				not active_is_property and
@@ -93,7 +93,7 @@ feature -- Layout
 			indent
 		end
 
-	put_array_end
+	leave_array
 		do
 			exdent
 			output_character ('%N')
@@ -101,7 +101,7 @@ feature -- Layout
 			Precursor
 		end
 
-	enter_property
+	on_enter_property
 		do
 			if active_is_empty then
 				output_character ('%N')
@@ -110,7 +110,7 @@ feature -- Layout
 			Precursor
 		end
 
-	enter_value
+	on_enter_value
 		do
 			if active_is_empty and not active_is_property then
 				output_character ('%N')

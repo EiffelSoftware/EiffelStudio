@@ -49,8 +49,8 @@ feature -- Element change
 	add_group (g: CONF_GROUP)
 			-- Add all compiled classes of group `g`to the set of classes to verify.
 		do
-			if attached workbench.universe as u then
-				⟳ i: g.classes ¦ if attached u.class_named (i.name, g).compiled_class as c then add_class (c) end ⟲
+			if attached workbench.universe as u and then attached g.classes as cs then
+				⟳ i: cs ¦ if attached u.class_named (i.name, g).compiled_class as c then add_class (c) end ⟲
 				if attached {CONF_CLUSTER} g as i and then attached i.children as s then
 					⟳ c: s ¦ add_group (c) ⟲
 				end

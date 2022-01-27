@@ -46,6 +46,7 @@ feature -- Query
 					lst.replace (resolved_expression (lst.item))
 					lst.forth
 				end
+				Result := lst
 			end
 		end
 
@@ -62,6 +63,7 @@ feature -- Query
 					tb.replace (resolved_expression (tb.item_for_iteration), tb.key_for_iteration)
 					tb.forth
 				end
+				Result := tb
 			end
 		end
 

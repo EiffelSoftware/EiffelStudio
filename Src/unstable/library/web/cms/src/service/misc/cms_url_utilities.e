@@ -25,13 +25,19 @@ feature -- Core
 			-- Path `p' in the context of the `base_url'
 		do
 			if attached base_url as l_base_url then
-				create Result.make_from_string (l_base_url)
-				if p.is_empty then
+				if p.starts_with (l_base_url) then
+						-- In case `p` is already based on base_url.
+					check starts_with_slash: p.starts_with ("/") end
+					Result := p.to_string_8
 				else
-					if p[1] /= '/' then
-						Result.extend ('/')
+					create Result.make_from_string (l_base_url)
+					if p.is_empty then
+					else
+						if p[1] /= '/' then
+							Result.extend ('/')
+						end
+						Result.append (p)
 					end
-					Result.append (p)
 				end
 			else
 				Result := p.to_string_8
@@ -134,6 +140,7 @@ feature -- Url
 
 	url (a_path: READABLE_STRING_8; opts: detachable CMS_API_OPTIONS): STRING_8
 			-- URL for path `a_path' and optional parameters from `opts'.
+			-- Caller can also use specific CMS_API_URL_OPTIONS (descendant of CMS_API_OPTIONS)
 			--| Options `opts' could be
 			--|  - absolute: True|False	=> return absolute url
 			--|  - query: string		=> append "?query"

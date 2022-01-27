@@ -56,6 +56,7 @@ feature {NONE} -- Initialization
 			m.force (image_jpeg, "jpeg")
 			m.force (image_jpg, "jpg")
 			m.force (image_png, "png")
+			m.force (image_svg_xml, "svg")
 			m.force (application_zip, "zip")
 			m.force (application_x_bzip, "bz")
 			m.force (application_x_bzip2, "bz2")

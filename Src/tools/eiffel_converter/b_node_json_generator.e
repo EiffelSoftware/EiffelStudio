@@ -44,9 +44,9 @@ feature -- Visitor: routine declaration
 	process_std_byte_code (x: STD_BYTE_CODE)
 			-- <Precursor>
 		do
-			printer.put_array_start
+			printer.enter_array
 			Precursor (x)
-			printer.put_array_end
+			printer.leave_array
 		end
 
 feature -- Visitor: entities
@@ -54,10 +54,10 @@ feature -- Visitor: entities
 	process_attribute_b (x: ATTRIBUTE_B)
 			-- <Precursor>
 		do
-			printer.put_object_start
+			printer.enter_object
 			printer.put_property_name (key_attribute)
 			printer.put_string_value (names_heap.item_32 (x.attribute_name_id))
-			printer.put_object_end
+			printer.leave_object
 		end
 
 	process_local_b (x: LOCAL_B)
@@ -71,13 +71,13 @@ feature -- Visitor: expressions
 	process_creation_expr_b (x: CREATION_EXPR_B)
 			-- <Precursor>
 		do
-			printer.put_object_start
+			printer.enter_object
 			printer.put_property_name (key_create)
-			printer.put_object_start
+			printer.enter_object
 			printer.put_property_name (key_type)
 			printer.put_string_value (x.type.name)
-			printer.put_object_end
-			printer.put_object_end
+			printer.leave_object
+			printer.leave_object
 		end
 
 feature -- Visitor: instructions
@@ -85,15 +85,15 @@ feature -- Visitor: instructions
 	process_assign_b (x: ASSIGN_B)
 			-- <Precursor>
 		do
-			printer.put_object_start
+			printer.enter_object
 			printer.put_property_name (key_assign)
-			printer.put_object_start
+			printer.enter_object
 			printer.put_property_name (key_target)
 			x.target.process (Current)
 			printer.put_property_name (key_source)
 			x.source.process (Current)
-			printer.put_object_end
-			printer.put_object_end
+			printer.leave_object
+			printer.leave_object
 		end
 
 	process_guard_b (x: GUARD_B)
@@ -114,17 +114,17 @@ feature -- Visitor: instructions
 	process_if_b (x: IF_B)
 			-- <Precursor>
 		do
-			printer.put_object_start
+			printer.enter_object
 			printer.put_property_name (key_conditional)
 				-- The beginning of a sequence of "if/elseif ... then ..." clauses.
-			printer.put_array_start
+			printer.enter_array
 				-- TODO: handle conditional expression.
 				-- The compound of the first "then" clause.
 			process_compound (x.compound)
 			safe_process (x.elsif_list)
 			process_compound (x.else_part)
-			printer.put_array_end
-			printer.put_object_end
+			printer.leave_array
+			printer.leave_object
 		end
 
 	process_loop_b (x: LOOP_B)
@@ -132,17 +132,17 @@ feature -- Visitor: instructions
 		do
 			safe_process (x.iteration_initialization)
 			safe_process (x.from_part)
-			printer.put_object_start
+			printer.enter_object
 			printer.put_property_name (key_loop)
 				-- TODO: handle exit condition and iteration exit condition condition.
 				-- TODO: handle invariant.
 				-- Because the code to advance iteration is separate, `process_compound` is not used.
-			printer.put_array_start
+			printer.enter_array
 			safe_process (x.compound)
 			safe_process (x.advance_code)
 				-- TODO: handle variant.
-			printer.put_array_end
-			printer.put_object_end
+			printer.leave_array
+			printer.leave_object
 		end
 
 feature {NONE} -- Visitor: instruction collection
@@ -150,9 +150,9 @@ feature {NONE} -- Visitor: instruction collection
 	process_compound (x: detachable BYTE_LIST [BYTE_NODE])
 			-- Generate representation for compound `x`.
 		do
-			printer.put_array_start
+			printer.enter_array
 			safe_process (x)
-			printer.put_array_end
+			printer.leave_array
 		end
 
 feature {NONE} -- Keys

@@ -1587,13 +1587,16 @@ feature -- Environment/ theme
 			Result := setup.files_location
 		end
 
-	files_path: STRING_8
+	based_files_path: STRING_8
 		do
 			create Result.make_from_string (base_path)
 			Result.append ("files/")
 		ensure
 			ends_with_slash: Result.ends_with ("/")
+			ends_with_files_path: Result.ends_with (files_path)
 		end
+
+	files_path: STRING_8 = "/files/"
 
 	cache_location: PATH
 			-- CMS internal cache location.

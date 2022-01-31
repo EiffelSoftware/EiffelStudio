@@ -457,12 +457,15 @@ feature -- Query
 			if a_target_name /= Void then
 				create {ARRAYED_LIST [CONF_TARGET]} Result.make (1)
 				across
-					sys.compilable_targets as ic
+					sys.targets as ic
 				until
 					tgt /= Void
 				loop
 					tgt := ic.item
-					if not a_target_name.is_case_insensitive_equal (tgt.name) then
+					if
+						not a_target_name.is_case_insensitive_equal (tgt.name)
+						or else not is_application_target (tgt)
+					then
 						tgt := Void
 					end
 				end
@@ -478,11 +481,11 @@ feature -- Query
 					end
 					if
 						tgt = Void and then
-						attached sys.compilable_targets as l_comp_targets
+						attached sys.targets as l_targets
 					then
-						create {ARRAYED_LIST [CONF_TARGET]} Result.make (l_comp_targets.count)
+						create {ARRAYED_LIST [CONF_TARGET]} Result.make (l_targets.count)
 						across
-							l_comp_targets as ic
+							l_targets as ic
 						loop
 							if is_application_target (ic.item) then
 								Result.extend (ic.item)
@@ -504,9 +507,13 @@ feature -- Query
 
 	is_application_target (tgt: CONF_TARGET): BOOLEAN
 		do
-			Result := not tgt.is_abstract and then
-						attached tgt.root as l_root and then
-						not l_root.is_all_root
+			if attached {CONF_REMOTE_TARGET_REFERENCE} tgt.parent_reference as l_remote_target then
+				Result := True -- For now, let's consider are compilable app target.
+			else
+				Result := not tgt.is_abstract and then
+							attached tgt.root as l_root and then
+							not l_root.is_all_root
+			end
 		end
 
 	ecf_target (sys: CONF_SYSTEM; a_target_name: detachable READABLE_STRING_GENERAL): detachable CONF_TARGET

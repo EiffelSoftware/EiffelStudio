@@ -9,6 +9,7 @@ inherit
 	SHARED_LOCALE
 	SHARED_WORKBENCH
 	SHARED_SERVER
+	SHARED_BYTE_CONTEXT
 
 create
 	make
@@ -45,10 +46,14 @@ feature {NONE} -- Execution
 			has_error: BOOLEAN
 			class_list: ARRAYED_LIST [CLASS_C]
 			g: B_NODE_JSON_GENERATOR
+			s: SYSTEM_I
+			root_classes: ARRAYED_LIST [CLASS_I]
 		do
 				-- Clean up the state.
 			create class_list.make (classes.count)
-			if attached workbench.universe as u then
+			create root_classes.make (1)
+			s := workbench.system
+			if attached workbench.universe as u and then attached s then
 					-- Add classes if possible.
 				⟳ n: classes ¦
 					cs := u.compiled_classes_with_name ({UTF_CONVERTER}.string_32_to_utf_8_string_8 (n))
@@ -57,7 +62,12 @@ feature {NONE} -- Execution
 						output_window.add (locale.formatted_string (locale.translation_in_context ("Class `$1` is not found or not compiled.", "command.export"), n))
 						output_window.add_new_line
 					else
-						⟳ c: cs ¦ class_list.extend (c.compiled_class) ⟲
+						⟳ c: cs ¦
+							class_list.extend (c.compiled_class)
+							if s.is_root_class (c) then
+								root_classes.extend (c)
+							end
+						⟲
 					end
 				⟲
 			else
@@ -65,16 +75,24 @@ feature {NONE} -- Execution
 				output_window.add (locale.translation_in_context ("The project is not compiled.", "command.export"))
 				output_window.add_new_line
 			end
-			if not has_error then
+			if root_classes.is_empty then
+				has_error := True
+				output_window.add (locale.translation_in_context ("The class list does not include a root class.", "command.export"))
+				output_window.add_new_line
+			elseif not has_error then
 					-- Export selected classes.
 				create g.make (io.output)
+				g.enter_system
 				⟳ c: class_list ¦
+					context.init (c.actual_type.associated_class_type (c.actual_type))
 					⟳ f: c.written_in_features ¦
 						if attached byte_server.disk_item (f.associated_feature_i.body_index) as code then
-							code.process (g)
+							g.process_feature_code (f.name_32, code)
 						end
 					⟲
 				⟲
+				⟳ c: root_classes ¦ ⟳ r: s.root_creators ¦ if r.root_class ~ c then g.process_root (r) end ⟲ ⟲
+				g.leave_system
 			end
 			classes.wipe_out
 		end

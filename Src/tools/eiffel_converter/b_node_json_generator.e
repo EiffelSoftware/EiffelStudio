@@ -12,10 +12,10 @@ inherit
 			process_creation_expr_b,
 			process_guard_b,
 			process_elsif_b,
+			process_feature_b,
 			process_if_b,
 			process_local_b,
-			process_loop_b,
-			process_std_byte_code
+			process_loop_b
 		end
 
 	SHARED_NAMES_HEAP
@@ -39,14 +39,85 @@ feature {NONE} -- Access
 	printer: JSON_STREAM_FILE_WRITER
 			-- The printer to generate output strings.
 
-feature -- Visitor: routine declaration
+feature -- Setup and tear down
 
-	process_std_byte_code (x: STD_BYTE_CODE)
-			-- <Precursor>
+	enter_system
+			-- Start a system.
 		do
 			printer.enter_array
-			Precursor (x)
+		end
+
+	leave_system
+			-- End a previously started system.
+		do
 			printer.leave_array
+		end
+
+feature -- Feature declaration
+
+	process_feature_code (n: READABLE_STRING_32; x: BYTE_CODE)
+			-- Process feature of name `n` with code `x`.
+		do
+			printer.enter_object
+			printer.put_property_name (key_routine)
+			printer.enter_object
+			printer.put_property_name (key_name)
+			printer.put_string_value (n)
+			if x.is_deferred then
+				printer.put_property_name (key_is_deferred)
+				printer.put_boolean_value (True)
+			elseif x.is_external then
+				printer.put_property_name (key_is_external)
+				printer.put_boolean_value (True)
+			else
+				if attached {ATTRIBUTE_BYTE_CODE} x then
+					printer.put_property_name (key_attribute)
+				elseif x.is_once then
+					printer.put_property_name (key_once)
+				else
+					printer.put_property_name (key_do)
+				end
+				printer.enter_array
+				x.process (Current)
+				printer.leave_array
+			end
+			printer.leave_object
+			printer.leave_object
+		end
+
+feature -- Root creation procedures
+
+	process_root (r: SYSTEM_ROOT)
+			-- Process a root entry `r`.
+		do
+				-- "entry" := create {ROOT_CLASS}
+			printer.enter_object
+			printer.put_property_name (key_assign)
+			printer.enter_object
+			printer.put_property_name (key_target)
+			printer.enter_object
+			printer.put_property_name (key_attribute)
+			printer.put_string_value (key_entry) -- attribute
+			printer.leave_object -- target
+			printer.put_property_name (key_source)
+			printer.enter_object
+			printer.put_property_name (key_create)
+			printer.enter_object
+			printer.put_property_name (key_type)
+			printer.put_string_value (r.class_type.name) -- type
+			printer.leave_object -- create
+			printer.leave_object -- source
+			printer.leave_object -- assign
+			printer.leave_object
+				-- "entry".root_procedure
+				-- TODO: replace an unqualified call with a quialified call when it is available.
+			printer.enter_object
+			printer.put_property_name (key_unqualified_call)
+			printer.enter_object
+			printer.put_property_name (key_routine)
+			printer.put_string_value ({UTF_CONVERTER}.utf_8_string_8_to_string_32 (r.procedure_name)) -- routine
+			printer.leave_object -- unqualified_call
+			printer.leave_object
 		end
 
 feature -- Visitor: entities
@@ -64,6 +135,20 @@ feature -- Visitor: entities
 			-- <Precursor>
 		do
 			printer.put_string_value ("local " + x.position.out)
+		end
+
+feature -- Visitor: calls
+
+	process_feature_b (x: FEATURE_B)
+			-- <Precursor>
+		do
+			printer.enter_object
+			printer.put_property_name (key_unqualified_call)
+			printer.enter_object
+			printer.put_property_name (key_routine)
+			printer.put_string_value (names_heap.item_32 (x.feature_name_id))
+			printer.leave_object
+			printer.leave_object
 		end
 
 feature -- Visitor: expressions
@@ -169,8 +254,29 @@ feature {NONE} -- Keys
 	key_create: STRING_32 = "create"
 			-- A key for a creation.
 
+	key_do: STRING_32 = "body"
+			-- A key for a "do" routine.
+
+	key_entry: STRING_32 = "%"entry%""
+			-- A key for an entry point.
+
+	key_is_deferred: STRING_32 = "is_deferred"
+			-- A key for "is_deferred" property.
+
+	key_is_external: STRING_32 = "is_external"
+			-- A key for "is_external" property.
+
 	key_loop: STRING_32 = "loop"
 			-- A key for a loop.
+
+	key_name: STRING_32 = "name"
+			-- A key for a name.
+
+	key_once: STRING_32 = "once"
+			-- A key for a "once" routine.
+
+	key_routine: STRING_32 = "routine"
+			-- A key for a routine.
 
 	key_source: STRING_32 = "source"
 			-- A key for a source of an assignment.
@@ -180,6 +286,9 @@ feature {NONE} -- Keys
 
 	key_type: STRING_32 = "type"
 			-- A key for a type of a creation.
+
+	key_unqualified_call: STRING_32 = "u_call"
+			-- A key for an unqualified call.
 
 note
 	date: "$Date$"

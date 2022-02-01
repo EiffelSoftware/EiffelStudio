@@ -150,7 +150,7 @@ feature -- Current CallStack
 			l_curr_stk_info: like current_stack_info
 		do
 			if not current_callstack_initialized then
-				debug ("_jfiat")
+				debug ("debugger_eifnet_data")
 					display_loaded_managed_threads
 				end
 

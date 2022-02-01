@@ -31,7 +31,7 @@ feature -- Access
 	t_Copyright_info: STRING
 		once
 			Result :=
-				"Copyright (C) 1985-2021 Eiffel Software Inc.%N%
+				"Copyright (C) 1985-2022 Eiffel Software Inc.%N%
 				%All rights reserved"
 		end
 

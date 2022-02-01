@@ -86,7 +86,7 @@ feature -- Access
 	copyright: IMMUTABLE_STRING_32
 			-- <Precursor>
 		once
-			create Result.make_from_string_general ("Copyright Eiffel Software 2011-2021. All Rights Reserved.")
+			create Result.make_from_string_general ("Copyright Eiffel Software 2011-2022. All Rights Reserved.")
 		end
 	
 	version: IMMUTABLE_STRING_32

@@ -65,10 +65,10 @@ feature -- File extensions
 
 feature -- Version
 
-	major_version: NATURAL_16 = 21
+	major_version: NATURAL_16 = 22
 			-- Major release version.
 
-	minor_version: NATURAL_16 = 11
+	minor_version: NATURAL_16 = 02
 			-- Minor release version.
 
 	two_digit_minimum_major_version: STRING

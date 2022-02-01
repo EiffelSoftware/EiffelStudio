@@ -376,7 +376,7 @@ feature {NONE} -- Implementation
 				l_data := memory.objects_instance_of_type (a_dynamic_type)
 				if l_data /= Void then
 
-					debug ("larry")
+					debug ("memory_analyzer")
 						io.put_string ("%Nin MA_OBJECT_SNAPSHOT_MEDIATOR: void object? " + l_data.count.out + " orignal object is: " + internal.type_name_of_type (a_dynamic_type))
 					end
 						-- FIXIT: Why get void object here? There sometime a void object...?

@@ -42,7 +42,7 @@ feature  -- Filter
 					Result := True
 				end
 
-				debug ("larry")
+				debug ("memory_analyzer")
 					if a_class_name.is_equal ("XML_GRAPH_ROUTINES") then
 						io.put_string ("%N MA_FILTER_SINGLETON a_class_name is: " + item_and_filter_names.item_for_iteration.class_name + " " + a_class_name.out + " RESULT IS:" + Result.out)
 						io.put_string ("%N MA_FILTER_SINGLETON: " + item_and_filter_names.item_for_iteration.class_name + " " + item_and_filter_names.item_for_iteration.selected.out)

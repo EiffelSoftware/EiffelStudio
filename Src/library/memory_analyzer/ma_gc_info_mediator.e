@@ -143,7 +143,7 @@ feature -- Implementation for agents
 		do
 			l_main_window := main_window
 			l_main_window.eiffel_history.draw_pixmap (0, 0, history_graph_eiffel.pixmap)
-			debug ("larry")
+			debug ("memory_analyzer")
 				io.put_string ("%N redraw in MA_GC_INFO_MEDIATOR: pixmap width/height is: " + history_graph_eiffel.pixmap.width.out + " " + history_graph_eiffel.pixmap.height.out)
 			end
 			l_main_window.c_history.draw_pixmap (0, 0, history_graph_c.pixmap)

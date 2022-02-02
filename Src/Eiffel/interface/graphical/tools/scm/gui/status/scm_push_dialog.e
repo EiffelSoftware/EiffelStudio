@@ -420,6 +420,8 @@ feature -- Action
 
 			if l_unsupported_remote then
 				l_push.report_error ({STRING_32} "Unsupported remote location: " + l_remote)
+			elseif l_remote.is_whitespace then
+				l_push.report_error ({STRING_32} "Missing remote location...")
 			else
 				create l_push.make (distributed_location, l_remote, l_branch)
 				if l_use_external_terminal then
@@ -550,7 +552,7 @@ feature -- Access
 ;
 
 note
-	copyright: "Copyright (c) 1984-2021, Eiffel Software"
+	copyright: "Copyright (c) 1984-2022, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

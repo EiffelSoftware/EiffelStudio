@@ -1,7 +1,8 @@
 <EIFFEL_DOCUMENT>		
 	<PREF NAME="editor.eiffel.text_mode_is_windows" DESCRIPTION="Format to use when saving class text. True means using Windows text format, False means using Unix text format."><BOOLEAN>True</BOOLEAN></PREF>	
 	<PREF NAME="general.console_shell_command" DESCRIPTION="Command used to launch a console."><STRING></STRING></PREF>
-	<PREF NAME="general.external_editor_command" DESCRIPTION="Command used to launch  an external editor."><STRING>notepad $target</STRING></PREF>
+	<PREF NAME="general.execute_in_console_shell_command" DESCRIPTION="Execute command in terminal/console."><STRING>cmd /C "$command &gt;&gt; pause || pause"</STRING></PREF>
+	<PREF NAME="general.external_editor_command" DESCRIPTION="Command used to launch an external editor."><STRING>notepad $target</STRING></PREF>
 	<PREF NAME="general.file_browser_command" DESCRIPTION="Command to open a file in external browser."><STRING>explorer $target</STRING></PREF>
 	<PREF NAME="general.use_postscript" DESCRIPTION="Generate postscript (rather than RTF) when printing."><BOOLEAN>False</BOOLEAN></PREF>
 </EIFFEL_DOCUMENT>

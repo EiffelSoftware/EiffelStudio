@@ -95,7 +95,7 @@ feature {NONE} -- User interface initialization
 			memory_map_grid.enable_selection_key_handling
 			memory_map_grid.show_header
 			memory_map_grid.hide_tree_node_connectors
-			memory_map_grid.set_row_height (16)
+--			memory_map_grid.set_row_height (16)
 			memory_map_grid.set_focused_selection_color (colors.grid_focus_selection_color)
 			memory_map_grid.set_focused_selection_text_color (colors.grid_focus_selection_text_color)
 			memory_map_grid.set_non_focused_selection_color (colors.grid_unfocus_selection_color)
@@ -1576,7 +1576,7 @@ invariant
 	filter_update_timer_attached: is_initialized and not is_recycled implies filter_update_timer /= Void
 
 ;note
-	copyright:	"Copyright (c) 1984-2017, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2022, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

@@ -19,8 +19,8 @@ feature -- Comparison (verified)
 		require
 			x_void_or_closed: attached x implies x.closed
 			y_void_or_closed: attached y implies y.closed
-			x_subjects_closed: attached x implies across x.subjects as s all s.item.closed end
-			y_subjects_closed: attached y implies across y.subjects as s all s.item.closed end
+			x_subjects_closed: attached x implies across x.subjects as s all s.closed end
+			y_subjects_closed: attached y implies across y.subjects as s all s.closed end
 		do
 			if x = Void then
 				Result := y = Void
@@ -315,7 +315,7 @@ feature -- Verification: ownership fields
 		note
 			status: functional, ghost, inv_unfriendly
 		do
-			Result := closed and across subjects as s all s.item.closed end
+			Result := closed and across subjects as s all s.closed end
 		end
 
 feature -- Verification: auxiliary
@@ -346,8 +346,8 @@ feature -- Verification: auxiliary
 			ys_exist: ys.non_void
 		do
 		ensure
-			x_in_ys_iff_current_in_ys: across ys as y some is_model_equal (y.item) end =
-				across ys as y some x.is_model_equal (y.item) end
+			x_in_ys_iff_current_in_ys: across ys as y some is_model_equal (y) end =
+				across ys as y some x.is_model_equal (y) end
 		end
 
 	frozen model_equals (x, y: ANY): BOOLEAN

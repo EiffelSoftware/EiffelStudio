@@ -14,5 +14,5 @@
 	N
 	N
 	N
-	s/\(\t\t\tvalid_position: not after\)/\1\n\t\t\tsubjects_closed: across subjects as s all s.item.closed end/
+	s/\(\t\t\tvalid_position: not after\)/\1\n\t\t\tsubjects_closed: across subjects as s all s.closed end/
 }

@@ -12,7 +12,7 @@ STD_FILES_SRC=$(ISE_LIBRARY)/library/base/elks/kernel/std_files.e
 GENERATED_FILES= \
 	base.ecf \
 	base-safe.ecf \
-	base-safe-scoop.ecf \
+	base-scoop-safe.ecf \
 	eve/any.e \
 	eve/arguments.e \
 	eve/arguments_32.e \
@@ -64,9 +64,9 @@ base-safe.ecf: base.ecf base-safe.sed Makefile
 	echo Updating $@
 	sed -f base-safe.sed base.ecf > $@
 
-base-safe-scoop.ecf: base-safe.ecf base-safe-scoop.sed Makefile
+base-scoop-safe.ecf: base-safe.ecf base-scoop-safe.sed Makefile
 	echo Updating $@
-	sed -f base-safe-scoop.sed base-safe.ecf > $@
+	sed -f base-scoop-safe.sed base-safe.ecf > $@
 
 eve/any.e: $(ANY_SRC) any.sed any.txt Makefile
 	echo Updating $@

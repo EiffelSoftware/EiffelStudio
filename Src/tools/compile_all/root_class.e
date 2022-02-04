@@ -371,40 +371,45 @@ feature {NONE} -- Implementation
 					then
 						l_skip_dotnet := arguments.skip_dotnet
 						l_platform := arguments.platform_option
-						across system.compilable_targets as l_cursor loop
+						across system.targets as l_cursor loop
 							l_target := l_cursor.item
-							l_is_ignored := l_ignored_targets /= Void and then l_ignored_targets.has (l_target.name)
-							if not l_is_ignored then
-									-- If we are asking for a .NET code generation and we are on a platform
-									-- that does not support .NET or that we asked to ignore .NET, we ignore it.
-								l_is_ignored := l_target.setting_msil_generation and l_skip_dotnet
-							end
-							if not l_is_ignored then
-									-- If a platform is set in the ECF, we check that
-									-- 1- if the platform option was set that it should be the same.
-									-- 2- if the platform option is not set that it should be the same as the current platform.
-									-- Otherwise we we ignore this target since it means it will most likely not compile.
-								if not l_target.setting_platform.is_empty then
-									if not l_platform.is_empty then
-										l_is_ignored := not l_platform.is_case_insensitive_equal (l_target.setting_platform)
-									else
-										l_is_ignored := get_platform (l_target.setting_platform) /= current_platform
-									end
-								else
-										-- If we have requested an exclusive platform, e.g. via `macosx!', and that the ECF
-										-- is not specifying any platform, then we should ignore it since we requested
-										-- to only process ECF which targets a specific platform.
-									l_is_ignored := arguments.is_platform_exclusive
+							if
+								(l_target.root /= Void and then not l_target.is_abstract)  -- Compilable targets
+								or attached {CONF_REMOTE_TARGET_REFERENCE} l_target.parent_reference -- Consider remote targets as compilable for now
+							then
+								l_is_ignored := l_ignored_targets /= Void and then l_ignored_targets.has (l_target.name)
+								if not l_is_ignored then
+										-- If we are asking for a .NET code generation and we are on a platform
+										-- that does not support .NET or that we asked to ignore .NET, we ignore it.
+									l_is_ignored := l_target.setting_msil_generation and l_skip_dotnet
 								end
-							end
+								if not l_is_ignored then
+										-- If a platform is set in the ECF, we check that
+										-- 1- if the platform option was set that it should be the same.
+										-- 2- if the platform option is not set that it should be the same as the current platform.
+										-- Otherwise we we ignore this target since it means it will most likely not compile.
+									if not l_target.setting_platform.is_empty then
+										if not l_platform.is_empty then
+											l_is_ignored := not l_platform.is_case_insensitive_equal (l_target.setting_platform)
+										else
+											l_is_ignored := get_platform (l_target.setting_platform) /= current_platform
+										end
+									else
+											-- If we have requested an exclusive platform, e.g. via `macosx!', and that the ECF
+											-- is not specifying any platform, then we should ignore it since we requested
+											-- to only process ECF which targets a specific platform.
+										l_is_ignored := arguments.is_platform_exclusive
+									end
+								end
 
-							if l_is_ignored then
-								output_action (interface_text_target, l_target)
-								report_ignored (a_file, l_target)
-								output_status_ignored
-								io.new_line
-							else
-								process_target (l_target, a_dir)
+								if l_is_ignored then
+									output_action (interface_text_target, l_target)
+									report_ignored (a_file, l_target)
+									output_status_ignored
+									io.new_line
+								else
+									process_target (l_target, a_dir)
+								end
 							end
 						end
 					end
@@ -963,7 +968,7 @@ feature {NONE} -- Directory manipulation
 		end
 
 note
-	copyright: "Copyright (c) 1984-2020, Eiffel Software"
+	copyright: "Copyright (c) 1984-2022, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

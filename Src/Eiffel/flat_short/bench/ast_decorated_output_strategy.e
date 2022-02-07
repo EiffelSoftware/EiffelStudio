@@ -1229,6 +1229,8 @@ feature {NONE} -- Implementation
 	process_routine_as (l_as: ROUTINE_AS)
 		local
 			comments: EIFFEL_COMMENTS
+			l_indexing_clause: INDEXING_CLAUSE_AS
+			l_has_option_note: BOOLEAN
 			chained_assert: CHAINED_ASSERTIONS
 			is_inline_agent: BOOLEAN
 			inline_agent_assertion: ROUTINE_ASSERTIONS
@@ -1264,25 +1266,51 @@ feature {NONE} -- Implementation
 				end
 				l_text_formatter_decorator.put_origin_comment
 				l_text_formatter_decorator.exdent
-				if current_feature.is_transient or current_feature.is_stable then
+				if
+					attached current_feature.e_feature as l_e_feat and then
+					attached l_e_feat.ast as l_feature_as and then
+					attached l_feature_as.body as l_body
+				then
+					l_indexing_clause := l_body.indexing_clause
+				end
+				if
+					(l_indexing_clause /= Void and then not l_indexing_clause.is_empty)
+					or current_feature.is_transient
+					or current_feature.is_stable
+				then
 						-- Transient/stable features always have a body thus we can handle the transient/stable/instance-free
 						-- property here by adding a `note' clause just after the comments.
 					l_text_formatter_decorator.process_keyword_text (ti_note_keyword, Void)
 					l_text_formatter_decorator.indent
-					l_text_formatter_decorator.put_new_line
-					l_text_formatter_decorator.add_string ("option:")
-					if current_feature.is_stable then
-						if is_next_option then
-							l_text_formatter_decorator.add_char (',')
-						end
-						l_text_formatter_decorator.add_string (" stable")
-						is_next_option := True
+					if l_indexing_clause /= Void then
+						l_has_option_note := l_indexing_clause.is_stable or else l_indexing_clause.is_transient
+
+						l_text_formatter_decorator.process_filter_item (f_indexing, True)
+						l_text_formatter_decorator.put_new_line
+						l_text_formatter_decorator.set_separator (Void)
+						l_text_formatter_decorator.set_new_line_between_tokens
+						process_eiffel_list (l_indexing_clause)
+						l_text_formatter_decorator.process_filter_item (f_indexing, False)
 					end
-					if current_feature.is_transient then
-						if is_next_option then
-							l_text_formatter_decorator.add_char (',')
+					if
+						not l_has_option_note and
+						(current_feature.is_transient or current_feature.is_stable)
+					then
+						l_text_formatter_decorator.put_new_line
+						l_text_formatter_decorator.add_string ("option:")
+						if current_feature.is_stable then
+							if is_next_option then
+								l_text_formatter_decorator.add_char (',')
+							end
+							l_text_formatter_decorator.add_string (" stable")
+							is_next_option := True
 						end
-						l_text_formatter_decorator.add_string (" transient")
+						if current_feature.is_transient then
+							if is_next_option then
+								l_text_formatter_decorator.add_char (',')
+							end
+							l_text_formatter_decorator.add_string (" transient")
+						end
 					end
 					l_text_formatter_decorator.exdent
 					l_text_formatter_decorator.put_new_line
@@ -5125,7 +5153,7 @@ note
 	ca_ignore: "CA033", "CA033: very long class"
 	date: "$Date$"
 	revision: "$Revision$"
-	copyright: "Copyright (c) 1984-2021, Eiffel Software"
+	copyright: "Copyright (c) 1984-2022, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

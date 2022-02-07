@@ -1267,8 +1267,7 @@ feature {NONE} -- Implementation
 				l_text_formatter_decorator.put_origin_comment
 				l_text_formatter_decorator.exdent
 				if
-					attached current_feature.e_feature as l_e_feat and then
-					attached l_e_feat.ast as l_feature_as and then
+					attached current_feature.body as l_feature_as and then
 					attached l_feature_as.body as l_body
 				then
 					l_indexing_clause := l_body.indexing_clause

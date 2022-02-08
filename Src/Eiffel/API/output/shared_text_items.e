@@ -257,6 +257,9 @@ feature -- Symbol names
 	ti_Double_quote: STRING = "%""
 			-- '"' character
 
+	ti_backquote: STRING = "`"
+			-- '`' character
+
 	ti_Empty: STRING = ""
 			-- Empty character
 

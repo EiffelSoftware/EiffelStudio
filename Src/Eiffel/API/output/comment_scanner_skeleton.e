@@ -160,22 +160,74 @@ feature {NONE} -- Implementation
 			-- A feature like `feature' encountered.
 		local
 			l_text : STRING_32
+			l_class_name: STRING_32
+			l_feat_name: STRING_32
+			i: INTEGER
 		do
 			l_text := unicode_text
 			check
 				l_text.count >= 2
 			end
 			l_text := l_text.substring (2, l_text.count - 1)
+			l_text.left_adjust
 			if current_class /= Void then
 				last_type := current_class.actual_type
 			end
-				-- We try infix and prefix
-			if not attached feature_by_name ({UTF_CONVERTER}.string_32_to_utf_8_string_8 (l_text.as_lower)) as l_feat then
-				add_text (l_text, True)
-			elseif last_is_alias then
-				l_feat.append_full_name (text_formatter)
-			else
-				l_feat.append_name (text_formatter)
+			if not l_text.is_empty then
+				if l_text [1] = '{' then
+					i := l_text.index_of ('}', 2)
+					if i > 0 then
+							-- {CLASS_NAME}.feature_name
+						l_class_name := l_text.substring (2, i - 1)
+						l_feat_name :=  l_text.substring (i + 2, l_text.count).as_lower
+						if
+							attached {CLASS_I} class_by_name (l_class_name) as cl_i and then
+							attached cl_i.compiled_class as cl
+						then
+							last_type := cl.actual_type
+						end
+					end
+				else
+					l_feat_name := l_text.as_lower
+				end
+				if l_feat_name.is_whitespace then
+					if l_class_name /= Void then
+						if attached last_type as l_last_type then
+							add_text (ti_backquote, False)
+							add_text (ti_l_curly, False)
+							l_last_type.append_to (text_formatter)
+							add_text (ti_r_curly, False)
+							add_text (ti_backquote, False)
+						else
+							add_text (l_text, True)
+						end
+					end
+				else
+						-- We try infix and prefix
+					if not attached feature_by_name ({UTF_CONVERTER}.string_32_to_utf_8_string_8 (l_feat_name)) as l_feat then
+						add_text (l_text, True)
+					elseif last_is_alias then
+						add_text (ti_backquote, False)
+						add_dot_feature
+						l_feat.append_full_name (text_formatter)
+						add_text (ti_backquote, False)
+					elseif attached last_type as l_last_type then
+						add_text (ti_backquote, False)
+						if l_class_name/= Void then
+							add_text (ti_l_curly, False)
+							l_last_type.append_to (text_formatter)
+							add_text (ti_r_curly, False)
+							text_formatter.process_symbol_text (ti_dot)
+						end
+						text_formatter.process_feature_text (l_feat_name, l_feat, false)
+						add_text (ti_backquote, False)
+						if l_feat.is_procedure then
+							reset_last_type
+						else
+							last_type := l_feat.type.actual_type
+						end
+					end
+				end
 			end
 		end
 
@@ -382,7 +434,7 @@ invariant
 	invariant_clause: True -- Your invariant here
 
 note
-	copyright:	"Copyright (c) 1984-2020, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2022, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

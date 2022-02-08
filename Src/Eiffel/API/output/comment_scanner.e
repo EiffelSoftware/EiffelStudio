@@ -100,7 +100,7 @@ debug ("GELEX")
 end
 
 				append_buffer
-				add_class (False)
+				add_class (True)
 			
 when 7 then
 --|#line <not available> "comment_scanner.l"
@@ -169,7 +169,7 @@ debug ("GELEX")
 	std.error.put_line ("Executing scanner user-code from file 'comment_scanner.l' at line <not available>")
 end
 
-				add_class (False)
+				add_class (True)
 			
 when 15 then
 --|#line <not available> "comment_scanner.l"

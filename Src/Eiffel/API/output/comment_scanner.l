@@ -30,7 +30,7 @@ CM		([^ \t\r\n\.])
 CS		([^ \t\r\n\.\{\}\[\]`\'])
 EMAIL	{A}{CM}*{H}@{H}{CM}*(\.{CM}+)*
 URL		(((https?|ftp|file|gopher|news|nntp|telnet):\/\/)|(www\.))[a-zA-Z0-9_%;&=?\/.#$:~-]*
-FEATURE	(`[^`']+[\'\`])
+QUOTED_FEATURE	(`[^`']+[\'\`])
 CLASS	\{{A}{X}*\}
 CLUSTER \[{C}+\]
 
@@ -62,7 +62,7 @@ CLUSTER \[{C}+\]
 			}
 
 -- Quoted feature
-{FEATURE}	{
+{QUOTED_FEATURE}	{
 				append_buffer
 				add_quote_feature
 			}
@@ -78,7 +78,7 @@ CLUSTER \[{C}+\]
 -- Braced class
 {CLASS}		{
 				append_buffer
-				add_class (False)
+				add_class (True)
 			}
 
 -- Cluster
@@ -109,7 +109,7 @@ CLUSTER \[{C}+\]
 			}
 
 -- Quoted feature
-{FEATURE}	{
+{QUOTED_FEATURE}	{
 				add_quote_feature
 			}
 
@@ -123,7 +123,7 @@ CLUSTER \[{C}+\]
 
 -- Braced class
 {CLASS}		{
-				add_class (False)
+				add_class (True)
 			}
 
 -- Cluster

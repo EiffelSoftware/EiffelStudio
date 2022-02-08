@@ -1201,6 +1201,8 @@ feature {NONE} -- Implementation
 				end
 				l_as.call.process (Current)
 			end
+			l_text_formatter_decorator.put_space
+			l_text_formatter_decorator.process_keyword_text (ti_end_keyword, Void)
 			last_type := l_type
 		end
 
@@ -4760,12 +4762,15 @@ feature {NONE} -- Implementation: helpers
 			a_id_set_not_void: a_id_set /= Void
 		do
 			if not has_error_internal and (a_id_set.first <= 0) then
-				has_error_internal := True
-				set_error_message ("Feature with routine id of 0!!!")
-			else
-				if not has_error_internal then
-					Result := a_class_c.feature_with_rout_id (a_id_set.first)
+				if attached {ACCESS_FEAT_AS} a_id_set as l_access_feat_as then
+					Result := a_class_c.feature_with_name (l_access_feat_as.access_name_32)
 				end
+				if Result = Void then
+					has_error_internal := True
+					set_error_message ("Feature with routine id of 0!!!")
+				end
+			elseif not has_error_internal then
+				Result := a_class_c.feature_with_rout_id (a_id_set.first)
 			end
 			if not has_error_internal and Result = Void then
 				has_error_internal := True

@@ -266,9 +266,11 @@ feature -- Basic operation
 
 	update_statuses (loc: detachable SCM_LOCATION)
 		do
+			scm_service.on_update_statuses_begin
 			if attached grid as g then
 				g.update_statuses (loc)
 			end
+			scm_service.on_update_statuses_end
 		end
 
 	update_status (a_status: SCM_STATUS)
@@ -294,6 +296,7 @@ feature -- Basic operation
 				l_save_dialog.set_size (devwin.dpi_scaler.scaled_size (800).min (devwin.window.width), devwin.dpi_scaler.scaled_size (600).min (devwin.window.height))
 			end
 			last_scm_dialog := l_save_dialog
+			l_save_dialog.set_is_modal (False)
 			l_save_dialog.show_on_active_window
 			if
 				attached l_save_dialog.commit as l_commit
@@ -715,7 +718,7 @@ feature -- Changelist
 
 invariant
 note
-	copyright: "Copyright (c) 1984-2021, Eiffel Software"
+	copyright: "Copyright (c) 1984-2022, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

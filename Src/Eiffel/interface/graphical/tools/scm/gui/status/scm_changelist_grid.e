@@ -9,7 +9,14 @@ class
 inherit
 	SCM_GRID
 		redefine
-			initialize
+			initialize,
+			destroy
+		end
+
+	SCM_CHANGELIST_COLLECTION_OBSERVER
+		undefine
+			default_create,
+			copy
 		end
 
 	SHARED_EXECUTION_ENVIRONMENT
@@ -32,6 +39,7 @@ feature {NONE} -- Initialization
 	make_with_workspace (chlst: SCM_CHANGELIST_COLLECTION; a_parent_box: detachable SCM_STATUS_BOX)
 		do
 			changelist := chlst
+			chlst.register_observer (Current)
 			status_box := a_parent_box
 			default_create
 		end
@@ -102,6 +110,33 @@ feature -- Access
 	status_box: detachable SCM_STATUS_BOX
 
 feature -- Events
+
+	on_item_removed (a_changelist: SCM_CHANGELIST; a_item: SCM_STATUS)
+			-- Item `a_item` was removed from associated `a_changelist`
+		do
+			if attached checkable_label_for_status (a_item) as cb then
+				cb.set_is_checked (False)
+			end
+		end
+
+	on_item_added (a_changelist: SCM_CHANGELIST; a_item: SCM_STATUS)
+			-- Item `a_item` was added to associated `a_changelist`
+		do
+			if attached checkable_label_for_status (a_item) as cb then
+				cb.set_is_checked (True)
+			elseif attached row_for_changelist (a_changelist) as l_row then
+				add_status_to_changelist_row (a_item, a_changelist, l_row)
+			else
+				add_changelist (a_changelist)
+			end
+		end
+
+	on_changelist_reset (a_changelist: SCM_CHANGELIST)
+			-- Associated `a_changelist` was reset.
+			-- no more item.
+		do
+			populate
+		end
 
 	on_row_selected (r: EV_GRID_ROW)
 		do
@@ -219,83 +254,147 @@ feature -- Layout settings
 feature -- Operations
 
 	populate
-		local
-			lst: SCM_CHANGELIST
-			glab: EV_GRID_LABEL_ITEM
-			gcb: like new_checkable_label_item
-			r: EV_GRID_ROW
-			l_status: SCM_STATUS
 		do
 			set_row_count_to (0)
 			across
 				changelist as coll_ic
 			loop
-				lst := coll_ic.item
-				insert_new_row (row_count + 1)
-				r := row (row_count)
-				r.set_data (lst.root)
-				glab := new_label_item (lst.root.nature)
-				r.set_item (status_column, glab)
+				add_changelist (coll_ic.item)
+			end
+		end
 
-				add_new_span_label_item_to (lst.root.location_path_name, filename_column, <<parent_column>>, r)
-				set_row_style_properties (r, bold_font, stock_colors.blue, Void)
-				across
-					lst as ic
-				loop
-					l_status := ic.item
-					insert_new_row (row_count + 1)
-					r := row (row_count)
-					r.set_data (l_status)
+	add_changelist (a_changelist: SCM_CHANGELIST)
+		local
+			glab: EV_GRID_LABEL_ITEM
+			r: EV_GRID_ROW
+		do
+			r := extended_new_row
+			r.set_data (a_changelist.root)
+			glab := new_label_item (a_changelist.root.nature)
+			r.set_item (status_column, glab)
 
-					gcb := new_checkable_label_item (l_status.status_as_string)
+			add_new_span_label_item_to (a_changelist.root.location_path_name, filename_column, <<parent_column>>, r)
+			set_row_style_properties (r, bold_font, stock_colors.blue, Void)
+			across
+				a_changelist as ic
+			loop
+				add_status_to_changelist_row (ic.item, a_changelist, r)
+			end
+		end
+
+	add_status_to_changelist_row (a_status: SCM_STATUS; a_changelist: SCM_CHANGELIST; a_parent_row: EV_GRID_ROW)
+		local
+			r: EV_GRID_ROW
+			glab: EV_GRID_LABEL_ITEM
+			gcb: like new_checkable_label_item
+		do
+			r := extended_new_subrow (a_parent_row)
+			r.set_data (a_status)
+
+			gcb := new_checkable_label_item (a_status.status_as_string)
 --					glab := new_label_item (l_status.status_as_string)
 --					r.set_item (status_column, glab)
-					r.set_item (status_column, gcb)
-					gcb.set_is_checked (True)
-					gcb.checked_changed_actions.extend (agent (i_root: SCM_LOCATION ; i_st: SCM_STATUS; i_cb: EV_GRID_CHECKABLE_LABEL_ITEM)
-						do
-							if i_cb.is_checked then
-								changelist.extend_status (i_root, i_st)
-							else
-								changelist.remove_status (i_root, i_st)
-							end
-
-						end (lst.root, l_status, ?))
-
-					glab := new_label_item (l_status.location.entry.name)
-					glab.set_data (l_status)
-					r.set_item (filename_column, glab)
-					if
-						attached {SCM_STATUS_UNVERSIONED} l_status
-						or attached {SCM_STATUS_UNKNOWN} l_status
-					then
-						-- Ignore
+			r.set_item (status_column, gcb)
+			gcb.set_is_checked (True)
+			gcb.checked_changed_actions.extend (agent (i_root: SCM_LOCATION ; i_st: SCM_STATUS; i_cb: EV_GRID_CHECKABLE_LABEL_ITEM)
+				do
+					if i_cb.is_checked then
+						changelist.extend_status (i_root, i_st)
 					else
-						glab.set_tooltip (scm_names.double_click_show_diff_tooltip)
-						glab.pointer_double_press_actions.extend (agent (a_root: SCM_LOCATION; i_status: SCM_STATUS; i_x, i_y, i_button: INTEGER; i_x_tilt, i_y_tilt, i_pressure: DOUBLE; i_screen_x, i_screen_y: INTEGER)
-								do
-									if attached status_box as l_status_box then
-										if
-											attached scm_s.service as scm and then
-											not (ev_application.ctrl_pressed or ev_application.shift_pressed or ev_application.alt_pressed)
-										then
-											l_status_box.show_status_diff (a_root, i_status)
-										else
-											l_status_box.grid.open_file_location (i_status.location)
-										end
-									end
-								end(lst.root, l_status, ?,?,?,?,?,?,?,?)
-							)
+						changelist.remove_status (i_root, i_st)
 					end
 
+				end (a_changelist.root, a_status, ?))
 
-					glab.set_pixmap (status_pixmap (l_status))
+			glab := new_label_item (a_status.location.entry.name)
+			glab.set_data (a_status)
+			r.set_item (filename_column, glab)
+			if
+				attached {SCM_STATUS_UNVERSIONED} a_status
+				or attached {SCM_STATUS_UNKNOWN} a_status
+			then
+				-- Ignore
+			else
+				glab.set_tooltip (scm_names.double_click_show_diff_tooltip)
+				glab.pointer_double_press_actions.extend (agent (a_root: SCM_LOCATION; i_status: SCM_STATUS; i_x, i_y, i_button: INTEGER; i_x_tilt, i_y_tilt, i_pressure: DOUBLE; i_screen_x, i_screen_y: INTEGER)
+						do
+							if attached status_box as l_status_box then
+								if
+									attached scm_s.service as scm and then
+									not (ev_application.ctrl_pressed or ev_application.shift_pressed or ev_application.alt_pressed)
+								then
+									l_status_box.show_status_diff (a_root, i_status)
+								else
+									l_status_box.grid.open_file_location (i_status.location)
+								end
+							end
+						end(a_changelist.root, a_status, ?,?,?,?,?,?,?,?)
+					)
+			end
 
-					glab := new_label_item (ic.item.location.parent.name)
-					r.set_item (parent_column, glab)
 
-					fill_empty_grid_items (r)
+			glab.set_pixmap (status_pixmap (a_status))
+
+			glab := new_label_item (a_status.location.parent.name)
+			r.set_item (parent_column, glab)
+
+			fill_empty_grid_items (r)
+		end
+
+feature {NONE} -- Implementation
+
+	checkable_label_for_status (a_status: SCM_STATUS): detachable like new_checkable_label_item
+		local
+			r, rn: INTEGER
+			c, cn: INTEGER
+			l_item: EV_GRID_ITEM
+		do
+			from
+				r := 1
+				rn := row_count
+			until
+				r > rn or Result /= Void
+			loop
+				if
+					attached row (r) as l_row and then
+					attached {SCM_STATUS} l_row.data as l_row_status and then
+					a_status.location.same_as (l_row_status.location)
+				then
+					from
+						c := 1
+						cn := l_row.count
+					until
+						c > cn or Result /= Void
+					loop
+						l_item := l_row.item (c)
+						if attached {like new_checkable_label_item} l_row.item (c) as cb then
+							Result := cb
+						end
+						c := c + 1
+					end
 				end
+				r := r + 1
+			end
+		end
+
+	row_for_changelist (a_chglist: SCM_CHANGELIST): detachable EV_GRID_ROW
+		local
+			r, rn: INTEGER
+		do
+			from
+				r := 1
+				rn := row_count
+			until
+				r > rn or Result /= Void
+			loop
+				if
+					attached row (r) as l_row and then
+					attached {SCM_LOCATION} l_row.data as l_loc and then
+					l_loc.same_as (a_chglist.root)
+				then
+					Result := l_row
+				end
+				r := r + 1
 			end
 		end
 
@@ -320,11 +419,19 @@ feature -- Operations
 		do
 		end
 
+	destroy
+		do
+			if attached changelist as lst then
+				lst.unregister_observer (Current)
+			end
+			Precursor
+		end
+
 
 invariant
 
 note
-	copyright: "Copyright (c) 1984-2021, Eiffel Software"
+	copyright: "Copyright (c) 1984-2022, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

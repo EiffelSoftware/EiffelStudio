@@ -20,7 +20,8 @@ inherit
 			on_workspace_updated,
 			on_configuration_updated,
 			on_changelist_updated,
-			on_statuses_updated
+			on_statuses_updated,
+			on_update_statuses_begin, on_update_statuses_end
 		end
 
 	SHARED_SOURCE_CONTROL_MANAGEMENT_SERVICE
@@ -213,6 +214,20 @@ feature {NONE} -- Action handlers
 			update_associated_interface_elements
 		end
 
+	on_update_statuses_begin
+		do
+			if attached status_box as l_status then
+				l_status.check_all_repo_button.disable_sensitive
+			end
+		end
+
+	on_update_statuses_end
+		do
+			if attached status_box as l_status then
+				l_status.check_all_repo_button.enable_sensitive
+			end
+		end
+
 	on_setup_selected
 		local
 			b: like main_box
@@ -382,7 +397,7 @@ feature -- Access: Help
 		end
 
 note
-	copyright: "Copyright (c) 1984-2021, Eiffel Software"
+	copyright: "Copyright (c) 1984-2022, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

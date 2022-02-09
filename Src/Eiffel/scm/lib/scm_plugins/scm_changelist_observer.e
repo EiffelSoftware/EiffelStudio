@@ -1,58 +1,27 @@
 note
-	description: "Summary description for {SCM_OBSERVER}."
+	description: "Observer on SCM_CHANGELIST object."
 	date: "$Date$"
 	revision: "$Revision$"
 
 deferred class
-	SCM_OBSERVER
+	SCM_CHANGELIST_OBSERVER
 
-inherit
-	EVENT_OBSERVER_I
+feature -- Events
 
-feature -- Event
-
-	on_workspace_updated (ws: detachable SCM_WORKSPACE)
-		require
-			is_interface_usable: attached {USABLE_I} Current as l_usable implies l_usable.is_interface_usable
-		do
+	on_item_removed (a_changelist: SCM_CHANGELIST; a_item: SCM_STATUS)
+			-- Item `a_item` was removed from associated `a_changelist`
+		deferred
 		end
 
-	on_update_statuses_begin
-			-- Check statuses operation started.
-		require
-			is_interface_usable: attached {USABLE_I} Current as l_usable implies l_usable.is_interface_usable
-		do
+	on_item_added (a_changelist: SCM_CHANGELIST; a_item: SCM_STATUS)
+			-- Item `a_item` was added to associated `a_changelist`
+		deferred
 		end
 
-	on_update_statuses_end
-			-- Check statuses operation ended
-		require
-			is_interface_usable: attached {USABLE_I} Current as l_usable implies l_usable.is_interface_usable
-		do
-		end
-
-	on_statuses_updated (a_root: SCM_LOCATION; a_location: PATH; a_statuses: detachable SCM_STATUS_LIST)
-		require
-			is_interface_usable: attached {USABLE_I} Current as l_usable implies l_usable.is_interface_usable
-		do
-		end
-
-	on_changelist_updated (ch: SCM_CHANGELIST_COLLECTION)
-		require
-			is_interface_usable: attached {USABLE_I} Current as l_usable implies l_usable.is_interface_usable
-		do
-		end
-
-	on_change_detected (ch: SCM_CHANGE)
-		require
-			is_interface_usable: attached {USABLE_I} Current as l_usable implies l_usable.is_interface_usable
-		do
-		end
-
-	on_configuration_updated (cfg: SCM_CONFIG)
-		require
-			is_interface_usable: attached {USABLE_I} Current as l_usable implies l_usable.is_interface_usable
-		do
+	on_changelist_reset (a_changelist: SCM_CHANGELIST)
+			-- Associated `a_changelist` was reset.
+			-- no more item.
+		deferred
 		end
 
 note

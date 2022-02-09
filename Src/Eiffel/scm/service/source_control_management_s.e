@@ -63,8 +63,13 @@ feature -- Status
 
 feature -- Operations
 
+	is_updating_statuses: BOOLEAN
+			-- Is `update_statuses` running?
+
 	update_statuses
 			-- Update statuses for all known SCM locations, i.e for the workspace
+		require
+			not is_updating_statuses
 		deferred
 		end
 
@@ -161,10 +166,40 @@ feature -- Events
 			end
 		end
 
+	on_update_statuses_begin
+		do
+			debug ("scm")
+				print (generator + ".on_update_statuses_begin%N")
+			end
+			is_updating_statuses := True
+			if attached observers as lst then
+				across
+					lst as ic
+				loop
+					ic.item.on_update_statuses_begin
+				end
+			end
+		end
+
+	on_update_statuses_end
+		do
+			debug ("scm")
+				print (generator + ".on_update_statuses_end%N")
+			end
+			if attached observers as lst then
+				across
+					lst as ic
+				loop
+					ic.item.on_update_statuses_end
+				end
+			end
+			is_updating_statuses := False
+		end
+
 	on_statuses_updated (a_root: SCM_LOCATION; a_location: PATH; a_statuses: detachable SCM_STATUS_LIST)
 		do
 			debug ("scm")
-				print (generator + ".on_statuses_updated (...)%N")
+				print (generator + ".on_statuses_updated (..., "+ a_location.utf_8_name +", ...)%N")
 			end
 			if statuses_updated_event.is_interface_usable then
 				statuses_updated_event.publish ([a_root, a_location, a_statuses])
@@ -289,7 +324,7 @@ feature {NONE} -- Implementation
 invariant
 
 note
-	copyright: "Copyright (c) 1984-2021, Eiffel Software"
+	copyright: "Copyright (c) 1984-2022, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

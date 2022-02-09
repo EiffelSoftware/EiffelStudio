@@ -56,6 +56,65 @@ feature -- Access
 			Result.append_string_general ("%"")
 		end
 
+feature -- Events
+
+	observers: detachable ARRAYED_LIST [SCM_CHANGELIST_OBSERVER]
+
+	register_observer (obs: SCM_CHANGELIST_OBSERVER)
+		local
+			lst: like observers
+		do
+			lst := observers
+			if lst = Void then
+				create lst.make (1)
+				observers := lst
+			end
+			lst.force (obs)
+		end
+
+	unregister_observer (obs: SCM_CHANGELIST_OBSERVER)
+		do
+			if attached observers as lst then
+				lst.prune_all (obs)
+				if lst.is_empty then
+					observers := Void
+				end
+			end
+		end
+
+	on_item_added (a_status: SCM_STATUS)
+		do
+			if attached observers as lst then
+				across
+					lst as ic
+				loop
+					ic.item.on_item_added (Current, a_status)
+				end
+			end
+		end
+
+	on_item_removed (a_status: SCM_STATUS)
+		do
+			if attached observers as lst then
+				across
+					lst as ic
+				loop
+					ic.item.on_item_removed (Current, a_status)
+				end
+			end
+		end
+
+	on_changelist_reset
+		do
+			if attached observers as lst then
+				across
+					lst as ic
+				loop
+					ic.item.on_changelist_reset (Current)
+				end
+			end
+		end
+
 feature -- Status report
 
 	has_path (p: PATH): BOOLEAN
@@ -92,6 +151,7 @@ feature -- Element change
 			not has_status (a_status)
 		do
 			items.force (a_status)
+			on_item_added (a_status)
 		end
 
 	extend_path (p: PATH)
@@ -102,15 +162,6 @@ feature -- Element change
 		ensure
 			has_path (p)
 		end
-
---	extend (a_name: READABLE_STRING_GENERAL)
---		require
---			not has (a_name)
---		do
---			extend_status (create {SCM_STATUS_UNKNOWN}.make_with_name (a_name))
---		ensure
---			has (a_name)
---		end
 
 	remove_status (a_status: SCM_STATUS)
 		require
@@ -138,6 +189,7 @@ feature -- Element change
 					a_name.same_string (l_status.location.name)
 				then
 					items.remove
+					on_item_removed (l_status)
 				else
 					items.forth
 				end
@@ -148,7 +200,10 @@ feature -- Element change
 
 	wipe_out
 		do
-			items.wipe_out
+			if count > 0 then
+				items.wipe_out
+				on_changelist_reset
+			end
 		ensure
 			count = 0
 		end
@@ -182,7 +237,7 @@ feature -- Conversion
 		end
 
 note
-	copyright: "Copyright (c) 1984-2021, Eiffel Software"
+	copyright: "Copyright (c) 1984-2022, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	source: "[
 			Eiffel Software

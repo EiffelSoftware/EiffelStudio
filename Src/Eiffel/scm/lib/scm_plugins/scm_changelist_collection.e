@@ -1,6 +1,5 @@
 note
 	description: "Summary description for {SCM_CHANGELIST_COLLECTION}."
-	author: ""
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -9,6 +8,8 @@ class
 
 inherit
 	ITERABLE [SCM_CHANGELIST]
+
+	SCM_CHANGELIST_OBSERVER
 
 	DEBUG_OUTPUT
 
@@ -76,6 +77,13 @@ feature -- Element change
 	put_changelist (a_chlst: SCM_CHANGELIST)
 		do
 			changelists.force (a_chlst)
+			a_chlst.register_observer (Current)
+		end
+
+	remove_changelist (a_chlst: SCM_CHANGELIST)
+		do
+			changelists.prune_all (a_chlst)
+			a_chlst.unregister_observer (Current)
 		end
 
 	extend_status (a_root: SCM_LOCATION; a_status: SCM_STATUS)
@@ -102,20 +110,6 @@ feature -- Element change
 			end
 		end
 
---	extend_path (a_root: SCM_LOCATION; a_location: PATH)
---		local
---			lst: like changelist
---		do
---			lst := changelist (a_root)
---			if lst = Void then
---				create lst.make_with_location (a_root)
---				put_changelist (lst)
---			end
---			if not lst.has_path (a_location) then
---				lst.extend_path (a_location)
---			end
---		end
-
 	remove_empty_changelists
 		do
 			from
@@ -123,8 +117,12 @@ feature -- Element change
 			until
 				changelists.off
 			loop
-				if attached changelists.item_for_iteration as l_chlist and then l_chlist.count = 0 then
+				if
+					attached changelists.item_for_iteration as l_chlist and then
+					l_chlist.count = 0
+				then
 					changelists.remove
+					l_chlist.unregister_observer (Current)
 				else
 					changelists.forth
 				end
@@ -133,7 +131,12 @@ feature -- Element change
 
 	wipe_out
 		do
-			changelists.wipe_out
+			across
+				changelists as ic
+			loop
+				remove_changelist (ic.item)
+			end
+			check changelist_count = 0 end
 		end
 
 	set_description (d: detachable READABLE_STRING_GENERAL)
@@ -142,6 +145,72 @@ feature -- Element change
 				description := Void
 			else
 				create description.make_from_string_general (d)
+			end
+		end
+
+feature -- Events
+
+	observers: detachable ARRAYED_LIST [SCM_CHANGELIST_COLLECTION_OBSERVER]
+
+	register_observer (obs: SCM_CHANGELIST_COLLECTION_OBSERVER)
+		local
+			lst: like observers
+		do
+			lst := observers
+			if lst = Void then
+				create lst.make (1)
+				observers := lst
+			end
+			lst.force (obs)
+		end
+
+	unregister_observer (obs: SCM_CHANGELIST_COLLECTION_OBSERVER)
+		do
+			if attached observers as lst then
+				lst.prune_all (obs)
+				if lst.is_empty then
+					observers := Void
+				end
+			end
+		end
+
+	on_item_removed (a_changelist: SCM_CHANGELIST; a_item: SCM_STATUS)
+			-- Item `a_item` was removed from associated `a_changelist`
+		do
+			if attached observers as lst then
+				across
+					lst as ic
+				loop
+					ic.item.on_item_removed (a_changelist, a_item)
+				end
+				if lst.count = 0 then
+					remove_changelist (a_changelist)
+				end
+			end
+		end
+
+	on_item_added (a_changelist: SCM_CHANGELIST; a_item: SCM_STATUS)
+			-- Item `a_item` was added to associated `a_changelist`
+		do
+			if attached observers as lst then
+				across
+					lst as ic
+				loop
+					ic.item.on_item_added (a_changelist, a_item)
+				end
+			end
+		end
+
+	on_changelist_reset (a_changelist: SCM_CHANGELIST)
+			-- Associated `a_changelist` was reset.
+			-- no more item.
+		do
+			if attached observers as lst then
+				across
+					lst as ic
+				loop
+					ic.item.on_changelist_reset (a_changelist)
+				end
 			end
 		end
 
@@ -159,7 +228,7 @@ feature {NONE} -- Implementation
 
 invariant
 note
-	copyright: "Copyright (c) 1984-2021, Eiffel Software"
+	copyright: "Copyright (c) 1984-2022, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

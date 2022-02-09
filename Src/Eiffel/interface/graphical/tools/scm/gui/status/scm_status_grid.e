@@ -286,6 +286,11 @@ feature -- Events
 			loop
 				nb := nb + ic.item.changes_count
 			end
+			if nb = 0 then
+				if attached status_box.active_changelist as lst then
+					nb := lst.count
+				end
+			end
 			if nb > 0 then
 				status_box.save_all_repo_button.enable_sensitive
 			else
@@ -475,7 +480,7 @@ feature -- Basic operation
 invariant
 
 note
-	copyright: "Copyright (c) 1984-2021, Eiffel Software"
+	copyright: "Copyright (c) 1984-2022, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

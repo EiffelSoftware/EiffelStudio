@@ -1,59 +1,17 @@
 note
-	description: "Summary description for {SCM_OBSERVER}."
+	description: "Observer on SCM_CHANGELIST_COLLECTION objects."
 	date: "$Date$"
 	revision: "$Revision$"
 
 deferred class
-	SCM_OBSERVER
+	SCM_CHANGELIST_COLLECTION_OBSERVER
 
 inherit
-	EVENT_OBSERVER_I
+	SCM_CHANGELIST_OBSERVER
 
-feature -- Event
+feature -- Events
 
-	on_workspace_updated (ws: detachable SCM_WORKSPACE)
-		require
-			is_interface_usable: attached {USABLE_I} Current as l_usable implies l_usable.is_interface_usable
-		do
-		end
 
-	on_update_statuses_begin
-			-- Check statuses operation started.
-		require
-			is_interface_usable: attached {USABLE_I} Current as l_usable implies l_usable.is_interface_usable
-		do
-		end
-
-	on_update_statuses_end
-			-- Check statuses operation ended
-		require
-			is_interface_usable: attached {USABLE_I} Current as l_usable implies l_usable.is_interface_usable
-		do
-		end
-
-	on_statuses_updated (a_root: SCM_LOCATION; a_location: PATH; a_statuses: detachable SCM_STATUS_LIST)
-		require
-			is_interface_usable: attached {USABLE_I} Current as l_usable implies l_usable.is_interface_usable
-		do
-		end
-
-	on_changelist_updated (ch: SCM_CHANGELIST_COLLECTION)
-		require
-			is_interface_usable: attached {USABLE_I} Current as l_usable implies l_usable.is_interface_usable
-		do
-		end
-
-	on_change_detected (ch: SCM_CHANGE)
-		require
-			is_interface_usable: attached {USABLE_I} Current as l_usable implies l_usable.is_interface_usable
-		do
-		end
-
-	on_configuration_updated (cfg: SCM_CONFIG)
-		require
-			is_interface_usable: attached {USABLE_I} Current as l_usable implies l_usable.is_interface_usable
-		do
-		end
 
 note
 	copyright: "Copyright (c) 1984-2022, Eiffel Software"

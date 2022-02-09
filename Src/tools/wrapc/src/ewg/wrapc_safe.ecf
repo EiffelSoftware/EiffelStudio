@@ -1,17 +1,11 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
-<system
-	xmlns="http://www.eiffel.com/developers/xml/configuration-1-20-0"
-	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-20-0 http://www.eiffel.com/developers/xml/configuration-1-20-0.xsd"
-	name="wrap_c"
-	uuid="2F7D69D7-4063-45FC-B5BD-698E010904AD"
->
+<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-21-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-21-0 http://www.eiffel.com/developers/xml/configuration-1-21-0.xsd" name="wrap_c" uuid="2F7D69D7-4063-45FC-B5BD-698E010904AD">
 	<target name="wrap_c">
 		<root class="EWG" feature="make"/>
-		<option debug="true" full_class_checking="false" is_attached_by_default="true" manifest_array_type="mismatch_warning" warning="true">
-			<debug name="gelex" enabled="false"/>
-			<debug name="geyacc" enabled="false"/>
-			<assertions check="true" invariant="true" loop="false" postcondition="true" precondition="true" supplier_precondition="true"/>
+		<option debug="false" warning="warning" full_class_checking="false" is_attached_by_default="true" manifest_array_type="mismatch_warning">
+			<debug name="gelex" enabled="true"/>
+			<debug name="geyacc" enabled="true"/>
+			<assertions precondition="true" postcondition="true" check="true" invariant="true" supplier_precondition="true"/>
 		</option>
 		<setting name="console_application" value="true"/>
 		<setting name="inlining_size" value="0"/>
@@ -27,8 +21,8 @@
 		<library name="time" location="${ISE_LIBRARY}\library\time\time.ecf" readonly="true"/>
 		<library name="wrapc_kernel" location="..\library\wrapc_kernel_safe.ecf" readonly="false">
 			<option debug="false">
-				<debug name="gelex" enabled="false"/>
-				<debug name="geyacc" enabled="false"/>
+				<debug name="gelex" enabled="true"/>
+				<debug name="geyacc" enabled="true"/>
 			</option>
 		</library>
 		<cluster name="ewg" location=".\"/>

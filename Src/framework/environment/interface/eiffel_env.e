@@ -1659,6 +1659,9 @@ feature -- Files (commands)
 			is_valid_environment: is_valid_environment
 		local
 			l_args: ARGUMENTS_32
+			fut: FILE_UTILITIES
+			l_ec_name: like ec_name
+			p: PATH
 		once
 			if is_workbench and (attached application_name as appname and then appname.same_string ("ec")) then
 					-- We have to launch ourself to perform a compilation that would make sense
@@ -1666,7 +1669,13 @@ feature -- Files (commands)
 				create l_args
 				create Result.make_from_string (l_args.command_name)
 			else
-				Result := bin_path.extended (ec_name + executable_suffix)
+				l_ec_name := ec_name
+				create p.make_from_string (l_ec_name)
+				if p.is_absolute and then fut.file_path_exists (p) then
+					Result := p
+				else
+					Result := bin_path.extended (l_ec_name + executable_suffix)
+				end
 			end
 		ensure
 			not_result_is_empty: not Result.is_empty
@@ -2375,7 +2384,7 @@ feature {NONE} -- Helper
 		end
 
 ;note
-	copyright: "Copyright (c) 1984-2020, Eiffel Software"
+	copyright: "Copyright (c) 1984-2022, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

@@ -86,21 +86,46 @@ feature -- Async Operations
 
 	mutex: MUTEX
 
+	update_statuses_temp: detachable TUPLE [timeout: detachable EV_TIMEOUT; workers: ARRAYED_LIST [WORKER_THREAD]]
+			-- Keep references to avoid GC to reclaim them.
+
 	update_statuses
 			-- Update statuses for all known SCM locations, i.e for the workspace
 		local
 			grp: SCM_GROUP
 			wt: WORKER_THREAD
+			l_worker_queue: ARRAYED_LIST [WORKER_THREAD]
 			m: MUTEX
 			cfg: SCM_FLAT_CONFIG
 			l_root: SCM_LOCATION
 			l_path: PATH
-			tu: SCM_ASYNC_STATUSES_DATA
-			l_results: ARRAYED_LIST [SCM_ASYNC_STATUSES_DATA]
+			d: SCM_ASYNC_STATUSES_DATA
+			l_location_count_by_worker: INTEGER
+			l_results, l_worker_data: ARRAYED_LIST [SCM_ASYNC_STATUSES_DATA]
+			t: detachable EV_TIMEOUT
 		do
-			if attached workspace as ws then
+			debug ("scm")
+				print (generator + ".update_statuses is_updating_statuses=" + is_updating_statuses.out + "%N")
+			end
+			if
+				not is_updating_statuses and then
+				attached workspace as ws
+			then
+					-- FIXME: experienced issue on non Windows platforms, so for now operate all update in same thread [2022-02-09]
+				if {PLATFORM}.is_windows then
+					create l_worker_queue.make (5)
+				else
+					create l_worker_queue.make (1)
+				end
+
+				on_update_statuses_begin
 				create m.make
 				create l_results.make (ws.locations.count)
+
+				l_location_count_by_worker := ws.locations.count // l_worker_queue.capacity -- N concurrent workers
+				update_statuses_temp := [t, l_worker_queue]
+
+				create l_worker_data.make (l_location_count_by_worker)
 				across
 					ws.locations as ic
 				loop
@@ -108,22 +133,49 @@ feature -- Async Operations
 					create cfg.make_from_config (config)
 					l_root := grp.root.deep_twin
 					l_path := grp.location
-					create tu.make (l_root, l_path, cfg)
-					l_results.extend (tu)
-					create wt.make (agent async_update_statuses (tu, m))
+					create d.make (l_root, l_path, cfg)
+					l_results.extend (d)
+					check has_more_room: l_worker_data.count < l_location_count_by_worker end
+					l_worker_data.force (d)
+					if l_worker_data.count >= l_location_count_by_worker then
+						create wt.make (agent async_update_statuses (l_worker_data, m))
+						l_worker_queue.force (wt)
+						wt.launch
+
+						create l_worker_data.make (l_location_count_by_worker)
+					end
+				end
+				if not l_worker_data.is_empty then
+					create wt.make (agent async_update_statuses (l_worker_data, m))
+					l_worker_queue.force (wt)
 					wt.launch
 				end
 				ev_application.add_idle_action_kamikaze (agent check_for_async_update_statuses_completion (l_results, m))
 			end
 		end
 
-	async_update_statuses (a_data: SCM_ASYNC_STATUSES_DATA; a_mutex: MUTEX)
+	async_update_statuses (a_data_set: LIST [SCM_ASYNC_STATUSES_DATA]; a_mutex: MUTEX)
+		local
+			lst: ARRAYED_LIST [TUPLE [data: SCM_ASYNC_STATUSES_DATA; status_list: detachable SCM_STATUS_LIST]]
+			d: SCM_ASYNC_STATUSES_DATA
 		do
-			if attached a_data.root.changes (a_data.root.location, a_data.path, a_data.config) as sts then
-				a_mutex.lock
-				a_data.statuses := sts
-				a_mutex.unlock
+			create lst.make (a_data_set.count)
+			across
+				a_data_set as ic
+			loop
+				d := ic.item
+				lst.force ([d, d.root.changes (d.root.location, d.path, d.config)])
 			end
+
+			a_mutex.lock
+			across
+				lst as ic
+			loop
+				print ("set " + d.path.utf_8_name + "%N")
+				d := ic.item.data
+				d.set_statuses (ic.item.status_list)
+			end
+			a_mutex.unlock
 		end
 
 	check_for_async_update_statuses_completion (
@@ -133,44 +185,51 @@ feature -- Async Operations
 			t: EV_TIMEOUT
 		do
 			create t
---			timeout := t
+			if attached update_statuses_temp as temp then
+				temp.timeout := t
+			else
+				check has_update_statuses_temp: False end
+			end
 			t.actions.extend (agent (i_list: LIST [SCM_ASYNC_STATUSES_DATA]; i_t: EV_TIMEOUT; i_m: MUTEX)
-					local
-						n: INTEGER
-					do
-						i_m.lock
-						n := i_list.count
-						across
-							i_list as ic
-						loop
-							if
-								attached ic.item as d and then
-								d.completed
-							then
+				local
+					n, nb: INTEGER
+				do
+					i_m.lock
+					nb := i_list.count
+					n := nb
+					across
+						i_list as ic
+					loop
+						if attached ic.item as d then
+							if d.completed then
 								n := n - 1
 							end
 						end
+					end
+					i_m.unlock
+					debug ("scm")
+						print ("check_for_async_update_statuses_completion n=" + n.out + " / " + nb.out + "%N")
+					end
 
-						-- ...check
-						i_m.unlock
-						if n = 0 then
-							i_t.destroy
---							timeout := Void
-							across
-								i_list as ic
-							loop
-								if attached ic.item as d then
-									on_statuses_updated (d.root, d.path, d.statuses)
-								end
+					if n = 0 then
+						i_t.destroy
+						update_statuses_temp := Void -- Clear all references kept to avoid GC to reclaim them.
+						across
+							i_list as ic
+						loop
+							if attached ic.item as d then
+								n := n + 1
+								on_statuses_updated (d.root, d.path, d.statuses)
 							end
-							i_list.wipe_out
-
-						else
-								-- continue timeout
 						end
-					end(a_list, t, a_mutex)
-				)
-				t.set_interval (500) -- interval in milliseconds)
+						i_list.wipe_out
+						on_update_statuses_end
+					else
+							-- continue timeout
+					end
+				end(a_list, t, a_mutex)
+			)
+			t.set_interval (500) -- interval in milliseconds)
 		end
 
 feature -- Operations
@@ -590,7 +649,7 @@ feature {NONE} -- Implementation: Internal cache
 invariant
 
 note
-	copyright: "Copyright (c) 1984-2021, Eiffel Software"
+	copyright: "Copyright (c) 1984-2022, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

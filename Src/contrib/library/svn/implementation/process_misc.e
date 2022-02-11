@@ -26,8 +26,9 @@ feature -- Execution
 				create err.make (0)
 				create pf
 				p := pf.process_launcher (a_file_name, args, a_working_directory)
-				p.set_hidden (True)
+				p.enable_launch_in_new_process_group
 				p.set_separate_console (False)
+				p.set_hidden (True)
 				p.set_detached_console (True)
 				p.redirect_output_to_stream
 				p.redirect_error_to_stream
@@ -39,21 +40,25 @@ feature -- Execution
 				if p.launched then
 					from
 					until
-						p.has_output_stream_closed or p.has_output_stream_error
+						p.has_exited
 					loop
-						p.read_output_to_special (res_spec)
-						append_special_of_natural_8_to_string_8 (res_spec, res)
-					end
+						from
+						until
+							p.has_output_stream_closed or p.has_output_stream_error
+						loop
+							p.read_output_to_special (res_spec)
+							append_special_of_natural_8_to_string_8 (res_spec, res)
+						end
 
-					from
-					until
-						p.has_error_stream_closed or p.has_error_stream_error
-					loop
-						p.read_error_to_special (err_spec)
-						append_special_of_natural_8_to_string_8 (err_spec, err)
+						from
+						until
+							p.has_error_stream_closed or p.has_error_stream_error
+						loop
+							p.read_error_to_special (err_spec)
+							append_special_of_natural_8_to_string_8 (err_spec, err)
+						end
+						p.wait_for_exit_with_timeout (50)
 					end
-
-					p.wait_for_exit
 					create Result.make (p.exit_code, res, err)
 				else
 					last_error := 1
@@ -80,8 +85,9 @@ feature -- Execution
 				create err.make (0)
 				create pf
 				p := pf.process_launcher_with_command_line (a_cmd, a_working_directory)
-				p.set_hidden (True)
+				p.enable_launch_in_new_process_group
 				p.set_separate_console (False)
+				p.set_hidden (True)
 				p.set_detached_console (True)
 				p.redirect_output_to_stream
 				p.redirect_error_to_stream
@@ -93,21 +99,25 @@ feature -- Execution
 				if p.launched then
 					from
 					until
-						p.has_output_stream_closed or p.has_output_stream_error
+						p.has_exited
 					loop
-						p.read_output_to_special (res_spec)
-						append_special_of_natural_8_to_string_8 (res_spec, res)
-					end
+						from
+						until
+							p.has_output_stream_closed or p.has_output_stream_error
+						loop
+							p.read_output_to_special (res_spec)
+							append_special_of_natural_8_to_string_8 (res_spec, res)
+						end
 
-					from
-					until
-						p.has_error_stream_closed or p.has_error_stream_error
-					loop
-						p.read_error_to_special (err_spec)
-						append_special_of_natural_8_to_string_8 (err_spec, err)
+						from
+						until
+							p.has_error_stream_closed or p.has_error_stream_error
+						loop
+							p.read_error_to_special (err_spec)
+							append_special_of_natural_8_to_string_8 (err_spec, err)
+						end
+						p.wait_for_exit_with_timeout (50)
 					end
-
-					p.wait_for_exit
 					create Result.make (p.exit_code, res, err)
 				else
 					last_error := 1
@@ -134,8 +144,9 @@ feature -- Execution
 				create err.make (0)
 				create pf
 				p := pf.process_launcher_with_command_line (a_cmd, a_working_directory)
-				p.set_hidden (True)
+				p.enable_launch_in_new_process_group
 				p.set_separate_console (False)
+				p.set_hidden (True)
 				p.set_detached_console (True)
 				if a_record_output then
 					p.redirect_output_to_stream
@@ -144,27 +155,35 @@ feature -- Execution
 
 				p.launch
 				if p.launched then
-					if a_record_output then
-						from
-							create res_spec.make_filled (0, 1024)
-						until
-							p.has_output_stream_closed or p.has_output_stream_error
-						loop
-							p.read_output_to_special (res_spec)
-							append_special_of_natural_8_to_string_8 (res_spec, res)
-						end
+					from
+					until
+						p.has_exited
+					loop
+						if a_record_output then
+							from
+								if res_spec = Void then
+									create res_spec.make_filled (0, 1024)
+								end
+							until
+								p.has_output_stream_closed or p.has_output_stream_error
+							loop
+								p.read_output_to_special (res_spec)
+								append_special_of_natural_8_to_string_8 (res_spec, res)
+							end
 
-						from
-							create err_spec.make_filled (0, 1024)
-						until
-							p.has_error_stream_closed or p.has_error_stream_error
-						loop
-							p.read_error_to_special (err_spec)
-							append_special_of_natural_8_to_string_8 (err_spec, err)
+							from
+								if err_spec = Void then
+									create err_spec.make_filled (0, 1024)
+								end
+							until
+								p.has_error_stream_closed or p.has_error_stream_error
+							loop
+								p.read_error_to_special (err_spec)
+								append_special_of_natural_8_to_string_8 (err_spec, err)
+							end
 						end
+						p.wait_for_exit_with_timeout (50)
 					end
-
-					p.wait_for_exit
 					create Result.make (p.exit_code, res, err)
 				else
 					last_error := 1
@@ -187,8 +206,9 @@ feature -- Execution
 				last_error := 0
 				create pf
 				p := pf.process_launcher_with_command_line (a_cmd, a_working_directory.name)
-				p.set_hidden (True)
+				p.enable_launch_in_new_process_group
 				p.set_separate_console (False)
+				p.set_hidden (True)
 				p.set_detached_console (True)
 				p.launch
 			else
@@ -289,14 +309,12 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright: "Copyright (c) 1984-2021, Eiffel Software"
-	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
+	copyright: "Copyright (c) 2003-2022, Jocelyn Fiat"
+	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
-			Eiffel Software
-			5949 Hollister Ave., Goleta, CA 93117 USA
-			Telephone 805-685-1006, Fax 805-685-6869
-			Website http://www.eiffel.com
-			Customer support http://support.eiffel.com
+			 Jocelyn Fiat
+			 Contact: jocelyn@eiffelsolution.com
+			 Website http://www.eiffelsolution.com/
 		]"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

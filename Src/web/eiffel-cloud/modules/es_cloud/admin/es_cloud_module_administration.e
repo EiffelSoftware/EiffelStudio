@@ -1,6 +1,5 @@
 note
 	description: "Summary description for {ES_CLOUD_MODULE_ADMINISTRATION}."
-	author: ""
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -31,12 +30,18 @@ feature -- Security
 			-- List of permission ids, used by this module, and declared.
 		do
 			Result := Precursor
-			Result.force ("admin es subscriptions")
-			Result.force ("admin es licenses")
-			Result.force ("admin es plans")
-			Result.force ("admin es organizations")
-			Result.force ("admin es store")
+			Result.force (perm_admin_es_subscriptions)
+			Result.force (perm_admin_es_licenses)
+			Result.force (perm_admin_es_plans)
+			Result.force (perm_admin_es_organizations)
+			Result.force (perm_admin_es_store)
 		end
+
+	perm_admin_es_subscriptions: STRING = "admin es subscriptions"
+	perm_admin_es_licenses: STRING = "admin es licenses"
+	perm_admin_es_plans: STRING = "admin es plans"
+	perm_admin_es_organizations: STRING = "admin es organizations"
+	perm_admin_es_store: STRING = "admin es store"
 
 feature {NONE} -- Router/administration
 
@@ -100,23 +105,28 @@ feature -- Hooks configuration
 			lnk: CMS_LOCAL_LINK
 			l_parent: CMS_LINK_COMPOSITE
 		do
-				 -- Add the link to the taxonomy to the main menu
-			if a_response.has_permission ("admin subscriptions") then
-				l_parent := a_menu_system.management_menu.new_composite_item ("EiffelStudio", a_response.api.administration_path_location ("cloud/"))
+			l_parent := a_menu_system.management_menu.new_composite_item ("EiffelStudio", a_response.api.administration_path_location ("cloud/"))
+			lnk := a_response.api.local_link ("Profiles", "cloud/profiles/")
+			l_parent.extend (lnk)
 
+			if a_response.has_permission (perm_admin_es_plans) then
 				lnk := a_response.api.administration_link ("Plans", "cloud/plans/")
 				l_parent.extend (lnk)
-
-				lnk := a_response.api.administration_link ("Redeem", "cloud/redeem/")
-				l_parent.extend (lnk)
-
+			end
+			if a_response.has_permission (perm_admin_es_licenses) then
 				lnk := a_response.api.administration_link ("Licenses", "cloud/licenses/")
 				l_parent.extend (lnk)
-
+			end
+			if a_response.has_permission (perm_admin_es_subscriptions) then
 				lnk := a_response.api.administration_link ("Subscriptions", "cloud/subscriptions/")
 				l_parent.extend (lnk)
-
+			end
+			if a_response.has_permission (perm_admin_es_organizations) then
 				lnk := a_response.api.administration_link ("Organizations", "cloud/organizations/")
+				l_parent.extend (lnk)
+			end
+			if a_response.has_permission (perm_admin_es_store) then
+				lnk := a_response.api.administration_link ("Redeem", "cloud/redeem/")
 				l_parent.extend (lnk)
 
 				lnk := a_response.api.administration_link ("Store", "cloud/store/")

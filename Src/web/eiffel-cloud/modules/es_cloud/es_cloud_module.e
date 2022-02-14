@@ -157,6 +157,7 @@ feature -- Access: router
 		local
 			h: ES_CLOUD_HANDLER
 			h_prof: ES_CLOUD_PROFILE_HANDLER
+			h_profs: ES_CLOUD_PROFILES_HANDLER
 			h_forms: ES_CLOUD_FORMS_HANDLER
 			h_stats: ES_CLOUD_STATISTICS_HANDLER
 			h_act: ES_CLOUD_ACTIVITIES_HANDLER
@@ -169,6 +170,9 @@ feature -- Access: router
 
 				create h_prof.make (Current, l_mod_api)
 				a_router.handle ("/" + cloud_profile_location + "{account_id}", h_prof, a_router.methods_get_post)
+
+				create h_profs.make (Current, l_mod_api)
+				a_router.handle ("/" + cloud_profiles_location, h_profs, a_router.methods_get)
 
 				create h_stats.make (Current, l_mod_api)
 				a_router.handle ("/" + statistics_location, h_stats, a_router.methods_get)
@@ -196,6 +200,8 @@ feature -- Access: router
 	root_location: STRING = "cloud/"
 
 	cloud_profile_location: STRING = "cloud/profile/"
+
+	cloud_profiles_location: STRING = "cloud/profiles/"
 
 	cloud_forms_location: STRING = "cloud/forms/"
 
@@ -512,10 +518,10 @@ feature -- Hook
 					lnk.set_weight (20)
 					a_menu_system.primary_menu.extend (lnk)
 				end
-				create lnk.make (a_response.api.translation ("Downloads", Void), "downloads")
-				lnk.set_weight (25)
-				a_menu_system.primary_menu.extend (lnk)
 			end
+			create lnk.make (a_response.api.translation ("Downloads", Void), "downloads")
+			lnk.set_weight (25)
+			a_menu_system.primary_menu.extend (lnk)
 		end
 
 feature -- Hooks: user management

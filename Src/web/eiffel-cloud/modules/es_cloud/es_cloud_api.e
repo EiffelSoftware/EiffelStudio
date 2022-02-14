@@ -115,6 +115,27 @@ feature -- Access: users
 			cms_api.user_api.save_user_profile (a_prof.cms_user, uprof)
 		end
 
+	cloud_user_profiles (params: CMS_DATA_QUERY_PARAMETERS): detachable ARRAYED_LIST [ES_CLOUD_USER_PROFILE]
+			-- List of the most recent cloud profiles for `params`.
+		local
+			cu: ES_CLOUD_USER
+			pf: like cloud_user_profile
+		do
+			create Result.make (params.size.to_integer_32)
+			across
+				cms_api.user_api.recent_users (params) as ic
+			loop
+				if attached ic.item as l_user then
+					create cu.make (l_user)
+					pf := cloud_user_profile (cu)
+					if pf = Void then
+						create pf.make (l_user)
+					end
+					Result.force (pf)
+				end
+			end
+		end
+
 feature -- Access: plans
 
 	plans: LIST [ES_CLOUD_PLAN]

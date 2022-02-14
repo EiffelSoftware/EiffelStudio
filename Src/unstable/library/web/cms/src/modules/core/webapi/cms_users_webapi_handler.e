@@ -39,7 +39,7 @@ feature -- Execution
 			l_full: BOOLEAN
 			nb: INTEGER
 		do
-			if api.has_permissions (<<"admin users", "view users">>) then
+			if api.has_permissions (<<{CMS_CORE_MODULE_WEBAPI}.perm_admin_users, {CMS_CORE_MODULE_WEBAPI}.perm_view_users>>) then
 				if attached req.query_parameter ("full") as p and then p.is_case_insensitive_equal ("yes") then
 					l_full := True
 				end
@@ -92,7 +92,7 @@ feature -- Execution
 			tf: WSF_FORM_TEXT_INPUT
 			err: STRING_32
 		do
-			if api.has_permission ("admin users") then
+			if api.has_permission ({CMS_CORE_MODULE_WEBAPI}.perm_admin_users) then
 				create f.make (req.percent_encoded_path_info, "new-user")
 				create tf.make ("username"); f.extend (tf)
 				create tf.make ("password"); f.extend (tf)
@@ -170,6 +170,6 @@ feature -- Execution
 
 
 note
-	copyright: "2011-2018, Jocelyn Fiat, Javier Velilla, Eiffel Software and others"
+	copyright: "2011-2022, Jocelyn Fiat, Javier Velilla, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 end

@@ -82,7 +82,7 @@ feature -- HTTP Methods
 			edit_response: CMS_ADMIN_USER_FORM_RESPONSE
 			view_response: CMS_ADMIN_USER_VIEW_RESPONSE
 		do
-			if api.has_permission ("admin users") then
+			if api.has_permission ({CMS_ADMIN_MODULE_ADMINISTRATION}.perm_admin_users) then
 				if req.percent_encoded_path_info.ends_with_general ("/edit") then
 					check valid_url: req.percent_encoded_path_info.starts_with_general (api.administration_path ("/user/")) end
 					create edit_response.make (req, res, api)
@@ -113,12 +113,11 @@ feature -- HTTP Methods
 			end
 		end
 
-
 	do_post (req: WSF_REQUEST; res: WSF_RESPONSE)
 		local
 			edit_response: CMS_ADMIN_USER_FORM_RESPONSE
 		do
-			if api.has_permission ("admin users") then
+			if api.has_permission ({CMS_ADMIN_MODULE_ADMINISTRATION}.perm_admin_users) then
 				if req.percent_encoded_path_info.ends_with_general ("/edit") then
 					create edit_response.make (req, res, api)
 					edit_response.execute

@@ -40,6 +40,7 @@ feature -- Access
 feature -- Access: metadata
 
 	title: detachable READABLE_STRING_32
+			-- Head title.
 
 	page_title: detachable READABLE_STRING_32
 			-- Page title
@@ -144,16 +145,23 @@ feature -- Head customization
 			add_additional_head_line (s, True)
 		end
 
-feature -- Element change				
+feature -- Element change
 
 	set_title (t: detachable READABLE_STRING_GENERAL)
+			-- Set the page and the head title to `t`
+		do
+			set_head_title (t)
+			set_page_title (t)
+		end
+
+	set_head_title (t: detachable READABLE_STRING_GENERAL)
+			-- Set the html head title to `t`
 		do
 			if t = Void then
 				title := Void
 			else
 				title := t
 			end
-			set_page_title (t)
 		end
 
 	set_page_title (t: detachable READABLE_STRING_GENERAL)
@@ -162,6 +170,9 @@ feature -- Element change
 				page_title := Void
 			else
 				page_title := t
+				if title = Void then
+					title := t
+				end
 			end
 		end
 
@@ -1043,8 +1054,10 @@ feature -- Generation
 			page.register_variable (absolute_url ("", Void), "host") -- Same as `site_url'.
 			page.register_variable (request.is_https, "is_https")
 			if attached title as l_title then
+				page.register_variable (l_title, "head_title")
 				page.register_variable (l_title, "site_title")
 			else
+				page.register_variable (site_name, "head_title")
 				page.register_variable (site_name, "site_title")
 			end
 			page.set_is_front (is_front)

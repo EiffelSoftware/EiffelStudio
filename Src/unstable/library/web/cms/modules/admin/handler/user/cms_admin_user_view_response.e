@@ -79,6 +79,9 @@ feature -- Execution
 			create s.make_empty
 			s.append ("<div class=%"info%"> ")
 			s.append ("<h4>Account Information</h4>")
+			s.append ("<p>Account: ")
+			s.append (api.user_html_link (a_user))
+			s.append ("</p>")
 			s.append ("<p>Username: ")
 			s.append (html_encoded (a_user.name))
 			s.append ("</p>")
@@ -98,7 +101,6 @@ feature -- Execution
 				s.append (ago.smart_date_duration (dt))
 				s.append ("</p>")
 			end
-
 			if
 				attached {LIST [CMS_USER_ROLE]} api.user_api.user_roles (a_user) as l_roles and then
 			   	not l_roles.is_empty

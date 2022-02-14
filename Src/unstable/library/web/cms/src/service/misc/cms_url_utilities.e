@@ -24,7 +24,7 @@ feature -- Core
 	based_path (p: READABLE_STRING_8): STRING_8
 			-- Path `p' in the context of the `base_url'
 		do
-			if attached base_url as l_base_url then
+			if attached base_url as l_base_url and then not l_base_url.is_empty then
 				if p.starts_with (l_base_url) then
 						-- In case `p` is already based on base_url.
 					check starts_with_slash: p.starts_with ("/") end
@@ -40,7 +40,14 @@ feature -- Core
 					end
 				end
 			else
-				Result := p.to_string_8
+				if p.is_empty then
+					Result := "/"
+				elseif p[1] /= '/' then
+					create Result.make_from_string (p)
+					Result.precede ('/')
+				else
+					Result := p.to_string_8
+				end
 			end
 		end
 

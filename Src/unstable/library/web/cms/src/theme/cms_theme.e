@@ -57,6 +57,7 @@ feature -- Element change
 			a_url.ends_with_general ("/")
 		local
 			i,j: INTEGER
+			s: READABLE_STRING_8
 		do
 			base_url := Void
 			if a_url [a_url.count] = '/' then
@@ -70,9 +71,12 @@ feature -- Element change
 				j := a_url.index_of ('/', i + 3)
 				if j > 0 then
 					if a_url [a_url.count] = '/' then
-						create base_url.make_from_string (a_url.substring (j, a_url.count - 1))
+						s := a_url.substring (j, a_url.count - 1)
 					else
-						create base_url.make_from_string (a_url.substring (j, a_url.count))
+						s := a_url.substring (j, a_url.count)
+					end
+					if not s.is_empty then
+						create base_url.make_from_string (s)
 					end
 				end
 			end

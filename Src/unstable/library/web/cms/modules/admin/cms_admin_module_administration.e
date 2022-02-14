@@ -47,7 +47,7 @@ feature -- Security
 	perm_view_system_info: STRING = "view system info"
 
 	perm_admin_modules: STRING = "admin modules"
-	perm_admin_users: STRING = "admin users"
+	perm_admin_users: STRING = "admin users" -- See {CMS_CORE_MODULE}.perm_admin_users
 	perm_admin_roles: STRING = "admin roles"
 	perm_access_admin: STRING = "access admin"
 	perm_view_logs: STRING = "view logs"

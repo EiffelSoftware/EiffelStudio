@@ -22,10 +22,14 @@ feature -- Security
 			-- List of permission ids, used by this module, and declared.
 		do
 			Result := Precursor
-			Result.force ("admin users")
-			Result.force ("view users")
-			Result.force ("use access_token")
+			Result.force (perm_admin_users)
+			Result.force (perm_view_users)
+			Result.force (perm_use_access_token)
 		end
+
+	perm_admin_users: STRING = "admin users"
+	perm_view_users: STRING = "view users"
+	perm_use_access_token: STRING = "use access_token"
 
 feature {NONE} -- Router/administration
 
@@ -54,6 +58,6 @@ feature -- Access: filter
 		end
 
 note
-	copyright: "2011-2017, Jocelyn Fiat, Javier Velilla, Eiffel Software and others"
+	copyright: "2011-2022, Jocelyn Fiat, Javier Velilla, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 end

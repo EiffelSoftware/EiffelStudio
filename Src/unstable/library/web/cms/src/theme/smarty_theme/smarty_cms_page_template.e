@@ -47,14 +47,12 @@ feature -- Access
 				-- FIXME: review variables !
 			if attached page.title as l_title then
 				variables.force (html_encoded (l_title), "head_title")
-				variables.force (html_encoded (l_title), "page_title")
 			else
 				if attached variables.item ("site_title") as l_site_title then
 					variables.force (l_site_title, "head_title")
 				else
 					variables.force ("CMS", "head_title")
 				end
-				variables.force ("", "page_title")
 			end
 
 			variables.force (page.language, "language")
@@ -133,7 +131,7 @@ feature -- Registration
 		end
 
 note
-	copyright: "2011-2018, Jocelyn Fiat, Javier Velilla, Alexander Kogtenkov, Eiffel Software and others"
+	copyright: "2011-2022, Jocelyn Fiat, Javier Velilla, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

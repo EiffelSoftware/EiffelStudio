@@ -149,12 +149,13 @@ feature -- Security
 			end
 		end
 
-	perm_view_users: STRING = "view users"
-
 	use_format_permission_name (a_format: CONTENT_FORMAT): STRING
 		do
 			Result := "use format " + a_format.name
 		end
+
+	perm_admin_users: STRING = "admin users" -- See {CMS_ADMIN_MODULE_ADMINISTRATION}.perm_admin_users
+	perm_view_users: STRING = "view users" -- See  {CMS_AUTHENTICATION_MODULE}.perm_view_users
 
 feature {CMS_EXECUTION} -- Administration
 

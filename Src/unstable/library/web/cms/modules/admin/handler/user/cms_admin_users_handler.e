@@ -72,7 +72,7 @@ feature -- HTTP Methods
 				-- get them from the configuration file and load them into
 				-- the setup class.
 
-			if api.has_permission ("admin users") then
+			if api.has_permission ({CMS_ADMIN_MODULE_ADMINISTRATION}.perm_admin_users) then
 				user_api := api.user_api
 
 				l_count := user_api.users_count

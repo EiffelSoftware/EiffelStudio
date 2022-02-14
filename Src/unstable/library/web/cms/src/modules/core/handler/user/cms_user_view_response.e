@@ -52,7 +52,7 @@ feature -- Process
 				attached associated_user as l_user
 			then
 				if
-					api.has_permission ("view users")
+					api.has_permission ({CMS_CORE_MODULE}.perm_view_users)
 					or l_user.same_as (user) -- Same user
 				then
 					f := new_view_form (l_user, request.request_uri, "view-user")
@@ -100,7 +100,7 @@ feature -- Process Edit
 			if a_user /= Void then
 				create fs.make
 				fs.set_legend ("User Information")
-				if not a_user.same_as (api.user) and then api.has_permission ("admin users") then
+				if not a_user.same_as (api.user) and then api.has_permission ({CMS_CORE_MODULE}.perm_admin_users) then
 					fs.extend_html_text ("<p>Administration: <a href=%"" + api.administration_path ("user/" + a_user.id.out) + "%">manage user " + html_encoded (api.real_user_display_name (a_user)) + "</a> ...</p>%N")
 				end
 				create ti.make_with_text ("profile_name", a_user.name)
@@ -139,6 +139,6 @@ feature -- Process Edit
 		end
 
 note
-	copyright: "2011-2020, Jocelyn Fiat, Javier Velilla, Eiffel Software and others"
+	copyright: "2011-2022, Jocelyn Fiat, Javier Velilla, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 end

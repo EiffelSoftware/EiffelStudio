@@ -363,7 +363,7 @@ feature -- Form
 				a_form.extend (ts)
 				a_form.extend_html_text ("<hr>")
 
-				if api.has_permission ("admin users") then
+				if api.has_permission ({CMS_ADMIN_MODULE_ADMINISTRATION}.perm_admin_users) then
 					create fs.make
 					fs.set_legend ("Change Password")
 					create tp.make ("password")

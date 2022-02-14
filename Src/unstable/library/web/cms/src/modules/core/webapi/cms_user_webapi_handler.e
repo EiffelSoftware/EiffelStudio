@@ -49,7 +49,7 @@ feature -- Execution
 --					l_user := u
 --				end
 				if l_user /= Void then
-					if l_user.same_as (u) or api.has_permissions (<<"admin users", "view users">>) then
+					if l_user.same_as (u) or api.has_permissions (<<{CMS_CORE_MODULE_WEBAPI}.perm_admin_users, {CMS_CORE_MODULE_WEBAPI}.perm_view_users>>) then
 						rep := new_response (req, res)
 						rep.add_string_field ("uid", l_user.id.out)
 						rep.add_string_field ("name", l_user.name)
@@ -86,6 +86,6 @@ feature -- Execution
 
 
 note
-	copyright: "2011-2017, Jocelyn Fiat, Javier Velilla, Eiffel Software and others"
+	copyright: "2011-2022, Jocelyn Fiat, Javier Velilla, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 end

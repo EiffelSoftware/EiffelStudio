@@ -85,12 +85,12 @@ feature {NONE} -- Implementation
 				-- result (inconclusive/error/verified): verified_regexp.captured_substring (2)
 				check current_procedure_error = Void end
 				check current_procedure_result /= Void end
-				if verified_regexp.captured_substring (2) ~ "verified" then
+				if verified_regexp.captured_substring (3) ~ "verified" then
 					current_procedure_result.set_successful
-				elseif verified_regexp.captured_substring (2) ~ "inconclusive" then
+				elseif verified_regexp.captured_substring (3) ~ "inconclusive" then
 					current_procedure_result.set_inconclusive
 				else
-					check verified_regexp.captured_substring (2).starts_with ("error") end
+					check verified_regexp.captured_substring (3).starts_with ("error") end
 					current_procedure_result.set_error
 				end
 				if attached verified_regexp.captured_substring (1) as t then
@@ -232,7 +232,7 @@ feature {NONE} -- Regular expressions
 			-- Regular expression for verified information line.
 		once
 			create Result.make
-			Result.compile ("^\s*\[([0-9.,]*) s, [0-9]+ proof obligations?\]\s*(\w+)\s*$")
+			Result.compile ("^\s*\[([0-9.,]*) s, (solver resource count: [0-9]+, )?[0-9]+ proof obligations?\]\s*(\w+)\s*$")
 		end
 
 	boogie_error_regexp: RX_PCRE_REGULAR_EXPRESSION

@@ -270,6 +270,11 @@ feature -- Handler
 			ch: READABLE_STRING_GENERAL
 		do
 			create {GENERIC_VIEW_CMS_RESPONSE} r.make (req, res, api)
+			if attached api.setup.site_name as l_site_name then
+				r.set_head_title ({STRING_32} "Downloads / " + l_site_name)
+			else
+				r.set_head_title ("Downloads")
+			end
 
 			if a_channel /= Void then
 				ch := a_channel

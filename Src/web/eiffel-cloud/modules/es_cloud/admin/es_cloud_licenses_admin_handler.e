@@ -128,6 +128,7 @@ feature -- Execution
 			lics: LIST [TUPLE [license: ES_CLOUD_LICENSE; user: detachable ES_CLOUD_USER; email: detachable READABLE_STRING_8; org: detachable ES_CLOUD_ORGANIZATION]]
 			lics_last_sessions: STRING_TABLE [ES_CLOUD_SESSION] -- indexed by license key.
 			lics_sorter: QUICK_SORTER [TUPLE [license: ES_CLOUD_LICENSE]]
+			l_last_remote_address: detachable READABLE_STRING_32
 			f: CMS_FORM
 			f_select: WSF_FORM_SELECT
 			f_opt: WSF_FORM_SELECT_OPTION
@@ -454,7 +455,7 @@ feature -- Execution
 					end
 				end
 				s.append ("last%">Last</a></th>")
-
+				s.append ("<th>Notes</th>")
 				s.append ("<th>organization(s)</th>")
 				s.append ("</tr>")
 				across
@@ -555,23 +556,33 @@ feature -- Execution
 							end
 							s.append ("</td>")
 							s.append ("<td>") -- Last
-							if
-								attached lics_last_sessions [lic.key] as l_last and then
-								attached l_last.last_date as dt
-							then
-								s.append ("<time class=%"timeago%" datetime=%"" + date_time_to_timestamp_string (dt) + "%">")
-								s.append (html_encoded (date_time_to_string (dt)))
-								s.append ("</time>")
+							if attached lics_last_sessions [lic.key] as l_last then
+								l_last_remote_address := l_last.remote_address
+								if attached l_last.last_date as dt then
+									s.append ("<time class=%"timeago%" datetime=%"" + date_time_to_timestamp_string (dt) + "%">")
+									s.append (html_encoded (date_time_to_string (dt)))
+									s.append ("</time>")
+								end
+							else
+								l_last_remote_address := Void
 							end
-							s.append ("<a href=%"")
+							s.append (" <a href=%"")
 							s.append (api.location_url ("activities/" + url_encoded (lic.key), Void))
 							s.append ("%">...</a>")
+
 							s.append ("</td>")
+
+							s.append ("<td>")
+							if attached l_last_remote_address as rem_addr then
+								s.append (html_encoded (rem_addr))
+							end
+							s.append ("</td>") -- Notes
 						else
 							s.append ("<td></td>") -- Plan
 							s.append ("<td></td>") -- Conditions
 							s.append ("<td></td>") -- Until
 							s.append ("<td></td>") -- Last
+							s.append ("<td></td>") -- Notes
 						end
 --						if l_user /= Void and orgs /= Void then
 --							s.append ("<td>")

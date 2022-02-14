@@ -54,27 +54,56 @@ feature -- Execution
 			s: STRING
 			nb: INTEGER
 			l_profile: ES_CLOUD_USER_PROFILE
+			l_page_helper: CMS_PAGINATION_GENERATOR
+			s_pager: STRING
+			l_show_all: BOOLEAN
+			lst: ITERABLE [ES_CLOUD_USER_PROFILE]
 		do
 			r := new_generic_response (req, res)
 			r.add_javascript_url (r.module_name_resource_url ({ES_CLOUD_MODULE}.name, "/files/js/es_cloud.js", Void))
 			r.add_style (r.module_name_resource_url ({ES_CLOUD_MODULE}.name, "/files/css/es_cloud.css", Void), Void)
 			r.set_title ("Profiles...")
 			s := ""
-			if attached es_cloud_api.cloud_user_profiles (create {CMS_DATA_QUERY_PARAMETERS}.make (0, 100)) as lst then
+
+			l_show_all := attached {WSF_STRING} req.query_parameter ("show") as p and then p.same_string ("all")
+
+			if not l_show_all then
+				create s_pager.make_empty
+				create l_page_helper.make (req.percent_encoded_path_info + "?page={page}&size={size}", api.user_api.users_count.as_natural_64, 25)
+				l_page_helper.get_setting_from_request (req)
+				if l_page_helper.has_upper_limit and then l_page_helper.pages_count > 1 then
+					l_page_helper.append_to_html (r, s_pager)
+					if l_page_helper.page_size > 25 then
+						s.append (s_pager)
+					end
+				end
+				lst := es_cloud_api.cloud_user_profiles (create {CMS_DATA_QUERY_PARAMETERS}.make (l_page_helper.current_page_offset, l_page_helper.page_size))
+			else
+				lst := es_cloud_api.cloud_user_profiles (Void) -- all profiles!
+			end
+			if lst /= Void then
 				across
 					lst as ic
 				loop
 					l_profile := ic.item
-					if l_profile.about_wikitext /= Void then
+					if not l_profile.is_empty then
 						nb := nb + 1
-						s.append ("<div>")
+						s.append ("<div>View profile for: ")
+						s.append ("<a href=%""+ api.url (module.user_cloud_profile_location (l_profile.cms_user), Void) + "" +"%" class=%"button%">&gt;&gt; View " + html_encoded (api.real_user_display_name (l_profile.cms_user)) + "</a>")
+						s.append ("</div>%N")
+					else
+						s.append ("<div>No profile for:")
 						s.append ("<a href=%""+ api.url (module.user_cloud_profile_location (l_profile.cms_user), Void) + "" +"%" class=%"button%">&gt;&gt; View " + html_encoded (api.real_user_display_name (l_profile.cms_user)) + "</a>")
 						s.append ("</div>%N")
 					end
 				end
 			end
-			if nb = 0 then
+			if l_show_all and nb = 0 then
 				r.add_message ("No public profile", Void)
+			end
+			if s_pager /= Void then
+				s.append (s_pager)
+				s.append (" <a class=%"button%" href=%"" + req.percent_encoded_path_info + "?show=all%">Show all</a>")
 			end
 
 			r.set_main_content (s)

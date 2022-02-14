@@ -23,6 +23,14 @@ feature -- Access
 
 	about_wikitext: detachable IMMUTABLE_STRING_32
 
+feature -- Status report
+
+	is_empty: BOOLEAN
+			-- Is profile empty ?
+		do
+			Result := about_wikitext = Void
+		end
+
 feature -- Element change
 
 	set_about_wikitext (t: detachable READABLE_STRING_GENERAL)

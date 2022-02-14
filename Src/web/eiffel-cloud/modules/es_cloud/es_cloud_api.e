@@ -115,23 +115,55 @@ feature -- Access: users
 			cms_api.user_api.save_user_profile (a_prof.cms_user, uprof)
 		end
 
-	cloud_user_profiles (params: CMS_DATA_QUERY_PARAMETERS): detachable ARRAYED_LIST [ES_CLOUD_USER_PROFILE]
+	cloud_user_profiles (params: detachable CMS_DATA_QUERY_PARAMETERS): detachable ARRAYED_LIST [ES_CLOUD_USER_PROFILE]
 			-- List of the most recent cloud profiles for `params`.
+			-- if `params` is Void, return all existing profiles (excluding empy)
 		local
 			cu: ES_CLOUD_USER
 			pf: like cloud_user_profile
+			nb: INTEGER
+			l_params: CMS_DATA_QUERY_PARAMETERS
+			l_done: BOOLEAN
+			lst: ITERABLE [CMS_USER]
 		do
-			create Result.make (params.size.to_integer_32)
-			across
-				cms_api.user_api.recent_users (params) as ic
-			loop
-				if attached ic.item as l_user then
-					create cu.make (l_user)
-					pf := cloud_user_profile (cu)
-					if pf = Void then
-						create pf.make (l_user)
+			if params /= Void then
+				create Result.make (params.size.to_integer_32)
+				across
+					cms_api.user_api.recent_users (params) as ic
+				loop
+					if attached ic.item as l_user then
+						create cu.make (l_user)
+						pf := cloud_user_profile (cu)
+						if pf = Void then
+							create pf.make (l_user)
+						end
+						Result.force (pf)
 					end
-					Result.force (pf)
+				end
+			else
+				create Result.make (100)
+				from
+					create l_params.make (0, 100)
+				until
+					l_done
+				loop
+					lst := cms_api.user_api.recent_users (l_params)
+					nb := 0
+					across
+						lst as ic
+					loop
+						nb := nb + 1
+						if attached ic.item as l_user then
+							pf := cloud_user_profile (l_user)
+							if pf /= Void and then not pf.is_empty then
+								Result.force (pf)
+							end
+						end
+					end
+					l_done := nb < 100
+					if not l_done then
+						l_params.set_offset (l_params.offset + l_params.size)
+					end
 				end
 			end
 		end

@@ -64,6 +64,27 @@ feature -- Access
 	data: detachable READABLE_STRING_32
 			-- Optional data (could be JSON content), mostly for debugging.
 
+	data_item (a_name: READABLE_STRING_GENERAL): detachable READABLE_STRING_32
+		local
+			jp: JSON_PARSER
+		do
+			if attached data as l_data then
+				create jp.make
+				jp.parse_string (l_data)
+				if
+					attached jp.parsed_json_object as jo and then
+					attached {JSON_STRING} (jo / a_name) as jv
+				then
+					Result := jv.unescaped_string_32
+				end
+			end
+		end
+
+	remote_address: detachable READABLE_STRING_32
+		do
+			Result := data_item ("remote_addr")
+		end
+
 feature -- Element change
 
 	set_last_date (dt: detachable like last_date)

@@ -414,6 +414,7 @@ feature -- Operations
 
 	update_statuses (loc: detachable SCM_LOCATION)
 		do
+			status_box.scm_service.on_update_statuses_enter
 			if attached scm_rows as lst then
 				across
 					lst as ic
@@ -424,6 +425,7 @@ feature -- Operations
 				end
 				refresh_now
 			end
+			status_box.scm_service.on_update_statuses_leave
 		end
 
 	update_status (a_status: SCM_STATUS)

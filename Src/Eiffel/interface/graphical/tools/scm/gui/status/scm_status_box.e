@@ -266,11 +266,11 @@ feature -- Basic operation
 
 	update_statuses (loc: detachable SCM_LOCATION)
 		do
-			scm_service.on_update_statuses_begin
+			scm_service.on_update_statuses_enter
 			if attached grid as g then
 				g.update_statuses (loc)
 			end
-			scm_service.on_update_statuses_end
+			scm_service.on_update_statuses_leave
 		end
 
 	update_status (a_status: SCM_STATUS)

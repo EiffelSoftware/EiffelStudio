@@ -339,6 +339,10 @@ feature -- Operations
 			r.set_item (parent_column, glab)
 
 			fill_empty_grid_items (r)
+
+			if a_parent_row.is_expandable and then not a_parent_row.is_expanded then
+				a_parent_row.expand
+			end
 		end
 
 feature {NONE} -- Implementation

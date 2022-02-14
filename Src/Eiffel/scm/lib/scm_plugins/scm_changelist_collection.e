@@ -134,8 +134,9 @@ feature -- Element change
 			across
 				changelists as ic
 			loop
-				remove_changelist (ic.item)
+				ic.item.unregister_observer (Current)
 			end
+			changelists.wipe_out
 			check changelist_count = 0 end
 		end
 

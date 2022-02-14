@@ -65,6 +65,12 @@ feature -- Operations
 
 	is_updating_statuses: BOOLEAN
 			-- Is `update_statuses` running?
+		do
+			Result := updating_statuses_depth > 0
+		end
+
+	updating_statuses_depth: INTEGER
+			-- Depth of update statuses recursive calls.
 
 	update_statuses
 			-- Update statuses for all known SCM locations, i.e for the workspace
@@ -166,12 +172,12 @@ feature -- Events
 			end
 		end
 
-	on_update_statuses_begin
+	on_update_statuses_enter
 		do
 			debug ("scm")
-				print (generator + ".on_update_statuses_begin%N")
+				print (generator + ".on_update_statuses_enter%N")
 			end
-			is_updating_statuses := True
+			updating_statuses_depth := updating_statuses_depth + 1
 			if attached observers as lst then
 				across
 					lst as ic
@@ -181,19 +187,21 @@ feature -- Events
 			end
 		end
 
-	on_update_statuses_end
+	on_update_statuses_leave
 		do
 			debug ("scm")
-				print (generator + ".on_update_statuses_end%N")
+				print (generator + ".on_update_statuses_leave%N")
 			end
-			if attached observers as lst then
-				across
-					lst as ic
-				loop
-					ic.item.on_update_statuses_end
+			updating_statuses_depth := updating_statuses_depth - 1
+			if not is_updating_statuses then
+				if attached observers as lst then
+					across
+						lst as ic
+					loop
+						ic.item.on_update_statuses_end
+					end
 				end
 			end
-			is_updating_statuses := False
 		end
 
 	on_statuses_updated (a_root: SCM_LOCATION; a_location: PATH; a_statuses: detachable SCM_STATUS_LIST)

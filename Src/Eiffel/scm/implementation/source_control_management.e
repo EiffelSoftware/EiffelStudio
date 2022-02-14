@@ -118,7 +118,7 @@ feature -- Async Operations
 					create l_worker_queue.make (1)
 				end
 
-				on_update_statuses_begin
+				on_update_statuses_enter
 				create m.make
 				create l_results.make (ws.locations.count)
 
@@ -223,7 +223,7 @@ feature -- Async Operations
 							end
 						end
 						i_list.wipe_out
-						on_update_statuses_end
+						on_update_statuses_leave
 					else
 							-- continue timeout
 					end

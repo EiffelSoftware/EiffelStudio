@@ -23,6 +23,8 @@ inherit
 
 	CMS_HOOK_MENU_SYSTEM_ALTER
 
+	CMS_HOOK_FORM_ALTER
+
 	REFACTORING_HELPER
 
 	SHARED_LOGGER
@@ -79,10 +81,14 @@ feature -- Security
 			-- List of permission ids, used by this module, and declared.
 		do
 			Result := Precursor
-			Result.force ("admin messaging")
-			Result.force ("message any user")
-			Result.force ("use messaging")
+			Result.force (perm_admin_messaging)
+			Result.force (perm_message_any_user)
+			Result.force (perm_use_messaging)
 		end
+
+	perm_admin_messaging: STRING = "admin messaging"
+	perm_message_any_user: STRING = "message any user"
+	perm_use_messaging: STRING = "use messaging"
 
 feature -- Hooks configuration
 
@@ -90,6 +96,7 @@ feature -- Hooks configuration
 			-- Module hooks configuration.
 		do
 			auto_subscribe_to_hooks (a_hooks)
+			a_hooks.subscribe_to_form_alter_hook (Current)
 		end
 
 feature -- Hooks
@@ -101,13 +108,50 @@ feature -- Hooks
 			lnk: CMS_LOCAL_LINK
 		do
 				 -- Add the link to the taxonomy to the main menu
-			if a_response.has_permission ("use messaging") then
+			if a_response.has_permission (perm_use_messaging) then
 				lnk := a_response.api.local_link ("Messaging", "messaging")
 				a_menu_system.navigation_menu.extend (lnk)
 			end
 		end
 
-	new_html_messaging_form (a_response: CMS_RESPONSE; api: CMS_API): STRING
+	form_alter (a_form: CMS_FORM; a_form_data: detachable WSF_FORM_DATA; a_response: CMS_RESPONSE)
+			-- Hook execution on form `a_form' and its associated data `a_form_data',
+			-- for related response `a_response'.
+		local
+			fset: WSF_FORM_FIELD_SET
+			l_uid: like {CMS_USER}.id
+		do
+			if
+				attached a_form.id as l_form_id and then
+				l_form_id.same_string ({CMS_USER_VIEW_RESPONSE}.view_user_form_id)
+			then
+				if
+					attached a_response.user as u and then
+					a_response.has_permission (perm_use_messaging)
+				then
+					if attached a_form.fields_by_name ("user-id") as l_uid_fields then
+						across
+							l_uid_fields as ic
+						until
+							l_uid /= 0
+						loop
+							if
+								attached {WSF_FORM_INPUT} ic.item as f and then
+								attached f.default_value as v
+							then
+								l_uid := v.to_integer_64
+							end
+						end
+					end
+					create fset.make
+					fset.set_legend ("Messaging")
+					fset.extend_html_text ("<a href=%"" + a_response.location_url ("messaging", Void) + "?to_users="+ l_uid.out +"%">Send a message</a>")
+					a_form.extend (fset)
+				end
+			end
+		end
+
+	new_html_messaging_form (a_response: CMS_RESPONSE; api: CMS_API; a_to_users: detachable LIST [CMS_USER]): STRING
 		local
 			f: CMS_FORM
 		do
@@ -121,14 +165,14 @@ feature -- Hooks
 --				end
 --				Result := l_tpl_block.to_html (a_response.theme)
 --			else
-				f := new_messaging_form (a_response, api)
+				f := new_messaging_form (a_response, api, a_to_users)
 				api.hooks.invoke_form_alter (f, f.last_data, a_response)
 
 				Result := "<div class=%"messaging-box%"><h1>Send message to ...</h1>" + f.to_html (a_response.wsf_theme) + "<br/></div>"
 --			end
 		end
 
-	new_messaging_form (a_response: CMS_RESPONSE; api: CMS_API): CMS_FORM
+	new_messaging_form (a_response: CMS_RESPONSE; api: CMS_API; a_to_users: detachable LIST [CMS_USER]): CMS_FORM
 		local
 			f: CMS_FORM
 			f_name: WSF_FORM_TEXT_INPUT
@@ -136,44 +180,68 @@ feature -- Hooks
 			f_submit: WSF_FORM_SUBMIT_INPUT
 			f_user: WSF_FORM_CHECKBOX_INPUT
 			f_set: WSF_FORM_FIELD_SET
+			f_div: WSF_FORM_DIV
 			l_params: CMS_DATA_QUERY_PARAMETERS
 			l_step: NATURAL_32
 			l_name: READABLE_STRING_32
 			nb: INTEGER
 			i: INTEGER
+			l_first: BOOLEAN
 		do
 			create f.make (a_response.url ("messaging", Void), "messaging-form")
 
 			if attached api.user as l_current_user then
-				nb := api.user_api.users_count
-				from
-					create f_set.make
-					f_set.set_legend ("Select users")
-					f.extend (f_set)
-					i := 0
-					l_step := 10
-				until
-					i > nb
-				loop
-					create l_params.make (i.to_natural_64, l_step)
-					if attached api.user_api.recent_users (l_params) as l_users then
-						across
-							l_users as ic
-						loop
-							if l_current_user.id = ic.item.id then
+				if a_to_users /= Void and then not a_to_users.is_empty then
+					create f_div.make
+					f_div.extend_html_text ("<span class=%"title%">To user(s)</span>:")
+					f.extend (f_div)
+					nb := a_to_users.count
+					l_first := True
+					across
+						a_to_users as ic
+					loop
+						if l_current_user.id = ic.item.id then
+						else
+							f_div.extend_hidden_input ("users[]", ic.item.id.out)
+							f_div.extend_html_text (api.user_html_link (ic.item))
+							if l_first then
+								l_first := False
 							else
-								create f_user.make_with_value ("users[]", ic.item.id.out)
-								l_name := api.user_api.real_user_display_name (ic.item)
-								if l_name.same_string (ic.item.name) then
-									f_user.set_title (l_name)
-								else
-									f_user.set_title (l_name + " (" + ic.item.name + ")")
-								end
-								f_set.extend (f_user)
+								f_div.extend_html_text (", ")
 							end
 						end
 					end
-					i := i + l_step.to_integer_32
+				else
+					create f_set.make
+					f_set.set_legend ("Select users")
+					f.extend (f_set)
+					from
+						i := 0
+						l_step := 10
+						nb := api.user_api.users_count
+					until
+						i > nb
+					loop
+						create l_params.make (i.to_natural_64, l_step)
+						if attached api.user_api.recent_users (l_params) as l_users then
+							across
+								l_users as ic
+							loop
+								if l_current_user.id = ic.item.id then
+								else
+									create f_user.make_with_value ("users[]", ic.item.id.out)
+									l_name := api.user_api.real_user_display_name (ic.item)
+									if l_name.same_string (ic.item.name) then
+										f_user.set_title (l_name)
+									else
+										f_user.set_title (l_name + " (" + ic.item.name + ")")
+									end
+									f_set.extend (f_user)
+								end
+							end
+						end
+						i := i + l_step.to_integer_32
+					end
 				end
 
 				create f_name.make ("title")
@@ -224,14 +292,29 @@ $(document).ready(function() {
 	handle_get_messaging (api: CMS_API; req: WSF_REQUEST; res: WSF_RESPONSE)
 		local
 			r: CMS_RESPONSE
+			s: READABLE_STRING_32
+			lst: ARRAYED_LIST [CMS_USER]
 		do
-			if api.has_permissions (<<"use messaging", "message any user">>) then
+			if api.has_permissions (<<perm_use_messaging, perm_message_any_user>>) then
 				create {GENERIC_VIEW_CMS_RESPONSE} r.make (req, res, api)
 				r.values.force ("messaging", "messaging")
-				r.set_main_content (new_html_messaging_form (r, api))
+				if attached {WSF_STRING} req.item ("to_users") as p_to_users then
+					s := p_to_users.value
+					create lst.make (1)
+					across
+						s.split (',') as ic
+					loop
+						if
+							attached api.user_api.user_by_id_or_name (ic.item) as u
+						then
+							lst.force (u)
+						end
+					end
+				end
+				r.set_main_content (new_html_messaging_form (r, api, lst))
 				r.execute
 			else
-				api.response_api.send_permissions_access_denied (Void, <<"use messaging", "message any user">>, req, res)
+				api.response_api.send_permissions_access_denied (Void, <<perm_use_messaging, perm_message_any_user>>, req, res)
 			end
 		end
 
@@ -247,13 +330,13 @@ $(document).ready(function() {
 			l_email_title: READABLE_STRING_8
 			l_email_messg: READABLE_STRING_8
 		do
-			if api.has_permission ("message any user") then
+			if api.has_permission (perm_message_any_user) then
 				create {GENERIC_VIEW_CMS_RESPONSE} r.make (req, res, api)
 				r.add_style (r.module_resource_url (Current, "/files/css/messaging.css", Void), Void)
 
 				create s.make_empty
 
-				f := new_messaging_form (r, api)
+				f := new_messaging_form (r, api, Void)
 				f.process (r)
 				if attached f.last_data as fd then
 					if
@@ -280,7 +363,7 @@ $(document).ready(function() {
 								end
 								s.append ("<li>")
 								if l_user /= Void and then attached l_user.email as l_user_email then
-									s.append (r.html_encoded (api.user_api.real_user_display_name (l_user)))
+									s.append (api.user_html_link (l_user))
 									s.append (" &lt;")
 									s.append (r.html_encoded (l_user_email))
 									s.append ("&gt;")
@@ -342,5 +425,6 @@ feature {NONE} -- Contact Message
 			end
 			Result := smt.string
 		end
+
 
 end

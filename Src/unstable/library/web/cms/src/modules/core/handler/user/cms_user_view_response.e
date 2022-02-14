@@ -55,7 +55,7 @@ feature -- Process
 					api.has_permission ({CMS_CORE_MODULE}.perm_view_users)
 					or l_user.same_as (user) -- Same user
 				then
-					f := new_view_form (l_user, request.request_uri, "view-user")
+					f := new_view_form (l_user, request.request_uri, view_user_form_id)
 					api.hooks.invoke_form_alter (f, Void, Current)
 					f.append_to_html (wsf_theme, b)
 				else

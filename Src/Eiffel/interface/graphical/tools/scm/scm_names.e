@@ -73,6 +73,8 @@ feature -- Menu
 	menu_diff: STRING_32 do Result := locale.translation_in_context ("Diff ...", "scm") end
 	menu_diff_selection: STRING_32 do Result := locale.translation_in_context ("Diff selection ...", "scm") end
 	menu_revert: STRING_32 do Result := locale.translation_in_context ("Revert ...", "scm") end
+	menu_add: STRING_32 do Result := locale.translation_in_context ("Add ...", "scm") end
+	menu_delete: STRING_32 do Result := locale.translation_in_context ("Delete ...", "scm") end
 	menu_update: STRING_32 do Result := locale.translation_in_context ("Update ...", "scm") end
 
 	menu_commit: STRING_32 do Result := locale.translation_in_context ("Commit ...", "scm") end
@@ -101,7 +103,9 @@ feature -- Dialogs
 	label_set_git_commands: STRING_32 do Result := locale.translation_in_context ("Set the GIT commands", "scm") end
 	label_command: STRING_32 do Result := locale.translation_in_context ("Command ", "scm") end
 	label_diff_command: STRING_32 do Result := locale.translation_in_context ("Diff command ", "scm") end
+	label_miscellaneous: STRING_32 do Result := locale.translation_in_context ("Miscellaneous", "scm") end
 
+	label_status_auto_check: STRING_32 do Result := locale.translation_in_context ("Status Auto Check", "scm") end
 
 	label_not_available_check_configuration: STRING_32 do Result := locale.translation_in_context ("Not available, check the configuration...", "scm") end
 

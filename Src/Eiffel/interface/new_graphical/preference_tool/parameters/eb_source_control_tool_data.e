@@ -34,7 +34,7 @@ feature {EB_SHARED_PREFERENCES} -- Preference
 	use_external_git_diff_command_preference: BOOLEAN_PREFERENCE
 	external_svn_diff_command_preference: STRING_PREFERENCE
 	external_git_diff_command_preference: STRING_PREFERENCE
-
+	status_auto_check_enabled_preference: BOOLEAN_PREFERENCE
 
 feature {NONE} -- Preference Strings
 
@@ -49,6 +49,8 @@ feature {NONE} -- Preference Strings
 	external_svn_diff_command_string: STRING = "tools.source_control.external_svn_diff_command"
 
 	external_git_diff_command_string: STRING = "tools.source_control.external_git_diff_command"
+
+	status_auto_check_enabled_string: STRING = "tools.source_control.status_auto_check_enabled"
 
 feature {NONE} -- Implementation
 
@@ -65,6 +67,7 @@ feature {NONE} -- Implementation
 			use_external_git_diff_command_preference := l_manager.new_boolean_preference_value (l_manager, use_external_git_diff_command_string, False)
 			external_svn_diff_command_preference := l_manager.new_string_preference_value (l_manager, external_svn_diff_command_string, "")
 			external_git_diff_command_preference := l_manager.new_string_preference_value (l_manager, external_git_diff_command_string, "")
+			status_auto_check_enabled_preference := l_manager.new_boolean_preference_value (l_manager, status_auto_check_enabled_string, False)
 		end
 
 	preferences: PREFERENCES
@@ -78,9 +81,10 @@ invariant
 	use_external_git_diff_command_preference_set: use_external_git_diff_command_preference /= Void
 	external_svn_diff_command_preference_set: external_svn_diff_command_preference /= Void
 	external_git_diff_command_preference_set: external_git_diff_command_preference /= Void
+	status_auto_check_enabled_preference_set: status_auto_check_enabled_preference /= Void
 
 note
-	copyright: "Copyright (c) 1984-2021, Eiffel Software"
+	copyright: "Copyright (c) 1984-2022, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

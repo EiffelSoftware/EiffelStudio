@@ -24,7 +24,7 @@ feature -- Execution
 		do
 			reset_error
 			create scm.make (cfg)
-			Result := scm.statuses (a_root_loc, loc, True, Void)
+			Result := scm.statuses (a_root_loc, loc, True, False, Void) -- True: is_recursive, False: with_all_untracked
 		end
 
 	revert (a_changelist: SCM_CHANGELIST; cfg: SCM_CONFIG): detachable STRING_32
@@ -92,6 +92,60 @@ feature -- Execution
 			end
 		end
 
+	add (a_changelist: SCM_CHANGELIST; cfg: SCM_CONFIG): detachable STRING_32
+			-- Add items from `a_changelist`, and return updated status for those items.
+		local
+			scm: SCM_SVN
+			opts: SCM_OPTIONS
+		do
+			reset_error
+			create scm.make (cfg)
+			create opts
+			if attached scm.add (a_changelist, opts) as res then
+				if res.succeed then
+					if attached res.message as msg then
+						Result := msg
+					else
+						Result := "SVN addition completed"
+					end
+				else
+					if attached res.message as msg then
+						Result := msg
+					else
+						Result := "SVN addition failed"
+					end
+					has_error := True
+				end
+			end
+		end
+
+	delete (a_changelist: SCM_CHANGELIST; cfg: SCM_CONFIG): detachable STRING_32
+			-- Delete items from `a_changelist`, and return updated status for those items
+		local
+			scm: SCM_SVN
+			opts: SCM_OPTIONS
+		do
+			reset_error
+			create scm.make (cfg)
+			create opts
+			if attached scm.delete (a_changelist, opts) as res then
+				if res.succeed then
+					if attached res.message as msg then
+						Result := msg
+					else
+						Result := "SVN deletion completed"
+					end
+				else
+					if attached res.message as msg then
+						Result := msg
+					else
+						Result := "SVN deletion failed"
+					end
+					has_error := True
+				end
+			end
+		end
+
 	commit (a_commit_set: SCM_SINGLE_COMMIT_SET; cfg: SCM_CONFIG)
 		local
 			scm: SCM_SVN
@@ -153,7 +207,7 @@ feature -- Execution
 			end
 		end
 note
-	copyright: "Copyright (c) 1984-2021, Eiffel Software"
+	copyright: "Copyright (c) 1984-2022, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

@@ -276,11 +276,35 @@ feature -- Operations
 			if retried then
 				Result := {STRING_32} "Exception raised ..." -- FIXME: provide more informations.
 			else
-				if attached {SCM_SVN_LOCATION} a_changelist.root as l_svn_loc then
-					Result := l_svn_loc.revert (a_changelist, config)
-				elseif attached {SCM_GIT_LOCATION} a_changelist.root as l_git_loc then
-					Result := l_git_loc.revert (a_changelist, config)
-				end
+				Result := a_changelist.root.revert (a_changelist, config)
+			end
+		rescue
+			retried := True
+			retry
+		end
+
+	add (a_changelist: SCM_CHANGELIST): detachable STRING_32
+		local
+			retried: BOOLEAN
+		do
+			if retried then
+				Result := {STRING_32} "Exception raised ..." -- FIXME: provide more informations.
+			else
+				Result := a_changelist.root.add (a_changelist, config)
+			end
+		rescue
+			retried := True
+			retry
+		end
+
+	delete (a_changelist: SCM_CHANGELIST): detachable STRING_32
+		local
+			retried: BOOLEAN
+		do
+			if retried then
+				Result := {STRING_32} "Exception raised ..." -- FIXME: provide more informations.
+			else
+				Result := a_changelist.root.delete (a_changelist, config)
 			end
 		rescue
 			retried := True

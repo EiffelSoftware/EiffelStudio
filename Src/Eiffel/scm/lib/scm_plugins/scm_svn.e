@@ -39,9 +39,9 @@ feature -- Factory
 
 feature -- Access: working copy
 
-	statuses (a_root_location, a_path: PATH; is_recursive: BOOLEAN; a_options: detachable SCM_OPTIONS): detachable SCM_STATUS_LIST
-			-- Statuses of nodes under `a_path'.	
-			-- Also process subfolders is `is_recursive' is True.
+	statuses (a_root_location, a_path: PATH; is_recursive, with_all_untracked: BOOLEAN; a_options: detachable SCM_OPTIONS): detachable SCM_STATUS_LIST
+			-- <Precursor>
+			--  * with_all_untracked: is not relevant for Subversion
 		local
 			svn: like new_scm_engine
 			opts: detachable SVN_OPTIONS
@@ -345,7 +345,7 @@ feature -- Access
 		end
 
 note
-	copyright: "Copyright (c) 1984-2021, Eiffel Software"
+	copyright: "Copyright (c) 1984-2022, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	source: "[
 			Eiffel Software

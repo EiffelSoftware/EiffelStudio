@@ -544,6 +544,44 @@ feature -- Basic operation
 			end
 		end
 
+	show_add_operation (a_root: detachable SCM_LOCATION; a_status: SCM_STATUS)
+		local
+			l_root: SCM_LOCATION
+			ch_list: SCM_CHANGELIST
+		do
+			l_root := a_root
+			if l_root = Void then
+				l_root := scm_service.scm_root_location (a_status.location)
+			end
+			if l_root /= Void then
+				create ch_list.make_with_location (l_root)
+				ch_list.extend_status (a_status)
+				if attached scm_service.add (ch_list) as l_output then
+					show_command_execution ("Add", l_output)
+					update_status (a_status)
+				end
+			end
+		end
+
+	show_delete_operation (a_root: detachable SCM_LOCATION; a_status: SCM_STATUS)
+		local
+			l_root: SCM_LOCATION
+			ch_list: SCM_CHANGELIST
+		do
+			l_root := a_root
+			if l_root = Void then
+				l_root := scm_service.scm_root_location (a_status.location)
+			end
+			if l_root /= Void then
+				create ch_list.make_with_location (l_root)
+				ch_list.extend_status (a_status)
+				if attached scm_service.delete (ch_list) as l_output then
+					show_command_execution ("Delete", l_output)
+					update_status (a_status)
+				end
+			end
+		end
+
 	show_update_operation (a_root: detachable SCM_LOCATION; a_status: SCM_STATUS)
 		local
 			l_root: SCM_LOCATION

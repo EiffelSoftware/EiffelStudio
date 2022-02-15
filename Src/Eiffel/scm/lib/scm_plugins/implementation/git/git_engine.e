@@ -61,7 +61,7 @@ feature -- Access tool info
 
 feature -- Execution
 
-	statuses (a_root_location, a_path: PATH; is_recursive: BOOLEAN; a_options: detachable SCM_OPTIONS): detachable SCM_STATUS_LIST
+	statuses (a_root_location, a_path: PATH; is_recursive, with_all_untracked: BOOLEAN; a_options: detachable SCM_OPTIONS): detachable SCM_STATUS_LIST
 		local
 			res: detachable PROCESS_COMMAND_RESULT
 			s: detachable READABLE_STRING_8
@@ -72,7 +72,10 @@ feature -- Execution
 			cmd.append_string (option_to_command_line_flags ("status", a_options))
 
 
-			cmd.append_string_general (" --porcelain=v1 --no-renames")
+			cmd.append_string_general (" --porcelain=v1 --no-renames ")
+			if with_all_untracked then
+				cmd.append_string_general (" --untracked-files=all ")
+			end
 			cmd.append_string_general (" .")
 
 			debug ("GIT_ENGINE")
@@ -91,7 +94,7 @@ feature -- Execution
 				Result := status_from_porcelain_output (a_root_location, {UTF_CONVERTER}.utf_8_string_8_to_string_32 (s))
 				debug ("GIT_ENGINE")
 					print ("-> terminated : count=" + s.count.out + " .%N")
-					print (s)
+--					print (s)
 				end
 			end
 		end
@@ -169,6 +172,92 @@ feature -- Execution
 				else
 					create Result.make_failure (cmd)
 					Result.set_message (res_revert.error_output)
+				end
+			else
+				create Result.make_failure (cmd)
+				Result.set_message ("Error: can not launch git [" + process_misc.last_error.out + "]")
+			end
+			debug ("GIT_ENGINE")
+				print ("-> terminated %N")
+			end
+		end
+
+	add (a_changelist: SCM_CHANGELIST; a_options: SCM_OPTIONS): SCM_RESULT
+			-- Add items from `a_changelist`, and return information about command execution.
+		local
+			cmd: STRING_32
+			fn: READABLE_STRING_32
+		do
+			create cmd.make_from_string (git_executable_location.name)
+			cmd.append_string_general (" add")
+			cmd.append_string (option_to_command_line_flags ("add", a_options))
+			across
+				a_changelist as ic
+			loop
+				fn := ic.item.location.name
+				cmd.append_character (' ')
+				if fn.has (' ') or fn.has ('%T') then
+					cmd.append_character ('"')
+					cmd.append_string_general (fn)
+					cmd.append_character ('"')
+				else
+					cmd.append_string_general (fn)
+				end
+			end
+
+			debug ("GIT_ENGINE")
+				print ({STRING_32} "Command: [" + cmd + "]%N")
+			end
+			if attached output_of_command (cmd, a_changelist.root.location) as res_add then
+				if res_add.exit_code = 0 then
+					create Result.make_success (cmd)
+					Result.set_message (res_add.output)
+				else
+					create Result.make_failure (cmd)
+					Result.set_message (res_add.error_output)
+				end
+			else
+				create Result.make_failure (cmd)
+				Result.set_message ("Error: can not launch git [" + process_misc.last_error.out + "]")
+			end
+			debug ("GIT_ENGINE")
+				print ("-> terminated %N")
+			end
+		end
+
+	delete (a_changelist: SCM_CHANGELIST; a_options: SCM_OPTIONS): SCM_RESULT
+			-- Add items from `a_changelist`, and return information about command execution.
+		local
+			cmd: STRING_32
+			fn: READABLE_STRING_32
+		do
+			create cmd.make_from_string (git_executable_location.name)
+			cmd.append_string_general (" rm")
+			cmd.append_string (option_to_command_line_flags ("rm", a_options))
+			across
+				a_changelist as ic
+			loop
+				fn := ic.item.location.name
+				cmd.append_character (' ')
+				if fn.has (' ') or fn.has ('%T') then
+					cmd.append_character ('"')
+					cmd.append_string_general (fn)
+					cmd.append_character ('"')
+				else
+					cmd.append_string_general (fn)
+				end
+			end
+
+			debug ("GIT_ENGINE")
+				print ({STRING_32} "Command: [" + cmd + "]%N")
+			end
+			if attached output_of_command (cmd, a_changelist.root.location) as res_delete then
+				if res_delete.exit_code = 0 then
+					create Result.make_success (cmd)
+					Result.set_message (res_delete.output)
+				else
+					create Result.make_failure (cmd)
+					Result.set_message (res_delete.error_output)
 				end
 			else
 				create Result.make_failure (cmd)
@@ -720,7 +809,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright: "Copyright (c) 1984-2021, Eiffel Software"
+	copyright: "Copyright (c) 1984-2022, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

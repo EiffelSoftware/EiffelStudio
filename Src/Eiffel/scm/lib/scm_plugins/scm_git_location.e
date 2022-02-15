@@ -21,11 +21,11 @@ feature -- Execution
 
 	changes (a_root_loc, loc: PATH; cfg: SCM_CONFIG): detachable SCM_STATUS_LIST
 		local
-			scm: SCM_GIT
+			scm: SCM
 		do
 			reset_error
-			create scm.make (cfg)
-			Result := scm.statuses (a_root_loc, loc, True, Void)
+			create {SCM_GIT} scm.make (cfg)
+			Result := scm.statuses (a_root_loc, loc, True, False, Void) -- True: is_recursive, False: with_all_untracked
 		end
 
 	update (a_changelist: SCM_CHANGELIST; cfg: SCM_CONFIG): detachable STRING_32
@@ -89,6 +89,62 @@ feature -- Execution
 			loop
 				if attached scm.diff (ic.item.location.name, Void) as d then
 					Result.put_string_diff (ic.item.location.name, d.to_string_32)
+				end
+			end
+		end
+
+	add (a_changelist: SCM_CHANGELIST; cfg: SCM_CONFIG): detachable STRING_32
+			-- Add items from `a_changelist`, and return updated status for those items.
+		local
+			scm: SCM_GIT
+			opts: SCM_OPTIONS
+		do
+			reset_error
+			create scm.make (cfg)
+			create opts
+
+			if attached scm.add (a_changelist, opts) as res then
+				if res.succeed then
+					if attached res.message as msg then
+						Result := msg
+					else
+						Result := "GIT addition completed"
+					end
+				else
+					if attached res.message as msg then
+						Result := msg
+					else
+						Result := "GIT addition failed"
+					end
+					has_error := True
+				end
+			end
+		end
+
+	delete (a_changelist: SCM_CHANGELIST; cfg: SCM_CONFIG): detachable STRING_32
+			-- Delete items from `a_changelist`, and return updated status for those items
+		local
+			scm: SCM_GIT
+			opts: SCM_OPTIONS
+		do
+			reset_error
+			create scm.make (cfg)
+			create opts
+
+			if attached scm.delete (a_changelist, opts) as res then
+				if res.succeed then
+					if attached res.message as msg then
+						Result := msg
+					else
+						Result := "GIT deletion completed"
+					end
+				else
+					if attached res.message as msg then
+						Result := msg
+					else
+						Result := "GIT deletion failed"
+					end
+					has_error := True
 				end
 			end
 		end
@@ -265,7 +321,7 @@ feature -- Execution
 		end
 
 note
-	copyright: "Copyright (c) 1984-2021, Eiffel Software"
+	copyright: "Copyright (c) 1984-2022, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

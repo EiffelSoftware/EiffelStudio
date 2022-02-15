@@ -29,6 +29,8 @@ feature {NONE} -- Initialization
 			svn_command_pref := preferences.source_control_tool_data.svn_command_preference
 			external_svn_diff_command_pref := preferences.source_control_tool_data.external_svn_diff_command_preference
 			use_external_svn_diff_command_pref := preferences.source_control_tool_data.use_external_svn_diff_command_preference
+
+			status_auto_check_enabled_pref := preferences.source_control_tool_data.status_auto_check_enabled_preference
 		end
 
 feature {NONE} -- Preferences
@@ -44,6 +46,8 @@ feature {NONE} -- Preferences
 	use_external_git_diff_command_pref: BOOLEAN_PREFERENCE
 
 	use_external_svn_diff_command_pref: BOOLEAN_PREFERENCE
+
+	status_auto_check_enabled_pref: BOOLEAN_PREFERENCE
 
 feature -- Access
 
@@ -61,6 +65,11 @@ feature -- Access
 			if Result.is_whitespace then
 				Result := Void
 			end
+		end
+
+	status_auto_check_enabled: BOOLEAN
+		do
+			Result := status_auto_check_enabled_pref.value
 		end
 
 	use_external_git_diff_command: BOOLEAN
@@ -158,10 +167,15 @@ feature -- Element change
 			external_svn_diff_command_pref.set_value_from_string (v)
 		end
 
+	set_status_auto_check_enabled (b: BOOLEAN)
+		do
+			status_auto_check_enabled_pref.set_value (b)
+		end
+
 invariant
 
 note
-	copyright: "Copyright (c) 1984-2021, Eiffel Software"
+	copyright: "Copyright (c) 1984-2022, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

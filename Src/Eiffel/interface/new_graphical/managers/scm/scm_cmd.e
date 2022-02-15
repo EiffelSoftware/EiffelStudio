@@ -244,7 +244,7 @@ feature -- Drop down menu
 		local
 			l_item: EV_MENU_ITEM
 			l_menu_status_item,
-			l_menu_revert_item,
+			l_menu_revert_item, l_menu_add_item, l_menu_delete_item,
 			l_menu_update_item,
 			l_menu_diff_item: EV_MENU_ITEM
 			l_menu_add_to_item: EV_MENU
@@ -273,6 +273,16 @@ feature -- Drop down menu
 					l_menu_revert_item.set_text (scm_names.menu_revert)
 					l_menu_revert_item.disable_sensitive
 					Result.extend (l_menu_revert_item)
+
+					create l_menu_add_item
+					l_menu_add_item.set_text (scm_names.menu_add)
+					l_menu_add_item.disable_sensitive
+					Result.extend (l_menu_add_item)
+
+					create l_menu_delete_item
+					l_menu_delete_item.set_text (scm_names.menu_delete)
+					l_menu_delete_item.disable_sensitive
+					Result.extend (l_menu_delete_item)
 
 					create l_menu_update_item
 					l_menu_update_item.set_text (scm_names.menu_update)
@@ -318,6 +328,11 @@ feature -- Drop down menu
 									l_menu_diff_item.select_actions.extend (agent on_editor_diff_selected (l_status))
 									l_menu_revert_item.enable_sensitive
 									l_menu_revert_item.select_actions.extend (agent on_editor_revert_selected (l_status))
+									l_menu_delete_item.enable_sensitive
+									l_menu_delete_item.select_actions.extend (agent on_editor_delete_selected (l_status))
+								elseif attached {SCM_STATUS_UNVERSIONED} l_status then
+									l_menu_add_item.enable_sensitive
+									l_menu_add_item.select_actions.extend (agent on_editor_add_selected (l_status))
 								end
 								if not attached {SCM_GIT_LOCATION} l_scm_root then
 										-- Not yet available for git
@@ -333,9 +348,9 @@ feature -- Drop down menu
 							loop
 								create mi.make_with_text (scm_names.menu_add_to_changelist (ic.key, ic.item.count))
 								if l_status /= Void then
-									mi.select_actions.extend (agent on_editor_add_selected (ic.key, l_status))
+									mi.select_actions.extend (agent on_editor_add_to_changelist_selected (ic.key, l_status))
 								else
-									mi.select_actions.extend (agent on_editor_add_selected (ic.key, create {SCM_STATUS_UNKNOWN}.make_with_name (st.file_name))) -- FIXME: check this code.
+									mi.select_actions.extend (agent on_editor_add_to_changelist_selected (ic.key, create {SCM_STATUS_UNKNOWN}.make_with_name (st.file_name))) -- FIXME: check this code.
 								end
 								l_menu_add_to_item.extend (mi)
 							end
@@ -402,7 +417,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	on_editor_add_selected (a_name: READABLE_STRING_GENERAL; a_status: SCM_STATUS)
+	on_editor_add_to_changelist_selected (a_name: READABLE_STRING_GENERAL; a_status: SCM_STATUS)
 		do
 			if
 				attached scm_s.service as scm and then
@@ -429,6 +444,42 @@ feature {NONE} -- Implementation
 					ch.extend_status (a_status)
 					s := scm.revert (ch)
 					show_command_execution ("Revert", s)
+				end
+			end
+		end
+
+	on_editor_add_selected (a_status: SCM_STATUS)
+		local
+			ch: SCM_CHANGELIST
+			s: READABLE_STRING_GENERAL
+		do
+			if
+				attached scm_s.service as scm and then
+				scm.is_available
+			then
+				if attached	scm.scm_root_location (a_status.location) as rt then
+					create ch.make_with_location (rt)
+					ch.extend_status (a_status)
+					s := scm.add (ch)
+					show_command_execution ("Add", s)
+				end
+			end
+		end
+
+	on_editor_delete_selected (a_status: SCM_STATUS)
+		local
+			ch: SCM_CHANGELIST
+			s: READABLE_STRING_GENERAL
+		do
+			if
+				attached scm_s.service as scm and then
+				scm.is_available
+			then
+				if attached	scm.scm_root_location (a_status.location) as rt then
+					create ch.make_with_location (rt)
+					ch.extend_status (a_status)
+					s := scm.delete (ch)
+					show_command_execution ("Delete", s)
 				end
 			end
 		end
@@ -478,7 +529,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright: "Copyright (c) 1984-2021, Eiffel Software"
+	copyright: "Copyright (c) 1984-2022, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

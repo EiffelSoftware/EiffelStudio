@@ -77,6 +77,27 @@ feature -- Execution
 			not has_error implies Result /= Void
 		end
 
+	revert (a_changelist: SCM_CHANGELIST; cfg: SCM_CONFIG): detachable STRING_32
+			-- Revert list of locations `a_locations`.
+		deferred
+		ensure
+			not has_error implies Result /= Void
+		end
+
+	add (a_changelist: SCM_CHANGELIST; cfg: SCM_CONFIG): detachable STRING_32
+			-- Added list of locations `a_locations`.
+		deferred
+		ensure
+			not has_error implies Result /= Void
+		end
+
+	delete (a_changelist: SCM_CHANGELIST; cfg: SCM_CONFIG): detachable STRING_32
+			-- Added list of locations `a_locations`.
+		deferred
+		ensure
+			not has_error implies Result /= Void
+		end
+
 	commit (a_commit_set: SCM_SINGLE_COMMIT_SET; cfg: SCM_CONFIG)
 		require
 			same_location: same_as (a_commit_set.changelist.root)
@@ -104,7 +125,7 @@ feature -- Error
 invariant
 
 note
-	copyright: "Copyright (c) 1984-2021, Eiffel Software"
+	copyright: "Copyright (c) 1984-2022, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

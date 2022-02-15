@@ -53,12 +53,17 @@ feature {NONE} -- Initialization
 			column (scm_column).set_title (scm_names.header_repository)
 			column (info_column).set_title ("...")
 
+			enable_resize_column (filename_column)
+			enable_resize_column (parent_column)
 
 			set_auto_resizing_column (checkbox_column, True)
 --			column (checkbox_column).set_width (20)
 			set_auto_resizing_column (filename_column, True)
 			set_auto_resizing_column (parent_column, True)
 			set_auto_resizing_column (scm_column, True)
+			enable_column_separators
+
+			enable_last_column_use_all_width
 
 			enable_multiple_row_selection
 
@@ -127,24 +132,39 @@ feature -- Actions
 							a_menu.extend (mi)
 							mi.disable_sensitive
 							a_menu.extend (create {EV_MENU_SEPARATOR})
-							if
-								attached {SCM_STATUS_MODIFIED} l_status
-								or attached {SCM_STATUS_CONFLICTED} l_status
-							then
+							if attached {SCM_STATUS_UNVERSIONED} l_status then
 								create mi
-								mi.set_text (scm_names.menu_diff)
-								mi.select_actions.extend (agent l_status_box.show_status_diff (Void, l_status))
+								mi.set_text (scm_names.menu_add)
+								mi.select_actions.extend (agent l_status_box.show_add_operation (Void, l_status))
+								a_menu.extend (mi)
+							else
+								if
+									attached {SCM_STATUS_MODIFIED} l_status
+									or attached {SCM_STATUS_ADDED} l_status
+									or attached {SCM_STATUS_DELETED} l_status
+									or attached {SCM_STATUS_CONFLICTED} l_status
+								then
+									create mi
+									mi.set_text (scm_names.menu_diff)
+									mi.select_actions.extend (agent l_status_box.show_status_diff (Void, l_status))
+									a_menu.extend (mi)
+								end
+
+								create mi
+								mi.set_text (scm_names.menu_revert)
+								mi.select_actions.extend (agent l_status_box.show_revert_operation (Void, l_status))
+								a_menu.extend (mi)
+
+								create mi
+								mi.set_text (scm_names.menu_delete)
+								mi.select_actions.extend (agent l_status_box.show_delete_operation (Void, l_status))
+								a_menu.extend (mi)
+
+								create mi
+								mi.set_text (scm_names.menu_update)
+								mi.select_actions.extend (agent l_status_box.show_update_operation (Void, l_status))
 								a_menu.extend (mi)
 							end
-							create mi
-							mi.set_text (scm_names.menu_revert)
-							mi.select_actions.extend (agent l_status_box.show_revert_operation (Void, l_status))
-							a_menu.extend (mi)
-
-							create mi
-							mi.set_text (scm_names.menu_update)
-							mi.select_actions.extend (agent l_status_box.show_update_operation (Void, l_status))
-							a_menu.extend (mi)
 
 							create mm.make_with_text (scm_names.menu_add_to_changelist (Void, 0))
 							across

@@ -90,14 +90,12 @@ feature {NONE} -- User interface initialization
 			-- `a_container': The dialog's container where the user interface elements should be extended
 		local
 			br_cbox: like branches_combo
-			radio, radio_custom: EV_RADIO_BUTTON
+			radio: EV_RADIO_BUTTON
 			fb, b: EV_VERTICAL_BOX
 			hb: EV_HORIZONTAL_BOX
 --			f: EV_FRAME
-			tf: EV_TEXT_FIELD
 			sp: EV_VERTICAL_SPLIT_AREA
 			txt: EV_TEXT
-			s: STRING_32
 			lab: EV_LABEL
 			li: EV_LIST_ITEM
 			cb: like use_external_terminal_checkbutton
@@ -259,7 +257,6 @@ feature -- Action
 			err: BOOLEAN
 			l_pointer_style: detachable EV_POINTER_STYLE
 			l_branch: READABLE_STRING_32
-			l_unsupported_remote: BOOLEAN
 			l_rebase: SCM_REBASE_OPERATION
 			l_cmd: STRING_32
 			l_use_external_terminal: like use_external_terminal
@@ -401,7 +398,7 @@ feature -- Access
 ;
 
 note
-	copyright: "Copyright (c) 1984-2021, Eiffel Software"
+	copyright: "Copyright (c) 1984-2022, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

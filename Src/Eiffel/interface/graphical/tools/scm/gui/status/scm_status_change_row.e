@@ -190,6 +190,16 @@ feature -- Execution
 			parent_grid.status_box.show_revert_operation (root_location, status)
 		end
 
+	do_add
+		do
+			parent_grid.status_box.show_add_operation (root_location, status)
+		end
+
+	do_delete
+		do
+			parent_grid.status_box.show_delete_operation (root_location, status)
+		end
+
 	do_update
 		do
 			parent_grid.status_box.show_update_operation (root_location, status)
@@ -201,27 +211,36 @@ feature -- Execution
 			mi: EV_MENU_ITEM
 		do
 			create m
-			create mi.make_with_text_and_action (scm_names.menu_diff, agent show_diff)
-			m.extend (mi)
 
-			create mi.make_with_text_and_action (scm_names.menu_update, agent do_update)
-			m.extend (mi)
-
-			if
-				attached {SCM_STATUS_MODIFIED} status
-				or attached {SCM_STATUS_ADDED} status
-				or attached {SCM_STATUS_DELETED} status
-				or attached {SCM_STATUS_CONFLICTED} status
-			then
-				create mi.make_with_text_and_action (scm_names.menu_revert, agent do_revert)
+			if attached {SCM_STATUS_UNVERSIONED} status then
+				create mi.make_with_text_and_action (scm_names.menu_add, agent do_add)
 				m.extend (mi)
+			else
+				create mi.make_with_text_and_action (scm_names.menu_diff, agent show_diff)
+				m.extend (mi)
+
+				create mi.make_with_text_and_action (scm_names.menu_update, agent do_update)
+				m.extend (mi)
+
+				create mi.make_with_text_and_action (scm_names.menu_delete, agent do_delete)
+				m.extend (mi)
+
+				if
+					attached {SCM_STATUS_MODIFIED} status
+					or attached {SCM_STATUS_ADDED} status
+					or attached {SCM_STATUS_DELETED} status
+					or attached {SCM_STATUS_CONFLICTED} status
+				then
+					create mi.make_with_text_and_action (scm_names.menu_revert, agent do_revert)
+					m.extend (mi)
+				end
 			end
 			m.show
 		end
 
 
 note
-	copyright: "Copyright (c) 1984-2021, Eiffel Software"
+	copyright: "Copyright (c) 1984-2022, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

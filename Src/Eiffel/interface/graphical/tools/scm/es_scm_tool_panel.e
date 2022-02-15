@@ -174,6 +174,12 @@ feature {NONE} -- Action handlers
 				end
 			end
 			update_associated_interface_elements
+			if
+				attached scm_s.service as scm and then
+				scm.config.status_auto_check_enabled
+			then
+				scm.update_statuses
+			end
 		end
 
 	on_configuration_updated (cfg: SCM_CONFIG)

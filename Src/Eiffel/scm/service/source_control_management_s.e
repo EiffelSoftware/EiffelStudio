@@ -131,6 +131,14 @@ feature -- Operations
 		deferred
 		end
 
+	add (a_changelist: SCM_CHANGELIST): detachable STRING_32
+		deferred
+		end
+
+	delete (a_changelist: SCM_CHANGELIST): detachable STRING_32
+		deferred
+		end
+
 	diff (a_changelist: SCM_CHANGELIST): detachable SCM_DIFF
 		deferred
 		end

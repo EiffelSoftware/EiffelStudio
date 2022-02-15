@@ -39,14 +39,14 @@ feature -- Factory
 
 feature -- Access: working copy
 
-	statuses (a_root_location, a_path: PATH; is_recursive: BOOLEAN; a_options: detachable SCM_OPTIONS): detachable SCM_STATUS_LIST
+	statuses (a_root_location, a_path: PATH; is_recursive, with_all_untracked: BOOLEAN; a_options: detachable SCM_OPTIONS): detachable SCM_STATUS_LIST
 			-- Statuses of nodes under `a_path'.	
 			-- Also process subfolders is `is_recursive' is True.
 		local
 			git: like new_scm_engine
 		do
 			git := new_scm_engine
-			Result := git.statuses (a_root_location, a_path, is_recursive, a_options)
+			Result := git.statuses (a_root_location, a_path, is_recursive, with_all_untracked, a_options)
 		end
 
 	remotes (a_root_location: PATH; a_options: detachable SCM_OPTIONS): detachable STRING_TABLE [GIT_REMOTE]
@@ -77,6 +77,24 @@ feature -- Operations: working copy
 		do
 			git := new_scm_engine
 			Result := git.revert (a_changelist, a_options)
+		end
+
+	add (a_changelist: SCM_CHANGELIST; a_options: detachable SCM_OPTIONS): SCM_RESULT
+			-- Add items from `a_changelist', and return information about command execution.
+		local
+			git: like new_scm_engine
+		do
+			git := new_scm_engine
+			Result := git.add (a_changelist, a_options)
+		end
+
+	delete (a_changelist: SCM_CHANGELIST; a_options: detachable SCM_OPTIONS): SCM_RESULT
+			-- Delete items from `a_changelist', and return information about command execution.
+		local
+			git: like new_scm_engine
+		do
+			git := new_scm_engine
+			Result := git.delete (a_changelist, a_options)
 		end
 
 	commit (a_changelist: SCM_CHANGELIST; a_log_message: READABLE_STRING_GENERAL; a_options: SCM_OPTIONS): SCM_RESULT
@@ -148,20 +166,6 @@ feature -- Operations: working copy
 
 feature {NONE} -- Operations: not fully implemented by all descendants		
 
-	add (a_changelist: SCM_CHANGELIST; a_options: detachable SCM_OPTIONS): SCM_RESULT
-			-- Add items from `a_changelist', and return information about command execution.
-		do
-			create Result.make_failure (Void)
-			Result.set_message ("Error: [add] not yet implemented for GIT")
-		end
-
-	delete (a_changelist: SCM_CHANGELIST; a_options: detachable SCM_OPTIONS): SCM_RESULT
-			-- Delete items from `a_changelist', and return information about command execution.
-		do
-			create Result.make_failure (Void)
-			Result.set_message ("Error: [delete] not yet implemented for GIT")
-		end
-
 	move (a_location, a_new_location: READABLE_STRING_GENERAL; a_options: detachable SCM_OPTIONS): SCM_RESULT
 			-- Move from `a_location' to `a_new_location', and return information about command execution.
 		do
@@ -193,7 +197,7 @@ feature -- Access
 		end
 
 note
-	copyright: "Copyright (c) 1984-2021, Eiffel Software"
+	copyright: "Copyright (c) 1984-2022, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	source: "[
 			Eiffel Software

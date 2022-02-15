@@ -45,6 +45,8 @@ feature {NONE} -- Initialization
 			create git_field_error
 			create svn_field_error
 
+			create status_auto_check_enabled_field
+
 			make_dialog
 		end
 
@@ -69,6 +71,8 @@ feature -- Widgets
 
 	external_git_diff_field,
 	external_svn_diff_field: EV_TEXT_FIELD
+
+	status_auto_check_enabled_field: EV_CHECK_BUTTON
 
 feature {NONE} -- User interface initialization
 
@@ -149,8 +153,6 @@ feature {NONE} -- User interface initialization
 					end(cb, field)
 				)
 
-
-
 				-- Subversion
 			create lab.make_with_text (scm_names.label_set_svn_commands)
 			lab.set_font (fonts.highlighted_label_font)
@@ -210,6 +212,27 @@ feature {NONE} -- User interface initialization
 					end(cb, field)
 				)
 
+				-- Miscellaneous
+			create lab.make_with_text (scm_names.label_miscellaneous)
+			lab.set_font (fonts.highlighted_label_font)
+			lab.align_text_left
+			vb.extend (lab)
+			vb.disable_item_expand (lab)
+
+			create hb
+			vb.extend (hb)
+			vb.disable_item_expand (hb)
+			create lab.make_with_text (scm_names.label_status_auto_check)
+			labs.force (lab)
+			hb.extend (lab)
+			hb.disable_item_expand (lab)
+			cb := status_auto_check_enabled_field
+			register_input_widget (cb)
+			hb.extend (cb)
+			hb.disable_item_expand (cb)
+			if scm_service.config.status_auto_check_enabled then
+				cb.enable_select
+			end
 
 				-- same width for the labels in `labs`
 			across
@@ -364,7 +387,10 @@ feature -- Action
 					is_changed := True
 					cfg.set_use_external_svn_diff_command (use_external_svn_diff_field.is_selected)
 				end
-
+			end
+			if status_auto_check_enabled_field.is_selected /= cfg.status_auto_check_enabled then
+				is_changed := True
+				cfg.set_status_auto_check_enabled (status_auto_check_enabled_field.is_selected)
 			end
 			if is_changed then
 				scm_service.on_configuration_updated (cfg)
@@ -409,6 +435,12 @@ feature -- Action
 				use_external_svn_diff_field.enable_select
 			else
 				use_external_svn_diff_field.disable_select
+			end
+
+			if cfg.status_auto_check_enabled then
+				status_auto_check_enabled_field.enable_select
+			else
+				status_auto_check_enabled_field.disable_select
 			end
 
 			check_commands_validity
@@ -466,7 +498,7 @@ feature -- Access
 			-- Indicates if the size and position information is remembered for the dialog	
 
 ;note
-	copyright: "Copyright (c) 1984-2021, Eiffel Software"
+	copyright: "Copyright (c) 1984-2022, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

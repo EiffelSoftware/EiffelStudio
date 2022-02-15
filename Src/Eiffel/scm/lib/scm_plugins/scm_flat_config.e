@@ -19,6 +19,7 @@ feature {NONE} -- Initialization
 		do
 			use_external_git_diff_command := cfg.use_external_git_diff_command
 			use_external_svn_diff_command := cfg.use_external_svn_diff_command
+			status_auto_check_enabled := cfg.status_auto_check_enabled
 		end
 
 feature -- Access
@@ -26,6 +27,8 @@ feature -- Access
 	git_command: detachable READABLE_STRING_32
 
 	svn_command: detachable READABLE_STRING_32
+
+	status_auto_check_enabled: BOOLEAN
 
 	use_external_git_diff_command: BOOLEAN
 
@@ -121,10 +124,15 @@ feature -- Element change
 			external_svn_diff_command_value := v
 		end
 
+	set_status_auto_check_enabled (b: BOOLEAN)
+		do
+			status_auto_check_enabled := b
+		end
+
 
 note
-	copyright: "Copyright (c) 1984-2021, Eiffel Software and others"
-	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
+	copyright: "Copyright (c) 1984-2022, Eiffel Software"
+	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[
 			This file is part of Eiffel Software's Eiffel Development Environment.

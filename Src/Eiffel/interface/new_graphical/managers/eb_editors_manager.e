@@ -1680,8 +1680,7 @@ feature {NONE} -- Implementation
 			l_list_string := l_class_name.split (operating_environment.directory_separator)
 			l_class_name := l_list_string [l_list_string.count]
 			if l_class_name.has ('.') then
-				Result := l_class_name.substring (1,
-														l_class_name.last_index_of ('.', l_class_name.count) - 1)
+				Result := l_class_name.substring (1, l_class_name.last_index_of ('.', l_class_name.count) - 1)
 			end
 			Result.to_upper
 		end
@@ -1720,24 +1719,27 @@ feature {NONE} -- Implementation
 	editor_with_stone_internal (a_editors: ARRAYED_LIST [EB_SMART_EDITOR]; a_stone: STONE): detachable EB_SMART_EDITOR
 			-- Editor from `a_editors' having `a_stone'.
 		require
+			a_stone_set: a_stone /= Void
 			editors_not_void: a_editors /= Void
+		local
+			e: like editor_with_stone_internal
 		do
-				-- FIXME: check the implementation about the use of ~ to compare strings [oct/2016]
 			across
 				a_editors as ic
 			until
 				Result /= Void
 			loop
-				if attached ic.item.stone as l_editor_stone then
-					if a_stone ~ l_editor_stone then
-						Result := ic.item
+				e := ic.item
+				if attached e.stone as l_editor_stone then
+					if a_stone.same_as (l_editor_stone) then
+						Result := e
 					elseif
 						attached {FILED_STONE} a_stone as l_file_stone1 and then
 						attached {FILED_STONE} l_editor_stone as l_file_stone2 and then
 						(l_file_stone1.is_valid and l_file_stone2.is_valid) and then
-						(l_file_stone1.file_name ~ l_file_stone2.file_name)
+						l_file_stone1.file_name.is_case_insensitive_equal (l_file_stone2.file_name)
 					then
-						Result := ic.item
+						Result := e
 					end
 				end
 			end
@@ -1833,7 +1835,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright: "Copyright (c) 1984-2018, Eiffel Software"
+	copyright: "Copyright (c) 1984-2022, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

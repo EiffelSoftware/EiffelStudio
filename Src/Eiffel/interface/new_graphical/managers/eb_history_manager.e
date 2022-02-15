@@ -320,16 +320,13 @@ feature -- Element change
 			-- after `active'.
 		local
 			history_item: STONE
-			fst, fst2: FEATURE_STONE
-			cst: CLASSI_STONE
+			fst: FEATURE_STONE
 			active_is_cst: BOOLEAN
 			i: INTEGER
 		do
-			cst ?= active
-			fst ?= active
-			active_is_cst := cst /= Void and fst = Void
+			active_is_cst := attached {CLASSI_STONE} active and not attached {FEATURE_STONE} active
 			if active_is_cst then
-				fst ?= a_stone
+				fst := {FEATURE_STONE} / a_stone
 			else
 				fst := Void
 			end
@@ -365,8 +362,7 @@ feature -- Element change
 
 					-- Add the new stone at the end of the history.
 				fst := Void
-				fst2 ?= a_stone
-				if fst2 /= Void  then
+				if attached {FEATURE_STONE} a_stone as fst2  then
 					history.extend (fst2)
 				else
 					history.extend (a_stone)
@@ -488,10 +484,8 @@ feature {NONE} -- Implementation
 			-- Generate the *_display_list according to the history state.
 		local
 			already_displayed: BOOLEAN
-			conv_cl: CLASSI_STONE
-			conv_clu: CLUSTER_STONE
-			conv_f: FEATURE_STONE
 			max_size: INTEGER
+			l_history_item: STONE
 		do
 			feature_display_list.wipe_out
 			class_display_list.wipe_out
@@ -513,16 +507,16 @@ feature {NONE} -- Implementation
 
 				already_displayed := False
 				if not history.before then
+					l_history_item := history.item
 						--| Is it a feature?
-					conv_f ?= history.item
-					if conv_f /= Void then
+					if attached {FEATURE_STONE} l_history_item as conv_f then
 						if feature_display_list.count < max_size then
 							from
 								feature_display_list.start
 							until
 								feature_display_list.after
 							loop
-								if feature_display_list.item.item1.same_as (history.item) then
+								if feature_display_list.item.item1.same_as (l_history_item) then
 									already_displayed := True
 									feature_display_list.finish
 								end
@@ -533,48 +527,44 @@ feature {NONE} -- Implementation
 								feature_display_list.finish
 							end
 						end
-					else
-							--| Is it a class?
-						conv_cl ?= history.item
-						if conv_cl /= Void then
-							if class_display_list.count < max_size then
-								from
-									class_display_list.start
-								until
-									class_display_list.after
-								loop
-									if class_display_list.item.item1.same_as (history.item) then
-										already_displayed := True
-										class_display_list.finish
-									end
-									class_display_list.forth
-								end
-								if not already_displayed then
-									class_display_list.extend (create {CELL2 [CLASSI_STONE, INTEGER]}.make (conv_cl, history.index))
+
+						--| Is it a class?
+					elseif attached {CLASSI_STONE} l_history_item as conv_cl then
+						if class_display_list.count < max_size then
+							from
+								class_display_list.start
+							until
+								class_display_list.after
+							loop
+								if class_display_list.item.item1.same_as (l_history_item) then
+									already_displayed := True
 									class_display_list.finish
 								end
+								class_display_list.forth
 							end
-						else
-								--| Is it a cluster?
-							conv_clu ?= history.item
-							if conv_clu /= Void then
-								if cluster_display_list.count < max_size then
-									from
-										cluster_display_list.start
-									until
-										cluster_display_list.after
-									loop
-										if cluster_display_list.item.item1.same_as (history.item) then
-											already_displayed := True
-											cluster_display_list.finish
-										end
-										cluster_display_list.forth
-									end
-									if not already_displayed then
-										cluster_display_list.extend (create {CELL2 [CLUSTER_STONE, INTEGER]}.make (conv_clu, history.index))
-										cluster_display_list.finish
-									end
+							if not already_displayed then
+								class_display_list.extend (create {CELL2 [CLASSI_STONE, INTEGER]}.make (conv_cl, history.index))
+								class_display_list.finish
+							end
+						end
+
+						--| Is it a cluster?
+					elseif attached {CLUSTER_STONE} l_history_item as conv_clu then
+						if cluster_display_list.count < max_size then
+							from
+								cluster_display_list.start
+							until
+								cluster_display_list.after
+							loop
+								if cluster_display_list.item.item1.same_as (l_history_item) then
+									already_displayed := True
+									cluster_display_list.finish
 								end
+								cluster_display_list.forth
+							end
+							if not already_displayed then
+								cluster_display_list.extend (create {CELL2 [CLUSTER_STONE, INTEGER]}.make (conv_clu, history.index))
+								cluster_display_list.finish
 							end
 						end
 					end

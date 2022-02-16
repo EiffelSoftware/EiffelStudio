@@ -53,7 +53,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_exec_name: READABLE_STRING_GENERAL; args: detachable LIST [READABLE_STRING_GENERAL]; a_working_directory: detachable READABLE_STRING_GENERAL)
+	make (a_exec_name: READABLE_STRING_GENERAL; args: detachable ITERABLE [READABLE_STRING_GENERAL]; a_working_directory: detachable READABLE_STRING_GENERAL)
 		do
 			create input_buffer.make_empty
 			create input_mutex.make

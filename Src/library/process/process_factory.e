@@ -17,7 +17,7 @@ inherit
 
 feature -- Access
 
-	process_launcher (a_file_name: READABLE_STRING_GENERAL; args: detachable LIST [READABLE_STRING_GENERAL]; a_working_directory: detachable READABLE_STRING_GENERAL): PROCESS
+	process_launcher (a_file_name: READABLE_STRING_GENERAL; args: detachable ITERABLE [READABLE_STRING_GENERAL]; a_working_directory: detachable READABLE_STRING_GENERAL): PROCESS
 			-- Returns a process launcher used to launch program `a_file_name' with arguments `args'
 			-- and working directory `a_working_directory'.
 			-- Use Void for `a_working_directory' if no working directory is specified.

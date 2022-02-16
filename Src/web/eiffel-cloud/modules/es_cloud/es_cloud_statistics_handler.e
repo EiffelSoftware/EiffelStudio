@@ -277,7 +277,6 @@ feature -- Execution
 				end
 				s.append ("</span>")
 			end
-			s.append ("</div>")
 			if u /= Void then
 				s.append ("<span class=%"user%">User ")
 				if api.has_permission ({ES_CLOUD_MODULE}.perm_manage_es_accounts) then
@@ -302,6 +301,7 @@ feature -- Execution
 				s.append ("&gt;")
 				s.append ("</span> ")
 			end
+			s.append ("</div>")
 			s.append ("<span class=%"details%">")
 			if attached es_cloud_api.last_license_session (lic) as sess then
 				s.append ("<span class=%"usage%">Used: "+ api.formatted_date_time_ago (sess.last_date) +"</span>")

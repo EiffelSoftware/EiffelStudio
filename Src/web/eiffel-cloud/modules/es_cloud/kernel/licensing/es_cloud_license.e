@@ -299,6 +299,7 @@ feature -- Element change
 	set_platforms (v: detachable LIST [READABLE_STRING_GENERAL])
 		local
 			lst: ARRAYED_LIST [IMMUTABLE_STRING_32]
+			pf: READABLE_STRING_GENERAL
 		do
 			if v = Void then
 				platforms := Void
@@ -307,9 +308,16 @@ feature -- Element change
 				across
 					v as ic
 				loop
-					lst.force (create {IMMUTABLE_STRING_32}.make_from_string_general (ic.item))
+					pf := ic.item
+					if not pf.is_whitespace then
+						lst.force (create {IMMUTABLE_STRING_32}.make_from_string_general (pf))
+					end
 				end
-				platforms := lst
+				if lst.is_empty then
+					platforms := Void
+				else
+					platforms := lst
+				end
 			end
 				-- Do not use general platform, but specific!
 -- TODO: to restore general platform cases, take the platforms `v` as comma separated values!				
@@ -330,7 +338,7 @@ feature -- Element change
 
 	set_version (v: detachable READABLE_STRING_GENERAL)
 		do
-			if v = Void then
+			if v = Void or else v.is_whitespace then
 				version := Void
 			else
 				create version.make_from_string_general (v)

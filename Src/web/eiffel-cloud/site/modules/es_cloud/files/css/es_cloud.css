@@ -38,7 +38,7 @@ div.es-licenses.es-stats div.es-license div.license-id span.condition {
   display: block;
 }
 div.es-licenses.es-stats div.es-license span.user {
-  display: inline-block;
+  display: block;
   min-width: 12rem;
 }
 div.es-licenses.es-stats div.es-license span.details {

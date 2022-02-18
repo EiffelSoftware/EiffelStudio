@@ -8,9 +8,26 @@ class
 
 feature -- Access
 
-	process_misc: PROCESS_MISC
+	process_misc_cell: CELL [PROCESS_MISC_I]
 		once
-			create Result
+			create Result.put (create {PROCESS_MISC})
+		end
+
+	process_misc: PROCESS_MISC_I
+		do
+			Result := process_misc_cell.item
+		end
+
+	last_process_error: like {PROCESS_MISC_I}.last_error
+		do
+			Result := process_misc.last_error
+		end
+
+feature -- Element change
+
+	set_process_misc (pm: PROCESS_MISC_I)
+		do
+			process_misc_cell.replace (pm)
 		end
 
 feature -- Helpers/bridge
@@ -62,8 +79,8 @@ feature -- Helpers/bridge
 		end
 
 note
-	copyright: "Copyright (c) 1984-2021, Eiffel Software"
-	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
+	copyright: "Copyright (c) 1984-2022, Eiffel Software and others"
+	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[
 			This file is part of Eiffel Software's Eiffel Development Environment.

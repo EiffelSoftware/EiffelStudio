@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
-<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-21-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-21-0 http://www.eiffel.com/developers/xml/configuration-1-21-0.xsd" name="es_scm" uuid="A0B44C10-FD14-45CF-BEF9-9979A7358BF0" library_target="es_scm">
+<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-22-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-22-0 http://www.eiffel.com/developers/xml/configuration-1-22-0.xsd" name="es_scm" uuid="A0B44C10-FD14-45CF-BEF9-9979A7358BF0" library_target="es_scm">
 	<description>ISE Eiffel - Source Control Management</description>
 	<target name="es_scm">
 		<root all_classes="true"/>
@@ -7,9 +7,10 @@
 			<exclude>/EIFGENs$</exclude>
 			<exclude>/\.svn</exclude>
 		</file_rule>
+		<option debug="true" is_obsolete_iteration="true"/>
 		<capability>
 			<concurrency support="none" use="thread"/>
-			<void_safety support="none" use="none"/>
+			<void_safety support="none"/>
 		</capability>
 		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf" readonly="true"/>
 		<library name="base_extension" location="$ISE_LIBRARY\library\base_extension\base_extension.ecf" readonly="false"/>
@@ -19,7 +20,12 @@
 		<library name="environment" location="$EIFFEL_SRC\framework\environment\environment.ecf" readonly="false" use_application_options="true"/>
 		<library name="package_visitor" location="$EIFFEL_SRC\framework\packages\visitor\package_visitor.ecf" readonly="false"/>
 		<library name="patterns" location="$ISE_LIBRARY\library\patterns\patterns.ecf" readonly="false" use_application_options="true"/>
-		<library name="process" location="$ISE_LIBRARY\library\process\base\base_process.ecf"/>
+		<library name="base_process" location="$ISE_LIBRARY\library\process\base\base_process.ecf"/>
+		<library name="process" location="$ISE_LIBRARY\library\process\process.ecf">
+			<condition>
+				<concurrency value="thread"/>
+			</condition>
+		</library>
 		<library name="svn" location="$ISE_LIBRARY\contrib\library\svn\svn.ecf"/>
 		<library name="thread" location="$ISE_LIBRARY\library\thread\thread.ecf"/>
 		<library name="time" location="$ISE_LIBRARY\library\time\time.ecf"/>
@@ -29,14 +35,10 @@
 			<cluster name="scm_model" location="$|model\"/>
 			<cluster name="scm_implementation" location="$|implementation\"/>
 		</cluster>
-		<cluster name="scm_plugins" location=".\lib\scm_plugins\" recursive="true">
-			<file_rule>
-				<exclude>/implementation$</exclude>
-			</file_rule>
-			<cluster name="implementation" location="$|implementation\" recursive="true" hidden="true"/>
-		</cluster>
+		<library name="scm_plugins" location=".\lib\scm_plugins\scm_plugins.ecf"/>
 	</target>
 	<target name="testing" extends="es_scm">
+		<option is_obsolete_iteration="true"/>
 		<library name="testing" location="$ISE_LIBRARY\library\testing\testing.ecf"/>
 		<tests name="tests" location=".\testing\" recursive="true"/>
 	</target>

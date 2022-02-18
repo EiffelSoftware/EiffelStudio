@@ -11,9 +11,14 @@ inherit
 	SCM_CONFIG
 
 create
+	make_default,
 	make_from_config
 
 feature {NONE} -- Initialization
+
+	make_default
+		do
+		end
 
 	make_from_config (cfg: SCM_CONFIG)
 		do

@@ -175,14 +175,14 @@ feature -- Execution
 				end
 			else
 				create Result.make_failure (cmd)
-				Result.set_message ("Error: can not launch git [" + process_misc.last_error.out + "]")
+				Result.set_message ("Error: can not launch git [" + last_process_error.out + "]")
 			end
 			debug ("GIT_ENGINE")
 				print ("-> terminated %N")
 			end
 		end
 
-	add (a_changelist: SCM_CHANGELIST; a_options: SCM_OPTIONS): SCM_RESULT
+	add (a_changelist: SCM_CHANGELIST; a_options: detachable SCM_OPTIONS): SCM_RESULT
 			-- Add items from `a_changelist`, and return information about command execution.
 		local
 			cmd: STRING_32
@@ -218,14 +218,14 @@ feature -- Execution
 				end
 			else
 				create Result.make_failure (cmd)
-				Result.set_message ("Error: can not launch git [" + process_misc.last_error.out + "]")
+				Result.set_message ("Error: can not launch git [" + last_process_error.out + "]")
 			end
 			debug ("GIT_ENGINE")
 				print ("-> terminated %N")
 			end
 		end
 
-	delete (a_changelist: SCM_CHANGELIST; a_options: SCM_OPTIONS): SCM_RESULT
+	delete (a_changelist: SCM_CHANGELIST; a_options: detachable SCM_OPTIONS): SCM_RESULT
 			-- Add items from `a_changelist`, and return information about command execution.
 		local
 			cmd: STRING_32
@@ -261,7 +261,7 @@ feature -- Execution
 				end
 			else
 				create Result.make_failure (cmd)
-				Result.set_message ("Error: can not launch git [" + process_misc.last_error.out + "]")
+				Result.set_message ("Error: can not launch git [" + last_process_error.out + "]")
 			end
 			debug ("GIT_ENGINE")
 				print ("-> terminated %N")
@@ -354,7 +354,7 @@ feature -- Execution
 				end
 			else
 				create Result.make_failure (cmd)
-				Result.set_message ("Error: can not launch git [" + process_misc.last_error.out + "]")
+				Result.set_message ("Error: can not launch git [" + last_process_error.out + "]")
 			end
 			debug ("GIT_ENGINE")
 				print ("-> terminated %N")
@@ -387,7 +387,7 @@ feature -- Execution
 				end
 			else
 				create Result.make_failure (cmd)
-				Result.set_message ("Error: can not launch git [" + process_misc.last_error.out + "]")
+				Result.set_message ("Error: can not launch git [" + last_process_error.out + "]")
 			end
 			debug ("GIT_ENGINE")
 				print ("-> terminated %N")
@@ -436,7 +436,7 @@ feature -- Execution
 				end
 			else
 				create Result.make_failure (cmd)
-				Result.set_message ("Error: can not launch git [" + process_misc.last_error.out + "]")
+				Result.set_message ("Error: can not launch git [" + last_process_error.out + "]")
 			end
 			debug ("GIT_ENGINE")
 				print ("-> terminated %N")
@@ -483,7 +483,7 @@ feature -- Execution
 				end
 			else
 				create Result.make_failure (cmd)
-				Result.set_message ("Error: can not launch git [" + process_misc.last_error.out + "]")
+				Result.set_message ("Error: can not launch git [" + last_process_error.out + "]")
 			end
 			debug ("GIT_ENGINE")
 				print ("-> terminated %N")
@@ -809,8 +809,8 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright: "Copyright (c) 1984-2022, Eiffel Software"
-	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
+	copyright: "Copyright (c) 1984-2022, Eiffel Software and others"
+	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[
 			This file is part of Eiffel Software's Eiffel Development Environment.

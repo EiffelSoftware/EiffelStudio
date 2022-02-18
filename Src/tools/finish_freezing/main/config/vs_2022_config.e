@@ -5,10 +5,10 @@ note
 	revision: "$Revision$"
 
 class
-	VS_2019_CONFIG
+	VS_2022_CONFIG
 
 inherit
-	VS_2017_CONFIG
+	VS_2019_CONFIG
 		redefine
 			vs_version
 		end
@@ -20,7 +20,7 @@ feature -- Status Report
 
 	vs_version: INTEGER
 		do
-			Result := 16
+			Result := 17
 		end
 
 note

@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
-<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-18-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-18-0 http://www.eiffel.com/developers/xml/configuration-1-18-0.xsd" name="svn" uuid="542546F4-A62F-4E6B-B298-C7EBAE7B82A8" library_target="svn">
+<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-22-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-22-0 http://www.eiffel.com/developers/xml/configuration-1-22-0.xsd" name="svn" uuid="542546F4-A62F-4E6B-B298-C7EBAE7B82A8" library_target="svn">
 	<target name="svn">
 		<description>Eiffel SVN (Subversion library)</description>
 		<root all_classes="true"/>
@@ -8,21 +8,69 @@
 			<exclude>/CVS$</exclude>
 			<exclude>/EIFGENs$</exclude>
 		</file_rule>
-		<option warning="true" namespace="EiffelSoftware.Library">
+		<option debug="true" warning="warning" is_obsolete_iteration="true">
 		</option>
-		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf"/>
-		<library name="encoding" location="$ISE_LIBRARY\library\encoding\encoding.ecf"/>
-		<library name="process" location="$ISE_LIBRARY\library\process\base\base_process.ecf"/>
-		<library name="time" location="$ISE_LIBRARY\library\time\time.ecf"/>
-		<library name="uri" location="$ISE_LIBRARY\library\text\uri\uri.ecf"/>
-		<library name="xml_parser" location="$ISE_LIBRARY\library\text\parser\xml\parser\xml_parser.ecf"/>
-		<library name="xml_tree" location="$ISE_LIBRARY\library\text\parser\xml\tree\xml_tree.ecf"/>
+		<setting name="total_order_on_reals" value="false"/>
+		<setting name="dead_code_removal" value="feature"/>
+		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf">
+			<option warning="none">
+			</option>
+		</library>
+		<library name="encoding" location="$ISE_LIBRARY\library\encoding\encoding.ecf">
+			<option warning="none">
+			</option>
+		</library>
+		<library name="base_process" location="$ISE_LIBRARY\library\process\base\base_process.ecf">
+			<option warning="none">
+			</option>
+		</library>
+		<library name="process" location="$ISE_LIBRARY\library\process\process.ecf">
+			<option warning="none">
+			</option>
+			<condition>
+				<concurrency value="thread"/>
+			</condition>
+		</library>
+		<library name="time" location="$ISE_LIBRARY\library\time\time.ecf">
+			<option warning="none">
+			</option>
+		</library>
+		<library name="uri" location="$ISE_LIBRARY\library\text\uri\uri.ecf">
+			<option warning="none">
+			</option>
+		</library>
+		<library name="xml_parser" location="$ISE_LIBRARY\library\text\parser\xml\parser\xml_parser.ecf">
+			<option warning="none">
+			</option>
+		</library>
+		<library name="xml_tree" location="$ISE_LIBRARY\library\text\parser\xml\tree\xml_tree.ecf">
+			<option warning="none">
+			</option>
+		</library>
 		<cluster name="svn" location=".\" recursive="true">
+			<option warning="none" is_obsolete_iteration="true">
+			</option>
 			<file_rule>
-				<exclude>/tests$</exclude>
 				<exclude>/implementation$</exclude>
+				<exclude>/tests$</exclude>
 			</file_rule>
-			<cluster name="implementation" location="$|implementation\" recursive="true" hidden="true"/>
+			<cluster name="implementation" location="$|implementation\" recursive="true" hidden="true">
+				<option warning="none" is_obsolete_iteration="true">
+				</option>
+				<file_rule>
+					<exclude>/concurrency$</exclude>
+				</file_rule>
+				<cluster name="concurrency_other" location="$|concurrency\other\" recursive="true" hidden="true">
+					<condition>
+						<concurrency excluded_value="thread"/>
+					</condition>
+				</cluster>
+				<cluster name="concurrency_thread" location="$|concurrency\thread\" recursive="true" hidden="true">
+					<condition>
+						<concurrency value="thread"/>
+					</condition>
+				</cluster>
+			</cluster>
 		</cluster>
 	</target>
 </system>

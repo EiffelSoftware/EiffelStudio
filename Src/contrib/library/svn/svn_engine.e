@@ -818,7 +818,7 @@ feature {NONE} -- impl
 				s := res.output
 				debug ("SVN_ENGINE")
 					print ("-> terminated : count=" + s.count.out + " .%N")
-					print (s)
+--					print (s)
 				end
 
 				l_svn_xml_manager := svn_xml_manager
@@ -863,7 +863,7 @@ feature {NONE} -- impl
 		end
 
 note
-	copyright: "Copyright (c) 2003-2021, Jocelyn Fiat"
+	copyright: "Copyright (c) 2003-2022, Jocelyn Fiat"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			 Jocelyn Fiat

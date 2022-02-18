@@ -96,9 +96,8 @@ feature -- Async Operations
 			wt: WORKER_THREAD
 			l_worker_queue: ARRAYED_LIST [WORKER_THREAD]
 			m: MUTEX
+			nb: INTEGER
 			cfg: SCM_FLAT_CONFIG
-			l_root: SCM_LOCATION
-			l_path: PATH
 			d: SCM_ASYNC_STATUSES_DATA
 			l_location_count_by_worker: INTEGER
 			l_results, l_worker_data: ARRAYED_LIST [SCM_ASYNC_STATUSES_DATA]
@@ -120,62 +119,60 @@ feature -- Async Operations
 
 				on_update_statuses_enter
 				create m.make
-				create l_results.make (ws.locations.count)
+				create l_results.make (ws.locations.count) -- Protected by mutex `m`
 
-				l_location_count_by_worker := ws.locations.count // l_worker_queue.capacity -- N concurrent workers
+				l_location_count_by_worker := 1 + ws.locations.count // l_worker_queue.capacity -- N concurrent workers
 				update_statuses_temp := [t, l_worker_queue]
 
-				create l_worker_data.make (l_location_count_by_worker)
+					-- New thread
 				across
 					ws.locations as ic
 				loop
+					if l_worker_data = Void or else l_worker_data.count >= l_location_count_by_worker then
+							-- New thread
+						nb := nb + 1
+						create l_worker_data.make (l_location_count_by_worker)
+						create cfg.make_from_config (config)
+
+						create wt.make (agent async_update_statuses (nb, l_worker_data, m))
+						l_worker_queue.force (wt)
+					end
+
 					grp := ic.item
-					create cfg.make_from_config (config)
-					l_root := grp.root.deep_twin
-					l_path := grp.location
-					create d.make (l_root, l_path, cfg)
+					create d.make (grp.root.deep_twin, grp.location.deep_twin, cfg)
 					l_results.extend (d)
 					check has_more_room: l_worker_data.count < l_location_count_by_worker end
 					l_worker_data.force (d)
-					if l_worker_data.count >= l_location_count_by_worker then
-						create wt.make (agent async_update_statuses (l_worker_data, m))
-						l_worker_queue.force (wt)
-						wt.launch
-
-						create l_worker_data.make (l_location_count_by_worker)
-					end
 				end
-				if not l_worker_data.is_empty then
-					create wt.make (agent async_update_statuses (l_worker_data, m))
-					l_worker_queue.force (wt)
-					wt.launch
+				across
+					l_worker_queue as ic
+				loop
+					ic.item.launch
 				end
 				ev_application.add_idle_action_kamikaze (agent check_for_async_update_statuses_completion (l_results, m))
 			end
 		end
 
-	async_update_statuses (a_data_set: LIST [SCM_ASYNC_STATUSES_DATA]; a_mutex: MUTEX)
+	async_update_statuses (a_id: INTEGER; a_data_set: LIST [SCM_ASYNC_STATUSES_DATA]; a_mutex: MUTEX)
 		local
-			lst: ARRAYED_LIST [TUPLE [data: SCM_ASYNC_STATUSES_DATA; status_list: detachable SCM_STATUS_LIST]]
+			st_lst: SCM_STATUS_LIST
 			d: SCM_ASYNC_STATUSES_DATA
+			nb: INTEGER
+			r: SCM_LOCATION
 		do
-			create lst.make (a_data_set.count)
+			nb := a_data_set.count
 			across
 				a_data_set as ic
 			loop
 				d := ic.item
-				lst.force ([d, d.root.changes (d.root.location, d.path, d.config)])
+				r := d.root
+				st_lst := r.changes (r.location, d.path, d.config)
+				a_mutex.lock
+				d.set_statuses (st_lst)
+				a_mutex.unlock
+				nb := nb - 1
 			end
 
-			a_mutex.lock
-			across
-				lst as ic
-			loop
-				print ("set " + d.path.utf_8_name + "%N")
-				d := ic.item.data
-				d.set_statuses (ic.item.status_list)
-			end
-			a_mutex.unlock
 		end
 
 	check_for_async_update_statuses_completion (
@@ -200,16 +197,11 @@ feature -- Async Operations
 					across
 						i_list as ic
 					loop
-						if attached ic.item as d then
-							if d.completed then
-								n := n - 1
-							end
+						if ic.item.completed then
+							n := n - 1
 						end
 					end
 					i_m.unlock
-					debug ("scm")
-						print ("check_for_async_update_statuses_completion n=" + n.out + " / " + nb.out + "%N")
-					end
 
 					if n = 0 then
 						i_t.destroy

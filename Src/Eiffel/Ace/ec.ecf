@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
-<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-21-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-21-0 http://www.eiffel.com/developers/xml/configuration-1-21-0.xsd" name="ec" uuid="D398E904-E3C8-4F8A-B9E7-6FE493CEA02F">
+<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-22-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-22-0 http://www.eiffel.com/developers/xml/configuration-1-22-0.xsd" name="ec" uuid="D398E904-E3C8-4F8A-B9E7-6FE493CEA02F">
 	<target name="common">
 		<file_rule>
 			<exclude>/EIFGENs$</exclude>
 			<exclude>/\.git$</exclude>
 			<exclude>/\.svn$</exclude>
 		</file_rule>
-		<option warning="warning">
+		<option warning="warning" is_obsolete_iteration="true">
 			<assertions precondition="true" postcondition="true" check="true" supplier_precondition="true"/>
 			<warning name="old_verbatim_strings" enabled="false"/>
 		</option>
@@ -64,7 +64,7 @@
 		<setting name="executable_name" value="ecb"/>
 		<setting name="inlining_size" value="8"/>
 		<capability>
-			<concurrency support="none" use="none"/>
+			<concurrency support="none"/>
 		</capability>
 		<variable name="batch_preferences" value="true"/>
 		<variable name="batch_framework" value="true"/>
@@ -104,12 +104,12 @@
 	<target name="bench" extends="common">
 		<description>Eiffel Studio</description>
 		<root class="EB_KERNEL" feature="make"/>
-		<option>
+		<option is_obsolete_iteration="true">
 			<warning name="once_in_generic" enabled="false"/>
 		</option>
 		<capability>
-			<concurrency support="thread" use="thread"/>
-			<void_safety support="none" use="none"/>
+			<concurrency support="thread"/>
+			<void_safety support="none"/>
 		</capability>
 		<external_object location="$(EIFFEL_SRC)/C/ipc/ewb/libmtwewb.a">
 			<condition>
@@ -187,6 +187,7 @@
 		<library name="eiffel_edition" location="$EIFFEL_SRC\Eiffel\edition\edition.ecf" readonly="false" use_application_options="true"/>
 		<library name="es_cloud" location="$EIFFEL_SRC\Eiffel\cloud\cloud.ecf" readonly="false" use_application_options="true"/>
 		<library name="es_scm" location="$EIFFEL_SRC\Eiffel\scm\scm.ecf" readonly="false" use_application_options="true"/>
+		<library name="es_scm_plugins" location="$EIFFEL_SRC\Eiffel\scm\lib\scm_plugins\scm_plugins.ecf" readonly="false" use_application_options="true"/>
 		<library name="es_update_manager" location="$EIFFEL_SRC\framework\update_manager\update_manager.ecf" use_application_options="true"/>
 		<library name="esa_api_client" location="$EIFFEL_SRC\web\support\client\esa_client.ecf"/>
 		<library name="fast_ini" location="$EIFFEL_SRC\framework\file_formats\fast_ini\fast_ini.ecf" readonly="false" use_application_options="true"/>

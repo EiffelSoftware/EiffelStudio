@@ -199,7 +199,7 @@ feature {NONE} -- Access
 			compatibility_configs.put (l_configs, l_c_config.code)
 
 				-- VS 16.0 (aka VS 2019 all editions)
-			create {VS_2019_CONFIG} l_c_config.make (a_use_32bit, "VC160", "Microsoft Visual Studio 2019 VC++ (19.0)", "2019-VS")
+			create {VS_2019_CONFIG} l_c_config.make (a_use_32bit, "VC160", "Microsoft Visual Studio 2019 VC++ (16.0)", "2019-VS")
 			l_configs.extend (l_c_config)
 			compatibility_configs.put (l_configs, l_c_config.code)
 

@@ -87,7 +87,7 @@ feature {NONE} -- Execution
 					context.init (c.actual_type.associated_class_type (c.actual_type))
 					⟳ f: c.written_in_features ¦
 						if attached byte_server.disk_item (f.associated_feature_i.body_index) as code then
-							g.process_feature_code (f.name_32, code)
+							g.process_feature (code, f.associated_feature_i)
 						end
 					⟲
 				⟲

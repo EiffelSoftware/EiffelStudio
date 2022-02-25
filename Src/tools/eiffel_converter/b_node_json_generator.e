@@ -7,6 +7,7 @@ class
 inherit
 	BYTE_NODE_ITERATOR
 		redefine
+			process_argument_b,
 			process_attribute_b,
 			process_assign_b,
 			process_creation_expr_b,
@@ -18,6 +19,7 @@ inherit
 			process_loop_b
 		end
 
+	SHARED_BYTE_CONTEXT
 	SHARED_NAMES_HEAP
 
 create
@@ -55,14 +57,15 @@ feature -- Setup and tear down
 
 feature -- Feature declaration
 
-	process_feature_code (n: READABLE_STRING_32; x: BYTE_CODE)
-			-- Process feature of name `n` with code `x`.
+	process_feature (x: BYTE_CODE; f: FEATURE_I)
+			-- Process code `x` of feature `f`.
 		do
+			context.set_current_feature (f)
 			printer.enter_object
 			printer.put_property_name (key_routine)
 			printer.enter_object
 			printer.put_property_name (key_name)
-			printer.put_string_value (n)
+			printer.put_string_value (f.feature_name_32)
 			if x.is_deferred then
 				printer.put_property_name (key_is_deferred)
 				printer.put_boolean_value (True)
@@ -83,6 +86,7 @@ feature -- Feature declaration
 			end
 			printer.leave_object
 			printer.leave_object
+			context.clear_feature_data
 		end
 
 feature -- Root creation procedures
@@ -104,7 +108,7 @@ feature -- Root creation procedures
 			printer.put_property_name (key_create)
 			printer.enter_object
 			printer.put_property_name (key_type)
-			printer.put_string_value (r.class_type.name) -- type
+			put_utf_8_value (r.class_type.name) -- type
 			printer.leave_object -- create
 			printer.leave_object -- source
 			printer.leave_object -- assign
@@ -115,12 +119,23 @@ feature -- Root creation procedures
 			printer.put_property_name (key_unqualified_call)
 			printer.enter_object
 			printer.put_property_name (key_routine)
-			printer.put_string_value ({UTF_CONVERTER}.utf_8_string_8_to_string_32 (r.procedure_name)) -- routine
+			put_utf_8_value (r.procedure_name) -- routine
 			printer.leave_object -- unqualified_call
 			printer.leave_object
 		end
 
 feature -- Visitor: entities
+
+	process_argument_b (x: ARGUMENT_B)
+			-- <Precursor>
+		do
+			printer.enter_object
+			printer.put_property_name (key_formal)
+			printer.put_integer_64_value (x.position)
+			printer.put_property_name (key_name)
+			printer.put_string_value (x.context.current_feature.arguments.item_name_32 (x.position))
+			printer.leave_object
+		end
 
 	process_attribute_b (x: ATTRIBUTE_B)
 			-- <Precursor>
@@ -134,7 +149,10 @@ feature -- Visitor: entities
 	process_local_b (x: LOCAL_B)
 			-- <Precursor>
 		do
-			printer.put_string_value ("local " + x.position.out)
+			printer.enter_object
+			printer.put_property_name (key_local)
+			printer.put_integer_64_value (x.position)
+			printer.leave_object
 		end
 
 feature -- Visitor: calls
@@ -147,7 +165,11 @@ feature -- Visitor: calls
 			printer.enter_object
 			printer.put_property_name (key_routine)
 			printer.put_string_value (names_heap.item_32 (x.feature_name_id))
-			printer.leave_object
+			printer.put_property_name (key_arguments)
+			printer.enter_array
+			safe_process (x.parameters)
+			printer.leave_array
+			printer.leave_object -- unqualified_call
 			printer.leave_object
 		end
 
@@ -160,7 +182,7 @@ feature -- Visitor: expressions
 			printer.put_property_name (key_create)
 			printer.enter_object
 			printer.put_property_name (key_type)
-			printer.put_string_value (x.type.name)
+			put_utf_8_value (x.type.name)
 			printer.leave_object
 			printer.leave_object
 		end
@@ -242,6 +264,9 @@ feature {NONE} -- Visitor: instruction collection
 
 feature {NONE} -- Keys
 
+	key_arguments: STRING_32 = "args"
+			-- A key for actual arguments.
+
 	key_assign: STRING_32 = "assign"
 			-- A key for an assignment.
 
@@ -260,11 +285,17 @@ feature {NONE} -- Keys
 	key_entry: STRING_32 = "%"entry%""
 			-- A key for an entry point.
 
+	key_formal: STRING_32 = "formal"
+			-- A key for a formal argument.
+
 	key_is_deferred: STRING_32 = "is_deferred"
 			-- A key for "is_deferred" property.
 
 	key_is_external: STRING_32 = "is_external"
 			-- A key for "is_external" property.
+
+	key_local: STRING_32 = "local"
+			-- A key for a local variable.
 
 	key_loop: STRING_32 = "loop"
 			-- A key for a loop.
@@ -289,6 +320,14 @@ feature {NONE} -- Keys
 
 	key_unqualified_call: STRING_32 = "u_call"
 			-- A key for an unqualified call.
+
+feature {NONE} -- Output
+
+	put_utf_8_value (s: READABLE_STRING_8)
+			-- Output property value `s` encoded in UTF-8.
+		do
+			printer.put_string_value ({UTF_CONVERTER}.utf_8_string_8_to_string_32 (s))
+		end
 
 note
 	date: "$Date$"

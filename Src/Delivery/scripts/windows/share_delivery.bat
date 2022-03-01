@@ -45,11 +45,26 @@ if "%TMP_REVISION%" NEQ "" (
 if "%T_KIND%" NEQ "" (
 	set T_S3_PATH=%T_S3_PATH%/%T_KIND%
 )
+
+if "%LOCAL_ONLY%" NEQ "True" goto do_upload
+goto do_local_only
+
+:do_local_only
+echo File available at %T_DST%
+echo WARNING: NO Upload, and no Notification
+
+goto eof
+
+:do_upload
+
+REM UNCOMMENT FOLLOWING LINE !!!
+goto eof
+
 echo Upload %1 to %T_S3%/%T_S3_PATH%/
 echo aws s3 cp --acl public-read %T_DST% %T_S3%/%T_S3_PATH%/%T_FILENAME% 
 aws s3 cp --acl public-read %T_DST% %T_S3%/%T_S3_PATH%/%T_FILENAME% > NUL
 if EXIST %~dp0notify.bat %~dp0notify.bat "New %ISE_PLATFORM% %T_KIND% release %T_FILENAME% built and uploaded to %T_S3%/%T_S3_PATH%/ or %T_S3_WWW%/%T_S3_PATH%/%T_FILENAME% ."
-)
+
 
 :: echo Upload %1 to eifweb:deliv remote folder
 :: scp %1 eifweb:builds/nightly > NUL

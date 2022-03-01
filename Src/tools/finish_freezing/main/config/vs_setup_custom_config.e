@@ -1,23 +1,41 @@
 note
-	description: "Locator for C/C++ compiler for Visual Studio 2022."
+	description: "[
+		Locator for C/C++ compiler for Visual Studio 2015, 2017, 2019, 2022.
+		
+		VS 2017 changed their install process and now we have to use a COM interface to locate VS 2017, and later versions.
+		]"
 	date: "$Date$"
 	revision: "$Revision$"
 
 class
-	VS_2022_CONFIG
+	VS_SETUP_CUSTOM_CONFIG
 
 inherit
 	VS_SETUP_CONFIG
+		rename
+			make as mscl_make
+		end
 
 create
 	make
 
-feature -- Status Report
+feature {NONE} -- Initalization
+
+	make (a_use_32bit: like use_32bit; a_code: like code; a_desc: like description; a_version: like version; a_vs_version: like vs_version)
+			-- <Precursor>
+			-- And for VisualStudio version `a_vs_version`.
+		do
+			vs_version := a_vs_version
+			mscl_make (a_use_32bit, a_code, a_desc, a_version)
+		end
+
+feature -- Access
 
 	vs_version: INTEGER
-		do
-			Result := 17
-		end
+			-- Internal version of Visual Studio
+
+invariant
+	vs_version_set: vs_version > 0
 
 note
 	copyright: "Copyright (c) 1984-2022, Eiffel Software"

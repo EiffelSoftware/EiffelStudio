@@ -8,10 +8,7 @@ class
 	VS_2019_CONFIG
 
 inherit
-	VS_2017_CONFIG
-		redefine
-			vs_version
-		end
+	VS_SETUP_CONFIG
 
 create
 	make

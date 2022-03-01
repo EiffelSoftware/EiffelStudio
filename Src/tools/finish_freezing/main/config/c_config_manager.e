@@ -194,17 +194,17 @@ feature {NONE} -- Access
 			create l_configs.make (1)
 
 				-- VS 17.0 (aka VS 2022 all editions)
-			create {VS_2022_CONFIG} l_c_config.make (a_use_32bit, "VC170", "Microsoft Visual Studio 2022 VC++ (17.0)", "2022-VS")
+			create {VS_SETUP_CUSTOM_CONFIG} l_c_config.make (a_use_32bit, "VC170", "Microsoft Visual Studio 2022 VC++ (17.0)", "2022-VS", 17)
 			l_configs.extend (l_c_config)
 			compatibility_configs.put (l_configs, l_c_config.code)
 
 				-- VS 16.0 (aka VS 2019 all editions)
-			create {VS_2019_CONFIG} l_c_config.make (a_use_32bit, "VC160", "Microsoft Visual Studio 2019 VC++ (16.0)", "2019-VS")
+			create {VS_SETUP_CUSTOM_CONFIG} l_c_config.make (a_use_32bit, "VC160", "Microsoft Visual Studio 2019 VC++ (19.0)", "2019-VS", 16)
 			l_configs.extend (l_c_config)
 			compatibility_configs.put (l_configs, l_c_config.code)
 
 				-- VS 15.0 (aka VS 2017 all editions)
-			create {VS_2017_CONFIG} l_c_config.make (a_use_32bit, "VC150", "Microsoft Visual Studio 2017 VC++ (15.0)", "2017-VS")
+			create {VS_SETUP_CUSTOM_CONFIG} l_c_config.make (a_use_32bit, "VC150", "Microsoft Visual Studio 2017 VC++ (15.0)", "2017-VS", 15)
 			l_configs.extend (l_c_config)
 			compatibility_configs.put (l_configs, l_c_config.code)
 

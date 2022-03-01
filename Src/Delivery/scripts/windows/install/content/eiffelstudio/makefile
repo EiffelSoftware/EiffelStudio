@@ -191,4 +191,5 @@ standard_x64: $(WXS_STD)
 clean:
 	for %i in ($(WXS_STD)) do if exist %i del %i
 	for %i in ($(WXS_ENT)) do if exist %i del %i
+	for %i in ($(WXS_BRANDED)) do if exist %i del %i
 	if exist *.msi del *.msi

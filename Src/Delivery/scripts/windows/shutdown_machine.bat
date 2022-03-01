@@ -1,3 +1,4 @@
+echo off
 setlocal
 
 if "%1" EQU "cancel" (
@@ -6,6 +7,8 @@ if "%1" EQU "cancel" (
 )
 if "%1" EQU "now" (
 	set tmp_delay=0
+	echo "Set delay to %tmp_delay% = now"
+	goto shutdown_in_delay
 )
 if "%1" EQU "" (
 	set tmp_delay=7200
@@ -13,6 +16,9 @@ if "%1" EQU "" (
 ) else (
 	set tmp_delay=%1
 )
+goto shutdown_in_delay
+
+:shutdown_in_delay
 if "%tmp_delay%" EQU "0" (
 	rem No notification when shutdown is immediate
 ) else (

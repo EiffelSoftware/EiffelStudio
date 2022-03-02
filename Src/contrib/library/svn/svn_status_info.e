@@ -22,10 +22,14 @@ create
 
 feature
 
-	make (d: PATH; p: like path; pp: like prefix_path )
+	make (d: PATH; p: like path; pp: detachable READABLE_STRING_GENERAL)
 		do
 			set_path (p)
-			prefix_path := pp
+			if pp /= Void then
+				create prefix_path.make_from_string_general (pp)
+			else
+				prefix_path := Void
+			end
 			absolute_path := d.extended (path)
 			wc_status := status_none_id
 			repos_status := status_none_id
@@ -43,7 +47,7 @@ feature
 
 	absolute_path: PATH
 
-	prefix_path: detachable STRING
+	prefix_path: detachable STRING_32
 
 	display_path: STRING_32
 		local
@@ -89,7 +93,7 @@ feature
 	set_wc_status (v: detachable READABLE_STRING_GENERAL)
 		do
 			if v /= Void and then not v.is_whitespace and then v.is_valid_as_string_8 then
-				wc_status := v.as_string_8
+				wc_status := v.to_string_8
 			else
 				wc_status := status_none_id
 			end
@@ -104,7 +108,7 @@ feature
 	set_repos_status (v: detachable READABLE_STRING_GENERAL)
 		do
 			if v /= Void and then not v.is_whitespace and then v.is_valid_as_string_8 then
-				repos_status := v.as_string_8
+				repos_status := v.to_string_8
 			else
 				repos_status := status_none_id
 			end
@@ -112,7 +116,7 @@ feature
 		end
 
 note
-	copyright: "Copyright (c) 2003-2015, Jocelyn Fiat"
+	copyright: "Copyright (c) 2003-2022, Jocelyn Fiat"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			 Jocelyn Fiat

@@ -77,13 +77,13 @@ feature -- Access
 		deferred
 		end
 
-	content (a_location: READABLE_STRING_GENERAL; a_rev: detachable SVN_RANGE_INDEX; a_options: detachable SVN_OPTIONS): detachable STRING
+	content (a_location: READABLE_STRING_GENERAL; a_rev: detachable SVN_RANGE_INDEX; a_options: detachable SVN_OPTIONS): detachable READABLE_STRING_8
 			-- Content of `a_location', at revision `a_rev' if provided.
 		deferred
 		end
 
 note
-	copyright: "Copyright (c) 2003-2015, Jocelyn Fiat"
+	copyright: "Copyright (c) 2003-2022, Jocelyn Fiat"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			 Jocelyn Fiat

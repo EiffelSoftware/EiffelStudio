@@ -30,7 +30,7 @@ feature {NONE} -- Initialization
 
 	make (s: READABLE_STRING_8)
 		do
-			string := s
+			string := s.to_string_8
 		end
 
 	make_from_revision (rev: INTEGER)

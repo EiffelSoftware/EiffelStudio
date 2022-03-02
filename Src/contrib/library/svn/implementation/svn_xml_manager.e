@@ -88,7 +88,7 @@ feature -- Access
 			retry
 		end
 
-	string_to_status_on_pathes (a_prefix_path: detachable STRING; dir: PATH; a_xml: STRING): detachable ARRAYED_LIST [SVN_STATUS_INFO]
+	string_to_status_on_pathes (a_prefix_path: detachable READABLE_STRING_GENERAL; dir: PATH; a_xml: READABLE_STRING_8): detachable ARRAYED_LIST [SVN_STATUS_INFO]
 		local
 			retried: BOOLEAN
 			l_path, l_status, l_revision: detachable READABLE_STRING_32
@@ -185,7 +185,7 @@ feature -- Access
 			retry
 		end
 
-	string_to_logs (a_unused_arg_location: READABLE_STRING_GENERAL; a_xml: STRING): detachable ARRAYED_LIST [SVN_REVISION_INFO]
+	string_to_logs (a_unused_arg_location: READABLE_STRING_GENERAL; a_xml: READABLE_STRING_8): detachable ARRAYED_LIST [SVN_REVISION_INFO]
 		local
 			retried: BOOLEAN
 			l_revision: READABLE_STRING_32
@@ -286,7 +286,7 @@ feature {NONE} -- Implementation
 			l_iri: IRI
 		do
 			if s.is_valid_as_string_8 then
-				Result := s.as_string_8
+				Result := s.to_string_8
 			else
 				create l_iri.make_from_string (s)
 				Result := l_iri.uri_string
@@ -298,7 +298,7 @@ feature {NONE} -- Implementation
 			utf: UTF_CONVERTER
 		do
 			if s.is_valid_as_string_8 then
-				Result := s.as_string_8
+				Result := s.to_string_8
 			else
 				Result := utf.utf_32_string_to_utf_8_string_8 (s)
 			end
@@ -315,7 +315,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright: "Copyright (c) 2003-2015, Jocelyn Fiat"
+	copyright: "Copyright (c) 2003-2022, Jocelyn Fiat"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			 Jocelyn Fiat

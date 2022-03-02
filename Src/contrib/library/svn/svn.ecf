@@ -8,55 +8,28 @@
 			<exclude>/CVS$</exclude>
 			<exclude>/EIFGENs$</exclude>
 		</file_rule>
-		<option debug="true" warning="warning" is_obsolete_iteration="true">
-		</option>
-		<setting name="total_order_on_reals" value="false"/>
+		<option debug="true" warning="warning" is_obsolete_iteration="true"/>
 		<setting name="dead_code_removal" value="feature"/>
-		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf">
-			<option warning="none">
-			</option>
-		</library>
-		<library name="encoding" location="$ISE_LIBRARY\library\encoding\encoding.ecf">
-			<option warning="none">
-			</option>
-		</library>
-		<library name="base_process" location="$ISE_LIBRARY\library\process\base\base_process.ecf">
-			<option warning="none">
-			</option>
-		</library>
+		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf"/>
+		<library name="encoding" location="$ISE_LIBRARY\library\encoding\encoding.ecf"/>
+		<library name="base_process" location="$ISE_LIBRARY\library\process\base\base_process.ecf"/>
 		<library name="process" location="$ISE_LIBRARY\library\process\process.ecf">
-			<option warning="none">
-			</option>
 			<condition>
 				<concurrency value="thread"/>
 			</condition>
 		</library>
-		<library name="time" location="$ISE_LIBRARY\library\time\time.ecf">
-			<option warning="none">
-			</option>
-		</library>
-		<library name="uri" location="$ISE_LIBRARY\library\text\uri\uri.ecf">
-			<option warning="none">
-			</option>
-		</library>
-		<library name="xml_parser" location="$ISE_LIBRARY\library\text\parser\xml\parser\xml_parser.ecf">
-			<option warning="none">
-			</option>
-		</library>
-		<library name="xml_tree" location="$ISE_LIBRARY\library\text\parser\xml\tree\xml_tree.ecf">
-			<option warning="none">
-			</option>
-		</library>
+		<library name="time" location="$ISE_LIBRARY\library\time\time.ecf"/>
+		<library name="uri" location="$ISE_LIBRARY\library\text\uri\uri.ecf"/>
+		<library name="xml_parser" location="$ISE_LIBRARY\library\text\parser\xml\parser\xml_parser.ecf"/>
+		<library name="xml_tree" location="$ISE_LIBRARY\library\text\parser\xml\tree\xml_tree.ecf"/>
 		<cluster name="svn" location=".\" recursive="true">
-			<option warning="none" is_obsolete_iteration="true">
-			</option>
+			<option is_obsolete_iteration="true"/>
 			<file_rule>
 				<exclude>/implementation$</exclude>
 				<exclude>/tests$</exclude>
 			</file_rule>
 			<cluster name="implementation" location="$|implementation\" recursive="true" hidden="true">
-				<option warning="none" is_obsolete_iteration="true">
-				</option>
+				<option is_obsolete_iteration="true"/>
 				<file_rule>
 					<exclude>/concurrency$</exclude>
 				</file_rule>

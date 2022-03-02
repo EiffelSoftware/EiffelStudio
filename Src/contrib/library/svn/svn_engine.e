@@ -104,7 +104,7 @@ feature -- Access: working copy
 			-- <Precursor>
 		local
 			res: detachable PROCESS_COMMAND_RESULT
-			s: detachable STRING
+			s: detachable READABLE_STRING_8
 			cmd: STRING_32
 		do
 			debug ("SVN_ENGINE")
@@ -131,7 +131,7 @@ feature -- Access: working copy
 			cmd.append_string ("%"")
 
 			debug ("SVN_ENGINE")
-				print ("Command: [" + cmd + "]%N")
+				print ({STRING_32} "Command: [" + cmd + {STRING_32} "]%N")
 			end
 			res := output_of_command (cmd, Void)
 			debug ("SVN_ENGINE")
@@ -159,7 +159,7 @@ feature -- Access: working copy
 			-- <Precursor>
 		local
 			res: detachable PROCESS_COMMAND_RESULT
-			s: detachable STRING
+			s: detachable READABLE_STRING_8
 			cmd: STRING_32
 		do
 			debug ("SVN_ENGINE")
@@ -172,7 +172,7 @@ feature -- Access: working copy
 			a_changelist.append_as_command_line_arguments_to (cmd)
 
 			debug ("SVN_ENGINE")
-				print ("Command: [" + cmd + "]%N")
+				print ({STRING_32} "Command: [" + cmd + {STRING_32} "]%N")
 			end
 			res := output_of_command (cmd, Void)
 			debug ("SVN_ENGINE")
@@ -200,7 +200,7 @@ feature -- Access: working copy
 			-- <Precursor>
 		local
 			res: detachable PROCESS_COMMAND_RESULT
-			s: detachable STRING
+			s: detachable READABLE_STRING_8
 			cmd: STRING_32
 		do
 			debug ("SVN_ENGINE")
@@ -221,7 +221,7 @@ feature -- Access: working copy
 			end
 
 			debug ("SVN_ENGINE")
-				print ("Command: [" + cmd + "]%N")
+				print ({STRING_32} "Command: [" + cmd + {STRING_32} "]%N")
 			end
 			res := output_of_command (cmd, Void)
 			debug ("SVN_ENGINE")
@@ -249,7 +249,7 @@ feature -- Access: working copy
 			-- <Precursor>
 		local
 			res: detachable PROCESS_COMMAND_RESULT
-			s: detachable STRING
+			s: detachable READABLE_STRING_8
 			cmd: STRING_32
 		do
 			debug ("SVN_ENGINE")
@@ -262,7 +262,7 @@ feature -- Access: working copy
 			a_changelist.append_as_command_line_arguments_to (cmd)
 
 			debug ("SVN_ENGINE")
-				print ("Command: [" + cmd + "]%N")
+				print ({STRING_32} "Command: [" + cmd + {STRING_32} "]%N")
 			end
 			res := output_of_command (cmd, Void)
 			debug ("SVN_ENGINE")
@@ -290,7 +290,7 @@ feature -- Access: working copy
 			-- <Precursor>
 		local
 			res: detachable PROCESS_COMMAND_RESULT
-			s: detachable STRING
+			s: detachable READABLE_STRING_8
 			cmd: STRING_32
 		do
 			debug ("SVN_ENGINE")
@@ -311,7 +311,7 @@ feature -- Access: working copy
 			a_changelist.append_as_command_line_arguments_to (cmd)
 
 			debug ("SVN_ENGINE")
-				print ("Command: [" + cmd + "]%N")
+				print ({STRING_32} "Command: [" + cmd + {STRING_32} "]%N")
 			end
 			res := output_of_command (cmd, Void)
 			debug ("SVN_ENGINE")
@@ -339,7 +339,7 @@ feature -- Access: working copy
 			-- <Precursor>
 		local
 			res: detachable PROCESS_COMMAND_RESULT
-			s: detachable STRING
+			s: detachable READABLE_STRING_8
 			cmd: STRING_32
 		do
 			debug ("SVN_ENGINE")
@@ -355,7 +355,7 @@ feature -- Access: working copy
 			cmd.append_string ("%" ")
 
 			debug ("SVN_ENGINE")
-				print ("Command: [" + cmd + "]%N")
+				print ({STRING_32} "Command: [" + cmd + {STRING_32} "]%N")
 			end
 			res := output_of_command (cmd, Void)
 			debug ("SVN_ENGINE")
@@ -388,14 +388,14 @@ feature -- Access: working copy
 			-- <Precursor>
 		local
 			res: detachable PROCESS_COMMAND_RESULT
-			s: detachable STRING
+			s: detachable READABLE_STRING_8
 			cmd,msg: STRING_32
 			args: ARRAYED_LIST [READABLE_STRING_GENERAL]
 			tmpfile: PLAIN_TEXT_FILE
 			tmp: PATH
 		do
 			debug ("SVN_ENGINE")
-				print ({STRING_32} "svn commit " + a_changelist.as_command_line_arguments + "%N")
+				print ({STRING_32} "svn commit " + a_changelist.as_command_line_arguments + {STRING_32} "%N")
 			end
 
 			create args.make (10)
@@ -499,7 +499,7 @@ feature -- Access: svn
 			cmd.append_string_general (a_location)
 
 			debug ("SVN_ENGINE")
-				print ("Command: [" + cmd + "]%N")
+				print ({STRING_32} "Command: [" + cmd + {STRING_32} "]%N")
 			end
 			res := output_of_command (cmd, Void)
 			debug ("SVN_ENGINE")
@@ -510,7 +510,7 @@ feature -- Access: svn
 					print ("-> terminated : None .%N")
 				end
 			else
-				s := res.output
+				s := res.output.to_string_8
 				debug ("SVN_ENGINE")
 					print ("-> terminated : count=" + s.count.out + " .%N")
 					print (s)
@@ -529,11 +529,11 @@ feature -- Access: svn
 	diff (a_location: READABLE_STRING_GENERAL; a_start, a_end: detachable SVN_RANGE_INDEX; a_options: detachable SVN_OPTIONS): detachable SVN_RESULT
 		local
 			res: detachable PROCESS_COMMAND_RESULT
-			s: detachable STRING
+			s: detachable READABLE_STRING_8
 			cmd: STRING_32
 		do
 			debug ("SVN_ENGINE")
-				print ({STRING_32} "Fetch svn info from [" + a_location.as_string_32 + "] %N")
+				print ({STRING_32} "Fetch svn info from [" + a_location.as_string_32 + {STRING_32} "] %N")
 			end
 
 			create cmd.make_from_string (svn_executable_path)
@@ -561,7 +561,7 @@ feature -- Access: svn
 --			cmd.append_string (" --summarize ")
 
 			debug ("SVN_ENGINE")
-				print ("Command: [" + cmd + "]%N")
+				print ({STRING_32} "Command: [" + cmd + {STRING_32} "]%N")
 			end
 			res := output_of_command (cmd, Void)
 			debug ("SVN_ENGINE")
@@ -584,7 +584,7 @@ feature -- Access: svn
 			end
 		end
 
-	path_content (a_location: READABLE_STRING_GENERAL; a_path: STRING; a_rev: detachable SVN_RANGE_INDEX; a_options: detachable SVN_OPTIONS): detachable STRING
+	path_content (a_location: READABLE_STRING_GENERAL; a_path: STRING; a_rev: detachable SVN_RANGE_INDEX; a_options: detachable SVN_OPTIONS): detachable READABLE_STRING_8
 		local
 			s: STRING_32
 		do
@@ -593,14 +593,13 @@ feature -- Access: svn
 			Result := content (s, a_rev, a_options)
 		end
 
-	content (a_location: READABLE_STRING_GENERAL; a_rev: detachable SVN_RANGE_INDEX; a_options: detachable SVN_OPTIONS): detachable STRING
+	content (a_location: READABLE_STRING_GENERAL; a_rev: detachable SVN_RANGE_INDEX; a_options: detachable SVN_OPTIONS): detachable READABLE_STRING_8
 		local
 			res: detachable PROCESS_COMMAND_RESULT
-			s: detachable STRING
 			cmd: STRING_32
 		do
 			debug ("SVN_ENGINE")
-				print ({STRING_32} "Fetch path content from [" + a_location.as_string_32 + "] %N")
+				print ({STRING_32} "Fetch path content from [" + a_location.as_string_32 + {STRING_32} "] %N")
 			end
 
 			create cmd.make_from_string (svn_executable_path)
@@ -618,7 +617,7 @@ feature -- Access: svn
 			cmd.append_string_general (a_location)
 
 			debug ("SVN_ENGINE")
-				print ({STRING_32} "Command: [" + cmd + "]%N")
+				print ({STRING_32} "Command: [" + cmd + {STRING_32} "]%N")
 			end
 			res := output_of_command (cmd, Void)
 			debug ("SVN_ENGINE")
@@ -629,13 +628,11 @@ feature -- Access: svn
 					print ("-> terminated : None .%N")
 				end
 			else
-				s := res.output
+				Result := res.output
 				debug ("SVN_ENGINE")
-					print ("-> terminated : count=" + s.count.out + " .%N")
-					print (s)
+					print ("-> terminated : count=" + Result.count.out + " .%N")
+					print (Result)
 				end
-
-				Result := s
 			end
 		end
 
@@ -687,7 +684,7 @@ feature -- Access: svn
 			cmd.append_string_general (a_location)
 
 			debug ("SVN_ENGINE")
-				print ({STRING_32} "Command: [" + cmd + "]%N")
+				print ({STRING_32} "Command: [" + cmd + {STRING_32} "]%N")
 			end
 			res := output_of_command (cmd, Void)
 			debug ("SVN_ENGINE")
@@ -773,7 +770,7 @@ feature {NONE} -- impl
 
 	svn_xml_manager: detachable SVN_XML_MANAGER
 
-	impl_statuses (a_prefix_path: detachable STRING; a_path: PATH; is_verbose, is_recursive, is_remote: BOOLEAN; a_options: detachable SVN_OPTIONS): detachable ARRAYED_LIST [SVN_STATUS_INFO]
+	impl_statuses (a_prefix_path: detachable READABLE_STRING_GENERAL; a_path: PATH; is_verbose, is_recursive, is_remote: BOOLEAN; a_options: detachable SVN_OPTIONS): detachable ARRAYED_LIST [SVN_STATUS_INFO]
 		local
 			res: detachable PROCESS_COMMAND_RESULT
 			s: detachable READABLE_STRING_8
@@ -804,7 +801,7 @@ feature {NONE} -- impl
 			cmd.append_string_general (a_path.name)
 
 			debug ("SVN_ENGINE")
-				print ({STRING_32} "Command: [" + cmd + "]%N")
+				print ({STRING_32} "Command: [" + cmd + {STRING_32} "]%N")
 			end
 			res := output_of_command (cmd, a_path)
 			debug ("SVN_ENGINE")

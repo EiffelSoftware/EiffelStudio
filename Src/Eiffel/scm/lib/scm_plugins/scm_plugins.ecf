@@ -10,7 +10,6 @@
 			<exclude>/EIFGENs$</exclude>
 		</file_rule>
 		<option warning="warning" is_obsolete_iteration="true"/>
-		<setting name="total_order_on_reals" value="false"/>
 		<setting name="dead_code_removal" value="feature"/>
 		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf"/>
 		<library name="encoding" location="$ISE_LIBRARY\library\encoding\encoding.ecf"/>

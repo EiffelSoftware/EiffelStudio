@@ -870,7 +870,11 @@ feature {COMPILER_EXPORTER} -- Instantiation of a type in the context of a desce
 				instantiation := find_class_type (System.class_of_id (a_class_id))
 			end
 			Result := type.actual_type
-			if attached instantiation.generics as l_generics and then l_generics.count > 0 then
+			if
+				instantiation /= Void and then
+				attached instantiation.generics as l_generics and then
+				l_generics.count > 0
+			then
 					-- Does not make sense to instantiate if `instantation' is
 					-- a TUPLE with no arguments.
 				if attached {GEN_TYPE_A} instantiation as gen_type then
@@ -1099,7 +1103,7 @@ invariant
 		class_declaration_mark = once_mark
 
 note
-	copyright:	"Copyright (c) 1984-2020, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2022, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

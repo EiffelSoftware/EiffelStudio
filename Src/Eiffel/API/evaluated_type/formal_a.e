@@ -617,7 +617,11 @@ feature -- Access
 				l_class := system.class_of_id (written_id)
 				if not l_class.lace_class.is_void_unsafe then
 					l_type_set := l_class.constrained_types (position)
-					if l_type_set.is_attached and then not Result.has_detachable_mark then
+					if
+						l_type_set /= Void and then
+						l_type_set.is_attached and then
+						not Result.has_detachable_mark
+					then
 							-- Promote attachment setting of the current contraint unless the formal has explicit detachable mark.
 						t := Result.duplicate
 						t.set_is_attached
@@ -765,7 +769,7 @@ feature {NONE} -- Status adaptation
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2019, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2022, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

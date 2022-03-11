@@ -90,6 +90,10 @@ feature {NONE} -- Implementation
 		deferred
 		end
 
+	model_file_name: PATH
+		deferred
+		end
+
 	boogie_executable: READABLE_STRING_32
 			-- Executable name to launch Boogie (including path if necessary).
 		deferred
@@ -149,7 +153,7 @@ feature {NONE} -- Implementation
 				l_arguments.extend ({STRING_32} "/z3opt:/T:" + l_context.options.timeout.out)
 			end
 --			l_arguments.extend ({STRING_32} "/errorLimit:1")
---			l_arguments.extend ({STRING_32} "/mv:" + safe_file_name (model_file_name))
+			l_arguments.extend ({STRING_32} "/mv:" + model_file_name.name)
 			l_arguments.extend (boogie_file_name.name)
 
 				-- Launch Boogie
@@ -196,25 +200,25 @@ feature {NONE} -- Implementation
 	handle_terminated
 			-- Handle process finished.
 		do
-			-- if {PLATFORM}.is_windows then
+				-- if {PLATFORM}.is_windows then
 				-- create l_f1.make_open_read (boogie_output_file_name)
 				-- if input.context /= Void then
-					-- create l_f2.make_open_write ("C:\temp\ap_output-" + input.context + ".txt")
+				-- create l_f2.make_open_write ("C:\temp\ap_output-" + input.context + ".txt")
 				-- else
-					-- create l_f2.make_open_write ("C:\temp\ap_output.txt")
+				-- create l_f2.make_open_write ("C:\temp\ap_output.txt")
 				-- end
 				-- from
-					-- l_f1.start
+				-- l_f1.start
 				-- until
-					-- l_f1.after
+				-- l_f1.after
 				-- loop
-					-- l_f1.read_line
-					-- l_f2.put_string (l_f1.last_string)
-					-- l_f2.put_character ('%N')
+				-- l_f1.read_line
+				-- l_f2.put_string (l_f1.last_string)
+				-- l_f2.put_character ('%N')
 				-- end
 				-- l_f1.close
 				-- l_f2.close
-			-- end
+				-- end
 		end
 
 	append_header (a_file: PLAIN_TEXT_FILE)
@@ -278,15 +282,6 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	safe_file_name (a_file_name: STRING): STRING
-			-- Safe version of `a_file_name' in case of special characters.
-		do
-			if a_file_name.has (' ') then
-				Result := "%"" + a_file_name + "%""
-			else
-				Result := a_file_name
-			end
-		end
 
 feature {NONE} -- Output capture
 
@@ -322,16 +317,16 @@ note
 	license_name: "GPL"
 	EIS: "name=GPL", "src=https://www.gnu.org/licenses/gpl.html", "tag=license"
 	copying: "[
-		This program is free software; you can redistribute it and/or modify it under the terms of
-		the GNU General Public License as published by the Free Software Foundation; either version 1,
-		or (at your option) any later version.
-
-		This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
-		without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
-		See the GNU General Public License for more details.
-
-		You should have received a copy of the GNU General Public License along with this program.
-		If not, see <https://www.gnu.org/licenses/>.
-	]"
+					This program is free software; you can redistribute it and/or modify it under the terms of
+					the GNU General Public License as published by the Free Software Foundation; either version 1,
+					or (at your option) any later version.
+			
+					This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
+					without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+					See the GNU General Public License for more details.
+			
+					You should have received a copy of the GNU General Public License along with this program.
+					If not, see <https://www.gnu.org/licenses/>.
+		]"
 
 end

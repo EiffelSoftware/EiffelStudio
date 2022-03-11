@@ -24,9 +24,14 @@ feature {NONE} -- Implementation
 
 	default_create
 			-- Initialize Windows executable.
+		local
+		    index: INTEGER
 		do
-			boogie_file_name := default_boogie_code_file_name
-			boogie_output_file_name := default_boogie_output_file_name
+            index := unique_number
+			boogie_file_name := system.eiffel_project.project_directory.target_path.extended ("Proofs").extended ("autoproof" + index.out + ".bpl")
+			boogie_output_file_name := system.eiffel_project.project_directory.target_path.extended ("Proofs").extended ("output" + index.out + ".txt")
+			model_file_name := system.eiffel_project.project_directory.target_path.extended ("Proofs").extended ("ce" + index.out + ".model")
+
 			create input.make
 		end
 
@@ -36,6 +41,9 @@ feature {NONE} -- Implementation
 			-- <Precursor>
 
 	boogie_output_file_name: PATH
+			-- <Precursor>
+
+	model_file_name: PATH
 			-- <Precursor>
 
 	boogie_executable: READABLE_STRING_32
@@ -54,17 +62,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	default_boogie_code_file_name: PATH
-			-- File name for Boogie code file.
-		do
-			Result := system.eiffel_project.project_directory.target_path.extended ("Proofs").extended ("autoproof" + unique_number.out + ".bpl")
-		end
 
-	default_boogie_output_file_name: PATH
-			-- File name for Boogie output file.
-		do
-			Result := system.eiffel_project.project_directory.target_path.extended ("Proofs").extended ("output" + unique_number.out + ".txt")
-		end
 
 	global_counter: CELL [INTEGER]
 		once
@@ -77,4 +75,20 @@ feature {NONE} -- Implementation
 			global_counter.put (Result + 1)
 		end
 
+note
+	license: "GNU General Public License"
+	license_name: "GPL"
+	EIS: "name=GPL", "src=https://www.gnu.org/licenses/gpl.html", "tag=license"
+	copying: "[
+		This program is free software; you can redistribute it and/or modify it under the terms of
+		the GNU General Public License as published by the Free Software Foundation; either version 1,
+		or (at your option) any later version.
+
+		This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
+		without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+		See the GNU General Public License for more details.
+
+		You should have received a copy of the GNU General Public License along with this program.
+		If not, see <https://www.gnu.org/licenses/>.
+	]"
 end

@@ -112,11 +112,14 @@ feature {NONE} -- Implementation
 				-- column: boogie_error_regexp.captured_substring (3).to_integer
 				-- error message: boogie_error_regexp.captured_substring (4)
 				check current_procedure_error = Void end
-				check current_procedure_result /= Void end
+				check attached current_procedure_result implies current_procedure_result.is_error end
 				l_line := boogie_error_regexp.captured_substring (2).to_integer
 				create current_procedure_error.make (boogie_error_regexp.captured_substring (4))
 				current_procedure_error.set_line (l_line, input_lines.i_th (l_line))
-				current_procedure_result.errors.extend (current_procedure_error)
+				if attached current_procedure_result then
+					current_procedure_result.errors.extend (current_procedure_error)
+				end
+				last_result.boogie_errors.extend (current_procedure_error.error_message)
 				if not current_procedure_error.has_related_location then
 					current_procedure_error := Void
 				end

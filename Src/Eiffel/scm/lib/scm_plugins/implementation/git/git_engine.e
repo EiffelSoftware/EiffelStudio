@@ -330,6 +330,7 @@ feature -- Execution
 				create tmpfile.make_open_temporary_with_prefix (tmp.extended ("tmp-eif-git-log_").name)
 				tmpfile.put_string ({UTF_CONVERTER}.utf_32_string_to_utf_8_string_8 (a_log_message))
 				tmpfile.flush
+				tmpfile.close
 				cmd.append_string_general (" --file ")
 				cmd.append_character ('"')
 				cmd.append_string_general (tmpfile.path.name)
@@ -355,6 +356,10 @@ feature -- Execution
 			else
 				create Result.make_failure (cmd)
 				Result.set_message ("Error: can not launch git [" + last_process_error.out + "]")
+			end
+			if tmpfile /= Void and then tmpfile.exists then
+				tmpfile.delete
+				tmpfile := Void
 			end
 			debug ("GIT_ENGINE")
 				print ("-> terminated %N")

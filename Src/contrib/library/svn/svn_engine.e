@@ -422,6 +422,7 @@ feature -- Access: working copy
 					create tmpfile.make_open_temporary_with_prefix (tmp.extended ("tsvn-eif-svn-log_").name)
 					tmpfile.put_string ({UTF_CONVERTER}.utf_32_string_to_utf_8_string_8 (a_log_message))
 					tmpfile.flush
+					tmpfile.close
 					args.force (tmpfile.path.name)
 				else
 					args.force ("--message")

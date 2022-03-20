@@ -499,10 +499,13 @@ feature {TYPE_A} -- Visitors
 	process_like_feature (a_type: LIKE_FEATURE)
 			-- Process `a_type'.
 		local
-			l_anchor_feature, l_orig_feat: FEATURE_I
+			l_anchor_feature: FEATURE_I
 			l_veen: VEEN
 			l_orig_class_id: INTEGER
 			is_postponed: BOOLEAN
+			s: ROUT_ID_SET
+			i: like {ROUT_ID_SET}.lower
+			n: like {ROUT_ID_SET}.lower
 		do
 				-- Find feature associated with `a_type'. It might not be
 				-- found in case anchors has disappeared. It might also
@@ -516,9 +519,20 @@ feature {TYPE_A} -- Visitors
 						-- Make sure the feature table of `c' is up-to-date.
 					if is_delayed implies c.degree_4_processed then
 							-- Feature table is ready.
-						l_orig_feat := c.feature_table.item_id (a_type.feature_name_id)
-						if l_orig_feat /= Void then
-							l_anchor_feature := current_feature_table.feature_of_rout_id (l_orig_feat.rout_id_set.first)
+						if attached c.feature_table.item_id (a_type.feature_name_id) as l_orig_feat then
+								-- The feature could be merged with some other one.
+								-- Therefore, it can have several routine IDs, not all from the current feature table.
+								-- Let's find a suitable one.
+							from
+								i := 1
+								s := l_orig_feat.rout_id_set
+								n := s.count
+							until
+								i > n or else attached l_anchor_feature
+							loop
+								l_anchor_feature := current_feature_table.feature_of_rout_id (s.item (i))
+								i := i + 1
+							end
 						end
 					else
 							-- Postpone type evaluation.
@@ -1076,7 +1090,7 @@ invariant
 
 note
 	ca_ignore: "CA033", "CA033 — very long class"
-	copyright:	"Copyright (c) 1984-2021, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2022, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

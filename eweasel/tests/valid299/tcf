@@ -1,0 +1,16 @@
+test_name 	 anchored-argument-on-merged-feature
+test_description A type anchored on an argument anchored on a merged renamed feature should not cause a compiler crash.
+
+copy_sub	Ace $TEST Ace
+copy_raw	test.e $CLUSTER test.e
+copy_raw	a.e $CLUSTER a.e
+copy_raw	b.e $CLUSTER b.e
+copy_raw	c.e $CLUSTER c.e
+
+compile_melted
+compile_result 	ok
+execute_work 	NONE 	exec_output
+execute_result 	ok
+compare		exec_output output
+
+test_end

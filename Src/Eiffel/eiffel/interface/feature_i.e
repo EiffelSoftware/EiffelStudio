@@ -98,7 +98,7 @@ feature -- Access
 		require
 			feature_name_id_set: feature_name_id > 0
 		do
-			Result := encoding_converter.utf8_to_utf32 (feature_name)
+			Result := names_heap.item_32 (feature_name_id)
 		ensure
 			feature_name_not_void: Result /= Void
 			feature_name_not_empty: not Result.is_empty
@@ -3838,7 +3838,7 @@ note
 	ca_ignore:
 		"CA033", "CA033: very long class",
 		"CA082", "CA082: missing redeclaration of `is_equal`"
-	copyright:	"Copyright (c) 1984-2021, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2022, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

@@ -119,6 +119,11 @@ feature {NONE} -- Initialization
 			execute (l_preference_access)
 
 			l_eifgen_init.dispose
+
+			if not workbench.successful then
+					-- Exit with non-zero error code.
+				die (-1)
+			end
 		end
 
 	initialize

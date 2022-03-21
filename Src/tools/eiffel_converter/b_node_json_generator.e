@@ -130,7 +130,7 @@ feature -- Visitor: entities
 			-- <Precursor>
 		do
 			printer.enter_object
-			printer.put_property_name (key_formal)
+			printer.put_property_name (key_argument)
 			printer.put_integer_64_value (x.position)
 			printer.put_property_name (key_name)
 			printer.put_string_value (x.context.current_feature.arguments.item_name_32 (x.position))
@@ -264,7 +264,10 @@ feature {NONE} -- Visitor: instruction collection
 
 feature {NONE} -- Keys
 
-	key_arguments: STRING_32 = "args"
+	key_argument: STRING_32 = "argument"
+			-- A key for a formal argument.
+
+	key_arguments: STRING_32 = "arguments"
 			-- A key for actual arguments.
 
 	key_assign: STRING_32 = "assign"
@@ -284,9 +287,6 @@ feature {NONE} -- Keys
 
 	key_entry: STRING_32 = "%"entry%""
 			-- A key for an entry point.
-
-	key_formal: STRING_32 = "formal"
-			-- A key for a formal argument.
 
 	key_is_deferred: STRING_32 = "is_deferred"
 			-- A key for "is_deferred" property.

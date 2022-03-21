@@ -120,7 +120,7 @@ feature {NONE} -- Initialization
 
 			l_eifgen_init.dispose
 
-			if not workbench.successful then
+			if workbench.system_defined and then not workbench.successful then
 					-- Exit with non-zero error code.
 				die (-1)
 			end

@@ -138,6 +138,7 @@ feature {NONE} -- Implementation
 		local
 			i: INTEGER
 			n: INTEGER
+			l_name: STRING_32
 		do
 			from
 				i := 1
@@ -146,7 +147,11 @@ feature {NONE} -- Implementation
 			until
 				i = 0
 			loop
-				if attached a_item_fct.item ([req, a_name + "[" + i.out + "]"]) as v then
+				create l_name.make_from_string_general (a_name)
+				l_name.extend ('[')
+				l_name.append (i.out)
+				l_name.extend (']')
+				if attached a_item_fct.item ([req, l_name]) as v then
 					Result.force (v, n)
 					n := n + 1
 					i := i + 1
@@ -158,7 +163,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright: "2011-2016, Jocelyn Fiat, Javier Velilla, Olivier Ligot, Colin Adams, Eiffel Software and others"
+	copyright: "2011-2022, Jocelyn Fiat, Javier Velilla, Olivier Ligot, Colin Adams, Alexander Kogtenkov, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

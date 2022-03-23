@@ -22,7 +22,7 @@ feature -- Status report
 			if l_path_info.ends_with_general ("/") then
 				l_path_info := l_path_info.substring (1, l_path_info.count - 1)
 			end
-			Result := l_path_info.same_string (api.setup.webapi_base_path)
+			Result := l_path_info.same_string (api.webapi_base_url)
 		end
 
 feature -- Execution
@@ -39,6 +39,6 @@ feature -- Execution
 		end
 
 note
-	copyright: "2011-2017, Jocelyn Fiat, Javier Velilla, Eiffel Software and others"
+	copyright: "2011-2022, Jocelyn Fiat, Javier Velilla, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 end

@@ -78,11 +78,11 @@ feature -- Execution
 --					do
 --					end(?, j))
 			end
-			rep.add_self (req.percent_encoded_path_info)
+			rep.add_self (rep.location)
 			rep.execute
 		end
 
 note
-	copyright: "2011-2020, Jocelyn Fiat, Javier Velilla, Eiffel Software and others"
+	copyright: "2011-2022, Jocelyn Fiat, Javier Velilla, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 end

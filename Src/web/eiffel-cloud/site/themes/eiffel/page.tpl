@@ -39,7 +39,7 @@
     </div>
   </div> 
   <!-- General Page Content -->
-  <div id='content'>
+  <div id="content" {unless isempty="$page_class_css"}class="{$page_class_css/}"{/unless}>
   	<!-- Left Sidebar sidebar_first -->
   	{unless isempty="$page.region_sidebar_first"}
   	<div id="sidebar_first" class="sidebar">{$page.region_sidebar_first/}</div>
@@ -50,7 +50,7 @@
   	{/unless}
 
     <!-- Highlighted, Help, Content -->      
-    <div id='main'>
+    <div id="main">
       <!-- Highlighted Section -->
       {unless isempty="$page.region_highlighted"}
     <div id="highlighted">{$page.region_highlighted/}</div>

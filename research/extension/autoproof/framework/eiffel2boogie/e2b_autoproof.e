@@ -136,11 +136,11 @@ feature {NONE} -- Implementation
 		require
 			verify_task_not_void: verify_task /= Void
 		do
-			if attached rota as l_rota then
+			if attached rota as r then
 				verify_task.reset_global_state
 				verify_task.add_notification_agents (notification_agents)
-				if not rota.has_task (verify_task) then
-					rota.run_task (verify_task)
+				if not r.has_task (verify_task) then
+					r.run_task (verify_task)
 				end
 			end
 		end

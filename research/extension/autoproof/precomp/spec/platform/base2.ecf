@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-22-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-22-0 http://www.eiffel.com/developers/xml/configuration-1-22-0.xsd" name="precomp_base2" uuid="A0B3C281-0E01-4264-B848-720F2D47D48D" library_target="base">
+	<target name="base">
+		<description>Adapted base library with base2 and MML classes.</description>
+		<root all_classes="true"/>
+		<option warning="error">
+		</option>
+		<capability>
+			<concurrency support="none"/>
+			<void_safety support="none"/>
+		</capability>
+		<library name="base" location="$AP\library\base\base.ecf"/>
+	</target>
+</system>

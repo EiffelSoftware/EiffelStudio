@@ -41,6 +41,11 @@ feature -- Status report
 	is_measured: BOOLEAN
 			-- Is time measurement requested?
 
+feature {NONE} -- Status report
+
+	has_failed: BOOLEAN
+			-- Has verification failed?
+
 feature -- Status setting
 
 	set_html (v: BOOLEAN)
@@ -130,6 +135,7 @@ feature {NONE} -- Execution
 			d: DATE_TIME_DURATION
 		do
 				-- Clean up the state.
+			has_failed := False
 			autoproof.reset
 			if attached workbench.universe as u then
 					-- Add features if possible.
@@ -190,10 +196,11 @@ feature {NONE} -- Execution
 				if is_html then
 					create html_writer
 					html_writer.print_header
-					autoproof.add_notification (agent html_writer.print_verification_result (?))
+					autoproof.add_notification (agent html_writer.print_verification_result)
 				else
-					autoproof.add_notification (agent print_result (?))
+					autoproof.add_notification (agent print_result)
 				end
+				autoproof.add_notification (agent record_status)
 
 				if is_measured then
 					create t.make_now_utc
@@ -224,6 +231,17 @@ feature {NONE} -- Execution
 			groups.wipe_out
 			is_cluster_collection_requested := False
 			is_override_collection_requested := False
+			workbench.error_handler.checksum
+		end
+
+	record_status (r: E2B_RESULT)
+			-- Record verification status of `r`.
+		do
+			if not r.is_verification_successful and then not has_failed then
+					-- Avoid duplicate verification failure reports.
+				has_failed := True
+				workbench.error_handler.insert_error (create {AP_VERIFICATION_FAILURE}.make)
+			end
 		end
 
 feature {NONE} -- Output

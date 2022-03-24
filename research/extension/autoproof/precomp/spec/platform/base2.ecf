@@ -9,6 +9,6 @@
 			<concurrency support="none"/>
 			<void_safety support="none"/>
 		</capability>
-		<library name="base" location="$AP\library\base\base.ecf"/>
+		<library name="base" location="$AP_LIBRARY\library\base\base.ecf"/>
 	</target>
 </system>

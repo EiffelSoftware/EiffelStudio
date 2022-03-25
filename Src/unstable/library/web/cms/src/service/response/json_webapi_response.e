@@ -27,6 +27,23 @@ feature -- Access
 
 	resource: JSON_OBJECT
 
+feature -- Status report
+
+	has_field (a_name: READABLE_STRING_GENERAL): BOOLEAN
+		do
+			Result := resource.has_key (a_name)
+		end
+
+	has_self_link: BOOLEAN
+		do
+			Result := has_link ("self")
+		end
+
+	has_link (rel: READABLE_STRING_GENERAL): BOOLEAN
+		do
+			Result := attached {JSON_OBJECT} resource.item ("_links") as l_links and then l_links.has_key (rel)
+		end
+
 feature -- Element change
 
 	add_self (a_href: READABLE_STRING_8)
@@ -95,7 +112,7 @@ feature -- Fields
 			resource.put (new_resource_item (a_value), a_name)
 		end
 
-feature -- Links				
+feature -- Links	
 
 	add_link (rel: READABLE_STRING_GENERAL; a_attname: detachable READABLE_STRING_8 ; a_att_href: READABLE_STRING_8)
 		local
@@ -179,6 +196,6 @@ feature {NONE} -- Implementation factory
 invariant
 
 note
-	copyright: "2011-2020, Jocelyn Fiat, Javier Velilla, Eiffel Software and others"
+	copyright: "2011-2022, Jocelyn Fiat, Javier Velilla, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 end

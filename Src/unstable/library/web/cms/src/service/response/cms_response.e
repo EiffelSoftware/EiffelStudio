@@ -125,11 +125,21 @@ feature -- Head customization
 			add_additional_head_line (s, False)
 		end
 
-	add_javascript_url (a_src: STRING)
+	add_javascript_module_url (a_src: READABLE_STRING_8)
 		local
 			s: STRING_8
 		do
-			create s.make_from_string ("<script type=%"text/javascript%" src=%"")
+			create s.make_from_string ("<script type=%"module%" src=%"")
+			s.append (a_src)
+			s.append ("%"></script>")
+			add_additional_head_line (s, False)
+		end
+
+	add_javascript_url (a_src: READABLE_STRING_8)
+		local
+			s: STRING_8
+		do
+			create s.make_from_string ("<script src=%"")
 			s.append (a_src)
 			s.append ("%"></script>")
 			add_additional_head_line (s, False)
@@ -139,7 +149,7 @@ feature -- Head customization
 		local
 			s: STRING_8
 		do
-			create s.make_from_string ("<script type=%"text/javascript%">%N")
+			create s.make_from_string ("<script>%N")
 			s.append (a_script)
 			s.append ("%N</script>")
 			add_additional_head_line (s, True)

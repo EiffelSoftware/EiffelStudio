@@ -15,7 +15,20 @@ rem Note: the script recompiles projects from scratch and does not keep them.
 rem       In particular, it removes `EIFGENs` from the current directory.
 rem
 
+setlocal enableextensions
 setlocal enabledelayedexpansion
+
+if not defined EC (
+	echo Environment variable %%EC%% is not defined.
+	echo It should point to EiffelStudio executable.
+	exit /b 1
+)
+
+if not exist "%EC%" (
+	echo Environment variable %%EC%% points to a non-existing path.
+	echo It should point to EiffelStudio executable.
+	exit /b 1
+)
 
 for /r %%# in (*.ecf) do (
 	%EC% -batch -clean -verify collection:cluster -verify printtime:false -config %%# 2> %%~dpn#.log

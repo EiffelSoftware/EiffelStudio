@@ -111,6 +111,8 @@ feature -- Helper conversions to and from string
 		do
 			create hd.make_from_date_time (dt)
 			Result := hd.rfc1123_string
+		ensure
+			instance_free: class
 		end
 
 	date_time_to_iso8601_string (dt: DATE_TIME): STRING_8
@@ -131,6 +133,8 @@ feature -- Helper conversions to and from string
 		do
 			create hd.make_from_date_time (dt)
 			Result := hd.rfc3339_string
+		ensure
+			instance_free: class
 		end
 
 	date_time_from_string (s: READABLE_STRING_GENERAL): detachable DATE_TIME
@@ -143,6 +147,8 @@ feature -- Helper conversions to and from string
 			if not hd.has_error then
 				Result := hd.date_time
 			end
+		ensure
+			instance_free: class
 		end
 
 	date_time_from_iso8601_string (s: READABLE_STRING_GENERAL): detachable DATE_TIME
@@ -155,6 +161,8 @@ feature -- Helper conversions to and from string
 			if not hd.has_error then
 				Result := hd.date_time
 			end
+		ensure
+			instance_free: class
 		end
 
 	list_to_csv_string (a_strings: ITERABLE [READABLE_STRING_GENERAL]): STRING_32
@@ -178,6 +186,8 @@ feature -- Helper conversions to and from string
 					Result.append_string_general (s)
 				end
 			end
+		ensure
+			instance_free: class
 		end
 
 	list_from_csv_string (a_csv: READABLE_STRING_32): LIST [READABLE_STRING_32]
@@ -212,9 +222,11 @@ feature -- Helper conversions to and from string
 				end
 				i := i + 1
 			end
+		ensure
+			instance_free: class
 		end
 
 note
-	copyright: "2011-2021, Jocelyn Fiat, Javier Velilla, Eiffel Software and others"
+	copyright: "2011-2022, Jocelyn Fiat, Javier Velilla, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 end

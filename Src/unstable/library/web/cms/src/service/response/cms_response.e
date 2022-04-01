@@ -139,20 +139,35 @@ feature -- Head customization
 		local
 			s: STRING_8
 		do
-			create s.make_from_string ("<script src=%"")
+			create s.make_from_string ("<script type=%"javascript%" src=%"")
 			s.append (a_src)
 			s.append ("%"></script>")
 			add_additional_head_line (s, False)
 		end
 
-	add_javascript_content (a_script: STRING)
+	add_javascript_content (a_script: READABLE_STRING_GENERAL)
 		local
 			s: STRING_8
 		do
-			create s.make_from_string ("<script>%N")
-			s.append (a_script)
+			create s.make_from_string ("<script type=%"javascript%">%N")
+			s.append (utf_8_encoded (a_script))
 			s.append ("%N</script>")
 			add_additional_head_line (s, True)
+		end
+
+	add_javascript_module (a_script: READABLE_STRING_GENERAL; a_src: detachable READABLE_STRING_8)
+		local
+			s: STRING_8
+		do
+			create s.make_from_string ("<script type=%"module%"")
+			if a_src /= Void then
+				s.append (" src=%"")
+				s.append (a_src)
+				s.append ("%">%N")
+			end
+			s.append (utf_8_encoded (a_script))
+			s.append ("%N</script>")
+			add_additional_head_line (s, False)
 		end
 
 feature -- Element change

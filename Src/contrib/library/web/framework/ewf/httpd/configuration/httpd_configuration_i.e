@@ -20,6 +20,7 @@ feature {NONE} -- Initialization
 			http_server_port := default_http_server_port
 			max_concurrent_connections := default_max_concurrent_connections
 			max_tcp_clients := default_max_tcp_clients
+			max_bind_attempts := default_max_bind_attempts
 			socket_timeout_ns := seconds_to_nanoseconds (default_socket_timeout)
 			socket_recv_timeout_ns := seconds_to_nanoseconds (default_socket_recv_timeout)
 			keep_alive_timeout_ns := seconds_to_nanoseconds (default_keep_alive_timeout)
@@ -38,6 +39,11 @@ feature -- Access
 
 	http_server_name: detachable READABLE_STRING_8 assign set_http_server_name
 	http_server_port: INTEGER assign set_http_server_port
+
+	max_bind_attempts: INTEGER assign set_max_bind_attempts
+
+	is_reuse_address_allowed: BOOLEAN assign set_is_reuse_address_allowed
+
 	max_tcp_clients: INTEGER assign set_max_tcp_clients
 			-- Listen on socket for at most `queue' connections.
 
@@ -150,6 +156,22 @@ feature -- Element change
 			http_server_port := v
 		ensure
 			http_server_port_set: http_server_port = v
+		end
+
+	set_max_bind_attempts (nb: like max_bind_attempts)
+			-- Set `max_bind_attempts' with `nb'.
+		do
+			max_bind_attempts := nb
+		ensure
+			max_bind_attempts_set: max_bind_attempts = nb
+		end
+
+	set_is_reuse_address_allowed (b: BOOLEAN)
+			-- Set `is_reuse_address_allowed` with `b`.
+		do
+			is_reuse_address_allowed := b
+		ensure
+			is_reuse_address_allowed = b
 		end
 
 	set_max_tcp_clients (v: like max_tcp_clients)

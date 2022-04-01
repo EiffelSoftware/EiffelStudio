@@ -80,6 +80,19 @@ feature -- Access: connection
 			Result := option_integer_value ("max_tcp_clients", 0)
 		end
 
+	max_bind_attempts: INTEGER assign set_max_bind_attempts
+			-- Maximum binding try before exiting.
+			-- (check every one second)
+		do
+			Result := option_integer_value ("max_bind_attempts", 0)
+		end
+
+	reuse_address_allowed: BOOLEAN assign set_reuse_address_allowed
+			 -- Is reuse address allowed?
+		do
+			Result := option_boolean_value ("allow_reuse_address", False)
+		end
+
 feature -- Access: network
 
 	socket_timeout: INTEGER assign set_socket_timeout
@@ -203,6 +216,18 @@ feature -- Element change
 			-- Set `max_concurrent_connections' with `v'.
 		do
 			set_numeric_option ("max_concurrent_connections", v)
+		end
+
+	set_max_bind_attempts (v: like max_bind_attempts)
+			-- Set `max_bind_attempts' with `v'.
+		do
+			set_numeric_option ("max_bind_attempts", v)
+		end
+
+	set_reuse_address_allowed (b: BOOLEAN)
+			-- Set `reuse_address_allowed' with `b'
+		do
+			reuse_address_allowed := b
 		end
 
 	set_socket_timeout (a_nb_seconds: like socket_timeout)

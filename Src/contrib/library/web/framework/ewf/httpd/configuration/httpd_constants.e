@@ -17,6 +17,7 @@ feature -- Default connection settings
 	default_http_server_port: INTEGER = 80
 	default_max_concurrent_connections: INTEGER = 100
 	default_max_tcp_clients: INTEGER = 100
+	default_max_bind_attempts: INTEGER = 0 -- No retry for now.
 
 feature -- Default timeout settings
 

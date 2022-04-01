@@ -151,6 +151,21 @@ feature -- Element change
 			set_port_on_configuration (a_port_number, configuration)
 		end
 
+
+	set_max_bind_attempts (nb: INTEGER)
+			-- Set `max_bind_attempts` to `nb`
+		require
+			nb_positive_or_zero: nb >= 0
+		do
+			set_max_bind_attempts_on_configuration (nb, configuration)
+		end
+
+	set_is_reuse_address_allowed (b: BOOLEAN)
+			-- Set is_reuse_address_allowed ?
+		do
+			set_is_reuse_address_allowed_on_configuration (b, configuration)
+		end
+
 	set_socket_recv_timeout (a_nb_seconds: INTEGER)
 		require
 			a_nb_seconds_positive_or_zero: a_nb_seconds >= 0
@@ -260,6 +275,16 @@ feature {NONE} -- Implementation: element change
 	set_port_on_configuration (a_port_number: INTEGER; cfg: like configuration)
 		do
 			cfg.set_http_server_port (a_port_number)
+		end
+
+	set_max_bind_attempts_on_configuration (nb: INTEGER; cfg: like configuration)
+		do
+			cfg.set_max_bind_attempts (nb)
+		end
+
+	set_is_reuse_address_allowed_on_configuration (b: BOOLEAN; cfg: like configuration)
+		do
+			cfg.set_is_reuse_address_allowed (b)
 		end
 
 	set_socket_recv_timeout_on_configuration (a_nb_seconds: INTEGER; cfg: like configuration)

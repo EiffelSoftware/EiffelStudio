@@ -120,6 +120,8 @@ feature {NONE} -- Initialization
 				socket_recv_timeout_ns := opts.option_timeout_ns_value ("socket_recv_timeout", socket_recv_timeout_ns)
 				keep_alive_timeout_ns := opts.option_timeout_ns_value ("keep_alive_timeout", keep_alive_timeout_ns)
 				max_keep_alive_requests := opts.option_integer_value ("max_keep_alive_requests", max_keep_alive_requests)
+				max_bind_attempts := opts.option_integer_value ("max_bind_attempts", max_bind_attempts)
+				is_reuse_address_allowed := opts.option_boolean_value ("allow_reuse_address", is_reuse_address_allowed)
 
 				if
 					opts.option_boolean_value ("is_secure", is_secure) and then
@@ -177,6 +179,8 @@ feature -- Execution
 			cfg.set_secure_settings (secure_settings)
 			cfg.set_http_server_name (server_name)
 			cfg.http_server_port := port_number
+			cfg.max_bind_attempts := max_bind_attempts
+			cfg.is_reuse_address_allowed := is_reuse_address_allowed
 			cfg.set_max_concurrent_connections (max_concurrent_connections)
 			cfg.set_max_tcp_clients (max_tcp_clients)
 			cfg.set_socket_timeout_ns (socket_timeout_ns)
@@ -259,6 +263,11 @@ feature {NONE} -- Implementation
 
 	keep_alive_timeout_ns: NATURAL_64
 	max_keep_alive_requests: INTEGER
+
+	max_bind_attempts: INTEGER
+		-- In seconds
+
+	is_reuse_address_allowed: BOOLEAN
 
 	is_secure_connection_supported: BOOLEAN
 			-- Is SSL supported in current compiled system?

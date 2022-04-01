@@ -118,8 +118,9 @@ feature {NONE} -- Implementation
 				current_procedure_error.set_line (l_line, input_lines.i_th (l_line))
 				if attached current_procedure_result then
 					current_procedure_result.errors.extend (current_procedure_error)
+				else
+					last_result.boogie_errors.extend (current_procedure_error.error_message)
 				end
-				last_result.boogie_errors.extend (current_procedure_error.error_message)
 				if not current_procedure_error.has_related_location then
 					current_procedure_error := Void
 				end

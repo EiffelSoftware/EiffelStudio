@@ -1037,10 +1037,19 @@ feature {NONE} -- Implementation: Byte Order Mark
 
 	is_bom_character (c: CHARACTER_32): BOOLEAN
 		do
-			if c.is_character_8 and then c.to_character_8.is_printable then
-				Result := False
-			else
+				-- UTF-8 	EF BB BF
+				-- UTF-16 Big Endian 	FE FF
+				-- UTF-16 Little Endian 	FF FE
+				-- UTF-32 Big Endian 	00 00 FE FF
+				-- UTF-32 Little Endian 	FF FE 00 00
+			inspect c
+			when '%/0xEF/', '%/0xBB/', '%/0xBF/' then -- UTF-8
 				Result := True
+			when '%/0xFE/', '%/0xFF/'then -- UTF-16 , UTF-32
+				Result := True
+			when '%/0x00/' then -- UTF-32
+				Result := True
+			else
 			end
 		end
 
@@ -1895,7 +1904,7 @@ feature {NONE} -- Factory: cache
 		end
 
 note
-	copyright: "Copyright (c) 1984-2018, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2022, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

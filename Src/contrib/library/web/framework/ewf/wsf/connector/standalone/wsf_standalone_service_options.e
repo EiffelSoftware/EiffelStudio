@@ -227,7 +227,7 @@ feature -- Element change
 	set_reuse_address_allowed (b: BOOLEAN)
 			-- Set `reuse_address_allowed' with `b'
 		do
-			reuse_address_allowed := b
+			set_boolean_option ("reuse_address_allowed", b)
 		end
 
 	set_socket_timeout (a_nb_seconds: like socket_timeout)

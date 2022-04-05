@@ -6,6 +6,13 @@
 # If all projects pass verification, the script will exit with 0 exit code.
 # For each project, the script will remove the EIFGENs directory after the verification is done.
 
+
+# Start with checking if EC veriable is set:
+
+if [ ! -f $EC ]; then
+	EC=`which ec`
+fi
+
 starting_dir=$PWD
 projects_to_test=`find $PWD -name "*.ecf"`
 return_value=0
@@ -14,7 +21,7 @@ do
 	project_dir=`dirname $project`
 	ecf_file=`basename $project`
 	cd $project_dir
-	ec -batch -clean -verify collection:cluster -verify printtime:false -config ${ecf_file} 2>err_log.txt
+	$EC -batch -clean -verify collection:cluster -verify printtime:false -config ${ecf_file} 2>err_log.txt
 	if [ $? -ne 0 ]; then
 		echo "Verification failed: $project"
 		return_value=-1

@@ -10,6 +10,7 @@ inherit
 			process_argument_b,
 			process_attribute_b,
 			process_assign_b,
+			process_check_b,
 			process_creation_expr_b,
 			process_guard_b,
 			process_elsif_b,
@@ -203,6 +204,40 @@ feature -- Visitor: instructions
 			printer.leave_object
 		end
 
+	process_check_b (x: CHECK_B)
+			-- <Precursor>
+		do
+			if attached x.check_list as l then
+				⟳ n: l ¦
+					if
+						attached {ASSERT_B} n as a and then
+						attached {CALL_ACCESS_B} a.expr as c and then
+						c.is_instance_free and then
+						attached c.precursor_type as t and then
+						attached t.base_class as b and then
+						b.name.same_string ("PROBE") and then
+						attached c.feature_name_id as i and then
+						names_heap.valid_index (i) and then
+						attached names_heap.item_32 (i) as f
+					then
+						if f.same_string ({STRING_32} "is_attached") then
+							generate_probe_1 (c.parameters, "attached")
+						elseif f.same_string ({STRING_32} "is_void") then
+							generate_probe_1 (c.parameters, "void")
+						elseif f.same_string ({STRING_32} "must_alias") then
+							generate_probe_2 (c.parameters, "must_alias")
+						elseif f.same_string ({STRING_32} "separated_path") then
+							generate_probe_2 (c.parameters, "separated")
+						elseif f.same_string ({STRING_32} "may_alias") then
+							generate_probe_2 (c.parameters, "may_alias")
+						elseif f.same_string ({STRING_32} "is_detachable") then
+							generate_probe_1 (c.parameters, "detachable")
+						end
+					end
+				⟲
+			end
+		end
+
 	process_guard_b (x: GUARD_B)
 			-- <Precursor>
 		do
@@ -260,6 +295,33 @@ feature {NONE} -- Visitor: instruction collection
 			printer.enter_array
 			safe_process (x)
 			printer.leave_array
+		end
+
+feature {NONE} -- Probes
+
+	generate_probe_1 (a: like {CALL_ACCESS_B}.parameters; t: STRING)
+			-- Generate a probe of a tag `t` with a single argument from `a` if `a.count = 1`.
+		do
+			if attached a and then a.count = 1 and then attached a [1] as a1 then
+				printer.enter_object
+				printer.put_property_name ("probe:" + t)
+				a1.process (Current)
+				printer.leave_object
+			end
+		end
+
+	generate_probe_2 (a: like {CALL_ACCESS_B}.parameters; t: STRING)
+			-- Generate a probe of a tag `t` with two arguments from `a` if `a.count = 2`.
+		do
+			if attached a and then a.count = 2 and then attached a [1] as a1 and then attached a [2] as a2 then
+				printer.enter_object
+				printer.put_property_name ("probe:" + t)
+				printer.enter_array
+				a1.process (Current)
+				a2.process (Current)
+				printer.leave_array
+				printer.leave_object
+			end
 		end
 
 feature {NONE} -- Keys

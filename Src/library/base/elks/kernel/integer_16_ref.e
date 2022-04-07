@@ -400,10 +400,77 @@ feature -- Conversion
 			Result := item.to_double
 		end
 
+	to_binary_string: STRING
+			-- Convert `item' into a binary string.
+		local
+			i: INTEGER
+			val: INTEGER_16
+		do
+			from
+				i := {PLATFORM}.integer_16_bits
+				create Result.make_filled ('0', i)
+				val := item
+			until
+				i = 0
+			loop
+				Result.put ((val & 0x1).to_binary_character, i)
+				val := val |>> 1
+				i := i - 1
+			end
+		ensure
+			result_not_void: Result /= Void
+			result_valid_count: Result.count = {PLATFORM}.integer_16_bits
+			binary: ∀ c: Result ¦ ("01").has (c)
+		end
+
+	to_binary_character: CHARACTER_8
+			-- Convert `item' into a binary character.
+		require
+			in_bounds: 0 <= item and item <= 1
+		do
+			Result := '0' + item.to_integer_32
+		ensure
+			valid_character: ("01").has (Result)
+		end
+
+	to_octal_string: STRING
+			-- Convert `item' into an octal string.
+		local
+			i: INTEGER
+			val: INTEGER_16
+		do
+			from
+				i := ({PLATFORM}.integer_16_bits / 3).ceiling_real_64.truncated_to_integer
+				create Result.make_filled ('0', i)
+				val := item
+			until
+				i = 0
+			loop
+				Result.put ((val & 0x7).to_octal_character, i)
+				val := val |>> 3
+				i := i - 1
+			end
+		ensure
+			result_not_void: Result /= Void
+			result_valid_count: Result.count = ({PLATFORM}.integer_16_bits / 3).ceiling_real_64.truncated_to_integer
+			octal: ∀ c: Result ¦ ("01234567").has (c)
+		end
+
+	to_octal_character: CHARACTER_8
+			-- Convert `item' into an octal character.
+		require
+			in_bounds: 0 <= item and item <= 7
+		do
+			Result := '0' + item.to_integer_32
+		ensure
+			valid_character: ("01234567").has (Result)
+		end
+
 	to_hex_string: STRING
 			-- Convert `item' into an hexadecimal string.
 		local
-			i, val: INTEGER
+			i: INTEGER
+			val: INTEGER_16
 		do
 			from
 				i := {PLATFORM}.integer_16_bits // 4
@@ -417,8 +484,9 @@ feature -- Conversion
 				i := i - 1
 			end
 		ensure
-			Result_not_void: Result /= Void
-			Result_valid_count: Result.count ={PLATFORM}.Integer_16_bits // 4
+			result_not_void: Result /= Void
+			result_valid_count: Result.count = {PLATFORM}.integer_16_bits // 4
+			hexadecimal: ∀ c: Result ¦ ("0123456789ABCDEF").has (c)
 		end
 
 	to_hex_character: CHARACTER_8

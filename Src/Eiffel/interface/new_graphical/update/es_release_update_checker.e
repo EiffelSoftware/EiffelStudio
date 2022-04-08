@@ -36,9 +36,11 @@ feature -- Execution
 			update_manager_api: ES_UPDATE_MANAGER
 		do
 			available_release := Void
-			create update_manager_api.make (create {ES_UPDATE_CLIENT_CONFIGURATION}.make ({ES_UPDATE_CONSTANTS}.update_service_url))
-			available_release := update_manager_api.available_release_update_for_channel (
-										channel, platform, version)
+			if {ES_GRAPHIC}.is_standard_edition then
+				create update_manager_api.make (create {ES_UPDATE_CLIENT_CONFIGURATION}.make ({ES_UPDATE_CONSTANTS}.update_service_url))
+				available_release := update_manager_api.available_release_update_for_channel (
+											channel, platform, version)
+			end
 			a_cb.call ([available_release])
 		end
 
@@ -47,15 +49,23 @@ feature -- Execution
 			wt: WORKER_THREAD
 			m: MUTEX
 		do
-			available_release := Void
-			completed := False
-			create m.make
-			create wt.make (agent async_check_for_update_imp (m))
-			ev_application.add_idle_action_kamikaze (agent check_for_completion (a_cb, m))
-			wt.launch
+			if {ES_GRAPHIC}.is_standard_edition then
+				available_release := Void
+				completed := False
+				create m.make
+				create wt.make (agent async_check_for_update_imp (m))
+				ev_application.add_idle_action_kamikaze (agent check_for_completion (a_cb, m))
+				wt.launch
+			else
+				available_release := Void
+				completed := True
+				a_cb.call ([available_release])
+			end
 		end
 
 	async_check_for_update_imp (a_mutex: MUTEX)
+		require
+			is_standard_edition: {ES_GRAPHIC}.is_standard_edition
 		local
 			update_manager_api: ES_UPDATE_MANAGER
 			rel: like available_release
@@ -112,7 +122,7 @@ feature {NONE} -- Implementation: Async
 invariant
 
 note
-	copyright: "Copyright (c) 1984-2019, Eiffel Software"
+	copyright: "Copyright (c) 1984-2022, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

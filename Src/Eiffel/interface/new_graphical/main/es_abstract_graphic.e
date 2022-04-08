@@ -269,7 +269,7 @@ feature {NONE} -- Welcome dialog
 
 	display_launching_page
 		do
-			if preferences.dialog_data.show_update_manager_dialog then
+			if is_standard_edition and preferences.dialog_data.show_update_manager_dialog then
 				display_version_updater_check (agent display_startup_page)
 			else
 				display_startup_page
@@ -597,7 +597,7 @@ invariant
 		valid_branded_edition: is_branded_edition implies not edition_name.is_whitespace
 
 note
-	copyright: "Copyright (c) 1984-2020, Eiffel Software"
+	copyright: "Copyright (c) 1984-2022, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

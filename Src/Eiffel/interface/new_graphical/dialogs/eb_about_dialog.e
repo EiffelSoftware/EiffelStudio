@@ -106,9 +106,12 @@ feature -- Initialization
 			create version_label.make_with_text (t_Version_info (False))
 			version_label.align_text_left
 			version_label.set_background_color (bg)
-				-- Check for update ...
-			create l_update_check_link.make_with_text ("Check for update (channel: " + preferences.misc_data.update_channel + ")")
-			l_update_check_link.select_actions.extend (agent check_for_update (l_update_check_link))
+
+			if {ES_GRAPHIC}.is_standard_edition then
+					-- Check for update ...
+				create l_update_check_link.make_with_text ("Check for update (channel: " + preferences.misc_data.update_channel + ")")
+				l_update_check_link.select_actions.extend (agent check_for_update (l_update_check_link))
+			end
 
 			create l_license_link.make_with_text (interface_names.l_read_license_text)
 			l_license_link.select_actions.extend (agent do (create {EB_LICENSE_COMMAND}).execute end)
@@ -129,8 +132,10 @@ feature -- Initialization
 			eiffel_text_box.set_padding (Layout_constants.Default_padding_size)
 			eiffel_text_box.extend (version_label)
 			eiffel_text_box.disable_item_expand (version_label)
-			eiffel_text_box.extend (l_update_check_link)
-			eiffel_text_box.disable_item_expand (l_update_check_link)
+			if l_update_check_link /= Void then
+				eiffel_text_box.extend (l_update_check_link)
+				eiffel_text_box.disable_item_expand (l_update_check_link)
+			end
 			eiffel_text_box.extend (copyright_label)
 			eiffel_text_box.disable_item_expand (copyright_label)
 
@@ -336,7 +341,7 @@ feature {NONE} -- Constant strings
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2020, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2022, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

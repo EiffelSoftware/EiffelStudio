@@ -89,12 +89,16 @@ feature -- Status
 						else
 							ctx.force (l_field_ref)
 						end
-						Result := is_recursively_expanded_in_context (l_field_ref, ctx)
+						if obj /= l_field_ref then
+							Result := is_recursively_expanded_in_context (l_field_ref, ctx)
+						end
 					end
 				elseif l_field_type = refl_obj.expanded_type then
 					if l_field_ref /= Void then
 						l_field_ref := refl_obj.expanded_field (i)
-						Result := is_recursively_expanded_in_context (l_field_ref, ctx)
+						if obj /= l_field_ref then
+							Result := is_recursively_expanded_in_context (l_field_ref, ctx)
+						end
 					end
 				end
 				i := i + 1

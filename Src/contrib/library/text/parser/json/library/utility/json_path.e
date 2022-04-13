@@ -73,6 +73,7 @@ feature {NONE} -- Implementation
 			j_array_item: JSON_VALUE
 			arr: JSON_ARRAY
 			p, l_tail, k: STRING_32
+			jk: JSON_STRING
 			i,j: INTEGER
 			err: BOOLEAN
 		do
@@ -141,10 +142,16 @@ feature {NONE} -- Implementation
 										Result := imp_matches (j_array, True, l_tail)
 									else
 										create arr.make (j_array.count)
+										jk := k
 										across
 											j_array as ic
 										loop
-											arr.extend (ic.item / k)
+											if
+												attached {JSON_OBJECT} ic.item as jo and then
+												attached jo.item (k) as jv
+											then
+												arr.extend (jv)
+											end
 										end
 										Result := imp_matches (arr, True, l_tail)
 									end
@@ -233,12 +240,15 @@ feature {NONE} -- Implementation
 feature {NONE} -- Implementation
 
 	nested_descendants (a_json_value: JSON_VALUE; a_name: READABLE_STRING_GENERAL): JSON_ARRAY
+		local
+			js: JSON_STRING
 		do
 			create Result.make_empty
-			add_nested_descendants_to (a_json_value, a_name, Result)
+			js := a_name
+			add_nested_descendants_to (a_json_value, js, Result)
 		end
 
-	add_nested_descendants_to (a_json_value: JSON_VALUE; a_name: READABLE_STRING_GENERAL; a_results: JSON_ARRAY)
+	add_nested_descendants_to (a_json_value: JSON_VALUE; a_name: JSON_STRING; a_results: JSON_ARRAY)
 		do
 			if attached {JSON_OBJECT} a_json_value as j_object then
 				if attached j_object.item (a_name) as j then

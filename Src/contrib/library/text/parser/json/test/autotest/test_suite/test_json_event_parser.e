@@ -10,14 +10,14 @@ class
 inherit
 	EQA_TEST_SET
 
-	JSON_PARSER_ACCESS
-		undefine
-			default_create
+	TEST_JSON_I
+		redefine
+			new_empty_parser
 		end
 
 feature -- Factory
 
-	new_parser: JSON_PARSER-- JSON_EVENT_STANDARD_PARSER
+	new_empty_parser: JSON_PARSER-- JSON_EVENT_STANDARD_PARSER
 		do
 			create Result.make
 		end
@@ -26,9 +26,9 @@ feature -- Test
 
 	test_parser
 		local
-			parser: like new_parser
+			parser: like new_empty_parser
 		do
-			parser := new_parser
+			parser := new_empty_parser
 			parser.parse_string ("{%"name%": %"value%"}")
 
 		end

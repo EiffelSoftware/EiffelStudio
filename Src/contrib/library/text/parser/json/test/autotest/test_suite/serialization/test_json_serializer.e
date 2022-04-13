@@ -10,6 +10,8 @@ class
 inherit
 	EQA_TEST_SET
 
+	TEST_JSON_I
+
 feature -- Tests
 
 	test_reflector_without_type_name
@@ -237,126 +239,6 @@ feature -- Factory
 			Result := new_group
 			if attached Result.persons as lst and then not lst.is_empty then
 				Result.set_owner (lst.first)
-			end
-		end
-
-	recursively_one_includes_other (one, other: detachable ANY; a_path: detachable STRING_8): BOOLEAN
-		local
-			t: TYPE [detachable ANY]
-			ref_one, ref_other: REFLECTED_REFERENCE_OBJECT
-			i,n: INTEGER
-			fn: READABLE_STRING_8
-			l_path: STRING_8
-		do
-
-			if one = Void then
-					-- Ignore if deserialized object has more (could happen with `found_item' for container).
-				Result := True --other = Void
-			elseif other = Void then
-				Result := not one.generating_type.is_attached -- one includes other, not the reverse
-			elseif one ~ other then
-				Result := True
-			else
-				t := one.generating_type
-				if t = other.generating_type then
-					Result := True
-					if attached {READABLE_STRING_GENERAL} one as s_one and attached {READABLE_STRING_GENERAL} one as s_other then
-						Result := s_one.same_string (s_other)
-					elseif t.is_expanded then
-							-- already checked via one ~ other						
-						Result := True -- Ignore for now False
-					else
-						create ref_one.make (one)
-						create ref_other.make (other)
-						n := ref_one.field_count
-						if n = ref_other.field_count then
-							from
-								i := 1
-							until
-								i > n or not Result
-							loop
-									-- should be same field name, as same type!
-								if not ref_one.is_field_transient (i) then
-
-									fn := ref_one.field_name (i)
-									if a_path = Void then
-										create l_path.make_from_string (fn)
-									else
-										l_path := a_path + "." + fn
-									end
-									Result := recursively_one_includes_other (ref_one.field (i), ref_other.field (i), l_path)
-									if not Result and a_path /= Void then
-										a_path.append_character ('.')
-										a_path.append (fn)
-									end
-								end
-								i := i + 1
-							end
-						else
-							Result := False -- same type, so never happens.
-						end
-					end
-				else
-					Result := False
-				end
-			end
-		end
-
-	recursively_same_objects (o1, o2: detachable ANY; a_path: detachable STRING_8): BOOLEAN
-		local
-			t: TYPE [detachable ANY]
-			ref_1, ref_2: REFLECTED_REFERENCE_OBJECT
-			i,n: INTEGER
-			fn: READABLE_STRING_8
-			l_path: STRING_8
-		do
-
-			if o1 = Void or o2 = Void then
-				Result := o1 = o2
-			elseif o1 ~ o2 then
-				Result := True
-			else
-				t := o1.generating_type
-				if t = o2.generating_type then
-					Result := True
-					if attached {READABLE_STRING_GENERAL} o1 as s1 and attached {READABLE_STRING_GENERAL} o1 as s2 then
-						Result := s1.same_string (s2)
-					elseif t.is_expanded then
-							-- already checked via o1 ~ o2						
-						check never_reached: False end
-					else
-						create ref_1.make (o1)
-						create ref_2.make (o2)
-						n := ref_1.field_count
-						if n = ref_2.field_count then
-							from
-								i := 1
-							until
-								i > n or not Result
-							loop
-									-- should be same field name, as same type!
-								fn := ref_1.field_name (i)
-								if not ref_1.is_field_transient (i) then
-									if a_path = Void then
-										create l_path.make_from_string (fn)
-									else
-										l_path := a_path + "." + fn
-									end
-									Result := recursively_same_objects (ref_1.field (i), ref_2.field (i), l_path)
-									if not Result and a_path /= Void then
-										a_path.append_character ('.')
-										a_path.append (fn)
-									end
-								end
-								i := i + 1
-							end
-						else
-							Result := False -- same type, so never happens.
-						end
-					end
-				else
-					Result := False
-				end
 			end
 		end
 

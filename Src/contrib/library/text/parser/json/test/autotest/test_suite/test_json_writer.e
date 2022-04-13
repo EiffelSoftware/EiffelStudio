@@ -4,10 +4,7 @@
 inherit
 	EQA_TEST_SET
 
-	EXCEPTIONS
-		undefine
-			default_create
-		end
+	TEST_JSON_I
 
 feature -- Test
 
@@ -88,17 +85,5 @@ feature -- Test
 			w.leave_object
 		end
 
-feature -- Comparison
-
-	is_valid (j: STRING_8): BOOLEAN
-		local
-			jp: JSON_PARSER
-		do
-			create jp.make
-			jp.parse_string (j)
-			if jp.is_parsed and jp.is_valid then
-				Result := True
-			end
-		end
 
 end

@@ -16,6 +16,11 @@ inherit
 			on_prepare
 		end
 
+	TEST_JSON_I
+		rename
+			new_parser as new_json_parser
+		end
+
 feature {NONE} -- Events
 
 	on_prepare
@@ -564,12 +569,6 @@ feature -- JSON_FROM_FILE
 			end
  			assert ("File contains json data", Result /= Void)
  		end
-
-
-	new_json_parser (a_string: READABLE_STRING_8): JSON_PARSER
-		do
-			create Result.make_with_string (a_string)
-		end
 
 invariant
 	file_reader /= Void

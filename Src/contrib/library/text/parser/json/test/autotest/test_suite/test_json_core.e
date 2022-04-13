@@ -4,27 +4,7 @@
 inherit
 	EQA_TEST_SET
 
-	JSON_PARSER_ACCESS
-		undefine
-			default_create
-		end
-
-	EXCEPTIONS
-		undefine
-			default_create
-		end
-
-feature -- Factory
-
-	new_parser (a_string: STRING_8): JSON_PARSER
-		do
-			create Result.make_with_string (a_string)
-		end
-
-	new_empty_parser: JSON_PARSER
-		do
-			create Result.make
-		end
+	TEST_JSON_I
 
 feature -- Test
 
@@ -1130,44 +1110,6 @@ feature -- Test
 			create jo.make
 			ht.force ("", jo)
 			assert ("ht.has_key (jo)", ht.has_key (jo))
-		end
-
-feature {NONE} -- Serialization
-
-	json_value (obj: detachable ANY): detachable JSON_VALUE
-		local
-			conv: JSON_BASIC_SERIALIZATION
-		do
-			create conv.make
-			Result := conv.to_json (obj)
-		end
-
-	json_object (j: detachable JSON_VALUE; a_base_class: detachable READABLE_STRING_GENERAL): detachable ANY
-		local
-			conv: JSON_BASIC_SERIALIZATION
-		do
-			create conv.make
-			Result := conv.from_json (j)
-		end
-
-	same_iterable (i1, i2: ITERABLE [detachable ANY]): BOOLEAN
-		local
-			c1, c2: ITERATION_CURSOR [detachable ANY]
-		do
-			c1 := i1.new_cursor
-			c2 := i2.new_cursor
-			from
-				Result := True
-			until
-				not Result and c1.after or c2.after
-			loop
-				Result := c1.item ~ c2.item
-				c1.forth
-				c2.forth
-			end
-			if not (c1.after and c2.after) then
-				Result := False
-			end
 		end
 
 end -- class TEST_JSON_CORE

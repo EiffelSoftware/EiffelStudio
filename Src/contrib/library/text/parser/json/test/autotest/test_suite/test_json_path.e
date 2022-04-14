@@ -58,6 +58,52 @@ feature -- Test
 			end
 		end
 
+	test_i_th_author_title
+		local
+			jp: JSON_PATH
+			jarr: JSON_ARRAY
+			js: STRING
+		do
+			if attached example_boot_store as j then
+				jarr := jp.matches (j, "$.store.book[0][author,title]")
+				assert ("author, title", jarr.count = 2)
+				js := pretty_json (jarr)
+				assert ("authors,title", same_json_values (js, "[
+						[
+							"Nigel Rees",
+							"Sayings of the Century"
+						]
+						]")
+					)
+			end
+		end
+
+	test_all_author_title
+		local
+			jp: JSON_PATH
+			jarr: JSON_ARRAY
+			js: STRING
+		do
+			if attached example_boot_store as j then
+				jarr := jp.matches (j, "$.store.book[*][author,title]")
+				assert ("author, title", jarr.count = 8)
+				js := pretty_json (jarr)
+				assert ("authors,title", same_json_values (js, "[
+							[
+								"Nigel Rees", 
+								"Sayings of the Century", 
+								"Evelyn Waugh", 
+								"Sword of Honour", 
+								"Herman Melville", 
+								"Moby Dick", 
+								"J. R. R. Tolkien", 
+								"The Lord of the Rings"
+							]
+						]")
+					)
+			end
+		end
+
 	test_slice_authors
 		local
 			jp: JSON_PATH

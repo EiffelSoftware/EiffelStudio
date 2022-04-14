@@ -73,6 +73,7 @@ feature {NONE} -- Implementation
 			j_array_item: JSON_VALUE
 			arr: JSON_ARRAY
 			p, l_tail, k: STRING_32
+			keys: like strings_as_keys
 			jk: JSON_STRING
 			i,j: INTEGER
 			err: BOOLEAN
@@ -163,69 +164,103 @@ feature {NONE} -- Implementation
 							end
 						end
 					when '[' then
-							-- Array item
 						i := next_closing_bracket (p, 2)
+						k := p.substring (2, i - 1)
+						k.adjust
 						l_tail := p.substring (i + 1, p.count)
-						if
-							a_is_collection and then
-							attached {JSON_ARRAY} a_json_value as j_arr and then
-							j_arr.count = 1
-						then
-							j_array_item := j_arr.i_th (1)
-						else
-							j_array_item := a_json_value
+
+						if i <= 0 then
+							err := True
 						end
-						if i > 0 and attached {JSON_ARRAY} j_array_item as j_arr then
-							k := p.substring (2, i - 1)
-							k.adjust
-							if k.is_empty then
-								err := True
-							elseif k.count >= 3 and then k[1] = '?' and then k[2] = '(' and k [k.count] = ')' then
-								Result := imp_matches (range_conditional_expression (j_arr, k.substring (3, k.count - 1)), True, l_tail)
-							elseif k.count >= 2 and then k[1] = '(' and k [k.count] = ')' then
-								if attached range_expression (j_arr, k.substring (2, k.count - 1)) as jv then
-									Result := imp_matches (jv, False, l_tail)
+						if k.is_empty then
+							err := True
+						elseif attached {JSON_OBJECT} a_json_value as j_object then
+								-- [name1,name2] ...
+							create arr.make_empty
+							across
+								strings_as_keys (k) as ic
+							loop
+								if attached j_object.item (ic.item) as jv then
+									arr.extend (jv)
 								end
-							elseif attached range_lower_upper (j_arr, k) as l_range then
-								create arr.make ((l_range.end_index - l_range.start_index + 1).max (0) // l_range.step + 1)
-								from
-									j := l_range.start_index
-								until
-									j > l_range.end_index
-								loop
-									if j_arr.valid_index (j) then
-										arr.extend (j_arr.i_th (j))
-									end
-									j := j + l_range.step
-								end
-								Result := imp_matches (arr, True, l_tail)
-							elseif attached range_indexes (j_arr, k) as l_range_indexes then
-								create arr.make (l_range_indexes.count)
-								across
-									l_range_indexes as ic
-								loop
-									j := ic.item
-									if j_arr.valid_index (j) then
-										arr.extend (j_arr.i_th (j))
-									end
-								end
-								Result := imp_matches (arr, True, l_tail)
-							elseif k.same_string_general ("*") then
-								Result := imp_matches (j_arr, True, l_tail)
-							elseif k.is_integer then
-								j := k.to_integer
-								if zero_based_index then
-									j := j + 1
-								end
-								if
-									j_arr.valid_index (j) and then
-									attached j_arr.i_th (j) as v
-								then
-										-- i_th
-									Result := imp_matches (v, False, l_tail)
-								end
+							end
+							Result := imp_matches (arr, True, l_tail)
+						elseif attached {JSON_ARRAY} a_json_value as j_array then
+								-- Array item
+							if
+								a_is_collection and then
+								attached {JSON_ARRAY} a_json_value as j_arr and then
+								j_arr.count = 1
+							then
+								j_array_item := j_arr.i_th (1)
 							else
-								-- ...
+								j_array_item := a_json_value
+							end
+							if attached {JSON_ARRAY} j_array_item as j_arr then
+								if k.count >= 3 and then k[1] = '?' and then k[2] = '(' and k [k.count] = ')' then
+									Result := imp_matches (range_conditional_expression (j_arr, k.substring (3, k.count - 1)), True, l_tail)
+								elseif k.count >= 2 and then k[1] = '(' and k [k.count] = ')' then
+									if attached range_expression (j_arr, k.substring (2, k.count - 1)) as jv then
+										Result := imp_matches (jv, False, l_tail)
+									end
+								elseif k[1].is_alpha then
+									keys := strings_as_keys (k)
+									create arr.make_empty
+									across
+										j_arr as ic
+									loop
+										if attached {JSON_OBJECT} ic.item as j_object then
+											across
+												keys as k_ic
+											loop
+												if attached j_object.item (k_ic.item) as jv then
+													arr.extend (jv)
+												end
+											end
+										end
+									end
+									Result := imp_matches (arr, True, l_tail)
+								elseif attached range_lower_upper (j_arr, k) as l_range then
+									create arr.make ((l_range.end_index - l_range.start_index + 1).max (0) // l_range.step + 1)
+									from
+										j := l_range.start_index
+									until
+										j > l_range.end_index
+									loop
+										if j_arr.valid_index (j) then
+											arr.extend (j_arr.i_th (j))
+										end
+										j := j + l_range.step
+									end
+									Result := imp_matches (arr, True, l_tail)
+								elseif attached range_indexes (j_arr, k) as l_range_indexes then
+									create arr.make (l_range_indexes.count)
+									across
+										l_range_indexes as ic
+									loop
+										j := ic.item
+										if j_arr.valid_index (j) then
+											arr.extend (j_arr.i_th (j))
+										end
+									end
+									Result := imp_matches (arr, True, l_tail)
+								elseif k.same_string_general ("*") then
+									Result := imp_matches (j_arr, True, l_tail)
+								elseif k.is_integer then
+									j := k.to_integer
+									if zero_based_index then
+										j := j + 1
+									end
+									if
+										j_arr.valid_index (j) and then
+										attached j_arr.i_th (j) as v
+									then
+											-- i_th
+										Result := imp_matches (v, False, l_tail)
+									end
+								else
+									-- ...
+								end
 							end
 						else
 							err := True
@@ -505,6 +540,20 @@ feature {NONE} -- Implementation
 			end
 			if s [Result] /= a_delimiter then
 				Result := 0
+			end
+		end
+
+	strings_as_keys (strs: READABLE_STRING_GENERAL): ARRAYED_LIST [JSON_STRING]
+		local
+			s: STRING_32
+		do
+			create Result.make (strs.occurrences (',') + 1)
+			across
+				strs.split (',') as ic
+			loop
+				s := ic.item
+				s.adjust
+				Result.force (create {JSON_STRING}.make_from_string_general (s))
 			end
 		end
 

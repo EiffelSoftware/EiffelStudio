@@ -111,7 +111,8 @@ feature {NONE} -- Initialization
 --	       						-- Ensure dialog is not off-screen
 --	       					dialog.set_position (l_sp_info.x, l_sp_info.y)
 --	       				end
-       				dialog.set_size ({EV_MONITOR_DPI_DETECTOR_IMP}.scaled_size (l_sp_info.width), {EV_MONITOR_DPI_DETECTOR_IMP}.scaled_size (l_sp_info.height))
+						-- WARNING: do not adapt to the DPI value, as the recorded value is the actual size!
+					dialog.set_size (l_sp_info.width, l_sp_info.height)
        			end
 
        				-- Hook up close action to store session size/position data
@@ -1133,7 +1134,7 @@ invariant
 	button_actions_attached: button_actions /= Void
 
 ;note
-	copyright:	"Copyright (c) 1984-2021, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2022, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

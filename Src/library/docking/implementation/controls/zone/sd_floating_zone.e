@@ -646,7 +646,9 @@ feature {NONE} -- Agents
 					l_zone.set_last_floating_height (a_height)
 					l_zone.set_last_floating_width (a_width)
 				end
-				floating_state.record_state
+				if is_floating_state_attached then
+					floating_state.record_state
+				end
 			end
 		end
 
@@ -658,7 +660,7 @@ feature {NONE} -- Agents
 
 note
 	library:	"SmartDocking: Library of reusable components for Eiffel."
-	copyright:	"Copyright (c) 1984-2020, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2022, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

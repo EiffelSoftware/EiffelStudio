@@ -616,6 +616,12 @@ feature {NONE} -- Comparision
 				Result := n1.integer_64_item = v2.to_integer_64
 			elseif attached {JSON_STRING} v1 as s1 then
 				Result := s1.same_string (v2)
+			elseif attached {JSON_BOOLEAN} v1 as b1 then
+				if b1.item then
+					Result := v2.is_case_insensitive_equal ("true")
+				else
+					Result := v2.is_case_insensitive_equal ("false")
+				end
 			else
 				-- False
 			end
@@ -627,6 +633,12 @@ feature {NONE} -- Comparision
 				Result := n1.integer_64_item /= v2.to_integer_64
 			elseif attached {JSON_STRING} v1 as s1 then
 				Result := not s1.same_string (v2)
+			elseif attached {JSON_BOOLEAN} v1 as b1 then
+				if b1.item then
+					Result := v2.is_case_insensitive_equal ("false")
+				else
+					Result := v2.is_case_insensitive_equal ("true")
+				end
 			else
 				-- False
 			end

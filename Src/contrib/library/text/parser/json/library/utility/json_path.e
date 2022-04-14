@@ -4,6 +4,7 @@ note
 
 		See: - https://tools.ietf.org/id/draft-goessner-dispatch-jsonpath-00.html
 			 - https://goessner.net/articles/JsonPath/
+			 - for future: eventually https://github.com/JSONPath-Plus/JSONPath
 
 			$	the root object/element
 			@	the current object/element
@@ -437,8 +438,14 @@ feature {NONE} -- Implementation
 			elseif cond.starts_with ("=") then
 				l_arg := cond.substring (2, cond.count); l_arg.adjust
 				Result := agent json_value_equal (?, l_arg)
+			elseif cond.starts_with ("===") then -- JS syntax
+				l_arg := cond.substring (4, cond.count); l_arg.adjust
+				Result := agent json_value_equal (?, l_arg)
 			elseif cond.starts_with ("/=") then
 				l_arg := cond.substring (3, cond.count); l_arg.adjust
+				Result := agent json_value_not_equal (?, l_arg)
+			elseif cond.starts_with ("!==") then
+				l_arg := cond.substring (4, cond.count); l_arg.adjust
 				Result := agent json_value_not_equal (?, l_arg)
 			end
 		end

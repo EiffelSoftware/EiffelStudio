@@ -44,9 +44,9 @@ feature -- Access
 			if i > 0 then
 				j := a_token_input.index_of ('.', i + 1)
 				if j > 0 then
-					l_enc_header := a_token_input.substring (1, i - 1)
-					l_enc_payload := a_token_input.substring (i + 1, j - 1)
-					l_signature := a_token_input.substring (j + 1, n)
+					l_enc_header := adjusted_string (a_token_input.substring (1, i - 1))
+					l_enc_payload := adjusted_string (a_token_input.substring (i + 1, j - 1))
+					l_signature := adjusted_string (a_token_input.substring (j + 1, n))
 					create jws.make_with_json_payload (base64url_decode (l_enc_payload))
 					alg := signature_algorithm_from_encoded_header (l_enc_header)
 					if a_alg /= Void then
@@ -106,6 +106,23 @@ feature -- Access
 		end
 
 feature {NONE} -- Implementation
+
+	adjusted_string (a_string: READABLE_STRING_8): READABLE_STRING_8
+			-- `a_string` without any space.
+		local
+			s: STRING_8
+		do
+			if 
+				not a_string.is_empty and then
+				(a_string [1].is_space or a_string [a_string.count].is_space)
+			then
+				s := a_string
+				s.adjust
+				Result := s
+			else
+				Result := a_string
+			end
+		end
 
 	signature_algorithm_from_encoded_header (a_enc_header: READABLE_STRING_8): detachable STRING_8
 		local

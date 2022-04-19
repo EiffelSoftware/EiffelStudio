@@ -235,7 +235,6 @@ feature {CMS_API_ACCESS} -- CMS Formats management
 	load_formats
 		local
 			f: CMS_FORMAT
-			jp: JSON_PARSER
 			s: STRING_32
 			l_name, l_title: READABLE_STRING_8
 		do
@@ -244,9 +243,7 @@ feature {CMS_API_ACCESS} -- CMS Formats management
 				attached storage.custom_value ("cms.formats", "api-formats") as v_formats and then
 				v_formats.is_valid_as_string_8
 			then
-				create jp.make_with_string (v_formats.to_string_8)
-				jp.parse_content
-				if jp.is_parsed and then jp.is_valid and then attached jp.parsed_json_object as j_formats then
+				if attached {JSON_OBJECT} json_value_from_string (v_formats.to_string_8) as j_formats then
 						-- { "plain_text": { "title": "Plain text", "filters": "plain_text+foobar+toto"}, ...}
 					across
 						j_formats as ic

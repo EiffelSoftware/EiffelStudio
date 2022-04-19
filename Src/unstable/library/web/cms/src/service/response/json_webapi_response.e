@@ -54,13 +54,9 @@ feature -- Element change
 feature -- Fields / json
 
 	import_json_object (a_json: READABLE_STRING_8)
-		local
-			jp: JSON_PARSER
 		do
-			create jp.make_with_string (a_json)
-			jp.parse_content
-			if jp.is_valid and jp.is_parsed then
-				if attached jp.parsed_json_object as jo then
+			if attached api.json_value_from_string (a_json) as jv then
+				if attached {JSON_OBJECT} jv as jo then
 					across
 						jo as ic
 					loop
@@ -161,7 +157,7 @@ feature -- Execution
 		local
 			m: WSF_PAGE_RESPONSE
 			j: STRING_8
-
+			l_methods: WSF_REQUEST_METHODS
 		do
 			j := resource.representation
 			create m.make_with_body (j)
@@ -171,6 +167,17 @@ feature -- Execution
 				m.set_status_code ({HTTP_STATUS_CODE}.temp_redirect)
 			end
 			m.header.put_content_type_with_charset ("application/json", "utf-8")
+
+			if attached request.http_access_control_request_headers as l_headers then
+				header.put_access_control_allow_headers (l_headers)
+			end
+			create l_methods.make_from_iterable (<<"GET", "POST">>)
+--			l_methods := router.allowed_methods_for_request (request)
+			if not l_methods.is_empty then
+				m.header.put_allow (l_methods)
+				m.header.put_access_control_allow_methods (l_methods)
+			end
+			m.header.put_access_control_allow_all_origin
 			response.send (m)
 		end
 

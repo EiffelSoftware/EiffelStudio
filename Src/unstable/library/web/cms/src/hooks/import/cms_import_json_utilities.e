@@ -10,11 +10,31 @@ class
 
 feature -- Access
 
+	json_value_from_string (a_json_string: READABLE_STRING_GENERAL): detachable JSON_VALUE
+		local
+			f: RAW_FILE
+			s: STRING_8
+			jp: JSON_PARSER
+		do
+			if a_json_string.is_valid_as_string_8 then
+				s := a_json_string.to_string_8
+			else
+				s := {UTF_CONVERTER}.utf_32_string_to_utf_8_string_8 (a_json_string)
+			end
+			create jp.make
+			jp.parse_string (s)
+			if
+				jp.is_parsed and then
+				jp.is_valid
+			then
+				Result := jp.parsed_json_value
+			end
+		end
+
 	json_value_from_location (a_location: PATH): detachable JSON_VALUE
 		local
 			f: RAW_FILE
 			s: STRING
-			jp: JSON_PARSER
 		do
 			create f.make_with_path (a_location)
 			if f.exists and then f.is_access_readable then
@@ -28,11 +48,7 @@ feature -- Access
 					s.append (f.last_string)
 				end
 				f.close
-				create jp.make_with_string (s)
-				jp.parse_content
-				if jp.is_valid then
-					Result := jp.parsed_json_value
-				end
+				Result := json_value_from_string (s)
 			end
 		end
 
@@ -117,6 +133,6 @@ feature -- Access
 		end
 
 note
-	copyright: "2011-2018, Jocelyn Fiat, Javier Velilla, Eiffel Software and others"
+	copyright: "2011-2022, Jocelyn Fiat, Javier Velilla, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 end

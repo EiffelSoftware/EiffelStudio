@@ -25,4 +25,6 @@ iff not defined NO_COMPILE then
 	specific_make %2
 	cd %1\C_library\libpng
 	specific_make %2
+	cd %1\C_library\curl
+	espawn "geant compile"
 endiff

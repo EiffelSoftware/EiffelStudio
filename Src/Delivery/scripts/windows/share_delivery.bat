@@ -57,9 +57,6 @@ goto eof
 
 :do_upload
 
-REM UNCOMMENT FOLLOWING LINE !!!
-goto eof
-
 echo Upload %1 to %T_S3%/%T_S3_PATH%/
 echo aws s3 cp --acl public-read %T_DST% %T_S3%/%T_S3_PATH%/%T_FILENAME% 
 aws s3 cp --acl public-read %T_DST% %T_S3%/%T_S3_PATH%/%T_FILENAME% > NUL

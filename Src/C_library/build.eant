@@ -16,18 +16,21 @@
 		<geant target="compile" dir="zlib" file="build.eant" reuse_variables="true" if="${is_windows}" />
 		<geant target="compile" dir="libpng" file="build.eant" reuse_variables="true" if="${is_windows}" />
 		<geant target="compile" dir="openssl" file="build.eant" reuse_variables="true" if="${is_windows}" />
+		<geant target="compile" dir="curl" file="build.eant" reuse_variables="true" if="${is_windows}" />
 	</target>
 	
 	<target name="clean" >
 		<geant target="clean" dir="zlib" file="build.eant" reuse_variables="true" if="${is_windows}" />
 		<geant target="clean" dir="libpng" file="build.eant" reuse_variables="true" if="${is_windows}" />
 		<geant target="clean" dir="openssl" file="build.eant" reuse_variables="true" if="${is_windows}" />
+		<geant target="clean" dir="curl" file="build.eant" reuse_variables="true" if="${is_windows}" />
 	</target>
 
 	<target name="clobber" >
 		<geant target="clobber" dir="zlib" file="build.eant" reuse_variables="true" if="${is_windows}" />
 		<geant target="clobber" dir="libpng" file="build.eant" reuse_variables="true" if="${is_windows}" />
 		<geant target="clobber" dir="openssl" file="build.eant" reuse_variables="true" if="${is_windows}" />
+		<geant target="clobber" dir="curl" file="build.eant" reuse_variables="true" if="${is_windows}" />
 	</target>
 	
 </project>

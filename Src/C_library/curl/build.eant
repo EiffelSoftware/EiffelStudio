@@ -1,0 +1,32 @@
+<?xml version="1.0"?>
+<project name="build_curl_clib" default="help">
+
+	<description>
+		description: "curl C_library compilation"
+	</description>
+
+	<target name="help">
+		<echo message="usage:"/>
+		<echo message=" geant compile"/>
+		<echo message=" geant clean"/>
+		<echo message=" geant clobber"/>
+	</target>
+	
+	<target name="compile" >
+		<geant target="compile_windows" reuse_variables="true" if="${is_windows}"/>
+	</target>
+
+	<target name="compile_windows" >
+		<exec executable="build_static_32.bat" if="${ISE_PLATFORM}=windows" />
+		<exec executable="build_static_64.bat" if="${ISE_PLATFORM}=win64" />
+	</target>
+	
+	<target name="clean" >  
+		<echo message="- Clean [C_library/curl]" />
+		<delete directory="builds" if="${is_windows}" />
+		<delete directory="spec\${ISE_PLATFORM}\static" if="${is_windows}" />
+	</target>
+
+	<target name="clobber" depend="clean" />
+	
+</project>

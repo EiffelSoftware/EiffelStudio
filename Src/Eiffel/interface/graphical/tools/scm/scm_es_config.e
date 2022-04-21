@@ -31,6 +31,8 @@ feature {NONE} -- Initialization
 			use_external_svn_diff_command_pref := preferences.source_control_tool_data.use_external_svn_diff_command_preference
 
 			status_auto_check_enabled_pref := preferences.source_control_tool_data.status_auto_check_enabled_preference
+			show_unversioned_files_pref := preferences.source_control_tool_data.show_unversioned_files_preference
+			hide_location_with_no_change_pref := preferences.source_control_tool_data.hide_location_with_no_change_preference
 		end
 
 feature {NONE} -- Preferences
@@ -48,6 +50,10 @@ feature {NONE} -- Preferences
 	use_external_svn_diff_command_pref: BOOLEAN_PREFERENCE
 
 	status_auto_check_enabled_pref: BOOLEAN_PREFERENCE
+
+	show_unversioned_files_pref: BOOLEAN_PREFERENCE
+
+	hide_location_with_no_change_pref: BOOLEAN_PREFERENCE
 
 feature -- Access
 
@@ -70,6 +76,16 @@ feature -- Access
 	status_auto_check_enabled: BOOLEAN
 		do
 			Result := status_auto_check_enabled_pref.value
+		end
+
+	show_unversioned_files_enabled: BOOLEAN
+		do
+			Result := show_unversioned_files_pref.value
+		end
+
+	hide_location_with_no_change_enabled: BOOLEAN
+		do
+			Result := hide_location_with_no_change_pref.value
 		end
 
 	use_external_git_diff_command: BOOLEAN
@@ -170,6 +186,16 @@ feature -- Element change
 	set_status_auto_check_enabled (b: BOOLEAN)
 		do
 			status_auto_check_enabled_pref.set_value (b)
+		end
+
+	set_show_unversioned_files (b: BOOLEAN)
+		do
+			show_unversioned_files_pref.set_value (b)
+		end
+
+	set_hide_location_with_no_change (b: BOOLEAN)
+		do
+			hide_location_with_no_change_pref.set_value (b)
 		end
 
 invariant

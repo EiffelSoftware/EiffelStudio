@@ -134,6 +134,9 @@ feature {NONE} -- Initialization
 
 			create unver_cb.make_with_text (scm_names.question_show_unversioned_files)
 			bar.extend (unver_cb); bar.disable_item_expand (unver_cb)
+			if scm_service.config.show_unversioned_files_enabled then
+				unver_cb.enable_select
+			end
 			unver_cb.select_actions.extend (agent (a_cb: EV_CHECK_BUTTON)
 					do
 						include_unversioned_files (a_cb.is_selected)
@@ -144,6 +147,9 @@ feature {NONE} -- Initialization
 			create hide_cb.make_with_text (scm_names.question_hide_location_with_no_change)
 			hide_cb.set_tooltip (scm_names.tooltip_question_hide_location_with_no_change)
 			bar.extend (hide_cb); bar.disable_item_expand (hide_cb)
+			if scm_service.config.hide_location_with_no_change_enabled then
+				hide_cb.enable_select
+			end
 			hide_cb.select_actions.extend (agent (a_cb: EV_CHECK_BUTTON)
 					do
 						hide_location_with_no_change (a_cb.is_selected)
@@ -198,7 +204,10 @@ feature -- Basic operation
 		end
 
 	include_unversioned_files (b: BOOLEAN)
+		local
+			c: like pointer_style
 		do
+			scm_service.config.set_show_unversioned_files (b)
 			if
 				attached include_unversioned_files_checkbox as cb and then
 				cb.is_selected /= b
@@ -212,7 +221,10 @@ feature -- Basic operation
 				cb.select_actions.resume
 			end
 			if attached grid as g then
+				c := pointer_style
+				set_pointer_style ((create {EV_STOCK_PIXMAPS}).busy_cursor)
 				g.include_unversioned_files (b)
+				set_pointer_style (c)
 			end
 		end
 
@@ -226,7 +238,10 @@ feature -- Basic operation
 		end
 
 	hide_location_with_no_change (b: BOOLEAN)
+		local
+			c: like pointer_style
 		do
+			scm_service.config.set_hide_location_with_no_change (b)
 			if
 				attached hide_location_with_no_change_checkbox as cb and then
 				cb.is_selected /= b
@@ -240,7 +255,10 @@ feature -- Basic operation
 				cb.select_actions.resume
 			end
 			if attached grid as g then
+				c := pointer_style
+				set_pointer_style ((create {EV_STOCK_PIXMAPS}).busy_cursor)
 				g.hide_location_with_no_change (b)
+				set_pointer_style (c)
 			end
 		end
 
@@ -298,25 +316,30 @@ feature -- Basic operation
 			last_scm_dialog := l_save_dialog
 			l_save_dialog.set_is_modal (False)
 			l_save_dialog.show_on_active_window
-			if
-				attached l_save_dialog.commit as l_commit
-			then
-				if l_commit.is_processed then
-					if attached {SCM_SINGLE_COMMIT_SET} l_commit as l_single then
-						update_statuses (l_single.changelist.root)
-					elseif attached {SCM_MULTI_COMMIT_SET} l_commit as l_multi then
-						across
-							l_multi.changelists as ic
-						loop
-							update_statuses (ic.item.root)
+			l_save_dialog.close_actions.extend (agent (i_save_dialog: SCM_SAVE_DIALOG; i_changelist: SCM_CHANGELIST_COLLECTION)
+				do
+					if
+						attached i_save_dialog.commit as l_commit
+					then
+						if l_commit.is_processed then
+							if attached {SCM_SINGLE_COMMIT_SET} l_commit as l_single then
+								update_statuses (l_single.changelist.root)
+							elseif attached {SCM_MULTI_COMMIT_SET} l_commit as l_multi then
+								across
+									l_multi.changelists as ic
+								loop
+									update_statuses (ic.item.root)
+								end
+							end
+							i_changelist.wipe_out
+						else
+							i_changelist.set_description (l_commit.message)
 						end
 					end
-					a_changelist.wipe_out
-				else
-					a_changelist.set_description (l_commit.message)
-				end
-			end
-			on_changelist_updated (a_changelist)
+					on_changelist_updated (i_changelist)
+					i_save_dialog.destroy
+				end(l_save_dialog, a_changelist)
+				)
 		end
 
 	open_save_dialog (a_commit: SCM_COMMIT_SET)

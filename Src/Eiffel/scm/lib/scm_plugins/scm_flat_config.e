@@ -25,6 +25,8 @@ feature {NONE} -- Initialization
 			use_external_git_diff_command := cfg.use_external_git_diff_command
 			use_external_svn_diff_command := cfg.use_external_svn_diff_command
 			status_auto_check_enabled := cfg.status_auto_check_enabled
+			show_unversioned_files_enabled := cfg.show_unversioned_files_enabled
+			hide_location_with_no_change_enabled := cfg.hide_location_with_no_change_enabled
 		end
 
 feature -- Access
@@ -34,6 +36,10 @@ feature -- Access
 	svn_command: detachable READABLE_STRING_32
 
 	status_auto_check_enabled: BOOLEAN
+
+	show_unversioned_files_enabled: BOOLEAN
+
+	hide_location_with_no_change_enabled: BOOLEAN
 
 	use_external_git_diff_command: BOOLEAN
 
@@ -134,10 +140,20 @@ feature -- Element change
 			status_auto_check_enabled := b
 		end
 
+	set_show_unversioned_files (b: BOOLEAN)
+		do
+			show_unversioned_files_enabled := b
+		end
+
+	set_hide_location_with_no_change (b: BOOLEAN)
+		do
+			hide_location_with_no_change_enabled := b
+		end
+
 
 note
-	copyright: "Copyright (c) 1984-2022, Eiffel Software"
-	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
+	copyright: "Copyright (c) 1984-2022, Eiffel Software and others"
+	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[
 			This file is part of Eiffel Software's Eiffel Development Environment.

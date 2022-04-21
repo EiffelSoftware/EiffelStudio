@@ -41,6 +41,16 @@ feature -- Access
 		deferred
 		end
 
+	show_unversioned_files_enabled: BOOLEAN
+			-- Unversioned files shown?
+		deferred
+		end
+
+	hide_location_with_no_change_enabled: BOOLEAN
+			-- Hide location with no change?
+		deferred
+		end
+
 feature -- Element change
 
 	set_svn_command (v: READABLE_STRING_GENERAL)
@@ -71,9 +81,17 @@ feature -- Element change
 		deferred
 		end
 
+	set_show_unversioned_files (b: BOOLEAN)
+		deferred
+		end
+
+	set_hide_location_with_no_change (b: BOOLEAN)
+		deferred
+		end
+
 note
-	copyright: "Copyright (c) 1984-2022, Eiffel Software"
-	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
+	copyright: "Copyright (c) 1984-2022, Eiffel Software and others"
+	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[
 			This file is part of Eiffel Software's Eiffel Development Environment.

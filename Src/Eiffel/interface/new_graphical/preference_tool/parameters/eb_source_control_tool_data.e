@@ -35,6 +35,8 @@ feature {EB_SHARED_PREFERENCES} -- Preference
 	external_svn_diff_command_preference: STRING_PREFERENCE
 	external_git_diff_command_preference: STRING_PREFERENCE
 	status_auto_check_enabled_preference: BOOLEAN_PREFERENCE
+	show_unversioned_files_preference: BOOLEAN_PREFERENCE
+	hide_location_with_no_change_preference: BOOLEAN_PREFERENCE
 
 feature {NONE} -- Preference Strings
 
@@ -52,6 +54,10 @@ feature {NONE} -- Preference Strings
 
 	status_auto_check_enabled_string: STRING = "tools.source_control.status_auto_check_enabled"
 
+	show_unversioned_files_string: STRING = "tools.source_control.show_unversioned_files"
+
+	hide_location_with_no_change_string: STRING = "tools.source_control.hide_location_with_no_change"
+
 feature {NONE} -- Implementation
 
 	initialize_preferences
@@ -68,6 +74,8 @@ feature {NONE} -- Implementation
 			external_svn_diff_command_preference := l_manager.new_string_preference_value (l_manager, external_svn_diff_command_string, "")
 			external_git_diff_command_preference := l_manager.new_string_preference_value (l_manager, external_git_diff_command_string, "")
 			status_auto_check_enabled_preference := l_manager.new_boolean_preference_value (l_manager, status_auto_check_enabled_string, False)
+			show_unversioned_files_preference := l_manager.new_boolean_preference_value (l_manager, show_unversioned_files_string, True)
+			hide_location_with_no_change_preference := l_manager.new_boolean_preference_value (l_manager, hide_location_with_no_change_string, False)
 		end
 
 	preferences: PREFERENCES
@@ -82,6 +90,8 @@ invariant
 	external_svn_diff_command_preference_set: external_svn_diff_command_preference /= Void
 	external_git_diff_command_preference_set: external_git_diff_command_preference /= Void
 	status_auto_check_enabled_preference_set: status_auto_check_enabled_preference /= Void
+	show_unversioned_files_preference_set: show_unversioned_files_preference /= Void
+	hide_location_with_no_change_preference_set: hide_location_with_no_change_preference /= Void
 
 note
 	copyright: "Copyright (c) 1984-2022, Eiffel Software"

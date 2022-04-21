@@ -58,7 +58,10 @@ feature {NONE} -- Initialization
 			parent_box := a_parent_box
 			scm_service := a_service
 
+			create close_actions
+
 			a_changelist.remove_empty_changelists
+
 
 			changelist := a_changelist
 			if a_changelist.changelist_count = 1 and then attached a_changelist.first_changelist as l_changelist then
@@ -90,6 +93,10 @@ feature -- Access
 	changelist: detachable SCM_CHANGELIST_COLLECTION
 
 	grid: detachable SCM_CHANGELIST_GRID
+
+feature -- Event
+
+	close_actions: ACTION_SEQUENCE
 
 feature -- Widgets
 
@@ -413,12 +420,20 @@ feature -- Action
 			if attached grid as g then
 				g.destroy
 			end
+			close_actions.call (Void)
 		end
 
 	on_cancel
 		do
 			commit.reset
 			commit.set_message (commit_log_text.text)
+			close_actions.call (Void)
+		end
+
+	destroy
+		do
+			close_actions.wipe_out
+			dialog.destroy
 		end
 
 feature -- Access

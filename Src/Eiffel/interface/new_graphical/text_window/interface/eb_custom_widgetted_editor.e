@@ -680,7 +680,6 @@ feature {NONE} -- Implementation
 		do
 			l_replace := a_replace and then (not text_displayed.is_empty and then not text_displayed.selection_is_empty)
 
-			search_tool.notebook.select_item (search_tool.notebook.i_th (1))
 			if l_replace then
 				search_tool.show_and_set_focus_replace
 			else
@@ -796,7 +795,7 @@ feature {NONE} -- Internal implentation cache
 			-- Note: Do not use directly!
 
 ;note
-	copyright: "Copyright (c) 1984-2021, Eiffel Software"
+	copyright: "Copyright (c) 1984-2022, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

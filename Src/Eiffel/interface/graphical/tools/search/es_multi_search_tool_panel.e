@@ -120,10 +120,6 @@ feature {NONE} -- Initialization
 
 			replace_all_click_button.select_actions.extend (agent confirm_and_replace_all)
 
-			notebook.drop_actions.set_veto_pebble_function (agent notebook_veto_pebble)
-			notebook.drop_actions.extend (agent on_drop_notebook)
-			notebook.selection_actions.extend (agent on_notebook_selected)
-
 			current_editor_button.key_press_actions.extend (agent key_pressed (?, True))
 			current_editor_button.select_actions.extend (agent toggle_scope_detail (current_editor_button))
 			current_editor_button.select_actions.extend (agent force_new_search)
@@ -280,9 +276,6 @@ feature -- Status setting
 	set_focus
 			-- Give the focus to the pattern field
 		do
-			if notebook.selected_item_index /= 1 then
-				notebook.select_item (notebook.i_th (1))
-			end
 			set_focus_if_possible (keyword_field)
 		end
 
@@ -290,9 +283,6 @@ feature -- Status setting
 			-- Give the focus to replace field.
 		do
 			show
-			if notebook.selected_item_index /= 1 then
-				notebook.select_item (notebook.i_th (1))
-			end
 			set_focus_if_possible (replace_combo_box)
 		end
 
@@ -539,7 +529,6 @@ feature {EB_SEARCH_REPORT_GRID, EB_CUSTOM_WIDGETTED_EDITOR} -- Build interface
 --			content.set_floating_width (527)
 --			content.set_floating_height (189)
 --			content.close_request_actions.extend (agent close)
---			content.drop_actions.extend (agent on_drop_notebook)
 --			content.focus_in_actions.extend (agent show)
 --		end
 
@@ -760,17 +749,6 @@ feature {EB_CUSTOM_WIDGETTED_EDITOR, EB_CONTEXT_MENU_FACTORY} -- Actions handler
 			else
 				search_compiled_class_button.disable_sensitive
 			end
-			if notebook /= Void then
-				if a_button = current_editor_button then
-					if widget /= Void and then is_shown then
-						set_focus
-					end
-				end
-				l_str := interface_names.l_scope.twin
-				l_str.append (": ")
-				l_str.append (a_button.text)
-				notebook.item_tab (notebook.i_th (2)).set_text (l_str)
-			end
 		end
 
 	add_scope
@@ -937,46 +915,6 @@ feature {EB_CUSTOM_WIDGETTED_EDITOR, EB_CONTEXT_MENU_FACTORY} -- Actions handler
 				editor.text_displayed.cursor.go_to_position (incremental_search_start_pos)
 				editor.check_cursor_position
 				editor.refresh_now
-			end
-		end
-
-	on_drop_notebook (a_stone: STONE)
-			-- When dropping on tabs of notebook.
-		do
-			inspect notebook.pointed_tab_index
-			when 1 then
-				notebook.select_item (notebook.i_th (1))
-				if attached {FILED_STONE} a_stone as l_filed_stone then
-					display_stone_signature (keyword_field, l_filed_stone)
-				end
-			else
-				notebook.select_item (notebook.i_th (2))
-				on_drop_custom_button (a_stone)
-				content.set_focus
-			end
-		end
-
-	notebook_veto_pebble (a_stone: ANY) : BOOLEAN
-			-- Notebook veto pebble
-		do
-			if notebook /= Void and then not notebook.is_destroyed then
-				inspect notebook.pointed_tab_index
-				when 1 then
-					Result := True
-				when 2 then
-					Result := attached {CLASSI_STONE} a_stone or else attached {CLUSTER_STONE} a_stone
-				else
-				end
-			end
-		end
-
-	on_notebook_selected
-			-- On notebook selected.
-		do
-			if notebook.pointed_tab_index = 1 then
-				if widget /= Void and is_shown then
-					set_focus
-				end
 			end
 		end
 
@@ -2058,7 +1996,7 @@ invariant
 	multi_search_performer_not_void: multi_search_performer /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2018, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2022, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

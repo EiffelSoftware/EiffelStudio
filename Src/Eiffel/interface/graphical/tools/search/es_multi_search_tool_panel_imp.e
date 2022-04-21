@@ -35,7 +35,7 @@ feature {NONE} -- Initialize
 	build_interface
 			-- Build all the tool's widgets.
 		local
-			vbox: EV_VERTICAL_BOX
+			mainbox,vbox: EV_VERTICAL_BOX
 			search_box: EV_HORIZONTAL_BOX
 			replace_box: EV_HORIZONTAL_BOX
 			label, label_search: EV_LABEL
@@ -173,21 +173,14 @@ feature {NONE} -- Initialize
 			vbox.extend (option_and_replace_all_box)
 			vbox.disable_item_expand (option_and_replace_all_box)
 
-			create notebook
-
-			notebook.set_tab_position (notebook.tab_top)
-			notebook.extend (vbox)
-			notebook.extend (scope_tab)
-			notebook.item_tab (vbox).set_text (interface_names.t_search_tool)
-			notebook.item_tab (scope_tab).set_text (interface_names.l_scope.twin)
-
-			create vbox
-			vbox.extend (notebook)
-			vbox.disable_item_expand (notebook)
+			create mainbox
+			mainbox.extend (vbox)
+			mainbox.disable_item_expand (vbox)
+			mainbox.extend (scope_tab)
 
 			create frame
 			frame.set_style ((create {EV_FRAME_CONSTANTS}).Ev_frame_raised)
-			frame.extend (vbox)
+			frame.extend (mainbox)
 			widget := frame
 		end
 
@@ -435,9 +428,6 @@ feature -- Widgets
 	replace_combo_box: EV_COMBO_BOX
 			-- Replacment combo box
 
-	notebook: EV_NOTEBOOK
-			-- Notebook, one tab for basic search, one for scopes.
-
 	whole_word_button: EV_CHECK_BUTTON
 			-- button to look for isolated words
 
@@ -586,7 +576,6 @@ feature {NONE} -- Destroy behavior.
 			incremental_search_button := Void
 			scope_list := Void
 			replace_combo_box := Void
-			notebook := Void
 			whole_word_button := Void
 			search_button := Void
 			replace_button := Void
@@ -608,7 +597,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2020, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2022, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

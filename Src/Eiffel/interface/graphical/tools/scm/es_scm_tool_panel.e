@@ -69,7 +69,7 @@ feature -- Operations
 			refresh
 		end
 
-feature {NONE} -- Factory		
+feature {NONE} -- Factory
 
 	create_widget: EV_VERTICAL_BOX
 			-- Create a new container widget upon request.
@@ -81,43 +81,45 @@ feature {NONE} -- Factory
 			Result.set_padding_width (layout_constants.default_padding_size)
 		end
 
-    create_mini_tool_bar_items: detachable ARRAYED_LIST [SD_TOOL_BAR_ITEM]
+	create_mini_tool_bar_items: detachable ARRAYED_LIST [SD_TOOL_BAR_ITEM]
 		local
 			togb: SD_TOOL_BAR_TOGGLE_BUTTON
 			but: SD_TOOL_BAR_BUTTON
-        do
-        	create Result.make (2)
+		do
+			create Result.make (2)
 
-        	create togb.make
-        	togb.set_text (scm_names.button_project)
-        	togb.set_tooltip (scm_names.tooltip_button_project)
-        	togb.select_actions.extend (agent on_setup_selected)
-        	Result.extend (togb)
-        	toggle_button_setup := togb
+			create togb.make
+			togb.set_text (scm_names.button_project)
+			togb.set_pixmap (pixmaps.icon_pixmaps.folder_preference_icon)
+			togb.set_pixel_buffer (pixmaps.icon_pixmaps.folder_preference_icon_buffer)
+			togb.set_tooltip (scm_names.tooltip_button_project)
+			togb.select_actions.extend (agent on_setup_selected)
+			Result.extend (togb)
+			toggle_button_setup := togb
 
-        	create but.make
+			create but.make
 			but.set_text (scm_names.button_config)
 			but.set_pixmap (pixmaps.icon_pixmaps.tool_preferences_icon)
 			but.set_pixel_buffer (pixmaps.icon_pixmaps.tool_preferences_icon_buffer)
-        	but.set_tooltip (scm_names.tooltip_button_config)
-        	but.select_actions.extend (agent on_preferences_selected)
-        	Result.extend (but)
+			but.set_tooltip (scm_names.tooltip_button_config)
+			but.select_actions.extend (agent on_preferences_selected)
+			Result.extend (but)
 
-        end
+		end
 
-    create_tool_bar_items: detachable ARRAYED_LIST [SD_TOOL_BAR_ITEM]
-            -- Retrieves a list of tool bar items to display at the top of the tool.
+	create_tool_bar_items: detachable ARRAYED_LIST [SD_TOOL_BAR_ITEM]
+			-- Retrieves a list of tool bar items to display at the top of the tool.
 		local
 --			but: SD_TOOL_BAR_TOGGLE_BUTTON
-        do
---       	
+		do
+--
 --        	create but.make
 --        	but.set_text (interface_names.b_advanced)
 --        	but.select_actions.extend (agent on_advanced_event (but))
 
 --        	create Result.make (1)
 --        	Result.extend (but)
-        end
+		end
 
 feature -- Widgets
 
@@ -433,4 +435,5 @@ note
 			Website http://www.eiffel.com
 			Customer support http://support.eiffel.com
 		]"
+
 end

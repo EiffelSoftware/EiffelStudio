@@ -207,6 +207,8 @@ feature -- General
 	button_clear_changelist: STRING_32 do Result := locale.translation_in_context ("Clear", "scm") end
 	button_clear_changelist_tooltip: STRING_32 do Result := locale.translation_in_context ("Clear the active changelist", "scm") end
 
+	button_checking: STRING_32 do Result := locale.translation_in_context ("Checking...", "scm") end
+
 	checkbutton_use_external_terminal: STRING_32 do Result := locale.translation_in_context ("Use external terminal?", "scm") end
 
 feature -- Messages

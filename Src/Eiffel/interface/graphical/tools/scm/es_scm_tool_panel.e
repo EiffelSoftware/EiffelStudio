@@ -226,6 +226,7 @@ feature {NONE} -- Action handlers
 		do
 			if attached status_box as l_status then
 				l_status.check_all_repo_button.disable_sensitive
+				l_status.check_all_repo_button.set_text (scm_names.button_checking)
 			end
 		end
 
@@ -233,6 +234,7 @@ feature {NONE} -- Action handlers
 		do
 			if attached status_box as l_status then
 				l_status.check_all_repo_button.enable_sensitive
+				l_status.check_all_repo_button.set_text (scm_names.button_check_all)
 			end
 		end
 

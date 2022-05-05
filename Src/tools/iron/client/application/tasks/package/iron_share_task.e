@@ -38,6 +38,7 @@ feature -- Execute
 			l_data: like data_from
 			uri: URI
 			tgt: PATH
+			l_remove_iron_archive: BOOLEAN
 			l_package: detachable IRON_PACKAGE
 			err, done: BOOLEAN
 			l_title, l_name, l_id: detachable READABLE_STRING_32
@@ -256,6 +257,7 @@ feature -- Execute
 										if l_iron_archive = Void or else not l_iron_archive.file_exists then
 											print ("[Error] Failure occured during package archive creation!%N")
 										end
+										l_remove_iron_archive := True
 --										if not (create {FILE_UTILITIES}).file_path_exists (l_archive_path) then
 --											print ("[Error] Failure occured during package archive creation!%N")
 --										end
@@ -317,6 +319,10 @@ feature -- Execute
 														print_new_line
 													end
 												end
+											end
+												-- Clean temp archive file
+											if l_remove_iron_archive then
+												l_iron_archive.delete_file
 											end
 										else
 											print ({STRING_32} "Unable to find package archive %""+ l_iron_archive.path.name +"%"!")

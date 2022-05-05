@@ -103,6 +103,26 @@ feature -- Basic operation
 			set_hash (hash_sha1)
 		end
 
+	delete_file
+			-- Delete Current archive file, if any.
+		require
+			file_exists
+		local
+			f: RAW_FILE
+			l_retry_count: INTEGER
+		do
+			if l_retry_count < 3 then
+				create f.make_with_path (path)
+				if f.exists then
+					f.delete
+				end
+			end
+		rescue
+			l_retry_count := l_retry_count + 1
+			{EXECUTION_ENVIRONMENT}.sleep (1_000_000) -- 1 ms
+			retry
+		end
+
 feature -- Change
 
 	set_path (v: PATH)
@@ -128,7 +148,7 @@ feature {NONE} -- Implementation
 	internal_hash: detachable STRING
 
 ;note
-	copyright: "Copyright (c) 1984-2014, Eiffel Software"
+	copyright: "Copyright (c) 1984-2020, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

@@ -37,7 +37,12 @@ feature -- Status report
 			if is_destroyed then
 					-- If we have upgraded the implementation, then
 					-- we need to query the interface.
-				Result := attached_interface.implementation.is_show_requested
+				if 
+					attached attached_interface.implementation as imp and then
+					imp /= Current
+				then
+					Result := imp.is_show_requested
+				end
 			else
 				Result := flag_set (style, {WEL_WINDOW_CONSTANTS}.Ws_visible)
 			end

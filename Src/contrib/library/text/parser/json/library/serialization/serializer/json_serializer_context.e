@@ -199,6 +199,8 @@ feature -- Helpers
 				else
 					Result := conv.to_json (obj, Current)
 				end
+			elseif attached {READABLE_STRING_GENERAL} obj as str then
+				create {JSON_STRING} Result.make_from_string_general (str)
 			end
 		end
 
@@ -285,6 +287,6 @@ feature {NONE} -- Implementation
 	serializers_cache: detachable HASH_TABLE [JSON_SERIALIZER, TYPE [detachable ANY]]
 
 ;note
-	copyright: "2010-2018, Javier Velilla, Jocelyn Fiat, Eiffel Software and others https://github.com/eiffelhub/json."
+	copyright: "2010-2022, Javier Velilla, Jocelyn Fiat, Eiffel Software and others https://github.com/eiffelhub/json."
 	license: "https://github.com/eiffelhub/json/blob/master/License.txt"
 end

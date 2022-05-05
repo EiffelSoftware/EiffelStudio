@@ -1,5 +1,5 @@
 note
-	description: "Objects that ..."
+	description: "Objects that read json content."
 	author: "jvelilla"
 	date: "$Date$"
 	revision: "0.1"

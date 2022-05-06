@@ -36,13 +36,13 @@ feature -- Execution
 			create {SCM_GIT} scm.make (cfg)
 			if attached scm.update (a_changelist, Void) as res then
 				if res.succeed then
-					if attached res.message as msg then
+					if attached res.message as msg and then not msg.is_whitespace then
 						Result := msg
 					else
 						Result := "GIT update completed"
 					end
 				else
-					if attached res.message as msg then
+					if attached res.message as msg and then not msg.is_whitespace then
 						Result := msg
 					else
 						Result := "GIT update failed"
@@ -60,7 +60,7 @@ feature -- Execution
 			create scm.make (cfg)
 			if attached scm.revert (a_changelist, Void) as res then
 				if res.succeed then
-					if attached res.message as msg then
+					if attached res.message as msg and then not msg.is_whitespace then
 						Result := msg
 					else
 						Result := "GIT revert completed"
@@ -105,13 +105,13 @@ feature -- Execution
 
 			if attached scm.add (a_changelist, opts) as res then
 				if res.succeed then
-					if attached res.message as msg then
+					if attached res.message as msg and then not msg.is_whitespace then
 						Result := msg
 					else
 						Result := "GIT addition completed"
 					end
 				else
-					if attached res.message as msg then
+					if attached res.message as msg and then not msg.is_whitespace then
 						Result := msg
 					else
 						Result := "GIT addition failed"
@@ -133,13 +133,13 @@ feature -- Execution
 
 			if attached scm.delete (a_changelist, opts) as res then
 				if res.succeed then
-					if attached res.message as msg then
+					if attached res.message as msg and then not msg.is_whitespace then
 						Result := msg
 					else
 						Result := "GIT deletion completed"
 					end
 				else
-					if attached res.message as msg then
+					if attached res.message as msg and then not msg.is_whitespace then
 						Result := msg
 					else
 						Result := "GIT deletion failed"
@@ -162,13 +162,13 @@ feature -- Execution
 			if attached a_commit_set.message as m then
 				res := scm.commit (a_commit_set.changelist, m, opts)
 				if res.succeed then
-					if attached res.message as msg then
+					if attached res.message as msg and then not msg.is_whitespace then
 						a_commit_set.report_success (msg)
 					else
 						a_commit_set.report_success ("git operation completed")
 					end
 				else
-					if attached res.message as msg then
+					if attached res.message as msg and then not msg.is_whitespace then
 						a_commit_set.report_error (msg)
 					else
 						a_commit_set.report_error ("git operation failed")
@@ -193,13 +193,13 @@ feature -- Execution
 			create opts
 			res := scm.push (a_push, opts)
 			if res.succeed then
-				if attached res.message as msg then
+				if attached res.message as msg and then not msg.is_whitespace then
 					a_push.report_success (msg)
 				else
 					a_push.report_success ("git operation completed")
 				end
 			else
-				if attached res.message as msg then
+				if attached res.message as msg and then not msg.is_whitespace then
 					a_push.report_error (msg)
 				else
 					a_push.report_error ("git operation failed")
@@ -230,13 +230,13 @@ feature -- Execution
 			create opts
 			res := scm.pull (a_pull, opts)
 			if res.succeed then
-				if attached res.message as msg then
+				if attached res.message as msg and then not msg.is_whitespace then
 					a_pull.report_success (msg)
 				else
 					a_pull.report_success ("git operation completed")
 				end
 			else
-				if attached res.message as msg then
+				if attached res.message as msg and then not msg.is_whitespace then
 					a_pull.report_error (msg)
 				else
 					a_pull.report_error ("git operation failed")
@@ -267,13 +267,13 @@ feature -- Execution
 			create opts
 			res := scm.rebase (a_op, opts)
 			if res.succeed then
-				if attached res.message as msg then
+				if attached res.message as msg and then not msg.is_whitespace then
 					a_op.report_success (msg)
 				else
 					a_op.report_success ("git operation completed")
 				end
 			else
-				if attached res.message as msg then
+				if attached res.message as msg and then not msg.is_whitespace then
 					a_op.report_error (msg)
 				else
 					a_op.report_error ("git operation failed")
@@ -321,8 +321,8 @@ feature -- Execution
 		end
 
 note
-	copyright: "Copyright (c) 1984-2022, Eiffel Software"
-	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
+	copyright: "Copyright (c) 1984-2022, Eiffel Software and others"
+	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[
 			This file is part of Eiffel Software's Eiffel Development Environment.

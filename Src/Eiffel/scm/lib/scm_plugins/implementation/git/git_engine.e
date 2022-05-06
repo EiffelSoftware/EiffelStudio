@@ -143,8 +143,17 @@ feature -- Execution
 	revert (a_changelist: SCM_CHANGELIST; a_options: detachable SCM_OPTIONS): SCM_RESULT
 		local
 			cmd: STRING_32
+			reset_cmd: STRING_32
+			l_has_reset: BOOLEAN
 			fn: READABLE_STRING_32
+			s_fn: READABLE_STRING_32
+			msg: READABLE_STRING_8
 		do
+			create reset_cmd.make_empty
+			create reset_cmd.make_from_string (git_executable_location.name)
+			reset_cmd.append_string (option_to_command_line_flags ("reset", a_options))
+			reset_cmd.append_string_general (" reset ")
+
 			create cmd.make_from_string (git_executable_location.name)
 			cmd.append_string (option_to_command_line_flags ("checkout", a_options))
 			cmd.append_string_general (" checkout -- ")
@@ -160,6 +169,38 @@ feature -- Execution
 				else
 					cmd.append_string_general (fn)
 				end
+				if
+					attached {SCM_STATUS_ADDED} ic.item
+					or attached {SCM_STATUS_DELETED} ic.item
+				then
+					l_has_reset := True
+					reset_cmd.append_character (' ')
+					if fn.has (' ') or fn.has ('%T') then
+						reset_cmd.append_character ('"')
+						reset_cmd.append_string_general (fn)
+						reset_cmd.append_character ('"')
+					else
+						reset_cmd.append_string_general (fn)
+					end
+				end
+			end
+
+			if l_has_reset then
+				debug ("GIT_ENGINE")
+					print ({STRING_32} "Command: [" + reset_cmd + "]%N")
+				end
+				if attached output_of_command (reset_cmd, a_changelist.root.location) as res_reset then
+					if res_reset.exit_code = 0 then
+						msg := res_reset.output
+					else
+						msg := res_reset.error_output
+					end
+				else
+					msg := "Error: can not launch git [" + last_process_error.out + "]"
+				end
+				debug ("GIT_ENGINE")
+					print ("-> terminated %N")
+				end
 			end
 
 			debug ("GIT_ENGINE")
@@ -168,15 +209,25 @@ feature -- Execution
 			if attached output_of_command (cmd, a_changelist.root.location) as res_revert then
 				if res_revert.exit_code = 0 then
 					create Result.make_success (cmd)
-					Result.set_message (res_revert.output)
+					if msg = Void then
+						msg := res_revert.output
+					elseif attached res_revert.output as m then
+						msg := msg + " %N" + m
+					end
+					Result.set_message (msg)
 				else
 					create Result.make_failure (cmd)
-					Result.set_message (res_revert.error_output)
+					if msg = Void then
+						msg := res_revert.error_output
+					elseif attached res_revert.error_output as m then
+						msg := msg + " %N" + m
+					end
 				end
 			else
 				create Result.make_failure (cmd)
-				Result.set_message ("Error: can not launch git [" + last_process_error.out + "]")
+				msg := "Error: can not launch git [" + last_process_error.out + "]"
 			end
+			Result.set_message (msg)
 			debug ("GIT_ENGINE")
 				print ("-> terminated %N")
 			end

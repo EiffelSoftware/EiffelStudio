@@ -35,13 +35,13 @@ feature -- Execution
 			create scm.make (cfg)
 			if attached scm.revert (a_changelist, Void) as res then
 				if res.succeed then
-					if attached res.message as msg then
+					if attached res.message as msg and then not msg.is_whitespace then
 						Result := msg
 					else
 						Result := "SVN revert completed"
 					end
 				else
-					if attached res.message as msg then
+					if attached res.message as msg and then not msg.is_whitespace then
 						Result := msg
 					else
 						Result := "SVN revert failed"
@@ -59,7 +59,7 @@ feature -- Execution
 			create scm.make (cfg)
 			if attached scm.update (a_changelist, Void) as res then
 				if res.succeed then
-					if attached res.message as msg then
+					if attached res.message as msg and then not msg.is_whitespace then
 						Result := msg
 					else
 						Result := "SVN update completed"
@@ -103,13 +103,13 @@ feature -- Execution
 			create opts
 			if attached scm.add (a_changelist, opts) as res then
 				if res.succeed then
-					if attached res.message as msg then
+					if attached res.message as msg and then not msg.is_whitespace then
 						Result := msg
 					else
 						Result := "SVN addition completed"
 					end
 				else
-					if attached res.message as msg then
+					if attached res.message as msg and then not msg.is_whitespace then
 						Result := msg
 					else
 						Result := "SVN addition failed"
@@ -130,13 +130,13 @@ feature -- Execution
 			create opts
 			if attached scm.delete (a_changelist, opts) as res then
 				if res.succeed then
-					if attached res.message as msg then
+					if attached res.message as msg and then not msg.is_whitespace then
 						Result := msg
 					else
 						Result := "SVN deletion completed"
 					end
 				else
-					if attached res.message as msg then
+					if attached res.message as msg and then not msg.is_whitespace then
 						Result := msg
 					else
 						Result := "SVN deletion failed"
@@ -176,7 +176,7 @@ feature -- Execution
 					res := scm.add (lst_to_add, opts)
 					if res.failed then
 						has_error := True
-						if attached res.message as msg then
+						if attached res.message as msg and then not msg.is_whitespace then
 							a_commit_set.report_error (msg)
 						else
 							a_commit_set.report_error ("SVN add failed")
@@ -186,13 +186,13 @@ feature -- Execution
 				if not a_commit_set.has_error then
 					res := scm.commit (a_commit_set.changelist, m, opts)
 					if res.succeed then
-						if attached res.message as msg then
+						if attached res.message as msg and then not msg.is_whitespace then
 							a_commit_set.report_success (msg)
 						else
 							a_commit_set.report_success ("SVN commit completed")
 						end
 					else
-						if attached res.message as msg then
+						if attached res.message as msg and then not msg.is_whitespace then
 							a_commit_set.report_error (msg)
 						else
 							a_commit_set.report_error ("SVN commit failed")
@@ -207,8 +207,8 @@ feature -- Execution
 			end
 		end
 note
-	copyright: "Copyright (c) 1984-2022, Eiffel Software"
-	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
+	copyright: "Copyright (c) 1984-2022, Eiffel Software and others"
+	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[
 			This file is part of Eiffel Software's Eiffel Development Environment.

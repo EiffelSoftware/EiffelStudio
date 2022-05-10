@@ -82,7 +82,7 @@ char *win_eif_getenv (char *k, char *app)
 		CHECK ("Valid length", key_len <= INT32_MAX);
 		CharLowerBuff (lower_k, (DWORD) key_len);
 
-		strcpy (key, "Software\\ISE\\Eiffel_22.04\\");
+		strcpy (key, "Software\\ISE\\Eiffel_22.05\\");
 		if (app == NULL)
 			strncat (key, strrchr(modulename, '\\')+1, appl_len);
 		else

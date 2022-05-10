@@ -1796,8 +1796,8 @@ feature {NONE} -- Raise/unraise notification
 
 	unpopup_switching_mode
 		do
-			if switching_mode_popup /= Void then
-				switching_mode_popup.hide
+			if attached switching_mode_popup as pop then
+				pop.hide
 				switching_mode_popup := Void
 			end
 		end

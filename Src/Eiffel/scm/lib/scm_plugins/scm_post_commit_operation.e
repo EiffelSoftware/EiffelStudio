@@ -8,13 +8,17 @@ deferred class
 
 feature -- Query
 
+	operation_title: STRING_32
+		deferred
+		end
+
 	description: STRING_32
 		deferred
 		end
 
 note
-	copyright: "Copyright (c) 1984-2021, Eiffel Software"
-	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
+	copyright: "Copyright (c) 1984-2022, Eiffel Software and others"
+	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[
 			This file is part of Eiffel Software's Eiffel Development Environment.

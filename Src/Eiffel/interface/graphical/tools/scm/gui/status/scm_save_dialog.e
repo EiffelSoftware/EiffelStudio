@@ -42,8 +42,12 @@ feature {NONE} -- Initialization
 			parent_box := a_parent_box
 			scm_service := a_service
 			commit := a_commit
+			create close_actions
+
 			create commit_log_box
 			create commit_log_text
+
+			create post_operations_box
 
 			create progress_log_box
 			create progress_log_text
@@ -55,14 +59,7 @@ feature {NONE} -- Initialization
 
 	make_with_changelist (a_service: SOURCE_CONTROL_MANAGEMENT_S; a_changelist: SCM_CHANGELIST_COLLECTION; a_parent_box: SCM_STATUS_BOX)
 		do
-			parent_box := a_parent_box
-			scm_service := a_service
-
-			create close_actions
-
 			a_changelist.remove_empty_changelists
-
-
 			changelist := a_changelist
 			if a_changelist.changelist_count = 1 and then attached a_changelist.first_changelist as l_changelist then
 				create {SCM_SINGLE_COMMIT_SET} commit.make_with_changelist (Void, l_changelist)
@@ -71,15 +68,7 @@ feature {NONE} -- Initialization
 			end
 			commit.set_message (a_changelist.description)
 
-			create commit_log_box
-			create commit_log_text
-
-			create progress_log_box
-			create progress_log_text
-
-			create status_box
-			create status_text
-			make_dialog
+			make (a_service, commit, a_parent_box)
 		end
 
 feature -- Access
@@ -111,6 +100,8 @@ feature -- Widgets
 	commit_log_box: EV_VERTICAL_BOX
 
 	commit_log_text: EV_TEXT
+
+	post_operations_box: EV_VERTICAL_BOX
 
 feature {NONE} -- User interface initialization
 
@@ -172,6 +163,18 @@ feature {NONE} -- User interface initialization
 
 			b.hide
 
+				-- Post commit operations box
+			b := post_operations_box
+			fb.extend (b)
+			b.set_padding_width (small_padding_size)
+			b.set_border_width (small_border_size)
+
+--			create lab.make_with_text (scm_names.lab*pos)
+--			lab.align_text_left
+--			b.extend (lab)
+--			b.disable_item_expand (lab)
+			b.hide
+
 				-- Commit log box
 			b := commit_log_box
 			sp.extend (b)
@@ -200,9 +203,6 @@ feature {NONE} -- User interface initialization
 			if attached button_close as but then
 				but.hide
 			end
-			if attached button_next as but then
-				but.hide
-			end
 
 			set_button_text (dialog_buttons.ok_button, scm_names.button_commit_changelist)
 			set_button_text (dialog_buttons.cancel_button, interface_names.b_cancel)
@@ -211,14 +211,10 @@ feature {NONE} -- User interface initialization
 			set_button_text (dialog_buttons.open_button, scm_names.button_diff)
 			set_button_tooltip (dialog_buttons.open_button, scm_names.tooltip_button_diff)
 
-			set_button_text (dialog_buttons.apply_button, scm_names.button_process_post_commit_operations)
-			set_button_tooltip (dialog_buttons.apply_button, scm_names.tooltip_button_process_post_commit_operations)
-
 			set_button_action_before_close (dialog_buttons.ok_button, agent on_ok)
 			set_button_action_before_close (dialog_buttons.cancel_button, agent on_cancel)
 			set_button_action_before_close (dialog_buttons.reset_button, agent on_close)
 			set_button_action_before_close (dialog_buttons.open_button, agent on_open_diff)
-			set_button_action_before_close (dialog_buttons.apply_button, agent on_process_post_commit_operations)
 
 			progress_log_box.hide
 		end
@@ -317,33 +313,20 @@ feature -- Action
 			veto_close
 		end
 
-	on_process_post_commit_operations
-		do
-			if attached scm_service.post_commit_operations (commit) as l_ops and then not l_ops.is_empty then
-				across
-					l_ops as ic
-				loop
-					progress_log_text.append_text ("%N - processing: ")
-					progress_log_text.append_text (ic.item.description)
-					progress_log_text.append_text ("%N")
-				end
-			end
-		end
-
 	on_ok
 		local
 			err: BOOLEAN
 			l_pointer_style: detachable EV_POINTER_STYLE
 			txt: STRING_32
+			l_post_op_but: EV_BUTTON
+			l_post_op_lab: EV_TEXT_FIELD
+			hb: EV_HORIZONTAL_BOX
 		do
 			if attached button_commit as but then
 				but.hide
 			end
 			if attached button_close as but then
 				but.show
-			end
-			if attached button_next as but then
-				but.hide
 			end
 
 			l_pointer_style := dialog.pointer_style
@@ -365,11 +348,6 @@ feature -- Action
 			end
 
 			if attached scm_service.post_commit_operations (commit) as l_ops and then not l_ops.is_empty then
-				if attached button_next as but then
-					but.show
-						-- FIXME: for now, hide as it is not yet implemented:
-					but.hide
-				end
 				txt := progress_log_text.text
 				txt.append_character ('%N')
 				txt.append (scm_names.message_for_post_commit_operations (l_ops.count))
@@ -377,13 +355,27 @@ feature -- Action
 				across
 					l_ops as ic
 				loop
-					if attached {SCM_POST_COMMIT_GIT_PUSH_OPERATION} ic.item as l_git_push then
-						txt.append ({STRING_32} " - ")
-						txt.append (l_git_push.description)
-						txt.append_character ('%N')
-					end
+					create l_post_op_but.make_with_text (ic.item.operation_title)
+					l_post_op_but.set_minimum_width (default_button_width)
+					l_post_op_but.select_actions.extend (agent on_post_operation_run (ic.item))
+					create l_post_op_lab.make_with_text (ic.item.description)
+					l_post_op_lab.disable_edit
+					create hb
+					hb.set_padding_width (3)
+					hb.extend (l_post_op_but)
+					hb.disable_item_expand (l_post_op_but)
+					hb.extend (l_post_op_lab)
+
+					post_operations_box.extend (hb)
+					post_operations_box.disable_item_expand (hb)
+
+--					txt.append ({STRING_32} " - ")
+--					txt.append (ic.item.description)
+--					txt.append_character ('%N')
 				end
 				progress_log_text.set_text (txt)
+				post_operations_box.extend (create {EV_CELL})
+				post_operations_box.show
 			end
 
 			err := commit.has_error
@@ -436,6 +428,15 @@ feature -- Action
 			dialog.destroy
 		end
 
+feature -- Events
+
+	on_post_operation_run (a_post_op: SCM_POST_COMMIT_OPERATION)
+		do
+			if attached {SCM_POST_COMMIT_GIT_PUSH_OPERATION} a_post_op as l_git_push then
+				parent_box.open_git_push_dialog (l_git_push.root_location)
+			end
+		end
+
 feature -- Access
 
 	icon: EV_PIXEL_BUFFER
@@ -454,10 +455,6 @@ feature -- Access
 		do
 			Result := dialog_window_buttons [dialog_buttons.open_button]
 		end
-	button_next: detachable EV_BUTTON
-		do
-			Result := dialog_window_buttons [dialog_buttons.apply_button]
-		end
 	button_commit: detachable EV_BUTTON
 		do
 			Result := dialog_window_buttons [dialog_buttons.ok_button]
@@ -475,10 +472,9 @@ feature -- Access
 			-- Set of button id's for dialog
 			-- Note: Use {ES_DIALOG_BUTTONS} or `dialog_buttons' to determine the id's correspondance.
 		once
-			create Result.make (5)
+			create Result.make (4)
 			Result.put_last (dialog_buttons.open_button) -- Diff
-			Result.put_last (dialog_buttons.apply_button) -- Apply post commit operations
-			Result.put_last (dialog_buttons.ok_button) -- Apply/Commit/...
+			Result.put_last (dialog_buttons.ok_button) -- Commit/...
 			Result.put_last (dialog_buttons.reset_button) -- Close
 			Result.put_last (dialog_buttons.cancel_button) -- Cancel
 		end

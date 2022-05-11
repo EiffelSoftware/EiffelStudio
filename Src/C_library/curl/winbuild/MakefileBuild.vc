@@ -464,7 +464,6 @@ $(TARGET): $(LIB_OBJS) $(LIB_DIROBJ) $(DISTDIR)
 	-copy $(LIB_DIROBJ)\*.exp                 $(DIRDIST)\lib /y >nul 2>&1
 	-copy $(LIB_DIROBJ)\*.pdb                 $(DIRDIST)\lib /y >nul 2>&1
 	-copy ..\include\curl\*.h   $(DIRDIST)\include\curl\ /y  >nul 2>&1
-	pause
 
 $(LIB_OBJS): $(LIB_DIROBJ) $(DIRDIST)
 

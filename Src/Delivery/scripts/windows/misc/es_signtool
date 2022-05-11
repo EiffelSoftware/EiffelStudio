@@ -1,0 +1,21 @@
+#!/bin/bash
+
+
+. ./jsign/config.rc
+
+jsign_opts=
+#jsign_opts=--replace
+
+a=$(keytool -list -v -keystore NONE -storetype PKCS11 -storepass ${token_pass} -providerClass sun.security.pkcs11.SunPKCS11 -providerArg ./jsign/eToken.cfg | grep "Alias name:")
+alias_name=${a:12}
+#echo alias_name=${alias_name}
+
+#echo Signing "$*" using ${alias_name}
+jsign ${jsign_opts} --keystore ./jsign/eToken.cfg --alias "${alias_name}" --storetype PKCS11 --storepass ${token_pass} --tsaurl http://ts.ssl.com --tsmode RFC3161 $*
+res=$?
+if [ $res -eq 0 ]; then
+	echo - Signing completed: $*
+else
+	echo - Signing FAILED   : $*
+fi
+

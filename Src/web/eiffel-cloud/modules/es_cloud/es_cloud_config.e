@@ -33,6 +33,8 @@ feature -- Access
 
 	additional_notification_email: detachable IMMUTABLE_STRING_8
 
+	additional_error_notification_email: detachable IMMUTABLE_STRING_8
+
 feature -- Element change
 
 	set_api_secret (s: detachable READABLE_STRING_GENERAL)
@@ -57,6 +59,11 @@ feature -- Element change
 	set_additional_notification_email (v: READABLE_STRING_GENERAL)
 		do
 			create additional_notification_email.make_from_string ({UTF_CONVERTER}.utf_32_string_to_utf_8_string_8 (v))
+		end
+
+	set_additional_error_notification_email (v: READABLE_STRING_GENERAL)
+		do
+			create additional_error_notification_email.make_from_string ({UTF_CONVERTER}.utf_32_string_to_utf_8_string_8 (v))
 		end
 
 	enable_auto_trial (a_pl_name: detachable READABLE_STRING_GENERAL)

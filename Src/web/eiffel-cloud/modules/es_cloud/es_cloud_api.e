@@ -47,6 +47,9 @@ feature {NONE} -- Initialization
 				if attached cfg.resolved_text_item ("shop.additional_notification_email") as s then
 					config.set_additional_notification_email (s)
 				end
+				if attached cfg.resolved_text_item ("shop.additional_error_notification_email") as s then
+					config.set_additional_error_notification_email (s)
+				end
 				if attached cfg.resolved_text_item ("session.expiration_delay") as s then
 					config.session_expiration_delay := s.to_integer
 				end
@@ -1852,7 +1855,7 @@ feature -- Email processing
 			s.append ("%NNotification from site " + cms_api.site_url + " .%N")
 			e := cms_api.new_html_email (cms_api.setup.site_notification_email, "[ERROR] " + a_error_title, s)
 			cms_api.process_email (e)
-			if attached config.additional_notification_email as l_addr then
+			if attached config.additional_error_notification_email as l_addr then
 				e := cms_api.new_html_email (l_addr, "[ERROR] " + a_error_title, s)
 				cms_api.process_email (e)
 			end

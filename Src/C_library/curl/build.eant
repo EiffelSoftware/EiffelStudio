@@ -17,7 +17,9 @@
 	</target>
 
 	<target name="compile_windows" >
+		<echo message="- Build static for Windows (x86)" if="${ISE_PLATFORM}=windows" />
 		<exec executable="build_static_32.bat" if="${ISE_PLATFORM}=windows" />
+		<echo message="- Build static for Windows (x86-64)" if="${ISE_PLATFORM}=win64" />
 		<exec executable="build_static_64.bat" if="${ISE_PLATFORM}=win64" />
 	</target>
 	

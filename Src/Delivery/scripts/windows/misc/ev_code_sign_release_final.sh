@@ -110,6 +110,8 @@ do
 	echo sign_file "$final_dir/$f" >> $T_SIGN_ALL_FILE 
 done
 
-echo Now you should call $T_SIGN_ALL_FILE
-
 cd $CWD
+
+echo Now you should call $T_SIGN_ALL_FILE
+. $T_SIGN_ALL_FILE
+

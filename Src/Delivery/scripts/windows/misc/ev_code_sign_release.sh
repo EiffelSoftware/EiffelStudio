@@ -7,6 +7,7 @@ CWD=`pwd`
 version=$1
 revision=$2
 platform=$3
+result_archive=$4
 
 usage () {
 	echo Usage: prog major.min revision platform
@@ -224,6 +225,17 @@ list_exe_files
 cd $deliv_dir/Eiffel_${version}/releases
 list_exe_files
 
+cd $CWD
+
 echo Now you should call $T_SIGN_ALL_FILE
+. $T_SIGN_ALL_FILE
+
+if [ -n "$result_archive" ]; then
+	cd $deliv_dir
+	echo Build the archive $result_archive ...
+	$CMD_7Z a $result_archive *
+	echo Archive completed.
+fi
 
 cd $CWD
+

@@ -225,13 +225,15 @@ feature -- Visitor: instructions
 						elseif f.same_string ({STRING_32} "is_void") then
 							generate_probe_1 (c.parameters, "void")
 						elseif f.same_string ({STRING_32} "must_alias") then
-							generate_probe_2 (c.parameters, "must_alias")
+							generate_probe_2 (c.parameters, "must-alias")
 						elseif f.same_string ({STRING_32} "separated_path") then
 							generate_probe_2 (c.parameters, "separated")
 						elseif f.same_string ({STRING_32} "may_alias") then
-							generate_probe_2 (c.parameters, "may_alias")
+							generate_probe_2 (c.parameters, "may-alias")
 						elseif f.same_string ({STRING_32} "is_detachable") then
 							generate_probe_1 (c.parameters, "detachable")
+						elseif f.same_string ({STRING_32} "is_unaliased") then
+							generate_probe_1 (c.parameters, "unaliased")
 						end
 					end
 				⟲
@@ -304,7 +306,7 @@ feature {NONE} -- Probes
 		do
 			if attached a and then a.count = 1 and then attached a [1] as a1 then
 				printer.enter_object
-				printer.put_property_name ("probe:" + t)
+				printer.put_property_name (prefix_probe + t)
 				a1.process (Current)
 				printer.leave_object
 			end
@@ -315,7 +317,7 @@ feature {NONE} -- Probes
 		do
 			if attached a and then a.count = 2 and then attached a [1] as a1 and then attached a [2] as a2 then
 				printer.enter_object
-				printer.put_property_name ("probe:" + t)
+				printer.put_property_name (prefix_probe + t)
 				printer.enter_array
 				a1.process (Current)
 				a2.process (Current)
@@ -382,6 +384,9 @@ feature {NONE} -- Keys
 
 	key_unqualified_call: STRING_32 = "u_call"
 			-- A key for an unqualified call.
+
+	prefix_probe: STRING_32 = "@probe:"
+			-- A prefix of a key for a probe.
 
 feature {NONE} -- Output
 

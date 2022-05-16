@@ -119,7 +119,7 @@ feature -- Head customization
 		local
 			s: STRING_8
 		do
-			create s.make_from_string ("<script src=%"")
+			create s.make_from_string ("<script type=%"text/javascript%" src=%"")
 			s.append (a_src)
 			s.append ("%" defer></script>")
 			add_additional_head_line (s, False)
@@ -139,7 +139,7 @@ feature -- Head customization
 		local
 			s: STRING_8
 		do
-			create s.make_from_string ("<script src=%"")
+			create s.make_from_string ("<script type=%"text/javascript%" src=%"")
 			s.append (a_src)
 			s.append ("%"></script>")
 			add_additional_head_line (s, False)
@@ -149,7 +149,7 @@ feature -- Head customization
 		local
 			s: STRING_8
 		do
-			create s.make_from_string ("<script>%N")
+			create s.make_from_string ("<script type=%"text/javascript%">%N")
 			s.append (utf_8_encoded (a_script))
 			s.append ("%N</script>")
 			add_additional_head_line (s, True)

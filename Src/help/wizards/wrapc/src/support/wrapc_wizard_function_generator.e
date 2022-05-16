@@ -1,5 +1,5 @@
 note
-	description: "Summary description for {WRAPC_WIZARD_FUNCTION_GENERATOR}."
+	description: "Object respponsible to extract C functions definitions from a C header file."
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -14,14 +14,19 @@ feature {NONE} -- Initialization
 	make (a_header_path: STRING_32)
 		do
 			create list_of_functions.make (100)
+			create callbacks.make (5)
 			compile_function_expression
+			compile_callback_expression
 			read_file_line_by_line (create {PATH}.make_from_string (a_header_path))
 		end
 
 feature -- Access
 
 	list_of_functions: ARRAYED_LIST [STRING]
-			-- List of c functions
+			-- List of c functions.
+
+	callbacks: STRING_TABLE[STRING]
+			-- List of callbacks definitions.
 
 feature {NONE} -- Implementation
 
@@ -41,7 +46,11 @@ feature {NONE} -- Implementation
 				loop
 					l_file.read_line
 					line := l_file.last_string
-					extract_function (line)
+					if is_callback_definition (line) then
+
+					else
+						extract_function (line)
+					end
 				end
 				l_file.close
 			else
@@ -94,10 +103,12 @@ feature {NONE} -- Implementation
 				if i = 0 then
 					if not l_line.substring (1, l_line.count).is_empty then
 						l_function := l_line.substring (1, l_line.count)
+						-- print ("%N function when i = 0:" + l_function)
 					end
 				else
 					if not l_line.substring (i, l_line.count).is_empty then
 						l_function := l_line.substring (i, l_line.count)
+						-- print ("%N function when i /= 0:" + l_function)
 					end
 				end
 				if l_function /= void then
@@ -110,9 +121,14 @@ feature {NONE} -- Implementation
 		end
 
 	c_function_expression: RX_PCRE_REGULAR_EXPRESSION
+	c_callback_expression: RX_PCRE_REGULAR_EXPRESSION
 
 	c_function_pattern: STRING = "^(.+)?([a-zA-Z]\w*)(\s*)?\(.+\);"
 			-- Regular expression to extract C function signature.
+
+	c_callback_pattern: STRING = "^(typedef)(\s+)([a-zA-Z]\w*)(\s*)?\(.+\);"
+			-- Regular expression to extract C callback function signature.
+
 
 	is_valid_function (a_string: STRING): BOOLEAN
 		local
@@ -122,11 +138,42 @@ feature {NONE} -- Implementation
 			Result := c_function_expression.recognizes (l_str)
 		end
 
+	is_valid_callback (a_string: STRING): BOOLEAN
+		local
+			l_str: STRING
+		do
+			create l_str.make_from_string (a_string)
+			Result := c_callback_expression.recognizes (l_str)
+		end
+
 	compile_function_expression
 			-- compile regular expression.
 		do
 			create c_function_expression.make
 			c_function_expression.compile (c_function_pattern)
+		end
+
+	compile_callback_expression
+			-- compile regular expression.
+		do
+			create c_callback_expression.make
+			c_callback_expression.compile (c_callback_pattern)
+		end
+
+
+	is_callback_definition (a_str: STRING): BOOLEAN
+		local
+			l_str: STRING
+			l_pointer_name: STRING
+		do
+			l_str := a_str.twin
+			l_str.adjust
+			Result := is_valid_callback (l_str)
+			if Result then
+				l_pointer_name := (l_str.substring (l_str.index_of ('*', 1) + 1, l_str.index_of (')', 1) - 1))
+				l_pointer_name.adjust
+				callbacks.force (l_str, l_pointer_name)
+			end
 		end
 
 end

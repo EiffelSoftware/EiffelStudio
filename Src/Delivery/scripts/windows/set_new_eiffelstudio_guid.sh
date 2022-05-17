@@ -47,7 +47,7 @@ fi
 # $EIF_DELIV_SCRIPTS_DIR_WINDOWS/install/includes/Preprocessors.wxi
 svn revert "$EIF_DELIV_SCRIPTS_DIR_WINDOWS/install/includes/Preprocessors.wxi"
 
-line=32
+line=37
 do_sed "$((line+1))s/\(ProductGuid\s*=\s*\)\"[0-9A-Fa-f-]*\"/\1\"$(new_uuid)\"/g" $EIF_DELIV_SCRIPTS_DIR_WINDOWS/install/includes/Preprocessors.wxi
 do_sed "$((line+2))s/\(RegistriesGuid\s*=\s*\)\"[0-9A-Fa-f-]*\"/\1\"$(new_uuid)\"/g" $EIF_DELIV_SCRIPTS_DIR_WINDOWS/install/includes/Preprocessors.wxi
 do_sed "$((line+3))s/\(ShortcutsGuid\s*=\s*\)\"[0-9A-Fa-f-]*\"/\1\"$(new_uuid)\"/g" $EIF_DELIV_SCRIPTS_DIR_WINDOWS/install/includes/Preprocessors.wxi

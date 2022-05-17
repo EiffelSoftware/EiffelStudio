@@ -864,7 +864,7 @@ feature {NONE} -- column resizing impl
 	auto_resized_columns: LINKED_LIST [INTEGER]
 
 	manually_resized_columns: ARRAYED_LIST [INTEGER]
-			-- Record of all manually rezied columns
+			-- Record of all manually resized columns
 
 	header_resize_started: BOOLEAN
 			-- Header resize started?
@@ -1399,7 +1399,7 @@ invariant
 	selected_rows_agent_attached: selected_rows_function /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2021, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2022, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

@@ -73,7 +73,7 @@ feature -- Widgets
 
 	progress_log_box: EV_VERTICAL_BOX
 
-	progress_log_text: EV_TEXT
+	progress_log_text: SCM_TEXT
 
 	use_external_terminal_checkbutton: EV_CHECK_BUTTON
 

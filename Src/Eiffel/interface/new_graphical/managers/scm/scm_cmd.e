@@ -310,6 +310,7 @@ feature -- Drop down menu
 					if attached {FILED_STONE} editor_stone as st then
 						create l_file_location.make_from_string (st.file_name)
 						l_scm_root := scm.scm_root_location (l_file_location)
+
 						if l_scm_root = Void then
 							l_menu_status_item.set_text (scm_names.menu_file_outside_any_repository)
 						else
@@ -317,6 +318,9 @@ feature -- Drop down menu
 							if
 								l_status /= Void
 							then
+								l_menu_diff_item.enable_sensitive
+								l_menu_diff_item.select_actions.extend (agent on_editor_diff_selected (l_status.location))
+
 								l_menu_status_item.set_data (l_status)
 								l_menu_status_item.set_pixmap (status_pixmap (l_status))
 								l_menu_status_item.set_text (scm_names.menu_editor_status (st.stone_name, l_status.status_as_string))
@@ -324,8 +328,7 @@ feature -- Drop down menu
 									attached {SCM_STATUS_MODIFIED} l_status
 									or attached {SCM_STATUS_CONFLICTED} l_status
 								then
-									l_menu_diff_item.enable_sensitive
-									l_menu_diff_item.select_actions.extend (agent on_editor_diff_selected (l_status))
+
 									l_menu_revert_item.enable_sensitive
 									l_menu_revert_item.select_actions.extend (agent on_editor_revert_selected (l_status))
 									l_menu_delete_item.enable_sensitive
@@ -341,6 +344,8 @@ feature -- Drop down menu
 								end
 							else
 								l_menu_status_item.set_text (scm_names.menu_editor_status (st.stone_name, Void))
+								l_menu_diff_item.enable_sensitive
+								l_menu_diff_item.select_actions.extend (agent on_editor_diff_selected (l_file_location))
 							end
 							l_menu_add_to_item.enable_sensitive
 							across
@@ -373,18 +378,19 @@ feature {NONE} -- Implementation
 		do
 		end
 
-	on_editor_diff_selected (a_status: SCM_STATUS)
+	on_editor_diff_selected (a_file_location: PATH)
 		local
 			dlg: SCM_DIFF_DIALOG
 			l_ext_cmd: READABLE_STRING_GENERAL
 			ch_list: SCM_CHANGELIST
 			l_location: PATH
+			l_fake_diff_status: SCM_STATUS_MODIFIED
 		do
 			if
 				attached scm_s.service as scm and then
 				scm.is_available
 			then
-				l_location := a_status.location
+				l_location := a_file_location
 				if attached scm.scm_root_location (l_location) as l_scm_root then
 					if
 						attached {SCM_GIT_LOCATION} l_scm_root and then
@@ -403,7 +409,8 @@ feature {NONE} -- Implementation
 						execution_environment.launch (l_ext_cmd)
 					else
 						create ch_list.make_with_location (l_scm_root)
-						ch_list.extend_status (a_status)
+						create l_fake_diff_status.make (a_file_location)
+						ch_list.extend_status (l_fake_diff_status)
 						if attached scm.diff (ch_list) as l_diff then
 							create dlg.make (scm, l_diff)
 							dlg.set_is_modal (False)

@@ -89,17 +89,17 @@ feature -- Event
 
 feature -- Widgets
 
-	status_text: EV_TEXT
+	status_text: SCM_TEXT
 
 	status_box: EV_VERTICAL_BOX
 
 	progress_log_box: EV_VERTICAL_BOX
 
-	progress_log_text: EV_TEXT
+	progress_log_text: SCM_TEXT
 
 	commit_log_box: EV_VERTICAL_BOX
 
-	commit_log_text: EV_TEXT
+	commit_log_text: SCM_TEXT
 
 	post_operations_box: EV_VERTICAL_BOX
 
@@ -321,6 +321,7 @@ feature -- Action
 			l_post_op_but: EV_BUTTON
 			l_post_op_lab: EV_TEXT_FIELD
 			hb: EV_HORIZONTAL_BOX
+			l_only_git_push_post_op: BOOLEAN
 		do
 			if attached button_commit as but then
 				but.hide
@@ -348,13 +349,13 @@ feature -- Action
 			end
 
 			if attached scm_service.post_commit_operations (commit) as l_ops and then not l_ops.is_empty then
-				txt := progress_log_text.text
-				txt.append_character ('%N')
-				txt.append (scm_names.message_for_post_commit_operations (l_ops.count))
-				txt.append_character ('%N')
+				l_only_git_push_post_op := True
 				across
 					l_ops as ic
 				loop
+					if not attached {SCM_POST_COMMIT_GIT_PUSH_OPERATION} ic.item then
+						l_only_git_push_post_op := False
+					end
 					create l_post_op_but.make_with_text (ic.item.operation_title)
 					l_post_op_but.set_minimum_width (default_button_width)
 					l_post_op_but.select_actions.extend (agent on_post_operation_run (ic.item))
@@ -368,11 +369,15 @@ feature -- Action
 
 					post_operations_box.extend (hb)
 					post_operations_box.disable_item_expand (hb)
-
---					txt.append ({STRING_32} " - ")
---					txt.append (ic.item.description)
---					txt.append_character ('%N')
 				end
+				txt := progress_log_text.text
+				txt.append_character ('%N')
+				if l_only_git_push_post_op then
+					txt.append (scm_names.message_for_post_commit_git_push_operations)
+				else
+					txt.append (scm_names.message_for_post_commit_operations (l_ops.count))
+				end
+				txt.append_character ('%N')
 				progress_log_text.set_text (txt)
 				post_operations_box.extend (create {EV_CELL})
 				post_operations_box.show

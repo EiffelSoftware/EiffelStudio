@@ -134,6 +134,8 @@ feature -- Dialogs
 	label_commit_message: STRING_32 do Result := locale.translation_in_context ("Commit message", "scm") end
 
 
+	text_warning_console_interactions: STRING_32 do Result := locale.translation_in_context ("Warning: Check your terminal/console for potential user interactions.", "scm") end
+
 	text_about_source_control_tool: STRING_32 do Result := locale.translation_in_context ("[
 			This tool has support for GIT and Subversion tools. 
 			Use the [Config] button to check or update the expected locations.
@@ -141,6 +143,7 @@ feature -- Dialogs
 		]", "scm") end
 
 	text_no_output: STRING_32 do Result := locale.translation_in_context ("No output ...", "scm") end
+	text_no_difference: STRING_32 do Result := locale.translation_in_context ("No difference", "scm") end
 
 	title_scm_diff: STRING_32 do Result := locale.translation_in_context ("Source Control / Diff", "scm") end
 	title_scm_command_execution (a_title: READABLE_STRING_GENERAL): STRING_32
@@ -213,11 +216,16 @@ feature -- General
 
 feature -- Messages
 
+	message_for_post_commit_git_push_operations: STRING_32
+		do
+			Result := locale.translation_in_context ("You may now push your commits to the remote repositories by clicking %"Push%" below.", "scm")
+		end
+
 	message_for_post_commit_operations (nb: INTEGER): STRING_32
 		require
 			nb > 0
 		do
-			Result := locale.formatted_string (locale.plural_translation_in_context ("You may need to operate the following manual instruction:", "You may need to operate the following $1 manual instructions:", "scm", nb), [nb])
+			Result := locale.formatted_string (locale.plural_translation_in_context ("You may need to operate the following instruction:", "You may need to operate the following $1 instructions:", "scm", nb), [nb])
 		end
 
 

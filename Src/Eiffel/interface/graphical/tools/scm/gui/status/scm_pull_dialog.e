@@ -78,7 +78,7 @@ feature -- Widgets
 
 	is_custom_remote: BOOLEAN
 
-	branches_text: EV_TEXT
+	branches_text: SCM_TEXT
 
 	branches_box: EV_VERTICAL_BOX
 
@@ -86,7 +86,7 @@ feature -- Widgets
 
 	progress_log_box: EV_VERTICAL_BOX
 
-	progress_log_text: EV_TEXT
+	progress_log_text: SCM_TEXT
 
 	use_external_terminal_checkbutton: EV_CHECK_BUTTON
 
@@ -550,7 +550,7 @@ feature -- Access
 ;
 
 note
-	copyright: "Copyright (c) 1984-2021, Eiffel Software"
+	copyright: "Copyright (c) 1984-2022, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

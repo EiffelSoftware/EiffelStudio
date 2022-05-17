@@ -53,8 +53,7 @@ feature -- Access
 
 feature -- Widgets
 
-	progress_log_text: EV_TEXT
-
+	progress_log_text: SCM_TEXT
 
 feature {NONE} -- User interface initialization
 
@@ -64,9 +63,17 @@ feature {NONE} -- User interface initialization
 			-- `a_container': The dialog's container where the user interface elements should be extended
 		local
 			txt: EV_TEXT
+			l_diff_text: READABLE_STRING_GENERAL
 		do
 			txt := progress_log_text
-			txt.set_text (diff.full_text)
+			l_diff_text := diff.full_text
+			if l_diff_text.is_whitespace then
+				txt.set_text (scm_names.text_no_difference)
+				txt.set_foreground_color (colors.high_priority_foreground_color)
+			else
+				txt.set_foreground_color (colors.normal_priority_foreground_color)
+				txt.set_text (diff.full_text)
+			end
 			txt.disable_edit
 			a_container.extend (txt)
 
@@ -123,6 +130,8 @@ feature -- Action
 	on_close
 		do
 			-- Bye
+			progress_log_text.recycle
+			progress_log_text.destroy
 		end
 
 feature -- Access
@@ -168,7 +177,7 @@ feature -- Access
 			-- Indicates if the size and position information is remembered for the dialog	
 
 ;note
-	copyright: "Copyright (c) 1984-2021, Eiffel Software"
+	copyright: "Copyright (c) 1984-2022, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

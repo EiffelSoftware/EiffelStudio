@@ -78,7 +78,7 @@ feature -- Widgets
 
 	is_custom_remote: BOOLEAN
 
-	branches_text: EV_TEXT
+	branches_text: SCM_TEXT
 
 	branches_box: EV_VERTICAL_BOX
 
@@ -86,7 +86,7 @@ feature -- Widgets
 
 	progress_log_box: EV_VERTICAL_BOX
 
-	progress_log_text: EV_TEXT
+	progress_log_text: SCM_TEXT
 
 	use_external_terminal_checkbutton: EV_CHECK_BUTTON
 
@@ -248,7 +248,7 @@ feature {NONE} -- User interface initialization
 			cb := use_external_terminal_checkbutton
 			extend_non_expandable_to (b, cb)
 			cb.enable_select
-			create lab.make_with_text ("Warning: this is an experimental implementation.%NAdditional operations may be needed in terminal/console.")
+			create lab.make_with_text (scm_names.text_warning_console_interactions)
 			lab.set_foreground_color (colors.high_priority_foreground_color)
 			extend_non_expandable_to (b, lab)
 
@@ -373,6 +373,7 @@ feature -- Action
 				but.show
 			end
 
+
 			l_pointer_style := dialog.pointer_style
 			dialog.set_pointer_style ((create {EV_STOCK_PIXMAPS}).busy_cursor)
 
@@ -418,12 +419,13 @@ feature -- Action
 
 			l_branch := branches_combo.text
 
+			create l_push.make (distributed_location, l_remote, l_branch)
+
 			if l_unsupported_remote then
 				l_push.report_error ({STRING_32} "Unsupported remote location: " + l_remote)
 			elseif l_remote.is_whitespace then
 				l_push.report_error ({STRING_32} "Missing remote location...")
 			else
-				create l_push.make (distributed_location, l_remote, l_branch)
 				if l_use_external_terminal then
 					l_cmd := scm_service.push_command_line (l_push)
 					process_external_command (l_cmd, l_push.root_location.location)

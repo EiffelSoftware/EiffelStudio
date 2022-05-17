@@ -370,7 +370,7 @@ feature -- Status report
 	debug_output: STRING
 			-- String that should be displayed in debugger to represent `Current'.
 		do
-			Result := count.out + "item(s)"
+			Result := count.out + " item(s)"
 		end
 
 feature {NONE} -- Implementation
@@ -382,6 +382,6 @@ invariant
 	items_not_void: items /= Void
 
 note
-	copyright: "2010-2021, Javier Velilla, Jocelyn Fiat, Eiffel Software and others https://github.com/eiffelhub/json."
+	copyright: "2010-2022, Javier Velilla, Jocelyn Fiat, Eiffel Software and others https://github.com/eiffelhub/json."
 	license: "https://github.com/eiffelhub/json/blob/master/License.txt"
 end

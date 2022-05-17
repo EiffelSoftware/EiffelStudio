@@ -63,6 +63,10 @@ feature {NONE}  -- Initlization
 			end
 
 			internal_auto_hide_indicator.set_tooltip (internal_shared.interface_names.tooltip_notebook_hidden_tab_indicator)
+			if attached internal_auto_hide_indicator.drop_actions as l_auto_hide_drop_actions then
+				l_auto_hide_drop_actions.extend (agent on_drop_actions)
+				l_auto_hide_drop_actions.set_veto_pebble_function (agent on_veto_drop_action)
+			end
 		ensure
 			set: internal_docking_manager = a_docking_manager
 		end
@@ -579,7 +583,7 @@ invariant
 
 note
 	library:	"SmartDocking: Library of reusable components for Eiffel."
-	copyright:	"Copyright (c) 1984-2021, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2022, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

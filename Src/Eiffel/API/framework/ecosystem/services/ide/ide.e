@@ -26,12 +26,23 @@ feature {NONE} -- Creation.
 				-- Initialize events.
 			create zoom_event
 			auto_dispose (zoom_event)
+			zoom_factor := 0
 		end
 
 feature -- Installation
 
 	install
 		do
+		end
+
+feature -- Access
+
+	zoom_factor: INTEGER
+			-- Current zoom factor value.
+
+	set_zoom_factor (a_zoom_factor: INTEGER)
+		do
+			zoom_factor := a_zoom_factor
 		end
 
 feature -- Event
@@ -76,7 +87,7 @@ feature {NONE} -- Implementation: Internal cache
 invariant
 
 note
-	copyright: "Copyright (c) 1984-2021, Eiffel Software"
+	copyright: "Copyright (c) 1984-2022, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

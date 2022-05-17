@@ -23,6 +23,20 @@ feature -- Access: Connecton
 			result_is_interface_usable: Result.is_interface_usable
 		end
 
+feature -- Acces
+
+	zoom_factor: INTEGER
+			-- Current zoom factor value.
+		deferred
+		end
+
+	set_zoom_factor (a_zoom_factor: INTEGER)
+			-- Set `zoom_factor` to `a_zoom_factor`.
+		deferred
+		ensure
+			zoom_factor_set: a_zoom_factor = zoom_factor
+		end
+
 feature -- Events
 
 	zoom_event: EVENT_TYPE [TUPLE [zoom_factor: INTEGER]]
@@ -39,13 +53,14 @@ feature -- Event publishing
 		require
 			is_interface_usable: is_interface_usable
 		do
+			set_zoom_factor (a_zoom_factor)
 			if zoom_event.is_interface_usable then
 				zoom_event.publish ([a_zoom_factor])
 			end
 		end
 
 note
-	copyright: "Copyright (c) 1984-2021, Eiffel Software"
+	copyright: "Copyright (c) 1984-2022, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

@@ -20,6 +20,25 @@ feature -- Registration helpers
 			end
 		end
 
+	unregister_as_ide_observer
+		do
+			if
+				attached {IDE_S} (create {SERVICE_CONSUMER [IDE_S]}).service as l_ide_service
+			then
+				l_ide_service.ide_connection.disconnect_events (Current)
+			end
+		end
+
+	zoom_factor: INTEGER
+			-- Current zoom factor.
+		do
+			if
+				attached {IDE_S} (create {SERVICE_CONSUMER [IDE_S]}).service as l_ide_service
+			then
+				Result := l_ide_service.zoom_factor
+			end
+		end
+
 feature {IDE_S} -- Event handlers
 
 	on_zoom (a_zoom_factor: INTEGER)
@@ -32,7 +51,7 @@ feature {IDE_S} -- Event handlers
 		end
 
 note
-	copyright: "Copyright (c) 1984-2021, Eiffel Software"
+	copyright: "Copyright (c) 1984-2022, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

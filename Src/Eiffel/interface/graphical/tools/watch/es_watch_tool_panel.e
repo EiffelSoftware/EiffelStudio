@@ -467,6 +467,7 @@ feature {NONE} -- add new expression from the grid
 			then
 				new_expression_row := watches_grid.extended_new_row
 				create glab.make_with_text ("...")
+				glab.set_font (watches_grid.grid_font)
 				grid_cell_set_tooltip (glab, interface_names.f_add_new_expression)
 
 				new_expression_row.set_item (1, glab)
@@ -1969,7 +1970,7 @@ invariant
 note
 	ca_ignore:
 		"CA093", "CA093: manifest array type mismatch"
-	copyright: "Copyright (c) 1984-2021, Eiffel Software"
+	copyright: "Copyright (c) 1984-2022, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

@@ -1105,22 +1105,21 @@ feature {NONE} -- Agent filling
 
 			a_row.insert_subrow (1)
 			lrow := a_row.subrow (1)
-
-			create glab.make_with_text ("count")
+			glab := parent_grid.new_grid_label_item ("count")
 			glab.set_pixmap (pixmaps.mini_pixmaps.general_search_icon)
 			lrow.set_item (col_name_index, glab)
 
-			create glab.make_with_text (object_spec_count_and_capacity.spec_count.out)
+			glab := parent_grid.new_grid_label_item (object_spec_count_and_capacity.spec_count.out)
 			lrow.set_item (Col_value_index, glab)
 
 			a_row.insert_subrow (2)
 			lrow := a_row.subrow (2)
 
-			create glab.make_with_text ("capacity")
+			glab := parent_grid.new_grid_label_item ("capacity")
 			glab.set_pixmap (pixmaps.mini_pixmaps.general_search_icon)
 			lrow.set_item (col_name_index, glab)
 
-			create glab.make_with_text (object_spec_count_and_capacity.spec_capacity.out)
+			glab := parent_grid.new_grid_label_item (object_spec_count_and_capacity.spec_capacity.out)
 			lrow.set_item (Col_value_index, glab)
 		end
 
@@ -1158,7 +1157,7 @@ feature {NONE} -- Agent filling
 				gf.set_overriden_fonts (label_font_table, label_font_height)
 				lrow.set_item (Col_name_index, gf)
 
-				create glab.make_with_text (vitem.output_value)
+				glab := parent_grid.new_grid_label_item (vitem.output_value)
 				glab.set_pixmap (pixmaps.mini_pixmaps.general_search_icon)
 				lrow.set_item (Col_value_index, glab)
 			end
@@ -1204,7 +1203,8 @@ feature {NONE} -- Agent filling
 						a_row.insert_subrow (r)
 						lrow := a_row.subrow (r)
 
-						create glab.make_with_text ("Agent")
+						glab := parent_grid.new_grid_label_item ("Agent")
+
 						glab.set_pixmap (pixmaps.mini_pixmaps.general_search_icon)
 						lrow.set_item (Col_name_index, glab)
 
@@ -1247,7 +1247,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright: "Copyright (c) 1984-2021, Eiffel Software"
+	copyright: "Copyright (c) 1984-2022, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

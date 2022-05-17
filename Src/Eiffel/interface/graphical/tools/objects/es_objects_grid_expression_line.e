@@ -346,6 +346,7 @@ feature -- Graphical changes
 	new_cell_expression: ES_OBJECTS_GRID_EXPRESSION_CELL
 		do
 			create Result
+			Result.set_font (parent_grid.grid_font)
 		end
 
 	set_expression_text (v: STRING_32)
@@ -706,7 +707,7 @@ feature -- Graphical changes
 		end
 
 note
-	copyright: "Copyright (c) 1984-2021, Eiffel Software"
+	copyright: "Copyright (c) 1984-2022, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

@@ -1,19 +1,21 @@
 #!/bin/bash
 
-# Usage: prog path-to-setups-dir
-CWD=`pwd`
-
-setups_dir=$1
-version=$2
-revision=$3
-platform=$4
-result_archive=$5
-
 usage () {
-	echo Usage: prog path-to-setups-dir major.min revision platform
+	echo "Usage: prog major.min revision platform path-to-setups-dir workspace_dir bin_dir result_archive  "
 	echo   platform: win64 or windows
 	exit 0
 }
+
+CWD=`pwd`
+
+version=$1
+revision=$2
+platform=$3
+setups_dir=$4
+workspace_dir=$5
+bin_dir=$6
+result_archive=$7
+
 safe_mkdir() {
 	if [ -d "$1" ]; then
 		echo Directory $1 already exists
@@ -33,24 +35,20 @@ if [ -z "${platform}" ]; then
 	usage 
 fi
 
-if [ -f $CWD/local.rc ]; then
-	. $CWD/local.rc
+if [ -f ${bin_dir}/local.rc ]; then
+	. ${bin_dir}/local.rc
 fi
 
 if [ -z "$CMD_7Z" ]; then 
 	CMD_7Z=7z 
 fi
 if [ -z "$CMD_SIGN" ]; then 
-	CMD_SIGN=./es_signtool 
+	CMD_SIGN=${bin_dir}/es_signtool 
 fi
 
 echo Code signing the setups at ${setups_dir}
 
-if [ ! -d "$CWD/_EV_CODE_SIGNING" ]; then
-	safe_mkdir $CWD/_EV_CODE_SIGNING
-fi
-
-T_WORKSPACE=$CWD/_EV_CODE_SIGNING/${version}.${revision}
+T_WORKSPACE=${workspace_dir}/_EV_CODE_SIGNING/${version}.${revision}
 if [ ! -d "$T_WORKSPACE" ]; then 
 	safe_mkdir $T_WORKSPACE 
 fi
@@ -195,7 +193,7 @@ list_exe_files
 
 cd $CWD
 
-echo Now you should call $T_SIGN_ALL_FILE
+echo Call now: $T_SIGN_ALL_FILE
 . $T_SIGN_ALL_FILE
 
 if [ -n "$result_archive" ]; then
@@ -206,4 +204,3 @@ if [ -n "$result_archive" ]; then
 fi
 
 cd $CWD
-

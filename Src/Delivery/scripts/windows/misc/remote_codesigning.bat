@@ -11,6 +11,9 @@ echo Sign release %version%.%revision% platform=%platform% from the %remote_mach
 
 if "%es_deliv_setups%" EQU "" set es_deliv_setups=\es-deliv\%version%\%platform%.VC110_VC140\Eiffel_%version%\setups
 
+set archive_fn=%version%.%revision%-%platform%-content_signed.7z
+if EXIST %archive_fn% goto APPLY_SIGNED_CONTENT
+
 set remote_dir=~/_data/%version%.%revision%-%platform%
 
 ::ssh %remote_machine% "rm -rf _data; mkdir _data"
@@ -35,13 +38,18 @@ scp -r setups/branded/*.7z %remote_machine%:%remote_dir%/setups/branded/
 
 cd %CWD%
 
-set archive_fn=~/_data/%version%.%revision%_content_signed.7z
+set remote_archive_fn=%remote_dir%/%archive_fn%
 
-ssh %remote_machine% "cd %remote_dir%/bin; /bin/bash ./ev_code_sign_setups.sh %version% %revision% %platform% %remote_dir%/setups %remote_dir% %remote_dir%/bin %archive_fn%"
+ssh %remote_machine% "cd %remote_dir%/bin; /bin/bash ./ev_code_sign_setups.sh %version% %revision% %platform% %remote_dir%/setups %remote_dir% %remote_dir%/bin %remote_archive_fn%"
 
-ssh %remote_machine% ls -la %remote_dir%
+scp %remote_machine%:%remote_archive_fn% %archive_fn%
+goto APPLY_SIGNED_CONTENT
 
-::ssh %remote_machine% /bin/bash ./command/sign_release_content.sh %version% %revision% %platform% %archive_fn%
-scp %remote_machine%:%archive_fn% .
+:APPLY_SIGNED_CONTENT
+echo Found %archive_fn%
+cd %es_deliv_setups%
+cd ..
+7z x %CWD%\%archive_fn%
+goto EOF
 
 :EOF

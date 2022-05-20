@@ -1,8 +1,13 @@
-The current process to sign the Windows releases:
-- Build the delivery as usual (it will upload to S3 storage)
-- Sign the release content:
-  `bash ./ev_code_sign_release_final.sh 22.05 123456 win64 target_archive.7z`
-- upload the ` target_archive.7z ` to the Windows build machine, and rebuild the .msi
-- Sign the release .msi files
-  `bash ./ev_code_sign_release_final.sh 22.05 123456`
-- Upload the result directly to s3 storage, using upload_final.sh .
+#Example of EV code signing workflow
+
+- Launch the delivery building: generates .7z and .msi (see how to avoid building msi in this first step)
+- Sign the content of .7z archives: done remotely, on the machine having the SSl.COM USB token
+	`remote_codesigning.bat 22.05 106275 win64 \es-deliv\22.05\win64.VC110_VC140\Eiffel_22.05\setups`
+ -> It will overwrite previous build release content
+
+- Go back the deliv folder, and launch the `make_installation` tasks, to redo the .msi
+- Sign the new .msi files: done remotely, on the machine having the SSl.COM USB token
+
+	`remote_codesigning_msi.bat 22.05 106275 win64 \es-deliv\22.05\win64.VC110_VC140\Eiffel_22.05\setups`
+
+- 

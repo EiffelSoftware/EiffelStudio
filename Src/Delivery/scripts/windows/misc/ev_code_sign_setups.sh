@@ -197,7 +197,7 @@ echo Call now: $T_SIGN_ALL_FILE
 . $T_SIGN_ALL_FILE
 
 if [ -n "$result_archive" ]; then
-	cd $deliv_dir
+	cd $deliv_dir/Eiffel_${version}
 	echo Build the archive $result_archive ...
 	$CMD_7Z a $result_archive *
 	echo Archive completed.

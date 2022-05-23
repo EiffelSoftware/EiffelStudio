@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: EiffelStudio $Revision$\n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2021-12-24 23:06+0300\n"
+"PO-Revision-Date: 2022-05-23 17:47+0300\n"
 "Last-Translator: Alexander Kogtenkov <kwaxer@mail.ru>\n"
 "Language-Team: Eiffel Software and others <support@eiffel.com>\n"
 "Language: ru\n"
@@ -727,7 +727,7 @@ msgstr ""
 "существует в одном из предков."
 
 #. Source code: Result := locale.formatted_string (locale.plural_translation_in_context ("$1 change", "$1 changes", "scm", nb), [nb])
-#: scm_names.e:161
+#: scm_names.e:168
 msgctxt "scm"
 msgid "$1 change"
 msgid_plural "$1 changes"
@@ -3080,6 +3080,12 @@ msgstr "Добавить &подкластер"
 msgid "Add ->"
 msgstr "Добавить ->"
 
+#. Source code: menu_add: STRING_32 do Result := locale.translation_in_context ("Add ...", "scm") end
+#: scm_names.e:76
+msgctxt "scm"
+msgid "Add ..."
+msgstr "Добавить…"
+
 #. Source code: m_objects_tool_layout_add_all: STRING_32	do Result := locale.translation ("Add All") end
 #: interface_names.e:681
 msgid "Add All"
@@ -4786,12 +4792,12 @@ msgid "Argument '"
 msgstr "Аргумент '"
 
 #. Source code: option_error_message := locale.translation ("Argument -project_path conflicts with -use_settings.")
-#: es.e:1115
+#: es.e:1127
 msgid "Argument -project_path conflicts with -use_settings."
 msgstr "Аргумент -project_path конфликтует с -use_settings."
 
 #. Source code: option_error_message := locale.translation ("Argument -use_settings conflicts with -project_path.")
-#: es.e:1222
+#: es.e:1234
 msgid "Argument -use_settings conflicts with -project_path."
 msgstr "Аргумент -use_settings конфликтует с -project_path."
 
@@ -7194,7 +7200,7 @@ msgid "Branch #$1"
 msgstr "Ветвь №$1"
 
 #. Source code: label_branches: STRING_32 do Result := locale.translation_in_context ("Branches", "scm") end
-#: scm_names.e:170
+#: scm_names.e:177
 msgctxt "scm"
 msgid "Branches"
 msgstr "Ветви"
@@ -7736,7 +7742,7 @@ msgid "Cannot instantiate type {$1} : $2."
 msgstr "Невозможно установить тип {$1} : $2."
 
 #. Source code: option_error_message := locale.translation ("Cannot mix -config or -target when compiling a system using an Eiffel class as argument")
-#: es.e:1127
+#: es.e:1139
 msgid ""
 "Cannot mix -config or -target when compiling a system using an Eiffel class "
 "as argument"
@@ -7745,7 +7751,7 @@ msgstr ""
 "в качестве аргумента"
 
 #. Source code: option_error_message := locale.translation ("Cannot mix -project, -config or -target when compiling a system using an Eiffel class as argument")
-#: es.e:1095
+#: es.e:1107
 msgid ""
 "Cannot mix -project, -config or -target when compiling a system using an "
 "Eiffel class as argument"
@@ -7764,12 +7770,12 @@ msgid "Cannot open file: $1."
 msgstr "Невозможно открыт файл: $1."
 
 #. Source code: option_error_message := locale.translation ("Cannot override -compat with -experiment.")
-#: es.e:1339
+#: es.e:1351
 msgid "Cannot override -compat with -experiment."
 msgstr "Невозможно переопределить -compat с помощью -experiment."
 
 #. Source code: option_error_message := locale.translation ("Cannot override -experiment with -compat.")
-#: es.e:1330
+#: es.e:1342
 msgid "Cannot override -experiment with -compat."
 msgstr "Невозможно переопределить -experiment с помощью -compat."
 
@@ -7868,7 +7874,7 @@ msgid "Capability"
 msgstr "Возможности"
 
 #. Source code: Result := locale.formatted_string (locale.translation_in_context
-#: conf_interface_names.e:1312
+#: conf_interface_names.e:1306
 msgctxt "configuration"
 msgid ""
 "Capability \"$1\" of current target has value \"$3\" insufficient for "
@@ -7884,7 +7890,7 @@ msgstr ""
 "\tФайл: $6"
 
 #. Source code: Result := locale.formatted_string (locale.translation_in_context
-#: conf_interface_names.e:1329
+#: conf_interface_names.e:1323
 msgctxt "configuration"
 msgid ""
 "Capability \"$1\" of dependent target has value \"$2\" insufficient for "
@@ -7910,7 +7916,7 @@ msgstr ""
 "\tФайл: $5"
 
 #. Source code: Result := locale.formatted_string (locale.translation_in_context
-#: conf_interface_names.e:1287
+#: conf_interface_names.e:1281
 msgctxt "configuration"
 msgid ""
 "Capability \"$1\" of supplier target has value \"$2\" insufficient for "
@@ -7936,12 +7942,12 @@ msgstr ""
 "\tФайл: $5"
 
 #. Source code: option_error_message := locale.translation ("Capability option requires a value.")
-#: es.e:1380
+#: es.e:1392
 msgid "Capability option requires a value."
 msgstr "Параметр capability должен иметь значение."
 
 #. Source code: locale.translation ("Capability option value should be one of %"$1%", %"$2%", %"$3%"."),
-#: es.e:1372
+#: es.e:1384
 msgid "Capability option value should be one of \"$1\", \"$2\", \"$3\"."
 msgstr ""
 "Значение параметра capability должно быть одним из \"$1\", \"$2\", \"$3\"."
@@ -8086,7 +8092,7 @@ msgid "Changed Time"
 msgstr "Время изменения"
 
 #. Source code: label_changes: STRING_32 do Result := locale.translation_in_context ("Changes", "scm") end
-#: scm_names.e:126
+#: scm_names.e:130
 msgctxt "scm"
 msgid "Changes"
 msgstr "Изменения"
@@ -8135,7 +8141,7 @@ msgid "Check"
 msgstr "check"
 
 #. Source code: button_check: STRING_32 do Result := locale.translation_in_context ("Check", "scm") end
-#: scm_names.e:181
+#: scm_names.e:188
 msgctxt "scm"
 msgid "Check"
 msgstr "Проверить"
@@ -8191,7 +8197,7 @@ msgid "Check for Void target"
 msgstr "Проверка на несуществующую цель"
 
 #. Source code: tooltip_button_check: STRING_32 do Result := locale.translation_in_context ("Check for changes", "scm") end
-#: scm_names.e:182
+#: scm_names.e:189
 msgctxt "scm"
 msgid "Check for changes"
 msgstr "Проверить изменения"
@@ -8219,7 +8225,7 @@ msgid "Check the validity of the library definition"
 msgstr "Проверить допустимость определения библиотеки"
 
 #. Source code: label_checking: STRING_32 do Result := locale.translation_in_context ("Checking ...", "scm") end
-#: scm_names.e:154
+#: scm_names.e:161
 msgctxt "scm"
 msgid "Checking ..."
 msgstr "Проверка…"
@@ -8244,6 +8250,12 @@ msgstr ""
 #: eb_metric_names.e:99
 msgid "Checking metric validity"
 msgstr "Проверка допустимости метрик"
+
+#. Source code: button_checking: STRING_32 do Result := locale.translation_in_context ("Checking...", "scm") end
+#: scm_names.e:213
+msgctxt "scm"
+msgid "Checking..."
+msgstr "Проверка…"
 
 #. Source code: Result.force (locale.translation ("Chinese"), "zh")
 #: locale_names.e:137
@@ -8535,6 +8547,12 @@ msgstr "Настройки класса"
 msgid "Class Relations"
 msgstr "Связи классов"
 
+#. Source code: output_window.add (locale.formatted_string (locale.translation_in_context ("Class `$1` is not found or not compiled.", "command.autoproof"), fc.class_name))
+#: e_autoproof.e:146
+msgctxt "command.autoproof"
+msgid "Class `$1` is not found or not compiled."
+msgstr "Класс «$1» не найден или не скомпилирован."
+
 #. Source code: l_class_address: STRING_32			do Result := locale.translation ("Class address") end
 #: interface_names.e:1215
 msgid "Class address"
@@ -8727,7 +8745,7 @@ msgid "Class naming convention violated"
 msgstr "Нарушено соглашение об именовании классов"
 
 #. Source code: Result := locale.formatted_string (locale.translation_in_context
-#: conf_interface_names.e:1247
+#: conf_interface_names.e:1241
 msgctxt "configuration"
 msgid ""
 "Class option \"$1\" has value \"$2\" insufficient for its cluster value "
@@ -9012,7 +9030,7 @@ msgid "Cleaning project..."
 msgstr "Очистка проекта..."
 
 #. Source code: button_clear_changelist: STRING_32 do Result := locale.translation_in_context ("Clear", "scm") end
-#: scm_names.e:203
+#: scm_names.e:210
 msgctxt "scm"
 msgid "Clear"
 msgstr "Очистить"
@@ -9054,7 +9072,7 @@ msgid "Clear text filter"
 msgstr "Очистить текстовый фильтр"
 
 #. Source code: button_clear_changelist_tooltip: STRING_32 do Result := locale.translation_in_context ("Clear the active changelist", "scm") end
-#: scm_names.e:204
+#: scm_names.e:211
 msgctxt "scm"
 msgid "Clear the active changelist"
 msgstr "Очистить активный список изменений"
@@ -9983,7 +10001,7 @@ msgid "Command"
 msgstr "Команда"
 
 #. Source code: label_command: STRING_32 do Result := locale.translation_in_context ("Command ", "scm") end
-#: scm_names.e:102
+#: scm_names.e:104
 msgctxt "scm"
 msgid "Command "
 msgstr "Команда"
@@ -10073,7 +10091,7 @@ msgstr "Команда для выполнения."
 
 #. <PREF NAME="general.file_browser_command" DESCRIPTION="Command to open a file in external browser."><STRING>explorer $target</STRING></PREF>
 #. <PREF NAME="general.file_browser_command" DESCRIPTION="Command to open a file in external browser."><STRING>nautilus $target</STRING></PREF>
-#: $EIFFEL_SRC/Delivery/studio/eifinit/spec/windows/default.xml:5
+#: $EIFFEL_SRC/Delivery/studio/eifinit/spec/windows/default.xml:6
 #: $EIFFEL_SRC/Delivery/studio/eifinit/spec/unix/default.xml:8
 msgctxt "preference"
 msgid "Command to open a file in external browser."
@@ -10093,9 +10111,7 @@ msgctxt "preference"
 msgid "Command to read Adobe Acrobat files."
 msgstr "Команда для чтения файлов Adobe Acrobat."
 
-#. <PREF NAME="general.external_editor_command" DESCRIPTION="Command used to launch  an external editor."><STRING>notepad $target</STRING></PREF>
 #. <PREF NAME="general.external_editor_command" DESCRIPTION="Command used to launch  an external editor."><STRING>$ISE_EIFFEL/tools/spec/$ISE_PLATFORM/bin/estudio-open-file $target $line</STRING></PREF>
-#: $EIFFEL_SRC/Delivery/studio/eifinit/spec/windows/default.xml:4
 #: $EIFFEL_SRC/Delivery/studio/eifinit/spec/unix/default.xml:5
 msgctxt "preference"
 msgid "Command used to launch  an external editor."
@@ -10108,6 +10124,12 @@ msgstr "Команда запуска внешнего редактора."
 msgctxt "preference"
 msgid "Command used to launch a console."
 msgstr "Команда для запуска консоли."
+
+#. <PREF NAME="general.external_editor_command" DESCRIPTION="Command used to launch an external editor."><STRING>notepad $target</STRING></PREF>
+#: $EIFFEL_SRC/Delivery/studio/eifinit/spec/windows/default.xml:5
+msgctxt "preference"
+msgid "Command used to launch an external editor."
+msgstr "Команда для запуска внешнего редактора."
 
 #. <PREF NAME="shortcuts.editor.comment" DESCRIPTION="Comment current line or selection."><SHORTCUT Ctrl="True">K</SHORTCUT></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:801
@@ -10158,25 +10180,25 @@ msgid "Comments text color"
 msgstr "Цвет комментариев"
 
 #. Source code: button_commit_changelist: STRING_32 do Result := locale.translation_in_context ("Commit", "scm") end
-#: scm_names.e:201
+#: scm_names.e:208
 msgctxt "scm"
 msgid "Commit"
 msgstr "Фиксировать"
 
 #. Source code: menu_commit: STRING_32 do Result := locale.translation_in_context ("Commit ...", "scm") end
-#: scm_names.e:78
+#: scm_names.e:80
 msgctxt "scm"
 msgid "Commit ..."
 msgstr "Фиксировать…"
 
 #. Source code: button_commit_changelist_tooltip: STRING_32 do Result := locale.translation_in_context ("Commit active changelist", "scm") end
-#: scm_names.e:202
+#: scm_names.e:209
 msgctxt "scm"
 msgid "Commit active changelist"
 msgstr "Зафиксировать активный список изменений"
 
 #. Source code: label_commit_message: STRING_32 do Result := locale.translation_in_context ("Commit message", "scm") end
-#: scm_names.e:130
+#: scm_names.e:134
 msgctxt "scm"
 msgid "Commit message"
 msgstr "Сообщение фиксации"
@@ -10567,7 +10589,7 @@ msgid "Conditions for this task to be executed."
 msgstr "Условия, которые должны исполняться для этой задачи."
 
 #. Source code: button_config: STRING_32 do Result := locale.translation_in_context ("Config", "scm") end
-#: scm_names.e:197
+#: scm_names.e:204
 msgctxt "scm"
 msgid "Config"
 msgstr "Конфигурация"
@@ -10578,7 +10600,7 @@ msgid "Config and cluster details"
 msgstr "Подробности конфигурации и кластера"
 
 #. Source code: menu_configuration: STRING_32 do Result := locale.translation_in_context ("Configuration ...", "scm") end
-#: scm_names.e:83
+#: scm_names.e:85
 msgctxt "scm"
 msgid "Configuration ..."
 msgstr "Конфигурация..."
@@ -11008,7 +11030,7 @@ msgid "Continue when breakpoint hits ?"
 msgstr "Продолжать при попадании на точку останова?"
 
 #. Source code: tooltip_button_process_post_commit_operations: STRING_32 do Result := locale.translation_in_context ("Continue with post-commit operation(s)...", "scm") end
-#: scm_names.e:193
+#: scm_names.e:200
 msgctxt "scm"
 msgid "Continue with post-commit operation(s)..."
 msgstr "Продолжить с операциями пост-фиксации…"
@@ -12492,7 +12514,7 @@ msgid "Custom local space later"
 msgstr "Автопродолжение local...<Пробел>"
 
 #. Source code: label_remote_custom_location: STRING_32 do Result := locale.translation_in_context ("Custom location", "scm") end
-#: scm_names.e:169
+#: scm_names.e:176
 msgctxt "scm"
 msgid "Custom location"
 msgstr "Произвольное расположение"
@@ -14016,6 +14038,12 @@ msgstr "Отложенный элемент"
 msgid "Delete"
 msgstr "Удалить"
 
+#. Source code: menu_delete: STRING_32 do Result := locale.translation_in_context ("Delete ...", "scm") end
+#: scm_names.e:77
+msgctxt "scm"
+msgid "Delete ..."
+msgstr "Удалить…"
+
 #. Source code: Result := locale.formatted_string(locale.translation("Delete Client Link '$1'") , [a_name])
 #: interface_names.e:2577
 msgid "Delete Client Link '$1'"
@@ -14217,7 +14245,7 @@ msgid "Deselect recalculatable history items"
 msgstr "Снять отметки с перевычисляемых элементов"
 
 #. Source code: label_remote_repositories: STRING_32 do Result := locale.translation_in_context ("Destination repositories", "scm") end
-#: scm_names.e:167
+#: scm_names.e:174
 msgctxt "scm"
 msgid "Destination repositories"
 msgstr "Целевые хранилища"
@@ -14636,7 +14664,7 @@ msgid "Dialogs"
 msgstr "Диалоги"
 
 #. Source code: button_diff: STRING_32 do Result := locale.translation_in_context ("Diff", "scm") end
-#: scm_names.e:185
+#: scm_names.e:192
 msgctxt "scm"
 msgid "Diff"
 msgstr "Сравнить"
@@ -14648,7 +14676,7 @@ msgid "Diff ..."
 msgstr "Сравнить…"
 
 #. Source code: label_diff_command: STRING_32 do Result := locale.translation_in_context ("Diff command ", "scm") end
-#: scm_names.e:103
+#: scm_names.e:105
 msgctxt "scm"
 msgid "Diff command "
 msgstr "Команда сравнения"
@@ -15678,7 +15706,7 @@ msgstr ""
 "чтобы улучшить читаемость кода."
 
 #. Source code: double_click_show_diff_tooltip: STRING_32 do Result := locale.translation_in_context ("Double-clicked to show the differences%N(when Shift is pressed, open the location)", "scm") end
-#: scm_names.e:176
+#: scm_names.e:183
 msgctxt "scm"
 msgid ""
 "Double-clicked to show the differences\n"
@@ -17686,6 +17714,12 @@ msgstr "Пусто"
 msgid "Empty 'rescue' clause"
 msgstr "Пустое предложение 'rescue'"
 
+#. Source code: error := locale.translation_in_context ("Empty AutoProof argument.", "command.autoproof")
+#: ec_command_line_option_extension.e:56
+msgctxt "command.autoproof"
+msgid "Empty AutoProof argument."
+msgstr "Пустой аргумент AutoProof."
+
 #. Source code: locale.translation_in_context (once "Empty Client_list is not allowed and will be assumed to be {NONE}.", once "parser.eiffel.warning")))
 #: eiffel_parser.e:5133
 msgctxt "parser.eiffel.warning"
@@ -17742,6 +17776,12 @@ msgctxt "code_analyzer"
 msgid "Empty branch in conditional instruction"
 msgstr "Пустая ветка в условной инструкции"
 
+#. Source code: error := locale.translation_in_context ("Empty class name.", "command.autoproof")
+#: ec_command_line_option_extension.e:96
+msgctxt "command.autoproof"
+msgid "Empty class name."
+msgstr "Пустое имя класса."
+
 #. Source code: (ca_messages.locale.translation_in_context ("Empty compound after {1} part of {2}.", once "code_analyzer.violation"),
 #: ca_empty_if_rule.e:79
 msgctxt "code_analyzer.violation"
@@ -17779,6 +17819,12 @@ msgstr "Пустая процедура создания"
 msgctxt "code_analysis.preference"
 msgid "Empty feature"
 msgstr "Пустой компонент"
+
+#. Source code: error := locale.translation_in_context ("Empty feature name.", "command.autoproof")
+#: ec_command_line_option_extension.e:98
+msgctxt "command.autoproof"
+msgid "Empty feature name."
+msgstr "Пустое имя компонента."
 
 #. Source code: locale.translation_in_context (once "Empty formal argument list is not allowed", once "parser.eiffel.warning")))
 #: eiffel_parser.e:8130
@@ -18649,6 +18695,12 @@ msgstr "Цвет фона ошибки"
 msgid "Error during parameters preparation"
 msgstr "Ошибка при подготовке параметров"
 
+#. Source code: error := locale.formatted_string (locale.translation_in_context ("Error in AutoProof argument %"$1%": $2", "command.autoproof"), argument, error)
+#: ec_command_line_option_extension.e:66
+msgctxt "command.autoproof"
+msgid "Error in AutoProof argument \"$1\": $2"
+msgstr "Ошибка в аргументе AutoProof «$1»: $2"
+
 #. Source code: do Result := locale.formatted_string (translation_in_context ("Error in command-line option %"$1%": $2.", once "code_analyzer"), a_option, a_message) end
 #: ca_messages.e:644
 msgctxt "code_analyzer"
@@ -18656,7 +18708,7 @@ msgid "Error in command-line option \"$1\": $2."
 msgstr "Ошибка в опции командной строки «$1»: $2."
 
 #. Source code: option_error_message := locale.formatted_string (locale.translation_in_context
-#: es.e:1156
+#: es.e:1168
 msgctxt "compiler.command-line.option"
 msgid "Error in command-line option \"$1\": $2."
 msgstr "Ошибка в опции командной строки «$1»: $2."
@@ -18797,6 +18849,12 @@ msgstr ""
 "Ошибка: нельзя вычислить `{$1}.$2'.\n"
 "Только однократный компонент, константа и статический вызов могут быть "
 "вычеслены в контексте \"Класс\".\n"
+
+#. Source code: locale.translation_in_context ("Error: Cannot verify selected item(s).", "autoproof.error").as_string_8,
+#: ap_verification_failure.e:44
+msgctxt "autoproof.error"
+msgid "Error: Cannot verify selected item(s)."
+msgstr "Ошибка: невозможно верифицировать выделенный(-ые) элемент(-ы)."
 
 #. Source code: format_elements (t, locale.translation_in_context ("[
 #: vucr_body.e:190
@@ -19197,7 +19255,9 @@ msgstr "Исполняемый модуль не устарел"
 msgid "Execute $1 tests"
 msgstr "Выполнить $1 тестов"
 
+#. <PREF NAME="general.execute_in_console_shell_command" DESCRIPTION="Execute command in terminal/console."><STRING>cmd /C "$command &gt; pause"</STRING></PREF>
 #. <PREF NAME="general.execute_in_console_shell_command" DESCRIPTION="Execute command in terminal/console."><STRING>$ISE_EIFFEL/tools/spec/$ISE_PLATFORM/bin/estudio-terminal-execution $command</STRING></PREF>
+#: $EIFFEL_SRC/Delivery/studio/eifinit/spec/windows/default.xml:4
 #: $EIFFEL_SRC/Delivery/studio/eifinit/spec/unix/default.xml:4
 msgctxt "preference"
 msgid "Execute command in terminal/console."
@@ -19208,7 +19268,9 @@ msgstr "Выполнить команду в терминале/консоли."
 msgid "Execute execution one step at a time"
 msgstr "Выполнять по одному шагу"
 
+#. <PREF NAME="general.execute_in_console_shell_command" DESCRIPTION="Execute command in terminal/console."><STRING>cmd /C "$command &gt; pause"</STRING></PREF>
 #. <PREF NAME="general.execute_in_console_shell_command" DESCRIPTION="Execute command in terminal/console."><STRING>$ISE_EIFFEL/tools/spec/$ISE_PLATFORM/bin/estudio-terminal-execution $command</STRING></PREF>
+#: $EIFFEL_SRC/Delivery/studio/eifinit/spec/windows/default.xml:4
 #: $EIFFEL_SRC/Delivery/studio/eifinit/spec/unix/default.xml:4
 msgctxt "preference"
 msgid "Execute in console shell command"
@@ -19719,14 +19781,14 @@ msgid "External compilation output prompted"
 msgstr "Вызвана панель вывода внешней компиляции"
 
 #. Source code: button_external_diff: STRING_32 do Result := locale.translation_in_context ("External diff", "scm") end
-#: scm_names.e:195
+#: scm_names.e:202
 msgctxt "scm"
 msgid "External diff"
 msgstr "Внешняя утилита сравнения"
 
-#. <PREF NAME="general.external_editor_command" DESCRIPTION="Command used to launch  an external editor."><STRING>notepad $target</STRING></PREF>
+#. <PREF NAME="general.external_editor_command" DESCRIPTION="Command used to launch an external editor."><STRING>notepad $target</STRING></PREF>
 #. <PREF NAME="general.external_editor_command" DESCRIPTION="Command used to launch  an external editor."><STRING>$ISE_EIFFEL/tools/spec/$ISE_PLATFORM/bin/estudio-open-file $target $line</STRING></PREF>
-#: $EIFFEL_SRC/Delivery/studio/eifinit/spec/windows/default.xml:4
+#: $EIFFEL_SRC/Delivery/studio/eifinit/spec/windows/default.xml:5
 #: $EIFFEL_SRC/Delivery/studio/eifinit/spec/unix/default.xml:5
 msgctxt "preference"
 msgid "External editor command"
@@ -19839,7 +19901,7 @@ msgid "Failures"
 msgstr "Неудачи"
 
 #. Source code: boolean_false: STRING_32 do Result := locale.translation ("False") end
-#: conf_interface_names.e:1355
+#: conf_interface_names.e:1349
 msgid "False"
 msgstr "Нет"
 
@@ -19954,6 +20016,12 @@ msgstr "Свойства компонента"
 #: eb_metric_names.e:864
 msgid "Feature `$1' (ID = \"$2\") is invalid."
 msgstr "Компонент `$1' (ID = \"$2\") недопустим."
+
+#. Source code: output_window.add (locale.formatted_string (locale.translation_in_context ("Feature `$1` is not found in class `$2`.", "command.autoproof"), fc.feature_name, fc.class_name))
+#: e_autoproof.e:154
+msgctxt "command.autoproof"
+msgid "Feature `$1` is not found in class `$2`."
+msgstr "Компонента «$1» нет в классе «$2»."
 
 #. Source code: l_feature_address: STRING_32				do Result := locale.translation("Feature address")	end
 #: interface_names.e:1466
@@ -20427,7 +20495,7 @@ msgstr "Не указан файл внешней команды $1."
 
 #. <PREF NAME="general.file_browser_command" DESCRIPTION="Command to open a file in external browser."><STRING>explorer $target</STRING></PREF>
 #. <PREF NAME="general.file_browser_command" DESCRIPTION="Command to open a file in external browser."><STRING>nautilus $target</STRING></PREF>
-#: $EIFFEL_SRC/Delivery/studio/eifinit/spec/windows/default.xml:5
+#: $EIFFEL_SRC/Delivery/studio/eifinit/spec/windows/default.xml:6
 #: $EIFFEL_SRC/Delivery/studio/eifinit/spec/unix/default.xml:8
 msgctxt "preference"
 msgid "File browser command"
@@ -21499,13 +21567,13 @@ msgid "GIT command (the binary is required to support GIT)."
 msgstr "Команда git (исполняемый файл клиента git)."
 
 #. Source code: Result := locale.translation_in_context ("GIT support: not available", "scm")
-#: scm_names.e:113
+#: scm_names.e:117
 msgctxt "scm"
 msgid "GIT support: not available"
 msgstr "git недоступен"
 
 #. Source code: Result := locale.translation_in_context ("GIT support: yes", "scm")
-#: scm_names.e:111
+#: scm_names.e:115
 msgctxt "scm"
 msgid "GIT support: yes"
 msgstr "Поддержка git: да"
@@ -21597,7 +21665,8 @@ msgstr "Общие"
 #. <PREF NAME="shortcuts.general.reload_current_tab" DESCRIPTION="Reload current editor tab."><SHORTCUT Ctrl="True">R</SHORTCUT></PREF>
 #. <PREF NAME="shortcuts.general.show_context_help" DESCRIPTION="Shows contextual help documentation, if available."><SHORTCUT>F1</SHORTCUT></PREF>
 #. <PREF NAME="general.console_shell_command" DESCRIPTION="Command used to launch a console."><STRING></STRING></PREF>
-#. <PREF NAME="general.external_editor_command" DESCRIPTION="Command used to launch  an external editor."><STRING>notepad $target</STRING></PREF>
+#. <PREF NAME="general.execute_in_console_shell_command" DESCRIPTION="Execute command in terminal/console."><STRING>cmd /C "$command &gt; pause"</STRING></PREF>
+#. <PREF NAME="general.external_editor_command" DESCRIPTION="Command used to launch an external editor."><STRING>notepad $target</STRING></PREF>
 #. <PREF NAME="general.file_browser_command" DESCRIPTION="Command to open a file in external browser."><STRING>explorer $target</STRING></PREF>
 #. <PREF NAME="general.use_postscript" DESCRIPTION="Generate postscript (rather than RTF) when printing."><BOOLEAN>False</BOOLEAN></PREF>
 #. <PREF NAME="general.console_shell_command" DESCRIPTION="Command used to launch a console."><STRING>$ISE_EIFFEL/tools/spec/$ISE_PLATFORM/bin/estudio-terminal</STRING></PREF>
@@ -21675,6 +21744,7 @@ msgstr "Общие"
 #: $EIFFEL_SRC/Delivery/studio/eifinit/spec/windows/default.xml:4
 #: $EIFFEL_SRC/Delivery/studio/eifinit/spec/windows/default.xml:5
 #: $EIFFEL_SRC/Delivery/studio/eifinit/spec/windows/default.xml:6
+#: $EIFFEL_SRC/Delivery/studio/eifinit/spec/windows/default.xml:7
 #: $EIFFEL_SRC/Delivery/studio/eifinit/spec/unix/default.xml:3
 #: $EIFFEL_SRC/Delivery/studio/eifinit/spec/unix/default.xml:4
 #: $EIFFEL_SRC/Delivery/studio/eifinit/spec/unix/default.xml:5
@@ -21750,7 +21820,7 @@ msgstr "Генерировать омонимы"
 
 #. <PREF NAME="general.use_postscript" DESCRIPTION="Generate postscript (rather than RTF) when printing."><BOOLEAN>False</BOOLEAN></PREF>
 #. <PREF NAME="general.use_postscript" DESCRIPTION="Generate postscript (rather than RTF) when printing."><BOOLEAN>True</BOOLEAN></PREF>
-#: $EIFFEL_SRC/Delivery/studio/eifinit/spec/windows/default.xml:6
+#: $EIFFEL_SRC/Delivery/studio/eifinit/spec/windows/default.xml:7
 #: $EIFFEL_SRC/Delivery/studio/eifinit/spec/unix/default.xml:9
 msgctxt "preference"
 msgid "Generate postscript (rather than RTF) when printing."
@@ -22068,7 +22138,7 @@ msgid "Go to the selected external information source"
 msgstr "Перейти к выбранному внешнему информационному ресурсу"
 
 #. Source code: menu_go_to_tool: STRING_32 do Result := locale.translation_in_context ("Go to the tool", "scm") end
-#: scm_names.e:85
+#: scm_names.e:87
 msgctxt "scm"
 msgid "Go to the tool"
 msgstr "Перейти в панель"
@@ -22192,6 +22262,12 @@ msgstr "Группа \"$1\" (ID = \"$2\") недопустима."
 msgid "Group $1 was not found."
 msgstr "Группа $1 не обнаружена."
 
+#. Source code: output_window.add (locale.formatted_string (locale.translation_in_context ("Group `$1` is not in the system.", "command.autoproof"), n))
+#: e_autoproof.e:177
+msgctxt "command.autoproof"
+msgid "Group `$1` is not in the system."
+msgstr "Группы «$1» нет в системе."
+
 #. Source code: Result := locale.formatted_string (locale.translation ("Group `$2' does not exist in target `$1'."), [a_target, a_group])
 #: interface_names.e:1766
 msgid "Group `$2' does not exist in target `$1'."
@@ -22203,7 +22279,7 @@ msgid "Group metrics by unit"
 msgstr "Группировать метрики по единицам измерения"
 
 #. Source code: Result := locale.formatted_string (locale.translation_in_context
-#: conf_interface_names.e:1268
+#: conf_interface_names.e:1262
 msgctxt "configuration"
 msgid ""
 "Group option \"$1\" has value \"$2\" insufficient for value \"$4\" of the "
@@ -22467,13 +22543,13 @@ msgid "Hide labels"
 msgstr "Скрыть ярлыки"
 
 #. Source code: tooltip_question_hide_location_with_no_change: STRING_32 do Result := locale.translation_in_context ("Hide location that has no change", "scm") end
-#: scm_names.e:96
+#: scm_names.e:98
 msgctxt "scm"
 msgid "Hide location that has no change"
 msgstr "Скрыть пути без изменений"
 
 #. Source code: question_hide_location_with_no_change: STRING_32 do Result := locale.translation_in_context ("Hide location with no change", "scm") end
-#: scm_names.e:95
+#: scm_names.e:97
 msgctxt "scm"
 msgid "Hide location with no change"
 msgstr "Скрыть пути без изменений"
@@ -23052,7 +23128,7 @@ msgid "Include all classes of cluster"
 msgstr "Включать все классы кластера"
 
 #. Source code: question_include_all_content: STRING_32 do Result := locale.translation_in_context ("Include all content", "scm") end
-#: scm_names.e:98
+#: scm_names.e:100
 msgctxt "scm"
 msgid "Include all content"
 msgstr "Включать всё содержимое"
@@ -23677,6 +23753,19 @@ msgstr "Безэкземплярный"
 msgid "Instance-free features"
 msgstr "Безэкземплярные компоненты"
 
+#. Source code: (locale.plural_translation_in_context
+#: es.e:1479
+msgctxt "compiler.option"
+msgid "Insufficient arguments for option `$1` that expects $2 argument."
+msgid_plural ""
+"Insufficient arguments for option `$1` that expects $2 arguments."
+msgstr[0] ""
+"Недостаточно аргументов для параметра «$1», который ожидает $2 аргумент."
+msgstr[1] ""
+"Недостаточно аргументов для параметра «$1», который ожидает $2 аргумента."
+msgstr[2] ""
+"Недостаточно аргументов для параметра «$1», который ожидает $2 аргументов."
+
 #. Source code: ("Integer value $1 is too large for $2.",
 #: eiffel_scanner_skeleton.e:497
 msgctxt "compiler.parser"
@@ -24138,6 +24227,13 @@ msgstr "Неверный тег описания."
 msgid "Invalid external tag."
 msgstr "Неверный тег external."
 
+#. Source code: error := locale.translation_in_context ("Invalid feature name format (expected: CLASS_NAME.feature_name).", "command.autoproof")
+#: ec_command_line_option_extension.e:94
+msgctxt "command.autoproof"
+msgid "Invalid feature name format (expected: CLASS_NAME.feature_name)."
+msgstr ""
+"Недопустимый формат имени компонента (ожидается: ИМЯ_КЛАССА.имя_компонента)."
+
 #. Source code: e_parse_incorrect_file_rule: STRING_32 do Result := locale.translation ("Invalid file_rule tag.") end
 #: conf_interface_names.e:940
 msgid "Invalid file_rule tag."
@@ -24224,7 +24320,7 @@ msgid "Invalid platform $1."
 msgstr "Недопустимая платформа $1."
 
 #. Source code: option_error_message := locale.translation ("Invalid platform argument")
-#: es.e:1357
+#: es.e:1369
 msgid "Invalid platform argument"
 msgstr "Недопустимое значение аргумента платформы."
 
@@ -24257,7 +24353,7 @@ msgid "Invalid precompile tag."
 msgstr "Неверный тег precompile."
 
 #. Source code: option_error_message := locale.formatted_string (locale.translation_in_context
-#: es.e:1186
+#: es.e:1198
 msgctxt "compiler.command-line.option"
 msgid ""
 "Invalid preference value \"$3\" for preference of name \"$2\" in option "
@@ -24392,18 +24488,10 @@ msgstr "Неверный тег/положение тега \"$1\"."
 msgid "Invalid value for all_classes attribute in root tag."
 msgstr "Недопустимое значение атрибута all_classes в элементе root."
 
-#. Source code: Result := locale.formatted_string (locale.translation ("Invalid value for configuration option %"$1%": %"$2%""), [option_name, option_value])
-#: conf_interface_names.e:1238
-msgid "Invalid value for configuration option \"$1\": \"$2\""
-msgstr "Недопустимое значение опции конфигурации \"$1\": \"$2\""
-
-#. Source code: Result := locale.formatted_string (locale.translation ("Invalid value for configuration option %"$1%": %"$2%" (Expected values: $3)"), [option_name, option_value, e])
-#: conf_interface_names.e:1236
-msgid ""
-"Invalid value for configuration option \"$1\": \"$2\" (Expected values: $3)"
-msgstr ""
-"Недопустимое значение опции конфигурации \"$1\": \"$2\" (Ожидаемые значения: "
-"$3)"
+#. Source code: Result := locale.formatted_string (locale.translation ("Invalid value for setting %"$1%": %"$2%" (Expected values: $3)"), [option_name, option_value, e])
+#: conf_interface_names.e:1233
+msgid "Invalid value for setting \"$1\": \"$2\" (Expected values: $3)"
+msgstr "Недопустимое значение настройки «$1»: «$2» (Ожидаемые значения: $3)"
 
 #. Source code: Result := locale.formatted_string (locale.translation ("Invalid value for setting $1."), [a_setting])
 #: conf_interface_names.e:937
@@ -27107,6 +27195,12 @@ msgstr ""
 msgid "Minimum version cannot be greater than maximum version."
 msgstr "Минимальная версия не может быть больше максимальной версии."
 
+#. Source code: label_miscellaneous: STRING_32 do Result := locale.translation_in_context ("Miscellaneous", "scm") end
+#: scm_names.e:106
+msgctxt "scm"
+msgid "Miscellaneous"
+msgstr "Разное"
+
 #. Source code: locale.translation_in_context ("Mismatch error", "configuration.option")
 #: target_properties.e:294
 msgctxt "configuration.option"
@@ -27156,12 +27250,12 @@ msgid "Missing attribute '$1'"
 msgstr "Отсутствует атрибут '$1'"
 
 #. Source code: option_error_message := locale.translation ("Missing class and feature name for option -callees")
-#: es.e:870
+#: es.e:882
 msgid "Missing class and feature name for option -callees"
 msgstr "Пропущены имена класса и компонента в опции -callees"
 
 #. Source code: option_error_message := locale.translation ("Missing class and feature name for option -callers")
-#: es.e:799
+#: es.e:811
 msgid "Missing class and feature name for option -callers"
 msgstr "Пропущены имена класса и компонента в опции -callers"
 
@@ -27172,17 +27266,17 @@ msgid "Missing class name after command-line option \"$1\"."
 msgstr "Отсутствует имя класса после опции командной строки «$1»."
 
 #. Source code: option_error_message := locale.translation ("Missing class name and feature name arguments for -dumpoperands.")
-#: es.e:1292
+#: es.e:1304
 msgid "Missing class name and feature name arguments for -dumpoperands."
 msgstr "Пропущены имена класса и компонента в опции -dumpoperands."
 
 #. Source code: option_error_message := locale.translation ("Missing class name argument for -dumpfeatures.")
-#: es.e:1279
+#: es.e:1291
 msgid "Missing class name argument for -dumpfeatures."
 msgstr "Пропущено имя класса в опции -dumpfeatures."
 
 #. Source code: option_error_message := locale.translation ("Missing class name or -all argument following filter name.")
-#: es.e:1043
+#: es.e:1055
 msgid "Missing class name or -all argument following filter name."
 msgstr "Пропущено имя класса или аргумент -all после имени фильтра."
 
@@ -27193,20 +27287,20 @@ msgid "Missing closing parenthesis for rule \"$1\""
 msgstr "Отсутствует закрывающая скобка в правиле «$1»"
 
 #. Source code: option_error_message := locale.translation ("Missing config name for option -ace.")
-#: es.e:1132
+#: es.e:1144
 msgid "Missing config name for option -ace."
 msgstr "Пропущено имя конфигурации в опции -ace."
 
-#. Source code: option_error_message := locale.translation ("Missing config name for option -config.")
-#: es.e:1142
-msgid "Missing config name for option -config."
-msgstr "Пропущено имя конфигурации в опции -config."
+#. Source code: option_error_message := locale.translation ("Missing configuration file name for option -config.")
+#: es.e:1154
+msgid "Missing configuration file name for option -config."
+msgstr "Пропущено имя файла конфигурации в опции -config."
 
 #. Source code: option_error_message := locale.formatted_string (locale.translation_in_context
-#: es.e:1162
+#: es.e:1174
 msgctxt "compiler.command-line.option"
-msgid "Missing configuration option for option \"$1\"."
-msgstr "Пропущена опция конфигурации в опции «$1»."
+msgid "Missing configuration setting for option \"$1\"."
+msgstr "Пропущена настройка конфигурации в опции «$1»."
 
 #. Source code: do Result := translation_in_context ("Missing creation procedure with no arguments", once "code_analyzer") end
 #: ca_names.e:200
@@ -27231,12 +27325,12 @@ msgid "Missing feature comment"
 msgstr "Отсутствующий комментарий компонента"
 
 #. Source code: option_error_message := locale.translation ("Missing feature name for option -callers")
-#: es.e:849
+#: es.e:861
 msgid "Missing feature name for option -callers"
 msgstr "Пропущено имя компонента в опции -callers"
 
 #. Source code: option_error_message := locale.translation ("Missing feature name for options -callees")
-#: es.e:920
+#: es.e:932
 msgid "Missing feature name for options -callees"
 msgstr "Пропущено имя компонента в опции -callees"
 
@@ -27247,22 +27341,22 @@ msgid "Missing file name after command-line option \"$1\"."
 msgstr "Отсутствует имя файла после опции командной строки «$1»."
 
 #. Source code: option_error_message := locale.translation ("Missing file name argument for -file.")
-#: es.e:1239
+#: es.e:1251
 msgid "Missing file name argument for -file."
 msgstr "Пропущено имя файла в опции -file."
 
 #. Source code: option_error_message := locale.translation ("Missing filter name for option -filter.")
-#: es.e:761
+#: es.e:773
 msgid "Missing filter name for option -filter."
 msgstr "Пропущено имя фильтра в опции -filter."
 
 #. Source code: option_error_message := locale.translation ("Missing input class file path for option -pretty")
-#: es.e:1006
+#: es.e:1018
 msgid "Missing input class file path for option -pretty"
 msgstr "Пропущен путь исходного класса в опции -pretty"
 
 #. Source code: option_error_message := locale.translation ("Missing library argument.")
-#: es.e:1319
+#: es.e:1331
 msgid "Missing library argument."
 msgstr "Пропущен аргумент библиотеки."
 
@@ -27271,10 +27365,10 @@ msgstr "Пропущен аргумент библиотеки."
 msgid "Missing manifest array type"
 msgstr "Отсутствует тип явно заданного массива"
 
-#. Source code: Result := locale.formatted_string (locale.translation ("Missing name for configuration option %"$1%""), [option])
+#. Source code: Result := locale.formatted_string (locale.translation ("Missing name in the setting %"$1%""), [option])
 #: conf_interface_names.e:1190
-msgid "Missing name for configuration option \"$1\""
-msgstr "Пропущено имя опции конфигурации \"$1\""
+msgid "Missing name in the setting \"$1\""
+msgstr "Пропущено имя в настройке «$1»"
 
 #. Source code: Result := locale.formatted_string (locale.translation ("Missing parent target: $1 in target $2"), [a_parent, a_target])
 #: conf_interface_names.e:908
@@ -27282,34 +27376,34 @@ msgid "Missing parent target: $1 in target $2"
 msgstr "Нет родительского задания $1 в задании $2"
 
 #. Source code: option_error_message := locale.translation ("Missing path for option -output_file.")
-#: es.e:1109
+#: es.e:1121
 msgid "Missing path for option -output_file."
 msgstr "Пропущен путь в опции -output_file."
 
 #. Source code: option_error_message := locale.translation ("Missing path to metadata cache path.")
-#: es.e:1305
+#: es.e:1317
 msgid "Missing path to metadata cache path."
 msgstr "Отсутствует путь кэша метаданных."
 
 #. Source code: option_error_message := locale.formatted_string (locale.translation_in_context
-#: es.e:1168
+#: es.e:1180
 msgctxt "compiler.command-line.option"
 msgid "Missing preference name for option \"$1\"."
 msgstr "Пропущено имя настройки в опции «$1»."
 
 #. Source code: option_error_message := locale.formatted_string (locale.translation_in_context
-#: es.e:1174
+#: es.e:1186
 msgctxt "compiler.command-line.option"
 msgid "Missing preference value for option \"$1\"."
 msgstr "Пропущено значение настройки для опции «$1»."
 
 #. Source code: option_error_message := locale.translation ("Missing project file for option -project.")
-#: es.e:1100
+#: es.e:1112
 msgid "Missing project file for option -project."
 msgstr "Пропущен файл проекта в опции -project."
 
 #. Source code: option_error_message := locale.translation ("Missing project path for option -project_path.")
-#: es.e:1121
+#: es.e:1133
 msgid "Missing project path for option -project_path."
 msgstr "Пропущен путь проекта в опции -project_path."
 
@@ -27335,7 +27429,7 @@ msgstr ""
 "командной строки «$1»."
 
 #. Source code: option_error_message := locale.translation ("Missing target name for option -target.")
-#: es.e:1201
+#: es.e:1213
 msgid "Missing target name for option -target."
 msgstr "Пропущено имя задания в опции -target."
 
@@ -27345,10 +27439,10 @@ msgctxt "eiffel.error"
 msgid "Missing type in local declaration list: {1}"
 msgstr "Пропущен тип в списке определения локальных переменных: {1}"
 
-#. Source code: Result := locale.formatted_string (locale.translation ("Missing value for configuration option %"$1%""), [option])
+#. Source code: Result := locale.formatted_string (locale.translation ("Missing value in the setting %"$1%""), [option])
 #: conf_interface_names.e:1196
-msgid "Missing value for configuration option \"$1\""
-msgstr "Пропущено значение опции конфигурации \"$1\""
+msgid "Missing value in the setting \"$1\""
+msgstr "Пропущено значение в настройке «$1»"
 
 #. Source code: do Result := locale.translation ("Modify existing breakpoint") end
 #: debugger_names.e:286
@@ -28015,7 +28109,7 @@ msgid "Next"
 msgstr "Далее"
 
 #. Source code: button_process_post_commit_operations: STRING_32 do Result := locale.translation_in_context ("Next", "scm") end
-#: scm_names.e:192
+#: scm_names.e:199
 msgctxt "scm"
 msgid "Next"
 msgstr "Далее"
@@ -28076,7 +28170,7 @@ msgstr ""
 "Хотите продолжить отправку сообщения об ошибке?"
 
 #. Source code: Result := locale.translation_in_context ("No change", "scm")
-#: scm_names.e:159
+#: scm_names.e:166
 msgctxt "scm"
 msgid "No change"
 msgstr "Без изменений"
@@ -28163,6 +28257,12 @@ msgstr "Нет описания."
 #: docking_names.e:103
 msgid "No detail available."
 msgstr "Нет подробностей."
+
+#. Source code: text_no_difference: STRING_32 do Result := locale.translation_in_context ("No difference", "scm") end
+#: scm_names.e:146
+msgctxt "scm"
+msgid "No difference"
+msgstr "Нет различий"
 
 #. Source code: Result := locale.translation ("No domain item defined. At least one domain item should be defined in a relation criterion.")
 #: eb_metric_names.e:827
@@ -28265,7 +28365,7 @@ msgid "No object"
 msgstr "Нет объекта"
 
 #. Source code: text_no_output: STRING_32 do Result := locale.translation_in_context ("No output ...", "scm") end
-#: scm_names.e:139
+#: scm_names.e:145
 msgctxt "scm"
 msgid "No output ..."
 msgstr "Нет вывода…"
@@ -28586,7 +28686,7 @@ msgid "Not Tested"
 msgstr "Не тестировалось"
 
 #. Source code: label_not_available_check_configuration: STRING_32 do Result := locale.translation_in_context ("Not available, check the configuration...", "scm") end
-#: scm_names.e:106
+#: scm_names.e:110
 msgctxt "scm"
 msgid "Not available, check the configuration..."
 msgstr "Недоступно, необходимо проверить конфигурацию…"
@@ -29486,13 +29586,13 @@ msgid "Open layout error. Opening default layout instead."
 msgstr "Ошибка открытия компоновки. Будет открыта компоновка по умолчанию."
 
 #. Source code: open_location: STRING_32 do Result := locale.translation_in_context ("Open location ...", "scm") end
-#: scm_names.e:87
+#: scm_names.e:89
 msgctxt "scm"
 msgid "Open location ..."
 msgstr "Открыть расположение…"
 
 #. Source code: open_parent_location: STRING_32 do Result := locale.translation_in_context ("Open parent location ...", "scm") end
-#: scm_names.e:89
+#: scm_names.e:91
 msgctxt "scm"
 msgid "Open parent location ..."
 msgstr "Открыть расположение родителя…"
@@ -29525,13 +29625,13 @@ msgid "Open the Eiffel Assembly Cache browser tool"
 msgstr "Открыть обозреватель кэша сборок"
 
 #. Source code: tooltip_button_config: STRING_32 do Result := locale.translation_in_context ("Open the configuration dialog", "scm") end
-#: scm_names.e:198
+#: scm_names.e:205
 msgctxt "scm"
 msgid "Open the configuration dialog"
 msgstr "Открыть диалог конфитурации"
 
 #. Source code: tooltip_button_project: STRING_32 do Result := locale.translation_in_context ("Open the project structure", "scm") end
-#: scm_names.e:184
+#: scm_names.e:191
 msgctxt "scm"
 msgid "Open the project structure"
 msgstr "Открыть структуру проекта"
@@ -29573,7 +29673,7 @@ msgid "Operation failed."
 msgstr "Операция не удалась."
 
 #. Source code: label_operation_logs: STRING_32 do Result := locale.translation_in_context ("Operation logs", "scm") end
-#: scm_names.e:128
+#: scm_names.e:132
 msgctxt "scm"
 msgid "Operation logs"
 msgstr "Журнал операции"
@@ -30156,7 +30256,7 @@ msgid "Platform"
 msgstr "Платформа"
 
 #. Source code: option_error_message := locale.translation ("Platform option requires a platform name.")
-#: es.e:1360
+#: es.e:1372
 msgid "Platform option requires a platform name."
 msgstr "Опции платформы необходимо имя платформы."
 
@@ -30960,7 +31060,7 @@ msgid "Project"
 msgstr "Проект"
 
 #. Source code: button_project: STRING_32 do Result := locale.translation_in_context ("Project", "scm") end
-#: scm_names.e:183
+#: scm_names.e:190
 msgctxt "scm"
 msgid "Project"
 msgstr "Проект"
@@ -31151,13 +31251,13 @@ msgid "PublicKeyToken"
 msgstr "Свёртка общедоступного ключа"
 
 #. Source code: button_pull: STRING_32 do Result := locale.translation_in_context ("Pull", "scm") end
-#: scm_names.e:189
+#: scm_names.e:196
 msgctxt "scm"
 msgid "Pull"
 msgstr "Вытащить"
 
 #. Source code: menu_git_pull: STRING_32 do Result := locale.translation_in_context ("Pull ...", "scm") end
-#: scm_names.e:80
+#: scm_names.e:82
 msgctxt "scm"
 msgid "Pull ..."
 msgstr "Вытащить…"
@@ -31193,13 +31293,13 @@ msgid "Purchase a license"
 msgstr "Купить лицензию"
 
 #. Source code: button_push: STRING_32 do Result := locale.translation_in_context ("Push", "scm") end
-#: scm_names.e:188
+#: scm_names.e:195
 msgctxt "scm"
 msgid "Push"
 msgstr "Протолкнуть"
 
 #. Source code: menu_git_push: STRING_32 do Result := locale.translation_in_context ("Push ...", "scm") end
-#: scm_names.e:79
+#: scm_names.e:81
 msgctxt "scm"
 msgid "Push ..."
 msgstr "Протолкнуть…"
@@ -31451,13 +31551,13 @@ msgstr ""
 "относительной (не должна иметь однократный ключ \"OBJECT\")."
 
 #. Source code: button_rebase: STRING_32 do Result := locale.translation_in_context ("Rebase", "scm") end
-#: scm_names.e:190
+#: scm_names.e:197
 msgctxt "scm"
 msgid "Rebase"
 msgstr "Перебазировать"
 
 #. Source code: menu_git_rebase: STRING_32 do Result := locale.translation_in_context ("Rebase ...", "scm") end
-#: scm_names.e:81
+#: scm_names.e:83
 msgctxt "scm"
 msgid "Rebase ..."
 msgstr "Перебазировать..."
@@ -31822,7 +31922,7 @@ msgid "Remind me later"
 msgstr "Напомнить позже"
 
 #. Source code: label_remote: STRING_32 do Result := locale.translation_in_context ("Remote", "scm") end
-#: scm_names.e:168
+#: scm_names.e:175
 msgctxt "scm"
 msgid "Remote"
 msgstr "Удалённый"
@@ -32540,7 +32640,7 @@ msgid "Reset user settings"
 msgstr "Сбросить установки пользователя"
 
 #. Source code: label_resetting: STRING_32 do Result := locale.translation_in_context ("Resetting ...", "scm") end
-#: scm_names.e:152
+#: scm_names.e:159
 msgctxt "scm"
 msgid "Resetting ..."
 msgstr "Сброс…"
@@ -34467,13 +34567,13 @@ msgstr ""
 "прикрепления."
 
 #. Source code: label_set_git_commands: STRING_32 do Result := locale.translation_in_context ("Set the GIT commands", "scm") end
-#: scm_names.e:101
+#: scm_names.e:103
 msgctxt "scm"
 msgid "Set the GIT commands"
 msgstr "Установить команды git"
 
 #. Source code: label_set_svn_commands: STRING_32 do Result := locale.translation_in_context ("Set the Subversion commands", "scm") end
-#: scm_names.e:100
+#: scm_names.e:102
 msgctxt "scm"
 msgid "Set the Subversion commands"
 msgstr "Установить команды subversion"
@@ -36513,7 +36613,7 @@ msgid "Show the callers of the currently edited feature"
 msgstr "Показать вызывающие компоненты редактируемого компонента"
 
 #. Source code: tooltip_button_diff: STRING_32 do Result := locale.translation_in_context ("Show the differences", "scm") end
-#: scm_names.e:186
+#: scm_names.e:193
 msgctxt "scm"
 msgid "Show the differences"
 msgstr "Показать различия"
@@ -36571,7 +36671,7 @@ msgid "Show unresolved tests"
 msgstr "Показать неразрешённые тесты"
 
 #. Source code: question_show_unversioned_files: STRING_32 do Result := locale.translation_in_context ("Show unversioned files", "scm") end
-#: scm_names.e:93
+#: scm_names.e:95
 msgctxt "scm"
 msgid "Show unversioned files"
 msgstr "Показать файлы без версий"
@@ -36945,49 +37045,49 @@ msgid "Source Control"
 msgstr "Контроль версий"
 
 #. Source code: Result := locale.formatted_string (locale.translation_in_context ("Source Control / $1", "scm"), [a_title])
-#: scm_names.e:144
+#: scm_names.e:151
 msgctxt "scm"
 msgid "Source Control / $1"
 msgstr "Контроль версий / $1"
 
 #. Source code: title_scm_commit: STRING_32 do Result := locale.translation_in_context ("Source Control / Commit", "scm") end
-#: scm_names.e:146
+#: scm_names.e:153
 msgctxt "scm"
 msgid "Source Control / Commit"
 msgstr "Контроль версий / фиксировать"
 
 #. Source code: title_scm_config: STRING_32 do Result := locale.translation_in_context ("Source Control / Configuration", "scm") end
-#: scm_names.e:147
+#: scm_names.e:154
 msgctxt "scm"
 msgid "Source Control / Configuration"
 msgstr "Контроль версий / конфигурация"
 
 #. Source code: title_scm_diff: STRING_32 do Result := locale.translation_in_context ("Source Control / Diff", "scm") end
-#: scm_names.e:141
+#: scm_names.e:148
 msgctxt "scm"
 msgid "Source Control / Diff"
 msgstr "Контроль версий / сравнить"
 
 #. Source code: title_scm_pull: STRING_32 do Result := locale.translation_in_context ("Source Control / Pull", "scm") end
-#: scm_names.e:149
+#: scm_names.e:156
 msgctxt "scm"
 msgid "Source Control / Pull"
 msgstr "Контроль версий / вытащить"
 
 #. Source code: title_scm_push: STRING_32 do Result := locale.translation_in_context ("Source Control / Push", "scm") end
-#: scm_names.e:148
+#: scm_names.e:155
 msgctxt "scm"
 msgid "Source Control / Push"
 msgstr "Контроль версий / протолкнуть"
 
 #. Source code: title_scm_rebase: STRING_32 do Result := locale.translation_in_context ("Source Control / Rebase", "scm") end
-#: scm_names.e:150
+#: scm_names.e:157
 msgctxt "scm"
 msgid "Source Control / Rebase"
 msgstr "Контроль версий / перебазировать"
 
 #. Source code: desc_scm_tool: STRING_32 do Result := locale.translation_in_context ("Source Control Management", "scm") end
-#: scm_names.e:174
+#: scm_names.e:181
 msgctxt "scm"
 msgid "Source Control Management"
 msgstr "Управление контролем версий"
@@ -37439,6 +37539,12 @@ msgctxt "scm"
 msgid "Status - $1"
 msgstr "Состояние - $1"
 
+#. Source code: label_status_auto_check: STRING_32 do Result := locale.translation_in_context ("Status Auto Check", "scm") end
+#: scm_names.e:108
+msgctxt "scm"
+msgid "Status Auto Check"
+msgstr "Автоматическое обновление состояния"
+
 #. Source code: l_status_bar: STRING_32 do Result := locale.translation ("Status Bar") end
 #: interface_names.e:17
 msgid "Status Bar"
@@ -37675,13 +37781,13 @@ msgid "Subversion command (the binary is required to support Subversion)."
 msgstr "Команда subversion (исполняемый файл клиента subversion)."
 
 #. Source code: Result := locale.translation_in_context ("Subversion support: not available", "scm")
-#: scm_names.e:122
+#: scm_names.e:126
 msgctxt "scm"
 msgid "Subversion support: not available"
 msgstr "subversion недоступен"
 
 #. Source code: Result := locale.translation_in_context ("Subversion support: yes", "scm")
-#: scm_names.e:120
+#: scm_names.e:124
 msgctxt "scm"
 msgid "Subversion support: yes"
 msgstr "Поддержка subversion: да"
@@ -39216,6 +39322,12 @@ msgstr ""
 "\n"
 "Будьте спокойны, это может занять некоторое время!"
 
+#. Source code: output_window.add (locale.translation_in_context ("The project is not compiled.", "command.autoproof"))
+#: e_autoproof.e:191
+msgctxt "command.autoproof"
+msgid "The project is not compiled."
+msgstr "Проект не скомпилирован."
+
 #. Source code: l_Project_location: STRING_32		do Result := locale.translation("The project location is the place where compilation%Nfiles will be generated by the compiler")	end
 #: interface_names.e:1646
 msgid ""
@@ -39948,7 +40060,7 @@ msgid "This session is PAUSED."
 msgstr "Эта сессия приостановлена."
 
 #. Source code: text_about_source_control_tool: STRING_32 do Result := locale.translation_in_context ("[
-#: scm_names.e:133
+#: scm_names.e:139
 msgctxt "scm"
 msgid ""
 "This tool has support for GIT and Subversion tools. \n"
@@ -40980,7 +41092,7 @@ msgid "Trigger zoom out editor's font."
 msgstr "Включить уменьшение шрифта редактора."
 
 #. Source code: boolean_true: STRING_32 do Result := locale.translation ("True") end
-#: conf_interface_names.e:1353
+#: conf_interface_names.e:1347
 msgid "True"
 msgstr "Да"
 
@@ -41866,16 +41978,6 @@ msgstr "Неизвестное имя класса"
 msgid "Unknown cluster name"
 msgstr "Неизвестное имя кластера"
 
-#. Source code: Result := locale.formatted_string (locale.translation ("Unknown configuration option %"$1%""), [option_name])
-#: conf_interface_names.e:1216
-msgid "Unknown configuration option \"$1\""
-msgstr "Неизвестная опция конфигурации \"$1\""
-
-#. Source code: Result := locale.formatted_string (locale.translation ("Unknown configuration option %"$1%" (Available options: $2)"), [option_name, s])
-#: conf_interface_names.e:1214
-msgid "Unknown configuration option \"$1\" (Available options: $2)"
-msgstr "Неизвестная опция конфигурации \"$1\" (Доступные опции: $2)"
-
 #. Source code: do Result := locale.formatted_string (locale.translation ("Unknown constant type for `$1'"), [fname]) end
 #: debugger_names.e:427
 msgid "Unknown constant type for `$1'"
@@ -41911,7 +42013,7 @@ msgid "Unknown option $1.\n"
 msgstr "Неизвестная опция $1.\n"
 
 #. Source code: option_error_message := locale.formatted_string (locale.translation_in_context
-#: es.e:1181
+#: es.e:1193
 msgctxt "compiler.command-line.option"
 msgid "Unknown preference name for option \"$1\": \"$2\"."
 msgstr "Неизвестное имя настройки в опции «$1»: «$2»."
@@ -41924,6 +42026,11 @@ msgid ""
 msgstr ""
 "Неизвестное имя протокола:\n"
 "$1"
+
+#. Source code: Result := locale.formatted_string (locale.translation ("Unknown setting %"$1%" (Available settings: $2)"), [option_name, s])
+#: conf_interface_names.e:1214
+msgid "Unknown setting \"$1\" (Available settings: $2)"
+msgstr "Неизвестная настройка «$1» (Доступные настройки: $2)"
 
 #. Source code: m_Separate_stone: STRING_32			do Result := locale.translation("Unlin&k Context Tool")	end
 #: interface_names.e:1052
@@ -42133,7 +42240,7 @@ msgid "Update"
 msgstr "Обновить"
 
 #. Source code: menu_update: STRING_32 do Result := locale.translation_in_context ("Update ...", "scm") end
-#: scm_names.e:76
+#: scm_names.e:78
 msgctxt "scm"
 msgid "Update ..."
 msgstr "Обновить…"
@@ -42739,7 +42846,7 @@ msgid "Use external svn diff command"
 msgstr "Использовать внешнюю команду сравнения subversion"
 
 #. Source code: checkbutton_use_external_terminal: STRING_32 do Result := locale.translation_in_context ("Use external terminal?", "scm") end
-#: scm_names.e:206
+#: scm_names.e:215
 msgctxt "scm"
 msgid "Use external terminal?"
 msgstr "Использовать внешний терминал?"
@@ -42773,7 +42880,7 @@ msgstr "Использовано `only`, возможное будущее кл�
 
 #. <PREF NAME="general.use_postscript" DESCRIPTION="Generate postscript (rather than RTF) when printing."><BOOLEAN>False</BOOLEAN></PREF>
 #. <PREF NAME="general.use_postscript" DESCRIPTION="Generate postscript (rather than RTF) when printing."><BOOLEAN>True</BOOLEAN></PREF>
-#: $EIFFEL_SRC/Delivery/studio/eifinit/spec/windows/default.xml:6
+#: $EIFFEL_SRC/Delivery/studio/eifinit/spec/windows/default.xml:7
 #: $EIFFEL_SRC/Delivery/studio/eifinit/spec/unix/default.xml:9
 msgctxt "preference"
 msgid "Use postscript"
@@ -43364,6 +43471,12 @@ msgstr ""
 " • Стандартный - Использовать стандартный синтаксис;\n"
 " • Предварительный - Позволять ещё не подтверждённые конструкции."
 
+#. Source code: t.add (locale.translation_in_context ("Verification failed.", "autoproof.error"))
+#: ap_verification_failure.e:51
+msgctxt "autoproof.error"
+msgid "Verification failed."
+msgstr "Верификация не удалась."
+
 #. Source code: a_formatter.add (locale.plural_translation_in_context
 #: e2b_successful_verification.e:52
 msgctxt "tool.auto_proof.result"
@@ -43755,6 +43868,14 @@ msgctxt "preference"
 msgid "Warning text color"
 msgstr "Цвет текста предупреждения"
 
+#. Source code: text_warning_console_interactions: STRING_32 do Result := locale.translation_in_context ("Warning: Check your terminal/console for potential user interactions.", "scm") end
+#: scm_names.e:137
+msgctxt "scm"
+msgid "Warning: Check your terminal/console for potential user interactions."
+msgstr ""
+"Предупреждение: проверьте свой терминал/консоль на наличие потенциальных "
+"взаимодействий с пользователем."
+
 #. Source code: l_Slice_taken_into_account1: STRING_32 do Result := locale.translation("Warning: Modifications will be taken into account")	end
 #: interface_names.e:1713
 msgid "Warning: Modifications will be taken into account"
@@ -43898,6 +44019,16 @@ msgstr "Валлийский"
 #: locale_names.e:178
 msgid "Welsh (United Kingdom)"
 msgstr "Валлийский (Великобритания)"
+
+#. Source code: locale.translation_in_context ("What to do: check AutoProof error messages and update the involved code accordingly.", "autoproof.error").as_string_8
+#: ap_verification_failure.e:45
+msgctxt "autoproof.error"
+msgid ""
+"What to do: check AutoProof error messages and update the involved code "
+"accordingly."
+msgstr ""
+"Что сделать: проверить сообщения об ошибках AutoProof и соответствующим "
+"образом обновить задействованный код."
 
 #. Source code: locale.translation_in_context ({STRING_32} "[
 #: option_properties.e:581
@@ -44463,14 +44594,24 @@ msgstr ""
 msgid "You have unsaved changes"
 msgstr "Имеются несохранённые изменения"
 
-#. Source code: Result := locale.formatted_string (locale.plural_translation_in_context ("You may need to do the following manual operation:", "You may need to do the following $1 manual operations:", "scm", nb), [nb])
-#: scm_names.e:214
+#. Source code: Result := locale.formatted_string (locale.plural_translation_in_context ("You may need to operate the following instruction:", "You may need to operate the following $1 instructions:", "scm", nb), [nb])
+#: scm_names.e:228
 msgctxt "scm"
-msgid "You may need to do the following manual operation:"
-msgid_plural "You may need to do the following $1 manual operations:"
-msgstr[0] "Может быть необходимо сделать следующую $1 операцию:"
-msgstr[1] "Может быть необходимо сделать следующие $1 операции:"
-msgstr[2] "Может быть необходимо сделать следующие $1 операций:"
+msgid "You may need to operate the following instruction:"
+msgid_plural "You may need to operate the following $1 instructions:"
+msgstr[0] "Может быть необходимо выполнить следующую $1 инструкцию:"
+msgstr[1] "Может быть необходимо выполнить следующие $1 инструкции:"
+msgstr[2] "Может быть необходимо выполнить следующих $1 инструкций:"
+
+#. Source code: Result := locale.translation_in_context ("You may now push your commits to the remote repositories by clicking %"Push%" below.", "scm")
+#: scm_names.e:221
+msgctxt "scm"
+msgid ""
+"You may now push your commits to the remote repositories by clicking \"Push"
+"\" below."
+msgstr ""
+"Теперь вы можете отправить свои коммиты в удалённые репозитории, нажав "
+"«Отправить» ниже."
 
 #. Source code: do Result := locale.translation ("You must choose at least one library.%N%
 #: interface_names.e:63
@@ -45662,7 +45803,7 @@ msgid "unknown error occurred"
 msgstr "произошла неизвестная ошибка"
 
 #. Source code: label_unversioned: STRING_32 do Result := locale.translation_in_context ("unversioned", "scm") end
-#: scm_names.e:165
+#: scm_names.e:172
 msgctxt "scm"
 msgid "unversioned"
 msgstr "без версии"
@@ -45765,3 +45906,9 @@ msgstr "Сравнение с {REAL}.nan"
 #: debugger_names.e:501
 msgid "{SPECIAL} is not yet supported"
 msgstr "{SPECIAL} ещё не поддерживается"
+
+#~ msgid "Invalid value for configuration option \"$1\": \"$2\""
+#~ msgstr "Недопустимое значение опции конфигурации \"$1\": \"$2\""
+
+#~ msgid "Unknown configuration option \"$1\""
+#~ msgstr "Неизвестная опция конфигурации \"$1\""

@@ -4761,9 +4761,9 @@ feature {NONE} -- Implementation: helpers
 			a_classs_c_not_void: a_class_c /= Void
 			a_id_set_not_void: a_id_set /= Void
 		do
-			if not has_error_internal and (a_id_set.first <= 0) then
+			if not has_error_internal and a_id_set.first <= 0 then
 				if attached {ACCESS_FEAT_AS} a_id_set as l_access_feat_as then
-					Result := a_class_c.feature_with_name (l_access_feat_as.access_name_32)
+					Result := a_class_c.feature_with_name_id (l_access_feat_as.feature_name.name_id)
 				end
 				if Result = Void then
 					has_error_internal := True

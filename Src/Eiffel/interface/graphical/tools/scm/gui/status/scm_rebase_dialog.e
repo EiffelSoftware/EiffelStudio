@@ -146,7 +146,7 @@ feature {NONE} -- User interface initialization
 			cb := use_external_terminal_checkbutton
 			extend_non_expandable_to (b, cb)
 			cb.enable_select
-			create lab.make_with_text ("Warning: this is an experimental implementation.%NAdditional operations may be needed in terminal/console.")
+			create lab.make_with_text (scm_names.text_warning_console_interactions)
 			lab.set_foreground_color (colors.high_priority_foreground_color)
 			extend_non_expandable_to (b, lab)
 

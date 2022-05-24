@@ -193,29 +193,6 @@ feature -- Execution
 			retry
 		end
 
---	launch_no_wait_command (a_cmd: READABLE_STRING_GENERAL; a_working_directory: PATH; is_hidden: BOOLEAN)
---		local
---			retried: BOOLEAN
---		do
---			if not retried then
---				last_error := 0
---				if attached process_launcher_with_command_line (a_cmd, a_working_directory.name) as p then
---					p.enable_launch_in_new_process_group
---					p.set_separate_console (False)
---					p.set_hidden (True)
---					p.set_detached_console (True)
---					p.launch
---				else
---					last_error := 1
---				end
---			else
---				last_error := 1
---			end
---		rescue
---			retried := True
---			retry
---		end
-
 feature -- Helpers
 
 	append_escaped_string_to (a_string: READABLE_STRING_GENERAL; a_output: STRING_32)
@@ -223,39 +200,26 @@ feature -- Helpers
 			i,n: INTEGER
 			ch: CHARACTER_32
 		do
-			if a_string.has ('%"') then
-				from
-					i := 1
-					n := a_string.count
-				until
-					i > n
-				loop
-					ch := a_string [i]
-					inspect ch
-					when '`' then
-						a_output.extend ('\')
-						a_output.extend ('\')
-						a_output.extend ('\')
-						a_output.extend (ch)
-					when '%"', '%'' then
-						a_output.extend ('\') -- escape the character
-						a_output.extend (ch)
-					when '%R' then
-						-- Ignore
-					when '\' then
-						a_output.extend (ch)
-						if i < n then
-							ch := a_string [i]
-							a_output.extend (ch)
-							i := i + 1
-						end
-					else
-						a_output.extend (ch)
-					end
-					i := i + 1
+			from
+				i := 1
+				n := a_string.count
+			until
+				i > n
+			loop
+				ch := a_string [i]
+				inspect ch
+				when '`' then
+					-- Ignore
+					-- TODO find proper escaping solution
+				when '%"', '%'' , '\' then
+					a_output.extend ('\') -- escape the character
+					a_output.extend (ch)
+				when '%R' then
+					-- Ignore
+				else
+					a_output.extend (ch)
 				end
-			else
-				a_output.append_string_general (a_string)
+				i := i + 1
 			end
 		end
 
@@ -277,13 +241,9 @@ feature -- Helpers
 				loop
 					arg := ic.item
 					Result.append_character (' ')
-					if arg.has (' ') then
-						Result.append_character ('%"')
-						append_escaped_string_to (arg, Result)
-						Result.append_character ('%"')
-					else
-						append_escaped_string_to (arg, Result)
-					end
+					Result.append_character ('%"')
+					append_escaped_string_to (arg, Result)
+					Result.append_character ('%"')
 				end
 			end
 		end

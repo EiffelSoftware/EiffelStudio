@@ -364,7 +364,10 @@ feature -- Execution
 				msg.left_adjust
 				msg.right_adjust
 			end
-			if msg.occurrences ('%N') = 1 then
+			if
+				msg.occurrences ('%N') = 1 and
+				not msg.has ('`')
+			then
 				across
 					msg.split ('%N') as ic
 				loop
@@ -373,7 +376,7 @@ feature -- Execution
 					append_escaped_string_to (ic.item, cmd)
 					cmd.append_character ('"')
 				end
-			elseif msg.has ('%N') then
+			elseif msg.has ('%N') or msg.has ('`') then
 				tmp := {EXECUTION_ENVIRONMENT}.temporary_directory_path
 				if tmp = Void then
 					tmp := {EXECUTION_ENVIRONMENT}.current_working_path

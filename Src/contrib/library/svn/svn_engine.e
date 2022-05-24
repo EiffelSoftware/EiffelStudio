@@ -413,7 +413,7 @@ feature -- Access: working copy
 					msg.left_adjust
 					msg.right_adjust
 				end
-				if msg.has ('%N') then
+				if msg.has ('%N') or msg.has ('`') then
 					args.force ("--file")
 					tmp := {EXECUTION_ENVIRONMENT}.temporary_directory_path
 					if tmp = Void then

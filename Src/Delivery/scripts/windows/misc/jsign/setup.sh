@@ -6,7 +6,8 @@ if [ ! `command -v jsign &> /dev/null` ]; then
 		opensc \
 		opensc-pkcs11 \
 		p7zip-full \
-		curl
+		curl \
+		dos2unix
 
 	if [ ! -f jsign_4.1_all.deb ]; then
 		wget https://github.com/ebourg/jsign/releases/download/4.1/jsign_4.1_all.deb

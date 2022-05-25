@@ -21,7 +21,7 @@ ssh %remote_machine% "rm -rf %remote_dir%; mkdir -p %remote_dir%/bin/"
 
 scp -r es_sign* *.sh %remote_machine%:%remote_dir%/bin/
 scp -r jsign %remote_machine%:%remote_dir%/bin/jsign
-ssh %remote_machine% "cd %remote_dir%/bin/jsign; /bin/sh ./setup.sh"
+ssh %remote_machine% "cd %remote_dir%/bin; dos2unix *.sh; cd ./jsign; dos2unix *.sh; /bin/sh ./setup.sh"
 
 cd %es_deliv_setups%
 cd ..

@@ -40,13 +40,15 @@ scp -r setups/branded/*.msi %remote_machine%:%remote_dir%/files/branded/
 cd %CWD%
 
 ssh %remote_machine% "cd %remote_dir%/bin; /bin/bash ./ev_code_sign_setups_msi.sh %remote_dir%"
-echo #!/bin/sh > _msi.sh
-echo cd %remote_dir%/bin; >> _msi.sh
-echo /bin/bash ./ev_code_sign_setups_msi.sh %remote_dir% >> _msi.sh
+::echo #!/bin/sh > _msi.sh
+::echo cd %remote_dir%/bin; >> _msi.sh
+::echo /bin/bash ./ev_code_sign_setups_msi.sh %remote_dir% >> _msi.sh
+::scp _msi.sh %remote_machine%:%remote_dir%/_msi.sh
+::rm _msi.sh
+::ssh %remote_machine% dos2unix %remote_dir%/*.sh
+::ssh %remote_machine% sh %remote_dir%/_msi.sh
 
-scp _msi.sh %remote_machine%:%remote_dir%/_msi.sh
-rm _msi.sh
-ssh %remote_machine% sh %remote_dir%/_msi.sh
+ssh %remote_machine% cd %remote_dir%/bin; dos2unix *.sh; /bin/bash ./ev_code_sign_setups_msi.sh %remote_dir%
 
 scp -r %remote_machine%:%remote_dir%/files_signed %T_SIGNED_FILES_DIR%
 copy upload_final.bat %T_SIGNED_FILES_DIR%\upload_to_s3.bat

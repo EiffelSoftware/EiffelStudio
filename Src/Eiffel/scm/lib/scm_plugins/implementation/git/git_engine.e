@@ -12,6 +12,11 @@ inherit
 			default_create
 		end
 
+	SHARED_EXECUTION_ENVIRONMENT
+		redefine
+			default_create
+		end
+
 create
 	default_create,
 	make_with_executable_path
@@ -32,7 +37,16 @@ feature -- Access
 
 	git_executable_location: PATH
 
+	pause_between_operations: INTEGER_64
+			-- Pause in nanoseconds between two consecutive git operations.
+			--| for instance in `commit` to avoid issue with index.lock ...
+
 feature -- Element change
+
+	set_pause_between_operations (d: INTEGER_64)
+		do
+			pause_between_operations := d
+		end
 
 	set_git_executable_path (v: READABLE_STRING_GENERAL)
 		do
@@ -146,7 +160,6 @@ feature -- Execution
 			reset_cmd: STRING_32
 			l_has_reset: BOOLEAN
 			fn: READABLE_STRING_32
-			s_fn: READABLE_STRING_32
 			msg: READABLE_STRING_8
 		do
 			create reset_cmd.make_empty
@@ -194,6 +207,10 @@ feature -- Execution
 						msg := res_reset.output
 					else
 						msg := res_reset.error_output
+					end
+					if pause_between_operations > 0 then
+							-- Wait a bit to avoid index.lock already exists...				
+						execution_environment.sleep (pause_between_operations)
 					end
 				else
 					msg := "Error: can not launch git [" + last_process_error.out + "]"
@@ -352,6 +369,11 @@ feature -- Execution
 			end
 			debug ("GIT_ENGINE")
 				print ("-> terminated %N")
+			end
+
+			if pause_between_operations > 0 then
+					-- Wait a bit to avoid index.lock already exists...				
+				execution_environment.sleep (pause_between_operations)
 			end
 
 			create cmd.make_from_string (git_executable_location.name)

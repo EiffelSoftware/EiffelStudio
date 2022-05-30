@@ -35,6 +35,7 @@ feature -- Factory
 			else
 				create Result
 			end
+			Result.set_pause_between_operations (50_000_000) -- 50ms
 		end
 
 feature -- Access: working copy

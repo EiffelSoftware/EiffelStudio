@@ -127,7 +127,7 @@ feature {NONE} -- User interface initialization
 			txt: EV_TEXT
 			s: STRING_32
 			lab: EV_LABEL
-			li: EV_LIST_ITEM
+			li, l_up_li: EV_LIST_ITEM
 			l_curr_branch: detachable READABLE_STRING_32
 			l_up_branch: detachable READABLE_STRING_8
 			l_up_repo: detachable READABLE_STRING_8
@@ -204,9 +204,15 @@ feature {NONE} -- User interface initialization
 					create li.make_with_text (s)
 					li.set_data ([l_remote_name, ic_remote.item.location])
 					rem_cbox.extend (li)
+					li.select_actions.extend (agent update_remote_branches (l_remote_name))
 					if l_up_repo /= Void and then l_up_repo.is_case_insensitive_equal_general (l_remote_name) then
-						li.enable_select
+						l_up_li := li
 					end
+				end
+				if l_up_li /= Void then
+					ev_application.add_idle_action_kamikaze (agent l_up_li.enable_select)
+				elseif li /= Void then
+					ev_application.add_idle_action_kamikaze (agent li.enable_select)
 				end
 			end
 
@@ -288,6 +294,51 @@ feature {NONE} -- User interface initialization
 			set_button_action_before_close (dialog_buttons.cancel_button, agent on_cancel)
 
 			progress_log_box.hide
+		end
+
+	update_remote_branches (a_remote_name: detachable READABLE_STRING_GENERAL)
+		local
+			r: STRING_32
+			br_name: STRING_32
+			li: EV_LIST_ITEM
+			lst: like distributed_location.branches
+		do
+			if a_remote_name = Void then
+				lst := distributed_location.branches (scm_service.config)
+			else
+				lst := distributed_location.all_branches (scm_service.config)
+			end
+			if
+				attached branches_combo as br_cbox and then
+				attached lst
+			then
+				br_cbox.wipe_out
+
+				r := {STRING_32} "remotes/"
+				if a_remote_name /= Void then
+					r.append_string_general (a_remote_name)
+					r.extend ('/')
+				end
+
+				across
+					lst as ic_branch
+				loop
+					if attached ic_branch.item as br then
+						if
+							a_remote_name = Void
+							or else br.name.starts_with (r)
+						then
+							create br_name.make_from_string_general (br.name)
+							br_name.remove_head (r.count)
+							create li.make_with_text (br_name)
+							br_cbox.extend (li)
+							if br.is_active then
+								li.enable_select
+							end
+						end
+					end
+				end
+			end
 		end
 
 feature -- Access: Help

@@ -50,6 +50,23 @@ feature -- Operation
 						end (glab, ?,?,?,?,?,?,?,?)
 					)
 			end
+			if attached a_row.item (a_grid.parent_column) as gi then
+				-- FIXME: write better code to avoid code duplication
+				gi.pointer_double_press_actions.extend (agent (i_loc: PATH; i_x, i_y, i_button: INTEGER; i_x_tilt, i_y_tilt, i_pressure: DOUBLE; i_screen_x, i_screen_y: INTEGER)
+						do
+							if attached parent_grid as pg then
+								pg.open_directory_location (i_loc)
+							end
+						end(root_location.location, ?,?,?,?,?,?,?,?)
+					)
+				gi.pointer_button_press_actions.extend (agent (i_item: EV_GRID_ITEM; i_x, i_y, i_button: INTEGER; i_x_tilt, i_y_tilt, i_pressure: DOUBLE; i_screen_x, i_screen_y: INTEGER)
+						do
+							if i_button = {EV_POINTER_CONSTANTS}.right then
+								on_options (i_item)
+							end
+						end (glab, ?,?,?,?,?,?,?,?)
+					)
+			end
 
 			cblab := new_checkable_label_item ("")
 			a_row.set_item (a_grid.checkbox_column, cblab)
@@ -290,7 +307,7 @@ feature -- Operation
 		end
 
 note
-	copyright: "Copyright (c) 1984-2021, Eiffel Software"
+	copyright: "Copyright (c) 1984-2022, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

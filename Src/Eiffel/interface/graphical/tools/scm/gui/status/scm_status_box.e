@@ -92,7 +92,7 @@ feature {NONE} -- Initialization
 				)
 			bar.extend (but); bar.disable_item_expand (but)
 
-			bar.extend (create {EV_CELL})
+--			bar.extend (create {EV_CELL})
 
 			create but.make_with_text (scm_names.button_commit_changelist)
 			set_default_size_for_button (but)
@@ -105,6 +105,7 @@ feature {NONE} -- Initialization
 
 			create l_combo
 			l_combo.return_actions.extend (agent on_changelist_combo_changed)
+--			l_combo.set_minimum_width (20)
 			changelist_combo := l_combo
 			update_changelist_combo (l_combo)
 			bar.extend (l_combo)

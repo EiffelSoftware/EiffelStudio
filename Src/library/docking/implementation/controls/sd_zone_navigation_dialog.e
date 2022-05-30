@@ -605,6 +605,8 @@ feature {NONE} -- Implementation command
 					-- If we call set_focus immediately, destroy will make Current get focus
 				destroy
 				l_content.set_focus
+					-- Extra set focus to be sure the content is focused.
+				ev_application.add_idle_action_kamikaze (agent l_content.set_focus)
 			else
 				check a_label_not_attached: a_label = Void end
 				destroy
@@ -1040,7 +1042,7 @@ invariant
 
 note
 	library: "SmartDocking: Library of reusable components for Eiffel."
-	copyright: "Copyright (c) 1984-2021, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2022, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

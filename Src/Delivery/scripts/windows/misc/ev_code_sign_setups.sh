@@ -34,6 +34,14 @@ fi
 if [ -z "${platform}" ]; then 
 	usage 
 fi
+if [ ! -z "${result_archive}" ]; then 
+	a=$result_archive
+	d=$(dirname "$result_archive")
+	if [ ! -d "$d" ]; then
+		mkdir -p "$d"
+	fi
+	result_archive=$(cd "$d"; pwd)/$(basename "$a")
+fi
 
 if [ -f ${bin_dir}/local.rc ]; then
 	. ${bin_dir}/local.rc

@@ -49,7 +49,7 @@ goto APPLY_SIGNED_CONTENT
 echo Found %archive_fn%
 cd %es_deliv_setups%
 cd ..
-7z x %CWD%\%archive_fn%
+7z -y x %CWD%\%archive_fn%
 goto EOF
 
 :EOF

@@ -22,6 +22,14 @@ if [ -f eToken.cfg ]; then
 else
 	echo "name = OpenSC-PKCS11" > eToken.cfg
 	echo "description = SunPKCS11 via OpenSC" >> eToken.cfg
-	echo "library = /usr/lib/x86_64-linux-gnu/opensc-pkcs11.so" >> eToken.cfg
+	case `uname -m` in
+		arm*)
+			echo "library = /usr/lib/arm-linux-gnueabihf/opensc-pkcs11.so" >> eToken.cfg
+			;;
+		*)
+			echo "library = /usr/lib/x86_64-linux-gnu/opensc-pkcs11.so" >> eToken.cfg
+			;;
+	esac
 	echo "slotListIndex = 0" >> eToken.cfg
 fi
+

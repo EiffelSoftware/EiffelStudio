@@ -5,44 +5,44 @@
 			"id": "eiffelstudio-rev", "name": "EiffelStudio",
 			"version": "22.05 REV",
 			"number": "22.05",
-			"build": "106292",
+			"build": "106302",
 			"download_link_pattern": "${mirror}${name}/${number}/${build}/${filename}",
 			"download": [
 				{
-					"filename": "Eiffel_22.05_rev_106292-win64.msi",
+					"filename": "Eiffel_22.05_rev_106302-win64.msi",
 					"platform": "win64",
-					"size": "159281152",
-					"hash": "061b2d0cb7801aa34d613974a93559fcfbf6a56c2f610aa5c63ab3ee11851823"
+					"size": "159260672",
+					"hash": "f55a59348d40357ee22b1673d1dc1e0c232065ff80606c720ddc7a76097851d1"
 				}
 				,{
-					"filename": "Eiffel_22.05_rev_106292-win64.7z",
+					"filename": "Eiffel_22.05_rev_106302-win64.7z",
 					"platform": "win64",
-					"size": "95218526",
-					"hash": "f4d0cb1a30984df03af6863eda525367150501a7cbb004f4fb11977552ed370b"
+					"size": "95279356",
+					"hash": "2cdddea648e5ca515b82dde261427543f61ae4018ce8bb41860032ff84842f64"
 				}
 				,{
-					"filename": "Eiffel_22.05_rev_106292-linux-x86-64.tar.bz2",
+					"filename": "Eiffel_22.05_rev_106302-linux-x86-64.tar.bz2",
 					"platform": "linux-x86-64",
-					"size": "116662185",
-					"hash": "99a28623e812a0a85577e1691bc92a343f929ab47bed32d1c4733f3d62212d24"
+					"size": "116605782",
+					"hash": "21299b08197c58fc67ed29b4223239f31b57f153ad2b6e5209c135714c2bbf03"
 				}
 				,{
-					"filename": "Eiffel_22.05_rev_106292-macosx-x86-64.tar.bz2",
+					"filename": "Eiffel_22.05_rev_106302-macosx-x86-64.tar.bz2",
 					"platform": "macosx-x86-64",
-					"size": "98942287",
-					"hash": "edd5e44619097eed7434a77f11baeb34a8c24bcd5aabc77b2255ef3264f25de7"
+					"size": "98938018",
+					"hash": "adf86cee67c8fa08d8702f56b29cd6698ebc2ef275e00b398e05c8bfe7ea7e25"
 				}
 				,{
-					"filename": "Eiffel_22.05_rev_106292-linux-armv7.tar.bz2",
+					"filename": "Eiffel_22.05_rev_106302-linux-armv7.tar.bz2",
 					"platform": "linux-armv7",
-					"size": "103908146",
-					"hash": "2ca0f2332e096089c376fc86ea7cdb048ff534114fe6e7176ba1b23cd104721a"
+					"size": "103923855",
+					"hash": "05c3fbfc0eabd6cc5b9a1c238eb56771e509e81af5023f7020b313df3671521f"
 				}
 				,{
-					"filename": "Eiffel_22.05_rev_106292-freebsd-x86-64.tar.bz2",
+					"filename": "Eiffel_22.05_rev_106302-freebsd-x86-64.tar.bz2",
 					"platform": "freebsd-x86-64",
-					"size": "107930854",
-					"hash": "f6a46938ef2cb595ec040e12d75e5fa85590292e0605fa5c2e262071e9a6b96a"
+					"size": "107934734",
+					"hash": "f1d0ee12cdb9f7eed5bacaaafc2cd0fd0968a09294264576ce00bcc2770d026d"
 				}
 			]
 		}

@@ -5,7 +5,7 @@
 			"id": "eiffelstudio-ent", "name": "EiffelStudio",
 			"version": "22.05 Enterprise Evaluation Edition",
 			"number": "22.05",
-			"build": "106292",
+			"build": "106302",
 			"download_link_pattern": "${mirror}${name}/${number}/${build}/${filename}",
 			"release": "Official Release",
 			"date": "05/2022",
@@ -19,45 +19,45 @@
 			"download": [
 				{
         "cdkey": "11288-55317-91217-27221-92171-81501",
-					"filename": "Eiffel_22.05_ent_106292-win64.msi",
+					"filename": "Eiffel_22.05_ent_106302-win64.msi",
 					"platform": "win64",
-					"size": "159305728",
-					"hash": "ca9dc974418925cc8427c317aa1f86b905fc8f57e8e25f981b9e973b43e008c9" 
+					"size": "159322112",
+					"hash": "7bdb9949b5fb426bec6173ef29e5dfde7a4b098e2aac799d9ed1c68b08d84445"
 				}
 				,{
         "cdkey": "11288-55317-91217-27221-92171-81501",
-					"filename": "Eiffel_22.05_ent_106292-win64.7z",
+					"filename": "Eiffel_22.05_ent_106302-win64.7z",
 					"platform": "win64",
-					"size": "95233957",
-					"hash": "7e6d2b1c8d01a48bae7fc8ce6e93ecaf88cc1df36389a26741ed426c8adc7fc2" 
+					"size": "95296672",
+					"hash": "06551240b87996f9b74765f3001e55741bd1ad26384afee6135ad7d4cf813108"
 				}
 				,{
         "cdkey": "11288-55317-91217-27221-92171-81501",
-					"filename": "Eiffel_22.05_ent_106292-linux-x86-64.tar.bz2",
+					"filename": "Eiffel_22.05_ent_106302-linux-x86-64.tar.bz2",
 					"platform": "linux-x86-64",
-					"size": "118490962",
-					"hash": "9ad15af311c08b4eb435371c9e4358abe9f465a96c49ee8b9a78567eb19ddd59" 
+					"size": "118468503",
+					"hash": "cc550f7c4c1d201f717875afcf3235ccca15930458b044492f075f5851730619"
 				}
 				,{
         "cdkey": "11288-55317-91217-27221-92171-81501",
-					"filename": "Eiffel_22.05_ent_106292-macosx-x86-64.tar.bz2",
+					"filename": "Eiffel_22.05_ent_106302-macosx-x86-64.tar.bz2",
 					"platform": "macosx-x86-64",
-					"size": "100308898",
-					"hash": "de70efc6a2768e5acfa4815a15093de00c40f7882fa6898c59cf7863b12763a0" 
+					"size": "100295803",
+					"hash": "62f57198a47ddd5d6e0bbe1e8ee3c563253615463fce9d4b63f487d936d259a6"
 				}
 				,{
         "cdkey": "11288-55317-91217-27221-92171-81501",
-					"filename": "Eiffel_22.05_ent_106292-linux-armv7.tar.bz2",
+					"filename": "Eiffel_22.05_ent_106302-linux-armv7.tar.bz2",
 					"platform": "linux-armv7",
-					"size": "105465654",
-					"hash": "30ce08850ed1fd31c89871e688a2ca314516bcca75cebb464018ae650043018f" 
+					"size": "105471390",
+					"hash": "07605836882664dfab4707e34d53c11016c9275222bd585738926b5339857e86"
 				}
 				,{
         "cdkey": "11288-55317-91217-27221-92171-81501",
-					"filename": "Eiffel_22.05_ent_106292-freebsd-x86-64.tar.bz2",
+					"filename": "Eiffel_22.05_ent_106302-freebsd-x86-64.tar.bz2",
 					"platform": "freebsd-x86-64",
-					"size": "109489204",
-					"hash": "f6140529362b4dd9d46027295493317c48b5c972c8b1d421a673f9b020c21e63" 
+					"size": "109497840",
+					"hash": "1be90a28547e723828050a73092fd02572bb938e64f9a048a3a573c3fb2fc5d0"
 				}
 			]
 		}

@@ -129,8 +129,8 @@ feature {CODE_SYMBOL_VALUE} -- Query
 			until
 				Result /= Void
 			loop
-				if l_c.item = a_value then
-					create Result.make_from_string_general (l_c.key)
+				if l_c = a_value then
+					create Result.make_from_string_general (@ l_c.key)
 				end
 			end
 		ensure
@@ -170,7 +170,7 @@ invariant
 	content_table_attached: content_table /= Void
 
 ;note
-	copyright:	"Copyright (c) 1984-2012, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2022, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

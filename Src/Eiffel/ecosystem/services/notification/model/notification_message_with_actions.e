@@ -55,16 +55,14 @@ feature -- Conversion
 			loop
 				s.append_character (' ')
 				s.append_character ('[')
-				s.append_string_general (ic.key)
+				s.append_string_general (@ ic.key)
 				s.append_character (']')
 			end
 			Result.set_text (s)
 		end
 
-invariant
-
 note
-	copyright: "Copyright (c) 1984-2019, Eiffel Software"
+	copyright: "Copyright (c) 1984-2022, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

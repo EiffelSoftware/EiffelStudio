@@ -1,12 +1,10 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
-<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-18-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-18-0 http://www.eiffel.com/developers/xml/configuration-1-18-0.xsd" name="ec_kernel" uuid="C77DA73B-5401-4B63-B57B-2CE7DCA2997B" library_target="ecosystem">
+<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-22-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-22-0 http://www.eiffel.com/developers/xml/configuration-1-22-0.xsd" name="ec_kernel" uuid="C77DA73B-5401-4B63-B57B-2CE7DCA2997B" library_target="ecosystem">
 	<target name="ecosystem">
 		<root all_classes="true"/>
 		<file_rule>
 			<exclude>/\.svn$</exclude>
 		</file_rule>
-		<option full_class_checking="false">
-		</option>
 		<capability>
 			<concurrency support="none"/>
 			<void_safety support="none"/>

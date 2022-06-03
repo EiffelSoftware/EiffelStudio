@@ -1,30 +1,46 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
-<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-21-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-21-0 http://www.eiffel.com/developers/xml/configuration-1-21-0.xsd" name="wrap_c" uuid="2F7D69D7-4063-45FC-B5BD-698E010904AD">
+<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-22-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-22-0 http://www.eiffel.com/developers/xml/configuration-1-22-0.xsd" name="wrap_c" uuid="2F7D69D7-4063-45FC-B5BD-698E010904AD">
 	<target name="wrap_c">
 		<root class="EWG" feature="make"/>
-		<option debug="false" warning="warning" full_class_checking="false" is_attached_by_default="true" manifest_array_type="mismatch_warning">
+		<option debug="false" warning="warning" full_class_checking="false" is_attached_by_default="true" is_obsolete_iteration="true" manifest_array_type="mismatch_warning">
 			<debug name="gelex" enabled="true"/>
 			<debug name="geyacc" enabled="true"/>
-			<assertions precondition="true" postcondition="true" check="true" invariant="true" supplier_precondition="true"/>
+			<assertions postcondition="true" check="true" invariant="true"/>
 		</option>
 		<setting name="console_application" value="true"/>
 		<setting name="inlining_size" value="0"/>
 		<setting name="msil_classes_per_module" value="5"/>
 		<setting name="dead_code_removal" value="feature"/>
 		<capability>
-			<concurrency support="none" use="none"/>
-			<void_safety support="all" use="all"/>
+			<concurrency support="none"/>
+			<void_safety support="all"/>
 		</capability>
-		<library name="base" location="${ISE_LIBRARY}\library\base\base.ecf" readonly="true"/>
-		<library name="kernel" location="$ISE_LIBRARY\contrib\library\gobo\library\kernel\src\library.ecf" readonly="true"/>
-		<library name="regexp" location="$ISE_LIBRARY\contrib\library\gobo\library\regexp\src\library.ecf" readonly="true"/>
-		<library name="time" location="${ISE_LIBRARY}\library\time\time.ecf" readonly="true"/>
+		<library name="base" location="${ISE_LIBRARY}\library\base\base.ecf" readonly="true">
+			<option>
+			</option>
+		</library>
+		<library name="kernel" location="$ISE_LIBRARY\contrib\library\gobo\library\kernel\src\library.ecf" readonly="true">
+			<option>
+			</option>
+		</library>
+		<library name="regexp" location="$ISE_LIBRARY\contrib\library\gobo\library\regexp\src\library.ecf" readonly="true">
+			<option>
+			</option>
+		</library>
+		<library name="time" location="${ISE_LIBRARY}\library\time\time.ecf" readonly="true">
+			<option>
+			</option>
+		</library>
 		<library name="wrapc_kernel" location="..\library\wrapc_kernel_safe.ecf" readonly="false">
 			<option debug="false">
 				<debug name="gelex" enabled="true"/>
 				<debug name="geyacc" enabled="true"/>
+				<assertions postcondition="true" check="true" invariant="true"/>
 			</option>
 		</library>
-		<cluster name="ewg" location=".\"/>
+		<cluster name="ewg" location=".\">
+			<option is_obsolete_iteration="true">
+			</option>
+		</cluster>
 	</target>
 </system>

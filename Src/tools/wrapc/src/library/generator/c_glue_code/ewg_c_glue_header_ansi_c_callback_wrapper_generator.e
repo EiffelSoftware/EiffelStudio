@@ -189,6 +189,7 @@ feature {NONE} -- Implementation
 
 	generate_entry_object (a_callback_wrapper: EWG_CALLBACK_WRAPPER)
 		do
+			output_stream.put_string ("extern ")
 			output_stream.put_string ("void* ")
 			output_stream.put_string (a_callback_wrapper.mapped_eiffel_name)
 			output_stream.put_line ("_object;")
@@ -203,6 +204,7 @@ feature {NONE} -- Implementation
 			until
 				i > a_count
 			loop
+				output_stream.put_string ("extern ")
 				output_stream.put_string (a_callback_wrapper.mapped_eiffel_name)
 				output_stream.put_string ("_eiffel_feature ")
 				output_stream.put_string (a_callback_wrapper.mapped_eiffel_name)

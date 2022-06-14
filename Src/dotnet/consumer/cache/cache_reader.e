@@ -102,7 +102,7 @@ feature -- Access
 		do
 			create des
 			des.deserialize (absolute_assembly_path_from_consumed_assembly (a_assembly).extended (assembly_types_file_name).name, 0)
-			Result ?= des.deserialized_object
+			Result := {CONSUMED_ASSEMBLY_TYPES} / des.deserialized_object
 		end
 
 	consumed_type_from_dotnet_type_name (a_assembly: CONSUMED_ASSEMBLY; a_type: STRING): detachable CONSUMED_TYPE
@@ -120,7 +120,7 @@ feature -- Access
 			if l_pos >= 0 then
 				create l_des
 				l_des.deserialize (absolute_assembly_path_from_consumed_assembly (a_assembly).extended (classes_file_name).name, l_pos)
-				Result ?= l_des.deserialized_object
+				Result := {CONSUMED_TYPE} / l_des.deserialized_object
 			end
 		end
 
@@ -140,7 +140,7 @@ feature -- Access
 				else
 					l_name := a_crt.name
 				end
-				Result := consumed_type_from_dotnet_type_name (l_ca_mapping.assemblies @ a_crt.assembly_id, l_name)
+				Result := consumed_type_from_dotnet_type_name (l_ca_mapping.assemblies [a_crt.assembly_id], l_name)
 			end
 		end
 
@@ -154,7 +154,7 @@ feature -- Access
 		do
 			create des
 			des.deserialize (absolute_assembly_path_from_consumed_assembly (a_assembly).extended (Assembly_mapping_file_name).name, 0)
-			Result ?= des.deserialized_object
+			Result := {CONSUMED_ASSEMBLY_MAPPING} / des.deserialized_object
 		end
 
 	consumed_type (a_type: SYSTEM_TYPE): detachable CONSUMED_TYPE
@@ -173,7 +173,7 @@ feature -- Access
 				if l_ca /= Void then
 					create l_des
 					l_des.deserialize (absolute_type_path (l_ca).name, l_pos)
-					Result ?= l_des.deserialized_object
+					Result := {CONSUMED_TYPE} / l_des.deserialized_object
 				end
 			end
 		end
@@ -299,7 +299,6 @@ feature {CACHE_WRITER} -- Implementation
 			non_void_clr_version: clr_version /= Void
 		local
 			des: EIFFEL_DESERIALIZER
-			l_ci: detachable CACHE_INFO
 			retried: BOOLEAN
 		do
 			if not retried then
@@ -309,8 +308,7 @@ feature {CACHE_WRITER} -- Implementation
 						create des
 						des.deserialize (Absolute_info_path.name, 0)
 						if des.successful then
-							l_ci ?= des.deserialized_object
-							if l_ci /= Void then
+							if attached {CACHE_INFO} des.deserialized_object as l_ci then
 								internal_info.put (l_ci)
 							end
 						end
@@ -375,7 +373,7 @@ feature {NONE} -- Implementation
 				Result := -1
 			end
 		ensure
-			valid_result: Result =-1 or Result >= 0
+			valid_result: Result = -1 or Result >= 0
 		end
 
 	type_position_from_type_name (a_assembly: CONSUMED_ASSEMBLY; a_type: STRING): INTEGER
@@ -397,9 +395,9 @@ feature {NONE} -- Implementation
 				until
 					i > l_types.count
 					or else Result >= 0
-					or else l_types.dotnet_names @ i = Void
+					or else l_types.dotnet_names [i] = Void
 				loop
-					if (l_types.dotnet_names @ i) ~ a_type then
+					if (l_types.dotnet_names [i]) ~ a_type then
 						Result := l_types.positions.item (i)
 					else
 						i := i + 1
@@ -407,7 +405,7 @@ feature {NONE} -- Implementation
 				end
 			end
 		ensure
-			valid_result: Result =-1 or Result >= 0
+			valid_result: Result = -1 or Result >= 0
 		end
 
 	assembly_location (a_type: SYSTEM_TYPE): PATH

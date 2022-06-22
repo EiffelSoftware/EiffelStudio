@@ -19,8 +19,9 @@ cd %cd%/winbuild
 
 @echo Compiling cURL 32bits statically
 
-espawn --x86 "nmake RTLIBCFG=static /f Makefile.vc mode=static GEN_PDB=no DEBUG=no MACHINE=x86"
-
+set espawn_cmd=espawn
+IF "%ISE_PLATFORM%" NEQ "windows" set espawn_cmd=%espawn_cmd% --x86
+%espawn_cmd% "nmake RTLIBCFG=static /f Makefile.vc mode=static GEN_PDB=no DEBUG=no MACHINE=x86"
 
 cd ..
 mkdir spec\windows\static\lib

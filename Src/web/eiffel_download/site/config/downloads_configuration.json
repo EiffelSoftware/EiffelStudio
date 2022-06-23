@@ -33,6 +33,20 @@
 				}
 				,{
         "cdkey": "11288-55317-91217-27221-92171-81501",
+					"filename": "Eiffel_22.05_ent_106302-windows.msi",
+					"platform": "windows",
+					"size": "140894208",
+					"hash": "8fc326829deea7da6440bc88d80d7c6078cc164224a8c49dac7c3e9192a964b4" 
+				}
+				,{
+        "cdkey": "11288-55317-91217-27221-92171-81501",
+					"filename": "Eiffel_22.05_ent_106302-windows.7z",
+					"platform": "windows",
+					"size": "83374386",
+					"hash": "8a04a754a10619ac7f44e45209184f7fa113e193cafd9c385ad7224a24bb0b58" 
+				}
+				,{					
+        "cdkey": "11288-55317-91217-27221-92171-81501",
 					"filename": "Eiffel_22.05_ent_106302-linux-x86-64.tar.bz2",
 					"platform": "linux-x86-64",
 					"size": "118468503",

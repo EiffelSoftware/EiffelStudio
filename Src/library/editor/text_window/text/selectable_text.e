@@ -191,8 +191,12 @@ feature -- String
 					if t = Void or else t = ln.eol_token then
 						Result.extend ('%N')
 						ln := ln.next
-						check ln /= Void end -- Never, otherwise a bug.
-						t := ln.first_token
+						if ln /= Void then
+							t := ln.first_token
+						else
+						 		-- Never, otherwise a bug.									
+							check ln_set: False end
+						end
 					else
 						Result.append (t.wide_image)
 						t := t.next
@@ -433,7 +437,7 @@ invariant
 	-- no_cursor_when_empty: is_empty implies cursor = Void and then selection_cursor = Void
 
 note
-	copyright:	"Copyright (c) 1984-2017, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2022, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

@@ -191,12 +191,8 @@ feature -- String
 					if t = Void or else t = ln.eol_token then
 						Result.extend ('%N')
 						ln := ln.next
-						if ln /= Void then
-							t := ln.first_token
-						else
-						 		-- Never, otherwise a bug.									
-							check ln_set: False end
-						end
+						check ln /= Void end -- Never, otherwise a bug.
+						t := ln.first_token
 					else
 						Result.append (t.wide_image)
 						t := t.next

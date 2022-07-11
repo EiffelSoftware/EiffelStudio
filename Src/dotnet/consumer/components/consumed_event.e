@@ -1,4 +1,4 @@
-note
+﻿note
 	description: ".NET events"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -63,10 +63,7 @@ feature -- Access
 	eiffelized_consumed_entities: ARRAYED_LIST [CONSUMED_ENTITY]
 			-- List of eiffelized Consumed Entities relative to `Current'.
 		do
-			create Result.make (3)
-			across eiffelized_consumed_procedures as l_procs loop
-				Result.extend (l_procs.item)
-			end
+			create Result.make_from_iterable (eiffelized_consumed_procedures)
 		end
 
 	eiffelized_consumed_procedures: ARRAYED_LIST [CONSUMED_PROCEDURE]
@@ -117,7 +114,7 @@ feature {NONE} -- Access
 			-- Internal data for `is_public'.
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2022, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
@@ -141,12 +138,11 @@ note
 			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
 		]"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
-
-end -- class CONSUMED_EVENT
+end

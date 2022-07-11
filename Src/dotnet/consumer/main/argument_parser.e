@@ -34,24 +34,15 @@ feature {NONE} -- Initialization
 feature -- Access
 
 	assemblies: ARRAYED_LIST [IMMUTABLE_STRING_32]
-			-- List of assemblies to add to cache
+			-- List of assemblies to add to cache.
 		require
 			successful: is_successful
 			add_or_removing_assemblies: add_assemblies or remove_assemblies
 		once
-			create Result.make (0)
-			if add_assemblies then
-				across options_values_of_name (add_switch) as l_item loop
-					Result.extend (l_item.item)
-				end
-			else
-				across options_values_of_name (remove_switch) as l_item loop
-					Result.extend (l_item.item)
-				end
-			end
+			Result := options_values_of_name (if add_assemblies then add_switch else remove_switch end)
 		ensure
-			result_attached: Result /= Void
-			result_contains_attached_valid_items: across Result as l_item all not l_item.item.is_empty end
+			result_attached: attached Result
+			result_contains_attached_valid_items: ∀ a: Result ¦ ¬ a.is_empty
 		end
 
 	reference_paths: ARRAYED_LIST [IMMUTABLE_STRING_32]
@@ -60,13 +51,10 @@ feature -- Access
 			successful: is_successful
 			add_assemblies: add_assemblies
 		once
-			create Result.make (10)
-			across options_values_of_name (reference_switch) as l_item loop
-				Result.extend (l_item.item)
-			end
+			Result := options_values_of_name (reference_switch)
 		ensure
 			result_attached: Result /= Void
-			result_contains_attached_valid_items: across Result as l_item all not l_item.item.is_empty end
+			result_contains_attached_valid_items: ∀ p: Result ¦ not p.is_empty
 		end
 
 	cache_path: PATH
@@ -218,12 +206,12 @@ feature {NONE} -- Switches
 			-- Name of lose argument, used in usage information
 
 	loose_argument_description: STRING = "Path to a valid .NET assembly";
-			-- Description of loose argument, used in usage information
+	-- Description of loose argument, used in usage information
 
 note
-	copyright:	"Copyright (c) 1984-2018, Eiffel Software"
-	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
-	licensing_options:	"http://www.eiffel.com/licensing"
+	copyright: "Copyright (c) 1984-2022, Eiffel Software"
+	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
+	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[
 			This file is part of Eiffel Software's Eiffel Development Environment.
 			
@@ -245,11 +233,11 @@ note
 			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
 		]"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 end

@@ -21,15 +21,13 @@ feature {NONE} -- Initialization
 	make
 			-- Initialize notifier
 		local
-			l_start: THREAD_START
 			t: SYSTEM_THREAD
 		do
 				-- To make void-safe happy.
 			check attached {SYSTEM_THREAD}.current_thread as l_thread then
 				application_thread := l_thread
 					-- Create the real thread
-				create l_start.make (Current, $on_init)
-				create t.make (l_start)
+				create t.make (create {THREAD_START}.make (Current, $on_init))
 				t.priority := {THREAD_PRIORITY}.highest
 				t.name := "Notifer"
 				t.start
@@ -104,7 +102,7 @@ feature -- Status Setting
 			end
 		end
 
-	notify_info (a_message: STRING)
+	notify_info (a_message: READABLE_STRING_32)
 			-- Notifier user of an event
 		require
 			a_message_attached: a_message /= Void
@@ -145,7 +143,7 @@ invariant
 	notify_form_attached: not is_zombie implies notify_form /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2018, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2022, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
@@ -169,11 +167,11 @@ note
 			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
 		]"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 end

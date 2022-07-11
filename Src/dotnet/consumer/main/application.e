@@ -91,11 +91,7 @@ feature {NONE} -- Initialization
 				if attached {RUNTIME_ENVIRONMENT}.get_runtime_directory as l_runtime_dir then
 					l_resolver.add_resolve_path (create {STRING_32}.make_from_cil (l_runtime_dir))
 				end
-				if not l_references.is_empty then
-					across l_references as l_ref loop
-						l_resolver.add_resolve_path (l_ref.item)
-					end
-				end
+				⟳ r: l_references ¦ l_resolver.add_resolve_path (r) ⟲
 				l_domain := {APP_DOMAIN}.current_domain
 				check
 					from_documentation_current_domain_attached: attached l_domain
@@ -118,9 +114,9 @@ feature {NONE} -- Initialization
 					display_message_with_new_line (cache_reader.absolute_consume_path.name + "' ...")
 					l_cache_writer.add_assembly (l_assembly, l_info_only)
 					if not l_cache_writer.successful then
-						display_error ("   Warning: Assembly '" + l_assembly + "' could not be consumed!")
+						display_error ({STRING_32} "   Warning: Assembly '" + l_assembly + "' could not be consumed!")
 						if l_cache_writer.error_message /= Void then
-							display_error ("   Reason: " + l_cache_writer.error_message)
+							display_error ({STRING_32} "   Reason: " + l_cache_writer.error_message)
 						end
 						{SYSTEM_DLL_TRACE}.write_line ({SYSTEM_STRING}.format ("'{0}' could not be consumed.", l_assembly.to_cil), "Warning")
 						l_error := True
@@ -139,9 +135,9 @@ feature {NONE} -- Initialization
 					display_message_with_new_line (cache_reader.absolute_consume_path.name + "'...")
 					l_cache_writer.unconsume_assembly (create {PATH}.make_from_string (l_assembly))
 					if not l_manager.is_successful then
-						display_error ("   Warning: Assembly '" + l_assembly + "' could not be removed (unconsumed)!")
+						display_error ({STRING_32} "   Warning: Assembly '" + l_assembly + "' could not be removed (unconsumed)!")
 						if l_cache_writer.error_message /= Void then
-							display_error ("   Reason: " + l_cache_writer.error_message)
+							display_error ({STRING_32} "   Reason: " + l_cache_writer.error_message)
 						end
 						{SYSTEM_DLL_TRACE}.write_line ({SYSTEM_STRING}.format ("'{0}' could not be removed (unconsumed).", l_assembly.to_cil), "Warning")
 						l_error := True
@@ -189,20 +185,11 @@ feature {NONE} -- Output
 			i: INTEGER
 		do
 			l_assemblies := cache_reader.assemblies
-			if l_assemblies /= Void then
-				if l_assemblies.is_empty then
-					l_assemblies := Void
-				end
-			end
-			if l_assemblies /= Void then
-				if
-					l_assemblies.for_all (agent (a_item: CONSUMED_ASSEMBLY): BOOLEAN
-						do
-							Result := a_item = Void or else not a_item.is_consumed
-						end)
-				then
-					l_assemblies := Void
-				end
+			if
+				attached l_assemblies and then
+				∀ a: l_assemblies ¦ attached a implies not a.is_consumed
+			then
+				l_assemblies := Void
 			end
 
 			l_writer := writer
@@ -213,7 +200,7 @@ feature {NONE} -- Output
 			create l_cp
 			create l_corrupted.make (0)
 
-			if l_assemblies /= Void then
+			if attached l_assemblies then
 				l_count := l_assemblies.count
 
 				create l_sindex.make_filled (' ', (l_count ^ 0.1).truncated_to_integer + 1)
@@ -395,9 +382,9 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2019, Eiffel Software"
-	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
-	licensing_options:	"http://www.eiffel.com/licensing"
+	copyright: "Copyright (c) 1984-2022, Eiffel Software"
+	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
+	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[
 			This file is part of Eiffel Software's Eiffel Development Environment.
 			
@@ -419,11 +406,11 @@ note
 			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
 		]"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 end

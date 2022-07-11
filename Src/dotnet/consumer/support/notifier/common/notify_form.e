@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "Form used to host notification icon, for Win64 systems"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -42,17 +42,10 @@ feature -- Status Setting
 			notify_info (a_message.message)
 		end
 
-	notify_info (a_messge: READABLE_STRING_GENERAL)
-			-- Notifier user of an event
-		local
-			l_message: READABLE_STRING_GENERAL
+	notify_info (m: READABLE_STRING_32)
+			-- Notifier user of an event with message `m`.
 		do
-			l_message := a_messge
-			if l_message.count > 255 then
-				l_message := l_message.substring (1, 252)
-				l_message := l_message + "..."
-			end
-			Precursor (l_message)
+			Precursor (if m.count > 255 then m.substring (1, 252) + "…" else m end)
 		end
 
 	clear_notification
@@ -99,7 +92,7 @@ feature -- Events
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2022, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
@@ -123,11 +116,11 @@ note
 			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
 		]"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
-end -- class NOTIFY_FORM
+end

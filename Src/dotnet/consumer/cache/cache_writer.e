@@ -91,12 +91,12 @@ feature -- Basic Operations
 			valid_path: not a_path.is_empty
 			path_exists: (create {RAW_FILE}.make_with_name (a_path)).exists
 			a_other_assemblies_contains_valid_items: a_other_assemblies /= Void implies a_other_assemblies.is_empty or else
-				across a_other_assemblies as l_ass all l_ass.item /= Void and then l_ass.item.is_case_insensitive_equal (l_ass.item) end
+				∀ a: a_other_assemblies ¦ attached a and then a.is_case_insensitive_equal (a)
 			a_other_assemblies_compares_objects: a_other_assemblies /= Void implies a_other_assemblies.object_comparison
 			a_processed_attached: a_processed /= Void
 			a_processed_compares_objects: a_processed.object_comparison
 			a_processed_contains_valid_items: a_processed.is_empty or else
-				across a_processed as l_item all l_item.item /= Void and then l_item.item.is_case_insensitive_equal (l_item.item) end
+				∀ a: a_processed ¦ attached a and then a.is_case_insensitive_equal (a)
 		local
 			l_string_tuple: TUPLE [STRING_32]
 			l_assembly_folder: PATH
@@ -201,7 +201,7 @@ feature -- Basic Operations
 					if
 						l_ca /= Void and then l_ca.is_consumed and then
 						((not a_info_only and l_ca.has_info_only) or else
-						cache_reader.is_assembly_stale (l_lower_path))
+							cache_reader.is_assembly_stale (l_lower_path))
 					then
 							-- unconsume stale assembly
 						unconsume_assembly (l_lower_path)
@@ -221,10 +221,9 @@ feature -- Basic Operations
 
 					if l_ca /= Void and then l_ca.is_consumed then
 						{SYSTEM_DLL_TRACE}.write_line_string ({SYSTEM_STRING}.format ("Assembly '{0}' is not being consumed because it is up-to-date.", a_path.to_cil))
-						l_reason := "Out of date"
 						if attached status_printer as l_status_printer then
 							create l_string_tuple
-							l_string_tuple.put ({STRING_32} "Up-to-date check: '" +	a_path +
+							l_string_tuple.put ({STRING_32} "Up-to-date check: '" + a_path +
 								"' has not been modified since last consumption.%N", 1)
 							l_status_printer.call (l_string_tuple)
 						end
@@ -297,12 +296,12 @@ feature -- Basic Operations
 										if
 											not a_processed.has (l_assembly_location) and then
 											not (l_reader.is_assembly_in_cache (l_assembly_path, True) or else
-											cache_reader.is_assembly_stale (l_assembly_path))
+													cache_reader.is_assembly_stale (l_assembly_path))
 										then
 												-- Adds only lookup info
 											add_assembly_ex (l_assembly_location,
 												a_info_only or else
-													(a_other_assemblies = Void or else
+												(a_other_assemblies = Void or else
 													not a_other_assemblies.has (l_assembly_location.as_lower)),
 												a_other_assemblies, a_processed)
 											l_assembly_info_updated := True
@@ -317,7 +316,7 @@ feature -- Basic Operations
 								attached notifier as l_notifier and then
 								attached {SYSTEM_STRING}.format ("Synchronizing cache...%N%NLocation: {0}", cache_reader.absolute_consume_path.name.to_cil) as l_msg
 							then
-								l_notifier.notify_info (l_msg)
+								l_notifier.notify_info (create {STRING_32}.make_from_cil (l_msg))
 							end
 							update_assembly_mappings (l_ca)
 							update_client_assembly_mappings (l_ca)
@@ -456,8 +455,6 @@ feature -- Basic Operations
 			l_assemblies: ARRAYED_LIST [CONSUMED_ASSEMBLY]
 			l_ca: CONSUMED_ASSEMBLY
 			retried: BOOLEAN
-			l_remove: BOOLEAN
-			l_removed: BOOLEAN
 		do
 			if not retried then
 				guard.lock
@@ -474,17 +471,14 @@ feature -- Basic Operations
 						l_assemblies.after
 					loop
 						l_ca := l_assemblies.item
-						l_remove := not l_ca.is_consumed
-						if not l_remove and then not (create {RAW_FILE}.make_with_path (l_ca.location)).exists then
-							if not (create {RAW_FILE}.make_with_path (l_ca.gac_path)).exists then
-								l_remove := True
-							end
-						end
-						if l_remove then
-								-- Remove assembly
+						if
+							not l_ca.is_consumed or else
+							not (create {RAW_FILE}.make_with_path (l_ca.location)).exists and then
+							not (create {RAW_FILE}.make_with_path (l_ca.gac_path)).exists
+						then
+								-- Remove assembly.
 							unconsume_assembly (l_ca.location)
 							update_client_assembly_mappings (l_ca)
-							l_removed := True
 						end
 						l_assemblies.forth
 					end
@@ -564,15 +558,16 @@ feature -- Basic Operations
 				if cache_reader.is_initialized then
 					Result := cache_reader.consumed_assembly_from_path (l_path)
 				end
-				if Result = Void then
-					if attached {GUID}.new_guid.to_string as l_id then
-						l_id_upper := l_id
-						l_id_upper.to_upper
-						Result := create_consumed_assembly_from_path (l_id_upper, l_path)
-						if Result /= Void and attached cache_reader.info as l_info then
-							l_info.add_assembly (Result)
-							update_info (l_info)
-						end
+				if
+					not attached Result and then
+					attached {GUID}.new_guid.to_string as l_id
+				then
+					l_id_upper := l_id
+					l_id_upper.to_upper
+					Result := create_consumed_assembly_from_path (l_id_upper, l_path)
+					if Result /= Void and attached cache_reader.info as l_info then
+						l_info.add_assembly (Result)
+						update_info (l_info)
 					end
 				end
 			end
@@ -593,7 +588,6 @@ feature -- Basic Operations
 			non_void_info: a_info /= Void
 		local
 			l_absolute_xml_info_path: PATH
-			serializer: EIFFEL_SERIALIZER
 			retried: BOOLEAN
 		do
 			if not retried then
@@ -601,8 +595,7 @@ feature -- Basic Operations
 				if a_info.is_dirty then
 					a_info.set_is_dirty (False)
 					l_absolute_xml_info_path := cache_reader.Absolute_info_path
-					create serializer
-					serializer.serialize (a_info, l_absolute_xml_info_path.name, False)
+					; (create {EIFFEL_SERIALIZER}).serialize (a_info, l_absolute_xml_info_path.name, False)
 				end
 			end
 			guard.unlock
@@ -618,7 +611,7 @@ feature -- Basic Operations
 			end
 		end
 
-feature {NONE} -- Implementation	
+feature {NONE} -- Implementation
 
 	remove_assembly_internal (a_path: PATH)
 			-- Remove assembly identified by `a_path' and its clients from cache.
@@ -799,50 +792,50 @@ feature {NONE} -- Implementation
 	cache_reader: CACHE_READER
 			-- associated cache reader
 
- 	culture_from_info (a_info: detachable CULTURE_INFO): STRING_32
- 			-- Returns culture string from `a_info'
- 		do
- 			if not attached a_info then
- 				Result := neutral_culture
- 			elseif attached a_info.to_string as l_info_name then
- 				Result := l_info_name
-	 			if Result.is_empty then
-	 				Result := neutral_culture
-	 			end
- 			else
- 				check
- 					to_string_attached: False
- 				then
- 				end
- 			end
+	culture_from_info (a_info: detachable CULTURE_INFO): STRING_32
+			-- Returns culture string from `a_info'
+		do
+			if not attached a_info then
+				Result := neutral_culture
+			elseif attached a_info.to_string as l_info_name then
+				Result := l_info_name
+				if Result.is_empty then
+					Result := neutral_culture
+				end
+			else
+				check
+					to_string_attached: False
+				then
+				end
+			end
 		ensure
 			result_not_void: Result /= Void
 			not_result_is_empty: not Result.is_empty
- 		end
+		end
 
 	neutral_culture: STRING_32 = "neutral"
 			-- neutral culture
 
 	version_from_info (a_info: detachable VERSION): STRING_32
- 			-- Returns culture string from `a_info'
+			-- Returns culture string from `a_info'
 		do
- 			if not attached a_info then
- 				create Result.make_empty
- 			elseif attached a_info.to_string as l_info_name then
-	 			Result := l_info_name
-	 		else
-	 			check
-	 				to_string_attached: False
-	 			then
-	 			end
- 			end
+			if not attached a_info then
+				create Result.make_empty
+			elseif attached a_info.to_string as l_info_name then
+				Result := l_info_name
+			else
+				check
+					to_string_attached: False
+				then
+				end
+			end
 		ensure
 			result_not_void: Result /= Void
- 		end
+		end
 
- 	public_key_token_from_array (a_array: detachable NATIVE_ARRAY [NATURAL_8]): STRING_32
- 			-- Returns culture string from `a_info'
- 		do
+	public_key_token_from_array (a_array: detachable NATIVE_ARRAY [NATURAL_8]): STRING_32
+			-- Returns culture string from `a_info'
+		do
 			if a_array = Void or else a_array.length = 0 then
 				Result := null_public_key_token
 			else
@@ -851,7 +844,7 @@ feature {NONE} -- Implementation
 		ensure
 			result_not_void: Result /= Void
 			not_result_is_empty: not Result.is_empty
- 		end
+		end
 
 	null_public_key_token: STRING_32 = "null"
 			-- Null public key tokens
@@ -868,9 +861,9 @@ invariant
 	non_void_cache_reader: cache_reader /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2018, Eiffel Software"
-	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
-	licensing_options:	"http://www.eiffel.com/licensing"
+	copyright: "Copyright (c) 1984-2022, Eiffel Software"
+	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
+	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[
 			This file is part of Eiffel Software's Eiffel Development Environment.
 			
@@ -892,11 +885,11 @@ note
 			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
 		]"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 end

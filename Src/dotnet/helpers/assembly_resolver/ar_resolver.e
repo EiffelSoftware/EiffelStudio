@@ -1,12 +1,11 @@
-note
+﻿note
 	description: "[
 		The simplest assembly resolver that will look for dependent assemblies
 		in application/library base folder. Other folders will also be examined
 		if explicitly added to resolver.
-		]"
+	]"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
-	author: ""
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -161,14 +160,14 @@ feature -- Resolution
 						else
 							l_name := Void
 						end
-						if l_name /= Void then
-							if does_name_match (l_name, a_name, a_version, a_culture, a_key) then
-								debug ("trace")
-									{SYSTEM_DLL_TRACE}.write_line_string ({STRING_32} "Attempting to load '" + l_file_path + "'.")
-								end
-
-								create Result.make_from_string (l_file_path)
+						if
+							attached l_name and then
+							does_name_match (l_name, a_name, a_version, a_culture, a_key)
+						then
+							debug ("trace")
+								{SYSTEM_DLL_TRACE}.write_line_string ({STRING_32} "Attempting to load '" + l_file_path + "'.")
 							end
+							create Result.make_from_string (l_file_path)
 						end
 					end
 					assembly_extensions.forth
@@ -351,20 +350,20 @@ feature -- Formatting
 			a_path_not_void: a_path /= Void
 			not_a_path_is_empty: not a_path.is_empty
 		local
-			l_res: STRING_32
 			l_forget_next_ds: BOOLEAN
 			l_unc_path: BOOLEAN
 			l_char: CHARACTER_32
 			i: INTEGER
 		do
-			create l_res.make (a_path.count)
+			create Result.make (a_path.count)
 			if a_path.count > 2 then
-				l_unc_path := a_path.substring (1, 2).same_string_general ("\\")
+				l_unc_path := a_path [1] = '\' and a_path [2] = '\'
 			end
 
 			if l_unc_path then
 				i := 3
-				l_res.append_string_general ("\\")
+				Result.extend ('\')
+				Result.extend ('\')
 			else
 				i := 1
 			end
@@ -375,18 +374,16 @@ feature -- Formatting
 			until
 				i > a_path.count
 			loop
-				l_char := a_path @ i
+				l_char := a_path [i]
 				if l_char /= '\' then
-					l_res.append_character (l_char)
+					Result.append_character (l_char)
 					l_forget_next_ds := False
 				elseif not l_forget_next_ds then
-					l_res.append_character (l_char)
+					Result.append_character (l_char)
 					l_forget_next_ds := True
 				end
 				i := i + 1
 			end
-
-			Result := l_res
 		ensure
 			result_not_void: Result /= Void
 			not_result_is_empty: not Result.is_empty
@@ -430,7 +427,7 @@ feature {NONE} -- Implementation
 			check
 				l_parts_has_name: l_parts.count >= 1
 			end
-			l_name := l_parts @ 1
+			l_name := l_parts.first
 			if l_parts.count >= 2 then
 				from
 					l_parts.go_i_th (2)
@@ -458,12 +455,13 @@ feature {NONE} -- Implementation
 					end
 					if l_key = Void and not l_set_for_it then
 						i := l_item.substring_index ("publickeytoken=", 1)
-						if i >= 1 then
-							if i <= i + 15 then
-								l_key := l_parts.item.substring (i + 15, l_item.count)
-								if l_key.is_case_insensitive_equal_general ("null") then
-									create {IMMUTABLE_STRING_32} l_key.make_empty
-								end
+						if
+							i >= 1 and then
+							i <= i + 15
+						then
+							l_key := l_parts.item.substring (i + 15, l_item.count)
+							if l_key.is_case_insensitive_equal_general ("null") then
+								create {IMMUTABLE_STRING_32} l_key.make_empty
 							end
 						end
 					end
@@ -571,7 +569,7 @@ invariant
 	resolve_event_handler_not_void: resolve_event_handler /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2022, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
@@ -595,12 +593,11 @@ note
 			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
 		]"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
-
-end -- class AR_RESOLVER
+end

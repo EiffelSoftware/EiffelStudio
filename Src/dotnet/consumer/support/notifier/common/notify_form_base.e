@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "Base implementation for a form used to host a notification icon."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -27,13 +27,10 @@ feature {NONE} -- Initialization
 
 	initialize_component
 			-- Initialize form controls
-		local
-			l_location: DRAWING_POINT
 		do
 			create notify_icon.make
 
-			create l_location.make_from_x_and_y (-1000, -1000)
-			set_location (l_location)
+			set_location (create {DRAWING_POINT}.make_from_x_and_y (-1000, -1000))
 			set_window_state ({WINFORMS_FORM_WINDOW_STATE}.minimized)
 			set_start_position ({WINFORMS_FORM_START_POSITION}.manual)
 			set_form_border_style ({WINFORMS_FORM_BORDER_STYLE}.fixed_tool_window)
@@ -70,7 +67,7 @@ feature -- Status Setting
 			last_notification_set: attached last_notification as l_notification and then l_notification.same_string (old notify_string)
 		end
 
-	notify_info (a_message: READABLE_STRING_GENERAL)
+	notify_info (a_message: READABLE_STRING_32)
 			-- Notifier user of an event
 		require
 			a_message_attached: a_message /= Void
@@ -129,19 +126,17 @@ feature {NONE} -- Constants
 
 feature {NONE} -- Implementation
 
-	last_notification: detachable READABLE_STRING_GENERAL
+	last_notification: detachable READABLE_STRING_32
 			-- Last set notification
 
 	resource_icon: detachable DRAWING_ICON
 			-- Load `notify_icon' from resources can be loaded and if present.
 		local
-			l_type: SYSTEM_TYPE
 			l_rm: RESOURCE_MANAGER
 			retried: BOOLEAN
 		do
 			if not retried then
-				l_type := {NOTIFY_FORM}
-				create l_rm.make (resource_name, (l_type.assembly))
+				create l_rm.make (resource_name, ({NOTIFY_FORM}).to_cil.assembly)
 				if attached {DRAWING_ICON} l_rm.get_object (tray_icon_resource_name) as l_icon then
 					Result := l_icon
 				end
@@ -152,7 +147,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2022, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
@@ -176,11 +171,11 @@ note
 			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
 		]"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
-end -- class NOTIFY_FORM_BASE
+end

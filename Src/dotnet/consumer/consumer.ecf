@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
-<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-20-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-20-0 http://www.eiffel.com/developers/xml/configuration-1-20-0.xsd" name="eiffelsoftware.metadataconsumer" uuid="03FEA2AF-7282-4F0F-9E4B-57317B1620DA" library_target="consumer_library">
+<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-22-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-22-0 http://www.eiffel.com/developers/xml/configuration-1-22-0.xsd" name="eiffelsoftware.metadataconsumer" uuid="03FEA2AF-7282-4F0F-9E4B-57317B1620DA" library_target="consumer_library">
 	<target name="consumer_library">
 		<root all_classes="true"/>
 		<version major="7" minor="2" release="9" build="376" company="Eiffel Software" product="Eiffel Assembly Metadata Consumer" copyright="Copyright Eiffel Software 2006-2019. All Rights Reserved."/>
 		<file_rule>
-			<exclude>/\.svn$</exclude>
 			<exclude>/EIFGENs$</exclude>
+			<exclude>/\.svn$</exclude>
 		</file_rule>
-		<option warning="true" namespace="EiffelSoftware.MetadataConsumer">
+		<option namespace="EiffelSoftware.MetadataConsumer">
 			<assertions/>
 		</option>
 		<setting name="cls_compliant" value="false"/>

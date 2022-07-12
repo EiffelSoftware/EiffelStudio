@@ -32,7 +32,7 @@ create {CONF_OPTION}
 
 feature -- Creation
 
-	create_from_namespace (n: attached like namespace): detachable like Current
+	create_from_namespace (n: attached like latest_namespace): detachable like Current
 			-- Create options with the defaults associated with namespace `n` if it is known.
 			-- Return `Void` if the namespace is unknown.
 			-- See also: `create_from_namespace_or_latest`.
@@ -45,7 +45,7 @@ feature -- Creation
 			is_namespace_known (n) ⇒ attached Result
 		end
 
-	create_from_namespace_or_latest (n: attached like namespace): like Current
+	create_from_namespace_or_latest (n: attached like latest_namespace): like Current
 			-- Create options with the defaults associated with namespace `n` if it is known.
 			-- Create options with the defaults associated with `latest_namespace` otherwise.
 			-- See also: `create_from_namespace`.
@@ -57,7 +57,7 @@ feature -- Creation
 
 feature {NONE} -- Creation
 
-	make_from_namespace (n: attached like namespace)
+	make_from_namespace (n: attached like latest_namespace)
 			-- Initialize options to the defaults associated with namespace `n`.
 		require
 			is_namespace_known (n)
@@ -376,9 +376,6 @@ feature -- Access, stored in configuration file
 	assertions: detachable CONF_ASSERTIONS
 			-- The assertion settings.
 
-	namespace: detachable READABLE_STRING_32
-			-- .NET namespace that is computed on demand.
-
 	local_namespace: detachable READABLE_STRING_32
 			-- .NET namespace set in configuration file
 
@@ -696,13 +693,11 @@ feature {CONF_ACCESS} -- Update, stored in configuration file.
 			else
 				local_namespace := a_namespace
 			end
-			namespace := Void
 		ensure
 			local_namespace_set:
 				a_namespace = Void or else not a_namespace.is_empty implies local_namespace = a_namespace
 			local_namespace_reset:
 				a_namespace /= Void and then a_namespace.is_empty implies local_namespace = Void
-			namespace_reset: namespace = Void
 		end
 
 	set_profile (a_enabled: BOOLEAN)
@@ -826,9 +821,6 @@ feature -- Duplication
 				if attached other.local_namespace as l then
 					local_namespace := l.twin
 				end
-				if attached other.namespace as n then
-					namespace := n.twin
-				end
 				void_safety := other.void_safety.twin
 				catcall_detection := other.catcall_detection.twin
 				syntax := other.syntax.twin
@@ -868,7 +860,6 @@ feature -- Comparison
 				is_trace = other.is_trace ∧…
 				is_trace_configured = other.is_trace_configured ∧…
 				local_namespace ~ other.local_namespace ∧…
-				namespace ~ other.namespace ∧…
 				void_safety ~ other.void_safety ∧…
 				syntax ~ other.syntax ∧…
 				array ~ other.array ∧…
@@ -1001,17 +992,10 @@ feature -- Merging
 			-- Apply this to all options.
 		do
 			merge_client (other)
-				-- Computation of `namespace' by using values in `other'.
-			namespace :=
-				if
-					attached if attached other.namespace as n then n else other.local_namespace end as o
-				then
-					if attached local_namespace as l then o + "." + l else o.twin end
-				elseif attached local_namespace as l then
-					l.twin
-				else
-					Void
-				end
+				-- Propagate `local_namespace` from `other` if necessary and possible.
+			if not attached local_namespace and then attached other.local_namespace as n then
+				set_local_namespace (n)
+			end
 			if not is_full_class_checking_configured then
 				is_full_class_checking_configured := other.is_full_class_checking_configured or else is_full_class_checking /~ other.is_full_class_checking
 				is_full_class_checking := other.is_full_class_checking
@@ -1063,7 +1047,7 @@ invariant
 
 note
 	ca_ignore: "CA093", "CA093: manifest array type mismatch"
-	copyright: "Copyright (c) 1984-2021, Eiffel Software"
+	copyright: "Copyright (c) 1984-2022, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

@@ -736,8 +736,6 @@ feature {EB_CUSTOM_WIDGETTED_EDITOR, EB_CONTEXT_MENU_FACTORY} -- Actions handler
 
 	toggle_scope_detail (a_button: EV_RADIO_BUTTON)
 			-- Show and hide the scope detail according to the scope box's selection.
-		local
-			l_str: STRING_GENERAL
 		do
 			if is_customized then
 				scope.enable_sensitive

@@ -25,7 +25,8 @@ feature -- Access
         do
 			Result := locale_internal.item
 		ensure
-			locale_not_void: Result /= Void
+			class
+			attached Result
 		end
 
 	locale_manager: I18N_LOCALE_MANAGER
@@ -36,6 +37,8 @@ feature -- Access
 			else
 				create Result.make (".")
 			end
+		ensure
+			class
 		end
 
 feature -- Status change
@@ -55,6 +58,8 @@ feature -- Status change
 			else
 				locale_internal.put (empty_locale)
 			end
+		ensure
+			class
 		end
 
 	set_locale (a_locale: like locale)
@@ -63,18 +68,24 @@ feature -- Status change
 			a_locale_not_void: a_locale /= Void
 		do
 			locale_internal.put (a_locale)
+		ensure
+			class
 		end
 
 	set_system_locale
 			-- Set `locale' `system_locale'
 		do
 			locale_internal.put (system_locale)
+		ensure
+			class
 		end
 
 	set_empty_locale
 			-- Set locale to be an empty locale.
 		do
 			locale_internal.put (empty_locale)
+		ensure
+			class
 		end
 
 feature {NONE} -- Implementation
@@ -83,21 +94,24 @@ feature {NONE} -- Implementation
 		once
 			create Result.put (empty_locale)
 		ensure
-			result_not_void: Result /= Void
+			class
+			attached Result
 		end
 
 	system_locale: I18N_LOCALE
 		once
 			Result := locale_manager.system_locale
 		ensure
-			result_not_void: Result /= Void
+			class
+			attached Result
 		end
 
 	empty_locale: I18N_LOCALE
 		once
 			Result := locale_manager.locale (create {I18N_LOCALE_ID}.make_from_string (""))
 		ensure
-			result_not_void: Result /= Void
+			class
+			attached Result
 		end
 
 feature -- File saving
@@ -328,7 +342,7 @@ feature -- String
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2020, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2022, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

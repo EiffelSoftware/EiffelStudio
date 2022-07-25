@@ -16,11 +16,13 @@
 		<library name="base_extension_unstable" location="$ISE_LIBRARY\unstable\library\base_extension\base_extension.ecf" readonly="false"/>
 		<library name="configuration_parser" location="configuration_parser.ecf" readonly="false"/>
 		<library name="consumer" location="$EIFFEL_SRC\dotnet\consumer\consumer.ecf" readonly="false"/>
-		<library name="emitter_loader" location="$EIFFEL_SRC\framework\emitter_loader\emitter_loader.ecf"/>
+		<library name="consumer_factory" location="C:\es\trunk\Src\dotnet\consumer_factory\consumer_factory.ecf"/>
+		<library name="consumer_interface" location="C:\es\trunk\Src\dotnet\consumer_interface\consumer_interface.ecf"/>
 		<library name="environment" location="$EIFFEL_SRC\framework\environment\environment.ecf"/>
 		<library name="file_utilities" location="$EIFFEL_SRC\framework\file_utilities\file_utilities.ecf"/>
 		<library name="gobo_kernel" location="$ISE_LIBRARY\library\gobo\gobo_kernel.ecf"/>
 		<library name="gobo_structure" location="$ISE_LIBRARY\library\gobo\gobo_structure.ecf"/>
+		<library name="interface_names" location="$EIFFEL_SRC\framework\interface_names\interface_names.ecf"/>
 		<library name="parser" location="..\parser\parser.ecf"/>
 		<library name="uuid" location="$ISE_LIBRARY\library\uuid\uuid.ecf"/>
 		<cluster name="configuration" location="compiler\" recursive="true">

@@ -31,6 +31,8 @@ inherit
 
 	CONF_ACCESS
 
+	SHARED_LOCALE
+
 create
 	make
 
@@ -136,31 +138,14 @@ feature -- Commands
 				create assemblies.make (o.count)
 				linear_assemblies.wipe_out
 
-					-- go through all the assemblies and update the information if necessary
-				from
-					a_new_assemblies.start
-				until
-					a_new_assemblies.after
-				loop
-						-- build the assembly,
-						-- consume if necessary
-					build_assembly (a_new_assemblies.item_for_iteration)
+					-- Go through all the assemblies and update the information if necessary.
+				⟳ a: a_new_assemblies ¦ build_assembly (a) ⟲
 
-					a_new_assemblies.forth
-				end
-
-					-- build/add dependencies
-				from
-					linear_assemblies.start
-				until
-					linear_assemblies.after
-				loop
-					build_dependencies (linear_assemblies.item)
-					linear_assemblies.forth
-				end
+					-- Build/add dependencies.
+				⟳ a: linear_assemblies ¦ build_dependencies (a) ⟲
 			end
-			if attached internal_il_emitter.item as e then
-				e.unload
+			if attached internal_consumer.item as e then
+				e.release
 			end
 		ensure
 			assemblies_set: not is_error implies assemblies /= Void
@@ -307,13 +292,9 @@ feature {NONE} -- Implementation
 				then
 					a_assembly.set_classes (l_classes)
 				else
-					from
-						create l_new_classes.make (l_classes.count)
-						l_classes.start
-					until
-						l_classes.after
-					loop
-						if attached {CONF_CLASS_ASSEMBLY} l_classes.item_for_iteration as l_class then
+					create l_new_classes.make (l_classes.count)
+					across l_classes as c loop
+						if attached {CONF_CLASS_ASSEMBLY} c as l_class then
 							create l_name.make_from_string (l_class.name)
 							if
 								l_renamings /= Void and then
@@ -329,7 +310,6 @@ feature {NONE} -- Implementation
 								-- In assemblies there are only CONF_CLASS_ASSEMBLY.
 							check has_only_conf_class_assembly: False end
 						end
-						l_classes.forth
 					end
 					a_assembly.set_classes (l_new_classes)
 				end
@@ -346,11 +326,8 @@ feature {NONE} -- Implementation
 			an_assembly_ok: an_assembly /= Void
 			assemblies_attached: attached assemblies
 		local
-			l_guid, l_dep_guid: READABLE_STRING_32
+			l_guid: READABLE_STRING_32
 			l_reader: EIFFEL_DESERIALIZER
-			l_referenced_assemblies: detachable ARRAYED_LIST [CONSUMED_ASSEMBLY]
-			i, cnt: INTEGER
-			l_cons_ass: CONSUMED_ASSEMBLY
 		do
 			l_guid := an_assembly.guid
 
@@ -359,22 +336,10 @@ feature {NONE} -- Implementation
 			l_reader.deserialize (an_assembly.consumed_path.extended
 				(referenced_assemblies_info_file).name, 0)
 			if attached {CONSUMED_ASSEMBLY_MAPPING} l_reader.deserialized_object as l_referenced_assemblies_mapping then
-				l_referenced_assemblies := l_referenced_assemblies_mapping.assemblies
-				if l_referenced_assemblies /= Void then
-					from
-						l_referenced_assemblies.start
-						i := 1
-						cnt := l_referenced_assemblies.count
-					until
-						i > cnt
-					loop
-						l_cons_ass := l_referenced_assemblies.i_th (i)
-						l_dep_guid := l_cons_ass.unique_id
-							-- if it's not the assembly itself
-						if not l_dep_guid.same_string (l_guid) then
-							an_assembly.add_dependency (get_physical_assembly (l_cons_ass), i)
-						end
-						i := i + 1
+				across l_referenced_assemblies_mapping.assemblies as a loop
+						-- if it's not the assembly itself
+					if not a.unique_id.same_string (l_guid) then
+						an_assembly.add_dependency (get_physical_assembly (a), @ a.target_index)
 					end
 				end
 			else
@@ -451,21 +416,14 @@ feature {NONE} -- Implementation
 				end
 
 					-- Classes in l_old_dotnet_classes are not used any more, mark them as removed.
-				if l_old_dotnet_classes /= Void then
-					from
-						l_old_dotnet_classes.start
-					until
-						l_old_dotnet_classes.after
-					loop
-						if attached {CONF_CLASS_ASSEMBLY} l_old_dotnet_classes.item_for_iteration as l_dotnet_class then
-							l_dotnet_class.invalidate
-							if l_dotnet_class.is_compiled then
-								removed_classes.force (l_dotnet_class)
-							end
-						else
-							check is_conf_class_assembly: False end
+				across l_old_dotnet_classes as o loop
+					if attached {CONF_CLASS_ASSEMBLY} o as c then
+						c.invalidate
+						if c.is_compiled then
+							removed_classes.force (c)
 						end
-						l_old_dotnet_classes.forth
+					else
+						check is_conf_class_assembly: False end
 					end
 				end
 
@@ -619,7 +577,7 @@ feature {NONE} -- Consuming
 			create l_unique_paths.make_caseless (10)
 
 			on_consume_assemblies
-			if attached il_emitter as l_emitter then
+			if attached consumer as l_emitter then
 				create l_paths.make_empty
 				across an_assemblies as l_assembly loop
 					l_a := l_assembly
@@ -683,7 +641,7 @@ feature {NONE} -- Consuming
 			end
 			if not l_paths.is_empty then
 				l_paths.remove_tail (1)
-				if attached il_emitter as l_emitter then
+				if attached consumer as l_emitter then
 					l_emitter.consume_assembly_from_path (l_paths, True, Void)
 				end
 			end
@@ -702,7 +660,7 @@ feature {NONE} -- Consuming
 		do
 			on_consume_assemblies
 			if
-				attached il_emitter as l_emitter and then
+				attached consumer as l_emitter and then
 				(attached an_assembly.assembly_name as l_assembly_name and then not l_assembly_name.is_empty) and
 				(attached an_assembly.assembly_version as l_assembly_version and then not l_assembly_version.is_empty) and
 				(attached an_assembly.assembly_culture as l_assembly_culture and then not l_assembly_culture.is_empty) and
@@ -735,31 +693,41 @@ feature {NONE} -- error handling
 			l_conf_exception.raise
 		end
 
-feature {CONSUMER_EXPORT} -- il emitter
+feature {CONSUMER_EXPORT} -- Consumer
 
-	il_emitter: detachable IL_EMITTER
-			-- Instance of IL_EMITTER
+	consumer: detachable CONSUMER
+			-- Instance of a consumer.
 		do
-			Result := internal_il_emitter.item
+			Result := internal_consumer.item
 			if Result = Void then
-				create Result.make (metadata_cache_path, il_version)
-				if not Result.exists then
-						-- IL_EMITTER component could not be loaded.
+				Result := {CONSUMER_FACTORY}.consumer (metadata_cache_path, il_version)
+				if not attached Result then
+					add_error (create {CONF_ERROR_EMITTER_INIT}.make
+						(locale.formatted_string (locale.translation_in_context
+							({STRING_32} "Cannot obtain a .NET assembly metadata consumer for IL version $1.", "configuration.compiler"),
+							il_version)))
+				elseif not Result.is_available then
+						-- Consumer could not be loaded.
 					add_error (create {CONF_ERROR_EMITTER})
+					Result.release
 					Result := Void
 				elseif not Result.is_initialized then
-						-- Path to cache is not valid
-					add_error (create {CONF_ERROR_EMITTER_INIT}.make (Result.last_com_code))
+						-- Consumer cannot be initialized (e.g., due to the error in the path).
+					add_error (create {CONF_ERROR_EMITTER_INIT}.make
+						(if attached Result.last_error_message as m then m else
+							{SHARED_LOCALE}.locale.translation_in_context ({STRING_32} "Cannot initialize a .NET assembly metadata consumer.", "configuration.compiler")
+						end))
+					Result.release
 					Result := Void
 				else
-					internal_il_emitter.put (Result)
+					internal_consumer.put (Result)
 				end
 			end
 		ensure
-			valid_result: Result /= Void implies Result.exists and then Result.is_initialized
+			valid_result: Result /= Void implies Result.is_available and then Result.is_initialized
 		end
 
-	internal_il_emitter: CELL [detachable IL_EMITTER]
+	internal_consumer: CELL [detachable CONSUMER]
 			-- Unique instance of IL_EMITTER
 		once
 			create Result.put (Void)
@@ -910,7 +878,7 @@ invariant
 	consume_assembly_observer_not_void: consume_assembly_observer /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2018, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2022, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

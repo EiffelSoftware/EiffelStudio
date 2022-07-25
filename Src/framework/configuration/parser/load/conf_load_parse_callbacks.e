@@ -1230,26 +1230,22 @@ feature {NONE} -- Implementation attribute processing
 			current_target_set: current_target /= Void
 		local
 			l_lower_name: STRING_32
-			l_location: like current_attributes.item
 			l_current_assembly: like current_assembly
 			l_current_group: like current_group
 		do
 			if attached current_attributes.item (at_name) as l_name then
 				l_lower_name := l_name.as_lower
-				l_location := current_attributes.item (at_location)
-				if
-					is_valid_group_name (l_lower_name) and
-					l_location /= Void and
-					attached current_target as l_current_target -- implied by precondition `current_target_not_void'
-				then
+				if not is_valid_group_name (l_lower_name) then
+					set_parse_error_message (conf_interface_names.e_parse_incorrect_assembly_name (l_name))
+				elseif not attached current_attributes.item (at_location) as l_location then
+					set_parse_error_message (conf_interface_names.e_parse_incorrect_assembly (l_name))
+				elseif attached current_target as l_current_target then -- implied by precondition `current_target_not_void'
 					if
-						l_location.same_string_general ("none") and then -- condition merged with the next 4 conditions during refactorying
-						(
-							attached current_attributes.item (at_assembly_name) as l_assembly_name and
-							attached current_attributes.item (at_assembly_version) as l_assembly_version and
-							attached current_attributes.item (at_assembly_culture) as l_assembly_culture and
-							attached current_attributes.item (at_assembly_key) as l_assembly_key
-						)
+						l_location.same_string ({STRING_32} "none") and then
+						attached current_attributes.item (at_assembly_name) as l_assembly_name and
+						attached current_attributes.item (at_assembly_version) as l_assembly_version and
+						attached current_attributes.item (at_assembly_culture) as l_assembly_culture and
+						attached current_attributes.item (at_assembly_key) as l_assembly_key
 					then
 						l_current_assembly := factory.new_assembly_from_gac (l_lower_name, l_assembly_name, l_assembly_version, l_assembly_culture, l_assembly_key, l_current_target)
 					else
@@ -1269,10 +1265,6 @@ feature {NONE} -- Implementation attribute processing
 						l_current_assembly.set_name_prefix (l_prefix)
 					end
 					l_current_target.add_assembly (l_current_assembly)
-				elseif not is_valid_group_name (l_lower_name) then
-					set_parse_error_message (conf_interface_names.e_parse_incorrect_assembly_name (l_name))
-				elseif l_location = Void then
-					set_parse_error_message (conf_interface_names.e_parse_incorrect_assembly (l_name))
 				else
 					check should_not_reach: False end
 				end
@@ -3259,7 +3251,7 @@ invariant
 	factory_not_void: factory /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2021, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2022, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

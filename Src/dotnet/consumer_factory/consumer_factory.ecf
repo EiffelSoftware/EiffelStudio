@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-22-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-22-0 http://www.eiffel.com/developers/xml/configuration-1-22-0.xsd" name="cached_consumer" uuid="00C4EE7A-37BF-48E9-AA75-2DDE3EE1137A" library_target="default">
+	<target name="default">
+		<root all_classes="true"/>
+		<capability>
+			<concurrency support="none"/>
+		</capability>
+		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf"/>
+		<library name="consumer_interface" location="..\consumer_interface\consumer_interface.ecf"/>
+		<library name="emitter_loader" location="$EIFFEL_SRC\framework\emitter_loader\emitter_loader.ecf"/>
+		<cluster name="main" location=".\"/>
+	</target>
+</system>

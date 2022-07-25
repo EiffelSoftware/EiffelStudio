@@ -1,5 +1,5 @@
-note
-	description: "Class that provides interface to Eiffel `emitter'"
+﻿note
+	description: "Class that provides interface to Eiffel a COM-based .NET assembly consumer."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 	date: "$Date$"
@@ -7,6 +7,13 @@ note
 
 class
 	IL_EMITTER
+
+inherit
+	CONSUMER
+		rename
+			is_available as exists,
+			release as unload
+		end
 
 create
 	make
@@ -16,31 +23,29 @@ feature {NONE} -- Initialization
 	make (a_path: PATH; a_runtime_version: READABLE_STRING_GENERAL)
 			-- Create new instance of IL_EMITTER
 		require
-			a_path_not_void: a_path /= Void
-			a_path_not_empty: not a_path.is_empty
-			a_runtime_version_not_void: a_runtime_version /= Void
-			a_runtime_version_not_empty: not a_runtime_version.is_empty
-		local
-			l_impl: like implementation
+			attached a_path
+			not a_path.is_empty
+			attached a_runtime_version
+			not a_runtime_version.is_empty
 		do
-			l_impl := (create {EMITTER_FACTORY}).new_emitter (a_runtime_version)
-			if l_impl /= Void then
-				implementation := l_impl
-				implementation.initialize_with_path (create {UNI_STRING}.make (a_path.name))
+			if attached (create {EMITTER_FACTORY}).new_emitter (a_runtime_version) as i then
+				i.initialize_with_path (create {UNI_STRING}.make (a_path.name))
+				implementation := i
 			end
 		end
 
 feature -- Status report
 
 	exists: BOOLEAN
+			-- <Precursor>
 		do
-			Result := implementation /= Void
+			Result := attached implementation
 		end
 
 	is_initialized: BOOLEAN
-			-- Is consumer initialized for given path?
+			-- <Precursor>
 		do
-			if implementation /= Void then
+			if attached implementation then
 				Result := implementation.is_initialized
 			end
 		end
@@ -48,17 +53,28 @@ feature -- Status report
 	last_com_code: INTEGER
 			-- Last value of the COM error if any.
 		do
-			if implementation /= Void then
+			if attached implementation then
 				Result := implementation.last_call_success
+			end
+		end
+
+	last_error_message: detachable READABLE_STRING_32
+			-- <Precursor>
+		local
+			c: like last_com_code
+		do
+			c := last_com_code
+			if c /= 0 then
+				Result := {STRING_32} "Unable to initialize Eiffel Assembly Cache (COM error: 0x" + c.to_hex_string + ")."
 			end
 		end
 
 feature -- Clean up
 
 	unload
-			-- unload all used resources
+			-- <Precursor>
 		do
-			if implementation /= Void then
+			if attached implementation then
 				implementation.unload
 			end
 		end
@@ -66,18 +82,14 @@ feature -- Clean up
 feature -- XML generation
 
 	consume_assembly_from_path (a_path: READABLE_STRING_GENERAL; a_info_only: BOOLEAN; a_references: detachable READABLE_STRING_GENERAL)
-			-- Consume local assembly `a_assembly' and all of its dependencies into EAC
-		require
-			exists: exists
-			non_void_path: a_path /= Void
-			non_empty_path: not a_path.is_empty
+			-- <Precursor>
 		local
 			l_refs: detachable UNI_STRING
 		do
 			if a_references /= Void then
 				create l_refs.make (a_references)
 			end
-			check implementation /= Void then
+			check attached implementation then
 				implementation.consume_assembly_from_path (
 					create {UNI_STRING}.make (a_path),
 					a_info_only,
@@ -86,20 +98,9 @@ feature -- XML generation
 		end
 
 	consume_assembly (a_name, a_version, a_culture, a_key: READABLE_STRING_GENERAL; a_info_only: BOOLEAN)
-			-- consume an assembly into the EAC from assemblyy defined by
-			-- "`a_name', Version=`a_version', Culture=`a_culture', PublicKeyToken=`a_key'"
-		require
-			exists: exists
-			non_void_name: a_name /= Void
-			non_void_version: a_version /= Void
-			non_void_culture: a_culture /= Void
-			non_void_key: a_key /= Void
-			non_empty_name: not a_name.is_empty
-			non_empty_version: not a_version.is_empty
-			non_empty_culture: not a_culture.is_empty
-			non_empty_key: not a_key.is_empty
+			-- <Precursor>
 		do
-			check implementation /= Void then
+			check attached implementation then
 				implementation.consume_assembly (
 					create {UNI_STRING}.make (a_name),
 					create {UNI_STRING}.make (a_version),
@@ -115,7 +116,7 @@ feature {NONE} -- Implementation
 			-- Com object to get information about assemblies and emitting them.
 
 note
-	copyright:	"Copyright (c) 1984-2013, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2022, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

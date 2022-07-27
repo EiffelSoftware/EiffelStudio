@@ -8,6 +8,13 @@ note
 class
 	IL_EMITTER
 
+inherit
+	CONSUMER
+		rename
+			is_available as exists,
+			release as unload
+		end
+
 create
 	make
 
@@ -16,10 +23,10 @@ feature {NONE} -- Initialization
 	make (a_path: PATH; a_runtime_version: READABLE_STRING_GENERAL)
 			-- Create new instance of IL_EMITTER
 		require
-			a_path_not_void: a_path /= Void
-			a_path_not_empty: not a_path.is_empty
-			a_runtime_version_not_void: a_runtime_version /= Void
-			a_runtime_version_not_empty: not a_runtime_version.is_empty
+			attached a_path
+			not a_path.is_empty
+			attached a_runtime_version
+			not a_runtime_version.is_empty
 		do
 			check
 				False
@@ -29,14 +36,13 @@ feature {NONE} -- Initialization
 feature -- Status report
 
 	exists: BOOLEAN
+			-- <Precursor>
 		do
 			Result := False
 		end
 
 	is_initialized: BOOLEAN
-			-- Is consumer initialized for given path?
-		require
-			exists: exists
+			-- <Precursor>
 		do
 			check
 				False
@@ -54,10 +60,18 @@ feature -- Status report
 			end
 		end
 
-feature -- Retrieval
+	last_error_message: detachable READABLE_STRING_32
+			-- <Precursor>
+		do
+			check
+				False
+			end
+		end
+
+feature -- Clean up
 
 	unload
-			-- unload all used resources
+			-- <Precursor>
 		do
 			check
 				False
@@ -67,11 +81,7 @@ feature -- Retrieval
 feature -- XML generation
 
 	consume_assembly_from_path (a_path: READABLE_STRING_GENERAL; a_info_only: BOOLEAN; a_references: detachable READABLE_STRING_GENERAL)
-			-- Consume local assembly `a_assembly' and all of its dependencies into EAC
-		require
-			exists: exists
-			non_void_path: a_path /= Void
-			non_empty_path: not a_path.is_empty
+			-- <Precursor>
 		do
 			check
 				False
@@ -79,18 +89,7 @@ feature -- XML generation
 		end
 
 	consume_assembly (a_name, a_version, a_culture, a_key: READABLE_STRING_GENERAL; a_info_only: BOOLEAN)
-			-- consume an assembly into the EAC from assemblyy defined by
-			-- "`a_name', Version=`a_version', Culture=`a_culture', PublicKeyToken=`a_key'"
-		require
-			exists: exists
-			non_void_name: a_name /= Void
-			non_void_version: a_version /= Void
-			non_void_culture: a_culture /= Void
-			non_void_key: a_key /= Void
-			non_empty_name: not a_name.is_empty
-			non_empty_version: not a_version.is_empty
-			non_empty_culture: not a_culture.is_empty
-			non_empty_key: not a_key.is_empty
+			-- <Precursor>
 		do
 			check
 				False
@@ -98,7 +97,7 @@ feature -- XML generation
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2013, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2022, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
@@ -129,5 +128,4 @@ note
 			Customer support http://support.eiffel.com
 		]"
 
-end -- class IL_EMITTER
-
+end

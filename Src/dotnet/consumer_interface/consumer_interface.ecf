@@ -2,7 +2,30 @@
 <system xmlns="http://www.eiffel.com/developers/xml/configuration-1-22-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-22-0 http://www.eiffel.com/developers/xml/configuration-1-22-0.xsd" name="consumer" uuid="6D914459-A568-4D61-85E3-6CF88B92C6D1" library_target="consumer_interface">
 	<target name="consumer_interface">
 		<root all_classes="true"/>
+		<option namespace="EiffelSoftware.MetadataConsumer">
+		</option>
 		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf"/>
 		<cluster name="main" location=".\"/>
+		<cluster name="components" location=".\components" recursive="true">
+			<option warning="none" is_obsolete_iteration="true">
+			</option>
+			<visible class="CONSUMED_ARGUMENT" feature="intentionally_absent_feature"/>
+			<visible class="CONSUMED_ARRAY_TYPE" feature="intentionally_absent_feature"/>
+			<visible class="CONSUMED_ASSEMBLY" feature="intentionally_absent_feature"/>
+			<visible class="CONSUMED_ASSEMBLY_MAPPING" feature="intentionally_absent_feature"/>
+			<visible class="CONSUMED_ASSEMBLY_TYPES" feature="intentionally_absent_feature"/>
+			<visible class="CONSUMED_CONSTRUCTOR" feature="intentionally_absent_feature"/>
+			<visible class="CONSUMED_EVENT" feature="intentionally_absent_feature"/>
+			<visible class="CONSUMED_FIELD" feature="intentionally_absent_feature"/>
+			<visible class="CONSUMED_FUNCTION" feature="intentionally_absent_feature"/>
+			<visible class="CONSUMED_LITERAL_FIELD" feature="intentionally_absent_feature"/>
+			<visible class="CONSUMED_NESTED_TYPE" feature="intentionally_absent_feature"/>
+			<visible class="CONSUMED_PROCEDURE" feature="intentionally_absent_feature"/>
+			<visible class="CONSUMED_PROPERTY" feature="intentionally_absent_feature"/>
+			<visible class="CONSUMED_REFERENCED_TYPE" feature="intentionally_absent_feature"/>
+			<visible class="CONSUMED_TYPE" feature="intentionally_absent_feature"/>
+		</cluster>
+		<cluster name="utilities" location=".\utilities" recursive="true">
+		</cluster>
 	</target>
 </system>

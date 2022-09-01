@@ -28,6 +28,7 @@
 		<external_resource location="$EIFFEL_SRC\dotnet\consumer\resources\consumer.resx"/>
 		<library name="assembly_resolver" location="$EIFFEL_SRC\dotnet\helpers\assembly_resolver\assembly_resolver.ecf" readonly="false"/>
 		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf" readonly="false"/>
+		<library name="consumer_interface" location="$EIFFEL_SRC\dotnet\consumer_interface\consumer_interface.ecf" readonly="false"/>
 		<library name="dotnet_helper" location="$EIFFEL_SRC\dotnet\helpers\support\dotnet_helper.ecf" readonly="false">
 			<condition>
 				<dotnet value="true"/>
@@ -71,21 +72,6 @@
 				<exclude>/EIFGENs$</exclude>
 			</file_rule>
 			<visible class="CACHE_INFO" feature="intentionally_absent_feature"/>
-			<visible class="CONSUMED_ARGUMENT" feature="intentionally_absent_feature"/>
-			<visible class="CONSUMED_ARRAY_TYPE" feature="intentionally_absent_feature"/>
-			<visible class="CONSUMED_ASSEMBLY" feature="intentionally_absent_feature"/>
-			<visible class="CONSUMED_ASSEMBLY_MAPPING" feature="intentionally_absent_feature"/>
-			<visible class="CONSUMED_ASSEMBLY_TYPES" feature="intentionally_absent_feature"/>
-			<visible class="CONSUMED_CONSTRUCTOR" feature="intentionally_absent_feature"/>
-			<visible class="CONSUMED_EVENT" feature="intentionally_absent_feature"/>
-			<visible class="CONSUMED_FIELD" feature="intentionally_absent_feature"/>
-			<visible class="CONSUMED_FUNCTION" feature="intentionally_absent_feature"/>
-			<visible class="CONSUMED_LITERAL_FIELD" feature="intentionally_absent_feature"/>
-			<visible class="CONSUMED_NESTED_TYPE" feature="intentionally_absent_feature"/>
-			<visible class="CONSUMED_PROCEDURE" feature="intentionally_absent_feature"/>
-			<visible class="CONSUMED_PROPERTY" feature="intentionally_absent_feature"/>
-			<visible class="CONSUMED_REFERENCED_TYPE" feature="intentionally_absent_feature"/>
-			<visible class="CONSUMED_TYPE" feature="intentionally_absent_feature"/>
 		</cluster>
 		<cluster name="interop" location="$EIFFEL_SRC\dotnet\consumer\support\interop\" recursive="true">
 			<condition>

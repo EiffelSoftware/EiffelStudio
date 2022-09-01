@@ -32,13 +32,14 @@ feature -- Disposal
 
 feature -- Basic operations
 
-	consume_assembly_from_path (a_path: READABLE_STRING_GENERAL; a_info_only: BOOLEAN; a_references: detachable READABLE_STRING_GENERAL)
-			-- Consume local assembly `a_assembly` and all of its dependencies.
+	consume_assembly_from_path (a_assembly_paths: READABLE_STRING_GENERAL; a_info_only: BOOLEAN; a_references: detachable READABLE_STRING_GENERAL)
+			-- Consume local assemblies `a_assembly_paths` and all of its dependencies `a_references`.
+			-- note: `a_assembly_paths` is a semi-colon separated value.
 		require
 			is_available
 			is_initialized
-			attached a_path
-			not a_path.is_empty
+			attached a_assembly_paths
+			not a_assembly_paths.is_empty
 		deferred
 		end
 

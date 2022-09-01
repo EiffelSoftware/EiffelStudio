@@ -1076,7 +1076,22 @@ feature -- Directories (distribution)
 		require
 			is_valid_environment: is_valid_environment
 		once
-			Result := shared_application_path.extended ("tools")
+			Result := shared_path.extended ("tools")
+		ensure
+			not_result_is_empty: not Result.is_empty
+		end
+
+	tools_bin_path: PATH
+			-- Location of binary tools components.
+		require
+			is_valid_environment: is_valid_environment
+		once
+			if is_unix_layout then
+				Result := unix_layout_base_path
+			else
+				Result := tools_path.extended (spec_name).extended (eiffel_platform)
+			end
+			Result := Result.extended (bin_name)
 		ensure
 			not_result_is_empty: not Result.is_empty
 		end

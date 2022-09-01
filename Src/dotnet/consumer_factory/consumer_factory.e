@@ -10,7 +10,13 @@ feature -- Basic operations
 			-- A .NET assembly consumer with the given cache path `cache_path` and .NET run-time version `version`
 			-- or `Void` if not found.
 		do
-			create {IL_EMITTER} Result.make (cache_path, version)
+			if attached {EXECUTION_ENVIRONMENT}.item ("ISE_EMDC") then
+					-- if "ISE_EMDC" is set (to any value, even blank)
+					-- use emdc executable to consume dotnet assemblies.
+				create {MD_CONSUMER_PROCESS} Result.make (cache_path, version)
+			else
+				create {IL_EMITTER} Result.make (cache_path, version)
+			end
 		ensure
 			class
 		end

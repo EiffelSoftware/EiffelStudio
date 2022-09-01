@@ -170,7 +170,7 @@ feature {NONE} -- Usage
 			Result.extend (create {ARGUMENT_ASSEMBLY_SWITCH}.make (add_switch, "Adds a specified assemblies to the cache.", False, True, loose_argument_name, loose_argument_description, False))
 			Result.extend (create {ARGUMENT_SWITCH}.make (info_only_switch, "Forces consumer to ignore all types in added assemblies.", True, False))
 			Result.extend (create {ARGUMENT_ASSEMBLY_SWITCH}.make (remove_switch, "Remove all specified assemblies from the cache.", False, False, loose_argument_name, loose_argument_description, False))
-			Result.extend (create {ARGUMENT_DIRECTORY_SWITCH}.make (reference_switch, "Add a lookup reference path for dependency resolution.", True, True, "path", "A location on disk", False))
+			Result.extend (create {ARGUMENT_FILE_OR_DIRECTORY_SWITCH}.make (reference_switch, "Add a lookup reference path for dependency resolution.", True, True, "path", "A location on disk", False))
 			Result.extend (create {ARGUMENT_SWITCH}.make (list_switch, "Lists the content of the cache.", False, False))
 			Result.extend (create {ARGUMENT_SWITCH}.make (verbose_switch, "Display verbose output.", True, False))
 			Result.extend (create {ARGUMENT_DIRECTORY_SWITCH}.make (output_switch, "Location of Eiffel assembly cache to perform operations on.", True, False, "cache", "A location of an Eiffel assembly cache", False))

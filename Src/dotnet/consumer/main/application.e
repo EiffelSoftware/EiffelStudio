@@ -51,6 +51,8 @@ feature {NONE} -- Initialization
 			l_resolver: CONSUMER_AGUMENTED_RESOLVER
 			l_assemblies: ARRAYED_LIST [IMMUTABLE_STRING_32]
 			l_references: ARRAYED_LIST [IMMUTABLE_STRING_32]
+			l_files: ARRAYED_LIST [READABLE_STRING_32]
+			l_processed: ARRAYED_LIST [READABLE_STRING_32]
 			l_info_only: BOOLEAN
 			l_assembly: READABLE_STRING_32
 			l_verbose: BOOLEAN
@@ -85,20 +87,25 @@ feature {NONE} -- Initialization
 				l_assemblies := a_parser.assemblies
 				l_references := a_parser.reference_paths
 
+				create l_files.make (30)
+				if attached {RUNTIME_ENVIRONMENT}.get_runtime_directory as l_runtime_dir then
+					l_files.extend (create {STRING_32}.make_from_cil (l_runtime_dir))
+				end
+				l_files.append (l_assemblies)
+				l_files.append (l_references)
+
 				l_info_only := a_parser.add_information_only
 
-				create l_resolver.make (l_assemblies)
-				if attached {RUNTIME_ENVIRONMENT}.get_runtime_directory as l_runtime_dir then
-					l_resolver.add_resolve_path (create {STRING_32}.make_from_cil (l_runtime_dir))
-				end
-				⟳ r: l_references ¦ l_resolver.add_resolve_path (r) ⟲
+				create l_resolver.make (l_files)
 				l_domain := {APP_DOMAIN}.current_domain
-				check
-					from_documentation_current_domain_attached: attached l_domain
-				then
+				if attached l_domain then
+					resolve_subscriber.subscribe (l_domain, l_resolver)
+				else
+					check
+						from_documentation: False
+					then
+					end
 				end
-				resolve_subscriber.subscribe (l_domain, l_resolver)
-				assembly_loader.set_resolver (l_resolver)
 
 					-- Preload assemblies
 				from l_assemblies.start until l_assemblies.after loop
@@ -107,12 +114,17 @@ feature {NONE} -- Initialization
 				end
 
 					-- Consume assemblies
+				create l_processed.make (l_assemblies.count * 3)
+				l_processed.compare_objects
+
 				from l_assemblies.start until l_assemblies.after loop
 					l_assembly := l_assemblies.item
 					{SYSTEM_DLL_TRACE}.write_line ({SYSTEM_STRING}.format ("Requesting consumption of assembly '{0}'.", l_assembly.to_cil), "Info")
 					display_message ({STRING_32} "Requesting consumption of assembly '" + l_assembly + "' into '")
 					display_message_with_new_line (cache_reader.absolute_consume_path.name + "' ...")
-					l_cache_writer.add_assembly (l_assembly, l_info_only)
+					l_resolver.add_resolve_path_from_file_name (l_assembly)
+					assembly_loader.set_resolver (l_resolver)
+					l_cache_writer.add_assembly_ex (l_assembly, l_info_only, l_assemblies, l_processed)
 					if not l_cache_writer.successful then
 						display_error ({STRING_32} "   Warning: Assembly '" + l_assembly + "' could not be consumed!")
 						if l_cache_writer.error_message /= Void then
@@ -121,10 +133,15 @@ feature {NONE} -- Initialization
 						{SYSTEM_DLL_TRACE}.write_line ({SYSTEM_STRING}.format ("'{0}' could not be consumed.", l_assembly.to_cil), "Warning")
 						l_error := True
 					end
+					assembly_loader.set_resolver (Void)
+					l_resolver.remove_resolve_path_from_file_name (l_assembly)
+
 					l_assemblies.forth
 				end
 				assembly_loader.set_resolver (Void)
-				resolve_subscriber.unsubscribe (l_domain, l_resolver)
+				if l_domain /= Void then
+					resolve_subscriber.unsubscribe (l_domain, l_resolver)
+				end
 			elseif a_parser.remove_assemblies then
 				l_assemblies := a_parser.assemblies
 

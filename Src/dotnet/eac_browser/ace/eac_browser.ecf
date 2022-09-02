@@ -27,6 +27,7 @@
 		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf" readonly="false"/>
 		<library name="base_extension" location="$ISE_LIBRARY\library\base_extension\base_extension.ecf" readonly="false"/>
 		<library name="consumer" location="$EIFFEL_SRC\dotnet\consumer\consumer.ecf" readonly="false"/>
+		<library name="consumer_interface" location="$EIFFEL_SRC\dotnet\consumer_interface\consumer_interface.ecf" readonly="false"/>
 		<library name="dotnet_assembly_documentation" location="$EIFFEL_SRC\dotnet\assembly_info\dotnet_assembly_information.ecf"/>
 		<library name="dotnet_helper" location="$EIFFEL_SRC\dotnet\helpers\support\dotnet_helper.ecf" readonly="false"/>
 		<library name="environment" location="$EIFFEL_SRC\framework\environment\environment.ecf"/>

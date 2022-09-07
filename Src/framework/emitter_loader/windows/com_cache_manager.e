@@ -117,18 +117,18 @@ feature -- Basic Oprtations
 			success: last_call_success = 0
 		end
 
-	consume_assembly_from_path (a_path: UNI_STRING; a_info_only: BOOLEAN; a_references: detachable UNI_STRING)
-			-- consume assembly found at 'apath' and all of its dependacies into EAC.
+	consume_assembly_from_path (a_assembly_paths: UNI_STRING; a_info_only: BOOLEAN; a_references: detachable UNI_STRING)
+			-- consume assembly found at 'a_assembly_paths' and all of its dependacies into EAC.
 			-- GAC dependacies will be put into the EAC
 		require
 			initialized: is_initialized
-			non_void_path: a_path /= Void
-			valid_path: not a_path.is_empty
+			non_void_path: a_assembly_paths /= Void
+			valid_path: not a_assembly_paths.is_empty
 		local
 			bstr_path: BSTR_STRING
 			bstr_refs: BSTR_STRING
 		do
-			create bstr_path.make_by_uni_string (a_path)
+			create bstr_path.make_by_uni_string (a_assembly_paths)
 			if a_references /= Void then
 				create bstr_refs.make_by_uni_string (a_references)
 				last_call_success := c_consume_assembly_from_path (item, bstr_path.item, a_info_only, bstr_refs.item)
@@ -196,8 +196,8 @@ feature {NONE} -- Implementation
 			"consume_assembly"
 		end
 
-	c_consume_assembly_from_path (ap, a_path: POINTER; a_info_only: BOOLEAN; a_references: POINTER): INTEGER
-			-- Consume referenced assembly `a_path' an all of its dependacies into EAC
+	c_consume_assembly_from_path (ap, a_assembly_paths: POINTER; a_info_only: BOOLEAN; a_references: POINTER): INTEGER
+			-- Consume referenced assembly `a_assembly_path' an all of its dependacies into EAC
 		external
 			"C++ EiffelSoftware_MetadataConsumer_Interop_I_COM_CACHE_MANAGER signature (BSTR, VARIANT_BOOL, BSTR): EIF_INTEGER use <ole2.h>, %"metadata_consumer.h%""
 		alias

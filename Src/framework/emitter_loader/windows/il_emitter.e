@@ -20,16 +20,16 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_path: PATH; a_runtime_version: READABLE_STRING_GENERAL)
+	make (a_cache_path: PATH; a_runtime_version: READABLE_STRING_GENERAL)
 			-- Create new instance of IL_EMITTER
 		require
-			attached a_path
-			not a_path.is_empty
+			attached a_cache_path
+			not a_cache_path.is_empty
 			attached a_runtime_version
 			not a_runtime_version.is_empty
 		do
 			if attached (create {EMITTER_FACTORY}).new_emitter (a_runtime_version) as i then
-				i.initialize_with_path (create {UNI_STRING}.make (a_path.name))
+				i.initialize_with_path (create {UNI_STRING}.make (a_cache_path.name))
 				implementation := i
 			end
 		end
@@ -81,7 +81,7 @@ feature -- Clean up
 
 feature -- XML generation
 
-	consume_assembly_from_path (a_path: READABLE_STRING_GENERAL; a_info_only: BOOLEAN; a_references: detachable READABLE_STRING_GENERAL)
+	consume_assembly_from_path (a_assemblies_path: READABLE_STRING_GENERAL; a_info_only: BOOLEAN; a_references: detachable READABLE_STRING_GENERAL)
 			-- <Precursor>
 		local
 			l_refs: detachable UNI_STRING
@@ -91,7 +91,7 @@ feature -- XML generation
 			end
 			check attached implementation then
 				implementation.consume_assembly_from_path (
-					create {UNI_STRING}.make (a_path),
+					create {UNI_STRING}.make (a_assemblies_path),
 					a_info_only,
 					l_refs)
 			end

@@ -99,6 +99,7 @@ feature -- XML generation
 			args: ARRAYED_LIST [READABLE_STRING_GENERAL]
 			ret: INTEGER
 			cmd: STRING_32
+			dir: DIRECTORY
 		do
 			create pf
 			create args.make (10)
@@ -113,6 +114,10 @@ feature -- XML generation
 			end
 			args.force ("-o")
 			args.force (cache_location.name)
+			create dir.make_with_path (cache_location)
+			if not dir.exists then
+				dir.recursive_create_dir
+			end
 			if a_info_only then
 				args.force ("-g")
 			end

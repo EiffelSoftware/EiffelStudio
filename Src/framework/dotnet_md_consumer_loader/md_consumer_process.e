@@ -35,7 +35,8 @@ feature {NONE} -- Initialization
 		do
 			if
 				attached {EXECUTION_ENVIRONMENT}.item ("ISE_EMDC") as l_ise_emdc and then
-				not l_ise_emdc.is_whitespace
+				not l_ise_emdc.is_whitespace and then
+				(create {FILE_UTILITIES}).file_exists (l_ise_emdc)
 			then
 					-- note: Used mostly during development
 				create emdc_location.make_from_string (l_ise_emdc)

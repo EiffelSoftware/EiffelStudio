@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-22-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-22-0 http://www.eiffel.com/developers/xml/configuration-1-22-0.xsd" name="dotnet_hostfxr" uuid="0C588D2E-0672-11ED-AA46-FB479E2F536B" library_target="dotnet_hostfxr">
+	<target name="dotnet_hostfxr">
+		<root all_classes="true"/>
+		<file_rule>
+			<exclude>/CVS$</exclude>
+			<exclude>/EIFGENs$</exclude>
+			<exclude>/\.git$</exclude>
+			<exclude>/\.svn$</exclude>
+		</file_rule>
+		<option warning="warning" is_obsolete_iteration="true" manifest_array_type="mismatch_warning">
+			<assertions precondition="true" postcondition="true" check="true" invariant="true" loop="true" supplier_precondition="true"/>
+		</option>
+		<setting name="console_application" value="true"/>
+		<setting name="total_order_on_reals" value="false"/>
+		<setting name="dead_code_removal" value="feature"/>
+		<external_include location="$ECF_CONFIG_PATH/Clib/spec/include"/>
+		<external_include location="$ECF_CONFIG_PATH/Clib"/>
+		<external_object location="$ECF_CONFIG_PATH/spec/$(ISE_PLATFORM)/lib/dotnet_loader.o">
+			<condition>
+				<platform excluded_value="windows"/>
+			</condition>
+		</external_object>
+		<external_linker_flag value="`$ECF_CONFIG_PATH/Clib/dotnet-config --library`">
+			<condition>
+				<platform excluded_value="windows"/>
+			</condition>		
+		</external_linker_flag>
+		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf">
+			<option warning="none">
+			</option>
+		</library>
+		<library name="json" location="$ISE_LIBRARY\contrib\library\text\parser\json\library\json.ecf"/>
+		<library name="process" location="$ISE_LIBRARY\library\process\base\base_process.ecf"/>
+		<cluster name="src" location=".\src\" recursive="true"/>
+	</target>
+</system>

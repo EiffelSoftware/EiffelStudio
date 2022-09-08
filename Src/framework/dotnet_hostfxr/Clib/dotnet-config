@@ -1,0 +1,97 @@
+#!/bin/sh
+
+usage()
+{
+    cat <<EOF
+Usage: dotnet-config [OPTIONS]
+Options
+    [--library]
+EOF
+    exit $1
+}
+
+if test $# -eq 0; then
+    usage 1 1>&2
+fi
+
+true_val=1
+false_val=0
+
+includes_list=""
+packages_list=""
+pkg_manager_options=""
+needs_library_path=$false_val
+needs_include_path=$false_val
+
+t_line=`dotnet --list-runtimes | grep Microsoft.NETCore.App | head -1`
+dotnet_version=`echo $t_line | cut -d' ' -f 2`
+dotnet_path=`echo $t_line | cut -d' ' -f 3 | tr -d '[]'`
+dotnet_app_packs_path=`echo $dotnet_path | sed -e "s/\/shared\//\/packs\//g"`
+dotnet_packs_path=`echo $dotnet_app_packs_path | sed 's/\/[^\/]*$//g'`
+
+os_id=`lsb_release -i | cut -d':' -f 2 | sed 's/\s//g'`
+os_release=`lsb_release -r | cut -d':' -f 2 | sed 's/\s//g'`
+arch=`uname -p`
+case $arch in
+	'x86_64')
+		arch="x64"
+		;;
+	*)
+		;;
+esac
+
+
+while test $# -gt 0; do
+    case $1 in
+        --library)
+        	if [ $needs_library_path = $false_val ]; then
+            	needs_library_path=$true_val
+
+				p=${dotnet_app_packs_path}.Host.linux-$arch$/${dotnet_version}/runtimes/linux-$arch/native
+				if [ ! -d "$p" ]; then
+            		p=${dotnet_app_packs_path}.Host.${os_id}.${os_release}-$arch$/${dotnet_version}/runtimes/${os_id}.${os_release}-$arch/native
+            		if [ ! -d "$p" ]; then
+						tmp_f=`find -L ${dotnet_packs_path} -name 'libnethost.so'` 
+						case $tmp_f in
+							*/libnethost.so)
+								p=`echo $tmp_f | sed 's/\/libnethost.so//g'`
+								;;
+							*)
+								;;
+						esac
+            		fi
+				fi
+            	packages_list=" $packages_list -L$p "
+            	pkg_manager_options=" $pkg_manager_options -lstdc++ -ldl -lnethost -lpthread "
+        	fi
+        ;;
+        --include)
+        	if [ $needs_include_path = $false_val ]; then
+            	needs_include_path=$true_val
+
+				p=${dotnet_app_packs_path}.Host.linux-$arch$/${dotnet_version}/runtimes/linux-$arch/native
+				if [ ! -d "$p" ]; then
+            		p=${dotnet_app_packs_path}.Host.${os_id}.${os_release}-$arch$/${dotnet_version}/runtimes/${os_id}.${os_release}-$arch/native
+            		if [ ! -d "$p" ]; then
+						tmp_f=`find -L ${dotnet_packs_path} -name 'nethost.h'` 
+						case $tmp_f in
+							*/nethost.h)
+								p=`echo $tmp_f | sed 's/\/nethost.h//g'`
+								;;
+							*)
+								;;
+						esac
+            		fi
+				fi
+            	includes_list=" $inc -I$p "
+        	fi
+        ;;
+        *)
+        	usage 1 1>&2
+        ;;
+    esac
+    shift
+done
+
+echo $includes_list $packages_list $pkg_manager_options
+

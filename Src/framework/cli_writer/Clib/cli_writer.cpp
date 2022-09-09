@@ -77,7 +77,7 @@ rt_public EIF_POINTER new_cache_manager ()
 	hr = CoCreateInstance (CLSID_EiffelSoftware_MetadataConsumer_Interop_COM_CACHE_MANAGER, NULL,
 		CLSCTX_INPROC_SERVER, IID_EiffelSoftware_MetadataConsumer_Interop_I_COM_CACHE_MANAGER, (void **) & pICM);
 
-	CHECK (hr, "Could not instansiate COM Object CLSID_EiffelSoftware_MetadataConsumer_Interop_Impl_COM_CACHE_MANAGER")
+	CHECK (hr, "Could not instantiate COM Object CLSID_EiffelSoftware_MetadataConsumer_Interop_Impl_COM_CACHE_MANAGER")
 
 	return pICM;
 }

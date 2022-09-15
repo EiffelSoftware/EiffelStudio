@@ -139,10 +139,27 @@ feature -- Commands
 				linear_assemblies.wipe_out
 
 					-- Go through all the assemblies and update the information if necessary.
-				⟳ a: a_new_assemblies ¦ build_assembly (a) ⟲
+				from
+					a_new_assemblies.start
+				until
+					a_new_assemblies.after
+				loop
+						-- build the assembly,
+						-- consume if necessary
+					build_assembly (a_new_assemblies.item_for_iteration)
 
-					-- Build/add dependencies.
-				⟳ a: linear_assemblies ¦ build_dependencies (a) ⟲
+					a_new_assemblies.forth
+				end
+
+					-- build/add dependencies
+				from
+					linear_assemblies.start
+				until
+					linear_assemblies.after
+				loop
+					build_dependencies (linear_assemblies.item)
+					linear_assemblies.forth
+				end
 			end
 			if attached internal_consumer.item as e then
 				e.release

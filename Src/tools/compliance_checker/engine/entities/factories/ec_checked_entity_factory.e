@@ -65,38 +65,20 @@ feature -- Factory Routines
 			-- Retrieve a checked member for `a_member'
 		require
 			a_member_not_void: a_member /= Void
-		local
-			l_method: detachable METHOD_INFO
-			l_property: detachable PROPERTY_INFO
-			l_ctor: detachable CONSTRUCTOR_INFO
-			l_event: detachable EVENT_INFO
-			l_field: detachable FIELD_INFO
 		do
-			Result ?= checked_entities.item (a_member)
-			if Result = Void then
-				l_method ?= a_member
-				if l_method /= Void then
+			if attached {like checked_member} checked_entities.item (a_member) as cm then
+				Result := cm
+			else
+				if attached {METHOD_INFO} a_member as l_method then
 					create {EC_CHECKED_MEMBER_METHOD} Result.make (l_method)
-				else
-					l_property ?= a_member
-					if l_property /= Void then
-						create {EC_CHECKED_MEMBER_PROPERTY} Result.make (l_property)
-					else
-						l_ctor ?= a_member
-						if l_ctor /= Void then
-							create {EC_CHECKED_MEMBER_CONSTRUCTOR} Result.make (l_ctor)
-						else
-							l_event ?= a_member
-							if l_event /= Void then
-								create {EC_CHECKED_MEMBER_EVENT} Result.make (l_event)
-							else
-								l_field ?= a_member
-								if l_field /= Void then
-									create {EC_CHECKED_MEMBER_FIELD} Result.make (l_field)
-								end
-							end
-						end
-					end
+				elseif attached {PROPERTY_INFO} a_member as l_property then
+					create {EC_CHECKED_MEMBER_PROPERTY} Result.make (l_property)
+				elseif attached {CONSTRUCTOR_INFO} a_member as l_ctor then
+					create {EC_CHECKED_MEMBER_CONSTRUCTOR} Result.make (l_ctor)
+				elseif attached {EVENT_INFO} a_member as l_event then
+					create {EC_CHECKED_MEMBER_EVENT} Result.make (l_event)
+				elseif attached {FIELD_INFO} a_member as l_field then
+					create {EC_CHECKED_MEMBER_FIELD} Result.make (l_field)
 				end
 			end
 		end
@@ -144,7 +126,7 @@ feature -- Factory Routines
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2009, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2022, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

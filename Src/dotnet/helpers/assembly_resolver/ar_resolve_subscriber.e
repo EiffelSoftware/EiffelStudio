@@ -118,12 +118,13 @@ feature {NONE} -- Implementation
 		require
 			a_sender_not_void: a_sender /= Void
 			a_args_not_void: a_args /= Void
-		local
-			l_domain: detachable APP_DOMAIN
 		do
-			l_domain ?= a_sender
-			check
-				invalid_sender: l_domain /= Void
+			if attached {APP_DOMAIN} a_sender as l_domain then
+				-- TODO: should something be done here ? [2022-09-26]
+			else
+				check
+					invalid_sender: False
+				end
 			end
 		end
 

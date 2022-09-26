@@ -13,20 +13,17 @@ create
 
 feature {NONE} -- Initialization
 
-	make (assembly_ids: LINKED_LIST [CONSUMED_ASSEMBLY])
+	make (assembly_ids: LIST [CONSUMED_ASSEMBLY])
 			-- Set `assemblies' with `assembly_ids'.
 		require
 			non_void_ids: assembly_ids /= Void
 		do
 			create assemblies.make (assembly_ids.count)
 			assemblies.compare_objects
-			from
-				assembly_ids.start
-			until
-				assembly_ids.after
+			across
+				assembly_ids as a
 			loop
-				assemblies.extend (assembly_ids.item)
-				assembly_ids.forth
+				assemblies.extend (a)
 			end
 		end
 

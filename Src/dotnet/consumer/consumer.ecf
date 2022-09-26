@@ -36,6 +36,7 @@
 		</library>
 		<library name="ecchecker" location="$EIFFEL_SRC\tools\compliance_checker\ace\ecchecker.ecf" readonly="false"/>
 		<library name="environment" location="$EIFFEL_SRC\framework\environment\environment.ecf" readonly="false"/>
+		<library name="json" location="$ISE_EIFFEL\contrib\library\text\parser\json\library\json.ecf" readonly="false"/>
 		<library name="logger" location="$EIFFEL_SRC\dotnet\helpers\logger\logger.ecf" readonly="false"/>
 		<assembly name="eiffelsoftware_runtime" location="$ISE_EIFFEL\studio\spec\$ISE_PLATFORM\lib\EiffelSoftware.Runtime.dll"/>
 		<assembly name="mscorlib" location="$ISE_DOTNET_FRAMEWORK\mscorlib.dll"/>

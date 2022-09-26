@@ -12,6 +12,8 @@ inherit
 	SED_MULTI_OBJECT_SERIALIZATION
 		undefine
 			log_last_exception
+		redefine
+			deserialize
 		end
 
 	SHARED_LOGGER
@@ -19,6 +21,34 @@ inherit
 			{NONE} all
 		undefine
 			default_create
+		end
+
+feature -- Basic Operations
+
+	deserialize (path: READABLE_STRING_GENERAL; a_pos: INTEGER)
+		local
+			jd: CONSUMED_OBJECT_FROM_JSON
+			p: PATH
+			f: RAW_FILE
+			fetched: BOOLEAN
+--			v: CONSUMED_OBJECT_TO_JSON
+--			sav: JSON_TO_FILE
+		do
+			create p.make_from_string (path)
+			create f.make_with_path (p) --.appended_with_extension ("json"))
+			if f.exists then
+				create jd.make --_short
+				deserialized_object := jd.from_json_file_at (f, a_pos)
+				if jd.has_error then
+					successful := False
+				else
+					fetched := deserialized_object /= Void
+					successful := fetched and then not jd.has_error
+				end
+			end
+			if not fetched then
+				Precursor (path, a_pos)
+			end
 		end
 
 note

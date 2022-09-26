@@ -12,6 +12,8 @@ inherit
 	SED_MULTI_OBJECT_SERIALIZATION
 		undefine
 			log_last_exception
+		redefine
+			serialize
 		end
 
 	SHARED_LOGGER
@@ -19,6 +21,60 @@ inherit
 			{NONE} all
 		undefine
 			default_create
+		end
+
+feature -- Serialization
+
+	is_json: BOOLEAN
+		once
+			Result := attached (create {EXECUTION_ENVIRONMENT}).item("ISE_EMDC_JSON") as var and then var.count > 0
+		end
+
+	serialize (a: ANY; path: READABLE_STRING_GENERAL; is_appending: BOOLEAN)
+		local
+			v: CONSUMED_OBJECT_TO_JSON
+			sav: JSON_TO_FILE
+			f: RAW_FILE
+			p: PATH
+		do
+			if is_json then
+				create v.make --_short
+				if attached v.to_json (a) as j then
+					create p.make_from_string (path)
+					create f.make_with_path (p) --.appended_with_extension ("json"))
+					if f.exists and is_appending then
+						open_file_appended (f)
+					else
+						f.create_read_write
+					end
+					create sav.make (f)
+					j.accept (sav)
+--					f.put_string (j.representation)
+					f.put_new_line
+					f.flush
+					f.close
+					last_file_position := f.count -- WRONG: NOT THE SAME "file"
+					successful := True
+				end
+			else
+				Precursor (a, path, is_appending)
+			end
+		end
+
+	open_file_appended (f: FILE)
+		local
+			retried: INTEGER
+		do
+			if retried < 5 then
+				if retried > 0 then
+					(create {EXECUTION_ENVIRONMENT}).sleep (10_000_000)
+				end
+				f.open_append
+				f.finish
+			end
+		rescue
+			retried := retried + 1
+			retry
 		end
 
 note

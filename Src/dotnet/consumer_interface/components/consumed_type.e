@@ -184,7 +184,7 @@ feature -- Access
 		end
 
 
-feature {NONE} -- Internal vales
+feature {CONSUMER_ACCESS} -- Internal vales
 
 	internal_procedures: detachable ARRAYED_LIST [CONSUMED_PROCEDURE]
 			-- Class procedures

@@ -149,6 +149,10 @@ feature -- XML generation
 				end
 			end
 
+			debug ("consumer")
+				print ("#CONSUMER: "+ cmd + "%N")
+			end
+
 			p.launch
 			if p.launched then
 				ret := p.exit_code

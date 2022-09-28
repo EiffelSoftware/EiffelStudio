@@ -1,6 +1,7 @@
 note
-	description: "Summary description for {CONSUMED_OBJECT_FROM_JSON}."
-	author: ""
+	description: "[
+		JSON deserialization of dotnet CONSUMED_... objects.
+	]"
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -8,38 +9,26 @@ class
 	CONSUMED_OBJECT_FROM_JSON
 
 create
-	make,
-	make_short
+	make
 
 feature {NONE} -- Initialization
 
 	make
 		do
-			create names
-		end
-
-	make_short
-		do
-			use_shortname := True
-			create {CONSUMED_OBJECT_JSON_SHORT_NAMES} names
+			if {EIFFEL_CONSUMER_SERIALIZATION}.use_long_json_names then
+				create names
+			else
+				create {CONSUMED_OBJECT_JSON_SHORT_NAMES} names
+			end
 		end
 
 feature -- Settings
 
 	names: CONSUMED_OBJECT_JSON_NAMES
 
-	use_shortname: BOOLEAN
-
 feature -- Status report
 
 	has_error: BOOLEAN
-
-feature -- Settings change
-
-	set_use_shortname (b: BOOLEAN)
-		do
-			use_shortname := b
-		end
 
 feature -- Deserialization
 
@@ -119,24 +108,48 @@ feature -- Deserialization
 				end
 			end
 			if t = Void then
-
+				check has_typename: False end
 			else
---				print ("From-JSON: ")
---				print (t)
---				print ("%N")
 				if
 					t.is_case_insensitive_equal ("CONSUMED_TYPE")
 					or t.is_case_insensitive_equal ("CONSUMED_NESTED_TYPE")
 				then
 					Result := consumed_type (v)
+				elseif
+					t.is_case_insensitive_equal ("CONSUMED_REFERENCED_TYPE")
+					or t.is_case_insensitive_equal ("CONSUMED_ARRAY_TYPE")
+				then
+					Result := consumed_referenced_type (v)
 				elseif t.is_case_insensitive_equal ("CONSUMED_ASSEMBLY_MAPPING") then
 					Result := consumed_assembly_mapping (v)
 				elseif t.is_case_insensitive_equal ("CONSUMED_ASSEMBLY_TYPES") then
 					Result := consumed_assembly_types (v)
 				elseif t.is_case_insensitive_equal ("CACHE_INFO") then
 					Result := cache_info (v)
+				elseif t.is_case_insensitive_equal ("CACHE_READER") then
+					Result := cache_reader (v)
+				elseif t.is_case_insensitive_equal ("CONSUMED_ASSEMBLY") then
+					Result := consumed_assembly (v)
+				elseif t.is_case_insensitive_equal ("CONSUMED_ARGUMENT") then
+					Result := consumed_argument (v)
+				elseif t.is_case_insensitive_equal ("CONSUMED_CONSTRUCTOR") then
+					Result := consumed_constructor (v)
+				elseif t.is_case_insensitive_equal ("CONSUMED_PROCEDURE") then
+					Result := consumed_procedure (v)
+				elseif t.is_case_insensitive_equal ("CONSUMED_FUNCTION") then
+					Result := consumed_function (v)
+				elseif
+					t.is_case_insensitive_equal ("CONSUMED_FIELD")
+					or 	t.is_case_insensitive_equal ("CONSUMED_LITERAL_FIELD")
+				then
+					Result := consumed_field (v)
+				elseif t.is_case_insensitive_equal ("CONSUMED_PROPERTY") then
+					Result := consumed_property (v)
+				elseif t.is_case_insensitive_equal ("CONSUMED_EVENT") then
+					Result := consumed_event (v)
 				else
-					print ("From-JSON: FIXME%T")
+					check supported_type: False end
+					print ("From-JSON: unsupported type name:%T")
 					print (t)
 					print ("%N")
 				end
@@ -144,7 +157,6 @@ feature -- Deserialization
 		end
 
 	cache_info (j: detachable JSON_VALUE): detachable CACHE_INFO
-		local
 		do
 			create Result
 			if attached {JSON_OBJECT} j as jo then
@@ -158,6 +170,13 @@ feature -- Deserialization
 					end
 				end
 			end
+		end
+
+	cache_reader (j: detachable JSON_VALUE): detachable ANY --CACHE_READER
+		local
+		do
+--			create Result
+			-- TODO
 		end
 
 	consumed_assembly_mapping (j: detachable JSON_VALUE): detachable CONSUMED_ASSEMBLY_MAPPING
@@ -186,7 +205,7 @@ feature -- Deserialization
 
 	consumed_assembly_types (j: detachable JSON_VALUE): detachable CONSUMED_ASSEMBLY_TYPES
 		local
-			l_eiffel_names, l_dotnet_names: ARRAYED_LIST [STRING]
+			l_eiffel_names, l_dotnet_names: ARRAYED_LIST [detachable STRING]
 			l_positions, l_flags: ARRAYED_LIST [INTEGER]
 			l_count, i, f, nb: INTEGER
 		do
@@ -213,6 +232,10 @@ feature -- Deserialization
 						i := i + 1
 						if attached {JSON_STRING} en as str then
 							l_eiffel_names.extend (str.unescaped_string_8)
+						elseif attached {JSON_NULL} en then
+							l_eiffel_names.extend (Void)
+						else
+							report_error ("ERROR: missing eiffel_name%N")
 						end
 					end
 					check i = l_eiffel_names.count end
@@ -228,6 +251,10 @@ feature -- Deserialization
 						i := i + 1
 						if attached {JSON_STRING} dn as str then
 							l_dotnet_names.extend (str.unescaped_string_8)
+						elseif attached {JSON_NULL} dn then
+							l_dotnet_names.extend (Void)
+						else
+							report_error ("ERROR: missing dotnet_name%N")
 						end
 					end
 					check i = l_dotnet_names.count end
@@ -266,21 +293,27 @@ feature -- Deserialization
 					i > nb
 				loop
 					f := l_flags.i_th (i)
-					Result.put (
-							l_dotnet_names.i_th (i),
-							l_eiffel_names.i_th (i),
-							f = {TYPE_FLAGS}.Is_interface,
-							f = {TYPE_FLAGS}.Is_enum,
-							f = {TYPE_FLAGS}.Is_delegate,
-							f = {TYPE_FLAGS}.Is_value_type,
-							l_positions.i_th (i)
-						)
+					if
+						attached l_eiffel_names.i_th (i) as l_en and then
+						attached l_dotnet_names.i_th (i) as l_dn
+					then
+						Result.put (
+								l_dn,
+								l_en,
+								f = {TYPE_FLAGS}.Is_interface,
+								f = {TYPE_FLAGS}.Is_enum,
+								f = {TYPE_FLAGS}.Is_delegate,
+								f = {TYPE_FLAGS}.Is_value_type,
+								l_positions.i_th (i)
+							)
+					end
+
 					i := i + 1
 				end
 			end
 		end
 
-	consumed_assembly (j: JSON_VALUE): detachable CONSUMED_ASSEMBLY
+	consumed_assembly (j: detachable JSON_VALUE): detachable CONSUMED_ASSEMBLY
 		local
 			uid, fn, n, v, c, k, s: JSON_STRING
 			is_in_gac: JSON_BOOLEAN
@@ -340,7 +373,7 @@ feature -- Deserialization
 					par := consumed_referenced_type (j_par)
 				end
 
-				if attached {JSON_ARRAY} jo[names.interfaces] as j_interfaces then
+				if attached {JSON_ARRAY} jo [names.interfaces] as j_interfaces then
 					inter := consumed_referenced_type_list (j_interfaces)
 				else
 					create inter.make (0)
@@ -349,21 +382,50 @@ feature -- Deserialization
 				if en /= Void and dn /= Void and inter /= Void then
 					if attached {JSON_OBJECT} jo [names.enclosing_type] as j_enc_type then
 						if attached consumed_referenced_type (j_enc_type) as l_enc_type then
-							create {CONSUMED_NESTED_TYPE} Result.make (dn.unescaped_string_8, en.unescaped_string_8, is_inter, is_abstract, is_sealed, is_value_type, is_enumerator, par, inter, l_enc_type)
+							create {CONSUMED_NESTED_TYPE} Result.make (
+									dn.unescaped_string_8, en.unescaped_string_8,
+									is_inter, is_abstract, is_sealed, is_value_type, is_enumerator,
+									par,
+									inter,
+									l_enc_type
+								)
 						else
 							report_error ("Missing enclosing type")
 						end
 					else
-						create {CONSUMED_TYPE} Result.make (dn.unescaped_string_8, en.unescaped_string_8, is_inter, is_abstract, is_sealed, is_value_type, is_enumerator, par, inter)
+						create {CONSUMED_TYPE} Result.make (
+								dn.unescaped_string_8, en.unescaped_string_8,
+								is_inter, is_abstract, is_sealed, is_value_type, is_enumerator,
+								par,
+								inter
+							)
 					end
 					if Result /= Void then
 						-- Complete the other infos...
-						if attached {JSON_ARRAY} jo [names.properties] as j_properties then
-							if attached consumed_properties (j_properties) as l_properties then
-								Result.set_properties (l_properties)
-							end
-
+						if attached {JSON_ARRAY} jo [names.constructors] as j_constructors then
+							Result.set_constructors (consumed_constructors (j_constructors))
 						end
+						if attached {JSON_ARRAY} jo [names.functions] as j_functions then
+							Result.set_functions (consumed_functions (j_functions))
+						end
+						if attached {JSON_ARRAY} jo [names.procedures] as j_procedures then
+							Result.set_procedures (consumed_procedures (j_procedures))
+						end
+						if attached {JSON_ARRAY} jo [names.fields] as j_fields then
+							Result.set_fields (consumed_fields (j_fields))
+						end
+						if attached {JSON_ARRAY} jo [names.events] as j_events then
+							Result.set_events (consumed_events (j_events))
+						end
+							-- Important to do that at the end.
+						if attached {JSON_ARRAY} jo [names.properties] as j_properties then
+							Result.set_properties (consumed_properties (j_properties))
+						end
+--						if attached {JSON_OBJECT} jo [names.associated_reference_type] as j_ass_type then
+--							if attached consumed_referenced_type (j_ass_type) as l_ass_type then
+
+--							end
+--						end
 					end
 				else
 					report_error ("Missing eiffel or dotnet name")
@@ -433,6 +495,7 @@ feature -- Deserialization
 							cp_getter,
 							cp_setter
 						)
+					update_consumed_entity_from (Result, jo)
 				end
 			end
 		end
@@ -495,8 +558,10 @@ feature -- Deserialization
 							boolean_item (jo, names.is_property_or_event),
 							l_type
 						)
+
+					update_consumed_member_from (Result, jo)
 				else
-					report_error (Void)
+					report_error ("Missing value for function")
 				end
 			end
 		end
@@ -511,6 +576,7 @@ feature -- Deserialization
 			if attached {JSON_OBJECT} j as jo then
 				en := jo.string_item (names.eiffel_name)
 				dn := jo.string_item (names.dotnet_name)
+				den := jo.string_item (names.dotnet_eiffel_name)
 				l_type := consumed_referenced_type (jo [names.declared_type])
 				if attached {JSON_ARRAY} jo [names.arguments] as j_args then
 					args := consumed_arguments (j_args)
@@ -528,7 +594,6 @@ feature -- Deserialization
 								boolean_item (jo, names.is_static)
 							)
 					else
-						den := jo.string_item (names.dotnet_eiffel_name)
 						if den = Void then
 							den := dn -- TODO: check if ok
 						end
@@ -546,8 +611,38 @@ feature -- Deserialization
 								l_type
 							)
 					end
+					update_consumed_member_from (Result, jo)
 				else
 					report_error ("Missing value for procedure")
+				end
+			end
+		end
+
+	consumed_constructor (j: detachable JSON_VALUE): detachable CONSUMED_CONSTRUCTOR
+		local
+			en: JSON_STRING
+			l_type: CONSUMED_REFERENCED_TYPE
+			args: ARRAYED_LIST [CONSUMED_ARGUMENT]
+		do
+			if attached {JSON_OBJECT} j as jo then
+				en := jo.string_item (names.eiffel_name)
+				l_type := consumed_referenced_type (jo [names.declared_type])
+				if attached {JSON_ARRAY} jo [names.arguments] as j_args then
+					args := consumed_arguments (j_args)
+				end
+				if args = Void then
+					create args.make (0)
+				end
+				if en /= Void and l_type /= Void and args /= Void then
+					create Result.make (
+							en.unescaped_string_8,
+							args.to_array,
+							boolean_item (jo, names.is_public),
+							l_type
+						)
+					update_consumed_entity_from (Result, jo)
+				else
+					report_error ("Missing value for constructor")
 				end
 			end
 		end
@@ -569,13 +664,14 @@ feature -- Deserialization
 							consumed_procedure (jo [names.adder]),
 							consumed_procedure (jo [names.remover])
 						)
+					update_consumed_entity_from (Result, jo)
 				end
 			end
 		end
 
 	consumed_field (j: detachable JSON_VALUE): detachable CONSUMED_FIELD
 		local
-			en, dn: JSON_STRING
+			en, dn, val: JSON_STRING
 			rt: CONSUMED_REFERENCED_TYPE
 			l_type: CONSUMED_REFERENCED_TYPE
 		do
@@ -585,14 +681,20 @@ feature -- Deserialization
 				rt := consumed_referenced_type (jo [names.return_type])
 				l_type := consumed_referenced_type (jo [names.declared_type])
 				if en /= Void and dn /= Void and rt /= Void and l_type /= Void then
-					if attached {JSON_STRING} jo [names.value] as j_value then
+					if boolean_item (jo, names.is_literal) then
+						val := jo.string_item (names.value)
+						if val = Void then
+							check has_value: False end
+							report_error ("From-JSON: missing value.%N")
+							val := "" -- default empty string.!!
+						end
 						create {CONSUMED_LITERAL_FIELD} Result.make (
 								en.unescaped_string_8,
 								dn.unescaped_string_8,
 								rt,
 								boolean_item (jo, names.is_static),
 								boolean_item (jo, names.is_public),
-								j_value.unescaped_string_8,
+								val.unescaped_string_8,
 								l_type
 							)
 					else
@@ -606,12 +708,28 @@ feature -- Deserialization
 								l_type
 							)
 					end
+					update_consumed_member_from (Result, jo)
 					if attached consumed_procedure (jo [names.setter]) as l_setter then
 						Result.set_setter (l_setter)
 					end
 				else
 					report_error ("Missing or invalid value for field")
 				end
+			end
+		end
+
+	update_consumed_member_from (m: CONSUMED_MEMBER; jo: JSON_OBJECT)
+		do
+			update_consumed_entity_from (m, jo)
+			if boolean_item (jo, names.is_artificially_added) then
+				m.set_is_artificially_added (True)
+			end
+		end
+
+	update_consumed_entity_from (e: CONSUMED_ENTITY; jo: JSON_OBJECT)
+		do
+			if boolean_item (jo, names.is_public) then
+				e.set_is_public (True)
 			end
 		end
 
@@ -629,6 +747,22 @@ feature -- List
 					Result.force (prop)
 				else
 					report_error ("Missing or invalid property")
+				end
+			end
+		end
+
+	consumed_constructors (jarr: JSON_ARRAY): detachable ARRAYED_LIST [CONSUMED_CONSTRUCTOR]
+		do
+			create Result.make (jarr.count)
+			across
+				jarr as j
+			loop
+				if
+					attached consumed_constructor (j) as c
+				then
+					Result.force (c)
+				else
+					report_error ("Missing or invalid constructor")
 				end
 			end
 		end
@@ -717,8 +851,8 @@ feature -- Helpers
 
 	report_error (m: detachable READABLE_STRING_GENERAL)
 		do
-			check False end
 			has_error := True
+			check False end
 		end
 
 	boolean_item (j: JSON_OBJECT; n: JSON_STRING): BOOLEAN

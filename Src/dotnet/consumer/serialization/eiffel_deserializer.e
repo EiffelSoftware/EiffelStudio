@@ -31,25 +31,30 @@ feature -- Basic Operations
 			p: PATH
 			f: RAW_FILE
 			fetched: BOOLEAN
---			v: CONSUMED_OBJECT_TO_JSON
---			sav: JSON_TO_FILE
 		do
-			create p.make_from_string (path)
-			create f.make_with_path (p) --.appended_with_extension ("json"))
-			if f.exists then
-				create jd.make --_short
-				deserialized_object := jd.from_json_file_at (f, a_pos)
-				if jd.has_error then
-					successful := False
-				else
-					fetched := deserialized_object /= Void
-					successful := fetched and then not jd.has_error
+			if {EIFFEL_CONSUMER_SERIALIZATION}.is_json_storage then
+				create p.make_from_string (path)
+				create f.make_with_path (p)
+				if f.exists then
+--					create {CONSUMED_OBJECT_FROM_JSON_DBG} jd.make
+					create jd.make
+					deserialized_object := jd.from_json_file_at (f, a_pos)
+					if jd.has_error then
+						successful := False
+					else
+						fetched := deserialized_object /= Void
+						successful := fetched and then not jd.has_error
+					end
 				end
 			end
 			if not fetched then
+					-- Try SED retrieval
 				Precursor (path, a_pos)
 			end
 		end
+
+feature {NONE} -- Implementation
+
 
 note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"

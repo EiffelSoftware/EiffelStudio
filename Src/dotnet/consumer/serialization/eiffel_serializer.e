@@ -25,11 +25,6 @@ inherit
 
 feature -- Serialization
 
-	is_json: BOOLEAN
-		once
-			Result := attached (create {EXECUTION_ENVIRONMENT}).item("ISE_EMDC_JSON") as var and then var.count > 0
-		end
-
 	serialize (a: ANY; path: READABLE_STRING_GENERAL; is_appending: BOOLEAN)
 		local
 			v: CONSUMED_OBJECT_TO_JSON
@@ -37,11 +32,12 @@ feature -- Serialization
 			f: RAW_FILE
 			p: PATH
 		do
-			if is_json then
-				create v.make --_short
+			if {EIFFEL_CONSUMER_SERIALIZATION}.is_json_storage then
+--				create {CONSUMED_OBJECT_TO_JSON_DBG} v.make
+				create v.make
 				if attached v.to_json (a) as j then
 					create p.make_from_string (path)
-					create f.make_with_path (p) --.appended_with_extension ("json"))
+					create f.make_with_path (p)
 					if f.exists and is_appending then
 						open_file_appended (f)
 					else
@@ -49,11 +45,10 @@ feature -- Serialization
 					end
 					create sav.make (f)
 					j.accept (sav)
---					f.put_string (j.representation)
 					f.put_new_line
 					f.flush
 					f.close
-					last_file_position := f.count -- WRONG: NOT THE SAME "file"
+					last_file_position := f.count
 					successful := True
 				end
 			else
@@ -61,7 +56,11 @@ feature -- Serialization
 			end
 		end
 
+feature {NONE} -- Implementation
+
 	open_file_appended (f: FILE)
+			-- Open file `f`, and retry max 5 times,
+			-- in case the file is locked temporary by the OS.
 		local
 			retried: INTEGER
 		do

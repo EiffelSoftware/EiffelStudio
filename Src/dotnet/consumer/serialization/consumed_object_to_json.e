@@ -2,42 +2,32 @@ note
 	description: "[
 		JSON serialization of dotnet CONSUMED_... objects.
 	]"
-	author: ""
 	date: "$Date$"
 	revision: "$Revision$"
 
 class
 	CONSUMED_OBJECT_TO_JSON
 
+inherit
+	CONSUMER_ACCESS
+
 create
-	make,
-	make_short
+	make
 
 feature {NONE} -- Initialization
 
 	make
 		do
-			create names
-		end
-
-	make_short
-		do
-			use_shortname := True
-			create {CONSUMED_OBJECT_JSON_SHORT_NAMES} names
+			if {EIFFEL_CONSUMER_SERIALIZATION}.use_long_json_names then
+				create names
+			else
+				create {CONSUMED_OBJECT_JSON_SHORT_NAMES} names
+			end
 		end
 
 feature -- Settings
 
 	names: CONSUMED_OBJECT_JSON_NAMES
-
-	use_shortname: BOOLEAN
-
-feature -- Settings change
-
-	set_use_shortname (b: BOOLEAN)
-		do
-			use_shortname := b
-		end
 
 feature -- Visitor
 
@@ -46,7 +36,6 @@ feature -- Visitor
 			jresult: JSON_VALUE
 			jobj: JSON_OBJECT
 		do
-
 			if attached {CONSUMED_TYPE} obj as t then
 				jresult := consumed_type_to_json (t)
 			elseif attached {CONSUMED_ASSEMBLY_TYPES} obj as l_ass_types then
@@ -60,13 +49,32 @@ feature -- Visitor
 				jobj.put (consumed_assemblies_to_json_array (ci.assemblies), names.assemblies)
 				jresult := jobj
 			elseif obj.generator.same_string ("CACHE_READER") then
-				create jobj.make_with_capacity (1)
-				jobj.put (Void, "CACHE_READER")
+				create jobj.make_empty
 				jresult := jobj
+			elseif attached {CONSUMED_REFERENCED_TYPE} obj as rt then
+				jresult := consumed_referenced_type_to_json (rt)
+			elseif attached {CONSUMED_ASSEMBLY} obj as a then
+				jresult := consumed_assembly_to_json (a)
+			elseif attached {CONSUMED_CONSTRUCTOR} obj as cre then
+				jresult := consumed_constructor_to_json (cre)
+			elseif attached {CONSUMED_PROCEDURE} obj as p then
+				jresult := consumed_procedure_to_json (p)
+			elseif attached {CONSUMED_FUNCTION} obj as f then
+				jresult := consumed_function_to_json (f)
+			elseif attached {CONSUMED_ARGUMENT} obj as arg then
+				jresult := consumed_argument_to_json (arg)
+			elseif attached {CONSUMED_FIELD} obj as f then
+					-- also CONSUMED_LITERAL_FIELD
+				jresult := consumed_field_to_json (f)
+			elseif attached {CONSUMED_EVENT} obj as ev then
+				jresult := consumed_event_to_json (ev)
+			elseif attached {CONSUMED_PROPERTY} obj as pr then
+				jresult := consumed_property_to_json (pr)
 			else
-				print ("To-JSON: FIXME ")
+				check supported_type: False end
+				print ("%NTo-JSON: Unhandled type {")
 				print (obj.generator)
-				print ("%N")
+				print ("}%N")
 			end
 			if jresult = Void then
 				create {JSON_NULL} Result
@@ -103,8 +111,6 @@ feature -- Visitors
 			Result.put_boolean (a.is_consumed, names.is_consumed)
 			Result.put_boolean (a.is_in_gac, names.is_in_gac)
 			Result.put_boolean (a.has_info_only, names.has_info_only)
-
---			Result.put_boolean (a.text, names.text)
 		end
 
 	consumed_assembly_types_to_json (t: CONSUMED_ASSEMBLY_TYPES): JSON_OBJECT
@@ -112,57 +118,80 @@ feature -- Visitors
 			jarr: JSON_ARRAY
 			s: READABLE_STRING_GENERAL
 			i: INTEGER
+			l_skip_first: BOOLEAN
 		do
 			create Result.make_with_capacity (5)
 			Result.put_integer (t.count, names.count)
 			create jarr.make_empty
+			l_skip_first := True
+			i := 0
 			across
 				t.eiffel_names as n
 			loop
+				i := i + 1
 				s := n
 				if s = Void then
-					jarr.extend (create {JSON_NULL})
+					if i = 1 then
+						l_skip_first := True
+					end
 				else
+					if i = 1 then
+						l_skip_first := False
+					end
 					jarr.extend (create {JSON_STRING}.make_from_string_general (s))
 				end
 			end
 			Result.put (jarr, names.eiffel_names)
 
 			create jarr.make_empty
+			i := 0
 			across
 				t.dotnet_names as n
 			loop
+				i := i + 1
 				s := n
-				if s = Void then
-					jarr.extend (create {JSON_NULL})
+				if i = 1 and l_skip_first then
+					check s = Void end
 				else
-					jarr.extend (create {JSON_STRING}.make_from_string_general (s))
+					if s = Void then
+						jarr.extend (create {JSON_NULL})
+					else
+						jarr.extend (create {JSON_STRING}.make_from_string_general (s))
+					end
 				end
 			end
 			Result.put (jarr, names.dotnet_names)
 
 			create jarr.make_empty
+			i := 0
 			across
 				t.flags as f
 			loop
-				jarr.extend (create {JSON_NUMBER}.make_integer (f))
+				i := i + 1
+				if i = 1 and l_skip_first then
+					check f = 0 end
+				else
+					jarr.extend (create {JSON_NUMBER}.make_integer (f))
+				end
 			end
 			Result.put (jarr, names.flags)
 
 			create jarr.make_empty
-			print (" position:")
-			i := -1
+			i := 0
 			across
 				t.positions as p
 			loop
-				if p = 0 and i /= 0 then
-					print (" " + p.out)
+				i := i + 1
+				if i = 1 and l_skip_first then
+					check p = 0 end
+				else
+					jarr.extend (create {JSON_NUMBER}.make_integer (p))
 				end
-				i := p
-				jarr.extend (create {JSON_NUMBER}.make_integer (p))
 			end
-			print ("%N")
 			Result.put (jarr, names.positions)
+			if t.count = 920 then
+				do_nothing
+			end
 		end
 
 	consumed_type_to_json (t: CONSUMED_TYPE): JSON_OBJECT
@@ -172,14 +201,6 @@ feature -- Visitors
 		do
 			create j.make
 			j.put_string (t.eiffel_name, names.eiffel_name)
-			if t.eiffel_name.is_case_insensitive_equal_general ("RT_TYPE") then
-				print ("EMDC RT_TYPE%N")
-				do_nothing
-			end
-			if t.dotnet_name.is_case_insensitive_equal_general ("RT_BASIC_TYPE") then
-				print ("EMDC RT_BASIC_TYPE%N")
-				do_nothing
-			end
 			j.put_string (t.dotnet_name, names.dotnet_name)
 			if t.is_interface then
 				j.put_boolean (t.is_interface, names.is_interface)
@@ -198,13 +219,9 @@ feature -- Visitors
 			end
 
 			if attached t.parent as p then
-				if p.name.same_string (t.dotnet_name) then
-					print ("To-JSON: parent same as current: " + t.dotnet_name + "%N")
-				else
-					j.put (consumed_referenced_type_to_json (p), names.parent)
-				end
+				j.put (consumed_referenced_type_to_json (p), names.parent)
 			end
-			if attached t.interfaces as l_interfaces and then not l_interfaces.is_empty then
+			if attached t.interfaces as l_interfaces then
 				create jarr.make (l_interfaces.count)
 				across
 					l_interfaces as i
@@ -214,7 +231,7 @@ feature -- Visitors
 				j.put (jarr, names.interfaces)
 			end
 
-			if attached t.properties as l_properties and then not l_properties.is_empty then
+			if attached t.properties as l_properties then
 				create jarr.make (l_properties.count)
 				across
 					l_properties as p
@@ -223,7 +240,7 @@ feature -- Visitors
 				end
 				j.put (jarr, names.properties)
 			end
-			if attached t.constructors as l_constructors and then not l_constructors.is_empty then
+			if attached t.constructors as l_constructors then
 				create jarr.make (l_constructors.count)
 				across
 					l_constructors as c
@@ -232,7 +249,7 @@ feature -- Visitors
 				end
 				j.put (jarr, names.constructors)
 			end
-			if attached t.functions as l_functions and then not l_functions.is_empty then
+			if attached t.internal_functions as l_functions then
 				create jarr.make (l_functions.count)
 				across
 					l_functions as f
@@ -241,7 +258,7 @@ feature -- Visitors
 				end
 				j.put (jarr, names.functions)
 			end
-			if attached t.procedures as l_procedures and then not l_procedures.is_empty then
+			if attached t.internal_procedures as l_procedures then
 				create jarr.make (l_procedures.count)
 				across
 					l_procedures as p
@@ -250,7 +267,7 @@ feature -- Visitors
 				end
 				j.put (jarr, names.procedures)
 			end
-			if attached t.fields as l_fields and then not l_fields.is_empty then
+			if attached t.fields as l_fields then
 				create jarr.make (l_fields.count)
 				across
 					l_fields as f
@@ -259,7 +276,7 @@ feature -- Visitors
 				end
 				j.put (jarr, names.fields)
 			end
-			if attached t.events as l_events and then not l_events.is_empty then
+			if attached t.events as l_events then
 				create jarr.make (l_events.count)
 				across
 					l_events as e
@@ -268,12 +285,6 @@ feature -- Visitors
 				end
 				j.put (jarr, names.events)
 			end
-
-			if attached t.associated_reference_type as l_ass_type then
-				j.put (consumed_referenced_type_to_json (l_ass_type), names.associated_reference_type)
-			end
-
---			internal_flags: INTEGER_32
 
 			if attached {CONSUMED_NESTED_TYPE} t as nt then
 				j.put (consumed_referenced_type_to_json (nt.enclosing_type), names.enclosing_type)
@@ -343,18 +354,8 @@ feature -- Visitors
 	consumed_constructor_to_json (c: CONSUMED_CONSTRUCTOR): JSON_OBJECT
 		local
 			j: JSON_OBJECT
-			jarr: JSON_ARRAY
 		do
 			j := consumed_entity_to_json (c)
-			if attached c.arguments as args and then not args.is_empty then
-				create jarr.make (args.count)
-				across
-					args as a
-				loop
-					jarr.extend (consumed_argument_to_json (a))
-				end
-				j.put (jarr, names.arguments)
-			end
 			Result := j
 		end
 
@@ -372,7 +373,7 @@ feature -- Visitors
 			if attached e.return_type as rt then
 				j.put (consumed_referenced_type_to_json (rt), names.return_type)
 			end
-			if attached e.arguments as args and then not args.is_empty then
+			if attached e.arguments as args then
 				create jarr.make (args.count)
 				across
 					args as a
@@ -381,21 +382,18 @@ feature -- Visitors
 				end
 				j.put (jarr, names.arguments)
 			end
-
-			if e.is_frozen then
-				j.put_boolean (e.is_frozen, names.is_frozen)
-			end
+				-- MEMBER
 			if e.is_public then
 				j.put_boolean (e.is_public, names.is_public)
+			end
+			if e.is_frozen then
+				j.put_boolean (e.is_frozen, names.is_frozen)
 			end
 			if e.is_static then
 				j.put_boolean (e.is_static, names.is_static)
 			end
-			if e.is_literal then
-				j.put_boolean (e.is_literal, names.is_literal)
-			end
-			if e.is_init_only then
-				j.put_boolean (e.is_init_only, names.is_init_only)
+			if e.is_deferred then
+				j.put_boolean (e.is_deferred, names.is_deferred)
 			end
 			if e.is_artificially_added then
 				j.put_boolean (e.is_artificially_added, names.is_artificially_added)
@@ -409,6 +407,15 @@ feature -- Visitors
 			if e.is_virtual then
 				j.put_boolean (e.is_virtual, names.is_virtual)
 			end
+
+				-- Other ENTITY
+			if e.is_literal then
+				j.put_boolean (e.is_literal, names.is_literal)
+			end
+			if e.is_init_only then
+				j.put_boolean (e.is_init_only, names.is_init_only)
+			end
+
 			if e.is_infix then
 				j.put_boolean (e.is_infix, names.is_infix)
 			end
@@ -418,6 +425,27 @@ feature -- Visitors
 			if e.is_constructor then
 				j.put_boolean (e.is_constructor, names.is_constructor)
 			end
+				-- Function
+			if e.is_method then
+				j.put_boolean (e.is_method, names.is_method)
+			end
+			if e.is_field then
+				j.put_boolean (e.is_field, names.is_field)
+			end
+			if e.is_property then
+				j.put_boolean (e.is_property, names.is_property)
+			end
+			if e.is_event then
+				j.put_boolean (e.is_event, names.is_event)
+			end
+			if e.is_constant then
+				j.put_boolean (e.is_constant, names.is_constant)
+			end
+
+			if e.is_attribute then
+				j.put_boolean (e.is_attribute, names.is_attribute)
+			end
+
 			-- ... see {CONSUMED_ENTITY}
 			Result := j
 		end
@@ -425,11 +453,14 @@ feature -- Visitors
 	consumed_member_to_json (m: CONSUMED_MEMBER): JSON_OBJECT
 		do
 			Result := consumed_entity_to_json (m)
+			if m.is_attribute_setter then
+				Result.put_boolean (m.is_attribute_setter, names.is_attribute_setter)
+			end
 		end
 
 	consumed_procedure_to_json (p: CONSUMED_PROCEDURE): JSON_OBJECT
 		do
-			Result := consumed_entity_to_json (p)
+			Result := consumed_member_to_json (p)
 			if p.is_attribute_setter then
 				Result.put_boolean (p.is_attribute_setter, names.is_attribute_setter)
 			end
@@ -450,6 +481,5 @@ feature -- Visitors
 			j.put (consumed_referenced_type_to_json (a.type), names.type)
 			Result := j
 		end
-
 
 end

@@ -70,6 +70,12 @@ feature	-- Names
 	is_prefix: JSON_STRING once Result := "is_prefix" end
 	is_constructor: JSON_STRING once Result := "is_constructor" end
 	is_attribute_setter: JSON_STRING once Result := "is_attribute_setter" end
+	is_method: JSON_STRING once Result := "is_method" end
+	is_field: JSON_STRING once Result := "is_field" end
+	is_property: JSON_STRING once Result := "is_property" end
+	is_event: JSON_STRING once Result := "is_event" end
+	is_constant: JSON_STRING once Result := "is_constant" end
+	is_attribute: JSON_STRING once Result := "is_attribute" end
 
 	type: JSON_STRING once Result := "type" end
 

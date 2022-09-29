@@ -41,7 +41,7 @@ feature -- Serialization
 				successful := True
 
 				create v.make
-				create {CONSUMED_OBJECT_TO_JSON_DBG} v.make
+--				create {CONSUMED_OBJECT_TO_JSON_DBG} v.make
 				
 				if attached v.to_json (a) as j then
 					create p.make_from_string (path)

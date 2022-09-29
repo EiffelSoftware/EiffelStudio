@@ -46,7 +46,7 @@ feature -- Basic Operations
 				create f.make_with_path (p)
 				if f.exists then
 					create jd.make
-					create {CONSUMED_OBJECT_FROM_JSON_DBG} jd.make
+--					create {CONSUMED_OBJECT_FROM_JSON_DBG} jd.make
 					deserialized_object := jd.from_json_file_at (f, a_pos)
 					if jd.has_error then
 						successful := False

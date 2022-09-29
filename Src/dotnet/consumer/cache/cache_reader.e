@@ -100,7 +100,7 @@ feature -- Access
 		local
 			des: EIFFEL_DESERIALIZER
 		do
-			create des
+			des := {EIFFEL_SERIALIZATION}.deserializer
 			des.deserialize (absolute_assembly_path_from_consumed_assembly (a_assembly).extended (assembly_types_file_name).name, 0)
 			Result := {CONSUMED_ASSEMBLY_TYPES} / des.deserialized_object
 		end
@@ -118,7 +118,7 @@ feature -- Access
 		do
 			l_pos := type_position_from_type_name (a_assembly, a_type)
 			if l_pos >= 0 then
-				create l_des
+				l_des := {EIFFEL_SERIALIZATION}.deserializer
 				l_des.deserialize (absolute_assembly_path_from_consumed_assembly (a_assembly).extended (classes_file_name).name, l_pos)
 				Result := {CONSUMED_TYPE} / l_des.deserialized_object
 			end
@@ -152,7 +152,7 @@ feature -- Access
 		local
 			des: EIFFEL_DESERIALIZER
 		do
-			create des
+			des := {EIFFEL_SERIALIZATION}.deserializer
 			des.deserialize (absolute_assembly_path_from_consumed_assembly (a_assembly).extended (Assembly_mapping_file_name).name, 0)
 			Result := {CONSUMED_ASSEMBLY_MAPPING} / des.deserialized_object
 		end
@@ -171,7 +171,7 @@ feature -- Access
 			if l_pos >= 0 then
 				l_ca := consumed_assembly_from_path (assembly_location (a_type))
 				if l_ca /= Void then
-					create l_des
+					l_des := {EIFFEL_SERIALIZATION}.deserializer
 					l_des.deserialize (absolute_type_path (l_ca).name, l_pos)
 					Result := {CONSUMED_TYPE} / l_des.deserialized_object
 				end
@@ -305,7 +305,7 @@ feature {CACHE_WRITER} -- Implementation
 				guard.lock
 				if internal_info.item = Void then
 					if is_initialized then
-						create des
+						des := {EIFFEL_SERIALIZATION}.deserializer
 						des.deserialize (Absolute_info_path.name, 0)
 						if des.successful then
 							if attached {CACHE_INFO} des.deserialized_object as l_ci then

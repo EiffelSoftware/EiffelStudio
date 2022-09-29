@@ -42,7 +42,9 @@ feature {NONE} -- Initialization
 			g := cp_getter
 				-- Remove `get_' from property name.
 			if cp_getter /= Void then
-				create l_name.make_from_string (cp_getter.dotnet_eiffel_name)
+					-- Note: keep the same reference, do not duplicate, 
+					-- so that the change is also applied to the other linked names (same object).
+				l_name := cp_getter.dotnet_eiffel_name
 				if l_name.count > 4 and then l_name.substring (1, 4).is_equal ("get_") then
 					l_name.remove_head (4)
 				end

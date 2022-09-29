@@ -1,31 +1,29 @@
 note
-	description: "Retrieve objects"
+	description: "Store objects."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 	date: "$Date$"
 	revision: "$Revision$"
 
-deferred class
-	EIFFEL_DESERIALIZER
+frozen class
+	EIFFEL_SED_SERIALIZER
 
-feature -- Access
-
-	deserialized_object: detachable ANY
-			-- Last deserialized object
-		deferred
+inherit
+	EIFFEL_SERIALIZER
+		undefine
+			default_create
 		end
 
-feature -- Status report
-
-	successful: BOOLEAN
-			-- Was last retrieval successful?
-		deferred
+	SED_MULTI_OBJECT_SERIALIZATION
+		undefine
+			log_last_exception
 		end
 
-feature -- Basic Operations
-
-	deserialize (path: READABLE_STRING_GENERAL; a_pos: INTEGER)
-		deferred
+	SHARED_LOGGER
+		export
+			{NONE} all
+		undefine
+			default_create
 		end
 
 note

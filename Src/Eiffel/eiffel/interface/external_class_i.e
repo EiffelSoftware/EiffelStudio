@@ -167,7 +167,7 @@ feature {NONE} -- Implementation
 	consumed_type_deserializer: EIFFEL_DESERIALIZER
 			-- Deserializer engine
 		once
-			create Result
+			Result := {EIFFEL_SERIALIZATION}.deserializer
 		ensure
 			consumed_type_deserializer_not_void: Result /= Void
 		end
@@ -180,7 +180,7 @@ feature {NONE} -- Type anchor
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2014, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2022, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

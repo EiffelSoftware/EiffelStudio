@@ -74,7 +74,7 @@ feature -- Basic Exportations
 
 			initialize
 			if not cr.is_initialized then
-				(create {EIFFEL_SERIALIZER}).serialize (
+				{EIFFEL_SERIALIZATION}.serialize (
 					cr.new_cache_info (cr.absolute_info_path),
 					cr.absolute_info_path.name, False)
 			end

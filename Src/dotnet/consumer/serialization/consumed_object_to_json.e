@@ -18,7 +18,7 @@ feature {NONE} -- Initialization
 
 	make
 		do
-			if {EIFFEL_CONSUMER_SERIALIZATION}.use_long_json_names then
+			if {EIFFEL_SERIALIZATION}.use_long_json_names then
 				create names
 			else
 				create {CONSUMED_OBJECT_JSON_SHORT_NAMES} names

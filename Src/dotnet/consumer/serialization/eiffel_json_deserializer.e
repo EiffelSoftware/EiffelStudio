@@ -5,27 +5,63 @@ note
 	date: "$Date$"
 	revision: "$Revision$"
 
-deferred class
+frozen class
+	EIFFEL_JSON_DESERIALIZER
+
+inherit
 	EIFFEL_DESERIALIZER
+		undefine
+			default_create
+		end
+
+	SHARED_LOGGER
+		export
+			{NONE} all
+		end
 
 feature -- Access
 
 	deserialized_object: detachable ANY
 			-- Last deserialized object
-		deferred
-		end
 
 feature -- Status report
 
 	successful: BOOLEAN
 			-- Was last retrieval successful?
-		deferred
-		end
 
 feature -- Basic Operations
 
 	deserialize (path: READABLE_STRING_GENERAL; a_pos: INTEGER)
-		deferred
+		local
+			jd: CONSUMED_OBJECT_FROM_JSON
+			p: PATH
+			f: RAW_FILE
+			retried: BOOLEAN
+		do
+			if not retried then
+				successful := True
+				deserialized_object := Void
+
+				create p.make_from_string (path)
+				create f.make_with_path (p)
+				if f.exists then
+					create jd.make
+					create {CONSUMED_OBJECT_FROM_JSON_DBG} jd.make
+					deserialized_object := jd.from_json_file_at (f, a_pos)
+					if jd.has_error then
+						successful := False
+					else
+						successful := deserialized_object /= Void
+					end
+				else
+					successful := False
+				end
+			else
+				successful := deserialized_object /= Void
+			end
+		rescue
+			retried := True
+			retry
 		end
 
 note

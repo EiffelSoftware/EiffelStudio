@@ -27,7 +27,7 @@ feature {NONE} -- Initialization
 
 	default_create
 		do
-			create error_message.make_empty
+--			create error_message.make_empty
 		end
 
 feature -- Access
@@ -38,7 +38,7 @@ feature -- Access
 	last_file_position: INTEGER
 			-- Position after last serialization
 
-	error_message: STRING_32
+	error_message: detachable STRING_32
 			-- Reason for failure
 
 feature -- Status report
@@ -101,6 +101,7 @@ feature -- Basic Operations
 			l_raw_file: detachable RAW_FILE
 			l_writer: SED_MEDIUM_READER_WRITER
 			retried: BOOLEAN
+			err: like error_message
 		do
 			if not retried then
 				create l_raw_file.make_with_name (path)
@@ -114,11 +115,13 @@ feature -- Basic Operations
 				store (a, l_writer)
 				last_file_position := l_raw_file.count
 				successful := True
+				error_message := Void
 			else
 				successful := False
-				create error_message.make (100)
-				error_message.append_string_general ("Cannot store into ")
-				error_message.append_string_general (path)
+				create err.make (100)
+				err.append_string_general ("Cannot store into ")
+				err.append_string_general (path)
+				error_message := err
 			end
 			if l_raw_file /= Void and then not l_raw_file.is_closed then
 				l_raw_file.close
@@ -140,7 +143,7 @@ feature {NONE} -- Logging
 
 note
 	library:	"EiffelBase: Library of reusable components for Eiffel."
-	copyright:	"Copyright (c) 1984-2021, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2022, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

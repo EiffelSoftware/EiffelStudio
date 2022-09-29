@@ -149,9 +149,9 @@ feature -- XML generation
 				end
 			end
 
-			debug ("consumer")
+--			debug ("consumer")
 				print ("#CONSUMER: "+ cmd + "%N")
-			end
+--			end
 
 			p.launch
 			if p.launched then

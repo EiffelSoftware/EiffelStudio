@@ -26,7 +26,7 @@ feature -- Factory Functions
 			end
 			create Result
 			if not l_file.exists then
-				(create {EIFFEL_SERIALIZER}).serialize (Current, a_path.name, False)
+				(create {EIFFEL_SERIALIZATION}).serialize (Current, a_path.name, False)
 			end
 		ensure
 			a_path_exists: (create {RAW_FILE}.make_with_path (a_path)).exists

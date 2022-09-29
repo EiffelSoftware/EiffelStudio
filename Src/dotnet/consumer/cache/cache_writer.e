@@ -595,7 +595,7 @@ feature -- Basic Operations
 				if a_info.is_dirty then
 					a_info.set_is_dirty (False)
 					l_absolute_xml_info_path := cache_reader.Absolute_info_path
-					; (create {EIFFEL_SERIALIZER}).serialize (a_info, l_absolute_xml_info_path.name, False)
+					{EIFFEL_SERIALIZATION}.serialize (a_info, l_absolute_xml_info_path.name, False)
 				end
 			end
 			guard.unlock
@@ -722,7 +722,7 @@ feature {NONE} -- Implementation
 
 				{SYSTEM_DLL_TRACE}.write_line_string ({SYSTEM_STRING}.format ("Updating assembly mappings for '{0}'.", a_assembly.text.to_cil))
 
-				create l_serializer
+				l_serializer := {EIFFEL_SERIALIZATION}.serializer
 				l_mappings := cache_reader.assembly_mapping_from_consumed_assembly (a_assembly)
 				if l_mappings /= Void then
 					from

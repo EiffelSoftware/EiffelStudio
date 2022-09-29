@@ -5,27 +5,25 @@ note
 	date: "$Date$"
 	revision: "$Revision$"
 
-deferred class
+frozen class
+	EIFFEL_SED_DESERIALIZER
+
+inherit
 	EIFFEL_DESERIALIZER
-
-feature -- Access
-
-	deserialized_object: detachable ANY
-			-- Last deserialized object
-		deferred
+		undefine
+			default_create
 		end
 
-feature -- Status report
-
-	successful: BOOLEAN
-			-- Was last retrieval successful?
-		deferred
+	SED_MULTI_OBJECT_SERIALIZATION
+		undefine
+			log_last_exception
 		end
 
-feature -- Basic Operations
-
-	deserialize (path: READABLE_STRING_GENERAL; a_pos: INTEGER)
-		deferred
+	SHARED_LOGGER
+		export
+			{NONE} all
+		undefine
+			default_create
 		end
 
 note

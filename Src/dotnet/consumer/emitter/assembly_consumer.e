@@ -309,7 +309,7 @@ feature {NONE} -- Implementation
 		do
 			create_consumed_assembly_folders
 
-			create serializer
+			serializer := {EIFFEL_SERIALIZATION}.serializer
 			create types.make (type_consumers.count)
 			l_string_tuple := string_tuple
 
@@ -351,7 +351,11 @@ feature {NONE} -- Implementation
 							serializer.serialize (type, s.name, True)
 							l_file_position := serializer.last_file_position
 							if not serializer.successful and attached error_printer as l_error_printer then
-								set_error (Serialization_error,{STRING_32} "" + type.eiffel_name + ", " + serializer.error_message)
+								if attached serializer.error_message as err then
+									set_error (Serialization_error,{STRING_32} "" + type.eiffel_name + ", " + err)
+								else
+									set_error (Serialization_error, {STRING_32} "" + type.eiffel_name + ", error")
+								end
 								l_string_tuple.put (error_message, 1)
 								l_error_printer.call (l_string_tuple)
 							else

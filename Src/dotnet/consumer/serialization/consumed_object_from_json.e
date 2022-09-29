@@ -15,7 +15,7 @@ feature {NONE} -- Initialization
 
 	make
 		do
-			if {EIFFEL_CONSUMER_SERIALIZATION}.use_long_json_names then
+			if {EIFFEL_SERIALIZATION}.use_long_json_names then
 				create names
 			else
 				create {CONSUMED_OBJECT_JSON_SHORT_NAMES} names
@@ -577,6 +577,18 @@ feature -- Deserialization
 				en := jo.string_item (names.eiffel_name)
 				dn := jo.string_item (names.dotnet_name)
 				den := jo.string_item (names.dotnet_eiffel_name)
+
+				if en = Void then
+					if dn /= Void then
+						create en.make_from_string_general (dn.unescaped_string_32) -- TODO: check if ok
+					end
+				end
+				if dn /= Void then
+					if en = Void then
+						create en.make_from_string_general (dn.unescaped_string_32) -- TODO: check if ok
+					end
+				end
+
 				l_type := consumed_referenced_type (jo [names.declared_type])
 				if attached {JSON_ARRAY} jo [names.arguments] as j_args then
 					args := consumed_arguments (j_args)
@@ -595,10 +607,11 @@ feature -- Deserialization
 							)
 					else
 						if den = Void then
-							den := dn -- TODO: check if ok
+							create den.make_from_string_general (en.unescaped_string_32) -- TODO: check if ok
 						end
 						create Result.make (
-								en.unescaped_string_8, dn.unescaped_string_8,
+								en.unescaped_string_8,
+								dn.unescaped_string_8,
 								den.unescaped_string_8,
 								args.to_array,
 								boolean_item (jo, names.is_frozen),

@@ -58,6 +58,7 @@ feature {NONE} -- Initialization
 			l_verbose: BOOLEAN
 			l_cache_writer: CACHE_WRITER
 			l_writer: like writer
+			l_use_json: BOOLEAN
 			l_error: BOOLEAN
 			l_domain: detachable APP_DOMAIN
 			l_receiver: detachable SYSTEM_OBJECT
@@ -69,6 +70,7 @@ feature {NONE} -- Initialization
 			end
 			l_cache_writer := l_manager.cache_writer
 			l_verbose := a_parser.show_verbose_output
+			l_use_json := a_parser.use_json_storage
 			if l_verbose then
 				l_cache_writer.set_error_printer (agent display_error)
 				l_cache_writer.set_status_printer (agent display_message_with_new_line)
@@ -79,6 +81,13 @@ feature {NONE} -- Initialization
 			if attached {RUNTIME_ENVIRONMENT}.get_runtime_directory as l_runtime_dir then
 				l_writer.put_string ("Using runtime directory: ")
 				l_writer.put_string (utf32_to_console_encoding (console_encoding, create {STRING_32}.make_from_cil (l_runtime_dir)))
+				l_writer.new_line
+				l_writer.new_line
+			end
+
+			if l_use_json then
+				{EIFFEL_SERIALIZATION}.set_use_json_storage (True)
+				l_writer.put_string ("Using JSON storage")
 				l_writer.new_line
 				l_writer.new_line
 			end

@@ -76,7 +76,7 @@ feature -- Access
 feature -- Status report
 
 	add_assemblies: BOOLEAN
-			-- Indiciate if assemblies are to be added to the cache (fake or otherwise)
+			-- Indicate if assemblies are to be added to the cache (fake or otherwise)
 		require
 			successful: is_successful
 		once
@@ -84,7 +84,7 @@ feature -- Status report
 		end
 
 	add_information_only: BOOLEAN
-			-- Inidicate if only the assembly information should be consumed
+			-- Indicate if only the assembly information should be consumed
 		require
 			successful: is_successful
 		once
@@ -100,7 +100,7 @@ feature -- Status report
 		end
 
 	list_assemblies: BOOLEAN
-			-- Inidicates if contents of cache should be listed
+			-- Indicates if contents of cache should be listed
 		require
 			successful: is_successful
 		once
@@ -108,7 +108,7 @@ feature -- Status report
 		end
 
 	clean_cache: BOOLEAN
-			-- Inidicates if contents of cache should compacted
+			-- Indicates if contents of cache should compacted
 		require
 			successful: is_successful
 		once
@@ -116,7 +116,7 @@ feature -- Status report
 		end
 
 	show_verbose_output: BOOLEAN
-			-- Inidicate if verbose information should be shown
+			-- Indicate if verbose information should be shown
 		require
 			successful: is_successful
 		once
@@ -132,11 +132,19 @@ feature -- Status report
 		end
 
 	wait_for_user_interaction: BOOLEAN
-			-- Inidicate if user interaction is required before exiting
+			-- Indicate if user interaction is required before exiting
 		require
 			successful: is_successful
 		once
 			Result := has_option (halt_switch)
+		end
+
+	use_json_storage: BOOLEAN
+			-- Indicate if the cache uses JSON content (as opposed to SED)
+		require
+			successful: is_successful
+		once
+			Result := has_option (json_switch)
 		end
 
 feature {NONE} -- Usage
@@ -176,17 +184,20 @@ feature {NONE} -- Usage
 			Result.extend (create {ARGUMENT_DIRECTORY_SWITCH}.make (output_switch, "Location of Eiffel assembly cache to perform operations on.", True, False, "cache", "A location of an Eiffel assembly cache", False))
 			Result.extend (create {ARGUMENT_SWITCH}.make (clean_switch, "Cleans and compacts an Eiffel cache.", False, False))
 			Result.extend (create {ARGUMENT_SWITCH}.make (halt_switch, "Waits for user to press enter before exiting.", True, False))
+			Result.extend (create {ARGUMENT_SWITCH}.make (json_switch, "Use JSON content for the cache storage.", True, False))
+			Result.extend (create {ARGUMENT_SWITCH}.make (help_switch, "Display help", True, False))
 
 		end
 
 	switch_groups: ARRAYED_LIST [ARGUMENT_GROUP]
 			-- Valid switch grouping
 		once
-			create Result.make (4)
-			Result.extend (create {ARGUMENT_GROUP}.make (<<switch_of_name (add_switch), switch_of_name (info_only_switch), switch_of_name (reference_switch), switch_of_name (output_switch), switch_of_name (verbose_switch), switch_of_name (halt_switch)>>, False))
-			Result.extend (create {ARGUMENT_GROUP}.make (<<switch_of_name (remove_switch), switch_of_name (output_switch), switch_of_name (halt_switch)>>, False))
-			Result.extend (create {ARGUMENT_GROUP}.make (<<switch_of_name (list_switch), switch_of_name (output_switch), switch_of_name (verbose_switch), switch_of_name (halt_switch)>>, False))
-			Result.extend (create {ARGUMENT_GROUP}.make (<<switch_of_name (clean_switch), switch_of_name (output_switch), switch_of_name (halt_switch)>>, False))
+			create Result.make (5)
+			Result.extend (create {ARGUMENT_GROUP}.make (<<switch_of_name (help_switch)>>, False))
+			Result.extend (create {ARGUMENT_GROUP}.make (<<switch_of_name (add_switch), switch_of_name (info_only_switch), switch_of_name (reference_switch), switch_of_name (output_switch), switch_of_name (verbose_switch), switch_of_name (halt_switch), switch_of_name (json_switch)>>, False))
+			Result.extend (create {ARGUMENT_GROUP}.make (<<switch_of_name (remove_switch), switch_of_name (output_switch), switch_of_name (halt_switch), switch_of_name (json_switch)>>, False))
+			Result.extend (create {ARGUMENT_GROUP}.make (<<switch_of_name (list_switch), switch_of_name (output_switch), switch_of_name (verbose_switch), switch_of_name (halt_switch), switch_of_name (json_switch)>>, False))
+			Result.extend (create {ARGUMENT_GROUP}.make (<<switch_of_name (clean_switch), switch_of_name (output_switch), switch_of_name (halt_switch), switch_of_name (json_switch)>>, False))
 		end
 
 feature {NONE} -- Switches
@@ -200,13 +211,14 @@ feature {NONE} -- Switches
 	output_switch: STRING = "o"
 	clean_switch: STRING = "c"
 	halt_switch: STRING = "halt"
+	json_switch: STRING = "j"
 			-- Switch names
 
 	loose_argument_name: STRING = "assembly"
 			-- Name of lose argument, used in usage information
 
 	loose_argument_description: STRING = "Path to a valid .NET assembly";
-	-- Description of loose argument, used in usage information
+			-- Description of loose argument, used in usage information
 
 note
 	copyright: "Copyright (c) 1984-2022, Eiffel Software"

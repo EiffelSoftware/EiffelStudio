@@ -21,34 +21,55 @@ inherit
 		end
 
 create
-	make
+	make,
+	make_with_updated_getter
 
 feature {NONE} -- Initialization
 
 	make (dn: STRING; pub, stat: BOOLEAN; decl_type: CONSUMED_REFERENCED_TYPE; cp_getter: detachable CONSUMED_FUNCTION; cp_setter: detachable CONSUMED_PROCEDURE)
-			-- Initialize event.
+			-- Initialize property.
 		require
 			non_void_dotnet_name: dn /= Void
 			valid_dotnet_name: not dn.is_empty
 			non_void_declaring_type: decl_type /= Void
 			getter_or_setter: cp_getter = Void implies cp_setter /= Void
 			getter_or_setter: cp_setter = Void implies cp_getter /= Void
-		local
-			l_name: like dotnet_eiffel_name
 		do
 			p := pub
 			t := stat
 			entity_make (dn, dn, pub, decl_type)
-			g := cp_getter
-				-- Remove `get_' from property name.
+
 			if cp_getter /= Void then
-					-- Note: keep the same reference, do not duplicate, 
-					-- so that the change is also applied to the other linked names (same object).
-				l_name := cp_getter.dotnet_eiffel_name
-				if l_name.count > 4 and then l_name.substring (1, 4).is_equal ("get_") then
-					l_name.remove_head (4)
-				end
+					-- Remove eventual "get_"
+				cp_getter.update_dotnet_eiffel_name_for_getter
 			end
+
+			g := cp_getter
+			s := cp_setter
+		ensure
+			dotnet_name_set: dotnet_name = dn
+			getter_set: getter = cp_getter
+			setter_set: setter = cp_setter
+		end
+
+feature {CONSUMER_ACCESS} -- Initialization		
+
+	make_with_updated_getter (dn: STRING; pub, stat: BOOLEAN; decl_type: CONSUMED_REFERENCED_TYPE; cp_getter: detachable CONSUMED_FUNCTION; cp_setter: detachable CONSUMED_PROCEDURE)
+			-- Initialize property with `cp_getter` already updated for the "get_" removal.
+			-- Mostly needed when rebuilding property object from existing data (JSON).
+			-- note: this avoids removing double "get_get_".
+		require
+			non_void_dotnet_name: dn /= Void
+			valid_dotnet_name: not dn.is_empty
+			non_void_declaring_type: decl_type /= Void
+			getter_or_setter: cp_getter = Void implies cp_setter /= Void
+			getter_or_setter: cp_setter = Void implies cp_getter /= Void
+		do
+			p := pub
+			t := stat
+			entity_make (dn, dn, pub, decl_type)
+
+			g := cp_getter
 			s := cp_setter
 		ensure
 			dotnet_name_set: dotnet_name = dn

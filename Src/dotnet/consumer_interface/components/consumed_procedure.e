@@ -108,6 +108,20 @@ feature {NONE} -- Initialization
 			declared_type_set: declared_type = a_type
 		end
 
+feature -- Element change
+
+	update_dotnet_eiffel_name_for_getter
+			-- Update current for getter procedure of CONSUMED_PROPERTY.
+			-- Remove the "get_".
+		local
+			l_name: like dotnet_eiffel_name
+		do
+			l_name := dotnet_eiffel_name
+			if l_name.starts_with ("get_") then
+				l_name.remove_head (4)
+			end
+		end
+
 feature -- Access
 
 	arguments: ARRAY [CONSUMED_ARGUMENT]

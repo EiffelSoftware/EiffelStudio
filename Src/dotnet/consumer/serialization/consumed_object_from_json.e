@@ -487,7 +487,7 @@ feature -- Deserialization
 				if dn /= Void and decl_type /= Void then
 					cp_getter := consumed_function (jo [names.getter])
 					cp_setter := consumed_procedure (jo [names.setter])
-					create Result.make (
+					create Result.make_with_updated_getter (
 							dn.unescaped_string_8,
 							boolean_item (jo, names.is_public),
 							boolean_item (jo, names.is_static),

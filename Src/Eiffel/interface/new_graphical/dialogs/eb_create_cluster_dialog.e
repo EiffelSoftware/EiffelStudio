@@ -373,7 +373,7 @@ feature {NONE} -- Implementation
 				if not is_top_level then
 					check group_not_void: group /= Void end
 					if group.is_cluster then
-						in_recursive := attache {CONF_CLUSTER} group as l_clu and then l_clu.is_recursive and then (original_path = Void or else original_path.is_empty)
+						in_recursive := attached {CONF_CLUSTER} group as l_clu and then l_clu.is_recursive and then (original_path = Void or else original_path.is_empty)
 						if group.is_test_cluster and not tests_cluster_box.is_selected then
 							prompts.show_error_prompt (warning_messages.w_cannot_create_cluster_in_tests_cluster, Current, Void)
 							aok := False

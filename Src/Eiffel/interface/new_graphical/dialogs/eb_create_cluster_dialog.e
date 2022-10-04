@@ -251,8 +251,8 @@ feature {NONE} -- Implementation
 		require
 			valid_args: cluster_n /= Void
 		do
-			if target.stone /= Void then
-				cluster_list.show_stone (target.stone)
+			if attached target.stone as st then
+				cluster_list.show_stone (st)
 			end
 			cluster_entry.set_text (cluster_n.as_lower)
 			show_modal_to_window (target.window)
@@ -305,19 +305,17 @@ feature {NONE} -- Implementation
 			-- Set `group' to selected cluster/library from tree.
 		local
 			l_folder: EB_CLASSES_TREE_FOLDER_ITEM
-			l_hdr: EB_CLASSES_TREE_HEADER_ITEM
 			clu: EB_SORTED_CLUSTER
 		do
 			is_top_level := False
 			if cluster_list.selected_item /= Void then
-				l_hdr ?= cluster_list.selected_item
-				if l_hdr /= Void then
+				if attached {EB_CLASSES_TREE_HEADER_ITEM} cluster_list.selected_item as l_hdr then
 					aok := True
 					is_top_level := True
 				else
-					l_folder ?= cluster_list.selected_item
+					l_folder := {EB_CLASSES_TREE_FOLDER_ITEM} / cluster_list.selected_item
 					if l_folder = Void then
-						l_folder ?= cluster_list.selected_item.parent
+						l_folder := {EB_CLASSES_TREE_FOLDER_ITEM} / cluster_list.selected_item.parent
 					end
 					if l_folder /= Void then
 						clu := l_folder.data
@@ -349,7 +347,6 @@ feature {NONE} -- Implementation
 			test_file: RAW_FILE
 			base_name: STRING
 			in_recursive: BOOLEAN
-			l_clu: CONF_CLUSTER
 		do
 			aok := True
 			if aok then
@@ -376,8 +373,7 @@ feature {NONE} -- Implementation
 				if not is_top_level then
 					check group_not_void: group /= Void end
 					if group.is_cluster then
-						l_clu ?= group
-						in_recursive := l_clu /= Void and then l_clu.is_recursive and then (original_path = Void or else original_path.is_empty)
+						in_recursive := attache {CONF_CLUSTER} group as l_clu and then l_clu.is_recursive and then (original_path = Void or else original_path.is_empty)
 						if group.is_test_cluster and not tests_cluster_box.is_selected then
 							prompts.show_error_prompt (warning_messages.w_cannot_create_cluster_in_tests_cluster, Current, Void)
 							aok := False
@@ -642,7 +638,7 @@ invariant
 	group_implies_path: group /= Void implies path /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2013, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2022, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

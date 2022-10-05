@@ -535,7 +535,7 @@ feature -- Element change
 			end
 		end
 
-	add_cluster (a_name: STRING; a_parent: CONF_GROUP; a_path: PATH; a_is_tests_cluster: BOOLEAN)
+	add_cluster (a_name: READABLE_STRING_GENERAL; a_parent: CONF_GROUP; a_path: PATH; a_is_tests_cluster: BOOLEAN)
 			-- Add new cluster with `a_name' optionally `a_parent' and `a_path'.
 			--
 			-- `a_name': Name of new cluster.
@@ -924,7 +924,7 @@ invariant
 	assemblies_not_void: assemblies /= Void
 
 note
-	copyright: "Copyright (c) 1984-2019, Eiffel Software"
+	copyright: "Copyright (c) 1984-2022, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

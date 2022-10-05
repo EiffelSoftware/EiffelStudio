@@ -547,6 +547,8 @@ feature -- Cluster tree warnings
 
 	w_Cannot_delete_need_recompile: STRING_32 do Result := locale.translation ("Compiled configuration is not up to date, please recompile.") end
 
+	w_configuration_not_up_to_date_need_recompile: STRING_32 do Result := locale.translation ("Compiled configuration is not up to date, please recompile.") end
+
 	w_Could_not_locate (cl_name: READABLE_STRING_GENERAL): STRING_32
 			-- Class/cluster could not be found in the cluster tree.
 		do
@@ -1177,7 +1179,7 @@ feature -- Warning messages
 
 
 note
-	copyright:	"Copyright (c) 1984-2018, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2022, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

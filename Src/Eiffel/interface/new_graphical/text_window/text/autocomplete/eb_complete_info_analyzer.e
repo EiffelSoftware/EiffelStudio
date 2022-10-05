@@ -179,7 +179,11 @@ feature -- Basic operations
 										loop
 											feat := f.item
 											if
-												(exploring_current_class or else feat.is_exported_to (l_current_class_c)) and then
+												(
+													exploring_current_class
+													or else feat.is_exported_to (l_current_class_c)
+													or else (cls_c.is_once and then feat.is_once_creation (cls_c))
+												) and then
 												(show_any_features or else not feat.written_class.is_class_any)
 											then
 												if l_has_renaming then
@@ -882,7 +886,7 @@ feature {NONE} -- Implementation
 					ft.after
 				loop
 					feat := ft.item_for_iteration
-					if feat.is_class then
+					if feat.is_class or feat.is_once_creation (cl) then
 						Result.extend (feat.api_feature (ft.feat_tbl_id))
 					end
 					ft.forth
@@ -1566,7 +1570,7 @@ feature {NONE} -- Implementation
 note
 	date: "$Date$"
 	revision: "$Revision$"
-	copyright: "Copyright (c) 1984-2021, Eiffel Software"
+	copyright: "Copyright (c) 1984-2022, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

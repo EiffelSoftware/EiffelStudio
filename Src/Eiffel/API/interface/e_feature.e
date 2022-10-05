@@ -630,7 +630,13 @@ feature -- Access
 			has_export_status: export_status /= Void;
 		do
 			Result := export_status.is_exported_to (client);
-		end;
+		end
+
+	is_once_creation (c: CLASS_C): BOOLEAN
+			-- Is it a creation procedure in a once class `c`?
+		do
+			Result := attached associated_feature_i as fi and then fi.is_once_creation (c)
+		end
 
 	ast: FEATURE_AS
 			-- Associated AST structure for feature
@@ -1241,7 +1247,7 @@ note
 	ca_ignore: "CA033", "CA033: very large class"
 	date: "$Date$"
 	revision: "$Revision$"
-	copyright:	"Copyright (c) 1984-2021, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2022, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

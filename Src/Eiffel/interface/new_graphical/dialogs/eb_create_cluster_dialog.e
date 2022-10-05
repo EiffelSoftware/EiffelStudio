@@ -410,7 +410,12 @@ feature {NONE} -- Implementation
 					else
 							-- if we are in a recursive cluster we don't need to do anything except refreshing
 						if in_recursive then
-							manager.refresh
+							if not chosen_dir.canonical_path.name.starts_with (group.location.evaluated_directory.canonical_path.name) then
+									-- Case: Add Cluster inside a recursive cluster, but with a location out the parent recursive cluster.
+								real_create_cluster (base_name)
+							else
+								manager.refresh
+							end
 						else
 							real_create_cluster (base_name)
 						end

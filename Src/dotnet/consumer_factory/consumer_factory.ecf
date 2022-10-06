@@ -9,6 +9,7 @@
 		<library name="consumer_interface" location="..\consumer_interface\consumer_interface.ecf"/>
 		<library name="dotnet_md_consumer_loader" location="$EIFFEL_SRC\framework\dotnet_md_consumer_loader\dotnet_md_consumer_loader.ecf" readonly="false"/>
 		<library name="emitter_loader" location="$EIFFEL_SRC\framework\emitter_loader\emitter_loader.ecf"/>
+		<library name="environment" location="$EIFFEL_SRC\framework\environment\environment.ecf"/>
 		<cluster name="main" location=".\"/>
 	</target>
 </system>

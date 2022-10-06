@@ -30,6 +30,7 @@ feature -- Status report
 feature -- Serialization
 
 	serialize (a: ANY; path: READABLE_STRING_GENERAL; is_appending: BOOLEAN)
+			-- Serialize `a` to `path`, as new file or just appended if `is_appending`.
 		deferred
 		end
 

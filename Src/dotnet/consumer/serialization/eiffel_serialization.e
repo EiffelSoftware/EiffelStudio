@@ -8,36 +8,20 @@ note
 class
 	EIFFEL_SERIALIZATION
 
-feature -- Settings change
+inherit
+	EIFFEL_LAYOUT
 
-	set_use_json_storage (b: BOOLEAN)
-			-- Set `use_json_storage` to `b`.
+feature -- Status report	
+
+	use_json_storage: BOOLEAN
+			-- Use JSON for metadata consumer cache storage?
 		do
-			settings.use_json := b
-			if b then
-				settings.use_long_names := attached (create {EXECUTION_ENVIRONMENT}).item("ISE_EMDC_JSON") as v and then
-						v.is_case_insensitive_equal ("long")
-			end
-		ensure
-			class
-		end
-
-feature -- Settings
-
-	settings: TUPLE [use_json, use_long_names: BOOLEAN]
-		once
-			if attached (create {EXECUTION_ENVIRONMENT}).item("ISE_EMDC_JSON") as var and then
-					var.count > 0 and then
-					not var.is_case_insensitive_equal ("false")
-			then
-				Result := [
-					True, -- Use JSON storage
-					attached (create {EXECUTION_ENVIRONMENT}).item("ISE_EMDC_JSON") as v and then
-							v.is_case_insensitive_equal ("long")
-				]
+			if is_eiffel_layout_defined then
+				Result := eiffel_layout.use_json_dotnet_md_cache
 			else
-				Result := [False, False]
+				Result := settings.use_json
 			end
+			Result := settings.use_json
 		ensure
 			class
 		end
@@ -51,17 +35,10 @@ feature -- Settings
 			class
 		end
 
-	use_json_storage: BOOLEAN
-			-- Use JSON for metadata consumer cache storage?
-		once
-			Result := settings.use_json
-		ensure
-			class
-		end
-
 feature -- Serialization
 
 	deserializer: EIFFEL_DESERIALIZER
+			-- Eiffel md consumer deserializer.
 		do
 			if use_json_storage then
 				create {EIFFEL_JSON_DESERIALIZER} Result
@@ -73,6 +50,7 @@ feature -- Serialization
 		end
 
 	serializer: EIFFEL_SERIALIZER
+			-- Eiffel md consumer serializer.	
 		do
 			if use_json_storage then
 				create {EIFFEL_JSON_SERIALIZER} Result
@@ -84,8 +62,45 @@ feature -- Serialization
 		end
 
 	serialize (a: ANY; path: READABLE_STRING_GENERAL; is_appending: BOOLEAN)
+			--
 		do
 			serializer.serialize (a, path, is_appending)
+		ensure
+			class
+		end
+
+feature -- Settings change
+
+	set_use_json_storage (b: BOOLEAN)
+			-- Set `use_json_storage` to `b`.
+		do
+			if is_eiffel_layout_defined then
+				eiffel_layout.set_use_json_dotnet_md_cache (b)
+			else
+				settings.use_json := b
+			end
+			if b then
+				settings.use_long_names := attached (create {EXECUTION_ENVIRONMENT}).item("ISE_EMDC_JSON") as v and then
+						v.is_case_insensitive_equal ("long")
+			end
+		ensure
+			class
+		end
+
+feature -- Settings
+
+	settings: TUPLE [use_json, use_long_names: BOOLEAN]
+		once
+			Result := [False, False]
+			if is_eiffel_layout_defined then
+				Result.use_json := eiffel_layout.use_json_dotnet_md_cache
+			end
+			if
+				attached (create {EXECUTION_ENVIRONMENT}).item("ISE_EMDC_JSON") as v and then
+						v.is_case_insensitive_equal ("long")
+			then
+				Result.use_long_names := True
+			end
 		ensure
 			class
 		end

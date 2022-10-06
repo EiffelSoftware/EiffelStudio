@@ -32,16 +32,23 @@ feature {NONE} -- Initialization
 			not a_cache_path.is_empty
 			attached a_runtime_version
 			not a_runtime_version.is_empty
+		local
+			s: READABLE_STRING_GENERAL
+			p: PATH
 		do
+			s := {EXECUTION_ENVIRONMENT}.item ("ISE_EMDC")
+			if s /= Void then
+				create p.make_from_string (s)
+			end
 			if
-				attached {EXECUTION_ENVIRONMENT}.item ("ISE_EMDC") as l_ise_emdc and then
-				not l_ise_emdc.is_whitespace and then
-				(create {FILE_UTILITIES}).file_exists (l_ise_emdc)
+				p /= Void and then
+				p.is_absolute and then
+				(create {FILE_UTILITIES}).file_path_exists (p)
 			then
 					-- note: Used mostly during development
-				create emdc_location.make_from_string (l_ise_emdc)
+				emdc_location := p
 			else
-				emdc_location := eiffel_layout.tools_bin_path.extended ("emdc").appended (eiffel_layout.executable_suffix)
+				emdc_location := eiffel_layout.emdc_command_name
 			end
 
 			cache_location := a_cache_path
@@ -113,6 +120,9 @@ feature -- XML generation
 					args.force (a)
 				end
 			end
+			if is_eiffel_layout_defined and then eiffel_layout.use_json_dotnet_md_cache then
+				args.force ("-json") -- For "JSON" storage
+			end
 			args.force ("-o")
 			args.force (cache_location.name)
 			create dir.make_with_path (cache_location)
@@ -150,7 +160,7 @@ feature -- XML generation
 			end
 
 			debug ("consumer")
-				print ("#CONSUMER: "+ cmd + "%N")
+				print ("#CONSUMER: "+ {UTF_CONVERTER}.string_32_to_utf_8_string_8 (cmd) + "%N")
 			end
 
 			p.launch

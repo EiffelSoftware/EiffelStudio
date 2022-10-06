@@ -211,7 +211,7 @@ feature {NONE} -- Switches
 	output_switch: STRING = "o"
 	clean_switch: STRING = "c"
 	halt_switch: STRING = "halt"
-	json_switch: STRING = "j"
+	json_switch: STRING = "json"
 			-- Switch names
 
 	loose_argument_name: STRING = "assembly"

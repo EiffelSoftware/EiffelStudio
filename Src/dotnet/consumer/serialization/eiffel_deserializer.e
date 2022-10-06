@@ -25,6 +25,7 @@ feature -- Status report
 feature -- Basic Operations
 
 	deserialize (path: READABLE_STRING_GENERAL; a_pos: INTEGER)
+			-- Deserialized object from `path`, at position `a_pos`.
 		deferred
 		end
 

@@ -290,6 +290,9 @@ feature -- Status update
 					-- We only initialize .NET precompiled libraries on Windows.
 				init_precompile_directory (True)
 			end
+
+				-- Check dotnet related settings
+			check_dotnet_environment
 		ensure
 			is_valid_environment: is_valid_environment
 		end
@@ -753,6 +756,8 @@ feature -- Directories (top-level)
 			not_result_is_empty: not Result.is_empty
 		end
 
+feature -- IRON
+
 	iron_command_name: PATH
 			-- path where the iron command is located in the installation directory.
 			-- With platform: $ISE_EIFFEL/tools/spec/$ISE_PLATFORM/bin/iron{.exe}
@@ -837,8 +842,61 @@ feature  -- Directories (dotnet)
 				Result := install_path
 			end
 			Result := Result.extended (dotnet_name).extended (assemblies_name)
+			if use_json_dotnet_md_cache then
+				Result := Result.extended ("json")
+			end
 		ensure
 			not_result_is_empty: not Result.is_empty
+		end
+
+	emdc_command_name: PATH
+			-- Complete path to `emdc'.
+		require
+			is_valid_environment: is_valid_environment
+		once
+			Result := tools_bin_path.extended (emdc_name).appended (executable_suffix)
+		ensure
+			not_result_is_empty: not Result.is_empty
+		end
+
+feature -- Cache settings		
+
+	check_dotnet_environment
+			-- Check .Net environment
+		do
+			if
+				attached get_environment_32 ("ISE_EMDC")as v1 and then v1.count > 0 and then not v1.is_case_insensitive_equal ("false")
+				or not {PLATFORM}.is_windows
+			then
+				use_emdc_consumer := True
+			else
+				use_emdc_consumer := False
+			end
+			if
+				attached get_environment_32 ("ISE_EMDC_JSON") as v2 and then
+				v2.count > 0 and then
+				not v2.is_case_insensitive_equal ("false")
+			then
+				use_json_dotnet_md_cache := True
+			else
+				use_json_dotnet_md_cache := False
+			end
+		end
+
+	use_emdc_consumer: BOOLEAN
+			-- Use emdc executable as .Net meta consumer?
+
+	use_json_dotnet_md_cache: BOOLEAN
+			-- Use JSON for cache storage.
+
+	set_use_emdc_consumer (b: BOOLEAN)
+		do
+			use_emdc_consumer := b
+		end
+
+	set_use_json_dotnet_md_cache (b: BOOLEAN)
+		do
+			use_json_dotnet_md_cache := b
 		end
 
 feature -- Directories (distribution)
@@ -1894,6 +1952,9 @@ feature -- Executable names
 
 	ecdbg_name: STRING_8 = "ecdbgd"
 			-- Name of console line debugger command.
+
+	emdc_name: STRING_8 = "emdc"
+			-- Name of the .Net metadata consumer executable (emdc).
 
 feature {NONE} -- Configuration of layout
 

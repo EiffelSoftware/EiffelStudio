@@ -4,6 +4,9 @@
 class
 	CONSUMER_FACTORY
 
+inherit
+	EIFFEL_LAYOUT
+
 feature -- Basic operations
 
 	consumer (cache_path: PATH; version: READABLE_STRING_32): detachable CONSUMER
@@ -11,10 +14,9 @@ feature -- Basic operations
 			-- or `Void` if not found.
 		do
 			if
-				attached {EXECUTION_ENVIRONMENT}.item ("ISE_EMDC")
-				or not {PLATFORM}.is_windows
+				is_eiffel_layout_defined and then 
+				eiffel_layout.use_emdc_consumer
 			then
-					-- if "ISE_EMDC" is set (to any value, even blank)
 					-- use emdc executable to consume dotnet assemblies.
 				create {MD_CONSUMER_PROCESS} Result.make (cache_path, version)
 			else

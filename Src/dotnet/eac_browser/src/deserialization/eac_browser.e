@@ -39,7 +39,7 @@ feature -- Access
 			if attached absolute_type_path (relative_assembly_path (an_assembly), a_dotnet_type_name) as p then
 				Result := Consumed_types.item (p)
 				if not attached Result then
-					create des
+					des := {EIFFEL_SERIALIZATION}.deserializer
 					des.deserialize  (p, 0)
 					Result := {CONSUMED_TYPE} / des.deserialized_object
 					if attached Result then
@@ -60,7 +60,7 @@ feature -- Access
 			a_file_name: STRING
 		do
 			if attached absolute_info_assembly_path (an_assembly) as p then
-				create des
+				des := {EIFFEL_SERIALIZATION}.deserializer
 				des.deserialize  (p, 0)
 				Result := {CONSUMED_ASSEMBLY_TYPES} / des.deserialized_object
 			end
@@ -76,7 +76,7 @@ feature -- Access
 			des: EIFFEL_DESERIALIZER
 		do
 			if attached absolute_referenced_assemblies_path (an_assembly) as p then
-				create des
+				des := {EIFFEL_SERIALIZATION}.deserializer
 				des.deserialize  (p, 0)
 				Result := {CONSUMED_ASSEMBLY_MAPPING} / des.deserialized_object
 			end
@@ -103,7 +103,7 @@ feature -- Access
 			des: EIFFEL_DESERIALIZER
 		do
 			if attached Absolute_info_assemblies_path as p then
-				create des
+				des := {EIFFEL_SERIALIZATION}.deserializer
 				des.deserialize  (p, 0)
 				Result := {CACHE_INFO} / des.deserialized_object
 			end

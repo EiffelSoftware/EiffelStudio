@@ -75,7 +75,7 @@ feature -- Settings change
 			-- Set `use_json_storage` to `b`.
 		do
 			if is_eiffel_layout_defined then
-				eiffel_layout.set_use_json_dotnet_md_cache (b)
+				eiffel_layout.set_use_json_dotnet_md_cache (b, False)
 			else
 				settings.use_json := b
 			end

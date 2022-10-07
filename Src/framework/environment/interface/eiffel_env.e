@@ -889,14 +889,32 @@ feature -- Cache settings
 	use_json_dotnet_md_cache: BOOLEAN
 			-- Use JSON for cache storage.
 
-	set_use_emdc_consumer (b: BOOLEAN)
+	set_use_emdc_consumer (b: BOOLEAN; a_permanent: BOOLEAN)
+			-- Set `use_emdc_consumer` to `b`
+			-- and if `a_permanent` is True, update the environment accordingly	
 		do
 			use_emdc_consumer := b
+			if a_permanent then
+				if b then
+					environment.set_application_item ("ISE_EMDC", application_name, version_name, "true")
+				else
+					environment.set_application_item ("ISE_EMDC", application_name, version_name, "false")
+				end
+			end
 		end
 
-	set_use_json_dotnet_md_cache (b: BOOLEAN)
+	set_use_json_dotnet_md_cache (b: BOOLEAN; a_permanent: BOOLEAN)
+			-- Set `use_json_dotnet_md_cache` to `b`
+			-- and if `a_permanent` is True, update the environment accordingly
 		do
 			use_json_dotnet_md_cache := b
+			if a_permanent then
+				if b then
+					environment.set_application_item ("ISE_EMDC_JSON", application_name, version_name, "true")
+				else
+					environment.set_application_item ("ISE_EMDC_JSON", application_name, version_name, "false")
+				end
+			end
 		end
 
 feature -- Directories (distribution)

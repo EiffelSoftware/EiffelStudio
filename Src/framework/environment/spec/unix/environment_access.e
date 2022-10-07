@@ -70,7 +70,7 @@ feature -- Access
 
 feature -- Environment change
 
-	set_application_item (a_var: READABLE_STRING_GENERAL; a_app: detachable READABLE_STRING_GENERAL; a_version: detachable STRING; a_value: detachable READABLE_STRING_GENERAL)
+	set_application_item (a_var: READABLE_STRING_GENERAL; a_app: detachable READABLE_STRING_GENERAL; a_version: STRING; a_value: detachable READABLE_STRING_GENERAL)
 			-- Set value `a_value` in variable `a_var` as if we were `a_app` for version `a_version` (formatted as MM.mm).
 		require
 			a_var_ok: a_var /= Void and then not a_var.has ('%U')

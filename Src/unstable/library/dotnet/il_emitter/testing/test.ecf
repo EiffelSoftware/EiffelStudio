@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-22-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-22-0 http://www.eiffel.com/developers/xml/configuration-1-22-0.xsd" name="il_emitter_test" uuid="322767D0-B971-402C-A921-4CCEE9504DF2">
+	<target name="il_emitter_test">
+		<root class="APPLICATION" feature="make"/>
+		<file_rule>
+			<exclude>/CVS$</exclude>
+			<exclude>/EIFGENs$</exclude>
+			<exclude>/\.git$</exclude>
+			<exclude>/\.svn$</exclude>
+		</file_rule>
+		<option warning="warning"  manifest_array_type="mismatch_warning">
+			<assertions precondition="true" postcondition="true" check="true" invariant="true" loop="true" supplier_precondition="true"/>
+		</option>
+		<setting name="console_application" value="true"/>
+		<setting name="dead_code_removal" value="feature"/>
+		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf">
+			<option warning="none">
+			</option>
+		</library>
+		<library name="il_emitter" location="..\il_emitter.ecf" readonly="false">
+			<option debug="true" warning="none">
+				<debug name="debug-cli" enabled="true"/>
+			</option>
+		</library>
+		<cluster name="il_emitter_test" location=".\" recursive="true">
+			<option warning="none" manifest_array_type="mismatch_warning">
+			</option>
+		</cluster>
+	</target>
+</system>

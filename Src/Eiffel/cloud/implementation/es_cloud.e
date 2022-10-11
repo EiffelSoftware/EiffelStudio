@@ -129,7 +129,7 @@ feature {NONE} -- Initialization
 		do
 			create inst.make (eiffel_layout)
 			l_app_name := env.product_name
-			l_var_name := "installation_id"
+			l_var_name := env.eiffel_platform + "_installation_id"
 			s := inst.application_item (l_var_name, l_app_name, env.version_name)
 			if s /= Void and then s.has_substring (env.version_name) and then s.is_valid_as_string_8 then
 				create installation.make_with_id (s.to_string_8)
@@ -1167,7 +1167,7 @@ feature {NONE} -- Implementation: Internal cache
 invariant
 
 note
-	copyright: "Copyright (c) 1984-2021, Eiffel Software"
+	copyright: "Copyright (c) 1984-2022, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

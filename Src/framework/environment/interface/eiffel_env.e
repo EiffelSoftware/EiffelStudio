@@ -765,7 +765,7 @@ feature -- IRON
 		require
 			is_valid_environment: is_valid_environment
 		do
-			Result := shared_path.extended ("tools").extended ("spec").extended (eiffel_platform).extended ("bin").extended (iron_name + executable_suffix)
+			Result := application_tools_bin_path.extended (iron_name + executable_suffix)
 		ensure
 			not_result_is_empty: not Result.is_empty
 		end
@@ -777,7 +777,7 @@ feature -- IRON
 		require
 			is_valid_environment: is_valid_environment
 		do
-			Result := shared_path.extended ("tools").extended (iron_name)
+			Result := shared_application_tools_path.extended (iron_name)
 		ensure
 			not_result_is_empty: not Result.is_empty
 		end
@@ -854,7 +854,7 @@ feature  -- Directories (dotnet)
 		require
 			is_valid_environment: is_valid_environment
 		once
-			Result := tools_bin_path.extended (emdc_name).appended (executable_suffix)
+			Result := application_tools_bin_path.extended (emdc_name).appended (executable_suffix)
 		ensure
 			not_result_is_empty: not Result.is_empty
 		end
@@ -1089,6 +1089,21 @@ feature -- Directories (distribution)
 			not_result_is_empty: not Result.is_empty
 		end
 
+	application_tools_bin_path: PATH
+			-- Location of binary tools components.
+		require
+			is_valid_environment: is_valid_environment
+		once
+			if is_unix_layout then
+				Result := unix_layout_base_path
+			else
+				Result := shared_application_tools_path.extended (spec_name).extended (eiffel_platform)
+			end
+			Result := Result.extended (bin_name)
+		ensure
+			not_result_is_empty: not Result.is_empty
+		end
+
 	runtime_include_path: PATH
 			-- Location of Eiffel runtime include files.
 		require
@@ -1152,22 +1167,7 @@ feature -- Directories (distribution)
 		require
 			is_valid_environment: is_valid_environment
 		once
-			Result := shared_path.extended ("tools")
-		ensure
-			not_result_is_empty: not Result.is_empty
-		end
-
-	tools_bin_path: PATH
-			-- Location of binary tools components.
-		require
-			is_valid_environment: is_valid_environment
-		once
-			if is_unix_layout then
-				Result := unix_layout_base_path
-			else
-				Result := tools_path.extended (spec_name).extended (eiffel_platform)
-			end
-			Result := Result.extended (bin_name)
+			Result := shared_application_path.extended ("tools")
 		ensure
 			not_result_is_empty: not Result.is_empty
 		end
@@ -1698,6 +1698,16 @@ feature -- Directories (platform independent)
 			not_result_is_empty: not Result.is_empty
 		end
 
+	shared_application_tools_path: PATH
+			-- Location of shared files specific for the current application's tools (platform independent).
+		require
+			is_valid_environment: is_valid_environment
+		once
+			Result := shared_path.extended (distribution_tools_name)
+		ensure
+			not_result_is_empty: not Result.is_empty
+		end
+
 	lib_path: PATH
 			-- Location of libs files (platform dependent).
 		require
@@ -2195,6 +2205,16 @@ feature -- Directory constants (top-level)
 			--| Redefine for alternative compiler distributions.
 		once
 			Result := "studio"
+		ensure
+			not_result_is_empty: not Result.is_empty
+		end
+
+	distribution_tools_name: STRING_8
+			-- Name of tools distribution.
+			--
+			--| Redefine for alternative tools distributions.
+		once
+			Result := "tools"
 		ensure
 			not_result_is_empty: not Result.is_empty
 		end

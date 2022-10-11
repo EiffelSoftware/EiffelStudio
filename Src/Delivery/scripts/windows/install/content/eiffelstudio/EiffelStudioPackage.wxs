@@ -105,7 +105,7 @@
             		<RegistryValue
                 		Root="HKCU"
     					Key="Software\ISE\$(var.ProductKey)"
-                		Name="installed_$(var.Platform)"
+                		Name="installed_$(var.IsePlatform)"
                 		Type="integer"
                 		Value="1"
                 		KeyPath="yes"/>

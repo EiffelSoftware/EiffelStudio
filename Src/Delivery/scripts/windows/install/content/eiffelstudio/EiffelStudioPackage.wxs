@@ -162,7 +162,7 @@
 				<RemoveFolder Id="RemoveEiffelStudio" Directory="EiffelStudio" On="uninstall" />
 				<RemoveFolder Id="RemoveEiffelStudio.Documentation" Directory="EiffelStudio.Documentation" On="uninstall" />
 				<RemoveFolder Id="RemoveEiffelStudio.Tools" Directory="EiffelStudio.Tools" On="uninstall" />
-				<RegistryValue Id="Id.shortcuts" Root="HKCU" Key="Software\ISE\$(var.ProductKey)" Name="InstalledShortcuts" Type="integer" Value="1" KeyPath="yes"/>
+				<RegistryValue Id="Id.shortcuts" Root="HKCU" Key="Software\ISE\$(var.ProductKey)" Name="InstalledShortcuts_$(var.IsePlatform)" Type="integer" Value="1" KeyPath="yes"/>
 				<Shortcut Id="esbuilder.exe" Name="EiffelBuild"
 					Description="GUI Builder using EiffelVision2" Show="normal" Directory="EiffelStudio"
 					Target="[INSTALLDIR]esbuilder\spec\$(var.IsePlatform)\bin\esbuilder.exe"

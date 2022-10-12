@@ -14,13 +14,14 @@ feature  -- Initialization
 	make
 			-- Run application.
 		do
---			(create {TEST_1}).test;
---			(create {TEST_2}).test;
---			(create {TEST_3}).test;
---			(create {TEST_4}).test;
---			(create {TEST_5}).test;
---			(create {TEST_6}).test;
---			(create {TEST_7}).test;
+			test_2;
+			(create {TEST_1}).test;
+			(create {TEST_2}).test;
+			(create {TEST_3}).test;
+			(create {TEST_4}).test;
+			(create {TEST_5}).test;
+			(create {TEST_6}).test;
+			(create {TEST_7}).test;
 			(create {TEST_8}).test;
 
 		end
@@ -40,6 +41,14 @@ feature  -- Initialization
 			end
 		end
 
+
+	test_2
+		local
+			l_list: LIST [STRING_32]
+		do
+			l_list := (create {PE_LIB}.make("",0)).split_path("System::Console.WriteLine")
+			l_list := (create {PE_LIB}.make("",0)).split_path("System.IO.FileStream..ctor")
+		end
 
 note
 	copyright: "Copyright (c) 1984-2019, Eiffel Software and others"

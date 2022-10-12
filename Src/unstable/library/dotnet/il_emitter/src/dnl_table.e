@@ -2,8 +2,10 @@ note
 	description: "[
 		Represent tables that can appear in a PE file
 		]"
+	author: ""
 	date: "$Date$"
 	revision: "$Revision$"
+
 class
 	DNL_TABLE
 

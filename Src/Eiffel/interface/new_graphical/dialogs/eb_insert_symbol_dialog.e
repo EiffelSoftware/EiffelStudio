@@ -277,6 +277,7 @@ feature -- Events
 			gi: EV_GRID_LABEL_ITEM
 			sym, s: STRING_32
 			g: like symbols_grid
+			gi_selected: EV_GRID_LABEL_ITEM
 		do
 			g := symbols_grid
 			g.clear
@@ -305,6 +306,9 @@ feature -- Events
 						gi.align_text_vertically_center
 						gi.set_tooltip (ic.item.description)
 						gi.set_data ([sym, ic.item.description])
+						if attached current_symbol as curr and then curr.symbol =  sym then
+							gi_selected := gi
+						end
 						gi.select_actions.extend (agent (i_data: attached like current_symbol)
 							do
 								current_symbol := i_data
@@ -325,6 +329,9 @@ feature -- Events
 						col.set_width (colw)
 --						col.resize_to_content
 					end
+				end
+				if gi_selected /= Void then
+					gi_selected.enable_select
 				end
 			end
 		end
@@ -373,6 +380,7 @@ feature -- Events
 						until
 							c > cn or gi /= Void
 						loop
+
 							gi := g.item (c, r)
 							if
 								gi /= Void and then
@@ -390,9 +398,17 @@ feature -- Events
 				elseif g.row_count > 0 and g.row (1).count > 0 then
 					gi := g.item (1, 1)
 				end
-				if gi /= Void then
+				if gi /= Void and then not gi.is_destroyed then
 					gi.ensure_visible
-					gi.enable_select
+					ev_application.add_idle_action_kamikaze (agent (i_gi: EV_GRID_ITEM)
+						do
+							if
+								not i_gi.is_destroyed and then i_gi.is_selectable
+							then
+								i_gi.enable_select
+							end
+						end(gi)
+					)
 				end
 			end
 		end
@@ -453,7 +469,7 @@ invariant
 note
 	date: "$Date$"
 	revision: "$Revision$"
-	copyright: "Copyright (c) 1984-2021, Eiffel Software"
+	copyright: "Copyright (c) 1984-2022, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

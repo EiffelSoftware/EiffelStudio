@@ -245,7 +245,7 @@ feature -- Basic Operations
 
 							if attached notifier as l_notifier then
 								l_notifier.notify_consume (
-									create {NOTIFY_MESSAGE}.make (l_ca,
+									create {CONSUMPTION_NOTIFY_MESSAGE}.make (l_ca,
 										a_path, create {STRING_32}.make_from_cil (l_reason), cache_reader.absolute_consume_path))
 							end
 

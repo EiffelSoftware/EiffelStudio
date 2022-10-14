@@ -47,36 +47,34 @@
 		<assembly name="system" location="$ISE_DOTNET_FRAMEWORK\System.dll" prefix="SYSTEM_DLL_"/>
 		<assembly name="system.drawing" location="$ISE_DOTNET_FRAMEWORK\System.Drawing.dll" prefix="DRAWING_"/>
 		<assembly name="system.windows.forms" location="$ISE_DOTNET_FRAMEWORK\System.Windows.Forms.dll" prefix="WINFORMS_"/>
-		<cluster name="consumer" location="$EIFFEL_SRC\dotnet\consumer\" recursive="true">
+		<cluster name="consumer" location="$EIFFEL_SRC\dotnet\consumer\">
 			<condition>
 				<dotnet value="true"/>
 			</condition>
-			<file_rule>
-				<exclude>/interop$</exclude>
-				<exclude>/resources$</exclude>
-				<exclude>main</exclude>
-			</file_rule>
+			<cluster name="consumer_cache" location="$|cache" recursive="true"/>
+			<cluster name="consumer_emitter" location="$|emitter" recursive="true"/>
+			<cluster name="consumer_cache" location="$|cache" recursive="true"/>
+			<cluster name="consumer_serialization" location="$|serialization" recursive="true"/>
+			<cluster name="consumer_support" location="$|support" recursive="true">
+				<file_rule>
+					<exclude>/interop$</exclude>
+				</file_rule>
+			</cluster>
 		</cluster>
-		<cluster name="consumer_classic" location="$EIFFEL_SRC\dotnet\consumer\" recursive="true">
+		<cluster name="consumer_classic" location="$EIFFEL_SRC\dotnet\consumer\">
 			<condition>
 				<dotnet value="false"/>
 			</condition>
-			<file_rule>
-				<exclude>/cache$</exclude>
-				<exclude>/emitter$</exclude>
-				<exclude>/interop$</exclude>
-				<exclude>/main$</exclude>
-				<exclude>/resources$</exclude>
-				<exclude>/support/errors$</exclude>
-				<exclude>/support/helpers$</exclude>
-				<exclude>/support/interop$</exclude>
-				<exclude>/support/notifier$</exclude>
-			</file_rule>
-			<file_rule>
-				<exclude>/.svn$</exclude>
-				<exclude>/EIFGENs$</exclude>
-			</file_rule>
-			<visible class="CACHE_INFO" feature="intentionally_absent_feature"/>
+			<cluster name="consumer_serialization" location="$|serialization" recursive="true"/>
+			<cluster name="consumer_support" location="$|support" recursive="true">
+				<file_rule>
+					<exclude>/errors$</exclude>
+					<exclude>/helpers$</exclude>
+					<exclude>/interop$</exclude>
+					<exclude>/notifier$</exclude>
+				</file_rule>
+				<visible class="CACHE_INFO" feature="intentionally_absent_feature"/>
+			</cluster>
 		</cluster>
 		<cluster name="interop" location="$EIFFEL_SRC\dotnet\consumer\support\interop\" recursive="true">
 			<condition>

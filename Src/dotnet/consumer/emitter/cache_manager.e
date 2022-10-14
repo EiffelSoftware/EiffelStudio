@@ -40,7 +40,7 @@ feature {NONE}-- Initialization
 			-- create an instance of CACHE_MANAGER
 		do
 			if notifier = Void then
-				create notifier.make
+				create {FORM_NOTIFIER} notifier.make
 			end
 			guard.set_notifier (notifier)
 

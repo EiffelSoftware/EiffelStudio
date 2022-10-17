@@ -93,19 +93,19 @@ feature -- Access
 			working.add_code_container (start)
 
 
-			create ins.make ({CIL_OPCODES}.i_ldsflda,{CIL_OPERAND_FACTORY}.complex_operand (create {CIL_FIELD_NAME}.make (ps)))
+			create ins.make ({CIL_INSTRUCTION_OPCODES}.i_ldsflda,{CIL_OPERAND_FACTORY}.complex_operand (create {CIL_FIELD_NAME}.make (ps)))
 			start.add_instruction (ins)
-			create ins.make ({CIL_OPCODES}.i_ldsflda,{CIL_OPERAND_FACTORY}.complex_operand (create {CIL_FIELD_NAME}.make (str)))
+			create ins.make ({CIL_INSTRUCTION_OPCODES}.i_ldsflda,{CIL_OPERAND_FACTORY}.complex_operand (create {CIL_FIELD_NAME}.make (str)))
 			start.add_instruction (ins)
-			create ins.make ({CIL_OPCODES}.i_call,{CIL_OPERAND_FACTORY}.complex_operand (create {CIL_METHOD_NAME}.make (signature_ep)))
+			create ins.make ({CIL_INSTRUCTION_OPCODES}.i_call,{CIL_OPERAND_FACTORY}.complex_operand (create {CIL_METHOD_NAME}.make (signature_ep)))
 			start.add_instruction (ins)
-			create ins.make ({CIL_OPCODES}.i_pop, Void)
+			create ins.make ({CIL_INSTRUCTION_OPCODES}.i_pop, Void)
 			start.add_instruction (ins)
-			create ins.make ({CIL_OPCODES}.i_ret, Void)
+			create ins.make ({CIL_INSTRUCTION_OPCODES}.i_ret, Void)
 			start.add_instruction (ins)
 
 
-			start.optimize (lib_entry)
+			start.optimize 
 
 			lib_entry.dump_output_file ("test2.il", {CIL_OUTPUT_MODE}.ilasm, False)
 			--lib_entry.dump_output_file ("test1.exe", {CIL_OUTPUT_MODE}.peexe, False)

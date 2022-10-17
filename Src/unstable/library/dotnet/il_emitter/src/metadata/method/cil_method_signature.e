@@ -18,6 +18,10 @@ note
 class
 	CIL_METHOD_SIGNATURE
 
+inherit
+
+	REFACTORING_HELPER
+
 create
 	make
 
@@ -212,6 +216,22 @@ feature -- Element change
 			pe_index := a_index
 		ensure
 			pe_index_set: pe_index = a_index
+		end
+
+	set_is_external (a_val: BOOLEAN)
+			-- Set `is_external` with `a_val`.
+		do
+			is_external := a_val
+		ensure
+			is_external_set: is_external = a_val
+		end
+
+	set_ref (a_val: BOOLEAN)
+			-- Set `ref` with `a_val`.
+		do
+			ref := a_val
+		ensure
+			ref_set: ref = a_val
 		end
 
 feature -- Status Report
@@ -411,18 +431,19 @@ feature -- Output
 
 	il_signature_dump (a_file: FILE_STREAM)
 		do
-			-- TODO implement.
+			to_implement("Add implementation")
 		end
 
 
 	pe_dump (a_stream: FILE_STREAM; as_type: BOOLEAN)
 		do
-			--TODO implement
+			to_implement("Add implementation")
 		end
 
 	adorn_generics(a_stream: FILE_STREAM; a_names: BOOLEAN): STRING_32
 		do
-			--TODO implement.
+			to_implement("Add implementation")
 			create Result.make_empty
 		end
+
 end

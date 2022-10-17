@@ -59,26 +59,26 @@ feature -- Test
 			start.add_local (counter)
 			counter_operand := {CIL_OPERAND_FACTORY}.complex_operand (counter)
 
-			start.add_instruction (create {CIL_INSTRUCTION}.make_with_text ({CIL_OPCODES}.i_comment, "initialize"))
+			start.add_instruction (create {CIL_INSTRUCTION}.make_with_text ({CIL_INSTRUCTION_OPCODES}.i_comment, "initialize"))
 			number_of_times := 7
-			start.add_instruction (create {CIL_INSTRUCTION}.make ({CIL_OPCODES}.i_ldc_i4, {CIL_OPERAND_FACTORY}.integer64_operand (number_of_times, {CIL_OPERAND_SIZE}.i32)))
-			start.add_instruction (create {CIL_INSTRUCTION}.make ({CIL_OPCODES}.i_stloc, counter_operand))
-			start.add_instruction (create {CIL_INSTRUCTION}.make_with_text ({CIL_OPCODES}.i_comment, "start of loop"))
+			start.add_instruction (create {CIL_INSTRUCTION}.make ({CIL_INSTRUCTION_OPCODES}.i_ldc_i4, {CIL_OPERAND_FACTORY}.integer64_operand (number_of_times, {CIL_OPERAND_SIZE}.i32)))
+			start.add_instruction (create {CIL_INSTRUCTION}.make ({CIL_INSTRUCTION_OPCODES}.i_stloc, counter_operand))
+			start.add_instruction (create {CIL_INSTRUCTION}.make_with_text ({CIL_INSTRUCTION_OPCODES}.i_comment, "start of loop"))
 			loop_label := {CIL_OPERAND_FACTORY}.label_operand ("loop")
-			start.add_instruction (create {CIL_INSTRUCTION}.make ({CIL_OPCODES}.i_label, loop_label))
+			start.add_instruction (create {CIL_INSTRUCTION}.make ({CIL_INSTRUCTION_OPCODES}.i_label, loop_label))
 
-			start.add_instruction (create {CIL_INSTRUCTION}.make ({CIL_OPCODES}.i_ldarg, {CIL_OPERAND_FACTORY}.complex_operand (param1)))
-			start.add_instruction (create {CIL_INSTRUCTION}.make ({CIL_OPCODES}.i_ldloc, counter_operand))
+			start.add_instruction (create {CIL_INSTRUCTION}.make ({CIL_INSTRUCTION_OPCODES}.i_ldarg, {CIL_OPERAND_FACTORY}.complex_operand (param1)))
+			start.add_instruction (create {CIL_INSTRUCTION}.make ({CIL_INSTRUCTION_OPCODES}.i_ldloc, counter_operand))
 
-			start.add_instruction (create {CIL_INSTRUCTION}.make ({CIL_OPCODES}.i_ldc_i4, {CIL_OPERAND_FACTORY}.integer64_operand (1, {CIL_OPERAND_SIZE}.i32)))
-			start.add_instruction (create {CIL_INSTRUCTION}.make ({CIL_OPCODES}.i_sub, Void))
-			start.add_instruction (create {CIL_INSTRUCTION}.make ({CIL_OPCODES}.i_dup, Void))
-			start.add_instruction (create {CIL_INSTRUCTION}.make ({CIL_OPCODES}.i_stloc, counter_operand))
-			start.add_instruction (create {CIL_INSTRUCTION}.make ({CIL_OPCODES}.i_brtrue, loop_label))
-			start.add_instruction (create {CIL_INSTRUCTION}.make_with_text ({CIL_OPCODES}.i_comment, "exit"))
-			start.add_instruction (create {CIL_INSTRUCTION}.make ({CIL_OPCODES}.i_ret, Void))
+			start.add_instruction (create {CIL_INSTRUCTION}.make ({CIL_INSTRUCTION_OPCODES}.i_ldc_i4, {CIL_OPERAND_FACTORY}.integer64_operand (1, {CIL_OPERAND_SIZE}.i32)))
+			start.add_instruction (create {CIL_INSTRUCTION}.make ({CIL_INSTRUCTION_OPCODES}.i_sub, Void))
+			start.add_instruction (create {CIL_INSTRUCTION}.make ({CIL_INSTRUCTION_OPCODES}.i_dup, Void))
+			start.add_instruction (create {CIL_INSTRUCTION}.make ({CIL_INSTRUCTION_OPCODES}.i_stloc, counter_operand))
+			start.add_instruction (create {CIL_INSTRUCTION}.make ({CIL_INSTRUCTION_OPCODES}.i_brtrue, loop_label))
+			start.add_instruction (create {CIL_INSTRUCTION}.make_with_text ({CIL_INSTRUCTION_OPCODES}.i_comment, "exit"))
+			start.add_instruction (create {CIL_INSTRUCTION}.make ({CIL_INSTRUCTION_OPCODES}.i_ret, Void))
 
-			start.optimize (lib_entry)
+			start.optimize
 
 
 			cls.add (start)
@@ -102,11 +102,11 @@ feature -- Test
 
 			-- note the reference to the generic form of ldc.i4 ... it will be optimized
     		-- into an ldc.i4.s by the library
-			main.add_instruction (create {CIL_INSTRUCTION}.make ({CIL_OPCODES}.i_ldstr, {CIL_OPERAND_FACTORY}.string_operand ("this is a string")))
-			main.add_instruction (create {CIL_INSTRUCTION}.make ({CIL_OPCODES}.i_call, {CIL_OPERAND_FACTORY}.complex_operand (create {CIL_METHOD_NAME}.make (signatures))))
-			main.add_instruction (create {CIL_INSTRUCTION}.make ({CIL_OPCODES}.i_ret, Void))
+			main.add_instruction (create {CIL_INSTRUCTION}.make ({CIL_INSTRUCTION_OPCODES}.i_ldstr, {CIL_OPERAND_FACTORY}.string_operand ("this is a string")))
+			main.add_instruction (create {CIL_INSTRUCTION}.make ({CIL_INSTRUCTION_OPCODES}.i_call, {CIL_OPERAND_FACTORY}.complex_operand (create {CIL_METHOD_NAME}.make (signatures))))
+			main.add_instruction (create {CIL_INSTRUCTION}.make ({CIL_INSTRUCTION_OPCODES}.i_ret, Void))
 
-			main.optimize (lib_entry)
+			main.optimize 
 
 			lib_entry.dump_output_file ("test7.il", {CIL_OUTPUT_MODE}.ilasm, False)
 

@@ -8,6 +8,10 @@ note
 class
 	CIL_TYPE
 
+inherit
+
+	REFACTORING_HELPER
+
 create
 	make,
 	make_with_pointer_level,
@@ -41,7 +45,7 @@ feature {NONE} --Initialization
 			show_type_set: not show_type
 			var_num_default: not (basic_type = {CIL_BASIC_TYPE}.type_var or else basic_type = {CIL_BASIC_TYPE}.method_param ) implies var_num = 0
 			var_num_set: basic_type = (basic_type = {CIL_BASIC_TYPE}.type_var or else basic_type = {CIL_BASIC_TYPE}.method_param ) implies var_num = a_pointer_level
-
+			mod_opt_void: mod_opt = Void
 		end
 
 	make_with_container (a_container: CIL_DATA_CONTAINER)
@@ -67,10 +71,13 @@ feature -- Access
 	pinned: BOOLEAN
 
 	pointer_level: INTEGER
+		-- pointre indirection count.
 
 	var_num: INTEGER
+		-- generic variable number
 
 	by_ref: BOOLEAN
+		-- is a reference?
 
 	array_level: INTEGER
 
@@ -79,9 +86,14 @@ feature -- Access
 
 	type_ref: detachable CIL_DATA_CONTAINER
 		-- The class reference for class type objects.
+		--|In the C++ library it the method GetClass.
 
 	method_ref: detachable CIL_METHOD_SIGNATURE
 		-- The signature reference for method type objects
+		--| In the C++ library is the method GetMethod.
+
+	mod_opt: detachable CIL_TYPE
+
 
 	pe_index: NATURAL
 
@@ -177,6 +189,7 @@ feature -- Status Report
 feature -- Element Change
 
 	set_show_type (a_val: BOOLEAN)
+			-- Set `show_type` with `a_val`.
 		do
 			show_type := a_val
 		ensure
@@ -184,12 +197,71 @@ feature -- Element Change
 		end
 
 	set_pointer_level (a_val: INTEGER)
-			-- Pointer indirection count
+			-- Set `pointer_level` with `a_val`
+			--| Pointer indirection count
 		do
 			pointer_level := a_val
 		ensure
 			pointer_level_set: pointer_level= a_val
 		end
+
+	set_pinned (a_val: BOOLEAN)
+			-- Set `pinned` with `a_val`.
+		do
+			pinned := a_val
+		ensure
+			pinned_set: pinned = a_val
+		end
+
+	set_var_num (a_val: INTEGER_32)
+			-- Set `var_num` with `a_val`.
+		do
+			var_num := a_val
+		ensure
+			var_num_set: var_num = a_val
+		end
+
+	set_by_ref (a_val: BOOLEAN)
+			-- Set `by_ref` with `a_val`.
+		do
+			by_ref := a_val
+		ensure
+			by_ref_set: by_ref = a_val
+		end
+
+
+	set_array_level (a_val: INTEGER_32)
+			-- Set `array_level` with `a_val`.
+		do
+			array_level := a_val
+		ensure
+			array_level_set: array_level = a_val
+		end
+
+	set_basic_type (a_type: like basic_type)
+			-- Set `basic_type` with `a_type`.
+		do
+			basic_type := a_type
+		ensure
+			basic_type_set: basic_type = a_type
+		end
+
+	set_pe_index (a_val: NATURAL_32)
+			-- Set `pe_index` with `a_val`.
+		do
+			pe_index := a_val
+		ensure
+			pe_index_set: pe_index = a_val
+		end
+
+	set_mod_opt (a_type: like mod_opt)
+			--Set `mod_opt` with `a_type`.
+		do
+			mod_opt := a_type
+		ensure
+			mod_opt_set: mod_opt = a_type
+		end
+
 
 feature -- Status Report
 
@@ -279,6 +351,11 @@ feature -- Output
 				a_file.put_string (" pinned")
 			end
 			Result := True
+		end
+
+	render (a_stream: FILE_STREAM; a_bytes: detachable ARRAY [NATURAL_8]): NATURAL_8
+		do
+			to_implement ("Add implementation")
 		end
 
 end

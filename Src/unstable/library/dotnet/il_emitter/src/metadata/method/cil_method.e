@@ -99,15 +99,16 @@ feature -- Change Element
 
 feature -- Operations
 
-	optimize (a_pe: PE_LIB)
+	--optimize (a_pe: PE_LIB)
+	  optimize
 		local
 			l_rescue: BOOLEAN
 		do
 			if not l_rescue then
-				calculate_live
-				calculate_max_stack
-				optimize_locals (a_pe)
-				optimize_code (a_pe)
+				--calculate_live
+				--calculate_max_stack
+				--optimize_locals
+				optimize_code
 			else
 				-- do nothing.	
 			end
@@ -146,7 +147,7 @@ feature {NONE} -- Implementation
 			loop
 				done := True
 				across instructions as ic loop
-					if ic.opcode = {CIL_OPCODES}.i_SEH and then ic.seh_begin then
+					if ic.opcode = {CIL_INSTRUCTION_OPCODES}.i_SEH and then ic.seh_begin then
 						ic.set_live(True)
 						skipping := False
 					elseif not skipping then
@@ -159,11 +160,11 @@ feature {NONE} -- Implementation
 								done := False
 								labels_reached.force (l_operand.string_value)
 							end
-							if ic.opcode = {CIL_OPCODES}.i_br then
+							if ic.opcode = {CIL_INSTRUCTION_OPCODES}.i_br then
 								skipping := True
 							end
 						elseif
-							ic.opcode = {CIL_OPCODES}.i_switch
+							ic.opcode = {CIL_INSTRUCTION_OPCODES}.i_switch
 						then
 							if not ic.switches.is_empty then
 								across  ic.switches as switch loop
@@ -174,7 +175,7 @@ feature {NONE} -- Implementation
 								end
 							end
 						end
-					elseif ic.opcode = {CIL_OPCODES}.i_label then
+					elseif ic.opcode = {CIL_INSTRUCTION_OPCODES}.i_label then
 						if labels_reached.has (ic.label) then
 							ic.set_live(True)
 							skipping := False
@@ -224,7 +225,7 @@ feature {NONE} -- Implementation
 								l_labels.force (n, l_operand.string_value)
 							end
 						end
-					elseif ins.opcode = {CIL_OPCODES}.i_switch then
+					elseif ins.opcode = {CIL_INSTRUCTION_OPCODES}.i_switch then
 						if not ins.switches.is_empty then
 							across ins.switches as item loop
 								if attached l_labels.item (item) as l_val and then
@@ -237,7 +238,7 @@ feature {NONE} -- Implementation
 								end
 							end
 						end
-					elseif ins.opcode = {CIL_OPCODES}.i_label then
+					elseif ins.opcode = {CIL_INSTRUCTION_OPCODES}.i_label then
 						if last_branch then
 							if attached l_labels.item (ins.label) as l_val then
 								n := l_val
@@ -254,7 +255,7 @@ feature {NONE} -- Implementation
 								l_labels.force (n, ins.label)
 							end
 						end
-					elseif ins.opcode = {CIL_OPCODES}.i_comment then
+					elseif ins.opcode = {CIL_INSTRUCTION_OPCODES}.i_comment then
 						-- Placeholder.
 					else
 						last_branch := False
@@ -270,7 +271,7 @@ feature {NONE} -- Implementation
 
 		end
 
-	optimize_locals (a_pe: PE_LIB)
+	optimize_locals 
 		local
 			l_sorter: SORTER [CIL_LOCAL]
 			comparator: PREDICATE [CIL_LOCAL, CIL_LOCAL]

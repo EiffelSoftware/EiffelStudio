@@ -1,5 +1,8 @@
 note
-	description: "Summary description for {CIL_PARAM}."
+	description: "[
+		Object representing a parameter
+		noticably missing is support for [in][out][opt] and default values	
+	]"
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -14,16 +17,25 @@ inherit
 		redefine
 			il_src_dump
 		end
+	REFACTORING_HELPER
 
 create
-	make
+	make,
+	make_with_index
 
 feature {NONE} -- Initialization
 
 	make (a_name: STRING_32; a_type: CIL_TYPE)
 		do
+			make_with_index (a_name, a_type, -1)
+		end
+
+	make_with_index (a_name: STRING_32; a_type: CIL_TYPE; a_index: INTEGER)
+		do
 			make_value (a_name, a_type)
-			index := -1
+			index := a_index
+		ensure
+			index_set: index = a_index
 		end
 
 feature -- Access		
@@ -48,6 +60,11 @@ feature -- Output
 			a_file.put_string (name)
 			a_file.put_string ("'")
 			Result := True
+		end
+
+	render (a_stream: FILE_STREAM; a_opcode: INTEGER; a_operand_type: INTEGER; a_byte: detachable ARRAY [NATURAL_8]): NATURAL_8
+		do
+			to_implement("Add implementation")
 		end
 
 end

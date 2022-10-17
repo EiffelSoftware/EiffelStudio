@@ -21,8 +21,12 @@ inherit
 			adorn_generics
 		end
 
+	REFACTORING_HELPER
+
 create
-	make
+	make,
+	make_from_class
+
 
 feature {NONE} -- Initialization
 
@@ -46,6 +50,19 @@ feature {NONE} -- Initialization
 			generics_empty: generics.is_empty
 		end
 
+	make_from_class (a_class: CIL_CLASS)
+		do
+			make_container (a_class.name, a_class.flags)
+			generic_parent := a_class.generic_parent
+			is_external := a_class.is_external
+			extend_from := a_class.extend_from
+			size := a_class.size
+			pack := a_class.pack
+			generics := a_class.generics
+			extends_name := a_class.extends_name
+			properties := a_class.properties
+		end
+
 feature -- Access
 
 	generic_parent: detachable CIL_CLASS assign set_generic_parent
@@ -58,15 +75,16 @@ feature -- Access
 			-- `extend_from'
 
 	size: INTEGER assign set_size
-			-- `size'
+			-- the structure size.
 
 	pack: INTEGER assign set_pack
-			-- `pack'
+			-- the structure packing.
 
 	generics: LIST [CIL_TYPE]
 			-- The list of generics.
 
 	extends_name: STRING_32
+			-- The name of a class which is being extended from
 
 	properties: LIST [CIL_PROPERTY]
 			-- The list of properties.
@@ -101,6 +119,23 @@ feature -- Element change
 			extend_from_assigned: extend_from = an_extend_from
 		end
 
+
+	set_generics (a_generics: LIST [CIL_TYPE])
+			-- Set `generics` with `a_generics`.
+		do
+			generics := a_generics
+		ensure
+			generics_set: generics = a_generics
+		end
+
+	set_extends_name (a_name: STRING_32)
+			-- Set `extends_name' with `a_name`
+		do
+			extends_name := a_name
+		ensure
+			extends_name_set: extends_name = a_name
+		end
+
 	set_size (a_size: like size)
 			-- Assign `size' with `a_size'.
 		do
@@ -117,6 +152,20 @@ feature -- Element change
 			pack_assigned: pack = a_pack
 		end
 
+	add_property(a_property: CIL_PROPERTY; a_add: BOOLEAN)
+			-- Add a property `a_property` to this container.
+		do
+			to_implement ("Add implementation")
+		end
+
+
+feature -- Operations
+
+	traverse (a_callback: CIL_CALLBACK): BOOLEAN
+			-- Traverse the declaration tree.
+		do
+			to_implement ("Add implementation")
+		end
 
 feature -- Status Report
 
@@ -144,6 +193,11 @@ feature -- Status Report
 				end
 
 			end
+		end
+
+	transfer_flags: INTEGER
+		do
+			to_implement ("Add Implementation")
 		end
 
 feature -- Output

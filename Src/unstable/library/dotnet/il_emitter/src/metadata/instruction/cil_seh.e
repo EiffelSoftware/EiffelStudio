@@ -28,4 +28,18 @@ feature -- Access
 			instance_free: class
 		end
 
+
+	index_of (a_value: CIL_SEH): INTEGER
+			-- Index of first occurrence of item identical to `a_value'.
+			-- -1 if none.
+		local
+			l_area: SPECIAL [CIL_SEH]
+		do
+			l_area := (create {ARRAYED_LIST [CIL_SEH]}.make_from_iterable (instances)).area
+			Result :=  l_area.index_of(a_value, l_area.lower)
+		ensure
+			instance_free: class
+		end
+
+
 end

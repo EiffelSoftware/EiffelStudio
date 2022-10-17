@@ -9,6 +9,11 @@ note
 
 class
 	CIL_OPERAND
+
+inherit
+
+	REFACTORING_HELPER
+
 create
 	make
 
@@ -43,7 +48,15 @@ feature -- Access
 			-- `float_value'
 
 	property: BOOLEAN assign set_property
-			-- `property'
+			-- is `property' flag?
+			--| only has meaning for `value` operands.
+
+feature -- Status Report
+
+	is_nan_or_inf: BOOLEAN
+		do
+			to_implement ("Add implementation")
+		end
 
 feature -- Element change
 
@@ -115,10 +128,16 @@ feature --Access
 
 	escaped_string: STRING_32
 		do
-				-- TODO to implement
+			to_implement ("Add implemenation")
 			Result := string_value
 		end
+
 feature -- Output
+
+	render (a_stream: FILE_STREAM; a_opcode: INTEGER; a_operand_type: INTEGER; a_byte: ARRAY [NATURAL_8]): BOOLEAN
+		do
+			to_implement ("Add implementation")
+		end
 
 	il_src_dump (a_file: FILE_STREAM): BOOLEAN
 		local

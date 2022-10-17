@@ -10,6 +10,10 @@ note
 class
 	PE_LIB
 
+inherit
+
+	REFACTORING_HELPER
+
 create
 	make
 
@@ -40,6 +44,10 @@ feature {NONE} -- Initialization
 				-- assembly in the list.
 			create l_assembly_ref.make (a_name, False, create {ARRAY [NATURAL_8]}.make_filled (0, 1, 8))
 			assembly_refs.force (l_assembly_ref)
+			create module_guid.make_filled (0, 1, 16)
+			create {ARRAYED_LIST [CIL_METHOD]} all_method.make (0)
+			create source_file.make_empty
+			create lib_path.make_empty
 		ensure
 			valid_obj_input_size: obj_input_size = 0
 			valid_obj_input_pos: obj_input_pos = 0
@@ -49,7 +57,6 @@ feature {NONE} -- Initialization
 			assembly_name_empty: assembly_name.is_empty
 			assembly_refs_set: assembly_refs.count = 1
 			using_list_empty: using_list.is_empty
-			input_stream_void: input_stream = Void
 			file_name_empty: file_name.is_empty
 			unmanaged_routines_empty: unmanaged_routines.is_empty
 			pe_writer_void: pe_writer = Void
@@ -57,7 +64,13 @@ feature {NONE} -- Initialization
 			code_container_void: code_container = Void
 			p_invoke_references_empty: p_invoke_references.is_empty
 			p_invoke_signatures_empty: p_invoke_signatures.is_empty
+			module_guid_set: module_guid.count = 16
+			all_method_set: all_method.is_empty
+			source_file_empty: source_file.is_empty
+			lib_path_empty: lib_path.is_empty
 		end
+
+feature -- Access
 
 	assembly_refs: LIST [CIL_ASSEMBLY_DEF]
 
@@ -72,13 +85,12 @@ feature {NONE} -- Initialization
 
 	output_stream: detachable FILE_STREAM
 
-	input_stream: detachable FILE
-
 	file_name: STRING_32
 
 	unmanaged_routines: STRING_TABLE [STRING_32]
 
 	core_flags: INTEGER
+			-- the core flags.
 
 	pe_writer: detachable PE_WRITER
 
@@ -99,33 +111,16 @@ feature {NONE} -- Initialization
 
 	obj_input_cache: INTEGER
 
-feature -- Access
-
 	module_refs: HASH_TABLE [NATURAL, NATURAL]
 
---	        ///** Get the working assembly
---        // This is the one with your code and data, that gets written to the output
---        AssemblyDef *WorkingAssembly() const { return assemblyRefs_.front(); }
+	module_GUID: ARRAY [NATURAL_8]
+			-- the length should be 16.
 
-	working_assembly: CIL_ASSEMBLY_DEF
-			-- Get the working assembly
-			-- This is the one with your code and data, that gets written to the output
-		do
-			Result := assembly_refs.first
-		end
+	source_file: STRING_32
 
-feature -- Access::FindType
+	all_method: LIST [CIL_METHOD]
 
-		-- TODO check if we can use once classes
-
-	s_notfound: INTEGER = 0
-	s_ambiguous: INTEGER = 1
-	s_namespace: INTEGER = 2
-	s_class: INTEGER = 3
-	s_enum: INTEGER = 4
-	s_field: INTEGER = 5
-	s_property: INTEGER = 6
-	s_method: INTEGER = 7
+	lib_path: STRING_32
 
 feature -- Access::CorFlags
 
@@ -140,15 +135,83 @@ feature -- Access::CorFlags
 			-- Set this if you want to force 32 bits - you will possibly need it
 			-- for pinvokes
 
-feature -- Operations
+feature -- Operations: PInvoke
 
 	add_pinvoke_reference (a_method_sig: CIL_METHOD_SIGNATURE; a_dll_name: STRING_32; iscdecl: BOOLEAN)
+			-- References as always added to this object.
 		local
 			l_method: CIL_METHOD
 		do
 			create l_method.make (a_method_sig, create {CIL_QUALIFIERS}.make_with_flags ({CIL_QUALIFIERS_ENUM}.pinvokefunc | {CIL_QUALIFIERS_ENUM}.public), False)
 			l_method.set_pinvoke (a_dll_name, if iscdecl then {CIL_INVOKE_TYPE}.Cdecl else {CIL_INVOKE_TYPE}.Stdcall end, "")
 			p_invoke_signatures.force (l_method, a_method_sig.name)
+		end
+
+	add_pinvoke_with_varargs (a_signature: CIL_METHOD_SIGNATURE)
+		local
+			list: LIST [CIL_METHOD_SIGNATURE]
+		do
+			if attached {LIST [CIL_METHOD_SIGNATURE]} p_invoke_references.item (a_signature.name) as l_list then
+				l_list.force (a_signature)
+			else
+				create {ARRAYED_LIST [CIL_METHOD_SIGNATURE]} list.make (1)
+				list.force (a_signature)
+				p_invoke_references.force (list, a_signature.name)
+			end
+		end
+
+	remove_pinvoke_reference (a_name: STRING_32)
+			-- Remove pinvoke reference associated with `a_name', if present.
+		do
+			p_invoke_references.remove (a_name)
+		end
+
+	find_pinvoke (a_name: STRING_32): detachable CIL_METHOD
+		do
+			if attached {CIL_METHOD} p_invoke_signatures.item (a_name) as l_method then
+				Result := l_method
+			end
+		end
+
+	find_pinvoke_with_varargs (a_name: STRING_32; a_vargs: LIST [CIL_PARAM]): detachable CIL_METHOD_SIGNATURE
+		local
+			i: INTEGER
+			exit: BOOLEAN
+		do
+			if attached {LIST [CIL_METHOD_SIGNATURE]} p_invoke_references.item (a_name) as l_list then
+				across l_list as ic until exit loop
+					if a_vargs.count = ic.vararg_params.count then
+						from
+							i := 1
+						until
+							i > l_list.count or else exit
+						loop
+								-- -- TODO double check this condition.
+							if attached {CIL_TYPE} ic.vararg_params [i].type as l_type1 and then
+								attached {CIL_TYPE} a_vargs [i].type as l_type2 and then
+								not l_type1.matches (l_type2)
+							then
+
+								exit := True
+							else
+								i := i + 1
+							end
+							if i > l_list.count and then not exit then
+								Result := l_list [i - 1]
+								exit := True
+							end
+						end
+					end
+				end
+			end
+		end
+
+feature -- Operations
+
+	traverse (a_callback: CIL_CALLBACK)
+			--  Traverse the declaration tree.
+		do
+			to_implement ("Add implementation")
 		end
 
 	allocate_method (a_method_sig: CIL_METHOD_SIGNATURE; a_flags: CIL_QUALIFIERS; a_entry: BOOLEAN): CIL_METHOD
@@ -159,7 +222,61 @@ feature -- Operations
 			create Result.make (a_method_sig, a_flags, a_entry)
 		end
 
+	find_or_create_generics (a_name: STRING_32; a_generics: LIST [CIL_TYPE]): detachable CIL_CLASS
+		local
+			l_tuple: TUPLE [type: CIL_FIND_TYPE; resource: detachable ANY]
+			l_class: CIL_CLASS
+			l_old: CIL_METHOD
+			l_m1: CIL_METHOD_SIGNATURE
+		do
+			l_tuple := find (a_name, a_generics, Void)
+			if l_tuple.type = {CIL_FIND_TYPE}.s_class then
+				if attached {CIL_CLASS} l_tuple.resource as l_resource then
+					Result := l_resource
+				end
+			else
+				l_tuple := find (a_name, Void, Void)
+				if l_tuple.type = {CIL_FIND_TYPE}.s_class and then
+					attached {CIL_CLASS} l_tuple.resource as l_resource
+				then
+					create l_class.make_from_class (l_resource)
+					l_class.set_generics (a_generics)
+					l_class.set_generic_parent (l_resource)
+					if attached l_resource.parent as l_parent then
+						l_parent.add (l_class)
+					end
+					across l_resource.methods as m loop
+							-- only doing methods right now ...
+							-- create l_m1.make (a_name: STRING_32, a_flags: INTEGER_32, a_container: detachable CIL_DATA_CONTAINER)
+						to_implement ("TODO finish implementation")
+					end
+				end
+
+			end
+
+		end
+
 feature -- Assembly
+
+	working_assembly: CIL_ASSEMBLY_DEF
+			-- Get the working assembly
+			-- This is the one with your code and data, that gets written to the output
+		do
+			Result := assembly_refs.first
+		end
+
+	empty_working_assembly (a_assembly_name: STRING_32): CIL_ASSEMBLY_DEF
+			-- 	Replace the working assembly with an empty one.
+			--  Data is not deleted and still remains a part of the PELib instance.
+		do
+			create Result.make (a_assembly_name, False, Void)
+			if attached assembly_refs.first as l_first then
+				assembly_refs.prune (l_first)
+				assembly_refs.put_i_th (Result, assembly_refs.lower)
+			else
+				assembly_refs.force (Result)
+			end
+		end
 
 	mscorlib_assembly: CIL_ASSEMBLY_DEF
 			-- loads the MSCorLib assembly.
@@ -203,6 +320,7 @@ feature -- Assembly
 
 	find_assembly (a_name: STRING_32): detachable CIL_ASSEMBLY_DEF
 			-- Find an assembly
+			--| in the already loaded set.
 		local
 			found: BOOLEAN
 		do
@@ -239,6 +357,7 @@ feature -- Assembly
 			n: INTEGER
 			exit: BOOLEAN
 		do
+			l_assembly := a_assembly
 			Result := [{CIL_FIND_TYPE}.s_notfound, Void]
 			create l_path.make_from_string (a_path)
 			l_path.replace_substring_all ("/", ".")
@@ -266,20 +385,20 @@ feature -- Assembly
 					if attached l_tuple.dc as l_dc then
 						if l_tuple.index = l_split.count then
 							l_found.force (l_dc)
-						elseif l_tuple.index = l_split.count - 1 and then
+						elseif l_tuple.index = l_split.count - 1 and then -- TODO double check
 							attached {CIL_CLASS} l_dc or else
 							attached {CIL_ENUM} l_dc or else
 							attached {CIL_ASSEMBLY_DEF} l_dc
 						then
 							across l_dc.fields as field loop
 									-- TODO double check the index since C++ is 0 based.
-								if field.name.same_string (l_split [l_tuple.index]) then
+								if field.name.same_string (l_split [l_tuple.index + 1]) then
 									l_found_field.force (field)
 								end
 							end
 							across l_dc.methods as cc loop
 								if attached {CIL_METHOD} cc as l_method and then
-									l_method.prototype.name.same_string (l_split [n])
+									l_method.prototype.name.same_string (l_split [l_tuple.index + 1])
 								then
 									l_found_method.force (l_method)
 								end
@@ -353,6 +472,137 @@ feature -- Assembly
 				exit := True
 			end
 
+		end
+
+	find_method (a_path: STRING_32; a_args: LIST [CIL_TYPE]; a_rv: detachable CIL_TYPE; a_generics: detachable LIST [CIL_TYPE]; a_assembly: detachable CIL_ASSEMBLY_DEF; a_match_args: BOOLEAN): TUPLE [type: CIL_FIND_TYPE; res: detachable CIL_METHOD]
+			-- find a method, with overload matching.
+		local
+			l_npos: INTEGER
+			l_assembly_name: STRING_32
+			l_path: STRING_32
+			l_assembly: CIL_ASSEMBLY_DEF
+			l_split: LIST [STRING_32]
+			l_found_method: LIST [CIL_METHOD]
+			l_tuple: TUPLE [index: INTEGER; dc: detachable CIL_DATA_CONTAINER]
+			l_method: CIL_METHOD
+		do
+			l_assembly := a_assembly
+			create l_path.make_from_string (a_path)
+			Result := [{CIL_FIND_TYPE}.s_notfound, Void]
+			if not l_path.is_empty and l_path [1] = '[' then
+				l_npos := l_path.index_of ('[', 1)
+				if l_npos /= 0 then
+					l_assembly_name := l_path.substring (1, l_npos - 1)
+					l_path := l_path.substring (l_npos + 1, l_path.count)
+					l_assembly := find_assembly (l_assembly_name)
+				end
+			end
+			l_split := split_path (l_path)
+			create {ARRAYED_LIST [CIL_METHOD]} l_found_method.make (0)
+
+			across assembly_refs as a loop
+				if not (attached a_assembly) or else
+					attached a_assembly and then a_assembly.is_equal (a) then -- TODO check
+
+					l_tuple := a.find_container_collection (l_split, a_generics, True)
+					if attached l_tuple.dc as l_dc then
+						if l_tuple.index = l_split.count - 1 and then -- TODO double check
+							attached {CIL_CLASS} l_dc or else
+							attached {CIL_ENUM} l_dc or else
+							attached {CIL_ASSEMBLY_DEF} l_dc
+						then
+							across l_dc.methods as cc loop
+								if attached {CIL_METHOD} cc as ll_method and then
+									ll_method.prototype.name.same_string (l_split [l_tuple.index + 1])
+								then
+									l_found_method.force (ll_method)
+								end
+							end
+						end
+					end
+				end
+			end
+
+			across using_list as u loop
+				l_tuple := u.find_container_collection (l_split, a_generics, false)
+				if attached l_tuple.dc as l_dc then
+					if l_tuple.index = l_split.count - 1 and then
+						(attached {CIL_CLASS} l_dc or else
+							attached {CIL_ENUM} l_dc)
+					then
+						across l_dc.methods as cc loop
+							if attached {CIL_METHOD} cc as ll_method and then
+								ll_method.prototype.name.same_string (l_split [l_tuple.index + 1])
+							then
+								l_found_method.force (ll_method)
+							end
+						end
+					end
+				end
+			end
+				-- TODO review
+			if a_match_args then
+				across l_found_method as it loop
+					if it.prototype.matches (a_args) or else attached a_rv as l_rv and
+						not (attached a_rv as l_rv and then
+								attached it.prototype.return_type as l_return_type and then
+								it.prototype.matches_type (l_return_type, l_rv))
+					then
+						l_found_method.prune (it)
+					end
+				end
+			end
+
+			if l_found_method.count > 1 then
+				across l_found_method as it loop
+					if it.prototype.flags & {CIL_METHOD_SIGNATURE_ATTRIBUTES}.vararg /= 0 then
+						l_found_method.prune (it)
+					end
+				end
+			end
+
+			if l_found_method.is_empty then
+				l_method := find_pinvoke (l_path)
+				if attached l_method then
+					Result.res := l_method
+					Result.type := {CIL_FIND_TYPE}.s_method
+				else
+					Result.type := {CIL_FIND_TYPE}.s_notfound
+				end
+			elseif l_found_method.count > 1 then
+				Result.type := {CIL_FIND_TYPE}.s_ambiguous
+			else
+				Result.res := l_found_method [1]
+				Result.type := {CIL_FIND_TYPE}.s_method
+			end
+		end
+
+	set_lib_path (a_paths: STRING_32)
+			-- Set the paths where assemblies are looked for. More than one path can be separated by ';'.
+		do
+			lib_path := a_paths
+		ensure
+			lib_path_set: lib_path = a_paths
+		end
+
+feature -- Element Change
+
+	add_using (a_path: STRING_32): BOOLEAN
+			-- add to the search path, returns true if it finds a namespace at `a_path`.
+			-- in any assembly.
+		local
+			l_split: LIST [STRING_32]
+			l_container: CIL_DATA_CONTAINER
+			l_res: TUPLE [index: INTEGER; dc: detachable CIL_DATA_CONTAINER]
+		do
+			l_split := split_path (a_path)
+			across assembly_refs as elem loop
+				l_res := elem.find_container_collection (l_split, Void, False)
+				if l_res.index = l_split.count and then attached {CIL_NAMESPACE} l_res.dc as l_namespace then
+					using_list.force (l_namespace)
+					Result := True
+				end
+			end
 		end
 
 feature {ANY} -- Implementation

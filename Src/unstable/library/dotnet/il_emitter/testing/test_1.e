@@ -38,20 +38,20 @@ feature -- Access
 			working.add_code_container (start)
 
 			op := {CIL_OPERAND_FACTORY}.character_operand ('A', {CIL_OPERAND_SIZE}.i32)
-			create ins.make ({CIL_OPCODES}.i_ldc_i4, op)
+			create ins.make ({CIL_INSTRUCTION_OPCODES}.i_ldc_i4, op)
 			start.add_instruction(ins)
 
 			create method_name.make (signature_rep)
 
 			op := {CIL_OPERAND_FACTORY}.complex_operand (method_name)
-			create ins.make ({CIL_OPCODES}.i_call, op)
+			create ins.make ({CIL_INSTRUCTION_OPCODES}.i_call, op)
 			start.add_instruction (ins)
 
-			create ins.make ({CIL_OPCODES}.i_ret, Void)
+			create ins.make ({CIL_INSTRUCTION_OPCODES}.i_ret, Void)
 			start.add_instruction (ins)
 
 
-			start.optimize(lib_entry)
+			start.optimize
 
 			lib_entry.dump_output_file ("test1.il",{CIL_OUTPUT_MODE}.ilasm, False)
 			lib_entry.dump_output_file ("test1.exe",{CIL_OUTPUT_MODE}.peexe, False)

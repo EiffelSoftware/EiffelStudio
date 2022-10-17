@@ -94,18 +94,18 @@ feature -- Test
 													{CIL_QUALIFIERS_ENUM}.managed), False)
 
 
-			create ins.make ({CIL_OPCODES}.i_ldsflda,{CIL_OPERAND_FACTORY}.complex_operand (create {CIL_FIELD_NAME}.make (ps)))
+			create ins.make ({CIL_INSTRUCTION_OPCODES}.i_ldsflda,{CIL_OPERAND_FACTORY}.complex_operand (create {CIL_FIELD_NAME}.make (ps)))
 			start.add_instruction (ins)
-			create ins.make ({CIL_OPCODES}.i_ldarg,{CIL_OPERAND_FACTORY}.complex_operand (param1))
+			create ins.make ({CIL_INSTRUCTION_OPCODES}.i_ldarg,{CIL_OPERAND_FACTORY}.complex_operand (param1))
 			start.add_instruction (ins)
-			create ins.make ({CIL_OPCODES}.i_call,{CIL_OPERAND_FACTORY}.complex_operand (create {CIL_METHOD_NAME}.make (signature_ep)))
+			create ins.make ({CIL_INSTRUCTION_OPCODES}.i_call,{CIL_OPERAND_FACTORY}.complex_operand (create {CIL_METHOD_NAME}.make (signature_ep)))
 			start.add_instruction (ins)
-			create ins.make ({CIL_OPCODES}.i_pop, Void)
+			create ins.make ({CIL_INSTRUCTION_OPCODES}.i_pop, Void)
 			start.add_instruction (ins)
-			create ins.make ({CIL_OPCODES}.i_ret, Void)
+			create ins.make ({CIL_INSTRUCTION_OPCODES}.i_ret, Void)
 			start.add_instruction (ins)
 
-			start.optimize (lib_entry)
+			start.optimize
 
 			cls.add (start)
 
@@ -121,14 +121,14 @@ feature -- Test
 
 			working.add (main)
 
-			create ins.make ({CIL_OPCODES}.i_ldc_i4,{CIL_OPERAND_FACTORY}.integer64_operand (57, {CIL_OPERAND_SIZE}.i32))
+			create ins.make ({CIL_INSTRUCTION_OPCODES}.i_ldc_i4,{CIL_OPERAND_FACTORY}.integer64_operand (57, {CIL_OPERAND_SIZE}.i32))
 			main.add_instruction (ins)
-			create ins.make ({CIL_OPCODES}.i_call,{CIL_OPERAND_FACTORY}.complex_operand (create {CIL_METHOD_NAME}.make (signature_es)))
+			create ins.make ({CIL_INSTRUCTION_OPCODES}.i_call,{CIL_OPERAND_FACTORY}.complex_operand (create {CIL_METHOD_NAME}.make (signature_es)))
 			main.add_instruction (ins)
-			create ins.make ({CIL_OPCODES}.i_ret, Void)
+			create ins.make ({CIL_INSTRUCTION_OPCODES}.i_ret, Void)
 			main.add_instruction (ins)
 
-			main.optimize (lib_entry)
+			main.optimize 
 
 
 

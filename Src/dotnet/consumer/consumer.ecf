@@ -47,26 +47,47 @@
 		<assembly name="system" location="$ISE_DOTNET_FRAMEWORK\System.dll" prefix="SYSTEM_DLL_"/>
 		<assembly name="system.drawing" location="$ISE_DOTNET_FRAMEWORK\System.Drawing.dll" prefix="DRAWING_"/>
 		<assembly name="system.windows.forms" location="$ISE_DOTNET_FRAMEWORK\System.Windows.Forms.dll" prefix="WINFORMS_"/>
-		<cluster name="consumer" location="$EIFFEL_SRC\dotnet\consumer\">
+		<cluster name="consumer_dotnet" location="$EIFFEL_SRC\dotnet\consumer\">
 			<condition>
 				<dotnet value="true"/>
 			</condition>
-			<cluster name="consumer_cache" location="$|cache" recursive="true"/>
-			<cluster name="consumer_emitter" location="$|emitter" recursive="true"/>
-			<cluster name="consumer_cache" location="$|cache" recursive="true"/>
-			<cluster name="consumer_serialization" location="$|serialization" recursive="true"/>
 			<cluster name="consumer_support" location="$|support" recursive="true">
+				<condition>
+					<dotnet value="true"/>
+				</condition>
 				<file_rule>
 					<exclude>/interop$</exclude>
 				</file_rule>
+			</cluster>
+			<cluster name="consumer_cache" location="$|cache" recursive="true">
+				<condition>
+					<dotnet value="true"/>
+				</condition>
+			</cluster>
+			<cluster name="consumer_emitter" location="$|emitter" recursive="true">
+				<condition>
+					<dotnet value="true"/>
+				</condition>
+			</cluster>
+			<cluster name="consumer_serialization" location="$|serialization" recursive="true">
+				<condition>
+					<dotnet value="true"/>
+				</condition>
 			</cluster>
 		</cluster>
 		<cluster name="consumer_classic" location="$EIFFEL_SRC\dotnet\consumer\">
 			<condition>
 				<dotnet value="false"/>
 			</condition>
-			<cluster name="consumer_serialization" location="$|serialization" recursive="true"/>
+			<cluster name="consumer_serialization" location="$|serialization" recursive="true">
+				<condition>
+					<dotnet value="false"/>
+				</condition>
+			</cluster>
 			<cluster name="consumer_support" location="$|support" recursive="true">
+				<condition>
+					<dotnet value="false"/>
+				</condition>
 				<file_rule>
 					<exclude>/errors$</exclude>
 					<exclude>/helpers$</exclude>

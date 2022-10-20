@@ -13,6 +13,10 @@ note
 class
 	CIL_DATA_CONTAINER
 
+inherit
+
+	REFACTORING_HELPER
+
 create
 	make
 
@@ -36,12 +40,15 @@ feature -- Access
 	children: LIST [CIL_DATA_CONTAINER]
 
 	methods: LIST [CIL_CODE_CONTAINER]
+		-- Current list of methods.
 
 	sorted_children: STRING_TABLE [LIST[CIL_DATA_CONTAINER]]
 
 	fields: LIST [CIL_FIELD]
+		-- Current list of fields.
 
 	parent: detachable CIL_DATA_CONTAINER
+		-- The immediate parent.
 
 	flags: CIL_QUALIFIERS
 		-- Check the class QUALIFIERS
@@ -50,19 +57,40 @@ feature -- Access
 		-- use to tell if the class has been instantiated, for example it might be used after a forward reference is resolved.
 
 	pe_index: NATURAL
-		-- generic index into the table or stream.
+		-- metatable index in the PE file for this data container.
 
 	assembly_ref: BOOLEAN
 
+	name: STRING_32
+		-- The name.
+
 feature -- Access
 
-	name: STRING_32
+	parent_namespace (a_lib: PE_LIB): NATURAL
+			-- The inner namespace parent.
+		do
+			to_implement ("Add implementation")
+		end
+
+
+	parent_class (a_lib: PE_LIB): NATURAL
+			-- The closest parent class.
+		do
+			to_implement ("Add implementation")
+		end
+
+	parent_assembly (a_lib: PE_LIB): NATURAL
+			-- The parent assembly.
+		do
+			to_implement ("Add implementation")
+		end
 
 
 feature -- Access Enumerations
 
 		-- all classes have to extend from SOMETHING...
 		-- this is enumerations for the ones we can create by default
+		-- TODO extract into a once class.
 
 	base_type_object: INTEGER = 1
 			-- reference to 'System::Object'
@@ -112,7 +140,6 @@ feature --Element Change
 			methods.force (item)
 		end
 
-
 	add_field_container (item: CIL_FIELD)
 			-- Add a field
 		do
@@ -120,10 +147,13 @@ feature --Element Change
 			fields.force (item)
 		end
 
-
 	set_parent (a_item: CIL_DATA_CONTAINER)
+			-- Set `parent` with `a_item`
+			--|The immediate parent
 		do
 			parent := a_item
+		ensure
+			parent_set: parent = a_item
 		end
 
 	set_sorted_children (a_name: STRING_32; a_item: CIL_DATA_CONTAINER)
@@ -158,6 +188,41 @@ feature --Element Change
 			instantiated := True
 		ensure
 			is_instantiated: instantiated = True
+		end
+
+	set_peindex (a_index: NATURAL)
+			-- Set `pe_index` with `a_index`.
+		do
+			pe_index := a_index
+		ensure
+			pe_index_set: pe_index = a_index
+		end
+
+	wipe_out,clear
+			-- Remove all the items of
+			-- children
+			-- methods
+			-- sorted_children
+			-- fields
+		do
+			fixme ("Refactor rename and only use wipe_out")
+			children.wipe_out
+			methods.wipe_out
+			sorted_children.wipe_out
+			fields.wipe_out
+		ensure
+			children.is_empty
+			methods.is_empty
+			sorted_children.is_empty
+			fields.is_empty
+		end
+
+feature -- Traverse
+
+	traverse (a_callback: CIL_CALLBACK): BOOLEAN
+			-- Traverse the declaration tree.	
+		do
+			to_implement("Add implementation")
 		end
 
 feature -- Status Report
@@ -222,7 +287,24 @@ feature -- Status Report
 			Result := [n, rv]
 		end
 
+feature -- Operations
+
+	base_types (a_type: INTEGER): INTEGER
+		do
+			to_implement ("Add implementation")
+		end
+
+	compile (a_stream: FILE_STREAM)
+		do
+			to_implement ("Add implementation")
+		end
+
 feature -- Output
+
+	pe_dump (a_stream: FILE_STREAM): BOOLEAN
+		do
+			to_implement ("Add implementation")
+		end
 
 	il_src_dump (a_file: FILE_STREAM): BOOLEAN
 		do
@@ -239,7 +321,9 @@ feature -- Output
 
 	adorn_generics (names: BOOLEAN): STRING_32
 		do
-			-- TODO to be implemented.
+			to_implement ("Add implementation")
 			create Result.make_empty
 		end
+
+
 end

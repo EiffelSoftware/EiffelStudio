@@ -10,6 +10,10 @@ note
 class
 	CIL_CODE_CONTAINER
 
+inherit
+
+	REFACTORING_HELPER
+
 create
 	make
 
@@ -20,6 +24,12 @@ feature {NONE} --Initialization
 			flags := a_flags
 			create labels.make (0)
 			create {ARRAYED_LIST [CIL_INSTRUCTION]} instructions.make (0)
+		ensure
+			flags_set: flags = a_flags
+			labels_empty: labels.is_empty
+			instructions_empty: instructions.is_empty
+			not_has_seh: not has_seh
+			parent_void: parent = Void
 		end
 
 feature -- Access
@@ -31,20 +41,50 @@ feature -- Access
 			-- Gobo has red black tree implementation.
 
 	instructions: LIST [CIL_INSTRUCTION]
+			-- Current list of CIL instructions.
 
 	flags: CIL_QUALIFIERS
+			-- flags.
 
 	parent: detachable CIL_DATA_CONTAINER
+			-- parent container.
 
 	has_seh: BOOLEAN
 			-- has Structured Exception Handling?
 
 feature -- Element Change
 
-	set_container (a_item: CIL_DATA_CONTAINER)
+	set_container (a_item: like parent)
 			-- Set `parent` container with `a_item`.
 		do
 			parent := a_item
+		ensure
+			parent_set: parent = a_item
+		end
+
+	add_instruction (a_ins: CIL_INSTRUCTION)
+			-- Add a single CIL instruction `a_ins`.
+			--| to the list of instructions.
+		do
+			instructions.force (a_ins)
+		end
+
+	remove_last_instruction: CIL_INSTRUCTION
+			-- it is possible to remove the last instruction.
+		require
+				-- TODO creqte a query
+			not_empty_instructions: not instructions.is_empty
+		do
+			Result := instructions.last
+			instructions.prune (Result)
+		end
+
+	last_instruction: CIL_INSTRUCTION
+			-- Retrieve the last instruction
+		require
+			not_empty_instructions: not instructions.is_empty
+		do
+			Result := instructions.last
 		end
 
 feature -- Optimization
@@ -269,6 +309,7 @@ feature {NONE} -- Implementation
 
 	validate_seh
 			-- Validate Structured Exception Handling.
+			-- Validate SEH tags, e.g. make sure there are matching begin and end tags and that filters are organized properly.
 		local
 			l_tags: ARRAYED_LIST [CIL_INSTRUCTION]
 			l_res: INTEGER
@@ -321,6 +362,7 @@ feature {NONE} -- Implementation
 		end
 
 	validate_instructions
+			-- Validate CIL instructions.
 		do
 			calculate_offsets
 			across instructions as ins loop
@@ -369,6 +411,7 @@ feature {NONE} -- Implementation
 		end
 
 	validate_seh_tags (tags: LIST [CIL_INSTRUCTION]; a_offset: INTEGER): INTEGER
+			-- Validate one level of tags (recursive)
 		local
 			l_offset_in: INTEGER
 			l_offset: INTEGER
@@ -437,6 +480,7 @@ feature {NONE} -- Implementation
 		end
 
 	validate_seh_filters (tags: LIST [CIL_INSTRUCTION])
+			--  Validate that SEH filter expressions are in the proper place.
 		local
 			l_check: BOOLEAN
 		do
@@ -455,6 +499,7 @@ feature {NONE} -- Implementation
 		end
 
 	validate_seh_epilogues
+			--  Validate the epilogue for each SEH section.
 		local
 			l_old, l_old1: CIL_INSTRUCTION
 		do
@@ -502,6 +547,40 @@ feature -- Output
 				Result := ins.il_src_dump (a_file)
 			end
 			Result := True
+		end
+
+	pe_dump (a_stream: FILE_STREAM): BOOLEAN
+		do
+			to_implement ("Add Implementation")
+			Result := False
+		end
+
+	render (a_stream: FILE_STREAM)
+		do
+			to_implement ("Add Implementation")
+		end
+
+feature -- Compile
+
+	compile (a_stream: FILE_STREAM; sz: NATURAL_32): ARRAY [NATURAL_32]
+		do
+			to_implement ("Add implementation c++ [Byte *Compile(Stream&, size_t &sz);]")
+			create Result.make_empty
+		end
+
+	do_compile (a_stream: FILE_STREAM)
+		do
+			to_implement ("Add implemenation c++ [virtual void Compile(Stream&) { }]")
+		end
+
+	compile_seh
+		do
+			to_implement ("Add implementation C++ [int CompileSEH(std::vector<Instruction *>tags, int offset, std::vector<SEHData> &sehData);]")
+		end
+
+	do_compile_seh
+		do
+			to_implement ("Add implementation C++ [void CompileSEH(std::vector<SEHData> &sehData);]")
 		end
 
 end

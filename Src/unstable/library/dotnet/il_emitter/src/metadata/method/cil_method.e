@@ -1,8 +1,8 @@
 note
 	description: "[
-		Object Representing a method with code
-		CIL instructions are added with the 'Add' feature of code container.
-	]"
+			Object Representing a method with code
+			CIL instructions are added with the 'Add' feature of code container.
+		]"
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -25,7 +25,7 @@ feature {NONE} --Initialization
 
 	make (a_prototype: CIL_METHOD_SIGNATURE; a_flags: CIL_QUALIFIERS; a_entry: BOOLEAN)
 		do
-			make_code(a_flags)
+			make_code (a_flags)
 			prototype := a_prototype
 			max_stack := 100
 			entry_point := a_entry
@@ -35,7 +35,7 @@ feature {NONE} --Initialization
 			create {ARRAYED_LIST [CIL_LOCAL]} var_list.make (0)
 			create pinvoke_name.make_empty
 			if not (flags.flags & {CIL_QUALIFIERS_ENUM}.Static /= 0) then
-				prototype.instance(True)
+				prototype.instance (True)
 			end
 		ensure
 			import_name_set: import_name.is_empty
@@ -45,14 +45,16 @@ feature {NONE} --Initialization
 			var_list_set: var_list.is_empty
 			max_stack_set: max_stack = 100
 			entry_point_Set: entry_point = a_entry
-			-- prototype set.
+				-- prototype set.
 		end
 
 feature -- Access
 
 	prototype: CIL_METHOD_SIGNATURE
+			-- signature.
 
 	var_list: LIST [CIL_LOCAL]
+			-- list of local variables.
 
 	pinvoke_name: STRING_32
 
@@ -63,15 +65,43 @@ feature -- Access
 	max_stack: INTEGER
 
 	entry_point: BOOLEAN
+			-- has entry point?
 
 	rendering: detachable PE_METHOD
 
 	import_name: STRING_32
 
+	item_local (a_index: INTEGER): CIL_LOCAL
+			-- Item at `a_index'-th position
+		require
+			valid_index: a_index > 0
+			valid_index: a_index < var_list.count
+		do
+			Result := var_list [a_index]
+		end
+
+feature -- Status Report
+
+	is_pinvoke: BOOLEAN
+			-- Is Pinvoke?
+		do
+			Result := invoke_mode = {CIL_INVOKE_MODE}.pinvoke
+		end
+
+	instance: BOOLEAN
+		do
+				-- TODO check the C++ code
+				--  return !!(Flags().Value & Qualifiers::Instance);
+			Result := not not (flags.flags & {CIL_QUALIFIERS_ENUM}.instance /= 0)
+		end
+
 feature -- Change Element
 
-	set_pinvoke(a_name: STRING_32; a_type: CIL_INVOKE_TYPE; a_import_name: STRING_32)
+	set_pinvoke (a_name: STRING_32; a_type: CIL_INVOKE_TYPE; a_import_name: STRING_32)
 			--  Set Pinvoke DLL name
+			--| default values
+			--| type = Stdcall
+			--| importName = ""
 		do
 			invoke_mode := {CIL_INVOKE_MODE}.PInvoke
 			pinvoke_name := a_name
@@ -84,33 +114,42 @@ feature -- Change Element
 			import_name_set: import_name = a_import_name
 		end
 
-	add_instruction (a_instruction: CIL_INSTRUCTION)
-			-- Add an instruction `a_instruction` to the listo of instructions.
+	set_entry_point (a_val: BOOLEAN)
+			-- Set `has_entry_point` with `a_val`.
 		do
-			instructions.force (a_instruction)
+			entry_point := a_val
+		ensure
+			entry_point_set: entry_point = a_val
 		end
 
 	add_local (a_local: CIL_LOCAL)
-			-- A a local variable `a_local`.
+			-- Aadd a local variable `a_local`.
 		do
 			a_local.set_index (var_list.count)
 			var_list.force (a_local)
 		end
 
+	set_instance (a_instance: BOOLEAN)
+		do
+			if a_instance then
+				
+			end
+		end
+
 feature -- Operations
 
-	--optimize (a_pe: PE_LIB)
-	  optimize
+		--optimize (a_pe: PE_LIB)
+	optimize
 		local
 			l_rescue: BOOLEAN
 		do
 			if not l_rescue then
-				--calculate_live
-				--calculate_max_stack
-				--optimize_locals
+					--calculate_live
+					--calculate_max_stack
+					--optimize_locals
 				optimize_code
 			else
-				-- do nothing.	
+					-- do nothing.
 			end
 		rescue
 			if attached exception_manager.last_exception as e then
@@ -121,10 +160,7 @@ feature -- Operations
 			retry
 		end
 
-
-
 feature {NONE} -- Exception Manager
-
 
 	exception_manager: EXCEPTION_MANAGER
 		once
@@ -148,7 +184,7 @@ feature {NONE} -- Implementation
 				done := True
 				across instructions as ic loop
 					if ic.opcode = {CIL_INSTRUCTION_OPCODES}.i_SEH and then ic.seh_begin then
-						ic.set_live(True)
+						ic.set_live (True)
 						skipping := False
 					elseif not skipping then
 						ic.set_live (True)
@@ -167,7 +203,7 @@ feature {NONE} -- Implementation
 							ic.opcode = {CIL_INSTRUCTION_OPCODES}.i_switch
 						then
 							if not ic.switches.is_empty then
-								across  ic.switches as switch loop
+								across ic.switches as switch loop
 									if labels_reached.has (switch) then
 										done := False
 										labels_reached.force (switch)
@@ -177,7 +213,7 @@ feature {NONE} -- Implementation
 						end
 					elseif ic.opcode = {CIL_INSTRUCTION_OPCODES}.i_label then
 						if labels_reached.has (ic.label) then
-							ic.set_live(True)
+							ic.set_live (True)
 							skipping := False
 						end
 					end
@@ -215,9 +251,9 @@ feature {NONE} -- Implementation
 					end
 					if ins.is_branch then
 						last_branch := True
-						if attached {CIL_OPERAND }ins.operand as l_operand then
+						if attached {CIL_OPERAND} ins.operand as l_operand then
 							if attached l_labels.item (l_operand.string_value) as l_val and then
-							   l_val /= n
+								l_val /= n
 							then
 									-- TODO reimplement.
 								{EXCEPTIONS}.raise (generator + " MismatchedStack at " + l_operand.string_value)
@@ -256,7 +292,7 @@ feature {NONE} -- Implementation
 							end
 						end
 					elseif ins.opcode = {CIL_INSTRUCTION_OPCODES}.i_comment then
-						-- Placeholder.
+							-- Placeholder.
 					else
 						last_branch := False
 					end
@@ -264,14 +300,14 @@ feature {NONE} -- Implementation
 			end
 			if n /= 0 then
 				if n /= 1 or else attached prototype.return_type as l_return_type and then l_return_type.is_void then
-					-- TODO reimplement.
+						-- TODO reimplement.
 					{EXCEPTIONS}.raise (generator + "calculate_max_stack Stack Not Empty at the end of function")
 				end
 			end
 
 		end
 
-	optimize_locals 
+	optimize_locals
 		local
 			l_sorter: SORTER [CIL_LOCAL]
 			comparator: PREDICATE [CIL_LOCAL, CIL_LOCAL]
@@ -312,7 +348,7 @@ feature -- Output
 				a_file.put_string (" ")
 			end
 
-			Result := prototype.il_src_dump (a_file, invoke_mode /= {CIL_INVOKE_MODE}.PInvoke, False,  invoke_mode = {CIL_INVOKE_MODE}.PInvoke)
+			Result := prototype.il_src_dump (a_file, invoke_mode /= {CIL_INVOKE_MODE}.PInvoke, False, invoke_mode = {CIL_INVOKE_MODE}.PInvoke)
 			flags.il_src_dump_after_flags (a_file)
 			if invoke_mode /= {CIL_INVOKE_MODE}.PInvoke then
 				a_file.put_string ("{")
@@ -342,10 +378,10 @@ feature -- Output
 						a_file.put_integer (it.index)
 						a_file.put_string ("]%T")
 						if attached {CIL_TYPE} it.type as l_type and then
-						   l_type.basic_type = {CIL_BASIC_TYPE}.class_ref
+							l_type.basic_type = {CIL_BASIC_TYPE}.class_ref
 						then
 							if attached {CIL_DATA_CONTAINER} l_type.type_ref as l_class and then
-							(l_class.flags.flags & {CIL_QUALIFIERS_ENUM}.value) /= 0
+								(l_class.flags.flags & {CIL_QUALIFIERS_ENUM}.value) /= 0
 							then
 								a_file.put_string ("valuetype ")
 							else
@@ -353,7 +389,7 @@ feature -- Output
 							end
 						end
 						if attached {CIL_TYPE} it.type as l_type then
-							Result :=l_type.il_src_dump(a_file)
+							Result := l_type.il_src_dump (a_file)
 						end
 						a_file.put_string (" ")
 
@@ -381,7 +417,7 @@ feature -- Output
 				a_file.flush
 				a_file.put_new_line
 				a_file.flush
-				Result := Precursor {CIL_CODE_CONTAINER}(a_file)
+				Result := Precursor {CIL_CODE_CONTAINER} (a_file)
 				a_file.put_string ("}")
 				a_file.put_new_line
 				a_file.flush
@@ -391,6 +427,5 @@ feature -- Output
 				a_file.flush
 			end
 		end
-
 
 end

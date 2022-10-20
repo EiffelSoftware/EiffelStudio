@@ -19,6 +19,9 @@ feature {NONE} --Initialization
 		do
 			name := a_name
 			type := a_type
+		ensure
+			name_set: name = a_name
+			type_set: type = a_type
 		end
 
 feature -- Access
@@ -35,12 +38,16 @@ feature -- Change Element
 			-- Set name.
 		do
 			name := a_name
+		ensure
+			name_set: name = a_name
 		end
 
-	set_type (a_type: CIL_TYPE)
+	set_type (a_type: like type)
 			-- Set type of value.
 		do
 			type := a_type
+		ensure
+			type_set: type = a_type
 		end
 
 feature -- Output

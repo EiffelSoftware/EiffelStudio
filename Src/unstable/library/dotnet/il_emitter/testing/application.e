@@ -25,7 +25,6 @@ feature  -- Initialization
 			(create {TEST_6}).test;
 			(create {TEST_7}).test;
 			(create {TEST_8}).test;
-
 		end
 
 
@@ -49,6 +48,12 @@ feature  -- Initialization
 			end
 
 			list.do_all (agent (item: INTEGER) do print ("%N" + item.out) end)
+
+			across list as i loop
+				print ("%NCursor index" + (@ i.cursor_index).out)
+				print (" - Value: " + i.out)
+			end
+
 		end
 
 

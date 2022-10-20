@@ -122,12 +122,12 @@ feature -- Element change
 			definitions_incremented: old internal_definitions + 1 = internal_definitions
 		end
 
-	set_return_type (a_type: CIL_TYPE)
+	set_return_type (a_type: like return_type)
 			-- Set `return_type` with `a_type`.	
 		do
 			return_type := a_type
 		ensure
-			attached return_type as l_type and then l_type = a_type
+			return_type_set: return_type = a_type
 		end
 
 	add_parameter (a_param: CIL_PARAM)

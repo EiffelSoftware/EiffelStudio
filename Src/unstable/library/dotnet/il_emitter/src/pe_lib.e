@@ -226,8 +226,8 @@ feature -- Operations
 		local
 			l_tuple: TUPLE [type: CIL_FIND_TYPE; resource: detachable ANY]
 			l_class: CIL_CLASS
-			l_old: CIL_METHOD
 			l_m1: CIL_METHOD_SIGNATURE
+			l_nm: CIL_METHOD
 		do
 			l_tuple := find (a_name, a_generics, Void)
 			if l_tuple.type = {CIL_FIND_TYPE}.s_class then
@@ -245,15 +245,21 @@ feature -- Operations
 					if attached l_resource.parent as l_parent then
 						l_parent.add (l_class)
 					end
+					l_class.clear
 					across l_resource.methods as m loop
 							-- only doing methods right now ...
-							-- create l_m1.make (a_name: STRING_32, a_flags: INTEGER_32, a_container: detachable CIL_DATA_CONTAINER)
-						to_implement ("TODO finish implementation")
+						if attached {CIL_METHOD} m as l_old then
+								-- TODO double check, maybe we need a new creation procedure
+								-- make_from_signature in the class CIL_METHOD_SIGNATURE
+							l_m1 := l_old.prototype.twin
+							l_m1.set_container (l_class)
+							create l_nm.make (l_m1, l_old.flags, False)
+							l_class.add (l_nm)
+						end
 					end
+					Result := l_class
 				end
-
 			end
-
 		end
 
 feature -- Assembly

@@ -92,13 +92,14 @@ feature -- Element Change
 
 	set_instance (a_val: BOOLEAN)
 			-- Set `instance` with `a_val`.
+			--| choose whether it is an instance member or static property.
 		do
 			instance := a_val
 			if attached getter as l_getter then
-				to_implement ("Add implementation CIL_METHOD.set_instance")
+				l_getter.set_instance (a_val)
 			end
 			if attached setter as l_setter then
-				to_implement ("Add implemenation CIL_METHOD.set_instance")
+				l_setter.set_instance (a_val)
 			end
 		ensure
 			instance_set: instance = a_val

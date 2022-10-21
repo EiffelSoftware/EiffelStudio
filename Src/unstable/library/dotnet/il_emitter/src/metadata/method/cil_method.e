@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "[
 			Object Representing a method with code
 			CIL instructions are added with the 'Add' feature of code container.
@@ -132,13 +132,19 @@ feature -- Change Element
 	set_instance (a_instance: BOOLEAN)
 		do
 			if a_instance then
-				
+				flags.set_flags (flags.flags | {CIL_QUALIFIERS_ENUM}.instance)
+				flags.set_flags (flags.flags & ⊝({CIL_QUALIFIERS_ENUM}.static))
+			else
+				flags.set_flags (flags.flags & ⊝ {CIL_QUALIFIERS_ENUM}.instance)
+				flags.set_flags (flags.flags | ({CIL_QUALIFIERS_ENUM}.static))
 			end
+				-- TODO double check if at some point
+				-- prototype could be Void.
+			prototype.instance (a_instance)
 		end
 
 feature -- Operations
 
-		--optimize (a_pe: PE_LIB)
 	optimize
 		local
 			l_rescue: BOOLEAN

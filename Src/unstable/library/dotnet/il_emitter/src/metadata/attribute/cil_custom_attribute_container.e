@@ -8,6 +8,9 @@ note
 	revision: "$Revision$"
 
 class
-	CUSTOM_ATTRIBUTE_CONTAINER
+	CIL_CUSTOM_ATTRIBUTE_CONTAINER
+inherit
+	REFACTORING_HELPER
 
+--TODO IMPLEMENT
 end

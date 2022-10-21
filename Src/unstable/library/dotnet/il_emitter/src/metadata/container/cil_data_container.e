@@ -31,7 +31,7 @@ feature {NONE} --Initialization
 			create {ARRAYED_LIST [CIL_DATA_CONTAINER]} children.make (0)
 			assembly_ref := False
 			create {ARRAYED_LIST [CIL_CODE_CONTAINER]} methods.make (0)
-			create sorted_children.make(0)
+			create sorted_children.make (0)
 			create {ARRAYED_LIST [CIL_FIELD]} fields.make (0)
 		end
 
@@ -40,29 +40,29 @@ feature -- Access
 	children: LIST [CIL_DATA_CONTAINER]
 
 	methods: LIST [CIL_CODE_CONTAINER]
-		-- Current list of methods.
+			-- Current list of methods.
 
-	sorted_children: STRING_TABLE [LIST[CIL_DATA_CONTAINER]]
+	sorted_children: STRING_TABLE [LIST [CIL_DATA_CONTAINER]]
 
 	fields: LIST [CIL_FIELD]
-		-- Current list of fields.
+			-- Current list of fields.
 
 	parent: detachable CIL_DATA_CONTAINER
-		-- The immediate parent.
+			-- The immediate parent.
 
 	flags: CIL_QUALIFIERS
-		-- Check the class QUALIFIERS
+			-- the qualifiers.
 
 	instantiated: BOOLEAN
-		-- use to tell if the class has been instantiated, for example it might be used after a forward reference is resolved.
+			-- use to tell if the class has been instantiated, for example it might be used after a forward reference is resolved.
 
 	pe_index: NATURAL
-		-- metatable index in the PE file for this data container.
+			-- metatable index in the PE file for this data container.
 
 	assembly_ref: BOOLEAN
 
 	name: STRING_32
-		-- The name.
+			-- The name.
 
 feature -- Access
 
@@ -71,7 +71,6 @@ feature -- Access
 		do
 			to_implement ("Add implementation")
 		end
-
 
 	parent_class (a_lib: PE_LIB): NATURAL
 			-- The closest parent class.
@@ -84,7 +83,6 @@ feature -- Access
 		do
 			to_implement ("Add implementation")
 		end
-
 
 feature -- Access Enumerations
 
@@ -104,17 +102,16 @@ feature -- Access Enumerations
 	base_index_system: INTEGER = 8
 			-- reference to 'System' namespace
 
-
 feature --Element Change
 
 	add (a_item: ANY)
 			-- Add an `a_item` to a container
-       		-- This could be a
-       		--	data container
-       		--	code container
-       		-- 	field container
+			-- This could be a
+			--	data container
+			--	code container
+			-- 	field container
 		do
-			if attached {CIL_DATA_CONTAINER} a_item as l_data  then
+			if attached {CIL_DATA_CONTAINER} a_item as l_data then
 				add_data_container (l_data)
 			elseif attached {CIL_CODE_CONTAINER} a_item as l_code then
 				add_code_container (l_code)
@@ -158,9 +155,9 @@ feature --Element Change
 
 	set_sorted_children (a_name: STRING_32; a_item: CIL_DATA_CONTAINER)
 		local
-			l_list: ARRAYED_LIST[CIL_DATA_CONTAINER]
+			l_list: ARRAYED_LIST [CIL_DATA_CONTAINER]
 		do
-			if attached {ARRAYED_LIST[CIL_DATA_CONTAINER]} sorted_children.at (a_name) as l_adj then
+			if attached {ARRAYED_LIST [CIL_DATA_CONTAINER]} sorted_children.at (a_name) as l_adj then
 				l_adj.force (a_item)
 			else
 				create l_list.make (1)
@@ -168,12 +165,12 @@ feature --Element Change
 				sorted_children.force (l_list, a_name)
 			end
 		ensure
-			-- To be added.
+				-- To be added.
 		end
 
-	number (n: NATURAL) : NATURAL
+	number (n: NATURAL): NATURAL
 		do
-			if attached {CIL_NAMESPACE} Current  then
+			if attached {CIL_NAMESPACE} Current then
 				Result := n + 1
 				pe_index := Result
 			end
@@ -198,7 +195,7 @@ feature --Element Change
 			pe_index_set: pe_index = a_index
 		end
 
-	wipe_out,clear
+	wipe_out, clear
 			-- Remove all the items of
 			-- children
 			-- methods
@@ -220,9 +217,9 @@ feature --Element Change
 feature -- Traverse
 
 	traverse (a_callback: CIL_CALLBACK): BOOLEAN
-			-- Traverse the declaration tree.	
+			-- Traverse the declaration tree.
 		do
-			to_implement("Add implementation")
+			to_implement ("Add implementation")
 		end
 
 feature -- Status Report
@@ -274,7 +271,7 @@ feature -- Status Report
 			loop
 					-- TODO check the index.
 				if attached dc_current then
-					dc_current := dc_current.find_container_string (a_split[i], if i = a_split.count - count then a_generics else Void end)
+					dc_current := dc_current.find_container_string (a_split [i], if i = a_split.count - count then a_generics else Void end)
 				end
 				if dc_current = Void then
 					exit := True
@@ -289,9 +286,25 @@ feature -- Status Report
 
 feature -- Operations
 
-	base_types (a_type: INTEGER): INTEGER
+	base_types (a_type: CELL [INTEGER])
 		do
-			to_implement ("Add implementation")
+			across methods as method loop
+				method.base_types(a_type)
+			end
+			across children as child loop
+				child.base_types(a_type)
+			end
+			if attached {CIL_ENUM} Current then
+				a_type.put (a_type.item | base_type_enum)
+			else
+				if attached {CIL_NAMESPACE} Current then
+					if flags.flags & {CIL_QUALIFIERS_ENUM}.value /= 0 then
+						a_type.put (a_type.item | base_type_value)
+					else
+						a_type.put (a_type.item | base_type_object)
+					end
+				end
+			end
 		end
 
 	compile (a_stream: FILE_STREAM)
@@ -311,19 +324,12 @@ feature -- Output
 			across fields as field loop
 				Result := field.il_src_dump (a_file)
 			end
-			across methods as method  loop
-				Result := method.il_src_dump(a_file)
+			across methods as method loop
+				Result := method.il_src_dump (a_file)
 			end
 			across children as l_child loop
 				Result := l_child.il_src_dump (a_file)
 			end
 		end
-
-	adorn_generics (names: BOOLEAN): STRING_32
-		do
-			to_implement ("Add implementation")
-			create Result.make_empty
-		end
-
 
 end

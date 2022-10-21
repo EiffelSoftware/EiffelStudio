@@ -16,13 +16,13 @@ feature {NONE} -- Initialization
 
 	make (a_size: INTEGER)
 		do
-			create {ARRAYED_LIST [TABLE_ENTRY_BASE]} table.make (a_size)
+			create {ARRAYED_LIST [PE_TABLE_ENTRY_BASE]} table.make (a_size)
 		end
 
 feature -- Access
 
 
-	table: LIST [TABLE_ENTRY_BASE]
+	table: LIST [PE_TABLE_ENTRY_BASE]
 		-- vector of tables that can appear in a PE file
 		-- empty tables are elided / pass over?
 

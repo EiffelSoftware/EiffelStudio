@@ -18,7 +18,7 @@ inherit
 			make as make_container
 		redefine
 			il_src_dump,
-			adorn_generics
+			traverse
 		end
 
 	REFACTORING_HELPER
@@ -26,7 +26,6 @@ inherit
 create
 	make,
 	make_from_class
-
 
 feature {NONE} -- Initialization
 
@@ -119,7 +118,6 @@ feature -- Element change
 			extend_from_assigned: extend_from = an_extend_from
 		end
 
-
 	set_generics (a_generics: LIST [CIL_TYPE])
 			-- Set `generics` with `a_generics`.
 		do
@@ -152,10 +150,11 @@ feature -- Element change
 			pack_assigned: pack = a_pack
 		end
 
-	add_property(a_property: CIL_PROPERTY; a_add: BOOLEAN)
+	add_property (a_property: CIL_PROPERTY; a_add: BOOLEAN)
 			-- Add a property `a_property` to this container.
 		do
-			to_implement ("Add implemenation")
+			a_property.set_container (Current, a_add)
+			properties.force (a_property)
 		end
 
 feature -- Status Report
@@ -187,8 +186,52 @@ feature -- Status Report
 		end
 
 	transfer_flags: INTEGER
+		local
+			l_pe_flags: INTEGER
 		do
-			to_implement ("Add Implementation")
+			l_pe_flags := {PE_TABLE_ENTRY_FLAGS}.class_
+			if attached {CIL_CLASS} parent as l_parent then
+				if flags.flags & {CIL_QUALIFIERS_ENUM}.public /= 0 then
+					l_pe_flags := l_pe_flags |  {PE_TABLE_ENTRY_FLAGS}.nestedpublic
+				else
+					l_pe_flags := l_pe_flags |  {PE_TABLE_ENTRY_FLAGS}.nestedprivate
+				end
+			else
+				if flags.flags & {CIL_QUALIFIERS_ENUM}.public /= 0 then
+					l_pe_flags := l_pe_flags |  {PE_TABLE_ENTRY_FLAGS}.public
+				end
+			end
+			if flags.flags & {CIL_QUALIFIERS_ENUM}.sequential /= 0 then
+				l_pe_flags := l_pe_flags |  {PE_TABLE_ENTRY_FLAGS}.explicitlayout
+			end
+			if flags.flags & {CIL_QUALIFIERS_ENUM}.sealed /= 0 then
+				l_pe_flags := l_pe_flags |  {PE_TABLE_ENTRY_FLAGS}.sealed
+			end
+			if flags.flags & {CIL_QUALIFIERS_ENUM}.ansi /= 0 then
+				l_pe_flags := l_pe_flags |  {PE_TABLE_ENTRY_FLAGS}.ansiclass
+			end
+			Result := l_pe_flags
+		end
+
+feature -- Operation
+
+	traverse (a_callback: CIL_CALLBACK): BOOLEAN
+			-- <Precursor>
+		local
+			exit: BOOLEAN
+		do
+			if not Precursor (a_callback) then
+				Result := True
+			else
+				across properties as p until exit loop
+					if not a_callback.enter_property (p) then
+						Result := False
+					end
+				end
+			end
+			if not exit then
+				Result := True
+			end
 		end
 
 feature -- Output

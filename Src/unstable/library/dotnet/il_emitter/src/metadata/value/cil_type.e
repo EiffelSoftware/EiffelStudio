@@ -289,6 +289,7 @@ feature -- Output
 	il_src_dump (a_file: FILE_STREAM): BOOLEAN
 		local
 			l_name: STRING_32
+			l_npos: INTEGER
 		do
 			if basic_type = {CIL_BASIC_TYPE}.class_ref then
 				if show_type then
@@ -300,7 +301,7 @@ feature -- Output
 						a_file.put_string (" class ")
 					end
 				end
-				if attached type_ref as l_type_ref then
+				if attached {CIL_CLASS}type_ref as l_type_ref then
 					l_name := {CIL_QUALIFIERS}.name ("", l_type_ref, True)
 
 					if l_name[1] /= "[" then
@@ -309,7 +310,18 @@ feature -- Output
 						a_file.put_string ("'")
 						a_file.put_string (l_type_ref.adorn_generics(False))
 					else
-						-- TODO implement.
+						l_npos := l_name.index_of (']', 1)
+						if l_npos /= 0 and then l_npos /= l_name.count then
+							a_file.put_string (l_name.substring (1, l_npos + 1))
+							a_file.put_string ("'")
+							a_file.put_string (l_name.substring (l_npos + 1, l_name.count))
+							a_file.put_string ("'")
+							a_file.put_string (l_type_ref.adorn_generics(False))
+						else
+							a_file.put_string ("'")
+							a_file.put_string (l_name)
+							a_file.put_string ("'")
+						end
 					end
 				end
 			elseif basic_type = {CIL_BASIC_TYPE}.type_var then
@@ -324,11 +336,12 @@ feature -- Output
 					Result := l_method_ref.il_src_dump (a_file, false, true, true)
 				end
 			else
-				a_file.put_string (type_names.at (basic_type.index + 1))
+				a_file.put_string (type_names.at ({CIL_BASIC_TYPE}.index_of (basic_type) + 1))
 			end
 			if array_level = 1 then
 				a_file.put_string (" []")
 			elseif array_level /= 0 then
+					-- TODO double check code with Type.cpp code
 				a_file.put_string (" [")
 				across 0 |..| (array_level - 1) as  i loop
 					if i /= 0 then

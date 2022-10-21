@@ -15,31 +15,29 @@ create
 
 feature {NONE} -- Creation
 
-	class_ref once index := 0 end
-	method_ref once index := 1 end
-	type_var once index := 2 end
-	method_param once index := 3 end
-	Void_ once index := 4 end
-	Bool once index := 5 end
-	Char once index := 6 end
-	i8 once index :=  7 end
-	u8 once index := 8 end
-	i16 once index := 9 end
-	u16 once index := 10 end
-	i32 once index := 11 end
-	u32 once index := 12 end
-	i64 once index := 13 end
-	u64 once index := 14 end
-	inative once index := 15 end
-	unative once index := 16 end
-	r32 once index := 17 end
-	r64 once index := 18 end
-	object once index := 19 end
-	string once index :=  20 end
+	class_ref once  end
+	method_ref once  end
+	type_var once end
+	method_param once end
+	Void_ once end
+	Bool once end
+	Char once end
+	i8 once end
+	u8 once end
+	i16 once end
+	u16 once end
+	i32 once end
+	u32 once end
+	i64 once end
+	u64 once end
+	inative once end
+	unative once end
+	r32 once end
+	r64 once end
+	object once end
+	string once end
 
 feature -- Access
-
-	index: INTEGER
 
 	instances: ITERABLE [CIL_BASIC_TYPE]
 			-- All known Basic Types
@@ -71,4 +69,16 @@ feature -- Access
 			instance_free: class
 		end
 
+
+	index_of (a_value: CIL_BASIC_TYPE): NATURAL_8
+			-- Index of first occurrence of item identical to `a_value'.
+			-- -1 if none.
+		local
+			l_area: SPECIAL [CIL_BASIC_TYPE]
+		do
+			l_area := (create {ARRAYED_LIST [CIL_BASIC_TYPE]}.make_from_iterable ({CIL_BASIC_TYPE}.instances)).area
+			Result :=  l_area.index_of(a_value, l_area.lower).to_natural_8
+		ensure
+			instance_free: class
+		end
 end

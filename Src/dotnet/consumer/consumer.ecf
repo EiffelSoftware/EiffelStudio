@@ -51,7 +51,7 @@
 			<condition>
 				<dotnet value="true"/>
 			</condition>
-			<cluster name="consumer_support" location="$|support" recursive="true">
+			<cluster name="consumer_dotnet_support" location="$|support" recursive="true">
 				<condition>
 					<dotnet value="true"/>
 				</condition>
@@ -59,17 +59,17 @@
 					<exclude>/interop$</exclude>
 				</file_rule>
 			</cluster>
-			<cluster name="consumer_cache" location="$|cache" recursive="true">
+			<cluster name="consumer_dotnet_cache" location="$|cache" recursive="true">
 				<condition>
 					<dotnet value="true"/>
 				</condition>
 			</cluster>
-			<cluster name="consumer_emitter" location="$|emitter" recursive="true">
+			<cluster name="consumer_dotnet_emitter" location="$|emitter" recursive="true">
 				<condition>
 					<dotnet value="true"/>
 				</condition>
 			</cluster>
-			<cluster name="consumer_serialization" location="$|serialization" recursive="true">
+			<cluster name="consumer_dotnet_serialization" location="$|serialization" recursive="true">
 				<condition>
 					<dotnet value="true"/>
 				</condition>

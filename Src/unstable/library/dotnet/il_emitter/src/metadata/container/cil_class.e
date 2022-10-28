@@ -189,26 +189,26 @@ feature -- Status Report
 		local
 			l_pe_flags: INTEGER
 		do
-			l_pe_flags := {PE_TABLE_ENTRY_FLAGS}.class_
+			l_pe_flags := {PE_TYPEDEF_TABLE_ENTRY}.class_
 			if attached {CIL_CLASS} parent as l_parent then
 				if flags.flags & {CIL_QUALIFIERS_ENUM}.public /= 0 then
-					l_pe_flags := l_pe_flags |  {PE_TABLE_ENTRY_FLAGS}.nestedpublic
+					l_pe_flags := l_pe_flags |  {PE_TYPEDEF_TABLE_ENTRY}.nestedpublic
 				else
-					l_pe_flags := l_pe_flags |  {PE_TABLE_ENTRY_FLAGS}.nestedprivate
+					l_pe_flags := l_pe_flags |  {PE_TYPEDEF_TABLE_ENTRY}.nestedprivate
 				end
 			else
 				if flags.flags & {CIL_QUALIFIERS_ENUM}.public /= 0 then
-					l_pe_flags := l_pe_flags |  {PE_TABLE_ENTRY_FLAGS}.public
+					l_pe_flags := l_pe_flags |  {PE_TYPEDEF_TABLE_ENTRY}.public
 				end
 			end
 			if flags.flags & {CIL_QUALIFIERS_ENUM}.sequential /= 0 then
-				l_pe_flags := l_pe_flags |  {PE_TABLE_ENTRY_FLAGS}.explicitlayout
+				l_pe_flags := l_pe_flags |  {PE_TYPEDEF_TABLE_ENTRY}.explicitlayout
 			end
 			if flags.flags & {CIL_QUALIFIERS_ENUM}.sealed /= 0 then
-				l_pe_flags := l_pe_flags |  {PE_TABLE_ENTRY_FLAGS}.sealed
+				l_pe_flags := l_pe_flags |  {PE_TYPEDEF_TABLE_ENTRY}.sealed
 			end
 			if flags.flags & {CIL_QUALIFIERS_ENUM}.ansi /= 0 then
-				l_pe_flags := l_pe_flags |  {PE_TABLE_ENTRY_FLAGS}.ansiclass
+				l_pe_flags := l_pe_flags |  {PE_TYPEDEF_TABLE_ENTRY}.ansiclass
 			end
 			Result := l_pe_flags
 		end

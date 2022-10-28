@@ -6,39 +6,84 @@ note
 class
 	PE_WRITER
 
+inherit
+
+	REFACTORING_HELPER
+
 create
 	make
 
 feature {NONE} -- Initialization
 
+		--  the maximum number of PE objects we will generate
+		--  this includes the following:
+		--  	.text / cildata
+		--   	.reloc (for the single necessary reloc entry)
+		--    	.rsrc (not implemented yet, will hold version info record)
+
 	make (is_exe: BOOLEAN; is_gui: BOOLEAN; a_snk_file: STRING_32)
+			--
 		do
 			dll := not is_exe
 			gui := is_gui
-
+			file_align := 0x200
+			object_align := 0x2000
+			image_base := 0x400000
+			language := 0x4b0
+			create snk_file.make_from_string (a_snk_file)
+			create meta_header.make_from_other (meta_header1)
+			create string_map.make (0)
+			create tables.make_filled(create {DNL_TABLE}.make, 1, {PE_TABLE_CONSTANTS}.max_tables)
+			create {ARRAYED_LIST [PE_METHOD]}methods.make(0)
+			create rva.make
+			create guid.make
+			create blob.make
+			create us.make
+			create strings.make
+		ensure
+			dll_set: dll = not is_exe
+			gui_set: gui = is_gui
+			object_base_zero: object_base = 0
+			value_base_zero: value_base = 0
+			enum_base_zero: enum_base = 0
+			system_index_zero: system_index = 0
+			entry_point_zero: entry_point = 0
+			param_attribute_type_zero: param_attribute_type = 0
+			param_attribute_data_zero: param_attribute_data = 0
+			file_align_set: file_align = 0x200
+			object_align_set: object_align = 0x2000
+			image_base_set: image_base = 0x400000
+			language_set: language = 0x4b0
+			pe_header_void: pe_header = Void
+			pe_object_void: pe_object = Void
+			cor20_header_void: cor20_header = Void
+			tables_header_void: tables_header = Void
+			snk_file_set: snk_file.same_string_general (a_snk_file)
+			snk_len_zero: snk_len = 0
+			output_file_vooid: output_file = Void
+			pe_base_zero: pe_base = 0
+			cor_base_zero: cor_base = 0
+			snk_base = 0
+			string_map_empty: string_map.is_empty
+			methods_empty: methods.is_empty
 		end
 
 feature -- Access
 
 	snk_base: NATURAL assign set_snk_base
 			-- `snk_base'
-		attribute check False then end end --| Remove line when `snk_base' is initialized in creation procedure.
 
 	cor_base: NATURAL assign set_cor_base
 			-- `cor_base'
-		attribute check False then end end --| Remove line when `cor_base' is initialized in creation procedure.
 
 	pe_base: NATURAL assign set_pe_base
 			-- `pe_base'
-		attribute check False then end end --| Remove line when `pe_base' is initialized in creation procedure.
 
 	snk_len: NATURAL assign set_snk_len
 			-- `snk_len'
-		attribute check False then end end --| Remove line when `snk_len' is initialized in creation procedure.
 
 	snk_file: STRING_32
 			-- `snk_file'
-		attribute check False then end end --| Remove line when `snk_file' is initialized in creation procedure.
 
 	tables_header: detachable DOTNET_META_TABLES_HEADER
 			-- `tables_header'
@@ -52,49 +97,40 @@ feature -- Access
 	pe_header: detachable PE_HEADER
 			-- `pe_header'
 
-	language: NATURAL
+	language: NATURAL_32
 			-- `language'
-		attribute check False then end end --| Remove line when `language' is initialized in creation procedure.
+			-- C++ defined as four bytes
+			-- DWord language_;
 
 	image_base: NATURAL assign set_image_base
 			-- `image_base'
-		attribute check False then end end --| Remove line when `image_base' is initialized in creation procedure.
 
 	object_align: NATURAL assign set_object_align
 			-- `object_align'
-		attribute check False then end end --| Remove line when `object_align' is initialized in creation procedure.
 
 	file_align: NATURAL assign set_file_align
 			-- `file_align'
-		attribute check False then end end --| Remove line when `file_align' is initialized in creation procedure.
 
 	param_attribute_data: NATURAL assign set_param_attribute_data
 			-- `param_attribute_data'
-		attribute check False then end end --| Remove line when `param_attribute_data' is initialized in creation procedure.
 
 	param_attribute_type: NATURAL assign set_param_attribute_type
 			-- `param_attribute_type'
-		attribute check False then end end --| Remove line when `param_attribute_type' is initialized in creation procedure.
 
 	entry_point: NATURAL assign set_entry_point
 			-- `entry_point'
-		attribute check False then end end --| Remove line when `entry_point' is initialized in creation procedure.
 
 	system_index: NATURAL assign set_system_index
 			-- `system_index'
-		attribute check False then end end --| Remove line when `system_index' is initialized in creation procedure.
 
 	enum_base: NATURAL assign set_enum_base
 			-- `enum_base'
-		attribute check False then end end --| Remove line when `enum_base' is initialized in creation procedure.
 
 	value_base: NATURAL assign set_value_base
 			-- `value_base'
-		attribute check False then end end --| Remove line when `value_base' is initialized in creation procedure.
 
 	object_base: NATURAL assign set_object_base
 			-- `object_base'
-		attribute check False then end end --| Remove line when `object_base' is initialized in creation procedure.
 
 	gui: BOOLEAN assign set_gui
 			-- `gui'
@@ -102,7 +138,93 @@ feature -- Access
 	dll: BOOLEAN assign set_dll
 			-- `dll'
 
+	output_file: detachable FILE_STREAM
 
+	assembly_version: detachable ARRAY [NATURAL_16]
+			--| C++ defined as Word assemblyVersion_[4];
+			--| Word is two bytes.
+
+	file_version: detachable ARRAY [NATURAL_16]
+
+	product_version: detachable ARRAY [NATURAL_16]
+
+	stream_headers: detachable ARRAY2 [NATURAL]
+
+	rsa_encoder: detachable CIL_RSA_ENCODER
+
+	mzh_header: ARRAY [NATURAL_8]
+			-- MS-DOS header
+		do
+			Result := <<
+					0x4d, 0x5a, 0x90, 0x00, 0x03, 0x00, 0x00, 0x00,
+					0x04, 0x00, 0x00, 0x00, 0xFF, 0xFF, 0x00, 0x00,
+					0xb8, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+					0x40, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+					0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+					0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+					0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+					0x00, 0x00, 0x00, 0x00, 0x80, 0x00, 0x00, 0x00,
+
+					0x0e, 0x1f, 0xba, 0x0e, 0x00, 0xb4, 0x09, 0xcd,
+					0x21, 0xb8, 0x01, 0x4c, 0xcd, 0x21, 0x54, 0x68,
+					0x69, 0x73, 0x20, 0x70, 0x72, 0x6f, 0x67, 0x72,
+					0x61, 0x6d, 0x20, 0x63, 0x61, 0x6e, 0x6e, 0x6f,
+					0x74, 0x20, 0x62, 0x65, 0x20, 0x72, 0x75, 0x6e,
+					0x20, 0x69, 0x6e, 0x20, 0x44, 0x4f, 0x53, 0x20,
+					0x6d, 0x6f, 0x64, 0x65, 0x2e, 0x0d, 0x0d, 0x0a,
+					0x24, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00>>
+		ensure
+			instance_free: class
+		end
+
+	meta_header: DOTNET_META_HEADER
+
+	stream_names: ARRAY [STRING_32]
+		do
+			Result := <<"#~", "#Strings", "#US", "#GUID", "#Blob">>
+		ensure
+			instance_free: class
+		end
+
+	default_us: ARRAY [NATURAL_8]
+			-- defined as static Byte defaultUS_[];
+			--| Byte defined as 1 byte.
+		do
+			Result := <<0, 3, 0x20, 0, 0>>
+			Result.conservative_resize_with_default (0, 1, 8)
+		end
+
+	string_map: STRING_TABLE [NATURAL]
+			-- reflection of the String stream so that we can keep from doing duplicates.
+			-- right now we don't check duplicates on any of the other streams...
+
+	tables: ARRAY [DNL_TABLE]
+			-- tables that can appear in a PE file.
+
+	methods: LIST [PE_METHOD]
+
+	strings: PE_POOL
+
+	us: PE_POOL
+
+	blob: PE_POOL
+
+	guid: PE_POOL
+
+	rva: PE_POOL
+
+
+feature {NONE} -- Implemenation
+
+	meta_header1: DOTNET_META_HEADER
+		do
+			create Result
+			Result.set_signature (1)
+			Result.set_major (1)
+			Result.set_minor (0)
+		ensure
+			instance_free: class
+		end
 
 feature -- Element change
 
@@ -280,6 +402,267 @@ feature -- Element change
 			dll := a_dll
 		ensure
 			dll_assigned: dll = a_dll
+		end
+
+feature -- Element Change
+
+	add_table_entry (a_entry: PE_TABLE_ENTRY_BASE): NATURAL
+			-- add an entry to one of the tables
+			-- note the data for the table will be a class inherited from TableEntryBase,
+			--  and this class will self-report the table index to use
+		local
+			n: INTEGER
+		do
+			n := a_entry.table_index
+			tables [n].table.force (a_entry)
+			debug ("pe_writer")
+				if n = {PE_TABLES}.tmethoddef.value then
+				end
+			end
+			Result := tables[n].table.count.to_natural_32
+		end
+
+	add_method (a_method: PE_METHOD)
+			-- add a method entry to the output list.  Note that Index_(D methods won't be added here.
+		do
+			if a_method.flags & {PE_METHOD_CONSTANTS}.EntryPoint /= 0 then
+				if entry_point /= 0 then
+					{EXCEPTIONS}.raise (generator + "Multiple entry points")
+				else
+					entry_point := a_method.method_def | ({PE_TABLES}.tMethodDef.value |<< 24)
+				end
+			end
+			methods.force (a_method)
+		end
+
+feature -- Stream functions
+
+	hash_string (a_utf8: STRING_32): NATURAL
+			-- return the stream index
+			--| TODO add a precondition to verify a_utf8 is a valid UTF_8
+		do
+			if attached string_map.item (a_utf8) as l_val then
+				Result := l_val
+			else
+				if strings.size = 0 then
+					strings.increment_size
+				end
+					-- TODO check if we really need to do `+ 1`
+				strings.confirm (strings.size + 1)
+				Result := strings.size
+				strings.increment_size_by ((a_utf8.count + 1).to_natural_32)
+				string_map.force (Result, a_utf8)
+			end
+		end
+
+	hash_us (a_str: STRING_32; a_len: INTEGER): NATURAL
+			-- return the stream index
+		do
+			to_implement ("Add implementation")
+		end
+
+	hash_guid (a_guid: ARRAY [NATURAL_8]): NATURAL
+			-- return the stream index
+		do
+			to_implement ("Add implementation")
+		end
+
+	Hash_Blob (a_blob_data: ARRAY [NATURAL_8]; a_blob_len: NATURAL_8): NATURAL
+			-- return the stream index
+		do
+			to_implement ("Add implementation")
+		end
+
+feature -- Various Operations
+
+	RVA_bytes (a_bytes: ARRAY [NATURAL_8]; a_data: NATURAL): NATURAL
+			--  this is the 'cildata' contents.   Again we emit into the cildata and it returns the offset in
+			--  the cildata to use.  It does NOT return the rva immediately, that is calculated later
+		do
+			to_implement ("Add implementation")
+		end
+
+	set_base_classes (a_object_index: NATURAL; a_value_index: NATURAL; a_enum_index: NATURAL; a_system_index: NATURAL)
+			--  Set the indexes of the various classes which can be extended to make new classes
+			--  these are typically in the typeref table
+			--  Also set the index of the System namespace entry which is t
+
+		do
+			to_implement ("Add implementation")
+		end
+
+	set_param_attribute (a_param_attribute_type: NATURAL; a_param_attribute_data: NATURAL)
+			-- this sets the data for the paramater attribute we support
+			-- we aren't generally supporting attributes in this version but we do need to be able to
+			-- set a single attribute that means a function has a variable length argument list
+		do
+			param_attribute_data := a_param_attribute_data
+			param_attribute_type := a_param_attribute_type
+		ensure
+			param_attribute_data_set: param_attribute_data = a_param_attribute_data
+			param_attribute_type_set: param_attribute_type = a_param_attribute_type
+		end
+
+	create_guid (a_Guid: ARRAY [NATURAL_8])
+		do
+			to_implement ("Add implementation [instance_free]")
+		end
+
+	next_table_index (a_table: INTEGER): NATURAL
+		do
+			to_implement ("Add implementation")
+		end
+
+	write_file (a_corFlags: INTEGER; a_out: FILE_STREAM): BOOLEAN
+		do
+			to_implement ("Add implementation")
+		end
+
+	hash_part_of_file (a_context: CIL_SHA1_CONTEXT; a_offset: NATURAL; a_len: NATURAL)
+		do
+			to_implement ("Add implementation")
+		end
+
+	cildata_rva: detachable ARRAY [NATURAL_8]
+			-- TODO double check.
+			-- another thing that makes this lib not thread safe, the RVA for
+			-- the beginning of the .data section gets put here after it is calculated
+			--| defined as
+			--|  static DWord cildata_rva_;
+			--|  DWord =:: four bytes
+
+feature -- Operations
+
+	calculate_objects (a_cor_flags: INTEGER)
+			-- this calculates various addresses and offsets that will be used and referenced
+			-- when we actually generate the data.   This must be kept in sync with the code to
+			-- generate data
+		do
+			to_implement ("Add implementation")
+		end
+
+feature -- Write operations
+
+	write_mz_data: BOOLEAN
+		do
+			to_implement ("Add implementation")
+		end
+
+	write_pe_header: BOOLEAN
+		do
+			to_implement ("Add implementation")
+		end
+
+	write_pe_objects: BOOLEAN
+		do
+			to_implement ("Add implementation")
+		end
+
+	write_iat: BOOLEAN
+		do
+			to_implement ("Add implementation")
+		end
+
+	write_core_header: BOOLEAN
+		do
+			to_implement ("Add implementation")
+		end
+
+	write_hash_data: BOOLEAN
+		do
+			to_implement ("Add implementation")
+		end
+
+	write_static_data: BOOLEAN
+		do
+			to_implement ("Add implementation")
+		end
+
+	write_methods: BOOLEAN
+		do
+			to_implement ("Add implementation")
+		end
+
+	write_metadata_headers: BOOLEAN
+		do
+			to_implement ("Add implementation")
+		end
+
+	write_tables: BOOLEAN
+		do
+			to_implement ("Add implementation")
+		end
+
+	write_strings: BOOLEAN
+		do
+			to_implement ("Add implementation")
+		end
+
+	write_us: BOOLEAN
+		do
+			to_implement ("Add implementation")
+		end
+
+	write_guid: BOOLEAN
+		do
+			to_implement ("Add implementation")
+		end
+
+	write_blob: BOOLEAN
+		do
+			to_implement ("Add implementation")
+		end
+
+	write_imports: BOOLEAN
+		do
+			to_implement ("Add implementation")
+		end
+
+	write_entry_point: BOOLEAN
+		do
+			to_implement ("Add implementation")
+		end
+
+	write_version_info (a_file_name: STRING_32): BOOLEAN
+		do
+			to_implement ("Add implementation")
+		end
+
+	write_relocs: BOOLEAN
+		do
+			to_implement ("Add implementation")
+		end
+
+	version_string (a_name: STRING_32; a_value: STRING_32)
+			-- a helper to put a string into the string area of the version information.
+		do
+			to_implement ("Add implementation")
+		end
+
+feature -- Output Helpers
+
+	put (a_data: ANY; a_size: NATURAL)
+		do
+			if attached output_file as l_file then
+					-- outputFile_->write((char *)data, size)
+			end
+		end
+
+	offset: NATURAL_64
+			-- the output position.
+		do
+			to_implement ("Add implementation")
+		end
+
+	seek (a_offset: NATURAL)
+			-- Set the output position.
+		do
+			to_implement ("Add implementation")
+		end
+
+	align (a_offset: NATURAL)
+		do
+			to_implement ("Add implementation")
 		end
 
 feature -- Constants

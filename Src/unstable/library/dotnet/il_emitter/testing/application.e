@@ -16,33 +16,34 @@ feature -- Initialization
 		local
 			mp: MANAGED_POINTER
 			l_val: INTEGER
-			l_cell: CELL[INTEGER]
+			l_cell: CELL [INTEGER]
+			l_api: CIL_EMITTER_API
 		do
-			l_val := 1
-			create l_cell.put (l_val)
-			fn (l_cell)
-			create mp.make (8)
-			mp.put_real_32 (3.5, 0)
-			across mp.read_array (0, 4) as ic loop
-				print (ic.to_hex_String)
-				io.put_new_line
-			end
+--			l_val := 1
+--			create l_cell.put (l_val)
+--			fn (l_cell)
+--			create mp.make (8)
+--			mp.put_real_32 (3.5, 0)
+--			across mp.read_array (0, 4) as ic loop
+--				print (ic.to_hex_String)
+--				io.put_new_line
+--			end
 
-			print (escaped_string ("Do you wish to send anyway?"))
-			io.put_new_line
-			print (escaped_string ("In the last decade, the German word %"über%" has come to be used frequently in colloquial English."))
+--			print (escaped_string ("Do you wish to send anyway?"))
+--			io.put_new_line
+--			print (escaped_string ("In the last decade, the German word %"über%" has come to be used frequently in colloquial English."))
 
-			test4;
-			test;
-			test_2;
-			test_3;
-			(create {TEST_1}).test;
-			(create {TEST_2}).test;
-			(create {TEST_3}).test;
-			(create {TEST_4}).test;
-			(create {TEST_5}).test;
-			(create {TEST_6}).test;
-			(create {TEST_7}).test;
+--			test4;
+--			test;
+--			test_2;
+--			test_3;
+--			(create {TEST_1}).test;
+--			(create {TEST_2}).test;
+--			(create {TEST_3}).test;
+--			(create {TEST_4}).test;
+--			(create {TEST_5}).test;
+--			(create {TEST_6}).test;
+--			(create {TEST_7}).test;
 			(create {TEST_8}).test;
 		end
 

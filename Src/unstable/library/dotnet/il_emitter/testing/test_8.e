@@ -21,7 +21,7 @@ feature -- Test
 			l_console: CIL_CLASS
 			l_sig_write_line: CIL_METHOD_SIGNATURE
 		do
-			create pe_file.make ("test8", {PE_LIB}.bits32)
+			create pe_file.make ("test8", {PE_LIB}.il_only | {PE_LIB}.bits32)
 
 			assembly := pe_file.working_assembly
 			create sig_main.make ("$Main", {CIL_METHOD_SIGNATURE_ATTRIBUTES}.managed, assembly)
@@ -29,6 +29,7 @@ feature -- Test
 
 			create method_main.make (sig_main,
 				create {CIL_QUALIFIERS}.make_with_flags (
+						{CIL_QUALIFIERS_ENUM}.private |
 						{CIL_QUALIFIERS_ENUM}.static |
 						{CIL_QUALIFIERS_ENUM}.HideBySig |
 						{CIL_QUALIFIERS_ENUM}.CIL |
@@ -71,6 +72,7 @@ feature -- Test
 			method_main.optimize
 
 			pe_file.dump_output_file ("test_8.il", {CIL_OUTPUT_MODE}.ilasm, false)
+			pe_file.dump_output_file ("test_8.il", {CIL_OUTPUT_MODE}.peexe, false)
 
 		end
 

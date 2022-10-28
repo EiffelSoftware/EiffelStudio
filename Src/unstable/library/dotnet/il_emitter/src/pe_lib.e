@@ -743,12 +743,12 @@ feature {NONE} -- Output Implementation
 				-- Give initial PE Indexes for field resolution..
 			n := working_assembly.number (n)
 
---			create L_pe_writer
+			create l_pe_writer.make (a_is_exe, a_is_gui, working_assembly.snk_file)
 		end
 
 	obj_out: BOOLEAN
 		do
-				-- TODO to implement
+			to_implement ("Add Implementation")
 		end
 
 end

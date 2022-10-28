@@ -49,102 +49,106 @@ feature {NONE} -- Creation Procedures
 
 	tModule
 			-- Assembly def
-		once end
+		once value := 0 end
 
 	tTypeRef
 			-- References to other assemblies
-		once end
+		once value := 1 end
 
 	tTypeDef
 			-- definitions of classes and enumerations
-		once end
+		once value := 2 end
 
 	tField
 			-- definitions of fields
-		once end
+		once value := 4 end
 
 	tMethodDef
 			-- definitions of methods once end includes both managed and unmanaged
-		once end
+		once value := 6 end
 
 	tParam
 			-- definitions of parameters
-		once end
+		once value := 8 end
 
-	tInterfaceImpl once end
+	tInterfaceImpl once value := 9 end
 
 	tMemberRef
 			-- references to external methods once end also the call site references for vararg-style pinvokes
-		once end
+		once value := 10 end
 
 	tConstant
 			-- initialization constants once end we use them for enumerations but that is about it
-		once end
+		once value := 11 end
 
 	tCustomAttribute
 			-- custom attributes once end we use it for C# style varargs but nothing else
-		once end
+		once value := 12 end
 
-	tFieldMarshal once end
+	tFieldMarshal once value := 13 end
 
 	tDeclSecurity
 			-- we don't use it
-		once end
+		once value := 14 end
 
 	tClassLayout
 			-- size once end packing for classes
-		once end
+		once value := 15 end
 
 	tFieldLayout
 			-- field offsets once end we don't use it
-		once end
+		once value := 16 end
 
 	tStandaloneSig
 			--?? we don't use it
-		once end
+		once value := 17 end
 
-	tEventMap once end
-	tEvent once end
-	tPropertyMap once end
-	tProperty once end
-	tMethodSemantics once end
-	tMethodImpl once end
+	tEventMap once value := 18 end
+	tEvent once value := 20 end
+	tPropertyMap once value := 21 end
+	tProperty once value := 23 end
+	tMethodSemantics once value := 24 end
+	tMethodImpl once value := 25 end
 
 	tModuleRef
 			--?? we don't use it
-		once end
+		once value := 26 end
 
 	tTypeSpec
 			-- we use it for referenced types not found in the typedef table
-		once end
+		once value := 27 end
 
 	tImplMap
 			-- pinvoke DLL information
-		once end
+		once value := 28 end
 
 	tFieldRVA
 			-- cildata RVAs for field initialized data
-		once end
+		once value := 29 end
 
 	tAssemblyDef
 			-- our main assembly
-		once end
+		once value := 32 end
 
 	tAssemblyRef
 			-- any external assemblies
-		once end
+		once value := 35 end
 
-	tFile once end
-	tExportedType once end
-	tManifestResource once end
+	tFile once value := 38 end
+	tExportedType once value := 39 end
+	tManifestResource once value := 40 end
 
 	tNestedClass
 			-- list of nested classes and their parents
-		once end
+		once value := 41 end
 
-	tGenericParam once end
-	tMethodSpec once end
-	tGenericParamConstraint once end
+	tGenericParam once value := 42 end
+	tMethodSpec once value := 43 end
+	tGenericParamConstraint once value := 44 end
+
+feature -- Value	
+
+	value: NATURAL
 
 feature -- Instances
 
@@ -186,7 +190,6 @@ feature -- Instances
 					{PE_TABLES}.tGenericParam,
 					{PE_TABLES}.tMethodSpec,
 					{PE_TABLES}.tGenericParamConstraint
-
 				>>
 		ensure
 			instance_free: class

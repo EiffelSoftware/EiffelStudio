@@ -34,13 +34,14 @@ feature {NONE} -- Initialization
 				create public_key_token.make_filled (0, 1, 8)
 			end
 
+			is_external := a_external
 			create namespace_cache.make (0)
 			create class_cache.make (0)
 			create snk_file.make_empty
 			create custom_attributes
 		ensure
 			snk_file_set: snk_file.is_empty
-			external_set: not is_external
+			external_set: is_external = a_external
 			loaded_set: not is_loaded
 		end
 
@@ -186,8 +187,10 @@ feature -- Output
 			if is_external then
 				a_file.put_string ("extern ")
 			end
+			a_file.put_string ("'")
 			a_file.put_string (name)
-			a_file.put_string ("{")
+			a_file.put_string ("'")
+			a_file.put_string (" {")
 			a_file.put_new_line
 			a_file.flush
 			if major /= 0 or else minor /= 0 or else build /= 0 or revision /= 0 then

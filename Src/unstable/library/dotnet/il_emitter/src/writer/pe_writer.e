@@ -33,8 +33,8 @@ feature {NONE} -- Initialization
 			create snk_file.make_from_string (a_snk_file)
 			create meta_header.make_from_other (meta_header1)
 			create string_map.make (0)
-			create tables.make_filled(create {DNL_TABLE}.make, 1, {PE_TABLE_CONSTANTS}.max_tables)
-			create {ARRAYED_LIST [PE_METHOD]}methods.make(0)
+			create tables.make_filled (create {DNL_TABLE}.make, 1, {PE_TABLE_CONSTANTS}.max_tables)
+			create {ARRAYED_LIST [PE_METHOD]} methods.make (0)
 			create rva.make
 			create guid.make
 			create blob.make
@@ -212,7 +212,6 @@ feature -- Access
 	guid: PE_POOL
 
 	rva: PE_POOL
-
 
 feature {NONE} -- Implemenation
 
@@ -419,7 +418,7 @@ feature -- Element Change
 				if n = {PE_TABLES}.tmethoddef.value then
 				end
 			end
-			Result := tables[n].table.count.to_natural_32
+			Result := tables [n].table.count.to_natural_32
 		end
 
 	add_method (a_method: PE_METHOD)

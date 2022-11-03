@@ -4,7 +4,7 @@ note
 	revision: "$Revision$"
 
 class
-	PE_MODULE_DEF
+	PE_MODULE_REF
 
 inherit
 

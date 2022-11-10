@@ -297,7 +297,7 @@ feature -- Operations
 			if attached {CIL_ENUM} Current then
 				a_type.put (a_type.item | base_type_enum)
 			else
-				if attached {CIL_NAMESPACE} Current then
+				if not attached {CIL_NAMESPACE} Current then
 					if flags.flags & {CIL_QUALIFIERS_ENUM}.value /= 0 then
 						a_type.put (a_type.item | base_type_value)
 					else

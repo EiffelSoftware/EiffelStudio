@@ -8,7 +8,7 @@
 			<exclude>/\.git$</exclude>
 			<exclude>/\.svn$</exclude>
 		</file_rule>
-		<option warning="warning"  manifest_array_type="mismatch_warning">
+		<option warning="warning" manifest_array_type="mismatch_warning">
 			<assertions precondition="true" postcondition="true" check="true" invariant="true" loop="true" supplier_precondition="true"/>
 		</option>
 		<setting name="console_application" value="true"/>
@@ -22,6 +22,7 @@
 				<debug name="debug-cli" enabled="true"/>
 			</option>
 		</library>
+		<library name="time" location="$ISE_LIBRARY\library\time\time.ecf"/>
 		<cluster name="il_emitter_test" location=".\" recursive="true">
 			<option warning="none" manifest_array_type="mismatch_warning">
 			</option>

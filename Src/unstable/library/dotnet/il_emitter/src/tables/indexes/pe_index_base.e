@@ -59,11 +59,15 @@ feature -- Access
 feature -- Operations
 
 	render (a_sizes: ARRAY [NATURAL]; a_bytes: ARRAY [NATURAL_8]): NATURAL
+		require
+			valid_size: a_sizes.capacity = {PE_TABLE_CONSTANTS}.max_tables + {PE_TABLE_CONSTANTS}.extra_indexes
 		do
 			to_implement ("Add implementation");
 		end
 
 	get	(a_sizes: ARRAY [NATURAL]; a_bytes: ARRAY [NATURAL_8]): NATURAL
+		require
+			valid_size: a_sizes.capacity = {PE_TABLE_CONSTANTS}.max_tables + {PE_TABLE_CONSTANTS}.extra_indexes
 		do
 			to_implement ("Add implementation")
 		end
@@ -74,14 +78,12 @@ feature -- Operations
 		end
 
 	has_index_overflow(a_sizes: ARRAY[NATURAL]): BOOLEAN
+		require
+			valid_size: a_sizes.capacity = {PE_TABLE_CONSTANTS}.max_tables + {PE_TABLE_CONSTANTS}.extra_indexes
 		do
-				-- Todo check
-			Result := false
 		end
 
 	large (a_x: NATURAL): BOOLEAN
-		local
-
 		do
 			Result := (a_x |<< get_index_shift) > 0xffff
 		end

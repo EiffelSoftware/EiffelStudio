@@ -18,32 +18,15 @@ feature -- Initialization
 			l_val: INTEGER
 			l_cell: CELL [INTEGER]
 			l_api: CIL_EMITTER_API
+			time: TIME
 		do
---			l_val := 1
---			create l_cell.put (l_val)
---			fn (l_cell)
---			create mp.make (8)
---			mp.put_real_32 (3.5, 0)
---			across mp.read_array (0, 4) as ic loop
---				print (ic.to_hex_String)
---				io.put_new_line
---			end
-
---			print (escaped_string ("Do you wish to send anyway?"))
---			io.put_new_line
---			print (escaped_string ("In the last decade, the German word %"über%" has come to be used frequently in colloquial English."))
-
---			test4;
---			test;
---			test_2;
---			test_3;
---			(create {TEST_1}).test;
---			(create {TEST_2}).test;
---			(create {TEST_3}).test;
---			(create {TEST_4}).test;
---			(create {TEST_5}).test;
---			(create {TEST_6}).test;
---			(create {TEST_7}).test;
+			(create {TEST_1}).test;
+			(create {TEST_2}).test;
+			(create {TEST_3}).test;
+			(create {TEST_4}).test;
+			(create {TEST_5}).test;
+			(create {TEST_6}).test;
+			(create {TEST_7}).test;
 			(create {TEST_8}).test;
 		end
 
@@ -209,6 +192,66 @@ feature -- Initialization
 
 		do
 			val.put (val.item + 5)
+		end
+
+	compute_size: INTEGER
+		local
+			l_internal: INTERNAL
+			n: INTEGER
+			l_obj: PE_HEADER
+			l_size: INTEGER
+		do
+			create l_obj
+			create l_internal
+			n := l_internal.field_count (l_obj)
+			across 1 |..| n as ic loop
+				if attached l_internal.field (ic, l_obj) as l_field then
+					if attached {INTEGER_32} l_field then
+						Result := Result + {PLATFORM}.integer_32_bytes
+					elseif attached {INTEGER_16} l_field then
+						Result := Result + {PLATFORM}.integer_16_bytes
+					elseif attached {NATURAL_8} l_field then
+						Result := Result + {PLATFORM}.natural_8_bytes
+					end
+				end
+			end
+		end
+
+	compute_pe_object_size: INTEGER
+		local
+			l_internal: INTERNAL
+			n: INTEGER
+			l_obj: PE_OBJECT
+			l_size: INTEGER
+		do
+			create l_obj
+			create l_internal
+			n := l_internal.field_count (l_obj)
+			across 1 |..| n as ic loop
+				if attached l_internal.field (ic, l_obj) as l_field then
+					if attached {INTEGER_32} l_field then
+						Result := Result + {PLATFORM}.integer_32_bytes
+					elseif attached {STRING} l_field as l_str then
+						Result := Result + l_str.capacity
+					elseif attached {ARRAY [INTEGER]} l_field as l_arr then
+						Result := Result + (l_arr.count * {PLATFORM}.integer_32_bytes)
+					end
+				end
+			end
+		end
+
+	number_of_seconds_since_epoch: INTEGER_32
+			-- calculate the number of seconds since epoch in eiffel
+		local
+			l_date_epoch: DATE_TIME
+			l_date_now: DATE_TIME
+			l_diff: INTEGER_32
+		do
+			create l_date_epoch.make_from_epoch (0)
+			create l_date_now.make_now_utc
+			Result := l_date_now.definite_duration (l_date_epoch).seconds_count.to_integer
+		ensure
+			is_class: class
 		end
 
 note

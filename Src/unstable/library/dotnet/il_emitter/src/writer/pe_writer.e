@@ -55,7 +55,7 @@ feature {NONE} -- Initialization
 			image_base_set: image_base = 0x400000
 			language_set: language = 0x4b0
 			pe_header_void: pe_header = Void
-			pe_object_void: pe_object = Void
+			pe_object_void: pe_objects = Void
 			cor20_header_void: cor20_header = Void
 			tables_header_void: tables_header = Void
 			snk_file_set: snk_file.same_string_general (a_snk_file)
@@ -88,11 +88,11 @@ feature -- Access
 	tables_header: detachable DOTNET_META_TABLES_HEADER
 			-- `tables_header'
 
-	cor20_header: detachable DOTNET_COR20_HEADER
+	cor20_header: detachable PE_DOTNET_COR20_HEADER
 			-- `cor20_header'
 
-	pe_object: detachable PE_OBJECT
-			-- `pe_object'
+	pe_objects: detachable LIST [PE_OBJECT]
+			-- `pe_objects'
 
 	pe_header: detachable PE_HEADER
 			-- `pe_header'
@@ -283,12 +283,12 @@ feature -- Element change
 			cor20_header_assigned: cor20_header = a_cor20_header
 		end
 
-	set_pe_object (a_pe_object: like pe_object)
-			-- Assign `pe_object' with `a_pe_object'.
+	set_pe_object (a_pe_object: like pe_objects)
+			-- Assign `pe_objects' with `a_pe_object'.
 		do
-			pe_object := a_pe_object
+			pe_objects := a_pe_object
 		ensure
-			pe_object_assigned: pe_object = a_pe_object
+			pe_object_assigned: pe_objects = a_pe_object
 		end
 
 	set_pe_header (a_pe_header: like pe_header)
@@ -415,8 +415,8 @@ feature -- Element Change
 			n := a_entry.table_index
 			tables [n].table.force (a_entry)
 			debug ("pe_writer")
-				if n = {PE_TABLES}.tmethoddef.value then
-				end
+					-- Check C++ code  PEWriter::AddTableEntry
+				to_implement ("Double check if its requried.")
 			end
 			Result := tables [n].table.count.to_natural_32
 		end
@@ -434,13 +434,21 @@ feature -- Element Change
 			methods.force (a_method)
 		end
 
+feature -- Status Report
+
+	is_entry_point: BOOLEAN
+		do
+			Result := entry_point /= 0
+		end
+
 feature -- Stream functions
 
 	hash_string (a_utf8: STRING_32): NATURAL
 			-- return the stream index
 			--| TODO add a precondition to verify a_utf8 is a valid UTF_8
 		do
-			if attached string_map.item (a_utf8) as l_val then
+			if string_map.has (a_utf8) and then
+				attached string_map.item (a_utf8) as l_val then
 				Result := l_val
 			else
 				if strings.size = 0 then
@@ -514,7 +522,11 @@ feature -- Various Operations
 
 	write_file (a_corFlags: INTEGER; a_out: FILE_STREAM): BOOLEAN
 		do
-			to_implement ("Add implementation")
+			output_file := a_out
+			if not is_entry_point and not dll then
+				{EXCEPTIONS}.raise (generator + " Missing Entry Point ")
+			end
+			calculate_objects (a_corflags)
 		end
 
 	hash_part_of_file (a_context: CIL_SHA1_CONTEXT; a_offset: NATURAL; a_len: NATURAL)
@@ -536,8 +548,160 @@ feature -- Operations
 			-- this calculates various addresses and offsets that will be used and referenced
 			-- when we actually generate the data.   This must be kept in sync with the code to
 			-- generate data
+		require
+			pe_header_void: pe_header = Void
+		local
+			l_pe_header: PE_HEADER
+			l_pe_objects: like pe_objects
+			l_n: INTEGER
+			l_current_rva: NATURAL
 		do
-			to_implement ("Add implementation")
+				-- pe_header setup.
+			check pe_header = Void end
+			create l_pe_header
+			l_pe_header.signature := {PE_HEADER_CONSTANTS}.PESIG
+			l_pe_header.cpu_type := {PE_HEADER_CONSTANTS}.pe_intel386.to_integer_16
+			l_pe_header.magic := {PE_HEADER_CONSTANTS}.pe_magicnum.to_natural_8
+			l_pe_header.nt_hdr_size := 0xe0
+				-- optional header size
+			l_pe_header.flags := ({PE_HEADER_CONSTANTS}.pe_file_executable + if dll then {PE_HEADER_CONSTANTS}.pe_file_library else 0 end).to_natural_8
+			l_pe_header.linker_major_version := 6
+			l_pe_header.object_align := object_align.to_integer_32
+			l_pe_header.file_align := file_align.to_integer_32
+			l_pe_header.image_base := image_base.to_integer_32
+			l_pe_header.os_major_version := 4
+			l_pe_header.subsys_major_version := 4
+			l_pe_header.subsystem := (if gui then {PE_HEADER_CONSTANTS}.PE_SUBSYS_WINDOWS else {PE_HEADER_CONSTANTS}.PE_SUBSYS_CONSOLE end).to_integer_16
+			l_pe_header.dll_flags := 0x8540
+				-- magic!
+			l_pe_header.stack_size := 0x100000
+			l_pe_header.stack_commit := 0x1000
+			l_pe_header.heap_size := 0x100000
+			l_pe_header.heap_commit := 0x1000
+			l_pe_header.num_rvas := 16
+
+			l_pe_header.num_objects := 2
+			l_pe_header.header_size := mzh_header.count + compute_pe_header_size + l_pe_header.num_objects * compute_pe_object_size
+
+			if (l_pe_header.header_size \\ file_align.to_integer_32) /= 0 then
+				l_pe_header.header_size := l_pe_header.header_size + (file_align.to_integer_32 - (l_pe_header.header_size \\ file_align.to_integer_32))
+			end
+
+			l_pe_header.time := number_of_seconds_since_epoch
+
+			pe_header := l_pe_header
+
+			check pe_objects = Void end
+
+			create {ARRAYED_LIST [PE_OBJECT]}l_pe_objects.make_filled (max_pe_objects)
+
+			l_n := 1
+			l_pe_objects[l_n].name := ".text"
+			l_pe_objects[l_n].flags := {PE_HEADER_CONSTANTS}.winf_execute | {PE_HEADER_CONSTANTS}.winf_code | {PE_HEADER_CONSTANTS}.winf_readable
+
+			l_n := l_n + 1
+			l_pe_objects[l_n].name := ".reloc"
+			l_pe_objects[l_n].flags := {PE_HEADER_CONSTANTS}.WINF_INITDATA | {PE_HEADER_CONSTANTS}.WINF_READABLE | {PE_HEADER_CONSTANTS}.WINF_DISCARDABLE
+			l_current_rva := mzh_header.count.to_natural_32 + compute_pe_header_size.to_natural_32 + l_pe_header.num_objects.to_natural_32 * compute_pe_object_size.to_natural_32
+			if (l_current_rva \\ object_align) /= 0 then
+				l_current_rva := l_current_rva + object_align - (l_current_rva \\ object_align)
+			end
+
+			l_pe_objects [1].virtual_addr := l_current_rva.to_integer_32
+			l_pe_objects [1].raw_ptr := l_pe_header.header_size
+			l_pe_header.code_base := l_current_rva.to_integer_32
+			l_pe_header.iat_rva := l_current_rva.to_integer_32
+			l_pe_header.iat_size := 8
+			--l_pe_header.com_size =
+
+
+
+			to_implement ("Work in progress")
+		end
+
+feature {NONE} -- Implementation
+
+	number_of_seconds_since_epoch: INTEGER_32
+			-- calculate the number of seconds since epoch in eiffel
+		local
+			l_date_epoch: DATE_TIME
+			l_date_now: DATE_TIME
+			l_diff: INTEGER_32
+		do
+			create l_date_epoch.make_from_epoch (0)
+			create l_date_now.make_now_utc
+			Result := l_date_now.definite_duration (l_date_epoch).seconds_count.to_integer
+		ensure
+			is_class: class
+		end
+
+
+	compute_pe_header_size: INTEGER
+		local
+			l_internal: INTERNAL
+			n: INTEGER
+			l_obj: PE_HEADER
+			l_size: INTEGER
+		do
+			create l_obj
+			create l_internal
+			n := l_internal.field_count (l_obj)
+			across 1 |..| n as ic loop
+				if attached l_internal.field (ic, l_obj) as l_field then
+					if attached {INTEGER_32} l_field then
+						Result := Result + {PLATFORM}.integer_32_bytes
+					elseif attached {INTEGER_16} l_field then
+						Result := Result + {PLATFORM}.integer_16_bytes
+					elseif attached {NATURAL_8} l_field then
+						Result := Result + {PLATFORM}.natural_8_bytes
+					end
+				end
+			end
+		end
+
+	compute_pe_object_size: INTEGER
+		local
+			l_internal: INTERNAL
+			n: INTEGER
+			l_obj: PE_OBJECT
+			l_size: INTEGER
+		do
+			create l_obj
+			create l_internal
+			n := l_internal.field_count (l_obj)
+			across 1 |..| n as ic loop
+				if attached l_internal.field (ic, l_obj) as l_field then
+					if attached {INTEGER_32} l_field then
+						Result := Result + {PLATFORM}.integer_32_bytes
+					elseif attached {STRING} l_field as l_str then
+						Result := Result + l_str.capacity
+					elseif attached {ARRAY [INTEGER]} l_field as l_arr then
+						Result := Result + (l_arr.count * {PLATFORM}.integer_32_bytes)
+					end
+				end
+			end
+		end
+
+
+	compute_pe_dotnet_core20_size: INTEGER
+		local
+			l_internal: INTERNAL
+			n: INTEGER
+			l_obj: PE_DOTNET_COR20_HEADER
+			l_size: INTEGER
+		do
+			create l_obj
+			create l_internal
+			n := l_internal.field_count (l_obj)
+			across 1 |..| n as ic loop
+				if attached l_internal.field (ic, l_obj) as l_field then
+					if attached {NATURAL_16} l_field then
+						Result := Result + {PLATFORM}.natural_16_bytes
+					elseif attached {ARRAY [NATURAL]} l_field as l_arr then
+						Result := Result + (l_arr.count * {PLATFORM}.natural_32_bytes)
+					end
+				end
+			end
 		end
 
 feature -- Write operations

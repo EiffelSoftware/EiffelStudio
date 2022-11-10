@@ -9,22 +9,15 @@ class
 inherit
 
 	PE_INDEX_BASE
-		rename
-			make as make_base
 		redefine
 			get_index_shift,
 			has_index_overflow
 		end
 
 create
-	make_with_tag_and_index,
-	make
+	make,
+	make_with_tag_and_index
 
-feature {NONE} -- Initialization
-
-	make
-		do
-		end
 
 feature -- Enum: tags
 
@@ -43,7 +36,10 @@ feature -- Operations
 
 	has_index_overflow (a_sizes: ARRAY [NATURAL]): BOOLEAN
 		do
-			to_implement ("Add implementation")
+			Result := large(a_sizes[{PE_TABLES}.tModule.value.to_integer_32 + 1]) or
+			 		large(a_sizes[{PE_TABLES}.tModuleRef.value.to_integer_32 + 1]) or
+			 		large(a_sizes[{PE_TABLES}.tAssemblyRef.value.to_integer_32 + 1]) or
+			 		large(a_sizes[{PE_TABLES}.tTypeRef.value.to_integer_32 + 1])
 		end
 
 end

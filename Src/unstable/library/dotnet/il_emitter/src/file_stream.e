@@ -9,7 +9,8 @@ class
 create
 	make,
 	make_binary,
-	make_temp
+	make_temp,
+	make_stream
 
 feature {NONE} -- Initialiation
 
@@ -35,10 +36,21 @@ feature {NONE} -- Initialiation
 			on_debug := True
 		end
 
+	make_stream (a_pe_writer: PE_WRITER; a_pe_lib: PE_LIB)
+		do
+			create debug_output.make_empty
+			pe_writer := a_pe_writer
+			pe_lib := a_pe_lib
+		end
+
 	output_stream: detachable FILE
 			-- Stream to write the content.
 
 feature -- Access
+
+	pe_writer: detachable PE_WRITER
+
+	pe_lib: detachable PE_LIB
 
 	on_debug: BOOLEAN
 			-- Genereate in memory stream.

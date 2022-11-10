@@ -14,7 +14,7 @@ feature -- Access
 
 	table_index: INTEGER
 		do
-			to_implement ("Add implemenation or make it deferred")
+			Result := 0
 		end
 
 feature -- Operations

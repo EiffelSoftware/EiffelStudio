@@ -18,7 +18,7 @@ feature {NONE} -- Implementation
 	make
 		do
 			size := 0
-			max_size:= 200
+			max_size := 200
 			create base.make_filled (0, 1, 200)
 		ensure
 			size_zero: size = 0
@@ -39,12 +39,14 @@ feature -- Access
 		require
 			valid_size: size + new_size <= max_size
 		do
-			if size + new_size < max_size then
-				max_size := max_size * 2
-			else
-				max_size := (max_size + new_size) * 2
+			if size + new_size > max_size then
+				if size + new_size < max_size * 2 then
+					max_size := max_size * 2
+				else
+					max_size := (max_size + new_size) * 2
+				end
+				base.conservative_resize_with_default (0, 1, max_size.to_integer_32)
 			end
-			base.conservative_resize_with_default (0, 1, max_size.to_integer_32)
 		ensure
 			new_max_size: base.capacity.to_natural_32 = max_size
 		end
@@ -56,7 +58,7 @@ feature -- Element Change
 		do
 			size := size + 1
 		ensure
-			size_incremented: old size + 1  = size
+			size_incremented: old size + 1 = size
 		end
 
 	increment_size_by (a_value: NATURAL)
@@ -64,7 +66,7 @@ feature -- Element Change
 		do
 			size := size + a_value
 		ensure
-			size_incremented: old size + a_value  = size
+			size_incremented: old size + a_value = size
 		end
 
 end

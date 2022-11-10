@@ -738,12 +738,120 @@ feature {NONE} -- Output Implementation
 		local
 			n: NATURAL
 			l_pe_writer: PE_WRITER
+			l_module_index: NATURAL
+			l_type_def: PE_TYPEDEF_OR_REF
+			l_table: PE_TABLE_ENTRY_BASE
+			l_n: NATURAL
+			l_base_types: CELL [INTEGER]
+			l_system_index: NATURAL
+			l_object_index: NATURAL
+			l_value_index: NATURAL
+			l_enum_index: NATURAL
+			l_stream: FILE_STREAM
+			l_mscorlib_assembly: CIL_ASSEMBLY_DEF
+			l_assembly_index: NATURAL
+			l_rs: PE_RESOLUTION_SCOPE
+			l_result : TUPLE [type: CIL_FIND_TYPE; resource: detachable ANY]
+			l_pos: INTEGER
+			l_file_name: STRING_32
+			l_name_index: NATURAL
+			l_guid_index: NATURAL
 		do
 			n := 1
 				-- Give initial PE Indexes for field resolution..
 			n := working_assembly.number (n)
 
 			create l_pe_writer.make (a_is_exe, a_is_gui, working_assembly.snk_file)
+
+				-- RK: Unhandled Exception on Mono 3 and 5:
+				-- System.TypeLoadException: Could not load type 'Module' from assembly 'test6, Version=0.0.0.0, Culture=neutral,
+				-- PublicKeyToken=null'.
+				-- [ERROR] FATAL UNHANDLED EXCEPTION: System.TypeLoadException: Could not load type 'Module' from assembly 'test6,
+				-- Version=0.0.0.0, Culture=neutral, PublicKeyToken=null'.
+
+			l_module_index := l_pe_writer.hash_string ({STRING_32} "<Module>")
+				-- RK fix: "<Module>" instead of "Module" fixes the issue
+
+			create l_type_def.make_with_tag_and_index ({PE_TYPEDEF_OR_REF}.typedef, 0)
+
+			create {PE_TYPEDEF_TABLE_ENTRY} l_table.make_with_data (0, l_module_index, 0, l_type_def, 1, 1)
+			l_n := l_pe_writer.add_table_entry (l_table)
+
+			create l_base_types.put (0)
+			working_assembly.base_types (l_base_types)
+			if l_base_types.item /= 0 then
+				if attached mscorlib_assembly then end
+			end
+
+			if l_base_types.item /= 0 then
+				l_system_index := l_pe_writer.hash_string ("System")
+				 if l_base_types.item & {CIL_DATA_CONTAINER}.base_type_object /= 0 then
+				 	l_object_index := l_pe_writer.hash_string ("Object")
+				 end
+				 if l_base_types.item & {CIL_DATA_CONTAINER}.base_type_value /= 0 then
+				 	l_value_index := l_pe_writer.hash_string ("ValueType")
+				 end
+				 if l_base_types.item & {CIL_DATA_CONTAINER}.base_type_enum /= 0 then
+				 	l_enum_index := l_pe_writer.hash_string ("Enum")
+				 end
+			end
+
+			create l_stream.make_stream (l_pe_writer, Current)
+
+			across assembly_refs as assembly loop
+				Result := assembly.pe_header_dump (l_stream)
+			end
+
+			if l_base_types.item /= 0 then
+				l_mscorlib_assembly := mscorlib_assembly
+				l_assembly_index := l_mscorlib_assembly.pe_index
+				create l_rs.make_with_tag_and_index ( {PE_RESOLUTION_SCOPE}.AssemblyRef, l_assembly_index)
+				if l_base_types.item & {CIL_DATA_CONTAINER}.base_type_object /= 0 then
+					create {PE_TYPE_REF_TABLE_ENTRY} l_table.make_with_data (l_rs, l_object_index, l_system_index)
+					l_object_index := l_pe_writer.add_table_entry (l_table)
+					l_result := find ("[mscorlib]System::Object", Void, Void)
+					if attached {CIL_CLASS} l_result.resource as l_resource then
+						l_resource.set_peindex (l_object_index)
+					end
+				end
+				if l_base_types.item & {CIL_DATA_CONTAINER}.base_type_value /= 0 then
+					create {PE_TYPE_REF_TABLE_ENTRY} l_table.make_with_data (l_rs, l_value_index, l_system_index)
+					l_value_index := l_pe_writer.add_table_entry (l_table)
+					l_result := find ("[mscorlib]System::ValueType", Void, Void)
+					if attached {CIL_CLASS} l_result.resource as l_resource then
+						l_resource.set_peindex (l_value_index)
+					end
+				end
+				if l_base_types.item & {CIL_DATA_CONTAINER}.base_type_enum /= 0 then
+					create {PE_TYPE_REF_TABLE_ENTRY} l_table.make_with_data (l_rs, l_enum_index, l_system_index)
+					l_enum_index := l_pe_writer.add_table_entry (l_table)
+					l_result := find ("[mscorlib]System::ValueType", Void, Void)
+					if attached {CIL_CLASS} l_result.resource as l_resource then
+						l_resource.set_peindex (l_enum_index)
+					end
+				end
+				l_pe_writer.set_base_classes (l_object_index, l_value_index, l_enum_index, l_system_index)
+			end
+				-- TODO double check
+			create l_file_name.make_from_string (a_file_name)
+			l_pos := a_file_name.last_index_of ('\', l_file_name.count)
+			if l_pos /= 0 and then l_pos /= a_file_name.count then
+				l_file_name := l_file_name.substring (1, l_pos)
+			end
+			l_name_index := l_pe_writer.hash_string (l_file_name)
+			l_pe_writer.create_guid (module_guid)
+			l_guid_index := l_pe_writer.hash_guid (module_guid)
+
+			create {PE_MODULE_TABLE_ENTRY} l_table.make_with_data (l_name_index, l_guid_index)
+			l_n := l_pe_writer.add_table_entry (l_table)
+
+			across p_invoke_signatures as signature loop
+				Result := signature.pe_dump (l_stream)
+			end
+
+			Result := working_assembly.pe_dump (l_stream)
+			working_assembly.compile (l_stream)
+			Result := l_pe_writer.write_file (core_flags, l_stream)
 		end
 
 	obj_out: BOOLEAN

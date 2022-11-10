@@ -14,6 +14,10 @@ inherit
 			has_index_overflow
 		end
 
+create
+	make_with_index
+
+
 feature -- Operations
 
 	get_index_shift: INTEGER

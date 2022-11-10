@@ -5,7 +5,7 @@
 # ISE EIFFEL 4.5
 
 if [ -n "$LD" ]; then
-	ld='$LD'
+	ld=$LD
 else
 	ld='ar'
 fi

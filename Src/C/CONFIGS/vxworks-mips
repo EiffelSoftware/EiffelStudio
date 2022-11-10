@@ -40,7 +40,7 @@ else
 fi
 ar='armips'
 if [ -n "$LD" ]; then
-	ld='$LD'
+	ld=$LD
 else
 	ld='ldmips -EL -X -N -warn-common'
 fi

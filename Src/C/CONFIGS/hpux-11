@@ -62,7 +62,7 @@ eunicefix=':'
 
 d_bsdsig='undef'
 if [ -n "$LD" ]; then
-	ld='$LD'
+	ld=$LD
 else
 	ld='ld'
 fi

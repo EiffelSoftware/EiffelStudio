@@ -42,7 +42,7 @@ else
 fi
 ar='arhppa'
 if [ -n "$LD" ]; then
-	ld='$LD'
+	ld=$LD
 else
 	ld='ld'
 fi

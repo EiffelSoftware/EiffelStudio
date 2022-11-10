@@ -69,7 +69,7 @@ shared_prefix='lib'
 
 command_makefile='make -f'
 if [ -n "$LD" ]; then
-	ld='$LD'
+	ld=$LD
 else
 	ld='ld'
 fi

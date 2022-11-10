@@ -204,7 +204,7 @@ concurrent_prefix='c'
 cp='/usr/bin/cp'
 eiflib='finalized'
 if [ -n "$LD" ]; then
-	ld='$LD'
+	ld=$LD
 else
 	ld='ld'
 fi

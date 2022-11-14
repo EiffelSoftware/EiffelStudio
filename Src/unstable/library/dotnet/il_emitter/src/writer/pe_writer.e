@@ -8,6 +8,8 @@ class
 
 inherit
 
+	PE_TABLE_CONSTANTS
+
 	REFACTORING_HELPER
 
 create
@@ -33,13 +35,15 @@ feature {NONE} -- Initialization
 			create snk_file.make_from_string (a_snk_file)
 			create meta_header.make_from_other (meta_header1)
 			create string_map.make (0)
-			create tables.make_filled (create {DNL_TABLE}.make, 1, {PE_TABLE_CONSTANTS}.max_tables)
+			create tables.make_filled (create {DNL_TABLE}.make, 1, Max_tables)
 			create {ARRAYED_LIST [PE_METHOD]} methods.make (0)
 			create rva.make
 			create guid.make
 			create blob.make
 			create us.make
 			create strings.make
+			create rsa_encoder
+			create stream_headers.make_filled (0, 5, 2)
 		ensure
 			dll_set: dll = not is_exe
 			gui_set: gui = is_gui
@@ -68,6 +72,12 @@ feature {NONE} -- Initialization
 			methods_empty: methods.is_empty
 		end
 
+feature -- Constant
+
+	RTV_STRING: STRING = "v4.0.30319"
+			--this is a CUSTOM version string for microsoft.
+			--standard CIL differs
+
 feature -- Access
 
 	snk_base: NATURAL assign set_snk_base
@@ -85,7 +95,7 @@ feature -- Access
 	snk_file: STRING_32
 			-- `snk_file'
 
-	tables_header: detachable DOTNET_META_TABLES_HEADER
+	tables_header: detachable PE_DOTNET_META_TABLES_HEADER
 			-- `tables_header'
 
 	cor20_header: detachable PE_DOTNET_COR20_HEADER
@@ -148,9 +158,9 @@ feature -- Access
 
 	product_version: detachable ARRAY [NATURAL_16]
 
-	stream_headers: detachable ARRAY2 [NATURAL]
+	stream_headers: ARRAY2 [NATURAL]
 
-	rsa_encoder: detachable CIL_RSA_ENCODER
+	rsa_encoder: CIL_RSA_ENCODER
 
 	mzh_header: ARRAY [NATURAL_8]
 			-- MS-DOS header
@@ -534,7 +544,7 @@ feature -- Various Operations
 			to_implement ("Add implementation")
 		end
 
-	cildata_rva: detachable ARRAY [NATURAL_8]
+	cildata_rva: NATURAL_32
 			-- TODO double check.
 			-- another thing that makes this lib not thread safe, the RVA for
 			-- the beginning of the .data section gets put here after it is calculated
@@ -555,6 +565,17 @@ feature -- Operations
 			l_pe_objects: like pe_objects
 			l_n: INTEGER
 			l_current_rva: NATURAL
+			l_core_20_header: PE_DOTNET_COR20_HEADER
+			l_last_rva: NATURAL
+			l_end: INTEGER
+			l_data: CIL_SEH_DATA
+			l_edata: CIL_SEH_DATA
+			l_exit: BOOLEAN
+			l_etiny: BOOLEAN
+			l_tables_header: PE_DOTNET_META_TABLES_HEADER
+			l_counts: ARRAY [NATURAL]
+			l_buffer: ARRAY [NATURAL_8]
+			l_sect: INTEGER
 		do
 				-- pe_header setup.
 			check pe_header = Void end
@@ -581,7 +602,7 @@ feature -- Operations
 			l_pe_header.num_rvas := 16
 
 			l_pe_header.num_objects := 2
-			l_pe_header.header_size := mzh_header.count + compute_pe_header_size + l_pe_header.num_objects * compute_pe_object_size
+			l_pe_header.header_size := mzh_header.count + {PE_HEADER}.size_of + l_pe_header.num_objects * {PE_OBJECT}.size_of
 
 			if (l_pe_header.header_size \\ file_align.to_integer_32) /= 0 then
 				l_pe_header.header_size := l_pe_header.header_size + (file_align.to_integer_32 - (l_pe_header.header_size \\ file_align.to_integer_32))
@@ -589,20 +610,20 @@ feature -- Operations
 
 			l_pe_header.time := number_of_seconds_since_epoch
 
-			pe_header := l_pe_header
 
+				-- pe_objects setup
 			check pe_objects = Void end
 
-			create {ARRAYED_LIST [PE_OBJECT]}l_pe_objects.make_filled (max_pe_objects)
+			create {ARRAYED_LIST [PE_OBJECT]} l_pe_objects.make_filled (max_pe_objects)
 
 			l_n := 1
-			l_pe_objects[l_n].name := ".text"
-			l_pe_objects[l_n].flags := {PE_HEADER_CONSTANTS}.winf_execute | {PE_HEADER_CONSTANTS}.winf_code | {PE_HEADER_CONSTANTS}.winf_readable
+			l_pe_objects [l_n].name := ".text"
+			l_pe_objects [l_n].flags := {PE_HEADER_CONSTANTS}.winf_execute | {PE_HEADER_CONSTANTS}.winf_code | {PE_HEADER_CONSTANTS}.winf_readable
 
 			l_n := l_n + 1
-			l_pe_objects[l_n].name := ".reloc"
-			l_pe_objects[l_n].flags := {PE_HEADER_CONSTANTS}.WINF_INITDATA | {PE_HEADER_CONSTANTS}.WINF_READABLE | {PE_HEADER_CONSTANTS}.WINF_DISCARDABLE
-			l_current_rva := mzh_header.count.to_natural_32 + compute_pe_header_size.to_natural_32 + l_pe_header.num_objects.to_natural_32 * compute_pe_object_size.to_natural_32
+			l_pe_objects [l_n].name := ".reloc"
+			l_pe_objects [l_n].flags := {PE_HEADER_CONSTANTS}.WINF_INITDATA | {PE_HEADER_CONSTANTS}.WINF_READABLE | {PE_HEADER_CONSTANTS}.WINF_DISCARDABLE
+			l_current_rva := mzh_header.count.to_natural_32 + {PE_HEADER}.size_of.to_natural_32 + l_pe_header.num_objects.to_natural_32 * {PE_OBJECT}.size_of.to_natural_32
 			if (l_current_rva \\ object_align) /= 0 then
 				l_current_rva := l_current_rva + object_align - (l_current_rva \\ object_align)
 			end
@@ -612,11 +633,335 @@ feature -- Operations
 			l_pe_header.code_base := l_current_rva.to_integer_32
 			l_pe_header.iat_rva := l_current_rva.to_integer_32
 			l_pe_header.iat_size := 8
-			--l_pe_header.com_size =
+			l_pe_header.com_size := {PE_DOTNET_COR20_HEADER}.size_of
+			l_current_rva := l_current_rva + l_pe_header.com_size.to_natural_32
 
 
+				-- cor20_header setup
+			check cor20_header = Void end
+			create l_core_20_header
+			l_core_20_header.cb := {PE_DOTNET_COR20_HEADER}.size_of.to_natural_32
+			l_core_20_header.major_runtime_version := 2
+			l_core_20_header.minor_runtime_version := 5
 
-			to_implement ("Work in progress")
+				-- standard CIL expects ONLY bit 0, we are using bit 1 as well
+				-- for interoperability with the microsoft runtimes.
+
+			l_core_20_header.flags := a_cor_flags.to_natural_32
+			l_core_20_header.entry_point_token := entry_point
+
+			if not snk_file.is_empty then
+				to_implement ("Implement snkfile code")
+			end
+
+			cildata_rva := l_current_rva
+			if rva.size /= 0 then
+				l_current_rva := l_current_rva + rva.size
+				if l_current_rva \\ 8 /= 0 then
+					l_current_rva := l_current_rva + 8 - (l_current_rva \\ 8)
+				end
+			end
+
+			l_last_rva := l_current_rva
+
+			across methods as method loop
+				if method.flags & {PE_METHOD_CONSTANTS}.cil /= 0 then
+					if (method.flags & 3) = {PE_METHOD_CONSTANTS}.tinyformat then
+						method.set_rva (l_current_rva)
+						l_last_rva := l_current_rva
+						l_current_rva := l_current_rva + 1
+					else
+						if (l_current_rva \\ 4) /= 0 then
+							l_current_rva := l_current_rva + 4 - (l_current_rva \\ 4)
+						end
+						method.set_rva (l_current_rva)
+						l_last_rva := l_current_rva
+						l_current_rva := l_current_rva + 12
+					end
+					l_current_rva := l_current_rva + method.code_size
+					if not method.seh_data.is_empty then
+						if (l_current_rva \\ 4) /= 0 then
+							l_current_rva := l_current_rva + 4 - (l_current_rva \\ 4)
+						end
+						l_end := 1
+						l_data := method.seh_data [l_end]
+						from
+						until
+							l_end > method.seh_data.count or else L_exit
+						loop
+							l_edata := method.seh_data [l_end]
+
+							l_etiny := l_edata.try_offset < 65536 and then l_edata.try_length < 256 and then
+								l_edata.handler_offset < 65536 and then l_edata.handler_length < 256
+
+							if not l_etiny then
+								l_exit := true
+							else
+								l_end := l_end + 1
+							end
+						end
+						if l_end > method.seh_data.count and then method.seh_data.count < 21 then
+							l_current_rva := l_current_rva + 4 + (method.seh_data.count * 12).to_natural_32
+						else
+							l_current_rva := l_current_rva + 4 + (method.seh_data.count * 24).to_natural_32
+						end
+					end
+				else
+					method.set_rva (0)
+				end
+			end
+
+			if (l_current_rva \\ 4) /= 0 then
+				l_current_rva := l_current_rva + 4 - (l_current_rva \\ 4)
+			end
+
+			l_core_20_header.metadata [1] := l_current_rva
+				-- metadata root
+
+			l_current_rva := l_current_rva + 12
+				-- metadata header
+
+			l_current_rva := l_current_rva + 4
+				-- version size
+
+			l_current_rva := l_current_rva + compute_rtv_string_size
+
+			if (l_current_rva \\ 4) /= 0 then
+				l_current_rva := l_current_rva + 4 - (l_current_rva \\ 4)
+			end
+
+			l_current_rva := l_current_rva + 2
+				-- flags
+
+			l_current_rva := l_current_rva + 2
+				-- streams, will be 5 in our implementation
+				-- check stream_names feature.
+
+			across stream_names as elem loop
+				l_current_rva := l_current_rva + (elem.count + 1).to_natural_32
+				if (l_current_rva \\ 4) /= 0 then
+					l_current_rva := l_current_rva + 4 - (l_current_rva \\ 4)
+				end
+			end
+
+			stream_headers [1, 1] := l_current_rva - l_core_20_header.metadata [1]
+
+
+				-- tables_header set_up
+			check tables_header = Void end
+			create l_tables_header
+			l_tables_header.major_version := 2
+			l_tables_header.minor_version := 1
+			l_tables_header.mask_sorted := ({INTEGER_64} 0x1600 |<< 32) + 0x3325FA00
+			if strings.size >= 65536 then
+				l_tables_header.heap_offset_sizes := l_tables_header.heap_offset_sizes | 1
+			end
+			if guid.size >= 65536 then
+				l_tables_header.heap_offset_sizes := l_tables_header.heap_offset_sizes | 2
+			end
+			if blob.size >= 65536 then
+				l_tables_header.heap_offset_sizes := l_tables_header.heap_offset_sizes | 4
+			end
+
+			l_n := 0
+			create l_counts.make_filled (0, 1, Max_tables + Extra_indexes)
+			l_counts [t_string] := strings.size
+			l_counts [t_us] := us.size
+			l_counts [t_guid] := guid.size
+			l_counts [t_blob] := blob.size
+
+			across 0 |..| (max_tables - 1) as ic loop
+				if not tables [ic + 1].is_empty then
+					l_counts [ic + 1] := tables [ic + 1].size.to_natural_32
+					l_tables_header.mask_valid := l_tables_header.mask_valid | ({INTEGER_64}1 |<< ic)
+					l_n := l_n + 1
+				end
+			end
+			l_current_rva := l_current_rva + {PE_DOTNET_META_TABLES_HEADER}.size_of.to_natural_32
+					-- tables header
+			l_current_rva := l_current_rva + (l_n * {PLATFORM}.natural_32_bytes).to_natural_32
+					--table counts
+					-- Dword is 4 bytes.
+
+			across 0 |..| (max_tables - 1) as ic loop
+				if l_counts [ic + 1] /= 0 then
+					create l_buffer.make_filled (0, 1, 512)
+					l_n := tables [ic + 1].table [1].render (l_counts, l_buffer).to_integer_32
+					l_n := l_n * (l_counts [ic + 1]).to_integer_32
+					l_current_rva := l_current_rva + l_n.to_natural_32
+				end
+			end
+
+			if (l_current_rva \\ 4) /= 0 then
+				l_current_rva := l_current_rva + 4 - (l_current_rva \\ 4)
+			end
+
+			stream_headers [1,2] := l_current_rva - stream_headers[1,1] - l_core_20_header.metadata [1]
+			stream_headers [2,1] := l_current_rva - l_core_20_header.metadata [1]
+			l_current_rva := l_current_rva + strings.size
+
+			if (l_current_rva \\ 4) /= 0 then
+				l_current_rva := l_current_rva + 4 - (l_current_rva \\ 4)
+			end
+
+			stream_headers [2,2] := l_current_rva - stream_headers[2,1] - l_core_20_header.metadata [1]
+			stream_headers [3,1] := l_current_rva - l_core_20_header.metadata [1]
+			if us.size = 0 then
+				l_current_rva := l_current_rva + default_us.count.to_natural_32
+						-- US May be empty in our implementation we put an empty string there
+			else
+				l_current_rva := l_current_rva + us.size
+			end
+
+				-- TODO refactor this code into a feature.
+			if (l_current_rva \\ 4) /= 0 then
+				l_current_rva := l_current_rva + 4 - (l_current_rva \\ 4)
+			end
+
+			stream_headers [3,2] := l_current_rva - stream_headers[3,1] - l_core_20_header.metadata [1]
+			stream_headers [4,1] := l_current_rva - l_core_20_header.metadata [1]
+			l_current_rva := l_current_rva + guid.size
+
+			if (l_current_rva \\ 4) /= 0 then
+				l_current_rva := l_current_rva + 4 - (l_current_rva \\ 4)
+			end
+
+			stream_headers [4,2] := l_current_rva - stream_headers[4,1] - l_core_20_header.metadata [1]
+			stream_headers [5,1] := l_current_rva - l_core_20_header.metadata [1]
+			l_current_rva := l_current_rva + blob.size
+
+			if (l_current_rva \\ 4) /= 0 then
+				l_current_rva := l_current_rva + 4 - (l_current_rva \\ 4)
+			end
+
+			stream_headers [5,2] := l_current_rva - stream_headers[5,1] - l_core_20_header.metadata [1]
+			l_core_20_header.metadata [2] := l_current_rva - l_core_20_header.metadata [1]
+			l_pe_header.import_rva := l_current_rva.to_integer_32
+			l_current_rva := l_current_rva + ({PE_IMPORT_DIR}.size_of * 2).to_natural_32 + 8
+
+
+			if (l_current_rva \\ 16) /= 0 then
+				l_current_rva := l_current_rva + 16 - (l_current_rva \\ 16).to_natural_32
+			end
+
+			l_current_rva := l_current_rva + 2 +
+								c_sizeof ((create {C_STRING}.make ("_CorXXXMain")).item).to_natural_32 +
+								c_sizeof ((create {C_STRING}.make ("mscoree.dll")).item).to_natural_32 + 1
+
+			l_pe_header.import_size := l_current_rva.to_integer_32 - l_pe_header.import_rva
+
+			if (l_current_rva \\ 4) /= 0 then
+				l_current_rva := l_current_rva + 4 - (l_current_rva \\ 4)
+			end
+
+			l_current_rva := l_current_rva + 2
+			l_pe_header.entry_point := l_current_rva.to_integer_32
+			l_current_rva := l_current_rva + 6
+			if snk_len /= 0 then
+				l_core_20_header.strong_name_signature [1] := l_current_rva
+				l_core_20_header.strong_name_signature [2] := snk_len
+				l_current_rva := l_current_rva + snk_len
+			end
+
+			l_sect := 1
+			l_pe_objects [l_sect].virtual_size := l_current_rva.to_integer_32 - l_pe_objects [l_sect].virtual_addr
+			l_n := l_pe_objects [l_sect].virtual_size
+
+			if ((l_n \\ file_align.to_integer_32) /= 0) then
+				l_n := l_n + file_align.to_integer_32 - (l_n \\ file_align.to_integer_32)
+			end
+			l_pe_objects [l_sect].raw_size := l_n
+			l_pe_header.code_size := l_n
+
+
+			if (l_current_rva \\ object_align) /= 0 then
+				l_current_rva := l_current_rva + object_align - (l_current_rva \\ object_align)
+			end
+			l_pe_objects [l_sect + 1].raw_ptr := l_pe_objects [l_sect].raw_ptr + l_pe_objects [l_sect].raw_size
+			l_pe_objects [l_sect + 1].virtual_addr := l_current_rva.to_integer_32
+			l_pe_header.data_base := l_current_rva.to_integer_32
+			l_sect := l_sect + 1
+
+
+--#if 0
+--        peHeader_->resource_rva = currentRVA;
+--        currentRVA += (sizeof(PEResourceDirTable) + sizeof(PEResourceDirEntry)) * 3; /* resource dirs */
+--        currentRVA += sizeof(PEResourceDataEntry);
+
+--        currentRVA += 2; /* size of version info */
+--        currentRVA += 48; /* fixed info */
+--        currentRVA += 68; /* VarFileInfo */
+--        currentRVA += 368 - 72; /* String file info base */
+--        std::string nn = peLib.FileName();
+--        n = nn.find_last_of("\\");
+--        if (n != std::string::npos)
+--            n = nn.size() - n;
+--        else
+--            n = nn.size();
+--        if (n % 4)
+--            n += 4 - (n % 4);
+--        currentRVA += n * 2;
+
+--        char temp[256];
+--        sprintf(temp, "%d.%d.%d.%d", fileVersion[0], fileVersion[1], fileVersion[2], fileVersion[3]);
+--        n = strlen(temp);
+--        if (n % 4)
+--            n += 4 - (n % 4);
+--        n *= 2;
+--        currentRVA += n;
+--        sprintf(temp, "%d.%d.%d.%d", productVersion[0], productVersion[1], productVersion[2], productVersion[3]);
+--        n = strlen(temp);
+--        if (n % 4)
+--            n += 4 - (n % 4);
+--        n *= 2;
+--        currentRVA += n;
+--        sprintf(temp, "%d.%d.%d.%d", assemblyVersion[0], assemblyVersion[1], assemblyVersion[2], assemblyVersion[3]);
+--        n = strlen(temp);
+--        if (n % 4)
+--            n += 4 - (n % 4);
+--        n *= 2;
+--        currentRVA += n;
+
+--        peObjects_[sect].virtual_size = currentRVA - peObjects_[sect].virtual_addr;
+--        peHeader_->resource_size = peObjects_[sect].virtual_size;
+--        n = peObjects_[sect].virtual_size;
+--        if (n % fileAlign);
+--        n += fileAlign - n % fileAlign;
+--        peObjects_[sect].raw_size = n;
+--        peHeader_->data_size += n;
+
+--        if (currentRVA %objectAlign)
+--            currentRVA += objectAlign - currentRVA % objectAlign;
+--        peObjects_[sect + 1].raw_ptr = peObjects_[sect].raw_ptr + peObjects_[sect].raw_size;
+--        peObjects_[sect + 1].virtual_addr = currentRVA;
+--        sect++;
+--#endif
+
+			l_pe_header.fixup_rva := l_current_rva.to_integer_32
+			l_current_rva := l_current_rva + 12
+					-- sizeof relocs
+
+			l_pe_objects [l_sect].virtual_size := l_current_rva.to_integer_32 - l_pe_objects [l_sect].virtual_addr
+			l_pe_header.fixup_size := l_pe_objects [l_sect].virtual_size
+			l_n := l_pe_objects [l_sect].virtual_size
+			if (l_n \\ file_align.to_integer_32) /= 0 then
+				l_n := l_n + file_align.to_integer_32 - (l_n \\ file_align.to_integer_32)
+			end
+			l_pe_objects [l_sect].raw_size := l_n
+			l_pe_header.data_size := l_pe_header.data_size + l_n
+
+			if (l_current_rva \\ object_align) /= 0 then
+				l_current_rva := l_current_rva + object_align - (l_current_rva \\ object_align)
+			end
+			l_pe_objects [l_sect + 1].raw_ptr := l_pe_objects [l_sect].raw_ptr + l_pe_objects[l_sect].raw_size
+			l_pe_objects [l_sect + 1].virtual_addr := l_current_rva.to_integer_32
+			l_pe_header.image_size := l_current_rva.to_integer_32
+
+
+			pe_header := l_pe_header
+			pe_objects := l_pe_objects
+			cor20_header := l_core_20_header
+			tables_header := l_tables_header
 		end
 
 feature {NONE} -- Implementation
@@ -636,72 +981,21 @@ feature {NONE} -- Implementation
 		end
 
 
-	compute_pe_header_size: INTEGER
-		local
-			l_internal: INTERNAL
-			n: INTEGER
-			l_obj: PE_HEADER
-			l_size: INTEGER
-		do
-			create l_obj
-			create l_internal
-			n := l_internal.field_count (l_obj)
-			across 1 |..| n as ic loop
-				if attached l_internal.field (ic, l_obj) as l_field then
-					if attached {INTEGER_32} l_field then
-						Result := Result + {PLATFORM}.integer_32_bytes
-					elseif attached {INTEGER_16} l_field then
-						Result := Result + {PLATFORM}.integer_16_bytes
-					elseif attached {NATURAL_8} l_field then
-						Result := Result + {PLATFORM}.natural_8_bytes
-					end
-				end
-			end
-		end
-
-	compute_pe_object_size: INTEGER
-		local
-			l_internal: INTERNAL
-			n: INTEGER
-			l_obj: PE_OBJECT
-			l_size: INTEGER
-		do
-			create l_obj
-			create l_internal
-			n := l_internal.field_count (l_obj)
-			across 1 |..| n as ic loop
-				if attached l_internal.field (ic, l_obj) as l_field then
-					if attached {INTEGER_32} l_field then
-						Result := Result + {PLATFORM}.integer_32_bytes
-					elseif attached {STRING} l_field as l_str then
-						Result := Result + l_str.capacity
-					elseif attached {ARRAY [INTEGER]} l_field as l_arr then
-						Result := Result + (l_arr.count * {PLATFORM}.integer_32_bytes)
-					end
-				end
-			end
+	c_sizeof (a_str: POINTER): INTEGER
+		external "C inline"
+		alias
+			"return (EIF_INTEGER)sizeof($a_str);"
 		end
 
 
-	compute_pe_dotnet_core20_size: INTEGER
-		local
-			l_internal: INTERNAL
-			n: INTEGER
-			l_obj: PE_DOTNET_COR20_HEADER
-			l_size: INTEGER
+
+
+
+
+	compute_rtv_string_size: NATURAL
 		do
-			create l_obj
-			create l_internal
-			n := l_internal.field_count (l_obj)
-			across 1 |..| n as ic loop
-				if attached l_internal.field (ic, l_obj) as l_field then
-					if attached {NATURAL_16} l_field then
-						Result := Result + {PLATFORM}.natural_16_bytes
-					elseif attached {ARRAY [NATURAL]} l_field as l_arr then
-						Result := Result + (l_arr.count * {PLATFORM}.natural_32_bytes)
-					end
-				end
-			end
+			to_implement ("To double check")
+			Result := (rtv_string.count + 1).to_natural_32
 		end
 
 feature -- Write operations

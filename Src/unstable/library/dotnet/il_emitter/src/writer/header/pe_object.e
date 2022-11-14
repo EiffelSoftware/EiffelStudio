@@ -89,4 +89,32 @@ feature -- Element Change
 		ensure
 			flags_set: flags = a_flags
 		end
+
+feature -- Measurement
+
+	size_of: INTEGER
+		local
+			l_internal: INTERNAL
+			n: INTEGER
+			l_obj: PE_OBJECT
+			l_size: INTEGER
+		do
+			create l_obj
+			create l_internal
+			n := l_internal.field_count (l_obj)
+			across 1 |..| n as ic loop
+				if attached l_internal.field (ic, l_obj) as l_field then
+					if attached {INTEGER_32} l_field then
+						Result := Result + {PLATFORM}.integer_32_bytes
+					elseif attached {STRING} l_field as l_str then
+						Result := Result + l_str.capacity
+					elseif attached {ARRAY [INTEGER]} l_field as l_arr then
+						Result := Result + (l_arr.count * {PLATFORM}.integer_32_bytes)
+					end
+				end
+			end
+		ensure
+			instance_free: class
+		end
+
 end

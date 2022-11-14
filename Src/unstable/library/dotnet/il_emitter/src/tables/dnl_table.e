@@ -25,4 +25,21 @@ feature -- Access
 			-- vector of tables that can appear in a PE file
 			-- empty tables are elided / pass over?
 
+
+feature -- Status Report
+
+	size: INTEGER
+			-- Table size
+		do
+			Result := table.count
+		end
+
+	is_empty: BOOLEAN
+			-- Is the table empty?
+		do
+			Result := table.is_empty
+		end
+
+
+
 end

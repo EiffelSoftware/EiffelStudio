@@ -218,6 +218,12 @@ feature -- Access
 	res3_rva: INTEGER assign set_res3_rva
 			-- `res3_rva'
 
+feature -- Measurement
+
+	new: ANY
+			-- `new'
+		attribute check False then end end --| Remove line when `new' is initialized in creation procedure.
+
 feature -- Element change
 
 	set_signature (a_signature: like signature)
@@ -778,6 +784,33 @@ feature -- Element change
 			res3_rva := a_res3_rva
 		ensure
 			res3_rva_assigned: res3_rva = a_res3_rva
+		end
+
+feature -- Measurement
+
+	size_of: INTEGER
+		local
+			l_internal: INTERNAL
+			n: INTEGER
+			l_obj: PE_HEADER
+			l_size: INTEGER
+		do
+			create l_obj
+			create l_internal
+			n := l_internal.field_count (l_obj)
+			across 1 |..| n as ic loop
+				if attached l_internal.field (ic, l_obj) as l_field then
+					if attached {INTEGER_32} l_field then
+						Result := Result + {PLATFORM}.integer_32_bytes
+					elseif attached {INTEGER_16} l_field then
+						Result := Result + {PLATFORM}.integer_16_bytes
+					elseif attached {NATURAL_8} l_field then
+						Result := Result + {PLATFORM}.natural_8_bytes
+					end
+				end
+			end
+		ensure
+			instance_free: class
 		end
 
 end

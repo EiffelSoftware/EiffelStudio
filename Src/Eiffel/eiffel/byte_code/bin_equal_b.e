@@ -154,7 +154,10 @@ feature
 				get_left_register
 			end
 			right.analyze
-			if right_type.is_basic and not (left_type.is_none or left_type.is_basic) then
+			if
+				not left_type.is_none and then not left_type.is_basic and then
+				(right_type.is_basic or else right.allocates_memory)
+			then
 					-- Release register of `right` because its result will be kept in `right_register`.
 				right.free_register
 				get_right_register
@@ -302,7 +305,7 @@ feature -- Inlining
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2018, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2022, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

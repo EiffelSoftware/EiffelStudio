@@ -34,17 +34,17 @@ feature {NONE} --Initialization
 			end
 		ensure
 			basic_type_set: basic_type = a_type
-			pointer_level_set: not (basic_type = {CIL_BASIC_TYPE}.type_var or else basic_type = {CIL_BASIC_TYPE}.method_param ) implies pointer_level = a_pointer_level
-			pointer_level_defaul: (basic_type = {CIL_BASIC_TYPE}.type_var or else basic_type = {CIL_BASIC_TYPE}.method_param ) implies pointer_level = 0
+			pointer_level_set: not (basic_type = {CIL_BASIC_TYPE}.type_var or else basic_type = {CIL_BASIC_TYPE}.method_param) implies pointer_level = a_pointer_level
+			pointer_level_defaul: (basic_type = {CIL_BASIC_TYPE}.type_var or else basic_type = {CIL_BASIC_TYPE}.method_param) implies pointer_level = 0
 			array_level_set: array_level = 0
 			by_ref_set: not by_ref
-			type_ref_void:  type_ref = Void
+			type_ref_void: type_ref = Void
 			method_ref_void: method_ref = Void
 			pe_index_set: pe_index = 0
 			pinned_set: not pinned
 			show_type_set: not show_type
-			var_num_default: not (basic_type = {CIL_BASIC_TYPE}.type_var or else basic_type = {CIL_BASIC_TYPE}.method_param ) implies var_num = 0
-			var_num_set: basic_type = (basic_type = {CIL_BASIC_TYPE}.type_var or else basic_type = {CIL_BASIC_TYPE}.method_param ) implies var_num = a_pointer_level
+			var_num_default: not (basic_type = {CIL_BASIC_TYPE}.type_var or else basic_type = {CIL_BASIC_TYPE}.method_param) implies var_num = 0
+			var_num_set: basic_type = (basic_type = {CIL_BASIC_TYPE}.type_var or else basic_type = {CIL_BASIC_TYPE}.method_param) implies var_num = a_pointer_level
 			mod_opt_void: mod_opt = Void
 		end
 
@@ -65,40 +65,37 @@ feature {NONE} --Initialization
 			var_num_set: var_num = 0
 		end
 
-
 feature -- Access
 
 	pinned: BOOLEAN
 
 	pointer_level: INTEGER
-		-- pointre indirection count.
+			-- pointre indirection count.
 
 	var_num: INTEGER
-		-- generic variable number
+			-- generic variable number
 
 	by_ref: BOOLEAN
-		-- is a reference?
+			-- is a reference?
 
 	array_level: INTEGER
 
 	basic_type: CIL_BASIC_TYPE
-		--The type of the CLS_TYPE object
+			--The type of the CLS_TYPE object
 
 	type_ref: detachable CIL_DATA_CONTAINER
-		-- The class reference for class type objects.
-		--|In the C++ library it the method GetClass.
+			-- The class reference for class type objects.
+			--|In the C++ library it the method GetClass.
 
 	method_ref: detachable CIL_METHOD_SIGNATURE
-		-- The signature reference for method type objects
-		--| In the C++ library is the method GetMethod.
+			-- The signature reference for method type objects
+			--| In the C++ library is the method GetMethod.
 
 	mod_opt: detachable CIL_TYPE
-
 
 	pe_index: NATURAL
 
 	show_type: BOOLEAN assign set_show_type
-
 
 feature -- Status Report
 
@@ -148,31 +145,30 @@ feature -- Status Report
 							Result := False
 						end
 						if Result and then
-							l_type_ref.name.substring(1, n1) /= l_other_type_ref.name.substring(1, n2)
+							l_type_ref.name.substring (1, n1) /= l_other_type_ref.name.substring (1, n2)
 						then
 							Result := False
 						end
 						if Result and then
 							l_transfer
 						then
-							type_ref := a_other.type_ref  -- TODO add a setter so we can add a postcondition.
+							type_ref := a_other.type_ref -- TODO add a setter so we can add a postcondition.
 						end
 					end
 				end
 			end
 		end
 
-
 	matches_type_ref (a_other: detachable CIL_DATA_CONTAINER): BOOLEAN
 			-- TODO double check this implementation
 		do
 			if
 				attached type_ref as l_type_Ref and then
-			    attached a_other as l_other
+				attached a_other as l_other
 			then
-				 -- TODO need to check how to
-				 -- compare DATA_CONTAINER instances.
-				Result :=  l_type_ref.is_equal(l_other)
+					-- TODO need to check how to
+					-- compare DATA_CONTAINER instances.
+				Result := l_type_ref.is_equal (l_other)
 			else
 				if type_ref = Void and then
 					a_other = Void
@@ -183,8 +179,6 @@ feature -- Status Report
 				end
 			end
 		end
-
-
 
 feature -- Element Change
 
@@ -202,7 +196,7 @@ feature -- Element Change
 		do
 			pointer_level := a_val
 		ensure
-			pointer_level_set: pointer_level= a_val
+			pointer_level_set: pointer_level = a_val
 		end
 
 	set_pinned (a_val: BOOLEAN)
@@ -228,7 +222,6 @@ feature -- Element Change
 		ensure
 			by_ref_set: by_ref = a_val
 		end
-
 
 	set_array_level (a_val: INTEGER_32)
 			-- Set `array_level` with `a_val`.
@@ -262,7 +255,6 @@ feature -- Element Change
 			mod_opt_set: mod_opt = a_type
 		end
 
-
 feature -- Status Report
 
 	is_void: BOOLEAN
@@ -272,14 +264,14 @@ feature -- Status Report
 
 feature --Access Instance Free
 
-	type_names: ARRAYED_LIST[STRING]
+	type_names: ARRAYED_LIST [STRING]
 		once
 			create Result.make_from_array (<<
-					"",        "",        "", "", "void",   "bool",       "char",
-                    "int8",    "uint8",   "int16",  "uint16",     "int32",
-                    "uint32",  "int64",   "uint64", "native int", "native unsigned int",
-                    "float32", "float64", "object", "string"
-			>>)
+					"", "", "", "", "void", "bool", "char",
+					"int8", "uint8", "int16", "uint16", "int32",
+					"uint32", "int64", "uint64", "native int", "native unsigned int",
+					"float32", "float64", "object", "string"
+				>>)
 		ensure
 			instance_free: class
 		end
@@ -301,14 +293,14 @@ feature -- Output
 						a_file.put_string (" class ")
 					end
 				end
-				if attached {CIL_CLASS}type_ref as l_type_ref then
+				if attached {CIL_CLASS} type_ref as l_type_ref then
 					l_name := {CIL_QUALIFIERS}.name ("", l_type_ref, True)
 
-					if l_name[1] /= "[" then
+					if l_name [1] /= '[' then
 						a_file.put_string ("'")
 						a_file.put_string (l_name)
 						a_file.put_string ("'")
-						a_file.put_string (l_type_ref.adorn_generics(False))
+						a_file.put_string (l_type_ref.adorn_generics (False))
 					else
 						l_npos := l_name.index_of (']', 1)
 						if l_npos /= 0 and then l_npos /= l_name.count then
@@ -316,7 +308,7 @@ feature -- Output
 							a_file.put_string ("'")
 							a_file.put_string (l_name.substring (l_npos + 1, l_name.count))
 							a_file.put_string ("'")
-							a_file.put_string (l_type_ref.adorn_generics(False))
+							a_file.put_string (l_type_ref.adorn_generics (False))
 						else
 							a_file.put_string ("'")
 							a_file.put_string (l_name)
@@ -343,7 +335,7 @@ feature -- Output
 			elseif array_level /= 0 then
 					-- TODO double check code with Type.cpp code
 				a_file.put_string (" [")
-				across 0 |..| (array_level - 1) as  i loop
+				across 0 |..| (array_level - 1) as i loop
 					if i /= 0 then
 						a_file.put_string (", 0...")
 					else
@@ -353,7 +345,7 @@ feature -- Output
 				a_file.put_string ("]")
 			end
 			if pointer_level > 0 then
-				across 0 |..| (pointer_level-1) as  i loop
+				across 0 |..| (pointer_level - 1) as i loop
 					a_file.put_string (" *")
 				end
 			end

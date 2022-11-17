@@ -4,7 +4,7 @@ note
 	revision: "$Revision$"
 
 class
-	PE_TYPE_ENUM
+	PE_TYPES_ENUM
 
 feature -- Access: Simple Type
 

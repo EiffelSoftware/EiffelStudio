@@ -435,7 +435,7 @@ feature -- Output
 		end
 
 
-	pe_dump (a_stream: FILE_STREAM; as_type: BOOLEAN)
+	pe_dump (a_stream: FILE_STREAM; as_type: BOOLEAN): BOOLEAN
 		do
 			to_implement("Add implementation")
 		end

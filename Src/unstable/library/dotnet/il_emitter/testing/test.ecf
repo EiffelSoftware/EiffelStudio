@@ -10,6 +10,7 @@
 		</file_rule>
 		<option warning="warning" manifest_array_type="mismatch_warning">
 			<assertions precondition="true" postcondition="true" check="true" invariant="true" loop="true" supplier_precondition="true"/>
+			<warning name="obsolete_feature" value="all"/>
 		</option>
 		<setting name="console_application" value="true"/>
 		<setting name="dead_code_removal" value="feature"/>

@@ -102,6 +102,15 @@ feature -- Access Enumerations
 	base_index_system: INTEGER = 8
 			-- reference to 'System' namespace
 
+
+feature -- Status Report
+
+	in_assembly_ref: BOOLEAN
+		do
+			Result := if attached parent as l_parent then l_parent.in_assembly_ref else False end
+		end
+
+
 feature --Element Change
 
 	add (a_item: ANY)
@@ -316,7 +325,15 @@ feature -- Output
 
 	pe_dump (a_stream: FILE_STREAM): BOOLEAN
 		do
-			to_implement ("Add implementation")
+			across fields as field loop
+				Result := field.pe_dump (a_stream)
+			end
+			across methods as method loop
+				Result := method.pe_dump (a_stream)
+			end
+			across children as child loop
+				Result := child.pe_dump (a_stream)
+			end
 		end
 
 	il_src_dump (a_file: FILE_STREAM): BOOLEAN

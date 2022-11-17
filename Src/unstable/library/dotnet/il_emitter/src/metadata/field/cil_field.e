@@ -6,6 +6,10 @@ note
 class
 	CIL_FIELD
 
+inherit
+
+	REFACTORING_HELPER
+
 create
 	make
 
@@ -75,8 +79,19 @@ feature -- Access
 
 	enum_value: INTEGER_64
 
+	byte_length: INTEGER
+
 
 feature -- Element change
+
+	add_enum_value (a_value: INTEGER_64; a_size: CIL_VALUE_SIZE)
+		do
+			if mode = {CIL_VALUE_MODE}.none then
+				mode := {CIL_VALUE_MODE}.enum
+				enum_value := a_value
+				size := a_size
+			end
+		end
 
 	add_initializer (a_bytes: ARRAY [NATURAL_8])
 			--  Add an SDATA initializer
@@ -265,6 +280,11 @@ feature -- Output
 			else
 				a_file.put_string (" int32")
 			end
+		end
+
+	pe_dump (a_stream: FILE_STREAM): BOOLEAN
+		do
+			to_implement ("Add implementation")
 		end
 
 feature {NONE} -- Utils

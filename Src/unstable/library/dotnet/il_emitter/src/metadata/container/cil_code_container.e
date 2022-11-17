@@ -52,6 +52,14 @@ feature -- Access
 	has_seh: BOOLEAN
 			-- has Structured Exception Handling?
 
+
+feature -- Status Report
+
+	in_assembly_ref: BOOLEAN
+		do
+			Result := if attached parent as l_parent then l_parent.in_assembly_ref else False end
+		end
+
 feature -- Element Change
 
 	set_container (a_item: like parent)

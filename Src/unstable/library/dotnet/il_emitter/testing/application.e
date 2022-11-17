@@ -20,6 +20,7 @@ feature -- Initialization
 			l_api: CIL_EMITTER_API
 			time: TIME
 		do
+			test_guid;
 			(create {TEST_1}).test;
 			(create {TEST_2}).test;
 			(create {TEST_3}).test;
@@ -252,6 +253,51 @@ feature -- Initialization
 			Result := l_date_now.definite_duration (l_date_epoch).seconds_count.to_integer
 		ensure
 			is_class: class
+		end
+
+	test_guid
+		local
+			l_guid: ARRAY [NATURAL_8]
+		do
+			create l_guid.make_filled (0, 1, 16)
+			create_guid (l_guid)
+		end
+
+	create_guid (a_guid: ARRAY [NATURAL_8])
+		local
+			l_mp: MANAGED_POINTER
+		do
+			create l_mp.make (16)
+			c_create_guid (l_mp.item)
+			a_guid.make_from_array (l_mp.read_array (0, 16))
+		end
+
+	c_create_guid (a_guid: POINTER)
+		external "C++ inline use <random>, <random>, <array>, <algorithm>, <functional>"
+		alias
+			"{
+			std::array<unsigned char, 128 / 8> rnd;
+
+		    std::uniform_int_distribution<int> distribution(0, 0xff);
+		    // note that this whole thing will fall apart if the C++ lib uses
+		    // a prng with constant seed for the random_device implementation.
+		    // that shouldn't be a problem on OS we are interested in.
+		    std::random_device dev;
+		    std::mt19937 engine(dev());
+		    auto generator = std::bind(distribution, engine);
+
+		    std::generate(rnd.begin(), rnd.end(), generator);
+
+		    // make it a valid version 4 (random) GUID
+		    // remember that on windows GUIDs are native endianness so this may need
+		    // work if you port it
+		    rnd[7 /*6*/] &= 0xf;
+		    rnd[7 /*6*/] |= 0x40;
+		    rnd[9 /*8*/] &= 0x3f;
+		    rnd[9 /*8*/] |= 0x80;
+
+		    memcpy($a_guid, rnd.data(), rnd.size());
+			}"
 		end
 
 note

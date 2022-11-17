@@ -19,7 +19,7 @@ feature {NONE} -- Implementation
 		do
 			size := 0
 			max_size := 200
-			create base.make_filled (0, 1, 200)
+			create base.make_filled (0, 200)
 		ensure
 			size_zero: size = 0
 			max_size: max_size = 200
@@ -32,7 +32,9 @@ feature -- Access
 
 	max_size: NATURAL
 
-	base: ARRAY [NATURAL_8]
+	base: SPECIAL [NATURAL_8]
+		-- todo double check if we need to use
+		-- SPECIAL instead of ARRAY
 
 	confirm (new_size: NATURAL)
 			-- C++ uses ensure
@@ -45,7 +47,7 @@ feature -- Access
 				else
 					max_size := (max_size + new_size) * 2
 				end
-				base.conservative_resize_with_default (0, 1, max_size.to_integer_32)
+				base := base.resized_area_with_default (0, max_size.to_integer_32)
 			end
 		ensure
 			new_max_size: base.capacity.to_natural_32 = max_size
@@ -67,6 +69,20 @@ feature -- Element Change
 			size := size + a_value
 		ensure
 			size_incremented: old size + a_value = size
+		end
+
+	copy_data (a_index: INTEGER; a_data: ARRAY [NATURAL_8]; a_count: INTEGER)
+		local
+			l_index: INTEGER
+		do
+			 -- TODO double check if
+			 -- base.copy_data (other: SPECIAL [T], source_index, destination_index, n: INTEGER_32)
+			 -- could replace the following code.
+			l_index := a_index
+			across 1 |..| a_count as ic  loop
+				base [l_index] := ic.to_natural_8
+				l_index := l_index + 1
+			end
 		end
 
 end

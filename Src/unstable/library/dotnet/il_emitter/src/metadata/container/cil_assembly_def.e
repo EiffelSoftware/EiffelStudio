@@ -15,6 +15,8 @@ inherit
 	CIL_DATA_CONTAINER
 		rename
 			make as make_data_container
+		redefine
+			in_assembly_ref
 		end
 
 create
@@ -174,11 +176,36 @@ feature -- Status Report
 			to_implement ("Add implementation")
 		end
 
+	in_assembly_ref: BOOLEAN
+		do
+			Result := is_external
+		end
+
 feature -- Output
 
-	pe_header_dump (a_strean: FILE_STREAM): BOOLEAN
+	pe_header_dump (a_stream: FILE_STREAM): BOOLEAN
+		local
+			l_name_index: NATURAL
+			l_table: PE_TABLE_ENTRY_BASE
+			l_blob_index: NATURAL
+			l_exit: BOOLEAN
 		do
-			to_implement ("Add implemenation")
+			if attached {PE_WRITER} a_stream.pe_writer as l_writer then
+				l_name_index := l_writer.hash_string (name)
+				if is_external then
+					across 1 |..| 8 as ic until l_exit loop
+						if public_key_token [ic] /= 0then
+							l_blob_index := l_writer.hash_blob (public_key_token, 8)
+							l_exit := True
+						end
+					end
+					create {PE_ASSEMBLY_REF_TABLE_ENTRY} l_table.make_with_data ({PE_ASSEMBLY_FLAGS}.PA_none, major.to_natural_16, minor.to_natural_16, build.to_natural_16, revision.to_natural_16, l_name_index, l_blob_index)
+				else
+					create {PE_ASSEMBLY_DEF_TABLE_ENTRY} l_table.make_with_data ({PE_ASSEMBLY_FLAGS}.PA_none, major.to_natural_16, minor.to_natural_16, build.to_natural_16, revision.to_natural_16, l_name_index.to_natural_32)
+				end
+				pe_index := l_writer.add_table_entry (l_table)
+				Result := True
+			end
 		end
 
 	il_header_dump (a_file: FILE_STREAM): BOOLEAN

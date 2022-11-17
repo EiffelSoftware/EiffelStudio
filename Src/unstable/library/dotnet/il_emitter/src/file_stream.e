@@ -136,4 +136,25 @@ feature -- Element change
 			Result := debug_output
 		end
 
+
+feature -- PE_LIB	
+
+	find (a_name: STRING_32): detachable ANY
+		local
+			l_res: TUPLE [type: CIL_FIND_TYPE; resource: detachable ANY]
+		do
+			if attached pe_lib as l_pe_lib then
+				l_res := l_pe_lib.find (a_name, Void, l_pe_lib.mscorlib_assembly)
+				Result := l_res.resource
+			end
+		end
+
+
+	add_method (a_method: CIL_METHOD)
+		do
+			if attached pe_lib as l_pe_lib then
+				l_pe_lib.all_method.force (a_method)
+			end
+		end
+
 end

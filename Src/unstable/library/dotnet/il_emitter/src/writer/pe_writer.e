@@ -456,6 +456,9 @@ feature -- Stream functions
 	hash_string (a_utf8: STRING_32): NATURAL
 			-- return the stream index
 			--| TODO add a precondition to verify a_utf8 is a valid UTF_8
+		local
+			l_str: STRING_8
+			l_converter: BYTE_ARRAY_CONVERTER
 		do
 			if string_map.has (a_utf8) and then
 				attached string_map.item (a_utf8) as l_val then
@@ -464,9 +467,12 @@ feature -- Stream functions
 				if strings.size = 0 then
 					strings.increment_size
 				end
-					-- TODO check if we really need to do `+ 1`
 				strings.confirm (strings.size + 1)
 				Result := strings.size
+				l_str := {UTF_CONVERTER}.utf_32_string_to_utf_8_string_8 (a_utf8)
+				create l_converter.make_from_bin_string (l_str)
+
+				strings.copy_data (strings.size.to_integer_32, l_converter.to_natural_8_array, l_str.count + 1)
 				strings.increment_size_by ((a_utf8.count + 1).to_natural_32)
 				string_map.force (Result, a_utf8)
 			end
@@ -474,20 +480,97 @@ feature -- Stream functions
 
 	hash_us (a_str: STRING_32; a_len: INTEGER): NATURAL
 			-- return the stream index
+		local
+			l_flag: INTEGER
+			l_blob_len: INTEGER
+			n: INTEGER
 		do
-			to_implement ("Add implementation")
+			if us.size = 0 then
+				us.increment_size
+			end
+			us.confirm ((a_len * 2 + 5).to_natural_32)
+			Result := us.size
+			l_blob_len := a_len * 2 + 1
+			if l_blob_len < 0x80 then
+				us.base [us.size.to_integer_32] := l_blob_len.to_natural_8
+				us.increment_size
+			elseif l_blob_len <= 0x3fff then
+				us.base[us.size.to_integer_32] := ((l_blob_len |>> 8) | 0x80).to_natural_8
+				us.increment_size
+        		us.base[us.size.to_integer_32] := l_blob_len.to_natural_8
+        		us.increment_size
+        	else
+		        l_blob_len := l_blob_len & 0x1fffffff
+		        us.base[us.size.to_integer_32] := ((l_blob_len |>> 24) | 0xc0).to_natural_8
+		        us.increment_size
+		        us.base[us.size.to_integer_32] := (l_blob_len |>> 16).to_natural_8
+		        us.increment_size
+		        us.base[us.size.to_integer_32] := (l_blob_len |>> 8).to_natural_8
+		        us.increment_size
+		        us.base[us.size.to_integer_32] := (l_blob_len |>> 0).to_natural_8
+		    	us.increment_size
+		    end
+
+			across a_str as i loop
+				n := i.code
+		        if (n & 0xff00)/= 0 then
+		            l_flag := 1
+		        elseif (n <= 8 or else (n >= 0x0e and then n < 0x20) or else n = 0x27 or else n = 0x2d or else n = 0x7f) then
+		            l_flag := 1
+		        end
+		        us.base[us.size.to_integer_32] := (n & 0xff).to_natural_8
+		        us.increment_size
+		        us.base[us.size.to_integer_32] := (n |>> 8).to_natural_8
+		        us.increment_size
+		    end
+		    us.base [us.size.to_integer_32] := l_flag.to_natural_8
+		    us.increment_size
 		end
 
 	hash_guid (a_guid: ARRAY [NATURAL_8]): NATURAL
 			-- return the stream index
 		do
-			to_implement ("Add implementation")
+			guid.confirm (16) -- 128 // 8
+			Result := guid.size
+			guid.copy_data (Result.to_integer_32, a_guid, 16)
+			guid.increment_size_by (16)
+			Result := Result // 16 + 1
 		end
 
-	Hash_Blob (a_blob_data: ARRAY [NATURAL_8]; a_blob_len: NATURAL_8): NATURAL
-			-- return the stream index
+	hash_blob (a_blob_data: ARRAY [NATURAL_8]; a_blob_len: NATURAL_8): NATURAL
+			-- return the stream index.
+		local
+			l_rv: NATURAL
+			l_blob_len: INTEGER
 		do
-			to_implement ("Add implementation")
+			l_blob_len := a_blob_len
+			if blob.size = 0 then
+				blob.increment_size
+			end
+			blob.confirm (a_blob_len + 4)
+			l_rv := blob.size
+			if a_blob_len < 0x80 then
+				blob.base [blob.size.to_integer_32] := l_blob_len.to_natural_8
+				blob.increment_size
+			elseif a_blob_len <= 0x3fff then
+				blob.base [blob.size.to_integer_32] := ((l_blob_len |>> 8) | 0x80).to_natural_8
+				blob.increment_size
+				blob.base [blob.size.to_integer_32] := l_blob_len.to_natural_8
+				blob.increment_size
+			else
+				l_blob_len := (l_blob_len & 0x1fffffff).to_natural_8
+				blob.base [blob.size.to_integer_32] := ((l_blob_len |>> 24) | 0xc0).to_natural_8
+				blob.increment_size
+				blob.base [blob.size.to_integer_32] := (l_blob_len |>> 16).to_natural_8
+				blob.increment_size
+				blob.base [blob.size.to_integer_32] := (l_blob_len |>> 8).to_natural_8
+				blob.increment_size
+				blob.base [blob.size.to_integer_32] := (l_blob_len |>> 0).to_natural_8
+				blob.increment_size
+			end
+			blob.copy_data ((blob.size).to_integer_32, a_blob_data, l_blob_len)
+			blob.increment_size_by (l_blob_len.to_natural_8)
+			Result := l_rv
 		end
 
 feature -- Various Operations
@@ -505,7 +588,16 @@ feature -- Various Operations
 			--  Also set the index of the System namespace entry which is t
 
 		do
-			to_implement ("Add implementation")
+			{PE_SIGNATURE_GENERATOR_HELPER}.set_object_type (a_object_index)
+			object_base := a_object_index
+			value_base := a_value_index
+			enum_base := a_enum_index
+			system_index := a_system_index
+		ensure
+			object_base_set: object_base = a_object_index
+			value_index_set: value_base = a_value_index
+			enum_base_set: enum_base = a_enum_index
+			system_index_set: system_index = a_system_index
 		end
 
 	set_param_attribute (a_param_attribute_type: NATURAL; a_param_attribute_data: NATURAL)
@@ -520,14 +612,21 @@ feature -- Various Operations
 			param_attribute_type_set: param_attribute_type = a_param_attribute_type
 		end
 
-	create_guid (a_Guid: ARRAY [NATURAL_8])
+	create_guid (a_guid: ARRAY [NATURAL_8])
+		local
+			l_mp: MANAGED_POINTER
 		do
-			to_implement ("Add implementation [instance_free]")
+				-- At the moment this code uses a C++ wrapper.
+				-- double check how to use UUID.
+			create l_mp.make (16)
+			c_create_guid (l_mp.item)
+			a_guid.make_from_array (l_mp.read_array (0, 16))
 		end
 
 	next_table_index (a_table: INTEGER): NATURAL
 		do
-			to_implement ("Add implementation")
+				-- TODO double check if we need the + 1.
+			Result := (tables[a_table].size + 1).to_natural_32
 		end
 
 	write_file (a_corFlags: INTEGER; a_out: FILE_STREAM): BOOLEAN
@@ -610,7 +709,6 @@ feature -- Operations
 
 			l_pe_header.time := number_of_seconds_since_epoch
 
-
 				-- pe_objects setup
 			check pe_objects = Void end
 
@@ -635,7 +733,6 @@ feature -- Operations
 			l_pe_header.iat_size := 8
 			l_pe_header.com_size := {PE_DOTNET_COR20_HEADER}.size_of
 			l_current_rva := l_current_rva + l_pe_header.com_size.to_natural_32
-
 
 				-- cor20_header setup
 			check cor20_header = Void end
@@ -746,7 +843,6 @@ feature -- Operations
 
 			stream_headers [1, 1] := l_current_rva - l_core_20_header.metadata [1]
 
-
 				-- tables_header set_up
 			check tables_header = Void end
 			create l_tables_header
@@ -773,15 +869,15 @@ feature -- Operations
 			across 0 |..| (max_tables - 1) as ic loop
 				if not tables [ic + 1].is_empty then
 					l_counts [ic + 1] := tables [ic + 1].size.to_natural_32
-					l_tables_header.mask_valid := l_tables_header.mask_valid | ({INTEGER_64}1 |<< ic)
+					l_tables_header.mask_valid := l_tables_header.mask_valid | ({INTEGER_64} 1 |<< ic)
 					l_n := l_n + 1
 				end
 			end
 			l_current_rva := l_current_rva + {PE_DOTNET_META_TABLES_HEADER}.size_of.to_natural_32
-					-- tables header
+				-- tables header
 			l_current_rva := l_current_rva + (l_n * {PLATFORM}.natural_32_bytes).to_natural_32
-					--table counts
-					-- Dword is 4 bytes.
+				--table counts
+				-- Dword is 4 bytes.
 
 			across 0 |..| (max_tables - 1) as ic loop
 				if l_counts [ic + 1] /= 0 then
@@ -796,19 +892,19 @@ feature -- Operations
 				l_current_rva := l_current_rva + 4 - (l_current_rva \\ 4)
 			end
 
-			stream_headers [1,2] := l_current_rva - stream_headers[1,1] - l_core_20_header.metadata [1]
-			stream_headers [2,1] := l_current_rva - l_core_20_header.metadata [1]
+			stream_headers [1, 2] := l_current_rva - stream_headers [1, 1] - l_core_20_header.metadata [1]
+			stream_headers [2, 1] := l_current_rva - l_core_20_header.metadata [1]
 			l_current_rva := l_current_rva + strings.size
 
 			if (l_current_rva \\ 4) /= 0 then
 				l_current_rva := l_current_rva + 4 - (l_current_rva \\ 4)
 			end
 
-			stream_headers [2,2] := l_current_rva - stream_headers[2,1] - l_core_20_header.metadata [1]
-			stream_headers [3,1] := l_current_rva - l_core_20_header.metadata [1]
+			stream_headers [2, 2] := l_current_rva - stream_headers [2, 1] - l_core_20_header.metadata [1]
+			stream_headers [3, 1] := l_current_rva - l_core_20_header.metadata [1]
 			if us.size = 0 then
 				l_current_rva := l_current_rva + default_us.count.to_natural_32
-						-- US May be empty in our implementation we put an empty string there
+					-- US May be empty in our implementation we put an empty string there
 			else
 				l_current_rva := l_current_rva + us.size
 			end
@@ -818,35 +914,34 @@ feature -- Operations
 				l_current_rva := l_current_rva + 4 - (l_current_rva \\ 4)
 			end
 
-			stream_headers [3,2] := l_current_rva - stream_headers[3,1] - l_core_20_header.metadata [1]
-			stream_headers [4,1] := l_current_rva - l_core_20_header.metadata [1]
+			stream_headers [3, 2] := l_current_rva - stream_headers [3, 1] - l_core_20_header.metadata [1]
+			stream_headers [4, 1] := l_current_rva - l_core_20_header.metadata [1]
 			l_current_rva := l_current_rva + guid.size
 
 			if (l_current_rva \\ 4) /= 0 then
 				l_current_rva := l_current_rva + 4 - (l_current_rva \\ 4)
 			end
 
-			stream_headers [4,2] := l_current_rva - stream_headers[4,1] - l_core_20_header.metadata [1]
-			stream_headers [5,1] := l_current_rva - l_core_20_header.metadata [1]
+			stream_headers [4, 2] := l_current_rva - stream_headers [4, 1] - l_core_20_header.metadata [1]
+			stream_headers [5, 1] := l_current_rva - l_core_20_header.metadata [1]
 			l_current_rva := l_current_rva + blob.size
 
 			if (l_current_rva \\ 4) /= 0 then
 				l_current_rva := l_current_rva + 4 - (l_current_rva \\ 4)
 			end
 
-			stream_headers [5,2] := l_current_rva - stream_headers[5,1] - l_core_20_header.metadata [1]
+			stream_headers [5, 2] := l_current_rva - stream_headers [5, 1] - l_core_20_header.metadata [1]
 			l_core_20_header.metadata [2] := l_current_rva - l_core_20_header.metadata [1]
 			l_pe_header.import_rva := l_current_rva.to_integer_32
 			l_current_rva := l_current_rva + ({PE_IMPORT_DIR}.size_of * 2).to_natural_32 + 8
-
 
 			if (l_current_rva \\ 16) /= 0 then
 				l_current_rva := l_current_rva + 16 - (l_current_rva \\ 16).to_natural_32
 			end
 
 			l_current_rva := l_current_rva + 2 +
-								c_sizeof ((create {C_STRING}.make ("_CorXXXMain")).item).to_natural_32 +
-								c_sizeof ((create {C_STRING}.make ("mscoree.dll")).item).to_natural_32 + 1
+				c_sizeof ((create {C_STRING}.make ("_CorXXXMain")).item).to_natural_32 +
+				c_sizeof ((create {C_STRING}.make ("mscoree.dll")).item).to_natural_32 + 1
 
 			l_pe_header.import_size := l_current_rva.to_integer_32 - l_pe_header.import_rva
 
@@ -873,7 +968,6 @@ feature -- Operations
 			l_pe_objects [l_sect].raw_size := l_n
 			l_pe_header.code_size := l_n
 
-
 			if (l_current_rva \\ object_align) /= 0 then
 				l_current_rva := l_current_rva + object_align - (l_current_rva \\ object_align)
 			end
@@ -881,7 +975,6 @@ feature -- Operations
 			l_pe_objects [l_sect + 1].virtual_addr := l_current_rva.to_integer_32
 			l_pe_header.data_base := l_current_rva.to_integer_32
 			l_sect := l_sect + 1
-
 
 --#if 0
 --        peHeader_->resource_rva = currentRVA;
@@ -939,7 +1032,7 @@ feature -- Operations
 
 			l_pe_header.fixup_rva := l_current_rva.to_integer_32
 			l_current_rva := l_current_rva + 12
-					-- sizeof relocs
+				-- sizeof relocs
 
 			l_pe_objects [l_sect].virtual_size := l_current_rva.to_integer_32 - l_pe_objects [l_sect].virtual_addr
 			l_pe_header.fixup_size := l_pe_objects [l_sect].virtual_size
@@ -953,10 +1046,9 @@ feature -- Operations
 			if (l_current_rva \\ object_align) /= 0 then
 				l_current_rva := l_current_rva + object_align - (l_current_rva \\ object_align)
 			end
-			l_pe_objects [l_sect + 1].raw_ptr := l_pe_objects [l_sect].raw_ptr + l_pe_objects[l_sect].raw_size
+			l_pe_objects [l_sect + 1].raw_ptr := l_pe_objects [l_sect].raw_ptr + l_pe_objects [l_sect].raw_size
 			l_pe_objects [l_sect + 1].virtual_addr := l_current_rva.to_integer_32
 			l_pe_header.image_size := l_current_rva.to_integer_32
-
 
 			pe_header := l_pe_header
 			pe_objects := l_pe_objects
@@ -971,7 +1063,6 @@ feature {NONE} -- Implementation
 		local
 			l_date_epoch: DATE_TIME
 			l_date_now: DATE_TIME
-			l_diff: INTEGER_32
 		do
 			create l_date_epoch.make_from_epoch (0)
 			create l_date_now.make_now_utc
@@ -980,17 +1071,11 @@ feature {NONE} -- Implementation
 			is_class: class
 		end
 
-
 	c_sizeof (a_str: POINTER): INTEGER
 		external "C inline"
 		alias
 			"return (EIF_INTEGER)sizeof($a_str);"
 		end
-
-
-
-
-
 
 	compute_rtv_string_size: NATURAL
 		do
@@ -1130,5 +1215,35 @@ feature -- Constants
 			-- 	.text / cildata
 			-- 	.reloc (for the single necessary reloc entry)
 			-- 	.rsrc (not implemented yet, will hold version info record)
+
+feature {NONE} -- C++ externals
+
+	c_create_guid (a_guid: POINTER)
+		external "C++ inline use <random>, <array>, <algorithm>, <functional>"
+		alias
+			"{
+			std::array<unsigned char, 128 / 8> rnd;
+
+		    std::uniform_int_distribution<int> distribution(0, 0xff);
+		    // note that this whole thing will fall apart if the C++ lib uses
+		    // a prng with constant seed for the random_device implementation.
+		    // that shouldn't be a problem on OS we are interested in.
+		    std::random_device dev;
+		    std::mt19937 engine(dev());
+		    auto generator = std::bind(distribution, engine);
+
+		    std::generate(rnd.begin(), rnd.end(), generator);
+
+		    // make it a valid version 4 (random) GUID
+		    // remember that on windows GUIDs are native endianness so this may need
+		    // work if you port it
+		    rnd[7 /*6*/] &= 0xf;
+		    rnd[7 /*6*/] |= 0x40;
+		    rnd[9 /*8*/] &= 0x3f;
+		    rnd[9 /*8*/] |= 0x80;
+
+		    memcpy($a_guid, rnd.data(), rnd.size());
+			}"
+		end
 
 end

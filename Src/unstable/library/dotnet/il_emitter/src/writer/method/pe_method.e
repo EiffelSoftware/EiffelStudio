@@ -58,9 +58,9 @@ feature -- Access
 	max_stack: NATURAL_16
 			-- Defined as Word = 2 bytes.
 
-	code_size: NATURAL
+	code_size: NATURAL assign set_code_size
 
-	code: detachable ARRAY [NATURAL_8]
+	code: detachable ARRAY [NATURAL_8] assign set_code
 
 	signature_token: NATURAL
 
@@ -83,6 +83,22 @@ feature -- Element Change
 			rva := a_value
 		ensure
 			rva_set: rva = a_value
+		end
+
+	set_code_size (a_size: like code_size)
+			-- Set `code_size` with `a_size`.
+		do
+			code_size := a_size
+		ensure
+			code_size_set: code_size = a_size
+		end
+
+	set_code (a_code: like code)
+			-- Set `code` with `a_code`.
+ 		do
+			code := a_code
+		ensure
+			code_set: code = a_code
 		end
 
 end

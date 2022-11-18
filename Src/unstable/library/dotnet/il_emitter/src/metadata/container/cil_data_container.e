@@ -318,7 +318,9 @@ feature -- Operations
 
 	compile (a_stream: FILE_STREAM)
 		do
-			to_implement ("Add implementation")
+			across methods as method loop
+				method.compile (a_stream)
+			end
 		end
 
 feature -- Output

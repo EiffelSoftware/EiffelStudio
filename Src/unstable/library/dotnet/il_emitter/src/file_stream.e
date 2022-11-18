@@ -20,6 +20,7 @@ feature {NONE} -- Initialiation
 			create {PLAIN_TEXT_FILE} output_stream.make_create_read_write (a_file_name)
 			create debug_output.make_empty
 			on_debug := False
+			create module_ref.make (0)
 		end
 
 
@@ -28,12 +29,14 @@ feature {NONE} -- Initialiation
 			create {RAW_FILE} output_stream.make_create_read_write (a_file_name)
 			create debug_output.make_empty
 			on_debug := False
+			create module_ref.make (0)
 		end
 
 	make_temp
 		do
 			create debug_output.make_empty
 			on_debug := True
+			create module_ref.make (0)
 		end
 
 	make_stream (a_pe_writer: PE_WRITER; a_pe_lib: PE_LIB)
@@ -41,6 +44,7 @@ feature {NONE} -- Initialiation
 			create debug_output.make_empty
 			pe_writer := a_pe_writer
 			pe_lib := a_pe_lib
+			create module_ref.make (0)
 		end
 
 	output_stream: detachable FILE
@@ -60,6 +64,9 @@ feature -- Access
 	debug_output: STRING_32
 			-- In memory string
 			-- iff debug is enabled.
+
+
+	module_ref: HASH_TABLE [NATURAL, NATURAL]
 
 feature -- Element change
 

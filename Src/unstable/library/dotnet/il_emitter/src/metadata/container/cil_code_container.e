@@ -592,23 +592,45 @@ feature -- Output
 
 feature -- Compile
 
-	compile (a_stream: FILE_STREAM; sz: NATURAL_32): ARRAY [NATURAL_32]
+	compile_cc (a_stream: FILE_STREAM; a_sz: CELL [NATURAL_32]): detachable ARRAY [NATURAL_8]
+		local
+			l_last: CIL_INSTRUCTION
+			l_sz: NATURAL
+			l_pos: INTEGER
 		do
-			to_implement ("Add implementation c++ [Byte *Compile(Stream&, size_t &sz);]")
-			create Result.make_empty
+			l_sz := a_sz.item
+			calculate_offsets
+			load_labels
+			l_last := if instructions.is_empty then Void else instructions.last end
+
+			if attached l_last then
+				l_sz := (l_last.offset + l_last.instruction_size).to_natural_32
+				if l_sz /= 0 then
+					create Result.make_filled (0, 1, l_sz.to_integer_32)
+					l_pos := 0
+					across instructions as ins loop
+						--l_pos := l_pos + ins.render (a_stream, l_pos, labels)
+						to_implement ("Work in progress")
+					end
+				end
+			else
+				l_sz := 0
+			end
+			labels.wipe_out
+			a_sz.put (l_sz)
 		end
 
-	do_compile (a_stream: FILE_STREAM)
+	compile (a_stream: FILE_STREAM)
 		do
-			to_implement ("Add implemenation c++ [virtual void Compile(Stream&) { }]")
+			-- to be redefined
 		end
 
-	compile_seh
+	compile_seh_cc (a_tags: LIST [CIL_INSTRUCTION]; a_offset: INTEGER; a_seh_data: LIST [CIL_SEH_DATA]): INTEGER
 		do
 			to_implement ("Add implementation C++ [int CompileSEH(std::vector<Instruction *>tags, int offset, std::vector<SEHData> &sehData);]")
 		end
 
-	do_compile_seh
+	compile_seh (a_seh_data: CIL_SEH_DATA)
 		do
 			to_implement ("Add implementation C++ [void CompileSEH(std::vector<SEHData> &sehData);]")
 		end

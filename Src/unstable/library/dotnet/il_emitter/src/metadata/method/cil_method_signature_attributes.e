@@ -1,6 +1,5 @@
 note
 	description: "Method signatures constants."
-	author: ""
 	date: "$Date$"
 	revision: "$Revision$"
 

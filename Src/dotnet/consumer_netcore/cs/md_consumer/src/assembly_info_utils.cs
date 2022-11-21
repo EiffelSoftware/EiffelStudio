@@ -190,9 +190,10 @@ namespace md_consumer
                 l_uid = Guid.NewGuid().ToString().ToUpper();
             }
             string fn = l_uid;
-            if (l_assembly_name != null) {
-                fn = l_assembly_name + '!' + fn;
-            }
+            //FIXME: uncomment to have more human friendly title
+            // if (l_assembly_name != null) {
+            //     fn = l_assembly_name + '!' + fn;
+            // }
 
             CONSUMED_ASSEMBLY ca = new CONSUMED_ASSEMBLY(l_uid, fn, l_assembly_name, l_name_data.version, l_name_data.culture, l_name_data.public_key_token, assembly.Location.ToString());
             ca.fullname = name.FullName;

@@ -1,0 +1,19 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <ItemGroup>
+    <ProjectReference Include="../md_consumer/md_consumer.csproj" />
+    <!-- <PackageReference Include="System.Reflection.MetadataLoadContext" Version="6.0.0" /> -->
+  </ItemGroup>
+
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>net6.0</TargetFramework>
+    <TargetName>nemdc</TargetName>
+    <AssemblyName>nemdc</AssemblyName>
+    <Nullable>enable</Nullable>
+    <!-- <ImplicitUsings>enable</ImplicitUsings> -->
+    <!-- <GenerateTargetFrameworkAttribute>false</GenerateTargetFrameworkAttribute> -->
+    <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
+  </PropertyGroup>
+
+</Project>
+

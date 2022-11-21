@@ -1,0 +1,46 @@
+<?xml version="1.0"?>
+
+<project name="build_consumer_netcore" default="help">
+	<description>
+		description: "Eiffel .netcore metadata consumer 's compilation"
+	</description>
+	
+	<target name="help">
+		<echo message="usage:"/>
+		<echo message=" geant compile"/>
+		<echo message=" geant clean"/>
+		<echo message=" geant clobber"/>
+	</target>
+	
+	<target name="compile" >
+		<echo message="- Compile nemdc" />
+		<exec executable="dotnet build -c Release" accept_errors="true" dir="cs${path_separator}md_consumer_app" />
+		<exec executable="dotnet publish -c Release" accept_errors="true" dir="cs${path_separator}md_consumer_app" />
+		<mkdir directory="spec${path_separator}${ISE_PLATFORM}${path_separator}bin" />
+		<geant target="_copy_dotnet_build_results" arguments="${cwd}${path_separator}cs${path_separator}md_consumer_app/bin/Release/net6.0/publish/,${cwd}${path_separator}spec${path_separator}${ISE_PLATFORM}${path_separator}bin" />
+	</target>
+
+	<target name="_copy_dotnet_build_results">
+		<argument name="a_src"/>
+		<argument name="a_dest"/>
+		<echo message="- Copy from ${a_src} to ${a_dest} folder" />
+		<copy dir="${a_src}" to_directory="${a_dest}" force="true">
+		  	<fileset include="@(*.dll|*.deps.json|*.runtimeconfig.json|nemdc|nemdc.exe)"/>
+		</copy>
+		<exec executable="chmod u+x nemdc${exe} " dir="${a_dest}" />
+	</target>
+	
+	<target name="clean" >
+		<echo message="- Clean nemdc" />
+		<exec executable="dotnet clean -c Release" accept_errors="true" dir="cs${path_separator}md_consumer_app" />	
+		<delete dir="spec${path_separator}${ISE_PLATFORM}${path_separator}bin">
+			<fileset  include="@(*.dll|nemdc*)"/>
+  		</delete>
+	</target>
+
+	<target name="clobber" >
+		<echo message="- Clobber nemdc" />
+		<geant target="clean" />
+	</target>
+	
+</project>

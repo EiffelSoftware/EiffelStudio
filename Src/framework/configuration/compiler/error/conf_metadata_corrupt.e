@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "Error for a corrupt metadata cache."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -10,25 +10,19 @@ class
 
 inherit
 	CONF_ERROR
-		redefine
-			default_create
-		end
-
-feature {NONE} -- Initialization
-
-	default_create
-			-- Create.
-		do
-			text := {STRING_32} "Metadata cache corrupt or changed during incremental recompilation or since building a precompile!"
-		end
 
 feature -- Access
 
-	text: READABLE_STRING_32;
-		-- Error text.
+	text: READABLE_STRING_32
+			-- <Precursor>
+		do
+			Result := {SHARED_LOCALE}.locale.translation_in_context
+				({STRING_32} "Metadata cache corrupt or changed during incremental recompilation or since building a precompile!",
+				"configuration.compiler")
+		end
 
 note
-	copyright:	"Copyright (c) 1984-2011, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2022, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

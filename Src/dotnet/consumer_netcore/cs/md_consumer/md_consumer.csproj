@@ -2,7 +2,7 @@
 
   <ItemGroup>
   	  <PackageReference Include="System.Reflection.MetadataLoadContext" Version="6.0.0" />
-      <ProjectReference Include="../../../../Eiffel/eiffel/com_il_generation/Core/run-time/runtime.csproj" />
+      <ProjectReference Include="../../../../Eiffel/eiffel/com_il_generation/Core/run-time/runtime_core.csproj" />
       <!-- <Reference Include="EiffelSoftware.Runtime">
         <HintPath>"../../../../Eiffel/eiffel/com_il_generation/Core/run-time/EiffelSoftware.Runtime.dll"</HintPath>
       </Reference> -->

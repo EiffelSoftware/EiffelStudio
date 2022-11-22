@@ -587,7 +587,7 @@ feature {NONE} -- Consuming
 			an_assemblies_not_void: an_assemblies /= Void
 		local
 			l_a: CONF_ASSEMBLY
-			l_paths: STRING_32
+			l_paths: ARRAYED_LIST [READABLE_STRING_32]
 			l_path: READABLE_STRING_GENERAL
 			l_unique_paths: STRING_TABLE [BOOLEAN]
 		do
@@ -595,7 +595,7 @@ feature {NONE} -- Consuming
 
 			on_consume_assemblies
 			if attached consumer as l_emitter then
-				create l_paths.make_empty
+				create l_paths.make (an_assemblies.count)
 				across an_assemblies as l_assembly loop
 					l_a := l_assembly
 					if l_a.is_non_local_assembly then
@@ -606,6 +606,11 @@ feature {NONE} -- Consuming
 							attached l_a.assembly_public_key_token as l_assembly_public_key_token
 						then
 							l_emitter.consume_assembly (l_assembly_name, l_assembly_version, l_assembly_culture, l_assembly_public_key_token, True)
+							if attached l_emitter.last_error_message as m then
+								add_error (create {CONF_METADATA_CONSUMER_FAILURE}.make
+									({SHARED_LOCALE}.locale.formatted_string ({SHARED_LOCALE}.locale.translation_in_context
+										({STRING_32} "Error when loading .NET metadata for %"$1%": $2.", "configuration.compiler"), l_assembly_name, m)))
+							end
 						else
 							check is_non_local_assembly: False end
 						end
@@ -613,14 +618,17 @@ feature {NONE} -- Consuming
 						l_path := l_a.location.evaluated_path.name
 						if not l_unique_paths.has (l_path) then
 							l_unique_paths.force (True, l_path)
-							l_paths.append_string_general (l_path)
-							l_paths.append_character (';')
+							l_paths.extend (l_path)
 						end
 					end
 				end
 				if not l_paths.is_empty then
-					l_paths.remove_tail (1)
 					l_emitter.consume_assembly_from_path (l_paths, True, Void)
+					if attached l_emitter.last_error_message as m then
+						add_error (create {CONF_METADATA_CONSUMER_FAILURE}.make
+							({SHARED_LOCALE}.locale.formatted_string ({SHARED_LOCALE}.locale.translation_in_context
+								({STRING_32} "Error when loading .NET assemblies metadata: $1.", "configuration.compiler"), m)))
+					end
 				end
 			end
 			retrieve_cache
@@ -637,29 +645,32 @@ feature {NONE} -- Consuming
 			an_assemblies_not_void: an_assemblies /= Void
 		local
 			l_a: CONF_ASSEMBLY
-			l_paths: STRING_32
+			l_paths: ARRAYED_LIST [READABLE_STRING_32]
 			l_path: READABLE_STRING_GENERAL
 			l_unique_paths: STRING_TABLE [BOOLEAN]
 		do
 			create l_unique_paths.make_caseless (10)
 
 			on_consume_assemblies
-			create l_paths.make_empty
+			create l_paths.make (an_assemblies.count)
 			across an_assemblies as l_assembly loop
 				l_a := l_assembly
 				if not l_a.is_non_local_assembly then
 					l_path := l_a.location.evaluated_path.name
 					if not l_unique_paths.has (l_path) then
 						l_unique_paths.force (True, l_path)
-						l_paths.append_string_general (l_path)
-						l_paths.append_character (';')
+						l_paths.extend (l_path)
 					end
 				end
 			end
 			if not l_paths.is_empty then
-				l_paths.remove_tail (1)
 				if attached consumer as l_emitter then
 					l_emitter.consume_assembly_from_path (l_paths, True, Void)
+					if attached l_emitter.last_error_message as m then
+						add_error (create {CONF_METADATA_CONSUMER_FAILURE}.make
+							({SHARED_LOCALE}.locale.formatted_string ({SHARED_LOCALE}.locale.translation_in_context
+								({STRING_32} "Error when loading .NET assemblies metadata: $1.", "configuration.compiler"), m)))
+					end
 				end
 			end
 			retrieve_cache
@@ -684,6 +695,11 @@ feature {NONE} -- Consuming
 				(attached an_assembly.assembly_public_key_token as l_assembly_public_key_token and then not l_assembly_public_key_token.is_empty)
 			then
 				l_emitter.consume_assembly (l_assembly_name, l_assembly_version, l_assembly_culture, l_assembly_public_key_token, True)
+				if attached l_emitter.last_error_message as m then
+					add_error (create {CONF_METADATA_CONSUMER_FAILURE}.make
+						({SHARED_LOCALE}.locale.formatted_string ({SHARED_LOCALE}.locale.translation_in_context
+							({STRING_32} "Error when loading metadata for %"$1%": $2.", "configuration.compiler"), l_assembly_name, m)))
+				end
 			else
 				check an_assembly_ok: False end
 			end
@@ -731,7 +747,10 @@ feature {CONSUMER_EXPORT} -- Consumer
 				elseif not Result.is_initialized then
 						-- Consumer cannot be initialized (e.g., due to the error in the path).
 					add_error (create {CONF_ERROR_EMITTER_INIT}.make
-						(if attached Result.last_error_message as m then m else
+						(if attached Result.last_error_message as m then
+							{SHARED_LOCALE}.locale.formatted_string
+								({SHARED_LOCALE}.locale.translation_in_context ({STRING_32} "Cannot initialize a .NET assembly metadata consumer: $1.", "configuration.compiler"), m)
+						else
 							{SHARED_LOCALE}.locale.translation_in_context ({STRING_32} "Cannot initialize a .NET assembly metadata consumer.", "configuration.compiler")
 						end))
 					Result.release

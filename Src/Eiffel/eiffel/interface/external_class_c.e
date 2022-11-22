@@ -1617,32 +1617,31 @@ feature {NONE} -- Implementation
 			l_emitter: CONSUMER
 			l_man: CONF_CONSUMER_MANAGER
 			l_assemblies: STRING_TABLE [CONF_PHYSICAL_ASSEMBLY_INTERFACE]
-			l_path: STRING_32
+			l_path: ARRAYED_LIST [READABLE_STRING_32]
 		do
 				-- Create message
 			degree_output.put_string ({STRING_32} "   Consuming assembly '" + assembly.location.evaluated_path.name + "'...")
 
 			l_assemblies := universe.conf_system.all_assemblies
 			if l_assemblies /= Void then
-				create l_path.make (256)
+				create l_path.make (l_assemblies.count)
 					-- Note: All system assemblies are required because they are needed by the consumer
 					-- to resolve dependencies.
-				from l_assemblies.start until l_assemblies.after loop
-					if attached {CONF_PHYSICAL_ASSEMBLY} l_assemblies.item_for_iteration as l_assembly then
-						if not l_assembly.is_dependency then
-							l_path.append_character (';')
-							l_path.append (l_assembly.consumed_assembly.location.name)
-						end
-					else
-						check is_physical_assembly: False end
+				across
+					l_assemblies as a
+				loop
+					if
+						attached {CONF_PHYSICAL_ASSEMBLY} a as p and then
+						not p.is_dependency
+					then
+						l_path.extend (p.consumed_assembly.location.name)
 					end
-					l_assemblies.forth
 				end
 				if not l_path.is_empty then
 					create l_man.make (create {CONF_COMP_FACTORY}, create {PATH}.make_from_string (system.metadata_cache_path), system.clr_runtime_version, assembly.target,  create {SEARCH_TABLE [CONF_CLASS]}.make (0), create {SEARCH_TABLE [CONF_CLASS]}.make (0), create {SEARCH_TABLE [CONF_CLASS]}.make (0))
 					l_emitter := new_emitter (l_man)
 					if l_emitter.is_available and then l_emitter.is_initialized then
-						l_emitter.consume_assembly_from_path (assembly.consumed_assembly.location.name, False, l_path)
+						l_emitter.consume_assembly_from_path (<<assembly.consumed_assembly.location.name>>, False, l_path)
 						l_man.rebuild_assembly (assembly)
 						l_emitter.release
 					end

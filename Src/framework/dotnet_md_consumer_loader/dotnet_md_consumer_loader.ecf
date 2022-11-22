@@ -6,10 +6,10 @@
 			<exclude>/\.svn$</exclude>
 		</file_rule>
 		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf"/>
-		<library name="consumer_interface" location="$EIFFEL_SRC\dotnet\consumer_interface\consumer_interface.ecf" readonly="false"/>
 		<library name="base_process" location="$EIFFEL_SRC\library\process\base\base_process.ecf"/>
+		<library name="consumer_interface" location="$EIFFEL_SRC\dotnet\consumer_interface\consumer_interface.ecf" readonly="false"/>
 		<library name="environment" location="$EIFFEL_SRC\framework\environment\environment.ecf"/>
-		<cluster name="dotnet_md_consumer_loader" location=".\" recursive="true">
-		</cluster>
+		<library name="interface_names" location="$EIFFEL_SRC\framework\interface_names\interface_names.ecf"/>
+		<cluster name="dotnet_md_consumer_loader" location=".\" recursive="true"/>
 	</target>
 </system>

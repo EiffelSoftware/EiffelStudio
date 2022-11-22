@@ -65,7 +65,7 @@ feature -- Status report
 		do
 			c := last_com_code
 			if c /= 0 then
-				Result := {STRING_32} "Unable to initialize Eiffel Assembly Cache (COM error: 0x" + c.to_hex_string + ")."
+				Result := {STRING_32} "COM error 0x" + c.to_hex_string
 			end
 		end
 
@@ -81,17 +81,36 @@ feature -- Clean up
 
 feature -- XML generation
 
-	consume_assembly_from_path (a_assemblies_path: READABLE_STRING_GENERAL; a_info_only: BOOLEAN; a_references: detachable READABLE_STRING_GENERAL)
+	consume_assembly_from_path (a_assemblies_path: ITERABLE [READABLE_STRING_32]; a_info_only: BOOLEAN; a_references: detachable ITERABLE [READABLE_STRING_32])
 			-- <Precursor>
 		local
 			l_refs: detachable UNI_STRING
+			paths: STRING_32
+			refs: STRING_32
 		do
+			create paths.make_empty
+			across
+				a_assemblies_path as p
+			loop
+				paths.append (p)
+				paths.append_character (';')
+			end
+			if not paths.is_empty then
+				paths.remove_tail (1)
+			end
 			if a_references /= Void then
-				create l_refs.make (a_references)
+				create refs.make_empty
+				across
+					a_references as p
+				loop
+					refs.append_character (';')
+					refs.append (p)
+				end
+				create l_refs.make (refs)
 			end
 			check attached implementation then
 				implementation.consume_assembly_from_path (
-					create {UNI_STRING}.make (a_assemblies_path),
+					create {UNI_STRING}.make (paths),
 					a_info_only,
 					l_refs)
 			end
@@ -116,6 +135,7 @@ feature {NONE} -- Implementation
 			-- Com object to get information about assemblies and emitting them.
 
 note
+	ca_ignore: "CA011", "CA011: too many arguments"
 	copyright:	"Copyright (c) 1984-2022, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
@@ -147,4 +167,4 @@ note
 			Customer support http://support.eiffel.com
 		]"
 
-end -- class IL_EMITTER
+end

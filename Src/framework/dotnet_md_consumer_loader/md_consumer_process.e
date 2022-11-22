@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "[
 			Use "emdc" executable execution to consume dotnet assemblies.
 			
@@ -33,33 +33,37 @@ feature {NONE} -- Initialization
 			attached a_runtime_version
 			not a_runtime_version.is_empty
 		local
-			s: READABLE_STRING_GENERAL
-			p: PATH
+			dir: DIRECTORY
 		do
-			s := {EXECUTION_ENVIRONMENT}.item ("ISE_EMDC")
-			if s /= Void then
-				create p.make_from_string (s)
-			end
-			if
-				p /= Void and then
-				p.is_absolute and then
-				(create {FILE_UTILITIES}).file_path_exists (p)
-			then
-					-- note: Used mostly during development
-				emdc_location := p
-			else
-				emdc_location := eiffel_layout.emdc_command_name
-			end
-
+			emdc_location :=
+				if attached {EXECUTION_ENVIRONMENT}.item ("ISE_EMDC") as s then
+					create {PATH}.make_from_string (s)
+				else
+					eiffel_layout.emdc_command_name
+				end
 			cache_location := a_cache_path
+			create dir.make_with_path (a_cache_path)
+			if not dir.exists then
+				dir.recursive_create_dir
+			end
+			if not exists then
+				last_error_message := {SHARED_LOCALE}.locale.formatted_string
+					({SHARED_LOCALE}.locale.translation_in_context ("Cannot find .NET metadata consumer at %"$1%"", "metadata_consumer"),
+					emdc_location.name)
+			elseif not is_initialized then
+				last_error_message := {SHARED_LOCALE}.locale.formatted_string
+					({SHARED_LOCALE}.locale.translation_in_context ("The path to the metadata cache does not exist and cannot be created: $1", "metadata_consumer"),
+					a_cache_path.name)
+			end
 		end
-
 
 feature -- Status report
 
 	emdc_location: PATH
+			-- The path to the "emdc" executable.
 
 	cache_location: PATH
+			-- The path to the consumed metadata cache.
 
 	exists: BOOLEAN
 			-- <Precursor>
@@ -74,21 +78,11 @@ feature -- Status report
 		local
 			fut: FILE_UTILITIES
 		do
-			if exists then
-				Result := fut.file_path_exists (cache_location)
-			end
-			Result := True
+			Result := exists and then fut.directory_path_exists (cache_location)
 		end
 
 	last_error_message: detachable READABLE_STRING_32
 			-- <Precursor>
-		do
-			if not exists then
-				Result := {STRING_32} "Unable to find Eiffel Assembly md consumer (emdc)."
-			elseif not is_initialized then
-				Result := {STRING_32} "Unable to find Eiffel Assembly Cache."
-			end
-		end
 
 feature -- Clean up
 
@@ -99,47 +93,37 @@ feature -- Clean up
 
 feature -- XML generation
 
-	consume_assembly_from_path (a_assembly_paths: READABLE_STRING_GENERAL; a_info_only: BOOLEAN; a_references: detachable READABLE_STRING_GENERAL)
+	consume_assembly_from_path (a_assembly_paths: ITERABLE [READABLE_STRING_32]; a_info_only: BOOLEAN; a_references: detachable ITERABLE [READABLE_STRING_32])
 			-- <Precursor>
 		local
 			p: BASE_PROCESS
 			pf: BASE_PROCESS_FACTORY
 			args: ARRAYED_LIST [READABLE_STRING_GENERAL]
-			ret: INTEGER
 			cmd: STRING_32
-			dir: DIRECTORY
 		do
 			create pf
 			create args.make (10)
 			args.force ("-nologo")
 			across
-				a_assembly_paths.split (';') as a
+				a_assembly_paths as a
 			loop
-				if not a.is_whitespace then
-					args.force ("-a")
-					args.force (a)
-				end
+				args.force ("-a")
+				args.force (a)
 			end
 			if is_eiffel_layout_defined and then eiffel_layout.use_json_dotnet_md_cache then
 				args.force ("-json") -- For "JSON" storage
 			end
 			args.force ("-o")
 			args.force (cache_location.name)
-			create dir.make_with_path (cache_location)
-			if not dir.exists then
-				dir.recursive_create_dir
-			end
 			if a_info_only then
 				args.force ("-g")
 			end
 			if a_references /= Void then
 				across
-					a_references.split (';') as r
+					a_references as r
 				loop
-					if not r.is_whitespace then
-						args.force ("-i")
-						args.force (r)
-					end
+					args.force ("-i")
+					args.force (r)
 				end
 			end
 
@@ -160,30 +144,33 @@ feature -- XML generation
 			end
 
 			debug ("consumer")
-				print ("#CONSUMER: "+ {UTF_CONVERTER}.string_32_to_utf_8_string_8 (cmd) + "%N")
+				print ("#CONSUMER: " + {UTF_CONVERTER}.string_32_to_utf_8_string_8 (cmd) + "%N")
 			end
 
 			p.launch
 			if p.launched then
-				ret := p.exit_code
 				p.wait_for_exit
-
+				if p.exit_code /= 0 then
+					last_error_message := {SHARED_LOCALE}.locale.formatted_string
+						({SHARED_LOCALE}.locale.translation_in_context ("Exited with code %"$1%"", "metadata_consumer"),
+						"0x" + p.exit_code.to_hex_string)
+				end
 			else
-				-- Error ...
+				last_error_message := {SHARED_LOCALE}.locale.formatted_string
+					({SHARED_LOCALE}.locale.translation_in_context ("Failed to start %"$1%"", "metadata_consumer"),
+					emdc_location.name)
 			end
 		end
 
 	consume_assembly (a_name, a_version, a_culture, a_key: READABLE_STRING_GENERAL; a_info_only: BOOLEAN)
 			-- <Precursor>
 		do
-			check False then
-				-- Not yet implemented!
-			end
+			last_error_message := {SHARED_LOCALE}.locale.translation_in_context
+				("Consuming .NET metadata from assemblies from GAC is not implemented", "metadata_consumer")
 		end
 
-feature {NONE} -- Implementation
-
 note
+	ca_ignore: "CA011", "CA011: too many arguments"
 	copyright: "Copyright (c) 1984-2022, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
@@ -214,4 +201,5 @@ note
 			Website http://www.eiffel.com
 			Customer support http://support.eiffel.com
 		]"
+
 end

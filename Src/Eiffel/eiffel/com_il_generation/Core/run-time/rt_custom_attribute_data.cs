@@ -196,7 +196,9 @@ namespace EiffelSoftware.Runtime
 				return a_provider.GetCustomAttributes(a_type, false);
 			}
 #else
-			return a_provider.GetCustomAttributes(a_type, false);
+			IList<CustomAttributeData> attributes = CustomAttributeData.GetCustomAttributes(a_type);
+			return attributes.ToArray();
+
 #endif
 		}
 

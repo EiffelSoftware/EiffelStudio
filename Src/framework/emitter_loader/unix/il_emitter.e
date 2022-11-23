@@ -80,7 +80,7 @@ feature -- Clean up
 
 feature -- XML generation
 
-	consume_assembly_from_path (a_path: READABLE_STRING_GENERAL; a_info_only: BOOLEAN; a_references: detachable READABLE_STRING_GENERAL)
+	consume_assembly_from_path (a_assembly_paths: ITERABLE [READABLE_STRING_32]; a_info_only: BOOLEAN; a_references: detachable ITERABLE [READABLE_STRING_32])
 			-- <Precursor>
 		do
 			check

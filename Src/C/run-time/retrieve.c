@@ -803,24 +803,24 @@ rt_private void set_mismatch_information (
 	mismatch_information_initialize (eif_access (mismatch_information_object));
 
 	/* Store class name in table */
-	mismatch_information_add (eif_access (mismatch_information_object), eif_typename_of_type (eif_decoded_type(new_dftype)), "_type_name");
+	(FUNCTION_CAST(void, (EIF_REFERENCE, EIF_REFERENCE, EIF_POINTER)) mismatch_information_add) (eif_access (mismatch_information_object), eif_typename_of_type (eif_decoded_type(new_dftype)), "_type_name");
 
 	/* Store the storable versions */
 	l_old_version = conv->version;
 	l_new_version = System(To_dtype(new_dftype)).cn_version;
 	if (l_old_version || l_new_version) {
-		mismatch_information_set_versions (eif_access (mismatch_information_object),
-			l_old_version, l_new_version);
+		(FUNCTION_CAST(void, (EIF_REFERENCE, EIF_POINTER, EIF_POINTER)) mismatch_information_set_versions) (eif_access (mismatch_information_object),
+			(EIF_POINTER) l_old_version, (EIF_POINTER) l_new_version);
 	} else {
 			/* No version number we simply set both to Voids */
-		mismatch_information_set_versions (eif_access (mismatch_information_object), NULL, NULL);
+		(FUNCTION_CAST(void, (EIF_REFERENCE, EIF_POINTER, EIF_POINTER)) mismatch_information_set_versions) (eif_access (mismatch_information_object), NULL, NULL);
 	}
 
-	/* Store atribute values in table */
+	/* Store attribute values in table */
 	for (i=0; i<conv->attribute_count; i++) {
 		attribute_detail *att = conv->attributes + i;
 		EIF_REFERENCE old_value = ((EIF_REFERENCE *) values)[i];
-		mismatch_information_add (eif_access (mismatch_information_object), old_value, att->name);
+		(FUNCTION_CAST(void, (EIF_REFERENCE, EIF_REFERENCE, EIF_POINTER)) mismatch_information_add) (eif_access (mismatch_information_object), old_value, (EIF_POINTER) att->name);
 	}
 	RT_GC_WEAN(values);
 }

@@ -1068,7 +1068,7 @@ rt_public void eif_thr_exit(void)
 				if (eif_thr_context->set_terminated_func) {
 						/* Set the `terminated' field of the thread object to True so that
 						 * it knows the thread is terminated */
-					eif_thr_context->set_terminated_func(eif_access(eif_thr_context->current), EIF_TRUE);
+					(FUNCTION_CAST(void,(EIF_REFERENCE, EIF_BOOLEAN)) eif_thr_context->set_terminated_func) (eif_access(eif_thr_context->current), EIF_TRUE);
 				}
 			}
 				

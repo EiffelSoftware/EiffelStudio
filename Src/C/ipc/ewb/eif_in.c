@@ -144,7 +144,7 @@ rt_public EIF_REFERENCE request_dispatch (Request rqst)
 			return (char *) 0;
 		case DEAD:
 			eif_string = makestr ("Nothing", 7);
-			(dead_hdlr_set) (eif_access (dead_handler), eif_string);
+			(FUNCTION_CAST(void,(EIF_REFERENCE, EIF_REFERENCE)) dead_hdlr_set) (eif_access (dead_handler), eif_string);
 			return eif_access (dead_handler);
 		case NOTIFIED:
 			{
@@ -159,7 +159,7 @@ rt_public EIF_REFERENCE request_dispatch (Request rqst)
 				sprintf (ptr, "0x%" EIF_POINTER_DISPLAY, (rt_uint_ptr) notif_info.st_data2);
 				ptr += strlen (ptr) + 1;
 				eif_string = makestr (string, (size_t) (ptr - string));
-				(notify_hdlr_set) (eif_access (notify_handler), eif_string);
+				(FUNCTION_CAST(void,(EIF_REFERENCE, EIF_REFERENCE)) notify_hdlr_set) (eif_access (notify_handler), eif_string);
 				return eif_access (notify_handler);
 			}
 		case STOPPED:
@@ -189,12 +189,12 @@ rt_public EIF_REFERENCE request_dispatch (Request rqst)
 				sprintf (ptr, "%i", stop_info.st_exception);
 				ptr += strlen (ptr); /* terminating null so that (ptr - string) is the length */
 				eif_string = makestr (string, (size_t) (ptr - string));
-				(stopped_hdlr_set) (eif_access (stopped_handler), eif_string);
+				(FUNCTION_CAST(void,(EIF_REFERENCE, EIF_REFERENCE)) stopped_hdlr_set) (eif_access (stopped_handler), eif_string);
 				return eif_access (stopped_handler);
 			}
 		default:
 			eif_string = makestr ("Nothing", 7);
-			(failure_hdlr_set) (eif_access (failure_handler), eif_string);
+			(FUNCTION_CAST(void,(EIF_REFERENCE, EIF_REFERENCE)) failure_hdlr_set) (eif_access (failure_handler), eif_string);
 			return eif_access (failure_handler);
 		}
 }

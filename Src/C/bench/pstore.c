@@ -75,7 +75,7 @@ rt_private long parsing_buffer_size = 0;
 rt_private int file_descriptor;
 rt_private struct rt_store_context parsing_context;
 
-rt_private uint32 pst_store(struct rt_store_context *a_context, char *object, uint32 a_object_count);	/* Recursive store */
+rt_private uint32 pst_store(struct rt_store_context *a_context, EIF_REFERENCE object, uint32 a_object_count);	/* Recursive store */
 rt_private void parsing_store_write(size_t);
 rt_private void parsing_store_append(struct rt_store_context *a_context, char *object, fnptr mid, fnptr nid);
 rt_private int compiler_char_write(char *pointer, int size);
@@ -303,7 +303,7 @@ rt_private uint32 pst_store(struct rt_store_context *a_context, EIF_REFERENCE ob
 
 	/* Call `make_index' on `server' with `object' */
     if (object_needs_index) {
-		(make_index)(server, object, saved_file_pos, a_object_count - saved_object_count);
+		(FUNCTION_CAST(void,(EIF_REFERENCE,EIF_REFERENCE,EIF_INTEGER,EIF_INTEGER)) make_index)(server, object, (EIF_INTEGER) saved_file_pos, (EIF_INTEGER) (a_object_count - saved_object_count));    	
 	}
 
 	return a_object_count;

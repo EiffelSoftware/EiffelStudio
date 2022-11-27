@@ -194,7 +194,7 @@ struct rout_info {						/* Routine information */
 /* Invalid body id used to mark empty invariants (= max uint32) */
 #define INVALID_ID 0xFFFFFFFF
 
-typedef char *(*fnptr)(EIF_REFERENCE, ...); /* The function pointer type */
+typedef void *(*fnptr)(EIF_REFERENCE, ...); /* The function pointer type */
 
 #if defined(WORKBENCH) || defined(EIF_THREADS)
 /*

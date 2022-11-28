@@ -12,6 +12,8 @@
 		<echo message=" ---- "/>
 		<echo message=" geant compile_10"/>
 		<echo message=" geant compile_20"/>
+		<echo message=" geant compile_40"/>
+		<echo message=" geant compile_core"/>
 		<echo message=" ---- "/>
 		<echo message=" geant clean"/>
 		<echo message=" geant clobber"/>
@@ -32,11 +34,20 @@
 	<target name="compile_20" >
 		<exec executable="nmake dotnet_20" />
 	</target>
+	<target name="compile_40" >
+		<exec executable="nmake dotnet_40" />
+	</target>
+	<target name="compile_core" >
+		<echo message="- Compile .Net 6.0 Eiffel runtime" />
+		<exec executable="dotnet build -c Release runtime_core.csproj" />
+		<exec executable="dotnet publish -c Release runtime_core.csproj" />
+	</target>
 	<target name="clean" >
 		<echo message="- Clean [EiffelSoftware.Runtime.dll]" />
 		<delete>
 			<fileset directory="." include="@(**/*.dll)"/>
 		</delete>
+		<exec executable="dotnet clean -c Release runtime_core.csproj" />
 	</target>
 
 	<target name="clobber" depend="clean" />

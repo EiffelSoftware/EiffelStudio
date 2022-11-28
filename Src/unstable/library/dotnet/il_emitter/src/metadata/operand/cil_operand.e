@@ -213,15 +213,45 @@ feature --Access
 
 feature -- Output
 
-	render (a_stream: FILE_STREAM; a_opcode: INTEGER; a_operand_type: INTEGER; a_byte: ARRAY [NATURAL_8]): BOOLEAN
+	render (a_stream: FILE_STREAM; a_opcode: INTEGER; a_operand_type: INTEGER; a_result: SPECIAL [NATURAL_8]; a_offset: INTEGER): NATURAL_32
+		local
+			l_sz :INTEGER
 		do
-			to_implement ("Add implementation")
+			l_sz := a_offset
+			inspect type
+			when {CIL_OPERAND_TYPE}.t_none then
+				-- No operand, nothing to display
+			when {CIL_OPERAND_TYPE}.t_label then
+				-- Shouldn't be rendered.	
+			when {CIL_OPERAND_TYPE}.t_value then
+				if attached {CIL_VALUE} ref_value as l_ref_value then
+						-- TODO check if we need to add an offset to index the
+						-- byte array
+					l_sz := l_ref_value.render (a_stream, a_opcode, a_operand_type, a_result).to_integer_32
+				end
+			when {CIL_OPERAND_TYPE}.t_int then
+					-- TODO double check
+					-- this piece of code needs to be simpler
+				if a_operand_type = {CIL_IOPERAND}.index_of ({CIL_IOPERAND}.o_immed1).to_integer_32 then
+					a_result [l_sz] := int_value.to_natural_8
+					l_sz := l_sz + 1
+				elseif a_operand_type = {CIL_IOPERAND}.index_of ({CIL_IOPERAND}.o_immed4).to_integer_32 then
+					a_result [l_sz] := int_value.to_natural_8
+					l_sz := l_sz + 4
+				elseif a_operand_type = {CIL_IOPERAND}.index_of ({CIL_IOPERAND}.o_immed8).to_integer_32 then
+					a_result [l_sz] := int_value.to_natural_8
+					l_sz := l_sz + 8
+				end
+			else
+
+			end
+			to_implement ("Work in progress")
 		end
 
 	il_src_dump (a_file: FILE_STREAM): BOOLEAN
 		local
 			l_buf: ARRAY [NATURAL_8]
-			l_sz, i: INTEGER
+			l_sz: INTEGER
 		do
 			inspect type
 			when {CIL_OPERAND_TYPE}.t_none then

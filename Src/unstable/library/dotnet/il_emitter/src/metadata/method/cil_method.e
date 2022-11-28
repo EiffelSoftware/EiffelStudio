@@ -82,7 +82,7 @@ feature -- Access
 			Result := var_list [a_index]
 		end
 
-	token: NATURAL
+	token: NATURAL_64
 		-- redundant from `rendering.method_def` because PE_WRITER deletes all PE_METHODS
 
 feature -- Status Report
@@ -238,8 +238,6 @@ feature {NONE} -- Implementation
 			l_labels: STRING_TABLE [INTEGER]
 			n, m: INTEGER
 			last_branch: BOOLEAN
-			skipping: BOOLEAN
-
 		do
 			create l_labels.make (0)
 			labels.compare_objects
@@ -267,7 +265,7 @@ feature {NONE} -- Implementation
 								l_val /= n
 							then
 									-- TODO reimplement.
-								{EXCEPTIONS}.raise (generator + " MismatchedStack at " + l_operand.string_value)
+								{EXCEPTIONS}.raise (generator + " MismatchedStack at " + l_operand.string_value.to_string_8)
 							else
 								l_labels.force (n, l_operand.string_value)
 							end
@@ -279,7 +277,7 @@ feature {NONE} -- Implementation
 									l_val /= n
 								then
 										-- TODO reimplement.
-									{EXCEPTIONS}.raise (generator + " MismatchedStack at " + item)
+									{EXCEPTIONS}.raise (generator + " MismatchedStack at " + item.to_string_8)
 								else
 									l_labels.force (n, item)
 								end
@@ -297,7 +295,7 @@ feature {NONE} -- Implementation
 								l_val /= n
 							then
 									-- TODO reimplement.
-								{EXCEPTIONS}.raise (generator + " MismatchedStack at " + ins.label)
+								{EXCEPTIONS}.raise (generator + " MismatchedStack at " + ins.label.to_string_8)
 							else
 								l_labels.force (n, ins.label)
 							end
@@ -456,7 +454,7 @@ feature -- Output
 
 	compile (a_stream: FILE_STREAM)
 		local
-			l_sz: CELL [NATURAL_32]
+			l_sz: CELL [NATURAL_64]
 		do
 			if attached {PE_METHOD} rendering as l_rendering then
 				create l_sz.put (l_rendering.code_size)
@@ -469,8 +467,8 @@ feature {NONE} -- Implementation
 
 	pe_dump_imp (a_stream: FILE_STREAM): BOOLEAN
 		local
-			l_sz: CELL [NATURAL]
-			l_method_signature: NATURAL
+			l_sz: CELL [NATURAL_64]
+			l_method_signature: NATURAL_64
 			l_sig: ARRAY [NATURAL_8]
 			l_table: PE_TABLE_ENTRY_BASE
 			l_res: NATURAL_8
@@ -480,20 +478,20 @@ feature {NONE} -- Implementation
 			l_rendering: like rendering
 			l_impl_flags: INTEGER
 			l_mf_flags: INTEGER
-			l_name_index: NATURAL
-			l_import_name_index: NATURAL
+			l_name_index: NATURAL_64
+			l_import_name_index: NATURAL_64
 			l_param_index: NATURAL
 			i: INTEGER
 			l_last_param_index: NATURAL
 			l_flags: INTEGER
-			l_module_name: NATURAL
-			l_module_ref: NATURAL
+			l_module_name: NATURAL_64
+			l_module_ref: NATURAL_64
 			l_method_index: PE_MEMBER_FORWARDED
-			l_attribute_type: NATURAL
-			l_attribute_data: NATURAL
+			l_attribute_type: NATURAL_64
+			l_attribute_data: NATURAL_64
 			l_ctor_index: NATURAL
 			l_data: ARRAY [NATURAL_8]
-			l_data_sig: NATURAL
+			l_data_sig: NATURAL_64
 			l_attribute:  PE_CUSTOM_ATTRIBUTE
 			l_type: PE_CUSTOM_ATTRIBUTE_TYPE
 		do
@@ -557,9 +555,9 @@ feature {NONE} -- Implementation
 
 			create l_rendering.make (has_seh, l_pe_flags,
 									if attached {PE_WRITER}a_stream.pe_writer as l_writer then l_writer.next_table_index ({PE_TABLES}.tmethoddef.value.to_integer_32) else {NATURAL_32}0 end,
-									max_stack.to_natural_16, var_list.count.to_natural_32,
-									if attached l_last then (l_last.offset + l_last.instruction_size).to_natural_32 else {NATURAL_32}0 end,
-									if l_method_signature /= 0 then l_method_signature | ({PE_TABLES}.tstandalonesig.value |<< 24) else {NATURAL_32}0 end)
+									max_stack.to_natural_16, var_list.count,
+									if attached l_last then (l_last.offset + l_last.instruction_size) else 0 end,
+									if l_method_signature /= 0 then l_method_signature | ({PE_TABLES}.tstandalonesig.value |<< 24) else {NATURAL_64}0 end)
 
 			token := l_rendering.method_def | ({PE_TABLES}.tmethoddef.value |<< 24)
 
@@ -584,7 +582,7 @@ feature {NONE} -- Implementation
 	        if (flags.flags & {CIL_QUALIFIERS_ENUM}.PreserveSig) /= 0 then
 	            l_impl_flags := l_impl_flags | {PE_METHOD_DEF_TABLE_ENTRY}.PreserveSig
 	        end
-	        if (flags.Flags() & {CIL_QUALIFIERS_ENUM}.Public) /= 0 then
+	        if (flags.flags & {CIL_QUALIFIERS_ENUM}.Public) /= 0 then
 	           	l_mf_flags := l_mf_flags | {PE_METHOD_DEF_TABLE_ENTRY}.Public
 	        elseif (flags.flags & {CIL_QUALIFIERS_ENUM}.Private) /= 0 then
 	            l_mf_flags := l_mf_flags | {PE_METHOD_DEF_TABLE_ENTRY}.Private
@@ -670,7 +668,7 @@ feature {NONE} -- Implementation
 							Result := l_result.pe_dump (a_stream)
 							l_ctor_index := l_result.prototype.pe_index_call_site
 						end
-						l_data := <<1, 0, 0, 0>>
+						l_data := {ARRAY [NATURAL_8]}<<1, 0, 0, 0>>
 						l_data_sig := l_writer.hash_blob (l_data, l_data.count.to_natural_8)
 						l_writer.set_param_attribute (l_ctor_index, l_data_sig)
 						l_attribute_type := l_writer.param_attribute_type

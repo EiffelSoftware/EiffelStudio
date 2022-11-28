@@ -66,7 +66,7 @@ feature -- Access
 			-- iff debug is enabled.
 
 
-	module_ref: HASH_TABLE [NATURAL, NATURAL]
+	module_ref: HASH_TABLE [NATURAL_64, NATURAL_64]
 
 feature -- Element change
 
@@ -104,10 +104,10 @@ feature -- Element change
 			end
 		end
 
-	put_string (s: READABLE_STRING_8)
+	put_string (s: READABLE_STRING_GENERAL)
 		do
 			if attached output_stream as l_stream then
-				l_stream.put_string (s)
+				l_stream.put_string (s.to_string_8)
 			end
 			if on_debug then
 				debug_output.append_string (s)
@@ -138,7 +138,7 @@ feature -- Element change
 			end
 		end
 
-	text: STRING
+	text: STRING_32
 		do
 			Result := debug_output
 		end

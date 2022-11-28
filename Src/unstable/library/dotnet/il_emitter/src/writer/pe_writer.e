@@ -121,25 +121,25 @@ feature -- Access
 	file_align: NATURAL assign set_file_align
 			-- `file_align'
 
-	param_attribute_data: NATURAL assign set_param_attribute_data
+	param_attribute_data: NATURAL_64 assign set_param_attribute_data
 			-- `param_attribute_data'
 
-	param_attribute_type: NATURAL assign set_param_attribute_type
+	param_attribute_type: NATURAL_64 assign set_param_attribute_type
 			-- `param_attribute_type'
 
-	entry_point: NATURAL assign set_entry_point
+	entry_point: NATURAL_64 assign set_entry_point
 			-- `entry_point'
 
-	system_index: NATURAL assign set_system_index
+	system_index: NATURAL_64 assign set_system_index
 			-- `system_index'
 
-	enum_base: NATURAL assign set_enum_base
+	enum_base: NATURAL_64 assign set_enum_base
 			-- `enum_base'
 
-	value_base: NATURAL assign set_value_base
+	value_base: NATURAL_64 assign set_value_base
 			-- `value_base'
 
-	object_base: NATURAL assign set_object_base
+	object_base: NATURAL_64 assign set_object_base
 			-- `object_base'
 
 	gui: BOOLEAN assign set_gui
@@ -158,14 +158,14 @@ feature -- Access
 
 	product_version: detachable ARRAY [NATURAL_16]
 
-	stream_headers: ARRAY2 [NATURAL]
+	stream_headers: ARRAY2 [NATURAL_64]
 
 	rsa_encoder: CIL_RSA_ENCODER
 
 	mzh_header: ARRAY [NATURAL_8]
 			-- MS-DOS header
 		do
-			Result := <<
+			Result :={ARRAY [NATURAL_8]} <<
 					0x4d, 0x5a, 0x90, 0x00, 0x03, 0x00, 0x00, 0x00,
 					0x04, 0x00, 0x00, 0x00, 0xFF, 0xFF, 0x00, 0x00,
 					0xb8, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
@@ -191,7 +191,7 @@ feature -- Access
 
 	stream_names: ARRAY [STRING_32]
 		do
-			Result := <<"#~", "#Strings", "#US", "#GUID", "#Blob">>
+			Result := {ARRAY [STRING_32]}<<"#~", "#Strings", "#US", "#GUID", "#Blob">>
 		ensure
 			instance_free: class
 		end
@@ -200,11 +200,11 @@ feature -- Access
 			-- defined as static Byte defaultUS_[];
 			--| Byte defined as 1 byte.
 		do
-			Result := <<0, 3, 0x20, 0, 0>>
+			Result := {ARRAY [NATURAL_8]}<<0, 3, 0x20, 0, 0>>
 			Result.conservative_resize_with_default (0, 1, 8)
 		end
 
-	string_map: STRING_TABLE [NATURAL]
+	string_map: STRING_TABLE [NATURAL_64]
 			-- reflection of the String stream so that we can keep from doing duplicates.
 			-- right now we don't check duplicates on any of the other streams...
 
@@ -453,7 +453,7 @@ feature -- Status Report
 
 feature -- Stream functions
 
-	hash_string (a_utf8: STRING_32): NATURAL
+	hash_string (a_utf8: STRING_32): NATURAL_64
 			-- return the stream index
 			--| TODO add a precondition to verify a_utf8 is a valid UTF_8
 		local
@@ -472,13 +472,13 @@ feature -- Stream functions
 				l_str := {UTF_CONVERTER}.utf_32_string_to_utf_8_string_8 (a_utf8)
 				create l_converter.make_from_bin_string (l_str)
 
-				strings.copy_data (strings.size.to_integer_32, l_converter.to_natural_8_array, l_str.count + 1)
+				strings.copy_data (strings.size.to_integer_32, l_converter.to_natural_8_array, (l_str.count + 1).to_natural_64)
 				strings.increment_size_by ((a_utf8.count + 1).to_natural_32)
 				string_map.force (Result, a_utf8)
 			end
 		end
 
-	hash_us (a_str: STRING_32; a_len: INTEGER): NATURAL
+	hash_us (a_str: STRING_32; a_len: INTEGER): NATURAL_64
 			-- return the stream index
 		local
 			l_flag: INTEGER
@@ -527,7 +527,7 @@ feature -- Stream functions
 		    us.increment_size
 		end
 
-	hash_guid (a_guid: ARRAY [NATURAL_8]): NATURAL
+	hash_guid (a_guid: ARRAY [NATURAL_8]): NATURAL_64
 			-- return the stream index
 		do
 			guid.confirm (16) -- 128 // 8
@@ -537,11 +537,11 @@ feature -- Stream functions
 			Result := Result // 16 + 1
 		end
 
-	hash_blob (a_blob_data: ARRAY [NATURAL_8]; a_blob_len: NATURAL_8): NATURAL
+	hash_blob (a_blob_data: ARRAY [NATURAL_8]; a_blob_len: NATURAL_64): NATURAL_64
 			-- return the stream index.
 		local
-			l_rv: NATURAL
-			l_blob_len: INTEGER
+			l_rv: NATURAL_64
+			l_blob_len: NATURAL_64
 		do
 			l_blob_len := a_blob_len
 			if blob.size = 0 then
@@ -582,7 +582,7 @@ feature -- Various Operations
 			to_implement ("Add implementation")
 		end
 
-	set_base_classes (a_object_index: NATURAL; a_value_index: NATURAL; a_enum_index: NATURAL; a_system_index: NATURAL)
+	set_base_classes (a_object_index: NATURAL_64; a_value_index: NATURAL_64; a_enum_index: NATURAL_64; a_system_index: NATURAL_64)
 			--  Set the indexes of the various classes which can be extended to make new classes
 			--  these are typically in the typeref table
 			--  Also set the index of the System namespace entry which is t
@@ -600,7 +600,7 @@ feature -- Various Operations
 			system_index_set: system_index = a_system_index
 		end
 
-	set_param_attribute (a_param_attribute_type: NATURAL; a_param_attribute_data: NATURAL)
+	set_param_attribute (a_param_attribute_type: NATURAL_64; a_param_attribute_data: NATURAL_64)
 			-- this sets the data for the paramater attribute we support
 			-- we aren't generally supporting attributes in this version but we do need to be able to
 			-- set a single attribute that means a function has a variable length argument list
@@ -663,16 +663,16 @@ feature -- Operations
 			l_pe_header: PE_HEADER
 			l_pe_objects: like pe_objects
 			l_n: INTEGER
-			l_current_rva: NATURAL
+			l_current_rva: NATURAL_64
 			l_core_20_header: PE_DOTNET_COR20_HEADER
-			l_last_rva: NATURAL
+			l_last_rva: NATURAL_64
 			l_end: INTEGER
 			l_data: CIL_SEH_DATA
 			l_edata: CIL_SEH_DATA
 			l_exit: BOOLEAN
 			l_etiny: BOOLEAN
 			l_tables_header: PE_DOTNET_META_TABLES_HEADER
-			l_counts: ARRAY [NATURAL]
+			l_counts: ARRAY [NATURAL_64]
 			l_buffer: ARRAY [NATURAL_8]
 			l_sect: INTEGER
 		do
@@ -745,13 +745,13 @@ feature -- Operations
 				-- for interoperability with the microsoft runtimes.
 
 			l_core_20_header.flags := a_cor_flags.to_natural_32
-			l_core_20_header.entry_point_token := entry_point
+			l_core_20_header.entry_point_token := entry_point.to_natural_32
 
 			if not snk_file.is_empty then
 				to_implement ("Implement snkfile code")
 			end
 
-			cildata_rva := l_current_rva
+			cildata_rva := l_current_rva.to_natural_32
 			if rva.size /= 0 then
 				l_current_rva := l_current_rva + rva.size
 				if l_current_rva \\ 8 /= 0 then
@@ -812,7 +812,7 @@ feature -- Operations
 				l_current_rva := l_current_rva + 4 - (l_current_rva \\ 4)
 			end
 
-			l_core_20_header.metadata [1] := l_current_rva
+			l_core_20_header.metadata [1] := l_current_rva.to_natural_32
 				-- metadata root
 
 			l_current_rva := l_current_rva + 12
@@ -931,7 +931,7 @@ feature -- Operations
 			end
 
 			stream_headers [5, 2] := l_current_rva - stream_headers [5, 1] - l_core_20_header.metadata [1]
-			l_core_20_header.metadata [2] := l_current_rva - l_core_20_header.metadata [1]
+			l_core_20_header.metadata [2] := l_current_rva.to_natural_32 - l_core_20_header.metadata [1]
 			l_pe_header.import_rva := l_current_rva.to_integer_32
 			l_current_rva := l_current_rva + ({PE_IMPORT_DIR}.size_of * 2).to_natural_32 + 8
 
@@ -953,7 +953,7 @@ feature -- Operations
 			l_pe_header.entry_point := l_current_rva.to_integer_32
 			l_current_rva := l_current_rva + 6
 			if snk_len /= 0 then
-				l_core_20_header.strong_name_signature [1] := l_current_rva
+				l_core_20_header.strong_name_signature [1] := l_current_rva.to_natural_32
 				l_core_20_header.strong_name_signature [2] := snk_len
 				l_current_rva := l_current_rva + snk_len
 			end

@@ -23,8 +23,8 @@ create
 
 feature {NONE} -- Initialization
 
-	make_with_data (a_flags: INTEGER; a_type_name_index: NATURAL; a_type_name_space_index: NATURAL;
-					a_extends: PE_TYPEDEF_OR_REF; a_field_index: NATURAL; a_method_index: NATURAL)
+	make_with_data (a_flags: INTEGER; a_type_name_index: NATURAL_64; a_type_name_space_index: NATURAL_64;
+					a_extends: PE_TYPEDEF_OR_REF; a_field_index: NATURAL_64; a_method_index: NATURAL_64)
 		do
 			flags := a_flags
 			create type_name_index.make_with_index (a_type_name_index)
@@ -58,12 +58,12 @@ feature -- Operations
 			Result := {PE_TABLES}.ttypedef.value.to_integer_32
 		end
 
-	render (a_sizes: ARRAY [NATURAL]; a_bytes: ARRAY [NATURAL_8]): NATURAL
+	render (a_sizes: ARRAY [NATURAL_64]; a_bytes: ARRAY [NATURAL_8]): NATURAL_64
 		do
 			to_implement  ("Add implementation")
 		end
 
-	get (a_sizes: ARRAY [NATURAL]; a_bytes: ARRAY [NATURAL_8]): NATURAL
+	get (a_sizes: ARRAY [NATURAL_64]; a_bytes: ARRAY [NATURAL_8]): NATURAL_64
 		do
 			to_implement ("Add implementation")
 		end

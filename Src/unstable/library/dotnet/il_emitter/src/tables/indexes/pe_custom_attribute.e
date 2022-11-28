@@ -48,6 +48,7 @@ feature -- Enum: tags
 	File: INTEGER = 16
 	ExportedType: INTEGER = 17
 	ManifestResource: INTEGER = 18
+
 feature -- Operations
 
 	get_index_shift: INTEGER
@@ -55,7 +56,7 @@ feature -- Operations
 			Result := tagbits
 		end
 
-	has_index_overflow (a_sizes: ARRAY [NATURAL]): BOOLEAN
+	has_index_overflow (a_sizes: ARRAY [NATURAL_64]): BOOLEAN
 		do
 			to_implement ("Add implementation")
 		end

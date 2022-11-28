@@ -67,7 +67,6 @@ feature -- Operations
 		local
 			l_dir: DIRECTORY
 			l_path: STRING_32
-			l_str: STRING_32
 			l_split: LIST [STRING_32]
 			l_index: INTEGER
 			l_name: STRING_32
@@ -112,7 +111,7 @@ feature -- Operations
 			end
 		end
 
-	search_for_managed_file (a_name: STRING; a_major, a_minor, a_build, a_revision: INTEGER): STRING_32
+	search_for_managed_file (a_name: STRING_32; a_major, a_minor, a_build, a_revision: INTEGER): STRING_32
 		local
 			l_windir: STRING_32
 		do

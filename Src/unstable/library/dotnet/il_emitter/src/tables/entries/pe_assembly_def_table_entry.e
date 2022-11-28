@@ -20,7 +20,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make_with_data (a_flags: INTEGER; a_major, a_minor, a_build, a_revision: NATURAL_16; a_name_index: NATURAL)
+	make_with_data (a_flags: INTEGER; a_major, a_minor, a_build, a_revision: NATURAL_16; a_name_index: NATURAL_64)
 		do
 			hash_alg_id := DefaultHashAlgId.to_natural_16
 			flags := a_flags
@@ -55,12 +55,12 @@ feature -- Operations
 			Result := {PE_TABLES}.tAssemblyDef.value.to_integer_32
 		end
 
-	render (a_sizes: ARRAY [NATURAL]; a_bytes: ARRAY [NATURAL_8]): NATURAL
+	render (a_sizes: ARRAY [NATURAL_64]; a_bytes: ARRAY [NATURAL_8]): NATURAL_64
 		do
 			to_implement ("Add implementation")
 		end
 
-	get (a_sizes: ARRAY [NATURAL]; a_bytes: ARRAY [NATURAL_8]): NATURAL
+	get (a_sizes: ARRAY [NATURAL_64]; a_bytes: ARRAY [NATURAL_8]): NATURAL_64
 		do
 			to_implement ("Add implementation")
 		end

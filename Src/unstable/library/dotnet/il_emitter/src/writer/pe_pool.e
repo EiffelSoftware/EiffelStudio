@@ -28,15 +28,15 @@ feature {NONE} -- Implementation
 
 feature -- Access
 
-	size: NATURAL
+	size: NATURAL_64
 
-	max_size: NATURAL
+	max_size: NATURAL_64
 
 	base: SPECIAL [NATURAL_8]
 		-- todo double check if we need to use
 		-- SPECIAL instead of ARRAY
 
-	confirm (new_size: NATURAL)
+	confirm (new_size: NATURAL_64)
 			-- C++ uses ensure
 		require
 			valid_size: size + new_size <= max_size
@@ -63,7 +63,7 @@ feature -- Element Change
 			size_incremented: old size + 1 = size
 		end
 
-	increment_size_by (a_value: NATURAL)
+	increment_size_by (a_value: NATURAL_64)
 			-- Increment size by `a_value`.
 		do
 			size := size + a_value
@@ -71,7 +71,7 @@ feature -- Element Change
 			size_incremented: old size + a_value = size
 		end
 
-	copy_data (a_index: INTEGER; a_data: ARRAY [NATURAL_8]; a_count: INTEGER)
+	copy_data (a_index: INTEGER; a_data: ARRAY [NATURAL_8]; a_count: NATURAL_64)
 		local
 			l_index: INTEGER
 		do
@@ -79,7 +79,9 @@ feature -- Element Change
 			 -- base.copy_data (other: SPECIAL [T], source_index, destination_index, n: INTEGER_32)
 			 -- could replace the following code.
 			l_index := a_index
-			across 1 |..| a_count as ic  loop
+				-- TODO fixme
+			fixme ("Implement the loop with from since there is no NATURAL_INTERVAL")
+			across 1 |..| a_count.to_integer_32 as ic  loop
 				base [l_index] := ic.to_natural_8
 				l_index := l_index + 1
 			end

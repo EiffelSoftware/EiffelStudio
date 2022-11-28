@@ -67,7 +67,7 @@ feature -- Access
 	text: STRING_32
 			-- text, e.g for a comment.
 
-	label: STRING
+	label: STRING_32
 			-- Label name associated with the instruction.
 		do
 			Result := "";
@@ -327,9 +327,72 @@ feature -- Output
 			Result := True
 		end
 
-	render (a_stream: FILE_STREAM; a_byte: ARRAY [NATURAL_8]; labels: STRING_TABLE [CIL_INSTRUCTION]): NATURAL_32
+	render (a_stream: FILE_STREAM; a_result: SPECIAL [NATURAL_8]; a_offset:INTEGER; labels: STRING_TABLE [CIL_INSTRUCTION]): NATURAL_32
+		local
+			l_sz: INTEGER
+			l_data: SPECIAL [NATURAL_8]
+			l_dis: NATURAL_8
+			l_base: INTEGER
+			n: INTEGER
+			l_branch_label: STRING_32
+			l_cur: INTEGER
 		do
-			to_implement ("Add implementation")
+			l_sz := a_offset
+			if opcode = {CIL_INSTRUCTION_OPCODES}.i_seh and then
+				seh_type = {CIL_SEH}.seh_catch
+			then
+				create l_data.make_empty (4)
+				if attached seh_catch_type as l_seh_catch_type then
+					l_dis := l_seh_catch_type.render (a_stream, l_data)
+				end
+			end
+			if opcode /= {CIL_INSTRUCTION_OPCODES}.i_label and then
+			   opcode /= {CIL_INSTRUCTION_OPCODES}.i_comment and then
+			   opcode /= {CIL_INSTRUCTION_OPCODES}.i_line
+			then
+				a_result [l_sz] := instructions [{CIL_INSTRUCTION_OPCODES}.index_of (opcode) + 1].op1
+				l_sz := l_sz + 1
+				if instructions [{CIL_INSTRUCTION_OPCODES}.index_of (opcode) + 1].op2 /= 0xff then
+					a_result [l_sz] := instructions [{CIL_INSTRUCTION_OPCODES}.index_of (opcode) + 1].op2
+					l_sz := l_sz + 1
+				end
+				if opcode = {CIL_INSTRUCTION_OPCODES}.i_switch then
+					a_result [l_sz] := switches.count.to_natural_8
+						-- Double check if the previous assigment is equivalent to
+						-- C++ *(DWord*)(result + sz) = switches_->size();
+					l_sz := l_sz + 4
+						-- sz += sizeof(DWord) where DWord is defined as 4 bytes.
+					l_base := l_sz + offset+ switches.count * 4
+					across switches as switch loop
+						n := if attached labels[switch] as l_ins then l_ins.offset else 0 end
+						a_result [l_sz] := (n - l_base).to_natural_8
+						l_sz := l_sz + 4
+					end
+				elseif is_branch then
+					l_branch_label := if attached operand as l_operand then l_operand.string_value else {STRING_32}"" end
+					l_cur := offset + 1 + if is_rel4 then 4 else 1 end
+						-- calculate source
+					n := if attached labels [l_branch_label] as l_ins then l_ins.offset - l_cur else 0 - l_cur end
+						-- calculate offset to target
+					if is_rel4 then
+						a_result [l_sz] := n.to_natural_8
+						l_sz := l_sz + 4
+					else
+						a_result [l_sz] := n.to_natural_8
+					 	l_sz := l_sz + 1
+					end
+				else
+					if attached operand as l_operand and then
+					   instructions [{CIL_INSTRUCTION_OPCODES}.index_of (opcode) + 1].operand_type /= {CIL_IOPERAND}.index_of ({CIL_IOPERAND}.o_single) + 1
+					   			-- TODO double check if this comparision is ok!!!
+					then
+						l_sz := l_sz + l_operand.render (a_stream, {CIL_INSTRUCTION_OPCODES}.index_of (opcode) + 1,
+															instructions [{CIL_INSTRUCTION_OPCODES}.index_of (opcode) + 1].operand_type,
+															a_result, l_sz).to_integer_32
+					end
+				end
+			end
+			Result := l_sz.to_natural_32
 		end
 
 feature -- Static

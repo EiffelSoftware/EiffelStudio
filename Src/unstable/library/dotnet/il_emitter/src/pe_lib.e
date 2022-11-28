@@ -598,7 +598,6 @@ feature -- Element Change
 			-- in any assembly.
 		local
 			l_split: LIST [STRING_32]
-			l_container: CIL_DATA_CONTAINER
 			l_res: TUPLE [index: INTEGER; dc: detachable CIL_DATA_CONTAINER]
 		do
 			l_split := split_path (a_path)
@@ -618,7 +617,6 @@ feature {ANY} -- Implementation
 			l_last: STRING_32
 			l_path: STRING_32
 			n: INTEGER_32
-			l_split: LIST [STRING_32]
 		do
 			l_last := ""
 			create {ARRAYED_LIST [STRING_32]} Result.make (0)
@@ -651,7 +649,7 @@ feature {ANY} -- Implementation
 			if Result.count > 2 then
 				if Result [Result.count].same_string ("ctor") or else Result [Result.count].same_string ("cctor") then
 					if Result [Result.count - 1].is_empty then
-						Result [Result.count - 1] := "." + Result [Result.count]
+						Result [Result.count - 1] := {STRING_32} "." + Result [Result.count]
 						Result.prune (Result [Result.count])
 					end
 				end
@@ -738,24 +736,24 @@ feature {NONE} -- Output Implementation
 		local
 			n: NATURAL
 			l_pe_writer: PE_WRITER
-			l_module_index: NATURAL
+			l_module_index: NATURAL_64
 			l_type_def: PE_TYPEDEF_OR_REF
 			l_table: PE_TABLE_ENTRY_BASE
 			l_n: NATURAL
 			l_base_types: CELL [INTEGER]
-			l_system_index: NATURAL
-			l_object_index: NATURAL
-			l_value_index: NATURAL
-			l_enum_index: NATURAL
+			l_system_index: NATURAL_64
+			l_object_index: NATURAL_64
+			l_value_index: NATURAL_64
+			l_enum_index: NATURAL_64
 			l_stream: FILE_STREAM
 			l_mscorlib_assembly: CIL_ASSEMBLY_DEF
-			l_assembly_index: NATURAL
+			l_assembly_index: NATURAL_64
 			l_rs: PE_RESOLUTION_SCOPE
-			l_result : TUPLE [type: CIL_FIND_TYPE; resource: detachable ANY]
+			l_result: TUPLE [type: CIL_FIND_TYPE; resource: detachable ANY]
 			l_pos: INTEGER
 			l_file_name: STRING_32
-			l_name_index: NATURAL
-			l_guid_index: NATURAL
+			l_name_index: NATURAL_64
+			l_guid_index: NATURAL_64
 		do
 			n := 1
 				-- Give initial PE Indexes for field resolution..
@@ -785,15 +783,15 @@ feature {NONE} -- Output Implementation
 
 			if l_base_types.item /= 0 then
 				l_system_index := l_pe_writer.hash_string ("System")
-				 if l_base_types.item & {CIL_DATA_CONTAINER}.base_type_object /= 0 then
-				 	l_object_index := l_pe_writer.hash_string ("Object")
-				 end
-				 if l_base_types.item & {CIL_DATA_CONTAINER}.base_type_value /= 0 then
-				 	l_value_index := l_pe_writer.hash_string ("ValueType")
-				 end
-				 if l_base_types.item & {CIL_DATA_CONTAINER}.base_type_enum /= 0 then
-				 	l_enum_index := l_pe_writer.hash_string ("Enum")
-				 end
+				if l_base_types.item & {CIL_DATA_CONTAINER}.base_type_object /= 0 then
+					l_object_index := l_pe_writer.hash_string ("Object")
+				end
+				if l_base_types.item & {CIL_DATA_CONTAINER}.base_type_value /= 0 then
+					l_value_index := l_pe_writer.hash_string ("ValueType")
+				end
+				if l_base_types.item & {CIL_DATA_CONTAINER}.base_type_enum /= 0 then
+					l_enum_index := l_pe_writer.hash_string ("Enum")
+				end
 			end
 
 			create l_stream.make_stream (l_pe_writer, Current)
@@ -805,7 +803,7 @@ feature {NONE} -- Output Implementation
 			if l_base_types.item /= 0 then
 				l_mscorlib_assembly := mscorlib_assembly
 				l_assembly_index := l_mscorlib_assembly.pe_index
-				create l_rs.make_with_tag_and_index ( {PE_RESOLUTION_SCOPE}.AssemblyRef, l_assembly_index)
+				create l_rs.make_with_tag_and_index ({PE_RESOLUTION_SCOPE}.AssemblyRef, l_assembly_index)
 				if l_base_types.item & {CIL_DATA_CONTAINER}.base_type_object /= 0 then
 					create {PE_TYPE_REF_TABLE_ENTRY} l_table.make_with_data (l_rs, l_object_index, l_system_index)
 					l_object_index := l_pe_writer.add_table_entry (l_table)

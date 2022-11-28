@@ -19,12 +19,12 @@ feature -- Access
 
 feature -- Operations
 
-	render (a_sizes: ARRAY [NATURAL]; a_bytes: ARRAY [NATURAL_8]): NATURAL
+	render (a_sizes: ARRAY [NATURAL_64]; a_bytes: ARRAY [NATURAL_8]): NATURAL_64
 		do
 			to_implement  ("Add implementation")
 		end
 
-	get (a_sizes: ARRAY [NATURAL]; a_bytes: ARRAY [NATURAL_8]): NATURAL
+	get (a_sizes: ARRAY [NATURAL_64]; a_bytes: ARRAY [NATURAL_8]): NATURAL_64
 		do
 			to_implement ("Add implementation")
 		end

@@ -21,12 +21,12 @@ create
 
 feature {NONE} -- Initialization
 
-	make (has_seh: BOOLEAN; a_flags: INTEGER; a_method_def: NATURAL; a_max_stack: NATURAL_16; a_local_count: NATURAL; a_code_size: NATURAL; a_signature: NATURAL)
+	make (has_seh: BOOLEAN; a_flags: INTEGER; a_method_def: NATURAL_64; a_max_stack: INTEGER; a_local_count: INTEGER; a_code_size: INTEGER; a_signature: NATURAL_64)
 		do
 			flags := a_flags
 			hrd_size := 3
-			max_stack := a_max_stack
-			code_size := a_code_size
+			max_stack := a_max_stack.to_natural_16
+			code_size := a_code_size.to_natural_64
 			signature_token := a_signature
 			create {ARRAYED_LIST [CIL_SEH_DATA]} seh_data.make (0)
 			if (flags & 0xfff) = 0 then
@@ -58,17 +58,17 @@ feature -- Access
 	max_stack: NATURAL_16
 			-- Defined as Word = 2 bytes.
 
-	code_size: NATURAL assign set_code_size
+	code_size: NATURAL_64 assign set_code_size
 
 	code: detachable ARRAY [NATURAL_8] assign set_code
 
-	signature_token: NATURAL
+	signature_token: NATURAL_64
 
-	rva: NATURAL
+	rva: NATURAL_64
 
-	method_def: NATURAL
+	method_def: NATURAL_64
 
-	write (a_sizes: ARRAY [NATURAL]; a_stream: FILE_STREAM): NATURAL
+	write (a_sizes: ARRAY [NATURAL_64]; a_stream: FILE_STREAM): NATURAL_64
 		require
 			valid_size: a_sizes.capacity = {PE_TABLE_CONSTANTS}.max_tables + {PE_TABLE_CONSTANTS}.extra_indexes
 		do
@@ -77,7 +77,7 @@ feature -- Access
 
 feature -- Element Change
 
-	set_rva (a_value: NATURAL)
+	set_rva (a_value: like rva)
 			-- Set `rva` with `a_value`
 		do
 			rva := a_value

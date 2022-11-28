@@ -20,7 +20,7 @@ create
 
 feature {NONE} -- Implementation
 
-	make_with_data (a_resolution: PE_RESOLUTION_SCOPE; a_type_name_index: NATURAL; a_type_name_space_index: NATURAL)
+	make_with_data (a_resolution: PE_RESOLUTION_SCOPE; a_type_name_index: NATURAL_64; a_type_name_space_index: NATURAL_64)
 		do
 			resolution := a_resolution
 			create type_name_index.make_with_index (a_type_name_index)
@@ -43,12 +43,12 @@ feature -- Operations
 			Result := {PE_TABLES}.ttyperef.value.to_integer_32
 		end
 
-	render (a_sizes: ARRAY [NATURAL]; a_bytes: ARRAY [NATURAL_8]): NATURAL
+	render (a_sizes: ARRAY [NATURAL_64]; a_bytes: ARRAY [NATURAL_8]): NATURAL_64
 		do
 			to_implement  ("Add implementation")
 		end
 
-	get (a_sizes: ARRAY [NATURAL]; a_bytes: ARRAY [NATURAL_8]): NATURAL
+	get (a_sizes: ARRAY [NATURAL_64]; a_bytes: ARRAY [NATURAL_8]): NATURAL_64
 		do
 			to_implement ("Add implementation")
 		end

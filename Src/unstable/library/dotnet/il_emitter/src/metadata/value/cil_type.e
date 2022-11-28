@@ -44,7 +44,7 @@ feature {NONE} --Initialization
 			pinned_set: not pinned
 			show_type_set: not show_type
 			var_num_default: not (basic_type = {CIL_BASIC_TYPE}.type_var or else basic_type = {CIL_BASIC_TYPE}.method_param) implies var_num = 0
-			var_num_set: basic_type = (basic_type = {CIL_BASIC_TYPE}.type_var or else basic_type = {CIL_BASIC_TYPE}.method_param) implies var_num = a_pointer_level
+			var_num_set: (basic_type = {CIL_BASIC_TYPE}.type_var or else basic_type = {CIL_BASIC_TYPE}.method_param) implies var_num = a_pointer_level
 			mod_opt_void: mod_opt = Void
 		end
 
@@ -93,7 +93,7 @@ feature -- Access
 
 	mod_opt: detachable CIL_TYPE
 
-	pe_index: NATURAL
+	pe_index: NATURAL_64
 
 	show_type: BOOLEAN assign set_show_type
 
@@ -239,7 +239,7 @@ feature -- Element Change
 			basic_type_set: basic_type = a_type
 		end
 
-	set_pe_index (a_val: NATURAL_32)
+	set_pe_index (a_val: NATURAL_64)
 			-- Set `pe_index` with `a_val`.
 		do
 			pe_index := a_val
@@ -358,7 +358,7 @@ feature -- Output
 			Result := True
 		end
 
-	render (a_stream: FILE_STREAM; a_bytes: detachable ARRAY [NATURAL_8]): NATURAL_8
+	render (a_stream: FILE_STREAM; a_bytes: detachable SPECIAL [NATURAL_8]): NATURAL_8
 		do
 			to_implement ("Add implementation")
 		end

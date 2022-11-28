@@ -21,7 +21,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make_with_data (a_method: PE_METHOD; a_iflags: INTEGER; a_mflags: INTEGER; a_name_index: NATURAL; a_signature_index: NATURAL; a_param_index: NATURAL )
+	make_with_data (a_method: PE_METHOD; a_iflags: INTEGER; a_mflags: INTEGER; a_name_index: NATURAL_64; a_signature_index: NATURAL_64; a_param_index: NATURAL_64 )
 		do
 			rva := 0
 			method := a_method
@@ -122,12 +122,12 @@ feature -- Operations
 			Result := {PE_TABLES}.tmethoddef.value.to_integer_32
 		end
 
-	render (a_sizes: ARRAY [NATURAL]; a_byte: ARRAY [NATURAL_8]): NATURAL
+	render (a_sizes: ARRAY [NATURAL_64]; a_byte: ARRAY [NATURAL_8]): NATURAL_64
 		do
 			to_implement ("Add implementation")
 		end
 
-	get (a_sizes: ARRAY [NATURAL]; a_byte: ARRAY [NATURAL_8]): NATURAL
+	get (a_sizes: ARRAY [NATURAL_64]; a_byte: ARRAY [NATURAL_8]): NATURAL_64
 		do
 			to_implement ("Add implementation")
 		end

@@ -32,7 +32,7 @@ feature {NONE} -- Initialization
 			index_zet: index = 0
 		end
 
-	make_with_index (a_index: NATURAL)
+	make_with_index (a_index: NATURAL_64)
 		do
 			index := a_index
 		ensure
@@ -40,7 +40,7 @@ feature {NONE} -- Initialization
 			tag_zero: tag = 0
 		end
 
-	make_with_tag_and_index (a_tag: INTEGER; a_index: NATURAL)
+	make_with_tag_and_index (a_tag: INTEGER; a_index: NATURAL_64)
 		do
 			make_with_index (a_index)
 			tag := a_tag
@@ -53,19 +53,19 @@ feature -- Access
 
 	tag: INTEGER
 
-	index: NATURAL
+	index: NATURAL_64
 
 
 feature -- Operations
 
-	render (a_sizes: ARRAY [NATURAL]; a_bytes: ARRAY [NATURAL_8]): NATURAL
+	render (a_sizes: ARRAY [NATURAL_64]; a_bytes: ARRAY [NATURAL_8]): NATURAL
 		require
 			valid_size: a_sizes.capacity = {PE_TABLE_CONSTANTS}.max_tables + {PE_TABLE_CONSTANTS}.extra_indexes
 		do
 			to_implement ("Add implementation");
 		end
 
-	get	(a_sizes: ARRAY [NATURAL]; a_bytes: ARRAY [NATURAL_8]): NATURAL
+	get	(a_sizes: ARRAY [NATURAL_64]; a_bytes: ARRAY [NATURAL_8]): NATURAL
 		require
 			valid_size: a_sizes.capacity = {PE_TABLE_CONSTANTS}.max_tables + {PE_TABLE_CONSTANTS}.extra_indexes
 		do
@@ -77,13 +77,13 @@ feature -- Operations
 			Result := 0
 		end
 
-	has_index_overflow(a_sizes: ARRAY[NATURAL]): BOOLEAN
+	has_index_overflow(a_sizes: ARRAY[NATURAL_64]): BOOLEAN
 		require
 			valid_size: a_sizes.capacity = {PE_TABLE_CONSTANTS}.max_tables + {PE_TABLE_CONSTANTS}.extra_indexes
 		do
 		end
 
-	large (a_x: NATURAL): BOOLEAN
+	large (a_x: NATURAL_32): BOOLEAN
 		do
 			Result := (a_x |<< get_index_shift) > 0xffff
 		end

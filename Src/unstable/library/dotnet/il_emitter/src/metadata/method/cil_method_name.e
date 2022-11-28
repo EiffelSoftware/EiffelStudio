@@ -14,7 +14,8 @@ inherit
 		rename
 			make as make_value
 		redefine
-			il_src_dump
+			il_src_dump,
+			render
 		end
 	REFACTORING_HELPER
 
@@ -40,7 +41,7 @@ feature -- Access
 
 feature -- Output
 
-	render (a_stream: FILE_STREAM; a_opcode: INTEGER; a_operand_type: INTEGER; a_byte: ARRAY [NATURAL_8]): BOOLEAN
+	render (a_stream: FILE_STREAM; a_opcode: INTEGER; a_operand_type: INTEGER; a_byte: detachable SPECIAL [NATURAL_8]): NATURAL_32
 		do
 			to_implement ("Add implementation")
 		end

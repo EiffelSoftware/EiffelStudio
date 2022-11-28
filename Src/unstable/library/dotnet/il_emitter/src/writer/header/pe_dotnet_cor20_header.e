@@ -171,7 +171,6 @@ feature -- Measurement
 			l_internal: INTERNAL
 			n: INTEGER
 			l_obj: PE_DOTNET_COR20_HEADER
-			l_size: INTEGER
 		do
 			create l_obj
 			create l_internal
@@ -195,9 +194,9 @@ feature -- Measurement
 invariant
 	valid_metadata_capacity: metadata.capacity = 2
 	valid_resources_capacity: resources.capacity = 2
-	valid_strong_name_signature_capacity: strong_name_signature = 2
-	valid_code_manager_table_capacity: code_manager_table = 2
+	valid_strong_name_signature_capacity: strong_name_signature.capacity = 2
+	valid_code_manager_table_capacity: code_manager_table.capacity = 2
 	valid_vtable_fixup_capacity: vtable_fixup.capacity = 2
-	valid_export_address_table_jumps_capacity: export_address_table_jumps = 2
+	valid_export_address_table_jumps_capacity: export_address_table_jumps.capacity = 2
 	valid_managed_native_header_capacity: managed_native_header.capacity = 2
 end

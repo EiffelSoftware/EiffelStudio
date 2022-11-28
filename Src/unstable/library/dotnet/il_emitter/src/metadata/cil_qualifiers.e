@@ -156,7 +156,7 @@ feature -- Static features
 			if not Result.is_empty then
 				Result := Result.substring (1, Result.count - 1)
 			end
-			if not a_root.empty then
+			if not a_root.is_empty then
 				if not Result.is_empty then
 					Result.append ("::")
 				end

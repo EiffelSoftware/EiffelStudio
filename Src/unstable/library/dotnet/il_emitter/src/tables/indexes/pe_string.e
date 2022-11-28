@@ -20,7 +20,7 @@ inherit
 			has_index_overflow
 		end
 
-create 
+create
 
 	make_with_index
 
@@ -40,7 +40,7 @@ feature -- Operations
 			Result := 0
 		end
 
-	has_index_overflow (a_sizes: ARRAY [NATURAL]): BOOLEAN
+	has_index_overflow (a_sizes: ARRAY [NATURAL_64]): BOOLEAN
 		do
 			to_implement ("Add implementation")
 		end

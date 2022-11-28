@@ -60,4 +60,11 @@ feature -- Output
 			end
 			Result := True
 		end
+
+	render (a_stream: FILE_STREAM; a_opcode: INTEGER; a_operand_type: INTEGER; a_result: detachable SPECIAL [NATURAL_8]): NATURAL_32
+		do
+			if attached type as l_type then
+				Result := l_type.render (a_stream, a_result)
+			end
+		end
 end

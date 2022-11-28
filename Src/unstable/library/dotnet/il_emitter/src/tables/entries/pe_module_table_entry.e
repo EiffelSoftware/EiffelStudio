@@ -19,7 +19,7 @@ create
 
 feature {NONE} -- Implementation
 
-	make_with_data (a_name_index: NATURAL; a_guid_index: NATURAL)
+	make_with_data (a_name_index: NATURAL_64; a_guid_index: NATURAL_64)
 		do
 			create name_index.make_with_index (a_name_index)
 			create guid_index.make_with_index (a_guid_index)
@@ -34,12 +34,12 @@ feature -- Access
 
 feature -- Operations
 
-	render (a_sizes: ARRAY [NATURAL]; a_bytes: ARRAY [NATURAL_8]): NATURAL
+	render (a_sizes: ARRAY [NATURAL_64]; a_bytes: ARRAY [NATURAL_8]): NATURAL_64
 		do
 			to_implement  ("Add implementation")
 		end
 
-	get (a_sizes: ARRAY [NATURAL]; a_bytes: ARRAY [NATURAL_8]): NATURAL
+	get (a_sizes: ARRAY [NATURAL_64]; a_bytes: ARRAY [NATURAL_8]): NATURAL_64
 		do
 			to_implement ("Add implementation")
 		end

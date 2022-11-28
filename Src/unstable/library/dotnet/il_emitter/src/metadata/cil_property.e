@@ -181,9 +181,8 @@ feature {NONE} -- Implementation
 			l_setter_name: STRING_32
 			l_count: INTEGER
 			l_stream: STRING_32
-			l_cbuf: STRING_32
 		do
-			l_getter_name := "get_" + name
+			l_getter_name := {STRING_32}"get_" + name
 			if attached parent as l_parent then
 				across l_parent.methods as m until l_exit loop
 					if attached {CIL_METHOD} m as l_method and then l_method.prototype.name.same_string (l_getter_name) then
@@ -202,7 +201,7 @@ feature {NONE} -- Implementation
 			end
 			if has_setter then
 				fixme ("Refactor setter/getter code")
-				l_setter_name := "set_" + name
+				l_setter_name := {STRING_32}"set_" + name
 				if attached parent as l_parent then
 					l_exit := False
 					across l_parent.methods as m until l_exit loop

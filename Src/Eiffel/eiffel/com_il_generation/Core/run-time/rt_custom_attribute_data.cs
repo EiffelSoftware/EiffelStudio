@@ -195,10 +195,11 @@ namespace EiffelSoftware.Runtime
 				// Use non-reflection-only routine.
 				return a_provider.GetCustomAttributes(a_type, false);
 			}
-#else
+#elif NET
 			IList<CustomAttributeData> attributes = CustomAttributeData.GetCustomAttributes(a_type);
 			return attributes.ToArray();
-
+#else
+			return a_provider.GetCustomAttributes(a_type, false);
 #endif
 		}
 

@@ -16,22 +16,23 @@ feature {NONE} -- Initialization
 		do
 			create name.make_empty
 			size := 0
-			create data.make_empty
 		ensure
 			name_empty: name.is_empty
 			size_zero: size = 0
-			data_emtpy: data.is_empty
 		end
 feature -- Access
 
 	name: STRING_32
 		-- the name.
 
-	size: NATURAL_32
+	size: NATURAL_64
 
-	data: ARRAY [NATURAL_32]
+	data: detachable ARRAY [NATURAL_8]
 
 feature -- Operations
 
 	-- bool operator() (const CustomAttributeDescriptor *left, const CustomAttributeDescriptor *right) const;
+
+
+
 end

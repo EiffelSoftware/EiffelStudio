@@ -318,16 +318,19 @@ feature -- Output
 			if not generics.is_empty and then
 				generics.first.basic_type /= {CIL_BASIC_TYPE}.type_var
 			then
-
+				pe_dump_generics (a_stream)
 			elseif in_assembly_ref then
+				pe_dump_assembly_ref (a_stream)
 			else
+				pe_dump_generics (a_stream)
 			end
-			to_implement ("Work in progress")
+			Result := True
+
 		end
 
 feature {NONE} -- Implementation
 
-	pe_dump_generics (a_stream: FILE_STREAM): BOOLEAN
+	pe_dump_generics (a_stream: FILE_STREAM)
 		local
 			l_val: SPECIAL [NATURAL_8]
 			l_dis: INTEGER
@@ -336,12 +339,13 @@ feature {NONE} -- Implementation
 			l_sig: ARRAY [NATURAL_8]
 			l_signature: NATURAL_64
 			l_table: PE_TYPE_SPEC_TABLE_ENTRY
+			l_result: BOOLEAN
 		do
 			if pe_index /= 0 then
 				if attached {CIL_CLASS} generic_parent as l_generic_parent and then
 					l_generic_parent.pe_index = 0 -- !genericParent_->PEIndex()
 				then
-					Result := l_generic_parent.pe_dump (a_stream)
+					l_result := l_generic_parent.pe_dump (a_stream)
 				end
 				if not generics.is_empty then
 					across generics as l_gen loop
@@ -360,9 +364,136 @@ feature {NONE} -- Implementation
 				if attached {PE_WRITER} a_stream.pe_writer as l_writer then
 					l_signature := l_writer.hash_blob (l_sig, l_sz.item)
 					create l_table.make_with_data (l_signature)
+					pe_index := l_writer.add_table_entry (l_table)
 				end
 			end
-			Result := True
+		end
+
+	pe_dump_assembly_ref (a_stream: FILE_STREAM)
+		local
+			l_resolution: PE_RESOLUTION_SCOPE
+			l_typename_index: NATURAL_64
+			l_table: PE_TABLE_ENTRY_BASE
+			l_namespace_index: NATURAL_64
+			l_result: BOOLEAN
+		do
+			if pe_index /= 0 then
+				if attached {CIL_CLASS} parent as l_class then
+						-- This is a nested class
+					l_result := l_class.pe_dump (a_stream)
+					create l_resolution.make_with_tag_and_index ({PE_RESOLUTION_SCOPE}.TypeRef, l_class.pe_index)
+					if attached {PE_WRITER} a_stream.pe_writer as l_writer then
+						l_typename_index := l_writer.hash_string (name)
+						create {PE_TYPE_REF_TABLE_ENTRY} l_table.make_with_data (l_resolution, l_typename_index, 0)
+						pe_index := l_writer.add_table_entry (l_table)
+					end
+				else
+						-- This is a top level class in an assembly
+					create l_resolution.make_with_tag_and_index ({PE_RESOLUTION_SCOPE}.assemblyref, parent_assembly (a_stream))
+					if attached {PE_WRITER} a_stream.pe_writer as l_writer then
+						l_typename_index := l_writer.hash_string (name)
+						l_namespace_index := parent_namespace (a_stream)
+						create {PE_TYPE_REF_TABLE_ENTRY} l_table.make_with_data (l_resolution, l_typename_index, l_namespace_index)
+						pe_index := l_writer.add_table_entry (l_table)
+					end
+				end
+			end
+		end
+
+	pe_dump_default (a_stream: FILE_STREAM)
+		local
+			l_pe_flags: INTEGER
+			l_typename_index: NATURAL_64
+			l_namespace_index: NATURAL_64
+			l_extends: NATURAL_64
+			l_field_index: NATURAL_64
+			l_method_index: NATURAL_64
+			l_parent: CIL_DATA_CONTAINER
+			l_result: BOOLEAN
+			l_type_type: INTEGER
+			l_extends_class: PE_TYPEDEF_OR_REF
+			l_table: PE_TABLE_ENTRY_BASE
+			l_my_pack: INTEGER
+			l_my_size: INTEGER
+			l_dis: NATURAL_64
+			l_enclosing: NATURAL_64
+			l_property_index: NATURAL_64
+			l_owner: PE_TYPE_OR_METHOD_DEF
+			l_name: STRING_32
+			l_char_A: CHARACTER_32
+			l_name_str: NATURAL_64
+		do
+			l_pe_flags := transfer_flags
+			if attached {PE_WRITER} a_stream.pe_writer as l_writer then
+				l_typename_index := l_writer.hash_string (name)
+				l_namespace_index := parent_namespace (a_stream)
+				l_extends := if flags.flags & {CIL_QUALIFIERS_ENUM}.value /= 0 then l_writer.value_base else l_writer.object_base end
+				l_field_index := l_writer.next_table_index ({PE_TABLES}.tfield.value.to_integer_32)
+				l_method_index := l_writer.next_table_index ({PE_TABLES}.tmethoddef.value.to_integer_32)
+				l_parent := parent
+				if attached {CIL_CLASS} extend_from as l_extend_from then
+					if l_extend_from.pe_index = 0 then
+						l_result := l_extend_from.pe_dump (a_stream)
+					end
+					l_extends := l_extend_from.pe_index
+				end
+				if attached {CIL_CLASS} l_parent as ll_parent then
+					l_namespace_index := 0
+				end
+				l_type_type := {PE_TYPEDEF_OR_REF}.typeref
+				if attached {CIL_CLASS} extend_from as l_extend_from and then not l_extend_from.in_assembly_ref then
+					l_type_type := {PE_TYPEDEF_OR_REF}.typedef
+				end
+				create l_extends_class.make_with_tag_and_index (l_type_type, l_extends)
+				create {PE_TYPEDEF_TABLE_ENTRY} l_table.make_with_data (l_pe_flags, l_typename_index, l_namespace_index, l_extends_class, l_field_index, l_method_index)
+				pe_index := l_writer.add_table_entry (l_table)
+
+				if pack > 0 or else size > 0 then
+					l_my_pack := pack
+					l_my_size := size
+
+					if l_my_pack <= 0 then
+						l_my_pack := 1
+					end
+					if l_my_size <= 0 then
+						l_my_size := 1
+					end
+					create {PE_CLASS_LAYOUT_TABLE_ENTRY} l_table.make_with_data (l_my_pack.to_natural_16, l_my_size.to_natural_32, pe_index)
+					l_dis := l_writer.add_table_entry (l_table)
+				end
+				if attached {CIL_CLASS} l_parent as ll_parent then
+					l_enclosing := parent_class (a_stream)
+					create {PE_NESTED_CLASS_TABLE_ENTRY} l_table.make_with_data (pe_index, l_enclosing)
+					l_dis := l_writer.add_table_entry (l_table)
+				end
+				if attached {CIL_DATA_CONTAINER} Current as l_dc then
+					l_result := l_dc.pe_dump (a_stream)
+				end
+					-- properties
+				if not properties.is_empty then
+					l_property_index := l_writer.next_table_index ({PE_TABLES}.tproperty.value.to_integer_32)
+					create {PE_PROPERTY_MAP_TABLE_ENTRY} l_table.make_with_data (pe_index, l_property_index)
+					l_dis := l_writer.add_table_entry (l_table)
+					across properties as p loop
+						l_result := p.pe_dump (a_stream)
+					end
+				end
+					-- generics
+				if not generics.is_empty then
+					create l_owner.make_with_tag_and_index ({PE_TYPE_OR_METHOD_DEF}.typedef, pe_index)
+					l_char_A := 'A'
+					create l_name.make_empty
+
+					across 0 |..| (generics.count - 1) as i loop
+						l_name.append_character (((i // 26) + l_char_A.code).to_character_32)
+						l_name.append_character (((i \\ 26) + l_char_A.code).to_character_32)
+						l_name_str := l_writer.hash_string (l_name)
+						create {PE_GENERIC_PARAM_CONSTRAINTS_TABLE_ENTRY} l_table.make_with_data (i.to_natural_16, 0, l_owner, l_name_str)
+						fixme ("Doube check the index i when we create l_table. ")
+						l_dis := l_writer.add_table_entry (l_table)
+					end
+				end
+			end
 		end
 
 end

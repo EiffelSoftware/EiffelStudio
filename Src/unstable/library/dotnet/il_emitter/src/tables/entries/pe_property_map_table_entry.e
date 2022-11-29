@@ -21,7 +21,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make_with_data (a_parent: NATURAL; a_property_list: NATURAL)
+	make_with_data (a_parent: NATURAL_64; a_property_list: NATURAL_64)
 		do
 			create parent.make_with_index (a_parent)
 			create property_list.make_with_index (a_property_list)
@@ -40,12 +40,12 @@ feature -- Operations
 			Result := {PE_TABLES}.tPropertyMap.value.to_integer_32
 		end
 
-	render (a_sizes: ARRAY [NATURAL]; a_bytes: ARRAY [NATURAL_8]): NATURAL
+	render (a_sizes: ARRAY [NATURAL_64]; a_bytes: ARRAY [NATURAL_8]): NATURAL_64
 		do
 			to_implement ("Add implementation")
 		end
 
-	get (a_sizes: ARRAY [NATURAL]; a_bytes: ARRAY [NATURAL_8]): NATURAL
+	get (a_sizes: ARRAY [NATURAL_64]; a_bytes: ARRAY [NATURAL_8]): NATURAL_64
 		do
 			to_implement ("Add implementation")
 		end

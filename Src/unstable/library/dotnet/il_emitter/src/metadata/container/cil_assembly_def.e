@@ -40,7 +40,7 @@ feature {NONE} -- Initialization
 			create namespace_cache.make (0)
 			create class_cache.make (0)
 			create snk_file.make_empty
-			create custom_attributes
+			create custom_attributes.make
 		ensure
 			snk_file_set: snk_file.is_empty
 			external_set: is_external = a_external

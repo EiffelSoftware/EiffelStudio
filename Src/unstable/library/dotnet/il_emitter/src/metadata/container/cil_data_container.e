@@ -66,19 +66,19 @@ feature -- Access
 
 feature -- Access
 
-	parent_namespace (a_lib: PE_LIB): NATURAL_64
+	parent_namespace (a_lib: FILE_STREAM): NATURAL_64
 			-- The inner namespace parent.
 		do
 			to_implement ("Add implementation")
 		end
 
-	parent_class (a_lib: PE_LIB): NATURAL_64
+	parent_class (a_lib: FILE_STREAM): NATURAL_64
 			-- The closest parent class.
 		do
 			to_implement ("Add implementation")
 		end
 
-	parent_assembly (a_lib: PE_LIB): NATURAL_64
+	parent_assembly (a_lib: FILE_STREAM): NATURAL_64
 			-- The parent assembly.
 		do
 			to_implement ("Add implementation")

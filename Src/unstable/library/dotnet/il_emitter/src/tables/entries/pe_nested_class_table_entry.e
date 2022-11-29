@@ -20,7 +20,7 @@ create
 
 feature {NONE} -- Implementation
 
-	make_with_data (a_nested: NATURAL; a_enclosing: NATURAL)
+	make_with_data (a_nested: NATURAL_64; a_enclosing: NATURAL_64)
 		do
 			create nested_index.make_with_index (a_nested)
 			create enclosing_index.make_with_index (a_enclosing)
@@ -39,12 +39,12 @@ feature -- Operations
 			Result := {PE_TABLES}.tNestedClass.value.to_integer_32
 		end
 
-	render (a_sizes: ARRAY [NATURAL]; a_bytes: ARRAY [NATURAL_8]): NATURAL
+	render (a_sizes: ARRAY [NATURAL_64]; a_bytes: ARRAY [NATURAL_8]): NATURAL_64
 		do
 			to_implement ("Add implementation")
 		end
 
-	get (a_sizes: ARRAY [NATURAL]; a_bytes: ARRAY [NATURAL_8]): NATURAL
+	get (a_sizes: ARRAY [NATURAL_64]; a_bytes: ARRAY [NATURAL_8]): NATURAL_64
 		do
 			to_implement ("Add implementation")
 		end

@@ -97,6 +97,7 @@ feature -- Element Change
 feature -- Optimization
 
 	optimize_code
+			--| corresponds to C++ CodeContainer::Optimize()
 		do
 			load_labels
 				--optimize_ldc

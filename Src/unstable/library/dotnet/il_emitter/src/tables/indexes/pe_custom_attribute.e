@@ -16,6 +16,8 @@ inherit
 			has_index_overflow
 		end
 
+	HASHABLE
+
 create
 	make_with_tag_and_index,
 	make
@@ -48,6 +50,15 @@ feature -- Enum: tags
 	File: INTEGER = 16
 	ExportedType: INTEGER = 17
 	ManifestResource: INTEGER = 18
+
+feature -- Access
+
+	hash_code: INTEGER
+			-- Hash code value
+		do
+			Result := index.to_integer_32.hash_code
+		end
+
 
 feature -- Operations
 

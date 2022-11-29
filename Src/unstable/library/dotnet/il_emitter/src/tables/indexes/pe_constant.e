@@ -16,7 +16,7 @@ inherit
 			has_index_overflow
 		end
 
-create 
+create
 	make_with_tag_and_index
 
 create
@@ -42,7 +42,7 @@ feature -- Operations
 			Result := tagbits
 		end
 
-	has_index_overflow (a_sizes: ARRAY [NATURAL]): BOOLEAN
+	has_index_overflow (a_sizes: ARRAY [NATURAL_64]): BOOLEAN
 		do
 			to_implement ("Add implementation")
 		end

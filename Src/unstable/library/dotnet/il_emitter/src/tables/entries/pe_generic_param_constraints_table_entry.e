@@ -20,19 +20,26 @@ create
 
 feature {NONE} -- Initialization
 
-	-- TODO add a new creation procedure `make`
 
-	make_with_data (a_owner: NATURAL; a_constraint: PE_TYPEDEF_OR_REF)
+	make_with_data (a_number: NATURAL_16; a_flags: NATURAL_16; a_owner: PE_TYPE_OR_METHOD_DEF; a_name: NATURAL_64)
 		do
-			create owner.make_with_index (a_owner)
-			constraint := a_constraint
+			number := a_number
+			flags := a_flags
+			owner := a_owner
+			create name.make_with_index (a_name)
 		end
 
 feature -- Access
 
-	owner: PE_GENERIC_REF
+	number: NATURAL_16
+		-- Defined as WORD two bytes
 
-	constraint: PE_TYPEDEF_OR_REF
+	flags: NATURAL_16
+		-- Defined as WORD two bytes
+
+	owner: PE_TYPE_OR_METHOD_DEF
+
+	name: PE_STRING
 
 feature -- Operations
 
@@ -41,12 +48,12 @@ feature -- Operations
 			Result := {PE_TABLES}.tGenericParam.value.to_integer_32
 		end
 
-	render (a_sizes: ARRAY [NATURAL]; a_bytes: ARRAY [NATURAL_8]): NATURAL
+	render (a_sizes: ARRAY [NATURAL_64]; a_bytes: ARRAY [NATURAL_8]): NATURAL_64
 		do
 			to_implement ("Add implementation")
 		end
 
-	get (a_sizes: ARRAY [NATURAL]; a_bytes: ARRAY [NATURAL_8]): NATURAL
+	get (a_sizes: ARRAY [NATURAL_64]; a_bytes: ARRAY [NATURAL_8]): NATURAL_64
 		do
 			to_implement ("Add implementation")
 		end

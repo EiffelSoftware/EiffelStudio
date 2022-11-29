@@ -40,7 +40,7 @@ feature -- Operations
 			Result := tagbits
 		end
 
-	has_index_overflow (a_sizes: ARRAY [NATURAL]): BOOLEAN
+	has_index_overflow (a_sizes: ARRAY [NATURAL_64]): BOOLEAN
 		do
 			to_implement ("Add implementation")
 		end

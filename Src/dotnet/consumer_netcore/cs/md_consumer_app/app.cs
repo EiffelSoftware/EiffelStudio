@@ -31,7 +31,6 @@ namespace EifMdConsumer
             bool nologo = false;
 
             int res = 0;
-
             // res = a.LoadFromAssemblyPath (inputFile);
 
             for (int i = 0; i < args.Length; i++)
@@ -72,6 +71,10 @@ namespace EifMdConsumer
                     if (!nologo) {
                         Program.display_logo();
                     }
+                    // Initialize ASSEMBLY_LOADER
+                    md_consumer.ASSEMBLY_LOADER loader = md_consumer.SHARED_ASSEMBLY_LOADER.assembly_loader;
+                    loader.register_locations(ref_assemblies);
+                    
                     StringBuilder o = new StringBuilder();
                     if (cache_location != null) {
                         md_consumer.CACHE_WRITER cache = new md_consumer.CACHE_WRITER(cache_location, o);
@@ -86,20 +89,17 @@ namespace EifMdConsumer
                         foreach (var a in add_assemblies) {
                             res = md.analyze(a, ref_assemblies, has_info_only, null, cache_location, json_outputfile, data, o);
                         }
-                        if (json_outputfile == null) {
-                            Console.WriteLine(data.ToString());
-                        }
+                        // if (json_outputfile == null) {
+                        //     Console.WriteLine(data.ToString());
+                        // }
                     }
-                    Console.WriteLine(o.ToString());
+                    // Console.WriteLine(o.ToString());
                     if (has_halt) {
                         Console.WriteLine("Please press enter to exit...");
                         string? line = Console.ReadLine();
                     }
                 }
             }
-
-            // res = md_consumer.MdConsumer.analyze(inputFile, locations, "type=System.Text.Json.JsonDocument", json_outputfile, data, o);
-
             return res;
         }
 

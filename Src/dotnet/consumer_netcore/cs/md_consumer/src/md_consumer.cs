@@ -141,19 +141,21 @@ namespace md_consumer
             AssemblyAnalyzer? l_analyzer;
             CONSUMED_ASSEMBLY? ca = a_consumed_assembly;
             Assembly? l_assembly = null;
-            var o = output;
-            o.AppendLine("+---------------------------------------------------+\n");
-            o.AppendLine("Analyze Assembly: " + assembly_loc);
+            StringBuilder? o = output;
+            // var o = output;
+            // o.AppendLine("+---------------------------------------------------+\n");
+            // o.AppendLine("Analyze Assembly: " + assembly_loc);
             try
             {
-                ASSEMBLY_LOADER loader = new ASSEMBLY_LOADER(other_assemblies);
-                SHARED_ASSEMBLY_LOADER.set_assembly_loader (loader);
+                ASSEMBLY_LOADER loader = SHARED_ASSEMBLY_LOADER.assembly_loader;
+                loader.register_locations (other_assemblies);
+                // SHARED_ASSEMBLY_LOADER.set_assembly_loader (loader);
 
                 l_analyzer = new AssemblyAnalyzer(assembly_loc, loader);
-                o.AppendLine("+ Load assembly");
+                // o.AppendLine("+ Load assembly");
                 l_analyzer.load_assembly(o);
                 StringBuilder buf = new StringBuilder();
-                o.AppendLine("+ Get metadata");
+                // o.AppendLine("+ Get metadata");
                 l_assembly = l_analyzer.assembly;
                 if (l_assembly != null) {
                     ca = l_analyzer.consume_assembly_metadata(ca, l_assembly, a_info_only, cache_location);

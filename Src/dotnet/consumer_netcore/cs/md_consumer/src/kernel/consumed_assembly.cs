@@ -38,6 +38,20 @@ namespace md_consumer
             version = v;
             in_gac = false; /* GAC is only supported for .Net framework, otherwise it is obsolete */
         }
+        public CONSUMED_ASSEMBLY(CONSUMED_ASSEMBLY ca)
+        // Duplication of `ca`
+        {
+            guid = ca.guid;
+            folder_name = ca.folder_name;
+            name = ca.name;
+            location = ca.location;
+            public_key_token = ca.public_key_token;
+            culture = ca.culture;
+            version = ca.version;
+            fullname = ca.fullname;
+            is_consumed = ca.is_consumed;
+            has_info_only = ca.has_info_only;
+        }
         public bool same_as (CONSUMED_ASSEMBLY? other)
         {
             if (other == null) {

@@ -36,7 +36,7 @@ namespace md_consumer
             MdConsumerData md_data = new MdConsumerData();
 
             System.Diagnostics.Trace.WriteLine(string.Format("Beginning consumption for assembly '{0}'.", assembly.ToString()));
-            // System.Diagnostics.Trace.WriteLine(string.Format("Consuming into '{0}'.", destination_path_name));
+            System.Diagnostics.Trace.WriteLine(string.Format("Consuming into '{0}'.", destination_path_name));
             shared_assembly_mapping.reset_assembly_mapping();
 
             // AssemblyName[] l_referenced_assemblies = assembly.GetReferencedAssemblies();
@@ -67,8 +67,15 @@ namespace md_consumer
                 var l_assembly_mapping = shared_assembly_mapping.assembly_mapping();
                 foreach (AssemblyName l_assembly_name in referenced_assemblies)
                 {
-                    Assembly? l_ref_ass = Assembly.Load(l_assembly_name);
-                    if (l_ref_ass != null) {
+                    Assembly? l_ref_ass = null;
+                    try {
+                        l_ref_ass = SHARED_ASSEMBLY_LOADER.assembly_loader.assembly_from_name(l_assembly_name);
+                    } catch {
+                        l_ref_ass = null;
+                    }                    
+                    if (l_ref_ass == null) {
+                        System.Diagnostics.Trace.WriteLine(string.Format(" ! could not load assembly '{0}'.", l_assembly_name.ToString()));
+                    } else {
                         string? l_ref_ass_full_name = l_ref_ass.FullName;
                         if (l_ref_ass_full_name != null) {
                             CONSUMED_ASSEMBLY? ca = consumed_assembly (l_ref_ass);
@@ -288,14 +295,11 @@ namespace md_consumer
                             }
                             md_data.add_consumed_type(type);
 
-                            //FIXME/TODO: store on disk using `destination_path + classes_file_name`... see ASSEMBLY_CONSUMER.e file
-                            //TODO GENERATE JSON in `writer`...
                             if (destination_path_name != null) {
                                 string s = Path.Combine(destination_path_name, classes_file_name);
                                 // Append to file `s`
                                 long file_size = md_data.serialize_type_to_json_file (type, s, true);
                                 l_file_position = (int) file_size;
-                                // md_data.serialize_to_json
                             }
                         }
                     }

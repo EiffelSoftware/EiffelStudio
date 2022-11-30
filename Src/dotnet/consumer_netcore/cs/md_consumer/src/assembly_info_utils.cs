@@ -9,114 +9,6 @@ using System.Linq;
 
 namespace md_consumer
 {
-    static class SHARED_ASSEMBLY_LOADER
-    {
-        public static ASSEMBLY_LOADER assembly_loader = new ASSEMBLY_LOADER(null);
-        public static void set_assembly_loader(ASSEMBLY_LOADER loader)
-        {
-            assembly_loader = loader;
-        }
-    }
-    class ASSEMBLY_LOADER : IDisposable
-    {
-        MetadataLoadContext? md_context;
-        public List<string>? locations;
-        Dictionary<string,Assembly?> loaded_assemblies;
-
-        public ASSEMBLY_LOADER(List<string>? locs)
-        {
-            locations = locs;
-            loaded_assemblies = new Dictionary<string,Assembly?>(1);
-        }
-        public Assembly? loaded_assembly (string n)
-        {
-            if (loaded_assemblies.ContainsKey(n)) {
-                return loaded_assemblies[n];
-            } else {
-                return null;
-            }
-        }
-        public Assembly? assembly_from_name(AssemblyName name)
-        {
-            string? l_full_name = name.FullName;
-            if (l_full_name != null) {
-                var l_loaded_ass = loaded_assembly(l_full_name);
-                if (l_loaded_ass != null) {
-                    return l_loaded_ass;
-                } else {
-                    MetadataLoadContext? mlc = md_context;
-                    if  (mlc != null) {
-                        return mlc.LoadFromAssemblyName(l_full_name);
-                    }
-                }
-            }
-            return null;
-        }
-        public Assembly? assembly_from(string location)
-        {
-            // Console.WriteLine("load_assembly: " + location);
-            Assembly? assembly = assembly = loaded_assembly(location);
-            if (assembly == null) {
-                string runtime_dir = RuntimeEnvironment.GetRuntimeDirectory();
-                try
-                {
-                    // Get the array of runtime assemblies.
-                    // This will allow us to at least inspect types depending only on BCL.
-                    // Create MetadataLoadContext that can resolve assemblies using the created list.
-                    MetadataLoadContext? mlc = md_context;
-                    if (mlc == null) {
-                        string[] runtimeAssemblies = Directory.GetFiles(RuntimeEnvironment.GetRuntimeDirectory(), "*.dll");
-
-                        // Create the list of assembly paths consisting of runtime assemblies and the input file.
-                        var paths = new List<string>(runtimeAssemblies);
-                        if (locations != null && locations.Count > 0) {
-                            foreach (string loc in locations) {
-                                paths.Add(loc);
-                            }
-                        }
-                        paths.Add(location);
-
-                        var resolver = new PathAssemblyResolver(paths);
-                        mlc = new MetadataLoadContext(resolver);
-                        md_context = mlc;
-                    }                          
-
-                    // using (mlc) // See `Dispose` 
-                    {
-                        // Load assembly into MetadataLoadContext.
-                        assembly = mlc.LoadFromAssemblyPath(location);
-                    }
-                }
-                catch (IOException ex)
-                {
-                    Console.WriteLine("I/O error occured when trying to load assembly: ");
-                    Console.WriteLine(ex.ToString());
-                    assembly = null;
-                }
-                catch (UnauthorizedAccessException ex)
-                {
-                    Console.WriteLine("Access denied when trying to load assembly: ");
-                    Console.WriteLine(ex.ToString());
-                    assembly = null;
-                }
-                loaded_assemblies[location] = assembly;
-            }
-            return assembly;
-        }
-        public void Dispose()
-        {
-            close();
-        }
-        public void close()
-        {
-            var mlc = md_context;
-            if (mlc != null) {
-                mlc?.Dispose();
-            }
-            md_context = null;
-        }  
-    }
-
     class AssemblyAnalyzer: IDisposable
     {
         string location;
@@ -172,7 +64,9 @@ namespace md_consumer
                 writer.WriteEndObject();
                 writer.Flush();
                 ms.Close();
-                output.AppendLine(System.Text.Encoding.UTF8.GetString(ms.ToArray()));
+                if (output != null) {
+                    output.AppendLine(System.Text.Encoding.UTF8.GetString(ms.ToArray()));
+                }
             }
 
             assembly = assembly_loader.assembly_from(location);

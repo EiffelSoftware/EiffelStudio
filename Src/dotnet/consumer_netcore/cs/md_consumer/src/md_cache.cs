@@ -563,8 +563,12 @@ namespace md_consumer
                     var l_info = cache_info();
                     consumed_ca.set_is_consumed(true, a_info_only);
                     l_info.update_assembly(consumed_ca);
+                    if (!consumed_ca.location.Equals(l_key_path)) {
+                        CONSUMED_ASSEMBLY dup_ca = new CONSUMED_ASSEMBLY(consumed_ca);
+                        dup_ca.location = l_key_path;
+                        l_info.add_assembly(dup_ca);
+                    }
                     update_info(l_info);
-
 
                     if (assembly != null) {
                         AssemblyName[] l_names = assembly.GetReferencedAssemblies();

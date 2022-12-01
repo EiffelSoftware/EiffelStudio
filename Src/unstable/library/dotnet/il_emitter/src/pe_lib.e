@@ -739,7 +739,7 @@ feature {NONE} -- Output Implementation
 			l_module_index: NATURAL_64
 			l_type_def: PE_TYPEDEF_OR_REF
 			l_table: PE_TABLE_ENTRY_BASE
-			l_n: NATURAL
+			l_n: NATURAL_64
 			l_base_types: CELL [INTEGER]
 			l_system_index: NATURAL_64
 			l_object_index: NATURAL_64

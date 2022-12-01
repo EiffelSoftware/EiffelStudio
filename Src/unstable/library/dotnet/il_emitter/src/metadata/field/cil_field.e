@@ -280,6 +280,8 @@ feature -- Output
 			else
 				a_file.put_string (" int32")
 			end
+		ensure
+			instance_free: class
 		end
 
 	pe_dump (a_stream: FILE_STREAM): BOOLEAN

@@ -482,7 +482,7 @@ feature {NONE} -- Implementation
 			l_import_name_index: NATURAL_64
 			l_param_index: NATURAL
 			i: INTEGER
-			l_last_param_index: NATURAL
+			l_last_param_index: NATURAL_64
 			l_flags: INTEGER
 			l_module_name: NATURAL_64
 			l_module_ref: NATURAL_64

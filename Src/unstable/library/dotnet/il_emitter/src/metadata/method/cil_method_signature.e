@@ -90,7 +90,7 @@ feature -- Access
 	ref: BOOLEAN
 		-- is ref?
 
-	pe_index: NATURAL
+	pe_index: NATURAL_64
 
 	pe_index_call_site: NATURAL
 

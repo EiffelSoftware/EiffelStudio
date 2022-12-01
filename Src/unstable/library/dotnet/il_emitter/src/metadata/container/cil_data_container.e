@@ -68,20 +68,59 @@ feature -- Access
 
 	parent_namespace (a_lib: FILE_STREAM): NATURAL_64
 			-- The inner namespace parent.
+		local
+			l_current: CIL_DATA_CONTAINER
+			l_res: BOOLEAN
 		do
-			to_implement ("Add implementation")
+			l_current := Current.parent
+			from until l_current = Void or attached {CIL_NAMESPACE} l_current
+			loop
+				l_current := l_current.parent
+			end
+			if attached {CIL_NAMESPACE} l_current as l_current_namespace then
+				if l_current.in_assembly_ref then
+					l_res := l_current_namespace.pe_dump (a_lib)
+				end
+				Result := l_current.pe_index
+			end
+				-- by default Result is 0
 		end
 
 	parent_class (a_lib: FILE_STREAM): NATURAL_64
 			-- The closest parent class.
+		local
+			l_current: CIL_DATA_CONTAINER
+			l_res: BOOLEAN
 		do
-			to_implement ("Add implementation")
+			l_current := parent
+			if attached {CIL_CLASS} l_current as l_current_class then
+				if l_current.in_assembly_ref then
+					l_res := l_current_class.pe_dump (a_lib)
+				end
+				Result := l_current.pe_index
+			end
+				-- by default Result is 0
 		end
 
 	parent_assembly (a_lib: FILE_STREAM): NATURAL_64
 			-- The parent assembly.
+		local
+			l_current: CIL_DATA_CONTAINER
 		do
-			to_implement ("Add implementation")
+				-- the parent assembly is always at top of the datacontainer tree
+			l_current := parent
+			from until l_current /= Void and then l_current.parent = Void and then attached {CIL_ASSEMBLY_DEF} l_current
+			loop
+				l_current := if attached l_current then l_current.parent else Void end
+			end
+			if l_current /= Void then -- attached {CIL_ASSEMBLY_DEF} l_current as l_current_assembly
+					-- if l_current.in_assembly_ref then
+					-- TODO original leads to infinite loop: static_cast<AssemblyDef*>(current)->PEDump(peLib);
+					-- l_current_assembly.pe_dum (a_lib)
+					-- end
+				Result := l_current.pe_index
+			end
+
 		end
 
 feature -- Access Enumerations
@@ -107,6 +146,11 @@ feature -- Status Report
 	in_assembly_ref: BOOLEAN
 		do
 			Result := if attached parent as l_parent then l_parent.in_assembly_ref else False end
+		end
+
+	get_assembly: detachable CIL_ASSEMBLY_DEF
+		do
+			Result := if attached parent as l_parent then l_parent.get_assembly else Void end
 		end
 
 feature --Element Change
@@ -225,8 +269,73 @@ feature -- Traverse
 
 	traverse (a_callback: CIL_CALLBACK): BOOLEAN
 			-- Traverse the declaration tree.
+		local
+			l_exit: BOOLEAN
+			l_continue: BOOLEAN
 		do
 			to_implement ("Add implementation")
+			across children as child until l_exit loop
+				if attached {CIL_CLASS} child as l_class then
+					if not a_callback.enter_class (l_class) then
+						l_continue := True
+					end
+					if not l_continue and then not child.traverse (a_callback) then
+						Result := true
+						l_exit := True
+					end
+					if not l_continue and then not l_exit and then
+						not a_callback.exit_class (l_class) then
+						Result := False
+						l_exit := True
+					end
+				elseif attached {CIL_ENUM} child as l_enum then
+					if not a_callback.enter_enum (l_enum) then
+						l_continue := True
+					end
+					if not l_continue and then not child.traverse (a_callback) then
+						Result := true
+						l_exit := True
+					end
+					if not l_continue and then not l_exit and then
+						not a_callback.exit_enum (l_enum) then
+						Result := False
+						l_exit := True
+					end
+				elseif attached {CIL_NAMESPACE} child as l_namespace then
+					if not a_callback.enter_namespace (l_namespace) then
+						l_continue := True
+					end
+					if not l_continue and then not child.traverse (a_callback) then
+						Result := true
+						l_exit := True
+					end
+					if not l_continue and then not l_exit and then
+						not a_callback.exit_namespace (l_namespace) then
+						Result := False
+						l_exit := True
+					end
+				end
+				l_continue := False
+			end
+			if not l_exit then
+				across fields as field until l_exit loop
+					if not a_callback.enter_field (field) then
+						Result := False
+						l_exit := True
+					end
+				end
+			end
+			if not l_exit then
+				across methods as method until l_exit loop
+					if attached {CIL_METHOD} method as l_method and then not a_callback.enter_method (l_method) then
+						Result := False
+						l_exit := True
+					end
+				end
+			end
+			if not l_exit then
+				Result := True
+			end
 		end
 
 feature -- Status Report
@@ -324,6 +433,12 @@ feature -- Operations
 			across methods as method loop
 				method.compile (a_stream)
 			end
+		end
+
+	render (a_stream: FILE_STREAM)
+			-- sometimes we want to traverse upwards in the tree
+		do
+				-- empty implementation
 		end
 
 feature -- Output

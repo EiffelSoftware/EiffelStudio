@@ -16,7 +16,8 @@ inherit
 		rename
 			make as make_data_container
 		redefine
-			in_assembly_ref
+			in_assembly_ref,
+			get_assembly
 		end
 
 create
@@ -78,7 +79,7 @@ feature -- Access
 
 	custom_attributes: CIL_CUSTOM_ATTRIBUTE_CONTAINER
 
-	assembly_def: CIL_ASSEMBLY_DEF
+	get_assembly, assembly_def: CIL_ASSEMBLY_DEF
 			-- Return current assembly
 		do
 			Result := Current

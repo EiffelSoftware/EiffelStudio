@@ -110,6 +110,8 @@ feature -- Access: Signature Generators
 
 			l_size := l_size + embed_type (signature_generator.work_area, l_size, a_field.type).to_integer_32
 			Result := convert_to_blob (signature_generator.work_area, l_size, a_size)
+		ensure
+			instance_free: class
 		end
 
 	local_var_sig (a_method: CIL_METHOD; a_size: CELL [NATURAL_64]): ARRAY [NATURAL_8]

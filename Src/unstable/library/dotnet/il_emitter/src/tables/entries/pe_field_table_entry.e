@@ -20,7 +20,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make_with_data (a_flags: INTEGER; a_name_index: NATURAL; a_signature_index: NATURAL)
+	make_with_data (a_flags: INTEGER; a_name_index: NATURAL_64; a_signature_index: NATURAL_64)
 		do
 			flags := a_flags
 			create name_index.make_with_index (a_name_index)

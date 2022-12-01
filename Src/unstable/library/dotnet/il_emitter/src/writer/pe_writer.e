@@ -415,7 +415,7 @@ feature -- Element change
 
 feature -- Element Change
 
-	add_table_entry (a_entry: PE_TABLE_ENTRY_BASE): NATURAL
+	add_table_entry (a_entry: PE_TABLE_ENTRY_BASE): NATURAL_64
 			-- add an entry to one of the tables
 			-- note the data for the table will be a class inherited from TableEntryBase,
 			--  and this class will self-report the table index to use

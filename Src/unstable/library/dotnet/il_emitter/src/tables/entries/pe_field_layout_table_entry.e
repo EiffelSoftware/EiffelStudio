@@ -20,7 +20,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make_with_data (a_offset: NATURAL; a_parent: NATURAL)
+	make_with_data (a_offset: NATURAL_64; a_parent: NATURAL_64)
 		do
 			offset := a_offset
 			create parent.make_with_index (a_parent)
@@ -28,7 +28,7 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	offset: NATURAL
+	offset: NATURAL_64
 
 	parent: PE_FIELD_LIST
 

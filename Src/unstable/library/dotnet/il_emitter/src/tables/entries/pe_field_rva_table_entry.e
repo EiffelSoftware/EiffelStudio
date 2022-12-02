@@ -21,7 +21,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make_with_data (a_rva: NATURAL; a_field_index: NATURAL)
+	make_with_data (a_rva: NATURAL_64; a_field_index: NATURAL_64)
 		do
 			rva := a_rva
 			create field_index.make_with_index (a_field_index)
@@ -29,7 +29,7 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	rva: NATURAL
+	rva: NATURAL_64
 
 	field_index: PE_FIELD_LIST
 

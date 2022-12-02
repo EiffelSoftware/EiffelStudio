@@ -20,9 +20,9 @@ create
 
 feature {NONE} -- Intialization
 
-	make_with_data (a_type: NATURAL_8; a_parent_index: PE_CONSTANT; a_value_index: NATURAL)
+	make_with_data (a_type: INTEGER; a_parent_index: PE_CONSTANT; a_value_index: NATURAL_64)
 		do
-			type := a_type
+			type := a_type.to_natural_8
 			parent_index := a_parent_index
 			create value_index.make_with_index (a_value_index)
 		end

@@ -40,16 +40,16 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	definitions: INTEGER
+	definitions: NATURAL_64
 			-- `definitions' count.
 
 	is_external: BOOLEAN assign set_is_external
 			-- Not locally defined.
 
-	explicit_offset: NATURAL assign set_explicit_offset
+	explicit_offset: NATURAL_64 assign set_explicit_offset
 			-- Field offset for explicit structures
 
-	pe_index: NATURAL assign set_pe_index
+	pe_index: NATURAL_64 assign set_pe_index
 			-- Index in the `fielddef` table
 
 	ref: BOOLEAN assign set_ref
@@ -85,6 +85,8 @@ feature -- Access
 feature -- Element change
 
 	add_enum_value (a_value: INTEGER_64; a_size: CIL_VALUE_SIZE)
+			-- Add an enumeration constant.
+			--|Note that the field does need to be part of an enumeration.
 		do
 			if mode = {CIL_VALUE_MODE}.none then
 				mode := {CIL_VALUE_MODE}.enum
@@ -194,6 +196,13 @@ feature -- Element change
 			mode_assigned: mode = a_mode
 		end
 
+feature -- Status Report
+
+	in_assembly_ref: BOOLEAN
+		do
+			Result := if attached parent as l_parent then l_parent.in_assembly_ref else False end
+		end
+
 feature -- Output
 
 	il_src_dump (a_file: FILE_STREAM): BOOLEAN
@@ -205,7 +214,7 @@ feature -- Output
 				l_parent.flags.flags & {CIL_QUALIFIERS_ENUM}.sequential /= 0 and then explicit_offset /= 0
 			then
 				a_file.put_string (" [")
-				a_file.put_integer_64 (explicit_offset)
+				a_file.put_natural_64 (explicit_offset)
 				a_file.put_string ("]")
 			end
 			flags.il_src_dump_before_flags(a_file)
@@ -285,8 +294,126 @@ feature -- Output
 		end
 
 	pe_dump (a_stream: FILE_STREAM): BOOLEAN
+		local
+			l_sz: CELL [NATURAL_64]
+			l_sig: ARRAY [NATURAL_8]
+			l_sig_index: NATURAL_64
+			l_name_index: NATURAL_64
+			l_ref_parent: PE_MEMBER_REF_PARENT
+			l_table: PE_TABLE_ENTRY_BASE
+			l_pe_flags: INTEGER
+			l_buf: SPECIAL [NATURAL_8]
+			l_type: INTEGER
+			l_value_index: NATURAL_64
+			l_constant: PE_CONSTANT
+			l_dis: NATURAL_64
 		do
-			to_implement ("Add implementation")
+			if type.basic_type = {CIL_BASIC_TYPE}.class_ref then
+				if attached {CIL_DATA_CONTAINER} type.type_ref as l_class and then
+					l_class.in_assembly_ref
+				then
+					Result := l_class.pe_dump (a_stream)
+				end
+			end
+			create l_sz.put (0)
+			l_sig := {PE_SIGNATURE_GENERATOR_HELPER}.field_sig (Current, l_sz)
+			if attached {PE_WRITER} a_stream.pe_writer as l_writer then
+				l_sig_index := l_writer.hash_blob (l_sig, l_sz.item)
+				pe_index := l_writer.hash_string (name)
+				l_name_index := pe_index
+				if in_assembly_ref then
+					if attached parent as l_parent then
+						Result := l_parent.pe_dump (a_stream)
+					end
+					create l_ref_parent.make_with_tag_and_index ({PE_MEMBER_REF_PARENT}.typeref, if attached parent as l_parent then l_parent.pe_index else {NATURAL_64}0 end)
+					create {PE_MEMBER_REF_TABLE_ENTRY} l_table.make_with_data (l_ref_parent, l_name_index, l_sig_index)
+					pe_index := l_writer.add_table_entry (l_table)
+				else
+					l_pe_flags := 0
+					if flags.flags & {CIL_QUALIFIERS_ENUM}.public /= 0 then
+						l_pe_flags := l_pe_flags | {PE_FIELD_TABLE_ENTRY}.public
+					elseif flags.flags & {CIL_QUALIFIERS_ENUM}.private /= 0  then
+						l_pe_flags := l_pe_flags | {PE_FIELD_TABLE_ENTRY}.private
+					end
+
+					if flags.flags & {CIL_QUALIFIERS_ENUM}.static /= 0  then
+						l_pe_flags := l_pe_flags | {PE_FIELD_TABLE_ENTRY}.static
+					end
+					if flags.flags & {CIL_QUALIFIERS_ENUM}.literal /= 0  then
+						l_pe_flags := l_pe_flags | {PE_FIELD_TABLE_ENTRY}.literal
+					end
+
+					inspect mode
+					when {CIL_VALUE_MODE}.enum  then
+						l_pe_flags := l_pe_flags | {PE_FIELD_TABLE_ENTRY}.hasdefault
+							-- in the blob
+					when {CIL_VALUE_MODE}.bytes  then
+						if byte_length /= 0 and then not byte_value.is_empty then
+							l_pe_flags := l_pe_flags | {PE_FIELD_TABLE_ENTRY}.hasfieldrva
+						end
+					when {CIL_VALUE_MODE}.none  then
+							-- Should never get here.
+					end
+
+					create {PE_FIELD_TABLE_ENTRY} l_table.make_with_data (l_pe_flags, l_name_index, l_sig_index)
+					pe_index := l_writer.add_table_entry (l_table)
+					if attached parent as l_parent and then
+						((l_parent.flags.flags & {CIL_QUALIFIERS_ENUM}.explicit /= 0) or else
+						 (l_parent.flags.flags & {CIL_QUALIFIERS_ENUM}.sequential /= 0) and then
+						 explicit_offset /= 0)
+					then
+						create {PE_FIELD_LAYOUT_TABLE_ENTRY} l_table.make_with_data (explicit_offset, pe_index)
+						l_dis := l_writer.add_table_entry (l_table)
+							-- l_dis  helper variable that will not be used.
+					end
+
+					create l_buf.make_filled (0, 8)
+					{BYTE_ARRAY_HELPER}.put_array_integer_64 (l_buf, enum_value, 0)
+
+					inspect mode
+					when {CIL_VALUE_MODE}.none then
+						-- Should never get here.
+					when {CIL_VALUE_MODE}.enum then
+						inspect size
+						when {CIL_VALUE_SIZE}.i8 then
+							l_sz.put (1)
+							l_type :=  {PE_TYPES_ENUM}.element_type_i1
+						when {CIL_VALUE_SIZE}.i16 then
+							l_sz.put (2)
+							l_type :=  {PE_TYPES_ENUM}.element_type_i2
+						when {CIL_VALUE_SIZE}.i32 then
+							l_sz.put (4)
+							l_type :=  {PE_TYPES_ENUM}.element_type_i4
+						when {CIL_VALUE_SIZE}.i64 then
+							l_sz.put (8)
+							l_type :=  {PE_TYPES_ENUM}.element_type_i8
+						else
+								-- default case
+							l_sz.put (4)
+							l_type :=  {PE_TYPES_ENUM}.element_type_i4
+						end
+						-- this is NOT compressed like the sigs are...
+						l_value_index := l_writer.hash_blob (l_buf.to_array, l_sz.item)
+						create l_constant.make_with_tag_and_index ({PE_CONSTANT}.fielddef, pe_index)
+						create {PE_CONSTANT_TABLE_ENTRY} l_table.make_with_data (l_type, l_constant, l_value_index)
+						l_dis := l_writer.add_table_entry (l_table)
+						if not byte_value.is_empty and then
+						   byte_length /= 0 then
+						   	l_value_index := l_writer.rva_bytes (byte_value, byte_length.to_natural_64)
+						   	create {PE_FIELD_RVA_TABLE_ENTRY} l_table.make_with_data (l_value_index, pe_index)
+						   	l_dis := l_writer.add_table_entry (l_table)
+						end
+					when {CIL_VALUE_MODE}.bytes then
+						if not byte_value.is_empty and then
+						   byte_length /= 0 then
+						   	l_value_index := l_writer.rva_bytes (byte_value, byte_length.to_natural_64)
+						   	create {PE_FIELD_RVA_TABLE_ENTRY} l_table.make_with_data (l_value_index, pe_index)
+						   	l_dis := l_writer.add_table_entry (l_table)
+						end
+					end
+				end
+			end
+			Result := True
 		end
 
 feature {NONE} -- Utils

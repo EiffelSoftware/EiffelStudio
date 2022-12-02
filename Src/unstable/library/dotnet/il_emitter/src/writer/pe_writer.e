@@ -575,7 +575,7 @@ feature -- Stream functions
 
 feature -- Various Operations
 
-	RVA_bytes (a_bytes: ARRAY [NATURAL_8]; a_data: NATURAL): NATURAL
+	RVA_bytes (a_bytes: ARRAY [NATURAL_8]; a_data: NATURAL_64): NATURAL_64
 			--  this is the 'cildata' contents.   Again we emit into the cildata and it returns the offset in
 			--  the cildata to use.  It does NOT return the rva immediately, that is calculated later
 		do

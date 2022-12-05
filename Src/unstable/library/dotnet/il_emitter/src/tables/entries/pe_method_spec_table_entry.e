@@ -20,7 +20,7 @@ create
 
 feature {NONE} -- Implementation
 
-	make_with_data (a_method: PE_METHOD_DEF_OR_REF; a_instantiation: NATURAL)
+	make_with_data (a_method: PE_METHOD_DEF_OR_REF; a_instantiation: NATURAL_64)
 		do
 			method := a_method
 			create instantiation.make_with_index (a_instantiation)

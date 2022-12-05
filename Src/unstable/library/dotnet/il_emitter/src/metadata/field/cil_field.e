@@ -73,14 +73,13 @@ feature -- Access
 	mode: CIL_VALUE_MODE assign set_mode
 			-- `mode'
 
-	-- The following two attributes are represented as a Union
+		-- The following two attributes are represented as a Union
 	byte_value: ARRAY [NATURAL_8]
-		-- TO be checked but it could be an ARRAY[NATURAL_8]
+			-- TO be checked but it could be an ARRAY[NATURAL_8]
 
 	enum_value: INTEGER_64
 
 	byte_length: INTEGER
-
 
 feature -- Element change
 
@@ -101,7 +100,7 @@ feature -- Element change
 		do
 			if mode = {CIL_VALUE_MODE}.None then
 				create byte_value.make_from_array (a_bytes)
-				mode :={CIL_VALUE_MODE}.Bytes
+				mode := {CIL_VALUE_MODE}.Bytes
 			end
 		ensure
 			initiliazed: (old mode = {CIL_VALUE_MODE}.None) implies byte_value.same_items (a_bytes) and then mode = {CIL_VALUE_MODE}.Bytes
@@ -217,8 +216,8 @@ feature -- Output
 				a_file.put_natural_64 (explicit_offset)
 				a_file.put_string ("]")
 			end
-			flags.il_src_dump_before_flags(a_file)
-			flags.il_src_dump_after_flags(a_file)
+			flags.il_src_dump_before_flags (a_file)
+			flags.il_src_dump_after_flags (a_file)
 
 			if type.basic_type = {CIL_BASIC_TYPE}.class_ref then
 				if attached {CIL_DATA_CONTAINER} type.type_ref as l_type_ref and then
@@ -228,7 +227,7 @@ feature -- Output
 					Result := type.il_src_dump (a_file)
 				else
 					a_file.put_string (" class ")
-					Result :=type.il_src_dump (a_file)
+					Result := type.il_src_dump (a_file)
 				end
 			else
 				a_file.put_string (" ")
@@ -240,7 +239,7 @@ feature -- Output
 
 			inspect mode
 			when {CIL_VALUE_MODE}.None then
-				-- do nothing
+					-- do nothing
 			when {CIL_VALUE_MODE}.Enum then
 				a_file.put_string (" = ")
 				il_src_dump_type_name (a_file, size)
@@ -249,12 +248,12 @@ feature -- Output
 				a_file.put_string (")")
 			when {CIL_VALUE_MODE}.Bytes then
 				if not byte_value.is_empty then
-					a_file.put_string(" at $")
-					a_file.put_string(name)
+					a_file.put_string (" at $")
+					a_file.put_string (name)
 					a_file.put_new_line
-					a_file.put_string(".data cil $")
-					a_file.put_string(name)
-					a_file.put_string(" = bytearray (")
+					a_file.put_string (".data cil $")
+					a_file.put_string (name)
+					a_file.put_string (" = bytearray (")
 					a_file.put_new_line
 
 					across byte_value as ic loop
@@ -268,12 +267,11 @@ feature -- Output
 					a_file.put_string (")")
 				end
 			else
-				-- do nothing.
+					-- do nothing.
 			end
 			a_file.put_new_line
 			Result := true
 		end
-
 
 	il_src_dump_type_name (a_file: FILE_STREAM; a_size: CIL_VALUE_SIZE)
 		do
@@ -325,33 +323,33 @@ feature -- Output
 					if attached parent as l_parent then
 						Result := l_parent.pe_dump (a_stream)
 					end
-					create l_ref_parent.make_with_tag_and_index ({PE_MEMBER_REF_PARENT}.typeref, if attached parent as l_parent then l_parent.pe_index else {NATURAL_64}0 end)
+					create l_ref_parent.make_with_tag_and_index ({PE_MEMBER_REF_PARENT}.typeref, if attached parent as l_parent then l_parent.pe_index else {NATURAL_64} 0 end)
 					create {PE_MEMBER_REF_TABLE_ENTRY} l_table.make_with_data (l_ref_parent, l_name_index, l_sig_index)
 					pe_index := l_writer.add_table_entry (l_table)
 				else
 					l_pe_flags := 0
 					if flags.flags & {CIL_QUALIFIERS_ENUM}.public /= 0 then
 						l_pe_flags := l_pe_flags | {PE_FIELD_TABLE_ENTRY}.public
-					elseif flags.flags & {CIL_QUALIFIERS_ENUM}.private /= 0  then
+					elseif flags.flags & {CIL_QUALIFIERS_ENUM}.private /= 0 then
 						l_pe_flags := l_pe_flags | {PE_FIELD_TABLE_ENTRY}.private
 					end
 
-					if flags.flags & {CIL_QUALIFIERS_ENUM}.static /= 0  then
+					if flags.flags & {CIL_QUALIFIERS_ENUM}.static /= 0 then
 						l_pe_flags := l_pe_flags | {PE_FIELD_TABLE_ENTRY}.static
 					end
-					if flags.flags & {CIL_QUALIFIERS_ENUM}.literal /= 0  then
+					if flags.flags & {CIL_QUALIFIERS_ENUM}.literal /= 0 then
 						l_pe_flags := l_pe_flags | {PE_FIELD_TABLE_ENTRY}.literal
 					end
 
 					inspect mode
-					when {CIL_VALUE_MODE}.enum  then
+					when {CIL_VALUE_MODE}.enum then
 						l_pe_flags := l_pe_flags | {PE_FIELD_TABLE_ENTRY}.hasdefault
 							-- in the blob
-					when {CIL_VALUE_MODE}.bytes  then
+					when {CIL_VALUE_MODE}.bytes then
 						if byte_length /= 0 and then not byte_value.is_empty then
 							l_pe_flags := l_pe_flags | {PE_FIELD_TABLE_ENTRY}.hasfieldrva
 						end
-					when {CIL_VALUE_MODE}.none  then
+					when {CIL_VALUE_MODE}.none then
 							-- Should never get here.
 					end
 
@@ -359,8 +357,8 @@ feature -- Output
 					pe_index := l_writer.add_table_entry (l_table)
 					if attached parent as l_parent and then
 						((l_parent.flags.flags & {CIL_QUALIFIERS_ENUM}.explicit /= 0) or else
-						 (l_parent.flags.flags & {CIL_QUALIFIERS_ENUM}.sequential /= 0) and then
-						 explicit_offset /= 0)
+							(l_parent.flags.flags & {CIL_QUALIFIERS_ENUM}.sequential /= 0) and then
+							explicit_offset /= 0)
 					then
 						create {PE_FIELD_LAYOUT_TABLE_ENTRY} l_table.make_with_data (explicit_offset, pe_index)
 						l_dis := l_writer.add_table_entry (l_table)
@@ -372,43 +370,43 @@ feature -- Output
 
 					inspect mode
 					when {CIL_VALUE_MODE}.none then
-						-- Should never get here.
+							-- Should never get here.
 					when {CIL_VALUE_MODE}.enum then
 						inspect size
 						when {CIL_VALUE_SIZE}.i8 then
 							l_sz.put (1)
-							l_type :=  {PE_TYPES_ENUM}.element_type_i1
+							l_type := {PE_TYPES_ENUM}.element_type_i1
 						when {CIL_VALUE_SIZE}.i16 then
 							l_sz.put (2)
-							l_type :=  {PE_TYPES_ENUM}.element_type_i2
+							l_type := {PE_TYPES_ENUM}.element_type_i2
 						when {CIL_VALUE_SIZE}.i32 then
 							l_sz.put (4)
-							l_type :=  {PE_TYPES_ENUM}.element_type_i4
+							l_type := {PE_TYPES_ENUM}.element_type_i4
 						when {CIL_VALUE_SIZE}.i64 then
 							l_sz.put (8)
-							l_type :=  {PE_TYPES_ENUM}.element_type_i8
+							l_type := {PE_TYPES_ENUM}.element_type_i8
 						else
 								-- default case
 							l_sz.put (4)
-							l_type :=  {PE_TYPES_ENUM}.element_type_i4
+							l_type := {PE_TYPES_ENUM}.element_type_i4
 						end
-						-- this is NOT compressed like the sigs are...
+							-- this is NOT compressed like the sigs are...
 						l_value_index := l_writer.hash_blob (l_buf.to_array, l_sz.item)
 						create l_constant.make_with_tag_and_index ({PE_CONSTANT}.fielddef, pe_index)
 						create {PE_CONSTANT_TABLE_ENTRY} l_table.make_with_data (l_type, l_constant, l_value_index)
 						l_dis := l_writer.add_table_entry (l_table)
 						if not byte_value.is_empty and then
-						   byte_length /= 0 then
-						   	l_value_index := l_writer.rva_bytes (byte_value, byte_length.to_natural_64)
-						   	create {PE_FIELD_RVA_TABLE_ENTRY} l_table.make_with_data (l_value_index, pe_index)
-						   	l_dis := l_writer.add_table_entry (l_table)
+							byte_length /= 0 then
+							l_value_index := l_writer.rva_bytes (byte_value, byte_length.to_natural_64)
+							create {PE_FIELD_RVA_TABLE_ENTRY} l_table.make_with_data (l_value_index, pe_index)
+							l_dis := l_writer.add_table_entry (l_table)
 						end
 					when {CIL_VALUE_MODE}.bytes then
 						if not byte_value.is_empty and then
-						   byte_length /= 0 then
-						   	l_value_index := l_writer.rva_bytes (byte_value, byte_length.to_natural_64)
-						   	create {PE_FIELD_RVA_TABLE_ENTRY} l_table.make_with_data (l_value_index, pe_index)
-						   	l_dis := l_writer.add_table_entry (l_table)
+							byte_length /= 0 then
+							l_value_index := l_writer.rva_bytes (byte_value, byte_length.to_natural_64)
+							create {PE_FIELD_RVA_TABLE_ENTRY} l_table.make_with_data (l_value_index, pe_index)
+							l_dis := l_writer.add_table_entry (l_table)
 						end
 					end
 				end
@@ -420,8 +418,8 @@ feature {NONE} -- Utils
 
 	format_integer (w: INTEGER; a_char: CHARACTER): FORMAT_INTEGER
 		do
-			create Result.make(w)
-			Result.set_fill(a_char)
+			create Result.make (w)
+			Result.set_fill (a_char)
 		ensure
 			is_class: class
 		end

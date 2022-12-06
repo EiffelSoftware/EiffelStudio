@@ -41,7 +41,7 @@ feature -- Operations
 
 	has_index_overflow (a_sizes: ARRAY [NATURAL_64]): BOOLEAN
 		do
-			to_implement ("Add implementation")
+			Result := large (a_sizes[{PE_TABLE_CONSTANTS}.t_blob + 1].to_natural_32)
 		end
 
 end

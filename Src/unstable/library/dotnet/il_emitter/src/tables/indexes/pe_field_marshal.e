@@ -40,7 +40,7 @@ feature -- Operations
 
 	has_index_overflow (a_sizes: ARRAY [NATURAL_64]): BOOLEAN
 		do
-			to_implement ("Add implementation")
+			Result := large(a_sizes[{PE_TABLES}.tFile.value.to_integer_32 + 1].to_natural_32) or else large(a_sizes[{PE_TABLES}.tParam.value.to_integer_32 + 1].to_natural_32)
 		end
 
 end

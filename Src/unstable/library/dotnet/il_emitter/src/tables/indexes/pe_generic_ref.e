@@ -17,7 +17,6 @@ inherit
 create
 	make_with_index
 
-
 feature -- Operations
 
 	get_index_shift: INTEGER
@@ -27,7 +26,7 @@ feature -- Operations
 
 	has_index_overflow (a_sizes: ARRAY [NATURAL_64]): BOOLEAN
 		do
-			to_implement ("Add implementation")
+			Result := large (a_sizes [{PE_TABLES}.tGenericParam.value.to_integer_32 + 1].to_natural_32)
 		end
 
 end

@@ -1,7 +1,13 @@
 note
 	description: "[
-					    Main class to instantiate
-			    		the creation procedure creates a working assembly, you put all your code and data into that
+				
+				
+						    // TODO: the AST of PELib can be considerably simplified (we actually only need what the IlEmitter API provides)
+			    			// TODO: the PEDump implementation still has issues (e.g. redundant calls to PEDump out in the tree leading to
+						    // redundant types with different IDs and thus runtime exceptions because of "wrong" signatures)
+							
+							Main class to instantiate
+						    the creation procedure creates a working assembly, you put all your code and data into that
 		]"
 	author: ""
 	date: "$Date$"
@@ -45,7 +51,7 @@ feature {NONE} -- Initialization
 			create l_assembly_ref.make (a_name, False, create {ARRAY [NATURAL_8]}.make_filled (0, 1, 8))
 			assembly_refs.force (l_assembly_ref)
 			create module_guid.make_filled (0, 1, 16)
-			create {ARRAYED_LIST [CIL_METHOD]} all_method.make (0)
+			create {ARRAYED_LIST [CIL_METHOD]} all_methods.make (0)
 			create source_file.make_empty
 			create lib_path.make_empty
 		ensure
@@ -65,7 +71,7 @@ feature {NONE} -- Initialization
 			p_invoke_references_empty: p_invoke_references.is_empty
 			p_invoke_signatures_empty: p_invoke_signatures.is_empty
 			module_guid_set: module_guid.count = 16
-			all_method_set: all_method.is_empty
+			all_method_set: all_methods.is_empty
 			source_file_empty: source_file.is_empty
 			lib_path_empty: lib_path.is_empty
 		end
@@ -118,7 +124,7 @@ feature -- Access
 
 	source_file: STRING_32
 
-	all_method: LIST [CIL_METHOD]
+	all_methods: LIST [CIL_METHOD]
 
 	lib_path: STRING_32
 
@@ -349,6 +355,9 @@ feature -- Assembly
 
 	find (a_path: STRING_32; a_generics: detachable LIST [CIL_TYPE]; a_assembly: detachable CIL_ASSEMBLY_DEF): TUPLE [type: CIL_FIND_TYPE; resource: detachable ANY]
 			-- find `a_path`, return value tells what type of object was found
+			--| Correspond to C++ method
+			--| PELib::eFindType PELib::Find(std::string path, Resource **result,
+			--|           std::deque<Type*>* generics = nullptr, AssemblyDef *assembly = nullptr);
 		local
 			l_npos: INTEGER
 			l_assembly_name: STRING_32
@@ -482,6 +491,10 @@ feature -- Assembly
 
 	find_method (a_path: STRING_32; a_args: LIST [CIL_TYPE]; a_rv: detachable CIL_TYPE; a_generics: detachable LIST [CIL_TYPE]; a_assembly: detachable CIL_ASSEMBLY_DEF; a_match_args: BOOLEAN): TUPLE [type: CIL_FIND_TYPE; res: detachable CIL_METHOD]
 			-- find a method, with overload matching.
+			--| Correspong to C++ method
+			--|  PELib::eFindType PELib::Find(std::string path, Method **result, const std::vector<Type *>& args, Type* rv = nullptr,
+			--|           std::deque<Type*>* generics = nullptr, AssemblyDef *assembly = nullptr, bool matchArgs = true);
+
 		local
 			l_npos: INTEGER
 			l_assembly_name: STRING_32

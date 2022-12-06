@@ -172,7 +172,7 @@ feature -- PE_LIB
 	add_method (a_method: CIL_METHOD)
 		do
 			if attached pe_lib as l_pe_lib then
-				l_pe_lib.all_method.force (a_method)
+				l_pe_lib.all_methods.force (a_method)
 			end
 		end
 

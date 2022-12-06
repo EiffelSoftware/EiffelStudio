@@ -59,7 +59,6 @@ feature -- Access
 			Result := index.to_integer_32.hash_code
 		end
 
-
 feature -- Operations
 
 	get_index_shift: INTEGER
@@ -69,7 +68,19 @@ feature -- Operations
 
 	has_index_overflow (a_sizes: ARRAY [NATURAL_64]): BOOLEAN
 		do
-			to_implement ("Add implementation")
+			Result := large (a_sizes [{PE_TABLES}.tMethodDef.value.to_integer_32 + 1].to_natural_32) or
+				large (a_sizes [{PE_TABLES}.tField.value.to_integer_32 + 1].to_natural_32) or
+				large (a_sizes [{PE_TABLES}.tTypeRef.value.to_integer_32 + 1].to_natural_32) or
+				large (a_sizes [{PE_TABLES}.tTypeDef.value.to_integer_32 + 1].to_natural_32) or
+				large (a_sizes [{PE_TABLES}.tParam.value.to_integer_32 + 1].to_natural_32) or
+				large (a_sizes [{PE_TABLES}.tImplMap.value.to_integer_32 + 1].to_natural_32) or
+				large (a_sizes [{PE_TABLES}.tMemberRef.value.to_integer_32 + 1].to_natural_32) or
+				large (a_sizes [{PE_TABLES}.tModule.value.to_integer_32 + 1].to_natural_32) or
+				large (a_sizes [{PE_TABLES}.tStandaloneSig.value.to_integer_32 + 1].to_natural_32) or
+				large (a_sizes [{PE_TABLES}.tModuleRef.value.to_integer_32 + 1].to_natural_32) or
+				large (a_sizes [{PE_TABLES}.tTypeSpec.value.to_integer_32 + 1].to_natural_32) or
+				large (a_sizes [{PE_TABLES}.tAssemblyDef.value.to_integer_32 + 1].to_natural_32) or
+				large (a_sizes [{PE_TABLES}.tAssemblyRef.value.to_integer_32 + 1].to_natural_32)
 		end
 
 end

@@ -1,5 +1,5 @@
 note
-	description: "Summary description for {PE_CONSTANT}."
+	description: "A possible index type that occur in the tables we are interested in."
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -35,6 +35,7 @@ feature -- Enum: tags
 	FieldDef: INTEGER = 0
 	ParamDef: INTEGER = 1
 			--TagProperty : INTEGER =2
+
 feature -- Operations
 
 	get_index_shift: INTEGER
@@ -44,7 +45,8 @@ feature -- Operations
 
 	has_index_overflow (a_sizes: ARRAY [NATURAL_64]): BOOLEAN
 		do
-			to_implement ("Add implementation")
+			Result := large(a_sizes[{PE_TABLES}.tField.value.to_integer_32 + 1].to_natural_32) or
+					  large(a_sizes[{PE_TABLES}.tParam.value.to_integer_32 + 1].to_natural_32)
 		end
 
 end

@@ -153,13 +153,13 @@ feature --Access
 
 			create l_ret_val.make_empty
 			across string_value as i until l_doit loop
-				if i.code < 32 or else i.code > 126 or else i= '\' or else i = '"' then
+				if i.code < 32 or else i.code > 126 or else i = '\' or else i = '"' then
 					l_doit := True
 				end
 			end
 			if l_doit then
 				across string_value as i loop
-					l_item := i.code &  0xff
+					l_item := i.code & 0xff
 					if l_item < 32 then
 
 						if l_a.code = l_item then
@@ -186,21 +186,21 @@ feature --Access
 						end
 
 						if l_item < 32 then
-							l_ret_val.append ("%H0")
+							l_ret_val.append ("\0")
 							l_ret_val.append_character ((l_item // 8 + l_0.code).to_character_32)
-							l_ret_val.append_character ( (l_item & 7 + l_0.code).to_character_32)
+							l_ret_val.append_character ((l_item & 7 + l_0.code).to_character_32)
 						else
-							l_ret_val.append ("%H")
+							l_ret_val.append ("\")
 							l_ret_val.append_character (l_item.to_character_32)
 						end
 					elseif l_item.to_character_32 = '"' or else l_item.to_character_32 = '%H' then
-						l_ret_val.append ("%H")
+						l_ret_val.append ("\")
 						l_ret_val.append_character (l_item.to_character_32)
 					elseif l_item > 126 then
-						l_ret_val.append ("%H")
+						l_ret_val.append ("\")
 						l_ret_val.append_character ((l_item // 64 + l_0.code).to_character_32)
-						l_ret_val.append_character (( (l_item // 8) & 7 + l_0.code).to_character_32)
-						l_ret_val.append_character ( (l_item  & 7 + l_0.code).to_character_32)
+						l_ret_val.append_character (((l_item // 8) & 7 + l_0.code).to_character_32)
+						l_ret_val.append_character ((l_item & 7 + l_0.code).to_character_32)
 					else
 						l_ret_val.append_character (l_item.to_character_32)
 					end
@@ -215,14 +215,14 @@ feature -- Output
 
 	render (a_stream: FILE_STREAM; a_opcode: INTEGER; a_operand_type: INTEGER; a_result: SPECIAL [NATURAL_8]; a_offset: INTEGER): NATURAL_32
 		local
-			l_sz :INTEGER
+			l_sz: INTEGER
 		do
 			l_sz := a_offset
 			inspect type
 			when {CIL_OPERAND_TYPE}.t_none then
-				-- No operand, nothing to display
+					-- No operand, nothing to display
 			when {CIL_OPERAND_TYPE}.t_label then
-				-- Shouldn't be rendered.	
+					-- Shouldn't be rendered.
 			when {CIL_OPERAND_TYPE}.t_value then
 				if attached {CIL_VALUE} ref_value as l_ref_value then
 						-- TODO check if we need to add an offset to index the
@@ -274,7 +274,7 @@ feature -- Output
 					end
 					a_file.put_string ("(")
 					across 1 |..| l_sz as ic loop
-						a_file.put_string (l_buf[ic].to_hex_string)
+						a_file.put_string (l_buf [ic].to_hex_string)
 					end
 					a_file.put_string (")")
 				else
@@ -292,10 +292,9 @@ feature -- Output
 			Result := True
 		end
 
-
 feature {NONE} -- Implementation
 
-	real32_to_byte(a_val: REAL_32): ARRAY [NATURAL_8]
+	real32_to_byte (a_val: REAL_32): ARRAY [NATURAL_8]
 		local
 			mp: MANAGED_POINTER
 		do
@@ -304,7 +303,7 @@ feature {NONE} -- Implementation
 			Result := mp.read_array (0, 8)
 		end
 
-	real64_to_byte(a_val: REAL_64): ARRAY [NATURAL_8]
+	real64_to_byte (a_val: REAL_64): ARRAY [NATURAL_8]
 		local
 			mp: MANAGED_POINTER
 		do

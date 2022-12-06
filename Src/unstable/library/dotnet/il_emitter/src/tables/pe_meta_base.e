@@ -1,6 +1,5 @@
 note
 	description: "Summary description for {PE_META_BASE}."
-	author: ""
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -15,7 +14,7 @@ feature -- Dump
 
 	dump
 		do
-			to_implement("Add implementation")
+			-- empty implementation
 		ensure
 			is_class: class
 		end

@@ -22,7 +22,6 @@ create
 	make_with_index,
 	make_with_tag_and_index
 
-
 feature {NONE} -- Initialization
 
 	make
@@ -55,36 +54,66 @@ feature -- Access
 
 	index: NATURAL_64
 
-
 feature -- Operations
 
 	render (a_sizes: ARRAY [NATURAL_64]; a_bytes: ARRAY [NATURAL_8]): NATURAL_64
 		require
 			valid_size: a_sizes.capacity = {PE_TABLE_CONSTANTS}.max_tables + {PE_TABLE_CONSTANTS}.extra_indexes
+		local
+			l_rv: NATURAL_64
+			l_val: NATURAL_32
 		do
-			to_implement ("Add implementation");
+			l_val := ((index |<< get_index_shift) + tag.to_natural_64).to_natural_32
+			if has_index_overflow (a_sizes) then
+				{BYTE_ARRAY_HELPER}.put_array_natural_32 (a_bytes, l_val, 0)
+				l_rv := 4
+			else
+				{BYTE_ARRAY_HELPER}.put_array_natural_16_with_natural_32 (a_bytes, l_val, 0)
+				l_rv := 2
+			end
+			Result := l_rv
 		end
 
-	get	(a_sizes: ARRAY [NATURAL_64]; a_bytes: ARRAY [NATURAL_8]): NATURAL_64
+	get (a_sizes: ARRAY [NATURAL_64]; a_bytes: ARRAY [NATURAL_8]): NATURAL_64
 		require
 			valid_size: a_sizes.capacity = {PE_TABLE_CONSTANTS}.max_tables + {PE_TABLE_CONSTANTS}.extra_indexes
+		local
+			l_val: NATURAL_64
+			l_rv: NATURAL_64
 		do
-			to_implement ("Add implementation")
+			if has_index_overflow (a_sizes) then
+				l_val := {BYTE_ARRAY_HELPER}.byte_array_to_natural_32 (a_bytes.to_special)
+				l_rv := 4
+			else
+				l_val := {BYTE_ARRAY_HELPER}.byte_array_to_natural_16 (a_bytes.to_special)
+				l_rv := 2
+			end
+			index := l_val |>> get_index_shift
+			tag := (l_val & (({INTEGER} 1 |<< get_index_shift - 1)).to_natural_64).to_integer_32
+			Result := l_rv
 		end
 
 	get_index_shift: INTEGER
 		do
-			Result := 0
+				-- to be redefined
+				--| Declared in C++ as virtual int GetIndexShift() const = 0;
+				--| it's a pure virtual function. So the function doesn't change
+				--| the data of the class.
+				--| In Eiffel we could declared it as deferred.
 		end
 
-	has_index_overflow(a_sizes: ARRAY[NATURAL_64]): BOOLEAN
+	has_index_overflow (a_sizes: ARRAY [NATURAL_64]): BOOLEAN
 		require
 			valid_size: a_sizes.capacity = {PE_TABLE_CONSTANTS}.max_tables + {PE_TABLE_CONSTANTS}.extra_indexes
 		do
+				-- to re redefined.
+				--| Declared in C++ as virtual bool HasIndexOverflow(size_t sizes[MaxTables + ExtraIndexes]) const = 0;
+				--| it's a pure virtual function. (same as `get_index_shift`)
 		end
 
 	large (a_x: NATURAL_32): BOOLEAN
 		do
 			Result := (a_x |<< get_index_shift) > 0xffff
 		end
+
 end

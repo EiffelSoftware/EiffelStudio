@@ -18,6 +18,8 @@ feature -- Operand factory features.
 			instance_free: class
 		end
 
+feature -- Operand is a complex value
+
 	complex_operand (v: CIL_VALUE): CIL_OPERAND
 			-- Operand is a complex value.
 		do
@@ -34,6 +36,8 @@ feature -- Operand factory features.
 			property_set: Result.property = False
 			string_value_empty: Result.string_value.is_empty
 		end
+
+feature -- Operand is an integer constant
 
 	integer64_operand (a_value: INTEGER_64; a_size: CIL_OPERAND_SIZE): CIL_OPERAND
 			-- Operand is an integer constant.
@@ -77,6 +81,9 @@ feature -- Operand factory features.
 			instance_free: class
 		end
 
+
+feature -- Operand is a floating point constant		
+
 	real_operand (a_value: REAL_64; a_size: CIL_OPERAND_SIZE): CIL_OPERAND
 			-- Operand is a floating point operand.
 		do
@@ -95,6 +102,9 @@ feature -- Operand factory features.
 		 	string_value_empty: Result.string_value.is_empty
 		end
 
+
+feature -- Operand is an string constant		
+
 	string_operand (a_value: READABLE_STRING_GENERAL): CIL_OPERAND
 			-- Operand is a String.
 		do
@@ -112,6 +122,8 @@ feature -- Operand factory features.
 		 	string_value_set: Result.string_value.same_string_general (a_value)
 		end
 
+
+feature -- Operand is a label constant
 
 	label_operand (a_value: READABLE_STRING_GENERAL): CIL_OPERAND
 			-- Operand is a label

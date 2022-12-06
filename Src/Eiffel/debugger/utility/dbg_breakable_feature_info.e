@@ -185,7 +185,7 @@ feature -- Element change
 			create t.make (breakable_count, breakable_nested_count)
 			l_name := a_name
 			if l_name = Void then
-				create l_name.initialize ("~unamed #" + (object_test_locals.count + 1).out)
+				create l_name.initialize ("~unnamed #" + (object_test_locals.count + 1).out)
 			end
 			t.name_id := l_name
 			t.type := a_type
@@ -231,7 +231,7 @@ feature -- Status report
 note
 	date: "$Date$"
 	revision: "$Revision$"
-	copyright: "Copyright (c) 1984-2021, Eiffel Software"
+	copyright: "Copyright (c) 1984-2022, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

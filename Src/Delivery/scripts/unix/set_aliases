@@ -1,7 +1,7 @@
 #!/bin/sh
 
 if [ ! "$STUDIO_VERSION_MAJOR_MINOR" ]; then
-	STUDIO_VERSION_MAJOR_MINOR=22.11
+	STUDIO_VERSION_MAJOR_MINOR=22.12
 fi
 
 # File in which the status of the installation generation is logged

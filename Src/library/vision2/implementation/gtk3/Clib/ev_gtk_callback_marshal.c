@@ -60,7 +60,7 @@ void c_ev_gtk_callback_marshal (
 			eif_access ((EIF_OBJECT) closure->data),
 			(EIF_INTEGER) n_param_values - 1,
 			(EIF_POINTER) ((GValue*)param_values + 1),
-			return_value
+			(EIF_POINTER) return_value
        	 	);
 }
 
@@ -72,7 +72,7 @@ int c_ev_gtk_callback_marshal_true_callback (EIF_OBJECT adopted_agent)
                 ev_gtk_callback_marshal (
                         eif_access (ev_gtk_callback_marshal_object),
                         eif_access (adopted_agent),
-                        0,
+                        (EIF_POINTER) 0,
                         (EIF_POINTER) NULL,
 			NULL
         );

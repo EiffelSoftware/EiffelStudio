@@ -56,40 +56,55 @@ feature -- Access
 
 feature -- Operations
 
-	render (a_sizes: ARRAY [NATURAL_64]; a_bytes: ARRAY [NATURAL_8]): NATURAL_64
+	render (a_sizes: ARRAY [NATURAL_64]; a_dest: ARRAY [NATURAL_8]; a_pos: INTEGER): NATURAL_64
 		require
 			valid_size: a_sizes.capacity = {PE_TABLE_CONSTANTS}.max_tables + {PE_TABLE_CONSTANTS}.extra_indexes
 		local
 			l_rv: NATURAL_64
 			l_val: NATURAL_32
 		do
+				--  Calculate the value to be written to the destintation `a_dest`.
 			l_val := ((index |<< get_index_shift) + tag.to_natural_64).to_natural_32
+
+
 			if has_index_overflow (a_sizes) then
-				{BYTE_ARRAY_HELPER}.put_array_natural_32 (a_bytes, l_val, 0)
+					-- write the value as NATURAL_32 to the destination `a_dest`
+					-- and set the return value to 4.
+				{BYTE_ARRAY_HELPER}.put_array_natural_32 (a_dest, l_val, a_pos)
 				l_rv := 4
 			else
-				{BYTE_ARRAY_HELPER}.put_array_natural_16_with_natural_32 (a_bytes, l_val, 0)
+					-- write the value as NATURAL_16 to the destination `a_dest`
+					-- and set the return value to 2.
+				{BYTE_ARRAY_HELPER}.put_array_natural_16_with_natural_32 (a_dest, l_val, a_pos)
 				l_rv := 2
 			end
+				-- Return the number of bytes written to the destination `a_dest`
 			Result := l_rv
 		end
 
-	get (a_sizes: ARRAY [NATURAL_64]; a_bytes: ARRAY [NATURAL_8]): NATURAL_64
+	get (a_sizes: ARRAY [NATURAL_64]; a_src: ARRAY [NATURAL_8]; a_pos: INTEGER): NATURAL_64
 		require
 			valid_size: a_sizes.capacity = {PE_TABLE_CONSTANTS}.max_tables + {PE_TABLE_CONSTANTS}.extra_indexes
 		local
 			l_val: NATURAL_64
 			l_rv: NATURAL_64
 		do
+				-- Determine the size of the value to read from the source `a_src`
 			if has_index_overflow (a_sizes) then
-				l_val := {BYTE_ARRAY_HELPER}.byte_array_to_natural_32 (a_bytes.to_special)
+					-- Use a 32-bit Natural to store the value
+					-- and set the return value to 4.
+				l_val := {BYTE_ARRAY_HELPER}.byte_array_to_natural_32 (a_src.to_special, a_pos)
 				l_rv := 4
 			else
-				l_val := {BYTE_ARRAY_HELPER}.byte_array_to_natural_16 (a_bytes.to_special)
+					-- Use a 16-bit Natural to store the value
+					-- and set the return value to 2.
+				l_val := {BYTE_ARRAY_HELPER}.byte_array_to_natural_16 (a_src.to_special, a_pos)
 				l_rv := 2
 			end
+				-- Compute the index and tag values
 			index := l_val |>> get_index_shift
 			tag := (l_val & (({INTEGER} 1 |<< get_index_shift - 1)).to_natural_64).to_integer_32
+				-- Return the number of bytes read from the source `a_src`
 			Result := l_rv
 		end
 

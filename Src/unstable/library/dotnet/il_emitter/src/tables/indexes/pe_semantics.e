@@ -42,7 +42,7 @@ feature -- Operations
 	has_index_overflow (a_sizes: ARRAY [NATURAL_64]): BOOLEAN
 		do
 			Result := large(a_sizes[{PE_TABLES}.tEvent.value.to_integer_32 + 1].to_natural_32) or else
-					  large(a_sizes[{PE_TABLES}.tProperty.value.to_integere_32 + 1].to_natural_32)
+					  large(a_sizes[{PE_TABLES}.tProperty.value.to_integer_32 + 1].to_natural_32)
 		end
 
 end

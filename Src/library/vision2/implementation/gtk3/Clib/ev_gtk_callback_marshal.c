@@ -49,36 +49,35 @@ void c_ev_gtk_callback_marshal_destroy (void)
 }
 
 void c_ev_gtk_callback_marshal (
-    GClosure *closure, GValue *return_value, guint n_param_values, const GValue *param_values, gpointer invocation_hint, gpointer marshal_data
-)
-        // Called by GTK when an `object' emits a signal,
-        // Call an `agent' with `n_args' `args'.
+    	GClosure *closure, GValue *return_value, guint n_param_values, const GValue *param_values, gpointer invocation_hint, gpointer marshal_data
+		)
+    // Called by GTK when an `object' emits a signal,
+    // Call an `agent' with `n_args' `args'.
 {
 	if (c_ev_gtk_callback_marshal_is_enabled)
 		ev_gtk_callback_marshal (
-			eif_access (ev_gtk_callback_marshal_object),
-			eif_access ((EIF_OBJECT) closure->data),
-			(EIF_INTEGER) n_param_values - 1,
-			(EIF_POINTER) ((GValue*)param_values + 1),
-			(EIF_POINTER) return_value
-       	 	);
+				eif_access (ev_gtk_callback_marshal_object),
+				eif_access ((EIF_OBJECT) closure->data),
+				(EIF_INTEGER) n_param_values - 1,
+				(EIF_POINTER) ((GValue*)param_values + 1),
+				(EIF_POINTER) return_value
+       	 		);
 }
 
 int c_ev_gtk_callback_marshal_true_callback (EIF_OBJECT adopted_agent)
-		// GtkFunction that passes `agent' to ev_gtk_callback_marshal
-		// and returns TRUE
+	// GtkFunction that passes `agent' to ev_gtk_callback_marshal
+	// and returns TRUE
 {
-      if (c_ev_gtk_callback_marshal_is_enabled)
-                ev_gtk_callback_marshal (
-                        eif_access (ev_gtk_callback_marshal_object),
-                        eif_access (adopted_agent),
-                        (EIF_POINTER) 0,
-                        (EIF_POINTER) NULL,
-			NULL
-        );
-      return TRUE;
+    if (c_ev_gtk_callback_marshal_is_enabled)
+        ev_gtk_callback_marshal (
+            	eif_access (ev_gtk_callback_marshal_object),
+            	eif_access (adopted_agent),
+            	(EIF_INTEGER) 0,
+            	(EIF_POINTER) NULL,
+				(EIF_POINTER) NULL
+        		);
+    return TRUE;
 }
-
 
 void dummy_callback (void)
 {

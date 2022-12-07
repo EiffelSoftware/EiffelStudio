@@ -217,13 +217,19 @@ feature -- Element change
 		local
 			pixmap_imp: detachable EV_PIXMAP_IMP
 		do
-			pixmap_imp ?= an_icon.twin.implementation
-			check
-				icon_implementation_exists: pixmap_imp /= Void then
+			--| note: be aware this feature may not be supported anymore by GTK
+			--| it is recommended to use `set_icon_name` and proper style.
+
+			if not {PLATFORM}.is_mac then
+					-- Not supported on MacOS
+				pixmap_imp ?= an_icon.twin.implementation
+				check
+					icon_implementation_exists: pixmap_imp /= Void then
+				end
+				icon_pixmap_internal := pixmap_imp.interface
+				--| FIXME IEK Implement with gtk 3 feature.
+				{GTK2}.gtk_window_set_icon (c_object, pixmap_imp.pixbuf)
 			end
-			icon_pixmap_internal := pixmap_imp.interface
-			--| FIXME IEK Implement with gtk 3 feature.
-			{GTK2}.gtk_window_set_icon (c_object, pixmap_imp.pixbuf)
 		end
 
 feature {NONE} -- Implementation
@@ -244,7 +250,7 @@ feature {EV_ANY, EV_ANY_I} -- Implementation
 	interface: detachable EV_TITLED_WINDOW note option: stable attribute end;
 
 note
-	copyright:	"Copyright (c) 1984-2021, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2022, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

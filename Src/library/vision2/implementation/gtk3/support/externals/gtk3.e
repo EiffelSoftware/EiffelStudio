@@ -359,22 +359,6 @@ feature -- Style
 			"C (GtkWidget*): GtkStyleContext* | <ev_gtk.h>"
 		end
 
-feature -- GtkMenu externals
-
-	frozen gtk_menu_popup_at_widget (a_menu: POINTER; a_widget: POINTER; a_widget_anchor: INTEGER_32; a_menu_anchor: INTEGER_32; a_trigger_event: POINTER)
-		external
-			"C (GtkMenu*, GtkWidget*, GdkGravity, GdkGravity, const GdkEvent*) | <ev_gtk.h>"
-		end
-
-	frozen gtk_menu_popup_at_pointer (a_menu: POINTER; a_trigger_event: POINTER)
-		external
-			"C (GtkMenu*, const GdkEvent*) | <ev_gtk.h>"
-		end
-
-	frozen gtk_menu_popup_at_rect (a_menu: POINTER; a_window: POINTER; a_rectangle: POINTER; a_rectangle_anchor: INTEGER_32; a_menu_anchor: INTEGER_32; a_trigger_event: POINTER)
-		external
-			"C (GtkMenu*, GdkWindow*, const GdkRectangle*, GdkGravity, GdkGravity, const GdkEvent*) | <ev_gtk.h>"
-		end
 
 feature -- GTK Layout
 

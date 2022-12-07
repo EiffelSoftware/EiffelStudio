@@ -515,41 +515,6 @@ feature -- Widget Style
 			"C signature (GtkStyleContext*): GtkStateFlags use <ev_gtk.h>"
 		end
 
-	frozen gtk_style_struct_base (a_c_struct: POINTER): POINTER
-		external
-			"C [struct <ev_gtk.h>] (GtkStyle): EIF_POINTER"
-		alias
-			"base"
-		end
-
-	frozen gtk_style_struct_bg (a_c_struct: POINTER): POINTER
-		external
-			"C [struct <ev_gtk.h>] (GtkStyle): EIF_POINTER"
-		alias
-			"bg"
-		end
-
-	frozen gtk_style_struct_dark (a_c_struct: POINTER): POINTER
-		external
-			"C [struct <ev_gtk.h>] (GtkStyle): EIF_POINTER"
-		alias
-			"dark"
-		end
-
-	frozen gtk_style_struct_fg (a_c_struct: POINTER): POINTER
-		external
-			"C [struct <ev_gtk.h>] (GtkStyle): EIF_POINTER"
-		alias
-			"fg"
-		end
-
-	frozen gtk_style_struct_text (a_c_struct: POINTER): POINTER
-		external
-			"C [struct <ev_gtk.h>] (GtkStyle): EIF_POINTER"
-		alias
-			"text"
-		end
-
 feature -- Drawing
 
 	frozen gtk_drawing_area_new: POINTER
@@ -1809,7 +1774,7 @@ feature -- Gobject Type
 		end
 
 note
-	copyright: "Copyright (c) 1984-2021, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2022, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

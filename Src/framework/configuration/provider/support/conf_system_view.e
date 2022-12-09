@@ -90,6 +90,7 @@ feature -- Query
 	system: detachable CONF_SYSTEM
 			-- Full system object.
 			-- note: it parses the associated `path' file to build the result.
+			-- Also set `is_redirection`...
 		local
 			l_factory: CONF_PARSE_FACTORY
 			l_loader: CONF_LOAD
@@ -100,9 +101,9 @@ feature -- Query
 			l_loader.retrieve_configuration (path.name)
 			if
 				not l_loader.is_error and then
-				attached l_loader.last_system as l_system and then
-				l_loader.last_redirection = Void -- Exclude redirection!
+				attached l_loader.last_system as l_system
 			then
+				is_redirection := l_loader.last_redirection /= Void
 				Result := l_system
 			end
 		end
@@ -120,6 +121,9 @@ feature -- Status report
 	has_library_target: BOOLEAN
 			-- Has a library target ?
 
+	is_redirection: BOOLEAN
+			-- Is it a redirection ?
+
 feature -- Basic operation
 
 	analyze
@@ -131,6 +135,9 @@ feature -- Basic operation
 		do
 			has_library_target := False
 			if attached system as l_system then
+				if is_redirection then
+						-- TODO: exclude redirection!
+				end
 				l_system_name := l_system.name
 				l_description := l_system.description
 				if l_description /= Void and then l_description.is_empty then

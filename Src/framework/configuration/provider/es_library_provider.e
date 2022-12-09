@@ -61,7 +61,8 @@ feature {NONE} -- Implementation
 		do
 			fn := real_directory_path (a_target, a_path)
 			create Result.make (fn, a_path)
-			if Result.has_library_target then
+			if Result.has_library_target and then not Result.is_redirection then
+				-- Exclude redirection!
 				if a_search_iron then
 					apply_iron_package_information_to (fn, Result)
 				end

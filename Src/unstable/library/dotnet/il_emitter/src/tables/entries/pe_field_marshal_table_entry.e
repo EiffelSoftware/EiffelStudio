@@ -39,14 +39,30 @@ feature -- Operations
 			Result := {PE_TABLES}.tfieldmarshal.value.to_integer_32
 		end
 
-	render (a_sizes: ARRAY [NATURAL_64]; a_bytes: ARRAY [NATURAL_8]): NATURAL_64
+	render (a_sizes: ARRAY [NATURAL_64]; a_dest: ARRAY [NATURAL_8]): NATURAL_64
+		local
+			l_bytes: NATURAL_64
 		do
-			to_implement ("Add implementation")
+				-- Write parent and native_type to the buffer and update
+				-- the number of bytes
+			l_bytes := parent.render (a_sizes, a_dest, 0)
+			l_bytes := l_bytes + native_type.render (a_sizes, a_dest, l_bytes.to_integer_32)
+
+				-- Return the number of bytes written
+			Result := l_bytes
 		end
 
-	get (a_sizes: ARRAY [NATURAL_64]; a_bytes: ARRAY [NATURAL_8]): NATURAL_64
+	get (a_sizes: ARRAY [NATURAL_64]; a_src: ARRAY [NATURAL_8]): NATURAL_64
+		local
+			l_bytes: NATURAL_64
 		do
-			to_implement ("Add implementation")
+				-- Read parent and native_type  from the buffer and update
+				-- the number of bytes
+			l_bytes := parent.get (a_sizes, a_src, 0)
+			l_bytes := l_bytes + native_type.get (a_sizes, a_src, l_bytes.to_integer_32)
+
+				-- Return the number of bytes readed
+			Result := l_bytes
 		end
 
 end

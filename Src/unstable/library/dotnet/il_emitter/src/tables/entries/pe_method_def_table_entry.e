@@ -18,10 +18,9 @@ inherit
 create
 	make_with_data
 
-
 feature {NONE} -- Initialization
 
-	make_with_data (a_method: PE_METHOD; a_iflags: INTEGER; a_mflags: INTEGER; a_name_index: NATURAL_64; a_signature_index: NATURAL_64; a_param_index: NATURAL_64 )
+	make_with_data (a_method: PE_METHOD; a_iflags: INTEGER; a_mflags: INTEGER; a_name_index: NATURAL_64; a_signature_index: NATURAL_64; a_param_index: NATURAL_64)
 		do
 			rva := 0
 			method := a_method
@@ -29,12 +28,11 @@ feature {NONE} -- Initialization
 			flags := a_mflags
 			create name_index.make_with_index (a_name_index)
 			create signature_index.make_with_index (a_signature_index)
-			create param_list.make_with_index (a_param_index)
+			create param_index.make_with_index (a_param_index)
 		ensure
 			method_set: method = a_method
 
 		end
-
 
 feature -- Access
 
@@ -52,7 +50,7 @@ feature -- Access
 
 	signature_index: PE_BLOB
 
-	param_list: PE_PARAM_LIST
+	param_index: PE_PARAM_LIST
 
 feature -- Enum: Implementation Flags
 
@@ -122,14 +120,61 @@ feature -- Operations
 			Result := {PE_TABLES}.tmethoddef.value.to_integer_32
 		end
 
-	render (a_sizes: ARRAY [NATURAL_64]; a_byte: ARRAY [NATURAL_8]): NATURAL_64
+	render (a_sizes: ARRAY [NATURAL_64]; a_dest: ARRAY [NATURAL_8]): NATURAL_64
+		local
+			l_bytes: NATURAL_64
 		do
-			to_implement ("Add implementation")
+				-- Write the method.rva to the destination buffer `a_dest`.
+			{BYTE_ARRAY_HELPER}.put_array_natural_32_with_natural_64 (a_dest.to_special, if attached method as l_method then l_method.rva else {NATURAL_64} 0 end, 0)
+
+				-- Initialize the number of bytes written
+			l_bytes := 4
+				-- Write implementation flags to the destination buffer.
+			{BYTE_ARRAY_HELPER}.put_array_natural_16_with_integer_32 (a_dest.to_special, impl_flags, l_bytes.to_integer_32)
+			l_bytes := l_bytes + 2
+
+				-- Write flags to the destination buffer.
+			{BYTE_ARRAY_HELPER}.put_array_natural_16_with_integer_32 (a_dest.to_special, flags, l_bytes.to_integer_32)
+			l_bytes := l_bytes + 2
+
+				-- Write the name_index, signature_index, param_index
+				-- to the buffer and update the number of bytes.
+
+			l_bytes := l_bytes + name_index.render (a_sizes, a_dest, l_bytes.to_integer_32)
+			l_bytes := l_bytes + signature_index.render (a_sizes, a_dest, l_bytes.to_integer_32)
+			l_bytes := l_bytes + param_index.render (a_sizes, a_dest, l_bytes.to_integer_32)
+
+				-- Return the total number of bytes written.
+			Result := l_bytes
 		end
 
-	get (a_sizes: ARRAY [NATURAL_64]; a_byte: ARRAY [NATURAL_8]): NATURAL_64
+	get (a_sizes: ARRAY [NATURAL_64]; a_src: ARRAY [NATURAL_8]): NATURAL_64
+		local
+			l_bytes: NATURAL_64
 		do
-			to_implement ("Add implementation")
+				-- Set the rva (from a_src)  to rva.
+			rva := {BYTE_ARRAY_HELPER}.byte_array_to_integer_32 (a_src, 0)
+
+				-- Initialize the number of bytes readed.
+			l_bytes := 4
+
+				-- Set the implementation flags (from a_src)  to impl_flags.
+			impl_flags := {BYTE_ARRAY_HELPER}.byte_array_to_integer_16 (a_src, l_bytes.to_integer_32)
+			l_bytes := l_bytes + 2
+
+				-- Set the flags (from a_src)  to flags.
+			flags := {BYTE_ARRAY_HELPER}.byte_array_to_integer_16 (a_src, l_bytes.to_integer_32)
+			l_bytes := l_bytes + 2
+
+				-- Get the name_index, signature_index, param_index
+				-- to the buffer and update the number of bytes.
+
+			l_bytes := l_bytes + name_index.render (a_sizes, a_src, l_bytes.to_integer_32)
+			l_bytes := l_bytes + signature_index.render (a_sizes, a_src, l_bytes.to_integer_32)
+			l_bytes := l_bytes + param_index.render (a_sizes, a_src, l_bytes.to_integer_32)
+
+				-- Return the number of bytes readed.
+			Result := l_bytes
 		end
 
 end

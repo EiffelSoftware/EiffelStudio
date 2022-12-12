@@ -102,6 +102,22 @@ feature -- Element Change
 			instance_free: class
 		end
 
+	put_array_natural_32_with_natural_64 (a_arr: SPECIAL [NATURAL_8]; a_value: NATURAL_64; a_pos: INTEGER)
+		require
+			valid_pos: a_pos >= a_arr.lower and then a_pos <= a_arr.upper
+		local
+			l_arr: ARRAY [NATURAL_8]
+			l_mp: MANAGED_POINTER
+		do
+			create l_arr.make_from_special (a_arr)
+			create l_mp.make_from_array (l_arr)
+			l_mp.put_natural_64 (a_value, a_pos)
+			l_arr := l_mp.read_array (a_arr.lower, a_arr.upper)
+			a_arr.copy_data (l_arr.to_special, a_pos, a_pos, {PLATFORM}.natural_32_bytes)
+		ensure
+			instance_free: class
+		end
+
 	put_array_natural_32_with_integer_32 (a_arr: SPECIAL [NATURAL_8]; a_value: INTEGER_32; a_pos: INTEGER)
 		require
 			valid_pos: a_pos >= a_arr.lower and then a_pos <= a_arr.upper
@@ -229,6 +245,16 @@ feature -- Access
 		do
 			create l_mp.make_from_array (a_arr.to_array)
 			Result := l_mp.read_natural_16 (a_pos)
+		ensure
+			instance_free: class
+		end
+
+	byte_array_to_natural_8 (a_arr: SPECIAL[NATURAL_8]; a_pos: INTEGER): NATURAL_8
+		local
+			l_mp: MANAGED_POINTER
+		do
+			create l_mp.make_from_array (a_arr.to_array)
+			Result := l_mp.read_natural_8 (a_pos)
 		ensure
 			instance_free: class
 		end

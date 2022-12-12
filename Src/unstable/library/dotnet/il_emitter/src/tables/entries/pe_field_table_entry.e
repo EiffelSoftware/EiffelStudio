@@ -84,8 +84,7 @@ feature -- Operations
 
 				-- Write the name_index, signature_index
 				-- to the buffer and update the number of bytes.
-
-			l_bytes := l_bytes + name_index.render (a_sizes, a_dest, l_bytes.to_integer_32)
+ 			l_bytes := l_bytes + name_index.render (a_sizes, a_dest, l_bytes.to_integer_32)
 			l_bytes := l_bytes + signature_index.render (a_sizes, a_dest, l_bytes.to_integer_32)
 
 				-- Return the total number of bytes written.

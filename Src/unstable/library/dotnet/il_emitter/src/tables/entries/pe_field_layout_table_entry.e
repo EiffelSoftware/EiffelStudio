@@ -39,14 +39,36 @@ feature -- Operations
 			Result := {PE_TABLES}.tFieldLayout.value.to_integer_32
 		end
 
-	render (a_sizes: ARRAY [NATURAL_64]; a_bytes: ARRAY [NATURAL_8]): NATURAL_64
+	render (a_sizes: ARRAY [NATURAL_64]; a_dest: ARRAY [NATURAL_8]): NATURAL_64
+		local
+			l_bytes: NATURAL_64
 		do
-			to_implement ("Add implementation")
-		end
+				-- Write offset to the destination buffer `a_dest`.
+			{BYTE_ARRAY_HELPER}.put_array_natural_32_with_natural_64 (a_dest.to_special, offset, 0)
 
-	get (a_sizes: ARRAY [NATURAL_64]; a_bytes: ARRAY [NATURAL_8]): NATURAL_64
+				-- Intialize the number of bytes written
+			l_bytes := 4
+
+				-- Write parent and premission set to the buffer and update the number of bytes.
+			l_bytes := l_bytes + parent.render (a_sizes, a_dest, l_bytes.to_integer_32)
+
+				-- Return the number of bytes written
+			Result := l_bytes
+		end
+	get (a_sizes: ARRAY [NATURAL_64]; a_src: ARRAY [NATURAL_8]): NATURAL_64
+		local
+			l_bytes: NATURAL_64
 		do
-			to_implement ("Add implementation")
+				-- Set the offset (from a_src)  to action
+			offset := {BYTE_ARRAY_HELPER}.byte_array_to_natural_32 (a_src, 0)
+
+				-- Intialize the number of bytes.
+			l_bytes := 4
+
+				-- Read parent from the buffer and update the number of bytes.
+			l_bytes := l_bytes + parent.get (a_sizes, a_src, l_bytes.to_integer_32)
+				-- Return the number of bytes readed
+			Result := l_bytes
 		end
 
 end

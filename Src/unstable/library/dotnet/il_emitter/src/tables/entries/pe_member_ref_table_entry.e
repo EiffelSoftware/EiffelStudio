@@ -42,14 +42,44 @@ feature -- Operations
 			Result := {PE_TABLES}.tmemberref.value.to_integer_32
 		end
 
-	render (a_sizes: ARRAY [NATURAL_64]; a_bytes: ARRAY [NATURAL_8]): NATURAL_64
+	render (a_sizes: ARRAY [NATURAL_64]; a_dest: ARRAY [NATURAL_8]): NATURAL_64
+		local
+			l_bytes: NATURAL_64
 		do
-			to_implement ("Add implementation")
+				-- Write the parent_index to the buffer and update the number
+				-- of bytes.
+			l_bytes := parent_index.render (a_sizes, a_dest, 0)
+
+				-- Write the name_index to the buffer and update the number
+				-- of bytes.
+			l_bytes := l_bytes + name_index.render (a_sizes, a_dest, l_bytes.to_integer_32)
+
+				-- Write the signature_index to the buffer and update the number
+				-- of bytes.
+			l_bytes := l_bytes + signature_index.render (a_sizes, a_dest, l_bytes.to_integer_32)
+
+				-- Return the number of bytes written
+			Result := l_bytes
 		end
 
-	get (a_sizes: ARRAY [NATURAL_64]; a_bytes: ARRAY [NATURAL_8]): NATURAL_64
+	get (a_sizes: ARRAY [NATURAL_64]; a_src: ARRAY [NATURAL_8]): NATURAL_64
+		local
+			l_bytes: NATURAL_64
 		do
-			to_implement ("Add implementation")
+				-- Get the parent_index to the buffer and update the number
+				-- of bytes.
+			l_bytes := parent_index.get (a_sizes, a_src, 0)
+
+				-- Get the name_index to the buffer and update the number
+				-- of bytes.
+			l_bytes := l_bytes + name_index.get (a_sizes, a_src, l_bytes.to_integer_32)
+
+				-- Get the signature_index to the buffer and update the number
+				-- of bytes.
+			l_bytes := l_bytes + signature_index.get (a_sizes, a_src, l_bytes.to_integer_32)
+
+				-- Return the number of bytes readed
+			Result := l_bytes
 		end
 
 

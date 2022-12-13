@@ -9,11 +9,6 @@ class
 inherit
 
 	PE_TABLE_ENTRY_BASE
-		redefine
-			render,
-			get,
-			table_index
-		end
 
 	PE_TYPE_DEF_FLAGS
 

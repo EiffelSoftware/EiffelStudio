@@ -3,7 +3,7 @@ note
 	date: "$Date$"
 	revision: "$Revision$"
 
-class
+deferred class
 	PE_TABLE_ENTRY_BASE
 
 inherit
@@ -13,8 +13,7 @@ inherit
 feature -- Access
 
 	table_index: INTEGER
-		do
-			fixme ("Make it deferred")
+		deferred
 		end
 
 feature -- Operations
@@ -22,12 +21,11 @@ feature -- Operations
 	render (a_sizes: ARRAY [NATURAL_64]; a_dest: ARRAY [NATURAL_8]): NATURAL_64
 			-- Write the Current table entry to the given destination buffer `a_dest`.
 			-- and returns the number of bytes written to the buffer.
-		do
-			fixme ("Make it deferred")
+		deferred
+
 		end
 
 	get (a_sizes: ARRAY [NATURAL_64]; a_bytes: ARRAY [NATURAL_8]): NATURAL_64
-		do
-			fixme ("Make it deferred")
+		deferred
 		end
 end

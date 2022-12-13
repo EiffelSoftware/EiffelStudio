@@ -14,11 +14,6 @@ class
 inherit
 
 	PE_TABLE_ENTRY_BASE
-		redefine
-			render,
-			get,
-			table_index
-		end
 
 create
 	make_with_data

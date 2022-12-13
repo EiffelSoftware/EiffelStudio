@@ -733,7 +733,7 @@ feature {CONSUMER_EXPORT} -- Consumer
 		do
 			Result := internal_consumer.item
 			if Result = Void then
-				Result := {CONSUMER_FACTORY}.consumer (metadata_cache_path, il_version)
+				Result := {CONSUMER_FACTORY}.consumer (full_cache_path, il_version)
 				if not attached Result then
 					add_error (create {CONF_ERROR_EMITTER_INIT}.make
 						(locale.formatted_string (locale.translation_in_context

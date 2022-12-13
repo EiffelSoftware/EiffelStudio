@@ -77,12 +77,18 @@ feature {NONE} -- Initialization
 				-- A parser to process configutation options specified in the command line.
 			create configuration_option_parser.make
 				(agent: ITERABLE [READABLE_STRING_32]
+					local
+						t: like eiffel_layout.default_il_environment.installed_runtimes
+						n: ARRAYED_LIST [READABLE_STRING_32]
 					do
 							-- agent eiffel_layout.default_il_environment.installed_runtimes
 							-- would work, but it would cause computation of CLR run-times
 							-- immediately though it might be never required.
 							-- Therefore we are using the inline agent instead.
-						Result := eiffel_layout.default_il_environment.installed_runtimes
+						t := eiffel_layout.default_il_environment.installed_runtimes
+						create n.make (t.count)
+						⟳ r: t ¦ n.extend (@ r.key) ⟲
+						Result := n
 					end)
 				-- Check that environment variables
 				-- are properly set.

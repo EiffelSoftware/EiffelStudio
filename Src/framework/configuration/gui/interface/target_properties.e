@@ -254,7 +254,6 @@ feature {NONE} -- Implementation
 			l_dir_prop: DIRECTORY_PROPERTY
 			l_file_prop: FILE_PROPERTY
 			l_key_file_prop: KEY_FILE_PROPERTY
-			l_installed_runtimes: ARRAYED_LIST [READABLE_STRING_32]
 			l_il_env: IL_ENVIRONMENT
 			l_il_choices: ARRAYED_LIST [STRING_32]
 			l_il_version: STRING_32
@@ -529,15 +528,11 @@ feature {NONE} -- Implementation
 			properties.add_property (l_string_prop)
 
 			create l_il_env
-			l_installed_runtimes := l_il_env.installed_runtimes
-			create l_il_choices.make (l_installed_runtimes.count)
-			from
-				l_installed_runtimes.start
-			until
-				l_installed_runtimes.after
+			create l_il_choices.make (l_il_env.installed_runtimes.count)
+			across
+				l_il_env.installed_runtimes as r
 			loop
-				l_il_choices.put_right (l_installed_runtimes.item_for_iteration)
-				l_installed_runtimes.forth
+				l_il_choices.put_right (@ r.key)
 			end
 			l_il_choices.force ("")
 			create l_choice_prop.make_with_choices (conf_interface_names.target_msil_clr_version_name, l_il_choices)
@@ -779,7 +774,7 @@ feature {NONE} -- Validation and warning generation
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2021, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2022, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

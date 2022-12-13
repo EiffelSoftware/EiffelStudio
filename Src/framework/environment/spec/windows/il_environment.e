@@ -14,6 +14,11 @@ inherit
 			default_create
 		end
 
+	SHARED_EXECUTION_ENVIRONMENT
+		redefine
+			default_create
+		end
+
 create
 	make, default_create
 
@@ -71,17 +76,15 @@ feature -- Access
 			l_runtimes := installed_runtimes
 			if not l_runtimes.is_empty then
 					-- Take the most recent version from `installed_runtimes'.
+				across
+					l_runtimes as r
 				from
-					Result := l_runtimes.first
-					l_runtimes.start
-					l_runtimes.forth
-				until
-					l_runtimes.after
+					Result := r.key
+					r.forth
 				loop
-					if Result < l_runtimes.item then
-						Result := l_runtimes.item
+					if Result < r.key then
+						Result := r.key
 					end
-					l_runtimes.forth
 				end
 			else
 					-- No .NET runtime found, we simply return a fake version
@@ -101,22 +104,21 @@ feature -- Access
 	is_version_installed (a_version: READABLE_STRING_GENERAL): BOOLEAN
 			-- Is `a_version' installed?
 		do
-			Result := across installed_runtimes as l_runtime some l_runtime.item.same_string_general (a_version) end
+			Result := installed_runtimes.has (a_version)
 		end
 
-	installed_runtimes: ARRAYED_LIST [IMMUTABLE_STRING_32]
-			-- List all installed version of the runtime.
+	installed_runtimes: STRING_TABLE [PATH]
+			-- All paths of installed versions of .NET runtime indexed by their version names.
 		local
-			l_runtime_path: detachable like dotnet_runtime_path
+			l_runtime_path: detachable like dotnet_framework_runtime_path
 			l_content: ARRAYED_LIST [PATH]
 			l_dir: DIRECTORY
 			l_file_name: PATH
 			l_entry: PATH
 			l_file: RAW_FILE
-		do
-			l_runtime_path := dotnet_runtime_path
-			create Result.make (5)
-			Result.compare_objects
+		once
+			l_runtime_path := dotnet_framework_runtime_path
+			create Result.make_equal (5)
 			if l_runtime_path /= Void then
 				create l_dir.make_with_path (l_runtime_path)
 				if l_dir.exists then
@@ -138,16 +140,39 @@ feature -- Access
 							l_file_name := l_runtime_path.extended_path (l_entry).extended ("mscorwks.dll")
 							create l_file.make_with_path (l_file_name)
 							if l_file.exists then
-								Result.put_right (l_entry.name)
+								Result [l_entry.name] := l_file_name.parent
 							else
 								l_file_name := l_runtime_path.extended_path (l_entry).extended ("clr.dll")
 								l_file.make_with_path (l_file_name)
 								if l_file.exists then
-									Result.put_right (l_entry.name)
+									Result [l_entry.name] := l_file_name.parent
 								end
 							end
 						end
 						l_content.forth
+					end
+				end
+			end
+			across
+				dotnet_runtime_paths as p
+			loop
+				l_file_name := p.item.extended ("shared")
+				create l_dir.make_with_path (l_file_name)
+				if l_dir.exists then
+					across l_dir.entries as e loop
+						l_entry := e.item
+						create l_dir.make_with_path (l_file_name.extended_path (l_entry))
+						if
+							not l_entry.is_current_symbol and then
+							not l_entry.is_parent_symbol and then
+							l_dir.exists
+						then
+							across l_dir.entries as v loop
+								if version_expression.matches (v.item.utf_8_name) then
+									Result [l_entry.name + "/" + v.item.name] := l_file_name.extended_path (l_entry).extended_path (v.item)
+								end
+							end
+						end
 					end
 				end
 			end
@@ -160,8 +185,84 @@ feature -- Access
 		require
 			is_dotnet_installed: is_dotnet_installed
 		do
-			if attached dotnet_runtime_path as l_path then
-				Result := l_path.extended (version)
+			Result := installed_runtimes [version]
+		end
+
+	installed_sdks: STRING_TABLE [PATH]
+			-- All paths of installed versions of .NET SDKs indexed by their version names.
+		local
+			reg: WEL_REGISTRY
+			p: POINTER
+			f: STRING_32
+			d: DIRECTORY
+		once
+			create Result.make_equal (1)
+				-- For version v2.0 and earlier, the path to the SDK path is simple to find.
+			create reg
+			p := reg.open_key_with_access ("hkey_local_machine\SOFTWARE\Microsoft\.NETFramework",
+				{WEL_REGISTRY_ACCESS_MODE}.Key_read)
+			if p /= default_pointer then
+				across <<"", "v1.1", "v2.0">> as k loop
+					if attached reg.key_value (p, "sdkInstallRoot" + k.item) as key then
+						Result [(<<"net10", "net11", "net20">>) [k.target_index]] :=
+							create {PATH}.make_from_string (key.string_value)
+					end
+				end
+				reg.close_key (p)
+			end
+				-- For version v4.0 and later, the path depends on what was installed on your machine,
+				-- i.e. Visual Studio vs Windows SDK and the version of the SDK used.
+			across <<"v8.1A", "v8.1", "v8.0A", "v8.0", "v7.1A", "v7.1", "v7.0A", "v7.0">> as v loop
+				p := reg.open_key_with_access ("hkey_local_machine\SOFTWARE\Microsoft\Microsoft SDKs\Windows\" + v.item,
+					{WEL_REGISTRY_ACCESS_MODE}.key_read)
+				if p /= default_pointer then
+					across 1 |..| reg.number_of_subkeys (p) as i loop
+						if
+							attached reg.enumerate_key (p, i.item) as k and then
+							k.name.starts_with ("WinSDK-NetFx") and then
+							k.name.ends_with ("Tools") and then
+							attached k.name.substring (12, k.name.count - 5) as sdk_version and then
+							sdk_version.count >= 2 and then
+							attached reg.open_key (p, k.name, {WEL_REGISTRY_ACCESS_MODE}.key_read) as s and then
+							s /= default_pointer
+						then
+							if attached reg.key_value (s, "InstallationFolder") as key then
+								Result [{STRING_32} "net" + sdk_version] := create {PATH}.make_from_string (key.string_value)
+							end
+							reg.close_key (s)
+						end
+					end
+					reg.close_key (p)
+				end
+			end
+				-- Higher versions of .NET SDKs are located in "%ProgramFiles%\dotnet" (for 64-bit .NET on 64-bit Windows).
+				-- TODO: handle other cases described at
+				--    https://github.com/dotnet/core-setup/blob/master/Documentation/design-docs/multilevel-sharedfx-lookup.md
+			f := execution_environment.item ("ProgramFiles")
+			if not attached f then
+				f := {STRING_32} "C:\Program Files"
+			end
+			f := f + "\dotnet\sdk"
+			create d.make_with_name (f)
+			if d.exists then
+				across
+					d.entries as e
+				loop
+					if
+						not e.item.is_current_symbol and then
+						not e.item.is_parent_symbol and then
+						Version_expression.matches (e.item.utf_8_name) and then
+						attached e.item.name as v and then
+						attached (create {PATH}.make_from_string (f + "\" + v)) as n and then
+						(create {DIRECTORY}.make_with_path (n)).exists
+					then
+						Result ["net" + v.head (if v.occurrences ('.') >= 2 then
+							v.index_of ('.', 2) - 1
+						else
+							v.count
+						end)] := n
+					end
+				end
 			end
 		end
 
@@ -174,10 +275,10 @@ feature -- Access
 			key: detachable WEL_REGISTRY_KEY_VALUE
 			l_major_version: like version
 		do
+			create reg
 			l_major_version := version.head (4)
 			if old_sdk_keys.has (l_major_version) then
 					-- For version v2.0 and earlier, the path to the SDK path is simple to find.
-				create reg
 				p := reg.open_key_with_access ("hkey_local_machine\SOFTWARE\Microsoft\.NETFramework",
 					{WEL_REGISTRY_ACCESS_MODE}.Key_read)
 				if p /= default_pointer then
@@ -197,13 +298,13 @@ feature -- Access
 				until
 					Result /= Void
 				loop
-					create reg
 					p := reg.open_key_with_access (l_path.item, {WEL_REGISTRY_ACCESS_MODE}.key_read)
 					if p /= default_pointer then
 						key := reg.key_value (p, "InstallationFolder")
 						if key /= Void then
 							create Result.make_from_string (key.string_value)
 						end
+						reg.close_key (p)
 					end
 				end
 			end
@@ -324,8 +425,41 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	dotnet_runtime_path: detachable PATH
-			-- Path to where .NET runtimes are installed. It can be a once since this value is
+	dotnet_runtime_paths: ITERABLE [PATH]
+			-- Paths to where .NET runtimes are installed.
+		local
+			reg: WEL_REGISTRY
+			p: POINTER
+			key: WEL_REGISTRY_KEY_VALUE
+			paths: ARRAYED_LIST [PATH]
+		do
+			create paths.make (1)
+			paths.compare_objects
+			create reg
+				-- TODO: Support different architectures.
+			p := reg.open_key_with_access ("hkey_local_machine\SOFTWARE\dotnet\Setup\InstalledVersions\x64\sharedhost",
+				{WEL_REGISTRY_ACCESS_MODE}.Key_read)
+			if p /= default_pointer then
+				key := reg.key_value (p, "Path")
+				if attached key then
+					paths.extend (create {PATH}.make_from_string (key.string_value))
+				end
+				reg.close_key (p)
+			end
+			p := reg.open_key_with_access ("hkey_local_machine\SOFTWARE\dotnet\Setup\InstalledVersions\x64",
+				{WEL_REGISTRY_ACCESS_MODE}.Key_read)
+			if p /= default_pointer then
+				key := reg.key_value (p, "InstallLocation")
+				if attached key then
+					paths.extend (create {PATH}.make_from_string (key.string_value))
+				end
+				reg.close_key (p)
+			end
+			Result := paths
+		end
+
+	dotnet_framework_runtime_path: detachable PATH
+			-- Path to where .NET Framework runtimes are installed. It can be a once since this value is
 			-- not dependent on `version'.
 		local
 			reg: WEL_REGISTRY
@@ -336,7 +470,7 @@ feature {NONE} -- Implementation
 			p := reg.open_key_with_access ("hkey_local_machine\SOFTWARE\Microsoft\.NETFramework",
 				{WEL_REGISTRY_ACCESS_MODE}.Key_read)
 			if p /= default_pointer then
-				key := reg.key_value (p, runtime_root_key)
+				key := reg.key_value (p, framework_runtime_root_key)
 				if key /= Void then
 					create Result.make_from_string (key.string_value)
 				end
@@ -360,8 +494,16 @@ feature -- Constants
 
 feature {NONE} -- Constants
 
-	runtime_root_key: STRING = "InstallRoot"
+	framework_runtime_root_key: STRING = "InstallRoot"
 			-- Name of key specifiying where runtimes are installed.
+
+	version_expression: REGULAR_EXPRESSION
+			-- The regular expression decribing a dotnet version.
+		once
+			create Result
+				-- TODO: update the final part of the expression to match the version specification rules.
+			Result.compile ("(0|([1-9][0-9]*)).(0|([1-9][0-9]*)).*")
+		end
 
 invariant
 	version_not_void: version /= Void
@@ -369,7 +511,7 @@ invariant
 		version.item (3) = '.' and version.item (4).is_digit)
 
 note
-	copyright: "Copyright (c) 1984-2020, Eiffel Software"
+	copyright: "Copyright (c) 1984-2022, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

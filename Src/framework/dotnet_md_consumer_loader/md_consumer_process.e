@@ -126,6 +126,16 @@ feature -- XML generation
 					args.force (r)
 				end
 			end
+			if
+				not eiffel_layout.default_il_environment.installed_sdks.is_empty and then
+				attached eiffel_layout.default_il_environment.installed_sdks.new_cursor as c and then
+				attached c.item as sdk_path
+			then
+				args.extend ("-i")
+				args.extend (sdk_path.name)
+				args.extend ("-i")
+				args.extend (sdk_path.extended ("ref").name)
+			end
 
 			p := pf.process_launcher (emdc_location.name, args, emdc_location.parent.name)
 

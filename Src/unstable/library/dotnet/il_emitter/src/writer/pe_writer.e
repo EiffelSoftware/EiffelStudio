@@ -643,13 +643,19 @@ feature -- Various Operations
 			to_implement ("Add implementation")
 		end
 
-	cildata_rva: NATURAL_32
+	cildata_rva: PE_CILDATA_RVA
+		do
+			create Result
+		ensure
+			instance_free: class
+		end
 			-- TODO double check.
 			-- another thing that makes this lib not thread safe, the RVA for
 			-- the beginning of the .data section gets put here after it is calculated
 			--| defined as
 			--|  static DWord cildata_rva_;
 			--|  DWord =:: four bytes
+
 
 feature -- Operations
 
@@ -751,7 +757,7 @@ feature -- Operations
 				to_implement ("Implement snkfile code")
 			end
 
-			cildata_rva := l_current_rva.to_natural_32
+			cildata_rva.value := l_current_rva.to_natural_32
 			if rva.size /= 0 then
 				l_current_rva := l_current_rva + rva.size
 				if l_current_rva \\ 8 /= 0 then

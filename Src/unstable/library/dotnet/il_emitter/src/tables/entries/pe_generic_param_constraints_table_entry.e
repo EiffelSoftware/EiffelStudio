@@ -21,25 +21,18 @@ create
 feature {NONE} -- Initialization
 
 
-	make_with_data (a_number: NATURAL_16; a_flags: NATURAL_16; a_owner: PE_TYPE_OR_METHOD_DEF; a_name: NATURAL_64)
+	make_with_data (a_owner: PE_GENERIC_REF; a_constraint: PE_TYPEDEF_OR_REF)
 		do
-			number := a_number
-			flags := a_flags
 			owner := a_owner
-			create name.make_with_index (a_name)
+			constraint := a_constraint
 		end
 
 feature -- Access
 
-	number: NATURAL_16
-		-- Defined as WORD two bytes
 
-	flags: NATURAL_16
-		-- Defined as WORD two bytes
+	owner: PE_GENERIC_REF
 
-	owner: PE_TYPE_OR_METHOD_DEF
-
-	name: PE_STRING
+	constraint: PE_TYPEDEF_OR_REF
 
 feature -- Operations
 
@@ -48,14 +41,21 @@ feature -- Operations
 			Result := {PE_TABLES}.tGenericParam.value.to_integer_32
 		end
 
-	render (a_sizes: ARRAY [NATURAL_64]; a_bytes: ARRAY [NATURAL_8]): NATURAL_64
+	render (a_sizes: ARRAY [NATURAL_64]; a_dest: ARRAY [NATURAL_8]): NATURAL_64
+		local
+			l_bytes: NATURAL_64
 		do
-			to_implement ("Add implementation")
+			l_bytes := owner.render (a_sizes, a_dest, 0)
+			l_bytes := l_bytes + constraint.render (a_sizes, a_dest, l_bytes.to_integer_32)
+			Result := l_bytes
 		end
 
-	get (a_sizes: ARRAY [NATURAL_64]; a_bytes: ARRAY [NATURAL_8]): NATURAL_64
+	get (a_sizes: ARRAY [NATURAL_64]; a_src: ARRAY [NATURAL_8]): NATURAL_64
+		local
+			l_bytes: NATURAL_64
 		do
-			to_implement ("Add implementation")
+			l_bytes := owner.get (a_sizes, a_src, 0)
+			l_bytes := l_bytes + constraint.get (a_sizes, a_src, l_bytes.to_integer_32)
+			Result := l_bytes
 		end
-
 end

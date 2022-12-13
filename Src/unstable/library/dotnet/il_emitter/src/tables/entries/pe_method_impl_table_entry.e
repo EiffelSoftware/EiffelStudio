@@ -42,14 +42,30 @@ feature -- Operations
 			Result := {PE_TABLES}.tMethodimpl.value.to_integer_32
 		end
 
-	render (a_sizes: ARRAY [NATURAL_64]; a_bytes: ARRAY [NATURAL_8]): NATURAL_64
+	render (a_sizes: ARRAY [NATURAL_64]; a_dest: ARRAY [NATURAL_8]): NATURAL_64
+		local
+			l_bytes: NATURAL_64
 		do
-			to_implement ("Add implementation")
+				-- Write class, method_body and method_declaration to the buffer and update the number of bytes.
+			l_bytes := class_.render (a_sizes, a_dest, 0)
+			l_bytes := l_bytes + method_body.render (a_sizes, a_dest, l_bytes.to_integer_32)
+			l_bytes := l_bytes + method_declaration.render (a_sizes, a_dest, l_bytes.to_integer_32)
+
+				-- Return the number of bytes written
+			Result := l_bytes
 		end
 
-	get (a_sizes: ARRAY [NATURAL_64]; a_bytes: ARRAY [NATURAL_8]): NATURAL_64
+	get (a_sizes: ARRAY [NATURAL_64]; a_src: ARRAY [NATURAL_8]): NATURAL_64
+		local
+			l_bytes: NATURAL_64
 		do
-			to_implement ("Add implementation")
+				-- Read class, method_body and method_declaration from the buffer and update the number of bytes.
+			l_bytes := class_.get (a_sizes, a_src, 0)
+			l_bytes := l_bytes + method_body.get (a_sizes, a_src, l_bytes.to_integer_32)
+			l_bytes := l_bytes + method_declaration.get (a_sizes, a_src, l_bytes.to_integer_32)
+
+				-- Return the number of bytes written
+			Result := l_bytes
 		end
 
 end

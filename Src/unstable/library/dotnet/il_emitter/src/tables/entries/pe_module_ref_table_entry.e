@@ -36,14 +36,14 @@ feature -- Operations
 			Result := {PE_TABLES}.tModuleref.value.to_integer_32
 		end
 
-	render (a_sizes: ARRAY [NATURAL_64]; a_bytes: ARRAY [NATURAL_8]): NATURAL_64
+	render (a_sizes: ARRAY [NATURAL_64]; a_dest: ARRAY [NATURAL_8]): NATURAL_64
 		do
-			to_implement ("Add implementation")
+			Result := name_index.render (a_sizes, a_dest, 0)
 		end
 
-	get (a_sizes: ARRAY [NATURAL_64]; a_bytes: ARRAY [NATURAL_8]): NATURAL_64
+	get (a_sizes: ARRAY [NATURAL_64]; a_src: ARRAY [NATURAL_8]): NATURAL_64
 		do
-			to_implement ("Add implementation")
+			Result := name_index.get (a_sizes, a_src, 0)
 		end
 
 end

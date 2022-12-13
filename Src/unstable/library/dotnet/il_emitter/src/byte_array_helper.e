@@ -219,12 +219,12 @@ feature -- Element Change
 
 feature -- Access
 
-	byte_array_to_natural_64 (a_arr: SPECIAL[NATURAL_8]): NATURAL_64
+	byte_array_to_natural_64 (a_arr: SPECIAL[NATURAL_8]; a_pos: INTEGER): NATURAL_64
 		local
 			l_mp: MANAGED_POINTER
 		do
 			create l_mp.make_from_array (a_arr.to_array)
-			Result := l_mp.read_natural_64 (0)
+			Result := l_mp.read_natural_64 (a_pos)
 		ensure
 			instance_free: class
 		end

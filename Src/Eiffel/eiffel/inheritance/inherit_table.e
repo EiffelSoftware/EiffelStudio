@@ -1055,7 +1055,9 @@ feature
 			end
 			if a_class.is_once then
 					-- Add an attribute to keep an index of a creation procedure.
-				n := class_info.creators.count
+				if attached class_info.creators as c then
+					n := c.count
+				end
 				create {FEATURE_NAME} creation_index_name.initialize (create {ID_AS}.initialize_from_id (names_heap.inspect_attribute_name_id))
 				feature_i := feature_i_from_feature_as
 						(create {FEATURE_AS}.initialize
@@ -2011,7 +2013,7 @@ feature {NONE} -- Temporary body index
 		end
 
 note
-	copyright: "Copyright (c) 1984-2021, Eiffel Software"
+	copyright: "Copyright (c) 1984-2022, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

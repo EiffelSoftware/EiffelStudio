@@ -42,7 +42,7 @@ feature -- Basic Operation
 			l_vert: EV_VERTICAL_BOX
 			l_lab: EV_LABEL
 			l_il_env: IL_ENVIRONMENT
-			l_runtimes: ARRAYED_LIST [READABLE_STRING_32]
+			l_runtimes: STRING_TABLE [PATH]
 			l_item: EV_LIST_ITEM
 		do
 			create rb_project_type_exe.make_with_text (interface_names.l_Exe_type)
@@ -108,14 +108,11 @@ feature -- Basic Operation
 			create clr_version_cb
 			clr_version_cb.set_minimum_width (130)
 
-			from
-				l_runtimes.start
-			until
-				l_runtimes.after
+			across
+				l_runtimes as ic
 			loop
-				create l_item.make_with_text (l_runtimes.item_for_iteration)
+				create l_item.make_with_text (ic.item.name)
 				clr_version_cb.extend (l_item)
-				l_runtimes.forth
 			end
 
 			clr_version_cb.disable_edit

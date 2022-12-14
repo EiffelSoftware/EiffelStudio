@@ -1319,7 +1319,12 @@ feature {NONE} -- Implementation
 				elseif
 					attached l_type.base_class as c and then
 					c.is_once and then
-					c.creators.has (l_as.feature_name.name_id)
+					(attached c.creators as creators and then
+					creators.has (l_as.feature_name.name_id)
+					or
+					c.allows_default_creation and then
+					attached c.default_create_feature as d and then
+					d.feature_name_id = l_as.feature_name.name_id)
 				then
 						-- This is a shorthand for creating an object of a once class.
 					process_creation_expression (l_type, False, l_as, l_as.class_type)
@@ -12339,7 +12344,7 @@ note
 		"CA033", "CA033 — too long class"
 	date: "$Date$"
 	revision: "$Revision$"
-	copyright: "Copyright (c) 1984-2021, Eiffel Software"
+	copyright: "Copyright (c) 1984-2022, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
